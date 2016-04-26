@@ -1,0 +1,4 @@
+/home/daniel/data/work/Grid/Legotrain-vAN-20150728-LHC12_QA-2nd/GammaConvCalo_LHC12abcdfghi-pass1_120.root	bla 	LHC12	LHC12a-i
+/home/daniel/data/work/Grid/Legotrain-vAN-20150728-LHC12_QA-2nd/GammaConvCalo_MC_LHC14e2a_120.root	bla 	LHC14e2a	Pythia8
+/home/daniel/data/work/Grid/Legotrain-vAN-20150728-LHC12_QA-2nd/GammaConvCalo_MC_LHC14e2b_120.root	bla 	LHC14e2b	Pythia8+AddSig
+/home/daniel/data/work/Grid/Legotrain-vAN-20150728-LHC12_QA-2nd/GammaConvCalo_MC_LHC14e2c_120.root	bla 	LHC14e2c	Phojet

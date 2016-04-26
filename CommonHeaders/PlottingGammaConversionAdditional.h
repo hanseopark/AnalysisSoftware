@@ -3098,151 +3098,6 @@ void DrawIndividualTextSlicesR ( Double_t* yValues,
 }
 
 
-void DrawAliceLogoAdv( Double_t x_left, 
-                    Double_t y_down, 
-                    TString type, 
-                    TString energy, 
-                    TString position, 
-                    TCanvas *myCanvas, 
-                    TString centrality){
-    
-    Double_t shiftTextl = 0;
-    Double_t shiftTextr = 0;
-    Double_t shiftTextt = 0;
-    Double_t shiftTextb = 0;
-    Double_t shiftLogo = 0;
-
-    if(gPad->GetAbsHNDC() != 1.){ 
-        shiftTextr = 0.25;
-        shiftTextl = 0.12;
-        shiftTextt = 0.27;
-        shiftTextb = 0.16;
-        shiftLogo = 0.10;
-    }
-
-    TPad *myPad = new TPad("myPad", "The pad",x_left,y_down,x_left+0.14,y_down+0.25+shiftLogo,0);
-    
-    myPad->SetLeftMargin(0.15);
-    myPad->SetTopMargin(0.04);
-    myPad->SetRightMargin(0.04);
-    myPad->SetBottomMargin(0.15);
-    myPad->SetFillColor(0);
-    myPad->SetBorderMode(0);
-    myPad->SetBorderSize(0);
-    myPad->SetFrameBorderMode(0);
-    myPad->SetAttFillPS(0,0);
-    myPad->SetFillColor(0);
-    myPad->SetFrameFillColor(0);
-    myPad->Draw();
-    myPad->cd();
-    
-
-    TASImage *myAliceLogo;
-    if(type.CompareTo("Work in Progress") == 0){
-        myAliceLogo = new TASImage("LogoNeu.eps");
-        myPad->cd();
-        myAliceLogo->Draw();
-    }
-    if(type.CompareTo("Performance") == 0){
-        myAliceLogo = new TASImage("per.eps");
-        myPad->cd();
-        myAliceLogo->Draw();
-    }
-    if(type.CompareTo("Preliminary") == 0){
-        myAliceLogo = new TASImage("pre.eps");
-        myPad->cd();
-        myAliceLogo->Draw();
-    }
-
-    myCanvas->cd(0);
-
-    TDatime now;
-    Int_t iDate = now.GetDate();
-    Int_t iYear=iDate/10000;
-    Int_t iMonth=(iDate%10000)/100;
-    Int_t iDay=iDate%100;
-    TString cMonth[12]={"Jan","Feb","Mar","Apr","May","Jun",
-                        "Jul","Aug","Sep","Oct","Nov","Dec"};
-    TString cStamp1,cStamp2;
-    cStamp1 = Form("%i %s %i",iDay, cMonth[iMonth-1].Data(), iYear);
-    cStamp2 = Form("%i/%.2d/%i",iDay, iMonth, iYear);
-    
-    Double_t calcpositionalice[2] = {0,0};
-    Double_t calcpositionenergy[2] = {0,0};
-    Double_t calcpositiondate[2] = {0,0};
-    Double_t shiftcent = 0.2;
-    if(position.CompareTo("l") == 0){
-        shiftcent = 0.;
-        if(type.CompareTo("Work in Progress") == 0) calcpositionalice[0] = x_left - 0.24;
-        if(type.CompareTo("Performance") == 0) calcpositionalice[0] = x_left - 0.18;
-        if(type.CompareTo("Preliminary") == 0) calcpositionalice[0] = x_left - 0.16;
-        calcpositionalice[1] = y_down + 0.19+shiftTextl;
-        if(energy.CompareTo("7TeV") == 0) calcpositionenergy[0] = x_left - 0.23;
-        if(energy.CompareTo("2760GeV") == 0) calcpositionenergy[0] = x_left - 0.27;
-        if(energy.CompareTo("900GeV") == 0) calcpositionenergy[0] = x_left - 0.27;
-        if(energy.CompareTo("HI") == 0) calcpositionenergy[0] = x_left - 0.35;
-        calcpositionenergy[1] = y_down + 0.13+shiftTextl;
-        calcpositiondate[0] = x_left - 0.13;
-        calcpositiondate[1] = y_down + 0.07+shiftTextl;
-    }
-    if(position.CompareTo("r") == 0){
-        calcpositionalice[0] = x_left + 0.15;
-        calcpositionalice[1] = y_down + 0.19+shiftTextr;
-        calcpositionenergy[0] = x_left + 0.15;
-        calcpositionenergy[1] = y_down + 0.13+shiftTextr;
-        calcpositiondate[0] = x_left + 0.15;
-        calcpositiondate[1] = y_down + 0.07+shiftTextr;
-    }
-    if(position.CompareTo("b") == 0){
-        calcpositionalice[0] = x_left - 0.04;
-        calcpositionalice[1] = y_down - 0.02+shiftTextb;
-        calcpositionenergy[0] = x_left - 0.04;
-        calcpositionenergy[1] = y_down - 0.08+shiftTextb;
-        calcpositiondate[0] = x_left + 0.02;
-        calcpositiondate[1] = y_down - 0.00+shiftTextb;
-    }
-    if(position.CompareTo("t") == 0){
-        calcpositionalice[0] = x_left - 0.04;
-        calcpositionalice[1] = y_down + 0.38+shiftTextt;
-        calcpositionenergy[0] = x_left - 0.04;
-        calcpositionenergy[1] = y_down + 0.32+shiftTextt;
-        calcpositiondate[0] = x_left - 0.04;
-        calcpositiondate[1] = y_down + 0.26+shiftTextt;
-    }
-
-    TLatex *alice = new TLatex(calcpositionalice[0], calcpositionalice[1],type);
-    alice->SetNDC();
-    alice->SetTextColor(kBlack);
-    alice->SetTextFont(42);
-    alice->SetTextSize(0.05);
-    alice->SetLineWidth(2);
-    if(type.CompareTo("Work in Progress") == 0) alice->Draw();
-    TString collisionenergy ="";
-    //if(energy.CompareTo("7TeV") == 0) collisionenergy = "pp, #sqrt{#it{s}} = 7 TeV";
-    //if(energy.CompareTo("HI") == 0) collisionenergy = "Pb-Pb, #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
-    if(energy.CompareTo("900GeV") == 0) collisionenergy = "pp, #sqrt{#it{s}} = 900 GeV";
-    if(energy.CompareTo("2760GeV") == 0) collisionenergy = "pp, #sqrt{#it{s}} = 2.76 TeV";
-    TLatex *CollisionEnergy = new TLatex(calcpositionenergy[0],calcpositionenergy[1],collisionenergy);
-    CollisionEnergy->SetNDC();
-    CollisionEnergy->SetTextColor(kBlack);
-    CollisionEnergy->SetTextFont(42);
-    CollisionEnergy->SetTextSize(0.05);
-    CollisionEnergy->SetLineWidth(2);
-    CollisionEnergy->Draw();
-
-    TText *date = new TText(calcpositiondate[0],calcpositiondate[1],cStamp2);
-    date->SetNDC();
-    date->SetTextFont(42);
-    date->SetTextSize(0.04);
-    if(type.CompareTo("Preliminary") != 0) date->Draw();
-    
-    TText *centr = new TText(calcpositiondate[0] + shiftcent,calcpositiondate[1],centrality);
-    centr->SetNDC();
-    centr->SetTextFont(42);
-    centr->SetTextSize(0.04);
-    if(energy.CompareTo("HI") == 0) centr->Draw();
-}
-
 void DrawCentrality(Double_t x_low, 
                     Double_t y_low, 
                     TString centrality){
@@ -4326,7 +4181,8 @@ void DrawMergedClusterLambdaCuts (Int_t nlm = 1){
     if (nlm == 1 || nlm == 0 ){
         TF1 *min = new TF1("min","exp(2.135-0.245*x)",4.95,15.63);
         min->SetLineColor(kBlack);
-        min->SetLineStyle(2);        
+        min->SetLineStyle(2);
+        
         min->Draw("same");
         TF1 *cnst = new TF1("cnst","0.27",13.63,50.05);
         cnst->SetLineColor(kBlack);

@@ -1,0 +1,8 @@
+root -x -l -b -q TaskV1/CorrectCaloNonLinearity2_Compare.C\+\(\"LHC11a-Pythia\"\)
+root -x -l -b -q TaskV1/CorrectCaloNonLinearity2_Compare.C\+\(\"LHC11a-Phojet\"\)
+root -x -l -b -q TaskV1/CorrectCaloNonLinearity2_Compare.C\+\(\"LHC11a-JJ\"\)
+root -x -l -b -q TaskV1/CorrectCaloNonLinearity2_Compare.C\+\(\"LHC12-Pythia\"\)
+root -x -l -b -q TaskV1/CorrectCaloNonLinearity2_Compare.C\+\(\"LHC12-Phojet\"\)
+root -x -l -b -q TaskV1/CorrectCaloNonLinearity2_Compare.C\+\(\"LHC13bc\"\)
+root -x -l -b -q TaskV1/CorrectCaloNonLinearity2_Compare.C\+\(\"Calo\"\)
+root -x -l -b -q TaskV1/CorrectCaloNonLinearity2_Compare.C\+\(\"ConvCalo\"\)
