@@ -89,7 +89,7 @@ void  ProduceFinalResults( const char *fileNamePi0 = "myOutput",
     }
     
     date = ReturnDateString();
-    TString fileNameSysErrPi0 ="SystematicErrorsInput/SystematicErrorAveraged_Pi0_7TeV_24_Apr_2012.dat"; // default
+    TString fileNameSysErrPi0 ="SystematicErrorsNew/SystematicErrorAveraged_Pi0_7TeV_24_Apr_2012.dat"; // default
     collisionSystem= ReturnFullCollisionsSystem(optionEnergy);
 
     // original systematic errors were from 18_May_2011 inversion of material error caused changing
@@ -97,12 +97,12 @@ void  ProduceFinalResults( const char *fileNamePi0 = "myOutput",
         minPtForFits=0.3;
         minPtForFitsEta=0.4;
         if (useSameBinningPi0Eta.CompareTo("")==0){         
-            fileNameSysErrPi0 = "SystematicErrorsInput/SystematicErrorAveraged_Pi0_7TeV_24_Apr_2012.dat"; //SystematicError_Pi0_7TeV_12_Mar_2012.dat
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_7TeV_24_Apr_2012.dat"; //SystematicError_Pi0_7TeV_12_Mar_2012.dat
         } else {
-            fileNameSysErrPi0 = "SystematicErrorsInput/SystematicErrorAveraged_Pi0EtaBinning_7TeV_24_Apr_2012.dat"; // SystematicError_Pi0EtaBinning_7TeV_12_Mar_2012.dat
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_7TeV_24_Apr_2012.dat"; // SystematicError_Pi0EtaBinning_7TeV_12_Mar_2012.dat
             minPtForFits=0.4;
         }    
-        fileNameSysErrEta = "SystematicErrorsInput/SystematicErrorAveraged_Eta_7TeV_24_Apr_2012.dat";//SystematicError_Eta_7TeV_12_Mar_2012.dat
+        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_7TeV_24_Apr_2012.dat";//SystematicError_Eta_7TeV_12_Mar_2012.dat
         cout << "You have choosen 7TeV" << endl;
     } else if( optionEnergy.CompareTo("8TeV") == 0) {
         minPtForFits=0.4;
@@ -139,35 +139,19 @@ void  ProduceFinalResults( const char *fileNamePi0 = "myOutput",
             minPtForFits=0.6;
         }
         fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_2.76TeV_5_Aug_2013.dat"; 
-        if (mode == 2){
-            minPtForFits=0.6;
-            minPtForFitsEta=1;
-
-//             SystematicErrorsNew/SystematicErrorAveraged_Pi0_2.76TeVEG1_2015_10_19.dat
-//             SystematicErrorsNew/SystematicErrorAveraged_Pi0_2.76TeVEG2_2015_10_19.dat
-//             SystematicErrorsNew/SystematicErrorAveraged_Pi0_2.76TeVEMC1_2015_10_19.dat
-//             SystematicErrorsNew/SystematicErrorAveraged_Pi0_2.76TeVEMC7_2015_10_19.dat
-//             SystematicErrorsNew/SystematicErrorAveraged_Pi0_2.76TeVINT7_2015_10_19.dat
-            if (useSameBinningPi0Eta.CompareTo("")==0){         
-                fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_2.76TeV_2015_10_19.dat";
-            } else {
-                fileNameSysErrPi0 = "SystematicErrorsCalculatedConvCalo/SystematicErrorAveraged_Pi0EtaBinning_2.76TeV_2015_05_18.dat"; 
-                minPtForFits=1;
-            }    
-            fileNameSysErrEta = "SystematicErrorsCalculatedConvCalo/SystematicErrorAveraged_Eta_2.76TeV_2015_05_18.dat"; 
-        }    
-        
-        
+        if (mode == 2 || mode == 4){
+            cout << "wrong macro, please look at ProduceFinalResultsPatchedTriggers.C"
+        }
     } else if( optionEnergy.CompareTo("900GeV") == 0) {
         minPtForFits=0.4;
         minPtForFitsEta=0.9;
         if (useSameBinningPi0Eta.CompareTo("")==0){         
-            fileNameSysErrPi0 = "SystematicErrorsInput/SystematicErrorAveraged_Pi0_900GeV_24_Apr_2012.dat"; //SystematicError_Pi0_900GeV_12_Mar_2012.dat
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_900GeV_24_Apr_2012.dat"; //SystematicError_Pi0_900GeV_12_Mar_2012.dat
         } else {
-            fileNameSysErrPi0 = "SystematicErrorsInput/SystematicErrorAveraged_Pi0EtaBinning_900GeV_24_Apr_2012.dat"; //SystematicError_Pi0EtaBinning_900GeV_12_Mar_2012.dat
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_900GeV_24_Apr_2012.dat"; //SystematicError_Pi0EtaBinning_900GeV_12_Mar_2012.dat
             minPtForFits=0.9;
         }
-        fileNameSysErrEta = "SystematicErrorsInput/SystematicErrorAveraged_Eta_900GeV_24_Apr_2012.dat"; //SystematicError_Eta_900GeV_12_Mar_2012.dat
+        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_900GeV_24_Apr_2012.dat"; //SystematicError_Eta_900GeV_12_Mar_2012.dat
     } else if( optionEnergy.CompareTo("PbPb_2.76TeV") == 0 || optionEnergy.CompareTo("pPb_5.023TeV") == 0  ) {
         cout << "This macro will not work for pPb or PbPb" << endl;
       return;

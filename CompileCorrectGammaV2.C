@@ -50,8 +50,8 @@ void CompileCorrectGammaV2(){
         gSystem->AddIncludePath("-I/home/admin1/leardini/photonconv/AnalysisSoftware/RooUnfold/RooUnfold-master/RooUnfold/src"); 
         gSystem->Load("/home/admin1/leardini/photonconv/AnalysisSoftware/RooUnfold/RooUnfold-master/libRooUnfold");
     } else if (homedirectory.CompareTo("/home/fbock") == 0){   
-        gSystem->AddIncludePath("-I/home/fbock/Photon/Software/photonconv/AnalysisSoftware/RooUnfold/src"); 
-		gSystem->Load("/home/fbock/Photon/Software/photonconv/AnalysisSoftware/RooUnfold/libRooUnfold");
+        gSystem->AddIncludePath("-I/home/fbock/Photon/Software/PCGGIT/AnalysisSoftware/RooUnfold/src"); 
+		gSystem->Load("/home/fbock/Photon/Software/PCGGIT/AnalysisSoftware/RooUnfold/libRooUnfold");
 	} else if (homedirectory.CompareTo("/home/daniel") == 0){
 		gSystem->AddIncludePath("-I/home/daniel/data/work/photonconv/AnalysisSoftware/RooUnfold/src");
 		gSystem->Load("/home/daniel/data/work/photonconv/AnalysisSoftware/RooUnfold/libRooUnfold");

@@ -751,109 +751,6 @@ void CombineNeutralPionResultspp(TString suffix = "pdf",
    cout << "here" << endl;
    
    
-   //********************* processing old pp files *************************************
-/*
-   TFile*   fileCocktail =                new TFile("ExternalInputPbPb/cocktail_allCentpluspp.root");
-   TDirectory* directoryCocktailpp2760GeV =           (TDirectory*)fileCocktail->Get("cocktail_pp_2760GeV_qcd"); 
-   TH1D* histoEtaFromCocktailpp2760GeV = (TH1D*)directoryCocktailpp2760GeV->Get("ptEta"); 
-
-   
-   TFile* fileNeutralPionCombDataPP = new TFile("CombinedResultsPaperX_18_Feb_2014.root");
-   TGraphAsymmErrors* graphInvYieldPi0Comb7TeV= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb7TeV");
-   graphInvYieldPi0Comb7TeV = ScaleGraph(graphInvYieldPi0Comb7TeV,1./xSection7TeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0Comb7TeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb7TeVStatErr");
-   graphInvYieldPi0Comb7TeVStatErr = ScaleGraph(graphInvYieldPi0Comb7TeVStatErr,1./xSection7TeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0Comb7TeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb7TeVSysErr");
-   graphInvYieldPi0Comb7TeVSysErr = ScaleGraph(graphInvYieldPi0Comb7TeVSysErr,1./xSection7TeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0PCM7TeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PCMStat7TeV");
-   graphInvYieldPi0PCM7TeVStatErr = ScaleGraph(graphInvYieldPi0PCM7TeVStatErr,1./xSection7TeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0PCM7TeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PCMSys7TeV");
-   graphInvYieldPi0PCM7TeVSysErr = ScaleGraph(graphInvYieldPi0PCM7TeVSysErr,1./xSection7TeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0PHOS7TeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PHOSStat7TeV");
-   graphInvYieldPi0PHOS7TeVStatErr = ScaleGraph(graphInvYieldPi0PHOS7TeVStatErr,1./xSection7TeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0PHOS7TeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PHOSSys7TeV");
-   graphInvYieldPi0PHOS7TeVSysErr = ScaleGraph(graphInvYieldPi0PHOS7TeVSysErr,1./xSection7TeVppINEL);
-   cout << "here 2.76TeV" << endl;
-   TGraphAsymmErrors* graphInvYieldPi0Comb2760GeV= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb2760GeV");
-   graphInvYieldPi0Comb2760GeV = ScaleGraph(graphInvYieldPi0Comb2760GeV,1./xSection2760GeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0Comb2760GeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb2760GeVStatErr");
-   graphInvYieldPi0Comb2760GeVStatErr = ScaleGraph(graphInvYieldPi0Comb2760GeVStatErr,1./xSection2760GeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0Comb2760GeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb2760GeVSysErr");
-   graphInvYieldPi0Comb2760GeVSysErr = ScaleGraph(graphInvYieldPi0Comb2760GeVSysErr,1./xSection2760GeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0PCM2760GeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PCM2760GeVStatErr");
-   graphInvYieldPi0PCM2760GeVStatErr = ScaleGraph(graphInvYieldPi0PCM2760GeVStatErr,1./xSection2760GeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0PCM2760GeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PCM2760GeVSysErr");
-   graphInvYieldPi0PCM2760GeVSysErr = ScaleGraph(graphInvYieldPi0PCM2760GeVSysErr,1./xSection2760GeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0PHOS2760GeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PHOS2760GeVStatErr");
-   graphInvYieldPi0PHOS2760GeVStatErr = ScaleGraph(graphInvYieldPi0PHOS2760GeVStatErr,1./xSection2760GeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0PHOS2760GeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PHOS2760GeVSysErr");
-   graphInvYieldPi0PHOS2760GeVSysErr = ScaleGraph(graphInvYieldPi0PHOS2760GeVSysErr,1./xSection2760GeVppINEL);
-   cout << "here 900 GeV" << endl;
-   TGraphAsymmErrors* graphInvYieldPi0Comb900GeV= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb900GeV");
-   graphInvYieldPi0Comb900GeV = ScaleGraph(graphInvYieldPi0Comb900GeV,1./xSection900GeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0Comb900GeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb900GeVStatErr");
-   graphInvYieldPi0Comb900GeVStatErr = ScaleGraph(graphInvYieldPi0Comb900GeVStatErr,1./xSection900GeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0Comb900GeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb900GeVSysErr");
-   graphInvYieldPi0Comb900GeVSysErr = ScaleGraph(graphInvYieldPi0Comb900GeVSysErr,1./xSection900GeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0PCM900GeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PCMStat900GeV");
-   graphInvYieldPi0PCM900GeVStatErr = ScaleGraph(graphInvYieldPi0PCM900GeVStatErr,1./xSection900GeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0PCM900GeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PCMSys900GeV");
-   graphInvYieldPi0PCM900GeVSysErr = ScaleGraph(graphInvYieldPi0PCM900GeVSysErr,1./xSection900GeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0PHOS900GeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PHOSStat900GeV");
-   graphInvYieldPi0PHOS900GeVStatErr = ScaleGraph(graphInvYieldPi0PHOS900GeVStatErr,1./xSection900GeVppINEL);
-   TGraphAsymmErrors* graphInvYieldPi0PHOS900GeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PHOSSys900GeV");
-   graphInvYieldPi0PHOS900GeVSysErr = ScaleGraph(graphInvYieldPi0PHOS900GeVSysErr,1./xSection900GeVppINEL);
-
-
-
-   cout << "efficiencies Added Sig 2.76TeV GeV" << endl;
-   TFile* fileNeutralPion2760GeVDataPPEffiAddedSig = new TFile("000001100209366300380000000_01631031009000/2.76TeV/Pi0_MC_GammaConvV1CorrectionHistosAddSig_000001100209366300380000000_01631031009000.root");
-   TH1D* histoEffiAddedSigPP = (TH1D*)fileNeutralPion2760GeVDataPPEffiAddedSig->Get("TrueMesonEffiPt");
-   
-   TFile* fileNeutralPion7TeVDataPPEffi2760GeVCut = new TFile("ppAdditionalInput/0000011002093663003800000_01631031009/7TeV/Pi0_MC_GammaConvV1CorrectionHistosD_0000011002093663003800000_01631031009.root");
-   TH1D* histoEffi7TeV2760GeVCut = (TH1D*)fileNeutralPion7TeVDataPPEffi2760GeVCut->Get("TrueMesonEffiPt");
-   
-   TFile* fileNeutralPion2760GeVDataPPEffiWithSDD = new TFile("ppAdditionalInput/0002011002093663003800000_01631031009/2.76TeV/Pi0_MC_GammaConvV1CorrectionHistos_0002011002093663003800000_01631031009.root");
-   TH1D* histoEffi2760GeVWithSDD = (TH1D*)fileNeutralPion2760GeVDataPPEffiWithSDD->Get("TrueMesonEffiPt");
-   
-   cout << "efficiencies MinBias 2.76TeV GeV" << endl;
-   TFile* fileNeutralPion2760GeVDataPPEffiMinBias = new TFile("000001100209366300380000000_01631031009000/2.76TeV/Pi0_MC_GammaConvV1CorrectionHistosMinBias_000001100209366300380000000_01631031009000.root");
-   TH1D* histoEffiMinBiasPP = (TH1D*)fileNeutralPion2760GeVDataPPEffiMinBias->Get("TrueMesonEffiPt");
-
-   
-   cout << "MC spectra 2.76TeV GeV" << endl;
-   TFile* fileNeutralPion2760GeVDataPP = new TFile("000001100209366300380000000_01631031009000/2.76TeV/Pi0_data_GammaConvV1Correction_000001100209366300380000000_01631031009000.root");
-   TH1D* histoMCYieldPi02760GeVFinal = (TH1D*)fileNeutralPion2760GeVDataPP->Get("MCYield_Meson_oldBin");
-   TFile* fileEta2760GeVDataPP = new TFile("000001100209366300380000000_01631031009000/2.76TeV/Eta_data_GammaConvV1Correction_000001100209366300380000000_01631031009000.root");
-   TH1D* histoMCYieldEta2760GeVFinal = (TH1D*)fileEta2760GeVDataPP->Get("MCYield_Meson_oldBin");
-   
-   cout << "MC spectra added signal 2.76TeV GeV" << endl;
-   TFile* fileNeutralPion2760GeVDataPPAddSig = new TFile("000001100209366300380000000_01631031009000/2.76TeV/Pi0_MC_GammaConvV1CorrectionHistosAddSig_000001100209366300380000000_01631031009000.root");
-   TH1D* histoMCYieldPi02760GeVAddSig = (TH1D*)fileNeutralPion2760GeVDataPPAddSig->Get("MC_Meson_genPt_oldBin");
-   TH1F *histoEventQualityMC =         (TH1F*)fileNeutralPion2760GeVDataPPAddSig->Get("NEvents");
-   Float_t nEvtMC = GetNEvents(histoEventQualityMC);
-   TString rapidityRange = "";
-   Double_t deltaRapid =  ReturnRapidityStringAndDouble("01631031009", rapidityRange);
-   Double_t scaling = 1./(2.*TMath::Pi());
-   ScaleMCYield(histoMCYieldPi02760GeVAddSig,  deltaRapid,  scaling,  nEvtMC,  "Pi0" ,"kFALSE");
-   cout << "MC spectra withough weighting added signal 2.76TeV GeV" << endl;
-   TFile* fileNeutralPion2760GeVDataPPAddSigWOWeighting = new TFile("ppAdditionalInput/0000012002093663003800000_01631031009/2.76TeV/Pi0_data_GammaConvV1Correction_0000012002093663003800000_01631031009.root");
-   TH1D* histoMCYieldPi02760GeVAddSigWOWeighting = (TH1D*)fileNeutralPion2760GeVDataPPAddSigWOWeighting->Get("MCYield_Meson_oldBin");
-   
-   cout << "MC spectra without weighting 2.76TeV GeV" << endl;
-   TFile* fileNeutralPion2760GeVDataPPWOWeigthing = new TFile("ppAdditionalInput/0000011002093663003800000_01631031009/2.76TeV/Pi0_data_GammaConvV1Correction_0000011002093663003800000_01631031009.root");
-   TH1D* histoMCYieldPi02760GeVWOWeighting = (TH1D*)fileNeutralPion2760GeVDataPPWOWeigthing->Get("MCYield_Meson_oldBin");
-   cout << "MC spectra 7TeV GeV" << endl;
-   TFile* fileNeutralPion7TeVDataPP = new TFile("900366208010033211360000000900/7TeV/Pi0_data_AnalysisResultsCorrection_900366208010033211360000000900.root");
-   TH1D* histoMCYieldPi07TeV = (TH1D*)fileNeutralPion7TeVDataPP->Get("MCYield_Meson_oldBin");
-   TFile* fileEta7TeVDataPP = new TFile("900366208010033211360000000900/7TeV/Eta_data_AnalysisResultsCorrection_900366208010033211360000000900.root");
-   TH1D* histoMCYieldEta7TeV = (TH1D*)fileEta7TeVDataPP->Get("MCYield_Meson_oldBin");
-   cout << "MC spectra 0.9TeV GeV" << endl;
-   TFile* fileNeutralPion900GeVDataPP = new TFile("900366208010033211360000000900/900GeV/Pi0_data_AnalysisResultsCorrection_900366208010033211360000000900.root");
-   TH1D* histoMCYieldPi0900GeV = (TH1D*)fileNeutralPion900GeVDataPP->Get("MCYield_Meson_oldBin");
-   TFile* fileEta900GeVDataPP = new TFile("900366208010033211360000000900/900GeV/Eta_data_AnalysisResultsCorrection_900366208010033211360000000900.root");
-   TH1D* histoMCYieldEta900GeV = (TH1D*)fileEta900GeVDataPP->Get("MCYield_Meson_oldBin");
-*/
 
    TFile* filePi0Pythia = new TFile("0000011_002092570028250400000_01521065000000/8TeV/Pi0_data_GammaConvV1Correction_0000011_002092570028250400000_01521065000000.root");
    TH1D* histoMCYieldPi0Pythia = (TH1D*)filePi0Pythia->Get("MCYield_Meson_oldBin");
@@ -896,12 +793,6 @@ void CombineNeutralPionResultspp(TString suffix = "pdf",
    SetStyleHistoTH2ForGraphs(histo2DEffPi0Pythia, "#it{p}_{T} (GeV/#it{c})","#epsilon_{reco, #pi^{0}}",0.03,0.04, 0.03,0.04, 1.,1.);
    histo2DEffPi0Pythia->Draw("copy");
 
-//   DrawGammaSetMarker(histoTrueEffPtPi07TeV, markerStyleSpectrum7TeVMC, markerSizePi0PP7TeV, colorPi07TeV, colorPi07TeV);  
-//   histoTrueEffPtPi07TeV->DrawCopy("e1,same");  
-//   DrawGammaSetMarker(histoTrueEffPtPi02760GeV, markerStyleSpectrum2760GeVMC, markerSizePi0PP2760GeV, colorPi02760GeV, colorPi02760GeV);  
-//   histoTrueEffPtPi02760GeV->DrawCopy("pe1,same");    
-//   DrawGammaSetMarker(histoTrueEffPtPi0900GeV, markerStyleSpectrum900GeVMC, markerSizePi0PP900GeV, colorPi0900GeV, colorPi0900GeV); 
-//   histoTrueEffPtPi0900GeV->DrawCopy("e1,same");
    DrawGammaSetMarker(histoPi0TrueEffiPtPythia8TeV, markerStyleSpectrum8TeVMC, markerSizePi0PP8TeV, colorPi08TeV, colorPi08TeV); 
    histoPi0TrueEffiPtPythia8TeV->DrawCopy("e1,same");   
    DrawGammaSetMarker(histoPi0TrueEffiPtPythia7TeV, markerStyleSpectrum7TeVMC, markerSizePi0PP7TeV, colorPi07TeV, colorPi07TeV);  
@@ -920,9 +811,6 @@ void CombineNeutralPionResultspp(TString suffix = "pdf",
    legendEffiPi0Pythia->AddEntry(histoPi0TrueEffiPtPythia7TeV,"pp #sqrt{#it{s}} = 7 TeV","p");
    legendEffiPi0Pythia->AddEntry(histoPi0TrueEffiPtPythia2760GeV,"pp #sqrt{#it{s}} = 2.76 TeV","p");
    legendEffiPi0Pythia->AddEntry(histoPi0TrueEffiPtPythia900GeV,"pp #sqrt{#it{s}} = 0.9 TeV","p");
-   //legendEffiPi0Pythia->AddEntry(histoTrueEffPtPi07TeV,"pp #sqrt{#it{s}} = 7 TeV","p");
-   //legendEffiPi0Pythia->AddEntry(histoTrueEffPtPi02760GeV,"pp #sqrt{#it{s}} = 2.76 TeV","p");
-   //legendEffiPi0Pythia->AddEntry(histoTrueEffPtPi0900GeV,"pp #sqrt{#it{s}} = 0.9 TeV","p");
    legendEffiPi0Pythia->Draw();
    
    canvasEfficiencyPi0Pythia->SaveAs(Form("%s/EfficiencyPi0Pythia.%s",outputDir.Data(),suffix.Data()));

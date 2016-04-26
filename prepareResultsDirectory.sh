@@ -16,14 +16,9 @@ mkdir ExternalInput
 mkdir ExternalInputPbPb
 mkdir ExternalInputpPb
 mkdir FinalResults
-mkdir SystematicErrors
-mkdir SystematicErrorsInput
 mkdir CocktailInput
-mkdir ppAdditionalInput
 mkdir RooUnfold
-ln -sf $PHOTONCONVDIR/SystematicErrorsInput/* SystematicErrorsInput/
 ln -sf $PHOTONCONVDIR/SystematicErrorsNew/* SystematicErrorsNew/
-ln -sf $PHOTONCONVDIR/SystematicErrors/* SystematicErrors/
 ln -sf $PHOTONCONVDIR/CommonHeaders/*.h CommonHeaders/
 ln -sf $PHOTONCONVDIR/TaskV1/*.h TaskV1/
 ln -sf $PHOTONCONVDIR/TaskV1/*.C TaskV1/
@@ -34,7 +29,6 @@ ln -sf $PHOTONCONVDIR/ExternalInputPbPb/* ExternalInputPbPb/
 ln -sf $PHOTONCONVDIR/ExternalInputpPb/* ExternalInputpPb/
 ln -sf $PHOTONCONVDIR/FinalResults/* FinalResults/
 ln -sf $PHOTONCONVDIR/CocktailInput/* CocktailInput/
-ln -sf $PHOTONCONVDIR/ppAdditionalInput/* ppAdditionalInput/
 ln -sf $PHOTONCONVDIR/RooUnfold/* RooUnfold/
 
 ln -sf $PHOTONCONVDIR/*.eps .

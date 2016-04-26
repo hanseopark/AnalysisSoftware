@@ -548,62 +548,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePP 
 	graphInvYieldPi0PHOS900GeVStatErr = ScaleGraph(graphInvYieldPi0PHOS900GeVStatErr,1./xSection900GeVppINEL);
 	TGraphAsymmErrors* graphInvYieldPi0PHOS900GeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PHOSSys900GeV");
 	graphInvYieldPi0PHOS900GeVSysErr = ScaleGraph(graphInvYieldPi0PHOS900GeVSysErr,1./xSection900GeVppINEL);
-
-	cout << "efficiencies Added Sig 2.76TeV GeV" << endl;
-	TFile* fileNeutralPion2760GeVDataPPEffiAddedSig = new TFile("000001100209366300380000000_01631031009000/2.76TeV/Pi0_MC_GammaConvV1CorrectionHistosAddSig_000001100209366300380000000_01631031009000.root");
-	TH1D* histoEffiAddedSigPP = (TH1D*)fileNeutralPion2760GeVDataPPEffiAddedSig->Get("TrueMesonEffiPt");
-	
-	TFile* fileNeutralPion7TeVDataPPEffi2760GeVCut = new TFile("ppAdditionalInput/0000011002093663003800000_01631031009/7TeV/Pi0_MC_GammaConvV1CorrectionHistosD_0000011002093663003800000_01631031009.root");
-	TH1D* histoEffi7TeV2760GeVCut = (TH1D*)fileNeutralPion7TeVDataPPEffi2760GeVCut->Get("TrueMesonEffiPt");
-	
-	TFile* fileNeutralPion2760GeVDataPPEffiWithSDD = new TFile("ppAdditionalInput/0002011002093663003800000_01631031009/2.76TeV/Pi0_MC_GammaConvV1CorrectionHistos_0002011002093663003800000_01631031009.root");
-	TH1D* histoEffi2760GeVWithSDD = (TH1D*)fileNeutralPion2760GeVDataPPEffiWithSDD->Get("TrueMesonEffiPt");
-	
-	cout << "efficiencies MinBias 2.76TeV GeV" << endl;
-	TFile* fileNeutralPion2760GeVDataPPEffiMinBias = new TFile("000001100209366300380000000_01631031009000/2.76TeV/Pi0_MC_GammaConvV1CorrectionHistosMinBias_000001100209366300380000000_01631031009000.root");
-	TH1D* histoEffiMinBiasPP = (TH1D*)fileNeutralPion2760GeVDataPPEffiMinBias->Get("TrueMesonEffiPt");
-
-//    cout << "old spectra 2.76TeV GeV" << endl;
-//    TFile* fileNeutralPionDataPPOld = new TFile("0000011002093663003800000_01631031009_old/data_GammaConversionResultsFullCorrectionNoBinShifting.root");
-//    TDirectory* directoryPi02760GeVOld =         (TDirectory*)fileNeutralPionDataPPOld->Get("Pi02.76TeV"); 
-//    TH1D* histoRawYieldPi02760GeVOld =           (TH1D*)directoryPi02760GeVOld->Get("RAWYieldPerEventsPi0");
-//    TH1D* histoCorrectedYieldPi02760GeVOld =           (TH1D*)directoryPi02760GeVOld->Get("CorrectedYieldPi0");
-   
-	cout << "MC spectra 2.76TeV GeV" << endl;
-	TFile* fileNeutralPion2760GeVDataPP = new TFile("000001100209366300380000000_01631031009000/2.76TeV/Pi0_data_GammaConvV1Correction_000001100209366300380000000_01631031009000.root");
-	TH1D* histoMCYieldPi02760GeVFinal = (TH1D*)fileNeutralPion2760GeVDataPP->Get("MCYield_Meson_oldBin");
-	TFile* fileEta2760GeVDataPP = new TFile("000001100209366300380000000_01631031009000/2.76TeV/Eta_data_GammaConvV1Correction_000001100209366300380000000_01631031009000.root");
-	TH1D* histoMCYieldEta2760GeVFinal = (TH1D*)fileEta2760GeVDataPP->Get("MCYield_Meson_oldBin");
-	
-	cout << "MC spectra added signal 2.76TeV GeV" << endl;
-	TFile* fileNeutralPion2760GeVDataPPAddSig = new TFile("000001100209366300380000000_01631031009000/2.76TeV/Pi0_MC_GammaConvV1CorrectionHistosAddSig_000001100209366300380000000_01631031009000.root");
-	TH1D* histoMCYieldPi02760GeVAddSig = (TH1D*)fileNeutralPion2760GeVDataPPAddSig->Get("MC_Meson_genPt_oldBin");
-	TH1F *histoEventQualityMC =         (TH1F*)fileNeutralPion2760GeVDataPPAddSig->Get("NEvents");
-	Float_t nEvtMC = GetNEvents(histoEventQualityMC);
-	TString rapidityRange = "";
-	Double_t deltaRapid =  ReturnRapidityStringAndDouble("01631031009", rapidityRange);
-	Double_t scaling = 1./(2.*TMath::Pi());
-	ScaleMCYield(histoMCYieldPi02760GeVAddSig,  deltaRapid,  scaling,  nEvtMC,  "Pi0" ,"kFALSE");
-	cout << "MC spectra withough weighting added signal 2.76TeV GeV" << endl;
-	TFile* fileNeutralPion2760GeVDataPPAddSigWOWeighting = new TFile("ppAdditionalInput/0000012002093663003800000_01631031009/2.76TeV/Pi0_data_GammaConvV1Correction_0000012002093663003800000_01631031009.root");
-	TH1D* histoMCYieldPi02760GeVAddSigWOWeighting = (TH1D*)fileNeutralPion2760GeVDataPPAddSigWOWeighting->Get("MCYield_Meson_oldBin");
-	
-	cout << "MC spectra without weighting 2.76TeV GeV" << endl;
-	TFile* fileNeutralPion2760GeVDataPPWOWeigthing = new TFile("ppAdditionalInput/0000011002093663003800000_01631031009/2.76TeV/Pi0_data_GammaConvV1Correction_0000011002093663003800000_01631031009.root");
-	TH1D* histoMCYieldPi02760GeVWOWeighting = (TH1D*)fileNeutralPion2760GeVDataPPWOWeigthing->Get("MCYield_Meson_oldBin");
-	cout << "MC spectra 7TeV GeV" << endl;
-	TFile* fileNeutralPion7TeVDataPP = new TFile("900366208010033211360000000900/7TeV/Pi0_data_AnalysisResultsCorrection_900366208010033211360000000900.root");
-	TH1D* histoMCYieldPi07TeV = (TH1D*)fileNeutralPion7TeVDataPP->Get("MCYield_Meson_oldBin");
-	TFile* fileEta7TeVDataPP = new TFile("900366208010033211360000000900/7TeV/Eta_data_AnalysisResultsCorrection_900366208010033211360000000900.root");
-	TH1D* histoMCYieldEta7TeV = (TH1D*)fileEta7TeVDataPP->Get("MCYield_Meson_oldBin");
-	cout << "MC spectra 0.9TeV GeV" << endl;
-	TFile* fileNeutralPion900GeVDataPP = new TFile("900366208010033211360000000900/900GeV/Pi0_data_AnalysisResultsCorrection_900366208010033211360000000900.root");
-	TH1D* histoMCYieldPi0900GeV = (TH1D*)fileNeutralPion900GeVDataPP->Get("MCYield_Meson_oldBin");
-	TFile* fileEta900GeVDataPP = new TFile("900366208010033211360000000900/900GeV/Eta_data_AnalysisResultsCorrection_900366208010033211360000000900.root");
-	TH1D* histoMCYieldEta900GeV = (TH1D*)fileEta900GeVDataPP->Get("MCYield_Meson_oldBin");
-
-   
-   
+      
 ////////////////////////////////////////////////////////////////// LHC11h file //////////////////////////////////////////////////////////////////////////////   
 	TFile*   filePCMPbPbLHC11h = new TFile(nameFilePbPbLHC11h.Data());
      

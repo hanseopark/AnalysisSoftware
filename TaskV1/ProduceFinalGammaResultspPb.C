@@ -90,7 +90,7 @@ void ProduceFinalGammaResultspPb(TString inputFileName = "",TString cutSel = "",
 	gSystem->Exec("mkdir -p "+outputDir);
   
 	TString date = ReturnDateString();
-	TString fileNameSysErrPi0 ="SystematicErrorsInput/SystematicErrorAveraged_Pi0_7TeV_24_Apr_2012.dat"; // default
+	TString fileNameSysErrPi0 ="SystematicErrorsNew/SystematicErrorAveraged_Pi0_7TeV_24_Apr_2012.dat"; // default
 	TString collisionSystem= ReturnFullCollisionsSystem(option);
 	
 	TFile *fileInput = new TFile(inputFileName);
