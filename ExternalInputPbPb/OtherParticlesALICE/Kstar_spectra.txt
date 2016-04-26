@@ -1,0 +1,99 @@
+*dataset:
+*location: Figure 4(a)
+*dscomment: Transverse-momentum distributions of (K*(892)0 + anti-K*(892)0)/2 in Pb-Pb collisions at sqrt(s_NN)=2.76 TeV, centrality 0.0-20.0%
+*reackey: PB PB --> K*(892)0 X
+*reackey: PB PB --> AK*(892)0 X
+*obskey: DN/DPT
+*qual: RE : PB PB --> (K*(892)0 <PI- K+> + AK*(892)0 <PI+ K->)/2 X
+*qual: CENTRALITY IN PCT : 0.0 TO 20.0
+*qual: SQRT(S)/NUCLEON IN GEV : 2760.0
+*qual: YRAP : -0.5 TO 0.5
+*xheader: PT IN GEV
+*yheader: (1/Nev)*D2(N)/DPT/DYRAP in GEV**-1
+*dserror: 0.6 PCT: normalization
+*dserror: 10.05 PCT: other pT-correlated systematic uncertainties
+*data: x : y
+ 0.3 TO 0.8; 8.132 +- 0.585 (DSYS=1.345:uncorrelated);
+ 0.8 TO 1.2; 9.670 +- 0.843 (DSYS=1.389:uncorrelated);
+ 1.2 TO 1.6; 7.260 +- 0.512 (DSYS=0.738:uncorrelated);
+ 1.6 TO 2.0; 5.258 +- 0.304 (DSYS=0.812:uncorrelated);
+ 2.0 TO 2.5; 3.309 +- 0.235 (DSYS=0.391:uncorrelated);
+ 2.5 TO 3.0; 1.401 +- 0.122 (DSYS=0.164:uncorrelated);
+ 3.0 TO 4.0; 0.4587 +- 0.0376 (DSYS=0.0493:uncorrelated);
+ 4.0 TO 5.0; 0.07789 +- 0.00825 (DSYS=0.01375:uncorrelated);
+*dataend:
+
+*dataset:
+*location: Figure 4(a)
+*dscomment: Transverse-momentum distributions of (K*(892)0 + anti-K*(892)0)/2 in Pb-Pb collisions at sqrt(s_NN)=2.76 TeV, centrality 20.0-40.0%
+*reackey: PB PB --> K*(892)0 X
+*reackey: PB PB --> AK*(892)0 X
+*obskey: DN/DPT
+*qual: RE : PB PB --> (K*(892)0 <PI- K+> + AK*(892)0 <PI+ K->)/2 X
+*qual: CENTRALITY IN PCT : 20.0 TO 40.0
+*qual: SQRT(S)/NUCLEON IN GEV : 2760.0
+*qual: YRAP : -0.5 TO 0.5
+*xheader: PT IN GEV
+*yheader: (1/Nev)*D2(N)/DPT/DYRAP in GEV**-1
+*dserror: 1.5 PCT: normalization
+*dserror: 10.05 PCT: other pT-correlated systematic uncertainties
+*data: x : y
+ 0.3 TO 0.8; 4.510 +- 0.403 (DSYS=0.733:uncorrelated);
+ 0.8 TO 1.2; 5.244 +- 0.519 (DSYS=0.691:uncorrelated);
+ 1.2 TO 1.6; 3.822 +- 0.309 (DSYS=0.491:uncorrelated);
+ 1.6 TO 2.0; 3.011 +- 0.131 (DSYS=0.553:uncorrelated);
+ 2.0 TO 2.5; 1.650 +- 0.067 (DSYS=0.335:uncorrelated);
+ 2.5 TO 3.0; 0.6633 +- 0.0503 (DSYS=0.0849:uncorrelated);
+ 3.0 TO 4.0; 0.2338 +- 0.0110 (DSYS=0.0293:uncorrelated);
+ 4.0 TO 5.0; 0.04319 +- 0.00371 (DSYS=0.00416:uncorrelated);
+*dataend:
+
+*dataset:
+*location: Figure 4(a)
+*dscomment: Transverse-momentum distributions of (K*(892)0 + anti-K*(892)0)/2 in Pb-Pb collisions at sqrt(s_NN)=2.76 TeV, centrality 40.0-60.0%
+*reackey: PB PB --> K*(892)0 X
+*reackey: PB PB --> AK*(892)0 X
+*obskey: DN/DPT
+*qual: RE : PB PB --> (K*(892)0 <PI- K+> + AK*(892)0 <PI+ K->)/2 X
+*qual: CENTRALITY IN PCT : 40.0 TO 60.0
+*qual: SQRT(S)/NUCLEON IN GEV : 2760.0
+*qual: YRAP : -0.5 TO 0.5
+*xheader: PT IN GEV
+*yheader: (1/Nev)*D2(N)/DPT/DYRAP in GEV**-1
+*dserror: 2.95 PCT: normalization
+*dserror: 10.05 PCT: other pT-correlated systematic uncertainties
+*data: x : y
+ 0.3 TO 0.8; 2.501 +- 0.153 (DSYS=0.249:uncorrelated);
+ 0.8 TO 1.2; 2.376 +- 0.209 (DSYS=0.280:uncorrelated);
+ 1.2 TO 1.6; 1.540 +- 0.120 (DSYS=0.140:uncorrelated);
+ 1.6 TO 2.0; 0.8216 +- 0.0468 (DSYS=0.1123:uncorrelated);
+ 2.0 TO 2.5; 0.5460 +- 0.0240 (DSYS=0.0683:uncorrelated);
+ 2.5 TO 3.0; 0.2439 +- 0.0183 (DSYS=0.0299:uncorrelated);
+ 3.0 TO 4.0; 0.09480 +- 0.00404 (DSYS=0.01056:uncorrelated);
+ 4.0 TO 5.0; 0.02339 +- 0.00145 (DSYS=0.00298:uncorrelated);
+*dataend:
+
+*dataset:
+*location: Figure 4(a)
+*dscomment: Transverse-momentum distributions of (K*(892)0 + anti-K*(892)0)/2 in Pb-Pb collisions at sqrt(s_NN)=2.76 TeV, centrality 60.0-80.0%
+*reackey: PB PB --> K*(892)0 X
+*reackey: PB PB --> AK*(892)0 X
+*obskey: DN/DPT
+*qual: RE : PB PB --> (K*(892)0 <PI- K+> + AK*(892)0 <PI+ K->)/2 X
+*qual: CENTRALITY IN PCT : 60.0 TO 80.0
+*qual: SQRT(S)/NUCLEON IN GEV : 2760.0
+*qual: YRAP : -0.5 TO 0.5
+*xheader: PT IN GEV
+*yheader: (1/Nev)*D2(N)/DPT/DYRAP in GEV**-1
+*dserror: 5.85 PCT: normalization
+*dserror: 10.05 PCT: other pT-correlated systematic uncertainties
+*data: x : y
+ 0.3 TO 0.8; 0.8002 +- 0.0441 (DSYS=0.0904:uncorrelated);
+ 0.8 TO 1.2; 0.6801 +- 0.0381 (DSYS=0.0942:uncorrelated);
+ 1.2 TO 1.6; 0.3915 +- 0.0213 (DSYS=0.0556:uncorrelated);
+ 1.6 TO 2.0; 0.1958 +- 0.0123 (DSYS=0.0273:uncorrelated);
+ 2.0 TO 2.5; 0.1357 +- 0.0065 (DSYS=0.0220:uncorrelated);
+ 2.5 TO 3.0; 0.05901 +- 0.00330 (DSYS=0.00798:uncorrelated);
+ 3.0 TO 4.0; 0.02141 +- 0.00112 (DSYS=0.00290:uncorrelated);
+ 4.0 TO 5.0; 0.006516 +- 0.000484 (DSYS=0.000920:uncorrelated);
+*dataend:
