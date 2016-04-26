@@ -1,5 +1,5 @@
 if [ $1 = "fbock" ]; then 
-   PHOTONCONVDIR=/home/fbock/Photon/Software/photonconv/AnalysisSoftware
+   PHOTONCONVDIR=/home/fbock/Photon/Software/PCGGIT/AnalysisSoftware
 elif [ $1 = "leardini" ]; then 
    PHOTONCONVDIR=/home/admin1/leardini/photonconv/AnalysisSoftware
 elif [ $1 = "dmuhlhei" ]; then
