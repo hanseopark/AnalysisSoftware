@@ -600,9 +600,6 @@ void ExtractSignalV2(   TString meson                   = "",
         fFileDataLog << "----------------------------------new pT bin ------------------------------------" << endl;
         fFileDataLog << "---------------------------------------------------------------------------------" << endl;
         
-//         if (fPrefix.Contains("Pi0")) changeParamHighPt(fMode, iPt, fNBinsPt);
-
-
         ProcessEM( fHistoMappingGGInvMassPtBin[iPt], fHistoMappingBackInvMassPtBin[iPt], fBGFitRange);
         fHistoMappingSignalInvMassPtBin[iPt] = fSignal;
         fHistoMappingBackNormInvMassPtBin[iPt] = fBckNorm;
@@ -5877,6 +5874,24 @@ Double_t LinearBGExclusion(Double_t *x, Double_t *par) {
     }
     return par[0] + par[1]*x[0];
 }
+
+// Using an different Fitrange for Mode 4
+Double_t LinearBGExclusionnew(Double_t *x, Double_t *par) {
+    if (x[0] > fBGFitRangeLeft[1] && x[0] < fBGFitRange[0]) {
+        TF1::RejectPoint();
+        return 0;
+    } 
+    if (x[0] < fBGFitRangeLeft[0]) {
+        TF1::RejectPoint();
+        return 0;
+    } 
+    if (x[0] > fBGFitRange[1]) {
+        TF1::RejectPoint();
+        return 0;
+    } 
+    return par[0] + par[1]*x[0];
+}
+
 
 //****************************************************************************
 //******** Calculation of FWHM for Gaussian + left side exponential  *********

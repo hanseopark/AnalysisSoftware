@@ -211,6 +211,7 @@ void CalculateFWHM(TF1 *);                                                      
 Double_t CrystalBallBck(Double_t *,Double_t *);                                                             // Definition of CrystalBall with linear BG
 Double_t LinearBackground(Double_t *,Double_t *);                                                           // Definition of linear BG
 Double_t LinearBGExclusion(Double_t *,Double_t *);                                                          // Definition of linear BG with excluded region
+Double_t LinearBGExclusionnew(Double_t *,Double_t *);                                                       // Definition of linear BG with excluded region
 Double_t CrystalBall(Double_t *,Double_t *);                                                                // Definition of CrystalBall
 void Delete();                                                                                              // Deleting all pointers
 void SetCorrectMCHistogrammNames(TString);                                                                  // Setting correct histogram names

@@ -1,8 +1,5 @@
 // provided by Gamma Conversion Group, $ALICE_ROOT/PWGGA/GammaConv ;https://twiki.cern.ch/twiki/bin/view/ALICE/PWG4GammaConversion
 
-
-#include "Gausfitimplement.h"
-
 //________________________________ Plotting Invariant mass in a single p_t bin ____________________________________________
 void PlotInvMassSinglePtBin(    TH1D* fHistoMappingGGInvMassPtBinPlot, 
                                 TH1D* fHistoMappingBackNormInvMassPtBinPlot, 
@@ -1080,7 +1077,6 @@ void PlotWithFitSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtB
                             mass                        = fMesonMassLeft[iPt];
                         if (nameOfPlot.Contains("True")) 
                             mass                        = fMesonTrueMass[iPt];
-//                         if( fMode == 4 && decayChannel.Contains("#pi")) changeParamHighPt(fMode, iPt, fNumberPtBins);
                         Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
                         Double_t intRangeWideLow        = mass + fMesonIntDeltaRangeWide[0];
                         Double_t intRangeNarrowLow      = mass + fMesonIntDeltaRangeNarrow[0];
@@ -1157,7 +1153,6 @@ void PlotWithFitSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtB
                             mass                        = fMesonMassLeft[iPt];
                         if (nameOfPlot.Contains("True"))
                             mass                        = fMesonTrueMass[iPt];
-//                         if( fMode == 4 && decayChannel.Contains("#pi") ) changeParamHighPt(fMode, iPt, fNumberPtBins);
                         
                         Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
                         Double_t intRangeWideLow        = mass + fMesonIntDeltaRangeWide[0];
@@ -1425,7 +1420,6 @@ void PlotWith2FitsSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassP
                             mass                        = fMesonMassLeft[iPt];
                         if (nameOfPlot.Contains("True")) 
                             mass                        = fMesonTrueMass[iPt];
-//                         if( fMode == 4 && decayChannel.Contains("#pi")) changeParamHighPt(fMode, iPt, fNumberPtBins);
                         Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
                         Double_t intRangeWideLow        = mass + fMesonIntDeltaRangeWide[0];
                         Double_t intRangeNarrowLow      = mass + fMesonIntDeltaRangeNarrow[0];
@@ -1502,7 +1496,6 @@ void PlotWith2FitsSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassP
                             mass                        = fMesonMassLeft[iPt];
                         if (nameOfPlot.Contains("True"))
                             mass                        = fMesonTrueMass[iPt];
-//                         if( fMode == 4 && decayChannel.Contains("#pi") ) changeParamHighPt(fMode, iPt, fNumberPtBins);
                         
                         Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
                         Double_t intRangeWideLow        = mass + fMesonIntDeltaRangeWide[0];
