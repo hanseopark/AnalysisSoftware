@@ -140,7 +140,7 @@ void  ProduceFinalResults( const char *fileNamePi0 = "myOutput",
         }
         fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_2.76TeV_5_Aug_2013.dat"; 
         if (mode == 2 || mode == 4){
-            cout << "wrong macro, please look at ProduceFinalResultsPatchedTriggers.C"
+            cout << "wrong macro, please look at ProduceFinalResultsPatchedTriggers.C" << endl;
         }
     } else if( optionEnergy.CompareTo("900GeV") == 0) {
         minPtForFits=0.4;
