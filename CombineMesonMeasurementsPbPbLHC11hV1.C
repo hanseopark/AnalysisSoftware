@@ -48,7 +48,7 @@
 #include "CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "CommonHeaders/ConversionFunctions.h"
 #include "CommonHeaders/CombinationFunctions.h"
-#include "CombineMesonMeasurementsPbPbLHC11hV2.h"
+#include "CombineMesonMeasurementsPbPbLHC11hV1.h"
 
 
 extern TRandom*	gRandom;
@@ -62,7 +62,7 @@ struct SysErrorConversion {
 	//	TString name;
 };
 
-void CombineMesonMeasurementsPbPbLHC11hVV1(TString meson = "Eta", 	
+void CombineMesonMeasurementsPbPbLHC11hV1(TString meson = "Eta",
 										TString fileNamePCM = "", 
 										TString fileNameEMCalFull = "",  
 										TString suffix = "pdf", 
