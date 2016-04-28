@@ -48,7 +48,7 @@
 #include "CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "CommonHeaders/ConversionFunctions.h"
 #include "CommonHeaders/CombinationFunctions.h"
-#include "CommonHeaders/Interpolation.h"
+#include "CommonHeaders/Interpolation5023GeV.h"
 #include "TPaveText.h"
 
 extern TRandom*	gRandom;
@@ -57,7 +57,7 @@ extern TSystem*	gSystem;
 extern TMinuit*  	gMinuit;
 
 
-//TGraphAsymmErrors* CalceloutMaterialError(TGraphAsymmErrors* graphYieldPi0, TString method);
+
 
 TGraphAsymmErrors* GetSpectrumWithSystErrors(TH1D* spectrum, TString fileNameSysErr,TString outputName,Int_t offsetSyst);
 TGraphAsymmErrors* CalculateRatio(TGraphAsymmErrors* ObjA_StatErr, TGraphAsymmErrors* ObjA_SystErr, TGraphAsymmErrors* ObjB_StatErr, TGraphAsymmErrors* ObjB_SystErr,Int_t startBin, Int_t endBin);
@@ -73,13 +73,16 @@ TGraphAsymmErrors* g_methodB_stat[6];
 TGraphAsymmErrors* g_methodB_sysA[6];
 TGraphAsymmErrors* g_methodB_sysB[6];
 TGraphAsymmErrors* g_methodB_sysC[6];
-TH1F* htest_statistic[6];
+
+enum { kDalitz = 0, kPCM, kPHOS, kEMCAL };
 TString methodName[4]={"Dalitz","PCM","PHOS","EMCAL"};
 Int_t   ratioAB[6][2];
 Int_t   ratioABRange[6][2];
-Double_t pValue[6][2];
+//Double_t pValue[6][2];
 const Int_t  Ntotal = 34;
 const Int_t  nPtLimits = Ntotal+1;
+Double_t pValue[6][nPtLimits+1][2];
+TH1F* htest_statistic[6][nPtLimits+1];
 Double_t xValComb[Ntotal] = {0};
 Double_t xErr[Ntotal]={0};
 
@@ -184,7 +187,7 @@ Double_t test_statistic(const bool real_data = false, Int_t iRatio=0,Int_t start
 
 
 
-void ComputePValue(){
+void ComputePValue(Bool_t binBybin = kFALSE){
   
   const Int_t nevt = 100000;
   
@@ -193,13 +196,37 @@ void ComputePValue(){
   //htest_statistic.SetXTitle("test statistic t");
   //htest_statistic.SetYTitle("counts");
   
+  Int_t startBin = nPtLimits;
+  
+  if(binBybin) startBin = 0;
+  
+  
   
   for(Int_t ii = 0; ii < 6; ii++){
     
-    htest_statistic[ii] = new TH1F("htest_statistic","htest_statistic", 3000, 0., 3000.);
+     TString detA = methodName[ratioAB[ii][0]];
+     TString detB = methodName[ratioAB[ii][1]];
+     
+    /*
+    if( binBybin == kFALSE ){
+      
+      htest_statistic[ii][nPtLimits] = new TH1F(Form("%s_%s_statistic_%d",detA.Data(),detB.Data(),ii),Form("%s_%s_statistic_%d",detA.Data(),detB.Data(),ii), 3000, 0., 3000.);
+      htest_statistic[ii][nPtLimits]->SetXTitle("test statistic t");
+      htest_statistic[ii][nPtLimits]->SetYTitle("counts");
     
-    htest_statistic[ii]->SetXTitle("test statistic t");
-    htest_statistic[ii]->SetYTitle("counts");
+    } else {*/
+      
+        for(Int_t iBin = startBin; iBin < nPtLimits+1; iBin++){
+	  
+	  htest_statistic[ii][iBin] = new TH1F(Form("%s_%s_statistic_%d",detA.Data(),detB.Data(),iBin),Form("%s_%s_statistic_%d",detA.Data(),detB.Data(),iBin), 3000, 0., 3000.);
+	  htest_statistic[ii][iBin]->SetXTitle("test statistic t");
+	  htest_statistic[ii][iBin]->SetYTitle("counts");
+	  
+	}      
+    //}
+    
+    cout<<"Llego aqui"<<endl;
+    
     
     bool real_data_flag;
     
@@ -217,26 +244,78 @@ void ComputePValue(){
 	  for (Int_t ievt=0; ievt<nevt; ievt++) {
 
 		real_data_flag = false;
-		htest_statistic[ii]->Fill(test_statistic(real_data_flag,ii,ratioABRange[ii][0],ratioABRange[ii][1]));
+		
+		htest_statistic[ii][nPtLimits]->Fill(test_statistic(real_data_flag,ii,ratioABRange[ii][0],ratioABRange[ii][1]));
+		
+		if( binBybin == kTRUE ){
+		  
+		   for(Int_t iBin = ratioABRange[ii][0]; iBin <= ratioABRange[ii][1]; iBin++){
+		     
+		     htest_statistic[ii][iBin]->Fill(test_statistic(real_data_flag,ii,iBin,iBin));
+		     
+		   }
+		  
+		}
+		
 	  }
 	  
-	  //cout<<"Paso aqui"<<endl;
+	  cout<<"Paso aqui"<<endl;
 	  
-	  real_data_flag = true;
-	  Double_t test_statistic_data = test_statistic(real_data_flag,ii,ratioABRange[ii][0],ratioABRange[ii][1]);
+	  Double_t test_statistic_data[nPtLimits+1];
+	 
+	  
+	   real_data_flag = true;
+	   test_statistic_data[nPtLimits] = test_statistic(real_data_flag,ii,ratioABRange[ii][0],ratioABRange[ii][1]);
+	  
+	    if( binBybin == kTRUE ){
+	      
+	       for(Int_t iBin = ratioABRange[ii][0]; iBin <= ratioABRange[ii][1]; iBin++){
+		     
+		     test_statistic_data[iBin] = test_statistic(real_data_flag,ii,iBin,iBin);
+		     
+		}
+	      
+	    }
+	  
+	   
+	  
 	  //cout << "test_statistic_data = " << test_statistic_data << endl;
 	  
-	  Double_t int_total = htest_statistic[ii]->GetEntries();
-	  Double_t ib_test_statistic_data = htest_statistic[ii]->FindBin(test_statistic_data);
-	  Double_t pval = 1 - htest_statistic[ii]->Integral(1, ib_test_statistic_data) / int_total;
+	  Double_t int_total = htest_statistic[ii][nPtLimits]->GetEntries();
+	  Double_t ib_test_statistic_data = htest_statistic[ii][nPtLimits]->FindBin(test_statistic_data[nPtLimits]);
+	  Double_t pval = 1 - htest_statistic[ii][nPtLimits]->Integral(1, ib_test_statistic_data) / int_total;
 
 	  //TString s = "p-value (comparison Dalitz/PCM inlusive photon spectrum) = ";
 	  //if (takeDR) s = "p-value (comparison PCM/PHOS double ratio) = ";
   
-	  pValue[ii][0] = pval;
-	  pValue[ii][1] = p_value_to_n_sigma(pval);
+	  pValue[ii][nPtLimits][0] = pval;
+	  pValue[ii][nPtLimits][1] = p_value_to_n_sigma(pval);
 	  
-	  cout <<"("<<methodName[ratioAB[ii][0]].Data()<<"/"<<methodName[ratioAB[ii][1]].Data()<<"), pT range: ("<< xValComb[ratioABRange[ii][0]]<<" - "<< xValComb[ratioABRange[ii][1]]<<" GeV)  pVal "<< pval << ", nsigma = " << p_value_to_n_sigma(pval) << endl;
+	  if( binBybin ){
+	    
+	      for(Int_t iBin = ratioABRange[ii][0]; iBin <= ratioABRange[ii][1]; iBin++){
+	    
+	      int_total = htest_statistic[ii][iBin]->GetEntries();
+	      ib_test_statistic_data = htest_statistic[ii][iBin]->FindBin(test_statistic_data[iBin]);
+	      pval = 1 - htest_statistic[ii][iBin]->Integral(1, ib_test_statistic_data) / int_total;
+
+	  //TString s = "p-value (comparison Dalitz/PCM inlusive photon spectrum) = ";
+	  //if (takeDR) s = "p-value (comparison PCM/PHOS double ratio) = ";
+  
+	      pValue[ii][iBin][0] = pval;
+	      pValue[ii][iBin][1] = p_value_to_n_sigma(pval);
+	      
+	      //cout <<"("<<methodName[ratioAB[ii][0]].Data()<<"/"<<methodName[ratioAB[ii][1]].Data()<<"), pT range: ("<< xValComb[iBin]<<" - "<< xValComb[iBin]<<" GeV)  pVal "<< pValue[ii][iBin][0]  << ", nsigma = " <<  pValue[ii][iBin][1] << endl;
+	 
+	      
+	      }
+	    
+	  }
+	  
+	  
+	  
+	  
+	  //cout <<"("<<methodName[ratioAB[ii][0]].Data()<<"/"<<methodName[ratioAB[ii][1]].Data()<<"), pT range: ("<< xValComb[ratioABRange[ii][0]]<<" - "<< xValComb[ratioABRange[ii][1]]<<" GeV)  pVal "<<  pValue[ii][nPtLimits][0] << ", nsigma = " << pValue[ii][nPtLimits][1] << endl;
 	  
 	  
     
@@ -251,7 +330,7 @@ void ComputePValue(){
 
 
 
-void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
+void ComputePValuesForpPb(TString suffix="pdf",Bool_t binBybin = kFALSE){
 
 	gROOT->Reset();	
 	gROOT->SetStyle("Plain");
@@ -263,20 +342,18 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	
 	
 	TString dateForOutput 				= ReturnDateStringForOutput();
-	TString outputDir 				= Form("SpectrapPbErrorsABC/%s/%s",suffix.Data(),dateForOutput.Data());
+	TString outputDir 				= Form("PValuesForpPb/%s/%s",suffix.Data(),dateForOutput.Data());
 	gSystem->Exec("mkdir -p "+outputDir);
 	
 	
-	TString fileNameNeutralPionDalitz       	= "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_2015-06-28.root";
 	
-	//TString	fileNameNeutralPionDalitz      	= "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_2014-09-12.root";
-	//TString fileNameNeutralPionDalitz 	= "ExternalInputpPb/PCM/data_PCMResults_Dalitz_20150611_pPb.root";
+	//TString fileNameNeutralPionDalitz       	= "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_2015-06-28.root";
+	TString fileNameNeutralPionDalitz		= "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20150806.root";
 	
-	//TString fileNameNeutralPionPCM    	= "ExternalInputpPb/PCM/data_PCMResults_pPb_20141023.root";
-	TString fileNameNeutralPionPCM          	= "ExternalInputpPb/PCM/data_PCMResults_pPb_20150623_standard_dc4.root";
+	//TString fileNameNeutralPionPCM          	= "ExternalInputpPb/PCM/data_PCMResults_pPb_20150623_standard_dc4.root";
+	TString fileNameNeutralPionPCM                  = "ExternalInputpPb/PCM/data_PCMResults_pPb_20150804_standard_CatErrors.root";
 	
 	
-	//TString fileNameNeutralPionPHOS   	= "ExternalInputpPb/PHOS/data_PHOSResultsFullCorrection_pPb-23102014.root";
 	TString	fileNameNeutralPionPHOS 		= "ExternalInputpPb/PHOS/data_PHOSResults_pPb_20150623.root";
 	TString nameHistoPHOS 				= "hCor_stat";
 	TString nameHistoPHOSSysErrors 			= "hCor_syst";
@@ -288,17 +365,17 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	TString nameHistoEMCalSysErrors 		= "Pi0SystError";
 	
 	
-	TString collisionSystempPb = "p-Pb #sqrt{s_{NN}} = 5.02 TeV";     
+	TString collisionSystempPb = "p-Pb, MB #sqrt{s_{NN}} = 5.02 TeV";     
+	
+	cout<<"kDalitz: "<<kDalitz<<endl;
 	
 	
-	
-	
-	ratioAB[0][0]=0; ratioAB[0][1]=1;//Dalitz/PCM
-	ratioAB[1][0]=0; ratioAB[1][1]=2; //Dalitz/PHOS
-	ratioAB[2][0]=0; ratioAB[2][1]=3; //Dalitz/EMCAL
-	ratioAB[3][0]=1; ratioAB[3][1]=2; //PCM/PHOS
-	ratioAB[4][0]=1; ratioAB[4][1]=3; //PCM/EMCAL
-	ratioAB[5][0]=2; ratioAB[5][1]=3; //PHOS/EMCAL
+	ratioAB[0][0]=kDalitz; ratioAB[0][1]=kPCM;//Dalitz/PCM
+	ratioAB[1][0]=kDalitz; ratioAB[1][1]=kPHOS; //Dalitz/PHOS
+	ratioAB[2][0]=kDalitz; ratioAB[2][1]=kEMCAL; //Dalitz/EMCAL
+	ratioAB[3][0]=kPCM;    ratioAB[3][1]=kPHOS; //PCM/PHOS
+	ratioAB[4][0]=kPCM;    ratioAB[4][1]=kEMCAL; //PCM/EMCAL
+	ratioAB[5][0]=kPHOS;   ratioAB[5][1]=kEMCAL; //PHOS/EMCAL
 	
 	
 	ratioABRange[0][0]=3; ratioABRange[0][1]=16;//Dalitz/PCM
@@ -308,12 +385,6 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	ratioABRange[4][0]=6; ratioABRange[4][1]=27; //PCM/EMCAL
 	ratioABRange[5][0]=6; ratioABRange[5][1]=27; //PHOS/EMCAL
 	
-	
-	
-	
-	
-	
-	//Double_t pValue[6]={0};
 	
 	
 	Double_t materialErr = 4.5;
@@ -364,8 +435,8 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	Double_t yPi0DalitzSystErrCMatCanceled[Ntotal]={0};
 	
 	
-	const Int_t nP_PCM = 29;
-	Int_t nPCMOffset = 1;
+	const Int_t nP_PCM = 30;
+	Int_t nPCMOffset = 0;
 	  
 	Double_t ptPi0PCM[Ntotal]={0};
 	Double_t xPi0PCMErr[Ntotal]={0};
@@ -451,15 +522,26 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	
 		
 	
-        TH1D* histoDalitzYieldPi0pPb =            	(TH1D*)directoryDalitzPi0pPb->Get("CorrectedYieldPi0");
-	
-	//TGraphAsymmErrors* graphYieldPi0DalitzStatErr = new TGraphAsymmErrors(histoDalitzYieldPi0pPb);
-	TGraphAsymmErrors* tempDalitzSystErr = (TGraphAsymmErrors*)directoryDalitzPi0pPb->Get("Pi0SystError");
-	//tempDalitzSystErr->Print();
+        TH1D* histoDalitzYieldPi0pPb 			= (TH1D*)directoryDalitzPi0pPb->Get("CorrectedYieldPi0");
+	TGraphAsymmErrors* tempDalitzSystErr 		= (TGraphAsymmErrors*)directoryDalitzPi0pPb->Get("Pi0SystError");
+	TGraphAsymmErrors* tempDalitzSystErrWOMaterial 	= (TGraphAsymmErrors*)directoryDalitzPi0pPb->Get("Pi0SystErrorA");
+	TGraphAsymmErrors* tempDalitzSystErrA		= (TGraphAsymmErrors*)directoryDalitzPi0pPb->Get("Pi0SystErrorCatA");
+	TGraphAsymmErrors* tempDalitzSystErrB		= (TGraphAsymmErrors*)directoryDalitzPi0pPb->Get("Pi0SystErrorCatB");
+	TGraphAsymmErrors* tempDalitzSystErrC		= (TGraphAsymmErrors*)directoryDalitzPi0pPb->Get("Pi0SystErrorCatC");
+	TGraphAsymmErrors* tempDalitzSystErrCWOMaterial = (TGraphAsymmErrors*)directoryDalitzPi0pPb->Get("Pi0SystErrorCatCWOMaterial");
+	TGraphAsymmErrors* tempDalitzComplErr           = (TGraphAsymmErrors*)directoryDalitzPi0pPb->Get("Pi0ComplError");
 	
 	TH1D* histoPCMYieldPi0pPb =            		(TH1D*)directoryPCMPi0pPb->Get("CorrectedYieldPi0");
-	//TGraphAsymmErrors* graphYieldPi0PCMStatErr = new TGraphAsymmErrors(histoPCMYieldPi0pPb);
-	TGraphAsymmErrors* tempPCMSystErr = (TGraphAsymmErrors*)directoryPCMPi0pPb->Get("Pi0SystError");
+	TGraphAsymmErrors* tempPCMSystErr   =           (TGraphAsymmErrors*)directoryPCMPi0pPb->Get("Pi0SystError");
+	TGraphAsymmErrors* tempPCMSystErrWOMaterial =  (TGraphAsymmErrors*)directoryPCMPi0pPb->Get("Pi0SystErrorA");
+	TGraphAsymmErrors* tempPCMSystErrA  =		(TGraphAsymmErrors*)directoryPCMPi0pPb->Get("Pi0SystErrorCatA");
+	TGraphAsymmErrors* tempPCMSystErrB  =		(TGraphAsymmErrors*)directoryPCMPi0pPb->Get("Pi0SystErrorCatB");
+	TGraphAsymmErrors* tempPCMSystErrC  =		(TGraphAsymmErrors*)directoryPCMPi0pPb->Get("Pi0SystErrorCatC");
+	TGraphAsymmErrors* tempPCMComplErr  =           (TGraphAsymmErrors*)directoryPCMPi0pPb->Get("Pi0ComplError");
+	
+	
+	tempPCMSystErrC->Print();
+	
 	
 	TH1D* histoPHOSYieldPi0pPbStat  =                    (TH1D*)fileNeutralPionPHOS->Get(nameHistoPHOS.Data());
 	TH1D* histoPHOSYieldPi0pPbSyst  =                    (TH1D*)fileNeutralPionPHOS->Get(nameHistoPHOSSysErrors.Data());
@@ -473,24 +555,28 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	
 	
 	TGraphAsymmErrors* temp = new TGraphAsymmErrors(histoEMCALYieldPi0pPbSyst);
+	
 
 	for(Int_t ii = 0; ii < nP_Dalitz; ii++){
 	      
-	      ptPi0Dalitz[ii+nDalitzOffset]		= histoDalitzYieldPi0pPb->GetBinCenter(ii + 3);
+	      ptPi0Dalitz[ii+nDalitzOffset]		= histoDalitzYieldPi0pPb->GetBinCenter(ii + 2);
 	      xPi0DalitzErr[ii+nDalitzOffset]           = xErr[ii+nDalitzOffset];
-	      yieldPi0Dalitz[ii + nDalitzOffset]	= histoDalitzYieldPi0pPb->GetBinContent(ii + 3);
-	      yPi0DalitzStatErr[ii + nDalitzOffset]	= histoDalitzYieldPi0pPb->GetBinError(ii + 3);
+	      
+	      cout<<ptPi0Dalitz[ii+nDalitzOffset]<<"  ptPi0Dalitz: "<<xPi0DalitzErr[ii+nDalitzOffset]<<endl;
+	      
+	      yieldPi0Dalitz[ii + nDalitzOffset]	= histoDalitzYieldPi0pPb->GetBinContent(ii + 2);
+	      yPi0DalitzStatErr[ii + nDalitzOffset]	= histoDalitzYieldPi0pPb->GetBinError(ii + 2);
 	      yPi0DalitzSystErr[ii + nDalitzOffset]     = tempDalitzSystErr->GetErrorYhigh(ii);
-	      Double_t materialRelErr   		= materialErr*yieldPi0Dalitz[ ii + nDalitzOffset]/100;
-	      Double_t dalitzBRRelErr   		= dalitzBRErr*yieldPi0Dalitz[ ii + nDalitzOffset]/100;
+	      //Double_t materialRelErr   		= materialErr*yieldPi0Dalitz[ ii + nDalitzOffset]/100;
+	      //Double_t dalitzBRRelErr   		= dalitzBRErr*yieldPi0Dalitz[ ii + nDalitzOffset]/100;
 	      
-	      
-	      yPi0DalitzSystErrMatCanceled[ii+nDalitzOffset]    = pow(( pow( yPi0DalitzSystErr[ ii + nDalitzOffset],2 ) - pow(materialRelErr,2) ) , 0.5);
-	      yPi0DalitzSystErrA[ii+nDalitzOffset]   		= pow(( pow( yPi0DalitzSystErr[ ii + nDalitzOffset],2 ) - pow(materialRelErr,2) - pow(dalitzBRRelErr,2) ) , 0.5); //Temporal 
-	      yPi0DalitzSystErrB[ii+nDalitzOffset]   		= 0;
-	      yPi0DalitzSystErrC[ii+nDalitzOffset]		= pow( ( pow(materialRelErr,2) + pow(dalitzBRRelErr,2) ),0.5 );
-	      yPi0DalitzSystErrCMatCanceled[ii+nDalitzOffset]	= dalitzBRRelErr;
-	      yPi0DalitzTotErr[ii+nDalitzOffset]		= pow( ( pow(yPi0DalitzStatErr[ii+nDalitzOffset],2)+ pow(yPi0DalitzSystErr[ii+nDalitzOffset],2) ),0.5);
+	
+	      yPi0DalitzSystErrMatCanceled[ii+nDalitzOffset]    = tempDalitzSystErrWOMaterial->GetErrorYhigh(ii);
+	      yPi0DalitzSystErrA[ii+nDalitzOffset]   		= tempDalitzSystErrA->GetErrorYhigh(ii); 
+	      yPi0DalitzSystErrB[ii+nDalitzOffset]   		= tempDalitzSystErrB->GetErrorYhigh(ii); 
+	      yPi0DalitzSystErrC[ii+nDalitzOffset]		= tempDalitzSystErrC->GetErrorYhigh(ii); 
+	      yPi0DalitzSystErrCMatCanceled[ii+nDalitzOffset]	= tempDalitzSystErrCWOMaterial->GetErrorYhigh(ii); 
+	      yPi0DalitzTotErr[ii+nDalitzOffset]		= tempDalitzComplErr->GetErrorYhigh(ii);
 	      
 		      
 	}
@@ -499,24 +585,32 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	    
 	    for(Int_t ii = 0; ii < nP_PCM; ii++){
 	      
-	      ptPi0PCM[ii+nPCMOffset]		=  histoPCMYieldPi0pPb->GetBinCenter(ii + 3);
+	      ptPi0PCM[ii+nPCMOffset]		=  histoPCMYieldPi0pPb->GetBinCenter(ii + 2);
+	     
 	      xPi0PCMErr[ii+nPCMOffset]         =  xErr[ii+nPCMOffset];
-	      yieldPi0PCM[ii + nPCMOffset]	=  histoPCMYieldPi0pPb->GetBinContent(ii + 3);
-	      yPi0PCMStatErr[ii + nPCMOffset]	=  histoPCMYieldPi0pPb->GetBinError(ii + 3);
+	      
+	      yieldPi0PCM[ii + nPCMOffset]	=  histoPCMYieldPi0pPb->GetBinContent(ii + 2);
+	      yPi0PCMStatErr[ii + nPCMOffset]	=  histoPCMYieldPi0pPb->GetBinError(ii + 2);
 	      yPi0PCMSystErr[ii + nPCMOffset]   =  tempPCMSystErr->GetErrorYhigh(ii);
+	      
 	      Double_t materialRelErr 		=  materialErr*yieldPi0PCM[ ii + nPCMOffset]/100;
 	      Double_t twomaterialRelErr  	=  (2*materialErr)*yieldPi0PCM[ ii + nPCMOffset]/100;
 	      
+	    
 	      
-	      yPi0PCMSystErrMatCanceled[ii+nDalitzOffset]    = pow( (pow( yPi0PCMSystErr[ii + nPCMOffset],2 ) - pow(twomaterialRelErr,2) + pow(materialRelErr,2) ) , 0.5);
+	        
+	      yPi0PCMSystErrMatCanceled[ii+nPCMOffset] =  pow( (pow( yPi0PCMSystErr[ ii + nPCMOffset ],2 ) - pow(twomaterialRelErr,2) + pow(materialRelErr,2) ) , 0.5);
 	  
-	      yPi0PCMSystErrA[ii+nPCMOffset]   		= pow(( pow( yPi0PCMSystErr[ ii + nPCMOffset],2 ) - pow(twomaterialRelErr,2) ) , 0.5); //Temporal 
-	      yPi0PCMSystErrB[ii+nPCMOffset]   		= 0;
-	      yPi0PCMSystErrC[ii+nPCMOffset]		= twomaterialRelErr;
-	      yPi0PCMSystErrCMatCanceled[ii+nPCMOffset]	= materialRelErr;
+	      yPi0PCMSystErrA[ii+nPCMOffset]   		  =  tempPCMSystErrA->GetErrorYhigh(ii);//Temporal 
+	      yPi0PCMSystErrB[ii+nPCMOffset]   		  =  tempPCMSystErrB->GetErrorYhigh(ii);//Temporal 
+	      yPi0PCMSystErrC[ii+nPCMOffset]		  =  tempPCMSystErrC->GetErrorYhigh(ii);//Temporal  
+	      
+	      cout<<"Error C: "<<yPi0PCMSystErrC[ii+nPCMOffset]/yieldPi0PCM[ii + nPCMOffset] <<endl;
+	      
+	      yPi0PCMSystErrCMatCanceled[ii+nPCMOffset]	  =  materialRelErr;
 	      yPi0PCMTotErr[ii+nPCMOffset]		= pow( ( pow(yPi0PCMStatErr[ii+nPCMOffset],2)+ pow(yPi0PCMSystErr[ii+nPCMOffset],2) ),0.5);
 	      
-	      
+	  	      
 	    }
 	    
 	    
@@ -536,8 +630,7 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	      
 	      Double_t temp = pow( ( pow(yPi0PHOSSystErrA[ii+nPHOSOffset],2)+ pow(yPi0PHOSSystErrB[ii+nPHOSOffset],2) +  pow(yPi0PHOSSystErrC[ii+nPHOSOffset],2) ),0.5);
 	      
-	      //cout<<ii<<" "<<xValComb[ii+nPHOSOffset]<<" "<<ptPi0PHOS[ii+nPHOSOffset]<<" "<<yieldPi0PHOS[ii+nPHOSOffset]<<" "<<xPi0PHOSErr[ii+nPHOSOffset]<<" "<<yPi0PHOSSystErr[ii+nPHOSOffset]<<" "<<yPi0PHOSSystErrA[ii+nPHOSOffset]<<" "<<yPi0PHOSSystErrB[ii+nPHOSOffset]<<" "<<yPi0PHOSSystErrC[ii+nPHOSOffset]<<" "<<temp<<endl;
-	      
+		      
 	    }
 	    
 	    for(Int_t ii = 0; ii < nP_EMCAL; ii++){
@@ -557,13 +650,9 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	      
 	      Double_t temp = pow( ( pow(yPi0EMCALSystErrA[ii+nEMCALOffset],2)+ pow(yPi0EMCALSystErrB[ii+nEMCALOffset],2) +  pow(yPi0EMCALSystErrC[ii+nEMCALOffset],2) ),0.5);
 	      
-	     // cout<<ii<<" "<<xValComb[ii+nEMCALOffset]<<" "<<ptPi0EMCAL[ii+nEMCALOffset]<<" "<<yieldPi0EMCAL[ii+nEMCALOffset]<<" "<<xPi0EMCALErr[ii+nEMCALOffset]<<" "<<yPi0EMCALSystErr[ii+nEMCALOffset]<<" "<<yPi0EMCALSystErrA[ii+nEMCALOffset]<<" "<<yPi0EMCALSystErrB[ii+nEMCALOffset]<<" "<<yPi0EMCALSystErrC[ii+nEMCALOffset]<<" "<<temp<<endl;
 	      
 	    }
 	    
-	    //Create TGraphAsymmErrors
-	     
-	    //TString methodName[4]={"Dalitz","PCM","PHOS","EMCAL"};
 	
 	 
 	    TGraphAsymmErrors* graphInvYieldPi0MethodsStatErr[4];
@@ -577,10 +666,10 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	    TGraphAsymmErrors* graphInvYieldPi0DalitzSystErrCMatCanceled 	= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0Dalitz,xPi0DalitzErr,xPi0DalitzErr,yPi0DalitzSystErrCMatCanceled,	yPi0DalitzSystErrCMatCanceled);
 
 	    
-	    graphInvYieldPi0MethodsStatErr[0]		= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0Dalitz,xPi0DalitzErr,xPi0DalitzErr,yPi0DalitzStatErr,			yPi0DalitzStatErr);
-	    graphInvYieldPi0MethodsSystErrA[0] 		= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0Dalitz,xPi0DalitzErr,xPi0DalitzErr,yPi0DalitzSystErrA,			yPi0DalitzSystErrA);
-	    graphInvYieldPi0MethodsSystErrB[0]		= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0Dalitz,xPi0DalitzErr,xPi0DalitzErr,yPi0DalitzSystErrB,			yPi0DalitzSystErrA);
-	    graphInvYieldPi0MethodsSystErrC[0] 		= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0Dalitz,xPi0DalitzErr,xPi0DalitzErr,yPi0DalitzSystErrC,			yPi0DalitzSystErrA);
+	    graphInvYieldPi0MethodsStatErr[kDalitz]		= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0Dalitz,xPi0DalitzErr,xPi0DalitzErr,yPi0DalitzStatErr,			yPi0DalitzStatErr);
+	    graphInvYieldPi0MethodsSystErrA[kDalitz] 		= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0Dalitz,xPi0DalitzErr,xPi0DalitzErr,yPi0DalitzSystErrA,			yPi0DalitzSystErrA);
+	    graphInvYieldPi0MethodsSystErrB[kDalitz]		= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0Dalitz,xPi0DalitzErr,xPi0DalitzErr,yPi0DalitzSystErrB,			yPi0DalitzSystErrA);
+	    graphInvYieldPi0MethodsSystErrC[kDalitz] 		= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0Dalitz,xPi0DalitzErr,xPi0DalitzErr,yPi0DalitzSystErrC,			yPi0DalitzSystErrA);
 	    
 	  
 	    TGraphAsymmErrors* graphInvYieldPi0PCMSystErr  			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PCM,xPi0PCMErr,xPi0PCMErr,yPi0PCMSystErr,  				yPi0PCMSystErr);
@@ -589,37 +678,46 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	   
 	    
 	    
-	    graphInvYieldPi0MethodsStatErr[1]  			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PCM,xPi0PCMErr,xPi0PCMErr,yPi0PCMStatErr,				yPi0PCMStatErr);
-	    graphInvYieldPi0MethodsSystErrA[1] 			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PCM,xPi0PCMErr,xPi0PCMErr,yPi0PCMSystErrA,				yPi0PCMSystErrA);
-	    graphInvYieldPi0MethodsSystErrB[1] 			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PCM,xPi0PCMErr,xPi0PCMErr,yPi0PCMSystErrB,				yPi0PCMSystErrB);
-	    graphInvYieldPi0MethodsSystErrC[1]                  = new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PCM,xPi0PCMErr,xPi0PCMErr,yPi0PCMSystErrC,				yPi0PCMSystErrC);
+	    graphInvYieldPi0MethodsStatErr[kPCM]  			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PCM,xPi0PCMErr,xPi0PCMErr,yPi0PCMStatErr,				yPi0PCMStatErr);
+	    graphInvYieldPi0MethodsSystErrA[kPCM] 			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PCM,xPi0PCMErr,xPi0PCMErr,yPi0PCMSystErrA,				yPi0PCMSystErrA);
+	    graphInvYieldPi0MethodsSystErrB[kPCM] 			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PCM,xPi0PCMErr,xPi0PCMErr,yPi0PCMSystErrB,				yPi0PCMSystErrB);
+	    graphInvYieldPi0MethodsSystErrC[kPCM]                  	= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PCM,xPi0PCMErr,xPi0PCMErr,yPi0PCMSystErrC,				yPi0PCMSystErrC);
 	    
 	    
 	    TGraphAsymmErrors* graphInvYieldPi0PHOSSystErr  				= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PHOS,xPi0PHOSErr,xPi0PHOSErr,yPi0PHOSSystErr,  				yPi0PHOSSystErr);
 	   
 	    
-	    graphInvYieldPi0MethodsStatErr[2]  			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PHOS,xPi0PHOSErr,xPi0PHOSErr,yPi0PHOSStatErr,				yPi0PHOSStatErr);
-	    graphInvYieldPi0MethodsSystErrA[2] 			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PHOS,xPi0PHOSErr,xPi0PHOSErr,yPi0PHOSSystErrA,				yPi0PHOSSystErrA);
-	    graphInvYieldPi0MethodsSystErrB[2] 			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PHOS,xPi0PHOSErr,xPi0PHOSErr,yPi0PHOSSystErrB,				yPi0PHOSSystErrB);
-	    graphInvYieldPi0MethodsSystErrC[2] 			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PHOS,xPi0PHOSErr,xPi0PHOSErr,yPi0PHOSSystErrC,				yPi0PHOSSystErrC);
+	    graphInvYieldPi0MethodsStatErr[kPHOS]  			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PHOS,xPi0PHOSErr,xPi0PHOSErr,yPi0PHOSStatErr,				yPi0PHOSStatErr);
+	    graphInvYieldPi0MethodsSystErrA[kPHOS] 			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PHOS,xPi0PHOSErr,xPi0PHOSErr,yPi0PHOSSystErrA,				yPi0PHOSSystErrA);
+	    graphInvYieldPi0MethodsSystErrB[kPHOS] 			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PHOS,xPi0PHOSErr,xPi0PHOSErr,yPi0PHOSSystErrB,				yPi0PHOSSystErrB);
+	    graphInvYieldPi0MethodsSystErrC[kPHOS] 			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0PHOS,xPi0PHOSErr,xPi0PHOSErr,yPi0PHOSSystErrC,				yPi0PHOSSystErrC);
 	   
 	    TGraphAsymmErrors* graphInvYieldPi0EMCALSystErr  				= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0EMCAL,xPi0EMCALErr,xPi0EMCALErr,yPi0EMCALSystErr,  			yPi0EMCALSystErr);
 	   
 	    
-	    graphInvYieldPi0MethodsStatErr[3]  			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0EMCAL,xPi0EMCALErr,xPi0EMCALErr,yPi0EMCALStatErr,			yPi0EMCALStatErr);
-	    graphInvYieldPi0MethodsSystErrA[3] 			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0EMCAL,xPi0EMCALErr,xPi0EMCALErr,yPi0EMCALSystErrA,			yPi0EMCALSystErrA);
-	    graphInvYieldPi0MethodsSystErrB[3] 			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0EMCAL,xPi0EMCALErr,xPi0EMCALErr,yPi0EMCALSystErrB,			yPi0EMCALSystErrB);
-	    graphInvYieldPi0MethodsSystErrC[3] 			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0EMCAL,xPi0EMCALErr,xPi0EMCALErr,yPi0EMCALSystErrC,			yPi0EMCALSystErrC);
+	    graphInvYieldPi0MethodsStatErr[kEMCAL]  			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0EMCAL,xPi0EMCALErr,xPi0EMCALErr,yPi0EMCALStatErr,			yPi0EMCALStatErr);
+	    graphInvYieldPi0MethodsSystErrA[kEMCAL] 			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0EMCAL,xPi0EMCALErr,xPi0EMCALErr,yPi0EMCALSystErrA,			yPi0EMCALSystErrA);
+	    graphInvYieldPi0MethodsSystErrB[kEMCAL] 			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0EMCAL,xPi0EMCALErr,xPi0EMCALErr,yPi0EMCALSystErrB,			yPi0EMCALSystErrB);
+	    graphInvYieldPi0MethodsSystErrC[kEMCAL] 			= new TGraphAsymmErrors(Ntotal,xValComb,yieldPi0EMCAL,xPi0EMCALErr,xPi0EMCALErr,yPi0EMCALSystErrC,			yPi0EMCALSystErrC);
 	   
 	    
-	    TGraphAsymmErrors* ratioDalitzPCM		= (TGraphAsymmErrors*) CalculateRatio(graphInvYieldPi0MethodsStatErr[0],graphInvYieldPi0DalitzSystErrMatCanceled,graphInvYieldPi0MethodsStatErr[1],graphInvYieldPi0PCMSystErrMatCanceled,ratioABRange[0][0],ratioABRange[0][1]);
-	    TGraphAsymmErrors* ratioDalitzPHOS  	= (TGraphAsymmErrors*) CalculateRatio(graphInvYieldPi0MethodsStatErr[0],graphInvYieldPi0DalitzSystErr,graphInvYieldPi0MethodsStatErr[2],graphInvYieldPi0PHOSSystErr,ratioABRange[1][0],ratioABRange[1][1]);
-	    TGraphAsymmErrors* ratioDalitzEMCAL 	= (TGraphAsymmErrors*) CalculateRatio(graphInvYieldPi0MethodsStatErr[0],graphInvYieldPi0DalitzSystErr,graphInvYieldPi0MethodsStatErr[3],graphInvYieldPi0EMCALSystErr,ratioABRange[2][0],ratioABRange[2][1]);
-	    TGraphAsymmErrors* ratioPCMPHOS  		= (TGraphAsymmErrors*) CalculateRatio(graphInvYieldPi0MethodsStatErr[1],graphInvYieldPi0PCMSystErr,graphInvYieldPi0MethodsStatErr[2],graphInvYieldPi0PCMSystErr,ratioABRange[3][0],ratioABRange[3][1]);
-	    TGraphAsymmErrors* ratioPCMEMCAL 		= (TGraphAsymmErrors*) CalculateRatio(graphInvYieldPi0MethodsStatErr[1],graphInvYieldPi0PCMSystErr,graphInvYieldPi0MethodsStatErr[3],graphInvYieldPi0EMCALSystErr,ratioABRange[4][0],ratioABRange[4][1]);
-            TGraphAsymmErrors* ratioPHOSEMCAL	 	= (TGraphAsymmErrors*) CalculateRatio(graphInvYieldPi0MethodsStatErr[2],graphInvYieldPi0PHOSSystErr,graphInvYieldPi0MethodsStatErr[3],graphInvYieldPi0EMCALSystErr,ratioABRange[5][0],ratioABRange[5][1]);
+	    TGraphAsymmErrors* ratioDalitzPCM		= (TGraphAsymmErrors*) CalculateRatio(graphInvYieldPi0MethodsStatErr[kDalitz],	graphInvYieldPi0DalitzSystErrMatCanceled,graphInvYieldPi0MethodsStatErr[kPCM],graphInvYieldPi0PCMSystErrMatCanceled,ratioABRange[0][0],ratioABRange[0][1]);
+	    TGraphAsymmErrors* ratioDalitzPHOS  	= (TGraphAsymmErrors*) CalculateRatio(graphInvYieldPi0MethodsStatErr[kDalitz],	graphInvYieldPi0DalitzSystErr,graphInvYieldPi0MethodsStatErr[kPHOS],graphInvYieldPi0PHOSSystErr,ratioABRange[1][0],ratioABRange[1][1]);
+	    TGraphAsymmErrors* ratioDalitzEMCAL 	= (TGraphAsymmErrors*) CalculateRatio(graphInvYieldPi0MethodsStatErr[kDalitz],	graphInvYieldPi0DalitzSystErr,graphInvYieldPi0MethodsStatErr[kEMCAL],graphInvYieldPi0EMCALSystErr,ratioABRange[2][0],ratioABRange[2][1]);
+	    TGraphAsymmErrors* ratioPCMPHOS  		= (TGraphAsymmErrors*) CalculateRatio(graphInvYieldPi0MethodsStatErr[kPCM],	graphInvYieldPi0PCMSystErr,graphInvYieldPi0MethodsStatErr[kPHOS],graphInvYieldPi0PCMSystErr,ratioABRange[3][0],ratioABRange[3][1]);
+	    TGraphAsymmErrors* ratioPCMEMCAL 		= (TGraphAsymmErrors*) CalculateRatio(graphInvYieldPi0MethodsStatErr[kPCM],	graphInvYieldPi0PCMSystErr,graphInvYieldPi0MethodsStatErr[kEMCAL],graphInvYieldPi0EMCALSystErr,ratioABRange[4][0],ratioABRange[4][1]);
+            TGraphAsymmErrors* ratioPHOSEMCAL	 	= (TGraphAsymmErrors*) CalculateRatio(graphInvYieldPi0MethodsStatErr[kPHOS],	graphInvYieldPi0PHOSSystErr,graphInvYieldPi0MethodsStatErr[kEMCAL],graphInvYieldPi0EMCALSystErr,ratioABRange[5][0],ratioABRange[5][1]);
 	  
-	
+	    TGraphAsymmErrors* graphRatioAB[6];
+	    
+	    graphRatioAB[0] = ratioDalitzPCM;
+	    graphRatioAB[1] = ratioDalitzPHOS;
+	    graphRatioAB[2] = ratioDalitzEMCAL;
+	    graphRatioAB[3] = ratioPCMPHOS;
+	    graphRatioAB[4] = ratioPCMEMCAL;
+	    graphRatioAB[5] = ratioPHOSEMCAL;
+	    
+	    
 	
 	
 	for(Int_t ii = 0; ii < 6; ii ++){
@@ -644,13 +742,80 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	else
 	g_methodB_sysC[ii] =    (TGraphAsymmErrors*)graphInvYieldPi0MethodsSystErrC[b]->Clone(Form("Pi0_%s_sysCErr",methodName[a].Data()));
 	
+	
+	
 		  
 	  
 	}
 	
 	
 	
-	ComputePValue();
+	ComputePValue(binBybin);
+	
+	const char *tablePvaluesbinbybin = Form("%s/tablePvaluesbinbybin.dat",outputDir.Data());
+	fstream tablePvaluesbinbybinDat;
+	cout << tablePvaluesbinbybin << endl;
+	tablePvaluesbinbybinDat.open(tablePvaluesbinbybin, ios::out);
+	
+	
+	
+	for(Int_t iPt = 0; iPt < nPtLimits-1; iPt ++ ) {
+	  
+	        tablePvaluesbinbybinDat<<xValComb[iPt]<<"\t&\t";
+	       
+		for(Int_t ii = 0 ; ii < 6;  ii++){
+		  
+		  if( iPt < ratioABRange[ii][0] || iPt > ratioABRange[ii][1] ) {
+		    if( ii < 5 )
+		    tablePvaluesbinbybinDat<<"\t&\t";
+		    else
+		    tablePvaluesbinbybinDat<<"\t \\\\";
+		  }
+		  else {
+		    if ( ii < 5 )
+		    tablePvaluesbinbybinDat<<pValue[ii][iPt][0]<<"\t&\t";
+		    else
+		    tablePvaluesbinbybinDat<<pValue[ii][iPt][0]<<"\t\\\\";
+		  }
+		  
+		}
+		tablePvaluesbinbybinDat<<"\n";
+	}  
+	
+	
+	
+	tablePvaluesbinbybinDat.close();
+	
+	
+	
+	const char *tablePvaluesANDsigma = Form("%s/tablePvaluesANDsigma.dat",outputDir.Data());
+	fstream tablePvaluesANDsigmaDat;
+	cout << tablePvaluesANDsigma << endl;
+	tablePvaluesANDsigmaDat.open(tablePvaluesANDsigma, ios::out);
+	
+	
+	for(Int_t ii = 0 ; ii < 6;  ii++){
+	  
+	  
+		 //tablePvaluesANDsigmaDat << 
+		 
+		 
+		   tablePvaluesANDsigmaDat<<methodName[ratioAB[ii][0]].Data()<<"/"<<methodName[ratioAB[ii][1]].Data()<<"\t&\t"<<xValComb[ratioABRange[ii][0]]<<" - "<< xValComb[ratioABRange[ii][1]]<<"\t&\t"<<  pValue[ii][nPtLimits][0] << "\t&\t" << pValue[ii][nPtLimits][1] <<"\\\\"<<endl;
+	
+		  
+		   //if( iPt < ratioABRange[ii][0] || iPt > ratioABRange[ii][1] ) {
+		   // if( ii < 5 )
+		    //tablePvaluesbinbybinDat<<"\t&\t";
+		    //else
+		    //tablePvaluesbinbybinDat<<"\t \\\\";
+	}
+	
+	tablePvaluesANDsigmaDat.close();
+	
+	
+	
+	
+	
 	  
             
 	  ////////////////////Ploting////////////////////////////////////////////////////////////////////////////////////////////
@@ -677,8 +842,8 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	histo2DpPb5023GeVRatioDalitzPCM->GetYaxis()->SetRangeUser(0.0,2.0);
 	histo2DpPb5023GeVRatioDalitzPCM->DrawCopy();
 	
-	 TLatex *labelPValueDalitzPCM = new TLatex(0.7,0.8,Form("p-Value: %2.3f",pValue[0][0]));
-	 TLatex *labelPValueSigmaDalitzPCM = new TLatex(0.7,0.7,Form("#sigma: %2.3f",pValue[0][1]));
+	 TLatex *labelPValueDalitzPCM = new TLatex(0.7,0.8,Form("p-Value: %2.3f",pValue[0][nPtLimits][0]));
+	 TLatex *labelPValueSigmaDalitzPCM = new TLatex(0.7,0.7,Form("#sigma: %2.3f",pValue[0][nPtLimits][1]));
 	 SetStyleTLatex( labelPValueDalitzPCM, 0.05,4);
 	  SetStyleTLatex( labelPValueSigmaDalitzPCM, 0.05,4);
 	
@@ -717,8 +882,8 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	histo2DpPb5023GeVRatioDalitzPHOS->GetYaxis()->SetRangeUser(0.0,2.0);
 	histo2DpPb5023GeVRatioDalitzPHOS->DrawCopy();
 	
-	TLatex *labelPValueDalitzPHOS = new TLatex(0.7,0.8,Form("p-Value: %2.3f",pValue[1][0]));
-	 TLatex *labelPValueSigmaDalitzPHOS = new TLatex(0.7,0.7,Form("#sigma: %2.3f",pValue[1][1]));
+	TLatex *labelPValueDalitzPHOS = new TLatex(0.7,0.8,Form("p-Value: %2.3f",pValue[1][nPtLimits][0]));
+	 TLatex *labelPValueSigmaDalitzPHOS = new TLatex(0.7,0.7,Form("#sigma: %2.3f",pValue[1][nPtLimits][1]));
 	 SetStyleTLatex( labelPValueDalitzPHOS, 0.05,4);
 	  SetStyleTLatex( labelPValueSigmaDalitzPHOS, 0.05,4);
 	
@@ -759,8 +924,8 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	histo2DpPb5023GeVRatioDalitzEMCAL->GetYaxis()->SetRangeUser(0.0,2.0);
 	histo2DpPb5023GeVRatioDalitzEMCAL->DrawCopy();
 	
-	TLatex *labelPValueDalitzEMCAL = new TLatex(0.7,0.8,Form("p-Value: %2.3f",pValue[2][0]));
-	 TLatex *labelPValueSigmaDalitzEMCAL = new TLatex(0.7,0.7,Form("#sigma: %2.3f",pValue[2][1]));
+	TLatex *labelPValueDalitzEMCAL = new TLatex(0.7,0.8,Form("p-Value: %2.3f",pValue[2][nPtLimits][0]));
+	 TLatex *labelPValueSigmaDalitzEMCAL = new TLatex(0.7,0.7,Form("#sigma: %2.3f",pValue[2][nPtLimits][1]));
 	 SetStyleTLatex( labelPValueDalitzEMCAL, 0.05,4);
 	  SetStyleTLatex( labelPValueSigmaDalitzEMCAL, 0.05,4);
 	
@@ -804,8 +969,8 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	histo2DpPb5023GeVRatioPCMPHOS->GetYaxis()->SetRangeUser(0.0,2.0);
 	histo2DpPb5023GeVRatioPCMPHOS->DrawCopy();
 	
-	TLatex *labelPValuePCMPHOS = new TLatex(0.7,0.8,Form("p-Value: %2.3f",pValue[3][0]));
-	 TLatex *labelPValueSigmaPCMPHOS = new TLatex(0.7,0.7,Form("#sigma: %2.3f",pValue[3][1]));
+	TLatex *labelPValuePCMPHOS = new TLatex(0.7,0.8,Form("p-Value: %2.3f",pValue[3][nPtLimits][0]));
+	 TLatex *labelPValueSigmaPCMPHOS = new TLatex(0.7,0.7,Form("#sigma: %2.3f",pValue[3][nPtLimits][1]));
 	 SetStyleTLatex( labelPValuePCMPHOS, 0.05,4);
 	  SetStyleTLatex( labelPValueSigmaPCMPHOS, 0.05,4);
 	
@@ -847,8 +1012,8 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	histo2DpPb5023GeVRatioPCMEMCAL->GetYaxis()->SetRangeUser(0.0,2.0);
 	histo2DpPb5023GeVRatioPCMEMCAL->DrawCopy();
 	
-	TLatex *labelPValuePCMEMCAL = new TLatex(0.7,0.8,Form("p-Value: %2.3f",pValue[4][0]));
-	 TLatex *labelPValueSigmaPCMEMCAL = new TLatex(0.7,0.7,Form("#sigma: %2.3f",pValue[4][1]));
+	TLatex *labelPValuePCMEMCAL = new TLatex(0.7,0.8,Form("p-Value: %2.3f",pValue[4][nPtLimits][0]));
+	 TLatex *labelPValueSigmaPCMEMCAL = new TLatex(0.7,0.7,Form("#sigma: %2.3f",pValue[4][nPtLimits][1]));
 	 SetStyleTLatex( labelPValuePCMEMCAL, 0.05,4);
 	  SetStyleTLatex( labelPValueSigmaPCMEMCAL, 0.05,4);
 	
@@ -890,23 +1055,23 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	histo2DpPb5023GeVRatioPHOSEMCAL->DrawCopy();
 	
 	
-	TLatex *labelPValuePHOSEMCAL = new TLatex(0.7,0.8,Form("p-Value: %2.3f",pValue[5][0]));
-	 TLatex *labelPValueSigmaPHOSEMCAL = new TLatex(0.7,0.7,Form("#sigma: %2.3f",pValue[5][1]));
-	 SetStyleTLatex( labelPValuePHOSEMCAL, 0.05,4);
-	  SetStyleTLatex( labelPValueSigmaPHOSEMCAL, 0.05,4);
+	TLatex *labelPValuePHOSEMCAL = new TLatex(0.7,0.8,Form("p-Value: %2.3f",pValue[5][nPtLimits][0]));
+	TLatex *labelPValueSigmaPHOSEMCAL = new TLatex(0.7,0.7,Form("#sigma: %2.3f",pValue[5][nPtLimits][1]));
+	SetStyleTLatex( labelPValuePHOSEMCAL, 0.05,4);
+	SetStyleTLatex( labelPValueSigmaPHOSEMCAL, 0.05,4);
 	
 
-		DrawGammaSetMarkerTGraphAsym(ratioPHOSEMCAL, 20, 1.5,kBlack,kBlack);
-		ratioPHOSEMCAL->Draw("E1psame");
+	DrawGammaSetMarkerTGraphAsym(ratioPHOSEMCAL, 20, 1.5,kBlack,kBlack);
+	ratioPHOSEMCAL->Draw("E1psame");
 		
 		
-		labelPValuePHOSEMCAL->Draw("sames");
-		labelPValueSigmaPHOSEMCAL->Draw("sames");
-		  labelCollisionSystempPb->Draw("sames");
+	labelPValuePHOSEMCAL->Draw("sames");
+	labelPValueSigmaPHOSEMCAL->Draw("sames");
+	labelCollisionSystempPb->Draw("sames");
 
 
 		
-		DrawGammaLines(0., 15. , 1, 1 ,1,kBlack);
+	DrawGammaLines(0., 15. , 1, 1 ,1,kBlack);
 	
 		
 	
@@ -914,6 +1079,218 @@ void ProduceSpectrapPbErrorsABC(TString suffix="pdf"){
 	canvaspPb5023GeVRatioPHOSEMCAL->Update();
 	canvaspPb5023GeVRatioPHOSEMCAL->Print(Form("%s/RatioPHOSEMCAL_pPb5023GeV.%s",outputDir.Data(),suffix.Data()));
 	delete canvaspPb5023GeVRatioPHOSEMCAL;
+	
+	
+	
+	TCanvas* canvasRatiosAllMethods = new TCanvas("canvasRatiosAllMethods","",3100,1080*2);  // gives the page size
+	canvasRatiosAllMethods->SetTickx();
+	canvasRatiosAllMethods->SetTicky();
+	canvasRatiosAllMethods->SetGridx(0);
+	canvasRatiosAllMethods->SetGridy(0);
+	canvasRatiosAllMethods->SetLogy(1);
+	canvasRatiosAllMethods->SetLeftMargin(0.00);
+	canvasRatiosAllMethods->SetRightMargin(0.00);
+	canvasRatiosAllMethods->SetTopMargin(0.00);
+	canvasRatiosAllMethods->SetFillColor(0);
+	
+	  TPad* padRatiosAllMethods[6];
+	
+	
+	  Double_t globalleftOffset  = 0.19;
+	  Double_t globalrightOffset = 0.02;
+	  Double_t globalbottomMarging = 0.17;
+	  Double_t globaltopMarging    = 0.02;
+          Double_t padWith =   ( 1.0 - (( 1.0 / 3 )*globalleftOffset ) - ( (1.0/3)*globalrightOffset ) ) / 3;
+	  Double_t padHeight =  ( 1.0 - (( 1.0 / 2 )*globalbottomMarging ) - ( (1.0/2)*globaltopMarging ) ) / 2;
+	   
+	  cout<<"padWith: "<<padWith<<" padHeight"<<padHeight<<endl;
+	 
+	  
+	  Double_t xMin = 0;
+	  Double_t xMax = 0;
+	  Double_t yMin = 0;
+	  Double_t yMax = yMin + padHeight + ( ( 1.0 /2 )*globalbottomMarging) ;
+	
+	for ( Int_t ii = 0;  ii < 6; ii++){
+	  
+	  Double_t leftOffset   = 0;
+	  Double_t rightOffset  = 0;
+	  
+	  Double_t bottomMargin =  globalbottomMarging;
+	  Double_t topMargin   =  0;
+	  
+	  
+	  xMin =  xMax;
+	  xMax =  xMin + padWith; //( ( 1.0 /3 )*globalleftOffset) ;
+	  
+	  if ( ii >= 3 ){
+	    if( ii == 3 ){
+	    yMin = yMax;
+	    yMax = yMin + padHeight;
+	    }
+	    
+	    //bottomMargin =  globalbottomMarging;
+	    //topMargin    =  0;
+	    
+	    bottomMargin = 0;
+	    topMargin    = globaltopMarging;
+	
+	  }
+ 	  
+ 	  if( ii == 0 || ii == 3 ){
+	    
+	    leftOffset  = globalleftOffset;
+	    
+	     xMin =  0;
+	     xMax =  xMin + padWith + ( ( 1.0 /3 )*globalleftOffset) ;
+	    
+	  }
+	  
+	  if( ii == 2 || ii == 5 ){
+	    
+	    rightOffset = globalrightOffset;
+	    
+	  }
+	  
+	  cout<<xMin<<"\t"<<yMin<<"\t"<<xMax<<"\t"<<yMax<<endl;
+	  
+	  
+	  padRatiosAllMethods[ii] = new TPad(Form("padRatiosAllMethods_%d",ii),"",xMin,yMin,xMax,yMax,-1, -1, -2);
+	  
+	  padRatiosAllMethods[ii]->SetFillColor(0);
+	  padRatiosAllMethods[ii]->GetFrame()->SetFillColor(0);
+	  padRatiosAllMethods[ii]->SetBorderMode(0);
+	  padRatiosAllMethods[ii]->SetLeftMargin(leftOffset);
+	  padRatiosAllMethods[ii]->SetBottomMargin(bottomMargin);
+	  padRatiosAllMethods[ii]->SetRightMargin(rightOffset);
+	  padRatiosAllMethods[ii]->SetTopMargin(topMargin);
+	  padRatiosAllMethods[ii]->SetLogx(1);
+	  padRatiosAllMethods[ii]->Draw();
+	  //padRatiosAllMethods[ii]->cd();
+	  
+	  //DrawGammaSetMarkerTGraphAsym(graphRatioAB[ii], 20, 1.5,kBlack,kBlack);
+	  
+	  //graphRatioAB[ii]->Draw("E1p");
+	  
+	}
+	
+	 TH2F *histoDummy[6];
+	
+	for(Int_t ii = 0; ii < 6; ii++){
+	  
+	  padRatiosAllMethods[ii]->cd();
+	  
+	  
+	  
+	  histoDummy[ii] = new TH2F("histoFWHMCanvas2D","histoFWHMCanvas2D",1000,0.0,15.,1000,0.0,5.);
+	  histoDummy[ii]->GetYaxis()->SetRangeUser(0.6,2.1);
+	  histoDummy[ii]->GetXaxis()->SetRangeUser(0.5,15.);
+	  SetStyleHistoTH2ForGraphs(histoDummy[ii], "#it{p}_{T} (GeV/#it{c})","DetA/DetB", 0.05,0.064, 0.05,0.06, 0.8,0.9, 512, 505);
+	   histoDummy[ii]->GetXaxis()->SetTitleOffset(1.2);
+	   histoDummy[ii]->GetYaxis()->SetTitleOffset(1.2);
+	   histoDummy[ii]->GetYaxis()->CenterTitle();
+	  
+	  histoDummy[ii]->Draw();
+	  
+	  DrawGammaSetMarkerTGraphAsym(graphRatioAB[ii], 20, 2.0,kBlack,kBlack,1.4,kTRUE);
+	  
+	  graphRatioAB[ii]->Draw("pEsame");
+	  
+	  DrawGammaLines(0.,15,1.0, 1.0,0.5);
+	  
+	   Double_t labelleftOffset = 0.05;
+	   Double_t labeltopOffset = 0.88;
+	   Double_t labelpValuOffset = 0;
+	  
+	  if( ii == 0 || ii == 3 ){
+	    labelleftOffset  = 0.05+globalleftOffset;
+	    labelpValuOffset = 0.6;
+	  } else{
+	    
+	     labelpValuOffset = labelleftOffset+0.6;
+	  }
+	  
+	  if( ii < 3 )
+	    labeltopOffset =  labeltopOffset + globaltopMarging;//( 1 - globalbottomMarging )*labeltopOffset;
+	    
+	  
+	  TLatex *labelDummy = new TLatex(labelleftOffset,labeltopOffset,collisionSystempPb.Data());
+	  SetStyleTLatex( labelDummy,0.05,4);
+	  labelDummy->Draw();
+	  
+	  TLatex *labelpValueDummy = new TLatex(labelpValuOffset,labeltopOffset-0.15,Form("p-Value: %2.3f",pValue[ii][nPtLimits][0]));
+	  SetStyleTLatex( labelpValueDummy,0.05,4);
+	  labelpValueDummy->Draw();
+	  
+	   TLatex *labelSigmaDummy = new TLatex(labelpValuOffset,labeltopOffset-0.21,Form("#sigma: %2.3f",pValue[ii][nPtLimits][1]));
+	   SetStyleTLatex( labelSigmaDummy, 0.05,4);
+	   labelSigmaDummy->Draw();
+          
+	    TLegend* legendDummy = new TLegend(labelleftOffset,labeltopOffset-0.15,labelleftOffset+0.3,labeltopOffset-.05);
+	    legendDummy->SetTextSize(0.04);
+	    legendDummy->SetFillColor(0);
+	    legendDummy->SetLineColor(0);  
+	    legendDummy->SetFillStyle(0);
+	    legendDummy->Draw();
+	  
+	     legendDummy->AddEntry(graphRatioAB[ii],Form("%s/%s",methodName[ratioAB[ii][0]].Data(),methodName[ratioAB[ii][1]].Data()) );
+	  
+	  
+	}
+	
+	canvasRatiosAllMethods->Update();
+	canvasRatiosAllMethods->Print(Form("%s/RatioAllMethods.%s",outputDir.Data(),suffix.Data()));
+	delete canvasRatiosAllMethods;
+	
+	
+	
+	/*
+	TPad* padMassMeson01 = new TPad("padMassMeson01", "",xMin0, 0.0,xMax0, 1.,-1, -1, -2);
+        padMassMeson01->SetFillColor(0);
+   padMassMeson01->GetFrame()->SetFillColor(0);
+   padMassMeson01->SetBorderMode(0);
+   padMassMeson01->SetLeftMargin(leftOffset);
+   padMassMeson01->SetBottomMargin(bottomMargin);
+   padMassMeson01->SetRightMargin(0.00);
+   padMassMeson01->SetTopMargin(topMargin);
+   //padMassMeson01->SetLogx(1);
+   padMassMeson01->Draw();
+   
+   
+   TPad* padMassMeson02 = new TPad("padMassMeson02", "",xMin1, 0.0,xMax1, 1.,-1, -1, -2);
+   padMassMeson02->SetFillColor(0);
+   padMassMeson02->GetFrame()->SetFillColor(0);
+   padMassMeson02->SetBorderMode(0);
+   padMassMeson02->SetLeftMargin(0.0);
+   padMassMeson02->SetBottomMargin(bottomMargin);
+   padMassMeson02->SetRightMargin(0.00);
+   padMassMeson02->SetTopMargin(topMargin);
+   //padMassMeson02->SetLogx(1);
+   padMassMeson02->Draw();
+   
+   
+   TPad* padMassMeson03 = new TPad("padMassMeson03", "",xMin2, 0.0,xMax2, 1.,-1, -1, -2);
+   padMassMeson03->SetFillColor(0);
+   padMassMeson03->GetFrame()->SetFillColor(0);
+   padMassMeson03->SetBorderMode(0);
+   padMassMeson03->SetLeftMargin(0.00);
+   padMassMeson03->SetBottomMargin(bottomMargin);
+   padMassMeson03->SetRightMargin(rightOffset);
+   padMassMeson03->SetTopMargin(topMargin);
+   padMassMeson03->Draw();  
+   //padMassMeson03->SetLogx(1);
+   padMassMeson01->cd();
+	*/
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -952,11 +1329,22 @@ TGraphAsymmErrors* CalculateRatio(TGraphAsymmErrors* ObjA_StatErr, TGraphAsymmEr
   }
 
   Int_t nPoints = (endBin - startBin) + 1;
+  
+  
+  //Double_t yErrSystLowA[nPoints];
+  //Double_t yErrSystHighA[nPoints];
+  Double_t yErrTotLowA[nPoints];
+  Double_t yErrTotHighA[nPoints];
+  
+  //Double_t yErrSystLowB[nPoints];
+  //Double_t yErrSystHighB[nPoints];
+  Double_t yErrTotLowB[nPoints];
+  Double_t yErrTotHighB[nPoints];
     
   Double_t xVal[nPoints];
   Double_t xErrLow[nPoints];
   Double_t xErrHigh[nPoints];
-  Double_t rationY[nPoints];
+  Double_t ratioY[nPoints];
   Double_t yErrSystLow[nPoints];
   Double_t yErrSystHigh[nPoints];
   Double_t yErrStatLow[nPoints];
@@ -973,24 +1361,34 @@ TGraphAsymmErrors* CalculateRatio(TGraphAsymmErrors* ObjA_StatErr, TGraphAsymmEr
 	  cout<<"Errot: In this function both graph must have the same binning in the range"<<endl;
 	  return 0x0;
 	}
-    
+	
+	yErrTotLowA[newBin] 	= pow( ( pow( ObjA_SystErr->GetErrorYlow(i), 2 )  +  pow( ObjA_StatErr->GetErrorYlow(i), 2 ) ), 0.5 );
+	yErrTotHighA[newBin]	= pow( ( pow( ObjA_SystErr->GetErrorYhigh(i),2 )  +  pow( ObjA_StatErr->GetErrorYhigh(i),2 ) ), 0.5 );
+	
+	yErrTotLowB[newBin] 	= pow( ( pow( ObjB_SystErr->GetErrorYlow(i), 2 )  +  pow( ObjB_StatErr->GetErrorYlow(i), 2 ) ), 0.5 );
+	yErrTotHighB[newBin]	= pow( ( pow( ObjB_SystErr->GetErrorYhigh(i),2 )  +  pow( ObjB_StatErr->GetErrorYhigh(i),2 ) ), 0.5 );
+	
+	
+	
+	
+	
         xVal[newBin] 		= ObjA_StatErr->GetX()[i];
 	xErrLow[newBin] 	= ObjA_StatErr->GetErrorXlow(i);
 	xErrHigh[newBin]	= ObjA_StatErr->GetErrorXhigh(i);
-	rationY[newBin]         = ObjA_StatErr->GetY()[i]/ObjB_StatErr->GetY()[i];
+	ratioY[newBin]         =  ObjA_StatErr->GetY()[i]/ObjB_StatErr->GetY()[i];
 	
 	
-	yErrStatLow[newBin]     = pow( ( pow( ObjA_StatErr->GetErrorYlow(i)/ObjA_StatErr->GetY()[i] ,2) +  pow( ObjB_StatErr->GetErrorYlow(i)/ObjB_StatErr->GetY()[i] ,2) ),0.5  )*rationY[newBin];
-	yErrStatHigh[newBin]    = pow( ( pow( ObjA_StatErr->GetErrorYhigh(i)/ObjA_StatErr->GetY()[i] ,2) +  pow( ObjB_StatErr->GetErrorYhigh(i)/ObjB_StatErr->GetY()[i] ,2) ),0.5  )*rationY[newBin];
+	//yErrStatLow[newBin]     = pow( ( pow( ObjA_StatErr->GetErrorYlow(i)/ObjA_StatErr->GetY()[i] ,2) +  pow( ObjB_StatErr->GetErrorYlow(i)/ObjB_StatErr->GetY()[i] ,2) ),0.5  )*rationY[newBin];
+	//yErrStatHigh[newBin]    = pow( ( pow( ObjA_StatErr->GetErrorYhigh(i)/ObjA_StatErr->GetY()[i] ,2) +  pow( ObjB_StatErr->GetErrorYhigh(i)/ObjB_StatErr->GetY()[i] ,2) ),0.5  )*rationY[newBin];
 	
 	
 	
 	
-	yErrSystLow[newBin]     = pow( ( pow( ObjA_SystErr->GetErrorYlow(i)/ObjA_SystErr->GetY()[i] ,2) +   pow( ObjB_SystErr->GetErrorYlow(i)/ObjB_SystErr->GetY()[i] ,2) ),0.5 )*rationY[newBin];
-	yErrSystHigh[newBin]    = pow( ( pow( ObjA_SystErr->GetErrorYhigh(i)/ObjA_SystErr->GetY()[i] ,2) +  pow( ObjB_SystErr->GetErrorYhigh(i)/ObjB_SystErr->GetY()[i] ,2) ),0.5  )*rationY[newBin];
+	//yErrSystLow[newBin]     = pow( ( pow( ObjA_SystErr->GetErrorYlow(i)/ObjA_SystErr->GetY()[i] ,2) +   pow( ObjB_SystErr->GetErrorYlow(i)/ObjB_SystErr->GetY()[i] ,2) ),0.5 )*rationY[newBin];
+	//yErrSystHigh[newBin]    = pow( ( pow( ObjA_SystErr->GetErrorYhigh(i)/ObjA_SystErr->GetY()[i] ,2) +  pow( ObjB_SystErr->GetErrorYhigh(i)/ObjB_SystErr->GetY()[i] ,2) ),0.5  )*rationY[newBin];
 	
-	yErrTotLow[newBin]  = pow( ( pow( yErrStatLow[newBin], 2) + pow(yErrSystLow[newBin],2)  ),0.5);
-	yErrTotHigh[newBin] = pow( ( pow( yErrStatHigh[newBin],2) + pow(yErrSystHigh[newBin],2) ), 0.5);
+	yErrTotLow[newBin]  = pow( ( pow( yErrTotLowA[newBin]/ObjA_SystErr->GetY()[i], 2) + pow(yErrTotLowB[newBin]/ObjB_SystErr->GetY()[i],2)  ),0.5)*ratioY[newBin];
+	yErrTotHigh[newBin] = pow( ( pow( yErrTotHighA[newBin]/ObjA_SystErr->GetY()[i], 2) + pow(yErrTotHighB[newBin]/ObjB_SystErr->GetY()[i],2) ), 0.5)*ratioY[newBin];
 	
 	
 	newBin++;
@@ -998,7 +1396,7 @@ TGraphAsymmErrors* CalculateRatio(TGraphAsymmErrors* ObjA_StatErr, TGraphAsymmEr
     
   }
     
-  TGraphAsymmErrors* graphRatio = new TGraphAsymmErrors(newBin,xVal,rationY,xErrLow,xErrHigh,yErrTotLow,yErrTotHigh);
+  TGraphAsymmErrors* graphRatio = new TGraphAsymmErrors(newBin,xVal,ratioY,xErrLow,xErrHigh,yErrTotLow,yErrTotHigh);
   
   return graphRatio;
   
