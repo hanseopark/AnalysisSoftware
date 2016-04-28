@@ -188,7 +188,7 @@ TF1* FitObject( TString type,
         }
         if(type.BeginsWith("tcmpt") || type.BeginsWith("TCMPT")){ // Two component model fit [A. Bylinkin and A. Rostovtsev, Phys. Atom. Nucl 75 (2012) 999-1005]
             cout <<Form("fitting %s with two component model by Bylinkin",FunctionName.Data()) << endl;
-            TF1 *TwoCompModel_Dummy = new TF1("twoCompModel_Dummy",Form("x*[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1]) + x*[2]/(1 + x*x/TMath::Power(1+x*x/([3]*[3]*[4]),-[4]) )",mass,mass,mass));
+            TF1 *TwoCompModel_Dummy = new TF1("twoCompModel_Dummy",Form("x*[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1]) + x*[2]/(TMath::Power(1+x*x/([3]*[3]*[4]),[4]) )",mass,mass,mass));
             if (mesonType.CompareTo("Pi0")==0){
                 TwoCompModel_Dummy->SetParameters(450.,0.3,1,0.3,8.); // standard parameter optimize if necessary
             } else if (mesonType.CompareTo("Eta")==0){    
@@ -490,7 +490,7 @@ TF1* FitObject( TString type,
         }
         if(type.BeginsWith("tcmpt") || type.BeginsWith("TCMPT")){ // Two component model fit [A. Bylinkin and A. Rostovtsev, Phys. Atom. Nucl 75 (2012) 999-1005]
             cout <<Form("fitting %s with two component model by Bylinkin multiplied by pT",FunctionName.Data()) << endl;
-            TF1 *TwoCompModel_Dummy = new TF1("twoCompModel_Dummy",Form(" x*[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1]) + [2]/(TMath::Power(1+x*x/([3]*[3]*[4]),[4]) )",mass,mass,mass));
+     	    TF1 *TwoCompModel_Dummy = new TF1("twoCompModel_Dummy",Form(" x*[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1]) + x*[2]/(TMath::Power(1+x*x/([3]*[3]*[4]),[4]) )",mass,mass,mass));
             FitFunction = (TF1*)TwoCompModel_Dummy->Clone(FunctionName);
             FitFunction->SetRange(xmin, xmax);
             if (mesonType.CompareTo("Pi0")==0){
@@ -664,7 +664,7 @@ TF1* FitObject( TString type,
             Obj->Fit(FitFunction,FitOptions,"",xmin,xmax);
         } if(type.BeginsWith("tcmpt") || type.BeginsWith("TCMPT")){ // Two component model fit [A. Bylinkin and A. Rostovtsev, Phys. Atom. Nucl 75 (2012) 999-1005]
             cout <<Form("fitting %s with two component model by Bylinkin multiplied by pT",FunctionName.Data()) << endl;
-            TF1 *TwoCompModel_Dummy = new TF1("twoCompModel_Dummy",Form(" x*[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1]) + [2]/(TMath::Power(1+x*x/([3]*[3]*[4]),[4]) )",mass,mass,mass));
+            TF1 *TwoCompModel_Dummy = new TF1("twoCompModel_Dummy",Form(" x*[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1]) + x*[2]/(TMath::Power(1+x*x/([3]*[3]*[4]),[4]) )",mass,mass,mass));
             FitFunction = (TF1*)TwoCompModel_Dummy->Clone(FunctionName);
             FitFunction->SetRange(xmin, xmax);
             if (mesonType.CompareTo("Pi0")==0){
@@ -880,7 +880,7 @@ TF1* FitObject( TString type,
         }
         if(type.BeginsWith("tcmpt") || type.BeginsWith("TCMPT")){ // Two component model fit [A. Bylinkin and A. Rostovtsev, Phys. Atom. Nucl 75 (2012) 999-1005]
             cout <<Form("fitting %s with two component model by Bylinkin multiplied by pT",FunctionName.Data()) << endl;
-            TF1 *TwoCompModel_Dummy = new TF1("twoCompModel_Dummy",Form(" x*[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1]) + [2]/(TMath::Power(1+x*x/([3]*[3]*[4]),[4]) )",mass,mass,mass));
+            TF1 *TwoCompModel_Dummy = new TF1("twoCompModel_Dummy",Form(" x*[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1]) + x* [2]/(TMath::Power(1+x*x/([3]*[3]*[4]),[4]) )",mass,mass,mass));
             FitFunction = (TF1*)TwoCompModel_Dummy->Clone(FunctionName);
             FitFunction->SetRange(xmin, xmax);
             if (mesonType.CompareTo("Pi0")==0){
