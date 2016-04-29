@@ -387,7 +387,8 @@ void CombineEtaToPi0RatiosLHC11h(TString suffix = "pdf", TString nameFilePbPb = 
 		
 	
 	cout << "PCM Eta for pPb" << endl;
-	TFile* filePCMpPb 					= new TFile("data_PCMResults_pPb_20150624_standard_dc4.root");
+    TString nameFilepPb = "LHC11hInputFiles/data_PCMResults_pPb_20150624_standard_dc4.root";
+	TFile* filePCMpPb 					= new TFile(nameFilepPb.Data());
 	TDirectory* fEtaToPi0pPbContainer 	= (TDirectory*) filePCMpPb->GetDirectory("Eta_pPb_5.023TeV_0-100%");
 	TH1D* histoPCMEtaToPi0RatiopPb 		= (TH1D*)fEtaToPi0pPbContainer->Get("EtatoPi0Ratio");
 	TGraphAsymmErrors* graphPCMEtaToPi0RatioSysErrpPb=    (TGraphAsymmErrors*)fEtaToPi0pPbContainer->Get("EtatoPi0RatioSys"); 

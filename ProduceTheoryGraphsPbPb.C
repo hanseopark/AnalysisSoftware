@@ -1329,7 +1329,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 	
 	//*********************************************************************************************************************************
 	//************************************************************** EPOS 3 ***********************************************************
-    // Calculation for 0-10% only for LHC11h
+    // Calculation for 0-10% (for LHC11h -> is worse than old EPOS...)
 	
     Double_t Pi0pt[70];
 	Double_t Etapt[70];
@@ -1346,6 +1346,9 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     Int_t iPoint = 0;
     while(!fEposPi0Txt.eof() && iPoint < 70){ 
         fEposPi0Txt >> Pi0pt[iPoint] >> Pi0dndptpy[iPoint] >> Pi0dndptpy_staterr[iPoint];
+        Pi0dndptpy[iPoint]= Pi0dndptpy[iPoint]/(Pi0pt[iPoint]*2*TMath::Pi());
+        Pi0dndptpy_staterr[iPoint] = Pi0dndptpy_staterr[iPoint]/(Pi0pt[iPoint]*2*TMath::Pi());
+
         iPoint++;
     }
     fEposPi0Txt.close();
@@ -1360,6 +1363,9 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     iPoint = 0;
     while(!fEposEtaTxt.eof() && iPoint < 70){ 
         fEposEtaTxt >> Etapt[iPoint] >> Etadndptpy[iPoint] >> Etadndptpy_staterr[iPoint];
+        Etadndptpy[iPoint]= Etadndptpy[iPoint]/(Etapt[iPoint]*2*TMath::Pi());
+        Etadndptpy_staterr[iPoint] = Etadndptpy_staterr[iPoint]/(Etapt[iPoint]*2*TMath::Pi());
+
         iPoint++;
     }
     fEposEtaTxt.close();

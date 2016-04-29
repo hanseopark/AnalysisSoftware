@@ -22,7 +22,7 @@ Double_t FontSize = 0.035;
 Double_t maxYEtatoPi0 = 1.05;
 Double_t minPtRange = 0.4;
 Double_t maxPtRange = 30.;
-
+Double_t minfitPt;
 
 Color_t	colorPCM0010		= kRed+1;
 Color_t	colorEMCal0010		= kRed+2;
@@ -199,6 +199,8 @@ TH1D* statErrorCollectionRaaLHC11h_2050[11];
 
 TGraphAsymmErrors* sysErrorCollectionLHC11h_0010[11];
 TGraphAsymmErrors* sysErrorCollectionLHC11h_2050[11];
+TGraphAsymmErrors* sysErrorCollectionWOMatLHC11h_0010[11];
+TGraphAsymmErrors* sysErrorCollectionWOMatLHC11h_2050[11];
 TGraphAsymmErrors* sysErrorCollectionEtatoPi0LHC11h_0010[11];
 TGraphAsymmErrors* sysErrorCollectionEtatoPi0LHC11h_2050[11];
 TGraphAsymmErrors* sysErrorCollectionRaaLHC11h_0010[11];
@@ -220,7 +222,7 @@ Double_t xPtLimitsEta[14] =  {0.0, 0.5, 1.0, 1.5, 2,
 // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match                            
 Int_t offSetsPi0[11]    =   { 0, 2, 15, 0, 0,
                               0, 0, 0, 0, 0, 0};
-Int_t offSetsPi0Sys[11]=    { 1, 3, 15, 0, 0,
+Int_t offSetsPi0Sys[11]=    { 1, 4, 15, 0, 0,
                               0, 0, 0, 0, 0, 1};
                             
 Int_t offSetsEta[11]    =   { 0, 0, 6, 0, 0,
@@ -238,9 +240,10 @@ TGraph* graphWeightsALHC11h_2050[11];
 
 TGraphAsymmErrors* graphCombInvYieldStat2760GeVALHC11h_0010   = NULL;
 TGraphAsymmErrors* graphCombInvYieldSys2760GeVALHC11h_0010    = NULL;
+TGraphAsymmErrors* graphCombInvYieldTot2760GeVALHC11h_0010    = NULL;
+
 TGraphAsymmErrors* graphCombInvYieldStat2760GeVALHC11h_2050   = NULL;
 TGraphAsymmErrors* graphCombInvYieldSys2760GeVALHC11h_2050    = NULL;
-TGraphAsymmErrors* graphCombInvYieldTot2760GeVALHC11h_0010    = NULL;
 TGraphAsymmErrors* graphCombInvYieldTot2760GeVALHC11h_2050    = NULL;
                               
 TGraph* graphWeightsLHC11h_0010[11];
@@ -1023,25 +1026,31 @@ TH1D*  histoEMCALWidthMC0010;
 
 TGraphAsymmErrors* graphPCMInvYieldStatPbPb2760GeVUnShifted_0010;
 TGraphAsymmErrors* graphPCMInvYieldSysPbPb2760GeVUnShifted_0010;
+TGraphAsymmErrors* graphPCMInvYieldSysPbPb2760GeVWOMatUnShifted_0010;
 TGraphAsymmErrors* graphEMCalInvYieldStatPbPb2760GeVUnshifted_0010;
 TGraphAsymmErrors* graphEMCalInvYieldSysPbPb2760GeVUnshifted_0010;
+TGraphAsymmErrors* graphPHOSInvYieldStatPbPb2760GeVUnshifted_0010;
+TGraphAsymmErrors* graphPHOSInvYieldSysPbPb2760GeVUnshifted_0010;
 
 TGraphAsymmErrors* graphPCMInvYieldStatPbPb2760GeVUnShifted_2050;
 TGraphAsymmErrors* graphPCMInvYieldSysPbPb2760GeVUnShifted_2050;
+TGraphAsymmErrors* graphPCMInvYieldSysPbPb2760GeVWOMatUnShifted_2050;
 TGraphAsymmErrors* graphEMCalInvYieldStatPbPb2760GeVUnshifted_2050;
 TGraphAsymmErrors* graphEMCalInvYieldSysPbPb2760GeVUnshifted_2050;
 
-TGraphAsymmErrors*  graphCombInvYieldTot2760GeVALHC11hYShifted_0010;
-TGraphAsymmErrors*  graphCombInvYieldSys2760GeVALHC11hYShifted_0010;
-TGraphAsymmErrors*  graphCombInvYieldStat2760GeVALHC11hYShifted_0010;
+TGraphAsymmErrors*  graphCombInvYieldTot2760GeVLHC11hYShifted_0010;
+TGraphAsymmErrors*  graphCombInvYieldSys2760GeVLHC11hYShifted_0010;
+TGraphAsymmErrors*  graphCombInvYieldStat2760GeVLHC11hYShifted_0010;
 TGraphAsymmErrors*  graphPCMInvYieldStatPbPb2760GeVYShifted_0010;
 TGraphAsymmErrors*  graphPCMInvYieldSysPbPb2760GeVYShifted_0010;
 TGraphAsymmErrors*  graphEMCalInvYieldStatPbPb2760GeVYShifted_0010;
 TGraphAsymmErrors*  graphEMCalInvYieldSysPbPb2760GeVYShifted_0010;
+TGraphAsymmErrors*  graphPHOSInvYieldStatPbPb2760GeVYShifted_0010;
+TGraphAsymmErrors*  graphPHOSInvYieldSysPbPb2760GeVYShifted_0010;
 
-TGraphAsymmErrors*  graphCombInvYieldTot2760GeVALHC11hYShifted_2050;
-TGraphAsymmErrors*  graphCombInvYieldSys2760GeVALHC11hYShifted_2050;
-TGraphAsymmErrors*  graphCombInvYieldStat2760GeVALHC11hYShifted_2050;
+TGraphAsymmErrors*  graphCombInvYieldTot2760GeVLHC11hYShifted_2050;
+TGraphAsymmErrors*  graphCombInvYieldSys2760GeVLHC11hYShifted_2050;
+TGraphAsymmErrors*  graphCombInvYieldStat2760GeVLHC11hYShifted_2050;
 TGraphAsymmErrors*  graphPCMInvYieldStatPbPb2760GeVYShifted_2050;
 TGraphAsymmErrors*  graphPCMInvYieldSysPbPb2760GeVYShifted_2050;
 TGraphAsymmErrors*  graphEMCalInvYieldStatPbPb2760GeVYShifted_2050;
@@ -1056,7 +1065,7 @@ TGraphAsymmErrors*  graphPCMPi0RAAStatPbPb2760GeVYShifted_2050;
 TGraphAsymmErrors*  graphPCMPi0RAASysPbPb2760GeVYShifted_2050;
 TGraphAsymmErrors*  graphEMCalPi0RAAStatPbPb2760GeVYShifted_2050;
 TGraphAsymmErrors*  graphEMCalPi0RAASysPbPb2760GeVYShifted_2050;
- 
+
 TGraphAsymmErrors*  graphPCMEtaRAAStatPbPb2760GeVYShifted_0010;
 TGraphAsymmErrors*  graphPCMEtaRAASysPbPb2760GeVYShifted_0010;
 TGraphAsymmErrors*  graphEMCalEtaRAAStatPbPb2760GeVYShifted_0010;
@@ -1066,3 +1075,26 @@ TGraphAsymmErrors*  graphPCMEtaRAAStatPbPb2760GeVYShifted_2050;
 TGraphAsymmErrors*  graphPCMEtaRAASysPbPb2760GeVYShifted_2050;
 TGraphAsymmErrors*  graphEMCalEtaRAAStatPbPb2760GeVYShifted_2050;
 TGraphAsymmErrors*  graphEMCalEtaRAASysPbPb2760GeVYShifted_2050;
+
+TF1* fitBylinkinPbPb2760GeVPtLHC11h_0010;
+TF1* fitBylinkinPbPb2760GeVPtLHC11h_2050;
+TF1* fitBylinkinPbPb2760GeVPtLHC11hYshift_0010;
+TF1* fitBylinkinPbPb2760GeVPtLHC11hYshift_2050;
+
+TF1* fitTCMInvYield2760GeVLHC11h_0010;
+TF1* fitTCMInvYield2760GeVLHC11h_2050;
+TF1* fitTCMInvYield2760GeVas10h_0010;
+TF1* fitTCMInvYield2760GeVas10h_2050;
+
+TGraphAsymmErrors* graphRatioPCMCombFitStat2760GeV_0010;
+TGraphAsymmErrors* graphRatioPCMCombFitSys2760GeV_0010;
+TGraphAsymmErrors* graphRatioEMCalCombFitStat2760GeV_0010;
+TGraphAsymmErrors* graphRatioEMCalCombFitSys2760GeV_0010;
+
+TGraphAsymmErrors* graphRatioPCMCombFitStat2760GeV_2050;
+TGraphAsymmErrors* graphRatioPCMCombFitSys2760GeV_2050;
+TGraphAsymmErrors* graphRatioEMCalCombFitStat2760GeV_2050;
+TGraphAsymmErrors* graphRatioEMCalCombFitSys2760GeV_2050;
+
+TGraphAsymmErrors* graphRatioPHOSCombFitStat2760GeV_0010;
+TGraphAsymmErrors* graphRatioPHOSCombFitSys2760GeV_0010;

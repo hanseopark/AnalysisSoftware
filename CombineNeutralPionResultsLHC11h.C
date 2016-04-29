@@ -81,23 +81,25 @@ void ScaleMCYield(TH1D* histoCorrectedToBeScaled, Double_t deltaRapid, Double_t 
 }
 
 
-void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePP = "data_PCMResultsFullCorrection_PP_NoBinShifting.root", TString nameFilePbPbLHC11h = "data_PCMResults_PbPb_2.76TeV", Bool_t runDrawReweighted = kTRUE){
+void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbPbLHC11h = "data_PCMResults_PbPb_2.76TeV", Bool_t runDrawReweighted = kTRUE){
 
 	gROOT->Reset();   
 	gROOT->SetStyle("Plain");
 	
-	TString nameFileEtaPbPbLHC10h = "data_PCMResults_PbPb_2.76TeV_LHC10hEta.root";
-	TString nameFilePi0PbPbLHC10h = "data_PCMResults_PbPb_2.76TeV_LHC10h.root";
+    TString nameFilePP = "LHC11hInputFiles/data_PCMResultsFullCorrection_PP_NoBinShifting.root";
+    TString nameFilePPpaper = "LHC11hInputFiles/CombinedResultsPaperX_18_Feb_2014.root";
+	TString nameFilePi0PbPbLHC10h = "LHC11hInputFiles/data_PCMResults_PbPb_2.76TeV_LHC10h.root";
+	TString nameFileEtaPbPbLHC10h = "LHC11hInputFiles/data_PCMResults_PbPb_2.76TeV_LHC10hEta.root";
 	
 	TString dateForOutput = ReturnDateStringForOutput();
 	TString outputDir = Form("%s/%s/CombineNeutralPionResults",suffix.Data(),dateForOutput.Data());
 	gSystem->Exec("mkdir -p "+outputDir);
 	gSystem->Exec(Form("cp %s %s/InputFilePCMPionPP.root ",nameFilePP.Data(),outputDir.Data() ));
-	gSystem->Exec(Form("cp %s %s/InputFilePCMPionPbPbLHC10h.root ",nameFilePi0PbPbLHC10h.Data(),outputDir.Data() ));
+    gSystem->Exec(Form("cp %s %s/InputFilePionPPPaper.root ",nameFilePPpaper.Data(),outputDir.Data() ));
+    gSystem->Exec(Form("cp %s %s/InputFilePCMPionPbPbLHC10h.root ",nameFilePi0PbPbLHC10h.Data(),outputDir.Data() ));
 	gSystem->Exec(Form("cp %s %s/InputFilePCMEtaPbPbLHC10h.root ",nameFileEtaPbPbLHC10h.Data(),outputDir.Data() ));
 	gSystem->Exec(Form("cp %s %s/InputFilePCMPbPbLHC11h.root ",nameFilePbPbLHC11h.Data(),outputDir.Data() ));
 	
-	gSystem->Exec("mkdir -p "+outputDir);
    
 	StyleSettingsThesis();  
 	SetPlotStyle();
@@ -257,7 +259,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePP 
 
 	
 ////////////////////////////////////////////////////////////////// LHC10h file //////////////////////////////////////////////////////////////////////////////   
-    TFile*   filePCMPbPbLHC10h = new TFile("data_PCMResults_PbPb_2.76TeV_LHC10h.root"); //data_PCMResults_PbPb_2.76TeV_LHC10h.root
+    TFile*   filePCMPbPbLHC10h = new TFile(nameFilePi0PbPbLHC10h.Data()); //data_PCMResults_PbPb_2.76TeV_LHC10h.root
      
 //////////////////////// Pi0 ////////////////////////////   
     cout << "Pi0 0-10%" << endl;
@@ -265,14 +267,18 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePP 
 
         TH1D* histoPCMPi0CorrectedSpecPbPbLHC10h0010                 = (TH1D*)directoryPi0PbPbLHC10h0010->Get("CorrectedYieldPi0");   
         TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC10h0010 = (TGraphAsymmErrors*)directoryPi0PbPbLHC10h0010->Get("Pi0SystErrorA"); 
+        TH1D* histoPi0TrueEffiPtPbPbLHC10h0010                       = (TH1D*)directoryPi0PbPbLHC10h0010->Get("Pi0_Efficiency");
+        TH1D* histoPi0RawYieldPbPbLHC10h0010                         = (TH1D*)directoryPi0PbPbLHC10h0010->Get("Pi0_RawYieldPerEvent");
+
 
     cout << "20-40%" << endl;
     TDirectory* directoryPi0PbPbLHC10h2040 = (TDirectory*)filePCMPbPbLHC10h->Get("Pi0_PbPb_2.76TeV_20-40%"); 
     
         TH1D* histoPCMPi0CorrectedSpecPbPbLHC10h2040                 = (TH1D*)directoryPi0PbPbLHC10h2040->Get("CorrectedYieldPi0");   
         TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC10h2040 = (TGraphAsymmErrors*)directoryPi0PbPbLHC10h2040->Get("Pi0SystErrorA"); 
-        
-	
+        TH1D* histoPi0TrueEffiPtPbPbLHC10h2040                       = (TH1D*)directoryPi0PbPbLHC10h2040->Get("Pi0_Efficiency");
+        TH1D* histoPi0RawYieldPbPbLHC10h2040                         = (TH1D*)directoryPi0PbPbLHC10h2040->Get("Pi0_RawYieldPerEvent");
+
 
 		
 /////////////////////////////////////////////// Charged pions/kaons file /////////////////////////////////////////////////////////
@@ -502,7 +508,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePP 
 	TH1D* histoEtaFromCocktail6080 = (TH1D*)directoryCocktail6080->Get("ptEta");  
 	cout << "here 7TeV" << endl;
 	
-	TFile* fileNeutralPionCombDataPP = new TFile("CombinedResultsPaperX_18_Feb_2014.root");
+	TFile* fileNeutralPionCombDataPP = new TFile(nameFilePPpaper.Data());
 	TGraphAsymmErrors* graphInvYieldPi0Comb7TeV= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb7TeV");
 	graphInvYieldPi0Comb7TeV = ScaleGraph(graphInvYieldPi0Comb7TeV,1./xSection7TeVppINEL);
 	TGraphAsymmErrors* graphInvYieldPi0Comb7TeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb7TeVStatErr");
@@ -1864,12 +1870,14 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePP 
 	
 
 //==========================================================================================
+    TString folderComparison = Form("%s/ComparisonPublished",outputDir.Data());
+    gSystem->Exec("mkdir -p "+folderComparison);
 	
     TCanvas* canvasRatiowithPub = new TCanvas("canvasRatiowithPub","",200,10,1350,900);  // gives the page size
     DrawGammaCanvasSettings( canvasRatiowithPub, 0.09, 0.01, 0.015, 0.115);
     
     TH2D *histo2DCompCombinedRatioPub = new TH2D("histo2DCompCombinedRatioPub", "histo2DCompCombinedRatioPub", 20,0.1,12.01,1000.,-0.4,2.);
-    SetStyleHistoTH2ForGraphs(histo2DCompCombinedRatioPub, "#it{p}_{T} (GeV/#it{c})","#pi^{0} corrected yield #frac{2010}{2011}", 0.035,0.04, 0.035,0.04, 1.,1.);
+    SetStyleHistoTH2ForGraphs(histo2DCompCombinedRatioPub, "#it{p}_{T} (GeV/#it{c})","#pi^{0} #frac{2010}{2011}", 0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DCompCombinedRatioPub->GetYaxis()->SetRangeUser(0.,2.5);
     histo2DCompCombinedRatioPub->Draw("copy");
 
@@ -1912,9 +1920,80 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePP 
     legendRatio1->AddEntry(RatioPi0YieldsPublishedTo2011_2040," 20-40%","pl");
     legendRatio1->Draw();
 
-    canvasRatiowithPub->SaveAs(Form("%s/Pi0yields_RatioWithPublished.%s",outputDir.Data(),suffix.Data()));
+    canvasRatiowithPub->SaveAs(Form("%s/Pi0yields_RatioWithPublished.%s",folderComparison.Data(),suffix.Data()));
 
-	
+    canvasRatiowithPub->cd();
+    histo2DCompCombinedRatioPub->Draw("copy");
+
+    grapha    = NULL;
+    graphb    = NULL;
+    graphc    = NULL;
+    graphd     = NULL;
+    graph1    = NULL;
+    graph2     = NULL;
+    graph3    = NULL;
+    graph4     = NULL;
+
+    TGraphErrors* RatioPi0RawYieldsPublishedTo2011_0010 = CalculateRatioBetweenSpectraWithDifferentBinning(histoPi0RawYieldPbPbLHC10h0010, histoPi0RawYieldPbPbLHC10h0010,
+                                                                                                     histoPi0RawYieldPbPbLHC11h0010, histoPi0RawYieldPbPbLHC11h0010,
+                                                                                                     kTRUE,  kTRUE,
+                                                                                                     &graphc, &graphd,
+                                                                                                     &grapha, &graphb ) ;
+//     RatioPi0YieldsPublishedTo2011_0010->Print();
+
+    TGraphErrors* RatioPi0RawYieldsPublishedTo2011_2040 = CalculateRatioBetweenSpectraWithDifferentBinning(histoPi0RawYieldPbPbLHC10h2040, histoPi0RawYieldPbPbLHC10h2040,
+                                                                                                     histoPi0RawYieldPbPbLHC11h2040, histoPi0RawYieldPbPbLHC11h2040,
+                                                                                                     kTRUE,  kTRUE,
+                                                                                                     &graph3, &graph4,
+                                                                                                     &graph1, &graph2 ) ;
+//     RatioPi0YieldsPublishedTo2011_2040->Print();
+
+    DrawGammaSetMarkerTGraphErr(RatioPi0RawYieldsPublishedTo2011_0010, 20., 2., kRed, kRed);
+    DrawGammaSetMarkerTGraphErr(RatioPi0RawYieldsPublishedTo2011_2040, 20., 2., kAzure+1, kAzure+1);
+
+    RatioPi0RawYieldsPublishedTo2011_0010->Draw("same,p");
+    RatioPi0RawYieldsPublishedTo2011_2040->Draw("same,p");
+
+    legendRatio1->Draw();
+
+    canvasRatiowithPub->SaveAs(Form("%s/Pi0Raw_RatioWithPublished.%s",folderComparison.Data(),suffix.Data()));
+
+    canvasRatiowithPub->cd();
+	histo2DCompCombinedRatioPub->Draw("copy");
+
+    grapha    = NULL;
+    graphb    = NULL;
+    graphc    = NULL;
+    graphd     = NULL;
+    graph1    = NULL;
+    graph2     = NULL;
+    graph3    = NULL;
+    graph4     = NULL;
+
+    TGraphErrors* RatioPi0EffiPublishedTo2011_0010 = CalculateRatioBetweenSpectraWithDifferentBinning(histoPi0TrueEffiPtPbPbLHC10h0010, histoPi0TrueEffiPtPbPbLHC10h0010,
+                                                                                                     histoPi0TrueEffiPtPbPbLHC11h0010, histoPi0TrueEffiPtPbPbLHC11h0010,
+                                                                                                     kTRUE,  kTRUE,
+                                                                                                     &graphc, &graphd,
+                                                                                                     &grapha, &graphb ) ;
+//     RatioPi0YieldsPublishedTo2011_0010->Print();
+
+    TGraphErrors* RatioPi0EffiPublishedTo2011_2040 = CalculateRatioBetweenSpectraWithDifferentBinning(histoPi0TrueEffiPtPbPbLHC10h2040, histoPi0TrueEffiPtPbPbLHC10h2040,
+                                                                                                     histoPi0TrueEffiPtPbPbLHC11h2040, histoPi0TrueEffiPtPbPbLHC11h2040,
+                                                                                                     kTRUE,  kTRUE,
+                                                                                                     &graph3, &graph4,
+                                                                                                     &graph1, &graph2 ) ;
+//     RatioPi0YieldsPublishedTo2011_2040->Print();
+
+    DrawGammaSetMarkerTGraphErr(RatioPi0EffiPublishedTo2011_0010, 20., 2., kRed, kRed);
+    DrawGammaSetMarkerTGraphErr(RatioPi0EffiPublishedTo2011_2040, 20., 2., kAzure+1, kAzure+1);
+
+    RatioPi0EffiPublishedTo2011_0010->Draw("same,p");
+    RatioPi0EffiPublishedTo2011_2040->Draw("same,p");
+
+    legendRatio1->Draw();
+
+    canvasRatiowithPub->SaveAs(Form("%s/Pi0Eff_RatioWithPublished.%s",folderComparison.Data(),suffix.Data()));
+
 	TCanvas* canvasRatioRaa = new TCanvas("canvasRatioRaa","",200,10,1350,900);  // gives the page size
 	DrawGammaCanvasSettings( canvasRatioRaa, 0.09, 0.01, 0.015, 0.115);
 	
@@ -1963,7 +2042,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePP 
 	legendRatio->AddEntry(RatioPi0RaaPublishedTo2011_2040," 20-40%","pl");
 	legendRatio->Draw();
 
-	canvasRatioRaa->SaveAs(Form("%s/Pi0RAA_RatioWithPublished.%s",outputDir.Data(),suffix.Data()));
+	canvasRatioRaa->SaveAs(Form("%s/Pi0RAA_RatioWithPublished.%s",folderComparison.Data(),suffix.Data()));
 
 //==========================================================================================
 
