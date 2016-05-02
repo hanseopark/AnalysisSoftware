@@ -466,8 +466,9 @@ TGraphAsymmErrors* CalculateGraphErrRatioToOtherTGraphErr(TGraphAsymmErrors* gra
     return returnGraph;
 }
 
-
-
+//**********************************************************************************************************
+// Calculates shifted spectrum in xt or mt 
+//**********************************************************************************************************
 TH1D* CalculateShiftedSpectrumInXtOrMt(TH1D* ptSpectrum, TH1D* spectrum, TString nameNewSpectrum){
     Double_t dummyValue     = 0;
     Double_t dummyError     = 0;
@@ -481,6 +482,9 @@ TH1D* CalculateShiftedSpectrumInXtOrMt(TH1D* ptSpectrum, TH1D* spectrum, TString
     return shiftedSpectrum;
 }
 
+//**********************************************************************************************************
+// Calculates mean mass from fit - expected mass
+//**********************************************************************************************************
 TH1D* CalculateMassMinusExpectedMass(TH1D* histo, Double_t mass){
     TH1D* histoNew                  = (TH1D*) histo->Clone();
     for ( Int_t l=0; l < histoNew->GetNbinsX()+1; l++){
@@ -494,6 +498,9 @@ TH1D* CalculateMassMinusExpectedMass(TH1D* histo, Double_t mass){
     return histoNew;
 }
 
+//**********************************************************************************************************
+// Takes out scaling with pT bin by bin for histograms
+//**********************************************************************************************************
 void RemoveScalingWithPt(TH1D* histo){
     for (Int_t i = 0; i < histo->GetNbinsX()+1;i++){
         histo->SetBinContent(i, histo->GetBinContent(i)*histo->GetBinCenter(i));
@@ -502,6 +509,9 @@ void RemoveScalingWithPt(TH1D* histo){
     return;
 }
 
+//**********************************************************************************************************
+// Takes out scaling with pT bin by bin for TGraphAsymmErrors
+//**********************************************************************************************************
 void RemoveScalingWithPtGraph(TGraphAsymmErrors* graph){
     Double_t * xValue       = graph->GetX(); 
     Double_t * yValue       = graph->GetY();
@@ -516,6 +526,9 @@ void RemoveScalingWithPtGraph(TGraphAsymmErrors* graph){
     return;
 }
 
+//**********************************************************************************************************
+// Scales every bin with for TGraphAsymmErrors
+//**********************************************************************************************************
 void ScaleWithPtGraph(TGraphAsymmErrors* graph){
     Double_t * xValue       = graph->GetX(); 
     Double_t * yValue       = graph->GetY();
