@@ -65,6 +65,7 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
                                         TString fileNameMergedV1Cluster         = "",  
                                         TString fileNameMergedV1NLM1Cluster     = "",  
                                         TString fileNameMergedV1NLM2Cluster     = "",  
+                                        TString fileNameDiClusterV2             = "",
                                         TString suffix                          = "eps"
                                     ){
 
@@ -114,20 +115,33 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
     //************************** Read data for EMCAL merged Fredi V2 clusterizer **************************************************            
     TFile* fileMergedV2Clus                                  = new TFile(fileNameMergedV2Cluster.Data());
     TDirectory* directoryMergedV2ClusPi0                     = (TDirectory*)fileMergedV2Clus->Get("Pi02.76TeV"); 
-        TGraphAsymmErrors* graphMergedV2ClusPi0InvXSectionStat   = (TGraphAsymmErrors*)directoryMergedV2ClusPi0->Get("graphInvCrossSectionPi0");
-        TGraphAsymmErrors* graphMergedV2ClusPi0InvXSectionSys    = (TGraphAsymmErrors*)directoryMergedV2ClusPi0->Get("InvCrossSectionPi0Sys");
+        TGraphAsymmErrors* graphMergedV2ClusPi0InvXSectionStat      = (TGraphAsymmErrors*)directoryMergedV2ClusPi0->Get("graphInvCrossSectionPi0");
+        TGraphAsymmErrors* graphMergedV2ClusPi0InvXSectionSys       = (TGraphAsymmErrors*)directoryMergedV2ClusPi0->Get("InvCrossSectionPi0Sys");
+        TGraphAsymmErrors* graphMergedV2ClusPi0Efficiency           = (TGraphAsymmErrors*)directoryMergedV2ClusPi0->Get("EfficiencyPi0");
+        TGraphAsymmErrors* graphMergedV2ClusPi0Purity               = (TGraphAsymmErrors*)directoryMergedV2ClusPi0->Get("PurityPi0");        
+        TGraphAsymmErrors* graphMergedV2ClusPi0PurityDivEff         = CalculateGraphErrRatioToOtherTGraphErr(graphMergedV2ClusPi0Purity, graphMergedV2ClusPi0Efficiency,kTRUE);
+        TGraphAsymmErrors* graphMergedV2ClusPi0EffDivPur            = CalculateGraphErrRatioToOtherTGraphErr(graphMergedV2ClusPi0Efficiency, graphMergedV2ClusPi0Purity, kTRUE);
         for (Int_t i = 0; graphMergedV2ClusPi0InvXSectionStat->GetX()[0]< 10; i++){
             graphMergedV2ClusPi0InvXSectionStat->RemovePoint(0);
         }
         for (Int_t i = 0; graphMergedV2ClusPi0InvXSectionSys->GetX()[0]< 10; i++){
             graphMergedV2ClusPi0InvXSectionSys->RemovePoint(0);
         }
+
+    //************************** Read data for EMCAL merged Fredi V2 clusterizer **************************************************            
+    TFile* fileDiClusV2Clus                                     = new TFile(fileNameDiClusterV2.Data());
+    TDirectory* directoryDiClusV2Pi0                            = (TDirectory*)fileDiClusV2Clus->Get("Pi02.76TeV"); 
+        TGraphAsymmErrors* graphDiClusV2Pi0Efficiency               = (TGraphAsymmErrors*)directoryDiClusV2Pi0->Get("EfficiencyPi0");
         
     //************************** Read data for EMCAL merged Fredi V1 clusterizer **************************************************                
     TFile* fileMergedV1Clus                                  = new TFile(fileNameMergedV1Cluster.Data());
     TDirectory* directoryMergedV1ClusPi0                     = (TDirectory*)fileMergedV1Clus->Get("Pi02.76TeV"); 
-        TGraphAsymmErrors* graphMergedV1ClusPi0InvXSectionStat   = (TGraphAsymmErrors*)directoryMergedV1ClusPi0->Get("graphInvCrossSectionPi0");
-        TGraphAsymmErrors* graphMergedV1ClusPi0InvXSectionSys    = (TGraphAsymmErrors*)directoryMergedV1ClusPi0->Get("InvCrossSectionPi0Sys");
+        TGraphAsymmErrors* graphMergedV1ClusPi0InvXSectionStat      = (TGraphAsymmErrors*)directoryMergedV1ClusPi0->Get("graphInvCrossSectionPi0");
+        TGraphAsymmErrors* graphMergedV1ClusPi0InvXSectionSys       = (TGraphAsymmErrors*)directoryMergedV1ClusPi0->Get("InvCrossSectionPi0Sys");
+        TGraphAsymmErrors* graphMergedV1ClusPi0Efficiency           = (TGraphAsymmErrors*)directoryMergedV1ClusPi0->Get("EfficiencyPi0");
+        TGraphAsymmErrors* graphMergedV1ClusPi0Purity               = (TGraphAsymmErrors*)directoryMergedV1ClusPi0->Get("PurityPi0");
+        TGraphAsymmErrors* graphMergedV1ClusPi0PurityDivEff         = CalculateGraphErrRatioToOtherTGraphErr(graphMergedV1ClusPi0Purity, graphMergedV1ClusPi0Efficiency,kTRUE);
+        TGraphAsymmErrors* graphMergedV1ClusPi0EffDivPur            = CalculateGraphErrRatioToOtherTGraphErr(graphMergedV1ClusPi0Efficiency, graphMergedV1ClusPi0Purity, kTRUE);
         for (Int_t i = 0; graphMergedV1ClusPi0InvXSectionStat->GetX()[0]< 10; i++){
             graphMergedV1ClusPi0InvXSectionStat->RemovePoint(0);
         }
@@ -138,8 +152,12 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
     //************************** Read data for EMCAL merged Fredi V1 clusterizer NLM1 **************************************************                    
     TFile* fileMergedV1NLM1Clus                                  = new TFile(fileNameMergedV1NLM1Cluster.Data());
     TDirectory* directoryMergedV1NLM1ClusPi0                     = (TDirectory*)fileMergedV1NLM1Clus->Get("Pi02.76TeV"); 
-        TGraphAsymmErrors* graphMergedV1NLM1ClusPi0InvXSectionStat   = (TGraphAsymmErrors*)directoryMergedV1NLM1ClusPi0->Get("graphInvCrossSectionPi0");
-        TGraphAsymmErrors* graphMergedV1NLM1ClusPi0InvXSectionSys    = (TGraphAsymmErrors*)directoryMergedV1NLM1ClusPi0->Get("InvCrossSectionPi0Sys");
+        TGraphAsymmErrors* graphMergedV1NLM1ClusPi0InvXSectionStat      = (TGraphAsymmErrors*)directoryMergedV1NLM1ClusPi0->Get("graphInvCrossSectionPi0");
+        TGraphAsymmErrors* graphMergedV1NLM1ClusPi0InvXSectionSys       = (TGraphAsymmErrors*)directoryMergedV1NLM1ClusPi0->Get("InvCrossSectionPi0Sys");
+        TGraphAsymmErrors* graphMergedV1NLM1ClusPi0Efficiency           = (TGraphAsymmErrors*)directoryMergedV1NLM1ClusPi0->Get("EfficiencyPi0");
+        TGraphAsymmErrors* graphMergedV1NLM1ClusPi0Purity               = (TGraphAsymmErrors*)directoryMergedV1NLM1ClusPi0->Get("PurityPi0");
+        TGraphAsymmErrors* graphMergedV1NLM1ClusPi0PurityDivEff         = CalculateGraphErrRatioToOtherTGraphErr(graphMergedV1NLM1ClusPi0Purity, graphMergedV1NLM1ClusPi0Efficiency,kTRUE);
+        TGraphAsymmErrors* graphMergedV1NLM1ClusPi0EffDivPur            = CalculateGraphErrRatioToOtherTGraphErr(graphMergedV1NLM1ClusPi0Efficiency, graphMergedV1NLM1ClusPi0Purity, kTRUE);
         for (Int_t i = 0; graphMergedV1NLM1ClusPi0InvXSectionStat->GetX()[0]< 10; i++){
             graphMergedV1NLM1ClusPi0InvXSectionStat->RemovePoint(0);
         }
@@ -150,8 +168,12 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
     //************************** Read data for EMCAL merged Fredi V1 clusterizer NLM2 **************************************************                    
     TFile* fileMergedV1NLM2Clus                                  = new TFile(fileNameMergedV1NLM2Cluster.Data());
     TDirectory* directoryMergedV1NLM2ClusPi0                     = (TDirectory*)fileMergedV1NLM2Clus->Get("Pi02.76TeV"); 
-        TGraphAsymmErrors* graphMergedV1NLM2ClusPi0InvXSectionStat   = (TGraphAsymmErrors*)directoryMergedV1NLM2ClusPi0->Get("graphInvCrossSectionPi0");
-        TGraphAsymmErrors* graphMergedV1NLM2ClusPi0InvXSectionSys    = (TGraphAsymmErrors*)directoryMergedV1NLM2ClusPi0->Get("InvCrossSectionPi0Sys");
+        TGraphAsymmErrors* graphMergedV1NLM2ClusPi0InvXSectionStat      = (TGraphAsymmErrors*)directoryMergedV1NLM2ClusPi0->Get("graphInvCrossSectionPi0");
+        TGraphAsymmErrors* graphMergedV1NLM2ClusPi0InvXSectionSys       = (TGraphAsymmErrors*)directoryMergedV1NLM2ClusPi0->Get("InvCrossSectionPi0Sys");
+        TGraphAsymmErrors* graphMergedV1NLM2ClusPi0Efficiency           = (TGraphAsymmErrors*)directoryMergedV1NLM2ClusPi0->Get("EfficiencyPi0");
+        TGraphAsymmErrors* graphMergedV1NLM2ClusPi0Purity               = (TGraphAsymmErrors*)directoryMergedV1NLM2ClusPi0->Get("PurityPi0");
+        TGraphAsymmErrors* graphMergedV1NLM2ClusPi0PurityDivEff         = CalculateGraphErrRatioToOtherTGraphErr(graphMergedV1NLM2ClusPi0Purity, graphMergedV1NLM2ClusPi0Efficiency,kTRUE);
+        TGraphAsymmErrors* graphMergedV1NLM2ClusPi0EffDivPur            = CalculateGraphErrRatioToOtherTGraphErr(graphMergedV1NLM2ClusPi0Efficiency, graphMergedV1NLM2ClusPi0Purity, kTRUE);
         for (Int_t i = 0; graphMergedV1NLM2ClusPi0InvXSectionStat->GetX()[0]< 10; i++){
             graphMergedV1NLM2ClusPi0InvXSectionStat->RemovePoint(0);
         }
@@ -454,5 +476,199 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
         
     canvasRatioMeas->SaveAs(Form("%s/Pi0_RatioOfXToV1NLM1Clus_PP2760GeV.%s",outputDir.Data(),suffix.Data()));
     
+    
+    // **********************************************************************************************************************
+    // ******************************** Acceptance * Efficiency for pi0 single measurement 2.76TeV **************************
+    // **********************************************************************************************************************
+    textSizeLabelsPixel             = 55;
+    Double_t textSizeLabelsRel      = 55./1200;
+    cout << textSizeLabelsRel << endl;
+    
+    TCanvas* canvasAcceptanceTimesEff       = new TCanvas("canvasAcceptanceTimesEff", "", 200, 10, 1200, 1100);  // gives the page size
+    DrawGammaCanvasSettings( canvasAcceptanceTimesEff,  0.1, 0.01, 0.015, 0.095);
+    canvasAcceptanceTimesEff->SetLogy(1);
+    canvasAcceptanceTimesEff->SetLogx(1);
+    
+        TH2F * hist2DEff;
+        hist2DEff                = new TH2F("hist2DEff", "hist2DEff",1000, 5.,  52, 1000, 1e-3, 1e-0 );
+        SetStyleHistoTH2ForGraphs( hist2DEff, "#it{p}_{T} (GeV/#it{c})", "#epsilon_{eff} ",  
+                                0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.1);//(#times #epsilon_{pur})
+        hist2DEff->GetYaxis()->SetLabelOffset(0.001);
+        hist2DEff->GetXaxis()->SetLabelOffset(-0.01);
+        hist2DEff->GetXaxis()->SetMoreLogLabels(kTRUE);
+        hist2DEff->DrawCopy(); 
+
+        DrawGammaSetMarkerTGraphAsym(graphMergedV2ClusPi0Efficiency,markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
+        graphMergedV2ClusPi0Efficiency->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphMergedV1ClusPi0Efficiency,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+        graphMergedV1ClusPi0Efficiency->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphMergedV1NLM1ClusPi0Efficiency,markerStyleDet[3], markerSizeDet[3], colorDet[3] , colorDet[3]);
+        graphMergedV1NLM1ClusPi0Efficiency->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphMergedV1NLM2ClusPi0Efficiency,markerStyleDet[4], markerSizeDet[4], colorDet[4] , colorDet[4]);
+        graphMergedV1NLM2ClusPi0Efficiency->Draw("p,same,e");
+
+        TLegend* legendEffiAccPi0           = GetAndSetLegend2(0.55, 0.13, 0.83, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
+        legendEffiAccPi0->AddEntry(graphMergedV2ClusPi0Efficiency,"V2 clus","p");
+        legendEffiAccPi0->AddEntry(graphMergedV1ClusPi0Efficiency,"V1 clus","p");
+        legendEffiAccPi0->AddEntry(graphMergedV1NLM1ClusPi0Efficiency,"V1 clus, LM=1","p");
+        legendEffiAccPi0->AddEntry(graphMergedV1NLM2ClusPi0Efficiency,"V1 clus, LM=2","p");        
+        legendEffiAccPi0->Draw();
+
+//         TLatex *labelPerfEffi               = new TLatex(0.15,0.92,"ALICE performance");
+//         SetStyleTLatex( labelPerfEffi, textSizeLabelsRel,4);
+//         labelPerfEffi->Draw();
+        TLatex *labelEnergyEffi             = new TLatex(0.15,0.92,collisionSystem2760GeV.Data());
+        SetStyleTLatex( labelEnergyEffi, textSizeLabelsRel,4);
+        labelEnergyEffi->Draw();
+        TLatex *labelDetSysEffiPi0          = new TLatex(0.15,0.87,"#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelDetSysEffiPi0, textSizeLabelsRel,4);
+        labelDetSysEffiPi0->Draw();
+
+        
+    canvasAcceptanceTimesEff->Update();
+    canvasAcceptanceTimesEff->Print(Form("%s/Pi0_Efficiency.%s",outputDir.Data(),suffix.Data()));
+    canvasAcceptanceTimesEff->SetLogy(0);
+       TH2F * hist2DPur;
+        hist2DPur                = new TH2F("hist2DPur", "hist2DPur",1000, 5.,  52, 1000, 0.3, 1.1 );
+        SetStyleHistoTH2ForGraphs( hist2DPur, "#it{p}_{T} (GeV/#it{c})", "#epsilon_{pur} ",  
+                                0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.1);//(#times #epsilon_{pur})
+        hist2DPur->GetYaxis()->SetLabelOffset(0.001);
+        hist2DPur->GetXaxis()->SetLabelOffset(-0.01);
+        hist2DPur->GetXaxis()->SetMoreLogLabels(kTRUE);
+        hist2DPur->DrawCopy(); 
+
+        DrawGammaSetMarkerTGraphAsym(graphMergedV2ClusPi0Purity,markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
+        graphMergedV2ClusPi0Purity->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphMergedV1ClusPi0Purity,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+        graphMergedV1ClusPi0Purity->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphMergedV1NLM1ClusPi0Purity,markerStyleDet[3], markerSizeDet[3], colorDet[3] , colorDet[3]);
+        graphMergedV1NLM1ClusPi0Purity->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphMergedV1NLM2ClusPi0Purity,markerStyleDet[4], markerSizeDet[4], colorDet[4] , colorDet[4]);
+        graphMergedV1NLM2ClusPi0Purity->Draw("p,same,e");
+
+        TLegend* legendPurityPi0           = GetAndSetLegend2(0.14, 0.13, 0.35, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
+        legendPurityPi0->AddEntry(graphMergedV2ClusPi0Purity,"V2 clus","p");
+        legendPurityPi0->AddEntry(graphMergedV1ClusPi0Purity,"V1 clus","p");
+        legendPurityPi0->AddEntry(graphMergedV1NLM1ClusPi0Purity,"V1 clus, LM=1","p");
+        legendPurityPi0->AddEntry(graphMergedV1NLM2ClusPi0Purity,"V1 clus, LM=2","p");        
+        legendPurityPi0->Draw();
+
+//         TLatex *labelPerfEffi               = new TLatex(0.15,0.92,"ALICE performance");
+//         SetStyleTLatex( labelPerfEffi, textSizeLabelsRel,4);
+//         labelPerfEffi->Draw();
+        labelEnergyEffi->Draw();
+        labelDetSysEffiPi0->Draw();
+        
+    canvasAcceptanceTimesEff->Update();
+    canvasAcceptanceTimesEff->Print(Form("%s/Pi0_Purity.%s",outputDir.Data(),suffix.Data()));
+   
+    canvasAcceptanceTimesEff->SetLogy(1);
+        TH2F * hist2DPurDivEff;
+        hist2DPurDivEff                = new TH2F("hist2DPurDivEff", "hist2DPurDivEff",1000, 5.,  52, 1000, 0.7, 1000 );
+        SetStyleHistoTH2ForGraphs( hist2DPurDivEff, "#it{p}_{T} (GeV/#it{c})", "#epsilon_{pur}/#epsilon_{eff} ",  
+                                0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.1);//(#times #epsilon_{pur})
+        hist2DPurDivEff->GetYaxis()->SetLabelOffset(0.001);
+        hist2DPurDivEff->GetXaxis()->SetLabelOffset(-0.01);
+        hist2DPurDivEff->GetXaxis()->SetMoreLogLabels(kTRUE);
+        hist2DPurDivEff->DrawCopy(); 
+
+        cout << "effi" << endl;
+        graphMergedV2ClusPi0Efficiency->Print();
+        cout << "pur" << endl;
+        graphMergedV2ClusPi0Purity->Print();
+        cout << "pur/effi" << endl;
+        graphMergedV2ClusPi0PurityDivEff->Print();
+        DrawGammaSetMarkerTGraphAsym(graphMergedV2ClusPi0PurityDivEff,markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
+        graphMergedV2ClusPi0PurityDivEff->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphMergedV1ClusPi0PurityDivEff,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+        graphMergedV1ClusPi0PurityDivEff->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphMergedV1NLM1ClusPi0PurityDivEff,markerStyleDet[3], markerSizeDet[3], colorDet[3] , colorDet[3]);
+        graphMergedV1NLM1ClusPi0PurityDivEff->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphMergedV1NLM2ClusPi0PurityDivEff,markerStyleDet[4], markerSizeDet[4], colorDet[4] , colorDet[4]);
+        graphMergedV1NLM2ClusPi0PurityDivEff->Draw("p,same,e");
+
+        TLegend* legendPurDifEffPi0           = GetAndSetLegend2(0.62, 0.95-(4*textSizeLabelsRel) , 0.85, 0.95,textSizeLabelsPixel);
+        legendPurDifEffPi0->AddEntry(graphMergedV2ClusPi0PurityDivEff,"V2 clus","p");
+        legendPurDifEffPi0->AddEntry(graphMergedV1ClusPi0PurityDivEff,"V1 clus","p");
+        legendPurDifEffPi0->AddEntry(graphMergedV1NLM1ClusPi0PurityDivEff,"V1 clus, LM=1","p");
+        legendPurDifEffPi0->AddEntry(graphMergedV1NLM2ClusPi0PurityDivEff,"V1 clus, LM=2","p");        
+        legendPurDifEffPi0->Draw();
+
+//         TLatex *labelPerfEffi               = new TLatex(0.15,0.92,"ALICE performance");
+//         SetStyleTLatex( labelPerfEffi, textSizeLabelsRel,4);
+//         labelPerfEffi->Draw();
+        labelEnergyEffi->Draw();
+        labelDetSysEffiPi0->Draw();
+        
+    canvasAcceptanceTimesEff->Update();
+    canvasAcceptanceTimesEff->Print(Form("%s/Pi0_PurityDiffEfficiency.%s",outputDir.Data(),suffix.Data()));
+    
+        TH2F * hist2DEffDivPur;
+        hist2DEffDivPur                = new TH2F("hist2DEffDivPur", "hist2DEffDivPur",1000, 5.,  52, 1000, 0.001, 1 );
+        SetStyleHistoTH2ForGraphs( hist2DEffDivPur, "#it{p}_{T} (GeV/#it{c})", "#epsilon_{eff}/#epsilon_{pur}",  
+                                0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.1);//(#times #epsilon_{pur})
+        hist2DEffDivPur->GetYaxis()->SetLabelOffset(0.001);
+        hist2DEffDivPur->GetXaxis()->SetLabelOffset(-0.01);
+        hist2DEffDivPur->GetXaxis()->SetMoreLogLabels(kTRUE);
+        hist2DEffDivPur->DrawCopy(); 
+
+        DrawGammaSetMarkerTGraphAsym(graphDiClusV2Pi0Efficiency,25, markerSizeDet[1], colorDet[1] , colorDet[1]);
+        graphDiClusV2Pi0Efficiency->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphMergedV2ClusPi0EffDivPur,markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
+        graphMergedV2ClusPi0EffDivPur->Draw("p,same,e");
+//         DrawGammaSetMarkerTGraphAsym(graphMergedV1ClusPi0EffDivPur,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+//         graphMergedV1ClusPi0EffDivPur->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphMergedV1NLM1ClusPi0EffDivPur,markerStyleDet[3], markerSizeDet[3], colorDet[3] , colorDet[3]);
+        graphMergedV1NLM1ClusPi0EffDivPur->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphMergedV1NLM2ClusPi0EffDivPur,markerStyleDet[4], markerSizeDet[4], colorDet[4] , colorDet[4]);
+        graphMergedV1NLM2ClusPi0EffDivPur->Draw("p,same,e");
+
+        TLegend* legendEffDivPurPi0           = GetAndSetLegend2(0.62, 0.13, 0.85, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
+        legendEffDivPurPi0->AddEntry(graphMergedV2ClusPi0PurityDivEff,"V2 clus","p");
+        
+//         legendEffDivPurPi0->AddEntry(graphMergedV1ClusPi0PurityDivEff,"V1 clus","p");
+        legendEffDivPurPi0->AddEntry(graphMergedV1NLM1ClusPi0PurityDivEff,"V1 clus, LM=1","p");
+        legendEffDivPurPi0->AddEntry(graphMergedV1NLM2ClusPi0PurityDivEff,"V1 clus, LM=2","p");        
+        legendEffDivPurPi0->Draw();
+
+        labelEnergyEffi->Draw();
+        labelDetSysEffiPi0->Draw();
+        
+    canvasAcceptanceTimesEff->Update();
+    canvasAcceptanceTimesEff->Print(Form("%s/Pi0_EfficiencyDiffPur.%s",outputDir.Data(),suffix.Data()));
+    
+    canvasAcceptanceTimesEff->SetLogy(0);
+        hist2DEffDivPur->GetYaxis()->SetRangeUser(0,0.42);
+        hist2DEffDivPur->DrawCopy(); 
+        
+        DrawGammaSetMarkerTGraphAsym(graphDiClusV2Pi0Efficiency,25, markerSizeDet[1], colorDet[1] , colorDet[1]);
+        graphDiClusV2Pi0Efficiency->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphMergedV2ClusPi0EffDivPur,markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
+        graphMergedV2ClusPi0EffDivPur->Draw("p,same,e");
+//         DrawGammaSetMarkerTGraphAsym(graphMergedV1ClusPi0EffDivPur,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+//         graphMergedV1ClusPi0EffDivPur->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphMergedV1NLM1ClusPi0EffDivPur,markerStyleDet[3], markerSizeDet[3], colorDet[3] , colorDet[3]);
+        graphMergedV1NLM1ClusPi0EffDivPur->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphMergedV1NLM2ClusPi0EffDivPur,markerStyleDet[4], markerSizeDet[4], colorDet[4] , colorDet[4]);
+        graphMergedV1NLM2ClusPi0EffDivPur->Draw("p,same,e");
+
+        TLegend* legendEffDiffPurLinPi0           = GetAndSetLegend2(0.62, 0.95-(4*textSizeLabelsRel) , 0.85, 0.95,textSizeLabelsPixel);
+        legendEffDiffPurLinPi0->AddEntry(graphMergedV2ClusPi0PurityDivEff,"V2 clus","p");
+        legendEffDiffPurLinPi0->AddEntry(graphDiClusV2Pi0Efficiency,"V2 di-clus","p");
+//         legendEffDiffPurLinPi0->AddEntry(graphMergedV1ClusPi0PurityDivEff,"V1 clus","p");
+        legendEffDiffPurLinPi0->AddEntry(graphMergedV1NLM1ClusPi0PurityDivEff,"V1 clus, LM=1","p");
+        legendEffDiffPurLinPi0->AddEntry(graphMergedV1NLM2ClusPi0PurityDivEff,"V1 clus, LM=2","p");        
+        legendEffDiffPurLinPi0->Draw();
+
+
+//         TLatex *labelPerfEffi               = new TLatex(0.15,0.92,"ALICE performance");
+//         SetStyleTLatex( labelPerfEffi, textSizeLabelsRel,4);
+//         labelPerfEffi->Draw();
+        labelEnergyEffi->Draw();
+        labelDetSysEffiPi0->Draw();
+        
+    canvasAcceptanceTimesEff->Update();
+    canvasAcceptanceTimesEff->Print(Form("%s/Pi0_EfficiencyDiffPur_lin.%s",outputDir.Data(),suffix.Data()));
+     
 }
     

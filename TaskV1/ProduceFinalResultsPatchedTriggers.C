@@ -4927,6 +4927,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         if (graphAcceptancePi0Weighted)                 graphAcceptancePi0Weighted->Write("AcceptancePi0", TObject::kOverwrite);
         if (graphEfficiencyPi0Weighted)                 graphEfficiencyPi0Weighted->Write("EfficiencyPi0", TObject::kOverwrite);
         if (graphEffTimesAccPi0Weighted)                graphEffTimesAccPi0Weighted->Write("EffTimesAccPi0", TObject::kOverwrite);
+        if (graphPurityPi0Weighted)                     graphPurityPi0Weighted->Write("PurityPi0", TObject::kOverwrite);
         if (mode != 10){
             if (graphMassPi0DataWeighted)                   graphMassPi0DataWeighted->Write("Pi0_Mass_data", TObject::kOverwrite);
             if (graphMassPi0MCWeighted)                     graphMassPi0MCWeighted->Write("Pi0_Mass_MC", TObject::kOverwrite);
