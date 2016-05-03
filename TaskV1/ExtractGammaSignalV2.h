@@ -67,7 +67,6 @@ TH1D*       fDeltaPtDummy                                           = NULL;
 // Histograms for conversion analysis
 TH1D*       fHistoGammaConvPt                                                                   = NULL;
 TH1D*       fHistoGammaConvPtOrBin                                                              = NULL;
-TH1D*       fHistoGammaConvPtDCAzBinning                                                        = NULL;
 TH1D*       fHistoGammaMCrecConvPt                                                              = NULL;
 TH1D*       fHistoGammaMCrecConvPtOrBin                                                         = NULL;
 TH1D*       fHistoGammaMCConvPt                                                                 = NULL;

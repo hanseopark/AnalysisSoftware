@@ -200,9 +200,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
         fHistoGammaConvPt                   = (TH1D*)ESDContainer->FindObject("ESD_ConvGamma_Pt");
         fHistoGammaConvPt->Sumw2();
         fHistoGammaConvPtOrBin              = (TH1D*)fHistoGammaConvPt->Clone("ESD_ConvGamma_Pt_OriginalBinning");
-        fHistoGammaConvPtDCAzBinning        = (TH1D*)fHistoGammaConvPt->Clone("ESD_ConvGamma_Pt_DCAzDistBinning");
         RebinSpectrum(fHistoGammaConvPt,"");
-        RebinSpectrumToDCAzDistBinning(fHistoGammaConvPtDCAzBinning,"");
         
         // read dca tree for conversions
         if(!addSig && !(mode == 4 || mode == 5)){
@@ -2648,13 +2646,23 @@ Bool_t CalculatePileUpCorrectionFactor(TH1D* ratioWithWithoutPileUp, TH1D* &pile
         fitToRatio                          = new TF1("fitRatio", "1+[0]/TMath::Power((x-[1]), [2])", fBinsPtDummy[1], fBinsPtDummy[fNBinsPtDummy]);
         fitToRatio->SetParameters(1, 0, 1);
         fitToRatio->SetName(Form("%s_fit", ratioWithWithoutPileUp->GetName()));
-        //TFitResultPtr fitToRatioResult      = ratioWithWithoutPileUp->Fit(fitToRatio, "SIMNER");     // Intgral option doesn't quite work
-                                                                                                        // Error in <GSLError>: Error 21 in qags.c at 553 : bad integrand behavior found in the integration interval
-        TFitResultPtr fitToRatioResult      = ratioWithWithoutPileUp->Fit(fitToRatio, "SQNRE+");
+        TFitResultPtr fitToRatioResult      = ratioWithWithoutPileUp->Fit(fitToRatio, "SIMNRE");
         fitStatus                           = fitToRatioResult;
         
-        if (fitStatus == 0) {
-            //cout << "    " << ratioWithWithoutPileUp->GetName() << " fit success, status: " << fitStatus << endl;
+        // fit status: https://root.cern.ch/doc/master/classTH1.html and https://root.cern.ch/doc/master/classTMinuit.html
+        // fitStatus = migradResult + 10*minosResult + 100*hesseResult + 1000*improveResult.
+        //  0: command executed normally
+        //  1: command is blank, ignored
+        //  2: command line unreadable, ignored
+        //  3: unknown command, ignored
+        //  4: abnormal termination (e.g., MIGRAD not converged)
+        //  9: reserved
+        //  10: END command
+        //  11: EXIT or STOP command
+        //  12: RETURN command
+        
+        if (fitStatus == 0 || fitStatus >= 1000) {
+            // accepting fits, if everything went fine (i.e. fitstatus = 0) of if only improve had problems (i.e. fitstatus >= 1000)
             
             for (Int_t i = fFitStartBin; i < fNBinsPt+1; i++) {
 
@@ -2676,7 +2684,7 @@ Bool_t CalculatePileUpCorrectionFactor(TH1D* ratioWithWithoutPileUp, TH1D* &pile
                 }
             }
         } else {
-            //cout << "    " << ratioWithWithoutPileUp->GetName() << " fit failed, status: " << fitStatus << endl;
+            // if fit failed, set correction factors to one
             
             returnValue                     = kFALSE;
             cout << "WARNING: fit to " << ratioWithWithoutPileUp->GetName() << " failed, correction factor set to one!" << endl;
@@ -2688,6 +2696,7 @@ Bool_t CalculatePileUpCorrectionFactor(TH1D* ratioWithWithoutPileUp, TH1D* &pile
         }
     } else {
         // same binning between spectra and DCAz distributions, pileup correction factor is inverse of ratio
+        
         for (Int_t i = 1; i < fNBinsPt+1; i++) {
             if (!ratioWithWithoutPileUp->GetBinContent(i))
                 ratioWithWithoutPileUp->SetBinContent(i,            1);
