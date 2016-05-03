@@ -1667,13 +1667,13 @@ Int_t GetBinning(   Double_t*  binning,
     if (meson.CompareTo("Pi0")==0){
         if (energy.CompareTo("2.76TeV") == 0){
             if ( mode == 2 ){
-                maxNBins = 25;
-                for(Int_t i = 0; i < maxNBins; i++){
+                maxNBins = 24;
+                for(Int_t i = 0; i < maxNBins+1; i++){
                     binning[i] = fBinsPi02760GeVPtTrigFullPCMEMC[i];
                 } 
             } else if ( mode == 4){
-                maxNBins = 27;
-                for(Int_t i = 0; i < maxNBins; i++){
+                maxNBins = 26;
+                for(Int_t i = 0; i < maxNBins+1; i++){
                     binning[i] = fBinsPi02760GeVPtTrig13g[i];
                 }
             } else if ( mode == 10){
@@ -1691,8 +1691,8 @@ Int_t GetBinning(   Double_t*  binning,
         }
     } else if (meson.Contains("Eta")){
         if (energy.CompareTo("2.76TeV") == 0){
-            maxNBins = 13;
-            for(Int_t i = 0; i < maxNBins; i++){
+            maxNBins = 12;
+            for(Int_t i = 0; i < maxNBins+1; i++){
                 binning[i] = fBinsEta2760GeVPtTrig11a[i];
             } 
         }

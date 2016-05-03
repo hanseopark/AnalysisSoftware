@@ -424,7 +424,7 @@ TGraphAsymmErrors* CalculateGraphErrRatioToOtherTGraphErr(TGraphAsymmErrors* gra
     TGraphAsymmErrors* graphToDivBy2    = (TGraphAsymmErrors*)graphToDivBy->Clone("graphToDivBy2");
     Int_t j                             = 0;
     for (Int_t i = 0; i < graph->GetN(); i++){
-        cout << i << "\t" << j<< endl;
+//         cout << i << "\t" << j<< endl;
 //         cout << "graph A: " << graph->GetX()[i] << endl;
 //         cout << "graph B: " << graphToDivBy2->GetX()[j] << endl;
         while (abs(graph->GetX()[i] - graphToDivBy2->GetX()[j]) > 0.0001 && j < graphToDivBy2->GetN()){
@@ -1866,7 +1866,7 @@ TGraphAsymmErrors *ApplyXshift(TGraphAsymmErrors *spectrum, TF1 *tsallis, TStrin
 //_________________________________________________________________________________________________
 TGraphAsymmErrors* ApplyXshiftIndividualSpectra( TGraphAsymmErrors *CombinedSpectrum, 
                                                  TGraphAsymmErrors *IndividualSpectum,
-                                                 TF1 *tsallis,
+                                                 TF1 *shiftFunction,
                                                  Int_t startBin =0, Int_t numberOfCommonBins = 0, TString mesonType = "Pi0"){
     //----------------------------------------------------------------------
     // function bin shift the individual spectra based the commond fit.
@@ -1875,8 +1875,6 @@ TGraphAsymmErrors* ApplyXshiftIndividualSpectra( TGraphAsymmErrors *CombinedSpec
     //         -> where they are not the same, a manual shift is done for the individual spectra
     //----------------------------------------------------------------------
 
-    
-    
 //     CombinedSpectrum->Print();
 //     cout << "entered bin shifting individual spectra x" << endl;
     TGraphAsymmErrors *spectrumShifted  = (TGraphAsymmErrors*)CombinedSpectrum->Clone();
@@ -1886,7 +1884,7 @@ TGraphAsymmErrors* ApplyXshiftIndividualSpectra( TGraphAsymmErrors *CombinedSpec
     Double_t* xvalueErrLow              = spectrumShifted->GetEXlow();
         
     TGraphAsymmErrors* indSpecShifted   = (TGraphAsymmErrors*)IndividualSpectum->Clone();
-     //IndividualSpectum->Print();
+//     IndividualSpectum->Print();
     Double_t* xvalueI                   = indSpecShifted->GetX();
     
     Double_t* xvalueIErrlow             = indSpecShifted->GetEXlow();
@@ -1896,10 +1894,11 @@ TGraphAsymmErrors* ApplyXshiftIndividualSpectra( TGraphAsymmErrors *CombinedSpec
     Double_t* yvalueIErrhigh            = indSpecShifted->GetEYhigh();
     Int_t numberPointsI                 = indSpecShifted->GetN();
         
-    //     indSpecShifted->Print();
+//     indSpecShifted->Print();
+    cout  << "startBin: " << startBin << "\t largest common bin: " << numberOfCommonBins << "\t number of real common bins: " <<  numberOfCommonBins-startBin  << endl;
     Int_t iBinsInd                      = 0;
     for (Int_t iBins = startBin ; iBins < numberOfCommonBins; iBins++){
-      //cout << iBinsInd << "\t"<<xvalue[iBins] << "\t"<< xvalueI[iBinsInd]<< endl;
+        cout << "Common bins: " << iBinsInd << "\t"<< xvalueI[iBinsInd] << "\t"<<xvalue[iBins] << endl;
         //cout << "Before Shift" << yvalue[iBinsInd] << "\t" << yvalueI[iBinsInd] << endl;
         yvalueI[iBinsInd]               = yvalueI[iBinsInd]*xvalueI[iBinsInd]/xvalue[iBins];
             //cout << "after Shift" << yvalue[iBinsInd] << "\t" << yvalueI[iBinsInd] << endl;
@@ -1911,16 +1910,17 @@ TGraphAsymmErrors* ApplyXshiftIndividualSpectra( TGraphAsymmErrors *CombinedSpec
         iBinsInd++;
     }
      //cout << iBinsInd << "\t" << numberPointsI << endl;
-    TString formulaName                 = Form("%s",tsallis->GetName());
-    Int_t nPar                          = tsallis->GetNpar();
-    TString formula                     = Form("%s - [%d]",(tsallis->GetExpFormula()).Data(),nPar);
-//     cout << "Formula used for bin shift: " << formula << endl;
+    TString formulaName                 = Form("%s",shiftFunction->GetName());
+    Int_t nPar                          = shiftFunction->GetNpar();
+    TString formula                     = Form("%s - [%d]",(shiftFunction->GetExpFormula()).Data(),nPar);
+    cout << "Formula used for bin shift: " << formula << endl;
     TF1 * fYield                        = new TF1(formulaName.Data(),formula, 0.2,25.);
     for(Int_t p=0; p<nPar; p++){
-        fYield->SetParameter(p,tsallis->GetParameter(p));
+        fYield->SetParameter(p,shiftFunction->GetParameter(p));
     }
 
-    for (Int_t ip = (iBinsInd-1); ip < numberPointsI; ip++){
+    for (Int_t ip = (iBinsInd); ip < numberPointsI; ip++){
+        cout << "Individual shift: " << ip << "\t" <<xvalueI[ip] ;
         Double_t ptMin                  = xvalueI[ip]-xvalueIErrlow[ip];
         Double_t ptMax                  = xvalueI[ip]+xvalueIErrhigh[ip];
         fYield->SetParameter(nPar,0.);
@@ -1929,6 +1929,7 @@ TGraphAsymmErrors* ApplyXshiftIndividualSpectra( TGraphAsymmErrors *CombinedSpec
         indSpecShifted->SetPoint(ip,pt0,yvalueI[ip]*xvalueI[ip]/pt0);
         indSpecShifted->SetPointEXlow(ip,xvalueIErrlow[ip] -dX);
         indSpecShifted->SetPointEXhigh(ip,xvalueIErrhigh[ip]+dX);
+        cout << "\t" << pt0 << endl;
     }
 
      return indSpecShifted;

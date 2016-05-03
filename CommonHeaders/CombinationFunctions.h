@@ -1294,12 +1294,14 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
                         yValue[meas]                            = histoStat[meas]->GetBinContent(binCounters[meas]+1-startOffsets[meas]);
                         yStatErr[meas]                          = histoStat[meas]->GetBinError(binCounters[meas]+1-startOffsets[meas]);
                         cout << binCounters[meas]-sysOffsets[meas] << "\t"<< graphSyst[meas]->GetX()[binCounters[meas]-sysOffsets[meas]] 
-                             << "\t"<< graphSyst[meas]->GetErrorYhigh(binCounters[meas]-sysOffsets[meas]) 
+                             << "\t"<< graphSyst[meas]->GetY()[binCounters[meas]-sysOffsets[meas]]
                              << "\t"<< graphSyst[meas]->GetErrorYlow(binCounters[meas]-sysOffsets[meas]) << endl;
                         ySysErr[meas]                           = graphSyst[meas]->GetErrorYhigh(binCounters[meas]-sysOffsets[meas]);
                         yTotErr[meas]                           = TMath::Sqrt(yStatErr[meas]*yStatErr[meas]+ySysErr[meas]*ySysErr[meas]);
                         numberOfMeasInPtBin++;
-                        if (graphSyst[meas]->GetX()[binCounters[meas]-sysOffsets[meas]] - histoStat[meas]->GetXaxis()->GetBinCenter(binCounters[meas]+1-startOffsets[meas]) > 0.001){
+                        Double_t pTDiff = (graphSyst[meas]->GetX()[binCounters[meas]-sysOffsets[meas]] - histoStat[meas]->GetXaxis()->GetBinCenter(binCounters[meas]+1-startOffsets[meas]));
+//                         cout << "p_{T}: "<< graphSyst[meas]->GetX()[binCounters[meas]-sysOffsets[meas]] << "\t" << histoStat[meas]->GetXaxis()->GetBinCenter(binCounters[meas]+1-startOffsets[meas]) << "\t diff: " << pTDiff << endl;
+                        if ( abs(pTDiff) > 0.001){
                             cout << "the offsets between stat and sys are wrong, please correct" << endl;
                             return NULL;
                         }
