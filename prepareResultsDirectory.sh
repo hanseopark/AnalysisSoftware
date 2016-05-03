@@ -46,4 +46,13 @@ if [ $2 = "pp2760GeV" ]; then
     rm *13TeV*
     rm *LHC11h*
     rm *LHC10*
+elif [ $2 = "pPb5023GeV" ]; then
+    rm *PbPb*
+    rm *pp*
+    rm *2760*
+    rm *7TeV*
+    rm *8TeV*
+    rm *13TeV*
+    rm *LHC11h*
+    rm *LHC10*
 fi
