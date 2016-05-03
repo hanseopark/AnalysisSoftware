@@ -35,7 +35,7 @@
 #include "TPostScript.h"
 #include "TGraphErrors.h"
 #include "TArrow.h"
-#include "TGraphAsymmErrors.h" 
+#include "TGraphAsymmErrors.h"
 #include "TGaxis.h"
 #include "TMarker.h"
 #include "Math/WrappedTF1.h"
@@ -50,15 +50,15 @@
 #include "CommonHeaders/CombinationFunctions.h"
 #include "CombineMesonMeasurementsPbPbLHC11hV1.h"
 
-extern TRandom*	gRandom;
-extern TBenchmark*	gBenchmark;
-extern TSystem*	gSystem;
-extern TMinuit*  	gMinuit;	
+extern TRandom* gRandom;
+extern TBenchmark*  gBenchmark;
+extern TSystem* gSystem;
+extern TMinuit*     gMinuit;
 
 struct SysErrorConversion {
-	Double_t value;
-	Double_t error;
-	//	TString name;
+    Double_t value;
+    Double_t error;
+    //  TString name;
 };
 
 void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
@@ -159,6 +159,14 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     }
     SetStyleTLatex( labelDetSysInvYieldSectionPi0LHC11hwithPP, 0.035,4);
 
+    TLatex *labelEtaToPi0Energy = new TLatex(0.12,0.87,collisionSystem2760GeV.Data());
+    SetStyleTLatex( labelEtaToPi0Energy,0.04,4);
+//      labelEtaToPi0Energy->SetTextFont(63);
+
+    TLatex *labelPreliminaryEtaToPi0 = new TLatex(0.65,0.15,"ALICE Preliminary");
+    SetStyleTLatex( labelPreliminaryEtaToPi0, 0.04,4);
+
+
 
     for (Int_t i = 0; i < 11; i++){
         colorDet[i]                 = GetDefaultColorDiffDetectors(nameMeasGlobal[i].Data(), kFALSE, kFALSE, kTRUE);
@@ -193,7 +201,8 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     TString fileNameEPOS                    = "ExternalInputPbPb/Theory/EPOS/pi0_eta_Anders19Feb2016_NoUrQMD.root";
     TString fileNameEPOScharged             = "ExternalInputPbPb/Theory/EPOS/Epos_sumChargedPionsKaons.root";
 
-    TString fileNamePP2760GeVpublished      = "LHC11hInputFiles/CombinedResultsPaperPP2760GeV_2016_01_08.root";
+    TString fileNamePP2760GeVpublished      = "LHC11hInputFiles/CombinedResultsPaperPP2760GeV_2016_05_03_FrediV2Clusterizer.root"; //"LHC11hInputFiles/CombinedResultsPaperPP2760GeV_2016_01_08.root";
+    TString fileNamePPPHOS                  = "ExternalInput/PHOS/2.76TeV/LHC11a_PHOS_pi0_pp2760_noBWCorr_FDcorr_20140218.root";
     TString fileFinalResultsPi0PPforRAA     = "LHC11hInputFiles/CombinedResultsPaperX_18_Feb_2014.root";
     TString fileFinalResultsEtaPPforRAA     = "LHC11hInputFiles/CombinedResultsEta2760X_2015_09_01.root";
 
@@ -295,28 +304,28 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     //New EPOS (maybe 2?) (file from Anders email of the 19th Feb. 2016)
     //necessary to do -> dndptpy[iPoint] = dndptpy[iPoint]/(pt[iPoint]*2*TMath::Pi());
     TFile* filePredictionEpos = new TFile(fileNameEPOS.Data());
-    TH1D *histoEPOSPi0_0010 = (TH1D*)filePredictionEpos->Get("pi0_pt_cent0_10");
+    TH1D *histoEPOSPi0_0010 = (TH1D*)filePredictionEpos->Get("rb_pi0_pt_cent0_10");
     for (Int_t i = 1; i < histoEPOSPi0_0010->GetNbinsX()+1 ; i++){
         Double_t newBinContent = histoEPOSPi0_0010->GetBinContent(i)/(2*TMath::Pi()*histoEPOSPi0_0010->GetBinCenter(i));
         Double_t newBinError = histoEPOSPi0_0010->GetBinError(i)/(2*TMath::Pi()*histoEPOSPi0_0010->GetBinCenter(i));
         histoEPOSPi0_0010->SetBinContent(i,newBinContent);
         histoEPOSPi0_0010->SetBinError(i,newBinError);
     }
-    TH1D *histoEPOSEta_0010 = (TH1D*)filePredictionEpos->Get("eta_pt_cent0_10");
+    TH1D *histoEPOSEta_0010 = (TH1D*)filePredictionEpos->Get("rb_eta_pt_cent0_10");
     for (Int_t i = 1; i < histoEPOSEta_0010->GetNbinsX()+1 ; i++){
         Double_t newBinContent = histoEPOSEta_0010->GetBinContent(i)/(2*TMath::Pi()*histoEPOSEta_0010->GetBinCenter(i));
         Double_t newBinError = histoEPOSEta_0010->GetBinError(i)/(2*TMath::Pi()*histoEPOSEta_0010->GetBinCenter(i));
         histoEPOSEta_0010->SetBinContent(i,newBinContent);
         histoEPOSEta_0010->SetBinError(i,newBinError);
     }
-    TH1D *histoEPOSPi0_2050 = (TH1D*)filePredictionEpos->Get("pi0_pt_cent20_50");
+    TH1D *histoEPOSPi0_2050 = (TH1D*)filePredictionEpos->Get("rb_pi0_pt_cent20_50");
     for (Int_t i = 1; i < histoEPOSPi0_2050->GetNbinsX()+1 ; i++){
         Double_t newBinContent = histoEPOSPi0_2050->GetBinContent(i)/(2*TMath::Pi()*histoEPOSPi0_2050->GetBinCenter(i));
         Double_t newBinError = histoEPOSPi0_2050->GetBinError(i)/(2*TMath::Pi()*histoEPOSPi0_2050->GetBinCenter(i));
         histoEPOSPi0_2050->SetBinContent(i,newBinContent);
         histoEPOSPi0_2050->SetBinError(i,newBinError);
     }
-    TH1D *histoEPOSEta_2050 = (TH1D*)filePredictionEpos->Get("eta_pt_cent20_50");
+    TH1D *histoEPOSEta_2050 = (TH1D*)filePredictionEpos->Get("rb_eta_pt_cent20_50");
     for (Int_t i = 1; i < histoEPOSEta_2050->GetNbinsX()+1 ; i++){
         Double_t newBinContent = histoEPOSEta_2050->GetBinContent(i)/(2*TMath::Pi()*histoEPOSEta_2050->GetBinCenter(i));
         Double_t newBinError = histoEPOSEta_2050->GetBinError(i)/(2*TMath::Pi()*histoEPOSEta_2050->GetBinCenter(i));
@@ -333,6 +342,16 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         histoEPOSpred_0010 = (TH1D*)histoEPOSEta_0010->Clone("histoEPOSpred_0010");
         histoEPOSpred_2050 = (TH1D*)histoEPOSEta_2050->Clone("histoEPOSpred_2050");
     }
+    //here
+    DrawGammaSetMarker(histoEPOSpred_0010,1,2,colorEPOS0010,colorEPOS0010);
+    histoEPOSpred_0010->SetLineWidth(2);
+    TH1D *histoEPOSpredScaledforPlot_0010 = (TH1D*)histoEPOSpred_0010->Clone("histoEPOSpredScaledforPlot_0010");
+    histoEPOSpredScaledforPlot_0010->Scale(4);
+    DrawGammaSetMarker(histoEPOSpredScaledforPlot_0010,1,2,colorEPOS0010,colorEPOS0010);
+    histoEPOSpredScaledforPlot_0010->SetLineWidth(2);
+
+    DrawGammaSetMarker(histoEPOSpred_2050,1,2,colorEPOS2050,colorEPOS2050);
+    histoEPOSpred_2050->SetLineWidth(2);
 
     TH1D* histoEPOSEtaToPi0Ratio_0010 = (TH1D*)histoEPOSEta_0010->Clone("histoEPOSEtaToPi0Ratio_0010");
     histoEPOSEtaToPi0Ratio_0010->Divide(histoEPOSEta_0010,histoEPOSPi0_0010,1.,1.,"");
@@ -396,8 +415,11 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     }
 
     TGraphAsymmErrors *TheoryCracowLowPtScaledforPlot_0010 = (TGraphAsymmErrors*)TheoryCracowLowPt_0010->Clone("TheoryCracowLowPtScaledforPlot_0010");
-     TheoryCracowLowPtScaledforPlot_0010 = ScaleGraph(TheoryCracowLowPtScaledforPlot_0010,4);
+    TheoryCracowLowPtScaledforPlot_0010 = ScaleGraph(TheoryCracowLowPtScaledforPlot_0010,4);
+    DrawGammaSetMarkerTGraphAsym(TheoryCracowLowPtScaledforPlot_0010, 0, 0, colorCracow0010,colorCracow0010, 5, kTRUE, colorCracow0010);
 
+    DrawGammaSetMarkerTGraphAsym(TheoryCracowLowPt_0010, 0, 0, colorCracow0010,colorCracow0010, 5, kTRUE,colorCracow0010);
+    DrawGammaSetMarkerTGraphAsym(TheoryCracowLowPt_2050, 0, 0, colorCracow2050,colorCracow2050, 5, kTRUE,colorCracow2050);
 
     //**************************** Jet Quenching NLO arXiv:1506.00838 ****************************//
     TGraphAsymmErrors* graphPi0RAAJetQuenching_0010 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("graphPi0RAAJetQuenching_0010");
@@ -589,51 +611,354 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
     //**************************** PP 2.76TeV ****************************//
     fileFinalResultsPP =        new TFile(fileNamePP2760GeVpublished.Data());
-    cout << "For the Pi0 in PP (combined analysis) " << endl; // combo of PCM, EMCal, PCM+EMCal, EMCal merged, PHOS
+
+    cout << "For the Pi0 in PP" << endl;
     TDirectoryFile* directoryPi0PP2760GeV         = (TDirectoryFile*)fileFinalResultsPP->Get("Pi02.76TeV");
 
+    cout << "Pi0 in PP, combined input" << endl; // combo of PCM, EMCal, PCM+EMCal, EMCal merged, PHOS
     graphInvSectionCombStatPi02760GeV = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0Comb2760GeVAStatErr");
-    graphInvSectionCombStatPi02760GeV = ScaleGraph(graphInvSectionCombStatPi02760GeV,1./xSection2760GeVppINEL);
+      graphInvSectionCombStatPi02760GeV = ScaleGraph(graphInvSectionCombStatPi02760GeV,1./xSection2760GeVppINEL);
     graphInvSectionCombSysPi02760GeV = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0Comb2760GeVASysErr");
-    graphInvSectionCombSysPi02760GeV = ScaleGraph(graphInvSectionCombSysPi02760GeV,1./xSection2760GeVppINEL);
+      graphInvSectionCombSysPi02760GeV = ScaleGraph(graphInvSectionCombSysPi02760GeV,1./xSection2760GeVppINEL);
+
+//       graphInvSectionCombStatPi02760GeV->Print();
+//       graphInvSectionCombSysPi02760GeV->Print();
+//       return;
 
     graphInvSectionCombStatPi02760GeVPlot = (TGraphAsymmErrors*)graphInvSectionCombStatPi02760GeV->Clone("graphInvSectionCombStatPi02760GeVPlot");
+      DrawGammaSetMarkerTGraphAsym(graphInvSectionCombStatPi02760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack);
+      if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvSectionCombStatPi02760GeVPlot);
+
     graphInvSectionCombSysPi02760GeVPlot = (TGraphAsymmErrors*)graphInvSectionCombSysPi02760GeV->Clone("graphInvSectionCombSysPi02760GeVPlot");
+      DrawGammaSetMarkerTGraphAsym(graphInvSectionCombSysPi02760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack, widthLinesBoxes, kTRUE);
+
+    TF1 *fitInvCrossSectionTsallisPi0Comb2760GeV = (TF1*)directoryPi0PP2760GeV->Get("TsallisFitPi0");
+      fitInvCrossSectionTsallisPi0Comb2760GeV->SetParameter(0, fitInvCrossSectionTsallisPi0Comb2760GeV->GetParameter(0)*1./xSection2760GeVppINEL);
+      // ---> Tsallis fit is used for both bin-shifts
+    TF1 *fitInvCrossSectionTCMPi0Comb2760GeV = (TF1*)directoryPi0PP2760GeV->Get("TwoComponentModelFitPi0");
+      fitInvCrossSectionTCMPi0Comb2760GeV->SetParameter(0, fitInvCrossSectionTCMPi0Comb2760GeV->GetParameter(0)*1./xSection2760GeVppINEL);
+      fitInvCrossSectionTCMPi0Comb2760GeV->SetParameter(2, fitInvCrossSectionTCMPi0Comb2760GeV->GetParameter(2)*1./xSection2760GeVppINEL);
+
+    graphInvSectionCombStatPi02760GeVforRAA = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0Comb2760GeVAStatErr_yShifted");
+      graphInvSectionCombStatPi02760GeVforRAA = ScaleGraph(graphInvSectionCombStatPi02760GeVforRAA,1./xSection2760GeVppINEL);
+    graphInvSectionCombSysPi02760GeVforRAA = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0Comb2760GeVASysErr_yShifted");
+      graphInvSectionCombSysPi02760GeVforRAA = ScaleGraph(graphInvSectionCombSysPi02760GeVforRAA,1./xSection2760GeVppINEL);
+
+//       graphInvSectionCombStatPi02760GeVforRAA->Print();
+//       graphInvSectionCombSysPi02760GeVforRAA->Print();
+//       return;
+
+    cout << "Pi0 in PP, PCM input" << endl;
+    graphInvSectionPCMStatPi02760GeV = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PCM2760GeVStatErr");
+      graphInvSectionPCMStatPi02760GeV = ScaleGraph(graphInvSectionPCMStatPi02760GeV,1./xSection2760GeVppINEL);
+    graphInvSectionPCMSysPi02760GeV = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PCM2760GeVSysErr");
+      graphInvSectionPCMSysPi02760GeV = ScaleGraph(graphInvSectionPCMSysPi02760GeV,1./xSection2760GeVppINEL);
+
+//       graphInvSectionPCMStatPi02760GeV->Print();
+//       graphInvSectionPCMSysPi02760GeV->Print();
+//       return;
+
+    graphInvSectionPCMStatPi02760GeVforRAA =       (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PCM2760GeVStatErr_yShifted");
+      graphInvSectionPCMStatPi02760GeVforRAA = ScaleGraph(graphInvSectionPCMStatPi02760GeVforRAA,1./xSection2760GeVppINEL);
+    //WITH material budget error
+    graphInvSectionPCMSysPi02760GeV_yShifted =       (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PCM2760GeVSysErr_yShifted");
+      graphInvSectionPCMSysPi02760GeV_yShifted = ScaleGraph(graphInvSectionPCMSysPi02760GeV_yShifted,1./xSection2760GeVppINEL);
+
+      // subtraction of material budget error:
+      Int_t pi0PCMbins = graphInvSectionPCMSysPi02760GeV_yShifted->GetN();
+      Double_t *xWM = graphInvSectionPCMSysPi02760GeV_yShifted->GetX();
+      Double_t *yWM = graphInvSectionPCMSysPi02760GeV_yShifted->GetY();
+      Double_t xErrWM[pi0PCMbins];
+      Double_t yErrWM[pi0PCMbins];
+      Double_t yrelErrWM[pi0PCMbins];
+      Double_t yErrorWOM[pi0PCMbins];
+      Double_t yrelErrorWOM[pi0PCMbins];
+
+      for(Int_t i = 0;i<graphInvSectionPCMSysPi02760GeV_yShifted->GetN();i++){
+
+        xErrWM[i] = graphInvSectionPCMSysPi02760GeV_yShifted->GetErrorXlow(i);
+        yrelErrWM[i] = graphInvSectionPCMSysPi02760GeV_yShifted->GetErrorYlow(i);
+        yErrWM[i] = (yrelErrWM[i] * 100.)/yWM[i];
+
+        yErrorWOM[i] = TMath::Sqrt( (yErrWM[i]*yErrWM[i]) - (9.*9.) );
+        yrelErrorWOM[i] = (yWM[i]*yErrorWOM[i])/100.;
+//           cout << "yErrWM[i] " << yErrWM[i] << endl;
+//           cout << "yErrorWOM[i] " << yErrorWOM[i] << endl;
+
+      }
+      //WITHOUT material budget error
+      graphInvSectionPCMSysPi02760GeVforRAA = new TGraphAsymmErrors(pi0PCMbins,xWM,yWM,xErrWM,xErrWM,yrelErrorWOM,yrelErrorWOM);
+
+//       graphInvSectionPCMStatPi02760GeVforRAA->Print();
+//       graphInvSectionPCMSysPi02760GeVforRAA->Print();
+//       return;
 
 
-    cout << "Pi0 in pp 2.76TeV" << endl;
-    TFile *filePi0PPforRAA =      new TFile(fileFinalResultsPi0PPforRAA);
-    TF1 *fitInvCrossSectionPi0Comb2760GeV = (TF1*)filePi0PPforRAA->Get("fitInvCrossSectionPi0Comb2760GeV_YShift");
-    fitInvCrossSectionPi0Comb2760GeV->SetParameter(0, fitInvCrossSectionPi0Comb2760GeV->GetParameter(0)*1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    TGraphAsymmErrors* graphInvSectionCombPi02760GeVforRAA = (TGraphAsymmErrors*)filePi0PPforRAA->Get("graphInvCrossSectionPi0Comb2760GeV_YShifted");
-    graphInvSectionCombPi02760GeVforRAA = ScaleGraph(graphInvSectionCombPi02760GeVforRAA,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    TGraphAsymmErrors* graphInvSectionPCMPi02760GeVforRAA =       (TGraphAsymmErrors*)filePi0PPforRAA->Get("graphInvCrossSectionPi0PCMStat2760GeV_YShifted");
-    graphInvSectionPCMPi02760GeVforRAA = ScaleGraph(graphInvSectionPCMPi02760GeVforRAA,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    TGraphAsymmErrors* graphInvSectionPCMSysPi02760GeVforRAA =        (TGraphAsymmErrors*)filePi0PPforRAA->Get("graphInvCrossSectionPi0PCMSysForRAA2760GeV_YShifted");
-    graphInvSectionPCMSysPi02760GeVforRAA = ScaleGraph(graphInvSectionPCMSysPi02760GeVforRAA,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    graphInvSectionPCMSysPi02760GeVforRAA->RemovePoint(graphInvSectionPCMSysPi02760GeVforRAA->GetN()-1);
+    cout << "Pi0 in PP, PHOS input" << endl;
+    graphInvSectionPHOSStatPi02760GeV = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PHOS2760GeVStatErr");
+      graphInvSectionPHOSStatPi02760GeV = ScaleGraph(graphInvSectionPHOSStatPi02760GeV,1./xSection2760GeVppINEL);
+    graphInvSectionPHOSSysPi02760GeV = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PHOS2760GeVSysErr");
+      graphInvSectionPHOSSysPi02760GeV = ScaleGraph(graphInvSectionPHOSSysPi02760GeV,1./xSection2760GeVppINEL);
 
-    cout << "For the Eta in PP (combined analysis) " << endl; // combo of PCM, EMCal, PCM+EMCal
+//       graphInvSectionPHOSStatPi02760GeV->Print();
+//       graphInvSectionPHOSSysPi02760GeV->Print();
+//       return;
+
+    graphInvSectionPHOSStatPi02760GeVforRAA =       (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PHOS2760GeVStatErr_yShifted");
+      graphInvSectionPHOSStatPi02760GeVforRAA = ScaleGraph(graphInvSectionPHOSStatPi02760GeVforRAA,1./xSection2760GeVppINEL);
+    //WITH common errors
+    graphInvSectionPHOSSysPi02760GeV_yShifted =       (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PHOS2760GeVSysErr_yShifted");
+      graphInvSectionPHOSSysPi02760GeV_yShifted = ScaleGraph(graphInvSectionPHOSSysPi02760GeV_yShifted,1./xSection2760GeVppINEL);
+
+      TFile *filePPPHOS =        new TFile(fileNamePPPHOS.Data());
+      TDirectoryFile* directoryPHOSPi02760GeV = (TDirectoryFile*)filePPPHOS->Get("pp2760");
+      TH1D *histoPi0PhosSysRAA2760GeV =     (TH1D*)directoryPHOSPi02760GeV->Get("hPi02760GeVSysTypeB");
+
+      // taking type B error histo
+      Int_t pi0PHOSbins = graphInvSectionPHOSSysPi02760GeV_yShifted->GetN();
+      Double_t *xsys = graphInvSectionPHOSSysPi02760GeV_yShifted->GetX();
+      Double_t xsysErr[pi0PHOSbins];
+      Double_t *ysys = graphInvSectionPHOSSysPi02760GeV_yShifted->GetY();
+      Double_t ysysErrtypeB[pi0PHOSbins];
+
+      for(Int_t i = 0;i<graphInvSectionPHOSSysPi02760GeV_yShifted->GetN();i++){
+
+        xsysErr[i] = graphInvSectionPHOSSysPi02760GeV_yShifted->GetErrorXlow(i);
+        ysysErrtypeB[i] = histoPi0PhosSysRAA2760GeV->GetBinError(i+1);
+
+      }
+      //WITHOUT common errors (type B)
+      graphInvSectionPHOSSysPi02760GeVforRAA = new TGraphAsymmErrors(pi0PHOSbins,xsys,ysys,xsysErr,xsysErr,ysysErrtypeB,ysysErrtypeB);
+
+//       graphInvSectionPHOSStatPi02760GeVforRAA->Print();
+//       graphInvSectionPHOSSysPi02760GeVforRAA->Print();
+//       return;
+
+
+    cout << "Pi0 in PP, EMCal input" << endl;
+    graphInvSectionEMCalStatPi02760GeV = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0EMCAL2760GeVStatErr");
+    graphInvSectionEMCalStatPi02760GeV = ScaleGraph(graphInvSectionEMCalStatPi02760GeV,1./xSection2760GeVppINEL);
+    graphInvSectionEMCalSysPi02760GeV = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0EMCAL2760GeVSysErr");
+    graphInvSectionEMCalSysPi02760GeV = ScaleGraph(graphInvSectionEMCalSysPi02760GeV,1./xSection2760GeVppINEL);
+
+//       graphInvSectionEMCalStatPi02760GeV->Print();
+//       graphInvSectionEMCalSysPi02760GeV->Print();
+//       return;
+
+    graphInvSectionEMCalStatPi02760GeVforRAA =       (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PCMEMCAL2760GeVStatErr_yShifted");
+      graphInvSectionEMCalStatPi02760GeVforRAA = ScaleGraph(graphInvSectionEMCalStatPi02760GeVforRAA,1./xSection2760GeVppINEL);
+    //WITH common errors
+    graphInvSectionEMCalSysPi02760GeV_yShifted =       (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PCMEMCAL2760GeVSysErr_yShifted");
+      graphInvSectionEMCalSysPi02760GeV_yShifted = ScaleGraph(graphInvSectionEMCalSysPi02760GeV_yShifted,1./xSection2760GeVppINEL);
+
+      // subtraction of common errors:
+      Int_t pi0EMCalbins = graphInvSectionEMCalSysPi02760GeV_yShifted->GetN();
+      Double_t *xWCommonErr = graphInvSectionEMCalSysPi02760GeV_yShifted->GetX();
+      Double_t *yWCommonErr = graphInvSectionEMCalSysPi02760GeV_yShifted->GetY();
+      Double_t xErrWCommonErr[pi0EMCalbins];
+      Double_t yErrWCommonErr[pi0EMCalbins];
+      Double_t yrelErrWCommonErr[pi0EMCalbins];
+      Double_t yErrorWOCommonErr[pi0EMCalbins];
+      Double_t yrelErrorWOCommonErr[pi0EMCalbins];
+
+      for(Int_t i = 0;i<graphInvSectionEMCalSysPi02760GeV_yShifted->GetN();i++){
+
+        xErrWCommonErr[i] = graphInvSectionEMCalSysPi02760GeV_yShifted->GetErrorXlow(i);
+        yrelErrWCommonErr[i] = graphInvSectionEMCalSysPi02760GeV_yShifted->GetErrorYlow(i);
+        yErrWCommonErr[i] = (yrelErrWCommonErr[i] * 100.)/yWCommonErr[i];
+
+        yErrorWOCommonErr[i] = TMath::Sqrt( (yErrWCommonErr[i]*yErrWCommonErr[i]) - (9.*9.) );
+        yrelErrorWOCommonErr[i] = (yWCommonErr[i]*yErrorWOCommonErr[i])/100.;
+
+      }
+      //WITHOUT common errors
+      graphInvSectionEMCalSysPi02760GeVforRAA = new TGraphAsymmErrors(pi0EMCalbins,xWCommonErr,yWCommonErr,xErrWCommonErr,xErrWCommonErr,yrelErrorWOCommonErr,yrelErrorWOCommonErr);
+
+//       graphInvSectionEMCalStatPi02760GeVforRAA->Print();
+//       graphInvSectionEMCalSysPi02760GeVforRAA->Print();
+//       return;
+
+
+//     cout << "Pi0 in pp 2.76TeV" << endl;
+//     TFile *filePi0PPforRAA =      new TFile(fileFinalResultsPi0PPforRAA);
+//     TF1 *fitInvCrossSectionPi0Comb2760GeV = (TF1*)filePi0PPforRAA->Get("fitInvCrossSectionPi0Comb2760GeV_YShift");
+//     fitInvCrossSectionPi0Comb2760GeV->SetParameter(0, fitInvCrossSectionPi0Comb2760GeV->GetParameter(0)*1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+//     TGraphAsymmErrors* graphInvSectionCombPi02760GeVforRAA = (TGraphAsymmErrors*)filePi0PPforRAA->Get("graphInvCrossSectionPi0Comb2760GeV_YShifted");
+//     graphInvSectionCombPi02760GeVforRAA = ScaleGraph(graphInvSectionCombPi02760GeVforRAA,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+//     TGraphAsymmErrors* graphInvSectionPCMPi02760GeVforRAA =       (TGraphAsymmErrors*)filePi0PPforRAA->Get("graphInvCrossSectionPi0PCMStat2760GeV_YShifted");
+//     graphInvSectionPCMPi02760GeVforRAA = ScaleGraph(graphInvSectionPCMPi02760GeVforRAA,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+//     TGraphAsymmErrors* graphInvSectionPCMSysPi02760GeVforRAA =        (TGraphAsymmErrors*)filePi0PPforRAA->Get("graphInvCrossSectionPi0PCMSysForRAA2760GeV_YShifted");
+//     graphInvSectionPCMSysPi02760GeVforRAA = ScaleGraph(graphInvSectionPCMSysPi02760GeVforRAA,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+//     graphInvSectionPCMSysPi02760GeVforRAA->RemovePoint(graphInvSectionPCMSysPi02760GeVforRAA->GetN()-1);
+
+
+
+
+    cout << "For the Eta in PP" << endl;
     TDirectoryFile* directoryEtaPP2760GeV         = (TDirectoryFile*)fileFinalResultsPP->Get("Eta2.76TeV");
 
+    cout << "Eta in PP, combined input" << endl; // combo of PCM, EMCal, PCM+EMCal, EMCal merged
     graphInvSectionCombStatEta2760GeV = (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaComb2760GeVAStatErr");
-    graphInvSectionCombStatEta2760GeV = ScaleGraph(graphInvSectionCombStatEta2760GeV,1./xSection2760GeVppINEL);
+      graphInvSectionCombStatEta2760GeV = ScaleGraph(graphInvSectionCombStatEta2760GeV,1./xSection2760GeVppINEL);
     graphInvSectionCombSysEta2760GeV = (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaComb2760GeVASysErr");
-    graphInvSectionCombSysEta2760GeV = ScaleGraph(graphInvSectionCombSysEta2760GeV,1./xSection2760GeVppINEL);
+      graphInvSectionCombSysEta2760GeV = ScaleGraph(graphInvSectionCombSysEta2760GeV,1./xSection2760GeVppINEL);
+
+//       graphInvSectionCombStatEta2760GeV->Print();
+//       graphInvSectionCombSysEta2760GeV->Print();
+//       return;
 
     graphInvSectionCombStatEta2760GeVPlot = (TGraphAsymmErrors*)graphInvSectionCombStatEta2760GeV->Clone("graphInvSectionCombStatEta2760GeVPlot");
-    graphInvSectionCombSysEta2760GeVPlot = (TGraphAsymmErrors*)graphInvSectionCombSysEta2760GeV->Clone("graphInvSectionCombSysEta2760GeVPlot");
+      DrawGammaSetMarkerTGraphAsym(graphInvSectionCombStatEta2760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack);
+      if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvSectionCombStatEta2760GeVPlot);
 
-    cout << "Eta in pp 2.76TeV" << endl;
-    TFile *fileEtaPPforRAA =      new TFile(fileFinalResultsEtaPPforRAA);
-    TF1 *fitInvCrossSectionEtaComb2760GeV = (TF1*)fileEtaPPforRAA->Get("fitInvCrossSectionEtaComb2760GeV_YShift");
-    fitInvCrossSectionEtaComb2760GeV->SetParameter(0, fitInvCrossSectionEtaComb2760GeV->GetParameter(0)*1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    TGraphAsymmErrors* graphInvSectionCombEta2760GeVforRAA = (TGraphAsymmErrors*)fileEtaPPforRAA->Get("graphInvCrossSectionEtaComb2760GeV_YShifted");
-    graphInvSectionCombEta2760GeVforRAA = ScaleGraph(graphInvSectionCombEta2760GeVforRAA,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    TGraphAsymmErrors* graphInvSectionPCMEta2760GeVforRAA =       (TGraphAsymmErrors*)fileEtaPPforRAA->Get("graphInvCrossSectionEtaPCMStat2760GeV_YShifted");
-    graphInvSectionPCMEta2760GeVforRAA = ScaleGraph(graphInvSectionPCMEta2760GeVforRAA,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    TGraphAsymmErrors* graphInvSectionPCMSysEta2760GeVforRAA =        (TGraphAsymmErrors*)fileEtaPPforRAA->Get("graphInvCrossSectionEtaPCMSysForRAA2760GeV_YShifted");
-    graphInvSectionPCMSysEta2760GeVforRAA = ScaleGraph(graphInvSectionPCMSysEta2760GeVforRAA,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+    graphInvSectionCombSysEta2760GeVPlot = (TGraphAsymmErrors*)graphInvSectionCombSysEta2760GeV->Clone("graphInvSectionCombSysEta2760GeVPlot");
+      DrawGammaSetMarkerTGraphAsym(graphInvSectionCombSysEta2760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack, widthLinesBoxes, kTRUE);
+
+    TF1 *fitInvCrossSectionTsallisEtaComb2760GeV = (TF1*)directoryEtaPP2760GeV->Get("TsallisFitEta");
+      fitInvCrossSectionTsallisEtaComb2760GeV->SetParameter(0, fitInvCrossSectionTsallisEtaComb2760GeV->GetParameter(0)*1./xSection2760GeVppINEL);
+      // ---> Tsallis fit is used for both bin-shifts
+    TF1 *fitInvCrossSectionTCMEtaComb2760GeV = (TF1*)directoryEtaPP2760GeV->Get("TwoComponentModelFitEta");
+      fitInvCrossSectionTCMEtaComb2760GeV->SetParameter(0, fitInvCrossSectionTCMEtaComb2760GeV->GetParameter(0)*1./xSection2760GeVppINEL);
+      fitInvCrossSectionTCMEtaComb2760GeV->SetParameter(2, fitInvCrossSectionTCMEtaComb2760GeV->GetParameter(2)*1./xSection2760GeVppINEL);
+
+    graphInvSectionCombStatEta2760GeVforRAA = (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaComb2760GeVAStatErr_yShifted");
+      graphInvSectionCombStatEta2760GeVforRAA = ScaleGraph(graphInvSectionCombStatEta2760GeVforRAA,1./xSection2760GeVppINEL);
+    graphInvSectionCombSysEta2760GeVforRAA = (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaComb2760GeVASysErr_yShifted");
+      graphInvSectionCombSysEta2760GeVforRAA = ScaleGraph(graphInvSectionCombSysEta2760GeVforRAA,1./xSection2760GeVppINEL);
+
+//       graphInvSectionCombStatEta2760GeVforRAA->Print();
+//       graphInvSectionCombSysEta2760GeVforRAA->Print();
+//       return;
+
+    cout << "Eta in PP, PCM input" << endl;
+    graphInvSectionPCMStatEta2760GeV = (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaPCM2760GeVStatErr");
+      graphInvSectionPCMStatEta2760GeV = ScaleGraph(graphInvSectionPCMStatEta2760GeV,1./xSection2760GeVppINEL);
+    graphInvSectionPCMSysEta2760GeV = (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaPCM2760GeVSysErr");
+      graphInvSectionPCMSysEta2760GeV = ScaleGraph(graphInvSectionPCMSysEta2760GeV,1./xSection2760GeVppINEL);
+
+//       graphInvSectionPCMStatEta2760GeV->Print();
+//       graphInvSectionPCMSysEta2760GeV->Print();
+//       return;
+
+    graphInvSectionPCMStatEta2760GeVforRAA =       (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaPCM2760GeVStatErr_yShifted");
+      graphInvSectionPCMStatEta2760GeVforRAA = ScaleGraph(graphInvSectionPCMStatEta2760GeVforRAA,1./xSection2760GeVppINEL);
+    //WITH material budget error
+    graphInvSectionPCMSysEta2760GeV_yShifted =       (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaPCM2760GeVSysErr_yShifted");
+      graphInvSectionPCMSysEta2760GeV_yShifted = ScaleGraph(graphInvSectionPCMSysEta2760GeV_yShifted,1./xSection2760GeVppINEL);
+
+      // subtraction of material budget error:
+      Int_t etaPCMbins = graphInvSectionPCMSysEta2760GeV_yShifted->GetN();
+      Double_t *xetaWM = graphInvSectionPCMSysEta2760GeV_yShifted->GetX();
+      Double_t *yetaWM = graphInvSectionPCMSysEta2760GeV_yShifted->GetY();
+      Double_t xetaErrWM[etaPCMbins];
+      Double_t yetaErrWM[etaPCMbins];
+      Double_t yetarelErrWM[etaPCMbins];
+      Double_t yetaErrorWOM[etaPCMbins];
+      Double_t yetarelErrorWOM[etaPCMbins];
+
+      for(Int_t i = 0;i<graphInvSectionPCMSysEta2760GeV_yShifted->GetN();i++){
+
+        xetaErrWM[i] = graphInvSectionPCMSysEta2760GeV_yShifted->GetErrorXlow(i);
+        yetarelErrWM[i] = graphInvSectionPCMSysEta2760GeV_yShifted->GetErrorYlow(i);
+        yetaErrWM[i] = (yetarelErrWM[i] * 100.)/yetaWM[i];
+
+        yetaErrorWOM[i] = TMath::Sqrt( (yetaErrWM[i]*yetaErrWM[i]) - (9.*9.) );
+        yetarelErrorWOM[i] = (yetaWM[i]*yetaErrorWOM[i])/100.;
+//           cout << "yetaErrWM[i] " << yetaErrWM[i] << endl;
+//           cout << "yetaErrorWOM[i] " << yetaErrorWOM[i] << endl;
+
+      }
+      //WITHOUT material budget error
+      graphInvSectionPCMSysEta2760GeVforRAA = new TGraphAsymmErrors(etaPCMbins,xetaWM,yetaWM,xetaErrWM,xetaErrWM,yetarelErrorWOM,yetarelErrorWOM);
+
+//       graphInvSectionPCMStatEta2760GeVforRAA->Print();
+//       graphInvSectionPCMSysEta2760GeVforRAA->Print();
+//       return;
+
+
+    cout << "Eta in PP, EMCal input" << endl;
+    graphInvSectionEMCalStatEta2760GeV = (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaEMCAL2760GeVStatErr");
+    graphInvSectionEMCalStatEta2760GeV = ScaleGraph(graphInvSectionEMCalStatEta2760GeV,1./xSection2760GeVppINEL);
+    graphInvSectionEMCalSysEta2760GeV = (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaEMCAL2760GeVSysErr");
+    graphInvSectionEMCalSysEta2760GeV = ScaleGraph(graphInvSectionEMCalSysEta2760GeV,1./xSection2760GeVppINEL);
+
+//       graphInvSectionEMCalStatEta2760GeV->Print();
+//       graphInvSectionEMCalSysEta2760GeV->Print();
+//       return;
+
+    graphInvSectionEMCalStatEta2760GeVforRAA =       (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaEMCAL2760GeVStatErr_yShifted");
+      graphInvSectionEMCalStatEta2760GeVforRAA = ScaleGraph(graphInvSectionEMCalStatEta2760GeVforRAA,1./xSection2760GeVppINEL);
+    //WITH common errors
+    graphInvSectionEMCalSysEta2760GeV_yShifted =       (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaEMCAL2760GeVSysErr_yShifted");
+      graphInvSectionEMCalSysEta2760GeV_yShifted = ScaleGraph(graphInvSectionEMCalSysEta2760GeV_yShifted,1./xSection2760GeVppINEL);
+
+      // subtraction of common errors:
+      Int_t etaEMCalbins = graphInvSectionEMCalSysEta2760GeV_yShifted->GetN();
+      Double_t *xetaWCommonErr = graphInvSectionEMCalSysEta2760GeV_yShifted->GetX();
+      Double_t *yetaWCommonErr = graphInvSectionEMCalSysEta2760GeV_yShifted->GetY();
+      Double_t xetaErrWCommonErr[etaEMCalbins];
+      Double_t yetaErrWCommonErr[etaEMCalbins];
+      Double_t yetarelErrWCommonErr[etaEMCalbins];
+      Double_t yetaErrorWOCommonErr[etaEMCalbins];
+      Double_t yetarelErrorWOCommonErr[etaEMCalbins];
+
+      for(Int_t i = 0;i<graphInvSectionEMCalSysEta2760GeV_yShifted->GetN();i++){
+
+        xetaErrWCommonErr[i] = graphInvSectionEMCalSysEta2760GeV_yShifted->GetErrorXlow(i);
+        yetarelErrWCommonErr[i] = graphInvSectionEMCalSysEta2760GeV_yShifted->GetErrorYlow(i);
+        yetaErrWCommonErr[i] = (yetarelErrWCommonErr[i] * 100.)/yetaWCommonErr[i];
+
+        yetaErrorWOCommonErr[i] = TMath::Sqrt( (yetaErrWCommonErr[i]*yetaErrWCommonErr[i]) - (9.*9.) );
+        yetarelErrorWOCommonErr[i] = (yetaWCommonErr[i]*yetaErrorWOCommonErr[i])/100.;
+
+      }
+      //WITHOUT common errors
+      graphInvSectionEMCalSysEta2760GeVforRAA = new TGraphAsymmErrors(etaEMCalbins,xetaWCommonErr,yetaWCommonErr,xetaErrWCommonErr,xetaErrWCommonErr,yetarelErrorWOCommonErr,yetarelErrorWOCommonErr);
+
+//       graphInvSectionEMCalStatEta2760GeVforRAA->Print();
+//       graphInvSectionEMCalSysEta2760GeVforRAA->Print();
+//       return;
+
+
+//     cout << "Eta in pp 2.76TeV" << endl;
+//     TFile *fileEtaPPforRAA =      new TFile(fileFinalResultsEtaPPforRAA);
+//     TF1 *fitInvCrossSectionEtaComb2760GeV = (TF1*)fileEtaPPforRAA->Get("fitInvCrossSectionEtaComb2760GeV_YShift");
+//     fitInvCrossSectionEtaComb2760GeV->SetParameter(0, fitInvCrossSectionEtaComb2760GeV->GetParameter(0)*1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+//     TGraphAsymmErrors* graphInvSectionCombEta2760GeVforRAA = (TGraphAsymmErrors*)fileEtaPPforRAA->Get("graphInvCrossSectionEtaComb2760GeV_YShifted");
+//     graphInvSectionCombEta2760GeVforRAA = ScaleGraph(graphInvSectionCombEta2760GeVforRAA,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+//     TGraphAsymmErrors* graphInvSectionPCMEta2760GeVforRAA =       (TGraphAsymmErrors*)fileEtaPPforRAA->Get("graphInvCrossSectionEtaPCMStat2760GeV_YShifted");
+//     graphInvSectionPCMEta2760GeVforRAA = ScaleGraph(graphInvSectionPCMEta2760GeVforRAA,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+//     TGraphAsymmErrors* graphInvSectionPCMSysEta2760GeVforRAA =        (TGraphAsymmErrors*)fileEtaPPforRAA->Get("graphInvCrossSectionEtaPCMSysForRAA2760GeV_YShifted");
+//     graphInvSectionPCMSysEta2760GeVforRAA = ScaleGraph(graphInvSectionPCMSysEta2760GeVforRAA,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+
+
+
+    //===================== loading pp inputs =============================
+    TFile* fEtatoPi0input = new TFile("EtaToPi0InputsForCombination.root");
+    TH1D *histoPCMEtaToPi0RatioPbPb0010 = (TH1D*)fEtatoPi0input->Get("histoPCMEtaToPi0RatioPbPb0010");
+    TH1D *histoPCMEtaToPi0RatioPbPb2050 = (TH1D*)fEtatoPi0input->Get("histoPCMEtaToPi0RatioPbPb2050");
+    TH1D *histoPCMEtaToPi0RatiopPb = (TH1D*)fEtatoPi0input->Get("histoPCMEtaToPi0RatiopPb");
+    TGraphAsymmErrors *graphPCMEtaToPi0RatioSysErrpPb = (TGraphAsymmErrors*)fEtatoPi0input->Get("graphPCMEtaToPi0RatioSysErrpPb");
+
+    TGraphAsymmErrors *graphCombEtaToPi0RatioSysErrpp7TeV = (TGraphAsymmErrors*)fEtatoPi0input->Get("graphCombEtaToPi0RatioSysErrpp7TeV");
+    DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0RatioSysErrpp7TeV, markerStylepp, markerSizepp, kBlack, kBlack, 1, kTRUE);
+    TGraphAsymmErrors *graphCombEtaToPi0Ratiopp7TeVNoXErrors = (TGraphAsymmErrors*)fEtatoPi0input->Get("graphCombEtaToPi0Ratiopp7TeVNoXErrors");
+    DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Ratiopp7TeVNoXErrors, markerStylepp, markerSizepp, kBlack, kBlack, 1, kTRUE);
+
+    TH1D *cocktailEtaToPi0Ratio7TeVRebined = (TH1D*)fEtatoPi0input->Get("cocktailEtaToPi0Ratio7TeVRebined");
+    TH1D *cocktailEtaToPi0Ratio_MtScaledRebinned = (TH1D*)fEtatoPi0input->Get("cocktailEtaToPi0Ratio_MtScaledRebinned");
+    TH1D *cocktailEtaToPi0Ratio_K0ScaledRebinned = (TH1D*)fEtatoPi0input->Get("cocktailEtaToPi0Ratio_K0ScaledRebinned");
+
+    cocktailEtaToPi0Ratio7TeVRebined->GetXaxis()->SetRangeUser(0.1,16.);
+    cocktailEtaToPi0Ratio_K0ScaledRebinned->GetXaxis()->SetRangeUser(0.1,16.);
+    cocktailEtaToPi0Ratio_MtScaledRebinned->GetXaxis()->SetRangeUser(0.1,16.);
+    cocktailEtaToPi0Ratio7TeVRebined->SetLineStyle(5);
+    cocktailEtaToPi0Ratio7TeVRebined->SetLineWidth(2.5);
+    cocktailEtaToPi0Ratio_K0ScaledRebinned->SetLineStyle(6);
+    cocktailEtaToPi0Ratio_K0ScaledRebinned->SetLineWidth(2.5);
+    cocktailEtaToPi0Ratio_MtScaledRebinned->SetLineStyle(7);
+    cocktailEtaToPi0Ratio_MtScaledRebinned->SetLineWidth(2.5);
+    //======================================================================
 
 
     //**************************** PHOS ****************************//
@@ -655,6 +980,9 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
         graphPHOSPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(0);
         graphPHOSPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(0);
+
+        graphSysErrRAAYieldPi0PHOSPbPb0010->RemovePoint(0);
+        graphSysErrRAAYieldPi0PHOSPbPb0010->RemovePoint(0);
 
 //         graphPHOSPi0InvYieldStatPbPb2760GeV_0010->Print();
 //         graphPHOSPi0InvYieldSysPbPb2760GeV_0010->Print();
@@ -1065,7 +1393,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         sysErrorCollectionLHC11h_2050[2] = (TGraphAsymmErrors*)graphEMCalPi0InvYieldSysPbPb2760GeV_2050->Clone("sysErrEMCalPi0_2050");
 
         sysErrorCollectionWOMatLHC11h_0010[0] = (TGraphAsymmErrors*)graphPCMPi0InvYieldSysWOMat2760GeV_0010->Clone("sysErrPCMWOMatPi0_0010");
-        sysErrorCollectionWOMatLHC11h_0010[1] = (TGraphAsymmErrors*)graphPHOSPi0InvYieldSysPbPb2760GeV_0010->Clone("sysErrPHOSPi0_0010");
+        sysErrorCollectionWOMatLHC11h_0010[1] = (TGraphAsymmErrors*)graphSysErrRAAYieldPi0PHOSPbPb0010->Clone("sysErrPHOSPi0_0010");
         sysErrorCollectionWOMatLHC11h_0010[2] = (TGraphAsymmErrors*)graphEMCalPi0InvYieldSysPbPb2760GeV_0010->Clone("sysErrEMCalPi0_0010");
 
         sysErrorCollectionWOMatLHC11h_2050[0] = (TGraphAsymmErrors*)graphPCMPi0InvYieldSysWOMat2760GeV_2050->Clone("sysErrPCMWOMatPi0_2050");
@@ -1103,7 +1431,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         sysErrorCollectionRaaLHC11h_2050[2] = (TGraphAsymmErrors*)graphEMCalEtaRAASysPbPb2760GeV_2050->Clone("sysErrEMCalEtaRaa_2050");
 
     }
-
 
     Int_t textSizeLabelsPixel = 900*0.04;
     TCanvas* canvasWeights = new TCanvas("canvasWeights","",200,10,1350,900);  // gives the page size
@@ -1747,7 +2074,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
         graphPHOSInvYieldStatPbPb2760GeVUnshifted_0010      = (TGraphAsymmErrors*)graphPHOSPi0InvYieldStatPbPb2760GeV_0010->Clone("UnshiftedStatPHOSPi0_0010");
         graphPHOSInvYieldSysPbPb2760GeVUnshifted_0010       = (TGraphAsymmErrors*)graphPHOSPi0InvYieldSysPbPb2760GeV_0010->Clone("UnshiftedSysPHOSPi0_0010");
-
+        graphPHOSInvYieldSysPbPb2760GeVforRAAUnshifted_0010 = (TGraphAsymmErrors*)graphSysErrRAAYieldPi0PHOSPbPb0010->Clone("UnshiftedSysforRAAPHOSPi0_0010");
 
     } else if(meson.CompareTo("Eta")==0){
         graphPCMInvYieldStatPbPb2760GeVUnShifted_0010       = (TGraphAsymmErrors*)graphPCMEtaInvYieldStatPbPb2760GeV_0010->Clone("UnshiftedStatPCMEta_0010");
@@ -1908,56 +2235,54 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
             delete canvasDummy2;
 
 
-
-
             //shifting in Y
-            TF1* fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010 = ApplyYShift(graphCombInvYieldTot2760GeVALHC11hUnShifted_0010, &graphCombInvYieldTot2760GeVLHC11hYShifted_0010, "tcmpt", "", 0.4, paramTCM_0010, 0.00001, kFALSE, "Pi0");
+//             TF1* fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010 = ApplyYShift(graphCombInvYieldTot2760GeVALHC11hUnShifted_0010, &graphCombInvYieldTot2760GeVLHC11hYShifted_0010, "tcmpt", "", 0.4, paramTCM_0010, 0.00001, kFALSE, "Pi0");
 
             cout << "combined binshift Y" << endl;
             graphCombInvYieldSys2760GeVLHC11hYShifted_0010 = (TGraphAsymmErrors*)graphCombInvYieldSys2760GeVALHC11hUnShifted_0010->Clone("YShiftedCombSys0010");
-            graphCombInvYieldSys2760GeVLHC11hYShifted_0010= ApplyYshiftIndividualSpectra( graphCombInvYieldSys2760GeVLHC11hYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010);
+            graphCombInvYieldSys2760GeVLHC11hYShifted_0010= ApplyYshiftIndividualSpectra( graphCombInvYieldSys2760GeVLHC11hYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11h_0010);
             graphCombInvYieldStat2760GeVLHC11hYShifted_0010 = (TGraphAsymmErrors*)graphCombInvYieldStat2760GeVALHC11hUnShifted_0010->Clone("YShiftedCombStat0010");
-            graphCombInvYieldStat2760GeVLHC11hYShifted_0010= ApplyYshiftIndividualSpectra( graphCombInvYieldStat2760GeVLHC11hYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010);
+            graphCombInvYieldStat2760GeVLHC11hYShifted_0010= ApplyYshiftIndividualSpectra( graphCombInvYieldStat2760GeVLHC11hYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11h_0010);
 
             cout << "PCM binshift Y" << endl;
             graphPCMInvYieldSysPbPb2760GeVYShifted_0010 = (TGraphAsymmErrors*)graphPCMInvYieldSysPbPb2760GeVWOMatUnShifted_0010->Clone("YShiftedPCMSys0010");
-            graphPCMInvYieldSysPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphPCMInvYieldSysPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010);
+            graphPCMInvYieldSysPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphPCMInvYieldSysPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11h_0010);
             graphPCMInvYieldStatPbPb2760GeVYShifted_0010 = (TGraphAsymmErrors*)graphPCMInvYieldStatPbPb2760GeVUnShifted_0010->Clone("YShiftedPCMStat0010");
-            graphPCMInvYieldStatPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphPCMInvYieldStatPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010);
+            graphPCMInvYieldStatPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphPCMInvYieldStatPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11h_0010);
 
             cout << "EMCal binshift Y" << endl;
             graphEMCalInvYieldSysPbPb2760GeVYShifted_0010 = (TGraphAsymmErrors*)graphEMCalInvYieldSysPbPb2760GeVUnshifted_0010->Clone("YShiftedEMCalSys0010");
-            graphEMCalInvYieldSysPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldSysPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010);
+            graphEMCalInvYieldSysPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldSysPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11h_0010);
             graphEMCalInvYieldStatPbPb2760GeVYShifted_0010 = (TGraphAsymmErrors*)graphEMCalInvYieldStatPbPb2760GeVUnshifted_0010->Clone("YShiftedEMCalStat0010");
-            graphEMCalInvYieldStatPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldStatPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010);
+            graphEMCalInvYieldStatPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldStatPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11h_0010);
 
             cout << "PHOS binshift Y" << endl;
-            graphPHOSInvYieldSysPbPb2760GeVYShifted_0010 = (TGraphAsymmErrors*)graphPHOSInvYieldSysPbPb2760GeVUnshifted_0010->Clone("YShiftedPHOSSys0010");
-            graphPHOSInvYieldSysPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphPHOSInvYieldSysPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010);
+            graphPHOSInvYieldSysPbPb2760GeVYShifted_0010 = (TGraphAsymmErrors*)graphPHOSInvYieldSysPbPb2760GeVforRAAUnshifted_0010->Clone("YShiftedPHOSSys0010");
+            graphPHOSInvYieldSysPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphPHOSInvYieldSysPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11h_0010);
             graphPHOSInvYieldStatPbPb2760GeVYShifted_0010 = (TGraphAsymmErrors*)graphPHOSInvYieldStatPbPb2760GeVUnshifted_0010->Clone("YShiftedPHOSStat0010");
-            graphPHOSInvYieldStatPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphPHOSInvYieldStatPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010);
+            graphPHOSInvYieldStatPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphPHOSInvYieldStatPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11h_0010);
 
 //             cout << WriteParameterToFile(fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010)<< endl << endl;
 
-            TF1* fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050 = ApplyYShift(graphCombInvYieldTot2760GeVALHC11hUnShifted_2050, &graphCombInvYieldTot2760GeVLHC11hYShifted_2050, "tcmpt", "", 0.4, paramTCM_2050, 0.00001, kFALSE, "Pi0");
+//             TF1* fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050 = ApplyYShift(graphCombInvYieldTot2760GeVALHC11hUnShifted_2050, &graphCombInvYieldTot2760GeVLHC11hYShifted_2050, "tcmpt", "", 0.4, paramTCM_2050, 0.00001, kFALSE, "Pi0");
 
             cout << "combined binshift Y" << endl;
             graphCombInvYieldSys2760GeVLHC11hYShifted_2050 = (TGraphAsymmErrors*)graphCombInvYieldSys2760GeVALHC11hUnShifted_2050->Clone("YShiftedCombSys2050");
-            graphCombInvYieldSys2760GeVLHC11hYShifted_2050= ApplyYshiftIndividualSpectra( graphCombInvYieldSys2760GeVLHC11hYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050);
+            graphCombInvYieldSys2760GeVLHC11hYShifted_2050= ApplyYshiftIndividualSpectra( graphCombInvYieldSys2760GeVLHC11hYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11h_2050);
             graphCombInvYieldStat2760GeVLHC11hYShifted_2050 = (TGraphAsymmErrors*)graphCombInvYieldStat2760GeVALHC11hUnShifted_2050->Clone("YShiftedCombStat2050");
-            graphCombInvYieldStat2760GeVLHC11hYShifted_2050= ApplyYshiftIndividualSpectra( graphCombInvYieldStat2760GeVLHC11hYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050);
+            graphCombInvYieldStat2760GeVLHC11hYShifted_2050= ApplyYshiftIndividualSpectra( graphCombInvYieldStat2760GeVLHC11hYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11h_2050);
 
             cout << "PCM binshift Y" << endl;
             graphPCMInvYieldSysPbPb2760GeVYShifted_2050 = (TGraphAsymmErrors*)graphPCMInvYieldSysPbPb2760GeVWOMatUnShifted_2050->Clone("YShiftedPCMSys2050");
-            graphPCMInvYieldSysPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphPCMInvYieldSysPbPb2760GeVYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050);
+            graphPCMInvYieldSysPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphPCMInvYieldSysPbPb2760GeVYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11h_2050);
             graphPCMInvYieldStatPbPb2760GeVYShifted_2050 = (TGraphAsymmErrors*)graphPCMInvYieldStatPbPb2760GeVUnShifted_2050->Clone("YShiftedPCMStat2050");
-            graphPCMInvYieldStatPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphPCMInvYieldStatPbPb2760GeVYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050);
+            graphPCMInvYieldStatPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphPCMInvYieldStatPbPb2760GeVYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11h_2050);
 
             cout << "EMCal binshift Y" << endl;
             graphEMCalInvYieldSysPbPb2760GeVYShifted_2050 = (TGraphAsymmErrors*)graphEMCalInvYieldSysPbPb2760GeVUnshifted_2050->Clone("YShiftedEMCalSys2050");
-            graphEMCalInvYieldSysPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldSysPbPb2760GeVYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050);
+            graphEMCalInvYieldSysPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldSysPbPb2760GeVYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11h_2050);
             graphEMCalInvYieldStatPbPb2760GeVYShifted_2050 = (TGraphAsymmErrors*)graphEMCalInvYieldStatPbPb2760GeVUnshifted_2050->Clone("YShiftedEMCalStat2050");
-            graphEMCalInvYieldStatPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldStatPbPb2760GeVYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050);
+            graphEMCalInvYieldStatPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldStatPbPb2760GeVYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11h_2050);
 
 //             cout << WriteParameterToFile(fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050)<< endl << endl;
 
@@ -2160,52 +2485,50 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
             delete canvasDummy2;
 
 
-
-
             //shifting in Y
-            TF1* fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010 = ApplyYShift(graphCombInvYieldTot2760GeVALHC11hUnShifted_0010, &graphCombInvYieldTot2760GeVLHC11hYShifted_0010, "tcmpt", "", 0.4, paramTCM_0010, 0.00001, kTRUE, "Eta");
+//             TF1* fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010 = ApplyYShift(graphCombInvYieldTot2760GeVALHC11hUnShifted_0010, &graphCombInvYieldTot2760GeVLHC11hYShifted_0010, "tcmpt", "", 0.4, paramTCM_0010, 0.00001, kTRUE, "Eta");
 
             cout << "combined binshift Y" << endl;
             graphCombInvYieldSys2760GeVLHC11hYShifted_0010 = (TGraphAsymmErrors*)graphCombInvYieldSys2760GeVALHC11hUnShifted_0010->Clone("YShiftedCombSys0010");
-            graphCombInvYieldSys2760GeVLHC11hYShifted_0010= ApplyYshiftIndividualSpectra( graphCombInvYieldSys2760GeVLHC11hYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010);
+            graphCombInvYieldSys2760GeVLHC11hYShifted_0010= ApplyYshiftIndividualSpectra( graphCombInvYieldSys2760GeVLHC11hYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11h_0010);
             graphCombInvYieldStat2760GeVLHC11hYShifted_0010 = (TGraphAsymmErrors*)graphCombInvYieldStat2760GeVALHC11hUnShifted_0010->Clone("YShiftedCombStat0010");
-            graphCombInvYieldStat2760GeVLHC11hYShifted_0010= ApplyYshiftIndividualSpectra( graphCombInvYieldStat2760GeVLHC11hYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010);
+            graphCombInvYieldStat2760GeVLHC11hYShifted_0010= ApplyYshiftIndividualSpectra( graphCombInvYieldStat2760GeVLHC11hYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11h_0010);
 
             cout << "PCM binshift Y" << endl;
             graphPCMInvYieldSysPbPb2760GeVYShifted_0010 = (TGraphAsymmErrors*)graphPCMInvYieldSysPbPb2760GeVWOMatUnShifted_0010->Clone("YShiftedPCMSys0010");
-            graphPCMInvYieldSysPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphPCMInvYieldSysPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010);
+            graphPCMInvYieldSysPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphPCMInvYieldSysPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11h_0010);
             graphPCMInvYieldStatPbPb2760GeVYShifted_0010 = (TGraphAsymmErrors*)graphPCMInvYieldStatPbPb2760GeVUnShifted_0010->Clone("YShiftedPCMStat0010");
-            graphPCMInvYieldStatPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphPCMInvYieldStatPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010);
+            graphPCMInvYieldStatPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphPCMInvYieldStatPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11h_0010);
 
             cout << "EMCal binshift Y" << endl;
             graphEMCalInvYieldSysPbPb2760GeVYShifted_0010 = (TGraphAsymmErrors*)graphEMCalInvYieldSysPbPb2760GeVUnshifted_0010->Clone("YShiftedEMCalSys0010");
-            graphEMCalInvYieldSysPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldSysPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010);
+            graphEMCalInvYieldSysPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldSysPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11h_0010);
             graphEMCalInvYieldStatPbPb2760GeVYShifted_0010 = (TGraphAsymmErrors*)graphEMCalInvYieldStatPbPb2760GeVUnshifted_0010->Clone("YShiftedEMCalStat0010");
-            graphEMCalInvYieldStatPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldStatPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010);
+            graphEMCalInvYieldStatPbPb2760GeVYShifted_0010 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldStatPbPb2760GeVYShifted_0010, fitBylinkinPbPb2760GeVPtMultLHC11h_0010);
 
-            cout << WriteParameterToFile(fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010)<< endl << endl;
+//             cout << WriteParameterToFile(fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010)<< endl << endl;
 
-            TF1* fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050 = ApplyYShift(graphCombInvYieldTot2760GeVALHC11hUnShifted_2050, &graphCombInvYieldTot2760GeVLHC11hYShifted_2050, "tcmpt", "", 0.4, paramTCM_2050, 0.00001, kTRUE, "Eta");
+//             TF1* fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050 = ApplyYShift(graphCombInvYieldTot2760GeVALHC11hUnShifted_2050, &graphCombInvYieldTot2760GeVLHC11hYShifted_2050, "tcmpt", "", 0.4, paramTCM_2050, 0.00001, kTRUE, "Eta");
 
             cout << "combined binshift Y" << endl;
             graphCombInvYieldSys2760GeVLHC11hYShifted_2050 = (TGraphAsymmErrors*)graphCombInvYieldSys2760GeVALHC11hUnShifted_2050->Clone("YShiftedCombSys2050");
-            graphCombInvYieldSys2760GeVLHC11hYShifted_2050= ApplyYshiftIndividualSpectra( graphCombInvYieldSys2760GeVLHC11hYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050);
+            graphCombInvYieldSys2760GeVLHC11hYShifted_2050= ApplyYshiftIndividualSpectra( graphCombInvYieldSys2760GeVLHC11hYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11h_2050);
             graphCombInvYieldStat2760GeVLHC11hYShifted_2050 = (TGraphAsymmErrors*)graphCombInvYieldStat2760GeVALHC11hUnShifted_2050->Clone("YShiftedCombStat2050");
-            graphCombInvYieldStat2760GeVLHC11hYShifted_2050= ApplyYshiftIndividualSpectra( graphCombInvYieldStat2760GeVLHC11hYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050);
+            graphCombInvYieldStat2760GeVLHC11hYShifted_2050= ApplyYshiftIndividualSpectra( graphCombInvYieldStat2760GeVLHC11hYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11h_2050);
 
             cout << "PCM binshift Y" << endl;
             graphPCMInvYieldSysPbPb2760GeVYShifted_2050 = (TGraphAsymmErrors*)graphPCMInvYieldSysPbPb2760GeVWOMatUnShifted_2050->Clone("YShiftedPCMSys2050");
-            graphPCMInvYieldSysPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphPCMInvYieldSysPbPb2760GeVYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050);
+            graphPCMInvYieldSysPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphPCMInvYieldSysPbPb2760GeVYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11h_2050);
             graphPCMInvYieldStatPbPb2760GeVYShifted_2050 = (TGraphAsymmErrors*)graphPCMInvYieldStatPbPb2760GeVUnShifted_2050->Clone("YShiftedPCMStat2050");
-            graphPCMInvYieldStatPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphPCMInvYieldStatPbPb2760GeVYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050);
+            graphPCMInvYieldStatPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphPCMInvYieldStatPbPb2760GeVYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11h_2050);
 
             cout << "EMCal binshift Y" << endl;
             graphEMCalInvYieldSysPbPb2760GeVYShifted_2050 = (TGraphAsymmErrors*)graphEMCalInvYieldSysPbPb2760GeVUnshifted_2050->Clone("YShiftedEMCalSys2050");
-            graphEMCalInvYieldSysPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldSysPbPb2760GeVYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050);
+            graphEMCalInvYieldSysPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldSysPbPb2760GeVYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11h_2050);
             graphEMCalInvYieldStatPbPb2760GeVYShifted_2050 = (TGraphAsymmErrors*)graphEMCalInvYieldStatPbPb2760GeVUnshifted_2050->Clone("YShiftedEMCalStat2050");
-            graphEMCalInvYieldStatPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldStatPbPb2760GeVYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050);
+            graphEMCalInvYieldStatPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldStatPbPb2760GeVYShifted_2050, fitBylinkinPbPb2760GeVPtMultLHC11h_2050);
 
-            cout << WriteParameterToFile(fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050)<< endl << endl;
+//             cout << WriteParameterToFile(fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050)<< endl << endl;
 
 
             TCanvas* canvasDummy3 = new TCanvas("canvasDummy3","",200,10,1350,1350*1.15);  // gives the page size
@@ -2219,10 +2542,10 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
             histo2DDummy3->GetXaxis()->SetLabelOffset(-0.01);
             histo2DDummy3->Draw("copy");
 
-//             fitBylinkinPbPb2760GeVPtLHC11h_0010->SetLineColor(kBlue);
-//             fitBylinkinPbPb2760GeVPtLHC11h_0010->Draw("same");
-//             fitBylinkinPbPb2760GeVPtLHC11h_2050->SetLineColor(kBlue);
-//             fitBylinkinPbPb2760GeVPtLHC11h_2050->Draw("same");
+            fitBylinkinPbPb2760GeVPtLHC11h_0010->SetLineColor(kBlue);
+            fitBylinkinPbPb2760GeVPtLHC11h_0010->Draw("same");
+            fitBylinkinPbPb2760GeVPtLHC11h_2050->SetLineColor(kBlue);
+            fitBylinkinPbPb2760GeVPtLHC11h_2050->Draw("same");
 
             DrawGammaSetMarkerTGraphAsym(graphCombInvYieldStat2760GeVALHC11hUnShifted_0010, 20, 1.5, kRed, kRed, widthLinesBoxes, kTRUE);
             graphCombInvYieldStat2760GeVALHC11hUnShifted_0010->Draw("pEsame");
@@ -2233,12 +2556,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
             graphCombInvYieldStat2760GeVLHC11hYShifted_0010->Draw("pEsame");
             DrawGammaSetMarkerTGraphAsym(graphCombInvYieldStat2760GeVLHC11hYShifted_2050, 24, 1.5, kBlack, kBlack, widthLinesBoxes, kTRUE);
             graphCombInvYieldStat2760GeVLHC11hYShifted_2050->Draw("pEsame");
-
-            fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010->SetLineColor(kBlue+2);
-            fitBylinkinPbPb2760GeVPtMultLHC11hYshift_0010->Draw("same");
-            fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050->SetLineColor(kBlue+2);
-            fitBylinkinPbPb2760GeVPtMultLHC11hYshift_2050->Draw("same");
-
 
             TLegend* legendYdummy = new TLegend(0.55,0.8,0.85,0.95);
             legendYdummy->SetFillColor(0);
@@ -2280,7 +2597,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
             delete canvasDummy3;
         }
-// return;
     }
 
 
@@ -2339,9 +2655,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     cout << WriteParameterToFile(fitTCMInvYield2760GeVLHC11h_2050)<< endl << endl;
 
 
-    //**********************************************************************************************************************//
-    //*********************************************     Ratio of Comb to Fit    ********************************************//
-    //**********************************************************************************************************************//
 
     TGraphAsymmErrors* graphRatioCombCombFitTot2760GeVLHC11h_0010   = (TGraphAsymmErrors*)graphCombInvYieldTot2760GeVLHC11h_0010->Clone();
     graphRatioCombCombFitTot2760GeVLHC11h_0010                      = CalculateGraphErrRatioToFit(graphRatioCombCombFitTot2760GeVLHC11h_0010, fitTCMInvYield2760GeVLHC11h_0010);
@@ -2448,14 +2761,20 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         histo2DRatioToCombFitLHC11h->GetYaxis()->SetRangeUser(0.05,2.45);
         histo2DRatioToCombFitLHC11h->Draw("copy");
 
+        DrawGammaLines(0.3, 30. , 1., 1.,0.5,   kGray+2);
+        DrawGammaLines(0.3, 30. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.3, 30. , 0.9, 0.9,0.5, kGray, 7);
+
         DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFitSys2760GeVLHC11h_0010, markerStyleComb, markerSizeComb, colorCombo0010 , colorCombo0010, widthLinesBoxes, kTRUE);
         graphRatioCombCombFitSys2760GeVLHC11h_0010->Draw("E2same");
         DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFitStat2760GeVLHC11h_0010, markerStyleComb, markerSizeComb, colorCombo0010 , colorCombo0010);
+        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioCombCombFitStat2760GeVLHC11h_0010);
         graphRatioCombCombFitStat2760GeVLHC11h_0010->Draw("p,same,e0");
 
         DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFitSys2760GeVLHC11h_2050, markerStyleComb, markerSizeComb, colorCombo2050, colorCombo2050, widthLinesBoxes, kTRUE);
         graphRatioCombCombFitSys2760GeVLHC11h_2050->Draw("E2same");
         DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFitStat2760GeVLHC11h_2050, markerStyleComb, markerSizeComb, colorCombo2050, colorCombo2050);
+        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioCombCombFitStat2760GeVLHC11h_2050);
         graphRatioCombCombFitStat2760GeVLHC11h_2050->Draw("p,same,e0");
 
         TLegend* legendCombToCombFit = new TLegend(0.2,0.75,0.5,0.94);
@@ -2466,10 +2785,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         legendCombToCombFit->AddEntry(graphRatioCombCombFitSys2760GeVLHC11h_0010,"0-10%","fp");
         legendCombToCombFit->AddEntry(graphRatioCombCombFitSys2760GeVLHC11h_2050,"20-50%","fp");
         legendCombToCombFit->Draw();
-
-        DrawGammaLines(0.3, 30. , 1., 1.,0.5,   kGray+2);
-        DrawGammaLines(0.3, 30. , 1.1, 1.1,0.5, kGray, 7);
-        DrawGammaLines(0.3, 30. , 0.9, 0.9,0.5, kGray, 7);
 
         TLatex *labelRatioToFitEnergy = new TLatex(0.65,0.92,collisionSystem2760GeV.Data());
         SetStyleTLatex( labelRatioToFitEnergy, 0.85*textSizeLabelsPixel,4);
@@ -2491,27 +2806,29 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     canvasRatioToCombFitLHC11h->cd();
     histo2DRatioToCombFitLHC11h->Draw("copy");
 
+        DrawGammaLines(0.3, 30. , 1., 1.,0.5,   kGray+2);
+        DrawGammaLines(0.3, 30. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.3, 30. , 0.9, 0.9,0.5, kGray, 7);
+
         DrawGammaSetMarkerTGraphAsym(graphRatioPCMCombFitSys2760GeV_0010, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);//colorPCM0010, colorPCM0010, widthLinesBoxes, kTRUE);
         graphRatioPCMCombFitSys2760GeV_0010->Draw("E2same");
         DrawGammaSetMarkerTGraphAsym(graphRatioPCMCombFitStat2760GeV_0010, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0]);//colorPCM0010, colorPCM0010);
+        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioPCMCombFitStat2760GeV_0010);
         graphRatioPCMCombFitStat2760GeV_0010->Draw("p,same,e");
 
         if(meson.CompareTo("Pi0")==0){
             DrawGammaSetMarkerTGraphAsym(graphRatioPHOSCombFitSys2760GeV_0010, markerStyleDet[1] ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1], widthLinesBoxes, kTRUE);
             graphRatioPHOSCombFitSys2760GeV_0010->Draw("E2same");
             DrawGammaSetMarkerTGraphAsym(graphRatioPHOSCombFitStat2760GeV_0010, markerStyleDet[1] ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1]);
+            if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioPHOSCombFitStat2760GeV_0010);
             graphRatioPHOSCombFitStat2760GeV_0010->Draw("p,same,e");
         }
 
         DrawGammaSetMarkerTGraphAsym(graphRatioEMCalCombFitSys2760GeV_0010, markerStyleDet[2] ,markerSizeDet[2]*0.5, colorDet[2], colorDet[2], widthLinesBoxes, kTRUE);//colorEMCal0010, colorEMCal0010, widthLinesBoxes, kTRUE);
         graphRatioEMCalCombFitSys2760GeV_0010->Draw("E2same");
         DrawGammaSetMarkerTGraphAsym(graphRatioEMCalCombFitStat2760GeV_0010, markerStyleDet[2] ,markerSizeDet[2]*0.5, colorDet[2], colorDet[2]);//colorEMCal0010, colorEMCal0010);
+        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioEMCalCombFitStat2760GeV_0010);
         graphRatioEMCalCombFitStat2760GeV_0010->Draw("p,same,e");
-
-
-        DrawGammaLines(0.23, 70. , 1., 1.,0.5, kGray+2);
-        DrawGammaLines(0.23, 70. , 1.1, 1.1,0.5, kGray, 7);
-        DrawGammaLines(0.23, 70. , 0.9, 0.9,0.5, kGray, 7);
 
         labelRatioToFitEnergy->Draw();
         labelRatioToFitPi0->Draw();
@@ -2529,10 +2846,10 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         SetStyleTLatex( textPCMOnlyRatioPi0LHC11h, 0.85*textSizeLabelsPixel,4);
         textPCMOnlyRatioPi0LHC11h->SetTextFont(43);
         textPCMOnlyRatioPi0LHC11h->Draw();
+        TLatex *textPHOSOnlyRatioPi0LHC11h = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[2],"PHOS");
+        SetStyleTLatex( textPHOSOnlyRatioPi0LHC11h,  0.85*textSizeLabelsPixel,4);
+        textPHOSOnlyRatioPi0LHC11h->SetTextFont(43);
         if(meson.CompareTo("Pi0")==0){
-          TLatex *textPHOSOnlyRatioPi0LHC11h = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[2],"PHOS");
-          SetStyleTLatex( textPHOSOnlyRatioPi0LHC11h,  0.85*textSizeLabelsPixel,4);
-          textPHOSOnlyRatioPi0LHC11h->SetTextFont(43);
           textPHOSOnlyRatioPi0LHC11h->Draw();
         }
         TLatex *textEMCalOnlyRatioPi0LHC11h = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[3],"EMCal");
@@ -2575,19 +2892,21 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     canvasRatioToCombFitLHC11h->cd();
     histo2DRatioToCombFitLHC11h->Draw("copy");
 
+        DrawGammaLines(0.3, 30. , 1., 1.,0.5,   kGray+2);
+        DrawGammaLines(0.3, 30. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.3, 30. , 0.9, 0.9,0.5, kGray, 7);
+
         DrawGammaSetMarkerTGraphAsym(graphRatioPCMCombFitSys2760GeV_2050, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);//colorPCM2050, colorPCM2050, widthLinesBoxes, kTRUE);
         graphRatioPCMCombFitSys2760GeV_2050->Draw("E2same");
-        DrawGammaSetMarkerTGraphAsym(graphRatioPCMCombFitStat2760GeV_2050, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0]);//colorPCM2050, colorPCM2050);
+        DrawGammaSetMarkerTGraphAsym(graphRatioEMCalCombFitSys2760GeV_2050, markerStyleDet[2] ,markerSizeDet[2]*0.5, colorDet[2], colorDet[2], widthLinesBoxes, kTRUE);//colorEMCal2050, colorEMCal2050, widthLinesBoxes, kTRUE);
         graphRatioEMCalCombFitSys2760GeV_2050->Draw("E2same");
 
-        DrawGammaSetMarkerTGraphAsym(graphRatioEMCalCombFitSys2760GeV_2050, markerStyleDet[2] ,markerSizeDet[2]*0.5, colorDet[2], colorDet[2], widthLinesBoxes, kTRUE);//colorEMCal2050, colorEMCal2050, widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPCMCombFitStat2760GeV_2050, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0]);//colorPCM2050, colorPCM2050);
+        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioPCMCombFitStat2760GeV_2050);
         graphRatioPCMCombFitStat2760GeV_2050->Draw("p,same,e");
         DrawGammaSetMarkerTGraphAsym(graphRatioEMCalCombFitStat2760GeV_2050, markerStyleDet[2] ,markerSizeDet[2]*0.5, colorDet[2], colorDet[2]);//colorEMCal2050, colorEMCal2050);
+        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioEMCalCombFitStat2760GeV_2050);
         graphRatioEMCalCombFitStat2760GeV_2050->Draw("p,same,e");
-
-        DrawGammaLines(0.23, 70. , 1., 1.,0.5, kGray+2);
-        DrawGammaLines(0.23, 70. , 1.1, 1.1,0.5, kGray, 7);
-        DrawGammaLines(0.23, 70. , 0.9, 0.9,0.5, kGray, 7);
 
         labelRatioToFitEnergy->Draw();
         labelRatioToFitPi0->Draw();
@@ -2647,20 +2966,26 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
             }
         }
 
+        fitTCMInvYield2760GeVLHC11h_0010->SetLineStyle(4);
+        fitTCMInvYield2760GeVLHC11h_0010->Draw("same");
+
         if(meson.CompareTo("Pi0")==0){
             DrawGammaSetMarkerTGraphAsym(graphPCMPi0InvYieldSysPbPb2760GeV_0010, markerStyleDet[0], markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);//colorPCM0010, colorPCM0010, widthLinesBoxes, kTRUE);
             graphPCMPi0InvYieldSysPbPb2760GeV_0010->Draw("E2same");
             DrawGammaSetMarkerTGraphAsym(graphPCMPi0InvYieldStatPbPb2760GeV_0010,markerStyleDet[0], markerSizeDet[0]*0.5, colorDet[0], colorDet[0]);//colorPCM0010, colorPCM0010);
+            if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphPCMPi0InvYieldStatPbPb2760GeV_0010);
             graphPCMPi0InvYieldStatPbPb2760GeV_0010->Draw("p,same,e1");
 
             DrawGammaSetMarkerTGraphAsym(graphPHOSPi0InvYieldSysPbPb2760GeV_0010, markerStyleDet[1], markerSizeDet[1]*0.5, colorDet[1], colorDet[1], widthLinesBoxes, kTRUE);//colorPHOS0010, colorPHOS0010, widthLinesBoxes, kTRUE);
             graphPHOSPi0InvYieldSysPbPb2760GeV_0010->Draw("E2same");
             DrawGammaSetMarkerTGraphAsym(graphPHOSPi0InvYieldStatPbPb2760GeV_0010, markerStyleDet[1], markerSizeDet[1]*0.5, colorDet[1], colorDet[1]);//colorPHOS0010, colorPHOS0010);
+            if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphPHOSPi0InvYieldStatPbPb2760GeV_0010);
             graphPHOSPi0InvYieldStatPbPb2760GeV_0010->Draw("p,same,e1");
 
             DrawGammaSetMarkerTGraphAsym(graphEMCalPi0InvYieldSysPbPb2760GeV_0010, markerStyleDet[2], markerSizeDet[2]*0.5, colorDet[2], colorDet[2], widthLinesBoxes, kTRUE);//colorEMCal0010, colorEMCal0010, widthLinesBoxes, kTRUE);
             graphEMCalPi0InvYieldSysPbPb2760GeV_0010->Draw("E2same");
             DrawGammaSetMarkerTGraphAsym(graphEMCalPi0InvYieldStatPbPb2760GeV_0010, markerStyleDet[2], markerSizeDet[2]*0.5, colorDet[2], colorDet[2]);//colorEMCal0010, colorEMCal0010);
+            if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphEMCalPi0InvYieldStatPbPb2760GeV_0010);
             graphEMCalPi0InvYieldStatPbPb2760GeV_0010->Draw("p,same,e1");
 
         } else if(meson.CompareTo("Eta")==0){
@@ -2668,11 +2993,13 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
             DrawGammaSetMarkerTGraphAsym(graphPCMEtaInvYieldSysPbPb2760GeV_0010, markerStyleDet[0], markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);//colorPCM0010, colorPCM0010, widthLinesBoxes, kTRUE);
             graphPCMEtaInvYieldSysPbPb2760GeV_0010->Draw("E2same");
             DrawGammaSetMarkerTGraphAsym(graphPCMEtaInvYieldStatPbPb2760GeV_0010,markerStyleDet[0], markerSizeDet[0]*0.5, colorDet[0], colorDet[0]);//colorPCM0010, colorPCM0010);
+            if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphPCMEtaInvYieldStatPbPb2760GeV_0010);
             graphPCMEtaInvYieldStatPbPb2760GeV_0010->Draw("p,same,e1");
 
             DrawGammaSetMarkerTGraphAsym(graphEMCalEtaInvYieldSysPbPb2760GeV_0010, markerStyleDet[2], markerSizeDet[2]*0.5, colorDet[2], colorDet[2], widthLinesBoxes, kTRUE);//colorEMCal0010, colorEMCal0010, widthLinesBoxes, kTRUE);
             graphEMCalEtaInvYieldSysPbPb2760GeV_0010->Draw("E2same");
             DrawGammaSetMarkerTGraphAsym(graphEMCalEtaInvYieldStatPbPb2760GeV_0010, markerStyleDet[2], markerSizeDet[2]*0.5, colorDet[2], colorDet[2]);//colorEMCal0010, colorEMCal0010);
+            if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphEMCalEtaInvYieldStatPbPb2760GeV_0010);
             graphEMCalEtaInvYieldStatPbPb2760GeV_0010->Draw("p,same,e1");
 
         }
@@ -2706,25 +3033,32 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
             }
         }
 
+        fitTCMInvYield2760GeVLHC11h_2050->SetLineStyle(4);
+        fitTCMInvYield2760GeVLHC11h_2050->Draw("same");
+
         if(meson.CompareTo("Pi0")==0){
             DrawGammaSetMarkerTGraphAsym(graphPCMPi0InvYieldSysPbPb2760GeV_2050, markerStyleDet[0], markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);//colorPCM2050, colorPCM2050, widthLinesBoxes, kTRUE);
             graphPCMPi0InvYieldSysPbPb2760GeV_2050->Draw("E2same");
             DrawGammaSetMarkerTGraphAsym(graphPCMPi0InvYieldStatPbPb2760GeV_2050,markerStyleDet[0], markerSizeDet[0]*0.5, colorDet[0], colorDet[0]);//colorPCM2050, colorPCM2050);
+            if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphPCMPi0InvYieldStatPbPb2760GeV_2050);
             graphPCMPi0InvYieldStatPbPb2760GeV_2050->Draw("p,same,e1");
 
             DrawGammaSetMarkerTGraphAsym(graphEMCalPi0InvYieldSysPbPb2760GeV_2050, markerStyleDet[2], markerSizeDet[2]*0.5, colorDet[2], colorDet[2], widthLinesBoxes, kTRUE);//colorEMCal2050, colorEMCal2050, widthLinesBoxes, kTRUE);
             graphEMCalPi0InvYieldSysPbPb2760GeV_2050->Draw("E2same");
             DrawGammaSetMarkerTGraphAsym(graphEMCalPi0InvYieldStatPbPb2760GeV_2050, markerStyleDet[2], markerSizeDet[2]*0.5, colorDet[2], colorDet[2]);//colorEMCal2050, colorEMCal2050);
+            if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphEMCalPi0InvYieldStatPbPb2760GeV_2050);
             graphEMCalPi0InvYieldStatPbPb2760GeV_2050->Draw("p,same,e1");
         } else if(meson.CompareTo("Eta")==0){
             DrawGammaSetMarkerTGraphAsym(graphPCMEtaInvYieldSysPbPb2760GeV_2050, markerStyleDet[0], markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);//colorPCM2050, colorPCM2050, widthLinesBoxes, kTRUE);
             graphPCMEtaInvYieldSysPbPb2760GeV_2050->Draw("E2same");
             DrawGammaSetMarkerTGraphAsym(graphPCMEtaInvYieldStatPbPb2760GeV_2050,markerStyleDet[0], markerSizeDet[0]*0.5, colorDet[0], colorDet[0]);//colorPCM2050, colorPCM2050);
+            if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphPCMEtaInvYieldStatPbPb2760GeV_2050);
             graphPCMEtaInvYieldStatPbPb2760GeV_2050->Draw("p,same,e1");
 
             DrawGammaSetMarkerTGraphAsym(graphEMCalEtaInvYieldSysPbPb2760GeV_2050, markerStyleDet[2], markerSizeDet[2]*0.5, colorDet[2], colorDet[2], widthLinesBoxes, kTRUE);//colorEMCal2050, colorEMCal2050, widthLinesBoxes, kTRUE);
             graphEMCalEtaInvYieldSysPbPb2760GeV_2050->Draw("E2same");
             DrawGammaSetMarkerTGraphAsym(graphEMCalEtaInvYieldStatPbPb2760GeV_2050, markerStyleDet[2], markerSizeDet[2]*0.5, colorDet[2], colorDet[2]);//colorEMCal2050, colorEMCal2050);
+            if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphEMCalEtaInvYieldStatPbPb2760GeV_2050);
             graphEMCalEtaInvYieldStatPbPb2760GeV_2050->Draw("p,same,e1");
         }
 
@@ -2748,21 +3082,35 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
             }
         }
 
+
+        DrawGammaSetMarkerTGraphAsym(graphCombInvYieldSys2760GeVLHC11h_0010, markerStyleComb, markerSizeComb, colorCombo0010 , colorCombo0010, 2, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphCombInvYieldStat2760GeVLHC11h_0010, markerStyleComb, markerSizeComb, colorCombo0010, colorCombo0010);
+        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombInvYieldStat2760GeVLHC11h_0010);
+
+        //scaling of yields for plotting sake: ////////////////////////////
         TGraphAsymmErrors *graphCombInvYieldSys2760GeVLHC11hScaled_0010 = (TGraphAsymmErrors*)graphCombInvYieldSys2760GeVLHC11h_0010->Clone("graphCombInvYieldSys2760GeVLHC11hScaled_0010");
         graphCombInvYieldSys2760GeVLHC11hScaled_0010 = ScaleGraph(graphCombInvYieldSys2760GeVLHC11hScaled_0010, 4);
         TGraphAsymmErrors *graphCombInvYieldStat2760GeVLHC11hScaled_0010 = (TGraphAsymmErrors*)graphCombInvYieldStat2760GeVLHC11h_0010->Clone("graphCombInvYieldStat2760GeVLHC11hScaled_0010");
         graphCombInvYieldStat2760GeVLHC11hScaled_0010 = ScaleGraph(graphCombInvYieldStat2760GeVLHC11hScaled_0010,4);
+        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombInvYieldStat2760GeVLHC11hScaled_0010);
+
+        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombInvYieldStat2760GeVLHC11h_2050);
+
+        TF1* fitTCMInvYield2760GeVLHC11hScaledforPlot_0010 = (TF1*)fitTCMInvYield2760GeVLHC11h_0010->Clone();
+        fitTCMInvYield2760GeVLHC11hScaledforPlot_0010->SetLineStyle(4);
+        fitTCMInvYield2760GeVLHC11hScaledforPlot_0010->SetParameter(0,fitTCMInvYield2760GeVLHC11hScaledforPlot_0010->GetParameter(0)*4);
+        fitTCMInvYield2760GeVLHC11hScaledforPlot_0010->SetParameter(2,fitTCMInvYield2760GeVLHC11hScaledforPlot_0010->GetParameter(2)*4);
+
+        //////////////////////////////////////////////////////////////////
 
         DrawGammaSetMarkerTGraphAsym(graphCombInvYieldSys2760GeVLHC11hScaled_0010, markerStyle0010, markerSizeComb, colorCombo0010 , colorCombo0010, 2, kTRUE);
         DrawGammaSetMarkerTGraphAsym(graphCombInvYieldStat2760GeVLHC11hScaled_0010, markerStyle0010, markerSizeComb, colorCombo0010, colorCombo0010);
         graphCombInvYieldSys2760GeVLHC11hScaled_0010->Draw("E2same");
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombInvYieldStat2760GeVLHC11hScaled_0010);
         graphCombInvYieldStat2760GeVLHC11hScaled_0010->Draw("p,same,e0");
 
         DrawGammaSetMarkerTGraphAsym(graphCombInvYieldSys2760GeVLHC11h_2050, markerStyle2050, markerSizeComb, colorCombo2050 ,colorCombo2050, 2, kTRUE);
         DrawGammaSetMarkerTGraphAsym(graphCombInvYieldStat2760GeVLHC11h_2050, markerStyle2050, markerSizeComb,  colorCombo2050 ,colorCombo2050);
         graphCombInvYieldSys2760GeVLHC11h_2050->Draw("E2same");
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombInvYieldStat2760GeVLHC11h_2050);
         graphCombInvYieldStat2760GeVLHC11h_2050->Draw("p,same,e0");
 
         TLegend* legendInvYieldSectionPi0LHC11h_onlyPbPb = new TLegend(0.2,0.13,0.53,0.23);
@@ -2806,10 +3154,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
         if(meson.CompareTo("Pi0")==0){
 
-            DrawGammaSetMarkerTGraphAsym(graphInvSectionCombStatPi02760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack);
-            if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvSectionCombStatPi02760GeVPlot);
             graphInvSectionCombStatPi02760GeVPlot->Draw("p,same,e0");
-            DrawGammaSetMarkerTGraphAsym(graphInvSectionCombSysPi02760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack, widthLinesBoxes, kTRUE);
             graphInvSectionCombSysPi02760GeVPlot->Draw("E2same");
 
             legendSpectraPP->SetHeader(collisionSystemPP2760GeV.Data());
@@ -2817,10 +3162,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
         } else if(meson.CompareTo("Eta")==0){
 
-            DrawGammaSetMarkerTGraphAsym(graphInvSectionCombStatEta2760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack);
-            if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvSectionCombStatEta2760GeVPlot);
             graphInvSectionCombStatEta2760GeVPlot->Draw("p,same,e0");
-            DrawGammaSetMarkerTGraphAsym(graphInvSectionCombSysEta2760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack, widthLinesBoxes, kTRUE);
             graphInvSectionCombSysEta2760GeVPlot->Draw("E2same");
 
             legendSpectraPP->SetHeader(collisionSystemPP2760GeV.Data());
@@ -2839,13 +3181,9 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         legendInvYieldSectionPi0LHC11h_WitPP->AddEntry(graphCombInvYieldSys2760GeVLHC11hScaled_0010,Form("  %s",cent0010.Data()),"fp");
         legendInvYieldSectionPi0LHC11h_WitPP->AddEntry(graphCombInvYieldSys2760GeVLHC11h_2050,Form("%s",cent2050.Data()),"fp");
 
-        legendInvYieldSectionPi0LHC11h_WitPP->AddEntry(fitTCMInvYield2760GeVLHC11h_0010,"fits to Pb#font[122]{-}Pb","l");
+        legendInvYieldSectionPi0LHC11h_WitPP->AddEntry(fitTCMInvYield2760GeVLHC11hScaledforPlot_0010,"fits to Pb#font[122]{-}Pb","l");
 //         legendInvYieldSectionPi0LHC11h_WitPP->AddEntry((TObject*)0,"#it{A}_{e} exp(-#it{E}_{T, kin}/#it{T}_{e}) + #it{A}/#(){1 + #frac{#it{p}_{T}^{2}}{#it{T}^{2}#upoint n}}^{-n}","");
-        fitTCMInvYield2760GeVLHC11h_0010->SetParameter(0,fitTCMInvYield2760GeVLHC11h_0010->GetParameter(0)*4);
-        fitTCMInvYield2760GeVLHC11h_0010->SetParameter(2,fitTCMInvYield2760GeVLHC11h_0010->GetParameter(2)*4);
-        fitTCMInvYield2760GeVLHC11h_0010->SetLineStyle(4);
-        fitTCMInvYield2760GeVLHC11h_0010->Draw("same");
-        fitTCMInvYield2760GeVLHC11h_2050->SetLineStyle(4);
+        fitTCMInvYield2760GeVLHC11hScaledforPlot_0010->Draw("same");
         fitTCMInvYield2760GeVLHC11h_2050->Draw("same");
 
 //         legendInvYieldSectionPi0LHC11h_WitPP->AddEntry(fitTCMInvYield2760GeVas10h_0010," QCD fit to Pb#font[122]{-}Pb","l");
@@ -2864,12 +3202,9 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 //      labelPreliminary->Draw();
 
         graphCombInvYieldSys2760GeVLHC11hScaled_0010->Draw("E2same");
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombInvYieldStat2760GeVLHC11hScaled_0010);
         graphCombInvYieldStat2760GeVLHC11hScaled_0010->Draw("p,same,e0");
 
-
         graphCombInvYieldSys2760GeVLHC11h_2050->Draw("E2same");
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombInvYieldStat2760GeVLHC11h_2050);
         graphCombInvYieldStat2760GeVLHC11h_2050->Draw("p,same,e0");
 
     canvasInvYieldSectionPi0LHC11h->SaveAs(Form("%s/%s_YieldCombinedLHC11h_DataOnly_withPP.%s",outputDir.Data(),meson.Data(),suffix.Data()));
@@ -2903,53 +3238,47 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
             if(graphInvYieldPi0StatBothMeson_0010 && graphInvYieldEtaStatBothMeson_0010){
 
-                TGraphAsymmErrors *graphNLOPi00010 = (TGraphAsymmErrors*)graphNLOCalcDSS14InvYieldPi0Band->Clone("graphNLOPi00010");
-                graphNLOPi00010 = ScaleGraph(graphNLOPi00010,nColl0010*4e2);
-                TGraphAsymmErrors *graphNLOPi02050 = (TGraphAsymmErrors*)graphNLOCalcDSS14InvYieldPi0Band->Clone("graphNLOPi02050");
-                graphNLOPi02050 = ScaleGraph(graphNLOPi02050,nColl2050*1e2);
+                TGraphAsymmErrors *graphNLOPi0ScaledandNColl_0010 = (TGraphAsymmErrors*)graphNLOCalcDSS14InvYieldPi0Band->Clone("graphNLOPi0ScaledandNColl_0010");
+                graphNLOPi0ScaledandNColl_0010 = ScaleGraph(graphNLOPi0ScaledandNColl_0010,nColl0010*4e2);
+                TGraphAsymmErrors *graphNLOPi0ScaledandNColl_2050 = (TGraphAsymmErrors*)graphNLOCalcDSS14InvYieldPi0Band->Clone("graphNLOPi0ScaledandNColl_2050");
+                graphNLOPi0ScaledandNColl_2050 = ScaleGraph(graphNLOPi0ScaledandNColl_2050,nColl2050*1e2);
 
-                TGraphAsymmErrors *graphNLOEta0010 = (TGraphAsymmErrors*)graphNLOCalcDSS07InvYieldEtaBand->Clone("graphNLOEta0010");
-                graphNLOEta0010 = ScaleGraph(graphNLOEta0010,nColl0010);
-                TGraphAsymmErrors *graphNLOEta2050 = (TGraphAsymmErrors*)graphNLOCalcDSS07InvYieldEtaBand->Clone("graphNLOEta2050");
-                graphNLOEta2050 = ScaleGraph(graphNLOEta2050,nColl2050*2e-1);
+                TGraphAsymmErrors *graphNLOEtaonlyNColl_0010 = (TGraphAsymmErrors*)graphNLOCalcDSS07InvYieldEtaBand->Clone("graphNLOEtaonlyNColl_0010");
+                graphNLOEtaonlyNColl_0010 = ScaleGraph(graphNLOEtaonlyNColl_0010,nColl0010);
+                TGraphAsymmErrors *graphNLOEtaScaledandNColl_2050 = (TGraphAsymmErrors*)graphNLOCalcDSS07InvYieldEtaBand->Clone("graphNLOEtaScaledandNColl_2050");
+                graphNLOEtaScaledandNColl_2050 = ScaleGraph(graphNLOEtaScaledandNColl_2050,nColl2050*2e-1);
 
 
                 for(Int_t i=0;i<19;i++){
-                    graphNLOPi00010->RemovePoint(graphNLOPi00010->GetN()-1);
-                    graphNLOPi02050->RemovePoint(graphNLOPi02050->GetN()-1);
+                    graphNLOPi0ScaledandNColl_0010->RemovePoint(graphNLOPi0ScaledandNColl_0010->GetN()-1);
+                    graphNLOPi0ScaledandNColl_2050->RemovePoint(graphNLOPi0ScaledandNColl_2050->GetN()-1);
                 }
                 for(Int_t i=0;i<4;i++){
-                    graphNLOEta0010->RemovePoint(graphNLOEta0010->GetN()-1);
-                    graphNLOEta2050->RemovePoint(graphNLOEta2050->GetN()-1);
+                    graphNLOEtaonlyNColl_0010->RemovePoint(graphNLOEtaonlyNColl_0010->GetN()-1);
+                    graphNLOEtaScaledandNColl_2050->RemovePoint(graphNLOEtaScaledandNColl_2050->GetN()-1);
                 }
 
-                DrawGammaSetMarkerTGraphAsym(graphNLOPi00010, 0, 0, colorNLO+1, colorNLO+1, 1, kTRUE, kRed-7);
-                graphNLOPi00010->SetFillStyle(3001);
-                graphNLOPi00010->Draw("3,same");
-                DrawGammaSetMarkerTGraphAsym(graphNLOPi02050, 0, 0, colorNLO+1, colorNLO+1, 1, kTRUE, kAzure-4);
-                graphNLOPi02050->SetFillStyle(3001);
-                graphNLOPi02050->Draw("3,same");
-                DrawGammaSetMarkerTGraphAsym(graphNLOEta0010, 0, 0, colorNLO, colorNLO, 1, kTRUE, kRed-9);
-                graphNLOEta0010->Draw("3,same");
-                DrawGammaSetMarkerTGraphAsym(graphNLOEta2050, 0, 0, colorNLO, colorNLO, 1, kTRUE, kAzure-9);
-                graphNLOEta2050->Draw("3,same");
+                DrawGammaSetMarkerTGraphAsym(graphNLOPi0ScaledandNColl_0010, 0, 0, colorNLO+1, colorNLO+1, 1, kTRUE, kRed-7);
+                graphNLOPi0ScaledandNColl_0010->SetFillStyle(3001);
+                graphNLOPi0ScaledandNColl_0010->Draw("3,same");
+                DrawGammaSetMarkerTGraphAsym(graphNLOPi0ScaledandNColl_2050, 0, 0, colorNLO+1, colorNLO+1, 1, kTRUE, kAzure-4);
+                graphNLOPi0ScaledandNColl_2050->SetFillStyle(3001);
+                graphNLOPi0ScaledandNColl_2050->Draw("3,same");
+                DrawGammaSetMarkerTGraphAsym(graphNLOEtaonlyNColl_0010, 0, 0, colorNLO, colorNLO, 1, kTRUE, kRed-9);
+                graphNLOEtaonlyNColl_0010->Draw("3,same");
+                DrawGammaSetMarkerTGraphAsym(graphNLOEtaScaledandNColl_2050, 0, 0, colorNLO, colorNLO, 1, kTRUE, kAzure-9);
+                graphNLOEtaScaledandNColl_2050->Draw("3,same");
 
-                TGraphAsymmErrors* copydummyPi0= (TGraphAsymmErrors*)graphInvYieldPi0StatBothMeson_0010->Clone();
-                DrawGammaSetMarkerTGraphAsym(copydummyPi0, 0, 0, colorNLO+1, colorNLO+1, 1, kTRUE, colorNLO+1);
-                copydummyPi0->SetFillStyle(3001);
-                TGraphAsymmErrors* copydummyEta= (TGraphAsymmErrors*)graphInvYieldEtaStatBothMeson_0010->Clone();
-                DrawGammaSetMarkerTGraphAsym(copydummyEta, 0, 0, colorNLO+1, colorNLO+1, 1, kTRUE, colorNLO+1);
+                TGraphAsymmErrors *graphInvYieldPi0SysBothMeson_scaledx400_0010 = (TGraphAsymmErrors*)graphInvYieldPi0SysBothMeson_0010->Clone("");
+                graphInvYieldPi0SysBothMeson_scaledx400_0010 = ScaleGraph(graphInvYieldPi0SysBothMeson_scaledx400_0010,400);
+                DrawGammaSetMarkerTGraphAsym(graphInvYieldPi0SysBothMeson_scaledx400_0010, 24, markerSizeComb, colorCombo0010 , colorCombo0010, 2, kTRUE);
+                graphInvYieldPi0SysBothMeson_scaledx400_0010->Draw("E2same");
 
-                TGraphAsymmErrors *graphInvYieldPi0SysBothMeson_scaledx104_0010 = (TGraphAsymmErrors*)graphInvYieldPi0SysBothMeson_0010->Clone("");
-                graphInvYieldPi0SysBothMeson_scaledx104_0010 = ScaleGraph(graphInvYieldPi0SysBothMeson_scaledx104_0010,400);
-                DrawGammaSetMarkerTGraphAsym(graphInvYieldPi0SysBothMeson_scaledx104_0010, 24, markerSizeComb, colorCombo0010 , colorCombo0010, 2, kTRUE);
-                graphInvYieldPi0SysBothMeson_scaledx104_0010->Draw("E2same");
-
-                TGraphAsymmErrors *graphInvYieldPi0StatBothMeson_scaledx104_0010 = (TGraphAsymmErrors*)graphInvYieldPi0StatBothMeson_0010->Clone("");
-                graphInvYieldPi0StatBothMeson_scaledx104_0010 = ScaleGraph(graphInvYieldPi0StatBothMeson_scaledx104_0010,400);
-                DrawGammaSetMarkerTGraphAsym(graphInvYieldPi0StatBothMeson_scaledx104_0010, 24, markerSizeComb, colorCombo0010, colorCombo0010);
-                if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvYieldPi0StatBothMeson_scaledx104_0010);
-                graphInvYieldPi0StatBothMeson_scaledx104_0010->Draw("p,same,e0");
+                TGraphAsymmErrors *graphInvYieldPi0StatBothMeson_scaledx400_0010 = (TGraphAsymmErrors*)graphInvYieldPi0StatBothMeson_0010->Clone("");
+                graphInvYieldPi0StatBothMeson_scaledx400_0010 = ScaleGraph(graphInvYieldPi0StatBothMeson_scaledx400_0010,400);
+                DrawGammaSetMarkerTGraphAsym(graphInvYieldPi0StatBothMeson_scaledx400_0010, 24, markerSizeComb, colorCombo0010, colorCombo0010);
+                if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvYieldPi0StatBothMeson_scaledx400_0010);
+                graphInvYieldPi0StatBothMeson_scaledx400_0010->Draw("p,same,e0");
 
                 TGraphAsymmErrors *graphInvYieldPi0SysBothMeson_scaledx100_2050 = (TGraphAsymmErrors*)graphInvYieldPi0SysBothMeson_2050->Clone("");
                 graphInvYieldPi0SysBothMeson_scaledx100_2050 = ScaleGraph(graphInvYieldPi0SysBothMeson_scaledx100_2050,100);
@@ -2961,33 +3290,33 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
                 if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvYieldPi0StatBothMeson_scaledx100_2050);
                 graphInvYieldPi0StatBothMeson_scaledx100_2050->Draw("p,same,e0");
 
-                TGraphAsymmErrors *graphInvYieldEtaSysBothMeson_scaledx4_0010 = (TGraphAsymmErrors*)graphInvYieldEtaSysBothMeson_0010->Clone("");
-//              graphInvYieldEtaSysBothMeson_scaledx4_0010 = ScaleGraph(graphInvYieldEtaSysBothMeson_scaledx4_0010,4);
-                DrawGammaSetMarkerTGraphAsym(graphInvYieldEtaSysBothMeson_scaledx4_0010, markerStyle0010, markerSizeComb, colorCombo0010 , colorCombo0010, 2, kTRUE);
-                graphInvYieldEtaSysBothMeson_scaledx4_0010->Draw("E2same");
+                TGraphAsymmErrors *graphInvYieldPi0SysBothMeson_notscaled_2050 = (TGraphAsymmErrors*)graphInvYieldEtaSysBothMeson_0010->Clone("");
+//              graphInvYieldPi0SysBothMeson_notscaled_2050 = ScaleGraph(graphInvYieldPi0SysBothMeson_notscaled_2050,4);
+                DrawGammaSetMarkerTGraphAsym(graphInvYieldPi0SysBothMeson_notscaled_2050, markerStyle0010, markerSizeComb, colorCombo0010 , colorCombo0010, 2, kTRUE);
+                graphInvYieldPi0SysBothMeson_notscaled_2050->Draw("E2same");
 
-                TGraphAsymmErrors *graphInvYieldEtaStatBothMeson_scaledx4_0010 = (TGraphAsymmErrors*)graphInvYieldEtaStatBothMeson_0010->Clone("");
-//              graphInvYieldEtaStatBothMeson_scaledx4_0010 = ScaleGraph(graphInvYieldEtaStatBothMeson_scaledx4_0010,4);
-                DrawGammaSetMarkerTGraphAsym(graphInvYieldEtaStatBothMeson_scaledx4_0010, markerStyle0010, markerSizeComb, colorCombo0010, colorCombo0010);
-                if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvYieldEtaStatBothMeson_scaledx4_0010);
-                graphInvYieldEtaStatBothMeson_scaledx4_0010->Draw("p,same,e0");
+                TGraphAsymmErrors *graphInvYieldEtaStatBothMeson_notscaled_0010 = (TGraphAsymmErrors*)graphInvYieldEtaStatBothMeson_0010->Clone("");
+//              graphInvYieldEtaStatBothMeson_notscaled_0010 = ScaleGraph(graphInvYieldEtaStatBothMeson_notscaled_0010,4);
+                DrawGammaSetMarkerTGraphAsym(graphInvYieldEtaStatBothMeson_notscaled_0010, markerStyle0010, markerSizeComb, colorCombo0010, colorCombo0010);
+                if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvYieldEtaStatBothMeson_notscaled_0010);
+                graphInvYieldEtaStatBothMeson_notscaled_0010->Draw("p,same,e0");
 
-                TGraphAsymmErrors *graphInvYieldEtaSysBothMeson_scaledx4_2050 = (TGraphAsymmErrors*)graphInvYieldEtaSysBothMeson_2050->Clone("");
-                graphInvYieldEtaSysBothMeson_scaledx4_2050 = ScaleGraph(graphInvYieldEtaSysBothMeson_scaledx4_2050,2e-1);
-                DrawGammaSetMarkerTGraphAsym(graphInvYieldEtaSysBothMeson_scaledx4_2050, markerStyle2050, markerSizeComb, colorCombo2050 , colorCombo2050, 2, kTRUE);
-                graphInvYieldEtaSysBothMeson_scaledx4_2050->Draw("E2same");
+                TGraphAsymmErrors *graphInvYieldEtaSysBothMeson_scaleddown_2050 = (TGraphAsymmErrors*)graphInvYieldEtaSysBothMeson_2050->Clone("");
+                graphInvYieldEtaSysBothMeson_scaleddown_2050 = ScaleGraph(graphInvYieldEtaSysBothMeson_scaleddown_2050,2e-1);
+                DrawGammaSetMarkerTGraphAsym(graphInvYieldEtaSysBothMeson_scaleddown_2050, markerStyle2050, markerSizeComb, colorCombo2050 , colorCombo2050, 2, kTRUE);
+                graphInvYieldEtaSysBothMeson_scaleddown_2050->Draw("E2same");
 
-                TGraphAsymmErrors *graphInvYieldEtaStatBothMeson_scaledx4_2050 = (TGraphAsymmErrors*)graphInvYieldEtaStatBothMeson_2050->Clone("");
-                graphInvYieldEtaStatBothMeson_scaledx4_2050 = ScaleGraph(graphInvYieldEtaStatBothMeson_scaledx4_2050,2e-1);
-                DrawGammaSetMarkerTGraphAsym(graphInvYieldEtaStatBothMeson_scaledx4_2050, markerStyle2050, markerSizeComb, colorCombo2050, colorCombo2050);
-                if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvYieldEtaStatBothMeson_scaledx4_2050);
-                graphInvYieldEtaStatBothMeson_scaledx4_2050->Draw("p,same,e0");
+                TGraphAsymmErrors *graphInvYieldEtaStatBothMeson_scaleddown_2050 = (TGraphAsymmErrors*)graphInvYieldEtaStatBothMeson_2050->Clone("");
+                graphInvYieldEtaStatBothMeson_scaleddown_2050 = ScaleGraph(graphInvYieldEtaStatBothMeson_scaleddown_2050,2e-1);
+                DrawGammaSetMarkerTGraphAsym(graphInvYieldEtaStatBothMeson_scaleddown_2050, markerStyle2050, markerSizeComb, colorCombo2050, colorCombo2050);
+                if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvYieldEtaStatBothMeson_scaleddown_2050);
+                graphInvYieldEtaStatBothMeson_scaleddown_2050->Draw("p,same,e0");
 
-//              DrawGammaSetMarkerTGraphAsym(graphInvYieldEtaSysBothMeson_2050, markerStyle2050, markerSizeComb, colorCombo2050 , colorCombo2050, 2, kTRUE);
-//              graphInvYieldEtaSysBothMeson_2050->Draw("E2same");
-//              DrawGammaSetMarkerTGraphAsym(graphInvYieldEtaStatBothMeson_2050, markerStyle2050, markerSizeComb, colorCombo2050, colorCombo2050);
-//              if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvYieldEtaStatBothMeson_2050);
-//              graphInvYieldEtaStatBothMeson_2050->Draw("p,same,e0");
+                TGraphAsymmErrors* copydummyPi0= (TGraphAsymmErrors*)graphInvYieldPi0StatBothMeson_0010->Clone();
+                DrawGammaSetMarkerTGraphAsym(copydummyPi0, 0, 0, colorNLO+1, colorNLO+1, 1, kTRUE, colorNLO+1);
+                copydummyPi0->SetFillStyle(3001);
+                TGraphAsymmErrors* copydummyEta= (TGraphAsymmErrors*)graphInvYieldEtaStatBothMeson_0010->Clone();
+                DrawGammaSetMarkerTGraphAsym(copydummyEta, 0, 0, colorNLO+1, colorNLO+1, 1, kTRUE, colorNLO+1);
 
 
                 TLegend* legendInvYieldSectionPi0LHC11h_onlyPbPb = new TLegend(0.2,0.13,0.7,0.23);
@@ -2998,9 +3327,9 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
                 legendInvYieldSectionPi0LHC11h_onlyPbPb->SetTextSize(FontSize);
                 legendInvYieldSectionPi0LHC11h_onlyPbPb->SetNColumns(2);
                 legendInvYieldSectionPi0LHC11h_onlyPbPb->SetHeader(collisionSystem2760GeV.Data());
-                legendInvYieldSectionPi0LHC11h_onlyPbPb->AddEntry(graphInvYieldEtaSysBothMeson_scaledx4_0010,Form("#eta,   %s",cent0010.Data()),"fp");
-                legendInvYieldSectionPi0LHC11h_onlyPbPb->AddEntry(graphInvYieldPi0SysBothMeson_scaledx104_0010,Form("#pi^{0},   %s",cent0010.Data()),"fp");
-                legendInvYieldSectionPi0LHC11h_onlyPbPb->AddEntry(graphInvYieldEtaSysBothMeson_scaledx4_2050,Form("#eta, %s",cent2050.Data()),"fp");
+                legendInvYieldSectionPi0LHC11h_onlyPbPb->AddEntry(graphInvYieldPi0SysBothMeson_notscaled_2050,Form("#eta,   %s",cent0010.Data()),"fp");
+                legendInvYieldSectionPi0LHC11h_onlyPbPb->AddEntry(graphInvYieldPi0SysBothMeson_scaledx400_0010,Form("#pi^{0},   %s",cent0010.Data()),"fp");
+                legendInvYieldSectionPi0LHC11h_onlyPbPb->AddEntry(graphInvYieldEtaSysBothMeson_scaleddown_2050,Form("#eta, %s",cent2050.Data()),"fp");
                 legendInvYieldSectionPi0LHC11h_onlyPbPb->AddEntry(graphInvYieldPi0SysBothMeson_scaledx100_2050,Form("#pi^{0}, %s",cent2050.Data()),"fp");
                 legendInvYieldSectionPi0LHC11h_onlyPbPb->Draw();
 
@@ -3012,7 +3341,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
                 legNLO->SetTextFont(42);
                 legNLO->SetTextSize(FontSize);
                 legNLO->SetHeader("pQCD NLO #mu = #it{p}_{T}");
-//              legNLO->AddEntry(graphNLOEta0010,"pQCD NLO #mu = #it{p}_{T}","l");
+//              legNLO->AddEntry(graphNLOEtaonlyNColl_0010,"pQCD NLO #mu = #it{p}_{T}","l");
                 legNLO->AddEntry(copydummyPi0,"for #pi^{0}, MSTW + DSS14","f");
                 legNLO->AddEntry((TObject*)0,"PRD 91 014035","");
                 legNLO->AddEntry(copydummyEta,"for #eta, MSTW + DSS07","f");
@@ -3030,100 +3359,65 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
                 canvasInvYieldSectionPi0LHC11h->SaveAs(Form("%s/YieldCombinedLHC11h_BothMesons.%s",paperPlots.Data(),suffix.Data()));
 
 
+                canvasInvYieldSectionPi0LHC11h->cd();
+                histo2DInvYieldSectionPi0LHC11hcopy->DrawCopy();
 
-                TGraphAsymmErrors *TheoryCracowEtaLowPt_scaledx4_0010 = (TGraphAsymmErrors*)TheoryCracowEtaLowPt_0010->Clone();
-                TheoryCracowEtaLowPt_scaledx4_0010 = ScaleGraph(TheoryCracowEtaLowPt_scaledx4_0010,4);
-                DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaLowPt_scaledx4_0010, 0, 0, colorCracow0010,colorCracow0010, 5, kTRUE, colorCracow0010);
-                TheoryCracowEtaLowPt_scaledx4_0010->Draw("l,same");
+                    graphInvYieldPi0SysBothMeson_scaledx400_0010->Draw("E2same");
+                    graphInvYieldPi0StatBothMeson_scaledx400_0010->Draw("p,same,e0");
 
-                DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaLowPt_2050, 0, 0, colorCracow2050,colorCracow2050, 5, kTRUE,colorCracow2050);
-                TheoryCracowEtaLowPt_2050->Draw("l,same");
+                    TGraphAsymmErrors *TheoryCracowPi0LowPt_scaledx400_0010 = (TGraphAsymmErrors*)TheoryCracowPi0LowPt_0010->Clone();
+                    TheoryCracowPi0LowPt_scaledx400_0010 = ScaleGraph(TheoryCracowPi0LowPt_scaledx400_0010,400);
+                    DrawGammaSetMarkerTGraphAsym(TheoryCracowPi0LowPt_scaledx400_0010, 0, 0, colorCracow0010,colorCracow0010, 5, kTRUE, colorCracow0010);
+                    TheoryCracowPi0LowPt_scaledx400_0010->Draw("l,same");
 
-                TGraphAsymmErrors *TheoryCracowPi0LowPt_scaledx104_0010 = (TGraphAsymmErrors*)TheoryCracowPi0LowPt_0010->Clone();
-                TheoryCracowPi0LowPt_scaledx104_0010 = ScaleGraph(TheoryCracowPi0LowPt_scaledx104_0010,400);
-                DrawGammaSetMarkerTGraphAsym(TheoryCracowPi0LowPt_scaledx104_0010, 0, 0, colorCracow0010,colorCracow0010, 5, kTRUE, colorCracow0010);
-                TheoryCracowPi0LowPt_scaledx104_0010->Draw("l,same");
+                    graphInvYieldPi0SysBothMeson_scaledx100_2050->Draw("E2same");
+                    graphInvYieldPi0StatBothMeson_scaledx100_2050->Draw("p,same,e0");
 
-                TGraphAsymmErrors *TheoryCracowPi0LowPt_scaledx100_2050 = (TGraphAsymmErrors*)TheoryCracowPi0LowPt_2050->Clone();
-                TheoryCracowPi0LowPt_scaledx100_2050 = ScaleGraph(TheoryCracowPi0LowPt_scaledx100_2050,100);
-                DrawGammaSetMarkerTGraphAsym(TheoryCracowPi0LowPt_scaledx100_2050, 0, 0, colorCracow2050,colorCracow2050, 5, kTRUE,colorCracow2050);
-                TheoryCracowPi0LowPt_scaledx100_2050->Draw("l,same");
-                /*
-                histoEPOSPi0Rebin_0010->Scale(400);
-                DrawGammaSetMarker(histoEPOSPi0Rebin_0010,5,2,colorEPOS0010,colorEPOS0010);
-                histoEPOSPi0Rebin_0010->SetLineStyle(6);
-                histoEPOSPi0Rebin_0010->SetLineWidth(2);
-                histoEPOSPi0Rebin_0010->GetXaxis()->SetRangeUser(0.,13.);
-                histoEPOSPi0Rebin_0010->Draw("same,c,histo");
+                    TGraphAsymmErrors *TheoryCracowPi0LowPt_scaledx100_2050 = (TGraphAsymmErrors*)TheoryCracowPi0LowPt_2050->Clone();
+                    TheoryCracowPi0LowPt_scaledx100_2050 = ScaleGraph(TheoryCracowPi0LowPt_scaledx100_2050,100);
+                    DrawGammaSetMarkerTGraphAsym(TheoryCracowPi0LowPt_scaledx100_2050, 0, 0, colorCracow2050,colorCracow2050, 5, kTRUE,colorCracow2050);
+                    TheoryCracowPi0LowPt_scaledx100_2050->Draw("l,same");
 
-                histoEPOSPi0Rebin_2050->Scale(100);
-                DrawGammaSetMarker(histoEPOSPi0Rebin_2050,5,2,colorEPOS2050,colorEPOS2050);
-                histoEPOSPi0Rebin_2050->SetLineStyle(6);
-                histoEPOSPi0Rebin_2050->SetLineWidth(2);
-                histoEPOSPi0Rebin_2050->GetXaxis()->SetRangeUser(0.,13.);
-                histoEPOSPi0Rebin_2050->Draw("same,c,histo");
+                    graphInvYieldPi0SysBothMeson_notscaled_2050->Draw("E2same");
+                    graphInvYieldEtaStatBothMeson_notscaled_0010->Draw("p,same,e0");
 
-                histoEPOSEtaRebin_0010->Scale(4);
-                DrawGammaSetMarker(histoEPOSEtaRebin_0010,5,2,colorEPOS0010,colorEPOS0010);
-                histoEPOSEtaRebin_0010->SetLineStyle(6);
-                histoEPOSEtaRebin_0010->SetLineWidth(2);
-                histoEPOSEtaRebin_0010->GetXaxis()->SetRangeUser(0.,13.);
-                histoEPOSEtaRebin_0010->Draw("same,c,histo");
+                    TGraphAsymmErrors *TheoryCracowEtaLowPt_notscaled_0010 = (TGraphAsymmErrors*)TheoryCracowEtaLowPt_0010->Clone();
+//                     TheoryCracowEtaLowPt_notscaled_0010 = ScaleGraph(TheoryCracowEtaLowPt_notscaled_0010,4);
+                    DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaLowPt_notscaled_0010, 0, 0, colorCracow0010,colorCracow0010, 5, kTRUE, colorCracow0010);
+                    TheoryCracowEtaLowPt_notscaled_0010->Draw("l,same");
 
-                DrawGammaSetMarker(histoEPOSEtaRebin_2050,5,2,colorEPOS2050,colorEPOS2050);
-                histoEPOSEtaRebin_2050->SetLineStyle(6);
-                histoEPOSEtaRebin_2050->SetLineWidth(2);
-                histoEPOSEtaRebin_2050->GetXaxis()->SetRangeUser(0.,13.);
-                histoEPOSEtaRebin_2050->Draw("same,c,histo");
+                    graphInvYieldEtaSysBothMeson_scaleddown_2050->Draw("E2same");
+                    graphInvYieldEtaStatBothMeson_scaleddown_2050->Draw("p,same,e0");
+
+                    TGraphAsymmErrors *TheoryCracowEtaLowPt_scaleddown_2050 = (TGraphAsymmErrors*)TheoryCracowEtaLowPt_2050->Clone();
+                    TheoryCracowEtaLowPt_scaleddown_2050 = ScaleGraph(TheoryCracowEtaLowPt_scaleddown_2050,2e-1);
+                    DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaLowPt_scaleddown_2050, 0, 0, colorCracow2050,colorCracow2050, 5, kTRUE,colorCracow2050);
+                    TheoryCracowEtaLowPt_scaleddown_2050->Draw("l,same");
 
 
-                TLegend* legtheory = new TLegend(0.6,0.85,0.8,0.95);
-                legtheory->SetFillColor(0);
-                legtheory->SetLineColor(0);
-                legtheory->SetTextFont(42);
-                legtheory->SetTextSize(FontSize);
-                legtheory->SetHeader("PRC 90, 014906 (2014)");
-                legtheory->AddEntry(TheoryCracowEtaLowPt_scaledx4_0010,"NEQ SHM 0-10%", "l");
-                legtheory->AddEntry(TheoryCracowEtaLowPt_2050,"NEQ SHM 20-50%", "l");
-                legtheory->Draw("same");
+                    legendInvYieldSectionPi0LHC11h_onlyPbPb->Draw();
+                    legNLO->Draw();
 
-                TLegend* legtheory2 = new TLegend(0.6,0.73,0.8,0.83);
-                legtheory2->SetFillColor(0);
-                legtheory2->SetLineColor(0);
-                legtheory2->SetTextFont(42);
-                legtheory2->SetTextSize(FontSize);
-                legtheory2->SetHeader("PRC 89, 064903 (2014)");
-                legtheory2->AddEntry(histoEPOSEtaRebin_0010,"EPOS 3 0-10%", "l");
-                legtheory2->AddEntry(histoEPOSEtaRebin_2050,"EPOS 2 20-50%", "l");
-                legtheory2->Draw("same");*/
+                    TLegend* legtheory1 = new TLegend(0.2,0.24,0.55,0.34);
+                    legtheory1->SetFillColor(0);
+                    legtheory1->SetLineColor(0);
+                    legtheory1->SetMargin(0.17);
+                    legtheory1->SetTextFont(42);
+                    legtheory1->SetTextSize(FontSize);
+                    legtheory1->SetHeader("PRC 90, 014906 (2014)");
+                    legtheory1->AddEntry(TheoryCracowPi0LowPt_scaledx400_0010,"NEQ SHM 0-10%", "l");
+                    legtheory1->AddEntry(TheoryCracowPi0LowPt_scaledx100_2050,"NEQ SHM 20-50%", "l");
+                    legtheory1->Draw("same");
+
+                    labelFactorPi0104->Draw();
+                    labelFactorPi0100->Draw();
+                    labelFactorEta->Draw();
+
+                canvasInvYieldSectionPi0LHC11h->SaveAs(Form("%s/YieldCombinedLHC11h_BothMesonswithModels.%s",outputDir.Data(),suffix.Data()));
+                canvasInvYieldSectionPi0LHC11h->SaveAs(Form("%s/YieldCombinedLHC11h_BothMesonswithModels.%s",paperPlots.Data(),suffix.Data()));
+
             }
         }
-
-//      TGraphAsymmErrors *graphInvSectionCombStatPi02760GeVPlot_scaledx001 = (TGraphAsymmErrors*)graphInvSectionCombStatPi02760GeVPlot->Clone("");
-//      graphInvSectionCombStatPi02760GeVPlot_scaledx001 = ScaleGraph(graphInvSectionCombStatPi02760GeVPlot_scaledx001,0.1);
-//      DrawGammaSetMarkerTGraphAsym(graphInvSectionCombStatPi02760GeVPlot_scaledx001, 30,markerSizepp, kBlack , kBlack);
-//      if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvSectionCombStatPi02760GeVPlot_scaledx001);
-//      graphInvSectionCombStatPi02760GeVPlot_scaledx001->Draw("p,same,e0");
-//
-//      TGraphAsymmErrors *graphInvSectionCombSysPi02760GeVPlot_scaledx001 = (TGraphAsymmErrors*)graphInvSectionCombSysPi02760GeVPlot->Clone("");
-//      graphInvSectionCombSysPi02760GeVPlot_scaledx001 = ScaleGraph(graphInvSectionCombSysPi02760GeVPlot_scaledx001,0.1);
-//      DrawGammaSetMarkerTGraphAsym(graphInvSectionCombSysPi02760GeVPlot_scaledx001, 30,markerSizepp, kBlack , kBlack, widthLinesBoxes, kTRUE);
-//      graphInvSectionCombSysPi02760GeVPlot_scaledx001->Draw("E2same");
-//
-//
-//      TGraphAsymmErrors *graphInvSectionCombStatEta2760GeVPlot_scaledx001 = (TGraphAsymmErrors*)graphInvSectionCombStatEta2760GeVPlot->Clone("");
-//      graphInvSectionCombStatEta2760GeVPlot_scaledx001 = ScaleGraph(graphInvSectionCombStatEta2760GeVPlot_scaledx001,0.01);
-//      DrawGammaSetMarkerTGraphAsym(graphInvSectionCombStatEta2760GeVPlot_scaledx001, markerStylepp,markerSizepp, kBlack , kBlack);
-//      if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvSectionCombStatEta2760GeVPlot_scaledx001);
-//      graphInvSectionCombStatEta2760GeVPlot_scaledx001->Draw("p,same,e0");
-//
-//      TGraphAsymmErrors *graphInvSectionCombSysEta2760GeVPlot_scaledx001 = (TGraphAsymmErrors*)graphInvSectionCombSysEta2760GeVPlot->Clone("");
-//      graphInvSectionCombSysEta2760GeVPlot_scaledx001 = ScaleGraph(graphInvSectionCombSysEta2760GeVPlot_scaledx001,0.01);
-//      DrawGammaSetMarkerTGraphAsym(graphInvSectionCombSysEta2760GeVPlot_scaledx001, markerStylepp,markerSizepp, kBlack , kBlack, widthLinesBoxes, kTRUE);
-//      graphInvSectionCombSysEta2760GeVPlot_scaledx001->Draw("E2same");
-
-    canvasInvYieldSectionPi0LHC11h->SaveAs(Form("%s/YieldCombinedLHC11h_BothMesonswithModels.%s",outputDir.Data(),suffix.Data()));
-    canvasInvYieldSectionPi0LHC11h->SaveAs(Form("%s/YieldCombinedLHC11h_BothMesonswithModels.%s",paperPlots.Data(),suffix.Data()));
 
 
     canvasInvYieldSectionPi0LHC11h->cd();
@@ -3131,16 +3425,16 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 //  histo2DInvYieldSectionPi0LHC11h->GetXaxis()->SetRangeUser(minPtRange-0.5,maxPtRange);
 
         TGraphAsymmErrors *graphNLOforPi0PP = (TGraphAsymmErrors*)graphNLOCalcDSS14InvYieldPi0Band->Clone("graphNLOforPi0PP");
-        TGraphAsymmErrors *graphNLOforPi00010 = (TGraphAsymmErrors*)graphNLOCalcDSS14InvYieldPi0Band->Clone("graphNLOforPi00010");
-        graphNLOforPi00010 = ScaleGraph(graphNLOforPi00010,nColl0010*4);
-        TGraphAsymmErrors *graphNLOforPi02050 = (TGraphAsymmErrors*)graphNLOCalcDSS14InvYieldPi0Band->Clone("graphNLOforPi02050");
-        graphNLOforPi02050 = ScaleGraph(graphNLOforPi02050,nColl2050);
+        TGraphAsymmErrors *graphNLOforPi0PbPb0010 = (TGraphAsymmErrors*)graphNLOCalcDSS14InvYieldPi0Band->Clone("graphNLOforPi0PbPb0010");
+        graphNLOforPi0PbPb0010 = ScaleGraph(graphNLOforPi0PbPb0010,nColl0010*4);
+        TGraphAsymmErrors *graphNLOforPi0PbPb2050 = (TGraphAsymmErrors*)graphNLOCalcDSS14InvYieldPi0Band->Clone("graphNLOforPi0PbPb2050");
+        graphNLOforPi0PbPb2050 = ScaleGraph(graphNLOforPi0PbPb2050,nColl2050);
 
         TGraphAsymmErrors *graphNLOforEtaPP = (TGraphAsymmErrors*)graphNLOCalcDSS07InvYieldEtaBand->Clone("graphNLOforEtaPP");
-        TGraphAsymmErrors *graphNLOforEta0010 = (TGraphAsymmErrors*)graphNLOCalcDSS07InvYieldEtaBand->Clone("graphNLOforEta0010");
-        graphNLOforEta0010 = ScaleGraph(graphNLOforEta0010,nColl0010*4);
-        TGraphAsymmErrors *graphNLOforEta2050 = (TGraphAsymmErrors*)graphNLOCalcDSS07InvYieldEtaBand->Clone("graphNLOforEta2050");
-        graphNLOforEta2050 = ScaleGraph(graphNLOforEta2050,nColl2050);
+        TGraphAsymmErrors *graphNLOforEtaPbPb0010 = (TGraphAsymmErrors*)graphNLOCalcDSS07InvYieldEtaBand->Clone("graphNLOforEtaPbPb0010");
+        graphNLOforEtaPbPb0010 = ScaleGraph(graphNLOforEtaPbPb0010,nColl0010*4);
+        TGraphAsymmErrors *graphNLOforEtaPbPb2050 = (TGraphAsymmErrors*)graphNLOCalcDSS07InvYieldEtaBand->Clone("graphNLOforEtaPbPb2050");
+        graphNLOforEtaPbPb2050 = ScaleGraph(graphNLOforEtaPbPb2050,nColl2050);
 
         TLatex *labelNLO;
         labelNLO= new TLatex(0.61,0.75,"PDF: MSTW, FF: DSS14");
@@ -3165,14 +3459,12 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
             DrawGammaSetMarkerTGraphAsym(graphNLOforPi0PP, 0, 0, colorNLO, colorNLO, 3, kTRUE, colorNLO);
             graphNLOforPi0PP->Draw("3,same");
-            DrawGammaSetMarkerTGraphAsym(graphNLOforPi00010, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
-            graphNLOforPi00010->Draw("3,same");
-            DrawGammaSetMarkerTGraphAsym(graphNLOforPi02050, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
-            graphNLOforPi02050->Draw("3,same");
+            DrawGammaSetMarkerTGraphAsym(graphNLOforPi0PbPb0010, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
+            graphNLOforPi0PbPb0010->Draw("3,same");
+            DrawGammaSetMarkerTGraphAsym(graphNLOforPi0PbPb2050, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
+            graphNLOforPi0PbPb2050->Draw("3,same");
 
-            DrawGammaSetMarkerTGraphAsym(graphInvSectionCombStatPi02760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack);
             graphInvSectionCombStatPi02760GeVPlot->Draw("p,same,e0");
-            DrawGammaSetMarkerTGraphAsym(graphInvSectionCombSysPi02760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack, widthLinesBoxes, kTRUE);//, colorComb1020-5);
             graphInvSectionCombSysPi02760GeVPlot->Draw("E2same");
 
 
@@ -3188,28 +3480,33 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
             DrawGammaSetMarkerTGraphAsym(graphNLOforEtaPP, 0, 0, colorNLO, colorNLO, 3, kTRUE, colorNLO);
             graphNLOforEtaPP->Draw("3,same");
-            DrawGammaSetMarkerTGraphAsym(graphNLOforEta0010, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
-            graphNLOforEta0010->Draw("3,same");
-            DrawGammaSetMarkerTGraphAsym(graphNLOforEta2050, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
-            graphNLOforEta2050->Draw("3,same");
+            DrawGammaSetMarkerTGraphAsym(graphNLOforEtaPbPb0010, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
+            graphNLOforEtaPbPb0010->Draw("3,same");
+            DrawGammaSetMarkerTGraphAsym(graphNLOforEtaPbPb2050, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
+            graphNLOforEtaPbPb2050->Draw("3,same");
 
-            DrawGammaSetMarkerTGraphAsym(graphInvSectionCombStatEta2760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack);
             graphInvSectionCombStatEta2760GeVPlot->Draw("p,same,e0");
-            DrawGammaSetMarkerTGraphAsym(graphInvSectionCombSysEta2760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack, widthLinesBoxes, kTRUE);//, colorComb1020-5);
             graphInvSectionCombSysEta2760GeVPlot->Draw("E2same");
         }
 
-        legendInvYieldSectionPi0LHC11h_WitPP->Draw();
+        TLegend* legendInvYieldSectionPi0LHC11h_WitPPandNLO = new TLegend(0.595,0.79,0.91,0.92); //0.17,0.13,0.5,0.24);
+        legendInvYieldSectionPi0LHC11h_WitPPandNLO->SetFillColor(0);
+        legendInvYieldSectionPi0LHC11h_WitPPandNLO->SetMargin(0.17);
+        legendInvYieldSectionPi0LHC11h_WitPPandNLO->SetLineColor(0);
+        legendInvYieldSectionPi0LHC11h_WitPPandNLO->SetTextFont(42);
+        legendInvYieldSectionPi0LHC11h_WitPPandNLO->SetTextSize(FontSize);
+        legendInvYieldSectionPi0LHC11h_WitPPandNLO->SetHeader(collisionSystem2760GeV.Data());
+        legendInvYieldSectionPi0LHC11h_WitPPandNLO->AddEntry(graphCombInvYieldSys2760GeVLHC11hScaled_0010,Form("  %s",cent0010.Data()),"fp");
+        legendInvYieldSectionPi0LHC11h_WitPPandNLO->AddEntry(graphCombInvYieldSys2760GeVLHC11h_2050,Form("%s",cent2050.Data()),"fp");
+        legendInvYieldSectionPi0LHC11h_WitPPandNLO->Draw();
         labelFactorUpper->Draw();
 //      labelPreliminary->Draw();
         labelSyst->Draw();
 
         graphCombInvYieldSys2760GeVLHC11hScaled_0010->Draw("E2same");
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombInvYieldStat2760GeVLHC11hScaled_0010);
         graphCombInvYieldStat2760GeVLHC11hScaled_0010->Draw("p,same,e0");
 
         graphCombInvYieldSys2760GeVLHC11h_2050->Draw("E2same");
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombInvYieldStat2760GeVLHC11h_2050);
         graphCombInvYieldStat2760GeVLHC11h_2050->Draw("p,same,e0");
 
     canvasInvYieldSectionPi0LHC11h->Update();
@@ -3221,28 +3518,19 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 //  histo2DInvYieldSectionPi0LHC11h->GetXaxis()->SetRangeUser(minPtRange,maxPtRange);
     histo2DInvYieldSectionPi0LHC11h->DrawCopy();
 
-        DrawGammaSetMarkerTGraphAsym(TheoryCracowLowPtScaledforPlot_0010, 0, 0, colorCracow0010,colorCracow0010, 5, kTRUE, colorCracow0010);
         TheoryCracowLowPtScaledforPlot_0010->Draw("l,same");
-        DrawGammaSetMarkerTGraphAsym(TheoryCracowLowPt_2050, 0, 0, colorCracow2050,colorCracow2050, 5, kTRUE,colorCracow2050);
         TheoryCracowLowPt_2050->Draw("l,same");
 
-        histoEPOSpred_0010->Scale(4);
-        DrawGammaSetMarker(histoEPOSpred_0010,1,2,colorEPOS0010,colorEPOS0010);
-        histoEPOSpred_0010->SetLineWidth(2);
-        histoEPOSpred_0010->GetXaxis()->SetRangeUser(0.,13.);
-        histoEPOSpred_0010->Draw("same,c,histo");
+//         histoEPOSpredScaledforPlot_0010->GetXaxis()->SetRangeUser(0.,12.5);
+        histoEPOSpredScaledforPlot_0010->Draw("same,c,histo");
 
-        DrawGammaSetMarker(histoEPOSpred_2050,1,2,colorEPOS2050,colorEPOS2050);
-        histoEPOSpred_2050->SetLineWidth(2);
-        histoEPOSpred_2050->GetXaxis()->SetRangeUser(0.,13.);
+//         histoEPOSpred_2050->GetXaxis()->SetRangeUser(0.,12.5);
         histoEPOSpred_2050->Draw("same,c,histo");
 
         graphCombInvYieldSys2760GeVLHC11hScaled_0010->Draw("E2same");
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombInvYieldStat2760GeVLHC11hScaled_0010);
         graphCombInvYieldStat2760GeVLHC11hScaled_0010->Draw("p,same,e0");
 
         graphCombInvYieldSys2760GeVLHC11h_2050->Draw("E2same");
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombInvYieldStat2760GeVLHC11h_2050);
         graphCombInvYieldStat2760GeVLHC11h_2050->Draw("p,same,e0");
 
         TLegend* legtheory = new TLegend(0.2,0.13,0.52,0.24);
@@ -3261,8 +3549,8 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         legtheory2->SetTextFont(42);
         legtheory2->SetTextSize(FontSize);
         legtheory2->SetHeader("PRC 89, 064903 (2014)");
-        legtheory2->AddEntry(histoEPOSpred_0010,"EPOS 3 0-10%", "l");
-        legtheory2->AddEntry(histoEPOSpred_2050,"EPOS 2 20-50%", "l");
+        legtheory2->AddEntry(histoEPOSpred_0010,"EPOS 0-10%", "l");
+        legtheory2->AddEntry(histoEPOSpred_2050,"EPOS 20-50%", "l");
         legtheory2->Draw("same");
 
         legendInvYieldSectionPi0LHC11h_WitPP->Draw();
@@ -3290,18 +3578,14 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
         if(meson.CompareTo("Pi0")==0){
 
-            DrawGammaSetMarkerTGraphAsym(graphInvSectionCombStatPi02760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack);
             graphInvSectionCombStatPi02760GeVPlot->Draw("p,same,e0");
-            DrawGammaSetMarkerTGraphAsym(graphInvSectionCombSysPi02760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack, widthLinesBoxes, kTRUE);
             graphInvSectionCombSysPi02760GeVPlot->Draw("E2same");
 
             legendSpectraPP2->AddEntry(graphInvSectionCombSysPi02760GeVPlot,"EPJC 74 (2014) 3108","pf");
 
         } else if(meson.CompareTo("Eta")==0){
 
-            DrawGammaSetMarkerTGraphAsym(graphInvSectionCombStatEta2760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack);
             graphInvSectionCombStatEta2760GeVPlot->Draw("p,same,e0");
-            DrawGammaSetMarkerTGraphAsym(graphInvSectionCombSysEta2760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack, widthLinesBoxes, kTRUE);
             graphInvSectionCombSysEta2760GeVPlot->Draw("E2same");
 
             legendSpectraPP2->AddEntry(graphInvSectionCombSysEta2760GeVPlot,"JPG 38 (2011) 124076","pf");
@@ -3315,18 +3599,16 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         labelFactorLower->Draw();
 
         graphCombInvYieldSys2760GeVLHC11hScaled_0010->Draw("E2same");
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombInvYieldStat2760GeVLHC11hScaled_0010);
         graphCombInvYieldStat2760GeVLHC11hScaled_0010->Draw("p,same,e0");
 
         graphCombInvYieldSys2760GeVLHC11h_2050->Draw("E2same");
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombInvYieldStat2760GeVLHC11h_2050);
         graphCombInvYieldStat2760GeVLHC11h_2050->Draw("p,same,e0");
 
 
         TheoryCracowLowPtScaledforPlot_0010->Draw("l,same");
         TheoryCracowLowPt_2050->Draw("l,same");
 
-        histoEPOSpred_0010->Draw("same,c,histo");
+        histoEPOSpredScaledforPlot_0010->Draw("same,c,histo");
         histoEPOSpred_2050->Draw("same,c,histo");
 
         legtheory->Draw("same");
@@ -3399,25 +3681,12 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         histo2DInvYieldSectionPi0LHC11h->GetXaxis()->SetRangeUser(minPtRange,maxPtRange);
         histo2DInvYieldSectionPi0LHC11h->Draw("copy");
 
-        DrawGammaSetMarkerTGraphAsym(graphCombInvYieldSys2760GeVLHC11h_0010, markerStyleComb, markerSizeComb, colorCombo0010 , colorCombo0010, 2, kTRUE);
         graphCombInvYieldSys2760GeVLHC11h_0010->Draw("E2same");
-        DrawGammaSetMarkerTGraphAsym(graphCombInvYieldStat2760GeVLHC11h_0010, markerStyleComb, markerSizeComb, colorCombo0010, colorCombo0010);
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombInvYieldStat2760GeVLHC11h_0010);
         graphCombInvYieldStat2760GeVLHC11h_0010->Draw("p,same,e0");
 
-        TGraphAsymmErrors *TheoryCracowLowPtforRatio_0010 = (TGraphAsymmErrors*)TheoryCracowLowPtScaledforPlot_0010->Clone("TheoryCracowLowPtforRatio_0010");
-        TheoryCracowLowPtforRatio_0010 = ScaleGraph(TheoryCracowLowPtforRatio_0010,1./4);
-        DrawGammaSetMarkerTGraphAsym(TheoryCracowLowPtforRatio_0010, 0, 0, colorCracowRatio, colorCracowRatio, 5, kTRUE, colorCracowRatio);
-        TheoryCracowLowPtforRatio_0010->Draw("l,same");
-
-        histoEPOSpred_0010->Scale(1./4);
-        histoEPOSpred_0010->SetLineColor(colorEPOSRatio);
         histoEPOSpred_0010->Draw("same,c,histo");
 
-        fitTCMInvYield2760GeVLHC11h_0010->SetParameter(0,fitTCMInvYield2760GeVLHC11h_0010->GetParameter(0)/4);
-        fitTCMInvYield2760GeVLHC11h_0010->SetParameter(2,fitTCMInvYield2760GeVLHC11h_0010->GetParameter(2)/4);
-        fitTCMInvYield2760GeVLHC11h_0010->SetLineStyle(4);
-        fitTCMInvYield2760GeVLHC11h_0010->Draw("same");
+        fitTCMInvYield2760GeVLHC11hScaledforPlot_0010->Draw("same");
 
         TLatex *labelDetSysRatioToModelsLHC11h;
         if(meson.CompareTo("Pi0")==0){
@@ -3438,8 +3707,8 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         legendXsectionPaper->SetMargin(0.2);
         if(meson.CompareTo("Pi0")==0) legendXsectionPaper->AddEntry(graphCombInvYieldSys2760GeVLHC11h_0010,"#pi^{0} ALICE","pf");
         else if(meson.CompareTo("Eta")==0) legendXsectionPaper->AddEntry(graphCombInvYieldSys2760GeVLHC11h_0010,"#eta ALICE","pf");
-        legendXsectionPaper->AddEntry(TheoryCracowLowPtforRatio_0010,"NEQ SHM","l");
-        legendXsectionPaper->AddEntry(histoEPOSpred_0010,"EPOS 3","l");
+        legendXsectionPaper->AddEntry(TheoryCracowLowPt_0010,"NEQ SHM","l");
+        legendXsectionPaper->AddEntry(histoEPOSpred_0010,"EPOS","l");
         legendXsectionPaper->AddEntry(fitTCMInvYield2760GeVLHC11h_0010,"#it{A}_{e} exp(-#it{E}_{T, kin}/#it{T}_{e}) + #it{A}/#(){1 + #frac{#it{p}_{T}^{2}}{#it{T}^{2}#upoint n}}^{-n}","l");
         legendXsectionPaper->Draw();
 
@@ -3457,14 +3726,13 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 //      ratio2DLowPt->GetXaxis()->SetTickLength(0.07);
         ratio2DLowPt->DrawCopy();
 
-        TGraphAsymmErrors* graphRatioCombLowPt2760GeVLHC11h_0010 = (TGraphAsymmErrors*)TheoryCracowLowPtforRatio_0010->Clone("graphRatioCombLowPt2760GeVLHC11h_0010");
+        TGraphAsymmErrors* graphRatioCombLowPt2760GeVLHC11h_0010 = (TGraphAsymmErrors*)TheoryCracowLowPt_0010->Clone("graphRatioCombLowPt2760GeVLHC11h_0010");
         graphRatioCombLowPt2760GeVLHC11h_0010 = CalculateGraphErrRatioToFit(graphRatioCombLowPt2760GeVLHC11h_0010, fitTCMInvYield2760GeVLHC11h_0010);
         DrawGammaSetMarkerTGraphAsym(graphRatioCombLowPt2760GeVLHC11h_0010, 0, 0, colorCracowRatio, colorCracowRatio, 5, kTRUE, colorCracowRatio);
         graphRatioCombLowPt2760GeVLHC11h_0010->Draw("l,same");
 
         DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFitStat2760GeVLHC11h_0010, markerStyleComb, markerSizeComb*2, kBlack, kBlack, widthLinesBoxes, kFALSE);
         graphRatioCombCombFitStat2760GeVLHC11h_0010->SetLineWidth(widthLinesBoxes);
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioCombCombFitStat2760GeVLHC11h_0010);
         graphRatioCombCombFitStat2760GeVLHC11h_0010->Draw("p,same,e0");
 
         DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFitSys2760GeVLHC11h_0010, markerStyleComb, markerSizeComb*2, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
@@ -3560,7 +3828,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         histoEPOSpred_2050->Draw("same,c,histo");
 
         graphCombInvYieldSys2760GeVLHC11h_2050->Draw("E2same");
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombInvYieldStat2760GeVLHC11h_2050);
         graphCombInvYieldStat2760GeVLHC11h_2050->Draw("p,same,e0");
 
         fitTCMInvYield2760GeVLHC11h_2050->SetLineStyle(4);
@@ -3577,7 +3844,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         if(meson.CompareTo("Pi0")==0) legendXsectionPaper2->AddEntry(graphCombInvYieldSys2760GeVLHC11h_2050,"#pi^{0} ALICE","pf");
         else if(meson.CompareTo("Eta")==0) legendXsectionPaper2->AddEntry(graphCombInvYieldSys2760GeVLHC11h_2050,"#eta ALICE","pf");
         legendXsectionPaper2->AddEntry(TheoryCracowLowPtforRatio_2050,"NEQ SHM","l");
-        legendXsectionPaper2->AddEntry(histoEPOSpred_2050,"EPOS 2","l");
+        legendXsectionPaper2->AddEntry(histoEPOSpred_2050,"EPOS","l");
         legendXsectionPaper2->AddEntry(fitTCMInvYield2760GeVLHC11h_2050,"#it{A}_{e} exp(-#it{E}_{T, kin}/#it{T}_{e}) + #it{A}/#(){1 + #frac{#it{p}_{T}^{2}}{#it{T}^{2}#upoint n}}^{-n}","l");
         legendXsectionPaper2->Draw();
         legendXsectionPaper2->Draw();
@@ -3587,41 +3854,34 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         padInvSectionLowPtRatio_2050->SetLogx(1);
         ratio2DLowPt->DrawCopy();
 
+        DrawGammaLines(0.8, 30.,1., 1.,0.1,kGray);
+
         TGraphAsymmErrors* graphRatioCombLowPt2760GeVLHC11h_2050 = (TGraphAsymmErrors*)TheoryCracowLowPt_2050->Clone("graphRatioCombLowPt2760GeVLHC11h_2050");
         graphRatioCombLowPt2760GeVLHC11h_2050 = CalculateGraphErrRatioToFit(graphRatioCombLowPt2760GeVLHC11h_2050, fitTCMInvYield2760GeVLHC11h_2050);
-
-//      DrawGammaSetMarkerTGraphAsym(graphRatioCombLowPt2760GeVLHC11h_2050, 0, 0, colorCracowRatio,colorCracowRatio, widthLinesBoxes, kTRUE,colorCracowRatio);
         DrawGammaSetMarkerTGraphAsym(graphRatioCombLowPt2760GeVLHC11h_2050, 0, 0, colorCracowRatio,colorCracowRatio, 5, kTRUE,colorCracowRatio);
         graphRatioCombLowPt2760GeVLHC11h_2050->Draw("l,same");
 
         DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFitStat2760GeVLHC11h_2050, markerStyleComb, markerSizeComb*2, kBlack, kBlack, widthLinesBoxes, kFALSE);
-        graphRatioCombCombFitStat2760GeVLHC11h_2050->SetLineWidth(widthLinesBoxes);
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioCombCombFitStat2760GeVLHC11h_2050);
         graphRatioCombCombFitStat2760GeVLHC11h_2050->Draw("p,same,e0");
 
         DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFitSys2760GeVLHC11h_2050, markerStyleComb, markerSizeComb*2, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
-        graphRatioCombCombFitSys2760GeVLHC11h_2050->SetLineWidth(0);
         graphRatioCombCombFitSys2760GeVLHC11h_2050->Draw("2,same");
-
-        DrawGammaLines(0.8, 30.,1., 1.,0.1,kGray);
 
 
         padInvSectionEPOSRatio_2050->cd();
         padInvSectionEPOSRatio_2050->SetLogx(1);
         ratio2DPythia->DrawCopy();
 
+        DrawGammaLines(0.8, 30.,1., 1.,0.1,kGray);
+
         TH1D* histoRatioEPOSToFit2760GeVLHC11h_2050 = (TH1D*) histoEPOSpred_2050->Clone();
         histoRatioEPOSToFit2760GeVLHC11h_2050 = CalculateHistoRatioToFit (histoRatioEPOSToFit2760GeVLHC11h_2050, fitTCMInvYield2760GeVLHC11h_2050);
-
         DrawGammaSetMarker(histoRatioEPOSToFit2760GeVLHC11h_2050, 24, 1.5, colorEPOSRatio,colorEPOSRatio);
-        histoRatioEPOSToFit2760GeVLHC11h_2050->SetLineWidth(widthCommonFit);
-//      histoRatioEPOSToFit2760GeVLHC11h_2050->GetXaxis()->SetRangeUser(0.5,14);
         histoRatioEPOSToFit2760GeVLHC11h_2050->Draw("same,hist,c");
 
         graphRatioCombCombFitSys2760GeVLHC11h_2050->Draw("2,same");
         graphRatioCombCombFitStat2760GeVLHC11h_2050->Draw("p,same,e0");
 
-        DrawGammaLines(0.8, 30.,1., 1.,0.1,kGray);
 
     canvasInvYieldSectionRatios_2050->Update();
 //  canvasInvYieldSectionRatios_2050->SaveAs(Form("%s/%s_YieldCombinedLHC11h_DataWithModelsAndRatios_2050.%s",outputDir.Data(),meson.Data(),suffix.Data()));
@@ -3676,7 +3936,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 //      ratio2DUpperPadOnlyRatio->GetXaxis()->SetTickLength(0.07);
         ratio2DUpperPadOnlyRatio->DrawCopy();
 
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioCombCombFitStat2760GeVLHC11h_0010);
         graphRatioCombCombFitStat2760GeVLHC11h_0010->Draw("p,same,e0");
         graphRatioCombCombFitSys2760GeVLHC11h_0010->Draw("2,same");
 
@@ -3690,7 +3949,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
         TLegend* legendXsectionPaperOnlyRatios;
         if(meson.CompareTo("Pi0")==0)legendXsectionPaperOnlyRatios = GetAndSetLegend2(0.17, 0.45-4*0.065, 0.5, 0.45, 0.85* textSizeLabelsPixel);
-//         else if(meson.CompareTo("Eta")==0)legendXsectionPaperOnlyRatios = GetAndSetLegend2(0.17, 0.95-4*0.07, 0.5, 0.95, 0.85* textSizeLabelsPixel);
         else if(meson.CompareTo("Eta")==0)legendXsectionPaperOnlyRatios = GetAndSetLegend2(0.17, 0.95-4*0.065, 0.5, 0.95, 0.85* textSizeLabelsPixel);
         legendXsectionPaperOnlyRatios->SetNColumns(1);
         legendXsectionPaperOnlyRatios->SetMargin(0.2);
@@ -3700,14 +3958,11 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         legendXsectionPaperOnlyRatios->AddEntry(graphRatioCombLowPt2760GeVLHC11h_0010,"NEQ SHM","l");
         legendXsectionPaperOnlyRatios->AddEntry(histoRatioEPOSToFit2760GeVLHC11h_0010,"EPOS2","l");
         legendXsectionPaperOnlyRatios->AddEntry(histoRatioEPOS3ToFit2760GeVLHC11h_0010,"EPOS3","l");
-        //         if(meson.CompareTo("Eta")==0) legendXsectionPaperOnlyRatios->Draw();
-
 
         DrawGammaLines(0.8, 30.,1., 1.,0.1,kGray);
 
     padInvSectionLowerRatio->cd();
     padInvSectionLowerRatio->SetLogx(1);
-
 
         TH2F * ratio2DLowerPadOnlyRatio =  new TH2F("ratio2DLowerPadOnlyRatio","ratio2DLowerPadOnlyRatio",1000,0.8,30.,1000,0.01,2.1);
         SetStyleHistoTH2ForGraphs(ratio2DLowerPadOnlyRatio, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown,
@@ -3721,10 +3976,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 //      ratio2DLowerPadOnlyRatio->GetXaxis()->SetTickLength(0.07);
         ratio2DLowerPadOnlyRatio->DrawCopy();
 
-//      DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFitStat2760GeVLHC11h_2050, markerStyle2050, markerSizeComb*2, kBlack, kBlack, widthLinesBoxes, kFALSE);
-//      DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFitSys2760GeVLHC11h_2050, markerStyle2050, markerSizeComb*2, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
-
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioCombCombFitStat2760GeVLHC11h_2050);
         graphRatioCombCombFitStat2760GeVLHC11h_2050->Draw("p,same,e0");
         graphRatioCombCombFitSys2760GeVLHC11h_2050->Draw("2,same");
 
@@ -3812,82 +4063,85 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
             TF1 *fitEtaInvYield2760GeVLHC11h_0010 = (TF1*)MesonInput->Get("FitToYieldEta_0010");
             TF1 *fitEtaInvYield2760GeVLHC11h_2050 = (TF1*)MesonInput->Get("FitToYieldEta_2050");
 
-            TH1D *histoEPOSPi0Rebin_0010 = (TH1D*)MesonInput->Get("EPOSpredictionPi0_0010");
-            TH1D *histoEPOSPi0Rebin_2050 = (TH1D*)MesonInput->Get("EPOSpredictionPi0_2050");
-            TH1D *histoEPOSEtaRebin_0010 = (TH1D*)MesonInput->Get("EPOSpredictionEta_0010");
-            TH1D *histoEPOSEtaRebin_2050 = (TH1D*)MesonInput->Get("EPOSpredictionEta_2050");
-
-
             if(graphInvYieldPi0Stat_0010 && graphInvYieldEtaStat_0010 && fitPi0InvYield2760GeVLHC11h_0010 && fitEtaInvYield2760GeVLHC11h_0010){
 
-                TGraphAsymmErrors* graphRatioPi0InvYieldFitStat2760GeVLHC11h_0010   = (TGraphAsymmErrors*)graphInvYieldPi0Stat_0010->Clone();
-                graphRatioPi0InvYieldFitStat2760GeVLHC11h_0010                      = CalculateGraphErrRatioToFit(graphRatioPi0InvYieldFitStat2760GeVLHC11h_0010, fitPi0InvYield2760GeVLHC11h_0010);
-                TGraphAsymmErrors* graphRatioPi0InvYieldFitSyst2760GeVLHC11h_0010   = (TGraphAsymmErrors*)graphInvYieldPi0Syst_0010->Clone();
-                graphRatioPi0InvYieldFitSyst2760GeVLHC11h_0010                      = CalculateGraphErrRatioToFit(graphRatioPi0InvYieldFitSyst2760GeVLHC11h_0010, fitPi0InvYield2760GeVLHC11h_0010);
+              ////////// data
+                TGraphAsymmErrors* graphRatioPi0InvYieldFitStat2760GeVLHC11h_0010 = (TGraphAsymmErrors*)graphInvYieldPi0Stat_0010->Clone();
+                  graphRatioPi0InvYieldFitStat2760GeVLHC11h_0010 = CalculateGraphErrRatioToFit(graphRatioPi0InvYieldFitStat2760GeVLHC11h_0010, fitPi0InvYield2760GeVLHC11h_0010);
+                  if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioPi0InvYieldFitStat2760GeVLHC11h_0010);
+                  DrawGammaSetMarkerTGraphAsym(graphRatioPi0InvYieldFitStat2760GeVLHC11h_0010, markerStyleComb, markerSizeComb, kBlack, kBlack);
 
-                DrawGammaSetMarkerTGraphAsym(graphRatioPi0InvYieldFitSyst2760GeVLHC11h_0010,markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE);
-                DrawGammaSetMarkerTGraphAsym(graphRatioPi0InvYieldFitStat2760GeVLHC11h_0010, markerStyleComb, markerSizeComb, kBlack, kBlack);
+                TGraphAsymmErrors* graphRatioPi0InvYieldFitSyst2760GeVLHC11h_0010 = (TGraphAsymmErrors*)graphInvYieldPi0Syst_0010->Clone();
+                  graphRatioPi0InvYieldFitSyst2760GeVLHC11h_0010 = CalculateGraphErrRatioToFit(graphRatioPi0InvYieldFitSyst2760GeVLHC11h_0010, fitPi0InvYield2760GeVLHC11h_0010);
+                  DrawGammaSetMarkerTGraphAsym(graphRatioPi0InvYieldFitSyst2760GeVLHC11h_0010,markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE);
 
-                TGraphAsymmErrors* graphRatioPi0InvYieldFitStat2760GeVLHC11h_2050   = (TGraphAsymmErrors*)graphInvYieldPi0Stat_2050->Clone();
-                graphRatioPi0InvYieldFitStat2760GeVLHC11h_2050                      = CalculateGraphErrRatioToFit(graphRatioPi0InvYieldFitStat2760GeVLHC11h_2050, fitPi0InvYield2760GeVLHC11h_2050);
-                TGraphAsymmErrors* graphRatioPi0InvYieldFitSyst2760GeVLHC11h_2050   = (TGraphAsymmErrors*)graphInvYieldPi0Syst_2050->Clone();
-                graphRatioPi0InvYieldFitSyst2760GeVLHC11h_2050                      = CalculateGraphErrRatioToFit(graphRatioPi0InvYieldFitSyst2760GeVLHC11h_2050, fitPi0InvYield2760GeVLHC11h_2050);
+                TGraphAsymmErrors* graphRatioPi0InvYieldFitStat2760GeVLHC11h_2050 = (TGraphAsymmErrors*)graphInvYieldPi0Stat_2050->Clone();
+                  graphRatioPi0InvYieldFitStat2760GeVLHC11h_2050 = CalculateGraphErrRatioToFit(graphRatioPi0InvYieldFitStat2760GeVLHC11h_2050, fitPi0InvYield2760GeVLHC11h_2050);
+                  if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioPi0InvYieldFitStat2760GeVLHC11h_2050);
+                  DrawGammaSetMarkerTGraphAsym(graphRatioPi0InvYieldFitStat2760GeVLHC11h_2050, markerStyleComb, markerSizeComb, kBlack, kBlack);
 
-                DrawGammaSetMarkerTGraphAsym(graphRatioPi0InvYieldFitSyst2760GeVLHC11h_2050, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE);
-                DrawGammaSetMarkerTGraphAsym(graphRatioPi0InvYieldFitStat2760GeVLHC11h_2050, markerStyleComb, markerSizeComb, kBlack, kBlack);
+                TGraphAsymmErrors* graphRatioPi0InvYieldFitSyst2760GeVLHC11h_2050 = (TGraphAsymmErrors*)graphInvYieldPi0Syst_2050->Clone();
+                  graphRatioPi0InvYieldFitSyst2760GeVLHC11h_2050 = CalculateGraphErrRatioToFit(graphRatioPi0InvYieldFitSyst2760GeVLHC11h_2050, fitPi0InvYield2760GeVLHC11h_2050);
+                  DrawGammaSetMarkerTGraphAsym(graphRatioPi0InvYieldFitSyst2760GeVLHC11h_2050, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE);
 
-                TGraphAsymmErrors* graphRatioEtaInvYieldFitStat2760GeVLHC11h_0010   = (TGraphAsymmErrors*)graphInvYieldEtaStat_0010->Clone();
-                graphRatioEtaInvYieldFitStat2760GeVLHC11h_0010                      = CalculateGraphErrRatioToFit(graphRatioEtaInvYieldFitStat2760GeVLHC11h_0010, fitEtaInvYield2760GeVLHC11h_0010);
-                TGraphAsymmErrors* graphRatioEtaInvYieldFitSyst2760GeVLHC11h_0010   = (TGraphAsymmErrors*)graphInvYieldEtaSyst_0010->Clone();
-                graphRatioEtaInvYieldFitSyst2760GeVLHC11h_0010                      = CalculateGraphErrRatioToFit(graphRatioEtaInvYieldFitSyst2760GeVLHC11h_0010, fitEtaInvYield2760GeVLHC11h_0010);
+                TGraphAsymmErrors* graphRatioEtaInvYieldFitStat2760GeVLHC11h_0010 = (TGraphAsymmErrors*)graphInvYieldEtaStat_0010->Clone();
+                  graphRatioEtaInvYieldFitStat2760GeVLHC11h_0010 = CalculateGraphErrRatioToFit(graphRatioEtaInvYieldFitStat2760GeVLHC11h_0010, fitEtaInvYield2760GeVLHC11h_0010);
+                  if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioEtaInvYieldFitStat2760GeVLHC11h_0010);
+                  DrawGammaSetMarkerTGraphAsym(graphRatioEtaInvYieldFitStat2760GeVLHC11h_0010, markerStyleComb, markerSizeComb, kBlack, kBlack);
 
-                DrawGammaSetMarkerTGraphAsym(graphRatioEtaInvYieldFitSyst2760GeVLHC11h_0010, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE);
-                DrawGammaSetMarkerTGraphAsym(graphRatioEtaInvYieldFitStat2760GeVLHC11h_0010, markerStyleComb, markerSizeComb, kBlack, kBlack);
+                TGraphAsymmErrors* graphRatioEtaInvYieldFitSyst2760GeVLHC11h_0010 = (TGraphAsymmErrors*)graphInvYieldEtaSyst_0010->Clone();
+                  graphRatioEtaInvYieldFitSyst2760GeVLHC11h_0010 = CalculateGraphErrRatioToFit(graphRatioEtaInvYieldFitSyst2760GeVLHC11h_0010, fitEtaInvYield2760GeVLHC11h_0010);
+                  DrawGammaSetMarkerTGraphAsym(graphRatioEtaInvYieldFitSyst2760GeVLHC11h_0010, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE);
 
-                TGraphAsymmErrors* graphRatioEtaInvYieldFitStat2760GeVLHC11h_2050   = (TGraphAsymmErrors*)graphInvYieldEtaStat_2050->Clone();
-                graphRatioEtaInvYieldFitStat2760GeVLHC11h_2050                      = CalculateGraphErrRatioToFit(graphRatioEtaInvYieldFitStat2760GeVLHC11h_2050, fitEtaInvYield2760GeVLHC11h_2050);
-                TGraphAsymmErrors* graphRatioEtaInvYieldFitSyst2760GeVLHC11h_2050   = (TGraphAsymmErrors*)graphInvYieldEtaSyst_2050->Clone();
-                graphRatioEtaInvYieldFitSyst2760GeVLHC11h_2050                      = CalculateGraphErrRatioToFit(graphRatioEtaInvYieldFitSyst2760GeVLHC11h_2050, fitEtaInvYield2760GeVLHC11h_2050);
+                TGraphAsymmErrors* graphRatioEtaInvYieldFitStat2760GeVLHC11h_2050 = (TGraphAsymmErrors*)graphInvYieldEtaStat_2050->Clone();
+                  graphRatioEtaInvYieldFitStat2760GeVLHC11h_2050 = CalculateGraphErrRatioToFit(graphRatioEtaInvYieldFitStat2760GeVLHC11h_2050, fitEtaInvYield2760GeVLHC11h_2050);
+                  if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioEtaInvYieldFitStat2760GeVLHC11h_2050);
+                  DrawGammaSetMarkerTGraphAsym(graphRatioEtaInvYieldFitStat2760GeVLHC11h_2050, markerStyleComb, markerSizeComb, kBlack, kBlack);
 
-                DrawGammaSetMarkerTGraphAsym(graphRatioEtaInvYieldFitSyst2760GeVLHC11h_2050, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE);
-                DrawGammaSetMarkerTGraphAsym(graphRatioEtaInvYieldFitStat2760GeVLHC11h_2050, markerStyleComb, markerSizeComb, kBlack, kBlack);
+                TGraphAsymmErrors* graphRatioEtaInvYieldFitSyst2760GeVLHC11h_2050 = (TGraphAsymmErrors*)graphInvYieldEtaSyst_2050->Clone();
+                  graphRatioEtaInvYieldFitSyst2760GeVLHC11h_2050 = CalculateGraphErrRatioToFit(graphRatioEtaInvYieldFitSyst2760GeVLHC11h_2050, fitEtaInvYield2760GeVLHC11h_2050);
+                  DrawGammaSetMarkerTGraphAsym(graphRatioEtaInvYieldFitSyst2760GeVLHC11h_2050, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE);
 
 
+              ////////// Cracow
                 TGraphAsymmErrors* graphRatioLowPtPi0_0010 = (TGraphAsymmErrors*)TheoryCracowPi0LowPt_0010->Clone();
-                graphRatioLowPtPi0_0010 = CalculateGraphErrRatioToFit(graphRatioLowPtPi0_0010, fitPi0InvYield2760GeVLHC11h_0010);
-                DrawGammaSetMarkerTGraphAsym(graphRatioLowPtPi0_0010, 0, 0, colorCracowRatio, colorCracowRatio, 5, kTRUE, colorCracowRatio);
-
-                TH1D* histoRatioEPOSToFitPi0_0010 = (TH1D*) histoEPOSPi0Rebin_0010->Clone();
-                histoRatioEPOSToFitPi0_0010 = CalculateHistoRatioToFit (histoRatioEPOSToFitPi0_0010, fitPi0InvYield2760GeVLHC11h_0010);
-                DrawGammaSetMarker(histoRatioEPOSToFitPi0_0010, 24, 1.5,colorEPOSRatio,colorEPOSRatio);
-                histoRatioEPOSToFitPi0_0010->SetLineWidth(widthCommonFit);
+                  graphRatioLowPtPi0_0010 = CalculateGraphErrRatioToFit(graphRatioLowPtPi0_0010, fitPi0InvYield2760GeVLHC11h_0010);
+                  DrawGammaSetMarkerTGraphAsym(graphRatioLowPtPi0_0010, 0, 0, colorCracowRatio, colorCracowRatio, 5, kTRUE, colorCracowRatio);
 
                 TGraphAsymmErrors* graphRatioLowPtPi0_2050 = (TGraphAsymmErrors*)TheoryCracowPi0LowPt_2050->Clone();
-                graphRatioLowPtPi0_2050 = CalculateGraphErrRatioToFit(graphRatioLowPtPi0_2050, fitPi0InvYield2760GeVLHC11h_2050);
-                DrawGammaSetMarkerTGraphAsym(graphRatioLowPtPi0_2050, 0, 0, colorCracowRatio, colorCracowRatio, 5, kTRUE, colorCracowRatio);
-
-                TH1D* histoRatioEPOSToFitPi0_2050 = (TH1D*) histoEPOSPi0Rebin_2050->Clone();
-                histoRatioEPOSToFitPi0_2050 = CalculateHistoRatioToFit (histoRatioEPOSToFitPi0_2050, fitPi0InvYield2760GeVLHC11h_2050);
-                DrawGammaSetMarker(histoRatioEPOSToFitPi0_2050, 24, 1.5,colorEPOSRatio,colorEPOSRatio);
-                histoRatioEPOSToFitPi0_2050->SetLineWidth(widthCommonFit);
+                  graphRatioLowPtPi0_2050 = CalculateGraphErrRatioToFit(graphRatioLowPtPi0_2050, fitPi0InvYield2760GeVLHC11h_2050);
+                  DrawGammaSetMarkerTGraphAsym(graphRatioLowPtPi0_2050, 0, 0, colorCracowRatio, colorCracowRatio, 5, kTRUE, colorCracowRatio);
 
                 TGraphAsymmErrors* graphRatioLowPtEta_0010 = (TGraphAsymmErrors*)TheoryCracowEtaLowPt_0010->Clone();
-                graphRatioLowPtEta_0010 = CalculateGraphErrRatioToFit(graphRatioLowPtEta_0010, fitEtaInvYield2760GeVLHC11h_0010);
-                DrawGammaSetMarkerTGraphAsym(graphRatioLowPtEta_0010, 0, 0, colorCracowRatio, colorCracowRatio, 5, kTRUE, colorCracowRatio);
-
-                TH1D* histoRatioEPOSToFitEta_0010 = (TH1D*) histoEPOSEtaRebin_0010->Clone();
-                histoRatioEPOSToFitEta_0010 = CalculateHistoRatioToFit (histoRatioEPOSToFitEta_0010, fitEtaInvYield2760GeVLHC11h_0010);
-                DrawGammaSetMarker(histoRatioEPOSToFitEta_0010, 24, 1.5,colorEPOSRatio,colorEPOSRatio);
-                histoRatioEPOSToFitEta_0010->SetLineWidth(widthCommonFit);
+                  graphRatioLowPtEta_0010 = CalculateGraphErrRatioToFit(graphRatioLowPtEta_0010, fitEtaInvYield2760GeVLHC11h_0010);
+                  DrawGammaSetMarkerTGraphAsym(graphRatioLowPtEta_0010, 0, 0, colorCracowRatio, colorCracowRatio, 5, kTRUE, colorCracowRatio);
 
                 TGraphAsymmErrors* graphRatioLowPtEta_2050 = (TGraphAsymmErrors*)TheoryCracowEtaLowPt_2050->Clone();
-                graphRatioLowPtEta_2050 = CalculateGraphErrRatioToFit(graphRatioLowPtEta_2050, fitEtaInvYield2760GeVLHC11h_2050);
-                DrawGammaSetMarkerTGraphAsym(graphRatioLowPtEta_2050, 0, 0, colorCracowRatio, colorCracowRatio, 5, kTRUE, colorCracowRatio);
+                  graphRatioLowPtEta_2050 = CalculateGraphErrRatioToFit(graphRatioLowPtEta_2050, fitEtaInvYield2760GeVLHC11h_2050);
+                  DrawGammaSetMarkerTGraphAsym(graphRatioLowPtEta_2050, 0, 0, colorCracowRatio, colorCracowRatio, 5, kTRUE, colorCracowRatio);
 
-                TH1D* histoRatioEPOSToFitEta_2050 = (TH1D*) histoEPOSEtaRebin_2050->Clone();
-                histoRatioEPOSToFitEta_2050 = CalculateHistoRatioToFit (histoRatioEPOSToFitEta_2050, fitEtaInvYield2760GeVLHC11h_2050);
-                DrawGammaSetMarker(histoRatioEPOSToFitEta_2050, 24, 1.5,colorEPOSRatio,colorEPOSRatio);
-                histoRatioEPOSToFitEta_2050->SetLineWidth(widthCommonFit);
+
+              ////////// EPOS
+                TH1D* histoRatioEPOSToFitPi0_0010 = (TH1D*) histoEPOSPi0_0010->Clone();
+                  histoRatioEPOSToFitPi0_0010 = CalculateHistoRatioToFit (histoRatioEPOSToFitPi0_0010, fitPi0InvYield2760GeVLHC11h_0010);
+                  DrawGammaSetMarker(histoRatioEPOSToFitPi0_0010, 24, 1.5,colorEPOSRatio,colorEPOSRatio);
+                  histoRatioEPOSToFitPi0_0010->SetLineWidth(widthCommonFit);
+
+                TH1D* histoRatioEPOSToFitPi0_2050 = (TH1D*) histoEPOSPi0_2050->Clone();
+                  histoRatioEPOSToFitPi0_2050 = CalculateHistoRatioToFit (histoRatioEPOSToFitPi0_2050, fitPi0InvYield2760GeVLHC11h_2050);
+                  DrawGammaSetMarker(histoRatioEPOSToFitPi0_2050, 24, 1.5,colorEPOSRatio,colorEPOSRatio);
+                  histoRatioEPOSToFitPi0_2050->SetLineWidth(widthCommonFit);
+
+                TH1D* histoRatioEPOSToFitEta_0010 = (TH1D*) histoEPOSEta_0010->Clone();
+                  histoRatioEPOSToFitEta_0010 = CalculateHistoRatioToFit (histoRatioEPOSToFitEta_0010, fitEtaInvYield2760GeVLHC11h_0010);
+                  DrawGammaSetMarker(histoRatioEPOSToFitEta_0010, 24, 1.5,colorEPOSRatio,colorEPOSRatio);
+                  histoRatioEPOSToFitEta_0010->SetLineWidth(widthCommonFit);
+
+                TH1D* histoRatioEPOSToFitEta_2050 = (TH1D*) histoEPOSEta_2050->Clone();
+                  histoRatioEPOSToFitEta_2050 = CalculateHistoRatioToFit (histoRatioEPOSToFitEta_2050, fitEtaInvYield2760GeVLHC11h_2050);
+                  DrawGammaSetMarker(histoRatioEPOSToFitEta_2050, 24, 1.5,colorEPOSRatio,colorEPOSRatio);
+                  histoRatioEPOSToFitEta_2050->SetLineWidth(widthCommonFit);
+
 
                 padInvYieldUpperRatio_pad1->cd();
                 padInvYieldUpperRatio_pad1->SetLogx(1);
@@ -3906,18 +4160,11 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
                     for(Int_t a=0; a<4; a++){
                         graphRatioLowPtPi0_0010->RemovePoint(0);
                     }
-                    histoRatioEPOSToFitPi0_0010->GetXaxis()->SetRangeUser(1.,13.);
                     graphRatioLowPtPi0_0010->Draw("l,same");
                     histoRatioEPOSToFitPi0_0010->Draw("same,hist,c");
 
-                    if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioPi0InvYieldFitStat2760GeVLHC11h_0010);
                     graphRatioPi0InvYieldFitStat2760GeVLHC11h_0010->Draw("p,same,e0");
                     graphRatioPi0InvYieldFitSyst2760GeVLHC11h_0010->Draw("E2same");
-
-
-//                  TLatex *labelcent0010 = new TLatex(0.85,0.88," 0-10%");
-//                  SetStyleTLatex( labelcent0010,0.85* textsizeLabelsXSecMiddle,4);
-//                  labelcent0010->Draw();
 
                     TLegend* legen4PadOnlyRatios_pad1 = GetAndSetLegend2(0.52, 0.22-2*0.08, 0.9, 0.22, 0.85*textSizeLabelsPixel4pad);
                     legen4PadOnlyRatios_pad1->SetMargin(0.17);
@@ -3951,10 +4198,8 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
                     graphRatioLowPtEta_0010->RemovePoint(0);
                     graphRatioLowPtEta_0010->RemovePoint(0);
                     graphRatioLowPtEta_0010->Draw("l,same");
-                    histoRatioEPOSToFitEta_0010->GetXaxis()->SetRangeUser(1.,13.);
                     histoRatioEPOSToFitEta_0010->Draw("same,hist,c");
 
-                    if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioEtaInvYieldFitStat2760GeVLHC11h_0010);
                     graphRatioEtaInvYieldFitStat2760GeVLHC11h_0010->Draw("p,same,e0");
                     graphRatioEtaInvYieldFitSyst2760GeVLHC11h_0010->Draw("E2same");
 
@@ -3982,10 +4227,8 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
                     graphRatioLowPtPi0_2050->RemovePoint(0);
                     graphRatioLowPtPi0_2050->RemovePoint(0);
                     graphRatioLowPtPi0_2050->Draw("l,same");
-                    histoRatioEPOSToFitPi0_2050->GetXaxis()->SetRangeUser(1.,13.);
                     histoRatioEPOSToFitPi0_2050->Draw("same,hist,c");
 
-                    if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioPi0InvYieldFitStat2760GeVLHC11h_2050);
                     graphRatioPi0InvYieldFitStat2760GeVLHC11h_2050->Draw("p,same,e0");
                     graphRatioPi0InvYieldFitSyst2760GeVLHC11h_2050->Draw("E2same");
 
@@ -4011,10 +4254,8 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
                     graphRatioLowPtEta_2050->RemovePoint(0);
                     graphRatioLowPtEta_2050->RemovePoint(0);
                     graphRatioLowPtEta_2050->Draw("l,same");
-                    histoRatioEPOSToFitEta_2050->GetXaxis()->SetRangeUser(1.,13.);
                     histoRatioEPOSToFitEta_2050->Draw("same,hist,c");
 
-                    if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRatioEtaInvYieldFitStat2760GeVLHC11h_2050);
                     graphRatioEtaInvYieldFitStat2760GeVLHC11h_2050->Draw("p,same,e0");
                     graphRatioEtaInvYieldFitSyst2760GeVLHC11h_2050->Draw("E2same");
 
@@ -4036,128 +4277,301 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
 
 
-    //*********************************************************************************************************************//
-    //*************************  Combination of RAA     *******************************************************************//
 
-//     if(bWCorrection.CompareTo("X")==0 ){
-//       cout << " \n\nCalculating RAA for " << meson.Data() << endl;
-//
-//       TF1* fitInvCrossSectionPi0Comb2760GeV = FitObject("l","fitInvCrossSectionPi0Comb2760GeV","Pi0");
-//       fitInvCrossSectionPi0Comb2760GeV->SetParameter(1,7.5);
-//       fitInvCrossSectionPi0Comb2760GeV->SetParameter(2,0.152);
-//       fitInvCrossSectionPi0Comb2760GeV->SetRange(0,15);
-//
-//       graphInvSectionComb->Fit(fitInvCrossSectionPi0Comb2760GeV,"QNRMEX0+","",0.4,8.);
-//       cout << "Initial Fit result" << endl;
-//       cout << WriteParameterToFile(fitInvCrossSectionPi0Comb2760GeV)<< endl;
+    //**********************************************************************************************************************//
+    //***********************************************     Raa combination    ***********************************************//
+    //**********************************************************************************************************************//
 
-//     TGraphAsymmErrors* graphPi0RAAPCM0010;
-//     TGraphAsymmErrors* graphPi0RAASysPCM0010;
-//
-//     TCanvas* canvasDummy5 = new TCanvas("canvasDummy2","",200,10,1200,1100);  // gives the page size
-//     DrawGammaCanvasSettings( canvasDummy5,  0.1, 0.01, 0.015, 0.08);
-//     canvasDummy5->SetLogy();
-//     canvasDummy5->SetLogx();
-//     TH2F * histo2DDummy5;
-//     histo2DDummy5 = new TH2F("histo2DDummy5","histo2DDummy5",1000,0.23,30.,1000,1e-8,10);
-//     SetStyleHistoTH2ForGraphs(histo2DDummy5, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )", 0.032,0.04, 0.04,0.04, 1,1.55);
-//     histo2DDummy5->DrawCopy();
-//
-//     DrawGammaSetMarkerTGraphAsym(graphInvSectionCombPi02760GeV, 20,markerSizeCommonSpectrumPi0900GeV, kRed, kRed, widthLinesBoxes, kTRUE);
-//     graphInvSectionCombPi02760GeV->Draw("pEsame");
-//
-//     fitInvCrossSectionPi0Comb2760GeV->SetLineColor(kBlue+2);
-//     fitInvCrossSectionPi0Comb2760GeV->Draw("same");
-//
-//     canvasDummy5->Update();
-//     canvasDummy5->Print(Form("%s/PPDataPlusFit.%s",outputDir.Data(),suffix.Data()));
+    if(meson.CompareTo("Pi0")==0){
+          CalcRaa(    graphInvSectionPCMPi02760GeVforRAA, graphInvSectionPCMSysPi02760GeVforRAA,graphInvSectionCombPi02760GeVforRAA, fitInvCrossSectionPi0Comb2760GeV,
+                          graphPCMInvYieldStatPbPb2760GeVYShifted_0010, graphPCMInvYieldSysPbPb2760GeVYShifted_0010,
+                          &graphRAAPCM0010, &graphRAASysPCM0010,
+                          nColl0010, nCollErr0010,"Pi0",8.,0.);
+          histoRAAStatPCM0010       = GraphAsymErrorsToHist_withErrors(graphRAAPCM0010,"histoRAAStatPCM0010");
 
-//       cout << "____________ PCM ____________" << endl ;
-//
-//       CalcRaa(    graphInvSectionCombStatPi02760GeVPlot, graphInvSectionCombSysEta2760GeVPlot,graphInvSectionCombStatPi02760GeVPlot, fitInvCrossSectionPi0Comb2760GeV,
-//                     graphPCMInvYieldStatPbPb2760GeVYShifted_0010, graphPCMInvYieldSysPbPb2760GeVYShifted_0010,  //PbPb Yields
-//                     &graphPi0RAAPCM0010, &graphPi0RAASysPCM0010,
-//                     nColl0010, nCollErr0010,8.,0);
-//
-// //     //  return;
-// //     cout << "EMCal*********************************************" << endl ;
-// //     cout << "***********************************************" << endl<< endl ;
-// //
-// //     TGraphAsymmErrors* graphRAAEMCal0010;
-// //     TGraphAsymmErrors* graphRAASysEMCal0010;
-// //     CalcRaa(    graphInvSectionEMCalStatPi02760GeVRed, graphInvSectionEMCalSysPi02760GeVRed,graphInvSectionCombPi02760GeVOnlyStat, fitInvCrossSectionPi0Comb2760GeV,
-// //                     graphYieldPi0EMCalPbPb0010StatErrYShifted, graphYieldPi0EMCalPbPb0010SysRAAErrYShifted,  //PbPb Yields
-// //                     &graphRAAEMCal0010, &graphRAASysEMCal0010,
-// //                     nColl0010, nCollErr0010, 8.,1);
-// //
-// //     //  return;
-// //     cout << "Combined*****************************************" << endl ;
-// //     cout << "***********************************************" << endl<< endl ;
-// //
-// //     TGraphAsymmErrors* graphRAACombInd0010;
-// //     TGraphAsymmErrors* graphRAASysCombInd0010;
-// //     TGraphAsymmErrors* graphRAAPi0CombPbPb0010_2 = CombinePtPointsRAA(  graphRAAPCM0010,        graphRAASysPCM0010,
-// //                                                 graphRAAEMCal0010,   graphRAASysEMCal0010,
-// //                                                 graphRAACombInd0010, graphRAASysCombInd0010,
-// //                                                 xPtLimitsPbPbEMCal2, 19, 0, 0,2);
-//
-//
+          return;
+          CalcRaa(    graphInvSectionPHOSStatPi02760GeV, graphInvSectionPHOSSysPi02760GeV,graphInvSectionCombPi02760GeVforRAA, fitInvCrossSectionPi0Comb2760GeV,
+                          graphPHOSInvYieldStatPbPb2760GeVYShifted_0010, graphPHOSInvYieldSysPbPb2760GeVYShifted_0010,
+                          &graphRAAPHOS0010, &graphRAASysPHOS0010,
+                          nColl0010, nCollErr0010,"Pi0", 12.,0.);
+          histoRAAStatPHOS0010       = GraphAsymErrorsToHist_withErrors(graphRAAPHOS0010,"histoRAAStatPHOS0010");
+
+          CalcRaa(    graphInvSectionEMCalStatPi02760GeV, graphInvSectionEMCalSysPi02760GeV,graphInvSectionCombPi02760GeVforRAA, fitInvCrossSectionPi0Comb2760GeV,
+                          graphEMCalInvYieldStatPbPb2760GeVYShifted_0010, graphEMCalInvYieldSysPbPb2760GeVYShifted_0010,
+                          &graphRAAEMCal0010, &graphRAASysEMCal0010,
+                          nColl0010, nCollErr0010,"Pi0",20.,0);
+          histoRAAStatEMCal0010       = GraphAsymErrorsToHist_withErrors(graphRAAEMCal0010,"histoRAAStatEMCal0010");
+          graphRAAEMCal0010->Print();
+//           for(Int_t z=0;z<=histoRAAStatEMCal0010->GetNbinsX()+1;z++)
+//           {
+//              cout << "bin cont: " << z << " " <<  histoRAAStatEMCal0010->GetBinContent(z) << endl;}
+//              return;
+
+          CalcRaa(    graphInvSectionPCMPi02760GeVforRAA, graphInvSectionPCMSysPi02760GeVforRAA,graphInvSectionCombPi02760GeVforRAA, fitInvCrossSectionPi0Comb2760GeV,
+                          graphPCMInvYieldStatPbPb2760GeVYShifted_2050, graphPCMInvYieldSysPbPb2760GeVYShifted_2050,
+                          &graphRAAPCM2050, &graphRAASysPCM2050,
+                          nColl2050, nCollErr2050,"Pi0",8.,0.);
+          histoRAAStatPCM2050       = GraphAsymErrorsToHist_withErrors(graphRAAPCM2050,"histoRAAStatPCM2050");
+
+          CalcRaa(    graphInvSectionEMCalStatPi02760GeV, graphInvSectionEMCalSysPi02760GeV,graphInvSectionCombPi02760GeVforRAA, fitInvCrossSectionPi0Comb2760GeV,
+                          graphEMCalInvYieldStatPbPb2760GeVYShifted_2050, graphEMCalInvYieldSysPbPb2760GeVYShifted_2050,
+                          &graphRAAEMCal2050, &graphRAASysEMCal2050,
+                          nColl2050, nCollErr2050,"Pi0",20.,0.);
+          histoRAAStatEMCal2050       = GraphAsymErrorsToHist_withErrors(graphRAAEMCal2050,"histoRAAStatEMCal2050");
+
+    } else if(meson.CompareTo("Eta")==0){
+
+          CalcRaa(    graphInvSectionPCMEta2760GeVforRAA, graphInvSectionPCMSysEta2760GeVforRAA,graphInvSectionCombEta2760GeVforRAA, fitInvCrossSectionEtaComb2760GeV,
+                          graphPCMInvYieldStatPbPb2760GeVYShifted_0010, graphPCMInvYieldSysPbPb2760GeVYShifted_0010,
+                          &graphRAAPCM0010, &graphRAASysPCM0010,
+                          nColl0010, nCollErr0010,"Eta",6.,0.,"h");
+          histoRAAStatPCM0010       = GraphAsymErrorsToHist_withErrors(graphRAAPCM0010,"histoRAAStatPCM0010");
+
+          CalcRaa(    graphInvSectionEMCalStatEta2760GeV, graphInvSectionEMCalSysEta2760GeV,graphInvSectionCombEta2760GeVforRAA, fitInvCrossSectionEtaComb2760GeV,
+                          graphEMCalInvYieldStatPbPb2760GeVYShifted_0010, graphEMCalInvYieldSysPbPb2760GeVYShifted_0010,
+                          &graphRAAEMCal0010, &graphRAASysEMCal0010,
+                          nColl0010, nCollErr0010,"Eta",20.,0.,"h");
+          histoRAAStatEMCal0010       = GraphAsymErrorsToHist_withErrors(graphRAAEMCal0010,"histoRAAStatEMCal0010");
+
+          CalcRaa(    graphInvSectionPCMEta2760GeVforRAA, graphInvSectionPCMSysEta2760GeVforRAA,graphInvSectionCombEta2760GeVforRAA, fitInvCrossSectionEtaComb2760GeV,
+                          graphPCMInvYieldStatPbPb2760GeVYShifted_2050, graphPCMInvYieldSysPbPb2760GeVYShifted_2050,
+                          &graphRAAPCM2050, &graphRAASysPCM2050,
+                          nColl2050, nCollErr2050,"Eta",6.,0.,"h");
+          histoRAAStatPCM2050       = GraphAsymErrorsToHist_withErrors(graphRAAPCM2050,"histoRAAStatPCM2050");
+
+          CalcRaa(    graphInvSectionEMCalStatEta2760GeV, graphInvSectionEMCalSysEta2760GeV,graphInvSectionCombEta2760GeVforRAA, fitInvCrossSectionEtaComb2760GeV,
+                          graphEMCalInvYieldStatPbPb2760GeVYShifted_2050, graphEMCalInvYieldSysPbPb2760GeVYShifted_2050,
+                          &graphRAAEMCal2050, &graphRAASysEMCal2050,
+                          nColl2050, nCollErr2050,"Eta",20.,0.,"h");
+          histoRAAStatEMCal2050       = GraphAsymErrorsToHist_withErrors(graphRAAEMCal2050,"histoRAAStatEMCal2050");
+    }
+//     if(PaperPi0 && meson.CompareTo("Pi0")==0){
+//       for(Int_t a = 0; a<3; a++){
+//         graphRAASysPCM0010->RemovePoint(0);
+//         graphRAAPCM0010->RemovePoint(0);
+//         graphRAAPCM2050->RemovePoint(0);
+//         graphRAASysPCM2050->RemovePoint(0);
+//       }
 //     }
 
-    TGraphAsymmErrors* graphCombRAAStatPbPb2760GeVLHC11h_0010 = NULL;
-    TGraphAsymmErrors* graphCombRAASysPbPb2760GeVLHC11h_0010 = NULL;
-    TGraphAsymmErrors* graphCombRAATot2760GeVLHC11h_0010 = NULL;
+//     graphRAAPCM0010->Print();
+//     graphRAAPHOS0010->Print();
+//     graphRAAEMCal0010->Print();
+//     return;
 
-    TGraphAsymmErrors* graphCombRAAStatPbPb2760GeVLHC11h_2050 = NULL;
-    TGraphAsymmErrors* graphCombRAASysPbPb2760GeVLHC11h_2050 = NULL;
-    TGraphAsymmErrors* graphCombRAATot2760GeVLHC11h_2050 = NULL;
+    TCanvas* canvasRAAMeasurements = new TCanvas("canvasRAAMeasurements","",200,10,1200,1100);  //200,10,1350,900);  // gives the page size
+        DrawGammaCanvasSettings( canvasRAAMeasurements, 0.08, 0.02, 0.035, 0.09);
+//  canvasRAAMeasurements->SetLogx();
+
+      TH2F * histo2DRAADummy = new TH2F("histo2DRAADummy","histo2DRAADummy",1000,0.,21.,1000,0,1.2);
+      SetStyleHistoTH2ForGraphs(histo2DRAADummy, "p_{T} (GeV/c)","RAA", 0.032,0.04, 0.04,0.04, 1,1.);
+      histo2DRAADummy->DrawCopy();
+
+      DrawGammaLines(0.3, 30. , 1., 1.,0.5,   kGray);
+
+      DrawGammaSetMarkerTGraphAsym(graphRAASysPCM0010, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
+      graphRAASysPCM0010->Draw("E2same");
+      DrawGammaSetMarkerTGraphAsym(graphRAAPCM0010, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0]);
+      if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRAAPCM0010);
+      graphRAAPCM0010->Draw("p,same,e");
+
+      if(meson.CompareTo("Pi0")==0){
+          DrawGammaSetMarkerTGraphAsym(graphRAASysPHOS0010, markerStyleDet[1] ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1], widthLinesBoxes, kTRUE);
+          graphRAASysPHOS0010->Draw("E2same");
+          DrawGammaSetMarkerTGraphAsym(graphRAAPHOS0010, markerStyleDet[1] ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1]);
+          if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRAAPHOS0010);
+          graphRAAPHOS0010->Draw("p,same,e");
+      }
+
+      DrawGammaSetMarkerTGraphAsym(graphRAASysEMCal0010,markerStyleDet[2] ,markerSizeDet[2]*0.5, colorDet[2], colorDet[2], widthLinesBoxes, kTRUE);
+      graphRAASysEMCal0010->Draw("E2same");
+      DrawGammaSetMarkerTGraphAsym(graphRAAEMCal0010, markerStyleDet[2] ,markerSizeDet[2]*0.5, colorDet[2], colorDet[2]);
+      if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRAAEMCal0010);
+      graphRAAEMCal0010->Draw("p,same,e");
+
+
+        // ****************************** Definition of the Legend ******************************************
+        // **************** Row def ************************
+        Double_t rowsLegendOnlyPi0Ratio2[5]      = {0.75,0.7,0.66,0.62,0.59};
+        Double_t rowsLegendOnlyPi0RatioAbs2[5]   = {0.5,.85,0.8,0.75,0.9};
+        Double_t columnsLegendOnlyPi0Ratio2[3]   = {0.15,0.28, 0.35};
+        Double_t columnsLegendOnlyPi0RatioAbs2[3]= {1.,5.2, 6.7};
+        Double_t lengthBox2                      = 0.5/2;
+        Double_t heightBox2                      = 0.08/4;
+        // ****************** first Column **************************************************
+        TLatex *textPCMOnlyLHC11h = new TLatex(columnsLegendOnlyPi0Ratio2[0],rowsLegendOnlyPi0Ratio2[1],"PCM");
+        SetStyleTLatex( textPCMOnlyLHC11h, 0.5*textSizeLabelsPixel,4);
+        textPCMOnlyLHC11h->SetTextFont(43);
+        textPCMOnlyLHC11h->Draw();
+        TLatex *textPHOSOnlyLHC11h = new TLatex(columnsLegendOnlyPi0Ratio2[0],rowsLegendOnlyPi0Ratio2[2],"PHOS");
+        SetStyleTLatex( textPHOSOnlyLHC11h,  0.5*textSizeLabelsPixel,4);
+        textPHOSOnlyLHC11h->SetTextFont(43);
+        if(meson.CompareTo("Pi0")==0){
+          textPHOSOnlyLHC11h->Draw();
+        }
+        TLatex *textEMCalOnlyLHC11h = new TLatex(columnsLegendOnlyPi0Ratio2[0],rowsLegendOnlyPi0Ratio2[3],"EMCal");
+        SetStyleTLatex( textEMCalOnlyLHC11h,  0.5*textSizeLabelsPixel,4);
+        textEMCalOnlyLHC11h->SetTextFont(43);
+        textEMCalOnlyLHC11h->Draw();
+        // ****************** second Column *************************************************
+        TLatex *textStatOnlyLHC11h = new TLatex(columnsLegendOnlyPi0Ratio2[1],rowsLegendOnlyPi0Ratio2[0] ,"stat");
+        SetStyleTLatex( textStatOnlyLHC11h, 0.5*textSizeLabelsPixel,4);
+        textStatOnlyLHC11h->SetTextFont(43);
+        textStatOnlyLHC11h->Draw();
+        TLatex *textSysOnlyLHC11h = new TLatex(columnsLegendOnlyPi0Ratio2[2] ,rowsLegendOnlyPi0Ratio2[0],"syst");
+        SetStyleTLatex( textSysOnlyLHC11h, 0.5*textSizeLabelsPixel,4);
+        textSysOnlyLHC11h->SetTextFont(43);
+        textSysOnlyLHC11h->Draw();
+
+        TMarker* markerPCMOnlyLHC11h = CreateMarkerFromGraph(graphRAASysPCM0010,columnsLegendOnlyPi0Ratio2[1] ,rowsLegendOnlyPi0Ratio2[1],1);
+        markerPCMOnlyLHC11h->DrawMarker(columnsLegendOnlyPi0RatioAbs2[1] ,rowsLegendOnlyPi0RatioAbs2[1]);
+        TBox* boxPCMOnlyPi0 = CreateBoxFromGraph(graphRAASysPCM0010, columnsLegendOnlyPi0RatioAbs2[2]-1.5*lengthBox2 , rowsLegendOnlyPi0RatioAbs2[1]- heightBox2,
+                                                        columnsLegendOnlyPi0RatioAbs2[2]+ 2*lengthBox2, rowsLegendOnlyPi0RatioAbs2[1]+ heightBox2);
+        boxPCMOnlyPi0->Draw("l");
+
+        if(meson.CompareTo("Pi0")==0){
+            TMarker* markerPHOSOnlyLHC11h = CreateMarkerFromGraph(graphRAASysPHOS0010, columnsLegendOnlyPi0Ratio2[1] ,rowsLegendOnlyPi0Ratio2[2],1);
+            markerPHOSOnlyLHC11h->DrawMarker(columnsLegendOnlyPi0RatioAbs2[1] ,rowsLegendOnlyPi0RatioAbs2[2]);
+            TBox* boxPHOSOnly = CreateBoxFromGraph(graphRAASysPHOS0010, columnsLegendOnlyPi0RatioAbs2[2]-1.5*lengthBox2 , rowsLegendOnlyPi0RatioAbs2[2]- heightBox2,
+                                                            columnsLegendOnlyPi0RatioAbs2[2]+ 2*lengthBox2, rowsLegendOnlyPi0RatioAbs2[2]+ heightBox2);
+            boxPHOSOnly->Draw("l");
+        }
+
+        TMarker* markerEMCalOnlyLHC11h = CreateMarkerFromGraph(graphRAASysEMCal0010, columnsLegendOnlyPi0Ratio2[1] ,rowsLegendOnlyPi0Ratio2[3],1);
+        markerEMCalOnlyLHC11h->DrawMarker(columnsLegendOnlyPi0RatioAbs2[1] ,rowsLegendOnlyPi0RatioAbs2[3]);
+        TBox* boxEMCalOnly = CreateBoxFromGraph(graphRAASysEMCal0010, columnsLegendOnlyPi0RatioAbs2[2]-1.5*lengthBox2 , rowsLegendOnlyPi0RatioAbs2[3]- heightBox2,
+                                                        columnsLegendOnlyPi0RatioAbs2[2]+ 2*lengthBox2, rowsLegendOnlyPi0RatioAbs2[3]+ heightBox2);
+        boxEMCalOnly->Draw("l");
+
+
+        labelEnergyInvYieldSectionPi0LHC11h->Draw();
+        labelDetSysInvYieldSectionPi0LHC11h->Draw();
+
+    canvasRAAMeasurements->Update();
+    canvasRAAMeasurements->SaveAs(Form("%s/%s_RAA_IndividualMeasLHC11h_0010.%s",outputDir.Data(),meson.Data(),suffix.Data()));
+
+    canvasRAAMeasurements->cd();
+      histo2DRAADummy->DrawCopy();
+
+      DrawGammaLines(0., 20.5 , 1., 1.,0.5,   kGray);
+
+      DrawGammaSetMarkerTGraphAsym(graphRAASysPCM2050, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
+      graphRAASysPCM2050->Draw("E2same");
+      DrawGammaSetMarkerTGraphAsym(graphRAAPCM2050, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0]);
+      if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRAAPCM2050);
+      graphRAAPCM2050->Draw("p,same,e");
+
+      DrawGammaSetMarkerTGraphAsym(graphRAASysEMCal2050,markerStyleDet[2] ,markerStyleDet[2]*0.5, colorDet[2], colorDet[2], widthLinesBoxes, kTRUE);
+      graphRAASysEMCal2050->Draw("E2same");
+      DrawGammaSetMarkerTGraphAsym(graphRAAEMCal2050, markerStyleDet[2] ,markerSizeDet[2]*0.5, colorDet[2], colorDet[2]);
+      if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphRAAEMCal2050);
+      graphRAAEMCal2050->Draw("p,same,e");
+
+
+        labelEnergyInvYieldSectionPi0LHC11h->Draw();
+        labelDetSysInvYieldSectionPi0LHC11h->Draw();
+
+      textPCMOnlyLHC11h->Draw();
+      textEMCalOnlyLHC11h->Draw();
+
+      textStatOnlyLHC11h->Draw();
+      textSysOnlyLHC11h->Draw();
+
+      markerPCMOnlyLHC11h->DrawMarker(columnsLegendOnlyPi0RatioAbs2[1] ,rowsLegendOnlyPi0RatioAbs2[1]);
+      boxPCMOnlyPi0->Draw("l");
+      markerEMCalOnlyLHC11h->DrawMarker(columnsLegendOnlyPi0RatioAbs2[1] ,rowsLegendOnlyPi0RatioAbs2[3]);
+      boxEMCalOnly->Draw("l");
+
+
+    canvasRAAMeasurements->Update();
+    canvasRAAMeasurements->SaveAs(Form("%s/%s_RAA_IndividualMeasLHC11h_2050.%s",outputDir.Data(),meson.Data(),suffix.Data()));
+
+
+    for (Int_t i = 0; i< 11; i++){
+
+        statErrorCollectionforRAALHC11h_0010[i] = NULL;
+        statErrorCollectionforRAALHC11h_2050[i] = NULL;
+
+        sysErrorCollectionforRAALHC11h_0010[i] = NULL;
+        sysErrorCollectionforRAALHC11h_2050[i] = NULL;
+
+    }
+    if(meson.CompareTo("Pi0")==0){
+
+        statErrorCollectionforRAALHC11h_0010[0] = (TH1D*)histoRAAStatPCM0010->Clone("statErrPCMPi0forRAA_0010");
+        statErrorCollectionforRAALHC11h_0010[1] = (TH1D*)histoRAAStatPHOS0010->Clone("statErrPCMPi0forRAA_0010");
+        statErrorCollectionforRAALHC11h_0010[2] = (TH1D*)histoRAAStatEMCal0010->Clone("statErrEMCalPi0forRAA_0010");
+
+        statErrorCollectionforRAALHC11h_2050[0] = (TH1D*)histoRAAStatPCM2050->Clone("statErrPCMPi0forRAA_2050");
+        statErrorCollectionforRAALHC11h_2050[2] = (TH1D*)histoRAAStatEMCal2050->Clone("statErrEMCalPi0forRAA_2050");
+
+
+        sysErrorCollectionforRAALHC11h_0010[0] = (TGraphAsymmErrors*)graphRAASysPCM0010->Clone("sysErrPCMPi0forRAA_0010");
+        sysErrorCollectionforRAALHC11h_0010[1] = (TGraphAsymmErrors*)graphRAASysPHOS0010->Clone("sysErrPCMPi0forRAA_0010");
+        sysErrorCollectionforRAALHC11h_0010[2] = (TGraphAsymmErrors*)graphRAASysEMCal0010->Clone("sysErrEMCalPi0forRAA_0010");
+
+        sysErrorCollectionforRAALHC11h_2050[0] = (TGraphAsymmErrors*)graphRAASysPCM2050->Clone("sysErrPCMPi0forRAA_2050");
+        sysErrorCollectionforRAALHC11h_2050[2] = (TGraphAsymmErrors*)graphRAASysEMCal2050->Clone("sysErrEMCalPi0forRAA_2050");
+
+    } else if(meson.CompareTo("Eta")==0) {
+
+        statErrorCollectionforRAALHC11h_0010[0] = (TH1D*)histoRAAStatPCM0010->Clone("statErrPCMEtaforRAA_0010");
+        statErrorCollectionforRAALHC11h_0010[2] = (TH1D*)histoRAAStatEMCal0010->Clone("statErrEMCalEtaforRAA_0010");
+
+        statErrorCollectionforRAALHC11h_2050[0] = (TH1D*)histoRAAStatPCM2050->Clone("statErrPCMEtaforRAA_2050");
+        statErrorCollectionforRAALHC11h_2050[2] = (TH1D*)histoRAAStatEMCal2050->Clone("statErrEMCalEtaforRAA_2050");
+
+
+        sysErrorCollectionforRAALHC11h_0010[0] = (TGraphAsymmErrors*)graphRAASysPCM0010->Clone("sysErrPCMEtaforRAA_0010");
+        sysErrorCollectionforRAALHC11h_0010[2] = (TGraphAsymmErrors*)graphRAASysEMCal0010->Clone("sysErrEMCalEtaforRAA_0010");
+
+        sysErrorCollectionforRAALHC11h_2050[0] = (TGraphAsymmErrors*)graphRAASysPCM2050->Clone("sysErrPCMEtaforRAA_2050");
+        sysErrorCollectionforRAALHC11h_2050[2] = (TGraphAsymmErrors*)graphRAASysEMCal2050->Clone("sysErrEMCalEtaforRAA_2050");
+
+    }
+//         statErrorCollectionforRAALHC11h_0010[2]->Print();
+//         sysErrorCollectionforRAALHC11h_0010[0]->Print();
+//         sysErrorCollectionforRAALHC11h_0010[1]->Print();
+        sysErrorCollectionforRAALHC11h_0010[2]->Print();
+//         return;
 
     cout << " \n\nCombining RAA for " << meson.Data() << endl;
-//     if(bWCorrection.CompareTo("X")==0 ){
-    if(kFALSE ){
+
+    if(meson.CompareTo("Pi0")==0){
+        graphCombRAATot2760GeVLHC11hTOT_0010 = CombinePtPointsSpectraFullCorrMat( statErrorCollectionforRAALHC11h_0010,  sysErrorCollectionforRAALHC11h_0010,
+                                                                                                  xPtLimitsPi0, 23, offSetsPi0RAA, offSetsPi0RAASys,
+                                                                                                  graphCombRAAStat2760GeVLHC11h_0010, graphCombRAASys2760GeVLHC11h_0010,
+                                                                                                    Form("%s/0010LHC11h_WeightingRAA%s.dat",outputDir.Data(),meson.Data()),1);
+    } else if(meson.CompareTo("Eta")==0){
+        graphCombRAATot2760GeVLHC11hTOT_0010 = CombinePtPointsSpectraFullCorrMat( statErrorCollectionforRAALHC11h_0010,  sysErrorCollectionforRAALHC11h_0010,
+                                                                                                  xPtLimitsEta, 13, offSetsEtaRAA, offSetsEtaRAASys,
+                                                                                                  graphCombRAAStat2760GeVLHC11h_0010, graphCombRAASys2760GeVLHC11h_0010,
+                                                                                                    Form("%s/0010LHC11h_WeightingRAA%s.dat",outputDir.Data(),meson.Data()),1);
+    }
+//     graphCombRAATot2760GeVLHC11hTOT_0010->Print();
+//     graphCombRAAStat2760GeVLHC11h_0010->Print();
+//     graphCombRAASys2760GeVLHC11h_0010->Print();
+//     return;
       if(meson.CompareTo("Pi0")==0){
-          graphCombRAATot2760GeVLHC11h_0010 = CombinePtPointsRAA(graphPCMPi0RAAStatPbPb2760GeVYShifted_0010,     graphPCMPi0RAASysPbPb2760GeVYShifted_0010,
-                                                                  graphEMCalPi0RAAStatPbPb2760GeVYShifted_0010, graphEMCalPi0RAASysPbPb2760GeVYShifted_0010,                                graphCombRAAStatPbPb2760GeVLHC11h_0010, graphCombRAASysPbPb2760GeVLHC11h_0010,
-                                                                  xPtLimitsPi0, 24, 0, 1, 16, kFALSE);
-
-          graphCombRAATot2760GeVLHC11h_2050 = CombinePtPointsRAA(graphPCMPi0RAAStatPbPb2760GeVYShifted_2050,     graphPCMPi0RAASysPbPb2760GeVYShifted_2050,
-                                                                  graphEMCalPi0RAAStatPbPb2760GeVYShifted_2050, graphEMCalPi0RAASysPbPb2760GeVYShifted_2050,                                graphCombRAAStatPbPb2760GeVLHC11h_2050, graphCombRAASysPbPb2760GeVLHC11h_2050,
-                                                                  xPtLimitsPi0, 24, 0, 1, 16, kFALSE);
-
-      } else if(meson.CompareTo("Eta")==0){
-
-          graphCombRAATot2760GeVLHC11h_0010 = CombinePtPointsRAA(graphPCMEtaRAAStatPbPb2760GeVYShifted_0010,     graphPCMEtaRAASysPbPb2760GeVYShifted_0010,
-                                                                  graphEMCalEtaRAAStatPbPb2760GeVYShifted_0010, graphEMCalEtaRAASysPbPb2760GeVYShifted_0010,                                graphCombRAAStatPbPb2760GeVLHC11h_0010, graphCombRAASysPbPb2760GeVLHC11h_0010,
-                                                                  xPtLimitsEta, 14, 0, 2, 6, kFALSE);
-
-          graphCombRAATot2760GeVLHC11h_2050 = CombinePtPointsRAA(graphPCMEtaRAAStatPbPb2760GeVYShifted_2050,     graphPCMEtaRAASysPbPb2760GeVYShifted_2050,
-                                                                  graphEMCalEtaRAAStatPbPb2760GeVYShifted_2050, graphEMCalEtaRAASysPbPb2760GeVYShifted_2050,                                graphCombRAAStatPbPb2760GeVLHC11h_2050, graphCombRAASysPbPb2760GeVLHC11h_2050,
-                                                                  xPtLimitsEta, 14, 0, 2, 6, kFALSE);
-
-      }
-    } else {
-
-      if(meson.CompareTo("Pi0")==0){
-          graphCombRAATot2760GeVLHC11h_0010 = CombinePtPointsRAA(graphPCMPi0RAAStatPbPb2760GeV_0010,     graphPCMPi0RAASysPbPb2760GeV_0010,
+          graphCombRAATot2760GeVLHC11hTOT_0010 = CombinePtPointsRAA(graphPCMPi0RAAStatPbPb2760GeV_0010,     graphPCMPi0RAASysPbPb2760GeV_0010,
                                                                   graphEMCalPi0RAAStatPbPb2760GeV_0010, graphEMCalPi0RAASysPbPb2760GeV_0010,                                graphCombRAAStatPbPb2760GeVLHC11h_0010, graphCombRAASysPbPb2760GeVLHC11h_0010,
                                                                   xPtLimitsPi0, 24, 0, 1, 16, kFALSE);
 
-          graphCombRAATot2760GeVLHC11h_2050 = CombinePtPointsRAA(graphPCMPi0RAAStatPbPb2760GeV_2050,     graphPCMPi0RAASysPbPb2760GeV_2050,
+          graphCombRAATot2760GeVLHC11hTOT_2050 = CombinePtPointsRAA(graphPCMPi0RAAStatPbPb2760GeV_2050,     graphPCMPi0RAASysPbPb2760GeV_2050,
                                                                   graphEMCalPi0RAAStatPbPb2760GeV_2050, graphEMCalPi0RAASysPbPb2760GeV_2050,                                graphCombRAAStatPbPb2760GeVLHC11h_2050, graphCombRAASysPbPb2760GeVLHC11h_2050,
                                                                   xPtLimitsPi0, 24, 0, 1, 16, kFALSE);
 
       } else if(meson.CompareTo("Eta")==0){
 
-          graphCombRAATot2760GeVLHC11h_0010 = CombinePtPointsRAA(graphPCMEtaRAAStatPbPb2760GeV_0010,     graphPCMEtaRAASysPbPb2760GeV_0010,
+          graphCombRAATot2760GeVLHC11hTOT_0010 = CombinePtPointsRAA(graphPCMEtaRAAStatPbPb2760GeV_0010,     graphPCMEtaRAASysPbPb2760GeV_0010,
                                                                   graphEMCalEtaRAAStatPbPb2760GeV_0010, graphEMCalEtaRAASysPbPb2760GeV_0010,                                graphCombRAAStatPbPb2760GeVLHC11h_0010, graphCombRAASysPbPb2760GeVLHC11h_0010,
                                                                   xPtLimitsEta, 14, 0, 2, 6, kFALSE);
 
-          graphCombRAATot2760GeVLHC11h_2050 = CombinePtPointsRAA(graphPCMEtaRAAStatPbPb2760GeV_2050,     graphPCMEtaRAASysPbPb2760GeV_2050,
+          graphCombRAATot2760GeVLHC11hTOT_2050 = CombinePtPointsRAA(graphPCMEtaRAAStatPbPb2760GeV_2050,     graphPCMEtaRAASysPbPb2760GeV_2050,
                                                                   graphEMCalEtaRAAStatPbPb2760GeV_2050, graphEMCalEtaRAASysPbPb2760GeV_2050,                                graphCombRAAStatPbPb2760GeVLHC11h_2050, graphCombRAASysPbPb2760GeVLHC11h_2050,
                                                                   xPtLimitsEta, 14, 0, 2, 6, kFALSE);
 
       }
-    }
 
 
         if(PaperPi0 && meson.CompareTo("Pi0")==0){
@@ -4323,7 +4737,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombRAAStatPbPb2760GeVLHC11hEta_2050);
         graphCombRAAStatPbPb2760GeVLHC11hEta_2050->Draw("p,same,e0");
 
-
         TLegend* legendRAAcomboPi0andEta2050 = new TLegend(0.5,0.83,0.9,0.93);
         legendRAAcomboPi0andEta2050->SetFillColor(0);
         legendRAAcomboPi0andEta2050->SetLineColor(0);
@@ -4353,11 +4766,23 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         histo2DRAAcombo->GetXaxis()->SetRangeUser(0.,21);
         histo2DRAAcombo->Draw("copy");
 
-        DrawGammaSetMarkerTGraphAsym(graphCombRAASysPbPb2760GeVLHC11h_0010, markerStyle0010, markerSizeComb, colorCombo0010 , colorCombo0010, 2, kTRUE);
-        graphCombRAASysPbPb2760GeVLHC11h_0010->Draw("E2same");
-        DrawGammaSetMarkerTGraphAsym(graphCombRAAStatPbPb2760GeVLHC11h_0010, markerStyle0010, markerSizeComb, colorCombo0010 , colorCombo0010);
-        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombRAAStatPbPb2760GeVLHC11h_0010);
-        graphCombRAAStatPbPb2760GeVLHC11h_0010->Draw("p,same,e0");
+//         DrawGammaSetMarkerTGraphAsym(graphCombRAASysPbPb2760GeVLHC11h_0010, markerStyle0010, markerSizeComb, colorCombo0010 , colorCombo0010, 2, kTRUE);
+//         graphCombRAASysPbPb2760GeVLHC11h_0010->Draw("E2same");
+//         DrawGammaSetMarkerTGraphAsym(graphCombRAAStatPbPb2760GeVLHC11h_0010, markerStyle0010, markerSizeComb, colorCombo0010 , colorCombo0010);
+//         if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombRAAStatPbPb2760GeVLHC11h_0010);
+//         graphCombRAAStatPbPb2760GeVLHC11h_0010->Draw("p,same,e0");
+//
+//         DrawGammaSetMarkerTGraphAsym(graphCombRAASysPbPb2760GeVLHC11h_2050, markerStyle2050, markerSizeComb, colorCombo2050, colorCombo2050, 2, kTRUE);
+//         graphCombRAASysPbPb2760GeVLHC11h_2050->Draw("E2same");
+//         DrawGammaSetMarkerTGraphAsym(graphCombRAAStatPbPb2760GeVLHC11h_2050, markerStyle2050, markerSizeComb, colorCombo2050 , colorCombo2050);
+//         if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombRAAStatPbPb2760GeVLHC11h_2050);
+//         graphCombRAAStatPbPb2760GeVLHC11h_2050->Draw("p,same,e0");
+
+        DrawGammaSetMarkerTGraphAsym(graphCombRAASys2760GeVLHC11h_0010, markerStyle0010, markerSizeComb, colorCombo0010 , colorCombo0010, 2, kTRUE);
+        graphCombRAASys2760GeVLHC11h_0010->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphCombRAAStat2760GeVLHC11h_0010, markerStyle0010, markerSizeComb, colorCombo0010 , colorCombo0010);
+        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombRAAStat2760GeVLHC11h_0010);
+        graphCombRAAStat2760GeVLHC11h_0010->Draw("p,same,e0");
 
         DrawGammaSetMarkerTGraphAsym(graphCombRAASysPbPb2760GeVLHC11h_2050, markerStyle2050, markerSizeComb, colorCombo2050, colorCombo2050, 2, kTRUE);
         graphCombRAASysPbPb2760GeVLHC11h_2050->Draw("E2same");
@@ -4374,7 +4799,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         legendRAAcombo2->SetMargin(0.17);
         legendRAAcombo2->SetTextSize(FontSize);
         legendRAAcombo2->SetHeader(collisionSystem2760GeV.Data());
-        legendRAAcombo2->AddEntry(graphCombRAASysPbPb2760GeVLHC11h_0010,Form("%s ",cent0010.Data()),"fp");
+        legendRAAcombo2->AddEntry(graphCombRAASys2760GeVLHC11h_0010,Form("%s ",cent0010.Data()),"fp");
         legendRAAcombo2->AddEntry(graphCombRAASysPbPb2760GeVLHC11h_2050,Form("%s ",cent2050.Data()),"fp");
         legendRAAcombo2->Draw();
 
@@ -5116,45 +5541,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         //************************************   Combination of EtatoPi0    ***************************************************//
         cout << "\n\n\n *************************    Combination of Eta to Pi0 ratio    ************************* \n\n\n" << endl;
 
-        if(bWCorrection.CompareTo("X")==0 ){
-
-
-
-        }
-
-        TLatex *labelEtaToPi0Energy = new TLatex(0.12,0.87,collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelEtaToPi0Energy,0.04,4);
-//      labelEtaToPi0Energy->SetTextFont(63);
-
-        TLatex *labelPreliminaryEtaToPi0 = new TLatex(0.65,0.15,"ALICE Preliminary");
-        SetStyleTLatex( labelPreliminaryEtaToPi0, 0.04,4);
-
-        //===================== loading pp inputs =============================
-        TFile* fEtatoPi0input = new TFile("EtaToPi0InputsForCombination.root");
-        TH1D *histoPCMEtaToPi0RatioPbPb0010 = (TH1D*)fEtatoPi0input->Get("histoPCMEtaToPi0RatioPbPb0010");
-        TH1D *histoPCMEtaToPi0RatioPbPb2050 = (TH1D*)fEtatoPi0input->Get("histoPCMEtaToPi0RatioPbPb2050");
-        TH1D *histoPCMEtaToPi0RatiopPb = (TH1D*)fEtatoPi0input->Get("histoPCMEtaToPi0RatiopPb");
-        TGraphAsymmErrors *graphPCMEtaToPi0RatioSysErrpPb = (TGraphAsymmErrors*)fEtatoPi0input->Get("graphPCMEtaToPi0RatioSysErrpPb");
-
-        TGraphAsymmErrors *graphCombEtaToPi0RatioSysErrpp7TeV = (TGraphAsymmErrors*)fEtatoPi0input->Get("graphCombEtaToPi0RatioSysErrpp7TeV");
-        DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0RatioSysErrpp7TeV, markerStylepp, markerSizepp, kBlack, kBlack, 1, kTRUE);
-        TGraphAsymmErrors *graphCombEtaToPi0Ratiopp7TeVNoXErrors = (TGraphAsymmErrors*)fEtatoPi0input->Get("graphCombEtaToPi0Ratiopp7TeVNoXErrors");
-        DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Ratiopp7TeVNoXErrors, markerStylepp, markerSizepp, kBlack, kBlack, 1, kTRUE);
-
-        TH1D *cocktailEtaToPi0Ratio7TeVRebined = (TH1D*)fEtatoPi0input->Get("cocktailEtaToPi0Ratio7TeVRebined");
-        TH1D *cocktailEtaToPi0Ratio_MtScaledRebinned = (TH1D*)fEtatoPi0input->Get("cocktailEtaToPi0Ratio_MtScaledRebinned");
-        TH1D *cocktailEtaToPi0Ratio_K0ScaledRebinned = (TH1D*)fEtatoPi0input->Get("cocktailEtaToPi0Ratio_K0ScaledRebinned");
-
-        cocktailEtaToPi0Ratio7TeVRebined->GetXaxis()->SetRangeUser(0.1,16.);
-        cocktailEtaToPi0Ratio_K0ScaledRebinned->GetXaxis()->SetRangeUser(0.1,16.);
-        cocktailEtaToPi0Ratio_MtScaledRebinned->GetXaxis()->SetRangeUser(0.1,16.);
-        cocktailEtaToPi0Ratio7TeVRebined->SetLineStyle(5);
-        cocktailEtaToPi0Ratio7TeVRebined->SetLineWidth(2.5);
-        cocktailEtaToPi0Ratio_K0ScaledRebinned->SetLineStyle(6);
-        cocktailEtaToPi0Ratio_K0ScaledRebinned->SetLineWidth(2.5);
-        cocktailEtaToPi0Ratio_MtScaledRebinned->SetLineStyle(7);
-        cocktailEtaToPi0Ratio_MtScaledRebinned->SetLineWidth(2.5);
-        //======================================================================
 
         TGraphAsymmErrors* graphCombEtatoPi0Stat2760GeVLHC11h_0010 = NULL;
         TGraphAsymmErrors* graphCombEtatoPi0Sys2760GeVLHC11h_0010 = NULL;
@@ -5340,7 +5726,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
             legendRatioALICE3A->SetTextSize(0.04);
             legendRatioALICE3A->SetHeader("Phys.Rev. C89, 064903 (2014)");
             legendRatioALICE3A->AddEntry(histoEPOSpred_0010,"EPOS 0#font[122]{-}10%", "l");
-            legendRatioALICE3A->AddEntry(histoEPOSpred_2050,"EPOS 20-50%", "l");
+            legendRatioALICE3A->AddEntry(histoEPOSpred_2050,"EPOS0-50%", "l");
 //          legendRatioALICE3A->Draw();
             TLegend* legendRatioALICE3B = new TLegend(0.54,0.66,0.92,0.78);
             legendRatioALICE3B->SetFillColor(0);
@@ -5608,323 +5994,322 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
 
 
-//     TCanvas* canvasTheoryCracowRatio = new TCanvas("canvasTheoryCracowRatio","",200,10,1200,1100);  //200,10,1350,900);  // gives the page size
-//     DrawGammaCanvasSettings( canvasTheoryCracowRatio, 0.09, 0.03, 0.035, 0.1);
-//     canvasTheoryCracowRatio->SetLogx();
-//
-//       TH2F * histo2DTheoryCracowRatio = new TH2F("histo2DTheoryCracowRatio","histo2DTheoryCracowRatio",11000,0.09,5.,1000,0.01,2.);
-//       SetStyleHistoTH2ForGraphs(histo2DTheoryCracowRatio, "#it{p}_{T} (GeV/#it{c})","Particle ratio",0.035,0.04, 0.035,0.04, 1.2,1.);
-//       histo2DTheoryCracowRatio->Draw("copy");
-//       histo2DTheoryCracowRatio->GetYaxis()->SetRangeUser(0.,1.);
-//
-//         DrawGammaSetMarkerTGraphAsym(TheoryCracowChargedKaonToPionLowPt_0010, 0, 0, kMagenta+1,kMagenta+1, 5, kTRUE, kMagenta+1);
-//         TheoryCracowChargedKaonToPionLowPt_0010->Draw("l,same");
-//
-//         DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaToPi0_0010,0, 0, kRed+1,kRed+1, 5, kTRUE, kRed+1);
-//         TheoryCracowEtaToPi0_0010->Draw("l,same");
-//
-//         DrawGammaSetMarkerTGraphAsym(TheoryCracowChargedEtaToKaonLowPt_0010, 0, 0, kViolet+1,kViolet+1, 5, kTRUE, kViolet+1);
-//         TheoryCracowChargedEtaToKaonLowPt_0010->Draw("l,same");
-//
-// //         DrawGammaSetMarkerTGraphAsym(TheoryCracowPi0ToChargedPionLowPt_0010,0, 0, kCyan+2,kCyan+2, 5, kTRUE, kCyan+2);
-// //         TheoryCracowPi0ToChargedPionLowPt_0010->Draw("l,same");
-//
-//         graphChargedRatioKaonToPionSys0010->Draw("2same");
-//         graphChargedRatioKaonToPion0010->Draw("p,same");
-//
-//         graphCombEtatoPi0Sys2760GeVLHC11h_0010->Draw("E2same");
-//         if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombEtatoPi0Stat2760GeVLHC11h_0010);
-//         graphCombEtatoPi0Stat2760GeVLHC11h_0010->Draw("p,same,e0");
-//
-//       TLegend* legRatio = new TLegend(0.2,0.77,0.35,0.93);
-//       legRatio->SetFillColor(0);
-//       legRatio->SetLineColor(0);
-//       legRatio->SetTextFont(42);
-//       legRatio->SetTextSize(FontSize);
-// //       legRatio->AddEntry(TheoryCracowPi0ToChargedPionLowPt_0010,"#pi^{0}/#pi^{#pm}","l");
-//       legRatio->AddEntry(TheoryCracowChargedEtaToKaonLowPt_0010,"#eta/K^{#pm}","l");
-//       legRatio->AddEntry(TheoryCracowChargedKaonToPionLowPt_0010,"K^{#pm}/#pi^{#pm}","l");
-//       legRatio->AddEntry(TheoryCracowEtaToPi0_0010,"#eta/#pi^{0}","l");
-//       legRatio->Draw();
-//
-//     canvasTheoryCracowRatio->SaveAs(Form("%s/CracowTheoryWithChargedRatio.%s",outputDir.Data(),suffix.Data()));
-//
-//     canvasTheoryCracowRatio->cd();
-//     histo2DTheoryCracowRatio->Draw("copy");
-//
-//         DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaToPi0_0010,0, 0, kRed+1,kRed+1, 5, kTRUE, kRed+1);
-//         TheoryCracowEtaToPi0_0010->Draw("l,same");
-//
-//         graphCombEtatoPi0Sys2760GeVLHC11h_0010->Draw("E2same");
-//         if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombEtatoPi0Stat2760GeVLHC11h_0010);
-//         graphCombEtatoPi0Stat2760GeVLHC11h_0010->Draw("p,same,e0");
-//
-//         DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaToPi0_2050,0, 0, kAzure+1,kAzure+1, 5, kTRUE, kAzure+1);
-//         TheoryCracowEtaToPi0_2050->Draw("l,same");
-//
-//         graphCombEtatoPi0Sys2760GeVLHC11h_2050->Draw("E2same");
-//         if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombEtatoPi0Stat2760GeVLHC11h_2050);
-//         graphCombEtatoPi0Stat2760GeVLHC11h_2050->Draw("p,same,e0");
-//
-//         TLegend* legEtaToPi0Ratio = new TLegend(0.2,0.77,0.35,0.93);
-//         legEtaToPi0Ratio->SetFillColor(0);
-//         legEtaToPi0Ratio->SetLineColor(0);
-//         legEtaToPi0Ratio->SetTextFont(42);
-//         legEtaToPi0Ratio->SetTextSize(FontSize);
-//         legEtaToPi0Ratio->AddEntry(graphCombEtatoPi0Sys2760GeVLHC11h_0010,"#eta/#pi^{0} - 0#font[122]{-}10%","pf");
-//         legEtaToPi0Ratio->AddEntry(graphCombEtatoPi0Sys2760GeVLHC11h_2050,"#eta/#pi^{0} - 20-50%","pf");
-//         legEtaToPi0Ratio->AddEntry(TheoryCracowEtaToPi0_0010,"model #eta/#pi^{0} - 0#font[122]{-}10%","l");
-//         legEtaToPi0Ratio->AddEntry(TheoryCracowEtaToPi0_2050,"model #eta/#pi^{0} - 20-50%","l");
-//         legEtaToPi0Ratio->Draw();
-//
-//
-//     canvasTheoryCracowRatio->SaveAs(Form("%s/CracowTheoryEtaToPi0.%s",outputDir.Data(),suffix.Data()));
-//
-//     canvasTheoryCracowRatio->cd();
-//     histo2DTheoryCracowRatio->Draw("copy");
-//     histo2DTheoryCracowRatio->GetYaxis()->SetRangeUser(0.8,1.5);
-//
-//       DrawGammaSetMarkerTGraphAsym(TheoryCracowPi0ToChargedPionLowPt_0010,0, 0, kCyan+2,kCyan+2, 5, kTRUE, kCyan+2);
-//       TheoryCracowPi0ToChargedPionLowPt_0010->Draw("l,same");
-//       DrawGammaLines(0.09, 5. , 1., 1.,1.,kGray);
-//
-//       TLegend* legRatioPi = new TLegend(0.8,0.77,0.95,0.93);
-//       legRatioPi->SetFillColor(0);
-//       legRatioPi->SetLineColor(0);
-//       legRatioPi->SetTextFont(42);
-//       legRatioPi->SetTextSize(FontSize);
-//       legRatioPi->AddEntry(TheoryCracowPi0ToChargedPionLowPt_0010,"#pi^{0}/#pi^{#pm}","l");
-//       legRatioPi->Draw();
-//
-//     canvasTheoryCracowRatio->SaveAs(Form("%s/CracowTheoryPi0ToChargedPions.%s",outputDir.Data(),suffix.Data()));
+    TCanvas* canvasTheoryCracowRatio = new TCanvas("canvasTheoryCracowRatio","",200,10,1200,1100);  //200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasTheoryCracowRatio, 0.09, 0.03, 0.035, 0.1);
+    canvasTheoryCracowRatio->SetLogx();
+
+      TH2F * histo2DTheoryCracowRatio = new TH2F("histo2DTheoryCracowRatio","histo2DTheoryCracowRatio",11000,0.09,5.,1000,0.01,2.);
+      SetStyleHistoTH2ForGraphs(histo2DTheoryCracowRatio, "#it{p}_{T} (GeV/#it{c})","Particle ratio",0.035,0.04, 0.035,0.04, 1.2,1.);
+      histo2DTheoryCracowRatio->Draw("copy");
+      histo2DTheoryCracowRatio->GetYaxis()->SetRangeUser(0.,1.);
+
+        DrawGammaSetMarkerTGraphAsym(TheoryCracowChargedKaonToPionLowPt_0010, 0, 0, kMagenta+1,kMagenta+1, 5, kTRUE, kMagenta+1);
+        TheoryCracowChargedKaonToPionLowPt_0010->Draw("l,same");
+
+        DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaToPi0_0010,0, 0, kRed+1,kRed+1, 5, kTRUE, kRed+1);
+        TheoryCracowEtaToPi0_0010->Draw("l,same");
+
+        DrawGammaSetMarkerTGraphAsym(TheoryCracowChargedEtaToKaonLowPt_0010, 0, 0, kViolet+1,kViolet+1, 5, kTRUE, kViolet+1);
+        TheoryCracowChargedEtaToKaonLowPt_0010->Draw("l,same");
+
+//         DrawGammaSetMarkerTGraphAsym(TheoryCracowPi0ToChargedPionLowPt_0010,0, 0, kCyan+2,kCyan+2, 5, kTRUE, kCyan+2);
+//         TheoryCracowPi0ToChargedPionLowPt_0010->Draw("l,same");
+
+        graphChargedRatioKaonToPionSys0010->Draw("2same");
+        graphChargedRatioKaonToPion0010->Draw("p,same");
+
+        graphCombEtatoPi0Sys2760GeVLHC11h_0010->Draw("E2same");
+        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombEtatoPi0Stat2760GeVLHC11h_0010);
+        graphCombEtatoPi0Stat2760GeVLHC11h_0010->Draw("p,same,e0");
+
+      TLegend* legRatio = new TLegend(0.2,0.77,0.35,0.93);
+      legRatio->SetFillColor(0);
+      legRatio->SetLineColor(0);
+      legRatio->SetTextFont(42);
+      legRatio->SetTextSize(FontSize);
+//       legRatio->AddEntry(TheoryCracowPi0ToChargedPionLowPt_0010,"#pi^{0}/#pi^{#pm}","l");
+      legRatio->AddEntry(TheoryCracowChargedEtaToKaonLowPt_0010,"#eta/K^{#pm}","l");
+      legRatio->AddEntry(TheoryCracowChargedKaonToPionLowPt_0010,"K^{#pm}/#pi^{#pm}","l");
+      legRatio->AddEntry(TheoryCracowEtaToPi0_0010,"#eta/#pi^{0}","l");
+      legRatio->Draw();
+
+    canvasTheoryCracowRatio->SaveAs(Form("%s/CracowTheoryWithChargedRatio.%s",outputDir.Data(),suffix.Data()));
+
+    canvasTheoryCracowRatio->cd();
+    histo2DTheoryCracowRatio->Draw("copy");
+
+        DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaToPi0_0010,0, 0, kRed+1,kRed+1, 5, kTRUE, kRed+1);
+        TheoryCracowEtaToPi0_0010->Draw("l,same");
+
+        graphCombEtatoPi0Sys2760GeVLHC11h_0010->Draw("E2same");
+        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombEtatoPi0Stat2760GeVLHC11h_0010);
+        graphCombEtatoPi0Stat2760GeVLHC11h_0010->Draw("p,same,e0");
+
+        DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaToPi0_2050,0, 0, kAzure+1,kAzure+1, 5, kTRUE, kAzure+1);
+        TheoryCracowEtaToPi0_2050->Draw("l,same");
+
+        graphCombEtatoPi0Sys2760GeVLHC11h_2050->Draw("E2same");
+        if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombEtatoPi0Stat2760GeVLHC11h_2050);
+        graphCombEtatoPi0Stat2760GeVLHC11h_2050->Draw("p,same,e0");
+
+        TLegend* legEtaToPi0Ratio = new TLegend(0.2,0.77,0.35,0.93);
+        legEtaToPi0Ratio->SetFillColor(0);
+        legEtaToPi0Ratio->SetLineColor(0);
+        legEtaToPi0Ratio->SetTextFont(42);
+        legEtaToPi0Ratio->SetTextSize(FontSize);
+        legEtaToPi0Ratio->AddEntry(graphCombEtatoPi0Sys2760GeVLHC11h_0010,"#eta/#pi^{0} - 0#font[122]{-}10%","pf");
+        legEtaToPi0Ratio->AddEntry(graphCombEtatoPi0Sys2760GeVLHC11h_2050,"#eta/#pi^{0} - 20-50%","pf");
+        legEtaToPi0Ratio->AddEntry(TheoryCracowEtaToPi0_0010,"model #eta/#pi^{0} - 0#font[122]{-}10%","l");
+        legEtaToPi0Ratio->AddEntry(TheoryCracowEtaToPi0_2050,"model #eta/#pi^{0} - 20-50%","l");
+        legEtaToPi0Ratio->Draw();
 
 
-//     Double_t arrayBoundariesX1_MassWidth[3];
-//     Double_t arrayBoundariesY1_MassWidth[3];
-//     Double_t relativeMarginsX_MassWidth[3];
-//     Double_t relativeMarginsY_MassWidth[3];
-//     textSizeLabelsPixel = 90;
-//     ReturnCorrectValuesForCanvasScaling(2400,1600, 2, 2,0.25, 0.2, 0.003,0.2,arrayBoundariesX1_MassWidth,arrayBoundariesY1_MassWidth,relativeMarginsX_MassWidth,relativeMarginsY_MassWidth);
-//
-//     TCanvas * canvas4PartMassWidth = new TCanvas("canvas4PartMassWidth","",0,0,2400,1600);  // gives the page size
-// //     DrawGammaCanvasSettings( canvas4PartMassWidth, 0.13, 0.0, 0.02, 0.1);
-//     canvas4PartMassWidth->cd();
-//
-//     TPad* pad4PartMassWidth1 = new TPad("pad4PartMassWidth1", "", arrayBoundariesX1_4[0], arrayBoundariesY1_4[1], arrayBoundariesX1_4[1], arrayBoundariesY1_4[0],-1, -1, -2);
-//     DrawGammaPadSettings( pad4PartMassWidth1, relativeMarginsX[0], relativeMarginsX[1], relativeMarginsY[0], relativeMarginsY[1]);
-//     pad4PartMassWidth1->Draw();
-//
-//     TPad* pad4PartMassWidth2 = new TPad("pad4PartMassWidth2", "", arrayBoundariesX1_4[0], arrayBoundariesY1_4[2], arrayBoundariesX1_4[1], arrayBoundariesY1_4[1],-1, -1, -2);
-//     DrawGammaPadSettings( pad4PartMassWidth2, relativeMarginsX[0], relativeMarginsX[1], relativeMarginsY[1], relativeMarginsY[2]);
-//     pad4PartMassWidth2->Draw();
-//
-//     TPad* pad4PartMassWidth3 = new TPad("pad4PartMassWidth3", "", arrayBoundariesX1_4[1], arrayBoundariesY1_4[1], arrayBoundariesX1_4[2], arrayBoundariesY1_4[0],-1, -1, -2);
-//     DrawGammaPadSettings( pad4PartMassWidth3, relativeMarginsX[1], relativeMarginsX[1], relativeMarginsY[0], relativeMarginsY[1]);
-//     pad4PartMassWidth3->Draw();
-//
-//     TPad* pad4PartMassWidth4 = new TPad("pad4PartMassWidth4", "", arrayBoundariesX1_4[1], arrayBoundariesY1_4[2], arrayBoundariesX1_4[2], arrayBoundariesY1_4[1],-1, -1, -2);
-//     DrawGammaPadSettings( pad4PartMassWidth4, relativeMarginsX[1], relativeMarginsX[1], relativeMarginsY[1], relativeMarginsY[2]);
-//     pad4PartMassWidth4->Draw();
-//
-//
-//
-//     Int_t textSizeLabelsPixelMass = 50;
-//     Double_t marginMass = 0.13*2400;
-//     Double_t textsizeLabelsMass = 0;
-//     Double_t textsizeFacMass = 0;
-//     Double_t textsizeLabelsWidth = 0;
-//     Double_t textsizeFacWidth = 0;
-//
-//     if (pad4PartMassWidth1->XtoPixel(pad4PartMassWidth1->GetX2()) < pad4PartMassWidth1->YtoPixel(pad4PartMassWidth1->GetY1())){
-//         textsizeLabelsWidth = (Double_t)textSizeLabelsPixelMass/pad4PartMassWidth1->XtoPixel(pad4PartMassWidth1->GetX2()) ;
-//         textsizeFacWidth = (Double_t)1./pad4PartMassWidth1->XtoPixel(pad4PartMassWidth1->GetX2()) ;
-//     } else {
-//         textsizeLabelsWidth = (Double_t)textSizeLabelsPixelMass/pad4PartMassWidth1->YtoPixel(pad4PartMassWidth1->GetY1());
-//         textsizeFacWidth = (Double_t)1./pad4PartMassWidth1->YtoPixel(pad4PartMassWidth1->GetY1());
-//     }
-//     if (pad4PartMassWidth2->XtoPixel(pad4PartMassWidth2->GetX2()) < pad4PartMassWidth2->YtoPixel(pad4PartMassWidth2->GetY1())){
-//         textsizeLabelsMass = (Double_t)textSizeLabelsPixelMass/pad4PartMassWidth2->XtoPixel(pad4PartMassWidth2->GetX2()) ;
-//         textsizeFacMass = (Double_t)1./pad4PartMassWidth2->XtoPixel(pad4PartMassWidth2->GetX2()) ;
-//     } else {
-//         textsizeLabelsMass = (Double_t)textSizeLabelsPixelMass/pad4PartMassWidth2->YtoPixel(pad4PartMassWidth2->GetY1());
-//         textsizeFacMass = (Double_t)1./pad4PartMassWidth2->YtoPixel(pad4PartMassWidth2->GetY1());
-//     }
-//
-//     cout << textsizeLabelsMass << endl;
-//
-//     TPad* padFWHMLegend1 = new TPad("padFWHMLegend1", "", 0.07, 0.815, 0.35, 0.93,-1, -1, -2);
-//     DrawGammaPadSettings( padFWHMLegend1, 0., 0., 0., 0.);
-//     padFWHMLegend1->Draw();
-//
-//
-//     TH2D *histo2DPi0FWHM;
-//     histo2DPi0FWHM = new TH2D("histo2DPi0FWHM", "histo2DPi0FWHM", 20,0.35,20. ,1000.,-30,40);
-//     SetStyleHistoTH2ForGraphs(histo2DPi0FWHM, "#it{p}_{T} (GeV/#it{c})","peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth,textsizeLabelsWidth, 0.85*textsizeLabelsWidth,textsizeLabelsWidth, 1,0.3/(textsizeFacWidth*marginMass), 515, 504);
-//     histo2DPi0FWHM->GetYaxis()->SetRangeUser(-1.,18);
-//     histo2DPi0FWHM->GetYaxis()->SetLabelOffset(0.01);
-//     histo2DPi0FWHM->GetYaxis()->SetLabelFont(42);
-//     histo2DPi0FWHM->GetXaxis()->SetLabelFont(42);
-//
-//     TH2D *histo2DPi0Mass;
-//     histo2DPi0Mass = new TH2D("histo2DPi0Mass", "histo2DPi0Mass", 20,0.35,20. ,1000.,125.,150);
-//     SetStyleHistoTH2ForGraphs(histo2DPi0Mass, "#it{p}_{T} (GeV/#it{c})","peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass,textsizeLabelsMass, 0.85*textsizeLabelsMass,textsizeLabelsMass, 0.9,0.3/(textsizeFacMass*marginMass), 515, 510);
-//     histo2DPi0Mass->GetYaxis()->SetRangeUser(128.,143.5);
-//     histo2DPi0Mass->GetXaxis()->SetLabelOffset(-0.02);
-//     histo2DPi0Mass->GetYaxis()->SetLabelOffset(0.01);
-//     histo2DPi0Mass->GetYaxis()->SetLabelFont(42);
-//     histo2DPi0Mass->GetXaxis()->SetLabelFont(42);
-//
-//     pad4PartMassWidth1->cd();
-//     pad4PartMassWidth1->SetLogx();
-//     histo2DPi0FWHM->DrawCopy();
-//
-// //     DrawGammaSetMarker(histoPHOSWidthDataPP, markerStylePHOS, markerSizeMass, colorPHOSMass, colorPHOSMass);
-// //     histoPHOSWidthDataPP->DrawCopy("same,e0,p");
-// //     DrawGammaSetMarker(histoPHOSWidthMCPP, markerStylePHOSMC, markerSizeMass, colorPHOSMCMass , colorPHOSMCMass);
-// //     histoPHOSWidthMCPP->DrawCopy("same,e0,p");
-// //
-// //     DrawGammaSetMarker(histoPCMWidthDataPP, markerStyleConv, markerSizeMass, colorConv, colorConv);
-// //     histoPCMWidthDataPP->DrawCopy("same,e0,p");
-// //     DrawGammaSetMarker(histoPCMWidthMCPP, markerStyleConvMC, markerSizeMass, colorConvMC, colorConvMC);
-// //     histoPCMWidthMCPP->DrawCopy("same,e0,p");
-// //
-// //     DrawGammaSetMarker(histoPHOSWidthData0010, markerStylePHOS, markerSizeMass, colorPHOSMass, colorPHOSMass);
-// //     DrawGammaSetMarker(histoPHOSWidthMC0010, markerStylePHOSMC, markerSizeMass, colorPHOSMCMass , colorPHOSMCMass);
-// //
-// //     TLatex *labelMassPi0PP = new TLatex(0.2,0.88,collisionSystemPP.Data());
-// //     SetStyleTLatex( labelMassPi0PP, 0.85*textsizeLabelsWidth,4);
-// //     labelMassPi0PP->Draw();
-// //     TLatex *labelLegendAMass = new TLatex(0.92,0.88,"a)");
-// //     SetStyleTLatex( labelLegendAMass,0.85*textsizeLabelsWidth,4);
-// //     labelLegendAMass->Draw();
-// //
-// //     //********************************** Defintion of the Legend **************************************************
-// //     Double_t columnsLegendFWHM[4]   = {0.,0.2,0.37,0.55};
-// //     Double_t rowsLegendFWHM[3]      = {0.66,0.33,0.0};
-// //     //******************* Text sizes *******************
-// //     Size_t textSizeLeftColumnFWHM   = 0.301;
-// //     Size_t textSizeTopRowFWHM   = 0.301;
-// //     Size_t textSizeSecondRowFWHM    = 0.301;
-// //     //******************* Offsets ***********************
-// //     Double_t offsetMarkerXFWHM  = 0.07;
-// //     Double_t offsetMarkerYFWHM  = 0.07;
-// //     //****************** Scale factors ******************
-// //     Double_t scaleMarkerFWHM        = 1.;
-// //
-// //     padFWHMLegend1->cd();
-// //     //****************** first Column **************************************************
-// //     TLatex *textFWHMCTS = new TLatex(columnsLegendFWHM[0],rowsLegendFWHM[1],"PCM");
-// //     SetStyleTLatex( textFWHMCTS, textSizeLeftColumnFWHM,4);
-// //     textFWHMCTS->Draw();
-// //     TLatex *textFWHMPHOS = new TLatex(columnsLegendFWHM[0],rowsLegendFWHM[2],"PHOS");
-// //     SetStyleTLatex( textFWHMPHOS, textSizeLeftColumnFWHM,4);
-// //     textFWHMPHOS->Draw();
-// //
-// //     //****************** second Column *************************************************
-// //     TLatex *textFWHMData2 = new TLatex(columnsLegendFWHM[1],rowsLegendFWHM[0] ,"Data");
-// //     SetStyleTLatex( textFWHMData2, textSizeTopRowFWHM ,4);
-// //     textFWHMData2->Draw();
-// //     TLatex *textFWHMMC2 = new TLatex(columnsLegendFWHM[2] ,rowsLegendFWHM[0],"MC");
-// //     SetStyleTLatex( textFWHMMC2, textSizeTopRowFWHM,4);
-// //     textFWHMMC2->Draw();
-// //
-// //     TMarker* markerCTSPi0FWHM = CreateMarkerFromHisto(histoPCMWidthDataPP,columnsLegendFWHM[1]+ offsetMarkerXFWHM ,rowsLegendFWHM[1]+ offsetMarkerYFWHM ,scaleMarkerFWHM);
-// //     markerCTSPi0FWHM->DrawMarker(columnsLegendFWHM[1]+ offsetMarkerXFWHM ,rowsLegendFWHM[1]+ offsetMarkerYFWHM);
-// //     TMarker* markerPHOSPi0FWHM = CreateMarkerFromHisto(histoPHOSWidthData0010,columnsLegendFWHM[1]+ offsetMarkerXFWHM ,rowsLegendFWHM[2]+ offsetMarkerYFWHM ,scaleMarkerFWHM);
-// //     markerPHOSPi0FWHM->DrawMarker(columnsLegendFWHM[1]+ offsetMarkerXFWHM ,rowsLegendFWHM[2]+ offsetMarkerYFWHM);
-// //
-// //     TMarker* markerCTSPi0FWHMMC = CreateMarkerFromHisto(histoPCMWidthMCPP,columnsLegendFWHM[2]+ offsetMarkerXFWHM ,rowsLegendFWHM[1]+ offsetMarkerYFWHM ,scaleMarkerFWHM);
-// //     markerCTSPi0FWHMMC->DrawMarker(columnsLegendFWHM[2]+ offsetMarkerXFWHM ,rowsLegendFWHM[1]+ offsetMarkerYFWHM);
-// //     TMarker* markerPHOSPi0FWHMMC = CreateMarkerFromHisto(histoPHOSWidthMC0010,columnsLegendFWHM[2]+ offsetMarkerXFWHM ,rowsLegendFWHM[2]+ offsetMarkerYFWHM ,scaleMarkerFWHM);
-// //     markerPHOSPi0FWHMMC->DrawMarker(columnsLegendFWHM[2]+ offsetMarkerXFWHM ,rowsLegendFWHM[2]+ offsetMarkerYFWHM);
-// //
-// //     TLatex *textWidthConv2 = new TLatex(columnsLegendFWHM[3],rowsLegendFWHM[1] ,"FWHM/2.35");
-// //     SetStyleTLatex( textWidthConv2, textSizeSecondRowFWHM,4);
-// //     textWidthConv2->Draw();
-// //     TLatex *textWidthPHOS2 = new TLatex(columnsLegendFWHM[3] ,rowsLegendFWHM[2],"#sigma");
-// //     SetStyleTLatex( textWidthPHOS2, textSizeSecondRowFWHM,4);
-// //     textWidthPHOS2->Draw();
-//
-//
-//     pad4PartMassWidth1->cd();
-//     pad4PartMassWidth1->SetLogx();
-//     histo2DPi0FWHM->DrawCopy();
-//
-//     DrawGammaSetMarker(histoPCMPi0FWHMMeVPbPb2760GeV_0010, markerStyleConv, markerSizeMass, colorConv, colorConv);
-//     histoPCMPi0FWHMMeVPbPb2760GeV_0010->DrawCopy("same,e0,p");
-//     DrawGammaSetMarker(histoPCMPi0TrueFWHMMeVPbPb2760GeV_0010, markerStyleConvMC, markerSizeMass, colorConvMC, colorConvMC);
-//     histoPCMPi0TrueFWHMMeVPbPb2760GeV_0010->DrawCopy("same,e0,p");
-//
-//     TLatex *labelMassPi0PbPb0005 = new TLatex(0.05,0.88,collisionSystemPbPb0010.Data());
-//     SetStyleTLatex( labelMassPi0PbPb0005, 0.85*textsizeLabelsWidth,4);
-//     labelMassPi0PbPb0005->Draw();
-//     TLatex *labelLegendBMass = new TLatex(0.89,0.88,"c)");
-//     SetStyleTLatex( labelLegendBMass, 0.85*textsizeLabelsWidth,4);
-//     labelLegendBMass->Draw();
-//
-//     pad4PartMassWidth1->Update();
-//     pad4PartMassWidth2->cd();
-//     pad4PartMassWidth2->SetLogx();
-//     histo2DPi0Mass->DrawCopy();
-//
-//     DrawGammaSetMarker(histoPCMPi0MassPbPb2760GeV_0010 , markerStyleConv, markerSizeMass, colorConv, colorConv);
-//     histoPCMPi0MassPbPb2760GeV_0010->DrawCopy("same,e0,p");
-//     DrawGammaSetMarker(histoPCMPi0TrueMassPbPb2760GeV_0010 , markerStyleConvMC , markerSizeMass, colorConvMC, colorConvMC);
-//     histoPCMPi0TrueMassPbPb2760GeV_0010->DrawCopy("same,e0,p");
-//
-//     DrawGammaLines(0.35, 20. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,1.,colorConv);
-//     TLatex *labelLegendFMass = new TLatex(0.89,0.9,"f)");
-//     SetStyleTLatex( labelLegendFMass, 0.85*textsizeLabelsMass,4);
-//     labelLegendFMass->Draw();
-//
-//     pad4PartMassWidth2->Update();
-//
-//     pad4PartMassWidth3->cd();
-//     pad4PartMassWidth3->SetLogx();
-//     histo2DPi0FWHM->DrawCopy();
-//
-//     DrawGammaSetMarker(histoPCMEtaFWHMMeVPbPb2760GeV_0010, markerStyleConv, markerSizeMass, colorConv, colorConv);
-//     histoPCMEtaFWHMMeVPbPb2760GeV_0010->DrawCopy("same,e0,p");
-//     DrawGammaSetMarker(histoPCMEtaTrueFWHMMeVPbPb2760GeV_0010, markerStyleConvMC, markerSizeMass, colorConvMC, colorConvMC);
-//     histoPCMEtaTrueFWHMMeVPbPb2760GeV_0010->DrawCopy("same,e0,p");
-//
-//     TLatex *labelMassPi0PbPb6080 = new TLatex(0.05,0.88,collisionSystemCent6080.Data());
-//     SetStyleTLatex( labelMassPi0PbPb6080, 0.85*textsizeLabelsWidth,4);
-//     labelMassPi0PbPb6080->Draw();
-//     TLatex *labelLegendCMass = new TLatex(0.91,0.88,"b)");
-//     SetStyleTLatex( labelLegendCMass, 0.85*textsizeLabelsWidth,4);
-//     labelLegendCMass->Draw();
-//
-//     pad4PartMassWidth3->Update();
-//     pad4PartMassWidth4->cd();
-//     pad4PartMassWidth4->SetLogx();
-//     histo2DPi0Mass->DrawCopy();
-//
-//     DrawGammaSetMarker(histoPCMPi0MassPbPb2760GeV_0010 , markerStyleConv, markerSizeMass, colorConv, colorConv);
-//     histoPCMPi0MassPbPb2760GeV_0010->DrawCopy("same,e0,p");
-//     DrawGammaSetMarker(histoPCMPi0TrueMassPbPb2760GeV_0010 , markerStyleConvMC , markerSizeMass, colorConvMC, colorConvMC);
-//     histoPCMPi0TrueMassPbPb2760GeV_0010->DrawCopy("same,e0,p");
-//
-//     DrawGammaLines(0.35, 20. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,1.,colorConv);
-//     TLatex *labelLegendEMass = new TLatex(0.91,0.9,"e)");
-//     SetStyleTLatex( labelLegendEMass, 0.85*textsizeLabelsMass,4);
-//     labelLegendEMass->Draw();
-//
-//     pad4PartMassWidth4->Update();
-//
-//     canvas4PartMassWidth->Update();
-//     canvas4PartMassWidth->SaveAs(Form("%s/MassWidth_4Parted_Paper.%s",paperPlots.Data(),suffix.Data()));
-//     canvas4PartMassWidth->SaveAs(Form("%s/MassWidth_4Parted_Paper.%s",outputDir.Data(),suffix.Data()));
-//     delete pad4PartMassWidth1;
-//     delete pad4PartMassWidth2;
-//     delete pad4PartMassWidth3;
-//     delete pad4PartMassWidth4;
-//     delete canvas4PartMassWidth;
+    canvasTheoryCracowRatio->SaveAs(Form("%s/CracowTheoryEtaToPi0.%s",outputDir.Data(),suffix.Data()));
+
+    canvasTheoryCracowRatio->cd();
+    histo2DTheoryCracowRatio->Draw("copy");
+    histo2DTheoryCracowRatio->GetYaxis()->SetRangeUser(0.8,1.5);
+
+      DrawGammaSetMarkerTGraphAsym(TheoryCracowPi0ToChargedPionLowPt_0010,0, 0, kCyan+2,kCyan+2, 5, kTRUE, kCyan+2);
+      TheoryCracowPi0ToChargedPionLowPt_0010->Draw("l,same");
+      DrawGammaLines(0.09, 5. , 1., 1.,1.,kGray);
+
+      TLegend* legRatioPi = new TLegend(0.8,0.77,0.95,0.93);
+      legRatioPi->SetFillColor(0);
+      legRatioPi->SetLineColor(0);
+      legRatioPi->SetTextFont(42);
+      legRatioPi->SetTextSize(FontSize);
+      legRatioPi->AddEntry(TheoryCracowPi0ToChargedPionLowPt_0010,"#pi^{0}/#pi^{#pm}","l");
+      legRatioPi->Draw();
+
+    canvasTheoryCracowRatio->SaveAs(Form("%s/CracowTheoryPi0ToChargedPions.%s",outputDir.Data(),suffix.Data()));
 
 
-//     cout << WriteParameterToFile(fitTCMInvYield2760GeVLHC11h_0010)<< endl << endl;
-//     cout << WriteParameterToFile(fitTCMInvYield2760GeVLHC11h_2050)<< endl << endl;
+    Double_t arrayBoundariesX1_MassWidth[3];
+    Double_t arrayBoundariesY1_MassWidth[3];
+    Double_t relativeMarginsX_MassWidth[3];
+    Double_t relativeMarginsY_MassWidth[3];
+    textSizeLabelsPixel = 90;
+    ReturnCorrectValuesForCanvasScaling(2400,1600, 2, 2,0.25, 0.2, 0.003,0.2,arrayBoundariesX1_MassWidth,arrayBoundariesY1_MassWidth,relativeMarginsX_MassWidth,relativeMarginsY_MassWidth);
 
+    TCanvas * canvas4PartMassWidth = new TCanvas("canvas4PartMassWidth","",0,0,2400,1600);  // gives the page size
+//     DrawGammaCanvasSettings( canvas4PartMassWidth, 0.13, 0.0, 0.02, 0.1);
+    canvas4PartMassWidth->cd();
+
+    TPad* pad4PartMassWidth1 = new TPad("pad4PartMassWidth1", "", arrayBoundariesX1_4[0], arrayBoundariesY1_4[1], arrayBoundariesX1_4[1], arrayBoundariesY1_4[0],-1, -1, -2);
+    DrawGammaPadSettings( pad4PartMassWidth1, relativeMarginsX[0], relativeMarginsX[1], relativeMarginsY[0], relativeMarginsY[1]);
+    pad4PartMassWidth1->Draw();
+
+    TPad* pad4PartMassWidth2 = new TPad("pad4PartMassWidth2", "", arrayBoundariesX1_4[0], arrayBoundariesY1_4[2], arrayBoundariesX1_4[1], arrayBoundariesY1_4[1],-1, -1, -2);
+    DrawGammaPadSettings( pad4PartMassWidth2, relativeMarginsX[0], relativeMarginsX[1], relativeMarginsY[1], relativeMarginsY[2]);
+    pad4PartMassWidth2->Draw();
+
+    TPad* pad4PartMassWidth3 = new TPad("pad4PartMassWidth3", "", arrayBoundariesX1_4[1], arrayBoundariesY1_4[1], arrayBoundariesX1_4[2], arrayBoundariesY1_4[0],-1, -1, -2);
+    DrawGammaPadSettings( pad4PartMassWidth3, relativeMarginsX[1], relativeMarginsX[1], relativeMarginsY[0], relativeMarginsY[1]);
+    pad4PartMassWidth3->Draw();
+
+    TPad* pad4PartMassWidth4 = new TPad("pad4PartMassWidth4", "", arrayBoundariesX1_4[1], arrayBoundariesY1_4[2], arrayBoundariesX1_4[2], arrayBoundariesY1_4[1],-1, -1, -2);
+    DrawGammaPadSettings( pad4PartMassWidth4, relativeMarginsX[1], relativeMarginsX[1], relativeMarginsY[1], relativeMarginsY[2]);
+    pad4PartMassWidth4->Draw();
+
+
+
+    Int_t textSizeLabelsPixelMass = 50;
+    Double_t marginMass = 0.13*2400;
+    Double_t textsizeLabelsMass = 0;
+    Double_t textsizeFacMass = 0;
+    Double_t textsizeLabelsWidth = 0;
+    Double_t textsizeFacWidth = 0;
+
+    if (pad4PartMassWidth1->XtoPixel(pad4PartMassWidth1->GetX2()) < pad4PartMassWidth1->YtoPixel(pad4PartMassWidth1->GetY1())){
+        textsizeLabelsWidth = (Double_t)textSizeLabelsPixelMass/pad4PartMassWidth1->XtoPixel(pad4PartMassWidth1->GetX2()) ;
+        textsizeFacWidth = (Double_t)1./pad4PartMassWidth1->XtoPixel(pad4PartMassWidth1->GetX2()) ;
+    } else {
+        textsizeLabelsWidth = (Double_t)textSizeLabelsPixelMass/pad4PartMassWidth1->YtoPixel(pad4PartMassWidth1->GetY1());
+        textsizeFacWidth = (Double_t)1./pad4PartMassWidth1->YtoPixel(pad4PartMassWidth1->GetY1());
+    }
+    if (pad4PartMassWidth2->XtoPixel(pad4PartMassWidth2->GetX2()) < pad4PartMassWidth2->YtoPixel(pad4PartMassWidth2->GetY1())){
+        textsizeLabelsMass = (Double_t)textSizeLabelsPixelMass/pad4PartMassWidth2->XtoPixel(pad4PartMassWidth2->GetX2()) ;
+        textsizeFacMass = (Double_t)1./pad4PartMassWidth2->XtoPixel(pad4PartMassWidth2->GetX2()) ;
+    } else {
+        textsizeLabelsMass = (Double_t)textSizeLabelsPixelMass/pad4PartMassWidth2->YtoPixel(pad4PartMassWidth2->GetY1());
+        textsizeFacMass = (Double_t)1./pad4PartMassWidth2->YtoPixel(pad4PartMassWidth2->GetY1());
+    }
+
+    cout << textsizeLabelsMass << endl;
+
+    TPad* padFWHMLegend1 = new TPad("padFWHMLegend1", "", 0.07, 0.815, 0.35, 0.93,-1, -1, -2);
+    DrawGammaPadSettings( padFWHMLegend1, 0., 0., 0., 0.);
+    padFWHMLegend1->Draw();
+
+
+    TH2D *histo2DPi0FWHM;
+    histo2DPi0FWHM = new TH2D("histo2DPi0FWHM", "histo2DPi0FWHM", 20,0.35,20. ,1000.,-30,40);
+    SetStyleHistoTH2ForGraphs(histo2DPi0FWHM, "#it{p}_{T} (GeV/#it{c})","peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth,textsizeLabelsWidth, 0.85*textsizeLabelsWidth,textsizeLabelsWidth, 1,0.3/(textsizeFacWidth*marginMass), 515, 504);
+    histo2DPi0FWHM->GetYaxis()->SetRangeUser(-1.,18);
+    histo2DPi0FWHM->GetYaxis()->SetLabelOffset(0.01);
+    histo2DPi0FWHM->GetYaxis()->SetLabelFont(42);
+    histo2DPi0FWHM->GetXaxis()->SetLabelFont(42);
+
+    TH2D *histo2DPi0Mass;
+    histo2DPi0Mass = new TH2D("histo2DPi0Mass", "histo2DPi0Mass", 20,0.35,20. ,1000.,125.,150);
+    SetStyleHistoTH2ForGraphs(histo2DPi0Mass, "#it{p}_{T} (GeV/#it{c})","peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass,textsizeLabelsMass, 0.85*textsizeLabelsMass,textsizeLabelsMass, 0.9,0.3/(textsizeFacMass*marginMass), 515, 510);
+    histo2DPi0Mass->GetYaxis()->SetRangeUser(128.,143.5);
+    histo2DPi0Mass->GetXaxis()->SetLabelOffset(-0.02);
+    histo2DPi0Mass->GetYaxis()->SetLabelOffset(0.01);
+    histo2DPi0Mass->GetYaxis()->SetLabelFont(42);
+    histo2DPi0Mass->GetXaxis()->SetLabelFont(42);
+
+    pad4PartMassWidth1->cd();
+    pad4PartMassWidth1->SetLogx();
+    histo2DPi0FWHM->DrawCopy();
+
+//     DrawGammaSetMarker(histoPHOSWidthDataPP, markerStylePHOS, markerSizeMass, colorPHOSMass, colorPHOSMass);
+//     histoPHOSWidthDataPP->DrawCopy("same,e0,p");
+//     DrawGammaSetMarker(histoPHOSWidthMCPP, markerStylePHOSMC, markerSizeMass, colorPHOSMCMass , colorPHOSMCMass);
+//     histoPHOSWidthMCPP->DrawCopy("same,e0,p");
+//
+//     DrawGammaSetMarker(histoPCMWidthDataPP, markerStyleConv, markerSizeMass, colorConv, colorConv);
+//     histoPCMWidthDataPP->DrawCopy("same,e0,p");
+//     DrawGammaSetMarker(histoPCMWidthMCPP, markerStyleConvMC, markerSizeMass, colorConvMC, colorConvMC);
+//     histoPCMWidthMCPP->DrawCopy("same,e0,p");
+//
+//     DrawGammaSetMarker(histoPHOSWidthData0010, markerStylePHOS, markerSizeMass, colorPHOSMass, colorPHOSMass);
+//     DrawGammaSetMarker(histoPHOSWidthMC0010, markerStylePHOSMC, markerSizeMass, colorPHOSMCMass , colorPHOSMCMass);
+//
+//     TLatex *labelMassPi0PP = new TLatex(0.2,0.88,collisionSystemPP.Data());
+//     SetStyleTLatex( labelMassPi0PP, 0.85*textsizeLabelsWidth,4);
+//     labelMassPi0PP->Draw();
+//     TLatex *labelLegendAMass = new TLatex(0.92,0.88,"a)");
+//     SetStyleTLatex( labelLegendAMass,0.85*textsizeLabelsWidth,4);
+//     labelLegendAMass->Draw();
+//
+//     //********************************** Defintion of the Legend **************************************************
+//     Double_t columnsLegendFWHM[4]   = {0.,0.2,0.37,0.55};
+//     Double_t rowsLegendFWHM[3]      = {0.66,0.33,0.0};
+//     //******************* Text sizes *******************
+//     Size_t textSizeLeftColumnFWHM   = 0.301;
+//     Size_t textSizeTopRowFWHM   = 0.301;
+//     Size_t textSizeSecondRowFWHM    = 0.301;
+//     //******************* Offsets ***********************
+//     Double_t offsetMarkerXFWHM  = 0.07;
+//     Double_t offsetMarkerYFWHM  = 0.07;
+//     //****************** Scale factors ******************
+//     Double_t scaleMarkerFWHM        = 1.;
+//
+//     padFWHMLegend1->cd();
+//     //****************** first Column **************************************************
+//     TLatex *textFWHMCTS = new TLatex(columnsLegendFWHM[0],rowsLegendFWHM[1],"PCM");
+//     SetStyleTLatex( textFWHMCTS, textSizeLeftColumnFWHM,4);
+//     textFWHMCTS->Draw();
+//     TLatex *textFWHMPHOS = new TLatex(columnsLegendFWHM[0],rowsLegendFWHM[2],"PHOS");
+//     SetStyleTLatex( textFWHMPHOS, textSizeLeftColumnFWHM,4);
+//     textFWHMPHOS->Draw();
+//
+//     //****************** second Column *************************************************
+//     TLatex *textFWHMData2 = new TLatex(columnsLegendFWHM[1],rowsLegendFWHM[0] ,"Data");
+//     SetStyleTLatex( textFWHMData2, textSizeTopRowFWHM ,4);
+//     textFWHMData2->Draw();
+//     TLatex *textFWHMMC2 = new TLatex(columnsLegendFWHM[2] ,rowsLegendFWHM[0],"MC");
+//     SetStyleTLatex( textFWHMMC2, textSizeTopRowFWHM,4);
+//     textFWHMMC2->Draw();
+//
+//     TMarker* markerCTSPi0FWHM = CreateMarkerFromHisto(histoPCMWidthDataPP,columnsLegendFWHM[1]+ offsetMarkerXFWHM ,rowsLegendFWHM[1]+ offsetMarkerYFWHM ,scaleMarkerFWHM);
+//     markerCTSPi0FWHM->DrawMarker(columnsLegendFWHM[1]+ offsetMarkerXFWHM ,rowsLegendFWHM[1]+ offsetMarkerYFWHM);
+//     TMarker* markerPHOSPi0FWHM = CreateMarkerFromHisto(histoPHOSWidthData0010,columnsLegendFWHM[1]+ offsetMarkerXFWHM ,rowsLegendFWHM[2]+ offsetMarkerYFWHM ,scaleMarkerFWHM);
+//     markerPHOSPi0FWHM->DrawMarker(columnsLegendFWHM[1]+ offsetMarkerXFWHM ,rowsLegendFWHM[2]+ offsetMarkerYFWHM);
+//
+//     TMarker* markerCTSPi0FWHMMC = CreateMarkerFromHisto(histoPCMWidthMCPP,columnsLegendFWHM[2]+ offsetMarkerXFWHM ,rowsLegendFWHM[1]+ offsetMarkerYFWHM ,scaleMarkerFWHM);
+//     markerCTSPi0FWHMMC->DrawMarker(columnsLegendFWHM[2]+ offsetMarkerXFWHM ,rowsLegendFWHM[1]+ offsetMarkerYFWHM);
+//     TMarker* markerPHOSPi0FWHMMC = CreateMarkerFromHisto(histoPHOSWidthMC0010,columnsLegendFWHM[2]+ offsetMarkerXFWHM ,rowsLegendFWHM[2]+ offsetMarkerYFWHM ,scaleMarkerFWHM);
+//     markerPHOSPi0FWHMMC->DrawMarker(columnsLegendFWHM[2]+ offsetMarkerXFWHM ,rowsLegendFWHM[2]+ offsetMarkerYFWHM);
+//
+//     TLatex *textWidthConv2 = new TLatex(columnsLegendFWHM[3],rowsLegendFWHM[1] ,"FWHM/2.35");
+//     SetStyleTLatex( textWidthConv2, textSizeSecondRowFWHM,4);
+//     textWidthConv2->Draw();
+//     TLatex *textWidthPHOS2 = new TLatex(columnsLegendFWHM[3] ,rowsLegendFWHM[2],"#sigma");
+//     SetStyleTLatex( textWidthPHOS2, textSizeSecondRowFWHM,4);
+//     textWidthPHOS2->Draw();
+
+
+    pad4PartMassWidth1->cd();
+    pad4PartMassWidth1->SetLogx();
+    histo2DPi0FWHM->DrawCopy();
+
+    DrawGammaSetMarker(histoPCMPi0FWHMMeVPbPb2760GeV_0010, markerStyleConv, markerSizeMass, colorConv, colorConv);
+    histoPCMPi0FWHMMeVPbPb2760GeV_0010->DrawCopy("same,e0,p");
+    DrawGammaSetMarker(histoPCMPi0TrueFWHMMeVPbPb2760GeV_0010, markerStyleConvMC, markerSizeMass, colorConvMC, colorConvMC);
+    histoPCMPi0TrueFWHMMeVPbPb2760GeV_0010->DrawCopy("same,e0,p");
+
+    TLatex *labelMassPi0PbPb0005 = new TLatex(0.05,0.88,collisionSystemPbPb0010.Data());
+    SetStyleTLatex( labelMassPi0PbPb0005, 0.85*textsizeLabelsWidth,4);
+    labelMassPi0PbPb0005->Draw();
+    TLatex *labelLegendBMass = new TLatex(0.89,0.88,"c)");
+    SetStyleTLatex( labelLegendBMass, 0.85*textsizeLabelsWidth,4);
+    labelLegendBMass->Draw();
+
+    pad4PartMassWidth1->Update();
+    pad4PartMassWidth2->cd();
+    pad4PartMassWidth2->SetLogx();
+    histo2DPi0Mass->DrawCopy();
+
+    DrawGammaSetMarker(histoPCMPi0MassPbPb2760GeV_0010 , markerStyleConv, markerSizeMass, colorConv, colorConv);
+    histoPCMPi0MassPbPb2760GeV_0010->DrawCopy("same,e0,p");
+    DrawGammaSetMarker(histoPCMPi0TrueMassPbPb2760GeV_0010 , markerStyleConvMC , markerSizeMass, colorConvMC, colorConvMC);
+    histoPCMPi0TrueMassPbPb2760GeV_0010->DrawCopy("same,e0,p");
+
+    DrawGammaLines(0.35, 20. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,1.,colorConv);
+    TLatex *labelLegendFMass = new TLatex(0.89,0.9,"f)");
+    SetStyleTLatex( labelLegendFMass, 0.85*textsizeLabelsMass,4);
+    labelLegendFMass->Draw();
+
+    pad4PartMassWidth2->Update();
+
+    pad4PartMassWidth3->cd();
+    pad4PartMassWidth3->SetLogx();
+    histo2DPi0FWHM->DrawCopy();
+
+    DrawGammaSetMarker(histoPCMEtaFWHMMeVPbPb2760GeV_0010, markerStyleConv, markerSizeMass, colorConv, colorConv);
+    histoPCMEtaFWHMMeVPbPb2760GeV_0010->DrawCopy("same,e0,p");
+    DrawGammaSetMarker(histoPCMEtaTrueFWHMMeVPbPb2760GeV_0010, markerStyleConvMC, markerSizeMass, colorConvMC, colorConvMC);
+    histoPCMEtaTrueFWHMMeVPbPb2760GeV_0010->DrawCopy("same,e0,p");
+
+    TLatex *labelMassPi0PbPb6080 = new TLatex(0.05,0.88,collisionSystemCent6080.Data());
+    SetStyleTLatex( labelMassPi0PbPb6080, 0.85*textsizeLabelsWidth,4);
+    labelMassPi0PbPb6080->Draw();
+    TLatex *labelLegendCMass = new TLatex(0.91,0.88,"b)");
+    SetStyleTLatex( labelLegendCMass, 0.85*textsizeLabelsWidth,4);
+    labelLegendCMass->Draw();
+
+    pad4PartMassWidth3->Update();
+    pad4PartMassWidth4->cd();
+    pad4PartMassWidth4->SetLogx();
+    histo2DPi0Mass->DrawCopy();
+
+    DrawGammaSetMarker(histoPCMPi0MassPbPb2760GeV_0010 , markerStyleConv, markerSizeMass, colorConv, colorConv);
+    histoPCMPi0MassPbPb2760GeV_0010->DrawCopy("same,e0,p");
+    DrawGammaSetMarker(histoPCMPi0TrueMassPbPb2760GeV_0010 , markerStyleConvMC , markerSizeMass, colorConvMC, colorConvMC);
+    histoPCMPi0TrueMassPbPb2760GeV_0010->DrawCopy("same,e0,p");
+
+    DrawGammaLines(0.35, 20. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,1.,colorConv);
+    TLatex *labelLegendEMass = new TLatex(0.91,0.9,"e)");
+    SetStyleTLatex( labelLegendEMass, 0.85*textsizeLabelsMass,4);
+    labelLegendEMass->Draw();
+
+    pad4PartMassWidth4->Update();
+
+    canvas4PartMassWidth->Update();
+    canvas4PartMassWidth->SaveAs(Form("%s/MassWidth_4Parted_Paper.%s",paperPlots.Data(),suffix.Data()));
+    canvas4PartMassWidth->SaveAs(Form("%s/MassWidth_4Parted_Paper.%s",outputDir.Data(),suffix.Data()));
+    delete pad4PartMassWidth1;
+    delete pad4PartMassWidth2;
+    delete pad4PartMassWidth3;
+    delete pad4PartMassWidth4;
+    delete canvas4PartMassWidth;
+
+
+    cout << WriteParameterToFile(fitTCMInvYield2760GeVLHC11h_0010)<< endl << endl;
+    cout << WriteParameterToFile(fitTCMInvYield2760GeVLHC11h_2050)<< endl << endl;
 
 
     //******************************************************************************//
@@ -5947,10 +6332,10 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         histoEPOSpred_0010->Write(Form("EPOSprediction%s_0010",meson.Data()));
         histoEPOSpred_2050->Write(Form("EPOSprediction%s_2050",meson.Data()));
 
-        TheoryCracowLowPtforRatio_0010->Write(Form("Cracowprediction%s_2050",meson.Data()));
-        TheoryCracowLowPtforRatio_2050->Write(Form("Cracowprediction%s_2050",meson.Data()));
+        TheoryCracowLowPt_0010->Write(Form("Cracowprediction%s_0010",meson.Data()));
+        TheoryCracowLowPt_2050->Write(Form("Cracowprediction%s_2050",meson.Data()));
 
-
+        //for comparison to charged pions:
         graphPCMPi0InvYieldSysPbPb2760GeV_0010->Write("graphPCMPi0InvYieldSysPbPb2760GeV_0010");
         graphPCMPi0InvYieldStatPbPb2760GeV_0010->Write("graphPCMPi0InvYieldStatPbPb2760GeV_0010");
 
@@ -5959,16 +6344,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
         graphEMCalPi0InvYieldSysPbPb2760GeV_0010->Write("graphEMCalPi0InvYieldSysPbPb2760GeV_0010");
         graphEMCalPi0InvYieldStatPbPb2760GeV_0010->Write("graphEMCalPi0InvYieldStatPbPb2760GeV_0010");
-
-//      if(meson.CompareTo("Eta")==0){
-//
-//          graphCombEtatoPi0Sys2760GeVLHC11h_0010->Write("graphCombEtatoPi0Sys2760GeVLHC11h_0010");
-//          graphCombEtatoPi0Stat2760GeVLHC11h_0010->Write("graphCombEtatoPi0Stat2760GeVLHC11h_0010");
-//
-//          graphCombEtatoPi0Sys2760GeVLHC11h_2050->Write("graphCombEtatoPi0Sys2760GeVLHC11h_2050");
-//          graphCombEtatoPi0Stat2760GeVLHC11h_2050->Write("graphCombEtatoPi0Stat2760GeVLHC11h_2050");
-//
-//      }
 
     fCombResults.Close();
 
