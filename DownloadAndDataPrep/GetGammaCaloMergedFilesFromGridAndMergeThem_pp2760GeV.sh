@@ -24,16 +24,14 @@ function ChangeStructureIfNeeded()
     fi    
 }
 
-
-
 NSlashes=10
 NSlashes2=9
 
 # switches to enable/disable certain procedures
 DOWNLOADON=1
-MERGEON=1
-MERGEONBINSSingle=1
-MERGEONBINS=1
+MERGEON=0
+MERGEONBINSSingle=0
+MERGEONBINS=0
 
 # check if train configuration has actually been given
 HAVELHC11a=1
@@ -94,8 +92,6 @@ elif [ $1 = "bsahlmul" ]; then
   NSlashes=11
   NSlashes2=10
 fi
-
-
 
 # TRAINDIR=Legotrain-vAN-20150909-MergedFirstFullScaleTest
 # LHC11aData="985_20150910-2344";
@@ -359,13 +355,13 @@ fi
 # LHC11aData="1500"; 
 # LHC13gData="1503"; 
 
-TRAINDIR=Legotrain-mCalo-20160412_V2ClusterizerSys200ns
-LHC11aData="1501"; 
-LHC13gData="1504"; 
-
-TRAINDIR=Legotrain-mCalo-20160412_V2ClusterizerSys50ns
-LHC11aData="1502"; 
-LHC13gData="1505"; 
+# TRAINDIR=Legotrain-mCalo-20160412_V2ClusterizerSys200ns
+# LHC11aData="1501"; 
+# LHC13gData="1504"; 
+# 
+# TRAINDIR=Legotrain-mCalo-20160412_V2ClusterizerSys50ns
+# LHC11aData="1502"; 
+# LHC13gData="1505"; 
 
 # TRAINDIR=Legotrain-mCalo-20160412_V1ClusterizerAddInfo
 # LHC11aData="1493"; 
@@ -374,6 +370,14 @@ LHC13gData="1505";
 # LHC13gData="1499"; 
 # LHC15a3aMC="2019"; 
 # LHC15a3aplusMC="2020"; 
+
+TRAINDIR=Legotrain-mCalo-20160501_V2Clusterizer30MeVDiff
+LHC11aData="1534"; 
+LHC15g1aMC="2049";
+
+LHC13gData="1535"; 
+LHC15a3aMC="2047"; 
+LHC15a3aplusMC="2048"; 
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
