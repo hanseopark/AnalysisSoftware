@@ -2730,7 +2730,14 @@ TGraphAsymmErrors* CalculateWeightedQuantity(   TGraphAsymmErrors** graphs,
                         abs(graphs[meas]->GetX()[ptBin-offsets[meas]] + graphs[meas]->GetErrorXhigh(ptBin-offsets[meas]) - xPtLimits[ptBin+1] ) < 0.000001 
                 ){
                     cout << meas << "\t" << ptBin-offsets[meas] << endl;
+//                     graphs[meas]->Print();
                     cout << graphs[meas]->GetX()[ptBin-offsets[meas]] << "\t"<< graphs[meas]->GetY()[ptBin-offsets[meas]] << "\t" << weights[meas]->GetY()[ptBin-offsets[meas]] << endl;
+//                     cout << "doing "<< meas << ":\t" << graphs[meas]->GetX()[ptBin-offsets[meas]] << "\t" << weights[meas]->GetX()[ptBin-offsets[meas]] << endl;
+                    if (TMath::Abs(graphs[meas]->GetX()[ptBin-offsets[meas]] - weights[meas]->GetX()[ptBin-offsets[meas]]) > 0.00001 ){
+                        cout << "failed at "<< meas << ":\t" << graphs[meas]->GetX()[ptBin-offsets[meas]] << "\t" << weights[meas]->GetX()[ptBin-offsets[meas]] << endl;
+                        cout << "something went wrong with the offsets" << endl;
+//                         return NULL;
+                    }
                     if (TMath::Abs(weights[meas]->GetY()[ptBin-offsets[meas]]) > 1e-5){
                         values[ptBin] += graphs[meas]->GetY()[ptBin-offsets[meas]]*weights[meas]->GetY()[ptBin-offsets[meas]];
                         errors[ptBin] += graphs[meas]->GetErrorYhigh(ptBin-offsets[meas])*weights[meas]->GetY()[ptBin-offsets[meas]];

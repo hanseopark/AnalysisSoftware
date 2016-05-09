@@ -1752,6 +1752,36 @@ TGraphAsymmErrors* ApplyYshiftIndividualSpectra(TGraphAsymmErrors *IndividualSpe
      return indSpecShifted;
 }
 
+//_________________________________________________________________________________________________
+TH1D* ApplyYshiftIndividualSpectra(TH1D *IndividualSpectum , TF1 *commonFit) {
+//     cout << "entered bin shifting individual spectra y  "<<IndividualSpectum->GetName()  << endl;
+    TH1D* indSpecShifted            = (TH1D*)IndividualSpectum->Clone(IndividualSpectum->GetName());
+    TH1D* dummySpec                 = (TH1D*)IndividualSpectum->Clone("b");
+      
+    for (Int_t ip = 1; ip < indSpecShifted->GetNbinsX()+1; ip++){
+        cout << ip <<":\t" << dummySpec->GetBinCenter(ip) << "\t+-" << dummySpec->GetBinWidth(ip)/2 << "\t "<< dummySpec->GetBinContent(ip) << endl;
+        if (!(dummySpec->GetBinContent(ip) > 0)) continue;
+        Double_t ptMin                          = dummySpec->GetBinCenter(ip)-dummySpec->GetBinWidth(ip)/2;
+        Double_t ptMax                          = dummySpec->GetBinCenter(ip)+dummySpec->GetBinWidth(ip)/2;
+        Double_t yvalueIErr                     = dummySpec->GetBinError(ip)/dummySpec->GetBinContent(ip);
+        // the bin shift affected value of the fit function in current bin
+        Double_t shiftedValue                   = commonFit->Integral(ptMin,ptMax) / dummySpec->GetBinWidth(ip);
+        // the correct value at the bin center
+        Double_t trueValue                      = commonFit->Eval(dummySpec->GetBinCenter(ip));
+        // the bin shift correction factor
+        Double_t ratio                          = shiftedValue / trueValue;
+        Double_t output                         = dummySpec->GetBinContent(ip)/ratio;
+        
+        cout << ratio << "\t" << output<< endl;
+        
+        indSpecShifted->SetBinContent(ip,output);
+        indSpecShifted->SetBinError(ip,yvalueIErr*output);
+    }
+    
+     return indSpecShifted;
+}
+
+
 //_______________________________________________________________________________________
 Double_t bin_shift_x(TF1 *fYield, Double_t ptMin, Double_t ptMax, Double_t yValue){
 

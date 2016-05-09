@@ -66,7 +66,8 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
                                         TString fileNameMergedV1NLM1Cluster     = "",  
                                         TString fileNameMergedV1NLM2Cluster     = "",  
                                         TString fileNameDiClusterV2             = "",
-                                        TString suffix                          = "eps"
+                                        TString suffix                          = "eps",
+                                        TString fileNameMergedV2Cluster30MeV    = ""
                                     ){
 
     TString date = ReturnDateString();
@@ -95,6 +96,10 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
     Style_t  markerStyleDet[5]                  = {20, 21, 24, 24, 24 };
     Size_t   markerSizeDet[5]                   = {2.,2.,2.,2.,2.};          
 
+    Bool_t enableV2CompAdd                      = kFALSE;
+    if (fileNameMergedV2Cluster30MeV.CompareTo("") != 0){
+        enableV2CompAdd                         = kTRUE;
+    }
 
     //************************** Read data for EMCAL merged Haitao **************************************************    
     TFile* fileMergedHaitao                                     = new TFile(fileNameMergedHaitao.Data());
@@ -113,8 +118,12 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
             graphMergedHaitaoPi0InvXSectionSys-> RemovePoint(graphMergedHaitaoPi0InvXSectionSys->GetN()-1);
             
     //************************** Read data for EMCAL merged Fredi V2 clusterizer **************************************************            
-    TFile* fileMergedV2Clus                                  = new TFile(fileNameMergedV2Cluster.Data());
-    TDirectory* directoryMergedV2ClusPi0                     = (TDirectory*)fileMergedV2Clus->Get("Pi02.76TeV"); 
+    TFile* fileMergedV2Clus                                     = new TFile(fileNameMergedV2Cluster.Data());
+    TDirectory* directoryMergedV2ClusPi0                        = (TDirectory*)fileMergedV2Clus->Get("Pi02.76TeV"); 
+        TH1F* histoTriggRejectEMC1vsINT1v2Clus                  = (TH1F*)fileMergedV2Clus->Get("TriggRejectvsPt_EMC1_INT1");
+        TH1F* histoTriggRejectEMC7vsINT7v2Clus                  = (TH1F*)fileMergedV2Clus->Get("TriggRejectvsPt_EMC7_INT7");
+        TH1F* histoTriggRejectEG2vsEMC7v2Clus                   = (TH1F*)fileMergedV2Clus->Get("TriggRejectvsPt_EG2_EMC7");
+        TH1F* histoTriggRejectEG1vsEG2v2Clus                    = (TH1F*)fileMergedV2Clus->Get("TriggRejectvsPt_EG1_EG2");
         TGraphAsymmErrors* graphMergedV2ClusPi0InvXSectionStat      = (TGraphAsymmErrors*)directoryMergedV2ClusPi0->Get("graphInvCrossSectionPi0");
         TGraphAsymmErrors* graphMergedV2ClusPi0InvXSectionSys       = (TGraphAsymmErrors*)directoryMergedV2ClusPi0->Get("InvCrossSectionPi0Sys");
         TGraphAsymmErrors* graphMergedV2ClusPi0Efficiency           = (TGraphAsymmErrors*)directoryMergedV2ClusPi0->Get("EfficiencyPi0");
@@ -134,8 +143,8 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
         TGraphAsymmErrors* graphDiClusV2Pi0Efficiency               = (TGraphAsymmErrors*)directoryDiClusV2Pi0->Get("EfficiencyPi0");
         
     //************************** Read data for EMCAL merged Fredi V1 clusterizer **************************************************                
-    TFile* fileMergedV1Clus                                  = new TFile(fileNameMergedV1Cluster.Data());
-    TDirectory* directoryMergedV1ClusPi0                     = (TDirectory*)fileMergedV1Clus->Get("Pi02.76TeV"); 
+    TFile* fileMergedV1Clus                                     = new TFile(fileNameMergedV1Cluster.Data());
+    TDirectory* directoryMergedV1ClusPi0                        = (TDirectory*)fileMergedV1Clus->Get("Pi02.76TeV"); 
         TGraphAsymmErrors* graphMergedV1ClusPi0InvXSectionStat      = (TGraphAsymmErrors*)directoryMergedV1ClusPi0->Get("graphInvCrossSectionPi0");
         TGraphAsymmErrors* graphMergedV1ClusPi0InvXSectionSys       = (TGraphAsymmErrors*)directoryMergedV1ClusPi0->Get("InvCrossSectionPi0Sys");
         TGraphAsymmErrors* graphMergedV1ClusPi0Efficiency           = (TGraphAsymmErrors*)directoryMergedV1ClusPi0->Get("EfficiencyPi0");
@@ -150,8 +159,12 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
         }
         
     //************************** Read data for EMCAL merged Fredi V1 clusterizer NLM1 **************************************************                    
-    TFile* fileMergedV1NLM1Clus                                  = new TFile(fileNameMergedV1NLM1Cluster.Data());
-    TDirectory* directoryMergedV1NLM1ClusPi0                     = (TDirectory*)fileMergedV1NLM1Clus->Get("Pi02.76TeV"); 
+    TFile* fileMergedV1NLM1Clus                                 = new TFile(fileNameMergedV1NLM1Cluster.Data());
+    TDirectory* directoryMergedV1NLM1ClusPi0                    = (TDirectory*)fileMergedV1NLM1Clus->Get("Pi02.76TeV"); 
+    TH1F* histoTriggRejectEMC1vsINT1v1ClusNLM1                  = (TH1F*)fileMergedV1NLM1Clus->Get("TriggRejectvsPt_EMC1_NLM1_INT1_NLM1");
+    TH1F* histoTriggRejectEMC7vsINT7v1ClusNLM1                  = (TH1F*)fileMergedV1NLM1Clus->Get("TriggRejectvsPt_EMC7_NLM1_INT7_NLM1");
+    TH1F* histoTriggRejectEG2vsEMC7v1ClusNLM1                   = (TH1F*)fileMergedV1NLM1Clus->Get("TriggRejectvsPt_EG2_NLM1_EMC7_NLM1");
+    TH1F* histoTriggRejectEG1vsEG2v1ClusNLM1                    = (TH1F*)fileMergedV1NLM1Clus->Get("TriggRejectvsPt_EG1_NLM1_EG2_NLM1");
         TGraphAsymmErrors* graphMergedV1NLM1ClusPi0InvXSectionStat      = (TGraphAsymmErrors*)directoryMergedV1NLM1ClusPi0->Get("graphInvCrossSectionPi0");
         TGraphAsymmErrors* graphMergedV1NLM1ClusPi0InvXSectionSys       = (TGraphAsymmErrors*)directoryMergedV1NLM1ClusPi0->Get("InvCrossSectionPi0Sys");
         TGraphAsymmErrors* graphMergedV1NLM1ClusPi0Efficiency           = (TGraphAsymmErrors*)directoryMergedV1NLM1ClusPi0->Get("EfficiencyPi0");
@@ -166,8 +179,8 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
         }
 
     //************************** Read data for EMCAL merged Fredi V1 clusterizer NLM2 **************************************************                    
-    TFile* fileMergedV1NLM2Clus                                  = new TFile(fileNameMergedV1NLM2Cluster.Data());
-    TDirectory* directoryMergedV1NLM2ClusPi0                     = (TDirectory*)fileMergedV1NLM2Clus->Get("Pi02.76TeV"); 
+    TFile* fileMergedV1NLM2Clus                                 = new TFile(fileNameMergedV1NLM2Cluster.Data());
+    TDirectory* directoryMergedV1NLM2ClusPi0                    = (TDirectory*)fileMergedV1NLM2Clus->Get("Pi02.76TeV"); 
         TGraphAsymmErrors* graphMergedV1NLM2ClusPi0InvXSectionStat      = (TGraphAsymmErrors*)directoryMergedV1NLM2ClusPi0->Get("graphInvCrossSectionPi0");
         TGraphAsymmErrors* graphMergedV1NLM2ClusPi0InvXSectionSys       = (TGraphAsymmErrors*)directoryMergedV1NLM2ClusPi0->Get("InvCrossSectionPi0Sys");
         TGraphAsymmErrors* graphMergedV1NLM2ClusPi0Efficiency           = (TGraphAsymmErrors*)directoryMergedV1NLM2ClusPi0->Get("EfficiencyPi0");
@@ -181,6 +194,25 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
             graphMergedV1NLM2ClusPi0InvXSectionSys->RemovePoint(0);
         }
 
+    //************************** Read data for EMCAL merged Fredi V2 clusterizer **************************************************            
+    TFile* fileMergedV2Clus30MeV                                = NULL;
+    TDirectory* directoryMergedV2ClusPi030MeV                   = NULL;
+    TGraphAsymmErrors* graphMergedV2Clus30MeVPi0InvXSectionStat = NULL;
+    TGraphAsymmErrors* graphMergedV2Clus30MeVPi0InvXSectionSys  = NULL;
+
+    if (enableV2CompAdd){
+        fileMergedV2Clus30MeV                                   = new TFile(fileNameMergedV2Cluster30MeV.Data());
+        directoryMergedV2ClusPi030MeV                           = (TDirectory*)fileMergedV2Clus30MeV->Get("Pi02.76TeV"); 
+        graphMergedV2Clus30MeVPi0InvXSectionStat                = (TGraphAsymmErrors*)directoryMergedV2ClusPi030MeV->Get("graphInvCrossSectionPi0");
+        graphMergedV2Clus30MeVPi0InvXSectionSys                 = (TGraphAsymmErrors*)directoryMergedV2ClusPi030MeV->Get("InvCrossSectionPi0Sys");
+        for (Int_t i = 0; graphMergedV2Clus30MeVPi0InvXSectionStat->GetX()[0]< 10; i++){
+            graphMergedV2Clus30MeVPi0InvXSectionStat->RemovePoint(0);
+        }
+        for (Int_t i = 0; graphMergedV2Clus30MeVPi0InvXSectionSys->GetX()[0]< 10; i++){
+            graphMergedV2Clus30MeVPi0InvXSectionSys->RemovePoint(0);
+        }
+    }   
+        
     // **********************************************************************************************************************
     // ******************************************* Compare Haitao to all others *********************************************
     // **********************************************************************************************************************
@@ -302,7 +334,15 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
                                                                                                             kTRUE,  kTRUE, 
                                                                                                             &dummyA, &dummyB, 
                                                                                                             &dummyC, &dummyD)    ;
-    
+    TGraphErrors* graphRatioPi0V2Clus30MeVDivV2Tot      = NULL;
+    if (enableV2CompAdd){
+        graphRatioPi0V2Clus30MeVDivV2Tot                = CalculateRatioBetweenSpectraWithDifferentBinning( graphMergedV2Clus30MeVPi0InvXSectionStat, graphMergedV2Clus30MeVPi0InvXSectionSys, 
+                                                                                                            graphMergedV2ClusPi0InvXSectionStat, graphMergedV2ClusPi0InvXSectionSys,  
+                                                                                                            kTRUE,  kTRUE, 
+                                                                                                            &dummyA, &dummyB, 
+                                                                                                            &dummyC, &dummyD)    ;
+    }    
+                                                                                                            
     // **********************************************************************************************************************
     // ************************* Calculate graphs with relativ error around 1 for all 5 measurements ************************
     // **********************************************************************************************************************
@@ -385,6 +425,37 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
         
     canvasRatioMeas->SaveAs(Form("%s/Pi0_RatioOfXToHaitao_PP2760GeV.%s",outputDir.Data(),suffix.Data()));
 
+    histo2DRatioMeas->Draw("copy");
+        DrawGammaSetMarkerTGraphAsym(relSysErrHaitao, 20, 1, kGray+1 , kGray+1, widthLinesBoxes, kTRUE, kGray+1);
+        relSysErrHaitao->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(relStatErrHaitao, 20, 1, kGray+2 , kGray+2, widthLinesBoxes, kTRUE);
+        relStatErrHaitao->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(relStatErrV1Clus, 20, 1, kBlue-6 , kBlue-6, widthLinesBoxes, kTRUE);
+        relStatErrV1Clus->Draw("E2same");
+        
+        DrawGammaSetMarkerTGraphErr(graphRatioPi0V1ClusDivHaitaoTot, markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+        graphRatioPi0V1ClusDivHaitaoTot->Draw("p,same,xz");
+        
+        DrawGammaLines(7, 60., 1., 1.,0.1, kGray+2);
+        DrawGammaLines(7, 60., 1.2, 1.2,0.1, kGray, 7);
+        DrawGammaLines(7, 60., 0.8, 0.8,0.1, kGray, 7);
+        DrawGammaLines(7, 60., 1.1, 1.1,0.1, kGray, 3);
+        DrawGammaLines(7, 60., 0.9, 0.9,0.1, kGray, 3);
+
+        TLegend* legendRatioOnlyHaitao       = GetAndSetLegend2(0.27, 0.25-(0.035*2.2), 0.75, 0.25, 32);
+        legendRatioOnlyHaitao->SetMargin(0.15);
+        legendRatioOnlyHaitao->SetNColumns(2);
+        legendRatioOnlyHaitao->AddEntry(relStatErrHaitao,"Haitao, stat Err","f");
+        legendRatioOnlyHaitao->AddEntry(relSysErrHaitao,"Haitao, sys Err","f");
+        legendRatioOnlyHaitao->AddEntry(relStatErrV1Clus,"V1 clus, stat Err","f");
+        legendRatioOnlyHaitao->AddEntry(graphRatioPi0V1ClusDivHaitaoTot,"X: V1 clus","p");
+        legendRatioOnlyHaitao->Draw();
+
+        labelRatioToOldEnergy->Draw();
+        labelRatioToOldPi0->Draw();
+        
+    canvasRatioMeas->SaveAs(Form("%s/Pi0_RatioOfV1ToHaitaoOnly_PP2760GeV.%s",outputDir.Data(),suffix.Data()));
+   
     histo2DRatioMeas->GetYaxis()->SetTitle("#frac{Meas. X}{V1 clus}");
     histo2DRatioMeas->Draw("copy");
         DrawGammaSetMarkerTGraphAsym(relSysErrV1Clus, 20, 1, kBlue-8 , kBlue-8, widthLinesBoxes, kTRUE, kBlue-8);
@@ -476,6 +547,82 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
         
     canvasRatioMeas->SaveAs(Form("%s/Pi0_RatioOfXToV1NLM1Clus_PP2760GeV.%s",outputDir.Data(),suffix.Data()));
     
+    histo2DRatioMeas->GetYaxis()->SetTitle("#frac{Meas. X}{V2 clus}");
+    histo2DRatioMeas->GetYaxis()->SetRangeUser(0.2,1.55);
+    histo2DRatioMeas->Draw("copy");
+
+        DrawGammaSetMarkerTGraphAsym(relSysErrV2Clus, 20, 1, kRed-8, kRed-8, widthLinesBoxes, kTRUE, kRed-8);
+        relSysErrV2Clus->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(relStatErrV1NLM1Clus, 20, 1, kCyan-2 , kCyan-2, widthLinesBoxes, kTRUE);
+        relStatErrV1NLM1Clus->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(relStatErrV2Clus, 20, 1, kRed-6 , kRed-6, widthLinesBoxes, kTRUE);
+        relStatErrV2Clus->Draw("E2same");
+        
+        DrawGammaSetMarkerTGraphErr(graphRatioPi0V1NLM1ClusDivV2Tot, markerStyleDet[3], markerSizeDet[3], colorDet[3] , colorDet[3]);
+        graphRatioPi0V1NLM1ClusDivV2Tot->Draw("p,same,xz");
+        DrawGammaSetMarkerTGraphErr(graphRatioPi0V1ClusDivV2Tot, markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+        graphRatioPi0V1ClusDivV2Tot->Draw("p,same,xz");
+        DrawGammaSetMarkerTGraphErr(graphRatioPi0V1NLM2ClusDivV2Tot, markerStyleDet[4], markerSizeDet[4], colorDet[4] , colorDet[4]);
+        graphRatioPi0V1NLM2ClusDivV2Tot->Draw("p,same,xz");
+        
+        DrawGammaLines(7, 60., 1., 1.,0.1, kGray+2);
+        DrawGammaLines(7, 60., 1.2, 1.2,0.1, kGray, 7);
+        DrawGammaLines(7, 60., 0.8, 0.8,0.1, kGray, 7);
+        DrawGammaLines(7, 60., 1.1, 1.1,0.1, kGray, 3);
+        DrawGammaLines(7, 60., 0.9, 0.9,0.1, kGray, 3);
+         
+        TLegend* legendRatioV2Clus       = GetAndSetLegend2(0.27, 0.29-(0.035*4), 0.75, 0.29, 32);
+        legendRatioV2Clus->SetMargin(0.15);
+        legendRatioV2Clus->SetNColumns(2);
+        legendRatioV2Clus->AddEntry(relStatErrV2Clus,"V2 clus, stat Err","f");
+        legendRatioV2Clus->AddEntry(graphRatioPi0V1NLM1ClusDivV2Tot,"X: V1 clus LM=1","p");
+        legendRatioV2Clus->AddEntry(relSysErrV2Clus,"V2 clus, sys Err","f");
+        legendRatioV2Clus->AddEntry(graphRatioPi0V1ClusDivV2Tot,"X: V1 ","p");
+        legendRatioV2Clus->AddEntry(relStatErrV1NLM1Clus,"V1 clus LM=1, stat Err","f");
+        legendRatioV2Clus->AddEntry(graphRatioPi0V1NLM2ClusDivV2Tot,"X: V1 clus LM=2","p");
+        legendRatioV2Clus->Draw();
+ 
+        labelRatioToOldEnergy->Draw();
+        labelRatioToOldPi0->Draw();
+        
+    canvasRatioMeas->SaveAs(Form("%s/Pi0_RatioOfXToV2Clus_PP2760GeV.%s",outputDir.Data(),suffix.Data()));
+    
+    if (enableV2CompAdd){
+        histo2DRatioMeas->GetYaxis()->SetTitle("#frac{Meas. X}{V2 clus}");
+        histo2DRatioMeas->GetYaxis()->SetRangeUser(0.5,1.55);
+        histo2DRatioMeas->Draw("copy");
+
+            DrawGammaSetMarkerTGraphAsym(relSysErrV2Clus, 20, 1, kRed-8, kRed-8, widthLinesBoxes, kTRUE, kRed-8);
+            relSysErrV2Clus->Draw("E2same");
+            DrawGammaSetMarkerTGraphAsym(relStatErrV2Clus, 20, 1, kRed-6 , kRed-6, widthLinesBoxes, kTRUE);
+            relStatErrV2Clus->Draw("E2same");
+            
+//             TF1* pol0 = new TF1("pol0","[0]",10,40);//
+//             graphRatioPi0V2Clus30MeVDivV2Tot->Fit(pol0,"NRMX0+","",10,40);
+            
+            DrawGammaSetMarkerTGraphErr(graphRatioPi0V2Clus30MeVDivV2Tot, markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
+            graphRatioPi0V2Clus30MeVDivV2Tot->Draw("p,same,xz");
+//             pol0->Draw("same");
+            
+            DrawGammaLines(7, 60., 1., 1.,0.1, kGray+2);
+            DrawGammaLines(7, 60., 1.2, 1.2,0.1, kGray, 7);
+            DrawGammaLines(7, 60., 0.8, 0.8,0.1, kGray, 7);
+            DrawGammaLines(7, 60., 1.1, 1.1,0.1, kGray, 3);
+            DrawGammaLines(7, 60., 0.9, 0.9,0.1, kGray, 3);
+            
+            TLegend* legendRatioV2Clus2       = GetAndSetLegend2(0.27, 0.25-(0.035*3), 0.75, 0.25, 32);
+            legendRatioV2Clus2->SetMargin(0.15);
+            legendRatioV2Clus2->SetNColumns(2);
+            legendRatioV2Clus2->AddEntry(relStatErrV2Clus,"V2 clus, stat Err","f");
+            legendRatioV2Clus2->AddEntry(relSysErrV2Clus,"V2 clus, sys Err","f");
+            legendRatioV2Clus2->AddEntry(graphRatioPi0V2Clus30MeVDivV2Tot,"X: V2, cutoff 30MeV","p");
+            legendRatioV2Clus2->Draw();
+    
+            labelRatioToOldEnergy->Draw();
+            labelRatioToOldPi0->Draw();
+            
+        canvasRatioMeas->SaveAs(Form("%s/Pi0_RatioOfV2Clus30MeVToV2Clus_PP2760GeV.%s",outputDir.Data(),suffix.Data()));        
+    }
     
     // **********************************************************************************************************************
     // ******************************** Acceptance * Efficiency for pi0 single measurement 2.76TeV **************************
@@ -498,10 +645,12 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
         hist2DEff->GetXaxis()->SetMoreLogLabels(kTRUE);
         hist2DEff->DrawCopy(); 
 
+        DrawGammaSetMarkerTGraphAsym(graphDiClusV2Pi0Efficiency,25, markerSizeDet[1], colorDet[1] , colorDet[1]);
+        graphDiClusV2Pi0Efficiency->Draw("p,same,e");        
         DrawGammaSetMarkerTGraphAsym(graphMergedV2ClusPi0Efficiency,markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
         graphMergedV2ClusPi0Efficiency->Draw("p,same,e");
-        DrawGammaSetMarkerTGraphAsym(graphMergedV1ClusPi0Efficiency,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
-        graphMergedV1ClusPi0Efficiency->Draw("p,same,e");
+//         DrawGammaSetMarkerTGraphAsym(graphMergedV1ClusPi0Efficiency,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+//         graphMergedV1ClusPi0Efficiency->Draw("p,same,e");
         DrawGammaSetMarkerTGraphAsym(graphMergedV1NLM1ClusPi0Efficiency,markerStyleDet[3], markerSizeDet[3], colorDet[3] , colorDet[3]);
         graphMergedV1NLM1ClusPi0Efficiency->Draw("p,same,e");
         DrawGammaSetMarkerTGraphAsym(graphMergedV1NLM2ClusPi0Efficiency,markerStyleDet[4], markerSizeDet[4], colorDet[4] , colorDet[4]);
@@ -509,7 +658,8 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
 
         TLegend* legendEffiAccPi0           = GetAndSetLegend2(0.55, 0.13, 0.83, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
         legendEffiAccPi0->AddEntry(graphMergedV2ClusPi0Efficiency,"V2 clus","p");
-        legendEffiAccPi0->AddEntry(graphMergedV1ClusPi0Efficiency,"V1 clus","p");
+        legendEffiAccPi0->AddEntry(graphDiClusV2Pi0Efficiency,"V2 di-clus","p");
+//         legendEffiAccPi0->AddEntry(graphMergedV1ClusPi0Efficiency,"V1 clus","p");
         legendEffiAccPi0->AddEntry(graphMergedV1NLM1ClusPi0Efficiency,"V1 clus, LM=1","p");
         legendEffiAccPi0->AddEntry(graphMergedV1NLM2ClusPi0Efficiency,"V1 clus, LM=2","p");        
         legendEffiAccPi0->Draw();
@@ -539,16 +689,16 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
 
         DrawGammaSetMarkerTGraphAsym(graphMergedV2ClusPi0Purity,markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
         graphMergedV2ClusPi0Purity->Draw("p,same,e");
-        DrawGammaSetMarkerTGraphAsym(graphMergedV1ClusPi0Purity,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
-        graphMergedV1ClusPi0Purity->Draw("p,same,e");
+//         DrawGammaSetMarkerTGraphAsym(graphMergedV1ClusPi0Purity,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+//         graphMergedV1ClusPi0Purity->Draw("p,same,e");
         DrawGammaSetMarkerTGraphAsym(graphMergedV1NLM1ClusPi0Purity,markerStyleDet[3], markerSizeDet[3], colorDet[3] , colorDet[3]);
         graphMergedV1NLM1ClusPi0Purity->Draw("p,same,e");
         DrawGammaSetMarkerTGraphAsym(graphMergedV1NLM2ClusPi0Purity,markerStyleDet[4], markerSizeDet[4], colorDet[4] , colorDet[4]);
         graphMergedV1NLM2ClusPi0Purity->Draw("p,same,e");
 
-        TLegend* legendPurityPi0           = GetAndSetLegend2(0.14, 0.13, 0.35, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
+        TLegend* legendPurityPi0           = GetAndSetLegend2(0.14, 0.13, 0.35, 0.13+(3*textSizeLabelsRel),textSizeLabelsPixel);
         legendPurityPi0->AddEntry(graphMergedV2ClusPi0Purity,"V2 clus","p");
-        legendPurityPi0->AddEntry(graphMergedV1ClusPi0Purity,"V1 clus","p");
+//         legendPurityPi0->AddEntry(graphMergedV1ClusPi0Purity,"V1 clus","p");
         legendPurityPi0->AddEntry(graphMergedV1NLM1ClusPi0Purity,"V1 clus, LM=1","p");
         legendPurityPi0->AddEntry(graphMergedV1NLM2ClusPi0Purity,"V1 clus, LM=2","p");        
         legendPurityPi0->Draw();
@@ -580,16 +730,16 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
         graphMergedV2ClusPi0PurityDivEff->Print();
         DrawGammaSetMarkerTGraphAsym(graphMergedV2ClusPi0PurityDivEff,markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
         graphMergedV2ClusPi0PurityDivEff->Draw("p,same,e");
-        DrawGammaSetMarkerTGraphAsym(graphMergedV1ClusPi0PurityDivEff,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
-        graphMergedV1ClusPi0PurityDivEff->Draw("p,same,e");
+//         DrawGammaSetMarkerTGraphAsym(graphMergedV1ClusPi0PurityDivEff,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+//         graphMergedV1ClusPi0PurityDivEff->Draw("p,same,e");
         DrawGammaSetMarkerTGraphAsym(graphMergedV1NLM1ClusPi0PurityDivEff,markerStyleDet[3], markerSizeDet[3], colorDet[3] , colorDet[3]);
         graphMergedV1NLM1ClusPi0PurityDivEff->Draw("p,same,e");
         DrawGammaSetMarkerTGraphAsym(graphMergedV1NLM2ClusPi0PurityDivEff,markerStyleDet[4], markerSizeDet[4], colorDet[4] , colorDet[4]);
         graphMergedV1NLM2ClusPi0PurityDivEff->Draw("p,same,e");
 
-        TLegend* legendPurDifEffPi0           = GetAndSetLegend2(0.62, 0.95-(4*textSizeLabelsRel) , 0.85, 0.95,textSizeLabelsPixel);
+        TLegend* legendPurDifEffPi0           = GetAndSetLegend2(0.62, 0.95-(3*textSizeLabelsRel) , 0.85, 0.95,textSizeLabelsPixel);
         legendPurDifEffPi0->AddEntry(graphMergedV2ClusPi0PurityDivEff,"V2 clus","p");
-        legendPurDifEffPi0->AddEntry(graphMergedV1ClusPi0PurityDivEff,"V1 clus","p");
+//         legendPurDifEffPi0->AddEntry(graphMergedV1ClusPi0PurityDivEff,"V1 clus","p");
         legendPurDifEffPi0->AddEntry(graphMergedV1NLM1ClusPi0PurityDivEff,"V1 clus, LM=1","p");
         legendPurDifEffPi0->AddEntry(graphMergedV1NLM2ClusPi0PurityDivEff,"V1 clus, LM=2","p");        
         legendPurDifEffPi0->Draw();
@@ -625,7 +775,7 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
 
         TLegend* legendEffDivPurPi0           = GetAndSetLegend2(0.62, 0.13, 0.85, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
         legendEffDivPurPi0->AddEntry(graphMergedV2ClusPi0PurityDivEff,"V2 clus","p");
-        
+        legendEffDivPurPi0->AddEntry(graphDiClusV2Pi0Efficiency,"V2 di-clus","p");
 //         legendEffDivPurPi0->AddEntry(graphMergedV1ClusPi0PurityDivEff,"V1 clus","p");
         legendEffDivPurPi0->AddEntry(graphMergedV1NLM1ClusPi0PurityDivEff,"V1 clus, LM=1","p");
         legendEffDivPurPi0->AddEntry(graphMergedV1NLM2ClusPi0PurityDivEff,"V1 clus, LM=2","p");        
@@ -670,5 +820,115 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
     canvasAcceptanceTimesEff->Update();
     canvasAcceptanceTimesEff->Print(Form("%s/Pi0_EfficiencyDiffPur_lin.%s",outputDir.Data(),suffix.Data()));
      
+    //***************************************************************************************************************
+    //**************************Plotting trigger rejection factors = fits linear scale all in one *******************
+    //***************************************************************************************************************
+    Size_t textSizeSpectra2         = 0.0415;
+    Int_t textPixelPP               = textSizeSpectra2*1100;
+
+    TCanvas* canvasTriggerRejectLinear = new TCanvas("canvasTriggerReject","",0,0,1500,1100);// gives the page size
+    DrawGammaCanvasSettings( canvasTriggerRejectLinear, 0.118, 0.015, textSizeSpectra2, 0.08);
+    canvasTriggerRejectLinear->SetLogy(0);
+    
+    Double_t minTriggRejectLin = 0;
+    Double_t maxTriggRejectLin = 3100;
+    
+    TH2F * histo2DTriggRejectLinear;
+    histo2DTriggRejectLinear = new TH2F("histo2DTriggRejectLinear","histo2DTriggRejectLinear",1000,0., 50,15000,minTriggRejectLin, maxTriggRejectLin);
+    SetStyleHistoTH2ForGraphs(histo2DTriggRejectLinear, "#it{p}_{T} (GeV/#it{c})","#frac{N_{clus,trig EMC1} /N_{Evt, trig EMC1}}{N_{clus,trig INT1} /N_{Evt,trig INT1}}", 
+                            0.85*textSizeSpectra2,textSizeSpectra2, 0.85*textSizeSpectra2,textSizeSpectra2, 0.85,1.18);
+    histo2DTriggRejectLinear->GetXaxis()->SetRangeUser(0,25);
+    histo2DTriggRejectLinear->DrawCopy(); 
+        DrawGammaSetMarker(histoTriggRejectEMC1vsINT1v1ClusNLM1,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+        histoTriggRejectEMC1vsINT1v1ClusNLM1->Draw("p,same,e");
+        DrawGammaSetMarker(histoTriggRejectEMC1vsINT1v2Clus,markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
+        histoTriggRejectEMC1vsINT1v2Clus->Draw("p,same,e");
+
+        TLegend* legendTriggerRejectEMC1           = GetAndSetLegend2(0.72, 0.13, 0.85, 0.13+(2*textSizeLabelsRel),textSizeLabelsPixel);
+        legendTriggerRejectEMC1->AddEntry(histoTriggRejectEMC1vsINT1v2Clus,"V2 clus","p");
+        legendTriggerRejectEMC1->AddEntry(histoTriggRejectEMC1vsINT1v1ClusNLM1,"V1 clus","p");
+        legendTriggerRejectEMC1->Draw();
+
+    TLatex *labelEnergyTriggerReject             = new TLatex(0.15,0.90,collisionSystem2760GeV.Data());
+    SetStyleTLatex( labelEnergyTriggerReject, textSizeLabelsRel,4);
+    labelEnergyTriggerReject->Draw();
+    TLatex *labelTriggerRejectEMC1             = new TLatex(0.15,0.85,"EMC1/INT1");
+    SetStyleTLatex( labelTriggerRejectEMC1, textSizeLabelsRel,4);
+    labelTriggerRejectEMC1->Draw();
+        
+    histo2DTriggRejectLinear->Draw("same,axis");
+    
+    canvasTriggerRejectLinear->Update();
+    canvasTriggerRejectLinear->SaveAs(Form("%s/TriggerRejectionFactorsLinY_EMC1vsINT1.%s",outputDir.Data(),suffix.Data()));
+    
+    histo2DTriggRejectLinear->GetYaxis()->SetTitle("#frac{N_{clus,trig EMC7} /N_{Evt, trig EMC7}}{N_{clus,trig INT7} /N_{Evt,trig INT7}}");
+    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,320);
+    histo2DTriggRejectLinear->GetXaxis()->SetRangeUser(0,25);
+    histo2DTriggRejectLinear->DrawCopy(); 
+
+        DrawGammaSetMarker(histoTriggRejectEMC7vsINT7v1ClusNLM1,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+        histoTriggRejectEMC7vsINT7v1ClusNLM1->Draw("p,same,e");
+        DrawGammaSetMarker(histoTriggRejectEMC7vsINT7v2Clus,markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
+        histoTriggRejectEMC7vsINT7v2Clus->Draw("p,same,e");
+
+        legendTriggerRejectEMC1->Draw();
+
+    labelEnergyTriggerReject->Draw();
+    TLatex *labelTriggerRejectEMC7             = new TLatex(0.15,0.85,"EMC7/INT7");
+    SetStyleTLatex( labelTriggerRejectEMC7, textSizeLabelsRel,4);
+    labelTriggerRejectEMC7->Draw();
+
+        
+    histo2DTriggRejectLinear->Draw("same,axis");
+    
+    canvasTriggerRejectLinear->Update();
+    canvasTriggerRejectLinear->SaveAs(Form("%s/TriggerRejectionFactorsLinY_EMC7vsINT7.%s",outputDir.Data(),suffix.Data()));
+    
+    histo2DTriggRejectLinear->GetYaxis()->SetTitle("#frac{N_{clus,trig EG2} /N_{Evt, trig EG2}}{N_{clus,trig EMC7} /N_{Evt,trig EMC7}}");
+    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,25);
+    histo2DTriggRejectLinear->GetXaxis()->SetRangeUser(0,30);
+    histo2DTriggRejectLinear->DrawCopy(); 
+
+        DrawGammaSetMarker(histoTriggRejectEG2vsEMC7v1ClusNLM1,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+        histoTriggRejectEG2vsEMC7v1ClusNLM1->Draw("p,same,e");
+        DrawGammaSetMarker(histoTriggRejectEG2vsEMC7v2Clus,markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
+        histoTriggRejectEG2vsEMC7v2Clus->Draw("p,same,e");
+
+        legendTriggerRejectEMC1->Draw();
+
+    labelEnergyTriggerReject->Draw();
+    TLatex *labelTriggerRejectEG2             = new TLatex(0.15,0.85,"EG2/EMC7");
+    SetStyleTLatex( labelTriggerRejectEG2, textSizeLabelsRel,4);
+    labelTriggerRejectEG2->Draw();
+
+        
+    histo2DTriggRejectLinear->Draw("same,axis");
+    
+    canvasTriggerRejectLinear->Update();
+    canvasTriggerRejectLinear->SaveAs(Form("%s/TriggerRejectionFactorsLinY_EG2vsEMC7.%s",outputDir.Data(),suffix.Data()));
+    
+    histo2DTriggRejectLinear->GetYaxis()->SetTitle("#frac{N_{clus,trig EG1} /N_{Evt, trig EG1}}{N_{clus,trig EG2} /N_{Evt,trig EG2}}");
+    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,10);
+    histo2DTriggRejectLinear->GetXaxis()->SetRangeUser(0,50);
+    histo2DTriggRejectLinear->DrawCopy(); 
+
+        DrawGammaSetMarker(histoTriggRejectEG1vsEG2v1ClusNLM1,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+        histoTriggRejectEG1vsEG2v1ClusNLM1->Draw("p,same,e");
+        DrawGammaSetMarker(histoTriggRejectEG1vsEG2v2Clus,markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
+        histoTriggRejectEG1vsEG2v2Clus->Draw("p,same,e");
+
+        legendTriggerRejectEMC1->Draw();
+
+    labelEnergyTriggerReject->Draw();
+    TLatex *labelTriggerRejectEG1             = new TLatex(0.15,0.85,"EG1/EG2");
+    SetStyleTLatex( labelTriggerRejectEG1, textSizeLabelsRel,4);
+    labelTriggerRejectEG1->Draw();
+
+        
+    histo2DTriggRejectLinear->Draw("same,axis");
+    
+    canvasTriggerRejectLinear->Update();
+    canvasTriggerRejectLinear->SaveAs(Form("%s/TriggerRejectionFactorsLinY_EG1vsEG2.%s",outputDir.Data(),suffix.Data()));
+    
 }
     
