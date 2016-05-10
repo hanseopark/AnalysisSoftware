@@ -169,6 +169,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
     Size_t   markerSizeDet[11];
     Size_t   markerSizeDetMC[11];
 
+    Color_t  colorNLO                           = kAzure-4;
     Style_t  styleMarkerNLOMuHalf               = 24;
     Style_t  styleMarkerNLOMuOne                = 27;
     Style_t  styleMarkerNLOMuTwo                = 30;
@@ -532,6 +533,16 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         while (graphNLOCalcEtaMuTwo->GetX()[graphNLOCalcEtaMuTwo->GetN()-1] > 22. )
             graphNLOCalcEtaMuTwo->RemovePoint(graphNLOCalcEtaMuTwo->GetN()-1);
             
+        cout << "mu half" << endl;
+        graphNLOEtaToPi0MuHalf->Print();
+        cout << "mu one" << endl;
+        graphNLOEtaToPi0MuOne->Print();
+        cout << "mu two" << endl;
+        graphNLOEtaToPi0MuTwo->Print();
+        
+        
+        
+//         return;
     // *******************************************************************************************************
     // ************************** Loading charged pion results ***********************************************
     // *******************************************************************************************************        
@@ -3443,7 +3454,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
     //    ratio2DTheoryPP->GetXaxis()->SetTickLength(0.07);
         ratio2DTheoryPP->DrawCopy(); 
 
-        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombNLODSS14, 0, 0, kGreen-6, kGreen-6, widthLinesBoxes, kTRUE, kGreen-6);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombNLODSS14, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
         graphRatioPi0CombNLODSS14->Draw("2,same");
         
         DrawGammaSetMarker(histoRatioPythia8ToFit, 24, 1.5, kRed+2 , kRed+2);  
@@ -3489,7 +3500,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         ratio2DTheoryPP->GetYaxis()->SetRangeUser(0.05,2.45);
         ratio2DTheoryPP->DrawCopy(); 
 
-        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombNLODSS14, 0, 0, kGreen-6, kGreen-6, widthLinesBoxes, kTRUE, kGreen-6);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombNLODSS14, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
         graphRatioPi0CombNLODSS14->Draw("2,same");
         
         DrawGammaSetMarker(histoRatioPythia8ToFit, 24, 1.5, kRed+2 , kRed+2);  
@@ -3536,11 +3547,11 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         ratio2DTheoryPPEta->GetYaxis()->SetLabelFont(42);
         ratio2DTheoryPPEta->DrawCopy(); 
 
-        DrawGammaNLOTGraph( graphRatioEtaCombNLOMuHalf, widthCommonFit, styleLineNLOMuHalf, kGreen-6);
+        DrawGammaNLOTGraph( graphRatioEtaCombNLOMuHalf, widthCommonFit, styleLineNLOMuHalf, colorNLO);
         graphRatioEtaCombNLOMuHalf->Draw("same,c");
-        DrawGammaNLOTGraph( graphRatioEtaCombNLOMuOne, widthCommonFit, styleLineNLOMuOne, kGreen-6);
+        DrawGammaNLOTGraph( graphRatioEtaCombNLOMuOne, widthCommonFit, styleLineNLOMuOne, colorNLO);
         graphRatioEtaCombNLOMuOne->Draw("same,c");
-        DrawGammaNLOTGraph( graphRatioEtaCombNLOMuTwo, widthCommonFit, styleLineNLOMuTwo, kGreen-6);
+        DrawGammaNLOTGraph( graphRatioEtaCombNLOMuTwo, widthCommonFit, styleLineNLOMuTwo, colorNLO);
         graphRatioEtaCombNLOMuTwo->Draw("same,c");
         
         DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitStatA, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
@@ -3635,7 +3646,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         histoPythia8InvXSection->Draw("same,hist,c");
 
         graphNLODSS14Calc->RemovePoint(0);
-        DrawGammaSetMarkerTGraphAsym(graphNLODSS14Calc, 0, 0, kGreen-6, kGreen-6, widthLinesBoxes, kTRUE, kGreen-6);
+        DrawGammaSetMarkerTGraphAsym(graphNLODSS14Calc, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
         graphNLODSS14Calc->Draw("3,same");
         
         DrawGammaSetMarkerTGraphAsym(graphCombPi0InvXSectionSysA, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE);
@@ -3691,7 +3702,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         ratio2DNLO->DrawCopy();
 
         graphRatioPi0CombNLODSS14->RemovePoint(0);
-        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombNLODSS14, 0, 0, kGreen-6, kGreen-6, widthLinesBoxes, kTRUE, kGreen-6);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombNLODSS14, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
         graphRatioPi0CombNLODSS14->Draw("3,same");
 
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitStatA, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
@@ -3749,11 +3760,11 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
 //         histoPythia8InvXSection->SetLineWidth(widthCommonFit);
 //         histoPythia8InvXSection->Draw("same,hist,c");
 
-        DrawGammaNLOTGraph( graphNLOCalcEtaMuHalf, widthCommonFit, styleLineNLOMuHalf, kGreen-6);
+        DrawGammaNLOTGraph( graphNLOCalcEtaMuHalf, widthCommonFit, styleLineNLOMuHalf, colorNLO);
         graphNLOCalcEtaMuHalf->Draw("same,c");
-        DrawGammaNLOTGraph( graphNLOCalcEtaMuOne, widthCommonFit, styleLineNLOMuOne, kGreen-6);
+        DrawGammaNLOTGraph( graphNLOCalcEtaMuOne, widthCommonFit, styleLineNLOMuOne, colorNLO);
         graphNLOCalcEtaMuOne->Draw("same,c");
-        DrawGammaNLOTGraph( graphNLOCalcEtaMuTwo, widthCommonFit, styleLineNLOMuTwo, kGreen-6);
+        DrawGammaNLOTGraph( graphNLOCalcEtaMuTwo, widthCommonFit, styleLineNLOMuTwo, colorNLO);
         graphNLOCalcEtaMuTwo->Draw("same,c");
         
         DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionSysA, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE);
@@ -3797,11 +3808,11 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         ratio2DNLOEta->GetXaxis()->SetTickLength(0.07);
         ratio2DNLOEta->DrawCopy();
 
-        DrawGammaNLOTGraph( graphRatioEtaCombNLOMuHalf, widthCommonFit, styleLineNLOMuHalf, kGreen-6);
+        DrawGammaNLOTGraph( graphRatioEtaCombNLOMuHalf, widthCommonFit, styleLineNLOMuHalf, colorNLO);
         graphRatioEtaCombNLOMuHalf->Draw("same,c");
-        DrawGammaNLOTGraph( graphRatioEtaCombNLOMuOne, widthCommonFit, styleLineNLOMuOne, kGreen-6);
+        DrawGammaNLOTGraph( graphRatioEtaCombNLOMuOne, widthCommonFit, styleLineNLOMuOne, colorNLO);
         graphRatioEtaCombNLOMuOne->Draw("same,c");
-        DrawGammaNLOTGraph( graphRatioEtaCombNLOMuTwo, widthCommonFit, styleLineNLOMuTwo, kGreen-6);
+        DrawGammaNLOTGraph( graphRatioEtaCombNLOMuTwo, widthCommonFit, styleLineNLOMuTwo, colorNLO);
         graphRatioEtaCombNLOMuTwo->Draw("same,c");
         
         DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitStatA, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
@@ -3936,11 +3947,11 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Paper.%s",outputDir.Data(), suffix.Data()));
 
         // plotting NLO
-        DrawGammaNLOTGraph( graphNLOEtaToPi0MuHalf, widthCommonFit, styleLineNLOMuHalf, kGreen-6);
+        DrawGammaNLOTGraph( graphNLOEtaToPi0MuHalf, widthCommonFit, styleLineNLOMuHalf, colorNLO);
         graphNLOEtaToPi0MuHalf->Draw("same,c");
-        DrawGammaNLOTGraph( graphNLOEtaToPi0MuOne, widthCommonFit, styleLineNLOMuOne, kGreen-6);
+        DrawGammaNLOTGraph( graphNLOEtaToPi0MuOne, widthCommonFit, styleLineNLOMuOne, colorNLO);
         graphNLOEtaToPi0MuOne->Draw("same,c");
-        DrawGammaNLOTGraph( graphNLOEtaToPi0MuTwo, widthCommonFit, styleLineNLOMuTwo, kGreen-6);
+        DrawGammaNLOTGraph( graphNLOEtaToPi0MuTwo, widthCommonFit, styleLineNLOMuTwo, colorNLO);
         graphNLOEtaToPi0MuTwo->Draw("same,c");
 
         // plotting labels
