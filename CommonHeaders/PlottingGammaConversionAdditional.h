@@ -3181,7 +3181,8 @@ TLegend *GetAndSetLegend2(  Double_t positionX,
                             Size_t textSize, 
                             Int_t columns               = 1, 
                             TString header              = "",
-                            Font_t textFont             = 43
+                            Font_t textFont             = 43,
+                            Double_t margin             = 0
                         ){
 
     TLegend *legend = new TLegend(positionX,positionY,positionXRight,positionYUp);
@@ -3193,6 +3194,7 @@ TLegend *GetAndSetLegend2(  Double_t positionX,
     legend->SetLineStyle(0);
     legend->SetTextFont(textFont);
     legend->SetTextSize(textSize);
+    if (margin != 0) legend->SetMargin(margin);
     if (header.CompareTo("")!= 0) legend->SetHeader(header);
     return legend;
 }

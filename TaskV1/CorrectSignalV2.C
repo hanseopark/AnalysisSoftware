@@ -1247,14 +1247,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TH1D* histoRatioValRecMassGauss = NULL;
     if (!kIsMC){ 
         TCanvas* canvasMass = new TCanvas("canvasMass","",200,10,1350,900);  // gives the page size
-        DrawGammaCanvasSettings( canvasMass, 0.10, 0.01, 0.02, 0.10);
+        DrawGammaCanvasSettings( canvasMass, 0.092, 0.01, 0.02, 0.082);
         
         if ( !kIsEta ){
             histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.140);
-            if (mode == 2 || mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.140);
+            if (mode == 2 || mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.140);
             if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
         } else {
             histoMassMeson->GetYaxis()->SetRangeUser(0.54,0.56);
+            if (mode == 2 || mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.50,0.57);
         }               
         histoMassMeson->GetYaxis()->SetNdivisions(510); 
         
@@ -1270,13 +1271,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         
         DrawGammaLines(0., maxPtMeson,mesonMassExpect, mesonMassExpect,0.1);
         
-        TLegend* legendMass = new TLegend(0.15,0.12,0.5,0.25);
-        legendMass->SetTextSize(0.02);
-        legendMass->SetFillColor(0);
-        legendMass->SetFillStyle(0);
-        legendMass->SetLineColor(0);
+        TLegend* legendMass = GetAndSetLegend2(0.65, 0.13, 0.95, 0.13+(0.035*3), 0.035, 1, "", 42, 0.15);
         legendMass->AddEntry(histoMassMeson,"reconstructed Data");
-
         if (histoMCrecMassMeson){
             DrawGammaSetMarker(histoMCrecMassMeson, 21, 0.8, kRed-4, kRed-4);
             histoMCrecMassMeson->DrawCopy("same,e1,p"); 
@@ -1287,7 +1283,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
         
         legendMass->Draw();
-        PutProcessLabelAndEnergyOnPlot(0.18, 0.97, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        PutProcessLabelAndEnergyOnPlot(0.15, 0.97, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
         
         canvasMass->Update();
         canvasMass->SaveAs(Form("%s/%s_Mass_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -1323,12 +1319,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             
             DrawGammaLines(0., maxPtMeson,1, 1,0.1);
             
-            TLegend* legendMassRatio = new TLegend(0.15,0.12,0.5,0.25);
-            legendMassRatio->SetTextSize(0.02);
-            legendMassRatio->SetFillColor(0);
-            legendMassRatio->SetFillStyle(0);
-            legendMassRatio->SetLineColor(0);
-            legendMassRatio->SetNColumns(2);
+            TLegend* legendMassRatio = GetAndSetLegend2(0.15, 0.12, 0.6, 0.12+(0.035*4), 0.035, 2, "", 42, 0.15);
             legendMassRatio->AddEntry(histoRatioRecMass,"rec MC/ data");
             legendMassRatio->AddEntry((TObject*)0,Form("%0.4f #pm %0.4f", recMassRatio, recMassRatioError),"");
             legendMassRatio->AddEntry(histoRatioValRecMass,"val. rec MC/ data");
@@ -1362,7 +1353,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                         
             legendMassRatio->Draw();
             
-            PutProcessLabelAndEnergyOnPlot(0.18, 0.97, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.15, 0.97, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
             
             canvasMassRatio->Update();
             canvasMassRatio->SaveAs(Form("%s/%s_RatioMass_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -1376,42 +1367,46 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             
             if ( !kIsEta ){
                 histoMassMeson->GetYaxis()->SetRangeUser(0.125,0.150);
-                if (mode == 2 || mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.140);
+                if (mode == 2 || mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.140);
                 if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
             } else {
                 histoMassMeson->GetYaxis()->SetRangeUser(0.52,0.58);
+                if (mode == 2 || mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.48,0.57);
             }               
 
             histoMassMeson->DrawCopy("e1,p"); 
             histoTrueMassMeson->DrawCopy("same,e1,p"); 
-                
-            TLegend* legendMass4 = new TLegend(0.55,0.12,0.95,0.25);
-            legendMass4->SetTextSize(0.02);
-            legendMass4->SetFillColor(0);
-            legendMass4->SetFillStyle(0);
-            legendMass4->SetLineColor(0);
+            
+            // count lines to be put for legend
+            Int_t nLinesLegend = 2;
+            if (histoMCrecMassMeson) nLinesLegend++;
+            if (histoMassGaussianMeson) nLinesLegend++;
+            if (histoMCrecMassGaussianMeson) nLinesLegend++;
+            if (histoTrueMassGaussianMeson) nLinesLegend++;
+            
+            TLegend* legendMass4 = GetAndSetLegend2(0.55, 0.12, 0.95, 0.12+(0.035*nLinesLegend), 0.035, 1, "", 42, 0.1); 
             legendMass4->AddEntry(histoMassMeson,"reconstructed Data");
-
+            // put reconstructed MC if available
             if (histoMCrecMassMeson){
                 histoMCrecMassMeson->DrawCopy("same,e1,p"); 
                 legendMass4->AddEntry(histoMCrecMassMeson,"reconstructed MC");
             }
-
             if(!kIsEta ) legendMass4->AddEntry(histoTrueMassMeson,"True reconstructed #pi^{0}");
             if(kIsEta ) legendMass4->AddEntry(histoTrueMassMeson,"True reconstructed #eta");
             
+            // put Mass obtained from pure gaussian if available
             if (histoMassGaussianMeson){
                 DrawGammaSetMarker(histoMassGaussianMeson, 20, 0.8, kGray+2, kGray+2);
                 histoMassGaussianMeson->DrawCopy("same,e1,p"); 
                 legendMass4->AddEntry(histoMassGaussianMeson,"reconstructed Data, pure Gauss"); 
             }
-            
+            // put MC Mass obtained from pure gaussian if available
             if (histoMCrecMassGaussianMeson){
                 DrawGammaSetMarker(histoMCrecMassGaussianMeson, 20, 0.8, kGreen-2, kGreen-2);
                 histoMCrecMassGaussianMeson->DrawCopy("same,e1,p"); 
                 legendMass4->AddEntry(histoMCrecMassGaussianMeson,"reconstructed MC, pure Gauss");
             }
-            
+            // put True MC Mass obtained from pure gaussian if available
             if (histoTrueMassGaussianMeson){
                 DrawGammaSetMarker(histoTrueMassGaussianMeson, 24, 0.8, kGreen+4, kGreen+4);
                 histoTrueMassGaussianMeson->DrawCopy("same,e1,p"); 
@@ -1420,7 +1415,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }
             
             DrawGammaLines(0., maxPtMeson,mesonMassExpect, mesonMassExpect,0.1);
-            PutProcessLabelAndEnergyOnPlot(0.55, 0.4, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.15, 0.95, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
             legendMass4->Draw();
             canvasMass->Update(); 
             canvasMass->SaveAs(Form("%s/%s_MassComparisonPureGaussian_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -1431,46 +1426,54 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //**********************************************************************************        
         canvasMass->cd();
         if (mode==2 || mode == 3){
+            // read additional histos
+            TH1D* histoTrueMassCaloPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMesonCaloPhoton");            
+            TH1D* histoTrueMassCaloConvPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMesonCaloConvPhoton");
+            TH1D* histoTrueMassCaloMergedClusterMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMesonCaloMergedCluster");
+
+            // start plotting
             if ( !kIsEta ){
                 histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.140);
                 if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
             } else {
                 histoMassMeson->GetYaxis()->SetRangeUser(0.52,0.58);
+                if (mode == 2 || mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.48,0.57);
             }               
 
             histoMassMeson->DrawCopy("e1,p"); 
             histoTrueMassMeson->DrawCopy("same,e1,p"); 
-                
-            TLegend* legendMass2 = new TLegend(0.55,0.12,0.95,0.25);
-            legendMass2->SetTextSize(0.02);
-            legendMass2->SetFillColor(0);
-            legendMass2->SetFillStyle(0);
-            legendMass2->SetLineColor(0);
-            legendMass2->AddEntry(histoMassMeson,"reconstructed Data");
 
+            // count lines to be put for legend
+            Int_t nLinesLegend = 2;
+            if (histoMCrecMassMeson) nLinesLegend++;
+            if (histoTrueMassCaloPhotonMeson) nLinesLegend++;
+            if (histoTrueMassCaloConvPhotonMeson) nLinesLegend++;
+            if (histoTrueMassCaloMergedClusterMeson) nLinesLegend++;
+                        
+            TLegend* legendMass2 = GetAndSetLegend2(0.55, 0.12, 0.95, 0.12+(0.035*nLinesLegend), 0.035, 1, "", 42, 0.1); 
+            legendMass2->AddEntry(histoMassMeson,"reconstructed Data");            
+            // put reconstructed MC if available
             if (histoMCrecMassMeson){
                 histoMCrecMassMeson->DrawCopy("same,e1,p"); 
                 legendMass2->AddEntry(histoMCrecMassMeson,"reconstructed MC");
             }
-
             if(!kIsEta ) legendMass2->AddEntry(histoTrueMassMeson,"True reconstructed #pi^{0}");
             if(kIsEta ) legendMass2->AddEntry(histoTrueMassMeson,"True reconstructed #eta");
-            
-            TH1D* histoTrueMassCaloPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMesonCaloPhoton");
+            // put reconstructed validated real gammagamma Mass position
             if (histoTrueMassCaloPhotonMeson){
                 DrawGammaSetMarker(histoTrueMassCaloPhotonMeson, 25, 0.8, kGreen+2, kGreen+2);
                 histoTrueMassCaloPhotonMeson->DrawCopy("same,e1,p"); 
                 if(!kIsEta ) legendMass2->AddEntry(histoTrueMassCaloPhotonMeson,"True reconstructed #pi^{0}, cluster real #gamma");
                 if(kIsEta ) legendMass2->AddEntry(histoTrueMassCaloPhotonMeson,"True reconstructed #eta, cluster real #gamma");
             }
-            TH1D* histoTrueMassCaloConvPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMesonCaloConvPhoton");
+            // put reconstructed validated real gamma gamma_{conv} Mass position
             if (histoTrueMassCaloConvPhotonMeson){
                 DrawGammaSetMarker(histoTrueMassCaloConvPhotonMeson, 25, 0.8, kCyan+2, kCyan+2);
                 histoTrueMassCaloConvPhotonMeson->DrawCopy("same,e1,p"); 
                 if(!kIsEta ) legendMass2->AddEntry(histoTrueMassCaloConvPhotonMeson,"True reconstructed #pi^{0}, cluster conv #gamma");
                 if(kIsEta ) legendMass2->AddEntry(histoTrueMassCaloConvPhotonMeson,"True reconstructed #eta, cluster conv #gamma");
             }
-            TH1D* histoTrueMassCaloMergedClusterMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMesonCaloMergedCluster");
+            // put reconstructed validated real gamma gamma_{merged} Mass position
             if (histoTrueMassCaloMergedClusterMeson){
                 DrawGammaSetMarker(histoTrueMassCaloMergedClusterMeson, 25, 0.8, kViolet+2, kViolet+2);
                 histoTrueMassCaloMergedClusterMeson->DrawCopy("same,e1,p"); 
@@ -1479,8 +1482,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }
             
             DrawGammaLines(0., maxPtMeson,mesonMassExpect, mesonMassExpect,0.1);
-            PutProcessLabelAndEnergyOnPlot(0.55, 0.4, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.15, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
             legendMass2->Draw();
+            
             canvasMass->Update(); 
             canvasMass->SaveAs(Form("%s/%s_MassAddedInfos_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
         }
@@ -1489,23 +1493,31 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //******************** Mass Plot further decomposed for Calo + Calo *****************
         //**********************************************************************************        
         if (mode==4 || mode == 5){
+            // read additional histos
+            TH1D* histoTrueMassCaloPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMesonCaloPhoton");
+            TH1D* histoTrueMassCaloConvPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMesonCaloConvPhoton");
+            TH1D* histoTrueMassMixedCaloConvPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMesonMixedCaloConvPhoton");
             if (!kIsEta){
                 histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.140);
                 if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
             } else {
                 histoMassMeson->GetYaxis()->SetRangeUser(0.52,0.58);
+                if (mode == 2 || mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.48,0.57);
             }               
 
             histoMassMeson->DrawCopy("e1,p"); 
             histoTrueMassMeson->DrawCopy("same,e1,p"); 
-                
-            TLegend* legendMass3 = new TLegend(0.55,0.12,0.95,0.25);
-            legendMass3->SetTextSize(0.02);
-            legendMass3->SetFillColor(0);
-            legendMass3->SetFillStyle(0);
-            legendMass3->SetLineColor(0);
-            legendMass3->AddEntry(histoMassMeson,"reconstructed Data");
 
+            // count lines to be put for legend
+            Int_t nLinesLegend = 2;
+            if (histoMCrecMassMeson) nLinesLegend++;
+            if (histoTrueMassCaloPhotonMeson) nLinesLegend++;
+            if (histoTrueMassCaloConvPhotonMeson) nLinesLegend++;
+            if (histoTrueMassMixedCaloConvPhotonMeson) nLinesLegend++;
+                        
+            TLegend* legendMass3 = GetAndSetLegend2(0.55, 0.12, 0.95, 0.12+(0.035*nLinesLegend), 0.035, 1, "", 42, 0.1); 
+            legendMass3->AddEntry(histoMassMeson,"reconstructed Data");
+            // put reconstructed MC if available
             if (histoMCrecMassMeson){
                 histoMCrecMassMeson->DrawCopy("same,e1,p"); 
                 legendMass3->AddEntry(histoMCrecMassMeson,"reconstructed MC");
@@ -1513,22 +1525,21 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
             if(!kIsEta ) legendMass3->AddEntry(histoTrueMassMeson,"True reconstructed #pi^{0}");
             if(kIsEta ) legendMass3->AddEntry(histoTrueMassMeson,"True reconstructed #eta");
-            
-            TH1D* histoTrueMassCaloPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMesonCaloPhoton");
+            // put reconstructed validated real gammagamma Mass position
             if (histoTrueMassCaloPhotonMeson){
                 DrawGammaSetMarker(histoTrueMassCaloPhotonMeson, 25, 0.8, kGreen+2, kGreen+2);
                 histoTrueMassCaloPhotonMeson->DrawCopy("same,e1,p"); 
                 if(!kIsEta ) legendMass3->AddEntry(histoTrueMassCaloPhotonMeson,"True reconstructed #pi^{0}, #gamma#gamma");
                 if(kIsEta ) legendMass3->AddEntry(histoTrueMassCaloPhotonMeson,"True reconstructed #eta, #gamma#gamma");
             }
-            TH1D* histoTrueMassCaloConvPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMesonCaloConvPhoton");
+            // put reconstructed validated real gamma_{conv} gamma_{conv} Mass position
             if (histoTrueMassCaloConvPhotonMeson){
                 DrawGammaSetMarker(histoTrueMassCaloConvPhotonMeson, 25, 0.8, kCyan+2, kCyan+2);
                 histoTrueMassCaloConvPhotonMeson->DrawCopy("same,e1,p"); 
                 if(!kIsEta ) legendMass3->AddEntry(histoTrueMassCaloConvPhotonMeson,"True reconstructed #pi^{0}, #gamma_{conv}#gamma_{conv}");
                 if(kIsEta ) legendMass3->AddEntry(histoTrueMassCaloConvPhotonMeson,"True reconstructed #eta, #gamma_{conv}#gamma_{conv}");
             }
-            TH1D* histoTrueMassMixedCaloConvPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMesonMixedCaloConvPhoton");
+            // put reconstructed validated real gamma gamma_{conv} Mass position
             if (histoTrueMassMixedCaloConvPhotonMeson){
                 DrawGammaSetMarker(histoTrueMassMixedCaloConvPhotonMeson, 25, 0.8, kBlue+2, kBlue+2);
                 histoTrueMassMixedCaloConvPhotonMeson->DrawCopy("same,e1,p"); 
@@ -1538,7 +1549,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             
             DrawGammaLines(0., maxPtMeson,mesonMassExpect, mesonMassExpect,0.1);
             
-            PutProcessLabelAndEnergyOnPlot(0.55, 0.4, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.15, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
             legendMass3->Draw();
             canvasMass->Update(); 
             canvasMass->SaveAs(Form("%s/%s_MassAddedInfos_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -1553,20 +1564,29 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     if (!kIsMC){ 
         
         TCanvas* canvasFWHM = new TCanvas("canvasFWHM","",200,10,1350,900);  // gives the page size
-        DrawGammaCanvasSettings( canvasFWHM, 0.10, 0.01, 0.04, 0.10);
+        DrawGammaCanvasSettings( canvasFWHM, 0.07, 0.01, 0.031, 0.082);
+        
+        Double_t maxFWHM        = 0.022;
+        if (kIsEta) 
+          maxFWHM               = 0.022;
+        if (kIsEta && mode == 4)
+          maxFWHM               = 0.060;
+
+        Double_t minFWHM        = -0.004;
+        if (kIsEta) minFWHM     = 0.00;
+        if (mode == 4) minFWHM  = 0.00; 
+
         
         histoFWHMMeson->Sumw2();
         histoFWHMMeson->Scale(1./2.35);
         DrawAutoGammaMesonHistos( histoFWHMMeson, 
                                     "", "#it{p}_{T} (GeV/#it{c})", Form("FWHM/2.35 for %s in |#it{y}| < %s (GeV/#it{c}^{2})",textMeson.Data(), rapidityRange.Data()), 
                                     kFALSE, 1.5,-20., kFALSE,
-                                    kTRUE, -0.004, 0.020, 
-                                    kFALSE, 0., 10.);  
-        histoFWHMMeson->GetYaxis()->SetNdivisions(510); 
-        
-        TLegend* legendFWHM = new TLegend(0.15,0.1,0.5,0.2);
-        legendFWHM->SetTextSize(0.02);
-        legendFWHM->SetFillColor(0);
+                                    kTRUE, minFWHM, maxFWHM, 
+                                    kFALSE, 0., 10., 62, 
+                                    0.04, 42, 0.03, 0.9, 0.8);
+                                        
+        TLegend* legendFWHM = GetAndSetLegend2(0.1, 0.12, 0.45, 0.12+(0.035*3), 0.035, 1, "", 42, 0.1); 
         legendFWHM->AddEntry(histoFWHMMeson,"reconstructed Data");
         
         DrawGammaSetMarker(histoFWHMMeson, 20, 0.8, kBlack, kBlack); 
@@ -1587,7 +1607,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         if(kIsEta ) legendFWHM->AddEntry(histoTrueFWHMMeson,"True reconstructed #eta");
 
         legendFWHM->Draw();
-        PutProcessLabelAndEnergyOnPlot(0.18, 0.94, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        PutProcessLabelAndEnergyOnPlot(0.7, 0.94, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
         canvasFWHM->Update();
         canvasFWHM->SaveAs(Form("%s/%s_FWHM_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
 
@@ -1596,37 +1616,46 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //**********************************************************************************        
         
         if (histoWidthGaussianMeson){
-            histoFWHMMeson->GetYaxis()->SetRangeUser(-0.004, 0.050);
+            Double_t maxFWHMGaus    = 0.022;
+            if (kIsEta) 
+              maxFWHMGaus           = 0.022;
+            if (kIsEta && mode == 4)
+              maxFWHMGaus           = 0.060;
+          
+            histoFWHMMeson->GetYaxis()->SetRangeUser(minFWHM, maxFWHMGaus);
             histoFWHMMeson->DrawCopy("e1,p"); 
             histoTrueFWHMMeson->DrawCopy("same,e1,p"); 
 
-            TLegend* legendFWHM4 = new TLegend(0.55,0.12,0.95,0.25);
-            legendFWHM4->SetTextSize(0.02);
-            legendFWHM4->SetFillColor(0);
-            legendFWHM4->SetFillStyle(0);
-            legendFWHM4->SetLineColor(0);
-            legendFWHM4->AddEntry(histoFWHMMeson,"reconstructed Data");
+            // count lines to be put for legend
+            Int_t nLinesLegend = 2;
+            if (histoMCrecFWHMMeson) nLinesLegend++;
+            if (histoWidthGaussianMeson) nLinesLegend++;
+            if (histoMCrecWidthGaussMeson) nLinesLegend++;
+            if (histoTrueWidthGaussianMeson) nLinesLegend++;
 
+            TLegend* legendFWHM4 = GetAndSetLegend2(0.1, 0.12, 0.45, 0.12+(0.035*nLinesLegend), 0.035, 1, "", 42, 0.1); 
+            legendFWHM4->AddEntry(histoFWHMMeson,"reconstructed Data");
+            //  put rec MC width if available
             if (histoMCrecFWHMMeson){
                 histoMCrecFWHMMeson->DrawCopy("same,e1,p"); 
                 legendFWHM4->AddEntry(histoMCrecFWHMMeson,"reconstructed MC");
             }
-
             if(!kIsEta ) legendFWHM4->AddEntry(histoTrueFWHMMeson,"True reconstructed #pi^{0}");
             if(kIsEta ) legendFWHM4->AddEntry(histoTrueFWHMMeson,"True reconstructed #eta");
             
-            
+            //  put gaussian data width if available
             if (histoWidthGaussianMeson){
                 DrawGammaSetMarker(histoWidthGaussianMeson, 20, 1.0, kGray+2, kGray+2);
                 histoWidthGaussianMeson->DrawCopy("same,e1,p"); 
                 legendFWHM4->AddEntry(histoWidthGaussianMeson,"reconstructed Data, #sigma pure Gauss");
             }
+            //  put gaussian MC width if available
             if (histoMCrecWidthGaussMeson){
                 DrawGammaSetMarker(histoMCrecWidthGaussMeson, 20, 1.0, kGreen-2, kGreen-2);
                 histoMCrecWidthGaussMeson->DrawCopy("same,e1,p"); 
                 legendFWHM4->AddEntry(histoMCrecWidthGaussMeson,"reconstructed MC, #sigma pure Gauss");
             }
-
+            //  put gaussian validated MC width if available
             if (histoTrueWidthGaussianMeson){
                 DrawGammaSetMarker(histoTrueWidthGaussianMeson, 24, 1.0, kGreen+4, kGreen+4);
                 histoTrueWidthGaussianMeson->DrawCopy("same,e1,p"); 
@@ -1634,7 +1663,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if(kIsEta ) legendFWHM4->AddEntry(histoTrueWidthGaussianMeson,"True reconstructed #eta, #sigma pure Gauss");
             }
             
-            PutProcessLabelAndEnergyOnPlot(0.18, 0.94, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.7, 0.94, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
             legendFWHM4->Draw();
             canvasFWHM->Update(); 
             canvasFWHM->SaveAs(Form("%s/%s_FWHMComparisonPureGauss_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -1642,19 +1671,34 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //**********************************************************************************
         //******************** FWHM Plot further decomposed for PCM + Calo *****************
         //**********************************************************************************        
+          Double_t maxFWHMAdd     = 0.030;
+          if (kIsEta) 
+            maxFWHMAdd            = 0.030;
+          if (kIsEta && mode == 4)
+            maxFWHMAdd            = 0.070;
+
         if (mode==2 || mode == 3){
-        
-            histoFWHMMeson->GetYaxis()->SetRangeUser(-0.004, 0.030); 
+
+            // read additional histos
+            TH1D* histoTrueFWHMCaloPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloPhoton");
+            TH1D* histoTrueFWHMCaloConvPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloConvPhoton");
+            TH1D* histoTrueFWHMCaloMergedClusterMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloMergedCluster");
+            
+            // start plotting
+            histoFWHMMeson->GetYaxis()->SetRangeUser(minFWHM, maxFWHMAdd); 
             histoFWHMMeson->DrawCopy("e1,p"); 
             histoTrueFWHMMeson->DrawCopy("same,e1,p"); 
 
-            TLegend* legendFWHM2 = new TLegend(0.55,0.12,0.95,0.25);
-            legendFWHM2->SetTextSize(0.02);
-            legendFWHM2->SetFillColor(0);
-            legendFWHM2->SetFillStyle(0);
-            legendFWHM2->SetLineColor(0);
+            // count lines to be put for legend
+            Int_t nLinesLegend = 2;
+            if (histoMCrecFWHMMeson) nLinesLegend++;
+            if (histoTrueFWHMCaloPhotonMeson) nLinesLegend++;
+            if (histoTrueFWHMCaloConvPhotonMeson) nLinesLegend++;
+            if (histoTrueFWHMCaloMergedClusterMeson) nLinesLegend++;
+            
+            TLegend* legendFWHM2 = GetAndSetLegend2(0.1, 0.12, 0.45, 0.12+(0.035*nLinesLegend), 0.035, 1, "", 42, 0.1); 
             legendFWHM2->AddEntry(histoFWHMMeson,"reconstructed Data");
-
+            // plot MC rec FWHM if available
             if (histoMCrecFWHMMeson){
                 histoMCrecFWHMMeson->DrawCopy("same,e1,p"); 
                 legendFWHM2->AddEntry(histoMCrecFWHMMeson,"reconstructed MC");
@@ -1663,7 +1707,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             if(!kIsEta ) legendFWHM2->AddEntry(histoTrueFWHMMeson,"True reconstructed #pi^{0}");
             if(kIsEta ) legendFWHM2->AddEntry(histoTrueFWHMMeson,"True reconstructed #eta");
             
-            TH1D* histoTrueFWHMCaloPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloPhoton");
+            // plot validated gamma gamma FWHM if available
             if (histoTrueFWHMCaloPhotonMeson){
                 histoTrueFWHMCaloPhotonMeson->Scale(1./2.35);
                 DrawGammaSetMarker(histoTrueFWHMCaloPhotonMeson, 25, 0.8, kGreen+2, kGreen+2);
@@ -1671,7 +1715,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if(!kIsEta ) legendFWHM2->AddEntry(histoTrueFWHMCaloPhotonMeson,"True reconstructed #pi^{0}, cluster real #gamma");
                 if(kIsEta ) legendFWHM2->AddEntry(histoTrueFWHMCaloPhotonMeson,"True reconstructed #eta, cluster real #gamma");
             }
-            TH1D* histoTrueFWHMCaloConvPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloConvPhoton");
+            // plot validated gamma gamma_{conv} FWHM if available
             if (histoTrueFWHMCaloConvPhotonMeson){
                 histoTrueFWHMCaloConvPhotonMeson->Scale(1./2.35);
                 DrawGammaSetMarker(histoTrueFWHMCaloConvPhotonMeson, 25, 0.8, kCyan+2, kCyan+2);
@@ -1679,7 +1723,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if(!kIsEta ) legendFWHM2->AddEntry(histoTrueFWHMCaloConvPhotonMeson,"True reconstructed #pi^{0}, cluster conv #gamma");
                 if(kIsEta ) legendFWHM2->AddEntry(histoTrueFWHMCaloConvPhotonMeson,"True reconstructed #eta, cluster conv #gamma");
             }
-            TH1D* histoTrueFWHMCaloMergedClusterMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloMergedCluster");
+            // plot validated gamma gamma_{merged} FWHM if available
             if (histoTrueFWHMCaloMergedClusterMeson){
                 histoTrueFWHMCaloMergedClusterMeson->Scale(1./2.35);
                 DrawGammaSetMarker(histoTrueFWHMCaloMergedClusterMeson, 25, 0.8, kViolet+2, kViolet+2);
@@ -1688,7 +1732,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if(kIsEta ) legendFWHM2->AddEntry(histoTrueFWHMCaloMergedClusterMeson,"True reconstructed #eta, merged cluster #gamma");
             }
             
-            PutProcessLabelAndEnergyOnPlot(0.18, 0.94, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.7, 0.94, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
             legendFWHM2->Draw();
             canvasFWHM->Update(); 
             canvasFWHM->SaveAs(Form("%s/%s_FWHMAddedInfos_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -1699,17 +1743,28 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //**********************************************************************************        
 
         if (mode==4 || mode == 5){
-            histoFWHMMeson->GetYaxis()->SetRangeUser(-0.004, 0.030); 
+            // read additional histos
+            TH1D* histoTrueFWHMCaloPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloPhoton");
+            TH1D* histoTrueFWHMCaloConvPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloConvPhoton");
+            TH1D* histoTrueFWHMMixedCaloConvPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonMixedCaloConvPhoton");
+
+            histoFWHMMeson->GetYaxis()->SetRangeUser(minFWHM, maxFWHMAdd); 
             histoFWHMMeson->DrawCopy("e1,p"); 
             histoTrueFWHMMeson->DrawCopy("same,e1,p"); 
-                
-            TLegend* legendFWHM3 = new TLegend(0.55,0.12,0.95,0.25);
-            legendFWHM3->SetTextSize(0.02);
-            legendFWHM3->SetFillColor(0);
-            legendFWHM3->SetFillStyle(0);
-            legendFWHM3->SetLineColor(0);
-            legendFWHM3->AddEntry(histoFWHMMeson,"reconstructed Data");
 
+            // count lines to be put for legend
+            Int_t nLinesLegend = 2;
+            if (histoMCrecFWHMMeson) nLinesLegend++;
+            if (histoTrueFWHMCaloPhotonMeson) nLinesLegend++;
+            if (histoTrueFWHMCaloConvPhotonMeson) nLinesLegend++;
+            if (histoTrueFWHMMixedCaloConvPhotonMeson) nLinesLegend++;
+            
+            Int_t nColumns                  = 1;
+            if (nLinesLegend > 5) nColumns  = 2;
+            
+            TLegend* legendFWHM3 = GetAndSetLegend2(0.1, 0.12, 0.1+nColumns*0.35, 0.12+(0.035*nLinesLegend/(Double_t)nColumns), 0.035, nColumns, "", 42, 0.1); 
+            legendFWHM3->AddEntry(histoFWHMMeson,"reconstructed Data");
+            // plot MC rec FWHM if available
             if (histoMCrecFWHMMeson){
                 histoMCrecFWHMMeson->DrawCopy("same,e1,p"); 
                 legendFWHM3->AddEntry(histoMCrecFWHMMeson,"reconstructed MC");
@@ -1717,8 +1772,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
             if(!kIsEta ) legendFWHM3->AddEntry(histoTrueFWHMMeson,"True reconstructed #pi^{0}");
             if(kIsEta ) legendFWHM3->AddEntry(histoTrueFWHMMeson,"True reconstructed #eta");
-
-            TH1D* histoTrueFWHMCaloPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloPhoton");
+            // plot validated gamma gamma FWHM if available
             if (histoTrueFWHMCaloPhotonMeson){
                 histoTrueFWHMCaloPhotonMeson->Scale(1./2.35);
                 DrawGammaSetMarker(histoTrueFWHMCaloPhotonMeson, 25, 0.8, kGreen+2, kGreen+2);
@@ -1726,7 +1780,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if(!kIsEta ) legendFWHM3->AddEntry(histoTrueFWHMCaloPhotonMeson,"True reconstructed #pi^{0}, #gamma#gamma");
                 if(kIsEta ) legendFWHM3->AddEntry(histoTrueFWHMCaloPhotonMeson,"True reconstructed #eta, #gamma#gamma");
             }
-            TH1D* histoTrueFWHMCaloConvPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloConvPhoton");
+            // plot validated gamma_{conv} gamma_{conv} FWHM if available
             if (histoTrueFWHMCaloConvPhotonMeson){
                 histoTrueFWHMCaloConvPhotonMeson->Scale(1./2.35);
                 DrawGammaSetMarker(histoTrueFWHMCaloConvPhotonMeson, 25, 0.8, kCyan+2, kCyan+2);
@@ -1734,7 +1788,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if(!kIsEta ) legendFWHM3->AddEntry(histoTrueFWHMCaloConvPhotonMeson,"True reconstructed #pi^{0}, #gamma_{conv}#gamma_{conv}");
                 if(kIsEta ) legendFWHM3->AddEntry(histoTrueFWHMCaloConvPhotonMeson,"True reconstructed #eta, #gamma_{conv}#gamma_{conv}");
             }
-            TH1D* histoTrueFWHMMixedCaloConvPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonMixedCaloConvPhoton");
+            // plot validated gamma gamma_{conv} FWHM if available
             if (histoTrueFWHMMixedCaloConvPhotonMeson){
                 histoTrueFWHMMixedCaloConvPhotonMeson->Scale(1./2.35);
                 DrawGammaSetMarker(histoTrueFWHMMixedCaloConvPhotonMeson, 25, 0.8, kViolet+2, kViolet+2);
@@ -1744,31 +1798,30 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }
             
             legendFWHM3->Draw();
-            PutProcessLabelAndEnergyOnPlot(0.18, 0.94, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.7, 0.94, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
 
             canvasFWHM->Update(); 
             canvasFWHM->SaveAs(Form("%s/%s_FWHMAddedInfos_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
             delete legendFWHM3;
         }
 
-        
         delete canvasFWHM;
         delete legendFWHM;
     }    
 
-    TH1D* histoTrueEffiPtUnmod                         = (TH1D*) histoTrueEffiPt->Clone("histoTrueEffiPtUnmod"); 
-    TH1D* histoTrueEffiNarrowPtUnmod                 = (TH1D*) histoTrueEffiNarrowPt->Clone("histoTrueEffiNarrowPtUnmod"); 
+    TH1D* histoTrueEffiPtUnmod                     = (TH1D*) histoTrueEffiPt->Clone("histoTrueEffiPtUnmod"); 
+    TH1D* histoTrueEffiNarrowPtUnmod               = (TH1D*) histoTrueEffiNarrowPt->Clone("histoTrueEffiNarrowPtUnmod"); 
     TH1D* histoTrueEffiWidePtUnmod                 = (TH1D*) histoTrueEffiWidePt->Clone("histoTrueEffiWidePtUnmod"); 
     if (containsWOWeights && (mode!=0 || mode!=9) && nameMeson.Contains("Pi0")){
 
         TCanvas* canvasCompEffSimple = new TCanvas("canvasCompEffSimple","",200,10,1350,900);  // gives the page size
         DrawGammaCanvasSettings( canvasCompEffSimple, 0.10, 0.01, 0.035, 0.09);
 
-        TH1D* histoRatioEffWOWeightingNormalEff        = (TH1D*) histoEffiPt->Clone(); 
+        TH1D* histoRatioEffWOWeightingNormalEff           = (TH1D*) histoEffiPt->Clone(); 
         histoRatioEffWOWeightingNormalEff->Divide(histoRatioEffWOWeightingNormalEff, histoTrueEffiPtWOWeights, 1., 1., "B");
-        TH1D* histoRatioEffWOWeightingNormalEffNarrow        = (TH1D*) histoEffiNarrowPt->Clone(); 
+        TH1D* histoRatioEffWOWeightingNormalEffNarrow     = (TH1D*) histoEffiNarrowPt->Clone(); 
         histoRatioEffWOWeightingNormalEffNarrow->Divide(histoRatioEffWOWeightingNormalEffNarrow, histoTrueEffiNarrowPtWOWeights, 1., 1., "B");
-        TH1D* histoRatioEffWOWeightingNormalEffWide        = (TH1D*) histoEffiWidePt->Clone(); 
+        TH1D* histoRatioEffWOWeightingNormalEffWide       = (TH1D*) histoEffiWidePt->Clone(); 
         histoRatioEffWOWeightingNormalEffWide->Divide(histoRatioEffWOWeightingNormalEffWide, histoTrueEffiWidePtWOWeights, 1., 1., "B");
 
         // Calculation & Plotting of correction factor for Normal integration window
@@ -2021,7 +2074,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //**********************************************************************************        
         if (!kDalitz && nameMeson.Contains("Pi0")){
             TCanvas* canvasSecFrac = new TCanvas("canvasSecFrac","",200,10,1350,900);  // gives the page size
-            DrawGammaCanvasSettings( canvasSecFrac, 0.09, 0.02, 0.04, 0.09);
+            DrawGammaCanvasSettings( canvasSecFrac, 0.082, 0.018, 0.03, 0.08);
 //             canvasSecFrac->SetLogy(1); 
             
 //             histoYieldTrueSecFracMeson_orig->Scale(100.);
@@ -2058,24 +2111,19 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 fitDefaultSecFracFromK0->Draw("same");
             }
             
-            TLegend* legendSecFrac = new TLegend(0.6,0.76,0.94,0.93);
-            legendSecFrac->SetTextSize(0.03);
-            legendSecFrac->SetLineColor(0);
-            legendSecFrac->SetLineWidth(0);
-            legendSecFrac->SetFillColor(0);
-            legendSecFrac->SetFillStyle(0);
+            TLegend* legendSecFrac  = GetAndSetLegend2(0.8, 0.93-5*0.035*1.15, 0.94, 0.93, 0.035, 1, "", 42, 0.25);
             legendSecFrac->AddEntry(histoYieldTrueSecFracMeson_orig,"#it{r}_{All}");
-            if (doK0SecCorrectionWithDefaultHisto == 0) legendSecFrac->AddEntry(fitSecFracPLWithConst,"fit to #it{r}_{All}");
-                else if (doK0SecCorrectionWithDefaultHisto == 2) legendSecFrac->AddEntry(fitSecFracPurePowerlaw,"fit to #it{r}_{All}");
-                else if (doK0SecCorrectionWithDefaultHisto == 1) legendSecFrac->AddEntry(fitDefaultSecFrac,"fit to #it{r}_{All}");
+            if (doK0SecCorrectionWithDefaultHisto == 0) legendSecFrac->AddEntry(fitSecFracPLWithConst,"fit to #it{r}_{All}","l");
+                else if (doK0SecCorrectionWithDefaultHisto == 2) legendSecFrac->AddEntry(fitSecFracPurePowerlaw,"fit to #it{r}_{All}","l");
+                else if (doK0SecCorrectionWithDefaultHisto == 1) legendSecFrac->AddEntry(fitDefaultSecFrac,"fit to #it{r}_{All}","l");
             legendSecFrac->AddEntry(histoYieldTrueSecFracFromK0SMeson_orig,"#it{r}_{K_{s}^{0}}");
-            if (doK0SecCorrectionWithDefaultHisto == 0) legendSecFrac->AddEntry(fitSecFracPLWithConstFromK0,"fit to #it{r}_{K_{s}^{0}}");
-                else if (doK0SecCorrectionWithDefaultHisto == 2) legendSecFrac->AddEntry(fitSecFracPurePowerlawFromK0,"fit to #it{r}_{K_{s}^{0}}");
-                else if (doK0SecCorrectionWithDefaultHisto == 1) legendSecFrac->AddEntry(fitDefaultSecFracFromK0,"fit to #it{r}_{K_{s}^{0}}");
+            if (doK0SecCorrectionWithDefaultHisto == 0) legendSecFrac->AddEntry(fitSecFracPLWithConstFromK0,"fit to #it{r}_{K_{s}^{0}}","l");
+                else if (doK0SecCorrectionWithDefaultHisto == 2) legendSecFrac->AddEntry(fitSecFracPurePowerlawFromK0,"fit to #it{r}_{K_{s}^{0}}","l");
+                else if (doK0SecCorrectionWithDefaultHisto == 1) legendSecFrac->AddEntry(fitDefaultSecFracFromK0,"fit to #it{r}_{K_{s}^{0}}","l");
             legendSecFrac->AddEntry(histoYieldTrueSecFracFromLambdaMeson_orig,"#it{r}_{#Lambda}"); 
             legendSecFrac->Draw();
 
-            PutProcessLabelAndEnergyOnPlot(0.62, 0.75, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.5, 0.93, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
             canvasSecFrac->Update();
             canvasSecFrac->SaveAs(Form("%s/%s_FracSecondaries_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
             delete canvasSecFrac;
@@ -2085,14 +2133,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //******************** Efficiency Simple Plot **************************************
         //**********************************************************************************
         TCanvas* canvasEffSimple = new TCanvas("canvasEffSimple","",200,10,1350,900);  // gives the page size
-        DrawGammaCanvasSettings( canvasEffSimple, 0.10, 0.01, 0.035, 0.09);
+        DrawGammaCanvasSettings( canvasEffSimple, 0.065, 0.01, 0.035, 0.09);
                     
         DrawAutoGammaMesonHistos( histoTrueEffiPtUnmod, 
                                     "", "#it{p}_{T} (GeV/#it{c})", "#epsilon_{eff}", 
                                     kTRUE, 1.3, 3e-6, kFALSE,
                                     kFALSE, 0., 0.7, 
                                     kFALSE, 0., 10.);
-                
+//                                     0.04, 42, 0.03, 0.9, 0.8);
+        histoTrueEffiPtUnmod->GetYaxis()->SetTitleOffset(0.76);        
         DrawGammaSetMarker(histoTrueEffiPtUnmod, 20, 1., kBlack, kBlack);
         histoTrueEffiPtUnmod->DrawCopy("e1");
         if (containsWOWeights){
@@ -2106,9 +2155,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             DrawGammaSetMarker(histoEffiPt, 25, 1., kGreen+2, kGreen+2);
             histoEffiPt->DrawCopy("same,e1,p");            
         }    
-        TLegend* legendEff = GetAndSetLegend2(0.25,0.13,0.45,0.24, 28);
-        legendEff->SetMargin(0.15);
-        
+        TLegend* legendEff = GetAndSetLegend2(0.5,0.13,0.95,0.24, 0.035, 1, "", 42, 0.1);
         if (containsWOWeights){
             legendEff->AddEntry(histoTrueEffiPtUnmod,"validated efficiency, w weights");
             legendEff->AddEntry(histoTrueEffiPtWOWeights,"validated efficiency, w/o weights"); 
@@ -2123,7 +2170,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         legendEff->Draw();
         
         canvasEffSimple->Update();
-        PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 63, 0.03);
+        PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
 
         canvasEffSimple->SaveAs(Form("%s/%s_TrueEffSimple_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data())); 
         delete canvasEffSimple;
@@ -2133,14 +2180,14 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //*********************************************************************************
         
         TCanvas* canvasEffi = new TCanvas("canvasEffi","",200,10,1350,900);  // gives the page size
-        DrawGammaCanvasSettings( canvasEffi, 0.10, 0.015, 0.035, 0.10);
+        DrawGammaCanvasSettings( canvasEffi, 0.065, 0.01, 0.035, 0.09);
 
         DrawAutoGammaMesonHistos( histoTrueEffiPt, 
                                     "", "#it{p}_{T} (GeV/#it{c})", "#epsilon_{eff}", 
                                     kFALSE, 0.75, 3e-6, kFALSE,
                                     kFALSE, 0., 0.7, 
                                     kFALSE, 0., 10.);
-
+        histoTrueEffiPt->GetYaxis()->SetTitleOffset(0.76);        
         DrawGammaSetMarker(histoTrueEffiPt, 20, 1., kBlack, kBlack); 
         histoTrueEffiPt->DrawCopy("e1"); 
         
@@ -2152,17 +2199,13 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         DrawGammaSetMarker(histoTrueEffiWidePt, 24, 1., kGray+3, kGray+3); 
         histoTrueEffiWidePt->DrawCopy("e1,same"); 
                 
-        TLegend* legendTrueEff = new TLegend(0.6,0.13,0.98,0.24);
-        legendTrueEff->SetTextSize(0.02);
-        legendTrueEff->SetFillColor(0);
-        legendTrueEff->SetFillStyle(0);
-        legendTrueEff->SetLineColor(0);
+        TLegend* legendTrueEff = GetAndSetLegend2(0.5,0.13,0.95,0.13+3*0.035, 0.035, 1, "", 42, 0.1);
         legendTrueEff->AddEntry(histoTrueEffiPt,"true normal");
         legendTrueEff->AddEntry(histoTrueEffiWidePt,"true wide int");
         legendTrueEff->AddEntry(histoTrueEffiNarrowPt,"true narrow int");
         legendTrueEff->Draw();
         
-        PutProcessLabelAndEnergyOnPlot(0.62, 0.35, 0.02, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
         canvasEffi->Update();
 
         canvasEffi->SaveAs(Form("%s/%s_%s_TrueEfficiency_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
@@ -2404,9 +2447,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     DrawGammaSetMarker(histoCorrectedYieldTrueLeftWide, 24, 1., kBlue+2, kBlue+2); 
     histoCorrectedYieldTrueLeftWide->DrawCopy("e1,same"); 
     
-    TLegend* legendYield3 = new TLegend(0.15,0.03,0.66,0.19);
-    legendYield3->SetTextSize(0.02); 
-    legendYield3->SetFillColor(0);
+    TLegend* legendYield3 = GetAndSetLegend2(0.15,0.03,0.66,0.03+6*0.035, 0.035, 1, "", 42, 0.1);
     legendYield3->AddEntry(histoCorrectedYieldTrue,"corr true eff/right norm");
     legendYield3->AddEntry(histoCorrectedYieldTrueWide,"corr true eff wide int /right norm");
     legendYield3->AddEntry(histoCorrectedYieldTrueNarrow,"corr true eff narrow int /right norm");
@@ -2415,7 +2456,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     legendYield3->AddEntry(histoCorrectedYieldTrueLeftNarrow,"corr true eff narrow int /left norm");
     legendYield3->Draw();
 
-    PutProcessLabelAndEnergyOnPlot(0.62, 0.95, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+    PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
     
     padCorrectedYieldRatios->cd();
     padCorrectedYieldRatios->SetTickx();
@@ -2493,16 +2534,13 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         histoCorrectedYieldNorm->DrawCopy("e1,same"); 
         
         cout << "here" << endl; 
-        TLegend* legendYield4 = new TLegend(0.15,0.03,0.66,0.19);
-        legendYield4->SetTextSize(0.02); 
-        legendYield4->SetFillColor(0);
-        legendYield4->SetFillStyle(0);
+        TLegend* legendYield4 = GetAndSetLegend2(0.15,0.03,0.66,0.03+3*0.035, 0.035, 1, "", 42, 0.1);
         legendYield4->AddEntry(histoCorrectedYieldTrue,"corr true eff");
         legendYield4->AddEntry(histoMCYieldMeson,"MC input (possibly weighted)");
         legendYield4->AddEntry(histoCorrectedYieldNorm,"normal eff");
         legendYield4->Draw();
 
-        PutProcessLabelAndEnergyOnPlot(0.62, 0.95, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
         padCorrectedYieldRatios->cd();
         padCorrectedYieldRatios->SetTickx();
         padCorrectedYieldRatios->SetTicky();
@@ -2548,12 +2586,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         DrawGammaSetMarker(histoYieldSecFromK0SMeson, 24, 1., kCyan, kCyan);  
         histoYieldSecFromK0SMeson->DrawCopy("same,e1");  
 
-        TLegend* legendSecRAWYield = new TLegend(0.6,0.8,0.93,0.93);
-        legendSecRAWYield->SetTextSize(0.03);  
-        legendSecRAWYield->SetFillColor(0);
-        legendSecRAWYield->SetFillStyle(0);
-        legendSecRAWYield->SetLineColor(0);
-        legendSecRAWYield->SetBorderSize(0);
+        TLegend* legendSecRAWYield = GetAndSetLegend2(0.6,0.93-3*0.035,0.93,0.93, 0.035, 1, "", 42, 0.1);
         legendSecRAWYield->AddEntry(histoUnCorrectedYieldDrawing,"RAW yield");
         legendSecRAWYield->AddEntry(histoYieldSecMeson,"total secondaries");
         legendSecRAWYield->AddEntry(histoYieldSecFromK0SMeson,"additional secondaries from K^{0}_{s}");
@@ -2575,10 +2608,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         DrawGammaSetMarker(histoYieldGGMeson, 20, 1., kBlue, kBlue); 
         histoYieldGGMeson->DrawCopy("same,e1");
             
-        TLegend* legendSecRAWYield = new TLegend(0.6,0.8,0.93,0.93);
-        legendSecRAWYield->SetTextSize(0.03);  
-        legendSecRAWYield->SetFillColor(0);
-        legendSecRAWYield->SetBorderSize(0);
+        TLegend* legendSecRAWYield = GetAndSetLegend2(0.6,0.93-2*0.035,0.93,0.93, 0.035, 1, "", 42, 0.1);
         legendSecRAWYield->AddEntry(histoUnCorrectedYieldDrawing,"RAW yield");
         legendSecRAWYield->AddEntry(histoYieldGGMeson,"Contamination from #gamma#gamma");
         legendSecRAWYield->Draw();
@@ -2626,17 +2656,12 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 ratioTrueGammaDivTotal->DrawCopy("e1");  
                 ratioTrueConvGammaDivTotal->DrawCopy("e1,same");  
                 
-                TLegend* legendFracDifferentContrib = new TLegend(0.6,0.8,0.94,0.93);
-                legendFracDifferentContrib->SetTextSize(0.03);
-                legendFracDifferentContrib->SetLineColor(0);
-                legendFracDifferentContrib->SetLineWidth(0);
-                legendFracDifferentContrib->SetFillColor(0);
-                legendFracDifferentContrib->SetFillStyle(0);
+                TLegend* legendFracDifferentContrib = GetAndSetLegend2(0.6,0.93-2*0.035*1.1,0.93,0.93, 0.035, 1, "", 42, 0.1);
                 legendFracDifferentContrib->AddEntry(ratioTrueGammaDivTotal,"XX= #gamma_{PCM}, #gamma_{cluster}");
                 legendFracDifferentContrib->AddEntry(ratioTrueConvGammaDivTotal,"XX= #gamma_{PCM}, #gamma_{conv,cluster}");
                 legendFracDifferentContrib->Draw();
 
-                PutProcessLabelAndEnergyOnPlot(0.15, 0.92, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+                PutProcessLabelAndEnergyOnPlot(0.15, 0.92, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
                 canvasFracDifferentContrib->Update();
                 canvasFracDifferentContrib->SaveAs(Form("%s/%s_RelativeContributionsToTruePeak_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
                 delete canvasFracDifferentContrib;
@@ -2688,18 +2713,13 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 ratioTrueConvGammaDivTotal->DrawCopy("e1,same");  
                 ratioTrueConvGamma2DivTotal->DrawCopy("e1,same");  
                 
-                TLegend* legendFracDifferentContrib = new TLegend(0.6,0.8,0.94,0.93);
-                legendFracDifferentContrib->SetTextSize(0.03);
-                legendFracDifferentContrib->SetLineColor(0);
-                legendFracDifferentContrib->SetLineWidth(0);
-                legendFracDifferentContrib->SetFillColor(0);
-                legendFracDifferentContrib->SetFillStyle(0);
+                TLegend* legendFracDifferentContrib = GetAndSetLegend2(0.6,0.93-3*0.035*1.1,0.93,0.93, 0.035, 1, "", 42, 0.1);
                 legendFracDifferentContrib->AddEntry(ratioTrueGammaDivTotal,"XX= #gamma_{cluster}, #gamma_{cluster}");
                 legendFracDifferentContrib->AddEntry(ratioTrueConvGammaDivTotal,"XX= #gamma_{cluster}, #gamma_{conv,cluster}");
                 legendFracDifferentContrib->AddEntry(ratioTrueConvGamma2DivTotal,"XX= #gamma_{conv,cluster}, #gamma_{conv,cluster}");
                 legendFracDifferentContrib->Draw();
 
-                PutProcessLabelAndEnergyOnPlot(0.15, 0.92, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+                PutProcessLabelAndEnergyOnPlot(0.15, 0.92, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
                 canvasFracDifferentContrib->Update();
                 canvasFracDifferentContrib->SaveAs(Form("%s/%s_RelativeContributionsToTruePeak_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
                 delete canvasFracDifferentContrib;
