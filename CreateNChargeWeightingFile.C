@@ -6,7 +6,7 @@
 #include "TKey.h"
 #include "iostream"
 
-void CreateESDTrackFile(){
+void CreateNChargeWeightingFile(){
 
 // 2.76 TeV
 //	const Int_t nFiles=15;
