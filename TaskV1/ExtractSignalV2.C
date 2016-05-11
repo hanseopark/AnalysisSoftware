@@ -3006,7 +3006,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fMesonLambdaTailRange[0]        = 0.018;
             if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonLambdaTailRange[0] = 0.005;}
             fMesonLambdaTailRange[1]        = 0.020;
-            if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonLambdaTailRange[1] = 0.050;}
+            if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonLambdaTailRange[1] = 0.030;}
             fMesonIntDeltaRange[0]          = -0.060;
             fMesonIntDeltaRange[1]          = 0.055;
             fMesonIntDeltaRangeWide[0]      = -0.080; 
