@@ -1,0 +1,163 @@
+#include "TString.h"
+#include "TFile.h"
+#include "TH1.h"
+#include "TList.h"
+#include "TObject.h"
+#include "TKey.h"
+#include "iostream"
+
+void CreateESDTrackFile(){
+
+// 2.76 TeV
+//	const Int_t nFiles=15;
+
+//	TString mainDir[nFiles];
+//	TString path[nFiles]={
+//		"/home/daniel/data/work/Grid/Legotrain-vAN-20151019-2.76TeV-QA/GammaConvCalo_LHC11a-pass4_1.root",
+//		"/home/daniel/data/work/Grid/Legotrain-vAN-20151019-2.76TeV-QA/GammaConvCalo_LHC11a-pass4_1.root",
+//		"/home/daniel/data/work/Grid/Legotrain-vAN-20151019-2.76TeV-QA/GammaConvCalo_LHC13g-pass3_96.root",
+//		"/home/daniel/data/work/Grid/Legotrain-vAN-20151019-2.76TeV-QA/GammaConvCalo_LHC13g-pass3_96.root",
+//		"/home/daniel/data/work/Grid/Legotrain-vAN-20151019-2.76TeV-QA/GammaConvCalo_LHC13g-pass3_95.root",
+//		"/home/daniel/data/work/Grid/Legotrain-vAN-20151019-2.76TeV-QA/GammaConvCalo_LHC13g-pass3_95.root",
+//		"/home/daniel/data/work/Grid/Legotrain-vAN-20151019-2.76TeV-QA/GammaConvCalo_MC_LHC12f1a_1.root",
+//		"/home/daniel/data/work/Grid/Legotrain-vAN-20151019-2.76TeV-QA/GammaConvCalo_MC_LHC12f1a_1.root",
+//		"/home/daniel/data/work/Grid/Legotrain-vAN-20151019-2.76TeV-QA/GammaConvCalo_MC_LHC12f1b_1.root",
+//		"/home/daniel/data/work/Grid/Legotrain-vAN-20151019-2.76TeV-QA/GammaConvCalo_MC_LHC12f1b_1.root",
+//		"/home/daniel/data/work/Grid/Legotrain-vAN-20150825-ConvCalo/GammaConvCalo_MC_LHC12i3_1.root",
+//		"/home/daniel/data/work/Grid/Legotrain-vAN-20151019-2.76TeV-QA/GammaConvCalo_MC_LHC15g2_96.root",
+//		"/home/daniel/data/work/Grid/Legotrain-vAN-20151019-2.76TeV-QA/GammaConvCalo_MC_LHC15g2_96.root",
+//		"/home/daniel/data/work/Grid/Legotrain-vAN-20151019-2.76TeV-QA/GammaConvCalo_MC_LHC15g2_95.root",
+//		"/home/daniel/data/work/Grid/Legotrain-vAN-20151019-2.76TeV-QA/GammaConvCalo_MC_LHC15g2_95.root"
+//	};
+//	TString name[nFiles]={
+//		"LHC11a_00",
+//		"LHC11a_51",
+//		"LHC13g_00",
+//		"LHC13g_52",
+//		"LHC13g_83",
+//		"LHC13g_85",
+//		"LHC12f1a_00",
+//		"LHC12f1a_51",
+//		"LHC12f1b_00",
+//		"LHC12f1b_51",
+//		"LHC12i3_00",
+//		"LHC15g2_00",
+//		"LHC15g2_52",
+//		"LHC15g2_83",
+//		"LHC15g2_85"
+//	};
+//	Int_t cutNr[nFiles]={0,1,0,1,0,1,0,1,0,1,0,0,1,0,1};
+
+  // 8TeV
+  const Int_t nFiles=24;
+
+  TString mainDir[nFiles];
+  TString path[nFiles]={
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12a_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12b_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12c_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12d_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12f_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12g_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12h_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12i_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1a1_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1b_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1c_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1d_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1f_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1g_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1h_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1i_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2a_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2b_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2c_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2d_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2f_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2g_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2h_GammaConvCalo_120.root",
+      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2i_GammaConvCalo_120.root",
+  };
+  TString name[nFiles]={
+      "LHC12a_00",
+      "LHC12b_00",
+      "LHC12c_00",
+      "LHC12d_00",
+      "LHC12f_00",
+      "LHC12g_00",
+      "LHC12h_00",
+      "LHC12i_00",
+      "LHC15h1a1_00",
+      "LHC15h1b_00",
+      "LHC15h1c_00",
+      "LHC15h1d_00",
+      "LHC15h1f_00",
+      "LHC15h1g_00",
+      "LHC15h1h_00",
+      "LHC15h1i_00",
+      "LHC15h2a_00",
+      "LHC15h2b_00",
+      "LHC15h2c_00",
+      "LHC15h2d_00",
+      "LHC15h2f_00",
+      "LHC15h2g_00",
+      "LHC15h2h_00",
+      "LHC15h2i_00"
+  };
+  Int_t cutNr[nFiles]={0,0,0,0,0,0,0,0,
+                       0,0,0,0,0,0,0,0,
+                       0,0,0,0,0,0,0,0
+                      };
+
+	TDirectory::AddDirectory(0);
+	TFile::AddDirectory(0);
+
+	for(Int_t i=0; i<nFiles; i++){
+		TFile* fFile = new TFile(path[i].Data(),"READ");
+		if(fFile->IsZombie()){cout << "ERROR: File " << path[i].Data() << " could not be openend! Returning..." << endl; return;}
+		else{
+			cout << "Reading file: " << path[i].Data();
+			TKey *key;
+			TIter next(fFile->GetListOfKeys());
+			while ((key=(TKey*)next())) {cout << Form(" - found TopDir: %s",key->GetName()); mainDir[i] = key->GetName();}
+			cout << endl;
+		}
+
+		TList *listInput =(TList*)fFile->Get(mainDir[i].Data());
+			listInput->SetOwner(kTRUE);
+		TList *listCuts = (TList*)listInput->At(cutNr[i]);
+			listCuts->SetOwner(kTRUE);
+		TString nameCuts = listCuts->GetName();
+		nameCuts.Replace(0,11,"");
+		delete listInput;
+
+		TList* TopDir = (TList*) fFile->Get(mainDir[i].Data());
+			TopDir->SetOwner(kTRUE);
+			if(TopDir == NULL) {cout << "ERROR: TopDir not Found"<<endl; return;}
+		TList* TopContainer= (TList*) TopDir->FindObject(Form("Cut Number %s",nameCuts.Data()));
+			TopContainer->SetOwner(kTRUE);
+			if(TopContainer == NULL) {cout << "ERROR: " << Form("Cut Number %s",nameCuts.Data()) << " not found in File" << endl; return;}
+		TList* ESDContainer = (TList*) TopContainer->FindObject(Form("%s ESD histograms",nameCuts.Data()));
+			ESDContainer->SetOwner(kTRUE);
+			if(ESDContainer == NULL) {cout << "ERROR: " << Form("%s ESD histograms",nameCuts.Data()) << " not found in File" << endl; return;}
+
+		TH1D* fHistNGoodTracks = (TH1D*)ESDContainer->FindObject("GoodESDTracks");
+        fHistNGoodTracks->Sumw2();
+        Double_t integral = fHistNGoodTracks->Integral();
+        fHistNGoodTracks->Scale(1./integral);
+
+		TFile* fOutput;
+		if(i==0) fOutput = new TFile("ESDTracks.root","RECREATE");
+		else fOutput = new TFile("ESDTracks.root","UPDATE");
+
+		fHistNGoodTracks->Write(name[i].Data());
+
+		fOutput->Close();
+		delete fOutput;
+
+        fFile->Close();
+		delete fFile;
+	}
+
+	return;
+}
