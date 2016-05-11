@@ -3,7 +3,7 @@ if [ $1 = "fbock" ]; then
 elif [ $1 = "leardini" ]; then 
    PHOTONCONVDIR=/home/admin1/leardini/newSoftware/AnalysisSoftware
 elif [ $1 = "dmuhlhei" ]; then
-   PHOTONCONVDIR=/home/daniel/data/work/photonconv/AnalysisSoftware
+   PHOTONCONVDIR=/home/daniel/data/work/pcgGit/AnalysisSoftware
 fi
 
 echo $PHOTONCONVDIR
@@ -25,6 +25,7 @@ ln -sf $PHOTONCONVDIR/TaskV1/*.h TaskV1/
 ln -sf $PHOTONCONVDIR/TaskV1/*.C TaskV1/
 ln -sf $PHOTONCONVDIR/TaskQA/*.h TaskQA/
 ln -sf $PHOTONCONVDIR/TaskQA/*.C TaskQA/
+ln -sf $PHOTONCONVDIR/DataQA DataQA
 ln -sf $PHOTONCONVDIR/ExternalInput/* ExternalInput/
 ln -sf $PHOTONCONVDIR/ExternalInputPbPb/* ExternalInputPbPb/
 ln -sf $PHOTONCONVDIR/ExternalInputpPb/* ExternalInputpPb/
@@ -52,6 +53,22 @@ elif [ $2 = "pPb5023GeV" ]; then
     rm *2760*
     rm *7TeV*
     rm *8TeV*
+    rm *13TeV*
+    rm *LHC11h*
+    rm *LHC10*
+elif [ $2 = "pp7TeV" ]; then
+    rm *PbPb*
+    rm *pPb*
+    rm *2760*
+    rm *8TeV*
+    rm *13TeV*
+    rm *LHC11h*
+    rm *LHC10*
+elif [ $2 = "pp8TeV" ]; then
+    rm *PbPb*
+    rm *pPb*
+    rm *2760*
+    rm *7TeV*
     rm *13TeV*
     rm *LHC11h*
     rm *LHC10*
