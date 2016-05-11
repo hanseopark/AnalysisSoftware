@@ -255,31 +255,54 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 
 //    const Int_t nFiles = 2;
 //    TString Files[nFiles] = {"GammaCalo_101","GammaConvCalo_101"};
-    const Int_t nSets = 4;
-    const Int_t nData = 4;
-    TString DataSets[nSets]={
-      "LHC12d_T50", "LHC12d_T100","LHC12d_T200","LHC12d_T300"
-    };
 
-    TString train = "Legotrain-vAN-20160401-8TeV-TenderVariations";
-    Int_t trainRuns[nSets] = {1483,1484,1485,1486};
 
-    TString runlist[nSets] = {"merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9"
-                             };
+//    const Int_t nSets = 4;
+//    const Int_t nData = 4;
+//    TString DataSets[nSets]={
+//      "LHC12d_T50", "LHC12d_T100","LHC12d_T200","LHC12d_T300"
+//    };
 
-    const Int_t nFiles = 1;
-    TString Files[nFiles] = {"GammaConvCalo_101"};
+//    TString train = "Legotrain-vAN-20160401-8TeV-TenderVariations";
+//    Int_t trainRuns[nSets] = {1483,1484,1485,1486};
 
-    const Int_t nMerge = 0;
-    TString strMerge[nMerge]={};
-    std::vector<Int_t> mergeVec[nMerge];
-    std::vector<Int_t>::iterator it;
+//    TString runlist[nSets] = {"merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9"
+//                             };
+
+//    const Int_t nFiles = 1;
+//    TString Files[nFiles] = {"GammaConvCalo_101"};
+
+//    const Int_t nMerge = 0;
+//    TString strMerge[nMerge]={};
+//    std::vector<Int_t> mergeVec[nMerge];
+//    std::vector<Int_t>::iterator it;
+
+
 //    mergeVec[0].push_back(11); mergeVec[0].push_back(12);
 //    mergeVec[1].push_back(13); mergeVec[1].push_back(14);
 //    mergeVec[2].push_back(15); mergeVec[2].push_back(16);
 //    mergeVec[3].push_back(17); mergeVec[3].push_back(18);
 //    mergeVec[4].push_back(19); mergeVec[4].push_back(20);
 //    mergeVec[5].push_back(21); mergeVec[5].push_back(22);
+
+    const Int_t nSets = 1;
+    const Int_t nData = 0;
+    TString DataSets[nSets]={
+      "LHC16c2"
+    };
+
+    TString train = "Legotrain-vAN-20160413-8TeV-JetJetValid";
+    Int_t trainRuns[nSets] = {2009};
+
+    TString runlist[nSets] = {"merge"};
+
+    const Int_t nFiles = 2;
+    TString Files[nFiles] = {"GammaCalo_111","GammaConvCalo_31"};
+
+    const Int_t nMerge = 0;
+    TString strMerge[nMerge]={};
+    std::vector<Int_t> mergeVec[nMerge];
+    std::vector<Int_t>::iterator it;
 //*********************************************************************************************************************************
 //*********************************************************************************************************************************
 //*********************************************************************************************************************************
@@ -453,7 +476,7 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
           else{
             cout << "\n\n\t**********************************************************************************************" << endl;
             cout << "\t**********************************************************************************************" << endl;
-            cout << "\t*******************Err: copyAlien2Local(), check runlist in photonconv rep!*******************" << endl;
+            cout << "\t*******************Err: copyAlien2Local()!****************************************************" << endl;
             cout << "\t**********************************************************************************************" << endl;
             cout << "\t**********************************************************************************************\n" << endl;
             nErr[i]++;
