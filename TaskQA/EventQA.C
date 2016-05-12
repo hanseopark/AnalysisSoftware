@@ -319,6 +319,7 @@ void EventQA(
 		nEvents[i] = 0;
         nEventsAll[i] = 0;
 		TH1D* fHistNEvents = (TH1D*)ESDContainer->FindObject("NEvents");
+        if(plotDataSets[i].Contains("JetJet") || plotDataSets[i].Contains("jetjet")) fHistNEvents = (TH1D*)ESDContainer->FindObject("NEventsWOWeight");
         if(fHistNEvents){
           nEvents[i] = (Double_t) GetNEvents(fHistNEvents,kFALSE);
           nEventsAll[i] = fHistNEvents->GetEntries() - fHistNEvents->GetBinContent(4);

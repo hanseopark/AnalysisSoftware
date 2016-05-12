@@ -749,7 +749,8 @@ void GetMinMaxBin(TH1* hist, Int_t &iMin, Int_t &iMax){
 }
 
 void GetMinMaxBin(TH2* hist2D, Int_t &iMin, Int_t &iMax){
-
+    if(!hist2D){cout << "INFO: NULL pointer given to GetMinMaxBin!'" << endl; return;}
+    //if(hist2D->IsA()!=TH2::Class()){cout << Form("INFO: No TH2 given to GetMinMaxBin(TH2*): %s!'",hist2D->GetName()) << endl; return;}
     TH1* hist = (TH1*) hist2D->ProjectionX(Form("%s_project",hist2D->GetName()),1,hist2D->GetNbinsY());
 	GetMinMaxBin(hist, iMin, iMax);
 	delete hist;
@@ -757,7 +758,8 @@ void GetMinMaxBin(TH2* hist2D, Int_t &iMin, Int_t &iMax){
 }
 
 void GetMinMaxBinY(TH2* hist2D, Int_t &iMin, Int_t &iMax){
-
+    if(!hist2D){cout << "INFO: NULL pointer given to GetMinMaxBin!'" << endl; return;}
+    //if(hist2D->IsA()!=TH2::Class()){cout << Form("INFO: No TH2 given to GetMinMaxBin(TH2*): %s!'",hist2D->GetName()) << endl; return;}
     TH1* hist = (TH1*) hist2D->ProjectionY(Form("%s_project",hist2D->GetName()),1,hist2D->GetNbinsX());
 	GetMinMaxBin(hist, iMin, iMax);
 	delete hist;
@@ -1290,7 +1292,7 @@ void DrawPeriodQACompareHistoRatioTH1(TCanvas* canvas,Double_t leftMargin,Double
 		//y-axis
 		vecTemp.at(iVec)->GetYaxis()->SetTitleOffset(yOffset);
         vecTemp.at(iVec)->SetYTitle("");
-		vecTemp.at(iVec)->GetYaxis()->SetRangeUser(0,2);
+        vecTemp.at(iVec)->GetYaxis()->SetRangeUser(0,2);
 		vecTemp.at(iVec)->GetYaxis()->SetLabelFont(42);
 		vecTemp.at(iVec)->GetYaxis()->SetTitleFont(62);
         vecTemp.at(iVec)->GetYaxis()->SetTitleSize(0.04);
