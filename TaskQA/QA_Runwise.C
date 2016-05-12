@@ -13,6 +13,7 @@ void QA_Runwise(
 				Int_t doExtQA = 2,				// 0: switched off, 1: normal extQA, 2: with Cell level plots
 				TString suffix = "eps"
 ){
+    TString folderRunlists = "DownloadAndDataPrep/runlists";
 
 	const Int_t maxSets = 20;
 	TString DataSets[maxSets];
@@ -509,14 +510,14 @@ void QA_Runwise(
 	}
 //**************************************************************************************************************
 	if(doEventQA) EventQA_Runwise(nSets,nData,fEnergyFlag,filePath,fileName,DataSets,plotDataSets,mode,cutNr,
-								  doExtQA,doEquidistantXaxis,doTrigger,doHistsForEverySet,addSubFolder,useDataRunListForMC,markerSize,suffix);
+                                  doExtQA,doEquidistantXaxis,doTrigger,doHistsForEverySet,addSubFolder,useDataRunListForMC,markerSize,suffix,folderRunlists);
 	if(doPhotonQA){
 		TString path = filePath;
 		if(!filePathPhoton.IsNull()) path = filePathPhoton;
 		PhotonQA_Runwise(nSets,nData,fEnergyFlag,path,fileName,DataSets,plotDataSets,mode,cutNr,
-									doExtQA,doEquidistantXaxis,doTrigger,doHistsForEverySet,addSubFolder,useDataRunListForMC,markerSize,suffix);
+                                    doExtQA,doEquidistantXaxis,doTrigger,doHistsForEverySet,addSubFolder,useDataRunListForMC,markerSize,suffix,folderRunlists);
 	}
 	if(doClusterQA) ClusterQA_Runwise(nSets,nData,fEnergyFlag,filePath,fileName,DataSets,plotDataSets,mode,cutNr,
-									  doExtQA,doEquidistantXaxis,doTrigger,doHistsForEverySet,addSubFolder,useDataRunListForMC,markerSize,suffix);
+                                      doExtQA,doEquidistantXaxis,doTrigger,doHistsForEverySet,addSubFolder,useDataRunListForMC,markerSize,suffix,folderRunlists);
 	return;
 }

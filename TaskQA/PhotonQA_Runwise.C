@@ -18,7 +18,8 @@ void PhotonQA_Runwise(
 				Bool_t addSubFolder = kFALSE,
 				Bool_t useDataRunListForMC = kFALSE,
 				Size_t markerSize = 1,
-				TString suffix = "eps"
+                TString suffix = "eps",
+                TString folderRunlists = ""
 				)
 {
 	cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -74,7 +75,7 @@ void PhotonQA_Runwise(
 	std::vector<TString> vecRuns;
 
 //******************************************************************************
-	TString fileRuns = Form("runNumbers%s.txt", (vecDataSet.at(0)).Data());
+    TString fileRuns = Form("%s/runNumbers%s.txt", folderRunlists.Data(), (vecDataSet.at(0)).Data());
 	if(!readin(fileRuns, vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
 
 	TFile* fPhotonQAFile = new TFile(Form("%s/%s/%s/AnalysisResults.root", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data()));
@@ -132,9 +133,9 @@ void PhotonQA_Runwise(
 	for(Int_t i=0; i<nSets; i++)
 	{
 		vecRuns.clear();
-		fileRuns = Form("runNumbers%s.txt", vecDataSet.at(i).Data());
+        fileRuns = Form("%s/runNumbers%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data());
 		if(useDataRunListForMC && i>=nData) {
-			fileRuns = Form("runNumbers%s-%s.txt", vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
+            fileRuns = Form("%s/runNumbers%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
 			cout << "Switch useDataRunListForMC is true, reading runs from: " << fileRuns.Data() << endl;
 		}
 		if(!readin(fileRuns, vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
@@ -532,9 +533,9 @@ void PhotonQA_Runwise(
 	{
 		vecRuns.clear();
 		fDataSet = vecDataSet.at(i);
-		fileRuns = Form("runNumbers%s.txt", fDataSet.Data());
+        fileRuns = Form("%s/runNumbers%s.txt", folderRunlists.Data(), fDataSet.Data());
 		if(useDataRunListForMC && i>=nData) {
-			fileRuns = Form("runNumbers%s-%s.txt", vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
+            fileRuns = Form("%s/runNumbers%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
 			cout << "Switch useDataRunListForMC is true, reading runs from: " << fileRuns.Data() << endl;
 		}
 		if(!readin(fileRuns, vecRuns)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
@@ -1004,11 +1005,11 @@ void PhotonQA_Runwise(
 		{
 			vecRuns.clear();
 			fDataSet = vecDataSet.at(i);
-			fileRuns = Form("runNumbers%s.txt", fDataSet.Data());
+            fileRuns = Form("%s/runNumbers%s.txt", folderRunlists.Data(), fDataSet.Data());
 			outputDirDataSet = Form("%s/%s",outputDir.Data(), DataSets[i].Data());
 
 			if(useDataRunListForMC && i>=nData) {
-				fileRuns = Form("runNumbers%s-%s.txt", vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
+                fileRuns = Form("%s/runNumbers%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
 				outputDirDataSet = Form("%s/%s-%s", outputDir.Data(), DataSets[i].Data(),DataSets[0].Data());
 				cout << "Switch useDataRunListForMC is true, reading runs from: " << fileRuns.Data() << endl;
 			}

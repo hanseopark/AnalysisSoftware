@@ -17,7 +17,8 @@ void ClusterQA_Runwise(
 				Bool_t addSubFolder = kFALSE,
 				Bool_t useDataRunListForMC = kFALSE,
 				Size_t markerSize = 1,
-				TString suffix = "eps"
+                TString suffix = "eps",
+                TString folderRunlists = ""
 				)
 {
 	cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -82,7 +83,7 @@ void ClusterQA_Runwise(
 	std::vector<TString> vecRuns;
 
 //****************************** Determine which cut to process ************************************************
-	TString fileRuns = Form("runNumbers%s.txt", (vecDataSet.at(0)).Data());
+    TString fileRuns = Form("%s/runNumbers%s.txt", folderRunlists.Data(), (vecDataSet.at(0)).Data());
 	if(!readin(fileRuns, vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
 	TFile* fCutFile = new TFile(Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data()));
 	if(fCutFile->IsZombie()) {cout << "ERROR: ROOT file '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data()) << "' could not be openend, return!" << endl; return;}
@@ -185,9 +186,9 @@ void ClusterQA_Runwise(
 	for(Int_t i=0; i<nSets; i++)
 	{
 		vecRuns.clear();
-		fileRuns = Form("runNumbers%s.txt", vecDataSet.at(i).Data());
+        fileRuns = Form("%s/runNumbers%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data());
 		if(useDataRunListForMC && i>=nData) {
-			fileRuns = Form("runNumbers%s-%s.txt", vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
+            fileRuns = Form("%s/runNumbers%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
 			cout << "Switch useDataRunListForMC is true, reading runs from: " << fileRuns.Data() << endl;
 		}
 		if(!readin(fileRuns, vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
@@ -630,9 +631,9 @@ void ClusterQA_Runwise(
 	{
 		vecRuns.clear();
 		fDataSet = vecDataSet.at(i);
-		fileRuns = Form("runNumbers%s.txt", fDataSet.Data());
+        fileRuns = Form("%s/runNumbers%s.txt", folderRunlists.Data(), fDataSet.Data());
 		if(useDataRunListForMC && i>=nData) {
-			fileRuns = Form("runNumbers%s-%s.txt", vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
+            fileRuns = Form("%s/runNumbers%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
 			cout << "Switch useDataRunListForMC is true, reading runs from: " << fileRuns.Data() << endl;
 		}
 		if(!readin(fileRuns, vecRuns)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
@@ -1308,11 +1309,11 @@ void ClusterQA_Runwise(
 		{
 			vecRuns.clear();
 			fDataSet = vecDataSet.at(i);
-			fileRuns = Form("runNumbers%s.txt", fDataSet.Data());
+            fileRuns = Form("%s/runNumbers%s.txt", folderRunlists.Data(), fDataSet.Data());
 			outputDirDataSet = Form("%s/%s",outputDir.Data(), DataSets[i].Data());
 
 			if(useDataRunListForMC && i>=nData) {
-				fileRuns = Form("runNumbers%s-%s.txt", vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
+                fileRuns = Form("%s/runNumbers%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
 				outputDirDataSet = Form("%s/%s-%s", outputDir.Data(), DataSets[i].Data(),DataSets[0].Data());
 				cout << "Switch useDataRunListForMC is true, reading runs from: " << fileRuns.Data() << endl;
 			}
