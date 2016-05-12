@@ -97,12 +97,25 @@ void PhotonQA_Runwise(
 	nameCutsPQAshort.Replace(0,15,"");
 	nameCutsPQAshort.Replace(8,35,"");
 
+    TString cutTreeProjection = "";
+    Bool_t cutTreeStdCut = kTRUE;
+    //choosing cut to project from tree
+    cutTreeProjection = "0004314141";
+    if(fEnergyFlag.CompareTo("8TeV")==0){cutTreeProjection = "0005314140"; cutTreeStdCut = kFALSE;}
+
 	cout << endl;
-	cout << "long cutnumber for PhotonQA: '" << nameCutsPQA << "'\nshort cutnumber for PhotonQA: '"<< nameCutsPQAshort << "'" << endl;
+    cout << "long cutnumber for PhotonQA: '" << nameCutsPQA << "'\nevent cutnumber for PhotonQA: '"<< nameCutsPQAshort << "'" << endl;
+    cout << "****************************************************************************" << endl;
+    cout << "****************************************************************************" << endl;
+    cout << "****************************************************************************\n" << endl;
+    if(cutTreeStdCut) cout << "WARNING: using standard cut in the following, please check carefully (and add your desired cut to PhotonQA_Runwise!" << endl;
+    cout << "using cutnumber: '" << cutTreeProjection << "' to project out of tree, double check with BuildHistogramsForGammaQAAdvV3.C!!!" << endl;
+    cout << "\n****************************************************************************" << endl;
+    cout << "****************************************************************************" << endl;
+    cout << "****************************************************************************" << endl;
 
 	fPhotonQAFile->Close();
 	delete fPhotonQAFile;
-	cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 	if(nameMainDir.IsNull() || !nameMainDir.BeginsWith("Gamma")){cout << "ERROR, Unable to obtain valid name of MainDir:|" << nameMainDir.Data() << "|, running in mode: " << fMode << endl; return;}
 
 	cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -595,7 +608,7 @@ void PhotonQA_Runwise(
 				delete RootFilePQA;
 
 				cout << "\t\tCalling BuildHistogramsForGammaQAAdvV3..." << endl;
-				BuildHistogramsForGammaQAAdvV3(fAnalysisResultsFile.Data(),nameCutsPQA,nameCutsPQAshort,(i>=nData),0,Form("%s/%s/%s/PhotonQA",filePath.Data(), fDataSet.Data(), fRunNumber.Data()),kTRUE);
+                BuildHistogramsForGammaQAAdvV3(fAnalysisResultsFile.Data(),nameCutsPQA,cutTreeProjection,(i>=nData),0,Form("%s/%s/%s/PhotonQA",filePath.Data(), fDataSet.Data(), fRunNumber.Data()),kTRUE);
 				cout << "\t\tdone!" << endl;
 				cout << "\t\t----------------------------------------------------------------------------" << endl;
 				doMergeOutput = kTRUE;
