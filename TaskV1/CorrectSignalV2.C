@@ -346,25 +346,38 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     histoDefaultTrueSecFracModeledToData->Scale(1+doubleAddFactorK0s);
     histoDefaultTrueSecFracModeledToData->Add(histoDefaultTrueSecFracNotFromK0sMeson,1);
     
+    cout << "fitting tot sec frac" << endl;
     TF1* fitDefaultSecFrac                          = new TF1("fitDefaultSecFrac","[0]/pow(x,[1])");
     fitDefaultSecFrac->SetRange(minPtMesonSec, maxPtMeson);
     TFitResultPtr resultSecFrac                     = histoDefaultTrueSecFracMeson->Fit(fitDefaultSecFrac,"SINRME+","",minPtMesonSec, maxPtMeson);
+    cout << "fitting tot sec frac wide" << endl;
     TF1* fitDefaultSecFracWide                      = new TF1("fitDefaultSecFrac","[0]/pow(x,[1])");
     fitDefaultSecFracWide->SetRange(minPtMesonSec, maxPtMeson);
     TFitResultPtr resultSecFracWide                 = histoDefaultTrueSecFracMesonWide->Fit(fitDefaultSecFracWide,"SINRME+","",minPtMesonSec, maxPtMeson);
+    cout << "fitting tot sec frac narrow" << endl;
     TF1* fitDefaultSecFracNarrow                    = new TF1("fitDefaultSecFrac","[0]/pow(x,[1])");
     fitDefaultSecFracNarrow->SetRange(minPtMesonSec, maxPtMeson);
     TFitResultPtr resultSecFracNarrow               = histoDefaultTrueSecFracMesonNarrow->Fit(fitDefaultSecFracNarrow,"SINRME+","",minPtMesonSec, maxPtMeson);
+    cout << "fitting K0s sec frac " << endl;
     TF1* fitDefaultSecFracFromK0                    = new TF1("fitDefaultSecFrac","[0]/pow(x,[1])");
     fitDefaultSecFracFromK0->SetRange(minPtMesonSec, maxPtMeson);
+    fitDefaultSecFracFromK0->SetParLimits(0,0.1*fitDefaultSecFrac->GetParameter(0),10*fitDefaultSecFrac->GetParameter(0));
+    fitDefaultSecFracFromK0->SetParLimits(1,0.1*fitDefaultSecFrac->GetParameter(1),10*fitDefaultSecFrac->GetParameter(1));
     TFitResultPtr resultSecFracFromK0               = histoDefaultTrueSecFracFromK0SMeson->Fit(fitDefaultSecFracFromK0,"SINRME+","",minPtMesonSec, maxPtMeson);
+    cout << "fitting K0s sec frac wide" << endl;
     TF1* fitDefaultSecFracFromK0Wide                = new TF1("fitDefaultSecFrac","[0]/pow(x,[1])");
     fitDefaultSecFracFromK0Wide->SetRange(minPtMesonSec, maxPtMeson);
+    fitDefaultSecFracFromK0Wide->SetParLimits(0,0.1*fitDefaultSecFrac->GetParameter(0),10*fitDefaultSecFrac->GetParameter(0));
+    fitDefaultSecFracFromK0Wide->SetParLimits(1,0.1*fitDefaultSecFrac->GetParameter(1),10*fitDefaultSecFrac->GetParameter(1));
     TFitResultPtr resultSecFracFromK0Wide           = histoDefaultTrueSecFracFromK0SMesonWide->Fit(fitDefaultSecFracFromK0Wide,"SINRME+","",minPtMesonSec, maxPtMeson);
+    cout << "fitting tot sec frac narrow" << endl;
     TF1* fitDefaultSecFracFromK0Narrow              = new TF1("fitDefaultSecFrac","[0]/pow(x,[1])");
     fitDefaultSecFracFromK0Narrow->SetRange(minPtMesonSec, maxPtMeson);
+    fitDefaultSecFracFromK0Narrow->SetParLimits(0,0.1*fitDefaultSecFrac->GetParameter(0),10*fitDefaultSecFrac->GetParameter(0));
+    fitDefaultSecFracFromK0Narrow->SetParLimits(1,0.1*fitDefaultSecFrac->GetParameter(1),10*fitDefaultSecFrac->GetParameter(1));
     TFitResultPtr resultSecFracFromK0Narrow         = histoDefaultTrueSecFracFromK0SMesonNarrow->Fit(fitDefaultSecFracFromK0Narrow,"SINRME+","",minPtMesonSec, maxPtMeson);
 
+    cout << "survived fitting" << endl;
 
     //*******************************************************************************************************
     //***********************************Reading MC correction file *****************************************
@@ -765,9 +778,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         histoYieldGGMesonLeftWide->Multiply(histoYieldTrueGGFracMesonWide);
     }
     
-    Double_t mesonMassExpect = 0;
-    if( !kIsEta )     mesonMassExpect = TDatabasePDG::Instance()->GetParticle(111)->Mass();
-    if( kIsEta )     mesonMassExpect = TDatabasePDG::Instance()->GetParticle(221)->Mass();
+    Double_t mesonMassExpect    = 0;
+    if( !kIsEta )    
+        mesonMassExpect         = TDatabasePDG::Instance()->GetParticle(111)->Mass();
+    if( kIsEta )     
+        mesonMassExpect         = TDatabasePDG::Instance()->GetParticle(221)->Mass();
     
     cout << "made it!!" << endl;
     
@@ -1251,7 +1266,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         
         if ( !kIsEta ){
             histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.140);
-            if (mode == 2 || mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.140);
+            if (mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.140);
+            if (mode == 2 ) histoMassMeson->GetYaxis()->SetRangeUser(0.128,0.140);
             if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
         } else {
             histoMassMeson->GetYaxis()->SetRangeUser(0.54,0.56);
@@ -1367,7 +1383,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             
             if ( !kIsEta ){
                 histoMassMeson->GetYaxis()->SetRangeUser(0.125,0.150);
-                if (mode == 2 || mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.140);
+                if (mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.140);
+                if (mode == 2 ) histoMassMeson->GetYaxis()->SetRangeUser(0.125,0.140);
                 if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
             } else {
                 histoMassMeson->GetYaxis()->SetRangeUser(0.52,0.58);
@@ -1566,10 +1583,14 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         TCanvas* canvasFWHM = new TCanvas("canvasFWHM","",200,10,1350,900);  // gives the page size
         DrawGammaCanvasSettings( canvasFWHM, 0.07, 0.01, 0.031, 0.082);
         
-        Double_t maxFWHM        = 0.022;
+        Double_t maxFWHM        = 0.015;
+        if (mode == 2)
+          maxFWHM               = 0.015;
         if (kIsEta) 
           maxFWHM               = 0.022;
         if (kIsEta && mode == 4)
+          maxFWHM               = 0.060;
+        if (kIsEta && mode == 2)
           maxFWHM               = 0.060;
 
         Double_t minFWHM        = -0.004;
@@ -1616,11 +1637,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //**********************************************************************************        
         
         if (histoWidthGaussianMeson){
-            Double_t maxFWHMGaus    = 0.022;
+            Double_t maxFWHMGaus    = 0.015;
+            if (mode == 2)
+                maxFWHMGaus         = 0.015;
             if (kIsEta) 
-              maxFWHMGaus           = 0.022;
+                maxFWHMGaus         = 0.022;
             if (kIsEta && mode == 4)
-              maxFWHMGaus           = 0.060;
+                maxFWHMGaus         = 0.060;
+            if (kIsEta && mode == 2)
+                maxFWHMGaus         = 0.060;
           
             histoFWHMMeson->GetYaxis()->SetRangeUser(minFWHM, maxFWHMGaus);
             histoFWHMMeson->DrawCopy("e1,p"); 
@@ -1671,11 +1696,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //**********************************************************************************
         //******************** FWHM Plot further decomposed for PCM + Calo *****************
         //**********************************************************************************        
-          Double_t maxFWHMAdd     = 0.030;
-          if (kIsEta) 
-            maxFWHMAdd            = 0.030;
-          if (kIsEta && mode == 4)
-            maxFWHMAdd            = 0.070;
+        Double_t maxFWHMAdd         = 0.030;
+        if (mode == 2)      
+            maxFWHMAdd              = 0.015;
+        if (kIsEta) 
+            maxFWHMAdd              = 0.030;
+        if (kIsEta && mode == 4)
+            maxFWHMAdd              = 0.070;
+        if (kIsEta && mode == 2)
+            maxFWHMAdd              = 0.060;
 
         if (mode==2 || mode == 3){
 
