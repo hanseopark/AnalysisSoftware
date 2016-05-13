@@ -301,6 +301,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TFile*  fileCorrectedPi0        [MaxNumberOfFiles];
     TString FileNameUnCorrectedPi0  [MaxNumberOfFiles];
     TFile*  fileUnCorrectedPi0      [MaxNumberOfFiles];
+    TString FileNameUnCorrectedMCPi0[MaxNumberOfFiles];
+    TFile*  fileUnCorrectedMCPi0    [MaxNumberOfFiles];
 
     TH1D*   histoCorrectedYieldPi0  [MaxNumberOfFiles];
     TH1D*   histoRawClusterPt       [MaxNumberOfFiles];
@@ -327,6 +329,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TH1D*   histoTriggerEffPi0      [MaxNumberOfFiles];
     Bool_t  enableTriggerEffPi0     [MaxNumberOfFiles];
     Bool_t  enableTriggerEffPi0All                          = kFALSE;
+    Bool_t  enableTriggerRejecCompMC                        = kFALSE;
+    
+    TH1D*   histoMCRawClusterPt     [MaxNumberOfFiles];
+    TH1D*   histoMCRatioRawClusterPt[MaxNumberOfFiles];
     
     for (Int_t i=0; i< nrOfTrigToBeComb; i++){
         // Define CutSelections
@@ -354,6 +360,18 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         cout<< FileNameUnCorrectedPi0[i] << endl;
         fileUnCorrectedPi0[i]                               = new TFile(FileNameUnCorrectedPi0[i]);
         if (fileUnCorrectedPi0[i]->IsZombie()) return;
+
+        if (isMC.CompareTo("data") == 0){
+            FileNameUnCorrectedMCPi0[i]                     = Form("%s/%s/Pi0_MC_GammaConvV1WithoutCorrection_%s.root",cutNumber[i].Data(), optionEnergy.Data(), cutNumber[i].Data());
+            if (mode == 10) FileNameUnCorrectedMCPi0[i]     = Form("%s/%s/Pi0_MC_GammaMergedWithoutCorrection_%s.root",cutNumber[i].Data(), optionEnergy.Data(), cutNumber[i].Data());
+
+            cout<< FileNameUnCorrectedMCPi0[i] << endl;
+            fileUnCorrectedMCPi0[i]                         = new TFile(FileNameUnCorrectedMCPi0[i]);
+            if (fileUnCorrectedMCPi0[i]->IsZombie()) 
+                enableTriggerRejecCompMC                    = kFALSE;
+            else 
+                enableTriggerRejecCompMC                    = kTRUE;
+        }
         
         histoEventQualtity[i]                               = (TH1F*)fileCorrectedPi0[i]->Get("NEvents");
         histoCorrectedYieldPi0[i]                           = (TH1D*)fileCorrectedPi0[i]->Get(nameCorrectedYield.Data());
@@ -460,6 +478,22 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             delete pol0_2;
             cout << "trigger rejection factor " << triggerName[i].Data() << "/" << triggerName[trigSteps[i][0]].Data() << ": " << triggRejecFac[i][trigSteps[i][0]] 
                   << "+-" << triggRejecFacErr[i][trigSteps[i][0]] << endl;
+                  
+            if (enableTriggerRejecCompMC){      
+                histoMCRawClusterPt[i]                  = (TH1D*)fileUnCorrectedMCPi0[i]->Get("ClusterPtPerEvent");
+                histoMCRawClusterPt[i]->SetName(Form("MCClusterPtPerEvent_%s",cutNumber[i].Data()));
+                histoMCRatioRawClusterPt[i]             = (TH1D*)histoMCRawClusterPt[i]->Clone(Form("MCRatioCluster_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()));
+                histoMCRatioRawClusterPt[i]->Sumw2();
+                histoMCRatioRawClusterPt[i]->Divide(histoMCRatioRawClusterPt[i],histoMCRawClusterPt[trigSteps[i][0]],1.,1.,"");
+
+                TF1* pol0_MC                            = new TF1("pol0_MC","[0]",minPt[i],maxPt[i]); //
+                histoMCRatioRawClusterPt[i]->Fit(pol0_MC,"QNRMEX0+","",minPt[i],maxPt[i]);
+
+                Double_t scaleFactorMC                    = triggRejecFac[i][trigSteps[i][0]]/pol0_MC->GetParameter(0);
+                histoMCRatioRawClusterPt[i]->Scale(scaleFactorMC);
+                
+                cout << "data: "<<triggRejecFac[i][trigSteps[i][0]] << "\t MC: " << pol0_MC->GetParameter(0) << "\t scale factor: " << scaleFactorMC<< endl; 
+            }    
         }
     }
     
@@ -668,7 +702,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             pol0->SetRange(minPt[i],maxPt[i]);
             pol0->Draw("same");
             histoRatioRawClusterPt[i]->DrawCopy("e1,same"); 
-            TLegend* legendTriggRejectSingle = GetAndSetLegend2(0.33, 0.12, 0.92, 0.12+(1.05*(nrOfTrigToBeComb-2+1)*textSizeSpectra2),textPixelPP);
+            TLegend* legendTriggRejectSingle = GetAndSetLegend2(0.33, 0.12, 0.92, 0.12+(1.05*(2)*textSizeSpectra2),textPixelPP);
             legendTriggRejectSingle->SetMargin(0.02);
             legendTriggRejectSingle->SetNColumns(3);
             legendTriggRejectSingle->AddEntry(histoRatioRawClusterPt[i],Form("   %s/%s",triggerNameLabel[i].Data(),triggerNameLabel[trigSteps[i][0]].Data() ),"p");
@@ -681,6 +715,28 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             canvasTriggerRejectLinear->Update();
             canvasTriggerRejectLinear->SaveAs(Form("%s/%s_TriggerRejectionFactorsLinY_Single_%s_%s.%s",outputDir.Data(), isMC.Data(), triggerName[i].Data(), 
                                                    triggerName[trigSteps[i][0]].Data(), suffix.Data())); 
+         
+            if (enableTriggerRejecCompMC) {
+                histo2DTriggRejectLinear->DrawCopy(); 
+
+                triggRejecCLPol0->Draw("e3,same");
+                pol0->Draw("same");
+                
+                DrawGammaSetMarker(histoRatioRawClusterPt[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                histoRatioRawClusterPt[i]->DrawCopy("e1,same"); 
+                DrawGammaSetMarker(histoMCRatioRawClusterPt[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i]+2, colorTriggShade[i]+2);
+                histoMCRatioRawClusterPt[i]->DrawCopy("e1,same"); 
+
+                legendTriggRejectSingle->AddEntry(histoMCRatioRawClusterPt[i],"   scaled MC","p");
+                legendTriggRejectSingle->Draw();
+
+                histo2DTriggRejectLinear->Draw("same,axis");
+
+                canvasTriggerRejectLinear->Update();
+                canvasTriggerRejectLinear->SaveAs(Form("%s/%s_TriggerRejectionFactorsLinY_SingleWithMC_%s_%s.%s",outputDir.Data(), isMC.Data(), triggerName[i].Data(), 
+                                                    triggerName[trigSteps[i][0]].Data(), suffix.Data())); 
+         
+            }    
             
         }   
     }   
