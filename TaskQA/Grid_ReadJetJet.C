@@ -12,26 +12,26 @@
 
 Bool_t readin(TString fileTxt, std::vector<TString> &vec);
 
-void Grid_ReadJetJet(TString folder = "/home/daniel/data/work/photonconv/AnalysisSoftware")
+void Grid_ReadJetJet(TString folder = "/home/daniel/data/work/pcgGit/AnalysisSoftware")
 {
    //JetJet
-//    const Int_t nFiles = 2;
-//    TString Tag = "20160411";
-//    TString DataSetsFile[nFiles] = {"GammaCalo_111.root","GammaConvCalo_31.root"};
-//    TString DataSetsCut[nFiles] = {"00000113_1111100063032220000_0163103100000050","00000113_00200009327000008250400000_1111100063032230000_0163103100000010"};
+    const Int_t nFiles = 2;
+    TString Tag = "20160513";
+    TString DataSetsFile[nFiles] = {"GammaCalo_111.root","GammaConvCalo_31.root"};
+    TString DataSetsCut[nFiles] = {"00010113_1111100063032220000_0163103100000050","00010113_00200009327000008250400000_1111100063032230000_0163103100000010"};
 
-//    const Int_t nSets = 1;
-//    TString DataSets[nSets]={"LHC16c2"};
-//    TString DataSetsFolder[nSets]={"LHC16c2"};
+    const Int_t nSets = 1;
+    TString DataSets[nSets]={"LHC16c2"};
+    TString DataSetsFolder[nSets]={"LHC16c2"};
 
-  const Int_t nFiles = 2;
-  TString Tag = "20160411";
-  TString DataSetsFile[nFiles] = {"GammaConvCalo_1.root","GammaConvCalo_2.root"};
-  TString DataSetsCut[nFiles] = {"80000013_00200009327000008250400000_1111100053022230000_0163103100000010","80085013_00200009327000008250400000_1111100053022230000_0163103100000010"};
+//  const Int_t nFiles = 2;
+//  TString Tag = "20160411";
+//  TString DataSetsFile[nFiles] = {"GammaConvCalo_1.root","GammaConvCalo_2.root"};
+//  TString DataSetsCut[nFiles] = {"80000013_00200009327000008250400000_1111100053022230000_0163103100000010","80085013_00200009327000008250400000_1111100053022230000_0163103100000010"};
 
-  const Int_t nSets = 3;
-  TString DataSets[nSets]={"LHC16c3a","LHC16c3b","LHC16c3c"};
-  TString DataSetsFolder[nSets]={"LHC16c3a","LHC16c3b","LHC16c3c"};
+//  const Int_t nSets = 3;
+//  TString DataSets[nSets]={"LHC16c3a","LHC16c3b","LHC16c3c"};
+//  TString DataSetsFolder[nSets]={"LHC16c3a","LHC16c3b","LHC16c3c"};
 
 
     std::vector<TString> vecRuns;
@@ -51,12 +51,12 @@ void Grid_ReadJetJet(TString folder = "/home/daniel/data/work/photonconv/Analysi
         vecBins.clear();
 		fDataSet = DataSets[i];
         if(fDataSet.CompareTo("")==0) continue;
-        fileTxt = Form("%s/runNumbers%s.txt", folder.Data(), fDataSet.Data());
+        fileTxt = Form("%s/DownloadAndDataPrep/runlists/runNumbers%s.txt", folder.Data(), fDataSet.Data());
         cout << "\n------------------------------------------------------" << endl;
         if(!readin(fileTxt, vecRuns)) cout << "\n\n\n**********************ERROR, no Run Numbers could be found!**********************\n\n\n" << endl;
         cout << "------------------------------------------------------" << endl;
 
-        fileTxt = Form("%s/binsJetJet%s.txt", folder.Data(), fDataSet.Data());
+        fileTxt = Form("%s/DownloadAndDataPrep/binsJetJet%s.txt", folder.Data(), fDataSet.Data());
         cout << "\n------------------------------------------------------" << endl;
         if(!readin(fileTxt, vecBins)) cout << "\n\n\n**********************ERROR, no Jet Jet Bins could be found!**********************\n\n\n" << endl;
         cout << "------------------------------------------------------" << endl;

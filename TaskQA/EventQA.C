@@ -319,7 +319,7 @@ void EventQA(
 		nEvents[i] = 0;
         nEventsAll[i] = 0;
 		TH1D* fHistNEvents = (TH1D*)ESDContainer->FindObject("NEvents");
-        if(plotDataSets[i].Contains("JetJet") || plotDataSets[i].Contains("jetjet")) fHistNEvents = (TH1D*)ESDContainer->FindObject("NEventsWOWeight");
+        //if(plotDataSets[i].Contains("JetJet") || plotDataSets[i].Contains("jetjet")) fHistNEvents = (TH1D*)ESDContainer->FindObject("NEventsWOWeight");
         if(fHistNEvents){
           nEvents[i] = (Double_t) GetNEvents(fHistNEvents,kFALSE);
           nEventsAll[i] = fHistNEvents->GetEntries() - fHistNEvents->GetBinContent(4);
@@ -364,15 +364,31 @@ void EventQA(
 			vecNEvents.push_back(new TH1D(*fHistNEvents));
 		}
     //-----------------------------------
-        TH2D* fHistMesonCuts = (TH2D*)MesonCutsContainer->FindObject(Form("MesonCuts %s", fMesonCutSelection[i].Data()));
-        if(fHistMesonCuts && fHistMesonCuts->IsA()==TH2::Class()){
+        TH2D* fHistMesonCuts = (TH2D*) MesonCutsContainer->FindObject(Form("MesonCuts %s", fMesonCutSelection[i].Data()));
+        if(fHistMesonCuts && fHistMesonCuts->IsA()==TH2F::Class()){
+          GetMinMaxBinY(fHistMesonCuts,minB,maxB);
+          SetYRange(fHistMesonCuts,1,maxB+1);
+          SetZMinMaxTH2(fHistMesonCuts,1,fHistMesonCuts->GetNbinsX(),1,maxB+1);
+          DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                               fHistMesonCuts,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
+                               "","#it{p}_{T}",0.9,0.8);
+          SaveCanvasAndWriteHistogram(canvas, fHistMesonCuts, Form("%s/Meson_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+
           PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistMesonCuts, "#it{p}_{T}", "#frac{d#it{p}_{T}}{dN}",
                               5,10,0,0);
           SaveCanvas(canvas, Form("%s/Meson_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
         }else cout << Form("INFO: Object |MesonCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", fMesonCutSelection[i].Data()) << endl;
     //-----------------------------------
         TH2D* fHistMesonBGCuts = (TH2D*)MesonCutsContainer->FindObject(Form("MesonBGCuts %s", fMesonCutSelection[i].Data()));
-        if(fHistMesonBGCuts && fHistMesonBGCuts->IsA()==TH2::Class()){
+        if(fHistMesonBGCuts && fHistMesonBGCuts->IsA()==TH2F::Class()){
+          GetMinMaxBinY(fHistMesonBGCuts,minB,maxB);
+          SetYRange(fHistMesonBGCuts,1,maxB+1);
+          SetZMinMaxTH2(fHistMesonBGCuts,1,fHistMesonBGCuts->GetNbinsX(),1,maxB+1);
+          DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                               fHistMesonBGCuts,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
+                               "","#it{p}_{T}",0.9,0.8);
+          SaveCanvasAndWriteHistogram(canvas, fHistMesonBGCuts, Form("%s/MesonBG_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+
           PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistMesonBGCuts, "#it{p}_{T}", "#frac{d#it{p}_{T}}{dN}",
                               5,10,0,0);
           SaveCanvas(canvas, Form("%s/MesonBGCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
@@ -404,7 +420,7 @@ void EventQA(
                                  fHistClusterIdentificationCuts,"","","# of Entries",1,1,
                                  0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(canvas, fHistClusterIdentificationCuts, Form("%s/ClusterQualityCuts_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
-          }else if(fHistClusterIdentificationCuts2D && fHistClusterIdentificationCuts2D->IsA()==TH2::Class()){
+          }else if(fHistClusterIdentificationCuts2D && fHistClusterIdentificationCuts2D->IsA()==TH2F::Class()){
             GetMinMaxBinY(fHistClusterIdentificationCuts2D,minB,maxB);
             SetYRange(fHistClusterIdentificationCuts2D,1,maxB+1);
             SetZMinMaxTH2(fHistClusterIdentificationCuts2D,1,fHistClusterIdentificationCuts2D->GetNbinsX(),1,maxB+1);
@@ -428,28 +444,60 @@ void EventQA(
             }
     //-----------------------------------
             TH2D* fHistPhotonCuts2DPreSel = (TH2D*)TopContainerGamma->FindObject(Form("PhotonCuts %s", ContainerGammaCut.Data()));
-            if(fHistPhotonCuts2DPreSel && fHistPhotonCuts2DPreSel->IsA()==TH2::Class()){
+            if(fHistPhotonCuts2DPreSel && fHistPhotonCuts2DPreSel->IsA()==TH2F::Class()){
+              GetMinMaxBinY(fHistPhotonCuts2DPreSel,minB,maxB);
+              SetYRange(fHistPhotonCuts2DPreSel,1,maxB+1);
+              SetZMinMaxTH2(fHistPhotonCuts2DPreSel,1,fHistPhotonCuts2DPreSel->GetNbinsX(),1,maxB+1);
+              DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                   fHistPhotonCuts2DPreSel,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
+                                   "","#it{p}_{T, #gamma}",0.9,0.8);
+              SaveCanvasAndWriteHistogram(canvas, fHistPhotonCuts2DPreSel, Form("%s/Preselect_PhotonCuts_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+
               PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistPhotonCuts2DPreSel, "#it{p}_{T, #gamma}", "#frac{d#it{p}_{T, #gamma}}{dN}",
                                   5,10,0,0);
               SaveCanvas(canvas, Form("%s/Preselect_PhotonCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
             }else cout << Form("INFO: Object |Preselect_PhotonCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", ContainerGammaCut.Data()) << endl;
     //-----------------------------------
             TH2D* fHistPhotonAccCuts2DPreSel = (TH2D*)TopContainerGamma->FindObject(Form("PhotonAcceptanceCuts %s", ContainerGammaCut.Data()));
-            if(fHistPhotonAccCuts2DPreSel && fHistPhotonAccCuts2DPreSel->IsA()==TH2::Class()){
+            if(fHistPhotonAccCuts2DPreSel && fHistPhotonAccCuts2DPreSel->IsA()==TH2F::Class()){
+              GetMinMaxBinY(fHistPhotonAccCuts2DPreSel,minB,maxB);
+              SetYRange(fHistPhotonAccCuts2DPreSel,1,maxB+1);
+              SetZMinMaxTH2(fHistPhotonAccCuts2DPreSel,1,fHistPhotonAccCuts2DPreSel->GetNbinsX(),1,maxB+1);
+              DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                   fHistPhotonAccCuts2DPreSel,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
+                                   "","#it{p}_{T, #gamma}",0.9,0.8);
+              SaveCanvasAndWriteHistogram(canvas, fHistPhotonAccCuts2DPreSel, Form("%s/Preselect_PhotonAcceptanceCuts_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+
               PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistPhotonAccCuts2DPreSel, "#it{p}_{T, #gamma}", "#frac{d#it{p}_{T, #gamma}}{dN}",
                                   5,10,0,0);
               SaveCanvas(canvas, Form("%s/Preselect_PhotonAcceptanceCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
             }else cout << Form("INFO: Object |Preselect_PhotonAcceptanceCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", ContainerGammaCut.Data()) << endl;
     //-----------------------------------
             TH2D* fHistPhotonCuts2D = (TH2D*)ConvCutsContainer->FindObject(Form("PhotonCuts %s", fGammaCutSelection[i].Data()));
-            if(fHistPhotonCuts2D && fHistPhotonCuts2D->IsA()==TH2::Class()){
+            if(fHistPhotonCuts2D && fHistPhotonCuts2D->IsA()==TH2F::Class()){
+              GetMinMaxBinY(fHistPhotonCuts2D,minB,maxB);
+              SetYRange(fHistPhotonCuts2D,1,maxB+1);
+              SetZMinMaxTH2(fHistPhotonCuts2D,1,fHistPhotonCuts2D->GetNbinsX(),1,maxB+1);
+              DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                   fHistPhotonCuts2D,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
+                                   "","#it{p}_{T, #gamma}",0.9,0.8);
+              SaveCanvasAndWriteHistogram(canvas, fHistPhotonCuts2D, Form("%s/PhotonCuts_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+
               PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistPhotonCuts2D, "#it{p}_{T, #gamma}", "#frac{d#it{p}_{T, #gamma}}{dN}",
                                   5,10,0,0);
               SaveCanvas(canvas, Form("%s/PhotonCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
             }else cout << Form("INFO: Object |PhotonCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", fGammaCutSelection[i].Data()) << endl;
     //-----------------------------------
             TH2D* fHistPhotonAccCuts2D = (TH2D*)ConvCutsContainer->FindObject(Form("PhotonAcceptanceCuts %s", fGammaCutSelection[i].Data()));
-            if(fHistPhotonAccCuts2D && fHistPhotonAccCuts2D->IsA()==TH2::Class()){
+            if(fHistPhotonAccCuts2D && fHistPhotonAccCuts2D->IsA()==TH2F::Class()){
+              GetMinMaxBinY(fHistPhotonAccCuts2D,minB,maxB);
+              SetYRange(fHistPhotonAccCuts2D,1,maxB+1);
+              SetZMinMaxTH2(fHistPhotonAccCuts2D,1,fHistPhotonAccCuts2D->GetNbinsX(),1,maxB+1);
+              DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                   fHistPhotonAccCuts2D,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
+                                   "","#it{p}_{T, #gamma}",0.9,0.8);
+              SaveCanvasAndWriteHistogram(canvas, fHistPhotonAccCuts2D, Form("%s/PhotonAcceptanceCuts_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+
               PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistPhotonAccCuts2D, "#it{p}_{T, #gamma}", "#frac{d#it{p}_{T, #gamma}}{dN}",
                                   5,10,0,0);
               SaveCanvas(canvas, Form("%s/PhotonAcceptanceCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);

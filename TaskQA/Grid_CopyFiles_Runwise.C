@@ -11,7 +11,7 @@
 Bool_t readin(TString fileTxt, std::vector<TString> &vec);
 Bool_t copyAlien2Local(TString loc, TString rem);
 
-void Grid_CopyFiles_Runwise(TString folder = "/home/daniel/data/work/photonconv/AnalysisSoftware", Bool_t isJetJet=kFALSE)
+void Grid_CopyFiles_Runwise(TString folder = "/home/daniel/data/work/pcgGit/AnalysisSoftware", Bool_t isJetJet=kFALSE)
 {
     cout<<"Connecting to Alien..."<<endl;
     TGrid::Connect("alien://");
@@ -182,31 +182,31 @@ void Grid_CopyFiles_Runwise(TString folder = "/home/daniel/data/work/photonconv/
 //          };
 
    //JetJet
+    isJetJet=kTRUE;
+    const Int_t nFiles = 2;
+    TString Tag = "20160513";
+    TString DataSetsFile[nFiles] = {"GammaCalo_111.root","GammaConvCalo_31.root"};
+
+    const Int_t nSets = 1;
+    TString DataSets[nSets]={"LHC16c2"};
+    TString DataSetsFolder[nSets]={"LHC16c2"};
+    TString PrefixDataSets[nSets]={"/alice/sim/2016/LHC16c2/"};
+    TString SuffixDataSets[nSets]={"/PWGGA/GA_pp_MC/2067_20160510-2013/"};
+
 //    isJetJet=kTRUE;
 //    const Int_t nFiles = 2;
 //    TString Tag = "20160411";
-//    TString DataSetsFile[nFiles] = {"GammaCalo_111.root","GammaConvCalo_31.root"};
+//    TString DataSetsFile[nFiles] = {"GammaConvCalo_1.root","GammaConvCalo_2.root"};
 
-//    const Int_t nSets = 1;
-//    TString DataSets[nSets]={"LHC16c2"};
-//    TString DataSetsFolder[nSets]={"LHC16c2"};
-//    TString PrefixDataSets[nSets]={"/alice/sim/2016/LHC16c2/"};
-//    TString SuffixDataSets[nSets]={"/PWGGA/GA_pp_MC/2008_20160411-0115/"};
-
-    isJetJet=kTRUE;
-    const Int_t nFiles = 2;
-    TString Tag = "20160411";
-    TString DataSetsFile[nFiles] = {"GammaConvCalo_1.root","GammaConvCalo_2.root"};
-
-    const Int_t nSets = 3;
-    TString DataSets[nSets]={"LHC16c3a","LHC16c3b","LHC16c3c"};
-    TString DataSetsFolder[nSets]={"LHC16c3a","LHC16c3b","LHC16c3c"};
-    TString PrefixDataSets[nSets]={"/alice/sim/2016/LHC16c3a/",
-                                  "/alice/sim/2016/LHC16c3b/",
-                                  "/alice/sim/2016/LHC16c3c/"};
-    TString SuffixDataSets[nSets]={"/PWGGA/GA_pPb_MC/731_20160325-1253/",
-                                  "/PWGGA/GA_pPb_MC/732_20160325-1253/",
-                                  "/PWGGA/GA_pPb_MC/733_20160325-1253/"};
+//    const Int_t nSets = 3;
+//    TString DataSets[nSets]={"LHC16c3a","LHC16c3b","LHC16c3c"};
+//    TString DataSetsFolder[nSets]={"LHC16c3a","LHC16c3b","LHC16c3c"};
+//    TString PrefixDataSets[nSets]={"/alice/sim/2016/LHC16c3a/",
+//                                  "/alice/sim/2016/LHC16c3b/",
+//                                  "/alice/sim/2016/LHC16c3c/"};
+//    TString SuffixDataSets[nSets]={"/PWGGA/GA_pPb_MC/731_20160325-1253/",
+//                                  "/PWGGA/GA_pPb_MC/732_20160325-1253/",
+//                                  "/PWGGA/GA_pPb_MC/733_20160325-1253/"};
 
 	//pp LHC12
 //            const Int_t nFiles = 3;
@@ -594,12 +594,12 @@ void Grid_CopyFiles_Runwise(TString folder = "/home/daniel/data/work/photonconv/
         vecBins.clear();
 		fDataSet = DataSets[i];
         if(fDataSet.CompareTo("")==0) continue;
-        fileTxt = Form("%s/runNumbers%s.txt", folder.Data(), fDataSet.Data());
+        fileTxt = Form("%s/DownloadAndDataPrep/runlists/runNumbers%s.txt", folder.Data(), fDataSet.Data());
         cout << "\n------------------------------------------------------" << endl;
         if(!readin(fileTxt, vecRuns)) cout << "\n\n\n**********************ERROR, no Run Numbers could be found!**********************\n\n\n" << endl;
         cout << "------------------------------------------------------" << endl;
         if(isJetJet){
-          fileTxt = Form("%s/binsJetJet%s.txt", folder.Data(), fDataSet.Data());
+          fileTxt = Form("%s/DownloadAndDataPrep/binsJetJet%s.txt", folder.Data(), fDataSet.Data());
           cout << "\n------------------------------------------------------" << endl;
           if(!readin(fileTxt, vecBins)) cout << "\n\n\n**********************ERROR, no Jet Jet Bins could be found!**********************\n\n\n" << endl;
           cout << "------------------------------------------------------" << endl;

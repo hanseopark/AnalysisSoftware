@@ -531,7 +531,7 @@ void ClusterQA(
 //-----------------------------------
     nEvents[i] = 0;
     TH1D* fHistNEvents = (TH1D*)ESDContainer->FindObject("NEvents");
-    if(plotDataSets[i].Contains("JetJet") || plotDataSets[i].Contains("jetjet")) fHistNEvents = (TH1D*)ESDContainer->FindObject("NEventsWOWeight");
+    //if(plotDataSets[i].Contains("JetJet") || plotDataSets[i].Contains("jetjet")) fHistNEvents = (TH1D*)ESDContainer->FindObject("NEventsWOWeight");
     if(fHistNEvents) nEvents[i] = (Double_t) GetNEvents(fHistNEvents,kFALSE);
     else cout << "INFO: Object |fHistNEvents| could not be found!" << endl;
 //-----------------------------------
@@ -1257,7 +1257,7 @@ void ClusterQA(
 //-----------------------------------
     if(doExtQA>1){
       TH2D* fHistClusterTimingInCluster = (TH2D*)CaloExtQAContainer->FindObject(Form("ClusterIncludedCellsTiming_afterClusterQA %s", fClusterCutSelection[i].Data()));
-      if(fHistClusterTimingInCluster && fHistClusterTimingInCluster->IsA()==TH2D::Class()){
+      if(fHistClusterTimingInCluster){
         GetMinMaxBin(fHistClusterTimingInCluster,minB,maxB);
         SetXRange(fHistClusterTimingInCluster,minB,fHistClusterTimingInCluster->GetXaxis()->FindBin(30.));
         DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
@@ -1268,8 +1268,8 @@ void ClusterQA(
         //-----------------------------------
         TH1D* fHistClusterTimingInClusterY = (TH1D*) fHistClusterTimingInCluster->ProjectionY("fHistClusterTimingInClusterY",1,fHistClusterTimingInCluster->GetNbinsX());
         if(fHistClusterTimingInClusterY){
-          GetMinMaxBin(fHistClusterTimingInClusterY,minB,maxB);
-          SetXRange(fHistClusterTimingInClusterY,minB,maxB);
+//          GetMinMaxBin(fHistClusterTimingInClusterY,minB,maxB);
+          SetXRange(fHistClusterTimingInClusterY,1,fHistClusterTimingInCluster->GetNbinsY());
           DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                fHistClusterTimingInClusterY,"","Cell Time in Cluster (ns)","#frac{d#it{N}}{d#it{t_{cell}}}",1,1,
                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
@@ -3397,7 +3397,7 @@ void ClusterQA(
   //*****************************************************************************************************
   //*****************************************************************************************************
 
-  if(doCellQA){
+  if(doExtQA>1 && doCellQA){
     cellQA = cellQAData;
     std::vector<TH2D*> DataMCHists;
     std::vector<TH2D*> DataMCHistsTime;

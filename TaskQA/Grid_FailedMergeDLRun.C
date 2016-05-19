@@ -10,7 +10,7 @@
 
 Bool_t copyAlien2Local(TString where, TString loc, TString rem);
 
-void Grid_FailedMergeDLRun(TString folder = "/home/daniel/data/work/photonconv/AnalysisSoftware")
+void Grid_FailedMergeDLRun(TString folder = "/home/daniel/data/work/pcgGit/AnalysisSoftware")
 {
     cout<<"Connecting to Alien..."<<endl;
     TGrid::Connect("alien://");

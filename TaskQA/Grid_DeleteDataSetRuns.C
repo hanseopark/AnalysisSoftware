@@ -1,6 +1,6 @@
 void readin(TString fileRuns, std::vector<TString> &vec);
 
-void Grid_DeleteDataSetRuns(TString folder = "/home/daniel/data/work/photonconv/AnalysisSoftware")
+void Grid_DeleteDataSetRuns(TString folder = "/home/daniel/data/work/pcgGit/AnalysisSoftware")
 {
   std::vector<TString> vecRuns;
 
