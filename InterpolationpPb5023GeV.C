@@ -58,7 +58,7 @@
   
 
 
-void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUpCorrection", TString suffix="pdf", TString outputDir="OutputRpPb_yShift_Individual",TString FitFuncName="Bylinkin", TString thesisPlots="" )//Bylinkin
+void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPileUpCorrection", TString suffix="pdf", TString outputDir="OutputRpPb_yShift_Individual",TString FitFuncName="Tsallis", TString thesisPlots="" )//Bylinkin
 {
 
 	
@@ -118,12 +118,14 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	TString fileNameNeutralPionEMCalResultsPP	="ExternalInputpPb/EMCAL/data_EMCAL-EMCALResultsFullCorrection_PP_276_Friederike.root";
 	TString fileNameNeutralPionEMCalResultsPP7TeV	="ExternalInputpPb/EMCAL/pi0Specrtum2011EMCAL_24June2015_7_Evi.root"; 
 	TString fileNameNeutralPionPHOSResultsPP	="ExternalInputpPb/PHOS/CombinedResultsPP_ShiftedX_PaperRAA_ConsiderPileup7TeVPHOSData.root";
+	TString fileNameNeutralPionCombResultspPb	="CombinepPbSpectra/2016_05_19_LowPtCut/Tsallis/eps/ResultspPb_Tsallis_2016_05_19.root";
 	TString fileNameNeutralPionPCMResultspPb        ="ExternalInputpPb/PCM/data_PCMResults_pPb_20151111_standard_CatErrors.root";
 	TString fileNameNeutralPionDalitzResultspPb	="ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20150806.root";
 	TString fileNameNeutralPionEMCalResultspPb	="ExternalInputpPb/EMCAL/data_EMCalEMCalResults_160215_pPb_5023_Mike.root";
 	TString fileNameNeutralPionPHOSResultspPb       ="ExternalInputpPb/PHOS/InvariantYield_Pi0_pPb_Graph_PHOS_20160415.root";
 	TString fileNameRpPbPHOS  	     = "ExternalInputpPb/PHOS/data_PHOSResults_RpPb_20160405.root";
-	TFile* CommonFile=new TFile("ExternalInputpPb/Combined_pPbResults_2016_03_31.root");// Common Fit for YShift	
+	//	TFile* CommonFile=new TFile("ExternalInputpPb/Combined_pPbResults_2016_03_31.root");// Common Fit for YShift
+	TFile* CommonFile=new TFile("CombinepPbSpectra/2016_05_06/Tsallis/eps/ResultspPb_Tsallis_2016_05_06.root");// Common Fit for YShift
 
 	//PHOS Input
 
@@ -148,7 +150,26 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	TGraphAsymmErrors* graphInvYieldPi0pPb5023GeVComplErr;
  	TGraphAsymmErrors* graphInvYieldPi0pPb5023GeVStatErr; 
 	//pPb Input
-	if (System.CompareTo("PCM")==0){
+	if (System.CompareTo("Comb")==0){
+
+	  fileNeutralPionResultspPb = new TFile(fileNameNeutralPionCombResultspPb.Data());
+        graphInvYieldPi0pPb5023GeVSystErr    = (TGraphAsymmErrors*)fileNeutralPionResultspPb->Get("CombinedPi0pPbSpectrumSysErr"); 
+	graphInvYieldPi0pPb5023GeVComplErr   = (TGraphAsymmErrors*)fileNeutralPionResultspPb->Get("CombinedPi0pPbSpectrumTotErr");
+ 	graphInvYieldPi0pPb5023GeVStatErr    = (TGraphAsymmErrors*)fileNeutralPionResultspPb->Get("CombinedPi0pPbSpectrumStatErr");
+	cout<<"Comb test"<<endl;
+	graphInvYieldPi0pPb5023GeVStatErr->Print();
+	graphInvYieldPi0pPb5023GeVSystErr->Print();
+	graphInvYieldPi0pPb5023GeVComplErr->Print();
+	
+	//	graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+
+	cout<<" Comb"<<endl;
+	graphInvYieldPi0pPb5023GeVStatErr->Print();
+	graphInvYieldPi0pPb5023GeVSystErr->Print();
+	graphInvYieldPi0pPb5023GeVComplErr->Print();
+
+	}
+	else if (System.CompareTo("PCM")==0){
 
 	  fileNeutralPionResultspPb = new TFile(fileNameNeutralPionPCMResultspPb.Data());
 	  fNeutralPionResultspPbContainer = (TDirectory*) fileNeutralPionResultspPb->GetDirectory("Pi0_pPb_5.023TeV_0-100%");
@@ -233,13 +254,17 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	    graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
 	    graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
 	    graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+	    graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(23); //remove last pT bin
 
 	    graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(24);
 	    graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(24);
-	    graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(24);
+	    graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(24); 
+	    graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(23); //remove last pT bin
+
 	    graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(24);
 	    graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(24);
 	    graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(24);
+	    graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(23); //remove last pT bin
 	    cout<<"EMCal test"<<endl;
 	    graphInvYieldPi0pPb5023GeVStatErr->Print();
 	    graphInvYieldPi0pPb5023GeVSystErr->Print();
@@ -345,8 +370,8 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	
 	
 	
-	graphAsymmChargedParticlesRpPbSystErr = GetChargeParticlesRpPb("Syst");
-	graphAsymmChargedParticlesRpPbStatErr = GetChargeParticlesRpPb("Stat");
+	graphAsymmChargedParticlesRpPbSystErr = GetChargeParticlesRpPb2013("Syst");
+	graphAsymmChargedParticlesRpPbStatErr = GetChargeParticlesRpPb2013("Stat");
 	
 
 	TString fileNamePythia8 = "ExternalInputpPb/pythia8-5.02TeV-part-1.root";
@@ -367,10 +392,10 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	  Parameters2760GeV[2] = 0.139;
 	  
 	  Parameters7TeV    = new Double_t[3];// = {13.7e+09,7.,0.13};
-	  Parameters7TeV[0] = 13.7e+09;
-	  Parameters7TeV[1] = 7.0;
-	  Parameters7TeV[2] = 0.13;
-
+	  Parameters7TeV[0] = 1.45613e+11;
+	  Parameters7TeV[1] = 7;
+	  Parameters7TeV[2] = 0.15;
+ 
           if( resultsType.CompareTo("PHOS") == 0 ){  
 	    Parameters7TeV[0] = 2.26842e+11;
 	    Parameters7TeV[1] = 6.70106e+00;
@@ -386,18 +411,33 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	  
 	  
 	  Parameters2760GeV = new Double_t[5];// = { 2.4e+10, 0.3, 1e+10,0.3,8};
-	  Parameters2760GeV[0] = 2.4e+10;
-	  Parameters2760GeV[1] = 0.3;
-	  Parameters2760GeV[2] = 1e+10;
-	  Parameters2760GeV[3] = 0.3;
-	  Parameters2760GeV[4] = 3.8;
-  
+	  // Parameters2760GeV[0] = 2.4e+10;
+	  // Parameters2760GeV[1] = 0.3;
+	  // Parameters2760GeV[2] = 1e+10;
+	  // Parameters2760GeV[3] = 0.3;
+	  // Parameters2760GeV[4] = 3.8;
+	  // Parameters2760GeV[0] =  18.2676*xSection2760GeVppINEL* recalcBarn ;//7.4e+1;
+	  // Parameters2760GeV[1] = 0.164972;
+	  // Parameters2760GeV[2] =1.28029*xSection2760GeVppINEL* recalcBarn ;
+	  // Parameters2760GeV[3] =0.702793;
+	  // Parameters2760GeV[4] =3.16247 ;
+
+	  Parameters2760GeV[0] =   4.31440e+09 ;//7.4e+1;
+	  Parameters2760GeV[1] =  4.48647e-01 ;
+	  Parameters2760GeV[2] =   1.31062e+11  ;
+	  Parameters2760GeV[3]=    3.49106e-01 ;
+	  Parameters2760GeV[4] =  2.78576e+00;	  
 	  Parameters7TeV    = new Double_t[5];// = { 7.4e+10, 0.3, 1e+09,0.3,8};
-	  Parameters7TeV[0] = 7.4e+10;
-	  Parameters7TeV[1] = 0.3;
-	  Parameters7TeV[2] = 1e+09;
-	  Parameters7TeV[3] = 0.3;
-	  Parameters7TeV[4] = 3.8;
+	  // Parameters7TeV[0] =  18.2676*xSection7TeVINEL* recalcBarn ;
+	  // Parameters7TeV[1] =  0.164972;
+	  // Parameters7TeV[2] = 1.28029*xSection7TeVINEL* recalcBarn ;
+	  // Parameters7TeV[3] =0.702793;
+	  // Parameters7TeV[4] =3.16247 ;
+	  Parameters7TeV[0] = 1.68474e+09   ;
+	  Parameters7TeV[1] =5.57627e-01 ;
+	  Parameters7TeV[2] = 1.51358e+11  ;
+	  Parameters7TeV[3] = 3.98235e-01;
+	  Parameters7TeV[4] =  2.80009e+00;
 
           if( resultsType.CompareTo("PHOS") == 0  ){  
 	    Parameters2760GeV[0] = 8.0e+11;
@@ -486,7 +526,8 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	  
 	
 	graphNameInvCrossSectionPi07TeVStatErr     	= "graphInvCrossSectionPi0PHOSStat7TeV";
-	graphNameInvCrossSectionPi07TeVSysErr      	= "gInvCrossSection_Sys";
+	graphNameInvCrossSectionPi07TeVSysErr      	= "gInvCrossSection_Sys";// larger sys errors to account for plie-up
+	//	graphNameInvCrossSectionPi07TeVSysErr      	= "graphInvCrossSectionPi0PHOSStat7TeV";//published PHOS sys errors
 	
 	graphNameInvCrossSectionPi02760GeVStatErr 	= "graphInvCrossSectionPi0PHOS2760GeVStatErr";
 	graphNameInvCrossSectionPi02760GeVSysErr  	= "graphInvCrossSectionPi0PHOS2760GeVSysErr"; 
@@ -633,7 +674,7 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 		
 	}   
 	cout << "*************************" << endl;
-	
+		 graphInvCrossSectionPi07TeVStatErr->Print();
 	TGraphErrors* RatioNoPileUpAndPileUpCorr =  new TGraphErrors(nBins-1,ratioX,ratioY,errorX,errorY); 
 	
 	
@@ -729,7 +770,7 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 
 	//Use Bylinkin fit from combined spectrum for YShift
 
-	TF1 *fitBylinkinPi0pPb5023GeV = (TF1*)CommonFile->Get("FitCombinedpPbSpectrum");	
+	TF1 *fitBylinkinPi0pPb5023GeV = (TF1*)CommonFile->Get("FitCombinedPi0pPbSpectrum");	
 	
 	graphInvYieldPi0pPb5023GeVYShiftedComplErr  = ApplyYshiftIndividualSpectra(graphInvYieldPi0pPb5023GeVYShiftedComplErr ,fitBylinkinPi0pPb5023GeV);
 	graphInvYieldPi0pPb5023GeVYShiftedSystErr   = ApplyYshiftIndividualSpectra( graphInvYieldPi0pPb5023GeVYShiftedSystErr,fitBylinkinPi0pPb5023GeV); 
@@ -785,12 +826,18 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 		
 	TF1* fitPi02760GeVBinSystErr        = RebinWithFitToTGraph(graphInvYieldPi02760GeVSystErr,  &graphAInvYieldPi02760GeVBinSystErr,graphAInvYieldPi02760GeVBinStatSystErr,fitPi02760GeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters2760GeV);
 	TF1* fitPi02760GeVBinStatErr	    = FillTGraphEYWithFitErr(graphInvYieldPi02760GeVStatErr,&graphAInvYieldPi02760GeVBinStatErr,graphAInvYieldPi02760GeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters2760GeV);
-	
-	
+	// TF1*fitLow=FitObject("tcm1","fitInvCrossSectionPi0276Low","Pi0");	
+	// TF1*fitHigh=FitObject("tcm2","fitInvCrossSectionPi0276High","Pi0");	
+	// fitLow->SetParameters(fitPi02760GeVBinStatSystErr->GetParameter(0),fitPi02760GeVBinStatSystErr->GetParameter(1));
+	// fitHigh->SetParameters(fitPi02760GeVBinStatSystErr->GetParameter(2),fitPi02760GeVBinStatSystErr->GetParameter(3),fitPi02760GeVBinStatSystErr->GetParameter(4));
+	// fitLow->SetRange(minPt,maxPt); 
+	// fitHigh->SetRange(minPt,maxPt);
+
+
 	TGraphAsymmErrors* TGraphAymmmRatioToFitPi0PP2760GeV = (TGraphAsymmErrors*) CalculateGraphErrRatioToFit(graphInvYieldPi02760GeVStatSystErr,fitPi02760GeVBinStatSystErr);
 	
 	
-	TCanvas* canvasRatioToFitPi0PP2760GeV = new TCanvas("canvasRatioToFitPi0PP2760GeV","Ratio between PileUp Correction And No PileUp correction spectra",200,10,1200,700);
+	TCanvas* canvasRatioToFitPi0PP2760GeV = new TCanvas("canvasRatioToFitPi0PP2760GeV","Ratio to fit pp 2.76TeV",200,10,1200,700);
 	
 	DrawGammaCanvasSettings( canvasRatioToFitPi0PP2760GeV,  0.1, 0.01, 0.015, 0.13);
 	
@@ -853,12 +900,17 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	
 	 cout<<"Start to computing"<<endl;
 	graphInvYieldPi07TeVStatSystErr->Print();
-	
+	// TF1*fitLow7=FitObject("tcm1","fitInvCrossSectionPi07Low","Pi0");	
+	// TF1*fitHigh7=FitObject("tcm2","fitInvCrossSectionPi07High","Pi0");	
+	// fitLow7->SetParameters(fitPi07TeVBinStatSystErr->GetParameter(0),fitPi07TeVBinStatSystErr->GetParameter(1));
+	// fitHigh7->SetParameters(fitPi07TeVBinStatSystErr->GetParameter(2),fitPi07TeVBinStatSystErr->GetParameter(3),fitPi07TeVBinStatSystErr->GetParameter(4));
+	// fitLow7->SetRange(minPt,maxPt); 
+	// fitHigh7->SetRange(minPt,maxPt);
 	 TGraphAsymmErrors* TGraphAsymmRatioToFitPi0PP7TeV = (TGraphAsymmErrors*) CalculateGraphErrRatioToFit(graphInvYieldPi07TeVStatSystErr,fitPi07TeVBinStatSystErr);
 	
 	
 	
-	 TCanvas* canvasRatioToFitPi0PP7TeV = new TCanvas("canvasRatioToFitPi0PP7TeV","Ratio between PileUp Correction And No PileUp correction spectra",200,10,1200,700);
+	 TCanvas* canvasRatioToFitPi0PP7TeV = new TCanvas("canvasRatioToFitPi0PP7TeV","Ratio between RatioToFit pp 7TeV",200,10,1200,700);
 	
 	 DrawGammaCanvasSettings( canvasRatioToFitPi0PP7TeV,  0.1, 0.01, 0.015, 0.13);
 	
@@ -962,8 +1014,14 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	
 	CalcRpPb(graphErrosInterPolation5023GeVBinSystWOMatErr,graphAErrosInterPolation5023GeVBinStatErr,graphInvYieldPi0pPb5023GeVYShiftedSystWOMatErr, graphInvYieldPi0pPb5023GeVYShiftedStatErr,&graphRpPbSystErr,&graphRpPbStatErr);
 	
-	} else {
-		
+	} else if ( resultsType.CompareTo("PHOS") == 0 && System.CompareTo("PHOS") == 0 ){
+	    graphErrosInterPolation5023GeVBinSystWOMatErr     = CancelOutMaterialError(graphAErrosInterPolation5023GeVBinSystErr, "PHOSPHOS");
+	    graphInvYieldPi0pPb5023GeVYShiftedSystWOMatErr    = CancelOutMaterialError(graphInvYieldPi0pPb5023GeVYShiftedSystErr,"PHOSPHOS");
+
+	    CalcRpPb(graphErrosInterPolation5023GeVBinSystWOMatErr,graphAErrosInterPolation5023GeVBinStatErr,graphInvYieldPi0pPb5023GeVYShiftedSystWOMatErr, graphInvYieldPi0pPb5023GeVYShiftedStatErr,&graphRpPbSystErr,&graphRpPbStatErr);
+	
+	}else {
+	  
 	CalcRpPb(graphAErrosInterPolation5023GeVBinSystErr,graphAErrosInterPolation5023GeVBinStatErr,graphInvYieldPi0pPb5023GeVYShiftedSystErr, graphInvYieldPi0pPb5023GeVYShiftedStatErr,&graphRpPbSystErr,&graphRpPbStatErr);
 	
 	}
@@ -1038,6 +1096,10 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	graphInvYieldPi02760GeVStatSystErr->Draw("p,same,e1");
 	fitPi02760GeVBinStatSystErr->Draw("p,same");
 	legendInvYields2760GeVBin->Draw("same");
+	// fitLow->SetLineColor(kGreen);	
+	// fitLow->Draw("p,same");	
+	// fitHigh->SetLineColor(kRed);	
+	// fitHigh->Draw("p,same");
 	
 	
 	cInvYield2760GeVBin->Update();
@@ -1084,8 +1146,11 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	graphInvYieldPi07TeVStatSystErr->Draw("p,same,e1");
 	fitPi07TeVBinStatSystErr->Draw("same");
 	legendInvYields7TeVBin->Draw("same");
-	
-	
+	// fitLow7->SetLineColor(kGreen);
+	// fitLow7->Draw("same");	
+	// fitHigh7->SetLineColor(kRed);
+	// fitHigh7->Draw("same");	
+
 	cInvYield7TeVBin->Update();
 	cInvYield7TeVBin->SaveAs(Form("%s/InvYield_PP_Bin%s_7TeV.%s",outputDir.Data(),System.Data(),suffix.Data()));
 	
@@ -1207,7 +1272,10 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
        	SetStyleTLatex( labelSpectraPi0LabelpPb2, 0.03,4);
 	labelSpectraPi0LabelpPb2->Draw();
 
-	TLatex *labelSpectraPi0LabelpPb = new TLatex(0.65,0.8,"|#it{y}_{#pi^{0},lab}| < 0.8");
+	TLatex *labelSpectraPi0LabelpPb;
+	if (System.CompareTo("PHOS")==0)	labelSpectraPi0LabelpPb= new TLatex(0.65,0.8,"|#it{y}_{#pi^{0},lab}| < 0.13");
+	else if (System.CompareTo("EMCal")==0)	labelSpectraPi0LabelpPb= new TLatex(0.65,0.8,"|#it{y}_{#pi^{0},lab}| < 0.5");
+	else	labelSpectraPi0LabelpPb= new TLatex(0.65,0.8,"|#it{y}_{#pi^{0},lab}| < 0.8");
 	SetStyleTLatex( labelSpectraPi0LabelpPb, 0.03,4);
 	labelSpectraPi0LabelpPb->Draw();  
 
@@ -1364,7 +1432,7 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	legendInvYieldPi0pPb5023GeVYShifted->SetLineColor(0);
 	legendInvYieldPi0pPb5023GeVYShifted->SetTextSize(0.03);
 	legendInvYieldPi0pPb5023GeVYShifted->AddEntry(graphInvYieldPi0pPb5023GeVComplErr,Form("#pi^{0} p-Pb at #sqrt{#it{s}_{NN}} = 5.02 TeV (%s)",System.Data()));
-	legendInvYieldPi0pPb5023GeVYShifted->AddEntry(graphInvYieldPi0pPb5023GeVYShiftedComplErr,Form("#pi^{0} p-Pb at #sqrt{#it{s}_{NN}} = 5.02  YBin shifted (%s)",System.Data()));
+	legendInvYieldPi0pPb5023GeVYShifted->AddEntry(graphInvYieldPi0pPb5023GeVYShiftedComplErr,Form("#pi^{0} p-Pb at #sqrt{#it{s}_{NN}} = 5.02 #it{y}-shifted (%s)",System.Data()));
 	legendInvYieldPi0pPb5023GeVYShifted->Draw("same");
 	
 		
@@ -1428,7 +1496,9 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	legendRpPb->SetTextFont(42);
 	legendRpPb->SetNColumns(3);
 	legendRpPb->SetTextSize(0.04);
-	legendRpPb->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.8",SystemLabel.Data()),"p");
+	if (System.CompareTo("PHOS")==0)	legendRpPb->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.13",SystemLabel.Data()),"p");
+	else if (System.CompareTo("EMCal")==0)	legendRpPb->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.5",SystemLabel.Data()),"p");
+	else	legendRpPb->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.8",SystemLabel.Data()),"p");
 	legendRpPb->Draw();
 	canvasRpPb->Update();
 	
@@ -1477,7 +1547,9 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	legendRpPbPHOS->SetNColumns(1);
 	legendRpPbPHOS->SetTextSize(0.04);
 	legendRpPbPHOS->AddEntry(graphRpPbPHOSStatErr,"PHOS Tsubasa","pef");
-	legendRpPbPHOS->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.8",SystemLabel.Data()),"p");
+	if (System.CompareTo("PHOS")==0)	legendRpPbPHOS->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.13",SystemLabel.Data()),"p");
+	else if (System.CompareTo("EMCal")==0)	legendRpPbPHOS->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.5",SystemLabel.Data()),"p");
+	else	legendRpPbPHOS->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.8",SystemLabel.Data()),"p");
 	legendRpPbPHOS->Draw();
 	canvasRpPbPHOS->Update();
 	
@@ -1543,13 +1615,16 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	LabelpPbChargedPar->Draw();
 	
 	
-	 TLegend* legendRpPb2 = new TLegend(0.3,0.20,0.75,0.35);
+	 TLegend* legendRpPb2 = new TLegend(0.2,0.15,0.65,0.3);
 	legendRpPb2->SetFillColor(0);
 	legendRpPb2->SetLineColor(0);
 	legendRpPb2->SetTextSize(0.03);
 	legendRpPb2->SetTextFont(42);
 	legendRpPb2->SetTextSize(0.04);
-	legendRpPb2->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.8",SystemLabel.Data()),"p");
+	if (System.CompareTo("PHOS")==0)	legendRpPb2->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.13",SystemLabel.Data()),"p");
+	else if (System.CompareTo("EMCal")==0)	legendRpPb2->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.5",SystemLabel.Data()),"p");
+	else if (System.CompareTo("Comb")==0)	legendRpPb2->AddEntry(graphRpPbStatErr,"#pi^{0} combined","p");
+	else	legendRpPb2->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.8",SystemLabel.Data()),"p");
 	legendRpPb2->AddEntry(graphAsymmChargedParticlesRpPbStatErr,"ALICE, NSD, charged particles, |#eta_{cms}| < 0.3","p");
 	
 	legendRpPb2->Draw();
@@ -1760,8 +1835,11 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	legendRpPbESP09sCGC->SetLineColor(0);
 	legendRpPbESP09sCGC->SetTextSize(0.04);
 	legendRpPbESP09sCGC->SetTextFont(42);
-	legendRpPbESP09sCGC->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.8",SystemLabel.Data()),"p");
 
+	if (System.CompareTo("PHOS")==0)	legendRpPbESP09sCGC->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.13",SystemLabel.Data()),"p");
+	else if (System.CompareTo("EMCal")==0)	legendRpPbESP09sCGC->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.5",SystemLabel.Data()),"p");
+	else if (System.CompareTo("Comb")==0)	legendRpPbESP09sCGC->AddEntry(graphRpPbStatErr,"#pi^{0} combined","p");
+	else	legendRpPbESP09sCGC->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.8",SystemLabel.Data()),"p");
 	
 	TLegend* legendRpPbESP09s = new TLegend(xMinTheory,0.3+offsetYMaxLegend,0.55,0.48+offsetYMaxLegend);
 	legendRpPbESP09s->SetFillColor(0);
@@ -1887,13 +1965,16 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	
 
 	
-	TLegend* legendRpPbChargedPions = new TLegend(0.3,0.20,0.75,0.35);
+	TLegend* legendRpPbChargedPions = new TLegend(0.2,0.150,0.65,0.3);
 	legendRpPbChargedPions->SetFillColor(0);
 	legendRpPbChargedPions->SetLineColor(0);
 	legendRpPbChargedPions->SetTextSize(0.03);
 	legendRpPbChargedPions->SetTextFont(42);
 	legendRpPbChargedPions->SetTextSize(0.04);
-	legendRpPbChargedPions->AddEntry(graphRpPbStatErr,Form("%s, -0.8 < #it{y} < 0.8",SystemLabel.Data()),"p");
+	if (System.CompareTo("PHOS")==0)	legendRpPbChargedPions->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.13",SystemLabel.Data()),"p");
+	else if (System.CompareTo("EMCal")==0)	legendRpPbChargedPions->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.5",SystemLabel.Data()),"p");
+	else if (System.CompareTo("Comb")==0)	legendRpPbChargedPions->AddEntry(graphRpPbStatErr,"#pi^{0} combined","p");
+	else	legendRpPbChargedPions->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.8",SystemLabel.Data()),"p");
 	legendRpPbChargedPions->AddEntry(graphChargedPionRpPbStatErr,Form("%s, -0.5 < #it{y}_{cms} < 0   for #it{p}_{T} < 2.0 GeV/#it{c}",ChargedPionsLabel.Data()),"p");
 	legendRpPbChargedPions->AddEntry((TObject*)0,"            -0.3 < #it{y}_{cms} < 0.3 for #it{p}_{T} > 2.0 GeV/#it{c}","");
 	legendRpPbChargedPions->Draw();
@@ -1901,6 +1982,8 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	
 	
 	canvasRpPbChargedPions->SaveAs(Form("%s/RpPb_Comparison_%s_ChargedPions.%s",outputDir.Data(),System.Data(),suffix.Data()));
+
+
 	if (System.CompareTo("PCM")==0){	
 	/////
 	TH1D* histoChargedPions =GraphAsymErrorsToHist_withErrors(graphChargedPionRpPbStatErr, "HistoChargedPionsRpPb");
@@ -2002,13 +2085,16 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	LabelpPbChargedPionsKaonsProtons->Draw();
 
 	
-	TLegend* legendRpPbChargedPionsKaonsProtons = new TLegend(0.3,0.15,0.75,0.45);
+	TLegend* legendRpPbChargedPionsKaonsProtons = new TLegend(0.18,0.15,0.5,0.45);
 	legendRpPbChargedPionsKaonsProtons->SetFillColor(0);
 	legendRpPbChargedPionsKaonsProtons->SetLineColor(0);
 	legendRpPbChargedPionsKaonsProtons->SetTextSize(0.03);
 	legendRpPbChargedPionsKaonsProtons->SetTextFont(42);
 	legendRpPbChargedPionsKaonsProtons->SetTextSize(0.03);
-	legendRpPbChargedPionsKaonsProtons->AddEntry(graphRpPbStatErr,SystemLabel.Data(),"p");
+	if (System.CompareTo("PHOS")==0)	legendRpPbChargedPionsKaonsProtons->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.13",SystemLabel.Data()),"p");
+	else if (System.CompareTo("EMCal")==0)	legendRpPbChargedPionsKaonsProtons->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.5",SystemLabel.Data()),"p");
+	else if (System.CompareTo("Comb")==0)	legendRpPbChargedPionsKaonsProtons->AddEntry(graphRpPbStatErr,"#pi^{0} combined","p");
+	else	legendRpPbChargedPionsKaonsProtons->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.8",SystemLabel.Data()),"p");
 	legendRpPbChargedPionsKaonsProtons->AddEntry(graphChargedPionRpPbStatErrClone,"#pi^{+}+#pi^{-} -0.5 < #it{y}_{CMS} < 0 for #it{p}_{T} < 2.0 GeV/#it{c}","p");
 	legendRpPbChargedPionsKaonsProtons->AddEntry((TObject*)0,"            -0.3 < #it{y}_{CMS}< 0.3 for #it{p}_{T} > 2.0 GeV/#it{c}","");
 	legendRpPbChargedPionsKaonsProtons->AddEntry(graphChargedKaonRpPbSystErr,"K^{+} + K^{-} -0.5 < #it{y}_{CMS} < 0 for #it{p}_{T} < 2.0 GeV/#it{c}","p");
@@ -2030,6 +2116,68 @@ void Interpolation_yShift2(TString System="PCM", TString resultsType ="PCMPileUp
 	
 	cout<<"Llego al final"<<endl;
 	
+	
+	//////////////////////////Comparison to Combined RpPb /////////////////////////////////
+
+	TFile* fCombined= new TFile("CombineRpPb/eps/2016_05_19/ResultsRpPbpPb_2016_05_19.root");//without pile-up correction 	
+	TGraphAsymmErrors* CombinePi0RpPbSystErr=(TGraphAsymmErrors*)fCombined->Get("CombinedPi0RpPbSystErr");
+	TGraphAsymmErrors* CombinePi0RpPbStatErr=(TGraphAsymmErrors*)fCombined->Get("CombinedPi0RpPbStatErr");
+	
+	TCanvas* canvasRpPbCombinedPi0 = new TCanvas("canvasRpPbCombinedPi0","Dalitz R_{pPb} with charged particles",200,10,1000,700);
+	
+	DrawGammaCanvasSettings( canvasRpPbCombinedPi0,  0.1, 0.01, 0.015, 0.11);
+	
+	
+	TH2F * histo2DRpPbCombinedPi0 = new TH2F("histo2DRpPbCombinedPi0","histo2DRpPbCombinedPi0",1000,0.,pTLimit,1000,0.0,5.0);
+	SetStyleHistoTH2ForGraphs(histo2DRpPbCombinedPi0,pTLabel.Data(),RpPbLabel.Data(), 0.04,0.04, 0.04,0.04, 1.2,1.0, 512, 512); 
+	
+	
+	//	histo2DRpPbCombinedPi0->GetXaxis()->SetRangeUser(0.0,14.5);
+	histo2DRpPbCombinedPi0->GetYaxis()->SetRangeUser(0.19,1.81);
+	histo2DRpPbCombinedPi0->GetYaxis()->CenterTitle();
+	
+	histo2DRpPbCombinedPi0->Draw(); 
+	
+
+	DrawGammaSetMarkerTGraphAsym(CombinePi0RpPbSystErr,20,1.5, kRed,kRed, 1,kTRUE);
+	DrawGammaSetMarkerTGraphAsym(CombinePi0RpPbStatErr,20,1.5, kRed,kRed);
+	CombinePi0RpPbSystErr->Draw("E2,same");
+	CombinePi0RpPbStatErr->Draw("p,same");
+
+	graphRpPbSystErr->Draw("2p,same,e");
+	graphRpPbStatErr->Draw("p,same,e");
+	
+	
+	
+	
+	DrawGammaLines(0., 20.,1., 1.,1.,kBlack,2);
+	
+	TLatex *textRpPbCombinedPi0 = new TLatex(0.15,0.87,energyLabel.Data());
+	SetStyleTLatex( textRpPbCombinedPi0,0.04,4); 
+	textRpPbCombinedPi0->Draw();
+	
+	TLatex *LabelpPbCombinedPi0 = new TLatex(0.15,0.92,thesisPlotLabel.Data());
+	SetStyleTLatex( LabelpPbCombinedPi0, 0.04,4);
+	LabelpPbCombinedPi0->Draw();
+
+	TLegend* legendRpPbCombinedPi0 = new TLegend(0.2,0.150,0.65,0.3);
+	legendRpPbCombinedPi0->SetFillColor(0);
+	legendRpPbCombinedPi0->SetLineColor(0);
+	legendRpPbCombinedPi0->SetTextSize(0.03);
+	legendRpPbCombinedPi0->SetTextFont(42);
+	legendRpPbCombinedPi0->SetTextSize(0.04);
+	if (System.CompareTo("PHOS")==0)	legendRpPbCombinedPi0->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.13",SystemLabel.Data()),"p");
+	else if (System.CompareTo("EMCal")==0)	legendRpPbCombinedPi0->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.5",SystemLabel.Data()),"p");
+	else if (System.CompareTo("Comb")==0)	legendRpPbCombinedPi0->AddEntry(graphRpPbStatErr,"#it{R}_{p-Pb} from combined #pi^{0} spectra","p");
+	else	legendRpPbCombinedPi0->AddEntry(graphRpPbStatErr,Form("%s, |#it{y}| < 0.8",SystemLabel.Data()),"p");
+	legendRpPbCombinedPi0->AddEntry(CombinePi0RpPbStatErr,"Combined individual #it{R}_{p-Pb}","p");
+
+	legendRpPbCombinedPi0->Draw();
+	
+	
+	
+	canvasRpPbCombinedPi0->SaveAs(Form("%s/RpPb_Comparison_%s_CombinedPi0.%s",outputDir.Data(),System.Data(),suffix.Data()));
+
 	
 
 

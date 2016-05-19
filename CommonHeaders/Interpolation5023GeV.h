@@ -13,6 +13,8 @@ extern TMinuit*         gMinuit;
 void CalcRpPb(TGraphAsymmErrors* PPSpectrumSystErr, TGraphAsymmErrors*  PPSpectrumStatErr, TGraphAsymmErrors* pPbSpectrumSystErr, TGraphAsymmErrors* pPbSpectrumStatErr,
 	      TGraphAsymmErrors** graphRpPbSystErr, TGraphAsymmErrors** graphRpPbStatErr);
 
+void CalcRpPbInvYield(TGraphAsymmErrors* PPSpectrumSystErr, TGraphAsymmErrors*  PPSpectrumStatErr, TGraphAsymmErrors* pPbSpectrumSystErr, TGraphAsymmErrors* pPbSpectrumStatErr,
+	      TGraphAsymmErrors** graphRpPbSystErr, TGraphAsymmErrors** graphRpPbStatErr);
 void GetTGraphErrorsUpDown(TGraphAsymmErrors* graphYieldError, TGraphErrors** graphRelErrUpDown);
 
 
@@ -27,7 +29,8 @@ TGraphAsymmErrors* CalculateSystErrors(TGraphErrors* spectrum,TGraphAsymmErrors*
 TF1* RebinWithFitToTGraph(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TF1* CurrentFit, TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters);
 TF1* FillTGraphEYWithFitErr(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters);
 TGraphErrors *GetInterpolSpectrum2D(TGraphErrors *g1, TGraphErrors *g2,Double_t d1, Double_t d2,Double_t dSqrts);
-TGraphAsymmErrors* GetChargeParticlesRpPb(TString typeErr);
+TGraphAsymmErrors* GetChargeParticlesRpPb2013(TString typeErr);
+TGraphAsymmErrors* GetChargeParticlesRpPb2012(TString typeErr);
 TGraphErrors *ConvertTGraphAsymmErrorstoTGraphErrors(TGraphAsymmErrors* g1);
 TGraphAsymmErrors* ConvertTGraphErrorstoTGraphAsymmErrors(TGraphErrors* g1);
 TH1F* GetPPReferenceFromPythia(TString fileName);
@@ -96,7 +99,7 @@ Int_t colorsArray[kNAna];
 
 
 
-TGraphAsymmErrors* GetChargeParticlesRpPb(TString typeErr){
+TGraphAsymmErrors* GetChargeParticlesRpPb2012(TString typeErr){
 
   // Plot: p8424_d3x1y1
   double p8424_d3x1y1_xval[] = { 0.525, 0.575, 0.625, 0.675, 0.725, 0.775, 0.825, 0.875, 0.925, 
@@ -160,6 +163,83 @@ TGraphAsymmErrors* GetChargeParticlesRpPb(TString typeErr){
 }
 
 
+
+TGraphAsymmErrors* GetChargeParticlesRpPb2013(TString typeErr){
+ // Plot: p8550_d4x1y2
+  double p8550_d4x1y1_xval[] = { 0.175, 0.225, 0.275, 0.32499999999999996, 0.375, 0.42500000000000004, 0.475, 0.525, 0.575, 
+    0.625, 0.675, 0.725, 0.775, 0.825, 0.875, 0.925, 0.975, 1.05, 1.15, 
+    1.25, 1.35, 1.45, 1.55, 1.65, 1.75, 1.85, 1.95, 2.1, 2.3, 
+    2.5, 2.7, 2.9, 3.1, 3.3, 3.5, 3.7, 3.9, 4.25, 4.75, 
+    5.25, 5.75, 6.25, 6.75, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 
+    13.5, 14.5, 15.5, 17.0, 19.0, 21.0, 23.0, 26.0, 30.0, 36.0, 
+    45.0 };
+  double p8550_d4x1y1_xerrminus[] = { 0.024999999999999994, 0.024999999999999994, 0.025000000000000022, 0.024999999999999967, 0.025000000000000022, 0.025000000000000022, 0.024999999999999967, 0.025000000000000022, 0.02499999999999991, 
+    0.025000000000000022, 0.025000000000000022, 0.025000000000000022, 0.025000000000000022, 0.02499999999999991, 0.025000000000000022, 0.025000000000000022, 0.025000000000000022, 0.050000000000000044, 0.04999999999999982, 
+    0.050000000000000044, 0.050000000000000044, 0.050000000000000044, 0.050000000000000044, 0.04999999999999982, 0.050000000000000044, 0.050000000000000044, 0.050000000000000044, 0.10000000000000009, 0.09999999999999964, 
+    0.10000000000000009, 0.10000000000000009, 0.10000000000000009, 0.10000000000000009, 0.09999999999999964, 0.10000000000000009, 0.10000000000000009, 0.10000000000000009, 0.25, 0.25, 
+    0.25, 0.25, 0.25, 0.25, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 
+    0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 4.0, 
+    5.0 };
+  double p8550_d4x1y1_xerrplus[] = { 0.025000000000000022, 0.024999999999999994, 0.024999999999999967, 0.025000000000000022, 0.025000000000000022, 0.024999999999999967, 0.025000000000000022, 0.025000000000000022, 0.025000000000000022, 
+    0.025000000000000022, 0.02499999999999991, 0.025000000000000022, 0.025000000000000022, 0.025000000000000022, 0.025000000000000022, 0.02499999999999991, 0.025000000000000022, 0.050000000000000044, 0.050000000000000044, 
+    0.050000000000000044, 0.04999999999999982, 0.050000000000000044, 0.050000000000000044, 0.050000000000000044, 0.050000000000000044, 0.04999999999999982, 0.050000000000000044, 0.10000000000000009, 0.10000000000000009, 
+    0.10000000000000009, 0.09999999999999964, 0.10000000000000009, 0.10000000000000009, 0.10000000000000009, 0.10000000000000009, 0.09999999999999964, 0.10000000000000009, 0.25, 0.25, 
+    0.25, 0.25, 0.25, 0.25, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 
+    0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 4.0, 
+    5.0 };
+  double p8550_d4x1y1_yval[] = { 0.5346, 0.5265, 0.5276, 0.5324, 0.5399, 0.5505, 0.5646, 0.5811, 0.5975, 
+    0.6143, 0.6316, 0.6496, 0.667, 0.6845, 0.6986, 0.7119, 0.7252, 0.7499, 0.7806, 
+    0.8074, 0.8354, 0.86, 0.8836, 0.9024, 0.9284, 0.9492, 0.9732, 0.9932, 1.021, 
+    1.049, 1.065, 1.075, 1.083, 1.087, 1.082, 1.082, 1.093, 1.099, 1.084, 
+    1.083, 1.07, 1.065, 1.035, 1.027, 1.027, 0.9953, 1.001, 0.9924, 0.9966, 
+    0.9812, 1.001, 0.9878, 0.9951, 0.9866, 0.9764, 1.048, 0.9631, 0.9364, 1.108, 
+    0.8506 };
+  double p8550_d4x1y1_yerrminus[] = { 0.05200104710484203, 0.042000524996718795, 0.04300046511376359, 0.04500040110932346, 0.048000416664858235, 0.05100039215535504, 0.052000465382532876, 0.05300054339344079, 0.053000637732012246, 
+    0.052000753840689654, 0.05300090659601965, 0.05500105089905101, 0.05600128927087304, 0.05700154734741856, 0.058001904279083805, 0.059002204196114565, 0.060002613276423214, 0.06200129030915405, 0.06500155767364349, 
+    0.070002160680939, 0.0730025485856487, 0.07100385623330609, 0.07300449369730606, 0.07600593726808452, 0.07700649323271383, 0.07800923022309604, 0.07901069547852367, 0.08100888840121187, 0.08301018009858792, 
+    0.08501699830033993, 0.08602098581160297, 0.08704188646852733, 0.08803272118933958, 0.08804141071109663, 0.08805112151472007, 0.08806185326235191, 0.08807774974418908, 0.0890649201425567, 0.08808637806153684, 
+    0.0941029223775755, 0.09216425554410994, 0.0912463149940862, 0.08834500551813894, 0.08728923186739587, 0.08755021416307329, 0.08485281374238571, 0.085, 0.08551023330572781, 0.08514693182963201, 
+    0.0848999411071645, 0.0891852005660132, 0.08953770155638349, 0.0904433524367601, 0.09546203433826454, 0.09888377015466188, 0.11399122773266371, 0.10430723848324237, 0.11745637488020819, 0.14142135623730953, 
+    0.14477914214416385 };
+  double p8550_d4x1y1_yerrplus[] = { 0.05200104710484203, 0.042000524996718795, 0.04300046511376359, 0.04500040110932346, 0.048000416664858235, 0.05100039215535504, 0.052000465382532876, 0.05300054339344079, 0.053000637732012246, 
+    0.052000753840689654, 0.05300090659601965, 0.05500105089905101, 0.05600128927087304, 0.05700154734741856, 0.058001904279083805, 0.059002204196114565, 0.060002613276423214, 0.06200129030915405, 0.06500155767364349, 
+    0.070002160680939, 0.0730025485856487, 0.07100385623330609, 0.07300449369730606, 0.07600593726808452, 0.07700649323271383, 0.07800923022309604, 0.07901069547852367, 0.08100888840121187, 0.08301018009858792, 
+    0.08501699830033993, 0.08602098581160297, 0.08704188646852733, 0.08803272118933958, 0.08804141071109663, 0.08805112151472007, 0.08806185326235191, 0.08807774974418908, 0.0890649201425567, 0.08808637806153684, 
+    0.0941029223775755, 0.09216425554410994, 0.0912463149940862, 0.08834500551813894, 0.08728923186739587, 0.08755021416307329, 0.08485281374238571, 0.085, 0.08551023330572781, 0.08514693182963201, 
+    0.0848999411071645, 0.0891852005660132, 0.08953770155638349, 0.0904433524367601, 0.09546203433826454, 0.09888377015466188, 0.11399122773266371, 0.10430723848324237, 0.11745637488020819, 0.14142135623730953, 
+    0.14477914214416385 };
+  double p8550_d4x1y1_ystatminus[] = { 3.3E-4, 2.1E-4, 2.0E-4, 1.9E-4, 2.0E-4, 2.0E-4, 2.2E-4, 2.4E-4, 2.6E-4, 
+    2.8E-4, 3.1E-4, 3.4E-4, 3.8E-4, 4.2E-4, 4.7E-4, 5.1E-4, 5.6E-4, 4.0E-4, 4.5E-4, 
+    5.5E-4, 6.1E-4, 7.4E-4, 8.1E-4, 9.5E-4, 0.001, 0.0012, 0.0013, 0.0012, 0.0013, 
+    0.0017, 0.0019, 0.0027, 0.0024, 0.0027, 0.003, 0.0033, 0.0037, 0.0034, 0.0039, 
+    0.0044, 0.0055, 0.0067, 0.0078, 0.0071, 0.0098, 0.012, 0.013, 0.016, 0.019, 
+    0.022, 0.027, 0.031, 0.028, 0.037, 0.047, 0.063, 0.056, 0.08, 0.1, 
+    0.12 };
+  double p8550_d4x1y1_ystatplus[] = { 3.3E-4, 2.1E-4, 2.0E-4, 1.9E-4, 2.0E-4, 2.0E-4, 2.2E-4, 2.4E-4, 2.6E-4, 
+    2.8E-4, 3.1E-4, 3.4E-4, 3.8E-4, 4.2E-4, 4.7E-4, 5.1E-4, 5.6E-4, 4.0E-4, 4.5E-4, 
+    5.5E-4, 6.1E-4, 7.4E-4, 8.1E-4, 9.5E-4, 0.001, 0.0012, 0.0013, 0.0012, 0.0013, 
+    0.0017, 0.0019, 0.0027, 0.0024, 0.0027, 0.003, 0.0033, 0.0037, 0.0034, 0.0039, 
+    0.0044, 0.0055, 0.0067, 0.0078, 0.0071, 0.0098, 0.012, 0.013, 0.016, 0.019, 
+    0.022, 0.027, 0.031, 0.028, 0.037, 0.047, 0.063, 0.056, 0.08, 0.1, 
+    0.12 };
+  int p8550_d4x1y1_numpoints = 60;
+
+  TGraphAsymmErrors* p8550_d4x1y1;
+  
+  if( typeErr.CompareTo("Syst") == 0 ) {
+    p8550_d4x1y1 = new TGraphAsymmErrors(p8550_d4x1y1_numpoints, p8550_d4x1y1_xval, p8550_d4x1y1_yval, p8550_d4x1y1_xerrminus, p8550_d4x1y1_xerrplus, p8550_d4x1y1_yerrminus, p8550_d4x1y1_yerrplus);
+  } else if ( typeErr.CompareTo("Stat") == 0 ) {
+	  
+    p8550_d4x1y1  = new TGraphAsymmErrors(p8550_d4x1y1_numpoints, p8550_d4x1y1_xval, p8550_d4x1y1_yval, p8550_d4x1y1_xerrminus, p8550_d4x1y1_xerrplus, p8550_d4x1y1_ystatminus, p8550_d4x1y1_ystatplus);
+      
+  }
+  p8550_d4x1y1->SetName("/HepData/8550/d4x1y1");
+  p8550_d4x1y1->SetTitle("/HepData/8550/d4x1y1");
+  
+  return p8550_d4x1y1;
+  
+
+}
 	
 TGraphErrors* RemovePointsFromGraph(TGraphErrors *graph, Int_t 
 NbPoints){
@@ -529,6 +609,87 @@ void CalcRpPb(TGraphAsymmErrors* PPSpectrumSystErr, TGraphAsymmErrors*  PPSpectr
 	
 	
 }
+void CalcRpPbInvYield(TGraphAsymmErrors* PPSpectrumSystErr, TGraphAsymmErrors*  PPSpectrumStatErr, TGraphAsymmErrors* pPbSpectrumSystErr, TGraphAsymmErrors* pPbSpectrumStatErr,
+	      TGraphAsymmErrors** graphRpPbSystErr, TGraphAsymmErrors** graphRpPbStatErr){
+	      
+
+
+	
+	 //Computing RpPb using the interpolated pp@5.023 TeV and PCM pp@7 TeV spectra
+	 
+	//Double_t        xSectionpPb5023GeVINEL   =  70*1e-3;  //Dangerous to should be put in a library
+	
+	cout<<"material Error"<<endl;
+	
+	Int_t nPoints = pPbSpectrumStatErr->GetN();
+
+	
+	(*graphRpPbStatErr) = new TGraphAsymmErrors( nPoints);
+	(*graphRpPbSystErr)  = new TGraphAsymmErrors( nPoints);
+	
+	
+	Double_t *xBins      =  pPbSpectrumStatErr->GetX();
+	Double_t *xErrlow    =  pPbSpectrumStatErr->GetEXlow();
+	Double_t *xErrhigh   =  pPbSpectrumStatErr->GetEXhigh();
+	
+	Double_t *ypPbBins   =  pPbSpectrumStatErr->GetY();
+	Double_t *yPPBins    =  PPSpectrumStatErr->GetY();
+	
+	
+	Double_t *ypPbStatErrlow      = pPbSpectrumStatErr->GetEYlow();
+	//Double_t *ypPbStatErrhigh     = pPbSpectrumStatErr->GetEYlow();
+	
+	
+	Double_t *ypPbSystErrlow    = pPbSpectrumSystErr->GetEYlow();
+	Double_t *ypPbSystErrhigh   = pPbSpectrumSystErr->GetEYlow();
+	
+	
+	Double_t *yPPStatErrlow  = PPSpectrumStatErr->GetEYlow();
+	//Double_t *yPPStatErrhigh = PPSpectrumStatErr->GetEYlow();
+	
+	
+	Double_t *yPPSystErrlow  = PPSpectrumSystErr->GetEYlow();
+	Double_t *yPPSystErrhigh = PPSpectrumSystErr->GetEYlow();
+	
+	Double_t *RpPb   = new Double_t[nPoints];
+	
+	
+	
+	
+	
+	 Double_t fNcoll = 6.9;
+	 Double_t fNcollErr = 0.7;
+	
+	 /* Double_t fTpPb     =   0.0983e3*(1/recalcBarn); */
+	 /* Double_t fTpPbErr  =   0.0035e3*(1/recalcBarn); */
+	 
+	
+	
+	
+	for(Int_t iPoint = 0; iPoint < nPoints; iPoint++){
+	  
+	  RpPb[iPoint] =  ypPbBins[iPoint] / (fNcoll* yPPBins[iPoint]);
+	  
+	 (*graphRpPbSystErr)->SetPoint( iPoint, xBins[iPoint], RpPb[iPoint]);
+	 (*graphRpPbStatErr)->SetPoint( iPoint, xBins[iPoint], RpPb[iPoint] );
+	
+	 
+	 Double_t errYStat = 	 pow( pow( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( yPPStatErrlow[iPoint]/yPPBins[iPoint],  2.), 0.5)* RpPb[iPoint];
+	 Double_t errYSystlow =  pow( pow( ypPbSystErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( yPPSystErrlow[iPoint]/yPPBins[iPoint]  ,2. ) + pow ((fNcollErr/fNcoll) , 2),   0.5) * RpPb[iPoint];
+	 Double_t errYSysthigh = pow( pow( ypPbSystErrhigh[iPoint]/ypPbBins[iPoint],2. ) + pow( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) + pow ((fNcollErr/fNcoll) , 2),   0.5) * RpPb[iPoint];
+	 
+	 
+	 
+	 
+	 (*graphRpPbStatErr)->SetPointError(iPoint, xErrlow[iPoint],xErrhigh[iPoint],errYStat,errYStat);
+	 (*graphRpPbSystErr)->SetPointError(iPoint, xErrlow[iPoint],xErrhigh[iPoint],errYSystlow,errYSysthigh);
+		 
+	 
+	}
+	
+	
+	
+}
 
 TGraphAsymmErrors* ConvertTGraphErrorstoTGraphAsymmErrors(TGraphErrors* g1){
   
@@ -793,8 +954,28 @@ TGraphAsymmErrors* CancelOutMaterialError(TGraphAsymmErrors* graphYieldPi0, TStr
 	    }
 	
 	
-      }
-      
+      }else if ( method.CompareTo("PHOSPHOS") == 0 ) {
+	
+	cout<<"Entro PHOS"<<endl;
+	
+	
+	    Double_t  errorMaterial = 0.5;
+       
+
+
+	    for(Int_t i = 0; i < nPoints; i++){
+	  
+
+                Double_t materialE 	=  (  errorMaterial   * valueY[i] ) / 100.0;
+		
+		//cout<<valueX[i]<<" "<<"errorLow:  "<<errorYlow[i] * errorYlow[i]<<"  material:    "<<materialE*materialE<<endl;
+	        //cout<<valueX[i]<<" "<<"errorHigh: "<<errorYhigh[i] * errorYhigh[i]<<"  material:  "<<materialE*materialE<<endl;
+
+                errorYlow[i]  = TMath::Sqrt(   ( errorYlow[i] * errorYlow[i]  )  - ( materialE*materialE ) );
+                errorYhigh[i] = TMath::Sqrt(   ( errorYhigh[i]* errorYhigh[i] )  - ( materialE*materialE ) );
+
+	    }
+      }     
       //cout<<"LLego al fin"<<endl;
       
       TGraphAsymmErrors* graphInvYieldPi0CancelOutMaterial = new TGraphAsymmErrors(nPoints,valueX,valueY,errorXlow,errorXhigh,errorYlow,errorYhigh);
