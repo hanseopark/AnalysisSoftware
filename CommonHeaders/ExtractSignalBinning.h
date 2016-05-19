@@ -179,11 +179,11 @@ Int_t fBinsEta8TeVPtRebin[19]                   = { 8, 6, 6, 4, 4,
                                                     5, 5, 5, 5};
 Int_t fBinsEta8TeVEMCALPtRebin[19]              = { 4, 4, 4, 10, 10,
                                                     10, 8, 8, 8, 8,
-                                                    8, 8, 8, 8, 8,
-                                                    10, 20, 4, 4};
+                                                    8, 8, 8, 10, 16,
+                                                    16, 16, 4, 4};
 Int_t fBinsEta8TeVConvEMCALPtRebin[19]          = { 20, 20, 20, 10, 8,
                                                     8, 8, 8, 8, 8,
-                                                    8, 8, 8, 8, 20,
+                                                    8, 8, 8, 16, 20,
                                                     20, 20, 20, 20};
 Int_t fBinsPi0EtaBinning8TeVPtRebin[19]         = { 8, 1, 1, 1, 1, 
                                                     1, 1, 2, 2, 2, 
@@ -875,7 +875,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
             if (fNBinsPt-fStartPtBin > nBinsPlot) fRow++;
 
             fExampleBin         = 10;
-            if( modi == 4 ) fExampleBin = 14;
+            if( modi == 4 ) fExampleBin = 13;
             if (specialTrigg==1) fExampleBin = 22;
             if (specialTrigg==2) fExampleBin = 37;
         //*********************************************************************************************
@@ -1296,7 +1296,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
         } else if (energy.CompareTo("8TeV") == 0) {
             fStartPtBin         = 1;
             if (modi == 2 ) fStartPtBin = 3;
-            if (modi == 4 ) fStartPtBin = 4;
+            if (modi == 4 ) fStartPtBin = 5;
             fColumn             = 4;
             fRow                = 3;
             
@@ -1325,6 +1325,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
             nBinsPlot           = fColumn*fRow -1;
             if (fNBinsPt-fStartPtBin > nBinsPlot) fColumn++;
             fExampleBin         = 6;
+            if( modi == 4 ) fExampleBin = 9;
         //*********************************************************************************************
         //********************************** Eta for pp 13TeV******************************************
         //*********************************************************************************************

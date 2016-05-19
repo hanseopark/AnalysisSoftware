@@ -232,7 +232,7 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
     // ****************************** Read & process data from file **************************************
     // ***************************************************************************************************
     TFile* fileErrorInput= new TFile(nameDataFileErrors);
-    TFile* filePi0EtaBinning=new TFile("~/data/work/photonconv/AnalysisSoftware/8TeV_CaloSystematics/CutStudies/8TeV/Eta_data_SystematicErrorCuts.root");
+    TFile* filePi0EtaBinning=new TFile("~/data/work/pcgGit/AnalysisSoftware/8TeV_CaloSystematics/CutStudies/8TeV/Eta_data_SystematicErrorCuts.root");
     
     for (Int_t i = 0;i < nCuts;i++){
         
@@ -767,10 +767,10 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
  
         // create dummy histo
         TH2D *histo2DSysErrMean ;
-        if (meson.Contains("Pi0") ){
+        if (meson.Contains("Eta") ){
             histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,0.,20.);
         } else {
-            histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,0.,20.);
+            histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,0.,17.);
         }
         SetStyleHistoTH2ForGraphs( histo2DSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);
@@ -842,10 +842,10 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
     
         // create dummy histo
         TH2D *histo2DNewSysErrMean ;
-        if (meson.Contains("Pi0")){
+        if (meson.Contains("Eta")){
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,20.);
         } else {
-            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,20.);
+            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,17.);
         }
         SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);
@@ -1028,10 +1028,10 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
 
         // create dummy histo
         TH2D *histo2DSummedErrMean ;
-        if (meson.Contains("Pi0") ){
-            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,17.);
-        } else {
+        if (meson.Contains("Eta") ){
             histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,20.);
+        } else {
+            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,17.);
         }
         SetStyleHistoTH2ForGraphs( histo2DSummedErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);

@@ -254,7 +254,7 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
     // ****************************** Read & process data from file **************************************
     // ***************************************************************************************************
     TFile* fileErrorInput= new TFile(nameDataFileErrors.Data());
-    TFile* filePi0EtaBinning=new TFile("~/data/work/photonconv/AnalysisSoftware/8TeV_Systematics/CutStudies/8TeV/Eta_data_SystematicErrorCuts.root");
+    TFile* filePi0EtaBinning=new TFile("~/data/work/pcgGit/AnalysisSoftware/8TeV_Systematics/CutStudies/8TeV/Eta_data_SystematicErrorCuts.root");
     
     for (Int_t i = 0; i < nCuts; i++){
         
@@ -340,7 +340,7 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
                 } else {
                     for (Int_t k = 0; k < nPtBins; k++){
                         Double_t error   = 7.5;
-                        if(ptBins[k]>=4.) error = 5.7 + (0.25)*ptBins[k] + 0.05*ptBins[k]*ptBins[k];
+                        if(ptBins[k]>=4.) error = 6.3 + (0.1)*ptBins[k] + 0.04*ptBins[k]*ptBins[k];
                         
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = error*0.01;
@@ -564,7 +564,7 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
                             additionalNameOutput.CompareTo("EGA")==0
                         ){
                             error = 1.5; // parametrisation
-                            if(ptBins[k]>5) error += 0.75*(ptBins[k]-6.);
+                            if(ptBins[k]>5) error += 0.9*(ptBins[k]-5.);
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -579,7 +579,7 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
                             additionalNameOutput.CompareTo("EGA")==0
                         ){
                             error = 2.0; // parametrisation
-                            if(ptBins[k]>5) error += 0.75*(ptBins[k]-6.);
+                            if(ptBins[k]>5) error += 0.9*(ptBins[k]-5.);
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -1043,10 +1043,10 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
  
         // create dummy histo
         TH2D *histo2DSysErrMean ;
-        if ( meson.CompareTo("Pi0") == 0 ){
-            histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,0.,30.);
+        if ( meson.Contains("Eta") ){
+            histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,0.,25.);
         } else {
-            histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,0.,35.);
+            histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,0.,20.);
         }
         SetStyleHistoTH2ForGraphs( histo2DSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);
@@ -1129,10 +1129,10 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
     
         // create dummy histo
         TH2D *histo2DNewSysErrMean ;
-        if ( meson.CompareTo("Pi0") == 0 ){
+        if ( meson.Contains("Eta") ){
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,-0.5,30.);
         } else { 
-            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,-0.5,35.);
+            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,-0.5,20.);
         }
         SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);
@@ -1339,10 +1339,10 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
 
         // create dummy histo
         TH2D *histo2DSummedErrMean ;
-        if ( meson.CompareTo("Pi0") == 0 ){	
-            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,-0.5,30.);
+        if ( meson.Contains("Eta") ){
+            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,-0.5,25.);
         } else {
-            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,-0.5,35.);
+            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,-0.5,17.);
         }
         SetStyleHistoTH2ForGraphs( histo2DSummedErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);
