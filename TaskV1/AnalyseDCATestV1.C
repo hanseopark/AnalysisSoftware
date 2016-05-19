@@ -1349,7 +1349,7 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 	if (setPi0.CompareTo("Pi0") == 0){
 		fNBinsPt 			= numberOfBins;
 		fBinsPt 						= new Double_t[33];
-                 if (fEnergyFlag.CompareTo("13TeV") == 0) {
+        if (fEnergyFlag.CompareTo("13TeV") == 0) {
 			fStartPtBin					= 1;
 			fColumn 					= 5;
 			fRow 						= 4;
@@ -1372,8 +1372,7 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 			if (fNBinsPt-fStartPtBin > nBinsPlot) fColumn++;
 			nBinsPlot 					= fColumn*fRow -1;
 			if (fNBinsPt-fStartPtBin > nBinsPlot) fRow++;			
-		}
-                else if (fEnergyFlag.CompareTo("7TeV") == 0) {
+		} else if (fEnergyFlag.CompareTo("7TeV") == 0) {
 			fStartPtBin					= 1;
 			fColumn 					= 5;
 			fRow 						= 4;
@@ -1448,6 +1447,8 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 			for (Int_t i = 0; i < fNBinsPt+1; i++) {
 				if (cent.CompareTo("60-80%")==0 || cent.CompareTo("70-80%")==0 || cent.CompareTo("75-90%")==0 ){
 					fBinsPt[i] 			= fBinsPi0HIPtDCAPer[i];
+                } else if ( optPeriod.CompareTo("LHC11h")==0 || optPeriod.CompareTo("LHC14a1b")==0 ){
+                    fBinsPt[i]          = fBinsPi0HIPtDCALHC11h[i];
 				} else {
 					fBinsPt[i] 			= fBinsPi0HIPtDCA[i];
 				}   	
@@ -1477,25 +1478,35 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 				fMaxYFracBGOverIntHist		= 50;   
 			} else if (cent.CompareTo("60-70%")==0){
 				fColumn 					= 5;
-				if (optPeriod.CompareTo("LHC11h")==0){
-					optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing7";
-					optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing5";
-					optionBGSmoothingVar2 		= "BackDecreasingWindow,BackSmoothing9";
-					nIterBGFit 					= 13;
-					fMaxYFracBGOverIntHist		= 15;
-				} else {
-					optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing7";
-					optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing5";
-					optionBGSmoothingVar2 		= "BackDecreasingWindow,BackSmoothing9";
-					nIterBGFit 					= 17;
-					fMaxYFracBGOverIntHist		= 15;	      
-				}  
+                optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing7";
+                optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing5";
+                optionBGSmoothingVar2 		= "BackDecreasingWindow,BackSmoothing9";
+                nIterBGFit 					= 17;
+                fMaxYFracBGOverIntHist		= 15;
 			} else if (cent.CompareTo("50-60%")==0){
 				optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing5";
 				optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing3";
 				optionBGSmoothingVar2 		= "BackDecreasingWindow,BackSmoothing7";
 				nIterBGFit 					= 14;
 				fMaxYFracBGOverIntHist		= 12;
+            } else if (cent.CompareTo("40-60%") == 0){
+                optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
+                optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing3";
+                optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+                nIterBGFit                  = 17;
+                fMaxYFracBGOverIntHist      = 10;
+            } else if (cent.CompareTo("40-50%")==0) {
+                optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
+                optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing3";
+                optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+                nIterBGFit                  = 16;
+                fMaxYFracBGOverIntHist      = 12;
+            } else if (cent.CompareTo("30-50%")==0) {
+                optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
+                optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing3";
+                optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+                nIterBGFit                  = 18;
+                fMaxYFracBGOverIntHist      = 12;
 			} else if (cent.CompareTo("30-40%")==0) {
 				optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing5";
 				optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing3";
@@ -1506,38 +1517,28 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 				optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing5";
 				optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing3";
 				optionBGSmoothingVar2 		= "BackDecreasingWindow,BackSmoothing7";
-				nIterBGFit 					= 18;
-				fMaxYFracBGOverIntHist		= 12;
-			} else if (cent.CompareTo("20-30%")==0) {
-				optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing5";
-				optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing3";
-				optionBGSmoothingVar2 		= "BackDecreasingWindow,BackSmoothing7";
-				nIterBGFit 					= 18;
-				fMaxYFracBGOverIntHist		= 12;
-			} else if (cent.CompareTo("30-50%")==0) {
-				optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing5";
-				optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing3";
-				optionBGSmoothingVar2 		= "BackDecreasingWindow,BackSmoothing7";
-				nIterBGFit 					= 18;
-				fMaxYFracBGOverIntHist		= 12;  
-			} else if (cent.CompareTo("40-50%")==0) {
-				optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing5";
-				optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing3";
-				optionBGSmoothingVar2 		= "BackDecreasingWindow,BackSmoothing7";
-				nIterBGFit 					= 16;
-				fMaxYFracBGOverIntHist		= 12;   
-			} else if (cent.CompareTo("40-60%") == 0){
-				optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing5";
-				optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing3";
-				optionBGSmoothingVar2 		= "BackDecreasingWindow,BackSmoothing7";
 				nIterBGFit 					= 17;
-				fMaxYFracBGOverIntHist		= 10;
+				fMaxYFracBGOverIntHist		= 12;
 			} else if (cent.CompareTo("20-40%") == 0){
-				optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing5";
-				optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing3";
-				optionBGSmoothingVar2 		= "BackDecreasingWindow,BackSmoothing7";
-				nIterBGFit 					= 19;      
-				fMaxYFracBGOverIntHist		= 8;
+                if (optPeriod.CompareTo("LHC11h")==0){
+                    optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
+                    optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing3";
+                    optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+                    nIterBGFit                  = 17;
+                    fMaxYFracBGOverIntHist      = 8;
+                } else {
+                    optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing5";
+                    optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing3";
+                    optionBGSmoothingVar2 		= "BackDecreasingWindow,BackSmoothing7";
+                    nIterBGFit 					= 19;
+                    fMaxYFracBGOverIntHist		= 8;
+                }
+            } else if (cent.CompareTo("20-30%")==0) {
+                optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
+                optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing3";
+                optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+                nIterBGFit                  = 18;
+                fMaxYFracBGOverIntHist      = 12;
 			} else {
 				fMaxYFracBGOverIntHist		= 4;
 				nIterBGFit 					= 21;
@@ -1598,8 +1599,7 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 			if (fNBinsPt-fStartPtBin > nBinsPlot) fColumn++;
 			nBinsPlot 					= fColumn*fRow -1;
 			if (fNBinsPt-fStartPtBin > nBinsPlot) fRow++;
-		}
-                else if (fEnergyFlag.CompareTo("7TeV") == 0) {
+		} else if (fEnergyFlag.CompareTo("7TeV") == 0) {
 			fStartPtBin					= 1;
 			fColumn 					= 5;
 			fRow 						= 3;
@@ -1668,7 +1668,11 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 				fNBinsPt 				= 16;
 			}
 			for (Int_t i = 0; i < fNBinsPt+1; i++) {
-				fBinsPt[i] 				= fBinsEtaHIPtDCA[i];
+              if ( optPeriod.CompareTo("LHC11h")==0 || optPeriod.CompareTo("LHC14a1b")==0 ){
+				fBinsPt[i] 				= fBinsEtaHIPtDCALHC11h[i];
+              } else {
+                fBinsPt[i]              = fBinsEtaHIPtDCA[i];
+              }
 			}
 			
 			fExampleBin = 4;
@@ -1698,7 +1702,7 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 				optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing5";
 				optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing3";
 				optionBGSmoothingVar2 		= "BackDecreasingWindow,BackSmoothing7";	
-				nIterBGFit 				= 18;      
+				nIterBGFit 				= 17;
 				fMaxYFracBGOverIntHist	= 8;
 			} else if (cent.CompareTo("20-40%") == 0){
 				optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing5";
@@ -1770,8 +1774,7 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 			optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing5";
 			optionBGSmoothingVar2 		= "BackDecreasingWindow,BackSmoothing7";
 			fMaxYFracBGOverIntHist                          = 30;
-		}
-		else if (fEnergyFlag.CompareTo("7TeV") == 0) {
+		} else if (fEnergyFlag.CompareTo("7TeV") == 0) {
 			fStartPtBin					= 1;
 			fColumn 					= 5;
 			fRow 						= 3;
@@ -1828,16 +1831,27 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 			fExampleBin 				= 2;
 			nIterBGFit 					= 13;
 		} else if( fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0) { 
-			fStartPtBin					= 1;
-			fColumn 					= 2;
-			fRow 						= 2;
+            fStartPtBin                 = 1; //otherwise usually 3
+            fColumn                     = 4;
+            fRow                        = 3;
 
-			if (fNBinsPt > 4) {
-				cout << "You have chosen to have more than 4 bins, this is not possible, it will be reduced to 4" << endl;
-				fNBinsPt 				= 4;
-			}
+            if ( optPeriod.CompareTo("LHC11h")==0 || optPeriod.CompareTo("LHC14a1b")==0 ){
+              if (fNBinsPt > 10) {
+                  cout << "You have chosen to have more than 10 bins, this is not possible, it will be reduced to 10" << endl;
+                  fNBinsPt                = 10;
+              }
+            } else {
+              if (fNBinsPt > 4) {
+                  cout << "You have chosen to have more than 4 bins, this is not possible, it will be reduced to 4" << endl;
+                  fNBinsPt 				= 4;
+              }
+            }
 			for (Int_t i = 0; i < fNBinsPt+1; i++) {
+              if ( optPeriod.CompareTo("LHC11h")==0 || optPeriod.CompareTo("LHC14a1b")==0 ){
+                fBinsPt[i]              = fBinsEtaHIPtDCALHC11h[i];
+              } else {
 				fBinsPt[i] 				= fBinsEtaHIPt[i];
+              }
 			}
 
 			fExampleBin = 2;
@@ -1846,8 +1860,10 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 				nIterBGFit 				= 15;
 			} else if (cent.CompareTo("40-60%") == 0){
 				nIterBGFit 				= 17;
-			} else if (cent.CompareTo("20-40%") == 0){
+			} else if (cent.CompareTo("20-50%") == 0){
 				nIterBGFit 				= 19;   
+            } else if (cent.CompareTo("20-40%") == 0){
+                nIterBGFit              = 19;
 			} else {
 				nIterBGFit 				= 21;
 			}   

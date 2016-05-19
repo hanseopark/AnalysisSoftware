@@ -455,12 +455,23 @@ TH1D* histoRAAStatEMCal0010;
 TH1D* histoRAAStatEMCal2050;
 TH1D* histoRAAStatPHOS0010;
 // Raa graphs from calcraa with comb fit (see above)
-TGraphAsymmErrors* graphCombRAATotPbPb2760GeVTOT_0010 = NULL;
+TGraphAsymmErrors* graphCombRAATotPbPb2760GeV_0010 = NULL;
 TGraphAsymmErrors* graphCombRAAStatPbPb2760GeV_0010 = NULL;
 TGraphAsymmErrors* graphCombRAASysPbPb2760GeV_0010 = NULL;
-TGraphAsymmErrors* graphCombRAATotPbPb2760GeVTOT_2050 = NULL;
+TGraphAsymmErrors* graphCombRAATotPbPb2760GeV_2050 = NULL;
 TGraphAsymmErrors* graphCombRAAStatPbPb2760GeV_2050 = NULL;
 TGraphAsymmErrors* graphCombRAASysPbPb2760GeV_2050 = NULL;
+
+
+//loading file for both meson plots
+TGraphAsymmErrors *graphRAAPi0StatBothMeson_0010;
+TGraphAsymmErrors *graphRAAPi0SysBothMeson_0010;
+TGraphAsymmErrors *graphRAAPi0StatBothMeson_2050;
+TGraphAsymmErrors *graphRAAPi0SysBothMeson_2050;
+TGraphAsymmErrors *graphRAAEtaStatBothMeson_0010;
+TGraphAsymmErrors *graphRAAEtaSysBothMeson_0010;
+TGraphAsymmErrors *graphRAAEtaStatBothMeson_2050;
+TGraphAsymmErrors *graphRAAEtaSysBothMeson_2050;
 
 
 TFile*  filePHOSPbPb;

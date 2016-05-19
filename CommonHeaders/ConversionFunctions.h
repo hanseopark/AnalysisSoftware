@@ -1973,12 +1973,19 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
                 Double_t fNcoll, Double_t fNcollError, TString meson = "Pi0", Double_t maxPtPP = 0., Int_t nSubEnd = 0, TString functionInterpolation = "powPure"){
     //--------------------------------------- extrapolating the pp CONV yield in pT --------------------------------------------------
 
-    cout << "PbPb PCM spectrum: " << endl;
+    TString nameSystem = graphPbPbSpectrum->GetName();
+    cout<< nameSystem.Data() << endl;
+    TString labelSystem;
+    if(nameSystem.Contains("PCM")) labelSystem = "PCM";
+    else if(nameSystem.Contains("PHOS")) labelSystem = "PHOS";
+    else if(nameSystem.Contains("EMCal")) labelSystem = "EMCal";
+
+    cout << Form("PbPb %s spectrum: ",labelSystem.Data()) << endl;
     graphPbPbSpectrum->Print();
     cout << "\n";
     graphPbPbSpectrumSysNoMat->Print();
     
-    cout << "\n PP PCM spectrum: " << endl;
+    cout << Form("\n PP %s spectrum: ",labelSystem.Data()) << endl;
     graphPPSpectrum->Print();
     cout << "\n";
     graphPPSpectrumSystNoMat->Print();
@@ -2038,7 +2045,8 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
 //     Double_t fitBeginpp = xBinsPPComb[0];
 //     Double_t fitEndpp = xBinsPPComb[nBinsPPComb-1];
 
-	fitPP                               = FitObject(functionInterpolation.Data(),"fitRAARef",meson.Data(), dummyPPSpectrum, 0.4, 14.);
+// 	fitPP                               = FitObject(functionInterpolation.Data(),"fitRAARef",meson.Data(), dummyPPSpectrum, 0.4, 40.);
+
 
     TF1* fitPPPowerlaw;
     TF1* fitPPPowerlaw2;
@@ -2053,8 +2061,9 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
         
         if(meson.Contains("Eta")){
 
-			fitPPPowerlaw = FitObject("h","fitRAARefLevy",meson.Data(),dummyPPSpectrum,0.4, 14.);
-			fitPPPowerlaw2 = FitObject("powPure","fitRAARefPowerlaw2",meson.Data(),dummyPPSpectrum, 0.4, 14.);
+			fitPPPowerlaw = FitObject("h","fitRAARefLevy",meson.Data(),dummyPPSpectrum,0.8, 20.);
+// 			fitPPPowerlaw2 = FitObject("powPure","fitRAARefPowerlaw2",meson.Data(),dummyPPSpectrum, 0.8, 20.);
+            fitPPPowerlaw2 = FitObject("h","fitRAARefLevy2",meson.Data(),dummyPPSpectrum, 0.8, 20.);
 
 			//fit fixed as Pi0:        
 			//     fitRAARef
@@ -2068,17 +2077,17 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
 			//           fitPP->FixParameter(1,6.3976643035);
 			//             fitPP->FixParameter(2,0.2725372973);
 
-			resultPP                    = dummyPPSpectrum->Fit(fitPP,fittingOptions.Data() , "", .5, maxPtPPForSpec);
+			resultPP                    = dummyPPSpectrum->Fit(fitPP,fittingOptions.Data() , "", 1., maxPtPPForSpec);
 			resultPPPowerlaw            = dummyPPSpectrum->Fit(fitPPPowerlaw,fittingOptions.Data() , "", 1., maxPtPPForSpec);
-			resultPPPowerlaw2           = dummyPPSpectrum->Fit(fitPPPowerlaw2,fittingOptions.Data() , "", 2., maxPtPPForSpec);
+			resultPPPowerlaw2           = dummyPPSpectrum->Fit(fitPPPowerlaw2,fittingOptions.Data() , "", 0.5, maxPtPPForSpec);
 
         } else {
-			fitPPPowerlaw = FitObject("h","fitRAARefLevy",meson.Data(),dummyPPSpectrum,0.4, 14.);
-			fitPPPowerlaw2 = FitObject("h","fitRAARefLevy2",meson.Data(),dummyPPSpectrum, 0.4, 14.);
+			fitPPPowerlaw = FitObject("h","fitRAARefLevy",meson.Data(),dummyPPSpectrum,0.4, 40.);
+			fitPPPowerlaw2 = FitObject("h","fitRAARefLevy2",meson.Data(),dummyPPSpectrum, 0.4, 40.);
 
-			resultPP                    = dummyPPSpectrum->Fit(fitPP,fittingOptions.Data() , "", 1., maxPtPPForSpec);
-			resultPPPowerlaw            = dummyPPSpectrum->Fit(fitPPPowerlaw,fittingOptions.Data() , "", 2., maxPtPPForSpec);
-			resultPPPowerlaw2           = dummyPPSpectrum->Fit(fitPPPowerlaw2,fittingOptions.Data() , "", 3., maxPtPPForSpec);   
+			resultPP                    = dummyPPSpectrum->Fit(fitPP,fittingOptions.Data() , "", 2., maxPtPPForSpec);
+			resultPPPowerlaw            = dummyPPSpectrum->Fit(fitPPPowerlaw,fittingOptions.Data() , "", 1., maxPtPPForSpec);
+			resultPPPowerlaw2           = dummyPPSpectrum->Fit(fitPPPowerlaw2,fittingOptions.Data() , "", 2.5, maxPtPPForSpec);
         }
         
     } else {
@@ -2176,7 +2185,7 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
     DrawGammaCanvasSettings( canvasDummy6,  0.1, 0.01, 0.015, 0.08);
     canvasDummy6->SetLogy();
     canvasDummy6->SetLogx();
-    TH2F * histo2DDummy6 = new TH2F("histo2DDummy6","histo2DDummy5",1000,0.23,30.,1000,1e-8,10);
+    TH2F * histo2DDummy6 = new TH2F("histo2DDummy6","histo2DDummy5",1000,0.3,40.,1000,1e-10,10);
     SetStyleHistoTH2ForGraphs(histo2DDummy6, "#it{p}_{T} (GeV/#it{c})","", 0.032,0.04, 0.04,0.04, 1,1.55);
     histo2DDummy6->DrawCopy(); 
 
@@ -2200,32 +2209,13 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
 	legend->SetFillColor(0);
 	legend->SetLineColor(0);
 	legend->SetTextSize(0.03);
-	legend->AddEntry(graphPPSpectrum,"PCM","p");
+	legend->AddEntry(graphPPSpectrum,labelSystem.Data(),"p");
 	legend->AddEntry(graphPPCombinedSpectrum,"comb","p");
 	legend->AddEntry(graphPPSpectrumExtended,"extrapolated","p");
 	legend->Draw();
     
     canvasDummy6->Update();
-    canvasDummy6->Print(Form("debugWithInterpolation_%s.eps", meson.Data()));
-
-
-    canvasDummy6->cd();
-    canvasDummy6->SetLogy(0);
-    canvasDummy6->SetLogx(0);
-    
-    TH2F * histo2DDummy7 = new TH2F("histo2DDummy7","histo2DDummy7",1000,0.23,15.,1000,0.,20);
-    histo2DDummy7->DrawCopy();
-    
-    DrawGammaSetMarkerTGraphAsym(relSysErrorFuncPP, 20,2, kBlue+2, kBlue+2, 1, kTRUE);
-    DrawGammaSetMarkerTGraphAsym(relSysErrorPowerLaw1 , 20,2, kOrange+2, kOrange+2, 1, kTRUE);
-    DrawGammaSetMarkerTGraphAsym(relSysErrorPowerLaw2, 20,2, kGreen+2, kGreen+2, 1, kTRUE);
-
-    relSysErrorFuncPP->Draw("p,l,same");
-    relSysErrorPowerLaw1->Draw("p,l,same");
-    relSysErrorPowerLaw2->Draw("p,l,same");
-
-    canvasDummy6->Update();
-    canvasDummy6->Print(Form("debugRelSysErr_%s.eps", meson.Data()));
+    canvasDummy6->Print(Form("debugWithInterpolation_%s%s.eps",labelSystem.Data(), meson.Data()));
 
     
     graphPPSpectrumExtendedSys->Print();
