@@ -49,64 +49,58 @@ void CreateNChargeWeightingFile(){
 //	Int_t cutNr[nFiles]={0,1,0,1,0,1,0,1,0,1,0,0,1,0,1};
 
   // 8TeV
-  const Int_t nFiles=24;
+  const Int_t nFiles=21;
 
   TString mainDir[nFiles];
   TString path[nFiles]={
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12a_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12b_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12c_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12d_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12f_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12g_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12h_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12i_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1a1_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1b_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1c_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1d_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1f_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1g_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1h_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1i_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2a_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2b_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2c_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2d_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2f_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2g_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2h_GammaConvCalo_120.root",
-      "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2i_GammaConvCalo_120.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC12a_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC12b_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC12c_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC12d_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC12f_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC12h_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC12i_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h1a1_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h1b_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h1c_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h1d_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h1f_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h1h_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h1i_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h2a_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h2b_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h2c_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h2d_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h2f_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h2h_GammaConvCalo_101.root",
+      "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h2i_GammaConvCalo_101.root",
   };
   TString name[nFiles]={
-      "LHC12a_00",
-      "LHC12b_00",
-      "LHC12c_00",
-      "LHC12d_00",
-      "LHC12f_00",
-      "LHC12g_00",
-      "LHC12h_00",
-      "LHC12i_00",
-      "LHC15h1a1_00",
-      "LHC15h1b_00",
-      "LHC15h1c_00",
-      "LHC15h1d_00",
-      "LHC15h1f_00",
-      "LHC15h1g_00",
-      "LHC15h1h_00",
-      "LHC15h1i_00",
-      "LHC15h2a_00",
-      "LHC15h2b_00",
-      "LHC15h2c_00",
-      "LHC15h2d_00",
-      "LHC15h2f_00",
-      "LHC15h2g_00",
-      "LHC15h2h_00",
-      "LHC15h2i_00"
+      "LHC12a_10",
+      "LHC12b_10",
+      "LHC12c_10",
+      "LHC12d_10",
+      "LHC12f_10",
+      "LHC12h_10",
+      "LHC12i_10",
+      "LHC15h1a1_10",
+      "LHC15h1b_10",
+      "LHC15h1c_10",
+      "LHC15h1d_10",
+      "LHC15h1f_10",
+      "LHC15h1h_10",
+      "LHC15h1i_10",
+      "LHC15h2a_10",
+      "LHC15h2b_10",
+      "LHC15h2c_10",
+      "LHC15h2d_10",
+      "LHC15h2f_10",
+      "LHC15h2h_10",
+      "LHC15h2i_10"
   };
-  Int_t cutNr[nFiles]={0,0,0,0,0,0,0,0,
-                       0,0,0,0,0,0,0,0,
-                       0,0,0,0,0,0,0,0
+  Int_t cutNr[nFiles]={0,0,0,0,0,0,0,
+                       0,0,0,0,0,0,0,
+                       0,0,0,0,0,0,0
                       };
 
 	TDirectory::AddDirectory(0);
@@ -155,6 +149,7 @@ void CreateNChargeWeightingFile(){
 		fOutput->Close();
 		delete fOutput;
 
+        delete TopDir;
         fFile->Close();
 		delete fFile;
 	}

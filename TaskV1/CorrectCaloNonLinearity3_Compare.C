@@ -302,7 +302,7 @@ void CorrectCaloNonLinearity3_Compare(TString select = "LHC11a-Pythia")
       plotMassData[0]             = kTRUE;
       inputFileNames[1]           = "LHC12-Phojet-Calo";
       plotMassData[1]             = kFALSE;
-    } else if(select.CompareTo("LHC12-ConvCalo-Calo")==0){
+    } else if(select.CompareTo("8TeV")==0){
       nNL                         = 4;
       inputFileNames              = new TString[nNL];
       plotMassData                = new Bool_t[nNL];
@@ -760,6 +760,122 @@ void CorrectCaloNonLinearity3_Compare(TString select = "LHC11a-Pythia")
         legend->AddEntry(testB,"kPi0MCv3 / kTestBeamv3","p");
         legend->Draw("same");
         PutProcessLabelAndEnergyOnPlot(0.7, 0.25, 0.03, "pp, #sqrt{#it{s}} = 2.76 TeV", "CCMF","");
+        canvasRatio->SetLogx(1); canvasRatio->SetLogy(0); canvasRatio->SetLogz(0); canvasRatio->Update();
+        canvasRatio->SaveAs(Form("%s/TotalCorrection_Full_Case2_%s.%s", outputDir.Data(), select.Data(), suffix.Data()));
+        canvasRatio->Clear();
+        legend->Clear();
+    }
+//##############################################################################################################
+//8 TeV ##############################################################################################################
+//##############################################################################################################
+
+    if(select.Contains("8TeV")){
+      Int_t n=4;
+        legend->SetNColumns(2);
+        legend->SetY1(1.05);
+        legend->SetX2(1.5);
+
+        TH1D* testB = new TH1D(*testBeam);
+        testB->Reset("ICE");
+        DrawGammaSetMarker(testB,  20, 0.8, kBlack, kBlack);
+        for(Int_t iBin = 1; iBin <= testBeam->GetNbinsX()+1; iBin++) {
+            if(iBin%10>=1) continue;
+            Float_t e = testB->GetXaxis()->GetBinCenter(iBin);
+            Float_t factor = 1;
+            factor *= FunctionNL_kPi0MCv3(e);
+            factor /= FunctionNL_kTestBeamv3(e);
+            testB->SetBinContent(iBin,factor);
+        }
+
+        testB->GetXaxis()->SetTitleOffset(0.8);
+        testB->GetYaxis()->SetRangeUser(0.98,1.1);
+        testB->DrawCopy("p");
+
+        Color_t clr[10] = { kAzure, kRed, kAzure+8, kRed-8, kAzure+8, kRed+2, kAzure-3, kRed-2, kAzure-6, kRed-6};
+
+        TH1D* testBarr[n];
+        for(Int_t iNL=0; iNL<n; iNL++){
+            testBarr[iNL] = (TH1D*) histoTotalCorrection[0]->Clone(Form("NL%i",iNL));
+            testBarr[iNL]->Reset("ICE");
+            DrawGammaSetMarker(testBarr[iNL], 21, 0.5, clr[iNL], clr[iNL]);
+            testBarr[iNL]->SetLineWidth(3);
+            for(Int_t iBin = 1; iBin <= testBarr[iNL]->GetNbinsX()+1; iBin++) {
+                Float_t energy = testBarr[iNL]->GetXaxis()->GetBinCenter(iBin);
+                Float_t factor = 1;
+                if(iNL==0) factor /= FunctionNL_kSDM(energy, 0.96874*0.991*0.9958*0.999, -3.76064, -0.193181);
+                else if(iNL==1) factor /= FunctionNL_kSDM(energy, 0.963379*0.9985*0.9992, -3.61217, -0.614043);
+                else if(iNL==2) factor /= FunctionNL_kSDM(energy, 0.969703*0.989*0.9969*0.9991, -3.80387, -0.200546);
+                else if(iNL==3) factor /= FunctionNL_kSDM(energy, 0.96105*0.999*0.9996, -3.62239, -0.556256);
+                if(iNL>5 && iBin%10>=1) continue;
+                testBarr[iNL]->SetBinContent(iBin,factor);
+            }
+            if(iNL==0) legend->AddEntry(testBarr[iNL],"Pythia8 - ConvCalo","l");
+            else if(iNL==1) legend->AddEntry(testBarr[iNL],"Pythia8 - Calo","l");
+            else if(iNL==2) legend->AddEntry(testBarr[iNL],"Phojet - ConvCalo","l");
+            else if(iNL==3) legend->AddEntry(testBarr[iNL],"Phojet - Calo","l");
+            testBarr[iNL]->DrawCopy("p,same");
+        }
+        testB->DrawCopy("p,same");
+        legend->AddEntry(testB,"kPi0MCv3 / kTestBeamv3","p");
+        legend->Draw("same");
+        PutProcessLabelAndEnergyOnPlot(0.7, 0.25, 0.03, "pp, #sqrt{#it{s}} = 8 TeV", "CCRF","");
+        canvasRatio->SetLogx(1); canvasRatio->SetLogy(0); canvasRatio->SetLogz(0); canvasRatio->Update();
+        canvasRatio->SaveAs(Form("%s/TotalCorrection_Full_Case1_%s.%s", outputDir.Data(), select.Data(), suffix.Data()));
+        canvasRatio->Clear();
+        legend->Clear();
+    }
+
+    // Case 2 - 8TeV : Mass Fitting, then Ratio
+    if(select.Contains("8TeV")){
+       Int_t n = 4;
+        legend->SetNColumns(2);
+        legend->SetY1(1.05);
+        legend->SetX2(1.5);
+
+        TH1D* testB = new TH1D(*testBeam);
+        testB->Reset("ICE");
+        DrawGammaSetMarker(testB,  20, 0.8, kBlack, kBlack);
+        for(Int_t iBin = 1; iBin <= testB->GetNbinsX()+1; iBin++) {
+            if(iBin%10>=1) continue;
+            Float_t e = testB->GetXaxis()->GetBinCenter(iBin);
+            Float_t factor = 1;
+            factor *= FunctionNL_kPi0MCv3(e);
+            factor /= FunctionNL_kTestBeamv3(e);
+            testB->SetBinContent(iBin,factor);
+        }
+        testB->GetXaxis()->SetTitleOffset(0.8);
+        testB->GetYaxis()->SetRangeUser(0.98,1.1);
+        testB->DrawCopy("p");
+
+        Color_t clr[10] = { kAzure, kRed, kAzure+8, kRed-8, kAzure+8, kRed+2, kAzure-3, kRed-2, kAzure-6, kRed-6};
+
+        TH1D* testBarr[n];
+        for(Int_t iNL=0; iNL<n; iNL++){
+            testBarr[iNL] = (TH1D*) histoTotalCorrection[0]->Clone(Form("NL%i",iNL));
+            testBarr[iNL]->Reset("ICE");
+            DrawGammaSetMarker(testBarr[iNL], 21, 0.5, clr[iNL], clr[iNL]);
+            testBarr[iNL]->SetLineWidth(3);
+            for(Int_t iBin = 1; iBin <= testBarr[iNL]->GetNbinsX()+1; iBin++) {
+                Float_t energy = testBarr[iNL]->GetXaxis()->GetBinCenter(iBin);
+                Float_t factor = 1;
+                if(iNL==0) factor /= (FunctionNL_DPOW(energy, 1.0654169768, -0.0935785719, -0.1137883054, 1.1814766150, -0.1980098061, -0.0854569214) - 0.0138);
+                else if(iNL==1) factor /= (FunctionNL_DPOW(energy, 1.1389201636, -0.1999994717, -0.1622237979, 1.1603460704, -0.1999999989, -0.2194447313) - 0.0025);
+                else if(iNL==2) factor /= (FunctionNL_DPOW(energy, 1.0652493513, -0.0929276101, -0.1113762695, 1.1837801885, -0.1999914832, -0.0854569214) - 0.0145);
+                else if(iNL==3) factor /= (FunctionNL_DPOW(energy, 1.0105301622, -0.0732424689, -0.5000000000, 1.0689250170, -0.1082682369, -0.4388156470) - 0.001);
+                if(iNL>5 && iBin%10>=1) continue;
+                testBarr[iNL]->SetBinContent(iBin,factor);
+            }
+            if(iNL==0) legend->AddEntry(testBarr[iNL],"Pythia8 - ConvCalo","l");
+            else if(iNL==1) legend->AddEntry(testBarr[iNL],"Pythia8 - Calo","l");
+            else if(iNL==2) legend->AddEntry(testBarr[iNL],"Phojet - ConvCalo","l");
+            else if(iNL==3) legend->AddEntry(testBarr[iNL],"Phojet - Calo","l");
+
+            testBarr[iNL]->DrawCopy("p,same");
+        }
+        testB->DrawCopy("p,same");
+        legend->AddEntry(testB,"kPi0MCv3 / kTestBeamv3","p");
+        legend->Draw("same");
+        PutProcessLabelAndEnergyOnPlot(0.7, 0.25, 0.03, "pp, #sqrt{#it{s}} = 8 TeV", "CCMF","");
         canvasRatio->SetLogx(1); canvasRatio->SetLogy(0); canvasRatio->SetLogz(0); canvasRatio->Update();
         canvasRatio->SaveAs(Form("%s/TotalCorrection_Full_Case2_%s.%s", outputDir.Data(), select.Data(), suffix.Data()));
         canvasRatio->Clear();
