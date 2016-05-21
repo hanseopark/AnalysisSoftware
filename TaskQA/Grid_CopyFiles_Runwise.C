@@ -119,79 +119,141 @@ void Grid_CopyFiles_Runwise(TString folder = "/home/daniel/data/work/pcgGit/Anal
 
 
 //pp LHC12
-//        const Int_t nFiles = 1;
-//        TString Tag = "20160320";
-//        TString DataSetsFile[nFiles] = {"GammaCalo_121.root"};
+        const Int_t nFiles = 2;
+        TString Tag = "20160518";
+        //TString DataSetsFile[nFiles] = {"GammaConvCalo_101.root","GammaCalo_101.root"};
+        TString DataSetsFile[nFiles] = {"AnalysisResults.root","GammaConvV1_70.root"};
 
-//        const Int_t nSets = 21;
-//        TString DataSets[nSets]={
-//          "LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i",
-//          "LHC15h1a1", "LHC15h1b", "LHC15h1c", "LHC15h1d", "LHC15h1f", "LHC15h1h", "LHC15h1i",
-//          "LHC15h2a", "LHC15h2b", "LHC15h2c", "LHC15h2d", "LHC15h2f", "LHC15h2h", "LHC15h2i"
-//        };
-//        TString DataSetsFolder[nSets]={
-//          "LHC12", "LHC12", "LHC12", "LHC12", "LHC12", "LHC12", "LHC12",
-//          "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1",
-//          "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2"
-//        };
-//        TString PrefixDataSets[nSets]={
-//              "/alice/data/2012/LHC12a/000",
-//              "/alice/data/2012/LHC12b/000",
-//              "/alice/data/2012/LHC12c/000",
-//              "/alice/data/2012/LHC12d/000",
-//              "/alice/data/2012/LHC12f/000",
-//              "/alice/data/2012/LHC12h/000",
-//              "/alice/data/2012/LHC12i/000",
-//              "/alice/sim/2015/LHC15h1a1/",
-//              "/alice/sim/2015/LHC15h1b/",
-//              "/alice/sim/2015/LHC15h1c/",
-//              "/alice/sim/2015/LHC15h1d/",
-//              "/alice/sim/2015/LHC15h1f/",
-//              "/alice/sim/2015/LHC15h1h/",
-//              "/alice/sim/2015/LHC15h1i/",
-//              "/alice/sim/2015/LHC15h2a/",
-//              "/alice/sim/2015/LHC15h2b/",
-//              "/alice/sim/2015/LHC15h2c/",
-//              "/alice/sim/2015/LHC15h2d/",
-//              "/alice/sim/2015/LHC15h2f/",
-//              "/alice/sim/2015/LHC15h2h/",
-//              "/alice/sim/2015/LHC15h2i/"};
+        const Int_t nSets = 21;
+        TString DataSets[nSets]={
+          "LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i",
+          "LHC15h1a1", "LHC15h1b", "LHC15h1c", "LHC15h1d", "LHC15h1f", "LHC15h1h", "LHC15h1i",
+          "LHC15h2a", "LHC15h2b", "LHC15h2c", "LHC15h2d", "LHC15h2f", "LHC15h2h", "LHC15h2i"
+        };
+        TString DataSetsFolder[nSets]={
+          "LHC12", "LHC12", "LHC12", "LHC12", "LHC12", "LHC12", "LHC12",
+          "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1",
+          "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2"
+        };
+        TString PrefixDataSets[nSets]={
+              "/alice/data/2012/LHC12a/000",
+              "/alice/data/2012/LHC12b/000",
+              "/alice/data/2012/LHC12c/000",
+              "/alice/data/2012/LHC12d/000",
+              "/alice/data/2012/LHC12f/000",
+              "/alice/data/2012/LHC12h/000",
+              "/alice/data/2012/LHC12i/000",
+              "/alice/sim/2015/LHC15h1a1/",
+              "/alice/sim/2015/LHC15h1b/",
+              "/alice/sim/2015/LHC15h1c/",
+              "/alice/sim/2015/LHC15h1d/",
+              "/alice/sim/2015/LHC15h1f/",
+              "/alice/sim/2015/LHC15h1h/",
+              "/alice/sim/2015/LHC15h1i/",
+              "/alice/sim/2015/LHC15h2a/",
+              "/alice/sim/2015/LHC15h2b/",
+              "/alice/sim/2015/LHC15h2c/",
+              "/alice/sim/2015/LHC15h2d/",
+              "/alice/sim/2015/LHC15h2f/",
+              "/alice/sim/2015/LHC15h2h/",
+              "/alice/sim/2015/LHC15h2i/"};
 
 //        TString SuffixDataSets[nSets]={
-//          "/pass2/PWGGA/GA_pp/1394_20160320-1130/",
-//          "/pass2/PWGGA/GA_pp/1395_20160320-1130/",
-//          "/pass2/PWGGA/GA_pp/1396_20160320-1130/",
-//          "/pass2/PWGGA/GA_pp/1397_20160320-1129/",
-//          "/pass2/PWGGA/GA_pp/1398_20160320-1129/",
-//          "/pass2/PWGGA/GA_pp/1399_20160320-1129/",
-//          "/pass2/PWGGA/GA_pp/1400_20160320-1129/",
-//                "/PWGGA/GA_pp_MC/1858_20160320-1131/",
-//                "/PWGGA/GA_pp_MC/1859_20160320-1131/",
-//                "/PWGGA/GA_pp_MC/1860_20160320-1131/",
-//                "/PWGGA/GA_pp_MC/1861_20160320-1131/",
-//                "/PWGGA/GA_pp_MC/1862_20160320-1131/",
-//                "/PWGGA/GA_pp_MC/1863_20160320-1131/",
-//                "/PWGGA/GA_pp_MC/1864_20160320-1131/",
-//          "/PWGGA/GA_pp_MC/1865_20160320-1131/",
-//          "/PWGGA/GA_pp_MC/1866_20160320-1131/",
-//          "/PWGGA/GA_pp_MC/1867_20160320-1131/",
-//          "/PWGGA/GA_pp_MC/1868_20160320-1130/",
-//          "/PWGGA/GA_pp_MC/1869_20160320-1130/",
-//          "/PWGGA/GA_pp_MC/1870_20160320-1130/",
-//          "/PWGGA/GA_pp_MC/1871_20160320-1130/"
+//          "/pass2/PWGGA/GA_pp/1578_20160519-0111/",
+//          "/pass2/PWGGA/GA_pp/1579_20160519-0111/",
+//          "/pass2/PWGGA/GA_pp/1580_20160519-0110/",
+//          "/pass2/PWGGA/GA_pp/1581_20160519-0110/",
+//          "/pass2/PWGGA/GA_pp/1582_20160519-0110/",
+//          "/pass2/PWGGA/GA_pp/1583_20160519-0110/",
+//          "/pass2/PWGGA/GA_pp/1584_20160519-0110/",
+//                "/PWGGA/GA_pp_MC/2079_20160519-0918/",
+//                "/PWGGA/GA_pp_MC/2080_20160519-0918/",
+//                "/PWGGA/GA_pp_MC/2081_20160519-0918/",
+//                "/PWGGA/GA_pp_MC/2082_20160519-0918/",
+//                "/PWGGA/GA_pp_MC/2083_20160519-0918/",
+//                "/PWGGA/GA_pp_MC/2084_20160519-0918/",
+//                "/PWGGA/GA_pp_MC/2085_20160519-0918/",
+//          "/PWGGA/GA_pp_MC/2086_20160519-0917/",
+//          "/PWGGA/GA_pp_MC/2087_20160519-0917/",
+//          "/PWGGA/GA_pp_MC/2088_20160519-0917/",
+//          "/PWGGA/GA_pp_MC/2089_20160519-0917/",
+//          "/PWGGA/GA_pp_MC/2090_20160519-0917/",
+//          "/PWGGA/GA_pp_MC/2091_20160519-0917/",
+//          "/PWGGA/GA_pp_MC/2092_20160519-0917/"
 //          };
+        TString SuffixDataSets[nSets]={
+          "/pass2/PWGGA/GA_pp/1586_20160519-2141/",
+          "/pass2/PWGGA/GA_pp/1587_20160519-2144/",
+          "/pass2/PWGGA/GA_pp/1588_20160519-2144/",
+          "/pass2/PWGGA/GA_pp/1589_20160519-2143/",
+          "/pass2/PWGGA/GA_pp/1590_20160519-2143/",
+          "/pass2/PWGGA/GA_pp/1591_20160519-2143/",
+          "/pass2/PWGGA/GA_pp/1592_20160519-2143/",
+                "/PWGGA/GA_pp_MC/2093_20160520-0947/",
+                "/PWGGA/GA_pp_MC/2094_20160519-2336/",
+                "/PWGGA/GA_pp_MC/2095_20160519-2336/",
+                "/PWGGA/GA_pp_MC/2096_20160519-2336/",
+                "/PWGGA/GA_pp_MC/2097_20160519-2335/",
+                "/PWGGA/GA_pp_MC/2098_20160519-2335/",
+                "/PWGGA/GA_pp_MC/2099_20160519-2335/",
+          "/PWGGA/GA_pp_MC/2100_20160519-2335/",
+          "/PWGGA/GA_pp_MC/2101_20160519-2335/",
+          "/PWGGA/GA_pp_MC/2102_20160519-2335/",
+          "/PWGGA/GA_pp_MC/2103_20160519-2335/",
+          "/PWGGA/GA_pp_MC/2104_20160519-2335/",
+          "/PWGGA/GA_pp_MC/2105_20160519-2334/",
+          "/PWGGA/GA_pp_MC/2106_20160519-2334/"
+          };
+
+//                    const Int_t nFiles = 2;
+//                    TString Tag = "20160518";
+//                    TString DataSetsFile[nFiles] = {"GammaConvCalo_101.root","GammaCalo_101.root"};
+//                    const Int_t nSets = 6;
+//                    TString DataSets[nSets]={
+//                                             "LHC12b-kEMC7",
+//                                             "LHC12c-kEMC7",
+//                                             "LHC12d-kEMC7",
+//                                             "LHC12f-kEMC7",
+//                                             "LHC12h-kEMC7",
+//                                             "LHC12i-kEMC7"
+//                    };
+//                TString DataSetsFolder[nSets]={
+//                            "LHC12",
+//                            "LHC12",
+//                            "LHC12",
+//                            "LHC12",
+//                            "LHC12",
+//                            "LHC12"
+//                };
+//                    TString PrefixDataSets[nSets]={
+////                                                   "/alice/data/2012/LHC12a/000",
+//                                                   "/alice/data/2012/LHC12b/000",
+//                                                   "/alice/data/2012/LHC12c/000",
+//                                                   "/alice/data/2012/LHC12d/000",
+//                                                   "/alice/data/2012/LHC12f/000",
+//                                                   "/alice/data/2012/LHC12h/000",
+//                                                   "/alice/data/2012/LHC12i/000"};
+//                    TString SuffixDataSets[nSets]={
+////                                                 "/pass2/PWGGA/GA_pp/1578_20160519-0111/",
+//                                                 "/pass2/PWGGA/GA_pp/1579_20160519-0111/",
+//                                                 "/pass2/PWGGA/GA_pp/1580_20160519-0110/",
+//                                                 "/pass2/PWGGA/GA_pp/1581_20160519-0110/",
+//                                                 "/pass2/PWGGA/GA_pp/1582_20160519-0110/",
+//                                                 "/pass2/PWGGA/GA_pp/1583_20160519-0110/",
+//                                                 "/pass2/PWGGA/GA_pp/1584_20160519-0110/",
+//                                                  };
 
    //JetJet
-    isJetJet=kTRUE;
-    const Int_t nFiles = 2;
-    TString Tag = "20160513";
-    TString DataSetsFile[nFiles] = {"GammaCalo_111.root","GammaConvCalo_31.root"};
+//    isJetJet=kTRUE;
+//    const Int_t nFiles = 2;
+//    TString Tag = "20160513";
+//    TString DataSetsFile[nFiles] = {"GammaCalo_111.root","GammaConvCalo_31.root"};
 
-    const Int_t nSets = 1;
-    TString DataSets[nSets]={"LHC16c2"};
-    TString DataSetsFolder[nSets]={"LHC16c2"};
-    TString PrefixDataSets[nSets]={"/alice/sim/2016/LHC16c2/"};
-    TString SuffixDataSets[nSets]={"/PWGGA/GA_pp_MC/2067_20160510-2013/"};
+//    const Int_t nSets = 1;
+//    TString DataSets[nSets]={"LHC16c2"};
+//    TString DataSetsFolder[nSets]={"LHC16c2"};
+//    TString PrefixDataSets[nSets]={"/alice/sim/2016/LHC16c2/"};
+//    TString SuffixDataSets[nSets]={"/PWGGA/GA_pp_MC/2067_20160510-2013/"};
 
 //    isJetJet=kTRUE;
 //    const Int_t nFiles = 2;
@@ -250,40 +312,6 @@ void Grid_CopyFiles_Runwise(TString folder = "/home/daniel/data/work/pcgGit/Anal
 //                                           "/pass2/PWGGA/GA_pp/1231_20160203-1808/",
 //                                           "/pass2/PWGGA/GA_pp/1232_20160203-1808/",
 //                                           "/pass2/PWGGA/GA_pp/1233_20160203-1807/"
-//                                          };
-//            const Int_t nFiles = 3;
-//            TString Tag = "20160309";
-//            TString DataSetsFile[nFiles] = {"GammaConvCalo_120.root","GammaConvCalo_121.root","GammaConvCalo_122.root"};
-
-//            const Int_t nSets = 7;
-//            TString DataSets[nSets]={"LHC12a",
-//                                     "LHC12b",
-//                                     "LHC12c",
-//                                     "LHC12d",
-//                                     "LHC12f",
-//                                     "LHC12h",
-//                                     "LHC12i"};
-//            TString DataSetsFolder[nSets]={"LHC12",
-//                                     "LHC12",
-//                                     "LHC12",
-//                                     "LHC12",
-//                                     "LHC12",
-//                                     "LHC12",
-//                                     "LHC12"};
-//            TString PrefixDataSets[nSets]={"/alice/data/2012/LHC12a/000",
-//                                           "/alice/data/2012/LHC12b/000",
-//                                           "/alice/data/2012/LHC12c/000",
-//                                           "/alice/data/2012/LHC12d/000",
-//                                           "/alice/data/2012/LHC12f/000",
-//                                           "/alice/data/2012/LHC12h/000",
-//                                           "/alice/data/2012/LHC12i/000"};
-//            TString SuffixDataSets[nSets]={"/pass2/PWGGA/GA_pp/1360_20160310-1120/",
-//                                           "/pass2/PWGGA/GA_pp/1361_20160310-1120/",
-//                                           "/pass2/PWGGA/GA_pp/1362_20160310-1120/",
-//                                           "/pass2/PWGGA/GA_pp/1363_20160310-1121/",
-//                                           "/pass2/PWGGA/GA_pp/1364_20160310-1121/",
-//                                           "/pass2/PWGGA/GA_pp/1365_20160310-1121/",
-//                                           "/pass2/PWGGA/GA_pp/1366_20160310-1122/"
 //                                          };
 
 
@@ -376,97 +404,6 @@ void Grid_CopyFiles_Runwise(TString folder = "/home/daniel/data/work/pcgGit/Anal
 //											   "/PWGGA/GA_pp_MC/822_20150801-0541/"
 //											  };
 
-	//pp LHC12 pass2
-//			const Int_t nFiles = 1;
-//			TString Tag = "20150728-p2";
-//			TString DataSetsFile[nFiles] = {"GammaConvCalo_120.root"};
-
-//			const Int_t nSets = 8;
-//			TString DataSets[nSets]={"LHC12a",
-//									 "LHC12b",
-//									 "LHC12c",
-//									 "LHC12d",
-//									 "LHC12f",
-//									 "LHC12g",
-//									 "LHC12h",
-//									 "LHC12i"};
-//			TString PrefixDataSets[nSets]={"/alice/data/2012/LHC12a/000",
-//										   "/alice/data/2012/LHC12b/000",
-//										   "/alice/data/2012/LHC12c/000",
-//										   "/alice/data/2012/LHC12d/000",
-//										   "/alice/data/2012/LHC12f/000",
-//										   "/alice/data/2012/LHC12g/000",
-//										   "/alice/data/2012/LHC12h/000",
-//										   "/alice/data/2012/LHC12i/000"};
-//			TString SuffixDataSets[nSets]={"/pass2/PWGGA/GA_pp/821_20150728-0843/",
-//										   "/pass2/PWGGA/GA_pp/822_20150728-0845/",
-//										   "/pass2/PWGGA/GA_pp/823_20150728-0846/",
-//										   "/pass2/PWGGA/GA_pp/824_20150728-0846/",
-//										   "/pass2/PWGGA/GA_pp/825_20150728-0847/",
-//										   "/pass2/PWGGA/GA_pp/826_20150728-0849/",
-//										   "/pass2/PWGGA/GA_pp/827_20150728-0850/",
-//										   "/pass2/PWGGA/GA_pp/828_20150728-0850/"
-//										  };
-
-//			const Int_t nFiles = 1;
-//			TString Tag = "20150625";
-//			TString DataSetsFile[nFiles] = {"GammaConvCalo_122.root"}; //120 extQA, 121 kEMC7, 122 kEGA, 123 EJE
-//			const Int_t nSets = 9;
-//			TString DataSets[nSets]={"LHC12a-kEMCEGA",
-//									 "LHC12b-kEMCEGA",
-//									 "LHC12c-kEMCEGA",
-//									 "LHC12d-kEMCEGA",
-//									 "LHC12e-kEMCEGA",
-//									 "LHC12f-kEMCEGA",
-//									 "LHC12g-kEMCEGA",
-//									 "LHC12h-kEMCEGA",
-//									 "LHC12i-kEMCEGA"};
-//			TString PrefixDataSets[nSets]={"/alice/data/2012/LHC12a/000",
-//										   "/alice/data/2012/LHC12b/000",
-//										   "/alice/data/2012/LHC12c/000",
-//										   "/alice/data/2012/LHC12d/000",
-//										   "/alice/data/2012/LHC12e/000",
-//										   "/alice/data/2012/LHC12f/000",
-//										   "/alice/data/2012/LHC12g/000",
-//										   "/alice/data/2012/LHC12h/000",
-//										   "/alice/data/2012/LHC12i/000"};
-//			TString SuffixDataSets[nSets]={"/pass1/PWGGA/GA_pp/708_20150625-0919/",
-//										   "/pass1/PWGGA/GA_pp/709_20150625-0920/",
-//										   "/pass1/PWGGA/GA_pp/710_20150625-0922/",
-//										   "/pass1/PWGGA/GA_pp/711_20150625-0922/",
-//										   "/pass1/PWGGA/GA_pp/712_20150625-0923/",
-//										   "/pass1/PWGGA/GA_pp/713_20150625-0924/",
-//										   "/pass1/PWGGA/GA_pp/714_20150625-0925/",
-//										   "/pass1/PWGGA/GA_pp/715_20150625-0925/",
-//										   "/pass1/PWGGA/GA_pp/716_20150625-0927/"
-//										  };
-
-//			const Int_t nSets = 8;
-//			TString DataSets[nSets]={"LHC12a",
-//									 "LHC12b",
-//									 "LHC12c",
-//									 "LHC12d",
-//									 "LHC12f",
-//									 "LHC12g",
-//									 "LHC12h",
-//									 "LHC12i"};
-//			TString PrefixDataSets[nSets]={"/alice/data/2012/LHC12a/000",
-//										   "/alice/data/2012/LHC12b/000",
-//										   "/alice/data/2012/LHC12c/000",
-//										   "/alice/data/2012/LHC12d/000",
-//										   "/alice/data/2012/LHC12f/000",
-//										   "/alice/data/2012/LHC12g/000",
-//										   "/alice/data/2012/LHC12h/000",
-//										   "/alice/data/2012/LHC12i/000"};
-//			TString SuffixDataSets[nSets]={"/pass1/PWGGA/GA_pp/691_20150620-0025/",
-//										   "/pass1/PWGGA/GA_pp/692_20150620-0025/",
-//										   "/pass1/PWGGA/GA_pp/693_20150620-0026/",
-//										   "/pass1/PWGGA/GA_pp/694_20150620-0026/",
-//										   "/pass1/PWGGA/GA_pp/695_20150620-0029/",
-//										   "/pass1/PWGGA/GA_pp/696_20150620-0029/",
-//										   "/pass1/PWGGA/GA_pp/697_20150620-0029/",
-//										   "/pass1/PWGGA/GA_pp/698_20150620-0030/"
-//										  };
 
     //pp LHC11a
 //            const Int_t nFiles = 1;

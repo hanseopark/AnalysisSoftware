@@ -147,7 +147,7 @@ public:
 		return;
 	}
 
-	void DoFitting(TH2D* fInvMassMesonPt, TH2D* fInvMassBGPt, Double_t nEventsBin1, Int_t mode, TString saveCanvas, TString name, Bool_t doPrint, Bool_t doLog, fstream& fLog){
+    void DoFitting(TH2D* fInvMassMesonPt, TH2D* fInvMassBGPt, Double_t nEventsBin1, Int_t mode, TString saveCanvas, TString name, Bool_t doPrint, Bool_t doLog, fstream& fLog){
 		Init();
 
         //Fitting starts at pT = 1 GeV/c
@@ -189,7 +189,7 @@ public:
 					fBckNormPi->SetBinContent(i,0.);
 				}
 			}
-		}
+        }
 		numberOfZeros = 0;
 		for (Int_t i = 1; i < fBckNormEta->GetNbinsX()+1; i++){
 			if (fBckNormEta->GetBinContent(i) == 0){
@@ -220,15 +220,29 @@ public:
 		fFitRecoPi = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",0.1,0.145);
 		fFitRecoPi->SetParameter(0,mesonAmplitude);
 		fFitRecoPi->SetParameter(1,0.135);
-		fFitRecoPi->SetParameter(2,0.003);
-		fFitRecoPi->SetParameter(3,0.012);
 		fFitRecoPi->SetParLimits(0,mesonAmplitudeMinPi,mesonAmplitudeMaxPi);
 		fFitRecoPi->SetParLimits(1,0.1,0.145);
-		fFitRecoPi->SetParLimits(2,0.001,0.009);
-		fFitRecoPi->SetParLimits(3,0.001,0.02);
-		fSignalPi->Draw();
-		fSignalPi->Fit(fFitRecoPi,"SINRMQE+","",0.1,0.145);
-		TFitResultPtr result = fSignalPi->Fit(fFitRecoPi,"SINRMQE+","",0.1,0.145);
+
+        if(mode==2){
+          fFitRecoPi->SetParameter(2,0.008);
+          fFitRecoPi->SetParameter(3,0.020);
+          fFitRecoPi->SetParLimits(2,0.001,0.02);
+          fFitRecoPi->SetParLimits(3,0.001,0.05);
+        }else if(mode==4){
+          fFitRecoPi->SetParameter(2,0.012);
+          fFitRecoPi->SetParameter(3,0.020);
+          fFitRecoPi->SetParLimits(2,0.001,0.03);
+          fFitRecoPi->SetParLimits(3,0.001,0.05);
+        }else{
+          fFitRecoPi->SetParameter(2,0.003);
+          fFitRecoPi->SetParameter(3,0.020);
+          fFitRecoPi->SetParLimits(2,0.001,0.01);
+          fFitRecoPi->SetParLimits(3,0.001,0.05);
+        }
+        fSignalPi->Draw();
+        fSignalPi->Fit(fFitRecoPi,"SINRMQEC+","",0.1,0.145);
+        TFitResultPtr result = fSignalPi->Fit(fFitRecoPi,"SINRMQEC+","",0.1,0.145);
+
 		fFitRecoPi->SetLineColor(3);
 		fFitRecoPi->SetLineWidth(1);
 		fFitRecoPi->SetLineStyle(1);
@@ -292,16 +306,30 @@ public:
 		Double_t mesonAmplitudeMaxEta = mesonAmplitudeEta*115./100.;
 
 		fFitRecoEta->SetParameter(0,mesonAmplitudeEta);
-		fFitRecoEta->SetParameter(1,0.548);
-		fFitRecoEta->SetParameter(2,0.005);
-		fFitRecoEta->SetParameter(3,0.007);
+        fFitRecoEta->SetParameter(1,0.540);
 		fFitRecoEta->SetParLimits(0,mesonAmplitudeMinEta,mesonAmplitudeMaxEta);
-		fFitRecoEta->SetParLimits(1,0.52,0.56);
-		fFitRecoEta->SetParLimits(2,0.002,0.015);
-		fFitRecoEta->SetParLimits(3,0.005,0.026);
+        fFitRecoEta->SetParLimits(1,0.51,0.56);
+
+        if(mode==2){
+          fFitRecoEta->SetParameter(2,0.020);
+          fFitRecoEta->SetParameter(3,0.007);
+          fFitRecoEta->SetParLimits(2,0.010,0.040);
+          fFitRecoEta->SetParLimits(3,0.005,0.030);
+        }else if(mode==4){
+          fFitRecoEta->SetParameter(2,0.030);
+          fFitRecoEta->SetParameter(3,0.007);
+          fFitRecoEta->SetParLimits(2,0.015,0.050);
+          fFitRecoEta->SetParLimits(3,0.005,0.040);
+        }else{
+          fFitRecoEta->SetParameter(2,0.010);
+          fFitRecoEta->SetParameter(3,0.007);
+          fFitRecoEta->SetParLimits(2,0.002,0.050);
+          fFitRecoEta->SetParLimits(3,0.005,0.026);
+        }
+
 		fSignalEta->Draw("");
-		fSignalEta->Fit(fFitRecoEta,"SINRMQE+","",0.5,0.57);
-		TFitResultPtr resultEta = fSignalEta->Fit(fFitRecoEta,"SINRQME+","",0.5,0.57);
+        fSignalEta->Fit(fFitRecoEta,"SINRMQEC+","",0.5,0.57);
+        TFitResultPtr resultEta = fSignalEta->Fit(fFitRecoEta,"SINRQMEC+","",0.5,0.57);
 
 		fFitRecoEta->SetLineColor(3);
 		fFitRecoEta->SetLineWidth(1);

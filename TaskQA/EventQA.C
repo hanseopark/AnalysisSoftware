@@ -918,7 +918,7 @@ void EventQA(
 
 	//-----------------------------------
 	//-----------------------------------
-		fitter.DoFitting((TH2D*)vecESDMother.at(i), (TH2D*)vecESDBackground.at(i), nEventsBin1, fMode, outputDir.Data(), DataSets[i],kFALSE,kTRUE,fLog);
+        fitter.DoFitting((TH2D*)vecESDMother.at(i), (TH2D*)vecESDBackground.at(i), nEventsBin1, fMode, outputDir.Data(), DataSets[i],kFALSE,kTRUE,fLog);
 
 		TH1D* tempPi = new TH1D(*fitter.GetSignalPi0());
 		tempPi->GetXaxis()->SetRangeUser(0.,0.25);

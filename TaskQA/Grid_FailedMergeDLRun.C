@@ -44,17 +44,17 @@ void Grid_FailedMergeDLRun(TString folder = "/home/daniel/data/work/pcgGit/Analy
 //	Int_t first[nRuns] = {1,1,1,1,1};
 //	Int_t last[nRuns] = {81,21,21,26,54};
 
-//    const Int_t nFiles = 3;
-//    TString Tag = "20160104";
-//    TString DataSetsFile[nFiles] = {"GammaCalo_110.root", "GammaConvCalo_110.root", "GammaConvCalo_120.root"};
+    const Int_t nFiles = 2;
+    TString Tag = "20160518";
+    TString DataSetsFile[nFiles] = {"GammaConvV1_70.root", "AnalysisResults.root"};
 
-//    TString prefix = "/alice/data/2012/LHC12h/000";
-//    TString suffix = "/pass2/PWGGA/GA_pp/1152_20160105-0012/";
-//    TString DataSet = "LHC12h";
-//    const Int_t nRuns = 2;
-//    Int_t run[nRuns] = {190904,192177};
-//    Int_t first[nRuns] = {1,1};
-//    Int_t last[nRuns] = {29,75};
+    TString prefix = "/alice/sim/2015/LHC15h1a1/";
+    TString suffix = "/PWGGA/GA_pp_MC/2093_20160520-0947/";
+    TString DataSet = "LHC15h1a1";
+    const Int_t nRuns = 1;
+    Int_t run[nRuns] = {176749};
+    Int_t first[nRuns] = {3};
+    Int_t last[nRuns] = {178};
 
 //    const Int_t nFiles = 2;
 //    TString Tag = "20160104";
@@ -156,17 +156,17 @@ void Grid_FailedMergeDLRun(TString folder = "/home/daniel/data/work/pcgGit/Analy
 
     //LHC10
 
-    const Int_t nFiles = 2;
-    TString Tag = "20160206";
-    TString DataSetsFile[nFiles] = {"GammaCalo_201.root","GammaConvCalo_201.root"};
+//    const Int_t nFiles = 2;
+//    TString Tag = "20160206";
+//    TString DataSetsFile[nFiles] = {"GammaCalo_201.root","GammaConvCalo_201.root"};
 
-    TString prefix = "/alice/sim/2014/LHC14j4e/";
-    TString suffix = "/PWGGA/GA_pp_MC/1616_20160207-1047/";
-    TString DataSet = "LHC14j4e";
-    const Int_t nRuns = 2;
-    Int_t run[nRuns] = {128855,128498};
-    Int_t first[nRuns] = {1,1};
-    Int_t last[nRuns] = {50,43};
+//    TString prefix = "/alice/sim/2014/LHC14j4e/";
+//    TString suffix = "/PWGGA/GA_pp_MC/1616_20160207-1047/";
+//    TString DataSet = "LHC14j4e";
+//    const Int_t nRuns = 2;
+//    Int_t run[nRuns] = {128855,128498};
+//    Int_t first[nRuns] = {1,1};
+//    Int_t last[nRuns] = {50,43};
 
 	for(Int_t iRun=0; iRun<nRuns; iRun++)
 	{

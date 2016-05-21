@@ -780,7 +780,7 @@ void EventQA_Runwise(
 					hConvNCandidatesQA[i]->SetBinError(bin, sqrt(ConvNCandidatesQA) / nEvents);
                 }else cout << "INFO: Object |IsPhotonSelected| could not be found! Skipping Fill..." << endl;
 			}
-	//---------
+    //---------
 			TH2D* ESD_Mother = (TH2D*) ESDContainer->FindObject("ESD_Mother_InvMass_Pt");
 			TH2D* ESD_Background = (TH2D*) ESDContainer->FindObject("ESD_Background_InvMass_Pt");
             if( ESD_Mother && ESD_Background ){
@@ -792,7 +792,7 @@ void EventQA_Runwise(
 				gSystem->Exec("mkdir -p "+outputDirDataSet);
 				gSystem->Exec("mkdir -p "+outputDirDataSet+"/ExtQA");
 
-				fitter.DoFitting(ESD_Mother, ESD_Background, nEventsBin1, fMode, Form("%s/ExtQA",outputDirDataSet.Data()), fRunNumber,kTRUE,kTRUE,fLog[i]);
+                fitter.DoFitting(ESD_Mother, ESD_Background, nEventsBin1, fMode, Form("%s/ExtQA",outputDirDataSet.Data()), fRunNumber,kTRUE,kTRUE,fLog[i]);
 
 				Double_t widthPi = 0; Double_t widthPiErr = 0; Double_t massPi = 0; Double_t massPiErr = 0;
 				Double_t ratioPi0 = 0; Double_t ratioPi0Err = 0;
@@ -800,9 +800,9 @@ void EventQA_Runwise(
 				Double_t ratioEta = 0; Double_t ratioEtaErr = 0;
 
                 fitter.GetMeson(kTRUE,widthPi,widthPiErr,massPi,massPiErr);
-				fitter.GetMesonRatios(kTRUE,ratioPi0,ratioPi0Err);
-				fitter.GetMeson(kFALSE,widthEta,widthEtaErr,massEta,massEtaErr);
-				fitter.GetMesonRatios(kFALSE,ratioEta,ratioEtaErr);
+                fitter.GetMesonRatios(kTRUE,ratioPi0,ratioPi0Err);
+                fitter.GetMeson(kFALSE,widthEta,widthEtaErr,massEta,massEtaErr);
+                fitter.GetMesonRatios(kFALSE,ratioEta,ratioEtaErr);
 
 				hPi0Frac[i]->SetBinContent(bin,ratioPi0);
 				hPi0Frac[i]->SetBinError(bin,ratioPi0Err);
