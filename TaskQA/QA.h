@@ -147,7 +147,7 @@ public:
 		return;
 	}
 
-    void DoFitting(TH2D* fInvMassMesonPt, TH2D* fInvMassBGPt, Double_t nEventsBin1, Int_t mode, TString saveCanvas, TString name, Bool_t doPrint, Bool_t doLog, fstream& fLog){
+    Bool_t DoFitting(TH2D* fInvMassMesonPt, TH2D* fInvMassBGPt, Double_t nEventsBin1, Int_t mode, TString saveCanvas, TString name, Bool_t doPrint, Bool_t doLog, fstream& fLog){
 		Init();
 
         //Fitting starts at pT = 1 GeV/c
@@ -206,6 +206,10 @@ public:
 		fSignalPi->SetTitle("");
 		fSignalPi->Sumw2();
 		fSignalPi->Add(fBckNormPi,-1.);
+        if(fSignalPi->Integral(fSignalPi->FindBin(0.1),fSignalPi->FindBin(0.145))<=10){
+          cout << "Total integral <= 10 for pi0 in " << name.Data() << ", skipping fit and returning..." << endl;
+          return kFALSE;
+        }
 
 		if (mode == 0){
 			fSignalPi->Rebin(2);
@@ -225,14 +229,14 @@ public:
 
         if(mode==2){
           fFitRecoPi->SetParameter(2,0.008);
-          fFitRecoPi->SetParameter(3,0.020);
-          fFitRecoPi->SetParLimits(2,0.001,0.02);
-          fFitRecoPi->SetParLimits(3,0.001,0.05);
+          fFitRecoPi->SetParameter(3,0.015);
+          fFitRecoPi->SetParLimits(2,0.005,0.02);
+          fFitRecoPi->SetParLimits(3,0.010,0.04);
         }else if(mode==4){
           fFitRecoPi->SetParameter(2,0.012);
           fFitRecoPi->SetParameter(3,0.020);
-          fFitRecoPi->SetParLimits(2,0.001,0.03);
-          fFitRecoPi->SetParLimits(3,0.001,0.05);
+          fFitRecoPi->SetParLimits(2,0.01,0.03);
+          fFitRecoPi->SetParLimits(3,0.01,0.04);
         }else{
           fFitRecoPi->SetParameter(2,0.003);
           fFitRecoPi->SetParameter(3,0.020);
@@ -295,6 +299,11 @@ public:
 		fSignalEta->SetTitle("");
 		fSignalEta->Sumw2();
 		fSignalEta->Add(fBckNormEta,-1.);
+        if(fSignalEta->Integral(fSignalEta->FindBin(0.5),fSignalEta->FindBin(0.57))<=5){
+          cout << "Total integral <= 5 for eta in " << name.Data() << ", skipping fit and returning..." << endl;
+          return kFALSE;
+        }
+
 
 		fSignalEta->Rebin(4);
 		fSignalEta->GetXaxis()->SetRangeUser(0.5,0.57);
@@ -312,14 +321,14 @@ public:
 
         if(mode==2){
           fFitRecoEta->SetParameter(2,0.020);
-          fFitRecoEta->SetParameter(3,0.007);
+          fFitRecoEta->SetParameter(3,0.020);
           fFitRecoEta->SetParLimits(2,0.010,0.040);
-          fFitRecoEta->SetParLimits(3,0.005,0.030);
+          fFitRecoEta->SetParLimits(3,0.010,0.030);
         }else if(mode==4){
           fFitRecoEta->SetParameter(2,0.030);
-          fFitRecoEta->SetParameter(3,0.007);
+          fFitRecoEta->SetParameter(3,0.025);
           fFitRecoEta->SetParLimits(2,0.015,0.050);
-          fFitRecoEta->SetParLimits(3,0.005,0.040);
+          fFitRecoEta->SetParLimits(3,0.010,0.040);
         }else{
           fFitRecoEta->SetParameter(2,0.010);
           fFitRecoEta->SetParameter(3,0.007);
@@ -369,7 +378,7 @@ public:
 
 		delete canvasMass;
 
-		return;
+        return kTRUE;
 	}
 
 private:

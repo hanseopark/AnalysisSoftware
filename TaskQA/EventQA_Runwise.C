@@ -792,7 +792,7 @@ void EventQA_Runwise(
 				gSystem->Exec("mkdir -p "+outputDirDataSet);
 				gSystem->Exec("mkdir -p "+outputDirDataSet+"/ExtQA");
 
-                fitter.DoFitting(ESD_Mother, ESD_Background, nEventsBin1, fMode, Form("%s/ExtQA",outputDirDataSet.Data()), fRunNumber,kTRUE,kTRUE,fLog[i]);
+                Bool_t kScs = fitter.DoFitting(ESD_Mother, ESD_Background, nEventsBin1, fMode, Form("%s/ExtQA",outputDirDataSet.Data()), fRunNumber,kTRUE,kTRUE,fLog[i]);
 
 				Double_t widthPi = 0; Double_t widthPiErr = 0; Double_t massPi = 0; Double_t massPiErr = 0;
 				Double_t ratioPi0 = 0; Double_t ratioPi0Err = 0;
@@ -818,28 +818,30 @@ void EventQA_Runwise(
                 hEtaWidth[i]->SetBinContent(bin,widthEta/2.35);
                 hEtaWidth[i]->SetBinError(bin,widthEtaErr/2.35);
 
-				TH1D* tempPi0 = new TH1D(*fitter.GetSignalPi0());
-				tempPi0->GetXaxis()->SetRangeUser(0.02,0.22);
-				tempPi0->GetXaxis()->SetTitle("M_{#gamma#gamma} (GeV/#it{c}^2)");
-				tempPi0->GetYaxis()->SetTitle("#frac{1}{N_{Events}} #frac{dN}{dM_{#gamma#gamma}}");
-				tempPi0->SetTitle(Form("%s, nEvents: %.2e",fRunNumber.Data(),nEvents));
-				tempPi0->Sumw2();
-				tempPi0->Scale(1 / nEvents);
-				tempPi0->SetDirectory(0);
-				vecPi0Signal[i].push_back(tempPi0);
+                if(kScs){
+                  TH1D* tempPi0 = new TH1D(*fitter.GetSignalPi0());
+                  tempPi0->GetXaxis()->SetRangeUser(0.02,0.22);
+                  tempPi0->GetXaxis()->SetTitle("M_{#gamma#gamma} (GeV/#it{c}^2)");
+                  tempPi0->GetYaxis()->SetTitle("#frac{1}{N_{Events}} #frac{dN}{dM_{#gamma#gamma}}");
+                  tempPi0->SetTitle(Form("%s, nEvents: %.2e",fRunNumber.Data(),nEvents));
+                  tempPi0->Sumw2();
+                  tempPi0->Scale(1 / nEvents);
+                  tempPi0->SetDirectory(0);
+                  vecPi0Signal[i].push_back(tempPi0);
 
-				TH1D* tempEta = new TH1D(*fitter.GetSignalEta());
-				tempEta->GetXaxis()->SetRangeUser(0.45,0.65);
-				tempEta->GetXaxis()->SetTitle("M_{#gamma#gamma} (GeV/#it{c}^2)");
-				tempEta->GetYaxis()->SetTitle("#frac{1}{N_{Events}} #frac{dN}{dM_{#gamma#gamma}}");
-				tempEta->SetTitle(Form("%s, nEvents: %.2e",fRunNumber.Data(),nEvents));
-				tempEta->Sumw2();
-				tempEta->Scale(1 / nEvents);
-				tempEta->SetDirectory(0);
-				vecEtaSignal[i].push_back(tempEta);
+                  TH1D* tempEta = new TH1D(*fitter.GetSignalEta());
+                  tempEta->GetXaxis()->SetRangeUser(0.45,0.65);
+                  tempEta->GetXaxis()->SetTitle("M_{#gamma#gamma} (GeV/#it{c}^2)");
+                  tempEta->GetYaxis()->SetTitle("#frac{1}{N_{Events}} #frac{dN}{dM_{#gamma#gamma}}");
+                  tempEta->SetTitle(Form("%s, nEvents: %.2e",fRunNumber.Data(),nEvents));
+                  tempEta->Sumw2();
+                  tempEta->Scale(1 / nEvents);
+                  tempEta->SetDirectory(0);
+                  vecEtaSignal[i].push_back(tempEta);
 
-				vecPi0Fit[i].push_back(new TF1(*fitter.GetFitPi0()));
-				vecEtaFit[i].push_back(new TF1(*fitter.GetFitEta()));
+                  vecPi0Fit[i].push_back(new TF1(*fitter.GetFitPi0()));
+                  vecEtaFit[i].push_back(new TF1(*fitter.GetFitEta()));
+                }
               }else{
                 cout << "INFO: nEvents<10, skipping mass fits...!" << endl;
                 hPi0Frac[i]->SetBinContent(bin,0.);
