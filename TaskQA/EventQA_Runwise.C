@@ -773,7 +773,10 @@ void EventQA_Runwise(
 				TH1F* ConvIPS = (TH1F*) ConvCutsContainer->FindObject(Form("IsPhotonSelected %s", fGammaCutSelection.Data()));
 				if(ConvIPS){
 					Double_t ConvNCandidates = ConvIPS->GetBinContent(1);
-                    Double_t ConvNCandidatesQA = ConvIPS->GetBinContent(10);
+                    Double_t ConvNCandidatesQA = 0;
+                    if(ConvIPS->GetXaxis()->GetBinLabel(9)=="out") ConvNCandidatesQA = ConvIPS->GetBinContent(9);
+                    else if(ConvIPS->GetXaxis()->GetBinLabel(10)=="out") ConvNCandidatesQA = ConvIPS->GetBinContent(10);
+                    else {cout << "------EventQA_Runwise: Could not determine ConvNCandidatesQA, setting to zero------" << endl;}
 					hConvNCandidates[i]->SetBinContent(bin, ConvNCandidates / nEvents);
 					hConvNCandidates[i]->SetBinError(bin, sqrt(ConvNCandidates) / nEvents);
 					hConvNCandidatesQA[i]->SetBinContent(bin, ConvNCandidatesQA / nEvents);
