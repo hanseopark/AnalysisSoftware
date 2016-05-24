@@ -81,10 +81,15 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 //                             1684,1685,1686,1687,1688,1690,1691,
 //                             1692,1693,1694,1695,1696,1698,1699
 //                             };
-    TString train = "Legotrain-vAN-20160518-8TeV-QA";
+//    TString train = "Legotrain-vAN-20160518-8TeV-QA";
+//    Int_t trainRuns[nSets] = {1578,1579,1580,1581,1582,1583,1584,
+//                             2079,2080,2081,2082,2083,2084,2085,
+//                             2086,2087,2088,2089,2090,2091,2092
+//                             };
+    TString train = "Legotrain-vAN-20160522-8TeV-Weighting";
     Int_t trainRuns[nSets] = {1578,1579,1580,1581,1582,1583,1584,
-                             2079,2080,2081,2082,2083,2084,2085,
-                             2086,2087,2088,2089,2090,2091,2092
+                             2107,2108,2109,2110,2111,2112,2113,
+                             2114,2115,2116,2117,2118,2119,2120
                              };
 
     TString runlist[nSets] = {"merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9",
@@ -101,8 +106,11 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 //    const Int_t nFiles = 4;
 //    TString Files[nFiles] = {"GammaCalo_101","GammaCalo_108","GammaConvCalo_101","GammaConvCalo_112"};
 
-    const Int_t nFiles = 4;
-    TString Files[nFiles] = {"GammaCalo_101","GammaConvV1_78","GammaConvCalo_101","GammaCaloMerged_115"};
+//    const Int_t nFiles = 4;
+//    TString Files[nFiles] = {"GammaCalo_101","GammaConvV1_78","GammaConvCalo_101","GammaCaloMerged_115"};
+
+    const Int_t nFiles = 2;
+    TString Files[nFiles] = {"GammaCalo_101","GammaConvCalo_101"};
 
     const Int_t nMerge = 11;
     TString strMerge[nMerge]={"LHC12","LHC15h1","LHC15h2","LHC15h","LHC15ha","LHC15hb","LHC15hc","LHC15hd","LHC15hf","LHC15hh","LHC15hi"};
