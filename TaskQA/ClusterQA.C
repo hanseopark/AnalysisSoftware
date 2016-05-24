@@ -2333,8 +2333,8 @@ void ClusterQA(
           pad2->Draw();
 
           const Int_t nBin = 3;
-          Int_t lowBin[nBin] = {0,10,40};
-          Int_t upBin[nBin] = {300,12,50};
+          Int_t lowBin[nBin] = {0,16,40};
+          Int_t upBin[nBin] = {300,18,50};
           Int_t lastBinning[2];
           lastBinning[0]=0; lastBinning[1]=0;
           for(Int_t iB=0; iB<nBin; iB++)

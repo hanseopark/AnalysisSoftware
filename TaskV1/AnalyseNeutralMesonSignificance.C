@@ -561,7 +561,14 @@ void AnalyseNeutralMesonSignificance(   TString fileNameData    = "myOutput",
     } else minimum              = minimumData*10;
     cout << minimumData << "\t" << minimumMC << "\t" << minimum << "\t"<< 1/fEventQualityMC->GetEntries()<< endl;
         
-    
+    Bool_t rangeXaxis = kFALSE;
+    Double_t rangeXhigh = 20.;
+    if(optEnergy.CompareTo("8TeV")==0){
+      rangeXaxis = kTRUE;
+      rangeXhigh = 10.;
+      if(optGenerator.Contains("JetJet")) rangeXhigh = 20.;
+    }
+
     //**********************************************************************************
     //**************************** Plot 2D distributions *******************************
     //**********************************************************************************    
@@ -569,146 +576,146 @@ void AnalyseNeutralMesonSignificance(   TString fileNameData    = "myOutput",
     PlotStandard2D( histoPi0RapidityPtData , 
                     Form("%s/RecPi0_Y_Pt_Data.%s",outputDirectory.Data(),suffix.Data()), 
                     "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{y}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,"Data", optPeriod);
     histoEtaRapidityPtData->GetZaxis()->SetRangeUser(minimum, maximumEtaY);
     PlotStandard2D( histoEtaRapidityPtData ,
                     Form("%s/RecEta_Y_Pt_Data.%s",outputDirectory.Data(),suffix.Data()),
                     "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{y}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,"Data", optPeriod);
     histoPi0AlphaPtData->GetZaxis()->SetRangeUser(minimum, maximumPi0Alpha);
     PlotStandard2D( histoPi0AlphaPtData ,
                     Form("%s/RecPi0_Alpha_Pt_Data.%s",outputDirectory.Data(),suffix.Data()), 
                     "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#alpha}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,"Data", optPeriod);
     histoEtaAlphaPtData->GetZaxis()->SetRangeUser(minimum, maximumEtaAlpha);
     PlotStandard2D( histoEtaAlphaPtData , 
                     Form("%s/RecEta_Alpha_Pt_Data.%s",outputDirectory.Data(),suffix.Data()), 
                     "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#alpha}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,"Data", optPeriod);
     histoPi0OpenPtData->GetZaxis()->SetRangeUser(minimum, maximumPi0Open);
     PlotStandard2D( histoPi0OpenPtData ,
                     Form("%s/RecPi0_Open_Pt_Data.%s",outputDirectory.Data(),suffix.Data()), 
                     "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#theta}_{#pi^{0}, cand}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,"Data", optPeriod);
     histoEtaOpenPtData->GetZaxis()->SetRangeUser(minimum, maximumEtaOpen);
     PlotStandard2D( histoEtaOpenPtData , 
                     Form("%s/RecEta_Open_Pt_Data.%s",outputDirectory.Data(),suffix.Data()), 
                     "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#theta}_{#eta, cand}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,"Data", optPeriod);
 
     histoPi0RapidityPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Y);
     PlotStandard2D( histoPi0RapidityPtMC , 
                     Form("%s/RecPi0_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
                     "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{y}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     histoEtaRapidityPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaY);
     PlotStandard2D( histoEtaRapidityPtMC , 
                     Form("%s/RecEta_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
                     "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{y}",   
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     histoPi0AlphaPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Alpha);
     PlotStandard2D( histoPi0AlphaPtMC , 
                     Form("%s/RecPi0_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
                     "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#alpha}",   
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     histoEtaAlphaPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaAlpha);
     PlotStandard2D( histoEtaAlphaPtMC , 
                     Form("%s/RecEta_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
                     "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#alpha}",   
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     histoPi0OpenPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Open);
     PlotStandard2D( histoPi0OpenPtMC , 
                     Form("%s/RecPi0_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
                     "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#theta}_{#pi^{0}, cand}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     histoEtaOpenPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaOpen);
     PlotStandard2D( histoEtaOpenPtMC , 
                     Form("%s/RecEta_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
                     "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#theta}_{#eta, cand}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     
     histoTruePi0RapidityPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Y);
     PlotStandard2D( histoTruePi0RapidityPtMC ,
                     Form("%s/TruePi0_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
                     "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{y}",   
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     histoTrueEtaRapidityPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaY);
     PlotStandard2D( histoTrueEtaRapidityPtMC , 
                     Form("%s/TrueEta_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
                     "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{y}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1,
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     histoTruePi0AlphaPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Alpha);
     PlotStandard2D( histoTruePi0AlphaPtMC , 
                     Form("%s/TruePi0_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()),
                     "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#alpha}",   
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1, floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     histoTrueEtaAlphaPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaAlpha);
     PlotStandard2D( histoTrueEtaAlphaPtMC , 
                     Form("%s/TrueEta_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
                     "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#alpha}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     histoTruePi0OpenPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Open);
     PlotStandard2D( histoTruePi0OpenPtMC , 
                     Form("%s/TruePi0_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()),
                     "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#theta}_{#pi^{0}}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1, floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     histoTrueEtaOpenPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaOpen);
     PlotStandard2D( histoTrueEtaOpenPtMC , 
                     Form("%s/TrueEta_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
                     "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#theta}_{#eta}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     
     histoBGPi0RapidityPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Y);
     PlotStandard2D( histoBGPi0RapidityPtMC , 
                     Form("%s/BGPi0_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
                     "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{y}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     histoBGEtaRapidityPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaY);
     PlotStandard2D( histoBGEtaRapidityPtMC , 
                     Form("%s/BGEta_Y_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
                     "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{y}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     histoBGPi0AlphaPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Alpha);
     PlotStandard2D( histoBGPi0AlphaPtMC , 
                     Form("%s/BGPi0_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
                     "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#theta}_{BG #pi^{0} mass window}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     histoBGEtaAlphaPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaAlpha);
     PlotStandard2D( histoBGEtaAlphaPtMC , 
                     Form("%s/BGEta_Alpha_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
                     "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#theta}_{BG #eta mass window}",  
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     histoBGPi0OpenPtMC->GetZaxis()->SetRangeUser(minimum, maximumPi0Open);
     PlotStandard2D( histoBGPi0OpenPtMC , 
                     Form("%s/BGPi0_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
                     "", "#it{p}_{#pi^{0},T} (GeV/#it{c})", "#it{#alpha}",   
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
     histoBGEtaOpenPtMC->GetZaxis()->SetRangeUser(minimum, maximumEtaOpen);
     PlotStandard2D( histoBGEtaOpenPtMC , 
                     Form("%s/BGEta_Open_Pt_%s.%s",outputDirectory.Data(),optGenerator.Data(),suffix.Data()), 
                     "", "#it{p}_{#eta,T} (GeV/#it{c})", "#it{#alpha}",   
-                    kFALSE, 30., 180., kFALSE, 0.01, 20., 0, 0, 1, 
+                    kFALSE, 30., 180., rangeXaxis, 0.01, rangeXhigh, 0, 0, 1,
                     floatLocationRightUp2D,500,500,optGeneratorForLabels, optPeriod);
 
     if (enableExtConvCaloQA){

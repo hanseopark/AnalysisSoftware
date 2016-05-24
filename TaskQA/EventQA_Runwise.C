@@ -774,8 +774,10 @@ void EventQA_Runwise(
 				if(ConvIPS){
 					Double_t ConvNCandidates = ConvIPS->GetBinContent(1);
                     Double_t ConvNCandidatesQA = 0;
-                    if(ConvIPS->GetXaxis()->GetBinLabel(9)=="out") ConvNCandidatesQA = ConvIPS->GetBinContent(9);
-                    else if(ConvIPS->GetXaxis()->GetBinLabel(10)=="out") ConvNCandidatesQA = ConvIPS->GetBinContent(10);
+                    TString ConvIPSbin9 = ConvIPS->GetXaxis()->GetBinLabel(9);
+                    TString ConvIPSbin10 = ConvIPS->GetXaxis()->GetBinLabel(10);
+                    if(ConvIPSbin9.CompareTo("out")==0) ConvNCandidatesQA = ConvIPS->GetBinContent(9);
+                    else if(ConvIPSbin10.CompareTo("out")==0) ConvNCandidatesQA = ConvIPS->GetBinContent(10);
                     else {cout << "------EventQA_Runwise: Could not determine ConvNCandidatesQA, setting to zero------" << endl;}
 					hConvNCandidates[i]->SetBinContent(bin, ConvNCandidates / nEvents);
 					hConvNCandidates[i]->SetBinError(bin, sqrt(ConvNCandidates) / nEvents);
