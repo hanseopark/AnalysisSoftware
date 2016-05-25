@@ -139,7 +139,7 @@ Int_t fBinsPi08TeVEMCALPtRebin[32]              = { 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 4,
-                                                    4, 4, 4, 4, 5,
+                                                    4, 4, 4, 4, 8,
                                                     2, 2};
 Int_t fBinsPi08TeVEMCALTriggerPtRebin[39]        = { 4, 4, 4, 2, 2,
                                                     2, 2, 2, 2, 2,
@@ -178,9 +178,9 @@ Int_t fBinsEta8TeVPtRebin[19]                   = { 8, 6, 6, 4, 4,
                                                     5, 5, 5, 5, 5,
                                                     5, 5, 5, 5};
 Int_t fBinsEta8TeVEMCALPtRebin[19]              = { 4, 4, 4, 10, 10,
-                                                    10, 8, 8, 8, 8,
-                                                    8, 8, 8, 10, 16,
-                                                    16, 16, 4, 4};
+                                                    10, 10, 8, 8, 8,
+                                                    8, 8, 8, 16, 16,
+                                                    16, 20, 4, 4};
 Int_t fBinsEta8TeVConvEMCALPtRebin[19]          = { 20, 20, 20, 10, 8,
                                                     8, 8, 8, 8, 8,
                                                     8, 8, 8, 16, 20,

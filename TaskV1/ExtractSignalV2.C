@@ -3020,13 +3020,16 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fFitRange[0]                    = 0.41;
             if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fFitRange[0] = 0.39;}
             fFitRange[1]                    = 0.73;
+            if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fFitRange[1] = 0.71;}
             fBGFitRange[0]                  = 0.67;
             fBGFitRange[1]                  = 0.799;
+            if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fBGFitRange[1] = 0.795;}
             fBGFitRangeLeft[0]              = 0.34;
             fBGFitRangeLeft[1]              = 0.44;
             fMesonFitRange[0]               = 0.41;
             if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonFitRange[0] = 0.39;}
             fMesonFitRange[1]               = 0.73;
+            if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonFitRange[1] = 0.71;}
             fMesonWidthExpect               = 0.025;
             fMesonLambdaTail                = 0.012;
             fMesonWidthRange[0]             = 0.018;
