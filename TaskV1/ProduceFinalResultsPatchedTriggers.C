@@ -515,7 +515,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     Size_t textSizeSpectra2         = 0.0415;
     Int_t textPixelPP               = textSizeSpectra2*1100;
     TCanvas* canvasTriggerReject    = new TCanvas("canvasTriggerReject","",0,0,1500,1100);// gives the page size
-    DrawGammaCanvasSettings( canvasTriggerReject, 0.12, 0.015, 0.015, 0.085);
+    DrawGammaCanvasSettings( canvasTriggerReject, 0.12, 0.017, 0.015, 0.085);
     canvasTriggerReject->SetLogy(1);
     
     Double_t minTriggReject = 0.1;
@@ -609,7 +609,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //***************************************************************************************************************
  
     TCanvas* canvasTriggerRejectLinear = new TCanvas("canvasTriggerReject","",0,0,1500,1100);// gives the page size
-    DrawGammaCanvasSettings( canvasTriggerRejectLinear, 0.118, 0.015, textSizeSpectra2, 0.08);
+    DrawGammaCanvasSettings( canvasTriggerRejectLinear, 0.118, 0.017, textSizeSpectra2, 0.08);
     canvasTriggerRejectLinear->SetLogy(0);
     
     Double_t minTriggRejectLin = 0;
@@ -746,7 +746,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //************************************Plotting trigger rejection trials *************************************************
     //***************************************************************************************************************
     TCanvas* canvasTriggerRejecTrial = new TCanvas("canvasTriggerRejecTrial","",0,0,1000,900);// gives the page size
-    DrawGammaCanvasSettings( canvasTriggerRejecTrial, 0.09, 0.015, textSizeSpectra, 0.08);
+    DrawGammaCanvasSettings( canvasTriggerRejecTrial, 0.09, 0.017, textSizeSpectra, 0.08);
     canvasTriggerRejecTrial->SetLogy(0);
     
     for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
@@ -842,11 +842,12 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //************************************Plotting efficiencies Pi0 *************************************************
     //***************************************************************************************************************
     TCanvas* canvasEffi = new TCanvas("canvasEffi","",0,0,1000,900);// gives the page size
-    DrawGammaCanvasSettings( canvasEffi, 0.09, 0.015, 0.015, 0.08);
+    DrawGammaCanvasSettings( canvasEffi, 0.09, 0.017, 0.015, 0.08);
     canvasEffi->SetLogy(1);
 
     Double_t minEffiPi0 = 1e-4;
     Double_t maxEffiPi0 = 1e-1;
+    if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1) minEffiPi0 = 1e-5;
     if (mode == 4) maxEffiPi0 = 8e-1;
     if (mode == 10) maxEffiPi0 = 8e-1;
 
@@ -894,7 +895,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //***************************************************************************************************************
     if (enableTriggerEffPi0All){
         TCanvas* canvasTriggerEffi = new TCanvas("canvasTriggerEffi","",0,0,1000,900);// gives the page size
-        DrawGammaCanvasSettings( canvasTriggerEffi, 0.09, 0.015, 0.015, 0.08);
+        DrawGammaCanvasSettings( canvasTriggerEffi, 0.09, 0.017, 0.015, 0.08);
         canvasTriggerEffi->SetLogy(0);
 
         Double_t minEffiTrigPi0         = 0;
@@ -961,7 +962,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //************************************Plotting acceptance Pi0 *************************************************
     //***************************************************************************************************************
     TCanvas* canvasAcc = new TCanvas("canvasAcc","",0,0,1000,900);// gives the page size
-    DrawGammaCanvasSettings( canvasAcc, 0.1, 0.015, 0.015, 0.08);
+    DrawGammaCanvasSettings( canvasAcc, 0.1, 0.017, 0.015, 0.08);
     canvasAcc->SetLogy(0);
 
     Double_t minAccPi0 = 0.15;
@@ -1004,7 +1005,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         //************************************Plotting efficiencies Pi0 *************************************************
         //***************************************************************************************************************
         TCanvas* canvasPurity = new TCanvas("canvasPurity","",0,0,1000,900);// gives the page size
-        DrawGammaCanvasSettings( canvasPurity, 0.09, 0.015, 0.015, 0.08);
+        DrawGammaCanvasSettings( canvasPurity, 0.09, 0.017, 0.015, 0.08);
         canvasPurity->SetLogy(1);
 
         Double_t minPurityPi0 = 0.1;
@@ -1055,9 +1056,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //**************************** Mass and Width general plotting definitions **************************************
     //***************************************************************************************************************
     TCanvas* canvasMass         = new TCanvas("canvasMass","",0,0,1000,900);// gives the page size
-    DrawGammaCanvasSettings( canvasMass, 0.11, 0.015, 0.015, 0.08);
+    DrawGammaCanvasSettings( canvasMass, 0.11, 0.017, 0.015, 0.08);
     Double_t minMassPi0         = 0.120;
     Double_t maxMassPi0         = 0.160;
+    if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1) maxMassPi0 = 0.150;
     TH2F * histo2DMassPi0       = new TH2F("histo2DMassPi0","histo2DMassPi0",1000,0., maxPtGlobalPi0,10000,minMassPi0, maxMassPi0);
     SetStyleHistoTH2ForGraphs(histo2DMassPi0, "#it{p}_{T} (GeV/#it{c})","#it{M}_{#pi^{0}} (Mev/#it{c}^{2})", 
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.4);
@@ -1070,7 +1072,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TLegend* legendMassRedPi02  = GetAndSetLegend2(0.46, 0.81, 0.80, 0.81+(1.05*8/2*0.85*textSizeSpectra),28);
     
     TCanvas* canvasWidth        = new TCanvas("canvasWidth","",0,0,1000,900);// gives the page size
-    DrawGammaCanvasSettings( canvasWidth, 0.09, 0.015, 0.035, 0.08);
+    DrawGammaCanvasSettings( canvasWidth, 0.09, 0.017, 0.035, 0.08);
     Double_t minWidthPi0        = 0.0;
     Double_t maxWidthPi0        = 0.0295;
     TH2F * histo2DWidthPi0      = new TH2F("histo2DWidthPi0","histo2DWidthPi0",1000,0., maxPtGlobalPi0,10000,minWidthPi0, maxWidthPi0);
@@ -1203,12 +1205,20 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     
     Double_t minCorrYieldRawUnscaled    = 7e-8;
     Double_t maxCorrYieldRawUnscaled    = 4e-2;
+    if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1){
+      minCorrYieldRawUnscaled    = 2e-8;
+      maxCorrYieldRawUnscaled    = 2e-3;
+    }
     if (mode == 10) {
         minCorrYieldRawUnscaled         = 2e-12;
         maxCorrYieldRawUnscaled         = 1;
     } else if (mode == 4) {
         minCorrYieldRawUnscaled         = 7e-8;
         maxCorrYieldRawUnscaled         = 1;
+        if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1){
+          minCorrYieldRawUnscaled         = 7e-8;
+          maxCorrYieldRawUnscaled         = 2e-3;
+        }
     }
     TH2F * histo2DRawUnscaled       = new TH2F("histo2DRawUnscaled", "histo2DRawUnscaled", 1000, 0., maxPtGlobalPi0, 10000, minCorrYieldRawUnscaled, maxCorrYieldRawUnscaled);
     SetStyleHistoTH2ForGraphs(histo2DRawUnscaled, "#it{p}_{T} (GeV/#it{c})","#frac{d#it{N}_{#pi_{0}, raw}}{#it{N}_{evt}d#it{p}_{T}} (#it{c}/GeV)^{2}", 
@@ -1255,7 +1265,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //************************************Plotting unscaled invariant yield Pi0 *************************************
     //***************************************************************************************************************    
     TCanvas* canvasCorrUnscaled = new TCanvas("canvasCorrUnscaled","",0,0,1000,1350);// gives the page size
-    DrawGammaCanvasSettings( canvasCorrUnscaled, 0.15, 0.015, 0.015, 0.07);
+    DrawGammaCanvasSettings( canvasCorrUnscaled, 0.15, 0.017, 0.015, 0.07);
     canvasCorrUnscaled->SetLogy();
     
     Double_t minCorrYieldUnscaled = 2e-10;
@@ -2472,7 +2482,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //************************************* Efficiency weighted *****************************************************
     //***************************************************************************************************************    
     if (graphEfficiencyPi0Weighted){
-        DrawGammaCanvasSettings( canvasEffi, 0.09, 0.015, 0.015, 0.08);
+        DrawGammaCanvasSettings( canvasEffi, 0.09, 0.017, 0.015, 0.08);
         canvasEffi->SetLogy(1);
         canvasEffi->cd();
         histo2DEffiPi0->DrawCopy(); 
@@ -2502,7 +2512,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //***************************************************************************************************************    
     if (graphPurityPi0Weighted){
         TCanvas* canvasPurity = new TCanvas("canvasPurity","",0,0,1000,900);// gives the page size
-        DrawGammaCanvasSettings( canvasPurity, 0.09, 0.015, 0.015, 0.08);
+        DrawGammaCanvasSettings( canvasPurity, 0.09, 0.017, 0.015, 0.08);
         canvasPurity->SetLogy(1);
 
         Double_t minPurityPi0 = 0.1;
@@ -2539,7 +2549,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //************************************* Acceptance weighted *****************************************************
     //***************************************************************************************************************    
     if (graphAcceptancePi0Weighted){
-        DrawGammaCanvasSettings( canvasAcc, 0.1, 0.015, 0.015, 0.08);
+        DrawGammaCanvasSettings( canvasAcc, 0.1, 0.017, 0.015, 0.08);
         canvasAcc->cd();
         canvasAcc->SetLogy(0);
         histo2DAccPi0->DrawCopy(); 
@@ -2573,15 +2583,19 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //************************************Plotting scaled invariant yield *****************************************
     //***************************************************************************************************************
     TCanvas* canvasCorrScaled = new TCanvas("canvasCorrScaled","",0,0,1000,1350);// gives the page size
-    DrawGammaCanvasSettings( canvasCorrScaled, 0.15, 0.015, 0.015, 0.07);
+    DrawGammaCanvasSettings( canvasCorrScaled, 0.15, 0.017, 0.015, 0.07);
     canvasCorrScaled->SetLogy();
 //     canvasCorrScaled->SetGridx();
     Double_t minCorrYield       = 2e-10;
     Double_t maxCorrYield       = 1e0;
+    if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1){
+      minCorrYield       = 2e-9;
+      maxCorrYield       = 1e0;
+    }
     if (mode == 10) {
         minCorrYield            = 2e-12;
         maxCorrYield            = 1e-3;
-    }    
+    }
     
     TH2F * histo2DInvYieldScaled;
     histo2DInvYieldScaled = new TH2F("histo2DInvYieldScaled","histo2DInvYieldScaled",1000,0., maxPtGlobalPi0,10000,minCorrYield,maxCorrYield);
@@ -2657,7 +2671,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //****************************** Ratio to fit for individual spectra full range *********************************
     //***************************************************************************************************************
     TCanvas* canvasRatioSpec = new TCanvas("canvasRatioSpec","",0,0,1000,900);// gives the page size
-    DrawGammaCanvasSettings( canvasRatioSpec, 0.09, 0.015, 0.015, 0.08);
+    DrawGammaCanvasSettings( canvasRatioSpec, 0.09, 0.017, 0.015, 0.08);
     canvasRatioSpec->SetLogy(0);
     
     TH2F * histo2DRatioToFitPi0;
@@ -2977,8 +2991,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         //***************************************************************************************************************
         Double_t minEffiEta     = 1e-5;
         Double_t maxEffiEta     = 1e-1;
+        if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1){
+          minEffiEta     = 5e-4;
+          maxEffiEta     = 1e-1;
+        }
         if (mode == 4){
             maxEffiEta          = 5e0;
+            if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1){
+              minEffiEta     = 5e-4;
+              maxEffiEta     = 5e0;
+            }
         }
         
         canvasEffi->cd();
@@ -3011,7 +3033,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         //***************************************************************************************************************
         if (enableTriggerEffEtaAll){
             TCanvas* canvasTriggerEffi = new TCanvas("canvasTriggerEffi","",0,0,1000,900);// gives the page size
-            DrawGammaCanvasSettings( canvasTriggerEffi, 0.09, 0.015, 0.015, 0.08);
+            DrawGammaCanvasSettings( canvasTriggerEffi, 0.09, 0.017, 0.015, 0.08);
             canvasTriggerEffi->SetLogy(0);
 
             Double_t minEffiTrigEta         = 0;
@@ -3224,18 +3246,26 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         canvasWidth->SaveAs(Form("%s/Eta_%s_Width2.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
 
         //***************************************************************************************************************
-        //************************************Plotting unscaled invariant raw-yield Pi0 *********************************
+        //************************************Plotting unscaled invariant raw-yield Eta *********************************
         //***************************************************************************************************************
         canvasRawUnscaled->cd();
         
         Double_t minCorrYieldRawUnscaledEta     = 7e-8;
         Double_t maxCorrYieldRawUnscaledEta     = 4e-3;
+        if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1){
+          minCorrYieldRawUnscaledEta          = 7e-8;
+          maxCorrYieldRawUnscaledEta          = 2e-4;
+        }
         if (mode == 10) {
             minCorrYieldRawUnscaledEta          = 2e-12;
             maxCorrYieldRawUnscaledEta          = 1;
         } else if (mode == 4) {
             minCorrYieldRawUnscaledEta          = 7e-8;
             maxCorrYieldRawUnscaledEta          = 1e-1;
+            if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1){
+              minCorrYieldRawUnscaledEta          = 7e-8;
+              maxCorrYieldRawUnscaledEta          = 2e-4;
+            }
         }    
         
         TH2F * histo2DRawUnscaledEta       = new TH2F("histo2DRawUnscaledEta", "histo2DRawUnscaledEta", 1000, 0., maxPtGlobalEta, 10000, minCorrYieldRawUnscaledEta, maxCorrYieldRawUnscaledEta);
@@ -4251,9 +4281,20 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         //************************************Plotting scaled invariant yield *****************************************
         //***************************************************************************************************************
         canvasCorrScaled->cd();
+
+        Double_t minCorrYieldEta = 2e-11;
+        Double_t maxCorrYieldEta = 5e-2;
+        if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1){
+          minCorrYieldEta     = 5e-8;
+          maxCorrYieldEta     = 7e-2;
+          if(mode==4){
+            minCorrYieldEta     = 2e-9;
+            maxCorrYieldEta     = 1e-2;
+          }
+        }
         
         TH2F * histo2DInvYieldScaledEta;
-        histo2DInvYieldScaledEta = new TH2F("histo2DInvYieldScaledEta","histo2DInvYieldScaledEta",1000,0., maxPtGlobalEta,10000,2e-11,5e-2);
+        histo2DInvYieldScaledEta = new TH2F("histo2DInvYieldScaledEta","histo2DInvYieldScaledEta",1000,0., maxPtGlobalEta,10000,minCorrYieldEta,maxCorrYieldEta);
         SetStyleHistoTH2ForGraphs(histo2DInvYieldScaledEta, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", 
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.8,1.55);
 //         histo2DInvYieldScaledEta->SetRangeUser(2e-11,5e-2);
@@ -4930,7 +4971,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             
             Size_t textSizeEtaToPi0 = 0.04;            
             TCanvas* canvasEtatoPi0combo = new TCanvas("canvasEtatoPi0combo","",200,10,1200,1100);
-            DrawGammaCanvasSettings( canvasEtatoPi0combo, 0.09, 0.015, 0.02, 0.1);
+            DrawGammaCanvasSettings( canvasEtatoPi0combo, 0.09, 0.017, 0.02, 0.1);
 
             TH2F * histo2DEtatoPi0combo = new TH2F("histo2DEtatoPi0combo","histo2DEtatoPi0combo",11000,0,maxPtGlobalEta,1000,0.01,1.2);
             SetStyleHistoTH2ForGraphs(histo2DEtatoPi0combo, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0}",0.035,0.04, 0.035,0.04, 1.2,1.);
