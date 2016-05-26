@@ -557,7 +557,7 @@ void AnalyseNeutralMesonSignificance(   TString fileNameData    = "myOutput",
             minimum             = minimumMC*1000;
         } else {
             minimum             = minimumMC*10;
-        }    
+        }
     } else minimum              = minimumData*10;
     cout << minimumData << "\t" << minimumMC << "\t" << minimum << "\t"<< 1/fEventQualityMC->GetEntries()<< endl;
         

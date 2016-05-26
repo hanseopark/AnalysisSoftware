@@ -1583,7 +1583,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         TCanvas* canvasFWHM = new TCanvas("canvasFWHM","",200,10,1350,900);  // gives the page size
         DrawGammaCanvasSettings( canvasFWHM, 0.07, 0.01, 0.031, 0.082);
         
-        Double_t maxFWHM        = 0.015;
+        Double_t maxFWHM        = 0.030;
         if (mode == 2)
           maxFWHM               = 0.015;
         if (kIsEta) 
@@ -1637,7 +1637,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //**********************************************************************************        
         
         if (histoWidthGaussianMeson){
-            Double_t maxFWHMGaus    = 0.015;
+            Double_t maxFWHMGaus    = 0.030;
             if (mode == 2)
                 maxFWHMGaus         = 0.015;
             if (kIsEta) 
