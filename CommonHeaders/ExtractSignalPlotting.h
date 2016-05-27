@@ -72,7 +72,6 @@ void PlotExampleInvMassBins(    TH1D* histoInvMassSignalWithBG,
                 Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],1);
 
-
     TLegend* legendExamplePlotInvMass   = new TLegend(0.6,0.4,0.9,0.5);
     legendExamplePlotInvMass->SetTextSize(0.04);
     legendExamplePlotInvMass->SetFillColor(0);

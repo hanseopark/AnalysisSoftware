@@ -874,7 +874,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
             nBinsPlot           = fColumn*fRow -1;
             if (fNBinsPt-fStartPtBin > nBinsPlot) fRow++;
 
-            fExampleBin         = 10;
+            fExampleBin         = 3;
             if( modi == 4 ) fExampleBin = 13;
             if (specialTrigg==1) fExampleBin = 22;
             if (specialTrigg==2) fExampleBin = 37;
