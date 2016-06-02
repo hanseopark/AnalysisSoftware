@@ -25,7 +25,6 @@ ln -sf $PHOTONCONVDIR/TaskV1/*.h TaskV1/
 ln -sf $PHOTONCONVDIR/TaskV1/*.C TaskV1/
 ln -sf $PHOTONCONVDIR/TaskQA/*.h TaskQA/
 ln -sf $PHOTONCONVDIR/TaskQA/*.C TaskQA/
-ln -sf $PHOTONCONVDIR/DataQA DataQA
 ln -sf $PHOTONCONVDIR/ExternalInput/* ExternalInput/
 ln -sf $PHOTONCONVDIR/ExternalInputPbPb/* ExternalInputPbPb/
 ln -sf $PHOTONCONVDIR/ExternalInputpPb/* ExternalInputpPb/
@@ -33,6 +32,10 @@ ln -sf $PHOTONCONVDIR/FinalResults/* FinalResults/
 ln -sf $PHOTONCONVDIR/CocktailInput/* CocktailInput/
 ln -sf $PHOTONCONVDIR/RooUnfold/* RooUnfold/
 ln -sf $PHOTONCONVDIR/DownloadAndDataPrep/* DownloadAndDataPrep/
+
+if [ $1 = "dmuhlhei" ]; then 
+	ln -sf $PHOTONCONVDIR/DataQA DataQA
+fi
 
 ln -sf $PHOTONCONVDIR/*.eps .
 ln -sf $PHOTONCONVDIR/*.C .

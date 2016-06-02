@@ -86,10 +86,15 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 //                             2079,2080,2081,2082,2083,2084,2085,
 //                             2086,2087,2088,2089,2090,2091,2092
 //                             };
-    TString train = "Legotrain-vAN-20160522-8TeV-Weighting";
-    Int_t trainRuns[nSets] = {1578,1579,1580,1581,1582,1583,1584,
-                             2107,2108,2109,2110,2111,2112,2113,
-                             2114,2115,2116,2117,2118,2119,2120
+//    TString train = "Legotrain-vAN-20160522-8TeV-Weighting";
+//    Int_t trainRuns[nSets] = {1578,1579,1580,1581,1582,1583,1584,
+//                             2107,2108,2109,2110,2111,2112,2113,
+//                             2114,2115,2116,2117,2118,2119,2120
+//                             };
+    TString train = "Legotrain-vAN-20160527-8TeV-validAOD";
+    Int_t trainRuns[nSets] = {66,67,68,69,70,71,72,
+                             105,106,107,108,109,110,111,
+                             112,113,114,115,116,117,118
                              };
 
     TString runlist[nSets] = {"merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9",
