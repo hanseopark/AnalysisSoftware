@@ -24,6 +24,7 @@ TString     fCutSelection                                               = "";
 Int_t       fMode                                                       = -1;
 Bool_t      fAdvancedMesonQA                                            = kFALSE;
 Bool_t      fAdvancedClusterQA                                          = kFALSE;
+Bool_t      fAdditionalLabels                                           = kFALSE;
 TString     fEventCutSelection                                          = "";
 TString     fClusterCutSelection                                        = "";
 TString     fClusterMergedCutSelection                                  = "";

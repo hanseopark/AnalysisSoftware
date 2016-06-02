@@ -81,6 +81,8 @@ void ExtractSignalMergedMeson(  TString meson                   = "",
         fAdditionalName             = "JJGammaTrigg";
     }
         
+    fAdditionalLabels               = kTRUE;    
+        
     fCutSelection                   = cutSelection;
     TString fCutSelectionRead       = cutSelection;
     TString dummyString             = "";
@@ -562,6 +564,8 @@ void ExtractSignalMergedMeson(  TString meson                   = "",
         fHistoClustersMergedPtM02->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.55, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
 
+        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
+        
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_AllAcceptedClusters%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
@@ -589,6 +593,8 @@ void ExtractSignalMergedMeson(  TString meson                   = "",
         fHistoClustersMergedPtM02AccMeson->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
         
+        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
+        
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_AllAcceptedMesons%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
@@ -596,29 +602,33 @@ void ExtractSignalMergedMeson(  TString meson                   = "",
     //******************************************************************************************
     //******************** Plotting 2D M02 vs Pt validated merged clusters *********************
     //******************************************************************************************        
-    if (fHistoTrueClustersMergedPtM02){
+    if (fHistoTrueClustersMergedPtM02 && fHistoTrueClusPartConvMergedPtM02){
         fHistoTrueClustersMergedPtM02->Sumw2();
-        fHistoTrueClustersMergedPtM02->Scale(1./fNEvents);
-        DrawAutoGammaHistoPaper2D(fHistoTrueClustersMergedPtM02,
+        fHistoTrueClusPartConvMergedPtM02->Sumw2();
+        TH2F* dumm2D = (TH2F*)fHistoTrueClustersMergedPtM02->Clone("forplotting");
+        dumm2D->Add(fHistoTrueClusPartConvMergedPtM02);
+        
+        dumm2D->Scale(1./fNEvents);
+        DrawAutoGammaHistoPaper2D(dumm2D,
                                 " ",
                                 "#it{p}_{T} (GeV/#it{c})",
                                 "#lambda_{0}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
                                 1,2.95,50.05,0.8,0.8);
-        fHistoTrueClustersMergedPtM02->GetXaxis()->SetMoreLogLabels();
-        fHistoTrueClustersMergedPtM02->GetXaxis()->SetLabelOffset(-0.02);
-        fHistoTrueClustersMergedPtM02->GetZaxis()->SetLabelOffset(-0.008);
-        fHistoTrueClustersMergedPtM02->GetZaxis()->SetLabelSize(0.051);
-        fHistoTrueClustersMergedPtM02->GetZaxis()->SetRangeUser(minZM02,maxZM02);
-        fHistoTrueClustersMergedPtM02->GetXaxis()->SetTickLength(0.05);
-        fHistoTrueClustersMergedPtM02->DrawCopy("COLZ");
+        dumm2D->GetXaxis()->SetMoreLogLabels();
+        dumm2D->GetXaxis()->SetLabelOffset(-0.02);
+        dumm2D->GetZaxis()->SetLabelOffset(-0.008);
+        dumm2D->GetZaxis()->SetLabelSize(0.051);
+        dumm2D->GetZaxis()->SetRangeUser(minZM02,maxZM02);
+        dumm2D->GetXaxis()->SetTickLength(0.05);
+        dumm2D->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
         
         TLatex *labelM02 = new TLatex(0.11, 0.15, "val. merged clusters");
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
-//         DrawMergedClusterLambdaCuts(fNLMmin);
+        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
         
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueMerged%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
@@ -627,26 +637,30 @@ void ExtractSignalMergedMeson(  TString meson                   = "",
     //******************************************************************************************
     //******************** Plotting 2D M02 vs Pt validated merged pi0s *************************
     //******************************************************************************************        
-    if (fHistoTrueClustersPi0PtM02){
+    if (fHistoTrueClustersPi0PtM02 && fHistoTrueClusPartConvPi0PtM02){
         fHistoTrueClustersPi0PtM02->Sumw2();
-        fHistoTrueClustersPi0PtM02->Scale(1./fNEvents);
-        DrawAutoGammaHistoPaper2D(fHistoTrueClustersPi0PtM02,
+        fHistoTrueClusPartConvPi0PtM02->Sumw2();
+        TH2F* dumm2D = (TH2F*)fHistoTrueClustersPi0PtM02->Clone("forplotting");
+        dumm2D->Add(fHistoTrueClusPartConvPi0PtM02);
+        
+        dumm2D->Scale(1./fNEvents);
+        DrawAutoGammaHistoPaper2D(dumm2D,
                                 " ",
                                 "#it{p}_{T} (GeV/#it{c})",
                                 "#lambda_{0}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
                                 1,2.95,50.05,0.8,0.8);
-        fHistoTrueClustersPi0PtM02->GetXaxis()->SetMoreLogLabels();
-        fHistoTrueClustersPi0PtM02->GetXaxis()->SetLabelOffset(-0.02);
-        fHistoTrueClustersPi0PtM02->GetZaxis()->SetLabelOffset(-0.008);
-        fHistoTrueClustersPi0PtM02->GetZaxis()->SetLabelSize(0.051);
-        fHistoTrueClustersPi0PtM02->GetZaxis()->SetRangeUser(minZM02,maxZM02);
-        fHistoTrueClustersPi0PtM02->GetXaxis()->SetTickLength(0.05);
-        fHistoTrueClustersPi0PtM02->DrawCopy("COLZ");
+        dumm2D->GetXaxis()->SetMoreLogLabels();
+        dumm2D->GetXaxis()->SetLabelOffset(-0.02);
+        dumm2D->GetZaxis()->SetLabelOffset(-0.008);
+        dumm2D->GetZaxis()->SetLabelSize(0.051);
+        dumm2D->GetZaxis()->SetRangeUser(minZM02,maxZM02);
+        dumm2D->GetXaxis()->SetTickLength(0.05);
+        dumm2D->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
 
-//         DrawMergedClusterLambdaCuts(fNLMmin);
+        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
         TLatex *labelM02 = new TLatex(0.11, 0.15, "val. merged #pi^{0}");
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
@@ -659,28 +673,33 @@ void ExtractSignalMergedMeson(  TString meson                   = "",
     //******************************************************************************************
     //******************** Plotting 2D M02 vs Pt validated merged etas *************************
     //******************************************************************************************            
-    if (fHistoTrueClustersEtaPtM02){
+    if (fHistoTrueClustersEtaPtM02 && fHistoTrueClusPartConvEtaPtM02){
         fHistoTrueClustersEtaPtM02->Sumw2();
-        fHistoTrueClustersEtaPtM02->Scale(1./fNEvents);
-        DrawAutoGammaHistoPaper2D(fHistoTrueClustersEtaPtM02,
+        fHistoTrueClusPartConvEtaPtM02->Sumw2();
+        TH2F* dumm2D = (TH2F*)fHistoTrueClustersEtaPtM02->Clone("forplotting");
+        dumm2D->Add(fHistoTrueClusPartConvEtaPtM02);
+        dumm2D->Scale(1./fNEvents);
+        DrawAutoGammaHistoPaper2D(dumm2D,
                                 " ",
                                 "#it{p}_{T} (GeV/#it{c})",
                                 "#lambda_{0}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
                                 1,2.95,50.05,0.8,0.8);
-        fHistoTrueClustersEtaPtM02->GetXaxis()->SetMoreLogLabels();
-        fHistoTrueClustersEtaPtM02->GetXaxis()->SetLabelOffset(-0.02);
-        fHistoTrueClustersEtaPtM02->GetZaxis()->SetLabelOffset(-0.008);
-        fHistoTrueClustersEtaPtM02->GetZaxis()->SetLabelSize(0.051);
-        fHistoTrueClustersEtaPtM02->GetZaxis()->SetRangeUser(minZM02,maxZM02);
-        fHistoTrueClustersEtaPtM02->GetXaxis()->SetTickLength(0.05);
-        fHistoTrueClustersEtaPtM02->DrawCopy("COLZ");
+        dumm2D->GetXaxis()->SetMoreLogLabels();
+        dumm2D->GetXaxis()->SetLabelOffset(-0.02);
+        dumm2D->GetZaxis()->SetLabelOffset(-0.008);
+        dumm2D->GetZaxis()->SetLabelSize(0.051);
+        dumm2D->GetZaxis()->SetRangeUser(minZM02,maxZM02);
+        dumm2D->GetXaxis()->SetTickLength(0.05);
+        dumm2D->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
 
         TLatex *labelM02 = new TLatex(0.11, 0.15, "val. merged #eta");
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
+        
+        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
         
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueEta%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
@@ -690,7 +709,6 @@ void ExtractSignalMergedMeson(  TString meson                   = "",
     //******************** Plotting 2D M02 vs Pt validated gammas ******************************
     //******************************************************************************************            
     if (fHistoTrueClustersGammaPtM02){
-        fHistoTrueClustersGammaPtM02->Sumw2();
         fHistoTrueClustersGammaPtM02->Scale(1./fNEvents);
         DrawAutoGammaHistoPaper2D(fHistoTrueClustersGammaPtM02,
                                 " ",
@@ -711,7 +729,7 @@ void ExtractSignalMergedMeson(  TString meson                   = "",
         TLatex *labelM02 = new TLatex(0.11, 0.15, "val. #gamma");
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
-//         DrawMergedClusterLambdaCuts(fNLMmin);
+        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
         
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueGamma%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
@@ -742,6 +760,8 @@ void ExtractSignalMergedMeson(  TString meson                   = "",
         TLatex *labelM02 = new TLatex(0.11, 0.15, "val. e^{#pm}");
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
+     
+        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
         
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueElectron%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
@@ -772,6 +792,8 @@ void ExtractSignalMergedMeson(  TString meson                   = "",
         TLatex *labelM02 = new TLatex(0.11, 0.15, "background");
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
+        
+        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
         
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueBG%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
