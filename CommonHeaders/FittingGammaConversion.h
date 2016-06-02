@@ -1057,7 +1057,18 @@ TF1* FitTH1DRecursivelyGaussian (TH1D* histo, Double_t precision, Double_t fitRa
 }
 
 
-void ResolutionFitting( TH2* histoRebinned, TH1D** histoArray, TF1** fitArray , Int_t nBins, TH1F* histoMean, TH1F* histoSigma, TString fitName, Double_t rangeMin, Double_t rangeMax, Double_t precision, TString defaultName){
+void ResolutionFitting( TH2* histoRebinned, 
+                        TH1D** histoArray, 
+                        TF1** fitArray,
+                        Int_t nBins, 
+                        TH1F* histoMean, 
+                        TH1F* histoSigma, 
+                        TString fitName, 
+                        Double_t rangeMin,
+                        Double_t rangeMax, 
+                        Double_t precision, 
+                        TString defaultName){
+    
     for (Int_t i = 1; i < nBins + 1 ; i ++){
         fitArray[i-1] = 0x00;
         histoArray[i-1] = histoRebinned->ProjectionY(Form("%s_%i",defaultName.Data(),i-1), i, i);
@@ -1217,11 +1228,23 @@ void ResolutionFittingNormalized( TH2* histoRebinned, TH1D** histoArray, TF1** f
 }
 
 
-void ResolutionFittingRebined( TH2* histoRebinned, TH1D** histoArray, TF1** fitArray ,  Int_t nBins, Int_t* rebin, TH1F* histoMean, TH1F* histoSigma, TString fitName, Double_t rangeMin, Double_t rangeMax, Double_t precision, TString defaultName){
+void ResolutionFittingRebined( TH2* histo, 
+                               TH1D** histoArray, 
+                               TF1** fitArray ,  
+                               Int_t nBins,
+                               Double_t* ptRanges,
+                               Int_t* rebin, 
+                               TH1F* histoMean, 
+                               TH1F* histoSigma, 
+                               TString fitName, 
+                               Double_t rangeMin, 
+                               Double_t rangeMax, 
+                               Double_t precision, 
+                               TString defaultName){
     for (Int_t i = 1; i < nBins + 1 ; i ++){
-        cout << "Bin \t" << i-1 << endl;
+        cout << "Bin \t" << i-1 << "\t pt range: "<< ptRanges[i-1]<< " - " << ptRanges[i] <<  endl;
         fitArray[i-1] = 0x00;
-        histoArray[i-1] = histoRebinned->ProjectionY(Form("%s_%i",defaultName.Data(),i-1), i, i);
+        histoArray[i-1] = histo->ProjectionY(Form("%s_%i",defaultName.Data(),i-1), histo->GetXaxis()->FindBin(ptRanges[i-1]+0.001), histo->GetXaxis()->FindBin(ptRanges[i]-0.001));
         histoArray[i-1]->Sumw2();
         histoArray[i-1]->Rebin(rebin[i-1]);
         if (histoArray[i-1]->GetEntries() > 0){
