@@ -136,11 +136,12 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   TString nameFits = Form("%s/FittingParameters_%s_%s.dat",outputDir.Data(),dateForOutput.Data(),FittingType.Data());
   fFits.open(nameFits.Data(), ios::out);	
   //___________________________________ Declaration of files _____________________________________________
-  TString fileNameNeutralPionDalitz                   = "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20150806.root";
+  TString fileNameNeutralPionDalitz                   = "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20160601.root";
    TString fileNameNeutralPionPCM                      = "ExternalInputpPb/PCM/data_PCMResults_pPb_20151111_standard_CatErrors.root";
-      TString fileNameNeutralPionEMCal                    = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_160503_pPb.root"; 
+   TString fileNameNeutralPionEMCal                    = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_160602_newhighptbinningPi0_pPb.root";
+   TString fileNameNeutralPionEMCalEta                 = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_160503_pPb.root"; 
       // TString fileNameNeutralPionEMCal                    = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_160215_pPb_5023_Mike.roo";
-  TString fileNameNeutralPionPHOS                     = "ExternalInputpPb/PHOS/data_PHOSResults_pPb_20160208.root";
+      TString fileNameNeutralPionPHOS                     = "ExternalInputpPb/PHOS/20160601_Pi0InvariantSpectrum_pPb_PHOS.root";//data_PHOSResults_pPb_20160208.root";
  
 
   TString nameHistoPHOS                               = "hCor_stat";
@@ -320,12 +321,13 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   // ******************************** Reading EMCal ***************************************
   // **************************************************************************************
   TFile* fileNeutralPionEMCal                         = new TFile(fileNameNeutralPionEMCal);
+  TFile* fileNeutralPionEMCalEta                         = new TFile(fileNameNeutralPionEMCalEta);
   TDirectory* directoryEMCalPi0pPb                    = (TDirectory*)fileNeutralPionEMCal->Get("Pi0_pPb_5.023TeV_0-100%");
   if( ! directoryEMCalPi0pPb ){
     cout<<"EMCal: The directory Pi0_pPb_5.023TeV_0-100% does not exist "<<endl; 
     return;  
   }
-  TDirectory*	directoryEMCalEtapPb 	      	= (TDirectory*)fileNeutralPionEMCal->Get("Eta_pPb_5.023TeV_0-100%"); 
+  TDirectory*	directoryEMCalEtapPb 	      	= (TDirectory*)fileNeutralPionEMCalEta->Get("Eta_pPb_5.023TeV_0-100%"); 
   if( ! directoryEMCalEtapPb  ){
     cout<<"EMCal: The directory Eta_pPb_5.023TeV_0-100% does not exist "<<endl; 
     return;  
@@ -335,8 +337,21 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
     return;  
   }
   //Pi0
-  TH1D* histoEMCalYieldPi0pPbStat                     = (TH1D*)directoryEMCalPi0pPb->Get(nameHistoEMCal.Data());
+  TH1D* histoEMCalYieldPi0pPbStat1                     = (TH1D*)directoryEMCalPi0pPb->Get(nameHistoEMCal.Data());
+  TGraphAsymmErrors* graphEMCalYieldPi0pPbStatErr     =new TGraphAsymmErrors(histoEMCalYieldPi0pPbStat1);
+
+  cout <<"EMCal"<<endl;
+  graphEMCalYieldPi0pPbStatErr->Print();
+  graphEMCalYieldPi0pPbStatErr->RemovePoint(31);
+  graphEMCalYieldPi0pPbStatErr->Print();
+  TH1D* histoEMCalYieldPi0pPbStat=GraphAsymErrorsToHist_withErrors(graphEMCalYieldPi0pPbStatErr, "histoEMCalYieldPi0pPbStat");
   TGraphAsymmErrors* graphEMCalYieldPi0pPbSystErr     = (TGraphAsymmErrors*)directoryEMCalPi0pPb->Get(nameHistoEMCalSysErrors.Data());
+  graphEMCalYieldPi0pPbSystErr->Print();
+  graphEMCalYieldPi0pPbSystErr->RemovePoint(22);
+  graphEMCalYieldPi0pPbSystErr->RemovePoint(22);
+  graphEMCalYieldPi0pPbSystErr->RemovePoint(22);
+  graphEMCalYieldPi0pPbSystErr->RemovePoint(22);
+  graphEMCalYieldPi0pPbSystErr->Print();
   TGraphAsymmErrors* graphRatioCombEMCalSys           = (TGraphAsymmErrors*)graphEMCalYieldPi0pPbSystErr->Clone();
   //Eta
   TH1D*	histoEMCalYieldEtapPbStat 			= (TH1D*)directoryEMCalEtapPb->Get("CorrectedYieldEta");
@@ -1563,7 +1578,81 @@ graphEMCalYieldPi0EtaBinningpPb->Print();
 
   canvasYShiftEtaPi0Ratio->Update();
   canvasYShiftEtaPi0Ratio->Print(Form("%s/EtaPi0Ratio_YShifted.%s",outputDir.Data(),suffix.Data()));
+	
+ 	//*********************** Comparison of Measurements in ALICE ***************************************************
+	Double_t fBinsPi07TeVPt[22] =					{0.0, 0.1, 0.2, 0.3, 0.4,
+													 0.5, 0.6, 0.8, 1.0, 1.5,  
+												     1.9, 2.2, 2.7, 3.2,
+													 4.0,  5.0, 6.0, 8.0,
+													 10.0, 12.0, 18.0, 22.0};
 
+	TFile* cocktailFileMtScaledEta = new TFile("CocktailInput/cocktail_PbPb_0020c_dmtsallis_MTEta.root");
+	TDirectory* cocktailDirMtScaledEta = (TDirectoryFile*) cocktailFileMtScaledEta->Get("cocktail_PbPb_0020c_dmtsallis_MTEta");
+
+	TH1D* cocktailPi0_MtScaled = (TH1D* )cocktailDirMtScaledEta->Get("ptPi0");
+	cocktailPi0_MtScaled->Sumw2();
+	TH1D* cocktailPi0_MtScaledRebinned = (TH1D* )cocktailPi0_MtScaled->Rebin(21,"ptPionMTScaledRebinned",fBinsPi07TeVPt);
+	TH1D* cocktailEta_MtScaled = (TH1D* )cocktailDirMtScaledEta->Get("ptEta");
+	cocktailEta_MtScaled->Sumw2();
+	TH1D* cocktailEta_MtScaledRebinned = (TH1D* )cocktailEta_MtScaled->Rebin(21,"ptEtaMTScaledRebinned",fBinsPi07TeVPt);
+	// TH1D* cocktailOmega_MtScaled = (TH1D* )cocktailDirMtScaledEta->Get("ptOmega");
+	// cocktailOmega_MtScaled->Sumw2();
+	// TH1D* cocktailOmega_MtScaledRebinned = (TH1D* )cocktailOmega_MtScaled->Rebin(21,"ptOmegaMTScaledRebinned",fBinsPi07TeVPt);
+
+	TH1D* cocktailEtaToPi0Ratio_MtScaled = (TH1D* )cocktailEta_MtScaled->Clone("EtaToPi0Ratio_MtScaled");
+	cocktailEtaToPi0Ratio_MtScaled->Sumw2();
+	cocktailEtaToPi0Ratio_MtScaled->Divide(cocktailEtaToPi0Ratio_MtScaled,cocktailPi0_MtScaled);
+	TH1D* cocktailEtaToPi0Ratio_MtScaledRebinned = (TH1D* )cocktailEta_MtScaledRebinned->Clone("EtaToPi0Ratio_MtScaledRebinned");
+	cocktailEtaToPi0Ratio_MtScaledRebinned->Sumw2();
+	cocktailEtaToPi0Ratio_MtScaledRebinned->Divide(cocktailEtaToPi0Ratio_MtScaledRebinned,cocktailPi0_MtScaledRebinned);
+
+  	TFile* fileCombinedpp 				= new TFile("FinalResults/CombinedResultsPP_ShiftedX_PaperRAA_16_May_2014.root ");
+// 	TFile* fileCombinedpp 				= new TFile("CombinedResultsPaperX_18_Feb_2014.root");
+	TGraphAsymmErrors* graphCombEtaToPi0Ratiopp7TeV =         (TGraphAsymmErrors*)fileCombinedpp->Get("graphEtaToPi0Comb7TeVStat");
+	TGraphAsymmErrors* graphCombEtaToPi0RatioSysErrpp7TeV=    (TGraphAsymmErrors*)fileCombinedpp->Get("graphEtaToPi0Comb7TeVSys"); 
+                                 
+  TCanvas* canvasYShiftEtaPi0RatioALICE = new TCanvas("canvasYShiftEtaPi0RatioALICE","",200,10,500,400);  // gives the page size
+  DrawGammaCanvasSettings( canvasYShiftEtaPi0RatioALICE, 0.1, 0.02, 0.02, 0.11);
+
+  TH2F * histo2DCompCombinedYShiftEtaPi0RatioALICE;
+  histo2DCompCombinedYShiftEtaPi0RatioALICE = new TH2F("histo2DCompCombinedYShiftEtaPi0RatioALICE","histo2DCompCombinedYShiftEtaPi0RatioALICE",1000,0.3,16.,1000,0.,1.   );
+  SetStyleHistoTH2ForGraphs(histo2DCompCombinedYShiftEtaPi0RatioALICE, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0} ", 0.03,0.04, 0.03,0.05, 1.0,.8, 512, 508);
+  histo2DCompCombinedYShiftEtaPi0RatioALICE->DrawCopy(); 
+      
+  	cocktailEtaToPi0Ratio_MtScaledRebinned->GetXaxis()->SetRangeUser(0.3,16);
+	DrawGammaSetMarker(cocktailEtaToPi0Ratio_MtScaledRebinned, 2, 0, kRed+2, kRed+2);
+	cocktailEtaToPi0Ratio_MtScaledRebinned->SetLineStyle(2);
+	cocktailEtaToPi0Ratio_MtScaledRebinned->SetLineWidth(2);
+	cocktailEtaToPi0Ratio_MtScaledRebinned->Draw("same,hist,c");
+
+	DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Ratiopp7TeV, 21, 1, kBlue+2, kBlue+2);
+	graphCombEtaToPi0Ratiopp7TeV->Draw("same,e1p");
+	DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0RatioSysErrpp7TeV, 21, 1, kBlue+2, kBlue+2, 1., kTRUE);
+	graphCombEtaToPi0RatioSysErrpp7TeV->Draw("same,E2");
+   
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaPi0RatioStatpPb5023GeV,24,1,4, 4);  
+  graphCombEtaPi0RatioStatpPb5023GeV->Draw("pe,same");
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaPi0RatioSyspPb5023GeV,24,1, 4, 4, 1, kTRUE);  
+  graphCombEtaPi0RatioSyspPb5023GeV->Draw("E2,same");
+     
+  TLegend* legendRpPbCombineYShiftEtaPi0RatioALICE = new TLegend(0.15,0.75,0.5,0.90);
+  legendRpPbCombineYShiftEtaPi0RatioALICE->SetFillColor(0);
+  legendRpPbCombineYShiftEtaPi0RatioALICE->SetLineColor(0);
+  legendRpPbCombineYShiftEtaPi0RatioALICE->SetTextSize(0.03);
+  legendRpPbCombineYShiftEtaPi0RatioALICE->AddEntry(graphCombEtaPi0RatioSyspPb5023GeV,"#eta/#pi^{0} combined PCM+EMCal ","pef");
+  legendRpPbCombineYShiftEtaPi0RatioALICE->AddEntry(graphCombEtaToPi0RatioSysErrpp7TeV,"#eta/#pi^{0} PCM - pp 7 TeV","pef");
+  legendRpPbCombineYShiftEtaPi0RatioALICE->AddEntry(cocktailEtaToPi0Ratio_MtScaledRebinned,"#eta/#pi^{0}, #eta from #it{m}_{T} scaled #pi^{0}","pl");
+
+  
+  legendRpPbCombineYShiftEtaPi0RatioALICE->Draw();
+	
+  TLatex * lt4c = new TLatex(9.,0.9,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV") ;
+  lt4c->SetTextColor(kBlack) ;
+  lt4c->SetTextSize(0.04) ;
+  lt4c->Draw() ;
+
+  canvasYShiftEtaPi0RatioALICE->Update();
+  canvasYShiftEtaPi0RatioALICE->Print(Form("%s/EtaPi0Ratio_ALICE.%s",outputDir.Data(),suffix.Data()));
 
 
   fFits.close();

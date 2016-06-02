@@ -111,11 +111,11 @@ void CombineRpPb5023GeV(){
 
     
  
-    TString fileNameRpPb                   = "OutputRpPb_yShift_Individual/2016_05_18/PCM/pdf/PCM/Tsallis/Pi0RpPb_PCM_2016_05_18.root";
-    TString fileNameRpPbPCM                     = "OutputRpPb_yShift_Individual/2016_05_18/PCM/pdf/PCM/Tsallis/Pi0RpPb_PCM_2016_05_18.root";
-    TString fileNameRpPbDalitz                  = "OutputRpPb_yShift_Individual/2016_05_18/Dalitz/pdf/PCM/Tsallis/Pi0RpPb_Dalitz_2016_05_18.root";
-    TString fileNameRpPbPHOS                    = "OutputRpPb_yShift_Individual/2016_05_19/PHOS/pdf/PHOS/Tsallis/Pi0RpPb_PHOS_2016_05_19.root";
-    TString fileNameRpPbEMCal                   = "OutputRpPb_yShift_Individual/2016_05_18/EMCal/pdf/Comb/Tsallis/Pi0RpPb_EMCal_2016_05_18.root";
+    TString fileNameRpPb                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2016_05_18.root";
+    TString fileNameRpPbPCM                     = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2016_05_18.root";
+    TString fileNameRpPbDalitz                  = "ExternalInputpPb/InputRpPb/Pi0RpPb_Dalitz_2016_06_01.root";
+    TString fileNameRpPbPHOS                    = "ExternalInputpPb/InputRpPb/Pi0RpPb_PHOS_2016_06_01.root";
+    TString fileNameRpPbEMCal                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_EMCal_2016_06_02.root";
     TFile* fileNeutralPionRpPb                           = new TFile(fileNameRpPb.Data());
     TFile* fileNeutralPionRpPbPCM                           = new TFile(fileNameRpPbPCM.Data());
     TFile* fileNeutralPionRpPbDalitz                           = new TFile(fileNameRpPbDalitz.Data());
@@ -387,15 +387,15 @@ void CombineRpPb5023GeV(){
      SetStyleHistoTH2ForGraphs(histo2DAllGA1, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
     histo2DAllGA1->DrawCopy();
   
-    graphPCMYieldPi0pPbSystErr->Draw("E2,same");  
-    graphPCMYieldPi0pPb->Draw("p,same");  
-
-
     graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
     graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
+  
+    graphPCMYieldPi0pPbSystErr-> SetMarkerStyle(24);
+    graphPCMYieldPi0pPb->SetMarkerStyle(24);
+    graphPCMYieldPi0pPbSystErr->Draw("E2,same");  
+    graphPCMYieldPi0pPb->Draw("p,same");
 
-
-    TLegend* legendRpPbAllGA1 = new TLegend(0.17,0.15,0.4,0.4);
+    TLegend* legendRpPbAllGA1 = new TLegend(0.17,0.2,0.4,0.35);
     legendRpPbAllGA1->SetFillColor(0);
     legendRpPbAllGA1->SetLineColor(0);
     legendRpPbAllGA1->SetTextSize(0.03);
@@ -421,18 +421,16 @@ void CombineRpPb5023GeV(){
     histo2DAllGA2 = new TH2F("histo2DAllGA2","histo2DAllGA2",1000,0.,20.,1000,0.3,1.7);
      SetStyleHistoTH2ForGraphs(histo2DAllGA2, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
     histo2DAllGA2->DrawCopy();
-    
-
-
-    graphDalitzYieldPi0pPbSystErr->Draw("E2,same");  
-    graphDalitzYieldPi0pPb->Draw("p,same");  
-
 
     graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
     graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
 
+    graphDalitzYieldPi0pPbSystErr->SetMarkerStyle(24);
+    graphDalitzYieldPi0pPb->SetMarkerStyle(24);
+    graphDalitzYieldPi0pPbSystErr->Draw("E2,same");  
+    graphDalitzYieldPi0pPb->Draw("p,same");  
 
-    TLegend* legendRpPbAllGA2 = new TLegend(0.17,0.15,0.4,0.4);
+    TLegend* legendRpPbAllGA2 = new TLegend(0.17,0.2,0.4,0.35);
     legendRpPbAllGA2->SetFillColor(0);
     legendRpPbAllGA2->SetLineColor(0);
     legendRpPbAllGA2->SetTextSize(0.03);
@@ -461,16 +459,19 @@ void CombineRpPb5023GeV(){
     
 
 
- 
-
-    graphPHOSYieldPi0pPbSystErr->Draw("E2,same");  
-    graphPHOSYieldPi0pPb->Draw("p,same"); 
-
     graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
     graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
 
+ 
+graphPHOSYieldPi0pPbSystErr->SetMarkerStyle(24);
+graphPHOSYieldPi0pPb->SetMarkerStyle(24);
+    graphPHOSYieldPi0pPbSystErr->Draw("E2,same");  
+    graphPHOSYieldPi0pPb->Draw("p,same"); 
 
-    TLegend* legendRpPbAllGA3 = new TLegend(0.17,0.15,0.4,0.4);
+
+
+
+    TLegend* legendRpPbAllGA3 = new TLegend(0.17,0.2,0.4,0.35);
     legendRpPbAllGA3->SetFillColor(0);
     legendRpPbAllGA3->SetLineColor(0);
     legendRpPbAllGA3->SetTextSize(0.03);
@@ -497,17 +498,18 @@ void CombineRpPb5023GeV(){
     histo2DAllGA4 = new TH2F("histo2DAllGA4","histo2DAllGA4",1000,0.,20.,1000,0.3,1.7);
      SetStyleHistoTH2ForGraphs(histo2DAllGA4, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
     histo2DAllGA4->DrawCopy();
-    
-	  DrawGammaSetMarkerTGraphAsym(graphEMCalYieldPi0pPbSystErr,20,1.5, kGreen+2, kGreen+2, 1, kTRUE);
+
+     graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
+    graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");   
+
+	  DrawGammaSetMarkerTGraphAsym(graphEMCalYieldPi0pPbSystErr,24,1.5, kGreen+2, kGreen+2, 1, kTRUE);
+	  graphEMCalYieldPi0pPb->SetMarkerStyle(24);
     graphEMCalYieldPi0pPbSystErr->Draw("E2,same");  
     graphEMCalYieldPi0pPb->Draw("p,same");  
 
 
-    graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
-    graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
 
-
-    TLegend* legendRpPbAllGA4 = new TLegend(0.17,0.75,0.4,0.9);
+    TLegend* legendRpPbAllGA4 = new TLegend(0.17,0.2,0.4,0.35);
     legendRpPbAllGA4->SetFillColor(0);
     legendRpPbAllGA4->SetLineColor(0);
     legendRpPbAllGA4->SetTextSize(0.03);

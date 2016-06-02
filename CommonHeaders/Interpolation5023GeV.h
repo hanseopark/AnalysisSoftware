@@ -871,7 +871,7 @@ TGraphErrors *GetInterpolSpectrum3D(TGraphErrors *g1, TGraphErrors *g2,TGraphErr
 }
 
 
-TGraphAsymmErrors* CancelOutMaterialError(TGraphAsymmErrors* graphYieldPi0, TString method){
+TGraphAsymmErrors* CancelOutMaterialError(TGraphAsymmErrors* graphYieldPi0, TString method, TGraphAsymmErrors* GraphErrCancellation){
   
     TGraphAsymmErrors* graphYieldPi0Clone = (TGraphAsymmErrors*) graphYieldPi0->Clone();
      Double_t* valueX     = graphYieldPi0Clone->GetX();
@@ -957,23 +957,26 @@ TGraphAsymmErrors* CancelOutMaterialError(TGraphAsymmErrors* graphYieldPi0, TStr
       }else if ( method.CompareTo("PHOSPHOS") == 0 ) {
 	
 	cout<<"Entro PHOS"<<endl;
-	
-	
+    TGraphAsymmErrors* graphErrCancellationClone = (TGraphAsymmErrors*) GraphErrCancellation->Clone();	
+    Double_t* valueSystErrCancellation     = graphErrCancellationClone->GetY();	
+
+   
 	    Double_t  errorMaterial = 0.5;
        
 
 
 	    for(Int_t i = 0; i < nPoints; i++){
-	  
-
+	      	      errorMaterial=valueSystErrCancellation[i]*100.;
+	      cout<<"Cancel out: "<< errorMaterial << endl;  
                 Double_t materialE 	=  (  errorMaterial   * valueY[i] ) / 100.0;
-		
-		//cout<<valueX[i]<<" "<<"errorLow:  "<<errorYlow[i] * errorYlow[i]<<"  material:    "<<materialE*materialE<<endl;
-	        //cout<<valueX[i]<<" "<<"errorHigh: "<<errorYhigh[i] * errorYhigh[i]<<"  material:  "<<materialE*materialE<<endl;
+	
+		cout<<valueX[i]<<" "<<"errorLow:  "<< errorYlow[i]/ valueY[i]*100<<"  material:    "<<errorMaterial<<endl;
+	        cout<<valueX[i]<<" "<<"errorHigh: "<< errorYhigh[i]/ valueY[i]*100<<"  material:  "<<errorMaterial<<endl;
 
                 errorYlow[i]  = TMath::Sqrt(   ( errorYlow[i] * errorYlow[i]  )  - ( materialE*materialE ) );
                 errorYhigh[i] = TMath::Sqrt(   ( errorYhigh[i]* errorYhigh[i] )  - ( materialE*materialE ) );
-
+		cout<<valueX[i]<<" "<<"errorLow:  "<< errorYlow[i]/ valueY[i]*100<<endl;
+	        cout<<valueX[i]<<" "<<"errorHigh: "<< errorYhigh[i]/ valueY[i]*100<<endl;
 	    }
       }     
       //cout<<"LLego al fin"<<endl;
