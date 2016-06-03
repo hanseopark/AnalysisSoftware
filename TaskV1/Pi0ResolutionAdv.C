@@ -247,17 +247,24 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
     StyleSettings();	
     SetPlotStyle();
 
+    if (mesonName.CompareTo("Pi0") == 0)
+        mesonLatex ="#pi^{0}"; 
+    else if (mesonName.CompareTo("Eta") == 0)
+        mesonLatex ="#eta"; // 
+    
     collisionSystem                 = ReturnFullCollisionsSystem(optEnergy);
-    TString detectionSystem 		= ReturnFullTextReconstructionProcess(mode);
+    TString detectionProcess        = ReturnFullTextReconstructionProcess(mode);
     if (collisionSystem.CompareTo("") == 0){
         cout << "No correct collision system specification, has been given" << endl;
         return;     
     }
+    TString fTextMeasurement    = Form("%s #rightarrow #gamma#gamma", mesonLatex.Data());
     
     TString centrality = "";
     TString firstCutnumber = optionCutSelection(GetEventSystemCutPosition(),1);
     if (firstCutnumber.CompareTo("0") != 0){
         centrality = GetCentralityString(optionCutSelection);
+        collisionSystem = Form("%s %s", centrality.Data(), collisionSystem.Data());
     }   
     cout << centrality.Data() << endl;
     
@@ -270,10 +277,6 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
 
     textDate = ReturnDateString();
     
-    if (mesonName.CompareTo("Pi0") == 0)
-        mesonLatex ="#pi^{0}"; 
-    else if (mesonName.CompareTo("Eta") == 0)
-        mesonLatex ="#eta"; // 
     
     TString outputDirectory;
     if(optPeriod.CompareTo("") ==0 || optPeriod.CompareTo("All") ==0){
@@ -292,8 +295,6 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
     //**********************************************************************************************************************
 
     //Array defintion for printing Logo 
-    
-    
     Float_t floatLocationRightDown2D[4]=	{0.65,0.2,0.11, 0.02};
     
     //**********************************************************************************************************************
@@ -326,18 +327,17 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
             ptbinning[i]             = ptbinningStandard[i];
         }            
     } else {
-        maxNBinsPt          = 20;       
-        nColumns            = 6;
+        maxNBinsPt          = 17;       
+        nColumns            = 5;
         nRows               = 4;
-        Double_t ptbinningStandard[21]  = { 7.0, 8.0, 9.0, 10., 11.,
-                                            12., 13., 14., 15., 16., 
-                                            18., 20., 22., 24., 26., 
-                                            28., 30., 35., 40., 45.,
-                                            50 };
-        Int_t ptbinningRebStandard[20]  = { 10, 10, 10, 10, 10,
+        Double_t ptbinningStandard[18]  = { 10., 11., 12., 13., 14., 
+                                            15., 16., 18., 20., 22., 
+                                            24., 26., 28., 30., 35., 
+                                            40., 45., 50 };
+        Int_t ptbinningRebStandard[17]  = { 10, 10, 10, 10, 10,
                                             10, 10, 10, 10, 10,
                                             10, 10, 10, 10, 10,
-                                            10, 10, 10, 10, 10 };  
+                                            10, 10 };  
         for (Int_t i = 0; i < maxNBinsPt+1; i++){
             if (i < maxNBinsPt) 
                 ptbinningReb[i]      = ptbinningRebStandard[i];
@@ -387,9 +387,6 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
     TH2F * Resolution_Pi0_MCPt_ResolPt = (TH2F*)TrueConversionContainer->FindObject(Form("ESD_TruePrimary%s_MCPt_ResolPt",mesonName.Data()) ); //
     Resolution_Pi0_MCPt_ResolPt->Sumw2();
     cout << "hier noch " << Resolution_Pi0_MCPt_ResolPt<<endl;
-//     PlotStandard2D( Resolution_Pi0_MCPt_ResolPt, Form("%s/Resolution2D%s.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()), "", 
-//                      "#it{p}_{T,MC} (GeV/#it{c})", Form (" #mu ((#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}) (%)",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data()), 
-//                      kFALSE, -10, 10, kFALSE, 0, 50, 0, 1, floatLocationRightDown2D, 600, 600);
      
     //**********************************************************************************************************************************************
     //*********************************** Rebinning of 2D histograms and fitslices *****************************************************************
@@ -398,48 +395,34 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
     // 	Int_t maxXbin = 0;
     Double_t precision = 10E-4;
       
-    TH2F *Resolution_Pi0_Ptrebin = new TH2F("Resolution_Pi0_Ptrebin", "Photon Resolution dPt vs Pt ", maxNBinsPt, ptbinning, Resolution_Pi0_MCPt_ResolPt->GetNbinsY() ,-1,1) ;	
-    Resolution_Pi0_Ptrebin->Sumw2();
-    cout << "n bins Y  " << Resolution_Pi0_MCPt_ResolPt->GetNbinsY() << endl;
-    
-    maxYbin = Resolution_Pi0_MCPt_ResolPt->GetNbinsY();
-    for (Int_t i = 0; i <Resolution_Pi0_MCPt_ResolPt->GetNbinsX(); i++) {
-        TAxis *xaxis_old = 	Resolution_Pi0_MCPt_ResolPt->GetXaxis()	;		
-        Double_t binoldpoint = xaxis_old->GetBinCenter(i);							
-        for (Int_t j = 0 ; j < (maxYbin+1) ; j++){ 		
-            Double_t biny = Resolution_Pi0_MCPt_ResolPt->GetYaxis()->GetBinCenter(j);								
-            Double_t value =  Resolution_Pi0_MCPt_ResolPt->GetBinContent(i, j);
-            Resolution_Pi0_Ptrebin->Fill(binoldpoint, biny, value);
-        }
-    }
-//     PlotStandard2D( Resolution_Pi0_Ptrebin, Form("%s/Resolution2D_Rebinned%s.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()), "", 
-//                      "#it{p}_{T,MC} (GeV/#it{c})", Form (" #mu ((#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}) (%)",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data()), 
-//                      kFALSE, -10, 10, kFALSE, 0, 50, 0, 1, floatLocationRightDown2D, 600, 600);
-
     TH1D* Resolution_Pi0_PtRes[maxNBinsPt];
     TF1*  fitResolution_Pi0_PtRes[maxNBinsPt];
-    TH1F *Resolution_Pi0_Ptrebin_1 = new TH1F("Resolution_Pi0_Ptrebin_1", "mean Gamma Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ;	
-    TH1F *Resolution_Pi0_Ptrebin_2 = new TH1F("Resolution_Pi0_Ptrebin_2", "sigma Gamma Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ;	
+    TH1F *Resolution_Meson_Mean = new TH1F("Resolution_Meson_Mean", "mean meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ;	
+    TH1F *Resolution_Meson_Sigma = new TH1F("Resolution_Meson_Sigma", "sigma meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ;	
+    TH1F *Resolution_Meson_Mean2 = new TH1F("Resolution_Meson_Mean2", "mean meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ;  
+    TH1F *Resolution_Meson_Sigma2 = new TH1F("Resolution_Meson_Sigma2", "RMS meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ; 
 
     Double_t minFitRange = -0.5;
     Double_t maxFitRange = 0.5;
     if (mode == 10){
-        minFitRange = -0.3;
-        maxFitRange = 0.3;       
+        minFitRange = -0.25;
+        maxFitRange = 0.25;       
     }   
     
-    ResolutionFittingRebined( Resolution_Pi0_MCPt_ResolPt, Resolution_Pi0_PtRes, fitResolution_Pi0_PtRes, maxNBinsPt, ptbinning, ptbinningReb, Resolution_Pi0_Ptrebin_1, Resolution_Pi0_Ptrebin_2, "gaus", 
+    ResolutionFittingRebined( Resolution_Pi0_MCPt_ResolPt, Resolution_Pi0_PtRes, fitResolution_Pi0_PtRes, maxNBinsPt, ptbinning, ptbinningReb, Resolution_Meson_Mean, Resolution_Meson_Sigma, "gaus", 
                               minFitRange, maxFitRange, precision, "Resolution_Pi0_PtRes");
 
-//     for (Int_t i = 0; i < Resolution_Pi0_Ptrebin_2->GetNbinsX(); i++){
-//         Double_t newValue = Resolution_Pi0_Ptrebin_2->GetBinContent(i)*100;
-//         Double_t newError = Resolution_Pi0_Ptrebin_2->GetBinError(i)*100;
-//         Resolution_Pi0_Ptrebin_2->SetBinContent(i, newValue);
-//         Resolution_Pi0_Ptrebin_2->SetBinError(i, newError);
-//     }
-    Resolution_Pi0_Ptrebin_2->Scale(100);
-    Resolution_Pi0_Ptrebin_1->Scale(100);
+    Resolution_Meson_Sigma->Scale(100);
+    Resolution_Meson_Mean->Scale(100);
       
+    for (Int_t i = 0; i < maxNBinsPt; i++){
+        Resolution_Meson_Mean2->SetBinContent(i+1, Resolution_Pi0_PtRes[i]->GetMean());
+        Resolution_Meson_Mean2->SetBinError(i+1, Resolution_Pi0_PtRes[i]->GetMeanError());
+        Resolution_Meson_Sigma2->SetBinContent(i+1, Resolution_Pi0_PtRes[i]->GetRMS());
+        Resolution_Meson_Sigma2->SetBinError(i+1, Resolution_Pi0_PtRes[i]->GetRMSError());
+    }
+    Resolution_Meson_Sigma2->Scale(100.);
+    Resolution_Meson_Mean2->Scale(100.);
     //********************************************************************************************************
     //*************************************** creating ps-file ***********************************************
     //********************************************************************************************************  
@@ -460,8 +443,8 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
     padEPGdPtVsPt2->Draw();
     
     padEPGdPtVsPt1->cd();
-    TH2F * histo2DMean = new TH2F("histo2DMean","histo2DMean",5000,0.,50.,1000,-8.5,7.5);
-    SetStyleHistoTH2ForGraphs(histo2DMean, "#it{p}_{T,MC} (GeV/#it{c})", Form (" #mu ((#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}) (%)",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data()),  0.04,0.05, 0.04,0.05, 1.1,1.1);
+    TH2F * histo2DMean = new TH2F("histo2DMean","histo2DMean",5000,0.,50.,1000,-20,20);
+    SetStyleHistoTH2ForGraphs(histo2DMean, "#it{p}_{T,MC} (GeV/#it{c})", Form (" #mu ((#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}) (%s)",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data(),"%"),  0.04,0.05, 0.04,0.05, 1.1,1.1);
     if (mode == 0){
         histo2DMean->GetYaxis()->SetRangeUser(-1.9,1.9);
         histo2DMean->GetXaxis()->SetRangeUser(0,6);
@@ -472,30 +455,32 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
         histo2DMean->GetYaxis()->SetRangeUser(-8.5,6.5);
         histo2DMean->GetXaxis()->SetRangeUser(0,10);        
     } else if (mode == 10 || mode == 11){
-        histo2DMean->GetYaxis()->SetRangeUser(-8.5,6.5);
+        histo2DMean->GetYaxis()->SetRangeUser(-9.5,15.5);
         histo2DMean->GetXaxis()->SetRangeUser(0,50);        
     }    
     histo2DMean->DrawCopy(); 
 
-        StylingSliceHistos(Resolution_Pi0_Ptrebin_1,0.8);
-        Resolution_Pi0_Ptrebin_1->SetMarkerColor(kBlue+2);
-        Resolution_Pi0_Ptrebin_1->SetLineColor(kBlue-8);
-        Resolution_Pi0_Ptrebin_1->Draw("same,pe");
-        TLatex *labelCentrality1 = new TLatex(0.5,0.92,Form("%s %s",centrality.Data(), collisionSystem.Data()  ));
-        SetStyleTLatex( labelCentrality1, 0.038,4);
-        labelCentrality1->Draw();
-        TLatex *labelProcess = new TLatex(0.51,0.88,Form("%s #rightarrow #gamma#gamma",mesonLatex.Data() ));
-        SetStyleTLatex( labelProcess, 0.038,4);
-        labelProcess->Draw();
-        TLatex *labelDetSys = new TLatex(0.51,0.84,detectionSystem.Data());
-        SetStyleTLatex( labelDetSys, 0.038,4);
-        labelDetSys->Draw();
+        StylingSliceHistos(Resolution_Meson_Mean,0.8);
+        Resolution_Meson_Mean->SetMarkerColor(kBlue+2);
+        Resolution_Meson_Mean->SetLineColor(kBlue-8);
+        Resolution_Meson_Mean->Draw("same,pe");
+        StylingSliceHistos(Resolution_Meson_Mean2,0.8);
+        Resolution_Meson_Mean2->SetMarkerStyle(24);
+        Resolution_Meson_Mean2->SetMarkerColor(kGreen+2);
+        Resolution_Meson_Mean2->SetLineColor(kGreen-8);
+        Resolution_Meson_Mean2->Draw("same,pe");
+        
+        PutProcessLabelAndEnergyOnPlot(0.65, 0.95, 0.04, collisionSystem.Data(), fTextMeasurement.Data(), detectionProcess.Data());
+        TLegend* legendMean = GetAndSetLegend2(0.45, 0.92-(0.04*2), 0.65, 0.92, 0.04, 1, "", 42, 0.15);
+        legendMean->AddEntry(Resolution_Meson_Mean,"#mu Gauss");
+        legendMean->AddEntry(Resolution_Meson_Mean2,"#mu Histo");
+        legendMean->Draw();
         
     padEPGdPtVsPt1->Update();
     padEPGdPtVsPt2->cd();
     
     TH2F * histo2DSigma = new TH2F("histo2DSigma","histo2DSigma",5000,0.,50.,1000,-0.1,100);
-    SetStyleHistoTH2ForGraphs(histo2DSigma, Form("#it{p}^{%s}_{T,MC} (GeV/#it{c})",mesonLatex.Data()), Form(" #sigma #it{p}^{%s}_{T} (%)",mesonLatex.Data()), 0.04,0.05, 0.04,0.05, 1.1,1.1);
+    SetStyleHistoTH2ForGraphs(histo2DSigma, Form("#it{p}^{%s}_{T,MC} (GeV/#it{c})",mesonLatex.Data()), Form(" #sigma #it{p}^{%s}_{T} (%s)",mesonLatex.Data(),"%"), 0.04,0.05, 0.04,0.05, 1.1,1.1);
     if (mode == 0){
       histo2DSigma->GetYaxis()->SetRangeUser(0,7.2);
       histo2DSigma->GetXaxis()->SetRangeUser(0,6);
@@ -506,15 +491,26 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
           histo2DSigma->GetYaxis()->SetRangeUser(0,17);
           histo2DSigma->GetXaxis()->SetRangeUser(0,10);        
     } else if (mode == 10 || mode == 11){
-        histo2DSigma->GetYaxis()->SetRangeUser(0,17);
+        histo2DSigma->GetYaxis()->SetRangeUser(0,30.5);
         histo2DSigma->GetXaxis()->SetRangeUser(0,50);        
     } 
     histo2DSigma->DrawCopy(); 
 
-        StylingSliceHistos(Resolution_Pi0_Ptrebin_2,0.8);
-        Resolution_Pi0_Ptrebin_2->SetMarkerColor(kBlue+2);
-        Resolution_Pi0_Ptrebin_2->SetLineColor(kBlue-8);
-        Resolution_Pi0_Ptrebin_2->Draw("same,pe");
+        StylingSliceHistos(Resolution_Meson_Sigma,0.8);
+        Resolution_Meson_Sigma->SetMarkerColor(kBlue+2);
+        Resolution_Meson_Sigma->SetLineColor(kBlue-8);
+        Resolution_Meson_Sigma->Draw("same,pe");
+        StylingSliceHistos(Resolution_Meson_Sigma2,0.8);
+        Resolution_Meson_Sigma2->SetMarkerStyle(24);
+        Resolution_Meson_Sigma2->SetMarkerColor(kGreen+2);
+        Resolution_Meson_Sigma2->SetLineColor(kGreen-8);
+        Resolution_Meson_Sigma2->Draw("same,pe");
+
+        TLegend* legendSigma = GetAndSetLegend2(0.78, 0.96-(0.04*2), 0.95, 0.96, 0.04, 1, "", 42, 0.15);
+        legendSigma->AddEntry(Resolution_Meson_Mean,"#sigma Gauss");
+        legendSigma->AddEntry(Resolution_Meson_Mean2,"RMS Histo");
+        legendSigma->Draw();
+
     padEPGdPtVsPt2->Update();
     canvasEPGdPtVsPt->Update();		
     canvasEPGdPtVsPt->SaveAs(Form("%s/Resolution_%s_Pt.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()));
@@ -522,8 +518,13 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
     delete padEPGdPtVsPt2;	
     delete canvasEPGdPtVsPt;
 
-    ProduceProjectionsPlotWithFits( Resolution_Pi0_PtRes ,fitResolution_Pi0_PtRes, ptbinning, maxNBinsPt ,nColumns, nRows, Form(" (p^{%s}_{T,rec} -p^{%s}_{T,MC})/p^{%s}_{T,MC}", mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data()), Form ("N_{%s}", mesonLatex.Data()),"" , Form("fit %s",mesonLatex.Data()), "Pt",Form("%s/ProjectionsFitted%s.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()), mode);
+    ProduceProjectionsPlotWithFits( Resolution_Pi0_PtRes ,fitResolution_Pi0_PtRes, ptbinning, maxNBinsPt ,nColumns, nRows, Form(" (p^{%s}_{T,rec} -p^{%s}_{T,MC})/p^{%s}_{T,MC}", mesonLatex.Data(),
+                                    mesonLatex.Data(), mesonLatex.Data()), Form ("N_{%s}", mesonLatex.Data()), "MC" , Form("fit %s",mesonLatex.Data()), "Pt",Form("%s/ProjectionsFitted%s.%s", 
+                                    outputDirectory.Data(), mesonName.Data(), suffix.Data()), mode);
 
+    PlotStandard2D( Resolution_Pi0_MCPt_ResolPt, Form("%s/Resolution2D%s.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()), "", 
+                     "#it{p}_{T,MC} (GeV/#it{c})", Form (" #mu ((#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}) (%s)",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data(),"%"), 
+                     kFALSE, -10, 10, kFALSE, 0, 50, 0, 1, floatLocationRightDown2D, 600, 600);
 
 }
 
