@@ -4181,31 +4181,63 @@ Marker_t GetDefaultTriggerMarkerSizeName (TString triggerName, Bool_t isShade ){
 
 void DrawMergedClusterLambdaCuts (Int_t nlm = 1){
     if (nlm == 1 || nlm == 0 ){
-        TF1 *min = new TF1("min","exp(2.135-0.245*x)",4.95,15.63);
-        min->SetLineColor(kBlack);
+        TF1 *min1 = new TF1("min1","exp(2.135-0.245*x)",4.95,14.63);
+        min1->SetLineColor(kWhite);
+        min1->SetLineWidth(4);
+        min1->SetLineStyle(2);
+        min1->Draw("same");
+        TF1 *min = new TF1("min","exp(2.135-0.245*x)",4.95,14.63);
+        min->SetLineColor(kRed+2);
+        min->SetLineWidth(3);
         min->SetLineStyle(2);
-        
         min->Draw("same");
+        TF1 *cnst1 = new TF1("cnst","0.27",13.63,50.05);
+        cnst1->SetLineColor(kWhite);
+        cnst1->SetLineWidth(4);
+        cnst1->SetLineStyle(2);
+        cnst1->Draw("same");
         TF1 *cnst = new TF1("cnst","0.27",13.63,50.05);
-        cnst->SetLineColor(kBlack);
+        cnst->SetLineColor(kRed+2);
         cnst->SetLineStyle(2);
+        cnst->SetLineWidth(3);
         cnst->Draw("same");
+        TF1 *max1 = new TF1("max","exp(0.0662-0.0201*x)-0.0955+0.00186*x+21.9/x",9.5,50.05);        
+        max1->SetLineColor(kWhite);
+        max1->SetLineWidth(4);
+        max1->SetLineStyle(2);
+        max1->Draw("same");
         TF1 *max = new TF1("max","exp(0.0662-0.0201*x)-0.0955+0.00186*x+21.9/x",9.5,50.05);        
-        max->SetLineColor(kBlack);
+        max->SetLineColor(kRed+2);
+        max->SetLineWidth(3);
         max->SetLineStyle(2);
         max->Draw("same");
     } else if (nlm == 2){
-        TF1 *min = new TF1("min","exp(2.135-0.245*x)",4.95,15.63);
+        TF1 *min = new TF1("min","exp(2.135-0.245*x)",4.95,14.63);
+        min->SetLineColor(kWhite);
+        min->SetLineWidth(2);
+        min->SetLineStyle(2);
+        min->Draw("same");
         min->SetLineColor(kBlack);
+        min->SetLineWidth(1);
         min->SetLineStyle(2);
         min->Draw("same");
         TF1 *cnst = new TF1("cnst","0.27",13.63,50.05);
-        cnst->SetLineColor(kBlack);
+        cnst->SetLineColor(kWhite);
+        cnst->SetLineWidth(2);
         cnst->SetLineStyle(2);
         cnst->Draw("same");
+        cnst->SetLineColor(kBlack);
+        cnst->SetLineStyle(2);
+        cnst->SetLineWidth(1);
+        cnst->Draw("same");
         TF1 *max = new TF1("max","exp(0.353-0.0264*x)-0.524+0.00559*x+21.9/x",9.5,50.05);        
-        max->SetLineColor(kBlack);
+        max->SetLineColor(kWhite);
+        max->SetLineWidth(2);
         max->SetLineStyle(2);
-        max->Draw("same");        
+        max->Draw("same");
+        max->SetLineColor(kBlack);
+        max->SetLineWidth(1);
+        max->SetLineStyle(2);
+        max->Draw("same");
     }    
 }    

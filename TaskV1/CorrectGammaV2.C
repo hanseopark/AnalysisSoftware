@@ -193,7 +193,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //***************************** Set output directory ***************************************
     //******************************************************************************************
     TString outputDir           = Form("%s/%s/%s/CorrectGammaV2",cutSelection.Data(),option.Data(),suffix.Data());
-    gSystem->Exec("mkdir "+outputDir);
+    gSystem->Exec("mkdir -p "+outputDir);
 
     //******************************************************************************************
     //************************ Define additional global variables ******************************
@@ -368,6 +368,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
     TH1D*   histoMCrecBackground_Pt                         = NULL;
     TH1D*   histoMCrecGamma_Pt                              = NULL;
+    TH1D*   histoMCrecGamma_OriginalBin_Pt                  = NULL;
     TH1D*   histoMCrecPrimaryGamma_Pt                       = NULL;
     TH1D*   histoMCAllGamma_MCPt                            = NULL;
     TH1D*   histoMCAllGamma_OriginalBin_MCPt                = NULL;
@@ -923,14 +924,14 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         
         // unfold with different techniques, but same response matrix
         RooUnfoldBayes      unfold_Spectrum (&response,histoGammaCorrUnfoldReso_Pt, 4);
-        RooUnfoldBayes      unfold_Spectrum (&response,histoMCrecGammaCorr_Pt, 4);
+        RooUnfoldBayes      unfold_SpectrumMCrec (&response,histoMCrecGammaCorr_Pt, 4);
         RooUnfoldBinByBin   unfold_SpectrumBinByBin (&response,histoGammaCorrUnfoldReso_BinByBin_Pt);
-        //RooUnfoldSvd      unfold_SpectrumSvD (&response, histoGammaCorrUnfoldReso_SvD_Pt, 20);   
+        //RooUnfoldSvd      unfold_SpectrumSvD (&response, histoGammaCorrUnfoldReso_SvD_Pt, 20);
         //RooUnfoldTUnfold  unfold_SpectrumTUnfold (&response,histoGammaCorrUnfoldReso_TUnfold_Pt);
         
         // get histograms from RooUnfold and rebin them 
         histoGammaCorrUnfoldReso_Pt             = (TH1D*) unfold_Spectrum.Hreco();
-        histoMCrecGammaCorr_Pt                  = (TH1D*) unfold_Spectrum.Hreco();
+        histoMCrecGammaCorr_Pt                  = (TH1D*) unfold_SpectrumMCrec.Hreco();
         histoMCrecGammaCorr_Pt                  = RebinTH1D(histoMCrecGammaCorr_Pt,histoESDConvGammaPt,kTRUE);
         histoGammaResolCorrUnfold_Pt            = (TH1D*) histoGamma_OriginalBin_Pt->Clone("histoGammaResolCorrUnfold_Pt");
         histoGammaResolCorrUnfold_Pt->Divide(histoGammaCorrUnfoldReso_Pt);    

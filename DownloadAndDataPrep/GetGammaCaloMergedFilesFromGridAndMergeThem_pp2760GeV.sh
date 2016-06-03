@@ -28,10 +28,10 @@ NSlashes=10
 NSlashes2=9
 
 # switches to enable/disable certain procedures
-DOWNLOADON=1
-MERGEON=0
-MERGEONBINSSingle=0
-MERGEONBINS=0
+DOWNLOADON=0
+MERGEON=1
+MERGEONBINSSingle=1
+MERGEONBINS=1
 
 # check if train configuration has actually been given
 HAVELHC11a=1
@@ -371,14 +371,29 @@ fi
 # LHC15a3aMC="2019"; 
 # LHC15a3aplusMC="2020"; 
 
-TRAINDIR=Legotrain-mCalo-20160501_V2Clusterizer30MeVDiff
-LHC11aData="1534"; 
-LHC15g1aMC="2049";
+# TRAINDIR=Legotrain-mCalo-20160501_V2Clusterizer30MeVDiff
+# LHC11aData="1534"; 
+# LHC15g1aMC="2049";
+# 
+# LHC13gData="1535"; 
+# LHC15a3aMC="2047"; 
+# LHC15a3aplusMC="2048"; 
 
-LHC13gData="1535"; 
-LHC15a3aMC="2047"; 
-LHC15a3aplusMC="2048"; 
+TRAINDIR=Legotrain-mCalo-20160527_V2ClusNewMCdef
+LHC11aData="1566"; 
+LHC15g1aMC="2131";
 
+LHC13gData="1567"; 
+LHC15a3aMC="2129"; 
+LHC15a3aplusMC="2130"; 
+
+# TRAINDIR=Legotrain-mCalo-20160527_V2ClusNewMCdef_woSort
+# LHC11aData="1566"; 
+# LHC15g1aMC="2135";
+# 
+# LHC13gData="1567"; 
+# LHC15a3aMC="2133"; 
+# LHC15a3aplusMC="2134"; 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
