@@ -64,8 +64,8 @@ void Grid_ReadJetJet(TString folder = "/home/daniel/data/work/pcgGit/AnalysisSof
 		Bool_t doNormalFolder = kFALSE;
 		if(DataSetsFolder[i].IsNull()) doNormalFolder = kTRUE;
 
-        for(Int_t j=0; j<(Int_t)vecRuns.size(); j++)
-        {
+//        for(Int_t j=0; j<(Int_t)vecRuns.size(); j++)
+//        {
             Int_t nBins = (Int_t)vecBins.size();
             for(Int_t b=0; b<nBins; b++)
             {
@@ -74,8 +74,8 @@ void Grid_ReadJetJet(TString folder = "/home/daniel/data/work/pcgGit/AnalysisSof
               cout << "\t\tBin:\t\t" << vecBins.at(b) << endl;
               for(Int_t k=0; k<nFiles; k++)
               {
-                  if(doNormalFolder) fPathLocal = Form("%s/DataQA/%s/%s/%s/%s", folder.Data(), Tag.Data(), fDataSet.Data(), vecBins.at(b).Data(), vecRuns.at(j).Data());
-                  else fPathLocal = Form("%s/DataQA/%s/%s/%s/%s", folder.Data(), Tag.Data(), DataSetsFolder[i].Data(), vecBins.at(b).Data(), vecRuns.at(j).Data());
+                  if(doNormalFolder) fPathLocal = Form("%s/DataQA/%s/%s/%s", folder.Data(), Tag.Data(), fDataSet.Data(), vecBins.at(b).Data()/*, vecRuns.at(j).Data()*/);
+                  else fPathLocal = Form("%s/DataQA/%s/%s/%s", folder.Data(), Tag.Data(), DataSetsFolder[i].Data(), vecBins.at(b).Data()/*, vecRuns.at(j).Data()*/);
 
                   fPathLocal+="/"; fPathLocal+=DataSetsFile[k];
 
@@ -117,7 +117,7 @@ void Grid_ReadJetJet(TString folder = "/home/daniel/data/work/pcgGit/AnalysisSof
               cout << "\t**********************************************************************************************" << endl;
               cout << "\t**********************************************************************************************\n" << endl;
             }
-          }
+//          }
     }
     return;
 }
