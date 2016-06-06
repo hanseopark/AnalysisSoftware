@@ -139,28 +139,28 @@ Int_t fBinsPi08TeVEMCALTrigger1PtRebin[35]      = { 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
-                                                    2, 2, 2, 2, 2};
+                                                    4, 8, 2, 2, 2};
 Int_t fBinsPi08TeVEMCALTrigger2PtRebin[35]      = { 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
-                                                    2, 2, 2, 2, 2};
+                                                    2, 2, 8, 2, 2};
 Int_t fBinsPi08TeVConvEMCALTrigger1PtRebin[35]  = { 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
-                                                    2, 2, 2, 2, 2,
-                                                    2, 2, 2, 2, 2};
+                                                    2, 2, 2, 2, 4,
+                                                    4, 4, 8, 2, 2};
 Int_t fBinsPi08TeVConvEMCALTrigger2PtRebin[35]  = { 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
-                                                    2, 2, 2, 2, 2};
+                                                    4, 4, 5, 10, 10};
 Int_t fBinsPi08TeVConvEMCALPtRebin[28]          = { 2, 2,
                                                     4, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
@@ -197,23 +197,23 @@ Int_t fBinsEta8TeVConvEMCALPtRebin[19]          = { 20, 20, 20, 10, 8,
 Int_t fBinsEta8TeVEMCALTrigger1PtRebin[21]      = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
-                                                    5, 5, 5, 5, 5,
-                                                    5};
+                                                    8, 8, 10, 10, 10,
+                                                    10};
 Int_t fBinsEta8TeVEMCALTrigger2PtRebin[21]      = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
-                                                    5, 5, 5, 5, 5,
-                                                    5};
+                                                    5, 5, 5, 5, 10,
+                                                    16};
 Int_t fBinsEta8TeVConvEMCALTrigger1PtRebin[21]  = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
-                                                    5, 5, 5, 5, 5,
-                                                    5, 5, 5, 5, 5,
+                                                    5, 5, 5, 8, 8,
+                                                    10, 16, 16, 5, 5,
                                                     5};
 Int_t fBinsEta8TeVConvEMCALTrigger2PtRebin[21]  = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
-                                                    5, 5, 5, 5, 5,
-                                                    5, 5, 5, 5, 5,
-                                                    5};
+                                                    5, 5, 5, 5, 8,
+                                                    8, 8, 8, 16, 16,
+                                                    20};
 Int_t fBinsPi0EtaBinning8TeVPtRebin[19]         = { 8, 1, 1, 1, 1, 
                                                     1, 1, 2, 2, 2, 
                                                     2, 4, 4, 4, 4,
@@ -818,7 +818,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
 
             if (modi == 2 && specialTrigg == 1) fStartPtBin = 12;
             if (modi == 2 && specialTrigg == 2) fStartPtBin = 28;
-            if (modi == 4 && specialTrigg == 1) fStartPtBin = 12;
+            if (modi == 4 && specialTrigg == 1) fStartPtBin = 13;
             if (modi == 4 && specialTrigg == 2) fStartPtBin = 28;
 
             fColumn             = 6;
@@ -836,9 +836,9 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 fColumn     = 5;
                 fRow        = 4;
             }
-            if (fNBinsPt - fStartPtBin < 15){
-                fColumn     = 5;
-                fRow        = 3;
+            if (fNBinsPt - fStartPtBin < 16){
+                fColumn     = 4;
+                fRow        = 4;
             }
             if (fNBinsPt - fStartPtBin < 10){
                 fColumn     = 4;
@@ -924,8 +924,10 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
 
             fExampleBin         = 3;
             if( modi == 4 ) fExampleBin = 13;
-            if (specialTrigg==1) fExampleBin = 14;
-            if (specialTrigg==2) fExampleBin = 34;
+            if (modi == 2 && specialTrigg==1) fExampleBin = 14;
+            if (modi == 2 && specialTrigg==2) fExampleBin = 34;
+            if (modi == 4 && specialTrigg==1) fExampleBin = 14;
+            if (modi == 4 && specialTrigg==2) fExampleBin = 32;
         //*********************************************************************************************
         //********************************** Pi0 for pp 13TeV******************************************
         //*********************************************************************************************
@@ -1363,9 +1365,9 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
           if (modi == 2 ) fStartPtBin = 3;
           if (modi == 4 ) fStartPtBin = 5;
 
-          if (modi == 2 && specialTrigg == 1) fStartPtBin = 5;
+          if (modi == 2 && specialTrigg == 1) fStartPtBin = 6;
           if (modi == 2 && specialTrigg == 2) fStartPtBin = 14;
-          if (modi == 4 && specialTrigg == 1) fStartPtBin = 5;
+          if (modi == 4 && specialTrigg == 1) fStartPtBin = 7;
           if (modi == 4 && specialTrigg == 2) fStartPtBin = 14;
 
           fColumn             = 4;
@@ -1383,9 +1385,9 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
               fColumn     = 5;
               fRow        = 4;
           }
-          if (fNBinsPt - fStartPtBin < 15){
-              fColumn     = 5;
-              fRow        = 3;
+          if (fNBinsPt - fStartPtBin < 16){
+              fColumn     = 4;
+              fRow        = 4;
           }
           if (fNBinsPt - fStartPtBin < 10){
               fColumn     = 4;
