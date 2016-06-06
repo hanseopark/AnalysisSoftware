@@ -315,7 +315,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   graphPHOSYieldPi0pPbSystErr->Print();
   cout<<"Statistic PHOS  "<<endl;
   temp03->Print();
-  TH1D * histoRatioCombPHOS                           = (TH1D*)histoPHOSYieldPi0pPbSyst->Clone();
+  TH1D * histoRatioCombPHOS                           = (TH1D*)histoPHOSYieldPi0pPbStat->Clone();
     
   // **************************************************************************************
   // ******************************** Reading EMCal ***************************************
@@ -403,13 +403,15 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
 												      graphCombPi0InvCrossSectionStatpPb5023GeV, graphCombPi0InvCrossSectionSyspPb5023GeV,
 												      fileNameOutputWeightingPi0,1
 												      );
+  cout<< "CombinedSpectrum:" << endl;
+  graphCombPi0InvCrossSectionTotpPb5023GeV->Print();
   graphCombPi0InvCrossSectionStatpPb5023GeV->Print();
-    
+  graphCombPi0InvCrossSectionSyspPb5023GeV->Print();
   TGraphAsymmErrors* graphInvYieldPi0CombpPb5023GeVStaClone   = (TGraphAsymmErrors*) graphCombPi0InvCrossSectionStatpPb5023GeV->Clone();
   TGraphAsymmErrors* graphInvYieldPi0CombpPb5023GeVSysClone   = (TGraphAsymmErrors*) graphCombPi0InvCrossSectionSyspPb5023GeV->Clone();
   TGraphAsymmErrors* graphInvYieldPi0CombpPb5023GeVTotClone   = (TGraphAsymmErrors*) graphCombPi0InvCrossSectionTotpPb5023GeV->Clone();
     
-  TGraphAsymmErrors* graphRatioCombCombFit                    = (TGraphAsymmErrors*) graphInvYieldPi0CombpPb5023GeVTotClone ->Clone(); 
+  TGraphAsymmErrors* graphRatioCombCombFitTot                    = (TGraphAsymmErrors*) graphInvYieldPi0CombpPb5023GeVTotClone ->Clone(); 
   TGraphAsymmErrors* graphRatioCombCombFitSta                 = (TGraphAsymmErrors*) graphInvYieldPi0CombpPb5023GeVStaClone ->Clone();
   TGraphAsymmErrors* graphRatioCombCombFitSys                 = (TGraphAsymmErrors*) graphInvYieldPi0CombpPb5023GeVSysClone ->Clone(); 
 
@@ -473,11 +475,11 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   fFits<< FittingType.Data()<<endl;
   fFits<<"Fitting Combined Pi0 spectrum"<< endl; 
   if (FittingType.CompareTo("Tsallis")==0){
-    for (int i=0;i < 3;i++){    
+    for (Int_t i=0;i < 3;i++){    
       fFits<< fitCombPi0pPb5023GeVPt->GetParName(i) <<":  "<< fitCombPi0pPb5023GeVPt->GetParameter(i)<<" +/- "<< fitCombPi0pPb5023GeVPt->GetParError(i)  << endl; 
     }   
   }else {
-    for (int i=0;i < 5;i++){    
+    for (Int_t i=0;i < 5;i++){    
       fFits<< fitCombPi0pPb5023GeVPt->GetParName(i) <<":  "<< fitCombPi0pPb5023GeVPt->GetParameter(i)<<" +/- "<< fitCombPi0pPb5023GeVPt->GetParError(i) << endl; 
     }  
 
@@ -516,19 +518,20 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   graphRatioCombPCMSys        = CalculateGraphErrRatioToFit(graphRatioCombPCMSys, fitCombPi0pPb5023GeVPt);
   graphRatioCombDalitzSys     = CalculateGraphErrRatioToFit(graphRatioCombDalitzSys, fitCombPi0pPb5023GeVPt);
   graphRatioCombEMCalSys      = CalculateGraphErrRatioToFit(graphRatioCombEMCalSys, fitCombPi0pPb5023GeVPt);
-    
-  graphRatioCombCombFit       = CalculateGraphErrRatioToFit(graphInvYieldPi0CombpPb5023GeVTotClone,fitCombPi0pPb5023GeVPt); 
+  TH1D* histoRatioCombPHOSsys = CalculateHistoRatioToFit(histoPHOSYieldPi0pPbSyst,fitCombPi0pPb5023GeVPt); 
+   
+  graphRatioCombCombFitTot       = CalculateGraphErrRatioToFit(graphInvYieldPi0CombpPb5023GeVTotClone,fitCombPi0pPb5023GeVPt); 
   graphRatioCombCombFitSta    = CalculateGraphErrRatioToFit(graphInvYieldPi0CombpPb5023GeVStaClone,fitCombPi0pPb5023GeVPt); 
   graphRatioCombCombFitSys    = CalculateGraphErrRatioToFit(graphInvYieldPi0CombpPb5023GeVSysClone,fitCombPi0pPb5023GeVPt); 
   //graphRatioCombEMCalSys      = CalculateGraphErrRatioToFit(graphRatioCombEMCalSys,fitCombPi0pPb5023GeVPt);
 
-  histoRatioCombPHOS          = CalculateHistoRatioToFit(histoRatioCombPHOS,fitCombPi0pPb5023GeVPt);
+
     
 
   TH1D* histoRatioCombPCM     = CalculateHistoRatioToFit(histoPCMYieldPi0pPb,fitCombPi0pPb5023GeVPt);
   TH1D* histoRatioCombDalitz  = CalculateHistoRatioToFit(histoDalitzYieldPi0pPb,fitCombPi0pPb5023GeVPt);
   TH1D* histoRatioCombEMCal   = CalculateHistoRatioToFit(histoEMCalYieldPi0pPbStat,fitCombPi0pPb5023GeVPt);
-  TH1D* histoRatioCombPHOSsys = CalculateHistoRatioToFit(histoPHOSYieldPi0pPbSyst,fitCombPi0pPb5023GeVPt);
+  histoRatioCombPHOS          = CalculateHistoRatioToFit(histoRatioCombPHOS,fitCombPi0pPb5023GeVPt);
 
   // **************************************************************************************
   // ************************* Plotting ratio of different systems ************************
@@ -565,19 +568,19 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   */
 
   ratio2DInvXSectionPi0->DrawCopy();  
-  graphRatioCombCombFitSys->SetPointEYlow(30,0.137146);//attribute EMCal Sys error to 
-  graphRatioCombCombFitSys->SetPointEYhigh(30,0.137146);
+  // graphRatioCombCombFitSys->SetPointEYlow(30,0.137146);//attribute EMCal Sys error to 
+  // graphRatioCombCombFitSys->SetPointEYhigh(30,0.137146);
   DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFitSys,20,1, kBlue, kBlue, 1, kTRUE, kBlue-9);  
   graphRatioCombCombFitSys->Draw("E2,same");
 
-  DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFit,20,1, kBlue, kBlue);  
-  graphRatioCombCombFit->Draw("pe,same");
+  DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFitSta,20,1, kBlue, kBlue);  
+  graphRatioCombCombFitSta->Draw("pe,same");
 
   DrawGammaSetMarkerTGraphAsym(graphRatioCombPCMSys,24,1, 1, 1, 1, kTRUE);  
   graphRatioCombPCMSys->Draw("E2,same");
 
   DrawGammaSetMarker(histoRatioCombPCM, 24,1, 1 , 1);
-  histoRatioCombPCM->Draw("same") ;
+  histoRatioCombPCM->Draw("E1,same") ;
 
   TLatex * lt2 = new TLatex(2.,1.25,"PCM") ;
   lt2->SetTextColor(kBlack) ;
@@ -591,12 +594,12 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   ratio2DInvXSectionPi0->DrawCopy(); 
   graphRatioCombCombFitSys->Draw("E2,same") ;
 
-  graphRatioCombCombFit->Draw("pe,same");
+  graphRatioCombCombFitSta->Draw("pe,same");
 
   DrawGammaSetMarkerTGraphAsym(graphRatioCombDalitzSys,24,1, kCyan+2, kCyan+2, 1, kTRUE);  
   graphRatioCombDalitzSys->Draw("E2same");
   DrawGammaSetMarker(histoRatioCombDalitz, 24,1 ,kCyan+2 ,kCyan+2);
-  histoRatioCombDalitz->Draw("same") ; 
+  histoRatioCombDalitz->Draw("E1,same") ; 
   TLatex * lt = new TLatex(2.,0.7,"PCM"); 
   lt->SetTextSize(0.16) ;
   lt->SetTextColor(kCyan+2) ;
@@ -609,13 +612,13 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   
   graphRatioCombCombFitSys->Draw("E2") ;
   
-  graphRatioCombCombFit->Draw("pe,same");
+  graphRatioCombCombFitSta->Draw("pe,same");
 
             
   DrawGammaSetMarkerTGraphAsym(graphRatioCombEMCalSys,24,1,kGreen+2 , kGreen+2, 1, kTRUE);  
   graphRatioCombEMCalSys->Draw("E2same");
   DrawGammaSetMarker(histoRatioCombEMCal, 24,1 ,kGreen+2 ,kGreen+2);
-  histoRatioCombEMCal->Draw("same") ;
+  histoRatioCombEMCal->Draw("E1,same") ;
   cout<<"EMCal"<<endl;
   graphRatioCombEMCalSys->Print();
   lt->SetTextColor(kGreen+2) ;
@@ -627,8 +630,8 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   
   ratio2DInvXSectionPi0->DrawCopy(); 
   graphRatioCombCombFitSys->Draw("E2") ;
-  graphRatioCombCombFit->Draw("pe,same");
-  graphRatioCombCombFit->Print();
+  graphRatioCombCombFitSta->Draw("pe,same");
+  graphRatioCombCombFitSta->Print();
   graphRatioCombCombFitSys->Print();
   histoRatioCombPHOSsys->SetLineColor(kRed+1);
   histoRatioCombPHOSsys->SetFillStyle(0) ;
@@ -636,7 +639,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   
   histoRatioCombPHOS->SetMarkerColor(kRed+1);
   histoRatioCombPHOS->SetLineColor(kRed+1);
-  histoRatioCombPHOS->Draw("same");
+  histoRatioCombPHOS->Draw("E1,same");
 
 
   lt->SetTextColor(kRed+1) ;
@@ -685,8 +688,8 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFitSys,20,1., kBlue, kBlue, 1.5, kTRUE, 0);  
   graphRatioCombCombFitSys->Draw("E2,same");
 
-  DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFit,20,1., kBlue, kBlue,1.5);  
-  graphRatioCombCombFit->Draw("p,same");
+  DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFitSta,20,1., kBlue, kBlue,1.5);  
+  graphRatioCombCombFitSta->Draw("p,same");
 
   TLatex * lt3 = new TLatex(2.8,2.2,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV") ;
   lt3->SetTextColor(kBlack) ;
@@ -746,23 +749,23 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   DrawGammaSetMarkerTGraphAsym(graphRatioCombPCMSys,20,1, 1, 1, 1, kTRUE);  
   graphRatioCombPCMSys->Draw("E2same");
   DrawGammaSetMarker(histoRatioCombPCM, 20,1, 1 , 1);
-  histoRatioCombPCM->Draw("same") ;
+  histoRatioCombPCM->Draw("pE1,same") ;
 
   DrawGammaSetMarkerTGraphAsym(graphRatioCombDalitzSys,29,1, kCyan+2, kCyan+2, 1, kTRUE);  
   graphRatioCombDalitzSys->Draw("E2same");
   DrawGammaSetMarker(histoRatioCombDalitz, 29,1.5 ,kCyan+2 ,kCyan+2);
-  histoRatioCombDalitz->Draw("same") ; 
+  histoRatioCombDalitz->Draw("pE1,same") ; 
  
   DrawGammaSetMarkerTGraphAsym(graphRatioCombEMCalSys,33,1,kGreen+2 , kGreen+2, 1, kTRUE);  
   graphRatioCombEMCalSys->Draw("E2same");
   DrawGammaSetMarker(histoRatioCombEMCal, 33,1.5 ,kGreen+2 ,kGreen+2);
-  histoRatioCombEMCal->Draw("same") ;
+  histoRatioCombEMCal->Draw("pE1,same") ;
 	
   histoRatioCombPHOSsys->Draw("E2same") ;
 	
   histoRatioCombPHOS->SetMarkerStyle(21);
   histoRatioCombPHOS->SetMarkerSize(1);
-  histoRatioCombPHOS->Draw("same");
+  histoRatioCombPHOS->Draw("pE1,same");
 	
   TLatex * lt4 = new TLatex(2.8,2.2,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV") ;
   lt4->SetTextColor(kBlack) ;
@@ -843,7 +846,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   Double_t* XPi0Unshifted=graphCombPi0InvCrossSectionTotpPb5023GeV->GetX();
   Double_t* XPi0Shifted=graphCombPi0InvCrossSectionTotpPb5023GeVXShifted->GetX();
 
-  for (int i=0;i<graphCombPi0InvCrossSectionTotpPb5023GeV->GetN();i++){
+  for (Int_t i=0;i<graphCombPi0InvCrossSectionTotpPb5023GeV->GetN();i++){
 
     fFits <<  XPi0Unshifted[i]-graphCombPi0InvCrossSectionTotpPb5023GeV->GetErrorXlow(i)<< " - " <<  XPi0Unshifted[i]+ graphCombPi0InvCrossSectionTotpPb5023GeV->GetErrorXhigh(i)<< " GeV/$c$ & " << XPi0Unshifted[i] <<" GeV/$c$ & " << XPi0Shifted[i]<<" GeV/$c$ & " << (XPi0Shifted[i]-XPi0Unshifted[i])*1000 <<" MeV/$c$" << endl;
   }
@@ -883,7 +886,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   TGraphAsymmErrors* graphInvYieldEtaCombpPb5023GeVSysClone   = (TGraphAsymmErrors*) graphCombEtaInvCrossSectionSyspPb5023GeV->Clone();
   TGraphAsymmErrors* graphInvYieldEtaCombpPb5023GeVTotClone   = (TGraphAsymmErrors*) graphCombEtaInvCrossSectionTotpPb5023GeV->Clone();
     
-  TGraphAsymmErrors* graphRatioCombEtaFit                    = (TGraphAsymmErrors*) graphInvYieldEtaCombpPb5023GeVTotClone ->Clone(); 
+  TGraphAsymmErrors* graphRatioCombEtaFitTot                    = (TGraphAsymmErrors*) graphInvYieldEtaCombpPb5023GeVTotClone ->Clone(); 
   TGraphAsymmErrors* graphRatioCombEtaFitSta                 = (TGraphAsymmErrors*) graphInvYieldEtaCombpPb5023GeVStaClone ->Clone();
   TGraphAsymmErrors* graphRatioCombEtaFitSys                 = (TGraphAsymmErrors*) graphInvYieldEtaCombpPb5023GeVSysClone ->Clone(); 
 
@@ -964,11 +967,11 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   
   fFits<<"Fitting Combined Eta spectrum"<< endl;  
   if (FittingType.CompareTo("Tsallis")==0){
-    for (int i=0;i < 3;i++){    
+    for (Int_t i=0;i < 3;i++){    
       fFits<< fitCombEtapPb5023GeVPt->GetParName(i) <<":  "<< fitCombEtapPb5023GeVPt->GetParameter(i)<<" +/- "<< fitCombEtapPb5023GeVPt->GetParError(i)  << endl; 
     }   
   }else {
-    for (int i=0;i < 5;i++){    
+    for (Int_t i=0;i < 5;i++){    
       fFits<< fitCombEtapPb5023GeVPt->GetParName(i) <<":  "<< fitCombEtapPb5023GeVPt->GetParameter(i)<<" +/- "<< fitCombEtapPb5023GeVPt->GetParError(i) << endl; 
     }  
 
@@ -1017,7 +1020,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   graphRatioCombEtaPCMSys        = CalculateGraphErrRatioToFit(graphRatioCombEtaPCMSys, fitCombEtapPb5023GeVPt);
   graphRatioCombEtaEMCalSys      = CalculateGraphErrRatioToFit(graphRatioCombEtaEMCalSys, fitCombEtapPb5023GeVPt);
     
-  graphRatioCombEtaFit       = CalculateGraphErrRatioToFit(graphInvYieldEtaCombpPb5023GeVTotClone,fitCombEtapPb5023GeVPt); 
+  graphRatioCombEtaFitTot       = CalculateGraphErrRatioToFit(graphInvYieldEtaCombpPb5023GeVTotClone,fitCombEtapPb5023GeVPt); 
   graphRatioCombEtaFitSta    = CalculateGraphErrRatioToFit(graphInvYieldEtaCombpPb5023GeVStaClone,fitCombEtapPb5023GeVPt); 
   graphRatioCombEtaFitSys    = CalculateGraphErrRatioToFit(graphInvYieldEtaCombpPb5023GeVSysClone,fitCombEtapPb5023GeVPt); 
   //graphRatioCombEtaEMCalSys      = CalculateGraphErrRatioToFit(graphRatioCombEtaEMCalSys,fitCombEtapPb5023GeVPt);
@@ -1074,14 +1077,14 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   DrawGammaSetMarkerTGraphAsym(graphRatioCombEtaFitSys,20,1, kBlue, kBlue, 1, kTRUE, kBlue-9);  
   graphRatioCombEtaFitSys->Draw("E2,same");
 
-  DrawGammaSetMarkerTGraphAsym(graphRatioCombEtaFit,20,1, kBlue, kBlue);  
-  graphRatioCombEtaFit->Draw("pe,same");
+  DrawGammaSetMarkerTGraphAsym(graphRatioCombEtaFitSta,20,1, kBlue, kBlue);  
+  graphRatioCombEtaFitSta->Draw("pe,same");
 
   DrawGammaSetMarkerTGraphAsym(graphRatioCombEtaPCMSys,24,1, 1, 1, 1, kTRUE);  
   graphRatioCombEtaPCMSys->Draw("E2,same");
 
   DrawGammaSetMarker(histoRatioCombEtaPCM, 24,1, 1 , 1);
-  histoRatioCombEtaPCM->Draw("same") ;
+  histoRatioCombEtaPCM->Draw("p,E1,same") ;
 
   TLatex * lt2a = new TLatex(1.,1.3,"PCM") ;
   lt2a->SetTextColor(kBlack) ;
@@ -1100,13 +1103,13 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   
   graphRatioCombEtaFitSys->Draw("E2") ;
   
-  graphRatioCombEtaFit->Draw("pe,same");
+  graphRatioCombEtaFitSta->Draw("pe,same");
 
             
   DrawGammaSetMarkerTGraphAsym(graphRatioCombEtaEMCalSys,24,1,kGreen+2 , kGreen+2, 1, kTRUE);  
   graphRatioCombEtaEMCalSys->Draw("E2same");
   DrawGammaSetMarker(histoRatioCombEtaEMCal, 24,1 ,kGreen+2 ,kGreen+2);
-  histoRatioCombEtaEMCal->Draw("same") ;
+  histoRatioCombEtaEMCal->Draw("p,E1,same") ;
   cout<<"EMCal"<<endl;
   graphRatioCombEtaEMCalSys->Print();
   lt->SetTextColor(kGreen+2) ;
@@ -1129,7 +1132,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
 
 
   TH2F * ratio2DInvXSectionEtaa;
-  ratio2DInvXSectionEtaa = new TH2F("ratio2DInvXSectionEtaa","ratio2DInvXSectionEtaa",1000,0.5,25.,1000,0.21,2.69);
+  ratio2DInvXSectionEtaa = new TH2F("ratio2DInvXSectionEtaa","ratio2DInvXSectionEtaa",1000,0.5,25.,1000,0.41,2.29);
 
   //SetStyleHistoTH1ForGraphs(ratio2DInvXSectionEtaa, "#it{p}_{T} (GeV/#it{c})", "Data/Fit",12,14,12,13,4.85, 1.5, 505,505);
     
@@ -1158,17 +1161,17 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   DrawGammaSetMarkerTGraphAsym(graphRatioCombEtaFitSys,20,1., kBlue, kBlue, 1.5, kTRUE, 0);  
   graphRatioCombEtaFitSys->Draw("E2,same");
 
-  DrawGammaSetMarkerTGraphAsym(graphRatioCombEtaFit,20,1., kBlue, kBlue,1.5);  
-  graphRatioCombEtaFit->Draw("p,same");
+  DrawGammaSetMarkerTGraphAsym(graphRatioCombEtaFitSta,20,1., kBlue, kBlue,1.5);  
+  graphRatioCombEtaFitSta->Draw("p,same");
 
-  TLatex * lt3a = new TLatex(2.8,2.2,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV") ;
+  TLatex * lt3a = new TLatex(2.8,2.,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV") ;
   lt3a->SetTextColor(kBlack) ;
   lt3a->SetTextSize(0.05) ;
-  lt3a->DrawLatex(2.8,2.0,"#eta, ALICE");
+  lt3a->DrawLatex(2.8,1.85,"#eta, ALICE");
   //		lt3->DrawLatex(3.,1.8,"#pi^{0} #rightarrow #gamma#gamma");
   //	lt3->DrawLatex(3.,1.8,"#pi^{0}");
   //	lt3->DrawLatex(2.8,1.8,"#pi^{0} #rightarrow #gamma#gamma, #pi^{0} #rightarrow e^{+}e^{-}#gamma");
-  lt3->Draw() ;
+  lt3a->Draw("same") ;
 
  
 
@@ -1188,7 +1191,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
 
 
   TH2F * ratio2DInvXSectionEtab;
-  ratio2DInvXSectionEtab = new TH2F("ratio2DInvXSectionEtab","ratio2DInvXSectionEtab",1000,0.5,25.,1000,0.41,2.69);
+  ratio2DInvXSectionEtab = new TH2F("ratio2DInvXSectionEtab","ratio2DInvXSectionEtab",1000,0.5,25.,1000,0.41,2.29);
 
   //SetStyleHistoTH1ForGraphs(ratio2DInvXSectionEtab, "#it{p}_{T} (GeV/#it{c})", "Data/Fit",12,14,12,13,4.85, 1.5, 505,505);
     
@@ -1219,28 +1222,28 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   DrawGammaSetMarkerTGraphAsym(graphRatioCombEtaPCMSys,20,1, 1, 1, 1, kTRUE);  
   graphRatioCombEtaPCMSys->Draw("E2same");
   DrawGammaSetMarker(histoRatioCombEtaPCM, 20,1, 1 , 1);
-  histoRatioCombEtaPCM->Draw("same") ;
+  histoRatioCombEtaPCM->Draw("E1,same") ;
  
   DrawGammaSetMarkerTGraphAsym(graphRatioCombEtaEMCalSys,33,1,kGreen+2 , kGreen+2, 1, kTRUE);  
   graphRatioCombEtaEMCalSys->Draw("E2same");
   DrawGammaSetMarker(histoRatioCombEtaEMCal, 33,1.5 ,kGreen+2 ,kGreen+2);
-  histoRatioCombEtaEMCal->Draw("same") ;
+  histoRatioCombEtaEMCal->Draw("E1,same") ;
 	
-  TLatex * lt4a = new TLatex(2.8,2.2,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV") ;
+  TLatex * lt4a = new TLatex(2.8,2.0,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV") ;
   lt4a->SetTextColor(kBlack) ;
   lt4a->SetTextSize(0.05) ;
-  lt4a->DrawLatex(2.8,2.,"#eta, ALICE");
+  lt4a->DrawLatex(2.8,1.85,"#eta, ALICE");
   //	lt4->DrawLatex(3.,1.8,"#pi^{0} #rightarrow #gamma#gamma");
   //	lt4->DrawLatex(2.8,1.8,"#pi^{0} #rightarrow #gamma#gamma, #pi^{0} #rightarrow e^{+}e^{-}#gamma");
-  lt4->Draw() ;
+  lt4a->Draw("same");
 
-  TLegend* legendSpectraDiffDetMinBiasStripEta = new TLegend(0.18,0.83,0.5,0.95);
+  TLegend* legendSpectraDiffDetMinBiasStripEta = new TLegend(0.18,0.75,0.4,0.9);
   legendSpectraDiffDetMinBiasStripEta->SetFillColor(0);
   legendSpectraDiffDetMinBiasStripEta->SetLineColor(0);
   legendSpectraDiffDetMinBiasStripEta->SetTextFont(42);
   legendSpectraDiffDetMinBiasStripEta->AddEntry(histoRatioCombEtaPCM,Form("PCM"),"pf");
   legendSpectraDiffDetMinBiasStripEta->AddEntry(histoRatioCombEtaEMCal,Form("EMCal"),"pf");
-  legendSpectraDiffDetMinBiasStripEta->Draw();
+  legendSpectraDiffDetMinBiasStripEta->Draw("same");
 
   canvasRatioIndEtaYieldpPb->Update();
   canvasRatioIndEtaYieldpPb->Print(Form("%s/RatioIndEtaYieldFitpPb.%s",outputDir.Data(),suffix.Data()));
@@ -1346,7 +1349,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t L
   Double_t* XEtaUnshifted=graphCombEtaInvCrossSectionTotpPb5023GeV->GetX();
   Double_t* XEtaShifted=graphCombEtaInvCrossSectionTotpPb5023GeVXShifted->GetX();
 
-  for (int i=0;i<graphCombEtaInvCrossSectionTotpPb5023GeV->GetN();i++){
+  for (Int_t i=0;i<graphCombEtaInvCrossSectionTotpPb5023GeV->GetN();i++){
 
     fFits <<  XEtaUnshifted[i]-graphCombEtaInvCrossSectionTotpPb5023GeV->GetErrorXlow(i)<< " - " <<  XEtaUnshifted[i]+ graphCombEtaInvCrossSectionTotpPb5023GeV->GetErrorXhigh(i)<< " GeV/$c$ & " << XEtaUnshifted[i] <<" GeV/$c$ & " << XEtaShifted[i]<<" GeV/$c$ & " << (XEtaShifted[i]-XEtaUnshifted[i])*1000 << " MeV/$c$"<< endl;
   }
@@ -1472,7 +1475,7 @@ graphEMCalYieldPi0EtaBinningpPb->Print();
   if (FittingType.CompareTo("Tsallis")==0)  legendRpPbCombineYShiftEtaEMCal->AddEntry(fitCombEtapPb5023GeVPt,"Tsallis Fit","l");
   else  legendRpPbCombineYShiftEtaEMCal->AddEntry(fitCombEtapPb5023GeVPt,"Bylinkin-Rostovtsev Fit","l");
     
-  legendRpPbCombineYShiftEtaEMCal->Draw();
+  legendRpPbCombineYShiftEtaEMCal->Draw("same");
 	
 
 
@@ -1492,16 +1495,20 @@ graphEMCalYieldPi0EtaBinningpPb->Print();
   graphEMCalEtaPi0RatiopPbSystErr->Print();
   graphPCMEtaPi0RatiopPbSystErr->Print();
 
+
   Double_t* PCMY= graphPCMEtaPi0RatioStatErrYShift->GetY();
   Double_t* PCMX= graphPCMEtaPi0RatioStatErrYShift->GetX();
   Double_t* EMCalY= graphEMCalEtaPi0RatioStatErrYShift->GetY();
   Double_t* EMCalX= graphEMCalEtaPi0RatioStatErrYShift->GetX();
- for (int i;i<graphPCMEtaPi0RatiopPbSystErr->GetN();i++){
-   graphPCMEtaPi0RatioSystErrYShift->SetPoint(i,PCMX[i],PCMY[i]);
+
+
+ for (Int_t j=0;j<graphPCMEtaPi0RatioSystErrYShift->GetN();j++){
+     graphPCMEtaPi0RatioSystErrYShift->SetPoint(j,PCMX[j],PCMY[j]);
  }
- for (int i;i<graphEMCalEtaPi0RatiopPbSystErr->GetN();i++){
-   graphEMCalEtaPi0RatioSystErrYShift->SetPoint(i,EMCalX[i],EMCalY[i]);
- }  
+ for (Int_t k=0;k<graphEMCalEtaPi0RatiopPbSystErr->GetN();k++){
+   graphEMCalEtaPi0RatioSystErrYShift->SetPoint(k,EMCalX[k],EMCalY[k]);
+ }
+ 
 
  TH1D *histoPCMEtaPi0RatioStatErrYShift=GraphAsymErrorsToHist_withErrors(graphPCMEtaPi0RatioStatErrYShift,"histoPCMEtaPi0RatiopPbStatErrYShift");
  TH1D *histoEMCalEtaPi0RatioStatErrYShift=GraphAsymErrorsToHist_withErrors(graphEMCalEtaPi0RatioStatErrYShift,"histoEMCalEtaPi0RatiopPbStatErrYShift");
@@ -1569,12 +1576,12 @@ graphEMCalYieldPi0EtaBinningpPb->Print();
  
 
   
-  legendRpPbCombineYShiftEtaPi0Ratio->Draw();
+  legendRpPbCombineYShiftEtaPi0Ratio->Draw("same");
 	
   TLatex * lt4b = new TLatex(9.,0.9,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV") ;
   lt4b->SetTextColor(kBlack) ;
   lt4b->SetTextSize(0.04) ;
-  lt4b->Draw() ;
+  lt4b->Draw("same") ;
 
   canvasYShiftEtaPi0Ratio->Update();
   canvasYShiftEtaPi0Ratio->Print(Form("%s/EtaPi0Ratio_YShifted.%s",outputDir.Data(),suffix.Data()));
@@ -1625,9 +1632,9 @@ graphEMCalYieldPi0EtaBinningpPb->Print();
 	cocktailEtaToPi0Ratio_MtScaledRebinned->SetLineWidth(2);
 	cocktailEtaToPi0Ratio_MtScaledRebinned->Draw("same,hist,c");
 
-	DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Ratiopp7TeV, 21, 1, kBlue+2, kBlue+2);
+	DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Ratiopp7TeV, 21, 1, kGray+3, kGray+3);
 	graphCombEtaToPi0Ratiopp7TeV->Draw("same,e1p");
-	DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0RatioSysErrpp7TeV, 21, 1, kBlue+2, kBlue+2, 1., kTRUE);
+	DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0RatioSysErrpp7TeV, 21, 1, kGray+3, kGray+3, 1., kTRUE);
 	graphCombEtaToPi0RatioSysErrpp7TeV->Draw("same,E2");
    
   DrawGammaSetMarkerTGraphAsym(graphCombEtaPi0RatioStatpPb5023GeV,24,1,4, 4);  
@@ -1644,12 +1651,12 @@ graphEMCalYieldPi0EtaBinningpPb->Print();
   legendRpPbCombineYShiftEtaPi0RatioALICE->AddEntry(cocktailEtaToPi0Ratio_MtScaledRebinned,"#eta/#pi^{0}, #eta from #it{m}_{T} scaled #pi^{0}","pl");
 
   
-  legendRpPbCombineYShiftEtaPi0RatioALICE->Draw();
+  legendRpPbCombineYShiftEtaPi0RatioALICE->Draw("same");
 	
   TLatex * lt4c = new TLatex(9.,0.9,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV") ;
   lt4c->SetTextColor(kBlack) ;
   lt4c->SetTextSize(0.04) ;
-  lt4c->Draw() ;
+  lt4c->Draw("same") ;
 
   canvasYShiftEtaPi0RatioALICE->Update();
   canvasYShiftEtaPi0RatioALICE->Print(Form("%s/EtaPi0Ratio_ALICE.%s",outputDir.Data(),suffix.Data()));
