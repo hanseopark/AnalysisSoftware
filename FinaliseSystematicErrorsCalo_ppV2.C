@@ -578,7 +578,7 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
                             additionalNameOutput.CompareTo("EG2")==0  ||
                             additionalNameOutput.CompareTo("EG1")==0 
                         ){
-                            error   = 0.5+7/pow(1.9,ptBins[k]);   
+                            error   = (0.5+7/pow(1.9,ptBins[k])*)6/4;   
 //                             1.5+(0.01)*ptBins[k]+(0.01)*ptBins[k]*ptBins[k]+1;
                         }    
 //                     } 
