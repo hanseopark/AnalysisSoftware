@@ -998,7 +998,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     } else if ( trigger.CompareTo("85") == 0 ){
                         specialTrigg = 2; //L1 G2 (lower threshold) 
                     } else if ( trigger.CompareTo("83") == 0    ){
-                        specialTrigg = 3; //L1 G2 (lower threshold) 
+                        specialTrigg = 3; //L1 G1 (higher threshold) 
                     } else if ( trigger.CompareTo("51") == 0    ){
                         specialTrigg = 4; //L0 LHC11a
                     } else if ( trigger.CompareTo("01") == 0  || trigger.CompareTo("00") == 0   ){
