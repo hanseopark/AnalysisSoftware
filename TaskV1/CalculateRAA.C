@@ -89,30 +89,30 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 
 	if (textMeson.CompareTo("Pi0")==0){
 		if (centralityString.CompareTo("0-10%") == 0 ){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_%s_PbPb_2.76TeV0010_2016_01_14.dat", textMeson.Data()); 
+			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0010_2016_06_07.dat", textMeson.Data());
 		} else if (centralityString.CompareTo("0-5%") == 0){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_%s_PbPb_2.76TeV0005_2016_01_14.dat", textMeson.Data()); 
+			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0005_2016_06_07.dat", textMeson.Data());
 		} else if (centralityString.CompareTo("5-10%") == 0){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_%s_PbPb_2.76TeV0510_2016_01_14.dat", textMeson.Data()); 
+			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0510_2016_06_07.dat", textMeson.Data());
 		} else if (centralityString.CompareTo("20-40%") == 0){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_%s_PbPb_2.76TeV2040_2016_01_14.dat", textMeson.Data()); 
+			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV2040_2016_06_07.dat", textMeson.Data());
         }else if (centralityString.CompareTo("20-50%") == 0){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_%s_PbPb_2.76TeV2050_2016_01_14.dat", textMeson.Data()); 
+			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV2050_2016_06_07.dat", textMeson.Data());
 		} else {
 			fileNameSysErr = Form("DummySystFile.dat"); 
 		}
       cout << "Taking sytematics from " << fileNameSysErr << endl;
     } else {
 		if (centralityString.CompareTo("0-10%") == 0 ){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_%s_PbPb_2.76TeV0010_2016_01_14.dat", textMeson.Data()); 
+			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0010_2016_06_07.dat", textMeson.Data());
 		} else if (centralityString.CompareTo("0-5%") == 0){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_%s_PbPb_2.76TeV0005_2016_01_14.dat", textMeson.Data()); 
+			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0005_2016_06_07.dat", textMeson.Data());
 		} else if (centralityString.CompareTo("5-10%") == 0){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_%s_PbPb_2.76TeV0510_2016_01_14.dat", textMeson.Data()); 
+			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0510_2016_06_07.dat", textMeson.Data());
 		} else if (centralityString.CompareTo("20-40%") == 0){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_%s_PbPb_2.76TeV2040_2016_01_14.dat", textMeson.Data()); 
+			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV2040_2016_06_07.dat", textMeson.Data());
         }else if (centralityString.CompareTo("20-50%") == 0){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_%s_PbPb_2.76TeV2050_2016_01_14.dat", textMeson.Data()); 
+			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV2050_2016_06_07.dat", textMeson.Data());
 		} else {
 			fileNameSysErr = Form("DummySystFileEta.dat"); 
 		}
@@ -329,7 +329,7 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 			cout << "parameter " << i << "\t" << parametersBinShiftForQCDfit[i] << endl;
 		}
 		fitBinShifting = BinShiftTH1D(histoRecBinShift, &histoCorrYieldBinShifted, "Pi0","qcd", "fitBinShifting",minPtForFits,parametersBinShiftForQCDfit);
-		
+
 		DrawGammaSetMarker(histoCorrYieldBinShifted, 24, 0.9, kBlack, kBlack);
 		DrawAutoGammaMesonHistos( histoCorrYieldBinShifted, 
 						"", "p_{T} (GeV/c)", "#frac{1}{2#pi N_{ev}} #frac{d^{2}N}{p_{T}dp_{T}dy} (c/GeV)^{2}", 
@@ -555,28 +555,20 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 		
 		DrawGammaSetMarker(histoRatioFitLevy, 21, 0.5, kBlue, kBlue);
 		histoRatioFitLevy->Draw("e1,x0");
-		
 		DrawGammaSetMarker(histoRatioFitHag, 21, 0.5, kGreen+2, kGreen+2);
 		if(kHagSucc)histoRatioFitHag->Draw("e1,x0,same");
-		
 		DrawGammaSetMarker(histoRatioFitRadu, 21, 0.5, kRed+2, kRed+2);
 		if(kRaduSucc)histoRatioFitRadu->Draw("e1,x0,same");
-		
 		DrawGammaSetMarker(histoRatioFitBoltz, 21, 0.5, kMagenta+4, kMagenta+4);
 		if(kBoltzSucc)histoRatioFitBoltz->Draw("e1,x0,same");
-		
 		DrawGammaSetMarker(histoRatioFitExp, 21, 0.5, kOrange+7, kOrange+7);
 		if(kExpSucc)histoRatioFitExp->Draw("e1,x0,same");
-
 		DrawGammaSetMarker(histoRatioFitPow, 21, 0.5, kTeal, kTeal);
 		if(kPowSucc)histoRatioFitPow->Draw("e1,x0,same");
-		
 		DrawGammaSetMarker(histoRatioFitModPow, 21, 0.5, kMagenta+2, kMagenta+2);
 		if(kModPowSucc)histoRatioFitModPow->Draw("e1,same");
-		
 		DrawGammaSetMarker(histoRatioFitQCD, 21, 0.5, kBlue-3, kBlue-3);
 		histoRatioFitQCD->Draw("e1,same");
-		
 		DrawGammaSetMarker(histoRatioFitBylinkin, 21, 0.5, kPink+9, kPink+9);
 		histoRatioFitBylinkin->Draw("e1,same");
 		
@@ -1164,7 +1156,8 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 	TH1D* histoCorrectedYieldEta = NULL;
 	TH1D* histoRatioEtaPi0 = NULL;
 	TGraphAsymmErrors* graphSystErrRatio = NULL;
-	
+    TGraphAsymmErrors* graphSystErrRatio2 = NULL;
+
 	if (fileName2.CompareTo("")!=0 && textMeson.CompareTo("Eta")==0){
       		
 		histoCorrectedYieldEta = (TH1D*) histoCorrectedYield->Clone(); 
@@ -1188,34 +1181,36 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 		Double_t       ratioXError[50];
 		Double_t       ratioSysUpError[50];
 		Double_t       ratioSysDownError[50];
+        Double_t       ratioSysUpErrorOnFly[50];
+        Double_t       ratioSysDownErrorOnFly[50];
 		Bool_t         withRatioSyst = kFALSE;
         
         TString fileNameSysErrPi0EtaBinning;
         if (centralityString.CompareTo("0-10%") == 0 ){
-            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV0010_2016_01_14.dat"; 
+            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV0010_2016_06_07.dat";
         } else if (centralityString.CompareTo("0-5%") == 0){
-            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV0005_2016_01_14.dat"; 
+            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV0005_2016_06_07.dat";
         } else if (centralityString.CompareTo("5-10%") == 0){
-            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV0510_2016_01_14.dat";
+            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV0510_2016_06_07.dat";
         } else if (centralityString.CompareTo("20-40%") == 0){
-            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV2040_2016_01_14.dat";
+            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV2040_2016_06_07.dat";
         }else if (centralityString.CompareTo("20-50%") == 0){
-            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV2050_2016_01_14.dat";
+            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV2050_2016_06_07.dat";
         } else {
             fileNameSysErrPi0EtaBinning = "DummySystFileEta.dat"; 
         }
 
         TString fileNameSysErrPi0EtaBinningFromEta;
         if (centralityString.CompareTo("0-10%") == 0 ){
-            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_%s_PbPb_2.76TeV0010_2016_01_14.dat", textMeson.Data()); 
+            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0010_2016_06_07.dat", textMeson.Data());
         } else if (centralityString.CompareTo("0-5%") == 0){
-            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_%s_PbPb_2.76TeV0005_2016_01_14.dat", textMeson.Data()); 
+            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0005_2016_06_07.dat", textMeson.Data());
         } else if (centralityString.CompareTo("5-10%") == 0){
-            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_%s_PbPb_2.76TeV0510_2016_01_14.dat", textMeson.Data()); 
+            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0510_2016_06_07.dat", textMeson.Data());
         } else if (centralityString.CompareTo("20-40%") == 0){
-            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_%s_PbPb_2.76TeV2040_2016_01_14.dat", textMeson.Data()); 
+            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV2040_2016_06_07.dat", textMeson.Data());
             }else if (centralityString.CompareTo("20-50%") == 0){
-            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_01_14/SystematicErrorAveraged_%s_PbPb_2.76TeV2050_2016_01_14.dat", textMeson.Data()); 
+            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV2050_2016_06_07.dat", textMeson.Data());
         } else {
             fileNameSysErrPi0EtaBinningFromEta = Form("DummySystFileEta.dat"); 
         }
@@ -1356,7 +1351,10 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
               
               ratioSysUpError[i]= histoRatioEtaPi0->GetBinContent(i+offsetSyst)*relPi0EtaBinningSystErrorWOMaterialUp[i]/100;
               ratioSysDownError[i]= (histoRatioEtaPi0->GetBinContent(i+offsetSyst)*relPi0EtaBinningSystErrorWOMaterialDown[i]/100)*(-1);
-              
+
+              ratioSysUpErrorOnFly[i]= TMath::Sqrt(TMath::Power(relSystErrorWOMaterialUp[i]/100*histoCorrYieldBinShifted->GetBinContent(i+offsetSyst)/histoCorrYieldPi0EtaBinningBinShifted->GetBinContent(i+offsetSyst),2) + TMath::Power(histoCorrYieldBinShifted->GetBinContent(i+offsetSyst)*relPi0EtaBinningSystErrorWOMaterialUp[i]/100/histoCorrYieldPi0EtaBinningBinShifted->GetBinContent(i+offsetSyst),2));
+              ratioSysDownErrorOnFly[i]= TMath::Sqrt(TMath::Power(relSystErrorWOMaterialDown[i]/100*histoCorrYieldBinShifted->GetBinContent(i+offsetSyst)/histoCorrYieldPi0EtaBinningBinShifted->GetBinContent(i+offsetSyst),2) + TMath::Power(histoCorrYieldBinShifted->GetBinContent(i+offsetSyst)*relPi0EtaBinningSystErrorWOMaterialDown[i]/100/histoCorrYieldPi0EtaBinningBinShifted->GetBinContent(i+offsetSyst),2));
+
             } else {
 
   // ------------------> with bin shift:	
@@ -1374,16 +1372,20 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
         
         graphSystErrRatio = new TGraphAsymmErrors(nPointsPi0EtaBinning,ratioXValue,ratioYValue,ratioXError,ratioXError,ratioSysDownError,ratioSysUpError);        
 		graphSystErrRatio->SetFillColor(kGray+1);
+        graphSystErrRatio2 = new TGraphAsymmErrors(nPointsPi0EtaBinning,ratioXValue,ratioYValue,ratioXError,ratioXError,ratioSysDownErrorOnFly,ratioSysUpErrorOnFly);
+        graphSystErrRatio2->SetFillStyle(0);
 
-		graphSystErrRatio->Draw("p,2,same");   
+		graphSystErrRatio->Draw("p,2,same");
+        graphSystErrRatio2->Draw("p,2,same");
 		histoRatioEtaPi0->DrawCopy("same,p,x0,e1"); 
 		histoRatioEtaPi0->DrawCopy("same,axis"); 
 		
-		TLegend* legendRatio = new TLegend(0.6,0.12,0.97,0.22);
+		TLegend* legendRatio = new TLegend(0.55,0.12,0.97,0.28);
 		legendRatio->SetTextSize(0.03);        
 		legendRatio->SetFillColor(0);
 		legendRatio->AddEntry(histoRatioEtaPi0,Form("ALICE (%s)",collisionSystem.Data()),"p");
-		legendRatio->AddEntry(graphSystErrRatio,"systematic uncertainty","f");
+		legendRatio->AddEntry(graphSystErrRatio,"systematic uncertainty on ratio","f");
+        legendRatio->AddEntry(graphSystErrRatio2,"systematic uncertainty from yields","f");
 		legendRatio->Draw("same");
 		
 		canvasRatioEtaPi0->Update();

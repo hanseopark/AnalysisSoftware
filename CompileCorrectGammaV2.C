@@ -47,8 +47,8 @@ void CompileCorrectGammaV2(){
 	cout << "HomeDirectory: " << homedirectory.Data() << endl;
 	cout << "***************************************" << endl;
     if (homedirectory.CompareTo("/home/admin1") == 0){   
-        gSystem->AddIncludePath("-I/home/admin1/leardini/photonconv/AnalysisSoftware/RooUnfold/RooUnfold-master/RooUnfold/src"); 
-        gSystem->Load("/home/admin1/leardini/photonconv/AnalysisSoftware/RooUnfold/RooUnfold-master/libRooUnfold");
+        gSystem->AddIncludePath("-I/home/admin1/leardini/newSoftware/AnalysisSoftware/RooUnfold/src");
+        gSystem->Load("/home/admin1/leardini/newSoftware/AnalysisSoftware/RooUnfold/libRooUnfold");
     } else if (homedirectory.CompareTo("/home/fbock") == 0){   
         gSystem->AddIncludePath("-I/home/fbock/Photon/Software/PCGGIT/AnalysisSoftware/RooUnfold/src"); 
 		gSystem->Load("/home/fbock/Photon/Software/PCGGIT/AnalysisSoftware/RooUnfold/libRooUnfold");

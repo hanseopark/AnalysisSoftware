@@ -19,6 +19,7 @@ mkdir FinalResults
 mkdir CocktailInput
 mkdir RooUnfold
 mkdir DownloadAndDataPrep
+
 ln -sf $PHOTONCONVDIR/SystematicErrorsNew/* SystematicErrorsNew/
 ln -sf $PHOTONCONVDIR/CommonHeaders/*.h CommonHeaders/
 ln -sf $PHOTONCONVDIR/TaskV1/*.h TaskV1/
@@ -75,4 +76,7 @@ elif [ $2 = "pp8TeV" ]; then
     rm *13TeV*
     rm *LHC11h*
     rm *LHC10*
+elif [ $2 = "PbPb2.76TeV" ]; then
+    mkdir LHC11hInputFiles
+    ln -sf $PHOTONCONVDIR/LHC11hInputFiles/* LHC11hInputFiles/
 fi

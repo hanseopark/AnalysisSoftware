@@ -213,9 +213,9 @@ Int_t offSetsPi0[11]    =   { 0, 2, 15, 0, 0,
                               0, 0, 0, 0, 0, 0};
 Int_t offSetsPi0Sys[11]=    { 1, 4, 15, 0, 0,
                               0, 0, 0, 0, 0, 1};
-Int_t offSetsPi0RAA[11]    =   { 1, 4, 15, 0, 0,
+Int_t offSetsPi0RAA[11]    =   { 4, 4, 15, 0, 0,
                               0, 0, 0, 0, 0, 0};
-Int_t offSetsPi0RAASys[11]=    { 1, 4, 15, 0, 0,
+Int_t offSetsPi0RAASys[11]=    { 4, 4, 15, 0, 0,
                               0, 0, 0, 0, 0, 1};
 
 Int_t offSetsEta[11]    =   { 0, 0, 6, 0, 0,
@@ -410,13 +410,23 @@ TGraphAsymmErrors*  graphEMCalInvYieldSysPbPb2760GeVYShifted_2050;
 
 TF1* fitBylinkinPbPb2760GeVPtLHC11h_0010;
 TF1* fitBylinkinPbPb2760GeVPtLHC11h_2050;
+TF1* fitQCDPbPb2760GeVPtLHC11h_0010;
+TF1* fitQCDPbPb2760GeVPtLHC11h_2050;
+TF1* fitTsallisPbPb2760GeVPtLHC11h_0010;
+TF1* fitTsallisPbPb2760GeVPtLHC11h_2050;
+
 // TF1* fitBylinkinPbPb2760GeVPtLHC11hYshift_0010;
 // TF1* fitBylinkinPbPb2760GeVPtLHC11hYshift_2050;
 
-TF1* fitTCMInvYield2760GeVLHC11h_0010;
-TF1* fitTCMInvYield2760GeVLHC11h_2050;
-TF1* fitTCMInvYield2760GeVas10h_0010;
-TF1* fitTCMInvYield2760GeVas10h_2050;
+TF1* fitQCDInvYield2760GeVLHC11h_0010;
+TF1* fitQCDInvYield2760GeVLHC11h_2050;
+TF1* fitQCDInvYieldPbPb2760GeV_0010;
+TF1* fitQCDInvYieldPbPb2760GeV_2050;
+
+TF1 *fitLowPtBylinkin_0010;
+TF1 *fitHighPtBylinkin_0010;
+TF1 *fitLowPtBylinkin_2050;
+TF1 *fitHighPtBylinkin_2050;
 
 // RAA directly from measurement (non calculated)
 TGraphAsymmErrors*  graphPCMPi0RAAStatPbPb2760GeVYShifted_0010;
@@ -473,6 +483,13 @@ TGraphAsymmErrors *graphRAAEtaSysBothMeson_0010;
 TGraphAsymmErrors *graphRAAEtaStatBothMeson_2050;
 TGraphAsymmErrors *graphRAAEtaSysBothMeson_2050;
 
+
+TGraphAsymmErrors* graphCombEtatoPi0StatPbPb2760GeV_0010 = NULL;
+TGraphAsymmErrors* graphCombEtatoPi0SysPbPb2760GeV_0010 = NULL;
+TGraphAsymmErrors* graphCombEtatoPi0TotPbPb2760GeV_0010 = NULL;
+TGraphAsymmErrors* graphCombEtatoPi0StatPbPb2760GeV_2050 = NULL;
+TGraphAsymmErrors* graphCombEtatoPi0SysPbPb2760GeV_2050 = NULL;
+TGraphAsymmErrors* graphCombEtatoPi0TotPbPb2760GeV_2050 = NULL;
 
 TFile*  filePHOSPbPb;
 TDirectory* directoryPHOSPi0PbPb0010;
@@ -666,3 +683,22 @@ TGraphErrors*   graphPHENIX200GeVEtaRAA_2060;
 
 TGraphErrors*   graphWA98_17_3GeVRAA_0013;
 
+TH2F * histo2DInvYieldSectionPi0LHC11h;
+TLatex *labelRatioToFitPi0;
+TLatex *labelRelSysErrPi0;
+TLatex *labelWeightsPi0;
+TH1D *histoEPOSpred_0010;
+TH1D *histoEPOSpred_2050;
+TLatex *labelFactorLower;
+TLatex *labelFactorLowerOnlyPbPb;
+TLatex *labelFactorUpper;
+TLatex *labelSystOnlyPbPb;
+TLatex *labelSyst;
+TLatex *labelSystRaa;
+TLatex *labelDetSysInvYieldSectionPi0LHC11h;
+TLatex *labelDetSysInvYieldSectionPi0LHC11hnoPrelim;
+TLatex *labelDetSysInvYieldSectionPi0LHC11hwithPP;
+TLatex *labelRelStatErrPi0;
+TLegend* legendXsectionPaperOnlyRatios;
+TLatex *labelDetSysRatioToModelsLHC11h;
+TH2F * histo2DInvYieldSectionLHC11hwithPP;

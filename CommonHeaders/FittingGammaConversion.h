@@ -111,7 +111,7 @@ TF1* FitObject( TString type,
         }
       
         if(type.BeginsWith("rad") || type.BeginsWith("RAD")){
-            TF1 *Rad_Dummy = new TF1("Rad_Dummy","(x<=[3])*x*[0]*([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+0.135*([1]-2.)))*pow(1.+(sqrt(x*x+0.135*0.135)-0.135)/([1]*[2]), -[1]) + (x>[3]) * x *[0] * ([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+0.135*([1]-2.))) * pow([1]*[2]/([3]+[1]*[2]-0.135),[1]) * pow([3],[4]) * pow( 1./x, [4] )");
+            TF1 *Rad_Dummy = new TF1("Rad_Dummy",Form("(x<=[3])*x*[0]*([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+%.10f*([1]-2.)))*pow(1.+(sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1]) + (x>[3]) * x *[0] * ([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+%.10f*([1]-2.))) * pow([1]*[2]/([3]+[1]*[2]-%.10f),[1]) * pow([3],[4]) * pow( 1./x, [4] )",mass,mass,mass,mass,mass,mass));
             Rad_Dummy->SetLineWidth(1);
             Double_t par0min3 = 150.;
             Double_t par0max3 = 1500.;
@@ -320,7 +320,7 @@ TF1* FitObject( TString type,
         }
         if(type.BeginsWith("rad") || type.BeginsWith("RAD")){
             cout <<Form("fitting %s with Radoslav Func",FunctionName.Data()) << endl;
-            TF1 *Rad_Dummy = new TF1("Rad_Dummy","(x<=[3])*x*[0]*([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+0.135*([1]-2.)))*pow(1.+(sqrt(x*x+0.135*0.135)-0.135)/([1]*[2]), -[1]) + (x>[3]) * x *[0] * ([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+0.135*([1]-2.))) * pow([1]*[2]/([3]+[1]*[2]-0.135),[1]) * pow([3],[4]) * pow( 1./x, [4] )");
+            TF1 *Rad_Dummy = new TF1("Rad_Dummy",Form("(x<=[3])*x*[0]*([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+%.10f*([1]-2.)))*pow(1.+(sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1]) + (x>[3]) * x *[0] * ([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+%.10f*([1]-2.))) * pow([1]*[2]/([3]+[1]*[2]-%.10f),[1]) * pow([3],[4]) * pow( 1./x, [4] )",mass,mass,mass,mass,mass,mass));
             FitFunction = (TF1*)Rad_Dummy->Clone(FunctionName);
             FitFunction->SetRange(xmin, xmax);
             Double_t par0min3 = 10.;
@@ -508,7 +508,7 @@ TF1* FitObject( TString type,
 
         if(type.BeginsWith("rad") || type.BeginsWith("RAD")){
             cout <<Form("fitting %s with Radoslav Func",FunctionName.Data()) << endl;
-            TF1 *Rad_Dummy = new TF1("Rad_Dummy","(x<=[3])*x*[0]*([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+0.135*([1]-2.)))*pow(1.+(sqrt(x*x+0.135*0.135)-0.135)/([1]*[2]), -[1]) + (x>[3]) * x *[0] * ([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+0.135*([1]-2.))) * pow([1]*[2]/([3]+[1]*[2]-0.135),[1]) * pow([3],[4]) * pow( 1./x, [4] )");
+            TF1 *Rad_Dummy = new TF1("Rad_Dummy",Form("(x<=[3])*x*[0]*([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+%.10f*([1]-2.)))*pow(1.+(sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1]) + (x>[3]) * x *[0] * ([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+%.10f*([1]-2.))) * pow([1]*[2]/([3]+[1]*[2]-%.10f),[1]) * pow([3],[4]) * pow( 1./x, [4] )",mass,mass,mass,mass,mass,mass));
             FitFunction = (TF1*)Rad_Dummy->Clone(FunctionName);
             FitFunction->SetRange(xmin, xmax);
             Double_t par0min3 = 150.;
@@ -680,13 +680,13 @@ TF1* FitObject( TString type,
                 FitFunction->SetParLimits(2,0,10000);
             } else if (limitPar){
                 FitFunction->SetParLimits(0,0,100);
-                FitFunction->SetParLimits(2,0,100);          
+                FitFunction->SetParLimits(2,0,100);
             }
             if (limitPar){
                 FitFunction->SetParLimits(1,0,10000);
                 FitFunction->SetParLimits(3,0,10000);
                 FitFunction->SetParLimits(4,0,10);
-            }    
+            }
             Obj->Fit(FitFunction,FitOptions,"",xmin,xmax);
         } if(type.BeginsWith("tcm") || type.BeginsWith("TCM")){ // Two component model fit [A. Bylinkin and A. Rostovtsev, Phys. Atom. Nucl 75 (2012) 999-1005]
             cout <<Form("fitting %s with two component model by Bylinkin",FunctionName.Data()) << endl;
@@ -707,7 +707,7 @@ TF1* FitObject( TString type,
             } else {
                 if(FunctionName.Contains("0010") && limitPar){
                     FitFunction->SetParLimits(0,0,100);
-                    FitFunction->SetParLimits(2,0,100);   
+                    FitFunction->SetParLimits(2,0,100);
                 } else if(FunctionName.Contains("2050") && limitPar){
                     FitFunction->SetParLimits(0,0,100);
                     FitFunction->SetParLimits(2,0,100);   
@@ -719,9 +719,41 @@ TF1* FitObject( TString type,
                 FitFunction->SetParLimits(4,0,10);
             }    
             Obj->Fit(FitFunction,FitOptions,"",xmin,xmax);
+        } else if(type.BeginsWith("Lowtcm") || type.BeginsWith("LOWTCM")){ // Two component model fit [A. Bylinkin and A. Rostovtsev, Phys. Atom. Nucl 75 (2012) 999-1005]
+            cout <<Form("fitting %s with low pt component of Bylinkin",FunctionName.Data()) << endl;
+            TF1 *TwoCompModel_Dummy = new TF1("twoCompModel_Dummy",Form("[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1])",mass,mass,mass));
+            FitFunction = (TF1*)TwoCompModel_Dummy->Clone(FunctionName);
+            FitFunction->SetRange(xmin, xmax);
+            if (mesonType.CompareTo("Pi0")==0){
+                if(Parameter == NULL){
+                    FitFunction->SetParameters(450.,0.3); // standard parameter optimize if necessary
+                } else FitFunction->SetParameters(Parameter[0],Parameter[1]);
+            } else if (mesonType.CompareTo("Eta")==0){
+                if(Parameter == NULL){
+                    FitFunction->SetParameters(450.,0.3); // standard parameter optimize if necessary
+                } else FitFunction->SetParameters(Parameter[0],Parameter[1]);
+            }
+            FitFunction->SetParNames("Ae","Te");
+            Obj->Fit(FitFunction,FitOptions,"",xmin,xmax);
+        } else if(type.BeginsWith("Hightcm") || type.BeginsWith("HIGHTCM")){ // Two component model fit [A. Bylinkin and A. Rostovtsev, Phys. Atom. Nucl 75 (2012) 999-1005]
+            cout <<Form("fitting %s with high pt component of Bylinkin",FunctionName.Data()) << endl;
+            TF1 *TwoCompModel_Dummy = new TF1("twoCompModel_Dummy",Form("[0]/(TMath::Power(1+x*x/([1]*[1]*[2]),[2]) )"));
+            FitFunction = (TF1*)TwoCompModel_Dummy->Clone(FunctionName);
+            FitFunction->SetRange(xmin, xmax);
+            if (mesonType.CompareTo("Pi0")==0){
+                if(Parameter == NULL){
+                    FitFunction->SetParameters(1,0.3,8.); // standard parameter optimize if necessary
+                } else FitFunction->SetParameters(Parameter[0],Parameter[1],Parameter[2]);
+            } else if (mesonType.CompareTo("Eta")==0){
+                if(Parameter == NULL){
+                    FitFunction->SetParameters(1,0.3,8.); // standard parameter optimize if necessary
+                } else FitFunction->SetParameters(Parameter[0],Parameter[1],Parameter[2]);
+            }
+            FitFunction->SetParNames("A","T","n");
+            Obj->Fit(FitFunction,FitOptions,"",xmin,xmax);
         } else if(type.CompareTo("rad") ==0|| type.CompareTo("RAD")==0){
             cout <<Form("fitting %s with Radoslav Func",FunctionName.Data()) << endl;
-            TF1 *Rad_Dummy = new TF1("Rad_Dummy","(x<=[3])*x*[0]*([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+0.135*([1]-2.)))*pow(1.+(sqrt(x*x+0.135*0.135)-0.135)/([1]*[2]), -[1]) + (x>[3]) * x *[0] * ([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+0.135*([1]-2.))) * pow([1]*[2]/([3]+[1]*[2]-0.135),[1]) * pow([3],[4]) * pow( 1./x, [4] )");
+            TF1 *Rad_Dummy = new TF1("Rad_Dummy",Form("(x<=[3])*x*[0]*([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+%.10f*([1]-2.)))*pow(1.+(sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1]) + (x>[3]) * x *[0] * ([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+%.10f*([1]-2.))) * pow([1]*[2]/([3]+[1]*[2]-%.10f),[1]) * pow([3],[4]) * pow( 1./x, [4] )",mass,mass,mass,mass,mass,mass));
             FitFunction = (TF1*)Rad_Dummy->Clone(FunctionName);
             FitFunction->SetRange(xmin, xmax);
             Double_t par0min3 = 150.;
@@ -901,7 +933,7 @@ TF1* FitObject( TString type,
 
         if(type.BeginsWith("rad") || type.BeginsWith("RAD")){
             cout <<Form("fitting %s with Radoslav Func",FunctionName.Data()) << endl;
-            TF1 *Rad_Dummy = new TF1("Rad_Dummy","(x<=[3])*x*[0]*([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+0.135*([1]-2.)))*pow(1.+(sqrt(x*x+0.135*0.135)-0.135)/([1]*[2]), -[1]) + (x>[3]) * x *[0] * ([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+0.135*([1]-2.))) * pow([1]*[2]/([3]+[1]*[2]-0.135),[1]) * pow([3],[4]) * pow( 1./x, [4] )");
+            TF1 *Rad_Dummy = new TF1("Rad_Dummy",Form("(x<=[3])*x*[0]*([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+%.10f*([1]-2.)))*pow(1.+(sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1]) + (x>[3]) * x *[0] * ([1]-1.)*([1]-2.)/([1]*[2]*([1]*[2]+%.10f*([1]-2.))) * pow([1]*[2]/([3]+[1]*[2]-%.10f),[1]) * pow([3],[4]) * pow( 1./x, [4] )",mass,mass,mass,mass,mass,mass));
             FitFunction = (TF1*)Rad_Dummy->Clone(FunctionName);
             FitFunction->SetRange(xmin, xmax);
             Double_t par0min3 = 150.;

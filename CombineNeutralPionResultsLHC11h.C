@@ -1516,8 +1516,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	DrawGammaCanvasSettings( canvasEtaSpectra,  0.13, 0.01, 0.015, 0.08);
 	canvasEtaSpectra->SetLogy();
 	canvasEtaSpectra->SetLogx();
-	TH2F * histo2DEtaSpectra = new TH2F("histo2DEtaSpectra","histo2DEtaSpectra",1000,0.1,11.,1000,1e-8,2e2 );
-	SetStyleHistoTH2ForGraphs(histo2DEtaSpectra, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV/#it{c})^{-2}", 0.03,0.04, 0.03,0.04, 0.83,1.4);
+	TH2F * histo2DEtaSpectra = new TH2F("histo2DEtaSpectra","histo2DEtaSpectra",1000,0.5,15.,1000,1e-8,2e2 );
+	SetStyleHistoTH2ForGraphs(histo2DEtaSpectra, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV/#it{c})^{-2}", 0.03,0.04, 0.03,0.04, 0.95,1.4);
 	histo2DEtaSpectra->DrawCopy(); 
 	
 // 	graphCorrectedYieldSysEta2760GeV = ScaleGraph(graphCorrectedYieldSysEta2760GeV,1e1);
@@ -1593,8 +1593,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	DrawGammaCanvasSettings( canvasPi0Spectra,  0.13, 0.01, 0.015, 0.08);
 	canvasPi0Spectra->SetLogy();
 	canvasPi0Spectra->SetLogx();
-	TH2F * histo2DPi0Spectra = new TH2F("histo2DPi0Spectra","histo2DPi0Spectra",1000,0.1,15.,1000,1e-7,2e3 );
-	SetStyleHistoTH2ForGraphs(histo2DPi0Spectra, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV/#it{c})^{-2}", 0.03,0.04, 0.03,0.04, 0.83,1.4);
+	TH2F * histo2DPi0Spectra = new TH2F("histo2DPi0Spectra","histo2DPi0Spectra",1000,0.3,20.,1000,1e-7,2e3 );
+	SetStyleHistoTH2ForGraphs(histo2DPi0Spectra, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV/#it{c})^{-2}", 0.03,0.04, 0.03,0.04, 0.95,1.4);
 	histo2DPi0Spectra->DrawCopy(); 
 
 	
@@ -1763,9 +1763,9 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	legendPi0RAA->SetTextSize(0.035);
 	legendPi0RAA->SetMargin(0.2);
 // 	legendPi0RAA->AddEntry(graphPi0RAASys0005,"PCM #pi^{0} R_{AA} (2010) - 0-5%");
-	legendPi0RAA->AddEntry(graphPi0RAA0010,"PCM #pi^{0} R_{AA} (2010) - 0-10%", "pl");
+	legendPi0RAA->AddEntry(graphPi0RAA0010,"PCM #pi^{0} R_{AA} - 0-10%", "pl");
 // 	legendPi0RAA->AddEntry(graphPi0RAASys2040,"PCM #pi^{0} R_{AA} (2010) - 20-40%");
-	legendPi0RAA->AddEntry(graphPi0RAA2050,"PCM #pi^{0} R_{AA} (2010) - 20-50%", "pl");
+	legendPi0RAA->AddEntry(graphPi0RAA2050,"PCM #pi^{0} R_{AA} - 20-50%", "pl");
 	legendPi0RAA->Draw();
 	
 	canvasRAA->Update();
@@ -2411,9 +2411,9 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	legendEtaRAA->SetTextSize(0.035);
 	legendEtaRAA->SetMargin(0.2);
 // 	legendEtaRAA->AddEntry(graphEtaRAASys0005,"PCM #eta R_{AA} (2011) - 0-5%");
-	legendEtaRAA->AddEntry(graphEtaRAA0010,"PCM #eta R_{AA} (2011) - 0-10%","pl");
+	legendEtaRAA->AddEntry(graphEtaRAA0010,"PCM #eta R_{AA} - 0-10%","pl");
 // 	legendEtaRAA->AddEntry(graphEtaRAASys2040,"PCM #eta R_{AA} (2011) - 20-40%");
-	legendEtaRAA->AddEntry(graphEtaRAA2050,"PCM #eta R_{AA} (2011) - 20-50%","pl");
+	legendEtaRAA->AddEntry(graphEtaRAA2050,"PCM #eta R_{AA} - 20-50%","pl");
 	legendEtaRAA->Draw();
 	
 	canvasRAA->Update();
@@ -2462,8 +2462,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	legendEtaRAAcomp1->SetMargin(0.2);
 	legendEtaRAAcomp1->AddEntry(graphEtaRAAPHENIX0010,"PHENIX #eta R_{AA} - 0-10%","pl");
 	legendEtaRAAcomp1->AddEntry(graphEtaRAAPHENIX2040,"PHENIX #eta R_{AA} - 20-40%","pl");
-	legendEtaRAAcomp1->AddEntry(graphEtaRAASys0010,"PCM #eta R_{AA} (2011) - 0-10%", "pl");
-	legendEtaRAAcomp1->AddEntry(graphEtaRAASys2040,"PCM #eta R_{AA} (2011) - 20-40%", "pl");
+	legendEtaRAAcomp1->AddEntry(graphEtaRAASys0010,"PCM #eta R_{AA} - 0-10%", "pl");
+	legendEtaRAAcomp1->AddEntry(graphEtaRAASys2040,"PCM #eta R_{AA} - 20-40%", "pl");
 	legendEtaRAAcomp1->Draw();
 	
 	canvasRAA->Update();

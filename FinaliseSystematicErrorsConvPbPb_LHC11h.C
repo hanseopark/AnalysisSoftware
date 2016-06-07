@@ -311,51 +311,73 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 
 			for (Int_t l=0; l< nPtBins; l++){
 				if (!(meson.CompareTo("EtaToPi0") == 0)){
-					
+//////////////////////////////////////////////////////////////////////////////
 					if(nameCutVariationSC[cut].Contains("Alpha")){
 						if(meson.Contains("Pi0")){
-							if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",minPt,5.);
-								if(ptBins[l] < 5. || ptBins[l] > 8.){
-									newPoint = pol2->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
-									cout << "taking graph point" << endl;
-								}
-							} else if(additionalNameOutput.Contains("2050") || additionalNameOutput.Contains("2040")){
-								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",0.8,14.);
-								if(ptBins[l] < 0.8 || ptBins[l] > 12.){
-									newPoint = pol3->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
-									newPoint = pol2->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								}
+							if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") || additionalNameOutput.Contains("2050") || additionalNameOutput.Contains("2040")){
+								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",0.8,10.);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+// 							} else if(additionalNameOutput.Contains("2050") || additionalNameOutput.Contains("2040")){
+// 								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",0.8,12.);
+// 								if( (ptBins[l] > 0.8 && ptBins[l] < 3.) || ptBins[l] > 12.){
+//                                     newPoint = pol2->Eval(ptBins[l]);
+//                                     meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+//                                 } else if(ptBins[l] < 0.7 || ptBins[l] > 5. && ptBins[l] < 10.){
+//                                     newPoint = pol3->Eval(ptBins[l]);
+//                                     meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+//                                 } else {
+//                                     cout << "taking graph point" << endl;
+//                                 }
 							}
 						} else if(meson.Contains("Eta")){
-							if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-								meanErrorsCorr[cut]->Fit(pol3,"QNRMEX0+","",1.,7.);
-								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2,8.);
-								if(ptBins[l] < 6.){
-									newPoint = pol3->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
-									newPoint = pol2->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);	
-								}
+							if(additionalNameOutput.Contains("0010") ){
+								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,8.);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                            } else if(additionalNameOutput.Contains("0005") ){
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,8.);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint*0.7);
+                            } else if( additionalNameOutput.Contains("0510") ){
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,4.);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint*2.);
 							} else if(additionalNameOutput.Contains("2050") || additionalNameOutput.Contains("2040")){
-								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,10.);
 								newPoint = pol2->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);	
+								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint*0.8);
 							}
 						}
+//////////////////////////////////////////////////////////////////////////////
 					} else if(nameCutVariationSC[cut].Contains("Chi2")){
 							if(meson.Contains("Pi0")){
-								if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
+								if(additionalNameOutput.Contains("0010")){
 									meanErrorsCorr[cut]->Fit(pol4,"QNRMEX0+","",1.,14.);
-									newPoint = pol4->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-									
+                                    if(ptBins[l] < 5. || ptBins[l] == 11. ){
+                                      newPoint = pol4->Eval(ptBins[l]);
+                                      meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                    } else {
+                                        cout << "taking graph point" << endl;
+                                    }
+                                } else if(additionalNameOutput.Contains("0005") ){
+                                    meanErrorsCorr[cut]->Fit(pol4,"QNRMEX0+","",1.,12.);
+                                    if(ptBins[l] < 5. || ptBins[l] > 11. ){
+                                      newPoint = pol4->Eval(ptBins[l]);
+                                      meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                    } else {
+                                        cout << "taking graph point" << endl;
+                                    }
+                                } else if( additionalNameOutput.Contains("0510") ){
+                                    meanErrorsCorr[cut]->Fit(pol4,"QNRMEX0+","",1.,12.);
+                                    if(ptBins[l] < 5.){
+                                      newPoint = pol4->Eval(ptBins[l]);
+                                      meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                    } else if(ptBins[l] > 8. ){
+                                      newPoint = pol3->Eval(ptBins[l]);
+                                      meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                    } else {
+                                        cout << "taking graph point" << endl;
+                                    }
 								} else if(additionalNameOutput.Contains("2050")){
 									meanErrorsCorr[cut]->Fit(pol4,"QNRMEX0+","",1.,14.);
 									newPoint = pol4->Eval(ptBins[l]);
@@ -373,175 +395,225 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 									}
 								}
 							} else if(meson.Contains("Eta")){
-								if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-									meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,10.);
-									if(ptBins[l] <= 2.){
-										newPoint = pol3->Eval(ptBins[l]);
-										meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-									} else if(ptBins[l] > 3.){
+								if(additionalNameOutput.Contains("0010")){
+                                        meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,9.);
 										newPoint = pol2->Eval(ptBins[l]);
 										meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-									} else {
-										newPoint = pol4->Eval(ptBins[l]);
-										meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-									}	
-								} else if(additionalNameOutput.Contains("2050")){
-									meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,10.);
-									if(ptBins[l] > 3. && ptBins[l] < 6.){
-										newPoint = pol4->Eval(ptBins[l]);
-										meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-									} else if(ptBins[l] < 3.){
-										newPoint = pol3->Eval(ptBins[l]);
-										meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-									} else if(ptBins[l] > 8.){
-										newPoint = pol2->Eval(ptBins[l]);
-										meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-									} else {
-										cout << "taking graph point" << endl;
-									}
-								} else if(additionalNameOutput.Contains("2040")){
-									meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,8.);
-									if(ptBins[l] > 3. && ptBins[l] < 6.){
-										newPoint = pol4->Eval(ptBins[l]);
-										meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-									} else if(ptBins[l] < 3.){
-										newPoint = pol3->Eval(ptBins[l]);
-										meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-									} else if(ptBins[l] > 8.){
-										newPoint = pol2->Eval(ptBins[l]);
-										meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-									} else {
-										cout << "taking graph point" << endl;
-									}
+                                } else if( additionalNameOutput.Contains("0005") ){
+                                        meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,maxPt);
+                                        newPoint = pol2->Eval(ptBins[l]);
+                                        meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else if(additionalNameOutput.Contains("0510") ){
+                                        newPoint = pol2->Eval(ptBins[l]);
+                                        meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint*0.6);
+                                } else if(additionalNameOutput.Contains("2050")){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,8.);
+                                    newPoint = pol2->Eval(ptBins[l]);
+                                    meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else if(additionalNameOutput.Contains("2040")){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,8.);
+                                    newPoint = pol2->Eval(ptBins[l]);
+                                    meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint*1.2);
 								}
 							}
+//////////////////////////////////////////////////////////////////////////////
 					} else if( nameCutVariationSC[cut].Contains("ConvPhi")){
 						if(meson.Contains("Pi0")){
 							if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-								if(ptBins[l] < 8. ){
-									newPoint = pol3->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
-									cout << "taking graph point" << endl;					
-								}
-							} else if(additionalNameOutput.Contains("2050")){
-								if(ptBins[l] < 10. ){
-									newPoint = pol3->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
-									cout << "taking graph point" << endl;
-								}
-							} else if(additionalNameOutput.Contains("2040")){
-								newPoint = pol3->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,maxPt);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+							} else if(additionalNameOutput.Contains("2050") || additionalNameOutput.Contains("2040")){
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,8.);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 							}
 						} else if(meson.Contains("Eta")){
-							if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
+							if(additionalNameOutput.Contains("0010") ){
+                                if(ptBins[l] < 1.5){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,8.);
+									newPoint = pol2->Eval(ptBins[l]);
+									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else if(ptBins[l] > 8.){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,9.);
+                                    newPoint = pol2->Eval(ptBins[l]);
+                                    meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else {
+                                    cout << "taking graph point" << endl;
+                                }
+                            } else if(additionalNameOutput.Contains("0005") ){
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,8.);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                            } else if(additionalNameOutput.Contains("0510") ){
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,7.);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+							} else if(additionalNameOutput.Contains("2050")){
+                                meanErrorsCorr[cut]->Fit(pol3,"QNRMEX0+","",2.,8.);
+								if(ptBins[l] < 6.){
 									newPoint = pol3->Eval(ptBins[l]);
 									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								
-							} else if(additionalNameOutput.Contains("2050") || additionalNameOutput.Contains("2040")){
-								if(ptBins[l] <= 6.){
-									newPoint = pol4->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else if(ptBins[l] > 6.){
-									newPoint = pol4->Eval(6.);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);	
 								} else {
-									cout << "taking graph point" << endl;
-								}						
-							}
+                                    newPoint = pol3->Eval(6.);
+                                    meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                }
+                            } else if(additionalNameOutput.Contains("2040")){
+                                if( ptBins[l] < 2. || ptBins[l] > 6.){
+                                    newPoint = pol3->Eval(7.);
+                                    meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else {
+                                    cout << "taking graph point" << endl;
+                                }
+                            }
 						}
+//////////////////////////////////////////////////////////////////////////////
 					} else if(nameCutVariationSC[cut].Contains("dEdxE")){
 						if(meson.Contains("Pi0")){
 							if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-								if(ptBins[l] < 10.){
-									newPoint = pol3->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
-									newPoint = pol2->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);	
-								}
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",0.8,maxPt);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 							} else if(additionalNameOutput.Contains("2050")){
-								if(ptBins[l] < 10.){
-									newPoint = pol3->Eval(ptBins[l]);
+								if(ptBins[l] < 5.){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",0.8,8.);
+									newPoint = pol2->Eval(ptBins[l]);
 									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
+								} else if(ptBins[l] > 8.){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",0.8,10.);
 									newPoint = pol2->Eval(ptBins[l]);
 									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);	
-								}
+                                } else {
+                                    cout << "taking graph point" << endl;
+                                }
 							}  else if(additionalNameOutput.Contains("2040")){
-									newPoint = pol3->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);									
+                                if(ptBins[l] < 5){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",0.8,8.);
+                                    newPoint = pol2->Eval(ptBins[l]);
+                                    meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else if(ptBins[l] > 8.){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",0.8,12.);
+                                    newPoint = pol2->Eval(ptBins[l]);
+                                    meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else {
+                                    cout << "taking graph point" << endl;
+                                }
 							}	
 						} else if(meson.Contains("Eta")){
-							if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-								if(ptBins[l] <= 1.5){
-									newPoint = pol3->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else if(ptBins[l] > 6.){
-									newPoint = pol4->Eval(6.);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else if(ptBins[l] == 3.5){
-									newPoint = pol4->Eval(2.5);
+							if(additionalNameOutput.Contains("0010") ){
+								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,10.);
+                                if(ptBins[l] < 2.){
+									newPoint = pol2->Eval(ptBins[l]);
 									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 								} else {
 									cout << "taking graph point" << endl;
 								}					
+                            } else if(additionalNameOutput.Contains("0005")  ){
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,10.);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint*0.7);
+                            } else if(additionalNameOutput.Contains("0510") ){
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,10.);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 							}  else if(additionalNameOutput.Contains("2050")){
-								newPoint = pol3->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,8.);
+                                if(ptBins[l] < 2. || ptBins[l] > 6.){
+                                  newPoint = pol2->Eval(ptBins[l]);
+                                  meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else {
+                                    cout << "taking graph point" << endl;
+                                }
 							}  else if(additionalNameOutput.Contains("2040")){
-								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,8.);
-								newPoint = pol2->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							}
+                                if(ptBins[l] > 6.){
+                                  meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,6.);
+                                  newPoint = pol2->Eval(6.);
+                                  meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else if(ptBins[l] < 2.){
+                                  meanErrorsCorr[cut]->Fit(pol3,"QNRMEX0+","",2.,6.);
+                                  newPoint = pol3->Eval(ptBins[l]);
+                                  meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else {
+                                    cout << "taking graph point" << endl;
+                                }
+                            }
 						}
+//////////////////////////////////////////////////////////////////////////////
 					} else if(nameCutVariationSC[cut].Contains("dEdxPi")){
 						if(meson.Contains("Pi0")){
 							if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,12.);
-								if(ptBins[l] >= 3.){
+                                if(ptBins[l] < 1.){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,3.);
+                                    newPoint = pol2->Eval(ptBins[l]);
+                                    meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else if(ptBins[l] >= 1.){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,10.);
 									newPoint = pol2->Eval(ptBins[l]);
 									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
-									newPoint = pol4->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								}
+                                } else {
+                                    cout << "taking graph point" << endl;
+                                }
 							}  else if(additionalNameOutput.Contains("2050") || additionalNameOutput.Contains("2040")){
-								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,10.);
-								if(ptBins[l] <= 8.){
-									newPoint = pol3->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
+								if(ptBins[l] < 4.){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,4.);
 									newPoint = pol2->Eval(ptBins[l]);
 									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else if(ptBins[l] >= 4.){
+                                    meanErrorsCorr[cut]->Fit(pol3,"QNRMEX0+","",.5,12.);
+                                    newPoint = pol3->Eval(ptBins[l]);
+                                    meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else {
+                                    cout << "taking graph point" << endl;
 								}
 							}
 						} else if(meson.Contains("Eta")){
-							if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
+							if(additionalNameOutput.Contains("0010") ){
 								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,10.);
-								if(ptBins[l] < 6.){
-									newPoint = pol2->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else if(ptBins[l] >= 6.){
-									newPoint = pol4->Eval(6.);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
-									cout << "taking graph point" << endl;
-								}						
-							}  else if(additionalNameOutput.Contains("2050") || additionalNameOutput.Contains("2040")){
-								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,10.);
-								newPoint = pol2->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							}
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                            } else if( additionalNameOutput.Contains("0005") ){
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",4.,10.);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint*0.8);
+                            } else if( additionalNameOutput.Contains("0510") ){
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",4.,maxPt);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint*0.6);
+                            }  else if(additionalNameOutput.Contains("2050")){
+                                if(ptBins[l] < 2.){
+                                  meanErrorsCorr[cut]->Fit(pol3,"QNRMEX0+","",1.5,8.);
+                                  newPoint = pol3->Eval(ptBins[l]);
+                                  meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else if(ptBins[l] >= 2.){
+                                  meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,8.);
+                                  newPoint = pol2->Eval(ptBins[l]);
+                                  meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                }
+                            }  else if( additionalNameOutput.Contains("2040")){
+                                if(ptBins[l] < 3.){
+                                  meanErrorsCorr[cut]->Fit(pol3,"QNRMEX0+","",2.,10.);
+                                  newPoint = pol3->Eval(ptBins[l]);
+                                  meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else if(ptBins[l] >= 3.){
+                                  meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2,8.);
+                                  newPoint = pol2->Eval(ptBins[l]);
+                                  meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                }
+                            }
 						}
+//////////////////////////////////////////////////////////////////////////////
 					} else if(nameCutVariationSC[cut].Contains("Qt")){
 						if(meson.Contains("Pi0")){
 							if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
+                              if(ptBins[l] <= 6.){
 								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,8.);
 								newPoint = pol2->Eval(ptBins[l]);
 								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                              } else if(ptBins[l] > 6.){
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,12.);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                              }
 							} else if(additionalNameOutput.Contains("2050")){
 								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,12.);
 								newPoint = pol2->Eval(ptBins[l]);
@@ -552,299 +624,352 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 							}
 						} else if(meson.Contains("Eta")){
-							if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-								if(ptBins[l] <= 2.){
-									newPoint = pol4->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else if(ptBins[l] > 2. && ptBins[l] < 6.){
-									newPoint = pol3->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
-									cout << "taking graph point" << endl;
-								}
-							} else if(additionalNameOutput.Contains("2050")){
-								meanErrorsCorr[cut]->Fit(pol3,"QNRMEX0+","",1.,8.);
-								if(ptBins[l] == 9.){
-									newPoint = pol3->Eval(7.);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else if(ptBins[l] <= 6.){
-									newPoint = pol4->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
-									cout << "taking graph point" << endl;
-								}
+							if(additionalNameOutput.Contains("0010") ){
+                                newPoint = pol3->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                            } else if(additionalNameOutput.Contains("0005")){
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,10.);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                            } else if(additionalNameOutput.Contains("0510") ){
+                                if(ptBins[l] > 6.){
+                                  meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,8.);
+                                  newPoint = pol2->Eval(5.);
+                                  meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else if(ptBins[l] < 2.){
+                                  newPoint = pol4->Eval(ptBins[l]);
+                                  meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else {
+                                  meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,8.);
+                                  newPoint = pol2->Eval(ptBins[l]);
+                                  meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                }
+                            } else if(additionalNameOutput.Contains("2050")){
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,6.);
+                                if(ptBins[l] < 1.5 || ptBins[l] > 6.){
+                                    newPoint = pol2->Eval(ptBins[l]);
+                                    meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else {
+                                    cout << "taking graph point" << endl;
+                                }
 							} else if(additionalNameOutput.Contains("2040")){
-								meanErrorsCorr[cut]->Fit(pol3,"QNRMEX0+","",1.,8.);
-								if(ptBins[l] < 3.){
-									newPoint = pol4->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,6.);
+								if(ptBins[l] < 2.){
 									newPoint = pol2->Eval(ptBins[l]);
 									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								}
+                                } else if(ptBins[l] > 6.){
+                                    newPoint = pol2->Eval(4.);
+                                    meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else {
+                                    cout << "taking graph point" << endl;
+                                }
 							}
 						}
+//////////////////////////////////////////////////////////////////////////////
 					} else if(nameCutVariationSC[cut].Contains("SinglePt")){
 						if(meson.Contains("Pi0")){
 							if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,10.);
-								meanErrorsCorr[cut]->Fit(pol4,"QNRMEX0+","",1.5,12.);
-								if(ptBins[l] < 1.5){
-									newPoint = pol4->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else if(ptBins[l] > 6. && ptBins[l] < 10.){
-									newPoint = pol3->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else if((ptBins[l] > 1.5 && ptBins[l] <= 2.5) || ptBins[l] > 10. ){
-									newPoint = pol2->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
-									cout << "taking graph point" << endl;					
-								}
+								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,maxPt);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 							} else if(additionalNameOutput.Contains("2050")){
-									meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",0.8,14.);
-									if(ptBins[l] < 10. ){
-										newPoint = pol2->Eval(ptBins[l]);
-										meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-									} else {
-										cout << "taking graph point" << endl;					
-									}
+                                if(ptBins[l] < 10. ){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,10.);
+                                    newPoint = pol2->Eval(ptBins[l]);
+                                    meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else if(ptBins[l] > 10. ){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,12.);
+                                    newPoint = pol2->Eval(ptBins[l]);
+                                    meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                }
 							} else if(additionalNameOutput.Contains("2040")){
-									meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",0.8,14.);
+                                if(ptBins[l] < 5. ){
+									meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,10.);
 									newPoint = pol2->Eval(ptBins[l]);
 									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);									
-							}
+                                } else if(ptBins[l] > 12. ){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,maxPt);
+                                    newPoint = pol2->Eval(ptBins[l]);
+                                    meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else {
+                                    cout << "taking graph point" << endl;
+                                }
+                            }
 						} else if(meson.Contains("Eta")){
-							if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1,8.);
-								if(ptBins[l] < 2.){
-									newPoint = pol4->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
+							if(additionalNameOutput.Contains("0010") ){
+								if(ptBins[l] > 4.){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,maxPt);
 									newPoint = pol2->Eval(ptBins[l]);
 									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								}
-							} else if(additionalNameOutput.Contains("2050") || additionalNameOutput.Contains("2040")){
+								} else if(ptBins[l] < 2.){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,maxPt);
 									newPoint = pol2->Eval(ptBins[l]);
 									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-									
-							}
+                                } else {
+                                    cout << "taking graph point" << endl;
+                                }
+                            } else if( additionalNameOutput.Contains("0005")){
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,6.);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint*0.8);
+                            } else if( additionalNameOutput.Contains("0510") ){
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,8.);
+                                if(ptBins[l] < 6.){
+                                  newPoint = pol2->Eval(ptBins[l]);
+                                  meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else {
+                                  newPoint = pol2->Eval(6.);
+                                  meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                }
+							} else if(additionalNameOutput.Contains("2050")){
+                              if(ptBins[l] < 2.){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,maxPt);
+									newPoint = pol2->Eval(ptBins[l]);
+									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else if(ptBins[l] > 8.){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.2,maxPt);
+                                    newPoint = pol2->Eval(ptBins[l]);
+                                    meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                } else {
+                                    cout << "taking graph point" << endl;
+                                }
+                            } else if(additionalNameOutput.Contains("2040")){
+                                    meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,maxPt);
+                                    newPoint = pol2->Eval(ptBins[l]);
+                                    meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint*0.6);
+                            }
 						}
+//////////////////////////////////////////////////////////////////////////////
 					} else if(nameCutVariationSC[cut].Contains("TPCCluster")){
 						if(meson.Contains("Pi0")){
 							if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-								if(ptBins[l] < 10.){
-									newPoint = pol3->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
-									newPoint = pol2->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								}
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,10);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 							} else if(additionalNameOutput.Contains("2050")){
-								newPoint = pol2->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,12.);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 							} else if(additionalNameOutput.Contains("2040")){
-								if(ptBins[l] < 5.){
-									newPoint = pol3->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else if(ptBins[l] > 10.){
-									newPoint = pol2->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								} else {
-									cout << "taking graph point" << endl;					
-								}
+                                meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,10.);
+                                newPoint = pol2->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 							}
 						} else if(meson.Contains("Eta")){
-							if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-								if(ptBins[l] > 2.){
-									newPoint = pol3->Eval(ptBins[l]);
-									meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);								
-								} else {
-									cout << "taking graph point" << endl;					
-								}					
+							if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0510") ){
+                              meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,10);
+                              newPoint = pol2->Eval(ptBins[l]);
+                              meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                            } else if(additionalNameOutput.Contains("0005") ){
+                              meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,8.);
+                              newPoint = pol2->Eval(ptBins[l]);
+                              meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 							} else if(additionalNameOutput.Contains("2050")){
-								newPoint = pol3->Eval(ptBins[l]);
+                              meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,7.);
+								newPoint = pol2->Eval(ptBins[l]);
 								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);									
 							} else if(additionalNameOutput.Contains("2040")){
-								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1,8.);
+								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,7.);
 								newPoint = pol2->Eval(ptBins[l]);
 								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);									
 							}
 						}
 					}
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 				} else 	if (meson.CompareTo("EtaToPi0") == 0 && nCuts > 9){
 				
 					if(nameCutVariationSC[cut].Contains("Alpha")){
-						if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,6.);
-							if(ptBins[l] < 2.){
-								newPoint = pol4->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+						if(additionalNameOutput.Contains("0010")){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,8.);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if(additionalNameOutput.Contains("0005") ){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,6.);
+                            newPoint = pol2->Eval(1.);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if( additionalNameOutput.Contains("0510") ){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,4.5);
+                            if( ptBins[l] < 4.){
+                              newPoint = pol2->Eval(ptBins[l]);
+                              meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                            } else {
+                              newPoint = pol2->Eval(1.);
+                              meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                            }
+						} else if(additionalNameOutput.Contains("2050") ){
+							if( ptBins[l] < 8.){
+                                meanErrorsCorr[cut]->Fit(pol3,"QNRMEX0+","",1.5,6.);
+                                newPoint = pol3->Eval(ptBins[l]);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 							} else {
-								newPoint = pol2->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                                newPoint = pol3->Eval(7.5);
+                                meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 							}
-						} else if(additionalNameOutput.Contains("2050")){
-							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2,10.);
-							if(ptBins[l] < 3. || (ptBins[l] > 4. && ptBins[l] < 8.)){
-								newPoint = pol3->Eval(2.5);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							} else {
-								cout << "taking graph point" << endl;
-							}
-						} else if(additionalNameOutput.Contains("2040")){
-							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,3.);
-							newPoint = pol2->Eval(ptBins[l]);
-							meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if( additionalNameOutput.Contains("2040")){
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint*0.6);
 						}
+//////////////////////////////////////////////////////////////////////////////
 					} else if(nameCutVariationSC[cut].Contains("Chi2")){
-						if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,8.);
-							newPoint = pol2->Eval(ptBins[l]);
-							meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+						if(additionalNameOutput.Contains("0010") ){
+							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,6.);
+                            newPoint = pol2->Eval(3.5);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if(additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,6.);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint*0.9);
 						} else if(additionalNameOutput.Contains("2050")){
-							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,8.);
-							meanErrorsCorr[cut]->Fit(pol3,"QNRMEX0+","",1.,8.);
-							if(ptBins[l] < 3.){
-								newPoint = pol3->Eval(3.);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							} else if(ptBins[l] > 4.){
-								newPoint = pol2->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							} else {
-								cout << "taking graph point" << endl;					
-							}
-						} else if(additionalNameOutput.Contains("2040")){
-							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1,8.);
-							if(ptBins[l] <= 6.){
-								newPoint = pol2->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							} else if(ptBins[l] > 6.){
-								newPoint = pol3->Eval(2.5);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							}
-						}
+							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,6);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if( additionalNameOutput.Contains("2040")){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,8.);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        }
+//////////////////////////////////////////////////////////////////////////////
 					} else if( nameCutVariationSC[cut].Contains("ConvPhi")){
-						if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-							newPoint = pol2->Eval(ptBins[l]);
-							meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-						} else if(additionalNameOutput.Contains("2050") || additionalNameOutput.Contains("2040")){
-							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,7.);
-							newPoint = pol2->Eval(ptBins[l]);
-							meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-						}
-					} else if(nameCutVariationSC[cut].Contains("dEdxE")){
-						if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,8.);
-							 if(ptBins[l] == 1.25 || ptBins[l] == 3.5){
-								newPoint = pol3->Eval(5.);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							} else if(ptBins[l] == 3.5 || ptBins[l] == 7.){
-								newPoint = pol2->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							} else {
-								cout << "taking graph point" << endl;
-							}
-						}  else if(additionalNameOutput.Contains("2050")){
-								newPoint = pol2->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-						}  else if( additionalNameOutput.Contains("2040")){
-								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,8.);
-								newPoint = pol2->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-						}	
-					} else if(nameCutVariationSC[cut].Contains("dEdxPi")){
-						if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,10.);
-							if(ptBins[l] < 2.){
-								newPoint = pol4->Eval(5.);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							} else {
-								newPoint = pol2->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							}
-						}  else if(additionalNameOutput.Contains("2050")){
-							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,8.);
-							newPoint = pol2->Eval(ptBins[l]);
-							meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-						}  else if( additionalNameOutput.Contains("2040")){
+						if(additionalNameOutput.Contains("0010") ){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,6.);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if( additionalNameOutput.Contains("0005")  ){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,8.);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if(additionalNameOutput.Contains("0510") ){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,8.);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+						} else if(additionalNameOutput.Contains("2050")){
 							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,6.);
 							newPoint = pol2->Eval(ptBins[l]);
 							meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-						}
-					} else if(nameCutVariationSC[cut].Contains("Qt")){
-						if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,5.);
-							if(ptBins[l] < 3.){
-								newPoint = pol2->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							} else if(ptBins[l] == 3.5 || ptBins[l] >6. ){
-								newPoint = pol3->Eval(3.);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							} else {
-								cout << "taking graph point" << endl;
-							}
-						} else if(additionalNameOutput.Contains("2050")){
-							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.1,8.);
-							if(ptBins[l] < 4.){
-								newPoint = pol2->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							} else if(ptBins[l] == 5. || ptBins[l] == 9. ){
-								newPoint = pol2->Eval(3.5);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							} else {
-								cout << "taking graph point" << endl;					
-							}
-						} else if(additionalNameOutput.Contains("2040")){
+                        } else if( additionalNameOutput.Contains("2040")){
+                            newPoint = pol2->Eval(8.);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        }
+//////////////////////////////////////////////////////////////////////////////
+					} else if(nameCutVariationSC[cut].Contains("dEdxE")){
+						if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0510") ){
+							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.5,maxPt);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if(additionalNameOutput.Contains("0005") ){
+                            newPoint = pol2->Eval(7.);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+						}  else if(additionalNameOutput.Contains("2050")){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,8.);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        }  else if(  additionalNameOutput.Contains("2040")){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,6.);
+                            newPoint = pol2->Eval(5.);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        }
+//////////////////////////////////////////////////////////////////////////////
+					} else if(nameCutVariationSC[cut].Contains("dEdxPi")){
+						if(additionalNameOutput.Contains("0010")  ){
+							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,10.);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if( additionalNameOutput.Contains("0005") ){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",4.,maxPt);
+                            newPoint = pol2->Eval(6.);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if( additionalNameOutput.Contains("0510") ){
+                            newPoint = pol3->Eval(2.);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+						}  else if(additionalNameOutput.Contains("2050") ){
+                          if(ptBins[l] < 6.){
+							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,8.);
 							newPoint = pol2->Eval(ptBins[l]);
 							meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-						}
-					} else if(nameCutVariationSC[cut].Contains("SinglePt")){
-						if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-							if(ptBins[l] < 6.){
+                          } else if(ptBins[l] > 6.){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,8.);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                          }
+                        }  else if( additionalNameOutput.Contains("2040")){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,8.);
+                            newPoint = pol2->Eval(6.);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        }
+//////////////////////////////////////////////////////////////////////////////
+					} else if(nameCutVariationSC[cut].Contains("Qt")){
+						if(additionalNameOutput.Contains("0010")  ){
+                            newPoint = pol3->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if( additionalNameOutput.Contains("0005") ){
+                            newPoint = pol4->Eval(3.);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if(additionalNameOutput.Contains("0510") ){
+                            newPoint = pol3->Eval(2.5);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+						} else if(additionalNameOutput.Contains("2050")){
+							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,6.);
+                            meanErrorsCorr[cut]->Fit(pol3,"QNRMEX0+","",1.5,8.);
+                            if(ptBins[l] < 6.){
 								newPoint = pol3->Eval(ptBins[l]);
 								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							} else if(ptBins[l] >= 6.){
-								newPoint = pol3->Eval(5.);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);								
+							} else if(ptBins[l] > 6.){
+								newPoint = pol3->Eval(6.);
+								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 							} else {
 								cout << "taking graph point" << endl;					
 							}
-						} else if(additionalNameOutput.Contains("2050") || additionalNameOutput.Contains("2040")){
-								meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,8.);
-								newPoint = pol2->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-								
+                        } else if(additionalNameOutput.Contains("2040")){
+                            meanErrorsCorr[cut]->Fit(pol3,"QNRMEX0+","",1.5,8.);
+                            newPoint = pol3->Eval(3.5);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 						}
-					} else if(nameCutVariationSC[cut].Contains("TPCCluster")){
-						if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005") || additionalNameOutput.Contains("0510") ){
-// 							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.,8.);
-							if(ptBins[l] < 1.5){
-								newPoint = pol4->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							} else if(ptBins[l] > 2.){
-								newPoint = pol2->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							}								
+//////////////////////////////////////////////////////////////////////////////
+					} else if(nameCutVariationSC[cut].Contains("SinglePt")){
+						if(additionalNameOutput.Contains("0010") ){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,9.);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if(additionalNameOutput.Contains("0005") ){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,maxPt);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if( additionalNameOutput.Contains("0510") ){
+                            newPoint = pol3->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 						} else if(additionalNameOutput.Contains("2050")){
-								newPoint = pol2->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-						} else if(additionalNameOutput.Contains("2040")){
-							if(ptBins[l] < 6.){
-								newPoint = pol3->Eval(ptBins[l]);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							} else {
-								newPoint = pol3->Eval(5.5);
-								meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
-							}
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,8.);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if(additionalNameOutput.Contains("2040")){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,6.);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+						}
+//////////////////////////////////////////////////////////////////////////////
+					} else if(nameCutVariationSC[cut].Contains("TPCCluster")){
+						if(additionalNameOutput.Contains("0010") || additionalNameOutput.Contains("0005")  ){
+							meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,maxPt);
+                            newPoint = pol2->Eval(4.);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if( additionalNameOutput.Contains("0510") ){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,maxPt);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+						} else if(additionalNameOutput.Contains("2050") ){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",1.5,7.);
+                            newPoint = pol2->Eval(ptBins[l]);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
+                        } else if( additionalNameOutput.Contains("2040")){
+                            meanErrorsCorr[cut]->Fit(pol2,"QNRMEX0+","",2.,6.5);
+                            newPoint = pol2->Eval(2.5);
+                            meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 						}
 					}
-
 				}// else cout <<"bla"<<endl;
 				
-					
-					
 			} //end of pt bins loop	
 			
 			histo2DCheckSmooth->DrawCopy();

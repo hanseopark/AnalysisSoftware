@@ -533,7 +533,6 @@ Double_t fBinsEtaHIPtLHC11h[17]                 = { 0.0, 0.6, 1.0, 1.4, 1.8,
 Double_t fBinsEtaHIPtLHC11hLessBins[13]         = { 0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 
                                                     4., 6.0, 8.0, 10., 12., 
                                                     15., 19.};
-
 Int_t fBinsEtaHIPtRebin[4]                      = { 10, 8, 5, 5};
 Int_t fBinsEtaHIPtRebinLHC11h[16]               = { 10, 8, 8, 4, 4,
                                                     4, 5, 5, 8, 8, 8,
@@ -541,8 +540,8 @@ Int_t fBinsEtaHIPtRebinLHC11h[16]               = { 10, 8, 8, 4, 4,
 Int_t fBinsEtaHIPtRebinLHC11hFinerBinning[15]   = { 10, 8, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
                                                     8, 8, 8, 8, 8};
-Int_t fBinsEtaHIPtRebinLHC11hLessBins[12]       = { 10, 8, 5, 5, 5, 
-                                                    5, 5, 8, 8, 10, 
+Int_t fBinsEtaHIPtRebinLHC11hLessBins[12]       = { 10, 8, 5, 5, 5,
+                                                    5, 5, 8, 10, 10,
                                                     10, 10};
 
 Int_t fBinsPi0EtaBinningHIPtRebin[4]            = { 10, 2, 2, 2};
@@ -1192,14 +1191,22 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 fColumn         = 5;
                 fRow            = 5;
                 
-                if (fNBinsPt > 21) {
-                    cout << "You have chosen Direct Photon Plots and more than 21 bins, this is not possible, it will be reduced to 21 bins." << endl;
-                    fNBinsPt    = 21;
+                if (fNBinsPt > 24) {
+                    cout << "You have chosen Direct Photon Plots and more than 24 bins, this is not possible, it will be reduced to 24 bins." << endl;
+                    fNBinsPt    = 24;
                 }
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
-                    fBinsPt[i]  = fBinsPi0HIDirectPhotonPt[i];
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0HIDirectPhotonPtRebin[i];
+                    fBinsPt[i]  = fBinsPi0HIPtLHC11h[i];
+                    if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0HIPtLHC11hRebin[i];
                 }
+//                 if (fNBinsPt > 21) {
+//                     cout << "You have chosen Direct Photon Plots and more than 21 bins, this is not possible, it will be reduced to 21 bins." << endl;
+//                     fNBinsPt    = 21;
+//                 }
+//                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
+//                     fBinsPt[i]  = fBinsPi0HIDirectPhotonPt[i];
+//                     if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0HIDirectPhotonPtRebin[i];
+//                 }
                 fExampleBin     = 5;
             } else{
                 fStartPtBin     = 1;
