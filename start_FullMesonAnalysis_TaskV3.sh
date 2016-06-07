@@ -276,7 +276,7 @@ function GiveBinning7TeV()
 
 function GiveBinning8TeV()
 {
-    echo "How many p_T bins do you want to use for the Pi0? 23(7GeV), 24(8GeV), 25(10GeV), 26(12GeV) 27 (16GeV) 28 (25GeV), EMCAL (33)";
+    echo "How many p_T bins do you want to use for the Pi0? 23(7GeV), 24(8GeV), 25(10GeV), 26(12GeV) 27 (16GeV) 28 (25GeV), EMCAL (33), 48 EMC-merged (50GeV)";
     
     read answer
     if [ $answer = 23 ]; then
@@ -327,53 +327,59 @@ function GiveBinning8TeV()
         echo "44 Bins --> Max p_T = 25 GeV ...";
         correctPi0=1
         BinsPtPi0=44
+    elif [ $answer = 48 ]; then
+        echo "48 Bins --> Max p_T = 50 GeV ...";
+        correctPi0=1
+        BinsPtPi0=48
     else
         echo "Pi0 Binning was not set correctly. Please try again.";
         correctPi0=0
     fi
-     
-    echo "How many p_T bins do you want to use for the Eta? 10(4GeV), 12(6GeV), 13(8GeV), 14(10GeV), 15(12GeV)";
-    read answer
-    if [ $answer = 10 ]; then
-        echo "10 Bins --> Max p_T = 4 GeV ...";
-        correctEta=1
-        BinsPtEta=10
-    elif [ $answer = 12 ]; then
-        echo "12 Bins --> Max p_T = 6 GeV ...";
-        correctEta=1
-        BinsPtEta=12
-    elif [ $answer = 13 ]; then
-        echo "13 Bins --> Max p_T = 8 GeV ...";
-        correctEta=1
-        BinsPtEta=13
-    elif [ $answer = 14 ]; then
-         echo "14 Bins --> Max p_T = 10 GeV ...";
-         correctEta=1
-         BinsPtEta=14
-    elif [ $answer = 15 ]; then
-        echo "15 Bins --> Max p_T = 12 GeV ...";
-        correctEta=1
-        BinsPtEta=15
-    elif [ $answer = 16 ]; then
-        echo "16 Bins --> Max p_T = 14 GeV ...";
-        correctEta=1
-        BinsPtEta=16
-    elif [ $answer = 17 ]; then
-        echo "17 Bins --> Max p_T = 14 GeV ...";
-        correctEta=1
-        BinsPtEta=17
-    elif [ $answer = 18 ]; then
-        echo "18 Bins --> Max p_T = 14 GeV ...";
-        correctEta=1
-        BinsPtEta=18
-    elif [ $answer = 19 ]; then
-        echo "19 Bins --> Max p_T = 14 GeV ...";
-        correctEta=1
-        BinsPtEta=19
-    else
-        echo "Eta Binning was not set correctly. Please try again.";
-        correctEta=0
-    fi
+
+    if [ $DoEta -eq 1 ] || [ $DoPi0InEtaBinning -eq 1 ]; then
+        echo "How many p_T bins do you want to use for the Eta? 10(4GeV), 12(6GeV), 13(8GeV), 14(10GeV), 15(12GeV)";
+        read answer
+        if [ $answer = 10 ]; then
+            echo "10 Bins --> Max p_T = 4 GeV ...";
+            correctEta=1
+            BinsPtEta=10
+        elif [ $answer = 12 ]; then
+            echo "12 Bins --> Max p_T = 6 GeV ...";
+            correctEta=1
+            BinsPtEta=12
+        elif [ $answer = 13 ]; then
+            echo "13 Bins --> Max p_T = 8 GeV ...";
+            correctEta=1
+            BinsPtEta=13
+        elif [ $answer = 14 ]; then
+            echo "14 Bins --> Max p_T = 10 GeV ...";
+            correctEta=1
+            BinsPtEta=14
+        elif [ $answer = 15 ]; then
+            echo "15 Bins --> Max p_T = 12 GeV ...";
+            correctEta=1
+            BinsPtEta=15
+        elif [ $answer = 16 ]; then
+            echo "16 Bins --> Max p_T = 14 GeV ...";
+            correctEta=1
+            BinsPtEta=16
+        elif [ $answer = 17 ]; then
+            echo "17 Bins --> Max p_T = 14 GeV ...";
+            correctEta=1
+            BinsPtEta=17
+        elif [ $answer = 18 ]; then
+            echo "18 Bins --> Max p_T = 14 GeV ...";
+            correctEta=1
+            BinsPtEta=18
+        elif [ $answer = 19 ]; then
+            echo "19 Bins --> Max p_T = 14 GeV ...";
+            correctEta=1
+            BinsPtEta=19
+        else
+            echo "Eta Binning was not set correctly. Please try again.";
+            correctEta=0
+        fi
+    fi    
 }
 
 function GiveBinning900GeV()

@@ -114,6 +114,18 @@ Double_t fBinsPi08TeVPtEMCAL[33]                = { 0.0, 0.3, 0.4, 0.5, 0.6,
                                                     6.0, 7.0, 8.0, 10.0, 12.0,
                                                     16.0, 20.0, 25.0};
 
+Double_t fBinsPi08TeVPtMerged[50]               = { 0.0, 0.4, 0.6, 0.8, 1.0,
+                                                    1.2, 1.4, 1.6, 1.8, 2.0, 
+                                                    2.2, 2.4, 2.6, 3.0, 3.5, 
+                                                    4.0, 4.5, 5.0, 5.5, 6.0, 
+                                                    6.5, 7.0, 7.5, 8.0, 8.5,
+                                                    9.0, 9.5, 10.0, 11.0, 12.0, 
+                                                    13.0, 14.0, 15.0, 16.0, 17.0, 
+                                                    18.0, 19.0, 20.0, 22.0, 24.0, 
+                                                    26.0, 28.0, 30.0, 34.0, 36.0,
+                                                    38.0, 40.0, 45.0, 50.0, 60.0};
+
+                                                    
 Double_t fBinsPi08TeVPtDCA[23]                  = { 0.0, 0.3, 0.4, 0.6, 0.8,
                                                     1.0, 1.2, 1.4, 1.6, 2.0,
                                                     2.4, 2.8, 3.2, 3.6, 4.0,
@@ -168,6 +180,11 @@ Int_t fBinsPi08TeVConvEMCALPtRebin[28]          = { 2, 2,
                                                     2, 2, 2, 4, 4,
                                                     4, 4, 5, 8, 16,
                                                     2};
+Int_t fBinsPi08TeVPtMergedRebin[49]             = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                    2, 2, 2, 2, 2, 4, 4, 4, 4, 4,
+                                                    4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+                                                    4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+                                                    4, 4, 4, 4, 4, 4, 4, 5, 5 };
 
 Double_t fBinsEta8TeVPt[20]                     = { 0.0, 0.4, 0.8, 1.2, 1.6,
                                                     2.0, 2.4, 2.8, 3.2, 3.6, 
@@ -820,32 +837,34 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
             if (modi == 2 && specialTrigg == 2) fStartPtBin = 28;
             if (modi == 4 && specialTrigg == 1) fStartPtBin = 12;
             if (modi == 4 && specialTrigg == 2) fStartPtBin = 28;
+            if (modi == 10 && specialTrigg == 0) fStartPtBin = 28;
+            if (modi == 10 && specialTrigg == 1) fStartPtBin = 28;
+            if (modi == 10 && specialTrigg == 2) fStartPtBin = 28;
 
             fColumn             = 6;
             fRow                = 5;
 
-            if (fNBinsPt - fStartPtBin > 29){
+            if ((fNBinsPt - fStartPtBin) > 29){
                 fColumn     = 6;
                 fRow        = 6;
-            }
-            if (fNBinsPt - fStartPtBin < 25){
+            } else if ((fNBinsPt - fStartPtBin) < 10){
+                fColumn     = 4;
+                fRow        = 3;
+            } else if ((fNBinsPt - fStartPtBin) < 15){
+                fColumn     = 5;
+                fRow        = 3;
+            } else if ((fNBinsPt - fStartPtBin) < 20){
+                fColumn     = 5;
+                fRow        = 4;
+            } else if ((fNBinsPt - fStartPtBin) < 25){
                 fColumn     = 5;
                 fRow        = 5;
             }
-            if (fNBinsPt - fStartPtBin < 20){
-                fColumn     = 5;
-                fRow        = 4;
-            }
-            if (fNBinsPt - fStartPtBin < 15){
-                fColumn     = 5;
-                fRow        = 3;
-            }
-            if (fNBinsPt - fStartPtBin < 10){
-                fColumn     = 4;
-                fRow        = 3;
-            }
+            
+            
+            
 
-            if (fNBinsPt > 33 && modi != 2 && modi != 3 && modi != 4) {
+            if (fNBinsPt > 33 && modi != 2 && modi != 3 && modi != 4 && modi != 10) {
                 cout << "You have chosen to have more than 33 bins, this is not possible, it will be reduced to 33" << endl;
                 fNBinsPt        = 33;
             } else if (fNBinsPt > 32 && (modi ==4)){
@@ -870,7 +889,10 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                   cout << "You have chosen to have more than 28 bins, this is not possible, it will be reduced to 28" << endl;
                   fNBinsPt        = 28;
                 }
-            }
+            } else if (fNBinsPt > 49 && (modi == 10)){
+                cout << "You have chosen to have more than 49 bins, this is not possible, it will be reduced to 49" << endl;
+                fNBinsPt        = 49;
+            }    
 
 //            if (modi ==4){
 //                if (trigger.CompareTo("52") == 0 || trigger.CompareTo("81") == 0){
@@ -883,44 +905,48 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
 
             for (Int_t i = 0; i < fNBinsPt+1; i++) {
                 if (modi == 4 ){
-                  if(specialTrigg > 0)
+                    if(specialTrigg > 0)
                     fBinsPt[i]                 = fBinsPi08TeVTriggerPt[i];
-                  else
+                    else
                     fBinsPt[i]                 = fBinsPi08TeVPtEMCAL[i];
                 } else if (modi == 2){
-                  if(specialTrigg > 0)
+                    if(specialTrigg > 0)
                     fBinsPt[i]                 = fBinsPi08TeVTriggerPt[i];
-                  else
+                    else
                     fBinsPt[i]                 = fBinsPi08TeVPtConvEMCAL[i];
+                } else if (modi == 10){
+                    fBinsPt[i]                 = fBinsPi08TeVPtMerged[i];
                 } else {
                     fBinsPt[i]                 = fBinsPi08TeVPt[i];
                 }
 
                 if (modi == 2){
-                  if( specialTrigg == 1 ){
+                    if( specialTrigg == 1 ){
                     if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvEMCALTrigger1PtRebin[i];
-                  } else if( specialTrigg == 2 ){
+                    } else if( specialTrigg == 2 ){
                     if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvEMCALTrigger2PtRebin[i];
-                  } else{
+                    } else{
                     if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvEMCALPtRebin[i];
-                  }
+                    }
                 } else if(modi == 4) {
-                  if( specialTrigg == 1 ){
+                    if( specialTrigg == 1 ){
                     if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCALTrigger1PtRebin[i];
-                  } else if( specialTrigg == 2 ){
+                    } else if( specialTrigg == 2 ){
                     if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCALTrigger2PtRebin[i];
-                  } else{
+                    } else{
                     if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCALPtRebin[i];
-                  }
+                    }
+                } else if(modi == 10) {
+                    if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPtMergedRebin[i];
                 } else {
                     if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPtRebin[i];
                 }
             }
 
-//            Int_t nBinsPlot = fColumn*fRow -1;
-//            if (fNBinsPt-fStartPtBin > nBinsPlot) fColumn++;
-//            nBinsPlot           = fColumn*fRow -1;
-//            if (fNBinsPt-fStartPtBin > nBinsPlot) fRow++;
+            Int_t nBinsPlot = fColumn*fRow -1;
+            if ((fNBinsPt-fStartPtBin) > nBinsPlot) fColumn++;
+            nBinsPlot           = fColumn*fRow -1;
+            if ((fNBinsPt-fStartPtBin) > nBinsPlot) fRow++;
 
             fExampleBin         = 3;
             if( modi == 4 ) fExampleBin = 13;
