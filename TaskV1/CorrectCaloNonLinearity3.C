@@ -154,12 +154,24 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
         endPtBin            = 20;
         exampleBin1         = 4;
         exampleBin2         = 15;
+        if(select.Contains("JetJet")){
+          startPtBin          = 3;
+          endPtBin            = 23;
+          exampleBin1         = 4;
+          exampleBin2         = 15;
+        }
     } else if (select.Contains("Calo") && select.Contains("LHC12") ){
         startPtBin          = 3;
         endPtBin            = 16;
         if(select.Contains("Pythia")) endPtBin=15;
         exampleBin1         = 8;
         exampleBin2         = 14;
+        if(select.Contains("JetJet")){
+          startPtBin          = 3;
+          endPtBin            = 16;
+          exampleBin1         = 8;
+          exampleBin2         = 14;
+        }
     } else if (select.Contains("ConvCalo") && select.Contains("LHC13bc") ){
         startPtBin          = 0;
         endPtBin            = 20;
@@ -533,29 +545,29 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
         fPlot[1]            = "#frac{LHC15g1a}{LHC11a - EMC1}";
     // Default configuration for LHC10 (7TeV) 
     } else if(select.CompareTo("LHC10-Calo")==0){
-        strDataFile[0]      = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20150922-LHC10_p4-QA/GammaCalo_LHC10bcdef-pass4_201.root";
-        strMCFile[0]        = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20150922-LHC10_p4-QA/GammaCalo_MC_LHC14j4b_LHC14j4c_LHC14j4d_LHC14j4e_LHC14j4f_201.root";
+        strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20150922-LHC10_p4-QA/GammaCalo_LHC10bcdef-pass4_201.root";
+        strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20150922-LHC10_p4-QA/GammaCalo_MC_LHC14j4b_LHC14j4c_LHC14j4d_LHC14j4e_LHC14j4f_201.root";
         dataCut[0]          = "00000113_1111100010032230000_0163103100000050";
         mcCut[0]            = "00000113_1111100010032230000_0163103100000050";
 
         fPlot[0]            = "#frac{LHC14j4b-f}{LHC10b-f}";
     } else if(select.CompareTo("LHC10-ConvCalo")==0){
-        strDataFile[0]      = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20150922-LHC10_p4-QA/GammaConvCalo_LHC10bcdef-pass4_201.root";
-        strMCFile[0]        = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20150922-LHC10_p4-QA/GammaConvCalo_MC_LHC14j4b_LHC14j4c_LHC14j4d_LHC14j4e_LHC14j4f_201.root";
+        strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20150922-LHC10_p4-QA/GammaConvCalo_LHC10bcdef-pass4_201.root";
+        strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20150922-LHC10_p4-QA/GammaConvCalo_MC_LHC14j4b_LHC14j4c_LHC14j4d_LHC14j4e_LHC14j4f_201.root";
         dataCut[0]          = "00000113_00200009327000008250400000_1111100013032230000_0163103100000010";
         mcCut[0]            = "00000113_00200009327000008250400000_1111100013032230000_0163103100000010";
 
         fPlot[0]            = "#frac{LHC14j4b-f}{LHC10b-f}";
     } else if(select.CompareTo("LHC13bc-Calo")==0){
-        strDataFile[0]      = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20151005-LHC13bc_NonLin/GammaCalo_LHC13b-pass3_LHC13c-pass3_13.root";
-        strMCFile[0]        = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20151005-LHC13bc_NonLin/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_p4_13.root";
+        strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20151005-LHC13bc_NonLin/GammaCalo_LHC13b-pass3_LHC13c-pass3_13.root";
+        strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20151005-LHC13bc_NonLin/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_p4_13.root";
         dataCut[0]          = "80000013_1111100050032230000_0163103100000050";
         mcCut[0]            = "80000013_1111100050032230000_0163103100000050";
 
         fPlot[0]            = "#frac{LHC13b2_efix}{LHC13bc}";
     } else if(select.CompareTo("LHC13bc-Calo2")==0){
-        strDataFile[0]      = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20151005-LHC13bc_NonLin/GammaCalo_LHC13b-pass3_LHC13c-pass3_13.root";
-        strMCFile[0]        = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20151005-LHC13bc_NonLin/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_p4_13.root";
+        strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20151005-LHC13bc_NonLin/GammaCalo_LHC13b-pass3_LHC13c-pass3_13.root";
+        strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20151005-LHC13bc_NonLin/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_p4_13.root";
         dataCut[0]          = "80000013_1111100050032230000_0163103100000050";
         mcCut[0]            = "80000013_1111100050032230000_0163103100000050";
 
@@ -563,69 +575,111 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
         startPtBin          = 2;
         endPtBin            = 17;
     } else if(select.CompareTo("LHC13bc-ConvCalo")==0){
-        strDataFile[0]      = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20151005-LHC13bc_NonLin/GammaConvCalo_LHC13b-pass4_LHC13c-pass4_3.root";
-        strMCFile[0]        = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20151005-LHC13bc_NonLin/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_3.root";
+        strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20151005-LHC13bc_NonLin/GammaConvCalo_LHC13b-pass4_LHC13c-pass4_3.root";
+        strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20151005-LHC13bc_NonLin/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_3.root";
         dataCut[0]          = "80000013_00200009327002008250400000_1111100053032230000_0163103100000010";
         mcCut[0]            = "80000013_00200009327002008250400000_1111100053032230000_0163103100000010";
         fPlot[0]            = "#frac{LHC13b2_efix}{LHC13bc}";
     } else if(select.CompareTo("LHC12-Pythia-Calo")==0){
-      strDataFile[0]      = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC12_GammaCalo_111.root";
-      strMCFile[0]        = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC15h1_GammaCalo_111.root";
+      strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC12_GammaCalo_111.root";
+      strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC15h1_GammaCalo_111.root";
       dataCut[0]          = "00000113_1111100063032230000_0163103100000050";
       mcCut[0]            = "00000113_1111100063032230000_0163103100000050";
 
       firstTriggerBin[0]  = 12;
-      strDataFile[1]      = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kEMC7-LHC12_GammaCalo_111.root";
-      strMCFile[1]        = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC15h1_GammaCalo_111.root";
+      strDataFile[1]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kEMC7-LHC12_GammaCalo_111.root";
+      strMCFile[1]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC15h1_GammaCalo_111.root";
       dataCut[1]          = "00052113_1111100063032230000_0163103100000050";
       mcCut[1]            = "00052113_1111100063032230000_0163103100000050";
 
       fPlot[0]            = "#frac{LHC15h1}{LHC12 - INT7}";
       fPlot[1]            = "#frac{LHC15h1}{LHC12 - EMC7}";
     } else if(select.CompareTo("LHC12-Pythia-ConvCalo")==0){
-      strDataFile[0]      = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC12_GammaConvCalo_31.root";
-      strMCFile[0]        = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC15h1_GammaConvCalo_31.root";
+      strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC12_GammaConvCalo_31.root";
+      strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC15h1_GammaConvCalo_31.root";
       dataCut[0]          = "00000113_00200009327000008250400000_1111100063032230000_0163103100000010";
       mcCut[0]            = "00000113_00200009327000008250400000_1111100063032230000_0163103100000010";
 
       firstTriggerBin[0]  = 12;
-      strDataFile[1]      = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kEMC7-LHC12_GammaConvCalo_31.root";
-      strMCFile[1]        = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC15h1_GammaConvCalo_31.root";
+      strDataFile[1]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kEMC7-LHC12_GammaConvCalo_31.root";
+      strMCFile[1]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC15h1_GammaConvCalo_31.root";
       dataCut[1]          = "00052113_00200009327000008250400000_1111100063032230000_0163103100000010";
       mcCut[1]            = "00052113_00200009327000008250400000_1111100063032230000_0163103100000010";
 
       fPlot[0]            = "#frac{LHC15h1}{LHC12 - INT7}";
       fPlot[1]            = "#frac{LHC15h1}{LHC12 - EMC7}";
     } else if(select.CompareTo("LHC12-Phojet-Calo")==0){
-      strDataFile[0]      = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC12_GammaCalo_111.root";
-      strMCFile[0]        = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC15h2_GammaCalo_111.root";
+      strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC12_GammaCalo_111.root";
+      strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC15h2_GammaCalo_111.root";
       dataCut[0]          = "00000113_1111100063032230000_0163103100000050";
       mcCut[0]            = "00000113_1111100063032230000_0163103100000050";
 
       firstTriggerBin[0]  = 12;
-      strDataFile[1]      = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kEMC7-LHC12_GammaCalo_111.root";
-      strMCFile[1]        = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC15h2_GammaCalo_111.root";
+      strDataFile[1]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kEMC7-LHC12_GammaCalo_111.root";
+      strMCFile[1]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC15h2_GammaCalo_111.root";
       dataCut[1]          = "00052113_1111100063032230000_0163103100000050";
       mcCut[1]            = "00052113_1111100063032230000_0163103100000050";
 
       fPlot[0]            = "#frac{LHC15h2}{LHC12 - INT7}";
       fPlot[1]            = "#frac{LHC15h1}{LHC12 - EMC7}";
     } else if(select.CompareTo("LHC12-Phojet-ConvCalo")==0){
-      strDataFile[0]      = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC12_GammaConvCalo_31.root";
-      strMCFile[0]        = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC15h2_GammaConvCalo_31.root";
+      strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC12_GammaConvCalo_31.root";
+      strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC15h2_GammaConvCalo_31.root";
       dataCut[0]          = "00000113_00200009327000008250400000_1111100063032230000_0163103100000010";
       mcCut[0]            = "00000113_00200009327000008250400000_1111100063032230000_0163103100000010";
       dataMainDir[0]      = "GammaConvCalo";
       mcMainDir[0]        = "GammaConvCalo";
 
       firstTriggerBin[0]  = 12;
-      strDataFile[1]      = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kEMC7-LHC12_GammaConvCalo_31.root";
-      strMCFile[1]        = "/home/daniel/Desktop/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC15h2_GammaConvCalo_31.root";
+      strDataFile[1]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kEMC7-LHC12_GammaConvCalo_31.root";
+      strMCFile[1]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC15h2_GammaConvCalo_31.root";
       dataCut[1]          = "00052113_00200009327000008250400000_1111100063032230000_0163103100000010";
       mcCut[1]            = "00052113_00200009327000008250400000_1111100063032230000_0163103100000010";
 
       fPlot[0]            = "#frac{LHC15h2}{LHC12 - INT7}";
       fPlot[1]            = "#frac{LHC15h2}{LHC12 - EMC7}";
+    } else if(select.CompareTo("LHC12-JetJet-Calo")==0){
+      strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC12_GammaCalo_111.root";
+      strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20160513-8TeV-JetJetValid/LHC16c2_GammaCalo_111.root";
+      dataCut[0]          = "00000113_1111100063032230000_0163103100000050";
+      mcCut[0]            = "00010113_1111100063032220000_0163103100000050";
+
+      firstTriggerBin[0]  = 10;
+      strDataFile[1]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kEMC7-LHC12_GammaCalo_111.root";
+      strMCFile[1]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20160513-8TeV-JetJetValid/LHC16c2_GammaCalo_111.root";
+      dataCut[1]          = "00052113_1111100063032230000_0163103100000050";
+      mcCut[1]            = "00052113_1111100063032220000_0163103100000050";
+
+      firstTriggerBin[1]  = 16;
+      strDataFile[2]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kEMCEGA-LHC12_GammaCalo_111.root";
+      strMCFile[2]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20160513-8TeV-JetJetValid/LHC16c2_GammaCalo_111.root";
+      dataCut[2]          = "00081113_1111100063032230000_0163103100000050";
+      mcCut[2]            = "00081113_1111100063032220000_0163103100000050";
+
+      fPlot[0]            = "#frac{LHC16c2}{LHC12 - INT7}";
+      fPlot[1]            = "#frac{LHC16c2}{LHC12 - EMC7}";
+      fPlot[2]            = "#frac{LHC16c2}{LHC12 - EGA}";
+    } else if(select.CompareTo("LHC12-JetJet-ConvCalo")==0){
+      strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kINT7-LHC12_GammaConvCalo_31.root";
+      strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20160513-8TeV-JetJetValid/LHC16c2_GammaConvCalo_31.root";
+      dataCut[0]          = "00000113_00200009327000008250400000_1111100063032230000_0163103100000010";
+      mcCut[0]            = "00010113_00200009327000008250400000_1111100063032230000_0163103100000010";
+
+      firstTriggerBin[0]  = 12;
+      strDataFile[1]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kEMC7-LHC12_GammaConvCalo_31.root";
+      strMCFile[1]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20160513-8TeV-JetJetValid/LHC16c2_GammaConvCalo_31.root";
+      dataCut[1]          = "00052113_00200009327000008250400000_1111100063032230000_0163103100000010";
+      mcCut[1]            = "00052113_00200009327000008250400000_1111100063032230000_0163103100000010";
+
+      firstTriggerBin[1]  = 20;
+      strDataFile[2]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20160120-8TeV_NL/kEMCEGA-LHC12_GammaConvCalo_31.root";
+      strMCFile[2]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20160513-8TeV-JetJetValid/LHC16c2_GammaConvCalo_31.root";
+      dataCut[2]          = "00081113_00200009327000008250400000_1111100063032230000_0163103100000010";
+      mcCut[2]            = "00081113_00200009327000008250400000_1111100063032230000_0163103100000010";
+
+      fPlot[0]            = "#frac{LHC16c2}{LHC12 - INT7}";
+      fPlot[1]            = "#frac{LHC16c2}{LHC12 - EMC7}";
+      fPlot[2]            = "#frac{LHC16c2}{LHC12 - EGA}";
     } else{
         cout << "No valid selection '" << select.Data() << "'' given, returning..." << endl;
         return;
@@ -727,8 +781,8 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
     histDataResults->SetDirectory(0);
     histMCResults->GetXaxis()->SetRangeUser(fBins[startPtBin],fBins[endPtBin]);
     histDataResults->GetXaxis()->SetRangeUser(fBins[startPtBin],fBins[endPtBin]);
-    histMCResults->GetYaxis()->SetRangeUser(0.12,0.14);
-    histDataResults->GetYaxis()->SetRangeUser(0.12,0.14);
+    histMCResults->GetYaxis()->SetRangeUser(0.12,0.142);
+    histDataResults->GetYaxis()->SetRangeUser(0.12,0.142);
 
     TF1* fFitReco;
     TF1* fFitMassPos;
@@ -899,6 +953,37 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
                  sliceHist->Rebin(2);
                  sliceBGHist->Rebin(2);
                }
+            } else if(select.Contains("LHC12-JetJet-Calo")) {
+                if(fBins[iClusterPt]==1.6){
+                  sliceHist->Rebin(8);
+                  sliceBGHist->Rebin(8);
+                } else if(iDataMC == 1 && fBins[iClusterPt]==4.0){
+                  sliceHist->Rebin(4);
+                  sliceBGHist->Rebin(4);
+                } else if(fBins[iClusterPt]<=1.0){
+                  sliceHist->Rebin(4);
+                  sliceBGHist->Rebin(4);
+                } else {
+                  sliceHist->Rebin(2);
+                  sliceBGHist->Rebin(2);
+                }
+             } else if(select.Contains("LHC12-JetJet-ConvCalo")) {
+                 if(fBins[iClusterPt]>=16.0){
+                   sliceHist->Rebin(8);
+                   sliceBGHist->Rebin(8);
+                 } else if(fBins[iClusterPt]>=8.0){
+                   sliceHist->Rebin(4);
+                   sliceBGHist->Rebin(4);
+                 } else if(fBins[iClusterPt]==3.2){
+                   sliceHist->Rebin(8);
+                   sliceBGHist->Rebin(8);
+                 } else if(fBins[iClusterPt]<=0.8){
+                   sliceHist->Rebin(4);
+                   sliceBGHist->Rebin(4);
+                 } else {
+                   sliceHist->Rebin(2);
+                   sliceBGHist->Rebin(2);
+                 }
             } else if(select.Contains("LHC13bc-Calo")) {
                if(fBins[iClusterPt]>=3.2){
                    sliceHist->Rebin(2);
@@ -922,22 +1007,22 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
 //                 || ( select.Contains("LHC13bc-ConvCalo")  && fBins[iClusterPt]<5 )
 //                 || ( select.Contains("LHC13bc-Calo")  && fBins[iClusterPt]<2 )
 //                 ){
-                Double_t range              = 0.3;
-                Double_t rangeMin           = 0.0;
-                if(select.Contains("-ConvCalo")) 
-                    rangeMin                = 0.0;
-                if (select.Contains("JetJet"))
-                    range                   = 0.2;
+//                Double_t range              = 0.3;
+//                Double_t rangeMin           = 0.0;
+//                if(select.Contains("-ConvCalo"))
+//                    rangeMin                = 0.0;
+//                if (select.Contains("JetJet"))
+//                    range                   = 0.2;
                 
                 Double_t integralSigAndBG   = sliceHist->Integral(sliceHist->FindBin(0.17), sliceHist->FindBin(0.3));
                 Double_t integralBG         = sliceBGHist->Integral(sliceBGHist->FindBin(0.17), sliceBGHist->FindBin(0.3));
                 cout << integralSigAndBG << "\t" << integralBG << "\t" << integralSigAndBG/ integralBG << endl;
                 
-                if (!isnan(integralSigAndBG/ integralBG) && !isinf(integralSigAndBG/ integralBG)){
+                if (integralBG != 0){
                     sliceBGHist->Scale( integralSigAndBG/ integralBG );
                 }    
                 TH1D* sliceHistCopy         = (TH1D*)sliceHist->Clone("SliceCopy");
-                if (!isnan(integralSigAndBG/ integralBG) && !isinf(integralSigAndBG/ integralBG)){
+                if (integralBG != 0 && fBins[iClusterPt]<16.0){
                     sliceHist->Add( sliceBGHist, -1);
                 }                
 //                 TF1* fBckFit                = FitBckg(sliceHist,rangeMin,range);
@@ -987,7 +1072,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
 //                 sliceHist->GetXaxis()->SetRangeUser(0.05,0.2);
 
             Double_t sigmaRangeAdjust = 1.5;
-            Double_t precision = 0.1;
+            //Double_t precision = 0.1;
             Double_t minMax[2]={0.04,0.3};
             
     //*******************************************************************************
@@ -1008,6 +1093,8 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
                     minMax[0]   = min;
                 cout << minMax[0] << endl;
             }
+            if( select.Contains("LHC12-JetJet-Calo")) minMax[0]+=0.01;
+
 //             fFitReco = FitRecursiveGaussian (sliceHist, precision, sigmaRangeAdjust, minMax[0], minMax[1]);
             fFitReco = FitExpPlusGaussian (sliceHist, minMax[0], minMax[1], mode);
 
@@ -1052,6 +1139,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
 
     Double_t minPlotY = 0.95;
     if(select.Contains("LHC10-Calo")) minPlotY = 0.9;
+    if(select.Contains("LHC12-JetJet")) minPlotY = 0.93;
 
 
     //*********************************************************************************************************************************
@@ -1147,6 +1235,10 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
         startFit                    = 6;
     if(select.Contains("LHC12-Pythia-ConvCalo"))
         startFit                    = 8;
+    if(select.Contains("LHC12-JetJet-Calo"))
+        startFit                    = 2.8;
+    if(select.Contains("LHC12-JetJet-ConvCalo"))
+        startFit                    = 5.0;
 
     TF1* fFitConst = new TF1("DataMCConst", "[0]" ,startFit,fBins[endPtBin]);
     histDataMCResults->Fit(fFitConst,"QRME0");

@@ -2872,6 +2872,15 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fMesonIntDeltaRangeNarrow[0]    = -0.016; 
             if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonIntDeltaRangeNarrow[0] = -0.020;}
             fMesonIntDeltaRangeNarrow[1]    = 0.016;
+
+            if ( fEnergyFlag.CompareTo("8TeV") == 0 ){
+              TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+              if( trigger.CompareTo("81") == 0 ){
+                fFitRange[0]=0.04;
+                fMesonFitRange[0] = 0.04;
+              }
+            }
+
         }
         if (fMode == 4 || fMode == 5 ){
             fPeakRange[0]                   = 0.05;
@@ -2932,6 +2941,13 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
                 fMesonIntDeltaRangeWide[1]      = fMesonIntDeltaRange[1]*1.4;// mod.
                 fMesonIntDeltaRangeNarrow[0]    = fMesonIntDeltaRange[0]*0.6; // mod.
                 fMesonIntDeltaRangeNarrow[1]    = fMesonIntDeltaRange[1]*0.6; // mod.
+
+                if ( fEnergyFlag.CompareTo("8TeV") == 0 ){
+                  TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+                  if( trigger.CompareTo("52") == 0 || trigger.CompareTo("81") == 0 ){
+                    fBGFitRange[0]=0.21;
+                  }
+                }
             }
         }
     } else if (setPi0.CompareTo("Eta") == 0){
