@@ -223,7 +223,9 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         
         TH1D* histoPCMPi0AccTimesEff                        = (TH1D*)histoPCMPi0TrueEffPt->Clone("histoPCMPi0AccTimesEff");
         histoPCMPi0AccTimesEff->Multiply(histoPCMPi0Acc);
-    
+        // normalize to full acceptance (delta y and phi)
+        histoPCMPi0AccTimesEff->Scale(2*TMath::Pi()*1.6);
+        
     TFile* filePCMEta                                       = new TFile(fileNamePCMEta.Data());
     TDirectory* directoryPCMEta                             = (TDirectory*)filePCMEta->Get("Eta2.76TeV"); 
         TH1D* histoPCMEtaMass                               = (TH1D*)directoryPCMEta->Get("MassEta");
@@ -238,7 +240,9 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
 
         TH1D* histoPCMEtaAccTimesEff                        = (TH1D*)histoPCMEtaTrueEffPt->Clone("histoPCMEtaAccTimesEff");
         histoPCMEtaAccTimesEff->Multiply(histoPCMEtaAcc);
-
+        // normalize to full acceptance (delta y and phi)
+        histoPCMEtaAccTimesEff->Scale(2*TMath::Pi()*1.6);
+        
         //      TGraphAsymmErrors* graphPCMEtaInvXSectionSysA     = (TGraphAsymmErrors*)directoryPCMEta->Get("InvCrossSectionEtaSysA");
         TGraphAsymmErrors* graphPCMEtaInvXSectionSys        = (TGraphAsymmErrors*)directoryPCMEta->Get("InvCrossSectionEtaSys");
 //      TGraphAsymmErrors* graphPCMEtaCorrYieldSysErr    = (TGraphAsymmErrors*)directoryPCMEta->Get("EtaSystError");
@@ -504,6 +508,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         histoPHOSPi0TrueFWHMMeV->SetBinContent(histoPHOSPi0TrueFWHMMeV->GetNbinsX(),10000.);
         histoPHOSPi0TrueFWHMMeV->SetBinContent(1,10000.);
         TH1D* histoPHOSPi0AccTimesEff                       = (TH1D*)directoryPHOSPi0->Get("yield1_int_CB");
+        histoPHOSPi0AccTimesEff->Scale(2*TMath::Pi());
         TGraphAsymmErrors* graphPHOSPi0AccTimesEff          = new TGraphAsymmErrors(histoPHOSPi0AccTimesEff);
 
 
@@ -3223,7 +3228,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
     canvasAcceptanceTimesEff->SetLogx(1);
     
         TH2F * histo2DAccEff;
-        histo2DAccEff                = new TH2F("histo2DAccEff", "histo2DAccEff",1000, 0.23,  70, 1000, 8e-6, 2e-1 );
+        histo2DAccEff                = new TH2F("histo2DAccEff", "histo2DAccEff",1000, 0.23,  70, 1000, 8e-5, 2e-0 );
         SetStyleHistoTH2ForGraphs( histo2DAccEff, "#it{p}_{T} (GeV/#it{c})", "#it{A} #times #it{#epsilon}_{eff} / #it{P}",  
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.1);//(#times #epsilon_{pur})
         histo2DAccEff->GetYaxis()->SetLabelOffset(0.001);
@@ -3300,7 +3305,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
     canvasAcceptanceTimesEff->cd();
     
         TH2F * histo2DAccEffEta;
-        histo2DAccEffEta                = new TH2F("histo2DAccEffEta", "histo2DAccEffEta",1000, 0.33,  25, 1000, 8e-5, 1.5e-1 );
+        histo2DAccEffEta                = new TH2F("histo2DAccEffEta", "histo2DAccEffEta",1000, 0.33,  25, 1000, 8e-4, 1.5e-0 );
         SetStyleHistoTH2ForGraphs( histo2DAccEffEta, "#it{p}_{T} (GeV/#it{c})", "#it{A} #times #it{#epsilon}_{eff} / #it{P}",  
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.1);//(#times #epsilon_{pur})
         histo2DAccEffEta->GetYaxis()->SetLabelOffset(0.001);

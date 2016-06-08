@@ -333,6 +333,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     
     TH1D*   histoMCRawClusterPt     [MaxNumberOfFiles];
     TH1D*   histoMCRatioRawClusterPt[MaxNumberOfFiles];
+    TString rapidityRange                                   = "";
+    Double_t deltaRapid             [MaxNumberOfFiles];
+
     
     for (Int_t i=0; i< nrOfTrigToBeComb; i++){
         // Define CutSelections
@@ -342,8 +345,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TString fElectronCutSelection                       = "";
         TString fMesonCutSelection                          = "";
         // disentangle cut selection
-        ReturnSeparatedCutNumberAdvanced(cutNumber[i].Data(),fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
-    
+        ReturnSeparatedCutNumberAdvanced(cutNumber[i].Data(),fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);    
+        
         FileNameCorrectedPi0[i]                             = Form("%s/%s/Pi0_%s_GammaConvV1Correction_%s.root", cutNumber[i].Data(), optionEnergy.Data(), isMC.Data(), 
                                                                     cutNumber[i].Data());
         if (mode == 10) FileNameCorrectedPi0[i]             = Form("%s/%s/Pi0_%s_GammaMergedCorrection_%s.root", cutNumber[i].Data(), optionEnergy.Data(), isMC.Data(), 
@@ -372,7 +375,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             else 
                 enableTriggerRejecCompMC                    = kTRUE;
         }
-        
+        deltaRapid[i]                                       =  ReturnRapidityStringAndDouble(fMesonCutSelection, rapidityRange);
+
         histoEventQualtity[i]                               = (TH1F*)fileCorrectedPi0[i]->Get("NEvents");
         histoCorrectedYieldPi0[i]                           = (TH1D*)fileCorrectedPi0[i]->Get(nameCorrectedYield.Data());
         histoCorrectedYieldPi0[i]->SetName(Form("CorrectedYield_%s",cutNumber[i].Data()));
@@ -416,6 +420,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 histoTriggerEffPi0[i]->Divide(histoTriggerEffPi0[i],histoEffiBasePi0Temp,1.,1.,"B");
                 histoEffTimesAccPi0[i]                      = (TH1D*)histoEffBasePi0[i]->Clone(Form("EffTimeAcc_%s",  cutNumber[i].Data()));
                 histoEffTimesAccPi0[i]->Multiply(histoAcceptancePi0[i]);
+                histoEffTimesAccPi0[i]->Scale(deltaRapid[i]*2*TMath::Pi());
             } else {
                 histoEffBasePi0[i]                          = NULL;
                 histoTriggerEffPi0[i]                       = NULL;
@@ -423,6 +428,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         } else {
             histoEffTimesAccPi0[i]                      = (TH1D*)histoEfficiencyPi0[i]->Clone(Form("EffTimeAcc_%s",  cutNumber[i].Data()));
             histoEffTimesAccPi0[i]->Multiply(histoAcceptancePi0[i]);
+            histoEffTimesAccPi0[i]->Scale(deltaRapid[i]*2*TMath::Pi());
         }
         
         //Scale spectrum to MBOR
@@ -1367,7 +1373,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TGraphAsymmErrors* graphOrderedEffTimesAccPi0           [MaxNumberOfFiles];
     TGraphAsymmErrors* graphPurityPi0                       [MaxNumberOfFiles];
     TGraphAsymmErrors* graphOrderedPurityPi0                [MaxNumberOfFiles];
-    
+        
     // definition of predefined arrays for trigger correlation filling
     TH1D*               histoStatPi0    [12]; 
     TGraphAsymmErrors*  graphSystPi0    [12];
@@ -2923,6 +2929,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     histoTriggerEffEta[i]->Divide(histoTriggerEffEta[i],histoEffiBaseEtaTemp,1.,1.,"B");
                     histoEffTimesAccEta[i]                      = (TH1D*)histoEffBaseEta[i]->Clone(Form("EffTimeAcc_%s",  cutNumber[i].Data()));
                     histoEffTimesAccEta[i]->Multiply(histoAcceptanceEta[i]);
+                    histoEffTimesAccEta[i]->Scale(deltaRapid[i]*2*TMath::Pi());
                 } else {
                     histoEffBaseEta[i]                          = NULL;
                     histoTriggerEffEta[i]                       = NULL;
@@ -2930,6 +2937,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             } else {
                 histoEffTimesAccEta[i]                          = (TH1D*)histoEfficiencyEta[i]->Clone(Form("EffTimeAcc_%s",  cutNumber[i].Data()));
                 histoEffTimesAccEta[i]->Multiply(histoAcceptanceEta[i]);
+                histoEffTimesAccEta[i]->Scale(deltaRapid[i]*2*TMath::Pi());
 
             }    
 
@@ -5203,7 +5211,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             if (histoEfficiencyPi0[i])                  histoEfficiencyPi0[i]->Write(Form("EfficiencyPi0_%s",triggerName[i].Data()),TObject::kOverwrite);
             if (histoRawYieldPi0[i])                    histoRawYieldPi0[i]->Write(Form("RAWYieldPerEventsPi0_%s",triggerName[i].Data()),TObject::kOverwrite);
             if (histoMCInputPi0[i])                     histoMCInputPi0[i]->Write(Form("Pi0_Input_Reweighted_%s",triggerName[i].Data()),TObject::kOverwrite);
-            if (histoEffTimesAccPi0[i])                     histoEffTimesAccPi0[i]->Write(Form("EffTimesAccPi0_%s",triggerName[i].Data()),TObject::kOverwrite);
+            if (histoEffTimesAccPi0[i])                 histoEffTimesAccPi0[i]->Write(Form("EffTimesAccPi0_%s",triggerName[i].Data()),TObject::kOverwrite);
             if (mode != 10){
                 if (histoMassPi0Data[i])                    histoMassPi0Data[i]->Write(Form("Pi0_Mass_data_%s",triggerName[i].Data()),TObject::kOverwrite);
                 if (histoMassPi0MC[i])                      histoMassPi0MC[i]->Write(Form("Pi0_Mass_MC_%s",triggerName[i].Data()),TObject::kOverwrite);
