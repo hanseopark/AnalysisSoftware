@@ -947,19 +947,19 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
 
                 if (modi == 2){
                     if( specialTrigg == 1 ){
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvEMCALTrigger1PtRebin[i];
+                      if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvEMCALTrigger1PtRebin[i];
                     } else if( specialTrigg == 2 ){
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvEMCALTrigger2PtRebin[i];
+                      if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvEMCALTrigger2PtRebin[i];
                     } else{
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvEMCALPtRebin[i];
+                      if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvEMCALPtRebin[i];
                     }
                 } else if(modi == 4) {
                     if( specialTrigg == 1 ){
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCALTrigger1PtRebin[i];
+                      if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCALTrigger1PtRebin[i];
                     } else if( specialTrigg == 2 ){
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCALTrigger2PtRebin[i];
+                      if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCALTrigger2PtRebin[i];
                     } else{
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCALPtRebin[i];
+                      if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCALPtRebin[i];
                     }
                 } else if(modi == 10) {
                     if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPtMergedRebin[i];
@@ -1051,7 +1051,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     } else if ( trigger.CompareTo("85") == 0 ){
                         specialTrigg = 2; //L1 G2 (lower threshold) 
                     } else if ( trigger.CompareTo("83") == 0    ){
-                        specialTrigg = 3; //L1 G1 (higher threshold) 
+                        specialTrigg = 3; //L1 G1 (higher threshold)
                     } else if ( trigger.CompareTo("51") == 0    ){
                         specialTrigg = 4; //L0 LHC11a
                     } else if ( trigger.CompareTo("01") == 0  || trigger.CompareTo("00") == 0   ){
