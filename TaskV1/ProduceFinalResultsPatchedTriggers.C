@@ -376,7 +376,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 enableTriggerRejecCompMC                    = kTRUE;
         }
         deltaRapid[i]                                       =  ReturnRapidityStringAndDouble(fMesonCutSelection, rapidityRange);
-
+        cout << "For Trigger: " << triggerName[i] << " using rapidity: " <<  rapidityRange.Data() << endl;
+        
         histoEventQualtity[i]                               = (TH1F*)fileCorrectedPi0[i]->Get("NEvents");
         histoCorrectedYieldPi0[i]                           = (TH1D*)fileCorrectedPi0[i]->Get(nameCorrectedYield.Data());
         histoCorrectedYieldPi0[i]->SetName(Form("CorrectedYield_%s",cutNumber[i].Data()));
