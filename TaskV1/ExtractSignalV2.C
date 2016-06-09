@@ -2811,6 +2811,10 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fMesonIntDeltaRange         = new Double_t[2];
         fMesonIntDeltaRange[0]      = -0.035;
         fMesonIntDeltaRange[1]      = 0.010;
+		  if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV")){
+			  fMesonIntDeltaRange[0]      = -0.035;
+			  fMesonIntDeltaRange[1]      =  0.012;
+		  }
         fMesonIntDeltaRangeWide     = new Double_t[2];
         fMesonIntDeltaRangeWide[0]  = -0.055; 
         fMesonIntDeltaRangeWide[1]  = 0.025;
@@ -2975,6 +2979,10 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fMesonIntDeltaRange         = new Double_t[2]; 
         fMesonIntDeltaRange[0]      = -0.048;
         fMesonIntDeltaRange[1]      = 0.022;
+		  if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV")){
+			  fMesonIntDeltaRange[0]      = -0.036;
+			  fMesonIntDeltaRange[1]      =  0.018;
+		  }
         fMesonIntDeltaRangeWide     = new Double_t[2]; 
         fMesonIntDeltaRangeWide[0]  = -0.068;
         fMesonIntDeltaRangeWide[1]  = 0.032;
@@ -4515,6 +4523,14 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
             mesonAmplitudeMin = mesonAmplitude*98./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
             if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
+				if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV")){
+					if ((ptBin > 2)&&ptBin<100 ){
+						fMesonWidthRange[0]         = 0.001; 
+						fMesonWidthRange[1]         = 0.009;
+					}
+					mesonAmplitudeMin = mesonAmplitude*98./100.;
+					mesonAmplitudeMax = mesonAmplitude*115./100.;
+				}
             if (fMode == 2 || fMode == 3) {
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*600./100.;
@@ -4531,6 +4547,11 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
         } else {
             mesonAmplitudeMin = mesonAmplitude*50./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
+				if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV") ){
+					mesonAmplitudeMin = mesonAmplitude*65./100.;
+					if(ptBin > 1)mesonAmplitudeMin = mesonAmplitude*85./100.;
+					mesonAmplitudeMax = mesonAmplitude*115./100.;
+				}
             if (fMode == 2 || fMode == 3){
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
