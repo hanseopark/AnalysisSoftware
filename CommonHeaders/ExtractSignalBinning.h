@@ -1901,6 +1901,18 @@ Int_t GetBinning(   Double_t*  binning,
                     binning[i] = fBinsPi02760GeVFullHaitoMerged[i];
                 }
             }
+        } else if (energy.CompareTo("8TeV") == 0){
+          if ( mode == 2 ){
+              maxNBins = 32;
+              for(Int_t i = 0; i < maxNBins+1; i++){
+                  binning[i] = fBinsPi08TeVPtEMCAL[i];
+              }
+          } else if ( mode == 4){
+              maxNBins = 32;
+              for(Int_t i = 0; i < maxNBins+1; i++){
+                  binning[i] = fBinsPi08TeVPtEMCAL[i];
+              }
+          }
         }
     } else if (meson.Contains("Eta")){
         if (energy.CompareTo("2.76TeV") == 0){
@@ -1908,6 +1920,18 @@ Int_t GetBinning(   Double_t*  binning,
             for(Int_t i = 0; i < maxNBins+1; i++){
                 binning[i] = fBinsEta2760GeVPtTrig11a[i];
             } 
+        } else if (energy.CompareTo("8TeV") == 0){
+          if ( mode == 2 ){
+              maxNBins = 19;
+              for(Int_t i = 0; i < maxNBins+1; i++){
+                  binning[i] = fBinsEta8TeVConvEMCALPt[i];
+              }
+          } else if ( mode == 4){
+              maxNBins = 19;
+              for(Int_t i = 0; i < maxNBins+1; i++){
+                  binning[i] = fBinsEta8TeVPt[i];
+              }
+          }
         }
         
     }
