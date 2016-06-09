@@ -702,3 +702,12 @@ TLatex *labelRelStatErrPi0;
 TLegend* legendXsectionPaperOnlyRatios;
 TLatex *labelDetSysRatioToModelsLHC11h;
 TH2F * histo2DInvYieldSectionLHC11hwithPP;
+
+TGraphAsymmErrors* sysErrorRel2010and2011_0010[2];
+TGraphAsymmErrors* sysErrorRel2010and2011_2040[2];
+TGraphAsymmErrors* sysErrorRelRAA2010and2011_0010[2];
+TGraphAsymmErrors* sysErrorRelRAA2010and2011_2040[2];
+TGraphAsymmErrors* statErrorRel2010and2011_0010[2];
+TGraphAsymmErrors* statErrorRel2010and2011_2040[2];
+TGraphAsymmErrors* statErrorRelRAA2010and2011_0010[2];
+TGraphAsymmErrors* statErrorRelRAA2010and2011_2040[2];

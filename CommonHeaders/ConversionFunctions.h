@@ -1970,7 +1970,7 @@ TGraphAsymmErrors* ApplyXshiftIndividualSpectra( TGraphAsymmErrors *CombinedSpec
 void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSpectrumSystNoMat, TGraphAsymmErrors* graphPPCombinedSpectrum, TF1* fitPP,
                 TGraphAsymmErrors* graphPbPbSpectrum, TGraphAsymmErrors* graphPbPbSpectrumSysNoMat,  //PbPb Yields
                 TGraphAsymmErrors** graphRAA, TGraphAsymmErrors** graphRAASys,
-                Double_t fNcoll, Double_t fNcollError, TString meson = "Pi0", Double_t maxPtPP = 0., Int_t nSubEnd = 0, TString functionInterpolation = "powPure"){
+                Double_t fNcoll, Double_t fNcollError, TString meson = "Pi0", Double_t maxPtPP = 0., Int_t nSubEnd = 0, TString functionInterpolation = "powPure", Bool_t quiet = kTRUE){
     //--------------------------------------- extrapolating the pp CONV yield in pT --------------------------------------------------
 
     TString nameSystem = graphPbPbSpectrum->GetName();
@@ -1980,37 +1980,40 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
     else if(nameSystem.Contains("PHOS")) labelSystem = "PHOS";
     else if(nameSystem.Contains("EMCal")) labelSystem = "EMCal";
 
-    cout << Form("PbPb %s spectrum: ",labelSystem.Data()) << endl;
-    graphPbPbSpectrum->Print();
-    cout << "\n";
-    graphPbPbSpectrumSysNoMat->Print();
-    
-    cout << Form("\n PP %s spectrum: ",labelSystem.Data()) << endl;
-    graphPPSpectrum->Print();
-    cout << "\n";
-    graphPPSpectrumSystNoMat->Print();
-    
-    cout << "\n combined PP spectrum (for extrapolation): " << endl;
-    graphPPCombinedSpectrum->Print();
-    cout << "\n";
-    
+    if(!quiet){
+      cout << Form("PbPb %s spectrum: ",labelSystem.Data()) << endl;
+      graphPbPbSpectrum->Print();
+      cout << "\n";
+      graphPbPbSpectrumSysNoMat->Print();
+
+      cout << Form("\n PP %s spectrum: ",labelSystem.Data()) << endl;
+      graphPPSpectrum->Print();
+      cout << "\n";
+      graphPPSpectrumSystNoMat->Print();
+
+      cout << "\n combined PP spectrum (for extrapolation): " << endl;
+      graphPPCombinedSpectrum->Print();
+      cout << "\n";
+    }
     TGraphAsymmErrors* dummyPPSpectrum  = (TGraphAsymmErrors*)graphPPCombinedSpectrum->Clone("dummyPPSpectrum");
     Double_t* xBinsPPFit                = dummyPPSpectrum->GetX();
     Double_t* xBinsPPErrFitLow          = dummyPPSpectrum->GetEXlow();
     Double_t* xBinsPPErrFitHigh         = dummyPPSpectrum->GetEXhigh();
     Int_t nBinsPPFit                    = dummyPPSpectrum->GetN();
-    cout << "PP pt bins and errors: " << endl;
-    for (Int_t i = 0; i < nBinsPPFit; i++){
-//         xBinsPPErrFitLow[i] = 0.5*2*(xBinsPPErrFitLow[i]);
-//         xBinsPPErrFitHigh[i] = 0.5*2*(xBinsPPErrFitHigh[i]);
-//         xBinsPPErrFitLow[i] = 0.001*(xBinsPPFit[i]);
-//         xBinsPPErrFitHigh[i] = 0.001*(xBinsPPFit[i]);
-        
-        cout << xBinsPPFit[i] << "\t" << xBinsPPErrFitLow[i] << "\t" <<  xBinsPPErrFitHigh[i] << endl;
+    if(!quiet){
+      cout << "PP pt bins and errors: " << endl;
+      for (Int_t i = 0; i < nBinsPPFit; i++){
+  //         xBinsPPErrFitLow[i] = 0.5*2*(xBinsPPErrFitLow[i]);
+  //         xBinsPPErrFitHigh[i] = 0.5*2*(xBinsPPErrFitHigh[i]);
+  //         xBinsPPErrFitLow[i] = 0.001*(xBinsPPFit[i]);
+  //         xBinsPPErrFitHigh[i] = 0.001*(xBinsPPFit[i]);
+
+          cout << xBinsPPFit[i] << "\t" << xBinsPPErrFitLow[i] << "\t" <<  xBinsPPErrFitHigh[i] << endl;
+      }
     }
 
 //     TString fittingOptions ="QSEM0";
-    TString fittingOptions              = "NSMEX0+";
+    TString fittingOptions              = "QNSMEX0+";
 
     Double_t* xBinsPP                   = graphPPSpectrum->GetX();
     Double_t* xBinsErrPP                = graphPPSpectrum->GetEXlow();
@@ -2041,7 +2044,7 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
         firstBinPbPb++;
     }
     
-    cout << "Fitting stuff for the Raa: \n" << endl;
+//     cout << "Fitting stuff for the Raa: \n" << endl;
 //     Double_t fitBeginpp = xBinsPPComb[0];
 //     Double_t fitEndpp = xBinsPPComb[nBinsPPComb-1];
 
@@ -2128,7 +2131,7 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
             graphPPSpectrumExtendedSys->SetPointError(i, xBinsErrPbPb[i], xBinsErrPbPb[i], yErrLowPPSys[i+firstBinPbPb], yErrHighPPSys[i+firstBinPbPb]);
             if (yPP[i+firstBinPbPb] != 0){
                 lastSystematicRel       = yErrLowPPSys[i+firstBinPbPb]/yPP[i+firstBinPbPb]*100;
-                cout << "rel.syst.err. PPext : (" << yErrLowPPSys[i+firstBinPbPb] << " / " << yPP[i+firstBinPbPb] << ")*100 = " << lastSystematicRel << "\n" << endl;
+                 if(!quiet) cout << "rel.syst.err. PPext : (" << yErrLowPPSys[i+firstBinPbPb] << " / " << yPP[i+firstBinPbPb] << ")*100 = " << lastSystematicRel << "\n" << endl;
             }
             
             relSysErrorFuncPP->SetPoint(i,xBinsPbPb[i],lastSystematicRel);
@@ -2149,15 +2152,15 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
             cout << "yieldPP: " << yieldPP << " relErrPP: " << relErrPP << endl;
             Double_t yieldPPPowerlaw        = fitPPPowerlaw->Integral(ptStart, ptEnd, resultPPPowerlaw->GetParams())/binWidth;
             Double_t errorYieldPPPowerlaw   = fitPPPowerlaw->IntegralError(ptStart, ptEnd, resultPPPowerlaw->GetParams(), resultPPPowerlaw->GetCovarianceMatrix().GetMatrixArray())/binWidth;
-            cout << "pt: " << ptStart << " " << ptEnd << " , yieldPPvar1 " << yieldPPPowerlaw << "+-" << errorYieldPPPowerlaw << endl; 
+            if(!quiet) cout << "pt: " << ptStart << " " << ptEnd << " , yieldPPvar1 " << yieldPPPowerlaw << "+-" << errorYieldPPPowerlaw << endl;
             Double_t relErrPow1             = abs(yieldPPPowerlaw-yieldPP)/yieldPP*100;
-            cout << "relErrPP var1: " << relErrPow1 << endl;
+            if(!quiet) cout << "relErrPP var1: " << relErrPow1 << endl;
 
             Double_t yieldPPPowerlaw2       = fitPPPowerlaw2->Integral(ptStart, ptEnd, resultPPPowerlaw2->GetParams())/binWidth;
             Double_t errorYieldPPPowerlaw2  = fitPPPowerlaw2->IntegralError(ptStart, ptEnd, resultPPPowerlaw2->GetParams(), resultPPPowerlaw2->GetCovarianceMatrix().GetMatrixArray())/binWidth;
-            cout<< "pt: "<< ptStart << " " << ptEnd << " , yieldPPvar2 " << yieldPPPowerlaw2 << "+-" << errorYieldPPPowerlaw2 << endl; 
+            if(!quiet) cout<< "pt: "<< ptStart << " " << ptEnd << " , yieldPPvar2 " << yieldPPPowerlaw2 << "+-" << errorYieldPPPowerlaw2 << endl;
             Double_t relErrPow2             = abs(yieldPPPowerlaw2-yieldPP)/yieldPP *100;
-            cout << "relErrPP var2: " << relErrPow2 << endl;
+            if(!quiet) cout << "relErrPP var2: " << relErrPow2 << endl;
 
             graphPPSpectrumExtended->SetPoint(i,xBinsPbPb[i],yieldPP);
             graphPPSpectrumExtended->SetPointError(i, xBinsErrPbPb[i], xBinsErrPbPb[i], errorYieldPP, errorYieldPP);
@@ -2168,13 +2171,13 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
             relSysErrorPowerLaw2->SetPoint(i,xBinsPbPb[i],relErrPow2);
 
             Double_t syst                   = 0;
-				cout << "lastSystematicRel: " << lastSystematicRel << endl;
+				if(!quiet) cout << "lastSystematicRel: " << lastSystematicRel << endl;
 			if (abs(relErrPow1) > abs(relErrPow2)){
 				syst                    = TMath::Sqrt(relErrPow1*relErrPow1 + lastSystematicRel*lastSystematicRel)*yieldPP/100;
-				cout << "total syst for PP: " << TMath::Sqrt(relErrPow1*relErrPow1 + lastSystematicRel*lastSystematicRel) << endl;
+				if(!quiet) cout << "total syst for PP: " << TMath::Sqrt(relErrPow1*relErrPow1 + lastSystematicRel*lastSystematicRel) << endl;
 			} else {
 				syst                    = TMath::Sqrt(relErrPow2*relErrPow2 + lastSystematicRel*lastSystematicRel)*yieldPP/100;
-				cout << "total syst for PP: " << TMath::Sqrt(relErrPow2*relErrPow2 + lastSystematicRel*lastSystematicRel) << endl;
+				if(!quiet) cout << "total syst for PP: " << TMath::Sqrt(relErrPow2*relErrPow2 + lastSystematicRel*lastSystematicRel) << endl;
 			}
             graphPPSpectrumExtendedSys->SetPointError(i, xBinsErrPbPb[i], xBinsErrPbPb[i],syst, syst); //-syst, +syst);
                         
@@ -2217,9 +2220,10 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
     canvasDummy6->Update();
     canvasDummy6->Print(Form("debugWithInterpolation_%s%s.eps",labelSystem.Data(), meson.Data()));
 
-    
-    graphPPSpectrumExtendedSys->Print();
-    graphPPSpectrumExtended->Print();
+    if(!quiet) {
+      graphPPSpectrumExtendedSys->Print();
+      graphPPSpectrumExtended->Print();
+    }
 	
     Double_t* yPPExtended                   =  graphPPSpectrumExtended->GetY();
     Double_t errYlow;
@@ -2236,30 +2240,34 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
         (*graphRAASys)->SetPoint(i,xBinsPbPb[i],yPbPb[i] /(fNcoll* yPPExtended[i]));
         if (TMath::Abs(xBinsPP[i+firstBinPbPb]-xBinsPbPb[i]) < decisionBoundary && TMath::Abs(xBinsErrPP[i+firstBinPbPb]-xBinsErrPbPb[i]) < decisionBoundary && xBinsPP[i]<maxPtPPForSpec ){
 			
-            cout << "loop raa with pp points" << endl;
-            cout << "rel syst err PbPb: " << graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i] << endl;
-            cout << "rel syst err pp: "   << graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i] << endl;
+          if(!quiet) {
+              cout << "loop raa with pp points" << endl;
+              cout << "rel syst err PbPb: " << graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i] << endl;
+              cout << "rel syst err pp: "   << graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i] << endl;
+          }
             errYlow                         = pow(  pow(graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i],2.) + 
                                                     pow(graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i],2.) 
                                                     , 0.5)*yPbPb[i] /(fNcoll* yPPExtended[i]); //+ pow(fNcollError/fNcoll,2.) fNcollError not taking into account 
             errYhigh                        = pow(  pow(graphPbPbSpectrumSysNoMat->GetErrorYhigh(i)/yPbPb[i],2.) + 
                                                     pow(graphPPSpectrumExtendedSys->GetErrorYhigh(i)/yPPExtended[i],2.) 
                                                     , 0.5)*yPbPb[i] /(fNcoll* yPPExtended[i]); //+ pow(fNcollError/fNcoll,2.) fNcollError not taking into account
-       		cout << "rel syst err Raa: " << errYlow/(yPbPb[i]/(fNcoll* yPPExtended[i])) << endl;
-       		cout << "---------------" << endl;
+       		if(!quiet) cout << "rel syst err Raa: " << errYlow/(yPbPb[i]/(fNcoll* yPPExtended[i])) << endl;
+       		if(!quiet) cout << "---------------" << endl;
 
         } else {
-            cout << "loop raa with extr points" << endl;
-            cout << "rel syst err PbPb: " << graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i] << endl;
-            cout << "rel syst err pp: "   << graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i] << endl;
-            errYlow                         = pow(  pow(graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i],2.) + 
+          if(!quiet) {
+              cout << "loop raa with extr points" << endl;
+              cout << "rel syst err PbPb: " << graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i] << endl;
+              cout << "rel syst err pp: "   << graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i] << endl;
+          }
+              errYlow                         = pow(  pow(graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i],2.) +
                                                     pow(graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i],2.) 
                                                     , 0.5)*yPbPb[i] /(fNcoll* yPPExtended[i]); //+ pow(fNcollError/fNcoll,2.) fNcollError not taking into account 
             errYhigh                        = pow(  pow(graphPbPbSpectrumSysNoMat->GetErrorYhigh(i)/yPbPb[i],2.) + 
                                                     pow(graphPPSpectrumExtendedSys->GetErrorYhigh(i)/yPPExtended[i],2.) 
                                                     , 0.5)*yPbPb[i] /(fNcoll* yPPExtended[i]); //+ pow(fNcollError/fNcoll,2.) fNcollError not taking into account 
-       		cout << "rel syst err Raa: " << errYlow/(yPbPb[i]/(fNcoll* yPPExtended[i])) << endl;
-       		cout << "---------------" << endl;            
+       		if(!quiet) cout << "rel syst err Raa: " << errYlow/(yPbPb[i]/(fNcoll* yPPExtended[i])) << endl;
+       		if(!quiet) cout << "---------------" << endl;
         }
         (*graphRAASys)->SetPointError(i, xBinsErrPbPb[i], xBinsErrPbPb[i], errYlow, errYhigh);
     }

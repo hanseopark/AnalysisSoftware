@@ -799,12 +799,12 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
                               meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
                             }
 						} else if(additionalNameOutput.Contains("2050") ){
-							if( ptBins[l] < 8.){
+							if( ptBins[l] < 6.){
                                 meanErrorsCorr[cut]->Fit(pol3,"QNRMEX0+","",1.5,6.);
                                 newPoint = pol3->Eval(ptBins[l]);
                                 meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 							} else {
-                                newPoint = pol3->Eval(7.5);
+                                newPoint = pol3->Eval(6.);
                                 meanErrorsCorrSmoothed[cut]->SetPoint(l,ptBins[l],newPoint);
 							}
                         } else if( additionalNameOutput.Contains("2040")){

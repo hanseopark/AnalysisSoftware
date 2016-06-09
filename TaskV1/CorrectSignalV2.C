@@ -661,14 +661,14 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             cout << "Fit narrow range - secondaries"<< endl;  
             fitSecFracPLWithConstNarrow->SetRange(minPtMesonSec, maxPtMeson);
             TFitResultPtr resultPbPbLHC11hSecFracNarrow         = histoYieldTrueSecFracMesonNarrow->Fit(fitSecFracPLWithConstNarrow,"SINRME+","",minPtMesonSec, maxPtMeson);
-            
+
             cout << "Fit standard range - from K0s"<< endl;  
             fitSecFracPLWithConstFromK0->SetRange(minPtMesonSec, maxPtMeson);
-            TFitResultPtr resultPbPbLHC11hSecFracFromK0         = histoYieldTrueSecFracFromK0SMeson->Fit(fitSecFracPLWithConstFromK0,"SINRME+","",minPtMesonSec, maxPtMeson);
+            TFitResultPtr resultPbPbLHC11hSecFracFromK0         = histoYieldTrueSecFracFromK0SMeson->Fit(fitSecFracPLWithConstFromK0,"SNRME+","",minPtMesonSec, maxPtMeson);
 
             cout << "Fit wide range - from K0s"<< endl;  
             fitSecFracPLWithConstFromK0Wide->SetRange(minPtMesonSec, maxPtMeson);
-            TFitResultPtr resultPbPbLHC11hSecFracFromK0Wide     = histoYieldTrueSecFracFromK0SMesonWide->Fit(fitSecFracPLWithConstFromK0Wide,"SINRME+","",minPtMesonSec, maxPtMeson);
+            TFitResultPtr resultPbPbLHC11hSecFracFromK0Wide     = histoYieldTrueSecFracFromK0SMesonWide->Fit(fitSecFracPLWithConstFromK0Wide,"SNRME+","",minPtMesonSec, maxPtMeson);
 
             cout << "Fit narrow range - from K0s"<< endl;  
             fitSecFracPLWithConstFromK0Narrow->SetRange(minPtMesonSec, maxPtMeson);
