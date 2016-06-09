@@ -9,14 +9,14 @@
 #include "ClusterQA_Runwise.C"
 
 void QA_Runwise(
-				TString select = "LHC11a",
-				Bool_t doEventQA = kFALSE,
-				Bool_t doPhotonQA = kFALSE,
-				Bool_t doClusterQA = kFALSE,
-				Int_t mode = 2,
-				Int_t cutNr = -1,				// if -1: you have to choose number at runtime
-				Int_t doExtQA = 2,				// 0: switched off, 1: normal extQA, 2: with Cell level plots
-				TString suffix = "eps"
+                TString select      = "LHC11a",
+                Bool_t doEventQA    = kFALSE,
+                Bool_t doPhotonQA   = kFALSE,
+                Bool_t doClusterQA  = kFALSE,
+                Int_t mode          = 2,
+                Int_t cutNr         = -1,				// if -1: you have to choose number at runtime
+                Int_t doExtQA       = 2,				// 0: switched off, 1: normal extQA, 2: with Cell level plots
+                TString suffix      = "eps"
 ){
     TString folderRunlists = "DownloadAndDataPrep/runlists";
 
