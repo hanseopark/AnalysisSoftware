@@ -220,9 +220,9 @@ Double_t fBinsEta8TeVTrigger2Pt[24]             = { 0.0, 0.4, 0.8, 1.2, 1.6,
                                                     4.0, 5.0, 6.0, 8.0, 10.0,
                                                     12.0, 14.0, 16.0, 18.0, 20.0,
                                                     25.0, 30.0, 35.0, 40.};
-Int_t fBinsEta8TeVPtRebin[19]                   = { 8, 6, 6, 4, 4,
+Int_t fBinsEta8TeVPtRebin[19]                   = { 5, 8, 4, 4, 4,
                                                     4, 4, 5, 5, 5,
-                                                    5, 5, 5, 5, 5,
+                                                    5, 5, 7, 5, 5,
                                                     5, 5, 5, 5};
 Int_t fBinsEta8TeVEMCALPtRebin[19]              = { 4, 4, 4, 10, 10,
                                                     10, 10, 8, 8, 8,
@@ -853,6 +853,8 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
             if (modi == 4 ) fStartPtBin = 7;
             if (modi == 2 ) fStartPtBin = 2;
 
+				if (modi == 0 && specialTrigg == 1) fStartPtBin = 2;
+            if (modi == 0 && specialTrigg == 2) fStartPtBin = 4;
             if (modi == 2 && specialTrigg == 1) fStartPtBin = 21;
             if (modi == 2 && specialTrigg == 2) fStartPtBin = 28;
             if (modi == 4 && specialTrigg == 1) fStartPtBin = 21;
