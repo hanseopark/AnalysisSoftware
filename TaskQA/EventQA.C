@@ -1,11 +1,14 @@
 #include "QA.h"
 
+//**************************************************************************************************************
+//***************************** Main routine *******************************************************************
+//**************************************************************************************************************
 void EventQA(
-                Int_t nSetsIn,
-                TString fEnergyFlag,
-                TString* DataSets,
-                TString* plotDataSets,
-                TString* pathDataSets,
+                Int_t nSetsIn,                          // number of data sets to be analysed
+                TString fEnergyFlag,                    // energy flag
+                TString* DataSets,                      // technical names of data sets for output
+                TString* plotDataSets,                  // labels of data sets in plots
+                TString* pathDataSets,                  // path for data sets
                 Int_t mode              = 2,            // standard mode for analysis
                 Int_t cutNr             = -1,           // if -1: you have to choose number at runtime
                 Int_t doExtQA           = 2,            // 0: switched off, 1: normal extQA, 2: with Cell level plots
@@ -18,21 +21,56 @@ void EventQA(
     cout << "EventQA" << endl;
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
+    //**************************************************************************************************************
+    //**************************** Setting general plotting style **************************************************
+    //**************************************************************************************************************
     gROOT->Reset();
     TH1::AddDirectory(kFALSE);
-
-    const Int_t nSets = nSetsIn;
-
     StyleSettingsThesis();
     SetPlotStyle();
-    
-    //**************************************************************************************************************
-    TString fDate = ReturnDateString();
-    TString fTextMeasurement = Form("#pi^{0} #rightarrow #gamma#gamma");
-    TString fTextMeasurementEta = Form("#eta #rightarrow #gamma#gamma");
-    TString fTextMeasurementMeson[2]={fTextMeasurement,fTextMeasurementEta};
 
-    const Int_t maxSets = 12;
+
+    //**************************************************************************************************************
+    //****************************** Setting common variables ******************************************************
+    //**************************************************************************************************************
+    
+    const Int_t nSets                   = nSetsIn;
+    // set correct mode and enable respective flags
+    Int_t fMode                         = mode;    
+    Bool_t isCalo                       = kFALSE;
+    Bool_t isMergedCalo                 = kFALSE;
+    Bool_t isConv                       = kFALSE;
+    // mode:    0 // new output PCM-PCM
+    //          1 // new output PCM dalitz
+    //          2 // new output PCM-EMCal
+    //          3 // new output PCM-PHOS
+    //          4 // new output EMCal-EMCal
+    //          5 // new output PHOS-PHOS
+    //          9 // old output PCM-PCM
+    //          10 // merged EMCal
+    //          11 // merged PHOS
+    if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9) 
+        isConv                          = kTRUE;
+    if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 10 || fMode == 11) 
+        isCalo                          = kTRUE;
+    if (fMode == 10 || fMode == 11)
+        isMergedCalo                    = kTRUE;
+    
+    TString fCollisionSystem            = ReturnFullCollisionsSystem(fEnergyFlag);
+    if (fCollisionSystem.CompareTo("") == 0){
+        cout << "No correct collision system specification, has been given" << endl;
+        return;
+    }
+
+    TString fDetectionProcess           = ReturnFullTextReconstructionProcess(fMode);
+
+
+    TString fDate                       = ReturnDateString();
+    TString fTextMeasurement            = Form("#pi^{0} #rightarrow #gamma#gamma");
+    TString fTextMeasurementEta         = Form("#eta #rightarrow #gamma#gamma");
+    TString fTextMeasurementMeson[2]    = {fTextMeasurement, fTextMeasurementEta};
+
+    const Int_t maxSets                 = 12;
     //nSets == 0 is always data!
 
     if(nSets>maxSets){
@@ -41,35 +79,16 @@ void EventQA(
         return;
     }
 
-    Color_t colorCompare[maxSets] = {kBlack, kRed+1, kMagenta+2, 807, 800, kGreen+2, kCyan+2, kBlue+1, kOrange+2, kAzure, kViolet, kGray+1};
+    Color_t colorCompare[maxSets]       = {kBlack, kRed+1, kMagenta+2, 807, 800, kGreen+2, kCyan+2, kBlue+1, kOrange+2, kAzure, kViolet, kGray+1};
     TString nameMainDir[maxSets];
 
-    Int_t fMode             = mode;
-    Bool_t isCalo           = kFALSE;
-    Bool_t isMergedCalo     = kFALSE;
-    Bool_t isConv           = kFALSE;
-    // mode:	0 // new output PCM-PCM
-    //			1 // new output PCM dalitz
-    //			2 // new output PCM-EMCal
-    //			3 // new output PCM-PHOS
-    //          4 // new output EMCal-EMCal
-    //          5 // new output PHOS-PHOS
-    //			9 // old output PCM-PCM
-    //			10 // merged EMCal
-    //			11 // merged PHOS
-    if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9) 
-        isConv         = kTRUE;
-    if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 10 || fMode == 11) 
-        isCalo          = kTRUE;
-    if (fMode == 10 || fMode == 11)
-        isMergedCalo    = kTRUE;
 
-    TString* fCutSelection          = new TString[nSets];
-    TString* fEventCutSelection     = new TString[nSets];
-    TString* fGammaCutSelection     = new TString[nSets];
-    TString* fClusterCutSelection   = new TString[nSets];
-    TString* fElectronCutSelection  = new TString[nSets];
-    TString* fMesonCutSelection     = new TString[nSets];
+    TString* fCutSelection              = new TString[nSets];
+    TString* fEventCutSelection         = new TString[nSets];
+    TString* fGammaCutSelection         = new TString[nSets];
+    TString* fClusterCutSelection       = new TString[nSets];
+    TString* fElectronCutSelection      = new TString[nSets];
+    TString* fMesonCutSelection         = new TString[nSets];
 
     //*****************************************************************************************************
     //*****************************************************************************************************
@@ -141,65 +160,49 @@ void EventQA(
         ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
     }
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-
     cout << "Obtaining trigger - ";
-    TString* fTrigger = new TString[nSets];
-    for(Int_t iT=0;iT<nSets;iT++){fTrigger[iT]="";}
-    TString fTriggerCut = fEventCutSelection[0](3,2);
-    fTrigger[0] = AnalyseSpecialTriggerCut(fTriggerCut.Atoi(), DataSets[0].Data());
+    TString* fTrigger       = new TString[nSets];
+    for(Int_t iT=0;iT<nSets;iT++){ 
+        fTrigger[iT] = "";
+    }
+    TString fTriggerCut     = fEventCutSelection[0](3,2);
+    fTrigger[0]             = AnalyseSpecialTriggerCut(fTriggerCut.Atoi(), DataSets[0].Data());
     cout  << "'" << fTrigger[0].Data() << "' - was found!" << endl;
     if(fTrigger[0].Contains("not defined")){
-        fTrigger[0] = "";
+        fTrigger[0]         = "";
         cout << "INFO: Trigger cut not defined!" << endl;
     }
 
-    cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-
-    TString calo = "";
-    TString fClusters = "";
-    Int_t iCalo = 0;
-    Int_t nCaloModules = 0;
-    Int_t nCaloCells = 0;
-
-    if(isCalo){
-        if(fClusterCutSelection[0].BeginsWith('1')){
-            calo="EMCal"; iCalo=1;
-            fClusters = Form("%s clusters", calo.Data());
-            nCaloModules = 10;
-            nCaloCells = 11520;
-            if(DataSets[0].Contains("LHC10")){
-                nCaloModules = 4;
-                nCaloCells = 4608;
-            }
-        } else if(fClusterCutSelection[0].BeginsWith('2')){
-            calo="PHOS"; iCalo=2;
-            fClusters = Form("%s clusters", calo.Data());
-            nCaloModules = 5;
-            nCaloCells = 6000;
-            if(DataSets[0].Contains("LHC10")){
-                nCaloModules = 5;
-                nCaloCells = 6000;
-            }
-        } else {cout << "No correct calorimeter type found: " << calo.Data() << ", returning..." << endl; return;}
-    }
-
-    TString fCollisionSystem = ReturnFullCollisionsSystem(fEnergyFlag);
-    if (fCollisionSystem.CompareTo("") == 0){
-        cout << "No correct collision system specification, has been given" << endl;
-        return;
-    }
-
-    TString fDetectionProcess = ReturnFullTextReconstructionProcess(fMode);
-
-    TString outputDir = Form("%s/%s/EventQA/%s",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
-    if(addSubfolder) outputDir+=Form("/%s",DataSets[0].Data());
+    //*****************************************************************************************************
+    //************************** Define output directories*************************************************
+    //*****************************************************************************************************    
+    TString outputDir                   = Form("%s/%s/EventQA/%s",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
+    if(addSubfolder) outputDir          +=Form("/%s",DataSets[0].Data());
 
     gSystem->Exec("mkdir -p "+outputDir);
     gSystem->Exec("mkdir -p "+outputDir+"/Comparison");
     gSystem->Exec("mkdir -p "+outputDir+"/Comparison/Ratios");
+    
+    cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
     //*****************************************************************************************************
+    //************************** Set proper cluster nomenclature ******************************************
     //*****************************************************************************************************
+    TString calo            = "";
+    TString fClusters       = "";
+
+    if(isCalo){
+        if(fClusterCutSelection[0].BeginsWith('1')){
+            calo            = "EMCal"; 
+            fClusters       = Form("%s clusters", calo.Data());
+        } else if(fClusterCutSelection[0].BeginsWith('2')){
+            calo            = "PHOS"; 
+            fClusters       = Form("%s clusters", calo.Data());
+        } else {cout << "No correct calorimeter type found: " << calo.Data() << ", returning..." << endl; return;}
+    }
+
+    //*****************************************************************************************************
+    //******************************* create log file *****************************************************
     //*****************************************************************************************************
 
     fstream fLog;
@@ -220,6 +223,7 @@ void EventQA(
     std::vector<TH1D*> vecVertexZ;
     std::vector<TH1D*> vecNGoodTracks;
     std::vector<TH1D*> vecGammaCandidates;
+    std::vector<TH1D*> vecMergedCandidates;
     std::vector<TH1D*> vecV0Mult;
 
     std::vector<TH1D*> vecInvMassBeforeAfter[2];
@@ -240,16 +244,16 @@ void EventQA(
     std::vector<TH2D*> vecESDMother;
     std::vector<TH2D*> vecESDBackground;
 
-    Double_t* nEventsAll = new Double_t[nSets];
-    Double_t* nEvents = new Double_t[nSets];
+    Double_t* nEventsAll    = new Double_t[nSets];
+    Double_t* nEvents       = new Double_t[nSets];
 
-    Int_t minB = 0; Int_t maxB = 0;
-    Int_t minYB = 0; Int_t maxYB = 0;
+    Int_t minB          = 0;    Int_t maxB          = 0;
+    Int_t minYB         = 0;    Int_t maxYB         = 0;
 
-    Int_t minB_SPD = 0; Int_t maxB_SPD = 0;
-    Int_t minYB_SPD = 0; Int_t maxYB_SPD = 0;
-    Bool_t isMinMaxSPD = kTRUE;
-
+    Int_t minB_SPD      = 0;    Int_t maxB_SPD      = 0;
+    Int_t minYB_SPD     = 0;    Int_t maxYB_SPD     = 0;
+    Bool_t isMinMaxSPD  = kTRUE;
+    
     MesonFit fitter;
 
     //*****************************************************************************************************
@@ -258,9 +262,13 @@ void EventQA(
     //*****************************************************************************************************
     //*****************************************************************************************************
 
-    TCanvas* canvas = new TCanvas("canvas","",10,10,750,500);  // gives the page size
-    TCanvas* cvsQuadratic = new TCanvas("cvsQuadratic","",10,10,500,500);  // gives the page size
-    Double_t leftMargin = 0.09; Double_t rightMargin = 0.02; Double_t topMargin = 0.04; Double_t bottomMargin = 0.09;
+    // canvas definition
+    TCanvas* canvas         = new TCanvas("canvas","",10,10,750,500);  // gives the page size
+    TCanvas* cvsQuadratic   = new TCanvas("cvsQuadratic","",10,10,500,500);  // gives the page size
+    Double_t leftMargin     = 0.09; 
+    Double_t rightMargin    = 0.02; 
+    Double_t topMargin      = 0.04; 
+    Double_t bottomMargin   = 0.09;
     DrawGammaCanvasSettings(canvas,leftMargin,rightMargin,topMargin,bottomMargin);
 
     for(Int_t i=0; i<nSets; i++) {
@@ -271,38 +279,39 @@ void EventQA(
             return;
         }
         //-------------------------------------------------------------------------------------------------------------------------------
-        TList* TopDir = (TList*) fFile->Get(nameMainDir[i].Data());
+        // reading respective containers
+        TList* TopDir                   = (TList*) fFile->Get(nameMainDir[i].Data());
             if(TopDir == NULL) {cout << "ERROR: TopDir not Found"<<endl; return;}
             else TopDir->SetOwner(kTRUE);
-        TList* TopContainer = (TList*) TopDir->FindObject(Form("Cut Number %s",fCutSelection[i].Data()));
+        TList* TopContainer             = (TList*) TopDir->FindObject(Form("Cut Number %s",fCutSelection[i].Data()));
             if(TopContainer == NULL) {cout << "ERROR: " << Form("Cut Number %s",fCutSelection[i].Data()) << " not found in File" << endl; return;}
             else TopContainer->SetOwner(kTRUE);
-        TList* ESDContainer = (TList*) TopContainer->FindObject(Form("%s ESD histograms",fCutSelection[i].Data()));
+        TList* ESDContainer             = (TList*) TopContainer->FindObject(Form("%s ESD histograms",fCutSelection[i].Data()));
             if(ESDContainer == NULL) {cout << "ERROR: " << Form("%s ESD histograms",fCutSelection[i].Data()) << " not found in File" << endl; return;}
             else ESDContainer->SetOwner(kTRUE);
-        TList* ConvEventCutsContainer = (TList*) TopContainer->FindObject(Form("ConvEventCuts_%s",fEventCutSelection[i].Data()));
+        TList* ConvEventCutsContainer   = (TList*) TopContainer->FindObject(Form("ConvEventCuts_%s",fEventCutSelection[i].Data()));
             if(ConvEventCutsContainer == NULL) {cout << "ERROR: " << Form("ConvEventCuts_%s",fEventCutSelection[i].Data()) << " not found in File" << endl; return;}
             else if(ConvEventCutsContainer) ConvEventCutsContainer->SetOwner(kTRUE);
-        TList* ConvCutsContainer = (TList*) TopContainer->FindObject(Form("ConvCuts_%s",fGammaCutSelection[i].Data()));
+        TList* ConvCutsContainer        = (TList*) TopContainer->FindObject(Form("ConvCuts_%s",fGammaCutSelection[i].Data()));
             if(isConv && ConvCutsContainer == NULL) {cout << "ERROR: " << Form("ConvCuts_%s",fGammaCutSelection[i].Data()) << " not found in File" << endl; return;}
             else if(ConvCutsContainer) ConvCutsContainer->SetOwner(kTRUE);
-        TList* CaloCutsContainer = (TList*) TopContainer->FindObject(Form("CaloCuts_%s",fClusterCutSelection[i].Data()));
+        TList* CaloCutsContainer        = (TList*) TopContainer->FindObject(Form("CaloCuts_%s",fClusterCutSelection[i].Data()));
             if(isCalo && CaloCutsContainer == NULL) {cout << "ERROR: " << Form("CaloCuts_%s",fClusterCutSelection[i].Data()) << " not found in File" << endl; return;}
             else if(CaloCutsContainer) CaloCutsContainer->SetOwner(kTRUE);
-        TList* MesonCutsContainer = (TList*) TopContainer->FindObject(Form("ConvMesonCuts_%s",fMesonCutSelection[i].Data()));
+        TList* MesonCutsContainer       = (TList*) TopContainer->FindObject(Form("ConvMesonCuts_%s",fMesonCutSelection[i].Data()));
             if(MesonCutsContainer == NULL) {cout << "ERROR: " << Form("ConvMesonCuts_%s",fMesonCutSelection[i].Data()) << " not found in File" << endl; return;}
             else if(MesonCutsContainer) MesonCutsContainer->SetOwner(kTRUE);
-        TList* TrueContainer = (TList*) TopContainer->FindObject(Form("%s True histograms",fCutSelection[i].Data()));
+        TList* TrueContainer            = (TList*) TopContainer->FindObject(Form("%s True histograms",fCutSelection[i].Data()));
             if(TrueContainer == NULL) {cout << "INFO: " << Form("%s True histograms",fCutSelection[i].Data()) << " not found in File, processing data?" << endl;}
             else TrueContainer->SetOwner(kTRUE);
 
-        TList* TopContainerGamma = NULL;
-        TString ContainerGammaCut = "";
+        TList* TopContainerGamma        = NULL;
+        TString ContainerGammaCut       = "";
             if(isConv){
                 TList *listCuts=NULL; TString name=""; Int_t j=0;
                 do{ listCuts = (TList*)TopDir->At(j); name = listCuts->GetName(); } while(!name.BeginsWith("ConvCuts_") && ++j<TopDir->GetSize());
                 if(j>=TopDir->GetSize()) TopContainerGamma = NULL;
-                else TopContainerGamma = listCuts;
+                else TopContainerGamma  = listCuts;
 
                 if(TopContainerGamma == NULL) {cout << "ERROR: " << "ConvCuts_*" << " not found in File" << endl; return;}
                 else TopContainerGamma->SetOwner(kTRUE);
@@ -417,11 +426,27 @@ void EventQA(
             GetMinMaxBin(fHistGammaCandidates,minB,maxB);
             SetXRange(fHistGammaCandidates,1,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
-                                fHistGammaCandidates,"","N_{GammaCandidates}","#frac{dN}{dN_{Cand}}",1,1,
+                                fHistGammaCandidates,"","N_{#gamma candidates}","#frac{dN}{dN_{Cand}}",1,1,
                                 0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             WriteHistogram(fHistGammaCandidates);
             vecGammaCandidates.push_back(new TH1D(*fHistGammaCandidates));
         } else cout << "INFO: Object |GammaCandidates| could not be found! Skipping Draw..." << endl;
+
+        if (isMergedCalo){
+            //-------------------------------------------------------------------------------------------------------------------------------
+            // number of merged candidates 
+            TH1D* fHistMergedCandidates = (TH1D*)ESDContainer->FindObject("MergedCandidates");
+            if(fHistMergedCandidates){
+                GetMinMaxBin(fHistMergedCandidates,minB,maxB);
+                SetXRange(fHistMergedCandidates,1,maxB);
+                DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                    fHistMergedCandidates,"","N_{meson candidates}","#frac{dN}{dN_{Cand}}",1,1,
+                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                WriteHistogram(fHistMergedCandidates);
+                vecMergedCandidates.push_back(new TH1D(*fHistMergedCandidates));
+            } else cout << "INFO: Object |MergedCandidates| could not be found! Skipping Draw..." << endl;
+        }
+        
         //-------------------------------------------------------------------------------------------------------------------------------
         // SPD tracklets vs SPD cluster before cuts
         TH2D* fHistSPDtracklets_clusters_before = (TH2D*)TopContainerEvent->FindObject(Form("SPD tracklets vs SPD clusters %s",ContainerEventCut.Data()));
@@ -1129,17 +1154,40 @@ void EventQA(
         SetXRange(temp,minB,maxB);
     }
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecGammaCandidates,"","Number of GammaCandidates","#frac{1}{N_{Events}} #frac{dN}{dNCand}",1,1.1,
+                                vecGammaCandidates,"","Number of #gamma Candidates","#frac{1}{N_{Events}} #frac{dN}{dNCand}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kFALSE,
                                 0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/GammaCandidates.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                    vecGammaCandidates,"","Number of GammaCandidates","#frac{1}{N_{Events}} #frac{dN}{dNCand}",1,1.1,
+                                    vecGammaCandidates,"","Number of #gamma Candidates","#frac{1}{N_{Events}} #frac{dN}{dNCand}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
                                     0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_GammaCandidates.%s", outputDir.Data(), suffix.Data()));
 
+    if(isMergedCalo){
+        //-------------------------------------------------------------------------------------------------------------------------------
+        // Merged candidates
+        GetMinMaxBin(vecMergedCandidates,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecMergedCandidates.size(); iVec++){
+            TH1D* temp = vecMergedCandidates.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecMergedCandidates,"","Number of meson Candidates","#frac{1}{N_{Events}} #frac{dN}{dNCand}",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+        SaveCanvas(canvas, Form("%s/Comparison/MergedCandidates.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                        vecMergedCandidates,"","Number of meson Candidates","#frac{1}{N_{Events}} #frac{dN}{dNCand}",1,1.1,
+                                        labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MergedCandidates.%s", outputDir.Data(), suffix.Data()));
+    }    
+    
     //-------------------------------------------------------------------------------------------------------------------------------
     //---------------------------------------- Meson histogram comparisons ----------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
@@ -1421,7 +1469,6 @@ void EventQA(
     //*****************************************************************************************************
     //***************************** Cleanup vectors *******************************************************
     //*****************************************************************************************************
-    //*****************************************************************************************************
 
     fLog.close();
 
@@ -1432,6 +1479,7 @@ void EventQA(
     DeleteVecTH1D(vecVertexZ);
     DeleteVecTH1D(vecNGoodTracks);
     DeleteVecTH1D(vecGammaCandidates);
+    DeleteVecTH1D(vecMergedCandidates);
     DeleteVecTH1D(vecV0Mult);
 
     DeleteVecTH1D(signalPi0);
