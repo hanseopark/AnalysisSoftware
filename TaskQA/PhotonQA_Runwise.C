@@ -1,3 +1,10 @@
+/*******************************************************************************
+ ******  provided by Gamma Conversion Group, PWGGA,                        *****
+ ******     Daniel Muehlheim, d.muehlheim@cern.ch                          ***** 
+ ******     Nicolas Schmidt, nicolas.schmidt@cern.ch                       ***** 
+ ******     Friederike Bock, fbock@cern.ch                                 ***** 
+ *******************************************************************************/
+
 #include "QA.h"
 #include "../TaskV1/BuildHistogramsForGammaQAAdvV3.C"
 

@@ -1,3 +1,8 @@
+/*******************************************************************************
+ ******  provided by Gamma Conversion Group, PWGGA,                        *****
+ ******     Daniel Muehlheim, d.muehlheim@cern.ch                          ***** 
+ *******************************************************************************/
+
 #include <TString.h>
 #include <TFile.h>
 #include <TObject.h>

@@ -1,3 +1,8 @@
+/*******************************************************************************
+ ******  provided by Gamma Conversion Group, PWGGA,                        *****
+ ******     Daniel Muehlheim, d.muehlheim@cern.ch                          ***** 
+ *******************************************************************************/
+
 #include "QA.h"
 #include "EventQA_Runwise.C"
 #include "PhotonQA_Runwise.C"

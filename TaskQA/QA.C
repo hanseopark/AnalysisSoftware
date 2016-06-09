@@ -1,4 +1,9 @@
-﻿#include "QA.h"
+﻿/*******************************************************************************
+ ******  provided by Gamma Conversion Group, PWGGA,                        *****
+ ******     Daniel Muehlheim, d.muehlheim@cern.ch                          ***** 
+ *******************************************************************************/
+
+#include "QA.h"
 #include "EventQA.C"
 #include "PhotonQA.C"
 #include "ClusterQA.C"
