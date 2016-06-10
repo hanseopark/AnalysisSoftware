@@ -160,9 +160,9 @@ void PlotStandard2D( TH2* histo2D, TString nameOutput, TString title, TString xT
 //******************* Main function ************************************************
 //**********************************************************************************
 
-void AnalysePythiaMB(TString filemask="",  // should read something like "$PATHTODIRECTORY/PythiaAnalysisResultsBin"
-                         TString generator="",
-                         TString tune="",
+void AnalysePythiaMB(TString filemask="Legotrain_vAN-20150825-Pythia8/PythiaAnalysisResults",  // should read something like "$PATHTODIRECTORY/PythiaAnalysisResultsBin" // use MC_gen output here!
+                         TString generator="Pythia",  // e.g. Pythia
+                         TString tune="Monash",    // e.g. Monash
                          TString particle="Pi0",
                          TString energy="2760GeV"){
   
@@ -240,13 +240,14 @@ void AnalysePythiaMB(TString filemask="",  // should read something like "$PATHT
   TString binning="";
   // histograms for MB
   TH2F* fHPt_Y_ParticleMB;
-  TH2F* fHPt_Y_ParticleAccMB;
-  TH2F* fHPt_Alpha_ParticleAccMB;
+//  TH2F* fHPt_Y_ParticleAccMB;
+//  TH2F* fHPt_Alpha_ParticleAccMB;
   
   TH1D* fHPt_ParticleMB;
   TH1D* fHPt_ParticleMBUB;
-  TH1D* fHPt_ParticleAccMB;
-  TH1D* fHPtFrac_ParticleMB;
+  TH1D* fHPt_ParticleMB_XSec;
+//  TH1D* fHPt_ParticleAccMB;
+//  TH1D* fHPtFrac_ParticleMB;
 
   TH1D* fHNEventsMB;
   TH1D* fHXSectionMB;
@@ -270,33 +271,33 @@ void AnalysePythiaMB(TString filemask="",  // should read something like "$PATHT
   
     // get particle histograms
     fHPt_Y_ParticleMB = (TH2F*) HistosAll->FindObject(Form("Pt_Y_%s",particle.Data()))->Clone(Form("Pt_Y_%s_MB",particle.Data()));
-    fHPt_Y_ParticleAccMB = (TH2F*) HistosAll->FindObject(Form("Pt_Y_%sGG%sAcc",particle.Data(),"PCM"))->Clone(Form("Pt_Y_%sGG%sAcc_MB",particle.Data(),detector.Data()));
-    fHPt_Alpha_ParticleAccMB = (TH2F*) HistosAll->FindObject(Form("Pt_Alpha_%sGG%sAcc",particle.Data(),detector.Data()))->Clone(Form("Pt_Alpha_%sGG%sAcc_MB",particle.Data(),detector.Data()));
+//    fHPt_Y_ParticleAccMB = (TH2F*) HistosAll->FindObject(Form("Pt_Y_%sGG%sAcc",particle.Data(),"PCM"))->Clone(Form("Pt_Y_%sGG%sAcc_MB",particle.Data(),detector.Data()));
+//    fHPt_Alpha_ParticleAccMB = (TH2F*) HistosAll->FindObject(Form("Pt_Alpha_%sGG%sAcc",particle.Data(),detector.Data()))->Clone(Form("Pt_Alpha_%sGG%sAcc_MB",particle.Data(),detector.Data()));
   
     //scale
     fHPt_Y_ParticleMB->Sumw2();
-    fHPt_Y_ParticleAccMB->Sumw2();
-   fHPt_Alpha_ParticleAccMB->Sumw2();
+//    fHPt_Y_ParticleAccMB->Sumw2();
+//    fHPt_Alpha_ParticleAccMB->Sumw2();
   
   
     cout << "these are " << fHNEventsMB->GetBinContent(1) << " events with a cross section of " << fHXSectionMB->GetMean() << " mb" << endl;
   
   
     fHPt_Y_ParticleMB->Scale(1./fHNEventsMB->GetBinContent(1));
-    fHPt_Y_ParticleAccMB->Scale(1./fHNEventsMB->GetBinContent(1));
-    fHPt_Alpha_ParticleAccMB->Scale(1./fHNEventsMB->GetBinContent(1));
+//    fHPt_Y_ParticleAccMB->Scale(1./fHNEventsMB->GetBinContent(1));
+//    fHPt_Alpha_ParticleAccMB->Scale(1./fHNEventsMB->GetBinContent(1));
   
     // now projections on pT axis
     fHPt_ParticleMBUB = (TH1D*)fHPt_Y_ParticleMB->ProjectionX(Form("hPt_%s_MB",particle.Data()),1,160)->Clone(Form("hPt_%s_MB",particle.Data()));
     fHPt_ParticleMB  = (TH1D*) fHPt_ParticleMBUB->Rebin(nbinsfinal,"hPt_ParticleMB",fBinsPi02760GeVPtMerged);
-    fHPt_ParticleAccMB = (TH1D*)fHPt_Y_ParticleAccMB->ProjectionX(Form("hPt_%sAcc_MB",particle.Data()),1,160)->Clone(Form("hPt_%sAcc_MB",particle.Data()));
+//    fHPt_ParticleAccMB = (TH1D*)fHPt_Y_ParticleAccMB->ProjectionX(Form("hPt_%sAcc_MB",particle.Data()),1,160)->Clone(Form("hPt_%sAcc_MB",particle.Data()));
   
     fHPt_ParticleMB->SetName(Form("hPt%s%s%s",particle.Data(),generator.Data(),tune.Data()));
     fHPt_ParticleMB->SetTitle(Form("pp, %s, %s, %s %s",energy.Data(),particle.Data(),generator.Data(),tune.Data()));
     fHPt_ParticleMB->Sumw2();
-    fHPt_ParticleAccMB->Sumw2();
+//    fHPt_ParticleAccMB->Sumw2();
     //fHPt_ParticleMB->Rebin(nreb);
-    fHPt_ParticleAccMB->Rebin(nreb);
+//    fHPt_ParticleAccMB->Rebin(nreb);
   
   // divide MB by bin width
   for(int ibin=1;ibin<fHPt_ParticleMB->GetNbinsX();ibin++){
@@ -321,9 +322,16 @@ void AnalysePythiaMB(TString filemask="",  // should read something like "$PATHT
   // scale with 1/2pi y
   fHPt_ParticleMB->Scale(1./(2.*3.14159265*1.6));
   
-  fHPt_ParticleMB->Print("all");
-    // now make plots like no other
-    
+  // print total cross section
+  
+  cout << "total inel. cross section #sigma_{inel} = " << fHXSectionMB->GetMean() * 1e9 << " pb" << endl;
+  
+  // make histogram for x section
+  fHPt_ParticleMB_XSec = (TH1D*) fHPt_ParticleMB->Clone("hPt_ParticleMB_XSec");
+  fHPt_ParticleMB_XSec->Scale(fHXSectionMB->GetMean()); // get xsec in mb from pythia
+  fHPt_ParticleMB_XSec->Scale(1e9);                     // pb!
+  
+  fHPt_ParticleMB_XSec->Print("all");
     // now make plots like no other
   
     //***************************************************************************************************************
@@ -366,8 +374,9 @@ void AnalysePythiaMB(TString filemask="",  // should read something like "$PATHT
   
     // write out
     gSystem->Exec("mkdir -p ../ExternalInput/Theory/Pythia/");
-    TFile* fout = new TFile(Form("../ExternalInput/Theory/Pythia/hist_%s_%s_%s.root",generator.Data(),tune.Data(),energy.Data()),"RECREATE");
+    TFile* fout = new TFile(Form("../ExternalInput/Theory/Pythia/hist_%s_%s_%s_%s.root",generator.Data(),tune.Data(),energy.Data(),particle.Data()),"RECREATE");
     fHPt_ParticleMB->Write();
+    fHPt_ParticleMB_XSec->Write();
     fout->Close();
   
   
