@@ -1,9 +1,9 @@
 /****************************************************************************************************************************
-******         provided by Gamma Conversion Group, PWG4,                                                     *****
-******        Ana Marin, marin@physi.uni-heidelberg.de                                                    *****
-******           Kathrin Koch, kkoch@physi.uni-heidelberg.de                                                     *****
-******        Friederike Bock, friederike.bock@cern.ch                                                    *****
-*****************************************************************************************************************************/
+ ******         provided by Gamma Conversion Group, PWG4,                                                     *****
+ ******        Ana Marin, marin@physi.uni-heidelberg.de                                                    *****
+ ******           Kathrin Koch, kkoch@physi.uni-heidelberg.de                                                     *****
+ ******        Friederike Bock, friederike.bock@cern.ch                                                    *****
+ *****************************************************************************************************************************/
 
 #include <Riostream.h>
 #include "TMath.h"
@@ -63,7 +63,7 @@ void DrawPad(Int_t iPad,Double_t a,Double_t b, Double_t c, Double_t d){
   TPad * sp;
   if(iPad==0)  sp = new TPad(Form("spectrum%d",iPad),"",0.,0,1.,bottom*0.22*(iPad+1)+0.1);
   else  sp = new TPad(Form("spectrum%d",iPad),"",0.,bottom*0.22*iPad+0.1,1.,bottom*0.22*(iPad+1)+0.1);
- //  TPad * sp = new TPad(Form("spectrum%d",iPad),"",0.,bottom*0.25*iPad,1.,bottom*0.25*(iPad+1));
+  //  TPad * sp = new TPad(Form("spectrum%d",iPad),"",0.,bottom*0.25*iPad,1.,bottom*0.25*(iPad+1));
   sp->Draw();
   sp->cd();
   sp->Range(0,0,1,1);
@@ -80,636 +80,698 @@ void DrawPad(Int_t iPad,Double_t a,Double_t b, Double_t c, Double_t d){
 }  
 
 struct SysErrorConversion {
-    Double_t value;
-    Double_t error;
-    //    TString name;
+  Double_t value;
+  Double_t error;
+  //    TString name;
 };
+
+TGraphAsymmErrors* ApplyNSDSysError(TGraphAsymmErrors* graphMesonSystErr, Double_t ScalingErr){
+  TGraphAsymmErrors*   graphMesonSystErrClone=(TGraphAsymmErrors*) graphMesonSystErr->Clone();
+  Int_t nPoints=graphMesonSystErrClone->GetN();
+  Double_t* valueY    = graphMesonSystErrClone->GetY();
+  Double_t* valueX    = graphMesonSystErrClone->GetX();
+  Double_t* ErrYlowSys     = graphMesonSystErrClone->GetEYlow();
+  Double_t* ErrYhighSys   = graphMesonSystErrClone->GetEYhigh();
+  Double_t* ErrXlowSys     = graphMesonSystErrClone->GetEXlow();
+  Double_t* ErrXhighSys   = graphMesonSystErrClone->GetEXhigh();
+
+  for(Int_t i = 0; i < graphMesonSystErrClone->GetN(); i++){
+
+
+    ErrYlowSys[i]  = TMath::Sqrt(   (ErrYlowSys[i] *ErrYlowSys[i]  ) + ( (valueY[i]*ScalingErr) *(valueY[i]*ScalingErr) ) );
+    ErrYhighSys[i]  = TMath::Sqrt(   (ErrYhighSys[i] *ErrYhighSys[i]  ) + ( (valueY[i]*ScalingErr) *(valueY[i]*ScalingErr) ) );
+        
+  }
+  TGraphAsymmErrors* graphMesonSystErrClone1= new TGraphAsymmErrors(nPoints,valueX,valueY,ErrXlowSys,ErrXhighSys,ErrYlowSys,ErrYhighSys);
+      
+  return graphMesonSystErrClone1;
+}
 
 const Int_t  Ntotal = 26;//31
 const Int_t  nPtLimits = Ntotal+1;
 
-void CombineRpPb5023GeV(){    
+void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){    
 
-    TString date                                        = ReturnDateString();
+  TString date                                        = ReturnDateString();
     
-    gROOT->Reset();
-    gROOT->SetStyle("Plain");
+  gROOT->Reset();
+  gROOT->SetStyle("Plain");
     
-    StyleSettingsThesis();
-    SetPlotStyle();
+  StyleSettingsThesis();
+  SetPlotStyle();
     
-    TString suffix                                      = "eps";
+  TString suffix                                      = "eps";
     
-    TString dateForOutput                               = ReturnDateStringForOutput();
-    TString outputDir                                   = Form("CombineRpPb/%s/%s",suffix.Data(),dateForOutput.Data());
+  TString dateForOutput                               = ReturnDateStringForOutput();
+  TString outputDir                                   = Form("CombineRpPb/%s/%s",suffix.Data(),dateForOutput.Data());
+  if (IsNSD) outputDir                                = Form("CombineRpPb/%s/%s_NSD",suffix.Data(),dateForOutput.Data());
 
-    gSystem->Exec("mkdir -p "+outputDir);
+  gSystem->Exec("mkdir -p "+outputDir);
     
-    
-    //cout << dateForOutput.Data() << endl;
-    //___________________________________ Declaration of files _____________________________________________
+  Double_t ScalingErr = 0.031;
+  Double_t Scaling = 0.964;    
+  //cout << dateForOutput.Data() << endl;
+  //___________________________________ Declaration of files _____________________________________________
 
     
  
-    TString fileNameRpPb                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2016_05_18.root";
-    TString fileNameRpPbPCM                     = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2016_05_18.root";
-    TString fileNameRpPbDalitz                  = "ExternalInputpPb/InputRpPb/Pi0RpPb_Dalitz_2016_06_01.root";
-    TString fileNameRpPbPHOS                    = "ExternalInputpPb/InputRpPb/Pi0RpPb_PHOS_2016_06_01.root";
-    TString fileNameRpPbEMCal                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_EMCal_2016_06_02.root";
-    TFile* fileNeutralPionRpPb                           = new TFile(fileNameRpPb.Data());
-    TFile* fileNeutralPionRpPbPCM                           = new TFile(fileNameRpPbPCM.Data());
-    TFile* fileNeutralPionRpPbDalitz                           = new TFile(fileNameRpPbDalitz.Data());
-    TFile* fileNeutralPionRpPbPHOS                           = new TFile(fileNameRpPbPHOS.Data());
-    TFile* fileNeutralPionRpPbEMCal                           = new TFile(fileNameRpPbEMCal.Data());
+  TString fileNameRpPb                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2016_05_18.root";
+  TString fileNameRpPbPCM                     = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2016_05_18.root";
+  TString fileNameRpPbDalitz                  = "ExternalInputpPb/InputRpPb/Pi0RpPb_Dalitz_2016_06_01.root";
+  TString fileNameRpPbPHOS                    = "ExternalInputpPb/InputRpPb/Pi0RpPb_PHOS_2016_06_01.root";
+  TString fileNameRpPbEMCal                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_EMCal_2016_06_02.root";
+  TFile* fileNeutralPionRpPb                           = new TFile(fileNameRpPb.Data());
+  TFile* fileNeutralPionRpPbPCM                           = new TFile(fileNameRpPbPCM.Data());
+  TFile* fileNeutralPionRpPbDalitz                           = new TFile(fileNameRpPbDalitz.Data());
+  TFile* fileNeutralPionRpPbPHOS                           = new TFile(fileNameRpPbPHOS.Data());
+  TFile* fileNeutralPionRpPbEMCal                           = new TFile(fileNameRpPbEMCal.Data());
     
-    TString nameHistoPCM                               = "Pi0_RpPb_PCM_StatErr";
-    TString nameHistoPCMSysErrors                      = "Pi0_RpPb_PCM_SystErr";
-    TString nameHistoDalitz                            = "Pi0_RpPb_Dalitz_StatErr";
-    TString nameHistoDalitzSysErrors                   = "Pi0_RpPb_Dalitz_SystErr";
-    TString nameHistoPHOS                              = "Pi0_RpPb_PHOS_StatErr";
-    TString nameHistoPHOSSysErrors                     = "Pi0_RpPb_PHOS_SystErr";
-    TString nameHistoEMCal                             = "Pi0_RpPb_EMCal_StatErr";
-    TString nameHistoEMCalSysErrors                    = "Pi0_RpPb_EMCal_SystErr";
-    TString nameHistoPCMppReferenceStat                = "Pi0_pp_reference_PCMBinning_StatErr";
-    TString nameHistoPCMppReferenceSyst                = "Pi0_pp_reference_PCMBinning_SystErr";
-    TString nameHistoDalitzppReferenceStat             = "Pi0_pp_reference_DalitzBinning_StatErr";
-    TString nameHistoDalitzppReferenceSyst             = "Pi0_pp_reference_DalitzBinning_SystErr";
-    TString nameHistoPHOSppReferenceStat               = "Pi0_pp_reference_PHOSBinning_StatErr";
-    TString nameHistoPHOSppReferenceSyst               = "Pi0_pp_reference_PHOSBinning_SystErr";
-    TString nameHistoEMCalppReferenceStat              = "Pi0_pp_reference_EMCalBinning_StatErr";
-    TString nameHistoEMCalppReferenceSyst              = "Pi0_pp_reference_EMCalBinning_SystErr";
-    TString nameHistoPCMAlpha                          = "Pi0_RpPb_PCM_Alpha";
-    TString nameHistoDalitzAlpha                       = "Pi0_RpPb_Dalitz_Alpha";
-    TString nameHistoPHOSAlpha                         = "Pi0_RpPb_PHOS_Alpha";
-    TString nameHistoEMCalAlpha                        = "Pi0_RpPb_EMCal_Alpha";
+  TString nameHistoPCM                               = "Pi0_RpPb_PCM_StatErr";
+  TString nameHistoPCMSysErrors                      = "Pi0_RpPb_PCM_SystErr";
+  TString nameHistoDalitz                            = "Pi0_RpPb_Dalitz_StatErr";
+  TString nameHistoDalitzSysErrors                   = "Pi0_RpPb_Dalitz_SystErr";
+  TString nameHistoPHOS                              = "Pi0_RpPb_PHOS_StatErr";
+  TString nameHistoPHOSSysErrors                     = "Pi0_RpPb_PHOS_SystErr";
+  TString nameHistoEMCal                             = "Pi0_RpPb_EMCal_StatErr";
+  TString nameHistoEMCalSysErrors                    = "Pi0_RpPb_EMCal_SystErr";
+  TString nameHistoPCMppReferenceStat                = "Pi0_pp_reference_PCMBinning_StatErr";
+  TString nameHistoPCMppReferenceSyst                = "Pi0_pp_reference_PCMBinning_SystErr";
+  TString nameHistoDalitzppReferenceStat             = "Pi0_pp_reference_DalitzBinning_StatErr";
+  TString nameHistoDalitzppReferenceSyst             = "Pi0_pp_reference_DalitzBinning_SystErr";
+  TString nameHistoPHOSppReferenceStat               = "Pi0_pp_reference_PHOSBinning_StatErr";
+  TString nameHistoPHOSppReferenceSyst               = "Pi0_pp_reference_PHOSBinning_SystErr";
+  TString nameHistoEMCalppReferenceStat              = "Pi0_pp_reference_EMCalBinning_StatErr";
+  TString nameHistoEMCalppReferenceSyst              = "Pi0_pp_reference_EMCalBinning_SystErr";
+  TString nameHistoPCMAlpha                          = "Pi0_RpPb_PCM_Alpha";
+  TString nameHistoDalitzAlpha                       = "Pi0_RpPb_Dalitz_Alpha";
+  TString nameHistoPHOSAlpha                         = "Pi0_RpPb_PHOS_Alpha";
+  TString nameHistoEMCalAlpha                        = "Pi0_RpPb_EMCal_Alpha";
    
     
-    TString collisionSystempPb                          = "p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV"; 
+  TString collisionSystempPb                          = "p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV"; 
     
     
-    // Double_t pTLimits[nPtLimits]                        = { 0.3, 0.4, 0.5, 0.6, 0.7, 
-    //                                                         0.8, 1.0, 1.2, 1.4, 1.6, 
-    Double_t pTLimits[nPtLimits]                        = { 1.0, 1.2, 1.4, 1.6, 
-                                                            1.8, 2.0, 2.2, 2.4, 2.6,
-                                                            2.8, 3.0, 3.2, 3.4, 3.6,
-                                                            3.8, 4.0, 4.5, 5.0, 5.5,
-                                                            6.0, 7.0, 8.0, 10.0,12.0,
-							    16.0, 20.0};
+  // Double_t pTLimits[nPtLimits]                        = { 0.3, 0.4, 0.5, 0.6, 0.7, 
+  //                                                         0.8, 1.0, 1.2, 1.4, 1.6, 
+  Double_t pTLimits[nPtLimits]                        = { 1.0, 1.2, 1.4, 1.6, 
+							  1.8, 2.0, 2.2, 2.4, 2.6,
+							  2.8, 3.0, 3.2, 3.4, 3.6,
+							  3.8, 4.0, 4.5, 5.0, 5.5,
+							  6.0, 7.0, 8.0, 10.0,12.0,
+							  16.0, 20.0};
                                 
     
-    //    Int_t offSets[11]                                   =  { 0, 6, 8, 0, 0,  3, 0, 0, 0,  0, 0};
-    // Int_t offSetsSys[11]                                =  {  0, 6,  8, 0, 0, 3, 0, 0, 0, 0, 0};
-    Int_t offSets[11]                                   =  { -6, 0, 2, 0, 0,  -3, 0, 0, 0,  0, 0};
-    Int_t offSetsSys[11]                                =  {  -6,0,  2, 0, 0, -3, 0, 0, 0, 0, 0};
+  //    Int_t offSets[11]                                   =  { 0, 6, 8, 0, 0,  3, 0, 0, 0,  0, 0};
+  // Int_t offSetsSys[11]                                =  {  0, 6,  8, 0, 0, 3, 0, 0, 0, 0, 0};
+  Int_t offSets[11]                                   =  { -6, 0, 2, 0, 0,  -3, 0, 0, 0,  0, 0};
+  Int_t offSetsSys[11]                                =  {  -6,0,  2, 0, 0, -3, 0, 0, 0, 0, 0};
     
     
-    TH1D* statErrorCollection[11];
-    for (Int_t i = 0; i< 11; i++){
-        statErrorCollection[i]                          = NULL;
-    }    
+  TH1D* statErrorCollection[11];
+  for (Int_t i = 0; i< 11; i++){
+    statErrorCollection[i]                          = NULL;
+  }    
     
-    TGraphAsymmErrors* sysErrorCollection[11];
-    for (Int_t i = 0; i< 11; i++){
-        sysErrorCollection[i]                           = NULL;
-    }    
+  TGraphAsymmErrors* sysErrorCollection[11];
+  for (Int_t i = 0; i< 11; i++){
+    sysErrorCollection[i]                           = NULL;
+  }    
     
  
-    // **************************************************************************************
-    // ****************************** Reading Dalitz ****************************************
-    // **************************************************************************************
+  // **************************************************************************************
+  // ****************************** Reading Dalitz ****************************************
+  // **************************************************************************************
 
-    TGraphAsymmErrors* graphDalitzYieldPi0pPb           = (TGraphAsymmErrors*)fileNeutralPionRpPbDalitz->Get(nameHistoDalitz.Data());
-    TH1D* histoDalitzYieldPi0pPb                        = (TH1D*)GraphAsymErrorsToHist_withErrors(graphDalitzYieldPi0pPb,nameHistoDalitz.Data());
-    TGraphAsymmErrors* graphDalitzYieldPi0pPbSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbDalitz->Get(nameHistoDalitzSysErrors.Data());
-    TGraphAsymmErrors* graphDalitzppreferenceStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbDalitz->Get(nameHistoDalitzppReferenceStat.Data());
-    TGraphAsymmErrors* graphDalitzppreferenceSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbDalitz->Get(nameHistoDalitzppReferenceSyst.Data());
-    TGraphAsymmErrors* graphDalitzAlpha                 = (TGraphAsymmErrors*)fileNeutralPionRpPbDalitz->Get( nameHistoDalitzAlpha.Data());
+  TGraphAsymmErrors* graphDalitzYieldPi0pPb           = (TGraphAsymmErrors*)fileNeutralPionRpPbDalitz->Get(nameHistoDalitz.Data());
+  TH1D* histoDalitzYieldPi0pPb                        = (TH1D*)GraphAsymErrorsToHist_withErrors(graphDalitzYieldPi0pPb,nameHistoDalitz.Data());
+  TGraphAsymmErrors* graphDalitzYieldPi0pPbSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbDalitz->Get(nameHistoDalitzSysErrors.Data());
+  TGraphAsymmErrors* graphDalitzppreferenceStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbDalitz->Get(nameHistoDalitzppReferenceStat.Data());
+  TGraphAsymmErrors* graphDalitzppreferenceSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbDalitz->Get(nameHistoDalitzppReferenceSyst.Data());
+  TGraphAsymmErrors* graphDalitzAlpha                 = (TGraphAsymmErrors*)fileNeutralPionRpPbDalitz->Get( nameHistoDalitzAlpha.Data());
 
-    // **************************************************************************************
-    // ****************************** Reading PCM *******************************************
-    // **************************************************************************************    
-    TGraphAsymmErrors* graphPCMYieldPi0pPb           = (TGraphAsymmErrors*)fileNeutralPionRpPbPCM->Get(nameHistoPCM.Data());
-    TH1D* histoPCMYieldPi0pPb           = (TH1D*)GraphAsymErrorsToHist_withErrors(graphPCMYieldPi0pPb,nameHistoPCM.Data());
-    TGraphAsymmErrors* graphPCMYieldPi0pPbSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbPCM->Get(nameHistoPCMSysErrors.Data());
-    TGraphAsymmErrors* graphPCMppreferenceStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbPCM->Get(nameHistoPCMppReferenceStat.Data());
-    TGraphAsymmErrors* graphPCMppreferenceSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbPCM->Get(nameHistoPCMppReferenceSyst.Data());
-    TGraphAsymmErrors* graphPCMAlpha                 = (TGraphAsymmErrors*)fileNeutralPionRpPbPCM->Get( nameHistoPCMAlpha.Data());    
-    // **************************************************************************************
-    // ******************************* Reading PHOS *****************************************
-    // **************************************************************************************    
+  // **************************************************************************************
+  // ****************************** Reading PCM *******************************************
+  // **************************************************************************************    
+  TGraphAsymmErrors* graphPCMYieldPi0pPb           = (TGraphAsymmErrors*)fileNeutralPionRpPbPCM->Get(nameHistoPCM.Data());
+  TH1D* histoPCMYieldPi0pPb           = (TH1D*)GraphAsymErrorsToHist_withErrors(graphPCMYieldPi0pPb,nameHistoPCM.Data());
+  TGraphAsymmErrors* graphPCMYieldPi0pPbSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbPCM->Get(nameHistoPCMSysErrors.Data());
+  TGraphAsymmErrors* graphPCMppreferenceStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbPCM->Get(nameHistoPCMppReferenceStat.Data());
+  TGraphAsymmErrors* graphPCMppreferenceSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbPCM->Get(nameHistoPCMppReferenceSyst.Data());
+  TGraphAsymmErrors* graphPCMAlpha                 = (TGraphAsymmErrors*)fileNeutralPionRpPbPCM->Get( nameHistoPCMAlpha.Data());    
+  // **************************************************************************************
+  // ******************************* Reading PHOS *****************************************
+  // **************************************************************************************    
   
-    TGraphAsymmErrors* graphPHOSYieldPi0pPb                      = (TGraphAsymmErrors*)fileNeutralPionRpPbPHOS->Get(nameHistoPHOS.Data()); 
-    TH1D* histoPHOSYieldPi0pPb           = GraphAsymErrorsToHist_withErrors(graphPHOSYieldPi0pPb,nameHistoPHOS.Data());
-    TGraphAsymmErrors* graphPHOSYieldPi0pPbSystErr                   = (TGraphAsymmErrors*)fileNeutralPionRpPbPHOS->Get(nameHistoPHOSSysErrors.Data());
-    TGraphAsymmErrors* graphPHOSppreferenceStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbPHOS->Get(nameHistoPHOSppReferenceStat.Data());
-    TGraphAsymmErrors* graphPHOSppreferenceSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbPHOS->Get(nameHistoPHOSppReferenceSyst.Data()); 
-    TGraphAsymmErrors* graphPHOSAlpha                 = (TGraphAsymmErrors*)fileNeutralPionRpPbPHOS->Get( nameHistoPHOSAlpha.Data());
-    // **************************************************************************************
-    // ******************************** Reading EMCal ***************************************
-    // **************************************************************************************
+  TGraphAsymmErrors* graphPHOSYieldPi0pPb                      = (TGraphAsymmErrors*)fileNeutralPionRpPbPHOS->Get(nameHistoPHOS.Data()); 
+  TH1D* histoPHOSYieldPi0pPb           = GraphAsymErrorsToHist_withErrors(graphPHOSYieldPi0pPb,nameHistoPHOS.Data());
+  TGraphAsymmErrors* graphPHOSYieldPi0pPbSystErr                   = (TGraphAsymmErrors*)fileNeutralPionRpPbPHOS->Get(nameHistoPHOSSysErrors.Data());
+  TGraphAsymmErrors* graphPHOSppreferenceStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbPHOS->Get(nameHistoPHOSppReferenceStat.Data());
+  TGraphAsymmErrors* graphPHOSppreferenceSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbPHOS->Get(nameHistoPHOSppReferenceSyst.Data()); 
+  TGraphAsymmErrors* graphPHOSAlpha                 = (TGraphAsymmErrors*)fileNeutralPionRpPbPHOS->Get( nameHistoPHOSAlpha.Data());
+  // **************************************************************************************
+  // ******************************** Reading EMCal ***************************************
+  // **************************************************************************************
     
-    TGraphAsymmErrors* graphEMCalYieldPi0pPb       = (TGraphAsymmErrors*)fileNeutralPionRpPbEMCal->Get(nameHistoEMCal.Data());
-    TH1D* histoEMCalYieldPi0pPb           = GraphAsymErrorsToHist_withErrors(graphEMCalYieldPi0pPb,nameHistoEMCal.Data());
-    TGraphAsymmErrors* graphEMCalYieldPi0pPbSystErr     = (TGraphAsymmErrors*)fileNeutralPionRpPbEMCal->Get(nameHistoEMCalSysErrors.Data());  
-    TGraphAsymmErrors* graphEMCalppreferenceStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbEMCal->Get(nameHistoEMCalppReferenceStat.Data());
-    TGraphAsymmErrors* graphEMCalppreferenceSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbEMCal->Get(nameHistoEMCalppReferenceSyst.Data()); 
-    TGraphAsymmErrors* graphEMCalAlpha                 = (TGraphAsymmErrors*)fileNeutralPionRpPbEMCal->Get( nameHistoEMCalAlpha.Data());
-       cout <<"stat"<< endl;
-      graphEMCalYieldPi0pPb->Print();
-       cout <<"sys"<< endl;
-       graphEMCalYieldPi0pPbSystErr->Print();
-    // **************************************************************************************
-    // ******************************** Reading Model calculations **************************
-    // **************************************************************************************
-    TGraphAsymmErrors*  graphAsymmErrorsPi0DSS5000    = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("EPS09s_fDSS_errors"); 
-    TGraph*  graphPi0CGC                     = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("ColorGlasCondensate"); 
-    TGraph*  graphPi0DSS5000                 = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("EPS09s_fDSS_NLO"); 
-    TGraph*  graphPi0ESP09sPi0AKK            = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("EPS09s_AKK_NLO"); 
-    TGraph*  graphPi0ESP09sPi0KKP            = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("EPS09s_KKP_NLO"); 
+  TGraphAsymmErrors* graphEMCalYieldPi0pPb       = (TGraphAsymmErrors*)fileNeutralPionRpPbEMCal->Get(nameHistoEMCal.Data());
+  TH1D* histoEMCalYieldPi0pPb           = GraphAsymErrorsToHist_withErrors(graphEMCalYieldPi0pPb,nameHistoEMCal.Data());
+  TGraphAsymmErrors* graphEMCalYieldPi0pPbSystErr     = (TGraphAsymmErrors*)fileNeutralPionRpPbEMCal->Get(nameHistoEMCalSysErrors.Data());  
+  TGraphAsymmErrors* graphEMCalppreferenceStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbEMCal->Get(nameHistoEMCalppReferenceStat.Data());
+  TGraphAsymmErrors* graphEMCalppreferenceSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbEMCal->Get(nameHistoEMCalppReferenceSyst.Data()); 
+  TGraphAsymmErrors* graphEMCalAlpha                 = (TGraphAsymmErrors*)fileNeutralPionRpPbEMCal->Get( nameHistoEMCalAlpha.Data());
+  cout <<"stat"<< endl;
+  graphEMCalYieldPi0pPb->Print();
+  cout <<"sys"<< endl;
+  graphEMCalYieldPi0pPbSystErr->Print();
+  // **************************************************************************************
+  // ******************************** Reading Model calculations **************************
+  // **************************************************************************************
+  TGraphAsymmErrors*  graphAsymmErrorsPi0DSS5000    = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("EPS09s_fDSS_errors"); 
+  TGraph*  graphPi0CGC                     = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("ColorGlasCondensate"); 
+  TGraph*  graphPi0DSS5000                 = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("EPS09s_fDSS_NLO"); 
+  TGraph*  graphPi0ESP09sPi0AKK            = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("EPS09s_AKK_NLO"); 
+  TGraph*  graphPi0ESP09sPi0KKP            = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("EPS09s_KKP_NLO"); 
 
 
-	graphAsymmErrorsPi0DSS5000->Draw("same,E3");
-	graphPi0CGC->Draw("same,p");
-	graphPi0DSS5000->Draw("same,p,l");
-	graphPi0ESP09sPi0AKK->Draw("same,p,l");
-	graphPi0ESP09sPi0KKP->Draw("same,p,l");
-    // **************************************************************************************
-    // ******************************** Reading Charged Particles and Pions **************************
-    // **************************************************************************************
-    TGraphAsymmErrors*  graphRpPbChargedParticlesStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("RpPb_ChargedParticles_StatErr"); 
-    TGraphAsymmErrors*  graphRpPbChargedParticlesSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("RpPb_ChargedParticles_SystErr"); 
-    TGraphAsymmErrors*  graphRpPbChargedPionsStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("RpPb_ChargedPions_StatErr"); 
-    TGraphAsymmErrors*  graphRpPbChargedPionsSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("RpPb_ChargedPions_SystErr"); 
-     // **************************************************************************************
-    // ********************************* Combine spectra ************************************
-    // **************************************************************************************
+  graphAsymmErrorsPi0DSS5000->Draw("same,E3");
+  graphPi0CGC->Draw("same,p");
+  graphPi0DSS5000->Draw("same,p,l");
+  graphPi0ESP09sPi0AKK->Draw("same,p,l");
+  graphPi0ESP09sPi0KKP->Draw("same,p,l");
+  // **************************************************************************************
+  // ******************************** Reading Charged Particles and Pions **************************
+  // **************************************************************************************
+  TGraphAsymmErrors*  graphRpPbChargedParticlesStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("RpPb_ChargedParticles_StatErr"); 
+  TGraphAsymmErrors*  graphRpPbChargedParticlesSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("RpPb_ChargedParticles_SystErr"); 
+  TGraphAsymmErrors*  graphRpPbChargedPionsStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("RpPb_ChargedPions_StatErr"); 
+  TGraphAsymmErrors*  graphRpPbChargedPionsSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("RpPb_ChargedPions_SystErr"); 
+  // **************************************************************************************
+  // ********************************* Combine spectra ************************************
+  // **************************************************************************************
     
-    TString fileNameOutputWeightingOld                  = Form("%s/WeightingOld.dat",outputDir.Data());
+  TString fileNameOutputWeightingOld                  = Form("%s/WeightingOld.dat",outputDir.Data());
 
-    statErrorCollection[0]          = (TH1D*)histoPCMYieldPi0pPb->Clone("statErrPCMPi0");
-    statErrorCollection[1]          = (TH1D*)histoPHOSYieldPi0pPb->Clone("statErrPHOSPi0");
-    //   statErrorCollection[2]          = (TH1D*)histoEMCalYieldPi0pPb->Clone("statErrEMCalPi0");
-    //   statErrorCollection[5]          = (TH1D*)histoDalitzYieldPi0pPb->Clone("statErrDalitzPi0");
+  statErrorCollection[0]          = (TH1D*)histoPCMYieldPi0pPb->Clone("statErrPCMPi0");
+  statErrorCollection[1]          = (TH1D*)histoPHOSYieldPi0pPb->Clone("statErrPHOSPi0");
+  //   statErrorCollection[2]          = (TH1D*)histoEMCalYieldPi0pPb->Clone("statErrEMCalPi0");
+  //   statErrorCollection[5]          = (TH1D*)histoDalitzYieldPi0pPb->Clone("statErrDalitzPi0");
     
-    sysErrorCollection[0]           = (TGraphAsymmErrors*)graphPCMYieldPi0pPbSystErr->Clone("sysErrPCMPi0");
-    sysErrorCollection[1]           = (TGraphAsymmErrors*)graphPHOSYieldPi0pPbSystErr->Clone("sysErrPHOSPi0");
-    //    sysErrorCollection[2]           = (TGraphAsymmErrors*)graphEMCalYieldPi0pPbSystErr->Clone("sysErrEMCalPi0");
-    //    sysErrorCollection[5]           = (TGraphAsymmErrors*)graphDalitzYieldPi0pPbSystErr->Clone("sysErrDalitzPi0");
-    cout << "Sys Error PCM:" <<endl;
-    graphPCMYieldPi0pPbSystErr->Print();    cout << "Sys Error PHOS:" <<endl;
-    graphPHOSYieldPi0pPbSystErr->Print();  cout << "Sys Error Dalitz:" <<endl;
-    graphDalitzYieldPi0pPbSystErr->Print();
+  sysErrorCollection[0]           = (TGraphAsymmErrors*)graphPCMYieldPi0pPbSystErr->Clone("sysErrPCMPi0");
+  sysErrorCollection[1]           = (TGraphAsymmErrors*)graphPHOSYieldPi0pPbSystErr->Clone("sysErrPHOSPi0");
+  //    sysErrorCollection[2]           = (TGraphAsymmErrors*)graphEMCalYieldPi0pPbSystErr->Clone("sysErrEMCalPi0");
+  //    sysErrorCollection[5]           = (TGraphAsymmErrors*)graphDalitzYieldPi0pPbSystErr->Clone("sysErrDalitzPi0");
+  cout << "Sys Error PCM:" <<endl;
+  graphPCMYieldPi0pPbSystErr->Print();    cout << "Sys Error PHOS:" <<endl;
+  graphPHOSYieldPi0pPbSystErr->Print();  cout << "Sys Error Dalitz:" <<endl;
+  graphDalitzYieldPi0pPbSystErr->Print();
     
-    TGraphAsymmErrors* graphCombPi0InvCrossSectionStatpPb5023GeV= NULL;
-    TGraphAsymmErrors* graphCombPi0InvCrossSectionSyspPb5023GeV = NULL;
+  TGraphAsymmErrors* graphCombPi0InvCrossSectionStatpPb5023GeV= NULL;
+  TGraphAsymmErrors* graphCombPi0InvCrossSectionSyspPb5023GeV = NULL;
     
-    TGraphAsymmErrors* graphCombPi0InvCrossSectionTotpPb5023GeV = CombinePtPointsSpectraFullCorrMat(    statErrorCollection,    sysErrorCollection,     
-                                                                                                        pTLimits, Ntotal,
-                                                                                                        offSets, offSetsSys,
-                                                                                                        graphCombPi0InvCrossSectionStatpPb5023GeV, graphCombPi0InvCrossSectionSyspPb5023GeV,
-                                                                                                        fileNameOutputWeightingOld,1
-                                                                                                    );
+  TGraphAsymmErrors* graphCombPi0InvCrossSectionTotpPb5023GeV = CombinePtPointsSpectraFullCorrMat(    statErrorCollection,    sysErrorCollection,     
+												      pTLimits, Ntotal,
+												      offSets, offSetsSys,
+												      graphCombPi0InvCrossSectionStatpPb5023GeV, graphCombPi0InvCrossSectionSyspPb5023GeV,
+												      fileNameOutputWeightingOld,1
+												      );
+  graphCombPi0InvCrossSectionStatpPb5023GeV->Print();
+
+  if (IsNSD){
+
+    graphCombPi0InvCrossSectionStatpPb5023GeV=ScaleGraph(graphCombPi0InvCrossSectionStatpPb5023GeV,Scaling);
+    graphCombPi0InvCrossSectionSyspPb5023GeV=ScaleGraph(graphCombPi0InvCrossSectionSyspPb5023GeV,Scaling);
+
+    graphCombPi0InvCrossSectionSyspPb5023GeV=ApplyNSDSysError(graphCombPi0InvCrossSectionSyspPb5023GeV,ScalingErr);
+
+    graphCombPi0InvCrossSectionTotpPb5023GeV  =  CalculateCombinedSysAndStatError( graphCombPi0InvCrossSectionStatpPb5023GeV ,graphCombPi0InvCrossSectionSyspPb5023GeV );
+    
+    cout<< "Combined RpPb NSD scaled:" << endl;
+    graphCombPi0InvCrossSectionTotpPb5023GeV->Print();
     graphCombPi0InvCrossSectionStatpPb5023GeV->Print();
-    
-    TGraphAsymmErrors* graphInvYieldPi0CombpPb5023GeVStaClone   = (TGraphAsymmErrors*) graphCombPi0InvCrossSectionStatpPb5023GeV->Clone();
-    TGraphAsymmErrors* graphInvYieldPi0CombpPb5023GeVSysClone   = (TGraphAsymmErrors*) graphCombPi0InvCrossSectionSyspPb5023GeV->Clone();
-    TGraphAsymmErrors* graphInvYieldPi0CombpPb5023GeVTotClone   = (TGraphAsymmErrors*) graphCombPi0InvCrossSectionTotpPb5023GeV->Clone();
-    
-    TGraphAsymmErrors* graphRatioCombCombFit                    = (TGraphAsymmErrors*) graphInvYieldPi0CombpPb5023GeVTotClone ->Clone(); 
-    TGraphAsymmErrors* graphRatioCombCombFitSta                 = (TGraphAsymmErrors*) graphInvYieldPi0CombpPb5023GeVStaClone ->Clone();
-    TGraphAsymmErrors* graphRatioCombCombFitSys                 = (TGraphAsymmErrors*) graphInvYieldPi0CombpPb5023GeVSysClone ->Clone(); 
+    graphCombPi0InvCrossSectionSyspPb5023GeV->Print();
+  }
+
 
     
+  TGraphAsymmErrors* graphInvYieldPi0CombpPb5023GeVStaClone   = (TGraphAsymmErrors*) graphCombPi0InvCrossSectionStatpPb5023GeV->Clone();
+  TGraphAsymmErrors* graphInvYieldPi0CombpPb5023GeVSysClone   = (TGraphAsymmErrors*) graphCombPi0InvCrossSectionSyspPb5023GeV->Clone();
+  TGraphAsymmErrors* graphInvYieldPi0CombpPb5023GeVTotClone   = (TGraphAsymmErrors*) graphCombPi0InvCrossSectionTotpPb5023GeV->Clone();
     
-    // **************************************************************************************
-    // ************************* Plotting Combined R_pPb ************************
-    // **************************************************************************************
-    TCanvas* canvasCombRpPb = new TCanvas("canvasCombRpPb","",200,10,1200,700);  // gives the page size
-    DrawGammaCanvasSettings( canvasCombRpPb, 0.08, 0.02, 0.02, 0.13);
+  // **************************************************************************************
+  // ************************* Plotting Combined R_pPb ************************
+  // **************************************************************************************
+  TCanvas* canvasCombRpPb = new TCanvas("canvasCombRpPb","",200,10,1200,700);  // gives the page size
+  DrawGammaCanvasSettings( canvasCombRpPb, 0.08, 0.02, 0.02, 0.13);
     
-    //  canvasCombRpPb->SetLogx();
-    // canvasCombRpPb->SetLogy();
-    TH2F * histo2DCombined;
-    histo2DCombined = new TH2F("histo2DCombined","histo2DCombined",1000,0.,20.,1000,0.3,1.7);
-     SetStyleHistoTH2ForGraphs(histo2DCombined, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
-    histo2DCombined->DrawCopy();
+  //  canvasCombRpPb->SetLogx();
+  // canvasCombRpPb->SetLogy();
+  TH2F * histo2DCombined;
+  histo2DCombined = new TH2F("histo2DCombined","histo2DCombined",1000,0.,20.,1000,0.3,1.7);
+  SetStyleHistoTH2ForGraphs(histo2DCombined, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
+  histo2DCombined->DrawCopy();
     
 
      
     
 
-     DrawGammaSetMarkerTGraphAsym(graphInvYieldPi0CombpPb5023GeVSysClone,20,1.5, 4, 4, 1, kTRUE);  
+  DrawGammaSetMarkerTGraphAsym(graphInvYieldPi0CombpPb5023GeVSysClone,20,1.5, 4, 4, 1, kTRUE);  
       
-    graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
+  graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
 
-    DrawGammaSetMarkerTGraphAsym(graphInvYieldPi0CombpPb5023GeVStaClone,20,1.5, kBlue, kBlue);  
-    graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
+  DrawGammaSetMarkerTGraphAsym(graphInvYieldPi0CombpPb5023GeVStaClone,20,1.5, kBlue, kBlue);  
+  graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
 
      
-    TLegend* legendRpPbCombine = new TLegend(0.1,0.85,0.55,0.95);
-    legendRpPbCombine->SetFillColor(0);
-    legendRpPbCombine->SetLineColor(0);
-    legendRpPbCombine->SetTextSize(0.03);
-    legendRpPbCombine->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
+  TLegend* legendRpPbCombine = new TLegend(0.1,0.85,0.55,0.95);
+  legendRpPbCombine->SetFillColor(0);
+  legendRpPbCombine->SetLineColor(0);
+  legendRpPbCombine->SetTextSize(0.03);
+  legendRpPbCombine->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
 
     
-    legendRpPbCombine->Draw();
+  legendRpPbCombine->Draw();
   
-    TLine* line =new TLine(0.,1.,20.,1.);
-    line->Draw("same");
+  TLine* line =new TLine(0.,1.,20.,1.);
+  line->Draw("same");
  
     
-     canvasCombRpPb->Print(Form("%s/Comb_RpPb.%s",outputDir.Data(),suffix.Data()));
+  canvasCombRpPb->Print(Form("%s/Comb_RpPb.%s",outputDir.Data(),suffix.Data()));
     
     
-    // **************************************************************************************
-    // ************************* Plotting All GA R_pPb ************************
-    // **************************************************************************************
-    TCanvas* canvasAllGARpPb = new TCanvas("canvasAllGARpPb","",200,10,1200,700);  // gives the page size
-    DrawGammaCanvasSettings( canvasAllGARpPb, 0.08, 0.02, 0.02, 0.13);
+  // **************************************************************************************
+  // ************************* Plotting All GA R_pPb ************************
+  // **************************************************************************************
+  //Apply NSD scaling to individual RpPb
+
+  if (IsNSD){
+    graphDalitzYieldPi0pPb=ScaleGraph(graphDalitzYieldPi0pPb,Scaling);
+    graphDalitzYieldPi0pPbSystErr=ScaleGraph(graphDalitzYieldPi0pPbSystErr,Scaling);
+    graphDalitzYieldPi0pPbSystErr=ApplyNSDSysError(graphDalitzYieldPi0pPbSystErr,ScalingErr);
+
+    graphPCMYieldPi0pPb=ScaleGraph(graphPCMYieldPi0pPb,Scaling);
+    graphPCMYieldPi0pPbSystErr=ScaleGraph(graphPCMYieldPi0pPbSystErr,Scaling);
+    graphPCMYieldPi0pPbSystErr=ApplyNSDSysError(graphPCMYieldPi0pPbSystErr,ScalingErr);
+
+    graphPHOSYieldPi0pPb=ScaleGraph(graphPHOSYieldPi0pPb,Scaling);
+    graphPHOSYieldPi0pPbSystErr=ScaleGraph(graphPHOSYieldPi0pPbSystErr,Scaling);
+    graphPHOSYieldPi0pPbSystErr=ApplyNSDSysError(graphPHOSYieldPi0pPbSystErr,ScalingErr);
+
+    graphEMCalYieldPi0pPb=ScaleGraph(graphEMCalYieldPi0pPb,Scaling);
+    graphEMCalYieldPi0pPbSystErr=ScaleGraph(graphEMCalYieldPi0pPbSystErr,Scaling);
+    graphEMCalYieldPi0pPbSystErr=ApplyNSDSysError(graphEMCalYieldPi0pPbSystErr,ScalingErr);
+  }
+
+
+  TCanvas* canvasAllGARpPb = new TCanvas("canvasAllGARpPb","",200,10,1200,700);  // gives the page size
+  DrawGammaCanvasSettings( canvasAllGARpPb, 0.08, 0.02, 0.02, 0.13);
     
-    //  canvasAllGARpPb->SetLogx();
-    // canvasAllGARpPb->SetLogy();
-    TH2F * histo2DAllGA;
-    histo2DAllGA = new TH2F("histo2DAllGA","histo2DAllGA",1000,0.,20.,1000,0.3,2.);
-     SetStyleHistoTH2ForGraphs(histo2DAllGA, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
-    histo2DAllGA->DrawCopy();
+  //  canvasAllGARpPb->SetLogx();
+  // canvasAllGARpPb->SetLogy();
+  TH2F * histo2DAllGA;
+  histo2DAllGA = new TH2F("histo2DAllGA","histo2DAllGA",1000,0.,20.,1000,0.3,2.);
+  SetStyleHistoTH2ForGraphs(histo2DAllGA, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
+  histo2DAllGA->DrawCopy();
+    
+  DrawGammaSetMarkerTGraphAsym(graphDalitzYieldPi0pPbSystErr,20,1.5, kCyan+2, kCyan+2, 1, kTRUE);
+  DrawGammaSetMarkerTGraphAsym(graphDalitzYieldPi0pPb,20,1.5, kCyan+2, kCyan+2); 
+  graphDalitzYieldPi0pPbSystErr->Draw("E2,same");  
+  graphDalitzYieldPi0pPb->Draw("p,same");  
+
+  DrawGammaSetMarkerTGraphAsym(graphPCMYieldPi0pPbSystErr,20,1.5, 1, 1, 1, kTRUE);
+  DrawGammaSetMarkerTGraphAsym(graphPCMYieldPi0pPb,20,1.5, 1, 1); 
+  graphPCMYieldPi0pPbSystErr->Draw("E2,same");  
+  graphPCMYieldPi0pPb->Draw("p,same");  
+
+  DrawGammaSetMarkerTGraphAsym(graphPHOSYieldPi0pPbSystErr,20,1.5, kRed+1,kRed+1, 1, kTRUE);
+  DrawGammaSetMarkerTGraphAsym(graphPHOSYieldPi0pPb,20,1.5, kRed+1, kRed+1); 
+  graphPHOSYieldPi0pPbSystErr->Draw("E2,same");  
+  graphPHOSYieldPi0pPb->Draw("p,same");
+ 
+  DrawGammaSetMarkerTGraphAsym(graphEMCalYieldPi0pPbSystErr,20,1.5, kGreen+2, kGreen+2, 1, kTRUE);
+  graphEMCalYieldPi0pPbSystErr->Draw("E2,same");
+  DrawGammaSetMarkerTGraphAsym(graphEMCalYieldPi0pPb,20,1.5, kGreen+2, kGreen+2); 
+  graphEMCalYieldPi0pPb->Draw("p,same");
     
 
-
-    graphDalitzYieldPi0pPbSystErr->Draw("E2,same");  
-    graphDalitzYieldPi0pPb->Draw("p,same");  
-
-    graphPCMYieldPi0pPbSystErr->Draw("E2,same");  
-    graphPCMYieldPi0pPb->Draw("p,same");  
-
-    graphPHOSYieldPi0pPbSystErr->Draw("E2,same");  
-    graphPHOSYieldPi0pPb->Draw("p,same"); 
-    	  DrawGammaSetMarkerTGraphAsym(graphEMCalYieldPi0pPbSystErr,20,1.5, kGreen+2, kGreen+2, 1, kTRUE);
-    graphEMCalYieldPi0pPbSystErr->Draw("E2,same");  
-    graphEMCalYieldPi0pPb->Draw("p,same");
-    
-
-    graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
-    graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
+  graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
+  graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
 
 
-    TLegend* legendRpPbAllGA = new TLegend(0.17,0.65,0.4,0.95);
-    legendRpPbAllGA->SetFillColor(0);
-    legendRpPbAllGA->SetLineColor(0);
-    legendRpPbAllGA->SetTextSize(0.03);
-    legendRpPbAllGA->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"Combined","pef");
-    legendRpPbAllGA->AddEntry(graphPCMYieldPi0pPbSystErr,"PCM","pef");
-    legendRpPbAllGA->AddEntry(graphDalitzYieldPi0pPbSystErr,"Dalitz","pef");
-    legendRpPbAllGA->AddEntry(graphPHOSYieldPi0pPbSystErr,"PHOS","pef");
-      legendRpPbAllGA->AddEntry(graphEMCalYieldPi0pPbSystErr,"EMCal","pef");
+  TLegend* legendRpPbAllGA = new TLegend(0.17,0.65,0.4,0.95);
+  legendRpPbAllGA->SetFillColor(0);
+  legendRpPbAllGA->SetLineColor(0);
+  legendRpPbAllGA->SetTextSize(0.03);
+  legendRpPbAllGA->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"Combined","pef");
+  legendRpPbAllGA->AddEntry(graphPCMYieldPi0pPbSystErr,"PCM","pef");
+  legendRpPbAllGA->AddEntry(graphDalitzYieldPi0pPbSystErr,"Dalitz","pef");
+  legendRpPbAllGA->AddEntry(graphPHOSYieldPi0pPbSystErr,"PHOS","pef");
+  legendRpPbAllGA->AddEntry(graphEMCalYieldPi0pPbSystErr,"EMCal","pef");
 
     
-    legendRpPbAllGA->Draw();
+  legendRpPbAllGA->Draw();
   
 
-    line->Draw("same");
+  line->Draw("same");
  
     
-     canvasAllGARpPb->Print(Form("%s/AllGA_RpPb.%s",outputDir.Data(),suffix.Data()));   
+  canvasAllGARpPb->Print(Form("%s/AllGA_RpPb.%s",outputDir.Data(),suffix.Data()));   
    
     
-    // **************************************************************************************
-    // ************************* PlottingCombined R_pPb and PCM************************
-    // **************************************************************************************
-    TCanvas* canvasAllGA1RpPb = new TCanvas("canvasAllGA1RpPb","",200,10,1200,700);  // gives the page size
-    DrawGammaCanvasSettings( canvasAllGA1RpPb, 0.08, 0.02, 0.02, 0.13);
+  // **************************************************************************************
+  // ************************* PlottingCombined R_pPb and PCM************************
+  // **************************************************************************************
+  TCanvas* canvasAllGA1RpPb = new TCanvas("canvasAllGA1RpPb","",200,10,1200,700);  // gives the page size
+  DrawGammaCanvasSettings( canvasAllGA1RpPb, 0.08, 0.02, 0.02, 0.13);
     
-    //  canvasAllGA1RpPb->SetLogx();
-    // canvasAllGA1RpPb->SetLogy();
-    TH2F * histo2DAllGA1;
-    histo2DAllGA1 = new TH2F("histo2DAllGA1","histo2DAllGA1",1000,0.,20.,1000,0.3,1.7);
-     SetStyleHistoTH2ForGraphs(histo2DAllGA1, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
-    histo2DAllGA1->DrawCopy();
+  //  canvasAllGA1RpPb->SetLogx();
+  // canvasAllGA1RpPb->SetLogy();
+  TH2F * histo2DAllGA1;
+  histo2DAllGA1 = new TH2F("histo2DAllGA1","histo2DAllGA1",1000,0.,20.,1000,0.3,1.7);
+  SetStyleHistoTH2ForGraphs(histo2DAllGA1, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
+  histo2DAllGA1->DrawCopy();
   
-    graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
-    graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
+  graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
+  graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
   
-    graphPCMYieldPi0pPbSystErr-> SetMarkerStyle(24);
-    graphPCMYieldPi0pPb->SetMarkerStyle(24);
-    graphPCMYieldPi0pPbSystErr->Draw("E2,same");  
-    graphPCMYieldPi0pPb->Draw("p,same");
+  graphPCMYieldPi0pPbSystErr-> SetMarkerStyle(24);
+  graphPCMYieldPi0pPb->SetMarkerStyle(24);
+  graphPCMYieldPi0pPbSystErr->Draw("E2,same");  
+  graphPCMYieldPi0pPb->Draw("p,same");
 
-    TLegend* legendRpPbAllGA1 = new TLegend(0.17,0.2,0.4,0.35);
-    legendRpPbAllGA1->SetFillColor(0);
-    legendRpPbAllGA1->SetLineColor(0);
-    legendRpPbAllGA1->SetTextSize(0.03);
-    legendRpPbAllGA1->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"Combined","pef");
-    legendRpPbAllGA1->AddEntry(graphPCMYieldPi0pPbSystErr,"PCM","pef");
+  TLegend* legendRpPbAllGA1 = new TLegend(0.17,0.2,0.4,0.35);
+  legendRpPbAllGA1->SetFillColor(0);
+  legendRpPbAllGA1->SetLineColor(0);
+  legendRpPbAllGA1->SetTextSize(0.03);
+  legendRpPbAllGA1->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"Combined","pef");
+  legendRpPbAllGA1->AddEntry(graphPCMYieldPi0pPbSystErr,"PCM","pef");
     
-    legendRpPbAllGA1->Draw();
+  legendRpPbAllGA1->Draw();
   
 
-    line->Draw("same");
+  line->Draw("same");
  
     
-     canvasAllGA1RpPb->Print(Form("%s/CombinedAndPCM_RpPb.%s",outputDir.Data(),suffix.Data()));   
-    // **************************************************************************************
-    // ************************* PlottingCombined R_pPb and Dalitz************************
-    // **************************************************************************************
-    TCanvas* canvasAllGA2RpPb = new TCanvas("canvasAllGA2RpPb","",200,10,1200,700);  // gives the page size
-    DrawGammaCanvasSettings( canvasAllGA2RpPb, 0.08, 0.02, 0.02, 0.13);
+  canvasAllGA1RpPb->Print(Form("%s/CombinedAndPCM_RpPb.%s",outputDir.Data(),suffix.Data()));   
+  // **************************************************************************************
+  // ************************* PlottingCombined R_pPb and Dalitz************************
+  // **************************************************************************************
+  TCanvas* canvasAllGA2RpPb = new TCanvas("canvasAllGA2RpPb","",200,10,1200,700);  // gives the page size
+  DrawGammaCanvasSettings( canvasAllGA2RpPb, 0.08, 0.02, 0.02, 0.13);
     
-    //  canvasAllGA2RpPb->SetLogx();
-    // canvasAllGA2RpPb->SetLogy();
-    TH2F * histo2DAllGA2;
-    histo2DAllGA2 = new TH2F("histo2DAllGA2","histo2DAllGA2",1000,0.,20.,1000,0.3,1.7);
-     SetStyleHistoTH2ForGraphs(histo2DAllGA2, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
-    histo2DAllGA2->DrawCopy();
+  //  canvasAllGA2RpPb->SetLogx();
+  // canvasAllGA2RpPb->SetLogy();
+  TH2F * histo2DAllGA2;
+  histo2DAllGA2 = new TH2F("histo2DAllGA2","histo2DAllGA2",1000,0.,20.,1000,0.3,1.7);
+  SetStyleHistoTH2ForGraphs(histo2DAllGA2, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
+  histo2DAllGA2->DrawCopy();
 
-    graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
-    graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
+  graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
+  graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
 
-    graphDalitzYieldPi0pPbSystErr->SetMarkerStyle(24);
-    graphDalitzYieldPi0pPb->SetMarkerStyle(24);
-    graphDalitzYieldPi0pPbSystErr->Draw("E2,same");  
-    graphDalitzYieldPi0pPb->Draw("p,same");  
+  graphDalitzYieldPi0pPbSystErr->SetMarkerStyle(24);
+  graphDalitzYieldPi0pPb->SetMarkerStyle(24);
+  graphDalitzYieldPi0pPbSystErr->Draw("E2,same");  
+  graphDalitzYieldPi0pPb->Draw("p,same");  
 
-    TLegend* legendRpPbAllGA2 = new TLegend(0.17,0.2,0.4,0.35);
-    legendRpPbAllGA2->SetFillColor(0);
-    legendRpPbAllGA2->SetLineColor(0);
-    legendRpPbAllGA2->SetTextSize(0.03);
-    legendRpPbAllGA2->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"Combined","pef");
-    legendRpPbAllGA2->AddEntry(graphDalitzYieldPi0pPbSystErr,"Dalitz","pef");
+  TLegend* legendRpPbAllGA2 = new TLegend(0.17,0.2,0.4,0.35);
+  legendRpPbAllGA2->SetFillColor(0);
+  legendRpPbAllGA2->SetLineColor(0);
+  legendRpPbAllGA2->SetTextSize(0.03);
+  legendRpPbAllGA2->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"Combined","pef");
+  legendRpPbAllGA2->AddEntry(graphDalitzYieldPi0pPbSystErr,"Dalitz","pef");
         
-    legendRpPbAllGA2->Draw();
+  legendRpPbAllGA2->Draw();
   
 
-    line->Draw("same");
+  line->Draw("same");
  
     
-     canvasAllGA2RpPb->Print(Form("%s/CombinedAndDalitz_RpPb.%s",outputDir.Data(),suffix.Data())); 
-     // **************************************************************************************
-    // ************************* PlottingCombined R_pPb and PHOS************************
-    // **************************************************************************************
-    TCanvas* canvasAllGA3RpPb = new TCanvas("canvasAllGA3RpPb","",200,10,1200,700);  // gives the page size
-    DrawGammaCanvasSettings( canvasAllGA3RpPb, 0.08, 0.02, 0.02, 0.13);
+  canvasAllGA2RpPb->Print(Form("%s/CombinedAndDalitz_RpPb.%s",outputDir.Data(),suffix.Data())); 
+  // **************************************************************************************
+  // ************************* PlottingCombined R_pPb and PHOS************************
+  // **************************************************************************************
+  TCanvas* canvasAllGA3RpPb = new TCanvas("canvasAllGA3RpPb","",200,10,1200,700);  // gives the page size
+  DrawGammaCanvasSettings( canvasAllGA3RpPb, 0.08, 0.02, 0.02, 0.13);
     
-    //  canvasAllGA3RpPb->SetLogx();
-    // canvasAllGA3RpPb->SetLogy();
-    TH2F * histo2DAllGA3;
-    histo2DAllGA3 = new TH2F("histo2DAllGA3","histo2DAllGA3",1000,0.,20.,1000,0.3,1.7);
-     SetStyleHistoTH2ForGraphs(histo2DAllGA3, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
-    histo2DAllGA3->DrawCopy();
+  //  canvasAllGA3RpPb->SetLogx();
+  // canvasAllGA3RpPb->SetLogy();
+  TH2F * histo2DAllGA3;
+  histo2DAllGA3 = new TH2F("histo2DAllGA3","histo2DAllGA3",1000,0.,20.,1000,0.3,1.7);
+  SetStyleHistoTH2ForGraphs(histo2DAllGA3, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
+  histo2DAllGA3->DrawCopy();
     
 
 
-    graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
-    graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
+  graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
+  graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
 
  
-graphPHOSYieldPi0pPbSystErr->SetMarkerStyle(24);
-graphPHOSYieldPi0pPb->SetMarkerStyle(24);
-    graphPHOSYieldPi0pPbSystErr->Draw("E2,same");  
-    graphPHOSYieldPi0pPb->Draw("p,same"); 
+  graphPHOSYieldPi0pPbSystErr->SetMarkerStyle(24);
+  graphPHOSYieldPi0pPb->SetMarkerStyle(24);
+  graphPHOSYieldPi0pPbSystErr->Draw("E2,same");  
+  graphPHOSYieldPi0pPb->Draw("p,same"); 
 
 
 
 
-    TLegend* legendRpPbAllGA3 = new TLegend(0.17,0.2,0.4,0.35);
-    legendRpPbAllGA3->SetFillColor(0);
-    legendRpPbAllGA3->SetLineColor(0);
-    legendRpPbAllGA3->SetTextSize(0.03);
-    legendRpPbAllGA3->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"Combined","pef");
-    legendRpPbAllGA3->AddEntry(graphPHOSYieldPi0pPbSystErr,"PHOS","pef");
+  TLegend* legendRpPbAllGA3 = new TLegend(0.17,0.2,0.4,0.35);
+  legendRpPbAllGA3->SetFillColor(0);
+  legendRpPbAllGA3->SetLineColor(0);
+  legendRpPbAllGA3->SetTextSize(0.03);
+  legendRpPbAllGA3->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"Combined","pef");
+  legendRpPbAllGA3->AddEntry(graphPHOSYieldPi0pPbSystErr,"PHOS","pef");
         
-    legendRpPbAllGA3->Draw();
+  legendRpPbAllGA3->Draw();
   
 
-    line->Draw("same");
+  line->Draw("same");
  
     
-     canvasAllGA3RpPb->Print(Form("%s/CombinedAndPHOS_RpPb.%s",outputDir.Data(),suffix.Data())); 
+  canvasAllGA3RpPb->Print(Form("%s/CombinedAndPHOS_RpPb.%s",outputDir.Data(),suffix.Data())); 
 
-     // **************************************************************************************
-    // ************************* PlottingCombined R_pPb and EMCal************************
-    // **************************************************************************************
-    TCanvas* canvasAllGA4RpPb = new TCanvas("canvasAllGA4RpPb","",200,10,1200,700);  // gives the page size
-    DrawGammaCanvasSettings( canvasAllGA4RpPb, 0.08, 0.02, 0.02, 0.13);
+  // **************************************************************************************
+  // ************************* PlottingCombined R_pPb and EMCal************************
+  // **************************************************************************************
+  TCanvas* canvasAllGA4RpPb = new TCanvas("canvasAllGA4RpPb","",200,10,1200,700);  // gives the page size
+  DrawGammaCanvasSettings( canvasAllGA4RpPb, 0.08, 0.02, 0.02, 0.13);
     
-    //  canvasAllGA4RpPb->SetLogx();
-    // canvasAllGA4RpPb->SetLogy();
-    TH2F * histo2DAllGA4;
-    histo2DAllGA4 = new TH2F("histo2DAllGA4","histo2DAllGA4",1000,0.,20.,1000,0.3,1.7);
-     SetStyleHistoTH2ForGraphs(histo2DAllGA4, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
-    histo2DAllGA4->DrawCopy();
+  //  canvasAllGA4RpPb->SetLogx();
+  // canvasAllGA4RpPb->SetLogy();
+  TH2F * histo2DAllGA4;
+  histo2DAllGA4 = new TH2F("histo2DAllGA4","histo2DAllGA4",1000,0.,20.,1000,0.3,1.7);
+  SetStyleHistoTH2ForGraphs(histo2DAllGA4, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
+  histo2DAllGA4->DrawCopy();
 
-     graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
-    graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");   
+  graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
+  graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");   
 
-	  DrawGammaSetMarkerTGraphAsym(graphEMCalYieldPi0pPbSystErr,24,1.5, kGreen+2, kGreen+2, 1, kTRUE);
-	  graphEMCalYieldPi0pPb->SetMarkerStyle(24);
-    graphEMCalYieldPi0pPbSystErr->Draw("E2,same");  
-    graphEMCalYieldPi0pPb->Draw("p,same");  
+  DrawGammaSetMarkerTGraphAsym(graphEMCalYieldPi0pPbSystErr,24,1.5, kGreen+2, kGreen+2, 1, kTRUE);
+  graphEMCalYieldPi0pPb->SetMarkerStyle(24);
+  graphEMCalYieldPi0pPbSystErr->Draw("E2,same");  
+  graphEMCalYieldPi0pPb->Draw("p,same");  
 
 
 
-    TLegend* legendRpPbAllGA4 = new TLegend(0.17,0.2,0.4,0.35);
-    legendRpPbAllGA4->SetFillColor(0);
-    legendRpPbAllGA4->SetLineColor(0);
-    legendRpPbAllGA4->SetTextSize(0.03);
-    legendRpPbAllGA4->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"Combined","pef");
-    legendRpPbAllGA4->AddEntry(graphEMCalYieldPi0pPbSystErr,"EMCal","pef");
+  TLegend* legendRpPbAllGA4 = new TLegend(0.17,0.2,0.4,0.35);
+  legendRpPbAllGA4->SetFillColor(0);
+  legendRpPbAllGA4->SetLineColor(0);
+  legendRpPbAllGA4->SetTextSize(0.03);
+  legendRpPbAllGA4->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"Combined","pef");
+  legendRpPbAllGA4->AddEntry(graphEMCalYieldPi0pPbSystErr,"EMCal","pef");
         
-    legendRpPbAllGA4->Draw();
+  legendRpPbAllGA4->Draw();
   
 
-    line->Draw("same");
+  line->Draw("same");
  
     
-     canvasAllGA4RpPb->Print(Form("%s/CombinedAndEMCal_RpPb.%s",outputDir.Data(),suffix.Data())); 
-    // **************************************************************************************
-    // ************************* Plotting Combined R_pPb with models ************************
-    // **************************************************************************************
-    TCanvas* canvasCombinedWithModelsRpPb = new TCanvas("canvasCombinedWithModelsRpPb","",200,10,1200,700);  // gives the page size
-    DrawGammaCanvasSettings( canvasCombinedWithModelsRpPb, 0.08, 0.02, 0.02, 0.13);
+  canvasAllGA4RpPb->Print(Form("%s/CombinedAndEMCal_RpPb.%s",outputDir.Data(),suffix.Data())); 
+  // **************************************************************************************
+  // ************************* Plotting Combined R_pPb with models ************************
+  // **************************************************************************************
+  TCanvas* canvasCombinedWithModelsRpPb = new TCanvas("canvasCombinedWithModelsRpPb","",200,10,1200,700);  // gives the page size
+  DrawGammaCanvasSettings( canvasCombinedWithModelsRpPb, 0.08, 0.02, 0.02, 0.13);
     
-    //  canvasCombinedWithModelsRpPb->SetLogx();
-    // canvasCombinedWithModelsRpPb->SetLogy();
-    TH2F * histo2DCombinedWithModels;
-    histo2DCombinedWithModels = new TH2F("histo2DCombinedWithModels","histo2DCombinedWithModels",1000,0.,20.,1000,0.3,1.5);
-     SetStyleHistoTH2ForGraphs(histo2DCombinedWithModels, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
-    histo2DCombinedWithModels->DrawCopy();
+  //  canvasCombinedWithModelsRpPb->SetLogx();
+  // canvasCombinedWithModelsRpPb->SetLogy();
+  TH2F * histo2DCombinedWithModels;
+  histo2DCombinedWithModels = new TH2F("histo2DCombinedWithModels","histo2DCombinedWithModels",1000,0.,20.,1000,0.3,1.5);
+  SetStyleHistoTH2ForGraphs(histo2DCombinedWithModels, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
+  histo2DCombinedWithModels->DrawCopy();
     
-    graphAsymmErrorsPi0DSS5000->Draw("same,E3");
-	graphPi0CGC->Draw("same,p");
-	graphPi0DSS5000->Draw("same,p,l");
-	graphPi0ESP09sPi0AKK->Draw("same,p,l");
-	graphPi0ESP09sPi0KKP->Draw("same,p,l");
-    graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
-    graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
-        Float_t offsetYMaxLegendPCM = -0.15;
-	Float_t xMinTheoryPCM = 0.30;
+  graphAsymmErrorsPi0DSS5000->Draw("same,E3");
+  graphPi0CGC->Draw("same,p");
+  graphPi0DSS5000->Draw("same,p,l");
+  graphPi0ESP09sPi0AKK->Draw("same,p,l");
+  graphPi0ESP09sPi0KKP->Draw("same,p,l");
+  graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
+  graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
+  Float_t offsetYMaxLegendPCM = -0.15;
+  Float_t xMinTheoryPCM = 0.30;
 
-	TLegend* legendRpPbESP09sPCM = new TLegend(0.2,0.15,0.45,0.43);
-	legendRpPbESP09sPCM->SetFillColor(0);
-	legendRpPbESP09sPCM->SetLineColor(0);
-	legendRpPbESP09sPCM->SetTextSize(0.04);
-	legendRpPbESP09sPCM->SetTextFont(42);
-	legendRpPbESP09sPCM->AddEntry(graphPi0ESP09sPi0KKP,"EPS09s KKP NLO");
-	legendRpPbESP09sPCM->AddEntry(graphPi0ESP09sPi0AKK,"EPS09s AKK NLO");
-	legendRpPbESP09sPCM->AddEntry(graphPi0DSS5000,"EPS09s fDSS NLO");
-	legendRpPbESP09sPCM->AddEntry(graphAsymmErrorsPi0DSS5000,"EPS09s fDSS errors","pef");
+  TLegend* legendRpPbESP09sPCM = new TLegend(0.2,0.15,0.45,0.43);
+  legendRpPbESP09sPCM->SetFillColor(0);
+  legendRpPbESP09sPCM->SetLineColor(0);
+  legendRpPbESP09sPCM->SetTextSize(0.04);
+  legendRpPbESP09sPCM->SetTextFont(42);
+  legendRpPbESP09sPCM->AddEntry(graphPi0ESP09sPi0KKP,"EPS09s KKP NLO");
+  legendRpPbESP09sPCM->AddEntry(graphPi0ESP09sPi0AKK,"EPS09s AKK NLO");
+  legendRpPbESP09sPCM->AddEntry(graphPi0DSS5000,"EPS09s fDSS NLO");
+  legendRpPbESP09sPCM->AddEntry(graphAsymmErrorsPi0DSS5000,"EPS09s fDSS errors","pef");
 	
 	
-	TLegend* legendRpPbCGCPCM = new TLegend(0.5,0.15,0.85,0.25);
-	legendRpPbCGCPCM->SetFillColor(0);
-	legendRpPbCGCPCM->SetLineColor(0);
-	legendRpPbCGCPCM->SetTextSize(0.04);
-	legendRpPbCGCPCM->SetTextFont(42);
-	legendRpPbCGCPCM->AddEntry(graphPi0CGC,"Color Glas Condensate","p");
-    	legendRpPbESP09sPCM->Draw("same");
-	legendRpPbCGCPCM->Draw("same");
+  TLegend* legendRpPbCGCPCM = new TLegend(0.5,0.15,0.85,0.25);
+  legendRpPbCGCPCM->SetFillColor(0);
+  legendRpPbCGCPCM->SetLineColor(0);
+  legendRpPbCGCPCM->SetTextSize(0.04);
+  legendRpPbCGCPCM->SetTextFont(42);
+  legendRpPbCGCPCM->AddEntry(graphPi0CGC,"Color Glas Condensate","p");
+  legendRpPbESP09sPCM->Draw("same");
+  legendRpPbCGCPCM->Draw("same");
 
   
 
-    line->Draw("same");
+  line->Draw("same");
  
     
-     canvasCombinedWithModelsRpPb->Print(Form("%s/CombinedWithModels_RpPb.%s",outputDir.Data(),suffix.Data()));
+  canvasCombinedWithModelsRpPb->Print(Form("%s/CombinedWithModels_RpPb.%s",outputDir.Data(),suffix.Data()));
  
 
 
-    // **************************************************************************************
-    // ************************* Plotting Combined R_pPb with Charged Particles ************************
-    // **************************************************************************************
-    TCanvas* canvasCombinedWithChargedParticlesRpPb = new TCanvas("canvasCombinedWithChargedParticlesRpPb","",200,10,1200,700);  // gives the page size
-    DrawGammaCanvasSettings( canvasCombinedWithChargedParticlesRpPb, 0.08, 0.02, 0.02, 0.13);
+  // **************************************************************************************
+  // ************************* Plotting Combined R_pPb with Charged Particles ************************
+  // **************************************************************************************
+  TCanvas* canvasCombinedWithChargedParticlesRpPb = new TCanvas("canvasCombinedWithChargedParticlesRpPb","",200,10,1200,700);  // gives the page size
+  DrawGammaCanvasSettings( canvasCombinedWithChargedParticlesRpPb, 0.08, 0.02, 0.02, 0.13);
     
-    //  canvasCombinedWithChargedParticlesRpPb->SetLogx();
-    // canvasCombinedWithChargedParticlesRpPb->SetLogy();
-    TH2F * histo2DCombinedWithChargedParticles;
-    histo2DCombinedWithChargedParticles = new TH2F("histo2DCombinedWithChargedParticles","histo2DCombinedWithChargedParticles",1000,0.,20.,1000,0.3,1.5);
-     SetStyleHistoTH2ForGraphs(histo2DCombinedWithChargedParticles, "#it{p}_{T} (GeV/#it{c})","#it{R}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
-    histo2DCombinedWithChargedParticles->DrawCopy();
+  //  canvasCombinedWithChargedParticlesRpPb->SetLogx();
+  // canvasCombinedWithChargedParticlesRpPb->SetLogy();
+  TH2F * histo2DCombinedWithChargedParticles;
+  histo2DCombinedWithChargedParticles = new TH2F("histo2DCombinedWithChargedParticles","histo2DCombinedWithChargedParticles",1000,0.,20.,1000,0.3,1.5);
+  SetStyleHistoTH2ForGraphs(histo2DCombinedWithChargedParticles, "#it{p}_{T} (GeV/#it{c})","#it{R}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
+  histo2DCombinedWithChargedParticles->DrawCopy();
     
-    graphRpPbChargedParticlesSystErr->Draw("E2,same");  
-    graphRpPbChargedParticlesStatErr->Draw("p,same");  
-    graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
-    graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
+  graphRpPbChargedParticlesSystErr->Draw("E2,same");  
+  graphRpPbChargedParticlesStatErr->Draw("p,same");  
+  graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
+  graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
   
-    TLegend* legendRpPbChargedParticles = new TLegend(0.1,0.85,0.55,0.95);
-    legendRpPbChargedParticles->SetFillColor(0);
-    legendRpPbChargedParticles->SetLineColor(0);
-    legendRpPbChargedParticles->SetTextSize(0.03);
-    legendRpPbChargedParticles->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"#pi^{0}, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
-    legendRpPbChargedParticles->AddEntry(graphRpPbChargedParticlesSystErr,"charged particles (NSD), p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
+  TLegend* legendRpPbChargedParticles = new TLegend(0.1,0.85,0.55,0.95);
+  legendRpPbChargedParticles->SetFillColor(0);
+  legendRpPbChargedParticles->SetLineColor(0);
+  legendRpPbChargedParticles->SetTextSize(0.03);
+  legendRpPbChargedParticles->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"#pi^{0}, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
+  legendRpPbChargedParticles->AddEntry(graphRpPbChargedParticlesSystErr,"charged particles (NSD), p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
    
-    legendRpPbChargedParticles->Draw();
+  legendRpPbChargedParticles->Draw();
 
-    line->Draw("same");
+  line->Draw("same");
  
     
-     canvasCombinedWithChargedParticlesRpPb->Print(Form("%s/CombinedWithChargedParticles_RpPb.%s",outputDir.Data(),suffix.Data()));
+  canvasCombinedWithChargedParticlesRpPb->Print(Form("%s/CombinedWithChargedParticles_RpPb.%s",outputDir.Data(),suffix.Data()));
 
-    // **************************************************************************************
-    // ************************* Plotting Combined R_pPb with Charged Pions ************************
-    // **************************************************************************************
-    TCanvas* canvasCombinedWithChargedPionsRpPb = new TCanvas("canvasCombinedWithChargedPionsRpPb","",200,10,1200,700);  // gives the page size
-    DrawGammaCanvasSettings( canvasCombinedWithChargedPionsRpPb, 0.08, 0.02, 0.02, 0.13);
+  // **************************************************************************************
+  // ************************* Plotting Combined R_pPb with Charged Pions ************************
+  // **************************************************************************************
+  TCanvas* canvasCombinedWithChargedPionsRpPb = new TCanvas("canvasCombinedWithChargedPionsRpPb","",200,10,1200,700);  // gives the page size
+  DrawGammaCanvasSettings( canvasCombinedWithChargedPionsRpPb, 0.08, 0.02, 0.02, 0.13);
     
-    //  canvasCombinedWithChargedPionsRpPb->SetLogx();
-    // canvasCombinedWithChargedPionsRpPb->SetLogy();
-    TH2F * histo2DCombinedWithChargedPions;
-    histo2DCombinedWithChargedPions = new TH2F("histo2DCombinedWithChargedPions","histo2DCombinedWithChargedPions",1000,0.,20.,1000,0.3,1.5);
-     SetStyleHistoTH2ForGraphs(histo2DCombinedWithChargedPions, "#it{p}_{T} (GeV/#it{c})","#it{R}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
-    histo2DCombinedWithChargedPions->DrawCopy();
+  //  canvasCombinedWithChargedPionsRpPb->SetLogx();
+  // canvasCombinedWithChargedPionsRpPb->SetLogy();
+  TH2F * histo2DCombinedWithChargedPions;
+  histo2DCombinedWithChargedPions = new TH2F("histo2DCombinedWithChargedPions","histo2DCombinedWithChargedPions",1000,0.,20.,1000,0.3,1.5);
+  SetStyleHistoTH2ForGraphs(histo2DCombinedWithChargedPions, "#it{p}_{T} (GeV/#it{c})","#it{R}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
+  histo2DCombinedWithChargedPions->DrawCopy();
     
-    graphRpPbChargedPionsSystErr->Draw("E2,same");  
-    graphRpPbChargedPionsStatErr->Draw("p,same");  
-    graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
-    graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
+  graphRpPbChargedPionsSystErr->Draw("E2,same");  
+  graphRpPbChargedPionsStatErr->Draw("p,same");  
+  graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
+  graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
   
-    TLegend* legendRpPbChargedPions = new TLegend(0.1,0.85,0.55,0.95);
-    legendRpPbChargedPions->SetFillColor(0);
-    legendRpPbChargedPions->SetLineColor(0);
-    legendRpPbChargedPions->SetTextSize(0.03);
-    legendRpPbChargedPions->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"#pi^{0}, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
-    legendRpPbChargedPions->AddEntry(graphRpPbChargedPionsSystErr,"#pi^{+/-} (NSD), p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
+  TLegend* legendRpPbChargedPions = new TLegend(0.1,0.85,0.55,0.95);
+  legendRpPbChargedPions->SetFillColor(0);
+  legendRpPbChargedPions->SetLineColor(0);
+  legendRpPbChargedPions->SetTextSize(0.03);
+  legendRpPbChargedPions->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"#pi^{0}, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
+  legendRpPbChargedPions->AddEntry(graphRpPbChargedPionsSystErr,"#pi^{+/-} (NSD), p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
    
-    legendRpPbChargedPions->Draw();
+  legendRpPbChargedPions->Draw();
 
-    line->Draw("same");
+  line->Draw("same");
  
     
-     canvasCombinedWithChargedPionsRpPb->Print(Form("%s/CombinedWithChargedPions_RpPb.%s",outputDir.Data(),suffix.Data()));
+  canvasCombinedWithChargedPionsRpPb->Print(Form("%s/CombinedWithChargedPions_RpPb.%s",outputDir.Data(),suffix.Data()));
 
-    // **************************************************************************************
-    // ************************* Plotting all ppreferences ************************
-    // **************************************************************************************
-    TCanvas* canvasAllppreferences = new TCanvas("canvasAllppreferences","",200,10,1200,700);  // gives the page size
-    DrawGammaCanvasSettings(canvasAllppreferences , 0.12, 0.02, 0.02, 0.11);
+  // **************************************************************************************
+  // ************************* Plotting all ppreferences ************************
+  // **************************************************************************************
+  TCanvas* canvasAllppreferences = new TCanvas("canvasAllppreferences","",200,10,1200,700);  // gives the page size
+  DrawGammaCanvasSettings(canvasAllppreferences , 0.12, 0.02, 0.02, 0.11);
     
-      canvasAllppreferences->SetLogx();
-     canvasAllppreferences->SetLogy();
-    TH2F * histo2DAllppreferences;
-    histo2DAllppreferences = new TH2F("histo2DAllppreferences","histo2DAllppreferences",1000,.3,30.,1000,2e2,10e11);
-     SetStyleHistoTH2ForGraphs(histo2DAllppreferences, "#it{p}_{T} (GeV/#it{c})","#it{E}#frac{d^{2}#sigma}{d#it{p}^{3}}(pb GeV^{-2} #it{c}^{3})", 0.05,0.06, 0.05,0.05, 0.7,1., 512, 505);
-    histo2DAllppreferences->DrawCopy();
+  canvasAllppreferences->SetLogx();
+  canvasAllppreferences->SetLogy();
+  TH2F * histo2DAllppreferences;
+  histo2DAllppreferences = new TH2F("histo2DAllppreferences","histo2DAllppreferences",1000,.3,30.,1000,2e2,10e11);
+  SetStyleHistoTH2ForGraphs(histo2DAllppreferences, "#it{p}_{T} (GeV/#it{c})","#it{E}#frac{d^{2}#sigma}{d#it{p}^{3}}(pb GeV^{-2} #it{c}^{3})", 0.05,0.06, 0.05,0.05, 0.7,1., 512, 505);
+  histo2DAllppreferences->DrawCopy();
     
-	DrawGammaSetMarkerTGraphAsym(graphPCMppreferenceSystErr,20,1.5, 1, 1, 1, kTRUE);
-	DrawGammaSetMarkerTGraphAsym(graphPCMppreferenceStatErr,20,1.5, 1, 1);
-	DrawGammaSetMarkerTGraphAsym(graphDalitzppreferenceSystErr,20,1.5,  kCyan+2,  kCyan+2, 1, kTRUE);
-	DrawGammaSetMarkerTGraphAsym(graphDalitzppreferenceStatErr,20,1.5,  kCyan+2,  kCyan+2);
-	DrawGammaSetMarkerTGraphAsym(graphPHOSppreferenceSystErr,20,1.5, kRed+1, kRed+1, 1, kTRUE);
-	DrawGammaSetMarkerTGraphAsym(graphPHOSppreferenceStatErr,20,1.5, kRed+1, kRed+1);
-	DrawGammaSetMarkerTGraphAsym(graphEMCalppreferenceSystErr,20,1.5, kGreen+2, kGreen+2, 1, kTRUE);
-	DrawGammaSetMarkerTGraphAsym(graphEMCalppreferenceStatErr,20,1.5, kGreen+2, kGreen+2);
+  DrawGammaSetMarkerTGraphAsym(graphPCMppreferenceSystErr,20,1.5, 1, 1, 1, kTRUE);
+  DrawGammaSetMarkerTGraphAsym(graphPCMppreferenceStatErr,20,1.5, 1, 1);
+  DrawGammaSetMarkerTGraphAsym(graphDalitzppreferenceSystErr,20,1.5,  kCyan+2,  kCyan+2, 1, kTRUE);
+  DrawGammaSetMarkerTGraphAsym(graphDalitzppreferenceStatErr,20,1.5,  kCyan+2,  kCyan+2);
+  DrawGammaSetMarkerTGraphAsym(graphPHOSppreferenceSystErr,20,1.5, kRed+1, kRed+1, 1, kTRUE);
+  DrawGammaSetMarkerTGraphAsym(graphPHOSppreferenceStatErr,20,1.5, kRed+1, kRed+1);
+  DrawGammaSetMarkerTGraphAsym(graphEMCalppreferenceSystErr,20,1.5, kGreen+2, kGreen+2, 1, kTRUE);
+  DrawGammaSetMarkerTGraphAsym(graphEMCalppreferenceStatErr,20,1.5, kGreen+2, kGreen+2);
 
-	graphPCMppreferenceSystErr->Draw("E2,same");  
-	graphPCMppreferenceStatErr->Draw("p,same");  
-	graphDalitzppreferenceSystErr->Draw("E2,same");  
-	graphDalitzppreferenceStatErr->Draw("p,same");  
-	graphPHOSppreferenceSystErr->Draw("E2,same");  
-	graphPHOSppreferenceStatErr->Draw("p,same");  
-	graphEMCalppreferenceSystErr->Draw("E2,same");  
-	graphEMCalppreferenceStatErr->Draw("p,same");  
+  graphPCMppreferenceSystErr->Draw("E2,same");  
+  graphPCMppreferenceStatErr->Draw("p,same");  
+  graphDalitzppreferenceSystErr->Draw("E2,same");  
+  graphDalitzppreferenceStatErr->Draw("p,same");  
+  graphPHOSppreferenceSystErr->Draw("E2,same");  
+  graphPHOSppreferenceStatErr->Draw("p,same");  
+  graphEMCalppreferenceSystErr->Draw("E2,same");  
+  graphEMCalppreferenceStatErr->Draw("p,same");  
 
   
-    TLegend* legendAllppreferences = new TLegend(0.15,0.15,0.45,0.5);
-    legendAllppreferences->SetFillColor(0);
-    legendAllppreferences->SetLineColor(0);
-    legendAllppreferences->SetTextSize(0.03);
-    legendAllppreferences->AddEntry(graphPCMppreferenceSystErr,"PCM pp reference #sqrt{#it{s}} = 5.02 TeV","pef");
-    legendAllppreferences->AddEntry(graphDalitzppreferenceSystErr,"Dalitz pp reference #sqrt{#it{s}} = 5.02 TeV","pef");
-   legendAllppreferences->AddEntry(graphPHOSppreferenceSystErr,"PHOS pp reference #sqrt{#it{s}} = 5.02 TeV","pef");
-   legendAllppreferences->AddEntry(graphEMCalppreferenceSystErr,"EMCal pp reference #sqrt{#it{s}} = 5.02 TeV","pef");
+  TLegend* legendAllppreferences = new TLegend(0.15,0.15,0.45,0.5);
+  legendAllppreferences->SetFillColor(0);
+  legendAllppreferences->SetLineColor(0);
+  legendAllppreferences->SetTextSize(0.03);
+  legendAllppreferences->AddEntry(graphPCMppreferenceSystErr,"PCM pp reference #sqrt{#it{s}} = 5.02 TeV","pef");
+  legendAllppreferences->AddEntry(graphDalitzppreferenceSystErr,"Dalitz pp reference #sqrt{#it{s}} = 5.02 TeV","pef");
+  legendAllppreferences->AddEntry(graphPHOSppreferenceSystErr,"PHOS pp reference #sqrt{#it{s}} = 5.02 TeV","pef");
+  legendAllppreferences->AddEntry(graphEMCalppreferenceSystErr,"EMCal pp reference #sqrt{#it{s}} = 5.02 TeV","pef");
    
-    legendAllppreferences->Draw();
+  legendAllppreferences->Draw();
 
-    line->Draw("same");
+  line->Draw("same");
  
     
-     canvasAllppreferences->Print(Form("%s/Allppreferences.%s",outputDir.Data(),suffix.Data()));
+  canvasAllppreferences->Print(Form("%s/Allppreferences.%s",outputDir.Data(),suffix.Data()));
 
-    // **************************************************************************************
-    // ************************* Plotting Ratio all ppreferences ************************
-    // **************************************************************************************
+  // **************************************************************************************
+  // ************************* Plotting Ratio all ppreferences ************************
+  // **************************************************************************************
 
 
  
 
- TGraphErrors* bla1 = NULL;
- TGraphErrors* bla2 = NULL;
- TGraphErrors* bla3 = NULL;
- TGraphErrors* bla4 = NULL;
-   cout << "PCM Spectrum  - Dalitz" << endl;
-   TGraphErrors* graphRatioPCMDalitz = CalculateRatioBetweenSpectraWithDifferentBinning(graphDalitzppreferenceStatErr,graphDalitzppreferenceSystErr ,graphPCMppreferenceStatErr,graphPCMppreferenceSystErr,  kTRUE,  kTRUE,&bla1,&bla2,&bla3,&bla4)  ;
-   //  graphRatioPCMDalitz->SetPointError(0,0.05,0.34515);
+  TGraphErrors* bla1 = NULL;
+  TGraphErrors* bla2 = NULL;
+  TGraphErrors* bla3 = NULL;
+  TGraphErrors* bla4 = NULL;
+  cout << "PCM Spectrum  - Dalitz" << endl;
+  TGraphErrors* graphRatioPCMDalitz = CalculateRatioBetweenSpectraWithDifferentBinning(graphDalitzppreferenceStatErr,graphDalitzppreferenceSystErr ,graphPCMppreferenceStatErr,graphPCMppreferenceSystErr,  kTRUE,  kTRUE,&bla1,&bla2,&bla3,&bla4)  ;
+  //  graphRatioPCMDalitz->SetPointError(0,0.05,0.34515);
 
-   graphRatioPCMDalitz->Print();
+  graphRatioPCMDalitz->Print();
    
-   cout << "PCM Spectrum  - PHOS " << endl;
-   TGraphErrors* graphRatioPCMPHOS = CalculateRatioBetweenSpectraWithDifferentBinning(graphPHOSppreferenceStatErr,graphPHOSppreferenceSystErr,graphPCMppreferenceStatErr,graphPCMppreferenceSystErr,  kTRUE,  kTRUE,&bla1,&bla2,&bla3,&bla4)  ;
-   graphRatioPCMPHOS->Print();
+  cout << "PCM Spectrum  - PHOS " << endl;
+  TGraphErrors* graphRatioPCMPHOS = CalculateRatioBetweenSpectraWithDifferentBinning(graphPHOSppreferenceStatErr,graphPHOSppreferenceSystErr,graphPCMppreferenceStatErr,graphPCMppreferenceSystErr,  kTRUE,  kTRUE,&bla1,&bla2,&bla3,&bla4)  ;
+  graphRatioPCMPHOS->Print();
                                                                                 
-   cout << "PCM Spectrum  - EMCal " << endl;
-   TGraphErrors* graphRatioPCMEMCal = CalculateRatioBetweenSpectraWithDifferentBinning(graphEMCalppreferenceStatErr,graphEMCalppreferenceSystErr,graphPCMppreferenceStatErr,graphPCMppreferenceSystErr,  kTRUE,  kTRUE,&bla1,&bla2,&bla3,&bla4)  ;
+  cout << "PCM Spectrum  - EMCal " << endl;
+  TGraphErrors* graphRatioPCMEMCal = CalculateRatioBetweenSpectraWithDifferentBinning(graphEMCalppreferenceStatErr,graphEMCalppreferenceSystErr,graphPCMppreferenceStatErr,graphPCMppreferenceSystErr,  kTRUE,  kTRUE,&bla1,&bla2,&bla3,&bla4)  ;
 
 
 
@@ -718,88 +780,88 @@ graphPHOSYieldPi0pPb->SetMarkerStyle(24);
 
 
 
-    TCanvas* canvasRatioAllppreferences = new TCanvas("canvasRatioAllppreferences","",200,10,1200,700);  // gives the page size
-    DrawGammaCanvasSettings(canvasRatioAllppreferences , 0.1, 0.02, 0.02, 0.11);
+  TCanvas* canvasRatioAllppreferences = new TCanvas("canvasRatioAllppreferences","",200,10,1200,700);  // gives the page size
+  DrawGammaCanvasSettings(canvasRatioAllppreferences , 0.1, 0.02, 0.02, 0.11);
     
-       canvasRatioAllppreferences->SetLogx();
-    //  canvasRatioAllppreferences->SetLogy();
-    TH2F * histo2DRatioAllppreferences;
-    histo2DRatioAllppreferences = new TH2F("histo2DRatioAllppreferences","histo2DRatioAllppreferences",1000,.3,30.,1000,0.5,1.5);
-     SetStyleHistoTH2ForGraphs(histo2DRatioAllppreferences, "#it{p}_{T} (GeV/#it{c})","ratio pp references", 0.05,0.06, 0.05,0.05, 0.7,.8, 512, 505);
-    histo2DRatioAllppreferences->DrawCopy();
+  canvasRatioAllppreferences->SetLogx();
+  //  canvasRatioAllppreferences->SetLogy();
+  TH2F * histo2DRatioAllppreferences;
+  histo2DRatioAllppreferences = new TH2F("histo2DRatioAllppreferences","histo2DRatioAllppreferences",1000,.3,30.,1000,0.5,1.5);
+  SetStyleHistoTH2ForGraphs(histo2DRatioAllppreferences, "#it{p}_{T} (GeV/#it{c})","ratio pp references", 0.05,0.06, 0.05,0.05, 0.7,.8, 512, 505);
+  histo2DRatioAllppreferences->DrawCopy();
     
 
-	DrawGammaSetMarkerTGraphErr(graphRatioPCMDalitz,20,1.5,  kCyan+2,  kCyan+2);
-	DrawGammaSetMarkerTGraphErr(graphRatioPCMPHOS,20,1.5, kRed+1, kRed+1);
-	DrawGammaSetMarkerTGraphErr(graphRatioPCMEMCal,20,1.5, kGreen+2, kGreen+2);
+  DrawGammaSetMarkerTGraphErr(graphRatioPCMDalitz,20,1.5,  kCyan+2,  kCyan+2);
+  DrawGammaSetMarkerTGraphErr(graphRatioPCMPHOS,20,1.5, kRed+1, kRed+1);
+  DrawGammaSetMarkerTGraphErr(graphRatioPCMEMCal,20,1.5, kGreen+2, kGreen+2);
 
 
-	graphRatioPCMDalitz->Draw("p,same");  
-	graphRatioPCMPHOS->Draw("p,same");  
-	graphRatioPCMEMCal->Draw("p,same");  
+  graphRatioPCMDalitz->Draw("p,same");  
+  graphRatioPCMPHOS->Draw("p,same");  
+  graphRatioPCMEMCal->Draw("p,same");  
 
   
-    TLegend* legendRatioAllppreferences = new TLegend(0.15,0.15,0.45,0.35);
-    legendRatioAllppreferences->SetFillColor(0);
-    legendRatioAllppreferences->SetLineColor(0);
-    legendRatioAllppreferences->SetTextSize(0.03);
-    legendRatioAllppreferences->AddEntry(graphRatioPCMDalitz,"pp reference #sqrt{#it{s}} = 5.02 TeV, Dalitz/PCM ","pe");
-   legendRatioAllppreferences->AddEntry(graphRatioPCMPHOS,"pp reference #sqrt{#it{s}} = 5.02 TeV, PHOS/PCM","pe");
-   legendRatioAllppreferences->AddEntry(graphRatioPCMEMCal,"pp reference #sqrt{#it{s}} = 5.02 TeV, EMCal/PCM","pe");
+  TLegend* legendRatioAllppreferences = new TLegend(0.15,0.15,0.45,0.35);
+  legendRatioAllppreferences->SetFillColor(0);
+  legendRatioAllppreferences->SetLineColor(0);
+  legendRatioAllppreferences->SetTextSize(0.03);
+  legendRatioAllppreferences->AddEntry(graphRatioPCMDalitz,"pp reference #sqrt{#it{s}} = 5.02 TeV, Dalitz/PCM ","pe");
+  legendRatioAllppreferences->AddEntry(graphRatioPCMPHOS,"pp reference #sqrt{#it{s}} = 5.02 TeV, PHOS/PCM","pe");
+  legendRatioAllppreferences->AddEntry(graphRatioPCMEMCal,"pp reference #sqrt{#it{s}} = 5.02 TeV, EMCal/PCM","pe");
    
-    legendRatioAllppreferences->Draw();
+  legendRatioAllppreferences->Draw();
 
-    line->Draw("same");
+  line->Draw("same");
  
     
-     canvasRatioAllppreferences->Print(Form("%s/RatioAllppreferences.%s",outputDir.Data(),suffix.Data()));
+  canvasRatioAllppreferences->Print(Form("%s/RatioAllppreferences.%s",outputDir.Data(),suffix.Data()));
 
 
 
-    // **************************************************************************************
-    // ************************* Plotting all Alpha ************************
-    // **************************************************************************************
-    TCanvas* canvasAllAlpha = new TCanvas("canvasAllAlpha","",200,10,1200,700);  // gives the page size
-    DrawGammaCanvasSettings(canvasAllAlpha , 0.07, 0.02, 0.02, 0.1);
+  // **************************************************************************************
+  // ************************* Plotting all Alpha ************************
+  // **************************************************************************************
+  TCanvas* canvasAllAlpha = new TCanvas("canvasAllAlpha","",200,10,1200,700);  // gives the page size
+  DrawGammaCanvasSettings(canvasAllAlpha , 0.07, 0.02, 0.02, 0.1);
     
-    //     canvasAllAlpha->SetLogx();
-    // canvasAllAlpha->SetLogy();
-    TH2F * histo2DAllAlpha;
-    histo2DAllAlpha = new TH2F("histo2DAllAlpha","histo2DAllAlpha",1000,0.,20.,1000,0.2,1.7);
-     SetStyleHistoTH2ForGraphs(histo2DAllAlpha, "#it{p}_{T} (GeV/#it{c})","#alpha", 0.04,0.04, 0.04,0.04, 1.,.6, 512, 505);
-    histo2DAllAlpha->DrawCopy();
+  //     canvasAllAlpha->SetLogx();
+  // canvasAllAlpha->SetLogy();
+  TH2F * histo2DAllAlpha;
+  histo2DAllAlpha = new TH2F("histo2DAllAlpha","histo2DAllAlpha",1000,0.,20.,1000,0.2,1.7);
+  SetStyleHistoTH2ForGraphs(histo2DAllAlpha, "#it{p}_{T} (GeV/#it{c})","#alpha", 0.04,0.04, 0.04,0.04, 1.,.6, 512, 505);
+  histo2DAllAlpha->DrawCopy();
     
-	DrawGammaSetMarkerTGraphAsym(graphPCMAlpha,20,1.5, 1, 1);
-	DrawGammaSetMarkerTGraphAsym(graphDalitzAlpha,20,1.5,  kCyan+2,  kCyan+2);
-	DrawGammaSetMarkerTGraphAsym(graphPHOSAlpha,20,1.5, kRed+1, kRed+1);
-	DrawGammaSetMarkerTGraphAsym(graphEMCalAlpha,20,1.5, kGreen+2, kGreen+2);
+  DrawGammaSetMarkerTGraphAsym(graphPCMAlpha,20,1.5, 1, 1);
+  DrawGammaSetMarkerTGraphAsym(graphDalitzAlpha,20,1.5,  kCyan+2,  kCyan+2);
+  DrawGammaSetMarkerTGraphAsym(graphPHOSAlpha,20,1.5, kRed+1, kRed+1);
+  DrawGammaSetMarkerTGraphAsym(graphEMCalAlpha,20,1.5, kGreen+2, kGreen+2);
 
 
-	graphPCMAlpha->Draw("p,same");
-	graphDalitzAlpha->Draw("p,same");  
-	graphPHOSAlpha->Draw("p,same");  
-	graphEMCalAlpha->Draw("p,same");  
+  graphPCMAlpha->Draw("p,same");
+  graphDalitzAlpha->Draw("p,same");  
+  graphPHOSAlpha->Draw("p,same");  
+  graphEMCalAlpha->Draw("p,same");  
 
   
-    TLegend* legendAllAlpha = new TLegend(0.65,0.15,0.95,0.35);
-    legendAllAlpha->SetFillColor(0);
-    legendAllAlpha->SetLineColor(0);
-    legendAllAlpha->SetTextSize(0.03);
-    legendAllAlpha->AddEntry(graphPCMAlpha,"PCM","pe");
-    legendAllAlpha->AddEntry(graphDalitzAlpha,"Dalitz","pe");
-   legendAllAlpha->AddEntry(graphPHOSAlpha,"PHOS","pe");
-   legendAllAlpha->AddEntry(graphEMCalAlpha,"EMCal","pe");
+  TLegend* legendAllAlpha = new TLegend(0.65,0.15,0.95,0.35);
+  legendAllAlpha->SetFillColor(0);
+  legendAllAlpha->SetLineColor(0);
+  legendAllAlpha->SetTextSize(0.03);
+  legendAllAlpha->AddEntry(graphPCMAlpha,"PCM","pe");
+  legendAllAlpha->AddEntry(graphDalitzAlpha,"Dalitz","pe");
+  legendAllAlpha->AddEntry(graphPHOSAlpha,"PHOS","pe");
+  legendAllAlpha->AddEntry(graphEMCalAlpha,"EMCal","pe");
    
-    legendAllAlpha->Draw();
+  legendAllAlpha->Draw();
  
     
-     canvasAllAlpha->Print(Form("%s/AllAlpha.%s",outputDir.Data(),suffix.Data()));
+  canvasAllAlpha->Print(Form("%s/AllAlpha.%s",outputDir.Data(),suffix.Data()));
 
-     //************************ WriteResultsToFile **************************************************
-     TFile fResults(Form("%s/ResultsRpPbpPb_%s.root",outputDir.Data(), dateForOutput.Data()),"RECREATE");
+  //************************ WriteResultsToFile **************************************************
+  TFile fResults(Form("%s/ResultsRpPbpPb_%s.root",outputDir.Data(), dateForOutput.Data()),"RECREATE");
      
-     graphInvYieldPi0CombpPb5023GeVSysClone->Write("CombinedPi0RpPbSystErr");
-     graphInvYieldPi0CombpPb5023GeVStaClone->Write("CombinedPi0RpPbStatErr");
+  graphInvYieldPi0CombpPb5023GeVSysClone->Write("CombinedPi0RpPbSystErr");
+  graphInvYieldPi0CombpPb5023GeVStaClone->Write("CombinedPi0RpPbStatErr");
 
 
 
