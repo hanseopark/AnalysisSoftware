@@ -355,45 +355,45 @@ void QA(    TString select          = "LHC11a",         // set selected
     }
     //**************************************************************************************************************
     else if(select.CompareTo("LHC12g-Vertex")==0){
-    //LHC12g-p2 VertexCheck
-    addSubfolder=kTRUE;
-    cutNr = 0;
-    nSets = 2;
-    fEnergyFlag="8TeV";
-    select.Remove(select.Length()-7,select.Length());
-    pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20151027-LHC12a_QA_MC_p2/VertexCheck/GammaConvCalo_LHC12g_pass2_120.root";
-    pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20151027-LHC12a_QA_MC_p2/VertexCheck/GammaConvCalo_MC_LHC15h1g_pass2_120.root";
-    DataSets[0]=select; DataSets[1]="LHC15h1g";
-    plotDataSets[0]=select; plotDataSets[1]="Pythia8";
+        //LHC12g-p2 VertexCheck
+        addSubfolder=kTRUE;
+        cutNr = 0;
+        nSets = 2;
+        fEnergyFlag="8TeV";
+        select.Remove(select.Length()-7,select.Length());
+        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20151027-LHC12a_QA_MC_p2/VertexCheck/GammaConvCalo_LHC12g_pass2_120.root";
+        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20151027-LHC12a_QA_MC_p2/VertexCheck/GammaConvCalo_MC_LHC15h1g_pass2_120.root";
+        DataSets[0]=select; DataSets[1]="LHC15h1g";
+        plotDataSets[0]=select; plotDataSets[1]="Pythia8";
     }
     //**************************************************************************************************************
     else if(select.CompareTo("LHC12-periods")==0){
-    //LHC12 comparison of all periods
-    addSubfolder=kTRUE;
-    cutNr = 0;
-    nSets = 8;
-    fEnergyFlag="8TeV";
-    labelData="LHC12";
-    pathDataSets[0] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12_GammaConvCalo_120.root";
-    pathDataSets[1] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12a_GammaConvCalo_120.root";
-    pathDataSets[2] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12b_GammaConvCalo_120.root";
-    pathDataSets[3] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12c_GammaConvCalo_120.root";
-    pathDataSets[4] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12d_GammaConvCalo_120.root";
-    pathDataSets[5] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12f_GammaConvCalo_120.root";
-    //pathDataSets[6] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12g_GammaConvCalo_120.root";
-    pathDataSets[6] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12h_GammaConvCalo_120.root";
-    pathDataSets[7] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12i_GammaConvCalo_120.root";
-    DataSets[0]="LHC12"; DataSets[1]="LHC12a"; DataSets[2]="LHC12b"; DataSets[3]="LHC12c"; DataSets[4]="LHC12d"; DataSets[5]="LHC12f"; /*DataSets[6]="LHC12g";*/ DataSets[6]="LHC12h"; DataSets[7]="LHC12i";
-    plotDataSets[0]="LHC12"; plotDataSets[1]="LHC12a"; plotDataSets[2]="LHC12b"; plotDataSets[3]="LHC12c"; plotDataSets[4]="LHC12d"; plotDataSets[5]="LHC12f"; /*plotDataSets[6]="LHC12g";*/ plotDataSets[6]="LHC12h"; plotDataSets[7]="LHC12i";
-    pathPhotonQA[0] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12/PhotonQA_LHC12.root";
-    pathPhotonQA[1] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12a/PhotonQA_LHC12a.root";
-    pathPhotonQA[2] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12b/PhotonQA_LHC12b.root";
-    pathPhotonQA[3] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12c/PhotonQA_LHC12c.root";
-    pathPhotonQA[4] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12d/PhotonQA_LHC12d.root";
-    pathPhotonQA[5] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12f/PhotonQA_LHC12f.root";
-    //pathPhotonQA[6] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12g/PhotonQA_LHC12g.root";
-    pathPhotonQA[6] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12h/PhotonQA_LHC12h.root";
-    pathPhotonQA[7] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12i/PhotonQA_LHC12i.root";
+        //LHC12 comparison of all periods
+        addSubfolder=kTRUE;
+        cutNr = 0;
+        nSets = 8;
+        fEnergyFlag="8TeV";
+        labelData="LHC12";
+        pathDataSets[0] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12_GammaConvCalo_120.root";
+        pathDataSets[1] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12a_GammaConvCalo_120.root";
+        pathDataSets[2] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12b_GammaConvCalo_120.root";
+        pathDataSets[3] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12c_GammaConvCalo_120.root";
+        pathDataSets[4] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12d_GammaConvCalo_120.root";
+        pathDataSets[5] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12f_GammaConvCalo_120.root";
+        //pathDataSets[6] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12g_GammaConvCalo_120.root";
+        pathDataSets[6] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12h_GammaConvCalo_120.root";
+        pathDataSets[7] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12i_GammaConvCalo_120.root";
+        DataSets[0]="LHC12"; DataSets[1]="LHC12a"; DataSets[2]="LHC12b"; DataSets[3]="LHC12c"; DataSets[4]="LHC12d"; DataSets[5]="LHC12f"; /*DataSets[6]="LHC12g";*/ DataSets[6]="LHC12h"; DataSets[7]="LHC12i";
+        plotDataSets[0]="LHC12"; plotDataSets[1]="LHC12a"; plotDataSets[2]="LHC12b"; plotDataSets[3]="LHC12c"; plotDataSets[4]="LHC12d"; plotDataSets[5]="LHC12f"; /*plotDataSets[6]="LHC12g";*/ plotDataSets[6]="LHC12h"; plotDataSets[7]="LHC12i";
+        pathPhotonQA[0] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12/PhotonQA_LHC12.root";
+        pathPhotonQA[1] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12a/PhotonQA_LHC12a.root";
+        pathPhotonQA[2] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12b/PhotonQA_LHC12b.root";
+        pathPhotonQA[3] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12c/PhotonQA_LHC12c.root";
+        pathPhotonQA[4] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12d/PhotonQA_LHC12d.root";
+        pathPhotonQA[5] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12f/PhotonQA_LHC12f.root";
+        //pathPhotonQA[6] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12g/PhotonQA_LHC12g.root";
+        pathPhotonQA[6] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12h/PhotonQA_LHC12h.root";
+        pathPhotonQA[7] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12i/PhotonQA_LHC12i.root";
     }
     //**************************************************************************************************************
     else if(select.BeginsWith("LHC12-kEMC") && !select.Contains("-periods")){
@@ -413,46 +413,46 @@ void QA(    TString select          = "LHC11a",         // set selected
     //**************************************************************************************************************
     else if(select.BeginsWith("LHC12-kEMC") && select.Contains("-periods")){
     //LHC12 Trigger
-    addSubfolder=kTRUE;
-    cutNr = 0;
-    nSets = 1;
-    fEnergyFlag="8TeV";
-    if(select.CompareTo("LHC12-kEMC7-periods")==0) {
-        nSets=7;
-        labelData="LHC12-kEMC7";
-        pathDataSets[0] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12-kEMC7_GammaConvCalo_121.root";
-        pathDataSets[1] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12b-kEMC7_GammaConvCalo_121.root";
-        pathDataSets[2] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12c-kEMC7_GammaConvCalo_121.root";
-        pathDataSets[3] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12d-kEMC7_GammaConvCalo_121.root";
-        pathDataSets[4] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12f-kEMC7_GammaConvCalo_121.root";
-        //pathDataSets[5] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12g-kEMC7_GammaConvCalo_121.root";
-        pathDataSets[6] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12h-kEMC7_GammaConvCalo_121.root";
-        pathDataSets[7] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12i-kEMC7_GammaConvCalo_121.root";
-        DataSets[0]="LHC12-kEMC7"; DataSets[1]="LHC12b-kEMC7"; DataSets[2]="LHC12c-kEMC7"; DataSets[3]="LHC12d-kEMC7";
-        DataSets[4]="LHC12f-kEMC7"; DataSets[5]="LHC12g-kEMC7"; DataSets[6]="LHC12h-kEMC7"; DataSets[7]="LHC12i-kEMC7";
-        plotDataSets[0]="LHC12"; plotDataSets[1]="LHC12b"; plotDataSets[2]="LHC12c"; plotDataSets[3]="LHC12d";
-        plotDataSets[4]="LHC12f"; plotDataSets[5]="LHC12g"; plotDataSets[6]="LHC12h"; plotDataSets[7]="LHC12i";
-        pathPhotonQA[0] = "";pathPhotonQA[1] = "";pathPhotonQA[2] = "";pathPhotonQA[3] = "";pathPhotonQA[4] = "";pathPhotonQA[5] = "";
-        pathPhotonQA[6] = "";//pathPhotonQA[7] = "";
-    }
-    else if(select.CompareTo("LHC12-kEMCEGA-periods")==0){
-        nSets=6;
-        labelData="LHC12-kEMCEGA";
-        pathDataSets[0] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12-kEMCEGA_GammaConvCalo_122.root";
-        pathDataSets[1] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12c-kEMCEGA_GammaConvCalo_122.root";
-        pathDataSets[2] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12d-kEMCEGA_GammaConvCalo_122.root";
-        pathDataSets[3] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12f-kEMCEGA_GammaConvCalo_122.root";
-        //pathDataSets[4] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12g-kEMCEGA_GammaConvCalo_122.root";
-        pathDataSets[4] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12h-kEMCEGA_GammaConvCalo_122.root";
-        pathDataSets[5] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12i-kEMCEGA_GammaConvCalo_122.root";
-        DataSets[0]="LHC12-kEMCEGA"; DataSets[1]="LHC12c-kEMCEGA"; DataSets[2]="LHC12d-kEMCEGA";
-        DataSets[3]="LHC12f-kEMCEGA"; /*DataSets[4]="LHC12g-kEMCEGA";*/ DataSets[4]="LHC12h-kEMCEGA"; DataSets[5]="LHC12i-kEMCEGA";
-        plotDataSets[0]="LHC12"; plotDataSets[1]="LHC12c"; plotDataSets[2]="LHC12d";
-        plotDataSets[3]="LHC12f"; /*plotDataSets[4]="LHC12g";*/ plotDataSets[4]="LHC12h"; plotDataSets[5]="LHC12i";
-        pathPhotonQA[0] = "";pathPhotonQA[1] = "";pathPhotonQA[2] = "";pathPhotonQA[3] = "";pathPhotonQA[4] = "";pathPhotonQA[5] = "";
-        //pathPhotonQA[6] = "";
-    }
-    else { cout << "No valid selection! Returning..." << endl; return;}
+        addSubfolder=kTRUE;
+        cutNr = 0;
+        nSets = 1;
+        fEnergyFlag="8TeV";
+        if(select.CompareTo("LHC12-kEMC7-periods")==0) {
+            nSets=7;
+            labelData="LHC12-kEMC7";
+            pathDataSets[0] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12-kEMC7_GammaConvCalo_121.root";
+            pathDataSets[1] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12b-kEMC7_GammaConvCalo_121.root";
+            pathDataSets[2] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12c-kEMC7_GammaConvCalo_121.root";
+            pathDataSets[3] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12d-kEMC7_GammaConvCalo_121.root";
+            pathDataSets[4] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12f-kEMC7_GammaConvCalo_121.root";
+            //pathDataSets[5] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12g-kEMC7_GammaConvCalo_121.root";
+            pathDataSets[6] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12h-kEMC7_GammaConvCalo_121.root";
+            pathDataSets[7] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12i-kEMC7_GammaConvCalo_121.root";
+            DataSets[0]="LHC12-kEMC7"; DataSets[1]="LHC12b-kEMC7"; DataSets[2]="LHC12c-kEMC7"; DataSets[3]="LHC12d-kEMC7";
+            DataSets[4]="LHC12f-kEMC7"; DataSets[5]="LHC12g-kEMC7"; DataSets[6]="LHC12h-kEMC7"; DataSets[7]="LHC12i-kEMC7";
+            plotDataSets[0]="LHC12"; plotDataSets[1]="LHC12b"; plotDataSets[2]="LHC12c"; plotDataSets[3]="LHC12d";
+            plotDataSets[4]="LHC12f"; plotDataSets[5]="LHC12g"; plotDataSets[6]="LHC12h"; plotDataSets[7]="LHC12i";
+            pathPhotonQA[0] = "";pathPhotonQA[1] = "";pathPhotonQA[2] = "";pathPhotonQA[3] = "";pathPhotonQA[4] = "";pathPhotonQA[5] = "";
+            pathPhotonQA[6] = "";//pathPhotonQA[7] = "";
+        }
+        else if(select.CompareTo("LHC12-kEMCEGA-periods")==0){
+            nSets=6;
+            labelData="LHC12-kEMCEGA";
+            pathDataSets[0] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12-kEMCEGA_GammaConvCalo_122.root";
+            pathDataSets[1] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12c-kEMCEGA_GammaConvCalo_122.root";
+            pathDataSets[2] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12d-kEMCEGA_GammaConvCalo_122.root";
+            pathDataSets[3] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12f-kEMCEGA_GammaConvCalo_122.root";
+            //pathDataSets[4] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12g-kEMCEGA_GammaConvCalo_122.root";
+            pathDataSets[4] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12h-kEMCEGA_GammaConvCalo_122.root";
+            pathDataSets[5] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12i-kEMCEGA_GammaConvCalo_122.root";
+            DataSets[0]="LHC12-kEMCEGA"; DataSets[1]="LHC12c-kEMCEGA"; DataSets[2]="LHC12d-kEMCEGA";
+            DataSets[3]="LHC12f-kEMCEGA"; /*DataSets[4]="LHC12g-kEMCEGA";*/ DataSets[4]="LHC12h-kEMCEGA"; DataSets[5]="LHC12i-kEMCEGA";
+            plotDataSets[0]="LHC12"; plotDataSets[1]="LHC12c"; plotDataSets[2]="LHC12d";
+            plotDataSets[3]="LHC12f"; /*plotDataSets[4]="LHC12g";*/ plotDataSets[4]="LHC12h"; plotDataSets[5]="LHC12i";
+            pathPhotonQA[0] = "";pathPhotonQA[1] = "";pathPhotonQA[2] = "";pathPhotonQA[3] = "";pathPhotonQA[4] = "";pathPhotonQA[5] = "";
+            //pathPhotonQA[6] = "";
+        }
+        else { cout << "No valid selection! Returning..." << endl; return;}
     }
     //**************************************************************************************************************
     else if(!select.BeginsWith("LHC12-kEMC") && select.BeginsWith("LHC12") && select.Contains("-kEMC")){
@@ -476,7 +476,7 @@ void QA(    TString select          = "LHC11a",         // set selected
     //**************************************************************************************************************
     else if( select.CompareTo("JJ-LHC12-kEMCEGA") == 0 || select.CompareTo("JJ-LHC12-kEMC7") == 0){
     //LHC12 Trigger Periodwise
-    select.Remove(0,3);
+        select.Remove(0,3);
         addSubfolder=kTRUE;
         cutNr = 0;
         nSets = 2;

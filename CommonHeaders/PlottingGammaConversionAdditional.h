@@ -3347,7 +3347,9 @@ Color_t GetColorDefaultColor( TString energy,
         if (!kBox){
             if (!generator.CompareTo("")||!generator.CompareTo("LHC13g")||!generator.CompareTo("LHC13g-kEMC7")||
                     !generator.CompareTo("LHC13g-kEMCEG1")||!generator.CompareTo("LHC13g-kEMCEG2")||
-                    !generator.CompareTo("LHC11a_p4_wSDD")||!generator.CompareTo("LHC11a_p4_wSDD-kEMC1")){
+                    !generator.CompareTo("LHC11a_p4_wSDD")||!generator.CompareTo("LHC11a_p4_wSDD-kEMC1") ||
+                    !generator.CompareTo("LHC11a_pass4_wSDD")||!generator.CompareTo("LHC11a_pass4_wSDD-kEMC1")
+            ){
                 return kMagenta+2;
             } else if (!generator.CompareTo("Pythia")||!generator.CompareTo("LHC12f1a")||!generator.CompareTo("LHC15g2")){
                 return kMagenta+4;
@@ -3357,6 +3359,8 @@ Color_t GetColorDefaultColor( TString energy,
                 return kMagenta-4;
             } else if (!generator.CompareTo("Phojet")||!generator.CompareTo("LHC12f1b")){
                 return kMagenta-2;
+            } else if (!generator.CompareTo("Pythia8-JJ")||!generator.CompareTo("JJ") || !generator.CompareTo("LHC15g1a") || !generator.CompareTo("LHC15a3a")){
+                return 807;
             }
         } else {
             return kMagenta-5;
@@ -3534,10 +3538,10 @@ Style_t GetDefaultMarkerStyle( TString energy,
         }
     }
     if (!energy.CompareTo("2.76TeV")){
-        if (!generator.CompareTo("")||!generator.CompareTo("LHC11a_p4_wSDD")){
+        if (!generator.CompareTo("")||!generator.CompareTo("LHC11a_p4_wSDD")|| !generator.CompareTo("LHC11a_pass4_wSDD")){
             return 29;
         } else if(!generator.CompareTo("LHC13g")||!generator.CompareTo("LHC13g-kEMC7")|
-                !generator.CompareTo("LHC13g-kEMCEG1")||!generator.CompareTo("LHC13g-kEMCEG2")){
+                !generator.CompareTo("LHC13g-kEMCEG1")||!generator.CompareTo("LHC13g-kEMCEG2") || !generator.CompareTo("LHC13g_pass1")){
             return 29;
         }else if(!generator.CompareTo("LHC12f1a")||!generator.CompareTo("LHC12f1b")||!generator.CompareTo("LHC12i3")){
             return 30;

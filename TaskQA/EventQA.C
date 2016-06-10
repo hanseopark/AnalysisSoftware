@@ -95,7 +95,7 @@ void EventQA(
     TString* fClusterCutSelection       = new TString[nSets];
     TString* fElectronCutSelection      = new TString[nSets];
     TString* fMesonCutSelection         = new TString[nSets];
-
+    TString* fMClusterCutSelection      = new TString[nSets];
     //*****************************************************************************************************
     //*****************************************************************************************************
     //****************************** Determine which cut to process ***************************************
@@ -161,9 +161,18 @@ void EventQA(
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
     for(Int_t i=0; i<nSets; i++){
-        fCutSelection[i] = cuts.at(cutNr);
-        fEventCutSelection[i] = ""; fGammaCutSelection[i] = ""; fClusterCutSelection[i] = ""; fElectronCutSelection[i] = ""; fMesonCutSelection[i] = "";
-        ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
+        fCutSelection[i]            = cuts.at(cutNr);
+        fEventCutSelection[i]       = ""; 
+        fGammaCutSelection[i]       = ""; 
+        fClusterCutSelection[i]     = ""; 
+        fMClusterCutSelection[i]    = ""; 
+        fElectronCutSelection[i]    = ""; 
+        fMesonCutSelection[i]       = "";
+        if (!isMerged){
+            ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
+        } else {
+            ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fClusterCutSelection[i], fMClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
+        }    
     }
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "Obtaining trigger - ";

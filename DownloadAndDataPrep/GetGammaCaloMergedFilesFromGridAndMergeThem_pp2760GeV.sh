@@ -28,7 +28,7 @@ NSlashes=10
 NSlashes2=9
 
 # switches to enable/disable certain procedures
-DOWNLOADON=0
+DOWNLOADON=1
 MERGEON=1
 MERGEONBINSSingle=1
 MERGEONBINS=1
@@ -438,6 +438,12 @@ if [ $2 = "LHC11a" ]; then
         if [ $HAVELHC11a == 1 ]; then
             echo "downloading LHC11a"
             CopyFileIfNonExisitent $OUTPUTDIR_LHC11a "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC11aData/merge_runlist_1"
+            runNumbers=`cat runNumbersLHC11a_pass4_wSDD.txt`
+            echo $runNumbers
+            for runNumber in $runNumbers; do
+                echo $runNumber
+                CopyFileIfNonExisitent $OUTPUTDIR_LHC11a/$runNumber "/alice/data/2011/LHC11a/000$runNumber/ESDs/pass4_with_SDD/PWGGA/GA_pp/$LHC11aData"
+            done;
         fi    
         if [ $HAVELHC15g1a == 1 ]; then
             echo "downloading LHC15g1a"
@@ -618,6 +624,14 @@ elif [ $2 = "LHC13g" ]; then
         if [ $HAVELHC13g == 1 ]; then
             echo "copying LHC13g" 
             CopyFileIfNonExisitent $OUTPUTDIR_LHC13g "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC13gData/merge"
+            runNumbers=`cat runNumbersLHC13g_pass1.txt`
+            echo $runNumbers
+            for runNumber in $runNumbers; do
+                echo $runNumber    
+                CopyFileIfNonExisitent $OUTPUTDIR_LHC13g/$runNumber "/alice/data/2013/LHC13g/000$runNumber/pass1/PWGGA/GA_pp/$LHC13gData"
+            done;
+            
+            
         fi    
         
         if [ $HAVELHC15a3a == 1 ]; then
