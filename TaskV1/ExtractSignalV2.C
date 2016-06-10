@@ -1283,32 +1283,35 @@ void ExtractSignalV2(   TString meson                   = "",
 
         //SB default
         fMesonSBdefault[iPt]                        = fMesonYieldsCorResidualBckFunc[iPt]/fTotalBckYields[iPt];
-        fMesonSBdefaultError[iPt]                   = pow( pow(fMesonYieldsCorResidualBckFuncError[iPt]/fTotalBckYields[iPt],2.) + 
-                                                           pow((fTotalBckYieldsError[iPt]*fMesonYieldsCorResidualBckFunc[iPt])/(fTotalBckYields[iPt] *fTotalBckYields[iPt] ),2.) ,0.5); 
+        fMesonSBdefaultError[iPt]                   = pow( pow(fMesonYieldsCorResidualBckFuncError[iPt]/fTotalBckYields[iPt], 2.) +
+                                                           pow((fTotalBckYieldsError[iPt]*fMesonYieldsCorResidualBckFunc[iPt])/(fTotalBckYields[iPt] *fTotalBckYields[iPt]), 2.), 0.5);
         
         //Significance default
         fMesonSigndefault[iPt]                      = fMesonYieldsCorResidualBckFunc[iPt]/pow(fMesonYieldsCorResidualBckFunc[iPt] + fTotalBckYields[iPt],0.5);
-        Double_t a                                  = pow( ( pow(fMesonYieldsCorResidualBckFunc[iPt] + fTotalBckYields[iPt],-0.5) - 
-                                                             0.5*fMesonYieldsCorResidualBckFunc[iPt]*pow(fMesonYieldsCorResidualBckFunc[iPt] + 
-                                                             fTotalBckYields[iPt],-1.5)/(fMesonYieldsCorResidualBckFunc[iPt] + fTotalBckYields[iPt]) )*fMesonYieldsCorResidualBckFuncError[iPt] ,2);
-        Double_t b                                  = pow( (fMesonSigndefault[iPt])*(0.5*fTotalBckYieldsError[iPt]*pow(fMesonYieldsCorResidualBckFunc[iPt]
-                                                            + fTotalBckYields[iPt],-1.5))  ,2.);
-        fMesonSigndefaultError[iPt]                 = pow( a + b ,0.5); 
+        Double_t a                                  = ( pow(fMesonYieldsCorResidualBckFunc[iPt] + fTotalBckYields[iPt], -0.5) -
+                                                        0.5*fMesonYieldsCorResidualBckFunc[iPt]*pow(fMesonYieldsCorResidualBckFunc[iPt] +
+                                                                                                    fTotalBckYields[iPt], -1.5) * fMesonYieldsCorResidualBckFuncError[iPt]);
+        Double_t b                                  = 0.5*fMesonYieldsCorResidualBckFunc[iPt]*pow(fMesonYieldsCorResidualBckFunc[iPt]
+                                                                                                  + fTotalBckYields[iPt],-1.5) * fTotalBckYieldsError[iPt];
+        fMesonSigndefaultError[iPt]                 = pow( a*a + b*b, 0.5);
 
         
         if( fFitBckInvMassPtBin[iPt]->Integral(fMesonMass[iPt]-fMesonFWHM[iPt], fMesonMass[iPt]+fFitSignalInvMassPtBin[iPt]->GetParameter(2))!=0){
             Double_t background         = fFitBckInvMassPtBin[iPt]->Integral(fMesonMass[iPt]-fMesonFWHM[iPt], 
                                                                     fMesonMass[iPt]+fFitSignalInvMassPtBin[iPt]->GetParameter(2));
-            Double_t backgroundErr      = fFitBckInvMassPtBin[iPt]->IntegralError(fMesonMass[iPt]-fMesonFWHM[iPt], 
-                                                                            fMesonMass[iPt]+fFitSignalInvMassPtBin[iPt]->GetParameter(2));
+            Double_t backgroundErr      = fFitBckInvMassPtBin[iPt]->IntegralError(fMesonMass[iPt]-fMesonFWHM[iPt],
+                                                                    fMesonMass[iPt]+fFitSignalInvMassPtBin[iPt]->GetParameter(2),
+                                                                    fFitBckInvMassPtBin[iPt]->GetParameters(), NULL /* cov matrix */);
             Double_t signal             = fFitSignalInvMassPtBin[iPt]->Integral(fMesonMass[iPt]-fMesonFWHM[iPt], 
-                                                                    fMesonMass[iPt]+fFitSignalInvMassPtBin[iPt]->GetParameter(2)) - background;
+                                                                       fMesonMass[iPt]+fFitSignalInvMassPtBin[iPt]->GetParameter(2)) - background;
             Double_t signalErr          = pow( pow(fFitSignalInvMassPtBin[iPt]->IntegralError(fMesonMass[iPt]-fMesonFWHM[iPt],
-                                                   fMesonMass[iPt]+fFitSignalInvMassPtBin[iPt]->GetParameter(2)),2 )+ pow(backgroundErr,2),0.5);
+                                                                                fMesonMass[iPt]+fFitSignalInvMassPtBin[iPt]->GetParameter(2),
+                                                                                fFitSignalInvMassPtBin[iPt]->GetParameters(),
+                                                                                NULL /* cov matrix */), 2) + pow(backgroundErr, 2), 0.5);
             fMesonSB[iPt]               = signal/ background;
-            fMesonSBError[iPt]          = pow( pow(signalErr/background,2.)+pow(signal/(background *background )*backgroundErr ,2.) ,0.5); 
+            fMesonSBError[iPt]          = pow( pow(signalErr/background, 2.) + pow(signal*backgroundErr/(background*background), 2.) ,0.5);
             fMesonSign[iPt]             = signal/ pow(background + signal,0.5);
-            fMesonSignError[iPt]        = pow(pow( (pow(background + signal ,0.5) - 0.5*signal*pow(background+signal,-0.5))/(background+signal) * signalErr ,2) + pow( 0.5*pow(signal+background,-1.5),2) ,0.5); 
+            fMesonSignError[iPt]        = pow(pow( (pow(background + signal, -0.5) - 0.5*signal*pow(background+signal, -1.5)) * signalErr, 2) + pow( 0.5*signal*backgroundErr*pow(signal+background, -1.5), 2), 0.5);
         }else{
             fMesonSB[iPt]               = 0.;
             fMesonSBError[iPt]          = 0.;
