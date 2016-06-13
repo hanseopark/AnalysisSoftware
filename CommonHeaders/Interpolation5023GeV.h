@@ -11,7 +11,7 @@ extern TMinuit*         gMinuit;
 
 
 void CalcRpPb(TGraphAsymmErrors* PPSpectrumSystErr, TGraphAsymmErrors*  PPSpectrumStatErr, TGraphAsymmErrors* pPbSpectrumSystErr, TGraphAsymmErrors* pPbSpectrumStatErr,
-	      TGraphAsymmErrors** graphRpPbSystErr, TGraphAsymmErrors** graphRpPbStatErr);
+	      TGraphAsymmErrors** graphRpPbSystErr, TGraphAsymmErrors** graphRpPbStatErr, Bool_t Individual=kTRUE);
 
 void CalcRpPbInvYield(TGraphAsymmErrors* PPSpectrumSystErr, TGraphAsymmErrors*  PPSpectrumStatErr, TGraphAsymmErrors* pPbSpectrumSystErr, TGraphAsymmErrors* pPbSpectrumStatErr,
 	      TGraphAsymmErrors** graphRpPbSystErr, TGraphAsymmErrors** graphRpPbStatErr);
@@ -530,7 +530,7 @@ TGraphAsymmErrors* CalculateSystErrors(TGraphErrors* spectrum,TGraphAsymmErrors*
 
 
 void CalcRpPb(TGraphAsymmErrors* PPSpectrumSystErr, TGraphAsymmErrors*  PPSpectrumStatErr, TGraphAsymmErrors* pPbSpectrumSystErr, TGraphAsymmErrors* pPbSpectrumStatErr,
-	      TGraphAsymmErrors** graphRpPbSystErr, TGraphAsymmErrors** graphRpPbStatErr){
+	      TGraphAsymmErrors** graphRpPbSystErr, TGraphAsymmErrors** graphRpPbStatErr, Bool_t Individual){
 	      
 
 
@@ -594,10 +594,18 @@ void CalcRpPb(TGraphAsymmErrors* PPSpectrumSystErr, TGraphAsymmErrors*  PPSpectr
 	
 	 
 	 Double_t errYStat = 	 pow( pow( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( yPPStatErrlow[iPoint]/yPPBins[iPoint],  2.), 0.5)* RpPb[iPoint];
-	 Double_t errYSystlow =  pow( pow( ypPbSystErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( yPPSystErrlow[iPoint]/yPPBins[iPoint]  ,2. ) + pow ((fTpPbErr/fTpPb) , 2),   0.5) * RpPb[iPoint];
-	 Double_t errYSysthigh = pow( pow( ypPbSystErrhigh[iPoint]/ypPbBins[iPoint],2. ) + pow( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) + pow ((fTpPbErr/fTpPb) , 2),   0.5) * RpPb[iPoint];
-	 
-	 
+	 Double_t errYSystlow;
+	 Double_t errYSysthigh; 
+	 if (Individual) {//assigne TpPbErr only to combined result
+
+	   cout<<"Test Individual!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<< endl;
+	   errYSystlow= pow( pow( ypPbSystErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( yPPSystErrlow[iPoint]/yPPBins[iPoint]  ,2. ) ,   0.5) * RpPb[iPoint];
+	   errYSysthigh= pow( pow( ypPbSystErrhigh[iPoint]/ypPbBins[iPoint],2. ) + pow( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) ,   0.5) * RpPb[iPoint];
+	   
+	 } else{	   cout<<"Test Comb!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<< endl;
+	   errYSystlow =  pow( pow( ypPbSystErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( yPPSystErrlow[iPoint]/yPPBins[iPoint]  ,2. ) + pow ((fTpPbErr/fTpPb) , 2),   0.5) * RpPb[iPoint];
+	   errYSysthigh = pow( pow( ypPbSystErrhigh[iPoint]/ypPbBins[iPoint],2. ) + pow( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) + pow ((fTpPbErr/fTpPb) , 2),   0.5) * RpPb[iPoint];
+	 }
 	 
 	 
 	 (*graphRpPbStatErr)->SetPointError(iPoint, xErrlow[iPoint],xErrhigh[iPoint],errYStat,errYStat);

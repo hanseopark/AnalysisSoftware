@@ -955,11 +955,14 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   DrawGammaSetMarkerTGraphAsym(graphCombPi0InvCrossSectionStatpPb5023GeVXShifted,20,0.7, kBlue, kBlue);  
   graphCombPi0InvCrossSectionStatpPb5023GeVXShifted->Draw("p,same");
 
-     
-  TLegend* legendRpPbCombineRatio = new TLegend(0.23,0.20,0.7,0.40);
+  TLatex * ltPre = new TLatex(.35,1e-6,"ALICE Preliminary"); 
+  ltPre->SetTextSize(0.05) ;
+  //  lt->DrawText(1.,1.45,"2016/06/14") ;
+  ltPre->Draw("same");     
+  TLegend* legendRpPbCombineRatio = new TLegend(0.23,0.10,0.7,0.250);
   legendRpPbCombineRatio->SetFillColor(0);
   legendRpPbCombineRatio->SetLineColor(0);
-  legendRpPbCombineRatio->SetTextSize(0.03);
+  legendRpPbCombineRatio->SetTextSize(0.04);
   if (IsNSD)  legendRpPbCombineRatio->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"NSD #pi^{0}, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
   else  legendRpPbCombineRatio->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"#pi^{0}, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
   if(FittingType.CompareTo("Tsallis")==0) legendRpPbCombineRatio->AddEntry(fitCombPi0pPb5023GeVPt,"Tsallis Fit","l");
@@ -1613,11 +1616,15 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   DrawGammaSetMarkerTGraphAsym(graphCombEtaInvCrossSectionStatpPb5023GeVXShifted,20,0.7, kBlue, kBlue);  
   graphCombEtaInvCrossSectionStatpPb5023GeVXShifted->Draw("p,same");
 
-     
-  TLegend* legendRpPbCombineRatioEta = new TLegend(0.23,0.20,0.7,0.40);
+  TLatex * ltPre2 = new TLatex(.35,3.7e-7,"ALICE Preliminary"); 
+  ltPre2->SetTextSize(0.05) ;
+  //  lt->DrawText(1.,1.45,"2016/06/14") ;
+  ltPre2->Draw("same"); 
+  
+  TLegend* legendRpPbCombineRatioEta = new TLegend(0.23,0.10,0.7,0.250);
   legendRpPbCombineRatioEta->SetFillColor(0);
   legendRpPbCombineRatioEta->SetLineColor(0);
-  legendRpPbCombineRatioEta->SetTextSize(0.03);
+  legendRpPbCombineRatioEta->SetTextSize(0.04);
   if (IsNSD)  legendRpPbCombineRatioEta->AddEntry(graphInvYieldEtaCombpPb5023GeVSysClone,"NSD #eta, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
   else  legendRpPbCombineRatioEta->AddEntry(graphInvYieldEtaCombpPb5023GeVSysClone,"#eta, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
   if(FittingType.CompareTo("Tsallis")==0) legendRpPbCombineRatioEta->AddEntry(fitCombEtapPb5023GeVPt,"Tsallis Fit","l");
@@ -1887,7 +1894,41 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
 
   canvasYShiftEtaPi0Ratio->Update();
   canvasYShiftEtaPi0Ratio->Print(Form("%s/EtaPi0Ratio_YShifted.%s",outputDir.Data(),suffix.Data()));
+
+                                   
+  TCanvas* canvasYShiftEtaPi0RatioPrelim = new TCanvas("canvasYShiftEtaPi0RatioPrelim","",200,10,500,400);  // gives the page size
+  DrawGammaCanvasSettings( canvasYShiftEtaPi0RatioPrelim, 0.1, 0.02, 0.02, 0.11);
+
+  TH2F * histo2DCompCombinedYShiftEtaPi0RatioPrelim;
+  histo2DCompCombinedYShiftEtaPi0RatioPrelim = new TH2F("histo2DCompCombinedYShiftEtaPi0RatioPrelim","histo2DCompCombinedYShiftEtaPi0RatioPrelim",1000,0.3,16.,1000,0.,1.   );
+  SetStyleHistoTH2ForGraphs(histo2DCompCombinedYShiftEtaPi0RatioPrelim, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0} ", 0.03,0.04, 0.03,0.05, 1.0,.8, 512, 508);
+  histo2DCompCombinedYShiftEtaPi0RatioPrelim->DrawCopy(); 
+      
+  
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaPi0RatioStatpPb5023GeV,20,0.7,4, 4);  
+  graphCombEtaPi0RatioStatpPb5023GeV->Draw("pe,same");
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaPi0RatioSyspPb5023GeV,20,0.7, 4, 4, 1, kTRUE);  
+  graphCombEtaPi0RatioSyspPb5023GeV->Draw("E2,same");
+  
+ 
+     
+  TLegend* legendRpPbCombineYShiftEtaPi0RatioPrelim = new TLegend(0.15,0.75,0.5,0.90);
+  legendRpPbCombineYShiftEtaPi0RatioPrelim->SetFillColor(0);
+  legendRpPbCombineYShiftEtaPi0RatioPrelim->SetLineColor(0);
+  legendRpPbCombineYShiftEtaPi0RatioPrelim->SetTextSize(0.03);
+  legendRpPbCombineYShiftEtaPi0RatioPrelim->AddEntry(graphCombEtaPi0RatioSyspPb5023GeV,"#eta/#pi^{0} ","pef");
+
+  
+  // legendRpPbCombineYShiftEtaPi0RatioPrelim->Draw("same");
 	
+  TLatex * lt4Pre = new TLatex(9.,0.9,"ALICE Preliminary") ;
+  lt4Pre->SetTextColor(kBlack) ;
+  lt4Pre->SetTextSize(0.04) ; 
+ lt4Pre->DrawLatex(9.,0.8,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV");
+  lt4Pre->Draw("same") ;
+
+  canvasYShiftEtaPi0RatioPrelim->Update();
+  canvasYShiftEtaPi0RatioPrelim->Print(Form("%s/EtaPi0RatioPrelim_YShifted.%s",outputDir.Data(),suffix.Data()));	
   //*********************** Comparison of Measurements in ALICE ***************************************************
   Double_t fBinsPi07TeVPt[22] =					{0.0, 0.1, 0.2, 0.3, 0.4,
 								 0.5, 0.6, 0.8, 1.0, 1.5,  

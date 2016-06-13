@@ -85,7 +85,7 @@ struct SysErrorConversion {
   //    TString name;
 };
 
-TGraphAsymmErrors* ApplyNSDSysError(TGraphAsymmErrors* graphMesonSystErr, Double_t ScalingErr){
+TGraphAsymmErrors* ApplyNSDSysError(TGraphAsymmErrors* graphMesonSystErr, Double_t ScalingErr, Double_t ScalingErrTpPb){
   TGraphAsymmErrors*   graphMesonSystErrClone=(TGraphAsymmErrors*) graphMesonSystErr->Clone();
   Int_t nPoints=graphMesonSystErrClone->GetN();
   Double_t* valueY    = graphMesonSystErrClone->GetY();
@@ -98,8 +98,8 @@ TGraphAsymmErrors* ApplyNSDSysError(TGraphAsymmErrors* graphMesonSystErr, Double
   for(Int_t i = 0; i < graphMesonSystErrClone->GetN(); i++){
 
 
-    ErrYlowSys[i]  = TMath::Sqrt(   (ErrYlowSys[i] *ErrYlowSys[i]  ) + ( (valueY[i]*ScalingErr) *(valueY[i]*ScalingErr) ) );
-    ErrYhighSys[i]  = TMath::Sqrt(   (ErrYhighSys[i] *ErrYhighSys[i]  ) + ( (valueY[i]*ScalingErr) *(valueY[i]*ScalingErr) ) );
+    ErrYlowSys[i]  = TMath::Sqrt(   (ErrYlowSys[i] *ErrYlowSys[i]  ) + ( (valueY[i]*ScalingErr) *(valueY[i]*ScalingErr) ) + ( (valueY[i]*ScalingErrTpPb) *(valueY[i]*ScalingErrTpPb) ) );
+    ErrYhighSys[i]  = TMath::Sqrt(   (ErrYhighSys[i] *ErrYhighSys[i]  ) + ( (valueY[i]*ScalingErr) *(valueY[i]*ScalingErr) ) + ( (valueY[i]*ScalingErrTpPb) *(valueY[i]*ScalingErrTpPb) ) );
         
   }
   TGraphAsymmErrors* graphMesonSystErrClone1= new TGraphAsymmErrors(nPoints,valueX,valueY,ErrXlowSys,ErrXhighSys,ErrYlowSys,ErrYhighSys);
@@ -107,6 +107,27 @@ TGraphAsymmErrors* ApplyNSDSysError(TGraphAsymmErrors* graphMesonSystErr, Double
   return graphMesonSystErrClone1;
 }
 
+TGraphAsymmErrors* ApplyTpPbSysError(TGraphAsymmErrors* graphMesonSystErr, Double_t ScalingErrTpPb){
+  TGraphAsymmErrors*   graphMesonSystErrClone=(TGraphAsymmErrors*) graphMesonSystErr->Clone();
+  Int_t nPoints=graphMesonSystErrClone->GetN();
+  Double_t* valueY    = graphMesonSystErrClone->GetY();
+  Double_t* valueX    = graphMesonSystErrClone->GetX();
+  Double_t* ErrYlowSys     = graphMesonSystErrClone->GetEYlow();
+  Double_t* ErrYhighSys   = graphMesonSystErrClone->GetEYhigh();
+  Double_t* ErrXlowSys     = graphMesonSystErrClone->GetEXlow();
+  Double_t* ErrXhighSys   = graphMesonSystErrClone->GetEXhigh();
+
+  for(Int_t i = 0; i < graphMesonSystErrClone->GetN(); i++){
+
+
+    ErrYlowSys[i]  = TMath::Sqrt(   (ErrYlowSys[i] *ErrYlowSys[i]  ) + ( (valueY[i]*ScalingErrTpPb) *(valueY[i]*ScalingErrTpPb) ) );
+    ErrYhighSys[i]  = TMath::Sqrt(   (ErrYhighSys[i] *ErrYhighSys[i]  ) + ( (valueY[i]*ScalingErrTpPb) *(valueY[i]*ScalingErrTpPb) ) );
+        
+  }
+  TGraphAsymmErrors* graphMesonSystErrClone1= new TGraphAsymmErrors(nPoints,valueX,valueY,ErrXlowSys,ErrXhighSys,ErrYlowSys,ErrYhighSys);
+      
+  return graphMesonSystErrClone1;
+}
 const Int_t  Ntotal = 26;//31
 const Int_t  nPtLimits = Ntotal+1;
 
@@ -128,19 +149,22 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
 
   gSystem->Exec("mkdir -p "+outputDir);
     
-  Double_t ScalingErr = 0.031;
-  Double_t Scaling = 0.964;    
+  Double_t ScalingErr = 0.031; //pure NSD Err
+  Double_t Scaling = 0.964;// NSD Err
+  Double_t ScalingErrTpPb =   0.0356; //Normalization Err on TpPb
   //cout << dateForOutput.Data() << endl;
   //___________________________________ Declaration of files _____________________________________________
 
     
  
-  TString fileNameRpPb                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2016_05_18.root";
-  TString fileNameRpPbPCM                     = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2016_05_18.root";
-  TString fileNameRpPbDalitz                  = "ExternalInputpPb/InputRpPb/Pi0RpPb_Dalitz_2016_06_01.root";
-  TString fileNameRpPbPHOS                    = "ExternalInputpPb/InputRpPb/Pi0RpPb_PHOS_2016_06_01.root";
-  TString fileNameRpPbEMCal                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_EMCal_2016_06_02.root";
+  TString fileNameRpPb                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2016_06_13.root";
+  TString fileNameRpPbCombined                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_Comb_2016_06_13.root";
+  TString fileNameRpPbPCM                     = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2016_06_13.root";
+  TString fileNameRpPbDalitz                  = "ExternalInputpPb/InputRpPb/Pi0RpPb_Dalitz_2016_06_13.root";
+  TString fileNameRpPbPHOS                    = "ExternalInputpPb/InputRpPb/Pi0RpPb_PHOS_2016_06_13.root";
+  TString fileNameRpPbEMCal                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_EMCal_2016_06_13.root";
   TFile* fileNeutralPionRpPb                           = new TFile(fileNameRpPb.Data());
+  TFile* fileNeutralPionRpPbComb                           = new TFile(fileNameRpPbCombined.Data());
   TFile* fileNeutralPionRpPbPCM                           = new TFile(fileNameRpPbPCM.Data());
   TFile* fileNeutralPionRpPbDalitz                           = new TFile(fileNameRpPbDalitz.Data());
   TFile* fileNeutralPionRpPbPHOS                           = new TFile(fileNameRpPbPHOS.Data());
@@ -154,6 +178,8 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   TString nameHistoPHOSSysErrors                     = "Pi0_RpPb_PHOS_SystErr";
   TString nameHistoEMCal                             = "Pi0_RpPb_EMCal_StatErr";
   TString nameHistoEMCalSysErrors                    = "Pi0_RpPb_EMCal_SystErr";
+  TString nameHistoCombSysErrors                     = "Pi0_RpPb_Comb_SystErr";
+  TString nameHistoComb                              = "Pi0_RpPb_Comb_StatErr";
   TString nameHistoPCMppReferenceStat                = "Pi0_pp_reference_PCMBinning_StatErr";
   TString nameHistoPCMppReferenceSyst                = "Pi0_pp_reference_PCMBinning_SystErr";
   TString nameHistoDalitzppReferenceStat             = "Pi0_pp_reference_DalitzBinning_StatErr";
@@ -162,10 +188,13 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   TString nameHistoPHOSppReferenceSyst               = "Pi0_pp_reference_PHOSBinning_SystErr";
   TString nameHistoEMCalppReferenceStat              = "Pi0_pp_reference_EMCalBinning_StatErr";
   TString nameHistoEMCalppReferenceSyst              = "Pi0_pp_reference_EMCalBinning_SystErr";
+  TString nameHistoCombppReferenceStat              = "Pi0_pp_reference_CombBinning_StatErr";
+  TString nameHistoCombppReferenceSyst              = "Pi0_pp_reference_CombBinning_SystErr";
   TString nameHistoPCMAlpha                          = "Pi0_RpPb_PCM_Alpha";
   TString nameHistoDalitzAlpha                       = "Pi0_RpPb_Dalitz_Alpha";
   TString nameHistoPHOSAlpha                         = "Pi0_RpPb_PHOS_Alpha";
   TString nameHistoEMCalAlpha                        = "Pi0_RpPb_EMCal_Alpha";
+  TString nameHistoCombAlpha                        = "Pi0_RpPb_Comb_Alpha";
    
     
   TString collisionSystempPb                          = "p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV"; 
@@ -243,6 +272,17 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   cout <<"sys"<< endl;
   graphEMCalYieldPi0pPbSystErr->Print();
   // **************************************************************************************
+  // ******************************** Reading RpPb from Combined pPb spectrum *************
+  // **************************************************************************************
+    
+  TGraphAsymmErrors* graphCombYieldPi0pPb       = (TGraphAsymmErrors*)fileNeutralPionRpPbComb->Get(nameHistoComb.Data());
+  TH1D* histoCombYieldPi0pPb           = GraphAsymErrorsToHist_withErrors(graphCombYieldPi0pPb,nameHistoComb.Data());
+  TGraphAsymmErrors* graphCombYieldPi0pPbSystErr     = (TGraphAsymmErrors*)fileNeutralPionRpPbComb->Get(nameHistoCombSysErrors.Data());  
+  TGraphAsymmErrors* graphCombppreferenceStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbComb->Get(nameHistoCombppReferenceStat.Data());
+  TGraphAsymmErrors* graphCombppreferenceSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbComb->Get(nameHistoCombppReferenceSyst.Data()); 
+  TGraphAsymmErrors* graphCombAlpha                 = (TGraphAsymmErrors*)fileNeutralPionRpPbComb->Get( nameHistoCombAlpha.Data());
+
+  // **************************************************************************************
   // ******************************** Reading Model calculations **************************
   // **************************************************************************************
   TGraphAsymmErrors*  graphAsymmErrorsPi0DSS5000    = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("EPS09s_fDSS_errors"); 
@@ -300,7 +340,7 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
     graphCombPi0InvCrossSectionStatpPb5023GeV=ScaleGraph(graphCombPi0InvCrossSectionStatpPb5023GeV,Scaling);
     graphCombPi0InvCrossSectionSyspPb5023GeV=ScaleGraph(graphCombPi0InvCrossSectionSyspPb5023GeV,Scaling);
 
-    graphCombPi0InvCrossSectionSyspPb5023GeV=ApplyNSDSysError(graphCombPi0InvCrossSectionSyspPb5023GeV,ScalingErr);
+    graphCombPi0InvCrossSectionSyspPb5023GeV=ApplyNSDSysError(graphCombPi0InvCrossSectionSyspPb5023GeV,ScalingErr,ScalingErrTpPb);
 
     graphCombPi0InvCrossSectionTotpPb5023GeV  =  CalculateCombinedSysAndStatError( graphCombPi0InvCrossSectionStatpPb5023GeV ,graphCombPi0InvCrossSectionSyspPb5023GeV );
     
@@ -308,6 +348,12 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
     graphCombPi0InvCrossSectionTotpPb5023GeV->Print();
     graphCombPi0InvCrossSectionStatpPb5023GeV->Print();
     graphCombPi0InvCrossSectionSyspPb5023GeV->Print();
+  } else {
+
+   graphCombPi0InvCrossSectionSyspPb5023GeV=ApplyTpPbSysError(graphCombPi0InvCrossSectionSyspPb5023GeV,ScalingErrTpPb);
+
+    graphCombPi0InvCrossSectionTotpPb5023GeV  =  CalculateCombinedSysAndStatError( graphCombPi0InvCrossSectionStatpPb5023GeV ,graphCombPi0InvCrossSectionSyspPb5023GeV );
+
   }
 
 
@@ -340,11 +386,16 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   DrawGammaSetMarkerTGraphAsym(graphInvYieldPi0CombpPb5023GeVStaClone,20,1.5, kBlue, kBlue);  
   graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");
 
+
+  TLatex * lt = new TLatex(1.,1.55,"ALICE Preliminary"); 
+  lt->SetTextSize(0.05) ;
+  //  lt->DrawText(1.,1.45,"2016/06/14") ;
+  lt->Draw("same");
      
-  TLegend* legendRpPbCombine = new TLegend(0.1,0.85,0.55,0.95);
+  TLegend* legendRpPbCombine = new TLegend(0.1,0.75,0.55,0.85);
   legendRpPbCombine->SetFillColor(0);
   legendRpPbCombine->SetLineColor(0);
-  legendRpPbCombine->SetTextSize(0.03);
+  legendRpPbCombine->SetTextSize(0.04);
   legendRpPbCombine->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
 
     
@@ -365,19 +416,24 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   if (IsNSD){
     graphDalitzYieldPi0pPb=ScaleGraph(graphDalitzYieldPi0pPb,Scaling);
     graphDalitzYieldPi0pPbSystErr=ScaleGraph(graphDalitzYieldPi0pPbSystErr,Scaling);
-    graphDalitzYieldPi0pPbSystErr=ApplyNSDSysError(graphDalitzYieldPi0pPbSystErr,ScalingErr);
+    graphDalitzYieldPi0pPbSystErr=ApplyNSDSysError(graphDalitzYieldPi0pPbSystErr,ScalingErr,ScalingErrTpPb);
 
     graphPCMYieldPi0pPb=ScaleGraph(graphPCMYieldPi0pPb,Scaling);
     graphPCMYieldPi0pPbSystErr=ScaleGraph(graphPCMYieldPi0pPbSystErr,Scaling);
-    graphPCMYieldPi0pPbSystErr=ApplyNSDSysError(graphPCMYieldPi0pPbSystErr,ScalingErr);
+    graphPCMYieldPi0pPbSystErr=ApplyNSDSysError(graphPCMYieldPi0pPbSystErr,ScalingErr,ScalingErrTpPb);
 
     graphPHOSYieldPi0pPb=ScaleGraph(graphPHOSYieldPi0pPb,Scaling);
     graphPHOSYieldPi0pPbSystErr=ScaleGraph(graphPHOSYieldPi0pPbSystErr,Scaling);
-    graphPHOSYieldPi0pPbSystErr=ApplyNSDSysError(graphPHOSYieldPi0pPbSystErr,ScalingErr);
+    graphPHOSYieldPi0pPbSystErr=ApplyNSDSysError(graphPHOSYieldPi0pPbSystErr,ScalingErr,ScalingErrTpPb);
 
     graphEMCalYieldPi0pPb=ScaleGraph(graphEMCalYieldPi0pPb,Scaling);
     graphEMCalYieldPi0pPbSystErr=ScaleGraph(graphEMCalYieldPi0pPbSystErr,Scaling);
-    graphEMCalYieldPi0pPbSystErr=ApplyNSDSysError(graphEMCalYieldPi0pPbSystErr,ScalingErr);
+    graphEMCalYieldPi0pPbSystErr=ApplyNSDSysError(graphEMCalYieldPi0pPbSystErr,ScalingErr,ScalingErrTpPb);
+  } else{
+    graphDalitzYieldPi0pPbSystErr=ApplyTpPbSysError(graphDalitzYieldPi0pPbSystErr,ScalingErrTpPb);
+    graphPCMYieldPi0pPbSystErr=ApplyTpPbSysError(graphPCMYieldPi0pPbSystErr,ScalingErrTpPb);
+    graphPHOSYieldPi0pPbSystErr=ApplyTpPbSysError(graphPHOSYieldPi0pPbSystErr,ScalingErrTpPb);
+    graphEMCalYieldPi0pPbSystErr=ApplyTpPbSysError(graphEMCalYieldPi0pPbSystErr,ScalingErrTpPb);
   }
 
 
@@ -631,7 +687,10 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   
 
   line->Draw("same");
- 
+  TLatex * lt2 = new TLatex(1.,1.38,"ALICE Preliminary"); 
+  lt2->SetTextSize(0.05) ;
+  //  lt->DrawText(1.,1.45,"2016/06/14") ;
+  lt2->Draw("same");
     
   canvasCombinedWithModelsRpPb->Print(Form("%s/CombinedWithModels_RpPb.%s",outputDir.Data(),suffix.Data()));
  
@@ -856,6 +915,65 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
  
     
   canvasAllAlpha->Print(Form("%s/AllAlpha.%s",outputDir.Data(),suffix.Data()));
+
+  // **************************************************************************************
+  // ************************* Plotting  R_pPb from Combined pPb spectrum *****************
+  // **************************************************************************************
+
+  if (IsNSD){
+
+    graphCombYieldPi0pPbSystErr=ScaleGraph(graphCombYieldPi0pPbSystErr,Scaling);
+    graphCombYieldPi0pPb=ScaleGraph(graphCombYieldPi0pPb,Scaling);
+    
+    graphCombYieldPi0pPbSystErr=ApplyNSDSysError(graphCombYieldPi0pPbSystErr,ScalingErr,0.);
+    
+  }
+
+
+
+  TCanvas* canvasCombRpPb2 = new TCanvas("canvasCombRpPb2","",200,10,1200,700);  // gives the page size
+  DrawGammaCanvasSettings( canvasCombRpPb2, 0.08, 0.02, 0.02, 0.13);
+    
+  //  canvasCombRpPb2->SetLogx();
+  // canvasCombRpPb2->SetLogy();
+  TH2F * histo2DCombined2;
+  histo2DCombined2 = new TH2F("histo2DCombined2","histo2DCombined2",1000,0.,20.,1000,0.3,1.7);
+  SetStyleHistoTH2ForGraphs(histo2DCombined2, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
+  histo2DCombined2->DrawCopy();
+    
+
+     
+    
+
+  DrawGammaSetMarkerTGraphAsym(graphCombYieldPi0pPbSystErr,20,1.5, 4, 4, 1, kTRUE);  
+      
+  graphCombYieldPi0pPbSystErr->Draw("E2,same");
+
+  DrawGammaSetMarkerTGraphAsym(graphCombYieldPi0pPb,20,1.5, kBlue, kBlue);  
+  graphCombYieldPi0pPb->Draw("p,same");
+
+
+  TLatex * lt3 = new TLatex(1.,1.55,"ALICE Preliminary"); 
+  lt3->SetTextSize(0.05) ;
+  //  lt3->DrawText(1.,1.45,"2016/06/14") ;
+  lt3->Draw("same");
+     
+  TLegend* legendRpPbCombine2 = new TLegend(0.1,0.75,0.55,0.85);
+  legendRpPbCombine2->SetFillColor(0);
+  legendRpPbCombine2->SetLineColor(0);
+  legendRpPbCombine2->SetTextSize(0.04);
+  legendRpPbCombine2->AddEntry(graphCombYieldPi0pPbSystErr,"p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
+
+    
+  legendRpPbCombine->Draw();
+  
+  TLine* line2 =new TLine(0.,1.,20.,1.);
+  line2->Draw("same");
+ 
+    
+  canvasCombRpPb2->Print(Form("%s/RpPb_CombinedpPbSpectrum.%s",outputDir.Data(),suffix.Data()));
+    
+    
 
   //************************ WriteResultsToFile **************************************************
   TFile fResults(Form("%s/ResultsRpPbpPb_%s.root",outputDir.Data(), dateForOutput.Data()),"RECREATE");

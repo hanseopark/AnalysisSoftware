@@ -118,7 +118,7 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	TString fileNameNeutralPionEMCalResultsPP	="ExternalInputpPb/EMCAL/data_EMCAL-EMCALResultsFullCorrection_PP_276_Friederike.root";
 	TString fileNameNeutralPionEMCalResultsPP7TeV	="ExternalInputpPb/EMCAL/pi0Specrtum2011EMCAL_24June2015_7_Evi.root"; 
 	TString fileNameNeutralPionPHOSResultsPP	="ExternalInputpPb/PHOS/CombinedResultsPP_ShiftedX_PaperRAA_ConsiderPileup7TeVPHOSData.root";
-	TString fileNameNeutralPionCombResultspPb	="ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2016_06_02.root";
+	TString fileNameNeutralPionCombResultspPb	="ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2016_06_06.root"; //low pT Cut
 	TString fileNameNeutralPionPCMResultspPb        ="ExternalInputpPb/PCM/data_PCMResults_pPb_20151111_standard_CatErrors.root";
 	TString fileNameNeutralPionDalitzResultspPb	="ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20160601.root";//data_PCMResults_Dalitz_pPb_20150806.root";
 	TString fileNameNeutralPionEMCalResultspPb	="ExternalInputpPb/EMCAL/data_EMCalEMCalResults_160602_newhighptbinningPi0_pPb.root";//data_EMCalEMCalResults_160215_pPb_5023_Mike.root";
@@ -126,7 +126,7 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	TString fileNameRpPbPHOS  	                ="ExternalInputpPb/PHOS/data_PHOSResults_RpPb_20160405.root";
 	TString fileNamePHOSSystErrCancellation         ="ExternalInputpPb/PHOS/ComponentCancelSys.root";
 	//	TFile* CommonFile=new TFile("ExternalInputpPb/Combined_pPbResults_2016_03_31.root");// Common Fit for YShift
-	TFile* CommonFile=new TFile("ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2016_06_02.root");// Common Fit for YShift
+	TFile* CommonFile=new TFile("ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2016_06_03.root");// Common Fit for YShift
 
 	//PHOS Input
 
@@ -1035,7 +1035,7 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	    graphInvYieldPi0pPb5023GeVYShiftedSystWOMatErr    = CancelOutMaterialError(graphInvYieldPi0pPb5023GeVYShiftedSystErr,"PCMPCM",graphPHOSSystErrCancellation);
 	  }
 	
-	CalcRpPb(graphErrosInterPolation5023GeVBinSystWOMatErr,graphAErrosInterPolation5023GeVBinStatErr,graphInvYieldPi0pPb5023GeVYShiftedSystWOMatErr, graphInvYieldPi0pPb5023GeVYShiftedStatErr,&graphRpPbSystErr,&graphRpPbStatErr);
+	  CalcRpPb(graphErrosInterPolation5023GeVBinSystWOMatErr,graphAErrosInterPolation5023GeVBinStatErr,graphInvYieldPi0pPb5023GeVYShiftedSystWOMatErr, graphInvYieldPi0pPb5023GeVYShiftedStatErr,&graphRpPbSystErr,&graphRpPbStatErr);
 	
 	} else if (( resultsType.CompareTo("PHOS") == 0 || resultsType.CompareTo("PHOSPileUpCorrection") == 0 ) && System.CompareTo("PHOS") == 0 ){
 	  graphErrosInterPolation5023GeVBinSystWOMatErr     = CancelOutMaterialError(graphAErrosInterPolation5023GeVBinSystErr, "PHOSPHOS",graphPHOSSystErrCancellation);
@@ -1043,10 +1043,13 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 
 	    CalcRpPb(graphErrosInterPolation5023GeVBinSystWOMatErr,graphAErrosInterPolation5023GeVBinStatErr,graphInvYieldPi0pPb5023GeVYShiftedSystWOMatErr, graphInvYieldPi0pPb5023GeVYShiftedStatErr,&graphRpPbSystErr,&graphRpPbStatErr);
 	
-	}else {
+	}else if(System.CompareTo("Comb") == 0 ) {
 	  
-	CalcRpPb(graphAErrosInterPolation5023GeVBinSystErr,graphAErrosInterPolation5023GeVBinStatErr,graphInvYieldPi0pPb5023GeVYShiftedSystErr, graphInvYieldPi0pPb5023GeVYShiftedStatErr,&graphRpPbSystErr,&graphRpPbStatErr);
+	  CalcRpPb(graphAErrosInterPolation5023GeVBinSystErr,graphAErrosInterPolation5023GeVBinStatErr,graphInvYieldPi0pPb5023GeVYShiftedSystErr, graphInvYieldPi0pPb5023GeVYShiftedStatErr,&graphRpPbSystErr,&graphRpPbStatErr,kFALSE);
 	
+	} else{
+	  CalcRpPb(graphAErrosInterPolation5023GeVBinSystErr,graphAErrosInterPolation5023GeVBinStatErr,graphInvYieldPi0pPb5023GeVYShiftedSystErr, graphInvYieldPi0pPb5023GeVYShiftedStatErr,&graphRpPbSystErr,&graphRpPbStatErr);
+
 	}
 	
 	///////////////////////////////////Quality plots //////////////////////////
