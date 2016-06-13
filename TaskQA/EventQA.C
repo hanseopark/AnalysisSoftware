@@ -168,7 +168,7 @@ void EventQA(
         fMClusterCutSelection[i]    = ""; 
         fElectronCutSelection[i]    = ""; 
         fMesonCutSelection[i]       = "";
-        if (!isMerged){
+        if (!isMergedCalo){
             ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
         } else {
             ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fClusterCutSelection[i], fMClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
