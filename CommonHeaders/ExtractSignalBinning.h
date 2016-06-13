@@ -1457,7 +1457,9 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
               cout << "You have chosen to have more than 16 bins for Eta, this is not possible, it will be reduced to 16" << endl;
               fNBinsPt        = 16;
           } else if (fNBinsPt > 19 && (modi == 4)){
-            if( specialTrigg == 2 && fNBinsPt > 23){
+            if( setPi0.CompareTo("Pi0EtaBinning") == 0 && ( specialTrigg > 0 && fNBinsPt > 20) ){
+              fNBinsPt        = 20;
+            }else if( specialTrigg == 2 && fNBinsPt > 23){
               cout << "You have chosen to have more than 23 bins, this is not possible, it will be reduced to 23" << endl;
               fNBinsPt        = 23;
             } else if ( specialTrigg == 1 && fNBinsPt > 23){
