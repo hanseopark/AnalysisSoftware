@@ -181,7 +181,7 @@ void ProduceHEPDataFileForDirGammaPaper2015( TString nameFilePbPb = "Gamma_CombR
 			
 		cout << endl;	
 		TString header2040 = " *location: Fig. 5\n *dscomment: Invariant differential yields of direct GAMMA produced in 20-40% central inelastic PbPb collisions at center-of-mass energy per nucleon 2.76 TeV\n *reackey: PB PB --> GAMMA X\n *obskey: DN/DPT**2/DYRAP\n *qual: RE: PB PB --> GAMMA X\n *qual: YRAP : 0.0\n *qual: CENTRALITY : 20.0 TO 40.0\n *qual: SQRT(S)/NUCLEON IN GEV : 2760.0\n *yheader: 1/(2*PI*Nevt)*(d**2N)/(PT*dPT*dY) IN (GEV/c)**-2\n *xheader: PT IN GEV/c\n *data: x : y";
-		ProduceHEPDataFileWithUpperLimitsErrorsSplit(graphDirGammaYieldStat2040, graphDirGammaYieldSysA2040, graphDirGammaYieldSysC2040, graphDirGammaYieldSysC2040, graphDirGammaYieldUpper2040, newBinsComb, nPointsTot, header2040);
+		ProduceHEPDataFileWithUpperLimitsErrorsSplit(graphDirGammaYieldStat2040, graphDirGammaYieldSysA2040, graphDirGammaYieldSysB2040, graphDirGammaYieldSysC2040, graphDirGammaYieldUpper2040, newBinsComb, nPointsTot, header2040);
 		
 		cout << endl;
 		TString header4080 = " *location: Fig. 5\n *dscomment: Invariant differential yields of direct GAMMA produced in 40-80% central inelastic PbPb collisions at center-of-mass energy per nucleon 2.76 TeV\n *reackey: PB PB --> GAMMA X\n *obskey: DN/DPT**2/DYRAP\n *qual: RE: PB PB --> GAMMA X\n *qual: YRAP : 0.0\n *qual: CENTRALITY : 40.0 TO 80.0\n *qual: SQRT(S)/NUCLEON IN GEV : 2760.0\n *yheader: 1/(2*PI*Nevt)*(d**2N)/(PT*dPT*dY) IN (GEV/c)**-2\n *xheader: PT IN GEV/c\n *data: x : y";

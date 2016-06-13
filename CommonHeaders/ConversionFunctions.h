@@ -3027,13 +3027,13 @@ void ProduceHEPDataFileWithUpperLimitsErrorsSplit(  TGraphAsymmErrors* statError
                     line                = Form("%sDSYS= %2.2e:B, ", line.Data(), currentYErrSystBDown[binSyst] );
                 }
                 if (precision-precisionSysC == 0){
-                    line                = Form("%sDSYS= %2.2e:C);", line.Data(), currentYErrSystBDown[binSyst] );
+                    line                = Form("%sDSYS= %2.2e:C);", line.Data(), currentYErrSystCDown[binSyst] );
                 } else if (precision-precisionSysC == 1){
-                    line                = Form("%sDSYS= %2.3e:C);", line.Data(), currentYErrSystBDown[binSyst] );
+                    line                = Form("%sDSYS= %2.3e:C);", line.Data(), currentYErrSystCDown[binSyst] );
                 } else if (precision-precisionSysC == 2){
-                    line                = Form("%sDSYS= %2.4e:C);", line.Data(), currentYErrSystBDown[binSyst] );
+                    line                = Form("%sDSYS= %2.4e:C);", line.Data(), currentYErrSystCDown[binSyst] );
                 } else {
-                    line                = Form("%sDSYS= %2.2e:C);", line.Data(), currentYErrSystBDown[binSyst] );
+                    line                = Form("%sDSYS= %2.2e:C);", line.Data(), currentYErrSystCDown[binSyst] );
                 }
 
                 binSyst++;
