@@ -709,12 +709,23 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             pol0->SetRange(minPt[i],maxPt[i]);
             pol0->Draw("same");
             histoRatioRawClusterPt[i]->DrawCopy("e1,same"); 
+
             TLegend* legendTriggRejectSingle = GetAndSetLegend2(0.33, 0.12, 0.92, 0.12+(1.05*(2)*textSizeSpectra2),textPixelPP);
             legendTriggRejectSingle->SetMargin(0.02);
             legendTriggRejectSingle->SetNColumns(3);
             legendTriggRejectSingle->AddEntry(histoRatioRawClusterPt[i],Form("   %s/%s",triggerNameLabel[i].Data(),triggerNameLabel[trigSteps[i][0]].Data() ),"p");
             legendTriggRejectSingle->AddEntry((TObject*)0,Form("%3.1f< #it{p}_{T} < %3.1f",minPt[i],maxPt[i]),"");
-            legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.2f#pm%3.2f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+            if (triggerName[i].Contains("EMC1"))
+                legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.0f #pm %3.0f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+            else if (triggerName[i].Contains("EMC7"))
+                legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.1f #pm %3.1f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+            else if (triggerName[i].Contains("EG2"))
+                legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.2f #pm %3.2f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+            else if (triggerName[i].Contains("EG1") )
+                legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.3f #pm %3.3f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+            else 
+                legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.2f #pm %3.2f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+
             legendTriggRejectSingle->Draw();
 
             histo2DTriggRejectLinear->Draw("same,axis");
@@ -1013,10 +1024,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         //***************************************************************************************************************
         TCanvas* canvasPurity = new TCanvas("canvasPurity","",0,0,1000,900);// gives the page size
         DrawGammaCanvasSettings( canvasPurity, 0.09, 0.017, 0.015, 0.08);
-        canvasPurity->SetLogy(1);
+        canvasPurity->SetLogy(0);
 
-        Double_t minPurityPi0 = 0.1;
-        Double_t maxPurityPi0 = 1.1;
+        Double_t minPurityPi0 = 0.6;
+        Double_t maxPurityPi0 = 1.02;
 
         TH2F * histo2DPurityPi0;
         histo2DPurityPi0 = new TH2F("histo2DPurityPi0","histo2DPurityPi0",1000,0., maxPtGlobalPi0,10000,minPurityPi0, maxPurityPi0);
@@ -2520,10 +2531,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     if (graphPurityPi0Weighted){
         TCanvas* canvasPurity = new TCanvas("canvasPurity","",0,0,1000,900);// gives the page size
         DrawGammaCanvasSettings( canvasPurity, 0.09, 0.017, 0.015, 0.08);
-        canvasPurity->SetLogy(1);
+        canvasPurity->SetLogy(0);
 
-        Double_t minPurityPi0 = 0.1;
-        Double_t maxPurityPi0 = 1.1;
+        Double_t minPurityPi0 = 0.6;
+        Double_t maxPurityPi0 = 1.02;
 
         TH2F * histo2DPurityPi0;
         histo2DPurityPi0 = new TH2F("histo2DPurityPi0","histo2DPurityPi0",1000,0., maxPtGlobalPi0,10000,minPurityPi0, maxPurityPi0);
