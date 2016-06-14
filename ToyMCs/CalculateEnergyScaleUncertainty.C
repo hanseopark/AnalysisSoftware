@@ -49,9 +49,15 @@ void CalculateEnergyScaleUncertainty(TString fileName = "data_EMCAL-EMCALResults
                                      const Int_t nfuncdndpt = 2, // switch dn/dpt function
                                      const Int_t nfuncdpt = 2,   // switch pt dependence of energy uncertainty
                                      const Float_t mass = 0.1349766, // mass of pi0
-                                     Bool_t variablebinning = 1){
-
+                                     Bool_t variablebinning = 1,
+                                     const Int_t ipoln = 5){
+  
   gRandom = new TRandom3(time(0));
+  
+  TString outputDir ="./plots/";
+  TString suffix = "eps";
+  
+  gSystem->Exec("mkdir -p "+outputDir);
 
   const Int_t nbinsfinal = 33;
   Float_t fBinsPi02760GeVPtMerged[nbinsfinal+1]            = { 0.0, 0.4, 0.6, 0.8, 1.0,
@@ -61,7 +67,11 @@ void CalculateEnergyScaleUncertainty(TString fileName = "data_EMCAL-EMCALResults
     9.0, 10.0, 11.0, 12.0, 14.0,
     16.0, 18., 22., 26., 30.,
     35.0, 40., 50., 60.};
-
+  
+  const Int_t ntriggers = 6;
+  const char* cTrigName[ntriggers] = {"INT1","INT7","EMC1","EMC7","EG2","EG1"};
+  const Float_t minpttrig[ntriggers] = {1.4,1.4,6. ,3. ,6. ,11.};
+  const Float_t maxpttrig[ntriggers] = {6. ,6. ,20.,11.,16.,20.};
   
   const Int_t nbins = 500;
   const Double_t histmin = 0;
@@ -69,50 +79,120 @@ void CalculateEnergyScaleUncertainty(TString fileName = "data_EMCAL-EMCALResults
   const Double_t dnmin = 0.5;
   const Double_t dnmax = 50;
   
+  TString dNName;
+  TString uncName;
+  TString ratiofitname;
+  
+  // switch function for fit to mass ratio
+  TF1* fratiofit;
+  switch(ipoln){
+    case 0: // pol0
+      fratiofit = new TF1("fratiofit","pol0",dnmin,dnmax);
+      ratiofitname = "pol0";
+      break;
+      
+    case 1: // pol1
+      fratiofit = new TF1("fratiofit","pol1",dnmin,dnmax);
+      ratiofitname = "pol1";
+      break;
+      
+    case 2: // pol2
+      fratiofit = new TF1("fratiofit","pol2",dnmin,dnmax);
+      ratiofitname = "pol2";
+      break;
+      
+    case 3: // pol3
+      fratiofit = new TF1("fratiofit","pol3",dnmin,dnmax);
+      ratiofitname = "pol3";
+      break;
+      
+    case 4: // pol4
+      fratiofit = new TF1("fratiofit","pol4",dnmin,dnmax);
+      ratiofitname = "pol4";
+      break;
+      
+    case 5: // pol5
+      fratiofit = new TF1("fratiofit","pol5",dnmin,dnmax);
+      ratiofitname = "pol5";
+      break;
+      
+    case 6: // pol6
+      fratiofit = new TF1("fratiofit","pol6",dnmin,dnmax);
+      ratiofitname = "pol6";
+      break;
+      
+    case 7: // pol7
+      fratiofit = new TF1("fratiofit","pol7",dnmin,dnmax);
+      ratiofitname = "pol7";
+      break;
+      
+    case 8: // pol8
+      fratiofit = new TF1("fratiofit","pol8",dnmin,dnmax);
+      ratiofitname = "pol8";
+      break;
+      
+    case 9: // pol9
+      fratiofit = new TF1("fratiofit","pol9",dnmin,dnmax);
+      ratiofitname = "pol9";
+      break;
+      
+    default:
+      fratiofit = new TF1("fratiofit","pol0",dnmin,dnmax);
+      ratiofitname = "pol0";
+      ntotal = 1;
+      cout << "maximum pol9! setting back to pol0, running only 1 event" << endl;
+      
+  }
+  
   // function to describe energy uncertainty
   TF1* funcertainty;
   
-  cout << nfuncdpt << endl;
-
-  TString dNName;
-  TString uncName;
-  
+  // switch different cases of energy uncertainty
   switch(nfuncdpt){
-
-    case 1:
+      
+    case 1: // 1% constant
       funcertainty = new TF1("funcertainty","pol0",dnmin,dnmax);
       funcertainty->SetParameter(0,1.01);
       break;
-
-    case 2:
+      
+    case 2: // 0.5% constant
+      funcertainty = new TF1("funcertainty","pol0",dnmin,dnmax);
+      funcertainty->SetParameter(0,1.005);
+      break;
+      
+    case 8: // %larger at low pT, going to constant at high pT
       funcertainty = new TF1("funcertainty","[0] + [1]/(1+[2]*x)",dnmin,dnmax);
       funcertainty->SetParameters(1.008,0.015,0.3);
       break;
+      
+    case 9:
+      funcertainty = (TF1*) fratiofit;
+      break;
+      
     default:
       cout << "no input function for energy scale uncertainty defined, switching to constant, running only 1 event" << endl;
       funcertainty = new TF1("funcertainty","pol0",dnmin,dnmax);
       funcertainty->SetParameter(0,1);
       ntotal = 1;
-
+      
   }
   
-  // function for input spectrum shape
+  // switch function for input spectrum shape
   TF1* fdndpt;
-  cout << nfuncdndpt << endl;
   switch(nfuncdndpt){
     case 1:    // power law
       fdndpt = new TF1("fdndpt","([0]/x)^[1]",dnmin,dnmax);
       fdndpt->SetParameters(1,6);
       dNName = "power law";
       break;
-
+      
     case 2:    // tsallis
       fdndpt = new TF1("fdndpt",
                        Form("[0] / ( 2 * TMath::Pi())*([1]-1.)*([1]-2.) / ([1]*[2]*([1]*[2]+%.10f*([1]-2.)))  * x* pow(1.+(sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1])",mass,mass,mass,mass),dnmin,dnmax);
       fdndpt->SetParameters(2e11,7., 0.137);
       dNName = "Tsallis";
       break;
-
+      
     case 3:    // bylinkin
       fdndpt = new TF1("fdndpt",Form("[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1]) + [2]/(TMath::Power(1+x*x/([3]*[3]*[4]),[4]) )",mass,mass,mass),dnmin,dnmax);
       fdndpt->SetParameters(450e8,0.3,1,0.3,8.);
@@ -125,14 +205,15 @@ void CalculateEnergyScaleUncertainty(TString fileName = "data_EMCAL-EMCALResults
       fdndpt->SetParameter(0,1);
       ntotal = 1;
   }
-
+  
   // function for pT sampling (flat for good statistics)
   TF1* fpt = new TF1("fpt","pol0",dnmin,dnmax);
   fpt->SetParameter(0,1.0);
   
+  // histograms for simulated spectra
   TH1D* fHdN;
   TH1D* fHdNShift;
-
+  
   if(variablebinning){
     // unshifted histogram
     fHdN = new TH1D("hdN","",nbinsfinal,fBinsPi02760GeVPtMerged);
@@ -154,7 +235,7 @@ void CalculateEnergyScaleUncertainty(TString fileName = "data_EMCAL-EMCALResults
   TDirectory* directoryEMCALPi0                           = (TDirectory*)fileInput->Get("Pi02.76TeV");
   TH1D* hpi0spectrum = (TH1D*) directoryEMCALPi0->Get("InvCrossSectionPi0")->Clone("hpi0spectrum");
   
-  // make dN/dpt!
+  // make dN/dpt! (multiply with pt)
   for(Int_t ibin = 1;ibin<hpi0spectrum->GetNbinsX();ibin++){
     hpi0spectrum->SetBinContent(ibin,hpi0spectrum->GetBinContent(ibin)*hpi0spectrum->GetBinCenter(ibin));
     hpi0spectrum->SetBinError(ibin,hpi0spectrum->GetBinError(ibin)*hpi0spectrum->GetBinCenter(ibin));
@@ -173,7 +254,7 @@ void CalculateEnergyScaleUncertainty(TString fileName = "data_EMCAL-EMCALResults
   hpi0spectrum->SetAxisRange(0,15.5,"X");
   hpi0spectrum->SetAxisRange(3e3,3e9,"Y");
   hpi0spectrum->SetXTitle("#it{p}_{T} (GeV/c)");
-  hpi0spectrum->SetYTitle("#it{E} #frac{d^{3}#it{N}}{d#it{p}^{3}}(pb GeV^{-2}c^{3}");
+  hpi0spectrum->SetYTitle("#it{E} #frac{d^{ 3}#it{N}}{d#it{p}^{ 3}} (pb GeV^{ -2}c^{ 3})");
   hpi0spectrum->SetTitleSize(0.03,"X");
   hpi0spectrum->SetTitleSize(0.03,"Y");
   hpi0spectrum->SetTitleOffset(1.2,"X");
@@ -189,6 +270,69 @@ void CalculateEnergyScaleUncertainty(TString fileName = "data_EMCAL-EMCALResults
   linput->AddEntry(fdndpt,Form("fit with %s function",dNName.Data()));
   linput->SetBorderSize(0);
   linput->Draw();
+  
+  // TGraphErrors for mass ratio data/mc vs pT
+  TGraphErrors* gMassRatios = new TGraphErrors(60);
+  TGraphErrors* gMassRatio[ntriggers];
+  
+  for(Int_t i=0;i<ntriggers;i++){
+    gMassRatio[i] = new TGraphErrors(30);
+  }
+  
+  // get masses for data and MC
+  TH1D* hPi0MassData[ntriggers];
+  TH1D* hPi0MassMC[ntriggers];
+  TH1D* hPi0MassRatio[ntriggers];
+  
+  for(Int_t i=0;i<ntriggers;i++){
+    hPi0MassData[i] = (TH1D*) directoryEMCALPi0->Get(Form("Pi0_Mass_data_%s",cTrigName[i]))->Clone(Form("hPi0MassData%s",cTrigName[i]));
+    hPi0MassMC[i] = (TH1D*) directoryEMCALPi0->Get(Form("Pi0_Mass_MC_%s",cTrigName[i]))->Clone(Form("hPi0MassMC%s",cTrigName[i]));
+    hPi0MassRatio[i] = (TH1D*) hPi0MassData[i]->Clone(Form("hPi0MassRatio%s",cTrigName[i]));
+    hPi0MassRatio[i]->Divide(hPi0MassMC[i]);
+  }
+  // fill all used points in a graph
+  Int_t ipoint = 0;
+  Int_t ipoints[ntriggers] = {0,0,0,0,0,0};
+  for(Int_t i=0;i<ntriggers;i++){
+    for(Int_t ibin=1;ibin<hPi0MassRatio[i]->GetNbinsX();ibin++){
+      if(hPi0MassRatio[i]->GetBinCenter(ibin) > minpttrig[i] && hPi0MassRatio[i]->GetBinCenter(ibin) < maxpttrig[i]){
+        
+        gMassRatio[i]->SetPoint(ipoints[i],hPi0MassRatio[i]->GetBinCenter(ibin),hPi0MassRatio[i]->GetBinContent(ibin));
+        gMassRatio[i]->SetPointError(ipoints[i],0.,hPi0MassRatio[i]->GetBinError(ibin));
+        
+        gMassRatios->SetPoint(ipoint,hPi0MassRatio[i]->GetBinCenter(ibin),hPi0MassRatio[i]->GetBinContent(ibin));
+        gMassRatios->SetPointError(ipoint,0.,hPi0MassRatio[i]->GetBinError(ibin));
+        
+        ipoints[i]++;
+        ipoint++;
+      }
+    }
+  }
+  
+  gMassRatios->Fit(fratiofit,"RE","",dnmin,16.);
+  
+  TCanvas* c3 = new TCanvas("c3","",800,800);
+  DrawGammaCanvasSettings( c3, 0.12, 0.015, 0.015, 0.07);
+  TH2F * histoFrameRatio;
+  histoFrameRatio = new TH2F(" histoFrameRatio"," histoFrameRatio",1000,0., 16.,10000,0.9,1.1);
+  histoFrameRatio->SetStats(kFALSE);
+  SetStyleHistoTH2ForGraphs(histoFrameRatio, "#it{p}_{T} (GeV/#it{c})","#it{M}^{ #pi^{0}}_{data} / #it{M}^{ #pi^{0}}_{MC}",
+                            0.032,0.033, 0.032,0.035, 1.,1.5);
+  histoFrameRatio->Draw();
+
+  fratiofit->SetLineColor(kRed);
+  fratiofit->Draw("same");
+
+  TLegend* lmassrat = new TLegend(0.6,0.7,0.9,0.9);
+  for(Int_t i=0;i<ntriggers;i++){
+    gMassRatio[i]->SetMarkerStyle(20+i);
+    gMassRatio[i]->SetFillColor(0);
+    gMassRatio[i]->Draw("p");
+    lmassrat->AddEntry(gMassRatio[i],cTrigName[i]);
+  }
+  lmassrat->AddEntry(ratiofitname,Form("%s fit to all triggers",ratiofitname.Data()));
+  lmassrat->SetBorderSize(0);
+  lmassrat->Draw();
   
   Int_t counter = 0;
   
@@ -211,7 +355,7 @@ void CalculateEnergyScaleUncertainty(TString fileName = "data_EMCAL-EMCALResults
     
     // fill shifted histogram
     fHdNShift->Fill(pt*ptshift,weight);
-
+    
     counter++;
   }
   
@@ -248,17 +392,18 @@ void CalculateEnergyScaleUncertainty(TString fileName = "data_EMCAL-EMCALResults
   fHdN->SetLineColor(1);
   fHdN->SetStats(kFALSE);
   fHdN->SetXTitle("#it{p}_{T} (GeV/c)");
-  fHdN->SetYTitle("d#it{N}^{#pi^{0}}/d#it{p}_{T} (a.u.)");
+  fHdN->SetYTitle("d#it{N}^{ #pi^{0}}/d#it{p}_{T} (a.u.)");
+  fHdN->SetTitleOffset(1.1,"Y");
   fHdN->SetAxisRange(histmin,histmax-0.01,"X");
   fHdN->SetAxisRange(2e-1,8e9,"Y");
   fHdN->Draw("p");
-
+  
   fHdNShift->SetMarkerStyle(21);
   fHdNShift->SetMarkerColor(2);
   fHdNShift->SetLineColor(2);
   fHdNShift->SetStats(kFALSE);
   fHdNShift->Draw("p,same");
-
+  
   TLegend* legendSpectra = new TLegend(0.4, 0.8, 0.95, 0.95);
   legendSpectra->SetMargin(0.12);
   legendSpectra->SetNColumns(1);
@@ -275,7 +420,7 @@ void CalculateEnergyScaleUncertainty(TString fileName = "data_EMCAL-EMCALResults
   pbottom->SetBottomMargin(0.25);
   pbottom->Draw();
   pbottom->cd();
-
+  
   // calculate ratio
   TH1D* fHdNRatio = (TH1D*) fHdNShift->Clone("fHdNRatio");
   fHdNRatio->SetAxisRange(histmin,histmax-0.01,"X");
@@ -295,7 +440,7 @@ void CalculateEnergyScaleUncertainty(TString fileName = "data_EMCAL-EMCALResults
   funcertainty->SetLineStyle(2);
   funcertainty->SetLineColor(1);
   funcertainty->Draw("same");
-
+  
   TLegend* legendRatio = new TLegend(0.14, 0.29, 0.42, 0.48);
   legendRatio->SetMargin(0.12);
   legendRatio->SetNColumns(1);
@@ -303,5 +448,9 @@ void CalculateEnergyScaleUncertainty(TString fileName = "data_EMCAL-EMCALResults
   legendRatio->AddEntry(fHdNRatio,"ratio of shifted and regular spectrum");
   legendRatio->AddEntry(funcertainty,"energy uncertainty function");
   legendRatio->Draw();
-
+  
+  c1->SaveAs(Form("%s/pi0_crosssection_fit%s.%s",outputDir.Data(),dNName.Data(),suffix.Data()));
+  c2->SaveAs(Form("%s/pi0_massratio_data_mc_fit_%s.%s",outputDir.Data(),ratiofitname.Data(),suffix.Data()));
+  c3->SaveAs(Form("%s/pi0_dndpt_shift_dnfit%s_uncfit%s.%s",outputDir.Data(),dNName.Data(),uncName.Data(),suffix.Data()));
+  
 }
