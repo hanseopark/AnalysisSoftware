@@ -768,7 +768,13 @@ void ClusterQA_Runwise(
                 bin                     = mapBin[fRunNumber];
             else 
                 bin                     = fRunNumber.Atoi() - hFBin;
-            Double_t nEvents            = GetNEvents((TH1*) ESDContainer->FindObject("NEvents"),kFALSE);
+            Double_t nEvents            = 0;
+            if ((TH1*) ESDContainer->FindObject("NEventsWOWeights")){
+                nEvents            = GetNEvents((TH1*) ESDContainer->FindObject("NEventsWOWeights"),kFALSE);
+                cout << "INFO: Output contains event weights" << endl;
+            } else {
+                nEvents            = GetNEvents((TH1*) ESDContainer->FindObject("NEvents"),kFALSE);
+            }    
             //--------------------------------------------------------------------------------------------------------
             fLog[i] << "----------------------------------------------------------------------------" << endl;
             fLog[i] << "Processing file: " << fRootFile.Data() << endl;

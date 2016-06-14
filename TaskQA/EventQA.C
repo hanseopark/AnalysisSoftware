@@ -345,13 +345,19 @@ void EventQA(
             ContainerEventCut = TopContainerEvent->GetName();
             ContainerEventCut.Remove(0,14);
         //-------------------------------------------------------------------------------------------------------------------------------
-        nEvents[i] = 0;
-        nEventsAll[i] = 0;
-        TH1D* fHistNEvents = (TH1D*)ESDContainer->FindObject("NEvents");
+        nEvents[i]          = 0;
+        nEventsAll[i]       = 0;
+        TH1D* fHistNEvents  = NULL;
+        fHistNEvents        = (TH1D*)ESDContainer->FindObject("NEventsWOWeight");
+        if (fHistNEvents ){
+            cout << "INFO: Output contains event weights" << endl;
+        } else {
+           fHistNEvents     = (TH1D*)ESDContainer->FindObject("NEvents"); 
+        }    
         //if(plotDataSets[i].Contains("JetJet") || plotDataSets[i].Contains("jetjet")) fHistNEvents = (TH1D*)ESDContainer->FindObject("NEventsWOWeight");
         if(fHistNEvents){
-            nEvents[i] = (Double_t) GetNEvents(fHistNEvents,kFALSE);
-            nEventsAll[i] = fHistNEvents->GetEntries() - fHistNEvents->GetBinContent(4);
+            nEvents[i]      = (Double_t) GetNEvents(fHistNEvents,kFALSE);
+            nEventsAll[i]   = fHistNEvents->GetEntries() - fHistNEvents->GetBinContent(4);
         }
         else{
             cout << "ERROR: Object |fHistNEvents| could not be found in File '" << pathDataSets[i].Data() << "'! Returning..." << endl;

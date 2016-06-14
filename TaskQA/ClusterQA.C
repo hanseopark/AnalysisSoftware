@@ -603,9 +603,14 @@ void ClusterQA(
         if(TrueContainer == NULL) {isTrueContainer[i] = kFALSE; cout << "INFO: " << Form("%s True histograms",fCutSelection[i].Data()) << " not found in File, processing data?" << endl;}
             else TrueContainer->SetOwner(kTRUE);
         //---------------------------------------------------------------------------------------------------------------
-        nEvents[i] = 0;
-        TH1D* fHistNEvents              = (TH1D*)ESDContainer->FindObject("NEvents");
-        //if(plotDataSets[i].Contains("JetJet") || plotDataSets[i].Contains("jetjet")) fHistNEvents = (TH1D*)ESDContainer->FindObject("NEventsWOWeight");
+        nEvents[i]                      = 0;
+        TH1D* fHistNEvents              = (TH1D*)ESDContainer->FindObject("NEventsWOWeight");
+        if (fHistNEvents){
+            cout << "INFO: Output contains event weights" << endl;
+        } else {
+            fHistNEvents                = (TH1D*)ESDContainer->FindObject("NEvents");
+        }    
+        
         if(fHistNEvents) nEvents[i]     = (Double_t) GetNEvents(fHistNEvents,kFALSE);
         else cout << "INFO: Object |fHistNEvents| could not be found!" << endl;
         //---------------------------------------------------------------------------------------------------------------

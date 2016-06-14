@@ -722,7 +722,14 @@ void EventQA_Runwise(
             //--------------------------------------------------------------------------------------------------------
             //----------------------------- Event quality histograms processing --------------------------------------
             //--------------------------------------------------------------------------------------------------------
-            TH1D* EVENTS = (TH1D*) ESDContainer->FindObject("NEvents");
+            TH1D* EVENTS    = NULL;
+            EVENTS          = (TH1D*) ESDContainer->FindObject("NEventsWOWeight");
+            if (EVENTS){
+                cout << "INFO: Output contains event weights" << endl;
+            } else {
+                EVENTS      = (TH1D*) ESDContainer->FindObject("NEvents");
+            }    
+            
             if(!EVENTS){
                 cout << "ERROR: Object |NEvents| could not be found! Returning!" << endl;
                 return;
