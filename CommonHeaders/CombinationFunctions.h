@@ -1198,7 +1198,8 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
                                                       Int_t* startOffsets, Int_t* sysOffsets,
                                                       TGraphAsymmErrors* &graphStatComb, TGraphAsymmErrors* &graphSystComb,
                                                       TString nameWeightsOutputFile = "output.dat",
-                                                      TString energy = "2.76TeV", TString mesonType = "Pi0", Bool_t isV2ClusterMerged = kFALSE 
+                                                      TString energy = "2.76TeV", TString mesonType = "Pi0", Bool_t isV2ClusterMerged = kFALSE,
+						      TGraphAsymmErrors** graphSystCorrFactors = NULL
                                                     ){
     
     Int_t maxNMeasurements                      = 11;
@@ -1269,6 +1270,7 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
         Double_t yStatErr[11]                   = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         Double_t ySysErr[11]                    = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         Double_t yTotErr[11]                    = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+	Double_t ySysErroCorrFactorRel[11]         = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         Int_t identCurr[2][11]                  = { {  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10 },
                                                     { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};  
         TString nameMeasPtBin[11]               = {"", "", "", "", "", "", "", "", "", "", ""};
@@ -1298,6 +1300,9 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
                              << "\t"<< graphSyst[meas]->GetErrorYlow(binCounters[meas]-sysOffsets[meas]) << endl;
                         ySysErr[meas]                           = graphSyst[meas]->GetErrorYhigh(binCounters[meas]-sysOffsets[meas]);
                         yTotErr[meas]                           = TMath::Sqrt(yStatErr[meas]*yStatErr[meas]+ySysErr[meas]*ySysErr[meas]);
+			if(energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0 ){
+			ySysErroCorrFactorRel[meas]                = graphSystCorrFactors[meas]->GetErrorYhigh(binCounters[meas]-sysOffsets[meas]) / graphSystCorrFactors[meas]->GetY()[binCounters[meas]-sysOffsets[meas]];
+			}
                         numberOfMeasInPtBin++;
                         Double_t pTDiff = (graphSyst[meas]->GetX()[binCounters[meas]-sysOffsets[meas]] - histoStat[meas]->GetXaxis()->GetBinCenter(binCounters[meas]+1-startOffsets[meas]));
 //                         cout << "p_{T}: "<< graphSyst[meas]->GetX()[binCounters[meas]-sysOffsets[meas]] << "\t" << histoStat[meas]->GetXaxis()->GetBinCenter(binCounters[meas]+1-startOffsets[meas]) << "\t diff: " << pTDiff << endl;
@@ -1377,7 +1382,31 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
             cout << nameMeas[0] <<  ":\t sys error : "  << ySysErr[0] << "\t, total err: " <<  yTotErr[0] << endl;
             cout << nameMeas[4] <<  ":\t sys error : "  << ySysErr[4] << "\t, total err: " <<  yTotErr[4] << endl;
         }    
-        Double_t cvPCM_PCMDal                   = 0.225; //Add correlation 
+        //Double_t cvPCM_PCMDal                   = 0.225; //Add correlation 
+        
+        Double_t cvPCM_PCMDal                   = 0.0; //Add correlation 
+        
+        if (yValue[0]>0 && yValue[5]>0 ){
+        
+         if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
+	  
+	      
+	     Double_t ySysPPRefErroPCMWOMatErr    = TMath::Sqrt( ySysErroCorrFactorRel[0]*ySysErroCorrFactorRel[0] -( 0.09*0.09 ));
+	     Double_t ySysPPRefErroDalitzWOMatErr = TMath::Sqrt( ySysErroCorrFactorRel[5]*ySysErroCorrFactorRel[5] -( 0.09*0.09 ));
+	     cvPCM_PCMDal = (ySysPPRefErroPCMWOMatErr*ySysPPRefErroDalitzWOMatErr) / ( (ySysErr[0]/yValue[0]) * (ySysErr[5]/yValue[5]));
+	     cout <<"cvPCM_PCMDal "<<cvPCM_PCMDal<<nameMeas[0] <<  ":\t sys error : "  << ySysErr[0]/yValue[0] << "\t, pp ref error: wo mat " <<  ySysPPRefErroPCMWOMatErr<< endl;
+  	     cout <<"cvPCM_PCMDal "<<cvPCM_PCMDal<<nameMeas[5] <<  ":\t sys error : "  << ySysErr[5]/yValue[5] << "\t, pp ref error: wo mat " <<  ySysPPRefErroPCMWOMatErr<< endl;
+  	  
+	 } else if( energy.CompareTo("pPb_5.023GeV") == 0 && mesonType.CompareTo("Pi0") == 0 ) {
+	   
+	     cvPCM_PCMDal = (0.09*0.045) /( (ySysErr[0]/yValue[0])*(ySysErr[5]/yValue[5]));   //0.225;       //Add correlation  
+	     cout <<"cvPCM_PCMDal   "<<cvPCM_PCMDal<<" "<< nameMeas[0] <<"\t, total err: " <<  ySysErr[0]/yValue[0]<<" "<<nameMeas[5] <<"\t, total err: " <<  ySysErr[5]/yValue[5] << endl;
+        
+	 }
+	}
+        
+        
+        
         Double_t cvPHO_PCMPHO                   = 0.;
         Double_t cvPHO_PHODal                   = 0.;
         Double_t cvEMC_PCMEMC                   = 0.; // 0.775
@@ -1429,15 +1458,68 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
             cout << nameMeas[9] <<  " sys error : "  << ySysErr[9] << "\t, total err: " <<  yTotErr[9] << endl;
         }    
       
+        //NOTE  
+        Double_t cvEMC_PCM  = 0.;
+	
+	if (yValue[0]>0 && yValue[2]>0 ){
         
+         if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
+	  
+	     Double_t ySysPPRefErroPCMWOMatErr    = TMath::Sqrt( ySysErroCorrFactorRel[0]*ySysErroCorrFactorRel[0] - (0.09*0.09));
+	     cvEMC_PCM = (ySysPPRefErroPCMWOMatErr*ySysErroCorrFactorRel[2]) / ( (ySysErr[0]/yValue[0]) * (ySysErr[2]/yValue[2]));
+	     cout <<"cvEMC_PCM "<<cvEMC_PCM<<nameMeas[0] <<  ":\t sys error : "  << ySysErr[0]/yValue[0] << "\t, pp ref error: wo mat " <<  ySysPPRefErroPCMWOMatErr<< endl;
+  	     cout <<"cvEMC_PCM "<<cvEMC_PCM<<nameMeas[2] <<  ":\t sys error : "  << ySysErr[2]/yValue[2] << "\t, pp ref error:  " <<  ySysErroCorrFactorRel[2]<< endl;
+  	  
+	 }
+	}
+	
+	
+	
+	Double_t cvEMC_PHOS = 0.;
+	
+	if (yValue[1]>0 && yValue[2]>0 ){
+        
+         if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
+	      
+	     
+             cvEMC_PHOS = (ySysErroCorrFactorRel[1]*ySysErroCorrFactorRel[2]) / ( (ySysErr[1]/yValue[1]) * (ySysErr[2]/yValue[2]));
+	     
+	     cout <<"cvEMC_PHOS "<<cvEMC_PHOS<<" "<<nameMeas[1] <<  ":\t sys error : "  << ySysErr[1]/yValue[1] << "\t, pp ref error:  " <<  ySysErroCorrFactorRel[1]<< endl;
+  	     cout <<"cvEMC_PHOS "<<cvEMC_PHOS<<" "<<nameMeas[2] <<  ":\t sys error : "  << ySysErr[2]/yValue[2] << "\t, pp ref error:  " <<  ySysErroCorrFactorRel[2]<< endl;
+	     cout<<"Hola pedrito"<<endl;
+	     
+  	  
+	 }
+	}
+	
+	
+	Double_t cvEMC_PCMDal = 0.;
+	
+	if (yValue[2]>0 && yValue[5]>0 ){
+        
+         if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
+	  
+	     Double_t ySysPPRefErroDalitzWOMatErr = TMath::Sqrt( ySysErroCorrFactorRel[5]*ySysErroCorrFactorRel[5] - ( 0.09*0.09 ) + (0.045*0.045) );
+	 
+	     cvEMC_PCMDal = (ySysErroCorrFactorRel[2]*ySysPPRefErroDalitzWOMatErr) / ( (ySysErr[2]/yValue[2]) * (ySysErr[5]/yValue[5]));
+	     cout <<"cvEMC_PCMDal "<<cvEMC_PCMDal<<" "<<nameMeas[2] <<  ":\t sys error : "  << ySysErr[2]/yValue[2] << "\t, pp ref error:  " <<  ySysErroCorrFactorRel[2]<< endl;
+  	     cout <<"cvEMC_PCMDal "<<cvEMC_PCMDal<<" "<<nameMeas[5] <<  ":\t sys error : "  << ySysErr[5]/yValue[5] << "\t, pp ref error:  " <<  ySysPPRefErroDalitzWOMatErr<< endl;
+  	  
+	 }
+	}
+	
+	
+	
+	
+	
         
                                         //PCM           PHOS            EMCal           PCM-PHOS            PCM-EMCal           PCM-Dalitz          PHOS-Dalitz         EMCal-Dalitz        spare   EMCAL merged    PCMOtherDataset
-        Double_t cvMatrix[11][11] = {   { 1,            0,              0,              cvPCM_PCMPHO,       cvPCM_PCMEMC,       cvPCM_PCMDal,       0,                  0,                  0,      0,              1,              },
-                                        { 0,            1,              0,              cvPHO_PCMPHO,       0,                  0,                  cvPHO_PHODal,       0,                  0,      0,              0,              },
-                                        { 0,            0,              1,              0,                  cvEMC_PCMEMC,       0,                  0,                  cvEMC_EMCDal,       0,      cvEMC_EMCm,     0,              },
+        Double_t cvMatrix[11][11] = {   { 1,            0,              cvEMC_PCM,      cvPCM_PCMPHO,       cvPCM_PCMEMC,       cvPCM_PCMDal,       0,                  0,                  0,      0,              1,              },
+                                        { 0,            1,              cvEMC_PHOS,     cvPHO_PCMPHO,       0,                  0,                  cvPHO_PHODal,       0,                  0,      0,              0,              },
+                                        { cvEMC_PCM,    cvEMC_PHOS,     1,              0,                  cvEMC_PCMEMC,       cvEMC_PCMDal,        0,                  cvEMC_EMCDal,       0,      cvEMC_EMCm,     0,              },
                                         { cvPCM_PCMPHO, cvPHO_PCMPHO,   0,              1,                  cvPCMPHO_PCMEMC,    cvPCMPHO_PCMDal,    cvPCMPHO_PHODal,    0,                  0,      0,              0,              },
                                         { cvPCM_PCMEMC, 0,              cvEMC_PCMEMC,   cvPCMPHO_PCMEMC,    1,                  cvPCMEMC_PCMDal,    0,                  cvPCMEMC_EMCDal,    0,      cvPCMEMC_EMCm,  0,              },
-                                        { cvPCM_PCMDal, 0,              0,              cvPCMPHO_PCMDal,    cvPCMEMC_PCMDal,    1,                  cvPCMDal_PHODal,    cvPCMDal_EMCDal,    0,      0,              cvPCM_PCMDal,   },
+                                        { cvPCM_PCMDal, 0,              cvEMC_PCMDal,   cvPCMPHO_PCMDal,    cvPCMEMC_PCMDal,    1,                  cvPCMDal_PHODal,    cvPCMDal_EMCDal,    0,      0,              cvPCM_PCMDal,   },
                                         { 0,            cvPHO_PHODal,   0,              cvPCMPHO_PHODal,    0,                  cvPCMDal_PHODal,    1,                  cvPHODal_EMCDal,    0,      0,              cvPCM_PCMEMC,   },
                                         { 0,            0,              cvEMC_EMCDal,   0,                  cvPCMEMC_EMCDal,    cvPCMDal_EMCDal,    cvPHODal_EMCDal,    1,                  0,      cvEMCDal_EMCm,  cvPCM_PCMPHO,   },
                                         { 0,            0,              0.,             0,                  0,                  0,                  0,                  0,                  1,      0,              0,              },

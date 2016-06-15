@@ -152,6 +152,8 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   Double_t ScalingErr = 0.031; //pure NSD Err
   Double_t Scaling = 0.964;// NSD Err
   Double_t ScalingErrTpPb =   0.0356; //Normalization Err on TpPb
+
+  Double_t NormalizationError =TMath::Sqrt(pow(0.031,2)+pow(0.036,2)+pow(0.036,2));//pPb normalization,TpPb and pp normalization errors
   //cout << dateForOutput.Data() << endl;
   //___________________________________ Declaration of files _____________________________________________
 
@@ -225,7 +227,14 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   for (Int_t i = 0; i< 11; i++){
     sysErrorCollection[i]                           = NULL;
   }    
-    
+  
+  
+  TGraphAsymmErrors* sysErrorPPReference[11];   //NOTE this histo is to compute the correlation factor as a function of pT
+  
+    for (Int_t i = 0; i< 11; i++){
+      sysErrorPPReference[i]                           = NULL;
+    }    
+     
  
   // **************************************************************************************
   // ****************************** Reading Dalitz ****************************************
@@ -312,27 +321,32 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
 
   statErrorCollection[0]          = (TH1D*)histoPCMYieldPi0pPb->Clone("statErrPCMPi0");
   statErrorCollection[1]          = (TH1D*)histoPHOSYieldPi0pPb->Clone("statErrPHOSPi0");
-  //   statErrorCollection[2]          = (TH1D*)histoEMCalYieldPi0pPb->Clone("statErrEMCalPi0");
-  //   statErrorCollection[5]          = (TH1D*)histoDalitzYieldPi0pPb->Clone("statErrDalitzPi0");
+  statErrorCollection[2]          = (TH1D*)histoEMCalYieldPi0pPb->Clone("statErrEMCalPi0");
+  statErrorCollection[5]          = (TH1D*)histoDalitzYieldPi0pPb->Clone("statErrDalitzPi0");
     
   sysErrorCollection[0]           = (TGraphAsymmErrors*)graphPCMYieldPi0pPbSystErr->Clone("sysErrPCMPi0");
   sysErrorCollection[1]           = (TGraphAsymmErrors*)graphPHOSYieldPi0pPbSystErr->Clone("sysErrPHOSPi0");
-  //    sysErrorCollection[2]           = (TGraphAsymmErrors*)graphEMCalYieldPi0pPbSystErr->Clone("sysErrEMCalPi0");
-  //    sysErrorCollection[5]           = (TGraphAsymmErrors*)graphDalitzYieldPi0pPbSystErr->Clone("sysErrDalitzPi0");
+  sysErrorCollection[2]           = (TGraphAsymmErrors*)graphEMCalYieldPi0pPbSystErr->Clone("sysErrEMCalPi0");
+  sysErrorCollection[5]           = (TGraphAsymmErrors*)graphDalitzYieldPi0pPbSystErr->Clone("sysErrDalitzPi0");
   cout << "Sys Error PCM:" <<endl;
   graphPCMYieldPi0pPbSystErr->Print();    cout << "Sys Error PHOS:" <<endl;
   graphPHOSYieldPi0pPbSystErr->Print();  cout << "Sys Error Dalitz:" <<endl;
   graphDalitzYieldPi0pPbSystErr->Print();
+
+  sysErrorPPReference[0]  = (TGraphAsymmErrors*)graphPCMppreferenceSystErr->Clone("sysErrPPRefPCMPi0");
+  sysErrorPPReference[1]  = (TGraphAsymmErrors*)graphPHOSppreferenceSystErr->Clone("sysErrPPRefPHOSPi0");
+  sysErrorPPReference[2]  = (TGraphAsymmErrors*)graphEMCalppreferenceStatErr->Clone("sysErrPPRefEMCalPi0");
+  sysErrorPPReference[5]  = (TGraphAsymmErrors*)graphDalitzppreferenceSystErr->Clone("sysErrPPRefDalitzPi0");
     
   TGraphAsymmErrors* graphCombPi0InvCrossSectionStatpPb5023GeV= NULL;
   TGraphAsymmErrors* graphCombPi0InvCrossSectionSyspPb5023GeV = NULL;
     
-  TGraphAsymmErrors* graphCombPi0InvCrossSectionTotpPb5023GeV = CombinePtPointsSpectraFullCorrMat(    statErrorCollection,    sysErrorCollection,     
+  TGraphAsymmErrors* graphCombPi0InvCrossSectionTotpPb5023GeV = CombinePtPointsSpectraFullCorrMat(   statErrorCollection,    sysErrorCollection,     
 												      pTLimits, Ntotal,
 												      offSets, offSetsSys,
 												      graphCombPi0InvCrossSectionStatpPb5023GeV, graphCombPi0InvCrossSectionSyspPb5023GeV,
-												      fileNameOutputWeightingOld,1
-												      );
+												      fileNameOutputWeightingOld,"pPb_5.023GeV_RpPb","Pi0",kFALSE,sysErrorPPReference
+												      ); 
   graphCombPi0InvCrossSectionStatpPb5023GeV->Print();
 
   if (IsNSD){
@@ -340,21 +354,21 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
     graphCombPi0InvCrossSectionStatpPb5023GeV=ScaleGraph(graphCombPi0InvCrossSectionStatpPb5023GeV,Scaling);
     graphCombPi0InvCrossSectionSyspPb5023GeV=ScaleGraph(graphCombPi0InvCrossSectionSyspPb5023GeV,Scaling);
 
-    graphCombPi0InvCrossSectionSyspPb5023GeV=ApplyNSDSysError(graphCombPi0InvCrossSectionSyspPb5023GeV,ScalingErr,ScalingErrTpPb);
+    // graphCombPi0InvCrossSectionSyspPb5023GeV=ApplyNSDSysError(graphCombPi0InvCrossSectionSyspPb5023GeV,ScalingErr,ScalingErrTpPb);//Normalization Uncertainties come as error box
 
-    graphCombPi0InvCrossSectionTotpPb5023GeV  =  CalculateCombinedSysAndStatError( graphCombPi0InvCrossSectionStatpPb5023GeV ,graphCombPi0InvCrossSectionSyspPb5023GeV );
+      graphCombPi0InvCrossSectionTotpPb5023GeV  =  CalculateCombinedSysAndStatError( graphCombPi0InvCrossSectionStatpPb5023GeV ,graphCombPi0InvCrossSectionSyspPb5023GeV );
     
     cout<< "Combined RpPb NSD scaled:" << endl;
     graphCombPi0InvCrossSectionTotpPb5023GeV->Print();
     graphCombPi0InvCrossSectionStatpPb5023GeV->Print();
     graphCombPi0InvCrossSectionSyspPb5023GeV->Print();
-  } else {
+  }//  else {
 
-   graphCombPi0InvCrossSectionSyspPb5023GeV=ApplyTpPbSysError(graphCombPi0InvCrossSectionSyspPb5023GeV,ScalingErrTpPb);
+  //  graphCombPi0InvCrossSectionSyspPb5023GeV=ApplyTpPbSysError(graphCombPi0InvCrossSectionSyspPb5023GeV,ScalingErrTpPb);
 
-    graphCombPi0InvCrossSectionTotpPb5023GeV  =  CalculateCombinedSysAndStatError( graphCombPi0InvCrossSectionStatpPb5023GeV ,graphCombPi0InvCrossSectionSyspPb5023GeV );
+  //   graphCombPi0InvCrossSectionTotpPb5023GeV  =  CalculateCombinedSysAndStatError( graphCombPi0InvCrossSectionStatpPb5023GeV ,graphCombPi0InvCrossSectionSyspPb5023GeV );
 
-  }
+  // }  //Normalization Uncertainties come as error box
 
 
     
@@ -366,13 +380,13 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   // ************************* Plotting Combined R_pPb ************************
   // **************************************************************************************
   TCanvas* canvasCombRpPb = new TCanvas("canvasCombRpPb","",200,10,1200,700);  // gives the page size
-  DrawGammaCanvasSettings( canvasCombRpPb, 0.08, 0.02, 0.02, 0.13);
+  DrawGammaCanvasSettings( canvasCombRpPb, 0.09, 0.02, 0.02, 0.13);
     
   //  canvasCombRpPb->SetLogx();
   // canvasCombRpPb->SetLogy();
   TH2F * histo2DCombined;
   histo2DCombined = new TH2F("histo2DCombined","histo2DCombined",1000,0.,20.,1000,0.3,1.7);
-  SetStyleHistoTH2ForGraphs(histo2DCombined, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
+  SetStyleHistoTH2ForGraphs(histo2DCombined, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.06, 0.9,0.6, 512, 505);
   histo2DCombined->DrawCopy();
     
 
@@ -396,14 +410,17 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   legendRpPbCombine->SetFillColor(0);
   legendRpPbCombine->SetLineColor(0);
   legendRpPbCombine->SetTextSize(0.04);
-  legendRpPbCombine->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
+  legendRpPbCombine->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"NSD, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
 
     
   legendRpPbCombine->Draw();
   
   TLine* line =new TLine(0.,1.,20.,1.);
   line->Draw("same");
- 
+  
+  TBox* BoxNorm =new TBox(0.25, 1.-NormalizationError, 0.5, 1.+NormalizationError);
+  BoxNorm->SetFillColor(4);
+  BoxNorm->Draw("same");
     
   canvasCombRpPb->Print(Form("%s/Comb_RpPb.%s",outputDir.Data(),suffix.Data()));
     
@@ -416,25 +433,25 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   if (IsNSD){
     graphDalitzYieldPi0pPb=ScaleGraph(graphDalitzYieldPi0pPb,Scaling);
     graphDalitzYieldPi0pPbSystErr=ScaleGraph(graphDalitzYieldPi0pPbSystErr,Scaling);
-    graphDalitzYieldPi0pPbSystErr=ApplyNSDSysError(graphDalitzYieldPi0pPbSystErr,ScalingErr,ScalingErrTpPb);
+    //   graphDalitzYieldPi0pPbSystErr=ApplyNSDSysError(graphDalitzYieldPi0pPbSystErr,ScalingErr,ScalingErrTpPb);
 
     graphPCMYieldPi0pPb=ScaleGraph(graphPCMYieldPi0pPb,Scaling);
     graphPCMYieldPi0pPbSystErr=ScaleGraph(graphPCMYieldPi0pPbSystErr,Scaling);
-    graphPCMYieldPi0pPbSystErr=ApplyNSDSysError(graphPCMYieldPi0pPbSystErr,ScalingErr,ScalingErrTpPb);
+    //   graphPCMYieldPi0pPbSystErr=ApplyNSDSysError(graphPCMYieldPi0pPbSystErr,ScalingErr,ScalingErrTpPb);
 
     graphPHOSYieldPi0pPb=ScaleGraph(graphPHOSYieldPi0pPb,Scaling);
     graphPHOSYieldPi0pPbSystErr=ScaleGraph(graphPHOSYieldPi0pPbSystErr,Scaling);
-    graphPHOSYieldPi0pPbSystErr=ApplyNSDSysError(graphPHOSYieldPi0pPbSystErr,ScalingErr,ScalingErrTpPb);
+    //  graphPHOSYieldPi0pPbSystErr=ApplyNSDSysError(graphPHOSYieldPi0pPbSystErr,ScalingErr,ScalingErrTpPb);
 
     graphEMCalYieldPi0pPb=ScaleGraph(graphEMCalYieldPi0pPb,Scaling);
     graphEMCalYieldPi0pPbSystErr=ScaleGraph(graphEMCalYieldPi0pPbSystErr,Scaling);
-    graphEMCalYieldPi0pPbSystErr=ApplyNSDSysError(graphEMCalYieldPi0pPbSystErr,ScalingErr,ScalingErrTpPb);
-  } else{
-    graphDalitzYieldPi0pPbSystErr=ApplyTpPbSysError(graphDalitzYieldPi0pPbSystErr,ScalingErrTpPb);
-    graphPCMYieldPi0pPbSystErr=ApplyTpPbSysError(graphPCMYieldPi0pPbSystErr,ScalingErrTpPb);
-    graphPHOSYieldPi0pPbSystErr=ApplyTpPbSysError(graphPHOSYieldPi0pPbSystErr,ScalingErrTpPb);
-    graphEMCalYieldPi0pPbSystErr=ApplyTpPbSysError(graphEMCalYieldPi0pPbSystErr,ScalingErrTpPb);
-  }
+    //  graphEMCalYieldPi0pPbSystErr=ApplyNSDSysError(graphEMCalYieldPi0pPbSystErr,ScalingErr,ScalingErrTpPb);
+  }//  else{
+  //   graphDalitzYieldPi0pPbSystErr=ApplyTpPbSysError(graphDalitzYieldPi0pPbSystErr,ScalingErrTpPb);
+  //   graphPCMYieldPi0pPbSystErr=ApplyTpPbSysError(graphPCMYieldPi0pPbSystErr,ScalingErrTpPb);
+  //   graphPHOSYieldPi0pPbSystErr=ApplyTpPbSysError(graphPHOSYieldPi0pPbSystErr,ScalingErrTpPb);
+  //   graphEMCalYieldPi0pPbSystErr=ApplyTpPbSysError(graphEMCalYieldPi0pPbSystErr,ScalingErrTpPb);
+  // }  //Normalization uncertainties come as error box!!
 
 
   TCanvas* canvasAllGARpPb = new TCanvas("canvasAllGARpPb","",200,10,1200,700);  // gives the page size
@@ -645,13 +662,13 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   // ************************* Plotting Combined R_pPb with models ************************
   // **************************************************************************************
   TCanvas* canvasCombinedWithModelsRpPb = new TCanvas("canvasCombinedWithModelsRpPb","",200,10,1200,700);  // gives the page size
-  DrawGammaCanvasSettings( canvasCombinedWithModelsRpPb, 0.08, 0.02, 0.02, 0.13);
+  DrawGammaCanvasSettings( canvasCombinedWithModelsRpPb, 0.09, 0.02, 0.02, 0.13);
     
   //  canvasCombinedWithModelsRpPb->SetLogx();
   // canvasCombinedWithModelsRpPb->SetLogy();
   TH2F * histo2DCombinedWithModels;
   histo2DCombinedWithModels = new TH2F("histo2DCombinedWithModels","histo2DCombinedWithModels",1000,0.,20.,1000,0.3,1.5);
-  SetStyleHistoTH2ForGraphs(histo2DCombinedWithModels, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
+  SetStyleHistoTH2ForGraphs(histo2DCombinedWithModels, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.06, 0.9,0.6, 512, 505);
   histo2DCombinedWithModels->DrawCopy();
     
   graphAsymmErrorsPi0DSS5000->Draw("same,E3");
@@ -680,18 +697,25 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   legendRpPbCGCPCM->SetLineColor(0);
   legendRpPbCGCPCM->SetTextSize(0.04);
   legendRpPbCGCPCM->SetTextFont(42);
-  legendRpPbCGCPCM->AddEntry(graphPi0CGC,"Color Glas Condensate","p");
+  legendRpPbCGCPCM->AddEntry(graphPi0CGC,"CGC (Lappi and M\344ntysaari)","p");
   legendRpPbESP09sPCM->Draw("same");
   legendRpPbCGCPCM->Draw("same");
 
-  
+   TLegend* legendRpPbCombine2a= new TLegend(0.1,0.75,0.55,0.85);
+  legendRpPbCombine2a->SetFillColor(0);
+  legendRpPbCombine2a->SetLineColor(0);
+  legendRpPbCombine2a->SetTextSize(0.04);
+  legendRpPbCombine2a->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"NSD, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
+
+    
+  legendRpPbCombine->Draw(); 
 
   line->Draw("same");
-  TLatex * lt2 = new TLatex(1.,1.38,"ALICE Preliminary"); 
+  TLatex * lt2 = new TLatex(1.,1.37,"ALICE Preliminary"); 
   lt2->SetTextSize(0.05) ;
   //  lt->DrawText(1.,1.45,"2016/06/14") ;
   lt2->Draw("same");
-    
+      BoxNorm->Draw("same");
   canvasCombinedWithModelsRpPb->Print(Form("%s/CombinedWithModels_RpPb.%s",outputDir.Data(),suffix.Data()));
  
 
@@ -718,11 +742,11 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   legendRpPbChargedParticles->SetFillColor(0);
   legendRpPbChargedParticles->SetLineColor(0);
   legendRpPbChargedParticles->SetTextSize(0.03);
-  legendRpPbChargedParticles->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"#pi^{0}, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
-  legendRpPbChargedParticles->AddEntry(graphRpPbChargedParticlesSystErr,"charged particles (NSD), p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
+  legendRpPbChargedParticles->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"NSD #pi^{0}, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
+  legendRpPbChargedParticles->AddEntry(graphRpPbChargedParticlesSystErr,"NSD charged particles, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
    
   legendRpPbChargedParticles->Draw();
-
+  BoxNorm->Draw("same");
   line->Draw("same");
  
     
@@ -750,11 +774,11 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   legendRpPbChargedPions->SetFillColor(0);
   legendRpPbChargedPions->SetLineColor(0);
   legendRpPbChargedPions->SetTextSize(0.03);
-  legendRpPbChargedPions->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"#pi^{0}, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
-  legendRpPbChargedPions->AddEntry(graphRpPbChargedPionsSystErr,"#pi^{+/-} (NSD), p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
+  legendRpPbChargedPions->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"NSD #pi^{0}, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
+  legendRpPbChargedPions->AddEntry(graphRpPbChargedPionsSystErr,"NSD #pi^{+/-}, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
    
   legendRpPbChargedPions->Draw();
-
+  BoxNorm->Draw("same");
   line->Draw("same");
  
     
@@ -925,7 +949,7 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
     graphCombYieldPi0pPbSystErr=ScaleGraph(graphCombYieldPi0pPbSystErr,Scaling);
     graphCombYieldPi0pPb=ScaleGraph(graphCombYieldPi0pPb,Scaling);
     
-    graphCombYieldPi0pPbSystErr=ApplyNSDSysError(graphCombYieldPi0pPbSystErr,ScalingErr,0.);
+    //  graphCombYieldPi0pPbSystErr=ApplyNSDSysError(graphCombYieldPi0pPbSystErr,ScalingErr,0.);  
     
   }
 
@@ -969,8 +993,9 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   
   TLine* line2 =new TLine(0.,1.,20.,1.);
   line2->Draw("same");
- 
-    
+
+  BoxNorm->Draw("same");
+
   canvasCombRpPb2->Print(Form("%s/RpPb_CombinedpPbSpectrum.%s",outputDir.Data(),suffix.Data()));
     
     

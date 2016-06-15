@@ -446,14 +446,13 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
 											       pTLimits, Ntotal,
 											       offSets, offSetsSys,
 											       graphCombPi0InvCrossSectionStatpPb5023GeV, graphCombPi0InvCrossSectionSyspPb5023GeV,
-											       fileNameOutputWeightingPi0,1
-											       );
+											       fileNameOutputWeightingPi0,"pPb_5.023GeV","Pi0");
+
   else graphCombPi0InvCrossSectionTotpPb5023GeV= CombinePtPointsSpectraFullCorrMat(    statErrorCollection,    sysErrorCollection,     
 										       pTLimitsLow, NtotalLow,
 										       offSetsLow, offSetsSysLow,
 										       graphCombPi0InvCrossSectionStatpPb5023GeV, graphCombPi0InvCrossSectionSyspPb5023GeV,
-										       fileNameOutputWeightingPi0,1
-										       );
+										       fileNameOutputWeightingPi0,"pPb_5.023GeV","Pi0");
   cout<< "CombinedSpectrum:" << endl;
   graphCombPi0InvCrossSectionTotpPb5023GeV->Print();
   graphCombPi0InvCrossSectionStatpPb5023GeV->Print();
@@ -464,7 +463,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
     graphCombPi0InvCrossSectionStatpPb5023GeV=ScaleGraph(graphCombPi0InvCrossSectionStatpPb5023GeV,Scaling);
     graphCombPi0InvCrossSectionSyspPb5023GeV=ScaleGraph(graphCombPi0InvCrossSectionSyspPb5023GeV,Scaling);
 
-    graphCombPi0InvCrossSectionSyspPb5023GeV=ApplyNSDSysError(graphCombPi0InvCrossSectionSyspPb5023GeV,ScalingErr);
+     graphCombPi0InvCrossSectionSyspPb5023GeV=ApplyNSDSysError(graphCombPi0InvCrossSectionSyspPb5023GeV,ScalingErr);
 
     graphCombPi0InvCrossSectionTotpPb5023GeV  =  CalculateCombinedSysAndStatError( graphCombPi0InvCrossSectionStatpPb5023GeV ,graphCombPi0InvCrossSectionSyspPb5023GeV );
     
@@ -827,11 +826,12 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   histoRatioCombPHOSStat->SetMarkerSize(1);
   histoRatioCombPHOSStat->Draw("pE1,same");
 	
-  TLatex * lt4 = new TLatex(2.8,2.,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV") ;
+  TLatex * lt4 = new TLatex(2.8,2.1,"ALICE Preliminary") ;
   lt4->SetTextColor(kBlack) ;
   lt4->SetTextSize(0.05) ;
-  if (IsNSD)  lt4->DrawLatex(2.8,1.85,"NSD #pi^{0}, ALICE");
-  else lt4->DrawLatex(2.8,1.85,"#pi^{0}, ALICE");
+  if (IsNSD)   lt4->DrawLatex(2.8,1.95,"p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV");
+  if (IsNSD)  lt4->DrawLatex(2.8,1.8,"NSD #pi^{0}");
+  else lt4->DrawLatex(2.8,1.95,"#pi^{0}, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV");
   //	lt4->DrawLatex(3.,1.8,"#pi^{0} #rightarrow #gamma#gamma");
   //	lt4->DrawLatex(2.8,1.8,"#pi^{0} #rightarrow #gamma#gamma, #pi^{0} #rightarrow e^{+}e^{-}#gamma");
   lt4->Draw() ;
@@ -1083,7 +1083,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
     graphCombEtaInvCrossSectionStatpPb5023GeV=ScaleGraph(graphCombEtaInvCrossSectionStatpPb5023GeV,Scaling);
     graphCombEtaInvCrossSectionSyspPb5023GeV=ScaleGraph(graphCombEtaInvCrossSectionSyspPb5023GeV,Scaling);
 
-    graphCombEtaInvCrossSectionSyspPb5023GeV=ApplyNSDSysError(graphCombEtaInvCrossSectionSyspPb5023GeV,ScalingErr);
+     graphCombEtaInvCrossSectionSyspPb5023GeV=ApplyNSDSysError(graphCombEtaInvCrossSectionSyspPb5023GeV,ScalingErr);
 
     graphCombEtaInvCrossSectionTotpPb5023GeV  =  CalculateCombinedSysAndStatError( graphCombEtaInvCrossSectionStatpPb5023GeV ,graphCombEtaInvCrossSectionSyspPb5023GeV );
     
@@ -1444,11 +1444,12 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   DrawGammaSetMarker(histoRatioCombEtaEMCalStat, 33,1.5 ,kGreen+2 ,kGreen+2);
   histoRatioCombEtaEMCalStat->Draw("E1,same") ;
 	
-  TLatex * lt4a = new TLatex(2.8,2.0,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV") ;
+  TLatex * lt4a = new TLatex(2.8,2.1,"ALICE Preliminary") ;
   lt4a->SetTextColor(kBlack) ;
-  lt4a->SetTextSize(0.05) ;
-  if (IsNSD)lt4a->DrawLatex(2.8,1.85,"NSD #eta, ALICE");
-  else  lt4a->DrawLatex(2.8,1.85,"#eta, ALICE");
+  lt4a->SetTextSize(0.05) ; 
+  if (IsNSD)lt4a->DrawLatex(2.8,1.95,"p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV");
+  if (IsNSD)lt4a->DrawLatex(2.8,1.8,"NSD #eta");
+  else  lt4a->DrawLatex(2.8,1.95,"#eta, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV");
   //	lt4->DrawLatex(3.,1.8,"#pi^{0} #rightarrow #gamma#gamma");
   //	lt4->DrawLatex(2.8,1.8,"#pi^{0} #rightarrow #gamma#gamma, #pi^{0} #rightarrow e^{+}e^{-}#gamma");
   lt4a->Draw("same");
@@ -1849,11 +1850,11 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
 
                                    
   TCanvas* canvasYShiftEtaPi0Ratio = new TCanvas("canvasYShiftEtaPi0Ratio","",200,10,500,400);  // gives the page size
-  DrawGammaCanvasSettings( canvasYShiftEtaPi0Ratio, 0.1, 0.02, 0.02, 0.11);
+  DrawGammaCanvasSettings( canvasYShiftEtaPi0Ratio, 0.11, 0.02, 0.02, 0.12);
 
   TH2F * histo2DCompCombinedYShiftEtaPi0Ratio;
   histo2DCompCombinedYShiftEtaPi0Ratio = new TH2F("histo2DCompCombinedYShiftEtaPi0Ratio","histo2DCompCombinedYShiftEtaPi0Ratio",1000,0.3,16.,1000,0.,1.   );
-  SetStyleHistoTH2ForGraphs(histo2DCompCombinedYShiftEtaPi0Ratio, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0} ", 0.03,0.04, 0.03,0.05, 1.0,.8, 512, 508);
+  SetStyleHistoTH2ForGraphs(histo2DCompCombinedYShiftEtaPi0Ratio, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0} ", 0.05,0.05, 0.05,0.06, 1.0,.8, 512, 508);
   histo2DCompCombinedYShiftEtaPi0Ratio->DrawCopy(); 
       
 
@@ -1878,7 +1879,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   TLegend* legendRpPbCombineYShiftEtaPi0Ratio = new TLegend(0.15,0.75,0.5,0.90);
   legendRpPbCombineYShiftEtaPi0Ratio->SetFillColor(0);
   legendRpPbCombineYShiftEtaPi0Ratio->SetLineColor(0);
-  legendRpPbCombineYShiftEtaPi0Ratio->SetTextSize(0.03);
+  legendRpPbCombineYShiftEtaPi0Ratio->SetTextSize(0.04);
   legendRpPbCombineYShiftEtaPi0Ratio->AddEntry(graphCombEtaPi0RatioSyspPb5023GeV,"#eta/#pi^{0} combined","pef");
   legendRpPbCombineYShiftEtaPi0Ratio->AddEntry(graphPCMEtaPi0RatioSystErrYShift,"#eta/#pi^{0} PCM","pef");
   legendRpPbCombineYShiftEtaPi0Ratio->AddEntry(graphEMCalEtaPi0RatioSystErrYShift,"#eta/#pi^{0} EMCal","pef");
@@ -1889,7 +1890,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
 	
   TLatex * lt4b = new TLatex(9.,0.9,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV") ;
   lt4b->SetTextColor(kBlack) ;
-  lt4b->SetTextSize(0.04) ;
+  lt4b->SetTextSize(0.05) ;
   lt4b->Draw("same") ;
 
   canvasYShiftEtaPi0Ratio->Update();
@@ -1897,11 +1898,11 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
 
                                    
   TCanvas* canvasYShiftEtaPi0RatioPrelim = new TCanvas("canvasYShiftEtaPi0RatioPrelim","",200,10,500,400);  // gives the page size
-  DrawGammaCanvasSettings( canvasYShiftEtaPi0RatioPrelim, 0.1, 0.02, 0.02, 0.11);
+  DrawGammaCanvasSettings( canvasYShiftEtaPi0RatioPrelim, 0.11, 0.02, 0.02, 0.12);
 
   TH2F * histo2DCompCombinedYShiftEtaPi0RatioPrelim;
   histo2DCompCombinedYShiftEtaPi0RatioPrelim = new TH2F("histo2DCompCombinedYShiftEtaPi0RatioPrelim","histo2DCompCombinedYShiftEtaPi0RatioPrelim",1000,0.3,16.,1000,0.,1.   );
-  SetStyleHistoTH2ForGraphs(histo2DCompCombinedYShiftEtaPi0RatioPrelim, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0} ", 0.03,0.04, 0.03,0.05, 1.0,.8, 512, 508);
+  SetStyleHistoTH2ForGraphs(histo2DCompCombinedYShiftEtaPi0RatioPrelim, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0} ", 0.05,0.05, 0.05,0.06, 1.,.8, 512, 508);
   histo2DCompCombinedYShiftEtaPi0RatioPrelim->DrawCopy(); 
       
   
@@ -1923,7 +1924,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
 	
   TLatex * lt4Pre = new TLatex(9.,0.9,"ALICE Preliminary") ;
   lt4Pre->SetTextColor(kBlack) ;
-  lt4Pre->SetTextSize(0.04) ; 
+  lt4Pre->SetTextSize(0.05) ; 
  lt4Pre->DrawLatex(9.,0.8,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV");
   lt4Pre->Draw("same") ;
 
@@ -1962,11 +1963,11 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   TGraphAsymmErrors* graphCombEtaToPi0RatioSysErrpp7TeV=    (TGraphAsymmErrors*)fileCombinedpp->Get("graphEtaToPi0Comb7TeVSys"); 
                                  
   TCanvas* canvasYShiftEtaPi0RatioALICE = new TCanvas("canvasYShiftEtaPi0RatioALICE","",200,10,500,400);  // gives the page size
-  DrawGammaCanvasSettings( canvasYShiftEtaPi0RatioALICE, 0.1, 0.02, 0.02, 0.11);
+  DrawGammaCanvasSettings( canvasYShiftEtaPi0RatioALICE, 0.11, 0.02, 0.02, 0.12);
 
   TH2F * histo2DCompCombinedYShiftEtaPi0RatioALICE;
   histo2DCompCombinedYShiftEtaPi0RatioALICE = new TH2F("histo2DCompCombinedYShiftEtaPi0RatioALICE","histo2DCompCombinedYShiftEtaPi0RatioALICE",1000,0.3,16.,1000,0.,1.   );
-  SetStyleHistoTH2ForGraphs(histo2DCompCombinedYShiftEtaPi0RatioALICE, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0} ", 0.03,0.04, 0.03,0.05, 1.0,.8, 512, 508);
+  SetStyleHistoTH2ForGraphs(histo2DCompCombinedYShiftEtaPi0RatioALICE, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0} ", 0.05,0.05, 0.05,0.06, 1.0,.8, 512, 508);
   histo2DCompCombinedYShiftEtaPi0RatioALICE->DrawCopy(); 
       
   cocktailEtaToPi0Ratio_MtScaledRebinned->GetXaxis()->SetRangeUser(0.3,16);
@@ -1985,10 +1986,11 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   DrawGammaSetMarkerTGraphAsym(graphCombEtaPi0RatioSyspPb5023GeV,24,1, 4, 4, 1, kTRUE);  
   graphCombEtaPi0RatioSyspPb5023GeV->Draw("E2,same");
      
-  TLegend* legendRpPbCombineYShiftEtaPi0RatioALICE = new TLegend(0.15,0.75,0.5,0.90);
+  //  TLegend* legendRpPbCombineYShiftEtaPi0RatioALICE = new TLegend(0.15,0.75,0.5,0.90);
+  TLegend* legendRpPbCombineYShiftEtaPi0RatioALICE = new TLegend(0.15,0.78,0.5,0.93);
   legendRpPbCombineYShiftEtaPi0RatioALICE->SetFillColor(0);
   legendRpPbCombineYShiftEtaPi0RatioALICE->SetLineColor(0);
-  legendRpPbCombineYShiftEtaPi0RatioALICE->SetTextSize(0.03);
+  legendRpPbCombineYShiftEtaPi0RatioALICE->SetTextSize(0.035);
   if(IsNSD)  legendRpPbCombineYShiftEtaPi0RatioALICE->AddEntry(graphCombEtaPi0RatioSyspPb5023GeV,"NSD #eta/#pi^{0} combined PCM+EMCal ","pef");
   else  legendRpPbCombineYShiftEtaPi0RatioALICE->AddEntry(graphCombEtaPi0RatioSyspPb5023GeV,"#eta/#pi^{0} combined PCM+EMCal ","pef");
   legendRpPbCombineYShiftEtaPi0RatioALICE->AddEntry(graphCombEtaToPi0RatioSysErrpp7TeV,"#eta/#pi^{0} PCM - pp 7 TeV","pef");
@@ -1997,9 +1999,10 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   
   legendRpPbCombineYShiftEtaPi0RatioALICE->Draw("same");
 	
-  TLatex * lt4c = new TLatex(9.,0.9,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV") ;
+  //  TLatex * lt4c = new TLatex(9.,0.9,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV") ;
+  TLatex * lt4c = new TLatex(7.,0.15,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV") ;
   lt4c->SetTextColor(kBlack) ;
-  lt4c->SetTextSize(0.04) ;
+  lt4c->SetTextSize(0.05) ;
   lt4c->Draw("same") ;
 
   canvasYShiftEtaPi0RatioALICE->Update();
