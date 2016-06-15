@@ -136,7 +136,7 @@ void QA(    TString select          = "LHC11a",         // set selected
         fEnergyFlag     = "2.76TeV";
         pathDataSets[0] = "/mnt/additionalStorage/OutputLegoTrains/pp/Legotrain-mCalo-20160527_V2ClusNewMCdef/GammaCaloMerged_LHC13g-pass1_41.root";
         pathDataSets[1] = "/mnt/additionalStorage/OutputLegoTrains/pp/Legotrain-mCalo-20160527_V2ClusNewMCdef/GammaCaloMerged_MC_LHC15a3aFinerPtHardBins_LHC15a3aplusFinerPtHardBins_41.root";
-        DataSets[0]     ="LHC13g";
+        DataSets[0]     ="LHC13g_pass1";
         DataSets[1]     ="LHC15a3a";
         plotDataSets[0] ="LHC13g";
         plotDataSets[1] ="JetJet";
@@ -247,7 +247,7 @@ void QA(    TString select          = "LHC11a",         // set selected
         pathDataSets[0] = "/mnt/additionalStorage/OutputLegoTrains/pp/Legotrain-mCalo-20160527_V2ClusNewMCdef/GammaCaloMerged_LHC11a-pass4_1.root";
         pathDataSets[1] = "/mnt/additionalStorage/OutputLegoTrains/pp/Legotrain-mCalo-20160527_V2ClusNewMCdef/GammaCaloMerged_MC_LHC15g1aFinerPtHardBins_1.root";
         
-        DataSets[0]="LHC11a_p4_wSDD"; DataSets[1]="LHC15g1a";
+        DataSets[0]="LHC11a_pass4_wSDD"; DataSets[1]="LHC15g1a";
         plotDataSets[0]="LHC11a"; plotDataSets[1]="JetJet";
         pathPhotonQA[0] = "";
         pathPhotonQA[1] = "";

@@ -192,6 +192,7 @@ void EventQA(
     //************************** Define output directories*************************************************
     //*****************************************************************************************************    
     TString outputDir                   = Form("%s/%s/EventQA/%s",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
+    TString outputDirRootFile           = Form("%s/%s/EventQA/",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
     if(addSubfolder) outputDir          +=Form("/%s",DataSets[0].Data());
 
     gSystem->Exec("mkdir -p "+outputDir);
@@ -221,7 +222,7 @@ void EventQA(
     //*****************************************************************************************************
 
     fstream fLog;
-    fLog.open(Form("%s/A-%s.log",outputDir.Data(),DataSets[0].Data()), ios::out);
+    fLog.open(Form("%s/A-%s.log",outputDirRootFile.Data(),DataSets[0].Data()), ios::out);
     fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     for(Int_t i=0; i<nSets; i++) fLog << "Using file: " << pathDataSets[i].Data() << endl;
     fLog << fCollisionSystem.Data() << endl;
@@ -379,7 +380,7 @@ void EventQA(
         //-------------------------------------------------------------------------------------------------------------------------------
         if( nEvents[i] < 1. ){cout << "ERROR: number of accepted events in data set is <1: " << nEvents[i] << "! Returning..." << endl; return;}
         //-------------------------------------------------------------------------------------------------------------------------------
-        const char* nameOutput = Form("%s/%s/EventQA/EventQA_%s.root",fCutSelection[i].Data(),fEnergyFlag.Data(),DataSets[i].Data());
+        const char* nameOutput = Form("%s/EventQA_%s.root",outputDirRootFile.Data(),DataSets[i].Data());
         TFile* fOutput = new TFile(nameOutput,"RECREATE");
         cout << endl;
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;

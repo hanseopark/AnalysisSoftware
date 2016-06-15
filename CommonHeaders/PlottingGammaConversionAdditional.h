@@ -3982,7 +3982,11 @@ void PlotErrorBarAtUpperEdgeOfTGraphAsymErr(TGraphAsymmErrors* graph,
 
 Color_t GetDefaultTriggerColor( TString periodName, 
                                 Int_t SpecialTrigger){
-    if(periodName.CompareTo("LHC11a")==0||periodName.CompareTo("LHC11a_p4_wSDD")==0||periodName.CompareTo("LHC11a_p4_wSDD-kEMC1")==0){
+    if( periodName.CompareTo("LHC11a") == 0                 ||
+        periodName.CompareTo("LHC11a_p4_wSDD") == 0         ||
+        periodName.CompareTo("LHC11a_p4_wSDD-kEMC1") == 0   ||
+        periodName.CompareTo("LHC11a_pass4_wSDD") == 0         
+    ){
         switch(SpecialTrigger)
         {
         case 3:
@@ -3993,11 +3997,14 @@ Color_t GetDefaultTriggerColor( TString periodName,
             cout << "GetDefaultTriggerMarker(): no valid input parameters '" << SpecialTrigger << "' given for period: " << periodName.Data() << endl;
             return kBlack;
         }
-    }else if(periodName.CompareTo("LHC13g")==0||periodName.CompareTo("LHC13g-kEMC7")==0||
-            periodName.CompareTo("LHC13g-kEMCEG1")==0||periodName.CompareTo("LHC13g-kEMCEG2")==0)	{
+    }else if(periodName.CompareTo("LHC13g") == 0            || periodName.CompareTo("LHC13g-kEMC7") == 0        ||
+             periodName.CompareTo("LHC13g-kEMCEG1") == 0    || periodName.CompareTo("LHC13g-kEMCEG2") == 0      ||
+             periodName.CompareTo("LHC13g_pass1") == 0 )	{
         switch(SpecialTrigger)
         {
         case 0:
+            return kBlack;
+        case 10:
             return kBlack;
         case 52:
             return kAzure;
@@ -4047,7 +4054,11 @@ Color_t GetDefaultTriggerColor( TString periodName,
 
 Style_t GetDefaultTriggerMarker( TString periodName, 
                                 Int_t SpecialTrigger){
-    if(periodName.CompareTo("LHC11a")==0||periodName.CompareTo("LHC11a_p4_wSDD")==0||periodName.CompareTo("LHC11a_p4_wSDD-kEMC1")==0){
+    if( periodName.CompareTo("LHC11a") == 0                 ||
+        periodName.CompareTo("LHC11a_p4_wSDD") == 0         || 
+        periodName.CompareTo("LHC11a_p4_wSDD-kEMC1") == 0   ||
+        periodName.CompareTo("LHC11a_pass4_wSDD") == 0         
+    ){
         switch(SpecialTrigger)
         {
         case 3:
@@ -4058,11 +4069,15 @@ Style_t GetDefaultTriggerMarker( TString periodName,
             cout << "GetDefaultTriggerMarker(): no valid input parameters '" << SpecialTrigger << "' given for period: " << periodName.Data() << endl;
             return 29;
         }
-    }else if(periodName.CompareTo("LHC13g")==0||periodName.CompareTo("LHC13g-kEMC7")==0||
-                periodName.CompareTo("LHC13g-kEMCEG1")==0||periodName.CompareTo("LHC13g-kEMCEG2")==0){
+    }else if(   periodName.CompareTo("LHC13g") == 0         || periodName.CompareTo("LHC13g-kEMC7") == 0    ||
+                periodName.CompareTo("LHC13g-kEMCEG1") == 0 || periodName.CompareTo("LHC13g-kEMCEG2") == 0  ||
+                periodName.CompareTo("LHC13g_pass1") == 0
+            ){
         switch(SpecialTrigger)
         {
         case 0:
+            return 20;
+        case 10:
             return 20;
         case 52:
             return 21;

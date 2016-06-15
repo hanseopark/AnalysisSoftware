@@ -211,11 +211,14 @@ void ClusterQA(
     //*****************************************************************************************************
     //************************** Define output directories*************************************************
     //*****************************************************************************************************    
-    TString outputDir   = "";
+    TString outputDir           = "";
+    TString outputDirRootFiles  = "";
     if (!runMergedClust){
-        outputDir       = Form("%s/%s/ClusterQA/%s",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
+        outputDir               = Form("%s/%s/ClusterQA/%s",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
+        outputDirRootFiles      = Form("%s/%s/ClusterQA",cuts.at(cutNr).Data(),fEnergyFlag.Data());
     } else {
-        outputDir       = Form("%s/%s/MergedClusterQA/%s",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
+        outputDir               = Form("%s/%s/MergedClusterQA/%s",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
+        outputDirRootFiles      = Form("%s/%s/MergedClusterQA/",cuts.at(cutNr).Data(),fEnergyFlag.Data());
     }    
     if(addSubfolder) 
         outputDir       +=Form("/%s",DataSets[0].Data());
@@ -266,7 +269,7 @@ void ClusterQA(
     //*****************************************************************************************************
 
     fstream fLog;
-    fLog.open(Form("%s/A-%s.log",outputDir.Data(),DataSets[0].Data()), ios::out);
+    fLog.open(Form("%s/A-%s.log",outputDirRootFiles.Data(),DataSets[0].Data()), ios::out);
     fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     for(Int_t i=0; i<nSets; i++) fLog << "Using file: " << pathDataSets[i].Data() << endl;
     fLog << "Energy: " << fEnergyFlag.Data() << endl;
@@ -628,7 +631,7 @@ void ClusterQA(
         if( nEvents[i] < 1. ){cout << "ERROR: number of accepted events in data set is <1: " << nEvents[i] << "! Returning..." << endl; return;}
         
         //---------------------------------------------------------------------------------------------------------------
-        const char* nameOutput = Form("%s/ClusterQA_%s.root",outputDir.Data(),DataSets[i].Data());
+        const char* nameOutput = Form("%s/ClusterQA_%s.root",outputDirRootFiles.Data(),DataSets[i].Data());
         TFile* fOutput = new TFile(nameOutput,"RECREATE");
         cout << endl;
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -2886,7 +2889,7 @@ void ClusterQA(
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "Drawing Special Histograms" << endl;
 
-    const char* nameOutput = Form("%s/ClusterQA_%s.root",outputDir.Data(),DataSets[0].Data());
+    const char* nameOutput = Form("%s/ClusterQA_%s.root",outputDirRootFiles.Data(),DataSets[0].Data());
     TFile* fOutput = new TFile(nameOutput,"UPDATE");
 
     //---------------------------------------------------------------------------------------------------------------
@@ -3824,7 +3827,7 @@ void ClusterQA(
             PlotBadCellComparisonVec(DataMCHists,colorCompare,allCells,canvas,outputDir,suffix,fClusters,plotDataSets,fCollisionSystem);
         }
 
-        char* nameOutput = Form("%s/ClusterQA_%s.root",outputDir.Data(),DataSets[0].Data());
+        char* nameOutput = Form("%s/ClusterQA_%s.root",outputDirRootFiles.Data(),DataSets[0].Data());
         TFile* fOutput = new TFile(nameOutput,"UPDATE");
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         cout << "Reopening Output file: " << nameOutput << " to store BadCellCandidates" << endl;
