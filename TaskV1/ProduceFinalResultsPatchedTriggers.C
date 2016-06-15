@@ -292,7 +292,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TString outputDir =    Form("%s/%s/%s/FinalResultsTriggersPatched%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data());
     gSystem->Exec("mkdir -p "+outputDir);
    
-    gSystem->Exec(Form("cp %s %s/configurationFile.root", fileListNamePi0.Data(), outputDir.Data()));
+    gSystem->Exec(Form("cp %s %s/configurationFile.txt", fileListNamePi0.Data(), outputDir.Data()));
     
     // put correct labels if only 1 set of NLM is used for merged ana
     if (fNLMmin > 0 && mode == 10){

@@ -289,10 +289,12 @@ void ExtractSignalV2(   TString meson                   = "",
         }
     }
     if ( fMode == 4  || fMode == 5 ){
-            fHistoClustersPt                = (TH1D*)ESDContainer->FindObject("ClusGamma_Pt");
-            fHistoClustersOverlapHeadersPt  = (TH1D*)ESDContainer->FindObject("ClusGammaOverlapHeaders_Pt");
-        
+        fHistoClustersPt                = (TH1D*)ESDContainer->FindObject("ClusGamma_Pt");
+        fHistoClustersOverlapHeadersPt  = (TH1D*)ESDContainer->FindObject("ClusGammaOverlapHeaders_Pt");
     }
+    if ( fMode == 1 ){
+        fHistoClustersPt                = (TH1D*)ESDContainer->FindObject("ClusGamma_Pt");
+    }    
     
     cout << fMesonCutSelectionRead.Data() << endl;
     cout << fGammaCutSelectionRead.Data() << endl;   
