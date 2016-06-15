@@ -118,7 +118,12 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         maxPtGlobalCluster          = 30;
     } else if (mode == 10){
         maxPtGlobalCluster          = 50;
-    }    
+    }
+    if(optionEnergy.CompareTo("8TeV")==0){
+      if(mode==2 || mode==4){
+        maxPtGlobalCluster          = 50;
+      }
+    }
     
     Size_t textSizeSpectra          = 0.04;
     const Int_t MaxNumberOfFiles    = 12;
@@ -245,8 +250,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     
     // put correct color setting for different triggers
     for (Int_t i = 0; i < numberOfTrigg; i++){
-        colorTrigg[i]       = GetDefaultTriggerColorName(triggerName[i], 0);
-        colorTriggShade[i]  = GetDefaultTriggerColorName(triggerName[i], 1);
+        colorTrigg[i]       = GetDefaultTriggerColorName(triggerName[i], 0, optionEnergy);
+        colorTriggShade[i]  = GetDefaultTriggerColorName(triggerName[i], 1, optionEnergy);
         markerTrigg[i]      = GetDefaultTriggerMarkerStyleName(triggerName[i], 0);
         markerTriggMC[i]    = GetDefaultTriggerMarkerStyleName(triggerName[i], 1);
         sizeTrigg[i]        = GetDefaultTriggerMarkerSizeName(triggerName[i], 0);
@@ -553,12 +558,12 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             DrawGammaSetMarker(histoRatioRawClusterPt[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
             histoRatioRawClusterPt[i]->DrawCopy("e,same"); 
             legendTriggReject->AddEntry(histoRatioRawClusterPt[i],Form("   %s/%s",triggerNameLabel[i].Data(),triggerNameLabel[trigSteps[i][0]].Data() ),"p");
-            legendTriggReject->AddEntry((TObject*)0,Form("  %3.1f< #it{p}_{T} < %3.1f",minPt[i],maxPt[i]),"");
+            legendTriggReject->AddEntry((TObject*)0,Form("  %3.1f < #it{p}_{T} < %3.1f",minPt[i],maxPt[i]),"");
             if (triggerName[i].Contains("EMC1"))
                 legendTriggReject->AddEntry((TObject*)0,Form("     %3.0f #pm %3.0f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
             else if (triggerName[i].Contains("EMC7"))
                 legendTriggReject->AddEntry((TObject*)0,Form("     %3.1f #pm %3.1f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
-            else if (triggerName[i].Contains("EG2"))
+            else if (triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA"))
                 legendTriggReject->AddEntry((TObject*)0,Form("     %3.2f #pm %3.2f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
             else if (triggerName[i].Contains("EG1") )
                 legendTriggReject->AddEntry((TObject*)0,Form("     %3.3f #pm %3.3f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
@@ -628,6 +633,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         maxTriggRejectLin = 2000;
     if (mode == 10)
         maxTriggRejectLin = 3000;
+
+    if( optionEnergy.CompareTo("8TeV")==0 ){
+      if (mode == 2 || mode == 4)
+        maxTriggRejectLin = 310;
+    }
     
     TH2F * histo2DTriggRejectLinear;
     histo2DTriggRejectLinear = new TH2F("histo2DTriggRejectLinear","histo2DTriggRejectLinear",1000,0., maxPtGlobalCluster,15000,minTriggRejectLin, maxTriggRejectLin);
@@ -683,6 +693,12 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
             if (triggerName[i].Contains("EG1"))
                 histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,8);
+            if (optionEnergy.CompareTo("8TeV")==0){
+              if (triggerName[i].Contains("EMC7"))
+                  histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,150);
+              if (triggerName[i].Contains("EGA"))
+                  histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,300);
+            }
                 
             histo2DTriggRejectLinear->DrawCopy(); 
 
@@ -713,8 +729,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             legendTriggRejectSingle->SetMargin(0.02);
             legendTriggRejectSingle->SetNColumns(3);
             legendTriggRejectSingle->AddEntry(histoRatioRawClusterPt[i],Form("   %s/%s",triggerNameLabel[i].Data(),triggerNameLabel[trigSteps[i][0]].Data() ),"p");
-            legendTriggRejectSingle->AddEntry((TObject*)0,Form("%3.1f< #it{p}_{T} < %3.1f",minPt[i],maxPt[i]),"");
-            legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.2f#pm%3.2f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+            legendTriggRejectSingle->AddEntry((TObject*)0,Form("  %3.1f < #it{p}_{T} < %3.1f",minPt[i],maxPt[i]),"");
+            legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.2f #pm %3.2f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
             legendTriggRejectSingle->Draw();
 
             histo2DTriggRejectLinear->Draw("same,axis");
@@ -796,6 +812,15 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         minClusYieldUnscaled         = 7e-10;
         maxClusYieldUnscaled         = 5;
     }
+    if(optionEnergy.CompareTo("8TeV")==0){
+      if (mode == 2) {
+          minClusYieldUnscaled         = 7e-10;
+          maxClusYieldUnscaled         = 5;
+      } else if (mode == 4) {
+          minClusYieldUnscaled         = 7e-10;
+          maxClusYieldUnscaled         = 5;
+      }
+    }
     TH2F * histo2DClusUnscaled       = new TH2F("histo2DClusUnscaled", "histo2DClusUnscaled", 1000, 0., maxPtGlobalCluster, 10000, minClusYieldUnscaled, maxClusYieldUnscaled);
     SetStyleHistoTH2ForGraphs(histo2DClusUnscaled, "#it{p}_{T} (GeV/#it{c})","#frac{d#it{N}_{#gamma, raw}}{#it{N}_{evt}d#it{p}_{T}} (#it{c}/GeV)^{2}", 
                             0.85*textSizeSpectra,0.04, 0.85*textSizeSpectra,textSizeSpectra, 0.8,1.7);
@@ -810,6 +835,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     }
     Double_t maxYLegendClus = 0.95;
     Double_t minYLegendClus = 0.95-(nrOfTrigToBeComb/nColumnsClus*0.75*textSizeSpectra);
+    if(optionEnergy.CompareTo("8TeV")==0) minYLegendClus-=0.03;
     
     TLegend* legendClusUnscaled      = GetAndSetLegend2(minXLegendClus, minYLegendClus, 0.95, maxYLegendClus,0.85*textSizePixelSpectra);
     legendClusUnscaled->SetNColumns(nColumnsClus);
@@ -854,13 +880,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
     Double_t minEffiPi0 = 1e-4;
     Double_t maxEffiPi0 = 1e-1;
-    if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1) minEffiPi0 = 1e-5;
     if (mode == 4) maxEffiPi0 = 8e-1;
     if (mode == 10) maxEffiPi0 = 8e-1;
 
+    if(optionEnergy.CompareTo("8TeV")==0){
+      if (mode == 2) minEffiPi0 = 5e-5;
+    }
+
     TH2F * histo2DEffiPi0;
     histo2DEffiPi0 = new TH2F("histo2DEffiPi0","histo2DEffiPi0",1000,0., maxPtGlobalPi0,10000,minEffiPi0, maxEffiPi0);
-    SetStyleHistoTH2ForGraphs(histo2DEffiPi0, "#it{p}_{T} (GeV/#it{c})","#epsilon_{#pi^{0}}", 
+    SetStyleHistoTH2ForGraphs(histo2DEffiPi0, "#it{p}_{T} (GeV/#it{c})","#epsilon_{reco} #times #epsilon_{trigg}",
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);
     histo2DEffiPi0->DrawCopy(); 
 
@@ -974,6 +1003,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
     Double_t minAccPi0 = 0.15;
     Double_t maxAccPi0 = 0.3;
+    if(optionEnergy.CompareTo("8TeV")==0){
+      if(mode == 2) minAccPi0 = 0.17;
+    }
 
     TH2F * histo2DAccPi0;
     histo2DAccPi0 = new TH2F("histo2DAccPi0","histo2DAccPi0",1000,0., maxPtGlobalPi0,10000,minAccPi0, maxAccPi0);
@@ -1066,7 +1098,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     DrawGammaCanvasSettings( canvasMass, 0.11, 0.017, 0.015, 0.08);
     Double_t minMassPi0         = 0.120;
     Double_t maxMassPi0         = 0.160;
-    if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1) maxMassPi0 = 0.150;
+    if(optionEnergy.CompareTo("8TeV")==0) maxMassPi0 = 0.150;
     TH2F * histo2DMassPi0       = new TH2F("histo2DMassPi0","histo2DMassPi0",1000,0., maxPtGlobalPi0,10000,minMassPi0, maxMassPi0);
     SetStyleHistoTH2ForGraphs(histo2DMassPi0, "#it{p}_{T} (GeV/#it{c})","#it{M}_{#pi^{0}} (Mev/#it{c}^{2})", 
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.4);
@@ -1102,7 +1134,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
         legendMassPi0->SetNColumns(2);
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (i == 0 || i == 2){
+            if((optionEnergy.CompareTo("2.76TeV")==0 && (i==0 || i==2)) ||
+               (optionEnergy.CompareTo("8TeV")==0)
+               ){
                 DrawGammaSetMarker(histoMassPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                 histoMassPi0Data[i]->DrawCopy("e1,same"); 
                 legendMassPi0->AddEntry(histoMassPi0Data[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
@@ -1131,7 +1165,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         
         legendMassPi02->SetNColumns(2);
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (i == 1 || i == 3 || i == 4 || i== 5){
+          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==1 || i==3 || i==4 || i==5)) ||
+             (optionEnergy.CompareTo("8TeV")==0)
+             ){
                 DrawGammaSetMarker(histoMassPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                 histoMassPi0Data[i]->DrawCopy("e1,same"); 
                 legendMassPi02->AddEntry(histoMassPi0Data[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
@@ -1156,7 +1192,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
         legendWidthPi0->SetNColumns(2);
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (i == 0 || i == 2){
+          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==0 || i==2)) ||
+             (optionEnergy.CompareTo("8TeV")==0)
+             ){
                 DrawGammaSetMarker(histoWidthPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                 histoWidthPi0Data[i]->DrawCopy("e1,same"); 
                 legendWidthPi0->AddEntry(histoWidthPi0Data[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
@@ -1183,7 +1221,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
         legendWidthPi02->SetNColumns(2);
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (i == 1 || i == 3 || i == 4 || i== 5){
+          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==1 || i==3 || i==4 || i==5)) ||
+             (optionEnergy.CompareTo("8TeV")==0)
+             ){
                 DrawGammaSetMarker(histoWidthPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                 histoWidthPi0Data[i]->DrawCopy("e1,same"); 
                 legendWidthPi02->AddEntry(histoWidthPi0Data[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
@@ -1212,20 +1252,21 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     
     Double_t minCorrYieldRawUnscaled    = 7e-8;
     Double_t maxCorrYieldRawUnscaled    = 4e-2;
-    if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1){
-      minCorrYieldRawUnscaled    = 2e-8;
-      maxCorrYieldRawUnscaled    = 2e-3;
-    }
     if (mode == 10) {
         minCorrYieldRawUnscaled         = 2e-12;
         maxCorrYieldRawUnscaled         = 1;
     } else if (mode == 4) {
         minCorrYieldRawUnscaled         = 7e-8;
         maxCorrYieldRawUnscaled         = 1;
-        if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1){
-          minCorrYieldRawUnscaled         = 7e-8;
-          maxCorrYieldRawUnscaled         = 2e-3;
-        }
+    }
+
+    if(optionEnergy.CompareTo("8TeV")==0){
+      minCorrYieldRawUnscaled    = 2e-8;
+      maxCorrYieldRawUnscaled    = 8e-3;
+      if(mode == 4){
+        minCorrYieldRawUnscaled         = 7e-8;
+        maxCorrYieldRawUnscaled         = 8e-3;
+      }
     }
     TH2F * histo2DRawUnscaled       = new TH2F("histo2DRawUnscaled", "histo2DRawUnscaled", 1000, 0., maxPtGlobalPi0, 10000, minCorrYieldRawUnscaled, maxCorrYieldRawUnscaled);
     SetStyleHistoTH2ForGraphs(histo2DRawUnscaled, "#it{p}_{T} (GeV/#it{c})","#frac{d#it{N}_{#pi_{0}, raw}}{#it{N}_{evt}d#it{p}_{T}} (#it{c}/GeV)^{2}", 
@@ -1241,6 +1282,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     }
     Double_t maxYLegendRaw = 0.95;
     Double_t minYLegendRaw = 0.95-(nrOfTrigToBeComb/nColumnsRaw*0.75*textSizeSpectra);
+    if(optionEnergy.CompareTo("8TeV")==0) minYLegendRaw-=0.03;
     
     TLegend* legendRawUnscaled      = GetAndSetLegend2(minXLegendRaw, minYLegendRaw, 0.95, maxYLegendRaw,0.85*textSizePixelSpectra);
     legendRawUnscaled->SetNColumns(nColumnsRaw);
@@ -1721,8 +1763,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 graphOrderedEffTimesAccPi0[3]   = graphEffTimesAccPi0[i];
             if (graphPurityPi0[i])
                 graphOrderedPurityPi0[3]        = graphPurityPi0[i];
-        } else if ((triggerName[i].CompareTo("EG2") == 0 || triggerName[i].CompareTo("EG2_NLM2") == 0) && graphsCorrectedYieldShrunkPi0[i]){   
-            cout << "filling EG2 trigger" << endl;
+        } else if ((triggerName[i].CompareTo("EG2") == 0 || triggerName[i].CompareTo("EG2_NLM2") == 0 ||  triggerName[i].CompareTo("EGA") == 0) && graphsCorrectedYieldShrunkPi0[i]){
+            cout << "filling EG2/EGA trigger" << endl;
             histoStatPi0[4]     = histoCorrectedYieldPi0ScaledMasked[i];
             graphSystPi0[4]     = graphsCorrectedYieldSysShrunkPi0[i];
             offSetsPi0Sys[4]    = histoStatPi0[4]->GetXaxis()->FindBin(graphSystPi0[4]->GetX()[0])-1;
@@ -1927,7 +1969,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         Int_t nPtBinsReadPi0            = 0;
         
         // labeling and plotting settings
-        TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", "EG2", "EG1",
+        TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", "EG2/EGA", "EG1",
                                             "INT1_NLM1", "INT7_NLM1", "EMC1_NLM1", "EMC7_NLM1", "EG2_NLM1", "EG1_NLM1"};
         Color_t colorTriggWeighted[12]   = {GetDefaultTriggerColorName(nameTriggerWeighted[0], 0),
                                            GetDefaultTriggerColorName(nameTriggerWeighted[1], 0),
@@ -2333,7 +2375,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         
         legendMassRedPi0->SetNColumns(2);
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (i == 0 || i == 2){
+          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==0 || i==2)) ||
+             (optionEnergy.CompareTo("8TeV")==0)
+             ){
                 if (graphMassPi0Data[i] && !maskedFullyPi0[i]) {
                     DrawGammaSetMarkerTGraphAsym(graphMassPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                     graphMassPi0Data[i]->Draw("p,e1,same"); 
@@ -2358,7 +2402,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         histo2DMassPi0->DrawCopy();    
         legendMassRedPi02->SetNColumns(2);
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (i == 1 || i == 3 || i == 4 || i == 5){
+          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==1 || i==3 || i==4 || i==5)) ||
+             (optionEnergy.CompareTo("8TeV")==0)
+             ){
                 if (graphMassPi0Data[i] && !maskedFullyPi0[i]) {
                     DrawGammaSetMarkerTGraphAsym(graphMassPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                     graphMassPi0Data[i]->Draw("p,e1,same"); 
@@ -2412,7 +2458,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
         legendWidthRedPi0->SetNColumns(2);
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (i == 0 || i == 2){
+          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==0 || i==2)) ||
+             (optionEnergy.CompareTo("8TeV")==0)
+             ){
                 if (graphWidthPi0Data[i] && !maskedFullyPi0[i]) {
                     DrawGammaSetMarkerTGraphAsym(graphWidthPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                     graphWidthPi0Data[i]->Draw("p,e1,same"); 
@@ -2437,7 +2485,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         histo2DWidthPi0->DrawCopy();    
         legendWidthRedPi02->SetNColumns(2);
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (i == 1 || i == 3 || i == 4 || i == 5){
+          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==1 || i==3 || i==4 || i==5)) ||
+             (optionEnergy.CompareTo("8TeV")==0)
+             ){
                 if (graphWidthPi0Data[i] && !maskedFullyPi0[i]) {
                     DrawGammaSetMarkerTGraphAsym(graphWidthPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                     graphWidthPi0Data[i]->Draw("p,e1,same"); 
@@ -3015,7 +3065,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         canvasEffi->cd();
         TH2F * histo2DEffiEta;
         histo2DEffiEta = new TH2F("histo2DEffiEta","histo2DEffiEta",1000,0., maxPtGlobalEta,10000,minEffiEta, maxEffiEta);
-        SetStyleHistoTH2ForGraphs(histo2DEffiEta, "#it{p}_{T} (GeV/#it{c})","#epsilon_{#eta}", 
+        SetStyleHistoTH2ForGraphs(histo2DEffiEta, "#it{p}_{T} (GeV/#it{c})","#epsilon_{reco} #times #epsilon_{trigg}",
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
         histo2DEffiEta->DrawCopy(); 
 
@@ -3152,7 +3202,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TLegend* legendMassEta = GetAndSetLegend2(0.52, 0.88, 0.95, 0.88+(1.05*4/2*0.85*textSizeSpectra),28);
         legendMassEta->SetNColumns(2);
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (i == 0 || i == 2){
+            /*if (i == 0 || i == 2)*/{
                 DrawGammaSetMarker(histoMassEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                 histoMassEtaData[i]->DrawCopy("e1,same"); 
                 legendMassEta->AddEntry(histoMassEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
@@ -3177,7 +3227,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TLegend* legendMassEta2 = GetAndSetLegend2(0.46, 0.81, 0.80, 0.81+(1.05*8/2*0.85*textSizeSpectra),28);
         legendMassEta2->SetNColumns(2);
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (i == 1 || i == 3 || i == 4 || i== 5){
+            /*if (i == 1 || i == 3 || i == 4 || i== 5)*/{
                 DrawGammaSetMarker(histoMassEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                 histoMassEtaData[i]->DrawCopy("e1,same"); 
                 legendMassEta2->AddEntry(histoMassEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
@@ -3212,7 +3262,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TLegend* legendWidthEta = GetAndSetLegend2(0.52, 0.87, 0.95, 0.87+(1.05*4/2*0.85*textSizeSpectra),28);
         legendWidthEta->SetNColumns(2);
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (i == 0 || i == 2){
+            /*if (i == 0 || i == 2)*/{
                 DrawGammaSetMarker(histoWidthEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                 histoWidthEtaData[i]->DrawCopy("e1,same"); 
                 legendWidthEta->AddEntry(histoWidthEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
@@ -3237,7 +3287,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TLegend* legendWidthEta2 = GetAndSetLegend2(0.46, 0.80, 0.80, 0.80+(1.05*8/2*0.85*textSizeSpectra),28);
         legendWidthEta2->SetNColumns(2);
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (i == 1 || i == 3 || i == 4 || i== 5){
+            /*if (i == 1 || i == 3 || i == 4 || i== 5)*/{
                 DrawGammaSetMarker(histoWidthEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                 histoWidthEtaData[i]->DrawCopy("e1,same"); 
                 legendWidthEta2->AddEntry(histoWidthEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
@@ -3670,8 +3720,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     graphOrderedEfficiencyEta[3]    = graphEfficiencyEta[i];
                 if (graphEffTimesAccEta[i])
                     graphOrderedEffTimesAccEta[3]   = graphEffTimesAccEta[i];                
-            } else if (triggerName[i].Contains("EG2") && graphsCorrectedYieldShrunkEta[i]){   
-                cout << "filling EG2 trigger" << endl;
+            } else if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && graphsCorrectedYieldShrunkEta[i]){
+                cout << "filling EG2/EGA trigger" << endl;
                 histoStatEta[4]     = histoCorrectedYieldEtaScaledMasked[i];
                 graphSystEta[4]     = graphsCorrectedYieldSysShrunkEta[i];
                 offSetsEtaSys[4]    = histoStatEta[4]->GetXaxis()->FindBin(graphSystEta[4]->GetX()[0])-1;
@@ -3731,7 +3781,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             Int_t nMeasSetEta           = nrOfTrigToBeCombEtaRed;
             Int_t nPtBinsReadEta        = 0;
             
-            TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", "EG2", "EG1",
+            TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", "EG2/EGA", "EG1",
                                                 "INT1_NLM1", "INT7_NLM1", "EMC1_NLM1", "EMC7_NLM1", "EG2_NLM1", "EG1_NLM1"};
             Color_t colorTriggWeighted[12]   = {GetDefaultTriggerColorName(nameTriggerWeighted[0], 0),
                                             GetDefaultTriggerColorName(nameTriggerWeighted[1], 0),
@@ -4073,7 +4123,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TLegend* legendMassRedEta = GetAndSetLegend2(0.52, 0.88, 0.95, 0.88+(1.05*4/2*0.85*textSizeSpectra),28);
         legendMassRedEta->SetNColumns(2);
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (i == 0 || i == 2){
+            /*if (i == 0 || i == 2)*/{
                 if (graphMassEtaData[i] && !maskedFullyEta[i]) {
                     DrawGammaSetMarkerTGraphAsym(graphMassEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                     graphMassEtaData[i]->Draw("p,e1,same"); 
@@ -4099,7 +4149,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TLegend* legendMassRedEta2 = GetAndSetLegend2(0.46, 0.81, 0.80, 0.81+(1.05*8/2*0.85*textSizeSpectra),28);
         legendMassRedEta2->SetNColumns(2);        
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (i == 1 || i == 3 || i == 4 || i == 5){
+            /*if (i == 1 || i == 3 || i == 4 || i == 5)*/{
                 if (graphMassEtaData[i] && !maskedFullyEta[i]) {
                     DrawGammaSetMarkerTGraphAsym(graphMassEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                     graphMassEtaData[i]->Draw("p,e1,same"); 
@@ -4214,7 +4264,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TLegend* legendWidthRedEta = GetAndSetLegend2(0.52, 0.87, 0.95, 0.87+(1.05*4/2*0.85*textSizeSpectra),28);
         legendWidthRedEta->SetNColumns(2);
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (i == 0 || i == 2){
+            /*if (i == 0 || i == 2)*/{
                 if (graphWidthEtaData[i] && !maskedFullyEta[i]) {
                     DrawGammaSetMarkerTGraphAsym(graphWidthEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                     graphWidthEtaData[i]->Draw("p,e1,same"); 
@@ -4240,7 +4290,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TLegend* legendWidthRedEta2 = GetAndSetLegend2(0.46, 0.80, 0.80, 0.80+(1.05*8/2*0.85*textSizeSpectra),28);
         legendWidthRedEta2->SetNColumns(2);        
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (i == 1 || i == 3 || i == 4 || i == 5){
+            /*if (i == 1 || i == 3 || i == 4 || i == 5)*/{
                 if (graphWidthEtaData[i] && !maskedFullyEta[i]) {
                     DrawGammaSetMarkerTGraphAsym(graphWidthEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                     graphWidthEtaData[i]->Draw("p,e1,same"); 
@@ -4690,8 +4740,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     histoStatEtaToPi0[3]     = histoEtaToPi0Masked[i];
                     graphSystEtaToPi0[3]     = graphsEtaToPi0SysShrunk[i];
                     offSetsEtaToPi0Sys[3]    = histoStatEtaToPi0[3]->GetXaxis()->FindBin(graphSystEtaToPi0[3]->GetX()[0])-1;
-                } else if (triggerName[i].Contains("EG2") && graphsEtaToPi0Shrunk[i]){   
-                    cout << "filling EG2 trigger" << endl;
+                } else if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && graphsEtaToPi0Shrunk[i]){
+                    cout << "filling EG2/EGA trigger" << endl;
                     histoStatEtaToPi0[4]     = histoEtaToPi0Masked[i];
                     graphSystEtaToPi0[4]     = graphsEtaToPi0SysShrunk[i];
                     offSetsEtaToPi0Sys[4]    = histoStatEtaToPi0[4]->GetXaxis()->FindBin(graphSystEtaToPi0[4]->GetX()[0])-1;
@@ -4726,7 +4776,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 Int_t nMeasSetEtaToPi0              = numberOfTrigg;
                 Int_t nPtBinsReadEtaToPi0           = 0;
             
-                TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", "EG2", "EG1",
+                TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", "EG2/EGA", "EG1",
                                                     "INT1_NLM1", "INT7_NLM1", "EMC1_NLM1", "EMC7_NLM1", "EG2_NLM1", "EG1_NLM1"};
                 Color_t colorTriggWeighted[12]   = {GetDefaultTriggerColorName(nameTriggerWeighted[0], 0),
                                                 GetDefaultTriggerColorName(nameTriggerWeighted[1], 0),

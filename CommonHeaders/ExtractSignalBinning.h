@@ -80,6 +80,17 @@ Int_t fBinsPi07TeVDirectPhotonPtRebin[23]       = { 2, 2, 1, 1, 1,
                                                     5, 5, 5};
 
 //******************** Pt binning for pp, 8 TeV ***************************************************
+Double_t fBinsPi0Combine8TeVPt[47]              = { 0.0, 0.3, 0.4, 0.5, 0.6,
+                                                    0.8, 1.0, 1.2, 1.4, 1.6,
+                                                    1.8, 2.0, 2.2, 2.4, 2.6,
+                                                    2.8, 3.0, 3.2, 3.4, 3.6,
+                                                    3.8, 4.0, 4.5, 5.0, 5.5,
+                                                    6.0, 6.5, 7.0, 7.5, 8.0,
+                                                    8.5, 9.0, 10.0, 11.0, 12.0,
+                                                    13.0, 14.0, 15.0, 16.0, 17.0,
+                                                    18.0, 20.0, 22.0, 26.0, 30.0,
+                                                    35.0, 40.0};
+
 Double_t fBinsPi08TeVPt[34]                     = { 0.0, 0.3, 0.4, 0.5, 0.6, 
                                                     0.8, 1.0, 1.2, 1.4, 1.6, 
                                                     1.8, 2.0, 2.2, 2.4, 2.6,
@@ -202,6 +213,12 @@ Int_t fBinsPi08TeVPtMergedRebin[49]             = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
                                                     4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                                                     4, 4, 4, 4, 4, 4, 4, 5, 5 };
 
+Double_t fBinsEtaCombine8TeVPt[26]              = { 0.0, 0.4, 0.8, 1.2, 1.6,
+                                                    2.0, 2.4, 2.8, 3.2, 3.6,
+                                                    4.0, 5.0, 6.0, 7.0, 8.0,
+                                                    9.0, 10.0, 12.0, 14.0, 16.0,
+                                                    18.0, 20.0, 25.0, 30.0, 35.0,
+                                                    40.0};
 Double_t fBinsEta8TeVPt[20]                     = { 0.0, 0.4, 0.8, 1.2, 1.6,
                                                     2.0, 2.4, 2.8, 3.2, 3.6, 
                                                     4.0, 5.0, 6.0, 8., 10.,
@@ -853,9 +870,9 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
             if (modi == 4 ) fStartPtBin = 7;
             if (modi == 2 ) fStartPtBin = 2;
 
-            if (modi == 2 && specialTrigg == 1) fStartPtBin = 21;
+            if (modi == 2 && specialTrigg == 1) fStartPtBin = 22;
             if (modi == 2 && specialTrigg == 2) fStartPtBin = 28;
-            if (modi == 4 && specialTrigg == 1) fStartPtBin = 21;
+            if (modi == 4 && specialTrigg == 1) fStartPtBin = 22;
             if (modi == 4 && specialTrigg == 2) fStartPtBin = 28;
             if (modi == 10 && specialTrigg == 0) fStartPtBin = 28;
             if (modi == 10 && specialTrigg == 1) fStartPtBin = 28;
@@ -975,9 +992,9 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
 
             fExampleBin         = 3;
             if( modi == 4 ) fExampleBin = 13;
-            if (modi == 2 && specialTrigg==1) fExampleBin = 22;
+            if (modi == 2 && specialTrigg==1) fExampleBin = 23;
             if (modi == 2 && specialTrigg==2) fExampleBin = 34;
-            if (modi == 4 && specialTrigg==1) fExampleBin = 22;
+            if (modi == 4 && specialTrigg==1) fExampleBin = 23;
             if (modi == 4 && specialTrigg==2) fExampleBin = 32;
         //*********************************************************************************************
         //********************************** Pi0 for pp 13TeV******************************************
@@ -1904,15 +1921,10 @@ Int_t GetBinning(   Double_t*  binning,
                 }
             }
         } else if (energy.CompareTo("8TeV") == 0){
-          if ( mode == 2 ){
-              maxNBins = 32;
+          if ( mode == 2 || mode == 4){
+              maxNBins = 46;
               for(Int_t i = 0; i < maxNBins+1; i++){
-                  binning[i] = fBinsPi08TeVPtEMCAL[i];
-              }
-          } else if ( mode == 4){
-              maxNBins = 32;
-              for(Int_t i = 0; i < maxNBins+1; i++){
-                  binning[i] = fBinsPi08TeVPtEMCAL[i];
+                  binning[i] = fBinsPi0Combine8TeVPt[i];
               }
           }
         }
@@ -1923,15 +1935,10 @@ Int_t GetBinning(   Double_t*  binning,
                 binning[i] = fBinsEta2760GeVPtTrig11a[i];
             } 
         } else if (energy.CompareTo("8TeV") == 0){
-          if ( mode == 2 ){
-              maxNBins = 19;
+          if ( mode == 2 || mode == 4){
+              maxNBins = 25;
               for(Int_t i = 0; i < maxNBins+1; i++){
-                  binning[i] = fBinsEta8TeVConvEMCALPt[i];
-              }
-          } else if ( mode == 4){
-              maxNBins = 19;
-              for(Int_t i = 0; i < maxNBins+1; i++){
-                  binning[i] = fBinsEta8TeVPt[i];
+                  binning[i] = fBinsEtaCombine8TeVPt[i];
               }
           }
         }
