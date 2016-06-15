@@ -555,10 +555,11 @@ void ExtractSignalV2(   TString meson                   = "",
     TString fDecayChannel = "#gamma#gamma";
     delete fMidPt;
 
-    if(fEnergyFlag.CompareTo("7TeV") == 0 ){
+    if(fEnergyFlag.CompareTo("7TeV") == 0){
         if(fPrefix.CompareTo("Pi0") == 0){
             for (Int_t iPt=fStartPtBin;iPt<fNBinsPeakPt;iPt++){
                 fFitPeakPosPtBin[iPt] =0x00;
+                if(!fHistoMappingPeakPosInvMassPtBin[iPt]) continue;
                 if(fCrysFitting==0){
                     fFileErrLog << "Using exp fit"<<endl;
                     FitPeakPosInvMassInPtBins(fHistoMappingPeakPosInvMassPtBin[iPt],iPt,kTRUE);
@@ -3733,11 +3734,11 @@ void ProcessRatioSignalBackground(TH1D* fGammaGamma, TH1D* fBck) {
 //****************************************************************************
 void FillMassHistosArray(TH2D* fGammaGammaInvMassVSPtDummy, TH2D *fAlphaPeakPosDummy) {
     fGammaGammaInvMassVSPtDummy->Sumw2();
-    fAlphaPeakPosDummy->Sumw2();
+    if(fAlphaPeakPosDummy)fAlphaPeakPosDummy->Sumw2();
     fFittingHistMidPtSignal     = FillProjectionX(fGammaGammaInvMassVSPtDummy, "Mapping_GG_InvMass_MidPt", fMidPt[0], fMidPt[1], fNRebin[4]);
     fMesonFullPtSignal          = FillProjectionX(fGammaGammaInvMassVSPtDummy, "Mapping_GG_InvMass_FullPt", fFullPt[0], fFullPt[1], fNRebin[4]);
 
-    if(fEnergyFlag.CompareTo("PbPb_2.76TeV") != 0 && fEnergyFlag.CompareTo("900GeV") != 0 && fEnergyFlag.CompareTo("2.76TeV") != 0 && fEnergyFlag.CompareTo("pPb_5.023TeV") != 0){
+    if(fAlphaPeakPosDummy && fEnergyFlag.CompareTo("PbPb_2.76TeV") != 0 && fEnergyFlag.CompareTo("900GeV") != 0 && fEnergyFlag.CompareTo("2.76TeV") != 0 && fEnergyFlag.CompareTo("pPb_5.023TeV") != 0){
         if(fPrefix.CompareTo("Pi0") == 0){
             for(Int_t iPt=fStartPtBin;iPt<fNBinsPeakPt;iPt++){
                 fNameHistoPP    = Form("Mapping_PP_InvMass_in_Pt_Bin%02d", iPt);
@@ -5579,7 +5580,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
     if (fPrefix.CompareTo("Pi0") == 0 && fEnergyFlag.CompareTo("7TeV") == 0) {
         for (Int_t ii=fStartPtBin;ii<fNBinsPeakPt;ii++){
             nameHistoPeakPos = Form("InvMassAlpha01_in_Pt_Bin%02d", ii);
-            fHistoMappingPeakPosInvMassPtBin[ii]->Write(nameHistoPeakPos.Data());
+            if(fHistoMappingPeakPosInvMassPtBin[ii]) fHistoMappingPeakPosInvMassPtBin[ii]->Write(nameHistoPeakPos.Data());
             fNameFitSignalPos = Form("Signal_InvMassFitPos_in_Pt_Bin%02d", ii);
             if(fFitPeakPosPtBin[ii]!=0x00) fFitPeakPosPtBin[ii]->Write(fNameFitSignalPos.Data());
         }

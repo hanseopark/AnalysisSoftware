@@ -4125,17 +4125,17 @@ Style_t GetDefaultTriggerMarker( TString periodName,
     return 29;
 }
 
-Color_t GetDefaultTriggerColorName (TString triggerName, Bool_t isShade ){
-    if ( (triggerName.Contains("MB") || triggerName.Contains("INT1") ) && !isShade)     return kBlack;
-    else if ((triggerName.Contains("MB") || triggerName.Contains("INT1") ) && isShade)  return kGray+1;
+Color_t GetDefaultTriggerColorName (TString triggerName, Bool_t isShade, TString opt = ""){
+    if ( (triggerName.Contains("MB") || triggerName.Contains("INT1") || (opt.CompareTo("8TeV")==0 && triggerName.Contains("INT7"))) && !isShade)     return kBlack;
+    else if ((triggerName.Contains("MB") || triggerName.Contains("INT1") || (opt.CompareTo("8TeV")==0 && triggerName.Contains("INT7"))) && isShade)  return kGray+1;
     else if (triggerName.Contains("INT7") && !isShade) return kGray+1;
     else if (triggerName.Contains("INT7") && isShade)  return kGray;
     else if (triggerName.Contains("EMC1") && !isShade) return kRed+2;
     else if (triggerName.Contains("EMC1") && isShade)  return kRed-6;
     else if (triggerName.Contains("EMC7") && !isShade) return kBlue+2;
     else if (triggerName.Contains("EMC7") && isShade)  return kBlue-6;
-    else if (triggerName.Contains("EG2") && !isShade)  return kGreen+3;
-    else if (triggerName.Contains("EG2") && isShade)   return kGreen-8;
+    else if ((triggerName.Contains("EG2") || triggerName.Contains("EGA")) && !isShade)  return kGreen+3;
+    else if ((triggerName.Contains("EG2") || triggerName.Contains("EGA")) && isShade)   return kGreen-8;
     else if (triggerName.Contains("EG1") && !isShade)  return kCyan+2;
     else if (triggerName.Contains("EG1") && isShade)   return kCyan-6;    
     else return kBlack; 
@@ -4159,8 +4159,8 @@ Marker_t GetDefaultTriggerMarkerStyleName (TString triggerName, Bool_t isShade )
     else if (triggerName.Contains("EMC7") && !isShade) return 34;
     else if (triggerName.Contains("EMC7") && isShade)  return 28;
     else if (triggerName.Contains("EG2_NLM1") && !isShade)  return 30;
-    else if (triggerName.Contains("EG2") && !isShade)  return 29;
-    else if (triggerName.Contains("EG2") && isShade)   return 30;
+    else if ((triggerName.Contains("EG2") || triggerName.Contains("EGA")) && !isShade)  return 29;
+    else if ((triggerName.Contains("EG2") || triggerName.Contains("EGA")) && isShade)   return 30;
     else if (triggerName.Contains("EG1_NLM1") && !isShade)  return 27;
     else if (triggerName.Contains("EG1") && !isShade)  return 33;
     else if (triggerName.Contains("EG1") && isShade)   return 27;    
@@ -4185,8 +4185,8 @@ Marker_t GetDefaultTriggerMarkerSizeName (TString triggerName, Bool_t isShade ){
     else if (triggerName.Contains("EMC7") && !isShade) return 2.;
     else if (triggerName.Contains("EMC7") && isShade)  return 2.;
     else if (triggerName.Contains("EG2_NLM1") && !isShade)  return 2;
-    else if (triggerName.Contains("EG2") && !isShade)  return 2;
-    else if (triggerName.Contains("EG2") && isShade)   return 2;
+    else if ((triggerName.Contains("EG2") || triggerName.Contains("EGA")) && !isShade)  return 2;
+    else if ((triggerName.Contains("EG2") || triggerName.Contains("EGA")) && isShade)   return 2;
     else if (triggerName.Contains("EG1_NLM1") && !isShade)  return 2;
     else if (triggerName.Contains("EG1") && !isShade)  return 2;
     else if (triggerName.Contains("EG1") && isShade)   return 2;    
