@@ -946,21 +946,18 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 fColumn     = 5;
                 fRow        = 5;
             }
-            
-            
-            
 
             if (fNBinsPt > 33 && modi != 2 && modi != 3 && modi != 4 && modi != 10) {
-					if ( specialTrigg == 1 && fNBinsPt > 42){
-						cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
-						fNBinsPt        = 42;
-					} else if ( specialTrigg == 2 && fNBinsPt > 41){
-						cout << "You have chosen to have more than 41 bins, this is not possible, it will be reduced to 41" << endl;
-						fNBinsPt        = 41;
-					} else if (specialTrigg!=1 && specialTrigg!=2){
-						cout << "You have chosen to have more than 33 bins, this is not possible, it will be reduced to 32" << endl;
-						fNBinsPt        = 33;
-					}
+                if ( specialTrigg == 1 && fNBinsPt > 42){
+                    cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
+                    fNBinsPt        = 42;
+                } else if ( specialTrigg == 2 && fNBinsPt > 41){
+                    cout << "You have chosen to have more than 41 bins, this is not possible, it will be reduced to 41" << endl;
+                    fNBinsPt        = 41;
+                } else if (specialTrigg!=1 && specialTrigg!=2){
+                    cout << "You have chosen to have more than 33 bins, this is not possible, it will be reduced to 32" << endl;
+                    fNBinsPt        = 33;
+                }
             } else if (fNBinsPt > 32 && (modi ==4)){
               if( specialTrigg == 2 && fNBinsPt > 42){
                 cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
@@ -999,56 +996,56 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
 
             for (Int_t i = 0; i < fNBinsPt+1; i++) {
                 if (modi == 4 ){
-                  if( specialTrigg == 1 ){
-                    fBinsPt[i]                 = fBinsPi08TeVTrigger1Pt[i];
-                    if(i==37) fBinsPt[i] = 18.0;
-                  } else if ( specialTrigg == 2 ){
-                    fBinsPt[i]                 = fBinsPi08TeVTrigger2Pt[i];
-                  } else
-                    fBinsPt[i]                 = fBinsPi08TeVPtEMCAL[i];
+                    if( specialTrigg == 1 ){
+                        fBinsPt[i]                 = fBinsPi08TeVTrigger1Pt[i];
+                        if(i==37) fBinsPt[i] = 18.0;
+                    } else if ( specialTrigg == 2 ){
+                        fBinsPt[i]                 = fBinsPi08TeVTrigger2Pt[i];
+                    } else
+                        fBinsPt[i]                 = fBinsPi08TeVPtEMCAL[i];
                 } else if (modi == 2){
-                  if( specialTrigg == 1 ){
-                    fBinsPt[i]                 = fBinsPi08TeVTrigger1Pt[i];
-                  } else if ( specialTrigg == 2 ){
-                    fBinsPt[i]                 = fBinsPi08TeVTrigger2Pt[i];
-                  } else
-                    fBinsPt[i]                 = fBinsPi08TeVPtConvEMCAL[i];
+                    if( specialTrigg == 1 ){
+                        fBinsPt[i]                 = fBinsPi08TeVTrigger1Pt[i];
+                    } else if ( specialTrigg == 2 ){
+                        fBinsPt[i]                 = fBinsPi08TeVTrigger2Pt[i];
+                    } else
+                        fBinsPt[i]                 = fBinsPi08TeVPtConvEMCAL[i];
                 } else if (modi == 10){
                     fBinsPt[i]                 = fBinsPi08TeVPtMerged[i];
                 } else {
-						  if( specialTrigg == 1 ){
-                    fBinsPt[i]                 = fBinsPi08TeVTrigger1Pt[i];
+                    if( specialTrigg == 1 ){
+                        fBinsPt[i]                 = fBinsPi08TeVTrigger1Pt[i];
                     } else if ( specialTrigg == 2 ){
-                    fBinsPt[i]                 = fBinsPi08TeVConvTrigger2Pt[i];
+                        fBinsPt[i]                 = fBinsPi08TeVConvTrigger2Pt[i];
                     } else
-                    fBinsPt[i]                 = fBinsPi08TeVPt[i];
-					 }
+                        fBinsPt[i]                 = fBinsPi08TeVPt[i];
+                }
 
                 if (modi == 2){
                     if( specialTrigg == 1 ){
-                      if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvEMCALTrigger1PtRebin[i];
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvEMCALTrigger1PtRebin[i];
                     } else if( specialTrigg == 2 ){
-                      if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvEMCALTrigger2PtRebin[i];
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvEMCALTrigger2PtRebin[i];
                     } else{
-                      if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvEMCALPtRebin[i];
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvEMCALPtRebin[i];
                     }
                 } else if(modi == 4) {
                     if( specialTrigg == 1 ){
-                      if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCALTrigger1PtRebin[i];
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCALTrigger1PtRebin[i];
                     } else if( specialTrigg == 2 ){
-                      if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCALTrigger2PtRebin[i];
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCALTrigger2PtRebin[i];
                     } else{
-                      if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCALPtRebin[i];
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCALPtRebin[i];
                     }
                 } else if(modi == 10) {
                     if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPtMergedRebin[i];
                 } else {
-						  if( specialTrigg == 1 ){
-                      if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvTrigger1PtRebin[i];
+                    if( specialTrigg == 1 ){
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvTrigger1PtRebin[i];
                     } else if( specialTrigg == 2 ){
-                      if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvTrigger2PtRebin[i];
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvTrigger2PtRebin[i];
                     } else{
-                      if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPtRebin[i];
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPtRebin[i];
                     }
                 }
             }
@@ -1581,56 +1578,57 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
           }
 
           for (Int_t i = 0; i < fNBinsPt+1; i++) {
-				    if( modi == 0 ){
-                  if(specialTrigg == 1){
-                    fBinsPt[i]      = fBinsEta8TeVConvTrigger1Pt[i];
-                  } else if (specialTrigg == 2){
-                    fBinsPt[i]      = fBinsEta8TeVConvTrigger2Pt[i];
-                  } else
-                    fBinsPt[i]      = fBinsEta8TeVPt[i];
-					 } else if ( modi == 2 ){
-                  if(specialTrigg == 1){
-                    fBinsPt[i]      = fBinsEta8TeVTrigger1Pt[i];
-                  } else if (specialTrigg == 2){
-                    fBinsPt[i]      = fBinsEta8TeVTrigger2Pt[i];
-                  } else
-                    fBinsPt[i]      = fBinsEta8TeVConvEMCALPt[i];
+                if( modi == 0 ){
+                    if(specialTrigg == 1){
+                        fBinsPt[i]      = fBinsEta8TeVConvTrigger1Pt[i];
+                    } else if (specialTrigg == 2){
+                        fBinsPt[i]      = fBinsEta8TeVConvTrigger2Pt[i];
+                    } else
+                        fBinsPt[i]      = fBinsEta8TeVPt[i];
+                } else if ( modi == 2 ){
+                    if(specialTrigg == 1){
+                        fBinsPt[i]      = fBinsEta8TeVTrigger1Pt[i];
+                    } else if (specialTrigg == 2){
+                        fBinsPt[i]      = fBinsEta8TeVTrigger2Pt[i];
+                    } else
+                        fBinsPt[i]      = fBinsEta8TeVConvEMCALPt[i];
                 } else if( modi == 4 ){
-                  if(specialTrigg == 1){
-                    fBinsPt[i]      = fBinsEta8TeVTrigger1Pt[i];
-                  } else if (specialTrigg == 2){
-                    fBinsPt[i]      = fBinsEta8TeVTrigger2Pt[i];
-                  } else
-                    fBinsPt[i]      = fBinsEta8TeVPt[i];
-                } else
-                    fBinsPt[i]      = fBinsEta8TeVPt[i];
-
-               if ( modi == 0 ){
-                  if(specialTrigg == 1){
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVConvTrigger1PtRebin[i];
-                  } else if(specialTrigg == 2){
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVConvTrigger2PtRebin[i];
-                  } else {
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVPtRebin[i];
-                  }
-					} else if ( modi == 2 ){
-                  if(specialTrigg == 1){
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVConvEMCALTrigger1PtRebin[i];
-                  } else if(specialTrigg == 2){
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVConvEMCALTrigger2PtRebin[i];
-                  } else {
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVConvEMCALPtRebin[i];
-                  }
-                } else if ( modi == 4 ) {
-                  if(specialTrigg == 1){
-                   if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVEMCALTrigger1PtRebin[i];
-                  } else if(specialTrigg == 2){
-                   if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVEMCALTrigger2PtRebin[i];
-                  } else {
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVEMCALPtRebin[i];
-                  }
+                    if(specialTrigg == 1){
+                        fBinsPt[i]      = fBinsEta8TeVTrigger1Pt[i];
+                    } else if (specialTrigg == 2){
+                        fBinsPt[i]      = fBinsEta8TeVTrigger2Pt[i];
+                    } else
+                        fBinsPt[i]      = fBinsEta8TeVPt[i];
                 } else {
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVPtRebin[i];
+                        fBinsPt[i]      = fBinsEta8TeVPt[i];
+                }
+                
+                if ( modi == 0 ){
+                    if(specialTrigg == 1){
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVConvTrigger1PtRebin[i];
+                    } else if(specialTrigg == 2){
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVConvTrigger2PtRebin[i];
+                    } else {
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVPtRebin[i];
+                    }
+                } else if ( modi == 2 ){
+                    if(specialTrigg == 1){
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVConvEMCALTrigger1PtRebin[i];
+                    } else if(specialTrigg == 2){
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVConvEMCALTrigger2PtRebin[i];
+                    } else {
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVConvEMCALPtRebin[i];
+                    }
+                } else if ( modi == 4 ) {
+                    if(specialTrigg == 1){
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVEMCALTrigger1PtRebin[i];
+                    } else if(specialTrigg == 2){
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVEMCALTrigger2PtRebin[i];
+                    } else {
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVEMCALPtRebin[i];
+                    }
+                } else {
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVPtRebin[i];
                 }
           }
 
@@ -2019,12 +2017,17 @@ Int_t GetBinning(   Double_t*  binning,
                 }
             }
         } else if (energy.CompareTo("8TeV") == 0){
-          if ( mode == 2 || mode == 4){
-              maxNBins = 46;
-              for(Int_t i = 0; i < maxNBins+1; i++){
-                  binning[i] = fBinsPi0Combine8TeVPt[i];
-              }
-          }
+            if ( mode == 2 || mode == 4){
+                maxNBins = 46;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsPi0Combine8TeVPt[i];
+                }
+            } else if ( mode == 0 ){
+                maxNBins = 40;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsPi08TeVTrigger1Pt[i];
+                }
+            } 
         }
     } else if (meson.Contains("Eta")){
         if (energy.CompareTo("2.76TeV") == 0){
@@ -2033,12 +2036,17 @@ Int_t GetBinning(   Double_t*  binning,
                 binning[i] = fBinsEta2760GeVPtTrig11a[i];
             } 
         } else if (energy.CompareTo("8TeV") == 0){
-          if ( mode == 2 || mode == 4){
-              maxNBins = 25;
-              for(Int_t i = 0; i < maxNBins+1; i++){
-                  binning[i] = fBinsEtaCombine8TeVPt[i];
-              }
-          }
+            if ( mode == 2 || mode == 4 ){
+                maxNBins = 25;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsEtaCombine8TeVPt[i];
+                }
+            } else if ( mode == 0 ){
+                maxNBins = 19;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsEta8TeVConvTrigger1Pt[i];
+                }
+            }    
         }
         
     }

@@ -292,8 +292,11 @@ void ExtractSignalV2(   TString meson                   = "",
         fHistoClustersPt                = (TH1D*)ESDContainer->FindObject("ClusGamma_Pt");
         fHistoClustersOverlapHeadersPt  = (TH1D*)ESDContainer->FindObject("ClusGammaOverlapHeaders_Pt");
     }
-    if ( fMode == 1 ){
+    if ( fMode == 0 ){
         fHistoClustersPt                = (TH1D*)ESDContainer->FindObject("ClusGamma_Pt");
+        if (fHistoClustersPt){
+            cout << "INFO: found cluster output in PCM stream, adding it to the raw data file." << endl;
+        }    
     }    
     
     cout << fMesonCutSelectionRead.Data() << endl;

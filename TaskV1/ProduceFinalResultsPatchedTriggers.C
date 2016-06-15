@@ -75,7 +75,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                             Float_t maxPtGlobalEta      = 14.,
                                             Bool_t  averagedEta         = kFALSE,
                                             Bool_t  v2ClusterizerMerged = kFALSE,
-                                            TString nameFileFitsShift   = ""
+                                            TString nameFileFitsShift   = "",
+                                            Bool_t  hasClusterOutput    = kTRUE
                                         ){
 
     //***************************************************************************************************************
@@ -126,6 +127,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     }
     
     Size_t textSizeSpectra          = 0.04;
+    Int_t textSizePixelSpectra      = textSizeSpectra*1000;
     const Int_t MaxNumberOfFiles    = 12;
     
     Color_t colorTrigg      [12]    = { kBlack, kBlack, kBlack, kBlack, kBlack,
@@ -454,59 +456,70 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         //***************************************************************************************************************
         //****************************** Calculate trigger rejection factors ********************************************
         //***************************************************************************************************************
-        if (mode == 2 || mode == 3 || mode == 4 || mode == 5 || mode == 10){
+        if ((mode == 0 || mode == 2 || mode == 3 || mode == 4 || mode == 5 || mode == 10) && hasClusterOutput ){
             histoRawClusterPt[i]                        = (TH1D*)fileUnCorrectedPi0[i]->Get("ClusterPtPerEvent");
-            histoRawClusterPt[i]->SetName(Form("ClusterPtPerEvent_%s",cutNumber[i].Data()));
-            histoRatioRawClusterPt[i]                   = (TH1D*)histoRawClusterPt[i]->Clone(Form("RatioCluster_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()));
-            histoRatioRawClusterPt[i]->Divide(histoRatioRawClusterPt[i],histoRawClusterPt[trigSteps[i][0]],1.,1.,"");
-            Int_t binMinTrigg                           = histoRatioRawClusterPt[i]->FindBin(minPt[i]);
-            minPt[i]                                    = histoRatioRawClusterPt[i]->GetBinCenter(binMinTrigg);
-            
-            TF1* pol0                                   = new TF1("pol0","[0]",minPt[i],maxPt[i]); //
-            histoRatioRawClusterPt[i]->Fit(pol0,"QNRMEX0+","",minPt[i],maxPt[i]);
-            
-            histoTriggerRejection[i]                    = new TH1D (Form("triggRejectMean_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()),
-                                                                    Form("triggRejectMean_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()),
-                                                                    10, 0.5,10.5 );
-            
-            for (Int_t k = 0; k<11; k++ ){
-                histoRatioRawClusterPt[i]->Fit(pol0,"QNRMEX0+","",histoRatioRawClusterPt[i]->GetBinCenter(binMinTrigg-2+k),maxPt[i]);
-                histoTriggerRejection[i]->SetBinContent(k+1,pol0->GetParameter(0));
-                histoTriggerRejection[i]->SetBinError(k+1,pol0->GetParError(0));
-            }
-            
-            TF1* pol0_2                                 = new TF1("pol0_2","[0]",0.5,10.5); //
-            histoTriggerRejection[i]->Fit(pol0_2,"QNRMEX0+","",0.5,10.5);
-            triggRejecFac[i][trigSteps[i][0]]           = pol0_2->GetParameter(0);
-            Double_t largestDev = 0;
-            for (Int_t  k = 0; k<11; k++ ){
-                Double_t diffToFit                      = abs(histoTriggerRejection[i]->GetBinContent(k+1)-triggRejecFac[i][trigSteps[i][0]])+histoTriggerRejection[i]->GetBinError(k+1);
-                if (diffToFit > largestDev) largestDev  = diffToFit;
-            }
-            triggRejecFacErr[i][trigSteps[i][0]] = largestDev;
-            
-            
-            delete pol0;
-            delete pol0_2;
-            cout << "trigger rejection factor " << triggerName[i].Data() << "/" << triggerName[trigSteps[i][0]].Data() << ": " << triggRejecFac[i][trigSteps[i][0]] 
-                  << "+-" << triggRejecFacErr[i][trigSteps[i][0]] << endl;
-                  
-            if (enableTriggerRejecCompMC){      
-                histoMCRawClusterPt[i]                  = (TH1D*)fileUnCorrectedMCPi0[i]->Get("ClusterPtPerEvent");
-                histoMCRawClusterPt[i]->SetName(Form("MCClusterPtPerEvent_%s",cutNumber[i].Data()));
-                histoMCRatioRawClusterPt[i]             = (TH1D*)histoMCRawClusterPt[i]->Clone(Form("MCRatioCluster_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()));
-                histoMCRatioRawClusterPt[i]->Sumw2();
-                histoMCRatioRawClusterPt[i]->Divide(histoMCRatioRawClusterPt[i],histoMCRawClusterPt[trigSteps[i][0]],1.,1.,"");
-
-                TF1* pol0_MC                            = new TF1("pol0_MC","[0]",minPt[i],maxPt[i]); //
-                histoMCRatioRawClusterPt[i]->Fit(pol0_MC,"QNRMEX0+","",minPt[i],maxPt[i]);
-
-                Double_t scaleFactorMC                    = triggRejecFac[i][trigSteps[i][0]]/pol0_MC->GetParameter(0);
-                histoMCRatioRawClusterPt[i]->Scale(scaleFactorMC);
+            if (!histoRawClusterPt[i]){ 
+                cout << "INFO: couldn't find cluster input, disabeling it!" << endl;
+                hasClusterOutput                        = kFALSE;
+                triggRejecFac[i][trigSteps[i][0]]       = 1;
+                triggRejecFacErr[i][trigSteps[i][0]]    = 0;
+            } else {    
+                histoRawClusterPt[i]->SetName(Form("ClusterPtPerEvent_%s",cutNumber[i].Data()));
+                histoRatioRawClusterPt[i]                   = (TH1D*)histoRawClusterPt[i]->Clone(Form("RatioCluster_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()));
+                histoRatioRawClusterPt[i]->Divide(histoRatioRawClusterPt[i],histoRawClusterPt[trigSteps[i][0]],1.,1.,"");
+                Int_t binMinTrigg                           = histoRatioRawClusterPt[i]->FindBin(minPt[i]);
+                minPt[i]                                    = histoRatioRawClusterPt[i]->GetBinCenter(binMinTrigg);
                 
-                cout << "data: "<<triggRejecFac[i][trigSteps[i][0]] << "\t MC: " << pol0_MC->GetParameter(0) << "\t scale factor: " << scaleFactorMC<< endl; 
+                TF1* pol0                                   = new TF1("pol0","[0]",minPt[i],maxPt[i]); //
+                histoRatioRawClusterPt[i]->Fit(pol0,"QNRMEX0+","",minPt[i],maxPt[i]);
+                
+                histoTriggerRejection[i]                    = new TH1D (Form("triggRejectMean_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()),
+                                                                        Form("triggRejectMean_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()),
+                                                                        10, 0.5,10.5 );
+                
+                for (Int_t k = 0; k<11; k++ ){
+                    histoRatioRawClusterPt[i]->Fit(pol0,"QNRMEX0+","",histoRatioRawClusterPt[i]->GetBinCenter(binMinTrigg-2+k),maxPt[i]);
+                    histoTriggerRejection[i]->SetBinContent(k+1,pol0->GetParameter(0));
+                    histoTriggerRejection[i]->SetBinError(k+1,pol0->GetParError(0));
+                }
+                
+                TF1* pol0_2                                 = new TF1("pol0_2","[0]",0.5,10.5); //
+                histoTriggerRejection[i]->Fit(pol0_2,"QNRMEX0+","",0.5,10.5);
+                triggRejecFac[i][trigSteps[i][0]]           = pol0_2->GetParameter(0);
+                Double_t largestDev = 0;
+                for (Int_t  k = 0; k<11; k++ ){
+                    Double_t diffToFit                      = abs(histoTriggerRejection[i]->GetBinContent(k+1)-triggRejecFac[i][trigSteps[i][0]])+histoTriggerRejection[i]->GetBinError(k+1);
+                    if (diffToFit > largestDev) largestDev  = diffToFit;
+                }
+                triggRejecFacErr[i][trigSteps[i][0]] = largestDev;
+                
+                
+                delete pol0;
+                delete pol0_2;
+                cout << "trigger rejection factor " << triggerName[i].Data() << "/" << triggerName[trigSteps[i][0]].Data() << ": " << triggRejecFac[i][trigSteps[i][0]] 
+                    << "+-" << triggRejecFacErr[i][trigSteps[i][0]] << endl;
+                    
+                if (enableTriggerRejecCompMC){      
+                    histoMCRawClusterPt[i]                  = (TH1D*)fileUnCorrectedMCPi0[i]->Get("ClusterPtPerEvent");
+                    histoMCRawClusterPt[i]->SetName(Form("MCClusterPtPerEvent_%s",cutNumber[i].Data()));
+                    histoMCRatioRawClusterPt[i]             = (TH1D*)histoMCRawClusterPt[i]->Clone(Form("MCRatioCluster_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()));
+                    histoMCRatioRawClusterPt[i]->Sumw2();
+                    histoMCRatioRawClusterPt[i]->Divide(histoMCRatioRawClusterPt[i],histoMCRawClusterPt[trigSteps[i][0]],1.,1.,"");
+
+                    TF1* pol0_MC                            = new TF1("pol0_MC","[0]",minPt[i],maxPt[i]); //
+                    histoMCRatioRawClusterPt[i]->Fit(pol0_MC,"QNRMEX0+","",minPt[i],maxPt[i]);
+
+                    Double_t scaleFactorMC                    = triggRejecFac[i][trigSteps[i][0]]/pol0_MC->GetParameter(0);
+                    histoMCRatioRawClusterPt[i]->Scale(scaleFactorMC);
+                    
+                    cout << "data: "<<triggRejecFac[i][trigSteps[i][0]] << "\t MC: " << pol0_MC->GetParameter(0) << "\t scale factor: " << scaleFactorMC<< endl; 
+                }    
             }    
-        }
+        } else {
+            triggRejecFac[i][trigSteps[i][0]]       = 1;
+            triggRejecFacErr[i][trigSteps[i][0]]    = 0;
+   
+        }    
     }
     
     // figure out which trigger we are using and set correct x-sections
@@ -521,368 +534,370 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     }    
     Double_t xSection       = ReturnCorrectXSection( optionEnergy, isV0AND);
 
+    
     //***************************************************************************************************************
     //*******************************Plotting trigger rejection factors = fits log scale all in one *****************
     //***************************************************************************************************************
-    Size_t textSizeSpectra2         = 0.0415;
-    Int_t textPixelPP               = textSizeSpectra2*1100;
-    TCanvas* canvasTriggerReject    = new TCanvas("canvasTriggerReject","",0,0,1500,1100);// gives the page size
-    DrawGammaCanvasSettings( canvasTriggerReject, 0.12, 0.017, 0.015, 0.085);
-    canvasTriggerReject->SetLogy(1);
-    
-    Double_t minTriggReject = 0.1;
-    Double_t maxTriggReject = 4200;
-    if (mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0)
-        maxTriggReject = 200;
-    if (mode == 10)
-        maxTriggReject = 5200;
-    
-    TH2F * histo2DTriggReject;
-    histo2DTriggReject = new TH2F("histo2DTriggReject","histo2DTriggReject",1000,0., maxPtGlobalCluster,10000,minTriggReject, maxTriggReject);
-    SetStyleHistoTH2ForGraphs(histo2DTriggReject, "#it{p}_{T} (GeV/#it{c})","#frac{N_{clus,trig A}/N_{Evt, trig A}}{N_{clus,trig B}/N_{Evt,trig B}}", 
-                            0.85*textSizeSpectra2,textSizeSpectra2, 0.85*textSizeSpectra2,textSizeSpectra2, 0.85,1.18);
-    histo2DTriggReject->DrawCopy(); 
+    if (hasClusterOutput){
+        Size_t textSizeSpectra2         = 0.0415;
+        Int_t textPixelPP               = textSizeSpectra2*1100;
+        TCanvas* canvasTriggerReject    = new TCanvas("canvasTriggerReject","",0,0,1500,1100);// gives the page size
+        DrawGammaCanvasSettings( canvasTriggerReject, 0.12, 0.017, 0.015, 0.085);
+        canvasTriggerReject->SetLogy(1);
+        
+        Double_t minTriggReject = 0.1;
+        Double_t maxTriggReject = 4200;
+        if (mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0)
+            maxTriggReject = 200;
+        if (mode == 10)
+            maxTriggReject = 5200;
+        
+        TH2F * histo2DTriggReject;
+        histo2DTriggReject = new TH2F("histo2DTriggReject","histo2DTriggReject",1000,0., maxPtGlobalCluster,10000,minTriggReject, maxTriggReject);
+        SetStyleHistoTH2ForGraphs(histo2DTriggReject, "#it{p}_{T} (GeV/#it{c})","#frac{N_{clus,trig A}/N_{Evt, trig A}}{N_{clus,trig B}/N_{Evt,trig B}}", 
+                                0.85*textSizeSpectra2,textSizeSpectra2, 0.85*textSizeSpectra2,textSizeSpectra2, 0.85,1.18);
+        histo2DTriggReject->DrawCopy(); 
 
-    TLegend* legendTriggReject = GetAndSetLegend2(0.33, 0.12, 0.92, 0.12+(0.9*(nrOfTrigToBeComb-2+1)*textSizeSpectra2),textPixelPP);
-    legendTriggReject->SetMargin(0.02);
-    legendTriggReject->SetNColumns(3);
-    for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-        if (i != trigSteps[i][0] ){
-            for (Int_t j = 1; j < histoRatioRawClusterPt[i]->GetNbinsX()+1; j++){
-               if (histoRatioRawClusterPt[i]->GetBinError(j)/histoRatioRawClusterPt[i]->GetBinContent(j) > 1){
-                    histoRatioRawClusterPt[i]->SetBinContent(j,1e6);
-                    histoRatioRawClusterPt[i]->SetBinError(j,0);
-               }    
-            }    
-            
-            DrawGammaSetMarker(histoRatioRawClusterPt[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-            histoRatioRawClusterPt[i]->DrawCopy("e,same"); 
-            legendTriggReject->AddEntry(histoRatioRawClusterPt[i],Form("   %s/%s",triggerNameLabel[i].Data(),triggerNameLabel[trigSteps[i][0]].Data() ),"p");
-            legendTriggReject->AddEntry((TObject*)0,Form("  %3.1f < #it{p}_{T} < %3.1f",minPt[i],maxPt[i]),"");
-            if (triggerName[i].Contains("EMC1"))
-                legendTriggReject->AddEntry((TObject*)0,Form("     %3.0f #pm %3.0f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
-            else if (triggerName[i].Contains("EMC7"))
-                legendTriggReject->AddEntry((TObject*)0,Form("     %3.1f #pm %3.1f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
-            else if (triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA"))
-                legendTriggReject->AddEntry((TObject*)0,Form("     %3.2f #pm %3.2f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
-            else if (triggerName[i].Contains("EG1") )
-                legendTriggReject->AddEntry((TObject*)0,Form("     %3.3f #pm %3.3f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
-            else 
-                legendTriggReject->AddEntry((TObject*)0,Form("     %3.2f #pm %3.2f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
-            
-                
-            TF1* pol0 = new TF1("pol0","[0]",minPt[i],maxPt[i]); //
-            
-            histoRatioRawClusterPt[i]->Fit(pol0,"NRME+","",minPt[i],maxPt[i]);
-            TH1D* triggRejecCLPol0 = (TH1D*)histoRatioRawClusterPt[i]->Clone(Form("CL_%i",i));
-            for (Int_t j = 1; j < triggRejecCLPol0->GetNbinsX()+1; j++){
-                triggRejecCLPol0->SetBinContent(j,triggRejecFac[i][trigSteps[i][0]]);
-                triggRejecCLPol0->SetBinError(j,triggRejecFacErr[i][trigSteps[i][0]]);
-            }    
-            triggRejecCLPol0->SetStats(kFALSE);
-            triggRejecCLPol0->SetFillColor(colorTriggShade[i]);
-            triggRejecCLPol0->SetMarkerSize(0);
-            triggRejecCLPol0->Draw("e3,same");
-            
-            pol0->SetParameter(0,triggRejecFac[i][trigSteps[i][0]]);
-            pol0->SetParError(0,triggRejecFacErr[i][trigSteps[i][0]]);
-            pol0->SetLineColor(colorTrigg[i]-1);
-            pol0->SetLineStyle(7);
-            pol0->SetRange(minPt[i],maxPt[i]);
-            pol0->Draw("same");
-            histoRatioRawClusterPt[i]->DrawCopy("e,same"); 
-        }
-    }
-    legendTriggReject->Draw();
-    histo2DTriggReject->Draw("same,axis");
-    TLatex *labelPerfTriggRejec  = NULL;
-    if (isMC.CompareTo("MC") == 0)
-        labelPerfTriggRejec  = new TLatex(0.15, 0.93,"ALICE simulation");
-    else 
-        labelPerfTriggRejec  = new TLatex(0.15, 0.93,"ALICE performance");
-    
-    SetStyleTLatex( labelPerfTriggRejec, textSizeSpectra2,4);
-    labelPerfTriggRejec->Draw();
-
-    TLatex *labelPerfTriggFitRange = new TLatex(0.523, 0.12+(0.9*(nrOfTrigToBeComb-2+1)*textSizeSpectra2)+0.01, "Fit range (GeV/#it{c})");
-    SetStyleTLatex( labelPerfTriggFitRange, textSizeSpectra2,4);
-    labelPerfTriggFitRange->Draw();
-
-    TLatex *labelPerfTriggRejecFac = new TLatex(0.753, 0.12+(0.9*(nrOfTrigToBeComb-2+1)*textSizeSpectra2)+0.01, "Trigger rejection");
-    SetStyleTLatex( labelPerfTriggRejecFac, textSizeSpectra2,4);
-    labelPerfTriggRejecFac->Draw();
-    
-    canvasTriggerReject->Update();
-    canvasTriggerReject->SaveAs(Form("%s/%s_TriggerRejectionFactors.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
-    delete canvasTriggerReject;
-    
-    //***************************************************************************************************************
-    //**************************Plotting trigger rejection factors = fits linear scale all in one *******************
-    //***************************************************************************************************************
- 
-    TCanvas* canvasTriggerRejectLinear = new TCanvas("canvasTriggerReject","",0,0,1500,1100);// gives the page size
-    DrawGammaCanvasSettings( canvasTriggerRejectLinear, 0.118, 0.017, textSizeSpectra2, 0.08);
-    canvasTriggerRejectLinear->SetLogy(0);
-    
-    Double_t minTriggRejectLin = 0;
-    Double_t maxTriggRejectLin = 2000;
-    if (isMC.CompareTo("MC")== 0) maxTriggRejectLin = 2500;
-    if (mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0)
-        maxTriggRejectLin = 100;
-    if (mode == 4 && optionEnergy.CompareTo("2.76TeV") == 0)
-        maxTriggRejectLin = 2000;
-    if (mode == 10)
-        maxTriggRejectLin = 3000;
-
-    if( optionEnergy.CompareTo("8TeV")==0 ){
-      if (mode == 2 || mode == 4)
-        maxTriggRejectLin = 310;
-    }
-    
-    TH2F * histo2DTriggRejectLinear;
-    histo2DTriggRejectLinear = new TH2F("histo2DTriggRejectLinear","histo2DTriggRejectLinear",1000,0., maxPtGlobalCluster,15000,minTriggRejectLin, maxTriggRejectLin);
-    SetStyleHistoTH2ForGraphs(histo2DTriggRejectLinear, "#it{p}_{T} (GeV/#it{c})","#frac{N_{clus,trig A}/N_{Evt, trig A}}{N_{clus,trig B}/N_{Evt,trig B}}", 
-                            0.85*textSizeSpectra2,textSizeSpectra2, 0.85*textSizeSpectra2,textSizeSpectra2, 0.85,1.18);
-    histo2DTriggRejectLinear->DrawCopy(); 
-
-    for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-        if (i != trigSteps[i][0] ){
-            DrawGammaSetMarker(histoRatioRawClusterPt[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-            histoRatioRawClusterPt[i]->DrawCopy("e1,same"); 
-            TF1* pol0 = new TF1("pol0","[0]",minPt[i],maxPt[i]); //
-            
-            histoRatioRawClusterPt[i]->Fit(pol0,"NRME+","",minPt[i],maxPt[i]);
-            TH1D* triggRejecCLPol0 = (TH1D*)histoRatioRawClusterPt[i]->Clone(Form("CL_%i",i));
-            triggRejecCLPol0->SetStats(kFALSE);
-            triggRejecCLPol0->SetFillColor(colorTriggShade[i]);
-            triggRejecCLPol0->SetMarkerSize(0);
-            for (Int_t j = 1; j < triggRejecCLPol0->GetNbinsX()+1; j++){
-                triggRejecCLPol0->SetBinContent(j,triggRejecFac[i][trigSteps[i][0]]);
-                triggRejecCLPol0->SetBinError(j,triggRejecFacErr[i][trigSteps[i][0]]);
-            }    
-            triggRejecCLPol0->Draw("e3,same");
-            
-            pol0->SetParameter(0,triggRejecFac[i][trigSteps[i][0]]);
-            pol0->SetParError(0,triggRejecFacErr[i][trigSteps[i][0]]);
-            pol0->SetLineColor(colorTrigg[i]-1);
-            pol0->SetLineStyle(7);
-            pol0->SetRange(minPt[i],maxPt[i]);
-            pol0->Draw("same");
-            histoRatioRawClusterPt[i]->DrawCopy("e1,same"); 
-        }
-    }
-    legendTriggReject->Draw();
-    labelPerfTriggFitRange->Draw();
-    labelPerfTriggRejecFac->Draw();
-
-    histo2DTriggRejectLinear->Draw("same,axis");
-    
-    canvasTriggerRejectLinear->Update();
-    canvasTriggerRejectLinear->SaveAs(Form("%s/%s_TriggerRejectionFactorsLinY.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
-
-    //***************************************************************************************************************
-    //********************Plotting trigger rejection factors = fits, linear scale 1 trigger at a time ***************
-    //***************************************************************************************************************
-     
-    for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-        if (i != trigSteps[i][0] ){
-            histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,histoRatioRawClusterPt[i]->GetMaximum()*1.5); 
-            if (triggerName[i].Contains("EMC7"))
-                histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,250);
-            if (triggerName[i].Contains("EG2"))
-                histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
-            if (triggerName[i].Contains("EG1"))
-                histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,8);
-            if (optionEnergy.CompareTo("8TeV")==0){
-              if (triggerName[i].Contains("EMC7"))
-                  histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,150);
-              if (triggerName[i].Contains("EGA"))
-                  histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,300);
-            }
-                
-            histo2DTriggRejectLinear->DrawCopy(); 
-
-            DrawGammaSetMarker(histoRatioRawClusterPt[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-            histoRatioRawClusterPt[i]->DrawCopy("e1,same"); 
-            TF1* pol0 = new TF1("pol0","[0]",minPt[i],maxPt[i]); //
-            
-            histoRatioRawClusterPt[i]->Fit(pol0,"NRME+","",minPt[i],maxPt[i]);
-            TH1D* triggRejecCLPol0 = (TH1D*)histoRatioRawClusterPt[i]->Clone(Form("CL_%i",i));
-            for (Int_t j = 1; j < triggRejecCLPol0->GetNbinsX()+1; j++){
-                triggRejecCLPol0->SetBinContent(j,triggRejecFac[i][trigSteps[i][0]]);
-                triggRejecCLPol0->SetBinError(j,triggRejecFacErr[i][trigSteps[i][0]]);
-            }    
-
-            triggRejecCLPol0->SetStats(kFALSE);
-            triggRejecCLPol0->SetFillColor(colorTriggShade[i]);
-            triggRejecCLPol0->SetMarkerSize(0);
-            triggRejecCLPol0->Draw("e3,same");
-            
-            pol0->SetParameter(0,triggRejecFac[i][trigSteps[i][0]]);
-            pol0->SetParError(0,triggRejecFacErr[i][trigSteps[i][0]]);
-            pol0->SetLineColor(colorTrigg[i]-1);
-            pol0->SetLineStyle(7);
-            pol0->SetRange(minPt[i],maxPt[i]);
-            pol0->Draw("same");
-            histoRatioRawClusterPt[i]->DrawCopy("e1,same"); 
-
-            TLegend* legendTriggRejectSingle = GetAndSetLegend2(0.33, 0.12, 0.92, 0.12+(1.05*(2)*textSizeSpectra2),textPixelPP);
-            legendTriggRejectSingle->SetMargin(0.02);
-            legendTriggRejectSingle->SetNColumns(3);
-            legendTriggRejectSingle->AddEntry(histoRatioRawClusterPt[i],Form("   %s/%s",triggerNameLabel[i].Data(),triggerNameLabel[trigSteps[i][0]].Data() ),"p");
-
-            legendTriggRejectSingle->AddEntry((TObject*)0,Form("%3.1f< #it{p}_{T} < %3.1f",minPt[i],maxPt[i]),"");
-            if (triggerName[i].Contains("EMC1"))
-                legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.0f #pm %3.0f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
-            else if (triggerName[i].Contains("EMC7"))
-                legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.1f #pm %3.1f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
-            else if (triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA"))
-                legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.2f #pm %3.2f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
-            else if (triggerName[i].Contains("EG1") )
-                legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.3f #pm %3.3f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
-            else 
-                legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.2f #pm %3.2f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
-
-            legendTriggRejectSingle->Draw();
-
-            histo2DTriggRejectLinear->Draw("same,axis");
-
-            canvasTriggerRejectLinear->Update();
-            canvasTriggerRejectLinear->SaveAs(Form("%s/%s_TriggerRejectionFactorsLinY_Single_%s_%s.%s",outputDir.Data(), isMC.Data(), triggerName[i].Data(), 
-                                                   triggerName[trigSteps[i][0]].Data(), suffix.Data())); 
-         
-            if (enableTriggerRejecCompMC) {
-                histo2DTriggRejectLinear->DrawCopy(); 
-
-                triggRejecCLPol0->Draw("e3,same");
-                pol0->Draw("same");
+        TLegend* legendTriggReject = GetAndSetLegend2(0.33, 0.12, 0.92, 0.12+(0.9*(nrOfTrigToBeComb-2+1)*textSizeSpectra2),textPixelPP);
+        legendTriggReject->SetMargin(0.02);
+        legendTriggReject->SetNColumns(3);
+        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+            if (i != trigSteps[i][0] ){
+                for (Int_t j = 1; j < histoRatioRawClusterPt[i]->GetNbinsX()+1; j++){
+                    if (histoRatioRawClusterPt[i]->GetBinError(j)/histoRatioRawClusterPt[i]->GetBinContent(j) > 1){
+                            histoRatioRawClusterPt[i]->SetBinContent(j,1e6);
+                            histoRatioRawClusterPt[i]->SetBinError(j,0);
+                    }    
+                }    
                 
                 DrawGammaSetMarker(histoRatioRawClusterPt[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                histoRatioRawClusterPt[i]->DrawCopy("e1,same"); 
-                DrawGammaSetMarker(histoMCRatioRawClusterPt[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i]+2, colorTriggShade[i]+2);
-                histoMCRatioRawClusterPt[i]->DrawCopy("e1,same"); 
+                histoRatioRawClusterPt[i]->DrawCopy("e,same"); 
+                legendTriggReject->AddEntry(histoRatioRawClusterPt[i],Form("   %s/%s",triggerNameLabel[i].Data(),triggerNameLabel[trigSteps[i][0]].Data() ),"p");
+                legendTriggReject->AddEntry((TObject*)0,Form("  %3.1f < #it{p}_{T} < %3.1f",minPt[i],maxPt[i]),"");
+                if (triggerName[i].Contains("EMC1"))
+                    legendTriggReject->AddEntry((TObject*)0,Form("     %3.0f #pm %3.0f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+                else if (triggerName[i].Contains("EMC7"))
+                    legendTriggReject->AddEntry((TObject*)0,Form("     %3.1f #pm %3.1f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+                else if (triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA"))
+                    legendTriggReject->AddEntry((TObject*)0,Form("     %3.2f #pm %3.2f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+                else if (triggerName[i].Contains("EG1") )
+                    legendTriggReject->AddEntry((TObject*)0,Form("     %3.3f #pm %3.3f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+                else 
+                    legendTriggReject->AddEntry((TObject*)0,Form("     %3.2f #pm %3.2f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+                
+                    
+                TF1* pol0 = new TF1("pol0","[0]",minPt[i],maxPt[i]); //
+                
+                histoRatioRawClusterPt[i]->Fit(pol0,"NRME+","",minPt[i],maxPt[i]);
+                TH1D* triggRejecCLPol0 = (TH1D*)histoRatioRawClusterPt[i]->Clone(Form("CL_%i",i));
+                for (Int_t j = 1; j < triggRejecCLPol0->GetNbinsX()+1; j++){
+                    triggRejecCLPol0->SetBinContent(j,triggRejecFac[i][trigSteps[i][0]]);
+                    triggRejecCLPol0->SetBinError(j,triggRejecFacErr[i][trigSteps[i][0]]);
+                }    
+                triggRejecCLPol0->SetStats(kFALSE);
+                triggRejecCLPol0->SetFillColor(colorTriggShade[i]);
+                triggRejecCLPol0->SetMarkerSize(0);
+                triggRejecCLPol0->Draw("e3,same");
+                
+                pol0->SetParameter(0,triggRejecFac[i][trigSteps[i][0]]);
+                pol0->SetParError(0,triggRejecFacErr[i][trigSteps[i][0]]);
+                pol0->SetLineColor(colorTrigg[i]-1);
+                pol0->SetLineStyle(7);
+                pol0->SetRange(minPt[i],maxPt[i]);
+                pol0->Draw("same");
+                histoRatioRawClusterPt[i]->DrawCopy("e,same"); 
+            }
+        }
+        legendTriggReject->Draw();
+        histo2DTriggReject->Draw("same,axis");
+        TLatex *labelPerfTriggRejec  = NULL;
+        if (isMC.CompareTo("MC") == 0)
+            labelPerfTriggRejec  = new TLatex(0.15, 0.93,"ALICE simulation");
+        else 
+            labelPerfTriggRejec  = new TLatex(0.15, 0.93,"ALICE performance");
+        
+        SetStyleTLatex( labelPerfTriggRejec, textSizeSpectra2,4);
+        labelPerfTriggRejec->Draw();
 
-                legendTriggRejectSingle->AddEntry(histoMCRatioRawClusterPt[i],"   scaled MC","p");
+        TLatex *labelPerfTriggFitRange = new TLatex(0.523, 0.12+(0.9*(nrOfTrigToBeComb-2+1)*textSizeSpectra2)+0.01, "Fit range (GeV/#it{c})");
+        SetStyleTLatex( labelPerfTriggFitRange, textSizeSpectra2,4);
+        labelPerfTriggFitRange->Draw();
+
+        TLatex *labelPerfTriggRejecFac = new TLatex(0.753, 0.12+(0.9*(nrOfTrigToBeComb-2+1)*textSizeSpectra2)+0.01, "Trigger rejection");
+        SetStyleTLatex( labelPerfTriggRejecFac, textSizeSpectra2,4);
+        labelPerfTriggRejecFac->Draw();
+        
+        canvasTriggerReject->Update();
+        canvasTriggerReject->SaveAs(Form("%s/%s_TriggerRejectionFactors.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+        delete canvasTriggerReject;
+        
+        //***************************************************************************************************************
+        //**************************Plotting trigger rejection factors = fits linear scale all in one *******************
+        //***************************************************************************************************************
+    
+        TCanvas* canvasTriggerRejectLinear = new TCanvas("canvasTriggerReject","",0,0,1500,1100);// gives the page size
+        DrawGammaCanvasSettings( canvasTriggerRejectLinear, 0.118, 0.017, textSizeSpectra2, 0.08);
+        canvasTriggerRejectLinear->SetLogy(0);
+        
+        Double_t minTriggRejectLin = 0;
+        Double_t maxTriggRejectLin = 2000;
+        if (isMC.CompareTo("MC")== 0) maxTriggRejectLin = 2500;
+        if (mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0)
+            maxTriggRejectLin = 100;
+        if (mode == 4 && optionEnergy.CompareTo("2.76TeV") == 0)
+            maxTriggRejectLin = 2000;
+        if (mode == 10)
+            maxTriggRejectLin = 3000;
+
+        if( optionEnergy.CompareTo("8TeV")==0 ){
+        if (mode == 2 || mode == 4)
+            maxTriggRejectLin = 310;
+        }
+        
+        TH2F * histo2DTriggRejectLinear;
+        histo2DTriggRejectLinear = new TH2F("histo2DTriggRejectLinear","histo2DTriggRejectLinear",1000,0., maxPtGlobalCluster,15000,minTriggRejectLin, maxTriggRejectLin);
+        SetStyleHistoTH2ForGraphs(histo2DTriggRejectLinear, "#it{p}_{T} (GeV/#it{c})","#frac{N_{clus,trig A}/N_{Evt, trig A}}{N_{clus,trig B}/N_{Evt,trig B}}", 
+                                0.85*textSizeSpectra2,textSizeSpectra2, 0.85*textSizeSpectra2,textSizeSpectra2, 0.85,1.18);
+        histo2DTriggRejectLinear->DrawCopy(); 
+
+        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+            if (i != trigSteps[i][0] ){
+                DrawGammaSetMarker(histoRatioRawClusterPt[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                histoRatioRawClusterPt[i]->DrawCopy("e1,same"); 
+                TF1* pol0 = new TF1("pol0","[0]",minPt[i],maxPt[i]); //
+                
+                histoRatioRawClusterPt[i]->Fit(pol0,"NRME+","",minPt[i],maxPt[i]);
+                TH1D* triggRejecCLPol0 = (TH1D*)histoRatioRawClusterPt[i]->Clone(Form("CL_%i",i));
+                triggRejecCLPol0->SetStats(kFALSE);
+                triggRejecCLPol0->SetFillColor(colorTriggShade[i]);
+                triggRejecCLPol0->SetMarkerSize(0);
+                for (Int_t j = 1; j < triggRejecCLPol0->GetNbinsX()+1; j++){
+                    triggRejecCLPol0->SetBinContent(j,triggRejecFac[i][trigSteps[i][0]]);
+                    triggRejecCLPol0->SetBinError(j,triggRejecFacErr[i][trigSteps[i][0]]);
+                }    
+                triggRejecCLPol0->Draw("e3,same");
+                
+                pol0->SetParameter(0,triggRejecFac[i][trigSteps[i][0]]);
+                pol0->SetParError(0,triggRejecFacErr[i][trigSteps[i][0]]);
+                pol0->SetLineColor(colorTrigg[i]-1);
+                pol0->SetLineStyle(7);
+                pol0->SetRange(minPt[i],maxPt[i]);
+                pol0->Draw("same");
+                histoRatioRawClusterPt[i]->DrawCopy("e1,same"); 
+            }
+        }
+        legendTriggReject->Draw();
+        labelPerfTriggFitRange->Draw();
+        labelPerfTriggRejecFac->Draw();
+
+        histo2DTriggRejectLinear->Draw("same,axis");
+        
+        canvasTriggerRejectLinear->Update();
+        canvasTriggerRejectLinear->SaveAs(Form("%s/%s_TriggerRejectionFactorsLinY.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+
+        //***************************************************************************************************************
+        //********************Plotting trigger rejection factors = fits, linear scale 1 trigger at a time ***************
+        //***************************************************************************************************************
+        
+        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+            if (i != trigSteps[i][0] ){
+                histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,histoRatioRawClusterPt[i]->GetMaximum()*1.5); 
+                if (triggerName[i].Contains("EMC7"))
+                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,250);
+                if (triggerName[i].Contains("EG2"))
+                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
+                if (triggerName[i].Contains("EG1"))
+                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,8);
+                if (optionEnergy.CompareTo("8TeV")==0){
+                if (triggerName[i].Contains("EMC7"))
+                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,150);
+                if (triggerName[i].Contains("EGA"))
+                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,300);
+                }
+                    
+                histo2DTriggRejectLinear->DrawCopy(); 
+
+                DrawGammaSetMarker(histoRatioRawClusterPt[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                histoRatioRawClusterPt[i]->DrawCopy("e1,same"); 
+                TF1* pol0 = new TF1("pol0","[0]",minPt[i],maxPt[i]); //
+                
+                histoRatioRawClusterPt[i]->Fit(pol0,"NRME+","",minPt[i],maxPt[i]);
+                TH1D* triggRejecCLPol0 = (TH1D*)histoRatioRawClusterPt[i]->Clone(Form("CL_%i",i));
+                for (Int_t j = 1; j < triggRejecCLPol0->GetNbinsX()+1; j++){
+                    triggRejecCLPol0->SetBinContent(j,triggRejecFac[i][trigSteps[i][0]]);
+                    triggRejecCLPol0->SetBinError(j,triggRejecFacErr[i][trigSteps[i][0]]);
+                }    
+
+                triggRejecCLPol0->SetStats(kFALSE);
+                triggRejecCLPol0->SetFillColor(colorTriggShade[i]);
+                triggRejecCLPol0->SetMarkerSize(0);
+                triggRejecCLPol0->Draw("e3,same");
+                
+                pol0->SetParameter(0,triggRejecFac[i][trigSteps[i][0]]);
+                pol0->SetParError(0,triggRejecFacErr[i][trigSteps[i][0]]);
+                pol0->SetLineColor(colorTrigg[i]-1);
+                pol0->SetLineStyle(7);
+                pol0->SetRange(minPt[i],maxPt[i]);
+                pol0->Draw("same");
+                histoRatioRawClusterPt[i]->DrawCopy("e1,same"); 
+
+                TLegend* legendTriggRejectSingle = GetAndSetLegend2(0.33, 0.12, 0.92, 0.12+(1.05*(2)*textSizeSpectra2),textPixelPP);
+                legendTriggRejectSingle->SetMargin(0.02);
+                legendTriggRejectSingle->SetNColumns(3);
+                legendTriggRejectSingle->AddEntry(histoRatioRawClusterPt[i],Form("   %s/%s",triggerNameLabel[i].Data(),triggerNameLabel[trigSteps[i][0]].Data() ),"p");
+
+                legendTriggRejectSingle->AddEntry((TObject*)0,Form("%3.1f< #it{p}_{T} < %3.1f",minPt[i],maxPt[i]),"");
+                if (triggerName[i].Contains("EMC1"))
+                    legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.0f #pm %3.0f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+                else if (triggerName[i].Contains("EMC7"))
+                    legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.1f #pm %3.1f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+                else if (triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA"))
+                    legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.2f #pm %3.2f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+                else if (triggerName[i].Contains("EG1") )
+                    legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.3f #pm %3.3f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+                else 
+                    legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.2f #pm %3.2f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+
                 legendTriggRejectSingle->Draw();
 
                 histo2DTriggRejectLinear->Draw("same,axis");
 
                 canvasTriggerRejectLinear->Update();
-                canvasTriggerRejectLinear->SaveAs(Form("%s/%s_TriggerRejectionFactorsLinY_SingleWithMC_%s_%s.%s",outputDir.Data(), isMC.Data(), triggerName[i].Data(), 
+                canvasTriggerRejectLinear->SaveAs(Form("%s/%s_TriggerRejectionFactorsLinY_Single_%s_%s.%s",outputDir.Data(), isMC.Data(), triggerName[i].Data(), 
                                                     triggerName[trigSteps[i][0]].Data(), suffix.Data())); 
-         
-            }    
             
+                if (enableTriggerRejecCompMC) {
+                    histo2DTriggRejectLinear->DrawCopy(); 
+
+                    triggRejecCLPol0->Draw("e3,same");
+                    pol0->Draw("same");
+                    
+                    DrawGammaSetMarker(histoRatioRawClusterPt[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                    histoRatioRawClusterPt[i]->DrawCopy("e1,same"); 
+                    DrawGammaSetMarker(histoMCRatioRawClusterPt[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i]+2, colorTriggShade[i]+2);
+                    histoMCRatioRawClusterPt[i]->DrawCopy("e1,same"); 
+
+                    legendTriggRejectSingle->AddEntry(histoMCRatioRawClusterPt[i],"   scaled MC","p");
+                    legendTriggRejectSingle->Draw();
+
+                    histo2DTriggRejectLinear->Draw("same,axis");
+
+                    canvasTriggerRejectLinear->Update();
+                    canvasTriggerRejectLinear->SaveAs(Form("%s/%s_TriggerRejectionFactorsLinY_SingleWithMC_%s_%s.%s",outputDir.Data(), isMC.Data(), triggerName[i].Data(), 
+                                                        triggerName[trigSteps[i][0]].Data(), suffix.Data())); 
+            
+                }    
+                
+            }   
         }   
-    }   
-    delete canvasTriggerRejectLinear;
+        delete canvasTriggerRejectLinear;
 
-    //***************************************************************************************************************
-    //************************************Plotting trigger rejection trials *************************************************
-    //***************************************************************************************************************
-    TCanvas* canvasTriggerRejecTrial = new TCanvas("canvasTriggerRejecTrial","",0,0,1000,900);// gives the page size
-    DrawGammaCanvasSettings( canvasTriggerRejecTrial, 0.09, 0.017, textSizeSpectra, 0.08);
-    canvasTriggerRejecTrial->SetLogy(0);
-    
-    for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-        if ( triggerName[i].CompareTo(triggerName[trigSteps[i][0]].Data()) != 0){
-            histoTriggerRejection[i]->SetTitle("");
-            DrawGammaSetMarker(histoTriggerRejection[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-            histoTriggerRejection[i]->Draw("e1,p"); 
-
-            TF1* pol0_2 = new TF1("pol0_2","[0]",0.5,10.5); //
-            histoTriggerRejection[i]->Fit(pol0_2,"QNRMEX0+","",0.5,10.5);
-            pol0_2->SetLineColor(colorTrigg[i]-1);
-            pol0_2->SetLineStyle(7);
-            pol0_2->Draw("same");
-            
-            canvasTriggerRejecTrial->Update();
-            canvasTriggerRejecTrial->SaveAs(Form("%s/TriggRejectMean_%s_%s_%s.%s",outputDir.Data(), isMC.Data(), triggerName[i].Data(), triggerName[trigSteps[i][0]].Data(),suffix.Data()));
-            
-            delete pol0_2;
-        }
-    }
-    delete canvasTriggerRejecTrial;
-
-
-
-    //***************************************************************************************************************
-    //************************************Plotting unscaled invariant raw-yield Pi0 *********************************
-    //***************************************************************************************************************
-    Int_t textSizePixelSpectra = textSizeSpectra*1000;
-    
-    TCanvas* canvasClusterYield = new TCanvas("canvasClusterYield","",0,0,1000,1350);// gives the page size
-    DrawGammaCanvasSettings( canvasClusterYield, 0.16, 0.02, 0.015, 0.07);
-    canvasClusterYield->SetLogy();
-    
-    Double_t minClusYieldUnscaled    = 7e-9;
-    Double_t maxClusYieldUnscaled    = 5;
-    if (mode == 10) {
-        minClusYieldUnscaled         = 2e-10;
-        maxClusYieldUnscaled         = 4;
-    } else if (mode == 4) {
-        minClusYieldUnscaled         = 7e-10;
-        maxClusYieldUnscaled         = 5;
-    }
-    if(optionEnergy.CompareTo("8TeV")==0){
-      if (mode == 2) {
-          minClusYieldUnscaled         = 7e-10;
-          maxClusYieldUnscaled         = 5;
-      } else if (mode == 4) {
-          minClusYieldUnscaled         = 7e-10;
-          maxClusYieldUnscaled         = 5;
-      }
-    }
-    TH2F * histo2DClusUnscaled       = new TH2F("histo2DClusUnscaled", "histo2DClusUnscaled", 1000, 0., maxPtGlobalCluster, 10000, minClusYieldUnscaled, maxClusYieldUnscaled);
-    SetStyleHistoTH2ForGraphs(histo2DClusUnscaled, "#it{p}_{T} (GeV/#it{c})","#frac{d#it{N}_{#gamma, raw}}{#it{N}_{evt}d#it{p}_{T}} (#it{c}/GeV)^{2}", 
-                            0.85*textSizeSpectra,0.04, 0.85*textSizeSpectra,textSizeSpectra, 0.8,1.7);
-    histo2DClusUnscaled->GetXaxis()->SetLabelOffset(-0.005);
-    histo2DClusUnscaled->DrawCopy(); 
-
-    Double_t minXLegendClus = 0.62;
-    Int_t nColumnsClus      = 2; 
-    if (nrOfTrigToBeComb > 6){
-        minXLegendClus = 0.3;
-        nColumnsClus   = 3; 
-    }
-    Double_t maxYLegendClus = 0.95;
-    Double_t minYLegendClus = 0.95-(nrOfTrigToBeComb/nColumnsClus*0.75*textSizeSpectra);
-    if(optionEnergy.CompareTo("8TeV")==0) minYLegendClus-=0.03;
-    
-    TLegend* legendClusUnscaled      = GetAndSetLegend2(minXLegendClus, minYLegendClus, 0.95, maxYLegendClus,0.85*textSizePixelSpectra);
-    legendClusUnscaled->SetNColumns(nColumnsClus);
-    for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-        DrawGammaSetMarker(histoRawClusterPt[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-        histoRawClusterPt[i]->DrawCopy("e1,same"); 
-        legendClusUnscaled->AddEntry(histoRawClusterPt[i],triggerNameLabel[i].Data(),"p");
-    }
-    legendClusUnscaled->Draw();
-    
-    
-    TLatex *labelEnergyClusUnscaled  = new TLatex(0.2, 0.12+(2*textSizeSpectra*0.85*0.85),collisionSystem.Data());
-    SetStyleTLatex( labelEnergyClusUnscaled, 0.85*textSizeSpectra,4);
-    labelEnergyClusUnscaled->Draw();
-    
-    TLatex *labelClusterUnscaled     = new TLatex(0.2, 0.12+textSizeSpectra*0.85,"#gamma_{cand}");
-    SetStyleTLatex( labelClusterUnscaled, 0.85*textSizeSpectra,4);
-    labelClusterUnscaled->Draw();
-    
-    TLatex *labelDetProcClus = NULL; 
-    if (mode == 4 || mode == 2){
-        labelDetProcClus = new TLatex(0.2, 0.12,detectionProcessClus.Data());
-    } else if (mode == 10) {
-        labelDetProcClus = new TLatex(0.2, 0.12,"rec. with EMCal");
-    } else {
-        labelDetProcClus = new TLatex(0.2, 0.12,"rec. with EMCal");
-    }    
+        //***************************************************************************************************************
+        //************************************Plotting trigger rejection trials *************************************************
+        //***************************************************************************************************************
+        TCanvas* canvasTriggerRejecTrial = new TCanvas("canvasTriggerRejecTrial","",0,0,1000,900);// gives the page size
+        DrawGammaCanvasSettings( canvasTriggerRejecTrial, 0.09, 0.017, textSizeSpectra, 0.08);
+        canvasTriggerRejecTrial->SetLogy(0);
         
-    SetStyleTLatex( labelDetProcClus, 0.85*textSizeSpectra,4);
-    labelDetProcClus->Draw();
+        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+            if ( triggerName[i].CompareTo(triggerName[trigSteps[i][0]].Data()) != 0){
+                histoTriggerRejection[i]->SetTitle("");
+                DrawGammaSetMarker(histoTriggerRejection[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                histoTriggerRejection[i]->Draw("e1,p"); 
 
-    canvasClusterYield->Update();
-    canvasClusterYield->SaveAs(Form("%s/Cluster_%s_YieldUnscaledTrigg.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
-    if (!enableEta) delete canvasClusterYield;    
+                TF1* pol0_2 = new TF1("pol0_2","[0]",0.5,10.5); //
+                histoTriggerRejection[i]->Fit(pol0_2,"QNRMEX0+","",0.5,10.5);
+                pol0_2->SetLineColor(colorTrigg[i]-1);
+                pol0_2->SetLineStyle(7);
+                pol0_2->Draw("same");
+                
+                canvasTriggerRejecTrial->Update();
+                canvasTriggerRejecTrial->SaveAs(Form("%s/TriggRejectMean_%s_%s_%s.%s",outputDir.Data(), isMC.Data(), triggerName[i].Data(), triggerName[trigSteps[i][0]].Data(),suffix.Data()));
+                
+                delete pol0_2;
+            }
+        }
+        delete canvasTriggerRejecTrial;
 
+
+
+        //***************************************************************************************************************
+        //************************************Plotting unscaled invariant raw-yield Pi0 *********************************
+        //***************************************************************************************************************
+        
+        TCanvas* canvasClusterYield = new TCanvas("canvasClusterYield","",0,0,1000,1350);// gives the page size
+        DrawGammaCanvasSettings( canvasClusterYield, 0.16, 0.02, 0.015, 0.07);
+        canvasClusterYield->SetLogy();
+        
+        Double_t minClusYieldUnscaled    = 7e-9;
+        Double_t maxClusYieldUnscaled    = 5;
+        if (mode == 10) {
+            minClusYieldUnscaled         = 2e-10;
+            maxClusYieldUnscaled         = 4;
+        } else if (mode == 4) {
+            minClusYieldUnscaled         = 7e-10;
+            maxClusYieldUnscaled         = 5;
+        }
+        if(optionEnergy.CompareTo("8TeV")==0){
+        if (mode == 2) {
+            minClusYieldUnscaled         = 7e-10;
+            maxClusYieldUnscaled         = 5;
+        } else if (mode == 4) {
+            minClusYieldUnscaled         = 7e-10;
+            maxClusYieldUnscaled         = 5;
+        }
+        }
+        TH2F * histo2DClusUnscaled       = new TH2F("histo2DClusUnscaled", "histo2DClusUnscaled", 1000, 0., maxPtGlobalCluster, 10000, minClusYieldUnscaled, maxClusYieldUnscaled);
+        SetStyleHistoTH2ForGraphs(histo2DClusUnscaled, "#it{p}_{T} (GeV/#it{c})","#frac{d#it{N}_{#gamma, raw}}{#it{N}_{evt}d#it{p}_{T}} (#it{c}/GeV)^{2}", 
+                                0.85*textSizeSpectra,0.04, 0.85*textSizeSpectra,textSizeSpectra, 0.8,1.7);
+        histo2DClusUnscaled->GetXaxis()->SetLabelOffset(-0.005);
+        histo2DClusUnscaled->DrawCopy(); 
+
+        Double_t minXLegendClus = 0.62;
+        Int_t nColumnsClus      = 2; 
+        if (nrOfTrigToBeComb > 6){
+            minXLegendClus = 0.3;
+            nColumnsClus   = 3; 
+        }
+        Double_t maxYLegendClus = 0.95;
+        Double_t minYLegendClus = 0.95-(nrOfTrigToBeComb/nColumnsClus*0.75*textSizeSpectra);
+        if(optionEnergy.CompareTo("8TeV")==0) minYLegendClus-=0.03;
+        
+        TLegend* legendClusUnscaled      = GetAndSetLegend2(minXLegendClus, minYLegendClus, 0.95, maxYLegendClus,0.85*textSizePixelSpectra);
+        legendClusUnscaled->SetNColumns(nColumnsClus);
+        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+            DrawGammaSetMarker(histoRawClusterPt[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+            histoRawClusterPt[i]->DrawCopy("e1,same"); 
+            legendClusUnscaled->AddEntry(histoRawClusterPt[i],triggerNameLabel[i].Data(),"p");
+        }
+        legendClusUnscaled->Draw();
+        
+        
+        TLatex *labelEnergyClusUnscaled  = new TLatex(0.2, 0.12+(2*textSizeSpectra*0.85*0.85),collisionSystem.Data());
+        SetStyleTLatex( labelEnergyClusUnscaled, 0.85*textSizeSpectra,4);
+        labelEnergyClusUnscaled->Draw();
+        
+        TLatex *labelClusterUnscaled     = new TLatex(0.2, 0.12+textSizeSpectra*0.85,"#gamma_{cand}");
+        SetStyleTLatex( labelClusterUnscaled, 0.85*textSizeSpectra,4);
+        labelClusterUnscaled->Draw();
+        
+        TLatex *labelDetProcClus = NULL; 
+        if (mode == 4 || mode == 2){
+            labelDetProcClus = new TLatex(0.2, 0.12,detectionProcessClus.Data());
+        } else if (mode == 10) {
+            labelDetProcClus = new TLatex(0.2, 0.12,"rec. with EMCal");
+        } else {
+            labelDetProcClus = new TLatex(0.2, 0.12,"rec. with EMCal");
+        }    
+            
+        SetStyleTLatex( labelDetProcClus, 0.85*textSizeSpectra,4);
+        labelDetProcClus->Draw();
+
+        canvasClusterYield->Update();
+        canvasClusterYield->SaveAs(Form("%s/Cluster_%s_YieldUnscaledTrigg.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+        if (!enableEta) delete canvasClusterYield;    
+    }
+    
     //***************************************************************************************************************
     //************************************Plotting efficiencies Pi0 *************************************************
     //***************************************************************************************************************
@@ -892,13 +907,18 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
     Double_t minEffiPi0 = 1e-4;
     Double_t maxEffiPi0 = 1e-1;
-    if (mode == 4) maxEffiPi0 = 8e-1;
-    if (mode == 10) maxEffiPi0 = 8e-1;
-
-    if(optionEnergy.CompareTo("8TeV")==0){
-      if (mode == 2) minEffiPi0 = 5e-5;
+    if (mode == 4){
+        maxEffiPi0      = 8e-1;
+    } else if (mode == 10){
+        maxEffiPi0      = 8e-1;
+    } else if (mode == 2){
+        if(optionEnergy.CompareTo("8TeV")==0)
+            minEffiPi0  = 5e-5;
+    } else if (mode == 0){
+        maxEffiPi0      = 8e-3;
+        minEffiPi0      = 5e-5;
     }
-
+    
     TH2F * histo2DEffiPi0;
     histo2DEffiPi0 = new TH2F("histo2DEffiPi0","histo2DEffiPi0",1000,0., maxPtGlobalPi0,10000,minEffiPi0, maxEffiPi0);
     SetStyleHistoTH2ForGraphs(histo2DEffiPi0, "#it{p}_{T} (GeV/#it{c})","#epsilon_{reco} #times #epsilon_{trigg}",
@@ -1015,8 +1035,12 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
     Double_t minAccPi0 = 0.15;
     Double_t maxAccPi0 = 0.3;
-    if(optionEnergy.CompareTo("8TeV")==0){
-      if(mode == 2) minAccPi0 = 0.17;
+    if (mode == 0){
+        maxAccPi0       = 1.05;
+        minAccPi0       = 0.7;
+    } else if (mode == 2){    
+        if(optionEnergy.CompareTo("8TeV")==0)
+            minAccPi0   = 0.17;
     }
 
     TH2F * histo2DAccPi0;
@@ -1110,7 +1134,13 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     DrawGammaCanvasSettings( canvasMass, 0.11, 0.017, 0.015, 0.08);
     Double_t minMassPi0         = 0.120;
     Double_t maxMassPi0         = 0.160;
-    if(optionEnergy.CompareTo("8TeV")==0) maxMassPi0 = 0.150;
+    if(optionEnergy.CompareTo("8TeV")==0) 
+        maxMassPi0              = 0.150;
+    if (mode == 0){
+        maxMassPi0              = 0.142;
+        minMassPi0              = 0.130;
+    }    
+    
     TH2F * histo2DMassPi0       = new TH2F("histo2DMassPi0","histo2DMassPi0",1000,0., maxPtGlobalPi0,10000,minMassPi0, maxMassPi0);
     SetStyleHistoTH2ForGraphs(histo2DMassPi0, "#it{p}_{T} (GeV/#it{c})","#it{M}_{#pi^{0}} (Mev/#it{c}^{2})", 
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.4);
@@ -1126,6 +1156,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     DrawGammaCanvasSettings( canvasWidth, 0.09, 0.017, 0.035, 0.08);
     Double_t minWidthPi0        = 0.0;
     Double_t maxWidthPi0        = 0.0295;
+    if (mode == 0){
+        minWidthPi0             = 0.0;
+        maxWidthPi0             = 0.0125;
+    }    
     TH2F * histo2DWidthPi0      = new TH2F("histo2DWidthPi0","histo2DWidthPi0",1000,0., maxPtGlobalPi0,10000,minWidthPi0, maxWidthPi0);
     SetStyleHistoTH2ForGraphs(histo2DWidthPi0, "#it{p}_{T} (GeV/#it{c})","#sigma_{#pi^{0}} (Mev/#it{c}^{2})", 
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);
@@ -1278,7 +1312,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
       if(mode == 4){
         minCorrYieldRawUnscaled         = 7e-8;
         maxCorrYieldRawUnscaled         = 8e-3;
-      }
+      } else if (mode == 0){
+        minCorrYieldRawUnscaled         = 2e-8;
+        maxCorrYieldRawUnscaled         = 4e-3;          
+      }    
     }
     TH2F * histo2DRawUnscaled       = new TH2F("histo2DRawUnscaled", "histo2DRawUnscaled", 1000, 0., maxPtGlobalPi0, 10000, minCorrYieldRawUnscaled, maxCorrYieldRawUnscaled);
     SetStyleHistoTH2ForGraphs(histo2DRawUnscaled, "#it{p}_{T} (GeV/#it{c})","#frac{d#it{N}_{#pi_{0}, raw}}{#it{N}_{evt}d#it{p}_{T}} (#it{c}/GeV)^{2}", 
@@ -1329,11 +1366,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     DrawGammaCanvasSettings( canvasCorrUnscaled, 0.15, 0.017, 0.015, 0.07);
     canvasCorrUnscaled->SetLogy();
     
-    Double_t minCorrYieldUnscaled = 2e-10;
-    Double_t maxCorrYieldUnscaled = 1e2;
+    Double_t minCorrYieldUnscaled   = 2e-10;
+    Double_t maxCorrYieldUnscaled   = 1e2;
     if (mode == 10) {
-        minCorrYieldUnscaled = 2e-12;
-        maxCorrYieldUnscaled = 1;
+        minCorrYieldUnscaled        = 2e-12;
+        maxCorrYieldUnscaled        = 1;
+    } else if (mode == 0){
+        minCorrYieldUnscaled        = 1e-8;
+        maxCorrYieldUnscaled        = 1e2;        
     }    
     
     TH2F * histo2DInvYieldUnscaled = new TH2F("histo2DInvYieldUnscaled","histo2DInvYieldUnscaled",1000,0., maxPtGlobalPi0,10000,minCorrYieldUnscaled,maxCorrYieldUnscaled);
@@ -2664,7 +2704,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     if (mode == 10) {
         minCorrYield            = 2e-12;
         maxCorrYield            = 1e-3;
-    }
+    } else if (mode == 0){
+        minCorrYield            = 2e-9;
+        maxCorrYield            = 1e1;        
+    }    
     
     TH2F * histo2DInvYieldScaled;
     histo2DInvYieldScaled = new TH2F("histo2DInvYieldScaled","histo2DInvYieldScaled",1000,0., maxPtGlobalPi0,10000,minCorrYield,maxCorrYield);
@@ -3063,16 +3106,19 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         Double_t minEffiEta     = 1e-5;
         Double_t maxEffiEta     = 1e-1;
         if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1){
-          minEffiEta     = 5e-4;
-          maxEffiEta     = 1e-1;
+          minEffiEta            = 5e-4;
+          maxEffiEta            = 1e-1;
         }
         if (mode == 4){
             maxEffiEta          = 5e0;
             if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1){
-              minEffiEta     = 5e-4;
-              maxEffiEta     = 5e0;
+              minEffiEta        = 5e-4;
+              maxEffiEta        = 5e0;
             }
-        }
+        } else if (mode == 0) {
+            maxEffiEta          = 8e-3;
+            minEffiEta          = 1e-4;
+        }    
         
         canvasEffi->cd();
         TH2F * histo2DEffiEta;
@@ -3091,7 +3137,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         legendEffiEta->Draw();
 
         labelEnergyEffi->Draw();
-        TLatex *labelEtaEffi = new TLatex(0.62, 0.25+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+        TLatex *labelEtaEffi = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
         SetStyleTLatex( labelEtaEffi, 0.85*textSizeSpectra,4);
         labelEtaEffi->Draw();
         labelDetProcEffi->Draw();
@@ -3174,6 +3220,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         canvasAcc->cd();
         Double_t minAccEta = 0.05;
         Double_t maxAccEta = 0.3;
+        if (mode == 0){
+            maxAccEta       = 1.05;
+            minAccEta       = 0.5;
+        } else if (mode == 2){    
+            if(optionEnergy.CompareTo("8TeV")==0)   
+                minAccEta   = 0.05;
+        }
+
         
         TH2F * histo2DAccEta;
         histo2DAccEta = new TH2F("histo2DAccEta","histo2DAccEta",1000,0., maxPtGlobalEta,10000,minAccEta, maxAccEta);
@@ -3205,6 +3259,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         Double_t minMassEta = 0.500;
         Double_t maxMassEta = 0.600;
     
+        if (mode == 0){
+            minMassEta      = 0.54;
+            maxMassEta      = 0.56;
+        }
+        
         TH2F * histo2DMassEta;
         histo2DMassEta = new TH2F("histo2DMassEta","histo2DMassEta",1000,0., maxPtGlobalEta,10000,minMassEta, maxMassEta);
         SetStyleHistoTH2ForGraphs(histo2DMassEta, "#it{p}_{T} (GeV/#it{c})","#it{M}_{#eta} (Mev/#it{c}^{2})", 
@@ -3262,9 +3321,13 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         //***************************************************************************************************************
         canvasWidth->cd();
         
-        Double_t minWidthEta = 0.0;
-        Double_t maxWidthEta = 0.060;
-    
+        Double_t minWidthEta    = 0.0;
+        Double_t maxWidthEta    = 0.060;
+        if (mode == 0){
+            minWidthEta         = 0.0;
+            maxWidthEta         = 0.012;
+        }
+        
         TH2F * histo2DWidthEta;
         histo2DWidthEta = new TH2F("histo2DWidthEta","histo2DWidthEta",1000,0., maxPtGlobalEta,10000,minWidthEta, maxWidthEta);
         SetStyleHistoTH2ForGraphs(histo2DWidthEta, "#it{p}_{T} (GeV/#it{c})","#sigma_{#eta} (Mev/#it{c}^{2})", 
@@ -3334,10 +3397,13 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             minCorrYieldRawUnscaledEta          = 7e-8;
             maxCorrYieldRawUnscaledEta          = 1e-1;
             if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1){
-              minCorrYieldRawUnscaledEta          = 7e-8;
-              maxCorrYieldRawUnscaledEta          = 2e-4;
+              minCorrYieldRawUnscaledEta        = 7e-8;
+              maxCorrYieldRawUnscaledEta        = 2e-4;
             }
-        }    
+        } else if (mode == 0) {
+            minCorrYieldRawUnscaledEta          = 7e-8;
+            maxCorrYieldRawUnscaledEta          = 1e-4;            
+        }
         
         TH2F * histo2DRawUnscaledEta       = new TH2F("histo2DRawUnscaledEta", "histo2DRawUnscaledEta", 1000, 0., maxPtGlobalEta, 10000, minCorrYieldRawUnscaledEta, maxCorrYieldRawUnscaledEta);
         SetStyleHistoTH2ForGraphs(histo2DRawUnscaledEta, "#it{p}_{T} (GeV/#it{c})","#frac{d#it{N}_{#eta, raw}}{#it{N}_{evt}d#it{p}_{T}} (#it{c}/GeV)^{2}", 
@@ -3365,8 +3431,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         //***************************************************************************************************************
         canvasCorrUnscaled->cd();
         
+        Double_t minCorrYieldUnscaledEta    = 2e-10;
+        Double_t maxCorrYieldUnscaledEta    = 1e2;
+        if (mode == 0){
+            minCorrYieldUnscaledEta         = 1e-7;
+            maxCorrYieldUnscaledEta         = 5e-1;        
+        }    
+
+        
         TH2F * histo2DInvYieldUnscaledEta;
-        histo2DInvYieldUnscaledEta = new TH2F("histo2DInvYieldUnscaledEta","histo2DInvYieldUnscaledEta",1000,0., maxPtGlobalEta,10000,2e-10,1e2);
+        histo2DInvYieldUnscaledEta = new TH2F("histo2DInvYieldUnscaledEta","histo2DInvYieldUnscaledEta",1000,0., maxPtGlobalEta,10000,minCorrYieldUnscaledEta,maxCorrYieldUnscaledEta);
         SetStyleHistoTH2ForGraphs(histo2DInvYieldUnscaledEta, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", 
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.8,1.55);
         histo2DInvYieldUnscaledEta->DrawCopy(); 
@@ -4353,16 +4427,20 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         //***************************************************************************************************************
         canvasCorrScaled->cd();
 
-        Double_t minCorrYieldEta = 2e-11;
-        Double_t maxCorrYieldEta = 5e-2;
+        Double_t minCorrYieldEta    = 2e-11;
+        Double_t maxCorrYieldEta    = 5e-2;
         if(optionEnergy.CompareTo("8TeV")==0 && numberOfTrigg==1){
-          minCorrYieldEta     = 5e-8;
-          maxCorrYieldEta     = 7e-2;
-          if(mode==4){
-            minCorrYieldEta     = 2e-9;
-            maxCorrYieldEta     = 1e-2;
-          }
+            minCorrYieldEta         = 5e-8;
+            maxCorrYieldEta         = 7e-2;
+            if(mode==4){
+                minCorrYieldEta     = 2e-9;
+                maxCorrYieldEta     = 1e-2;
+            }    
         }
+        if (mode == 0){
+            minCorrYieldEta         = 5e-8;
+            maxCorrYieldEta         = 1e-1;                
+        } 
         
         TH2F * histo2DInvYieldScaledEta;
         histo2DInvYieldScaledEta = new TH2F("histo2DInvYieldScaledEta","histo2DInvYieldScaledEta",1000,0., maxPtGlobalEta,10000,minCorrYieldEta,maxCorrYieldEta);
