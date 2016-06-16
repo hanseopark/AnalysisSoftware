@@ -2019,6 +2019,7 @@ Int_t GetBinning(   Double_t*  binning,
         } else if (energy.CompareTo("8TeV") == 0){
             if ( mode == 2 || mode == 4){
                 maxNBins = 46;
+                if(mode == 4) maxNBins = 40;
                 for(Int_t i = 0; i < maxNBins+1; i++){
                     binning[i] = fBinsPi0Combine8TeVPt[i];
                 }
