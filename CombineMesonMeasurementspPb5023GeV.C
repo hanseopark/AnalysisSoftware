@@ -2022,14 +2022,56 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   TGraphAsymmErrors* graphChargedPionspPbStatCopy = (TGraphAsymmErrors*) graphChargedPionspPbStat->Clone("graphChargedPionspPbStatCopy");
   TH1D*  histoCombPi0InvCrossSectionStatpPb5023GeVYShifted=(TH1D *)GraphAsymErrorsToHist_withErrors(graphCombPi0InvCrossSectionStatpPb5023GeVYShifted, "histoCombPi0InvCrossSectionStatpPb5023GeVYShifted");
 
-  TGraphErrors* bla1 = NULL;
-  TGraphErrors* bla2 = NULL;
-  TGraphErrors* bla3 = NULL;
-  TGraphErrors* bla4 = NULL;
+//   TGraphErrors* bla1 = NULL;
+//   TGraphErrors* bla2 = NULL;
+//   TGraphErrors* bla3 = NULL;
+//   TGraphErrors* bla4 = NULL;
+//   cout << "PCM Spectrum  - Dalitz" << endl;
+//   TGraphErrors* graphRatioPi0ChargedPions = CalculateRatioBetweenSpectraWithDifferentBinning(histoCombPi0InvCrossSectionStatpPb5023GeVYShifted,graphCombPi0InvCrossSectionSyspPb5023GeVYShiftedCopy,histoChargedPionspPbStatErr,graphChargedPionspPbSystCopy ,  kTRUE,  kTRUE,&bla1,&bla2,&bla3,&bla4)  ;
+
+
+  //NOTE splitting errors
+  TGraphErrors* graphCombPi0InvCrossSectionStatpPb5023GeVYShiftedRebin = NULL;
+  TGraphErrors* graphCombPi0InvCrossSectionSyspPb5023GeVYShiftedRebinOneMat = NULL;
+  TGraphErrors* graphChargedPionspPbStatErrRebin = NULL;
+  TGraphErrors* graphChargedPionspPbSystErrRebin = NULL;
+  
+  //TGraphErrors* graphCombPi0InvCrossSectionSyspPb5023GeVYShiftedRebin = NULL;
   cout << "PCM Spectrum  - Dalitz" << endl;
-  TGraphErrors* graphRatioPi0ChargedPions = CalculateRatioBetweenSpectraWithDifferentBinning(histoCombPi0InvCrossSectionStatpPb5023GeVYShifted,graphCombPi0InvCrossSectionSyspPb5023GeVYShiftedCopy,histoChargedPionspPbStatErr,graphChargedPionspPbSystCopy ,  kTRUE,  kTRUE,&bla1,&bla2,&bla3,&bla4)  ;
+  TGraphErrors* graphRatioPi0ChargedPions = CalculateRatioBetweenSpectraWithDifferentBinning(histoCombPi0InvCrossSectionStatpPb5023GeVYShifted,graphCombPi0InvCrossSectionSyspPb5023GeVYShiftedCopy,histoChargedPionspPbStatErr,graphChargedPionspPbSystCopy ,  kTRUE,  kTRUE,&graphCombPi0InvCrossSectionStatpPb5023GeVYShiftedRebin,&graphCombPi0InvCrossSectionSyspPb5023GeVYShiftedRebinOneMat,&graphChargedPionspPbStatErrRebin,&graphChargedPionspPbSystErrRebin)  ;
+  
+  
+   TGraphErrors* graphCombPi0InvCrossSectionSyspPb5023GeVYShiftedRebin         = (TGraphErrors*)graphCombPi0InvCrossSectionSyspPb5023GeVYShiftedRebinOneMat->Clone("Dummy");
+   Double_t * yValue           = graphCombPi0InvCrossSectionSyspPb5023GeVYShiftedRebin->GetY();
+   Double_t* yError            = graphCombPi0InvCrossSectionSyspPb5023GeVYShiftedRebin->GetEY();
+   Int_t nPoints               = graphCombPi0InvCrossSectionSyspPb5023GeVYShiftedRebin->GetN();
+  
+  
+  for(Int_t i=0; i< nPoints; i++){
+    
+   
+    yError[i] = TMath::Sqrt( TMath::Power((yError[i]/yValue[i]),2) + 0.045*0.045)*yValue[i];
+    
+	  
+    
+  }
+  
+  
+  
 
+  TGraphErrors* graphRatioPi0ChargedPionsStatErr = CalculateGraphRatioToGraph( graphCombPi0InvCrossSectionStatpPb5023GeVYShiftedRebin,graphChargedPionspPbStatErrRebin);
+  TGraphErrors* graphRatioPi0ChargedPionsSystErr = CalculateGraphRatioToGraph( graphCombPi0InvCrossSectionSyspPb5023GeVYShiftedRebin,graphChargedPionspPbSystErrRebin);
 
+  
+  
+  
+  
+  TGraphErrors*  tempTest  = CalculateCombinedSysAndStatError(graphRatioPi0ChargedPionsStatErr,graphRatioPi0ChargedPionsSystErr);
+
+  
+  
+  
+  
 
 
   TCanvas* CanvasRatioPi0ChargedPions = new TCanvas("CanvasRatioPi0ChargedPions","",200,10,1200,1200);  // gives the page size
@@ -2078,11 +2120,15 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   padRatios1->cd();
     
   padRatios1->SetLogx();
+  
+  DrawGammaSetMarkerTGraphErr(graphRatioPi0ChargedPionsSystErr,20,1.0, kBlue, kBlue, 1, kTRUE);
+  DrawGammaSetMarkerTGraphErr(graphRatioPi0ChargedPionsStatErr,20,1.0, kBlue, kBlue);
+
 
 
   //  canvasRatioAllppreferences->SetLogy();
   TH2F * histoRatioPi0ChargedPions;
-  histoRatioPi0ChargedPions = new TH2F("histoRatioPi0ChargedPions","histo2DRatioAllppreferences",1000,.2,30.,1000,0.71,1.39);
+  histoRatioPi0ChargedPions = new TH2F("histoRatioPi0ChargedPions","histo2DRatioAllppreferences",1000,.2,30.,1000,0.51,1.49);
   SetStyleHistoTH2ForGraphs(histoRatioPi0ChargedPions, "#it{p}_{T} (GeV/#it{c})","pi^{0}/pi^{+/-}", 0.13,0.13, 0.13,0.13, 0.5,.5, 502, 505);
  
  
@@ -2092,8 +2138,25 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   lineA3->SetLineColor(kGray+1);
   lineA3->Draw("same"); 
      
-  DrawGammaSetMarkerTGraph(graphRatioPi0ChargedPions,20,0.7, kBlue, kBlue);  
-  graphRatioPi0ChargedPions->Draw("p,same");  
+  //DrawGammaSetMarkerTGraph(graphRatioPi0ChargedPions,20,0.7, kBlue, kBlue);  
+  //graphRatioPi0ChargedPions->Draw("p,same");  
+  
+  //tempTest->Draw("p,same");
+  graphRatioPi0ChargedPionsStatErr->Draw("p,same,e");
+  //graphRatioPi0ChargedPionsStatErr->SetFillColor(0);
+  graphRatioPi0ChargedPionsSystErr->Draw("2same");
+  
+  
+  TLegend* legendPi0ChargedPionsRatio = new TLegend(0.86,0.75,0.96,0.90);
+  legendPi0ChargedPionsRatio->SetFillColor(0);
+  legendPi0ChargedPionsRatio->SetLineColor(0); 
+  legendPi0ChargedPionsRatio->SetTextSize(0.08);
+  legendPi0ChargedPionsRatio->AddEntry(graphRatioPi0ChargedPionsSystErr,"syst","ef");
+  legendPi0ChargedPionsRatio->AddEntry(graphRatioPi0ChargedPionsStatErr,"stat","pe");
+  
+  legendPi0ChargedPionsRatio->Draw("same");
+  
+  
           
   CanvasRatioPi0ChargedPions->Print(Form("%s/Comparison_ChargedPions.%s",outputDir.Data(),suffix.Data()));
 

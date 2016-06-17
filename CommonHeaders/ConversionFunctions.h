@@ -11,6 +11,7 @@ void                CalculateMeanPtWithError(const TF1* , Float_t& , Float_t& );
 // TH1D*            CalculateHistoRatioToFit (TH1D*, TF1*);
 // TH1F*            CalculateHistoRatioToFit (TH1F*, TF1*);
 TH1D*               CorrectHistoToBinCenter (TH1D*);
+TGraphErrors* 	    CalculateGraphRatioToGraph(TGraphErrors*, TGraphErrors*);
 TGraphErrors*       CalculateGraphErrRatioToFit (TGraphErrors* , TF1* );
 TGraphAsymmErrors*  CalculateGraphErrRatioToFit (TGraphAsymmErrors* , TF1* );
 TGraph*             CalculateGraphRatioToFit (TGraph* , TF1* );
@@ -19,6 +20,8 @@ TGraphAsymmErrors*  CalculateSysErrFromRelSysHisto( TH1D* , TString , Double_t* 
 TGraphAsymmErrors*  CalculateSysErrAFromRelSysHisto( TH1D* , TString , Double_t* , Double_t* , Int_t , const Int_t  );
 TGraphAsymmErrors*  CalculateSysErrFromRelSysHistoComplete( TH1D* , TString , Double_t* , Double_t* , Int_t , const Int_t  );
 TGraphAsymmErrors*  CalculateCombinedSysAndStatError( TGraphAsymmErrors* , TGraphAsymmErrors* );
+TGraphErrors*  	    CalculateCombinedSysAndStatError( TGraphErrors*, 	   TGraphErrors* );
+
 TH1D*               CalculateShiftedSpectrumInXtOrMt(TH1D* , TH1D* , TString );
 TH1D*               CalculateMassMinusExpectedMass(TH1D* , Double_t );
 void                RemoveScalingWithPt(TH1D* );
@@ -219,6 +222,35 @@ TGraphAsymmErrors* MultiplyGraphAsymmErrs (TGraphAsymmErrors* graph_1, TGraphAsy
 }
 
 
+TGraphErrors* CalculateGraphRatioToGraph(TGraphErrors* graphA, TGraphErrors* graphB){
+  
+    TGraphErrors* graphACopy 		= (TGraphErrors*)graphA->Clone("GraphCopy");
+    Double_t* xValue                    = graphACopy->GetX(); 
+    Double_t* yValue                    = graphACopy->GetY();
+    Double_t* xError                 	= graphACopy->GetEX();
+    Double_t* yError                 	= graphACopy->GetEY();
+    
+    
+    
+    Int_t nPoints                       = graphACopy->GetN();
+    for (Int_t i = 0; i < nPoints; i++){
+        yValue[i]                       = yValue[i]/graphB->GetY()[i];
+	cout<<i<<" A EY "<< graphA->GetEY()[i]<<" A Y "<<graphA->GetY()[i]<<" B EY "<<graphB->GetEY()[i]<<" B Y"<<graphB->GetY()[i]<<endl;
+	
+	
+        Double_t yErrorRatio    	= yValue[i]*TMath::Sqrt( TMath::Power(graphA->GetEY()[i]/graphA->GetY()[i],2) + TMath::Power(graphB->GetEY()[i]/graphB->GetY()[i],2));
+	yError[i] = yErrorRatio; 
+    }     
+	
+	
+	
+	
+    TGraphErrors* returnGraph      = new TGraphErrors(nPoints,xValue,yValue,xError,yError); 
+    return returnGraph;
+    
+}
+
+
 //**********************************************************************************************************
 // Calculates the ratio of a graph and a fit
 //**********************************************************************************************************
@@ -387,6 +419,30 @@ TGraphAsymmErrors* CalculateSysErrFromRelSysHistoComplete( TH1D* histo, TString 
 // Calculates a graph with total errors based on an 2 input graphs containing systematic and statistical
 // errors
 //**********************************************************************************************************
+
+
+TGraphErrors* CalculateCombinedSysAndStatError( TGraphErrors* graphStat, TGraphErrors* graphSys){
+   TGraphErrors* graphStatCopy          = (TGraphErrors*)graphStat->Clone("graphStatCopy");
+   TGraphErrors* graphSysCopy           = (TGraphErrors*)graphSys->Clone("graphSysCopy");
+   Double_t* xValue                     = graphStatCopy->GetX();
+   Double_t* xError                     = graphStatCopy->GetEX();
+   Double_t* yValueStat                 = graphStatCopy->GetY();
+   Double_t* yErrorStat                 = graphStatCopy->GetEY();
+   Double_t* yErrorSys                  = graphSysCopy->GetEY();
+   Int_t nPoints                        = graphStatCopy->GetN();
+   
+   Double_t yErrorComb[nPoints];
+  // Double_t yErrorComb[nPoints];
+   for (Int_t i = 0; i < nPoints; i++){
+      yErrorComb[i]                 = TMath::Sqrt((TMath::Power(yErrorStat[i],2) + TMath::Power(yErrorSys[i],2)));
+   }
+   
+   TGraphErrors* graphSysAndComb   = new TGraphErrors(nPoints,xValue,yValueStat,xError,yErrorComb);
+   
+   graphSysAndComb->SetName(graphSys->GetName());
+   return graphSysAndComb;
+}
+
 TGraphAsymmErrors* CalculateCombinedSysAndStatError( TGraphAsymmErrors* graphStat, TGraphAsymmErrors* graphSys){
    TGraphAsymmErrors* graphStatCopy     = (TGraphAsymmErrors*)graphStat->Clone("graphStatCopy");
    TGraphAsymmErrors* graphSysCopy      = (TGraphAsymmErrors*)graphSys->Clone("graphSysCopy");
