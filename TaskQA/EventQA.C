@@ -192,7 +192,7 @@ void EventQA(
     //************************** Define output directories*************************************************
     //*****************************************************************************************************    
     TString outputDir                   = Form("%s/%s/EventQA/%s",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
-    TString outputDirRootFile           = Form("%s/%s/EventQA/",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
+    TString outputDirRootFile           = Form("%s/%s/EventQA/",cuts.at(cutNr).Data(),fEnergyFlag.Data());
     if(addSubfolder) outputDir          +=Form("/%s",DataSets[0].Data());
 
     gSystem->Exec("mkdir -p "+outputDir);

@@ -2419,23 +2419,23 @@ void ClusterQA(
     //---------------------------------------------------------------------------------------------------------------
     for(Int_t iVec=0; iVec<(Int_t)vecClusterEnergy.size(); iVec++){
         TH1D* temp = vecClusterEnergy.at(iVec);
-        temp->Scale(1./nEvents[iVec]);
+        temp->Scale(1./temp->Integral());
         //temp->GetXaxis()->SetRangeUser(minClusE,fBinsClusterPt[fNBinsClusterPt+1]);
     }
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kTRUE,kTRUE,kFALSE,
-                                vecClusterEnergy,"","Cluster Energy (GeV)","#frac{1}{N_{Events}} #frac{dN}{dE}",1,1.1,
+                                vecClusterEnergy,"","Cluster Energy (GeV)","#frac{1}{N_{cl.}} #frac{dN}{dE}",1,1.1,
                                 labelData, colorCompare, kTRUE, 2, 5, kFALSE,
                                 0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Energy_Cluster_afterQA.%s", outputDir.Data(), suffix.Data()), kTRUE, kTRUE);
 
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecClusterEnergy,"","Cluster Energy (GeV)","#frac{1}{N_{Events}} #frac{dN}{dE}",1,1.1,
+                                vecClusterEnergy,"","Cluster Energy (GeV)","#frac{1}{N_{cl.}} #frac{dN}{dE}",1,1.1,
                                 labelData, colorCompare, kTRUE, 2, 5, kFALSE,
                                 0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Energy_Cluster_afterQA_lin.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                    vecClusterEnergy,"","Cluster Energy (GeV)","#frac{1}{N_{Events}} #frac{dN}{dE}",1,1.1,
+                                    vecClusterEnergy,"","Cluster Energy (GeV)","#frac{1}{N_{cl.}} #frac{dN}{dE}",1,1.1,
                                     labelData, colorCompare, kTRUE, 2, 5, kFALSE,
                                     0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Energy_Cluster_afterQA.%s", outputDir.Data(), suffix.Data()));
@@ -2450,18 +2450,18 @@ void ClusterQA(
     for(Int_t iVec=0; iVec<(Int_t)vecClusterM02.size(); iVec++){
         TH1D* temp = vecClusterM02.at(iVec);
         temp->Sumw2();
-        temp->Scale(1./nEvents[iVec]);
+        temp->Scale(1./temp->Integral());
     }
     //---------------------------------------------------------------------------------------------------------------
     // M02 (long axis)
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecClusterM02,"","#lambda_{0}^{2}","#frac{1}{N_{Events}} #frac{dN}{d#lambda_{0}^{2}}",1,1.1,
+                                vecClusterM02,"","#lambda_{0}^{2}","#frac{1}{N_{cl.}} #frac{dN}{d#lambda_{0}^{2}}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kTRUE,
                                 0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/M02_afterQA.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                    vecClusterM02,"","#lambda_{0}^{2}","#frac{1}{N_{Events}} #frac{dN}{d#lambda_{0}^{2}}",1,1.1,
+                                    vecClusterM02,"","#lambda_{0}^{2}","#frac{1}{N_{cl.}} #frac{dN}{d#lambda_{0}^{2}}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
                                     0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_M02_afterQA.%s", outputDir.Data(), suffix.Data()));
@@ -2471,16 +2471,16 @@ void ClusterQA(
     for(Int_t iVec=0; iVec<(Int_t)vecClusterM20.size(); iVec++){
         TH1D* temp = vecClusterM20.at(iVec);
         temp->Sumw2();
-        temp->Scale(1./nEvents[iVec]);
+        temp->Scale(1./temp->Integral());
     }
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecClusterM20,"","#lambda_{1}^{2}","#frac{1}{N_{Events}} #frac{dN}{d#lambda_{1}^{2}}",1,1.1,
+                                vecClusterM20,"","#lambda_{1}^{2}","#frac{1}{N_{cl.}} #frac{dN}{d#lambda_{1}^{2}}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kTRUE,
                                 0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/M20_afterQA.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                    vecClusterM20,"","#lambda_{1}^{2}","#frac{1}{N_{Events}} #frac{dN}{d#lambda_{1}^{2}}",1,1.1,
+                                    vecClusterM20,"","#lambda_{1}^{2}","#frac{1}{N_{cl.}} #frac{dN}{d#lambda_{1}^{2}}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
                                     0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_M20_afterQA.%s", outputDir.Data(), suffix.Data()));
@@ -2490,16 +2490,16 @@ void ClusterQA(
     for(Int_t iVec=0; iVec<(Int_t)vecClusterDispersion.size(); iVec++){
         TH1D* temp = vecClusterDispersion.at(iVec);
         temp->Sumw2();
-        temp->Scale(1./nEvents[iVec]);
+        temp->Scale(1./temp->Integral());
     }
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecClusterDispersion,"","Dispersion","#frac{1}{N_{Events}} #frac{dN}{dDisp}",1,1.1,
+                                vecClusterDispersion,"","Dispersion","#frac{1}{N_{cl}} #frac{dN}{dDisp}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kTRUE,
                                 0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Dispersion_afterQA.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                    vecClusterDispersion,"","Dispersion","#frac{1}{N_{Events}} #frac{dN}{dDisp}",1,1.1,
+                                    vecClusterDispersion,"","Dispersion","#frac{1}{N_{cl}} #frac{dN}{dDisp}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
                                     0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Dispersion_afterQA.%s", outputDir.Data(), suffix.Data()));
@@ -2513,16 +2513,16 @@ void ClusterQA(
     for(Int_t iVec=0; iVec<(Int_t)vecClusterNCells.size(); iVec++){
         TH1D* temp = vecClusterNCells.at(iVec);
         temp->Sumw2();
-        temp->Scale(1./nEvents[iVec]);
+        temp->Scale(1./temp->Integral());
     }
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecClusterNCells,"","N_{Cells} per Cluster","#frac{1}{N_{Events}} #frac{dN}{dN_{Cells}}",1,1.1,
+                                vecClusterNCells,"","N_{Cells} per Cluster","#frac{1}{N_{cl}} #frac{dN}{dN_{Cells}}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kFALSE,
                                 0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/NCells_afterQA.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                    vecClusterNCells,"","N_{Cells} per Cluster","#frac{1}{N_{Events}} #frac{dN}{dN_{Cells}}",1,1.1,
+                                    vecClusterNCells,"","N_{Cells} per Cluster","#frac{1}{N_{cl}} #frac{dN}{dN_{Cells}}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kFALSE,
                                     0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_NCells_afterQA.%s", outputDir.Data(), suffix.Data()));
@@ -2537,16 +2537,16 @@ void ClusterQA(
         TH1D* temp = vecClusterNLM.at(iVec);
         temp->Sumw2();
         Double_t nEntries = temp->Integral();
-        temp->Scale(1./nEntries);
+        temp->Scale(1./temp->Integral());
     }
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecClusterNLM,"","Number of Local Maxima","#frac{1}{N} #frac{dN}{dNLM}",1,1.1,
+                                vecClusterNLM,"","Number of Local Maxima","#frac{1}{N_{cl}} #frac{dN}{dNLM}",1,1.1,
                                 labelData, colorCompare, kTRUE, 2, 5, kFALSE,
                                 0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/NLM_Cluster_afterQA.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                    vecClusterNLM,"","Number of Local Maxima","#frac{1}{N} #frac{dN}{dNLM}",1,1.1,
+                                    vecClusterNLM,"","Number of Local Maxima","#frac{1}{N_{cl}} #frac{dN}{dNLM}",1,1.1,
                                     labelData, colorCompare, kTRUE, 2, 5, kFALSE,
                                     0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_NLM_Cluster_afterQA.%s", outputDir.Data(), suffix.Data()));
