@@ -1194,6 +1194,38 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 //     canvasGammaSpecComp->SaveAs(Form("%s/%s_%s_GammaSpectraRatios_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
 //     delete canvasGammaSpecComp;
 //     
+   
+    //*************************************************************************************************
+    //********************************* Decay gamma to all gamma **************************************
+    //*************************************************************************************************
+    TCanvas *canvasRatioAllDiffDecay    = GetAndSetCanvas("canvasRatioAllDiffDecay");
+    canvasRatioAllDiffDecay->SetLogy(0);
+    canvasRatioAllDiffDecay->cd();
+    
+        TH1D* histoAllDiffDecayGamma    = (TH1D*)histoMCAllGamma_OriginalBin_MCPt->Clone("RatioAllToDecay");
+        histoAllDiffDecayGamma->Scale(histoAllDiffDecayGamma->GetBinWidth(5));
+        histoAllDiffDecayGamma->Rebin(5);
+        histoAllDiffDecayGamma->Scale(1./histoAllDiffDecayGamma->GetBinWidth(5));
+        
+        TH1D* histoAllDecayGamma        = (TH1D*)histoPhotonSource_MCPt[7]->Clone("AllDecay");
+        histoAllDecayGamma->Scale(histoAllDecayGamma->GetBinWidth(5));
+        histoAllDecayGamma->Rebin(5);
+        histoAllDecayGamma->Scale(1./histoAllDecayGamma->GetBinWidth(5));
+        
+        histoAllDiffDecayGamma->Divide(histoAllDiffDecayGamma,histoAllDecayGamma,1,1,"B");
+        histoAllDiffDecayGamma->GetYaxis()->SetRangeUser(0.8,1.5);
+        
+        SetHistogramm(histoAllDiffDecayGamma,"#it{p}_{T} (GeV/#it{c})", "#frac{N_{#gamma_{incl}}}{N_{#gamma_{decay}}}");
+        histoAllDiffDecayGamma->Draw("p,e1");
+
+        DrawGammaLines(0., 50,1, 1,0.5, kGray+2, 7);
+ 
+        PutProcessLabelAndEnergyOnPlot( 0.7, 0.95, 0.035, cent, "#gamma", "", 42, 0.03);
+        
+    canvasRatioAllDiffDecay->SaveAs(Form("%s/%s_AllGammaDivDecayGammaSpectrumMC_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
+    delete canvasRatioAllDiffDecay;
+
+   
     //*************************************************************************************************
     //********************************* Gamma from Decay **********************************************
     //*************************************************************************************************
@@ -1201,6 +1233,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     for (Int_t i = 0; i< 9; i++){
         CorrectGammaMC(histoPhotonSource_MCPt[i], deltaEta, scaling, nEvtMC);
         SetHistogramm(histoPhotonSource_MCPt[i],"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}");
+        
         DrawGammaSetMarker(histoPhotonSource_MCPt[i], 22, 1.0, colorsDecay[i] , colorsDecay[i]);
     }
         
@@ -1220,6 +1253,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     canvasDecayGammaSpecMC->SaveAs(Form("%s/%s_DecayGammaSpectrumMC_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasDecayGammaSpecMC;
 
+       
     //*************************************************************************************************
     //******************************* Gamma Combinatorial Background **********************************
     //*************************************************************************************************
@@ -1298,8 +1332,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
     // plot ratio to summed total MC BG
     TCanvas *canvasRatioCombBackToBack = GetAndSetCanvas("canvasRatioCombBackToBack");
-    canvasRatioCombBackToBack->SetLogy();
 
+    canvasRatioCombBackToBack->SetLogy();
         TLegend* legendRatioCombBackToBack = GetAndSetLegend(0.15,0.76,4,3);
         
         TH1D **histoRatioCombBackToBack = new TH1D*[17];

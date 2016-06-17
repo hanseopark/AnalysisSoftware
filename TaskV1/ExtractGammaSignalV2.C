@@ -264,7 +264,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
         fHistoGammaMCAllPt->Sumw2();
         fHistoGammaMCAllPtOrBin                                 = (TH1D*)fHistoGammaMCAllPt->Clone("MC_AllGamma_OriginalBinning_MCPt");
         fHistoGammaMCAllPtOrBin->Scale(1./fHistoGammaMCAllPtOrBin->GetBinWidth(5));
-        fHistoGammaMCAllPtOrBin->GetXaxis()->SetRangeUser(0.,25.);
+//         fHistoGammaMCAllPtOrBin->GetXaxis()->SetRangeUser(0.,25.);
         RebinSpectrum(fHistoGammaMCAllPt);
         
         // Gamma from Decay
