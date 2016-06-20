@@ -12,6 +12,7 @@ void                CalculateMeanPtWithError(const TF1* , Float_t& , Float_t& );
 // TH1F*            CalculateHistoRatioToFit (TH1F*, TF1*);
 TH1D*               CorrectHistoToBinCenter (TH1D*);
 TGraphErrors* 	    CalculateGraphRatioToGraph(TGraphErrors*, TGraphErrors*);
+TGraphAsymmErrors*  CalculateAsymGraphRatioToGraph(TGraphAsymmErrors* graphA, TGraphAsymmErrors* graphB);
 TGraphErrors*       CalculateGraphErrRatioToFit (TGraphErrors* , TF1* );
 TGraphAsymmErrors*  CalculateGraphErrRatioToFit (TGraphAsymmErrors* , TF1* );
 TGraph*             CalculateGraphRatioToFit (TGraph* , TF1* );
@@ -221,35 +222,63 @@ TGraphAsymmErrors* MultiplyGraphAsymmErrs (TGraphAsymmErrors* graph_1, TGraphAsy
     cout << "here" << endl;
 }
 
-
+//**********************************************************************************************************
+// Calculates the ratio of two error graphs 
+//**********************************************************************************************************
 TGraphErrors* CalculateGraphRatioToGraph(TGraphErrors* graphA, TGraphErrors* graphB){
   
-    TGraphErrors* graphACopy 		= (TGraphErrors*)graphA->Clone("GraphCopy");
-    Double_t* xValue                    = graphACopy->GetX(); 
-    Double_t* yValue                    = graphACopy->GetY();
-    Double_t* xError                 	= graphACopy->GetEX();
-    Double_t* yError                 	= graphACopy->GetEY();
+    TGraphErrors* graphACopy        = (TGraphErrors*)graphA->Clone("GraphCopy");
+    Double_t* xValue                = graphACopy->GetX(); 
+    Double_t* yValue                = graphACopy->GetY();
+    Double_t* xError                = graphACopy->GetEX();
+    Double_t* yError                = graphACopy->GetEY();
+    Int_t nPoints                   = graphACopy->GetN();
     
-    
-    
-    Int_t nPoints                       = graphACopy->GetN();
     for (Int_t i = 0; i < nPoints; i++){
-        yValue[i]                       = yValue[i]/graphB->GetY()[i];
-	cout<<i<<" A EY "<< graphA->GetEY()[i]<<" A Y "<<graphA->GetY()[i]<<" B EY "<<graphB->GetEY()[i]<<" B Y"<<graphB->GetY()[i]<<endl;
-	
-	
-        Double_t yErrorRatio    	= yValue[i]*TMath::Sqrt( TMath::Power(graphA->GetEY()[i]/graphA->GetY()[i],2) + TMath::Power(graphB->GetEY()[i]/graphB->GetY()[i],2));
-	yError[i] = yErrorRatio; 
+        yValue[i]                   = yValue[i]/graphB->GetY()[i];
+        cout<<i<<" A EY "<< graphA->GetEY()[i]<<" A Y "<<graphA->GetY()[i]<<" B EY "<<graphB->GetEY()[i]<<" B Y"<<graphB->GetY()[i]<<endl;
+        Double_t yErrorRatio        = yValue[i]*TMath::Sqrt( TMath::Power(graphA->GetEY()[i]/graphA->GetY()[i],2) + TMath::Power(graphB->GetEY()[i]/graphB->GetY()[i],2));
+        yError[i] = yErrorRatio; 
     }     
-	
-	
-	
-	
-    TGraphErrors* returnGraph      = new TGraphErrors(nPoints,xValue,yValue,xError,yError); 
-    return returnGraph;
-    
+    TGraphErrors* returnGraph       = new TGraphErrors(nPoints,xValue,yValue,xError,yError); 
+    return returnGraph;    
 }
 
+//**********************************************************************************************************
+// Calculates the ratio of two asymmerror graphs 
+//**********************************************************************************************************
+TGraphAsymmErrors* CalculateAsymGraphRatioToGraph(TGraphAsymmErrors* graphA, TGraphAsymmErrors* graphB){
+  
+    TGraphErrors* graphACopy        = (TGraphErrors*)graphA->Clone("GraphCopy");
+    Double_t* xValue                = graphACopy->GetX(); 
+    Double_t* yValue                = graphACopy->GetY();
+    Double_t* xErrorHigh            = graphACopy->GetEXhigh();
+    Double_t* xErrorLow             = graphACopy->GetEXlow();
+    Double_t* yErrorHigh            = graphACopy->GetEYhigh();
+    Double_t* yErrorLow             = graphACopy->GetEYlow();
+   
+    Int_t nPoints                   = graphACopy->GetN();
+    for (Int_t i = 0; i < nPoints; i++){
+        if (abs(xValue[i]-graphB->GetX()[i]) < 0.0001){
+            if (graphB->GetY()[i] != 0){
+                yValue[i]                   = yValue[i]/graphB->GetY()[i];
+                Double_t yErrorRatioHigh    = yValue[i]*TMath::Sqrt( TMath::Power(graphA->GetEYhigh()[i]/graphA->GetY()[i],2) + TMath::Power(graphB->GetEYhigh()[i]/graphB->GetY()[i],2));
+                yErrorHigh[i]               = yErrorRatioHigh; 
+                Double_t yErrorRatioLow     = yValue[i]*TMath::Sqrt( TMath::Power(graphA->GetEYlow()[i]/graphA->GetY()[i],2) + TMath::Power(graphB->GetEYlow()[i]/graphB->GetY()[i],2));
+                yErrorLow[i]                = yErrorRatioLow; 
+            } else {
+                yValue[i]                   = 0;
+                yErrorHigh[i]               = 0;
+                yErrorLow[i]                = 0;
+            }    
+        } else {
+            cout << "ERROR: graphs don't have same binning " << endl;
+            return NULL;
+        }    
+    }
+    TGraphAsymmErrors* returnGraph      = new TGraphAsymmErrors(nPoints,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh); 
+    return returnGraph;
+}
 
 //**********************************************************************************************************
 // Calculates the ratio of a graph and a fit

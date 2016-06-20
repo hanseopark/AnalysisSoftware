@@ -87,7 +87,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
     //___________________________________ Declaration of files _____________________________________________
     TString collisionSystem2760GeV              = "pp, #sqrt{#it{s}} = 2.76 TeV";
     
-    TString fileNameTheory                      = "ExternalInput/TheoryCompilationPP.root";
+    TString fileNameTheory                      = "ExternalInput/Theory/TheoryCompilationPP.root";
     TString fileNamePHOS                        = "ExternalInput/PHOS/2.76TeV/LHC11a_PHOS_pi0_pp2760_noBWCorr_FDcorr_20140218.root";
     TString fileNamePCMEta                      = "FinalResults/data_PCMResultsFullCorrection_PP_NoBinShifting_usedTosvnEtapaper.root";
     TString fileNameChargedPionPP               = "ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_20_May_2015.root";
@@ -531,6 +531,9 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         TGraph* graphNLOCGCCalcMuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcCGCInvCrossSec2760GeV");
         TGraphAsymmErrors* graphNLODSS14Calc                = (TGraphAsymmErrors*)fileTheoryCompilation->Get("graphNLOCalcDSS14InvCrossSec2760GeV");
     
+        TDirectory* directoryDirectPhotonTheory             = (TDirectory*)fileTheoryCompilation->Get("DirectPhoton");
+        TGraphAsymmErrors* graphNLOCalcDirGam               = (TGraphAsymmErrors*)directoryDirectPhotonTheory->Get("graphDirectPhotonNLOVogelsang_2760GeV");
+        
         while (graphNLOCalcEtaMuHalf->GetX()[graphNLOCalcEtaMuHalf->GetN()-1] > 22. )
             graphNLOCalcEtaMuHalf->RemovePoint(graphNLOCalcEtaMuHalf->GetN()-1);
         while (graphNLOCalcEtaMuOne->GetX()[graphNLOCalcEtaMuOne->GetN()-1] > 22. )
@@ -843,6 +846,15 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
     if (graphCombPi0InvXSectionTotA == NULL) {
         cout << "Aborting: something went wrong during the combination of the new spectra" << endl;
         return;
+    }    
+    while (graphCombPi0InvXSectionStatA->GetX()[0] < 0.4){
+        graphCombPi0InvXSectionStatA->RemovePoint(0);
+    }
+    while (graphCombPi0InvXSectionTotA->GetX()[0] < 0.4){    
+        graphCombPi0InvXSectionTotA->RemovePoint(0);
+    }
+    while (graphCombPi0InvXSectionSysA->GetX()[0] < 0.4){    
+        graphCombPi0InvXSectionSysA->RemovePoint(0);
     }    
     graphCombPi0InvXSectionTotA->Print();
     
@@ -1226,6 +1238,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
                                                                                     fitTsallisPi0PtMult, 
                                                                                     0, graphCombPi0InvXSectionSysA->GetN());
         cout << "PCM" << endl;        
+        
         graphPCMPi0InvXSectionStat               = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA,
                                                                                     graphPCMPi0InvXSectionStat,
                                                                                     fitTsallisPi0PtMult, 
@@ -4122,7 +4135,93 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
    
     canvasCompYieldPPInd->Update();
     canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedHadronToNeutralPublishedCharged_PP2760GeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
+        
+    // **********************************************************************************************************************
+    // *********************************** HFE results for 2.76TeV **********************************************************
+    // **********************************************************************************************************************
+    
+    Double_t xValueHFE[]    = { 0.55,   0.65,   0.75,   0.85,   0.95,   1.05,   1.15,   1.25,   1.35,   1.45,
+                                1.625,  1.875,  2.125,  2.375,  2.625,  2.875,  3.25,   3.75,   4.25,   4.75, 
+                                5.5,    6.5,    7.5,    9.0,    11.0 };
+    Double_t xErrNegHFE[]   = { 0.050,  0.050,  0.050,  0.050,  0.050,  0.050,  0.050,  0.050,  0.050,  0.050, 
+                                0.125,  0.125,  0.125,  0.125,  0.125,  0.125,  0.25,   0.25,   0.25,   0.25, 
+                                0.5,    0.5,    0.5,    1.0,    1.0 };
+    Double_t xErrPosHFE[]   = { 0.050,  0.050,  0.050,  0.050,  0.050,  0.050,  0.050,  0.050,  0.050,  0.050, 
+                                0.125,  0.125,  0.125,  0.125,  0.125,  0.125,  0.25,   0.25,   0.25,   0.25, 
+                                0.5, 0.5, 0.5, 1.0, 1.0 };
+    Double_t yValueHFE[]    = { 19.58,  8.902,  7.438,  5.914,  3.64,   2.333,  1.694,  1.08,   1.237,  0.7166, 
+                                0.5536, 0.2903, 0.1756, 0.1035, 0.06608, 0.04384, 0.02174, 0.01383, 0.006796, 0.003306, 
+                                0.001664, 7.53E-4, 3.84E-4, 1.6E-4, 4.8E-5 };
+    Double_t yErrNegHFE[]   = { 14.00601299442493,      7.11655197409532,       4.035167902330707,      2.3827179858304675,     1.4889949630539387,
+                                0.9269843580125827,     0.6120661728930948,     0.41292251089036064,    0.3157483174935379,     0.2211634011313807, 
+                                0.12102098991497301,    0.06001666435249463,    0.030992418427738096,   0.019112822920751397,   0.012453513560437472, 
+                                0.008021396387163522,   0.0042004285495649135,  0.002537892826736385,   0.0014131514426981985,  8.054321821233617E-4,
+                                3.703093301552095E-4,   1.70578427709954E-4,    1.038315944209661E-4,   3.935733730830885E-5,   1.3892443989449805E-5 };
+    Double_t yErrPosHFE[]   = { 14.194594041394774,     7.2290926124929396,     4.102352983349921,      2.4218804677357633,     1.5141710603495235, 
+                                0.9423226623614653,     0.6225881463696525,     0.41949016675006817,    0.32020618357552055,    0.22401950807909565, 
+                                0.12270631605585754,    0.06073483349775481,    0.0313517144666763,     0.019277447963877377,   0.012551099553425588, 
+                                0.008072329279706076,   0.00422190715198712,    0.0025442091109026395,  0.0014165313268685586,  8.073295485735673E-4, 
+                                3.7126001669988653E-4,  1.70578427709954E-4,    1.038315944209661E-4,   3.935733730830885E-5,   1.3892443989449805E-5 };
+    Double_t yErrStatNegHFE[]   = { 1.72,       1.144,      0.628,      0.489,      0.375, 
+                                    0.266,      0.18,       0.144,      0.144,      0.1115, 
+                                    0.0428,     0.0266,     0.0137,     0.0109,     0.00826, 
+                                    0.00552,    0.00294,    0.00197,    0.001169,   2.55E-4, 
+                                    1.15E-4,    6.9E-5,     5.0E-5,     1.8E-5,     7.0E-6 };
+    Double_t yErrStatPosHFE[]   = { 1.72,       1.144,      0.628,      0.489,      0.375, 
+                                    0.266,      0.18,       0.144,      0.144,      0.1115, 
+                                    0.0428,     0.0266,     0.0137,     0.0109,     0.00826, 
+                                    0.00552,    0.00294,    0.00197,    0.001169,   2.55E-4, 
+                                    1.15E-4,    6.9E-5,     5.0E-5,     1.8E-5,     7.0E-6 };
+    Int_t nPointsHFE            = 25;
+    TGraphAsymmErrors* graphHFE = new TGraphAsymmErrors(nPointsHFE, xValueHFE, yValueHFE, xErrNegHFE, xErrPosHFE, yErrNegHFE, yErrPosHFE);    
+    graphHFE                    = ScaleGraph(graphHFE, 1e6);
+    TF1* fitPowInvXSectionHFE   = FitObject("powPure","fitPowInvXSectionHFE2760GeV","HFE",graphHFE,3,10. ,NULL,"QNRMEX0+","", kFALSE);
+    cout << WriteParameterToFile(fitPowInvXSectionHFE)<< endl;
+    
+    canvasXSectionPi0->cd();
+    TH2F * histo2DXSectionWithHFE;
+    histo2DXSectionWithHFE          = new TH2F("histo2DXSectionWithHFE","histo2DXSectionWithHFE",11000,0.23,70.,1000,2e-2,10e11);
+    SetStyleHistoTH2ForGraphs(histo2DXSectionWithHFE, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 1.,1.45);
+    histo2DXSectionWithHFE->GetXaxis()->SetMoreLogLabels();
+    histo2DXSectionWithHFE->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DXSectionWithHFE->Draw("copy");
 
+
+        DrawGammaSetMarkerTGraphAsym(graphCombPi0InvXSectionSysA, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
+        graphCombPi0InvXSectionSysA->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionSysA, markerStyleComb, markerSizeComb, kGray+2 , kGray+2, widthLinesBoxes, kTRUE);
+        graphCombEtaInvXSectionSysA->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphHFE, markerStyleComb, markerSizeComb, kCyan+2 , kCyan+2, widthLinesBoxes, kTRUE);
+        graphHFE->Draw("pE2same");
+    
+        DrawGammaSetMarkerTGraphAsym(graphCombPi0InvXSectionStatA, markerStyleComb, markerSizeComb, colorComb , colorComb);
+        graphCombPi0InvXSectionStatA->Draw("p,same,z");
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionStatA, markerStyleComb, markerSizeComb, kGray+2 , kGray+2);
+        graphCombEtaInvXSectionStatA->Draw("p,same,z");
+        DrawGammaSetMarkerTF1( fitTCMInvXSectionPi0, 7, 2, colorComb); 
+        fitTCMInvXSectionPi0->Draw("same");
+
+        fitTCMInvXSectionEta->SetRange(0.6,50.);
+        DrawGammaSetMarkerTF1( fitTCMInvXSectionEta, 7, 2, kGray+2); 
+        fitTCMInvXSectionEta->Draw("same");
+
+        fitPowInvXSectionHFE->SetRange(5,50.);
+        DrawGammaSetMarkerTF1( fitPowInvXSectionHFE, 7, 2, kCyan+2); 
+        fitPowInvXSectionHFE->Draw("same");
+
+        DrawGammaSetMarkerTGraphAsym(graphNLOCalcDirGam, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
+        graphNLOCalcDirGam->Draw("3,same");
+                        
+        labelEnergyXSectionPi0->Draw();
+
+        TLegend* legendXSectionWithHFE          = GetAndSetLegend2(0.76, 0.92-0.035*4, 0.98 , 0.92, 32); 
+        legendXSectionWithHFE->AddEntry(graphCombPi0InvXSectionSysA,"#pi^{0}","fp");
+        legendXSectionWithHFE->AddEntry(graphCombEtaInvXSectionSysA,"#eta","fp");
+        legendXSectionWithHFE->AddEntry(graphHFE,"#frac{e^{+}+e^{-}}{2}","fp");
+        legendXSectionWithHFE->AddEntry(graphNLOCalcDirGam,"#gamma_{dir} NLO","l");
+        legendXSectionWithHFE->Draw();
+   
+    canvasXSectionPi0->SaveAs(Form("%s/InvXSection_Pi0_Eta_HFE.%s",outputDir.Data(),suffix.Data()));
     
 //  // **********************************************************************************************************************
 //  // **************************Plot example invariant mass bin PCM -EMCAL *************************************************
