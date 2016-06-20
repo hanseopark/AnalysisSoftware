@@ -41,18 +41,18 @@ void EventQA_Compare( TString suffix  = "eps",
 
     //**************************************************************************************************************
     // merged cluster settings
-//     const Int_t nSets           = 4;
-//     Size_t constMarkerSize      = 1;
-//     TString outputDir           = "LHC13g_pass1";
-//     TString fEnergyFlag         = "2.76TeV";
-//     TString DataSets[nSets]     = {"LHC13g_pass1", "LHC13g_pass1", "LHC13g_pass1", "LHC13g_pass1"};
-//     TString plotDataSet         = "LHC13g";
-//     TString cutsDataSets[nSets] = {
-//                                     "00010113_1111121063032200000_1111121063022210001_0163301100000000",
-//                                     "00052013_1111121063032200000_1111121063022210001_0163301100000000",
-//                                     "00085013_1111121063032200000_1111121063022210001_0163301100000000",
-//                                     "00083013_1111121063032200000_1111121063022210001_0163301100000000"
-//                                   };
+    const Int_t nSets           = 4;
+    Size_t constMarkerSize      = 1;
+    TString outputDir           = "LHC13g_pass1";
+    TString fEnergyFlag         = "2.76TeV";
+    TString DataSets[nSets]     = {"LHC13g_pass1", "LHC13g_pass1", "LHC13g_pass1", "LHC13g_pass1"};
+    TString plotDataSet         = "LHC13g";
+    TString cutsDataSets[nSets] = {
+                                    "00010113_1111121063032200000_1111121063022210001_0163301100000000",
+                                    "00052013_1111121063032200000_1111121063022210001_0163301100000000",
+                                    "00085013_1111121063032200000_1111121063022210001_0163301100000000",
+                                    "00083013_1111121063032200000_1111121063022210001_0163301100000000"
+                                  };
     
     
     //**************************************************************************************************************
@@ -107,18 +107,18 @@ void EventQA_Compare( TString suffix  = "eps",
 
     //**************************************************************************************************************
     // merged cluster settings
-   const Int_t nSets            = 2;
-   Size_t constMarkerSize       = 1;
-   TString outputDir            ="LHC11a_pass4_wSDD";
-   TString fEnergyFlag          = "2.76TeV";
-   TString DataSets[nSets]      = {"LHC11a_pass4_wSDD","LHC11a_pass4_wSDD"};
-   TString plotDataSet          = "LHC11a";
-   TString cutsDataSets[nSets]  = {
-                                    "00003113_1111121053032200000_1111121053022210001_0163301100000000",
-                                    "00051013_1111121053032200000_1111121053022210001_0163301100000000"
-                                   };
-    
-                                  
+//    const Int_t nSets            = 2;
+//    Size_t constMarkerSize       = 1;
+//    TString outputDir            ="LHC11a_pass4_wSDD";
+//    TString fEnergyFlag          = "2.76TeV";
+//    TString DataSets[nSets]      = {"LHC11a_pass4_wSDD","LHC11a_pass4_wSDD"};
+//    TString plotDataSet          = "LHC11a";
+//    TString cutsDataSets[nSets]  = {
+//                                     "00003113_1111121053032200000_1111121053022210001_0163301100000000",
+//                                     "00051013_1111121053032200000_1111121053022210001_0163301100000000"
+//                                    };
+//     
+//                                   
                                   
 //**************************************************************************************************************
     Style_t hMarkerStyle[nSets];
@@ -447,12 +447,17 @@ void EventQA_Compare( TString suffix  = "eps",
     legend->SetTextFont(42);
 //---------
     if(doPlotsByTrigger){
-        for(Int_t h=0; h<(Int_t)vecHistosRunwise[0].size(); h++)
-        {
-            cout << h << ", ";
-            AdjustHistRange(vecHistosRunwise,1.2,1.2,h,nSets,kTRUE);
-            for(Int_t i=0; i<nSets; i++)
-            {
+        for(Int_t h=0; h<(Int_t)vecHistosRunwise[0].size(); h++){
+            cout << h << " " << vecHistosRunwiseName[0].at(h).Data() <<  ", " ;
+            Double_t scaleFactor    = 1.2;
+            if ( h==0 || vecHistosRunwiseName[0].at(h).Contains("hCaloNClusters") || vecHistosRunwiseName[0].at(h).Contains("hCaloMergedNClusters") ||  
+                vecHistosRunwiseName[0].at(h).Contains("hConvNCandidates") ) 
+                scaleFactor    = 12.;
+            if (vecHistosRunwiseName[0].at(h).Contains("hTracksGood-Mean"))
+                scaleFactor    = 2.5;
+            
+            AdjustHistRange(vecHistosRunwise, scaleFactor, scaleFactor, h, nSets, kTRUE);
+            for(Int_t i=0; i<nSets; i++){
                 TString draw;
                 if(h==0) draw = (i==0)?"p":"p, same";
                 else draw = (i==0)?"px0e1":"px0e1, same";
@@ -461,7 +466,10 @@ void EventQA_Compare( TString suffix  = "eps",
             }
             legend->Draw();
             PutProcessLabelAndEnergyOnPlot(0.8, 0.97-nTopRows*0.06, 0.03, fCollisionSystem.Data(), Form("%s clusters", calo.Data()), plotDataSet.Data());
-            if(h==0) SaveWriteCanvas(canvas, Form("EventQA_Compare/%s/%s.%s", outputDir.Data(), vecHistosRunwiseName[0].at(h).Data(),suffix.Data()), kFALSE, kTRUE);
+            if ( h==0 || vecHistosRunwiseName[0].at(h).Contains("hCaloNClusters") || vecHistosRunwiseName[0].at(h).Contains("hCaloMergedNClusters") ||  
+                vecHistosRunwiseName[0].at(h).Contains("hConvNCandidates") || vecHistosRunwiseName[0].at(h).Contains("hTracksGood-Mean")  
+               ) 
+               SaveWriteCanvas(canvas, Form("EventQA_Compare/%s/%s.%s", outputDir.Data(), vecHistosRunwiseName[0].at(h).Data(),suffix.Data()), kFALSE, kTRUE);
             else SaveWriteCanvas(canvas, Form("EventQA_Compare/%s/%s.%s", outputDir.Data(), vecHistosRunwiseName[0].at(h).Data(),suffix.Data()));
             legend->Clear();
         }
@@ -469,13 +477,11 @@ void EventQA_Compare( TString suffix  = "eps",
     }
 
 //****************************** Combined Comparison Histograms ************************************************
-    for(Int_t h=0; h<(Int_t)vecHistos[0].size(); h++)
-    {
+    canvas->SetLogy(0);
+    for(Int_t h=0; h<(Int_t)vecHistos[0].size(); h++){
         cout << h << ", ";
-//         if(h==9) TGaxis::SetExponentOffset(0.5, 0, "x");
         AdjustHistRange(vecHistos,5,5,h,nSets,kFALSE);
-        for(Int_t i=0; i<nSets; i++)
-        {
+        for(Int_t i=0; i<nSets; i++) {
             TString draw;
             if(h==0) draw = (i==0)?"p":"p, same";
             else draw = (i==0)?"px0e1":"px0e1, same";
@@ -483,7 +489,11 @@ void EventQA_Compare( TString suffix  = "eps",
             legend->AddEntry(((TH1D*) vecHistos[i].at(h)),plotDataSets[i].Data(),"p");
         }
         legend->Draw();
-        PutProcessLabelAndEnergyOnPlot(0.8, 0.97-nTopRows*0.06, 0.03, fCollisionSystem.Data(), Form("%s clusters", calo.Data()), plotDataSet.Data());
+        if ( vecHistosNameForSaving[0].at(h).Contains("Candidates") ) 
+            PutProcessLabelAndEnergyOnPlot(0.8, 0.97-nTopRows*0.06, 0.03, fCollisionSystem.Data(), Form("%s clusters", calo.Data()), plotDataSet.Data());
+        else 
+            PutProcessLabelAndEnergyOnPlot(0.8, 0.97-nTopRows*0.06, 0.03, fCollisionSystem.Data(), "", plotDataSet.Data());
+        
         SaveWriteCanvas(canvas, Form("EventQA_Compare/%s/QA/%s.%s", outputDir.Data(), vecHistosNameForSaving[0].at(h).Data(),suffix.Data()), kFALSE, kTRUE);
         legend->Clear();
 //         if(h==9) TGaxis::SetExponentOffset(0, 0, "x");

@@ -268,6 +268,10 @@ void ClusterQA_Compare( TString suffix          = "eps",
     TH1D* hClusterRMSDeltaEta[nSets];
     TH1D* hClusterRMSDeltaPhi[nSets];
 
+    TH1D* hClusterMeanM20[nSets];
+    TH1D* hClusterRMSM20[nSets];
+    
+    
 	Int_t nRange = 0;
 	Int_t nRangeRunwise = 0;
 
@@ -472,6 +476,15 @@ void ClusterQA_Compare( TString suffix          = "eps",
         vecHistosRunwise[i].push_back(hClusterRMSDeltaPhi[i]);
         vecHistosRunwiseName[i].push_back("hClusterDeltaPhi-RMS");
         if(i==0)nRangeRunwise++;
+        
+        vecHistosRunwise[i].push_back(hClusterMeanM20[i]);
+        vecHistosRunwiseName[i].push_back("hClusterM20-Mean");
+        if(i==0)nRangeRunwise++;
+
+        vecHistosRunwise[i].push_back(hClusterRMSM20[i]);
+        vecHistosRunwiseName[i].push_back("hClusterM20-RMS");
+        if(i==0)nRangeRunwise++;
+
     }
 
     Double_t nEvents[nSets];
@@ -575,12 +588,10 @@ void ClusterQA_Compare( TString suffix          = "eps",
     legend->SetTextFont(42);
 //---------
     if(doPlotsByTrigger){
-        for(Int_t h=0; h<(Int_t)vecHistosRunwise[0].size(); h++)
-        {
+        for(Int_t h=0; h<(Int_t)vecHistosRunwise[0].size(); h++) {
             cout << h << ", ";
             AdjustHistRange(vecHistosRunwise,1.2,1.2,h,nSets,kTRUE);
-            for(Int_t i=0; i<nSets; i++)
-            {
+            for(Int_t i=0; i<nSets; i++) {
                 TString draw;
                 if(h==0) draw = (i==0)?"p":"p, same";
                 else draw = (i==0)?"px0e1":"px0e1, same";
@@ -597,13 +608,11 @@ void ClusterQA_Compare( TString suffix          = "eps",
     }
 
 //****************************** Combined Comparison Histograms ************************************************
-    for(Int_t h=0; h<(Int_t)vecHistos[0].size(); h++)
-    {
+    for(Int_t h=0; h<(Int_t)vecHistos[0].size(); h++) {
         cout << h << ", ";
         if(h==9) TGaxis::SetExponentOffset(0.5, 0, "x");
         AdjustHistRange(vecHistos,5,5,h,nSets,kFALSE);
-        for(Int_t i=0; i<nSets; i++)
-        {
+        for(Int_t i=0; i<nSets; i++) {
             TString draw;
             if(h==0) draw = (i==0)?"p":"p, same";
             else draw = (i==0)?"px0e1":"px0e1, same";

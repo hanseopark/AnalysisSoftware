@@ -562,13 +562,13 @@ void ClusterQA_Runwise(
 
         histoName                   = "hClusterM20-Mean";
         if(i==0) vecHistosName.push_back(histoName);
-        hClusterMeanM20[i]          = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hClusterMeanM20; Run Number ; #bar{#lower[0.1]{M20}}_{Cluster}",hNBin,hFBin,hLBin);
+        hClusterMeanM20[i]          = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hClusterMeanM20; Run Number ; #bar{#lower[0.1]{#lambda_{1}^{2}}}",hNBin,hFBin,hLBin);
         EditTH1(globalRuns, doEquidistantXaxis, hClusterMeanM20[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
         vecHistos[i].push_back(hClusterMeanM20[i]);
 
         histoName                   = "hClusterM20-RMS";
         if(i==0) vecHistosName.push_back(histoName);
-        hClusterRMSM20[i]           = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hClusterRMSM20; Run Number ; #sigma_{M20_{Cluster}}",hNBin,hFBin,hLBin);
+        hClusterRMSM20[i]           = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hClusterRMSM20; Run Number ; #sigma_{#lower[0.1]{#lambda_{1}^{2}}}",hNBin,hFBin,hLBin);
         EditTH1(globalRuns, doEquidistantXaxis, hClusterRMSM20[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
         vecHistos[i].push_back(hClusterRMSM20[i]);
 
