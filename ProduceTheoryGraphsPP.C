@@ -602,1236 +602,1236 @@ void ProduceTheoryGraphsPP(){
 	histoPythia8InvYield2760GeVVarBinning->Scale(1./(xSection2760GeV*recalcBarn));
 
 	
-	//*******************************************************************************************************
-	//****************************** Pythia 8 Tune 4C *******************************************************
-	//*******************************************************************************************************
-	Color_t colorMB         = kBlack;
-	Color_t colorptHard2     = kBlue+1;
-	Color_t colorptHard5     = kRed+1;
-	Color_t colorptHard10     = kGreen+1;
-	
-	Double_t scalingFactor2760GeVPy8_4C_MB                = 1.096e3/(2361698525/4e8)*1/4e8*1e9;
-	Double_t scalingFactor2760GeVPy8_4C_ptHard2            = 2.690e2/(671454494/1e8)*1/1e8*1e9;
-	Double_t scalingFactor2760GeVPy8_4C_ptHard5            = 1.522e1/(702687699/1e8)*1/1e8*1e9;
-	Double_t scalingFactor2760GeVPy8_4C_ptHard10        = 1.194e0/(659556684/8.6e7)*1/8.6e7*1e9;
-	
-//     Double_t xSection2760GeVPy8_4CMB                    = 1.09e3;
-//     Double_t xSection2760GeVPy8_4CMBErr                    = 3.077e-2;
-//     Double_t nEvt2760GeVPy8_4CMB                        = 400e6;
-//     Double_t xSection2760GeVPy8_4CptHard5                = 1.522e1;
-//     Double_t xSection2760GeVPy8_4CptHard5Err            = 8.484e-4;
-//     Double_t nEvt2760GeVPy8_4CptHard5                    = 100e6;
-//     Double_t xSection2760GeVPy8_4CptHard10                = 1.194e0;
-//     Double_t xSection2760GeVPy8_4CptHard10Err            = 6.968e-5;
-//     Double_t nEvt2760GeVPy8_4CptHard10                    = 86e6;
-	
-	TFile*     file2760GeV_Pythia8_Tune4CMB                 = TFile::Open("ExternalInput/Theory/Pythia/hist_Pythia8_1_Tune4C_MB_400Mio.root");
-	TH1F*     histoPi02760GeV_Pythia8_Tune4CMB             = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPi0W0K");
-	TH1F*     histoPi0FromEta2760GeV_Pythia8_Tune4CMB     = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPi0FromEta");
-	TH1F*     histoPi0FromLambda2760GeV_Pythia8_Tune4CMB     = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPi0FromLambda");
-	TH1F*     histoPi0FromK0s2760GeV_Pythia8_Tune4CMB     = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPi0");
-	histoPi0FromK0s2760GeV_Pythia8_Tune4CMB->Sumw2();
-	histoPi0FromK0s2760GeV_Pythia8_Tune4CMB->Add(histoPi02760GeV_Pythia8_Tune4CMB,-1);
-	TH1F*     histoEta2760GeV_Pythia8_Tune4CMB             = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptEta");
-	TH1F*     histoPiPl2760GeV_Pythia8_Tune4CMB             = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPiPlW0K");
-	TH1F*     histoPiMi2760GeV_Pythia8_Tune4CMB             = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPiMiW0K");
-	TH1F*     histoPi0UB2760GeV_Pythia8_Tune4CMB             = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPi0W0KUB");
-	TH1F*     histoPi0FromEtaUB2760GeV_Pythia8_Tune4CMB     = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPi0FromEtaUB");
-	TH1F*     histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CMB     = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPi0FromLambdaUB");
-	TH1F*     histoPi0FromK0sUB2760GeV_Pythia8_Tune4CMB     = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPi0UB");
-	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CMB->Sumw2();
-	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CMB->Add(histoPi0UB2760GeV_Pythia8_Tune4CMB,-1);
-	TH1F*     histoEtaUB2760GeV_Pythia8_Tune4CMB             = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptEtaUB");
-	TH1F*     histoPiPlUB2760GeV_Pythia8_Tune4CMB             = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPiPlW0KUB");
-	TH1F*     histoPiMiUB2760GeV_Pythia8_Tune4CMB             = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPiMiW0KUB");
-	
-	histoPi02760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
-	histoPi0FromLambda2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
-	histoPi0FromEta2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
-	histoPi0FromK0s2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
-	histoEta2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
-	histoPiPl2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
-	histoPiMi2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
-	histoPi0UB2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
-	histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
-	histoPi0FromEtaUB2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
-	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
-	histoEtaUB2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
-	histoPiPlUB2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
-	histoPiMiUB2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
-
-	TFile*     file2760GeV_Pythia8_Tune4CptHard2                 = TFile::Open("ExternalInput/Theory/Pythia/hist_Pythia8_1_Tune4C_pTHard2GeV_100Mio.root");
-	TH1F*     histoPi02760GeV_Pythia8_Tune4CptHard2             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPi0W0K");
-	TH1F*     histoPi0FromEta2760GeV_Pythia8_Tune4CptHard2     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPi0FromEta");
-	TH1F*     histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard2 = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPi0FromLambda");
-	TH1F*     histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPi0");
-	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2->Sumw2();
-	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2->Add(histoPi02760GeV_Pythia8_Tune4CptHard2,-1);
-	TH1F*     histoEta2760GeV_Pythia8_Tune4CptHard2             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptEta");
-	TH1F*     histoPiPl2760GeV_Pythia8_Tune4CptHard2             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPiPlW0K");
-	TH1F*     histoPiMi2760GeV_Pythia8_Tune4CptHard2             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPiMiW0K");
-	TH1F*     histoPi0UB2760GeV_Pythia8_Tune4CptHard2         = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPi0W0KUB");
-	TH1F*     histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard2     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPi0FromEtaUB");
-	TH1F*     histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard2     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPi0FromLambdaUB");
-	TH1F*     histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard2     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPi0UB");
-	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard2->Sumw2();
-	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard2->Add(histoPi0UB2760GeV_Pythia8_Tune4CptHard2,-1);
-	TH1F*     histoEtaUB2760GeV_Pythia8_Tune4CptHard2         = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptEtaUB");
-	TH1F*     histoPiPlUB2760GeV_Pythia8_Tune4CptHard2         = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPiPlW0KUB");
-	TH1F*     histoPiMiUB2760GeV_Pythia8_Tune4CptHard2         = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPiMiW0KUB");
-	
-	histoPi02760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
-	histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
-	histoPi0FromEta2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
-	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
-	histoEta2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
-	histoPiPl2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
-	histoPiMi2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
-	histoPi0UB2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
-	histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
-	histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
-	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
-	histoEtaUB2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
-	histoPiPlUB2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
-	histoPiMiUB2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
-	
-	
-	TFile*     file2760GeV_Pythia8_Tune4CptHard5                 = TFile::Open("ExternalInput/Theory/Pythia/hist_Pythia8_1_Tune4C_pTHard5GeV_100Mio.root");
-	TH1F*     histoPi02760GeV_Pythia8_Tune4CptHard5             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPi0W0K");
-	TH1F*     histoPi0FromEta2760GeV_Pythia8_Tune4CptHard5     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPi0FromEta");
-	TH1F*     histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard5 = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPi0FromLambda");
-	TH1F*     histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPi0");
-	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5->Sumw2();
-	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5->Add(histoPi02760GeV_Pythia8_Tune4CptHard5,-1);
-	TH1F*     histoEta2760GeV_Pythia8_Tune4CptHard5             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptEta");
-	TH1F*     histoPiPl2760GeV_Pythia8_Tune4CptHard5             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPiPlW0K");
-	TH1F*     histoPiMi2760GeV_Pythia8_Tune4CptHard5             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPiMiW0K");
-	TH1F*     histoPi0UB2760GeV_Pythia8_Tune4CptHard5         = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPi0W0KUB");
-	TH1F*     histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard5     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPi0FromEtaUB");
-	TH1F*     histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard5     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPi0FromLambdaUB");
-	TH1F*     histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard5     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPi0UB");
-	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard5->Sumw2();
-	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard5->Add(histoPi0UB2760GeV_Pythia8_Tune4CptHard5,-1);
-	TH1F*     histoEtaUB2760GeV_Pythia8_Tune4CptHard5         = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptEtaUB");
-	TH1F*     histoPiPlUB2760GeV_Pythia8_Tune4CptHard5         = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPiPlW0KUB");
-	TH1F*     histoPiMiUB2760GeV_Pythia8_Tune4CptHard5         = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPiMiW0KUB");
-	
-	histoPi02760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
-	histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
-	histoPi0FromEta2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
-	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
-	histoEta2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
-	histoPiPl2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
-	histoPiMi2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
-	histoPi0UB2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
-	histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
-	histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
-	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
-	histoEtaUB2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
-	histoPiPlUB2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
-	histoPiMiUB2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
-
-	TFile*     file2760GeV_Pythia8_Tune4CptHard10                 = TFile::Open("ExternalInput/Theory/Pythia/hist_Pythia8_1_Tune4C_ptHard10GeV_Backup86.0Mio.root");
-	TH1F*     histoPi02760GeV_Pythia8_Tune4CptHard10             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPi0W0KClone");
-	TH1F*     histoPi0FromEta2760GeV_Pythia8_Tune4CptHard10     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPi0FromEtaClone");
-	TH1F*     histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard10     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPi0FromLambdaClone");
-	TH1F*     histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPi0Clone");
-	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10->Sumw2();
-	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10->Add(histoPi02760GeV_Pythia8_Tune4CptHard10,-1);
-	TH1F*     histoEta2760GeV_Pythia8_Tune4CptHard10             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptEtaClone");
-	TH1F*     histoPiPl2760GeV_Pythia8_Tune4CptHard10             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPiPlW0KClone");
-	TH1F*     histoPiMi2760GeV_Pythia8_Tune4CptHard10             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPiMiW0KClone");
-	TH1F*     histoPi0UB2760GeV_Pythia8_Tune4CptHard10             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPi0W0KUBClone");
-	TH1F*     histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard10     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPi0FromEtaUBClone");
-	TH1F*     histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard10     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPi0FromLambdaUBClone");
-	TH1F*     histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard10     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPi0UBClone");
-	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard10->Sumw2();
-	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard10->Add(histoPi0UB2760GeV_Pythia8_Tune4CptHard10,-1);
-	TH1F*     histoEtaUB2760GeV_Pythia8_Tune4CptHard10             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptEtaUBClone");
-	TH1F*     histoPiPlUB2760GeV_Pythia8_Tune4CptHard10             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPiPlW0KUBClone");
-	TH1F*     histoPiMiUB2760GeV_Pythia8_Tune4CptHard10             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPiMiW0KUBClone");
-	
-	histoPi02760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
-	histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
-	histoPi0FromEta2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
-	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
-	histoEta2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
-	histoPiPl2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
-	histoPiMi2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
-	histoPi0UB2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
-	histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
-	histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
-	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
-	histoEtaUB2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
-	histoPiPlUB2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
-	histoPiMiUB2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
-
-	TH1D* ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB = (TH1D*) histoPi02760GeV_Pythia8_Tune4CptHard2->Clone("ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB");
-	ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB->Divide(ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB, histoPi02760GeV_Pythia8_Tune4CMB,1.,1.,"");
-	TH1D* ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2 = (TH1D*) histoPi02760GeV_Pythia8_Tune4CptHard5->Clone("ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2");
-	ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Divide(ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2, histoPi02760GeV_Pythia8_Tune4CptHard2,1.,1.,"");
-	TH1D* ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5 = (TH1D*) histoPi02760GeV_Pythia8_Tune4CptHard10->Clone("ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5");
-	ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Divide(ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5, histoPi02760GeV_Pythia8_Tune4CptHard5,1.,1.,"");    
-	TH1D* ratioPi0UB2760GeV_Pythia8_Tune4CpTHard2DivMB = (TH1D*) histoPi0UB2760GeV_Pythia8_Tune4CptHard2->Clone("ratioPi0UB2760GeV_Pythia8_Tune4CpTHard2DivMB");
-	ratioPi0UB2760GeV_Pythia8_Tune4CpTHard2DivMB->Divide(ratioPi0UB2760GeV_Pythia8_Tune4CpTHard2DivMB, histoPi0UB2760GeV_Pythia8_Tune4CMB,1.,1.,"");
-	TH1D* ratioPi0UB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2 = (TH1D*) histoPi0UB2760GeV_Pythia8_Tune4CptHard5->Clone("ratioPi0UB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2");
-	ratioPi0UB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Divide(ratioPi0UB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, histoPi0UB2760GeV_Pythia8_Tune4CptHard2,1.,1.,"");
-	TH1D* ratioPi0UB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5 = (TH1D*) histoPi0UB2760GeV_Pythia8_Tune4CptHard10->Clone("ratioPi0UB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5");
-	ratioPi0UB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Divide(ratioPi0UB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, histoPi0UB2760GeV_Pythia8_Tune4CptHard5,1.,1.,"");    
-	DrawGammaSetMarker(ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(ratioPi0UB2760GeV_Pythia8_Tune4CpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(ratioPi0UB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(ratioPi0UB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
-
-	TH1D* ratioPiPl2760GeV_Pythia8_Tune4CpTHard2DivMB = (TH1D*) histoPiPl2760GeV_Pythia8_Tune4CptHard2->Clone("ratioPiPl2760GeV_Pythia8_Tune4CpTHard2DivMB");
-	ratioPiPl2760GeV_Pythia8_Tune4CpTHard2DivMB->Divide(ratioPiPl2760GeV_Pythia8_Tune4CpTHard2DivMB, histoPiPl2760GeV_Pythia8_Tune4CMB,1.,1.,"");
-	TH1D* ratioPiPl2760GeV_Pythia8_Tune4CpTHard5DivpTHard2 = (TH1D*) histoPiPl2760GeV_Pythia8_Tune4CptHard5->Clone("ratioPiPl2760GeV_Pythia8_Tune4CpTHard5DivpTHard2");
-	ratioPiPl2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Divide(ratioPiPl2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, histoPiPl2760GeV_Pythia8_Tune4CptHard2,1.,1.,"");
-	TH1D* ratioPiPl2760GeV_Pythia8_Tune4CpTHard10DivpTHard5 = (TH1D*) histoPiPl2760GeV_Pythia8_Tune4CptHard10->Clone("ratioPiPl2760GeV_Pythia8_Tune4CpTHard10DivpTHard5");
-	ratioPiPl2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Divide(ratioPiPl2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, histoPiPl2760GeV_Pythia8_Tune4CptHard5,1.,1.,"");    
-	TH1D* ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard2DivMB = (TH1D*) histoPiPlUB2760GeV_Pythia8_Tune4CptHard2->Clone("ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard2DivMB");
-	ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard2DivMB->Divide(ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard2DivMB, histoPiPlUB2760GeV_Pythia8_Tune4CMB,1.,1.,"");
-	TH1D* ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2 = (TH1D*) histoPiPlUB2760GeV_Pythia8_Tune4CptHard5->Clone("ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2");
-	ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Divide(ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, histoPiPlUB2760GeV_Pythia8_Tune4CptHard2,1.,1.,"");
-	TH1D* ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5 = (TH1D*) histoPiPlUB2760GeV_Pythia8_Tune4CptHard10->Clone("ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5");
-	ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Divide(ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, histoPiPlUB2760GeV_Pythia8_Tune4CptHard5,1.,1.,"");    
-	DrawGammaSetMarker(ratioPiPl2760GeV_Pythia8_Tune4CpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(ratioPiPl2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(ratioPiPl2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
-
-	TH1D* ratioPiMi2760GeV_Pythia8_Tune4CpTHard2DivMB = (TH1D*) histoPiMi2760GeV_Pythia8_Tune4CptHard2->Clone("ratioPiMi2760GeV_Pythia8_Tune4CpTHard2DivMB");
-	ratioPiMi2760GeV_Pythia8_Tune4CpTHard2DivMB->Divide(ratioPiMi2760GeV_Pythia8_Tune4CpTHard2DivMB, histoPiMi2760GeV_Pythia8_Tune4CMB,1.,1.,"");
-	TH1D* ratioPiMi2760GeV_Pythia8_Tune4CpTHard5DivpTHard2 = (TH1D*) histoPiMi2760GeV_Pythia8_Tune4CptHard5->Clone("ratioPiMi2760GeV_Pythia8_Tune4CpTHard5DivpTHard2");
-	ratioPiMi2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Divide(ratioPiMi2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, histoPiMi2760GeV_Pythia8_Tune4CptHard2,1.,1.,"");
-	TH1D* ratioPiMi2760GeV_Pythia8_Tune4CpTHard10DivpTHard5 = (TH1D*) histoPiMi2760GeV_Pythia8_Tune4CptHard10->Clone("ratioPiMi2760GeV_Pythia8_Tune4CpTHard10DivpTHard5");
-	ratioPiMi2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Divide(ratioPiMi2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, histoPiMi2760GeV_Pythia8_Tune4CptHard5,1.,1.,"");    
-	TH1D* ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard2DivMB = (TH1D*) histoPiMiUB2760GeV_Pythia8_Tune4CptHard2->Clone("ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard2DivMB");
-	ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard2DivMB->Divide(ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard2DivMB, histoPiMiUB2760GeV_Pythia8_Tune4CMB,1.,1.,"");
-	TH1D* ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2 = (TH1D*) histoPiMiUB2760GeV_Pythia8_Tune4CptHard5->Clone("ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2");
-	ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Divide(ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, histoPiMiUB2760GeV_Pythia8_Tune4CptHard2,1.,1.,"");
-	TH1D* ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5 = (TH1D*) histoPiMiUB2760GeV_Pythia8_Tune4CptHard10->Clone("ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5");
-	ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Divide(ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, histoPiMiUB2760GeV_Pythia8_Tune4CptHard5,1.,1.,"");    
-	DrawGammaSetMarker(ratioPiMi2760GeV_Pythia8_Tune4CpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(ratioPiMi2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(ratioPiMi2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
-
-	
-	TH1D* ratioEta2760GeV_Pythia8_Tune4CpTHard2DivMB = (TH1D*) histoEta2760GeV_Pythia8_Tune4CptHard2->Clone("ratioEta2760GeV_Pythia8_Tune4CpTHard2DivMB");
-	ratioEta2760GeV_Pythia8_Tune4CpTHard2DivMB->Divide(ratioEta2760GeV_Pythia8_Tune4CpTHard2DivMB, histoEta2760GeV_Pythia8_Tune4CMB,1.,1.,"");
-	TH1D* ratioEta2760GeV_Pythia8_Tune4CpTHard5DivpTHard2 = (TH1D*) histoEta2760GeV_Pythia8_Tune4CptHard5->Clone("ratioEta2760GeV_Pythia8_Tune4CpTHard5DivpTHard2");
-	ratioEta2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Divide(ratioEta2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, histoEta2760GeV_Pythia8_Tune4CptHard2,1.,1.,"");
-	TH1D* ratioEta2760GeV_Pythia8_Tune4CpTHard10DivpTHard5 = (TH1D*) histoEta2760GeV_Pythia8_Tune4CptHard10->Clone("ratioEta2760GeV_Pythia8_Tune4CpTHard10DivpTHard5");
-	ratioEta2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Divide(ratioEta2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, histoEta2760GeV_Pythia8_Tune4CptHard5,1.,1.,"");    
-	TH1D* ratioEtaUB2760GeV_Pythia8_Tune4CpTHard2DivMB = (TH1D*) histoEtaUB2760GeV_Pythia8_Tune4CptHard2->Clone("ratioEtaUB2760GeV_Pythia8_Tune4CpTHard2DivMB");
-	ratioEtaUB2760GeV_Pythia8_Tune4CpTHard2DivMB->Divide(ratioEtaUB2760GeV_Pythia8_Tune4CpTHard2DivMB, histoEtaUB2760GeV_Pythia8_Tune4CMB,1.,1.,"");
-	TH1D* ratioEtaUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2 = (TH1D*) histoEtaUB2760GeV_Pythia8_Tune4CptHard5->Clone("ratioEtaUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2");
-	ratioEtaUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Divide(ratioEtaUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, histoEtaUB2760GeV_Pythia8_Tune4CptHard2,1.,1.,"");
-	TH1D* ratioEtaUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5 = (TH1D*) histoEtaUB2760GeV_Pythia8_Tune4CptHard10->Clone("ratioEtaUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5");
-	ratioEtaUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Divide(ratioEtaUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, histoEtaUB2760GeV_Pythia8_Tune4CptHard5,1.,1.,"");    
-	DrawGammaSetMarker(ratioEta2760GeV_Pythia8_Tune4CpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(ratioEta2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(ratioEta2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(ratioEtaUB2760GeV_Pythia8_Tune4CpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(ratioEtaUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(ratioEtaUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
-	
-	DrawGammaSetMarker(histoPi02760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPi0FromK0s2760GeV_Pythia8_Tune4CMB, 24, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPi0UB2760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPi0FromK0sUB2760GeV_Pythia8_Tune4CMB, 24, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPi0FromEta2760GeV_Pythia8_Tune4CMB, 25, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPi0FromEtaUB2760GeV_Pythia8_Tune4CMB, 25, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPi0FromLambda2760GeV_Pythia8_Tune4CMB, 29, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CMB, 29, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoEta2760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoEtaUB2760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPiPl2760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPiPlUB2760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPiMi2760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPiMiUB2760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
-
-	DrawGammaSetMarker(histoPi02760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPi0UB2760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2, 24, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard2, 24, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard2, 25, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard2, 25, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard2, 29, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard2, 29, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoEta2760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoEtaUB2760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPiPl2760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPiPlUB2760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPiMi2760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPiMiUB2760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
-	
-	DrawGammaSetMarker(histoPi02760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5, 24, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard5, 24, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPi0UB2760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard5, 25, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard5, 25, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard5, 29, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard5, 29, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoEta2760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoEtaUB2760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPiPl2760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPiPlUB2760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPiMi2760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPiMiUB2760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
-
-	DrawGammaSetMarker(histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard10, 24, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10, 24, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPi02760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPi0UB2760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard10, 25, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard10, 25, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard10, 29, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard10, 29, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoEta2760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoEtaUB2760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPiPl2760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPiPlUB2760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPiMi2760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPiMiUB2760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
-
-	
-	//*******************************************************************************************************
-	//****************************** Pythia 8.2 Tune Monach *******************************************************
-	//*******************************************************************************************************    
-	Double_t scalingFactor2760GeVPy8_Monach_MB                = 6.311e02/(2713849945/4e8)*1/4e8*1e9;
-	Double_t scalingFactor2760GeVPy8_Monach_ptHard2            = 1.912e02/(508785747/8e7)*1/8e7*1e9;
-	Double_t scalingFactor2760GeVPy8_Monach_ptHard5            = 1.181e01/((199972446+136588301)/(3e7+2.05e7))*1/(3e7+2.05e7)*1e9;
-	Double_t scalingFactor2760GeVPy8_Monach_ptHard10        = 9.901e-01/(337055749/5e7)*1/5e7*1e9;
-	
-//     Double_t xSection2760GeVPy8_MonachMB                    = 1.09e3;
-//     Double_t xSection2760GeVPy8_MonachMBErr                    = 3.077e-2;
-//     Double_t nEvt2760GeVPy8_MonachMB                        = 400e6;
-//     Double_t xSection2760GeVPy8_MonachptHard5                = 1.522e1;
-//     Double_t xSection2760GeVPy8_MonachptHard5Err            = 8.484e-4;
-//     Double_t nEvt2760GeVPy8_MonachptHard5                    = 100e6;
-//     Double_t xSection2760GeVPy8_MonachptHard10                = 1.194e0;
-//     Double_t xSection2760GeVPy8_MonachptHard10Err            = 6.968e-5;
-//     Double_t nEvt2760GeVPy8_MonachptHard10                    = 86e6;
-	
-	TFile*     file2760GeV_Pythia8_TuneMonachMB                 = TFile::Open("ExternalInput/Theory/Pythia/hist_Pythia8_2_Monash_MB_Backup400.0Mio.root");
-	TH1F*     histoPi02760GeV_Pythia8_TuneMonachMB             = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPi0W0KClone");
-	TH1F*     histoPi0FromEta2760GeV_Pythia8_TuneMonachMB     = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPi0FromEtaClone");
-	TH1F*     histoPi0FromLambda2760GeV_Pythia8_TuneMonachMB     = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPi0FromLambdaClone");
-	TH1F*     histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB     = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPi0Clone");
-	histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB->Sumw2();
-	histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB->Add(histoPi02760GeV_Pythia8_TuneMonachMB,-1);
-	TH1F*     histoEta2760GeV_Pythia8_TuneMonachMB             = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptEtaClone");
-	TH1F*     histoPiPl2760GeV_Pythia8_TuneMonachMB             = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPiPlW0KClone");
-	TH1F*     histoPiMi2760GeV_Pythia8_TuneMonachMB             = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPiMiW0KClone");
-	TH1F*     histoPi0UB2760GeV_Pythia8_TuneMonachMB             = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPi0W0KUBClone");
-	TH1F*     histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachMB     = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPi0FromEtaUBClone");
-	TH1F*     histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachMB     = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPi0FromLambdaUBClone");
-	TH1F*     histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachMB     = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPi0UBClone");
-	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachMB->Sumw2();
-	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachMB->Add(histoPi0UB2760GeV_Pythia8_TuneMonachMB,-1);
-	TH1F*     histoEtaUB2760GeV_Pythia8_TuneMonachMB             = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptEtaUBClone");
-	TH1F*     histoPiPlUB2760GeV_Pythia8_TuneMonachMB         = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPiPlW0KUBClone");
-	TH1F*     histoPiMiUB2760GeV_Pythia8_TuneMonachMB         = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPiMiW0KUBClone");
-	
-	histoPi02760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
-	histoPi0FromLambda2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
-	histoPi0FromEta2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
-	histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
-	histoEta2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
-	histoPiPl2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
-	histoPiMi2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
-	histoPi0UB2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
-	histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
-	histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
-	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
-	histoEtaUB2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
-	histoPiPlUB2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
-	histoPiMiUB2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
-
-	TFile*     file2760GeV_Pythia8_TuneMonachptHard2                 = TFile::Open("ExternalInput/Theory/Pythia/hist_Pythia8_2_Monash_pTHard2_Backup80.0Mio.root");
-	TH1F*     histoPi02760GeV_Pythia8_TuneMonachptHard2             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPi0W0KClone");
-	TH1F*     histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard2     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPi0FromEtaClone");
-	TH1F*     histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard2 = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPi0FromLambdaClone");
-	TH1F*     histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPi0Clone");
-	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2->Sumw2();
-	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2->Add(histoPi02760GeV_Pythia8_TuneMonachptHard2,-1);
-	TH1F*     histoEta2760GeV_Pythia8_TuneMonachptHard2             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptEtaClone");
-	TH1F*     histoPiPl2760GeV_Pythia8_TuneMonachptHard2             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPiPlW0KClone");
-	TH1F*     histoPiMi2760GeV_Pythia8_TuneMonachptHard2             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPiMiW0KClone");
-	TH1F*     histoPi0UB2760GeV_Pythia8_TuneMonachptHard2         = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPi0W0KUBClone");
-	TH1F*     histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard2     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPi0FromEtaUBClone");
-	TH1F*     histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard2     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPi0FromLambdaUBClone");
-	TH1F*     histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard2     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPi0UBClone");
-	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard2->Sumw2();
-	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard2->Add(histoPi0UB2760GeV_Pythia8_TuneMonachptHard2,-1);
-	TH1F*     histoEtaUB2760GeV_Pythia8_TuneMonachptHard2         = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptEtaUBClone");
-	TH1F*     histoPiPlUB2760GeV_Pythia8_TuneMonachptHard2         = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPiPlW0KUBClone");
-	TH1F*     histoPiMiUB2760GeV_Pythia8_TuneMonachptHard2         = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPiMiW0KUBClone");
-	
-	histoPi02760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
-	histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
-	histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
-	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
-	histoEta2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
-	histoPiPl2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
-	histoPiMi2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
-	histoPi0UB2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
-	histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
-	histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
-	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
-	histoEtaUB2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
-	histoPiPlUB2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
-	histoPiMiUB2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
-	
-	
-	TFile*     file2760GeV_Pythia8_TuneMonachptHard5                 = TFile::Open("ExternalInput/Theory/Pythia/hist_Pythia8_2_Monash_pTHard5_50.5Mio.root");
-	TH1F*     histoPi02760GeV_Pythia8_TuneMonachptHard5             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPi0W0KClone");
-	TH1F*     histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard5     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPi0FromEtaClone");
-	TH1F*     histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard5 = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPi0FromLambdaClone");
-	TH1F*     histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPi0Clone");
-	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5->Sumw2();
-	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5->Add(histoPi02760GeV_Pythia8_TuneMonachptHard5,-1);
-	TH1F*     histoEta2760GeV_Pythia8_TuneMonachptHard5             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptEtaClone");
-	TH1F*     histoPiPl2760GeV_Pythia8_TuneMonachptHard5             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPiPlW0KClone");
-	TH1F*     histoPiMi2760GeV_Pythia8_TuneMonachptHard5             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPiMiW0KClone");
-	TH1F*     histoPi0UB2760GeV_Pythia8_TuneMonachptHard5         = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPi0W0KUBClone");
-	TH1F*     histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard5     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPi0FromEtaUBClone");
-	TH1F*     histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard5     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPi0FromLambdaUBClone");
-	TH1F*     histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard5     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPi0UBClone");
-	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard5->Sumw2();
-	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard5->Add(histoPi0UB2760GeV_Pythia8_TuneMonachptHard5,-1);
-	TH1F*     histoEtaUB2760GeV_Pythia8_TuneMonachptHard5         = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptEtaUBClone");
-	TH1F*     histoPiPlUB2760GeV_Pythia8_TuneMonachptHard5         = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPiPlW0KUBClone");
-	TH1F*     histoPiMiUB2760GeV_Pythia8_TuneMonachptHard5         = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPiMiW0KUBClone");
-	
-	histoPi02760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
-	histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
-	histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
-	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
-	histoEta2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
-	histoPiPl2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
-	histoPiMi2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
-	histoPi0UB2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
-	histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
-	histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
-	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
-	histoEtaUB2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
-	histoPiPlUB2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
-	histoPiMiUB2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
-
-	TFile*     file2760GeV_Pythia8_TuneMonachptHard10                 = TFile::Open("ExternalInput/Theory/Pythia/hist_Pythia8_2_Monash_pTHard10_50Mio.root");
-	TH1F*     histoPi02760GeV_Pythia8_TuneMonachptHard10             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPi0W0K");
-	TH1F*     histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard10     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPi0FromEta");
-	TH1F*     histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard10     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPi0FromLambda");
-	TH1F*     histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPi0");
-	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10->Sumw2();
-	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10->Add(histoPi02760GeV_Pythia8_TuneMonachptHard10,-1);
-	TH1F*     histoEta2760GeV_Pythia8_TuneMonachptHard10             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptEta");
-	TH1F*     histoPiPl2760GeV_Pythia8_TuneMonachptHard10             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPiPlW0K");
-	TH1F*     histoPiMi2760GeV_Pythia8_TuneMonachptHard10             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPiMiW0K");
-	TH1F*     histoPi0UB2760GeV_Pythia8_TuneMonachptHard10             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPi0W0KUB");
-	TH1F*     histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard10     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPi0FromEtaUB");
-	TH1F*     histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard10     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPi0FromLambdaUB");
-	TH1F*     histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard10     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPi0UB");
-	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard10->Sumw2();
-	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard10->Add(histoPi0UB2760GeV_Pythia8_TuneMonachptHard10,-1);
-	TH1F*     histoEtaUB2760GeV_Pythia8_TuneMonachptHard10             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptEtaUB");
-	TH1F*     histoPiPlUB2760GeV_Pythia8_TuneMonachptHard10             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPiPlW0KUB");
-	TH1F*     histoPiMiUB2760GeV_Pythia8_TuneMonachptHard10             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPiMiW0KUB");
-	
-	histoPi02760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
-	histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
-	histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
-	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
-	histoEta2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
-	histoPiPl2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
-	histoPiMi2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
-	histoPi0UB2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
-	histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
-	histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
-	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
-	histoEtaUB2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
-	histoPiPlUB2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
-	histoPiMiUB2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
-
-	TH1D* ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB = (TH1D*) histoPi02760GeV_Pythia8_TuneMonachptHard2->Clone("ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB");
-	ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB->Divide(ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB, histoPi02760GeV_Pythia8_TuneMonachMB,1.,1.,"");
-	TH1D* ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2 = (TH1D*) histoPi02760GeV_Pythia8_TuneMonachptHard5->Clone("ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2");
-	ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Divide(ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, histoPi02760GeV_Pythia8_TuneMonachptHard2,1.,1.,"");
-	TH1D* ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5 = (TH1D*) histoPi02760GeV_Pythia8_TuneMonachptHard10->Clone("ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5");
-	ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Divide(ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, histoPi02760GeV_Pythia8_TuneMonachptHard5,1.,1.,"");    
-	TH1D* ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard2DivMB = (TH1D*) histoPi0UB2760GeV_Pythia8_TuneMonachptHard2->Clone("ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard2DivMB");
-	ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Divide(ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard2DivMB, histoPi0UB2760GeV_Pythia8_TuneMonachMB,1.,1.,"");
-	TH1D* ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2 = (TH1D*) histoPi0UB2760GeV_Pythia8_TuneMonachptHard5->Clone("ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2");
-	ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Divide(ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, histoPi0UB2760GeV_Pythia8_TuneMonachptHard2,1.,1.,"");
-	TH1D* ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5 = (TH1D*) histoPi0UB2760GeV_Pythia8_TuneMonachptHard10->Clone("ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5");
-	ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Divide(ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, histoPi0UB2760GeV_Pythia8_TuneMonachptHard5,1.,1.,"");    
-	DrawGammaSetMarker(ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
-
-	TH1D* ratioPiPl2760GeV_Pythia8_TuneMonachpTHard2DivMB = (TH1D*) histoPiPl2760GeV_Pythia8_TuneMonachptHard2->Clone("ratioPiPl2760GeV_Pythia8_TuneMonachpTHard2DivMB");
-	ratioPiPl2760GeV_Pythia8_TuneMonachpTHard2DivMB->Divide(ratioPiPl2760GeV_Pythia8_TuneMonachpTHard2DivMB, histoPiPl2760GeV_Pythia8_TuneMonachMB,1.,1.,"");
-	TH1D* ratioPiPl2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2 = (TH1D*) histoPiPl2760GeV_Pythia8_TuneMonachptHard5->Clone("ratioPiPl2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2");
-	ratioPiPl2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Divide(ratioPiPl2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, histoPiPl2760GeV_Pythia8_TuneMonachptHard2,1.,1.,"");
-	TH1D* ratioPiPl2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5 = (TH1D*) histoPiPl2760GeV_Pythia8_TuneMonachptHard10->Clone("ratioPiPl2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5");
-	ratioPiPl2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Divide(ratioPiPl2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, histoPiPl2760GeV_Pythia8_TuneMonachptHard5,1.,1.,"");    
-	TH1D* ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard2DivMB = (TH1D*) histoPiPlUB2760GeV_Pythia8_TuneMonachptHard2->Clone("ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard2DivMB");
-	ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Divide(ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard2DivMB, histoPiPlUB2760GeV_Pythia8_TuneMonachMB,1.,1.,"");
-	TH1D* ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2 = (TH1D*) histoPiPlUB2760GeV_Pythia8_TuneMonachptHard5->Clone("ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2");
-	ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Divide(ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, histoPiPlUB2760GeV_Pythia8_TuneMonachptHard2,1.,1.,"");
-	TH1D* ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5 = (TH1D*) histoPiPlUB2760GeV_Pythia8_TuneMonachptHard10->Clone("ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5");
-	ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Divide(ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, histoPiPlUB2760GeV_Pythia8_TuneMonachptHard5,1.,1.,"");    
-	DrawGammaSetMarker(ratioPiPl2760GeV_Pythia8_TuneMonachpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(ratioPiPl2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(ratioPiPl2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
-
-	TH1D* ratioPiMi2760GeV_Pythia8_TuneMonachpTHard2DivMB = (TH1D*) histoPiMi2760GeV_Pythia8_TuneMonachptHard2->Clone("ratioPiMi2760GeV_Pythia8_TuneMonachpTHard2DivMB");
-	ratioPiMi2760GeV_Pythia8_TuneMonachpTHard2DivMB->Divide(ratioPiMi2760GeV_Pythia8_TuneMonachpTHard2DivMB, histoPiMi2760GeV_Pythia8_TuneMonachMB,1.,1.,"");
-	TH1D* ratioPiMi2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2 = (TH1D*) histoPiMi2760GeV_Pythia8_TuneMonachptHard5->Clone("ratioPiMi2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2");
-	ratioPiMi2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Divide(ratioPiMi2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, histoPiMi2760GeV_Pythia8_TuneMonachptHard2,1.,1.,"");
-	TH1D* ratioPiMi2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5 = (TH1D*) histoPiMi2760GeV_Pythia8_TuneMonachptHard10->Clone("ratioPiMi2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5");
-	ratioPiMi2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Divide(ratioPiMi2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, histoPiMi2760GeV_Pythia8_TuneMonachptHard5,1.,1.,"");    
-	TH1D* ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard2DivMB = (TH1D*) histoPiMiUB2760GeV_Pythia8_TuneMonachptHard2->Clone("ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard2DivMB");
-	ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Divide(ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard2DivMB, histoPiMiUB2760GeV_Pythia8_TuneMonachMB,1.,1.,"");
-	TH1D* ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2 = (TH1D*) histoPiMiUB2760GeV_Pythia8_TuneMonachptHard5->Clone("ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2");
-	ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Divide(ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, histoPiMiUB2760GeV_Pythia8_TuneMonachptHard2,1.,1.,"");
-	TH1D* ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5 = (TH1D*) histoPiMiUB2760GeV_Pythia8_TuneMonachptHard10->Clone("ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5");
-	ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Divide(ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, histoPiMiUB2760GeV_Pythia8_TuneMonachptHard5,1.,1.,"");    
-	DrawGammaSetMarker(ratioPiMi2760GeV_Pythia8_TuneMonachpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(ratioPiMi2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(ratioPiMi2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
-
-	
-	TH1D* ratioEta2760GeV_Pythia8_TuneMonachpTHard2DivMB = (TH1D*) histoEta2760GeV_Pythia8_TuneMonachptHard2->Clone("ratioEta2760GeV_Pythia8_TuneMonachpTHard2DivMB");
-	ratioEta2760GeV_Pythia8_TuneMonachpTHard2DivMB->Divide(ratioEta2760GeV_Pythia8_TuneMonachpTHard2DivMB, histoEta2760GeV_Pythia8_TuneMonachMB,1.,1.,"");
-	TH1D* ratioEta2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2 = (TH1D*) histoEta2760GeV_Pythia8_TuneMonachptHard5->Clone("ratioEta2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2");
-	ratioEta2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Divide(ratioEta2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, histoEta2760GeV_Pythia8_TuneMonachptHard2,1.,1.,"");
-	TH1D* ratioEta2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5 = (TH1D*) histoEta2760GeV_Pythia8_TuneMonachptHard10->Clone("ratioEta2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5");
-	ratioEta2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Divide(ratioEta2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, histoEta2760GeV_Pythia8_TuneMonachptHard5,1.,1.,"");    
-	TH1D* ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard2DivMB = (TH1D*) histoEtaUB2760GeV_Pythia8_TuneMonachptHard2->Clone("ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard2DivMB");
-	ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Divide(ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard2DivMB, histoEtaUB2760GeV_Pythia8_TuneMonachMB,1.,1.,"");
-	TH1D* ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2 = (TH1D*) histoEtaUB2760GeV_Pythia8_TuneMonachptHard5->Clone("ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2");
-	ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Divide(ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, histoEtaUB2760GeV_Pythia8_TuneMonachptHard2,1.,1.,"");
-	TH1D* ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5 = (TH1D*) histoEtaUB2760GeV_Pythia8_TuneMonachptHard10->Clone("ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5");
-	ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Divide(ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, histoEtaUB2760GeV_Pythia8_TuneMonachptHard5,1.,1.,"");    
-	DrawGammaSetMarker(ratioEta2760GeV_Pythia8_TuneMonachpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(ratioEta2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(ratioEta2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
-	
-	DrawGammaSetMarker(histoPi02760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB, 24, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPi0UB2760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachMB, 24, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPi0FromEta2760GeV_Pythia8_TuneMonachMB, 25, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachMB, 25, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPi0FromLambda2760GeV_Pythia8_TuneMonachMB, 29, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachMB, 29, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoEta2760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoEtaUB2760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPiPl2760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPiPlUB2760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPiMi2760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
-	DrawGammaSetMarker(histoPiMiUB2760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
-
-	DrawGammaSetMarker(histoPi02760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPi0UB2760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2, 24, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard2, 24, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard2, 25, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard2, 25, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard2, 29, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard2, 29, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoEta2760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoEtaUB2760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPiPl2760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPiPlUB2760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPiMi2760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
-	DrawGammaSetMarker(histoPiMiUB2760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
-	
-	DrawGammaSetMarker(histoPi02760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5, 24, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard5, 24, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPi0UB2760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard5, 25, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard5, 25, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard5, 29, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard5, 29, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoEta2760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoEtaUB2760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPiPl2760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPiPlUB2760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPiMi2760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
-	DrawGammaSetMarker(histoPiMiUB2760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
-
-	DrawGammaSetMarker(histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard10, 24, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10, 24, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPi02760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPi0UB2760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard10, 25, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard10, 25, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard10, 29, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard10, 29, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoEta2760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoEtaUB2760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPiPl2760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPiPlUB2760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPiMi2760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
-	DrawGammaSetMarker(histoPiMiUB2760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
-	
-	//************************************************************************************************
-	//************************ Plotting xSection *****************************************************
-	//************************************************************************************************
-	
-	TString collisionSystem2760GeV             = "pp, #sqrt{#it{s}} = 2.76 TeV";   
-
-	TCanvas* canvasXSectionPi0 = new TCanvas("canvasXSectionPi0","",200,10,1350,1350*1.15);  // gives the page size
-	DrawGammaCanvasSettings( canvasXSectionPi0, 0.14, 0.02, 0.02, 0.09);
-	canvasXSectionPi0->SetLogx();
-	canvasXSectionPi0->SetLogy();
-	
-	TH2F * histo2DXSectionPi0;
-	histo2DXSectionPi0 = new TH2F("histo2DXSectionPi0","histo2DXSectionPi0",11000,0.23,70.,1000,2e-2,10e11);
-	SetStyleHistoTH2ForGraphs(histo2DXSectionPi0, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 1.,1.45);
-	histo2DXSectionPi0->GetXaxis()->SetMoreLogLabels();
-	histo2DXSectionPi0->GetXaxis()->SetLabelOffset(-0.01);
-	histo2DXSectionPi0->Draw("copy");
-
-		histoPi02760GeV_Pythia8_Tune4CMB->Draw("pE1same");
-		histoPi02760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
-		histoPi02760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
-		histoPi02760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
-
-		TLatex *labelEnergyXSectionPi0 = new TLatex(0.64,0.92,collisionSystem2760GeV.Data());
-		SetStyleTLatex( labelEnergyXSectionPi0, 0.035,4);
-		labelEnergyXSectionPi0->Draw();
-		TLatex *labelDetSysXSectionPi0 = new TLatex(0.64,0.88,"#pi^{0} #rightarrow #gamma#gamma");
-		SetStyleTLatex( labelDetSysXSectionPi0, 0.035,4);
-		labelDetSysXSectionPi0->Draw();
-		TLatex *labelPythiaTuneA = new TLatex(0.64,0.84,"Pythia 8.1, Tune 4C");
-		SetStyleTLatex( labelPythiaTuneA, 0.035,4);
-		labelPythiaTuneA->Draw();
-
-		TLegend* legendXSectionPi0 = new TLegend(0.62,0.66,0.9,0.82);
-		legendXSectionPi0->SetFillColor(0);
-		legendXSectionPi0->SetLineColor(0);
-		legendXSectionPi0->SetTextFont(42);
-		legendXSectionPi0->SetTextSize(0.035);
-		legendXSectionPi0->AddEntry(histoPi02760GeV_Pythia8_Tune4CMB,"MB","p");
-		legendXSectionPi0->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard2,"p_{T,hard} > 2 GeV/c","p");
-		legendXSectionPi0->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard5,"p_{T,hard} > 5 GeV/c","p");
-		legendXSectionPi0->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard10,"p_{T,hard} > 10 GeV/c","p");
-		legendXSectionPi0->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0XSectionDiffptHardBins.eps"));
-
-	histo2DXSectionPi0->Draw("copy");
-		histoPi02760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
-		histoPi02760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
-		histoPi02760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
-		histoPi02760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		TLatex *labelPythiaTuneB = new TLatex(0.64,0.84,"Pythia 8.2, Monach");
-		SetStyleTLatex( labelPythiaTuneB, 0.035,4);
-		labelPythiaTuneB->Draw();
-
-		legendXSectionPi0->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0XSectionDiffptHardBins.eps"));
-
-	histo2DXSectionPi0->Draw("copy");
-		histoPi0UB2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
-		histoPi0UB2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
-		histoPi0UB2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
-		histoPi0UB2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneA->Draw();
-		legendXSectionPi0->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0UBXSectionDiffptHardBins.eps"));
-
-	histo2DXSectionPi0->Draw("copy");
-		histoPi0UB2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
-		histoPi0UB2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
-		histoPi0UB2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
-		histoPi0UB2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneB->Draw();
-		legendXSectionPi0->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0UBXSectionDiffptHardBins.eps"));
-	
-	histo2DXSectionPi0->Draw("copy");
-		histoPi02760GeV_Pythia8_Tune4CMB->Draw("pE1same");
-		histoPi0FromEta2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
-//         histoPi0FromK0s2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
-		histoPi0FromLambda2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneA->Draw();
-		
-		TLegend* legendXSectionPi02MB = new TLegend(0.62,0.72,0.9,0.82);
-		legendXSectionPi02MB->SetFillColor(0);
-		legendXSectionPi02MB->SetLineColor(0);
-		legendXSectionPi02MB->SetTextFont(42);
-		legendXSectionPi02MB->SetTextSize(0.035);
-		legendXSectionPi02MB->AddEntry(histoPi02760GeV_Pythia8_Tune4CMB,"X (not K)#rightarrow #pi^{0}","p");
-//         legendXSectionPi02MB->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard2,"K #rightarrow #pi^{0}","p");
-		legendXSectionPi02MB->AddEntry(histoPi0FromEta2760GeV_Pythia8_Tune4CMB,"#eta #rightarrow #pi^{0}","p");
-		legendXSectionPi02MB->AddEntry(histoPi0FromLambda2760GeV_Pythia8_Tune4CMB,"#Lambda #rightarrow #pi^{0}","p");
-		legendXSectionPi02MB->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0XSectionDiffSourcesMB.eps"));
-
-	histo2DXSectionPi0->Draw("copy");
-		TH1D* histoPi0All2760GeV_Pythia8_Tune4CMB = (TH1D*)histoPi02760GeV_Pythia8_Tune4CMB->Clone("histoPi0All2760GeV_Pythia8_Tune4CMB");
-		histoPi0All2760GeV_Pythia8_Tune4CMB->Sumw2();
-		histoPi0All2760GeV_Pythia8_Tune4CMB->Add(histoPi0FromK0s2760GeV_Pythia8_Tune4CMB);
-
-		DrawGammaSetMarker(histoPi0All2760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
-
-		histoPi0All2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
-		histoPi0FromK0s2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
-		histoPi0FromEta2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
-		histoPi0FromLambda2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneA->Draw();
-		TLegend* legendXSectionPi03MB = new TLegend(0.62,0.66,0.9,0.82);
-		legendXSectionPi03MB->SetFillColor(0);
-		legendXSectionPi03MB->SetLineColor(0);
-		legendXSectionPi03MB->SetTextFont(42);
-		legendXSectionPi03MB->SetTextSize(0.035);
-		legendXSectionPi03MB->AddEntry(histoPi0All2760GeV_Pythia8_Tune4CMB,"X #rightarrow #pi^{0}","p");
-		legendXSectionPi03MB->AddEntry(histoPi0FromK0s2760GeV_Pythia8_Tune4CMB,"K #rightarrow #pi^{0}","p");
-		legendXSectionPi03MB->AddEntry(histoPi0FromEta2760GeV_Pythia8_Tune4CMB,"#eta #rightarrow #pi^{0}","p");
-		legendXSectionPi03MB->AddEntry(histoPi0FromLambda2760GeV_Pythia8_Tune4CMB,"#Lambda #rightarrow #pi^{0}","p");
-		legendXSectionPi03MB->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0AllXSectionDiffSourcesMB.eps"));
-
-
-	histo2DXSectionPi0->Draw("copy");
-		histoPi02760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
-		histoPi0FromEta2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
-//         histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
-		histoPi0FromLambda2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneB->Draw();
-		
-		legendXSectionPi02MB->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0XSectionDiffSourcesMB.eps"));
-
-	histo2DXSectionPi0->Draw("copy");
-		TH1D* histoPi0All2760GeV_Pythia8_TuneMonachMB = (TH1D*)histoPi02760GeV_Pythia8_TuneMonachMB->Clone("histoPi0All2760GeV_Pythia8_TuneMonachMB");
-		histoPi0All2760GeV_Pythia8_TuneMonachMB->Sumw2();
-		histoPi0All2760GeV_Pythia8_TuneMonachMB->Add(histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB);
-
-		DrawGammaSetMarker(histoPi0All2760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
-
-		histoPi0All2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
-		histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
-		histoPi0FromEta2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
-		histoPi0FromLambda2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneB->Draw();
-		legendXSectionPi03MB->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0AllXSectionDiffSourcesMB.eps"));
-	
-	histo2DXSectionPi0->Draw("copy");
-		histoPi02760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
-		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
-//         histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
-		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneA->Draw();
-		TLegend* legendXSectionPi02ptHard2 = new TLegend(0.62,0.72,0.9,0.82);
-		legendXSectionPi02ptHard2->SetFillColor(0);
-		legendXSectionPi02ptHard2->SetLineColor(0);
-		legendXSectionPi02ptHard2->SetTextFont(42);
-		legendXSectionPi02ptHard2->SetTextSize(0.035);
-		legendXSectionPi02ptHard2->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard2,"X (not K)#rightarrow #pi^{0}","p");
-//         legendXSectionPi02ptHard2->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard2,"K #rightarrow #pi^{0}","p");
-		legendXSectionPi02ptHard2->AddEntry(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard2,"#eta #rightarrow #pi^{0}","p");
-		legendXSectionPi02ptHard2->AddEntry(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard2,"#Lambda #rightarrow #pi^{0}","p");
-		legendXSectionPi02ptHard2->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0XSectionDiffSourcesptHard2.eps"));
-
-	histo2DXSectionPi0->Draw("copy");
-		TH1D* histoPi0All2760GeV_Pythia8_Tune4CptHard2 = (TH1D*)histoPi02760GeV_Pythia8_Tune4CptHard2->Clone("histoPi0All2760GeV_Pythia8_Tune4CptHard2");
-		histoPi0All2760GeV_Pythia8_Tune4CptHard2->Sumw2();
-		histoPi0All2760GeV_Pythia8_Tune4CptHard2->Add(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2);
-
-		DrawGammaSetMarker(histoPi0All2760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
-
-		histoPi0All2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
-		histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
-		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
-		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneA->Draw();
-		
-		TLegend* legendXSectionPi03ptHard2 = new TLegend(0.62,0.66,0.9,0.82);
-		legendXSectionPi03ptHard2->SetFillColor(0);
-		legendXSectionPi03ptHard2->SetLineColor(0);
-		legendXSectionPi03ptHard2->SetTextFont(42);
-		legendXSectionPi03ptHard2->SetTextSize(0.035);
-		legendXSectionPi03ptHard2->AddEntry(histoPi0All2760GeV_Pythia8_Tune4CptHard2,"X #rightarrow #pi^{0}","p");
-		legendXSectionPi03ptHard2->AddEntry(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2,"K #rightarrow #pi^{0}","p");
-		legendXSectionPi03ptHard2->AddEntry(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard2,"#eta #rightarrow #pi^{0}","p");
-		legendXSectionPi03ptHard2->AddEntry(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard2,"#Lambda #rightarrow #pi^{0}","p");
-		legendXSectionPi03ptHard2->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0AllXSectionDiffSourcesptHard2.eps"));
-
-	histo2DXSectionPi0->Draw("copy");
-		histoPi02760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
-		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
-//         histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
-		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneB->Draw();
-		legendXSectionPi02ptHard2->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0XSectionDiffSourcesptHard2.eps"));
-
-	histo2DXSectionPi0->Draw("copy");
-		TH1D* histoPi0All2760GeV_Pythia8_TuneMonachptHard2 = (TH1D*)histoPi02760GeV_Pythia8_TuneMonachptHard2->Clone("histoPi0All2760GeV_Pythia8_TuneMonachptHard2");
-		histoPi0All2760GeV_Pythia8_TuneMonachptHard2->Sumw2();
-		histoPi0All2760GeV_Pythia8_TuneMonachptHard2->Add(histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2);
-
-		DrawGammaSetMarker(histoPi0All2760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
-
-		histoPi0All2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
-		histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
-		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
-		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneB->Draw();
-		legendXSectionPi03ptHard2->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0AllXSectionDiffSourcesptHard2.eps"));
-	
-	histo2DXSectionPi0->Draw("copy");
-		histoPi02760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
-		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
-//         histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
-		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneA->Draw();
-		
-		TLegend* legendXSectionPi02ptHard5 = new TLegend(0.62,0.72,0.9,0.82);
-		legendXSectionPi02ptHard5->SetFillColor(0);
-		legendXSectionPi02ptHard5->SetLineColor(0);
-		legendXSectionPi02ptHard5->SetTextFont(42);
-		legendXSectionPi02ptHard5->SetTextSize(0.035);
-		legendXSectionPi02ptHard5->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard5,"X (not K)#rightarrow #pi^{0}","p");
-//         legendXSectionPi02ptHard5->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard2,"K #rightarrow #pi^{0}","p");
-		legendXSectionPi02ptHard5->AddEntry(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard5,"#eta #rightarrow #pi^{0}","p");
-		legendXSectionPi02ptHard5->AddEntry(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard5,"#Lambda #rightarrow #pi^{0}","p");
-		legendXSectionPi02ptHard5->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0XSectionDiffSourcesptHard5.eps"));
-
-	histo2DXSectionPi0->Draw("copy");
-		TH1D* histoPi0All2760GeV_Pythia8_Tune4CptHard5 = (TH1D*)histoPi02760GeV_Pythia8_Tune4CptHard5->Clone("histoPi0All2760GeV_Pythia8_Tune4CptHard5");
-		histoPi0All2760GeV_Pythia8_Tune4CptHard5->Sumw2();
-		histoPi0All2760GeV_Pythia8_Tune4CptHard5->Add(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5);
-
-		DrawGammaSetMarker(histoPi0All2760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
-
-		histoPi0All2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
-		histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
-		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
-		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneA->Draw();
-		TLegend* legendXSectionPi03ptHard5 = new TLegend(0.62,0.66,0.9,0.82);
-		legendXSectionPi03ptHard5->SetFillColor(0);
-		legendXSectionPi03ptHard5->SetLineColor(0);
-		legendXSectionPi03ptHard5->SetTextFont(42);
-		legendXSectionPi03ptHard5->SetTextSize(0.035);
-		legendXSectionPi03ptHard5->AddEntry(histoPi0All2760GeV_Pythia8_Tune4CptHard5,"X #rightarrow #pi^{0}","p");
-		legendXSectionPi03ptHard5->AddEntry(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5,"K #rightarrow #pi^{0}","p");
-		legendXSectionPi03ptHard5->AddEntry(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard5,"#eta #rightarrow #pi^{0}","p");
-		legendXSectionPi03ptHard5->AddEntry(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard5,"#Lambda #rightarrow #pi^{0}","p");
-		legendXSectionPi03ptHard5->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0AllXSectionDiffSourcesptHard5.eps"));
-
-	histo2DXSectionPi0->Draw("copy");
-		histoPi02760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
-		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
-//         histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
-		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneB->Draw();   
-		legendXSectionPi02ptHard5->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0XSectionDiffSourcesptHard5.eps"));
-
-	histo2DXSectionPi0->Draw("copy");
-		TH1D* histoPi0All2760GeV_Pythia8_TuneMonachptHard5 = (TH1D*)histoPi02760GeV_Pythia8_TuneMonachptHard5->Clone("histoPi0All2760GeV_Pythia8_TuneMonachptHard5");
-		histoPi0All2760GeV_Pythia8_TuneMonachptHard5->Sumw2();
-		histoPi0All2760GeV_Pythia8_TuneMonachptHard5->Add(histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5);
-
-		DrawGammaSetMarker(histoPi0All2760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
-
-		histoPi0All2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
-		histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
-		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
-		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneB->Draw();   
-		legendXSectionPi03ptHard5->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0AllXSectionDiffSourcesptHard5.eps"));
-	
-	histo2DXSectionPi0->Draw("copy");
-		histoPi02760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
-		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
-//         histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
-		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneA->Draw();
-		
-		TLegend* legendXSectionPi02ptHard10 = new TLegend(0.62,0.72,0.9,0.82);
-		legendXSectionPi02ptHard10->SetFillColor(0);
-		legendXSectionPi02ptHard10->SetLineColor(0);
-		legendXSectionPi02ptHard10->SetTextFont(42);
-		legendXSectionPi02ptHard10->SetTextSize(0.035);
-		legendXSectionPi02ptHard10->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard10,"X (not K)#rightarrow #pi^{0}","p");
-//         legendXSectionPi02ptHard10->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard2,"K #rightarrow #pi^{0}","p");
-		legendXSectionPi02ptHard10->AddEntry(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard10,"#eta #rightarrow #pi^{0}","p");
-		legendXSectionPi02ptHard10->AddEntry(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard10,"#Lambda #rightarrow #pi^{0}","p");
-		legendXSectionPi02ptHard10->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0XSectionDiffSourcesptHard10.eps"));
-
-	histo2DXSectionPi0->Draw("copy");
-		TH1D* histoPi0All2760GeV_Pythia8_Tune4CptHard10 = (TH1D*)histoPi02760GeV_Pythia8_Tune4CptHard10->Clone("histoPi0All2760GeV_Pythia8_Tune4CptHard10");
-		histoPi0All2760GeV_Pythia8_Tune4CptHard10->Sumw2();
-		histoPi0All2760GeV_Pythia8_Tune4CptHard10->Add(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10);
-
-		DrawGammaSetMarker(histoPi0All2760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
-
-		histoPi0All2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
-		histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
-		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
-		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneA->Draw();
-		
-		TLegend* legendXSectionPi03ptHard10 = new TLegend(0.62,0.66,0.9,0.82);
-		legendXSectionPi03ptHard10->SetFillColor(0);
-		legendXSectionPi03ptHard10->SetLineColor(0);
-		legendXSectionPi03ptHard10->SetTextFont(42);
-		legendXSectionPi03ptHard10->SetTextSize(0.035);
-		legendXSectionPi03ptHard10->AddEntry(histoPi0All2760GeV_Pythia8_Tune4CptHard10,"X #rightarrow #pi^{0}","p");
-		legendXSectionPi03ptHard10->AddEntry(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10,"K #rightarrow #pi^{0}","p");
-		legendXSectionPi03ptHard10->AddEntry(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard10,"#eta #rightarrow #pi^{0}","p");
-		legendXSectionPi03ptHard10->AddEntry(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard10,"#Lambda #rightarrow #pi^{0}","p");
-		legendXSectionPi03ptHard10->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0AllXSectionDiffSourcesptHard10.eps"));
-
-	histo2DXSectionPi0->Draw("copy");
-		histoPi02760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
-		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
-//         histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
-		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneB->Draw();
-		legendXSectionPi02ptHard10->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0XSectionDiffSourcesptHard10.eps"));
-
-	histo2DXSectionPi0->Draw("copy");
-		TH1D* histoPi0All2760GeV_Pythia8_TuneMonachptHard10 = (TH1D*)histoPi02760GeV_Pythia8_TuneMonachptHard10->Clone("histoPi0All2760GeV_Pythia8_TuneMonachptHard10");
-		histoPi0All2760GeV_Pythia8_TuneMonachptHard10->Sumw2();
-		histoPi0All2760GeV_Pythia8_TuneMonachptHard10->Add(histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10);
-
-		DrawGammaSetMarker(histoPi0All2760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
-
-		histoPi0All2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
-		histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
-		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
-		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
-
-		labelEnergyXSectionPi0->Draw();
-		labelDetSysXSectionPi0->Draw();
-		labelPythiaTuneA->Draw();
-		legendXSectionPi03ptHard10->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0AllXSectionDiffSourcesptHard10.eps"));
-	
-	
-	histo2DXSectionPi0->Draw("copy");
-
-		histoEta2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
-		histoEta2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
-		histoEta2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
-		histoEta2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
-
-		TLatex *labelEnergyXSectionEta = new TLatex(0.64,0.92,collisionSystem2760GeV.Data());
-		SetStyleTLatex( labelEnergyXSectionEta, 0.035,4);
-		labelEnergyXSectionEta->Draw();
-		TLatex *labelDetSysXSectionEta = new TLatex(0.64,0.88,"#pi^{0} #rightarrow #gamma#gamma");
-		SetStyleTLatex( labelDetSysXSectionEta, 0.035,4);
-		labelDetSysXSectionEta->Draw();
-		labelPythiaTuneA->Draw();
-		
-		TLegend* legendXSectionEta = new TLegend(0.62,0.66,0.9,0.82);
-		legendXSectionEta->SetFillColor(0);
-		legendXSectionEta->SetLineColor(0);
-		legendXSectionEta->SetTextFont(42);
-		legendXSectionEta->SetTextSize(0.035);
-		legendXSectionEta->AddEntry(histoEta2760GeV_Pythia8_Tune4CMB,"MB","p");
-		legendXSectionEta->AddEntry(histoEta2760GeV_Pythia8_Tune4CptHard2,"p_{T,hard} > 2 GeV/c","p");
-		legendXSectionEta->AddEntry(histoEta2760GeV_Pythia8_Tune4CptHard5,"p_{T,hard} > 5 GeV/c","p");
-		legendXSectionEta->AddEntry(histoEta2760GeV_Pythia8_Tune4CptHard10,"p_{T,hard} > 10 GeV/c","p");
-		legendXSectionEta->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_EtaXSectionDiffptHardBins.eps"));
-	
-	histo2DXSectionPi0->Draw("copy");
-		histoEtaUB2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
-		histoEtaUB2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
-		histoEtaUB2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
-		histoEtaUB2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
-
-		labelEnergyXSectionEta->Draw();
-		labelDetSysXSectionEta->Draw();
-		labelPythiaTuneA->Draw();
-		legendXSectionEta->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_EtaUBXSectionDiffptHardBins.eps"));
-
-	histo2DXSectionPi0->Draw("copy");
-
-		histoEta2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
-		histoEta2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
-		histoEta2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
-		histoEta2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
-
-		labelEnergyXSectionEta->Draw();
-		labelDetSysXSectionEta->Draw();
-		labelPythiaTuneB->Draw();
-		legendXSectionEta->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_EtaXSectionDiffptHardBins.eps"));
-	
-	histo2DXSectionPi0->Draw("copy");
-		histoEtaUB2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
-		histoEtaUB2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
-		histoEtaUB2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
-		histoEtaUB2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
-
-		labelEnergyXSectionEta->Draw();
-		labelDetSysXSectionEta->Draw();
-		labelPythiaTuneB->Draw();
-		legendXSectionEta->Draw();
-
-	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_EtaUBXSectionDiffptHardBins.eps"));
-	
-	
-	TCanvas* canvasRatioXSection = new TCanvas("canvasRatioXSection","",200,10,1350,900);  // gives the page size
-	DrawGammaCanvasSettings( canvasRatioXSection, 0.1, 0.02, 0.035, 0.09);
-	canvasRatioXSection->SetLogx();
-
-	TH2F * histo2DRatioXSection;
-	histo2DRatioXSection = new TH2F("histo2DRatioXSection","histo2DRatioXSection",11000,0.23,70.,1000,0,2);
-	SetStyleHistoTH2ForGraphs(histo2DRatioXSection, "#it{p}_{T} (GeV/#it{c})","#frac{#sigma_{A}}{#sigma_{B}}",0.035,0.04, 0.035,0.04, 1.,1.);
-	histo2DRatioXSection->GetXaxis()->SetMoreLogLabels();
-	histo2DRatioXSection->GetXaxis()->SetLabelOffset(-0.01);
-//     histo2DRatioXSection->GetYaxis()->SetRangeUser(-10,10);
-	histo2DRatioXSection->Draw("copy");
-
-		ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB->Draw("pE1same");
-		ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Draw("pE1same");
-		ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Draw("pE1same");
-
-		TF1* const1Pi0Tune4C = new TF1("const1Pi0Tune4C","[0]",4.0,20);
-		TF1* const2Pi0Tune4C = new TF1("const2Pi0Tune4C","[0]",7.0,30);
-		TF1* const3Pi0Tune4C = new TF1("const3Pi0Tune4C","[0]",12.,50);
-		
-		ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB->Fit(const1Pi0Tune4C,"NRME+","",4,15);
-		ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Fit(const2Pi0Tune4C,"NRME+","",7,30);
-		ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Fit(const3Pi0Tune4C,"NRME+","",12,50);
-		
-		SetStyleFit(const1Pi0Tune4C, 4.0, 20, 2, 3, colorptHard2+1); 
-		SetStyleFit(const2Pi0Tune4C, 7,30, 2, 5, colorptHard5+1);
-		SetStyleFit(const3Pi0Tune4C, 12,50, 2, 7, colorptHard10+1);
-		
-		const1Pi0Tune4C->Draw("same");
-		const2Pi0Tune4C->Draw("same");
-		const3Pi0Tune4C->Draw("same");
-		
-		TLatex *labelEnergyRatioXSectionPi0 = new TLatex(0.74,0.90,collisionSystem2760GeV.Data());
-		SetStyleTLatex( labelEnergyRatioXSectionPi0, 0.035,4);
-		labelEnergyRatioXSectionPi0->Draw();
-		TLatex *labelDetSysRatioXSectionPi0 = new TLatex(0.74,0.86,"#pi^{0} #rightarrow #gamma#gamma");
-		SetStyleTLatex( labelDetSysRatioXSectionPi0, 0.035,4);
-		labelDetSysRatioXSectionPi0->Draw();
-		TLatex *labelRatioPythiaTuneA = new TLatex(0.74,0.82,"Pythia 8.1, Tune 4C");
-		SetStyleTLatex( labelRatioPythiaTuneA, 0.035,4);
-		labelRatioPythiaTuneA->Draw();
-
-		TLegend* legendXSectionRatioPi0 = new TLegend(0.12,0.8,0.6,0.94);
-		legendXSectionRatioPi0->SetFillColor(0);
-		legendXSectionRatioPi0->SetLineColor(0);
-		legendXSectionRatioPi0->SetTextFont(42);
-		legendXSectionRatioPi0->SetTextSize(0.035);
-		legendXSectionRatioPi0->SetNColumns(2);
-		legendXSectionRatioPi0->SetMargin(0.1);
-		legendXSectionRatioPi0->AddEntry(ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB,"(p_{T,hard} > 2 GeV/c)/(MB)","p");
-		legendXSectionRatioPi0->AddEntry(const1Pi0Tune4C,Form("%0.2f",const1Pi0Tune4C->GetParameter(0)),"l");
-		legendXSectionRatioPi0->AddEntry(ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2,"(p_{T,hard} > 5 GeV/c)/((p_{T,hard} > 2 GeV/c))","p");
-		legendXSectionRatioPi0->AddEntry(const2Pi0Tune4C,Form("%0.2f",const2Pi0Tune4C->GetParameter(0)),"l");
-		legendXSectionRatioPi0->AddEntry(ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5,"(p_{T,hard} > 10 GeV/c)/((p_{T,hard} > 5 GeV/c))","p");
-		legendXSectionRatioPi0->AddEntry(const3Pi0Tune4C,Form("%0.2f",const3Pi0Tune4C->GetParameter(0)),"l");
-		legendXSectionRatioPi0->Draw();
-
-		
-	canvasRatioXSection->SaveAs("ExternalInput/Theory/Pythia/Tune4C_RatioPi0XSectionDiffptHardBins.eps");
-
-	histo2DRatioXSection->Draw("copy");
-
-		ratioPi0UB2760GeV_Pythia8_Tune4CpTHard2DivMB->Draw("pE1same");
-		ratioPi0UB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Draw("pE1same");
-		ratioPi0UB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Draw("pE1same");
-
-		const1Pi0Tune4C->Draw("same");
-		const2Pi0Tune4C->Draw("same");
-		const3Pi0Tune4C->Draw("same");
-		
-		labelEnergyRatioXSectionPi0->Draw();
-		labelDetSysRatioXSectionPi0->Draw();
-		labelRatioPythiaTuneA->Draw();
-		
-		legendXSectionRatioPi0->Draw();   
-	canvasRatioXSection->SaveAs("ExternalInput/Theory/Pythia/Tune4C_RatioPi0UBXSectionDiffptHardBins.eps");
-	
-	histo2DRatioXSection->Draw("copy");
-
-		ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB->Draw("pE1same");
-		ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Draw("pE1same");
-		ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Draw("pE1same");
-
-		TF1* const1Pi0TuneMonach = new TF1("const1Pi0TuneMonach","[0]",4.0,20);
-		TF1* const2Pi0TuneMonach = new TF1("const2Pi0TuneMonach","[0]",7.0,30);
-		TF1* const3Pi0TuneMonach = new TF1("const3Pi0TuneMonach","[0]",12.,50);
-		
-		ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB->Fit(const1Pi0TuneMonach,"NRME+","",4,15);
-		ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Fit(const2Pi0TuneMonach,"NRME+","",7,30);
-		ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Fit(const3Pi0TuneMonach,"NRME+","",12,50);
-		
-		SetStyleFit(const1Pi0TuneMonach, 4.0, 20, 2, 3, colorptHard2+1); 
-		SetStyleFit(const2Pi0TuneMonach, 7,30, 2, 5, colorptHard5+1);
-		SetStyleFit(const3Pi0TuneMonach, 12,50, 2, 7, colorptHard10+1);
-		
-		const1Pi0TuneMonach->Draw("same");
-		const2Pi0TuneMonach->Draw("same");
-		const3Pi0TuneMonach->Draw("same");
-		
-		labelEnergyRatioXSectionPi0->Draw();
-		labelDetSysRatioXSectionPi0->Draw();
-		TLatex *labelRatioPythiaTuneB = new TLatex(0.74,0.82,"Pythia 8.2, Monach");
-		SetStyleTLatex( labelRatioPythiaTuneB, 0.035,4);
-		labelRatioPythiaTuneB->Draw();
-
-		TLegend* legendXSectionRatioPi0TuneMonach = new TLegend(0.12,0.8,0.6,0.94);
-		legendXSectionRatioPi0TuneMonach->SetFillColor(0);
-		legendXSectionRatioPi0TuneMonach->SetLineColor(0);
-		legendXSectionRatioPi0TuneMonach->SetTextFont(42);
-		legendXSectionRatioPi0TuneMonach->SetTextSize(0.035);
-		legendXSectionRatioPi0TuneMonach->SetNColumns(2);
-		legendXSectionRatioPi0TuneMonach->SetMargin(0.1);
-		legendXSectionRatioPi0TuneMonach->AddEntry(ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB,"(p_{T,hard} > 2 GeV/c)/(MB)","p");
-		legendXSectionRatioPi0TuneMonach->AddEntry(const1Pi0TuneMonach,Form("%0.2f",const1Pi0TuneMonach->GetParameter(0)),"l");
-		legendXSectionRatioPi0TuneMonach->AddEntry(ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2,"(p_{T,hard} > 5 GeV/c)/((p_{T,hard} > 2 GeV/c))","p");
-		legendXSectionRatioPi0TuneMonach->AddEntry(const2Pi0TuneMonach,Form("%0.2f",const2Pi0TuneMonach->GetParameter(0)),"l");
-		legendXSectionRatioPi0TuneMonach->AddEntry(ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5,"(p_{T,hard} > 10 GeV/c)/((p_{T,hard} > 5 GeV/c))","p");
-		legendXSectionRatioPi0TuneMonach->AddEntry(const3Pi0TuneMonach,Form("%0.2f",const3Pi0TuneMonach->GetParameter(0)),"l");
-		legendXSectionRatioPi0TuneMonach->Draw();
-
-		
-	canvasRatioXSection->SaveAs("ExternalInput/Theory/Pythia/TuneMonach_RatioPi0XSectionDiffptHardBins.eps");
-
-	histo2DRatioXSection->Draw("copy");
-
-		ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Draw("pE1same");
-		ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Draw("pE1same");
-		ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Draw("pE1same");
-
-		const1Pi0TuneMonach->Draw("same");
-		const2Pi0TuneMonach->Draw("same");
-		const3Pi0TuneMonach->Draw("same");
-		
-		labelEnergyRatioXSectionPi0->Draw();
-		labelDetSysRatioXSectionPi0->Draw();
-		labelRatioPythiaTuneB->Draw();
-		
-		legendXSectionRatioPi0TuneMonach->Draw();   
-	canvasRatioXSection->SaveAs("ExternalInput/Theory/Pythia/TuneMonach_RatioPi0UBXSectionDiffptHardBins.eps");
+// 	//*******************************************************************************************************
+// 	//****************************** Pythia 8 Tune 4C *******************************************************
+// 	//*******************************************************************************************************
+// 	Color_t colorMB         = kBlack;
+// 	Color_t colorptHard2     = kBlue+1;
+// 	Color_t colorptHard5     = kRed+1;
+// 	Color_t colorptHard10     = kGreen+1;
+// 	
+// 	Double_t scalingFactor2760GeVPy8_4C_MB                = 1.096e3/(2361698525/4e8)*1/4e8*1e9;
+// 	Double_t scalingFactor2760GeVPy8_4C_ptHard2            = 2.690e2/(671454494/1e8)*1/1e8*1e9;
+// 	Double_t scalingFactor2760GeVPy8_4C_ptHard5            = 1.522e1/(702687699/1e8)*1/1e8*1e9;
+// 	Double_t scalingFactor2760GeVPy8_4C_ptHard10        = 1.194e0/(659556684/8.6e7)*1/8.6e7*1e9;
+// 	
+// //     Double_t xSection2760GeVPy8_4CMB                    = 1.09e3;
+// //     Double_t xSection2760GeVPy8_4CMBErr                    = 3.077e-2;
+// //     Double_t nEvt2760GeVPy8_4CMB                        = 400e6;
+// //     Double_t xSection2760GeVPy8_4CptHard5                = 1.522e1;
+// //     Double_t xSection2760GeVPy8_4CptHard5Err            = 8.484e-4;
+// //     Double_t nEvt2760GeVPy8_4CptHard5                    = 100e6;
+// //     Double_t xSection2760GeVPy8_4CptHard10                = 1.194e0;
+// //     Double_t xSection2760GeVPy8_4CptHard10Err            = 6.968e-5;
+// //     Double_t nEvt2760GeVPy8_4CptHard10                    = 86e6;
+// 	
+// 	TFile*     file2760GeV_Pythia8_Tune4CMB                 = TFile::Open("ExternalInput/Theory/Pythia/hist_Pythia8_1_Tune4C_MB_400Mio.root");
+// 	TH1F*     histoPi02760GeV_Pythia8_Tune4CMB             = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPi0W0K");
+// 	TH1F*     histoPi0FromEta2760GeV_Pythia8_Tune4CMB     = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPi0FromEta");
+// 	TH1F*     histoPi0FromLambda2760GeV_Pythia8_Tune4CMB     = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPi0FromLambda");
+// 	TH1F*     histoPi0FromK0s2760GeV_Pythia8_Tune4CMB     = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPi0");
+// 	histoPi0FromK0s2760GeV_Pythia8_Tune4CMB->Sumw2();
+// 	histoPi0FromK0s2760GeV_Pythia8_Tune4CMB->Add(histoPi02760GeV_Pythia8_Tune4CMB,-1);
+// 	TH1F*     histoEta2760GeV_Pythia8_Tune4CMB             = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptEta");
+// 	TH1F*     histoPiPl2760GeV_Pythia8_Tune4CMB             = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPiPlW0K");
+// 	TH1F*     histoPiMi2760GeV_Pythia8_Tune4CMB             = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPiMiW0K");
+// 	TH1F*     histoPi0UB2760GeV_Pythia8_Tune4CMB             = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPi0W0KUB");
+// 	TH1F*     histoPi0FromEtaUB2760GeV_Pythia8_Tune4CMB     = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPi0FromEtaUB");
+// 	TH1F*     histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CMB     = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPi0FromLambdaUB");
+// 	TH1F*     histoPi0FromK0sUB2760GeV_Pythia8_Tune4CMB     = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPi0UB");
+// 	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CMB->Sumw2();
+// 	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CMB->Add(histoPi0UB2760GeV_Pythia8_Tune4CMB,-1);
+// 	TH1F*     histoEtaUB2760GeV_Pythia8_Tune4CMB             = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptEtaUB");
+// 	TH1F*     histoPiPlUB2760GeV_Pythia8_Tune4CMB             = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPiPlW0KUB");
+// 	TH1F*     histoPiMiUB2760GeV_Pythia8_Tune4CMB             = (TH1F*)file2760GeV_Pythia8_Tune4CMB->Get("ptPiMiW0KUB");
+// 	
+// 	histoPi02760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
+// 	histoPi0FromLambda2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
+// 	histoPi0FromEta2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
+// 	histoPi0FromK0s2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
+// 	histoEta2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
+// 	histoPiPl2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
+// 	histoPiMi2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
+// 	histoPi0UB2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
+// 	histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
+// 	histoPi0FromEtaUB2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
+// 	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
+// 	histoEtaUB2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
+// 	histoPiPlUB2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
+// 	histoPiMiUB2760GeV_Pythia8_Tune4CMB->Scale(scalingFactor2760GeVPy8_4C_MB);
+// 
+// 	TFile*     file2760GeV_Pythia8_Tune4CptHard2                 = TFile::Open("ExternalInput/Theory/Pythia/hist_Pythia8_1_Tune4C_pTHard2GeV_100Mio.root");
+// 	TH1F*     histoPi02760GeV_Pythia8_Tune4CptHard2             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPi0W0K");
+// 	TH1F*     histoPi0FromEta2760GeV_Pythia8_Tune4CptHard2     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPi0FromEta");
+// 	TH1F*     histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard2 = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPi0FromLambda");
+// 	TH1F*     histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPi0");
+// 	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2->Sumw2();
+// 	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2->Add(histoPi02760GeV_Pythia8_Tune4CptHard2,-1);
+// 	TH1F*     histoEta2760GeV_Pythia8_Tune4CptHard2             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptEta");
+// 	TH1F*     histoPiPl2760GeV_Pythia8_Tune4CptHard2             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPiPlW0K");
+// 	TH1F*     histoPiMi2760GeV_Pythia8_Tune4CptHard2             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPiMiW0K");
+// 	TH1F*     histoPi0UB2760GeV_Pythia8_Tune4CptHard2         = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPi0W0KUB");
+// 	TH1F*     histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard2     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPi0FromEtaUB");
+// 	TH1F*     histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard2     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPi0FromLambdaUB");
+// 	TH1F*     histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard2     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPi0UB");
+// 	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard2->Sumw2();
+// 	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard2->Add(histoPi0UB2760GeV_Pythia8_Tune4CptHard2,-1);
+// 	TH1F*     histoEtaUB2760GeV_Pythia8_Tune4CptHard2         = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptEtaUB");
+// 	TH1F*     histoPiPlUB2760GeV_Pythia8_Tune4CptHard2         = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPiPlW0KUB");
+// 	TH1F*     histoPiMiUB2760GeV_Pythia8_Tune4CptHard2         = (TH1F*)file2760GeV_Pythia8_Tune4CptHard2->Get("ptPiMiW0KUB");
+// 	
+// 	histoPi02760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
+// 	histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
+// 	histoPi0FromEta2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
+// 	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
+// 	histoEta2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
+// 	histoPiPl2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
+// 	histoPiMi2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
+// 	histoPi0UB2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
+// 	histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
+// 	histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
+// 	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
+// 	histoEtaUB2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
+// 	histoPiPlUB2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
+// 	histoPiMiUB2760GeV_Pythia8_Tune4CptHard2->Scale(scalingFactor2760GeVPy8_4C_ptHard2);
+// 	
+// 	
+// 	TFile*     file2760GeV_Pythia8_Tune4CptHard5                 = TFile::Open("ExternalInput/Theory/Pythia/hist_Pythia8_1_Tune4C_pTHard5GeV_100Mio.root");
+// 	TH1F*     histoPi02760GeV_Pythia8_Tune4CptHard5             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPi0W0K");
+// 	TH1F*     histoPi0FromEta2760GeV_Pythia8_Tune4CptHard5     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPi0FromEta");
+// 	TH1F*     histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard5 = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPi0FromLambda");
+// 	TH1F*     histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPi0");
+// 	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5->Sumw2();
+// 	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5->Add(histoPi02760GeV_Pythia8_Tune4CptHard5,-1);
+// 	TH1F*     histoEta2760GeV_Pythia8_Tune4CptHard5             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptEta");
+// 	TH1F*     histoPiPl2760GeV_Pythia8_Tune4CptHard5             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPiPlW0K");
+// 	TH1F*     histoPiMi2760GeV_Pythia8_Tune4CptHard5             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPiMiW0K");
+// 	TH1F*     histoPi0UB2760GeV_Pythia8_Tune4CptHard5         = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPi0W0KUB");
+// 	TH1F*     histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard5     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPi0FromEtaUB");
+// 	TH1F*     histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard5     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPi0FromLambdaUB");
+// 	TH1F*     histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard5     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPi0UB");
+// 	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard5->Sumw2();
+// 	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard5->Add(histoPi0UB2760GeV_Pythia8_Tune4CptHard5,-1);
+// 	TH1F*     histoEtaUB2760GeV_Pythia8_Tune4CptHard5         = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptEtaUB");
+// 	TH1F*     histoPiPlUB2760GeV_Pythia8_Tune4CptHard5         = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPiPlW0KUB");
+// 	TH1F*     histoPiMiUB2760GeV_Pythia8_Tune4CptHard5         = (TH1F*)file2760GeV_Pythia8_Tune4CptHard5->Get("ptPiMiW0KUB");
+// 	
+// 	histoPi02760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
+// 	histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
+// 	histoPi0FromEta2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
+// 	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
+// 	histoEta2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
+// 	histoPiPl2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
+// 	histoPiMi2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
+// 	histoPi0UB2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
+// 	histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
+// 	histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
+// 	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
+// 	histoEtaUB2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
+// 	histoPiPlUB2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
+// 	histoPiMiUB2760GeV_Pythia8_Tune4CptHard5->Scale(scalingFactor2760GeVPy8_4C_ptHard5);
+// 
+// 	TFile*     file2760GeV_Pythia8_Tune4CptHard10                 = TFile::Open("ExternalInput/Theory/Pythia/hist_Pythia8_1_Tune4C_ptHard10GeV_Backup86.0Mio.root");
+// 	TH1F*     histoPi02760GeV_Pythia8_Tune4CptHard10             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPi0W0KClone");
+// 	TH1F*     histoPi0FromEta2760GeV_Pythia8_Tune4CptHard10     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPi0FromEtaClone");
+// 	TH1F*     histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard10     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPi0FromLambdaClone");
+// 	TH1F*     histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPi0Clone");
+// 	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10->Sumw2();
+// 	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10->Add(histoPi02760GeV_Pythia8_Tune4CptHard10,-1);
+// 	TH1F*     histoEta2760GeV_Pythia8_Tune4CptHard10             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptEtaClone");
+// 	TH1F*     histoPiPl2760GeV_Pythia8_Tune4CptHard10             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPiPlW0KClone");
+// 	TH1F*     histoPiMi2760GeV_Pythia8_Tune4CptHard10             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPiMiW0KClone");
+// 	TH1F*     histoPi0UB2760GeV_Pythia8_Tune4CptHard10             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPi0W0KUBClone");
+// 	TH1F*     histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard10     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPi0FromEtaUBClone");
+// 	TH1F*     histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard10     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPi0FromLambdaUBClone");
+// 	TH1F*     histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard10     = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPi0UBClone");
+// 	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard10->Sumw2();
+// 	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard10->Add(histoPi0UB2760GeV_Pythia8_Tune4CptHard10,-1);
+// 	TH1F*     histoEtaUB2760GeV_Pythia8_Tune4CptHard10             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptEtaUBClone");
+// 	TH1F*     histoPiPlUB2760GeV_Pythia8_Tune4CptHard10             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPiPlW0KUBClone");
+// 	TH1F*     histoPiMiUB2760GeV_Pythia8_Tune4CptHard10             = (TH1F*)file2760GeV_Pythia8_Tune4CptHard10->Get("ptPiMiW0KUBClone");
+// 	
+// 	histoPi02760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
+// 	histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
+// 	histoPi0FromEta2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
+// 	histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
+// 	histoEta2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
+// 	histoPiPl2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
+// 	histoPiMi2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
+// 	histoPi0UB2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
+// 	histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
+// 	histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
+// 	histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
+// 	histoEtaUB2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
+// 	histoPiPlUB2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
+// 	histoPiMiUB2760GeV_Pythia8_Tune4CptHard10->Scale(scalingFactor2760GeVPy8_4C_ptHard10);
+// 
+// 	TH1D* ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB = (TH1D*) histoPi02760GeV_Pythia8_Tune4CptHard2->Clone("ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB");
+// 	ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB->Divide(ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB, histoPi02760GeV_Pythia8_Tune4CMB,1.,1.,"");
+// 	TH1D* ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2 = (TH1D*) histoPi02760GeV_Pythia8_Tune4CptHard5->Clone("ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2");
+// 	ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Divide(ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2, histoPi02760GeV_Pythia8_Tune4CptHard2,1.,1.,"");
+// 	TH1D* ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5 = (TH1D*) histoPi02760GeV_Pythia8_Tune4CptHard10->Clone("ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5");
+// 	ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Divide(ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5, histoPi02760GeV_Pythia8_Tune4CptHard5,1.,1.,"");    
+// 	TH1D* ratioPi0UB2760GeV_Pythia8_Tune4CpTHard2DivMB = (TH1D*) histoPi0UB2760GeV_Pythia8_Tune4CptHard2->Clone("ratioPi0UB2760GeV_Pythia8_Tune4CpTHard2DivMB");
+// 	ratioPi0UB2760GeV_Pythia8_Tune4CpTHard2DivMB->Divide(ratioPi0UB2760GeV_Pythia8_Tune4CpTHard2DivMB, histoPi0UB2760GeV_Pythia8_Tune4CMB,1.,1.,"");
+// 	TH1D* ratioPi0UB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2 = (TH1D*) histoPi0UB2760GeV_Pythia8_Tune4CptHard5->Clone("ratioPi0UB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2");
+// 	ratioPi0UB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Divide(ratioPi0UB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, histoPi0UB2760GeV_Pythia8_Tune4CptHard2,1.,1.,"");
+// 	TH1D* ratioPi0UB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5 = (TH1D*) histoPi0UB2760GeV_Pythia8_Tune4CptHard10->Clone("ratioPi0UB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5");
+// 	ratioPi0UB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Divide(ratioPi0UB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, histoPi0UB2760GeV_Pythia8_Tune4CptHard5,1.,1.,"");    
+// 	DrawGammaSetMarker(ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(ratioPi0UB2760GeV_Pythia8_Tune4CpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(ratioPi0UB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(ratioPi0UB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
+// 
+// 	TH1D* ratioPiPl2760GeV_Pythia8_Tune4CpTHard2DivMB = (TH1D*) histoPiPl2760GeV_Pythia8_Tune4CptHard2->Clone("ratioPiPl2760GeV_Pythia8_Tune4CpTHard2DivMB");
+// 	ratioPiPl2760GeV_Pythia8_Tune4CpTHard2DivMB->Divide(ratioPiPl2760GeV_Pythia8_Tune4CpTHard2DivMB, histoPiPl2760GeV_Pythia8_Tune4CMB,1.,1.,"");
+// 	TH1D* ratioPiPl2760GeV_Pythia8_Tune4CpTHard5DivpTHard2 = (TH1D*) histoPiPl2760GeV_Pythia8_Tune4CptHard5->Clone("ratioPiPl2760GeV_Pythia8_Tune4CpTHard5DivpTHard2");
+// 	ratioPiPl2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Divide(ratioPiPl2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, histoPiPl2760GeV_Pythia8_Tune4CptHard2,1.,1.,"");
+// 	TH1D* ratioPiPl2760GeV_Pythia8_Tune4CpTHard10DivpTHard5 = (TH1D*) histoPiPl2760GeV_Pythia8_Tune4CptHard10->Clone("ratioPiPl2760GeV_Pythia8_Tune4CpTHard10DivpTHard5");
+// 	ratioPiPl2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Divide(ratioPiPl2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, histoPiPl2760GeV_Pythia8_Tune4CptHard5,1.,1.,"");    
+// 	TH1D* ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard2DivMB = (TH1D*) histoPiPlUB2760GeV_Pythia8_Tune4CptHard2->Clone("ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard2DivMB");
+// 	ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard2DivMB->Divide(ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard2DivMB, histoPiPlUB2760GeV_Pythia8_Tune4CMB,1.,1.,"");
+// 	TH1D* ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2 = (TH1D*) histoPiPlUB2760GeV_Pythia8_Tune4CptHard5->Clone("ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2");
+// 	ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Divide(ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, histoPiPlUB2760GeV_Pythia8_Tune4CptHard2,1.,1.,"");
+// 	TH1D* ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5 = (TH1D*) histoPiPlUB2760GeV_Pythia8_Tune4CptHard10->Clone("ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5");
+// 	ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Divide(ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, histoPiPlUB2760GeV_Pythia8_Tune4CptHard5,1.,1.,"");    
+// 	DrawGammaSetMarker(ratioPiPl2760GeV_Pythia8_Tune4CpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(ratioPiPl2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(ratioPiPl2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
+// 
+// 	TH1D* ratioPiMi2760GeV_Pythia8_Tune4CpTHard2DivMB = (TH1D*) histoPiMi2760GeV_Pythia8_Tune4CptHard2->Clone("ratioPiMi2760GeV_Pythia8_Tune4CpTHard2DivMB");
+// 	ratioPiMi2760GeV_Pythia8_Tune4CpTHard2DivMB->Divide(ratioPiMi2760GeV_Pythia8_Tune4CpTHard2DivMB, histoPiMi2760GeV_Pythia8_Tune4CMB,1.,1.,"");
+// 	TH1D* ratioPiMi2760GeV_Pythia8_Tune4CpTHard5DivpTHard2 = (TH1D*) histoPiMi2760GeV_Pythia8_Tune4CptHard5->Clone("ratioPiMi2760GeV_Pythia8_Tune4CpTHard5DivpTHard2");
+// 	ratioPiMi2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Divide(ratioPiMi2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, histoPiMi2760GeV_Pythia8_Tune4CptHard2,1.,1.,"");
+// 	TH1D* ratioPiMi2760GeV_Pythia8_Tune4CpTHard10DivpTHard5 = (TH1D*) histoPiMi2760GeV_Pythia8_Tune4CptHard10->Clone("ratioPiMi2760GeV_Pythia8_Tune4CpTHard10DivpTHard5");
+// 	ratioPiMi2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Divide(ratioPiMi2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, histoPiMi2760GeV_Pythia8_Tune4CptHard5,1.,1.,"");    
+// 	TH1D* ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard2DivMB = (TH1D*) histoPiMiUB2760GeV_Pythia8_Tune4CptHard2->Clone("ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard2DivMB");
+// 	ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard2DivMB->Divide(ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard2DivMB, histoPiMiUB2760GeV_Pythia8_Tune4CMB,1.,1.,"");
+// 	TH1D* ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2 = (TH1D*) histoPiMiUB2760GeV_Pythia8_Tune4CptHard5->Clone("ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2");
+// 	ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Divide(ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, histoPiMiUB2760GeV_Pythia8_Tune4CptHard2,1.,1.,"");
+// 	TH1D* ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5 = (TH1D*) histoPiMiUB2760GeV_Pythia8_Tune4CptHard10->Clone("ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5");
+// 	ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Divide(ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, histoPiMiUB2760GeV_Pythia8_Tune4CptHard5,1.,1.,"");    
+// 	DrawGammaSetMarker(ratioPiMi2760GeV_Pythia8_Tune4CpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(ratioPiMi2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(ratioPiMi2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
+// 
+// 	
+// 	TH1D* ratioEta2760GeV_Pythia8_Tune4CpTHard2DivMB = (TH1D*) histoEta2760GeV_Pythia8_Tune4CptHard2->Clone("ratioEta2760GeV_Pythia8_Tune4CpTHard2DivMB");
+// 	ratioEta2760GeV_Pythia8_Tune4CpTHard2DivMB->Divide(ratioEta2760GeV_Pythia8_Tune4CpTHard2DivMB, histoEta2760GeV_Pythia8_Tune4CMB,1.,1.,"");
+// 	TH1D* ratioEta2760GeV_Pythia8_Tune4CpTHard5DivpTHard2 = (TH1D*) histoEta2760GeV_Pythia8_Tune4CptHard5->Clone("ratioEta2760GeV_Pythia8_Tune4CpTHard5DivpTHard2");
+// 	ratioEta2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Divide(ratioEta2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, histoEta2760GeV_Pythia8_Tune4CptHard2,1.,1.,"");
+// 	TH1D* ratioEta2760GeV_Pythia8_Tune4CpTHard10DivpTHard5 = (TH1D*) histoEta2760GeV_Pythia8_Tune4CptHard10->Clone("ratioEta2760GeV_Pythia8_Tune4CpTHard10DivpTHard5");
+// 	ratioEta2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Divide(ratioEta2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, histoEta2760GeV_Pythia8_Tune4CptHard5,1.,1.,"");    
+// 	TH1D* ratioEtaUB2760GeV_Pythia8_Tune4CpTHard2DivMB = (TH1D*) histoEtaUB2760GeV_Pythia8_Tune4CptHard2->Clone("ratioEtaUB2760GeV_Pythia8_Tune4CpTHard2DivMB");
+// 	ratioEtaUB2760GeV_Pythia8_Tune4CpTHard2DivMB->Divide(ratioEtaUB2760GeV_Pythia8_Tune4CpTHard2DivMB, histoEtaUB2760GeV_Pythia8_Tune4CMB,1.,1.,"");
+// 	TH1D* ratioEtaUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2 = (TH1D*) histoEtaUB2760GeV_Pythia8_Tune4CptHard5->Clone("ratioEtaUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2");
+// 	ratioEtaUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Divide(ratioEtaUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, histoEtaUB2760GeV_Pythia8_Tune4CptHard2,1.,1.,"");
+// 	TH1D* ratioEtaUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5 = (TH1D*) histoEtaUB2760GeV_Pythia8_Tune4CptHard10->Clone("ratioEtaUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5");
+// 	ratioEtaUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Divide(ratioEtaUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, histoEtaUB2760GeV_Pythia8_Tune4CptHard5,1.,1.,"");    
+// 	DrawGammaSetMarker(ratioEta2760GeV_Pythia8_Tune4CpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(ratioEta2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(ratioEta2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(ratioEtaUB2760GeV_Pythia8_Tune4CpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(ratioEtaUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(ratioEtaUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
+// 	
+// 	DrawGammaSetMarker(histoPi02760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPi0FromK0s2760GeV_Pythia8_Tune4CMB, 24, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPi0UB2760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPi0FromK0sUB2760GeV_Pythia8_Tune4CMB, 24, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPi0FromEta2760GeV_Pythia8_Tune4CMB, 25, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPi0FromEtaUB2760GeV_Pythia8_Tune4CMB, 25, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPi0FromLambda2760GeV_Pythia8_Tune4CMB, 29, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CMB, 29, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoEta2760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoEtaUB2760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPiPl2760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPiPlUB2760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPiMi2760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPiMiUB2760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
+// 
+// 	DrawGammaSetMarker(histoPi02760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPi0UB2760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2, 24, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard2, 24, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard2, 25, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard2, 25, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard2, 29, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard2, 29, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoEta2760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoEtaUB2760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPiPl2760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPiPlUB2760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPiMi2760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPiMiUB2760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
+// 	
+// 	DrawGammaSetMarker(histoPi02760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5, 24, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard5, 24, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPi0UB2760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard5, 25, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard5, 25, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard5, 29, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard5, 29, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoEta2760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoEtaUB2760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPiPl2760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPiPlUB2760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPiMi2760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPiMiUB2760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
+// 
+// 	DrawGammaSetMarker(histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard10, 24, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10, 24, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPi02760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPi0UB2760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard10, 25, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard10, 25, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard10, 29, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard10, 29, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoEta2760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoEtaUB2760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPiPl2760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPiPlUB2760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPiMi2760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPiMiUB2760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
+// 
+// 	
+// 	//*******************************************************************************************************
+// 	//****************************** Pythia 8.2 Tune Monach *******************************************************
+// 	//*******************************************************************************************************    
+// 	Double_t scalingFactor2760GeVPy8_Monach_MB                = 6.311e02/(2713849945/4e8)*1/4e8*1e9;
+// 	Double_t scalingFactor2760GeVPy8_Monach_ptHard2            = 1.912e02/(508785747/8e7)*1/8e7*1e9;
+// 	Double_t scalingFactor2760GeVPy8_Monach_ptHard5            = 1.181e01/((199972446+136588301)/(3e7+2.05e7))*1/(3e7+2.05e7)*1e9;
+// 	Double_t scalingFactor2760GeVPy8_Monach_ptHard10        = 9.901e-01/(337055749/5e7)*1/5e7*1e9;
+// 	
+// //     Double_t xSection2760GeVPy8_MonachMB                    = 1.09e3;
+// //     Double_t xSection2760GeVPy8_MonachMBErr                    = 3.077e-2;
+// //     Double_t nEvt2760GeVPy8_MonachMB                        = 400e6;
+// //     Double_t xSection2760GeVPy8_MonachptHard5                = 1.522e1;
+// //     Double_t xSection2760GeVPy8_MonachptHard5Err            = 8.484e-4;
+// //     Double_t nEvt2760GeVPy8_MonachptHard5                    = 100e6;
+// //     Double_t xSection2760GeVPy8_MonachptHard10                = 1.194e0;
+// //     Double_t xSection2760GeVPy8_MonachptHard10Err            = 6.968e-5;
+// //     Double_t nEvt2760GeVPy8_MonachptHard10                    = 86e6;
+// 	
+// 	TFile*     file2760GeV_Pythia8_TuneMonachMB                 = TFile::Open("ExternalInput/Theory/Pythia/hist_Pythia8_2_Monash_MB_Backup400.0Mio.root");
+// 	TH1F*     histoPi02760GeV_Pythia8_TuneMonachMB             = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPi0W0KClone");
+// 	TH1F*     histoPi0FromEta2760GeV_Pythia8_TuneMonachMB     = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPi0FromEtaClone");
+// 	TH1F*     histoPi0FromLambda2760GeV_Pythia8_TuneMonachMB     = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPi0FromLambdaClone");
+// 	TH1F*     histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB     = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPi0Clone");
+// 	histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB->Sumw2();
+// 	histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB->Add(histoPi02760GeV_Pythia8_TuneMonachMB,-1);
+// 	TH1F*     histoEta2760GeV_Pythia8_TuneMonachMB             = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptEtaClone");
+// 	TH1F*     histoPiPl2760GeV_Pythia8_TuneMonachMB             = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPiPlW0KClone");
+// 	TH1F*     histoPiMi2760GeV_Pythia8_TuneMonachMB             = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPiMiW0KClone");
+// 	TH1F*     histoPi0UB2760GeV_Pythia8_TuneMonachMB             = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPi0W0KUBClone");
+// 	TH1F*     histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachMB     = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPi0FromEtaUBClone");
+// 	TH1F*     histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachMB     = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPi0FromLambdaUBClone");
+// 	TH1F*     histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachMB     = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPi0UBClone");
+// 	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachMB->Sumw2();
+// 	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachMB->Add(histoPi0UB2760GeV_Pythia8_TuneMonachMB,-1);
+// 	TH1F*     histoEtaUB2760GeV_Pythia8_TuneMonachMB             = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptEtaUBClone");
+// 	TH1F*     histoPiPlUB2760GeV_Pythia8_TuneMonachMB         = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPiPlW0KUBClone");
+// 	TH1F*     histoPiMiUB2760GeV_Pythia8_TuneMonachMB         = (TH1F*)file2760GeV_Pythia8_TuneMonachMB->Get("ptPiMiW0KUBClone");
+// 	
+// 	histoPi02760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
+// 	histoPi0FromLambda2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
+// 	histoPi0FromEta2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
+// 	histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
+// 	histoEta2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
+// 	histoPiPl2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
+// 	histoPiMi2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
+// 	histoPi0UB2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
+// 	histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
+// 	histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
+// 	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
+// 	histoEtaUB2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
+// 	histoPiPlUB2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
+// 	histoPiMiUB2760GeV_Pythia8_TuneMonachMB->Scale(scalingFactor2760GeVPy8_Monach_MB);
+// 
+// 	TFile*     file2760GeV_Pythia8_TuneMonachptHard2                 = TFile::Open("ExternalInput/Theory/Pythia/hist_Pythia8_2_Monash_pTHard2_Backup80.0Mio.root");
+// 	TH1F*     histoPi02760GeV_Pythia8_TuneMonachptHard2             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPi0W0KClone");
+// 	TH1F*     histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard2     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPi0FromEtaClone");
+// 	TH1F*     histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard2 = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPi0FromLambdaClone");
+// 	TH1F*     histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPi0Clone");
+// 	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2->Sumw2();
+// 	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2->Add(histoPi02760GeV_Pythia8_TuneMonachptHard2,-1);
+// 	TH1F*     histoEta2760GeV_Pythia8_TuneMonachptHard2             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptEtaClone");
+// 	TH1F*     histoPiPl2760GeV_Pythia8_TuneMonachptHard2             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPiPlW0KClone");
+// 	TH1F*     histoPiMi2760GeV_Pythia8_TuneMonachptHard2             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPiMiW0KClone");
+// 	TH1F*     histoPi0UB2760GeV_Pythia8_TuneMonachptHard2         = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPi0W0KUBClone");
+// 	TH1F*     histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard2     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPi0FromEtaUBClone");
+// 	TH1F*     histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard2     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPi0FromLambdaUBClone");
+// 	TH1F*     histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard2     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPi0UBClone");
+// 	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard2->Sumw2();
+// 	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard2->Add(histoPi0UB2760GeV_Pythia8_TuneMonachptHard2,-1);
+// 	TH1F*     histoEtaUB2760GeV_Pythia8_TuneMonachptHard2         = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptEtaUBClone");
+// 	TH1F*     histoPiPlUB2760GeV_Pythia8_TuneMonachptHard2         = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPiPlW0KUBClone");
+// 	TH1F*     histoPiMiUB2760GeV_Pythia8_TuneMonachptHard2         = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard2->Get("ptPiMiW0KUBClone");
+// 	
+// 	histoPi02760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
+// 	histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
+// 	histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
+// 	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
+// 	histoEta2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
+// 	histoPiPl2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
+// 	histoPiMi2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
+// 	histoPi0UB2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
+// 	histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
+// 	histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
+// 	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
+// 	histoEtaUB2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
+// 	histoPiPlUB2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
+// 	histoPiMiUB2760GeV_Pythia8_TuneMonachptHard2->Scale(scalingFactor2760GeVPy8_Monach_ptHard2);
+// 	
+// 	
+// 	TFile*     file2760GeV_Pythia8_TuneMonachptHard5                 = TFile::Open("ExternalInput/Theory/Pythia/hist_Pythia8_2_Monash_pTHard5_50.5Mio.root");
+// 	TH1F*     histoPi02760GeV_Pythia8_TuneMonachptHard5             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPi0W0KClone");
+// 	TH1F*     histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard5     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPi0FromEtaClone");
+// 	TH1F*     histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard5 = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPi0FromLambdaClone");
+// 	TH1F*     histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPi0Clone");
+// 	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5->Sumw2();
+// 	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5->Add(histoPi02760GeV_Pythia8_TuneMonachptHard5,-1);
+// 	TH1F*     histoEta2760GeV_Pythia8_TuneMonachptHard5             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptEtaClone");
+// 	TH1F*     histoPiPl2760GeV_Pythia8_TuneMonachptHard5             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPiPlW0KClone");
+// 	TH1F*     histoPiMi2760GeV_Pythia8_TuneMonachptHard5             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPiMiW0KClone");
+// 	TH1F*     histoPi0UB2760GeV_Pythia8_TuneMonachptHard5         = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPi0W0KUBClone");
+// 	TH1F*     histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard5     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPi0FromEtaUBClone");
+// 	TH1F*     histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard5     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPi0FromLambdaUBClone");
+// 	TH1F*     histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard5     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPi0UBClone");
+// 	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard5->Sumw2();
+// 	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard5->Add(histoPi0UB2760GeV_Pythia8_TuneMonachptHard5,-1);
+// 	TH1F*     histoEtaUB2760GeV_Pythia8_TuneMonachptHard5         = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptEtaUBClone");
+// 	TH1F*     histoPiPlUB2760GeV_Pythia8_TuneMonachptHard5         = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPiPlW0KUBClone");
+// 	TH1F*     histoPiMiUB2760GeV_Pythia8_TuneMonachptHard5         = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard5->Get("ptPiMiW0KUBClone");
+// 	
+// 	histoPi02760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
+// 	histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
+// 	histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
+// 	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
+// 	histoEta2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
+// 	histoPiPl2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
+// 	histoPiMi2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
+// 	histoPi0UB2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
+// 	histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
+// 	histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
+// 	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
+// 	histoEtaUB2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
+// 	histoPiPlUB2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
+// 	histoPiMiUB2760GeV_Pythia8_TuneMonachptHard5->Scale(scalingFactor2760GeVPy8_Monach_ptHard5);
+// 
+// 	TFile*     file2760GeV_Pythia8_TuneMonachptHard10                 = TFile::Open("ExternalInput/Theory/Pythia/hist_Pythia8_2_Monash_pTHard10_50Mio.root");
+// 	TH1F*     histoPi02760GeV_Pythia8_TuneMonachptHard10             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPi0W0K");
+// 	TH1F*     histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard10     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPi0FromEta");
+// 	TH1F*     histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard10     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPi0FromLambda");
+// 	TH1F*     histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPi0");
+// 	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10->Sumw2();
+// 	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10->Add(histoPi02760GeV_Pythia8_TuneMonachptHard10,-1);
+// 	TH1F*     histoEta2760GeV_Pythia8_TuneMonachptHard10             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptEta");
+// 	TH1F*     histoPiPl2760GeV_Pythia8_TuneMonachptHard10             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPiPlW0K");
+// 	TH1F*     histoPiMi2760GeV_Pythia8_TuneMonachptHard10             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPiMiW0K");
+// 	TH1F*     histoPi0UB2760GeV_Pythia8_TuneMonachptHard10             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPi0W0KUB");
+// 	TH1F*     histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard10     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPi0FromEtaUB");
+// 	TH1F*     histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard10     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPi0FromLambdaUB");
+// 	TH1F*     histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard10     = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPi0UB");
+// 	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard10->Sumw2();
+// 	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard10->Add(histoPi0UB2760GeV_Pythia8_TuneMonachptHard10,-1);
+// 	TH1F*     histoEtaUB2760GeV_Pythia8_TuneMonachptHard10             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptEtaUB");
+// 	TH1F*     histoPiPlUB2760GeV_Pythia8_TuneMonachptHard10             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPiPlW0KUB");
+// 	TH1F*     histoPiMiUB2760GeV_Pythia8_TuneMonachptHard10             = (TH1F*)file2760GeV_Pythia8_TuneMonachptHard10->Get("ptPiMiW0KUB");
+// 	
+// 	histoPi02760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
+// 	histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
+// 	histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
+// 	histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
+// 	histoEta2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
+// 	histoPiPl2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
+// 	histoPiMi2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
+// 	histoPi0UB2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
+// 	histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
+// 	histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
+// 	histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
+// 	histoEtaUB2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
+// 	histoPiPlUB2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
+// 	histoPiMiUB2760GeV_Pythia8_TuneMonachptHard10->Scale(scalingFactor2760GeVPy8_Monach_ptHard10);
+// 
+// 	TH1D* ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB = (TH1D*) histoPi02760GeV_Pythia8_TuneMonachptHard2->Clone("ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB");
+// 	ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB->Divide(ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB, histoPi02760GeV_Pythia8_TuneMonachMB,1.,1.,"");
+// 	TH1D* ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2 = (TH1D*) histoPi02760GeV_Pythia8_TuneMonachptHard5->Clone("ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2");
+// 	ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Divide(ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, histoPi02760GeV_Pythia8_TuneMonachptHard2,1.,1.,"");
+// 	TH1D* ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5 = (TH1D*) histoPi02760GeV_Pythia8_TuneMonachptHard10->Clone("ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5");
+// 	ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Divide(ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, histoPi02760GeV_Pythia8_TuneMonachptHard5,1.,1.,"");    
+// 	TH1D* ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard2DivMB = (TH1D*) histoPi0UB2760GeV_Pythia8_TuneMonachptHard2->Clone("ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard2DivMB");
+// 	ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Divide(ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard2DivMB, histoPi0UB2760GeV_Pythia8_TuneMonachMB,1.,1.,"");
+// 	TH1D* ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2 = (TH1D*) histoPi0UB2760GeV_Pythia8_TuneMonachptHard5->Clone("ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2");
+// 	ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Divide(ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, histoPi0UB2760GeV_Pythia8_TuneMonachptHard2,1.,1.,"");
+// 	TH1D* ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5 = (TH1D*) histoPi0UB2760GeV_Pythia8_TuneMonachptHard10->Clone("ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5");
+// 	ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Divide(ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, histoPi0UB2760GeV_Pythia8_TuneMonachptHard5,1.,1.,"");    
+// 	DrawGammaSetMarker(ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
+// 
+// 	TH1D* ratioPiPl2760GeV_Pythia8_TuneMonachpTHard2DivMB = (TH1D*) histoPiPl2760GeV_Pythia8_TuneMonachptHard2->Clone("ratioPiPl2760GeV_Pythia8_TuneMonachpTHard2DivMB");
+// 	ratioPiPl2760GeV_Pythia8_TuneMonachpTHard2DivMB->Divide(ratioPiPl2760GeV_Pythia8_TuneMonachpTHard2DivMB, histoPiPl2760GeV_Pythia8_TuneMonachMB,1.,1.,"");
+// 	TH1D* ratioPiPl2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2 = (TH1D*) histoPiPl2760GeV_Pythia8_TuneMonachptHard5->Clone("ratioPiPl2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2");
+// 	ratioPiPl2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Divide(ratioPiPl2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, histoPiPl2760GeV_Pythia8_TuneMonachptHard2,1.,1.,"");
+// 	TH1D* ratioPiPl2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5 = (TH1D*) histoPiPl2760GeV_Pythia8_TuneMonachptHard10->Clone("ratioPiPl2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5");
+// 	ratioPiPl2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Divide(ratioPiPl2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, histoPiPl2760GeV_Pythia8_TuneMonachptHard5,1.,1.,"");    
+// 	TH1D* ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard2DivMB = (TH1D*) histoPiPlUB2760GeV_Pythia8_TuneMonachptHard2->Clone("ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard2DivMB");
+// 	ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Divide(ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard2DivMB, histoPiPlUB2760GeV_Pythia8_TuneMonachMB,1.,1.,"");
+// 	TH1D* ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2 = (TH1D*) histoPiPlUB2760GeV_Pythia8_TuneMonachptHard5->Clone("ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2");
+// 	ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Divide(ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, histoPiPlUB2760GeV_Pythia8_TuneMonachptHard2,1.,1.,"");
+// 	TH1D* ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5 = (TH1D*) histoPiPlUB2760GeV_Pythia8_TuneMonachptHard10->Clone("ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5");
+// 	ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Divide(ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, histoPiPlUB2760GeV_Pythia8_TuneMonachptHard5,1.,1.,"");    
+// 	DrawGammaSetMarker(ratioPiPl2760GeV_Pythia8_TuneMonachpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(ratioPiPl2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(ratioPiPl2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
+// 
+// 	TH1D* ratioPiMi2760GeV_Pythia8_TuneMonachpTHard2DivMB = (TH1D*) histoPiMi2760GeV_Pythia8_TuneMonachptHard2->Clone("ratioPiMi2760GeV_Pythia8_TuneMonachpTHard2DivMB");
+// 	ratioPiMi2760GeV_Pythia8_TuneMonachpTHard2DivMB->Divide(ratioPiMi2760GeV_Pythia8_TuneMonachpTHard2DivMB, histoPiMi2760GeV_Pythia8_TuneMonachMB,1.,1.,"");
+// 	TH1D* ratioPiMi2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2 = (TH1D*) histoPiMi2760GeV_Pythia8_TuneMonachptHard5->Clone("ratioPiMi2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2");
+// 	ratioPiMi2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Divide(ratioPiMi2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, histoPiMi2760GeV_Pythia8_TuneMonachptHard2,1.,1.,"");
+// 	TH1D* ratioPiMi2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5 = (TH1D*) histoPiMi2760GeV_Pythia8_TuneMonachptHard10->Clone("ratioPiMi2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5");
+// 	ratioPiMi2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Divide(ratioPiMi2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, histoPiMi2760GeV_Pythia8_TuneMonachptHard5,1.,1.,"");    
+// 	TH1D* ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard2DivMB = (TH1D*) histoPiMiUB2760GeV_Pythia8_TuneMonachptHard2->Clone("ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard2DivMB");
+// 	ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Divide(ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard2DivMB, histoPiMiUB2760GeV_Pythia8_TuneMonachMB,1.,1.,"");
+// 	TH1D* ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2 = (TH1D*) histoPiMiUB2760GeV_Pythia8_TuneMonachptHard5->Clone("ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2");
+// 	ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Divide(ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, histoPiMiUB2760GeV_Pythia8_TuneMonachptHard2,1.,1.,"");
+// 	TH1D* ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5 = (TH1D*) histoPiMiUB2760GeV_Pythia8_TuneMonachptHard10->Clone("ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5");
+// 	ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Divide(ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, histoPiMiUB2760GeV_Pythia8_TuneMonachptHard5,1.,1.,"");    
+// 	DrawGammaSetMarker(ratioPiMi2760GeV_Pythia8_TuneMonachpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(ratioPiMi2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(ratioPiMi2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
+// 
+// 	
+// 	TH1D* ratioEta2760GeV_Pythia8_TuneMonachpTHard2DivMB = (TH1D*) histoEta2760GeV_Pythia8_TuneMonachptHard2->Clone("ratioEta2760GeV_Pythia8_TuneMonachpTHard2DivMB");
+// 	ratioEta2760GeV_Pythia8_TuneMonachpTHard2DivMB->Divide(ratioEta2760GeV_Pythia8_TuneMonachpTHard2DivMB, histoEta2760GeV_Pythia8_TuneMonachMB,1.,1.,"");
+// 	TH1D* ratioEta2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2 = (TH1D*) histoEta2760GeV_Pythia8_TuneMonachptHard5->Clone("ratioEta2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2");
+// 	ratioEta2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Divide(ratioEta2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, histoEta2760GeV_Pythia8_TuneMonachptHard2,1.,1.,"");
+// 	TH1D* ratioEta2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5 = (TH1D*) histoEta2760GeV_Pythia8_TuneMonachptHard10->Clone("ratioEta2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5");
+// 	ratioEta2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Divide(ratioEta2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, histoEta2760GeV_Pythia8_TuneMonachptHard5,1.,1.,"");    
+// 	TH1D* ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard2DivMB = (TH1D*) histoEtaUB2760GeV_Pythia8_TuneMonachptHard2->Clone("ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard2DivMB");
+// 	ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Divide(ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard2DivMB, histoEtaUB2760GeV_Pythia8_TuneMonachMB,1.,1.,"");
+// 	TH1D* ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2 = (TH1D*) histoEtaUB2760GeV_Pythia8_TuneMonachptHard5->Clone("ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2");
+// 	ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Divide(ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, histoEtaUB2760GeV_Pythia8_TuneMonachptHard2,1.,1.,"");
+// 	TH1D* ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5 = (TH1D*) histoEtaUB2760GeV_Pythia8_TuneMonachptHard10->Clone("ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5");
+// 	ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Divide(ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, histoEtaUB2760GeV_Pythia8_TuneMonachptHard5,1.,1.,"");    
+// 	DrawGammaSetMarker(ratioEta2760GeV_Pythia8_TuneMonachpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(ratioEta2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(ratioEta2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard2DivMB, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5, 20, 1, colorptHard10, colorptHard10);
+// 	
+// 	DrawGammaSetMarker(histoPi02760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB, 24, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPi0UB2760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachMB, 24, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPi0FromEta2760GeV_Pythia8_TuneMonachMB, 25, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachMB, 25, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPi0FromLambda2760GeV_Pythia8_TuneMonachMB, 29, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachMB, 29, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoEta2760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoEtaUB2760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPiPl2760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPiPlUB2760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPiMi2760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
+// 	DrawGammaSetMarker(histoPiMiUB2760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
+// 
+// 	DrawGammaSetMarker(histoPi02760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPi0UB2760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2, 24, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard2, 24, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard2, 25, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard2, 25, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard2, 29, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard2, 29, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoEta2760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoEtaUB2760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPiPl2760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPiPlUB2760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPiMi2760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
+// 	DrawGammaSetMarker(histoPiMiUB2760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
+// 	
+// 	DrawGammaSetMarker(histoPi02760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5, 24, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard5, 24, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPi0UB2760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard5, 25, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard5, 25, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard5, 29, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard5, 29, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoEta2760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoEtaUB2760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPiPl2760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPiPlUB2760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPiMi2760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
+// 	DrawGammaSetMarker(histoPiMiUB2760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
+// 
+// 	DrawGammaSetMarker(histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard10, 24, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10, 24, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPi02760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPi0UB2760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard10, 25, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard10, 25, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard10, 29, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard10, 29, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoEta2760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoEtaUB2760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPiPl2760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPiPlUB2760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPiMi2760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
+// 	DrawGammaSetMarker(histoPiMiUB2760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
+// 	
+// 	//************************************************************************************************
+// 	//************************ Plotting xSection *****************************************************
+// 	//************************************************************************************************
+// 	
+// 	TString collisionSystem2760GeV             = "pp, #sqrt{#it{s}} = 2.76 TeV";   
+// 
+// 	TCanvas* canvasXSectionPi0 = new TCanvas("canvasXSectionPi0","",200,10,1350,1350*1.15);  // gives the page size
+// 	DrawGammaCanvasSettings( canvasXSectionPi0, 0.14, 0.02, 0.02, 0.09);
+// 	canvasXSectionPi0->SetLogx();
+// 	canvasXSectionPi0->SetLogy();
+// 	
+// 	TH2F * histo2DXSectionPi0;
+// 	histo2DXSectionPi0 = new TH2F("histo2DXSectionPi0","histo2DXSectionPi0",11000,0.23,70.,1000,2e-2,10e11);
+// 	SetStyleHistoTH2ForGraphs(histo2DXSectionPi0, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 1.,1.45);
+// 	histo2DXSectionPi0->GetXaxis()->SetMoreLogLabels();
+// 	histo2DXSectionPi0->GetXaxis()->SetLabelOffset(-0.01);
+// 	histo2DXSectionPi0->Draw("copy");
+// 
+// 		histoPi02760GeV_Pythia8_Tune4CMB->Draw("pE1same");
+// 		histoPi02760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
+// 		histoPi02760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
+// 		histoPi02760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
+// 
+// 		TLatex *labelEnergyXSectionPi0 = new TLatex(0.64,0.92,collisionSystem2760GeV.Data());
+// 		SetStyleTLatex( labelEnergyXSectionPi0, 0.035,4);
+// 		labelEnergyXSectionPi0->Draw();
+// 		TLatex *labelDetSysXSectionPi0 = new TLatex(0.64,0.88,"#pi^{0} #rightarrow #gamma#gamma");
+// 		SetStyleTLatex( labelDetSysXSectionPi0, 0.035,4);
+// 		labelDetSysXSectionPi0->Draw();
+// 		TLatex *labelPythiaTuneA = new TLatex(0.64,0.84,"Pythia 8.1, Tune 4C");
+// 		SetStyleTLatex( labelPythiaTuneA, 0.035,4);
+// 		labelPythiaTuneA->Draw();
+// 
+// 		TLegend* legendXSectionPi0 = new TLegend(0.62,0.66,0.9,0.82);
+// 		legendXSectionPi0->SetFillColor(0);
+// 		legendXSectionPi0->SetLineColor(0);
+// 		legendXSectionPi0->SetTextFont(42);
+// 		legendXSectionPi0->SetTextSize(0.035);
+// 		legendXSectionPi0->AddEntry(histoPi02760GeV_Pythia8_Tune4CMB,"MB","p");
+// 		legendXSectionPi0->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard2,"p_{T,hard} > 2 GeV/c","p");
+// 		legendXSectionPi0->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard5,"p_{T,hard} > 5 GeV/c","p");
+// 		legendXSectionPi0->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard10,"p_{T,hard} > 10 GeV/c","p");
+// 		legendXSectionPi0->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0XSectionDiffptHardBins.eps"));
+// 
+// 	histo2DXSectionPi0->Draw("copy");
+// 		histoPi02760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
+// 		histoPi02760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
+// 		histoPi02760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
+// 		histoPi02760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		TLatex *labelPythiaTuneB = new TLatex(0.64,0.84,"Pythia 8.2, Monach");
+// 		SetStyleTLatex( labelPythiaTuneB, 0.035,4);
+// 		labelPythiaTuneB->Draw();
+// 
+// 		legendXSectionPi0->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0XSectionDiffptHardBins.eps"));
+// 
+// 	histo2DXSectionPi0->Draw("copy");
+// 		histoPi0UB2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
+// 		histoPi0UB2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
+// 		histoPi0UB2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
+// 		histoPi0UB2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneA->Draw();
+// 		legendXSectionPi0->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0UBXSectionDiffptHardBins.eps"));
+// 
+// 	histo2DXSectionPi0->Draw("copy");
+// 		histoPi0UB2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
+// 		histoPi0UB2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
+// 		histoPi0UB2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
+// 		histoPi0UB2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneB->Draw();
+// 		legendXSectionPi0->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0UBXSectionDiffptHardBins.eps"));
+// 	
+// 	histo2DXSectionPi0->Draw("copy");
+// 		histoPi02760GeV_Pythia8_Tune4CMB->Draw("pE1same");
+// 		histoPi0FromEta2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
+// //         histoPi0FromK0s2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
+// 		histoPi0FromLambda2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneA->Draw();
+// 		
+// 		TLegend* legendXSectionPi02MB = new TLegend(0.62,0.72,0.9,0.82);
+// 		legendXSectionPi02MB->SetFillColor(0);
+// 		legendXSectionPi02MB->SetLineColor(0);
+// 		legendXSectionPi02MB->SetTextFont(42);
+// 		legendXSectionPi02MB->SetTextSize(0.035);
+// 		legendXSectionPi02MB->AddEntry(histoPi02760GeV_Pythia8_Tune4CMB,"X (not K)#rightarrow #pi^{0}","p");
+// //         legendXSectionPi02MB->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard2,"K #rightarrow #pi^{0}","p");
+// 		legendXSectionPi02MB->AddEntry(histoPi0FromEta2760GeV_Pythia8_Tune4CMB,"#eta #rightarrow #pi^{0}","p");
+// 		legendXSectionPi02MB->AddEntry(histoPi0FromLambda2760GeV_Pythia8_Tune4CMB,"#Lambda #rightarrow #pi^{0}","p");
+// 		legendXSectionPi02MB->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0XSectionDiffSourcesMB.eps"));
+// 
+// 	histo2DXSectionPi0->Draw("copy");
+// 		TH1D* histoPi0All2760GeV_Pythia8_Tune4CMB = (TH1D*)histoPi02760GeV_Pythia8_Tune4CMB->Clone("histoPi0All2760GeV_Pythia8_Tune4CMB");
+// 		histoPi0All2760GeV_Pythia8_Tune4CMB->Sumw2();
+// 		histoPi0All2760GeV_Pythia8_Tune4CMB->Add(histoPi0FromK0s2760GeV_Pythia8_Tune4CMB);
+// 
+// 		DrawGammaSetMarker(histoPi0All2760GeV_Pythia8_Tune4CMB, 20, 1, colorMB, colorMB);
+// 
+// 		histoPi0All2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
+// 		histoPi0FromK0s2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
+// 		histoPi0FromEta2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
+// 		histoPi0FromLambda2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneA->Draw();
+// 		TLegend* legendXSectionPi03MB = new TLegend(0.62,0.66,0.9,0.82);
+// 		legendXSectionPi03MB->SetFillColor(0);
+// 		legendXSectionPi03MB->SetLineColor(0);
+// 		legendXSectionPi03MB->SetTextFont(42);
+// 		legendXSectionPi03MB->SetTextSize(0.035);
+// 		legendXSectionPi03MB->AddEntry(histoPi0All2760GeV_Pythia8_Tune4CMB,"X #rightarrow #pi^{0}","p");
+// 		legendXSectionPi03MB->AddEntry(histoPi0FromK0s2760GeV_Pythia8_Tune4CMB,"K #rightarrow #pi^{0}","p");
+// 		legendXSectionPi03MB->AddEntry(histoPi0FromEta2760GeV_Pythia8_Tune4CMB,"#eta #rightarrow #pi^{0}","p");
+// 		legendXSectionPi03MB->AddEntry(histoPi0FromLambda2760GeV_Pythia8_Tune4CMB,"#Lambda #rightarrow #pi^{0}","p");
+// 		legendXSectionPi03MB->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0AllXSectionDiffSourcesMB.eps"));
+// 
+// 
+// 	histo2DXSectionPi0->Draw("copy");
+// 		histoPi02760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
+// 		histoPi0FromEta2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
+// //         histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
+// 		histoPi0FromLambda2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneB->Draw();
+// 		
+// 		legendXSectionPi02MB->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0XSectionDiffSourcesMB.eps"));
+// 
+// 	histo2DXSectionPi0->Draw("copy");
+// 		TH1D* histoPi0All2760GeV_Pythia8_TuneMonachMB = (TH1D*)histoPi02760GeV_Pythia8_TuneMonachMB->Clone("histoPi0All2760GeV_Pythia8_TuneMonachMB");
+// 		histoPi0All2760GeV_Pythia8_TuneMonachMB->Sumw2();
+// 		histoPi0All2760GeV_Pythia8_TuneMonachMB->Add(histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB);
+// 
+// 		DrawGammaSetMarker(histoPi0All2760GeV_Pythia8_TuneMonachMB, 20, 1, colorMB, colorMB);
+// 
+// 		histoPi0All2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
+// 		histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
+// 		histoPi0FromEta2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
+// 		histoPi0FromLambda2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneB->Draw();
+// 		legendXSectionPi03MB->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0AllXSectionDiffSourcesMB.eps"));
+// 	
+// 	histo2DXSectionPi0->Draw("copy");
+// 		histoPi02760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
+// 		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
+// //         histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
+// 		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneA->Draw();
+// 		TLegend* legendXSectionPi02ptHard2 = new TLegend(0.62,0.72,0.9,0.82);
+// 		legendXSectionPi02ptHard2->SetFillColor(0);
+// 		legendXSectionPi02ptHard2->SetLineColor(0);
+// 		legendXSectionPi02ptHard2->SetTextFont(42);
+// 		legendXSectionPi02ptHard2->SetTextSize(0.035);
+// 		legendXSectionPi02ptHard2->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard2,"X (not K)#rightarrow #pi^{0}","p");
+// //         legendXSectionPi02ptHard2->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard2,"K #rightarrow #pi^{0}","p");
+// 		legendXSectionPi02ptHard2->AddEntry(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard2,"#eta #rightarrow #pi^{0}","p");
+// 		legendXSectionPi02ptHard2->AddEntry(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard2,"#Lambda #rightarrow #pi^{0}","p");
+// 		legendXSectionPi02ptHard2->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0XSectionDiffSourcesptHard2.eps"));
+// 
+// 	histo2DXSectionPi0->Draw("copy");
+// 		TH1D* histoPi0All2760GeV_Pythia8_Tune4CptHard2 = (TH1D*)histoPi02760GeV_Pythia8_Tune4CptHard2->Clone("histoPi0All2760GeV_Pythia8_Tune4CptHard2");
+// 		histoPi0All2760GeV_Pythia8_Tune4CptHard2->Sumw2();
+// 		histoPi0All2760GeV_Pythia8_Tune4CptHard2->Add(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2);
+// 
+// 		DrawGammaSetMarker(histoPi0All2760GeV_Pythia8_Tune4CptHard2, 20, 1, colorptHard2, colorptHard2);
+// 
+// 		histoPi0All2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
+// 		histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
+// 		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
+// 		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneA->Draw();
+// 		
+// 		TLegend* legendXSectionPi03ptHard2 = new TLegend(0.62,0.66,0.9,0.82);
+// 		legendXSectionPi03ptHard2->SetFillColor(0);
+// 		legendXSectionPi03ptHard2->SetLineColor(0);
+// 		legendXSectionPi03ptHard2->SetTextFont(42);
+// 		legendXSectionPi03ptHard2->SetTextSize(0.035);
+// 		legendXSectionPi03ptHard2->AddEntry(histoPi0All2760GeV_Pythia8_Tune4CptHard2,"X #rightarrow #pi^{0}","p");
+// 		legendXSectionPi03ptHard2->AddEntry(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2,"K #rightarrow #pi^{0}","p");
+// 		legendXSectionPi03ptHard2->AddEntry(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard2,"#eta #rightarrow #pi^{0}","p");
+// 		legendXSectionPi03ptHard2->AddEntry(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard2,"#Lambda #rightarrow #pi^{0}","p");
+// 		legendXSectionPi03ptHard2->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0AllXSectionDiffSourcesptHard2.eps"));
+// 
+// 	histo2DXSectionPi0->Draw("copy");
+// 		histoPi02760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
+// 		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
+// //         histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
+// 		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneB->Draw();
+// 		legendXSectionPi02ptHard2->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0XSectionDiffSourcesptHard2.eps"));
+// 
+// 	histo2DXSectionPi0->Draw("copy");
+// 		TH1D* histoPi0All2760GeV_Pythia8_TuneMonachptHard2 = (TH1D*)histoPi02760GeV_Pythia8_TuneMonachptHard2->Clone("histoPi0All2760GeV_Pythia8_TuneMonachptHard2");
+// 		histoPi0All2760GeV_Pythia8_TuneMonachptHard2->Sumw2();
+// 		histoPi0All2760GeV_Pythia8_TuneMonachptHard2->Add(histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2);
+// 
+// 		DrawGammaSetMarker(histoPi0All2760GeV_Pythia8_TuneMonachptHard2, 20, 1, colorptHard2, colorptHard2);
+// 
+// 		histoPi0All2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
+// 		histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
+// 		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
+// 		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneB->Draw();
+// 		legendXSectionPi03ptHard2->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0AllXSectionDiffSourcesptHard2.eps"));
+// 	
+// 	histo2DXSectionPi0->Draw("copy");
+// 		histoPi02760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
+// 		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
+// //         histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
+// 		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneA->Draw();
+// 		
+// 		TLegend* legendXSectionPi02ptHard5 = new TLegend(0.62,0.72,0.9,0.82);
+// 		legendXSectionPi02ptHard5->SetFillColor(0);
+// 		legendXSectionPi02ptHard5->SetLineColor(0);
+// 		legendXSectionPi02ptHard5->SetTextFont(42);
+// 		legendXSectionPi02ptHard5->SetTextSize(0.035);
+// 		legendXSectionPi02ptHard5->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard5,"X (not K)#rightarrow #pi^{0}","p");
+// //         legendXSectionPi02ptHard5->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard2,"K #rightarrow #pi^{0}","p");
+// 		legendXSectionPi02ptHard5->AddEntry(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard5,"#eta #rightarrow #pi^{0}","p");
+// 		legendXSectionPi02ptHard5->AddEntry(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard5,"#Lambda #rightarrow #pi^{0}","p");
+// 		legendXSectionPi02ptHard5->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0XSectionDiffSourcesptHard5.eps"));
+// 
+// 	histo2DXSectionPi0->Draw("copy");
+// 		TH1D* histoPi0All2760GeV_Pythia8_Tune4CptHard5 = (TH1D*)histoPi02760GeV_Pythia8_Tune4CptHard5->Clone("histoPi0All2760GeV_Pythia8_Tune4CptHard5");
+// 		histoPi0All2760GeV_Pythia8_Tune4CptHard5->Sumw2();
+// 		histoPi0All2760GeV_Pythia8_Tune4CptHard5->Add(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5);
+// 
+// 		DrawGammaSetMarker(histoPi0All2760GeV_Pythia8_Tune4CptHard5, 20, 1, colorptHard5, colorptHard5);
+// 
+// 		histoPi0All2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
+// 		histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
+// 		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
+// 		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneA->Draw();
+// 		TLegend* legendXSectionPi03ptHard5 = new TLegend(0.62,0.66,0.9,0.82);
+// 		legendXSectionPi03ptHard5->SetFillColor(0);
+// 		legendXSectionPi03ptHard5->SetLineColor(0);
+// 		legendXSectionPi03ptHard5->SetTextFont(42);
+// 		legendXSectionPi03ptHard5->SetTextSize(0.035);
+// 		legendXSectionPi03ptHard5->AddEntry(histoPi0All2760GeV_Pythia8_Tune4CptHard5,"X #rightarrow #pi^{0}","p");
+// 		legendXSectionPi03ptHard5->AddEntry(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5,"K #rightarrow #pi^{0}","p");
+// 		legendXSectionPi03ptHard5->AddEntry(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard5,"#eta #rightarrow #pi^{0}","p");
+// 		legendXSectionPi03ptHard5->AddEntry(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard5,"#Lambda #rightarrow #pi^{0}","p");
+// 		legendXSectionPi03ptHard5->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0AllXSectionDiffSourcesptHard5.eps"));
+// 
+// 	histo2DXSectionPi0->Draw("copy");
+// 		histoPi02760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
+// 		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
+// //         histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
+// 		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneB->Draw();   
+// 		legendXSectionPi02ptHard5->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0XSectionDiffSourcesptHard5.eps"));
+// 
+// 	histo2DXSectionPi0->Draw("copy");
+// 		TH1D* histoPi0All2760GeV_Pythia8_TuneMonachptHard5 = (TH1D*)histoPi02760GeV_Pythia8_TuneMonachptHard5->Clone("histoPi0All2760GeV_Pythia8_TuneMonachptHard5");
+// 		histoPi0All2760GeV_Pythia8_TuneMonachptHard5->Sumw2();
+// 		histoPi0All2760GeV_Pythia8_TuneMonachptHard5->Add(histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5);
+// 
+// 		DrawGammaSetMarker(histoPi0All2760GeV_Pythia8_TuneMonachptHard5, 20, 1, colorptHard5, colorptHard5);
+// 
+// 		histoPi0All2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
+// 		histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
+// 		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
+// 		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneB->Draw();   
+// 		legendXSectionPi03ptHard5->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0AllXSectionDiffSourcesptHard5.eps"));
+// 	
+// 	histo2DXSectionPi0->Draw("copy");
+// 		histoPi02760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
+// 		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
+// //         histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
+// 		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneA->Draw();
+// 		
+// 		TLegend* legendXSectionPi02ptHard10 = new TLegend(0.62,0.72,0.9,0.82);
+// 		legendXSectionPi02ptHard10->SetFillColor(0);
+// 		legendXSectionPi02ptHard10->SetLineColor(0);
+// 		legendXSectionPi02ptHard10->SetTextFont(42);
+// 		legendXSectionPi02ptHard10->SetTextSize(0.035);
+// 		legendXSectionPi02ptHard10->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard10,"X (not K)#rightarrow #pi^{0}","p");
+// //         legendXSectionPi02ptHard10->AddEntry(histoPi02760GeV_Pythia8_Tune4CptHard2,"K #rightarrow #pi^{0}","p");
+// 		legendXSectionPi02ptHard10->AddEntry(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard10,"#eta #rightarrow #pi^{0}","p");
+// 		legendXSectionPi02ptHard10->AddEntry(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard10,"#Lambda #rightarrow #pi^{0}","p");
+// 		legendXSectionPi02ptHard10->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0XSectionDiffSourcesptHard10.eps"));
+// 
+// 	histo2DXSectionPi0->Draw("copy");
+// 		TH1D* histoPi0All2760GeV_Pythia8_Tune4CptHard10 = (TH1D*)histoPi02760GeV_Pythia8_Tune4CptHard10->Clone("histoPi0All2760GeV_Pythia8_Tune4CptHard10");
+// 		histoPi0All2760GeV_Pythia8_Tune4CptHard10->Sumw2();
+// 		histoPi0All2760GeV_Pythia8_Tune4CptHard10->Add(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10);
+// 
+// 		DrawGammaSetMarker(histoPi0All2760GeV_Pythia8_Tune4CptHard10, 20, 1, colorptHard10, colorptHard10);
+// 
+// 		histoPi0All2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
+// 		histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
+// 		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
+// 		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneA->Draw();
+// 		
+// 		TLegend* legendXSectionPi03ptHard10 = new TLegend(0.62,0.66,0.9,0.82);
+// 		legendXSectionPi03ptHard10->SetFillColor(0);
+// 		legendXSectionPi03ptHard10->SetLineColor(0);
+// 		legendXSectionPi03ptHard10->SetTextFont(42);
+// 		legendXSectionPi03ptHard10->SetTextSize(0.035);
+// 		legendXSectionPi03ptHard10->AddEntry(histoPi0All2760GeV_Pythia8_Tune4CptHard10,"X #rightarrow #pi^{0}","p");
+// 		legendXSectionPi03ptHard10->AddEntry(histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10,"K #rightarrow #pi^{0}","p");
+// 		legendXSectionPi03ptHard10->AddEntry(histoPi0FromEta2760GeV_Pythia8_Tune4CptHard10,"#eta #rightarrow #pi^{0}","p");
+// 		legendXSectionPi03ptHard10->AddEntry(histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard10,"#Lambda #rightarrow #pi^{0}","p");
+// 		legendXSectionPi03ptHard10->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_Pi0AllXSectionDiffSourcesptHard10.eps"));
+// 
+// 	histo2DXSectionPi0->Draw("copy");
+// 		histoPi02760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
+// 		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
+// //         histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
+// 		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneB->Draw();
+// 		legendXSectionPi02ptHard10->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0XSectionDiffSourcesptHard10.eps"));
+// 
+// 	histo2DXSectionPi0->Draw("copy");
+// 		TH1D* histoPi0All2760GeV_Pythia8_TuneMonachptHard10 = (TH1D*)histoPi02760GeV_Pythia8_TuneMonachptHard10->Clone("histoPi0All2760GeV_Pythia8_TuneMonachptHard10");
+// 		histoPi0All2760GeV_Pythia8_TuneMonachptHard10->Sumw2();
+// 		histoPi0All2760GeV_Pythia8_TuneMonachptHard10->Add(histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10);
+// 
+// 		DrawGammaSetMarker(histoPi0All2760GeV_Pythia8_TuneMonachptHard10, 20, 1, colorptHard10, colorptHard10);
+// 
+// 		histoPi0All2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
+// 		histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
+// 		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
+// 		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
+// 
+// 		labelEnergyXSectionPi0->Draw();
+// 		labelDetSysXSectionPi0->Draw();
+// 		labelPythiaTuneA->Draw();
+// 		legendXSectionPi03ptHard10->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_Pi0AllXSectionDiffSourcesptHard10.eps"));
+// 	
+// 	
+// 	histo2DXSectionPi0->Draw("copy");
+// 
+// 		histoEta2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
+// 		histoEta2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
+// 		histoEta2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
+// 		histoEta2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
+// 
+// 		TLatex *labelEnergyXSectionEta = new TLatex(0.64,0.92,collisionSystem2760GeV.Data());
+// 		SetStyleTLatex( labelEnergyXSectionEta, 0.035,4);
+// 		labelEnergyXSectionEta->Draw();
+// 		TLatex *labelDetSysXSectionEta = new TLatex(0.64,0.88,"#pi^{0} #rightarrow #gamma#gamma");
+// 		SetStyleTLatex( labelDetSysXSectionEta, 0.035,4);
+// 		labelDetSysXSectionEta->Draw();
+// 		labelPythiaTuneA->Draw();
+// 		
+// 		TLegend* legendXSectionEta = new TLegend(0.62,0.66,0.9,0.82);
+// 		legendXSectionEta->SetFillColor(0);
+// 		legendXSectionEta->SetLineColor(0);
+// 		legendXSectionEta->SetTextFont(42);
+// 		legendXSectionEta->SetTextSize(0.035);
+// 		legendXSectionEta->AddEntry(histoEta2760GeV_Pythia8_Tune4CMB,"MB","p");
+// 		legendXSectionEta->AddEntry(histoEta2760GeV_Pythia8_Tune4CptHard2,"p_{T,hard} > 2 GeV/c","p");
+// 		legendXSectionEta->AddEntry(histoEta2760GeV_Pythia8_Tune4CptHard5,"p_{T,hard} > 5 GeV/c","p");
+// 		legendXSectionEta->AddEntry(histoEta2760GeV_Pythia8_Tune4CptHard10,"p_{T,hard} > 10 GeV/c","p");
+// 		legendXSectionEta->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_EtaXSectionDiffptHardBins.eps"));
+// 	
+// 	histo2DXSectionPi0->Draw("copy");
+// 		histoEtaUB2760GeV_Pythia8_Tune4CMB->Draw("pE1same");
+// 		histoEtaUB2760GeV_Pythia8_Tune4CptHard2->Draw("pE1same");
+// 		histoEtaUB2760GeV_Pythia8_Tune4CptHard5->Draw("pE1same");
+// 		histoEtaUB2760GeV_Pythia8_Tune4CptHard10->Draw("pE1same");
+// 
+// 		labelEnergyXSectionEta->Draw();
+// 		labelDetSysXSectionEta->Draw();
+// 		labelPythiaTuneA->Draw();
+// 		legendXSectionEta->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/Tune4C_EtaUBXSectionDiffptHardBins.eps"));
+// 
+// 	histo2DXSectionPi0->Draw("copy");
+// 
+// 		histoEta2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
+// 		histoEta2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
+// 		histoEta2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
+// 		histoEta2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
+// 
+// 		labelEnergyXSectionEta->Draw();
+// 		labelDetSysXSectionEta->Draw();
+// 		labelPythiaTuneB->Draw();
+// 		legendXSectionEta->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_EtaXSectionDiffptHardBins.eps"));
+// 	
+// 	histo2DXSectionPi0->Draw("copy");
+// 		histoEtaUB2760GeV_Pythia8_TuneMonachMB->Draw("pE1same");
+// 		histoEtaUB2760GeV_Pythia8_TuneMonachptHard2->Draw("pE1same");
+// 		histoEtaUB2760GeV_Pythia8_TuneMonachptHard5->Draw("pE1same");
+// 		histoEtaUB2760GeV_Pythia8_TuneMonachptHard10->Draw("pE1same");
+// 
+// 		labelEnergyXSectionEta->Draw();
+// 		labelDetSysXSectionEta->Draw();
+// 		labelPythiaTuneB->Draw();
+// 		legendXSectionEta->Draw();
+// 
+// 	canvasXSectionPi0->SaveAs(Form("ExternalInput/Theory/Pythia/TuneMonach_EtaUBXSectionDiffptHardBins.eps"));
+// 	
+// 	
+// 	TCanvas* canvasRatioXSection = new TCanvas("canvasRatioXSection","",200,10,1350,900);  // gives the page size
+// 	DrawGammaCanvasSettings( canvasRatioXSection, 0.1, 0.02, 0.035, 0.09);
+// 	canvasRatioXSection->SetLogx();
+// 
+// 	TH2F * histo2DRatioXSection;
+// 	histo2DRatioXSection = new TH2F("histo2DRatioXSection","histo2DRatioXSection",11000,0.23,70.,1000,0,2);
+// 	SetStyleHistoTH2ForGraphs(histo2DRatioXSection, "#it{p}_{T} (GeV/#it{c})","#frac{#sigma_{A}}{#sigma_{B}}",0.035,0.04, 0.035,0.04, 1.,1.);
+// 	histo2DRatioXSection->GetXaxis()->SetMoreLogLabels();
+// 	histo2DRatioXSection->GetXaxis()->SetLabelOffset(-0.01);
+// //     histo2DRatioXSection->GetYaxis()->SetRangeUser(-10,10);
+// 	histo2DRatioXSection->Draw("copy");
+// 
+// 		ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB->Draw("pE1same");
+// 		ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Draw("pE1same");
+// 		ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Draw("pE1same");
+// 
+// 		TF1* const1Pi0Tune4C = new TF1("const1Pi0Tune4C","[0]",4.0,20);
+// 		TF1* const2Pi0Tune4C = new TF1("const2Pi0Tune4C","[0]",7.0,30);
+// 		TF1* const3Pi0Tune4C = new TF1("const3Pi0Tune4C","[0]",12.,50);
+// 		
+// 		ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB->Fit(const1Pi0Tune4C,"NRME+","",4,15);
+// 		ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Fit(const2Pi0Tune4C,"NRME+","",7,30);
+// 		ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Fit(const3Pi0Tune4C,"NRME+","",12,50);
+// 		
+// 		SetStyleFit(const1Pi0Tune4C, 4.0, 20, 2, 3, colorptHard2+1); 
+// 		SetStyleFit(const2Pi0Tune4C, 7,30, 2, 5, colorptHard5+1);
+// 		SetStyleFit(const3Pi0Tune4C, 12,50, 2, 7, colorptHard10+1);
+// 		
+// 		const1Pi0Tune4C->Draw("same");
+// 		const2Pi0Tune4C->Draw("same");
+// 		const3Pi0Tune4C->Draw("same");
+// 		
+// 		TLatex *labelEnergyRatioXSectionPi0 = new TLatex(0.74,0.90,collisionSystem2760GeV.Data());
+// 		SetStyleTLatex( labelEnergyRatioXSectionPi0, 0.035,4);
+// 		labelEnergyRatioXSectionPi0->Draw();
+// 		TLatex *labelDetSysRatioXSectionPi0 = new TLatex(0.74,0.86,"#pi^{0} #rightarrow #gamma#gamma");
+// 		SetStyleTLatex( labelDetSysRatioXSectionPi0, 0.035,4);
+// 		labelDetSysRatioXSectionPi0->Draw();
+// 		TLatex *labelRatioPythiaTuneA = new TLatex(0.74,0.82,"Pythia 8.1, Tune 4C");
+// 		SetStyleTLatex( labelRatioPythiaTuneA, 0.035,4);
+// 		labelRatioPythiaTuneA->Draw();
+// 
+// 		TLegend* legendXSectionRatioPi0 = new TLegend(0.12,0.8,0.6,0.94);
+// 		legendXSectionRatioPi0->SetFillColor(0);
+// 		legendXSectionRatioPi0->SetLineColor(0);
+// 		legendXSectionRatioPi0->SetTextFont(42);
+// 		legendXSectionRatioPi0->SetTextSize(0.035);
+// 		legendXSectionRatioPi0->SetNColumns(2);
+// 		legendXSectionRatioPi0->SetMargin(0.1);
+// 		legendXSectionRatioPi0->AddEntry(ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB,"(p_{T,hard} > 2 GeV/c)/(MB)","p");
+// 		legendXSectionRatioPi0->AddEntry(const1Pi0Tune4C,Form("%0.2f",const1Pi0Tune4C->GetParameter(0)),"l");
+// 		legendXSectionRatioPi0->AddEntry(ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2,"(p_{T,hard} > 5 GeV/c)/((p_{T,hard} > 2 GeV/c))","p");
+// 		legendXSectionRatioPi0->AddEntry(const2Pi0Tune4C,Form("%0.2f",const2Pi0Tune4C->GetParameter(0)),"l");
+// 		legendXSectionRatioPi0->AddEntry(ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5,"(p_{T,hard} > 10 GeV/c)/((p_{T,hard} > 5 GeV/c))","p");
+// 		legendXSectionRatioPi0->AddEntry(const3Pi0Tune4C,Form("%0.2f",const3Pi0Tune4C->GetParameter(0)),"l");
+// 		legendXSectionRatioPi0->Draw();
+// 
+// 		
+// 	canvasRatioXSection->SaveAs("ExternalInput/Theory/Pythia/Tune4C_RatioPi0XSectionDiffptHardBins.eps");
+// 
+// 	histo2DRatioXSection->Draw("copy");
+// 
+// 		ratioPi0UB2760GeV_Pythia8_Tune4CpTHard2DivMB->Draw("pE1same");
+// 		ratioPi0UB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Draw("pE1same");
+// 		ratioPi0UB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Draw("pE1same");
+// 
+// 		const1Pi0Tune4C->Draw("same");
+// 		const2Pi0Tune4C->Draw("same");
+// 		const3Pi0Tune4C->Draw("same");
+// 		
+// 		labelEnergyRatioXSectionPi0->Draw();
+// 		labelDetSysRatioXSectionPi0->Draw();
+// 		labelRatioPythiaTuneA->Draw();
+// 		
+// 		legendXSectionRatioPi0->Draw();   
+// 	canvasRatioXSection->SaveAs("ExternalInput/Theory/Pythia/Tune4C_RatioPi0UBXSectionDiffptHardBins.eps");
+// 	
+// 	histo2DRatioXSection->Draw("copy");
+// 
+// 		ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB->Draw("pE1same");
+// 		ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Draw("pE1same");
+// 		ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Draw("pE1same");
+// 
+// 		TF1* const1Pi0TuneMonach = new TF1("const1Pi0TuneMonach","[0]",4.0,20);
+// 		TF1* const2Pi0TuneMonach = new TF1("const2Pi0TuneMonach","[0]",7.0,30);
+// 		TF1* const3Pi0TuneMonach = new TF1("const3Pi0TuneMonach","[0]",12.,50);
+// 		
+// 		ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB->Fit(const1Pi0TuneMonach,"NRME+","",4,15);
+// 		ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Fit(const2Pi0TuneMonach,"NRME+","",7,30);
+// 		ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Fit(const3Pi0TuneMonach,"NRME+","",12,50);
+// 		
+// 		SetStyleFit(const1Pi0TuneMonach, 4.0, 20, 2, 3, colorptHard2+1); 
+// 		SetStyleFit(const2Pi0TuneMonach, 7,30, 2, 5, colorptHard5+1);
+// 		SetStyleFit(const3Pi0TuneMonach, 12,50, 2, 7, colorptHard10+1);
+// 		
+// 		const1Pi0TuneMonach->Draw("same");
+// 		const2Pi0TuneMonach->Draw("same");
+// 		const3Pi0TuneMonach->Draw("same");
+// 		
+// 		labelEnergyRatioXSectionPi0->Draw();
+// 		labelDetSysRatioXSectionPi0->Draw();
+// 		TLatex *labelRatioPythiaTuneB = new TLatex(0.74,0.82,"Pythia 8.2, Monach");
+// 		SetStyleTLatex( labelRatioPythiaTuneB, 0.035,4);
+// 		labelRatioPythiaTuneB->Draw();
+// 
+// 		TLegend* legendXSectionRatioPi0TuneMonach = new TLegend(0.12,0.8,0.6,0.94);
+// 		legendXSectionRatioPi0TuneMonach->SetFillColor(0);
+// 		legendXSectionRatioPi0TuneMonach->SetLineColor(0);
+// 		legendXSectionRatioPi0TuneMonach->SetTextFont(42);
+// 		legendXSectionRatioPi0TuneMonach->SetTextSize(0.035);
+// 		legendXSectionRatioPi0TuneMonach->SetNColumns(2);
+// 		legendXSectionRatioPi0TuneMonach->SetMargin(0.1);
+// 		legendXSectionRatioPi0TuneMonach->AddEntry(ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB,"(p_{T,hard} > 2 GeV/c)/(MB)","p");
+// 		legendXSectionRatioPi0TuneMonach->AddEntry(const1Pi0TuneMonach,Form("%0.2f",const1Pi0TuneMonach->GetParameter(0)),"l");
+// 		legendXSectionRatioPi0TuneMonach->AddEntry(ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2,"(p_{T,hard} > 5 GeV/c)/((p_{T,hard} > 2 GeV/c))","p");
+// 		legendXSectionRatioPi0TuneMonach->AddEntry(const2Pi0TuneMonach,Form("%0.2f",const2Pi0TuneMonach->GetParameter(0)),"l");
+// 		legendXSectionRatioPi0TuneMonach->AddEntry(ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5,"(p_{T,hard} > 10 GeV/c)/((p_{T,hard} > 5 GeV/c))","p");
+// 		legendXSectionRatioPi0TuneMonach->AddEntry(const3Pi0TuneMonach,Form("%0.2f",const3Pi0TuneMonach->GetParameter(0)),"l");
+// 		legendXSectionRatioPi0TuneMonach->Draw();
+// 
+// 		
+// 	canvasRatioXSection->SaveAs("ExternalInput/Theory/Pythia/TuneMonach_RatioPi0XSectionDiffptHardBins.eps");
+// 
+// 	histo2DRatioXSection->Draw("copy");
+// 
+// 		ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Draw("pE1same");
+// 		ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Draw("pE1same");
+// 		ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Draw("pE1same");
+// 
+// 		const1Pi0TuneMonach->Draw("same");
+// 		const2Pi0TuneMonach->Draw("same");
+// 		const3Pi0TuneMonach->Draw("same");
+// 		
+// 		labelEnergyRatioXSectionPi0->Draw();
+// 		labelDetSysRatioXSectionPi0->Draw();
+// 		labelRatioPythiaTuneB->Draw();
+// 		
+// 		legendXSectionRatioPi0TuneMonach->Draw();   
+// 	canvasRatioXSection->SaveAs("ExternalInput/Theory/Pythia/TuneMonach_RatioPi0UBXSectionDiffptHardBins.eps");
 	
 	
 	
@@ -2075,187 +2075,187 @@ void ProduceTheoryGraphsPP(){
 		graphNLOCalcDSS14InvYieldPi02760GeV->Write("graphNLOCalcDSS14InvYield2760GeV");
 		graphNLOCalcDSS14InvYieldPi07000GeV->Write("graphNLOCalcDSS14InvYield7000GeV");
 		
-		histoPi02760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPi02760GeV_Pythia8_Tune4CMB");
-		histoPi02760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPi02760GeV_Pythia8_Tune4CptHard2");
-		histoPi02760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPi02760GeV_Pythia8_Tune4CptHard5");
-		histoPi02760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPi02760GeV_Pythia8_Tune4CptHard10");
-		histoPi0UB2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPi02760GeV_Pythia8_Tune4CMB_UB");
-		histoPi0UB2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPi02760GeV_Pythia8_Tune4CptHard2_UB");
-		histoPi0UB2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPi02760GeV_Pythia8_Tune4CptHard5_UB");
-		histoPi0UB2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPi02760GeV_Pythia8_Tune4CptHard10_UB");
-
-		histoPi0FromK0s2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPi0FromK2760GeV_Pythia8_Tune4CMB");
-		histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPi0FromK2760GeV_Pythia8_Tune4CptHard2");
-		histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPi0FromK2760GeV_Pythia8_Tune4CptHard5");
-		histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPi0FromK2760GeV_Pythia8_Tune4CptHard10");
-		histoPi0FromK0sUB2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPi0FromK2760GeV_Pythia8_Tune4CMB_UB");
-		histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPi0FromK2760GeV_Pythia8_Tune4CptHard2_UB");
-		histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPi0FromK2760GeV_Pythia8_Tune4CptHard5_UB");
-		histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPi0FromK2760GeV_Pythia8_Tune4CptHard10_UB");
-
-		histoPi0FromEta2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_Tune4CMB");
-		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_Tune4CptHard2");
-		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_Tune4CptHard5");
-		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_Tune4CptHard10");
-		histoPi0FromEtaUB2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_Tune4CMB_UB");
-		histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_Tune4CptHard2_UB");
-		histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_Tune4CptHard5_UB");
-		histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_Tune4CptHard10_UB");
-
-		histoPi0FromLambda2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_Tune4CMB");
-		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_Tune4CptHard2");
-		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_Tune4CptHard5");
-		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_Tune4CptHard10");
-		histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_Tune4CMB_UB");
-		histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_Tune4CptHard2_UB");
-		histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_Tune4CptHard5_UB");
-		histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_Tune4CptHard10_UB");
-
-		histoEta2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldEta2760GeV_Pythia8_Tune4CMB");
-		histoEta2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldEta2760GeV_Pythia8_Tune4CptHard2");
-		histoEta2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldEta2760GeV_Pythia8_Tune4CptHard5");
-		histoEta2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldEta2760GeV_Pythia8_Tune4CptHard10");
-		histoEtaUB2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldEta2760GeV_Pythia8_Tune4CMB_UB");
-		histoEtaUB2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldEta2760GeV_Pythia8_Tune4CptHard2_UB");
-		histoEtaUB2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldEta2760GeV_Pythia8_Tune4CptHard5_UB");
-		histoEtaUB2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldEta2760GeV_Pythia8_Tune4CptHard10_UB");
-
-		histoPiPl2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPiPl2760GeV_Pythia8_Tune4CMB");
-		histoPiPl2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPiPl2760GeV_Pythia8_Tune4CptHard2");
-		histoPiPl2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPiPl2760GeV_Pythia8_Tune4CptHard5");
-		histoPiPl2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPiPl2760GeV_Pythia8_Tune4CptHard10");
-		histoPiPlUB2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPiPl2760GeV_Pythia8_Tune4CMB_UB");
-		histoPiPlUB2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPiPl2760GeV_Pythia8_Tune4CptHard2_UB");
-		histoPiPlUB2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPiPl2760GeV_Pythia8_Tune4CptHard5_UB");
-		histoPiPlUB2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPiPl2760GeV_Pythia8_Tune4CptHard10_UB");
-
-		histoPiMi2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPiMi2760GeV_Pythia8_Tune4CMB");
-		histoPiMi2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPiMi2760GeV_Pythia8_Tune4CptHard2");
-		histoPiMi2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPiMi2760GeV_Pythia8_Tune4CptHard5");
-		histoPiMi2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPiMi2760GeV_Pythia8_Tune4CptHard10");
-		histoPiMiUB2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPiMi2760GeV_Pythia8_Tune4CMB_UB");
-		histoPiMiUB2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPiMi2760GeV_Pythia8_Tune4CptHard2_UB");
-		histoPiMiUB2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPiMi2760GeV_Pythia8_Tune4CptHard5_UB");
-		histoPiMiUB2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPiMi2760GeV_Pythia8_Tune4CptHard10_UB");
-		
-		ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB->Write();
-		ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Write();
-		ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Write();
-		ratioPi0UB2760GeV_Pythia8_Tune4CpTHard2DivMB->Write();
-		ratioPi0UB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Write();
-		ratioPi0UB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Write();
-
-		ratioPiPl2760GeV_Pythia8_Tune4CpTHard2DivMB->Write();
-		ratioPiPl2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Write();
-		ratioPiPl2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Write();
-		ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard2DivMB->Write();
-		ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Write();
-		ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Write();
-
-		ratioPiMi2760GeV_Pythia8_Tune4CpTHard2DivMB->Write();
-		ratioPiMi2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Write();
-		ratioPiMi2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Write();
-		ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard2DivMB->Write();
-		ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Write();
-		ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Write();
-
-		ratioEta2760GeV_Pythia8_Tune4CpTHard2DivMB->Write();
-		ratioEta2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Write();
-		ratioEta2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Write();
-		ratioEtaUB2760GeV_Pythia8_Tune4CpTHard2DivMB->Write();
-		ratioEtaUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Write();
-		ratioEtaUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Write();
-
-		histoPi02760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPi02760GeV_Pythia8_TuneMonachMB");
-		histoPi02760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPi02760GeV_Pythia8_TuneMonachptHard2");
-		histoPi02760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPi02760GeV_Pythia8_TuneMonachptHard5");
-		histoPi02760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPi02760GeV_Pythia8_TuneMonachptHard10");
-		histoPi0UB2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPi02760GeV_Pythia8_TuneMonachMB_UB");
-		histoPi0UB2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPi02760GeV_Pythia8_TuneMonachptHard2_UB");
-		histoPi0UB2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPi02760GeV_Pythia8_TuneMonachptHard5_UB");
-		histoPi0UB2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPi02760GeV_Pythia8_TuneMonachptHard10_UB");
-
-		histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPi0FromK2760GeV_Pythia8_TuneMonachMB");
-		histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPi0FromK2760GeV_Pythia8_TuneMonachptHard2");
-		histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPi0FromK2760GeV_Pythia8_TuneMonachptHard5");
-		histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPi0FromK2760GeV_Pythia8_TuneMonachptHard10");
-		histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPi0FromK2760GeV_Pythia8_TuneMonachMB_UB");
-		histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPi0FromK2760GeV_Pythia8_TuneMonachptHard2_UB");
-		histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPi0FromK2760GeV_Pythia8_TuneMonachptHard5_UB");
-		histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPi0FromK2760GeV_Pythia8_TuneMonachptHard10_UB");
-
-		histoPi0FromEta2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_TuneMonachMB");
-		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_TuneMonachptHard2");
-		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_TuneMonachptHard5");
-		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_TuneMonachptHard10");
-		histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_TuneMonachMB_UB");
-		histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_TuneMonachptHard2_UB");
-		histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_TuneMonachptHard5_UB");
-		histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_TuneMonachptHard10_UB");
-
-		histoPi0FromLambda2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_TuneMonachMB");
-		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_TuneMonachptHard2");
-		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_TuneMonachptHard5");
-		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_TuneMonachptHard10");
-		histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_TuneMonachMB_UB");
-		histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_TuneMonachptHard2_UB");
-		histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_TuneMonachptHard5_UB");
-		histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_TuneMonachptHard10_UB");
-
-		histoEta2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldEta2760GeV_Pythia8_TuneMonachMB");
-		histoEta2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldEta2760GeV_Pythia8_TuneMonachptHard2");
-		histoEta2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldEta2760GeV_Pythia8_TuneMonachptHard5");
-		histoEta2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldEta2760GeV_Pythia8_TuneMonachptHard10");
-		histoEtaUB2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldEta2760GeV_Pythia8_TuneMonachMB_UB");
-		histoEtaUB2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldEta2760GeV_Pythia8_TuneMonachptHard2_UB");
-		histoEtaUB2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldEta2760GeV_Pythia8_TuneMonachptHard5_UB");
-		histoEtaUB2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldEta2760GeV_Pythia8_TuneMonachptHard10_UB");
-
-		histoPiPl2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPiPl2760GeV_Pythia8_TuneMonachMB");
-		histoPiPl2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPiPl2760GeV_Pythia8_TuneMonachptHard2");
-		histoPiPl2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPiPl2760GeV_Pythia8_TuneMonachptHard5");
-		histoPiPl2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPiPl2760GeV_Pythia8_TuneMonachptHard10");
-		histoPiPlUB2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPiPl2760GeV_Pythia8_TuneMonachMB_UB");
-		histoPiPlUB2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPiPl2760GeV_Pythia8_TuneMonachptHard2_UB");
-		histoPiPlUB2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPiPl2760GeV_Pythia8_TuneMonachptHard5_UB");
-		histoPiPlUB2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPiPl2760GeV_Pythia8_TuneMonachptHard10_UB");
-
-		histoPiMi2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPiMi2760GeV_Pythia8_TuneMonachMB");
-		histoPiMi2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPiMi2760GeV_Pythia8_TuneMonachptHard2");
-		histoPiMi2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPiMi2760GeV_Pythia8_TuneMonachptHard5");
-		histoPiMi2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPiMi2760GeV_Pythia8_TuneMonachptHard10");
-		histoPiMiUB2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPiMi2760GeV_Pythia8_TuneMonachMB_UB");
-		histoPiMiUB2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPiMi2760GeV_Pythia8_TuneMonachptHard2_UB");
-		histoPiMiUB2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPiMi2760GeV_Pythia8_TuneMonachptHard5_UB");
-		histoPiMiUB2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPiMi2760GeV_Pythia8_TuneMonachptHard10_UB");
-		
-		ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB->Write();
-		ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Write();
-		ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Write();
-		ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Write();
-		ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Write();
-		ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Write();
-
-		ratioPiPl2760GeV_Pythia8_TuneMonachpTHard2DivMB->Write();
-		ratioPiPl2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Write();
-		ratioPiPl2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Write();
-		ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Write();
-		ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Write();
-		ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Write();
-
-		ratioPiMi2760GeV_Pythia8_TuneMonachpTHard2DivMB->Write();
-		ratioPiMi2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Write();
-		ratioPiMi2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Write();
-		ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Write();
-		ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Write();
-		ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Write();
-
-		ratioEta2760GeV_Pythia8_TuneMonachpTHard2DivMB->Write();
-		ratioEta2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Write();
-		ratioEta2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Write();
-		ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Write();
-		ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Write();
-		ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Write();
+// 		histoPi02760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPi02760GeV_Pythia8_Tune4CMB");
+// 		histoPi02760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPi02760GeV_Pythia8_Tune4CptHard2");
+// 		histoPi02760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPi02760GeV_Pythia8_Tune4CptHard5");
+// 		histoPi02760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPi02760GeV_Pythia8_Tune4CptHard10");
+// 		histoPi0UB2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPi02760GeV_Pythia8_Tune4CMB_UB");
+// 		histoPi0UB2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPi02760GeV_Pythia8_Tune4CptHard2_UB");
+// 		histoPi0UB2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPi02760GeV_Pythia8_Tune4CptHard5_UB");
+// 		histoPi0UB2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPi02760GeV_Pythia8_Tune4CptHard10_UB");
+// 
+// 		histoPi0FromK0s2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPi0FromK2760GeV_Pythia8_Tune4CMB");
+// 		histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPi0FromK2760GeV_Pythia8_Tune4CptHard2");
+// 		histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPi0FromK2760GeV_Pythia8_Tune4CptHard5");
+// 		histoPi0FromK0s2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPi0FromK2760GeV_Pythia8_Tune4CptHard10");
+// 		histoPi0FromK0sUB2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPi0FromK2760GeV_Pythia8_Tune4CMB_UB");
+// 		histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPi0FromK2760GeV_Pythia8_Tune4CptHard2_UB");
+// 		histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPi0FromK2760GeV_Pythia8_Tune4CptHard5_UB");
+// 		histoPi0FromK0sUB2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPi0FromK2760GeV_Pythia8_Tune4CptHard10_UB");
+// 
+// 		histoPi0FromEta2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_Tune4CMB");
+// 		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_Tune4CptHard2");
+// 		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_Tune4CptHard5");
+// 		histoPi0FromEta2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_Tune4CptHard10");
+// 		histoPi0FromEtaUB2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_Tune4CMB_UB");
+// 		histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_Tune4CptHard2_UB");
+// 		histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_Tune4CptHard5_UB");
+// 		histoPi0FromEtaUB2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_Tune4CptHard10_UB");
+// 
+// 		histoPi0FromLambda2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_Tune4CMB");
+// 		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_Tune4CptHard2");
+// 		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_Tune4CptHard5");
+// 		histoPi0FromLambda2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_Tune4CptHard10");
+// 		histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_Tune4CMB_UB");
+// 		histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_Tune4CptHard2_UB");
+// 		histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_Tune4CptHard5_UB");
+// 		histoPi0FromLambdaUB2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_Tune4CptHard10_UB");
+// 
+// 		histoEta2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldEta2760GeV_Pythia8_Tune4CMB");
+// 		histoEta2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldEta2760GeV_Pythia8_Tune4CptHard2");
+// 		histoEta2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldEta2760GeV_Pythia8_Tune4CptHard5");
+// 		histoEta2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldEta2760GeV_Pythia8_Tune4CptHard10");
+// 		histoEtaUB2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldEta2760GeV_Pythia8_Tune4CMB_UB");
+// 		histoEtaUB2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldEta2760GeV_Pythia8_Tune4CptHard2_UB");
+// 		histoEtaUB2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldEta2760GeV_Pythia8_Tune4CptHard5_UB");
+// 		histoEtaUB2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldEta2760GeV_Pythia8_Tune4CptHard10_UB");
+// 
+// 		histoPiPl2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPiPl2760GeV_Pythia8_Tune4CMB");
+// 		histoPiPl2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPiPl2760GeV_Pythia8_Tune4CptHard2");
+// 		histoPiPl2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPiPl2760GeV_Pythia8_Tune4CptHard5");
+// 		histoPiPl2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPiPl2760GeV_Pythia8_Tune4CptHard10");
+// 		histoPiPlUB2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPiPl2760GeV_Pythia8_Tune4CMB_UB");
+// 		histoPiPlUB2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPiPl2760GeV_Pythia8_Tune4CptHard2_UB");
+// 		histoPiPlUB2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPiPl2760GeV_Pythia8_Tune4CptHard5_UB");
+// 		histoPiPlUB2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPiPl2760GeV_Pythia8_Tune4CptHard10_UB");
+// 
+// 		histoPiMi2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPiMi2760GeV_Pythia8_Tune4CMB");
+// 		histoPiMi2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPiMi2760GeV_Pythia8_Tune4CptHard2");
+// 		histoPiMi2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPiMi2760GeV_Pythia8_Tune4CptHard5");
+// 		histoPiMi2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPiMi2760GeV_Pythia8_Tune4CptHard10");
+// 		histoPiMiUB2760GeV_Pythia8_Tune4CMB->Write("histoInvYieldPiMi2760GeV_Pythia8_Tune4CMB_UB");
+// 		histoPiMiUB2760GeV_Pythia8_Tune4CptHard2->Write("histoInvYieldPiMi2760GeV_Pythia8_Tune4CptHard2_UB");
+// 		histoPiMiUB2760GeV_Pythia8_Tune4CptHard5->Write("histoInvYieldPiMi2760GeV_Pythia8_Tune4CptHard5_UB");
+// 		histoPiMiUB2760GeV_Pythia8_Tune4CptHard10->Write("histoInvYieldPiMi2760GeV_Pythia8_Tune4CptHard10_UB");
+// 		
+// 		ratioPi02760GeV_Pythia8_Tune4CpTHard2DivMB->Write();
+// 		ratioPi02760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Write();
+// 		ratioPi02760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Write();
+// 		ratioPi0UB2760GeV_Pythia8_Tune4CpTHard2DivMB->Write();
+// 		ratioPi0UB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Write();
+// 		ratioPi0UB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Write();
+// 
+// 		ratioPiPl2760GeV_Pythia8_Tune4CpTHard2DivMB->Write();
+// 		ratioPiPl2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Write();
+// 		ratioPiPl2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Write();
+// 		ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard2DivMB->Write();
+// 		ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Write();
+// 		ratioPiPlUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Write();
+// 
+// 		ratioPiMi2760GeV_Pythia8_Tune4CpTHard2DivMB->Write();
+// 		ratioPiMi2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Write();
+// 		ratioPiMi2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Write();
+// 		ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard2DivMB->Write();
+// 		ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Write();
+// 		ratioPiMiUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Write();
+// 
+// 		ratioEta2760GeV_Pythia8_Tune4CpTHard2DivMB->Write();
+// 		ratioEta2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Write();
+// 		ratioEta2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Write();
+// 		ratioEtaUB2760GeV_Pythia8_Tune4CpTHard2DivMB->Write();
+// 		ratioEtaUB2760GeV_Pythia8_Tune4CpTHard5DivpTHard2->Write();
+// 		ratioEtaUB2760GeV_Pythia8_Tune4CpTHard10DivpTHard5->Write();
+// 
+// 		histoPi02760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPi02760GeV_Pythia8_TuneMonachMB");
+// 		histoPi02760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPi02760GeV_Pythia8_TuneMonachptHard2");
+// 		histoPi02760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPi02760GeV_Pythia8_TuneMonachptHard5");
+// 		histoPi02760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPi02760GeV_Pythia8_TuneMonachptHard10");
+// 		histoPi0UB2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPi02760GeV_Pythia8_TuneMonachMB_UB");
+// 		histoPi0UB2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPi02760GeV_Pythia8_TuneMonachptHard2_UB");
+// 		histoPi0UB2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPi02760GeV_Pythia8_TuneMonachptHard5_UB");
+// 		histoPi0UB2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPi02760GeV_Pythia8_TuneMonachptHard10_UB");
+// 
+// 		histoPi0FromK0s2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPi0FromK2760GeV_Pythia8_TuneMonachMB");
+// 		histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPi0FromK2760GeV_Pythia8_TuneMonachptHard2");
+// 		histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPi0FromK2760GeV_Pythia8_TuneMonachptHard5");
+// 		histoPi0FromK0s2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPi0FromK2760GeV_Pythia8_TuneMonachptHard10");
+// 		histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPi0FromK2760GeV_Pythia8_TuneMonachMB_UB");
+// 		histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPi0FromK2760GeV_Pythia8_TuneMonachptHard2_UB");
+// 		histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPi0FromK2760GeV_Pythia8_TuneMonachptHard5_UB");
+// 		histoPi0FromK0sUB2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPi0FromK2760GeV_Pythia8_TuneMonachptHard10_UB");
+// 
+// 		histoPi0FromEta2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_TuneMonachMB");
+// 		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_TuneMonachptHard2");
+// 		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_TuneMonachptHard5");
+// 		histoPi0FromEta2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_TuneMonachptHard10");
+// 		histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_TuneMonachMB_UB");
+// 		histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_TuneMonachptHard2_UB");
+// 		histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_TuneMonachptHard5_UB");
+// 		histoPi0FromEtaUB2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPi0FromEta2760GeV_Pythia8_TuneMonachptHard10_UB");
+// 
+// 		histoPi0FromLambda2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_TuneMonachMB");
+// 		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_TuneMonachptHard2");
+// 		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_TuneMonachptHard5");
+// 		histoPi0FromLambda2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_TuneMonachptHard10");
+// 		histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_TuneMonachMB_UB");
+// 		histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_TuneMonachptHard2_UB");
+// 		histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_TuneMonachptHard5_UB");
+// 		histoPi0FromLambdaUB2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPi0FromLambda2760GeV_Pythia8_TuneMonachptHard10_UB");
+// 
+// 		histoEta2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldEta2760GeV_Pythia8_TuneMonachMB");
+// 		histoEta2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldEta2760GeV_Pythia8_TuneMonachptHard2");
+// 		histoEta2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldEta2760GeV_Pythia8_TuneMonachptHard5");
+// 		histoEta2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldEta2760GeV_Pythia8_TuneMonachptHard10");
+// 		histoEtaUB2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldEta2760GeV_Pythia8_TuneMonachMB_UB");
+// 		histoEtaUB2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldEta2760GeV_Pythia8_TuneMonachptHard2_UB");
+// 		histoEtaUB2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldEta2760GeV_Pythia8_TuneMonachptHard5_UB");
+// 		histoEtaUB2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldEta2760GeV_Pythia8_TuneMonachptHard10_UB");
+// 
+// 		histoPiPl2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPiPl2760GeV_Pythia8_TuneMonachMB");
+// 		histoPiPl2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPiPl2760GeV_Pythia8_TuneMonachptHard2");
+// 		histoPiPl2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPiPl2760GeV_Pythia8_TuneMonachptHard5");
+// 		histoPiPl2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPiPl2760GeV_Pythia8_TuneMonachptHard10");
+// 		histoPiPlUB2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPiPl2760GeV_Pythia8_TuneMonachMB_UB");
+// 		histoPiPlUB2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPiPl2760GeV_Pythia8_TuneMonachptHard2_UB");
+// 		histoPiPlUB2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPiPl2760GeV_Pythia8_TuneMonachptHard5_UB");
+// 		histoPiPlUB2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPiPl2760GeV_Pythia8_TuneMonachptHard10_UB");
+// 
+// 		histoPiMi2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPiMi2760GeV_Pythia8_TuneMonachMB");
+// 		histoPiMi2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPiMi2760GeV_Pythia8_TuneMonachptHard2");
+// 		histoPiMi2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPiMi2760GeV_Pythia8_TuneMonachptHard5");
+// 		histoPiMi2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPiMi2760GeV_Pythia8_TuneMonachptHard10");
+// 		histoPiMiUB2760GeV_Pythia8_TuneMonachMB->Write("histoInvYieldPiMi2760GeV_Pythia8_TuneMonachMB_UB");
+// 		histoPiMiUB2760GeV_Pythia8_TuneMonachptHard2->Write("histoInvYieldPiMi2760GeV_Pythia8_TuneMonachptHard2_UB");
+// 		histoPiMiUB2760GeV_Pythia8_TuneMonachptHard5->Write("histoInvYieldPiMi2760GeV_Pythia8_TuneMonachptHard5_UB");
+// 		histoPiMiUB2760GeV_Pythia8_TuneMonachptHard10->Write("histoInvYieldPiMi2760GeV_Pythia8_TuneMonachptHard10_UB");
+// 		
+// 		ratioPi02760GeV_Pythia8_TuneMonachpTHard2DivMB->Write();
+// 		ratioPi02760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Write();
+// 		ratioPi02760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Write();
+// 		ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Write();
+// 		ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Write();
+// 		ratioPi0UB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Write();
+// 
+// 		ratioPiPl2760GeV_Pythia8_TuneMonachpTHard2DivMB->Write();
+// 		ratioPiPl2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Write();
+// 		ratioPiPl2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Write();
+// 		ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Write();
+// 		ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Write();
+// 		ratioPiPlUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Write();
+// 
+// 		ratioPiMi2760GeV_Pythia8_TuneMonachpTHard2DivMB->Write();
+// 		ratioPiMi2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Write();
+// 		ratioPiMi2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Write();
+// 		ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Write();
+// 		ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Write();
+// 		ratioPiMiUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Write();
+// 
+// 		ratioEta2760GeV_Pythia8_TuneMonachpTHard2DivMB->Write();
+// 		ratioEta2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Write();
+// 		ratioEta2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Write();
+// 		ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard2DivMB->Write();
+// 		ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard5DivpTHard2->Write();
+// 		ratioEtaUB2760GeV_Pythia8_TuneMonachpTHard10DivpTHard5->Write();
 		
 	fileTheoryGraphsPP.Close();
 
