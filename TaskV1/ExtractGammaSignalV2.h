@@ -58,7 +58,7 @@ TString optionsShowBackground[4]                                    = {""};
 Int_t       nIterationsShowBackgroundDefault[4]                     = {13, 13, 13, 13};
 TString     optionsShowBackgroundDefault[4]                         = {"BackSmoothing10", "BackSmoothing10", "BackSmoothing10", "BackSmoothing10"};
 
-Int_t       nIterationsShowBackground13TeVDirectPhoton[4]           = {13, 13, 13, 13};
+Int_t       nIterationsShowBackground13TeVDirectPhoton[4]           = {10, 10, 13, 13};
 TString     optionsShowBackground13TeVDirectPhoton[4]               = {"BackSmoothing10", "BackSmoothing10", "BackSmoothing10", "BackSmoothing10"};
 
 // binning
