@@ -156,7 +156,7 @@ Int_t ProducePi0MesonDalitzResults(TString fileNameppDalitz 	= "ExternalInput/Da
 	TString fileNameNLOPi0   	  	= "ExternalInput/Theory/ALICENLOcalcPi0Vogelsang7Tev.data";
 	TString fileNamePi0NLODSS	  	= "ExternalInput/Theory/ALICE-DPT-DETA-PI0-7000.RES";
 	TString fileNamePi0NLOBKK	  	= "ExternalInput/Theory/lhc_7000_CTEQ5M_BKK_20.dat";
-	TString fileNameTheoryCompilation 	= "ExternalInput/TheoryCompilationPP.root";
+	TString fileNameTheoryCompilation 	= "ExternalInput/Theory/TheoryCompilationPP.root";
 	TString fileNameTheoryCompilationPbPb	= "ExternalInputPbPb/Theory/TheoryCompilationPbPb.root";
 	
 	

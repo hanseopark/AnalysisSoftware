@@ -82,7 +82,7 @@ void CombineMesonMeasurements7TeV( 	TString fileNamePCM = "",
 	//___________________________________ Declaration of files _____________________________________________
 	TString collisionSystem7TeV 			= "pp, #sqrt{#it{s}} = 7 TeV";		
 	
-	TString fileNameTheory					= "ExternalInput/TheoryCompilationPP.root";	
+	TString fileNameTheory					= "ExternalInput/Theory/TheoryCompilationPP.root";	
 	TString fileNamePHOS					= "ExternalInput/PHOS/7TeV/PHOS_pi0_7TeV_20111030_BWcorr.root";
 	TString fileNameChargedPionPP 			= "ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_20_May_2015.root";
 	TString fileNameChargedHadronPP			= "ExternalInput/UnidentifiedCharged/ChargedHadrinSpectraPP_20_May_2015.root";

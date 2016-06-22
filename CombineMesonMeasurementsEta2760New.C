@@ -118,7 +118,7 @@ void CombineMesonMeasurementsEta2760New(TString fileNamePCM = "",
     //************************** Read Theory*******************************************
 	cout<< " Reading theory "<<endl;
 
-	TFile* fileTheoryCompilation = new TFile("ExternalInput/TheoryCompilationPP.root");
+	TFile* fileTheoryCompilation = new TFile("ExternalInput/Theory/TheoryCompilationPP.root");
 	TH1F* histoPythia8InvXSection = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Spec2760GeV");
 	TH1F* histoPythia8InvXSection_VarBinning = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Spec2760GeVVarBinning");
 	graphNLOCalcMuHalf2760GeV=    (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecPi0MuHalf2760GeV");

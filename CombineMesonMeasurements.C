@@ -396,7 +396,7 @@ void CombineMesonMeasurements(TString fileNameConversions = "", const char *file
 	graphRatioEtaPi0SysErr900GeV = (TGraphAsymmErrors*)graphSystErrRatio900GeV->Clone("graphRatioEtaPi0SysErr900GeV");
 
 
-   TFile* fileTheoryCompilation = new TFile("ExternalInput/TheoryCompilationPP.root");
+   TFile* fileTheoryCompilation = new TFile("ExternalInput/Theory/TheoryCompilationPP.root");
    TH1F* histoPythia8InvXSection = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Spec2760GeV");
    TH1F* histoPythia8InvXSection_VarBinning = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Spec2760GeVVarBinning");
    graphNLOCalcMuHalf900GeV=    (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecPi0MuHalf900GeV");
