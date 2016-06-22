@@ -412,7 +412,7 @@ Int_t fBinsPi013TeVDirectPhotonPtRebin[29]      = { 4, 4, 4, 2, 2,
 
 Double_t fBinsPi013TeVDirectPhotonPtDCAzDist[16]= { 0.0, 0.4, 0.6, 0.8, 1.0,
                                                     1.2, 1.4, 1.6, 1.8, 2.0,
-                                                    2.5, 4.0, 6.0, 9.0, 13.0,
+                                                    2.5, 4.0, 6.0, 9.0, 12.0,
                                                     16.0};
 
 
