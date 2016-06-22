@@ -887,10 +887,10 @@ void CalculatePileUpBackground(Bool_t doMC){
         // plotting ratios + fits
         TCanvas *RatioWithWithoutPileUpCanvasMC                                     = GetAndSetCanvas("canvasRatioWithWithoutPileUpMC");
         
-        SetHistogramm(fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.998,1.03);
-        SetHistogramm(fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.998,1.03);
-        SetHistogramm(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.998,1.03);
-        SetHistogramm(fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.998,1.03);
+        SetHistogramm(fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
+        SetHistogramm(fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
+        SetHistogramm(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
+        SetHistogramm(fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
         
         DrawGammaSetMarker(fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning, 24, 1.0, kBlack, kBlack);
         DrawGammaSetMarker(fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning, 24, 1.0, kRed, kRed);
@@ -1033,7 +1033,7 @@ void CalculatePileUpBackground(Bool_t doMC){
         // plotting ratio + fit
         TCanvas *RatioWithWithoutPileUpCanvas                               = GetAndSetCanvas("canvasRatioWithWithoutPileUp");
 
-        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.998,1.03);
+        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
         DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning, 24, 1.0, kBlack, kBlack);
 
         fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning->DrawCopy();
