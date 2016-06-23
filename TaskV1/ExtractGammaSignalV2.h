@@ -128,12 +128,18 @@ TH1D***     fTrueGammaPtDCAzBins                                                
 TH1D***     fTrueSubGammaPtDCAzBins                                                             = NULL;
 TH1D**      fHistoCombinatorialSpecies                                                          = NULL;
 
+TH1D**      fESDGammaPerCatPtDCAzBins                                                           = NULL;
+TH1D**      fESDGammaRatioCatToCombinedPtDCAzBins                                               = NULL;
+
 TH1D*       fESDGammaPtPileUpAllCat                                                             = NULL;
 TH1D*       fESDGammaPtPileUp                                                                   = NULL;
 TH1D*       fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat                              = NULL;
 TH1D*       fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning                                    = NULL;
 TF1*        fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat                           = NULL;
 TF1*        fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning                                 = NULL;
+
+TH1D**      fMCrecGammaPerCatPtDCAzBins                                                         = NULL;
+TH1D**      fMCrecGammaRatioCatToCombinedPtDCAzBins                                             = NULL;
 
 TH1D*       fMCrecGammaPtPileUpAllCat                                                           = NULL;
 TH1D*       fMCrecGammaPtPileUp                                                                 = NULL;
@@ -336,6 +342,12 @@ void    DrawDCAzHisto                       (   TH1*        histo1,
                                                 Float_t     xMin,
                                                 Float_t     xMax,
                                                 Int_t       bck                                 );
+void     DrawFractionPerCat                 (   TH1D**      frac,
+                                                TString     fOutputDir,
+                                                TString     fPrefix,
+                                                TString     fPrefix2,
+                                                TString     fCutSelection,
+                                                TString     fSuffix                             );
 void     FillMassHistosArray                (   TH2D*       fGammaGammaInvMassVSPtDummy         );
 Bool_t   CompareArrays                      (   Int_t       nEntriesA,
                                                 Double_t*   arrayA,

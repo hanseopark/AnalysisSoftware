@@ -617,6 +617,9 @@ void CalculatePileUpBackground(Bool_t doMC){
             fTrueSubGammaPtDCAzBins[i]                                                      = new TH1D*[fNBinsPtDummy+1];
         }
         
+        fMCrecGammaPerCatPtDCAzBins                                                         = new TH1D*[4];
+        fMCrecGammaRatioCatToCombinedPtDCAzBins                                             = new TH1D*[3];
+        
         fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat                            = new TH1D("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", "", fNBinsPtDummy, fBinsPtDummy);
         fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Sumw2();
         fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning                                  = new TH1D("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning", "", fNBinsPtDummy, fBinsPtDummy);
@@ -649,6 +652,10 @@ void CalculatePileUpBackground(Bool_t doMC){
             // MCrec gamma
             fMCrecGammaPtDCAzBins[catIter][0]                                               = (TH1D*)fESDGammaPtDCAz[category]->ProjectionY(Form("MCrec_GammaPtDCAzBin_Full_%s", categoryName[catIter].Data()));
             fMCrecGammaPtDCAzBins[catIter][0]->Sumw2();
+            
+            // raw yield per cetegory
+            fMCrecGammaPerCatPtDCAzBins[catIter]                                            = new TH1D(Form("MCrec_GammaPtDCAzBin_%s", categoryName[catIter].Data()), "", fNBinsPtDummy, fBinsPtDummy);
+            fMCrecGammaPerCatPtDCAzBins[catIter]->Sumw2();
             
             // fake pileup background estimate from MCrec gamma
             if (catIter < 3){
@@ -722,6 +729,12 @@ void CalculatePileUpBackground(Bool_t doMC){
                 // MCrec gamma
                 fMCrecGammaPtDCAzBins[catIter][bin]                                         = (TH1D*)fESDGammaPtDCAz[category]->ProjectionY(Form("MCrec_GammaPtDCAzBin_%.1f_%.1f_%s",fBinsPtDummy[bin-1],fBinsPtDummy[bin], categoryName[catIter].Data()),startBin,endBin);
                 fMCrecGammaPtDCAzBins[catIter][bin]->Sumw2();
+                
+                // raw yields per category
+                Double_t tempBinError                                       = 0;
+                Double_t tempBinContent                                     = fMCrecGammaPtDCAzBins[catIter][bin]->IntegralAndError(-1000,1000,tempBinError);
+                fMCrecGammaPerCatPtDCAzBins[catIter]->SetBinContent(bin,    tempBinContent);
+                fMCrecGammaPerCatPtDCAzBins[catIter]->SetBinError(bin,      tempBinError);
                 
                 // fake pileup background estimate from MCrec gamma
                 if (catIter < 3){
@@ -806,6 +819,18 @@ void CalculatePileUpBackground(Bool_t doMC){
             fDate, fMeson, 1, fNBinsPtDummy, fBinsPtDummy, "#gamma --> e^{+}e^{-}", fIsMC,  "MinBias");
         }
 
+        // calculate ratios of raw yields per category
+        for (Int_t i=0; i<4; i++) fMCrecGammaPerCatPtDCAzBins[i]->Divide(fDeltaPtDummy);
+        for (Int_t i=0; i<3; i++) {
+            fMCrecGammaRatioCatToCombinedPtDCAzBins[i]                    = (TH1D*)fMCrecGammaPerCatPtDCAzBins[i+1]->Clone(Form("MCrec_GammaPtDCAzBin_Ratio_%s_to_%s", categoryName[i+1].Data(),categoryName[0].Data()));
+            fMCrecGammaRatioCatToCombinedPtDCAzBins[i]->Sumw2();
+            fMCrecGammaRatioCatToCombinedPtDCAzBins[i]->Divide(fESDGammaRatioCatToCombinedPtDCAzBins[i],fESDGammaPerCatPtDCAzBins[0],1,1,"B");
+        }
+        
+        // draw fractions per category
+        DrawFractionPerCat(fESDGammaRatioCatToCombinedPtDCAzBins, fOutputDir, fPrefix, fPrefix2, fCutSelection, fSuffix);
+
+        
         // building ratios with / without fake pileup
         CalculateDCAzDistributionRatio(fMCrecGammaPtDCAzBins, fMCrecSubGammaPtDCAzBins, 0, 0, fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat);
         CalculateDCAzDistributionRatio(fMCrecGammaPtDCAzBins, fMCrecSubGammaPtDCAzBins, 1, 3, fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning);
@@ -879,7 +904,7 @@ void CalculatePileUpBackground(Bool_t doMC){
         fTrueSecondaryFromXFromK0sConvGammaPtPileUpAllCat->Sumw2();
         fTrueSecondaryFromXFromK0sConvGammaPtPileUpAllCat->Multiply(fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorAllCat);
         
-        fTrueSecondaryFromXFromK0sConvGammaPtPileUp                           = (TH1D*)fHistoGammaTrueSecondaryConvGammaFromXFromK0sPt->Clone("ESD_TrueSecondaryConvGammaFromXFromK0s_Pt_PileUp");
+        fTrueSecondaryFromXFromK0sConvGammaPtPileUp                                 = (TH1D*)fHistoGammaTrueSecondaryConvGammaFromXFromK0sPt->Clone("ESD_TrueSecondaryConvGammaFromXFromK0s_Pt_PileUp");
         fTrueSecondaryFromXFromK0sConvGammaPtPileUp->Sumw2();
         fTrueSecondaryFromXFromK0sConvGammaPtPileUp->Multiply(fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactor);
         
@@ -936,6 +961,9 @@ void CalculatePileUpBackground(Bool_t doMC){
             fESDGammaPtDCAzBinsBack[i]                                      = new TH1D*[fNBinsPtDummy+1];
             fESDSubGammaPtDCAzBins[i]                                       = new TH1D*[fNBinsPtDummy+1];
         }
+        
+        fESDGammaPerCatPtDCAzBins                                           = new TH1D*[4];
+        fESDGammaRatioCatToCombinedPtDCAzBins                               = new TH1D*[3];
 
         fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat              = new TH1D("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", "", fNBinsPtDummy, fBinsPtDummy);
         fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Sumw2();
@@ -953,6 +981,9 @@ void CalculatePileUpBackground(Bool_t doMC){
             
             fESDGammaPtDCAzBins[catIter][0]                                 = (TH1D*)fESDGammaPtDCAz[category]->ProjectionY(Form("ESD_GammaPtDCAzBin_Full_%s", categoryName[catIter].Data()));
             fESDGammaPtDCAzBins[catIter][0]->Sumw2();
+            
+            fESDGammaPerCatPtDCAzBins[catIter]                              = new TH1D(Form("ESD_GammaPtDCAzBin_%s", categoryName[catIter].Data()), "", fNBinsPtDummy, fBinsPtDummy);
+            fESDGammaPerCatPtDCAzBins[catIter]->Sumw2();
             
             // estimate pileup BG
             if (catIter < 3) {
@@ -978,6 +1009,12 @@ void CalculatePileUpBackground(Bool_t doMC){
                 fESDGammaPtDCAzBins[catIter][bin]                           = (TH1D*)fESDGammaPtDCAz[category]->ProjectionY(Form("ESD_GammaPtDCAzBin_%.1f_%.1f_%s",fBinsPtDummy[bin-1],fBinsPtDummy[bin], categoryName[catIter].Data()),startBin,endBin);
                 fESDGammaPtDCAzBins[catIter][bin]->Sumw2();
                 
+                // raw yields per category
+                Double_t tempBinError                                       = 0;
+                Double_t tempBinContent                                     = fESDGammaPtDCAzBins[catIter][bin]->IntegralAndError(-1000,1000,tempBinError);
+                fESDGammaPerCatPtDCAzBins[catIter]->SetBinContent(bin,      tempBinContent);
+                fESDGammaPerCatPtDCAzBins[catIter]->SetBinError(bin,        tempBinError);
+
                 // estimate pileup BG
                 if (catIter < 3) {
                     fESDGammaPtDCAzBinsBack[catIter][bin]                   = (TH1D*)fESDGammaPtDCAzBins[catIter][bin]->ShowBackground(nIterationsShowBackground[catIter],optionShowBackgroundStandard.Data());
@@ -1002,6 +1039,17 @@ void CalculatePileUpBackground(Bool_t doMC){
             PlotDCAzInPtBinsWithBack( fESDGammaPtDCAzBins[catIter], fESDGammaPtDCAzBinsBack[catIter], NULL, nameFile, "CanvasESDDCAz", "PadESDDCAz",
                                      fDate, fMeson, 1, fNBinsPtDummy, fBinsPtDummy, "#gamma --> e^{+}e^{-}", fIsMC, "MinBias");
         }
+        
+        // calculate fractions per category
+        for (Int_t i=0; i<4; i++) fESDGammaPerCatPtDCAzBins[i]->Divide(fDeltaPtDummy);
+        for (Int_t i=0; i<3; i++) {
+            fESDGammaRatioCatToCombinedPtDCAzBins[i]                        = (TH1D*)fESDGammaPerCatPtDCAzBins[i+1]->Clone(Form("ESD_GammaPtDCAzBin_Ratio_%s_to_%s", categoryName[i+1].Data(), categoryName[0].Data()));
+            fESDGammaRatioCatToCombinedPtDCAzBins[i]->Sumw2();
+            fESDGammaRatioCatToCombinedPtDCAzBins[i]->Divide(fESDGammaRatioCatToCombinedPtDCAzBins[i],fESDGammaPerCatPtDCAzBins[0],1,1,"B");
+        }
+
+        // draw fractions per category
+        DrawFractionPerCat(fESDGammaRatioCatToCombinedPtDCAzBins, fOutputDir, fPrefix, fPrefix2, fCutSelection, fSuffix);
         
         // calculate ratio with/without pileup
         Double_t binContent, binError;
@@ -1607,7 +1655,17 @@ void SaveHistos(Int_t isMC, TString fCutID, TString fPrefix3,Bool_t PileUpCorrec
         if(PileUpCorrection && fEnablePCM){
             fESDGammaPtPileUpAllCat->Write("ESD_ConvGamma_Pt_PileUp_AllCatComb",TObject::kOverwrite);
             fESDGammaPtPileUp->Write("ESD_ConvGamma_Pt_PileUp",TObject::kOverwrite);
-            for (Int_t catIter = 0; catIter < 4; catIter++) fESDGammaPtDCAzBins[catIter][0]->Write(Form("ESD_GammaPtDCAzBin_Full_%s", categoryName[catIter].Data()),TObject::kOverwrite);
+            for (Int_t i = 0; i < 4; i++) {
+                fESDGammaPtDCAzBins[i][0]->Write(Form("ESD_GammaPtDCAzBin_Full_%s", categoryName[i].Data()),TObject::kOverwrite);
+                fESDGammaPerCatPtDCAzBins[i]->Write(Form("ESD_GammaPtDCAzBin_%s", categoryName[i].Data()),TObject::kOverwrite);
+                if (i < 3) fESDGammaRatioCatToCombinedPtDCAzBins[i]->Write(Form("ESD_GammaPtDCAzBin_Ratio_%s_to_%s", categoryName[i+1].Data(), categoryName[0].Data()),TObject::kOverwrite);
+            }
+            if (isMC) {
+                for (Int_t i = 0; i < 4; i++) {
+                    fMCrecGammaPerCatPtDCAzBins[i]->Write(Form("MCrec_GammaPtDCAzBin_%s", categoryName[i].Data()),TObject::kOverwrite);
+                    if (i < 3) fMCrecGammaRatioCatToCombinedPtDCAzBins[i]->Write(Form("MCrec_GammaPtDCAzBin_Ratio_%s_to_%s", categoryName[i+1].Data(), categoryName[0].Data()),TObject::kOverwrite);
+                }
+            }
         }
 
         // write basics MC quantities if possible (converted input spectrum & reconstructed validated (&primary) photons)
@@ -2470,6 +2528,29 @@ void DrawDCAzHisto( TH1* histo1,
             }
         }
     }
+}
+
+//**************************************************************************************************
+//************* Routine to produce fraction per category vs pt plots  ******************************
+//**************************************************************************************************
+void DrawFractionPerCat(TH1D** frac, TString fOutputDir, TString fPrefix, TString fPrefix2, TString fCutSelection, TString fSuffix) {
+    
+    TCanvas *canvas             = GetAndSetCanvas("canvas");
+    Color_t markerColor[3]      = {kBlack, kRed, kBlue};
+    
+    TLegend* legend             = GetAndSetLegend(0.7,0.75,3,1);
+    for (Int_t i=0; i<3; i++) {
+        SetHistogramm(frac[i],"p_{T} (GeV/c)","#gamma_{cat i} / #gamma_{all cat}",0.0,1.0);
+        DrawGammaSetMarker(frac[i], 20, 1.0, markerColor[i], markerColor[i]);
+        frac[i]->Draw("same");
+        legend->AddEntry(frac[i],Form("#gamma_{cat %i} / #gamma_{all cat}", i+1),"lp");
+    }
+    DrawGammaLines(0., frac[0]->GetXaxis()->GetBinUpEdge(frac[0]->GetNbinsX()), 1., 1., 0.5, kBlack);
+    legend->Draw("same");
+    
+    canvas->Print(Form("%s/%s_%s_ESD_FractionPerCategory_%s.%s",fOutputDir.Data(),fPrefix.Data(),fPrefix2.Data(),fCutSelection.Data(),fSuffix.Data()));
+    delete legend;
+    delete canvas;
 }
 
 //****************************************************************************
