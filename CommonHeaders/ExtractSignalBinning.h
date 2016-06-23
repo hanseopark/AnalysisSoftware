@@ -390,12 +390,11 @@ Int_t fBinsPi0EtaBinning13TeVPtRebin[13]        = { 8, 2, 2, 2, 2,              
                                                     2, 2, 4, 4, 4,
                                                     4, 4, 4 };
 
-Double_t fBinsPi013TeVDirectPhotonPt[26]        = { 0.0, 0.4, 0.6, 0.8, 1.0,
+Double_t fBinsPi013TeVDirectPhotonPt[25]        = { 0.0, 0.4, 0.6, 0.8, 1.0,
                                                     1.2, 1.4, 1.6, 1.8, 2.0,
                                                     2.2, 2.4, 2.6, 2.8, 3.0,
                                                     3.4, 3.8, 4.2, 4.8, 5.8,
-                                                    7.0, 8.5, 10, 12.0, 12.0,
-                                                    16.0};
+                                                    7.0, 8.5, 10, 12.0, 16.0};
 
 Int_t fBinsPi013TeVDirectPhotonPtRebin[29]      = { 4, 4, 4, 2, 2,
                                                     2, 2, 2, 2, 2,
@@ -403,12 +402,6 @@ Int_t fBinsPi013TeVDirectPhotonPtRebin[29]      = { 4, 4, 4, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 4, 4, 4, 8,
                                                     8, 8, 8, 8};
-
-//Double_t fBinsPi013TeVDirectPhotonPtDCAzDist[21]= { 0.0, 0.4, 0.6, 0.8, 1.0,
-//                                                    1.2, 1.4, 1.6, 1.8, 2.0,
-//                                                    2.4, 2.8, 3.2, 3.5, 4.0,
-//                                                    5.0, 7.0, 9.0, 12.0, 15.0,
-//                                                    20.0};
 
 Double_t fBinsPi013TeVDirectPhotonPtDCAzDist[16]= { 0.0, 0.4, 0.6, 0.8, 1.0,
                                                     1.2, 1.4, 1.6, 1.8, 2.0,
@@ -1072,9 +1065,9 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 fStartPtBin     = 1;
                 fColumn         = 6;
                 fRow            = 5;
-                if (fNBinsPt > 25) {
-                    cout << "You have chosen Direct Photon Plots and more than 25 bins, this is not possible, it will be reduced to 25 bins." << endl;
-                    fNBinsPt    = 25;
+                if (fNBinsPt > 24) {
+                    cout << "You have chosen Direct Photon Plots and more than 24 bins, this is not possible, it will be reduced to 24 bins." << endl;
+                    fNBinsPt    = 24;
                 }
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
                     fBinsPt[i]         = fBinsPi013TeVDirectPhotonPt[i];
