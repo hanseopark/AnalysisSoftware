@@ -45,21 +45,17 @@ TString     fContamination[10]                                      = { "Elec", 
                                                                       };
 
 // exemplary pt bins for DCAz distributions
-Int_t       exemplaryLowPtBin                                       = 3;
-Int_t       exemplaryHighPtBin                                      = 9;
+Int_t       exemplaryLowPtBin                                       = 1;
+Int_t       exemplaryHighPtBin                                      = 15;
 
 // photon categories
 TString     categoryName[4]                                         = {"all", "cat1", "cat2", "cat3"};
 
 // ShowBackground arguments
 Int_t nIterationsShowBackground[4]                                  = {0};
-TString optionsShowBackground[4]                                    = {""};
-
-Int_t       nIterationsShowBackgroundDefault[4]                     = {13, 13, 13, 13};
-TString     optionsShowBackgroundDefault[4]                         = {"BackSmoothing10", "BackSmoothing10", "BackSmoothing10", "BackSmoothing10"};
-
-Int_t       nIterationsShowBackground13TeVDirectPhoton[4]           = {10, 10, 13, 13};
-TString     optionsShowBackground13TeVDirectPhoton[4]               = {"BackSmoothing10", "BackSmoothing10", "BackSmoothing10", "BackSmoothing10"};
+TString optionShowBackgroundStandard                                = "";
+TString optionShowBackgroundVar1                                    = "";
+TString optionShowBackgroundVar2                                    = "";
 
 // binning
 TH1D*       fDeltaPtDummy                                           = NULL;
@@ -132,52 +128,52 @@ TH1D***     fTrueGammaPtDCAzBins                                                
 TH1D***     fTrueSubGammaPtDCAzBins                                                             = NULL;
 TH1D**      fHistoCombinatorialSpecies                                                          = NULL;
 
+TH1D*       fESDGammaPtPileUpAllCat                                                             = NULL;
 TH1D*       fESDGammaPtPileUp                                                                   = NULL;
-TH1D*       fESDGammaPtPileUpSepCat                                                             = NULL;
+TH1D*       fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat                              = NULL;
 TH1D*       fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning                                    = NULL;
-TH1D*       fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat                              = NULL;
+TF1*        fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat                           = NULL;
 TF1*        fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning                                 = NULL;
-TF1*        fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat                           = NULL;
 
+TH1D*       fMCrecGammaPtPileUpAllCat                                                           = NULL;
 TH1D*       fMCrecGammaPtPileUp                                                                 = NULL;
-TH1D*       fMCrecGammaPtPileUpSepCat                                                           = NULL;
+TH1D*       fTruePrimaryConvGammaPtPileUpAllCat                                                 = NULL;
 TH1D*       fTruePrimaryConvGammaPtPileUp                                                       = NULL;
-TH1D*       fTruePrimaryConvGammaPtPileUpSepCat                                                 = NULL;
+TH1D*       fTrueSecondaryConvGammaPtPileUpAllCat                                               = NULL;
 TH1D*       fTrueSecondaryConvGammaPtPileUp                                                     = NULL;
-TH1D*       fTrueSecondaryConvGammaPtPileUpSepCat                                               = NULL;
+TH1D*       fTrueSecondaryFromXFromK0sConvGammaPtPileUpAllCat                                   = NULL;
 TH1D*       fTrueSecondaryFromXFromK0sConvGammaPtPileUp                                         = NULL;
-TH1D*       fTrueSecondaryFromXFromK0sConvGammaPtPileUpSepCat                                   = NULL;
 
+TH1D*       fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat                            = NULL;
 TH1D*       fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning                                  = NULL;
-TH1D*       fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat                            = NULL;
+TF1*        fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat                         = NULL;
 TF1*        fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinning                               = NULL;
-TF1*        fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat                         = NULL;
 
+TH1D*       fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat                  = NULL;
 TH1D*       fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning                        = NULL;
-TH1D*       fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat                  = NULL;
+TF1*        fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat               = NULL;
 TF1*        fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning                     = NULL;
-TF1*        fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat               = NULL;
 
+TH1D*       fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat                = NULL;
 TH1D*       fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning                      = NULL;
-TH1D*       fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat                = NULL;
+TF1*        fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat             = NULL;
 TF1*        fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning                   = NULL;
-TF1*        fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat             = NULL;
 
+TH1D*       fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat    = NULL;
 TH1D*       fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning          = NULL;
-TH1D*       fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat    = NULL;
+TF1*        fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat = NULL;
 TF1*        fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning       = NULL;
-TF1*        fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat = NULL;
 
+TH1D*       fESDGammaPileUpCorrFactorAllCat                                                     = NULL;
 TH1D*       fESDGammaPileUpCorrFactor                                                           = NULL;
-TH1D*       fESDGammaPileUpCorrFactorSepCat                                                     = NULL;
+TH1D*       fMCrecGammaPileUpCorrFactorAllCat                                                   = NULL;
 TH1D*       fMCrecGammaPileUpCorrFactor                                                         = NULL;
-TH1D*       fMCrecGammaPileUpCorrFactorSepCat                                                   = NULL;
+TH1D*       fTruePrimaryConvGammaPileUpCorrFactorAllCat                                         = NULL;
 TH1D*       fTruePrimaryConvGammaPileUpCorrFactor                                               = NULL;
-TH1D*       fTruePrimaryConvGammaPileUpCorrFactorSepCat                                         = NULL;
+TH1D*       fTrueSecondaryConvGammaPileUpCorrFactorAllCat                                       = NULL;
 TH1D*       fTrueSecondaryConvGammaPileUpCorrFactor                                             = NULL;
-TH1D*       fTrueSecondaryConvGammaPileUpCorrFactorSepCat                                       = NULL;
+TH1D*       fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorAllCat                           = NULL;
 TH1D*       fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactor                                 = NULL;
-TH1D*       fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorSepCat                           = NULL;
 
 TH1D*       fHistoFracAllGammaToSecPileUp                                                       = NULL;
 TH1D*       fHistoFracAllGammaToSecFromXFromK0sPileUp                                           = NULL;

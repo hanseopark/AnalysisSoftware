@@ -136,7 +136,6 @@ void ExtractGammaSignalV2(      TString meson               = "",
     ObjectNameDCGammaConvRPt                = "ESD_TrueDoubleCountConvGamma_R_Pt";
     ObjectNameGammaConvMultipleCount        = "ESD_TrueMultipleCountConvGamma";
 
-    // taken from ExtractSignalV2.C -> MUST BE TESTED STILL
     //****************************** Specification of collision system ************************************************
     TString textProcess = ReturnMesonString (fPrefix);
     if(textProcess.CompareTo("") == 0 ){
@@ -618,25 +617,25 @@ void CalculatePileUpBackground(Bool_t doMC){
             fTrueSubGammaPtDCAzBins[i]                                                      = new TH1D*[fNBinsPtDummy+1];
         }
         
+        fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat                            = new TH1D("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", "", fNBinsPtDummy, fBinsPtDummy);
+        fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Sumw2();
         fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning                                  = new TH1D("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning", "", fNBinsPtDummy, fBinsPtDummy);
         fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning->Sumw2();
-        fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat                            = new TH1D("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_CategoryWise", "", fNBinsPtDummy, fBinsPtDummy);
-        fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat->Sumw2();
         
+        fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat                  = new TH1D("ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", "", fNBinsPtDummy, fBinsPtDummy);
+        fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Sumw2();
         fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning                        = new TH1D("ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning", "", fNBinsPtDummy, fBinsPtDummy);
         fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning->Sumw2();
-        fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat                  = new TH1D("ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_CategoryWise", "", fNBinsPtDummy, fBinsPtDummy);
-        fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat->Sumw2();
 
+        fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat                = new TH1D("ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", "", fNBinsPtDummy, fBinsPtDummy);
+        fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Sumw2();
         fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning                      = new TH1D("ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning", "", fNBinsPtDummy, fBinsPtDummy);
         fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning->Sumw2();
-        fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat                = new TH1D("ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_CategoryWise", "", fNBinsPtDummy, fBinsPtDummy);
-        fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat->Sumw2();
 
+        fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat    = new TH1D("ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", "", fNBinsPtDummy, fBinsPtDummy);
+        fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Sumw2();
         fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning          = new TH1D("ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning", "", fNBinsPtDummy, fBinsPtDummy);
         fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning->Sumw2();
-        fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat    = new TH1D("ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning_CategoryWise", "", fNBinsPtDummy, fBinsPtDummy);
-        fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat->Sumw2();
         
         // loop over photon categories
         Int_t category;
@@ -652,8 +651,8 @@ void CalculatePileUpBackground(Bool_t doMC){
             fMCrecGammaPtDCAzBins[catIter][0]->Sumw2();
             
             // fake pileup background estimate from MCrec gamma
-            if (catIter < 2){
-                fMCrecGammaPtDCAzBinsBack[catIter][0]                                       = (TH1D*)fMCrecGammaPtDCAzBins[catIter][0]->ShowBackground(nIterationsShowBackground[catIter],optionsShowBackground[catIter].Data());
+            if (catIter < 3){
+                fMCrecGammaPtDCAzBinsBack[catIter][0]                                       = (TH1D*)fMCrecGammaPtDCAzBins[catIter][0]->ShowBackground(nIterationsShowBackground[catIter],optionShowBackgroundStandard.Data());
                 fMCrecGammaPtDCAzBinsBack[catIter][0]->Sumw2();
                 fMCrecGammaPtDCAzBinsBack[catIter][0]->SetName(Form("MCrec_GammaPtDCAzBackBin_Full_%s", categoryName[catIter].Data()));
                 if (fMCrecGammaPtDCAzBinsBack[catIter][0]->Integral() < 1 || fMCrecGammaPtDCAzBinsBack[catIter][0]->GetEntries() > fMCrecGammaPtDCAzBins[catIter][0]->GetEntries()) {
@@ -725,8 +724,8 @@ void CalculatePileUpBackground(Bool_t doMC){
                 fMCrecGammaPtDCAzBins[catIter][bin]->Sumw2();
                 
                 // fake pileup background estimate from MCrec gamma
-                if (catIter < 2){
-                    fMCrecGammaPtDCAzBinsBack[catIter][bin]                                 = (TH1D*)fMCrecGammaPtDCAzBins[catIter][bin]->ShowBackground(nIterationsShowBackground[catIter],optionsShowBackground[catIter].Data());
+                if (catIter < 3){
+                    fMCrecGammaPtDCAzBinsBack[catIter][bin]                                 = (TH1D*)fMCrecGammaPtDCAzBins[catIter][bin]->ShowBackground(nIterationsShowBackground[catIter],optionShowBackgroundStandard.Data());
                     fMCrecGammaPtDCAzBinsBack[catIter][bin]->Sumw2();
                     fMCrecGammaPtDCAzBinsBack[catIter][bin]->SetName(Form("MCrec_GammaPtDCAzBackBin_%.1f_%.1f_%s", fBinsPtDummy[bin-1], fBinsPtDummy[bin], categoryName[catIter].Data()));
                     if (fMCrecGammaPtDCAzBinsBack[catIter][bin]->Integral() < 1 || fMCrecGammaPtDCAzBinsBack[catIter][bin]->GetEntries() > fMCrecGammaPtDCAzBins[catIter][bin]->GetEntries()) {
@@ -808,81 +807,81 @@ void CalculatePileUpBackground(Bool_t doMC){
         }
 
         // building ratios with / without fake pileup
-        CalculateDCAzDistributionRatio(fMCrecGammaPtDCAzBins, fMCrecSubGammaPtDCAzBins, 0, 0, fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning);
-        CalculateDCAzDistributionRatio(fMCrecGammaPtDCAzBins, fMCrecSubGammaPtDCAzBins, 1, 3, fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat);
+        CalculateDCAzDistributionRatio(fMCrecGammaPtDCAzBins, fMCrecSubGammaPtDCAzBins, 0, 0, fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat);
+        CalculateDCAzDistributionRatio(fMCrecGammaPtDCAzBins, fMCrecSubGammaPtDCAzBins, 1, 3, fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning);
         
-        CalculateDCAzDistributionRatio(fTruePrimaryGammaPtDCAzBins, fTruePrimarySubGammaPtDCAzBins, 0, 0, fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning);
-        CalculateDCAzDistributionRatio(fTruePrimaryGammaPtDCAzBins, fTruePrimarySubGammaPtDCAzBins, 1, 3, fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat);
+        CalculateDCAzDistributionRatio(fTruePrimaryGammaPtDCAzBins, fTruePrimarySubGammaPtDCAzBins, 0, 0, fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat);
+        CalculateDCAzDistributionRatio(fTruePrimaryGammaPtDCAzBins, fTruePrimarySubGammaPtDCAzBins, 1, 3, fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning);
 
-        CalculateDCAzDistributionRatio(fTrueSecondaryGammaPtDCAzBins, fTrueSecondarySubGammaPtDCAzBins, 0, 0, fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning);
-        CalculateDCAzDistributionRatio(fTrueSecondaryGammaPtDCAzBins, fTrueSecondarySubGammaPtDCAzBins, 1, 3, fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat);
+        CalculateDCAzDistributionRatio(fTrueSecondaryGammaPtDCAzBins, fTrueSecondarySubGammaPtDCAzBins, 0, 0, fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat);
+        CalculateDCAzDistributionRatio(fTrueSecondaryGammaPtDCAzBins, fTrueSecondarySubGammaPtDCAzBins, 1, 3, fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning);
 
-        CalculateDCAzDistributionRatio(fTrueSecondaryGammaFromXFromK0sPtDCAzBins, fTrueSecondarySubGammaFromXFromK0sPtDCAzBins, 0, 0, fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning);
-        CalculateDCAzDistributionRatio(fTrueSecondaryGammaFromXFromK0sPtDCAzBins, fTrueSecondarySubGammaFromXFromK0sPtDCAzBins, 1, 3, fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat);
+        CalculateDCAzDistributionRatio(fTrueSecondaryGammaFromXFromK0sPtDCAzBins, fTrueSecondarySubGammaFromXFromK0sPtDCAzBins, 0, 0, fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat);
+        CalculateDCAzDistributionRatio(fTrueSecondaryGammaFromXFromK0sPtDCAzBins, fTrueSecondarySubGammaFromXFromK0sPtDCAzBins, 1, 3, fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning);
         
         // define pileup correction factors
+        fMCrecGammaPileUpCorrFactorAllCat                                           = new TH1D("fMCrecGammaPileUpCorrFactorAllCatComb", "fMCrecGammaPileUpCorrFactorAllCatComb", fNBinsPt, fBinsPt);
+        fMCrecGammaPileUpCorrFactorAllCat->Sumw2();
         fMCrecGammaPileUpCorrFactor                                                 = new TH1D("fMCrecGammaPileUpCorrFactor", "fMCrecGammaPileUpCorrFactor", fNBinsPt, fBinsPt);
         fMCrecGammaPileUpCorrFactor->Sumw2();
-        fMCrecGammaPileUpCorrFactorSepCat                                           = new TH1D("fMCrecGammaPileUpCorrFactorSepCat", "fMCrecGammaPileUpCorrFactorSepCat", fNBinsPt, fBinsPt);
-        fMCrecGammaPileUpCorrFactorSepCat->Sumw2();
+        fTruePrimaryConvGammaPileUpCorrFactorAllCat                                 = new TH1D("fTruePrimaryConvGammaPileUpCorrFactorAllCatComb", "fTruePrimaryConvGammaPileUpCorrFactorAllCatComb", fNBinsPt, fBinsPt);
+        fTruePrimaryConvGammaPileUpCorrFactorAllCat->Sumw2();
         fTruePrimaryConvGammaPileUpCorrFactor                                       = new TH1D("fTruePrimaryConvGammaPileUpCorrFactor", "fTruePrimaryConvGammaPileUpCorrFactor", fNBinsPt, fBinsPt);
         fTruePrimaryConvGammaPileUpCorrFactor->Sumw2();
-        fTruePrimaryConvGammaPileUpCorrFactorSepCat                                 = new TH1D("fTruePrimaryConvGammaPileUpCorrFactorSepCat", "fTruePrimaryConvGammaPileUpCorrFactorSepCat", fNBinsPt, fBinsPt);
-        fTruePrimaryConvGammaPileUpCorrFactorSepCat->Sumw2();
+        fTrueSecondaryConvGammaPileUpCorrFactorAllCat                               = new TH1D("fTrueSecondaryConvGammaPileUpCorrFactorAllCatComb", "fTrueSecondaryConvGammaPileUpCorrFactorAllCatComb", fNBinsPt, fBinsPt);
+        fTrueSecondaryConvGammaPileUpCorrFactorAllCat->Sumw2();
         fTrueSecondaryConvGammaPileUpCorrFactor                                     = new TH1D("fTrueSecondaryConvGammaPileUpCorrFactor", "fTrueSecondaryConvGammaPileUpCorrFactor", fNBinsPt, fBinsPt);
         fTrueSecondaryConvGammaPileUpCorrFactor->Sumw2();
-        fTrueSecondaryConvGammaPileUpCorrFactorSepCat                               = new TH1D("fTrueSecondaryConvGammaPileUpCorrFactorSepCat", "fTrueSecondaryConvGammaPileUpCorrFactorSepCat", fNBinsPt, fBinsPt);
-        fTrueSecondaryConvGammaPileUpCorrFactorSepCat->Sumw2();
+        fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorAllCat                   = new TH1D("fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorAllCatComb", "fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorAllCatComb", fNBinsPt, fBinsPt);
+        fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorAllCat->Sumw2();
         fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactor                         = new TH1D("fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactor", "fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactor", fNBinsPt, fBinsPt);
         fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactor->Sumw2();
-        fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorSepCat                   = new TH1D("fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorSepCat", "fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorSepCat", fNBinsPt, fBinsPt);
-        fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorSepCat->Sumw2();
         
         // calculating pileup correction factors
+        CalculatePileUpCorrectionFactor(fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat, fMCrecGammaPileUpCorrFactorAllCat, fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat);
         CalculatePileUpCorrectionFactor(fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning, fMCrecGammaPileUpCorrFactor, fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinning);
-        CalculatePileUpCorrectionFactor(fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat, fMCrecGammaPileUpCorrFactorSepCat, fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat);
         
+        CalculatePileUpCorrectionFactor(fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat, fTruePrimaryConvGammaPileUpCorrFactorAllCat, fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat);
         CalculatePileUpCorrectionFactor(fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning, fTruePrimaryConvGammaPileUpCorrFactor, fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning);
-        CalculatePileUpCorrectionFactor(fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat, fTruePrimaryConvGammaPileUpCorrFactorSepCat, fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat);
         
+        CalculatePileUpCorrectionFactor(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat, fTrueSecondaryConvGammaPileUpCorrFactorAllCat, fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat);
         CalculatePileUpCorrectionFactor(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning, fTrueSecondaryConvGammaPileUpCorrFactor, fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning);
-        CalculatePileUpCorrectionFactor(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat, fTrueSecondaryConvGammaPileUpCorrFactorSepCat, fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat);
         
+        CalculatePileUpCorrectionFactor(fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat, fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorAllCat, fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat);
         CalculatePileUpCorrectionFactor(fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning, fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactor, fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning);
-        CalculatePileUpCorrectionFactor(fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat, fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorSepCat, fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat);
         
         // calculate spectra w/o fake pileup
+        fMCrecGammaPtPileUpAllCat                                                   = (TH1D*)fHistoGammaMCrecConvPt->Clone("MCrec_ConvGamma_Pt_PileUp_AllCatComb");
+        fMCrecGammaPtPileUpAllCat->Sumw2();
+        fMCrecGammaPtPileUpAllCat->Multiply(fMCrecGammaPileUpCorrFactorAllCat);
+        
         fMCrecGammaPtPileUp                                                         = (TH1D*)fHistoGammaMCrecConvPt->Clone("MCrec_ConvGamma_Pt_PileUp");
         fMCrecGammaPtPileUp->Sumw2();
         fMCrecGammaPtPileUp->Multiply(fMCrecGammaPileUpCorrFactor);
         
-        fMCrecGammaPtPileUpSepCat                                                   = (TH1D*)fHistoGammaMCrecConvPt->Clone("MCrec_ConvGamma_Pt_PileUp_CategoryWise");
-        fMCrecGammaPtPileUpSepCat->Sumw2();
-        fMCrecGammaPtPileUpSepCat->Multiply(fMCrecGammaPileUpCorrFactorSepCat);
+        fTruePrimaryConvGammaPtPileUpAllCat                                         = (TH1D*)fHistoGammaTruePrimaryConvPt->Clone("ESD_TruePrimaryConvGamma_Pt_PileUp_AllCatComb");
+        fTruePrimaryConvGammaPtPileUpAllCat->Sumw2();
+        fTruePrimaryConvGammaPtPileUpAllCat->Multiply(fTruePrimaryConvGammaPileUpCorrFactorAllCat);
         
         fTruePrimaryConvGammaPtPileUp                                               = (TH1D*)fHistoGammaTruePrimaryConvPt->Clone("ESD_TruePrimaryConvGamma_Pt_PileUp");
         fTruePrimaryConvGammaPtPileUp->Sumw2();
         fTruePrimaryConvGammaPtPileUp->Multiply(fTruePrimaryConvGammaPileUpCorrFactor);
-        
-        fTruePrimaryConvGammaPtPileUpSepCat                                         = (TH1D*)fHistoGammaTruePrimaryConvPt->Clone("ESD_TruePrimaryConvGamma_Pt_PileUp_CategoryWise");
-        fTruePrimaryConvGammaPtPileUpSepCat->Sumw2();
-        fTruePrimaryConvGammaPtPileUpSepCat->Multiply(fTruePrimaryConvGammaPileUpCorrFactorSepCat);
 
+        fTrueSecondaryConvGammaPtPileUpAllCat                                       = (TH1D*)fHistoGammaTrueSecondaryConvPt->Clone("ESD_TrueSecondaryConvGamma_Pt_PileUp_AllCatComb");
+        fTrueSecondaryConvGammaPtPileUpAllCat->Sumw2();
+        fTrueSecondaryConvGammaPtPileUpAllCat->Multiply(fTrueSecondaryConvGammaPileUpCorrFactorAllCat);
+        
         fTrueSecondaryConvGammaPtPileUp                                             = (TH1D*)fHistoGammaTrueSecondaryConvPt->Clone("ESD_TrueSecondaryConvGamma_Pt_PileUp");
         fTrueSecondaryConvGammaPtPileUp->Sumw2();
         fTrueSecondaryConvGammaPtPileUp->Multiply(fTrueSecondaryConvGammaPileUpCorrFactor);
-        
-        fTrueSecondaryConvGammaPtPileUpSepCat                                       = (TH1D*)fHistoGammaTrueSecondaryConvPt->Clone("ESD_TrueSecondaryConvGamma_Pt_PileUp_CategoryWise");
-        fTrueSecondaryConvGammaPtPileUpSepCat->Sumw2();
-        fTrueSecondaryConvGammaPtPileUpSepCat->Multiply(fTrueSecondaryConvGammaPileUpCorrFactorSepCat);
 
-        fTrueSecondaryFromXFromK0sConvGammaPtPileUp                                 = (TH1D*)fHistoGammaTrueSecondaryConvGammaFromXFromK0sPt->Clone("ESD_TrueSecondaryConvGammaFromXFromK0s_Pt_PileUp");
+        fTrueSecondaryFromXFromK0sConvGammaPtPileUpAllCat                           = (TH1D*)fHistoGammaTrueSecondaryConvGammaFromXFromK0sPt->Clone("ESD_TrueSecondaryConvGammaFromXFromK0s_Pt_PileUp_AllCatComb");
+        fTrueSecondaryFromXFromK0sConvGammaPtPileUpAllCat->Sumw2();
+        fTrueSecondaryFromXFromK0sConvGammaPtPileUpAllCat->Multiply(fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorAllCat);
+        
+        fTrueSecondaryFromXFromK0sConvGammaPtPileUp                           = (TH1D*)fHistoGammaTrueSecondaryConvGammaFromXFromK0sPt->Clone("ESD_TrueSecondaryConvGammaFromXFromK0s_Pt_PileUp");
         fTrueSecondaryFromXFromK0sConvGammaPtPileUp->Sumw2();
         fTrueSecondaryFromXFromK0sConvGammaPtPileUp->Multiply(fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactor);
-        
-        fTrueSecondaryFromXFromK0sConvGammaPtPileUpSepCat                           = (TH1D*)fHistoGammaTrueSecondaryConvGammaFromXFromK0sPt->Clone("ESD_TrueSecondaryConvGammaFromXFromK0s_Pt_PileUp_CategoryWise");
-        fTrueSecondaryFromXFromK0sConvGammaPtPileUpSepCat->Sumw2();
-        fTrueSecondaryFromXFromK0sConvGammaPtPileUpSepCat->Multiply(fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorSepCat);
         
         // plotting ratios + fits
         TCanvas *RatioWithWithoutPileUpCanvasMC                                     = GetAndSetCanvas("canvasRatioWithWithoutPileUpMC");
@@ -938,10 +937,10 @@ void CalculatePileUpBackground(Bool_t doMC){
             fESDSubGammaPtDCAzBins[i]                                       = new TH1D*[fNBinsPtDummy+1];
         }
 
+        fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat              = new TH1D("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", "", fNBinsPtDummy, fBinsPtDummy);
+        fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Sumw2();
         fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning                    = new TH1D("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning", "", fNBinsPtDummy, fBinsPtDummy);
         fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning->Sumw2();
-        fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat              = new TH1D("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_CategoryWise", "", fNBinsPtDummy, fBinsPtDummy);
-        fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat->Sumw2();
         
         // loop over photon categories
         Int_t category;
@@ -956,8 +955,8 @@ void CalculatePileUpBackground(Bool_t doMC){
             fESDGammaPtDCAzBins[catIter][0]->Sumw2();
             
             // estimate pileup BG
-            if (catIter < 2) {
-                fESDGammaPtDCAzBinsBack[catIter][0]                         = (TH1D*)fESDGammaPtDCAzBins[catIter][0]->ShowBackground(nIterationsShowBackground[catIter],optionsShowBackground[catIter].Data());
+            if (catIter < 3) {
+                fESDGammaPtDCAzBinsBack[catIter][0]                         = (TH1D*)fESDGammaPtDCAzBins[catIter][0]->ShowBackground(nIterationsShowBackground[catIter],optionShowBackgroundStandard.Data());
                 fESDGammaPtDCAzBinsBack[catIter][0]->SetName(Form("ESD_GammaPtDCAzBackBin_Full_%s", categoryName[catIter].Data()));
                 fESDGammaPtDCAzBinsBack[catIter][0]->Sumw2();
                 if (fESDGammaPtDCAzBinsBack[catIter][0]->Integral() < 1 || fESDGammaPtDCAzBinsBack[catIter][0]->GetEntries() > fESDGammaPtDCAzBins[catIter][0]->GetEntries()) {
@@ -980,8 +979,8 @@ void CalculatePileUpBackground(Bool_t doMC){
                 fESDGammaPtDCAzBins[catIter][bin]->Sumw2();
                 
                 // estimate pileup BG
-                if (catIter < 2) {
-                    fESDGammaPtDCAzBinsBack[catIter][bin]                   = (TH1D*)fESDGammaPtDCAzBins[catIter][bin]->ShowBackground(nIterationsShowBackground[catIter],optionsShowBackground[catIter].Data());
+                if (catIter < 3) {
+                    fESDGammaPtDCAzBinsBack[catIter][bin]                   = (TH1D*)fESDGammaPtDCAzBins[catIter][bin]->ShowBackground(nIterationsShowBackground[catIter],optionShowBackgroundStandard.Data());
                     fESDGammaPtDCAzBinsBack[catIter][bin]->SetName(Form("ESD_GammaPtDCAzBackBin_%.1f_%.1f_%s",fBinsPtDummy[bin-1],fBinsPtDummy[bin], categoryName[catIter].Data()));
                     fESDGammaPtDCAzBinsBack[catIter][bin]->Sumw2();
                     if (fESDGammaPtDCAzBinsBack[catIter][bin]->Integral() < 1 || fESDGammaPtDCAzBinsBack[catIter][bin]->GetEntries() > fESDGammaPtDCAzBins[catIter][bin]->GetEntries()) {
@@ -1007,28 +1006,28 @@ void CalculatePileUpBackground(Bool_t doMC){
         // calculate ratio with/without pileup
         Double_t binContent, binError;
         for (Int_t bin = 1; bin < fNBinsPtDummy+1; bin++) {
-            CalculateDCAzDistributionRatio(fESDGammaPtDCAzBins, fESDSubGammaPtDCAzBins, 0, 0, fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning);
-            CalculateDCAzDistributionRatio(fESDGammaPtDCAzBins, fESDSubGammaPtDCAzBins, 1, 3, fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat);
+            CalculateDCAzDistributionRatio(fESDGammaPtDCAzBins, fESDSubGammaPtDCAzBins, 0, 0, fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat);
+            CalculateDCAzDistributionRatio(fESDGammaPtDCAzBins, fESDSubGammaPtDCAzBins, 1, 3, fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning);
         }
         
         // define pileup correction factors
+        fESDGammaPileUpCorrFactorAllCat                                     = new TH1D("fESDGammaPileUpCorrFactorAllCatComb", "fESDGammaPileUpCorrFactorAllCatComb", fNBinsPt, fBinsPt);
+        fESDGammaPileUpCorrFactorAllCat->Sumw2();
         fESDGammaPileUpCorrFactor                                           = new TH1D("fESDGammaPileUpCorrFactor", "fESDGammaPileUpCorrFactor", fNBinsPt, fBinsPt);
         fESDGammaPileUpCorrFactor->Sumw2();
-        fESDGammaPileUpCorrFactorSepCat                                     = new TH1D("fESDGammaPileUpCorrFactorSepCat", "fESDGammaPileUpCorrFactorSepCat", fNBinsPt, fBinsPt);
-        fESDGammaPileUpCorrFactorSepCat->Sumw2();
 
         // calculate pileup correction factors
+        CalculatePileUpCorrectionFactor(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat, fESDGammaPileUpCorrFactorAllCat, fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat);
         CalculatePileUpCorrectionFactor(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning, fESDGammaPileUpCorrFactor, fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning);
-        CalculatePileUpCorrectionFactor(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat, fESDGammaPileUpCorrFactorSepCat, fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat);
         
         // calculate spectra w/o pileup
+        fESDGammaPtPileUpAllCat                                             = (TH1D*)fHistoGammaConvPt->Clone("ESD_ConvGamma_Pt_PileUp_AllCatComb");
+        fESDGammaPtPileUpAllCat->Sumw2();
+        fESDGammaPtPileUpAllCat->Multiply(fESDGammaPileUpCorrFactorAllCat);
+        
         fESDGammaPtPileUp                                                   = (TH1D*)fHistoGammaConvPt->Clone("ESD_ConvGamma_Pt_PileUp");
         fESDGammaPtPileUp->Sumw2();
         fESDGammaPtPileUp->Multiply(fESDGammaPileUpCorrFactor);
-        
-        fESDGammaPtPileUpSepCat                                             = (TH1D*)fHistoGammaConvPt->Clone("ESD_ConvGamma_Pt_PileUp_CategoryWise");
-        fESDGammaPtPileUpSepCat->Sumw2();
-        fESDGammaPtPileUpSepCat->Multiply(fESDGammaPileUpCorrFactorSepCat);
         
         // plotting ratio + fit
         TCanvas *RatioWithWithoutPileUpCanvas                               = GetAndSetCanvas("canvasRatioWithWithoutPileUp");
@@ -1431,18 +1430,24 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         }
     }
     
-    // initialize arguments for ShowBackground
+    // initialize ShowBackground for DCAz distributions
     if ((fEnergyFlag.CompareTo("13TeV") == 0) && (fMeson.CompareTo("Pi0") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
-        for (Int_t i = 0; i < 4; i++) {
-                nIterationsShowBackground[i]    = nIterationsShowBackground13TeVDirectPhoton[i];
-                optionsShowBackground[i]        = optionsShowBackground13TeVDirectPhoton[i];
-        }
+        nIterationsShowBackground[0]                    = 11;
+        nIterationsShowBackground[1]                    = 11;
+        nIterationsShowBackground[2]                    = 17;
+        nIterationsShowBackground[3]                    = 20;
+        optionShowBackgroundStandard                    = "BackDecreasingWindow, BackSmoothing3";
+        optionShowBackgroundVar1                        = "BackDecreasingWindow";
+        optionShowBackgroundVar2                        = "BackDecreasingWindow, BackSmoothing5";
     } else {
         cout << "WARNING: No ShowBackground-options defined, using the default ones." << endl;
-        for (Int_t i = 0; i < 4; i++) {
-            nIterationsShowBackground[i]                = nIterationsShowBackgroundDefault[i];
-            optionsShowBackground[i]                    = optionsShowBackgroundDefault[i];
-        }
+        nIterationsShowBackground[0]                    = 12;
+        nIterationsShowBackground[1]                    = 12;
+        nIterationsShowBackground[2]                    = 16;
+        nIterationsShowBackground[3]                    = 20;
+        optionShowBackgroundStandard                    = "BackDecreasingWindow, BackSmoothing4";
+        optionShowBackgroundVar1                        = "BackDecreasingWindow, BackSmoothing3";
+        optionShowBackgroundVar2                        = "BackDecreasingWindow, BackSmoothing7";
     }
     
     fHistoGconvGInvMassPtGConvBin                           = new TH1D*[fNBinsPt];
@@ -1600,8 +1605,8 @@ void SaveHistos(Int_t isMC, TString fCutID, TString fPrefix3,Bool_t PileUpCorrec
         
         // write raw photon distributions after pileup subtraction
         if(PileUpCorrection && fEnablePCM){
+            fESDGammaPtPileUpAllCat->Write("ESD_ConvGamma_Pt_PileUp_AllCatComb",TObject::kOverwrite);
             fESDGammaPtPileUp->Write("ESD_ConvGamma_Pt_PileUp",TObject::kOverwrite);
-            fESDGammaPtPileUpSepCat->Write("ESD_ConvGamma_Pt_PileUp_CategoryWise",TObject::kOverwrite);
             for (Int_t catIter = 0; catIter < 4; catIter++) fESDGammaPtDCAzBins[catIter][0]->Write(Form("ESD_GammaPtDCAzBin_Full_%s", categoryName[catIter].Data()),TObject::kOverwrite);
         }
 
@@ -1750,8 +1755,8 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3,Bool_t PileUpCorrecti
         // write pileup corrected histograms and DCA distributions for MC
         if(PileUpCorrection){
             for (Int_t catIter = 0; catIter < 4; catIter++) fMCrecGammaPtDCAzBins[catIter][0]->Write(Form("MCrec_GammaPtDCAzBin_Full_%s", categoryName[catIter].Data()),TObject::kOverwrite);
+            fMCrecGammaPtPileUpAllCat->Write("MCrec_ConvGamma_Pt_PileUp_AllCatComb",TObject::kOverwrite);
             fMCrecGammaPtPileUp->Write("MCrec_ConvGamma_Pt_PileUp",TObject::kOverwrite);
-            fMCrecGammaPtPileUpSepCat->Write("MCrec_ConvGamma_Pt_PileUp_CategoryWise",TObject::kOverwrite);
             fHistoFracAllGammaToSecPileUp->Write("FracAllGammaToSecPileUp",TObject::kOverwrite);
             fHistoFracAllGammaToSecFromXFromK0sPileUp->Write("FracAllGammaToSecFromXFromK0sPileUp",TObject::kOverwrite);
             fHistoGammaMCPurityPileUp->Write("GammaPurity_PileUp_Pt",TObject::kOverwrite);
@@ -1789,14 +1794,14 @@ void SaveDCAHistos(Int_t isMC, TString fCutID, TString fPrefix3){
         // write ratio of spectra with and without pileup
         if (!isMC) {
             
+            fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Write("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", TObject::kOverwrite);
+            if(fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat)
+                fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat->Write("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb", TObject::kOverwrite);
+            fESDGammaPileUpCorrFactorAllCat->Write("ESD_ConvGamma_PileUpCorFactor_AllCatComb", TObject::kOverwrite);
             fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning->Write("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning", TObject::kOverwrite);
             if(fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning)
                 fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->Write("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit", TObject::kOverwrite);
             fESDGammaPileUpCorrFactor->Write("ESD_ConvGamma_PileUpCorFactor", TObject::kOverwrite);
-            fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat->Write("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_CategoryWise", TObject::kOverwrite);
-            if(fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat)
-                fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat->Write("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_CategoryWise", TObject::kOverwrite);
-            fESDGammaPileUpCorrFactorSepCat->Write("ESD_ConvGamma_PileUpCorFactor_CategoryWise", TObject::kOverwrite);
             
             for (Int_t catIter = 0; catIter < 4; catIter++) {
                 if (catIter == 0) {
@@ -1835,41 +1840,41 @@ void SaveDCAHistos(Int_t isMC, TString fCutID, TString fPrefix3){
             }
         } else {
             
+            fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Write("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", TObject::kOverwrite);
+            if(fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat)
+                fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat->Write("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb", TObject::kOverwrite);
+            fMCrecGammaPileUpCorrFactorAllCat->Write("MCrec_ConvGamma_PileUpCorrFactor_AllCatComb", TObject::kOverwrite);
             fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning->Write("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning", TObject::kOverwrite);
             if(fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinning)
                 fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->Write("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit", TObject::kOverwrite);
             fMCrecGammaPileUpCorrFactor->Write("MCrec_ConvGamma_PileUpCorrFactor", TObject::kOverwrite);
-            fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat->Write("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_CategoryWise", TObject::kOverwrite);
-            if(fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat)
-                fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat->Write("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_CategoryWise", TObject::kOverwrite);
-            fMCrecGammaPileUpCorrFactorSepCat->Write("MCrec_ConvGamma_PileUpCorrFactor_CategoryWise", TObject::kOverwrite);
 
+            fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Write("ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", TObject::kOverwrite);
+            if(fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat)
+                fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat->Write("ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb", TObject::kOverwrite);
+            fTruePrimaryConvGammaPileUpCorrFactorAllCat->Write("ESD_TruePrimaryConvGamma_PileUpCorrFactor_AllCatComb", TObject::kOverwrite);
             fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning->Write("ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning", TObject::kOverwrite);
             if(fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning)
                 fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->Write("ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit", TObject::kOverwrite);
             fTruePrimaryConvGammaPileUpCorrFactor->Write("ESD_TruePrimaryConvGamma_PileUpCorrFactor", TObject::kOverwrite);
-            fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat->Write("ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_CategoryWise", TObject::kOverwrite);
-            if(fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat)
-                fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat->Write("ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_CategoryWise", TObject::kOverwrite);
-            fTruePrimaryConvGammaPileUpCorrFactorSepCat->Write("ESD_TruePrimaryConvGamma_PileUpCorrFactor_CategoryWise", TObject::kOverwrite);
 
+            fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Write("ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", TObject::kOverwrite);
+            if(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat)
+                fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat->Write("ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb", TObject::kOverwrite);
+            fTrueSecondaryConvGammaPileUpCorrFactorAllCat->Write("ESD_TrueSecondaryConvGamma_PileUpCorrFactor_AllCatComb", TObject::kOverwrite);
             fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning->Write("ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning", TObject::kOverwrite);
             if(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning)
                 fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->Write("ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit", TObject::kOverwrite);
             fTrueSecondaryConvGammaPileUpCorrFactor->Write("ESD_TrueSecondaryConvGamma_PileUpCorrFactor", TObject::kOverwrite);
-            fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat->Write("ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_CategoryWise", TObject::kOverwrite);
-            if(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat)
-                fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat->Write("ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_CategoryWise", TObject::kOverwrite);
-            fTrueSecondaryConvGammaPileUpCorrFactorSepCat->Write("ESD_TrueSecondaryConvGamma_PileUpCorrFactor_CategoryWise", TObject::kOverwrite);
 
+            fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Write("ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", TObject::kOverwrite);
+            if(fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat)
+                fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat->Write("ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb", TObject::kOverwrite);
+            fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorAllCat->Write("ESD_TrueSecondaryFromXFromK0sConvGamma_PileUpCorrFactor_AllCatComb", TObject::kOverwrite);
             fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning->Write("ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning", TObject::kOverwrite);
             if(fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning)
                 fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->Write("ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning_Fit", TObject::kOverwrite);
             fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactor->Write("ESD_TrueSecondaryFromXFromK0sConvGamma_PileUpCorrFactor", TObject::kOverwrite);
-            fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinningSepCat->Write("ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning_CategoryWise", TObject::kOverwrite);
-            if(fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat)
-                fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningSepCat->Write("ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_CategoryWise", TObject::kOverwrite);
-            fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorSepCat->Write("ESD_TrueSecondaryFromXFromK0sConvGamma_PileUpCorrFactor_CategoryWise", TObject::kOverwrite);
 
             for (Int_t catIter = 0; catIter < 4; catIter++) {
                 if (catIter == 0) {
@@ -2252,7 +2257,7 @@ void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBi
     cout<<"fColumnPlot: "<<fColumnPlot<<" fRowPlot: "<<fRowPlot<<endl;
 
     Int_t place                                 = 0;
-    for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++){
+    for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins+1;iPt++){
         cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
         Double_t startPt                        = fRangeBinsPt[iPt];
         Double_t endPt                          = fRangeBinsPt[iPt+1];
@@ -2367,7 +2372,7 @@ void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBi
 // overloading PlotDCAzInPtBinsWithBack()
 void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBinsBack,TH1D** ESDGammaPtDCAzBinsBackB, TString namePlot, TString nameCanvas, TString namePad, TString dateDummy, TString fMesonType, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, TString fDecayChannel, Bool_t fMonteCarloInfo, TString textCent) {
     
-    Int_t nPads = fNumberPtBins + 1;
+    Int_t nPads = fNumberPtBins + 2;
     
     Int_t nColumns  = 2;
     
@@ -2570,6 +2575,7 @@ Bool_t CalculateDCAzDistributionRatio(TH1D*** inputNum, TH1D*** inputDenom, Int_
         binErrorDenom               = 0;
         
         for (Int_t cat = categoryFirst; cat <= categoryLast; cat++) {
+            
             binContentNum           += inputNum[cat][ptBin]->IntegralAndError(-1000,1000,binErrorTemp);
             binErrorNum             += binErrorTemp*binErrorTemp;
             
@@ -2606,6 +2612,7 @@ Bool_t CalculateDCAzDistributionRatio(TH1D*** inputNum, TH1D*** inputDenom, Int_
 //******* Function to calculate pileup correction factors ********************
 //****************************************************************************
 Bool_t CalculatePileUpCorrectionFactor(TH1D* ratioWithWithoutPileUp, TH1D* &pileupCorrectionFactor, TF1* &fitToRatio) {
+    
     TH1D* unityHisto                        = (TH1D*)pileupCorrectionFactor->Clone("unityHisto");
     unityHisto->Reset("ICES");
     unityHisto->Sumw2();
@@ -2623,9 +2630,11 @@ Bool_t CalculatePileUpCorrectionFactor(TH1D* ratioWithWithoutPileUp, TH1D* &pile
         Int_t iMax = (fNBinsPt >= fNBinsPtDummy) ? fNBinsPt : fNBinsPtDummy;
         for (Int_t i = 1; i < iMax+1; i++) {
             if ( (fBinsPt[i-1] == fBinsPtDummy[i-1]) && (fBinsPt[i] == fBinsPtDummy[i]) ) {
+                
                 pileupCorrectionFactor->SetBinContent(i,            1/ratioWithWithoutPileUp->GetBinContent(i));
                 pileupCorrectionFactor->SetBinError(i,              ratioWithWithoutPileUp->GetBinError(i));
             } else {
+                
                 fFitStartBin = i;
                 break;
             }
