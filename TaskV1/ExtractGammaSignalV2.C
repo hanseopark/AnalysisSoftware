@@ -1480,9 +1480,9 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
     
     // initialize ShowBackground for DCAz distributions
     if ((fEnergyFlag.CompareTo("13TeV") == 0) && (fMeson.CompareTo("Pi0") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
-        nIterationsShowBackground[0]                    = 11;
-        nIterationsShowBackground[1]                    = 11;
-        nIterationsShowBackground[2]                    = 17;
+        nIterationsShowBackground[0]                    = 12;
+        nIterationsShowBackground[1]                    = 12;
+        nIterationsShowBackground[2]                    = 18;
         nIterationsShowBackground[3]                    = 20;
         optionShowBackgroundStandard                    = "BackDecreasingWindow, BackSmoothing3";
         optionShowBackgroundVar1                        = "BackDecreasingWindow";
@@ -1491,13 +1491,14 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         cout << "WARNING: No ShowBackground-options defined, using the default ones." << endl;
         nIterationsShowBackground[0]                    = 12;
         nIterationsShowBackground[1]                    = 12;
-        nIterationsShowBackground[2]                    = 16;
+        nIterationsShowBackground[2]                    = 18;
         nIterationsShowBackground[3]                    = 20;
-        optionShowBackgroundStandard                    = "BackDecreasingWindow, BackSmoothing4";
+        optionShowBackgroundStandard                    = "BackDecreasingWindow, BackSmoothing5";
         optionShowBackgroundVar1                        = "BackDecreasingWindow, BackSmoothing3";
         optionShowBackgroundVar2                        = "BackDecreasingWindow, BackSmoothing7";
     }
     
+    // initialize mass histo array
     fHistoGconvGInvMassPtGConvBin                           = new TH1D*[fNBinsPt];
     for(Int_t i = 0;i<fNBinsPt; i++){
         fHistoGconvGInvMassPtGConvBin[i]                    = NULL;
