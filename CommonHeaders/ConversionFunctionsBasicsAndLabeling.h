@@ -1027,6 +1027,8 @@ Double_t GetNCollFromCutNumber (TString cutNumber){
         if (centralityCutNumber.CompareTo("69") == 0){ //75-90%
             return ncoll7590;
         }
+    } else if (systemCutNumber.CompareTo("8") == 0) {
+        return 6.9;
     } else return 1.;
     return 1.;
 }
