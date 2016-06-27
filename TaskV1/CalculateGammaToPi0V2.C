@@ -50,7 +50,16 @@ extern TBenchmark *gBenchmark;
 extern TSystem *gSystem;
 
 
-void  CalculateGammaToPi0V2(TString nameFileGamma = "",TString nameFilePi0 = "",  TString cutSel = "", TString suffix = "gif", TString nameMeson = "", TString isMC ="", TString option="", Int_t mode = 9){
+void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
+                                TString nameFilePi0     = "",
+                                TString cutSel          = "",
+                                TString suffix          = "gif",
+                                TString nameMeson       = "",
+                                TString isMC            = "",
+                                TString option          = "",
+                                TString fEstimatePileup = "",
+                                Int_t mode              = 9
+                            ){
 
 	gROOT->Reset();
 
@@ -115,6 +124,10 @@ void  CalculateGammaToPi0V2(TString nameFileGamma = "",TString nameFilePi0 = "",
 		Meson_text                              = "#eta";
 		mesonType                               = "Eta";
 	}
+    
+    Bool_t kDoPileup                            = kFALSE;
+    if (fEstimatePileup.CompareTo("EstimateTrainPileUp") == 0)
+        kDoPileup                               = kTRUE;
 
 	One                                         = new TF1("One","1",0,25);
 	One->SetLineWidth(1.2);
@@ -126,12 +139,17 @@ void  CalculateGammaToPi0V2(TString nameFileGamma = "",TString nameFilePi0 = "",
 	
     // ***************** gamma file **********************************************************
 	fileGamma                                   = new TFile(nameFileGamma);
-	if(option.CompareTo("PbPb_2.76TeV") == 0){                                                              // this decision is not relevant now
-		histoGammaSpecCorrPurity                = (TH1D*)fileGamma->Get("GammaUnfold");                     // but change this in the future to
-	} else if (option.CompareTo("pPb_5.023TeV") == 0){                                                      // e.g. decide between pileup-corrected
-		histoGammaSpecCorrPurity                = (TH1D*)fileGamma->Get("GammaUnfold");                     // or not and use corresponding spectrum
+	if(option.CompareTo("PbPb_2.76TeV") == 0){
+		histoGammaSpecCorrPurity                = (TH1D*)fileGamma->Get("GammaUnfold");
+	} else if (option.CompareTo("pPb_5.023TeV") == 0){
+		histoGammaSpecCorrPurity                = (TH1D*)fileGamma->Get("GammaUnfold");
+    } else if (option.CompareTo("13TeV") == 0){
+        if (kDoPileup)
+            histoGammaSpecCorrPurity            = (TH1D*)fileGamma->Get("GammaCorrUnfoldPileUp_Pt");
+        else
+            histoGammaSpecCorrPurity            = (TH1D*)fileGamma->Get("GammaCorrUnfold_Pt");
     } else {
-        histoGammaSpecCorrPurity                = (TH1D*)fileGamma->Get("GammaCorrUnfold_Pt");
+        histoGammaSpecCorrPurity                = (TH1D*)fileGamma->Get("GammaUnfold");
     }
     if (!histoGammaSpecCorrPurity) {
         cout << "ERROR: GammaCorrUnfold_Pt not in gamma file" << endl;
@@ -148,7 +166,7 @@ void  CalculateGammaToPi0V2(TString nameFileGamma = "",TString nameFilePi0 = "",
 	histoMCDecayOmegaGammaPt                    = (TH1D*)fileGamma->Get("MC_DecayGammaOmega_Pt");
 	histoMCDecayRho0GammaPt                     = (TH1D*)fileGamma->Get("MC_DecayGammaRho_Pt");
 	histoMCDecayPhiGammaPt                      = (TH1D*)fileGamma->Get("MC_DecayGammaPhi_Pt");
-	histMCAllMinusDecay                         = (TH1D*)fileGamma->Get("MC_Direct_or_All_Minus_Decay");    // don't know which spectrum this should be -> CLARIFY
+	histMCAllMinusDecay                         = (TH1D*)fileGamma->Get("MC_Direct_or_All_Minus_Decay");
 
     // ***************** pi0 file ************************************************************
 	filePi0                                     = new TFile(nameFilePi0);
@@ -158,8 +176,6 @@ void  CalculateGammaToPi0V2(TString nameFileGamma = "",TString nameFilePi0 = "",
 	histoCorrectedPi0YieldNarrow                = (TH1D*)filePi0->Get("CorrectedYieldTrueEffNarrow");
 	histoMCYieldMeson                           = (TH1D*)filePi0->Get("MCYield_Meson");
 	histoMCYieldMesonOldBin                     = (TH1D*)filePi0->Get("MCYield_Meson_oldBin");
-
-    cout << __LINE__ << endl;
 
 	histoIncRatioPurity                         = (TH1D*) histoGammaSpecCorrPurity->Clone("Rec_IncRatioPurity");
 	histoIncRatioPurity->Divide(histoIncRatioPurity,histoCorrectedPi0YieldNormalEff,1,1,"");
@@ -240,7 +256,13 @@ void  CalculateGammaToPi0V2(TString nameFileGamma = "",TString nameFilePi0 = "",
 		fileNameNLOPhotonOne                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton8TeVmu.dat";
 		fileNameNLOPhotonTwo                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton8TeVtwomu.dat";
 	}
-	if(option.CompareTo("PbPb_2.76TeV") == 0 || option.CompareTo("2.76TeV") == 0){
+    if(option.CompareTo("13TeV") == 0){
+        xSection                                = xSection7TeV;
+        fileNameNLOPhotonHalf                   = "ExternalInput/Theory/ALICENLOcalcDirectPhoton7TeVmuhalf.dat";
+        fileNameNLOPhotonOne                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton7TeVmu.dat";
+        fileNameNLOPhotonTwo                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton7TeVtwomu.dat";
+    }
+    if(option.CompareTo("PbPb_2.76TeV") == 0 || option.CompareTo("2.76TeV") == 0){
 		xSection                                = xSection2760GeV;
 		fileNameNLOPhotonHalf                   = "ExternalInput/Theory/ALICENLOcalcDirectPhoton2760GeVmuhalf.dat";
 		fileNameNLOPhotonOne                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton2760GeVmu.dat";
