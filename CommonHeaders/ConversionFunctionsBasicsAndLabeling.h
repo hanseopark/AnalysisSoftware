@@ -1077,6 +1077,8 @@ Double_t GetNCollErrFromCutNumber (TString cutNumber){
         if (centralityCutNumber.CompareTo("69") == 0){ //75-90%
             return nCollErr7590;
         }
+    } else if (systemCutNumber.CompareTo("8") == 0) {
+        return 0.7;
     } else return 1.;
     return 1;
 }
