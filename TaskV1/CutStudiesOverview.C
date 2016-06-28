@@ -170,6 +170,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
     TH1D*   histoRawYieldCut            [ConstNumberOfCuts];
     TH1D*   histoMassRatioCut           [ConstNumberOfCuts];
     TH1D*   histoEtaToPi0Cut            [ConstNumberOfCuts];
+    TH1D*   histoWidthMeson             [ConstNumberOfCuts];
     TH1D*   histoSBCut                  [ConstNumberOfCuts];
     TH1D*   histoSBNarrowCut            [ConstNumberOfCuts];
     TH1D*   histoSignCut                [ConstNumberOfCuts];
@@ -180,6 +181,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
     TH1D*   histoRatioRawYieldCut       [ConstNumberOfCuts];
     TH1D*   histoRatioMassRatioCut      [ConstNumberOfCuts];
     TH1D*   histoRatioEtaToPi0Cut       [ConstNumberOfCuts];
+    TH1D*   histoRatioWidthMeson        [ConstNumberOfCuts];
     TH1D*   histoRatioSBCut             [ConstNumberOfCuts];
     TH1D*   histoRatioSBNarrowCut       [ConstNumberOfCuts];
     TH1D*   histoRatioSignCut           [ConstNumberOfCuts];
@@ -423,6 +425,9 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         histoRawYieldCut[i]->SetName(Form("histoYieldMesonPerEvent_%s",cutNumber[i].Data()));
         histoRawYieldCut[i]->Scale(1./nColls[i]);
         cout << "line " << __LINE__ << endl;
+        histoWidthMeson[i]                                      = (TH1D*)Cutuncorrfile[i]->Get("histoFWHMMeson");
+        histoWidthMeson[i]->SetName(Form("histoFWHMMeson_%s",cutNumber[i].Data()));
+        cout << "line " << __LINE__ << endl;
         histoSBCut[i]                                           = (TH1D*)Cutuncorrfile[i]->Get("histoSBdefaultMeson");
         histoSBCut[i]->SetName(Form("histoSBdefaultMeson_%s",cutNumber[i].Data()));
         cout << "line " << __LINE__ << endl;
@@ -471,6 +476,8 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             histoRatioRawYieldCut[i]->Divide(histoRatioRawYieldCut[i],histoRawYieldCut[0],1.,1.,"");
         }    
         cout << "line " << __LINE__ << endl;
+        histoRatioWidthMeson[i]                                      = (TH1D*) histoWidthMeson[i]->Clone(Form("histoRatioWidthMeson_%s", cutNumber[i].Data()));
+        histoRatioWidthMeson[i]->Divide(histoRatioWidthMeson[i],histoWidthMeson[0],1.,1.,"B");
         histoRatioSBCut[i]                                      = (TH1D*) histoSBCut[i]->Clone(Form("histoRatioSBCut_%s", cutNumber[i].Data()));
         histoRatioSBCut[i]->Divide(histoRatioSBCut[i],histoSBCut[0],1.,1.,"B");
         histoRatioSBNarrowCut[i]                                = (TH1D*) histoSBNarrowCut[i]->Clone(Form("histoRatioSBNarrowCut_%s", cutNumber[i].Data()));
@@ -672,7 +679,80 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         delete canvasRatioRawYields;
     }
     
-    
+    //**************************************************************************************
+    //************************ Plotting Width  *********************************************
+    //**************************************************************************************
+
+        TCanvas* canvasWidthMeson = new TCanvas("canvasWidthMeson","",1350,1500);
+        DrawGammaCanvasSettings( canvasWidthMeson,  0.13, 0.02, 0.02, 0.09);
+        // Upper pad definition
+        TPad* padWidth = new TPad("padWidth", "", 0., 0.33, 1., 1.,-1, -1, -2);
+        DrawGammaPadSettings( padWidth, 0.12, 0.02, 0.02, 0.);
+        //padWidth->SetLogy();
+        padWidth->Draw();
+        // lower pad definition
+        TPad* padWidthRatios = new TPad("padWidthRatios", "", 0., 0., 1., 0.33,-1, -1, -2);
+        DrawGammaPadSettings( padWidthRatios, 0.12, 0.02, 0.0, 0.2);
+        padWidthRatios->Draw();
+
+        padWidth->cd();
+        padWidth->SetTickx();
+        padWidth->SetTicky();
+
+        // Plot Width in uppper panel
+        padWidth->cd();
+
+        TLegend* legendWidth = GetAndSetLegend2(0.27,0.02,0.35,0.02+1.15*0.032*NumberOfCuts, 1500*0.75*0.032);
+        for(Int_t i = 0; i< NumberOfCuts; i++){
+            if(i == 0){
+                DrawGammaSetMarker(histoWidthMeson[i], 20, 1., color[0], color[0]);
+                DrawAutoGammaMesonHistos( histoWidthMeson[i],
+                                        "", "#it{p}_{T} (GeV/#it{c})", Form("%s width",textMeson.Data()),
+                                        kFALSE, 0., 1e-4, kTRUE,
+                                        kTRUE, 0.0, 0.050,
+                                        kFALSE, 0., 10.);
+                legendWidth->AddEntry(histoWidthMeson[i],Form("standard: %s",cutStringsName[i].Data()));
+            }
+            else {
+                if(i<20){
+                    DrawGammaSetMarker(histoWidthMeson[i], 20+i, 1.,color[i],color[i]);
+                } else {
+                    DrawGammaSetMarker(histoWidthMeson[i], 20+i, 1.,color[i-20],color[i-20]);
+                }
+                histoWidthMeson[i]->DrawCopy("same,e1,p");
+                legendWidth->AddEntry(histoWidthMeson[i],cutStringsName[i].Data());
+            }
+
+        }
+        legendWidth->Draw();
+        // Labeling of plot
+        PutProcessLabelAndEnergyOnPlot( 0.55, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod);
+
+        padWidthRatios->cd();
+        for(Int_t i = 0; i< NumberOfCuts; i++){
+            if(i==0){
+                // Set ratio min and max
+                Double_t minYRatio = 0.45;
+                Double_t maxYRatio = 1.55; //qu
+                SetStyleHistoTH1ForGraphs(histoRatioWidthMeson[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
+                DrawGammaSetMarker(histoRatioWidthMeson[i], 20, 1.,color[0],color[0]);
+                histoRatioWidthMeson[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
+                histoRatioWidthMeson[i]->DrawCopy("p,e1");
+            } else{
+                if(i<20){
+                    DrawGammaSetMarker(histoRatioWidthMeson[i], 20+i, 1.,color[i],color[i]);
+                } else {
+                    DrawGammaSetMarker(histoRatioWidthMeson[i], 20+i, 1.,color[i-20],color[i-20]);
+                }
+                histoRatioWidthMeson[i]->DrawCopy("same,e1,p");
+            }
+            DrawGammaLines(0., maxPt,1., 1.,0.1);
+        }
+
+        canvasWidthMeson->Update();
+        canvasWidthMeson->SaveAs(Form("%s/%s_%s_Width.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
+        delete canvasWidthMeson;
+
 
     //**************************************************************************************
     //************************ Plotting SB  ************************************************
