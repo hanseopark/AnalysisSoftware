@@ -48,18 +48,65 @@ void Grid_FailedMergeDLRun(TString folder = "/home/daniel/data/work/pcgGit/Analy
 //	Int_t run[nRuns] = {177597,180201,180564,184371,185217};
 //	Int_t first[nRuns] = {1,1,1,1,1};
 //	Int_t last[nRuns] = {81,21,21,26,54};
+//    const Int_t nFiles = 1;
+//    TString Tag = "20160524";
+//    TString DataSetsFile[nFiles] = {"GammaConvCalo_101.root"};
 
-    const Int_t nFiles = 2;
-    TString Tag = "20160518";
-    TString DataSetsFile[nFiles] = {"GammaConvV1_70.root", "AnalysisResults.root"};
+//    TString prefix = "/alice/sim/2015/LHC15h2d/";
+//    TString suffix = "/AOD178/PWGGA/GA_pp_MC_AOD/132_20160622-2225/";
+//    TString DataSet = "LHC15h2d";
+//    const Int_t nRuns = 1;
+//    Int_t run[nRuns] = {184147};
+//    Int_t first[nRuns] = {1};
+//    Int_t last[nRuns] = {39};
 
-    TString prefix = "/alice/sim/2015/LHC15h1a1/";
-    TString suffix = "/PWGGA/GA_pp_MC/2093_20160520-0947/";
-    TString DataSet = "LHC15h1a1";
+
+//    const Int_t nFiles = 1;
+//    TString Tag = "20160524";
+//    TString DataSetsFile[nFiles] = {"GammaConvCalo_101.root"};
+
+//    TString prefix = "/alice/sim/2015/LHC15h1c/";
+//    TString suffix = "/AOD178/PWGGA/GA_pp_MC_AOD/129_20160621-2332/";
+//    TString DataSet = "LHC15h1c";
+//    const Int_t nRuns = 1;
+//    Int_t run[nRuns] = {179571};
+//    Int_t first[nRuns] = {1};
+//    Int_t last[nRuns] = {68};
+
+//    const Int_t nFiles = 1;
+//    TString Tag = "20160524";
+//    TString DataSetsFile[nFiles] = {"GammaConvCalo_101.root"};
+
+//    TString prefix = "/alice/sim/2015/LHC15h1h/";
+//    TString suffix = "/AOD178/PWGGA/GA_pp_MC_AOD/131_20160622-2225/";
+//    TString DataSet = "LHC15h1h";
+//    const Int_t nRuns = 1;
+//    Int_t run[nRuns] = {189310};
+//    Int_t first[nRuns] = {1};
+//    Int_t last[nRuns] = {24};
+
+    const Int_t nFiles = 1;
+    TString Tag = "20160524";
+    TString DataSetsFile[nFiles] = {"GammaConvCalo_101.root"};
+
+    TString prefix = "/alice/sim/2015/LHC15h2b/";
+    TString suffix = "/AOD178/PWGGA/GA_pp_MC_AOD/130_20160622-2049/";
+    TString DataSet = "LHC15h2b";
     const Int_t nRuns = 1;
-    Int_t run[nRuns] = {176749};
-    Int_t first[nRuns] = {3};
-    Int_t last[nRuns] = {178};
+    Int_t run[nRuns] = {177597};
+    Int_t first[nRuns] = {1};
+    Int_t last[nRuns] = {25};
+//    const Int_t nFiles = 2;
+//    TString Tag = "20160518";
+//    TString DataSetsFile[nFiles] = {"GammaConvV1_70.root", "AnalysisResults.root"};
+
+//    TString prefix = "/alice/sim/2015/LHC15h1a1/";
+//    TString suffix = "/PWGGA/GA_pp_MC/2093_20160520-0947/";
+//    TString DataSet = "LHC15h1a1";
+//    const Int_t nRuns = 1;
+//    Int_t run[nRuns] = {176749};
+//    Int_t first[nRuns] = {3};
+//    Int_t last[nRuns] = {178};
 
 //    const Int_t nFiles = 2;
 //    TString Tag = "20160104";

@@ -69,6 +69,7 @@ Double_t FindSmallestEntryIn2D(TH2F* histo){
 //******************* return minimum for 1 D histo  ********************************
 //**********************************************************************************
 Double_t FindSmallestEntryIn1D(TH1D* histo){
+    if(!histo){cout << "WARNING: FindSmallestEntryIn1D, NULL pointer - returning 1... " << endl; return 1;}
     Double_t minimum = 1;
     for (Int_t i = 1; i<histo->GetNbinsX(); i++){
         if (histo->GetBinContent(i) < minimum && histo->GetBinContent(i) > 0){
@@ -82,6 +83,7 @@ Double_t FindSmallestEntryIn1D(TH1D* histo){
 //******************* return maximum for 1 D histo  ********************************
 //**********************************************************************************
 Double_t FindLargestEntryIn1D(TH1D* histo){
+    if(!histo){cout << "WARNING: FindLargestEntry1D, NULL pointer - returning 1... " << endl; return 1;}
     Double_t maximum = 1;
     for (Int_t i = 1; i<histo->GetNbinsX(); i++){
         if (histo->GetBinContent(i) > maximum ){

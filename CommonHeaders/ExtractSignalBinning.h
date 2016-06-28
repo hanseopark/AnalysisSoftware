@@ -998,7 +998,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 if (modi == 4 ){
                     if( specialTrigg == 1 ){
                         fBinsPt[i]                 = fBinsPi08TeVTrigger1Pt[i];
-                        if(i==37) fBinsPt[i] = 18.0;
+                        //if(i==37) fBinsPt[i] = 18.0;
                     } else if ( specialTrigg == 2 ){
                         fBinsPt[i]                 = fBinsPi08TeVTrigger2Pt[i];
                     } else
