@@ -45,6 +45,7 @@
 #include "Math/BrentRootFinder.h"
 #include "CommonHeaders/PlottingGammaConversionHistos.h"
 #include "CommonHeaders/PlottingGammaConversionAdditional.h"
+#include "CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 
 extern TRandom*    gRandom;
 extern TBenchmark*    gBenchmark;
@@ -645,7 +646,52 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
                                                 0.1, 50);  
         fitTheoryDirectMcGill2760GeV->SetParameter(0,1);
 
+        //******************************************************************************************************************
+        //************************************** Calculate inv. yield ******************************************************
+        //******************************************************************************************************************
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT1DirGam2760GeV    = (TGraphAsymmErrors*)graphNLOCalcDirGam2760GeV->Clone("graphNLOCalcInvYieldINT1DirGam2760GeV");
+        graphNLOCalcInvYieldINT1DirGam2760GeV                       = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT1DirGam2760GeV, 1/recalcBarn/ReturnCorrectXSection("2.76TeV", 0));
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT1PromGam2760GeV   = (TGraphAsymmErrors*)graphNLOCalcPromGam2760GeV->Clone("graphNLOCalcInvYieldINT1PromGam2760GeV");
+        graphNLOCalcInvYieldINT1PromGam2760GeV                      = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT1PromGam2760GeV, 1/recalcBarn/ReturnCorrectXSection("2.76TeV", 0));
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT1FragGam2760GeV   = (TGraphAsymmErrors*)graphNLOCalcFragGam2760GeV->Clone("graphNLOCalcInvYieldINT1FragGam2760GeV");
+        graphNLOCalcInvYieldINT1FragGam2760GeV                      = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT1FragGam2760GeV, 1/recalcBarn/ReturnCorrectXSection("2.76TeV", 0));
         
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT7DirGam2760GeV    = (TGraphAsymmErrors*)graphNLOCalcDirGam2760GeV->Clone("graphNLOCalcInvYieldINT7DirGam2760GeV");
+        graphNLOCalcInvYieldINT7DirGam2760GeV                       = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7DirGam2760GeV, 1/recalcBarn/ReturnCorrectXSection("2.76TeV", 1));
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT7PromGam2760GeV   = (TGraphAsymmErrors*)graphNLOCalcPromGam2760GeV->Clone("graphNLOCalcInvYieldINT7PromGam2760GeV");
+        graphNLOCalcInvYieldINT7PromGam2760GeV                      = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7PromGam2760GeV, 1/recalcBarn/ReturnCorrectXSection("2.76TeV", 1));
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT7FragGam2760GeV   = (TGraphAsymmErrors*)graphNLOCalcFragGam2760GeV->Clone("graphNLOCalcInvYieldINT7FragGam2760GeV");
+        graphNLOCalcInvYieldINT7FragGam2760GeV                      = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7FragGam2760GeV, 1/recalcBarn/ReturnCorrectXSection("2.76TeV", 1));
+
+        // xSection 5TeV?
+//        TGraphAsymmErrors* graphNLOCalcInvYieldDirGam5TeV       = (TGraphAsymmErrors*)graphNLOCalcDirGam5TeV->Clone("graphNLOCalcInvYieldDirGam5TeV");
+//        graphNLOCalcInvYieldDirGam5TeV                          = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldDirGam5TeV, 1/recalcBarn/ReturnCorrectXSection("5TeV", 0));
+//        TGraphAsymmErrors* graphNLOCalcInvYieldPromGam5TeV      = (TGraphAsymmErrors*)graphNLOCalcPromGam5TeV->Clone("graphNLOCalcInvYieldPromGam5TeV");
+//        graphNLOCalcInvYieldPromGam5TeV                         = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldPromGam5TeV, 1/recalcBarn/ReturnCorrectXSection("5TeV", 0));
+//        TGraphAsymmErrors* graphNLOCalcInvYieldFragGam5TeV      = (TGraphAsymmErrors*)graphNLOCalcFragGam5TeV->Clone("graphNLOCalcInvYieldFragGam5TeV");
+//        graphNLOCalcInvYieldFragGam5TeV                         = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldFragGam5TeV, 1/recalcBarn/ReturnCorrectXSection("5TeV", 0));
+        
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT1DirGam7TeV       = (TGraphAsymmErrors*)graphNLOCalcDirGam7TeV->Clone("graphNLOCalcInvYieldINT1DirGam7TeV");
+        graphNLOCalcInvYieldINT1DirGam7TeV                          = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT1DirGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 0));
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT1PromGam7TeV      = (TGraphAsymmErrors*)graphNLOCalcPromGam7TeV->Clone("graphNLOCalcInvYieldINT1PromGam7TeV");
+        graphNLOCalcInvYieldINT1PromGam7TeV                         = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT1PromGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 0));
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT1FragGam7TeV      = (TGraphAsymmErrors*)graphNLOCalcFragGam7TeV->Clone("graphNLOCalcInvYieldINT1FragGam7TeV");
+        graphNLOCalcInvYieldINT1FragGam7TeV                         = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT1FragGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 0));
+
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT7DirGam7TeV       = (TGraphAsymmErrors*)graphNLOCalcDirGam7TeV->Clone("graphNLOCalcInvYieldINT7DirGam7TeV");
+        graphNLOCalcInvYieldINT7DirGam7TeV                          = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7DirGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 1));
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT7PromGam7TeV      = (TGraphAsymmErrors*)graphNLOCalcPromGam7TeV->Clone("graphNLOCalcInvYieldINT7PromGam7TeV");
+        graphNLOCalcInvYieldINT7PromGam7TeV                         = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7PromGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 1));
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT7FragGam7TeV      = (TGraphAsymmErrors*)graphNLOCalcFragGam7TeV->Clone("graphNLOCalcInvYieldINT7FragGam7TeV");
+        graphNLOCalcInvYieldINT7FragGam7TeV                         = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7FragGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 1));
+
+        TGraphAsymmErrors* graphNLOCalcInvYieldDirGam8TeV           = (TGraphAsymmErrors*)graphNLOCalcDirGam8TeV->Clone("graphNLOCalcInvYieldDirGam8TeV");
+        graphNLOCalcInvYieldDirGam8TeV                              = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldDirGam8TeV, 1/recalcBarn/ReturnCorrectXSection("8TeV", 1));
+        TGraphAsymmErrors* graphNLOCalcInvYieldPromGam8TeV          = (TGraphAsymmErrors*)graphNLOCalcPromGam8TeV->Clone("graphNLOCalcInvYieldPromGam8TeV");
+        graphNLOCalcInvYieldPromGam8TeV                             = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldPromGam8TeV, 1/recalcBarn/ReturnCorrectXSection("8TeV", 1));
+        TGraphAsymmErrors* graphNLOCalcInvYieldFragGam8TeV          = (TGraphAsymmErrors*)graphNLOCalcFragGam8TeV->Clone("graphNLOCalcInvYieldFragGam8TeV");
+        graphNLOCalcInvYieldFragGam8TeV                             = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldFragGam8TeV, 1/recalcBarn/ReturnCorrectXSection("8TeV", 1));
+
         
         //******************************************************************************************************************
         //************************************** Writing output for pp ***************************************************
@@ -660,12 +706,30 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphNLOCalcDirGam2760GeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcDirGam2760GeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
             graphNLOCalcDirGam2760GeV->Write("graphDirectPhotonNLOVogelsang_2760GeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldINT1DirGam2760GeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldINT1DirGam2760GeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldINT1DirGam2760GeV->Write("graphDirectPhotonNLOVogelsangInvYielINT1_2760GeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldINT7DirGam2760GeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldINT7DirGam2760GeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldINT7DirGam2760GeV->Write("graphDirectPhotonNLOVogelsangInvYielINT7_2760GeV",TObject::kOverwrite);
             graphNLOCalcPromGam2760GeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcPromGam2760GeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
             graphNLOCalcPromGam2760GeV->Write("graphPromptPhotonNLOVogelsang_2760GeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldINT1PromGam2760GeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldINT1PromGam2760GeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldINT1PromGam2760GeV->Write("graphPromptPhotonNLOVogelsangInvYielINT1_2760GeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldINT7PromGam2760GeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldINT7PromGam2760GeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldINT7PromGam2760GeV->Write("graphPromptPhotonNLOVogelsangInvYielINT7_2760GeV",TObject::kOverwrite);
             graphNLOCalcFragGam2760GeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcFragGam2760GeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
             graphNLOCalcFragGam2760GeV->Write("graphFragmentationPhotonNLOVogelsang_2760GeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldINT1FragGam2760GeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldINT1FragGam2760GeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldINT1FragGam2760GeV->Write("graphFragmentationPhotonNLOVogelsangInvYieldINT1_2760GeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldINT7FragGam2760GeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldINT7FragGam2760GeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldINT7FragGam2760GeV->Write("graphFragmentationPhotonNLOVogelsangInvYieldINT7_2760GeV",TObject::kOverwrite);
             graphRatioNLOFragGammaDivTot2760GeV->Write("graphFragPhotonDivDirectNLOVogelsang_2760GeV",TObject::kOverwrite);
             graphRatioNLOPromptGammaDivTot2760GeV->Write("graphPromptPhotonDivDirectNLOVogelsang_2760GeV",TObject::kOverwrite);
             fitTheoryDirectMcGill2760GeV->Write("fitYieldDirectPhotonNLOPaquett_2760GeV",TObject::kOverwrite);
@@ -685,24 +749,51 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphNLOCalcDirGam7TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcDirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
             graphNLOCalcDirGam7TeV->Write("graphDirectPhotonNLOVogelsang_7TeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldINT1DirGam7TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldINT1DirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldINT1DirGam7TeV->Write("graphDirectPhotonNLOVogelsangInvYieldINT1_7TeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldINT7DirGam7TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldINT7DirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldINT7DirGam7TeV->Write("graphDirectPhotonNLOVogelsangInvYieldINT7_7TeV",TObject::kOverwrite);
             graphNLOCalcPromGam7TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcPromGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");            
             graphNLOCalcPromGam7TeV->Write("graphPromptPhotonNLOVogelsang_7TeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldINT1PromGam7TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldINT1PromGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldINT1PromGam7TeV->Write("graphPromptPhotonNLOVogelsangInvYieldINT1_7TeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldINT7PromGam7TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldINT7PromGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldINT7PromGam7TeV->Write("graphPromptPhotonNLOVogelsangInvYieldINT7_7TeV",TObject::kOverwrite);
             graphNLOCalcFragGam7TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcFragGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");                        
             graphNLOCalcFragGam7TeV->Write("graphFragmentationPhotonNLOVogelsang_7TeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldINT1FragGam7TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldINT1FragGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldINT1FragGam7TeV->Write("graphFragmentationPhotonNLOVogelsangInvYieldINT1_7TeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldINT7FragGam7TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldINT7FragGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldINT7FragGam7TeV->Write("graphFragmentationPhotonNLOVogelsangInvYieldINT7_7TeV",TObject::kOverwrite);
             graphRatioNLOFragGammaDivTot7TeV->Write("graphFragPhotonDivDirectNLOVogelsang_7TeV",TObject::kOverwrite);
             graphRatioNLOPromptGammaDivTot7TeV->Write("graphPromptPhotonDivDirectNLOVogelsang_7TeV",TObject::kOverwrite);
 
             graphNLOCalcDirGam8TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcDirGam8TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");            
             graphNLOCalcDirGam8TeV->Write("graphDirectPhotonNLOVogelsang_8TeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldDirGam8TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldDirGam8TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldDirGam8TeV->Write("graphDirectPhotonNLOVogelsangInvYield_8TeV",TObject::kOverwrite);
             graphNLOCalcPromGam8TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcPromGam8TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");            
             graphNLOCalcPromGam8TeV->Write("graphPromptPhotonNLOVogelsang_8TeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldPromGam8TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldPromGam8TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldPromGam8TeV->Write("graphPromptPhotonNLOVogelsangInvYield_8TeV",TObject::kOverwrite);
             graphNLOCalcFragGam8TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcFragGam8TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");            
             graphNLOCalcFragGam8TeV->Write("graphFragmentationPhotonNLOVogelsang_8TeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldFragGam8TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldFragGam8TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldFragGam8TeV->Write("graphFragmentationPhotonNLOVogelsangInvYield_8TeV",TObject::kOverwrite);
             graphRatioNLOFragGammaDivTot8TeV->Write("graphFragPhotonDivDirectNLOVogelsang_8TeV",TObject::kOverwrite);
             graphRatioNLOPromptGammaDivTot8TeV->Write("graphPromptPhotonDivDirectNLOVogelsang_8TeV",TObject::kOverwrite);
 
