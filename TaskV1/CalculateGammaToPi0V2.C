@@ -75,7 +75,7 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 	Color_t colorCocktailRho0                   = kAzure-2;
 	
 	cout << Form("%s/%s/%s/GammaToPi0",cutSel.Data(),option.Data(),suffix.Data()) << endl;
-	outputDir                                   = Form("%s/%s/%s/GammaToPi0",cutSel.Data(),option.Data(),suffix.Data());
+	TString outputDir                           = Form("%s/%s/%s/GammaToPi0",cutSel.Data(),option.Data(),suffix.Data());
 	gSystem->Exec("mkdir "+outputDir);
     
     // old cutnumber seperation
@@ -104,8 +104,13 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 	FindCocktailFile(fEventCutSelection, fGammaCutSelection, centrality,option);
 	TString centralityAdd                       = GetCentralityStringWoPer(fEventCutSelection);
 
-	textPi0New                                  = Form("Gamma_%s",nameMeson.Data());
-
+    TString triggerCutNumber                    = fEventCutSelection(3,1);
+    TString subTriggerCutNumber                 = fEventCutSelection(4,1);
+    
+    Double_t fNcoll                             = GetNCollFromCutNumber(fEventCutSelection);
+    Double_t fNcollErr                          = GetNCollErrFromCutNumber(fEventCutSelection);
+    
+	TString textPi0New                          = Form("Gamma_%s",nameMeson.Data());
 	if (isMC.CompareTo("kTRUE") == 0){
 		textPrefix2                             = "recMC";
 		pictDrawingOptions[1]                   = kTRUE;
@@ -131,7 +136,8 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 
 	One                                         = new TF1("One","1",0,25);
 	One->SetLineWidth(1.2);
-	One->SetLineColor(1);
+    One->SetLineStyle(2);
+	One->SetLineColor(kGray+2);
 
 	TString nameFinalResDat                     = Form("%s/%s/Gamma_%s_FinalExtraction_%s.dat",cutSel.Data(),option.Data(), textPrefix2.Data(), cutSel.Data());
 	fstream fileFinalResults;
@@ -243,87 +249,62 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 	Bool_t doNLOComparison                      = kTRUE;
 	
 	// Get the NLO Results
-    // xSection also depends on trigger -> implement decision according to trigger choice
-	if(option.CompareTo("7TeV") == 0){
-		xSection                                = xSection7TeV;
-		fileNameNLOPhotonHalf                   = "ExternalInput/Theory/ALICENLOcalcDirectPhoton7TeVmuhalf.dat";
-		fileNameNLOPhotonOne                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton7TeVmu.dat";
-		fileNameNLOPhotonTwo                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton7TeVtwomu.dat";
-	}
-	if(option.CompareTo("8TeV") == 0){
-		xSection                                = xSection7TeV;
-		fileNameNLOPhotonHalf                   = "ExternalInput/Theory/ALICENLOcalcDirectPhoton8TeVmuhalf.dat";
-		fileNameNLOPhotonOne                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton8TeVmu.dat";
-		fileNameNLOPhotonTwo                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton8TeVtwomu.dat";
-	}
-    if(option.CompareTo("13TeV") == 0){
-        xSection                                = xSection7TeV;
-        fileNameNLOPhotonHalf                   = "ExternalInput/Theory/ALICENLOcalcDirectPhoton7TeVmuhalf.dat";
-        fileNameNLOPhotonOne                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton7TeVmu.dat";
-        fileNameNLOPhotonTwo                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton7TeVtwomu.dat";
-    }
-    if(option.CompareTo("PbPb_2.76TeV") == 0 || option.CompareTo("2.76TeV") == 0){
-		xSection                                = xSection2760GeV;
-		fileNameNLOPhotonHalf                   = "ExternalInput/Theory/ALICENLOcalcDirectPhoton2760GeVmuhalf.dat";
-		fileNameNLOPhotonOne                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton2760GeVmu.dat";
-		fileNameNLOPhotonTwo                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton2760GeVtwomu.dat";
-	}
-	if(option.CompareTo("900GeV") == 0){
-		xSection                                = xSection900GeV;
-		fileNameNLOPhotonHalf                   = "ExternalInput/Theory/ALICENLOcalcDirectPhoton2760GeVmu.dat";
-		fileNameNLOPhotonOne                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton2760GeVmu.dat";
-		fileNameNLOPhotonTwo                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton2760GeVmu.dat";
-	}
-	if(option.CompareTo("pPb_5.023TeV") == 0){
-		xSection                                = xSection5023GeVppINEL;
-		fileNameNLOPhotonHalf                   = "ExternalInput/Theory/ALICENLOcalcDirectPhoton5023GeVHalfMu.dat";
-		fileNameNLOPhotonOne                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton5023GeVMu.dat";
-		fileNameNLOPhotonTwo                    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton5023GeVTwoMu.dat";
-		doNLOComparison                         = kTRUE;
-	}
+    if (doNLOComparison){
 
-	Double_t etascaling                         = 1./1.6;
-	etascaling                                  = 1.;           // why is this done?
+        fileTheoryCompilation                   = new TFile("ExternalInput/Theory/TheoryCompilationPP.root");
+        directoryGamma                          = (TDirectoryFile*)fileTheoryCompilation->Get("DirectPhoton");
 
-	if (doNLOComparison){
-        inHalf.open(fileNameNLOPhotonHalf,ios_base::in);
-        cout << fileNameNLOPhotonHalf << endl;
-		
-        while(!inHalf.eof()){
-			nlinesNLOHalf++;
-
-			//               Pt                              DirectPhoton           FragmentationPhoton         SumPhoton
-			inHalf >> ptNLOPhotonHalf[nlinesNLOHalf] >> muHalfD[nlinesNLOHalf] >> muHalfF[nlinesNLOHalf] >> muHalfDF[nlinesNLOHalf];
-			muHalfF[nlinesNLOHalf]              = muHalfF[nlinesNLOHalf]/xSection/recalcBarn*fcmult*(etascaling);
-			muHalfD[nlinesNLOHalf]              = muHalfD[nlinesNLOHalf]/xSection/recalcBarn*fcmult*(etascaling);
-            muHalfDF[nlinesNLOHalf]             = muHalfDF[nlinesNLOHalf]/xSection/recalcBarn*fcmult*(etascaling);
-		}
-		inHalf.close();
-
-		inOne.open(fileNameNLOPhotonOne,ios_base::in);
-		cout << fileNameNLOPhotonOne << endl;
-
-		while(!inOne.eof()){
-			nlinesNLOOne++;
-			inOne >> ptNLOPhotonOne[nlinesNLOOne] >> muOneD[nlinesNLOOne] >> muOneF[nlinesNLOOne] >> muOneDF[nlinesNLOOne];
-			muOneF[nlinesNLOOne]                = muOneF[nlinesNLOOne]/xSection/recalcBarn*fcmult*(etascaling);
-			muOneD[nlinesNLOOne]                = muOneD[nlinesNLOOne]/xSection/recalcBarn*fcmult*(etascaling);
-            muOneDF[nlinesNLOOne]               = muOneDF[nlinesNLOOne]/xSection/recalcBarn*fcmult*(etascaling);
-		}
-		inOne.close();
-
-		inTwo.open(fileNameNLOPhotonTwo,ios_base::in);
-		cout << fileNameNLOPhotonTwo << endl;
-
-		while(!inTwo.eof()){
-			nlinesNLOTwo++;
-			inTwo >> ptNLOPhotonTwo[nlinesNLOTwo] >> muTwoD[nlinesNLOTwo] >> muTwoF[nlinesNLOTwo] >> muTwoDF[nlinesNLOTwo];
-			muTwoF[nlinesNLOTwo]                = muTwoF[nlinesNLOTwo]/xSection/recalcBarn*fcmult*(etascaling);
-			muTwoD[nlinesNLOTwo]                = muTwoD[nlinesNLOTwo]/xSection/recalcBarn*fcmult*(etascaling);
-            muTwoDF[nlinesNLOTwo]               = muTwoDF[nlinesNLOTwo]/xSection/recalcBarn*fcmult*(etascaling);
+        if (option.CompareTo("900GeV") == 0) {
+            cout << "ERROR: No calculations in theory compilation file yet!" << endl;
+            return;
+        } else if (option.CompareTo("2.76TeV") == 0 || option.CompareTo("PbPb_2.76TeV") == 0) {
+            if (triggerCutNumber.CompareTo("1") == 0 && subTriggerCutNumber.CompareTo("0") == 0) {   // kINT7
+                graphDirectPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYieldINT7_2760GeV");
+                graphPromptPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYieldINT7_2760GeV");
+                graphFragmentationPhotonNLO     = (TGraphAsymmErrors*)directoryGamma->Get("graphFragmentationPhotonNLOVogelsangInvYieldINT7_2760GeV");
+            } else {
+                graphDirectPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYieldINT1_2760GeV");
+                graphPromptPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYieldINT1_2760GeV");
+                graphFragmentationPhotonNLO     = (TGraphAsymmErrors*)directoryGamma->Get("graphFragmentationPhotonNLOVogelsangInvYieldINT1_2760GeV");
+            }
+        } else if (option.CompareTo("5TeV") == 0 || option.CompareTo("pPb_5.023TeV") == 0) {
+//            graphDirectPhotonNLO              = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsang_5TeV");
+//            graphPromptPhotonNLO              = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsang_5TeV");
+//            graphFragmentationPhotonNLO       = (TGraphAsymmErrors*)directoryGamma->Get("graphFragmentationPhotonNLOVogelsang_5TeV");
+            cout << "ERROR: No inv. yield calculations in compilation file yet!" << endl;
+            return;
+        } else if (option.CompareTo("7TeV") == 0) {
+            if (triggerCutNumber.CompareTo("1") == 0 && subTriggerCutNumber.CompareTo("0") == 0) {   // kINT7
+                graphDirectPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYieldINT7_7TeV");
+                graphPromptPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYieldINT7_7TeV");
+                graphFragmentationPhotonNLO     = (TGraphAsymmErrors*)directoryGamma->Get("graphFragmentationPhotonNLOVogelsangInvYieldINT7_7TeV");
+            } else {
+                graphDirectPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYieldINT1_7TeV");
+                graphPromptPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYieldINT1_7TeV");
+                graphFragmentationPhotonNLO     = (TGraphAsymmErrors*)directoryGamma->Get("graphFragmentationPhotonNLOVogelsangInvYieldINT1_7TeV");
+            }
+        } else if (option.CompareTo("8TeV") == 0) {
+            graphDirectPhotonNLO                = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYield_8TeV");
+            graphPromptPhotonNLO                = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYield_8TeV");
+            graphFragmentationPhotonNLO         = (TGraphAsymmErrors*)directoryGamma->Get("graphFragmentationPhotonNLOVogelsangInvYield_8TeV");
+        } else if (option.CompareTo("13TeV") == 0) {
+//          graphDirectPhotonNLO                = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYield_13TeV");
+//          graphPromptPhotonNLO                = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYield_13TeV");
+//          graphFragmentationPhotonNLO         = (TGraphAsymmErrors*)directoryGamma->Get("graphFragmentationPhotonNLOVogelsangInvYield_13TeV");
+            
+            graphDirectPhotonNLO                = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYieldINT7_7TeV");
+            graphPromptPhotonNLO                = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYieldINT7_7TeV");
+            graphFragmentationPhotonNLO         = (TGraphAsymmErrors*)directoryGamma->Get("graphFragmentationPhotonNLOVogelsangInvYieldINT7_7TeV");
+        } else {
+            cout << "ERROR: Energy or collision system not known!" << endl;
+            return;
         }
-		inTwo.close();
-        
+    
+        // scale with Ncoll (for pPb and PbPb)
+        graphDirectPhotonNLO                    = (TGraphAsymmErrors*)ScaleGraph(graphDirectPhotonNLO, fNcoll);
+        graphPromptPhotonNLO                    = (TGraphAsymmErrors*)ScaleGraph(graphPromptPhotonNLO, fNcoll);
+        graphFragmentationPhotonNLO             = (TGraphAsymmErrors*)ScaleGraph(graphFragmentationPhotonNLO, fNcoll);
+
         cout << __LINE__ << endl;
 
 		TCanvas *NLOCalculationcanvas           = GetAndSetCanvas("NLOCalculationcanvas");
@@ -339,98 +320,69 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 		padNLOHistos->SetLogy();
 
 		SetHistogramm(histoMCDecaySumGammaPt,"p_{T} (GeV/c)","#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{p_{T}dp_{T}dy} (GeV^{-2}c)",5e-12,250);
-		
-		graphNLOCalcMuHalf                      = new TGraphErrors(nlinesNLOHalf,ptNLOPhotonHalf,muHalfDF,0,0);
-		graphNLOCalcMuHalf->SetName("graphNLOCalcMuHalf");
-		graphNLOCalcMuHalf->SetTitle("graphNLOCalcMuHalf");
-		graphNLOCalcMuHalf->GetYaxis()->SetRangeUser(0.1e-12,1);
-		DrawGammaSetMarkerTGraph(graphNLOCalcMuHalf, 24, 1., kRed+2, kRed+2);
+
+        graphDirectPhotonNLO->SetName("graphNLOCalcDirectPhoton");
+        graphDirectPhotonNLO->SetTitle("graphNLOCalcDirectPhoton");
+        graphDirectPhotonNLO->GetYaxis()->SetRangeUser(0.1e-12,1);
+        DrawGammaSetMarkerTGraphAsym(graphDirectPhotonNLO, 24, 1., kRed-1, kRed-1);
+
+        graphPromptPhotonNLO->SetName("graphNLOCalcPromptPhoton");
+        graphPromptPhotonNLO->SetTitle("graphNLOCalcPromptPhoton");
+        graphPromptPhotonNLO->GetYaxis()->SetRangeUser(0.1e-12,1);
+        DrawGammaSetMarkerTGraphAsym(graphPromptPhotonNLO, 24, 1., kBlue+2, kBlue+2);
+
+        graphFragmentationPhotonNLO->SetName("graphNLOCalcFragmentationPhoton");
+        graphFragmentationPhotonNLO->SetTitle("graphNLOCalcFragmentationPhoton");
+        graphFragmentationPhotonNLO->GetYaxis()->SetRangeUser(0.1e-12,1);
+        DrawGammaSetMarkerTGraphAsym(graphFragmentationPhotonNLO, 24, 1., kCyan-2, kCyan-2);
         
         cout << __LINE__ << ": start fitting to NLO calculations" << endl;
-        
-		//Double_t paramGraphNLOMuHalf[3]       = {0.1,3.4,0.5};
-		fitNLOMuHalf                            = FitObject("m","fitNLOMuHalf","Pi0",graphNLOCalcMuHalf,2.,25.);//,paramGraphNLOMuHalf);        // mod power law
-		DrawGammaSetMarkerTF1( fitNLOMuHalf, 8, 2.0, kBlue+2);
-        
-		graphNLOCalcMuOne                       = new TGraphErrors(nlinesNLOOne,ptNLOPhotonOne,muOneDF,0,0);
-		graphNLOCalcMuOne->SetName("graphNLOCalcMuOne");
-		DrawGammaSetMarkerTGraph(graphNLOCalcMuOne, 27, 1., kRed, kRed);
-        
-		//Double_t paramGraphNLOMuOne[3]        = {0.1,0.37,5.1};
-		//Double_t paramGraphNLOMuOne[3]        = {0.1,3.5,0.5};
-		fitNLOMuOne                             = FitObject("m","fitNLOMuOne","Pi0",graphNLOCalcMuOne,2.,25.);//,paramGraphNLOMuOne);
-		DrawGammaSetMarkerTF1( fitNLOMuOne, 8, 2.0, kBlue);
+    
+        fitNLODirectPhoton                      = FitObject("m","fitNLODirectPhoton","Pi0",graphDirectPhotonNLO,2.,25.);                    // mod power law
+        DrawGammaSetMarkerTF1( fitNLODirectPhoton, 8, 2.0, kRed-1);
 
-		graphNLOCalcMuTwo                       = new TGraphErrors(nlinesNLOTwo,ptNLOPhotonTwo,muTwoDF,0,0);
-		graphNLOCalcMuTwo->SetName("graphNLOCalcMuTwo");
-		DrawGammaSetMarkerTGraph(graphNLOCalcMuTwo, 30, 1., kRed-2, kRed-2);
-        
-		//Double_t paramGraphNLOMuTwo[3]        = {0.1,0.37,5.1};
-		//Double_t paramGraphNLOMuTwo[3]        = {0.1,3.5,0.5};
-		fitNLOMuTwo                             = FitObject("m","fitNLOMuTwo","Pi0",graphNLOCalcMuTwo,2.,25.);//,paramGraphNLOMuTwo);
-		DrawGammaSetMarkerTF1( fitNLOMuTwo, 8, 2.0, kBlue-2);
+        fitNLOPromptPhoton                      = FitObject("m","fitNLOPromptPhoton","Pi0",graphPromptPhotonNLO,2.,25.);                    // mod power law
+        DrawGammaSetMarkerTF1( fitNLOPromptPhoton, 8, 2.0, kBlue+2);
+
+        fitNLOFragmentationPhoton               = FitObject("m","fitNLOFragmentationPhoton","Pi0",graphFragmentationPhotonNLO,2.,25.);      // mod power law
+        DrawGammaSetMarkerTF1( fitNLOFragmentationPhoton, 8, 2.0, kCyan-2);
         
         histoMCDecaySumGammaPt->Draw("");
         histoGammaSpecCorrPurity->Draw("same");
-        fitNLOMuHalf->Draw("same");
-        graphNLOCalcMuHalf->Draw("p,same");
-        fitNLOMuOne->Draw("same");
-        graphNLOCalcMuOne->Draw("p,same");
-        fitNLOMuTwo->Draw("same");
-        graphNLOCalcMuTwo->Draw("p,same");
-        //histMCAllMinusDecay->Draw("same");
+        fitNLODirectPhoton->Draw("same");
+        graphDirectPhotonNLO->Draw("p,same");
+        fitNLOPromptPhoton->Draw("same");
+        graphPromptPhotonNLO->Draw("p,same");
+        fitNLOFragmentationPhoton->Draw("same");
+        graphFragmentationPhotonNLO->Draw("p,same");
 
 		TLegend* leg_NLOCalculationcanvas       = GetAndSetLegend(0.5,0.5,8);
-        leg_NLOCalculationcanvas->AddEntry(graphNLOCalcMuHalf,"Direct Photon NLO Calc #mu = p_{T}/2","lep");
-        leg_NLOCalculationcanvas->AddEntry(fitNLOMuHalf,"Fit to Direct Photon NLO Calc #mu = p_{T}/2");
-		leg_NLOCalculationcanvas->AddEntry(graphNLOCalcMuOne,"Direct Photon NLO Calc #mu = p_{T}","lep");
-        leg_NLOCalculationcanvas->AddEntry(fitNLOMuOne,"Fit to Direct Photon NLO Calc #mu = p_{T}");
-		leg_NLOCalculationcanvas->AddEntry(graphNLOCalcMuTwo,"Direct Photon NLO Calc #mu = 2p_{T}","lep");
-        leg_NLOCalculationcanvas->AddEntry(fitNLOMuTwo,"Fit to Direct Photon NLO Calc #mu = 2p_{T}");
-		//leg_NLOCalculationcanvas->AddEntry(histMCAllMinusDecay,"Not Decay Photons from MC");
-		leg_NLOCalculationcanvas->AddEntry(histoMCDecaySumGammaPt,"Decay Photons from MC");
+        leg_NLOCalculationcanvas->AddEntry(graphDirectPhotonNLO, "Direct Photon NLO Calc", "lep");
+        leg_NLOCalculationcanvas->AddEntry(fitNLODirectPhoton, "Fit to Direct Photon NLO Calc");
+        leg_NLOCalculationcanvas->AddEntry(graphPromptPhotonNLO, "Prompt Photon NLO Calc", "lep");
+        leg_NLOCalculationcanvas->AddEntry(fitNLOPromptPhoton, "Fit to Prompt Photon NLO Calc");
+        leg_NLOCalculationcanvas->AddEntry(graphFragmentationPhotonNLO, "Fragmentation Photon NLO Calc", "lep");
+        leg_NLOCalculationcanvas->AddEntry(fitNLOFragmentationPhoton, "Fit to Fragmentation Photon NLO Calc");
+        leg_NLOCalculationcanvas->AddEntry(histoMCDecaySumGammaPt,"Decay Photons from MC");
 		leg_NLOCalculationcanvas->AddEntry(histoGammaSpecCorrPurity,"Inclusive Photons from data");
         leg_NLOCalculationcanvas->Draw();
 
 		padNLORatios->cd();
 		padNLORatios->SetLogy();
 
-		histRatioNLOMuHalf                      = (TH1D*) histoMCDecaySumGammaPt->Clone("histRatioNLOMuHalf");
-		histRatioNLOMuOne                       = (TH1D*) histoMCDecaySumGammaPt->Clone("histRatioNLOMuOne");
-		histRatioNLOMuTwo                       = (TH1D*) histoMCDecaySumGammaPt->Clone("histRatioNLOMuTwo");
+        histRatioNLODirectPhoton                = (TH1D*) histoMCDecaySumGammaPt->Clone("histRatioNLODirectPhoton");
+        histRatioNLODirectPhoton                = CalculateHistoRatioToFitNLO(histRatioNLODirectPhoton,fitNLODirectPhoton,2.);
+        
+        SetHistogramm(histRatioNLODirectPhoton,"p_{T} (GeV/c)","#frac{Decay #gamma}{NLO Direct #gamma}",5,3e2);
 
-		histRatioNLOMuHalf                      = CalculateHistoRatioToFitNLO(histRatioNLOMuHalf,fitNLOMuHalf,2.);
-		histRatioNLOMuOne                       = CalculateHistoRatioToFitNLO(histRatioNLOMuOne,fitNLOMuOne,2.);
-		histRatioNLOMuTwo                       = CalculateHistoRatioToFitNLO(histRatioNLOMuTwo,fitNLOMuTwo,2.);
+        histRatioNLODirectPhoton->GetYaxis()->CenterTitle(kTRUE);
+        histRatioNLODirectPhoton->GetYaxis()->SetTitleSize(0.1);
+        histRatioNLODirectPhoton->GetYaxis()->SetTitleOffset(0.4);
+        DrawGammaSetMarker(histRatioNLODirectPhoton, 24, 0.5, kRed+2, kRed+2);
 
-        SetHistogramm(histRatioNLOMuHalf,"p_{T} (GeV/c)","#frac{Decay #gamma}{NLO Direct #gamma}",5,3e2);
-        SetHistogramm(histRatioNLOMuOne,"p_{T} (GeV/c)","#frac{Decay #gamma}{NLO Direct #gamma}",5,3e2);
-        SetHistogramm(histRatioNLOMuTwo,"p_{T} (GeV/c)","#frac{Decay #gamma}{NLO Direct #gamma}",5,3e2);
-
-		histRatioNLOMuHalf->GetYaxis()->CenterTitle(kTRUE);
-		histRatioNLOMuOne->GetYaxis()->CenterTitle(kTRUE);
-		histRatioNLOMuTwo->GetYaxis()->CenterTitle(kTRUE);
-		histRatioNLOMuHalf->GetYaxis()->SetTitleSize(0.1);
-		histRatioNLOMuHalf->GetYaxis()->SetTitleOffset(0.4);
-		histRatioNLOMuHalf->GetYaxis()->CenterTitle(kTRUE);
-
-		DrawGammaSetMarker(histRatioNLOMuHalf, 24, 0.5, kRed+2, kRed+2);
-		DrawGammaSetMarker(histRatioNLOMuOne, 27, 0.5, kRed, kRed);
-		DrawGammaSetMarker(histRatioNLOMuTwo, 30, 0.5, kRed-2, kRed-2);
-
-        histRatioNLOMuHalf->Draw();
-        histRatioNLOMuOne->Draw("e1,same");
-        histRatioNLOMuTwo->Draw("e1,same");
+        histRatioNLODirectPhoton->Draw();
 
 		NLOCalculationcanvas->Print(Form("%s/%s_NLOCalculations_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
-
-		graphNLOCalcMuHalfRebin                 = RebinNLOGraph(graphNLOCalcMuHalf);
-		graphNLOCalcMuOneRebin                  = RebinNLOGraph(graphNLOCalcMuOne);
-		graphNLOCalcMuTwoRebin                  = RebinNLOGraph(graphNLOCalcMuTwo);
-
-		histNLOCalcMuTwoRebin                   = GraphToHist(graphNLOCalcMuTwoRebin,25,"histNLOCalcMuTwoRebin");
-		histNLOCalcMuOneRebin                   = GraphToHist(graphNLOCalcMuOneRebin,25,"histNLOCalcMuOneRebin");
-		histNLOCalcMuHalfRebin                  = GraphToHist(graphNLOCalcMuHalfRebin,25,"histNLOCalcMuHalfRebin");
 	}
     
     cout << __LINE__ << endl;
@@ -584,10 +536,18 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 	//***************************************************************************************************************
 	//**************************************** Fitting photon spectrum **********************************************
 	//***************************************************************************************************************
-	TString fitGammaA                           = "h";      // Hagedorn
-	TString fitGammaB                           = "l";      // Levy
-	Double_t fitMinPt                           = 0.3;
-    Double_t fitMaxPt                           = 16;
+	TString fitGammaA                           = "h";
+	TString fitGammaB                           = "l";
+    Double_t fitMinPt                           = 0.4;
+    for (Int_t i=1; i<=histoGammaSpecCorrPurity->GetNbinsX(); i++) {
+        if (histoGammaSpecCorrPurity->GetBinContent(i) == 0) {
+            continue;
+        } else {
+            fitMinPt                            = histoGammaSpecCorrPurity->GetXaxis()->GetBinLowEdge(i);
+            break;
+        }
+    }
+    Double_t fitMaxPt                           = histoGammaSpecCorrPurity->GetXaxis()->GetBinUpEdge(histoGammaSpecCorrPurity->GetNbinsX());
 
 	if(option.CompareTo("PbPb_2.76TeV") == 0){
 		if(centCutNumberI<4){
@@ -675,33 +635,38 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 	ConversionGammaFitA->Draw("same");
 	ConversionGammaFitB->Draw("Csame");
 
-	TLegend* leg_ConversionGammaSpeccanvas      = GetAndSetLegend(0.5,0.83,2);
-	leg_ConversionGammaSpeccanvas->AddEntry(ConversionGammaFitA,fitGammaA);
-	leg_ConversionGammaSpeccanvas->AddEntry(ConversionGammaFitB,fitGammaB);
+	TLegend* leg_ConversionGammaSpeccanvas      = GetAndSetLegend(0.5,0.83,3);
+    leg_ConversionGammaSpeccanvas->SetTextSize(0.04);
+    leg_ConversionGammaSpeccanvas->AddEntry(histoGammaSpecCorrPurity,"#gamma data", "lp");
+	leg_ConversionGammaSpeccanvas->AddEntry(ConversionGammaFitA,"Hagedorn", "l");
+	leg_ConversionGammaSpeccanvas->AddEntry(ConversionGammaFitB,"Levy", "l");
 	leg_ConversionGammaSpeccanvas->Draw();
 
 	padConversionGammaRatio->cd();
 
-	TH2F * histo2DSpectraRatio;
-	histo2DSpectraRatio                         = new TH2F("histo2DSpectraRatio","histo2DSpectraRatio",1000,0.0,20.,1000,0.5,1.9);
-	SetStyleHistoTH2ForGraphs(histo2DSpectraRatio, "#it{p}_{T} (GeV/#it{c})","#frac{Yield}{Fit}", textsizeLabelsLower,textsizeLabelsLower, textsizeLabelsLower,textsizeLabelsLower, 1.,marginOffsetLower);
-	histo2DSpectraRatio->GetXaxis()->SetRangeUser(0.,histoGammaSpecCorrPurity->GetXaxis()->GetBinUpEdge(histoGammaSpecCorrPurity->GetNbinsX()));
-	histo2DSpectraRatio->GetXaxis()->SetTitleFont(62);
-	histo2DSpectraRatio->GetYaxis()->SetTitleFont(62);
-	histo2DSpectraRatio->GetYaxis()->CenterTitle(kTRUE);
-	histo2DSpectraRatio->DrawCopy(); 
+//	TH2F * histo2DSpectraRatio;
+//	histo2DSpectraRatio                         = new TH2F("histo2DSpectraRatio","histo2DSpectraRatio",1000,0.0,20.,1000,0.5,1.9);
+//	SetStyleHistoTH2ForGraphs(histo2DSpectraRatio, "#it{p}_{T} (GeV/#it{c})","#frac{Yield}{Fit}", textsizeLabelsLower,textsizeLabelsLower, textsizeLabelsLower,textsizeLabelsLower, 1.,marginOffsetLower);
+//	histo2DSpectraRatio->GetXaxis()->SetRangeUser(0.,histoGammaSpecCorrPurity->GetXaxis()->GetBinUpEdge(histoGammaSpecCorrPurity->GetNbinsX()));
+//    histo2DSpectraRatio->GetXaxis()->SetTitleFont(62);
+//	histo2DSpectraRatio->GetYaxis()->SetTitleFont(62);
+//	histo2DSpectraRatio->GetYaxis()->CenterTitle(kTRUE);
+//	histo2DSpectraRatio->DrawCopy(); 
 
 	histRatioConversionGammaA                   = (TH1D*) histoGammaSpecCorrPurity->Clone("histRatioConversionGammaA");
     histRatioConversionGammaA                   = CalculateHistoRatioToFit(histRatioConversionGammaA,ConversionGammaFitA);
     histRatioConversionGammaB                   = (TH1D*) histoGammaSpecCorrPurity->Clone("histRatioConversionGammaB");
 	histRatioConversionGammaB                   = CalculateHistoRatioToFit(histRatioConversionGammaB,ConversionGammaFitB);
-
-	DrawGammaSetMarker(histRatioConversionGammaA, 20, 1., kBlue-2, kBlue-2);
-	DrawGammaSetMarker(histRatioConversionGammaB, 24, 1., kRed-3, kRed-3);
     
-    One->Draw();
-	histRatioConversionGammaA->Draw("same");
-	histRatioConversionGammaB->Draw("same");
+    SetStyleHistoTH1ForGraphs(histRatioConversionGammaA, "#it{p}_{T} (GeV/#it{c})", "#frac{yield}{fit}", textsizeLabelsLower, textsizeLabelsLower, textsizeLabelsLower, textsizeLabelsLower, 1, marginOffsetLower, 510, 505);
+    histRatioConversionGammaA->GetYaxis()->SetRangeUser(0.55, 1.55);
+
+	DrawGammaSetMarker(histRatioConversionGammaA, 20, 1.5, kBlue-2, kBlue-2);
+	DrawGammaSetMarker(histRatioConversionGammaB, 20, 1.5, kRed-3, kRed-3);
+    
+    histRatioConversionGammaA->Draw("e1");
+	histRatioConversionGammaB->Draw("e1,same");
+    One->Draw("same");
 
 	ConversionGammaCanvas->Print(Form("%s/%s_Spectra_ConversionGamma_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
 
@@ -710,9 +675,9 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 	//***********************************************************************************************************************************************
 	//****************************************** Fitting pi0 and eta if possible ********************************************************************
 	//***********************************************************************************************************************************************
-	TString fitPi0A                             = "oHag";       // modified Hagedorn
-	TString fitPi0B                             = "qcd";        // [0]*TMath::Power(x,-1*([1]+[2]/(TMath::Power(x,[3])+[4])))
-	TString fitPi0C                             = "rad";        // Radoslav
+	TString fitPi0A                             = "oHag";
+	TString fitPi0B                             = "qcd";
+	TString fitPi0C                             = "rad";
 
 	Double_t *qcdparameters                     = new Double_t[5]; // for pp
 	qcdparameters[0]                            = 0.0978884;
@@ -722,7 +687,15 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 	qcdparameters[4]                            = 1.26592;
 
 	fitMinPt                                    = 0.5;
-	fitMaxPt                                    = 14;
+    for (Int_t i=1; i<=histoCorrectedPi0Yield->GetNbinsX(); i++) {
+        if (histoCorrectedPi0Yield->GetBinContent(i) == 0) {
+            continue;
+        } else {
+            fitMinPt                            = histoCorrectedPi0Yield->GetXaxis()->GetBinLowEdge(i);
+            break;
+        }
+    }
+	fitMaxPt                                    = histoCorrectedPi0Yield->GetXaxis()->GetBinUpEdge(histoCorrectedPi0Yield->GetNbinsX());
 
 	if(option.CompareTo("PbPb_2.76TeV") == 0){
 		oHagparameters                          = NULL;
@@ -897,7 +870,7 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 		}	
 		b                                       = histoCorrectedPi0Yield->GetXaxis()->FindBin(6);
 		for (Int_t i = histoCorrectedEtaYield->GetXaxis()->FindBin(6); i < histoCorrectedEtaYieldPatched->GetNbinsX()+1; i++){
-			histoCorrectedEtaYieldPatched->SetBinContent(i,histoCorrectedPi0Yield->GetBinContent(b)*0.47);
+			histoCorrectedEtaYieldPatched->SetBinContent(i,histoCorrectedPi0Yield->GetBinContent(b)*0.47);      // is this taken from the eta to pi0 ratio?
 			histoCorrectedEtaYieldPatched->SetBinError(i,histoCorrectedPi0Yield->GetBinError(b)*0.47);
 			b++;
 		}
@@ -926,11 +899,11 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 		fileFinalResults << forOutput.Data() << endl;
 		
         fitEtaYieldA->SetLineColor(kRed+2);
-        fitEtaYieldA->SetLineStyle(5);
-		fitEtaYieldB->SetLineColor(kGreen-7);
-		fitEtaYieldB->SetLineStyle(5);
+        fitEtaYieldA->SetLineStyle(2);
+		fitEtaYieldB->SetLineColor(kBlue+2);
+		fitEtaYieldB->SetLineStyle(2);
 		fitEtaYieldC->SetLineColor(kBlue-7);
-		fitEtaYieldC->SetLineStyle(6);
+		fitEtaYieldC->SetLineStyle(2);
         
         cout<<"------------------------------------------------------------------"<<endl;
         cout<<"----------------------- End Fitting Eta --------------------------"<<endl;
@@ -981,6 +954,7 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 	histo2DSpectraPi0->DrawCopy(); 
 
 	DrawGammaSetMarker(histoCorrectedPi0Yield, 20, 2.0, kBlack, kBlack);
+    
 	histoCorrectedPi0Yield->Draw("e1,same");
 	//fitPi0YieldA->Draw("same");
 	//fitPi0YieldAHighpt->Draw("same");
@@ -990,6 +964,7 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 	if(fileEta){
 		DrawGammaSetMarker(histoCorrectedEtaYield, 20, 2.0, kBlue+2, kBlue+2);
 		DrawGammaSetMarker(histoCorrectedEtaYieldPatched, 24, 2.0, kBlue-7, kBlue-7);
+        
         histoCorrectedEtaYield->Draw("e1,same");
         histoCorrectedEtaYieldPatched->Draw("e1,same");
         //fitEtaYieldA->Draw("same");
@@ -1003,69 +978,61 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
     } else {
         leg_ConversionSpeccanvas                = GetAndSetLegend(0.45,0.63,3);
     }
+    leg_ConversionSpeccanvas->SetTextSize(0.04);
     leg_ConversionSpeccanvas->AddEntry(histoCorrectedPi0Yield,"#pi^{0}","pl");
 	//    leg_ConversionSpeccanvas->AddEntry(fitPi0YieldA,Form("Parametrisation A %s Chi2 %.2f",fitPi0A.Data(),fitPi0YieldA->GetChisquare()),"l");
-	leg_ConversionSpeccanvas->AddEntry(fitPi0YieldB,Form("Parametrisation B %s #chi^{2}/ndf %.2f",fitPi0B.Data(),fitPi0YieldB->GetChisquare()/fitPi0YieldB->GetNDF()),"l");
-	leg_ConversionSpeccanvas->AddEntry(fitPi0YieldC,Form("Parametrisation C %s #chi^{2}/ndf %.2f",fitPi0C.Data(),fitPi0YieldC->GetChisquare()/fitPi0YieldC->GetNDF()),"l");
+	leg_ConversionSpeccanvas->AddEntry(fitPi0YieldB,Form("Parametrisation B: %s #chi^{2}/ndf %.2f",fitPi0B.Data(),fitPi0YieldB->GetChisquare()/fitPi0YieldB->GetNDF()),"l");
+	leg_ConversionSpeccanvas->AddEntry(fitPi0YieldC,Form("Parametrisation C: %s #chi^{2}/ndf %.2f",fitPi0C.Data(),fitPi0YieldC->GetChisquare()/fitPi0YieldC->GetNDF()),"l");
 	//    leg_ConversionSpeccanvas->AddEntry(fitPi0YieldAHighpt,Form("Parametrisation D rad Chi2 %.2f",fitPi0YieldAHighpt->GetChisquare()),"l");
 	if(fileEta){
         leg_ConversionSpeccanvas->AddEntry(histoCorrectedEtaYield,"#eta","pl");
-        leg_ConversionSpeccanvas->AddEntry(histoCorrectedEtaYield,"#eta patched","pl");
-        leg_ConversionSpeccanvas->AddEntry(fitEtaYieldB,Form("Parametrisation Eta B %s #chi^{2}/ndf %.2f",fitEtaB.Data(),fitEtaYieldB->GetChisquare()/fitEtaYieldB->GetNDF()),"l");
-		leg_ConversionSpeccanvas->AddEntry(fitEtaYieldC,Form("Parametrisation Eta C %s #chi^{2}/ndf %.2f",fitEtaC.Data(),fitEtaYieldC->GetChisquare()/fitEtaYieldC->GetNDF()),"l");
+        leg_ConversionSpeccanvas->AddEntry(fitEtaYieldB,Form("Parametrisation B: %s #chi^{2}/ndf %.2f",fitEtaB.Data(),fitEtaYieldB->GetChisquare()/fitEtaYieldB->GetNDF()),"l");
+        leg_ConversionSpeccanvas->AddEntry(histoCorrectedEtaYieldPatched,"#eta patched","pl");
+        leg_ConversionSpeccanvas->AddEntry(fitEtaYieldC,Form("Parametrisation C: %s #chi^{2}/ndf %.2f",fitEtaC.Data(),fitEtaYieldC->GetChisquare()/fitEtaYieldC->GetNDF()),"l");
 	}
 	leg_ConversionSpeccanvas->Draw();
 	
 	padConversionRatios->cd();
-	histo2DSpectraRatio->DrawCopy();
+	//histo2DSpectraRatio->DrawCopy();
 	
 	histRatioConversionPi0A                     = (TH1D*) histoCorrectedPi0Yield->Clone("histRatioConversionPi0A");
-	histRatioConversionPi0AHighpt               = (TH1D*) histoCorrectedPi0Yield->Clone("histRatioConversionPi0A");
+    histRatioConversionPi0A                     = CalculateHistoRatioToFit(histRatioConversionPi0A,fitPi0YieldA);
+    //histRatioConversionPi0AHighpt->Divide(histRatioConversionPi0AHighpt,cocktailPi0);                                         // cocktail Pi0 not known yet
+	//histRatioConversionPi0AHighpt               = (TH1D*) histoCorrectedPi0Yield->Clone("histRatioConversionPi0A");
 	histRatioConversionPi0B                     = (TH1D*) histoCorrectedPi0Yield->Clone("histRatioConversionPi0B");
+    histRatioConversionPi0B                     = CalculateHistoRatioToFit(histRatioConversionPi0B,fitPi0YieldB);
 	histRatioConversionPi0C                     = (TH1D*) histoCorrectedPi0Yield->Clone("histRatioConversionPi0C");
-
-    cout << __LINE__ << " division with cocktailPi0 not possible, not known yet" << endl;
-    
-	histRatioConversionPi0A                     = CalculateHistoRatioToFit(histRatioConversionPi0A,fitPi0YieldA);
-	histRatioConversionPi0AHighpt->Divide(histRatioConversionPi0AHighpt,cocktailPi0);
-	histRatioConversionPi0B                     = CalculateHistoRatioToFit(histRatioConversionPi0B,fitPi0YieldB);
 	histRatioConversionPi0C                     = CalculateHistoRatioToFit(histRatioConversionPi0C,fitPi0YieldC);
-
-    cout << __LINE__ << endl;
     
+    SetStyleHistoTH1ForGraphs(histRatioConversionPi0A, "#it{p}_{T} (GeV/#it{c})", "#frac{yield}{fit}", textsizeLabelsLower, textsizeLabelsLower, textsizeLabelsLower, textsizeLabelsLower, 1, marginOffsetLower, 510, 505);
+    SetStyleHistoTH1ForGraphs(histRatioConversionPi0B, "#it{p}_{T} (GeV/#it{c})", "#frac{yield}{fit}", textsizeLabelsLower, textsizeLabelsLower, textsizeLabelsLower, textsizeLabelsLower, 1, marginOffsetLower, 510, 505);
+
 	DrawGammaSetMarker(histRatioConversionPi0A, 20, 2.,kBlue-2,kBlue-2);
-	DrawGammaSetMarker(histRatioConversionPi0AHighpt, 20, 2.,kGreen+2,kGreen+2);
+	//DrawGammaSetMarker(histRatioConversionPi0AHighpt, 20, 2.,kGreen+2,kGreen+2);
 	DrawGammaSetMarker(histRatioConversionPi0B, 24, 2.,kRed-3,kRed-3);
 	DrawGammaSetMarker(histRatioConversionPi0C, 25, 2.,kYellow+2,kYellow+2);
 	
-	histRatioConversionPi0B->SetLineStyle(2);
-	histRatioConversionPi0C->SetLineStyle(3);
-	
-	One->Draw("same");
 	//histRatioConversionPi0A->Draw("same");
 	//histRatioConversionPi0AHighpt->Draw("same");
-	histRatioConversionPi0B->Draw("same");
-	histRatioConversionPi0C->Draw("same");
+    histRatioConversionPi0B->Draw("e1");
+	histRatioConversionPi0C->Draw("e1,same");
+    One->Draw("same");
 
 	if(fileEta){
 		histRatioConversionEtaA                 = (TH1D*) histoCorrectedEtaYield->Clone("histRatioConversionEtaA");
+        histRatioConversionEtaA                 = CalculateHistoRatioToFit(histRatioConversionEtaA,fitEtaYieldA);
 		histRatioConversionEtaB                 = (TH1D*) histoCorrectedEtaYield->Clone("histRatioConversionEtaB");
+        histRatioConversionEtaB                 = CalculateHistoRatioToFit(histRatioConversionEtaB,fitEtaYieldB);
 		histRatioConversionEtaC                 = (TH1D*) histoCorrectedEtaYield->Clone("histRatioConversionEtaC");
-
-		histRatioConversionEtaA                 = CalculateHistoRatioToFit(histRatioConversionEtaA,fitEtaYieldA);
-		histRatioConversionEtaB                 = CalculateHistoRatioToFit(histRatioConversionEtaB,fitEtaYieldB);
 		histRatioConversionEtaC                 = CalculateHistoRatioToFit(histRatioConversionEtaC,fitEtaYieldC);
 		
         //DrawGammaSetMarker(histRatioConversionEtaA, 20, 2.,kRed+2,kRed+2);
-        //histRatioConversionEtaA->SetLineStyle(5);
-		DrawGammaSetMarker(histRatioConversionEtaB, 20, 2.,kGreen-7,kGreen-7);
-		histRatioConversionEtaB->SetLineStyle(5);
+		DrawGammaSetMarker(histRatioConversionEtaB, 20, 2.,kBlue+2,kBlue+2);
 		DrawGammaSetMarker(histRatioConversionEtaC, 24, 2.,kBlue-7,kBlue-7);
-		histRatioConversionEtaB->SetLineStyle(6);
 		
         //histRatioConversionEtaA->Draw("same");
-		histRatioConversionEtaB->Draw("same");
-		histRatioConversionEtaC->Draw("same");
+		histRatioConversionEtaB->Draw("e1,same");
+		histRatioConversionEtaC->Draw("e1,same");
 	}
 
 	ConversionSpeccanvas->Print(Form("%s/%s_Spectra_ConversionPi0_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
@@ -1889,23 +1856,15 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 		TF1* QGPin7Tev                              = new TF1("QGPin7Tev","1+[0]*exp(-x/[1])+[2]*exp(-x/[3])",0,100);
 		QGPin7Tev->SetParameters(4.24707e+01, 2.85766e+00, 1.63353e+02, 4.53670e-01);
 
-		TH1D *cocktailAllGammaNLO                   = (TH1D*) cocktailAllGamma->Clone("cocktailAllGammaNLO");
-		graphNLOCalcMuHalfcopyA                     = (TGraphErrors*) graphNLOCalcMuHalf->Clone("graphNLOCalcMuHalfcopyA");
-		graphNLOCalcMuHalfcopyB                     = (TGraphErrors*) graphNLOCalcMuOne->Clone("graphNLOCalcMuHalfcopyB");
-		graphNLOCalcMuHalfcopyC                     = (TGraphErrors*) graphNLOCalcMuTwo->Clone("graphNLOCalcMuHalfcopyC");
+		cocktailAllGammaNLO                         = (TH1D*) cocktailAllGamma->Clone("cocktailAllGammaNLO");
+        graphDirectPhotonNLOCopy                    = (TGraphAsymmErrors*)graphDirectPhotonNLO->Clone("graphNLOCalcCopy");
 
-		xHalf                                       = graphNLOCalcMuHalfcopyA->GetX();
-		yHalf                                       = graphNLOCalcMuHalfcopyA->GetY();
-		eyHalf                                      = graphNLOCalcMuHalfcopyA->GetEY();
-
-		xOne                                        = graphNLOCalcMuHalfcopyB->GetX();
-		yOne                                        = graphNLOCalcMuHalfcopyB->GetY();
-		eyOne                                       = graphNLOCalcMuHalfcopyB->GetEY();
-
-		xTwo                                        = graphNLOCalcMuHalfcopyC->GetX();
-		yTwo                                        = graphNLOCalcMuHalfcopyC->GetY();
-		eyTwo=                                      graphNLOCalcMuHalfcopyC->GetEY();
-
+        xVal                                        = graphDirectPhotonNLOCopy->GetX();
+        xErr                                        = graphDirectPhotonNLOCopy->GetEX();
+        yVal                                        = graphDirectPhotonNLOCopy->GetY();
+        yErrUp                                      = graphDirectPhotonNLOCopy->GetEYhigh();
+        yErrDown                                    = graphDirectPhotonNLOCopy->GetEYlow();
+        
 		TString cocktailFit                         = "xqcd";
 		//if(fcocktailFunc.Contains("QCD") || fcocktailFunc.Contains("qcd"))
 		//    cocktailFit = "qcd";
@@ -1922,16 +1881,15 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 		canvasCocktailFitForNLO->Print(Form("%s/%scocktailAllGammaNLO_cocktailFitForNLO_%s.%s",outputDir.Data(),textPi0New.Data(),centralityAdd.Data(),suffix.Data()));
 
         cout << __LINE__ << endl;
-
-		for(Int_t bin = 0; bin < graphNLOCalcMuHalf->GetN(); bin++){// Scale with N_collisions
-			yHalf[bin]                              = (1 +( yHalf[bin] / (cocktailFitAllGammaForNLO->Eval(xHalf[bin]))));
-			yOne[bin]                               = (1 +( yOne[bin] / (cocktailFitAllGammaForNLO->Eval(xOne[bin]))));
-			yTwo[bin]                               = (1 +( yTwo[bin] / (cocktailFitAllGammaForNLO->Eval(xTwo[bin]))));
-		}
-
-		half                                        = new TGraphErrors(graphNLOCalcMuHalf->GetN(),xHalf,yHalf,eyHalf);
-		one                                         = new TGraphErrors(graphNLOCalcMuOne->GetN(),xOne,yOne,eyOne);
-		two                                         = new TGraphErrors(graphNLOCalcMuTwo->GetN(),xTwo,yTwo,eyTwo);
+        
+        for (Int_t bin=0; bin<graphDirectPhotonNLOCopy->GetN(); bin++) {
+            yVal[bin]                               = (1 + ( yVal[bin] / (cocktailFitAllGammaForNLO->Eval(xVal[bin]))));
+        }
+        
+        // ------------------------------ NLO Calculations -----------------------------
+        NLODoubleRatio                              = new TGraphAsymmErrors(graphDirectPhotonNLOCopy->GetN(), xVal, yVal, xErr, xErr, yErrDown, yErrUp);
+        NLODoubleRatio->SetName("NLODoubleRatio");
+        NLO                                         = (TGraphAsymmErrors*)graphDirectPhotonNLO->Clone("NLO");
 	}
 
     cout << __LINE__ << endl;
@@ -1941,23 +1899,23 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 	//**********************************************************************************
 
 	cocktailAllGammaPi0                             = RebinTH1D(cocktailAllGammaPi0,histoIncRatioPurity);
-	TH1D *cocktailAllGammaRebined                   = RebinTH1D(cocktailAllGamma,histoIncRatioPurity);
-	TH1D *cocktailPi0Rebined                        = RebinTH1D(cocktailPi0,histoIncRatioPurity);
+	cocktailAllGammaRebinned                        = RebinTH1D(cocktailAllGamma,histoIncRatioPurity);
+	cocktailPi0Rebinned                             = RebinTH1D(cocktailPi0,histoIncRatioPurity);
 
 	//cocktailPi0Gamma                              = RebinTH1D(cocktailPi0Gamma,histoIncRatioPurity);
-	cocktailAllGammaPi0->Divide(cocktailAllGammaRebined,cocktailPi0Rebined);
-	//cocktailAllGammaPi0->Divide(cocktailAllGammaRebined,cocktailPi0Gamma);
+	cocktailAllGammaPi0->Divide(cocktailAllGammaRebinned,cocktailPi0Rebinned);
+	//cocktailAllGammaPi0->Divide(cocktailAllGammaRebinned,cocktailPi0Gamma);
 	if (cocktailFileMtScaledEta){
 		cocktailAllGammaPi0MtScaledEta              = RebinTH1D(cocktailAllGammaPi0MtScaledEta,histoIncRatioPurity);
-		TH1D *cocktailAllGammaRebinedMtScaledEta    = RebinTH1D(cocktailAllGammaMtScaledEta,histoIncRatioPurity);
-		TH1D *cocktailPi0RebinedMtScaledEta         = RebinTH1D(cocktailPi0MtScaledEta,histoIncRatioPurity);
-		cocktailAllGammaPi0MtScaledEta->Divide(cocktailAllGammaRebinedMtScaledEta,cocktailPi0RebinedMtScaledEta);
+		TH1D *cocktailAllGammaRebinnedMtScaledEta   = RebinTH1D(cocktailAllGammaMtScaledEta,histoIncRatioPurity);
+		TH1D *cocktailPi0RebinnedMtScaledEta        = RebinTH1D(cocktailPi0MtScaledEta,histoIncRatioPurity);
+		cocktailAllGammaPi0MtScaledEta->Divide(cocktailAllGammaRebinnedMtScaledEta,cocktailPi0RebinnedMtScaledEta);
 	}
 	if (cocktailFileChargedPions){
 		cocktailAllGammaPi0ChargedPions             = RebinTH1D(cocktailAllGammaPi0ChargedPions,histoIncRatioPurity);
-		TH1D *cocktailAllGammaRebinedChargedPions   = RebinTH1D(cocktailAllGammaChargedPions,histoIncRatioPurity);
-		TH1D *cocktailPi0RebinedChargedPions        = RebinTH1D(cocktailPi0ChargedPions,histoIncRatioPurity);
-		cocktailAllGammaPi0ChargedPions->Divide(cocktailAllGammaRebinedChargedPions,cocktailPi0Rebined);
+		TH1D *cocktailAllGammaRebinnedChargedPions  = RebinTH1D(cocktailAllGammaChargedPions,histoIncRatioPurity);
+		TH1D *cocktailPi0RebinnedChargedPions       = RebinTH1D(cocktailPi0ChargedPions,histoIncRatioPurity);
+		cocktailAllGammaPi0ChargedPions->Divide(cocktailAllGammaRebinnedChargedPions,cocktailPi0Rebinned);
 	}
     
     cout << __LINE__ << endl;
@@ -2002,7 +1960,7 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 	histoDoubleRatioConversionTrueEffPurityNarrow   = (TH1D*) histoIncRatioPurityTrueEffNarrow->Clone("DoubleRatioConversionTrueEffPurityNarrow");
 	histoDoubleRatioConversionTrueEffPurityNarrow->Divide(cocktailAllGammaPi0);
 	histoDoubleRatioConversionOnlyGamma             = (TH1D*) histoGammaSpecCorrPurity->Clone("DoubleRatioConversionOnlyGamma");
-	histoDoubleRatioConversionOnlyGamma->Divide(cocktailAllGammaRebined);
+	histoDoubleRatioConversionOnlyGamma->Divide(cocktailAllGammaRebinned);
 
     cout << __LINE__ << endl;
 
@@ -2161,38 +2119,6 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
     cout << __LINE__ << endl;
     
 	if (doNLOComparison){
-		// ------------------------------ NLO Calculations -----------------------------
-		TGraphErrors *DirectPhotonDoubleNLOhalf             = (TGraphErrors*) half->Clone("doubleRatioNLOhalf");
-		TGraphErrors *DirectPhotonDoubleNLOone              = (TGraphErrors*) one->Clone("doubleRatioNLOone");
-		TGraphErrors *DirectPhotonDoubleNLOtwo              = (TGraphErrors*) two->Clone("doubleRatioNLOtwo");
-
-		TGraphErrors *DirectPhotonNLOhalf                   = (TGraphErrors*) graphNLOCalcMuHalf->Clone("graphNLOCalcMuHalf");
-		TGraphErrors *DirectPhotonNLOone                    = (TGraphErrors*) graphNLOCalcMuOne->Clone("graphNLOCalcMuOne");
-		TGraphErrors *DirectPhotonNLOtwo                    = (TGraphErrors*) graphNLOCalcMuTwo->Clone("graphNLOCalcMuTwo");
-		
-		Double_t *errorup                                   = new Double_t[DirectPhotonDoubleNLOhalf->GetN()];
-		Double_t *errorlow                                  = new Double_t[DirectPhotonDoubleNLOtwo->GetN()];
-
-		Double_t *errorSpecup                               = new Double_t[DirectPhotonDoubleNLOhalf->GetN()];
-		Double_t *errorSpeclow                              = new Double_t[DirectPhotonDoubleNLOtwo->GetN()];
-
-		yHalf                                               = DirectPhotonDoubleNLOhalf->GetY();
-		yOne                                                = DirectPhotonDoubleNLOone->GetY();
-		yTwo                                                = DirectPhotonDoubleNLOtwo->GetY();
-
-		Double_t *ySpecHalf                                 = DirectPhotonNLOhalf->GetY();
-		Double_t *ySpecOne                                  = DirectPhotonNLOone->GetY();
-		Double_t *ySpecTwo                                  = DirectPhotonNLOtwo->GetY();
-
-		for(Int_t i = 0;i<DirectPhotonDoubleNLOhalf->GetN(); i++){
-			errorup[i]                                      = yHalf[i]-yOne[i];
-			errorlow[i]                                     = -yTwo[i]+yOne[i];
-			errorSpecup[i]                                  = ySpecHalf[i]-ySpecOne[i];
-			errorSpeclow[i]                                 = -ySpecTwo[i]+ySpecOne[i];
-		}
-
-		TGraphAsymmErrors *NLODoubleRatio                   = new TGraphAsymmErrors( DirectPhotonDoubleNLOhalf->GetN(), DirectPhotonDoubleNLOone->GetX(), DirectPhotonDoubleNLOone->GetY(), DirectPhotonDoubleNLOone->GetEX(), DirectPhotonDoubleNLOone->GetEX(), errorlow,errorup );
-		TGraphAsymmErrors *NLO                              = new TGraphAsymmErrors( DirectPhotonDoubleNLOhalf->GetN(), DirectPhotonNLOone->GetX(), DirectPhotonNLOone->GetY(), DirectPhotonNLOone->GetEX(), DirectPhotonNLOone->GetEX(),errorSpeclow ,errorSpecup );
         
 		NLODoubleRatio->SetLineColor(kAzure);
 		NLODoubleRatio->SetFillColor(kAzure);
@@ -2463,9 +2389,9 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
             cocktailAllGammaModA                        = (TH1D*) cocktailDirModA->Get("ptg");
             cocktailPi0ModA                             = (TH1D*) cocktailDirModA->Get("ptPi0");
             cocktailAllGammaPi0ModA                     = RebinTH1D(cocktailAllGammaPi0ModA,histoIncRatioPurity);
-            TH1D *cocktailAllGammaRebinedModA           = RebinTH1D(cocktailAllGammaModA,histoIncRatioPurity);
-            TH1D *cocktailPi0RebinedModA                = RebinTH1D(cocktailPi0ModA,histoIncRatioPurity);
-            cocktailAllGammaPi0ModA->Divide(cocktailAllGammaRebinedModA,cocktailPi0RebinedModA);
+            TH1D *cocktailAllGammaRebinnedModA           = RebinTH1D(cocktailAllGammaModA,histoIncRatioPurity);
+            TH1D *cocktailPi0RebinnedModA                = RebinTH1D(cocktailPi0ModA,histoIncRatioPurity);
+            cocktailAllGammaPi0ModA->Divide(cocktailAllGammaRebinnedModA,cocktailPi0RebinnedModA);
             histoDoubleRatioFitPi0YieldPurityModA       = (TH1D*) histoIncRatioFitPurity->Clone("DoubleRatioConversionFitPurityModA");
             histoDoubleRatioFitPi0YieldPurityModA->Divide(cocktailAllGammaPi0ModA);
             histoDoubleRatioConversionTrueEffPurityModA = (TH1D*) histoIncRatioPurityTrueEff->Clone("DoubleRatioConversionTrueEffPurityModA");
@@ -2475,9 +2401,9 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
             cocktailAllGammaModB                        = (TH1D*) cocktailDirModB->Get("ptg");
             cocktailPi0ModB                             = (TH1D*) cocktailDirModB->Get("ptPi0");
             cocktailAllGammaPi0ModB                     = RebinTH1D(cocktailAllGammaPi0ModB,histoIncRatioPurity);
-            TH1D *cocktailAllGammaRebinedModB           = RebinTH1D(cocktailAllGammaModB,histoIncRatioPurity);
-            TH1D *cocktailPi0RebinedModB                = RebinTH1D(cocktailPi0ModB,histoIncRatioPurity);
-            cocktailAllGammaPi0ModB->Divide(cocktailAllGammaRebinedModB,cocktailPi0RebinedModB);
+            TH1D *cocktailAllGammaRebinnedModB           = RebinTH1D(cocktailAllGammaModB,histoIncRatioPurity);
+            TH1D *cocktailPi0RebinnedModB                = RebinTH1D(cocktailPi0ModB,histoIncRatioPurity);
+            cocktailAllGammaPi0ModB->Divide(cocktailAllGammaRebinnedModB,cocktailPi0RebinnedModB);
             histoDoubleRatioFitPi0YieldPurityModB       = (TH1D*) histoIncRatioFitPurity->Clone("DoubleRatioConversionFitPurityModB");
             histoDoubleRatioFitPi0YieldPurityModB->Divide(cocktailAllGammaPi0ModB);
             histoDoubleRatioConversionTrueEffPurityModB = (TH1D*) histoIncRatioPurityTrueEff->Clone("DoubleRatioConversionTrueEffPurityModB");
@@ -2509,7 +2435,6 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
 			histoPurityGammaMCData->Write();
 			ConversionGammaFitA->Write();
 			histoDirectPhotonSpectrum->Write();
-			//histoGammaSpecCorrPurity->Write("histoGammaSpecCorrPurity");
 			histoGammaSpecCorrPurity->Write("histoGammaSpecCorrPurity");
 				
         cout << __LINE__ << endl;
@@ -2580,14 +2505,15 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
         cout << __LINE__ << endl;
 
 			//NLO
-			half->Write("doubleRatioNLOhalf");
-			one->Write("doubleRatioNLOone");
-			two->Write("doubleRatioNLOtwo");
-			graphNLOCalcMuTwo->Write("graphNLOCalcMuTwo");
-			graphNLOCalcMuOne->Write("graphNLOCalcMuOne");
-			graphNLOCalcMuHalf->Write("graphNLOCalcMuHalf");
-			NLODoubleRatio->Write("graphNLODoubleRatio");
-			NLO->Write("graphNLODirGamma");
+            //graphDirectPhotonNLO->Write("graphDirectPhotonNLO", TObject::kOverwrite); // same as NLO
+            fitNLODirectPhoton->Write("fitNLODirectPhoton", TObject::kOverwrite);
+            graphPromptPhotonNLO->Write("graphPromptPhotonNLO", TObject::kOverwrite);
+            fitNLOPromptPhoton->Write("fitNLOPromptPhoton", TObject::kOverwrite);
+            graphFragmentationPhotonNLO->Write("graphFragmentationPhotonNLO", TObject::kOverwrite);
+            fitNLOFragmentationPhoton->Write("fitNLOFragmentationPhoton", TObject::kOverwrite);
+            histRatioNLODirectPhoton->Write("histRatioNLODirectPhoton", TObject::kOverwrite);
+			NLODoubleRatio->Write("graphNLODoubleRatio", TObject::kOverwrite);
+			NLO->Write("graphNLODirGamma", TObject::kOverwrite);
 		fileCorrectedOutput->Close();
 
         cout << __LINE__ << endl;
