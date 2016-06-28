@@ -1196,13 +1196,13 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             DrawAutoGammaMesonHistos( histoBGEstimateA, 
                                 "", "#it{p}_{T,#eta} (GeV/#it{c})", "Correction factor", 
                                 kFALSE, 2.,1e-8, kFALSE,
-                                kTRUE, 0.9, 1, 
+                                kTRUE, 0.8, 1,
                                 kFALSE, 0., 10.);
         } else {
             DrawAutoGammaMesonHistos( histoBGEstimateA, 
                                 "", "#it{p}_{T,#pi^{0}} (GeV/#it{c})", "Correction factor", 
                                 kFALSE, 2.,1e-8, kFALSE,
-                                kTRUE, 0.9, 1, 
+                                kTRUE, 0.8, 1,
                                 kFALSE, 0., 10.);
         }
         DrawGammaSetMarker(histoBGEstimateA, styleMethod[0], 1.2, colorMethod[0], colorMethod[0]);
