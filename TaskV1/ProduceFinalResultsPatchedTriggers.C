@@ -1221,28 +1221,27 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
         histo2DMassPi0->DrawCopy(); 
 
-        
-        legendMassPi02->SetNColumns(2);
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==1 || i==3 || i==4 || i==5)) ||
-             (optionEnergy.CompareTo("8TeV")==0)
-             ){
-                DrawGammaSetMarker(histoMassPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                histoMassPi0Data[i]->DrawCopy("e1,same"); 
-                legendMassPi02->AddEntry(histoMassPi0Data[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
-                DrawGammaSetMarker(histoMassPi0MC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
-                histoMassPi0MC[i]->DrawCopy("e1,same"); 
-                legendMassPi02->AddEntry(histoMassPi0MC[i], Form("%s MC", triggerNameLabel[i].Data()), "p"); 
-            }    
+
+        if (optionEnergy.CompareTo("2.76TeV")==0){
+            legendMassPi02->SetNColumns(2);
+            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+                if( optionEnergy.CompareTo("2.76TeV")==0 && (i==1 || i==3 || i==4 || i==5)){
+                    DrawGammaSetMarker(histoMassPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                    histoMassPi0Data[i]->DrawCopy("e1,same"); 
+                    legendMassPi02->AddEntry(histoMassPi0Data[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
+                    DrawGammaSetMarker(histoMassPi0MC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
+                    histoMassPi0MC[i]->DrawCopy("e1,same"); 
+                    legendMassPi02->AddEntry(histoMassPi0MC[i], Form("%s MC", triggerNameLabel[i].Data()), "p"); 
+                }    
+            }
+            legendMassPi02->Draw();
+            labelEnergyMass->Draw();
+            labelPi0Mass->Draw();
+            labelDetProcMass->Draw();
+
+            canvasMass->Update();
+            canvasMass->SaveAs(Form("%s/Pi0_%s_Mass2.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
         }
-        legendMassPi02->Draw();
-        labelEnergyMass->Draw();
-        labelPi0Mass->Draw();
-        labelDetProcMass->Draw();
-
-        canvasMass->Update();
-        canvasMass->SaveAs(Form("%s/Pi0_%s_Mass2.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
-
         //***************************************************************************************************************
         //************************************Plotting Width Pi0 *********************************************************
         //***************************************************************************************************************
@@ -1278,26 +1277,26 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
         histo2DWidthPi0->DrawCopy(); 
 
-        legendWidthPi02->SetNColumns(2);
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==1 || i==3 || i==4 || i==5)) ||
-             (optionEnergy.CompareTo("8TeV")==0)
-             ){
-                DrawGammaSetMarker(histoWidthPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                histoWidthPi0Data[i]->DrawCopy("e1,same"); 
-                legendWidthPi02->AddEntry(histoWidthPi0Data[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
-                DrawGammaSetMarker(histoWidthPi0MC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
-                histoWidthPi0MC[i]->DrawCopy("e1,same"); 
-                legendWidthPi02->AddEntry(histoWidthPi0MC[i], Form("%s MC", triggerNameLabel[i].Data()), "p"); 
-            }    
-        }
-        legendWidthPi02->Draw();
-        labelEnergyWidth->Draw();
-        labelPi0Width->Draw();
-        labelDetProcWidth->Draw();
+        if (optionEnergy.CompareTo("2.76TeV")==0) {
+            legendWidthPi02->SetNColumns(2);
+            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+                if(i==1 || i==3 || i==4 || i==5 ){
+                    DrawGammaSetMarker(histoWidthPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                    histoWidthPi0Data[i]->DrawCopy("e1,same"); 
+                    legendWidthPi02->AddEntry(histoWidthPi0Data[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
+                    DrawGammaSetMarker(histoWidthPi0MC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
+                    histoWidthPi0MC[i]->DrawCopy("e1,same"); 
+                    legendWidthPi02->AddEntry(histoWidthPi0MC[i], Form("%s MC", triggerNameLabel[i].Data()), "p"); 
+                }    
+            }
+            legendWidthPi02->Draw();
+            labelEnergyWidth->Draw();
+            labelPi0Width->Draw();
+            labelDetProcWidth->Draw();
 
-        canvasWidth->Update();
-        canvasWidth->SaveAs(Form("%s/Pi0_%s_Width2.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+            canvasWidth->Update();
+            canvasWidth->SaveAs(Form("%s/Pi0_%s_Width2.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+        }    
     }
 
     //***************************************************************************************************************
@@ -2488,33 +2487,32 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         canvasMass->Update();
         canvasMass->SaveAs(Form("%s/Pi0_%s_Mass1_Reduced.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
 
-        canvasMass->cd();
-        histo2DMassPi0->DrawCopy();    
-        legendMassRedPi02->SetNColumns(2);
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==1 || i==3 || i==4 || i==5)) ||
-             (optionEnergy.CompareTo("8TeV")==0)
-             ){
-                if (graphMassPi0Data[i] && !maskedFullyPi0[i]) {
-                    DrawGammaSetMarkerTGraphAsym(graphMassPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                    graphMassPi0Data[i]->Draw("p,e1,same"); 
-                    legendMassRedPi02->AddEntry(graphMassPi0Data[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
-                }
-                if (graphMassPi0MC[i] && !maskedFullyPi0[i]) {
-                    DrawGammaSetMarkerTGraphAsym(graphMassPi0MC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
-                    graphMassPi0MC[i]->Draw("p,e1,same"); 
-                    legendMassRedPi02->AddEntry(graphMassPi0MC[i], Form("%s MC", triggerNameLabel[i].Data()), "p"); 
+        if ( optionEnergy.CompareTo("2.76TeV")==0 ){
+            canvasMass->cd();
+            histo2DMassPi0->DrawCopy();    
+            legendMassRedPi02->SetNColumns(2);
+            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+                if( i==1 || i==3 || i==4 || i==5){
+                    if (graphMassPi0Data[i] && !maskedFullyPi0[i]) {
+                        DrawGammaSetMarkerTGraphAsym(graphMassPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                        graphMassPi0Data[i]->Draw("p,e1,same"); 
+                        legendMassRedPi02->AddEntry(graphMassPi0Data[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
+                    }
+                    if (graphMassPi0MC[i] && !maskedFullyPi0[i]) {
+                        DrawGammaSetMarkerTGraphAsym(graphMassPi0MC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
+                        graphMassPi0MC[i]->Draw("p,e1,same"); 
+                        legendMassRedPi02->AddEntry(graphMassPi0MC[i], Form("%s MC", triggerNameLabel[i].Data()), "p"); 
+                    }    
                 }    
-            }    
+            }
+            legendMassRedPi02->Draw();
+            labelEnergyMass->Draw();
+            labelPi0Mass->Draw();
+            labelDetProcMass->Draw();
+
+            canvasMass->Update();
+            canvasMass->SaveAs(Form("%s/Pi0_%s_Mass2_Reduced.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
         }
-        legendMassRedPi02->Draw();
-        labelEnergyMass->Draw();
-        labelPi0Mass->Draw();
-        labelDetProcMass->Draw();
-
-        canvasMass->Update();
-        canvasMass->SaveAs(Form("%s/Pi0_%s_Mass2_Reduced.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
-
         //***************************************************************************************************************
         //********************************* Pi0 Mass weighted ***********************************************************
         //***************************************************************************************************************    
@@ -2571,33 +2569,32 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         canvasWidth->Update();
         canvasWidth->SaveAs(Form("%s/Pi0_%s_Width1_Reduced.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
 
-        canvasWidth->cd();
-        histo2DWidthPi0->DrawCopy();    
-        legendWidthRedPi02->SetNColumns(2);
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==1 || i==3 || i==4 || i==5)) ||
-             (optionEnergy.CompareTo("8TeV")==0)
-             ){
-                if (graphWidthPi0Data[i] && !maskedFullyPi0[i]) {
-                    DrawGammaSetMarkerTGraphAsym(graphWidthPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                    graphWidthPi0Data[i]->Draw("p,e1,same"); 
-                    legendWidthRedPi02->AddEntry(graphWidthPi0Data[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
+        if (optionEnergy.CompareTo("2.76TeV")==0){
+            canvasWidth->cd();
+            histo2DWidthPi0->DrawCopy();    
+            legendWidthRedPi02->SetNColumns(2);
+            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+                if( i==1 || i==3 || i==4 || i==5 ){
+                    if (graphWidthPi0Data[i] && !maskedFullyPi0[i]) {
+                        DrawGammaSetMarkerTGraphAsym(graphWidthPi0Data[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                        graphWidthPi0Data[i]->Draw("p,e1,same"); 
+                        legendWidthRedPi02->AddEntry(graphWidthPi0Data[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
+                    }    
+                    if (graphWidthPi0MC[i] && !maskedFullyPi0[i]) {    
+                        DrawGammaSetMarkerTGraphAsym(graphWidthPi0MC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
+                        graphWidthPi0MC[i]->Draw("p,e1,same"); 
+                        legendWidthRedPi02->AddEntry(graphWidthPi0MC[i], Form("%s MC", triggerNameLabel[i].Data()), "p"); 
+                    }    
                 }    
-                if (graphWidthPi0MC[i] && !maskedFullyPi0[i]) {    
-                    DrawGammaSetMarkerTGraphAsym(graphWidthPi0MC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
-                    graphWidthPi0MC[i]->Draw("p,e1,same"); 
-                    legendWidthRedPi02->AddEntry(graphWidthPi0MC[i], Form("%s MC", triggerNameLabel[i].Data()), "p"); 
-                }    
-            }    
+            }
+            legendWidthRedPi02->Draw();
+            labelEnergyWidth->Draw();
+            labelPi0Width->Draw();
+            labelDetProcWidth->Draw();
+
+            canvasWidth->Update();
+            canvasWidth->SaveAs(Form("%s/Pi0_%s_Width2_Reduced.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
         }
-        legendWidthRedPi02->Draw();
-        labelEnergyWidth->Draw();
-        labelPi0Width->Draw();
-        labelDetProcWidth->Draw();
-
-        canvasWidth->Update();
-        canvasWidth->SaveAs(Form("%s/Pi0_%s_Width2_Reduced.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
-
         //***************************************************************************************************************
         //********************************* Pi0 Width weighted **********************************************************
         //***************************************************************************************************************        
@@ -3365,26 +3362,26 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
         TLegend* legendMassEta2 = GetAndSetLegend2(0.46, 0.81, 0.80, 0.81+(1.05*8/2*0.85*textSizeSpectra),28);
         legendMassEta2->SetNColumns(2);
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==1 || i==3 || i==4 || i==5)) ||
-             (optionEnergy.CompareTo("8TeV")==0)
-             ){
-                DrawGammaSetMarker(histoMassEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                histoMassEtaData[i]->DrawCopy("e1,same"); 
-                legendMassEta2->AddEntry(histoMassEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
-                DrawGammaSetMarker(histoMassEtaMC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
-                histoMassEtaMC[i]->DrawCopy("e1,same"); 
-                legendMassEta2->AddEntry(histoMassEtaMC[i], Form("%s MC", triggerNameLabel[i].Data()), "p"); 
-            }    
-        }
-        legendMassEta2->Draw();
-        labelEnergyMass->Draw();
-        labelEtaMass->Draw();
-        labelDetProcMass->Draw();
-
-        canvasMass->Update();
-        canvasMass->SaveAs(Form("%s/Eta_%s_Mass2.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
         
+        if (optionEnergy.CompareTo("2.76TeV")==0 ){
+            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+            if( i==1 || i==3 || i==4 || i==5 ){
+                    DrawGammaSetMarker(histoMassEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                    histoMassEtaData[i]->DrawCopy("e1,same"); 
+                    legendMassEta2->AddEntry(histoMassEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
+                    DrawGammaSetMarker(histoMassEtaMC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
+                    histoMassEtaMC[i]->DrawCopy("e1,same"); 
+                    legendMassEta2->AddEntry(histoMassEtaMC[i], Form("%s MC", triggerNameLabel[i].Data()), "p"); 
+                }    
+            }
+            legendMassEta2->Draw();
+            labelEnergyMass->Draw();
+            labelEtaMass->Draw();
+            labelDetProcMass->Draw();
+
+            canvasMass->Update();
+            canvasMass->SaveAs(Form("%s/Eta_%s_Mass2.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+        }
 
         //***************************************************************************************************************
         //************************************Plotting Width Eta *********************************************************
@@ -3433,26 +3430,26 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
         TLegend* legendWidthEta2 = GetAndSetLegend2(0.46, 0.80, 0.80, 0.80+(1.05*8/2*0.85*textSizeSpectra),28);
         legendWidthEta2->SetNColumns(2);
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==1 || i==3 || i==4 || i==5)) ||
-             (optionEnergy.CompareTo("8TeV")==0)
-             ){
-                DrawGammaSetMarker(histoWidthEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                histoWidthEtaData[i]->DrawCopy("e1,same"); 
-                legendWidthEta2->AddEntry(histoWidthEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
-                DrawGammaSetMarker(histoWidthEtaMC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
-                histoWidthEtaMC[i]->DrawCopy("e1,same"); 
-                legendWidthEta2->AddEntry(histoWidthEtaMC[i], Form("%s MC", triggerNameLabel[i].Data()), "p"); 
-            }    
+        
+        if (optionEnergy.CompareTo("2.76TeV")==0 ){
+            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+                if( i==1 || i==3 || i==4 || i==5 ){
+                    DrawGammaSetMarker(histoWidthEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                    histoWidthEtaData[i]->DrawCopy("e1,same"); 
+                    legendWidthEta2->AddEntry(histoWidthEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
+                    DrawGammaSetMarker(histoWidthEtaMC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
+                    histoWidthEtaMC[i]->DrawCopy("e1,same"); 
+                    legendWidthEta2->AddEntry(histoWidthEtaMC[i], Form("%s MC", triggerNameLabel[i].Data()), "p"); 
+                }    
+            }
+            legendWidthEta2->Draw();
+            labelEnergyWidth->Draw();
+            labelEtaWidth->Draw();
+            labelDetProcWidth->Draw();
+
+            canvasWidth->Update();
+            canvasWidth->SaveAs(Form("%s/Eta_%s_Width2.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
         }
-        legendWidthEta2->Draw();
-        labelEnergyWidth->Draw();
-        labelEtaWidth->Draw();
-        labelDetProcWidth->Draw();
-
-        canvasWidth->Update();
-        canvasWidth->SaveAs(Form("%s/Eta_%s_Width2.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
-
         //***************************************************************************************************************
         //************************************Plotting unscaled invariant raw-yield Eta *********************************
         //***************************************************************************************************************
@@ -4207,7 +4204,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                                                                             binningEta,  maxNAllowedEta,
                                                                                             MaxNumberOfFiles
                                                                                         );
-           if (!graphMassEtaDataWeighted){
+            
+            if (!graphMassEtaDataWeighted){
                 cout << "Aborted in CalculateWeightedQuantity" << endl;
                 return;
             }
@@ -4336,30 +4334,29 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         histo2DMassEta->DrawCopy();    
         TLegend* legendMassRedEta2 = GetAndSetLegend2(0.46, 0.81, 0.80, 0.81+(1.05*8/2*0.85*textSizeSpectra),28);
         legendMassRedEta2->SetNColumns(2);        
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==1 || i==3 || i==4 || i==5)) ||
-             (optionEnergy.CompareTo("8TeV")==0)
-             ){
-                if (graphMassEtaData[i] && !maskedFullyEta[i]) {
-                    DrawGammaSetMarkerTGraphAsym(graphMassEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                    graphMassEtaData[i]->Draw("p,e1,same"); 
-                    legendMassRedEta2->AddEntry(graphMassEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
-                }
-                if (graphMassEtaMC[i] && !maskedFullyEta[i]) {
-                    DrawGammaSetMarkerTGraphAsym(graphMassEtaMC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
-                    graphMassEtaMC[i]->Draw("p,e1,same"); 
-                    legendMassRedEta2->AddEntry(graphMassEtaMC[i], Form("%s MC", triggerNameLabel[i].Data()), "p"); 
+        if (optionEnergy.CompareTo("2.76TeV")==0){
+            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+                if(i==1 || i==3 || i==4 || i==5 ){
+                    if (graphMassEtaData[i] && !maskedFullyEta[i]) {
+                        DrawGammaSetMarkerTGraphAsym(graphMassEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                        graphMassEtaData[i]->Draw("p,e1,same"); 
+                        legendMassRedEta2->AddEntry(graphMassEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
+                    }
+                    if (graphMassEtaMC[i] && !maskedFullyEta[i]) {
+                        DrawGammaSetMarkerTGraphAsym(graphMassEtaMC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
+                        graphMassEtaMC[i]->Draw("p,e1,same"); 
+                        legendMassRedEta2->AddEntry(graphMassEtaMC[i], Form("%s MC", triggerNameLabel[i].Data()), "p"); 
+                    }    
                 }    
-            }    
+            }
+            legendMassRedEta2->Draw();
+            labelEnergyMass->Draw();
+            labelEtaMass->Draw();
+            labelDetProcMass->Draw();
+
+            canvasMass->Update();
+            canvasMass->SaveAs(Form("%s/Eta_%s_Mass2_Reduced.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
         }
-        legendMassRedEta2->Draw();
-        labelEnergyMass->Draw();
-        labelEtaMass->Draw();
-        labelDetProcMass->Draw();
-
-        canvasMass->Update();
-        canvasMass->SaveAs(Form("%s/Eta_%s_Mass2_Reduced.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
-
         //***************************************************************************************************************
         //********************************* Eta Mass weighted ***********************************************************
         //***************************************************************************************************************    
@@ -4481,30 +4478,31 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         histo2DWidthEta->DrawCopy();    
         TLegend* legendWidthRedEta2 = GetAndSetLegend2(0.46, 0.80, 0.80, 0.80+(1.05*8/2*0.85*textSizeSpectra),28);
         legendWidthRedEta2->SetNColumns(2);        
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==1 || i==3 || i==4 || i==5)) ||
-             (optionEnergy.CompareTo("8TeV")==0)
-             ){
-                if (graphWidthEtaData[i] && !maskedFullyEta[i]) {
-                    DrawGammaSetMarkerTGraphAsym(graphWidthEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                    graphWidthEtaData[i]->Draw("p,e1,same"); 
-                    legendWidthRedEta2->AddEntry(graphWidthEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
+        if (optionEnergy.CompareTo("2.76TeV")==0 ){
+            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+                if( i==1 || i==3 || i==4 || i==5 ){
+
+                    if (graphWidthEtaData[i] && !maskedFullyEta[i]) {
+                        DrawGammaSetMarkerTGraphAsym(graphWidthEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                        graphWidthEtaData[i]->Draw("p,e1,same"); 
+                        legendWidthRedEta2->AddEntry(graphWidthEtaData[i], Form("%s data",triggerNameLabel[i].Data()), "p"); 
+                    }    
+                    if (graphWidthEtaMC[i] && !maskedFullyEta[i]) {    
+                        DrawGammaSetMarkerTGraphAsym(graphWidthEtaMC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
+                        graphWidthEtaMC[i]->Draw("p,e1,same"); 
+                        legendWidthRedEta2->AddEntry(graphWidthEtaMC[i], Form("%s MC", triggerNameLabel[i].Data()), "p"); 
+                    }    
                 }    
-                if (graphWidthEtaMC[i] && !maskedFullyEta[i]) {    
-                    DrawGammaSetMarkerTGraphAsym(graphWidthEtaMC[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i], colorTriggShade[i]);
-                    graphWidthEtaMC[i]->Draw("p,e1,same"); 
-                    legendWidthRedEta2->AddEntry(graphWidthEtaMC[i], Form("%s MC", triggerNameLabel[i].Data()), "p"); 
-                }    
-            }    
+            }
+            legendWidthRedEta2->Draw();
+            labelEnergyWidth->Draw();
+            labelEtaWidth->Draw();
+            labelDetProcWidth->Draw();
+
+            canvasWidth->Update();
+            canvasWidth->SaveAs(Form("%s/Eta_%s_Width2_Reduced.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
         }
-        legendWidthRedEta2->Draw();
-        labelEnergyWidth->Draw();
-        labelEtaWidth->Draw();
-        labelDetProcWidth->Draw();
-
-        canvasWidth->Update();
-        canvasWidth->SaveAs(Form("%s/Eta_%s_Width2_Reduced.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
-
+        
         //***************************************************************************************************************
         //********************************* Eta Width weighted **********************************************************
         //***************************************************************************************************************        

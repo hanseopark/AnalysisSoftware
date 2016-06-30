@@ -3031,7 +3031,9 @@ TGraphAsymmErrors* CalculateWeightedQuantity(   TGraphAsymmErrors** graphs,
     Bool_t available    [maxNMeasurements];
     Bool_t correctBin   [maxNMeasurements];
     cout << "\nCalculatedWeightedQuantity" << endl;
-
+    Int_t binCounters   [maxNMeasurements][2];
+    Bool_t stopped      [maxNMeasurements];
+    
     for (Int_t meas = 0; meas < maxNMeasurements; meas++){
         available[meas]         = kFALSE;
         cout << "\n" << endl;
@@ -3039,10 +3041,12 @@ TGraphAsymmErrors* CalculateWeightedQuantity(   TGraphAsymmErrors** graphs,
         cout << graphs[meas] << endl;
         cout << weights[meas] << endl;
         if (graphs[meas] && weights[meas]){
-            available[meas]     = kTRUE;
-            offsets[meas]       = 0;
-            correctBin[meas]    = kFALSE;
-        
+            available[meas]         = kTRUE;
+            offsets[meas]           = 0;
+            correctBin[meas]        = kFALSE;
+            binCounters[meas][0]    = 0;
+            binCounters[meas][1]    = 0;
+            stopped[meas]           = kFALSE;
             while (graphs[meas]->GetX()[0] > xPtLimits[offsets[meas]]){
                 cout << offsets[meas] << "\t"<< graphs[meas]->GetX()[0] << "\t"<< xPtLimits[offsets[meas]] << endl;
                 offsets[meas]++;
@@ -3068,32 +3072,69 @@ TGraphAsymmErrors* CalculateWeightedQuantity(   TGraphAsymmErrors** graphs,
         xErr[ptBin]     = xValue[ptBin]- xPtLimits[ptBin];
         Int_t nMeas     = 0;
         for (Int_t meas = 0; meas < maxNMeasurements; meas++){            
-            if (graphs[meas] && weights[meas] && !(ptBin < offsets[meas]) ){
-                if (   abs(graphs[meas]->GetX()[ptBin-offsets[meas]] - graphs[meas]->GetErrorXlow(ptBin-offsets[meas]) - xPtLimits[ptBin] ) < 0.000001 &&
-                        abs(graphs[meas]->GetX()[ptBin-offsets[meas]] + graphs[meas]->GetErrorXhigh(ptBin-offsets[meas]) - xPtLimits[ptBin+1] ) < 0.000001 
-                ){
-                    cout << meas << "\t" << ptBin-offsets[meas] << endl;
-//                     graphs[meas]->Print();
-                    cout << graphs[meas]->GetX()[ptBin-offsets[meas]] << "\t"<< graphs[meas]->GetY()[ptBin-offsets[meas]] << "\t" << weights[meas]->GetY()[ptBin-offsets[meas]] << endl;
-//                     cout << "doing "<< meas << ":\t" << graphs[meas]->GetX()[ptBin-offsets[meas]] << "\t" << weights[meas]->GetX()[ptBin-offsets[meas]] << endl;
-                    if (TMath::Abs(graphs[meas]->GetX()[ptBin-offsets[meas]] - weights[meas]->GetX()[ptBin-offsets[meas]]) > 0.00001 ){
-                        cout << "failed at "<< meas << ":\t" << graphs[meas]->GetX()[ptBin-offsets[meas]] << "\t" << weights[meas]->GetX()[ptBin-offsets[meas]] << endl;
-                        cout << "something went wrong with the offsets" << endl;
-//                         return NULL;
+            if (graphs[meas] && weights[meas] && !(ptBin < offsets[meas]) && !stopped[meas] ){
+                cout << meas<< " meas " << endl;
+                cout << "pt bin meas " <<": " << binCounters[meas][0] << "\t weight: " << binCounters[meas][1] << endl;
+                cout << "pt expected: " <<  xValue[ptBin] << "\t meas: " << graphs[meas]->GetX()[binCounters[meas][0]] <<  "\t weight: " << weights[meas]->GetX()[binCounters[meas][1]] << endl;
+                
+                if (TMath::Abs(graphs[meas]->GetX()[binCounters[meas][0]] - weights[meas]->GetX()[binCounters[meas][1]]) > 0.00001 ){
+//                     cout << "failed at "<< meas << ":\t" << graphs[meas]->GetX()[binCounters[meas][0]] << "\t" << weights[meas]->GetX()[binCounters[meas][1]] << endl;
+                    cout << "something went wrong with the offsets" << endl;
+    //                         return NULL;
+                    while ( (graphs[meas]->GetX()[binCounters[meas][0]] - weights[meas]->GetX()[binCounters[meas][1]] ) < 0 && !stopped[meas] ){
+                        cout << "increased bin count" << endl;
+                        binCounters[meas][0]++;    
+                        if (binCounters[meas][0] == graphs[meas]->GetN() ) stopped[meas] = kTRUE;
                     }
-                    if (TMath::Abs(weights[meas]->GetY()[ptBin-offsets[meas]]) > 1e-5){
-                        values[ptBin] += graphs[meas]->GetY()[ptBin-offsets[meas]]*weights[meas]->GetY()[ptBin-offsets[meas]];
-                        errors[ptBin] += graphs[meas]->GetErrorYhigh(ptBin-offsets[meas])*weights[meas]->GetY()[ptBin-offsets[meas]];
+                }    
+                
+                if (   abs(graphs[meas]->GetX()[binCounters[meas][0]] - graphs[meas]->GetErrorXlow(binCounters[meas][0]) - xPtLimits[ptBin] ) < 0.000001 &&
+                       abs(graphs[meas]->GetX()[binCounters[meas][0]] + graphs[meas]->GetErrorXhigh(binCounters[meas][0]) - xPtLimits[ptBin+1] ) < 0.000001  
+                   ){   
+                    cout << meas << " entered" << endl;
+                    // increase weight graph bin counter
+                    cout << "measured: " << graphs[meas]->GetY()[binCounters[meas][0]] <<  "\t weight: " << weights[meas]->GetY()[binCounters[meas][1]] << endl;
+                    if (TMath::Abs(weights[meas]->GetY()[binCounters[meas][1]]) > 1e-5){
+                        values[ptBin] += graphs[meas]->GetY()[binCounters[meas][0]]*weights[meas]->GetY()[binCounters[meas][1]];
+                        errors[ptBin] += graphs[meas]->GetErrorYhigh(binCounters[meas][0])*weights[meas]->GetY()[binCounters[meas][1]];
                         nMeas++;
                     } else {
                         cout << "weight put to 0" << endl;
                     }
-                }    
+                    binCounters[meas][1]++;
+                    binCounters[meas][0]++;
+                    if (binCounters[meas][0] == graphs[meas]->GetN())stopped[meas] = kTRUE;
+                    if (stopped[meas]) cout << "This is last bin of measurement " << meas << endl;
+                    
+                } else {
+                    if (binCounters[meas][0] == graphs[meas]->GetN()){
+                        stopped[meas] = kTRUE;
+                        cout << "bin counter for " << meas << " is at " << binCounters[meas][0] << " while the graph is only " << graphs[meas]->GetN() << endl;
+                        cout << "Thus I stopped for meas. " << meas << endl;
+                    } else {
+                        cout << "meas not in same binning " << meas << endl;
+                        cout << graphs[meas]->GetX()[binCounters[meas][0]] + graphs[meas]->GetErrorXhigh(binCounters[meas][0]) << "\t ??" << xPtLimits[ptBin+1] << endl;
+                        while ( (graphs[meas]->GetX()[binCounters[meas][0]] + graphs[meas]->GetErrorXhigh(binCounters[meas][0]) - xPtLimits[ptBin+1]) < 0 && !stopped[meas]){
+                           cout << "increased bin count" << endl;
+                           binCounters[meas][0]++;
+                           if (binCounters[meas][0] == graphs[meas]->GetN() ) stopped[meas] = kTRUE;
+                        }
+                        while ( (weights[meas]->GetX()[binCounters[meas][1]] - graphs[meas]->GetX()[binCounters[meas][0]]) < 0 && !stopped[meas] ){
+                            cout << "increased weight count" << endl;
+                           binCounters[meas][1]++;    
+                           if (binCounters[meas][1] == weights[meas]->GetN() ) stopped[meas] = kTRUE;
+                        }    
+                        cout << graphs[meas]->GetX()[binCounters[meas][0]] << "\t" << weights[meas]->GetX()[binCounters[meas][1]] << endl;
+                        if (stopped[meas]) cout << "Measurement " << meas << " stops here" << endl;
+                    }    
+                }   
             }
         }
+        
         if (nMeas == 0) 
             values[ptBin] = -10000;
-        cout << values[ptBin] << "+-"<< errors[ptBin] << endl;
+        cout << values[ptBin] << "+-"<< errors[ptBin] << endl << endl << endl << endl;;
+        
     }
     
     TGraphAsymmErrors* graphWeighted = new TGraphAsymmErrors(nPtLimits,xValue,values,xErr,xErr,errors,errors);
