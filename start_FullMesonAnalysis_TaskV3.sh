@@ -276,7 +276,7 @@ function GiveBinning7TeV()
 
 function GiveBinning8TeV()
 {
-    echo "How many p_T bins do you want to use for the Pi0? 23(7GeV), 24(8GeV), 25(10GeV), 26(12GeV) 27 (16GeV) 28 (25GeV), EMCAL (33), 48 EMC-merged (50GeV)";
+    echo "How many p_T bins do you want to use for the Pi0? 23(7GeV), 24(8GeV), 25(10GeV), 26(12GeV) 27 (16GeV) 28 (25GeV), EMCAL (33), 40 EMC-merged (26GeV) 48 EMC-merged (50GeV), 52 EMC-merged (70GeV)";
     
     read answer
     if [ $answer = 23 ]; then
@@ -323,6 +323,10 @@ function GiveBinning8TeV()
         echo "33 Bins --> Max p_T = 25 GeV ...";
         correctPi0=1
         BinsPtPi0=33
+    elif [ $answer = 40 ]; then
+        echo "40 Bins --> Max p_T = 26 GeV ...";
+        correctPi0=1
+        BinsPtPi0=40
     elif [ $answer = 44 ]; then
         echo "44 Bins --> Max p_T = 25 GeV ...";
         correctPi0=1
@@ -331,6 +335,10 @@ function GiveBinning8TeV()
         echo "48 Bins --> Max p_T = 50 GeV ...";
         correctPi0=1
         BinsPtPi0=48
+    elif [ $answer = 52 ]; then
+        echo "48 Bins --> Max p_T = 70 GeV ...";
+        correctPi0=1
+        BinsPtPi0=52
     else
         echo "Pi0 Binning was not set correctly. Please try again.";
         correctPi0=0

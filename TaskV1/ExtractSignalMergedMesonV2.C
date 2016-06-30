@@ -219,6 +219,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     }
     fHistoClustersMergedPtM02           = (TH2F*)ESDContainer->FindObject("ClusMerged_Pt_M02");
     fHistoClustersMergedPtM02AccMeson   = (TH2F*)ESDContainer->FindObject("ClusMerged_Pt_M02_AcceptedMeson");
+    fHistoClustersMergedEM02AccMeson    = (TH2F*)ESDContainer->FindObject("ClusMerged_E_M02_AcceptedMeson");
     fHistoClusterCandidates             = (TH1D*)ESDContainer->FindObject("GammaCandidates");
     fHistoClusterMergedCandidates       = (TH1D*)ESDContainer->FindObject("MergedCandidates");
     fHistoTrackVsClusterCandidates      = (TH2F*)ESDContainer->FindObject("GoodESDTracksVsGammaCandidates");
@@ -557,9 +558,14 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     //******************************************************************************************
     //************************* Plotting 2D M02 vs Pt ******************************************
     //******************************************************************************************
-    Double_t minZM02 = 0;
-    Double_t maxZM02 = 0;
-    
+    Double_t minZM02        = 0;
+    Double_t maxZM02        = 0;
+    Double_t minPtPlotting  = 2.95;
+    Double_t maxPtPlotting  = 50;
+    if (fEnergyFlag.CompareTo("8TeV") == 0){
+        minPtPlotting       = 10;
+        maxPtPlotting       = 70;
+    }
     TCanvas* canvasPtM02 = new TCanvas("canvasPtM02","",2250,1500);
     DrawGammaCanvasSettings(canvasPtM02, 0.085, 0.12, 0.02, 0.1);
     canvasPtM02->SetLogx(1); 
@@ -579,7 +585,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                                 "#lambda_{0}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
-                                1,2.95,50.05,0.8,0.8);
+                                1,minPtPlotting, maxPtPlotting,0.8,0.8);
         fHistoClustersMergedPtM02->GetXaxis()->SetMoreLogLabels();
         fHistoClustersMergedPtM02->GetXaxis()->SetLabelOffset(-0.02);
         fHistoClustersMergedPtM02->GetZaxis()->SetLabelOffset(-0.008);
@@ -589,7 +595,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         fHistoClustersMergedPtM02->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.55, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
 
-        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
+//         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
         
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_AllAcceptedClusters%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
@@ -601,15 +607,16 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     if(fHistoClustersMergedPtM02AccMeson){
         fHistoClustersMergedPtM02AccMeson->Sumw2();
         fHistoClustersMergedPtM02AccMeson->Scale(1./fNEvents);
-        if (minZM02 == 0) minZM02     = FindSmallestEntryIn2D(fHistoClustersMergedPtM02AccMeson);
-        if (maxZM02 == 0) maxZM02     = fHistoClustersMergedPtM02AccMeson->GetMaximum();
+        if (minZM02 == 0) minZM02       = FindSmallestEntryIn2D(fHistoClustersMergedPtM02AccMeson);
+        if (maxZM02 == 0) maxZM02       = fHistoClustersMergedPtM02AccMeson->GetMaximum();
+        
         DrawAutoGammaHistoPaper2D(fHistoClustersMergedPtM02AccMeson,
                                 " ",
                                 "#it{p}_{T} (GeV/#it{c})",
                                 "#lambda_{0}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
-                                1,2.95,50.05,0.8,0.8);
+                                1,minPtPlotting, maxPtPlotting,0.8,0.8);
         fHistoClustersMergedPtM02AccMeson->GetXaxis()->SetMoreLogLabels();
         fHistoClustersMergedPtM02AccMeson->GetXaxis()->SetLabelOffset(-0.02);
         fHistoClustersMergedPtM02AccMeson->GetZaxis()->SetLabelSize(0.051);
@@ -618,12 +625,41 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         fHistoClustersMergedPtM02AccMeson->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
         
-        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
+//         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
         
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_AllAcceptedMesons%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
 
+    //******************************************************************************************
+    //**************** Plotting 2D M02 vs E merged clusters passing meson cuts ****************
+    //******************************************************************************************    
+    if(fHistoClustersMergedEM02AccMeson){
+        fHistoClustersMergedEM02AccMeson->Sumw2();
+        fHistoClustersMergedEM02AccMeson->Scale(1./fNEvents);
+        if (minZM02 == 0) minZM02     = FindSmallestEntryIn2D(fHistoClustersMergedEM02AccMeson);
+        if (maxZM02 == 0) maxZM02     = fHistoClustersMergedEM02AccMeson->GetMaximum();
+        DrawAutoGammaHistoPaper2D(fHistoClustersMergedEM02AccMeson,
+                                " ",
+                                "#it{E} (GeV)",
+                                "#lambda_{0}^{2}",
+                                0,0,0,
+                                1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
+                                1,2.95, maxPtPlotting,0.8,0.8);
+        fHistoClustersMergedEM02AccMeson->GetXaxis()->SetMoreLogLabels();
+        fHistoClustersMergedEM02AccMeson->GetXaxis()->SetLabelOffset(-0.02);
+        fHistoClustersMergedEM02AccMeson->GetZaxis()->SetLabelSize(0.051);
+        fHistoClustersMergedEM02AccMeson->GetZaxis()->SetRangeUser(minZM02,maxZM02);
+        fHistoClustersMergedEM02AccMeson->GetXaxis()->SetTickLength(0.05);
+        fHistoClustersMergedEM02AccMeson->DrawCopy("COLZ");
+        PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
+        
+//         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
+        
+        canvasPtM02->Update();
+        canvasPtM02->SaveAs(Form("%s/%s_%s_EVsM02_AllAcceptedMesons%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
+    }
+    
 //     //******************************************************************************************
 //     //******************** Plotting 2D M02 vs Pt validated merged clusters *********************
 //     //******************************************************************************************        
@@ -640,7 +676,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
 //                                 "#lambda_{0}^{2}",
 //                                 0,0,0,
 //                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
-//                                 1,2.95,50.05,0.8,0.8);
+//                                 1,minPtPlotting, maxPtPlotting,0.8,0.8);
 //         dumm2D->GetXaxis()->SetMoreLogLabels();
 //         dumm2D->GetXaxis()->SetLabelOffset(-0.02);
 //         dumm2D->GetZaxis()->SetLabelOffset(-0.008);
@@ -673,7 +709,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                                 "#lambda_{0}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
-                                1,2.95,50.05,0.8,0.8);
+                                1,minPtPlotting, maxPtPlotting,0.8,0.8);
         dumm2D->GetXaxis()->SetMoreLogLabels();
         dumm2D->GetXaxis()->SetLabelOffset(-0.02);
         dumm2D->GetZaxis()->SetLabelOffset(-0.008);
@@ -706,7 +742,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                                 "#lambda_{0}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
-                                1,2.95,50.05,0.8,0.8);
+                                1,minPtPlotting, maxPtPlotting,0.8,0.8);
         dumm2D->GetXaxis()->SetMoreLogLabels();
         dumm2D->GetXaxis()->SetLabelOffset(-0.02);
         dumm2D->GetZaxis()->SetLabelOffset(-0.008);
@@ -737,7 +773,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                                 "#lambda_{0}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
-                                1,2.95,50.05,0.8,0.8);
+                                1,minPtPlotting, maxPtPlotting,0.8,0.8);
         fHistoTrueClustersGammaPtM02->GetXaxis()->SetMoreLogLabels();
         fHistoTrueClustersGammaPtM02->GetXaxis()->SetLabelOffset(-0.02);
         fHistoTrueClustersGammaPtM02->GetZaxis()->SetLabelOffset(-0.008);
@@ -768,7 +804,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                                 "#lambda_{0}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
-                                1,2.95,50.05,0.8,0.8);
+                                1,minPtPlotting, maxPtPlotting,0.8,0.8);
         fHistoTrueClustersElectronPtM02->GetXaxis()->SetMoreLogLabels();
         fHistoTrueClustersElectronPtM02->GetXaxis()->SetLabelOffset(-0.02);
         fHistoTrueClustersElectronPtM02->GetZaxis()->SetLabelOffset(-0.008);
@@ -800,7 +836,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                                 "#lambda_{0}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
-                                1,2.95,50.05,0.8,0.8);
+                                1,minPtPlotting, maxPtPlotting,0.8,0.8);
         fHistoTrueClustersBGPtM02->GetXaxis()->SetMoreLogLabels();
         fHistoTrueClustersBGPtM02->GetXaxis()->SetLabelOffset(-0.02);
         fHistoTrueClustersBGPtM02->GetZaxis()->SetLabelOffset(-0.008);
@@ -1280,10 +1316,10 @@ void Initialize(TString setPi0,Int_t numberOfBins){
         fMesonId                        = 111;
         fMesonMassPlotRange             = new Double_t[2]; 
         fMesonMassPlotRange[0]          = 0.; 
-        fMesonMassPlotRange[1]          = 0.3;
+        fMesonMassPlotRange[1]          = 0.5;
         fMesonMassIntRange              = new Double_t[2]; 
         fMesonMassIntRange[0]           = 0.; 
-        fMesonMassIntRange[1]           = 0.3;
+        fMesonMassIntRange[1]           = 0.5;
 
         fMesonM02PlotRange              = new Double_t[2];
         fMesonM02PlotRange[0]           = 0;
@@ -2263,6 +2299,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3) {
         
         if(fHistoClustersMergedPtM02)                   fHistoClustersMergedPtM02->Write("ClusterMergedPtM02");
         if(fHistoClustersMergedPtM02AccMeson)           fHistoClustersMergedPtM02AccMeson->Write("ClusterMergedPtM02AccMeson");
+        if(fHistoClustersMergedEM02AccMeson)            fHistoClustersMergedEM02AccMeson->Write("ClusterMergedEM02AccMeson");
         if(fHistoTrackVsClusterCandidates)              fHistoTrackVsClusterCandidates->Write("TrackCandidatesVsClusters");
 
         if (fAdvancedClusterQA){
@@ -2375,6 +2412,7 @@ void Delete(){
     if (fHistoClustersOverlapHeadersPt)                         delete fHistoClustersOverlapHeadersPt;
     if (fHistoClustersMergedPtM02)                              delete fHistoClustersMergedPtM02;
     if (fHistoClustersMergedPtM02AccMeson)                      delete fHistoClustersMergedPtM02AccMeson;
+    if (fHistoClustersMergedEM02AccMeson)                       delete fHistoClustersMergedEM02AccMeson;
     if (fHistoTrackVsClusterCandidates)                         delete fHistoTrackVsClusterCandidates;
     if (fHistoInvMassVsPt)                                      delete fHistoInvMassVsPt;
     if (fHistoSPDtrackletvsSPDclusters)                         delete fHistoSPDtrackletvsSPDclusters;

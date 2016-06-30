@@ -188,6 +188,7 @@ TH1D*       fHistoClustersPt                                            = NULL;
 TH1D*       fHistoClustersOverlapHeadersPt                              = NULL;
 TH2F*       fHistoClustersMergedPtM02                                   = NULL;
 TH2F*       fHistoClustersMergedPtM02AccMeson                           = NULL;
+TH2F*       fHistoClustersMergedEM02AccMeson                            = NULL;
 TH1D*       fHistoClusterCandidates                                     = NULL;
 TH1D*       fHistoClusterMergedCandidates                               = NULL;
 TH2F*       fHistoTrackVsClusterCandidates                              = NULL;

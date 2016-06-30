@@ -144,7 +144,7 @@ Double_t fBinsPi08TeVPtEMCAL[33]                = { 0.0, 0.3, 0.4, 0.5, 0.6,
                                                     6.0, 7.0, 8.0, 10.0, 12.0,
                                                     16.0, 20.0, 25.0};
 
-Double_t fBinsPi08TeVPtMerged[50]               = { 0.0, 0.4, 0.6, 0.8, 1.0,
+Double_t fBinsPi08TeVPtMerged[53]               = { 0.0, 0.4, 0.6, 0.8, 1.0,
                                                     1.2, 1.4, 1.6, 1.8, 2.0, 
                                                     2.2, 2.4, 2.6, 3.0, 3.5, 
                                                     4.0, 4.5, 5.0, 5.5, 6.0, 
@@ -153,7 +153,8 @@ Double_t fBinsPi08TeVPtMerged[50]               = { 0.0, 0.4, 0.6, 0.8, 1.0,
                                                     13.0, 14.0, 15.0, 16.0, 17.0, 
                                                     18.0, 19.0, 20.0, 22.0, 24.0, 
                                                     26.0, 28.0, 30.0, 34.0, 36.0,
-                                                    38.0, 40.0, 45.0, 50.0, 60.0};
+                                                    38.0, 40.0, 45.0, 50.0, 55.0,
+                                                    60.0, 65.0, 70.0 };
 
                                                     
 Double_t fBinsPi08TeVPtDCA[23]                  = { 0.0, 0.3, 0.4, 0.6, 0.8,
@@ -233,11 +234,12 @@ Int_t fBinsPi08TeVConvEMCALPtRebin[28]          = { 2, 2,
                                                     2, 2, 2, 4, 4,
                                                     4, 4, 5, 8, 16,
                                                     2};
-Int_t fBinsPi08TeVPtMergedRebin[49]             = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+Int_t fBinsPi08TeVPtMergedRebin[52]             = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2, 4, 4, 4, 4, 4,
                                                     4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                                                     4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-                                                    4, 4, 4, 4, 4, 4, 4, 5, 5 };
+                                                    4, 4, 4, 4, 4, 4, 4, 5, 5, 5,
+                                                    5, 5};
 
 Double_t fBinsEtaCombine8TeVPt[26]              = { 0.0, 0.4, 0.8, 1.2, 1.6,
                                                     2.0, 2.4, 2.8, 3.2, 3.6,
@@ -973,9 +975,9 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                   cout << "You have chosen to have more than 28 bins, this is not possible, it will be reduced to 28" << endl;
                   fNBinsPt        = 28;
                 }
-            } else if (fNBinsPt > 49 && (modi == 10)){
+            } else if (fNBinsPt > 52 && (modi == 10)){
                 cout << "You have chosen to have more than 49 bins, this is not possible, it will be reduced to 49" << endl;
-                fNBinsPt        = 49;
+                fNBinsPt        = 52;
             }    
 
 //            if (modi ==4){
