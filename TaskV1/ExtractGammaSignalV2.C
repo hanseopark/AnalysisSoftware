@@ -45,11 +45,6 @@
 #include "../CommonHeaders/ExtractSignalPlotting.h"
 #include "ExtractGammaSignalV2.h"
 
-//
-// To do:
-//  - PlotDCAzInPtBinsWithBack with different background extraction methods!
-//
-
 //**************************************************************************************************
 //**********************************  Main Function ************************************************
 //**************************************************************************************************
