@@ -3050,6 +3050,13 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fMesonIntDeltaRangeWide[1]      = 0.065;
             fMesonIntDeltaRangeNarrow[0]    = -0.040;
             fMesonIntDeltaRangeNarrow[1]    = 0.045;
+
+            if ( fEnergyFlag.CompareTo("8TeV") == 0 ){
+              TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+              if( trigger.CompareTo("81") == 0 || triggerSet == 2){
+                fMesonFitRange[1]=0.75;
+              }
+            }
         }
         if (fMode == 4){
             fPeakRange[0]                   = 0.51;
@@ -4723,6 +4730,12 @@ void FitSubtractedPureGaussianInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPt
 
     Double_t linBckg = 0.05;
     if(fEnergyFlag.CompareTo("8TeV") == 0 && fPrefix.CompareTo("Eta") == 0) linBckg = 0.1;
+    if ( fEnergyFlag.CompareTo("8TeV") == 0 && fPrefix.CompareTo("Pi0") == 0){
+      TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+      if( trigger.CompareTo("52") == 0 ){
+        linBckg = 0.07;
+      }
+    }
 
     fFitReco= NULL;
     fFitReco = new TF1("GaussLinearBG","gaus(0)+[3]+[4]*x",fMesonFitRange[0],fMesonFitRange[1]);
@@ -5472,15 +5485,6 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
 
     cout << "Begin writing Uncorrected File" << endl;
     
-    Int_t fNBinsClusterPt           =  64;
-    Double_t fBinsClusterPt[65]     =  {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
-                                        1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
-                                        2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
-                                        4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8,
-                                        6.0, 6.2, 6.4, 6.6, 6.8, 7.0, 7.4, 7.8, 8.2, 8.6,
-                                        9.0, 9.5, 10,  11,  12,  14,  16,  18,  20,  25, 
-                                        30 , 35, 40, 45, 50 };
-
     TH1D*   fDeltaPtCluster       = new TH1D("fDeltaPtCluster","",fNBinsClusterPt,fBinsClusterPt);
     for(Int_t iPt=1;iPt<fNBinsClusterPt+1;iPt++){
         fDeltaPtCluster->SetBinContent(iPt,fBinsClusterPt[iPt]-fBinsClusterPt[iPt-1]);

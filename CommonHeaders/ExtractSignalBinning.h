@@ -8,6 +8,8 @@ Int_t fRow                                      = 0;
 Int_t fNBinsPt                                  = 0;    
 Double_t *fBinsPt                               = NULL;
 Int_t* fNRebin                                  = NULL;
+Int_t fNBinsClusterPt                           = 0;
+Double_t *fBinsClusterPt                        = NULL;
 Int_t fNBinsPtDCAzDist                          = 0;
 Double_t *fBinsPtDCAzDist                       = NULL;
 Int_t fExampleBin                               = 0;
@@ -21,7 +23,6 @@ Int_t fBinsPeakPtRebin[12]                      = { 4, 4, 2, 2, 2,
 Double_t fBinsPeakPtHalf[13]                    = { 0.0, 0.2, 0.3, 0.4, 0.5,
                                                     0.6, 0.7, 0.8, 1.0, 1.5,
                                                     2.0, 2.5, 3.5};
-
 //******************** Pt binning for pp, 7 TeV ***************************************************
 Double_t fBinsPi07TeVPt[33]                     = { 0.0, 0.3, 0.4, 0.5, 0.6, 
                                                     0.8, 1.0, 1.2, 1.4, 1.6, 
@@ -234,18 +235,18 @@ Int_t fBinsPi08TeVConvEMCALTrigger1PtRebin[40]  = { 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
-                                                    2, 2, 4, 4, 4,
-                                                    4, 4, 4, 4, 4,
-                                                    4, 4, 4, 4, 4,
-                                                    5, 8, 8, 10, 2};
+                                                    2, 2, 5, 5, 5,
+                                                    5, 8, 8, 8, 8,
+                                                    8, 8, 8, 8, 8,
+                                                    5, 10, 10, 10, 2};
 Int_t fBinsPi08TeVConvEMCALTrigger2PtRebin[42]  = { 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
-                                                    2, 2, 2, 4, 4,
-                                                    4, 4, 4, 4, 4,
-                                                    4, 4, 5, 8, 8,
+                                                    2, 2, 2, 10, 10,
+                                                    10, 10, 10, 10, 10,
+                                                    10, 10, 10, 10, 10,
                                                     10, 2};
 Int_t fBinsPi08TeVConvEMCALPtRebin[28]          = { 2, 2,
                                                     4, 2, 2, 2, 2,
@@ -299,8 +300,8 @@ Int_t fBinsEta8TeVPtRebin[19]                   = { 5, 8, 4, 4, 4,
                                                     4, 4, 5, 5, 5,
                                                     5, 5, 7, 5, 5,
                                                     5, 5, 5, 5};
-Int_t fBinsEta8TeVEMCALPtRebin[19]              = { 4, 4, 4, 10, 10,
-                                                    10, 10, 8, 8, 8,
+Int_t fBinsEta8TeVEMCALPtRebin[19]              = { 4, 4, 4, 16, 10,
+                                                    16, 8, 8, 10, 8,
                                                     8, 8, 8, 16, 16,
                                                     16, 20, 4, 4};
 Int_t fBinsEta8TeVConvEMCALPtRebin[19]          = { 20, 20, 20, 10, 8,
@@ -329,13 +330,13 @@ Int_t fBinsEta8TeVEMCALTrigger2PtRebin[23]      = { 5, 5, 5, 5, 5,
                                                     10, 20, 5};
 Int_t fBinsEta8TeVConvEMCALTrigger1PtRebin[23]  = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
-                                                    8, 8, 8, 8, 8,
-                                                    8, 8, 10, 16, 16,
+                                                    16, 16, 16, 16, 16,
+                                                    16, 16, 16, 16, 16,
                                                     5, 5, 5};
 Int_t fBinsEta8TeVConvEMCALTrigger2PtRebin[23]  = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
-                                                    5, 5, 5, 5, 10,
-                                                    10, 10, 10, 10, 16,
+                                                    5, 5, 5, 5, 16,
+                                                    16, 16, 20, 20, 20,
                                                     20, 25, 2};
 Int_t fBinsPi0EtaBinning8TeVPtRebin[19]         = { 8, 1, 1, 1, 1, 
                                                     1, 1, 2, 2, 2, 
@@ -345,6 +346,16 @@ Int_t fBinsPi0EtaBinning8TeVConvEMCALPtRebin[19] = {8, 2, 2, 2, 2,
                                                     2, 2, 4, 4, 4,
                                                     4, 4, 4, 8, 8,
                                                     8, 8, 8, 8};
+
+Int_t fNBinsCluster8TeVPt           =  73;
+Double_t fBinsCluster8TeVPt[74]     =  {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
+                                        1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
+                                        2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
+                                        4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8,
+                                        6.0, 6.2, 6.4, 6.6, 6.8, 7.0, 7.4, 7.8, 8.2, 8.6,
+                                        9.0, 9.5, 10, 10.5, 11, 11.5, 12., 13., 14., 15.,
+                                        16., 17., 18., 19., 20., 22., 24., 26., 28., 30.,
+                                        35, 40, 45, 50 };
 //******************** Pt binning for pp, 0.9 TeV ***************************************************
 Double_t fBinsPi0900GeVPt[12]                   = { 0.0, 0.4, 0.6, 0.8, 1.0,
                                                     1.2, 1.4, 1.6, 2.0, 2.5,
@@ -570,6 +581,14 @@ Double_t fBinsPi02760GeVDirectPhotonPt[16]      = { 0.0, 0.3, 0.6, 0.8, 1.0,
 Int_t fBinsPi02760GeVDirectPhotonPtRebin[15]    = { 4, 2, 2, 2, 2, 
                                                     2, 2, 2, 2, 2, 
                                                     2, 2, 4, 4, 4};
+Int_t fNBinsCluster2760GeVPt        =  64;
+Double_t fBinsCluster2760GeVPt[65]  =  {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
+                                        1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
+                                        2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
+                                        4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8,
+                                        6.0, 6.2, 6.4, 6.6, 6.8, 7.0, 7.4, 7.8, 8.2, 8.6,
+                                        9.0, 9.5, 10,  11,  12,  14,  16,  18,  20,  25,
+                                        30 , 35, 40, 45, 50 };
 
 // ***************** Pt binning for PbPb, 2.76 TeV *************************************
 Double_t fBinsPi0HIPt[25]                       = { 0.0, 0.4, 0.6, 0.8, 1.0,
@@ -860,6 +879,30 @@ Int_t fBinsPi0pPbDirectPhotonPtRebin[19]        = { 4, 4, 2, 2, 2,
 //******************** Initialize binning for analysis stream  ************************************
 //*************************************************************************************************
 void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TString directPhoton, Int_t modi, TString eventCutSelection, TString clusterCutSelection, Int_t triggerSet = -1){
+    //*************************************************************************************************
+    //************************************ Binning for Cluster ****************************************
+    //*************************************************************************************************
+
+    fBinsClusterPt = new Double_t[100];
+    if( energy.CompareTo("2.76TeV") == 0){
+
+      fNBinsClusterPt = fNBinsCluster2760GeVPt;
+      for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
+        fBinsClusterPt[iPt] = fBinsCluster2760GeVPt[iPt];
+      }
+
+    } else if( energy.CompareTo("8TeV") == 0){
+
+      fNBinsClusterPt = fNBinsCluster8TeVPt;
+      for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
+        fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
+      }
+
+    } else {
+      fNBinsClusterPt = 0;
+      fBinsClusterPt = NULL;
+    }
+
     //*************************************************************************************************
     //************************************ Binning for Pi0 ********************************************
     //*************************************************************************************************

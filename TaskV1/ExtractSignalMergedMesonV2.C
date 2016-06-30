@@ -2255,16 +2255,6 @@ TH1D* CalculateSecondaryFractions(TH1D* histoRawYield, TH1D* histoRawYieldSec, T
 //****************************************************************************
 void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3) {
 
-    Int_t fNBinsClusterPt           = 64;
-    Double_t fBinsClusterPt[65]     = {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
-                                       1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
-                                       2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
-                                       4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8,
-                                       6.0, 6.2, 6.4, 6.6, 6.8, 7.0, 7.4, 7.8, 8.2, 8.6,
-                                       9.0, 9.5, 10,  11,  12,  14,  16,  18,  20,  25,
-                                       30,  35,  40,  45,  50 
-                                      };
-
     TH1D*   fDeltaPtCluster         = new TH1D("fDeltaPtCluster", "", fNBinsClusterPt, fBinsClusterPt);
     for(Int_t iPt=1;iPt<fNBinsClusterPt+1;iPt++){
         fDeltaPtCluster->SetBinContent(iPt,fBinsClusterPt[iPt]-fBinsClusterPt[iPt-1]);
