@@ -1145,7 +1145,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         minMassPi0              = 0.123;
         maxMassPi0              = 0.150;
       }else if(mode == 4){
-        maxMassPi0              = 0.165;
+        maxMassPi0              = 0.180;
       }
     }
 
@@ -1856,6 +1856,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             histoStatPi0[4]     = histoCorrectedYieldPi0ScaledMasked[i];
             graphSystPi0[4]     = graphsCorrectedYieldSysShrunkPi0[i];
             offSetsPi0Sys[4]    = histoStatPi0[4]->GetXaxis()->FindBin(graphSystPi0[4]->GetX()[0])-1;
+            if(optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2)) offSetsPi0Sys[4]+=4;
+
             if (graphMassPi0Data[i]) 
                 graphOrderedMassPi0Data[4]      = graphMassPi0Data[i];
             if (graphMassPi0MC[i]) 
@@ -2047,7 +2049,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                                                                                    nameWeightsLogFilePi0.Data(),
                                                                                                    mode, optionEnergy, "Pi0", v2ClusterizerMerged 
                                                                                                );
-    
+  //  return;
         // preparations for weight readout
         Double_t xValuesReadPi0[100];
         Double_t weightsReadPi0[12][100];
@@ -3111,8 +3113,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 if (! doBinShiftForEtaToPi0){
                     histoCorrectedYieldPi0EtaBin[i]             = (TH1D*)fileCorrectedPi0EtaBin[i]->Get(nameCorrectedYield.Data());
                     histoCorrectedYieldPi0EtaBin[i]->SetName(Form("CorrectedYieldPi0EtaBin_%s",cutNumber[i].Data()));
-                    histoEtaToPi0[i]                            = (TH1D*)histoCorrectedYieldEta[i]->Clone(Form("EtaToPi0_%s", cutNumber[i].Data()));
-                    histoEtaToPi0[i]->Divide(histoEtaToPi0[i],histoCorrectedYieldPi0EtaBin[i],1.,1.,"");
+                    if(optionEnergy.CompareTo("8TeV")==0 && mode==4){
+                      histoEtaToPi0[i]                            = (TH1D*)histoCorrectedYieldPi0EtaBin[i]->Clone(Form("EtaToPi0_%s", cutNumber[i].Data()));
+                      for(Int_t iB=1; iB<=histoCorrectedYieldPi0EtaBin[i]->GetNbinsX(); iB++){histoEtaToPi0[i]->SetBinContent(iB,histoCorrectedYieldEta[i]->GetBinContent(iB));}
+                      histoEtaToPi0[i]->Divide(histoEtaToPi0[i],histoCorrectedYieldPi0EtaBin[i],1.,1.,"");
+                    }else{
+                      histoEtaToPi0[i]                            = (TH1D*)histoCorrectedYieldEta[i]->Clone(Form("EtaToPi0_%s", cutNumber[i].Data()));
+                      histoEtaToPi0[i]->Divide(histoEtaToPi0[i],histoCorrectedYieldPi0EtaBin[i],1.,1.,"");
+                    }
                 } else {
                     TFile *fileFitsBinShift                     = new TFile(nameFileFitsShift);
                     TF1* fitBinShiftPi0                         = (TF1*)fileFitsBinShift->Get("TsallisFitPi0");
@@ -3126,9 +3134,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     TH1D* histoCorrectedYieldEtaBinShift        = (TH1D*)histoCorrectedYieldEta[i]->Clone(Form("CorrectedYieldEtaBinShifted_%s",cutNumber[i].Data()));
                     histoCorrectedYieldEtaBinShift              = ApplyYshiftIndividualSpectra( histoCorrectedYieldEtaBinShift, fitBinShiftEta);
 
-                    histoEtaToPi0[i]                            = (TH1D*)histoCorrectedYieldEtaBinShift->Clone(Form("EtaToPi0%s_%s", addNameBinshift.Data(), cutNumber[i].Data()));
-                    histoEtaToPi0[i]->Divide(histoEtaToPi0[i],histoCorrectedYieldPi0EtaBinBinShift,1.,1.,"");
-
+                    if(optionEnergy.CompareTo("8TeV")==0 && mode==4){
+                      histoEtaToPi0[i]                            = (TH1D*)histoCorrectedYieldPi0EtaBinBinShift->Clone(Form("EtaToPi0_%s", cutNumber[i].Data()));
+                      for(Int_t iB=1; iB<=histoCorrectedYieldPi0EtaBinBinShift->GetNbinsX(); iB++){histoEtaToPi0[i]->SetBinContent(iB,histoCorrectedYieldEtaBinShift->GetBinContent(iB));}
+                      histoEtaToPi0[i]->Divide(histoEtaToPi0[i],histoCorrectedYieldPi0EtaBinBinShift,1.,1.,"");
+                    }else{
+                      histoEtaToPi0[i]                            = (TH1D*)histoCorrectedYieldEtaBinShift->Clone(Form("EtaToPi0%s_%s", addNameBinshift.Data(), cutNumber[i].Data()));
+                      histoEtaToPi0[i]->Divide(histoEtaToPi0[i],histoCorrectedYieldPi0EtaBinBinShift,1.,1.,"");
+                    }
                 }    
             }
             
@@ -3895,6 +3908,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 histoStatEta[4]     = histoCorrectedYieldEtaScaledMasked[i];
                 graphSystEta[4]     = graphsCorrectedYieldSysShrunkEta[i];
                 offSetsEtaSys[4]    = histoStatEta[4]->GetXaxis()->FindBin(graphSystEta[4]->GetX()[0])-1;
+                if(optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2)) offSetsEtaSys[4]+=2;
+
                 if (graphMassEtaData[i]) 
                     graphOrderedMassEtaData[4]      = graphMassEtaData[i];
                 if (graphMassEtaMC[i]) 
@@ -3943,6 +3958,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                                                                                     nameWeightsLogFileEta.Data(),
                                                                                                     mode, optionEnergy, "Eta", v2ClusterizerMerged
                                                                                                   );
+     //return;
             // Prepare arrays for reading weighting numbers 
             Double_t xValuesReadEta[100];
             Double_t weightsReadEta[12][100];
@@ -4184,14 +4200,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 
             canvasRelTotErr->SaveAs(Form("%s/Eta_RelErrorsFulldecomp.%s",outputDir.Data(),suffix.Data()));
             
-            
+
             // create averaged supporting graphs
             graphMassEtaDataWeighted                        = CalculateWeightedQuantity(    graphOrderedMassEtaData, 
                                                                                             graphWeightsEta,
                                                                                             binningEta,  maxNAllowedEta,
                                                                                             MaxNumberOfFiles
                                                                                         );
-            if (!graphMassEtaDataWeighted){
+           if (!graphMassEtaDataWeighted){
                 cout << "Aborted in CalculateWeightedQuantity" << endl;
                 return;
             }
@@ -4466,7 +4482,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TLegend* legendWidthRedEta2 = GetAndSetLegend2(0.46, 0.80, 0.80, 0.80+(1.05*8/2*0.85*textSizeSpectra),28);
         legendWidthRedEta2->SetNColumns(2);        
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            /*if (i == 1 || i == 3 || i == 4 || i == 5)*/{
+          if((optionEnergy.CompareTo("2.76TeV")==0 && (i==1 || i==3 || i==4 || i==5)) ||
+             (optionEnergy.CompareTo("8TeV")==0)
+             ){
                 if (graphWidthEtaData[i] && !maskedFullyEta[i]) {
                     DrawGammaSetMarkerTGraphAsym(graphWidthEtaData[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
                     graphWidthEtaData[i]->Draw("p,e1,same"); 
@@ -4805,6 +4823,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 graphsEtaToPi0SysRemoved0[i]    = new TGraphAsymmErrors(histoEtaToPi0[i]);
                 histoEtaToPi0Masked[i]          = (TH1D*)histoEtaToPi0[i]->Clone(Form("EtaToPi0%s_Masked_%s",addNameBinshift.Data(), triggerName[i].Data()));
                 
+                if(optionEnergy.CompareTo("8TeV")==0 && mode==4 && triggerName[i].Contains("EGA")) ptFromSpecEta[i][0] = 14;
+                cout << ptFromSpecEta[i][0] << endl;
                 // remove 0 bins at beginning according to ptFromSpecEta[i][0]
                 Int_t binsToMask = 1;
                 while (histoEtaToPi0Masked[i]->GetBinCenter(binsToMask) < ptFromSpecEta[i][0] ){
@@ -4940,6 +4960,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     histoStatEtaToPi0[4]     = histoEtaToPi0Masked[i];
                     graphSystEtaToPi0[4]     = graphsEtaToPi0SysShrunk[i];
                     offSetsEtaToPi0Sys[4]    = histoStatEtaToPi0[4]->GetXaxis()->FindBin(graphSystEtaToPi0[4]->GetX()[0])-1;
+
+                    if(optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2)) offSetsEtaToPi0Sys[4]+=2;
                 } else if (triggerName[i].Contains("EG1") && graphsEtaToPi0Shrunk[i]){   
                     cout << "filling EG1 trigger" << endl;
                     histoStatEtaToPi0[5]     = histoEtaToPi0Masked[i];
@@ -4952,6 +4974,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             TGraphAsymmErrors* graphEtaToPi0WeightedAverageTot  = NULL;
             // Calculate averaged eta/pi0 graphs according to statistical and systematic errors taking correctly into account the cross correlations
             if (averagedEta){
+                if(optionEnergy.CompareTo("8TeV")==0 && mode==4) maxNAllowedEta -= 3;
                 // calculate averaged eta/pi0 graphs
                 graphEtaToPi0WeightedAverageTot         = CombinePtPointsSpectraTriggerCorrMat( histoStatEtaToPi0, graphSystEtaToPi0,  
                                                                                                 binningEta,  maxNAllowedEta,
