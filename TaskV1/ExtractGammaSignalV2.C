@@ -45,6 +45,11 @@
 #include "../CommonHeaders/ExtractSignalPlotting.h"
 #include "ExtractGammaSignalV2.h"
 
+//
+// To do:
+//  - PlotDCAzInPtBinsWithBack with different background extraction methods!
+//
+
 //**************************************************************************************************
 //**********************************  Main Function ************************************************
 //**************************************************************************************************
@@ -549,7 +554,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
 
     //******************************** Save raw histograms for gammas ***************************************
     SaveHistos(fIsMC,cutSelection,fPrefix2,pileUpCorrection);
-    
+
     //******************************** Save pileup related histograms for raw gammas ************************
     if(pileUpCorrection && !addSig){
         SaveDCAHistos(fIsMC,cutSelection,fPrefix2);
@@ -659,7 +664,7 @@ void CalculatePileUpBackground(Bool_t doMC){
             
             // fake pileup background estimate from MCrec gamma
             if (catIter < 3){
-                fMCrecGammaPtDCAzBinsBack[catIter][0]                                       = (TH1D*)fMCrecGammaPtDCAzBins[catIter][0]->ShowBackground(nIterationsShowBackground[catIter],optionShowBackgroundStandard.Data());
+                fMCrecGammaPtDCAzBinsBack[catIter][0]                                       = (TH1D*)fMCrecGammaPtDCAzBins[catIter][0]->ShowBackground(nIterationsShowBackground[catIter],optionShowBackground[0].Data());
                 fMCrecGammaPtDCAzBinsBack[catIter][0]->Sumw2();
                 fMCrecGammaPtDCAzBinsBack[catIter][0]->SetName(Form("MCrec_GammaPtDCAzBackBin_Full_%s", categoryName[catIter].Data()));
                 if (fMCrecGammaPtDCAzBinsBack[catIter][0]->Integral() < 1 || fMCrecGammaPtDCAzBinsBack[catIter][0]->GetEntries() > fMCrecGammaPtDCAzBins[catIter][0]->GetEntries()) {
@@ -738,7 +743,7 @@ void CalculatePileUpBackground(Bool_t doMC){
                 
                 // fake pileup background estimate from MCrec gamma
                 if (catIter < 3){
-                    fMCrecGammaPtDCAzBinsBack[catIter][bin]                                 = (TH1D*)fMCrecGammaPtDCAzBins[catIter][bin]->ShowBackground(nIterationsShowBackground[catIter],optionShowBackgroundStandard.Data());
+                    fMCrecGammaPtDCAzBinsBack[catIter][bin]                                 = (TH1D*)fMCrecGammaPtDCAzBins[catIter][bin]->ShowBackground(nIterationsShowBackground[catIter],optionShowBackground[0].Data());
                     fMCrecGammaPtDCAzBinsBack[catIter][bin]->Sumw2();
                     fMCrecGammaPtDCAzBinsBack[catIter][bin]->SetName(Form("MCrec_GammaPtDCAzBackBin_%.1f_%.1f_%s", fBinsPtDummy[bin-1], fBinsPtDummy[bin], categoryName[catIter].Data()));
                     if (fMCrecGammaPtDCAzBinsBack[catIter][bin]->Integral() < 1 || fMCrecGammaPtDCAzBinsBack[catIter][bin]->GetEntries() > fMCrecGammaPtDCAzBins[catIter][bin]->GetEntries()) {
@@ -801,7 +806,7 @@ void CalculatePileUpBackground(Bool_t doMC){
                 CalculatePileUpSubtractedDCAz(fTrueGammaPtDCAzBins[catIter][bin], fTrueSubGammaPtDCAzBins[catIter][bin], fTrueSecondaryGammaFromXFromK0sPtDCAzBins[catIter][bin], fTrueSecondarySubGammaFromXFromK0sPtDCAzBins[catIter][bin]);
             }
             
-            // plotting DCAz distributions for MC rec and identified particle in pt slices
+            //plotting DCAz distributions for MC rec and identified particle in pt slices
             TString nameFile    = Form("%s/%s_%s_MCrec_DCAz_vs_Pt_%s_%s.%s", fOutputDir.Data(), fPrefix.Data(), fPrefix2.Data(), categoryName[catIter].Data(), fCutSelection.Data(), fSuffix.Data());
             PlotDCAzInPtBinsWithBack( fMCrecGammaPtDCAzBins[catIter], fMCrecGammaPtDCAzBinsBack[catIter], NULL, nameFile, "CanvasESDDCAz", "PadESDDCAz",
             fDate, fMeson, 1, fNBinsPtDummy, fBinsPtDummy, "#gamma --> e^{+}e^{-}", fIsMC, "MinBias");
@@ -953,23 +958,33 @@ void CalculatePileUpBackground(Bool_t doMC){
         // *****************************************************************************************************
         // create histos with dca z distribution for each bin
         fESDGammaPtDCAzBins                                                 = new TH1D**[4];
-        fESDGammaPtDCAzBinsBack                                             = new TH1D**[4];
-        fESDSubGammaPtDCAzBins                                              = new TH1D**[4];
+        fESDGammaPtDCAzBinsBack                                             = new TH1D***[4];
+        fESDSubGammaPtDCAzBins                                              = new TH1D***[4];
         
         for (Int_t i = 0; i < 4; i++) {
             fESDGammaPtDCAzBins[i]                                          = new TH1D*[fNBinsPtDummy+1];
-            fESDGammaPtDCAzBinsBack[i]                                      = new TH1D*[fNBinsPtDummy+1];
-            fESDSubGammaPtDCAzBins[i]                                       = new TH1D*[fNBinsPtDummy+1];
+            fESDGammaPtDCAzBinsBack[i]                                      = new TH1D**[fNBinsPtDummy+1];
+            fESDSubGammaPtDCAzBins[i]                                       = new TH1D**[fNBinsPtDummy+1];
+            
+            for (Int_t j = 0; j < fNBinsPtDummy+1; j++) {
+                fESDGammaPtDCAzBinsBack[i][j]                               = new TH1D*[3];
+                fESDSubGammaPtDCAzBins[i][j]                                = new TH1D*[3];
+            }
+        }
+        
+        fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat              = new TH1D*[3];
+        fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning                    = new TH1D*[3];
+        
+        for (Int_t i = 0; i < 3; i++) {
+            fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[i]       = new TH1D(Form("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb_%s", backgroundExtractionMethod[i].Data()), "", fNBinsPtDummy, fBinsPtDummy);
+            fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[i]->Sumw2();
+            fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[i]             = new TH1D(Form("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_%s", backgroundExtractionMethod[i].Data()), "", fNBinsPtDummy, fBinsPtDummy);
+            fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[i]->Sumw2();
         }
         
         fESDGammaPerCatPtDCAzBins                                           = new TH1D*[4];
         fESDGammaRatioCatToCombinedPtDCAzBins                               = new TH1D*[3];
 
-        fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat              = new TH1D("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", "", fNBinsPtDummy, fBinsPtDummy);
-        fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Sumw2();
-        fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning                    = new TH1D("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning", "", fNBinsPtDummy, fBinsPtDummy);
-        fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning->Sumw2();
-        
         // loop over photon categories
         Int_t category;
         for (Int_t catIter = 0; catIter < 4; catIter++) {
@@ -985,23 +1000,29 @@ void CalculatePileUpBackground(Bool_t doMC){
             fESDGammaPerCatPtDCAzBins[catIter]                              = new TH1D(Form("ESD_GammaPtDCAzBin_%s", categoryName[catIter].Data()), "", fNBinsPtDummy, fBinsPtDummy);
             fESDGammaPerCatPtDCAzBins[catIter]->Sumw2();
             
-            // estimate pileup BG
-            if (catIter < 3) {
-                fESDGammaPtDCAzBinsBack[catIter][0]                         = (TH1D*)fESDGammaPtDCAzBins[catIter][0]->ShowBackground(nIterationsShowBackground[catIter],optionShowBackgroundStandard.Data());
-                fESDGammaPtDCAzBinsBack[catIter][0]->SetName(Form("ESD_GammaPtDCAzBackBin_Full_%s", categoryName[catIter].Data()));
-                fESDGammaPtDCAzBinsBack[catIter][0]->Sumw2();
-                if (fESDGammaPtDCAzBinsBack[catIter][0]->Integral() < 1 || fESDGammaPtDCAzBinsBack[catIter][0]->GetEntries() > fESDGammaPtDCAzBins[catIter][0]->GetEntries()) {
-                    fESDGammaPtDCAzBinsBack[catIter][0]->Reset("ICES");
+            // loop over background extraction methods
+            for (Int_t i = 0; i < 3; i++) {
+
+                // estimate pileup BG
+                if (catIter < 3) {
+                    fESDGammaPtDCAzBinsBack[catIter][0][i]                  = (TH1D*)fESDGammaPtDCAzBins[catIter][0]->ShowBackground(nIterationsShowBackground[catIter],optionShowBackground[i].Data());
+                    fESDGammaPtDCAzBinsBack[catIter][0][i]->SetName(Form("ESD_GammaPtDCAzBackBin_Full_%s_%s", categoryName[catIter].Data(), backgroundExtractionMethod[i].Data()));
+                    fESDGammaPtDCAzBinsBack[catIter][0][i]->Sumw2();
+                    if (fESDGammaPtDCAzBinsBack[catIter][0][i]->Integral() < 1 || fESDGammaPtDCAzBinsBack[catIter][0][i]->GetEntries() > fESDGammaPtDCAzBins[catIter][0]->GetEntries()) {
+                        fESDGammaPtDCAzBinsBack[catIter][0][i]->Reset("ICES");
+                    }
+                } else {
+                    fESDGammaPtDCAzBinsBack[catIter][0][i]                  = (TH1D*)fESDGammaPtDCAzBins[catIter][0]->Clone(Form("ESD_GammaPtDCAzBackBin_Full_%s_%s", categoryName[catIter].Data(), backgroundExtractionMethod[i].Data()));
+                    fESDGammaPtDCAzBinsBack[catIter][0][i]->Reset();
                 }
-            } else {
-                fESDGammaPtDCAzBinsBack[catIter][0]                         = (TH1D*)fESDGammaPtDCAzBins[catIter][0]->Clone(Form("ESD_GammaPtDCAzBackBin_Full_%s", categoryName[catIter].Data()));
-                fESDGammaPtDCAzBinsBack[catIter][0]->Reset();
+                
+                // subtract estimated pileup BG
+                fESDSubGammaPtDCAzBins[catIter][0][i]                       = (TH1D*)fESDGammaPtDCAzBins[catIter][0]->Clone(Form("ESD_SubGammaPtDCAzBin_Full_%s_%s", categoryName[catIter].Data(), backgroundExtractionMethod[i].Data()));
+                fESDSubGammaPtDCAzBins[catIter][0][i]->Sumw2();
+                fESDSubGammaPtDCAzBins[catIter][0][i]->Add(fESDGammaPtDCAzBinsBack[catIter][0][i],-1);
             }
-            
-            fESDSubGammaPtDCAzBins[catIter][0]                              = (TH1D*)fESDGammaPtDCAzBins[catIter][0]->Clone(Form("ESD_SubGammaPtDCAzBin_Full_%s", categoryName[catIter].Data()));
-            fESDSubGammaPtDCAzBins[catIter][0]->Sumw2();
-            fESDSubGammaPtDCAzBins[catIter][0]->Add(fESDGammaPtDCAzBinsBack[catIter][0],-1);
-            
+
+            // loop over pt bins
             for(Int_t bin = 1; bin<fNBinsPtDummy+1; bin++){
                 Int_t startBin                                              = fHistoGammaConvPtOrBin->FindBin(fBinsPtDummy[bin-1]+0.001);
                 Int_t endBin                                                = fHistoGammaConvPtOrBin->FindBin(fBinsPtDummy[bin]-0.001);
@@ -1015,23 +1036,27 @@ void CalculatePileUpBackground(Bool_t doMC){
                 fESDGammaPerCatPtDCAzBins[catIter]->SetBinContent(bin,      tempBinContent);
                 fESDGammaPerCatPtDCAzBins[catIter]->SetBinError(bin,        tempBinError);
 
-                // estimate pileup BG
-                if (catIter < 3) {
-                    fESDGammaPtDCAzBinsBack[catIter][bin]                   = (TH1D*)fESDGammaPtDCAzBins[catIter][bin]->ShowBackground(nIterationsShowBackground[catIter],optionShowBackgroundStandard.Data());
-                    fESDGammaPtDCAzBinsBack[catIter][bin]->SetName(Form("ESD_GammaPtDCAzBackBin_%.1f_%.1f_%s",fBinsPtDummy[bin-1],fBinsPtDummy[bin], categoryName[catIter].Data()));
-                    fESDGammaPtDCAzBinsBack[catIter][bin]->Sumw2();
-                    if (fESDGammaPtDCAzBinsBack[catIter][bin]->Integral() < 1 || fESDGammaPtDCAzBinsBack[catIter][bin]->GetEntries() > fESDGammaPtDCAzBins[catIter][bin]->GetEntries()) {
-                        fESDGammaPtDCAzBinsBack[catIter][bin]->Reset("ICES");
+                // loop over background extraction methods
+                for (Int_t i = 0; i < 3; i++) {
+                    
+                    // estimate pileup BG
+                    if (catIter < 3) {
+                        fESDGammaPtDCAzBinsBack[catIter][bin][i]            = (TH1D*)fESDGammaPtDCAzBins[catIter][bin]->ShowBackground(nIterationsShowBackground[catIter],optionShowBackground[i].Data());
+                        fESDGammaPtDCAzBinsBack[catIter][bin][i]->SetName(Form("ESD_GammaPtDCAzBackBin_%.1f_%.1f_%s_%s", fBinsPtDummy[bin-1], fBinsPtDummy[bin], categoryName[catIter].Data(), backgroundExtractionMethod[i].Data()));
+                        fESDGammaPtDCAzBinsBack[catIter][bin][i]->Sumw2();
+                        if (fESDGammaPtDCAzBinsBack[catIter][bin][i]->Integral() < 1 || fESDGammaPtDCAzBinsBack[catIter][bin][i]->GetEntries() > fESDGammaPtDCAzBins[catIter][bin]->GetEntries()) {
+                            fESDGammaPtDCAzBinsBack[catIter][bin][i]->Reset("ICES");
+                        }
+                    } else {
+                        fESDGammaPtDCAzBinsBack[catIter][bin][i]            = (TH1D*)fESDGammaPtDCAzBins[catIter][bin]->Clone(Form("ESD_GammaPtDCAzBackBin_%.1f_%0.1f_%s_%s", fBinsPtDummy[bin-1],fBinsPtDummy[bin], categoryName[catIter].Data(), backgroundExtractionMethod[i].Data()));
+                        fESDGammaPtDCAzBinsBack[catIter][bin][i]->Reset();
                     }
-                } else {
-                    fESDGammaPtDCAzBinsBack[catIter][bin]                   = (TH1D*)fESDGammaPtDCAzBins[catIter][bin]->Clone(Form("ESD_GammaPtDCAzBackBin_%.1f_%0.1f_%s",fBinsPtDummy[bin-1],fBinsPtDummy[bin], categoryName[catIter].Data()));
-                    fESDGammaPtDCAzBinsBack[catIter][bin]->Reset();
+                    
+                    // subtract estimated pileup BG
+                    fESDSubGammaPtDCAzBins[catIter][bin][i]                 = (TH1D*)fESDGammaPtDCAzBins[catIter][bin]->Clone(Form("ESD_SubGammaPtDCAzBin_%.1f_%.1f_%s_%s",fBinsPtDummy[bin-1],fBinsPtDummy[bin], categoryName[catIter].Data(), backgroundExtractionMethod[i].Data()));
+                    fESDSubGammaPtDCAzBins[catIter][bin][i]->Sumw2();
+                    fESDSubGammaPtDCAzBins[catIter][bin][i]->Add(fESDGammaPtDCAzBinsBack[catIter][bin][i],-1);
                 }
-                
-                // subtract estimated pileup BG
-                fESDSubGammaPtDCAzBins[catIter][bin]                        = (TH1D*)fESDGammaPtDCAzBins[catIter][bin]->Clone(Form("ESD_SubGammaPtDCAzBin_%.1f_%.1f_%s",fBinsPtDummy[bin-1],fBinsPtDummy[bin], categoryName[catIter].Data()));
-                fESDSubGammaPtDCAzBins[catIter][bin]->Sumw2();
-                fESDSubGammaPtDCAzBins[catIter][bin]->Add(fESDGammaPtDCAzBinsBack[catIter][bin],-1);
             }
             
             // plotting DCAz distributions for rec gamma with estimated BG in pt slices
@@ -1047,46 +1072,86 @@ void CalculatePileUpBackground(Bool_t doMC){
             fESDGammaRatioCatToCombinedPtDCAzBins[i]->Sumw2();
             fESDGammaRatioCatToCombinedPtDCAzBins[i]->Divide(fESDGammaRatioCatToCombinedPtDCAzBins[i],fESDGammaPerCatPtDCAzBins[0],1,1,"B");
         }
-
+        
         // draw fractions per category
         DrawFractionPerCat(fESDGammaRatioCatToCombinedPtDCAzBins, fOutputDir, fPrefix, fPrefix2, fCutSelection, fSuffix);
         
         // calculate ratio with/without pileup
         Double_t binContent, binError;
-        for (Int_t bin = 1; bin < fNBinsPtDummy+1; bin++) {
-            CalculateDCAzDistributionRatio(fESDGammaPtDCAzBins, fESDSubGammaPtDCAzBins, 0, 0, fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat);
-            CalculateDCAzDistributionRatio(fESDGammaPtDCAzBins, fESDSubGammaPtDCAzBins, 1, 3, fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning);
+        for (Int_t i = 0; i < 3; i++) {
+            CalculateDCAzDistributionRatio(fESDGammaPtDCAzBins, fESDSubGammaPtDCAzBins, i, 0, 0, fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[i]);
+            CalculateDCAzDistributionRatio(fESDGammaPtDCAzBins, fESDSubGammaPtDCAzBins, i, 1, 3, fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[i]);
         }
         
         // define pileup correction factors
-        fESDGammaPileUpCorrFactorAllCat                                     = new TH1D("fESDGammaPileUpCorrFactorAllCatComb", "fESDGammaPileUpCorrFactorAllCatComb", fNBinsPt, fBinsPt);
-        fESDGammaPileUpCorrFactorAllCat->Sumw2();
-        fESDGammaPileUpCorrFactor                                           = new TH1D("fESDGammaPileUpCorrFactor", "fESDGammaPileUpCorrFactor", fNBinsPt, fBinsPt);
-        fESDGammaPileUpCorrFactor->Sumw2();
+        fESDGammaPileUpCorrFactorAllCat                                     = new TH1D*[3];
+        fESDGammaPileUpCorrFactor                                           = new TH1D*[3];
+        for (Int_t i = 0; i < 3; i++) {
+            fESDGammaPileUpCorrFactorAllCat[i]                              = new TH1D(Form("fESDGammaPileUpCorrFactorAllCatComb%i", i), Form("fESDGammaPileUpCorrFactorAllCatComb%i", i), fNBinsPt, fBinsPt);
+            fESDGammaPileUpCorrFactorAllCat[i]->Sumw2();
+            fESDGammaPileUpCorrFactor[i]                                    = new TH1D(Form("fESDGammaPileUpCorrFactor%i", i), Form("fESDGammaPileUpCorrFactor%i", i), fNBinsPt, fBinsPt);
+            fESDGammaPileUpCorrFactor[i]->Sumw2();
+        }
 
         // calculate pileup correction factors
-        CalculatePileUpCorrectionFactor(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat, fESDGammaPileUpCorrFactorAllCat, fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat);
-        CalculatePileUpCorrectionFactor(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning, fESDGammaPileUpCorrFactor, fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning);
+        fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat           = new TF1*[3];
+        fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning                 = new TF1*[3];
+        for (Int_t i = 0; i < 3; i++) {
+            CalculatePileUpCorrectionFactor(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[i], fESDGammaPileUpCorrFactorAllCat[i], fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat[i]);
+            CalculatePileUpCorrectionFactor(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[i], fESDGammaPileUpCorrFactor[i], fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning[i]);
+        }
         
-        // calculate spectra w/o pileup
+        // calculate spectra w/o pileup (using standard background extraction method)
         fESDGammaPtPileUpAllCat                                             = (TH1D*)fHistoGammaConvPt->Clone("ESD_ConvGamma_Pt_PileUp_AllCatComb");
         fESDGammaPtPileUpAllCat->Sumw2();
-        fESDGammaPtPileUpAllCat->Multiply(fESDGammaPileUpCorrFactorAllCat);
+        fESDGammaPtPileUpAllCat->Multiply(fESDGammaPileUpCorrFactorAllCat[0]);
         
         fESDGammaPtPileUp                                                   = (TH1D*)fHistoGammaConvPt->Clone("ESD_ConvGamma_Pt_PileUp");
         fESDGammaPtPileUp->Sumw2();
-        fESDGammaPtPileUp->Multiply(fESDGammaPileUpCorrFactor);
+        fESDGammaPtPileUp->Multiply(fESDGammaPileUpCorrFactor[0]);
         
         // plotting ratio + fit
         TCanvas *RatioWithWithoutPileUpCanvas                               = GetAndSetCanvas("canvasRatioWithWithoutPileUp");
 
-        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
-        DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning, 24, 1.0, kBlack, kBlack);
-
-        fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning->DrawCopy();
+        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0],"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
+        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[0],"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
+        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[1],"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
+        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[2],"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
         
-        if (fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning) fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->Draw("same");
- 
+        DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0], 25, 1.0, kGray+2, kGray+2);
+        DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[0], 24, 1.0, kBlack, kBlack);
+        DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[1], 24, 1.0, kBlue-2, kBlue-2);
+        DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[2], 24, 1.0, kGreen+2, kGreen+2);
+
+        fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0]->DrawCopy("");
+        fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[0]->DrawCopy("same");
+        fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[1]->DrawCopy("same");
+        fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[2]->DrawCopy("same");
+
+        if (fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat[0]) {
+            fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat[0]->SetLineColor(kGray+2);
+            fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat[0]->Draw("same");
+        }
+        if (fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning[0]) {
+            fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning[0]->SetLineColor(kBlack);
+            fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning[0]->Draw("same");
+        }
+        if (fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning[1]) {
+            fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning[1]->SetLineColor(kBlue-2);
+            fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning[1]->Draw("same");
+        }
+        if (fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning[2]) {
+            fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning[2]->SetLineColor(kGreen+2);
+            fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning[2]->Draw("same");
+        }
+
+        TLegend* legendDCAZData                                             = GetAndSetLegend(0.6,0.75,4,1);
+        legendDCAZData->AddEntry(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[0],"standard, sep. cat.","lp");
+        legendDCAZData->AddEntry(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[1],"variation 1, sep. cat.","lp");
+        legendDCAZData->AddEntry(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[2],"variation 2, sep. cat.","lp");
+        legendDCAZData->AddEntry(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0],"standard, combined cat.","lp");
+        legendDCAZData->Draw();
+        
         RatioWithWithoutPileUpCanvas->Print(Form("%s/%s_%s_ESD_With_vs_Without_Pileup_pT_%s.%s",fOutputDir.Data(),fPrefix.Data(),fPrefix2.Data(),fCutSelection.Data(),fSuffix.Data()));
         delete RatioWithWithoutPileUpCanvas;
     }
@@ -1099,7 +1164,6 @@ void CalculatePileUpGammaCorrection(){
     
     fHistoFracAllGammaToSecPileUp                       = (TH1D*) fESDGammaPtPileUp->Clone("FracAllGammaToSecPileUp");
     fHistoFracAllGammaToSecPileUp->Divide(fTrueSecondaryConvGammaPtPileUp,fHistoFracAllGammaToSecPileUp,1,1,"B");
-    cout << __LINE__ << endl;
 
     fHistoFracAllGammaToSecFromXFromK0sPileUp           = (TH1D*) fESDGammaPtPileUp->Clone("FracAllGammaToSecFromXFromK0sPileUp");
     fHistoFracAllGammaToSecFromXFromK0sPileUp->Divide(fTrueSecondaryFromXFromK0sConvGammaPtPileUp,fHistoFracAllGammaToSecFromXFromK0sPileUp,1,1,"B");
@@ -1110,14 +1174,12 @@ void CalculatePileUpGammaCorrection(){
     fHistoGammaMCPurityPileUp->Add(fTruePrimaryConvGammaPtPileUp);
     fHistoGammaMCPurityPileUp->Add(fTrueSecondaryConvGammaPtPileUp);
     fHistoGammaMCPurityPileUp->Divide(fHistoGammaMCPurityPileUp,fMCrecGammaPtPileUp,1,1,"B");
-    cout << __LINE__ << endl;
 
     fHistoGammaMCrecPrimaryConvPtPileUp                 = (TH1D*) fMCrecGammaPtPileUp->Clone("MCrec_PrimaryConvGamma_PtPileUp");
     fHistoGammaMCrecPrimaryConvPtPileUp->Add(fTrueSecondaryConvGammaPtPileUp,-1);
     fHistoGammaMCTruePurityPileUp                       = new TH1D("GammaTruePurity_PileUp_Pt","",fNBinsPt,fBinsPt);
     fHistoGammaMCTruePurityPileUp->Sumw2();
     fHistoGammaMCTruePurityPileUp->Divide(fTruePrimaryConvGammaPtPileUp,fHistoGammaMCrecPrimaryConvPtPileUp,1,1,"B");
-    cout << __LINE__ << endl;
     // ==========================================
 
     // ================ Reco Eff ================
@@ -1126,12 +1188,10 @@ void CalculatePileUpGammaCorrection(){
     fHistoGammaMCRecoEffPileUp->Add(fTruePrimaryConvGammaPtPileUp);
     fHistoGammaMCRecoEffPileUp->Add(fTrueSecondaryConvGammaPtPileUp);
     fHistoGammaMCRecoEffPileUp->Divide(fHistoGammaMCRecoEffPileUp,fHistoGammaMCConvPt,1,1,"B");
-    cout << __LINE__ << endl;
 
     fHistoGammaMCPrimaryRecoEffPileUp                   = new TH1D("GammaPrimaryRecoEff_PileUp_Pt","",fNBinsPt,fBinsPt);
     fHistoGammaMCPrimaryRecoEffPileUp->Sumw2();
     fHistoGammaMCPrimaryRecoEffPileUp->Divide(fTruePrimaryConvGammaPtPileUp,fHistoGammaMCConvPt,1,1,"B");
-    cout << __LINE__ << endl;
     // ==========================================
 }
 
@@ -1178,14 +1238,12 @@ void CalculateGammaCorrection(){
 
         fHistoFracAllGammaToSecFromXFromLambdaOrBin         = (TH1D*) fHistoGammaConvPtOrBin->Clone("FracAllGammaToSecFromXFromLambdaOriginalBinning");
         fHistoFracAllGammaToSecFromXFromLambdaOrBin->Divide(fHistoGammaTrueSecondaryConvGammaFromXFromLambdaPtOrBin,fHistoFracAllGammaToSecFromXFromLambdaOrBin,1,1,"B");
-
         // ==========================================
         
         // =============== Conv Prob ================
         fHistoGammaMCConvProb                               = new TH1D("MCGammaConvProb_MCPt","",fNBinsPt,fBinsPt);
         fHistoGammaMCConvProb->Sumw2();
         fHistoGammaMCConvProb->Divide(fHistoGammaMCConvPt,fHistoGammaMCAllPt,1,1,"B");
-
         // ==========================================
 
         // ================= PURITY =================
@@ -1206,7 +1264,6 @@ void CalculateGammaCorrection(){
         fHistoGammaMCTruePurityOrBin                        = (TH1D*)fHistoGammaMCrecPrimaryConvPtOrBin->Clone("GammaTruePurity_OriginalBinning_Pt");
         fHistoGammaMCTruePurityOrBin->Sumw2();
         fHistoGammaMCTruePurityOrBin->Divide(fHistoGammaTruePrimaryConvPtOrBin,fHistoGammaMCrecPrimaryConvPtOrBin,1,1,"B");
-
         // ==========================================
 
         // ================ Reco Eff ================
@@ -1223,7 +1280,6 @@ void CalculateGammaCorrection(){
         fHistoGammaMCPrimaryRecoEffMCPt                     = new TH1D("GammaPrimaryRecoEff_MCPt","",fNBinsPt,fBinsPt);
         fHistoGammaMCPrimaryRecoEffMCPt->Sumw2();
         fHistoGammaMCPrimaryRecoEffMCPt->Divide(fHistoGammaTruePrimaryConvMCPt,fHistoGammaMCConvPt,1,1,"B");
-
         // ==========================================
 
         // ========== identified MC BG ==============
@@ -1249,6 +1305,7 @@ void CalculateGammaCorrection(){
             }
         }
         // ==========================================
+        
         // ======== Secondary fractions =============
         fHistoFracAllGammaCaloToSecOrBin                    = (TH1D*) fHistoGammaCaloPtOrBin->Clone("FracAllGammaCaloToSecOriginalBinning");
         fHistoFracAllGammaCaloToSecOrBin->Divide(fHistoGammaTrueSecondaryCaloPtOrBin,fHistoFracAllGammaCaloToSecOrBin,1,1,"B");
@@ -1292,7 +1349,6 @@ void CalculateGammaCorrection(){
         fHistoGammaCaloMCTruePurityOrBin                    = (TH1D*)fHistoGammaMCrecPrimaryCaloPtOrBin->Clone("GammaCaloTruePurity_OriginalBinning_Pt");
         fHistoGammaCaloMCTruePurityOrBin->Sumw2();
         fHistoGammaCaloMCTruePurityOrBin->Divide(fHistoGammaTruePrimaryCaloPtOrBin,fHistoGammaMCrecPrimaryCaloPtOrBin,1,1,"B");
-
         // ==========================================
        
         // ================ Reco Eff ================
@@ -1309,7 +1365,6 @@ void CalculateGammaCorrection(){
         fHistoGammaCaloMCPrimaryRecoEffMCPt                 = new TH1D("GammaCaloPrimaryRecoEff_MCPt","",fNBinsPt,fBinsPt);
         fHistoGammaCaloMCPrimaryRecoEffMCPt->Sumw2();
         fHistoGammaCaloMCPrimaryRecoEffMCPt->Divide(fHistoGammaTruePrimaryCaloMCPt,fHistoGammaMCAllInEMCAccPt,1,1,"B");
-
         // ==========================================
 
         // ========== identified MC BG ==============
@@ -1362,7 +1417,6 @@ void CalculateGammaCorrection(){
                 fHistoGammaTruePrimaryCaloUnConv_recPt_MCPt_MC_Rebin->Fill(xcenter,ycenter,binContent);
             }
         }
-        
         // ==========================================
         
         // ======== Secondary fractions =============
@@ -1388,8 +1442,6 @@ void CalculateGammaCorrection(){
 
         fHistoFracAllGammaToSecFromXFromLambdaOrBin         = (TH1D*) fHistoGammaCaloPtOrBin->Clone("FracAllGammaToSecFromXFromLambdaOriginalBinning");
         fHistoFracAllGammaToSecFromXFromLambdaOrBin->Divide(fHistoGammaTrueSecondaryCaloFromLambdaPtOrBin,fHistoFracAllGammaToSecFromXFromLambdaOrBin,1,1,"B");
-
-        
         // ==========================================
         
         // ================= PURITY =================
@@ -1410,7 +1462,6 @@ void CalculateGammaCorrection(){
         fHistoGammaMCTruePurityOrBin                        = (TH1D*)fHistoGammaMCrecPrimaryCaloPtOrBin->Clone("GammaTruePurity_OriginalBinning_Pt");
         fHistoGammaMCTruePurityOrBin->Sumw2();
         fHistoGammaMCTruePurityOrBin->Divide(fHistoGammaTruePrimaryCaloPtOrBin,fHistoGammaMCrecPrimaryCaloPtOrBin,1,1,"B");
-
         // ==========================================
 
         // ================ Reco Eff ================
@@ -1484,24 +1535,24 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         nIterationsShowBackground[1]                    = 12;
         nIterationsShowBackground[2]                    = 18;
         nIterationsShowBackground[3]                    = 20;
-        optionShowBackgroundStandard                    = "BackDecreasingWindow, BackSmoothing3";
-        optionShowBackgroundVar1                        = "BackDecreasingWindow";
-        optionShowBackgroundVar2                        = "BackDecreasingWindow, BackSmoothing5";
+        optionShowBackground[0]                         = "BackDecreasingWindow";                   // standard
+        optionShowBackground[1]                         = "BackDecreasingWindow, BackSmoothing3";
+        optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing5";
     } else {
         cout << "WARNING: No ShowBackground-options defined, using the default ones." << endl;
         nIterationsShowBackground[0]                    = 12;
         nIterationsShowBackground[1]                    = 12;
         nIterationsShowBackground[2]                    = 18;
         nIterationsShowBackground[3]                    = 20;
-        optionShowBackgroundStandard                    = "BackDecreasingWindow, BackSmoothing5";
-        optionShowBackgroundVar1                        = "BackDecreasingWindow, BackSmoothing3";
-        optionShowBackgroundVar2                        = "BackDecreasingWindow, BackSmoothing7";
+        optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing5";   // standard
+        optionShowBackground[1]                         = "BackDecreasingWindow, BackSmoothing3";
+        optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
     }
     
     // initialize mass histo array
-    fHistoGconvGInvMassPtGConvBin                           = new TH1D*[fNBinsPt];
+    fHistoGconvGInvMassPtGConvBin                       = new TH1D*[fNBinsPt];
     for(Int_t i = 0;i<fNBinsPt; i++){
-        fHistoGconvGInvMassPtGConvBin[i]                    = NULL;
+        fHistoGconvGInvMassPtGConvBin[i]                = NULL;
     }
 }
 
@@ -1853,14 +1904,19 @@ void SaveDCAHistos(Int_t isMC, TString fCutID, TString fPrefix3){
         // write ratio of spectra with and without pileup
         if (!isMC) {
             
-            fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Write("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", TObject::kOverwrite);
-            if(fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat)
-                fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat->Write("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb", TObject::kOverwrite);
-            fESDGammaPileUpCorrFactorAllCat->Write("ESD_ConvGamma_PileUpCorFactor_AllCatComb", TObject::kOverwrite);
-            fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning->Write("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning", TObject::kOverwrite);
-            if(fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning)
-                fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->Write("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit", TObject::kOverwrite);
-            fESDGammaPileUpCorrFactor->Write("ESD_ConvGamma_PileUpCorFactor", TObject::kOverwrite);
+            for (Int_t i = 0; i < 3; i++) {
+                fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[i]->Write(Form("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb_%s", backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
+                if (fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat[i])
+                    fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat[i]->Write(Form("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb_%s", backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
+                fESDGammaPileUpCorrFactorAllCat[i]->Write(Form("ESD_ConvGamma_PileUpCorFactor_AllCatComb_%s", backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
+                fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[i]->Write(Form("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_%s", backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
+                if (fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning[i])
+                    fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning[i]->Write(Form("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_%s", backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
+                if (i == 0)
+                    fESDGammaPileUpCorrFactor[i]->Write("ESD_ConvGamma_PileUpCorFactor", TObject::kOverwrite);      // standard background estimation method
+                else
+                    fESDGammaPileUpCorrFactor[i]->Write(Form("ESD_ConvGamma_PileUpCorFactor_%s", backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
+            }
             
             for (Int_t catIter = 0; catIter < 4; catIter++) {
                 if (catIter == 0) {
@@ -1886,13 +1942,13 @@ void SaveDCAHistos(Int_t isMC, TString fCutID, TString fPrefix3){
                     ESDGammaPtDCAzBinsPerEvent->Scale(1./fNEvnt);
                     ESDGammaPtDCAzBinsPerEvent->Write(ESDGammaPtDCAzBinsPerEvent->GetName(), TObject::kOverwrite);
                     
-                    fESDGammaPtDCAzBinsBack[catIter][ptBin]->Write(fESDGammaPtDCAzBinsBack[catIter][ptBin]->GetName(), TObject::kOverwrite);
-                    TH1D *ESDGammaPtDCAzBinsBackPerEvent                        = (TH1D*)fESDGammaPtDCAzBinsBack[catIter][ptBin]->Clone(Form("%s_perEvent",fESDGammaPtDCAzBinsBack[catIter][ptBin]->GetName()));
+                    fESDGammaPtDCAzBinsBack[catIter][ptBin][0]->Write(fESDGammaPtDCAzBinsBack[catIter][ptBin][0]->GetName(), TObject::kOverwrite);
+                    TH1D *ESDGammaPtDCAzBinsBackPerEvent                        = (TH1D*)fESDGammaPtDCAzBinsBack[catIter][ptBin][0]->Clone(Form("%s_perEvent",fESDGammaPtDCAzBinsBack[catIter][ptBin][0]->GetName()));
                     ESDGammaPtDCAzBinsBackPerEvent->Scale(1./fNEvnt);
                     ESDGammaPtDCAzBinsBackPerEvent->Write(ESDGammaPtDCAzBinsBackPerEvent->GetName(), TObject::kOverwrite);
                     
-                    fESDSubGammaPtDCAzBins[catIter][ptBin]->Write(fESDSubGammaPtDCAzBins[catIter][ptBin]->GetName(), TObject::kOverwrite);
-                    TH1D *ESDGammaDCAzAllSubperEvent                            = (TH1D*)fESDSubGammaPtDCAzBins[catIter][ptBin]->Clone(Form("%s_perEvent",fESDSubGammaPtDCAzBins[catIter][ptBin]->GetName()));
+                    fESDSubGammaPtDCAzBins[catIter][ptBin][0]->Write(fESDSubGammaPtDCAzBins[catIter][ptBin][0]->GetName(), TObject::kOverwrite);
+                    TH1D *ESDGammaDCAzAllSubperEvent                            = (TH1D*)fESDSubGammaPtDCAzBins[catIter][ptBin][0]->Clone(Form("%s_perEvent",fESDSubGammaPtDCAzBins[catIter][ptBin][0]->GetName()));
                     ESDGammaDCAzAllSubperEvent->Scale(1./fNEvnt);
                     ESDGammaDCAzAllSubperEvent->Write(ESDGammaDCAzAllSubperEvent->GetName(), TObject::kOverwrite);
                 }
@@ -2080,17 +2136,17 @@ void PlotAdditionalDCAz(Int_t isMC, TString fCutID){
     TH1D *ESDGammaDCAzAllperEvent;
     TH1D *ESDGammaDCAzAllSub;
     TH1D *ESDGammaDCAzAllSubperEvent;
-
+    
     // Plot Data
     if(!isMC && InputData){
         for (Int_t catIter = 0; catIter < 4; catIter++) {
             
             ESDGammaDCAzAll                             = (TH1D*)InputData->Get(Form("ESD_GammaPtDCAzBin_Full_%s", categoryName[catIter].Data()));
             ESDGammaDCAzAllperEvent                     = (TH1D*)InputData->Get(Form("ESD_GammaPtDCAzBin_Full_%s_perEvent", categoryName[catIter].Data()));
-            ESDGammaDCAzBack                            = (TH1D*)InputData->Get(Form("ESD_GammaPtDCAzBackBin_Full_%s", categoryName[catIter].Data()));
-            ESDGammaDCAzBackperEvent                    = (TH1D*)InputData->Get(Form("ESD_GammaPtDCAzBackBin_Full_%s_perEvent", categoryName[catIter].Data()));
-            ESDGammaDCAzAllSub                          = (TH1D*)InputData->Get(Form("ESD_SubGammaPtDCAzBin_Full_%s", categoryName[catIter].Data()));
-            ESDGammaDCAzAllSubperEvent                  = (TH1D*)InputData->Get(Form("ESD_SubGammaPtDCAzBin_Full_%s_perEvent", categoryName[catIter].Data()));
+            ESDGammaDCAzBack                            = (TH1D*)InputData->Get(Form("ESD_GammaPtDCAzBackBin_Full_%s_%s", categoryName[catIter].Data(), backgroundExtractionMethod[0].Data()));
+            ESDGammaDCAzBackperEvent                    = (TH1D*)InputData->Get(Form("ESD_GammaPtDCAzBackBin_Full_%s_%s_perEvent", categoryName[catIter].Data(), backgroundExtractionMethod[0].Data()));
+            ESDGammaDCAzAllSub                          = (TH1D*)InputData->Get(Form("ESD_SubGammaPtDCAzBin_Full_%s_%s", categoryName[catIter].Data(), backgroundExtractionMethod[0].Data()));
+            ESDGammaDCAzAllSubperEvent                  = (TH1D*)InputData->Get(Form("ESD_SubGammaPtDCAzBin_Full_%s_%s_perEvent", categoryName[catIter].Data(), backgroundExtractionMethod[0].Data()));
             
             DrawGammaSetMarker(ESDGammaDCAzAll, 23, 1.0, kBlack, kBlack);
             DrawGammaSetMarker(ESDGammaDCAzAllperEvent, 23, 1.0, kBlack, kBlack);
@@ -2135,7 +2191,7 @@ void PlotAdditionalDCAz(Int_t isMC, TString fCutID){
             delete legendDCAZData;
         }
     }
-
+    
     TH1D *MCrecGammaDCAzAll;
     TH1D *MCrecGammaDCAzAllperEvent;
     TH1D *MCrecGammaDCAzBack;
@@ -2227,7 +2283,7 @@ void PlotAdditionalDCAz(Int_t isMC, TString fCutID){
             TLegend* legendDCAZperEvent                     = GetAndSetLegend(0.15,0.85,1,1,"Data");
             
             if(InputData){
-                ESDGammaDCAzAllSubperEvent                  = (TH1D*)InputData->Get(Form("ESD_SubGammaPtDCAzBin_Full_%s_perEvent", categoryName[catIter].Data()));
+                ESDGammaDCAzAllSubperEvent                  = (TH1D*)InputData->Get(Form("ESD_SubGammaPtDCAzBin_Full_%s_%s_perEvent", categoryName[catIter].Data(), backgroundExtractionMethod[0].Data()));
                 DrawGammaSetMarker(ESDGammaDCAzAllSubperEvent, 23, 1.0,  kBlack, kBlack);
                 SetHistogramm(ESDGammaDCAzAllSubperEvent,"DCA z (cm)","counts per event",1e-8,5e-2);
                 ESDGammaDCAzAllSubperEvent->DrawCopy("");
@@ -2254,12 +2310,12 @@ void PlotAdditionalDCAz(Int_t isMC, TString fCutID){
             delete canvasDCAzMCPerEvent;
         }
     }
-
+    
     TH1D *RatioWithWithoutPileUpData;
     TH1D *RatioWithWithoutPileUpMC;
 
     if(InputMC && InputData){
-        RatioWithWithoutPileUpData                          = (TH1D*)InputData->Get("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning");
+        RatioWithWithoutPileUpData                          = (TH1D*)InputData->Get(Form("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_%s", backgroundExtractionMethod[0].Data()));
         RatioWithWithoutPileUpMC                            = (TH1D*)InputMC->Get(Form("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning"));
 
         DrawGammaSetMarker(RatioWithWithoutPileUpData, 20, 1.0, kBlack, kBlack);
@@ -2286,16 +2342,16 @@ void PlotAdditionalDCAz(Int_t isMC, TString fCutID){
 //************* Routine to produce DCAz plots in pt bins *******************************************
 //**************************************************************************************************
 void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBinsBack,TH1D** ESDGammaPtDCAzBinsBackB, TString namePlot, TString nameCanvas, TString namePad, TString dateDummy, TString fMesonType,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, TString fDecayChannel, Bool_t fMonteCarloInfo, TString textCent){
-
+    
     cout << textCent.Data() << endl;
     TGaxis::SetMaxDigits(3);
-
+    
     TCanvas * canvasDataSpectra                 = new TCanvas(nameCanvas.Data(),"",2800,1800);  // gives the page size
     canvasDataSpectra->SetTopMargin(0.02);
     canvasDataSpectra->SetBottomMargin(0.02);
     canvasDataSpectra->SetRightMargin(0.02);
     canvasDataSpectra->SetLeftMargin(0.02);
-
+    
     TPad * padDataSpectra                       = new TPad(namePad.Data(),"",0.0,0.0,1.,1.,0);   // gives the size of the histo areas
     padDataSpectra->SetFillColor(0);
     padDataSpectra->GetFrame()->SetFillColor(0);
@@ -2303,7 +2359,7 @@ void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBi
     padDataSpectra->SetLogy(1);
     padDataSpectra->Divide(fColumnPlot,fRowPlot);
     padDataSpectra->Draw();
-
+    
     Double_t relWidthLogo;
     if (fMesonType.CompareTo("Pi0") == 0){
         relWidthLogo                            = 0.3;
@@ -2312,9 +2368,9 @@ void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBi
     }
     Double_t padXWidth                          = 2800/fColumnPlot;
     Double_t padYWidth                          = 1800/fRowPlot;
-
+    
     cout<<"fColumnPlot: "<<fColumnPlot<<" fRowPlot: "<<fRowPlot<<endl;
-
+    
     Int_t place                                 = 0;
     for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins+1;iPt++){
         cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
@@ -2325,7 +2381,7 @@ void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBi
         if (place == fColumnPlot){
             iPt--;
             padDataSpectra->cd(place);
-
+            
             TString textAlice                   = "ALICE performance";
             TString textEvents;
             if(fMonteCarloInfo) {
@@ -2382,7 +2438,7 @@ void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBi
             events->SetTextColor(1);
             events->SetTextSize(textHeight);
             events->Draw();
-
+            
             TLegend* legendData                 = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+2.)*differenceText);
             legendData->SetTextSize(textHeight);
             legendData->SetTextFont(62);
@@ -2406,9 +2462,9 @@ void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBi
             else padDataSpectra->cd(place)->SetLeftMargin(0.25);
             
             DrawDCAzHisto(  ESDGammaPtDCAzBins[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
-                            "DCA z (cm)", "dN/dDCA z",
-                            -10,10,0);
+                          Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                          "DCA z (cm)", "dN/dDCA z",
+                          -10,10,0);
             
             DrawDCAzHisto(  ESDGammaPtDCAzBinsBack[iPt],
                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
@@ -2417,9 +2473,155 @@ void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBi
             
             if (ESDGammaPtDCAzBinsBackB) {
                 DrawDCAzHisto(  ESDGammaPtDCAzBinsBackB[iPt],
-                                Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
-                                "DCA z (cm)", "dN/dDCA z",
-                                -10,10,2);
+                              Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                              "DCA z (cm)", "dN/dDCA z",
+                              -10,10,2);
+            }
+        }
+    }
+    canvasDataSpectra->Print(namePlot.Data());
+    delete padDataSpectra;
+    delete canvasDataSpectra;
+}
+
+void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D*** ESDGammaPtDCAzBinsBack, TH1D** ESDGammaPtDCAzBinsBackB, TString namePlot, TString nameCanvas, TString namePad, TString dateDummy, TString fMesonType, Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, TString fDecayChannel, Bool_t fMonteCarloInfo, TString textCent){
+    
+    cout << textCent.Data() << endl;
+    TGaxis::SetMaxDigits(3);
+    
+    TCanvas * canvasDataSpectra                 = new TCanvas(nameCanvas.Data(),"",2800,1800);  // gives the page size
+    canvasDataSpectra->SetTopMargin(0.02);
+    canvasDataSpectra->SetBottomMargin(0.02);
+    canvasDataSpectra->SetRightMargin(0.02);
+    canvasDataSpectra->SetLeftMargin(0.02);
+    
+    TPad * padDataSpectra                       = new TPad(namePad.Data(),"",0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+    padDataSpectra->SetFillColor(0);
+    padDataSpectra->GetFrame()->SetFillColor(0);
+    padDataSpectra->SetBorderMode(0);
+    padDataSpectra->SetLogy(1);
+    padDataSpectra->Divide(fColumnPlot,fRowPlot);
+    padDataSpectra->Draw();
+    
+    Double_t relWidthLogo;
+    if (fMesonType.CompareTo("Pi0") == 0){
+        relWidthLogo                            = 0.3;
+    } else {
+        relWidthLogo                            = 0.3;
+    }
+    Double_t padXWidth                          = 2800/fColumnPlot;
+    Double_t padYWidth                          = 1800/fRowPlot;
+    
+    cout<<"fColumnPlot: "<<fColumnPlot<<" fRowPlot: "<<fRowPlot<<endl;
+    
+    Int_t place                                 = 0;
+    for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins+1;iPt++){
+        cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
+        Double_t startPt                        = fRangeBinsPt[iPt];
+        Double_t endPt                          = fRangeBinsPt[iPt+1];
+        
+        place                                   = place + 1;                                    //give the right place in the page
+        if (place == fColumnPlot){
+            iPt--;
+            padDataSpectra->cd(place);
+            
+            TString textAlice                   = "ALICE performance";
+            TString textEvents;
+            if(fMonteCarloInfo) {
+                textEvents                      = "MC";
+            } else {
+                textEvents                      = "Data";
+            }
+            
+            Double_t nPixels                    = 13;
+            Double_t textHeight                 = 0.08;
+            if (padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) < padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1())){
+                textHeight                      = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
+            } else {
+                textHeight                      = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
+            }
+            
+            Double_t startTextX                 = 0.1;
+            Double_t startTextY                 = 0.9;
+            Double_t differenceText             = textHeight*1.25;
+            
+            TLatex *alice                       = new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
+            TLatex *latexDate                   = new TLatex(startTextX, (startTextY-1.25*differenceText), dateDummy.Data());
+            TLatex *energy                      = new TLatex(startTextX, (startTextY-2.25*differenceText), fCollisionSystem);
+            TLatex *process                     = new TLatex(startTextX, (startTextY-3.25*differenceText), fDecayChannel);
+            TLatex *detprocess                  = new TLatex(startTextX, (startTextY-4.25*differenceText), fDetectionProcess);
+            TLatex *events                      = new TLatex(startTextX, (startTextY-5.25*differenceText), Form("%s: %2.1e events",textEvents.Data(), fNEvnt));
+            
+            alice->SetNDC();
+            alice->SetTextColor(1);
+            alice->SetTextSize(textHeight*1.3);
+            alice->Draw();
+            
+            latexDate->SetNDC();
+            latexDate->SetTextColor(1);
+            latexDate->SetTextSize(textHeight);
+            latexDate->Draw();
+            
+            energy->SetNDC();
+            energy->SetTextColor(1);
+            energy->SetTextSize(textHeight);
+            energy->Draw();
+            
+            process->SetNDC();
+            process->SetTextColor(1);
+            process->SetTextSize(textHeight);
+            process->Draw();
+            
+            detprocess->SetNDC();
+            detprocess->SetTextColor(1);
+            detprocess->SetTextSize(textHeight);
+            detprocess->Draw();
+            
+            events->SetNDC();
+            events->SetTextColor(1);
+            events->SetTextSize(textHeight);
+            events->Draw();
+            
+            TLegend* legendData                 = GetAndSetLegend(startTextX, startTextY-12*differenceText, 4);
+            legendData->SetTextSize(textHeight);
+            legendData->SetTextFont(62);
+            legendData->SetFillColor(0);
+            legendData->SetFillStyle(0);
+            legendData->SetLineWidth(0);
+            legendData->SetLineColor(0);
+            legendData->SetMargin(0.15);
+            legendData->AddEntry(ESDGammaPtDCAzBins[iPt],ESDGammaPtDCAzBins[iPt]->GetName(),"l");
+            for (Int_t i = 0; i < 3; i++)
+                legendData->AddEntry(ESDGammaPtDCAzBinsBack[iPt][i],Form("background extraction %s", backgroundExtractionMethod[i].Data()),"l");
+            if(ESDGammaPtDCAzBinsBackB)legendData->AddEntry(ESDGammaPtDCAzBinsBackB[iPt],ESDGammaPtDCAzBinsBackB[iPt]->GetName(),"l");
+            legendData->Draw();
+        } else {
+            padDataSpectra->cd(place);
+            padDataSpectra->cd(place)->SetLogy();
+            padDataSpectra->cd(place)->SetTopMargin(0.12);
+            padDataSpectra->cd(place)->SetBottomMargin(0.15);
+            padDataSpectra->cd(place)->SetRightMargin(0.02);
+            int remaining                       = (place-1)%fColumnPlot;
+            if (remaining > 0) padDataSpectra->cd(place)->SetLeftMargin(0.15);
+            else padDataSpectra->cd(place)->SetLeftMargin(0.25);
+            
+            DrawDCAzHisto(  ESDGammaPtDCAzBins[iPt],
+                          Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                          "DCA z (cm)", "dN/dDCA z",
+                          -10,10,0);
+            
+            for (Int_t i = 0; i < 3; i++) {
+                DrawDCAzHisto(  ESDGammaPtDCAzBinsBack[iPt][i],
+                              Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                              "DCA z (cm)", "dN/dDCA z",
+                              -10,10,1,backgroundColor[i]);
+            }
+            
+            if (ESDGammaPtDCAzBinsBackB) {
+                DrawDCAzHisto(  ESDGammaPtDCAzBinsBackB[iPt],
+                              Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                              "DCA z (cm)", "dN/dDCA z",
+                              -10,10,2);
             }
         }
     }
@@ -2447,6 +2649,26 @@ void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBi
     
     PlotDCAzInPtBinsWithBack(ESDGammaPtDCAzBins, ESDGammaPtDCAzBinsBack,ESDGammaPtDCAzBinsBackB, namePlot, nameCanvas, namePad, dateDummy, fMesonType, nRows, nColumns, fStartBinPtRange, fNumberPtBins, fRangeBinsPt, fDecayChannel, fMonteCarloInfo, textCent);
 }
+
+void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D*** ESDGammaPtDCAzBinsBack,TH1D** ESDGammaPtDCAzBinsBackB, TString namePlot, TString nameCanvas, TString namePad, TString dateDummy, TString fMesonType, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, TString fDecayChannel, Bool_t fMonteCarloInfo, TString textCent) {
+    
+    Int_t nPads = fNumberPtBins + 2;
+    
+    Int_t nColumns  = 2;
+    
+    for (Int_t i = 0; i < nPads; i++) {
+        if (((nColumns+1) * CalculateNumberOfRowsForDCAzPlots(nPads, nColumns+1) - nPads <= (nColumns) * CalculateNumberOfRowsForDCAzPlots(nPads, nColumns) - nPads) || (TMath::Abs(nColumns+1 - CalculateNumberOfRowsForDCAzPlots(nPads, nColumns+1)) < TMath::Abs(nColumns - CalculateNumberOfRowsForDCAzPlots(nPads, nColumns)))) {
+            nColumns++;
+        } else {
+            break;
+        }
+    }
+    
+    Int_t nRows = CalculateNumberOfRowsForDCAzPlots(nPads, nColumns);
+    
+    PlotDCAzInPtBinsWithBack(ESDGammaPtDCAzBins, ESDGammaPtDCAzBinsBack,ESDGammaPtDCAzBinsBackB, namePlot, nameCanvas, namePad, dateDummy, fMesonType, nRows, nColumns, fStartBinPtRange, fNumberPtBins, fRangeBinsPt, fDecayChannel, fMonteCarloInfo, textCent);
+}
+
 
 //**************************************************************************************************
 //******* Function to calculate number of rows for given number of bins and columns ****************
@@ -2479,7 +2701,8 @@ void DrawDCAzHisto( TH1* histo1,
                     TString YTitle,
                     Float_t xMin,
                     Float_t xMax,
-                    Int_t bck) {
+                    Int_t bck,
+                    Color_t color) {
     
     histo1->GetXaxis()->SetRangeUser(xMin, xMax);
     
@@ -2498,8 +2721,8 @@ void DrawDCAzHisto( TH1* histo1,
     histo1->SetMarkerStyle(20);
     histo1->SetMarkerColor(1);
     histo1->SetLineColor(1);
-    histo1->SetLineWidth(1);
-    histo1->SetMarkerSize(0.2);
+    histo1->SetLineWidth(0.5);
+    histo1->SetMarkerSize(0.5);
     histo1->SetTitleOffset(1.2,"xy");
     histo1->SetTitleSize(0.05,"xy");
     histo1->GetYaxis()->SetLabelSize(0.05);
@@ -2507,10 +2730,10 @@ void DrawDCAzHisto( TH1* histo1,
     histo1->GetXaxis()->SetNdivisions(507,kTRUE);
     if( bck == 1 ){
         histo1->SetLineStyle(1);
-        histo1->SetLineColor(4);
-        histo1->SetMarkerColor(4);
+        histo1->SetLineColor(color);
+        histo1->SetMarkerColor(color);
         histo1->SetMarkerStyle(24);
-        histo1->SetLineWidth(1);
+        histo1->SetLineWidth(0.9);
         histo1->DrawCopy("hist,same");
     } else {
         if( bck == 2 ){
@@ -2689,7 +2912,59 @@ Bool_t CalculateDCAzDistributionRatio(TH1D*** inputNum, TH1D*** inputDenom, Int_
 
     return returnValue;
 }
-                                           
+
+// overloading of function for different background estimation methods
+Bool_t CalculateDCAzDistributionRatio(TH1D*** inputNum, TH1D**** inputDenom, Int_t backgroundExtractionMethod, Int_t categoryFirst, Int_t categoryLast, TH1D* &ratio) {
+    Bool_t returnValue              = kTRUE;
+    
+    TH1D* numerator                  = new TH1D("numerator", "numerator", fNBinsPtDummy, fBinsPtDummy);
+    TH1D* denominator                = new TH1D("denominator", "denominator", fNBinsPtDummy, fBinsPtDummy);
+    
+    Double_t binContentNum, binContentDenom;
+    Double_t binErrorTemp, binErrorNum, binErrorDenom;
+    
+    for (Int_t ptBin = 1; ptBin <= fNBinsPtDummy; ptBin++) {
+        
+        binContentNum               = 0;
+        binContentDenom             = 0;
+        
+        binErrorNum                 = 0;
+        binErrorDenom               = 0;
+        
+        for (Int_t cat = categoryFirst; cat <= categoryLast; cat++) {
+            
+            binContentNum           += inputNum[cat][ptBin]->IntegralAndError(-1000,1000,binErrorTemp);
+            binErrorNum             += binErrorTemp*binErrorTemp;
+            
+            binContentDenom         += inputDenom[cat][ptBin][backgroundExtractionMethod]->IntegralAndError(-1000,1000,binErrorTemp);
+            binErrorDenom           += binErrorTemp*binErrorTemp;
+        }
+        
+        binErrorNum                 = TMath::Sqrt(binErrorNum);
+        binErrorDenom               = TMath::Sqrt(binErrorDenom);
+        
+        numerator->SetBinContent(ptBin,         binContentNum);
+        numerator->SetBinError(ptBin,           binErrorNum);
+        
+        if (binContentDenom) {
+            denominator->SetBinContent(ptBin,   binContentDenom);
+            denominator->SetBinError(ptBin,     binErrorDenom);
+        } else {
+            returnValue             = kFALSE;
+            
+            numerator->SetBinContent(ptBin,     0);
+            denominator->SetBinContent(ptBin,   1);
+            denominator->SetBinError(ptBin,     binErrorDenom);
+        }
+    }
+    
+    // if the histograms (numerator and denominator) are identical, the error is set to 0
+    // this is a feature of the binomial-option of divide
+    ratio->Divide(numerator,denominator,1,1,"B");
+    
+    return returnValue;
+}
+
 //****************************************************************************
 //******* Function to calculate pileup correction factors ********************
 //****************************************************************************

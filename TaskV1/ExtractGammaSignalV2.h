@@ -50,12 +50,12 @@ Int_t       exemplaryHighPtBin                                      = 15;
 
 // photon categories
 TString     categoryName[4]                                         = {"all", "cat1", "cat2", "cat3"};
+TString     backgroundExtractionMethod[3]                           = {"std", "var1", "var2"};
+Color_t     backgroundColor[3]                                      = {kBlue+2, kGreen+3, kGray+2};
 
 // ShowBackground arguments
 Int_t nIterationsShowBackground[4]                                  = {0};
-TString optionShowBackgroundStandard                                = "";
-TString optionShowBackgroundVar1                                    = "";
-TString optionShowBackgroundVar2                                    = "";
+TString optionShowBackground[3]                                     = {""};
 
 // binning
 TH1D*       fDeltaPtDummy                                           = NULL;
@@ -107,8 +107,8 @@ TH2D*       fHistoGammaTruePrimaryConv_recPt_MCPt_MC_Rebin                      
 TH2F*       fMCrecGammaPtDCAz                                                                   = NULL;
 TH2F**      fESDGammaPtDCAz                                                                     = NULL;
 TH1D***     fESDGammaPtDCAzBins                                                                 = NULL;
-TH1D***     fESDGammaPtDCAzBinsBack                                                             = NULL;
-TH1D***     fESDSubGammaPtDCAzBins                                                              = NULL;
+TH1D****    fESDGammaPtDCAzBinsBack                                                             = NULL;
+TH1D****    fESDSubGammaPtDCAzBins                                                              = NULL;
 
 TH1D***     fMCrecGammaPtDCAzBins                                                               = NULL;
 TH1D***     fMCrecGammaPtDCAzBinsBack                                                           = NULL;
@@ -133,10 +133,10 @@ TH1D**      fESDGammaRatioCatToCombinedPtDCAzBins                               
 
 TH1D*       fESDGammaPtPileUpAllCat                                                             = NULL;
 TH1D*       fESDGammaPtPileUp                                                                   = NULL;
-TH1D*       fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat                              = NULL;
-TH1D*       fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning                                    = NULL;
-TF1*        fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat                           = NULL;
-TF1*        fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning                                 = NULL;
+TH1D**      fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat                              = NULL;
+TH1D**      fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning                                    = NULL;
+TF1**       fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat                           = NULL;
+TF1**       fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning                                 = NULL;
 
 TH1D**      fMCrecGammaPerCatPtDCAzBins                                                         = NULL;
 TH1D**      fMCrecGammaRatioCatToCombinedPtDCAzBins                                             = NULL;
@@ -170,8 +170,8 @@ TH1D*       fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistB
 TF1*        fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat = NULL;
 TF1*        fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning       = NULL;
 
-TH1D*       fESDGammaPileUpCorrFactorAllCat                                                     = NULL;
-TH1D*       fESDGammaPileUpCorrFactor                                                           = NULL;
+TH1D**      fESDGammaPileUpCorrFactorAllCat                                                     = NULL;
+TH1D**      fESDGammaPileUpCorrFactor                                                           = NULL;
 TH1D*       fMCrecGammaPileUpCorrFactorAllCat                                                   = NULL;
 TH1D*       fMCrecGammaPileUpCorrFactor                                                         = NULL;
 TH1D*       fTruePrimaryConvGammaPileUpCorrFactorAllCat                                         = NULL;
@@ -333,6 +333,20 @@ void    PlotDCAzInPtBinsWithBack            (   TH1D**      ESDGammaPtDCAzBins,
                                                 TString     fDecayChannel,
                                                 Bool_t      fMonteCarloInfo,
                                                 TString     textCent = "MinBias"                );
+void    PlotDCAzInPtBinsWithBack            (   TH1D**      ESDGammaPtDCAzBins,
+                                                TH1D***     ESDGammaPtDCAzBinsBack,
+                                                TH1D**      ESDGammaPtDCAzBinsBackB,
+                                                TString     namePlot,
+                                                TString     nameCanvas,
+                                                TString     namePad,
+                                                TString     dateDummy,
+                                                TString     fMesonType,
+                                                Int_t       fStartBinPtRange,
+                                                Int_t       fNumberPtBins,
+                                                Double_t*   fRangeBinsPt,
+                                                TString     fDecayChannel,
+                                                Bool_t      fMonteCarloInfo,
+                                                TString     textCent = "MinBias"                );
 Int_t   CalculateNumberOfRowsForDCAzPlots   (   Int_t       numberOfPads,
                                                 Int_t       numberOfColumns                     );
 void    DrawDCAzHisto                       (   TH1*        histo1,
@@ -341,7 +355,8 @@ void    DrawDCAzHisto                       (   TH1*        histo1,
                                                 TString     YTitle,
                                                 Float_t     xMin,
                                                 Float_t     xMax,
-                                                Int_t       bck                                 );
+                                                Int_t       bck,
+                                                Color_t     color = kBlue                       );
 void     DrawFractionPerCat                 (   TH1D**      frac,
                                                 TString     fOutputDir,
                                                 TString     fPrefix,
@@ -360,6 +375,12 @@ Bool_t   CalculatePileUpSubtractedDCAz      (   TH1D*       trueGamma,
 Bool_t   CalculateDCAzDistributionRatio     (   TH1D***     numerator,
                                                 TH1D***     denominator,
                                                 Int_t       categoryFirst,
+                                                Int_t       categoryLast,
+                                                TH1D*       &ratio                              );
+Bool_t   CalculateDCAzDistributionRatio     (   TH1D***     numerator,
+                                                TH1D****     denominator,
+                                                Int_t       categoryFirst,
+                                                Int_t       backgroundExtractionMethod,
                                                 Int_t       categoryLast,
                                                 TH1D*       &ratio                              );
 Bool_t    CalculatePileUpCorrectionFactor   (   TH1D*       ratioWithWithoutPileUp,
