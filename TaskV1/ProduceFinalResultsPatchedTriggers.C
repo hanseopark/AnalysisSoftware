@@ -292,6 +292,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     
     // defining output directory
     TString outputDir =    Form("%s/%s/%s/FinalResultsTriggersPatched%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data());
+    if(optionEnergy.CompareTo("8TeV") == 0){
+      if(mode == 4) outputDir = Form("%s/%s/%s/FinalResultsTriggersPatched_EMCAL%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data());
+      if(mode == 2) outputDir = Form("%s/%s/%s/FinalResultsTriggersPatched_PCMEMCAL%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data());
+    }
     gSystem->Exec("mkdir -p "+outputDir);
    
     gSystem->Exec(Form("cp %s %s/configurationFile.txt", fileListNamePi0.Data(), outputDir.Data()));
@@ -410,7 +414,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             histoWidthPi0MC[i]->SetName(Form("Pi0_Width_MC_%s",cutNumber[i].Data()));
         }
         if (cutNumberBaseEff[i].CompareTo("bla") != 0){
-            FileNameEffBasePi0[i]                           = Form("%s/%s/Pi0_MC_GammaConvV1CorrectionHistos_%s.root", cutNumber[i].Data(), optionEnergy.Data(), cutNumberBaseEff[i].Data());
+            FileNameEffBasePi0[i]                           = Form("%s/%s/Pi0_MC_GammaConvV1Correction_%s.root", cutNumber[i].Data(), optionEnergy.Data(), cutNumberBaseEff[i].Data());
             fileEffBasePi0[i]                               = new TFile(FileNameEffBasePi0[i]);
             if (fileEffBasePi0[i]->IsZombie()){
                 enableTriggerEffPi0[i]                         = kFALSE;
@@ -3058,7 +3062,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             histoWidthEtaMC[i]->SetName(Form("Eta_Width_MC_%s",cutNumber[i].Data()));
 
             if (cutNumberBaseEff[i].CompareTo("bla") != 0){
-                FileNameEffBaseEta[i]                           = Form("%s/%s/Eta_MC_GammaConvV1CorrectionHistos_%s.root", cutNumber[i].Data(), optionEnergy.Data(), cutNumberBaseEff[i].Data());
+                FileNameEffBaseEta[i]                           = Form("%s/%s/Eta_MC_GammaConvV1Correction_%s.root", cutNumber[i].Data(), optionEnergy.Data(), cutNumberBaseEff[i].Data());
                 fileEffBaseEta[i]                               = new TFile(FileNameEffBaseEta[i]);
                 if (fileEffBaseEta[i]->IsZombie()){
                     enableTriggerEffEta[i]                      = kFALSE;
@@ -5214,6 +5218,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     
                 canvasRelTotErr->SaveAs(Form("%s/EtaToPi0_RelErrorsFulldecomp.%s",outputDir.Data(),suffix.Data()));
                 
+                if(optionEnergy.CompareTo("8TeV")==0 && mode==4) maxNAllowedEta += 3;
             // if averaging wasn't enabled pick values according to predefined ranges ("cherry picking points")            
             } else {
                 graphEtaToPi0WeightedAverageStat        = new TGraphAsymmErrors(nPointFinalEtaToPi0, xValueFinalEtaToPi0, yValueFinalEtaToPi0, 
