@@ -245,8 +245,8 @@ Int_t fBinsPi08TeVConvEMCALTrigger2PtRebin[42]  = { 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 10, 10,
-                                                    10, 10, 10, 10, 10,
-                                                    10, 10, 10, 10, 10,
+                                                    10, 10, 10, 8, 8,
+                                                    8, 8, 8, 8, 8,
                                                     10, 2};
 Int_t fBinsPi08TeVConvEMCALPtRebin[28]          = { 2, 2,
                                                     4, 2, 2, 2, 2,
@@ -322,7 +322,7 @@ Int_t fBinsEta8TeVEMCALTrigger1PtRebin[23]      = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
                                                     10, 10, 10, 10, 10,
                                                     10, 10, 10, 10, 10,
-                                                    10, 16, 2};
+                                                    10, 25, 2};
 Int_t fBinsEta8TeVEMCALTrigger2PtRebin[23]      = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
                                                     5, 5, 5, 8, 10,
@@ -335,9 +335,9 @@ Int_t fBinsEta8TeVConvEMCALTrigger1PtRebin[23]  = { 5, 5, 5, 5, 5,
                                                     5, 5, 5};
 Int_t fBinsEta8TeVConvEMCALTrigger2PtRebin[23]  = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
-                                                    5, 5, 5, 5, 16,
-                                                    16, 16, 20, 20, 20,
-                                                    20, 25, 2};
+                                                    5, 5, 5, 5, 20,
+                                                    20, 16, 20, 20, 20,
+                                                    25, 25, 2};
 Int_t fBinsPi0EtaBinning8TeVPtRebin[19]         = { 8, 1, 1, 1, 1, 
                                                     1, 1, 2, 2, 2, 
                                                     2, 4, 4, 4, 4,

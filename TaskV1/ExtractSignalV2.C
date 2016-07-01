@@ -2888,9 +2888,10 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
 
             if ( fEnergyFlag.CompareTo("8TeV") == 0 ){
               TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
-              if( trigger.CompareTo("81") == 0 ){
+              if( trigger.CompareTo("81") == 0 || triggerSet == 2){
                 fFitRange[0]=0.04;
-                fMesonFitRange[0] = 0.04;
+                fMesonFitRange[0] = 0.02;
+                fMesonFitRange[1] = 0.21;
               }
             }
 
@@ -3053,8 +3054,11 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
 
             if ( fEnergyFlag.CompareTo("8TeV") == 0 ){
               TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
-              if( trigger.CompareTo("81") == 0 || triggerSet == 2){
-                fMesonFitRange[1]=0.75;
+              if( trigger.CompareTo("81") == 0 || trigger.CompareTo("52") == 0 || triggerSet == 2 || triggerSet == 1){
+                fMesonFitRange[0] = 0.36;
+                fMesonFitRange[1] = 0.73;
+                fBGFitRange[0]                  = 0.7;
+                fBGFitRange[1]                  = 0.78;
               }
             }
         }
