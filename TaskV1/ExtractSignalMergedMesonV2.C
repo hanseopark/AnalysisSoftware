@@ -595,7 +595,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         fHistoClustersMergedPtM02->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.55, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
 
-//         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
+//         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
         
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_AllAcceptedClusters%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
@@ -625,7 +625,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         fHistoClustersMergedPtM02AccMeson->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
         
-//         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
+//         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
         
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_AllAcceptedMesons%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
@@ -654,7 +654,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         fHistoClustersMergedEM02AccMeson->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
         
-//         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
+        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
         
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_EVsM02_AllAcceptedMesons%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
@@ -689,7 +689,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
 //         TLatex *labelM02 = new TLatex(0.11, 0.15, "val. merged clusters");
 //         SetStyleTLatex( labelM02, 0.05,4);
 //         labelM02->Draw();
-//         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
+//         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
 //         
 //         canvasPtM02->Update();
 //         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueMerged%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
@@ -719,7 +719,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         dumm2D->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
 
-        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
+//         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
         TLatex *labelM02 = new TLatex(0.11, 0.15, "val. merged #pi^{0}");
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
@@ -756,7 +756,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
         
-        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
+//         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
         
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueEta%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
@@ -786,7 +786,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         TLatex *labelM02 = new TLatex(0.11, 0.15, "val. #gamma");
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
-        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
+//         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
         
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueGamma%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
@@ -818,7 +818,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
      
-        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
+//         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
         
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueElectron%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
@@ -850,7 +850,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
         
-        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin);
+//         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
         
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueBG%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));

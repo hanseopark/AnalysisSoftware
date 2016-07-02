@@ -403,18 +403,18 @@ void CompareShapeMergedClusterQuantities(   TString dataFileName    = "rawSignal
     Double_t scaleFacData;
     Double_t scaleFacMC;
 
-    Double_t chi2NDFInvMass                 [50];
-    Double_t chi2NDFM02                     [50];
+    Double_t chi2NDFInvMass                 [70];
+    Double_t chi2NDFM02                     [70];
     for (Int_t i = 0; i < 50; i++){
         chi2NDFInvMass[i]                   = 10000;
         chi2NDFM02[i]                       = 10000;
     }
-    TH1D* histoDataInvMassPtBin             [50];
-    TH1D* histoMCInvMassPtBin               [50];
-    TH1D* histoValidatedInvMassMCPtBin      [50];
-    TH1D* histoDataM02PtBin                 [50];
-    TH1D* histoMCM02PtBin                   [50];
-    TH1D* histoValidatedM02MCPtBin          [50];
+    TH1D* histoDataInvMassPtBin             [70];
+    TH1D* histoMCInvMassPtBin               [70];
+    TH1D* histoValidatedInvMassMCPtBin      [70];
+    TH1D* histoDataM02PtBin                 [70];
+    TH1D* histoMCM02PtBin                   [70];
+    TH1D* histoValidatedM02MCPtBin          [70];
         
     for(Int_t iPt = fStartPtBin; iPt < fNBinsPt; iPt++){
         scaleFacData                        = 1;
@@ -528,26 +528,26 @@ void CompareShapeMergedClusterQuantities(   TString dataFileName    = "rawSignal
         fAdvanceClusterQA                   = kTRUE;
     
     if (fAdvanceClusterQA){
-        TH1D* histoDataMergedNCellsPtBin            [50];
-        TH1D* histoMCMergedNCellsPtBin              [50];
-        TH1D* histoDataMergedNCellsAroundPtBin      [50];
-        TH1D* histoMCMergedNCellsAroundPtBin        [50];
-        TH1D* histoDataMergedNCellsAroundAndInPtBin [50];
-        TH1D* histoMCMergedNCellsAroundAndInPtBin   [50];
-        TH1D* histoDataMergedEAroundEBin            [50];
-        TH1D* histoMCMergedEAroundEBin              [50];
-        Double_t chi2NDFNCells                      [50];
-        Double_t chi2NDFNCellsAround                [50];
-        Double_t chi2NDFNCellsAroundAndIn           [50];
-        Double_t chi2NDFEAround                     [50];
-        Double_t meanDataNCells                     [50];
-        Double_t meanDataNCellsAround               [50];
-        Double_t meanDataNCellsAroundAndIn          [50];
-        Double_t meanDataEAround                    [50];
-        Double_t meanMCNCells                       [50];
-        Double_t meanMCNCellsAround                 [50];
-        Double_t meanMCNCellsAroundAndIn            [50];
-        Double_t meanMCEAround                      [50];
+        TH1D* histoDataMergedNCellsPtBin            [70];
+        TH1D* histoMCMergedNCellsPtBin              [70];
+        TH1D* histoDataMergedNCellsAroundPtBin      [70];
+        TH1D* histoMCMergedNCellsAroundPtBin        [70];
+        TH1D* histoDataMergedNCellsAroundAndInPtBin [70];
+        TH1D* histoMCMergedNCellsAroundAndInPtBin   [70];
+        TH1D* histoDataMergedEAroundEBin            [70];
+        TH1D* histoMCMergedEAroundEBin              [70];
+        Double_t chi2NDFNCells                      [70];
+        Double_t chi2NDFNCellsAround                [70];
+        Double_t chi2NDFNCellsAroundAndIn           [70];
+        Double_t chi2NDFEAround                     [70];
+        Double_t meanDataNCells                     [70];
+        Double_t meanDataNCellsAround               [70];
+        Double_t meanDataNCellsAroundAndIn          [70];
+        Double_t meanDataEAround                    [70];
+        Double_t meanMCNCells                       [70];
+        Double_t meanMCNCellsAround                 [70];
+        Double_t meanMCNCellsAroundAndIn            [70];
+        Double_t meanMCEAround                      [70];
         for (Int_t i = 0; i < 50; i++){
             chi2NDFNCells[i]                        = 10000;
             chi2NDFNCellsAround[i]                  = 10000;

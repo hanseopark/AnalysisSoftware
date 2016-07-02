@@ -31,7 +31,7 @@ NSlashes3=11
 # switches to enable/disable certain procedures
 DOWNLOADON=1
 MERGEON=1
-MERGEONBINSSingle=1
+MERGEONBINSSingle=0
 MERGEONBINS=1
 
 # check if train configuration has actually been given
@@ -101,14 +101,14 @@ fi
 
 
 TRAINDIR=Legotrain-vAN20160627-firstFullTrial
-LHC12aData="1604"; 
-LHC12bData="1605"; 
-LHC12cData="1606"; 
-LHC12dData="1607"; 
-LHC12fData="1608"; 
-LHC12hData="1609"; 
-LHC12iData="1610"; 
-LHC16c2MC="2196";
+LHC12aData="1660"; 
+LHC12bData="1661"; 
+LHC12cData="1662"; 
+LHC12dData="1663"; 
+LHC12fData="1664"; 
+LHC12hData="1665"; 
+LHC12iData="1666"; 
+LHC16c2MC="2225";
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR

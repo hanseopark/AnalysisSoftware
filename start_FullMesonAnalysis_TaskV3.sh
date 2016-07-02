@@ -331,14 +331,14 @@ function GiveBinning8TeV()
         echo "44 Bins --> Max p_T = 25 GeV ...";
         correctPi0=1
         BinsPtPi0=44
-    elif [ $answer = 48 ]; then
-        echo "48 Bins --> Max p_T = 50 GeV ...";
+    elif [ $answer = 49 ]; then
+        echo "49 Bins --> Max p_T = 50 GeV ...";
         correctPi0=1
-        BinsPtPi0=48
-    elif [ $answer = 52 ]; then
-        echo "48 Bins --> Max p_T = 70 GeV ...";
+        BinsPtPi0=49
+    elif [ $answer = 53 ]; then
+        echo "43 Bins --> Max p_T = 70 GeV ...";
         correctPi0=1
-        BinsPtPi0=52
+        BinsPtPi0=53
     else
         echo "Pi0 Binning was not set correctly. Please try again.";
         correctPi0=0

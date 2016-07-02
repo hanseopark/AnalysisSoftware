@@ -31,7 +31,7 @@ NSlashes2=9
 DOWNLOADON=1
 MERGEON=1
 MERGEONBINSSingle=1
-MERGEONBINS=1
+MERGEONBINS=0
 
 # check if train configuration has actually been given
 HAVELHC11a=1
@@ -59,38 +59,10 @@ elif [ $1 = "fbockGSI" ]; then
    BASEDIR=/hera/alice/fbock/Grid/OutputLegoTrains/pp
 elif [ $1 = "leardini" ]; then 
    BASEDIR=/Users/lucy/
-elif [ $1 = "leardiniALICESERV1" ]; then 
-   BASEDIR=/alidata50/alice_u/leardini/GridOutput/PbPb/
-elif [ $1 = "leardiniGSI" ]; then 
-   BASEDIR=/hera/alice/leardini/Grid/OutputLegoTrains/pp
-elif [ $1 = "passfeld" ]; then 
-   BASEDIR=~/work/Gridoutput/pp
-elif [ $1 = "passfeldMAF" ]; then 
-   BASEDIR=/data9/a_pass02/gamma_test/AnalysisSoftware/LegoTrain/
-elif [ $1 = "passfeldGSI" ]; then  
-   BASEDIR=/hera/alice/passfeld/Grid/OutputLegoTrains/pp
-elif [ $1 = "amarin" ]; then     
-   BASEDIR=/Users/marin/
-elif [ $1 = "amarinGSI" ]; then     
-   BASEDIR=/hera/alice/marin/Grid/OutputLegoTrains/pp 
-elif [ $1 = "amarinALICESERV1" ]; then     
-   BASEDIR=/alidata50/alice_u/amarin/GridOutput/PbPb/   
-elif [ $1 = "mwilde" ]; then        
-   BASEDIR=~/work/GridOutput 
-elif [ $1 = "mwildeGSI" ]; then           
-   BASEDIR=/hera/alice/mwilde/Grid/OutputLegoTrains/pp 
-elif [ $1 = "pgonzales" ]; then     
-   BASEDIR=~/work/GridOutput 
-elif [ $1 = "pgonzalesGSI" ]; then        
-   BASEDIR=/hera/alice/pgonzales/Grid/OutputLegoTrains/pp
 elif [ $1 = "dmuhlheim" ]; then 
    BASEDIR=/home/daniel/Desktop/Grid
    NSlashes=9
    NSlashes=8
-elif [ $1 = "bsahlmul" ]; then
-  BASEDIR=/Users/sahlmul/Documents/ALICE/mycode/AnalysisSoftware/grid
-  NSlashes=11
-  NSlashes2=10
 fi
 
 # TRAINDIR=Legotrain-vAN-20150909-MergedFirstFullScaleTest
@@ -379,13 +351,13 @@ fi
 # LHC15a3aMC="2047"; 
 # LHC15a3aplusMC="2048"; 
 
-TRAINDIR=Legotrain-mCalo-20160527_V2ClusNewMCdef
-LHC11aData="1566"; 
-LHC15g1aMC="2131";
-
-LHC13gData="1567"; 
-LHC15a3aMC="2129"; 
-LHC15a3aplusMC="2130"; 
+# TRAINDIR=Legotrain-mCalo-20160527_V2ClusNewMCdef
+# LHC11aData="1566"; 
+# LHC15g1aMC="2131";
+# 
+# LHC13gData="1567"; 
+# LHC15a3aMC="2129"; 
+# LHC15a3aplusMC="2130"; 
 
 # TRAINDIR=Legotrain-mCalo-20160527_V2ClusNewMCdef_woSort
 # LHC11aData="1566"; 
@@ -394,6 +366,40 @@ LHC15a3aplusMC="2130";
 # LHC13gData="1567"; 
 # LHC15a3aMC="2133"; 
 # LHC15a3aplusMC="2134"; 
+
+# TRAINDIR=Legotrain-mCalo-20160626-v2ClusterWithTriggMimickInData
+# LHC11aData="1637"; 
+# LHC13gData="1638"; 
+
+
+TRAINDIR=Legotrain-mCalo-20160629_V2Clus
+# LHC11aData="1654"; 
+# LHC11aData="1655"; 
+LHC11aData="1656"; 
+# LHC15g1aMC="2213";
+# LHC15g1aMC="2216";
+LHC15g1aMC="2219";
+# LHC15g1bMC="2191";
+
+LHC13gData="1657"; 
+# LHC13gData="1658"; 
+# LHC13gData="1659"; 
+LHC15a3aMC="2211"; 
+# LHC15a3aMC="2214"; 
+# LHC15a3aMC="2217"; 
+LHC15a3aplusMC="2212"; 
+# LHC15a3aplusMC="2215"; 
+# LHC15a3aplusMC="2218"; 
+LHC15a3bMC="2189"; 
+
+# TRAINDIR=Legotrain-mCalo-20160629_V1Clus
+# LHC11aData="1639"; 
+# LHC15g1aMC="2224";
+# 
+# LHC13gData="1640"; 
+# LHC15a3aMC="2222"; 
+# LHC15a3aplusMC="2223"; 
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -472,7 +478,7 @@ if [ $2 = "LHC11a" ]; then
                 binNumbersJJGamma=`cat binNumbersJJGamma.txt`
                 for binNumber in $binNumbersJJGamma; do
                     echo $binNumber
-                    CopyFileIfNonExisitent $OUTPUTDIR_LHC15g1b/$binNumber/$runNumber "/alice/sim/2015/LHC15g1a/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC15g1bMC"
+                    CopyFileIfNonExisitent $OUTPUTDIR_LHC15g1b/$binNumber/$runNumber "/alice/sim/2015/LHC15g1b/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC15g1bMC"
                 done;   
             done;
         fi    
