@@ -1105,11 +1105,12 @@ void ClusterQA(
         //---------------------------------------------------------------------------------------------------------------
         //---------------------------- Drawing shower shape parameter M02 vs E for identified particles -----------------
         //---------------------------------------------------------------------------------------------------------------
-        if (doExtQA > 1){
+        if (doExtQA > 1 || isMerged){
+            cout << "entered plotting of merged cluster paper plot" << endl;
             TGaxis::SetExponentOffset(0, 0, "x");
             TGaxis::SetExponentOffset(0, 0, "y");
             //---------------------------------------------------------------------------------------------------------------
-            if(ClusterContainer && isMC){
+            if( ((isMerged && TrueContainer) || ClusterContainer) && isMC){
                 //---------------------------------------------------------------------------------------------------------------
                 // create canvas
                 TCanvas* cvsEM02 = new TCanvas("cvs2pads","",2250,1500);
@@ -1126,7 +1127,12 @@ void ClusterQA(
                 max->SetLineStyle(2);
                 //---------------------------------------------------------------------------------------------------------------
                 // validated Gamma plot
-                TH2D* fHistClusterTrueGammaEM02 = (TH2D*)ClusterContainer->FindObject("TrueClusGammaEM02");
+                TH2D* fHistClusterTrueGammaEM02 = NULL;
+                if (isMerged)
+                    fHistClusterTrueGammaEM02   = (TH2D*)TrueContainer->FindObject("TrueClusGammaEM02");
+                else 
+                    fHistClusterTrueGammaEM02   = (TH2D*)ClusterContainer->FindObject("TrueClusGammaEM02");
+                
                 if(fHistClusterTrueGammaEM02){
                     fHistClusterTrueGammaEM02->Scale(1/nEvents[i]);
                     DrawAutoGammaHistoPaper2D(fHistClusterTrueGammaEM02,
@@ -1144,6 +1150,9 @@ void ClusterQA(
                     fHistClusterTrueGammaEM02->GetZaxis()->SetLabelSize(0.051);
                     fHistClusterTrueGammaEM02->GetXaxis()->SetTickLength(0.05);
                     fHistClusterTrueGammaEM02->DrawCopy("COLZ");
+                    min->Draw("same");
+                    cnst->Draw("same");
+                    max->Draw("same");
                     WriteHistogram(fHistClusterTrueGammaEM02);
                     PutProcessLabelAndEnergyOnPlot(0.55, 0.99, 0.06, "ALICE simulation", fCollisionSystem.Data(), "", 42, 0.03, "");
                     PutProcessLabelAndEnergyOnPlot(0.12, 0.2, 0.06, "#gamma", "", "", 42, 0.03, "");
@@ -1154,7 +1163,12 @@ void ClusterQA(
 
                 //---------------------------------------------------------------------------------------------------------------
                 // validated Pi0 plot
-                TH2D* fHistClusterTruePi0EM02 = (TH2D*)ClusterContainer->FindObject("TrueClusPi0EM02");
+                TH2D* fHistClusterTruePi0EM02   = NULL;
+                if (isMerged)
+                    fHistClusterTruePi0EM02     = (TH2D*)TrueContainer->FindObject("TrueClusPi0EM02");
+                else 
+                    fHistClusterTruePi0EM02     = (TH2D*)ClusterContainer->FindObject("TrueClusPi0EM02");
+                
                 if(fHistClusterTruePi0EM02){
                     fHistClusterTruePi0EM02->Scale(1/nEvents[i]);
                     DrawAutoGammaHistoPaper2D(fHistClusterTruePi0EM02,
@@ -1172,6 +1186,10 @@ void ClusterQA(
                     fHistClusterTruePi0EM02->GetZaxis()->SetLabelSize(0.051);
                     fHistClusterTruePi0EM02->GetXaxis()->SetTickLength(0.05);
                     fHistClusterTruePi0EM02->DrawCopy("COLZ");
+                    min->Draw("same");
+                    cnst->Draw("same");
+                    max->Draw("same");
+
                     WriteHistogram(fHistClusterTruePi0EM02);
                     PutProcessLabelAndEnergyOnPlot(0.55, 0.99, 0.06,  "ALICE simulation", fCollisionSystem.Data(), "", 42, 0.03, "");
                     PutProcessLabelAndEnergyOnPlot(0.3, 0.6, 0.06, "#pi^{0}", "", "", 42, 0.03, "");
@@ -1185,26 +1203,100 @@ void ClusterQA(
                 if(fHistClusterTrueGammaEM02&&fHistClusterTruePi0EM02){
                     fHistClusterTrueGammaEM02->Add(fHistClusterTruePi0EM02,1);
                     fHistClusterTrueGammaEM02->SetName("TrueClusGammaPi0EM02");
-                    //SetZMinMaxTH2(fHistClusterTrueGammaEM02,fHistClusterTrueGammaEM02->GetXaxis()->FindBin(4.95),fHistClusterTrueGammaEM02->GetXaxis()->FindBin(50.05),
-                    //              fHistClusterTrueGammaEM02->GetYaxis()->FindBin(0.1),fHistClusterTrueGammaEM02->GetYaxis()->FindBin(2.95));
-                    fHistClusterTrueGammaEM02->GetZaxis()->SetRangeUser(5E-8,9E-5);
+                    SetZMinMaxTH2(fHistClusterTrueGammaEM02,fHistClusterTrueGammaEM02->GetXaxis()->FindBin(4.95),fHistClusterTrueGammaEM02->GetXaxis()->FindBin(50.05),
+                                 fHistClusterTrueGammaEM02->GetYaxis()->FindBin(0.1),fHistClusterTrueGammaEM02->GetYaxis()->FindBin(2.95));
+//                     fHistClusterTrueGammaEM02->GetZaxis()->SetRangeUser(5E-8,9E-5);
                     fHistClusterTrueGammaEM02->GetZaxis()->SetLabelSize(0.051);
                     fHistClusterTrueGammaEM02->GetXaxis()->SetTickLength(0.05);
                     fHistClusterTrueGammaEM02->DrawCopy("COLZ");
+                    
                     min->Draw("same");
                     cnst->Draw("same");
                     max->Draw("same");
-                    PutProcessLabelAndEnergyOnPlot(0.5, 0.99, 0.06,  "ALICE simulation", fCollisionSystem.Data(), "", 42, 0.03, "",0);
+                    PutProcessLabelAndEnergyOnPlot(0.5, 0.99, 0.06,  "ALICE simulation", fCollisionSystem.Data(), "", 42, 0.03, "");
                     PutProcessLabelAndEnergyOnPlot(0.28, 0.6, 0.08, "#pi^{0}", "", "", 42, 0.03, "",0);
                     PutProcessLabelAndEnergyOnPlot(0.12, 0.23, 0.08, "#gamma", "", "", 42, 0.03, "",0);
                     cvsEM02->SetLogx(1); cvsEM02->SetLogy(0); cvsEM02->SetLogz(1); cvsEM02->Update();
                     cvsEM02->SaveAs(Form("%s/EVsM02_TrueGamma_Pi0_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                     cvsEM02->Clear();
                 }
+                if (isMerged){
+                    //---------------------------------------------------------------------------------------------------------------
+                    // validated Eta plot
+                    TH2D* fHistClusterTrueEtaEM02   = NULL;
+                    if (isMerged)
+                        fHistClusterTrueEtaEM02     = (TH2D*)TrueContainer->FindObject("TrueClusEtaEM02");
+                    else 
+                        fHistClusterTrueEtaEM02     = (TH2D*)ClusterContainer->FindObject("TrueClusEtaEM02");
+                    
+                    if(fHistClusterTrueEtaEM02){
+                        fHistClusterTrueEtaEM02->Scale(1/nEvents[i]);
+                        DrawAutoGammaHistoPaper2D(fHistClusterTrueEtaEM02,
+                                                    "",
+                                                    "E (GeV)",
+                                                    "#lambda_{0}^{2}",
+                                                    0,0,0,
+                                                    1,0.1,2.95,
+                                                    1,4.95,50.05,0.8,0.65);
+                        fHistClusterTrueEtaEM02->GetXaxis()->SetMoreLogLabels();
+                        fHistClusterTrueEtaEM02->GetXaxis()->SetLabelOffset(-0.02);
+                        SetZMinMaxTH2(fHistClusterTrueEtaEM02,fHistClusterTrueEtaEM02->GetXaxis()->FindBin(4.95),fHistClusterTrueEtaEM02->GetXaxis()->FindBin(50.05),
+                                    fHistClusterTrueEtaEM02->GetYaxis()->FindBin(0.1),fHistClusterTrueEtaEM02->GetYaxis()->FindBin(2.95));
+                        //fHistClusterTrueEtaEM02->GetZaxis()->SetRangeUser(1E-8,5E-5);
+                        fHistClusterTrueEtaEM02->GetZaxis()->SetLabelSize(0.051);
+                        fHistClusterTrueEtaEM02->GetXaxis()->SetTickLength(0.05);
+                        fHistClusterTrueEtaEM02->DrawCopy("COLZ");
+                        min->Draw("same");
+                        cnst->Draw("same");
+                        max->Draw("same");
+                        WriteHistogram(fHistClusterTrueEtaEM02);
+                        PutProcessLabelAndEnergyOnPlot(0.55, 0.99, 0.06,  "ALICE simulation", fCollisionSystem.Data(), "", 42, 0.03, "");
+                        PutProcessLabelAndEnergyOnPlot(0.3, 0.6, 0.06, "#eta", "", "", 42, 0.03, "");
+                        cvsEM02->SetLogx(1); cvsEM02->SetLogy(0); cvsEM02->SetLogz(1); cvsEM02->Update();
+                        cvsEM02->SaveAs(Form("%s/EVsM02_TrueEta_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+                        cvsEM02->Clear();
+                    } else cout << "INFO: Object |TrueClusEtaEM02| could not be found! Skipping Draw..." << endl;
+                    //---------------------------------------------------------------------------------------------------------------
+                    // validated Electron plot
+                    TH2D* fHistClusterTrueElectronEM02   = NULL;
+                    if (isMerged)
+                        fHistClusterTrueElectronEM02     = (TH2D*)TrueContainer->FindObject("TrueClusElectronEM02");
+                    else 
+                        fHistClusterTrueElectronEM02     = (TH2D*)ClusterContainer->FindObject("TrueClusElectronEM02");
+                    
+                    if(fHistClusterTrueElectronEM02){
+                        fHistClusterTrueElectronEM02->Scale(1/nEvents[i]);
+                        DrawAutoGammaHistoPaper2D(fHistClusterTrueElectronEM02,
+                                                    "",
+                                                    "E (GeV)",
+                                                    "#lambda_{0}^{2}",
+                                                    0,0,0,
+                                                    1,0.1,2.95,
+                                                    1,4.95,50.05,0.8,0.65);
+                        fHistClusterTrueElectronEM02->GetXaxis()->SetMoreLogLabels();
+                        fHistClusterTrueElectronEM02->GetXaxis()->SetLabelOffset(-0.02);
+                        SetZMinMaxTH2(fHistClusterTrueElectronEM02,fHistClusterTrueElectronEM02->GetXaxis()->FindBin(4.95),fHistClusterTrueElectronEM02->GetXaxis()->FindBin(50.05),
+                                    fHistClusterTrueElectronEM02->GetYaxis()->FindBin(0.1),fHistClusterTrueElectronEM02->GetYaxis()->FindBin(2.95));
+                        //fHistClusterTrueElectronEM02->GetZaxis()->SetRangeUser(1E-8,5E-5);
+                        fHistClusterTrueElectronEM02->GetZaxis()->SetLabelSize(0.051);
+                        fHistClusterTrueElectronEM02->GetXaxis()->SetTickLength(0.05);
+                        fHistClusterTrueElectronEM02->DrawCopy("COLZ");
+                        min->Draw("same");
+                        cnst->Draw("same");
+                        max->Draw("same");
+                        WriteHistogram(fHistClusterTrueElectronEM02);
+                        PutProcessLabelAndEnergyOnPlot(0.55, 0.99, 0.06,  "ALICE simulation", fCollisionSystem.Data(), "", 42, 0.03, "");
+                        PutProcessLabelAndEnergyOnPlot((0.12, 0.23, 0.06, "e^{#pm}", "", "", 42, 0.03, "");
+                        cvsEM02->SetLogx(1); cvsEM02->SetLogy(0); cvsEM02->SetLogz(1); cvsEM02->Update();
+                        cvsEM02->SaveAs(Form("%s/EVsM02_TrueElectron_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+                        cvsEM02->Clear();
+                    } else cout << "INFO: Object |TrueClusElectronEM02| could not be found! Skipping Draw..." << endl;
+                }    
                 delete cvsEM02;
                 delete min;
                 delete cnst;
                 delete max;
+                
             }            
         }
         

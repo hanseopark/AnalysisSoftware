@@ -241,18 +241,23 @@ void QA(    TString select          = "LHC11a",         // set selected
     //**************************************************************************************************************
     else if(select.CompareTo("LHC11aMerged")==0){
     //LHC11a + JJ MC for merged cluster ana
-        nSets = 2;
+        nSets = 3;
         fEnergyFlag = "2.76TeV";
         
-        pathDataSets[0] = "/mnt/additionalStorage/OutputLegoTrains/pp/Legotrain-mCalo-20160527_V2ClusNewMCdef/GammaCaloMerged_LHC11a-pass4_1.root";
-        pathDataSets[1] = "/mnt/additionalStorage/OutputLegoTrains/pp/Legotrain-mCalo-20160527_V2ClusNewMCdef/GammaCaloMerged_MC_LHC15g1aFinerPtHardBins_1.root";
+        pathDataSets[0] = "/mnt/additionalStorage/OutputLegoTrains/pp/Legotrain-mCalo-20160629_V2Clus/GammaCaloMerged_LHC11a-pass4_19.root";
+        pathDataSets[1] = "/mnt/additionalStorage/OutputLegoTrains/pp/Legotrain-mCalo-20160629_V2Clus/GammaCaloMerged_MC_LHC15g1aFinerPtHardBins_19.root";
+        pathDataSets[2] = "/mnt/additionalStorage/OutputLegoTrains/pp/Legotrain-mCalo-20160629_V2Clus/GammaCaloMerged_MC_LHC15g1b_19.root";
         
-        DataSets[0]="LHC11a_pass4_wSDD"; DataSets[1]="LHC15g1a";
-        plotDataSets[0]="LHC11a"; plotDataSets[1]="JetJet";
+        DataSets[0]     = "LHC11a_pass4_wSDD"; 
+        DataSets[1]     = "LHC15g1a"; 
+        DataSets[2]     = "LHC15g1b";
+        plotDataSets[0] = "LHC11a";
+        plotDataSets[1] = "JetJet";  
+        plotDataSets[1] = "JetJet #gamma trig.";
         pathPhotonQA[0] = "";
         pathPhotonQA[1] = "";
+        pathPhotonQA[2] = "";
     }
-
     //**************************************************************************************************************
     else if(select.CompareTo("LHC15-JJ")==0){
     //LHC15-JJ EvsM02
