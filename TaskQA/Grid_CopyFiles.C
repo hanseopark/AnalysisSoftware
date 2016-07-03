@@ -275,20 +275,20 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 //*********************************************************************************************************************************
 //*********************************************************************************************************************************
 
-// convcalo systematics trigger EMC7
+ //convcalo systematics trigger EMC7
 //    const Int_t nSets = 6;
 //    const Int_t nData = 6;
 //    TString DataSets[nSets]={
-//      "LHC12b-kEMC7", "LHC12c-kEMC7", "LHC12d-kEMC7", "LHC12f-kEMC7", "LHC12h-kEMC7", "LHC12i-kEMC7"
+//      "LHC12b-kEMCEGA", "LHC12c-kEMCEGA", "LHC12d-kEMCEGA", "LHC12f-kEMCEGA", "LHC12h-kEMCEGA", "LHC12i-kEMCEGA"
 //    };
 
 //    TString train = "Legotrain-vAN-20160617-8TeV-Systematics_ConvCalo_EMC7";
 //    Int_t trainRuns[nSets] = {
-//                              1605,1606,1607,1608,1609,1610
+//                              1648,1649,1650,1651,1652,1653
 //                             };
 
 //    TString runlist[nSets] = {
-//                              "merge_runlist_10","merge_runlist_10","merge_runlist_10","merge_runlist_10","merge_runlist_10","merge_runlist_10"
+//                              "merge_runlist_11","merge_runlist_11","merge_runlist_11","merge_runlist_11","merge_runlist_11","merge_runlist_11"
 //                             };
 
 //    const Int_t nFiles = 16;
@@ -300,7 +300,7 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 
 
 //    const Int_t nMerge = 1;
-//    TString strMerge[nMerge]={"LHC12-kEMC7"};
+//    TString strMerge[nMerge]={"LHC12-kEMCEGA"};
 //    std::vector<Int_t> mergeVec[nMerge];
 //    std::vector<Int_t>::iterator it;
 //    for(Int_t i=0; i<nSets; i++){
@@ -318,9 +318,9 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 //          "LHC12c-kEMCEGA", "LHC12d-kEMCEGA", "LHC12f-kEMCEGA", "LHC12h-kEMCEGA", "LHC12i-kEMCEGA"
 //        };
 
-//        TString train = "Legotrain-vAN-20160627-8TeV-Systematics_ConvCalo_EGA";
+//        TString train = "Legotrain-vAN-20160617-8TeV-Systematics_ConvCalo_EGA";
 //        Int_t trainRuns[nSets] = {
-//                                  1642,1643,1644,1645,1646
+//                                  1649,1650,1651,1652,1653
 //                                 };
 
 //        TString runlist[nSets] = {
@@ -347,11 +347,11 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 //*********************************************************************************************************************************
 //*********************************************************************************************************************************
 
-     //calo systematics trigger EMC7+EGA
+     //calo systematics trigger EMC7
         const Int_t nSets = 6;
         const Int_t nData = 6;
         TString DataSets[nSets]={
-          "LHC12b-kEMC7", "LHC12c-kEMC7", "LHC12d-kEMC7", "LHC12f-kEMC7", "LHC12h-kEMC7", "LHC12i-kEMC7"
+          "LHC12b-kEMCEGA", "LHC12c-kEMCEGA", "LHC12d-kEMCEGA", "LHC12f-kEMCEGA", "LHC12h-kEMCEGA", "LHC12i-kEMCEGA"
         };
 
         TString train = "Legotrain-vAN-20160617-8TeV-Systematics_Calo_EMC7";
@@ -360,7 +360,7 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
                                  };
 
         TString runlist[nSets] = {
-                                  "merge_runlist_10","merge_runlist_10","merge_runlist_10","merge_runlist_10","merge_runlist_10","merge_runlist_10"
+                                  "merge_runlist_11","merge_runlist_11","merge_runlist_11","merge_runlist_11","merge_runlist_11","merge_runlist_11"
                                  };
 
         const Int_t nFiles = 9;
@@ -370,7 +370,7 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 
 
         const Int_t nMerge = 1;
-        TString strMerge[nMerge]={"LHC12-kEMC7"};
+        TString strMerge[nMerge]={"LHC12-kEMCEGA"};
         std::vector<Int_t> mergeVec[nMerge];
         std::vector<Int_t>::iterator it;
         for(Int_t i=0; i<nSets; i++){

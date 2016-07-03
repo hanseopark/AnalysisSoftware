@@ -858,8 +858,8 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
                         if (additionalNameOutput.CompareTo("")==0     ||
                             additionalNameOutput.CompareTo("EMC7")==0 ||
                             additionalNameOutput.CompareTo("EGA")==0){
-                            error   = 0.4+5./pow(10,ptBins[k]);
-                            if(ptBins[k]>=6.) error += 0.075*(ptBins[k]-6.);
+                            error   = 1.2+8./pow(10,ptBins[k]);
+                            //if(ptBins[k]>=6.) error += 0.075*(ptBins[k]-6.);
                         }
 //                     }
                     if (meson.CompareTo("Eta") == 0 || meson.CompareTo("Pi0EtaBinning") == 0){
