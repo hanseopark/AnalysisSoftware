@@ -91,7 +91,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
     TString fileNamePHOS                        = "ExternalInput/PHOS/2.76TeV/LHC11a_PHOS_pi0_pp2760_noBWCorr_FDcorr_20140218.root";
     TString fileNamePCMEta                      = "FinalResults/data_PCMResultsFullCorrection_PP_NoBinShifting_usedTosvnEtapaper.root";
     TString fileNameChargedPionPP               = "ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_20_May_2015.root";
-    TString fileNameChargedHadronPP             = "ExternalInput/UnidentifiedCharged/ChargedHadrinSpectraPP_20_May_2015.root";
+    TString fileNameChargedHadronPP             = "ExternalInput/UnidentifiedCharged/ChargedHadrinSpectraPP_2016_07_04.root";
     TString outputDir                           = Form("%s/%s/CombineMesonMeasurements2760GeV%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
     if (flagMerged == 0){
       outputDir = outputDir+"_HaitaoMerged";  
@@ -569,10 +569,18 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
     // ************************** Loading charged hadron results ***********************************************
     // *******************************************************************************************************        
     TFile* fileChargedHadronsInputpp                        = new TFile(fileNameChargedHadronPP.Data());
-        TGraphAsymmErrors* graphChargedHadronsStatPP        = (TGraphAsymmErrors*)fileChargedHadronsInputpp->Get("graphChargedHadronsStatPP2760GeV");
+        TGraphAsymmErrors* graphChargedHadronsStatPP        = (TGraphAsymmErrors*)fileChargedHadronsInputpp->Get("graphChargedHadronsALICEStatPP2760GeV");
         graphChargedHadronsStatPP                           = ScaleGraph(graphChargedHadronsStatPP,0.5*1e9/xSection2760GeVINEL);
-        TGraphAsymmErrors* graphChargedHadronsSysPP         = (TGraphAsymmErrors*)fileChargedHadronsInputpp->Get("graphChargedHadronsSysPP2760GeV");
+        TGraphAsymmErrors* graphChargedHadronsSysPP         = (TGraphAsymmErrors*)fileChargedHadronsInputpp->Get("graphChargedHadronsALICESysPP2760GeV");
         graphChargedHadronsSysPP                            = ScaleGraph(graphChargedHadronsSysPP,0.5*1e9/xSection2760GeVINEL);
+        TGraphAsymmErrors* graphChargedHadronsStatPPCMS     = (TGraphAsymmErrors*)fileChargedHadronsInputpp->Get("graphChargedHadronsCMSStatPP2760GeV");
+        graphChargedHadronsStatPPCMS                        = ScaleGraph(graphChargedHadronsStatPPCMS,0.5*1e9/xSection2760GeVINEL);
+        TGraphAsymmErrors* graphChargedHadronsSysPPCMS      = (TGraphAsymmErrors*)fileChargedHadronsInputpp->Get("graphChargedHadronsCMSSysPP2760GeV");
+        graphChargedHadronsSysPPCMS                         = ScaleGraph(graphChargedHadronsSysPPCMS,0.5*1e9/xSection2760GeVINEL);
+        TGraphAsymmErrors* graphChargedHadronsStatPPATLAS   = (TGraphAsymmErrors*)fileChargedHadronsInputpp->Get("graphChargedHadronsATLASStatPP2760GeV");
+        graphChargedHadronsStatPPATLAS                      = ScaleGraph(graphChargedHadronsStatPPATLAS,0.5*1e9/xSection2760GeVINEL);
+        TGraphAsymmErrors* graphChargedHadronsSysPPATLAS    = (TGraphAsymmErrors*)fileChargedHadronsInputpp->Get("graphChargedHadronsATLASSysPP2760GeV");
+        graphChargedHadronsSysPPATLAS                       = ScaleGraph(graphChargedHadronsSysPPATLAS,0.5*1e9/xSection2760GeVINEL);
         
     // *******************************************************************************************************
     // ************************** Combination of different pi0 measurements **********************************
@@ -4016,10 +4024,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
     
     cout << "combined Spectrum - low Pt CMS" << endl;
    
-    TGraphErrors* graphChPiInvYieldCMSStatPPCMSCombUp               = NULL;
-    TGraphErrors* graphChPiInvYieldCMSSystPPCMSCombUp               = NULL;
-    TGraphErrors* graphCombPi0InvYieldStatRebinnedCMSComb    = NULL;
-    TGraphErrors* graphCombPi0InvYieldSysRebinnedCMSComb     = NULL;
+    TGraphErrors* graphChPiInvYieldCMSStatPPCMSCombUp       = NULL;
+    TGraphErrors* graphChPiInvYieldCMSSystPPCMSCombUp       = NULL;
+    TGraphErrors* graphCombPi0InvYieldStatRebinnedCMSComb   = NULL;
+    TGraphErrors* graphCombPi0InvYieldSysRebinnedCMSComb    = NULL;
     TGraphErrors* graphRatioPi0CMSChPisCombA    = CalculateRatioBetweenSpectraWithDifferentBinning( graphCombPi0InvYieldStatA, graphCombPi0InvYieldSysA, 
                                                                                                         histoChPiInvYieldLowPtStatCMS, histoChPiInvYieldLowPtSysCMS,  
                                                                                                         kTRUE,  kTRUE, 
@@ -4027,10 +4035,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
                                                                                                         &graphChPiInvYieldCMSStatPPCMSCombUp, &graphChPiInvYieldCMSSystPPCMSCombUp ) ;
 
        cout << "combined Spectrum - published" << endl;
-    TGraphErrors* graphChPiInvYieldPubStatPPPubCombUp               = NULL;
-    TGraphErrors* graphChPiInvYieldPubSystPPPubCombUp               = NULL;
-    TGraphErrors* graphCombPi0InvYieldStatRebinnedPubComb    = NULL;
-    TGraphErrors* graphCombPi0InvYieldSysRebinnedPubComb     = NULL;
+    TGraphErrors* graphChPiInvYieldPubStatPPPubCombUp       = NULL;
+    TGraphErrors* graphChPiInvYieldPubSystPPPubCombUp       = NULL;
+    TGraphErrors* graphCombPi0InvYieldStatRebinnedPubComb   = NULL;
+    TGraphErrors* graphCombPi0InvYieldSysRebinnedPubComb    = NULL;
     TGraphErrors* graphRatioPi0PubChPisCombA    = CalculateRatioBetweenSpectraWithDifferentBinning( graphCombPi0InvYieldStatA, graphCombPi0InvYieldSysA, 
                                                                                                         histoChPiInvYieldPubStatPP, histoChPiInvYieldPubSystPP,  
                                                                                                         kTRUE,  kTRUE, 
@@ -4038,16 +4046,66 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
                                                                                                         &graphChPiInvYieldPubStatPPPubCombUp, &graphChPiInvYieldPubSystPPPubCombUp )    ;
 
        cout << "combined Spectrum - published" << endl;
-    TGraphErrors* graphChHadInvYieldPubStatPPHadCombUp              = NULL;
-    TGraphErrors* graphChHadInvYieldPubSystPPHadCombUp              = NULL;
-    TGraphErrors* graphCombPi0InvYieldStatRebinnedHadComb    = NULL;
-    TGraphErrors* graphCombPi0InvYieldSysRebinnedHadComb     = NULL;
+    TGraphErrors* graphChHadInvYieldPubStatPPHadCombUp      = NULL;
+    TGraphErrors* graphChHadInvYieldPubSystPPHadCombUp      = NULL;
+    TGraphErrors* graphCombPi0InvYieldStatRebinnedHadComb   = NULL;
+    TGraphErrors* graphCombPi0InvYieldSysRebinnedHadComb    = NULL;
     TGraphErrors* graphRatioPi0PubChHadsCombA   = CalculateRatioBetweenSpectraWithDifferentBinning( graphCombPi0InvYieldStatA, graphCombPi0InvYieldSysA, 
                                                                                                     graphChargedHadronsStatPP, graphChargedHadronsSysPP,  
                                                                                                     kTRUE,  kTRUE, 
                                                                                                     &graphCombPi0InvYieldStatRebinnedHadComb, &graphCombPi0InvYieldSysRebinnedHadComb, 
                                                                                                     &graphChHadInvYieldPubStatPPHadCombUp, &graphChHadInvYieldPubSystPPHadCombUp )    ;
-                                                                                                    
+
+    TF1* fitPowInvYieldChHadALICE       = FitObject("powPure","fitPowInvYieldChHadALICE","pi0",graphChargedHadronsStatPP,7,50. ,NULL,"QNRMEX0+","", kFALSE);
+    cout << WriteParameterToFile(fitPowInvYieldChHadALICE)<< endl;                                                                                                    
+    TF1* fitPowInvYieldChHadATLAS       = FitObject("powPure","fitPowInvYieldChHadATLAS","pi0",graphChargedHadronsStatPPATLAS,7,70. ,NULL,"QNRMEX0+","", kFALSE);
+    cout << WriteParameterToFile(fitPowInvYieldChHadATLAS)<< endl;
+    TF1* fitPowInvYieldChHadCMS         = FitObject("powPure","fitPowInvYieldChHadCMS","pi0",graphChargedHadronsStatPPCMS,7,70. ,NULL,"QNRMEX0+","", kFALSE);
+    cout << WriteParameterToFile(fitPowInvYieldChHadCMS)<< endl;
+
+    TGraphAsymmErrors* graphRatioChHadStatToChFitALICE      = CalculateGraphErrRatioToFit(graphChargedHadronsStatPP, fitPowInvYieldChHadALICE);
+    TGraphAsymmErrors* graphRatioChHadSysToChFitALICE       = CalculateGraphErrRatioToFit(graphChargedHadronsSysPP, fitPowInvYieldChHadALICE);
+    TGraphAsymmErrors* graphRatioPi0StatToChFitALICE        = CalculateGraphErrRatioToFit(graphCombPi0InvYieldStatA, fitPowInvYieldChHadALICE);
+    TGraphAsymmErrors* graphRatioPi0SysToChFitALICE         = CalculateGraphErrRatioToFit(graphCombPi0InvYieldSysA, fitPowInvYieldChHadALICE);
+    while (graphRatioChHadStatToChFitALICE->GetX()[0] < 7)
+        graphRatioChHadStatToChFitALICE->RemovePoint(0);   
+    while (graphRatioChHadSysToChFitALICE->GetX()[0] < 7)    
+        graphRatioChHadSysToChFitALICE->RemovePoint(0);   
+    while (graphRatioPi0StatToChFitALICE->GetX()[0] < 7)
+        graphRatioPi0StatToChFitALICE->RemovePoint(0);   
+    while (graphRatioPi0SysToChFitALICE->GetX()[0] < 7)
+        graphRatioPi0SysToChFitALICE->RemovePoint(0);   
+    
+    
+    TGraphAsymmErrors* graphRatioChHadStatToChFitATLAS      = CalculateGraphErrRatioToFit(graphChargedHadronsStatPPATLAS, fitPowInvYieldChHadATLAS);
+    TGraphAsymmErrors* graphRatioChHadSysToChFitATLAS       = CalculateGraphErrRatioToFit(graphChargedHadronsSysPPATLAS, fitPowInvYieldChHadATLAS);
+    TGraphAsymmErrors* graphRatioPi0StatToChFitATLAS        = CalculateGraphErrRatioToFit(graphCombPi0InvYieldStatA, fitPowInvYieldChHadATLAS);
+    TGraphAsymmErrors* graphRatioPi0SysToChFitATLAS         = CalculateGraphErrRatioToFit(graphCombPi0InvYieldSysA, fitPowInvYieldChHadATLAS);
+    while (graphRatioChHadStatToChFitATLAS->GetX()[0] < 7)
+        graphRatioChHadStatToChFitATLAS->RemovePoint(0);  
+    while (graphRatioChHadSysToChFitATLAS->GetX()[0] < 7)
+        graphRatioChHadSysToChFitATLAS->RemovePoint(0);   
+    while (graphRatioPi0StatToChFitATLAS->GetX()[0] < 7)
+        graphRatioPi0StatToChFitATLAS->RemovePoint(0);   
+    while (graphRatioPi0SysToChFitATLAS->GetX()[0] < 7)
+        graphRatioPi0SysToChFitATLAS->RemovePoint(0);   
+    
+    
+    TGraphAsymmErrors* graphRatioChHadStatToChFitCMS        = CalculateGraphErrRatioToFit(graphChargedHadronsStatPPCMS, fitPowInvYieldChHadCMS);
+    TGraphAsymmErrors* graphRatioChHadSysToChFitCMS         = CalculateGraphErrRatioToFit(graphChargedHadronsSysPPCMS, fitPowInvYieldChHadCMS);
+    TGraphAsymmErrors* graphRatioPi0StatToChFitCMS          = CalculateGraphErrRatioToFit(graphCombPi0InvYieldStatA, fitPowInvYieldChHadCMS);
+    TGraphAsymmErrors* graphRatioPi0SysToChFitCMS           = CalculateGraphErrRatioToFit(graphCombPi0InvYieldSysA, fitPowInvYieldChHadCMS);
+    while (graphRatioChHadStatToChFitCMS->GetX()[0] < 7)
+        graphRatioChHadStatToChFitCMS->RemovePoint(0);   
+    while (graphRatioChHadSysToChFitCMS->GetX()[0] < 7)
+        graphRatioChHadSysToChFitCMS->RemovePoint(0);   
+    while (graphRatioPi0StatToChFitCMS->GetX()[0] < 7)
+        graphRatioPi0StatToChFitCMS->RemovePoint(0);   
+    while (graphRatioPi0SysToChFitCMS->GetX()[0] < 7)
+        graphRatioPi0SysToChFitCMS->RemovePoint(0);   
+     
+    
+
     // ***************************************************************************************************************
     // ************************** Comparison pi0/pi+-, pi0 updated comb pp 2.76TeV ***********************
     // ***************************************************************************************************************    
@@ -4116,6 +4174,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
     canvasCompYieldPPInd->cd();
 
     histo2DCompCombinedRatio2->GetYaxis()->SetTitle("#pi^{0}/h^{#pm}");
+    histo2DCompCombinedRatio2->GetYaxis()->SetRangeUser(0.05,1.35);    
     histo2DCompCombinedRatio2->DrawCopy();
 
         DrawGammaSetMarkerTGraphErr(graphRatioPi0PubChHadsCombA, markerStyleCombHighPt, markerSizeComparison, kBlack , kBlack);
@@ -4135,7 +4194,81 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
    
     canvasCompYieldPPInd->Update();
     canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedHadronToNeutralPublishedCharged_PP2760GeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
+
+    histo2DCompCombinedRatio2->GetYaxis()->SetTitle("#pi^{0}/fit to h^{#pm}");
+    histo2DCompCombinedRatio2->DrawCopy();
+
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0SysToChFitALICE, markerStyleCombHighPt, markerSizeComparison, kBlack , kBlack, widthLinesBoxes, kTRUE, 0);
+        graphRatioPi0SysToChFitALICE->Draw("E2psame");
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0SysToChFitATLAS, markerStyleCombHighPt, markerSizeComparison, kBlue+1 , kBlue+1, widthLinesBoxes, kTRUE, 0);
+        graphRatioPi0SysToChFitATLAS->Draw("E2psame");
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0SysToChFitCMS, markerStyleCombHighPt, markerSizeComparison, kRed+1 , kRed+1, widthLinesBoxes, kTRUE, 0);
+        graphRatioPi0SysToChFitCMS->Draw("E2psame");
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0StatToChFitALICE, markerStyleCombHighPt, markerSizeComparison, kBlack , kBlack);
+        graphRatioPi0StatToChFitALICE->Draw("E1psame");
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0StatToChFitATLAS, markerStyleCombHighPt, markerSizeComparison, kBlue+1 , kBlue+1);
+        graphRatioPi0StatToChFitATLAS->Draw("E1psame");
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0StatToChFitCMS, markerStyleCombHighPt, markerSizeComparison, kRed+1 , kRed+1);
+        graphRatioPi0StatToChFitCMS->Draw("E1psame");
         
+        TLegend* legendPi0CompChargedPionsToFits   = GetAndSetLegend2(0.15, 0.85, 0.6, 0.92, 0.85* textSizeLabelsPixel);
+        legendPi0CompChargedPionsToFits->SetNColumns(3);
+        legendPi0CompChargedPionsToFits->SetMargin(0.25);
+        legendPi0CompChargedPionsToFits->AddEntry(graphRatioPi0SysToChFitALICE,"ALICE","fp");
+        legendPi0CompChargedPionsToFits->AddEntry(graphRatioPi0SysToChFitATLAS,"ATLAS","fp");
+        legendPi0CompChargedPionsToFits->AddEntry(graphRatioPi0SysToChFitCMS,"CMS","fp");
+        legendPi0CompChargedPionsToFits->Draw();
+    
+        labelRatioTheoryPP->Draw();
+        
+        DrawGammaLines(0., 70 , 1, 1 ,1, kGray, 1);   
+   
+    canvasCompYieldPPInd->Update();
+    canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedHadronToNeutralPublishedChargedOtherExp_PP2760GeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
+
+    
+    TH2F * histo2DCompCombinedRatio3;
+    histo2DCompCombinedRatio3       = new TH2F("histo2DCompCombinedRatio3","histo2DCompCombinedRatio3",1000,0.23,200.,1000,0.2,4.    );
+    SetStyleHistoTH2ForGraphs(histo2DCompCombinedRatio3, "#it{p}_{T} (GeV/#it{c})","h^{#pm}/powerlaw fit to spec", 0.85*textsizeLabelsPP, textsizeLabelsPP, 
+                              0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
+    histo2DCompCombinedRatio3->GetYaxis()->SetNoExponent(kTRUE);
+//  histo2DCompCombinedRatio3->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DCompCombinedRatio3->GetXaxis()->SetMoreLogLabels(kTRUE);
+    histo2DCompCombinedRatio3->GetXaxis()->SetNoExponent(kTRUE);    
+    histo2DCompCombinedRatio3->GetYaxis()->SetTitle("");   
+    histo2DCompCombinedRatio3->GetYaxis()->SetRangeUser(0.65,1.35);
+    histo2DCompCombinedRatio3->GetXaxis()->SetRangeUser(5,170.);
+    histo2DCompCombinedRatio3->DrawCopy();
+
+        DrawGammaSetMarkerTGraphAsym(graphRatioChHadSysToChFitALICE, markerStyleCombHighPt, markerSizeComparison, kBlack , kBlack, widthLinesBoxes, kTRUE, 0);
+        graphRatioChHadSysToChFitALICE->Draw("E2psame");
+        DrawGammaSetMarkerTGraphAsym(graphRatioChHadSysToChFitATLAS, markerStyleCombHighPt, markerSizeComparison, kBlue+1 , kBlue+1, widthLinesBoxes, kTRUE, 0);
+        graphRatioChHadSysToChFitATLAS->Draw("E2psame");
+        DrawGammaSetMarkerTGraphAsym(graphRatioChHadSysToChFitCMS, markerStyleCombHighPt, markerSizeComparison, kRed+1 , kRed+1, widthLinesBoxes, kTRUE, 0);
+        graphRatioChHadSysToChFitCMS->Draw("E2psame");
+        DrawGammaSetMarkerTGraphAsym(graphRatioChHadStatToChFitALICE, markerStyleCombHighPt, markerSizeComparison, kBlack , kBlack);
+        graphRatioChHadStatToChFitALICE->Draw("E1psame");
+        DrawGammaSetMarkerTGraphAsym(graphRatioChHadStatToChFitATLAS, markerStyleCombHighPt, markerSizeComparison, kBlue+1 , kBlue+1);
+        graphRatioChHadStatToChFitATLAS->Draw("E1psame");
+        DrawGammaSetMarkerTGraphAsym(graphRatioChHadStatToChFitCMS, markerStyleCombHighPt, markerSizeComparison, kRed+1 , kRed+1);
+        graphRatioChHadStatToChFitCMS->Draw("E1psame");
+        
+        TLegend* legendPi0CompChargedPionsFits   = GetAndSetLegend2(0.15, 0.85, 0.6, 0.92, 0.85* textSizeLabelsPixel);
+        legendPi0CompChargedPionsFits->SetNColumns(3);
+        legendPi0CompChargedPionsFits->SetMargin(0.25);
+        legendPi0CompChargedPionsFits->AddEntry(graphRatioChHadSysToChFitALICE,"ALICE","fp");
+        legendPi0CompChargedPionsFits->AddEntry(graphRatioChHadSysToChFitATLAS,"ATLAS","fp");
+        legendPi0CompChargedPionsFits->AddEntry(graphRatioChHadSysToChFitCMS,"CMS","fp");
+        legendPi0CompChargedPionsFits->Draw();
+    
+        labelRatioTheoryPP->Draw();
+        
+        DrawGammaLines(5., 170 , 1, 1 ,1, kGray, 1);   
+   
+    canvasCompYieldPPInd->Update();
+    canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedHadronToFit_PP2760GeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
+
+    
     // **********************************************************************************************************************
     // *********************************** HFE results for 2.76TeV **********************************************************
     // **********************************************************************************************************************

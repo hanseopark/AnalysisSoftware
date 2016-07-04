@@ -3450,6 +3450,14 @@ void FillChi2HistForNullHypo    (  Int_t    n_pseudo_exp,
         }
         histo->Fill(sumsq);
     }
-  
 }
 
+//*************************************************************************************************************
+//************************ Extract systematic errors from total and statistical errors ************************
+//*************************************************************************************************************
+void ExtractSystematicFromTotal(Int_t nPoints, Double_t* totals, Double_t* stat, Double_t* sysErr ){
+    for (Int_t i = 0; i < nPoints; i++){
+        sysErr[i] = TMath::Sqrt(totals[i]*totals[i]-stat[i]*stat[i]);
+    }    
+    return ;
+}    
