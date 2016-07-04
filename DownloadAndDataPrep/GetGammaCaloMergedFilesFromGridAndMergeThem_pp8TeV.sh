@@ -32,7 +32,7 @@ NSlashes3=11
 DOWNLOADON=1
 MERGEON=1
 MERGEONBINSSingle=0
-MERGEONBINS=1
+MERGEONBINS=0
 
 # check if train configuration has actually been given
 HAVELHC12a=1
@@ -100,16 +100,25 @@ elif [ $1 = "bsahlmul" ]; then
 fi
 
 
-TRAINDIR=Legotrain-vAN20160627-firstFullTrial
-LHC12aData="1660"; 
-LHC12bData="1661"; 
-LHC12cData="1662"; 
-LHC12dData="1663"; 
-LHC12fData="1664"; 
-LHC12hData="1665"; 
-LHC12iData="1666"; 
-LHC16c2MC="2225";
+# TRAINDIR=Legotrain-vAN20160627-firstFullTrial
+# LHC12aData="1660"; 
+# LHC12bData="1661"; 
+# LHC12cData="1662"; 
+# LHC12dData="1663"; 
+# LHC12fData="1664"; 
+# LHC12hData="1665"; 
+# LHC12iData="1666"; 
+# LHC16c2MC="2225";
 
+TRAINDIR=Legotrain-vAN20160702-withNewMCLabelAlgo
+LHC12aData="1667"; 
+LHC12bData="1668"; 
+LHC12cData="1669"; 
+LHC12dData="1670"; 
+LHC12fData="1671"; 
+LHC12hData="1672"; 
+LHC12iData="1673"; 
+LHC16c2MC="2243";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -293,17 +302,17 @@ if [ $DOWNLOADON == 1 ]; then
         echo "downloading LHC16c2"
         CopyFileIfNonExisitent $OUTPUTDIR_LHC16c2 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC16c2MC/merge"
 
-        echo "copying LHC12xJetJet" 
-        runNumbers=`cat runNumbersLHC16c2.txt`
-        echo $runNumbers
-        for runNumber in $runNumbers; do
-            echo $runNumber
-            binNumbersJJ=`cat binsJetJetLHC16c2.txt`
-            for binNumber in $binNumbersJJ; do
-                echo $binNumber
-                CopyFileIfNonExisitent $OUTPUTDIR_LHC16c2/$binNumber/$runNumber "/alice/sim/2016/LHC16c2/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC16c2MC"
-            done;   
-        done;
+#         echo "copying LHC12xJetJet" 
+#         runNumbers=`cat runNumbersLHC16c2.txt`
+#         echo $runNumbers
+#         for runNumber in $runNumbers; do
+#             echo $runNumber
+#             binNumbersJJ=`cat binsJetJetLHC16c2.txt`
+#             for binNumber in $binNumbersJJ; do
+#                 echo $binNumber
+#                 CopyFileIfNonExisitent $OUTPUTDIR_LHC16c2/$binNumber/$runNumber "/alice/sim/2016/LHC16c2/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC16c2MC"
+#             done;   
+#         done;
     fi    
 fi
 

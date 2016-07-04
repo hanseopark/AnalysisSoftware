@@ -347,15 +347,16 @@ Int_t fBinsPi0EtaBinning8TeVConvEMCALPtRebin[19] = {8, 2, 2, 2, 2,
                                                     4, 4, 4, 8, 8,
                                                     8, 8, 8, 8};
 
-Int_t fNBinsCluster8TeVPt           =  73;
-Double_t fBinsCluster8TeVPt[74]     =  {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
-                                        1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
-                                        2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
-                                        4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8,
-                                        6.0, 6.2, 6.4, 6.6, 6.8, 7.0, 7.4, 7.8, 8.2, 8.6,
-                                        9.0, 9.5, 10, 10.5, 11, 11.5, 12., 13., 14., 15.,
-                                        16., 17., 18., 19., 20., 22., 24., 26., 28., 30.,
-                                        35, 40, 45, 50 };
+Int_t fNBinsCluster8TeVPt           =  83;
+Double_t fBinsCluster8TeVPt[84]     =  {0.0,  0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9,
+                                        1.0,  1.1,  1.2,  1.3,  1.4,  1.5,  1.6,  1.7,  1.8,  1.9,
+                                        2.0,  2.2,  2.4,  2.6,  2.8,  3.0,  3.2,  3.4,  3.6,  3.8,
+                                        4.0,  4.2,  4.4,  4.6,  4.8,  5.0,  5.2,  5.4,  5.6,  5.8,
+                                        6.0,  6.2,  6.4,  6.6,  6.8,  7.0,  7.4,  7.8,  8.2,  8.6,
+                                        9.0,  9.5,  10,   10.5, 11,   11.5, 12.,  13.,  14.,  15.,
+                                        16.,  17.,  18.,  19.,  20.,  22.,  24.,  26.,  28.,  30.,
+                                        35,   40,   45,   50,   55,   60,   65,   70,   75,   80,
+                                        85,   90,   95,   100 };
 //******************** Pt binning for pp, 0.9 TeV ***************************************************
 Double_t fBinsPi0900GeVPt[12]                   = { 0.0, 0.4, 0.6, 0.8, 1.0,
                                                     1.2, 1.4, 1.6, 2.0, 2.5,
@@ -883,24 +884,21 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
     //************************************ Binning for Cluster ****************************************
     //*************************************************************************************************
 
-    fBinsClusterPt = new Double_t[100];
+    fBinsClusterPt          = new Double_t[100];
     if( energy.CompareTo("2.76TeV") == 0){
 
-      fNBinsClusterPt = fNBinsCluster2760GeVPt;
+      fNBinsClusterPt       = fNBinsCluster2760GeVPt;
       for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
         fBinsClusterPt[iPt] = fBinsCluster2760GeVPt[iPt];
       }
-
     } else if( energy.CompareTo("8TeV") == 0){
-
-      fNBinsClusterPt = fNBinsCluster8TeVPt;
+      fNBinsClusterPt       = fNBinsCluster8TeVPt;
       for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
         fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
       }
-
     } else {
-      fNBinsClusterPt = 0;
-      fBinsClusterPt = NULL;
+      fNBinsClusterPt       = 0;
+      fBinsClusterPt        = NULL;
     }
 
     //*************************************************************************************************

@@ -113,16 +113,19 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     }
     
     Double_t maxPtGlobalCluster     = 25;
-    if (mode==2){
-        maxPtGlobalCluster          = 25;
-    } else if (mode == 4){
-        maxPtGlobalCluster          = 30;
-    } else if (mode == 10){
-        maxPtGlobalCluster          = 50;
-    }
-    if(optionEnergy.CompareTo("8TeV")==0){
+    if (optionEnergy.CompareTo("2.76TeV")==0){
+        if (mode==2){
+            maxPtGlobalCluster          = 25;
+        } else if (mode == 4){
+            maxPtGlobalCluster          = 30;
+        } else if (mode == 10){
+            maxPtGlobalCluster          = 50;
+        }
+    } else if (optionEnergy.CompareTo("8TeV")==0){
       if(mode==2 || mode==4){
         maxPtGlobalCluster          = 50;
+      } else if (mode == 10){
+        maxPtGlobalCluster          = 70;  
       }
     }
     
@@ -654,7 +657,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             maxTriggRejectLin = 3000;
 
         if( optionEnergy.CompareTo("8TeV")==0 ){
-        if (mode == 2 || mode == 4)
+        if (mode == 2 || mode == 4 || mode == 10 )
             maxTriggRejectLin = 310;
         }
         

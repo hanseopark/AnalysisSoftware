@@ -31,7 +31,7 @@ NSlashes2=9
 DOWNLOADON=1
 MERGEON=1
 MERGEONBINSSingle=1
-MERGEONBINS=0
+MERGEONBINS=1
 
 # check if train configuration has actually been given
 HAVELHC11a=1
@@ -372,33 +372,33 @@ fi
 # LHC13gData="1638"; 
 
 
-TRAINDIR=Legotrain-mCalo-20160629_V2Clus
+# TRAINDIR=Legotrain-mCalo-20160629_V2Clus
 # LHC11aData="1654"; 
 # LHC11aData="1655"; 
-LHC11aData="1656"; 
+# LHC11aData="1656"; 
 # LHC15g1aMC="2213";
 # LHC15g1aMC="2216";
-LHC15g1aMC="2219";
+# LHC15g1aMC="2219";
 # LHC15g1bMC="2191";
 
-LHC13gData="1657"; 
+# LHC13gData="1657"; 
 # LHC13gData="1658"; 
 # LHC13gData="1659"; 
-LHC15a3aMC="2211"; 
+# LHC15a3aMC="2211"; 
 # LHC15a3aMC="2214"; 
 # LHC15a3aMC="2217"; 
-LHC15a3aplusMC="2212"; 
+# LHC15a3aplusMC="2212"; 
 # LHC15a3aplusMC="2215"; 
 # LHC15a3aplusMC="2218"; 
-LHC15a3bMC="2189"; 
+# LHC15a3bMC="2189"; 
 
-# TRAINDIR=Legotrain-mCalo-20160629_V1Clus
+TRAINDIR=Legotrain-mCalo-20160629_V1Clus
 # LHC11aData="1639"; 
 # LHC15g1aMC="2224";
 # 
-# LHC13gData="1640"; 
-# LHC15a3aMC="2222"; 
-# LHC15a3aplusMC="2223"; 
+LHC13gData="1640"; 
+LHC15a3aMC="2222"; 
+LHC15a3aplusMC="2223"; 
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
