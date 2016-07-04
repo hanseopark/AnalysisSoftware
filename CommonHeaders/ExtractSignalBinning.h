@@ -229,7 +229,7 @@ Int_t fBinsPi08TeVEMCALTrigger2PtRebin[42]      = { 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 4, 5,
                                                     5, 4, 5, 10, 10,
-                                                    8, 16, 2, 2, 2,
+                                                    10, 16, 2, 2, 2,
                                                     2, 2};
 Int_t fBinsPi08TeVConvEMCALTrigger1PtRebin[40]  = { 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
@@ -320,13 +320,13 @@ Int_t fBinsEta8TeVConvTrigger2PtRebin[23]      = { 5, 5, 5, 5, 5,
                                                     10, 20, 5};
 Int_t fBinsEta8TeVEMCALTrigger1PtRebin[23]      = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
+                                                    10, 10, 10, 8, 8,
                                                     10, 10, 10, 10, 10,
-                                                    10, 10, 10, 10, 10,
-                                                    10, 25, 2};
+                                                    10, 20, 2};
 Int_t fBinsEta8TeVEMCALTrigger2PtRebin[23]      = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
-                                                    5, 5, 5, 8, 10,
-                                                    8, 10, 10, 10, 10,
+                                                    5, 5, 5, 16, 16,
+                                                    16, 16, 8, 10, 10,
                                                     10, 20, 5};
 Int_t fBinsEta8TeVConvEMCALTrigger1PtRebin[23]  = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,

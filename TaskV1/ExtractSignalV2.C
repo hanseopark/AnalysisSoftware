@@ -2963,6 +2963,9 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
                     fMesonFitRange[0] = 0.08;
                     if(trigger.CompareTo("81")==0 || triggerSet == 2){
                       fMesonFitRange[1] = 0.30;
+                      fMesonIntDeltaRange[1] = 0.065;
+                      fMesonIntDeltaRangeWide[1]      = fMesonIntDeltaRange[1]*1.2;// mod.
+                      fMesonIntDeltaRangeNarrow[1]    = fMesonIntDeltaRange[1]*0.8; // mod.
                     }
                   }
                 }
