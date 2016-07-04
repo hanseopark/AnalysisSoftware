@@ -2890,8 +2890,17 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
               TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
               if( trigger.CompareTo("81") == 0 || triggerSet == 2){
                 fFitRange[0]=0.04;
-                fMesonFitRange[0] = 0.02;
-                fMesonFitRange[1] = 0.21;
+                fMesonFitRange[0] = 0.03;
+                fMesonFitRange[1] = 0.22;
+                fBGFitRange[0] = 0.23;
+                fBGFitRange[1] = 0.3;
+                fMesonLambdaTailRange[0] = 0.005;
+//                fMesonIntDeltaRange[0] += 0.003;
+//                fMesonIntDeltaRange[1] -= 0.002;
+//                fMesonIntDeltaRangeWide[0] += 0.003;
+//                fMesonIntDeltaRangeWide[1] -= 0.002;
+//                fMesonIntDeltaRangeNarrow[0] += 0.003;
+//                fMesonIntDeltaRangeNarrow[1] -= 0.002;
               }
             }
 
@@ -3058,10 +3067,19 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             if ( fEnergyFlag.CompareTo("8TeV") == 0 ){
               TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
               if( trigger.CompareTo("81") == 0 || trigger.CompareTo("52") == 0 || triggerSet == 2 || triggerSet == 1){
-                fMesonFitRange[0] = 0.36;
+                fFitRange[0] = 0.34;
+                fMesonFitRange[0] = 0.34;
                 fMesonFitRange[1] = 0.73;
                 fBGFitRange[0]                  = 0.7;
                 fBGFitRange[1]                  = 0.78;
+                if(trigger.CompareTo("52") == 0 || triggerSet == 1){
+                  fMesonIntDeltaRange[0]          = -0.050;
+                  fMesonIntDeltaRange[1]          = 0.055;
+                  fMesonIntDeltaRangeWide[0]      = -0.070;
+                  fMesonIntDeltaRangeWide[1]      = 0.065;
+                  fMesonIntDeltaRangeNarrow[0]    = -0.030;
+                  fMesonIntDeltaRangeNarrow[1]    = 0.045;
+                }
               }
             }
         }
