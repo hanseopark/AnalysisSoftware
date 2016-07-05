@@ -729,7 +729,7 @@ if(startPi0TextX){}
     if (detectionChannel.CompareTo("") != 0) latexDetPro = new TLatex(startTextX,startTextY-(2*differenceText),detectionChannel.Data());
     TLatex *events = 0x00;
     if (nEvents != 0){ 
-        events = new TLatex(startTextX,startTextY-(3*differenceText),Form("%s: %2.1e  MinBias events",eventsText.c_str(), nEvents)); // Bo: this was modified	
+        events = new TLatex(startTextX,startTextY-(3*differenceText),Form("%s: %2.1e events",eventsText.c_str(), nEvents)); // Bo: this was modified
     }
 
 // 	TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX,startLogoY,totalXLogo,totalYLogo);
