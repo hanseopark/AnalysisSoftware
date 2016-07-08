@@ -1075,7 +1075,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         for (Int_t i = 0; i < nMeasSetPi0A; i++){
             DrawGammaSetMarkerTGraph(statErrorRelCollectionPi0[availablePi0MeasA[i]], markerStyleDet[availablePi0MeasA[i]], markerSizeDet[availablePi0MeasA[i]]*0.5, colorDet[availablePi0MeasA[i]],
                                      colorDet[availablePi0MeasA[i]]);
-            sysErrorRelCollectionPi0[availablePi0MeasA[i]]->Draw("p,same,z");
+            statErrorRelCollectionPi0[availablePi0MeasA[i]]->Draw("p,same,z");
             legendRelStatErr->AddEntry(statErrorRelCollectionPi0[availablePi0MeasA[i]],nameMeasGlobal[availablePi0MeasA[i]],"p");
         }    
         legendRelStatErr->Draw();
