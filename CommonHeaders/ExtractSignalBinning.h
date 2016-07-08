@@ -81,17 +81,7 @@ Int_t fBinsPi07TeVDirectPhotonPtRebin[23]       = { 2, 2, 1, 1, 1,
                                                     5, 5, 5};
 
 //******************** Pt binning for pp, 8 TeV ***************************************************
-Double_t fBinsPi0Combine8TeVPt[45]              = { 0.0, 0.3, 0.4, 0.5, 0.6,
-                                                    0.8, 1.0, 1.2, 1.4, 1.6,
-                                                    1.8, 2.0, 2.2, 2.4, 2.6,
-                                                    2.8, 3.0, 3.2, 3.4, 3.6,
-                                                    3.8, 4.0, 4.5, 5.0, 5.5,
-                                                    6.0, 6.5, 7.0, 7.5, 8.0,
-                                                    8.5, 9.0, 10.0, 11.0, 12.0,
-                                                    13.0, 14.0, 16.0,
-                                                    18.0, 20.0, 22.0, 26.0, 30.0,
-                                                    35.0, 40.0};
-Double_t fBinsPi0CombineEMCal8TeVPt[47]         = { 0.0, 0.3, 0.4, 0.5, 0.6,
+Double_t fBinsPi0Combine8TeVPt[47]              = { 0.0, 0.3, 0.4, 0.5, 0.6,
                                                     0.8, 1.0, 1.2, 1.4, 1.6,
                                                     1.8, 2.0, 2.2, 2.4, 2.6,
                                                     2.8, 3.0, 3.2, 3.4, 3.6,
@@ -127,6 +117,16 @@ Double_t fBinsPi08TeVTrigger1Pt[41]             = { 0.0, 0.3, 0.4, 0.5, 0.6,
                                                     8.5, 9.0, 10.0, 11.0, 12.0,
                                                     14.0, 16.0, 20.0, 25.0, 30.0,
                                                     40.0};
+
+Double_t fBinsPi08TeVConvEMCalTrigger1Pt[43]    = { 0.0, 0.3, 0.4, 0.5, 0.6,
+                                                    0.8, 1.0, 1.2, 1.4, 1.6,
+                                                    1.8, 2.0, 2.2, 2.4, 2.6,
+                                                    2.8, 3.0, 3.2, 3.4, 3.6,
+                                                    3.8, 4.0, 4.5, 5.0, 5.5,
+                                                    6.0, 6.5, 7.0, 7.5, 8.0,
+                                                    8.5, 9.0, 10.0, 11.0, 12.0,
+                                                    13.0, 14.0, 15.0, 16.0, 18.0,
+                                                    20.0, 22.0, 26.0};
 Double_t fBinsPi08TeVEMCalTrigger1Pt[44]        = { 0.0, 0.3, 0.4, 0.5, 0.6,
                                                     0.8, 1.0, 1.2, 1.4, 1.6,
                                                     1.8, 2.0, 2.2, 2.4, 2.6,
@@ -137,14 +137,14 @@ Double_t fBinsPi08TeVEMCalTrigger1Pt[44]        = { 0.0, 0.3, 0.4, 0.5, 0.6,
                                                     13.0, 14.0, 15.0, 16.0, 18.0, 20.0, 25.0, 30.0,
                                                     40.0};
 
-Double_t fBinsPi08TeVTrigger2Pt[41]             = { 0.0, 0.3, 0.4, 0.5, 0.6,
+Double_t fBinsPi08TeVTrigger2Pt[43]             = { 0.0, 0.3, 0.4, 0.5, 0.6,
                                                     0.8, 1.0, 1.2, 1.4, 1.6,
                                                     1.8, 2.0, 2.2, 2.4, 2.6,
                                                     2.8, 3.0, 3.2, 3.4, 3.6,
                                                     3.8, 4.0, 4.5, 5.0, 6.0,
                                                     7.0, 8.0, 9.0, 10.0, 11.0,
-                                                    12.0, 13.0, 14.0, 16.0,
-                                                    18.0, 20.0, 22.0, 26.0,
+                                                    12.0, 13.0, 14.0, 15.0, 16.0,
+                                                    17.0, 18.0, 20.0, 22.0, 26.0,
                                                     30.0, 35.0, 40.0};
 
 Double_t fBinsPi08TeVEMCalTrigger2Pt[43]        = { 0.0, 0.3, 0.4, 0.5, 0.6,
@@ -241,22 +241,23 @@ Int_t fBinsPi08TeVEMCALTrigger2PtRebin[42]      = { 2, 2, 2, 2, 2,
                                                     5, 4, 5, 10, 10,
                                                     10, 16, 2, 2, 2,
                                                     2, 2};
-Int_t fBinsPi08TeVConvEMCALTrigger1PtRebin[40]  = { 2, 2, 2, 2, 2,
+Int_t fBinsPi08TeVConvEMCALTrigger1PtRebin[42]  = { 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
-                                                    2, 2, 5, 5, 5,
-                                                    5, 5, 5, 8, 5,
-                                                    10, 8, 8, 10, 10,
-                                                    10, 10, 10, 2, 2};
-Int_t fBinsPi08TeVConvEMCALTrigger2PtRebin[40]  = { 2, 2, 2, 2, 2,
+                                                    2, 5, 5, 8, 8,
+                                                    8, 8, 10, 10, 10,
+                                                    8, 10, 8, 10, 8,
+                                                    10, 10, 10, 10, 10,
+                                                    16, 10};
+Int_t fBinsPi08TeVConvEMCALTrigger2PtRebin[42]  = { 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
-                                                    2, 2, 10, 8, 8,
-                                                    8, 8, 10, 8,
-                                                    8, 10, 10, 10,
+                                                    2, 2, 16, 16, 10,
+                                                    16, 16, 16, 16, 10,
+                                                    16, 16, 10, 10, 16,
                                                     10, 2};
 Int_t fBinsPi08TeVConvEMCALPtRebin[28]          = { 2, 2,
                                                     4, 2, 2, 2, 2,
@@ -340,20 +341,13 @@ Int_t fBinsEta8TeVEMCALTrigger2PtRebin[23]      = { 5, 5, 5, 5, 5,
                                                     10, 20, 5};
 Int_t fBinsEta8TeVConvEMCALTrigger1PtRebin[23]  = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
-//                                                    20, 20, 20, 25, 20,
-//                                                    25, 25, 20, 25, 25,
-                                                    10, 10, 10, 10, 10,
-                                                    10, 10, 16, 16, 25,
-                                                    5, 5, 5};
-Int_t fBinsEtaPi08TeVConvEMCALTrigger1PtRebin[23]  = { 5, 5, 5, 5, 5,
-                                                    5, 5, 5, 5, 5,
-                                                    16, 16, 16, 10, 10,
-                                                    10, 10, 10, 16, 16,
+                                                    16, 16, 16, 16, 20,
+                                                    20, 20, 16, 16, 16,
                                                     5, 5, 5};
 Int_t fBinsEta8TeVConvEMCALTrigger2PtRebin[23]  = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 20,
-                                                    20, 16, 20, 20, 20,
+                                                    16, 20, 25, 25, 25,
                                                     25, 25, 2};
 Int_t fBinsPi0EtaBinning8TeVPtRebin[19]         = { 8, 1, 1, 1, 1, 
                                                     1, 1, 2, 2, 2, 
@@ -992,8 +986,8 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
 
             if (modi == 0 && specialTrigg == 1) fStartPtBin = 21;
             if (modi == 0 && specialTrigg == 2) fStartPtBin = 27;
-            if (modi == 2 && specialTrigg == 1) fStartPtBin = 22;
-            if (modi == 2 && specialTrigg == 2) fStartPtBin = 27;
+            if (modi == 2 && specialTrigg == 1) fStartPtBin = 21;
+            if (modi == 2 && specialTrigg == 2) fStartPtBin = 28;
             if (modi == 4 && specialTrigg == 1) fStartPtBin = 22;
             if (modi == 4 && specialTrigg == 2) fStartPtBin = 33;
             if (modi == 10 && specialTrigg == 0) fStartPtBin = 28;
@@ -1043,12 +1037,12 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 fNBinsPt        = 32;
               }
             } else if (fNBinsPt > 28 && (modi == 2 || modi == 3)){
-                if( specialTrigg == 2 && fNBinsPt > 40){
-                  cout << "You have chosen to have more than 40 bins, this is not possible, it will be reduced to 40" << endl;
-                  fNBinsPt        = 40;
-                } else if ( specialTrigg == 1 && fNBinsPt > 41){
-                  cout << "You have chosen to have more than 41 bins, this is not possible, it will be reduced to 41" << endl;
-                  fNBinsPt = 41;
+                if( specialTrigg == 2 && fNBinsPt > 42){
+                  cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
+                  fNBinsPt        = 42;
+                } else if ( specialTrigg == 1 && fNBinsPt > 42){
+                  cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
+                  fNBinsPt = 42;
                 } else if(specialTrigg!=1 && specialTrigg!=2) {
                   cout << "You have chosen to have more than 28 bins, this is not possible, it will be reduced to 28" << endl;
                   fNBinsPt        = 28;
@@ -1077,7 +1071,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                         fBinsPt[i]                 = fBinsPi08TeVPtEMCAL[i];
                 } else if (modi == 2){
                     if( specialTrigg == 1 ){
-                        fBinsPt[i]                 = fBinsPi08TeVTrigger1Pt[i];
+                        fBinsPt[i]                 = fBinsPi08TeVConvEMCalTrigger1Pt[i];
                     } else if ( specialTrigg == 2 ){
                         fBinsPt[i]                 = fBinsPi08TeVTrigger2Pt[i];
                     } else
@@ -1132,9 +1126,9 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
 
             if (modi == 0 && specialTrigg==1) fExampleBin = 23;
             if (modi == 0 && specialTrigg==2) fExampleBin = 30;
-            if (modi == 2 && specialTrigg==1) fExampleBin = 23;
-            if (modi == 2 && specialTrigg==2) fExampleBin = 34;
-            if (modi == 4 && specialTrigg==1) fExampleBin = 23;
+            if (modi == 2 && specialTrigg==1) fExampleBin = 39;
+            if (modi == 2 && specialTrigg==2) fExampleBin = 40;
+            if (modi == 4 && specialTrigg==1) fExampleBin = 35;
             if (modi == 4 && specialTrigg==2) fExampleBin = 34;
         //*********************************************************************************************
         //********************************** Pi0 for pp 13TeV******************************************
@@ -1687,11 +1681,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     }
                 } else if ( modi == 2 ){
                     if(specialTrigg == 1){
-                      if(setPi0.CompareTo("Pi0EtaBinning") == 0){
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEtaPi08TeVConvEMCALTrigger1PtRebin[i];
-                      }else{
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVConvEMCALTrigger1PtRebin[i];
-                      }
+                       if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVConvEMCALTrigger1PtRebin[i];
                     } else if(specialTrigg == 2){
                         if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVConvEMCALTrigger2PtRebin[i];
                     } else {
@@ -1719,10 +1709,10 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
           if( modi == 4 ) fExampleBin = 9;
           if (modi == 0 && specialTrigg==1) fExampleBin = 11;
           if (modi == 0 && specialTrigg==2) fExampleBin = 13;
-          if (modi == 2 && specialTrigg==1) fExampleBin = 11;
-          if (modi == 2 && specialTrigg==2) fExampleBin = 18;
-          if (modi == 4 && specialTrigg==1) fExampleBin = 11;
-          if (modi == 4 && specialTrigg==2) fExampleBin = 18;
+          if (modi == 2 && specialTrigg==1) fExampleBin = 19;
+          if (modi == 2 && specialTrigg==2) fExampleBin = 20;
+          if (modi == 4 && specialTrigg==1) fExampleBin = 20;
+          if (modi == 4 && specialTrigg==2) fExampleBin = 21;
             
         //*********************************************************************************************
         //********************************** Eta for pp 13TeV******************************************
@@ -2096,14 +2086,14 @@ Int_t GetBinning(   Double_t*  binning,
             }
         } else if (energy.CompareTo("8TeV") == 0){
             if ( mode == 2 ){
-                maxNBins = 44;
+                maxNBins = 46;
                 for(Int_t i = 0; i < maxNBins+1; i++){
                     binning[i] = fBinsPi0Combine8TeVPt[i];
                 }
             } else if ( mode == 4){
                  maxNBins = 41;
                  for(Int_t i = 0; i < maxNBins+1; i++){
-                     binning[i] = fBinsPi0CombineEMCal8TeVPt[i];
+                     binning[i] = fBinsPi0Combine8TeVPt[i];
                  }
             } else if ( mode == 0 ){
                 maxNBins = 40;
