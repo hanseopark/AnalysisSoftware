@@ -1865,7 +1865,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         
         TF1* fitEffiBiasWOWeightsNormalPol0         = new TF1("fitEffiBiasWOWeightsNormalPol0","[0]",0.4,maxPtMeson);
         TF1* fitEffiBiasWOWeightsNormalPol1         = new TF1("fitEffiBiasWOWeightsNormalPol1","[0]/pow(x,[1])+[2]",0.4,maxPtMeson);
-        fitEffiBiasWOWeightsNormalPol1->SetParLimits(2,0.5,1.5);
+        if( !(optionEnergy.CompareTo("8TeV")==0 && mode == 2) ) fitEffiBiasWOWeightsNormalPol1->SetParLimits(2,0.5,1.5);
         
         histoRatioEffWOWeightingNormalEff->Fit(fitEffiBiasWOWeightsNormalPol0,"NRME+","",0.4,maxPtMeson);
         cout << WriteParameterToFile(fitEffiBiasWOWeightsNormalPol0) << endl;
@@ -1921,7 +1921,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         
         TF1* fitEffiBiasWOWeightsNormalPol0Nar         = new TF1("fitEffiBiasWOWeightsNormalPol0Nar","[0]",0.4,maxPtMeson);
         TF1* fitEffiBiasWOWeightsNormalPol1Nar         = new TF1("fitEffiBiasWOWeightsNormalPol1Nar","[0]/pow(x,[1])+[2]",0.4,maxPtMeson);
-        fitEffiBiasWOWeightsNormalPol1Nar->SetParLimits(2,0.5,1.5);
+        if( !(optionEnergy.CompareTo("8TeV")==0 && mode == 2) ) fitEffiBiasWOWeightsNormalPol1Nar->SetParLimits(2,0.5,1.5);
         
         histoRatioEffWOWeightingNormalEffNarrow->Fit(fitEffiBiasWOWeightsNormalPol0Nar,"NRME+","",0.4,maxPtMeson);
         cout << WriteParameterToFile(fitEffiBiasWOWeightsNormalPol0Nar) << endl;
@@ -1974,7 +1974,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         
         TF1* fitEffiBiasWOWeightsNormalPol0Wi         = new TF1("fitEffiBiasWOWeightsNormalPol0Wi","[0]",0.4,maxPtMeson);
         TF1* fitEffiBiasWOWeightsNormalPol1Wi         = new TF1("fitEffiBiasWOWeightsNormalPol1Wi","[0]/pow(x,[1])+[2]",0.4,maxPtMeson);
-        fitEffiBiasWOWeightsNormalPol1Wi->SetParLimits(2,0.5,1.5);
+        if( !(optionEnergy.CompareTo("8TeV")==0 && mode == 2) ) fitEffiBiasWOWeightsNormalPol1Wi->SetParLimits(2,0.5,1.5);
         
         histoRatioEffWOWeightingNormalEff->Fit(fitEffiBiasWOWeightsNormalPol0Wi,"NRME+","",0.4,maxPtMeson);
         cout << WriteParameterToFile(fitEffiBiasWOWeightsNormalPol0Wi) << endl;
@@ -3246,6 +3246,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
     if (histoAcceptance)                    histoAcceptance->Write();
     if (histoTrueEffiPt)                    histoTrueEffiPt->Write("TrueMesonEffiPt");
+    if (histoTrueEffiNarrowPt)              histoTrueEffiNarrowPt->Write("TrueMesonEffiNarrowPt");
+    if (histoTrueEffiWidePt)                histoTrueEffiWidePt->Write("TrueMesonEffiWidePt");
     if (histoEffiPt)                        histoEffiPt->Write("MesonEffiPt");
     if (histoEventQuality)                  histoEventQuality->Write();
     if (histoNumberOfGoodESDTracksVtx)      histoNumberOfGoodESDTracksVtx->Write();
