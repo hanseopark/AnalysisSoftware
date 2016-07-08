@@ -112,10 +112,10 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************
     // ***************************************************************************************************
-    Bool_t bsmooth[16]                      = { 0, 1, 1, 1, 1,
+    Bool_t bsmooth[16]                      = { 1, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1, 0};
-    Bool_t bsmoothMBPi0[16]                 = { 0, 1, 1, 1, 1,
+    Bool_t bsmoothMBPi0[16]                 = { 1, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1, 0};
     Bool_t bsmoothMBEta[16]                 = { 1, 1, 1, 1, 1,
@@ -343,6 +343,15 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
                     }
                 } else if (meson.Contains("Pi0")){
                     Double_t error              = 5.; // 0,75% at low pT, up to 2%
+                    for (Int_t k = 0;k < nPtBins;k++){
+                          error              = 0.8;
+                          if(ptBins[k]>=6.) error = 0.8 + 0.03*(ptBins[k]-6.)*(ptBins[k]-6.);
+
+                          errorsMean[i][k]            = error;
+                          errorsMeanErr[i][k]         = error*0.01;
+                          errorsMeanCorr[i][k]        = error;
+                          errorsMeanErrCorr[i][k]     = error*0.01;
+                      }
                     if ( additionalNameOutput.CompareTo("EMC7")==0 ){
                       for (Int_t k = 0;k < nPtBins;k++){
                             error              = 1.52;
@@ -575,7 +584,7 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
             if (nameCutVariationSC[i].CompareTo("ClusterM02")==0 ){//&& meson.Contains("Pi0")
                 cout << "Cluster M02 smoothing" << endl;
                 for (Int_t k = 0;k < nPtBins;k++){
-                    Double_t error              = 0.5+(-0.007)*ptBins[k]+(0.013)*ptBins[k]*ptBins[k];
+                    Double_t error              = 0.5+(-0.007)*ptBins[k]+(0.008)*ptBins[k]*ptBins[k];
                     if( additionalNameOutput.CompareTo("EMC7")==0 ){
                       error = 0.75;
                       if(ptBins[k]>=12.) error += (0.28)*(ptBins[k]-12.);

@@ -1131,7 +1131,7 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
         TH2D *histo2DNewSysErrMean ;
         if ( meson.Contains("Eta") ){
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,-0.5,30.);
-        } else { 
+        } else {
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,-0.5,20.);
         }
         SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
