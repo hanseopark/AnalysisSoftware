@@ -1799,6 +1799,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             histoStatPi0[1]     = histoCorrectedYieldPi0ScaledMasked[i];
             graphSystPi0[1]     = graphsCorrectedYieldSysShrunkPi0[i];
             offSetsPi0Sys[1]    = histoStatPi0[1]->GetXaxis()->FindBin(graphSystPi0[1]->GetX()[0])-1;
+            if(optionEnergy.CompareTo("8TeV")==0 && mode == 2) offSetsPi0Sys[1]+=3;
             if (graphMassPi0Data[i]) 
                 graphOrderedMassPi0Data[1]      = graphMassPi0Data[i];
             if (graphMassPi0MC[i]) 
@@ -2055,7 +2056,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                                                                                    nameWeightsLogFilePi0.Data(),
                                                                                                    mode, optionEnergy, "Pi0", v2ClusterizerMerged 
                                                                                                );
-  //  return;
+    //return;
         // preparations for weight readout
         Double_t xValuesReadPi0[100];
         Double_t weightsReadPi0[12][100];
@@ -2217,7 +2218,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             TLegend* legendRelSysErr        = GetAndSetLegend2(0.62, 0.92-(0.035*nMeasSetPi0/2), 0.95, 0.92, 32);
             legendRelSysErr->SetNColumns(2);
             for (Int_t i = 0; i < nMeasSetPi0; i++){
-                cout << "plotting graph: " << availableMeasPi0[i] << endl;
+                cout << "plotting graph: " << availableMeasPi0[i] << "\t" <<graphRelSystPi0[availableMeasPi0[i]]->GetName() << endl;
                 DrawGammaSetMarkerTGraph(graphRelSystPi0[availableMeasPi0[i]], markerTriggWeighted[availableMeasPi0[i]], sizeTrigg[availableMeasPi0[i]], 
                                          colorTriggWeighted[availableMeasPi0[i]], colorTriggWeighted[availableMeasPi0[i]]);
                 graphRelSystPi0[availableMeasPi0[i]]->Draw("p,same,z");
@@ -2252,24 +2253,24 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             TLegend* legendRelStatErr       = GetAndSetLegend2(0.62, 0.92-(0.035*nMeasSetPi0/2), 0.95, 0.92, 32);
             legendRelStatErr->SetNColumns(2);
             for (Int_t i = 0; i < nMeasSetPi0; i++){
-//                 cout << "plotting graph: " << availableMeasPi0[i] << "\t" <<histoRelStatPi0[availableMeasPi0[i]]->GetName() << endl;
-                if (availableMeasPi0[i] == 0 && histoRelStatPi0[availableMeasPi0[i]] && mode == 2){
+                 cout << "plotting graph: " << availableMeasPi0[i] << "\t" <<histoRelStatPi0[availableMeasPi0[i]]->GetName() << endl;
+                if (histoRelStatPi0[availableMeasPi0[i]] && mode == 2){
                     TGraphAsymmErrors* dummyGraph = new TGraphAsymmErrors(histoRelStatPi0[availableMeasPi0[i]]);
                     dummyGraph->Print();
-                    DrawGammaSetMarkerTGraph(dummyGraph, markerTriggWeighted[availableMeasPi0[i]], sizeTrigg[availableMeasPi0[i]], 
+                    DrawGammaSetMarkerTGraph(dummyGraph, markerTriggWeighted[availableMeasPi0[i]], sizeTrigg[availableMeasPi0[i]],
                                          colorTriggWeighted[availableMeasPi0[i]], colorTriggWeighted[availableMeasPi0[i]]);
                     dummyGraph->Draw("pX,same");
-                    legendRelSysErr->AddEntry(dummyGraph,nameTriggerWeighted[availableMeasPi0[i]],"p");
+                    legendRelStatErr->AddEntry(dummyGraph,nameTriggerWeighted[availableMeasPi0[i]],"p");
                     
-//                     for (Int_t j = 1; j < histoRelStatPi0[availableMeasPi0[i]]->GetNbinsX()+1; j++){
-//                        cout << j << ": " << histoRelStatPi0[availableMeasPi0[i]]->GetBinContent(j) << endl;
-//                     }    
-                } else {    
+                     for (Int_t j = 1; j < histoRelStatPi0[availableMeasPi0[i]]->GetNbinsX()+1; j++){
+                        cout << j << ": " << histoRelStatPi0[availableMeasPi0[i]]->GetBinContent(j) << endl;
+                     }
+                } else {
                     DrawGammaSetMarker(histoRelStatPi0[availableMeasPi0[i]],markerTriggWeighted[availableMeasPi0[i]], sizeTrigg[availableMeasPi0[i]], 
                                             colorTriggWeighted[availableMeasPi0[i]], colorTriggWeighted[availableMeasPi0[i]]);
-                    histoRelStatPi0[availableMeasPi0[i]]->Draw("p,same,z");
+                    histoRelStatPi0[availableMeasPi0[i]]->DrawCopy("p,same,z");
                     legendRelStatErr->AddEntry(histoRelStatPi0[availableMeasPi0[i]],nameTriggerWeighted[availableMeasPi0[i]],"p");
-                }    
+                }
             }    
             legendRelStatErr->Draw();
 
@@ -2278,7 +2279,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             labelDetProcRelErr->Draw();
             
         canvasRelStatErr->SaveAs(Form("%s/Pi0_RelStatErr_SingleMeas.%s",outputDir.Data(),suffix.Data()));
-//         return;
+
         // plot full error for final result decomposed
         TCanvas* canvasRelTotErr            = new TCanvas("canvasRelTotErr","",200,10,1350,900);  // gives the page size
         DrawGammaCanvasSettings( canvasRelTotErr, 0.08, 0.02, 0.035, 0.09);
@@ -2308,7 +2309,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             
         canvasRelTotErr->SaveAs(Form("%s/Pi0_RelErrorsFulldecomp.%s",outputDir.Data(),suffix.Data()));
         
-        
+        //return;
         // Calculation of averaged supporting plots with weights from spectra
         if (mode != 10){
             graphMassPi0DataWeighted                    = CalculateWeightedQuantity(    graphOrderedMassPi0Data, 
@@ -4980,6 +4981,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             // Calculate averaged eta/pi0 graphs according to statistical and systematic errors taking correctly into account the cross correlations
             if (averagedEta){
                 if(optionEnergy.CompareTo("8TeV")==0 && mode==4) maxNAllowedEta -= 3;
+                if(optionEnergy.CompareTo("8TeV")==0 && mode==2) maxNAllowedEta -= 2;
                 // calculate averaged eta/pi0 graphs
                 graphEtaToPi0WeightedAverageTot         = CombinePtPointsSpectraTriggerCorrMat( histoStatEtaToPi0, graphSystEtaToPi0,  
                                                                                                 binningEta,  maxNAllowedEta,
@@ -5222,6 +5224,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 canvasRelTotErr->SaveAs(Form("%s/EtaToPi0_RelErrorsFulldecomp.%s",outputDir.Data(),suffix.Data()));
                 
                 if(optionEnergy.CompareTo("8TeV")==0 && mode==4) maxNAllowedEta += 3;
+                if(optionEnergy.CompareTo("8TeV")==0 && mode==2) maxNAllowedEta += 2;
             // if averaging wasn't enabled pick values according to predefined ranges ("cherry picking points")            
             } else {
                 graphEtaToPi0WeightedAverageStat        = new TGraphAsymmErrors(nPointFinalEtaToPi0, xValueFinalEtaToPi0, yValueFinalEtaToPi0, 
