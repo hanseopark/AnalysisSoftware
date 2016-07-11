@@ -7,13 +7,27 @@
 
 BASEDIR=/home/admin1/leardini/GridOutput/PbPb
 mkdir -p $BASEDIR
-TRAINDIR=Legotrain-vAN-20160529-1;
+TRAINDIR=Legotrain-vAN-20160623-1;
 
 
-LHC14a1a=788_20160530-1736;
-LHC14a1b=787_20160530-1451;
-LHC14a1aWithPhi=789_20160530-1627;
-LHC14a1bWithPhi=790_20160530-1445;
+#photon cut studies
+LHC11hData=332_20160706-1144; #---> list 7
+LHC11hDataWithPhi=332_20160706-1144; #---> list 8
+
+LHC14a1a=800_20160706-1427;
+LHC14a1b=801_20160706-1541;
+LHC14a1aWithPhi=800_20160706-1427;
+LHC14a1bWithPhi=801_20160706-1541;
+
+
+# #std on ESD with tag of 22nd may
+# LHC11hData=238_20160628-1326; #---> list 7
+# LHC11hDataWithPhi=238_20160628-1326; #---> list 8
+#
+# LHC14a1a=290_20160624-1346;
+# LHC14a1b=289_20160624-1035;
+# LHC14a1aWithPhi=290_20160624-1346;
+# LHC14a1bWithPhi=289_20160624-1035;
 
 
 ############################################
@@ -206,13 +220,13 @@ if [ $1 = "AODdata" ]; then
 
 else
    TRAINPATHData=GA_PbPb
-#     OUTPUTDIR_LHC11h=$BASEDIR/$TRAINDIR/$TRAINPATHData-$LHC11hData/merge_runlist_7
-#     mkdir -p $OUTPUTDIR_LHC11h
-#     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC11hData/merge_runlist_7/Gam* file:$OUTPUTDIR_LHC11h/
-#
-#     OUTPUTDIR_LHC11hWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHData-$LHC11hDataWithPhi/merge_runlist_8
-#     mkdir -p $OUTPUTDIR_LHC11hWithPhi
-#     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC11hDataWithPhi/merge_runlist_8/Gam* file:$OUTPUTDIR_LHC11hWithPhi/
+    OUTPUTDIR_LHC11h=$BASEDIR/$TRAINDIR/$TRAINPATHData-$LHC11hData/merge_runlist_7/Stage_1/
+    mkdir -p $OUTPUTDIR_LHC11h
+    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC11hData/merge_runlist_7/Stage_1/* file:$OUTPUTDIR_LHC11h/
+
+    OUTPUTDIR_LHC11hWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHData-$LHC11hDataWithPhi/merge_runlist_8/Stage_1/
+    mkdir -p $OUTPUTDIR_LHC11hWithPhi
+    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC11hDataWithPhi/merge_runlist_8/Stage_1/* file:$OUTPUTDIR_LHC11hWithPhi/
 
 fi
 
@@ -240,25 +254,25 @@ fi
 if [ $2 = "AODmc" ]; then
    TRAINPATHMC=GA_PbPb_MC_AOD
 
-    OUTPUTDIR_LHC14a1a=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1a/merge_runlist_6
-    OUTPUTDIR_LHC14a1b=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1b/merge_runlist_6
-    OUTPUTDIR_LHC14a1aWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1aWithPhi/merge_runlist_7
-    OUTPUTDIR_LHC14a1bWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1bWithPhi/merge_runlist_7
+#     OUTPUTDIR_LHC14a1a=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1a/merge_runlist_6
+#     OUTPUTDIR_LHC14a1b=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1b/merge_runlist_6
+#     OUTPUTDIR_LHC14a1aWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1aWithPhi/merge_runlist_7
+#     OUTPUTDIR_LHC14a1bWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1bWithPhi/merge_runlist_7
 
 #     OUTPUTDIR_LHC14a1a=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1a/merge_runlist_7
 #     OUTPUTDIR_LHC14a1b=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1b/merge_runlist_7
 #     OUTPUTDIR_LHC14a1aWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1aWithPhi/merge_runlist_6
 #     OUTPUTDIR_LHC14a1bWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1bWithPhi/merge_runlist_6
 
-    mkdir -p $OUTPUTDIR_LHC14a1a
-    mkdir -p $OUTPUTDIR_LHC14a1b
-    mkdir -p $OUTPUTDIR_LHC14a1aWithPhi
-    mkdir -p $OUTPUTDIR_LHC14a1bWithPhi
+#     mkdir -p $OUTPUTDIR_LHC14a1a
+#     mkdir -p $OUTPUTDIR_LHC14a1b
+#     mkdir -p $OUTPUTDIR_LHC14a1aWithPhi
+#     mkdir -p $OUTPUTDIR_LHC14a1bWithPhi
 
-    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1a/merge_runlist_6/Gam* file:$OUTPUTDIR_LHC14a1a/
-    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1b/merge_runlist_6/Gam* file:$OUTPUTDIR_LHC14a1b/
-    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1aWithPhi/merge_runlist_7/Gam* file:$OUTPUTDIR_LHC14a1aWithPhi/
-    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1bWithPhi/merge_runlist_7/Gam* file:$OUTPUTDIR_LHC14a1bWithPhi/
+#     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1a/merge_runlist_6/Gam* file:$OUTPUTDIR_LHC14a1a/
+#     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1b/merge_runlist_6/Gam* file:$OUTPUTDIR_LHC14a1b/
+#     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1aWithPhi/merge_runlist_7/Gam* file:$OUTPUTDIR_LHC14a1aWithPhi/
+#     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1bWithPhi/merge_runlist_7/Gam* file:$OUTPUTDIR_LHC14a1bWithPhi/
 
 #     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1a/merge_runlist_7/Gam* file:$OUTPUTDIR_LHC14a1a/
 #     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1b/merge_runlist_7/Gam* file:$OUTPUTDIR_LHC14a1b/
@@ -268,30 +282,30 @@ if [ $2 = "AODmc" ]; then
 else
    TRAINPATHMC=GA_PbPb_MC
 
-#     OUTPUTDIR_LHC14a1a=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1a/merge_runlist_7
-#     OUTPUTDIR_LHC14a1b=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1b/merge_runlist_7
-#     OUTPUTDIR_LHC14a1aWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1aWithPhi/merge_runlist_8
-#     OUTPUTDIR_LHC14a1bWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1bWithPhi/merge_runlist_8
-#
-# #     OUTPUTDIR_LHC14a1a=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1a/merge_runlist_8
-# #     OUTPUTDIR_LHC14a1b=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1b/merge_runlist_8
-# #     OUTPUTDIR_LHC14a1aWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1aWithPhi/merge_runlist_7
-# #     OUTPUTDIR_LHC14a1bWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1bWithPhi/merge_runlist_7
-#
-#     mkdir -p $OUTPUTDIR_LHC14a1a
-#     mkdir -p $OUTPUTDIR_LHC14a1b
-#     mkdir -p $OUTPUTDIR_LHC14a1aWithPhi
-#     mkdir -p $OUTPUTDIR_LHC14a1bWithPhi
-#
-#     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1a/merge_runlist_7/Gam* file:$OUTPUTDIR_LHC14a1a/
-#     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1b/merge_runlist_7/Gam* file:$OUTPUTDIR_LHC14a1b/
-#     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1aWithPhi/merge_runlist_8/Gam* file:$OUTPUTDIR_LHC14a1aWithPhi/
-#     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1bWithPhi/merge_runlist_8/Gam* file:$OUTPUTDIR_LHC14a1bWithPhi/
-#
-# #     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1a/merge_runlist_8/Gam* file:$OUTPUTDIR_LHC14a1a/
-# #     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1b/merge_runlist_8/Gam* file:$OUTPUTDIR_LHC14a1b/
-# #     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1aWithPhi/merge_runlist_7/Gam* file:$OUTPUTDIR_LHC14a1aWithPhi/
-# #     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1bWithPhi/merge_runlist_7/Gam* file:$OUTPUTDIR_LHC14a1bWithPhi/
+    OUTPUTDIR_LHC14a1a=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1a/merge_runlist_7
+    OUTPUTDIR_LHC14a1b=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1b/merge_runlist_7
+    OUTPUTDIR_LHC14a1aWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1aWithPhi/merge_runlist_8
+    OUTPUTDIR_LHC14a1bWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1bWithPhi/merge_runlist_8
+
+#     OUTPUTDIR_LHC14a1a=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1a/merge_runlist_8
+#     OUTPUTDIR_LHC14a1b=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1b/merge_runlist_8
+#     OUTPUTDIR_LHC14a1aWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1aWithPhi/merge_runlist_7
+#     OUTPUTDIR_LHC14a1bWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1bWithPhi/merge_runlist_7
+
+    mkdir -p $OUTPUTDIR_LHC14a1a
+    mkdir -p $OUTPUTDIR_LHC14a1b
+    mkdir -p $OUTPUTDIR_LHC14a1aWithPhi
+    mkdir -p $OUTPUTDIR_LHC14a1bWithPhi
+
+    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1a/merge_runlist_7/Gam* file:$OUTPUTDIR_LHC14a1a/
+    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1b/merge_runlist_7/Gam* file:$OUTPUTDIR_LHC14a1b/
+    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1aWithPhi/merge_runlist_8/Gam* file:$OUTPUTDIR_LHC14a1aWithPhi/
+    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1bWithPhi/merge_runlist_8/Gam* file:$OUTPUTDIR_LHC14a1bWithPhi/
+
+#     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1a/merge_runlist_8/Gam* file:$OUTPUTDIR_LHC14a1a/
+#     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1b/merge_runlist_8/Gam* file:$OUTPUTDIR_LHC14a1b/
+#     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1aWithPhi/merge_runlist_7/Gam* file:$OUTPUTDIR_LHC14a1aWithPhi/
+#     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1bWithPhi/merge_runlist_7/Gam* file:$OUTPUTDIR_LHC14a1bWithPhi/
 
 fi
 
@@ -469,8 +483,8 @@ else
 
 fi
 
-#
-#
+
+
 #
 # if [ $1 = "AODdata" ]; then
 # ################################## normal selection cut ######################################################
@@ -497,35 +511,35 @@ fi
 #    done;
 #
 #
-# # elif [ $1 = "DCAdata" ]; then
-# #     runs=`cat lhc11hforDCA.txt`
-# #     for run in $runs; do
-# #       ls $OUTPUTDIR_LHC11h/$run/GammaConvV1_*.root > fileLHC11hDCA.txt
-# #       fileNumbersData=`cat fileLHC11hDCA.txt`
-# #       for fileName in $fileNumbersData; do
-# #           echo $fileName
-# #           number=`echo $fileName  | cut -d "/" -f 11 | cut -d "_" -f 2 | cut -d "." -f1`
-# #           echo $number
-# #           root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC11h/$run/GammaConvV1_$number.root\"\,\"$OUTPUTDIR_LHC11h/$run/GammaConvV1_GA_PbPb_LHC11h-pass2_$number.root\"\,\"GammaConvV1_$number\"\)
-# #           root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR_LHC11h/$run/GammaConvV1_GA_PbPb_LHC11h-pass2_$number.root\"\,\"$OUTPUTDIR_LHC11h/$run/CutSelection_LHC11h_$number.log\"\)
-# #       done;
-# #     done;
-# #     counter=0;
-# #     number=40;
-# #     echo $number
-# #     mkdir -p $OUTPUTDIR_LHC11h/merged
-# #     for run in $runs; do
-# #        echo "run number ---> " $run
-# #        if [ $counter = 0 ]; then
-# #           cp $OUTPUTDIR_LHC11h/$run/GammaConvV1_GA_PbPb_LHC11h-pass2_$number.root $OUTPUTDIR_LHC11h/intermediate.root
-# #           counter=$(($counter+1));
-# #           echo $counter;
-# #        else
-# #           hadd -f $OUTPUTDIR_LHC11h/GammaConvV1_GA_PbPb_LHC11h-pass2_merged_$number.root $OUTPUTDIR_LHC11h/intermediate.root $OUTPUTDIR_LHC11h/$run/GammaConvV1_GA_PbPb_LHC11h-pass2_$number.root
-# #           mv $OUTPUTDIR_LHC11h/GammaConvV1_GA_PbPb_LHC11h-pass2_merged_$number.root $OUTPUTDIR_LHC11h/intermediate.root
-# #        fi
-# #     done;
-# #     mv $OUTPUTDIR_LHC11h/intermediate.root  $OUTPUTDIR_LHC11h/merged/GammaConvV1_GA_PbPb_LHC11h-pass2_FinalMerge_$number.root
+# # # elif [ $1 = "DCAdata" ]; then
+# # #     runs=`cat lhc11hforDCA.txt`
+# # #     for run in $runs; do
+# # #       ls $OUTPUTDIR_LHC11h/$run/GammaConvV1_*.root > fileLHC11hDCA.txt
+# # #       fileNumbersData=`cat fileLHC11hDCA.txt`
+# # #       for fileName in $fileNumbersData; do
+# # #           echo $fileName
+# # #           number=`echo $fileName  | cut -d "/" -f 11 | cut -d "_" -f 2 | cut -d "." -f1`
+# # #           echo $number
+# # #           root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC11h/$run/GammaConvV1_$number.root\"\,\"$OUTPUTDIR_LHC11h/$run/GammaConvV1_GA_PbPb_LHC11h-pass2_$number.root\"\,\"GammaConvV1_$number\"\)
+# # #           root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR_LHC11h/$run/GammaConvV1_GA_PbPb_LHC11h-pass2_$number.root\"\,\"$OUTPUTDIR_LHC11h/$run/CutSelection_LHC11h_$number.log\"\)
+# # #       done;
+# # #     done;
+# # #     counter=0;
+# # #     number=40;
+# # #     echo $number
+# # #     mkdir -p $OUTPUTDIR_LHC11h/merged
+# # #     for run in $runs; do
+# # #        echo "run number ---> " $run
+# # #        if [ $counter = 0 ]; then
+# # #           cp $OUTPUTDIR_LHC11h/$run/GammaConvV1_GA_PbPb_LHC11h-pass2_$number.root $OUTPUTDIR_LHC11h/intermediate.root
+# # #           counter=$(($counter+1));
+# # #           echo $counter;
+# # #        else
+# # #           hadd -f $OUTPUTDIR_LHC11h/GammaConvV1_GA_PbPb_LHC11h-pass2_merged_$number.root $OUTPUTDIR_LHC11h/intermediate.root $OUTPUTDIR_LHC11h/$run/GammaConvV1_GA_PbPb_LHC11h-pass2_$number.root
+# # #           mv $OUTPUTDIR_LHC11h/GammaConvV1_GA_PbPb_LHC11h-pass2_merged_$number.root $OUTPUTDIR_LHC11h/intermediate.root
+# # #        fi
+# # #     done;
+# # #     mv $OUTPUTDIR_LHC11h/intermediate.root  $OUTPUTDIR_LHC11h/merged/GammaConvV1_GA_PbPb_LHC11h-pass2_FinalMerge_$number.root
 #
 #
 # else
@@ -552,5 +566,5 @@ fi
 #    done;
 #
 # fi
-#
-#
+
+
