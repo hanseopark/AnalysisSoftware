@@ -138,9 +138,6 @@ TH1D**      fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning                    
 TF1**       fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat                           = NULL;
 TF1**       fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning                                 = NULL;
 
-TH1D**      fMCrecGammaPerCatPtDCAzBins                                                         = NULL;
-TH1D**      fMCrecGammaRatioCatToCombinedPtDCAzBins                                             = NULL;
-
 TH1D*       fMCrecGammaPtPileUpAllCat                                                           = NULL;
 TH1D*       fMCrecGammaPtPileUp                                                                 = NULL;
 TH1D*       fTruePrimaryConvGammaPtPileUpAllCat                                                 = NULL;
