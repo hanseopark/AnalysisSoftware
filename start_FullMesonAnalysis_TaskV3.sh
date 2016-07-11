@@ -50,6 +50,39 @@ function GiveBinning13TeV()
     echo "You have chosen $BinsPtEta bins";
 }
 
+function GiveBinningDirectPhoton13TeV()
+{
+    DoPi0InEtaBinning=0;
+    DoEta=0;
+
+    echo "How many p_T bins do you want to use for the Pi0? 20(7.0GeV), 21(8.5GeV), 22(10.0GeV), 23(12.0GeV), 24(16GeV)";
+    read answer
+    if [ $answer = 20 ]; then
+        echo "20 Bins --> Max p_T = 7.0 GeV ...";
+        correctPi0=1
+        BinsPtPi0=20
+    elif [ $answer = 21 ]; then
+        echo "21 Bins --> Max p_T = 8.5 GeV ...";
+        correctPi0=1
+        BinsPtPi0=21
+    elif [ $answer = 22 ]; then
+        echo "22 Bins --> Max p_T = 10.0 GeV ...";
+        correctPi0=1
+        BinsPtPi0=22
+    elif [ $answer = 23 ]; then
+        echo "23 Bins --> Max p_T = 12.0 GeV ...";
+        correctPi0=1
+        BinsPtPi0=23
+    elif [ $answer = 24 ]; then
+        echo "24 Bins --> Max p_T = 16 GeV ...";
+        correctPi0=1
+        BinsPtPi0=24
+    else
+        echo "Pi0 Binning was not set correctly. Please try again.";
+        correctPi0=0
+    fi
+}
+
 function GiveBinningDalitz7TeV()
 {
     echo "How many p_T bins do you want to use for the Pi0? 17(5GeV), 18(7GeV), 19(10GeV), 20(16GeV) 21(20GeV) 22(25GeV) 24 (extra)";
@@ -908,7 +941,7 @@ function ProduceFinalResultspPb()
 
 function CreateGammaFinalResults() 
 {
-    root -x -l -b -q TaskV1/CalculateGammaToPi0V2.C++\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\",$mode\)
+    root -x -l -b -q TaskV1/CalculateGammaToPi0V2.C++\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\",$mode\,\"$ESTIMATEPILEUP\"\)
 }
 
 function Usage() 
@@ -1858,24 +1891,47 @@ do
             correct=1
         fi
     elif [ $energy = "13TeV" ]; then
-        Conference="No"
-        Con=0
-        DoGamma=0
         if [ $mode -ne 0 ]; then
             echo "Mode is set to PCM-PCM";
             mode=0
         fi
-        if [ $ONLYCORRECTION -eq 0 ]; then
-            GiveBinning13TeV
-            correctPi0=1
-            correctEta=1
-        fi
-        if [ $correctPi0 -eq 0 ]; then
-            correct=0    
-        elif [ $correctEta -eq 0 ]; then
-            correct=0
-        else 
-            correct=1
+        echo "Do you want to produce Direct Photon plots? Yes/No?";
+        read answer
+        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+            echo "Will produce Direct Photon plots ...";
+            directphoton="directPhoton"
+            Con=1
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinningDirectPhoton13TeV
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else
+                correct=1
+            fi
+        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+            echo "No Direct Photon plots will be produced ...";
+            Conference="No"
+            Con=0
+            DoGamma=0
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinning13TeV
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else
+                correct=1
+            fi
+        else
+            echo "Command not found. Please try again.";
         fi
     elif [ $energy = "900GeV" ]; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
