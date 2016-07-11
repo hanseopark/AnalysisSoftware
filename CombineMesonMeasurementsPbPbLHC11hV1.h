@@ -6,7 +6,8 @@
 //___________________________________ Labels definition _____________________________________________
 
 TString collisionSystem2760GeV      = "Pb#font[122]{-}Pb, #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
-TString collisionSystemPbPb0010     = "0#font[122]{-}10% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV"    ;
+TString collisionSystemPbPb0010     = "0#font[122]{-}10% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+TString collisionSystemPbPb2040     = "20#font[122]{-}40% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
 TString collisionSystemPbPb2050     = "20#font[122]{-}50% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
 
 TString collisionSystemPP2760GeV    = "pp, #sqrt{#it{s}} = 2.76 TeV";
@@ -14,6 +15,7 @@ TString collisionSystemPP7TeV       = "pp, #sqrt{#it{s}} = 7 TeV";
 
 TString cent0010 = "0#font[122]{-}10%";
 TString cent2050 = "20#font[122]{-}50%";
+TString cent2040 = "20#font[122]{-}40%";
 
 
 
@@ -58,7 +60,7 @@ Color_t colorPhenix         = kBlack;
 //eta raa in phenix central kOrange+1, semicentral kGreen+2 nad kGreen-6
 
 Color_t colorCracow0010     = kOrange+6;
-Color_t colorCracow2050     = kBlue-9;//kCyan-9;
+Color_t colorCracow2050     = kAzure-4;//kCyan-9;
 
 Color_t colorEPOS0010       = kPink+5;
 Color_t colorEPOS2050       = kBlue;
@@ -302,6 +304,8 @@ Double_t commonCentralityErr6080 = 6.1;
 Double_t nColl0010 = 1500;
 Double_t nColl2040 = 438.4;
 Double_t nColl2050 = 349.1;
+Double_t nColl[5] = {1684.4, 1316, 1500,438.4,349.1};
+Double_t nCollErr[5] = {190, 140, 165,42.,51.};
 
 // Double_t factorToInel = 1/1.117; //1; //                         // this factor is multiplied with Raa and comes from trigger inelastic effiency for pp
 // Double_t recalcBarn =            1e12; //NLO in pbarn!!!!
@@ -414,6 +418,9 @@ TF1* fitQCDPbPb2760GeVPtLHC11h_0010;
 TF1* fitQCDPbPb2760GeVPtLHC11h_2050;
 TF1* fitTsallisPbPb2760GeVPtLHC11h_0010;
 TF1* fitTsallisPbPb2760GeVPtLHC11h_2050;
+
+TF1 *fitNormBylinkinPbPb2760GeVPtLHC11h_0010;
+TF1 *fitNormBylinkinPbPb2760GeVPtLHC11h_2050;
 
 // TF1* fitBylinkinPbPb2760GeVPtLHC11hYshift_0010;
 // TF1* fitBylinkinPbPb2760GeVPtLHC11hYshift_2050;

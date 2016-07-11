@@ -89,7 +89,7 @@ void PlotInvMassEMCalAndPCMTogether(){
 // 	}
 
 //===============================================================================================
-	TFile * filePCMPbPb0010 = new TFile("50100013_00200009247602008250404000_0152501500000000/PbPb_2.76TeV/Pi0_data_GammaConvV1WithoutCorrection_50100013_00200009247602008250404000_0152501500000000.root");
+	TFile * filePCMPbPb0010 = new TFile("50100013_00200009247602008250404000_0652501500000000/PbPb_2.76TeV/Pi0_data_GammaConvV1WithoutCorrection_50100013_00200009247602008250404000_0652501500000000.root");
 	TH1D* histoPCMSignalPlusBG0010 = (TH1D*)filePCMPbPb0010->Get(Form("Mapping_GG_InvMass_in_Pt_Bin%02d",binPbPb));
 	TH1D* histoPCMSignal0010 = (TH1D*)filePCMPbPb0010->Get(Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d",binPbPb));
 	TH1D* histoPCMRemainingBG0010 = (TH1D*)histoPCMSignal0010->Clone("histoPCMRemainingBG0010");
@@ -118,7 +118,7 @@ void PlotInvMassEMCalAndPCMTogether(){
 	fitPCMSignal0010->SetParameter(5,0.);
 
 //===============================================================================================	
-	TFile * filePCMPbPb2050 = new TFile("52500013_00200009247602008250404000_0152501500000000/PbPb_2.76TeV/Pi0_data_GammaConvV1WithoutCorrection_52500013_00200009247602008250404000_0152501500000000.root");
+	TFile * filePCMPbPb2050 = new TFile("52500013_00200009247602008250404000_0652501500000000/PbPb_2.76TeV/Pi0_data_GammaConvV1WithoutCorrection_52500013_00200009247602008250404000_0652501500000000.root");
 	TH1D* histoPCMSignalPlusBG2050 = (TH1D*)filePCMPbPb2050->Get(Form("Mapping_GG_InvMass_in_Pt_Bin%02d",binPbPb));
 	TH1D* histoPCMSignal2050 = (TH1D*)filePCMPbPb2050->Get(Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d",binPbPb));
 	TH1D* histoPCMRemainingBG2050 = (TH1D*)histoPCMSignal2050->Clone("histoPCMRemainingBG0010");
@@ -148,7 +148,7 @@ void PlotInvMassEMCalAndPCMTogether(){
 	fitPCMSignal2050->SetParameter(5,0.);
 	
 //===============================================================================================
-	TFile * filePCMPbPbEta0010 = new TFile("50100013_00200009247602008250404000_0152501500000000/PbPb_2.76TeV/Eta_data_GammaConvV1WithoutCorrection_50100013_00200009247602008250404000_0152501500000000.root");
+	TFile * filePCMPbPbEta0010 = new TFile("50100013_00200009247602008250404000_0652501500000000/PbPb_2.76TeV/Eta_data_GammaConvV1WithoutCorrection_50100013_00200009247602008250404000_0652501500000000.root");
 	TH1D* histoPCMSignalPlusBGEta0010 = (TH1D*)filePCMPbPbEta0010->Get(Form("Mapping_GG_InvMass_in_Pt_Bin%02d",binPbPb));
 	TH1D* histoPCMSignalEta0010 = (TH1D*)filePCMPbPbEta0010->Get(Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d",binPbPb));
 	TH1D* histoPCMRemainingBGEta0010 = (TH1D*)histoPCMSignalEta0010->Clone("histoPCMRemainingBGEta0010");
@@ -177,7 +177,7 @@ void PlotInvMassEMCalAndPCMTogether(){
 	fitPCMSignalEta0010->SetParameter(5,0.);
 	
 //===============================================================================================
-	TFile * filePCMPbPbEta2050 = new TFile("52500013_00200009247602008250404000_0152501500000000/PbPb_2.76TeV/Eta_data_GammaConvV1WithoutCorrection_52500013_00200009247602008250404000_0152501500000000.root");
+	TFile * filePCMPbPbEta2050 = new TFile("52500013_00200009247602008250404000_0652501500000000/PbPb_2.76TeV/Eta_data_GammaConvV1WithoutCorrection_52500013_00200009247602008250404000_0652501500000000.root");
 	TH1D* histoPCMSignalPlusBGEta2050 = (TH1D*)filePCMPbPbEta2050->Get(Form("Mapping_GG_InvMass_in_Pt_Bin%02d",binPbPb));
 	TH1D* histoPCMSignalEta2050 = (TH1D*)filePCMPbPbEta2050->Get(Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d",binPbPb));
 	TH1D* histoPCMRemainingBGEta2050 = (TH1D*)histoPCMSignalEta2050->Clone("histoPCMRemainingBGEta0010");
@@ -698,7 +698,7 @@ void PlotInvMassEMCalAndPCMTogether(){
 	
 	pad2PartRatioIndMeas1->cd();
 	
-	SetStyleHistoTH1ForGraphs(histoPCMSignalPlusBG0010, "#it{M}_{#gamma#gamma} (GeV/#it{c}^{2})","counts", 0.78*textSizeLabels,textSizeLabels,  0.78*textSizeLabels,textSizeLabels, 0.8,0.5/(textSizeFac*marginRatio), 505, 505);
+	SetStyleHistoTH1ForGraphs(histoPCMSignalPlusBG0010, "#it{M}_{#gamma#gamma} (GeV/#it{c}^{2})","counts", 0.78*textSizeLabels,textSizeLabels,  0.78*textSizeLabels,textSizeLabels, 1.,0.5/(textSizeFac*marginRatio), 505, 505);
 	histoPCMSignalPlusBG0010->GetYaxis()->SetLabelOffset(0.005);
 	histoPCMSignalPlusBG0010->GetYaxis()->SetTitleFont(62);
 	histoPCMSignalPlusBG0010->GetXaxis()->SetTitleFont(62);
@@ -728,7 +728,7 @@ void PlotInvMassEMCalAndPCMTogether(){
 	
 	pad2PartRatioIndMeas2->cd();
 
-	SetStyleHistoTH1ForGraphs(histoEMCalSignalPlusBG0010, "#it{M}_{#gamma#gamma} (GeV/#it{c}^{2})","counts", 0.78*textSizeLabels,textSizeLabels,  0.78*textSizeLabels,textSizeLabels, 0.8,0.5/(textSizeFac*marginRatio), 505, 505);
+	SetStyleHistoTH1ForGraphs(histoEMCalSignalPlusBG0010, "#it{M}_{#gamma#gamma} (GeV/#it{c}^{2})","counts", 0.78*textSizeLabels,textSizeLabels,  0.78*textSizeLabels,textSizeLabels, 1.,0.5/(textSizeFac*marginRatio), 505, 505);
 	histoEMCalSignalPlusBG0010->GetYaxis()->SetLabelOffset(0.005);
 	histoEMCalSignalPlusBG0010->GetYaxis()->SetTitleFont(62);
 	histoEMCalSignalPlusBG0010->GetXaxis()->SetTitleFont(62);
@@ -760,7 +760,7 @@ void PlotInvMassEMCalAndPCMTogether(){
 	
 	pad2PartRatioIndMeas3->cd();
 
-	SetStyleHistoTH1ForGraphs(histoPCMSignalPlusBGEta0010, "#it{M}_{#gamma#gamma} (GeV/#it{c}^{2})","", 0.78*textSizeLabels,textSizeLabels,  0.78*textSizeLabels,textSizeLabels, 0.8,0.5/(textSizeFac*marginRatio), 505, 505);
+	SetStyleHistoTH1ForGraphs(histoPCMSignalPlusBGEta0010, "#it{M}_{#gamma#gamma} (GeV/#it{c}^{2})","", 0.78*textSizeLabels,textSizeLabels,  0.78*textSizeLabels,textSizeLabels, 1.,0.5/(textSizeFac*marginRatio), 505, 505);
 	histoPCMSignalPlusBGEta0010->GetYaxis()->SetLabelOffset(0.005);
 	histoPCMSignalPlusBGEta0010->GetYaxis()->SetTitleFont(62);
 	histoPCMSignalPlusBGEta0010->GetXaxis()->SetTitleFont(62);
@@ -790,7 +790,7 @@ void PlotInvMassEMCalAndPCMTogether(){
 	
 	pad2PartRatioIndMeas4->cd();
 
-	SetStyleHistoTH1ForGraphs(histoEMCalSignalPlusBGEta0010, "#it{M}_{#gamma#gamma} (GeV/#it{c}^{2})","", 0.78*textSizeLabels,textSizeLabels,  0.78*textSizeLabels,textSizeLabels, 0.8,0.5/(textSizeFac*marginRatio), 505, 505);
+	SetStyleHistoTH1ForGraphs(histoEMCalSignalPlusBGEta0010, "#it{M}_{#gamma#gamma} (GeV/#it{c}^{2})","", 0.78*textSizeLabels,textSizeLabels,  0.78*textSizeLabels,textSizeLabels, 1.,0.5/(textSizeFac*marginRatio), 505, 505);
 	histoEMCalSignalPlusBGEta0010->GetYaxis()->SetLabelOffset(0.005);
 	histoEMCalSignalPlusBGEta0010->GetYaxis()->SetTitleFont(62);
 	histoEMCalSignalPlusBGEta0010->GetXaxis()->SetTitleFont(62);
