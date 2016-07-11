@@ -596,7 +596,70 @@ void QA_Runwise(
             plotDataSets[j] = dummyData2[j];
         }
     }
-
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC15f")==0){
+	  cutNr=-1;
+	  mode=0;
+	  suffix="pdf";
+	  fEnergyFlag = "13TeV";
+	  nSets = 2;
+	  nData = 1;
+	  filePath= "/home/meike/analysis/data/GridOutput/GammaConv/pp/";
+	  filePathPhoton = "/home/meike/analysis/data/GridOutput/PhotonQA/pp/";
+	  fileName = "GammaConvV1.root";
+	  DataSets[0]="LHC15f"; DataSets[1]="LHC15g3a3";
+	  plotDataSets[0]="LHC15f"; plotDataSets[1]="LHC15g3a3";
+	  markerSize=1.5;
+	  doEquidistantXaxis=kTRUE;
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC15h")==0){
+	  cutNr=0;
+	  mode=0;
+	  suffix="pdf";
+	  fEnergyFlag = "13TeV";
+	  nSets = 1;
+	  nData = 1;
+	  filePath= "/home/meike/analysis/data/GridOutput/GammaConv/pp/";
+	  filePathPhoton = "/home/meike/analysis/data/GridOutput/PhotonQA/pp/";
+	  fileName = "GammaConvV1.root";
+	  DataSets[0]="LHC15h";
+	  plotDataSets[0]="LHC15h";
+	  markerSize=3;
+	  doEquidistantXaxis=kTRUE;
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC15i")==0){
+	  cutNr=0;
+	  mode=0;
+	  suffix="pdf";
+	  fEnergyFlag = "13TeV";
+	  nSets = 1;
+	  nData = 1;
+	  filePath= "/home/meike/analysis/data/GridOutput/GammaConv/pp/";
+	  filePathPhoton = "/home/meike/analysis/data/GridOutput/PhotonQA/pp/";
+	  fileName = "GammaConvV1.root";
+	  DataSets[0]="LHC15i";
+	  plotDataSets[0]="LHC15i";
+	  markerSize=3;
+	  doEquidistantXaxis=kTRUE;
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC15g")==0){
+	  cutNr=0;
+	  mode=0;
+	  suffix="pdf";
+	  fEnergyFlag = "13TeV";
+	  nSets = 1;
+	  nData = 1;
+	  filePath= "/home/meike/analysis/data/GridOutput/GammaConv/pp/";
+	  filePathPhoton = "/home/meike/analysis/data/GridOutput/PhotonQA/pp/";
+	  fileName = "GammaConvV1.root";
+	  DataSets[0]="LHC15g";
+	  plotDataSets[0]="LHC15g";
+	  markerSize=3;
+	  doEquidistantXaxis=kTRUE;
+    }
     //**************************************************************************************************************
     else{
         cout << "No valid selection! Returning..." << endl;

@@ -663,6 +663,53 @@ void QA(    TString select          = "LHC11a",         // set selected
         pathPhotonQA[1] = "";
     }
     //**************************************************************************************************************
+    else if(select.CompareTo("LHC15f")==0){
+	        mode = 0;
+		suffix="pdf";
+		nSets = 2;
+		fEnergyFlag = "13TeV";
+		DataSets[0]="LHC15f"; DataSets[1]="LHC15g3a3";
+		plotDataSets[0]="Data"; plotDataSets[1]="LHC15g3a3";
+		pathDataSets[0]="/home/meike/analysis/data/GridOutput/GammaConv/pp/LHC15f/merged/GammaConvV1_117_LHC15fPass2AOD171_trainNo58_53runs.root";
+		pathDataSets[1]="/home/meike/analysis/data/GridOutput/GammaConv/pp/LHC15g3a3/merged/GammaConvV1_115_LHC15g3a3AOD176_trainNo124_50runs.root";
+		pathPhotonQA[0]="/home/meike/analysis/data/GridOutput/PhotonQA/pp/LHC15f/PhotonQA_LHC15f.root";
+		pathPhotonQA[1]="/home/meike/analysis/data/GridOutput/PhotonQA/pp/LHC15g3c3/PhotonQA_LHC15g3c3.root";
+
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC15h")==0){
+	        mode = 0;
+		suffix="pdf";
+		nSets = 1;
+		fEnergyFlag = "13TeV";
+		DataSets[0]="LHC15h";
+		plotDataSets[0]="LHC15h";
+	        pathDataSets[0]="/home/ceres/danisch/GridOutputGammaConv/pp/LHC15h/mymerge/62runs/GammaConvV1.root";
+		pathPhotonQA[0] = "/home/ceres/danisch/GridOutputPhotonQA/LHC15h/PhotonQA_LHC15h.root";
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC15i")==0){
+	        mode = 0;
+		suffix="pdf";
+		nSets = 1;
+		fEnergyFlag = "13TeV";
+		DataSets[0]="LHC15i";
+		plotDataSets[0]="LHC15i";
+		pathDataSets[0]="/home/ceres/danisch/GridOutputGammaConv/pp/LHC15i/mymerge/107runs/GammaConvV1.root";
+		pathPhotonQA[0] = "/home/ceres/danisch/GridOutputPhotonQA/LHC15i/PhotonQA_LHC15i.root";
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC15g")==0){
+	        mode = 0;
+		suffix="pdf";
+		nSets = 1;
+		fEnergyFlag = "13TeV";
+		DataSets[0]="LHC15g";
+		plotDataSets[0]="LHC15g";
+		pathDataSets[0]="/home/ceres/danisch/GridOutputGammaConv/pp/LHC15g/229245/GammaConvV1.root";
+		pathPhotonQA[0] = "/home/ceres/danisch/GridOutputPhotonQA/LHC15g/PhotonQA_LHC15g.root";
+    }
+    //**************************************************************************************************************
     else{
         cout << "No valid selection! Returning..." << endl;
         return;
