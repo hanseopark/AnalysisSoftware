@@ -2590,8 +2590,8 @@ if [ "$energy" != "PbPb_2.76TeV" ]; then
         CallPi0EtaData=\"$Pi0EtadataCorr\"\,\"$EtadataCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kFALSE\"\,\"Levy\"\,\"same\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
         CallPi0EtaMC=\"$Pi0EtaMCCorr\"\,\"$EtaMCCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kTRUE\"\,\"Levy\"\,\"same\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
 
-        if [ $ONLYCUTS -eq 0 ]; then 
-            if [ -f $EtadataCorr ] && [ -f $Pi0dataCorr ] && [ -f $SysErrFiledata ]; then
+        if [ $ONLYCUTS -eq 0 ]; then
+            if [ $DoPi0 -eq 1 ] && [ $DoEta -eq 1 ] && [ -f $EtadataCorr ] && [ -f $Pi0dataCorr ] && [ -f $SysErrFiledata ]; then
                 CreateFinalResults $CallPi0Data ;
                 if [ $DoGamma -eq 1 ]; then
                     if [ $NEWGammaMacros == 0 ]; then 
@@ -2604,9 +2604,9 @@ if [ "$energy" != "PbPb_2.76TeV" ]; then
 
             echo "have done this" 
 
-            if [ -f $EtaMCCorr ] && [ -f $Pi0MCCorr ] && [ -f $SysErrFileMC ]; then
+            if [ $DoPi0 -eq 1 ] && [ $DoEta -eq 1 ] && [ -f $EtaMCCorr ] && [ -f $Pi0MCCorr ] && [ -f $SysErrFileMC ]; then
                 CreateFinalResults $CallPi0MC
-            else 
+            else
                 PARTLY=1
             fi
             if [ $DoPi0InEtaBinning -eq 1 ] && [ $DoEta -eq 1 ]; then
