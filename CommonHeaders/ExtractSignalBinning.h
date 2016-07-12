@@ -1152,7 +1152,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
         } else if (energy.CompareTo("13TeV") == 0) {
             if (directPhoton.CompareTo("directPhoton") == 0){
                 fStartPtBin     = 1;
-                fColumn         = 6;
+                fColumn         = 5;
                 fRow            = 5;
                 if (fNBinsPt > 24) {
                     cout << "You have chosen Direct Photon Plots and more than 24 bins, this is not possible, it will be reduced to 24 bins." << endl;
