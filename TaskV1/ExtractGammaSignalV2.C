@@ -1501,13 +1501,13 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
     
     // initialize ShowBackground for DCAz distributions
     if ((fEnergyFlag.CompareTo("13TeV") == 0) && (fMeson.CompareTo("Pi0") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
-        nIterationsShowBackground[0]                    = 12;
-        nIterationsShowBackground[1]                    = 12;
+        nIterationsShowBackground[0]                    = 13;
+        nIterationsShowBackground[1]                    = 13;
         nIterationsShowBackground[2]                    = 18;
         nIterationsShowBackground[3]                    = 20;
         optionShowBackground[0]                         = "BackDecreasingWindow";                   // standard
-        optionShowBackground[1]                         = "BackDecreasingWindow, BackSmoothing3";
-        optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing5";
+        optionShowBackground[1]                         = "nosmoothing";
+        optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
     } else {
         cout << "WARNING: No ShowBackground-options defined, using the default ones." << endl;
         nIterationsShowBackground[0]                    = 12;
