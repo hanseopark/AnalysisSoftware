@@ -170,7 +170,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         nameWidthMC                                     = "histoFWHMMesonRecMC";        
     } else if (mode == 10){
         nameCorrectedYield                              = "CorrectedYieldTrueEff";
-        nameEfficiency                                  = "TrueMesonEffiPrimPt";
+        nameEfficiency                                  = "PrimaryMesonEfficiency";
         nameAcceptance                                  = "fHistoMCAcceptancePt";
         nameMCYield                                     = "MCYield_Meson_oldBin";
     }
@@ -349,7 +349,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TH1D*   histoMCRatioRawClusterPt[MaxNumberOfFiles];
     TString rapidityRange                                   = "";
     Double_t deltaRapid             [MaxNumberOfFiles];
-
     
     for (Int_t i=0; i< nrOfTrigToBeComb; i++){
         // Define CutSelections
@@ -400,7 +399,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         histoAcceptancePi0[i]                               = (TH1D*)fileCorrectedPi0[i]->Get(nameAcceptance.Data());
         histoAcceptancePi0[i]->SetName(Form("Acceptance_%s",  cutNumber[i].Data()));
         if (mode == 10){
-            histoPurityPi0[i]                               = (TH1D*)fileCorrectedPi0[i]->Get("TruePi0PurityMergedPt");
+            histoPurityPi0[i]                               = (TH1D*)fileCorrectedPi0[i]->Get("MesonPurity");
             histoPurityPi0[i]->SetName(Form("Purity_%s",  cutNumber[i].Data()));
 
         }    
@@ -459,7 +458,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         
         histoMCInputPi0[i]                                  = (TH1D*)fileCorrectedPi0[i]->Get(nameMCYield.Data());
         histoMCInputPi0[i]->SetName(Form("Pi0_Input_Reweighted_%s",cutNumber[i].Data()));
-    
+        histoMCInputPi0[i]->Sumw2();
+        histoMCInputPi0[i]->Rebin(4);
+        histoMCInputPi0[i]->Scale(1./4);
         //***************************************************************************************************************
         //****************************** Calculate trigger rejection factors ********************************************
         //***************************************************************************************************************
@@ -2818,13 +2819,23 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     graphCorrectedYieldWeightedAveragePi0Stat->Draw("p,E,same");
     
     fitInvYieldPi0->Draw("same");
-
+        
     labelEnergyUnscaled->Draw();
     labelPi0Unscaled->Draw();
     labelDetProcUnscaled->Draw();
     
     canvasCorrScaled->Update();
     canvasCorrScaled->SaveAs(Form("%s/Pi0_%s_CorrectedYieldFinal.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+
+    DrawGammaSetMarker(histoMCInputPi0[0],  0, 0, kBlue+2, kBlue+2);    
+    histoMCInputPi0[0]->Draw("same,hist,c");
+    
+    labelEnergyUnscaled->Draw();
+    labelPi0Unscaled->Draw();
+    labelDetProcUnscaled->Draw();
+    
+    canvasCorrScaled->Update();
+    canvasCorrScaled->SaveAs(Form("%s/Pi0_%s_CorrectedYieldFinal_WithMC.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
     
     if (!enableEta) delete canvasCorrScaled;
 
@@ -2923,10 +2934,13 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     
     TGraphAsymmErrors* graphCorrectedYieldFinalStatToFitPi0;
     TGraphAsymmErrors* graphCorrectedYieldFinalSysToFitPi0;
+    TH1D* histoMCInputToFit;
    
     graphCorrectedYieldFinalStatToFitPi0    = CalculateGraphErrRatioToFit (graphCorrectedYieldWeightedAveragePi0Stat, fitInvYieldPi0); 
     graphCorrectedYieldFinalSysToFitPi0     = CalculateGraphErrRatioToFit(graphCorrectedYieldWeightedAveragePi0Sys, fitInvYieldPi0); 
-
+    histoMCInputToFit                       = (TH1D*)histoMCInputPi0[0]->Clone("Pi0MCToFit");
+    histoMCInputToFit                       = CalculateHistoRatioToFitNLO (histoMCInputToFit, fitInvYieldPi0, minPtGlobalPi0);
+    
     DrawGammaSetMarkerTGraphAsym(graphCorrectedYieldFinalSysToFitPi0, 24, 2, kGray+1 , kGray+1, 1, kTRUE);
     DrawGammaSetMarkerTGraphAsym(graphCorrectedYieldFinalStatToFitPi0, 24, 2, kBlack , kBlack, 1, kTRUE);
     
@@ -2944,6 +2958,32 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     
     canvasRatioSpec->Update();
     canvasRatioSpec->SaveAs(Form("%s/Pi0_%s_RatioSpectraToFitFinal.%s",outputDir.Data(),isMC.Data(), suffix.Data()));
+
+    TH2F * histo2DRatioToFitPi02;
+    histo2DRatioToFitPi02 = new TH2F("histo2DRatioToFitPi02","histo2DRatioToFitPi02",1000,0., maxPtGlobalPi0,1000,0.25, 1.85);
+    SetStyleHistoTH2ForGraphs(histo2DRatioToFitPi02, "#it{p}_{T} (GeV/#it{c})","Data/Fit", 
+                            0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
+    histo2DRatioToFitPi02->DrawCopy(); 
+    
+    graphCorrectedYieldFinalSysToFitPi0->Draw("p,E2,same");
+    
+    DrawGammaLines(0., maxPtGlobalPi0 , 1., 1.,0.1, kGray+2);
+    DrawGammaLines(0., maxPtGlobalPi0 , 1.1, 1.1,0.1, kGray, 7);
+    DrawGammaLines(0., maxPtGlobalPi0 , 0.9, 0.9,0.1, kGray, 7);
+    
+    
+    graphCorrectedYieldFinalStatToFitPi0->Draw("p,E,same");
+    DrawGammaSetMarker(histoMCInputToFit, 20, 1.2, kBlue+1, kBlue+1);    
+    histoMCInputToFit->Draw("same,pe");
+    DrawGammaLines(0., maxPtGlobalPi0 , 0.6, 0.6,1, kBlue-7, 7);
+    
+    labelEnergyRatio->Draw();
+    labelPi0Ratio->Draw();
+    labelDetProcRatio->Draw();
+    
+    canvasRatioSpec->Update();
+    canvasRatioSpec->SaveAs(Form("%s/Pi0_%s_RatioSpectraToFitFinal_withMC.%s",outputDir.Data(),isMC.Data(), suffix.Data()));
+    
     
     if (!enableEta) delete canvasRatioSpec;
     
@@ -3052,6 +3092,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             histoRawYieldEta[i]                             = (TH1D*)fileUnCorrectedEta[i]->Get("histoYieldMesonPerEvent");
             histoRawYieldEta[i]->SetName(Form("RAWYieldPerEvent_%s",cutNumber[i].Data()));
             histoMCInputEta[i]                              = (TH1D*)fileCorrectedEta[i]->Get("MCYield_Meson_oldBinWOWeights");
+            histoMCInputEta[i]->Sumw2();
+            histoMCInputEta[i]->Rebin(4);
+            histoMCInputEta[i]->Scale(1./4);
+
             histoMCInputEta[i]->SetName(Form("Eta_Input_Reweighted_%s",cutNumber[i].Data()));
             histoMCInputEtaPi0[i]                           = (TH1D*) histoMCInputEta[i]->Clone(Form("EtaToPi0_Input_Reweighted_%s",cutNumber[i].Data()));
             histoMCInputEtaPi0[i]->Sumw2();

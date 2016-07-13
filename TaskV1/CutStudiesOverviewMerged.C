@@ -274,8 +274,8 @@ void CutStudiesOverviewMerged(  TString CombineCutsName     = "CombineCuts.dat",
         if (correctionFilesAvail){
             // for first cut read yield extraction errors as well            
             TString nameCorrectedYield                          = "CorrectedYieldTrueEff";
-            TString nameEfficiency                              = "TrueMesonEffiPrimPt";
-            TString namePurity                                  = "TruePi0PurityMergedPt";
+            TString nameEfficiency                              = "PrimaryMesonEfficiency";
+            TString namePurity                                  = "MesonPurity";
             TString nameAcceptance                              = "fHistoMCAcceptancePt";
             
             cout << "line " << __LINE__ << endl;
@@ -388,7 +388,7 @@ void CutStudiesOverviewMerged(  TString CombineCutsName     = "CombineCuts.dat",
         DrawGammaCanvasSettings( canvasRatioRawYields,  0.1, 0.02, 0.04, 0.08);
         canvasRatioRawYields->SetLogy(1); 
         // create legend
-        TLegend* legendRatioRaw = GetAndSetLegend2(0.55,0.15,0.7,0.15+1.15*0.032*numberOfCuts, 1000*0.032);
+        TLegend* legendRatioRaw = GetAndSetLegend2(0.55,0.15,0.7,0.15+1.15*0.032*numberOfCuts, 1000*0.032*0.8);
         // find min und max
         Double_t maxRatio = 2e3;
         Double_t minRatio = 0;
@@ -445,7 +445,7 @@ void CutStudiesOverviewMerged(  TString CombineCutsName     = "CombineCuts.dat",
 
     // Plot raw yield in uppper panel
     padRawClusterPt->cd();
-    TLegend* legendRawCluster = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*numberOfCuts, 1500*0.75*0.032);
+    TLegend* legendRawCluster = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*numberOfCuts, 1500*0.75*0.032*0.8);
     for(Int_t i = 0; i< numberOfCuts; i++){
         if(i == 0){
             Double_t scaleFactorRaw = 5.;
@@ -547,7 +547,7 @@ void CutStudiesOverviewMerged(  TString CombineCutsName     = "CombineCuts.dat",
         DrawGammaCanvasSettings( canvasRatioRawClusterPt,  0.1, 0.02, 0.04, 0.08);
         canvasRatioRawClusterPt->SetLogy(1); 
         // create legend
-        TLegend* legendRatioRawClusterTrigger = GetAndSetLegend2(0.55,0.15,0.7,0.15+1.15*0.032*numberOfCuts, 1000*0.032);
+        TLegend* legendRatioRawClusterTrigger = GetAndSetLegend2(0.55,0.15,0.7,0.15+1.15*0.032*numberOfCuts, 1000*0.032*0.8);
         // find min und max
         Double_t maxRatio = 2e3;
         Double_t minRatio = 0;
@@ -603,7 +603,7 @@ void CutStudiesOverviewMerged(  TString CombineCutsName     = "CombineCuts.dat",
 
         // Plot raw yield in uppper panel
         padRawYield->cd();
-        TLegend* legendRawMeson = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*numberOfCuts, 1500*0.75*0.032);
+        TLegend* legendRawMeson = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*numberOfCuts, 1500*0.75*0.032*0.8);
         for(Int_t i = 0; i< numberOfCuts; i++){
             if(i == 0){
                 Double_t scaleFactorRaw = 5.;
@@ -683,7 +683,7 @@ void CutStudiesOverviewMerged(  TString CombineCutsName     = "CombineCuts.dat",
 
         // Plot corrected yield in upper panel
         padCorrectedYield->cd();            
-        TLegend* legendCorrectedYieldMeson = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*numberOfCuts, 1500*0.75*0.032); 
+        TLegend* legendCorrectedYieldMeson = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*numberOfCuts, 1500*0.75*0.032*0.8); 
         for(Int_t i = 0; i< numberOfCuts; i++){
             if(i == 0){
                 DrawAutoGammaMesonHistos( histoCorrectedYieldCut[i],
@@ -767,7 +767,7 @@ void CutStudiesOverviewMerged(  TString CombineCutsName     = "CombineCuts.dat",
         padEffi->cd();
         padEffi->SetLogy(1);
 
-        TLegend* legendEffiMeson = GetAndSetLegend2(0.15,0.92-1.15*0.032*numberOfCuts,0.3,0.92, 1500*0.75*0.032); 
+        TLegend* legendEffiMeson = GetAndSetLegend2(0.15,0.92-1.15*0.032*numberOfCuts,0.3,0.92, 1500*0.75*0.032*0.8); 
         for(Int_t i = 0; i< numberOfCuts; i++){
             if(i == 0){
                 DrawGammaSetMarker(histoEffiCut[i], 20, 1., color[0], color[0]);
@@ -851,7 +851,7 @@ void CutStudiesOverviewMerged(  TString CombineCutsName     = "CombineCuts.dat",
         // draw efficiency in upper panel
         padPurity->cd();
 
-        TLegend* legendPurityMeson = GetAndSetLegend2(0.15,0.92-1.15*0.032*numberOfCuts,0.3,0.92, 1500*0.75*0.032); 
+        TLegend* legendPurityMeson = GetAndSetLegend2(0.15,0.92-1.15*0.032*numberOfCuts,0.3,0.92, 1500*0.75*0.032*0.8); 
         for(Int_t i = 0; i< numberOfCuts; i++){
             if(i == 0){
                 DrawGammaSetMarker(histoPurityCut[i], 20, 1., color[0], color[0]);
@@ -936,7 +936,7 @@ void CutStudiesOverviewMerged(  TString CombineCutsName     = "CombineCuts.dat",
         // draw acceptance in upper panel
         padAcceptance->cd();
 
-        TLegend* legendAcceptMeson = GetAndSetLegend2(0.15,0.92-1.15*0.032*numberOfCuts,0.3,0.92, 1500*0.75*0.032);
+        TLegend* legendAcceptMeson = GetAndSetLegend2(0.15,0.92-1.15*0.032*numberOfCuts,0.3,0.92, 1500*0.75*0.032*0.8);
         for(Int_t i = 0; i< numberOfCuts; i++){
             if(i == 0){
                 DrawGammaSetMarker(histoAcceptanceCut[i], 20, 1., color[0], color[0]);

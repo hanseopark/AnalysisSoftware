@@ -64,10 +64,10 @@ void CorrectYield( TH1D* histoCorrectedYield,
     histoCorrectedYield->Multiply(histoPurity);
     histoCorrectedYield->Add(histoRawSecYield,-1.);
     histoCorrectedYield->Add(histoRawAddSecYieldFromK0s,-1.);
-    histoCorrectedYield->Scale(1./nEvt);
     histoCorrectedYield->Divide(histoCorrectedYield,histoEffiPt,1.,1.,"");
     histoCorrectedYield->Divide(histoCorrectedYield,histoAcceptance,1.,1.,"");
     histoCorrectedYield->Scale(1./deltaRapid);
+    histoCorrectedYield->Scale(1./nEvt);
     histoCorrectedYield->Scale(scaling);
     for (Int_t i = 1; i < histoCorrectedYield->GetNbinsX()+1 ; i++){
         Double_t newBinContent = histoCorrectedYield->GetBinContent(i)/histoCorrectedYield->GetBinCenter(i);
@@ -253,12 +253,9 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     TFile* fileCorrections                      = new TFile(fileNameCorrectionFile.Data());
     if (fileCorrections->IsZombie()) return;
     TH1F *histoEventQualityMC                   = (TH1F*)fileCorrections->Get("NEvents");
-    TH1D *histoPurityPt                         = (TH1D*)fileCorrections->Get("TruePurityMergedPt");
     TString namePurity                          = "TruePurityPi0Pt";
     if (kIsEta) namePurity                      = "TruePurityEtaPt";
     TH1D* histoMesonPurityPt                    = (TH1D*)fileCorrections->Get(namePurity.Data());
-    TH1D* histoRatioPurities = (TH1D*)histoMesonPurityPt->Clone("histoRatioPurities");
-    histoRatioPurities->Divide(histoRatioPurities,histoPurityPt,1.,1.,"B");
 
     TH1D *histoAcceptance                       = (TH1D*)fileCorrections->Get("AcceptancePt");
     
@@ -379,11 +376,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     // loading efficiency
     TH1D *histoTrueEffiPt                       = NULL;
     TH1D *histoTrueEffiPrimMesonPt              = NULL;
-    histoTrueEffiPt                             = (TH1D*)fileCorrections->Get("TrueEfficiencyMergedPt"); 
     histoTrueEffiPrimMesonPt                    = (TH1D*)fileCorrections->Get("TrueEfficiencyPrimMesonPt"); 
-    TH1D* histoRatioEffi                        = (TH1D*)histoTrueEffiPrimMesonPt->Clone("histoRatioEffi");
-    histoRatioEffi->Divide(histoRatioEffi,histoTrueEffiPt,1.,1.,"B");
-
     
     // loading MC input spectra
     TH1D* histoInputMesonPt                     = (TH1D*)fileCorrections->Get("MC_Meson_Rebin");
@@ -559,20 +552,17 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         DrawGammaCanvasSettings( canvasEffSimple, 0.065, 0.01, 0.01, 0.08);
         canvasEffSimple->SetLogy(1);
         
-        DrawAutoGammaMesonHistos(   histoTrueEffiPt, 
+        DrawAutoGammaMesonHistos(   histoTrueEffiPrimMesonPt, 
                                     "", "#it{p}_{T} (GeV/#it{c})", "#epsilon_{eff}", 
                                     kTRUE, 2., 3e-5, kFALSE,
                                     kFALSE, 0., 0.3, 
                                     kFALSE, 0., 10.);
-        histoTrueEffiPt->GetYaxis()->SetTitleOffset(0.8);        
-        DrawGammaSetMarker(histoTrueEffiPt, 20, 1., kBlack, kBlack);
-        histoTrueEffiPt->DrawCopy("e1");
-        DrawGammaSetMarker(histoTrueEffiPrimMesonPt, 24, 1., kBlue+1, kBlue+1);
-        histoTrueEffiPrimMesonPt->DrawCopy("e1,same");
+        histoTrueEffiPrimMesonPt->GetYaxis()->SetTitleOffset(0.8);        
+        DrawGammaSetMarker(histoTrueEffiPrimMesonPt, 20, 1., kBlack, kBlack);
+        histoTrueEffiPrimMesonPt->DrawCopy("e1");
         
         TLegend* legendEff = GetAndSetLegend2(0.4,0.125,0.6,0.205, 28);
         legendEff->SetMargin(0.2);
-        legendEff->AddEntry(histoTrueEffiPt,"merged cluster efficiency");            
         legendEff->AddEntry(histoTrueEffiPrimMesonPt,Form("prim. %s efficiency",textMeson.Data()));            
         legendEff->Draw();
         
@@ -583,21 +573,18 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         // plotting efficiency linearly
         canvasEffSimple->SetLogy(0);
 
-        DrawAutoGammaMesonHistos(   histoTrueEffiPt, 
+        DrawAutoGammaMesonHistos(   histoTrueEffiPrimMesonPt, 
                                     "", "#it{p}_{T} (GeV/#it{c})", "#epsilon_{eff}", 
                                     kTRUE, 0.55, 0, kFALSE,
                                     kFALSE, 0., 0.7, 
                                     kFALSE, 0., 10.);
-        histoTrueEffiPt->GetYaxis()->SetTitleOffset(0.8);        
-        DrawGammaSetMarker(histoTrueEffiPt, 20, 1., kBlack, kBlack);
+        histoTrueEffiPrimMesonPt->GetYaxis()->SetTitleOffset(0.8);        
+        DrawGammaSetMarker(histoTrueEffiPrimMesonPt, 20, 1., kBlack, kBlack);
         
-        histoTrueEffiPt->DrawCopy("e1");
-        DrawGammaSetMarker(histoTrueEffiPrimMesonPt, 24, 1., kBlue+1, kBlue+1);
-        histoTrueEffiPrimMesonPt->DrawCopy("e1,same");
+        histoTrueEffiPrimMesonPt->DrawCopy("e1");
 
         TLegend* legendEffLinY = GetAndSetLegend2(0.7,0.125,0.9,0.205, 28);
         legendEffLinY->SetMargin(0.2);
-        legendEffLinY->AddEntry(histoTrueEffiPt,"merged cluster efficiency");            
         legendEffLinY->AddEntry(histoTrueEffiPrimMesonPt,Form("prim. %s efficiency",textMeson.Data()));                    
         legendEffLinY->Draw();
         PutProcessLabelAndEnergyOnPlot(0.13, 0.95, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
@@ -605,35 +592,6 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         canvasEffSimple->SaveAs(Form("%s/%s_TrueEffSimpleLinY_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data())); 
         delete canvasEffSimple;
 
-        //*********************************************************************************
-        //************************** Efficiency Ratio merged vs pi0 merged ********************
-        //*********************************************************************************                
-        TCanvas* canvasEfficiencyRatio = new TCanvas("canvasEfficiencyRatio","",200,10,1350,900);
-        DrawGammaCanvasSettings( canvasEfficiencyRatio, 0.06, 0.015, 0.015, 0.08);
-
-        DrawAutoGammaMesonHistos( histoRatioEffi, 
-                                    "", "#it{p}_{T} (GeV/#it{c})", "#epsilon_{eff,A}/#epsilon_{eff,B}", 
-                                    kFALSE, 0.75, 3e-6, kFALSE,
-                                    kTRUE, 0.8, 1.05, 
-                                    kFALSE, 0., 10.);
-        histoRatioEffi->GetYaxis()->SetTitleOffset(0.7);        
-        DrawGammaSetMarker(histoRatioEffi, 20, 1., kAzure+2, kAzure+2); 
-        histoRatioEffi->DrawCopy("e1"); 
-        DrawGammaLines(0., maxPtMeson,1., 1.,2,kGray+2,7);
-        histoRatioEffi->DrawCopy("same,e1"); 
-        
-        TLegend* legendEfficiencyRatio = GetAndSetLegend2(0.55, 0.125, 0.85, 0.205, 28);
-        legendEfficiencyRatio->SetMargin(0.2);
-        legendEfficiencyRatio->AddEntry(histoRatioEffi,Form("prim %s Efficiency/Merged Efficiency",textMeson.Data()));
-        legendEfficiencyRatio->Draw();   
-        
-        PutProcessLabelAndEnergyOnPlot(0.125, 0.95, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
-        canvasEfficiencyRatio->Update();
-
-        canvasEfficiencyRatio->SaveAs(Form("%s/%s_%s_TrueEfficiencyRatio_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
-        delete legendEfficiencyRatio;
-        delete canvasEfficiencyRatio;
-        
         
         //*********************************************************************************
         //************************** Purity Plot ******************************************
@@ -642,20 +600,14 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         TCanvas* canvasPurity = new TCanvas("canvasPurity","",200,10,1350,900);
         DrawGammaCanvasSettings( canvasPurity, 0.06, 0.015, 0.015, 0.08);
 
-        DrawAutoGammaMesonHistos( histoPurityPt, 
+        DrawAutoGammaMesonHistos( histoMesonPurityPt, 
                                     "", "#it{p}_{T} (GeV/#it{c})", "#epsilon_{pur}", 
                                     kFALSE, 0.75, 3e-6, kFALSE,
                                     kTRUE, 0., 1, 
                                     kFALSE, 0., 10.);
-        histoPurityPt->GetYaxis()->SetTitleOffset(0.7);        
-        DrawGammaSetMarker(histoPurityPt, 20, 1., kAzure+2, kAzure+2); 
-        histoPurityPt->DrawCopy("e1"); 
-        DrawGammaSetMarker(histoMesonPurityPt, 24, 1., kRed+2, kRed+2); 
-        histoMesonPurityPt->DrawCopy("e1,same"); 
-
+        histoMesonPurityPt->GetYaxis()->SetTitleOffset(0.7);        
         TLegend* legendPurity = GetAndSetLegend2(0.5, 0.125, 0.65, 0.205, 28);
         legendPurity->SetMargin(0.2);
-        legendPurity->AddEntry(histoPurityPt,"Merged Purity");
         legendPurity->AddEntry(histoMesonPurityPt,Form("%s Purity",textMeson.Data()));
         legendPurity->Draw();   
         
@@ -665,38 +617,6 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         canvasPurity->SaveAs(Form("%s/%s_%s_TruePurity_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
         delete legendPurity;
         delete canvasPurity;
-
-        
-        //*********************************************************************************
-        //************************** Purity Ratio merged vs pi0 merged ********************
-        //*********************************************************************************        
-        
-        TCanvas* canvasPurityRatio = new TCanvas("canvasPurityRatio","",200,10,1350,900);
-        DrawGammaCanvasSettings( canvasPurityRatio, 0.06, 0.015, 0.015, 0.08);
-
-        DrawAutoGammaMesonHistos( histoRatioPurities, 
-                                    "", "#it{p}_{T} (GeV/#it{c})", "#epsilon_{pur,A}/#epsilon_{pur,B}", 
-                                    kFALSE, 0.75, 3e-6, kFALSE,
-                                    kTRUE, 0.8, 1.05, 
-                                    kFALSE, 0., 10.);
-        histoRatioPurities->GetYaxis()->SetTitleOffset(0.7);        
-        DrawGammaSetMarker(histoRatioPurities, 20, 1., kAzure+2, kAzure+2); 
-        histoRatioPurities->DrawCopy("e1"); 
-        DrawGammaLines(0., maxPtMeson,1., 1.,2,kGray+2,7);
-        histoRatioPurities->DrawCopy("same,e1"); 
-        
-        TLegend* legendPurityRatio = GetAndSetLegend2(0.65, 0.125, 0.85, 0.205, 28);
-        legendPurityRatio->SetMargin(0.2);
-        legendPurityRatio->AddEntry(histoRatioPurities,Form("%s Purity/Merged Purity",textMeson.Data()));
-        legendPurityRatio->Draw();   
-        
-        PutProcessLabelAndEnergyOnPlot(0.125, 0.95, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
-        canvasPurityRatio->Update();
-
-        canvasPurityRatio->SaveAs(Form("%s/%s_%s_TruePurityRatio_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
-        delete legendPurityRatio;
-        delete canvasPurityRatio;
-        
         
     }
      
@@ -1065,7 +985,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     //***************************  Secondary RAW Yield  *********************************************
     //***********************************************************************************************    
     if ( doubleAddFactorK0s >= 0 && nameMeson.Contains("Pi0") ){ //&& !kIsMC
-        TCanvas* canvasRAWYieldSec = new TCanvas("canvasRAWYieldSec","",200,10,1350,900);  // gives the page size
+        TCanvas* canvasRAWYieldSec              = new TCanvas("canvasRAWYieldSec","",200,10,1350,900);  // gives the page size
         DrawGammaCanvasSettings( canvasRAWYieldSec, 0.07, 0.01, 0.02, 0.08); 
         canvasRAWYieldSec->SetLogy(1);
         DrawAutoGammaMesonHistos( histoUnCorrectedYieldDrawing, 
@@ -1077,18 +997,21 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         histoUnCorrectedYieldDrawing->GetYaxis()->SetTitleOffset(0.8);
         DrawGammaSetMarker(histoUnCorrectedYieldDrawing, 20, 1., kBlack, kBlack);
         histoUnCorrectedYieldDrawing->Draw("e1");
-        histoYieldSecMeson->Scale(1./nEvt);
-        DrawGammaSetMarker(histoYieldSecMeson, 20, 1., kBlue, kBlue);
-        histoYieldSecMeson->DrawCopy("same,e1");  
-        histoYieldSecFromK0SMeson->Scale(1./nEvt);
-        DrawGammaSetMarker(histoYieldSecFromK0SMeson, 24, 1., kCyan, kCyan);  
-        histoYieldSecFromK0SMeson->DrawCopy("same,e1");  
+        
+        TH1D* histoYieldSecMesonDrawing         = (TH1D*)histoYieldSecMeson->Clone();
+        histoYieldSecMesonDrawing->Scale(1./nEvt);
+        DrawGammaSetMarker(histoYieldSecMesonDrawing, 20, 1., kBlue, kBlue);
+        histoYieldSecMesonDrawing->DrawCopy("same,e1");  
+        TH1D* histoYieldSecFromK0SMesonDrawing  = (TH1D*)histoYieldSecFromK0SMeson->Clone();
+        histoYieldSecFromK0SMesonDrawing->Scale(1./nEvt);
+        DrawGammaSetMarker(histoYieldSecFromK0SMesonDrawing, 24, 1., kCyan, kCyan);  
+        histoYieldSecFromK0SMesonDrawing->DrawCopy("same,e1");  
 
-        TLegend* legendSecRAWYield = GetAndSetLegend2(0.63, 0.8, 0.93, 0.93, 28);
+        TLegend* legendSecRAWYield              = GetAndSetLegend2(0.63, 0.8, 0.93, 0.93, 28);
         legendSecRAWYield->SetMargin(0.12);
         legendSecRAWYield->AddEntry(histoUnCorrectedYieldDrawing,"RAW yield");
-        legendSecRAWYield->AddEntry(histoYieldSecMeson,"total secondaries");
-        legendSecRAWYield->AddEntry(histoYieldSecFromK0SMeson,"additional secondaries from K^{0}_{s}");
+        legendSecRAWYield->AddEntry(histoYieldSecMesonDrawing,"total secondaries");
+        legendSecRAWYield->AddEntry(histoYieldSecFromK0SMesonDrawing,"additional secondaries from K^{0}_{s}");
         legendSecRAWYield->Draw();
 
         PutProcessLabelAndEnergyOnPlot(0.13, 0.94, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
@@ -1096,23 +1019,20 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         canvasRAWYieldSec->Update();
         canvasRAWYieldSec->SaveAs(Form("%s/%s_%s_RAWYieldSecPt_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
         delete canvasRAWYieldSec;
-    } 
+    }
     
     //***********************************************************************************************
     //*********************************** correction for yield **************************************
     //***********************************************************************************************
     cout << "calculating corrected yield" << endl;    
     
-    TH1D* histoCorrectedYieldTrue = (TH1D*)histoUnCorrectedYield->Clone();
+    TH1D* histoCorrectedYieldTrue       = (TH1D*)histoUnCorrectedYield->Clone();
     histoCorrectedYieldTrue->SetName("CorrectedYieldTrueEff");
-    TH1D* histoCorrectedYieldTrueAlter = (TH1D*)histoUnCorrectedYield->Clone();
-    histoCorrectedYieldTrueAlter->SetName("CorrectedYieldTrueEff");
     
     CorrectYield(histoCorrectedYieldTrue, histoMesonPurityPt, histoYieldSecMeson, histoYieldSecFromK0SMeson, histoTrueEffiPrimMesonPt, histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
-    CorrectYield(histoCorrectedYieldTrueAlter, histoPurityPt, histoYieldSecMeson, histoYieldSecFromK0SMeson, histoTrueEffiPt, histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
     
-    histoCorrectedYieldTrue->Multiply(histoRatioEffi);
-    histoCorrectedYieldTrue->Divide(histoCorrectedYieldTrue,histoRatioPurities,1,1,"B");
+//     histoCorrectedYieldTrue->Multiply(histoRatioEffi);
+//     histoCorrectedYieldTrue->Divide(histoCorrectedYieldTrue,histoRatioPurities,1,1,"B");
     
     // **************************************************************************************
     // ************** Plot corrected yield with differnt yield extraction methods ***********
@@ -1141,16 +1061,13 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
                                 kFALSE, 0., 10.);
     DrawGammaSetMarker(histoCorrectedYieldTrue, 20, 1., kBlack, kBlack);  
     histoCorrectedYieldTrue->DrawCopy("e1");  
-    DrawGammaSetMarker(histoCorrectedYieldTrueAlter, 24, 1., kAzure+2, kAzure+2);  
-    histoCorrectedYieldTrueAlter->DrawCopy("same,e1");  
 //     DrawGammaSetMarker(histoMCYieldMeson, 24, 1., kRed+2, kRed+2);  
 //     histoMCYieldMeson->DrawCopy("same,e1");  
 
     TLegend* legendYield3 = GetAndSetLegend2(0.15, 0.03, 0.66, 0.19, 28);
     legendYield3->SetMargin(0.15);
     legendYield3->AddEntry(histoCorrectedYieldTrue,"corrected yield");
-    legendYield3->AddEntry(histoCorrectedYieldTrueAlter,"corrected yield, altern. corr facs");
-//     legendYield3->AddEntry(histoMCYieldMeson,"corrected yield, altern. corr facs");
+//     legendYield3->AddEntry(histoMCYieldMeson,"MC input yield");
     legendYield3->Draw();
 
     PutProcessLabelAndEnergyOnPlot(0.62, 0.95, 0.03, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data());
@@ -1159,11 +1076,9 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     padCorrectedYieldRatios->SetTickx();
     padCorrectedYieldRatios->SetTicky();
     padCorrectedYieldRatios->SetLogy(0);
-    TH1D *ratioTrue = (TH1D*) histoCorrectedYieldTrue->Clone(); 
+    TH1D *ratioTrue         = (TH1D*) histoCorrectedYieldTrue->Clone(); 
     ratioTrue->Divide(ratioTrue,histoCorrectedYieldTrue,1.,1.,"");
-    TH1D *ratioTrueAlter = (TH1D*) histoCorrectedYieldTrueAlter->Clone(); 
-    ratioTrueAlter->Divide(ratioTrueAlter,histoCorrectedYieldTrue,1.,1.,"");
-    TH1D *ratioTrueMCInput = (TH1D*) histoMCYieldMeson->Clone();
+    TH1D *ratioTrueMCInput  = (TH1D*) histoMCYieldMeson->Clone();
     ratioTrueMCInput->Divide(histoMCYieldMeson, histoCorrectedYieldTrue,1.,1.,"");
 
     ratioTrue->SetYTitle("#frac{modified}{standard}"); 
@@ -1173,8 +1088,6 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     ratioTrue->DrawCopy("p,e1");  
 //     DrawGammaSetMarker(ratioTrueMCInput, 24, 1., kRed+2, kRed+2); 
 //     ratioTrueMCInput->DrawCopy("same,p,e1");  
-    DrawGammaSetMarker(ratioTrueAlter, 24, 1., kAzure+2, kAzure+2); 
-    ratioTrueAlter->DrawCopy("same,p,e1");  
     
     canvasCorrecftedYield->Update();
     canvasCorrecftedYield->SaveAs(Form("%s/%s_%s_CorrectedYield_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
@@ -1195,14 +1108,11 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         histoCorrectedYieldTrue->DrawCopy("e1");  
         DrawGammaSetMarker(histoMCYieldMeson, 24, 1., kRed+2, kRed+2);  
         histoMCYieldMeson->DrawCopy("e1,same"); 
-        DrawGammaSetMarker(histoCorrectedYieldTrueAlter, 24, 1., kAzure+2, kAzure+2);  
-        histoCorrectedYieldTrueAlter->DrawCopy("same,e1");  
         
         cout << "here" << endl; 
         TLegend* legendYield4 = GetAndSetLegend2(0.15, 0.03, 0.66, 0.19, 28);
         legendYield4->SetMargin(0.15);
         legendYield4->AddEntry(histoCorrectedYieldTrue,"corr true eff");
-        legendYield4->AddEntry(histoCorrectedYieldTrueAlter,"corrected yield, altern. corr facs");
         legendYield4->AddEntry(histoMCYieldMeson,"MC input (possibly weighted)");
         legendYield4->Draw();
 
@@ -1219,9 +1129,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         ratioTrue->SetFillColor(kGray+2);
         ratioTrue->SetFillStyle(1);
         ratioTrue->DrawCopy("p,e2");
-        DrawGammaSetMarker(ratioTrueAlter, 24, 1., kAzure+2, kAzure+2); 
-        ratioTrueAlter->DrawCopy("same,p,e1");  
-                
+        
         DrawGammaSetMarker(ratioTrueMCInput, 24, 1., kRed+2, kRed+2);
         ratioTrueMCInput->DrawCopy("e1,same"); 
 
@@ -1240,7 +1148,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     const char* nameOutput = Form("%s/%s/%s_%s_GammaMergedCorrection%s_%s.root",fCutSelection.Data(),optionEnergy.Data(),nameMeson.Data(),prefix2.Data(),optionPeriod.Data(),fCutSelection.Data());
     TFile* correctedOutput = new TFile(nameOutput,"RECREATE");  
 
-    if (histoCorrectedYieldTrue)            histoCorrectedYieldTrue->Write();
+    if (histoCorrectedYieldTrue)            histoCorrectedYieldTrue->Write("CorrectedYieldTrueEff");
     
     if (histoYieldSecMeson)                 histoYieldSecMeson->Write();
     if (histoYieldSecFromK0SMeson)          histoYieldSecFromK0SMeson->Write();
@@ -1248,10 +1156,8 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     if (histoUnCorrectedYield)              histoUnCorrectedYield->Write();
 
     if (histoAcceptance)                    histoAcceptance->Write();
-    if (histoTrueEffiPt)                    histoTrueEffiPt->Write("TrueMesonEffiPt");
-    if (histoTrueEffiPrimMesonPt)           histoTrueEffiPrimMesonPt->Write();
-    if (histoPurityPt)                      histoPurityPt->Write();
-    if (histoMesonPurityPt)                 histoMesonPurityPt->Write();
+    if (histoTrueEffiPrimMesonPt)           histoTrueEffiPrimMesonPt->Write("PrimaryMesonEfficiency");
+    if (histoMesonPurityPt)                 histoMesonPurityPt->Write("MesonPurity");
     if (histoEventQuality)                  histoEventQuality->Write();
     if (histoInputMesonPt)                  histoInputMesonPt->Write();
     if (histoMCYieldMeson)                  histoMCYieldMeson->Write();

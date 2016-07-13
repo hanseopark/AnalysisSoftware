@@ -660,40 +660,125 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         canvasPtM02->SaveAs(Form("%s/%s_%s_EVsM02_AllAcceptedMesons%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
     
-//     //******************************************************************************************
-//     //******************** Plotting 2D M02 vs Pt validated merged clusters *********************
-//     //******************************************************************************************        
-//     if (fHistoTrueClustersMergedPtM02 && fHistoTrueClusPartConvMergedPtM02){
-//         fHistoTrueClustersMergedPtM02->Sumw2();
-//         fHistoTrueClusPartConvMergedPtM02->Sumw2();
-//         TH2F* dumm2D = (TH2F*)fHistoTrueClustersMergedPtM02->Clone("forplotting");
-//         dumm2D->Add(fHistoTrueClusPartConvMergedPtM02);
-//         
-//         dumm2D->Scale(1./fNEvents);
-//         DrawAutoGammaHistoPaper2D(dumm2D,
-//                                 " ",
-//                                 "#it{p}_{T} (GeV/#it{c})",
-//                                 "#lambda_{0}^{2}",
-//                                 0,0,0,
-//                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
-//                                 1,minPtPlotting, maxPtPlotting,0.8,0.8);
-//         dumm2D->GetXaxis()->SetMoreLogLabels();
-//         dumm2D->GetXaxis()->SetLabelOffset(-0.02);
-//         dumm2D->GetZaxis()->SetLabelOffset(-0.008);
-//         dumm2D->GetZaxis()->SetLabelSize(0.051);
-//         dumm2D->GetZaxis()->SetRangeUser(minZM02,maxZM02);
-//         dumm2D->GetXaxis()->SetTickLength(0.05);
-//         dumm2D->DrawCopy("COLZ");
-//         PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
-//         
-//         TLatex *labelM02 = new TLatex(0.11, 0.15, "val. merged clusters");
-//         SetStyleTLatex( labelM02, 0.05,4);
-//         labelM02->Draw();
-//         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
-//         
-//         canvasPtM02->Update();
-//         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueMerged%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
-//     }
+    //******************************************************************************************
+    //************** Plotting 2D M02 vs Pt validated merged clusters part conv *****************
+    //******************************************************************************************        
+    if (fHistoTrueClusPartConvMergedPtM02){
+        fHistoTrueClusPartConvMergedPtM02->Scale(1./fNEvents);
+        DrawAutoGammaHistoPaper2D(fHistoTrueClusPartConvMergedPtM02,
+                                " ",
+                                "#it{p}_{T} (GeV/#it{c})",
+                                "#lambda_{0}^{2}",
+                                0,0,0,
+                                1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
+                                1,minPtPlotting, maxPtPlotting,0.8,0.8);
+        fHistoTrueClusPartConvMergedPtM02->GetXaxis()->SetMoreLogLabels();
+        fHistoTrueClusPartConvMergedPtM02->GetXaxis()->SetLabelOffset(-0.02);
+        fHistoTrueClusPartConvMergedPtM02->GetZaxis()->SetLabelOffset(-0.008);
+        fHistoTrueClusPartConvMergedPtM02->GetZaxis()->SetLabelSize(0.051);
+        fHistoTrueClusPartConvMergedPtM02->GetZaxis()->SetRangeUser(minZM02,maxZM02);
+        fHistoTrueClusPartConvMergedPtM02->GetXaxis()->SetTickLength(0.05);
+        fHistoTrueClusPartConvMergedPtM02->DrawCopy("COLZ");
+        PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
+        
+        TLatex *labelM02 = new TLatex(0.11, 0.15, "val. merged clusters, part conv");
+        SetStyleTLatex( labelM02, 0.05,4);
+        labelM02->Draw();
+        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
+        
+        canvasPtM02->Update();
+        canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueMergedPartConv%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
+    }
+
+    //******************************************************************************************
+    //************** Plotting 2D M02 vs Pt validated merged clusters part conv *****************
+    //******************************************************************************************        
+    if (fHistoTrueClusPureMergedPtM02){
+        fHistoTrueClusPureMergedPtM02->Scale(1./fNEvents);
+        DrawAutoGammaHistoPaper2D(fHistoTrueClusPureMergedPtM02,
+                                " ",
+                                "#it{p}_{T} (GeV/#it{c})",
+                                "#lambda_{0}^{2}",
+                                0,0,0,
+                                1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
+                                1,minPtPlotting, maxPtPlotting,0.8,0.8);
+        fHistoTrueClusPureMergedPtM02->GetXaxis()->SetMoreLogLabels();
+        fHistoTrueClusPureMergedPtM02->GetXaxis()->SetLabelOffset(-0.02);
+        fHistoTrueClusPureMergedPtM02->GetZaxis()->SetLabelOffset(-0.008);
+        fHistoTrueClusPureMergedPtM02->GetZaxis()->SetLabelSize(0.051);
+        fHistoTrueClusPureMergedPtM02->GetZaxis()->SetRangeUser(minZM02,maxZM02);
+        fHistoTrueClusPureMergedPtM02->GetXaxis()->SetTickLength(0.05);
+        fHistoTrueClusPureMergedPtM02->DrawCopy("COLZ");
+        PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
+        
+        TLatex *labelM02 = new TLatex(0.11, 0.15, "val. merged clusters, pure");
+        SetStyleTLatex( labelM02, 0.05,4);
+        labelM02->Draw();
+        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
+        
+        canvasPtM02->Update();
+        canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueMergedPure%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
+    }
+
+    //******************************************************************************************
+    //********** Plotting 2D M02 vs Pt validated merged clusters one decay gamma ***************
+    //******************************************************************************************        
+    if (fHistoTrueClusOneGammaPtM02){
+        fHistoTrueClusOneGammaPtM02->Scale(1./fNEvents);
+        DrawAutoGammaHistoPaper2D(fHistoTrueClusOneGammaPtM02,
+                                " ",
+                                "#it{p}_{T} (GeV/#it{c})",
+                                "#lambda_{0}^{2}",
+                                0,0,0,
+                                1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
+                                1,minPtPlotting, maxPtPlotting,0.8,0.8);
+        fHistoTrueClusOneGammaPtM02->GetXaxis()->SetMoreLogLabels();
+        fHistoTrueClusOneGammaPtM02->GetXaxis()->SetLabelOffset(-0.02);
+        fHistoTrueClusOneGammaPtM02->GetZaxis()->SetLabelOffset(-0.008);
+        fHistoTrueClusOneGammaPtM02->GetZaxis()->SetLabelSize(0.051);
+        fHistoTrueClusOneGammaPtM02->GetZaxis()->SetRangeUser(minZM02,maxZM02);
+        fHistoTrueClusOneGammaPtM02->GetXaxis()->SetTickLength(0.05);
+        fHistoTrueClusOneGammaPtM02->DrawCopy("COLZ");
+        PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
+        
+        TLatex *labelM02 = new TLatex(0.11, 0.15, "val. merged clusters, 1 #gamma from decay");
+        SetStyleTLatex( labelM02, 0.05,4);
+        labelM02->Draw();
+        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
+        
+        canvasPtM02->Update();
+        canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueMergedOneDecayGamma%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
+    }
+
+    //******************************************************************************************
+    //******** Plotting 2D M02 vs Pt validated merged clusters one electron from decay *********
+    //******************************************************************************************        
+    if (fHistoTrueClusOneElectronPtM02){
+        fHistoTrueClusOneElectronPtM02->Scale(1./fNEvents);
+        DrawAutoGammaHistoPaper2D(fHistoTrueClusOneElectronPtM02,
+                                " ",
+                                "#it{p}_{T} (GeV/#it{c})",
+                                "#lambda_{0}^{2}",
+                                0,0,0,
+                                1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
+                                1,minPtPlotting, maxPtPlotting,0.8,0.8);
+        fHistoTrueClusOneElectronPtM02->GetXaxis()->SetMoreLogLabels();
+        fHistoTrueClusOneElectronPtM02->GetXaxis()->SetLabelOffset(-0.02);
+        fHistoTrueClusOneElectronPtM02->GetZaxis()->SetLabelOffset(-0.008);
+        fHistoTrueClusOneElectronPtM02->GetZaxis()->SetLabelSize(0.051);
+        fHistoTrueClusOneElectronPtM02->GetZaxis()->SetRangeUser(minZM02,maxZM02);
+        fHistoTrueClusOneElectronPtM02->GetXaxis()->SetTickLength(0.05);
+        fHistoTrueClusOneElectronPtM02->DrawCopy("COLZ");
+        PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
+        
+        TLatex *labelM02 = new TLatex(0.11, 0.15, "val. merged clusters, 1 e^{+/-} from decay");
+        SetStyleTLatex( labelM02, 0.05,4);
+        labelM02->Draw();
+        if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
+        
+        canvasPtM02->Update();
+        canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueMergedOneDecayElectron%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
+    }
     
     //******************************************************************************************
     //******************** Plotting 2D M02 vs Pt validated merged pi0s *************************
