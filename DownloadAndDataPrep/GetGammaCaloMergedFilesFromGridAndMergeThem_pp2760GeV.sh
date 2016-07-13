@@ -372,7 +372,7 @@ fi
 # LHC13gData="1638"; 
 
 
-# TRAINDIR=Legotrain-mCalo-20160629_V2Clus
+TRAINDIR=Legotrain-mCalo-20160629_V2Clus
 # LHC11aData="1654"; 
 # LHC11aData="1655"; 
 # LHC11aData="1656"; 
@@ -381,6 +381,7 @@ fi
 # LHC15g1aMC="2219";
 # LHC15g1bMC="2191";
 
+LHC13gData="1707";
 # LHC13gData="1657"; 
 # LHC13gData="1658"; 
 # LHC13gData="1659"; 
@@ -392,13 +393,42 @@ fi
 # LHC15a3aplusMC="2218"; 
 # LHC15a3bMC="2189"; 
 
-TRAINDIR=Legotrain-mCalo-20160629_V1Clus
-# LHC11aData="1639"; 
-# LHC15g1aMC="2224";
+
+
+# TRAINDIR=Legotrain-mCalo-20160629_V1Clus
+# # LHC11aData="1639"; 
+# # LHC15g1aMC="2224";
+# # 
+# LHC13gData="1640"; 
+# LHC15a3aMC="2222"; 
+# LHC15a3aplusMC="2223"; 
+
+# TRAINDIR=Legotrain-mCalo-20160702_V2ClusNewDefault
+# LHC11aData="1674"; 
+# LHC15g1aMC="2244";
 # 
-LHC13gData="1640"; 
-LHC15a3aMC="2222"; 
-LHC15a3aplusMC="2223"; 
+# LHC13gData="1675"; 
+# # LHC15a3aMC="2245"; 
+# LHC15a3aMC="2246"; 
+# # LHC15a3aplusMC="2247"; 
+# LHC15a3aplusMC="2248"; 
+
+# TRAINDIR=Legotrain-mCalo-20160705_V2newSys
+# LHC11aData="1677"; 
+# LHC15g1aMC="2253";
+# LHC15g1aMC="2254";
+
+# LHC13gData="1705"; 
+# LHC13gData="1706"; 
+# LHC13gData="1679"; 
+# LHC15a3aMC="2255"; 
+# LHC15a3aMC="2256"; 
+# LHC15a3aMC="2257"; 
+# LHC15a3aMC="2258"; 
+# LHC15a3aplusMC="2259"; 
+# LHC15a3aplusMC="2260"
+# LHC15a3aplusMC="2261"
+# LHC15a3aplusMC="2262"
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
@@ -444,12 +474,12 @@ if [ $2 = "LHC11a" ]; then
         if [ $HAVELHC11a == 1 ]; then
             echo "downloading LHC11a"
             CopyFileIfNonExisitent $OUTPUTDIR_LHC11a "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC11aData/merge_runlist_1"
-            runNumbers=`cat runNumbersLHC11a_pass4_wSDD.txt`
-            echo $runNumbers
-            for runNumber in $runNumbers; do
-                echo $runNumber
-                CopyFileIfNonExisitent $OUTPUTDIR_LHC11a/$runNumber "/alice/data/2011/LHC11a/000$runNumber/ESDs/pass4_with_SDD/PWGGA/GA_pp/$LHC11aData"
-            done;
+#             runNumbers=`cat runNumbersLHC11a_pass4_wSDD.txt`
+#             echo $runNumbers
+#             for runNumber in $runNumbers; do
+#                 echo $runNumber
+#                 CopyFileIfNonExisitent $OUTPUTDIR_LHC11a/$runNumber "/alice/data/2011/LHC11a/000$runNumber/ESDs/pass4_with_SDD/PWGGA/GA_pp/$LHC11aData"
+#             done;
         fi    
         if [ $HAVELHC15g1a == 1 ]; then
             echo "downloading LHC15g1a"
@@ -632,12 +662,10 @@ elif [ $2 = "LHC13g" ]; then
             CopyFileIfNonExisitent $OUTPUTDIR_LHC13g "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC13gData/merge"
             runNumbers=`cat runNumbersLHC13g_pass1.txt`
             echo $runNumbers
-            for runNumber in $runNumbers; do
-                echo $runNumber    
-                CopyFileIfNonExisitent $OUTPUTDIR_LHC13g/$runNumber "/alice/data/2013/LHC13g/000$runNumber/pass1/PWGGA/GA_pp/$LHC13gData"
-            done;
-            
-            
+#             for runNumber in $runNumbers; do
+#                 echo $runNumber    
+#                 CopyFileIfNonExisitent $OUTPUTDIR_LHC13g/$runNumber "/alice/data/2013/LHC13g/000$runNumber/pass1/PWGGA/GA_pp/$LHC13gData"
+#             done;            
         fi    
         
         if [ $HAVELHC15a3a == 1 ]; then
