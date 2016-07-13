@@ -393,52 +393,42 @@ Int_t fBinsPi0900GeVDirectPhotonPtRebin[7]      = { 4, 2, 2, 2, 2,
                                                     2, 4};
                                                 
 //******************** Pt binning for pp, 13 TeV ***************************************************
-//Double_t fBinsPi013TeVPt[21]                  = { 0.0, 0.4, 0.6, 0.8, 1.0,         
+//Double_t fBinsPi013TeVPt[17]                  = { 0.0, 0.4, 0.6, 0.8, 1.0,
 //                                                  1.2, 1.4, 1.6, 1.8, 2.0, 
 //                                                  2.2, 2.5, 2.9, 3.0, 3.5,
-//                                                  5.0, 10.0, 16.0, 18.0, 20.0, 22.0};     //Pi0 single period binning
-Double_t fBinsPi013TeVPt[21]                    = { 0.0, 0.4, 0.6, 0.8, 1.0,         
-                                                    1.2, 1.4, 1.6, 1.8, 2.0, 
-                                                    2.2, 2.4, 2.6, 2.9, 3.3, 
-                                                    3.9, 5.1, 6.5, 8.0, 11.0, 
+//                                                  5.0, 10.0};                             //Pi0 single period binning
+Double_t fBinsPi013TeVPt[21]                    = { 0.0, 0.4, 0.6, 0.8, 1.0,
+                                                    1.2, 1.4, 1.6, 1.8, 2.0,
+                                                    2.2, 2.4, 2.6, 2.9, 3.3,
+                                                    3.9, 5.1, 6.5, 8.0, 11.0,
                                                     16.0};                                  //Pi0 merged period binning (3 periods)
-Int_t fBinsPi013TeVPtRebin[24]                  = { 4, 4, 2, 2, 2,                                 // Rebinning Pi0
+Int_t fBinsPi013TeVPtRebin[24]                  = { 4, 4, 2, 2, 2,                          // Rebinning Pi0
                                                     2, 2, 2, 2, 2, 
                                                     2, 2, 2, 2, 2, 
                                                     2, 4, 4, 4, 8,
                                                     8, 8, 8, 8};
-
-//Double_t fBinsPi013TeVPtDCA[21]               = { 0.0, 0.4, 0.6, 0.8, 1.0,              	//Pi0 single period DCA binning     
-//                                                  1.2, 1.4, 1.6, 1.8, 2.0, 
-//                                                  2.2, 2.5, 2.9, 3.0, 3.5,
-//                                                  5.0, 10.0, 16.0, 18.0, 20.0, 
-//                                                  22.0};
-
-Double_t fBinsPi013TeVPtDCA[21]                 = { 0.0, 0.4, 0.6, 0.8, 1.0,         
-                                                    1.2, 1.4, 1.6, 1.8, 2.0, 
-                                                    2.2, 2.4, 2.6, 2.9, 3.3, 
-                                                    3.9, 5.1, 6.5, 8.0, 11.0, 
+//Double_t fBinsPi013TeVPtDCA[9]                = { 0.0, 0.4, 0.7, 1.0,              	    //Pi0 single period DCA binning
+//                                                  1.3, 1.7, 2.5, 4.0,
+//						    8.0};
+Double_t fBinsPi013TeVPtDCA[21]                 = { 0.0, 0.4, 0.6, 0.8, 1.0,
+                                                    1.2, 1.4, 1.6, 1.8, 2.0,
+                                                    2.2, 2.4, 2.6, 2.9, 3.3,
+                                                    3.9, 5.1, 6.5, 8.0, 11.0,
                                                     16.0};                                  //Pi0 merged period DCA binning (3 periods)
 
-//Double_t fBinsEta13TeVPt[14]                  = { 0., 0.5, 1.5, 2.0, 3.0,                 // Eta binning for 1 period  
-//                                                  4.0, 6.0, 8.0, 10., 12.5,
-//                                                  15., 20., 25., 30. };
-
-Double_t fBinsEta13TeVPt[14]                    = { 0.0, 0.5, 1.0, 1.5, 2.0,                // Eta binning for 3 merged periods        
-                                                    2.5, 3.0, 3.5, 4.0, 5.0, 
-                                                    6.0, 7.0, 9.0, 12.0};
-
+Double_t fBinsEta13TeVPt[8]                     = { 0., 0.4, 1.1, 1.6, 2.0, 3.0,            // Eta binning for LHC15f
+						    4.0, 6.0};
+//Double_t fBinsEta13TeVPt[5]                   = { 0., 0.4, 2., 3., 6.};                   // Eta binning for low B LHC15g
+//Double_t fBinsEta13TeVPt[14]                  = { 0.0, 0.4, 1.0, 1.5, 2.0,                // Eta binning for LHC15f+LHC15h+LHC15i
+//                                                  2.5, 3.0, 3.5, 4.0, 5.0,
+//                                                  6.0, 7.0, 9.0, 12.0};
 Int_t fBinsEta13TeVPtRebin[13]                  = { 8, 8, 5, 5, 5,                          // Rebinning Eta
                                                     5, 8, 8, 8, 8,
                                                     10, 10, 10};
-
-//Double_t fBinsEta13TeVPtDCA[14]               = { 0., 0.5, 1.5, 2.0, 3.0,                 // Eta DCA binning for 1 period  
-//                                                  4.0, 6.0, 8.0, 10., 12.5,
-//                                                  15., 20., 25., 30. };
-
-Double_t fBinsEta13TeVPtDCA[14]                 = { 0.0, 0.5, 1.0, 1.5, 2.0,                // Eta DCA binning for 3 merged periods        
-                                                    3.0, 5.0, 7.0, 12.0, 13.0,
-                                                    14.0, 15.0, 16.0, 20.0};
+Double_t fBinsEta13TeVPtDCA[6]                  = { 0., 0.4, 1.1, 1.6,                      // Eta DCA binning for LHC15f
+                                                    2.2, 4.0};
+//Double_t fBinsEta13TeVPtDCA[9]                = { 0.0, 0.4, 1.0, 1.5, 2.0,                // Eta DCA binning forLHC15f+LHC15h+LHC15i
+//                                                  3.0, 5.0, 7.0, 12.0};
 
 Int_t fBinsPi0EtaBinning13TeVPtRebin[13]        = { 8, 2, 2, 2, 2,                          // rebinning Pi0EtaBinning
                                                     2, 2, 4, 4, 4,
