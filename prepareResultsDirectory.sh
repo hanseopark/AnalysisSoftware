@@ -19,6 +19,7 @@ mkdir FinalResults
 mkdir CocktailInput
 mkdir RooUnfold
 mkdir DownloadAndDataPrep
+mkdir ToyModels
 
 ln -sf $PHOTONCONVDIR/SystematicErrorsNew/* SystematicErrorsNew/
 ln -sf $PHOTONCONVDIR/CommonHeaders/*.h CommonHeaders/
@@ -33,6 +34,7 @@ ln -sf $PHOTONCONVDIR/FinalResults/* FinalResults/
 ln -sf $PHOTONCONVDIR/CocktailInput/* CocktailInput/
 ln -sf $PHOTONCONVDIR/RooUnfold/* RooUnfold/
 ln -sf $PHOTONCONVDIR/DownloadAndDataPrep/* DownloadAndDataPrep/
+ln -sf $PHOTONCONVDIR/ToyModels/* ToyModels/
 
 if [ $1 = "dmuhlhei" ]; then 
 	ln -sf $PHOTONCONVDIR/DataQA DataQA

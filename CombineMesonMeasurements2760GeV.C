@@ -4663,7 +4663,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         graphEMCALMergedPi0InvXSectionStat->Write("graphInvCrossSectionPi0EMCALMerged2760GeVStatErr");
         graphEMCALMergedPi0InvXSectionSys->Write("graphInvCrossSectionPi0EMCALMerged2760GeVSysErr");
         // Final spectrum correlations Method A
-        graphCombPi0InvXSectionTotA->Write("graphInvCrossSectionPi0Comb2760GeVA");
+        graphCombPi0InvXSectionTotA->Write("graphInvCrossSectionPi0Comb2760GeVATotErr");
         graphCombPi0InvXSectionStatA->Write("graphInvCrossSectionPi0Comb2760GeVAStatErr");
         graphCombPi0InvXSectionSysA->Write("graphInvCrossSectionPi0Comb2760GeVASysErr");  
 
@@ -4687,7 +4687,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
             if (graphEMCALMergedPi0InvXSectionStat_yShifted) graphEMCALMergedPi0InvXSectionStat_yShifted->Write("graphInvCrossSectionPi0EMCALMerged2760GeVStatErr_yShifted");
             if (graphEMCALMergedPi0InvXSectionSys_yShifted) graphEMCALMergedPi0InvXSectionSys_yShifted->Write("graphInvCrossSectionPi0EMCALMerged2760GeVSysErr_yShifted");
             // Final spectrum correlations Method A
-            if(graphCombPi0InvXSectionTotA_yShifted)graphCombPi0InvXSectionTotA_yShifted->Write("graphInvCrossSectionPi0Comb2760GeVA_yShifted");
+            if(graphCombPi0InvXSectionTotA_yShifted)graphCombPi0InvXSectionTotA_yShifted->Write("graphInvCrossSectionPi0Comb2760GeVATotErr_yShifted");
             if(graphCombPi0InvXSectionStatA_yShifted)graphCombPi0InvXSectionStatA_yShifted->Write("graphInvCrossSectionPi0Comb2760GeVAStatErr_yShifted");
             if(graphCombPi0InvXSectionSysA_yShifted)graphCombPi0InvXSectionSysA_yShifted->Write("graphInvCrossSectionPi0Comb2760GeVASysErr_yShifted");  
 
@@ -4732,7 +4732,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         graphPCMEMCALEtaInvXSectionStat->Write("graphInvCrossSectionEtaPCMEMCAL2760GeVStatErr");
         graphPCMEMCALEtaInvXSectionSys->Write("graphInvCrossSectionEtaPCMEMCAL2760GeVSysErr");
         // Final spectrum correlations Method A
-        graphCombEtaInvXSectionTotA->Write("graphInvCrossSectionEtaComb2760GeVA");
+        graphCombEtaInvXSectionTotA->Write("graphInvCrossSectionEtaComb2760GeVATotErr");
         graphCombEtaInvXSectionStatA->Write("graphInvCrossSectionEtaComb2760GeVAStatErr");
         graphCombEtaInvXSectionSysA->Write("graphInvCrossSectionEtaComb2760GeVASysErr");  
     
@@ -4751,11 +4751,22 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
             if(graphPCMEMCALEtaInvXSectionStat_yShifted)graphPCMEMCALEtaInvXSectionStat_yShifted->Write("graphInvCrossSectionEtaPCMEMCAL2760GeVStatErr_yShifted");
             if(graphPCMEMCALEtaInvXSectionSys_yShifted)graphPCMEMCALEtaInvXSectionSys_yShifted->Write("graphInvCrossSectionEtaPCMEMCAL2760GeVSysErr_yShifted");
             // Final spectrum correlations Method A
-            if(graphCombEtaInvXSectionTotA_yShifted)graphCombEtaInvXSectionTotA_yShifted->Write("graphInvCrossSectionEtaComb2760GeVA_yShifted");
+            if(graphCombEtaInvXSectionTotA_yShifted)graphCombEtaInvXSectionTotA_yShifted->Write("graphInvCrossSectionEtaComb2760GeVATotErr_yShifted");
             if(graphCombEtaInvXSectionStatA_yShifted)graphCombEtaInvXSectionStatA_yShifted->Write("graphInvCrossSectionEtaComb2760GeVAStatErr_yShifted");
             if(graphCombEtaInvXSectionSysA_yShifted)graphCombEtaInvXSectionSysA_yShifted->Write("graphInvCrossSectionEtaComb2760GeVASysErr_yShifted");  
         }    
 
+        histoPCMEtaToPi0Stat->Write("histoRatioEtaToPi0PCM2760GeVStatErr");
+        graphPCMEtaToPi0Sys->Write("graphRatioEtaToPi0PCM2760GeVSysErr");
+        histoEMCALEtaToPi0Stat->Write("histoRatioEtaToPi0EMCAL2760GeVStatErr");
+        graphEMCALEtaToPi0Sys->Write("graphRatioEtaToPi0EMCAL2760GeVSysErr");
+        histoPCMEMCALEtaToPi0Stat->Write("histoRatioEtaToPi0PCMEMCAL2760GeVStatErr");
+        graphPCMEMCALEtaToPi0Sys->Write("graphRatioEtaToPi0PCMEMCAL2760GeVSysErr");
+        graphCombEtaToPi0TotA->Write("graphRatioEtaToPi0Comb2760GeVTotErr");
+        graphCombEtaToPi0StatA->Write("graphRatioEtaToPi0Comb2760GeVStatErr");
+        graphCombEtaToPi0SysA->Write("graphRatioEtaToPi0Comb2760GeVSysErr");
+
+        
         directoryEta->mkdir("Supporting");
         directoryEta->cd("Supporting");
             // Writing full correction factors

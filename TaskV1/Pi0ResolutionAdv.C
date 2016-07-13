@@ -384,8 +384,18 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
     //************************** Histo loading *************************************************************************
 
     //****************************** Resolution dPt vs Pt **********************************************
-    TH2F * Resolution_Pi0_MCPt_ResolPt = (TH2F*)TrueConversionContainer->FindObject(Form("ESD_TruePrimary%s_MCPt_ResolPt",mesonName.Data()) ); //
+    TH2F * Resolution_Pi0_MCPt_ResolPt              = (TH2F*)TrueConversionContainer->FindObject(Form("ESD_TruePrimary%s_MCPt_ResolPt",mesonName.Data()) ); //
     Resolution_Pi0_MCPt_ResolPt->Sumw2();
+    
+    TH2F* Resolution_Pi0_MCPt_ResolPt_Merged        = NULL;
+    TH2F* Resolution_Pi0_MCPt_ResolPt_PartMerged    = NULL;
+    if ( mode == 10 || mode == 11 ){
+        Resolution_Pi0_MCPt_ResolPt_Merged          = (TH2F*)TrueConversionContainer->FindObject(Form("ESD_TruePrimary%sMerged_MCPt_ResolPt",mesonName.Data()) ); //
+        Resolution_Pi0_MCPt_ResolPt_Merged->Sumw2();
+        Resolution_Pi0_MCPt_ResolPt_PartMerged      = (TH2F*)Resolution_Pi0_MCPt_ResolPt->Clone("Resolution_Pi0_MCPt_ResolPt_PartMerged");
+        Resolution_Pi0_MCPt_ResolPt_PartMerged->Sumw2();
+        Resolution_Pi0_MCPt_ResolPt_PartMerged->Add(Resolution_Pi0_MCPt_ResolPt_Merged,-1);
+    }    
     cout << "hier noch " << Resolution_Pi0_MCPt_ResolPt<<endl;
      
     //**********************************************************************************************************************************************
@@ -443,8 +453,9 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
     padEPGdPtVsPt2->Draw();
     
     padEPGdPtVsPt1->cd();
-    TH2F * histo2DMean = new TH2F("histo2DMean","histo2DMean",5000,0.,50.,1000,-20,20);
-    SetStyleHistoTH2ForGraphs(histo2DMean, "#it{p}_{T,MC} (GeV/#it{c})", Form (" #mu ((#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}) (%s)",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data(),"%"),  0.04,0.05, 0.04,0.05, 1.1,1.1);
+    TH2F * histo2DMean = new TH2F("histo2DMean","histo2DMean",5000,0.,50.,1000,-50,50);
+    SetStyleHistoTH2ForGraphs( histo2DMean, "#it{p}_{T,MC} (GeV/#it{c})", Form (" #mu ((#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}) (%s)",mesonLatex.Data(), mesonLatex.Data(),
+                               mesonLatex.Data(),"%"),  0.04,0.05, 0.04,0.05, 1.1,1.1);
     if (mode == 0){
         histo2DMean->GetYaxis()->SetRangeUser(-1.9,1.9);
         histo2DMean->GetXaxis()->SetRangeUser(0,6);
@@ -455,7 +466,7 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
         histo2DMean->GetYaxis()->SetRangeUser(-8.5,6.5);
         histo2DMean->GetXaxis()->SetRangeUser(0,10);        
     } else if (mode == 10 || mode == 11){
-        histo2DMean->GetYaxis()->SetRangeUser(-9.5,15.5);
+        histo2DMean->GetYaxis()->SetRangeUser(-38.5,17.5);
         histo2DMean->GetXaxis()->SetRangeUser(0,50);        
     }    
     histo2DMean->DrawCopy(); 
@@ -491,8 +502,8 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
           histo2DSigma->GetYaxis()->SetRangeUser(0,17);
           histo2DSigma->GetXaxis()->SetRangeUser(0,10);        
     } else if (mode == 10 || mode == 11){
-        histo2DSigma->GetYaxis()->SetRangeUser(0,30.5);
-        histo2DSigma->GetXaxis()->SetRangeUser(0,50);        
+        histo2DSigma->GetYaxis()->SetRangeUser(0,45.5);
+        histo2DSigma->GetXaxis()->SetRangeUser(0,50);                
     } 
     histo2DSigma->DrawCopy(); 
 
@@ -507,16 +518,111 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
         Resolution_Meson_Sigma2->Draw("same,pe");
 
         TLegend* legendSigma = GetAndSetLegend2(0.78, 0.96-(0.04*2), 0.95, 0.96, 0.04, 1, "", 42, 0.15);
-        legendSigma->AddEntry(Resolution_Meson_Mean,"#sigma Gauss");
-        legendSigma->AddEntry(Resolution_Meson_Mean2,"RMS Histo");
+        legendSigma->AddEntry(Resolution_Meson_Sigma,"#sigma Gauss");
+        legendSigma->AddEntry(Resolution_Meson_Sigma2,"RMS Histo");
         legendSigma->Draw();
 
     padEPGdPtVsPt2->Update();
     canvasEPGdPtVsPt->Update();		
     canvasEPGdPtVsPt->SaveAs(Form("%s/Resolution_%s_Pt.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()));
-    delete padEPGdPtVsPt1;	
-    delete padEPGdPtVsPt2;	
-    delete canvasEPGdPtVsPt;
+
+
+    if ( mode == 10 || mode == 11){
+        TH1D* Resolution_Pi0Merged_PtRes[maxNBinsPt];
+        TF1*  fitResolution_Pi0Merged_PtRes[maxNBinsPt];
+        TH1F *Resolution_Meson_MeanMerged = new TH1F("Resolution_Meson_MeanMerged", "mean meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ;    
+        TH1F *Resolution_Meson_SigmaMerged = new TH1F("Resolution_Meson_SigmaMerged", "sigma meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ; 
+        minFitRange = -0.2;
+        maxFitRange = 0.2;       
+        
+        ResolutionFittingRebined( Resolution_Pi0_MCPt_ResolPt_Merged, Resolution_Pi0Merged_PtRes, fitResolution_Pi0Merged_PtRes, maxNBinsPt, ptbinning, ptbinningReb, Resolution_Meson_MeanMerged,
+                                  Resolution_Meson_SigmaMerged, "gaus", minFitRange, maxFitRange, precision, "Resolution_Pi0Merged_PtRes");
+
+        Resolution_Meson_SigmaMerged->Scale(100);
+        Resolution_Meson_MeanMerged->Scale(100);
+        
+        TH1D* Resolution_Pi0PartMerged_PtRes[maxNBinsPt];
+        TF1*  fitResolution_Pi0PartMerged_PtRes[maxNBinsPt];
+        TH1F *Resolution_Meson_MeanPartMerged = new TH1F("Resolution_Meson_MeanPartMerged", "mean meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ;    
+        TH1F *Resolution_Meson_SigmaPartMerged = new TH1F("Resolution_Meson_SigmaPartMerged", "sigma meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ; 
+        
+        ResolutionFittingRebined( Resolution_Pi0_MCPt_ResolPt_PartMerged, Resolution_Pi0PartMerged_PtRes, fitResolution_Pi0PartMerged_PtRes, maxNBinsPt, ptbinning, ptbinningReb, Resolution_Meson_MeanPartMerged,
+                                  Resolution_Meson_SigmaPartMerged, "gaus", minFitRange, maxFitRange, precision, "Resolution_Pi0PartMerged_PtRes");
+
+        for (Int_t i = 0; i < maxNBinsPt; i++){
+            Resolution_Meson_MeanPartMerged->SetBinContent(i+1, Resolution_Pi0PartMerged_PtRes[i]->GetMean());
+            Resolution_Meson_MeanPartMerged->SetBinError(i+1, Resolution_Pi0PartMerged_PtRes[i]->GetMeanError());
+            Resolution_Meson_SigmaPartMerged->SetBinContent(i+1, Resolution_Pi0PartMerged_PtRes[i]->GetRMS());
+            Resolution_Meson_SigmaPartMerged->SetBinError(i+1, Resolution_Pi0PartMerged_PtRes[i]->GetRMSError());
+        }
+ 
+        Resolution_Meson_SigmaPartMerged->Scale(100);
+        Resolution_Meson_MeanPartMerged->Scale(100);
+
+        
+        padEPGdPtVsPt1->cd();
+        histo2DMean->GetYaxis()->SetRangeUser(-38.5,17.5);
+        histo2DMean->GetXaxis()->SetRangeUser(0,50);        
+        histo2DMean->DrawCopy(); 
+
+            StylingSliceHistos(Resolution_Meson_MeanMerged,0.8);
+            Resolution_Meson_MeanMerged->SetMarkerColor(kBlue+2);
+            Resolution_Meson_MeanMerged->SetLineColor(kBlue-8);
+            Resolution_Meson_MeanMerged->Draw("same,pe");
+            StylingSliceHistos(Resolution_Meson_MeanPartMerged,0.8);
+            Resolution_Meson_MeanPartMerged->SetMarkerStyle(24);
+            Resolution_Meson_MeanPartMerged->SetMarkerColor(kGreen+2);
+            Resolution_Meson_MeanPartMerged->SetLineColor(kGreen-8);
+            Resolution_Meson_MeanPartMerged->Draw("same,pe");
+            
+            PutProcessLabelAndEnergyOnPlot(0.17, 0.95, 0.04, collisionSystem.Data(), fTextMeasurement.Data(), detectionProcess.Data());
+            TLegend* legendMean2 = GetAndSetLegend2(0.17, 0.78-(0.04*2), 0.35, 0.78, 0.04, 1, "", 42, 0.15);
+            legendMean2->AddEntry(Resolution_Meson_MeanMerged,"#mu Gauss, pure merged");
+            legendMean2->AddEntry(Resolution_Meson_MeanPartMerged,"#mu Histo, part. merged");
+            legendMean2->Draw();
+            
+//         padEPGdPtVsPt1->Update();
+        padEPGdPtVsPt2->cd();
+        histo2DSigma->GetYaxis()->SetRangeUser(0,45.5);
+        histo2DSigma->GetXaxis()->SetRangeUser(0,50);                
+        histo2DSigma->DrawCopy(); 
+
+            StylingSliceHistos(Resolution_Meson_SigmaMerged,0.8);
+            Resolution_Meson_SigmaMerged->SetMarkerColor(kBlue+2);
+            Resolution_Meson_SigmaMerged->SetLineColor(kBlue-8);
+            Resolution_Meson_SigmaMerged->Draw("same,pe");
+            StylingSliceHistos(Resolution_Meson_SigmaPartMerged,0.8);
+            Resolution_Meson_SigmaPartMerged->SetMarkerStyle(24);
+            Resolution_Meson_SigmaPartMerged->SetMarkerColor(kGreen+2);
+            Resolution_Meson_SigmaPartMerged->SetLineColor(kGreen-8);
+            Resolution_Meson_SigmaPartMerged->Draw("same,pe");
+
+            TLegend* legendSigma2 = GetAndSetLegend2(0.17, 0.96-(0.04*2), 0.35, 0.96, 0.04, 1, "", 42, 0.15);
+            legendSigma2->AddEntry(Resolution_Meson_SigmaMerged,"#sigma Gauss, pure merged");
+            legendSigma2->AddEntry(Resolution_Meson_SigmaPartMerged,"RMS, part. merged");
+            legendSigma2->Draw();
+
+        padEPGdPtVsPt2->Update();
+        canvasEPGdPtVsPt->Update();     
+        canvasEPGdPtVsPt->SaveAs(Form("%s/Resolution_Split_%s_Pt.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()));
+        
+        ProduceProjectionsPlotWithFits( Resolution_Pi0Merged_PtRes ,fitResolution_Pi0Merged_PtRes, ptbinning, maxNBinsPt ,nColumns, nRows, Form(" (p^{%s}_{T,rec} -p^{%s}_{T,MC})/p^{%s}_{T,MC}", mesonLatex.Data(),
+                                        mesonLatex.Data(), mesonLatex.Data()), Form ("N_{%s}", mesonLatex.Data()), "MC" , Form("fit %s",mesonLatex.Data()), "Pt",Form("%s/ProjectionsFitted_PureMerged%s.%s", 
+                                        outputDirectory.Data(), mesonName.Data(), suffix.Data()), mode);
+
+        PlotStandard2D( Resolution_Pi0_MCPt_ResolPt_Merged, Form("%s/Resolution2D_PureMerged%s.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()), "", 
+                        "#it{p}_{T,MC} (GeV/#it{c})", Form (" #mu ((#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}) (%s)",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data(),"%"), 
+                        kFALSE, -10, 10, kFALSE, 0, 50, 0, 1, floatLocationRightDown2D, 600, 600);
+        
+        ProduceProjectionsPlotWithFits( Resolution_Pi0PartMerged_PtRes ,fitResolution_Pi0PartMerged_PtRes, ptbinning, maxNBinsPt ,nColumns, nRows, Form(" (p^{%s}_{T,rec} -p^{%s}_{T,MC})/p^{%s}_{T,MC}",
+                                        mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data()), Form ("N_{%s}", mesonLatex.Data()), "MC" , Form("fit %s",mesonLatex.Data()),
+                                        "Pt",Form("%s/ProjectionsFitted_PartMerged%s.%s", outputDirectory.Data(), mesonName.Data(), suffix.Data()), mode);
+
+        PlotStandard2D( Resolution_Pi0_MCPt_ResolPt_PartMerged, Form("%s/Resolution2D_PartMerged%s.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()), "", 
+                        "#it{p}_{T,MC} (GeV/#it{c})", Form (" #mu ((#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}) (%s)",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data(),"%"), 
+                        kFALSE, -10, 10, kFALSE, 0, 50, 0, 1, floatLocationRightDown2D, 600, 600);
+    
+    }
 
     ProduceProjectionsPlotWithFits( Resolution_Pi0_PtRes ,fitResolution_Pi0_PtRes, ptbinning, maxNBinsPt ,nColumns, nRows, Form(" (p^{%s}_{T,rec} -p^{%s}_{T,MC})/p^{%s}_{T,MC}", mesonLatex.Data(),
                                     mesonLatex.Data(), mesonLatex.Data()), Form ("N_{%s}", mesonLatex.Data()), "MC" , Form("fit %s",mesonLatex.Data()), "Pt",Form("%s/ProjectionsFitted%s.%s", 
@@ -525,6 +631,10 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
     PlotStandard2D( Resolution_Pi0_MCPt_ResolPt, Form("%s/Resolution2D%s.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()), "", 
                      "#it{p}_{T,MC} (GeV/#it{c})", Form (" #mu ((#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}) (%s)",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data(),"%"), 
                      kFALSE, -10, 10, kFALSE, 0, 50, 0, 1, floatLocationRightDown2D, 600, 600);
+    
+    delete padEPGdPtVsPt1;  
+    delete padEPGdPtVsPt2;  
+    delete canvasEPGdPtVsPt;
 
 }
 
