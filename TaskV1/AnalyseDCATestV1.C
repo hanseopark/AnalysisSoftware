@@ -1363,7 +1363,7 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 				fBinsPt[i] 				= fBinsPi013TeVPtDCA[i];
 			}
 			fExampleBin 			         	= 7;
-			nIterBGFit 					= 12;
+			nIterBGFit 					= 10;
 			fMaxYFracBGOverIntHist                          = 30;
 			optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing3";
 			optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing5";
@@ -1590,7 +1590,7 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 				fBinsPt[i] 				= fBinsEta13TeVPtDCA[i];
 			}
 			fExampleBin 			        	= 3;
-			nIterBGFit 					= 12;
+			nIterBGFit 					= 10;
 			optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing3";
 			optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing5";
 			optionBGSmoothingVar2 		= "BackDecreasingWindow,BackSmoothing7";
