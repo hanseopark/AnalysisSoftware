@@ -39,12 +39,12 @@ useTHnSparse=1
 
 function GiveBinning13TeV()
 {
-    echo "How many p_T bins do you want to use for the Pi0?";
+    echo "How many p_T bins do you want to use for the Pi0? Max. 16 for 15f, 20 for 15fhi, 17 for low B 15g";
     read BinsPtPi0
     correctPi0=1
     echo "You have chosen $BinsPtPi0 bins";
 
-    echo "How many p_T bins do you want to use for the eta meson?";
+    echo "How many p_T bins do you want to use for the eta meson? Max. 7 for 15f, 13 for 15fhi, 4 for low B 15g";
     read BinsPtEta
     correctEta=1
     echo "You have chosen $BinsPtEta bins";
@@ -1818,7 +1818,7 @@ fi
 correct=0
 while [ $correct -eq 0 ]
 do
-    echo "Which collision system do you want to process? 13TeV (pp@13TeV), 8TeV (pp@8TeV), 7TeV (pp@7TeV), 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), PbPb_2.76TeV (PbPb@2.76TeV), pPb_5.023TeV (pPb@5.023TeV)"
+    echo "Which collision system do you want to process? 13TeV (pp@13TeV), 13TeVLowB (pp@13TeV), 8TeV (pp@8TeV), 7TeV (pp@7TeV), 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), PbPb_2.76TeV (PbPb@2.76TeV), pPb_5.023TeV (pPb@5.023TeV)"
     read answer
     if [ $answer = "7TeV" ] || [ $answer = "7" ]; then
         energy="7TeV";
@@ -1826,6 +1826,8 @@ do
         energy="8TeV";
     elif [ $answer = "13TeV" ] || [ $answer = "13" ]; then
         energy="13TeV";
+    elif [ $answer = "13TeVLowB" ]; then
+        energy="13TeVLowB";
     elif [ $answer = "900GeV" ] || [ $answer = "900" ] || [ $answer = "9" ] || [ $answer = "0.9" ]; then
         energy="900GeV";
     elif [ $answer = "2.76TeV" ] || [ $answer = "2" ] || [ $answer = "2.76" ]; then
@@ -1890,7 +1892,7 @@ do
         else 
             correct=1
         fi
-    elif [ $energy = "13TeV" ]; then
+    elif [ $energy = "13TeV" ] || [ $energy = "13TeVLowB" ]; then
         if [ $mode -ne 0 ]; then
             echo "Mode is set to PCM-PCM";
             mode=0

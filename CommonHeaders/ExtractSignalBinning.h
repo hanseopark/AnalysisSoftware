@@ -393,32 +393,31 @@ Int_t fBinsPi0900GeVDirectPhotonPtRebin[7]      = { 4, 2, 2, 2, 2,
                                                     2, 4};
                                                 
 //******************** Pt binning for pp, 13 TeV ***************************************************
-//Double_t fBinsPi013TeVPt[17]                  = { 0.0, 0.4, 0.6, 0.8, 1.0,
-//                                                  1.2, 1.4, 1.6, 1.8, 2.0, 
-//                                                  2.2, 2.5, 2.9, 3.0, 3.5,
-//                                                  5.0, 10.0};                             //Pi0 single period binning
-Double_t fBinsPi013TeVPt[21]                    = { 0.0, 0.4, 0.6, 0.8, 1.0,
+Double_t fBinsPi013TeVPt[17]                    = { 0.0, 0.4, 0.6, 0.8, 1.0,
                                                     1.2, 1.4, 1.6, 1.8, 2.0,
-                                                    2.2, 2.4, 2.6, 2.9, 3.3,
-                                                    3.9, 5.1, 6.5, 8.0, 11.0,
-                                                    16.0};                                  //Pi0 merged period binning (3 periods)
+                                                    2.2, 2.5, 2.9, 3.0, 3.5,
+                                                    5.0, 10.0};                             //Pi0 single period binning
+//Double_t fBinsPi013TeVPt[21]                  = { 0.0, 0.4, 0.6, 0.8, 1.0,
+//                                                  1.2, 1.4, 1.6, 1.8, 2.0,
+//                                                  2.2, 2.4, 2.6, 2.9, 3.3,
+//                                                  3.9, 5.1, 6.5, 8.0, 11.0,
+//                                                  16.0};                                  //Pi0 merged period binning (3 periods)
 Int_t fBinsPi013TeVPtRebin[24]                  = { 4, 4, 2, 2, 2,                          // Rebinning Pi0
                                                     2, 2, 2, 2, 2, 
                                                     2, 2, 2, 2, 2, 
                                                     2, 4, 4, 4, 8,
                                                     8, 8, 8, 8};
-//Double_t fBinsPi013TeVPtDCA[9]                = { 0.0, 0.4, 0.7, 1.0,              	    //Pi0 single period DCA binning
-//                                                  1.3, 1.7, 2.5, 4.0,
-//						    8.0};
-Double_t fBinsPi013TeVPtDCA[21]                 = { 0.0, 0.4, 0.6, 0.8, 1.0,
-                                                    1.2, 1.4, 1.6, 1.8, 2.0,
-                                                    2.2, 2.4, 2.6, 2.9, 3.3,
-                                                    3.9, 5.1, 6.5, 8.0, 11.0,
-                                                    16.0};                                  //Pi0 merged period DCA binning (3 periods)
+Double_t fBinsPi013TeVPtDCA[9]                  = { 0.0, 0.4, 0.7, 1.0,              	    //Pi0 single period DCA binning
+                                                    1.3, 1.7, 2.5, 4.0,
+						    8.0};
+//Double_t fBinsPi013TeVPtDCA[21]               = { 0.0, 0.4, 0.6, 0.8, 1.0,
+//                                                  1.2, 1.4, 1.6, 1.8, 2.0,
+//                                                  2.2, 2.4, 2.6, 2.9, 3.3,
+//                                                  3.9, 5.1, 6.5, 8.0, 11.0,
+//                                                  16.0};                                  //Pi0 merged period DCA binning (3 periods)
 
 Double_t fBinsEta13TeVPt[8]                     = { 0., 0.4, 1.1, 1.6, 2.0, 3.0,            // Eta binning for LHC15f
 						    4.0, 6.0};
-//Double_t fBinsEta13TeVPt[5]                   = { 0., 0.4, 2., 3., 6.};                   // Eta binning for low B LHC15g
 //Double_t fBinsEta13TeVPt[14]                  = { 0.0, 0.4, 1.0, 1.5, 2.0,                // Eta binning for LHC15f+LHC15h+LHC15i
 //                                                  2.5, 3.0, 3.5, 4.0, 5.0,
 //                                                  6.0, 7.0, 9.0, 12.0};
@@ -451,7 +450,41 @@ Double_t fBinsPi013TeVDirectPhotonPtDCAzDist[16]= { 0.0, 0.4, 0.6, 0.8, 1.0,
                                                     1.2, 1.4, 1.6, 1.8, 2.0,
                                                     2.5, 4.0, 6.0, 9.0, 12.0,
                                                     16.0};
+//******************** Pt binning for pp, 13 TeV low B ( 0.2T ) ***************************************************
+Double_t fBinsPi013TeVLowBPt[18]                    = { 0.0, 0.1, 0.4, 0.6, 0.7,
+							0.8, 1.0, 1.2, 1.4, 1.6,
+							1.8, 2.0, 2.2, 2.5, 2.9,
+                                                        3.5, 5.0, 10.0};
+Int_t fBinsPi013TeVLowBPtRebin[17]                  = { 0, 4, 4, 4, 2,
+							2, 2, 2, 2, 2,
+							2, 2, 4, 4, 8,
+							8, 8};
+Double_t fBinsPi013TeVLowBPtDCA[10]                 = { 0.0, 0.1, 0.4, 0.7, 1.0,
+						        1.3, 1.7, 2.5, 4.0, 8.0};
 
+Double_t fBinsEta13TeVLowBPt[5]                     = { 0., 0.4, 2., 3., 6.};
+Int_t fBinsEta13TeVLowBPtRebin[4]                   = { 0, 15, 8, 10};
+Double_t fBinsEta13TeVLowBPtDCA[5]                  = { 0., 0.4, 2., 3., 6.};
+
+Int_t fBinsPi0EtaBinning13TeVLowBPtRebin[4]         = { 0, 4, 2, 4};
+
+Double_t fBinsPi013TeVLowBDirectPhotonPt[25]        = { 0.0, 0.4, 0.6, 0.8, 1.0,
+							1.2, 1.4, 1.6, 1.8, 2.0,
+							2.2, 2.4, 2.6, 2.8, 3.0,
+							3.4, 3.8, 4.2, 4.8, 5.8,
+							7.0, 8.5, 10, 12.0, 16.0};
+
+Int_t fBinsPi013TeVLowBDirectPhotonPtRebin[29]      = { 4, 4, 4, 2, 2,
+							2, 2, 2, 2, 2,
+							2, 2, 2, 2, 2,
+							2, 2, 2, 2, 2,
+							2, 4, 4, 4, 8,
+							8, 8, 8, 8};
+
+Double_t fBinsPi013TeVLowBDirectPhotonPtDCAzDist[16] = { 0.0, 0.4, 0.6, 0.8, 1.0,
+                                                         1.2, 1.4, 1.6, 1.8, 2.0,
+                                                         2.5, 4.0, 6.0, 9.0, 12.0,
+                                                         16.0};
 
 //******************** Pt binning for pp, 2.76 TeV ***************************************************
 Double_t fBinsPi02760GeVPt[25]                  = { 0.0, 0.4, 0.6, 0.8, 1.0,
@@ -1179,6 +1212,48 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 if (fNBinsPt-fStartPtBin > nBinsPlot) fRow++;
                 fExampleBin         = 7;
             }
+        //****** Pi0 for 13TeV low B field *************
+        } else if (energy.CompareTo("13TeVLowB") == 0) {
+            if (directPhoton.CompareTo("directPhoton") == 0){
+                fStartPtBin     = 1;
+                fColumn         = 5;
+                fRow            = 5;
+                if (fNBinsPt > 24) {
+                    cout << "You have chosen Direct Photon Plots and more than 24 bins, this is not possible, it will be reduced to 24 bins." << endl;
+                    fNBinsPt    = 24;
+                }
+                for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                    fBinsPt[i]         = fBinsPi013TeVLowBDirectPhotonPt[i];
+                    if (i < fNBinsPt+1) fNRebin[i] = fBinsPi013TeVLowBDirectPhotonPtRebin[i];
+                }
+                fNBinsPtDCAzDist    = 15;
+                fBinsPtDCAzDist     = new Double_t[fNBinsPtDCAzDist+1];
+                for (Int_t i = 0; i < fNBinsPtDCAzDist+1; i++) {
+                    fBinsPtDCAzDist[i] = fBinsPi013TeVLowBDirectPhotonPtDCAzDist[i];
+                }
+                fExampleBin     = 10;
+            } else {
+                fStartPtBin         = 1;
+                fColumn             = 5;
+                fRow                = 4;
+                if (fNBinsPt < 17)
+                    fColumn         = 4;
+                if (fNBinsPt > 17) {
+                    cout << "You have chosen to have more than 17 bins, this is not possible, it will be reduced to 17" << endl;
+                    fNBinsPt        = 17;
+                }
+                for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                    fBinsPt[i]      = fBinsPi013TeVLowBPt[i];
+                    if (i < fNBinsPt+1)
+                        fNRebin[i]  = fBinsPi013TeVLowBPtRebin[i];
+                }
+                Int_t nBinsPlot     = fColumn*fRow -1;
+                if (fNBinsPt-fStartPtBin > nBinsPlot) fColumn++;
+                nBinsPlot           = fColumn*fRow -1;
+                if (fNBinsPt-fStartPtBin > nBinsPlot) fRow++;
+                fExampleBin         = 7;
+            }
+
         //*********************************************************************************************
         //********************************** Pi0 for pp 2.76TeV****************************************
         //*********************************************************************************************
@@ -1743,7 +1818,30 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
             if (fNBinsPt-fStartPtBin > nBinsPlot) fColumn++;
             nBinsPlot           = fColumn*fRow -1;
             if (fNBinsPt-fStartPtBin > nBinsPlot) fRow++;
-            fExampleBin         = 4;                        
+            fExampleBin         = 4;
+	// ******* Eta for 13TeV low B field ***********
+        } else if (energy.CompareTo("13TeVLowB") == 0) {
+            fStartPtBin         = 1;
+            fColumn             = 2;
+            fRow                = 2;
+            if (fNBinsPt > 4) {
+	      cout << "You have chosen to have more than 4 bins for Eta, this is not possible, it will be reduced to 4" << endl;
+	      fNBinsPt        = 4;
+            }
+
+            for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                fBinsPt[i]      = fBinsEta13TeVLowBPt[i];
+                if (i < fNBinsPt+1){
+		  if (setPi0.CompareTo("Eta") == 0)  fNRebin[i]  = fBinsEta13TeVLowBPtRebin[i];
+		  else                               fNRebin[i]  = fBinsPi0EtaBinning13TeVLowBPtRebin[i];
+		}
+            }
+            Int_t nBinsPlot     = fColumn*fRow -1;
+            if (fNBinsPt-fStartPtBin > nBinsPlot) fColumn++;
+            nBinsPlot           = fColumn*fRow -1;
+            if (fNBinsPt-fStartPtBin > nBinsPlot) fRow++;
+            fExampleBin         = 2;
+
         //*********************************************************************************************
         //********************************** Eta for pp 2.76TeV****************************************
         //*********************************************************************************************    

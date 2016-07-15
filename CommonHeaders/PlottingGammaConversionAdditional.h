@@ -3315,8 +3315,8 @@ Color_t GetColorDefaultColor( TString energy,
                             TString generator, 
                             TString centrality, 
                             Bool_t kBox = kFALSE){
-    if (!energy.CompareTo("13TeV")){
-        if (!generator.CompareTo("LHC15f") || !generator.CompareTo("LHC15h") || !generator.CompareTo("LHC15i") || !generator.CompareTo("LHC15j") || !generator.CompareTo("LHC15k") || !generator.CompareTo("LHC15l")){
+    if (!energy.CompareTo("13TeV")||!energy.CompareTo("13TeVLowB")){
+        if (!generator.CompareTo("LHC15f") || !generator.CompareTo("LHC15g") || !generator.CompareTo("LHC15h") || !generator.CompareTo("LHC15i") || !generator.CompareTo("LHC15j") || !generator.CompareTo("LHC15k") || !generator.CompareTo("LHC15l")){
             return kBlack;
         } else if (!generator.Contains("g3a")) {
             return kBlue;
