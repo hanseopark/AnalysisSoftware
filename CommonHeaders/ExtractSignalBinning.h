@@ -455,7 +455,7 @@ Double_t fBinsPi013TeVLowBPt[18]                    = { 0.0, 0.1, 0.4, 0.6, 0.7,
 							0.8, 1.0, 1.2, 1.4, 1.6,
 							1.8, 2.0, 2.2, 2.5, 2.9,
                                                         3.5, 5.0, 10.0};
-Int_t fBinsPi013TeVLowBPtRebin[17]                  = { 0, 4, 4, 4, 2,
+Int_t fBinsPi013TeVLowBPtRebin[17]                  = { 4, 4, 4, 4, 2,
 							2, 2, 2, 2, 2,
 							2, 2, 4, 4, 8,
 							8, 8};
@@ -463,10 +463,10 @@ Double_t fBinsPi013TeVLowBPtDCA[10]                 = { 0.0, 0.1, 0.4, 0.7, 1.0,
 						        1.3, 1.7, 2.5, 4.0, 8.0};
 
 Double_t fBinsEta13TeVLowBPt[5]                     = { 0., 0.4, 2., 3., 6.};
-Int_t fBinsEta13TeVLowBPtRebin[4]                   = { 0, 15, 8, 10};
+Int_t fBinsEta13TeVLowBPtRebin[6]                   = { 15, 15, 10, 10, 10, 10};
 Double_t fBinsEta13TeVLowBPtDCA[5]                  = { 0., 0.4, 2., 3., 6.};
 
-Int_t fBinsPi0EtaBinning13TeVLowBPtRebin[4]         = { 0, 4, 2, 4};
+Int_t fBinsPi0EtaBinning13TeVLowBPtRebin[6]         = { 4, 4, 2, 4, 4, 4};
 
 Double_t fBinsPi013TeVLowBDirectPhotonPt[25]        = { 0.0, 0.4, 0.6, 0.8, 1.0,
 							1.2, 1.4, 1.6, 1.8, 2.0,
@@ -1811,8 +1811,12 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
             
             for (Int_t i = 0; i < fNBinsPt+1; i++) {
                 fBinsPt[i]      = fBinsEta13TeVPt[i];
-                if (i < fNBinsPt+1) 
-                    fNRebin[i]  = fBinsEta13TeVPtRebin[i];        
+		if (setPi0.CompareTo("Eta") == 0){
+		  if (i < fNBinsPt+1) fNRebin[i]  = fBinsEta13TeVPtRebin[i];
+		}
+		else{
+		  if (i < fNBinsPt+1) fNRebin[i]  = fBinsPi0EtaBinning13TeVPtRebin[i];
+		}
             }
             Int_t nBinsPlot     = fColumn*fRow -1;
             if (fNBinsPt-fStartPtBin > nBinsPlot) fColumn++;
@@ -1831,9 +1835,10 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
 
             for (Int_t i = 0; i < fNBinsPt+1; i++) {
                 fBinsPt[i]      = fBinsEta13TeVLowBPt[i];
-                if (i < fNBinsPt+1){
-		  if (setPi0.CompareTo("Eta") == 0)  fNRebin[i]  = fBinsEta13TeVLowBPtRebin[i];
-		  else                               fNRebin[i]  = fBinsPi0EtaBinning13TeVLowBPtRebin[i];
+		if (setPi0.CompareTo("Eta") == 0){
+		  if (i < fNBinsPt+1) fNRebin[i]  = fBinsEta13TeVLowBPtRebin[i];
+		} else {
+		  if (i < fNBinsPt+1) fNRebin[i]  = fBinsPi0EtaBinning13TeVLowBPtRebin[i];
 		}
             }
             Int_t nBinsPlot     = fColumn*fRow -1;
