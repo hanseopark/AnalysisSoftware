@@ -29,9 +29,9 @@ NSlashes2=9
 
 # switches to enable/disable certain procedures
 DOWNLOADON=1
-MERGEON=1
-MERGEONBINSSingle=1
-MERGEONBINS=1
+MERGEON=0
+MERGEONBINSSingle=0
+MERGEONBINS=0
 
 # check if train configuration has actually been given
 HAVELHC11a=1
@@ -41,15 +41,21 @@ HAVELHC13g=1
 HAVELHC15a3a=1
 HAVELHC15a3aplus=1
 HAVELHC15a3b=1
+HAVELHC12f1a=1
+HAVELHC12f1b=1
+HAVELHC15g2=1
 
 # default trainconfigurations
 LHC11aData="";
+LHC12f1aMC="";
+LHC12f1bMC="";
 LHC15g1aMC="";
 LHC15g1bMC="";
 LHC13gData="";
 LHC15a3aMC=""; 
 LHC15a3aplusMC=""; 
-LHC15a3bMC=""; 
+LHC15a3bMC="";
+LHC15g2MC=""; 
 
 if [ $1 = "fbock" ]; then 
     BASEDIR=/mnt/additionalStorage/OutputLegoTrains/pp
@@ -372,7 +378,7 @@ fi
 # LHC13gData="1638"; 
 
 
-TRAINDIR=Legotrain-mCalo-20160629_V2Clus
+# TRAINDIR=Legotrain-mCalo-20160629_V2Clus
 # LHC11aData="1654"; 
 # LHC11aData="1655"; 
 # LHC11aData="1656"; 
@@ -381,7 +387,7 @@ TRAINDIR=Legotrain-mCalo-20160629_V2Clus
 # LHC15g1aMC="2219";
 # LHC15g1bMC="2191";
 
-LHC13gData="1707";
+# LHC13gData="1707";
 # LHC13gData="1657"; 
 # LHC13gData="1658"; 
 # LHC13gData="1659"; 
@@ -413,10 +419,12 @@ LHC13gData="1707";
 # # LHC15a3aplusMC="2247"; 
 # LHC15a3aplusMC="2248"; 
 
-# TRAINDIR=Legotrain-mCalo-20160705_V2newSys
+TRAINDIR=Legotrain-mCalo-20160705_V2newSys
 # LHC11aData="1677"; 
 # LHC15g1aMC="2253";
 # LHC15g1aMC="2254";
+LHC12f1aMC="2267"; 
+LHC12f1bMC="2268"; 
 
 # LHC13gData="1705"; 
 # LHC13gData="1706"; 
@@ -429,7 +437,7 @@ LHC13gData="1707";
 # LHC15a3aplusMC="2260"
 # LHC15a3aplusMC="2261"
 # LHC15a3aplusMC="2262"
-
+LHC15g2MC="2269";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -444,7 +452,14 @@ if [ $2 = "LHC11a" ]; then
     if [ "$LHC15g1bMC" = "" ]; then 
         HAVELHC15g1b=0; 
     fi
+    if [ "$LHC12f1aMC" = "" ]; then 
+        HAVELHC12f1a=0; 
+    fi
+    if [ "$LHC12f1bMC" = "" ]; then 
+        HAVELHC12f1b=0; 
+    fi
 
+    
     if [ $HAVELHC11a == 1 ]; then
         LHC11aData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/ | grep $LHC11aData\_`
         if [ "$LHC11aData" == "" ]; then 
@@ -469,6 +484,24 @@ if [ $2 = "LHC11a" ]; then
             OUTPUTDIR_LHC15g1b=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC15g1bMC
         fi
     fi
+    if [ $HAVELHC12f1a == 1 ]; then
+        LHC12f1aMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC12f1aMC\_`
+        if [ "$LHC12f1aMC" == "" ]; then 
+            HAVELHC12f1a=0;
+        else     
+            OUTPUTDIR_LHC12f1a=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC12f1aMC
+        fi
+    fi  
+    
+    if [ $HAVELHC12f1b == 1 ]; then
+        LHC12f1bMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC12f1bMC\_`
+        if [ "$LHC12f1bMC" == "" ]; then 
+            HAVELHC12f1b=0;
+        else     
+            OUTPUTDIR_LHC12f1b=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC12f1bMC
+        fi
+    fi
+
 
     if [ $DOWNLOADON == 1 ]; then
         if [ $HAVELHC11a == 1 ]; then
@@ -481,6 +514,15 @@ if [ $2 = "LHC11a" ]; then
 #                 CopyFileIfNonExisitent $OUTPUTDIR_LHC11a/$runNumber "/alice/data/2011/LHC11a/000$runNumber/ESDs/pass4_with_SDD/PWGGA/GA_pp/$LHC11aData"
 #             done;
         fi    
+        if [ $HAVELHC12f1a == 1 ]; then
+            echo "downloading LHC12f1a"
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC12f1a "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC12f1aMC/merge_runlist_1"
+        fi    
+        if [ $HAVELHC12f1b == 1 ]; then
+            echo "downloading LHC12f1b"
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC12f1b "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC12f1bMC/merge_runlist_1"
+        fi    
+
         if [ $HAVELHC15g1a == 1 ]; then
             echo "downloading LHC15g1a"
             CopyFileIfNonExisitent $OUTPUTDIR_LHC15g1a "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC15g1aMC/merge"
@@ -512,6 +554,7 @@ if [ $2 = "LHC11a" ]; then
                 done;   
             done;
         fi    
+        
     fi
     
     if [ $HAVELHC11a == 1 ]; then
@@ -526,6 +569,31 @@ if [ $2 = "LHC11a" ]; then
         done;
     fi
 
+    if [ $HAVELHC12f1a == 1 ]; then
+        ls $OUTPUTDIR_LHC12f1a/GammaCaloMerged_*.root > fileLHC12f1a.txt
+        fileNumbers=`cat fileLHC12f1a.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+            echo $number
+            ChangeStructureIfNeeded $OUTPUTDIR_LHC12f1a/GammaCaloMerged_$number.root $OUTPUTDIR/GammaCaloMerged_MC_LHC12f1a_$number.root $number
+            root -b -l -q -x ../TaskV1/MakeCutLogCaloMerged.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC12f1a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCaloMerged_MC_LHC12f1a_$number.log\"\)
+        done;
+    fi
+    
+    if [ $HAVELHC12f1b == 1 ]; then
+        ls $OUTPUTDIR_LHC12f1b/GammaCaloMerged_*.root > fileLHC12f1b.txt
+        fileNumbers=`cat fileLHC12f1b.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+            echo $number
+            ChangeStructureIfNeeded $OUTPUTDIR_LHC12f1b/GammaCaloMerged_$number.root $OUTPUTDIR/GammaCaloMerged_MC_LHC12f1b_$number.root $number
+            root -b -l -q -x ../TaskV1/MakeCutLogCaloMerged.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC12f1b_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCaloMerged_MC_LHC12f1b_$number.log\"\)
+        done;
+    fi
+    
+    
     if [ $HAVELHC15g1a == 1 ]; then  
         ls $OUTPUTDIR_LHC15g1a/GammaCaloMerged_*.root > fileLHC15g1a.txt
         fileNumbers=`cat fileLHC15g1a.txt`
@@ -618,6 +686,9 @@ elif [ $2 = "LHC13g" ]; then
     if [ "$LHC15a3bMC" = "" ]; then 
         HAVELHC15a3b=0; 
     fi
+    if [ "$LHC15g2MC" == "" ]; then 
+        HAVELHC15g2=0;
+    fi
 
     
     if [ $HAVELHC13g == 1 ]; then
@@ -628,7 +699,16 @@ elif [ $2 = "LHC13g" ]; then
             OUTPUTDIR_LHC13g=$BASEDIR/$TRAINDIR/GA_pp-$LHC13gData
         fi
     fi
-   
+    
+    if [ $HAVELHC15g2 == 1 ]; then
+        LHC15g2MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC15g2MC\_`
+        if [ "$LHC15g2MC" == "" ]; then 
+            HAVELHC15g2=0;
+        else     
+            OUTPUTDIR_LHC15g2=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC15g2MC
+        fi
+    fi
+    
     if [ $HAVELHC15a3a == 1 ]; then
         LHC15a3aMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC15a3aMC\_`
         if [ "$LHC15a3aMC" == "" ]; then 
@@ -668,6 +748,11 @@ elif [ $2 = "LHC13g" ]; then
 #             done;            
         fi    
         
+        if [ $HAVELHC15g2 == 1 ]; then
+            echo "downloading LHC15g2"
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC15g2 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC15g2MC/merge"
+        fi
+
         if [ $HAVELHC15a3a == 1 ]; then
             echo "copying LHC15a3a" 
             CopyFileIfNonExisitent $OUTPUTDIR_LHC15a3a "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC15a3aMC/merge"
@@ -730,6 +815,19 @@ elif [ $2 = "LHC13g" ]; then
             root -b -l -q -x ../TaskV1/MakeCutLogCaloMerged.C\(\"$OUTPUTDIR/GammaCaloMerged_LHC13g-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC13g_$number.log\"\)
         done;
     fi
+    
+    if [ $HAVELHC15g2 == 1 ]; then
+        ls $OUTPUTDIR_LHC15g2/GammaCaloMerged_*.root > fileLHC15g2.txt
+        fileNumbers=`cat fileLHC15g2.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+            echo $number
+            ChangeStructureIfNeeded $OUTPUTDIR_LHC15g2/GammaCaloMerged_$number.root $OUTPUTDIR/GammaCaloMerged_MC_LHC15g2_$number.root $number
+            root -b -l -q -x ../TaskV1/MakeCutLogCaloMerged.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC15g2_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCaloMerged_MC_LHC15g2_$number.log\"\)
+        done;
+    fi
+
     
     if [ $HAVELHC15a3a == 1 ]; then
         binNumbersJJ=`cat binNumbersJJToMerge.txt`
