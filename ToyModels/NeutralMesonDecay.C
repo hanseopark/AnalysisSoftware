@@ -116,7 +116,8 @@ void NeutralMesonDecay( Int_t nEvts     = 1000000,
                         TString energy  = "2.76TeV",
                         Double_t minPt  = 2,
                         Double_t maxPt  = 50,
-                        TString suffix  = "eps"
+                        TString suffix  = "eps",
+                        Double_t rEMC   = 440.
                       ){
 
     //*************************************************************************************************
@@ -128,6 +129,10 @@ void NeutralMesonDecay( Int_t nEvts     = 1000000,
     StyleSettingsThesis(suffix);  
     SetPlotStyle();
 
+    TString fCollisionSystenWrite       = ReturnCollisionEnergyOutputString(energy);
+    TString fOutputDir                  = Form("%s/%s/",fCollisionSystenWrite.Data(),suffix.Data());
+    gSystem->Exec("mkdir -p "+fOutputDir);
+    
     //*************************************************************************************************
     //*************************** Initialize pt spectra for particles**********************************
     //*************************************************************************************************
@@ -208,6 +213,14 @@ void NeutralMesonDecay( Int_t nEvts     = 1000000,
     h2_ptMothervsDaughter->Sumw2();
     TH2D *h2_asym_geom          = new TH2D("h2_asym_geom","", 500,-1,1, 500,0,50);
     h2_ptMothervsDaughter->Sumw2();
+    TH2D *h2_OpenAngle          = new TH2D("h2_OpenAngle","", 500,0,50, 400,0,4);
+    h2_OpenAngle->SetXTitle(Form("#it{p}_{T,%s} (GeV/#it{c})",plotLabel.Data()));
+    h2_OpenAngle->SetYTitle("#theta_{open}");
+    h2_OpenAngle->Sumw2();
+    TH2D *h2_ClusterDistance    = new TH2D("h2_ClusterDistance","", 500,0,50, 5000,0,100);
+    h2_ClusterDistance->SetXTitle(Form("#it{p}_{T,%s} (GeV/#it{c})",plotLabel.Data()));
+    h2_ClusterDistance->SetYTitle("#it{R}_{#gamma's at r=440cm} (cm)");
+    h2_ClusterDistance->Sumw2();
     
     TH1D *h1_ptdistribution     = new TH1D("h1_ptdistribution","", 500,0,50);  
     h1_ptdistribution->Sumw2();
@@ -254,9 +267,10 @@ void NeutralMesonDecay( Int_t nEvts     = 1000000,
         
         Double_t weight         = event.Generate();
         Double_t ptDaughter[nDaughters];  
+        TLorentzVector* pDaughter[nDaughters];  
         for (Int_t i = 0; i < nDaughters; i++){
-            TLorentzVector *pDaughter   = event.GetDecay(i); // these are my daughters !! 
-            ptDaughter[i]               = pDaughter->Pt(); 
+            pDaughter[i]                = event.GetDecay(i); // these are my daughters !! 
+            ptDaughter[i]               = pDaughter[i]->Pt(); 
             
             h1_ptDaughter[i]->Fill(ptDaughter[i]);
             if (pdgCodesDaughters[i] == 22)
@@ -273,7 +287,13 @@ void NeutralMesonDecay( Int_t nEvts     = 1000000,
         }    
         if (nDaughters > 1){
             h2_asym_geom->Fill((ptDaughter[0]-ptDaughter[1])/(ptDaughter[0]+ptDaughter[1]), ptcurrent);
+            Double_t openangle      = pDaughter[0]->Angle(pDaughter[1]->Vect());
+            Double_t distanceCl     = TMath::Tan(openangle/2)*rEMC*2;
+            
+            h2_OpenAngle->Fill(ptcurrent,openangle);
+            h2_ClusterDistance->Fill(ptcurrent,distanceCl);
         }
+        
     }
 
     TCanvas *canvasQA = new TCanvas("canvasQA","canvasQA",1000,800);
@@ -304,7 +324,7 @@ void NeutralMesonDecay( Int_t nEvts     = 1000000,
     }
     
     legendSpectra->Draw();
-    canvasQA->SaveAs(Form("%s_PtDistribution_Input.%s",outputlabel.Data(), suffix.Data()));
+    canvasQA->SaveAs(Form("%s%s_PtDistribution_Input.%s",fOutputDir.Data(), outputlabel.Data(), suffix.Data()));
 
     DrawAutoGammaMesonHistos(   h1_phidistribution, 
                                 "", "#varphi (rad)", Form("#it{N}_{%s}",plotLabel.Data()), // (%)", 
@@ -322,7 +342,7 @@ void NeutralMesonDecay( Int_t nEvts     = 1000000,
                                 kFALSE, 0., 10.);
     h1_etadistribution->GetYaxis()->SetTitleOffset(0.85);        
     h1_etadistribution->DrawClone();
-    canvasQA->SaveAs(Form("%s_EtaDistribution_Input.%s",outputlabel.Data(),suffix.Data()));
+    canvasQA->SaveAs(Form("%s%s_EtaDistribution_Input.%s",fOutputDir.Data(), outputlabel.Data(),suffix.Data()));
 
     TCanvas *canvasQA2D = new TCanvas("canvasQA2D","canvasQA2D",1000,800);
     DrawGammaCanvasSettings( canvasQA2D, 0.1, 0.09, 0.02, 0.11);
@@ -338,7 +358,7 @@ void NeutralMesonDecay( Int_t nEvts     = 1000000,
                                 0,0, 50,1,0.85);
 
     h2_ptMothervsDaughter->Draw("colz");
-    canvasQA2D->SaveAs(Form("%s_PtMothervsDaughter1.%s",outputlabel.Data(),suffix.Data()));
+    canvasQA2D->SaveAs(Form("%s%s_PtMothervsDaughter1.%s",fOutputDir.Data(), outputlabel.Data(),suffix.Data()));
     DrawGammaCanvasSettings( canvasQA2D, 0.1, 0.09, 0.02, 0.11);
     DrawAutoGammaHistoPaper2D(h2_asym_geom,
                                 "",
@@ -348,13 +368,33 @@ void NeutralMesonDecay( Int_t nEvts     = 1000000,
                                 0,0,5,
                                 0,0, 50,1,0.85);
     h2_asym_geom->Draw("colz");
-    canvasQA2D->SaveAs(Form("%s_AsymmetryDaughtersVsMotherPt.%s",outputlabel.Data(),suffix.Data()));
+    canvasQA2D->SaveAs(Form("%s%s_AsymmetryDaughtersVsMotherPt.%s",fOutputDir.Data(),outputlabel.Data(),suffix.Data()));
     
+    DrawGammaCanvasSettings( canvasQA2D, 0.1, 0.09, 0.02, 0.11);
+    DrawAutoGammaHistoPaper2D(h2_OpenAngle,
+                                "",
+                                Form("#it{p}_{T,%s} (GeV/#it{c})",plotLabel.Data()),
+                                "#theta_{open}",
+                                0,0,0,
+                                0,0,5,
+                                0,0, 50,1,0.85);
+    h2_OpenAngle->Draw("colz");
+    canvasQA2D->SaveAs(Form("%s%s_MotherPtVsOpeningAngleDaughters.%s",fOutputDir.Data(),outputlabel.Data(),suffix.Data()));
+
+    DrawAutoGammaHistoPaper2D(h2_ClusterDistance,
+                                "",
+                                Form("#it{p}_{T,%s} (GeV/#it{c})",plotLabel.Data()),
+                                "#it{R}_{#gamma's at r=440cm} (cm)",
+                                0,0,0,
+                                0,0,5,
+                                0,0, 50,1,0.85);
+    h2_ClusterDistance->Draw("colz");
+    canvasQA2D->SaveAs(Form("%s%s_MotherPtVsClusterDistance.%s",fOutputDir.Data(),outputlabel.Data(),suffix.Data()));
     
     //*************************************************************************************************
     //********************** Write histograms to file *************************************************
     //*************************************************************************************************
-    TFile* fileOutput = new TFile(Form("ToyMCOutput_%s.root",outputlabel.Data()),"RECREATE");  
+    TFile* fileOutput = new TFile(Form("%s/ToyMCOutput_%s.root",fCollisionSystenWrite.Data(),outputlabel.Data()),"RECREATE");  
 
         h1_ptdistribution->Write();
         h1_phidistribution->Write();
@@ -363,7 +403,10 @@ void NeutralMesonDecay( Int_t nEvts     = 1000000,
             h1_ptDaughter[i]->Write();
         }     
         h2_ptMothervsDaughter->Write();
-    
+        h2_ClusterDistance->Write();
+        h2_OpenAngle->Write();
+        h2_asym_geom->Write();
+        
     fileOutput->Write();
     fileOutput->Close();
 
