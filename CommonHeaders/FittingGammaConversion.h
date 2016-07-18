@@ -28,6 +28,12 @@ TF1* FitObject( TString type,
     } else if (mesonType.CompareTo("Phi")==0){
         mass = TDatabasePDG::Instance()->GetParticle(333)->Mass();
         cout <<"Meson Mass: "<< mass << endl;
+    } else if (mesonType.CompareTo("K")==0){
+        mass = TDatabasePDG::Instance()->GetParticle(321)->Mass();
+        cout <<"Meson Mass: "<< mass << endl;
+    } else if (mesonType.CompareTo("K0s")==0){
+        mass = TDatabasePDG::Instance()->GetParticle(310)->Mass();
+        cout <<"Meson Mass: "<< mass << endl;
     } else {
         mass = 0;
         cout <<"Meson Mass: "<< mass << endl;

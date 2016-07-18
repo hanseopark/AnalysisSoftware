@@ -2479,15 +2479,15 @@ else
                     echo "CutSelection is $cutSelection";
                     if [ $DoPi0 -eq 1 ]; then
                         if [ -f $DataRootFile ]; then 
-                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kFALSE\,\"$energy\"\,\"Gaussian\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\)
+                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kFALSE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\)
                         fi
                         Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaMergedWithoutCorrection_*.root`             
                         if [ $MCFILE -eq 1 ]; then 
-                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"Gaussian\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\)
+                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\)
                             Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaMergedWithoutCorrection_*.root`
                             Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistos_*.root`
                             if [ $MERGINGMC -eq 1 ]; then 
-                                root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Pi0\"\,\"$MCRootFileGJ\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"Gaussian\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\,1\)
+                                root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Pi0\"\,\"$MCRootFileGJ\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\,1\)
                                 Pi0MCcorrectionFILEJJG=`ls $cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistosJJGammaTrigg_*.root`
                                 root -b -x -q -l TaskV1/MergeCorrFactorsJJandJJGammaTrigMergedCluster.C\+\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrectionFILE\"\,\"$cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistosJJ_$cutSelection.root\"\,\"$Pi0MCcorrectionFILEJJG\"\)
                                 
@@ -2498,15 +2498,15 @@ else
                     
                     if [ $DoEta -eq 1 ]; then
                         if [ -f $DataRootFile ]; then 
-                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kFALSE\,\"$energy\"\,\"Gaussian\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\)
+                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kFALSE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\)
                         fi
                         EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaMergedWithoutCorrection_*.root`        
                         if [ $MCFILE -eq 1 ]; then 
-                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Eta\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"Gaussian\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\)
+                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Eta\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\)
                             EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedWithoutCorrection_*.root`
                             EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedCorrectionHistos_*.root`
                             if [ $MERGINGMC -eq 1 ]; then 
-                                root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Eta\"\,\"$MCRootFileGJ\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"Gaussian\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\,1\)
+                                root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Eta\"\,\"$MCRootFileGJ\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\,1\)
                             fi
                             root -b -x -q -l TaskV1/CompareShapeMergedClusterQuantities.C\+\+\(\"$EtadataRAWFILE\"\,\"$EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtEta\,$mode\)
                         fi

@@ -31,7 +31,6 @@ TString     fClusterMergedCutSelection                                  = "";
 TString     fMesonCutSelection                                          = "";
 TString     fAdditionalName                                             = "";
 
-Int_t       fCrysFitting                                                = 0;
 Int_t       fIsMC                                                       = 0;
 Int_t       fIsMCGammaTrig                                              = 0;
 Int_t       fMesonId                                                    = 0;
@@ -97,8 +96,7 @@ TString     fObjectNameTrueClusSecMesonFromLambdaM02                    = "";
 //****************************************************************************
 void CreatePtHistos();                                                                                      // Creat pt dependent histograms
 void FillPtHistos();                                                                                        // Fill pt dependent histograms
-void Initialize(TString setPi0, Int_t);                                                                     // Initialization of global variables depending on meson analysed 
-void CalculateFWHM(TF1 *);                                                                                  // Calculation of FWHM
+void Initialize(TString setPi0, Int_t, Int_t);                                                              // Initialization of global variables depending on meson analysed 
 Double_t CrystalBallBck(Double_t *,Double_t *);                                                             // Definition of CrystalBall with linear BG
 Double_t LinearBackground(Double_t *,Double_t *);                                                           // Definition of linear BG
 Double_t CrystalBall(Double_t *,Double_t *);                                                                // Definition of CrystalBall

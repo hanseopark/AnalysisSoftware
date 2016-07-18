@@ -350,7 +350,7 @@ TString ReturnFullTextMeson(TString fEnergyFlagOpt,
         return Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 7 TeV ",textProcessOpt.Data());
     } else if(fEnergyFlagOpt.CompareTo("8TeV") == 0){
         return Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 8 TeV ",textProcessOpt.Data());
-    } else if((fEnergyFlagOpt.CompareTo("13TeV") == 0)||(fEnergyFlagOpt.CompareTo("13TeVLowB"))){
+    } else if(fEnergyFlagOpt.CompareTo("13TeV") == 0){
         return Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 13 TeV ",textProcessOpt.Data());
     } else if( fEnergyFlagOpt.CompareTo("900GeV") == 0) {
         return  Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 900 GeV ",textProcessOpt.Data());
@@ -400,8 +400,6 @@ TString ReturnFullCollisionsSystem( TString fEnergyFlagOpt){
         return  "pp, #sqrt{#it{s}} = 8 TeV";
     } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0) {
         return  "pp, #sqrt{#it{s}} = 13TeV";
-    } else if( fEnergyFlagOpt.CompareTo("13TeVLowB") == 0) {
-        return  "pp, #sqrt{#it{s}} = 13TeV, B = 0.2T";
     } else if( fEnergyFlagOpt.CompareTo("900GeV") == 0) {
         return  "pp, #sqrt{#it{s}} = 900 GeV";
     } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {
@@ -424,7 +422,7 @@ Double_t ReturnCollisionEnergy( TString fEnergyFlagOpt){
         return  7000;
     } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
         return 8000; 	
-    } else if(( fEnergyFlagOpt.CompareTo("13TeV") == 0)||( fEnergyFlagOpt.CompareTo("13TeVLowB") == 0)) {
+    } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0) {
         return 13000; 
     } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {
         return 2760; 
@@ -440,6 +438,35 @@ Double_t ReturnCollisionEnergy( TString fEnergyFlagOpt){
     }
 }
 
+//************************************************************************************
+//***************** return proper cms-energy for collision system ********************
+//************************************************************************************
+TString ReturnCollisionEnergyOutputString( TString fEnergyFlagOpt){ 
+    if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
+        return  "pp7TeV";
+    } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0) {
+        return  "pp5TeV";
+    } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
+        return  "pp8TeV";
+    } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0) {
+        return  "pp13TeV";
+    } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {
+        return  "pp2760GeV";
+    } else if( fEnergyFlagOpt.CompareTo("900GeV") == 0) {
+        return  "pp900GeV";
+    } else if( (fEnergyFlagOpt.CompareTo("PbPb_2.76TeV") == 0) ) {
+        return  "PbPb2760GeV";
+    } else if( (fEnergyFlagOpt.CompareTo("PbPb_5TeV") == 0) ) {
+        return  "PbPb5TeV";
+    } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0) {
+        return  "pPb5TeV";
+    } else if( fEnergyFlagOpt.CompareTo("pPb_8TeV") == 0) {
+        return  "pPb8TeV";
+    } else {
+        cout << "No correct collision system energy specification, has been given" << endl;
+        return "";     
+    }
+}
 
 //************************************************************************************
 //********************* EventCuts definition *****************************************
@@ -1247,7 +1274,7 @@ Double_t ReturnCorrectK0ScalingFactor(TString fEnergyFlagOpt, TString cutNr){
         return 1./0.75 -1.;
     } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
         return  1./0.75 -1.;	
-    } else if(( fEnergyFlagOpt.CompareTo("13TeV") == 0)||( fEnergyFlagOpt.CompareTo("13TeVLowB") == 0)) {
+    } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0) {
         cout << "Caution: no correct K0 Scaling factor for 13TeV available yet" << endl;
         return  1./0.75 -1.;
     } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {
@@ -3441,5 +3468,4 @@ TString ReturnFullTextReconstructionProcess( Int_t mode, Int_t separate = 0, TSt
                 return "not known";
         }    
     }    
-    
 }

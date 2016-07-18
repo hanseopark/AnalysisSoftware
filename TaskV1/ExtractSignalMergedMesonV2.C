@@ -58,12 +58,12 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                                     TString suffix                  = "", 
                                     Bool_t  optionMC                = kFALSE, 
                                     TString optionEnergy            = "", 
-                                    TString optionCrystalBall       = "", 
                                     TString optionPeriod            = "", 
                                     TString optionAdvancedMesonQA   = "",
                                     Int_t   numberOfBins            = 30,
                                     Int_t   mode                    = 10,
-                                    Bool_t  kJJGammaTriggMC         = 0  
+                                    Bool_t  kJJGammaTriggMC         = 0,
+                                    Int_t   triggerSet              = -1
                                 ) {
     gROOT->Reset();
 
@@ -133,16 +133,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     Double_t startXLabelInvMass     = 0.12;
     if (ReturnClusterNLM(fClusterMergedCutSelection) == 2)
         startXLabelInvMass          = 0.55;
-    
-    //****************************** Choice of Fitting procedure ******************************************************
-    if(optionCrystalBall.CompareTo("CrystalBall") == 0){// means we want to plot values for the pi0
-        fCrysFitting                = 1;
-        cout << "CrystalBall fit chosen ..." << endl;
-    } else   {
-        fCrysFitting                = 0;
-        cout << "Gaussian fit chosen ..." << endl;
-    }
-    
+        
     if(cutSelection.Length() == 0){
         cout<<"ERROR: Cut selection is not set, please do!"<<endl;
         return;
@@ -175,11 +166,11 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     
     //***************************** Initialization of variables according to meson type ******************************
     if(meson.CompareTo("Pi0") == 0){
-        Initialize("Pi0",numberOfBins);
+        Initialize("Pi0", numberOfBins, triggerSet);
     } else if (meson.CompareTo("Eta") == 0) {
-        Initialize("Eta",numberOfBins);
+        Initialize("Eta", numberOfBins, triggerSet);
     } else if(meson.CompareTo("Pi0EtaBinning") == 0) {
-        Initialize("Pi0EtaBinning",numberOfBins);
+        Initialize("Pi0EtaBinning", numberOfBins, triggerSet);
     } else   {
         cout<<"ERROR: First argument in the ExtractSignalMergedMeson(....) has to be either Pi0 or Eta or Pi0EtaBinning  or EtaPrim"<<endl;
         return;
@@ -1394,9 +1385,9 @@ Double_t FindSmallestEntryIn2D(TH2F* histo){
 //****** Initialization of arrays and variables, histograms for analysis *****
 //****** depending on mesonType, number of bins, mode, energy, centrality ****
 //****************************************************************************
-void Initialize(TString setPi0,Int_t numberOfBins){
+void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     
-    InitializeBinning(setPi0, numberOfBins, fEnergyFlag, "", fMode, fEventCutSelection, fClusterMergedCutSelection);
+    InitializeBinning(setPi0, numberOfBins, fEnergyFlag, "", fMode, fEventCutSelection, fClusterMergedCutSelection, triggerSet);
     if (setPi0.CompareTo("Pi0") == 0 || setPi0.CompareTo("Pi0EtaBinning") == 0){
         fMesonId                        = 111;
         fMesonMassPlotRange             = new Double_t[2]; 
@@ -2270,57 +2261,6 @@ Double_t LinearBackground(Double_t *x,Double_t *par) {
     return par[0] + par[1]*x[0];
 }
 
-//****************************************************************************
-//******** Calculation of FWHM for Gaussian + left side exponential  *********
-//****************************************************************************
-void CalculateFWHM(TF1 * fFunc){
-// Default function
-    if (fCrysFitting == 0){
-        TF1* fFunc_def;
-        fFunc_def               = new TF1("fFunc_def","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))", 
-                                          fMesonFitRange[0], fMesonFitRange[1]);
-        fFunc_def->SetParameter(0,fFunc->GetParameter(0));
-        fFunc_def->SetParameter(1,fFunc->GetParameter(1));
-        fFunc_def->SetParameter(2,fFunc->GetParameter(2));
-        fFunc_def->SetParameter(3,fFunc->GetParameter(3));
-    
-        //FWHM
-        fFWHMFunc               = fFunc_def->GetX( fFunc_def->GetParameter(0)*0.5, fFunc_def->GetParameter(1), fMesonFitRange[1]) - fFunc_def->GetX( fFunc_def->GetParameter(0)*0.5, 
-                                  fMesonFitRange[0],fFunc_def->GetParameter(1));
-
-        //FWHM error +
-        TF1* fFunc_plus;
-        fFunc_plus              = new TF1("fFunc_plus","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",
-                                          fMesonFitRange[0], fMesonFitRange[1]);
-        fFunc_plus->SetParameter(0,fFunc->GetParameter(0) + fFunc->GetParError(0));
-        fFunc_plus->SetParameter(1,fFunc->GetParameter(1) + fFunc->GetParError(1));
-        fFunc_plus->SetParameter(2,fFunc->GetParameter(2) + fFunc->GetParError(2));
-        fFunc_plus->SetParameter(3,fFunc->GetParameter(3) + fFunc->GetParError(3));
-        Double_t FWHM_plus      = fFunc_plus->GetX(fFunc_plus->GetParameter(0)*0.5,fFunc_plus->GetParameter(1), fMesonFitRange[1]) - fFunc_plus->GetX(fFunc_plus->GetParameter(0)*0.5, 
-                                  fMesonFitRange[0],fFunc_plus->GetParameter(1));
-
-        //FWHM error -
-        TF1* fFunc_minus;
-        fFunc_minus             = new TF1("fFunc_minus","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))", 
-                                          fMesonFitRange[0], fMesonFitRange[1]);
-        fFunc_minus->SetParameter(0,fFunc->GetParameter(0) - fFunc->GetParError(0));
-        fFunc_minus->SetParameter(1,fFunc->GetParameter(1) - fFunc->GetParError(1));
-        fFunc_minus->SetParameter(2,fFunc->GetParameter(2) - fFunc->GetParError(2));
-        fFunc_minus->SetParameter(3,fFunc->GetParameter(3) - fFunc->GetParError(3));
-        
-        Double_t FWHM_minus     = fFunc_minus->GetX( fFunc_minus->GetParameter(0)*0.5, fFunc_minus->GetParameter(1), fMesonFitRange[1] ) - fFunc_minus->GetX( fFunc_minus->GetParameter(0)*0.5, 
-                                  fMesonFitRange[0],fFunc_minus->GetParameter(1));
-        Double_t Error1         = TMath::Abs(fFWHMFunc-FWHM_plus);
-        Double_t Error2         = TMath::Abs(fFWHMFunc-FWHM_minus);
-        if(Error1>=Error2) 
-            fFWHMFuncError      = Error1;
-        if(Error1<Error2) 
-            fFWHMFuncError      = Error2;
-    } else {
-        fFWHMFunc               = fFunc->GetParameter(2)*2.35;
-        fFWHMFuncError          = fFunc->GetParError(2)*2.35;
-    }
-}
 
 //****************************************************************************
 //********************** Calculate Fraction of Secondaries *******************

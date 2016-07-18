@@ -416,7 +416,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     
     if (doK0SecCorrection){
         histoYieldTrueSecFracMeson              = (TH1D*)fileCorrections->Get("TrueSecFrac");
-        histoYieldTrueSecFracMeson_Or           = (TH1D*)histoYieldTrueSecFracMeson->Clone("TrueSecFrac_Or");
+        histoYieldTrueSecFracMeson_Or           = (TH1D*)histoYieldTrueSecFracMeson->Clone("TrueSecFra#it{c}_Or");
         histoYieldTrueSecFracFK0SMeson          = (TH1D*)fileCorrections->Get("TrueSecFracFromK0S");
         histoYieldTrueSecFracFLambdaMeson       = (TH1D*)fileCorrections->Get("TrueSecFracFromLambda");
         histoYieldTrueSecFracFK0SMeson_Or       = (TH1D*)histoYieldTrueSecFracFK0SMeson->Clone("TrueSecFracFromK0S_Or");
@@ -518,7 +518,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             legendSecFrac->AddEntry(histoYieldTrueSecFracFLambdaMeson_Or,"#it{r}_{#Lambda}", "pe"); 
             legendSecFrac->Draw();
 
-            PutProcessLabelAndEnergyOnPlot(0.62, 0.75, 0.03, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.14, 0.94, 0.03, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data());
             canvasSecFrac->Update();
             canvasSecFrac->SaveAs(Form("%s/%s_FracSecondaries_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
             
@@ -537,7 +537,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             fitSecFrac->Draw("same");
             fitSecFracFromK0->Draw("same");
             legendSecFrac->Draw();
-            PutProcessLabelAndEnergyOnPlot(0.62, 0.75, 0.03, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.14, 0.94, 0.03, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data());
             
             canvasSecFrac->Update();
             canvasSecFrac->SaveAs(Form("%s/%s_FracSecondariesLin_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -718,7 +718,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         canvasBGRatio->SetLogy(1);
 
             DrawAutoGammaMesonHistos( histoRatioTrueYieldGammaM02,
-                                        "", "#it{p}_{T} (GeV/#it{c})", "BG Source/ S+B", 
+                                        "", "#it{p}_{T} (GeV/#it{c})", "#it{c}_{i}", 
                                         kFALSE, 4., 4e-10, kTRUE,
                                         kTRUE, 1e-5, 10, 
                                         kFALSE, 0., 10.);
@@ -755,7 +755,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         canvasBGRatio->SaveAs(Form("%s/%s_%s_BGRatioPt_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
 
             DrawAutoGammaMesonHistos( histoRatioTrueClustersBGPt[0],
-                                        "", "#it{p}_{T} (GeV/#it{c})", "BG Source/ S+B", 
+                                        "", "#it{p}_{T} (GeV/#it{c})", "#it{c}_{i}", 
                                         kFALSE, 4., 4e-10, kTRUE,
                                         kTRUE, 1e-5, 10, 
                                         kFALSE, 0., 10.);
@@ -779,7 +779,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         canvasBGRatio->SaveAs(Form("%s/%s_%s_BGRatioPtPureBG_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
         
             DrawAutoGammaMesonHistos(   histoRatioTrueYieldGammaM02,
-                                        "", "#it{p}_{T} (GeV/#it{c})", "BG Source/ S+B", 
+                                        "", "#it{p}_{T} (GeV/#it{c})", "#it{c}_{i}", 
                                         kFALSE, 4., 4e-10, kTRUE,
                                         kTRUE, 1e-5, 10, 
                                         kFALSE, 0., 10.);
@@ -833,7 +833,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             
             PutProcessLabelAndEnergyOnPlot(0.14, 0.95, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
         canvasDCFrac->Update();
-        canvasDCFrac->SaveAs(Form("%s/%s_%s_Pi0DCFrac_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
+        canvasDCFrac->SaveAs(Form("%s/%s_%s_Pi0DCFra#it{c}_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
 
             histoRatioEtaDCFrac->Scale(100);
             DrawAutoGammaMesonHistos( histoRatioEtaDCFrac,
@@ -846,7 +846,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             
             PutProcessLabelAndEnergyOnPlot(0.14, 0.95, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
         canvasDCFrac->Update();
-        canvasDCFrac->SaveAs(Form("%s/%s_%s_EtaDCFrac_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
+        canvasDCFrac->SaveAs(Form("%s/%s_%s_EtaDCFra#it{c}_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
 
         //**********************************************************************************
         //********************** Plot decay channel decompositions     ************************

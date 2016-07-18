@@ -417,6 +417,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         }
         if (cutNumberBaseEff[i].CompareTo("bla") != 0){
             FileNameEffBasePi0[i]                           = Form("%s/%s/Pi0_MC_GammaConvV1Correction_%s.root", cutNumber[i].Data(), optionEnergy.Data(), cutNumberBaseEff[i].Data());
+            if (mode == 10) FileNameEffBasePi0[i]           = Form("%s/%s/Pi0_MC_GammaMergedCorrection_%s.root", cutNumber[i].Data(), optionEnergy.Data(), cutNumberBaseEff[i].Data());
             fileEffBasePi0[i]                               = new TFile(FileNameEffBasePi0[i]);
             if (fileEffBasePi0[i]->IsZombie()){
                 enableTriggerEffPi0[i]                         = kFALSE;
@@ -426,8 +427,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 enableTriggerEffPi0All                         = kTRUE;
             }    
             if (enableTriggerEffPi0[i]){
-                TH1D* histoEffiPi0Temp                      = (TH1D*)fileCorrectedPi0[i]->Get("TrueMesonEffiPt");
-                TH1D* histoEffiBasePi0Temp                  = (TH1D*)fileEffBasePi0[i]->Get("TrueMesonEffiPt");
+                TString effiNameBase                        = "TrueMesonEffiPt";
+                if (mode == 10) 
+                    effiNameBase                            = nameEfficiency;
+                TH1D* histoEffiPi0Temp                      = (TH1D*)fileCorrectedPi0[i]->Get(effiNameBase.Data());
+                TH1D* histoEffiBasePi0Temp                  = (TH1D*)fileEffBasePi0[i]->Get(effiNameBase.Data());
                 histoEffBasePi0[i]                          = (TH1D*)fileEffBasePi0[i]->Get(nameEfficiency.Data());
                 histoEffBasePi0[i]->SetName(Form("EfficiencyBase_%s",  cutNumber[i].Data()));
                 histoTriggerEffPi0[i]                       = (TH1D*)histoEffiPi0Temp->Clone(Form("TriggerEfficiency_%s", cutNumber[i].Data()));
@@ -1102,7 +1106,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
         TH2F * histo2DPurityPi0;
         histo2DPurityPi0 = new TH2F("histo2DPurityPi0","histo2DPurityPi0",1000,0., maxPtGlobalPi0,10000,minPurityPi0, maxPurityPi0);
-        SetStyleHistoTH2ForGraphs(histo2DPurityPi0, "#it{p}_{T} (GeV/#it{c})","#epsilon_{pur,#pi^{0}}", 
+        SetStyleHistoTH2ForGraphs(histo2DPurityPi0, "#it{p}_{T} (GeV/#it{c})","#it{P}_{#pi^{0}}", 
                                     0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);
         histo2DPurityPi0->DrawCopy(); 
 
@@ -2673,7 +2677,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
         TH2F * histo2DPurityPi0;
         histo2DPurityPi0 = new TH2F("histo2DPurityPi0","histo2DPurityPi0",1000,0., maxPtGlobalPi0,10000,minPurityPi0, maxPurityPi0);
-        SetStyleHistoTH2ForGraphs(histo2DPurityPi0, "#it{p}_{T} (GeV/#it{c})","#epsilon_{pur,#pi^{0}}", 
+        SetStyleHistoTH2ForGraphs(histo2DPurityPi0, "#it{p}_{T} (GeV/#it{c})","#it{P}_{#pi^{0}}", 
                                     0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);
         histo2DPurityPi0->DrawCopy(); 
 

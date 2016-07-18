@@ -611,7 +611,7 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
                                         outputDirectory.Data(), mesonName.Data(), suffix.Data()), mode);
 
         PlotStandard2D( Resolution_Pi0_MCPt_ResolPt_Merged, Form("%s/Resolution2D_PureMerged%s.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()), "", 
-                        "#it{p}_{T,MC} (GeV/#it{c})", Form (" #mu ((#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}) (%s)",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data(),"%"), 
+                        "#it{p}_{T,MC} (GeV/#it{c})", Form ("(#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data()), 
                         kFALSE, -10, 10, kFALSE, 0, 50, 0, 1, floatLocationRightDown2D, 600, 600);
         
         ProduceProjectionsPlotWithFits( Resolution_Pi0PartMerged_PtRes ,fitResolution_Pi0PartMerged_PtRes, ptbinning, maxNBinsPt ,nColumns, nRows, Form(" (p^{%s}_{T,rec} -p^{%s}_{T,MC})/p^{%s}_{T,MC}",
@@ -619,7 +619,7 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
                                         "Pt",Form("%s/ProjectionsFitted_PartMerged%s.%s", outputDirectory.Data(), mesonName.Data(), suffix.Data()), mode);
 
         PlotStandard2D( Resolution_Pi0_MCPt_ResolPt_PartMerged, Form("%s/Resolution2D_PartMerged%s.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()), "", 
-                        "#it{p}_{T,MC} (GeV/#it{c})", Form (" #mu ((#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}) (%s)",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data(),"%"), 
+                        "#it{p}_{T,MC} (GeV/#it{c})", Form ("(#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data()), 
                         kFALSE, -10, 10, kFALSE, 0, 50, 0, 1, floatLocationRightDown2D, 600, 600);
     
     }
@@ -629,7 +629,7 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
                                     outputDirectory.Data(), mesonName.Data(), suffix.Data()), mode);
 
     PlotStandard2D( Resolution_Pi0_MCPt_ResolPt, Form("%s/Resolution2D%s.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()), "", 
-                     "#it{p}_{T,MC} (GeV/#it{c})", Form (" #mu ((#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}) (%s)",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data(),"%"), 
+                     "#it{p}_{T,MC} (GeV/#it{c})", Form ("(#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data()), 
                      kFALSE, -10, 10, kFALSE, 0, 50, 0, 1, floatLocationRightDown2D, 600, 600);
     
     delete padEPGdPtVsPt1;  
