@@ -480,6 +480,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     
     if ( !(mode == 10 || mode == 11) ){
         Float_t maximumEtaUnscaled = FindLargestEntryIn1D(histoMCEtaInputW0EvtWeigth[0])*10;
+        if(optionEnergy.CompareTo("8TeV")==0) maximumEtaUnscaled*=5;
         Float_t minimumEtaUnscaled = FindSmallestEntryIn1D(histoMCEtaInputW0EvtWeigth[nrOfPtHardBins-1]);
         
         TH2F * histo2DInputUnscaledEta;
@@ -556,6 +557,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     
     if ( !(mode == 10 || mode == 11) ){
         Float_t maximumEtaScaled = FindLargestEntryIn1D(histoMCEtaInput[0])*10;
+        if(optionEnergy.CompareTo("8TeV")==0) maximumEtaScaled*=2;
         Float_t minimumEtaScaled = FindSmallestEntryIn1D(histoMCEtaInput[nrOfPtHardBins-1]);
         
         TH2F * histo2DInputScaledEta;

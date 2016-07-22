@@ -719,11 +719,12 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
                         errorPi0    = 2.;
                         errorEta    = 4.;
                     } else if (additionalNameOutput.CompareTo("EMC7")==0){
-                        errorPi0    = 0.5 + 25/pow(1.5,ptBins[k]) + 2.;
-                        errorEta    = 0.5 + 25/pow(1.5,ptBins[k]) + 4.;
+                        errorPi0    = 0.5 + 55/pow(2.0,ptBins[k]) + 2.;
+                        errorEta    = 0.5 + 55/pow(2.0,ptBins[k]) + 4.;
                     } else if (additionalNameOutput.CompareTo("EGA")==0){
-                        errorPi0    = 5. + 2.;
-                        errorEta    = 2. + 25/pow(1.2,ptBins[k]) + 4.;
+                        errorPi0    = 3. + 2.;
+                        if(ptBins[k]>=15) errorPi0-= 0.1*(ptBins[k]-15.0);
+                        errorEta    = 2. + 25/pow(1.3,(ptBins[k]-4.)) + 4.;
                     }
                     if (meson.CompareTo("Pi0EtaBinning")==0){
                        error    = TMath::Sqrt(errorPi0*errorPi0+errorEta*errorEta);
