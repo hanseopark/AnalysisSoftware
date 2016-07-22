@@ -157,6 +157,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TString nameCorrectedYield                          = "CorrectedYieldTrueEff";
     TString nameEfficiency                              = "TrueMesonEffiPt";
     TString nameAcceptance                              = "fMCMesonAccepPt";
+    TString nameAcceptanceWOEvtWeights                  = "fMCMesonAccepPtWOEvtWeights";
     TString nameMassMC                                  = "histoTrueMassMeson";
     TString nameWidthMC                                 = "histoTrueFWHMMeson";
     TString nameMCYield                                 = "MCYield_Meson_oldBinWOWeights";
@@ -322,6 +323,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TH1D*   histoRawClusterPt       [MaxNumberOfFiles];
     TH1D*   histoEfficiencyPi0      [MaxNumberOfFiles];
     TH1D*   histoAcceptancePi0      [MaxNumberOfFiles];
+    TH1D*   histoAcceptancePi0WOEvtWeights [MaxNumberOfFiles];
     TH1D*   histoPurityPi0          [MaxNumberOfFiles];
     TH1D*   histoEffTimesAccPi0     [MaxNumberOfFiles];
     TH1D*   histoRawYieldPi0        [MaxNumberOfFiles];
@@ -398,6 +400,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         histoEfficiencyPi0[i]->SetName(Form("Efficiency_%s",  cutNumber[i].Data()));
         histoAcceptancePi0[i]                               = (TH1D*)fileCorrectedPi0[i]->Get(nameAcceptance.Data());
         histoAcceptancePi0[i]->SetName(Form("Acceptance_%s",  cutNumber[i].Data()));
+        histoAcceptancePi0WOEvtWeights[i]                   = (TH1D*)fileCorrectedPi0[i]->Get(nameAcceptanceWOEvtWeights.Data());
+        if(histoAcceptancePi0WOEvtWeights[i]) histoAcceptancePi0WOEvtWeights[i]->SetName(Form("AcceptanceWOEvtWeights_%s",  cutNumber[i].Data()));
         if (mode == 10){
             histoPurityPi0[i]                               = (TH1D*)fileCorrectedPi0[i]->Get("MesonPurity");
             histoPurityPi0[i]->SetName(Form("Purity_%s",  cutNumber[i].Data()));
@@ -437,7 +441,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 histoTriggerEffPi0[i]                       = (TH1D*)histoEffiPi0Temp->Clone(Form("TriggerEfficiency_%s", cutNumber[i].Data()));
                 histoTriggerEffPi0[i]->Divide(histoTriggerEffPi0[i],histoEffiBasePi0Temp,1.,1.,"B");
                 histoEffTimesAccPi0[i]                      = (TH1D*)histoEffBasePi0[i]->Clone(Form("EffTimeAcc_%s",  cutNumber[i].Data()));
-                histoEffTimesAccPi0[i]->Multiply(histoAcceptancePi0[i]);
+                if(histoAcceptancePi0WOEvtWeights[i]){
+                  histoAcceptancePi0WOEvtWeights[i]->Sumw2();
+                  histoEffTimesAccPi0[i]->Multiply(histoAcceptancePi0WOEvtWeights[i]);
+                  histoEfficiencyPi0[i]->Multiply(histoAcceptancePi0[i]);
+                  histoEfficiencyPi0[i]->Divide(histoEfficiencyPi0[i],histoAcceptancePi0WOEvtWeights[i],1.,1.,"B");
+                  histoAcceptancePi0[i] = histoAcceptancePi0WOEvtWeights[i];
+                  histoAcceptancePi0[i]->SetName(Form("Acceptance_%s",  cutNumber[i].Data()));
+                }else histoEffTimesAccPi0[i]->Multiply(histoAcceptancePi0[i]);
                 histoEffTimesAccPi0[i]->Scale(deltaRapid[i]*2*TMath::Pi());
             } else {
                 histoEffBasePi0[i]                          = NULL;
@@ -445,7 +456,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             }
         } else {
             histoEffTimesAccPi0[i]                      = (TH1D*)histoEfficiencyPi0[i]->Clone(Form("EffTimeAcc_%s",  cutNumber[i].Data()));
-            histoEffTimesAccPi0[i]->Multiply(histoAcceptancePi0[i]);
+            if(histoAcceptancePi0WOEvtWeights[i]){
+              histoAcceptancePi0WOEvtWeights[i]->Sumw2();
+              histoEffTimesAccPi0[i]->Multiply(histoAcceptancePi0WOEvtWeights[i]);
+              histoEfficiencyPi0[i]->Multiply(histoAcceptancePi0[i]);
+              histoEfficiencyPi0[i]->Divide(histoEfficiencyPi0[i],histoAcceptancePi0WOEvtWeights[i],1.,1.,"B");
+              histoAcceptancePi0[i] = histoAcceptancePi0WOEvtWeights[i];
+              histoAcceptancePi0[i]->SetName(Form("Acceptance_%s",  cutNumber[i].Data()));
+            }else histoEffTimesAccPi0[i]->Multiply(histoAcceptancePi0[i]);
             histoEffTimesAccPi0[i]->Scale(deltaRapid[i]*2*TMath::Pi());
         }
         
@@ -3011,6 +3029,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TH1D*   histoCorrectedYieldEta      [MaxNumberOfFiles];
     TH1D*   histoEfficiencyEta          [MaxNumberOfFiles];
     TH1D*   histoAcceptanceEta          [MaxNumberOfFiles];
+    TH1D*   histoAcceptanceEtaWOEvtWeights [MaxNumberOfFiles];
     TH1D*   histoEffTimesAccEta         [MaxNumberOfFiles];
     TH1D*   histoRawYieldEta            [MaxNumberOfFiles];
     TH1D*   histoMCInputEta             [MaxNumberOfFiles];
@@ -3093,6 +3112,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             histoEfficiencyEta[i]->SetName(Form("Efficiency_%s",  cutNumber[i].Data()));
             histoAcceptanceEta[i]                           = (TH1D*)fileCorrectedEta[i]->Get(nameAcceptance.Data());
             histoAcceptanceEta[i]->SetName(Form("Acceptance_%s",  cutNumber[i].Data()));
+            histoAcceptanceEtaWOEvtWeights[i]               = (TH1D*)fileCorrectedEta[i]->Get(nameAcceptanceWOEvtWeights.Data());
+            if(histoAcceptanceEtaWOEvtWeights[i]) histoAcceptanceEtaWOEvtWeights[i]->SetName(Form("AcceptanceWOEvtWeights_%s",  cutNumber[i].Data()));
             histoRawYieldEta[i]                             = (TH1D*)fileUnCorrectedEta[i]->Get("histoYieldMesonPerEvent");
             histoRawYieldEta[i]->SetName(Form("RAWYieldPerEvent_%s",cutNumber[i].Data()));
             histoMCInputEta[i]                              = (TH1D*)fileCorrectedEta[i]->Get("MCYield_Meson_oldBinWOWeights");
@@ -3131,7 +3152,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     histoTriggerEffEta[i]                       = (TH1D*)histoEffiEtaTemp->Clone(Form("TriggerEfficiency_%s", cutNumber[i].Data()));
                     histoTriggerEffEta[i]->Divide(histoTriggerEffEta[i],histoEffiBaseEtaTemp,1.,1.,"B");
                     histoEffTimesAccEta[i]                      = (TH1D*)histoEffBaseEta[i]->Clone(Form("EffTimeAcc_%s",  cutNumber[i].Data()));
-                    histoEffTimesAccEta[i]->Multiply(histoAcceptanceEta[i]);
+                    if(histoAcceptanceEtaWOEvtWeights[i]){
+                      histoAcceptanceEtaWOEvtWeights[i]->Sumw2();
+                      histoEffTimesAccEta[i]->Multiply(histoAcceptanceEtaWOEvtWeights[i]);
+                      histoEfficiencyEta[i]->Multiply(histoAcceptanceEta[i]);
+                      histoEfficiencyEta[i]->Divide(histoEfficiencyEta[i],histoAcceptanceEtaWOEvtWeights[i],1.,1.,"B");
+                      histoAcceptanceEta[i] = histoAcceptanceEtaWOEvtWeights[i];
+                      histoAcceptanceEta[i]->SetName(Form("Acceptance_%s",  cutNumber[i].Data()));
+                    }else histoEffTimesAccEta[i]->Multiply(histoAcceptanceEta[i]);
                     histoEffTimesAccEta[i]->Scale(deltaRapid[i]*2*TMath::Pi());
                 } else {
                     histoEffBaseEta[i]                          = NULL;
@@ -3139,7 +3167,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 }
             } else {
                 histoEffTimesAccEta[i]                          = (TH1D*)histoEfficiencyEta[i]->Clone(Form("EffTimeAcc_%s",  cutNumber[i].Data()));
-                histoEffTimesAccEta[i]->Multiply(histoAcceptanceEta[i]);
+                if(histoAcceptanceEtaWOEvtWeights[i]){
+                  histoAcceptanceEtaWOEvtWeights[i]->Sumw2();
+                  histoEffTimesAccEta[i]->Multiply(histoAcceptanceEtaWOEvtWeights[i]);
+                  histoEfficiencyEta[i]->Multiply(histoAcceptanceEta[i]);
+                  histoEfficiencyEta[i]->Divide(histoEfficiencyEta[i],histoAcceptanceEtaWOEvtWeights[i],1.,1.,"B");
+                  histoAcceptanceEta[i] = histoAcceptanceEtaWOEvtWeights[i];
+                  histoAcceptanceEta[i]->SetName(Form("Acceptance_%s",  cutNumber[i].Data()));
+                }else histoEffTimesAccEta[i]->Multiply(histoAcceptanceEta[i]);
                 histoEffTimesAccEta[i]->Scale(deltaRapid[i]*2*TMath::Pi());
 
             }    

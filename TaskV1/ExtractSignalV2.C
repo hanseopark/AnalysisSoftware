@@ -336,18 +336,22 @@ void ExtractSignalV2(   TString meson                   = "",
             cout << "line " << __LINE__ << endl;
             if ( fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 ){
                 fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0AccWOWeights.Data());
+                fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0AccWOEvtWeights.Data());
             }
             fHistoMCMesonPt                             = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
             fHistoMCMesonPtWOWeights                    = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0WOWeights.Data());
+            fHistoMCMesonPtWOEvtWeights                 = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0WOEvtWeights.Data());
         }
         if( fMesonId == 221){
             fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAcc.Data());
 //          if ( fMode == 2 || fMode == 3  ){
                 fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAccWOWeights.Data());
+                fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAccWOEvtWeights.Data());
 //          }
         cout << "line " << __LINE__ << endl;
             fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCEta.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
             fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaWOWeights.Data());
+            fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaWOEvtWeights.Data());
         }
         fHistoMCMesonPt->Sumw2();
         fHistoMCMesonPtWithinAcceptance->Sumw2();
@@ -357,6 +361,10 @@ void ExtractSignalV2(   TString meson                   = "",
         if (fHistoMCMesonPtWithinAcceptanceWOWeights){ 
             cout << "found: " << ObjectNameMCPi0AccWOWeights.Data() << endl;
             fHistoMCMesonPtWithinAcceptanceWOWeights->Sumw2();
+        }
+        if (fHistoMCMesonPtWithinAcceptanceWOEvtWeights){
+            cout << "found: " << ObjectNameMCPi0AccWOEvtWeights.Data() << endl;
+            fHistoMCMesonPtWithinAcceptanceWOEvtWeights->Sumw2();
         }
         if (fHistoMCMesonPtWOWeights){
             fHistoMCMesonPtWeights              = (TH1D*)fHistoMCMesonPtWOWeights->Clone("WeightsMeson");
@@ -2209,11 +2217,13 @@ void ExtractSignalV2(   TString meson                   = "",
         // Rebin MC histograms for acceptance and input without weights
         cout << "came till here" << endl;
         if (fHistoMCMesonPtWithinAcceptanceWOWeights) FillHistosArrayMCWOWeights(fHistoMCMesonPtWithinAcceptanceWOWeights, fHistoMCMesonPtWOWeights, fDeltaPt);
+        if (fHistoMCMesonPtWithinAcceptanceWOEvtWeights) FillHistosArrayMCWOEvtWeights(fHistoMCMesonPtWithinAcceptanceWOEvtWeights, fHistoMCMesonPtWOEvtWeights, fDeltaPt);
         
         // Calculation of meson acceptance with possible weighted input
         CalculateMesonAcceptance();
         // Calculation of meson acceptance without weights for input
         if (fHistoMCMesonPtWithinAcceptanceWOWeights) CalculateMesonAcceptanceWOWeights();
+        if (fHistoMCMesonPtWithinAcceptanceWOEvtWeights) CalculateMesonAcceptanceWOEvtWeights();
 
         // calculate pure rec efficiency as in data with fully unweighted histograms if possible
         // ATTENTION: if unweighted histograms are not available this efficiency should not be used for anything!!!!
@@ -3601,12 +3611,16 @@ void SetCorrectMCHistogrammNames(TString mesonType){
     ObjectNameTrueSecFromLambda         = "ESD_TrueSecondaryMotherFromLambda_InvMass_Pt";
     ObjectNameMCPi0Acc                  = "MC_Pi0InAcc_Pt";
     ObjectNameMCPi0AccWOWeights         = "MC_Pi0WOWeightInAcc_Pt";
+    ObjectNameMCPi0AccWOEvtWeights      = "MC_Pi0_WOEventWeightsInAcc_Pt";
     ObjectNameMCEtaAcc                  = "MC_EtaInAcc_Pt";
     ObjectNameMCEtaAccWOWeights         = "MC_EtaWOWeightInAcc_Pt";
+    ObjectNameMCEtaAccWOEvtWeights      = "MC_Eta_WOEventWeightsInAcc_Pt";
     ObjectNameMCPi0                     = "MC_Pi0_Pt";
     ObjectNameMCPi0WOWeights            = "MC_Pi0_WOWeights_Pt";
+    ObjectNameMCPi0WOEvtWeights         = "MC_Pi0_WOEventWeights_Pt";
     ObjectNameMCEta                     = "MC_Eta_Pt";
     ObjectNameMCEtaWOWeights            = "MC_Eta_WOWeights_Pt";
+    ObjectNameMCEtaWOEvtWeights         = "MC_Eta_WOEventWeights_Pt";
     ObjectNameTrueGGBck                 = "ESD_TrueBckGG_InvMass_Pt";
     ObjectNameTrueContBck               = "ESD_TrueBckCont_InvMass_Pt";
     ObjectNameTrueAllBck                = "ESD_TrueAllCont_InvMass_Pt";
@@ -5423,6 +5437,20 @@ void FillHistosArrayMCWOWeights(TH1D* fHistoMCMesonPtWithinAcceptanceFill, TH1D 
 }
 
 //****************************************************************************
+//***************** Filling of MC histograms in proper binning ***************
+//****************************************************************************
+void FillHistosArrayMCWOEvtWeights(TH1D* fHistoMCMesonPtWithinAcceptanceFill, TH1D * fHistoMCMesonPtFill, TH1D * fDeltaPtFill) {
+//    Char_t nameHisto[100] = "fHistoMCMesonPtEtaWithinAcceptance";
+    fHistoMCMesonPtWithinAcceptanceFill->Sumw2();
+    fHistoMCMesonWithinAccepPtWOEvtWeights = (TH1D*)fHistoMCMesonPtWithinAcceptanceFill->Rebin(fNBinsPt,"",fBinsPt); // Proper bins in Pt
+    fHistoMCMesonWithinAccepPtWOEvtWeights->Divide(fDeltaPtFill);
+    fHistoMCMesonPtFill->Sumw2();
+    fHistoMCMesonPt1WOEvtWeights = (TH1D*)fHistoMCMesonPtFill->Rebin(fNBinsPt,"",fBinsPt); // Proper bins in Pt
+    fHistoMCMesonPt1WOEvtWeights->Divide(fDeltaPtFill);
+
+}
+
+//****************************************************************************
 //***************** Calculation of Meson Acceptance **************************
 //****************************************************************************
 void CalculateMesonAcceptance() {
@@ -5449,6 +5477,21 @@ void CalculateMesonAcceptanceWOWeights() {
     fFileDataLog << endl << "Calculation of the Acceptance wo weights" << endl;
     for ( Int_t i = 1; i < fHistoMCMesonAcceptPtWOWeights->GetNbinsX()+1 ; i++){
         fFileDataLog << "Bin " << i << "\t"<< fHistoMCMesonAcceptPtWOWeights->GetBinCenter(i)<< "\t" << fHistoMCMesonAcceptPtWOWeights->GetBinContent(i) << "\t" << fHistoMCMesonAcceptPtWOWeights->GetBinError(i) <<endl;
+    }
+}
+
+//****************************************************************************
+//***************** Calculation of Meson Acceptance **************************
+//****************************************************************************
+void CalculateMesonAcceptanceWOEvtWeights() {
+    fHistoMCMesonAcceptPtWOEvtWeights = new TH1D("fMCMesonAccepPtWOEvtWeights","",fNBinsPt,fBinsPt);
+    fHistoMCMesonAcceptPtWOEvtWeights->Sumw2();
+
+    fHistoMCMesonAcceptPtWOEvtWeights->Divide(fHistoMCMesonWithinAccepPtWOEvtWeights,fHistoMCMesonPt1WOEvtWeights,1.,1.,"B");
+    fHistoMCMesonAcceptPtWOEvtWeights->DrawCopy();
+    fFileDataLog << endl << "Calculation of the Acceptance wo weights" << endl;
+    for ( Int_t i = 1; i < fHistoMCMesonAcceptPtWOEvtWeights->GetNbinsX()+1 ; i++){
+        fFileDataLog << "Bin " << i << "\t"<< fHistoMCMesonAcceptPtWOEvtWeights->GetBinCenter(i)<< "\t" << fHistoMCMesonAcceptPtWOEvtWeights->GetBinContent(i) << "\t" << fHistoMCMesonAcceptPtWOEvtWeights->GetBinError(i) <<endl;
     }
 }
 
@@ -5784,6 +5827,11 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
         fHistoMCMesonPt1WOWeights->Write(); // Proper bins in Pt
     }
     cout << "line" << __LINE__ << endl;
+    if (fHistoMCMesonPtWithinAcceptanceWOEvtWeights){
+        fHistoMCMesonAcceptPtWOEvtWeights->Write();
+        fHistoMCMesonPt1WOEvtWeights->SetName("MC_Meson_genPt_properBinning_WOEvtWeights");
+        fHistoMCMesonPt1WOEvtWeights->Write(); // Proper bins in Pt
+    }
     fHistoMassMeson->Write();
     fHistoFWHMMeson->Write();
     fHistoMassGaussianMeson->Write();

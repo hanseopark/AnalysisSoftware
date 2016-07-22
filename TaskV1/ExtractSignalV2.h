@@ -79,12 +79,16 @@ TString     ObjectNameTrueSecFromK0S                                    = "";
 TString     ObjectNameTrueSecFromLambda                                 = "";
 TString     ObjectNameMCPi0Acc                                          = "";
 TString     ObjectNameMCPi0AccWOWeights                                 = "";
+TString     ObjectNameMCPi0AccWOEvtWeights                              = "";
 TString     ObjectNameMCEtaAcc                                          = "";
 TString     ObjectNameMCEtaAccWOWeights                                 = "";
+TString     ObjectNameMCEtaAccWOEvtWeights                              = "";
 TString     ObjectNameMCPi0                                             = "";
 TString     ObjectNameMCPi0WOWeights                                    = "";
+TString     ObjectNameMCPi0WOEvtWeights                                 = "";
 TString     ObjectNameMCEta                                             = "";
 TString     ObjectNameMCEtaWOWeights                                    = "";
+TString     ObjectNameMCEtaWOEvtWeights                                 = "";
 TString     ObjectNameTrueGGBck                                         = "";
 TString     ObjectNameTrueContBck                                       = "";
 TString     ObjectNameTrueAllBck                                        = "";
@@ -200,8 +204,10 @@ void IntegrateHistoInvMass(TH1D * , Double_t *);                                
 void IntegrateFitFunc(TF1 * , TH1D *, Double_t *);                                                          // Integrate fit function
 void FillHistosArrayMC(TH1D* , TH1D*, TH1D*);                                                               // Fill MC input histograms
 void FillHistosArrayMCWOWeights(TH1D* , TH1D*, TH1D*);                                                      // Fill MC input histograms
+void FillHistosArrayMCWOEvtWeights(TH1D* , TH1D*, TH1D*);                                                   // Fill MC input histograms
 void CalculateMesonAcceptance();                                                                            // Calculation of meson acceptance
 void CalculateMesonAcceptanceWOWeights();                                                                   // Calculation of meson acceptance
+void CalculateMesonAcceptanceWOEvtWeights();                                                                // Calculation of meson acceptance
 void CalculateMesonEfficiency(TH1D*, TH1D*,TString);                                                        // Calculation of meson efficiencies 
 void CalculateMesonEfficiencyWOWeights(TH1D*, TH1D*,TString);                                               // Calculation of meson efficiencies 
 void SaveHistos(Int_t, TString, TString, Bool_t);                                                           // Saving standard histograms to a file
@@ -712,19 +718,24 @@ TH1D*       fHistoMassWindowNarrowLow                                   = NULL;
 //****************************************************************************
 TH1D*       fHistoMCMesonPtWithinAcceptance                             = NULL;
 TH1D*       fHistoMCMesonPtWithinAcceptanceWOWeights                    = NULL;
+TH1D*       fHistoMCMesonPtWithinAcceptanceWOEvtWeights                 = NULL;
 TH1D*       fHistoMCMesonPt                                             = NULL;
 TH1D*       fHistoMCMesonPtWOWeights                                    = NULL;
+TH1D*       fHistoMCMesonPtWOEvtWeights                                 = NULL;
 TH1D*       fHistoMCMesonPtWeights                                      = NULL;
 TH1D*       fHistoMCMesonWithinAccepPt                                  = NULL;
 TH1D*       fHistoMCMesonWithinAccepPtWOWeights                         = NULL;
+TH1D*       fHistoMCMesonWithinAccepPtWOEvtWeights                      = NULL;
 TH1D*       fHistoMCMesonPt1                                            = NULL;
 TH1D*       fHistoMCMesonPt1WOWeights                                   = NULL;
+TH1D*       fHistoMCMesonPt1WOEvtWeights                                = NULL;
 
 //****************************************************************************
 //*********************** MC efficiency histograms ***************************
 //****************************************************************************
 TH1D*       fHistoMCMesonAcceptPt                                       = NULL;
 TH1D*       fHistoMCMesonAcceptPtWOWeights                              = NULL;
+TH1D*       fHistoMCMesonAcceptPtWOEvtWeights                           = NULL;
 TH1D*       fHistoMCMesonEffiPt                                         = NULL;
 TH1D*       fHistoTrueMesonEffiPt                                       = NULL;
 TH1D*       fHistoMonteMesonEffiPt                                      = NULL;

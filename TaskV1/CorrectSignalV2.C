@@ -392,6 +392,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TH1D *histoEffiLeftNarrowPt                     = (TH1D*)fileCorrections->Get("MesonLeftNarrowEffiPt");
     TH1D *histoEffiLeftWidePt                       = (TH1D*)fileCorrections->Get("MesonLeftWideEffiPt");
     TH1D *histoAcceptance                           = (TH1D*)fileCorrections->Get("fMCMesonAccepPt");
+    TH1D *histoAcceptanceWOEvtWeights               = (TH1D*)fileCorrections->Get("fMCMesonAccepPtWOEvtWeights");
     
     // load histograms without weighting for comparison of efficiencies & enable the comparison if those are present in the input file
     Bool_t containsWOWeights                        = kFALSE;
@@ -3245,6 +3246,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     if (histoRatioValRecMassGauss)          histoRatioValRecMassGauss->Write("histoRatioValRecMassGauss");
 
     if (histoAcceptance)                    histoAcceptance->Write();
+    if (histoAcceptanceWOEvtWeights)        histoAcceptanceWOEvtWeights->Write();
     if (histoTrueEffiPt)                    histoTrueEffiPt->Write("TrueMesonEffiPt");
     if (histoTrueEffiNarrowPt)              histoTrueEffiNarrowPt->Write("TrueMesonEffiNarrowPt");
     if (histoTrueEffiWidePt)                histoTrueEffiWidePt->Write("TrueMesonEffiWidePt");
