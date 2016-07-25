@@ -301,6 +301,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     TH1D* histoRatioMergedPartConvFrac          = NULL;
     TH1D* histoRatioMergedOneGammaFrac          = NULL;
     TH1D* histoRatioMergedOneElectronFrac       = NULL;
+    Bool_t  isUpdatedOutputFormat               = kFALSE;
     if (kIsMC){
         for (Int_t i = 0; i < 9; i++){
             histoTrueClustersBGPt[i]                = (TH1D*)fileCorrections->Get(Form("TrueClusBG_%s_Pt",labelsBG[i].Data()));
@@ -355,22 +356,48 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         histoRatioEtaDalitzFrac->Divide(histoRatioEtaDalitzFrac,histoTrueYieldEtaM02,1.,1.,"B");
         
         histoMergedAll                              = (TH1D*)fileCorrections->Get("histoTrueYieldMergedM02");
-        histoMergedPure                             = (TH1D*)fileCorrections->Get("histoTrueYieldMergedPureM02");
-        histoRatioMergedPureFrac                    = (TH1D*)histoMergedPure->Clone("RatioMergedPure");
-        histoRatioMergedPureFrac->Divide(histoRatioMergedPureFrac,histoMergedAll,1.,1.,"B");
-        histoRatioMergedPureFrac->Scale(100.);
-        histoMergedPartConv                         = (TH1D*)fileCorrections->Get("histoTrueYieldMergedPartConvM02");
-        histoRatioMergedPartConvFrac                = (TH1D*)histoMergedPartConv->Clone("RatioMergedPartConv");
-        histoRatioMergedPartConvFrac->Divide(histoRatioMergedPartConvFrac,histoMergedAll,1.,1.,"B");
-        histoRatioMergedPartConvFrac->Scale(100.);
-        histoMergedOneGamma                         = (TH1D*)fileCorrections->Get("histoTrueYieldMergedOneGammaFromMesonM02");
-        histoRatioMergedOneGammaFrac                = (TH1D*)histoMergedOneGamma->Clone("RatioMergedOneGamma");
-        histoRatioMergedOneGammaFrac->Divide(histoRatioMergedOneGammaFrac,histoMergedAll,1.,1.,"B");
-        histoRatioMergedOneGammaFrac->Scale(100.);
-        histoMergedOneElectron                      = (TH1D*)fileCorrections->Get("histoTrueYieldMergedOneElectronFromMesonM02");
-        histoRatioMergedOneElectronFrac             = (TH1D*)histoMergedOneElectron->Clone("RatioMergedOneElectron");
-        histoRatioMergedOneElectronFrac->Divide(histoRatioMergedOneElectronFrac,histoMergedAll,1.,1.,"B");
-        histoRatioMergedOneElectronFrac->Scale(100.);
+        histoMergedPure                             = (TH1D*)fileCorrections->Get(Form("histoTrueYieldMergedPureFrom%sM02",nameMeson.Data()));
+        cout << "maximum of pure merged: "<< histoMergedPure->GetMaximum() << endl;
+        if (!(histoMergedPure->GetMaximum() > 0)){
+            
+            histoMergedPure                         = (TH1D*)fileCorrections->Get("histoTrueYieldMergedPureM02");
+            histoRatioMergedPureFrac                = (TH1D*)histoMergedPure->Clone("RatioMergedPure");
+            histoRatioMergedPureFrac->Divide(histoRatioMergedPureFrac,histoMergedAll,1.,1.,"B");
+            histoRatioMergedPureFrac->Scale(100.);
+        } else { 
+            isUpdatedOutputFormat                   = kTRUE;
+            histoRatioMergedPureFrac                    = (TH1D*)histoMergedPure->Clone("RatioMergedPure");
+            histoRatioMergedPureFrac->Divide(histoRatioMergedPureFrac,histoTrueYieldPi0M02,1.,1.,"B");
+            histoRatioMergedPureFrac->Scale(100.);
+        }
+        if (!isUpdatedOutputFormat){
+            histoMergedPartConv                         = (TH1D*)fileCorrections->Get("histoTrueYieldMergedPartConvM02");
+            histoRatioMergedPartConvFrac                = (TH1D*)histoMergedPartConv->Clone("RatioMergedPartConv");
+            histoRatioMergedPartConvFrac->Divide(histoRatioMergedPartConvFrac,histoMergedAll,1.,1.,"B");
+            histoRatioMergedPartConvFrac->Scale(100.);
+            histoMergedOneGamma                         = (TH1D*)fileCorrections->Get("histoTrueYieldMergedOneGammaFromMesonM02");
+            histoRatioMergedOneGammaFrac                = (TH1D*)histoMergedOneGamma->Clone("RatioMergedOneGamma");
+            histoRatioMergedOneGammaFrac->Divide(histoRatioMergedOneGammaFrac,histoMergedAll,1.,1.,"B");
+            histoRatioMergedOneGammaFrac->Scale(100.);
+            histoMergedOneElectron                      = (TH1D*)fileCorrections->Get("histoTrueYieldMergedOneElectronFromMesonM02");
+            histoRatioMergedOneElectronFrac             = (TH1D*)histoMergedOneElectron->Clone("RatioMergedOneElectron");
+            histoRatioMergedOneElectronFrac->Divide(histoRatioMergedOneElectronFrac,histoMergedAll,1.,1.,"B");
+            histoRatioMergedOneElectronFrac->Scale(100.);
+        } else {
+            cout << "went into identified meson routine" << endl;
+            histoMergedPartConv                         = (TH1D*)fileCorrections->Get(Form("histoTrueYieldMergedPartConvFrom%sM02",nameMeson.Data()));
+            histoRatioMergedPartConvFrac                = (TH1D*)histoMergedPartConv->Clone("RatioMergedPartConv");
+            histoRatioMergedPartConvFrac->Divide(histoRatioMergedPartConvFrac,histoTrueYieldPi0M02,1.,1.,"B");
+            histoRatioMergedPartConvFrac->Scale(100.);
+            histoMergedOneGamma                         = (TH1D*)fileCorrections->Get(Form("histoTrueYieldMergedOneGammaFrom%sM02",nameMeson.Data()));
+            histoRatioMergedOneGammaFrac                = (TH1D*)histoMergedOneGamma->Clone("RatioMergedOneGamma");
+            histoRatioMergedOneGammaFrac->Divide(histoRatioMergedOneGammaFrac,histoTrueYieldPi0M02,1.,1.,"B");
+            histoRatioMergedOneGammaFrac->Scale(100.);
+            histoMergedOneElectron                      = (TH1D*)fileCorrections->Get(Form("histoTrueYieldMergedOneElectronFrom%sM02",nameMeson.Data()));
+            histoRatioMergedOneElectronFrac             = (TH1D*)histoMergedOneElectron->Clone("RatioMergedOneElectron");
+            histoRatioMergedOneElectronFrac->Divide(histoRatioMergedOneElectronFrac,histoTrueYieldPi0M02,1.,1.,"B");
+            histoRatioMergedOneElectronFrac->Scale(100.);
+        }    
     }
     
     // loading efficiency
@@ -918,7 +945,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
 
             TLegend* legendClusterClassificationDecomp = GetAndSetLegend2(0.65, 0.82, 0.95, 0.95, 28);
             legendClusterClassificationDecomp->SetMargin(0.2);
-            legendClusterClassificationDecomp->AddEntry(histoRatioPi0GGFrac,"L_{merged}", "p");
+            legendClusterClassificationDecomp->AddEntry(histoRatioMergedPureFrac,"L_{merged}", "p");
             legendClusterClassificationDecomp->AddEntry(histoRatioMergedPartConvFrac,"L_{merged part. conv}", "p");
             legendClusterClassificationDecomp->AddEntry(histoRatioMergedOneGammaFrac,"L_{1#gamma from decay}", "p");
             legendClusterClassificationDecomp->AddEntry(histoRatioMergedOneElectronFrac,"L_{1e^{#pm} from decay}", "p");
@@ -1167,7 +1194,12 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         histoUnCorrectedYieldDrawing->Write();
     }
     if (deltaPt)                            deltaPt->Write("deltaPt");
-    
+    if (kIsMC){
+        if (histoRatioMergedPureFrac)           histoRatioMergedPureFrac->Write();
+        if (histoRatioMergedPartConvFrac)       histoRatioMergedPartConvFrac->Write();
+        if (histoRatioMergedOneGammaFrac)       histoRatioMergedOneGammaFrac->Write();
+        if (histoRatioMergedOneElectronFrac)    histoRatioMergedOneElectronFrac->Write();
+    }
     correctedOutput->Write();
     correctedOutput->Close();
     

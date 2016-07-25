@@ -25,6 +25,7 @@ Int_t       fMode                                                       = -1;
 Bool_t      fAdvancedMesonQA                                            = kFALSE;
 Bool_t      fAdvancedClusterQA                                          = kFALSE;
 Bool_t      fAdditionalLabels                                           = kFALSE;
+Bool_t      fNewMCOutput                                                = kFALSE;
 TString     fEventCutSelection                                          = "";
 TString     fClusterCutSelection                                        = "";
 TString     fClusterMergedCutSelection                                  = "";
@@ -58,6 +59,10 @@ TString     labelsElectron[9]                                           = { "Dir
 //****************************************************************************
 TString     fObjectNameMCMesonAcc                                       = "";
 TString     fObjectNameMCMeson                                          = "";
+TString     fObjectNameMCMesonAccSecPi0                                 = "";
+TString     fObjectNameMCMesonSecPi0                                    = "";
+TString     fObjectNameMCMesonAccSecPi0FromK0s                          = "";
+TString     fObjectNameMCMesonSecPi0FromK0s                             = "";
 TString     fObjectNameMCMesonWOWeights                                 = "";
 TString     fObjectNameMCMesonDalitzAcc                                 = "";
 TString     fObjectNameMCMesonDalitz                                    = "";
@@ -72,7 +77,11 @@ TString     fObjectNameTrueFromEtaDCM02                                 = "";
 TString     fObjectNameTrueFromEtaGGM02                                 = "";
 TString     fObjectNameTrueFromEtaDalitzM02                             = "";
 TString     fObjectNameTrueMergedPartConvM02                            = "";
+TString     fObjectNameTrueMergedPartConvFromPi0M02                     = "";
+TString     fObjectNameTrueMergedPartConvFromEtaM02                     = "";
 TString     fObjectNameTrueMergedPureM02                                = "";
+TString     fObjectNameTrueMergedPureFromPi0M02                         = "";
+TString     fObjectNameTrueMergedPureFromEtaM02                         = "";
 TString     fObjectNameTrueMergedPartConvLeadEM02                       = "";
 TString     fObjectNameTrueMergedOneGammaM02                            = "";
 TString     fObjectNameTrueMergedOneGammaFromPi0M02                     = "";
@@ -113,16 +122,19 @@ TH1D* AddPossiblyNotExistingHists(TH1D*, TH1D*, TString );                      
 void CheckForNULLForPointer(TH1D* );                                                                        // Check if histo is NULL
 void FillMCM02HistosArray( TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*);                                       // Fill M02 histograms for MC 
 void FillMCM02AdditionHistosArray( TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*,    // Fill additional M02 histograms for MC     
-                                   TH2F*, TH2F*, TH2F*, TH2F* );                                                   
+                                   TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F* );                                                   
 void FillMCPrimSecM02HistosArray( TH2F*, TH2F*, TH2F*, TH2F* );                                             // Fill M02 histograms for MC for Pi0 Prim Sec 
 void FillMCBGSeparated(TH2F* );                                                                             // Fill MC BG separated 
 void FillMCElectronSeparated(TH2F* );                                                                       // Fill MC Electron separated 
 void FillMCGammaSeparated(TH2F* );                                                                          // Fill MC Gamma separated 
 void FillHistosArrayMC(TH1D*, TH1D * , TH1D * );                                                            // Rebin MC input histo's
+void FillHistosArrayMCSec(TH1D*, TH1D *, TH1D*, TH1D*, TH1D * );                                            // Rebin Sec MC input histo's
 void IntegrateHistoInvMass(TH1D*, Double_t* );                                                              // Integrate invariant mass histogram
 void IntegrateHistoM02(TH1D*, Double_t* );                                                                  // Integrate M02 histogram
 void CalculateMesonAcceptance();                                                                            // Calculation of meson acceptance
+void CalculateMesonAcceptanceSec();                                                                            // Calculation of meson acceptance
 TH1D* CalculateMesonEfficiency(TH1D*, TH1D*,TString);                                                       // Calculation of meson efficiencies 
+TH1D* CalculateMesonEfficiencySec(TH1D*, TH1D*,TString);                                                       // Calculation of meson efficiencies 
 TH1D* CalculatePurity(TH1D*, TH1D*,TString);                                                                // Calculation of purity
 TH1D* CalculateSecondaryFractions(TH1D*, TH1D*, TString );                                                  // Calculate fraction of secondaries
 void SaveHistos(Int_t, TString, TString);                                                                   // Saving standard histograms to a file
@@ -228,7 +240,11 @@ TH2F*       fHistoTrueClustersElectronPtSource                          = NULL;
 TH1D*       fHistoTrueClustersElectronPt[9]                             = { NULL, NULL, NULL, NULL, NULL,
                                                                             NULL, NULL, NULL, NULL};
 TH2F*       fHistoTrueClusPartConvMergedPtM02                           = NULL;
+TH2F*       fHistoTrueClusPartConvMergedFromPi0PtM02                    = NULL;
+TH2F*       fHistoTrueClusPartConvMergedFromEtaPtM02                    = NULL;
 TH2F*       fHistoTrueClusPureMergedPtM02                               = NULL;
+TH2F*       fHistoTrueClusPureMergedFromPi0PtM02                        = NULL;
+TH2F*       fHistoTrueClusPureMergedFromEtaPtM02                        = NULL;
 TH2F*       fHistoTrueClusOneGammaPtM02                                 = NULL;
 TH2F*       fHistoTrueClusOneGammaFromPi0PtM02                          = NULL;
 TH2F*       fHistoTrueClusOneGammaFromEtaPtM02                          = NULL;
@@ -246,7 +262,11 @@ TH2F*       fHistoTrueClustersSecPi0FLambdaPtM02                        = NULL;
 //****************************************************************************
 TH1D**      fHistoTrueClusMergedM02PtBin                                = NULL;
 TH1D**      fHistoTrueClusPartConvMergedM02PtBin                        = NULL;
+TH1D**      fHistoTrueClusPartConvMergedFromPi0M02PtBin                 = NULL;
+TH1D**      fHistoTrueClusPartConvMergedFromEtaM02PtBin                 = NULL;
 TH1D**      fHistoTrueClusPureMergedM02PtBin                            = NULL;
+TH1D**      fHistoTrueClusPureMergedFromPi0M02PtBin                     = NULL;
+TH1D**      fHistoTrueClusPureMergedFromEtaM02PtBin                     = NULL;
 TH1D**      fHistoTrueClusOneGammaM02PtBin                              = NULL;
 TH1D**      fHistoTrueClusOneGammaFromPi0M02PtBin                       = NULL;
 TH1D**      fHistoTrueClusOneGammaFromEtaM02PtBin                       = NULL;
@@ -301,8 +321,16 @@ Double_t*   fMesonM02TrueElectronYieldsError                            = NULL;
 Double_t*   fMesonM02TrueBGYieldsError                                  = NULL;
 Double_t*   fMesonM02TrueMergedPartConvYields                           = NULL;
 Double_t*   fMesonM02TrueMergedPartConvYieldsError                      = NULL;
+Double_t*   fMesonM02TrueMergedPartConvFromPi0Yields                    = NULL;
+Double_t*   fMesonM02TrueMergedPartConvFromPi0YieldsError               = NULL;
+Double_t*   fMesonM02TrueMergedPartConvFromEtaYields                    = NULL;
+Double_t*   fMesonM02TrueMergedPartConvFromEtaYieldsError               = NULL;
 Double_t*   fMesonM02TrueMergedPureYields                               = NULL;
 Double_t*   fMesonM02TrueMergedPureYieldsError                          = NULL;
+Double_t*   fMesonM02TrueMergedPureFromPi0Yields                        = NULL;
+Double_t*   fMesonM02TrueMergedPureFromPi0YieldsError                   = NULL;
+Double_t*   fMesonM02TrueMergedPureFromEtaYields                        = NULL;
+Double_t*   fMesonM02TrueMergedPureFromEtaYieldsError                   = NULL;
 Double_t*   fMesonM02TrueMergedOneGammaYields                           = NULL;
 Double_t*   fMesonM02TrueMergedOneGammaYieldsError                      = NULL;
 Double_t*   fMesonM02TrueMergedOneGammaFromPi0Yields                    = NULL;
@@ -330,8 +358,12 @@ Double_t*   fMesonM02TrueSecPi0FLambdaYieldsError                       = NULL;
 //****************************************************************************
 TH1D*       fDeltaPt                                                    = NULL;
 TH1D*       fHistoMCAcceptancePt                                        = NULL;
+TH1D*       fHistoMCAcceptanceSecPi0Pt                                  = NULL;
+TH1D*       fHistoMCAcceptanceSecPi0FromK0sPt                           = NULL;
 TH1D*       fHistoTrueEffiMerged                                        = NULL;
 TH1D*       fHistoTrueEffiPrimMeson                                     = NULL;
+TH1D*       fHistoTrueEffiSecPi0                                        = NULL;
+TH1D*       fHistoTrueEffiSecPi0FromK0s                                 = NULL;
 TH1D*       fHistoTruePurityMerged                                      = NULL;
 TH1D*       fHistoTruePi0PurityMerged                                   = NULL;
 TH1D*       fHistoTrueEtaPurityMerged                                   = NULL;
@@ -345,7 +377,11 @@ TH1D*       fHistoTruePi0SecFracFLambda                                 = NULL;
 TH1D*       fHistoYieldMesonM02                                         = NULL;
 TH1D*       fHistoTrueYieldMergedM02                                    = NULL;
 TH1D*       fHistoTrueYieldMergedPartConvM02                            = NULL;
+TH1D*       fHistoTrueYieldMergedPartConvFromPi0M02                     = NULL;
+TH1D*       fHistoTrueYieldMergedPartConvFromEtaM02                     = NULL;
 TH1D*       fHistoTrueYieldMergedPureM02                                = NULL;
+TH1D*       fHistoTrueYieldMergedPureFromPi0M02                         = NULL;
+TH1D*       fHistoTrueYieldMergedPureFromEtaM02                         = NULL;
 TH1D*       fHistoTrueYieldMergedOneGammaM02                            = NULL;
 TH1D*       fHistoTrueYieldMergedOneGammaFromPi0M02                     = NULL;
 TH1D*       fHistoTrueYieldMergedOneGammaFromEtaM02                     = NULL;
@@ -382,4 +418,11 @@ TH1D*       fHistoMCMesonWithinAccepPt                                  = NULL;
 TH1D*       fHistoMCMesonGGWithinAccepPt                                = NULL;
 TH1D*       fHistoMCMesonDalitzWithinAccepPt                            = NULL;
 TH1D*       fHistoMCMesonWithinAccepPtRebin                             = NULL;
-
+TH1D*       fHistoMCSecPi0Pt                                            = NULL;
+TH1D*       fHistoMCSecPi0PtRebin                                       = NULL;
+TH1D*       fHistoMCSecPi0FromK0sPt                                     = NULL;
+TH1D*       fHistoMCSecPi0FromK0sPtRebin                                = NULL;
+TH1D*       fHistoMCSecPi0WithinAccepPt                                 = NULL;
+TH1D*       fHistoMCSecPi0WithinAccepPtRebin                            = NULL;
+TH1D*       fHistoMCSecPi0FromK0sWithinAccepPt                          = NULL;
+TH1D*       fHistoMCSecPi0FromK0sWithinAccepPtRebin                     = NULL;

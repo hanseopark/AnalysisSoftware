@@ -407,16 +407,16 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
       
     TH1D* Resolution_Pi0_PtRes[maxNBinsPt];
     TF1*  fitResolution_Pi0_PtRes[maxNBinsPt];
-    TH1F *Resolution_Meson_Mean = new TH1F("Resolution_Meson_Mean", "mean meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ;	
-    TH1F *Resolution_Meson_Sigma = new TH1F("Resolution_Meson_Sigma", "sigma meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ;	
-    TH1F *Resolution_Meson_Mean2 = new TH1F("Resolution_Meson_Mean2", "mean meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ;  
-    TH1F *Resolution_Meson_Sigma2 = new TH1F("Resolution_Meson_Sigma2", "RMS meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ; 
+    TH1F *Resolution_Meson_Mean     = new TH1F("Resolution_Meson_Mean", "mean meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ;	
+    TH1F *Resolution_Meson_Sigma    = new TH1F("Resolution_Meson_Sigma", "sigma meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ;	
+    TH1F *Resolution_Meson_Mean2    = new TH1F("Resolution_Meson_Mean2", "mean meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ;  
+    TH1F *Resolution_Meson_Sigma2   = new TH1F("Resolution_Meson_Sigma2", "RMS meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ; 
 
-    Double_t minFitRange = -0.5;
-    Double_t maxFitRange = 0.5;
+    Double_t minFitRange    = -0.5;
+    Double_t maxFitRange    = 0.5;
     if (mode == 10){
-        minFitRange = -0.25;
-        maxFitRange = 0.25;       
+        minFitRange         = -0.25;
+        maxFitRange         = 0.25;       
     }   
     
     ResolutionFittingRebined( Resolution_Pi0_MCPt_ResolPt, Resolution_Pi0_PtRes, fitResolution_Pi0_PtRes, maxNBinsPt, ptbinning, ptbinningReb, Resolution_Meson_Mean, Resolution_Meson_Sigma, "gaus", 
