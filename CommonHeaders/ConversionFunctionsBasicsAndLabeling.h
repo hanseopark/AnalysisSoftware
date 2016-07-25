@@ -3325,12 +3325,12 @@ TString AnalyseChi2MesonCut(Int_t chi2GammaCut){   // Set Cut
 // ******************************************************************************************
 // ************************ Set correct xSection for pp *************************************
 // ******************************************************************************************
-Double_t xSection8TeVV0AND      = 55.74*1e-3;   // from https://indico.cern.ch/event/276276/contribution/3/material/slides/0.pdf
-Double_t xSection8TeVErrUp      = 0.46;         // from https://indico.cern.ch/event/276276/contribution/3/material/slides/0.pdf
-Double_t xSection8TeVErrDown    = 0.46;         // from https://indico.cern.ch/event/276276/contribution/3/material/slides/0.pdf
-Double_t xSection8TeVT0AND      = 55.74*1e-3;   // from https://indico.cern.ch/event/276276/contribution/3/material/slides/0.pdf
-Double_t xSection8TeVT0ErrUp    = 0.46;         // from https://indico.cern.ch/event/276276/contribution/3/material/slides/0.pdf
-Double_t xSection8TeVT0ErrDown  = 0.46;         // from https://indico.cern.ch/event/276276/contribution/3/material/slides/0.pdf
+Double_t xSection8TeVV0AND      = 56.4*1e-3;   // from https://indico.cern.ch/event/486605/contribution/3/attachments/1216371/1776468/PWG-PP_250116.pdf
+Double_t xSection8TeVErrUp      = 2.82;         // from https://indico.cern.ch/event/486605/contribution/3/attachments/1216371/1776468/PWG-PP_250116.pdf
+Double_t xSection8TeVErrDown    = 2.82;         // from https://indico.cern.ch/event/486605/contribution/3/attachments/1216371/1776468/PWG-PP_250116.pdf
+Double_t xSection8TeVT0AND      = 26.0*1e-3;   // from https://indico.cern.ch/event/486605/contribution/3/attachments/1216371/1776468/PWG-PP_250116.pdf
+Double_t xSection8TeVT0ErrUp    = 1.30;         // from https://indico.cern.ch/event/486605/contribution/3/attachments/1216371/1776468/PWG-PP_250116.pdf
+Double_t xSection8TeVT0ErrDown  = 1.30;         // from https://indico.cern.ch/event/486605/contribution/3/attachments/1216371/1776468/PWG-PP_250116.pdf
 Double_t xSection7TeV           = 62.22*1e-3;
 Double_t xSection7TeVV0AND      = 54.31*1e-3;
 Double_t xSection7TeVErrUp      = 2.18;
