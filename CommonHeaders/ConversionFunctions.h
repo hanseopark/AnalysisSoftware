@@ -4,6 +4,7 @@
 #include "TFitResult.h"
 #include "TObjString.h"
 #include "TRandom.h"
+#include "TSpline.h"
 
 //*********************** declaration of functions defined in this header ***********************************
 Float_t             CalculateMeanPt(const TF1* );
@@ -132,6 +133,41 @@ TH1D* InvertHisto (TH1D* histo){
     }
     return histo2;
 }
+
+//**********************************************************************************************************
+// Calculates the ratio of a histogram and a spline
+//**********************************************************************************************************
+TH1D* CalculateHistoRatioToSpline (TH1D* histo, TSpline* fit){
+    TH1D* histo2                = (TH1D*)histo->Clone("Dummy");
+    for( Int_t I = 1; I < histo->GetNbinsX() +1 ;I++){
+        Double_t xValue         = histo2->GetBinCenter(I);
+        Double_t yValue         = fit->Eval(xValue);
+        Double_t formerYValue   = histo2->GetBinContent(I);
+        if (yValue != 0){
+            histo2->SetBinContent(I,formerYValue/yValue);
+            histo2->SetBinError(I,histo2->GetBinError(I)/yValue);
+        }
+    }
+    return histo2;
+}
+
+//**********************************************************************************************************
+// Calculates the ratio of a histogram and a spline 
+//**********************************************************************************************************
+TH1F* CalculateHistoRatioToSpline (TH1F* histo, TSpline* fit){
+    TH1F* histo2                = (TH1F*)histo->Clone("Dummy");
+    for( Int_t I = 1; I < histo->GetNbinsX() +1 ;I++){
+        Double_t xValue         = histo2->GetBinCenter(I);
+        Double_t yValue         = fit->Eval(xValue);
+        Double_t formerYValue   = histo2->GetBinContent(I);
+        if (yValue != 0){
+            histo2->SetBinContent(I,formerYValue/yValue);
+            histo2->SetBinError(I,histo2->GetBinError(I)/yValue);
+        }
+    }
+    return histo2;
+}
+
 
 //**********************************************************************************************************
 // Calculates the ratio of a histogram and a fit, with the posibility to integrate the function in the same 

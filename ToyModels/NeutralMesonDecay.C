@@ -111,13 +111,17 @@ void DrawAutoGammaHistoPaper2D( TH2* histo1,
 
 
 
-void NeutralMesonDecay( Int_t nEvts     = 1000000, 
-                        Int_t particle  = 1,
-                        TString energy  = "2.76TeV",
-                        Double_t minPt  = 2,
-                        Double_t maxPt  = 50,
-                        TString suffix  = "eps",
-                        Double_t rEMC   = 440.
+void NeutralMesonDecay( Int_t nEvts         = 1000000, 
+                        Int_t particle      = 1,
+                        TString energy      = "2.76TeV",
+                        Double_t minPt      = 2,
+                        Double_t maxPt      = 50,
+                        TString suffix      = "eps",
+                        Double_t rEMC       = 440.,
+                        TString fileName    = "",
+                        TString cutSting    = "",
+                        Int_t mode          = 10,
+                        TString subMode     = ""
                       ){
 
     //*************************************************************************************************
@@ -200,6 +204,68 @@ void NeutralMesonDecay( Int_t nEvts     = 1000000,
         cout << "particle not defined, aborting" << endl;
     }    
         
+    Color_t colorSmear[5]               = {kAzure, kRed+2, kGreen+2, kViolet+2, kCyan+2};
+    Double_t ptBinning[69]              = {0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
+                                           1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
+                                           2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9,
+                                           3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8,
+                                           5.0, 5.4, 5.8, 6.2, 6.6, 7.0, 7.5, 8.0, 8.5, 9.0,
+                                           10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 18.0, 20.0, 25.0,
+                                           30.0, 35.0, 40.0, 45.0, 50.0, 55.0, 60.0, 65.0, 70.0};
+    Int_t nBinsX                        = 68;    
+    
+    //*************************************************************************************************    
+    //************************** Loading the resolutions **********************************************
+    //*************************************************************************************************
+    Bool_t haveResol                = kFALSE;
+    TH2F* histoResolutionInput[5];
+    TString labelResolHist[5];
+    Int_t nResolHist                = 1;
+    if (fileName.CompareTo("")!= 0 && cutSting.CompareTo("") != 0){
+        TFile* resolutionFile   = new TFile(fileName.Data());
+        //************************** Container Loading ********************************************************************
+        TString nameOutputContainer = "GammaConvV1";
+        if (mode == 2 || mode == 3){ 
+            nameOutputContainer     = "GammaConvCalo";  
+        } else if (mode == 4 || mode == 5) {
+            nameOutputContainer     = "GammaCalo";
+        } else if (mode == 10 || mode == 11) {
+            nameOutputContainer     = "GammaCaloMerged";
+            nResolHist              = 3;
+        }
+        TList *TopDir                   = (TList*)resolutionFile->Get(nameOutputContainer.Data());
+        if(TopDir == NULL){
+            cout<<"ERROR: TopDir not Found"<<endl;
+            return;
+        }
+        TList *HistosGammaConversion    = (TList*)TopDir->FindObject(Form("Cut Number %s",cutSting.Data()));
+        TList *TrueConversionContainer  = (TList*)HistosGammaConversion->FindObject(Form("%s True histograms",cutSting.Data()));
+
+        //****************************** Resolution dPt vs Pt **********************************************
+        TString nameResolHist[5];       
+        nameResolHist[0]                = Form("ESD_TruePrimary%s_MCPt_ResolPt",outputlabel.Data());
+        labelResolHist[0]               = Form("%s", plotLabel.Data());
+        if (mode == 10){
+            nameResolHist[0]            = Form("ESD_TruePrimary%sPureMerged_MCPt_ResolPt",outputlabel.Data());
+            nameResolHist[1]            = Form("ESD_TruePrimary%sMergedPartConv_MCPt_ResolPt",outputlabel.Data());
+            nameResolHist[2]            = Form("ESD_TruePrimary%s1Gamma_MCPt_ResolPt",outputlabel.Data());
+//             nameResolHist[3]            = Form("ESD_TruePrimary%s1Electron_MCPt_ResolPt",outputlabel.Data());
+            labelResolHist[0]               = Form("%s fully merged", plotLabel.Data());
+            labelResolHist[1]               = Form("%s merged part conv.", plotLabel.Data());
+            labelResolHist[2]               = Form("%s only 1 #gamma", plotLabel.Data());
+//             labelResolHist[3]               = Form("%s only 1 e^{#pm}", plotLabel.Data());
+        }    
+        for (Int_t i = 0; (i < 5) && (i < nResolHist); i++){
+            histoResolutionInput[i]     = (TH2F*)TrueConversionContainer->FindObject(nameResolHist[i].Data()); //
+            if (histoResolutionInput[i]){
+                histoResolutionInput[i]->Sumw2();
+                haveResol               = kTRUE;            
+            } else {
+                haveResol               = kFALSE;            
+            }    
+        }
+    }
+        
     //*************************************************************************************************
     //********************* Initialize random number generators and TGenPhaseSpace ********************
     //*************************************************************************************************
@@ -224,6 +290,19 @@ void NeutralMesonDecay( Int_t nEvts     = 1000000,
     
     TH1D *h1_ptdistribution     = new TH1D("h1_ptdistribution","", 500,0,50);  
     h1_ptdistribution->Sumw2();
+    TH1D *h1_ptdistributionReb  = new TH1D("h1_ptdistributionReb","", nBinsX, ptBinning);  
+    h1_ptdistributionReb->Sumw2();
+
+    TH1D* h1_ptdistSmeared[nResolHist];
+    TH1D* h1_ptdistSmearedReb[nResolHist];
+    
+    for (Int_t i = 0; i < nResolHist; i++){
+        h1_ptdistSmeared[i]      = new TH1D(Form("h1_ptdistSmeared_%d",i),"", 500,0,50);  
+        h1_ptdistSmeared[i]->Sumw2();
+        h1_ptdistSmearedReb[i]   = new TH1D(Form("h1_ptdistSmearedReb_%d",i),"", nBinsX, ptBinning);  
+        h1_ptdistSmearedReb[i]->Sumw2();
+    }
+    
     TH1D *h1_phidistribution    = new TH1D("h1_phidistribution","", 100,0,2*TMath::Pi());  
     h1_phidistribution->Sumw2();
     TH1D *h1_etadistribution    = new TH1D("h1_etadistribution","", 200,-1,1);  
@@ -237,26 +316,50 @@ void NeutralMesonDecay( Int_t nEvts     = 1000000,
     TH1D *h1_ptPiMiDaughters    = new TH1D("h1_ptPiMiDaughters","", 500,0,50);  
     TH1D *h1_ptPiZeroDaughters  = new TH1D("h1_ptPiZeroDaughters","", 500,0,50);  
 
+    TH1D* h1ResolProjection[5][1000];
+    if (haveResol){
+        for (Int_t j=0; (j < nResolHist && j < 5); j++){
+            for (Int_t i=0; (i < histoResolutionInput[j]->GetNbinsX()+1 && i < 1000); i++){
+                h1ResolProjection[j][i] = (TH1D*)histoResolutionInput[j]->ProjectionY(Form("dummy_%d_%d",j,i), i+1,i+1,"e");
+            }
+        }
+    }   
+    
     //*************************************************************************************************
     //**************************** Event loop *********************************************************
     //*************************************************************************************************
     for(Int_t n=0; n<nEvts; n++){ // this is the important loop (nEvents)
+        if (n%10000000 == 0) 
+            cout << "generated " << (Double_t)n/1e6 << " Mio events" << endl;
 //         cout << "event: " << n << endl;
-        Double_t ptcurrent      = ptDistribution->GetRandom();
-        
+        Double_t ptcurrent      = ptDistribution->GetRandom();        
 //         cout << "mother pt: " << ptcurrent << endl;
 
         Double_t phiCurrent     = randy1.Uniform(2*TMath::Pi());
         Double_t etaCurrent     = randy2.Uniform(-1,1);
 
+        h1_ptdistribution->Fill(ptcurrent);
+        h1_ptdistributionReb->Fill(ptcurrent);
+        h1_phidistribution->Fill(phiCurrent);
+        h1_etadistribution->Fill(etaCurrent);
+    
+        Double_t shift          = 0;
+        for (Int_t j = 0; (j < nResolHist && j < 5); j++){
+            Double_t ptcurrentDist      = ptcurrent;
+            if (haveResol){
+                shift                   = h1ResolProjection[j][histoResolutionInput[j]->GetXaxis()->FindBin(ptcurrent)-1]->GetRandom();
+                //             mesoncand->Pt()-mother->Pt())/mother->Pt()
+                ptcurrentDist           = (shift*ptcurrent)+ptcurrent; 
+    //             cout << ptcurrent <<"\t" << histoResolutionInput->GetXaxis()->FindBin(ptcurrent) << "\t" << shift <<"\t"<< ptcurrentDist<< endl; 
+            }
+            h1_ptdistSmeared[j]->Fill(ptcurrentDist);
+            h1_ptdistSmearedReb[j]->Fill(ptcurrentDist);
+        }    
         // assuming eta as a gaussian
 //         Double_t etaCurrent     = randy2.Gaus(0,2);        
 //         while (abs(etaCurrent) > 1){
 //             etaCurrent          = randy2.Gaus(0,2);
 //         }    
-        h1_ptdistribution->Fill(ptcurrent);
-        h1_phidistribution->Fill(phiCurrent);
-        h1_etadistribution->Fill(etaCurrent);
         
         TLorentzVector particle(0.0, 0.0, 0, massParticle); 
         particle.SetPtEtaPhiM(ptcurrent, etaCurrent, phiCurrent, massParticle);
@@ -300,15 +403,15 @@ void NeutralMesonDecay( Int_t nEvts     = 1000000,
     DrawGammaCanvasSettings( canvasQA, 0.07, 0.02, 0.02, 0.08);
     canvasQA->cd();
     canvasQA->SetLogy(1);
-    TLegend* legendSpectra = GetAndSetLegend2(0.86, 0.70, 0.95, 0.93, 32,1); 
     
+    TLegend* legendSpectra = GetAndSetLegend2(0.86, 0.70, 0.95, 0.93, 32,1); 
     DrawAutoGammaMesonHistos(   h1_ptdistribution, 
                                 "", "#it{p}_{T} (GeV/#it{c})", "#it{N}_{X}", // (%)", 
                                 kTRUE, 10, 1e-1, kFALSE,
                                 kFALSE, 0., 0.7, 
                                 kFALSE, 0., 10.);
     h1_ptdistribution->GetYaxis()->SetTitleOffset(0.85);
-    DrawGammaSetMarker(h1_ptdistribution, 20, 1.5, kAzure-6, kAzure-6);
+    DrawGammaSetMarker(h1_ptdistribution, 20, 1.5, kBlack, kBlack);
     h1_ptdistribution->DrawClone("pe");
     legendSpectra->AddEntry(h1_ptdistribution,plotLabel.Data(),"pe");
     
@@ -326,6 +429,91 @@ void NeutralMesonDecay( Int_t nEvts     = 1000000,
     legendSpectra->Draw();
     canvasQA->SaveAs(Form("%s%s_PtDistribution_Input.%s",fOutputDir.Data(), outputlabel.Data(), suffix.Data()));
 
+    //****************************** Plot smeared and input pT ***********************************************************************
+    canvasQA->cd();
+    TLegend* legendSpectra2 = GetAndSetLegend2(0.55, 0.93-(nResolHist+1)*0.035, 0.75, 0.93, 32,1); 
+    DrawGammaSetMarker(h1_ptdistribution, 20, 1.5, kBlack, kBlack);
+    h1_ptdistribution->DrawClone("pe");
+    legendSpectra2->AddEntry(h1_ptdistribution,plotLabel.Data(),"pe");
+    for (Int_t j = 0; (j < 5 && j < nResolHist); j++ ){
+        DrawGammaSetMarker(h1_ptdistSmeared[j], 24, 1.5, colorSmear[j], colorSmear[j]);
+        h1_ptdistSmeared[j]->Draw("same,pe");
+        legendSpectra2->AddEntry(h1_ptdistSmeared[j],Form("%s smeared",labelResolHist[j].Data()),"pe");
+    }
+    legendSpectra2->Draw();
+    
+    canvasQA->SaveAs(Form("%s%s_PtDistribution_InputVsSmeared%s.%s",fOutputDir.Data(), outputlabel.Data(), subMode.Data(), suffix.Data()));
+
+    //**************************** Calculate and draw ratio of smeared and input dist ************************************************
+    
+    TH1D* histoRatioSmearedDivInput[nResolHist];
+    
+    canvasQA->cd();
+    canvasQA->SetLogy(0);
+
+    TLegend* legendRatio1 = GetAndSetLegend2(0.55, 0.93-nResolHist*0.035, 0.75, 0.93, 32,1); 
+    for (Int_t j = 0; (j < 5 && j < nResolHist); j++ ){
+        histoRatioSmearedDivInput[j]    = (TH1D*)h1_ptdistSmeared[j]->Clone(Form("histoRatioSmearedDivInput%d",j));
+        histoRatioSmearedDivInput[j]->Divide(histoRatioSmearedDivInput[j],h1_ptdistribution,1,1,"B");
+        if (j == 0){
+            DrawAutoGammaMesonHistos(   histoRatioSmearedDivInput[j], 
+                                        "", "#it{p}_{T} (GeV/#it{c})", "smeared/input", // (%)", 
+                                        kFALSE, 10, 1e-1, kFALSE,
+                                        kTRUE, 0., 2, 
+                                        kFALSE, 0., 10.);
+            histoRatioSmearedDivInput[j]->GetYaxis()->SetTitleOffset(0.85);
+            DrawGammaSetMarker(histoRatioSmearedDivInput[j], 20, 1.5, colorSmear[j], colorSmear[j]);
+            histoRatioSmearedDivInput[j]->DrawClone("pe");
+            
+        }  else {
+            DrawGammaSetMarker(histoRatioSmearedDivInput[j], 24, 1.5, colorSmear[j], colorSmear[j]);
+            histoRatioSmearedDivInput[j]->DrawClone("same,pe");            
+        }   
+        legendRatio1->AddEntry(histoRatioSmearedDivInput[j],labelResolHist[j].Data(),"pe");
+    }
+    legendRatio1->Draw();
+    
+    DrawGammaLines(0, maxPt , 1, 1 ,1, kGray, 7);   
+    DrawGammaLines(0, maxPt , 1.2, 1.2 ,1, kGray, 8);   
+    DrawGammaLines(0, maxPt , 0.8, 0.8 ,1, kGray, 8);   
+    
+    canvasQA->SaveAs(Form("%s%s_Ratio_SmearedDivInputVsPt.%s",fOutputDir.Data(), outputlabel.Data(), suffix.Data()));
+
+    //**************************** Calculate and draw ratio of smeared and input dist ************************************************
+    TH1D* histoRatioSmearedDivInputReb[nResolHist];
+    canvasQA->cd();
+    canvasQA->SetLogy(0);
+
+    
+    for (Int_t j = 0; (j < 5 && j < nResolHist); j++ ){
+        histoRatioSmearedDivInputReb[j]    = (TH1D*)h1_ptdistSmearedReb[j]->Clone(Form("histoRatioSmearedDivInputReb%d",j));
+        histoRatioSmearedDivInputReb[j]->Divide(histoRatioSmearedDivInputReb[j],h1_ptdistributionReb,1,1,"B");
+        if (j == 0){
+            DrawAutoGammaMesonHistos(   histoRatioSmearedDivInputReb[j], 
+                                        "", "#it{p}_{T} (GeV/#it{c})", "smeared/input", // (%)", 
+                                        kFALSE, 10, 1e-1, kFALSE,
+                                        kTRUE, 0., 2, 
+                                        kTRUE, 0., maxPt);
+            histoRatioSmearedDivInputReb[j]->GetYaxis()->SetTitleOffset(0.85);
+            DrawGammaSetMarker(histoRatioSmearedDivInputReb[j], 20, 1.5, colorSmear[j], colorSmear[j]);
+            histoRatioSmearedDivInputReb[j]->DrawClone("pe");
+        }  else {
+            DrawGammaSetMarker(histoRatioSmearedDivInputReb[j], 24, 1.5, colorSmear[j], colorSmear[j]);
+            histoRatioSmearedDivInputReb[j]->DrawClone("same,pe");            
+        }    
+    }
+    legendRatio1->Draw();
+    
+    DrawGammaLines(0, maxPt , 1, 1 ,1, kGray, 7);   
+    DrawGammaLines(0, maxPt , 1.2, 1.2 ,1, kGray, 8);   
+    DrawGammaLines(0, maxPt , 0.8, 0.8 ,1, kGray, 8);   
+    
+    canvasQA->SaveAs(Form("%s%s_Ratio_SmearedDivInputVsPtRebined.%s",fOutputDir.Data(), outputlabel.Data(), suffix.Data()));
+    
+    
+    
+    //******************************** Plot input phi phi distribution ***************************************************************
+    canvasQA->SetLogy(1);
     DrawAutoGammaMesonHistos(   h1_phidistribution, 
                                 "", "#varphi (rad)", Form("#it{N}_{%s}",plotLabel.Data()), // (%)", 
                                 kTRUE, 10, 1e-1, kFALSE,
@@ -394,9 +582,12 @@ void NeutralMesonDecay( Int_t nEvts     = 1000000,
     //*************************************************************************************************
     //********************** Write histograms to file *************************************************
     //*************************************************************************************************
-    TFile* fileOutput = new TFile(Form("%s/ToyMCOutput_%s.root",fCollisionSystenWrite.Data(),outputlabel.Data()),"RECREATE");  
+    TFile* fileOutput = new TFile(Form("%s/ToyMCOutput_%s.root",fCollisionSystenWrite.Data(), outputlabel.Data()),"RECREATE");  
 
         h1_ptdistribution->Write();
+//         if(h1_ptdistSmeared) h1_ptdistSmeared->Write();
+//         if(histoRatioSmearedDivInputReb) histoRatioSmearedDivInputReb->Write();
+//         if(histoRatioSmearedDivInput) histoRatioSmearedDivInput->Write();
         h1_phidistribution->Write();
         h1_etadistribution->Write();
         for (Int_t i = 0; i < nDaughters; i++){

@@ -45,6 +45,7 @@
 #include "TFitResultPtr.h"
 #include "TFitResult.h"
 #include "TGenPhaseSpace.h"
+#include "TSpline.h"
 #include "CommonHeaders/PlottingGammaConversionHistos.h"
 #include "CommonHeaders/PlottingGammaConversionAdditional.h"
 #include "CommonHeaders/FittingGammaConversion.h"
@@ -139,7 +140,7 @@ void KaonDecay(     Int_t nEvts         = 1000000,
     //*************************** Initialize pt spectra ***********************************************
     //*************************************************************************************************
     Double_t massParticle       = 0;
-    TF1* ptDistribution         = NULL; 
+    
     TString outputlabel         = "";
     TString plotLabel           = "";
     TString daughterLabels[10]  = {"","","","","","","","","",""};
@@ -163,9 +164,12 @@ void KaonDecay(     Int_t nEvts         = 1000000,
 
     TFile* inputFile            = new TFile(filename.Data());
     TH1D* kaonSpectrum          = NULL; 
+    TF1* ptDistribution         = NULL; 
+    TSpline5* kaonParam         = NULL; 
+    TH1F* kaonSpectrumFromParam = new TH1F("kaonSpectrumFromParam","kaonSpectrumFromParam",5000,0,50); 
     // Data inputs
     TCanvas *canvasFitQA = new TCanvas("canvasFitQA","canvasFitQA",1000,800);
-    DrawGammaCanvasSettings( canvasFitQA, 0.07, 0.02, 0.02, 0.08);
+    DrawGammaCanvasSettings( canvasFitQA, 0.08, 0.015, 0.02, 0.08);
     canvasFitQA->cd();
     canvasFitQA->SetLogy(1);
 
@@ -174,17 +178,26 @@ void KaonDecay(     Int_t nEvts         = 1000000,
             kaonSpectrum            = (TH1D*)inputFile->Get("histoChargedKaonSpecPubStat2760GeV");
             Double_t paramGraph[3]  = {kaonSpectrum->GetBinContent(1), 6., 0.5};
             ptDistribution          = FitObject("l","ptDistribution","K",kaonSpectrum,0.1,20.,NULL,"QNRMEI");
+            kaonParam               = new TSpline5(kaonSpectrum);
+            for (Int_t i = 1; i<kaonSpectrumFromParam->GetNbinsX()+1; i++ ){
+                kaonSpectrumFromParam->SetBinContent(i,kaonParam->Eval(kaonSpectrumFromParam->GetBinCenter(i)));
+                kaonSpectrumFromParam->SetBinError(i,0);
+            }
+    
+            TH2F* dummyDrawingHist  = new TH2F("dummyDrawingHist","dummyDrawingHist",5000,0,50,10000, 1e-14, 1); 
+            SetStyleHistoTH2ForGraphs(  dummyDrawingHist, "#it{p}_{T} (GeV/#it{c})", "#it{N}_{X}", 0.028, 0.04, 
+                                        0.028, 0.04, 0.9, 0.95, 510, 505);
+            dummyDrawingHist->Draw();
             
-            
-            DrawAutoGammaMesonHistos(   kaonSpectrum, 
-                                        "", "#it{p}_{T} (GeV/#it{c})", "#it{N}_{X}", // (%)", 
-                                        kTRUE, 10, 1e-10, kFALSE,
-                                        kFALSE, 0., 0.7, 
-                                        kFALSE, 0., 10.);
-            kaonSpectrum->GetYaxis()->SetTitleOffset(0.85);
             DrawGammaSetMarker(kaonSpectrum, 20, 1.5, kAzure-6, kAzure-6);
-            kaonSpectrum->DrawClone("pe");
-            
+            kaonSpectrum->Draw("samepe");
+            kaonParam->SetLineColor(kAzure+2);
+            kaonParam->Draw("same");
+            if (kaonSpectrumFromParam){
+                kaonSpectrumFromParam->SetLineColor(kRed-6);
+                kaonSpectrumFromParam->Draw("same,pe");
+            }
+            ptDistribution->SetRange(0,50);
             ptDistribution->SetLineColor(kRed+2);
             ptDistribution->Draw("same");
             
