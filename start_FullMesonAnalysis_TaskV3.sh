@@ -314,7 +314,7 @@ function GiveBinning7TeV()
 function GiveBinning8TeV()
 {
     echo "How many p_T bins do you want to use for the Pi0? 23(7GeV), 24(8GeV), 25(10GeV), 26(12GeV) 27 (16GeV) 28 (25GeV), EMCAL (33), 40 EMC-merged (26GeV) 48 EMC-merged (50GeV), 52 EMC-merged (70GeV)";
-    
+
     read answer
     if [ $answer = 23 ]; then
         echo "23 Bins --> Max p_T = 7 GeV ...";
@@ -1891,6 +1891,11 @@ do
             correct=0
         else 
             correct=1
+        fi
+
+        if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
+            useTHnSparse=0
+            AdvMesonQA="AdvancedMesonQA"
         fi
     elif [ $energy = "13TeV" ] || [ $energy = "13TeVLowB" ]; then
         if [ $mode -ne 0 ]; then
