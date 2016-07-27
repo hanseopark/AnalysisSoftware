@@ -424,7 +424,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             fHistoMCSecPi0FromK0sPt             = (TH1D*)MCContainer->FindObject(fObjectNameMCMesonSecPi0FromK0s.Data());
             cout << fObjectNameMCMesonAccSecPi0.Data() << "\t" << fObjectNameMCMesonAccSecPi0FromK0s.Data() << "\t" <<  fObjectNameMCMesonSecPi0.Data() << "\t" << fObjectNameMCMesonSecPi0FromK0s.Data() << endl;   
             cout << fHistoMCSecPi0WithinAccepPt << "\t" << fHistoMCSecPi0FromK0sWithinAccepPt << "\t" <<  fHistoMCSecPi0Pt << "\t" << fHistoMCSecPi0FromK0sPt << endl;   
-            if (fHistoMCSecPi0WithinAccepPt && fHistoMCSecPi0FromK0sWithinAccepPt && fHistoMCSecPi0Pt && fHistoMCSecPi0FromK0sPt){fHistoMCSecPi0WithinAccepPt
+            if (fHistoMCSecPi0WithinAccepPt && fHistoMCSecPi0FromK0sWithinAccepPt && fHistoMCSecPi0Pt && fHistoMCSecPi0FromK0sPt){
                 fHistoMCSecPi0WithinAccepPt->Sumw2();
                 fHistoMCSecPi0FromK0sWithinAccepPt->Sumw2();
                 fHistoMCSecPi0Pt->Sumw2();
