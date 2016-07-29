@@ -29,6 +29,7 @@ The functions are
 */
 
 #include <Riostream.h>
+#include <TProfile.h>
 
 // extern TRandom *kgRandom;
 // extern TBenchmark *kgBenchmark;
@@ -149,6 +150,21 @@ void DrawGammaSetMarker(    TH1* histo1,
     histo1->GetXaxis()->SetLabelFont(42);
     histo1->GetYaxis()->SetTitleFont(62);
     histo1->GetXaxis()->SetTitleFont(62);
+}
+
+void DrawGammaSetMarkerProfile( TProfile* prof, 
+                                Style_t markerStyle, 
+                                Size_t markerSize, 
+                                Color_t markerColor, 
+                                Color_t lineColor ) {
+    prof->SetMarkerStyle(markerStyle);
+    prof->SetMarkerSize(markerSize);
+    prof->SetMarkerColor(markerColor);
+    prof->SetLineColor(lineColor);    
+    prof->GetYaxis()->SetLabelFont(42);
+    prof->GetXaxis()->SetLabelFont(42);
+    prof->GetYaxis()->SetTitleFont(62);
+    prof->GetXaxis()->SetTitleFont(62);
 }
 
 
