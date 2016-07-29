@@ -111,17 +111,18 @@ void DrawAutoGammaHistoPaper2D( TH2* histo1,
 
 
 
-void NeutralMesonDecay( Int_t nEvts         = 1000000, 
-                        Int_t particle      = 1,
-                        TString energy      = "2.76TeV",
-                        Double_t minPt      = 2,
-                        Double_t maxPt      = 50,
-                        TString suffix      = "eps",
-                        Double_t rEMC       = 440.,
-                        TString fileName    = "",
-                        TString cutSting    = "",
-                        Int_t mode          = 10,
-                        TString subMode     = ""
+void NeutralMesonDecay( Int_t nEvts                 = 1000000, 
+                        Int_t particle              = 1,
+                        TString energy              = "2.76TeV",
+                        Double_t minPt              = 2,
+                        Double_t maxPt              = 50,
+                        TString suffix              = "eps",
+                        Double_t rEMC               = 440.,
+                        TString fileName            = "",
+                        TString cutSting            = "",
+                        Int_t mode                  = 10,
+                        TString subMode             = "",
+                        TString fileNameFractions   = ""
                       ){
 
     //*************************************************************************************************
@@ -205,6 +206,14 @@ void NeutralMesonDecay( Int_t nEvts         = 1000000,
     }    
         
     Color_t colorSmear[5]               = {kAzure, kRed+2, kGreen+2, kViolet+2, kCyan+2};
+    Style_t markerSmear[5]              = {21, 20, 25, 24, 33};
+    Color_t colorScaled[3]              = {kRed-6, kGreen-6, kBlue-6};
+    Style_t markerScaled[3]             = {25, 24, 27};
+
+    Double_t scaleFactors[4][5]         = { {0, 0, 0, 0, 0}, 
+                                            {0., -0.5, 0.5, 0, 0}, 
+                                            {0.20, -0.2, 0., 0, 0},
+                                            {0.50, -0.5, 0., 0, 0} };
     Double_t ptBinning[69]              = {0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
                                            1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
                                            2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9,
@@ -218,7 +227,9 @@ void NeutralMesonDecay( Int_t nEvts         = 1000000,
     //************************** Loading the resolutions **********************************************
     //*************************************************************************************************
     Bool_t haveResol                = kFALSE;
+    Bool_t haveFractions            = kFALSE;
     TH2F* histoResolutionInput[5];
+    TH1F* histoFractionsInput[5];
     TString labelResolHist[5];
     Int_t nResolHist                = 1;
     if (fileName.CompareTo("")!= 0 && cutSting.CompareTo("") != 0){
@@ -231,7 +242,7 @@ void NeutralMesonDecay( Int_t nEvts         = 1000000,
             nameOutputContainer     = "GammaCalo";
         } else if (mode == 10 || mode == 11) {
             nameOutputContainer     = "GammaCaloMerged";
-            nResolHist              = 3;
+            nResolHist              = 4;
         }
         TList *TopDir                   = (TList*)resolutionFile->Get(nameOutputContainer.Data());
         if(TopDir == NULL){
@@ -249,11 +260,12 @@ void NeutralMesonDecay( Int_t nEvts         = 1000000,
             nameResolHist[0]            = Form("ESD_TruePrimary%sPureMerged_MCPt_ResolPt",outputlabel.Data());
             nameResolHist[1]            = Form("ESD_TruePrimary%sMergedPartConv_MCPt_ResolPt",outputlabel.Data());
             nameResolHist[2]            = Form("ESD_TruePrimary%s1Gamma_MCPt_ResolPt",outputlabel.Data());
+            nameResolHist[3]            = Form("ESD_TruePrimary%s1Gamma_MCPt_ResolPt",outputlabel.Data());
 //             nameResolHist[3]            = Form("ESD_TruePrimary%s1Electron_MCPt_ResolPt",outputlabel.Data());
             labelResolHist[0]               = Form("%s fully merged", plotLabel.Data());
             labelResolHist[1]               = Form("%s merged part conv.", plotLabel.Data());
             labelResolHist[2]               = Form("%s only 1 #gamma", plotLabel.Data());
-//             labelResolHist[3]               = Form("%s only 1 e^{#pm}", plotLabel.Data());
+            labelResolHist[3]               = Form("%s only 1 e^{#pm}", plotLabel.Data());
         }    
         for (Int_t i = 0; (i < 5) && (i < nResolHist); i++){
             histoResolutionInput[i]     = (TH2F*)TrueConversionContainer->FindObject(nameResolHist[i].Data()); //
@@ -265,7 +277,35 @@ void NeutralMesonDecay( Int_t nEvts         = 1000000,
             }    
         }
     }
-        
+    
+    if (fileNameFractions.CompareTo("") != 0 && cutSting.CompareTo("") != 0 && haveResol){
+        TFile* fractionsFile   = new TFile(fileNameFractions.Data());
+        TString nameFracHist[5];       
+        nameFracHist[0]                 = "";
+        if (mode == 10){
+            nameFracHist[0]             = "RatioMergedPure";
+            nameFracHist[1]             = "RatioMergedPartConv";
+            nameFracHist[2]             = "RatioMergedOneGamma";
+            nameFracHist[3]             = "RatioMergedOneElectron";
+        }
+        for (Int_t i = 0; (i < 5) && (i < nResolHist); i++){
+            cout << "trying to load: " << nameFracHist[i].Data() << endl;
+            histoFractionsInput[i]      = (TH1F*)fractionsFile->Get(nameFracHist[i].Data()); //
+            if (histoFractionsInput[i]){
+                histoFractionsInput[i]->Sumw2();
+                histoFractionsInput[i]->Scale(1./100);
+                haveFractions           = kTRUE;            
+                cout << "succeeded." << endl;
+//                 for (Int_t k = 1; k< histoFractionsInput[i]->GetNbinsX()+1; k++){
+//                     cout << k << "\t" << histoFractionsInput[i]->GetBinContent(k) << endl;
+//                 }    
+            } else {
+                haveFractions           = kFALSE;            
+                cout << "failed." << endl;
+            }
+        }
+    }
+    
     //*************************************************************************************************
     //********************* Initialize random number generators and TGenPhaseSpace ********************
     //*************************************************************************************************
@@ -295,12 +335,21 @@ void NeutralMesonDecay( Int_t nEvts         = 1000000,
 
     TH1D* h1_ptdistSmeared[nResolHist];
     TH1D* h1_ptdistSmearedReb[nResolHist];
-    
+    TProfile* p1_fractionsSmeared[nResolHist];
+    TProfile* p1_fractionsSmearedReb[nResolHist];
+    TSpline3* spFractions[nResolHist];
     for (Int_t i = 0; i < nResolHist; i++){
-        h1_ptdistSmeared[i]      = new TH1D(Form("h1_ptdistSmeared_%d",i),"", 500,0,50);  
+        h1_ptdistSmeared[i]         = new TH1D(Form("h1_ptdistSmeared_%d",i),"", 500,0,50);  
         h1_ptdistSmeared[i]->Sumw2();
-        h1_ptdistSmearedReb[i]   = new TH1D(Form("h1_ptdistSmearedReb_%d",i),"", nBinsX, ptBinning);  
+        h1_ptdistSmearedReb[i]      = new TH1D(Form("h1_ptdistSmearedReb_%d",i),"", nBinsX, ptBinning);  
         h1_ptdistSmearedReb[i]->Sumw2();
+        p1_fractionsSmeared[i]      = new TProfile(Form("p1_fractionsSmeared_%d",i),"", 500,0,50);  
+        p1_fractionsSmeared[i]->Sumw2();
+        p1_fractionsSmearedReb[i]   = new TProfile(Form("p1_fractionsSmearedReb_%d",i),"", nBinsX, ptBinning);  
+        p1_fractionsSmearedReb[i]->Sumw2();
+        if (haveFractions){
+            spFractions[i]              = new TSpline3(histoFractionsInput[i]);
+        }    
     }
     
     TH1D *h1_phidistribution    = new TH1D("h1_phidistribution","", 100,0,2*TMath::Pi());  
@@ -350,10 +399,17 @@ void NeutralMesonDecay( Int_t nEvts         = 1000000,
                 shift                   = h1ResolProjection[j][histoResolutionInput[j]->GetXaxis()->FindBin(ptcurrent)-1]->GetRandom();
                 //             mesoncand->Pt()-mother->Pt())/mother->Pt()
                 ptcurrentDist           = (shift*ptcurrent)+ptcurrent; 
-    //             cout << ptcurrent <<"\t" << histoResolutionInput->GetXaxis()->FindBin(ptcurrent) << "\t" << shift <<"\t"<< ptcurrentDist<< endl; 
+//                 cout << ptcurrent << "\t" << shift <<"\t"<< ptcurrentDist<< endl; 
             }
             h1_ptdistSmeared[j]->Fill(ptcurrentDist);
             h1_ptdistSmearedReb[j]->Fill(ptcurrentDist);
+            Double_t fraction           = 0;
+            if (haveFractions){
+                fraction                = spFractions[j]->Eval(ptcurrentDist);
+            }    
+            p1_fractionsSmeared[j]->Fill(ptcurrentDist,fraction);
+            p1_fractionsSmearedReb[j]->Fill(ptcurrentDist,fraction);
+            
         }    
         // assuming eta as a gaussian
 //         Double_t etaCurrent     = randy2.Gaus(0,2);        
@@ -396,9 +452,10 @@ void NeutralMesonDecay( Int_t nEvts         = 1000000,
             h2_OpenAngle->Fill(ptcurrent,openangle);
             h2_ClusterDistance->Fill(ptcurrent,distanceCl);
         }
-        
     }
 
+    
+    //****************************** Plot input pT and decay distributions ***********************************************************************
     TCanvas *canvasQA = new TCanvas("canvasQA","canvasQA",1000,800);
     DrawGammaCanvasSettings( canvasQA, 0.07, 0.02, 0.02, 0.08);
     canvasQA->cd();
@@ -431,12 +488,12 @@ void NeutralMesonDecay( Int_t nEvts         = 1000000,
 
     //****************************** Plot smeared and input pT ***********************************************************************
     canvasQA->cd();
-    TLegend* legendSpectra2 = GetAndSetLegend2(0.55, 0.93-(nResolHist+1)*0.035, 0.75, 0.93, 32,1); 
+    TLegend* legendSpectra2 = GetAndSetLegend2(0.45, 0.93-(nResolHist+1)*0.035, 0.65, 0.93, 32,1); 
     DrawGammaSetMarker(h1_ptdistribution, 20, 1.5, kBlack, kBlack);
     h1_ptdistribution->DrawClone("pe");
     legendSpectra2->AddEntry(h1_ptdistribution,plotLabel.Data(),"pe");
     for (Int_t j = 0; (j < 5 && j < nResolHist); j++ ){
-        DrawGammaSetMarker(h1_ptdistSmeared[j], 24, 1.5, colorSmear[j], colorSmear[j]);
+        DrawGammaSetMarker(h1_ptdistSmeared[j], markerSmear[j], 1.5, colorSmear[j], colorSmear[j]);
         h1_ptdistSmeared[j]->Draw("same,pe");
         legendSpectra2->AddEntry(h1_ptdistSmeared[j],Form("%s smeared",labelResolHist[j].Data()),"pe");
     }
@@ -444,6 +501,37 @@ void NeutralMesonDecay( Int_t nEvts         = 1000000,
     
     canvasQA->SaveAs(Form("%s%s_PtDistribution_InputVsSmeared%s.%s",fOutputDir.Data(), outputlabel.Data(), subMode.Data(), suffix.Data()));
 
+    //**************************** Draw fractions as input ***************************************************************************
+    if (haveFractions){
+        canvasQA->cd();
+        canvasQA->SetLogy(0);
+        TH2F* dummyDrawingHist  = new TH2F("dummyDrawingHist","dummyDrawingHist",5000,0,maxPt,10000, 0., 0.8); 
+        SetStyleHistoTH2ForGraphs(  dummyDrawingHist, "#it{p}_{T} (GeV/#it{c})", "L_{X} = clus. rec from X / all clus.", 0.028, 0.04, 
+                                    0.028, 0.04, 0.86, 0.82, 510, 505);
+        dummyDrawingHist->Draw();
+                
+
+        
+        TLegend* legendFractions = GetAndSetLegend2(0.15, 0.93-nResolHist*0.035, 0.35, 0.93, 32,1); 
+        for (Int_t j = 0; (j < 5 && j < nResolHist); j++ ){
+            DrawGammaSetMarkerProfile(p1_fractionsSmearedReb[j], markerSmear[j], 1.5, colorSmear[j], colorSmear[j]);
+            p1_fractionsSmearedReb[j]->DrawClone("same,pe");            
+            histoFractionsInput[j]->SetLineColor(colorSmear[j]);
+            histoFractionsInput[j]->Draw("same,hist,c");
+            
+            legendFractions->AddEntry(p1_fractionsSmearedReb[j],labelResolHist[j].Data(),"pe");
+        }
+        legendFractions->Draw();
+        
+        DrawGammaLines(0, maxPt , 0.60, 0.60 ,1, kGray, 8);   
+        DrawGammaLines(0, maxPt , 0.40, 0.40 ,1, kGray, 8);   
+        DrawGammaLines(0, maxPt , 0.20, 0.20 ,1, kGray, 8);   
+        
+        canvasQA->SaveAs(Form("%s%s_FractionsInputVsPt.%s",fOutputDir.Data(), outputlabel.Data(), suffix.Data()));
+        
+           
+    }
+    
     //**************************** Calculate and draw ratio of smeared and input dist ************************************************
     
     TH1D* histoRatioSmearedDivInput[nResolHist];
@@ -451,7 +539,7 @@ void NeutralMesonDecay( Int_t nEvts         = 1000000,
     canvasQA->cd();
     canvasQA->SetLogy(0);
 
-    TLegend* legendRatio1 = GetAndSetLegend2(0.55, 0.93-nResolHist*0.035, 0.75, 0.93, 32,1); 
+    TLegend* legendRatio1 = GetAndSetLegend2(0.15, 0.93-nResolHist*0.035, 0.35, 0.93, 32,1); 
     for (Int_t j = 0; (j < 5 && j < nResolHist); j++ ){
         histoRatioSmearedDivInput[j]    = (TH1D*)h1_ptdistSmeared[j]->Clone(Form("histoRatioSmearedDivInput%d",j));
         histoRatioSmearedDivInput[j]->Divide(histoRatioSmearedDivInput[j],h1_ptdistribution,1,1,"B");
@@ -462,11 +550,11 @@ void NeutralMesonDecay( Int_t nEvts         = 1000000,
                                         kTRUE, 0., 2, 
                                         kFALSE, 0., 10.);
             histoRatioSmearedDivInput[j]->GetYaxis()->SetTitleOffset(0.85);
-            DrawGammaSetMarker(histoRatioSmearedDivInput[j], 20, 1.5, colorSmear[j], colorSmear[j]);
+            DrawGammaSetMarker(histoRatioSmearedDivInput[j], markerSmear[j], 1.5, colorSmear[j], colorSmear[j]);
             histoRatioSmearedDivInput[j]->DrawClone("pe");
             
         }  else {
-            DrawGammaSetMarker(histoRatioSmearedDivInput[j], 24, 1.5, colorSmear[j], colorSmear[j]);
+            DrawGammaSetMarker(histoRatioSmearedDivInput[j], markerSmear[j], 1.5, colorSmear[j], colorSmear[j]);
             histoRatioSmearedDivInput[j]->DrawClone("same,pe");            
         }   
         legendRatio1->AddEntry(histoRatioSmearedDivInput[j],labelResolHist[j].Data(),"pe");
@@ -484,7 +572,6 @@ void NeutralMesonDecay( Int_t nEvts         = 1000000,
     canvasQA->cd();
     canvasQA->SetLogy(0);
 
-    
     for (Int_t j = 0; (j < 5 && j < nResolHist); j++ ){
         histoRatioSmearedDivInputReb[j]    = (TH1D*)h1_ptdistSmearedReb[j]->Clone(Form("histoRatioSmearedDivInputReb%d",j));
         histoRatioSmearedDivInputReb[j]->Divide(histoRatioSmearedDivInputReb[j],h1_ptdistributionReb,1,1,"B");
@@ -495,10 +582,10 @@ void NeutralMesonDecay( Int_t nEvts         = 1000000,
                                         kTRUE, 0., 2, 
                                         kTRUE, 0., maxPt);
             histoRatioSmearedDivInputReb[j]->GetYaxis()->SetTitleOffset(0.85);
-            DrawGammaSetMarker(histoRatioSmearedDivInputReb[j], 20, 1.5, colorSmear[j], colorSmear[j]);
+            DrawGammaSetMarker(histoRatioSmearedDivInputReb[j], markerSmear[j], 1.5, colorSmear[j], colorSmear[j]);
             histoRatioSmearedDivInputReb[j]->DrawClone("pe");
         }  else {
-            DrawGammaSetMarker(histoRatioSmearedDivInputReb[j], 24, 1.5, colorSmear[j], colorSmear[j]);
+            DrawGammaSetMarker(histoRatioSmearedDivInputReb[j], markerSmear[j], 1.5, colorSmear[j], colorSmear[j]);
             histoRatioSmearedDivInputReb[j]->DrawClone("same,pe");            
         }    
     }
@@ -510,7 +597,148 @@ void NeutralMesonDecay( Int_t nEvts         = 1000000,
     
     canvasQA->SaveAs(Form("%s%s_Ratio_SmearedDivInputVsPtRebined.%s",fOutputDir.Data(), outputlabel.Data(), suffix.Data()));
     
-    
+    if (haveResol && haveFractions){
+        //********************************************************************************************************************************
+        //**************************** Calculate reconstructed spectrum ******************************************************************
+        //********************************************************************************************************************************
+        TH1D* h1_ptdistSmearedReweighted[4][nResolHist];
+        TH1D* h1_ptdistSmearedReweightedReb[4][nResolHist];
+        
+        for (Int_t k = 0; k < 4; k++){
+            for (Int_t j = 0; (j < 5 && j < nResolHist); j++ ){
+                h1_ptdistSmearedReweighted[k][j] = (TH1D*)h1_ptdistSmeared[j]->Clone(Form("h1_ptdistSmeared_%d",j));
+                h1_ptdistSmearedReweightedReb[k][j] = (TH1D*)h1_ptdistSmearedReb[j]->Clone(Form("h1_ptdistSmearedReb_%d",j));
+                for (Int_t i = 1; i < h1_ptdistSmearedReweighted[k][j]->GetNbinsX()+1; i++){
+                    if (h1_ptdistSmearedReweighted[k][j]->GetBinCenter(i) > 10 && h1_ptdistSmearedReweighted[k][j]->GetBinCenter(i) < 50){
+                        h1_ptdistSmearedReweighted[k][j]->SetBinContent(i, h1_ptdistSmearedReweighted[k][j]->GetBinContent(i)*(p1_fractionsSmeared[j]->GetBinContent(i)+scaleFactors[k][j])/
+                                                                           h1_ptdistSmearedReweighted[k][j]->GetBinWidth(i));
+                        h1_ptdistSmearedReweighted[k][j]->SetBinError(i, h1_ptdistSmearedReweighted[k][j]->GetBinError(i)*(p1_fractionsSmeared[j]->GetBinContent(i)+scaleFactors[k][j])/
+                                                                         h1_ptdistSmearedReweighted[k][j]->GetBinWidth(i));
+                    } else {
+                        h1_ptdistSmearedReweighted[k][j]->SetBinContent(i, 0);
+                        h1_ptdistSmearedReweighted[k][j]->SetBinError(i, 0);
+                    }
+                }
+                for (Int_t i = 1; i < h1_ptdistSmearedReweightedReb[k][j]->GetNbinsX()+1; i++){
+                    if (h1_ptdistSmearedReweightedReb[k][j]->GetBinCenter(i) > 10 && h1_ptdistSmearedReweightedReb[k][j]->GetBinCenter(i) < 50){
+                        h1_ptdistSmearedReweightedReb[k][j]->SetBinContent(i, h1_ptdistSmearedReweightedReb[k][j]->GetBinContent(i)*(p1_fractionsSmearedReb[j]->GetBinContent(i)+scaleFactors[k][j])/
+                                                                            h1_ptdistSmearedReweightedReb[k][j]->GetBinWidth(i));
+                        h1_ptdistSmearedReweightedReb[k][j]->SetBinError(i, h1_ptdistSmearedReweightedReb[k][j]->GetBinError(i)*(p1_fractionsSmearedReb[j]->GetBinContent(i)+scaleFactors[k][j])/
+                                                                            h1_ptdistSmearedReweightedReb[k][j]->GetBinWidth(i));
+                    } else {
+                        h1_ptdistSmearedReweightedReb[k][j]->SetBinContent(i, 0);
+                        h1_ptdistSmearedReweightedReb[k][j]->SetBinError(i, 0);
+                    }
+                }
+            }    
+        }
+        
+        for (Int_t i = 1; i < h1_ptdistributionReb->GetNbinsX()+1; i++){
+            if (h1_ptdistributionReb->GetBinCenter(i) > 10 && h1_ptdistributionReb->GetBinCenter(i) < 50){
+                h1_ptdistributionReb->SetBinContent(i, h1_ptdistributionReb->GetBinContent(i)/h1_ptdistributionReb->GetBinWidth(i));
+                h1_ptdistributionReb->SetBinError(i, h1_ptdistributionReb->GetBinError(i)/h1_ptdistributionReb->GetBinWidth(i));
+            } else {
+                h1_ptdistributionReb->SetBinContent(i, 0);
+                h1_ptdistributionReb->SetBinError(i, 0);
+            }
+        }
+        
+        TH1D* h1_ptReweightedRecMCReb       = (TH1D*)h1_ptdistSmearedReweightedReb[0][0]->Clone("h1_ptReweightedRecMCReb");
+        h1_ptReweightedRecMCReb->Sumw2();
+        for (Int_t j = 1; (j < 5 && j < nResolHist); j++ ){
+            h1_ptReweightedRecMCReb->Add(h1_ptdistSmearedReweightedReb[0][j]);
+        }
+
+        
+        TH1D* h1_ptReweightedRecMCRebModFrac[3];   
+        TH1D* h1_ptReweightedRecMCRebModFracRatioToStandard[3];           
+        for (Int_t i = 0; i< 3; i++){
+            h1_ptReweightedRecMCRebModFrac[i]      = new TH1D(Form("h1_ptReweightedRecMCRebModFrac_%d",i),"", nBinsX, ptBinning);     
+            h1_ptReweightedRecMCRebModFrac[i]->Sumw2();
+            for (Int_t j = 0; (j < 5 && j < nResolHist); j++ ){
+                h1_ptReweightedRecMCRebModFrac[i]->Add(h1_ptdistSmearedReweightedReb[i+1][j]);
+            }
+            h1_ptReweightedRecMCRebModFracRatioToStandard[i]      = (TH1D*)h1_ptReweightedRecMCRebModFrac[i]->Clone(Form("h1_ptReweightedRecMCRebModFracRatioToStandard_%d",i));
+            h1_ptReweightedRecMCRebModFracRatioToStandard[i]->Divide(h1_ptReweightedRecMCRebModFracRatioToStandard[i],h1_ptReweightedRecMCReb,1,1,"B");
+        }    
+        
+        
+        //****************************** Plot smeared and input pT reweighted************************************************************
+        canvasQA->cd();
+        canvasQA->SetLogy(1);
+    //     TLegend* legendSpectra2 = GetAndSetLegend2(0.55, 0.93-(nResolHist+1)*0.035, 0.75, 0.93, 32,1); 
+        DrawAutoGammaMesonHistos(   h1_ptdistributionReb, 
+                                    "", "#it{p}_{T} (GeV/#it{c})", "#it{N}_{X}", // (%)", 
+                                    kTRUE, 10, 1e0, kFALSE,
+                                    kFALSE, 0., 0.7, 
+                                    kFALSE, 0., 10.);
+        h1_ptdistributionReb->GetYaxis()->SetTitleOffset(0.85);
+        DrawGammaSetMarker(h1_ptdistributionReb, 20, 1.5, kBlack, kBlack);
+        h1_ptdistributionReb->DrawClone("pe");
+    //     legendSpectra2->AddEntry(h1_ptdistributionReb,plotLabel.Data(),"pe");
+        for (Int_t j = 0; (j < 5 && j < nResolHist); j++ ){
+    //         DrawGammaSetMarker(h1_ptdistSmearedReweighted[0][j], markerSmear[j], 1.5, colorSmear[j], colorSmear[j]);
+    //         h1_ptdistSmearedReweighted[0][j]->Draw("same,pe");
+            DrawGammaSetMarker(h1_ptdistSmearedReweightedReb[0][j], markerSmear[j], 1.5, colorSmear[j], colorSmear[j]);
+            h1_ptdistSmearedReweightedReb[0][j]->Draw("same,pe");
+    //         legendSpectra2->AddEntry(h1_ptdistSmearedReweightedReb[0][j],Form("%s smeared",labelResolHist[j].Data()),"pe");
+        }
+        legendSpectra2->Draw();
+        canvasQA->SaveAs(Form("%s%s_PtDistribution_InputVsSmearedReweighted%s.%s",fOutputDir.Data(), outputlabel.Data(), subMode.Data(), suffix.Data()));
+
+        //****************************** Plot reconstructed spectrum ********************************************************************
+        canvasQA->cd();
+        canvasQA->SetLogy(1);
+        
+        DrawGammaSetMarker(h1_ptdistributionReb, 20, 1.5, kBlack, kBlack);
+        h1_ptdistributionReb->DrawClone("pe");
+        
+        DrawGammaSetMarker(h1_ptReweightedRecMCReb, 20, 1.5, kGray+2, kGray+2);
+        h1_ptReweightedRecMCReb->DrawClone("same,pe");
+        
+        TLegend* legendSpectra3 = GetAndSetLegend2(0.55, 0.93-(2+3)*0.035, 0.75, 0.93, 32,1); 
+        legendSpectra3->AddEntry(h1_ptdistributionReb,plotLabel.Data(),"pe");
+        legendSpectra3->AddEntry(h1_ptReweightedRecMCReb,Form("rec. %s",plotLabel.Data()),"pe");
+        
+        for (Int_t i = 0; i<3; i++){
+            DrawGammaSetMarker(h1_ptReweightedRecMCRebModFrac[i], markerScaled[i], 1.5, colorScaled[i], colorScaled[i]);
+            h1_ptReweightedRecMCRebModFrac[i]->Draw("same,pe");
+            legendSpectra3->AddEntry(h1_ptReweightedRecMCRebModFrac[i],Form("rec. %s, var %d",plotLabel.Data(),i),"pe");
+        }
+        legendSpectra3->Draw();
+        canvasQA->SaveAs(Form("%s%s_PtDistribution_RecSpec%s.%s",fOutputDir.Data(), outputlabel.Data(), subMode.Data(), suffix.Data()));
+        
+        //**************************** Draw ratio of modified reweighted to MC reweighted ************************************************
+        canvasQA->cd();
+        canvasQA->SetLogy(0);
+
+        TLegend* legendRatio2 = GetAndSetLegend2(0.55, 0.93-(2+3)*0.035, 0.75, 0.93, 32,1); 
+        for (Int_t j = 0; j < 3 ; j++ ){
+            if (j == 0){
+                DrawAutoGammaMesonHistos(   h1_ptReweightedRecMCRebModFracRatioToStandard[j], 
+                                            "", "#it{p}_{T} (GeV/#it{c})", "mod/standard", // (%)", 
+                                            kFALSE, 10, 1e-1, kFALSE,
+                                            kTRUE, 0.6, 1.4, 
+                                            kTRUE, 0., maxPt);
+                h1_ptReweightedRecMCRebModFracRatioToStandard[j]->GetYaxis()->SetTitleOffset(0.85);
+                DrawGammaSetMarker(h1_ptReweightedRecMCRebModFracRatioToStandard[j], markerScaled[j], 2.5, colorScaled[j], colorScaled[j]);
+                h1_ptReweightedRecMCRebModFracRatioToStandard[j]->DrawClone("pe");
+            }  else {
+                DrawGammaSetMarker(h1_ptReweightedRecMCRebModFracRatioToStandard[j], markerScaled[j], 2.5, colorScaled[j], colorScaled[j]);
+                h1_ptReweightedRecMCRebModFracRatioToStandard[j]->DrawClone("same,pe");            
+            }    
+            legendRatio2->AddEntry(h1_ptReweightedRecMCRebModFracRatioToStandard[j],Form("rec. %s, var %d",plotLabel.Data(),j),"pe");
+        }
+        legendRatio2->Draw();
+        
+        DrawGammaLines(0, maxPt , 1, 1 ,1, kGray, 7);   
+        DrawGammaLines(0, maxPt , 1.1, 1.1 ,1, kGray, 8);   
+        DrawGammaLines(0, maxPt , 0.9, 0.9 ,1, kGray, 8);   
+        
+        canvasQA->SaveAs(Form("%s%s_Ratio_ReweightedModDivStandard.%s",fOutputDir.Data(), outputlabel.Data(), suffix.Data()));
+
+        
+    }
     
     //******************************** Plot input phi phi distribution ***************************************************************
     canvasQA->SetLogy(1);
@@ -579,6 +807,27 @@ void NeutralMesonDecay( Int_t nEvts         = 1000000,
     h2_ClusterDistance->Draw("colz");
     canvasQA2D->SaveAs(Form("%s%s_MotherPtVsClusterDistance.%s",fOutputDir.Data(),outputlabel.Data(),suffix.Data()));
     
+    if (haveResol){
+        canvasQA2D->SetLeftMargin(0.115);
+        canvasQA2D->SetRightMargin(0.11);
+        for (Int_t j = 0; (j < 5 && j < nResolHist); j++ ){
+            DrawAutoGammaHistoPaper2D(  histoResolutionInput[j],
+                                        "",
+                                        "#it{p}_{T,MC} (GeV/#it{c})", 
+                                        Form ("(#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}", plotLabel.Data(), plotLabel.Data(), plotLabel.Data()),
+                                        0,0,0,
+                                        0,0,5,
+                                        0,0, 50,1,0.85);
+            histoResolutionInput[j]->GetZaxis()->SetRangeUser(1e-7, histoResolutionInput[j]->GetMaximum());
+            histoResolutionInput[j]->GetYaxis()->SetTitleOffset(1.05);
+            histoResolutionInput[j]->Draw("colz");
+            TLatex *labelProcess = new TLatex(0.65,0.9,Form("%s",labelResolHist[j].Data()));
+            SetStyleTLatex( labelProcess, 0.04,4);
+            labelProcess->Draw();
+
+            canvasQA2D->SaveAs(Form("%s%s_Resolutions%d.%s",fOutputDir.Data(),outputlabel.Data(),j,suffix.Data()));
+        }
+    }
     //*************************************************************************************************
     //********************** Write histograms to file *************************************************
     //*************************************************************************************************
