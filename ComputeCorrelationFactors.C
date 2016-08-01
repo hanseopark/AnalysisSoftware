@@ -79,6 +79,7 @@ void ComputeCorrelationFactors(
   cout << "creating outpur dir: " << outputDir.Data() << endl;
   gSystem->Exec("mkdir -p "+outputDir);
   gSystem->Exec("mkdir -p "+outputDir+"/sys");
+  gSystem->Exec("mkdir -p "+outputDir+"/corrFactors");
   //gSystem->Exec("mkdir -p "+outputDir+"/sysOverlaps");
   gSystem->Exec(Form("cp %s %s/%s_%s_%s_mode%s.config", fileInput.Data(), outputDir.Data(), meson.Data(), combMode.Data(), energyForOutput.Data(), mode.Data()));
 
@@ -164,18 +165,20 @@ void ComputeCorrelationFactors(
     while (getline(fileSysErr, line) && counter < 100) {
       istringstream ss(line);
       TString temp="";
+      TString tempBin="";
       Int_t counterColumn = 0;
       fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
       fLog << "\t*** reading line " << counter << " ***" << endl;
       while(ss && counterColumn < 100){
         ss >> temp;
         if(counter > 0 && counterColumn == 0){
-          if( !temp.IsNull() && (temp.Atof() < vecUseMinPt.at(iR) || temp.Atof() > vecUseMaxPt.at(iR)) ){
-            cout << "INFO: skipping pT " << temp.Atof() << ", outside of specified interval of " << vecUseMinPt.at(iR) << "-" << vecUseMaxPt.at(iR) << endl;
+          tempBin = temp;
+          if( !tempBin.IsNull() && (tempBin.Atof() < vecUseMinPt.at(iR) || tempBin.Atof() > vecUseMaxPt.at(iR)) ){
+            cout << "INFO: skipping pT " << tempBin.Atof() << ", outside of specified interval of " << vecUseMinPt.at(iR) << "-" << vecUseMaxPt.at(iR) << endl;
             break;
           }
         }
-        if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+        if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull() && counter < (vecNBins.at(iR)+1)){
           ptSys[iR][counter].push_back(temp);
           fLog << temp.Data() << ", ";
           counterColumn++;
@@ -186,14 +189,19 @@ void ComputeCorrelationFactors(
         ptSys[iR][counter++].push_back("TotalError");
         fLog << "TotalError";
         counterColumn++;
-      }else if(!temp.IsNull() && (temp.Atof() >= vecUseMinPt.at(iR) && temp.Atof() <= vecUseMaxPt.at(iR))) counter++;
-      fLog << "\n\t***" << counterColumn << " errors read ***" << endl;
+      }else if(!tempBin.IsNull() && (tempBin.Atof() >= vecUseMinPt.at(iR) && tempBin.Atof() <= vecUseMaxPt.at(iR))) counter++;
+      fLog << "\n\t***" << counterColumn << " columns read ***" << endl;
       fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n" << endl;
     }
     vecNBins.at(iR) = --counter;
     cout << "\t---" << counter << " pT bins read ---" << endl;
     fLog << "\t---" << counter << " pT bins read ---" << endl;
     fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    if(counter < 1){
+      cout << "ERROR: read " << counter << " pT-bins, returning!" << endl;
+      fLog << "ERROR: read " << counter << " pT-bins, returning!" << endl;
+      return;
+    }
     fileSysErr.close();
   }
 
@@ -205,6 +213,9 @@ void ComputeCorrelationFactors(
   fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
   fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n" << endl;
 
+  fstream fCorr;
+  fCorr.open(Form("%s/corrFactors/%s_%s_%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),energyForOutput.Data(),mode.Data()), ios::out);
+
   for(Int_t iC=0; iC<nRead; iC++){
     for(Int_t iC2=0; iC2<nRead; iC2++){
       if(iC==iC2) continue;
@@ -214,7 +225,9 @@ void ComputeCorrelationFactors(
       Double_t pT2 = -1;
 
       Double_t factor = 1;
+      TString tempCorr = "";
       if(iC<iC2){
+        tempCorr = Form("%s_%s-%s",vecComb.at(iC).Data(),vecComb.at(iC).Data(),vecComb.at(iC2).Data());
         cout << "\n\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         cout << "correlation factors " << vecComb.at(iC) << "_" << vecComb.at(iC) << "-" << vecComb.at(iC2) << endl;
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -222,6 +235,7 @@ void ComputeCorrelationFactors(
         fLog << "correlation factors " << vecComb.at(iC) << "_" << vecComb.at(iC) << "-" << vecComb.at(iC2) << endl;
         fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
       }else{
+        tempCorr = Form("%s_%s-%s",vecComb.at(iC).Data(),vecComb.at(iC2).Data(),vecComb.at(iC).Data());
         cout << "\n\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         cout << "correlation factors " << vecComb.at(iC) << "_" << vecComb.at(iC2) << "-" << vecComb.at(iC) << endl;
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -229,14 +243,13 @@ void ComputeCorrelationFactors(
         fLog << "correlation factors " << vecComb.at(iC) << "_" << vecComb.at(iC2) << "-" << vecComb.at(iC) << endl;
         fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
       }
-
-//      fstream fOverlap;
-//      if(iC<iC2) fOverlap.open(Form("%s/sysOverlaps/%s_%s_%s__%s_%s-%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),energyForOutput.Data(),vecComb.at(iC).Data(),vecComb.at(iC).Data(),vecComb.at(iC2).Data(),mode.Data()), ios::out);
-//      else fOverlap.open(Form("%s/sysOverlaps/%s_%s_%s__%s_%s-%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),energyForOutput.Data(),vecComb.at(iC).Data(),vecComb.at(iC2).Data(),vecComb.at(iC).Data(),mode.Data()), ios::out);
+      fCorr << endl;
+      fCorr << tempCorr.Data() << endl;
 
       for(;; binC++, binC2++){
         pT  = ((TString)ptSys[iC][binC].at(0)).Atof();
         pT2 = ((TString)ptSys[iC2][binC2].at(0)).Atof();
+        if( binC+1 == vecNBins.at(iC) || binC2+1 == vecNBins.at(iC2) ) break;
         do{
           if(pT < pT2){
             pT = ((TString)ptSys[iC][++binC].at(0)).Atof();
@@ -279,10 +292,12 @@ void ComputeCorrelationFactors(
         fLog << "\n\t|------------" << endl;
         fLog << "\n\tcorrFactor:\t" << factor << "|" << endl;
         fLog << "\t|------------" << endl;
+        fCorr << pT << " \t-\t " << factor << endl;
       }
-       //fOverlap.close();
     }
   }
+  fCorr.close();
+  fLog.close();
 
   return;
 }
