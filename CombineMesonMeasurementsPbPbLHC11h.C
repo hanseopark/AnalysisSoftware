@@ -1025,11 +1025,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         graphSysErrRAAYieldPi0PHOSPbPb0010->RemovePoint(0);
         graphSysErrRAAYieldPi0PHOSPbPb0010->RemovePoint(0);
 
-//         graphPHOSPi0InvYieldStatPbPb2760GeV_0010->Print();
-//         graphPHOSPi0InvYieldSysPbPb2760GeV_0010->Print();
-//         graphSysErrRAAYieldPi0PHOSPbPb0010->Print();
-//         return;
-
         Double_t error1;
         Double_t error2;
         for(Int_t i=0;i<graphPHOSPi0InvYieldStatPbPb2760GeV_0010->GetN();i++){
@@ -1049,6 +1044,16 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 //           "diff: " << TMath::Sqrt( (error1*error1) - (error2*error2) ) << endl;
 
         }
+        graphPHOSPi0InvYieldStatPbPb2760GeV_0010->RemovePoint(graphPHOSPi0InvYieldStatPbPb2760GeV_0010->GetN()-1);
+        graphPHOSPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(graphPHOSPi0InvYieldSysPbPb2760GeV_0010->GetN()-1);
+        graphSysErrRAAYieldPi0PHOSPbPb0010->RemovePoint(graphSysErrRAAYieldPi0PHOSPbPb0010->GetN()-1);
+        graphPHOSPi0InvYieldStatPbPb2760GeV_0010->RemovePoint(graphPHOSPi0InvYieldStatPbPb2760GeV_0010->GetN()-1);
+        graphPHOSPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(graphPHOSPi0InvYieldSysPbPb2760GeV_0010->GetN()-1);
+        graphSysErrRAAYieldPi0PHOSPbPb0010->RemovePoint(graphSysErrRAAYieldPi0PHOSPbPb0010->GetN()-1);
+
+//         graphPHOSPi0InvYieldStatPbPb2760GeV_0010->Print();
+//         graphPHOSPi0InvYieldSysPbPb2760GeV_0010->Print();
+//         graphSysErrRAAYieldPi0PHOSPbPb0010->Print();
 //         return;
 
     //**************************** PCM Pb-Pb data 2011 ****************************//
@@ -3084,10 +3089,10 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         fitLowPtBylinkin_0010 = FitObject("Lowtcm","Lowtcm0010","Pi0",graphCombInvYieldTotPbPb2760GeV_0010,0.,6.,parampart1TCM_0010,"QNRMEX0+","",limitPar);
         graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitLowPtBylinkin_0010,"QNRMEX0+","",0.8,2.);
         Double_t parampart2TCM_0010[3] = {graphCombInvYieldTotPbPb2760GeV_0010->GetY()[3],0.3,8};
-//         cout << WriteParameterToFile(fitLowPtBylinkin_0010)<< endl << endl;
+        cout << WriteParameterToFile(fitLowPtBylinkin_0010)<< endl << endl;
         fitHighPtBylinkin_0010 = FitObject("Hightcm","Hightcm0010","Pi0",graphCombInvYieldTotPbPb2760GeV_0010,0.,30.,parampart2TCM_0010,"QNRMEX0+","",limitPar);
         graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitHighPtBylinkin_0010,"QNRMEX0+","",1.,20.);
-//         cout << WriteParameterToFile(fitHighPtBylinkin_0010)<< endl << endl;
+        cout << WriteParameterToFile(fitHighPtBylinkin_0010)<< endl << endl;
 
         Double_t paramTCM_0010[5] = {fitLowPtBylinkin_0010->GetParameter(0),fitLowPtBylinkin_0010->GetParameter(1),fitHighPtBylinkin_0010->GetParameter(0),fitHighPtBylinkin_0010->GetParameter(1),fitHighPtBylinkin_0010->GetParameter(2)};
 //         Double_t paramTCM_0010[5] = {graphCombInvYieldTotPbPb2760GeV_0010->GetY()[0],0.3,graphCombInvYieldTotPbPb2760GeV_0010->GetY()[3],0.3,8};
@@ -3823,23 +3828,24 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         fitLowPtpart_0010->SetRange(0., 30.);
         fitLowPtpart_0010->FixParameter(0,fitBylinkinPbPb2760GeVPtLHC11h_0010->GetParameter(0));
         fitLowPtpart_0010->FixParameter(1,fitBylinkinPbPb2760GeVPtLHC11h_0010->GetParameter(1));
+        fitLowPtpart_0010->SetLineStyle(2);
+        fitLowPtpart_0010->SetLineColor(kRed);
+//         fitLowPtpart_0010->Draw("same");
+
         TF1 *fitHighPtpart_0010 = new TF1("fitHighPtpart_0010","[0]/(TMath::Power(1+x*x/([1]*[1]*[2]),[2]) )");
         fitHighPtpart_0010->SetRange(0., 30.);
         fitHighPtpart_0010->FixParameter(0,fitBylinkinPbPb2760GeVPtLHC11h_0010->GetParameter(2));
         fitHighPtpart_0010->FixParameter(1,fitBylinkinPbPb2760GeVPtLHC11h_0010->GetParameter(3));
         fitHighPtpart_0010->FixParameter(2,fitBylinkinPbPb2760GeVPtLHC11h_0010->GetParameter(4));
-
-        fitLowPtpart_0010->SetLineStyle(2);
-        fitLowPtpart_0010->SetLineColor(2);
         fitHighPtpart_0010->SetLineStyle(4);
-        fitHighPtpart_0010->SetLineColor(4);
-        fitLowPtpart_0010->Draw("same");
-        fitHighPtpart_0010->Draw("same");
-        fitLowPtBylinkin_0010->SetLineStyle(3);
-        fitLowPtBylinkin_0010->SetLineColor(3);
-        fitHighPtBylinkin_0010->SetLineStyle(6);
-        fitHighPtBylinkin_0010->SetLineColor(6);
+        fitHighPtpart_0010->SetLineColor(kBlue);
+//         fitHighPtpart_0010->Draw("same");
+
+        fitLowPtBylinkin_0010->SetLineStyle(2);
+        fitLowPtBylinkin_0010->SetLineColor(kMagenta+1);
         fitLowPtBylinkin_0010->Draw("same");
+        fitHighPtBylinkin_0010->SetLineStyle(4);
+        fitHighPtBylinkin_0010->SetLineColor(kGreen+2);
         fitHighPtBylinkin_0010->Draw("same");
 
         TLegend* legendInvYieldSingle = new TLegend(0.2,0.2,0.5,0.35);
@@ -3850,8 +3856,10 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         legendInvYieldSingle->SetTextSize(FontSize);
         legendInvYieldSingle->SetHeader(collisionSystem2760GeV.Data());
         legendInvYieldSingle->AddEntry(fitBylinkinPbPb2760GeVPtLHC11h_0010,"Bylinkin fit to Pb#font[122]{-}Pb","l");
-        legendInvYieldSingle->AddEntry(fitLowPtpart_0010,"Low p_{T} Bylinkin component","l");
-        legendInvYieldSingle->AddEntry(fitHighPtpart_0010,"High p_{T} Bylinkin component","l");
+//         legendInvYieldSingle->AddEntry(fitLowPtpart_0010,"Low p_{T} Bylinkin (drawn)","l");
+//         legendInvYieldSingle->AddEntry(fitHighPtpart_0010,"High p_{T} Bylinkin (drawn)","l");
+        legendInvYieldSingle->AddEntry(fitLowPtBylinkin_0010,"Low p_{T} Bylinkin (fitted)","l");
+        legendInvYieldSingle->AddEntry(fitHighPtBylinkin_0010,"High p_{T} Bylinkin (fitted)","l");
         legendInvYieldSingle->Draw();
 
         TLatex *labelBylinkin = new TLatex(0.22,0.14,"#it{A}_{e} exp(-#it{E}_{T, kin}/#it{T}_{e}) + #it{A}/#(){1 + #frac{#it{p}_{T}^{2}}{#it{T}^{2}#upoint n}}^{n}");
@@ -3874,28 +3882,31 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         fitBylinkinPbPb2760GeVPtLHC11h_2050->SetLineStyle(1);
         fitBylinkinPbPb2760GeVPtLHC11h_2050->Draw("same");
 
+
         TF1 *fitLowPtpart_2050 = new TF1("fitLowPtpart_2050",Form("[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1])",mass,mass,mass));
         fitLowPtpart_2050->SetRange(0., 30.);
         fitLowPtpart_2050->FixParameter(0,fitBylinkinPbPb2760GeVPtLHC11h_2050->GetParameter(0));
         fitLowPtpart_2050->FixParameter(1,fitBylinkinPbPb2760GeVPtLHC11h_2050->GetParameter(1));
+        fitLowPtpart_2050->SetLineStyle(2);
+        fitLowPtpart_2050->SetLineColor(kRed);
+//         fitLowPtpart_2050->Draw("same");
+
         TF1 *fitHighPtpart_2050 = new TF1("fitHighPtpart_2050","[0]/(TMath::Power(1+x*x/([1]*[1]*[2]),[2]) )");
         fitHighPtpart_2050->SetRange(0., 30.);
         fitHighPtpart_2050->FixParameter(0,fitBylinkinPbPb2760GeVPtLHC11h_2050->GetParameter(2));
         fitHighPtpart_2050->FixParameter(1,fitBylinkinPbPb2760GeVPtLHC11h_2050->GetParameter(3));
         fitHighPtpart_2050->FixParameter(2,fitBylinkinPbPb2760GeVPtLHC11h_2050->GetParameter(4));
-
-        fitLowPtpart_2050->SetLineStyle(2);
-        fitLowPtpart_2050->SetLineColor(2);
         fitHighPtpart_2050->SetLineStyle(4);
-        fitHighPtpart_2050->SetLineColor(4);
-        fitLowPtpart_2050->Draw("same");
-        fitHighPtpart_2050->Draw("same");
-        fitLowPtBylinkin_2050->SetLineStyle(3);
-        fitLowPtBylinkin_2050->SetLineColor(3);
-        fitHighPtBylinkin_2050->SetLineStyle(6);
-        fitHighPtBylinkin_2050->SetLineColor(6);
+        fitHighPtpart_2050->SetLineColor(kBlue);
+//         fitHighPtpart_2050->Draw("same");
+
+        fitLowPtBylinkin_2050->SetLineStyle(2);
+        fitLowPtBylinkin_2050->SetLineColor(kMagenta+1);
         fitLowPtBylinkin_2050->Draw("same");
+        fitHighPtBylinkin_2050->SetLineStyle(4);
+        fitHighPtBylinkin_2050->SetLineColor(kGreen+2);
         fitHighPtBylinkin_2050->Draw("same");
+
         legendInvYieldSingle->Draw();
         labelBylinkin->Draw();
         labelSystOnlyPbPb->Draw();
@@ -7540,9 +7551,18 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
 
 
-
-//     cout << WriteParameterToFile(fitBylinkinPbPb2760GeVPtLHC11h_0010)<< endl << endl;
-//     cout << WriteParameterToFile(fitBylinkinPbPb2760GeVPtLHC11h_2050)<< endl << endl;
+    cout << "Parameter Bylinkin fit 0010: " << endl;
+    cout << WriteParameterToFile(fitBylinkinPbPb2760GeVPtLHC11h_0010)<< endl << endl;
+    cout << "Parameter Bylinkin fit 2050: " << endl;
+    cout << WriteParameterToFile(fitBylinkinPbPb2760GeVPtLHC11h_2050)<< endl << endl;
+    cout << "Parameter low component Bylinkin fit 0010: " << endl;
+    cout << WriteParameterToFile(fitLowPtBylinkin_0010)<< endl << endl;
+    cout << "Parameter high component Bylinkin fit 0010: " << endl;
+    cout << WriteParameterToFile(fitHighPtBylinkin_0010)<< endl << endl;
+    cout << "Parameter low component Bylinkin fit 2050: " << endl;
+    cout << WriteParameterToFile(fitLowPtBylinkin_2050)<< endl << endl;
+    cout << "Parameter high component Bylinkin fit 2050: " << endl;
+    cout << WriteParameterToFile(fitHighPtBylinkin_2050)<< endl << endl;
 //     cout << "low 0010: " << fitLowPtBylinkin_0010->Eval(0) << "  high 0010: " << fitHighPtBylinkin_0010->Eval(0) << endl;
 //     cout << "low 2050: " << fitLowPtBylinkin_2050->Eval(0) << "  high 2050: " << fitHighPtBylinkin_2050->Eval(0) << endl;
 
