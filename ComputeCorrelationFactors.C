@@ -247,18 +247,21 @@ void ComputeCorrelationFactors(
       fCorr << tempCorr.Data() << endl;
 
       for(;; binC++, binC2++){
+        if( binC == vecNBins.at(iC)+1 || binC2 == vecNBins.at(iC2)+1 ) break;
+
         pT  = ((TString)ptSys[iC][binC].at(0)).Atof();
         pT2 = ((TString)ptSys[iC2][binC2].at(0)).Atof();
-        if( binC+1 == vecNBins.at(iC) || binC2+1 == vecNBins.at(iC2) ) break;
-        do{
-          if(pT < pT2){
-            pT = ((TString)ptSys[iC][++binC].at(0)).Atof();
-          }else if(pT2 < pT){
-            pT2 = ((TString)ptSys[iC2][++binC2].at(0)).Atof();
-          }
-        }while(pT!=pT2 && binC < vecNBins.at(iC) && binC2 < vecNBins.at(iC2));
-        if( binC == vecNBins.at(iC) || binC2 == vecNBins.at(iC2) ) break;
-        //cout << pT << ", " << pT2 << ", " << binC << ", " << binC2 << endl;
+        if( binC < vecNBins.at(iC) && binC2 < vecNBins.at(iC2) ){
+          do{
+            if(pT < pT2){
+              pT = ((TString)ptSys[iC][++binC].at(0)).Atof();
+            }else if(pT2 < pT){
+              pT2 = ((TString)ptSys[iC2][++binC2].at(0)).Atof();
+            }
+          }while(pT!=pT2 && binC < vecNBins.at(iC) && binC2 < vecNBins.at(iC2));
+
+        }
+        if( pT!=pT2 ) break;
 
         cout << "\n\t---------- pT: " << pT << " ----------" << endl;
         fLog << "\n\t---------- pT: " << pT << " ----------" << endl;
