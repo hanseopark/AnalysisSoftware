@@ -352,6 +352,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TString rapidityRange                                   = "";
     Double_t deltaRapid             [MaxNumberOfFiles];
     
+    TH1D*   histoInvMassSigPlusBG   [MaxNumberOfFiles];
+    TH1D*   histoInvMassSig         [MaxNumberOfFiles];
+    TH1D*   histoInvMassBG          [MaxNumberOfFiles];
+    TF1*    fitInvMassSig           [MaxNumberOfFiles];
+    
     for (Int_t i=0; i< nrOfTrigToBeComb; i++){
         // Define CutSelections
         TString fEventCutSelection                          = "";
@@ -361,6 +366,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TString fMesonCutSelection                          = "";
         // disentangle cut selection
         ReturnSeparatedCutNumberAdvanced(cutNumber[i].Data(),fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);    
+        
+        TString trigger                                     = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+        Int_t exampleBin                                    = ReturnSingleInvariantMassBinPlotting ("Pi0", optionEnergy, mode, trigger.Atoi());
         
         FileNameCorrectedPi0[i]                             = Form("%s/%s/Pi0_%s_GammaConvV1Correction_%s.root", cutNumber[i].Data(), optionEnergy.Data(), isMC.Data(), 
                                                                     cutNumber[i].Data());
@@ -405,8 +413,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         if (mode == 10){
             histoPurityPi0[i]                               = (TH1D*)fileCorrectedPi0[i]->Get("MesonPurity");
             histoPurityPi0[i]->SetName(Form("Purity_%s",  cutNumber[i].Data()));
-
         }    
+
         histoRawYieldPi0[i]                                 = (TH1D*)fileCorrectedPi0[i]->Get("histoYieldMesonPerEvent");
         histoRawYieldPi0[i]->SetName(Form("RAWYieldPerEvent_%s",cutNumber[i].Data()));
         if (mode != 10){
@@ -418,6 +426,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             histoWidthPi0Data[i]->SetName(Form("Pi0_Width_data_%s",cutNumber[i].Data()));
             histoWidthPi0MC[i]                                  = (TH1D*)fileCorrectedPi0[i]->Get(nameWidthMC.Data());
             histoWidthPi0MC[i]->SetName(Form("Pi0_Width_MC_%s",cutNumber[i].Data()));
+            histoInvMassSig[i]                                  = (TH1D*)fileCorrectedPi0[i]->Get(Form("InvMassSig_PtBin%02d",exampleBin));
+            if (histoInvMassSig[i]) histoInvMassSig[i]->SetName(Form("Pi0_InvMassSig_Example_%s",triggerName[i].Data()));
+            histoInvMassSigPlusBG[i]                            = (TH1D*)fileCorrectedPi0[i]->Get(Form("InvMassSigPlusBG_PtBin%02d",exampleBin));
+            if (histoInvMassSigPlusBG[i]) histoInvMassSigPlusBG[i]->SetName(Form("Pi0_InvMassSigPlusBG_Example_%s",triggerName[i].Data()));
+            histoInvMassBG[i]                                   = (TH1D*)fileCorrectedPi0[i]->Get(Form("InvMassBG_PtBin%02d",exampleBin));
+            if (histoInvMassBG[i]) histoInvMassBG[i]->SetName(Form("Pi0_InvMassBG_Example_%s",triggerName[i].Data()));
+            fitInvMassSig[i]                                    = (TF1*)fileCorrectedPi0[i]->Get(Form("FitInvMassSig_PtBin%02d",exampleBin));
+            if (fitInvMassSig[i]) fitInvMassSig[i]->SetName(Form("Pi0_InvMassSigFit_Example_%s",triggerName[i].Data()));
         }
         if (cutNumberBaseEff[i].CompareTo("bla") != 0){
             FileNameEffBasePi0[i]                           = Form("%s/%s/Pi0_MC_GammaConvV1Correction_%s.root", cutNumber[i].Data(), optionEnergy.Data(), cutNumberBaseEff[i].Data());
@@ -5564,7 +5580,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             if (graphMassPi0DataWeighted)                   graphMassPi0DataWeighted->Write("Pi0_Mass_data", TObject::kOverwrite);
             if (graphMassPi0MCWeighted)                     graphMassPi0MCWeighted->Write("Pi0_Mass_MC", TObject::kOverwrite);
             if (graphWidthPi0DataWeighted)                  graphWidthPi0DataWeighted->Write("Pi0_Width_data", TObject::kOverwrite);
-            if (graphWidthPi0MCWeighted)                    graphWidthPi0MCWeighted->Write("Pi0_Width_MC", TObject::kOverwrite);
+            if (graphWidthPi0MCWeighted)                    graphWidthPi0MCWeighted->Write("Pi0_Width_MC", TObject::kOverwrite);            
         }
         for (Int_t i=0; i< nrOfTrigToBeComb; i++){
             cout << "trigger: " << triggerName[i].Data() << endl; 
@@ -5578,6 +5594,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 if (histoMassPi0MC[i])                      histoMassPi0MC[i]->Write(Form("Pi0_Mass_MC_%s",triggerName[i].Data()),TObject::kOverwrite);
                 if (histoWidthPi0Data[i])                   histoWidthPi0Data[i]->Write(Form("Pi0_Width_data_%s",triggerName[i].Data()),TObject::kOverwrite);
                 if (histoWidthPi0MC[i])                     histoWidthPi0MC[i]->Write(Form("Pi0_Width_MC_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (histoInvMassSig[i])                     histoInvMassSig[i]->Write(Form("Pi0_InvMassSig_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (histoInvMassSigPlusBG[i])               histoInvMassSigPlusBG[i]->Write(Form("Pi0_InvMassSigPlusBG_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (histoInvMassBG[i])                      histoInvMassBG[i]->Write(Form("Pi0_InvMassBG_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (fitInvMassSig[i])                       fitInvMassSig[i]->Write(Form("Pi0_InvMassSigFit_Example_%s",triggerName[i].Data()),TObject::kOverwrite);                
             }
             if (graphsCorrectedYieldRemoved0Pi0[i])     graphsCorrectedYieldRemoved0Pi0[i]->Write(Form("CorrectedYieldPi0_%s",triggerName[i].Data()),TObject::kOverwrite);   
             if (graphsCorrectedYieldSysRemoved0Pi0[i])  graphsCorrectedYieldSysRemoved0Pi0[i]->Write(Form("Pi0SystError_%s",triggerName[i].Data()),TObject::kOverwrite);

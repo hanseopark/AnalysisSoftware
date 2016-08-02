@@ -41,7 +41,8 @@
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
 #include "../CommonHeaders/PlottingGammaConversionAdditional.h"
 #include "../CommonHeaders/FittingGammaConversion.h"
-#include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
+#include "../CommonHeaders/ExtractSignalBinning.h"
+// #include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "../CommonHeaders/ConversionFunctions.h"
 
 struct SysErrorConversion {
@@ -249,26 +250,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TString rapidityRange   = "";
     Double_t deltaRapid     =  ReturnRapidityStringAndDouble(fMesonCutSelection, rapidityRange);
     
+    TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+    
+    // Initialize bin for single invariant mass plot
     Int_t fExampleBin       = 2;
-    if(optionEnergy.CompareTo("7TeV") == 0){
-        if (nameMeson.Contains("Eta") )fExampleBin=6;
-            else fExampleBin=7;
-    } else if( optionEnergy.CompareTo("8TeV") == 0) {
-        if (nameMeson.Contains("Eta") )fExampleBin=6;
-            else fExampleBin=7;
-    } else if( optionEnergy.CompareTo("2.76TeV") == 0) {
-        if (nameMeson.Contains("Eta") )fExampleBin=4;
-            else fExampleBin=7;  
-    } else if( optionEnergy.CompareTo("900GeV") == 0) {
-        if (nameMeson.Contains("Eta") )fExampleBin=2;
-            else fExampleBin=7;
-    } else if( optionEnergy.CompareTo("pPb_5.023TeV") == 0 ) {
-        if (nameMeson.Contains("Eta") )fExampleBin=4;
-            else fExampleBin=7;
-    } else if( optionEnergy.CompareTo("PbPb_2.76TeV") == 0 ) {
-        if (nameMeson.Contains("Eta") )fExampleBin=6;
-            else fExampleBin=7;  
-    }
+    fExampleBin             = ReturnSingleInvariantMassBinPlotting (nameMeson, optionEnergy, mode, trigger.Atoi());
     
     //Variable defintion
     Double_t scaling        = 1./(2.*TMath::Pi());

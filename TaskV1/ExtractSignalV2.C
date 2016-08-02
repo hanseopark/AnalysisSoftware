@@ -5648,6 +5648,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
     fEventQuality->Write();
 
     TString nameHistoSignal;
+    TString titleHistoSignal;
     TString nameHistoSignalLeft;
     TString nameHistoPeakPos;
     TString nameHistoBckNorm;
@@ -5682,13 +5683,15 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
         }
 
         fHistoMappingGGInvMassPtBin[ii]->Write();
-        nameHistoBckNorm = Form("Mapping_BckNorm_InvMass_in_Pt_Bin%02d", ii);
-        fHistoMappingBackNormInvMassPtBin[ii]->Write(nameHistoBckNorm.Data());
-        nameHistoSignal = Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d", ii);
-        fHistoMappingSignalInvMassPtBin[ii]->Write(nameHistoSignal.Data());
+        nameHistoBckNorm    = Form("Mapping_BckNorm_InvMass_in_Pt_Bin%02d", ii);
+        nameHistoSignal     = Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d", ii);
         nameHistoSignalLeft = Form("fHistoMappingSignalInvMassLeft_in_Pt_Bin%02d", ii); //Added 12.12.2014
+        fitnameSignal       = Form("Signal_InvMassFit_in_Pt_Bin%02d", ii);
+        titleHistoSignal    = Form("       %3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",fBinsPt[ii],fBinsPt[ii+1]),
+        fHistoMappingBackNormInvMassPtBin[ii]->Write(nameHistoBckNorm.Data());
+        fHistoMappingSignalInvMassPtBin[ii]->SetTitle(titleHistoSignal.Data());
+        fHistoMappingSignalInvMassPtBin[ii]->Write(nameHistoSignal.Data());
         fHistoMappingSignalInvMassLeftPtBin[ii]->Write(nameHistoSignalLeft.Data());//Added 12.12.2014
-        fitnameSignal = Form("Signal_InvMassFit_in_Pt_Bin%02d", ii);
         if( fMode == 4 ) {
         nameHistoBckNormLeft = Form("Mapping_BckNormLeft_InvMass_in_Pt_Bin%02d", ii);
         fHistoMappingBackNormInvMassLeftPtBin[ii]->Write(nameHistoBckNormLeft.Data());
