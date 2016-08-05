@@ -3318,9 +3318,9 @@ Color_t GetColorDefaultColor( TString energy,
     if (!energy.CompareTo("13TeV")||!energy.CompareTo("13TeVLowB")){
         if (!generator.CompareTo("LHC15f") || !generator.CompareTo("LHC15g") || !generator.CompareTo("LHC15h") || !generator.CompareTo("LHC15i") || !generator.CompareTo("LHC15j") || !generator.CompareTo("LHC15k") || !generator.CompareTo("LHC15l")){
             return kBlack;
-        } else if (!generator.Contains("g3a")) {
+        } else if (!generator.CompareTo("LHC15g3a3")) {
             return kBlue;
-        } else if (!generator.Contains("g3c")) {
+        } else if (!generator.CompareTo("LHC15g3c3")) {
             return kRed;
         } else {
             return kRed;
@@ -3616,9 +3616,9 @@ Style_t GetDefaultMarkerStyle( TString energy,
             return 7;
         } else if (!generator.CompareTo("LHC15f")) {
             return 20;
-        } else if (!generator.Contains("g3a")) {
+        } else if (!generator.CompareTo("LHC15g3a3")) {
             return 28;
-        } else if (!generator.Contains("g3c")) {
+        } else if (!generator.CompareTo("LHC15g3c3")) {
             return 24;
         } else {
             return 27;
