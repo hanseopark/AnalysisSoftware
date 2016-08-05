@@ -668,12 +668,13 @@ void QA(    TString select          = "LHC11a",         // set selected
 		suffix="pdf";
 		nSets = 2;
 		fEnergyFlag = "13TeV";
-		DataSets[0]="LHC15f"; DataSets[1]="LHC15g3a3";
-		plotDataSets[0]="Data"; plotDataSets[1]="LHC15g3a3";
-		pathDataSets[0]="/home/meike/analysis/data/GridOutput/GammaConv/pp/LHC15f/merged/GammaConvV1_117_LHC15fPass2AOD171_trainNo58_53runs.root";
-		pathDataSets[1]="/home/meike/analysis/data/GridOutput/GammaConv/pp/LHC15g3a3/merged/GammaConvV1_115_LHC15g3a3AOD176_trainNo124_50runs.root";
-		pathPhotonQA[0]="/home/meike/analysis/data/GridOutput/PhotonQA/pp/LHC15f/PhotonQA_LHC15f.root";
-		pathPhotonQA[1]="/home/meike/analysis/data/GridOutput/PhotonQA/pp/LHC15g3c3/PhotonQA_LHC15g3c3.root";
+		DataSets[0]="LHC15f_ESD"; DataSets[1]="LHC15g3a3_ESD";
+		plotDataSets[0]="LHC15f_ESD"; plotDataSets[1]="LHC15g3a3_ESD";
+		labelData=plotDataSets[0];
+		pathDataSets[0]="/home/meike/analysis/data/GridOutput/GammaConv/pp/LHC15f_ESD/GammaConvV1_LHC15f_ESD.root";
+		pathDataSets[1]="/home/meike/analysis/data/GridOutput/GammaConv/pp/LHC15g3a3_ESD/GammaConvV1_LHC15g3a3_ESD.root";
+		pathPhotonQA[0]="/home/meike/analysis/data/GridOutput/PhotonQA/pp/LHC15f_ESD/PhotonQA_LHC15f_ESD.root";
+		pathPhotonQA[1]="/home/meike/analysis/data/GridOutput/PhotonQA/pp/LHC15g3a3_ESD/PhotonQA_LHC15g3a3_ESD.root";
 
     }
     //**************************************************************************************************************

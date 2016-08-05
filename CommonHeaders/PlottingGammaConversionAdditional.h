@@ -3316,12 +3316,18 @@ Color_t GetColorDefaultColor( TString energy,
                             TString centrality, 
                             Bool_t kBox = kFALSE){
     if (!energy.CompareTo("13TeV")||!energy.CompareTo("13TeVLowB")){
-        if (!generator.CompareTo("LHC15f") || !generator.CompareTo("LHC15g") || !generator.CompareTo("LHC15h") || !generator.CompareTo("LHC15i") || !generator.CompareTo("LHC15j") || !generator.CompareTo("LHC15k") || !generator.CompareTo("LHC15l")){
+        if (!generator.CompareTo("LHC15f") || !generator.CompareTo("LHC15f_ESD") || !generator.CompareTo("LHC15g") || !generator.CompareTo("LHC15h") || !generator.CompareTo("LHC15i") || !generator.CompareTo("LHC15j") || !generator.CompareTo("LHC15k") || !generator.CompareTo("LHC15l")){
             return kBlack;
-        } else if (!generator.CompareTo("LHC15g3a3")) {
+        } else if (!generator.CompareTo("LHC15f_AOD")) {
+            return kOrange+7;
+        } else if (!generator.CompareTo("LHC15g3a3") || !generator.CompareTo("LHC15g3a3_ESD") ) {
             return kBlue;
-        } else if (!generator.CompareTo("LHC15g3c3")) {
+        } else if (!generator.CompareTo("LHC15g3a3_AOD")) {
+            return kMagenta+2;
+        } else if (!generator.CompareTo("LHC15g3c3") || !generator.CompareTo("LHC15g3c3_ESD")) {
             return kRed;
+        } else if (!generator.CompareTo("LHC15g3c3_AOD")) {
+            return kGreen+2;
         } else {
             return kRed;
         }
@@ -3614,14 +3620,20 @@ Style_t GetDefaultMarkerStyle( TString energy,
     if (!energy.CompareTo("13TeV")){
         if (!generator.CompareTo("")) {
             return 7;
-        } else if (!generator.CompareTo("LHC15f")) {
-            return 20;
-        } else if (!generator.CompareTo("LHC15g3a3")) {
-            return 28;
-        } else if (!generator.CompareTo("LHC15g3c3")) {
+        } else if (!generator.CompareTo("LHC15f") || !generator.CompareTo("LHC15f_ESD")) {
             return 24;
-        } else {
+        } else if (!generator.CompareTo("LHC15f_AOD")) {
+            return 5;
+        } else if (!generator.CompareTo("LHC15g3a3") || !generator.CompareTo("LHC15g3a3_ESD")) {
+            return 28;
+        } else if (!generator.CompareTo("LHC15g3a3_AOD")) {
+            return 25;
+        } else if (!generator.CompareTo("LHC15g3c3") || !generator.CompareTo("LHC15g3c3_ESD")) {
+            return 31;
+        } else if (!generator.CompareTo("LHC15g3c3_AOD")) {
             return 27;
+        } else {
+            return 2;
         }
     }
     

@@ -23,7 +23,7 @@ void QA_Runwise(
     //******************* global settings **************************************************************************
     //**************************************************************************************************************
 
-    TString folderRunlists          = "DownloadAndDataPrep/runlists";
+    TString folderRunlists          = "DownloadAndDataPrep";
 
     const Int_t maxSets             = 20;
     TString DataSets[maxSets];
@@ -598,7 +598,6 @@ void QA_Runwise(
     }
     //**************************************************************************************************************
     else if(select.CompareTo("LHC15f")==0){
-	  cutNr=-1;
 	  mode=0;
 	  suffix="pdf";
 	  fEnergyFlag = "13TeV";
@@ -607,8 +606,8 @@ void QA_Runwise(
 	  filePath= "/home/meike/analysis/data/GridOutput/GammaConv/pp/";
 	  filePathPhoton = "/home/meike/analysis/data/GridOutput/PhotonQA/pp/";
 	  fileName = "GammaConvV1.root";
-	  DataSets[0]="LHC15f"; DataSets[1]="LHC15g3a3";
-	  plotDataSets[0]="LHC15f"; plotDataSets[1]="LHC15g3a3";
+	  DataSets[0]="LHC15f_ESD"; DataSets[1]="LHC15g3a3_ESD";
+	  plotDataSets[0]="LHC15f_ESD"; plotDataSets[1]="LHC15g3a3_ESD";
 	  markerSize=1.5;
 	  doEquidistantXaxis=kTRUE;
     }
