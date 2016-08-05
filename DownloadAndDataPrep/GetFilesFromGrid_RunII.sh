@@ -82,6 +82,33 @@ case "$1" in    # default: echo "no valid period chosen";
 	# all 13 runs:
 	RUN=(244917 244918 244975 244980 244982 244983 245061 245064 245066 245068 246390 246391 246392);
 	;;
+    "LHC15k1a1") # anchored to LHC15oLowIR
+	PERIOD=LHC15k1a1
+	YEAR=2015
+	isMC=TRUE
+	SYSTEM=PbPb
+	# no pass
+	# 10 runs:
+	RUN=(244918 244975 244982 244983 245064 245066 245068 246390 246391 246392);
+	;;
+    "LHC15k1a2") # anchored to LHC15oLowIR
+	PERIOD=LHC15k1a2
+	YEAR=2015
+	isMC=TRUE
+	SYSTEM=PbPb
+	# no pass
+	# 10 runs:
+	RUN=(244918 244975 244982 244983 245064 245066 245068 246390 246391 246392);
+	;;
+    "LHC15k1a3") # anchored to LHC15oLowIR
+	PERIOD=LHC15k1a3
+	YEAR=2015
+	isMC=TRUE
+	SYSTEM=PbPb
+	# no pass
+	# 10 runs:
+	RUN=(244918 244975 244982 244983 245064 245066 245068 246390 246391 246392);
+	;;
     "LHC15oHighIR")
 	PERIOD=LHC15o
 	YEAR=2015
@@ -142,9 +169,10 @@ Merge() {
 	    fi      
 	done
 	echo $actualNoRuns" runs merged";
-	if [ $actualNoRuns -ne ${#RUN[@]} ]; then
-	    mv $BASEDIR/$SYSTEM/$PERIOD/mymerge/${#RUN[@]}runs/ $BASEDIR/$SYSTEM/$PERIOD/mymerge/$actualNoRuns"runs"/
-	fi
+	#if [ $actualNoRuns -ne ${#RUN[@]} ]; then
+	mv $BASEDIR/$SYSTEM/$PERIOD/mymerge/${#RUN[@]}runs/Gam* $BASEDIR/$SYSTEM/$PERIOD/GammaConvV1_$actualNoRuns"runs.root"
+	rm -r $BASEDIR/$SYSTEM/$PERIOD/mymerge/
+	#fi
 }
 
 WriteInfo() {
