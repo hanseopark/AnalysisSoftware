@@ -361,6 +361,9 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         } else if (cutVariationName.Contains("ClusterNonLinearity")){
           TString fClusterNonLinearity                          = fClusterCutSelection(GetClusterNonLinearityCutPosition(fClusterCutSelection),2);
           cutStringsName[i]                                     = AnalyseClusterNonLinearityCut(fClusterNonLinearity.Atoi());
+        } else if (cutVariationName.Contains("PhotonAsymmetry")){
+            TString fPhotonAsymmetry                            = fGammaCutSelection(GetPhotonDoPhotonAsymmetryCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalysePhotonAsymmetry(fPhotonAsymmetry.Atoi());
         } else {
             cutStringsName[i]                                   = cutNumberAdv[i].Data();
         }

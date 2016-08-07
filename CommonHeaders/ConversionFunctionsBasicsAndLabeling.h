@@ -2505,6 +2505,27 @@ TString AnalysePhotonQuality(Int_t photonQualitCut ){
 }  
 
 //************************************************************************************
+//********* Analyzes the photon asymmetry cut, return correct cut label **************
+//************************************************************************************
+TString AnalysePhotonAsymmetry(Int_t photonQualitCut ){
+    switch(photonQualitCut) {
+        case 0:
+            return "no cut";
+        case 1:
+            return "for p_{T,track} > 3.5,  A_{gamma} < 0.04";
+        case 2:
+            return "for p_{T,track} > 3.5,  A_{gamma} < 0.06";
+        case 3:
+            return "for p_{T,track} > 0.0,  A_{gamma} < 0.05";
+        case 4:
+            return "p-dependent asymmetry cut ";
+        default:
+            return "photon asymmetry cut not defined";
+    }
+}
+
+
+//************************************************************************************
 //******** Analyzes the phi exclusion photon cuts, return correct cut label **********
 //************************************************************************************
 TString AnalyseConvPhiExclusionCut(TString gammaCutNumber){
