@@ -136,15 +136,14 @@ fi
 
 # ********* common functions **********************************************************************************************************
 Structure() {
-    if [ "$FILETYPE" == "G" ]; then
-	ls $OUTPUTDIR/GammaConvV1_*.root > fileData.txt
-	fileNumbers=`cat fileData.txt`
-	for fileName in $fileNumbers; do
-	    number=`echo $fileName | cut -d "_" -f 2 | cut -d "." -f 1`
-	    echo "trainconfig: " $number
-	    root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1.root\"\,\"GammaConvV1_$number\"\)
-	done
-    fi
+
+    ls $1/GammaConvV1_*.root > fileData.txt
+    fileNumbers=`cat fileData.txt`
+    for fileName in $fileNumbers; do
+	number=`echo $fileName | cut -d "_" -f 2 | cut -d "." -f 1`
+	echo "trainconfig: " $number
+	root -l -b -q -x ChangeStructureToStandard.C\(\"$1/GammaConvV1_$number.root\"\,\"$1/GammaConvV1_$number.root\"\,\"GammaConvV1_$number\"\)
+    done
 }
 
 Merge() {
@@ -344,21 +343,43 @@ fi
     # possible scenarios: no data / part of the data available already
 
 	declare -i i=0
+	declare -i j=0
 	for run in "${RUN[@]}"; do
 	    i=i+1
 	    echo "Run $i of ${#RUN[@]} ...";
-	    SOURCEDIR=/alice/$TYPE/$YEAR/$PERIOD/$PREFIX$run/$PASS/$AOD/PWGGA/$TRAINDIR/$TRAIN 
+	    SOURCEDIR=/alice/$TYPE/$YEAR/$PERIOD/$PREFIX$run/$PASS/$AOD/PWGGA/$TRAINDIR/$TRAIN
 	    OUTPUTDIR=$BASEDIR/$SYSTEM/$PERIOD/$run/
 	    if [ $2 = "G" ]; then
 		alien_ls $SOURCEDIR/GammaConvV1_*.root > filesToCopy.txt
 	    else
 		alien_ls $SOURCEDIR/AnalysisResults.root > filesToCopy.txt
 	    fi
+	    mkdir -p $OUTPUTDIR  # move below ?
 	    files=`cat filesToCopy.txt`
 	    if [ "$files" = "" ]; then
+		echo "no files found. Search for unmerged run files stage 1"
+		alien_find $SOURCEDIR/Stage_1/*/ GammaConvV1_*.root > UnMergedRunFilesToCopy.txt
+		unmergedFiles=`cat UnMergedRunFilesToCopy.txt`
+		j=0
+		for fileToCopy in $unmergedFiles; do
+		    if [ "$fileToCopy" = "" ]; then
+			continue
+		    fi
+		    j=j+1
+		    if [ -d $OUTPUTDIR/$j ]; then
+			echo "already copied $OUTPUTDIR/$j ";
+		    else
+			mkdir -p $OUTPUTDIR/$j
+			echo "copy "   $fileToCopy " to " $OUTPUTDIR/$j;
+			alien_cp alien:$fileToCopy file:$OUTPUTDIR/$j
+			echo "copied"
+			if [ "$FILETYPE" == "G" ]; then
+			    Structure $OUTPUTDIR/$j
+			fi
+		    fi
+		done
 		continue
 	    fi
-	    mkdir -p $OUTPUTDIR  # move below ?
 	    EXISTS=`ls $OUTPUTDIR`
 	    if [ "$EXISTS" != "" ] && [ "$answer" != "all" ] && [ "$answer" != "none" ]; then
 	        echo "files already exist for this run: "$EXISTS" download anyways? yes / all / no / none";  # !!! Diese Abfrage funktioniert noch nicht
@@ -370,14 +391,15 @@ fi
 	    fi
 	    for fileToCopy in $files; do
 		if [ -f $OUTPUTDIR/$fileToCopy ]; then
-		    echo "already copied $OUTPUTDIR_Data/$fileToCopy ";
+		    echo "already copied $OUTPUTDIR/$fileToCopy ";
 		elif [ "$answer" == "no" ] || [ "$answer" == "none" ]; then
 		    echo "don't copy "$SOURCEDIR/$fileToCopy;
 		else
 		    alien_cp alien:$SOURCEDIR/$fileToCopy file:$OUTPUTDIR/
 		    echo "copied " $SOURCEDIR/$fileToCopy " to " $OUTPUTDIR;
-		    #Change structure to standard
-		    Structure
+		    if [ "$FILETYPE" == "G" ]; then
+			Structure $OUTPUTDIR
+		    fi
 		fi
 	    done  
 	done
