@@ -30,6 +30,8 @@ Bool_t      fEstimateTrainPileUp                                        = kFALSE
 Bool_t      fEnableDCMeson                                              = kFALSE;
 Bool_t      fEnableDCCluster                                            = kFALSE;
 Bool_t      fUseRPBackground                                            = kFALSE;
+Bool_t      fNewMCOutput                                                = kFALSE;
+
 TString     fEventCutSelection                                          = "";
 TString     fGammaCutSelection                                          = "";
 TString     fClusterCutSelection                                        = "";
@@ -76,6 +78,7 @@ TString     ObjectNameTrueWOWeights                                     = "";
 TString     ObjectNameProfileWeights                                    = "";
 TString     ObjectNameTrueSec                                           = "";
 TString     ObjectNameTrueSecFromK0S                                    = "";
+TString     ObjectNameTrueSecFromK0L                                    = "";
 TString     ObjectNameTrueSecFromLambda                                 = "";
 TString     ObjectNameMCPi0Acc                                          = "";
 TString     ObjectNameMCPi0AccWOWeights                                 = "";
@@ -104,6 +107,14 @@ TString     ObjectNameDCMesonInvMassPt                                  = "";
 TString     ObjectNameDCGammaClusPt                                     = "";
 TString     ObjectNameMesonMultipleCount                                = "";
 TString     ObjectNameGammaClusMultipleCount                            = "";
+// object names for secondary MC histos
+TString     ObjectNameMCSecPi0Acc                                       = "";
+TString     ObjectNameMCSecPi0                                          = "";
+TString     ObjectNameMCSecPi0FromK0SAcc                                = "";
+TString     ObjectNameMCSecPi0FromK0S                                   = "";
+TString     ObjectNameMCSecPi0FromK0LAcc                                = "";
+TString     ObjectNameMCSecPi0FromK0L                                   = "";
+
 TString     fNameHistoGG                                                = "";
 TString     fNameHistoBack                                              = "";
 TString     fNameHistoPP                                                = "";
@@ -729,6 +740,21 @@ TH1D*       fHistoMCMesonWithinAccepPtWOEvtWeights                      = NULL;
 TH1D*       fHistoMCMesonPt1                                            = NULL;
 TH1D*       fHistoMCMesonPt1WOWeights                                   = NULL;
 TH1D*       fHistoMCMesonPt1WOEvtWeights                                = NULL;
+//****************************************************************************
+//************************ sec MC input histograms ***************************
+//****************************************************************************
+TH1D*       fHistoMCSecPi0Pt                                            = NULL;
+TH1D*       fHistoMCSecPi0FromK0SPt                                     = NULL;
+TH1D*       fHistoMCSecPi0FromK0LPt                                     = NULL;
+TH1D*       fHistoMCSecPi0PtWAcc                                        = NULL;
+TH1D*       fHistoMCSecPi0FromK0SPtWAcc                                 = NULL;
+TH1D*       fHistoMCSecPi0FromK0LPtWAcc                                 = NULL;
+TH1D*       fHistoMCSecPi0PtReb                                         = NULL;
+TH1D*       fHistoMCSecPi0FromK0SPtReb                                  = NULL;
+TH1D*       fHistoMCSecPi0FromK0LPtReb                                  = NULL;
+TH1D*       fHistoMCSecPi0PtWAccReb                                     = NULL;
+TH1D*       fHistoMCSecPi0FromK0SPtWAccReb                              = NULL;
+TH1D*       fHistoMCSecPi0FromK0LPtWAccReb                              = NULL;
 
 //****************************************************************************
 //*********************** MC efficiency histograms ***************************
