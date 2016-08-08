@@ -3739,64 +3739,6 @@ Size_t GetDefaultMarkerSize( TString energy,
     return 0;
 }
 
-
-// Color_t GetDefaultColorDiffDetectors( TString detector, 
-//                                     Bool_t isMC, 
-//                                     Bool_t isBox = kFALSE){
-//     if (isMC){ // MC
-//         if (detector.CompareTo("PCM") == 0){
-//             return kGray+1;
-//         } else if (detector.CompareTo("PHOS") == 0){
-//             return kRed-7;
-//         } else if (detector.CompareTo("EMCal") == 0){	
-//             return kGreen-6;
-//         } else if (detector.CompareTo("PCM-EMCal") == 0){	
-//             return kCyan-6;
-//         } else if (detector.CompareTo("PCM-PHOS") == 0){	
-//             return kOrange+1;
-//         } else if (detector.CompareTo("Dalitz") == 0){	
-//             return kBlue-6;
-//         }	else {
-//             return kBlue-6;
-//         }
-//     } else { // data
-//         if (!isBox){
-//             if (detector.CompareTo("PCM") == 0){
-//                 return kBlack;
-//             } else if (detector.CompareTo("PHOS") == 0){
-//                 return kRed+1;
-//             } else if (detector.CompareTo("EMCal") == 0){	
-//                 return kGreen+2;
-//             } else if (detector.CompareTo("PCM-EMCal") == 0){	
-//                 return kCyan+2;
-//             } else if (detector.CompareTo("PCM-PHOS") == 0){	
-//                 return 807;
-//             } else if (detector.CompareTo("Dalitz") == 0){	
-//                 return kBlue+1;
-//             } else {
-//                 return kBlue+1;
-//             }
-//         } else {
-//             if (detector.CompareTo("PCM") == 0){
-//                 return kGray+1;;
-//             } else if (detector.CompareTo("PHOS") == 0){
-//                 return kRed-6;
-//             } else if (detector.CompareTo("EMCal") == 0){	
-//                 return kGreen-6;
-//             } else if (detector.CompareTo("PCM-EMCal") == 0){	
-//                 return kCyan-6;
-//             } else if (detector.CompareTo("PCM-PHOS") == 0){	
-//                 return 806;
-//             } else if (detector.CompareTo("Dalitz") == 0){	
-//                 return kBlue-7;
-//             } else {
-//                 return kBlue-7;
-//             }
-//         }	
-//     }	
-//     return kBlack;
-// }
-
 Color_t GetDefaultColorDiffDetectors( TString detector, 
                                     Bool_t isMC, 
                                     Bool_t isBox = kFALSE, 
@@ -3806,9 +3748,9 @@ Color_t GetDefaultColorDiffDetectors( TString detector,
             return kGray+1;
         } else if (detector.CompareTo("PHOS") == 0){
             return kRed-7;
-        } else if (detector.CompareTo("EMCal") == 0){	
+        } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){	
             return kGreen-6;
-        } else if (detector.CompareTo("PCM-EMCal") == 0){	
+        } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){	
             return kBlue-6;
         } else if (detector.CompareTo("PCM-PHOS") == 0){	
             return kOrange+1;
@@ -3816,7 +3758,7 @@ Color_t GetDefaultColorDiffDetectors( TString detector,
             return kViolet-4;
         } else if (detector.CompareTo("EMCal high pT") == 0){
             return kOrange+1;
-        } else if (detector.CompareTo("EMCal merged") == 0){
+        } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0){
             return kCyan-6;
         }	else {
             return kCyan-6;
@@ -3830,10 +3772,10 @@ Color_t GetDefaultColorDiffDetectors( TString detector,
             } else if (detector.CompareTo("PHOS") == 0){
                 if(isHighPt) return kRed+1;
                 else return kRed-6;
-            } else if (detector.CompareTo("EMCal") == 0){	
+            } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){	
                 if(isHighPt) return kGreen+2;
                 else return kGreen-6;
-            } else if (detector.CompareTo("PCM-EMCal") == 0){	
+            } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){	
                 if(isHighPt) return kBlue+1;
                 else return kBlue-6;
             } else if (detector.CompareTo("PCM-PHOS") == 0){	
@@ -3848,7 +3790,7 @@ Color_t GetDefaultColorDiffDetectors( TString detector,
             }  else if (detector.CompareTo("EMCal high pT") == 0){
                 if(isHighPt) return 807;
                     else return 806;
-            } else if (detector.CompareTo("EMCal merged") == 0){
+            } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0){
                 if(isHighPt) return kCyan+2;
                     else return kCyan-6;
             } else {
@@ -3860,9 +3802,9 @@ Color_t GetDefaultColorDiffDetectors( TString detector,
                 return kGray+1;
             } else if (detector.CompareTo("PHOS") == 0){
                 return kRed-6;
-            } else if (detector.CompareTo("EMCal") == 0){	
+            } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){	
                 return kGreen-6;
-            } else if (detector.CompareTo("PCM-EMCal") == 0){	
+            } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){	
                 return kBlue-7;	
             } else if (detector.CompareTo("PCM-PHOS") == 0){	
                 return 806;
@@ -3870,7 +3812,7 @@ Color_t GetDefaultColorDiffDetectors( TString detector,
                 return kViolet-4;
             }  else if (detector.CompareTo("EMCal high pT") == 0){
                 return 806;
-            } else if (detector.CompareTo("EMCal merged") == 0){
+            } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0){
                 return kCyan-6;
             } else {
                 return kCyan-6;
@@ -3889,9 +3831,9 @@ Style_t GetDefaultMarkerStyleDiffDetectors( TString detector,
             return 24;
         } else if (detector.CompareTo("PHOS") == 0){
             return 25;
-        } else if (detector.CompareTo("EMCal") == 0){	
+        } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){	
             return 27;
-        } else if (detector.CompareTo("PCM-EMCal") == 0){	
+        } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){	
             return 28;
         } else if (detector.CompareTo("PCM-PHOS") == 0){	
             return 28;
@@ -3899,7 +3841,7 @@ Style_t GetDefaultMarkerStyleDiffDetectors( TString detector,
             return 30;
         }  else if (detector.CompareTo("EMCal high pT") == 0){
             return 28;
-        } else if (detector.CompareTo("EMCal merged") == 0){
+        } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0){
             return 30;
         } else if (detector.CompareTo("Comb") == 0){
             return 20;
@@ -3911,9 +3853,9 @@ Style_t GetDefaultMarkerStyleDiffDetectors( TString detector,
             return 20;
         } else if (detector.CompareTo("PHOS") == 0){
             return 21;
-        } else if (detector.CompareTo("EMCal") == 0){	
+        } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){	
             return 33;
-        } else if (detector.CompareTo("PCM-EMCal") == 0){	
+        } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){	
             return 34;
         } else if (detector.CompareTo("PCM-PHOS") == 0){	
             return 34;
@@ -3921,7 +3863,7 @@ Style_t GetDefaultMarkerStyleDiffDetectors( TString detector,
             return 29;
         }  else if (detector.CompareTo("EMCal high pT") == 0){
             return 34;
-        } else if (detector.CompareTo("EMCal merged") == 0){
+        } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0){
             return 29;
         } else if (detector.CompareTo("Comb") == 0){
             return 20;
@@ -3939,9 +3881,9 @@ Size_t GetDefaultMarkerSizeDiffDetectors( TString detector,
             return 2.2;
         } else if (detector.CompareTo("PHOS") == 0){
             return 2.2;
-        } else if (detector.CompareTo("EMCal") == 0){	
+        } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){	
             return 3.3;
-        } else if (detector.CompareTo("PCM-EMCal") == 0){	
+        } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){	
             return 2.2;
         } else if (detector.CompareTo("PCM-PHOS") == 0){	
             return 2.2;
@@ -3949,7 +3891,7 @@ Size_t GetDefaultMarkerSizeDiffDetectors( TString detector,
             return 2.2;
         }  else if (detector.CompareTo("EMCal high pT") == 0){
             return 2.2;
-        } else if (detector.CompareTo("EMCal merged") == 0){
+        } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0){
             return 2.2;
         } else {
             return 2.2;
@@ -3959,9 +3901,9 @@ Size_t GetDefaultMarkerSizeDiffDetectors( TString detector,
             return 2.2;
         } else if (detector.CompareTo("PHOS") == 0){
             return 2.2;
-        } else if (detector.CompareTo("EMCal") == 0){	
+        } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){	
             return 3.3;
-        } else if (detector.CompareTo("PCM-EMCal") == 0){	
+        } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){	
             return 2.2;
         } else if (detector.CompareTo("PCM-PHOS") == 0){	
             return 2.2;
@@ -3969,7 +3911,7 @@ Size_t GetDefaultMarkerSizeDiffDetectors( TString detector,
             return 2.2;
         }  else if (detector.CompareTo("EMCal high pT") == 0){
             return 2.2;
-        } else if (detector.CompareTo("EMCal merged") == 0){
+        } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0){
             return 2.2;
         } else {
             return 2.2;

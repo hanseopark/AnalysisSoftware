@@ -142,7 +142,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                         TString optionPeriod            = "",
                         TString fEstimatePileup         = "", 
                         Bool_t optDalitz                = kFALSE, 
-                        Int_t mode                      = 9
+                        Int_t mode                      = 9,
+                        Int_t triggerSet                = -1
+                        
                      ){  
     
     // ******************************************************************************************
@@ -254,7 +256,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     
     // Initialize bin for single invariant mass plot
     Int_t fExampleBin       = 2;
-    fExampleBin             = ReturnSingleInvariantMassBinPlotting (nameMeson, optionEnergy, mode, trigger.Atoi());
+    fExampleBin             = ReturnSingleInvariantMassBinPlotting (nameMeson, optionEnergy, mode, trigger.Atoi(), triggerSet);
     
     //Variable defintion
     Double_t scaling        = 1./(2.*TMath::Pi());

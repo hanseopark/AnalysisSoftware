@@ -5687,23 +5687,22 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
         nameHistoSignal     = Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d", ii);
         nameHistoSignalLeft = Form("fHistoMappingSignalInvMassLeft_in_Pt_Bin%02d", ii); //Added 12.12.2014
         fitnameSignal       = Form("Signal_InvMassFit_in_Pt_Bin%02d", ii);
-        titleHistoSignal    = Form("       %3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",fBinsPt[ii],fBinsPt[ii+1]),
+        titleHistoSignal    = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",fBinsPt[ii],fBinsPt[ii+1]),
         fHistoMappingBackNormInvMassPtBin[ii]->Write(nameHistoBckNorm.Data());
         fHistoMappingSignalInvMassPtBin[ii]->SetTitle(titleHistoSignal.Data());
         fHistoMappingSignalInvMassPtBin[ii]->Write(nameHistoSignal.Data());
         fHistoMappingSignalInvMassLeftPtBin[ii]->Write(nameHistoSignalLeft.Data());//Added 12.12.2014
         if( fMode == 4 ) {
-        nameHistoBckNormLeft = Form("Mapping_BckNormLeft_InvMass_in_Pt_Bin%02d", ii);
-        fHistoMappingBackNormInvMassLeftPtBin[ii]->Write(nameHistoBckNormLeft.Data());
-        fitnameSignal = Form("Signalnew_InvMassFit_in_Pt_Bin%02d", ii);
-        
-        fitnameSignalLeft = Form("SignalnewLeft_InvMassFit_in_Pt_Bin%02d", ii);
-        if(fFitInvMassLeftPtBin[ii]!=0x00) fFitInvMassLeftPtBin[ii]->Write(fitnameSignalLeft.Data());
-//         fitnameSignalLeft2 = Form("SignalLeft_InvMassFit_in_Pt_Bin%02d", ii);
-//         if(fFitInvMassLeftPtBin2[ii]!=0x00) fFitInvMassLeftPtBin2[ii]->Write(fitnameSignalLeft2.Data());
-//         fitnameSignal2 = Form("Signal_InvMassFit_in_Pt_Bin%02d", ii);
-//         if(fFitSignalInvMassPtBin2[ii]!=0x00) fFitSignalInvMassPtBin2[ii]->Write(fitnameSignal2.Data());
-        
+            nameHistoBckNormLeft = Form("Mapping_BckNormLeft_InvMass_in_Pt_Bin%02d", ii);
+            fHistoMappingBackNormInvMassLeftPtBin[ii]->Write(nameHistoBckNormLeft.Data());
+    //         fitnameSignal = Form("Signalnew_InvMassFit_in_Pt_Bin%02d", ii);
+            
+            fitnameSignalLeft = Form("SignalnewLeft_InvMassFit_in_Pt_Bin%02d", ii);
+            if(fFitInvMassLeftPtBin[ii]!=0x00) fFitInvMassLeftPtBin[ii]->Write(fitnameSignalLeft.Data());
+    //         fitnameSignalLeft2 = Form("SignalLeft_InvMassFit_in_Pt_Bin%02d", ii);
+    //         if(fFitInvMassLeftPtBin2[ii]!=0x00) fFitInvMassLeftPtBin2[ii]->Write(fitnameSignalLeft2.Data());
+    //         fitnameSignal2 = Form("Signal_InvMassFit_in_Pt_Bin%02d", ii);
+    //         if(fFitSignalInvMassPtBin2[ii]!=0x00) fFitSignalInvMassPtBin2[ii]->Write(fitnameSignal2.Data());
         }
         if(fFitSignalInvMassPtBin[ii]!=0x00) fFitSignalInvMassPtBin[ii]->Write(fitnameSignal.Data());
         

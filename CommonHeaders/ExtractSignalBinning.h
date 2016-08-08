@@ -924,7 +924,32 @@ Int_t fBinsPi0pPbDirectPhotonPtRebin[19]        = { 4, 4, 2, 2, 2,
 //*************************************************************************************************
 //******************** Initialize Single bin for invariant mass plot ******************************
 //*************************************************************************************************                                                    
-Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t mode, Int_t trigger){
+Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t mode, Int_t trigger, Int_t triggerSet = -1){
+
+    if (triggerSet != -1){
+        if (energy.CompareTo("2.76TeV") == 0){
+            if (triggerSet == 1)
+                trigger     = 52;
+            if (triggerSet == 2)    
+                trigger     = 85;
+            if (triggerSet == 3)
+                trigger     = 83;
+            if (triggerSet == 4)
+                trigger     = 51;
+            if (triggerSet == 5)    
+                trigger     = 01;
+        } else if (energy.CompareTo("8TeV") == 0){
+            if (triggerSet == 1)
+                trigger     = 52;
+            if (triggerSet == 2)
+                trigger     = 81;
+            if (triggerSet == 3)
+                trigger     = 53;
+            if (triggerSet == 4)
+                trigger     = 82;
+        }    
+    }         
+
     if (meson.CompareTo("Pi0") == 0){
         if (energy.CompareTo("900GeV") == 0) {
             return 5;
@@ -1116,10 +1141,10 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                         return 4;
                         break;
                     case 3:             // INT1 11a
-                        return 6;
+                        return 4;
                         break;
                     case 51:            // EMC1
-                        return 9;
+                        return 8;
                         break;
                     case 52:            // EMC7
                         return 5;
@@ -1137,7 +1162,7 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
             } else if ( mode == 4 ){    // EMC-EMC
                 switch (trigger){
                     case 3:             // INT1 11a
-                        return 4;
+                        return 6;
                         break;
                     case 0:             // INT1 13g
                     case 1:             // INT1 13g
@@ -1149,9 +1174,13 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                         return 5;
                         break;
                     case 51:            // EMC1
+                        return 8;
+                        break;
                     case 85:            // EG2
-                    case 83:            // EG1
                         return 7;
+                        break;
+                    case 83:            // EG1
+                        return 10;
                         break;
                     default:
                         return 4;
@@ -1321,7 +1350,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
     Int_t specialTrigg      = 0;
     
     // Initialize bin for single invariant mass plot
-    fExampleBin             = ReturnSingleInvariantMassBinPlotting (setPi0, energy, modi, trigger.Atoi());
+    fExampleBin             = ReturnSingleInvariantMassBinPlotting (setPi0, energy, modi, trigger.Atoi(), triggerSet);
     
     //*************************************************************************************************
     //************************************ Binning for Pi0 ********************************************

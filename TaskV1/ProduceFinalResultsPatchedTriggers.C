@@ -442,6 +442,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             if (fileEffBasePi0[i]->IsZombie()){
                 enableTriggerEffPi0[i]                         = kFALSE;
                 cout << "Didn't find the effi base file for " << triggerName[i].Data() << endl;
+                cout << "ABORTING: as base effi file was requested" << endl;
+                
             } else {
                 enableTriggerEffPi0[i]                         = kTRUE;
                 enableTriggerEffPi0All                         = kTRUE;
@@ -588,7 +590,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         Size_t textSizeSpectra2         = 0.0415;
         Int_t textPixelPP               = textSizeSpectra2*1100;
         TCanvas* canvasTriggerReject    = new TCanvas("canvasTriggerReject","",0,0,1500,1100);// gives the page size
-        DrawGammaCanvasSettings( canvasTriggerReject, 0.12, 0.017, 0.015, 0.085);
+        DrawGammaCanvasSettings( canvasTriggerReject, 0.076, 0.015, 0.015, 0.085);
         canvasTriggerReject->SetLogy(1);
         
         Double_t minTriggReject = 0.1;
@@ -600,8 +602,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         
         TH2F * histo2DTriggReject;
         histo2DTriggReject = new TH2F("histo2DTriggReject","histo2DTriggReject",1000,0., maxPtGlobalCluster,10000,minTriggReject, maxTriggReject);
-        SetStyleHistoTH2ForGraphs(histo2DTriggReject, "#it{p}_{T} (GeV/#it{c})","#frac{N_{clus,trig A}/N_{Evt, trig A}}{N_{clus,trig B}/N_{Evt,trig B}}", 
-                                0.85*textSizeSpectra2,textSizeSpectra2, 0.85*textSizeSpectra2,textSizeSpectra2, 0.85,1.18);
+        SetStyleHistoTH2ForGraphs(histo2DTriggReject, "#it{p}_{T} (GeV/#it{c})","#it{R}_{Trig}", //"#frac{N_{clus,trig A}/N_{Evt, trig A}}{N_{clus,trig B}/N_{Evt,trig B}}", 
+                                0.85*textSizeSpectra2,textSizeSpectra2, 0.85*textSizeSpectra2,textSizeSpectra2, 0.85,0.85);
         histo2DTriggReject->DrawCopy(); 
 
         TLegend* legendTriggReject = GetAndSetLegend2(0.33, 0.12, 0.92, 0.12+(0.9*(nrOfTrigToBeComb-2+1)*textSizeSpectra2),textPixelPP);
@@ -658,9 +660,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         histo2DTriggReject->Draw("same,axis");
         TLatex *labelPerfTriggRejec  = NULL;
         if (isMC.CompareTo("MC") == 0)
-            labelPerfTriggRejec  = new TLatex(0.15, 0.93,"ALICE simulation");
+            labelPerfTriggRejec  = new TLatex(0.11, 0.93,"ALICE simulation");
         else 
-            labelPerfTriggRejec  = new TLatex(0.15, 0.93,"ALICE performance");
+            labelPerfTriggRejec  = new TLatex(0.11, 0.93,"ALICE performance");
         
         SetStyleTLatex( labelPerfTriggRejec, textSizeSpectra2,4);
         labelPerfTriggRejec->Draw();
@@ -682,7 +684,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         //***************************************************************************************************************
     
         TCanvas* canvasTriggerRejectLinear = new TCanvas("canvasTriggerReject","",0,0,1500,1100);// gives the page size
-        DrawGammaCanvasSettings( canvasTriggerRejectLinear, 0.118, 0.017, textSizeSpectra2, 0.08);
+        DrawGammaCanvasSettings( canvasTriggerRejectLinear, 0.076, 0.015, textSizeSpectra2, 0.08);
         canvasTriggerRejectLinear->SetLogy(0);
         
         Double_t minTriggRejectLin = 0;
@@ -702,8 +704,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         
         TH2F * histo2DTriggRejectLinear;
         histo2DTriggRejectLinear = new TH2F("histo2DTriggRejectLinear","histo2DTriggRejectLinear",1000,0., maxPtGlobalCluster,15000,minTriggRejectLin, maxTriggRejectLin);
-        SetStyleHistoTH2ForGraphs(histo2DTriggRejectLinear, "#it{p}_{T} (GeV/#it{c})","#frac{N_{clus,trig A}/N_{Evt, trig A}}{N_{clus,trig B}/N_{Evt,trig B}}", 
-                                0.85*textSizeSpectra2,textSizeSpectra2, 0.85*textSizeSpectra2,textSizeSpectra2, 0.85,1.18);
+        SetStyleHistoTH2ForGraphs(histo2DTriggRejectLinear, "#it{p}_{T} (GeV/#it{c})","#it{R}_{Trig}", //"#frac{N_{clus,trig A}/N_{Evt, trig A}}{N_{clus,trig B}/N_{Evt,trig B}}", 
+                                0.85*textSizeSpectra2,textSizeSpectra2, 0.85*textSizeSpectra2,textSizeSpectra2, 0.85,0.85);
         histo2DTriggRejectLinear->DrawCopy(); 
 
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
@@ -2765,11 +2767,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     }    
 //     if (!enableEta) delete canvasAcc;
 
-
-
-    
-    
-    
     //***************************************************************************************************************
     //************************************Plotting scaled invariant yield *****************************************
     //***************************************************************************************************************
@@ -3056,6 +3053,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TH1D*   histoMassEtaMC              [MaxNumberOfFiles];
     TH1D*   histoWidthEtaData           [MaxNumberOfFiles];
     TH1D*   histoWidthEtaMC             [MaxNumberOfFiles];
+    TH1D*   histoEtaInvMassSigPlusBG    [MaxNumberOfFiles];
+    TH1D*   histoEtaInvMassSig          [MaxNumberOfFiles];
+    TH1D*   histoEtaInvMassBG           [MaxNumberOfFiles];
+    TF1*    fitEtaInvMassSig            [MaxNumberOfFiles];
     
     // create pointers for weighted graphs and supporting figutes
     TGraphAsymmErrors* graphCorrectedYieldWeightedAverageEtaStat    = NULL;
@@ -3109,6 +3110,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             // disentangle cut selection
             ReturnSeparatedCutNumberAdvanced(cutNumber[i].Data(),fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
         
+            TString trigger                                 = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+            Int_t exampleBin                                = ReturnSingleInvariantMassBinPlotting ("Eta", optionEnergy, mode, trigger.Atoi());
+
             FileNameCorrectedEta[i]                         = Form("%s/%s/Eta_%s_GammaConvV1Correction_%s.root", cutNumber[i].Data(), optionEnergy.Data(), isMC.Data(), 
                                                                         cutNumber[i].Data());
             cout<< FileNameCorrectedEta[i] << endl;
@@ -3149,6 +3153,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             histoWidthEtaData[i]->SetName(Form("Eta_Width_data_%s",cutNumber[i].Data()));
             histoWidthEtaMC[i]                                  = (TH1D*)fileCorrectedEta[i]->Get(nameWidthMC.Data());
             histoWidthEtaMC[i]->SetName(Form("Eta_Width_MC_%s",cutNumber[i].Data()));
+            histoEtaInvMassSig[i]                               = (TH1D*)fileCorrectedEta[i]->Get(Form("InvMassSig_PtBin%02d",exampleBin));
+            if (histoEtaInvMassSig[i]) histoEtaInvMassSig[i]->SetName(Form("Eta_InvMassSig_Example_%s",triggerName[i].Data()));
+            histoEtaInvMassSigPlusBG[i]                         = (TH1D*)fileCorrectedEta[i]->Get(Form("InvMassSigPlusBG_PtBin%02d",exampleBin));
+            if (histoEtaInvMassSigPlusBG[i]) histoEtaInvMassSigPlusBG[i]->SetName(Form("Eta_InvMassSigPlusBG_Example_%s",triggerName[i].Data()));
+            histoEtaInvMassBG[i]                                = (TH1D*)fileCorrectedEta[i]->Get(Form("InvMassBG_PtBin%02d",exampleBin));
+            if (histoEtaInvMassBG[i]) histoEtaInvMassBG[i]->SetName(Form("Eta_InvMassBG_Example_%s",triggerName[i].Data()));
+            fitEtaInvMassSig[i]                                 = (TF1*)fileCorrectedEta[i]->Get(Form("FitInvMassSig_PtBin%02d",exampleBin));
+            if (fitEtaInvMassSig[i]) fitEtaInvMassSig[i]->SetName(Form("Eta_InvMassSigFit_Example_%s",triggerName[i].Data()));
 
             if (cutNumberBaseEff[i].CompareTo("bla") != 0){
                 FileNameEffBaseEta[i]                           = Form("%s/%s/Eta_MC_GammaConvV1Correction_%s.root", cutNumber[i].Data(), optionEnergy.Data(), cutNumberBaseEff[i].Data());
@@ -5642,6 +5654,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 if (histoMassEtaMC[i])                      histoMassEtaMC[i]->Write(Form("Eta_Mass_MC_%s",triggerName[i].Data()),TObject::kOverwrite);
                 if (histoWidthEtaData[i])                   histoWidthEtaData[i]->Write(Form("Eta_Width_data_%s",triggerName[i].Data()),TObject::kOverwrite);
                 if (histoWidthEtaMC[i])                     histoWidthEtaMC[i]->Write(Form("Eta_Width_MC_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (histoEtaInvMassSig[i])                  histoEtaInvMassSig[i]->Write(Form("Eta_InvMassSig_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (histoEtaInvMassSigPlusBG[i])            histoEtaInvMassSigPlusBG[i]->Write(Form("Eta_InvMassSigPlusBG_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (histoEtaInvMassBG[i])                   histoEtaInvMassBG[i]->Write(Form("Eta_InvMassBG_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (fitEtaInvMassSig[i])                    fitEtaInvMassSig[i]->Write(Form("Eta_InvMassSigFit_Example_%s",triggerName[i].Data()),TObject::kOverwrite);                
+
                 if (graphsCorrectedYieldRemoved0Eta[i])     graphsCorrectedYieldRemoved0Eta[i]->Write(Form("CorrectedYieldEta_%s",triggerName[i].Data()),TObject::kOverwrite);
                 if (graphsCorrectedYieldSysRemoved0Eta[i])  graphsCorrectedYieldSysRemoved0Eta[i]->Write(Form("EtaSystError_%s",triggerName[i].Data()),TObject::kOverwrite);
                 if (enableTriggerEffEta[i]){

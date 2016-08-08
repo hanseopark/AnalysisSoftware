@@ -391,6 +391,9 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             fHistoTrueClustersSecPi0FLambdaPtM02            = (TH2F*) TrueContainer->FindObject(fObjectNameTrueClusSecMesonFromLambdaM02.Data());
             if (fHistoTrueClustersSecPi0FLambdaPtM02) fHistoTrueClustersSecPi0FLambdaPtM02->Sumw2();
 
+            // remove pi0 from K0s from secondary yield
+            if(fHistoTrueClustersSecPi0FK0sPtM02) fHistoTrueClustersSecPi0PtM02->Add(fHistoTrueClustersSecPi0FK0sPtM02,-1);
+            
             FillMCPrimSecM02HistosArray(    fHistoTrueClustersPrimPi0PtM02, fHistoTrueClustersSecPi0PtM02, fHistoTrueClustersSecPi0FK0sPtM02, fHistoTrueClustersSecPi0FLambdaPtM02
                                        );
         }
@@ -429,6 +432,10 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                 fHistoMCSecPi0FromK0sWithinAccepPt->Sumw2();
                 fHistoMCSecPi0Pt->Sumw2();
                 fHistoMCSecPi0FromK0sPt->Sumw2();
+        
+                // take pi0 from K0s out of sec pi0
+                fHistoMCSecPi0WithinAccepPt->Add(fHistoMCSecPi0FromK0sWithinAccepPt,-1);
+                fHistoMCSecPi0Pt->Add(fHistoMCSecPi0FromK0sPt,-1);
                 fNewMCOutput                    = kTRUE;
                 cout << "new MC output is being processed" << endl; 
             }    
@@ -561,11 +568,9 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                 fMesonM02TruePrimPi0Yields[iPt]                     = fYields;
                 fMesonM02TruePrimPi0YieldsError[iPt]                = fYieldsError;
 
-
                 IntegrateHistoM02(fHistoTrueClusSecPi0M02PtBin[iPt], fMesonM02IntRange );
-                fMesonM02TrueSecPi0Yields[iPt]                      = fYields;
-                fMesonM02TrueSecPi0YieldsError[iPt]                 = fYieldsError;
-
+                fMesonM02TrueSecPi0Yields[iPt]                     = fYields;
+                fMesonM02TrueSecPi0YieldsError[iPt]                = fYieldsError;
 
                 IntegrateHistoM02(fHistoTrueClusSecPi0FK0sM02PtBin[iPt], fMesonM02IntRange );
                 fMesonM02TrueSecPi0FK0sYields[iPt]                  = fYields;

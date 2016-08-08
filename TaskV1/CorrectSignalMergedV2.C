@@ -52,7 +52,7 @@ struct SysErrorConversion {
 void CorrectYield( TH1D* histoCorrectedYield, 
                    TH1D* histoPurity,
                    TH1D* histoRawSecYield, 
-                   TH1D* histoRawAddSecYieldFromK0s, 
+                   TH1D* histoRawSecYieldFromK0s, 
                    TH1D* histoEffiPt, 
                    TH1D* histoAcceptance, 
                    Double_t deltaRapid, 
@@ -63,7 +63,7 @@ void CorrectYield( TH1D* histoCorrectedYield,
     histoCorrectedYield->Sumw2();
     histoCorrectedYield->Multiply(histoPurity);
     histoCorrectedYield->Add(histoRawSecYield,-1.);
-    histoCorrectedYield->Add(histoRawAddSecYieldFromK0s,-1.);
+    histoCorrectedYield->Add(histoRawSecYieldFromK0s,-1.);
     histoCorrectedYield->Divide(histoCorrectedYield,histoEffiPt,1.,1.,"");
     histoCorrectedYield->Divide(histoCorrectedYield,histoAcceptance,1.,1.,"");
     histoCorrectedYield->Scale(1./deltaRapid);
@@ -432,8 +432,11 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     fitSecFracFromK0->SetParLimits(3,0,1e-2);
     TH1D* histoYieldSecMeson                    = NULL;
     TH1D* histoYieldSecFromK0SMeson             = NULL;
-    
-
+    TH1D* histoSecEffiPt                        = NULL;
+    TH1D* histoSecEffiFromK0sPt                 = NULL;
+    TH1D* histoSecAccPt                         = NULL;
+    TH1D* histoSecAccFromK0sPt                  = NULL;
+    Bool_t isNewOutput                          = kFALSE;
     Bool_t doK0SecCorrection                    = kFALSE;
     Int_t doK0SecCorrectionWithDefaultHisto     = 0;
     
@@ -482,9 +485,18 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         histoYieldSecFromK0SMeson->Sumw2();
         histoYieldSecFromK0SMeson->Multiply(histoMesonPurityPt);
         histoYieldSecFromK0SMeson->Multiply(histoYieldTrueSecFracFK0SMeson);
-        histoYieldSecFromK0SMeson->Scale(doubleAddFactorK0s);                
+        histoYieldSecFromK0SMeson->Scale(doubleAddFactorK0s+1);                
         
         cout << "I am changing the sec yield" << endl;
+        
+        histoSecAccPt                           = (TH1D*)fileCorrections->Get("SecPi0AcceptancePt");
+        histoSecAccFromK0sPt                    = (TH1D*)fileCorrections->Get("SecPi0FromK0sAcceptancePt");
+        histoSecEffiPt                          = (TH1D*)fileCorrections->Get("TrueEfficiencySecPi0Pt");
+        histoSecEffiFromK0sPt                   = (TH1D*)fileCorrections->Get("TrueEfficiencySecPi0FromK0sPt");
+
+        if (histoSecAccPt && histoSecAccFromK0sPt && histoSecEffiPt && histoSecEffiFromK0sPt)
+            isNewOutput                         = kTRUE;
+        
     }
         
     //**********************************************************************************
@@ -509,6 +521,34 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
 
         canvasAcceptance->Update();
         canvasAcceptance->SaveAs(Form("%s/%s_Acceptance_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
+        
+        if (isNewOutput){
+            canvasAcceptance->cd();
+            
+                histoAcceptance->GetYaxis()->SetRangeUser(0,histoAcceptance->GetMaximum()*1.8);
+                DrawGammaSetMarker(histoAcceptance, 20, 1.5, kAzure-6, kAzure-6);
+                histoAcceptance->DrawCopy("e1"); 
+
+                DrawGammaSetMarker(histoSecAccFromK0sPt, 24, 1.5, kRed+2, kRed+2);
+                histoSecAccFromK0sPt->DrawCopy("e1,same"); 
+
+                DrawGammaSetMarker(histoSecAccPt, 24, 1.5, kBlue, kBlue);
+                histoSecAccPt->DrawCopy("e1,same"); 
+                
+                TLegend* legendSecAcc = GetAndSetLegend2(0.1, 0.12, 0.3, 0.25, 32,1); 
+                legendSecAcc->AddEntry(histoAcceptance,"prim #pi^{0}   ","pe");
+                legendSecAcc->AddEntry(histoSecAccFromK0sPt,"sec #pi^{0} from K_{s}^{0}","pe");
+                legendSecAcc->AddEntry(histoSecAccPt,"sec #pi^{0} from mat. + had w/o K_{s}^{0}","pe");
+                legendSecAcc->Draw();
+
+                PutProcessLabelAndEnergyOnPlot(0.7, 0.25, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
+
+            canvasAcceptance->Update();
+            canvasAcceptance->SaveAs(Form("%s/%s_AcceptanceWithSec_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
+            
+            
+        }
+        
         delete canvasAcceptance;
         
         //**********************************************************************************
@@ -526,20 +566,21 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
                                     kFALSE, 0., 0.7, 
                                     kFALSE, 0., 10.);
             histoYieldTrueSecFracMeson_Or->GetYaxis()->SetTitleOffset(0.75);
-            DrawGammaSetMarker(histoYieldTrueSecFracMeson_Or, 20, 1., kBlack, kBlack);  
-            DrawGammaSetMarker(histoYieldTrueSecFracFK0SMeson_Or, 24, 1., kBlue, kBlue);
+            DrawGammaSetMarker(histoYieldTrueSecFracMeson_Or, 20, 1., kBlue, kBlue);  
+            DrawGammaSetMarker(histoYieldTrueSecFracFK0SMeson_Or, 24, 1., kRed+2, kRed+2);
             DrawGammaSetMarker(histoYieldTrueSecFracFLambdaMeson_Or, 24, 1., kViolet+2, kViolet+2);
             histoYieldTrueSecFracMeson_Or->DrawCopy("e1");  
             histoYieldTrueSecFracFK0SMeson_Or->DrawCopy("e1,same");  
             histoYieldTrueSecFracFLambdaMeson_Or->DrawCopy("e1,same"); 
-            fitSecFrac->SetLineColor(kBlack);  
-            fitSecFracFromK0->SetLineColor(kBlue); 
+            fitSecFrac->SetLineColor(kBlue);  
+            fitSecFracFromK0->SetLineColor(kRed+2); 
             fitSecFrac->Draw("same");
             fitSecFracFromK0->Draw("same");
             
-            TLegend* legendSecFrac = GetAndSetLegend2(0.7, 0.79, 0.97, 0.93, 32,2); 
-            legendSecFrac->AddEntry(histoYieldTrueSecFracMeson_Or,"#it{r}_{All}","pe");
-            legendSecFrac->AddEntry(fitSecFrac,"fit to #it{r}_{All}","l");
+            TLegend* legendSecFrac = GetAndSetLegend2(0.55, 0.79, 0.97, 0.93, 32,2); 
+            legendSecFrac->SetMargin(0.12);
+            legendSecFrac->AddEntry(histoYieldTrueSecFracMeson_Or,"#it{r}_{Mat. + had. w/o K^{0}_{s}}","pe");
+            legendSecFrac->AddEntry(fitSecFrac,"fit to #it{r}_{Mat. + had. w/o K^{0}_{s}}","l");
             legendSecFrac->AddEntry(histoYieldTrueSecFracFK0SMeson_Or,"#it{r}_{K_{s}^{0}}","pe");
             legendSecFrac->AddEntry(fitSecFracFromK0,"fit to #it{r}_{K_{s}^{0}}","l");
             legendSecFrac->AddEntry(histoYieldTrueSecFracFLambdaMeson_Or,"#it{r}_{#Lambda}", "pe"); 
@@ -551,13 +592,8 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             
             canvasSecFrac->SetLogy(0);
 
-            DrawAutoGammaMesonHistos( histoYieldTrueSecFracMeson_Or, 
-                                    "", "#it{p}_{T} (GeV/#it{c})", "#it{r}_{X} = #frac{X->#pi^{0}}{#pi^{0}}", // (%)", 
-                                    kFALSE, 1e-2, 0, kFALSE,
-                                    kTRUE, 0., 0.3, 
-                                    kFALSE, 0., 10.);
-            histoYieldTrueSecFracMeson_Or->GetYaxis()->SetTitleOffset(0.75);
-            DrawGammaSetMarker(histoYieldTrueSecFracMeson_Or, 20, 1., kBlack, kBlack);  
+            histoYieldTrueSecFracMeson_Or->GetYaxis()->SetRangeUser(0,0.15);
+            DrawGammaSetMarker(histoYieldTrueSecFracMeson_Or, 20, 1., kBlue, kBlue);  
             histoYieldTrueSecFracMeson_Or->DrawCopy("e1");  
             histoYieldTrueSecFracFK0SMeson_Or->DrawCopy("e1,same");  
             histoYieldTrueSecFracFLambdaMeson_Or->DrawCopy("e1,same"); 
@@ -617,6 +653,32 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         PutProcessLabelAndEnergyOnPlot(0.13, 0.95, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
         canvasEffSimple->Update();
         canvasEffSimple->SaveAs(Form("%s/%s_TrueEffSimpleLinY_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data())); 
+        
+        if (isNewOutput){
+        canvasEffSimple->SetLogy(0);
+
+            histoTrueEffiPrimMesonPt->GetYaxis()->SetRangeUser(0,3.);
+            histoTrueEffiPrimMesonPt->GetYaxis()->SetTitleOffset(0.8);        
+            DrawGammaSetMarker(histoTrueEffiPrimMesonPt, 20, 1., kBlack, kBlack);
+            histoTrueEffiPrimMesonPt->DrawCopy("e1");
+
+            DrawGammaSetMarker(histoSecEffiFromK0sPt, 24, 1., kRed+2, kRed+2);
+            histoSecEffiFromK0sPt->DrawCopy("e1,same");
+
+            DrawGammaSetMarker(histoSecEffiPt, 24, 1., kBlue, kBlue);
+            histoSecEffiPt->DrawCopy("e1,same");
+
+            TLegend* legendEffLinYSec = GetAndSetLegend2(0.13,0.65,0.35,0.8, 28);
+            legendEffLinYSec->SetMargin(0.15);
+            legendEffLinYSec->AddEntry(histoTrueEffiPrimMesonPt,Form("prim. %s",textMeson.Data()));                    
+            legendEffLinYSec->AddEntry(histoSecEffiFromK0sPt,Form("sec. %s K^{0}_{s}",textMeson.Data()));                    
+            legendEffLinYSec->AddEntry(histoSecEffiPt,Form("sec. %s from mat. + had w/o K^{0}_{s}",textMeson.Data()));                    
+            legendEffLinYSec->Draw();
+            PutProcessLabelAndEnergyOnPlot(0.13, 0.95, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
+            canvasEffSimple->Update();
+            canvasEffSimple->SaveAs(Form("%s/%s_TrueEffSimpleLinYWithSec_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data())); 
+        
+        }    
         delete canvasEffSimple;
 
         
@@ -1017,7 +1079,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         canvasRAWYieldSec->SetLogy(1);
         DrawAutoGammaMesonHistos( histoUnCorrectedYieldDrawing, 
                                     "", "#it{p}_{T} (GeV/#it{c})", "RAW Yield/ #it{N}_{Evt}", 
-                                    kTRUE, 1, 0.01/nEvt, kTRUE,
+                                    kTRUE, 1, 0.001/nEvt, kTRUE,
                                     kFALSE, 0., 0.7, 
                                     kFALSE, 0., 10.);
         histoUnCorrectedYieldDrawing->SetLineWidth(0.5); 
@@ -1031,14 +1093,14 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         histoYieldSecMesonDrawing->DrawCopy("same,e1");  
         TH1D* histoYieldSecFromK0SMesonDrawing  = (TH1D*)histoYieldSecFromK0SMeson->Clone();
         histoYieldSecFromK0SMesonDrawing->Scale(1./nEvt);
-        DrawGammaSetMarker(histoYieldSecFromK0SMesonDrawing, 24, 1., kCyan, kCyan);  
+        DrawGammaSetMarker(histoYieldSecFromK0SMesonDrawing, 24, 1., kRed+1, kRed+1);  
         histoYieldSecFromK0SMesonDrawing->DrawCopy("same,e1");  
 
         TLegend* legendSecRAWYield              = GetAndSetLegend2(0.63, 0.8, 0.93, 0.93, 28);
         legendSecRAWYield->SetMargin(0.12);
         legendSecRAWYield->AddEntry(histoUnCorrectedYieldDrawing,"RAW yield");
-        legendSecRAWYield->AddEntry(histoYieldSecMesonDrawing,"total secondaries");
-        legendSecRAWYield->AddEntry(histoYieldSecFromK0SMesonDrawing,"additional secondaries from K^{0}_{s}");
+        legendSecRAWYield->AddEntry(histoYieldSecMesonDrawing,"secondaries from mat. + had. w/o K^{0}_{s}");
+        legendSecRAWYield->AddEntry(histoYieldSecFromK0SMesonDrawing,"secondaries from K^{0}_{s}");
         legendSecRAWYield->Draw();
 
         PutProcessLabelAndEnergyOnPlot(0.13, 0.94, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
