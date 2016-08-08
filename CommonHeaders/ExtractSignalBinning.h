@@ -1794,6 +1794,11 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
           if (modi == 2 && specialTrigg==2) fExampleBin = 20;
           if (modi == 4 && specialTrigg==1) fExampleBin = 20;
           if (modi == 4 && specialTrigg==2) fExampleBin = 21;
+
+          if(setPi0.CompareTo("Pi0EtaBinning") == 0 && modi == 4){
+            if(specialTrigg == 1) fExampleBin = 19;
+            else if(specialTrigg == 2) fExampleBin = 18;
+          }
             
         //*********************************************************************************************
         //********************************** Eta for pp 13TeV******************************************
