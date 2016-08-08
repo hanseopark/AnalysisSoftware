@@ -1245,10 +1245,12 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                         break;
                     case 52:
                     case 53:
+                        if(meson.CompareTo("Pi0EtaBinning") == 0) return 19;
                         return 20;      // EMC triggers
                         break;
                     case 81:
                     case 82:
+                        if(meson.CompareTo("Pi0EtaBinning") == 0) return 18;
                         return 21;      // EGA triggers
                         break;
                     default:
