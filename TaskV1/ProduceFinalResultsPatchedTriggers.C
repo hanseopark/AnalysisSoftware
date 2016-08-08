@@ -125,7 +125,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
       if(mode==2 || mode==4){
         maxPtGlobalCluster          = 50;
       } else if (mode == 10){
-        maxPtGlobalCluster          = 70;  
+        maxPtGlobalCluster          = 70;
       }
     }
     
@@ -1017,6 +1017,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
         Double_t minEffiTrigPi0         = 0;
         Double_t maxEffiTrigPi0         = 1.1;
+        if(optionEnergy.CompareTo("8TeV") == 0 && mode == 2) maxEffiTrigPi0 = 1.5;
         
         TH2F * histo2DTriggerEffiPi0;
         histo2DTriggerEffiPi0 = new TH2F("histo2DTriggerEffiPi0","histo2DTriggerEffiPi0",1000,0., maxPtGlobalPi0,10000,minEffiTrigPi0, maxEffiTrigPi0);
@@ -3329,6 +3330,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
             Double_t minEffiTrigEta         = 0;
             Double_t maxEffiTrigEta         = 1.1;
+            if(optionEnergy.CompareTo("8TeV") == 0 && mode == 2) maxEffiTrigEta = 1.5;
             
             TH2F * histo2DTriggerEffiEta;
             histo2DTriggerEffiEta = new TH2F("histo2DTriggerEffiEta","histo2DTriggerEffiEta",1000,0., maxPtGlobalEta,10000,minEffiTrigEta, maxEffiTrigEta);
