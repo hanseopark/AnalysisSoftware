@@ -2838,10 +2838,16 @@ void SetCorrectMCHistogrammNames(TString mesonType){
     // MC histograms primaries
     ObjectNameMCPi0Acc                  = "MC_Pi0InAcc_Pt";
     ObjectNameMCPi0AccWOWeights         = "MC_Pi0WOWeightInAcc_Pt";
-    ObjectNameMCPi0AccWOEvtWeights      = "MC_Pi0_WOEventWeightsInAcc_Pt";
+    if(fMode == 4 || fMode == 5)
+      ObjectNameMCPi0AccWOEvtWeights    = "MC_Pi0WOEvtWeightInAcc_Pt";
+    else
+      ObjectNameMCPi0AccWOEvtWeights    = "MC_Pi0_WOEventWeightsInAcc_Pt";
     ObjectNameMCEtaAcc                  = "MC_EtaInAcc_Pt";
     ObjectNameMCEtaAccWOWeights         = "MC_EtaWOWeightInAcc_Pt";
-    ObjectNameMCEtaAccWOEvtWeights      = "MC_Eta_WOEventWeightsInAcc_Pt";
+    if(fMode == 4 || fMode == 5)
+      ObjectNameMCEtaAccWOEvtWeights    = "MC_EtaWOEvtWeightInAcc_Pt";
+    else
+      ObjectNameMCEtaAccWOEvtWeights    = "MC_Eta_WOEventWeightsInAcc_Pt";
     ObjectNameMCPi0                     = "MC_Pi0_Pt";
     ObjectNameMCPi0WOWeights            = "MC_Pi0_WOWeights_Pt";
     ObjectNameMCPi0WOEvtWeights         = "MC_Pi0_WOEventWeights_Pt";

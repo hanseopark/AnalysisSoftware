@@ -2190,60 +2190,152 @@ TGraphAsymmErrors* CombinePtPointsSpectraTriggerCorrMat(    TH1D** histoStat, TG
             corrFracEG1_EG2_EG1         = 0.8733;
             // Definition of correlations coefficients between triggered spectra for pi0 in 8TeV PCM-EMC
         } else if ( mode == 2 && energy.CompareTo("8TeV") == 0 && meson.CompareTo("Pi0") == 0){
-              corrFracINT7_INT7_EMC7      = 0.9438;
-              corrFracINT7_INT7_EG2       = 0.9438;
-              corrFracEMC7_INT7_EMC7      = 0.7361;
-              corrFracEG2_INT7_EG2        = 0.7405;
+            if(xValue[ptBin] == 4.25){
+              corrFracINT7_INT7_EMC7      = 0.976805;
+              corrFracEMC7_INT7_EMC7      = 0.859532;
+            }else if(xValue[ptBin] == 4.75){
+              corrFracINT7_INT7_EMC7      = 0.976918;
+              corrFracEMC7_INT7_EMC7      = 0.881726;
+            }else if(xValue[ptBin] == 5.25){
+              corrFracINT7_INT7_EMC7      = 0.976846;
+              corrFracEMC7_INT7_EMC7      = 0.897628;
+            }else if(xValue[ptBin] == 5.75){
+              corrFracINT7_INT7_EMC7      = 0.976589;
+              corrFracEMC7_INT7_EMC7      = 0.908639;
+            }else if(xValue[ptBin] == 10.5){
+              corrFracEMC7_EMC7_EG2       = 0.969019;
+              corrFracEG2_EMC7_EG2        = 0.947267;
+            }else if(xValue[ptBin] == 11.5){
+              corrFracEMC7_EMC7_EG2       = 0.970057;
+              corrFracEG2_EMC7_EG2        = 0.955199;
+            }else if(xValue[ptBin] == 12.5){
+              corrFracEMC7_EMC7_EG2       = 0.970954;
+              corrFracEG2_EMC7_EG2        = 0.959482;
+            }else if(xValue[ptBin] == 13.5){
+              corrFracEMC7_EMC7_EG2       = 0.971707;
+              corrFracEG2_EMC7_EG2        = 0.962173;
+            }else if(xValue[ptBin] == 14.5){
+              corrFracEMC7_EMC7_EG2       = 0.97229;
+              corrFracEG2_EMC7_EG2        = 0.964166;
+            }else if(xValue[ptBin] == 15.5){
+              corrFracEMC7_EMC7_EG2       = 0.972669;
+              corrFracEG2_EMC7_EG2        = 0.965824;
+            }else if(xValue[ptBin] == 19){
+              corrFracEMC7_EMC7_EG2       = 0.971928;
+              corrFracEG2_EMC7_EG2        = 0.969701;
+            }else if(xValue[ptBin] == 21){
+              corrFracEMC7_EMC7_EG2       = 0.969842;
+              corrFracEG2_EMC7_EG2        = 0.970833;
+            }else if(xValue[ptBin] == 24){
+              corrFracEMC7_EMC7_EG2       = 0.964543;
+              corrFracEG2_EMC7_EG2        = 0.970939;
+            }
 
-              corrFracEMC7_EMC7_EG2       = 0.9161;
-              corrFracEG2_EMC7_EG2        = 0.7950;
           // Definition of correlations coefficients between triggered spectra for pi0 in 8TeV PCM-EMC
           } else if (mode == 2 && energy.CompareTo("8TeV") == 0 && meson.CompareTo("Eta") == 0){
-              corrFracINT7_INT7_EMC7      = 0.7820;
-              corrFracINT7_INT7_EG2       = 0.7820;
-              corrFracEMC7_INT7_EMC7      = 0.9103;
-              corrFracEG2_INT7_EG2        = 0.8088;
-
-              corrFracEMC7_EMC7_EG2       = 0.8140;
-              corrFracEG2_EMC7_EG2        = 0.8593;
+              if(xValue[ptBin] == 4.5){
+                corrFracINT7_INT7_EMC7      = 0.97671;
+                corrFracEMC7_INT7_EMC7      = 0.814268;
+              }else if(xValue[ptBin] == 5.5){
+                corrFracINT7_INT7_EMC7      = 0.975535;
+                corrFracEMC7_INT7_EMC7      = 0.836971;
+              }else if(xValue[ptBin] == 13.0){
+                corrFracEMC7_EMC7_EG2       = 0.91968;
+                corrFracEG2_EMC7_EG2        = 0.91612;
+              }else if(xValue[ptBin] == 15.0){
+                corrFracEMC7_EMC7_EG2       = 0.920302;
+                corrFracEG2_EMC7_EG2        = 0.926154;
+              }
           // Definition of correlations coefficients between triggered spectra for eta/pi0 in 8TeV PCM-EMC
           } else if (mode == 2 && energy.CompareTo("8TeV") == 0 && meson.CompareTo("EtaToPi0") == 0){
-              corrFracINT7_INT7_EMC7      = 0.7948;
-              corrFracINT7_INT7_EG2       = 0.7948;
-              corrFracEMC7_INT7_EMC7      = 0.9648;
-              corrFracEG2_INT7_EG2        = 0.8898;
-
-              corrFracEMC7_EMC7_EG2       = 0.8663;
-              corrFracEG2_EMC7_EG2        = 0.8670;
+              if(xValue[ptBin] == 4.5){
+                corrFracINT7_INT7_EMC7      = 0.977787;
+                corrFracEMC7_INT7_EMC7      = 0.790249;
+              }else if(xValue[ptBin] == 5.5){
+                corrFracINT7_INT7_EMC7      = 0.975862;
+                corrFracEMC7_INT7_EMC7      = 0.818402;
+              }else if(xValue[ptBin] == 13.0){
+                corrFracEMC7_EMC7_EG2       = 0.919474;
+                corrFracEG2_EMC7_EG2        = 0.916318;
+              }else if(xValue[ptBin] == 15.0){
+                corrFracEMC7_EMC7_EG2       = 0.923574;
+                corrFracEG2_EMC7_EG2        = 0.928448;
+              }
           }
 
           // Definition of correlations coefficients between triggered spectra for pi0 in 8TeV EMC-EMC
           if (mode == 4 && energy.CompareTo("8TeV") == 0 && meson.CompareTo("Pi0") == 0){
-              corrFracINT7_INT7_EMC7      = 0.9116;
-              corrFracINT7_INT7_EG2       = 0.9116;
-              corrFracEMC7_INT7_EMC7      = 0.8477;
-              corrFracEG2_INT7_EG2        = 0.6737;
-
-              corrFracEMC7_EMC7_EG2       = 0.9412;
-              corrFracEG2_EMC7_EG2        = 0.8318;
+              if(xValue[ptBin] == 4.75){
+                corrFracINT7_INT7_EMC7      = 0.975173;
+                corrFracEMC7_INT7_EMC7      = 0.8814;
+              }else if(xValue[ptBin] == 5.25){
+                corrFracINT7_INT7_EMC7      = 0.975193;
+                corrFracEMC7_INT7_EMC7      = 0.893558;
+              }else if(xValue[ptBin] == 5.25){
+                corrFracINT7_INT7_EMC7      = 0.975219;
+                corrFracEMC7_INT7_EMC7      = 0.901839;
+              }else if(xValue[ptBin] == 15.5){
+                corrFracEMC7_EMC7_EG2       = 0.946546;
+                corrFracEG2_EMC7_EG2        = 0.925001;
+              }
           // Definition of correlations coefficients between triggered spectra for eta in 8TeV EMC-EMC
           } else if (mode == 4 && energy.CompareTo("8TeV") == 0 && meson.CompareTo("Eta") == 0){
-              corrFracINT7_INT7_EMC7      = 0.6501;
-              corrFracINT7_INT7_EG2       = 0.6501;
-              corrFracEMC7_INT7_EMC7      = 0.7372;
-              corrFracEG2_INT7_EG2        = 0.7485;
-
-              corrFracEMC7_EMC7_EG2       = 0.7529;
-              corrFracEG2_EMC7_EG2        = 0.8234;
+              if(xValue[ptBin] == 4.5){
+                corrFracINT7_INT7_EMC7      = 0.976484;
+                corrFracEMC7_INT7_EMC7      = 0.882484;
+              }else if(xValue[ptBin] == 5.5){
+                corrFracINT7_INT7_EMC7      = 0.976528;
+                corrFracEMC7_INT7_EMC7      = 0.899617;
+              }else if(xValue[ptBin] == 11){
+                corrFracINT7_INT7_EMC7      = 0.976818;
+                corrFracINT7_INT7_EG2       = 0.976818;
+                corrFracEMC7_INT7_EMC7      = 0.914128;
+                corrFracEG2_INT7_EG2        = 0.842794;
+                corrFracEMC7_EMC7_EG2       = 0.942287;
+                corrFracEG2_EMC7_EG2        = 0.904322;
+              }else if(xValue[ptBin] == 13){
+                corrFracINT7_INT7_EMC7      = 0.976475;
+                corrFracINT7_INT7_EG2       = 0.976475;
+                corrFracEMC7_INT7_EMC7      = 0.914037;
+                corrFracEG2_INT7_EG2        = 0.864343;
+                corrFracEMC7_EMC7_EG2       = 0.942931;
+                corrFracEG2_EMC7_EG2        = 0.909363;
+              }else if(xValue[ptBin] == 15){
+                corrFracINT7_INT7_EMC7      = 0.975876;
+                corrFracINT7_INT7_EG2       = 0.975876;
+                corrFracEMC7_INT7_EMC7      = 0.913896;
+                corrFracEG2_INT7_EG2        = 0.87742;
+                corrFracEMC7_EMC7_EG2       = 0.943251;
+                corrFracEG2_EMC7_EG2        = 0.91247;
+              }else if(xValue[ptBin] == 22.5){
+                corrFracEMC7_EMC7_EG2       = 0.940874;
+                corrFracEG2_EMC7_EG2        = 0.917386;
+              }else if(xValue[ptBin] == 27.5){
+                corrFracEMC7_EMC7_EG2       = 0.937221;
+                corrFracEG2_EMC7_EG2        = 0.918572;
+              }
           // Definition of correlations coefficients between triggered spectra for eta/pi0 in 8TeV EMC-EMC
           } else if (mode == 4 && energy.CompareTo("8TeV") == 0 && meson.CompareTo("EtaToPi0") == 0){
-              corrFracINT7_INT7_EMC7      = 0.6293;
-              corrFracINT7_INT7_EG2       = 0.6293;
-              corrFracEMC7_INT7_EMC7      = 0.6941;
-              corrFracEG2_INT7_EG2        = 0.8355;
-
-              corrFracEMC7_EMC7_EG2       = 0.6579;
-              corrFracEG2_EMC7_EG2        = 0.8355;
+              if(xValue[ptBin] == 4.5){
+                corrFracINT7_INT7_EMC7      = 0.977542;
+                corrFracEMC7_INT7_EMC7      = 0.856204;
+              }else if(xValue[ptBin] == 5.5){
+                corrFracINT7_INT7_EMC7      = 0.97763;
+                corrFracEMC7_INT7_EMC7      = 0.882649;
+              }else if(xValue[ptBin] == 11){
+                corrFracINT7_INT7_EMC7      = 0.978483;
+                corrFracEMC7_INT7_EMC7      = 0.907749;
+              }else if(xValue[ptBin] == 13){
+                corrFracINT7_INT7_EMC7      = 0.978382;
+                corrFracEMC7_INT7_EMC7      = 0.908641;
+              }else if(xValue[ptBin] == 15){
+                corrFracINT7_INT7_EMC7      = 0.978013;
+                corrFracINT7_INT7_EG2       = 0.978013;
+                corrFracEMC7_INT7_EMC7      = 0.91133;
+                corrFracEG2_INT7_EG2        = 0.872554;
+                corrFracEMC7_EMC7_EG2       = 0.93123;
+                corrFracEG2_EMC7_EG2        = 0.901517;
+              }
           }
   
         // correlation coefficients for merged cluster analysis cross NLM
