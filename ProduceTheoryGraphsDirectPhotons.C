@@ -52,11 +52,11 @@ extern TBenchmark*    gBenchmark;
 extern TSystem*    gSystem;
 extern TMinuit*      gMinuit;
 
-Double_t    xSection900GeV  = 47.78*1e-3;
-Double_t    xSection2760GeV = 55.416*1e-3;
+// Double_t    xSection900GeV  = 47.78*1e-3;
+// Double_t    xSection2760GeV = 55.416*1e-3;
 Double_t    xSection7000GeV = 62.22*1e-3;
 Double_t    xSection8000GeV = 55.74*1e-3;
-Double_t    recalcBarn      = 1e12; //NLO in pbarn!!!!
+// Double_t    recalcBarn      = 1e12; //NLO in pbarn!!!!
 
 
 TGraph* ScaleGraph (TGraph* graph, Double_t scaleFac){
@@ -1336,63 +1336,63 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             TDirectoryFile* directoryGamma = (TDirectoryFile*)fileTheoryGraphsPbPb->Get("DirectPhoton"); 
             fileTheoryGraphsPbPb->cd("DirectPhoton");
 
-            graphDirectPhotonMCGill0020->Write("graphDirectPhotonYield_McGill_0020");
-            graphDirectPhotonMCGill2040->Write("graphDirectPhotonYield_McGill_2040");
-            graphPromptPhotonMCGill0020->Write("graphPromptPhotonYield_McGill_0020");
-            graphPromptPhotonMCGill2040->Write("graphPromptPhotonYield_McGill_2040");
+            graphDirectPhotonMCGill0020->Write("graphDirectPhotonYield_McGill_0020", TObject::kOverwrite);
+            graphDirectPhotonMCGill2040->Write("graphDirectPhotonYield_McGill_2040", TObject::kOverwrite);
+            graphPromptPhotonMCGill0020->Write("graphPromptPhotonYield_McGill_0020", TObject::kOverwrite);
+            graphPromptPhotonMCGill2040->Write("graphPromptPhotonYield_McGill_2040", TObject::kOverwrite);
             
-            graphDirectPhotonPHSD0020->Write("graphDirectPhotonYield_PHSD_0020");
-            graphDirectPhotonPHSD0040->Write("graphDirectPhotonYield_PHSD_0040");
-            graphDirectPhotonPHSD2040->Write("graphDirectPhotonYield_PHSD_2040");
-            graphDirectPhotonPHSD4080->Write("graphDirectPhotonYield_PHSD_4080");
+            graphDirectPhotonPHSD0020->Write("graphDirectPhotonYield_PHSD_0020", TObject::kOverwrite);
+            graphDirectPhotonPHSD0040->Write("graphDirectPhotonYield_PHSD_0040", TObject::kOverwrite);
+            graphDirectPhotonPHSD2040->Write("graphDirectPhotonYield_PHSD_2040", TObject::kOverwrite);
+            graphDirectPhotonPHSD4080->Write("graphDirectPhotonYield_PHSD_4080", TObject::kOverwrite);
 
-            graphDirectPhotonHe0020->Write("graphDirectPhotonYield_He_0020");
-    //         graphDirectPhotonHe0040->Write("graphDirectPhotonYield_He_0040");
-            graphDirectPhotonHe2040->Write("graphDirectPhotonYield_He_2040");
-            graphDirectPhotonHe4080->Write("graphDirectPhotonYield_He_4080");
+            graphDirectPhotonHe0020->Write("graphDirectPhotonYield_He_0020", TObject::kOverwrite);
+    //         graphDirectPhotonHe0040->Write("graphDirectPhotonYield_He_0040", TObject::kOverwrite);
+            graphDirectPhotonHe2040->Write("graphDirectPhotonYield_He_2040", TObject::kOverwrite);
+            graphDirectPhotonHe4080->Write("graphDirectPhotonYield_He_4080", TObject::kOverwrite);
             
-            graphDirectPhotonChatterjee0020->Write("graphDirectPhotonYield_Chatterjee_0020");
-            graphDirectPhotonThermalChatterjee0020->Write("graphDirectPhotonThermalYield_Chatterjee_0020");
-            graphDirectPhotonPromptChatterjee0020->Write("graphDirectPhotonPromptYield_Chatterjee_0020");
-            graphDirectPhotonChatterjee2040->Write("graphDirectPhotonYield_Chatterjee_2040");
-            graphDirectPhotonThermalChatterjee2040->Write("graphDirectPhotonThermalYield_Chatterjee_2040");
-            graphDirectPhotonPromptChatterjee2040->Write("graphDirectPhotonPromptYield_Chatterjee_2040");
-            graphDirectPhotonChatterjee4060->Write("graphDirectPhotonYield_Chatterjee_4060");
-            graphDirectPhotonThermalChatterjee4060->Write("graphDirectPhotonThermalYield_Chatterjee_4060");
-            graphDirectPhotonPromptChatterjee4060->Write("graphDirectPhotonPromptYield_Chatterjee_4060");
+            graphDirectPhotonChatterjee0020->Write("graphDirectPhotonYield_Chatterjee_0020", TObject::kOverwrite);
+            graphDirectPhotonThermalChatterjee0020->Write("graphDirectPhotonThermalYield_Chatterjee_0020", TObject::kOverwrite);
+            graphDirectPhotonPromptChatterjee0020->Write("graphDirectPhotonPromptYield_Chatterjee_0020", TObject::kOverwrite);
+            graphDirectPhotonChatterjee2040->Write("graphDirectPhotonYield_Chatterjee_2040", TObject::kOverwrite);
+            graphDirectPhotonThermalChatterjee2040->Write("graphDirectPhotonThermalYield_Chatterjee_2040", TObject::kOverwrite);
+            graphDirectPhotonPromptChatterjee2040->Write("graphDirectPhotonPromptYield_Chatterjee_2040", TObject::kOverwrite);
+            graphDirectPhotonChatterjee4060->Write("graphDirectPhotonYield_Chatterjee_4060", TObject::kOverwrite);
+            graphDirectPhotonThermalChatterjee4060->Write("graphDirectPhotonThermalYield_Chatterjee_4060", TObject::kOverwrite);
+            graphDirectPhotonPromptChatterjee4060->Write("graphDirectPhotonPromptYield_Chatterjee_4060", TObject::kOverwrite);
 
-            graphDirectPhotonChatterjee0020_2->Write("graphDirectPhotonYield_Chatterjee_0020_2");
-            graphDirectPhotonThermalChatterjee0020_2->Write("graphDirectPhotonThermalYield_Chatterjee_0020_2");
-            graphDirectPhotonPromptChatterjee0020_2->Write("graphDirectPhotonPromptYield_Chatterjee_0020_2");
-            graphDirectPhotonChatterjee2040_2->Write("graphDirectPhotonYield_Chatterjee_2040_2");
-            graphDirectPhotonThermalChatterjee2040_2->Write("graphDirectPhotonThermalYield_Chatterjee_2040_2");
-            graphDirectPhotonPromptChatterjee2040_2->Write("graphDirectPhotonPromptYield_Chatterjee_2040_2");
+            graphDirectPhotonChatterjee0020_2->Write("graphDirectPhotonYield_Chatterjee_0020_2", TObject::kOverwrite);
+            graphDirectPhotonThermalChatterjee0020_2->Write("graphDirectPhotonThermalYield_Chatterjee_0020_2", TObject::kOverwrite);
+            graphDirectPhotonPromptChatterjee0020_2->Write("graphDirectPhotonPromptYield_Chatterjee_0020_2", TObject::kOverwrite);
+            graphDirectPhotonChatterjee2040_2->Write("graphDirectPhotonYield_Chatterjee_2040_2", TObject::kOverwrite);
+            graphDirectPhotonThermalChatterjee2040_2->Write("graphDirectPhotonThermalYield_Chatterjee_2040_2", TObject::kOverwrite);
+            graphDirectPhotonPromptChatterjee2040_2->Write("graphDirectPhotonPromptYield_Chatterjee_2040_2", TObject::kOverwrite);
             
-            graphDirectPhotonHees0020->Write("graphDirectPhotonYield_VanHees_0020");
-            graphDirectPhotonQGPHees0020->Write("graphDirectPhotonQGPYield_VanHees_0020");
-            graphDirectPhotonPrimordialHees0020->Write("graphDirectPhotonPrimordialYield_VanHees_0020");
-            graphDirectPhotonOmegaHees0020->Write("graphDirectPhotonOmegaYield_VanHees_0020");
-            graphDirectPhotonMesonGasHees0020->Write("graphDirectPhotonMesonGasYield_VanHees_0020");
-            graphDirectPhotonRhoSFHees0020->Write("graphDirectPhotonRhoSFYield_VanHees_0020");
+            graphDirectPhotonHees0020->Write("graphDirectPhotonYield_VanHees_0020", TObject::kOverwrite);
+            graphDirectPhotonQGPHees0020->Write("graphDirectPhotonQGPYield_VanHees_0020", TObject::kOverwrite);
+            graphDirectPhotonPrimordialHees0020->Write("graphDirectPhotonPrimordialYield_VanHees_0020", TObject::kOverwrite);
+            graphDirectPhotonOmegaHees0020->Write("graphDirectPhotonOmegaYield_VanHees_0020", TObject::kOverwrite);
+            graphDirectPhotonMesonGasHees0020->Write("graphDirectPhotonMesonGasYield_VanHees_0020", TObject::kOverwrite);
+            graphDirectPhotonRhoSFHees0020->Write("graphDirectPhotonRhoSFYield_VanHees_0020", TObject::kOverwrite);
 
-            graphDirectPhotonHees2040->Write("graphDirectPhotonYield_VanHees_2040");
-            graphDirectPhotonQGPHees2040->Write("graphDirectPhotonQGPYield_VanHees_2040");
-            graphDirectPhotonPrimordialHees2040->Write("graphDirectPhotonPrimordialYield_VanHees_2040");
-            graphDirectPhotonOmegaHees2040->Write("graphDirectPhotonOmegaYield_VanHees_2040");
-            graphDirectPhotonMesonGasHees2040->Write("graphDirectPhotonMesonGasYield_VanHees_2040");
-            graphDirectPhotonRhoSFHees2040->Write("graphDirectPhotonRhoSFYield_VanHees_2040");
+            graphDirectPhotonHees2040->Write("graphDirectPhotonYield_VanHees_2040", TObject::kOverwrite);
+            graphDirectPhotonQGPHees2040->Write("graphDirectPhotonQGPYield_VanHees_2040", TObject::kOverwrite);
+            graphDirectPhotonPrimordialHees2040->Write("graphDirectPhotonPrimordialYield_VanHees_2040", TObject::kOverwrite);
+            graphDirectPhotonOmegaHees2040->Write("graphDirectPhotonOmegaYield_VanHees_2040", TObject::kOverwrite);
+            graphDirectPhotonMesonGasHees2040->Write("graphDirectPhotonMesonGasYield_VanHees_2040", TObject::kOverwrite);
+            graphDirectPhotonRhoSFHees2040->Write("graphDirectPhotonRhoSFYield_VanHees_2040", TObject::kOverwrite);
 
-            graphDirectPhotonHees4080->Write("graphDirectPhotonYield_VanHees_4080");
-            graphDirectPhotonQGPHees4080->Write("graphDirectPhotonQGPYield_VanHees_4080");
-            graphDirectPhotonPrimordialHees4080->Write("graphDirectPhotonPrimordialYield_VanHees_4080");
-            graphDirectPhotonOmegaHees4080->Write("graphDirectPhotonOmegaYield_VanHees_4080");
-            graphDirectPhotonMesonGasHees4080->Write("graphDirectPhotonMesonGasYield_VanHees_4080");
-            graphDirectPhotonRhoSFHees4080->Write("graphDirectPhotonRhoSFYield_VanHees_4080");
+            graphDirectPhotonHees4080->Write("graphDirectPhotonYield_VanHees_4080", TObject::kOverwrite);
+            graphDirectPhotonQGPHees4080->Write("graphDirectPhotonQGPYield_VanHees_4080", TObject::kOverwrite);
+            graphDirectPhotonPrimordialHees4080->Write("graphDirectPhotonPrimordialYield_VanHees_4080", TObject::kOverwrite);
+            graphDirectPhotonOmegaHees4080->Write("graphDirectPhotonOmegaYield_VanHees_4080", TObject::kOverwrite);
+            graphDirectPhotonMesonGasHees4080->Write("graphDirectPhotonMesonGasYield_VanHees_4080", TObject::kOverwrite);
+            graphDirectPhotonRhoSFHees4080->Write("graphDirectPhotonRhoSFYield_VanHees_4080", TObject::kOverwrite);
             
-            graphDirectPhotonHolopainen0020->Write("graphDirectPhotonYield_Holopainen_0020");
-            graphDirectPhotonV2Holopainen0020->Write("graphDirectPhotonV2_Holopainen_0020");
-            graphDirectPhotonHolopainen2040->Write("graphDirectPhotonYield_Holopainen_2040");
-            graphDirectPhotonV2Holopainen2040->Write("graphDirectPhotonV2_Holopainen_2040");
+            graphDirectPhotonHolopainen0020->Write("graphDirectPhotonYield_Holopainen_0020", TObject::kOverwrite);
+            graphDirectPhotonV2Holopainen0020->Write("graphDirectPhotonV2_Holopainen_0020", TObject::kOverwrite);
+            graphDirectPhotonHolopainen2040->Write("graphDirectPhotonYield_Holopainen_2040", TObject::kOverwrite);
+            graphDirectPhotonV2Holopainen2040->Write("graphDirectPhotonV2_Holopainen_2040", TObject::kOverwrite);
             
         fileTheoryGraphsPbPb->Close();
     }
