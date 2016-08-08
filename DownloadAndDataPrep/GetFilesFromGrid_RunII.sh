@@ -140,9 +140,9 @@ Structure() {
     ls $1/GammaConvV1_*.root > fileData.txt
     fileNumbers=`cat fileData.txt`
     for fileName in $fileNumbers; do
-	number=`echo $fileName | cut -d "_" -f 2 | cut -d "." -f 1`
-	echo "trainconfig: " $number
-	root -l -b -q -x ChangeStructureToStandard.C\(\"$1/GammaConvV1_$number.root\"\,\"$1/GammaConvV1_$number.root\"\,\"GammaConvV1_$number\"\)
+	config=`echo $fileName | cut -d "_" -f 2 | cut -d "." -f 1`
+	echo "trainconfig: " $config
+	root -l -b -q -x ChangeStructureToStandard.C\(\"$1/GammaConvV1_$config.root\"\,\"$1/GammaConvV1_$config.root\"\,\"GammaConvV1_$config\"\)
     done
 }
 
@@ -154,24 +154,45 @@ Merge() {
 	for run in "${RUN[@]}"; do
 	    i=i+1
 	    echo "Run $i of ${#RUN[@]} ...";
-	    if [ -f $BASEDIR/$SYSTEM/$PERIOD/$run/GammaConvV1.root ]; then
+	    if [ -f $BASEDIR/$SYSTEM/$PERIOD/$run/GammaConvV1_$config.root ]; then
 		if [ $i = 1 ]; then
 		    mkdir -p $BASEDIR/$SYSTEM/$PERIOD/mymerge/${#RUN[@]}runs/
-		    cp $BASEDIR/$SYSTEM/$PERIOD/$run/GammaConvV1.root $BASEDIR/$SYSTEM/$PERIOD/mymerge/${#RUN[@]}runs/GammaConvV1.root
+		    cp $BASEDIR/$SYSTEM/$PERIOD/$run/GammaConvV1_$config.root $BASEDIR/$SYSTEM/$PERIOD/mymerge/${#RUN[@]}runs/GammaConvV1_$config.root
 		else
-		    hadd -f ./GammaConvV1.root $BASEDIR/$SYSTEM/$PERIOD/mymerge/${#RUN[@]}runs/GammaConvV1.root $BASEDIR/$SYSTEM/$PERIOD/$run/GammaConvV1.root    # merge every file to mymerge/GammaConv/GammaConvV1.root
-		    mv GammaConvV1.root $BASEDIR/$SYSTEM/$PERIOD/mymerge/${#RUN[@]}runs/
+		    hadd -f ./GammaConvV1_$config.root $BASEDIR/$SYSTEM/$PERIOD/mymerge/${#RUN[@]}runs/GammaConvV1_$config.root $BASEDIR/$SYSTEM/$PERIOD/$run/GammaConvV1_$config.root    # merge every file to mymerge/GammaConv/GammaConvV1_$config.root
+		    mv GammaConvV1_$config.root $BASEDIR/$SYSTEM/$PERIOD/mymerge/${#RUN[@]}runs/
 		fi
 	    else
-		    echo "file "$BASEDIR/$SYSTEM/$PERIOD/$run/"GammaConvV1.root does not exist!";
+		    echo "file "$BASEDIR/$SYSTEM/$PERIOD/$run/"GammaConvV1_$config.root does not exist!";
 		    actualNoRuns=actualNoRuns-1
 	    fi      
 	done
 	echo $actualNoRuns" runs merged";
 	#if [ $actualNoRuns -ne ${#RUN[@]} ]; then
-	mv $BASEDIR/$SYSTEM/$PERIOD/mymerge/${#RUN[@]}runs/Gam* $BASEDIR/$SYSTEM/$PERIOD/GammaConvV1_$actualNoRuns"runs.root"
+	mv $BASEDIR/$SYSTEM/$PERIOD/mymerge/${#RUN[@]}runs/GammaConvV1_$config.root $BASEDIR/$SYSTEM/$PERIOD/GammaConvV1_$config_$actualNoRuns"runs.root"
 	rm -r $BASEDIR/$SYSTEM/$PERIOD/mymerge/
 	#fi
+}
+
+MergeList(){  # $1: list $2: target path $3: target name
+
+    echo "target path: "$2
+    filesToMerge=`cat $1`
+    echo "name: "$3
+    declare -i i=0
+    rm $2/tmp.root
+    rm $2/TMP.root
+    for fileToMerge in $filesToMerge; do
+	i=i+1
+	if [ $i = 1 ]; then
+	    cp $fileToMerge $2/tmp.root
+	else
+	    hadd -f $2/TMP.root $2/tmp.root $fileToMerge
+	    mv $2/TMP.root $2/tmp.root
+	fi
+    done
+    mv $2/tmp.root $2/$3
+
 }
 
 WriteInfo() {
@@ -362,10 +383,10 @@ fi
 		unmergedFiles=`cat UnMergedRunFilesToCopy.txt`
 		j=0
 		for fileToCopy in $unmergedFiles; do
-		    if [ "$fileToCopy" = "" ]; then
-			continue
-		    fi
 		    j=j+1
+		    if [[ $fileToCopy =~ ^[0-9]+$ ]]; then   # " x \n files \n found "
+			break
+		    fi
 		    if [ -d $OUTPUTDIR/$j ]; then
 			echo "already copied $OUTPUTDIR/$j ";
 		    else
@@ -377,7 +398,13 @@ fi
 			    Structure $OUTPUTDIR/$j
 			fi
 		    fi
+		    realpath $OUTPUTDIR/$j/GammaConvV1_*.root >> FilesToMerge.txt
 		done
+		name=`ls $OUTPUTDIR/1`
+		if [ ! -f $OUTPUTDIR/$name ]; then  
+		    MergeList FilesToMerge.txt $OUTPUTDIR $name 
+		fi
+		rm FilesToMerge.txt
 		continue
 	    fi
 	    EXISTS=`ls $OUTPUTDIR`
@@ -419,5 +446,6 @@ fi
 # remove help files
 if [ -f fileData.txt ]; then rm fileData.txt; fi
 if [ -f filesToCopy.txt ]; then rm filesToCopy.txt; fi
-
+if [ -f UnMergedRunFilesToCopy.txt ]; then rm UnMergedRunFilesToCopy.txt; fi
+if [ -f FilesToMerge.txt ]; then rm FilesToMerge.txt; fi
 
