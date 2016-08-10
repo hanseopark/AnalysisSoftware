@@ -300,8 +300,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     Color_t  colorCatMC[6]                          = { kRed+3, 807+2, 800+2, kGreen+4, kCyan+4, kBlue+3};
     Style_t  styleCat[6]                            = { 20, 21, 29, 33, 20, 21};
     Style_t  styleCatMC[6]                          = { 24, 25, 30, 27, 24, 25};
-    Color_t colorSec[4]                             = {kRed+2, kViolet+2, kGreen+2, kBlue};
-    Style_t markerStyleSec[4]                       = {20, 24, 24, 25};
+    Color_t colorSec[4]                             = {kRed+2, 807, kGreen+2, kBlue};
+    Style_t markerStyleSec[4]                       = {20, 24, 24, 21};
     Size_t markerSizeSec[4]                         = {1, 1, 1, 1};
     
 
@@ -2173,40 +2173,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         
     canvasRawYield->Update();
     canvasRawYield->SaveAs(Form("%s/%s_%s_RawYieldDiffIntRanges_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
-   
-    padRawYieldHistos->cd();         
-        TH2F* histo2DDummyPtRawSec;
-        histo2DDummyPtRawSec               = new TH2F("histo2DDummyPtRawSec","histo2DDummyPtRawSec",1000,0, histoUnCorrectedYield[0]->GetXaxis()->GetBinUpEdge(histoUnCorrectedYield[0]->GetNbinsX()),
-                                                                                10000, 0.01*FindSmallestBin1DHist(histoYieldSecMeson[0][0],1e6 ), 3*histoUnCorrectedYield[0]->GetMaximum());
-        SetStyleHistoTH2ForGraphs(histo2DDummyPtRawSec, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", 0.033,0.04, 0.033,0.04, 1,1.35);
-        histo2DDummyPtRawSec->DrawCopy();         
-        
-        TLegend* legendYieldRawSec = GetAndSetLegend2(0.15,0.03,0.66,0.03+6*0.035, 0.035, 1, "", 42, 0.1);
-        for (Int_t k = 0; k < 6; k++){
-            DrawGammaSetMarker(histoYieldSecMeson[k][0], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRangesSec[k], colorIntRangesSec[k]);
-            histoYieldSecMeson[k][0]->DrawCopy("e1,same");
-            legendYieldRawSec->AddEntry(histoYieldSecMeson[k][0],nameIntRangePlot[k].Data());
-        }    
-        legendYieldRawSec->Draw();    
-        PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
-    
-    padRawYieldRatios->cd();
-    
-        histo2DDummyRatioPtRaw->DrawCopy();         
-
-        TH1D* RatioRawSecK0s[6]        = {NULL, NULL, NULL, NULL, NULL, NULL};
-        for (Int_t k = 0; k < 6; k++){
-            RatioRawSecK0s[k]          = (TH1D*) histoYieldSecMeson[k][0]->Clone(); 
-            RatioRawSecK0s[k]->Divide(RatioRawSecK0s[k],histoYieldSecMeson[0][0],1.,1.,"B");
-            DrawGammaSetMarker(RatioRawSecK0s[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRangesSec[k], colorIntRangesSec[k]);
-            RatioRawSecK0s[k]->DrawCopy("e1,same"); 
-
-        }    
-        DrawGammaLines(0., histoUnCorrectedYield[0]->GetXaxis()->GetBinUpEdge(histoUnCorrectedYield[0]->GetNbinsX()),1., 1.,0.1);
-        
-    canvasRawYield->Update();
-    canvasRawYield->SaveAs(Form("%s/%s_%s_SecRawYieldFromK0sDiffIntRanges_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
-    
+       
     //***********************************************************************************************
     //*********************************** correction for yield **************************************
     //***********************************************************************************************
