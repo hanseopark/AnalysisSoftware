@@ -42,7 +42,6 @@
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
 #include "../CommonHeaders/PlottingGammaConversionAdditional.h"
 #include "../CommonHeaders/FittingGammaConversion.h"
-//#include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "../CommonHeaders/ConversionFunctions.h"
 #include "ExtractSignalV2.h"
 #include "../CommonHeaders/ExtractSignalBinning.h"
@@ -132,7 +131,9 @@ void ExtractSignalV2(   TString meson                   = "",
         cout << "changing trigger for MC (no EMC trigger in MC)" << endl;
         TString fEventCutSelectionTriggerRead   = fEventCutSelection(3,fEventCutSelection.Length()-5);
         cout << fEventCutSelectionTriggerRead.Data() << endl;
-        if(fEventCutSelectionTriggerRead.CompareTo("83")==0 || fEventCutSelectionTriggerRead.CompareTo("85")==0 || fEventCutSelectionTriggerRead.CompareTo("93")==0 || fEventCutSelectionTriggerRead.CompareTo("95")==0 || fEventCutSelectionTriggerRead.CompareTo("52")==0 || fEventCutSelectionTriggerRead.CompareTo("51")==0 || fEventCutSelectionTriggerRead.CompareTo("00")==0){
+        if(fEventCutSelectionTriggerRead.CompareTo("83")==0     || fEventCutSelectionTriggerRead.CompareTo("85")==0     || fEventCutSelectionTriggerRead.CompareTo("93")==0 ||
+            fEventCutSelectionTriggerRead.CompareTo("95")==0    || fEventCutSelectionTriggerRead.CompareTo("52")==0     || fEventCutSelectionTriggerRead.CompareTo("51")==0 ||
+            fEventCutSelectionTriggerRead.CompareTo("00")==0){
             fEventCutSelection.Replace(GetEventSelectSpecialTriggerCutPosition (),2,"03");
             fEventCutSelectionRead  = fEventCutSelection;
             fGammaCutSelectionRead  = fGammaCutSelection;
@@ -276,21 +277,15 @@ void ExtractSignalV2(   TString meson                   = "",
         TList *ClusterContainer             = (TList*) HistosGammaConversion->FindObject(Form("%s Cluster Output",fCutSelectionRead.Data()));
         if (ClusterContainer){
             fHistoClustersPt                = (TH1D*)ClusterContainer->FindObject("ClusGamma_Pt");
-            cout << "line " << __LINE__ << endl;
             fHistoClustersOverlapHeadersPt  = (TH1D*)ClusterContainer->FindObject("ClusGammaOverlapHeaders_Pt");
-            cout << "line " << __LINE__ << endl;
             TH2F* fHistoTrue2DGammaDCClusPt = (TH2F*)ClusterContainer->FindObject(ObjectNameDCGammaClusPt.Data());
-            cout << "line " << __LINE__ << endl;
             if (fHistoTrue2DGammaDCClusPt!=NULL) fEnableDCCluster= kTRUE;
             if (fEnableDCCluster){
                 fHistoTrue2DGammaDCClusPt->Sumw2();
                 fHistoTrueGammaDCClusPt             = (TH1D*)fHistoTrue2DGammaDCClusPt->ProjectionX("TrueClusGamma_Pt",0,-1,"e");
-                cout << "line " << __LINE__ << endl;
                 cout << "Cluster DC found " << endl;
                 fHistoTrueGammaClusMultipleCount    = (TH1F*)ClusterContainer->FindObject(ObjectNameGammaClusMultipleCount.Data());
-                cout << "line " << __LINE__ << endl;
                 fHistoTrueGammaClusPt               = (TH1F*)ClusterContainer->FindObject("TrueClusGamma_Pt");
-                cout << "line " << __LINE__ << endl;
             }
         }
     }
@@ -317,12 +312,10 @@ void ExtractSignalV2(   TString meson                   = "",
     TString ObjectNameESD               = "ESD_Mother_InvMass_Pt";
     TString ObjectNameBck               = "ESD_Background_InvMass_Pt";
     
-    cout << "line " << __LINE__ << endl;
     fGammaGammaInvMassVSPt              = (TH2D*)ESDContainer->FindObject(ObjectNameESD.Data());
     fGammaGammaInvMassVSPt->Sumw2();
     fBckInvMassVSPt                     = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data());
     fBckInvMassVSPt->Sumw2();
-    cout << "line " << __LINE__ << endl;
     
     const char* FileDataLogname         = Form("%s/%s/%s_%s_EffiCheck_RAWDATA%s_%s.dat", cutSelection.Data(), fEnergyFlag.Data(), fPrefix.Data(), fPrefix2.Data(), fPeriodFlag.Data(),
                                         fCutSelectionRead.Data());
@@ -332,49 +325,67 @@ void ExtractSignalV2(   TString meson                   = "",
     else ProduceBckProperWeighting(ESDContainer,ESDContainer,UseTHnSparse);
     cout << "line " << __LINE__ << endl;
     
+    // enter pure simulation routines
     if(fIsMC){
+        // load containers for simulation
         TList *MCContainer              = (TList*)HistosGammaConversion->FindObject(Form("%s MC histograms",fCutSelectionRead.Data()));
         TList *TrueConversionContainer  = (TList*)HistosGammaConversion->FindObject(Form("%s True histograms",fCutSelectionRead.Data()));
-        cout << "line " << __LINE__ << endl;
         
+        // loading histograms for pi0
         if( fMesonId == 111){
+            // histos without acceptance requirement
+            fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
+            fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0WOWeights.Data());
+            fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0WOEvtWeights.Data());
+
+            // histos with gamma's in acceptance
             fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0Acc.Data());
-            cout << "line " << __LINE__ << endl;
             if ( fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 ){
                 fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0AccWOWeights.Data());
                 fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0AccWOEvtWeights.Data());
             }
-            fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
-            fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0WOWeights.Data());
-            fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0WOEvtWeights.Data());
+        
+            // secondary neutral pions histograms
+            fHistoMCSecPi0SourcePt              = (TH2D*)MCContainer->FindObject(ObjectNameMCSecPi0.Data());
+            fHistoMCSecPi0WAccSourcePt          = (TH2D*)MCContainer->FindObject(ObjectNameMCSecPi0Acc.Data());
+            if (fHistoMCSecPi0SourcePt && fHistoMCSecPi0WAccSourcePt){
+               fHistoMCSecPi0SourcePt->Sumw2();
+               fHistoMCSecPi0WAccSourcePt->Sumw2();
+               fNewMCOutput                     =  kTRUE;
+               
+               
+            }    
+            cout << "line " << __LINE__ << endl;
         }
+        
+        // loading histograms for eta
         if( fMesonId == 221){
+            // histos without acceptance requirement
+            fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCEta.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
+            fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaWOWeights.Data());
+            fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaWOEvtWeights.Data());
+            
+            // histos with gamma's in acceptance
             fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAcc.Data());
             fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAccWOWeights.Data());
             fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAccWOEvtWeights.Data());
             cout << "line " << __LINE__ << endl;
-            fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCEta.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
-            fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaWOWeights.Data());
-            fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaWOEvtWeights.Data());
+            
         }
+        
+        // prepare histos for correct error calculation
         fHistoMCMesonPt->Sumw2();
         fHistoMCMesonPtWithinAcceptance->Sumw2();
-
-        cout << "line " << __LINE__ << endl;
-    
-        if (fHistoMCMesonPtWithinAcceptanceWOWeights){ 
-            cout << "found: " << ObjectNameMCPi0AccWOWeights.Data() << endl;
-            fHistoMCMesonPtWithinAcceptanceWOWeights->Sumw2();
-        }
-        if (fHistoMCMesonPtWithinAcceptanceWOEvtWeights){
-            cout << "found: " << ObjectNameMCPi0AccWOEvtWeights.Data() << endl;
-            fHistoMCMesonPtWithinAcceptanceWOEvtWeights->Sumw2();
-        }
+        if (fHistoMCMesonPtWithinAcceptanceWOWeights) fHistoMCMesonPtWithinAcceptanceWOWeights->Sumw2();
+        if (fHistoMCMesonPtWithinAcceptanceWOEvtWeights) fHistoMCMesonPtWithinAcceptanceWOEvtWeights->Sumw2();
+        
+        // calculate applied weights
         if (fHistoMCMesonPtWOWeights){
             fHistoMCMesonPtWeights              = (TH1D*)fHistoMCMesonPtWOWeights->Clone("WeightsMeson");
             fHistoMCMesonPtWeights->Divide(fHistoMCMesonPt,fHistoMCMesonPtWOWeights, 1.,1.,"B");
         }   
 
+        // load double counting histograms for Calo mode
         if (fMode == 4 || fMode == 5){
             TH2F* fHistoTrue2DGammaDCClusPt     = (TH2F*)TrueConversionContainer->FindObject(ObjectNameDCGammaClusPt.Data());
             if (fHistoTrue2DGammaDCClusPt!=NULL) fEnableDCCluster= kTRUE;
@@ -388,6 +399,7 @@ void ExtractSignalV2(   TString meson                   = "",
             }
         }
         
+        // load reconstructed meson histograms
         fHistoTrueMesonInvMassVSPt                  = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrue.Data());
         fHistoTrueMesonInvMassVSPt->Sumw2();
         fHistoTrueFullMesonInvMassVSPt              = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueFull.Data());
@@ -459,12 +471,16 @@ void ExtractSignalV2(   TString meson                   = "",
         }
     
         if (meson.Contains("Pi0")){
-            fHistoTrueSecMesonInvMassVSPt                           = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSec.Data());
+            fHistoTrueSecMesonInvMassVSPt[0]                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSecFromK0S.Data());
+            fHistoTrueSecMesonInvMassVSPt[1]                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSecFromLambda.Data());
+            fHistoTrueSecMesonInvMassVSPt[2]                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSecFromK0L.Data());
+            fHistoTrueSecMesonInvMassVSPt[3]                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSec.Data());
+            
+            for (Int_t j = 0; j<3; j++){
+                if (fHistoTrueSecMesonInvMassVSPt[j]) fHistoTrueSecMesonInvMassVSPt[3]->Add(fHistoTrueSecMesonInvMassVSPt[j],-1);
+            }    
             FillMassMCTrueSecMesonHistosArray(fHistoTrueSecMesonInvMassVSPt);
-            fHistoTrueSecFromK0SMesonInvMassVSPt                    = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSecFromK0S.Data());
-            FillMassMCTrueSecFromK0SMesonHistosArray(fHistoTrueSecFromK0SMesonInvMassVSPt);   
-            fHistoTrueSecFromLambdaMesonInvMassVSPt                 = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSecFromLambda.Data());
-            FillMassMCTrueSecFromLambdaMesonHistosArray(fHistoTrueSecFromLambdaMesonInvMassVSPt);   
+            
         }
 
         cout << "line " << __LINE__ << endl;
@@ -479,55 +495,33 @@ void ExtractSignalV2(   TString meson                   = "",
         cout << "line " << __LINE__ << endl;
     }
     
-    
+    // calculate meson mass from pdg code
     fMesonMassExpect                            = TDatabasePDG::Instance()->GetParticle(fMesonId)->Mass();
+    // calculate number of events for normalization
     if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0){
         fNEvents        = fEventQuality->GetBinContent(1);
     } else {
         fNEvents        =  GetNEvents(fEventQuality);
     }
-    
-    TH1D *fBck                                  = (TH1D*)fBckInvMassVSPt->ProjectionX("ESD_Background_InvMass");
-    fBck->Sumw2();
-    TH1D *fGammaGamma                           = (TH1D*)fGammaGammaInvMassVSPt->ProjectionX("ESD_Mother_InvMass");
-    fGammaGamma->Sumw2();
-    fPeakPosAlpha01                             = (TH2D*)ESDContainer->FindObject("ESD_Mother_InvMass_vs_E_alpha");
-    if (fPeakPosAlpha01==NULL) fPeakPosAlpha01  = (TH2D*)ESDContainer->FindObject("ESD_Mother_InvMass_vs_Pt_Alpha");
-    
     cout<< "The mass of the meson is: "<< fMesonMassExpect<< " Events analysed: "<< fNEvents<< endl;
-    cout << "line " << __LINE__ << endl;
-    // Process the 1D invariant mass histos
-    fGammaGamma->SetTitle(Form("%s %s",fGammaGamma->GetTitle(),fCutSelection.Data()));
-    cout << "line " << __LINE__ << endl;
-    fGammaGamma->Rebin(fNRebinGlobal);
-    fBck->Rebin(fNRebinGlobal);
-    ProcessEM( fGammaGamma , fBck, fBGFitRange);
-    fHistoMappingBackNormInvMass    = fBckNorm;
-    fHistoMappingBackNormInvMass->Sumw2();
-    fHistoMappingSignalInvMass      = fSignal;
-    fHistoMappingSignalInvMass->Sumw2();
-    
-    fGammaGamma->DrawCopy();
-    fHistoMappingBackNormInvMass->DrawCopy("same");
-    fHistoMappingSignalInvMass->DrawCopy("same");
     
     // Function to Project the 2D histos InvariantMass VS Pt into Invariant Mass spectrum
-    FillMassHistosArray(fGammaGammaInvMassVSPt,fPeakPosAlpha01);
+    FillMassHistosArray(fGammaGammaInvMassVSPt);
     cout << "line " << __LINE__ << endl;
     
     ProcessEM( fMesonFullPtSignal, fMesonFullPtBackground, fBGFitRange);
-    fMesonFullPtBackNorm            = fBckNorm;
+    fMesonFullPtBackNorm                        = fBckNorm;
     
     ProcessEM( fFittingHistMidPtSignal, fFittingHistMidPtBackground, fBGFitRange);
-    fFittingHistMidPtSignalSub      = fSignal;
+    fFittingHistMidPtSignalSub                  = fSignal;
     if(fCrysFitting==0){
         fFileErrLog << "Using exp fit"<<endl;
         FitSubtractedInvMassInPtBins(fFittingHistMidPtSignalSub, fMesonIntDeltaRange,200,kTRUE);
-        fFitSignalInvMassMidPt      = fFitReco;
+        fFitSignalInvMassMidPt                  = fFitReco;
     } else {
         fFileErrLog << "Using Crystal Ball function"<<endl;
         FitCBSubtractedInvMassInPtBins(fFittingHistMidPtSignalSub, fMesonIntDeltaRange,200,kTRUE,"SinglefitfunctionMidPt",kFALSE);
-        fFitSignalInvMassMidPt      = fFitReco;
+        fFitSignalInvMassMidPt                  = fFitReco;
     }
 
     if (fIsMC){
@@ -561,38 +555,7 @@ void ExtractSignalV2(   TString meson                   = "",
     //    
     TString fDecayChannel = "#gamma#gamma";
     delete fMidPt;
-
-    if(fEnergyFlag.CompareTo("7TeV") == 0){
-        if(fPrefix.CompareTo("Pi0") == 0){
-            for (Int_t iPt=fStartPtBin;iPt<fNBinsPeakPt;iPt++){
-                fFitPeakPosPtBin[iPt] =0x00;
-                if(!fHistoMappingPeakPosInvMassPtBin[iPt]) continue;
-                if(fCrysFitting==0){
-                    fFileErrLog << "Using exp fit"<<endl;
-                    FitPeakPosInvMassInPtBins(fHistoMappingPeakPosInvMassPtBin[iPt],iPt,kTRUE);
-                    fFitPeakPosPtBin[iPt]       = fFitReco;
-                } else {
-                    fFileErrLog << "Using Crystal Ball function"<<endl;
-                    FitCBSubtractedInvMassInPtBins(fHistoMappingPeakPosInvMassPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE,Form("CBFitFuncPeakPos%02d",iPt),kFALSE);
-                    fFitPeakPosPtBin[iPt]       = fFitReco;
-                }
-                if (fFitPeakPosPtBin[iPt] !=0x00){
-                    fMesonMassPeakPos[iPt]      = fFitPeakPosPtBin[iPt]->GetParameter(1);
-                    fMesonMassPeakPosError[iPt] = fFitPeakPosPtBin[iPt]->GetParError(1);
-                    CalculateFWHM( fFitPeakPosPtBin[iPt]);
-                    fMesonFWHMAlpha01[iPt]      = fFWHMFunc;
-                    fMesonFWHMAlpha01Error[iPt] = fFWHMFuncError;
-                } else {
-                    fMesonMassPeakPos[iPt]      = 0.;
-                    fMesonMassPeakPosError[iPt] = 0.;
-                    fMesonFWHMAlpha01[iPt]      = 0.;
-                    fMesonFWHMAlpha01Error[iPt] = 0.;
-                }
-            }
-        }
-    }
-    
-    
+        
     for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){ // BEGIN ANALYSIS for each Pt bin
 
 
@@ -618,11 +581,11 @@ void ExtractSignalV2(   TString meson                   = "",
             fFileErrLog << "Using exp fit"<<endl;
             fFileDataLog << "Subtracted mixed event" << endl;
             FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE);
-            fFitSignalInvMassPtBin[iPt]             = fFitReco;
-            fFitSignalPeakPosInvMassPtBin[iPt]      = fFitGausExp;
-            fFitBckInvMassPtBin[iPt]                = fFitLinearBck;
-            fMesonYieldsResidualBckFunc[iPt]        = fIntLinearBck;
-            fMesonYieldsResidualBckFuncError[iPt]   = fIntLinearBckError;
+            fFitSignalInvMassPtBin[iPt]                 = fFitReco;
+            fFitSignalPeakPosInvMassPtBin[iPt]          = fFitGausExp;
+            fFitBckInvMassPtBin[iPt]                    = fFitLinearBck;
+            fMesonYieldsResidualBckFunc[0][iPt]         = fIntLinearBck;
+            fMesonYieldsResidualBckFuncError[0][iPt]    = fIntLinearBckError;
         } else {
             fFileErrLog << "Using Crystal Ball function"<<endl;
             FitCBSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE,Form("CBFitFuncNormalBin%02d",iPt),kFALSE);
@@ -632,8 +595,8 @@ void ExtractSignalV2(   TString meson                   = "",
             fFitRemainingBGInvMassPtBin[iPt]                    = fFitLinearBck;
             fFitSignalPeakPosInvMassPtBin[iPt]                  = fFitGausExp;
             fFitBckInvMassPtBin[iPt]                            = fFitLinearBck;
-            fMesonYieldsResidualBckFunc[iPt]                    = 0;
-            fMesonYieldsResidualBckFuncError[iPt]               = 0;
+            fMesonYieldsResidualBckFunc[0][iPt]                 = 0;
+            fMesonYieldsResidualBckFuncError[0][iPt]            = 0;
             
         }
 
@@ -649,30 +612,27 @@ void ExtractSignalV2(   TString meson                   = "",
             fMesonLambdaTailpar[iPt]        = fFitSignalInvMassPtBin[iPt]->GetParameter(3);
             fMesonLambdaTailparError[iPt]   = fFitSignalInvMassPtBin[iPt]->GetParError(3);
 
-            fMesonCurIntRange[0]            = fMesonMass[iPt] + fMesonIntDeltaRange[0];
-            fMesonCurIntRangeWide[0]        = fMesonMass[iPt] + fMesonIntDeltaRangeWide[0];
-            fMesonCurIntRangeNarrow[0]      = fMesonMass[iPt] + fMesonIntDeltaRangeNarrow[0];
-            fMesonCurIntRange[1]            = fMesonMass[iPt] + fMesonIntDeltaRange[1];
-            fMesonCurIntRangeWide[1]        = fMesonMass[iPt] + fMesonIntDeltaRangeWide[1];
-            fMesonCurIntRangeNarrow[1]      = fMesonMass[iPt] + fMesonIntDeltaRangeNarrow[1];
+            fMesonCurIntRange[0][0]         = fMesonMass[iPt] + fMesonIntDeltaRange[0];
+            fMesonCurIntRange[1][0]         = fMesonMass[iPt] + fMesonIntDeltaRangeWide[0];
+            fMesonCurIntRange[2][0]         = fMesonMass[iPt] + fMesonIntDeltaRangeNarrow[0];
+            fMesonCurIntRange[0][1]         = fMesonMass[iPt] + fMesonIntDeltaRange[1];
+            fMesonCurIntRange[1][1]         = fMesonMass[iPt] + fMesonIntDeltaRangeWide[1];
+            fMesonCurIntRange[2][1]         = fMesonMass[iPt] + fMesonIntDeltaRangeNarrow[1];
         } else {
             fMesonMass[iPt]                 = fMesonMassExpect;
             fMesonMassError[iPt]            = 0.;
-            fMesonCurIntRange[0]            = fMesonMassExpect + fMesonIntDeltaRange[0];
-            fMesonCurIntRangeWide[0]        = fMesonMassExpect + fMesonIntDeltaRangeWide[0];
-            fMesonCurIntRangeNarrow[0]      = fMesonMassExpect + fMesonIntDeltaRangeNarrow[0];
-            fMesonCurIntRange[1]            = fMesonMassExpect + fMesonIntDeltaRange[1];
-            fMesonCurIntRangeWide[1]        = fMesonMassExpect + fMesonIntDeltaRangeWide[1];
-            fMesonCurIntRangeNarrow[1]      = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
+            fMesonCurIntRange[0][0]         = fMesonMassExpect + fMesonIntDeltaRange[0];
+            fMesonCurIntRange[1][0]         = fMesonMassExpect + fMesonIntDeltaRangeWide[0];
+            fMesonCurIntRange[2][0]         = fMesonMassExpect + fMesonIntDeltaRangeNarrow[0];
+            fMesonCurIntRange[0][1]         = fMesonMassExpect + fMesonIntDeltaRange[1];
+            fMesonCurIntRange[1][1]         = fMesonMassExpect + fMesonIntDeltaRangeWide[1];
+            fMesonCurIntRange[2][1]        = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
         }
 
-
-        fMassWindowHigh[iPt]        = fMesonCurIntRange[1];
-        fMassWindowLow[iPt]         = fMesonCurIntRange[0];
-        fMassWindowWideHigh[iPt]    = fMesonCurIntRangeWide[1];
-        fMassWindowWideLow[iPt]     = fMesonCurIntRangeWide[0];
-        fMassWindowNarrowHigh[iPt]  = fMesonCurIntRangeNarrow[1];
-        fMassWindowNarrowLow[iPt]   = fMesonCurIntRangeNarrow[0];
+        for (Int_t k = 0; k < 3; k++){
+            fMassWindowHigh[k][iPt]        = fMesonCurIntRange[k][1];
+            fMassWindowLow[k][iPt]         = fMesonCurIntRange[k][0];        
+        }    
         
         FitSubtractedPureGaussianInvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt],iPt);
         fFitSignalGaussianInvMassPtBin[iPt] = fFitReco;
@@ -690,86 +650,44 @@ void ExtractSignalV2(   TString meson                   = "",
 
         
         if (fCrysFitting == 0){
-            IntegrateHistoInvMass( fHistoMappingGGInvMassPtBin[iPt], fMesonCurIntRange);
-            fGGYields[iPt]                  = fYields;
-            fGGYieldsError[iPt]             = fYieldsError;
-            IntegrateHistoInvMass( fHistoMappingGGInvMassPtBin[iPt], fMesonCurIntRangeWide);
-            fGGYieldsWide[iPt]              = fYields;
-            fGGYieldsWideError[iPt]         = fYieldsError;
-            IntegrateHistoInvMass( fHistoMappingGGInvMassPtBin[iPt], fMesonCurIntRangeNarrow);
-            fGGYieldsNarrow[iPt]            = fYields;
-            fGGYieldsNarrowError[iPt]       = fYieldsError;
-    
-            // Integrate the bck histo
-            IntegrateHistoInvMass( fHistoMappingBackNormInvMassPtBin[iPt], fMesonCurIntRange);
-            fBckYields[iPt]                 = fYields;
-            fBckYieldsError[iPt]            = fYieldsError;
-            IntegrateHistoInvMass( fHistoMappingBackNormInvMassPtBin[iPt], fMesonCurIntRangeWide);
-            fBckYieldsWide[iPt]             = fYields;
-            fBckYieldsWideError[iPt]        = fYieldsError;
-            IntegrateHistoInvMass( fHistoMappingBackNormInvMassPtBin[iPt], fMesonCurIntRangeNarrow);
-            fBckYieldsNarrow[iPt]           = fYields;
-            fBckYieldsNarrowError[iPt]      = fYieldsError;
-
-            // Integrate the signal histo
-            fFileDataLog<< endl <<"Signal histo normal range, right norm "<< fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << endl;
-            IntegrateHistoInvMassStream( fHistoMappingSignalInvMassPtBin[iPt], fMesonCurIntRange);
-            fMesonYields[iPt]               = fYields;
-            fMesonYieldsError[iPt]          = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
-            fFileDataLog<< endl <<"Signal histo wide range, right norm " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << endl;
-            IntegrateHistoInvMassStream( fHistoMappingSignalInvMassPtBin[iPt], fMesonCurIntRangeWide);
-            fMesonYieldsWide[iPt]           = fYields;
-            fMesonYieldsWideError[iPt]      = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
-            fFileDataLog<< endl <<"Signal histo narrow range, right norm" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-            IntegrateHistoInvMassStream( fHistoMappingSignalInvMassPtBin[iPt], fMesonCurIntRangeNarrow);
-            fMesonYieldsNarrow[iPt]         = fYields;
-            fMesonYieldsNarrowError[iPt]    = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
+            for (Int_t k = 0; k < 3; k++){
+                IntegrateHistoInvMass( fHistoMappingGGInvMassPtBin[iPt], fMesonCurIntRange[k]);
+                fGGYields[k][iPt]               = fYields;
+                fGGYieldsError[k][iPt]          = fYieldsError;
+                
+                // Integrate the bck histo
+                IntegrateHistoInvMass( fHistoMappingBackNormInvMassPtBin[iPt], fMesonCurIntRange[k]);
+                fBckYields[k][iPt]              = fYields;
+                fBckYieldsError[k][iPt]         = fYieldsError;
+                
+                // Integrate the signal histo
+                fFileDataLog<< endl <<"Signal histo "<< nameIntRange[k].Data() << ":\t" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << endl;
+                IntegrateHistoInvMassStream( fHistoMappingSignalInvMassPtBin[iPt], fMesonCurIntRange[k]);
+                fMesonYields[k][iPt]            = fYields;
+                fMesonYieldsError[k][iPt]       = fYieldsError;
+                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
+            }    
         } else {
-            IntegrateHistoInvMass( fHistoMappingGGInvMassPtBin[iPt], fMesonCurIntRange);
-            fGGYields[iPt]                  = fYields;
-            fGGYieldsError[iPt]             = fYieldsError;
-            IntegrateHistoInvMass( fHistoMappingGGInvMassPtBin[iPt], fMesonCurIntRangeWide);
-            fGGYieldsWide[iPt]              = fYields;
-            fGGYieldsWideError[iPt]         = fYieldsError;
-            IntegrateHistoInvMass( fHistoMappingGGInvMassPtBin[iPt], fMesonCurIntRangeNarrow);
-            fGGYieldsNarrow[iPt]            = fYields;
-            fGGYieldsNarrowError[iPt]       = fYieldsError;
-    
-            // Integrate the bck histo
-//             if (fMode != 4){
-                fHistoMappingBackNormInvMassPtBin[iPt]->Sumw2();
-                fHistoMappingBackNormInvMassPtBin[iPt]->Add(fHistoMappingRemainingBGInvMassPtBin[iPt],1);
-//             }
-            IntegrateHistoInvMass( fHistoMappingBackNormInvMassPtBin[iPt], fMesonCurIntRange);
-            
-            fBckYields[iPt]                 = fYields;
-            fBckYieldsError[iPt]            = fYieldsError;
-            IntegrateHistoInvMass( fHistoMappingBackNormInvMassPtBin[iPt], fMesonCurIntRangeWide);
-            fBckYieldsWide[iPt]             = fYields;
-            fBckYieldsWideError[iPt]        = fYieldsError;
-            IntegrateHistoInvMass( fHistoMappingBackNormInvMassPtBin[iPt], fMesonCurIntRangeNarrow);
-            fBckYieldsNarrow[iPt]           = fYields;
-            fBckYieldsNarrowError[iPt]      = fYieldsError;
+            for (Int_t k = 0; k < 3; k++){
+                IntegrateHistoInvMass( fHistoMappingGGInvMassPtBin[iPt], fMesonCurIntRange[k]);
+                fGGYields[k][iPt]               = fYields;
+                fGGYieldsError[k][iPt]          = fYieldsError;
 
-            // Integrate the signal histo
-            fFileDataLog<< endl <<"Signal histo normal range, right norm "<< fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << endl;
-            IntegrateHistoInvMassStream( fHistoMappingSignalRemainingBGSubInvMassPtBin[iPt], fMesonCurIntRange);
-            fMesonYields[iPt]               = fYields;
-            fMesonYieldsError[iPt]          = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
-            fFileDataLog<< endl <<"Signal histo wide range, right norm " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << endl;
-            IntegrateHistoInvMassStream( fHistoMappingSignalRemainingBGSubInvMassPtBin[iPt], fMesonCurIntRangeWide);
-            fMesonYieldsWide[iPt]           = fYields;
-            fMesonYieldsWideError[iPt]      = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
-            fFileDataLog<< endl <<"Signal histo narrow range, right norm" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-            IntegrateHistoInvMassStream( fHistoMappingSignalRemainingBGSubInvMassPtBin[iPt], fMesonCurIntRangeNarrow);
-            fMesonYieldsNarrow[iPt]         = fYields;
-            fMesonYieldsNarrowError[iPt]    = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
+                if (k == 0){
+                    fHistoMappingBackNormInvMassPtBin[iPt]->Sumw2();
+                    fHistoMappingBackNormInvMassPtBin[iPt]->Add(fHistoMappingRemainingBGInvMassPtBin[iPt],1);
+                }    
+                IntegrateHistoInvMass( fHistoMappingBackNormInvMassPtBin[iPt], fMesonCurIntRange[k]);
+                fBckYields[k][iPt]              = fYields;
+                fBckYieldsError[k][iPt]         = fYieldsError;
+
+                // Integrate the signal histo
+                fFileDataLog<< endl <<"Signal histo "<< nameIntRange[k].Data() << ":\t" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << endl;
+                IntegrateHistoInvMassStream( fHistoMappingSignalRemainingBGSubInvMassPtBin[iPt], fMesonCurIntRange[k]);
+                fMesonYields[k][iPt]            = fYields;
+                fMesonYieldsError[k][iPt]       = fYieldsError;
+                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
+            }    
         }
 
 
@@ -797,23 +715,23 @@ void ExtractSignalV2(   TString meson                   = "",
                     fMesonTrueFWHM[iPt]             = fFWHMFunc;
                     fMesonTrueFWHMError[iPt]        = fFWHMFuncError;
                     fFileDataLog << "TrueFWHM \t" << fMesonTrueFWHM[iPt] << "\t +-" << fMesonTrueFWHMError[iPt] << endl;
-                    fMesonTrueIntRange[0]           = fMesonTrueMass[iPt] + fMesonIntDeltaRange[0];
-                    fMesonTrueIntRangeWide[0]       = fMesonTrueMass[iPt] + fMesonIntDeltaRangeWide[0];
-                    fMesonTrueIntRangeNarrow[0]     = fMesonTrueMass[iPt] + fMesonIntDeltaRangeNarrow[0];
-                    fMesonTrueIntRange[1]           = fMesonTrueMass[iPt] + fMesonIntDeltaRange[1] ;
-                    fMesonTrueIntRangeWide[1]       = fMesonTrueMass[iPt] + fMesonIntDeltaRangeWide[1];
-                    fMesonTrueIntRangeNarrow[1]     = fMesonTrueMass[iPt] + fMesonIntDeltaRangeNarrow[1];
+                    fMesonTrueIntRange[0][0]        = fMesonTrueMass[iPt] + fMesonIntDeltaRange[0];
+                    fMesonTrueIntRange[1][0]        = fMesonTrueMass[iPt] + fMesonIntDeltaRangeWide[0];
+                    fMesonTrueIntRange[2][0]        = fMesonTrueMass[iPt] + fMesonIntDeltaRangeNarrow[0];
+                    fMesonTrueIntRange[0][1]        = fMesonTrueMass[iPt] + fMesonIntDeltaRange[1] ;
+                    fMesonTrueIntRange[1][1]        = fMesonTrueMass[iPt] + fMesonIntDeltaRangeWide[1];
+                    fMesonTrueIntRange[2][1]        = fMesonTrueMass[iPt] + fMesonIntDeltaRangeNarrow[1];
                 } else {
                     fMesonTrueMass[iPt]             = 0.;
                     fMesonTrueMassError[iPt]        = 1.;
                     fMesonTrueFWHM[iPt]             = 0.;
                     fMesonTrueFWHMError[iPt]        = 0.;
-                    fMesonTrueIntRange[0]           = fMesonMassExpect + fMesonIntDeltaRange[0];
-                    fMesonTrueIntRangeWide[0]       = fMesonMassExpect + fMesonIntDeltaRangeWide[0];
-                    fMesonTrueIntRangeNarrow[0]     = fMesonMassExpect + fMesonIntDeltaRangeNarrow[0];
-                    fMesonTrueIntRange[1]           = fMesonMassExpect + fMesonIntDeltaRange[1];
-                    fMesonTrueIntRangeWide[1]       = fMesonMassExpect + fMesonIntDeltaRangeWide[1];
-                    fMesonTrueIntRangeNarrow[1]     = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
+                    fMesonTrueIntRange[0][0]        = fMesonMassExpect + fMesonIntDeltaRange[0];
+                    fMesonTrueIntRange[1][0]        = fMesonMassExpect + fMesonIntDeltaRangeWide[0];
+                    fMesonTrueIntRange[2][0]        = fMesonMassExpect + fMesonIntDeltaRangeNarrow[0];
+                    fMesonTrueIntRange[0][1]        = fMesonMassExpect + fMesonIntDeltaRange[1];
+                    fMesonTrueIntRange[1][1]        = fMesonMassExpect + fMesonIntDeltaRangeWide[1];
+                    fMesonTrueIntRange[2][1]        = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
                 }
             }
 
@@ -858,23 +776,23 @@ void ExtractSignalV2(   TString meson                   = "",
                         CalculateFWHM(fFitTrueSignalInvMassPtReweightedBin[iPt]);
                         fMesonTrueFWHMReweighted[iPt]           = fFWHMFunc;
                         fMesonTrueFWHMReweightedError[iPt]      = fFWHMFuncError;
-                        fMesonTrueIntReweightedRange[0]         = fMesonTrueMassReweighted[iPt] + fMesonIntDeltaRange[0];
-                        fMesonTrueIntReweightedRangeWide[0]     = fMesonTrueMassReweighted[iPt] + fMesonIntDeltaRangeWide[0];
-                        fMesonTrueIntReweightedRangeNarrow[0]   = fMesonTrueMassReweighted[iPt] + fMesonIntDeltaRangeNarrow[0];
-                        fMesonTrueIntReweightedRange[1]         = fMesonTrueMassReweighted[iPt] + fMesonIntDeltaRange[1];
-                        fMesonTrueIntReweightedRangeWide[1]     = fMesonTrueMassReweighted[iPt] + fMesonIntDeltaRangeWide[1];
-                        fMesonTrueIntReweightedRangeNarrow[1]   = fMesonTrueMassReweighted[iPt] + fMesonIntDeltaRangeNarrow[1];
+                        fMesonTrueIntReweightedRange[0][0]      = fMesonTrueMassReweighted[iPt] + fMesonIntDeltaRange[0];
+                        fMesonTrueIntReweightedRange[1][0]      = fMesonTrueMassReweighted[iPt] + fMesonIntDeltaRangeWide[0];
+                        fMesonTrueIntReweightedRange[2][0]      = fMesonTrueMassReweighted[iPt] + fMesonIntDeltaRangeNarrow[0];
+                        fMesonTrueIntReweightedRange[0][1]      = fMesonTrueMassReweighted[iPt] + fMesonIntDeltaRange[1];
+                        fMesonTrueIntReweightedRange[1][1]      = fMesonTrueMassReweighted[iPt] + fMesonIntDeltaRangeWide[1];
+                        fMesonTrueIntReweightedRange[2][1]      = fMesonTrueMassReweighted[iPt] + fMesonIntDeltaRangeNarrow[1];
                     } else {
                         fMesonTrueMassReweighted[iPt]           = 0.;
                         fMesonTrueMassReweightedError[iPt]      = 1.;
                         fMesonTrueFWHMReweighted[iPt]           = 0.;
                         fMesonTrueFWHMReweightedError[iPt]      = 0.;
-                        fMesonTrueIntReweightedRange[0]         = fMesonMassExpect + fMesonIntDeltaRange[0];
-                        fMesonTrueIntReweightedRangeWide[0]     = fMesonMassExpect + fMesonIntDeltaRangeWide[0];
-                        fMesonTrueIntReweightedRangeNarrow[0]   = fMesonMassExpect + fMesonIntDeltaRangeNarrow[0];
-                        fMesonTrueIntReweightedRange[1]         = fMesonMassExpect + fMesonIntDeltaRange[1];
-                        fMesonTrueIntReweightedRangeWide[1]     = fMesonMassExpect + fMesonIntDeltaRangeWide[1];
-                        fMesonTrueIntReweightedRangeNarrow[1]   = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
+                        fMesonTrueIntReweightedRange[0][0]      = fMesonMassExpect + fMesonIntDeltaRange[0];
+                        fMesonTrueIntReweightedRange[1][0]      = fMesonMassExpect + fMesonIntDeltaRangeWide[0];
+                        fMesonTrueIntReweightedRange[2][0]      = fMesonMassExpect + fMesonIntDeltaRangeNarrow[0];
+                        fMesonTrueIntReweightedRange[0][1]      = fMesonMassExpect + fMesonIntDeltaRange[1];
+                        fMesonTrueIntReweightedRange[1][1]      = fMesonMassExpect + fMesonIntDeltaRangeWide[1];
+                        fMesonTrueIntReweightedRange[2][1]      = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
 
                     }
                 }
@@ -901,23 +819,23 @@ void ExtractSignalV2(   TString meson                   = "",
                     CalculateFWHM(fFitTrueSignalInvMassPtUnweightedBin[iPt]);
                     fMesonTrueFWHMUnweighted[iPt]               = fFWHMFunc;
                     fMesonTrueFWHMUnweightedError[iPt]          = fFWHMFuncError;
-                        fMesonTrueIntUnweightedRange[0]         = fMesonTrueMassUnweighted[iPt] + fMesonIntDeltaRange[0];
-                        fMesonTrueIntUnweightedRangeWide[0]     = fMesonTrueMassUnweighted[iPt] + fMesonIntDeltaRangeWide[0];
-                        fMesonTrueIntUnweightedRangeNarrow[0]   = fMesonTrueMassUnweighted[iPt] + fMesonIntDeltaRangeNarrow[0];
-                        fMesonTrueIntUnweightedRange[1]         = fMesonTrueMassUnweighted[iPt] + fMesonIntDeltaRange[1];
-                        fMesonTrueIntUnweightedRangeWide[1]     = fMesonTrueMassUnweighted[iPt] + fMesonIntDeltaRangeWide[1];
-                        fMesonTrueIntUnweightedRangeNarrow[1]   = fMesonTrueMassUnweighted[iPt] + fMesonIntDeltaRangeNarrow[1];
+                        fMesonTrueIntUnweightedRange[0][0]      = fMesonTrueMassUnweighted[iPt] + fMesonIntDeltaRange[0];
+                        fMesonTrueIntUnweightedRange[1][0]      = fMesonTrueMassUnweighted[iPt] + fMesonIntDeltaRangeWide[0];
+                        fMesonTrueIntUnweightedRange[2][0]      = fMesonTrueMassUnweighted[iPt] + fMesonIntDeltaRangeNarrow[0];
+                        fMesonTrueIntUnweightedRange[0][1]      = fMesonTrueMassUnweighted[iPt] + fMesonIntDeltaRange[1];
+                        fMesonTrueIntUnweightedRange[1][1]      = fMesonTrueMassUnweighted[iPt] + fMesonIntDeltaRangeWide[1];
+                        fMesonTrueIntUnweightedRange[2][1]      = fMesonTrueMassUnweighted[iPt] + fMesonIntDeltaRangeNarrow[1];
                     } else {
                         fMesonTrueMassUnweighted[iPt]           = 0.;
                         fMesonTrueMassUnweightedError[iPt]      = 1.;
                         fMesonTrueFWHMUnweighted[iPt]           = 0.;
                         fMesonTrueFWHMUnweightedError[iPt]      = 0.;
-                        fMesonTrueIntUnweightedRange[0]         = fMesonMassExpect + fMesonIntDeltaRange[0];
-                        fMesonTrueIntUnweightedRangeWide[0]     = fMesonMassExpect + fMesonIntDeltaRangeWide[0];
-                        fMesonTrueIntUnweightedRangeNarrow[0]   = fMesonMassExpect + fMesonIntDeltaRangeNarrow[0];
-                        fMesonTrueIntUnweightedRange[1]         = fMesonMassExpect + fMesonIntDeltaRange[1];
-                        fMesonTrueIntUnweightedRangeWide[1]     = fMesonMassExpect + fMesonIntDeltaRangeWide[1];
-                        fMesonTrueIntUnweightedRangeNarrow[1]   = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
+                        fMesonTrueIntUnweightedRange[0][0]      = fMesonMassExpect + fMesonIntDeltaRange[0];
+                        fMesonTrueIntUnweightedRange[1][0]      = fMesonMassExpect + fMesonIntDeltaRangeWide[0];
+                        fMesonTrueIntUnweightedRange[2][0]      = fMesonMassExpect + fMesonIntDeltaRangeNarrow[0];
+                        fMesonTrueIntUnweightedRange[0][1]      = fMesonMassExpect + fMesonIntDeltaRange[1];
+                        fMesonTrueIntUnweightedRange[1][1]      = fMesonMassExpect + fMesonIntDeltaRangeWide[1];
+                        fMesonTrueIntUnweightedRange[2][1]      = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
 
                     }
                 }
@@ -1067,149 +985,72 @@ void ExtractSignalV2(   TString meson                   = "",
                 }
             }
     
-            
-            IntegrateHistoInvMassStream( fHistoMappingTrueMesonInvMassPtBins[iPt], fMesonTrueIntRange);
-            fMesonTrueYields[iPt]                       = fYields;
-            fMesonTrueYieldsError[iPt]                  = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
+            // fill pt array with integrated validated MC yield for different integration windows: normal, wide, narrow
+            for (Int_t k = 0; k< 3;k++){
+                if (k > 0 )
+                    fFileDataLog<< endl <<"True histo " << nameIntRange[k].Data() << " range" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
+                IntegrateHistoInvMassStream( fHistoMappingTrueMesonInvMassPtBins[iPt], fMesonTrueIntRange[k]);
+                fMesonTrueYields[k][iPt]                        = fYields;
+                fMesonTrueYieldsError[k][iPt]                   = fYieldsError;
+                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
 
-            fFileDataLog<< endl <<"True histo wide range" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-            IntegrateHistoInvMassStream( fHistoMappingTrueMesonInvMassPtBins[iPt], fMesonTrueIntRangeWide);
-            fMesonTrueYieldsWide[iPt]                   = fYields;
-            fMesonTrueYieldsWideError[iPt]              = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
+                fFileDataLog<< endl <<"True histo " << nameIntRange[k].Data() << " range reweighted" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
+                IntegrateHistoInvMassStream( fHistoMappingTrueMesonInvMassPtReweightedBins[iPt], fMesonTrueIntReweightedRange[k]);
+                fMesonTrueYieldsReweighted[k][iPt]              = fYields;
+                fMesonTrueYieldsReweightedError[k][iPt]         = fYieldsError;
+                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
 
-            fFileDataLog<< endl <<"True histo narrow range" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-            IntegrateHistoInvMassStream( fHistoMappingTrueMesonInvMassPtBins[iPt], fMesonTrueIntRangeNarrow);
-            fMesonTrueYieldsNarrow[iPt]                 = fYields;
-            fMesonTrueYieldsNarrowError[iPt]            = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
-
-            cout<< "Analyse reweighted histos" << endl;
-            
-            fFileDataLog<< endl <<"True histo normal range reweighted" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-            IntegrateHistoInvMassStream( fHistoMappingTrueMesonInvMassPtReweightedBins[iPt], fMesonTrueIntReweightedRange);
-            fMesonTrueYieldsReweighted[iPt]             = fYields;
-            fMesonTrueYieldsReweightedError[iPt]        = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
-
-            fFileDataLog<< endl <<"True histo wide range reweighted" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-            IntegrateHistoInvMassStream( fHistoMappingTrueMesonInvMassPtReweightedBins[iPt], fMesonTrueIntReweightedRangeWide);
-            fMesonTrueYieldsReweightedWide[iPt]         = fYields;
-            fMesonTrueYieldsReweightedWideError[iPt]    = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
-
-            fFileDataLog<< endl <<"True histo narrow range reweighted" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-            IntegrateHistoInvMassStream( fHistoMappingTrueMesonInvMassPtReweightedBins[iPt], fMesonTrueIntReweightedRangeNarrow);
-            fMesonTrueYieldsReweightedNarrow[iPt]       = fYields;
-            fMesonTrueYieldsReweightedNarrowError[iPt]  = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
-
-
-            fFileDataLog<< endl <<"True histo normal range unweighted" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-            IntegrateHistoInvMassStream( fHistoMappingTrueMesonInvMassPtUnweightedBins[iPt], fMesonTrueIntUnweightedRange);
-            fMesonTrueYieldsUnweighted[iPt]             = fYields;
-            fMesonTrueYieldsUnweightedError[iPt]        = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
-
-            fFileDataLog<< endl <<"True histo wide range unweighted" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-            IntegrateHistoInvMassStream( fHistoMappingTrueMesonInvMassPtUnweightedBins[iPt], fMesonTrueIntUnweightedRangeWide);
-            fMesonTrueYieldsUnweightedWide[iPt]         = fYields;
-            fMesonTrueYieldsUnweightedWideError[iPt]    = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
-
-            fFileDataLog<< endl <<"True histo narrow range unweighted" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-            IntegrateHistoInvMassStream( fHistoMappingTrueMesonInvMassPtUnweightedBins[iPt], fMesonTrueIntUnweightedRangeNarrow);
-            fMesonTrueYieldsUnweightedNarrow[iPt]       = fYields;
-            fMesonTrueYieldsUnweightedNarrowError[iPt]  = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
-            
+                fFileDataLog<< endl <<"True histo " << nameIntRange[k].Data() << " range unweighted" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
+                IntegrateHistoInvMassStream( fHistoMappingTrueMesonInvMassPtUnweightedBins[iPt], fMesonTrueIntUnweightedRange[k]);
+                fMesonTrueYieldsUnweighted[k][iPt]              = fYields;
+                fMesonTrueYieldsUnweightedError[k][iPt]         = fYieldsError;
+                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
+                
+            }    
+                        
+            // fill double counting pt-array  if available
             if (fEnableDCMeson){
-        
-                IntegrateHistoInvMassStream( fHistoMappingTrueMesonDCInvMassPtBins[iPt], fMesonTrueIntRange);
+                IntegrateHistoInvMassStream( fHistoMappingTrueMesonDCInvMassPtBins[iPt], fMesonTrueIntRange[0]);
                 fMesonTrueYieldsDC[iPt]                         = fYields;
                 fMesonTrueYieldsDCError[iPt]                    = fYieldsError;
                 fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
                 cout << "***********************************************" << endl;
                 cout << "***********************************************" << endl;
                 cout << "***********************************************" << endl;
-        
                 cout << "***********************************************" << endl;
             }
             
+            // fill secondary yield pt-arrays for neutral pion for different sources and integration windows
             if (meson.Contains("Pi0")){
-                fFileDataLog<< endl <<"TrueSecTotal histo" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-                IntegrateHistoInvMassStream( fHistoMappingTrueSecMesonInvMassPtBins[iPt], fMesonTrueIntRange);
-                fMesonTrueSecYields[iPt]                    = fYields;
-                fMesonTrueSecYieldsError[iPt]               = fYieldsError;
-                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
-                    
-                fFileDataLog<< endl <<"TrueSecTotal histo wide range  " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-                IntegrateHistoInvMassStream( fHistoMappingTrueSecMesonInvMassPtBins[iPt], fMesonTrueIntRangeWide);
-                fMesonTrueSecYieldsWide[iPt]                = fYields;
-                fMesonTrueSecYieldsWideError[iPt]           = fYieldsError;
-                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
-                    
-                fFileDataLog<< endl <<"TrueSecTotal histo narrow range " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-                IntegrateHistoInvMassStream( fHistoMappingTrueSecMesonInvMassPtBins[iPt], fMesonTrueIntRangeNarrow);
-                fMesonTrueSecYieldsNarrow[iPt]              = fYields;
-                fMesonTrueSecYieldsNarrowError[iPt]         = fYieldsError;
-                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
-
-                fFileDataLog<< endl <<"TrueSecK0s histo " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-                IntegrateHistoInvMassStream( fHistoMappingTrueSecFromK0SMesonInvMassPtBins[iPt], fMesonTrueIntRange);
-                fMesonTrueSecFromK0SYields[iPt]             = fYields;
-                fMesonTrueSecFromK0SYieldsError[iPt]        = fYieldsError;
-                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
-            
-                fFileDataLog<< endl <<"TrueSecK0s histo wide range " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-                IntegrateHistoInvMassStream( fHistoMappingTrueSecFromK0SMesonInvMassPtBins[iPt], fMesonTrueIntRangeWide);
-                fMesonTrueSecFromK0SYieldsWide[iPt]         = fYields;
-                fMesonTrueSecFromK0SYieldsWideError[iPt]    = fYieldsError;
-                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
-            
-                fFileDataLog<< endl <<"TrueSecK0s histo narrow range " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-                IntegrateHistoInvMassStream( fHistoMappingTrueSecFromK0SMesonInvMassPtBins[iPt], fMesonTrueIntRangeNarrow);
-                fMesonTrueSecFromK0SYieldsNarrow[iPt]       = fYields;
-                fMesonTrueSecFromK0SYieldsNarrowError[iPt]  = fYieldsError;
-                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
-                
-                fFileDataLog<< endl <<"TrueSecLambda histo " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-                IntegrateHistoInvMassStream( fHistoMappingTrueSecFromLambdaMesonInvMassPtBins[iPt], fMesonTrueIntRange);
-                fMesonTrueSecFromLambdaYields[iPt]          = fYields;
-                fMesonTrueSecFromLambdaYieldsError[iPt]     = fYieldsError;
-                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
-            
-                fFileDataLog<< endl <<"TrueSecLambda histo wide range " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-                IntegrateHistoInvMassStream( fHistoMappingTrueSecFromLambdaMesonInvMassPtBins[iPt], fMesonTrueIntRangeWide);
-                fMesonTrueSecFromLambdaYieldsWide[iPt]      = fYields;
-                fMesonTrueSecFromLambdaYieldsWideError[iPt] = fYieldsError;
-                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
-            
-                fFileDataLog<< endl <<"TrueSecLambda histo narrow range " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-                IntegrateHistoInvMassStream( fHistoMappingTrueSecFromLambdaMesonInvMassPtBins[iPt], fMesonTrueIntRangeNarrow);
-                fMesonTrueSecFromLambdaYieldsNarrow[iPt]        = fYields;
-                fMesonTrueSecFromLambdaYieldsNarrowError[iPt]   = fYieldsError;
-                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
+                for (Int_t j = 0; j < 4; j++){
+                    if (fHistoMappingTrueSecMesonInvMassPtBins[j][iPt]){
+                        for (Int_t k = 0; k < 3; k++){
+                            fFileDataLog<< endl <<"TrueSec " << nameSecondaries[j].Data() << " histo " << nameIntRange[k].Data() << ":\t" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
+                            IntegrateHistoInvMassStream( fHistoMappingTrueSecMesonInvMassPtBins[j][iPt], fMesonTrueIntRange[k]);
+                            fMesonTrueSecYields[k][j][iPt]              = fYields;
+                            fMesonTrueSecYieldsError[k][j][iPt]         = fYieldsError;
+                            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
+                        }    
+                    } else {
+                        for (Int_t k= 0; k< 3; k++){
+                            fMesonTrueSecYields[k][j][iPt]          = 0;
+                            fMesonTrueSecYieldsError[k][j][iPt]     = 0;
+                        }
+                    }    
+                }
             } else {
-                fMesonTrueSecFromK0SYields[iPt]                     = 0;
-                fMesonTrueSecFromK0SYieldsError[iPt]                = 0;
-                fMesonTrueSecFromK0SYieldsWide[iPt]                 = 0;
-                fMesonTrueSecFromK0SYieldsWideError[iPt]            = 0;
-                fMesonTrueSecFromK0SYieldsNarrow[iPt]               = 0;
-                fMesonTrueSecFromK0SYieldsNarrowError[iPt]          = 0;
-                fMesonTrueSecFromLambdaYields[iPt]                  = 0;
-                fMesonTrueSecFromLambdaYieldsError[iPt]             = 0;
-                fMesonTrueSecFromLambdaYieldsWide[iPt]              = 0;
-                fMesonTrueSecFromLambdaYieldsWideError[iPt]         = 0;
-                fMesonTrueSecFromLambdaYieldsNarrow[iPt]            = 0;
-                fMesonTrueSecFromLambdaYieldsNarrowError[iPt]       = 0;
+                for (Int_t j = 0; j < 4; j++){
+                    for (Int_t k= 0; k< 3; k++){
+                        fMesonTrueSecYields[k][j][iPt]              = 0;
+                        fMesonTrueSecYieldsError[k][j][iPt]         = 0;
+                    }
+                }    
             }
 
 
-            if( (fGGYields[iPt] - fMesonTrueYields[iPt]) > 0) {
-                fMesonTrueSB[iPt]               = fMesonTrueYields[iPt] / ( fGGYields[iPt] - fMesonTrueYields[iPt] );
-                fMesonTrueSign[iPt]             = fMesonTrueYields[iPt] / pow( ( fGGYields[iPt] - fMesonTrueYields[iPt] ) , 0.5);
+            if( (fGGYields[0][iPt] - fMesonTrueYields[0][iPt]) > 0) {
+                fMesonTrueSB[iPt]               = fMesonTrueYields[0][iPt] / ( fGGYields[0][iPt] - fMesonTrueYields[0][iPt] );
+                fMesonTrueSign[iPt]             = fMesonTrueYields[0][iPt] / pow( ( fGGYields[0][iPt] - fMesonTrueYields[0][iPt] ) , 0.5);
                 fMesonTrueSBError[iPt]          = 0;
                 fMesonTrueSignError[iPt]        = 0;
             }
@@ -1220,173 +1061,75 @@ void ExtractSignalV2(   TString meson                   = "",
                 fMesonTrueSignError[iPt]        = 0.;
             }
         }
-        fFileDataLog<< "Residual Background leftover norm integration/right norm in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" << fMesonYieldsResidualBckFunc[iPt] << "\t +- \t" << fMesonYieldsResidualBckFuncError[iPt] << endl<< endl;
         
-        /////////////////////// added to check yields //////////////////////////////////////////////////////////   
-        fTotalBckYields[iPt] = fBckYields[iPt] + fMesonYieldsResidualBckFunc[iPt];
-        fTotalBckYieldsError[iPt] = pow(fBckYieldsError[iPt]*fBckYieldsError[iPt] + fMesonYieldsResidualBckFuncError[iPt]*fMesonYieldsResidualBckFuncError[iPt],0.5);
-        fFileDataLog<< "Total Background norm integration/right norm in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" << fTotalBckYields[iPt] << "\t +- \t" << fTotalBckYieldsError[iPt] << endl<< endl;
-        fFileDataLog<< "Background norm integration/right norm in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" << fBckYields[iPt] << "\t +- \t" << fBckYieldsError[iPt] << endl<< endl;
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
-                
-        fMesonYieldsCorResidualBckFunc[iPt]         = fMesonYields[iPt]- fMesonYieldsResidualBckFunc[iPt];
-        fMesonYieldsCorResidualBckFuncError[iPt]    = pow(( fMesonYieldsError[iPt]*fMesonYieldsError[iPt] +
-                                                            fMesonYieldsResidualBckFuncError[iPt]*fMesonYieldsResidualBckFuncError[iPt]),0.5);
-        fMesonYieldsPerEvent[iPt]                   = fMesonYieldsCorResidualBckFunc[iPt]/fNEvents;
-        fMesonYieldsPerEventError[iPt]              = fMesonYieldsCorResidualBckFuncError[iPt]/fNEvents;
-        
-        //Integrate Fit Function
-        IntegrateFitFunc( fFitSignalPeakPosInvMassPtBin[iPt], fHistoMappingSignalInvMassPtBin[iPt], fMesonCurIntRange);
-        fMesonYieldsFunc[iPt]                       = fYieldsFunc;
+        for (Int_t k = 0; k < 3; k++){
+            if (k > 0){
+                fFileErrLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << nameIntRange[k].Data()<<  endl;
+                Double_t intRange[2]    = {0,0};
+                if (k == 1){
+                    intRange[0]         = fMesonIntDeltaRangeWide[0];
+                    intRange[1]         = fMesonIntDeltaRangeWide[1];
+                } else if ( k == 2){
+                    intRange[0]         = fMesonIntDeltaRangeNarrow[0];
+                    intRange[1]         = fMesonIntDeltaRangeNarrow[1];                    
+                }    
+                if(fCrysFitting==0){
+                    fFileErrLog << "Using exp fit"<<endl;
+                    FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], intRange, iPt, kFALSE);
+                    fMesonYieldsResidualBckFunc[k][iPt]         = fIntLinearBck;
+                    fMesonYieldsResidualBckFuncError[k][iPt]    = fIntLinearBckError;
+                } else {
+                    fMesonYieldsResidualBckFunc[k][iPt]         = 0;
+                    fMesonYieldsResidualBckFuncError[k][iPt]    = 0;
+                }
+            }
+            
+            fFileDataLog << "Residual Background leftover " << nameIntRange[k].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
+                         << fMesonYieldsResidualBckFunc[k][iPt] << "\t +- \t" << fMesonYieldsResidualBckFuncError[k][iPt] << endl<< endl;
+            
+            /////////////////////// added to check yields //////////////////////////////////////////////////////////   
+            fTotalBckYields[k][iPt]                         = fBckYields[k][iPt] + fMesonYieldsResidualBckFunc[k][iPt];
+            fTotalBckYieldsError[k][iPt]                    = pow(fBckYieldsError[k][iPt]*fBckYieldsError[k][iPt] + fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt],0.5);
+            fFileDataLog << "Total Background " << nameIntRange[k].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
+                         << fTotalBckYields[k][iPt] << "\t +- \t" << fTotalBckYieldsError[k][iPt] << endl<< endl;
+            fFileDataLog << "Background " << nameIntRange[k].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
+                         << fBckYields[k][iPt] << "\t +- \t" << fBckYieldsError[k][iPt] << endl<< endl;
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////
+                    
+            fMesonYieldsCorResidualBckFunc[k][iPt]          = fMesonYields[k][iPt]- fMesonYieldsResidualBckFunc[k][iPt];
+            fMesonYieldsCorResidualBckFuncError[k][iPt]     = pow(( fMesonYieldsError[k][iPt]*fMesonYieldsError[k][iPt] +
+                                                                fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt]),0.5);
+            fMesonYieldsPerEvent[k][iPt]                    = fMesonYieldsCorResidualBckFunc[k][iPt]/fNEvents;
+            fMesonYieldsPerEventError[k][iPt]               = fMesonYieldsCorResidualBckFuncError[k][iPt]/fNEvents;
+            
+            //Integrate Fit Function
+            IntegrateFitFunc( fFitSignalPeakPosInvMassPtBin[iPt], fHistoMappingSignalInvMassPtBin[iPt], fMesonCurIntRange[k]);
+            fMesonYieldsFunc[k][iPt]                        = fYieldsFunc;
 
-        //SB default
-        fMesonSBdefault[iPt]                        = fMesonYieldsCorResidualBckFunc[iPt]/fTotalBckYields[iPt];
-        fMesonSBdefaultError[iPt]                   = pow( pow(fMesonYieldsCorResidualBckFuncError[iPt]/fTotalBckYields[iPt], 2.) +
-                                                           pow((fTotalBckYieldsError[iPt]*fMesonYieldsCorResidualBckFunc[iPt])/(fTotalBckYields[iPt] *fTotalBckYields[iPt]), 2.), 0.5);
-        
-        //Significance default
-        fMesonSigndefault[iPt]                      = fMesonYieldsCorResidualBckFunc[iPt]/pow(fMesonYieldsCorResidualBckFunc[iPt] + fTotalBckYields[iPt],0.5);
-        Double_t a                                  = ( pow(fMesonYieldsCorResidualBckFunc[iPt] + fTotalBckYields[iPt], -0.5) -
-                                                        0.5*fMesonYieldsCorResidualBckFunc[iPt]*pow(fMesonYieldsCorResidualBckFunc[iPt] +
-                                                                                                    fTotalBckYields[iPt], -1.5) * fMesonYieldsCorResidualBckFuncError[iPt]);
-        Double_t b                                  = 0.5*fMesonYieldsCorResidualBckFunc[iPt]*pow(fMesonYieldsCorResidualBckFunc[iPt]
-                                                                                                  + fTotalBckYields[iPt],-1.5) * fTotalBckYieldsError[iPt];
-        fMesonSigndefaultError[iPt]                 = pow( a*a + b*b, 0.5);
+            //SB default
+            if (fTotalBckYields[k][iPt] != 0){
+                fMesonSBdefault[k][iPt]                     = fMesonYieldsCorResidualBckFunc[k][iPt]/fTotalBckYields[k][iPt];
+                fMesonSBdefaultError[k][iPt]                = pow( pow(fMesonYieldsCorResidualBckFuncError[k][iPt]/fTotalBckYields[k][iPt], 2.) +
+                                                            pow((fTotalBckYieldsError[k][iPt]*fMesonYieldsCorResidualBckFunc[k][iPt])/(fTotalBckYields[k][iPt] *fTotalBckYields[k][iPt]), 2.), 0.5);
+            } else {
+                fMesonSBdefault[k][iPt]         = 0.;
+                fMesonSBdefaultError[k][iPt]    = 0.;            
+            }    
+            //Significance default
+            if ( pow(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt],0.5) != 0){
+                fMesonSigndefault[k][iPt]                       = fMesonYieldsCorResidualBckFunc[k][iPt]/pow(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt],0.5);
+                Double_t a                                      = ( pow(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt], -0.5) -
+                                                                    0.5*fMesonYieldsCorResidualBckFunc[k][iPt]*pow(fMesonYieldsCorResidualBckFunc[k][iPt] +
+                                                                    fTotalBckYields[k][iPt], -1.5) * fMesonYieldsCorResidualBckFuncError[k][iPt]);
+                Double_t b                                      = 0.5*fMesonYieldsCorResidualBckFunc[k][iPt]*pow(fMesonYieldsCorResidualBckFunc[k][iPt]
+                                                                + fTotalBckYields[k][iPt],-1.5) * fTotalBckYieldsError[k][iPt];
+                fMesonSigndefaultError[k][iPt]                  = pow( a*a + b*b, 0.5);
+            } else {
+                fMesonSigndefault[k][iPt]       = 0.;
+                fMesonSigndefaultError[k][iPt]  = 0.;
+            }    
+        }    
 
-        
-        if( fFitBckInvMassPtBin[iPt]->Integral(fMesonMass[iPt]-fMesonFWHM[iPt], fMesonMass[iPt]+fFitSignalInvMassPtBin[iPt]->GetParameter(2))!=0){
-            Double_t background         = fFitBckInvMassPtBin[iPt]->Integral(fMesonMass[iPt]-fMesonFWHM[iPt], 
-                                                                    fMesonMass[iPt]+fFitSignalInvMassPtBin[iPt]->GetParameter(2));
-            Double_t backgroundErr      = fFitBckInvMassPtBin[iPt]->IntegralError(fMesonMass[iPt]-fMesonFWHM[iPt],
-                                                                    fMesonMass[iPt]+fFitSignalInvMassPtBin[iPt]->GetParameter(2),
-                                                                    fFitBckInvMassPtBin[iPt]->GetParameters(), NULL /* cov matrix */);
-            Double_t signal             = fFitSignalInvMassPtBin[iPt]->Integral(fMesonMass[iPt]-fMesonFWHM[iPt], 
-                                                                       fMesonMass[iPt]+fFitSignalInvMassPtBin[iPt]->GetParameter(2)) - background;
-            Double_t signalErr          = pow( pow(fFitSignalInvMassPtBin[iPt]->IntegralError(fMesonMass[iPt]-fMesonFWHM[iPt],
-                                                                                fMesonMass[iPt]+fFitSignalInvMassPtBin[iPt]->GetParameter(2),
-                                                                                fFitSignalInvMassPtBin[iPt]->GetParameters(),
-                                                                                NULL /* cov matrix */), 2) + pow(backgroundErr, 2), 0.5);
-            fMesonSB[iPt]               = signal/ background;
-            fMesonSBError[iPt]          = pow( pow(signalErr/background, 2.) + pow(signal*backgroundErr/(background*background), 2.) ,0.5);
-            fMesonSign[iPt]             = signal/ pow(background + signal,0.5);
-            fMesonSignError[iPt]        = pow(pow( (pow(background + signal, -0.5) - 0.5*signal*pow(background+signal, -1.5)) * signalErr, 2) + pow( 0.5*signal*backgroundErr*pow(signal+background, -1.5), 2), 0.5);
-        }else{
-            fMesonSB[iPt]               = 0.;
-            fMesonSBError[iPt]          = 0.;
-            fMesonSBdefault[iPt]        = 0.;
-            fMesonSBdefaultError[iPt]   = 0.;
-            fMesonSign[iPt]             = 0.;
-            fMesonSignError[iPt]        = 0.;
-            fMesonSigndefault[iPt]      = 0.;
-            fMesonSigndefaultError[iPt] = 0.;
-        }
-
-        //       cout<< "iPt"<< iPt<< " "<< "FWHM done"<<endl;
-
-        // Wide integration mass window
-        //       cout<< "iPt"<< iPt<< " "<< "wide range"<<endl;
-        fFileErrLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << "wide range/right normalization" << endl;
-
-        if(fCrysFitting==0){
-            fFileErrLog << "Using exp fit"<<endl;
-            FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], fMesonIntDeltaRangeWide,iPt,kFALSE);
-            fMesonYieldsResidualBckFuncWide[iPt]        = fIntLinearBck;
-            fMesonYieldsResidualBckFuncWideError[iPt]   = fIntLinearBckError;
-        } else {
-//           fFileErrLog << "Using Crystal Ball function"<<endl;
-            fMesonYieldsResidualBckFuncWide[iPt]        = 0;
-            fMesonYieldsResidualBckFuncWideError[iPt]   = 0;
-
-        }
-
-        fFileDataLog<< "Residual Background leftover wide integration/right norm in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" << fMesonYieldsResidualBckFuncWide[iPt] <<"\t +- \t" << fMesonYieldsResidualBckFuncWideError[iPt] <<endl<< endl;
-        fMesonYieldsCorResidualBckFuncWide[iPt]         = fMesonYieldsWide[iPt]- fMesonYieldsResidualBckFuncWide[iPt];
-
-        fTotalBckYieldsWide[iPt]                        = fBckYieldsWide[iPt] + fMesonYieldsResidualBckFuncWide[iPt];
-        fTotalBckYieldsWideError[iPt]                   = pow( fBckYieldsWideError[iPt]*fBckYieldsWideError[iPt] +
-                                                               fMesonYieldsResidualBckFuncWideError[iPt]*fMesonYieldsResidualBckFuncWideError[iPt],0.5);
-
-        fMesonYieldsCorResidualBckFuncWideError[iPt]    = pow((fMesonYieldsWideError[iPt]*fMesonYieldsWideError[iPt]+
-                                                               fMesonYieldsResidualBckFuncWideError[iPt]*fMesonYieldsResidualBckFuncWideError[iPt]),0.5);
-        fMesonYieldsPerEventWide[iPt]                   = fMesonYieldsCorResidualBckFuncWide[iPt]/fNEvents;
-        fMesonYieldsPerEventWideError[iPt]              = fMesonYieldsCorResidualBckFuncWideError[iPt]/fNEvents;
-
-        if( fTotalBckYieldsWide[iPt]!=0){
-            fMesonSBWide[iPt]           = fMesonYieldsCorResidualBckFuncWide[iPt]/fTotalBckYieldsWide[iPt];
-            fMesonSBWideError[iPt]      = pow(pow(fMesonYieldsCorResidualBckFuncWideError[iPt]/fTotalBckYieldsWide[iPt],2.)+pow(fMesonYieldsCorResidualBckFuncWide[iPt]/(fTotalBckYieldsWide[iPt]*fTotalBckYieldsWide[iPt])*fTotalBckYieldsWideError[iPt],2.) ,0.5);
-            fMesonSignWide[iPt]         = fMesonYieldsCorResidualBckFuncWide[iPt]/pow(fTotalBckYieldsWide[iPt],0.5);
-            fMesonSignWideError[iPt]    = pow(pow(fMesonYieldsCorResidualBckFuncWideError[iPt]/pow(fTotalBckYieldsWide[iPt],0.5),2.)+pow(0.5*fMesonYieldsCorResidualBckFuncWide[iPt]/pow(fTotalBckYieldsWide[iPt],1.5)*fTotalBckYieldsWideError[iPt],2.) ,0.5);
-
-        }else{
-            fMesonSBWide[iPt]           = 0.;
-            fMesonSBWideError[iPt]      = 0.;
-            fMesonSignWide[iPt]         = 0.;
-            fMesonSignWideError[iPt]    = 0.;
-        }
-
-
-        // Narrow integration mass window
-        fFileErrLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << "narrow range/right normalization" << endl; ;
-        //       cout<< "iPt"<< iPt<< " "<< "narrow range"<<endl;
-
-        if(fCrysFitting==0){
-            fFileErrLog << "Using exp fit"<<endl;
-            FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], fMesonIntDeltaRangeNarrow,iPt,kFALSE);
-            fMesonYieldsResidualBckFuncNarrow[iPt]          = fIntLinearBck;
-            fMesonYieldsResidualBckFuncNarrowError[iPt]     = fIntLinearBckError;
-
-        } else {
-//          fFileErrLog << "Using Crystal Ball function"<<endl;
-            fMesonYieldsResidualBckFuncNarrow[iPt]          = 0;
-            fMesonYieldsResidualBckFuncNarrowError[iPt]     = 0;
-
-        }
-
-        fFileDataLog<< "Residual Background leftover narrow integration/right norm in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" << fMesonYieldsResidualBckFuncNarrow[iPt] <<"\t +- \t" << fMesonYieldsResidualBckFuncNarrowError[iPt]<<endl<< endl;
-        fMesonYieldsCorResidualBckFuncNarrow[iPt]           = fMesonYieldsNarrow[iPt]- fMesonYieldsResidualBckFuncNarrow[iPt];
-        fMesonYieldsCorResidualBckFuncNarrowError[iPt]      = pow(( fMesonYieldsNarrowError[iPt]*fMesonYieldsNarrowError[iPt]+
-                                                                    fMesonYieldsResidualBckFuncNarrowError[iPt]*fMesonYieldsResidualBckFuncNarrowError[iPt]),0.5);
-        fMesonYieldsPerEventNarrow[iPt]                     = fMesonYieldsCorResidualBckFuncNarrow[iPt]/fNEvents;
-        fMesonYieldsPerEventNarrowError[iPt]                = fMesonYieldsCorResidualBckFuncNarrowError[iPt]/fNEvents;
-
-        fTotalBckYieldsNarrow[iPt]                          = fBckYieldsNarrow[iPt] + fMesonYieldsResidualBckFuncNarrow[iPt];
-        fTotalBckYieldsNarrowError[iPt]                     = pow(  fBckYieldsNarrowError[iPt]*fBckYieldsNarrowError[iPt] + 
-                                                                    fMesonYieldsResidualBckFuncNarrowError[iPt]*fMesonYieldsResidualBckFuncNarrowError[iPt],0.5);
-
-        //SB default Narrow
-        fMesonSBdefaultNarrow[iPt]                          = fMesonYieldsCorResidualBckFuncNarrow[iPt]/fTotalBckYieldsNarrow[iPt];
-        fMesonSBdefaultNarrowError[iPt]                     = pow( pow(fMesonYieldsCorResidualBckFuncNarrowError[iPt]/fTotalBckYieldsNarrow[iPt],2.) + 
-                                                                   pow((fTotalBckYieldsNarrowError[iPt]*fMesonYieldsCorResidualBckFuncNarrow[iPt])/
-                                                                   (fTotalBckYieldsNarrow[iPt] *fTotalBckYieldsNarrow[iPt] ),2.) ,0.5); 
-        
-        //Significance default Narrow
-        fMesonSigndefaultNarrow[iPt]                        = fMesonYieldsCorResidualBckFuncNarrow[iPt]/pow(fMesonYieldsCorResidualBckFuncNarrow[iPt] + fTotalBckYieldsNarrow[iPt],0.5);
-        Double_t aNarrow                                    = pow( ( pow(fMesonYieldsCorResidualBckFuncNarrow[iPt] + fTotalBckYieldsNarrow[iPt],-0.5) - 
-                                                                     0.5*fMesonYieldsCorResidualBckFuncNarrow[iPt]*pow(fMesonYieldsCorResidualBckFuncNarrow[iPt] + 
-                                                                     fTotalBckYieldsNarrow[iPt],-1.5)/(fMesonYieldsCorResidualBckFuncNarrow[iPt] + fTotalBckYieldsNarrow[iPt]) )
-                                                                   *fMesonYieldsCorResidualBckFuncNarrowError[iPt] ,2);
-        Double_t bNarrow                                    = pow( (fMesonSigndefaultNarrow[iPt])*(0.5*fTotalBckYieldsNarrowError[iPt]* 
-                                                                    pow(fMesonYieldsCorResidualBckFuncNarrow[iPt] + fTotalBckYieldsNarrow[iPt],-1.5))  ,2.);
-        fMesonSigndefaultNarrowError[iPt]                   = pow( aNarrow + bNarrow ,0.5); 
-
-        
-        if( fTotalBckYieldsNarrow[iPt]!=0){
-            fMesonSBNarrow[iPt]                 = fMesonYieldsCorResidualBckFuncNarrow[iPt]/fTotalBckYieldsNarrow[iPt];
-            fMesonSBNarrowError[iPt]            = pow(pow(fMesonYieldsCorResidualBckFuncNarrowError[iPt]/fTotalBckYieldsNarrow[iPt],2.) + 
-                                                      pow(fMesonYieldsCorResidualBckFuncNarrow[iPt]/(fTotalBckYieldsNarrow[iPt]*fTotalBckYieldsNarrow[iPt])*fTotalBckYieldsNarrowError[iPt],2.) ,0.5);
-            fMesonSignNarrow[iPt]               = fMesonYieldsCorResidualBckFuncNarrow[iPt]/pow(fTotalBckYieldsNarrow[iPt],0.5);
-            fMesonSignNarrowError[iPt]          = pow(pow(fMesonYieldsCorResidualBckFuncNarrowError[iPt]/pow(fTotalBckYieldsNarrow[iPt],0.5),2.) + 
-                                                      pow(0.5*fMesonYieldsCorResidualBckFuncNarrow[iPt]/pow(fTotalBckYieldsNarrow[iPt],1.5)*fTotalBckYieldsNarrowError[iPt],2.) ,0.5);
-        } else {
-            fMesonSBNarrow[iPt]                 = 0.;
-            fMesonSBNarrowError[iPt]            = 0.;
-            fMesonSignNarrow[iPt]               = 0.;
-            fMesonSignNarrowError[iPt]          = 0.;
-            fMesonSigndefaultNarrow[iPt]        = 0.;
-            fMesonSigndefaultNarrowError[iPt]   = 0.;
-            fMesonSBdefaultNarrow[iPt]          = 0.;
-            fMesonSBdefaultNarrowError[iPt]     = 0.;
-        }
 
         //////////////////////////////// Start Analysis with  Normalization at the left of the Meson Peak
         // Function to subtract GG minus Bck
@@ -1408,8 +1151,8 @@ void ExtractSignalV2(   TString meson                   = "",
             fFitInvMassLeftPtBin[iPt]                               = fFitReco;
             fFitSignalPeakPosInvMassLeftPtBin[iPt]                  = fFitGausExp;
             fFitBckInvMassLeftPtBin[iPt]                            = fFitLinearBck;
-            fMesonYieldsResidualBckFuncLeft[iPt]                    = fIntLinearBck;
-            fMesonYieldsResidualBckFuncLeftError[iPt]               = fIntLinearBckError;
+            fMesonYieldsResidualBckFunc[3][iPt]                     = fIntLinearBck;
+            fMesonYieldsResidualBckFuncError[3][iPt]                = fIntLinearBckError;
         } else {
             fFileErrLog << "Using Crystal Ball function"<<endl;
             FitCBSubtractedInvMassInPtBins(fHistoMappingSignalInvMassLeftPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE, Form("CBFitFuncLeftBin%02d",iPt),kFALSE);
@@ -1420,8 +1163,8 @@ void ExtractSignalV2(   TString meson                   = "",
             fFitInvMassLeftPtBin[iPt]                               = fFitReco;
             fFitSignalPeakPosInvMassLeftPtBin[iPt]                  = fFitGausExp;
             fFitBckInvMassLeftPtBin[iPt]                            = fFitLinearBck;
-            fMesonYieldsResidualBckFuncLeft[iPt]                    = 0;
-            fMesonYieldsResidualBckFuncLeftError[iPt]               = 0;
+            fMesonYieldsResidualBckFunc[3][iPt]                     = 0;
+            fMesonYieldsResidualBckFuncError[3][iPt]                = 0;
 
         }
         CalculateFWHM(fFitInvMassLeftPtBin[iPt]);
@@ -1431,203 +1174,98 @@ void ExtractSignalV2(   TString meson                   = "",
         if (fFitInvMassLeftPtBin[iPt] !=0x00){
             fMesonMassLeft[iPt]             = fFitInvMassLeftPtBin[iPt]->GetParameter(1);
             fMesonMassLeftError[iPt]        = fFitInvMassLeftPtBin[iPt]->GetParError(1);
-            fMesonCurLeftIntRange[0]        = fMesonMassLeft[iPt] + fMesonIntDeltaRange[0];
-            fMesonCurLeftIntRangeWide[0]    = fMesonMassLeft[iPt] + fMesonIntDeltaRangeWide[0];
-            fMesonCurLeftIntRangeNarrow[0]  = fMesonMassLeft[iPt] + fMesonIntDeltaRangeNarrow[0];
-            fMesonCurLeftIntRange[1]        = fMesonMassLeft[iPt] + fMesonIntDeltaRange[1];
-            fMesonCurLeftIntRangeWide[1]    = fMesonMassLeft[iPt] + fMesonIntDeltaRangeWide[1];
-            fMesonCurLeftIntRangeNarrow[1]  = fMesonMassLeft[iPt] + fMesonIntDeltaRangeNarrow[1];
+            fMesonCurIntRange[3][0]         = fMesonMassLeft[iPt] + fMesonIntDeltaRange[0];
+            fMesonCurIntRange[4][0]         = fMesonMassLeft[iPt] + fMesonIntDeltaRangeWide[0];
+            fMesonCurIntRange[5][0]         = fMesonMassLeft[iPt] + fMesonIntDeltaRangeNarrow[0];
+            fMesonCurIntRange[3][1]         = fMesonMassLeft[iPt] + fMesonIntDeltaRange[1];
+            fMesonCurIntRange[4][1]         = fMesonMassLeft[iPt] + fMesonIntDeltaRangeWide[1];
+            fMesonCurIntRange[5][1]         = fMesonMassLeft[iPt] + fMesonIntDeltaRangeNarrow[1];
         } else {
             fMesonMassLeft[iPt]             = 0.;
             fMesonMassLeftError[iPt]        = 0.;
-            fMesonCurLeftIntRange[0]        = fMesonMassExpect + fMesonIntDeltaRange[0];
-            fMesonCurLeftIntRangeWide[0]    = fMesonMassExpect + fMesonIntDeltaRangeWide[0];
-            fMesonCurLeftIntRangeNarrow[0]  = fMesonMassExpect + fMesonIntDeltaRangeNarrow[0];
-            fMesonCurLeftIntRange[1]        = fMesonMassExpect + fMesonIntDeltaRange[1];
-            fMesonCurLeftIntRangeWide[1]    = fMesonMassExpect + fMesonIntDeltaRangeWide[1];
-            fMesonCurLeftIntRangeNarrow[1]  = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
+            fMesonCurIntRange[3][0]         = fMesonMassExpect + fMesonIntDeltaRange[0];
+            fMesonCurIntRange[4][0]         = fMesonMassExpect + fMesonIntDeltaRangeWide[0];
+            fMesonCurIntRange[5][0]         = fMesonMassExpect + fMesonIntDeltaRangeNarrow[0];
+            fMesonCurIntRange[3][1]         = fMesonMassExpect + fMesonIntDeltaRange[1];
+            fMesonCurIntRange[4][1]         = fMesonMassExpect + fMesonIntDeltaRangeWide[1];
+            fMesonCurIntRange[5][1]         = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
         }
 
         // Integrate the bck histo
-        if (fCrysFitting ==0){
-            IntegrateHistoInvMass( fHistoMappingBackNormInvMassLeftPtBin[iPt], fMesonCurLeftIntRange);
-            fBckYieldsLeft[iPt]                 = fYields;
-            fBckYieldsLeftError[iPt]            = fYieldsError;
-            IntegrateHistoInvMass( fHistoMappingBackNormInvMassLeftPtBin[iPt], fMesonCurLeftIntRangeWide);
-            fBckYieldsLeftWide[iPt]             = fYields;
-            fBckYieldsLeftWideError[iPt]        = fYieldsError;
-            IntegrateHistoInvMass( fHistoMappingBackNormInvMassLeftPtBin[iPt], fMesonCurLeftIntRangeNarrow);
-            fBckYieldsLeftNarrow[iPt]           = fYields;
-            fBckYieldsLeftNarrowError[iPt]      = fYieldsError;
+        if (fCrysFitting == 0){
+            for (Int_t k = 0; k < 3; k++){
+                IntegrateHistoInvMass( fHistoMappingBackNormInvMassLeftPtBin[iPt], fMesonCurIntRange[k+3]);
+                fBckYields[k+3][iPt]              = fYields;
+                fBckYieldsError[k+3][iPt]         = fYieldsError;
 
-            // Integrate the signal histo
-            fFileDataLog<< endl <<"Signal histo normal range, left norm " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-            IntegrateHistoInvMassStream( fHistoMappingSignalInvMassLeftPtBin[iPt], fMesonCurLeftIntRange);
-            fMesonYieldsLeft[iPt]               = fYields;
-            fMesonYieldsLeftError[iPt]          = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
-            fFileDataLog<< endl <<"Signal histo wide range, left norm " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-            IntegrateHistoInvMassStream( fHistoMappingSignalInvMassLeftPtBin[iPt], fMesonCurLeftIntRangeWide);
-            fMesonYieldsLeftWide[iPt]           = fYields;
-            fMesonYieldsLeftWideError[iPt]      = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
-            fFileDataLog<< endl <<"Signal histo narrow range, left norm " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-            IntegrateHistoInvMassStream( fHistoMappingSignalInvMassLeftPtBin[iPt], fMesonCurLeftIntRangeNarrow);
-            fMesonYieldsLeftNarrow[iPt]         = fYields;
-            fMesonYieldsLeftNarrowError[iPt]    = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
+                fFileDataLog<< endl <<"Signal histo " << nameIntRange[k+3].Data() << ":\t" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
+                IntegrateHistoInvMassStream( fHistoMappingSignalInvMassLeftPtBin[iPt], fMesonCurIntRange[k+3]);
+                fMesonYields[k+3][iPt]            = fYields;
+                fMesonYieldsError[k+3][iPt]       = fYieldsError;
+                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
+                
+            }
         } else {
-            fHistoMappingBackNormInvMassLeftPtBin[iPt]->Sumw2();
-            fHistoMappingBackNormInvMassLeftPtBin[iPt]->Add(fHistoMappingRemainingBGInvMassLeftPtBin[iPt],1);
-            IntegrateHistoInvMass( fHistoMappingBackNormInvMassLeftPtBin[iPt], fMesonCurLeftIntRange);
-            fBckYieldsLeft[iPt]                 = fYields;
-            fBckYieldsLeftError[iPt]            = fYieldsError;
-            IntegrateHistoInvMass( fHistoMappingBackNormInvMassLeftPtBin[iPt], fMesonCurLeftIntRangeWide);
-            fBckYieldsLeftWide[iPt]             = fYields;
-            fBckYieldsLeftWideError[iPt]        = fYieldsError;
-            IntegrateHistoInvMass( fHistoMappingBackNormInvMassLeftPtBin[iPt], fMesonCurLeftIntRangeNarrow);
-            fBckYieldsLeftNarrow[iPt]           = fYields;
-            fBckYieldsLeftNarrowError[iPt]      = fYieldsError;
+            for (Int_t k = 0; k < 3; k++){
+                if (k == 0){
+                    fHistoMappingBackNormInvMassLeftPtBin[iPt]->Sumw2();
+                    fHistoMappingBackNormInvMassLeftPtBin[iPt]->Add(fHistoMappingRemainingBGInvMassLeftPtBin[iPt],1);                    
+                }    
+                IntegrateHistoInvMass( fHistoMappingBackNormInvMassLeftPtBin[iPt], fMesonCurIntRange[k+3]);
+                fBckYields[k+3][iPt]              = fYields;
+                fBckYieldsError[k+3][iPt]         = fYieldsError;
 
-            // Integrate the signal histo
-            fFileDataLog<< endl <<"Signal histo normal range, left norm " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-            IntegrateHistoInvMassStream( fHistoMappingSignalRemainingBGSubInvMassLeftPtBin[iPt], fMesonCurLeftIntRange);
-            fMesonYieldsLeft[iPt]               = fYields;
-            fMesonYieldsLeftError[iPt]          = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
-            fFileDataLog<< endl <<"Signal histo wide range, left norm " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-            IntegrateHistoInvMassStream( fHistoMappingSignalRemainingBGSubInvMassLeftPtBin[iPt], fMesonCurLeftIntRangeWide);
-            fMesonYieldsLeftWide[iPt]           = fYields;
-            fMesonYieldsLeftWideError[iPt]      = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
-            fFileDataLog<< endl <<"Signal histo narrow range, left norm " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-            IntegrateHistoInvMassStream( fHistoMappingSignalRemainingBGSubInvMassLeftPtBin[iPt], fMesonCurLeftIntRangeNarrow);
-            fMesonYieldsLeftNarrow[iPt]         = fYields;
-            fMesonYieldsLeftNarrowError[iPt]    = fYieldsError;
-            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
-        }
-        fFileDataLog<< "Residual Background leftover norm integration/left norm in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" << fMesonYieldsResidualBckFuncLeft[iPt] << "\t +- \t" <<
-        fMesonYieldsResidualBckFuncLeftError[iPt]<<endl<< endl;
-        fMesonYieldsCorResidualBckFuncLeft[iPt]         = fMesonYieldsLeft[iPt]- fMesonYieldsResidualBckFuncLeft[iPt];
-        fMesonYieldsCorResidualBckFuncLeftError[iPt]    = pow( ( fMesonYieldsLeftError[iPt] * fMesonYieldsLeftError[iPt] + fMesonYieldsResidualBckFuncLeftError[iPt] *
-                                                                 fMesonYieldsResidualBckFuncLeftError[iPt]), 0.5);
-        fMesonYieldsLeftPerEvent[iPt]                   = fMesonYieldsCorResidualBckFuncLeft[iPt]/fNEvents;
-        fMesonYieldsLeftPerEventError[iPt]              = fMesonYieldsCorResidualBckFuncLeftError[iPt]/fNEvents;
-
-        fTotalBckYieldsLeft[iPt]                        = fBckYieldsLeft[iPt] + fMesonYieldsResidualBckFuncLeft[iPt];
-        fTotalBckYieldsLeftError[iPt]                   = pow( fBckYieldsLeftError[iPt] * fBckYieldsLeftError[iPt] + fMesonYieldsResidualBckFuncLeftError[iPt] * 
-                                                               fMesonYieldsResidualBckFuncLeftError[iPt], 0.5);
-
-        //Integrate Fit Function
-        IntegrateFitFunc( fFitSignalPeakPosInvMassLeftPtBin[iPt], fHistoMappingSignalInvMassLeftPtBin[iPt], fMesonCurLeftIntRange);
-        fMesonYieldsFuncLeft[iPt]                       = fYieldsFunc;
-
-        //GetFWHM
-        
-        if( fFitBckInvMassLeftPtBin[iPt]->Integral(fMesonMassLeft[iPt]-fMesonFWHMLeft[iPt], fMesonMassLeft[iPt]+fFitInvMassLeftPtBin[iPt]->GetParameter(2))!=0){
-            Double_t background         = fFitBckInvMassLeftPtBin[iPt]->Integral( fMesonMassLeft[iPt]-fMesonFWHMLeft[iPt], fMesonMassLeft[iPt]+fFitInvMassLeftPtBin[iPt]->GetParameter(2));
-            Double_t backgroundErr      = fFitBckInvMassLeftPtBin[iPt]->IntegralError(fMesonMassLeft[iPt]-fMesonFWHMLeft[iPt], fMesonMassLeft[iPt]+fFitInvMassLeftPtBin[iPt]->GetParameter(2));
-            Double_t signal             = fFitInvMassLeftPtBin[iPt]->Integral(fMesonMassLeft[iPt]-fMesonFWHMLeft[iPt], fMesonMassLeft[iPt]+fFitInvMassLeftPtBin[iPt]->GetParameter(2)) - background;
-            Double_t signalErr          = pow( pow(fFitInvMassLeftPtBin[iPt]->IntegralError(fMesonMassLeft[iPt]-fMesonFWHMLeft[iPt], 
-                                                                                            fMesonMassLeft[iPt]+fFitInvMassLeftPtBin[iPt]->GetParameter(2)),2 )+ pow(backgroundErr,2),0.5);
-            fMesonSBLeft[iPt]           = signal/ background;
-            fMesonSBLeftError[iPt]      = pow( pow(signalErr/background,2.)+pow(signal/(background *background )*backgroundErr ,2.) ,0.5); 
-            fMesonSignLeft[iPt]         = signal/ pow(background + signal,0.5);
-            fMesonSignLeftError[iPt]    = pow(pow( (pow(background + signal ,0.5) - 0.5*signal*pow(background+signal,-0.5))/(background+signal) * signalErr ,2) 
-                                                    + pow( 0.5*pow(signal+background,-1.5),2) ,0.5); 
-        }else{
-            fMesonSBLeft[iPt]           = 0.;
-            fMesonSBLeftError[iPt]      = 0.;
-            fMesonSignLeft[iPt]         = 0.;
-            fMesonSignLeftError[iPt]    = 0.;
+                fFileDataLog<< endl <<"Signal histo " << nameIntRange[k+3].Data() << ":\t" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
+                IntegrateHistoInvMassStream( fHistoMappingSignalRemainingBGSubInvMassLeftPtBin[iPt], fMesonCurIntRange[k+3]);
+                fMesonYields[k+3][iPt]            = fYields;
+                fMesonYieldsError[k+3][iPt]       = fYieldsError;
+                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
+                
+            }    
         }
 
-        // Wide integration mass window
-        //       cout<< "iPt"<< iPt<< " "<< "wide range"<<endl;
-        fFileErrLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << "wide range/left normalization" << endl;
-
-        if(fCrysFitting==0){
-            fFileErrLog << "Using exp fit"<<endl;
-            FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassLeftPtBin[iPt], fMesonIntDeltaRangeWide,iPt,kFALSE);
-            fMesonYieldsResidualBckFuncLeftWide[iPt]        = fIntLinearBck;
-            fMesonYieldsResidualBckFuncLeftWideError[iPt]   = fIntLinearBckError;
-
-        } else {
-//           fFileErrLog << "Using Crystal Ball function"<<endl;
-            fMesonYieldsResidualBckFuncLeftWide[iPt]       = 0;
-            fMesonYieldsResidualBckFuncLeftWideError[iPt]    = 0;
-        }
-
-        fFileDataLog<< "Residual Background leftover wide integration/left norm in iPt " << fBinsPt[iPt] << "-" << fBinsPt[iPt+1] << ":\t" << fMesonYieldsResidualBckFuncLeftWide[iPt] << "\t +- \t" 
-        << fMesonYieldsResidualBckFuncLeftWideError[iPt] <<endl<< endl;
-        fMesonYieldsCorResidualBckFuncLeftWide[iPt]         = fMesonYieldsLeftWide[iPt]- fMesonYieldsResidualBckFuncLeftWide[iPt];
-        fMesonYieldsCorResidualBckFuncLeftWideError[iPt]    = pow( ( fMesonYieldsLeftWideError[iPt] * fMesonYieldsLeftWideError[iPt] + fMesonYieldsResidualBckFuncLeftWideError[iPt] *
-                                                                     fMesonYieldsResidualBckFuncLeftWideError[iPt]), 0.5);
-        fMesonYieldsLeftPerEventWide[iPt]                   = fMesonYieldsCorResidualBckFuncLeftWide[iPt]/fNEvents;
-        fMesonYieldsLeftPerEventWideError[iPt]              = fMesonYieldsCorResidualBckFuncLeftWideError[iPt]/fNEvents;
-
-        fTotalBckYieldsLeftWide[iPt]                        = fBckYieldsLeftWide[iPt] + fMesonYieldsResidualBckFuncLeftWide[iPt];
-        fTotalBckYieldsLeftWideError[iPt]                   = pow( fBckYieldsLeftWideError[iPt]*fBckYieldsLeftWideError[iPt] + fMesonYieldsResidualBckFuncLeftWideError[iPt] *
-                                                                   fMesonYieldsResidualBckFuncLeftWideError[iPt], 0.5);
-
-
-        if( fTotalBckYieldsLeftWide[iPt]!=0){
-            fMesonSBLeftWide[iPt]               = fMesonYieldsCorResidualBckFuncLeftWide[iPt]/fTotalBckYieldsLeftWide[iPt];
-            fMesonSBLeftWideError[iPt]          = pow( pow( fMesonYieldsCorResidualBckFuncLeftWideError[iPt] / fTotalBckYieldsLeftWide[iPt], 2.) + pow( fMesonYieldsCorResidualBckFuncLeftWide[iPt] /
-                                                    ( fTotalBckYieldsLeftWide[iPt] * fTotalBckYieldsLeftWide[iPt]) * fTotalBckYieldsLeftWideError[iPt], 2.) ,0.5);
-            fMesonSignLeftWide[iPt]             = fMesonYieldsCorResidualBckFuncLeftWide[iPt]/pow(fTotalBckYieldsLeftWide[iPt],0.5);
-            fMesonSignLeftWideError[iPt]        = pow( pow( fMesonYieldsCorResidualBckFuncLeftWideError[iPt] / pow( fTotalBckYieldsLeftWide[iPt], 0.5), 2.) + pow( 0.5 *
-                                                    fMesonYieldsCorResidualBckFuncLeftWide[iPt] / pow( fTotalBckYieldsLeftWide[iPt], 1.5) * fTotalBckYieldsLeftWideError[iPt], 2.) ,0.5);
-        }else{
-            fMesonSBLeftWide[iPt]               = 0.;
-            fMesonSBLeftWideError[iPt]          = 0.;
-            fMesonSignLeftWide[iPt]             = 0.;
-            fMesonSignLeftWideError[iPt]        = 0.;
-        }
-
-
-        // Narrow integration mass window
-        fFileErrLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << "narrow range/left normalization" << endl;
-
-        if(fCrysFitting==0){
-            fFileErrLog << "Using exp fit"<<endl;
-            FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassLeftPtBin[iPt], fMesonIntDeltaRangeNarrow,iPt,kFALSE);
-            fMesonYieldsResidualBckFuncLeftNarrow[iPt]          = fIntLinearBck;
-            fMesonYieldsResidualBckFuncLeftNarrowError[iPt]     = fIntLinearBckError;
-
-        } else {
-            fMesonYieldsResidualBckFuncLeftNarrow[iPt]          = 0;
-            fMesonYieldsResidualBckFuncLeftNarrowError[iPt]     = 0;
-        }
-        
-        //FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassLeftPtBin[iPt],fMesonIntDeltaRangeNarrow,iPt,kFALSE);
-        fFileDataLog<< "Residual Background leftover narrow integration/left norm in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" << fMesonYieldsResidualBckFuncLeftNarrow[iPt] 
-        << "\t +- \t" << fMesonYieldsResidualBckFuncLeftNarrowError[iPt] << endl << endl;
-        fMesonYieldsCorResidualBckFuncLeftNarrow[iPt]       = fMesonYieldsLeftNarrow[iPt]- fMesonYieldsResidualBckFuncLeftNarrow[iPt];
-        fMesonYieldsCorResidualBckFuncLeftNarrowError[iPt]  = pow( ( fMesonYieldsLeftNarrowError[iPt] * fMesonYieldsLeftNarrowError[iPt] + fMesonYieldsResidualBckFuncLeftNarrowError[iPt] * 
-                                                            fMesonYieldsResidualBckFuncLeftNarrowError[iPt]), 0.5);
-        fMesonYieldsLeftPerEventNarrow[iPt]                 = fMesonYieldsCorResidualBckFuncLeftNarrow[iPt]/fNEvents;
-        fMesonYieldsLeftPerEventNarrowError[iPt]            = fMesonYieldsCorResidualBckFuncLeftNarrowError[iPt]/fNEvents;
-
-        fTotalBckYieldsLeftNarrow[iPt]                      = fBckYieldsLeftNarrow[iPt] + fMesonYieldsResidualBckFuncLeftNarrow[iPt];
-        fTotalBckYieldsLeftNarrowError[iPt]                 = pow( fBckYieldsLeftNarrowError[iPt]*fBckYieldsLeftNarrowError[iPt] + fMesonYieldsResidualBckFuncLeftNarrowError[iPt] * 
-                                                            fMesonYieldsResidualBckFuncLeftNarrowError[iPt], 0.5);
-
-        if( fTotalBckYieldsLeftNarrow[iPt]!=0){
-            fMesonSBLeftNarrow[iPt]         = fMesonYieldsCorResidualBckFuncLeftNarrow[iPt]/fTotalBckYieldsLeftNarrow[iPt];
-            fMesonSBLeftNarrowError[iPt]    = pow( pow( fMesonYieldsCorResidualBckFuncLeftNarrowError[iPt] / fTotalBckYieldsLeftNarrow[iPt], 2.) + pow(
-                                            fMesonYieldsCorResidualBckFuncLeftNarrow[iPt]/ (fTotalBckYieldsLeftNarrow[iPt] * fTotalBckYieldsLeftNarrow[iPt]) * fTotalBckYieldsLeftNarrowError[iPt],
-                                            2.), 0.5);
-            fMesonSignLeftNarrow[iPt]       = fMesonYieldsCorResidualBckFuncLeftNarrow[iPt]/pow(fTotalBckYieldsLeftNarrow[iPt],0.5);
-            fMesonSignLeftNarrowError[iPt]  = pow( pow( fMesonYieldsCorResidualBckFuncLeftNarrowError[iPt] / pow( fTotalBckYieldsLeftNarrow[iPt] , 0.5), 2.) + pow( 0.5 *
-                                            fMesonYieldsCorResidualBckFuncLeftNarrow[iPt] / pow( fTotalBckYieldsLeftNarrow[iPt], 1.5) * fTotalBckYieldsLeftNarrowError[iPt], 2.) ,0.5);
-        }else{
-            fMesonSBLeftNarrow[iPt]         = 0.;
-            fMesonSBLeftNarrowError[iPt]    = 0.;
-            fMesonSignLeftNarrow[iPt]       = 0.;
-            fMesonSignLeftNarrowError[iPt]  = 0.;
-        }
-
+        for (Int_t k = 0; k < 3; k++){
+            if (k > 0){
+                fFileErrLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << nameIntRange[k+3].Data()<<  endl;
+                Double_t intRange[2]    = {0,0};
+                if (k == 1){
+                    intRange[0]         = fMesonIntDeltaRangeWide[0];
+                    intRange[1]         = fMesonIntDeltaRangeWide[1];
+                } else if ( k == 2){
+                    intRange[0]         = fMesonIntDeltaRangeNarrow[0];
+                    intRange[1]         = fMesonIntDeltaRangeNarrow[1];                    
+                }    
+                if(fCrysFitting==0){
+                    fFileErrLog << "Using exp fit"<<endl;
+                    FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassLeftPtBin[iPt], intRange, iPt, kFALSE);
+                    fMesonYieldsResidualBckFunc[k+3][iPt]         = fIntLinearBck;
+                    fMesonYieldsResidualBckFuncError[k+3][iPt]    = fIntLinearBckError;
+                } else {
+                    fMesonYieldsResidualBckFunc[k+3][iPt]         = 0;
+                    fMesonYieldsResidualBckFuncError[k+3][iPt]    = 0;
+                }
+            }
+            
+            fFileDataLog << "Residual Background leftover " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
+                         << fMesonYieldsResidualBckFunc[k+3][iPt] << "\t +- \t" << fMesonYieldsResidualBckFuncError[k+3][iPt] << endl<< endl;
+            
+            fTotalBckYields[k+3][iPt]                       = fBckYields[k+3][iPt] + fMesonYieldsResidualBckFunc[k+3][iPt];
+            fTotalBckYieldsError[k+3][iPt]                  = pow(fBckYieldsError[k+3][iPt]*fBckYieldsError[k+3][iPt] + fMesonYieldsResidualBckFuncError[k+3][iPt]*fMesonYieldsResidualBckFuncError[k+3][iPt],0.5);
+            fFileDataLog << "Total Background " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
+                         << fTotalBckYields[k+3][iPt] << "\t +- \t" << fTotalBckYieldsError[k+3][iPt] << endl<< endl;
+            fFileDataLog << "Background " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
+                         << fBckYields[k+3][iPt] << "\t +- \t" << fBckYieldsError[k+3][iPt] << endl<< endl;
+                    
+            fMesonYieldsCorResidualBckFunc[k+3][iPt]        = fMesonYields[k+3][iPt]- fMesonYieldsResidualBckFunc[k+3][iPt];
+            fMesonYieldsCorResidualBckFuncError[k+3][iPt]   = pow(( fMesonYieldsError[k+3][iPt]*fMesonYieldsError[k+3][iPt] +
+                                                                    fMesonYieldsResidualBckFuncError[k+3][iPt]*fMesonYieldsResidualBckFuncError[k+3][iPt]),0.5);
+            fMesonYieldsPerEvent[k+3][iPt]                  = fMesonYieldsCorResidualBckFunc[k+3][iPt]/fNEvents;
+            fMesonYieldsPerEventError[k+3][iPt]             = fMesonYieldsCorResidualBckFuncError[k+3][iPt]/fNEvents;
+            
+            //Integrate Fit Function
+            IntegrateFitFunc( fFitSignalPeakPosInvMassLeftPtBin[iPt], fHistoMappingSignalInvMassLeftPtBin[iPt], fMesonCurIntRange[k+3]);
+            fMesonYieldsFunc[k+3][iPt]                      = fYieldsFunc;
+        }    
     }
 
     //******************** Data OUTPUTFILE ***************************************************
@@ -1639,9 +1277,10 @@ void ExtractSignalV2(   TString meson                   = "",
     fileSysErrDat << "fGGYields" << endl;
     fileSysErrDat << "Bin \t Right \t Right Wide \t Right Narr" << endl;
     for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
-        fileSysErrDat << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << fGGYields[iPt] << "+-" << fGGYieldsError[iPt] << "\t" <<
-            fGGYieldsWide[iPt] << "+-" << fGGYieldsWideError[iPt] << "\t" <<
-            fGGYieldsNarrow[iPt] << "+-" << fGGYieldsNarrowError[iPt] << endl;
+        fileSysErrDat << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << 
+            fGGYields[0][iPt] << "+-" << fGGYieldsError[0][iPt] << "\t" <<
+            fGGYields[1][iPt] << "+-" << fGGYieldsError[1][iPt] << "\t" <<
+            fGGYields[2][iPt] << "+-" << fGGYieldsError[2][iPt] << endl;
 
     }
     fileSysErrDat <<  endl;
@@ -1649,24 +1288,24 @@ void ExtractSignalV2(   TString meson                   = "",
     fileSysErrDat << "Bin \t Right \t Right Wide \t Right Narr \t Left \t Left Wide \t Left Narr" << endl;
     for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
         fileSysErrDat << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" <<
-            fTotalBckYields[iPt] << "+-" << fTotalBckYieldsError[iPt] << "\t" <<
-            fTotalBckYieldsWide[iPt] << "+-" << fTotalBckYieldsWideError[iPt] << "\t" <<
-            fTotalBckYieldsNarrow[iPt] << "+-" << fTotalBckYieldsNarrowError[iPt] << "\t" <<
-            fTotalBckYieldsLeft[iPt] << "+-" << fTotalBckYieldsLeftError[iPt]<< "\t" <<
-            fTotalBckYieldsLeftWide[iPt]<< "+-" << fTotalBckYieldsLeftWideError[iPt]<< "\t" <<
-            fTotalBckYieldsLeftNarrow[iPt]<< "+-" << fTotalBckYieldsLeftNarrowError[iPt] << endl;
+            fTotalBckYields[0][iPt] << "+-" << fTotalBckYieldsError[0][iPt] << "\t" <<
+            fTotalBckYields[1][iPt] << "+-" << fTotalBckYieldsError[1][iPt] << "\t" <<
+            fTotalBckYields[2][iPt] << "+-" << fTotalBckYieldsError[2][iPt] << "\t" <<
+            fTotalBckYields[3][iPt] << "+-" << fTotalBckYieldsError[3][iPt]<< "\t" <<
+            fTotalBckYields[4][iPt] << "+-" << fTotalBckYieldsError[4][iPt]<< "\t" <<
+            fTotalBckYields[5][iPt] << "+-" << fTotalBckYieldsError[5][iPt] << endl;
     }
     fileSysErrDat <<  endl;
     fileSysErrDat << "fMesonYields" << endl;
     fileSysErrDat << "Bin \t Right \t Right Wide \t Right Narr \t Left \t Left Wide \t Left Narr" << endl;
     for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
         fileSysErrDat << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" <<
-            fMesonYieldsCorResidualBckFunc[iPt] << "+-" << fMesonYieldsCorResidualBckFuncError[iPt] << "\t" <<
-            fMesonYieldsCorResidualBckFuncWide[iPt] << "+-" << fMesonYieldsCorResidualBckFuncWideError[iPt] << "\t" <<
-            fMesonYieldsCorResidualBckFuncNarrow[iPt] << "+-" << fMesonYieldsCorResidualBckFuncNarrowError[iPt] << "\t" <<
-            fMesonYieldsCorResidualBckFuncLeft[iPt]<< "+-" << fMesonYieldsCorResidualBckFuncLeftError[iPt]<< "\t" <<
-            fMesonYieldsCorResidualBckFuncLeftWide[iPt]<< "+-" << fMesonYieldsCorResidualBckFuncLeftWideError[iPt]<< "\t" <<
-            fMesonYieldsCorResidualBckFuncLeftNarrow[iPt]<< "+-" << fMesonYieldsCorResidualBckFuncLeftNarrowError[iPt] << endl;
+            fMesonYieldsCorResidualBckFunc[0][iPt] << "+-" << fMesonYieldsCorResidualBckFuncError[0][iPt] << "\t" <<
+            fMesonYieldsCorResidualBckFunc[1][iPt] << "+-" << fMesonYieldsCorResidualBckFuncError[1][iPt] << "\t" <<
+            fMesonYieldsCorResidualBckFunc[2][iPt] << "+-" << fMesonYieldsCorResidualBckFuncError[2][iPt] << "\t" <<
+            fMesonYieldsCorResidualBckFunc[3][iPt] << "+-" << fMesonYieldsCorResidualBckFuncError[3][iPt]<< "\t" <<
+            fMesonYieldsCorResidualBckFunc[4][iPt] << "+-" << fMesonYieldsCorResidualBckFuncError[4][iPt]<< "\t" <<
+            fMesonYieldsCorResidualBckFunc[5][iPt] << "+-" << fMesonYieldsCorResidualBckFuncError[5][iPt] << endl;
     }
     if(fIsMC){
         fileSysErrDat <<  endl;
@@ -1674,9 +1313,9 @@ void ExtractSignalV2(   TString meson                   = "",
         fileSysErrDat << "Bin \t True \t True Wide \t True Narr " << endl;
         for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
             fileSysErrDat << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" <<
-                fMesonTrueYields[iPt] << "\t" <<
-                fMesonTrueYieldsWide[iPt] << "\t" <<
-                fMesonTrueYieldsNarrow[iPt] << endl;
+                fMesonTrueYields[0][iPt] << "\t" <<
+                fMesonTrueYields[1][iPt] << "\t" <<
+                fMesonTrueYields[2][iPt] << endl;
         }
     }
     fileSysErrDat.close();
@@ -1813,7 +1452,7 @@ void ExtractSignalV2(   TString meson                   = "",
             nameCanvasTrue      = "TrueMesonCanvasSec";
             namePadTrue         = "TrueMesonPadSec";
             cout << nameMesonTrue.Data() << endl;
-            PlotInvMassSecondaryInPtBins( fHistoMappingTrueMesonInvMassPtBins, fHistoMappingTrueSecMesonInvMassPtBins, fHistoMappingTrueSecFromK0SMesonInvMassPtBins, nameMesonTrue, nameCanvasTrue,
+            PlotInvMassSecondaryInPtBins( fHistoMappingTrueMesonInvMassPtBins, fHistoMappingTrueSecMesonInvMassPtBins[3], fHistoMappingTrueSecMesonInvMassPtBins[1], nameMesonTrue, nameCanvasTrue,
                                         namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
                                         fCollisionSystem);
         }
@@ -1912,55 +1551,6 @@ void ExtractSignalV2(   TString meson                   = "",
 
     CreatePtHistos();
     FillPtHistos();
-
-    ///************************ Plotting fit control plot ************************///
-    ///*********************** Mass integration windows
-    TCanvas* canvasMassWindows = new TCanvas("canvasMassWindows","",1550,1200);  // gives the page size
-    canvasMassWindows->SetTickx();
-    canvasMassWindows->SetTicky();
-
-    DrawGammaSetMarker(fHistoMassWindowLow, 20, 2., kBlack, kBlack);
-    if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
-        DrawAutoGammaMesonHistos( fHistoMassWindowLow, 
-                                "", "p_{T} (GeV/c)", Form("Mass (GeV/c^{2})"), 
-                                kFALSE, 3.,0.,  kFALSE,
-                                kTRUE, 0.,0.3, 
-                                kFALSE, 0., 10.);
-    } else {
-        DrawAutoGammaMesonHistos( fHistoMassWindowLow, 
-                                "", "p_{T} (GeV/c)", Form("Mass (GeV/c^{2})"), 
-                                kFALSE, 3.,0.,  kFALSE,
-                                kTRUE, 0.3,0.7, 
-                                kFALSE, 0., 10.);
-    }
-    fHistoMassWindowLow->DrawCopy("hist");
-    DrawGammaSetMarker(fHistoMassWindowHigh, 20, 2., kBlack, kBlack);
-    fHistoMassWindowHigh->SetLineColor(kBlack);
-    fHistoMassWindowHigh->DrawCopy("same,hist");
-    DrawGammaSetMarker(fHistoMassWindowWideLow, 20, 2., kGreen+2, kGreen+2);
-    fHistoMassWindowWideLow->DrawCopy("same,hist");
-    DrawGammaSetMarker(fHistoMassWindowWideHigh, 20, 2., kGreen+2, kGreen+2);
-    fHistoMassWindowWideHigh->DrawCopy("same,hist");
-    DrawGammaSetMarker(fHistoMassWindowNarrowLow, 20, 2., kBlue+2, kBlue+2);
-    fHistoMassWindowNarrowLow->DrawCopy("same,hist");
-    DrawGammaSetMarker(fHistoMassWindowNarrowHigh, 20, 2., kBlue+2, kBlue+2);
-    fHistoMassWindowNarrowHigh->DrawCopy("same,hist");
-    
-    canvasMassWindows->Update();
-    
-    TLegend* legendMassWindows = new TLegend(0.15,0.8,0.4,0.95);
-    legendMassWindows->SetFillColor(0);
-    legendMassWindows->SetLineColor(0);
-    legendMassWindows->SetTextSize(0.04);
-    legendMassWindows->AddEntry(fHistoMassWindowLow,Form("Standard mass window for %s",fPrefix.Data()),"l");
-    legendMassWindows->AddEntry(fHistoMassWindowWideLow,"Wide mass window","l");
-    legendMassWindows->AddEntry(fHistoMassWindowNarrowLow, "Narrow mass window","l");
-    legendMassWindows->Draw();
-
-    if (fIsMC) canvasMassWindows->SaveAs(Form("%s/%s_MC_MassWindows_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
-    else canvasMassWindows->SaveAs(Form("%s/%s_data_MassWindows_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
-    
-    
     
     ///*********************** Lambda tail
     TCanvas* canvasLambdaTail = new TCanvas("canvasLambdaTail","",1550,1200);  // gives the page size
@@ -2072,106 +1662,63 @@ void ExtractSignalV2(   TString meson                   = "",
         if (fHistoMCMesonPtWithinAcceptanceWOWeights) CalculateMesonAcceptanceWOWeights();
         if (fHistoMCMesonPtWithinAcceptanceWOEvtWeights) CalculateMesonAcceptanceWOEvtWeights();
 
+        if (fNewMCOutput){
+            FillMCSecondaryHistAndCalculateAcceptance(fHistoMCSecPi0SourcePt, fHistoMCSecPi0WAccSourcePt);
+        }    
+        
         // calculate pure rec efficiency as in data with fully unweighted histograms if possible
         // ATTENTION: if unweighted histograms are not available this efficiency should not be used for anything!!!!
-        fNameHistoEffi="MesonEffiPt";
-        cout << fNameHistoEffi.Data() << endl;
-        if (fHistoMCMesonPtWithinAcceptanceWOWeights) CalculateMesonEfficiencyWOWeights(fHistoYieldMeson, fHistoYieldTrueSecMeson, fNameHistoEffi);
-            else CalculateMesonEfficiency(fHistoYieldMeson, fHistoYieldTrueSecMeson, fNameHistoEffi);
-        fHistoMonteMesonEffiPt = fHistoMCMesonEffiPt;
-        fNameHistoEffi="MesonWideEffiPt";
-        cout << fNameHistoEffi.Data() << endl;
-        if (fHistoMCMesonPtWithinAcceptanceWOWeights) CalculateMesonEfficiencyWOWeights(fHistoYieldMesonWide, fHistoYieldTrueSecMesonWide, fNameHistoEffi);
-            else CalculateMesonEfficiency(fHistoYieldMesonWide, fHistoYieldTrueSecMesonWide, fNameHistoEffi);
-        fHistoMonteMesonWideEffiPt = fHistoMCMesonEffiPt;
-        fNameHistoEffi="MesonNarrowEffiPt";
-        cout << fNameHistoEffi.Data() << endl;
-        if (fHistoMCMesonPtWithinAcceptanceWOWeights) CalculateMesonEfficiencyWOWeights(fHistoYieldMesonNarrow, fHistoYieldTrueSecMesonNarrow, fNameHistoEffi);
-            else CalculateMesonEfficiency(fHistoYieldMesonNarrow, fHistoYieldTrueSecMesonNarrow, fNameHistoEffi);
-        fHistoMonteMesonNarrowEffiPt = fHistoMCMesonEffiPt;
-        fNameHistoEffi="MesonLeftEffiPt";
-        cout << fNameHistoEffi.Data() << endl;
-        if (fHistoMCMesonPtWithinAcceptanceWOWeights) CalculateMesonEfficiencyWOWeights(fHistoYieldMesonLeft,fHistoYieldTrueSecMeson,fNameHistoEffi);
-            else CalculateMesonEfficiency(fHistoYieldMesonLeft,fHistoYieldTrueSecMeson,fNameHistoEffi);
-        fHistoMonteMesonLeftEffiPt = fHistoMCMesonEffiPt;
-        fNameHistoEffi="MesonLeftNarrowEffiPt";
-        cout << fNameHistoEffi.Data() << endl;
-        if (fHistoMCMesonPtWithinAcceptanceWOWeights) CalculateMesonEfficiencyWOWeights(fHistoYieldMesonLeftNarrow,fHistoYieldTrueSecMesonNarrow,fNameHistoEffi);
-            else CalculateMesonEfficiency(fHistoYieldMesonLeftNarrow,fHistoYieldTrueSecMesonNarrow,fNameHistoEffi);
-        fHistoMonteMesonLeftNarrowEffiPt = fHistoMCMesonEffiPt;
-        fNameHistoEffi="MesonLeftWideEffiPt";
-        cout << fNameHistoEffi.Data() << endl;
-        if (fHistoMCMesonPtWithinAcceptanceWOWeights) CalculateMesonEfficiencyWOWeights(fHistoYieldMesonLeftWide,fHistoYieldTrueSecMesonWide,fNameHistoEffi);
-            else CalculateMesonEfficiency(fHistoYieldMesonLeftWide,fHistoYieldTrueSecMesonWide,fNameHistoEffi);
-        fHistoMonteMesonLeftWideEffiPt = fHistoMCMesonEffiPt;
         
-        // True meson efficiencies for fully unweighted MC, to be compared to MesonEffiPt if those have been created with unweighted histograms
-        fNameHistoEffi="TrueMesonEffiPtUnweighted";
-        if (fHistoMCMesonPtWithinAcceptanceWOWeights) CalculateMesonEfficiencyWOWeights(fHistoYieldTrueMesonUnweighted,NULL,fNameHistoEffi);
-        fHistoMCTrueMesonEffiPtUnweighted = fHistoMCMesonEffiPt; 
-        fNameHistoEffi="TrueMesonWideEffiPtUnweighted";
-        if (fHistoMCMesonPtWithinAcceptanceWOWeights) CalculateMesonEfficiencyWOWeights(fHistoYieldTrueMesonUnweightedWide,NULL,fNameHistoEffi);
-        fHistoMCTrueMesonWideEffiPtUnweighted = fHistoMCMesonEffiPt; 
-        fNameHistoEffi="TrueMesonNarrowEffiPtUnweighted";
-        if (fHistoMCMesonPtWithinAcceptanceWOWeights) CalculateMesonEfficiencyWOWeights(fHistoYieldTrueMesonUnweightedNarrow,NULL,fNameHistoEffi);
-        fHistoMCTrueMesonNarrowEffiPtUnweighted = fHistoMCMesonEffiPt; 
+        for (Int_t k = 0; k < 3; k++){
+            fNameHistoEffi                      = Form("Meson%sEffiPt",nameIntRange[k].Data());
+            cout << fNameHistoEffi.Data() << endl;
+            if (fHistoMCMesonPtWithinAcceptanceWOWeights) 
+                fHistoMonteMesonEffiPt[k]       = CalculateMesonEfficiencyWOWeights(fHistoYieldMeson[k], fHistoYieldTrueSecMeson[k], fNameHistoEffi);
+            else 
+                fHistoMonteMesonEffiPt[k]       = CalculateMesonEfficiency(fHistoYieldMeson[k], fHistoYieldTrueSecMeson[k], fNameHistoEffi);
+            
+            fNameHistoEffi                      = Form("Meson%sEffiPt",nameIntRange[k+3].Data());
+            cout << fNameHistoEffi.Data() << endl;
+            if (fHistoMCMesonPtWithinAcceptanceWOWeights) 
+                fHistoMonteMesonEffiPt[k+3]       = CalculateMesonEfficiencyWOWeights(fHistoYieldMeson[k+3], fHistoYieldTrueSecMeson[k], fNameHistoEffi);
+            else 
+                fHistoMonteMesonEffiPt[k+3]       = CalculateMesonEfficiency(fHistoYieldMeson[k+3], fHistoYieldTrueSecMeson[k], fNameHistoEffi);
+        }    
         
-        // True meson efficiencies with possibly fully weighted inputs on a meson by meson basis in the aliphysics task, should always be used if you start weighting the MC
-        // True Meson (only once case, because no normalization)
-        fNameHistoEffi="TrueMesonEffiPt";
-        cout << fNameHistoEffi.Data() << endl;
-        CalculateMesonEfficiency(fHistoYieldTrueMeson,NULL,fNameHistoEffi);
-        fHistoMCTrueMesonEffiPt = fHistoMCMesonEffiPt; 
-        fNameHistoEffi="TrueMesonWideEffiPt";
-        cout << fNameHistoEffi.Data() << endl;
-        CalculateMesonEfficiency(fHistoYieldTrueMesonWide,NULL,fNameHistoEffi);
-        fHistoMCTrueMesonWideEffiPt = fHistoMCMesonEffiPt;
-        fNameHistoEffi="TrueMesonNarrowEffiPt";
-        cout << fNameHistoEffi.Data() << endl;
-        CalculateMesonEfficiency(fHistoYieldTrueMesonNarrow,NULL,fNameHistoEffi);
-        fHistoMCTrueMesonNarrowEffiPt = fHistoMCMesonEffiPt;
+        for (Int_t k = 0; k < 3; k++){
+            // True meson efficiencies for fully unweighted MC, to be compared to MesonEffiPt if those have been created with unweighted histograms
+            fNameHistoEffi                          = Form("TrueMeson%sEffiPtUnweighted",nameIntRange[k].Data());
+            cout << fNameHistoEffi.Data() << endl;
+            if (fHistoMCMesonPtWithinAcceptanceWOWeights)
+                fHistoMCTrueMesonEffiPtUnweighted[k]= CalculateMesonEfficiencyWOWeights(fHistoYieldTrueMesonUnweighted[k],NULL,fNameHistoEffi);
+            
+            // True meson efficiencies with possibly fully weighted inputs on a meson by meson basis in the aliphysics task, should always be used if you start weighting the MC
+            // True Meson (only once case, because no normalization)
+            fNameHistoEffi                          = Form("TrueMeson%sEffiPt",nameIntRange[k].Data());
+            cout << fNameHistoEffi.Data() << endl;
+            fHistoMCTrueMesonEffiPt[k]              = CalculateMesonEfficiency(fHistoYieldTrueMeson[k],NULL,fNameHistoEffi);
+            
 
-        // True meson efficiencies with possibly fully weighted inputs taking the average weight per inv mass bin in the original binning of the TrueMesonInvMass vs pT plot
-        // should give on average the same as TrueMesonEffiPt
-        fNameHistoEffi="TrueMesonEffiPtReweighted";
-        cout << fNameHistoEffi.Data() << endl;
-        CalculateMesonEfficiency(fHistoYieldTrueMesonReweighted,NULL,fNameHistoEffi);
-        fHistoMCTrueMesonEffiPtReweighted = fHistoMCMesonEffiPt; 
-        fNameHistoEffi="TrueMesonWideEffiPtReweighted";
-        cout << fNameHistoEffi.Data() << endl;
-        CalculateMesonEfficiency(fHistoYieldTrueMesonReweightedWide,NULL,fNameHistoEffi);
-        fHistoMCTrueMesonWideEffiPtReweighted = fHistoMCMesonEffiPt;
-        fNameHistoEffi="TrueMesonNarrowEffiPtReweighted";
-        cout << fNameHistoEffi.Data() << endl;
-        CalculateMesonEfficiency(fHistoYieldTrueMesonReweightedNarrow,NULL,fNameHistoEffi);
-        fHistoMCTrueMesonNarrowEffiPtReweighted = fHistoMCMesonEffiPt;
-
+            // True meson efficiencies with possibly fully weighted inputs taking the average weight per inv mass bin in the original binning of the TrueMesonInvMass vs pT plot
+            // should give on average the same as TrueMesonEffiPt
+            fNameHistoEffi                          = Form("TrueMeson%sEffiPtReweighted",nameIntRange[k].Data());
+            cout << fNameHistoEffi.Data() << endl;
+            fHistoMCTrueMesonEffiPtReweighted[k]    = CalculateMesonEfficiency(fHistoYieldTrueMesonReweighted[k],NULL,fNameHistoEffi);
+        }
+            
         // Calculation of secondary fractions using unweighted histograms, as secondaries are never weighted
-        fNameHistoFrac="TrueSecFrac";
-        TH1D* fHistoYieldTrueMesonSecPlusPrim = (TH1D*)fHistoYieldTrueMesonUnweighted->Clone("fHistoYieldTrueMesonSecPlusPrim");
-        fHistoYieldTrueMesonSecPlusPrim->Add(fHistoYieldTrueSecMeson);
-        fHistoYieldTrueSecFracMeson= CalculateSecondaryFractions(fHistoYieldTrueMesonSecPlusPrim, fHistoYieldTrueSecMeson, fNameHistoFrac);
-        fNameHistoFrac="TrueSecFracFromK0S";
-        fHistoYieldTrueSecFracFromK0SMeson= CalculateSecondaryFractions(fHistoYieldTrueMesonSecPlusPrim, fHistoYieldTrueSecFromK0SMeson, fNameHistoFrac);
-        fNameHistoFrac="TrueSecFracFromLambda";
-        fHistoYieldTrueSecFracFromLambdaMeson= CalculateSecondaryFractions(fHistoYieldTrueMesonSecPlusPrim, fHistoYieldTrueSecFromLambdaMeson, fNameHistoFrac);
-        fNameHistoFrac="TrueSecFracNarrow";
-        TH1D* fHistoYieldTrueMesonSecPlusPrimNarrow = (TH1D*)fHistoYieldTrueMesonUnweightedNarrow->Clone("fHistoYieldTrueMesonSecPlusPrimNarrow");
-        fHistoYieldTrueMesonSecPlusPrimNarrow->Add(fHistoYieldTrueSecMesonNarrow);
-        fHistoYieldTrueSecFracMesonNarrow= CalculateSecondaryFractions(fHistoYieldTrueMesonSecPlusPrimNarrow, fHistoYieldTrueSecMesonNarrow, fNameHistoFrac);
-        fNameHistoFrac="TrueSecFracFromK0SNarrow";
-        fHistoYieldTrueSecFracFromK0SMesonNarrow= CalculateSecondaryFractions(fHistoYieldTrueMesonSecPlusPrimNarrow, fHistoYieldTrueSecFromK0SMesonNarrow, fNameHistoFrac);
-        fNameHistoFrac="TrueSecFracFromLambdaNarrow";
-        fHistoYieldTrueSecFracFromLambdaMesonNarrow= CalculateSecondaryFractions(fHistoYieldTrueMesonSecPlusPrimNarrow, fHistoYieldTrueSecFromLambdaMesonNarrow, fNameHistoFrac);
-        fNameHistoFrac="TrueSecFracWide";
-        TH1D* fHistoYieldTrueMesonSecPlusPrimWide = (TH1D*)fHistoYieldTrueMesonUnweightedWide->Clone("fHistoYieldTrueMesonSecPlusPrimWide");
-        fHistoYieldTrueMesonSecPlusPrimWide->Add(fHistoYieldTrueSecMesonWide);
-        fHistoYieldTrueSecFracMesonWide= CalculateSecondaryFractions(fHistoYieldTrueMesonSecPlusPrimWide, fHistoYieldTrueSecMesonWide, fNameHistoFrac);
-        fNameHistoFrac="TrueSecFracFromK0SWide";
-        fHistoYieldTrueSecFracFromK0SMesonWide= CalculateSecondaryFractions(fHistoYieldTrueMesonSecPlusPrimWide, fHistoYieldTrueSecFromK0SMesonWide, fNameHistoFrac);
-        fNameHistoFrac="TrueSecFracFromLambdaWide";
-        fHistoYieldTrueSecFracFromLambdaMesonWide= CalculateSecondaryFractions(fHistoYieldTrueMesonSecPlusPrimWide, fHistoYieldTrueSecFromLambdaMesonWide, fNameHistoFrac);
-
+        TH1D* fHistoYieldTrueMesonSecPlusPrim[3];
+        for (Int_t k = 0; k < 3; k++){
+            fHistoYieldTrueMesonSecPlusPrim[k]          = (TH1D*)fHistoYieldTrueMesonUnweighted[k]->Clone(Form("fHistoYieldTrueMesonSecPlusPrim%s",nameIntRange[k].Data()));
+            for (Int_t j = 0; j< 4; j++){
+                fHistoYieldTrueMesonSecPlusPrim[k]->Add(fHistoYieldTrueSecMeson[k][j]);
+            }    
+            for (Int_t j = 0; j< 4; j++){
+                fHistoYieldTrueSecFracMeson[k][j]       = CalculateSecondaryFractions( fHistoYieldTrueMesonSecPlusPrim[k], fHistoYieldTrueSecMeson[k][j],
+                                                                                       Form("TrueSecFrom%sFrac%s",nameSecondaries[j].Data(),nameIntRange[k].Data()));
+            }    
+        }
+        
         SaveCorrectionHistos(fCutSelection, fPrefix2);
     }
     SaveHistos(fIsMC, fCutSelection, fPrefix2, UseTHnSparse);
@@ -2696,7 +2243,6 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fMesonFitRange[0]       = 0.05; 
             fMesonFitRange[1]       = 0.25; 
         }
-        //      fMesonFitRangeWithoutPeak = new Double_t[2]; fMesonFitRangeWithoutPeak[0] = 0.05; fMesonFitRangeWithoutPeak[0] = 0.3;
         fMesonId                    = 111;
         fMesonWidthExpect           = 0.003;
         fMesonLambdaTail            = 0.012;
@@ -3009,31 +2555,67 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fFullPt[0]              = 0.4;
     fFullPt[1]              = 15.;
 
-    fMesonCurIntRange                                               = new Double_t[2];
-    fMesonCurIntRangeWide                                           = new Double_t[2];
-    fMesonCurIntRangeNarrow                                         = new Double_t[2];
-    fMesonCurLeftIntRange                                           = new Double_t[2];
-    fMesonCurLeftIntRangeWide                                       = new Double_t[2];
-    fMesonCurLeftIntRangeNarrow                                     = new Double_t[2];
-    fMesonTrueIntRange                                              = new Double_t[2];
-    fMesonTrueIntRangeWide                                          = new Double_t[2];
-    fMesonTrueIntRangeNarrow                                        = new Double_t[2];
-    fMesonTrueIntReweightedRange                                    = new Double_t[2];
-    fMesonTrueIntReweightedRangeWide                                = new Double_t[2];
-    fMesonTrueIntReweightedRangeNarrow                              = new Double_t[2];
-    fMesonTrueIntUnweightedRange                                    = new Double_t[2];
-    fMesonTrueIntUnweightedRangeWide                                = new Double_t[2];
-    fMesonTrueIntUnweightedRangeNarrow                              = new Double_t[2];
-
-    fGGYields                                                       = new Double_t[fNBinsPt];
-    fBckYields                                                      = new Double_t[fNBinsPt];
-    fTotalBckYields                                                 = new Double_t[fNBinsPt];
-    fMesonYields                                                    = new Double_t[fNBinsPt];
-    fMesonTrueYields                                                = new Double_t[fNBinsPt];
-    fMesonTrueYieldsDC                                              = new Double_t[fNBinsPt];
-    fMesonTrueYieldsReweighted                                      = new Double_t[fNBinsPt];
-    fMesonTrueYieldsUnweighted                                      = new Double_t[fNBinsPt];
+    // initialize integration array for integration windows: normal, wide, narrow, left, left wide, left narrow
+    for (Int_t k = 0; k < 6; k++){
+        fMesonCurIntRange[k]                                        = new Double_t[2];
+    }    
     
+    // initialize integration pt-arrays for integration windows: normal, wide, narrow, left, left wide, left narrow
+    for (Int_t k = 0; k < 6; k++){
+        // Initialize yield arrays
+        fGGYields[k]                                                = new Double_t[fNBinsPt];
+        fBckYields[k]                                               = new Double_t[fNBinsPt];
+        fTotalBckYields[k]                                          = new Double_t[fNBinsPt];
+        fMesonYields[k]                                             = new Double_t[fNBinsPt];
+        fMesonYieldsFunc[k]                                         = new Double_t[fNBinsPt];
+        fMesonYieldsResidualBckFunc[k]                              = new Double_t[fNBinsPt];
+        fMesonYieldsCorResidualBckFunc[k]                           = new Double_t[fNBinsPt];
+        fMesonYieldsPerEvent[k]                                     = new Double_t[fNBinsPt];
+        
+        // Initialize error arrays
+        fGGYieldsError[k]                                           = new Double_t[fNBinsPt];
+        fBckYieldsError[k]                                          = new Double_t[fNBinsPt];
+        fTotalBckYieldsError[k]                                     = new Double_t[fNBinsPt];
+        fMesonYieldsError[k]                                        = new Double_t[fNBinsPt];
+        fMesonYieldsFuncError[k]                                    = new Double_t[fNBinsPt];
+        fMesonYieldsResidualBckFuncError[k]                         = new Double_t[fNBinsPt];
+        fMesonYieldsCorResidualBckFuncError[k]                      = new Double_t[fNBinsPt];
+        fMesonYieldsPerEventError[k]                                = new Double_t[fNBinsPt];
+    }    
+    
+    // initialize variable for different integration windows: normal, wide, narrow
+    for (Int_t k = 0; k < 3; k++ ){
+        // initialize pt arrays for integration ranges
+        fMesonTrueIntRange[k]                                        = new Double_t[2];
+        fMesonTrueIntReweightedRange[k]                              = new Double_t[2];
+        fMesonTrueIntUnweightedRange[k]                              = new Double_t[2];
+        // initialize pt arrays for mass windows
+        fMassWindowHigh[k]                                           = new Double_t[fNBinsPt];
+        fMassWindowLow[k]                                            = new Double_t[fNBinsPt];
+        // initialize pt arrays for S/B & Significance
+        fMesonSBdefault[k]                                           = new Double_t[fNBinsPt];
+        fMesonSigndefault[k]                                         = new Double_t[fNBinsPt];
+        fMesonSBdefaultError[k]                                      = new Double_t[fNBinsPt];
+        fMesonSigndefaultError[k]                                    = new Double_t[fNBinsPt];
+    
+        // initialize pt arrays for reconstructed validated yields
+        fMesonTrueYields[k]                                          = new Double_t[fNBinsPt];
+        fMesonTrueYieldsReweighted[k]                                = new Double_t[fNBinsPt];
+        fMesonTrueYieldsUnweighted[k]                                = new Double_t[fNBinsPt];
+        fMesonTrueYieldsError[k]                                     = new Double_t[fNBinsPt];
+        fMesonTrueYieldsReweightedError[k]                           = new Double_t[fNBinsPt];
+        fMesonTrueYieldsUnweightedError[k]                           = new Double_t[fNBinsPt];
+    
+        // initialize pt arrays for reconstructed validated yields from secondaries
+        for (Int_t j = 0; j < 4; j++){
+            fMesonTrueSecYields[k][j]                               = new Double_t[fNBinsPt];
+            fMesonTrueSecYieldsError[k][j]                          = new Double_t[fNBinsPt];
+        }
+    }
+    
+    // initialize pt arrays for additional yields in different fixed windows
+    fMesonTrueYieldsDC                                              = new Double_t[fNBinsPt];
+    fMesonTrueYieldsDCError                                         = new Double_t[fNBinsPt];
     fMesonTrueYieldFixedWindow                                      = new Double_t[fNBinsPt];
     fMesonTrueYieldGammaFixedWindow                                 = new Double_t[fNBinsPt];
     fMesonTrueYieldGammaConvGammaFixedWindow                        = new Double_t[fNBinsPt];
@@ -3043,39 +2625,30 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fMesonTrueYieldGammaConvGammaErrorFixedWindow                   = new Double_t[fNBinsPt];
     fMesonTrueYieldConvGammaConvGammaErrorFixedWindow               = new Double_t[fNBinsPt];
 
-    fMesonTrueSecYields                                             = new Double_t[fNBinsPt];
-    fMesonTrueSecFromK0SYields                                      = new Double_t[fNBinsPt];
-    fMesonTrueSecFromLambdaYields                                   = new Double_t[fNBinsPt];
-    fMesonYieldsFunc                                                = new Double_t[fNBinsPt];
-    fMesonYieldsResidualBckFunc                                     = new Double_t[fNBinsPt];
-    fMesonYieldsCorResidualBckFunc                                  = new Double_t[fNBinsPt];
-    fMesonYieldsPerEvent                                            = new Double_t[fNBinsPt];
-    fMesonMass                                                      = new Double_t[fNBinsPt];
+    
+    
     fMesonLambdaTailpar                                             = new Double_t[fNBinsPt];
     fMesonLambdaTailparError                                        = new Double_t[fNBinsPt];
     fMesonLambdaTailMCpar                                           = new Double_t[fNBinsPt];
     fMesonLambdaTailMCparError                                      = new Double_t[fNBinsPt];
-    fMesonSB                                                        = new Double_t[fNBinsPt];
-    fMesonSBdefault                                                 = new Double_t[fNBinsPt];
-    fMesonSign                                                      = new Double_t[fNBinsPt];
-    fMesonSigndefault                                               = new Double_t[fNBinsPt];
-    fMassWindowHigh                                                 = new Double_t[fNBinsPt];
-    fMassWindowLow                                                   = new Double_t[fNBinsPt];
-    fMassWindowWideHigh                                             = new Double_t[fNBinsPt];
-    fMassWindowWideLow                                              = new Double_t[fNBinsPt];
-    fMassWindowNarrowHigh                                           = new Double_t[fNBinsPt];
-    fMassWindowNarrowLow                                            = new Double_t[fNBinsPt];
+    
+    // initialize pt-arrays for different mass & width fitting procedures
+    fMesonMass                                                      = new Double_t[fNBinsPt];
+    fMesonMassError                                                 = new Double_t[fNBinsPt];
     fMesonFWHM                                                      = new Double_t[fNBinsPt];
-    fMesonFWHMAlpha01                                               = new Double_t[fNBinsPt];
+    fMesonFWHMError                                                 = new Double_t[fNBinsPt];
     fMesonTrueMass                                                  = new Double_t[fNBinsPt];
     fMesonTrueMassReweighted                                        = new Double_t[fNBinsPt];
     fMesonTrueMassUnweighted                                        = new Double_t[fNBinsPt];
     fMesonTrueFWHM                                                  = new Double_t[fNBinsPt];
     fMesonTrueFWHMReweighted                                        = new Double_t[fNBinsPt];
     fMesonTrueFWHMUnweighted                                        = new Double_t[fNBinsPt];
-    fMesonTrueSB                                                    = new Double_t[fNBinsPt];
-    fMesonTrueSign                                                  = new Double_t[fNBinsPt];
-    
+    fMesonTrueMassError                                             = new Double_t[fNBinsPt];
+    fMesonTrueMassReweightedError                                   = new Double_t[fNBinsPt];
+    fMesonTrueMassUnweightedError                                   = new Double_t[fNBinsPt];
+    fMesonTrueFWHMError                                             = new Double_t[fNBinsPt];
+    fMesonTrueFWHMReweightedError                                   = new Double_t[fNBinsPt];
+    fMesonTrueFWHMUnweightedError                                   = new Double_t[fNBinsPt];
     fMesonTrueMassCaloPhoton                                        = new Double_t[fNBinsPt];
     fMesonTrueMassCaloElectron                                      = new Double_t[fNBinsPt];
     fMesonTrueMassCaloConvPhoton                                    = new Double_t[fNBinsPt];
@@ -3088,111 +2661,6 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fMesonTrueFWHMCaloMergedCluster                                 = new Double_t[fNBinsPt];
     fMesonTrueFWHMCaloMergedClusterPartConv                         = new Double_t[fNBinsPt];
     fMesonTrueFWHMMixedCaloConvPhoton                               = new Double_t[fNBinsPt];
-    
-    // Normalization at the left of the peak
-    fGGYieldsLeft                                                   = new Double_t[fNBinsPt];
-    fBckYieldsLeft                                                  = new Double_t[fNBinsPt];
-    fTotalBckYieldsLeft                                             = new Double_t[fNBinsPt];
-    fMesonYieldsLeft                                                = new Double_t[fNBinsPt];
-    fMesonYieldsFuncLeft                                            = new Double_t[fNBinsPt];
-    fMesonYieldsResidualBckFuncLeft                                 = new Double_t[fNBinsPt];
-    fMesonYieldsCorResidualBckFuncLeft                              = new Double_t[fNBinsPt];
-    fMesonYieldsLeftPerEvent                                        = new Double_t[fNBinsPt];
-    fMesonMassLeft                                                  = new Double_t[fNBinsPt];
-    fMesonSBLeft                                                    = new Double_t[fNBinsPt];
-    fMesonSignLeft                                                  = new Double_t[fNBinsPt];
-    fMesonFWHMLeft                                                  = new Double_t[fNBinsPt];
-
-    // Narrow Integration Window
-    fGGYieldsNarrow                                                 = new Double_t[fNBinsPt];
-    fBckYieldsNarrow                                                = new Double_t[fNBinsPt];
-    fTotalBckYieldsNarrow                                           = new Double_t[fNBinsPt];
-    fMesonYieldsNarrow                                              = new Double_t[fNBinsPt];
-    fMesonTrueYieldsNarrow                                          = new Double_t[fNBinsPt];
-    fMesonTrueYieldsReweightedNarrow                                = new Double_t[fNBinsPt];
-    fMesonTrueYieldsUnweightedNarrow                                = new Double_t[fNBinsPt];
-    fMesonTrueSecYieldsNarrow                                       = new Double_t[fNBinsPt];
-    fMesonTrueSecFromK0SYieldsNarrow                                = new Double_t[fNBinsPt];
-    fMesonTrueSecFromLambdaYieldsNarrow                             = new Double_t[fNBinsPt];
-    fMesonYieldsFuncNarrow                                          = new Double_t[fNBinsPt];
-    fMesonYieldsResidualBckFuncNarrow                               = new Double_t[fNBinsPt];
-    fMesonYieldsCorResidualBckFuncNarrow                            = new Double_t[fNBinsPt];
-    fMesonYieldsPerEventNarrow                                      = new Double_t[fNBinsPt];
-    fMesonSBNarrow                                                  = new Double_t[fNBinsPt];
-    fMesonSBdefaultNarrow                                           = new Double_t[fNBinsPt];
-    fMesonSignNarrow                                                = new Double_t[fNBinsPt];
-    fMesonSigndefaultNarrow                                         = new Double_t[fNBinsPt];
-    
-    fGGYieldsLeftNarrow                                             = new Double_t[fNBinsPt];
-    fBckYieldsLeftNarrow                                            = new Double_t[fNBinsPt];
-    fTotalBckYieldsLeftNarrow                                       = new Double_t[fNBinsPt];
-    fMesonYieldsLeftNarrow                                          = new Double_t[fNBinsPt];
-    fMesonYieldsFuncLeftNarrow                                      = new Double_t[fNBinsPt];
-    fMesonYieldsResidualBckFuncLeftNarrow                           = new Double_t[fNBinsPt];
-    fMesonYieldsCorResidualBckFuncLeftNarrow                        = new Double_t[fNBinsPt];
-    fMesonYieldsLeftPerEventNarrow                                  = new Double_t[fNBinsPt];
-    fMesonSBLeftNarrow                                              = new Double_t[fNBinsPt];
-    fMesonSignLeftNarrow                                            = new Double_t[fNBinsPt];
-
-    // Wide Integration Window
-    fGGYieldsWide                                                   = new Double_t[fNBinsPt];
-    fBckYieldsWide                                                  = new Double_t[fNBinsPt];
-    fTotalBckYieldsWide                                             = new Double_t[fNBinsPt];
-    fMesonYieldsWide                                                = new Double_t[fNBinsPt];
-    fMesonTrueYieldsWide                                            = new Double_t[fNBinsPt];
-    fMesonTrueYieldsReweightedWide                                  = new Double_t[fNBinsPt];
-    fMesonTrueYieldsUnweightedWide                                  = new Double_t[fNBinsPt];
-    fMesonTrueSecYieldsWide                                         = new Double_t[fNBinsPt];
-    fMesonTrueSecFromK0SYieldsWide                                  = new Double_t[fNBinsPt];
-    fMesonTrueSecFromLambdaYieldsWide                               = new Double_t[fNBinsPt];
-    fMesonYieldsFuncWide                                            = new Double_t[fNBinsPt];
-    fMesonYieldsResidualBckFuncWide                                 = new Double_t[fNBinsPt];
-    fMesonYieldsCorResidualBckFuncWide                              = new Double_t[fNBinsPt];
-    fMesonYieldsPerEventWide                                        = new Double_t[fNBinsPt];
-    fMesonSBWide                                                    = new Double_t[fNBinsPt];
-    fMesonSignWide                                                  = new Double_t[fNBinsPt];
-
-    fGGYieldsLeftWide                                               = new Double_t[fNBinsPt];
-    fBckYieldsLeftWide                                              = new Double_t[fNBinsPt];
-    fTotalBckYieldsLeftWide                                         = new Double_t[fNBinsPt];
-    fMesonYieldsLeftWide                                            = new Double_t[fNBinsPt];
-    fMesonYieldsFuncLeftWide                                        = new Double_t[fNBinsPt];
-    fMesonYieldsResidualBckFuncLeftWide                             = new Double_t[fNBinsPt];
-    fMesonYieldsCorResidualBckFuncLeftWide                          = new Double_t[fNBinsPt];
-    fMesonYieldsLeftPerEventWide                                    = new Double_t[fNBinsPt];
-    fMesonSBLeftWide                                                = new Double_t[fNBinsPt];
-    fMesonSignLeftWide                                              = new Double_t[fNBinsPt];
-
-    fGGYieldsError                                                  = new Double_t[fNBinsPt];
-    fBckYieldsError                                                 = new Double_t[fNBinsPt];
-    fTotalBckYieldsError                                            = new Double_t[fNBinsPt];
-    fMesonYieldsError                                               = new Double_t[fNBinsPt];
-    fMesonTrueYieldsError                                           = new Double_t[fNBinsPt];
-    fMesonTrueYieldsDCError                                         = new Double_t[fNBinsPt];
-    fMesonTrueYieldsReweightedError                                 = new Double_t[fNBinsPt];
-    fMesonTrueYieldsUnweightedError                                 = new Double_t[fNBinsPt];
-    fMesonTrueSecYieldsError                                        = new Double_t[fNBinsPt];
-    fMesonTrueSecFromK0SYieldsError                                 = new Double_t[fNBinsPt];
-    fMesonTrueSecFromLambdaYieldsError                              = new Double_t[fNBinsPt];
-    fMesonYieldsFuncError                                           = new Double_t[fNBinsPt];
-    fMesonYieldsResidualBckFuncError                                = new Double_t[fNBinsPt];
-    fMesonYieldsCorResidualBckFuncError                             = new Double_t[fNBinsPt];
-    fMesonYieldsPerEventError                                       = new Double_t[fNBinsPt];
-    fMesonMassError                                                 = new Double_t[fNBinsPt];
-    fMesonSBError                                                   = new Double_t[fNBinsPt];
-    fMesonSBdefaultError                                            = new Double_t[fNBinsPt];
-    fMesonSignError                                                 = new Double_t[fNBinsPt];
-    fMesonSigndefaultError                                          = new Double_t[fNBinsPt];
-    fMesonFWHMError                                                 = new Double_t[fNBinsPt];
-    fMesonFWHMAlpha01Error                                          = new Double_t[fNBinsPt];
-    fMesonTrueMassError                                             = new Double_t[fNBinsPt];
-    fMesonTrueMassReweightedError                                   = new Double_t[fNBinsPt];
-    fMesonTrueMassUnweightedError                                   = new Double_t[fNBinsPt];
-    fMesonTrueFWHMError                                             = new Double_t[fNBinsPt];
-    fMesonTrueFWHMReweightedError                                   = new Double_t[fNBinsPt];
-    fMesonTrueFWHMUnweightedError                                   = new Double_t[fNBinsPt];
-    fMesonTrueSBError                                               = new Double_t[fNBinsPt];
-    fMesonTrueSignError                                             = new Double_t[fNBinsPt];
     fMesonTrueMassErrorCaloPhoton                                   = new Double_t[fNBinsPt];
     fMesonTrueMassErrorCaloElectron                                 = new Double_t[fNBinsPt];
     fMesonTrueMassErrorCaloConvPhoton                               = new Double_t[fNBinsPt];
@@ -3205,80 +2673,21 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fMesonTrueFWHMErrorCaloMergedCluster                            = new Double_t[fNBinsPt];
     fMesonTrueFWHMErrorCaloMergedClusterPartConv                    = new Double_t[fNBinsPt];
     fMesonTrueFWHMErrorMixedCaloConvPhoton                          = new Double_t[fNBinsPt];
-    
-    fGGYieldsLeftError                                              = new Double_t[fNBinsPt];
-    fBckYieldsLeftError                                             = new Double_t[fNBinsPt];
-    fTotalBckYieldsLeftError                                        = new Double_t[fNBinsPt];
-    fMesonYieldsLeftError                                           = new Double_t[fNBinsPt];
-    fMesonYieldsFuncLeftError                                       = new Double_t[fNBinsPt];
-    fMesonYieldsResidualBckFuncLeftError                            = new Double_t[fNBinsPt];
-    fMesonYieldsCorResidualBckFuncLeftError                         = new Double_t[fNBinsPt];
-    fMesonYieldsLeftPerEventError                                   = new Double_t[fNBinsPt];
+
+    // nitialize pt-arrays for different mass & width fitting procedures, normalization at the left of the peak
+    fMesonMassLeft                                                  = new Double_t[fNBinsPt];
+    fMesonFWHMLeft                                                  = new Double_t[fNBinsPt];
     fMesonMassLeftError                                             = new Double_t[fNBinsPt];
-    fMesonSBLeftError                                               = new Double_t[fNBinsPt];
-    fMesonSignLeftError                                             = new Double_t[fNBinsPt];
     fMesonFWHMLeftError                                             = new Double_t[fNBinsPt];
 
-    // Narrow integration Window
-    fGGYieldsNarrowError                                            = new Double_t[fNBinsPt];
-    fBckYieldsNarrowError                                           = new Double_t[fNBinsPt];
-    fTotalBckYieldsNarrowError                                      = new Double_t[fNBinsPt];
-    fMesonYieldsNarrowError                                         = new Double_t[fNBinsPt];
-    fMesonTrueYieldsNarrowError                                     = new Double_t[fNBinsPt];
-    fMesonTrueYieldsReweightedNarrowError                           = new Double_t[fNBinsPt];
-    fMesonTrueYieldsUnweightedNarrowError                           = new Double_t[fNBinsPt];
-    fMesonTrueSecYieldsNarrowError                                  = new Double_t[fNBinsPt];
-    fMesonTrueSecFromK0SYieldsNarrowError                           = new Double_t[fNBinsPt];
-    fMesonTrueSecFromLambdaYieldsNarrowError                        = new Double_t[fNBinsPt];
-    fMesonYieldsFuncNarrowError                                     = new Double_t[fNBinsPt];
-    fMesonYieldsResidualBckFuncNarrowError                          = new Double_t[fNBinsPt];
-    fMesonYieldsCorResidualBckFuncNarrowError                       = new Double_t[fNBinsPt];
-    fMesonYieldsPerEventNarrowError                                 = new Double_t[fNBinsPt];
-    fMesonSBNarrowError                                             = new Double_t[fNBinsPt];
-    fMesonSBdefaultNarrowError                                      = new Double_t[fNBinsPt];
-    fMesonSigndefaultNarrowError                                    = new Double_t[fNBinsPt];
-    fMesonSignNarrowError                                           = new Double_t[fNBinsPt];
-
-    fGGYieldsLeftNarrowError                                        = new Double_t[fNBinsPt];
-    fBckYieldsLeftNarrowError                                       = new Double_t[fNBinsPt];
-    fTotalBckYieldsLeftNarrowError                                  = new Double_t[fNBinsPt];
-    fMesonYieldsLeftNarrowError                                     = new Double_t[fNBinsPt];
-    fMesonYieldsFuncLeftNarrowError                                 = new Double_t[fNBinsPt];
-    fMesonYieldsResidualBckFuncLeftNarrowError                      = new Double_t[fNBinsPt];
-    fMesonYieldsCorResidualBckFuncLeftNarrowError                   = new Double_t[fNBinsPt];
-    fMesonYieldsLeftPerEventNarrowError                             = new Double_t[fNBinsPt];
-    fMesonSBLeftNarrowError                                         = new Double_t[fNBinsPt];
-    fMesonSignLeftNarrowError                                       = new Double_t[fNBinsPt];
-
-    // Wide integration Window
-    fGGYieldsWideError                                              = new Double_t[fNBinsPt];
-    fBckYieldsWideError                                             = new Double_t[fNBinsPt];
-    fTotalBckYieldsWideError                                        = new Double_t[fNBinsPt];
-    fMesonYieldsWideError                                           = new Double_t[fNBinsPt];
-    fMesonTrueYieldsWideError                                       = new Double_t[fNBinsPt];
-    fMesonTrueYieldsReweightedWideError                             = new Double_t[fNBinsPt];
-    fMesonTrueYieldsUnweightedWideError                             = new Double_t[fNBinsPt];
-    fMesonTrueSecYieldsWideError                                    = new Double_t[fNBinsPt];
-    fMesonTrueSecFromK0SYieldsWideError                             = new Double_t[fNBinsPt];
-    fMesonTrueSecFromLambdaYieldsWideError                          = new Double_t[fNBinsPt];
-    fMesonYieldsFuncWideError                                       = new Double_t[fNBinsPt];
-    fMesonYieldsResidualBckFuncWideError                            = new Double_t[fNBinsPt];
-    fMesonYieldsCorResidualBckFuncWideError                         = new Double_t[fNBinsPt];
-    fMesonYieldsPerEventWideError                                   = new Double_t[fNBinsPt];
-    fMesonSBWideError                                               = new Double_t[fNBinsPt];
-    fMesonSignWideError                                             = new Double_t[fNBinsPt];
-
-    fGGYieldsLeftWideError                                          = new Double_t[fNBinsPt];
-    fBckYieldsLeftWideError                                         = new Double_t[fNBinsPt];
-    fTotalBckYieldsLeftWideError                                    = new Double_t[fNBinsPt];
-    fMesonYieldsLeftWideError                                       = new Double_t[fNBinsPt];
-    fMesonYieldsFuncLeftWideError                                   = new Double_t[fNBinsPt];
-    fMesonYieldsResidualBckFuncLeftWideError                        = new Double_t[fNBinsPt];
-    fMesonYieldsCorResidualBckFuncLeftWideError                     = new Double_t[fNBinsPt];
-    fMesonYieldsLeftPerEventWideError                               = new Double_t[fNBinsPt];
-    fMesonSBLeftWideError                                           = new Double_t[fNBinsPt];
-    fMesonSignLeftWideError                                         = new Double_t[fNBinsPt];
-
+    // initialize pt-arrays for validated Significance and S/B
+    fMesonTrueSB                                                    = new Double_t[fNBinsPt];
+    fMesonTrueSign                                                  = new Double_t[fNBinsPt];
+    fMesonTrueSBError                                               = new Double_t[fNBinsPt];
+    fMesonTrueSignError                                             = new Double_t[fNBinsPt];
+    
+    
+    // initialize different histo-pt-arrays for validated meson quantities
     fHistoMappingTrueMesonInvMassPtBins                             = new TH1D*[fNBinsPt];    
     fHistoMappingTrueMesonDCInvMassPtBins                           = new TH1D*[fNBinsPt];    
     fHistoMappingTrueFullMesonInvMassPtBins                         = new TH1D*[fNBinsPt];    
@@ -3287,9 +2696,9 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fHistoMappingTrueGGBckInvMassPtBins                             = new TH1D*[fNBinsPt];    
     fHistoMappingTrueContBckInvMassPtBins                           = new TH1D*[fNBinsPt];    
     fHistoMappingTrueAllBckInvMassPtBins                            = new TH1D*[fNBinsPt];    
-    fHistoMappingTrueSecMesonInvMassPtBins                          = new TH1D*[fNBinsPt];    
-    fHistoMappingTrueSecFromK0SMesonInvMassPtBins                   = new TH1D*[fNBinsPt];    
-    fHistoMappingTrueSecFromLambdaMesonInvMassPtBins                = new TH1D*[fNBinsPt];    
+    for (Int_t i = 0; i < 4; i++){
+        fHistoMappingTrueSecMesonInvMassPtBins[i]                   = new TH1D*[fNBinsPt];    
+    }
     fHistoMappingTrueMesonCaloPhotonInvMassPtBins                   = new TH1D*[fNBinsPt];    
     fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins               = new TH1D*[fNBinsPt];    
     fHistoMappingTrueMesonCaloElectronInvMassPtBins                 = new TH1D*[fNBinsPt];    
@@ -3297,11 +2706,13 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fHistoMappingTrueMesonCaloMergedClusterPartConvInvMassPtBins    = new TH1D*[fNBinsPt];    
     fHistoMappingTrueMesonMixedCaloConvPhotonInvMassPtBins          = new TH1D*[fNBinsPt];    
 
+    // initialize arrays for BG weighting
     fHistoWeightsBGZbinVsMbin                                       = new TH2F*[fNBinsPt];    
     fHistoFillPerEventBGZbinVsMbin                                  = new TH2F*[fNBinsPt];    
     fHistoWeightsBGZbinVsPsibin                                     = new TH2F*[fNBinsPt];    
     fHistoFillPerEventBGZbinVsPsibin                                = new TH2F*[fNBinsPt];    
     
+    // initial  histo-pt-arrays for  data inv mass
     fHistoMappingGGInvMassPtBin                                     = new TH1D*[fNBinsPt];    
     fHistoMappingBackInvMassPtBin                                   = new TH1D*[fNBinsPt];
     fHistoMappingBackNormInvMassPtBin                               = new TH1D*[fNBinsPt];
@@ -3310,6 +2721,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fHistoMappingRemainingBGInvMassPtBin                            = new TH1D*[fNBinsPt];
     fHistoMappingRatioSBInvMassPtBin                                = new TH1D*[fNBinsPt];
 
+    // initial  fit-pt-arrays for  data inv mass
     fFitSignalInvMassPtBin                                          = new TF1*[fNBinsPt];
     fFitRemainingBGInvMassPtBin                                     = new TF1*[fNBinsPt];
     fFitTrueSignalInvMassPtBin                                      = new TF1*[fNBinsPt];
@@ -3324,21 +2736,16 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     
     fFitSignalPeakPosInvMassPtBin                                   = new TF1*[fNBinsPt];
     fFitBckInvMassPtBin                                             = new TF1*[fNBinsPt];
-    fFitRatioInvMassPtBin                                           = new TF1*[fNBinsPt];
     // Histograms for normalization on the left of the peak
     fHistoMappingBackNormInvMassLeftPtBin                           = new TH1D*[fNBinsPt];
     fHistoMappingSignalInvMassLeftPtBin                             = new TH1D*[fNBinsPt];
     fHistoMappingSignalRemainingBGSubInvMassLeftPtBin               = new TH1D*[fNBinsPt];
     fHistoMappingRemainingBGInvMassLeftPtBin                        = new TH1D*[fNBinsPt];
-    fHistoMappingPeakPosInvMassPtBin                                = new TH1D*[fNBinsPt];
 
     fFitInvMassLeftPtBin                                            = new TF1*[fNBinsPt];
     fFitRemainingBGInvMassLeftPtBin                                 = new TF1*[fNBinsPt];
     fFitSignalPeakPosInvMassLeftPtBin                               = new TF1*[fNBinsPt];
     fFitBckInvMassLeftPtBin                                         = new TF1*[fNBinsPt];
-    fFitPeakPosPtBin                                                = new TF1*[fNBinsPt];
-    fMesonMassPeakPos                                               = new Double_t[fNBinsPt];
-    fMesonMassPeakPosError                                          = new Double_t[fNBinsPt];
 
     fFitSignalGaussianInvMassPtBin                                  = new TF1*[fNBinsPt];
     fFitTrueSignalGaussianInvMassPtBin                              = new TF1*[fNBinsPt];
@@ -3359,9 +2766,9 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fHistoMappingTrueGGBckInvMassPtBins[i]                              = NULL;
         fHistoMappingTrueContBckInvMassPtBins[i]                            = NULL;
         fHistoMappingTrueAllBckInvMassPtBins[i]                             = NULL;
-        fHistoMappingTrueSecMesonInvMassPtBins[i]                           = NULL;
-        fHistoMappingTrueSecFromK0SMesonInvMassPtBins[i]                    = NULL;
-        fHistoMappingTrueSecFromLambdaMesonInvMassPtBins[i]                 = NULL;
+        for (Int_t j = 0; j < 4; j++ ){
+            fHistoMappingTrueSecMesonInvMassPtBins[j][i]                    = NULL;
+        }
         fHistoMappingTrueMesonCaloPhotonInvMassPtBins[i]                    = NULL;    
         fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[i]                = NULL;    
         fHistoMappingTrueMesonCaloElectronInvMassPtBins[i]                  = NULL;    
@@ -3391,19 +2798,16 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
 
         fFitSignalPeakPosInvMassPtBin[i]                                    = NULL;
         fFitBckInvMassPtBin[i]                                              = NULL;
-        fFitRatioInvMassPtBin[i]                                            = NULL;
         // Histograms for normalization on the left of the peak
         fHistoMappingBackNormInvMassLeftPtBin[i]                            = NULL;
         fHistoMappingSignalInvMassLeftPtBin[i]                              = NULL;
         fHistoMappingSignalRemainingBGSubInvMassLeftPtBin[i]                = NULL;
         fHistoMappingRemainingBGInvMassLeftPtBin[i]                         = NULL;
-        fHistoMappingPeakPosInvMassPtBin[i]                                 = NULL;
         
         fFitInvMassLeftPtBin[i]                                             = NULL;
         fFitRemainingBGInvMassLeftPtBin[i]                                  = NULL;
         fFitSignalPeakPosInvMassLeftPtBin[i]                                = NULL;
         fFitBckInvMassLeftPtBin[i]                                          = NULL;
-        fFitPeakPosPtBin[i]                                                 = NULL;
         
         fFitSignalGaussianInvMassPtBin[i]                                   = NULL;
         fFitTrueSignalGaussianInvMassPtBin[i]                               = NULL;
@@ -3417,13 +2821,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
 void SetCorrectMCHistogrammNames(TString mesonType){
     cout << "standard MC chosen" << endl;
 
-    ObjectNameTrue                      = "ESD_TruePrimaryMother_InvMass_Pt";
-    ObjectNameTrueFull                  = "ESD_TrueMother_InvMass_Pt";
-    ObjectNameTrueWOWeights             = "ESD_TruePrimaryMotherW0Weights_InvMass_Pt";
-    ObjectNameProfileWeights            = "ESD_TruePrimaryMotherWeights_InvMass_Pt";
-    ObjectNameTrueSec                   = "ESD_TrueSecondaryMother_InvMass_Pt";;
-    ObjectNameTrueSecFromK0S            = "ESD_TrueSecondaryMotherFromK0s_InvMass_Pt";
-    ObjectNameTrueSecFromLambda         = "ESD_TrueSecondaryMotherFromLambda_InvMass_Pt";
+    // MC histograms primaries
     ObjectNameMCPi0Acc                  = "MC_Pi0InAcc_Pt";
     ObjectNameMCPi0AccWOWeights         = "MC_Pi0WOWeightInAcc_Pt";
     ObjectNameMCPi0AccWOEvtWeights      = "MC_Pi0_WOEventWeightsInAcc_Pt";
@@ -3436,48 +2834,64 @@ void SetCorrectMCHistogrammNames(TString mesonType){
     ObjectNameMCEta                     = "MC_Eta_Pt";
     ObjectNameMCEtaWOWeights            = "MC_Eta_WOWeights_Pt";
     ObjectNameMCEtaWOEvtWeights         = "MC_Eta_WOEventWeights_Pt";
+
+    // MC histograms secondaries 
+    if (mesonType.Contains("Pi0")){
+        ObjectNameMCSecPi0Acc           = "MC_SecPi0InAcc_Pt_Source";
+        ObjectNameMCSecPi0              = "MC_SecPi0_Pt_Source";
+    }
+    
+    // reconstructed validated histograms main
+    ObjectNameTrue                      = "ESD_TruePrimaryMother_InvMass_Pt";
+    ObjectNameTrueFull                  = "ESD_TrueMother_InvMass_Pt";
+    ObjectNameTrueWOWeights             = "ESD_TruePrimaryMotherW0Weights_InvMass_Pt";
+    ObjectNameProfileWeights            = "ESD_TruePrimaryMotherWeights_InvMass_Pt";
+    ObjectNameTrueSec                   = "ESD_TrueSecondaryMother_InvMass_Pt";;
+    ObjectNameTrueSecFromK0S            = "ESD_TrueSecondaryMotherFromK0s_InvMass_Pt";
+    ObjectNameTrueSecFromK0L            = "ESD_TrueSecondaryMotherFromK0l_InvMass_Pt";
+    ObjectNameTrueSecFromLambda         = "ESD_TrueSecondaryMotherFromLambda_InvMass_Pt";
+    
+    // reconstructed validated histograms additional conversions
     ObjectNameTrueGGBck                 = "ESD_TrueBckGG_InvMass_Pt";
     ObjectNameTrueContBck               = "ESD_TrueBckCont_InvMass_Pt";
     ObjectNameTrueAllBck                = "ESD_TrueAllCont_InvMass_Pt";
+    
+    // reconstructed validated histograms additional calorimeters
     ObjectNameTrueCaloPhoton            = "ESD_TrueMotherCaloPhoton_InvMass_Pt";
     ObjectNameTrueCaloConvPhoton        = "ESD_TrueMotherCaloConvertedPhoton_InvMass_Pt";
     ObjectNameTrueMixedCaloConvPhoton   = "ESD_TrueMotherCaloMixedPhotonConvertedPhoton_InvMass_Pt";
-    ObjectNameTrueCaloElectron          = "ESD_TrueMotherCaloElectron_InvMass_Pt";
     ObjectNameTrueCaloMerged            = "ESD_TrueMotherCaloMergedCluster_InvMass_Pt";
     ObjectNameTrueCaloMergedPartConv    = "ESD_TrueMotherCaloMergedClusterPartConv_InvMass_Pt";
-    ObjectNameK0sRecPi0                 = "TrueK0sWithPi0Daughter_MCPt";
-    ObjectNameLambdaRecPi0              = "TrueLambdaWithPi0Daughter_MCPt";
     if (fMode > 1 && fMode !=9){
         ObjectNameTrueCaloPhoton            = Form("ESD_True%sCaloPhoton_InvMass_Pt", mesonType.Data());
         ObjectNameTrueCaloConvPhoton        = Form("ESD_True%sCaloConvertedPhoton_InvMass_Pt", mesonType.Data());
         ObjectNameTrueMixedCaloConvPhoton   = Form("ESD_True%sCaloMixedPhotonConvertedPhoton_InvMass_Pt", mesonType.Data());
-        if (mesonType.CompareTo("Pi0") == 0){
-            if (fMode == 4 || fMode == 5){
-                ObjectNameTrueCaloElectron          = Form("ESD_True%srCaloElectron_InvMass_Pt", mesonType.Data());
-            } else {
-                ObjectNameTrueCaloElectron          = Form("ESD_True%sCaloElectron_InvMass_Pt", mesonType.Data());
-            }
-        } else {
-            ObjectNameTrueCaloElectron      = Form("ESD_True%sCaloElectron_InvMass_Pt", mesonType.Data());
-        }
         ObjectNameTrueCaloMerged            = Form("ESD_True%sCaloMergedCluster_InvMass_Pt", mesonType.Data());
         ObjectNameTrueCaloMergedPartConv    = Form("ESD_True%sCaloMergedClusterPartConv_InvMass_Pt", mesonType.Data());
+
+        cout <<    ObjectNameTrueCaloPhoton.Data()          << "\t" << 
+                    ObjectNameTrueCaloConvPhoton.Data()       << "\t" << 
+                    ObjectNameTrueMixedCaloConvPhoton.Data()    << "\t" << 
+                    ObjectNameTrueCaloMerged.Data()          << "\t" << 
+                    ObjectNameTrueCaloMergedPartConv.Data() << endl;        
+
+        // set correct names for Calo modes            
         ObjectNameTrue                      = Form("ESD_TruePrimary%s_InvMass_Pt", mesonType.Data());
         ObjectNameTrueFull                  = Form("ESD_True%s_InvMass_Pt", mesonType.Data());
         ObjectNameTrueWOWeights             = Form("ESD_TruePrimary%sW0Weights_InvMass_Pt", mesonType.Data());
         ObjectNameProfileWeights            = Form("ESD_TruePrimary%sWeights_InvMass_Pt", mesonType.Data());
         ObjectNameTrueSec                   = Form("ESD_TrueSecondary%s_InvMass_Pt", mesonType.Data());
         ObjectNameTrueSecFromK0S            = Form("ESD_TrueSecondary%sFromK0s_InvMass_Pt", mesonType.Data());
+        ObjectNameTrueSecFromK0L            = Form("ESD_TrueSecondary%sFromK0l_InvMass_Pt", mesonType.Data());
         ObjectNameTrueSecFromLambda         = Form("ESD_TrueSecondary%sFromLambda_InvMass_Pt", mesonType.Data());
-        
-        
     }
-    cout <<    ObjectNameTrueCaloPhoton.Data()          << "\t" << 
-                ObjectNameTrueCaloConvPhoton.Data()       << "\t" << 
-                ObjectNameTrueMixedCaloConvPhoton.Data()    << "\t" << 
-                ObjectNameTrueCaloElectron.Data()          << "\t" << 
-                ObjectNameTrueCaloMerged.Data()          << "\t" << 
-                ObjectNameTrueCaloMergedPartConv.Data() << endl;
+
+    // input spectra for secondary particles
+    ObjectNameK0sRecPi0                 = "TrueK0sWithPi0Daughter_MCPt";
+    ObjectNameLambdaRecPi0              = "TrueLambdaWithPi0Daughter_MCPt";
+
+    
+    // double counting histograms
     ObjectNameDCMesonInvMassPt          = Form("ESD_TrueDoubleCount%s_InvMass_Pt", mesonType.Data());
     ObjectNameDCGammaClusPt             = "TrueDoubleCountClusterGamma_Pt";
     ObjectNameMesonMultipleCount        = Form("ESD_TrueMultipleCount%s", mesonType.Data());
@@ -3486,7 +2900,7 @@ void SetCorrectMCHistogrammNames(TString mesonType){
     return;
 }
 
-
+    
 //****************************************************************************
 //******************** Projection out of 2D in X *****************************
 //****************************************************************************
@@ -3588,21 +3002,11 @@ void ProcessRatioSignalBackground(TH1D* fGammaGamma, TH1D* fBck) {
 //****************************************************************************
 //******* Fill array of invariant mass histograms in pT slices ***************
 //****************************************************************************
-void FillMassHistosArray(TH2D* fGammaGammaInvMassVSPtDummy, TH2D *fAlphaPeakPosDummy) {
+void FillMassHistosArray(TH2D* fGammaGammaInvMassVSPtDummy) {
     fGammaGammaInvMassVSPtDummy->Sumw2();
-    if(fAlphaPeakPosDummy)fAlphaPeakPosDummy->Sumw2();
     fFittingHistMidPtSignal     = FillProjectionX(fGammaGammaInvMassVSPtDummy, "Mapping_GG_InvMass_MidPt", fMidPt[0], fMidPt[1], fNRebin[4]);
     fMesonFullPtSignal          = FillProjectionX(fGammaGammaInvMassVSPtDummy, "Mapping_GG_InvMass_FullPt", fFullPt[0], fFullPt[1], fNRebin[4]);
 
-    if(fAlphaPeakPosDummy && fEnergyFlag.CompareTo("PbPb_2.76TeV") != 0 && fEnergyFlag.CompareTo("900GeV") != 0 && fEnergyFlag.CompareTo("2.76TeV") != 0 && fEnergyFlag.CompareTo("pPb_5.023TeV") != 0){
-        if(fPrefix.CompareTo("Pi0") == 0){
-            for(Int_t iPt=fStartPtBin;iPt<fNBinsPeakPt;iPt++){
-                fNameHistoPP    = Form("Mapping_PP_InvMass_in_Pt_Bin%02d", iPt);
-                CheckForNULLForPointer(fHistoMappingPeakPosInvMassPtBin[iPt]);
-                fHistoMappingPeakPosInvMassPtBin[iPt]=  FillProjectionX(fAlphaPeakPosDummy, fNameHistoPP, fBinsPeakPt[iPt], fBinsPeakPt[iPt+1], fBinsPeakPtRebin[iPt]);
-            }
-        }
-    }
     cout << "nach Peak Pos" << endl;
     for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
         fNameHistoGG    = Form("Mapping_GG_InvMass_in_Pt_Bin%02d", iPt);
@@ -3836,45 +3240,21 @@ void FillMassMCTrueAllBckHistosArray(TH2D* fHistoTrueAllBckInvMassVSPtFill) {
 //******* Fill array of invariant mass histograms in pT slices ***************
 //******* validated secondary for mesons from any source *********************
 //****************************************************************************
-void FillMassMCTrueSecMesonHistosArray(TH2D* fHistoTrueSecMesonInvMassVSPtFill) {
-    fHistoTrueSecMesonInvMassVSPtFill->Sumw2();
-    for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
-        fNameHistoTrueSec = Form("Mapping_TrueSecMeson_InvMass_in_Pt_Bin%02d", iPt);
-        CheckForNULLForPointer(fHistoMappingTrueSecMesonInvMassPtBins[iPt]);
-        fHistoMappingTrueSecMesonInvMassPtBins[iPt]=  FillProjectionX(fHistoTrueSecMesonInvMassVSPtFill, fNameHistoTrueSec, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
-        fHistoMappingTrueSecMesonInvMassPtBins[iPt]->SetLineWidth(1);
-        fHistoMappingTrueSecMesonInvMassPtBins[iPt]->SetLineColor(2);
-    }
-}
-
-//****************************************************************************
-//******* Fill array of invariant mass histograms in pT slices ***************
-//******* validated secondary for mesons from K0s ****************************
-//****************************************************************************
-void FillMassMCTrueSecFromK0SMesonHistosArray(TH2D* fHistoTrueSecFromK0SMesonInvMassVSPtFill) {
-    fHistoTrueSecFromK0SMesonInvMassVSPtFill->Sumw2();
-    for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
-        fNameHistoTrueSecFromK0S = Form("Mapping_TrueSecFromK0SMeson_InvMass_in_Pt_Bin%02d", iPt);
-        CheckForNULLForPointer(fHistoMappingTrueSecFromK0SMesonInvMassPtBins[iPt]);
-        fHistoMappingTrueSecFromK0SMesonInvMassPtBins[iPt]=  FillProjectionX(fHistoTrueSecFromK0SMesonInvMassVSPtFill, fNameHistoTrueSecFromK0S, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
-        fHistoMappingTrueSecFromK0SMesonInvMassPtBins[iPt]->SetLineWidth(1);
-        fHistoMappingTrueSecFromK0SMesonInvMassPtBins[iPt]->SetLineColor(2);
-    }
-}
-
-//****************************************************************************
-//******* Fill array of invariant mass histograms in pT slices ***************
-//******* validated secondary for mesons from Lambdas ************************
-//****************************************************************************
-void FillMassMCTrueSecFromLambdaMesonHistosArray(TH2D* fHistoTrueSecFromLambdaMesonInvMassVSPtFill) {
-    fHistoTrueSecFromLambdaMesonInvMassVSPtFill->Sumw2();
-    for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
-        fNameHistoTrueSecFromLambda = Form("Mapping_TrueSecFromLambdaMeson_InvMass_in_Pt_Bin%02d", iPt);
-        CheckForNULLForPointer(fHistoMappingTrueSecFromLambdaMesonInvMassPtBins[iPt]);
-        fHistoMappingTrueSecFromLambdaMesonInvMassPtBins[iPt]=  FillProjectionX(fHistoTrueSecFromLambdaMesonInvMassVSPtFill, fNameHistoTrueSecFromLambda, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
-        fHistoMappingTrueSecFromLambdaMesonInvMassPtBins[iPt]->SetLineWidth(1);
-        fHistoMappingTrueSecFromLambdaMesonInvMassPtBins[iPt]->SetLineColor(2);
-    }
+void FillMassMCTrueSecMesonHistosArray(TH2D** fHistoTrueSecMesonInvMassVSPtFill) {
+    for (Int_t j = 0; j < 4; j++){
+        if (fHistoTrueSecMesonInvMassVSPtFill[j]){
+            fHistoTrueSecMesonInvMassVSPtFill[j]->Sumw2();
+            for(Int_t iPt=fStartPtBin; iPt<fNBinsPt; iPt++){
+                fNameHistoTrueSec                               = Form("Mapping_TrueSecPi0From%s_InvMass_in_Pt_Bin%02d",nameSecondaries[j].Data(), iPt);
+                CheckForNULLForPointer(fHistoMappingTrueSecMesonInvMassPtBins[j][iPt]);
+                fHistoMappingTrueSecMesonInvMassPtBins[j][iPt]  =  FillProjectionX(fHistoTrueSecMesonInvMassVSPtFill[j], fNameHistoTrueSec, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
+                fHistoMappingTrueSecMesonInvMassPtBins[j][iPt]->SetLineWidth(1);
+                fHistoMappingTrueSecMesonInvMassPtBins[j][iPt]->SetLineColor(2);
+            }
+        } else {
+            cout << "reconstructed histo for: " << nameSecondaries[j].Data() << "was not available" << endl;
+        }    
+    }    
 }
 
 //****************************************************************************
@@ -3896,42 +3276,43 @@ void CreatePtHistos(){
     fDeltaPt                            = new TH1D("deltaPt","",fNBinsPt,fBinsPt);
     fDeltaPt->Sumw2();
 
-    fHistoYieldMeson                    = new TH1D("histoYieldMeson","",fNBinsPt,fBinsPt);
-    fHistoYieldMeson->Sumw2();
-    fHistoYieldTrueMeson                = new TH1D("histoYieldTrueMeson","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueMeson->Sumw2();
+    // create histos for different integration windows: normal, wide, narrow, left, left wide, left narrow
+    for (Int_t k = 0; k < 6; k++){
+        // reconstructed yields in different integration windows
+        fHistoYieldMeson[k]                    = new TH1D(Form("histoYieldMeson%s",nameIntRange[k].Data()),"",fNBinsPt,fBinsPt);
+        fHistoYieldMeson[k]->Sumw2();
+        fHistoYieldMesonPerEvent[k]            = new TH1D(Form("histoYieldMeson%sPerEvent",nameIntRange[k].Data()),"",fNBinsPt,fBinsPt);
+        fHistoYieldMesonPerEvent[k]->Sumw2();
+
+    }   
+    
+    // create histos for different integration windows: normal, wide, narrow
+    for (Int_t k = 0; k < 3; k++){
+        // validated yields
+        fHistoYieldTrueMeson[k]                = new TH1D(Form("histoYieldTrueMeson%s",nameIntRange[k].Data()),"",fNBinsPt,fBinsPt);
+        fHistoYieldTrueMeson[k]->Sumw2();
+        fHistoYieldTrueMesonReweighted[k]      = new TH1D(Form("histoYieldTrueMeson%sReweighted",nameIntRange[k].Data()), "",fNBinsPt,fBinsPt);
+        fHistoYieldTrueMesonReweighted[k]->Sumw2();
+        fHistoYieldTrueMesonUnweighted[k]      = new TH1D(Form("histoYieldTrueMeson%sUnweighted",nameIntRange[k].Data()), "",fNBinsPt,fBinsPt);
+        fHistoYieldTrueMesonUnweighted[k]->Sumw2();
+
+        // Significance and S/B for reconstructed signal
+        fHistoSigndefaultMeson[k]              = new TH1D(Form("histoSigndefault%sMeson",nameIntRange[k].Data()),"",fNBinsPt,fBinsPt);
+        fHistoSigndefaultMeson[k]->Sumw2();
+        fHistoSBdefaultMeson[k]                = new TH1D(Form("histoSBdefault%sMeson",nameIntRange[k].Data()),"",fNBinsPt,fBinsPt);
+        fHistoSBdefaultMeson[k]->Sumw2();
+        
+        // mass window monitoring histos
+        fHistoMassWindowHigh[k]                = new TH1D(Form("histoMassWindow%sHigh",nameIntRange[k].Data()),"",fNBinsPt,fBinsPt);
+        fHistoMassWindowHigh[k]->Sumw2();
+        fHistoMassWindowLow[k]                 = new TH1D(Form("histoMassWindow%sLow",nameIntRange[k].Data()),"",fNBinsPt,fBinsPt);
+        fHistoMassWindowLow[k]->Sumw2();
+    }
+        
     fHistoYieldTrueMesonDC              = new TH1D("histoYieldTrueMesonDC","",fNBinsPt,fBinsPt);
     fHistoYieldTrueMesonDC->Sumw2();
 
-    fHistoYieldTrueMesonReweighted      = new TH1D("histoYieldTrueMesonReweighted","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueMesonReweighted->Sumw2();
-    fHistoYieldTrueMesonUnweighted      = new TH1D("histoYieldTrueMesonUnweighted","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueMesonUnweighted->Sumw2();
-    fHistoYieldTrueSecMeson             = new TH1D("histoYieldTrueSecMeson","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueSecMeson->Sumw2();
-    fHistoYieldTrueSecFromK0SMeson      = new TH1D("histoYieldTrueSecFromK0SMeson","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueSecFromK0SMeson->Sumw2();
-    fHistoYieldTrueSecFromLambdaMeson   = new TH1D("histoYieldTrueSecFromLambdaMeson","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueSecFromLambdaMeson->Sumw2();
-
-    fHistoYieldMesonPerEvent            = new TH1D("histoYieldMesonPerEvent","",fNBinsPt,fBinsPt);
-    fHistoYieldMesonPerEvent->Sumw2();
-    fHistoSignMeson                     = new TH1D("histoSignMeson","",fNBinsPt,fBinsPt);
-    fHistoSignMeson->Sumw2();
-    fHistoSigndefaultMeson              = new TH1D("histoSigndefaultMeson","",fNBinsPt,fBinsPt);
-    fHistoSigndefaultMeson->Sumw2();
-    fHistoSBMeson                       = new TH1D("histoSBMeson","",fNBinsPt,fBinsPt);
-    fHistoSBMeson->Sumw2();
-    fHistoSBdefaultMeson                = new TH1D("histoSBdefaultMeson","",fNBinsPt,fBinsPt);
-    fHistoSBdefaultMeson->Sumw2();
-    if(fPrefix.CompareTo("Pi0") == 0 && fEnergyFlag.CompareTo("7TeV") == 0){
-        fHistoMassPosition              = new TH1D("histoMassPosition","",fNBinsPeakPt,fBinsPeakPtHalf);
-        fHistoMassPosition->Sumw2();
-    }
-    if(fPrefix.CompareTo("Pi0") == 0 && fEnergyFlag.CompareTo("7TeV") == 0){
-        fHistoFWHMMesonAlpha01          = new TH1D("histoFWHMMesonAlpha01","",fNBinsPeakPt,fBinsPeakPtHalf); 
-        fHistoFWHMMesonAlpha01->Sumw2();
-    }
+    // Mass & Width histos for normalization at right side
     fHistoMassMeson                     = new TH1D("histoMassMeson","",fNBinsPt,fBinsPt);
     fHistoMassMeson->Sumw2();
     fHistoMassGaussianMeson             = new TH1D("histoMassGaussianMeson","",fNBinsPt,fBinsPt);
@@ -3940,6 +3321,14 @@ void CreatePtHistos(){
     fHistoWidthGaussianMeson->Sumw2();
     fHistoFWHMMeson                     = new TH1D("histoFWHMMeson","",fNBinsPt,fBinsPt);
     fHistoFWHMMeson->Sumw2();
+    // Mass & Width histos for normalization at left side
+    fHistoMassMesonLeft                     = new TH1D("histoMassMesonLeft","",fNBinsPt,fBinsPt);
+    fHistoMassMesonLeft->Sumw2();
+    fHistoFWHMMesonLeft                     = new TH1D("histoFWHMMesonLeft","",fNBinsPt,fBinsPt);
+    fHistoFWHMMesonLeft->Sumw2();
+
+
+    // Mass & Width histos for real signal normalization at right side
     fHistoTrueMassMeson                 = new TH1D("histoTrueMassMeson","",fNBinsPt,fBinsPt);
     fHistoTrueMassMeson->Sumw2();
     fHistoTrueMassGaussianMeson         = new TH1D("histoTrueMassGaussianMeson","",fNBinsPt,fBinsPt);
@@ -3956,10 +3345,13 @@ void CreatePtHistos(){
     fHistoTrueFWHMMesonReweighted->Sumw2();
     fHistoTrueFWHMMesonUnweighted       = new TH1D("histoTrueFWHMMesonUnweighted","",fNBinsPt,fBinsPt);
     fHistoTrueFWHMMesonUnweighted->Sumw2();
+    // Significance and S/B for MC
     fHistoTrueSignMeson                 = new TH1D("histoTrueSignMeson","",fNBinsPt,fBinsPt);
     fHistoTrueSignMeson->Sumw2();
     fHistoTrueSBMeson                   = new TH1D("histoTrueSBMeson","",fNBinsPt,fBinsPt);
     fHistoTrueSBMeson->Sumw2();
+    
+    // Mass & Width histos for real signal in different reco methods
     if (fAdvancedMesonQA && (fMode ==2 || fMode == 3 || fMode ==4 || fMode == 5)){
         fHistoTrueMassMesonCaloConvPhoton       = new TH1D("histoTrueMassMesonCaloConvPhoton","",fNBinsPt,fBinsPt);
         fHistoTrueMassMesonCaloConvPhoton->Sumw2();
@@ -3990,6 +3382,7 @@ void CreatePtHistos(){
         fHistoYieldTrueMesonConvGammaConvGammaFixedWindow=   new TH1D("histoYieldTrueMesonConvGammaConvGammaFixedWindow","",fNBinsPt,fBinsPt);
         fHistoYieldTrueMesonConvGammaConvGammaFixedWindow->Sumw2();
     }
+    // Mass & Width histos for real signal in different reco methods
     if (fAdvancedMesonQA && (fMode ==4 || fMode == 5)){
         fHistoTrueMassMesonMixedCaloConvPhoton =       new TH1D("histoTrueMassMesonMixedCaloConvPhoton","",fNBinsPt,fBinsPt);
         fHistoTrueMassMesonMixedCaloConvPhoton->Sumw2();
@@ -3997,104 +3390,18 @@ void CreatePtHistos(){
         fHistoTrueFWHMMesonMixedCaloConvPhoton->Sumw2();
     }
 
+    // lambda tail monitoring histo
     fHistoLambdaTail                    = new TH1D("histoLambdaTail","",fNBinsPt,fBinsPt);
     fHistoLambdaTail->Sumw2();
 
-    fHistoMassWindowHigh                = new TH1D("histoMassWindowHigh","",fNBinsPt,fBinsPt);
-    fHistoMassWindowHigh->Sumw2();
-    fHistoMassWindowLow                 = new TH1D("histoMassWindowLow","",fNBinsPt,fBinsPt);
-    fHistoMassWindowLow->Sumw2();
-    fHistoMassWindowWideHigh            = new TH1D("histoMassWindowWideHigh","",fNBinsPt,fBinsPt);
-    fHistoMassWindowWideHigh->Sumw2();
-    fHistoMassWindowWideLow             = new TH1D("histoMassWindowWideLow","",fNBinsPt,fBinsPt);
-    fHistoMassWindowWideLow->Sumw2();
-    fHistoMassWindowNarrowHigh          = new TH1D("histoMassWindowNarrowHigh","",fNBinsPt,fBinsPt);
-    fHistoMassWindowNarrowHigh->Sumw2();
-    fHistoMassWindowNarrowLow           = new TH1D("histoMassWindowNarrowLow","",fNBinsPt,fBinsPt);
-    fHistoMassWindowNarrowLow->Sumw2();
-    
-    fHistoYieldMesonNarrow              = new TH1D("histoYieldMesonNarrow","",fNBinsPt,fBinsPt);
-    fHistoYieldMesonNarrow->Sumw2();
-    fHistoYieldTrueMesonNarrow          = new TH1D("histoYieldTrueMesonNarrow","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueMesonNarrow->Sumw2();
-    fHistoYieldTrueMesonReweightedNarrow    = new TH1D("histoYieldTrueMesonNarrowReweighted","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueMesonReweightedNarrow->Sumw2();
-    fHistoYieldTrueMesonUnweightedNarrow    = new TH1D("histoYieldTrueMesonNarrowUnweighted","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueMesonUnweightedNarrow->Sumw2();
-    fHistoYieldTrueSecMesonNarrow           = new TH1D("histoYieldTrueSecMesonNarrow","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueSecMesonNarrow->Sumw2();
-    fHistoYieldTrueSecFromK0SMesonNarrow    = new TH1D("histoYieldTrueSecFromK0SMesonNarrow","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueSecFromK0SMesonNarrow->Sumw2();
-    fHistoYieldTrueSecFromLambdaMesonNarrow = new TH1D("histoYieldTrueSecFromLambdaMesonNarrow","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueSecFromLambdaMesonNarrow->Sumw2();
 
-    fHistoYieldMesonPerEventNarrow          = new TH1D("histoYieldMesonPerEventNarrow","",fNBinsPt,fBinsPt);
-    fHistoYieldMesonPerEventNarrow->Sumw2();
-    fHistoSignMesonNarrow                   = new TH1D("histoSignMesonNarrow","",fNBinsPt,fBinsPt);
-    fHistoSignMesonNarrow->Sumw2();
-    fHistoSBMesonNarrow                     = new TH1D("histoSBMesonNarrow","",fNBinsPt,fBinsPt);
-    fHistoSBMesonNarrow->Sumw2();
-    fHistoSBdefaultNarrowMeson              = new TH1D("histoSBdefaultNarrowMeson","",fNBinsPt,fBinsPt);
-    fHistoSBdefaultNarrowMeson->Sumw2();
-    fHistoSigndefaultNarrowMeson            = new TH1D("histoSigndefaultNarrowMeson","",fNBinsPt,fBinsPt);
-    fHistoSigndefaultNarrowMeson->Sumw2();
-
-    fHistoYieldMesonWide                    = new TH1D("histoYieldMesonWide","",fNBinsPt,fBinsPt);
-    fHistoYieldMesonWide->Sumw2();
-    fHistoYieldTrueMesonWide                = new TH1D("histoYieldTrueMesonWide","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueMesonWide->Sumw2();
-    fHistoYieldTrueMesonReweightedWide      = new TH1D("histoYieldTrueMesonWideReweighted","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueMesonReweightedWide->Sumw2();
-    fHistoYieldTrueMesonUnweightedWide      = new TH1D("histoYieldTrueMesonWideUnweighted","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueMesonUnweightedWide->Sumw2();
-    fHistoYieldTrueSecMesonWide             = new TH1D("histoYieldTrueSecMesonWide","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueSecMesonWide->Sumw2();
-    fHistoYieldTrueSecFromK0SMesonWide      = new TH1D("histoYieldTrueSecFromK0SMesonWide","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueSecFromK0SMesonWide->Sumw2();
-    fHistoYieldTrueSecFromLambdaMesonWide   = new TH1D("histoYieldTrueSecFromLambdaMesonWide","",fNBinsPt,fBinsPt);
-    fHistoYieldTrueSecFromLambdaMesonWide->Sumw2();
-    fHistoYieldMesonPerEventWide            = new TH1D("histoYieldMesonPerEventWide","",fNBinsPt,fBinsPt);
-    fHistoYieldMesonPerEventWide->Sumw2();
-    fHistoSignMesonWide                     = new TH1D("histoSignMesonWide","",fNBinsPt,fBinsPt);
-    fHistoSignMesonWide->Sumw2();
-    fHistoSBMesonWide                       = new TH1D("histoSBMesonWide","",fNBinsPt,fBinsPt);
-    fHistoSBMesonWide->Sumw2();
-
-    // Histos for normalization at the left of the peak
-
-    fHistoYieldMesonLeft                    = new TH1D("histoYieldMesonLeft","",fNBinsPt,fBinsPt);
-    fHistoYieldMesonLeft->Sumw2();
-    fHistoYieldMesonLeftPerEvent            = new TH1D("histoYieldMesonLeftPerEvent","",fNBinsPt,fBinsPt);
-    fHistoYieldMesonLeftPerEvent->Sumw2();
-    fHistoSignMesonLeft                     = new TH1D("histoSignMesonLeft","",fNBinsPt,fBinsPt);
-    fHistoSignMesonLeft->Sumw2();
-    fHistoSBMesonLeft                       = new TH1D("histoSBMesonLeft","",fNBinsPt,fBinsPt);
-    fHistoSBMesonLeft->Sumw2();
-    fHistoMassMesonLeft                     = new TH1D("histoMassMesonLeft","",fNBinsPt,fBinsPt);
-    fHistoMassMesonLeft->Sumw2();
-    fHistoFWHMMesonLeft                     = new TH1D("histoFWHMMesonLeft","",fNBinsPt,fBinsPt);
-    fHistoFWHMMesonLeft->Sumw2();
-
-
-    fHistoYieldMesonLeftNarrow              = new TH1D("histoYieldMesonLeftNarrow","",fNBinsPt,fBinsPt);
-    fHistoYieldMesonLeftNarrow->Sumw2();
-    fHistoYieldMesonLeftPerEventNarrow      = new TH1D("histoYieldMesonLeftPerEventNarrow","",fNBinsPt,fBinsPt);
-    fHistoYieldMesonLeftPerEventNarrow->Sumw2();
-    fHistoSignMesonLeftNarrow               = new TH1D("histoSignMesonLeftNarrow","",fNBinsPt,fBinsPt);
-    fHistoSignMesonLeftNarrow->Sumw2();
-    fHistoSBMesonLeftNarrow                 = new TH1D("histoSBMesonLeftNarrow","",fNBinsPt,fBinsPt);
-    fHistoSBMesonLeftNarrow->Sumw2();
-
-
-    fHistoYieldMesonLeftWide                = new TH1D("histoYieldMesonLeftWide","",fNBinsPt,fBinsPt);
-    fHistoYieldMesonLeftWide->Sumw2();
-    fHistoYieldMesonLeftPerEventWide        = new TH1D("histoYieldMesonLeftPerEventWide","",fNBinsPt,fBinsPt);
-    fHistoYieldMesonLeftPerEventWide->Sumw2();
-    fHistoSignMesonLeftWide                 = new TH1D("histoSignMesonLeftWide","",fNBinsPt,fBinsPt);
-    fHistoSignMesonLeftWide->Sumw2();
-    fHistoSBMesonLeftWide                   = new TH1D("histoSBMesonLeftWide","",fNBinsPt,fBinsPt);
-    fHistoSBMesonLeftWide->Sumw2();
-
+    // create secondary histos
+    for (Int_t k = 0; k < 3; k++){
+        for (Int_t j = 0; j < 4; j++){
+            fHistoYieldTrueSecMeson[k][j]   = new TH1D(Form("histoYieldTrueFrom%sSecMeson%s",nameSecondaries[j].Data(),nameIntRange[k].Data()),"",fNBinsPt,fBinsPt);
+            fHistoYieldTrueSecMeson[k][j]->Sumw2();
+        }    
+    }    
 }
 
 
@@ -4103,14 +3410,6 @@ void CreatePtHistos(){
 //****************************************************************************
 void FillPtHistos()
 {
-    if(fPrefix.CompareTo("Pi0") == 0 && fEnergyFlag.CompareTo("7TeV") == 0){
-        for (Int_t iPt=fStartPtBin+1;iPt<fNBinsPeakPt+1;iPt++){
-            fHistoMassPosition->SetBinContent(iPt,fMesonMassPeakPos[iPt-1]);
-            fHistoMassPosition->SetBinError(iPt,fMesonMassPeakPosError[iPt-1]);
-            fHistoFWHMMesonAlpha01->SetBinContent(iPt,fMesonFWHMAlpha01[iPt-1]);
-            fHistoFWHMMesonAlpha01->SetBinError(iPt,fMesonFWHMAlpha01Error[iPt-1]);
-        }
-    }
     for(Int_t iPt=fStartPtBin+1;iPt<fNBinsPt+1;iPt++){
 
         fDeltaPt->SetBinContent(iPt,fBinsPt[iPt]-fBinsPt[iPt-1]);
@@ -4197,104 +3496,43 @@ void FillPtHistos()
         fHistoLambdaTail->SetBinContent(iPt,fMesonLambdaTailpar[iPt-1]);
         fHistoLambdaTail->SetBinError(iPt,fMesonLambdaTailparError[iPt-1]);
 
-        fHistoSignMeson->SetBinContent(iPt,fMesonSign[iPt-1]);
-        fHistoSignMeson->SetBinError(iPt,fMesonSignError[iPt-1]);
-        fHistoSBMeson->SetBinContent(iPt,fMesonSB[iPt-1]);
-        fHistoSBMeson->SetBinError(iPt,fMesonSBError[iPt-1]);
-        fHistoSBdefaultMeson->SetBinContent(iPt,fMesonSBdefault[iPt-1]);
-        fHistoSBdefaultMeson->SetBinError(iPt,fMesonSBdefaultError[iPt-1]);
-        fHistoSigndefaultMeson->SetBinContent(iPt,fMesonSigndefault[iPt-1]);
-        fHistoSigndefaultMeson->SetBinError(iPt,fMesonSigndefaultError[iPt-1]);
         
-        fHistoMassWindowHigh->SetBinContent(iPt,fMassWindowHigh[iPt-1]);
-        fHistoMassWindowLow->SetBinContent(iPt,fMassWindowLow[iPt-1]);
-        fHistoMassWindowWideHigh->SetBinContent(iPt,fMassWindowWideHigh[iPt-1]);
-        fHistoMassWindowWideLow->SetBinContent(iPt,fMassWindowWideLow[iPt-1]);
-        fHistoMassWindowNarrowHigh->SetBinContent(iPt,fMassWindowNarrowHigh[iPt-1]);
-        fHistoMassWindowNarrowLow->SetBinContent(iPt,fMassWindowNarrowLow[iPt-1]);
+        // filling histogram arrays for normal, wide, narrow
+        for (Int_t k = 0; k < 3; k++){
+            fHistoMassWindowHigh[k]->SetBinContent(iPt,fMassWindowHigh[k][iPt-1]);
+            fHistoMassWindowLow[k]->SetBinContent(iPt,fMassWindowLow[k][iPt-1]);
+            fHistoSBdefaultMeson[k]->SetBinContent(iPt,fMesonSBdefault[k][iPt-1]);
+            fHistoSBdefaultMeson[k]->SetBinError(iPt,fMesonSBdefaultError[k][iPt-1]);
+            fHistoSigndefaultMeson[k]->SetBinContent(iPt,fMesonSigndefault[k][iPt-1]);
+            fHistoSigndefaultMeson[k]->SetBinError(iPt,fMesonSigndefaultError[k][iPt-1]);
 
+            
+        }
+
+        // filling histogram arrays for normal, wide, narrow, left, left wide, left narrow
+        for (Int_t k = 0; k < 6; k++){
+            fHistoYieldMeson[k]->SetBinContent(iPt,fMesonYieldsCorResidualBckFunc[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+            fHistoYieldMeson[k]->SetBinError(iPt,fMesonYieldsCorResidualBckFuncError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+            fHistoYieldMesonPerEvent[k]->SetBinContent(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFunc[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+            fHistoYieldMesonPerEvent[k]->SetBinError(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFuncError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+            
+        }    
         
-        fHistoYieldMeson->SetBinContent(iPt,fMesonYieldsCorResidualBckFunc[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        fHistoYieldMeson->SetBinError(iPt,fMesonYieldsCorResidualBckFuncError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
         
         if (fIsMC) {
-            fHistoYieldTrueMeson->SetBinContent(iPt,fMesonTrueYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueMeson->SetBinError(iPt,fMesonTrueYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            if (fEnableDCMeson) fHistoYieldTrueMesonDC->SetBinContent(iPt,fMesonTrueYieldsDC[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            if (fEnableDCMeson) fHistoYieldTrueMesonDC->SetBinError(iPt,fMesonTrueYieldsDCError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueMesonReweighted->SetBinContent(iPt,fMesonTrueYieldsReweighted[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueMesonReweighted->SetBinError(iPt,fMesonTrueYieldsReweightedError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueMesonUnweighted->SetBinContent(iPt,fMesonTrueYieldsUnweighted[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueMesonUnweighted->SetBinError(iPt,fMesonTrueYieldsUnweightedError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecMeson->SetBinContent(iPt,fMesonTrueSecYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecMeson->SetBinError(iPt,fMesonTrueSecYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecFromK0SMeson->SetBinContent(iPt,fMesonTrueSecFromK0SYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecFromK0SMeson->SetBinError(iPt,fMesonTrueSecFromK0SYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecFromLambdaMeson->SetBinContent(iPt,fMesonTrueSecFromLambdaYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecFromLambdaMeson->SetBinError(iPt,fMesonTrueSecFromLambdaYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        
+            for (Int_t k = 0; k < 3; k++){
+                fHistoYieldTrueMeson[k]->SetBinContent(iPt,fMesonTrueYields[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                fHistoYieldTrueMeson[k]->SetBinError(iPt,fMesonTrueYieldsError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                fHistoYieldTrueMesonReweighted[k]->SetBinContent(iPt,fMesonTrueYieldsReweighted[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                fHistoYieldTrueMesonReweighted[k]->SetBinError(iPt,fMesonTrueYieldsReweightedError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                fHistoYieldTrueMesonUnweighted[k]->SetBinContent(iPt,fMesonTrueYieldsUnweighted[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                fHistoYieldTrueMesonUnweighted[k]->SetBinError(iPt,fMesonTrueYieldsUnweightedError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                if (fEnableDCMeson && k == 0){
+                    fHistoYieldTrueMesonDC->SetBinContent(iPt,fMesonTrueYieldsDC[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                    fHistoYieldTrueMesonDC->SetBinError(iPt,fMesonTrueYieldsDCError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                }    
+            }    
         }
-        fHistoYieldMesonPerEvent->SetBinContent(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFunc[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        fHistoYieldMesonPerEvent->SetBinError(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFuncError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-
-        // Narrow integration window
-        fHistoSignMesonNarrow->SetBinContent(iPt,fMesonSignNarrow[iPt-1]);
-        fHistoSignMesonNarrow->SetBinError(iPt,fMesonSignNarrowError[iPt-1]);
-        fHistoSBMesonNarrow->SetBinContent(iPt,fMesonSBNarrow[iPt-1]);
-        fHistoSBMesonNarrow->SetBinError(iPt,fMesonSBNarrowError[iPt-1]);
-        
-        fHistoSBdefaultNarrowMeson->SetBinContent(iPt,fMesonSBdefaultNarrow[iPt-1]);
-        fHistoSBdefaultNarrowMeson->SetBinError(iPt,fMesonSBdefaultNarrowError[iPt-1]);
-        fHistoSigndefaultNarrowMeson->SetBinContent(iPt,fMesonSigndefaultNarrow[iPt-1]);
-        fHistoSigndefaultNarrowMeson->SetBinError(iPt,fMesonSigndefaultNarrowError[iPt-1]);
-
-
-        fHistoYieldMesonNarrow->SetBinContent(iPt,fMesonYieldsCorResidualBckFuncNarrow[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        fHistoYieldMesonNarrow->SetBinError(iPt,fMesonYieldsCorResidualBckFuncNarrowError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-
-        if (fIsMC) {
-            fHistoYieldTrueMesonNarrow->SetBinContent(iPt,fMesonTrueYieldsNarrow[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueMesonNarrow->SetBinError(iPt,fMesonTrueYieldsNarrowError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueMesonReweightedNarrow->SetBinContent(iPt,fMesonTrueYieldsReweightedNarrow[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueMesonReweightedNarrow->SetBinError(iPt,fMesonTrueYieldsReweightedNarrowError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueMesonUnweightedNarrow->SetBinContent(iPt,fMesonTrueYieldsUnweightedNarrow[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueMesonUnweightedNarrow->SetBinError(iPt,fMesonTrueYieldsUnweightedNarrowError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecMesonNarrow->SetBinContent(iPt,fMesonTrueSecYieldsNarrow[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecMesonNarrow->SetBinError(iPt,fMesonTrueSecYieldsNarrowError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecFromK0SMesonNarrow->SetBinContent(iPt,fMesonTrueSecFromK0SYieldsNarrow[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecFromK0SMesonNarrow->SetBinError(iPt,fMesonTrueSecFromK0SYieldsNarrowError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecFromLambdaMesonNarrow->SetBinContent(iPt,fMesonTrueSecFromLambdaYieldsNarrow[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecFromLambdaMesonNarrow->SetBinError(iPt,fMesonTrueSecFromLambdaYieldsNarrowError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        
-        }
-        fHistoYieldMesonPerEventNarrow->SetBinContent(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFuncNarrow[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        fHistoYieldMesonPerEventNarrow->SetBinError(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFuncNarrowError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-
-        // Wide integration window
-        fHistoSignMesonWide->SetBinContent(iPt,fMesonSignWide[iPt-1]);
-        fHistoSignMesonWide->SetBinError(iPt,fMesonSignWideError[iPt-1]);
-        fHistoSBMesonWide->SetBinContent(iPt,fMesonSBWide[iPt-1]);
-        fHistoSBMesonWide->SetBinError(iPt,fMesonSBWideError[iPt-1]);
-
-        fHistoYieldMesonWide->SetBinContent(iPt,fMesonYieldsCorResidualBckFuncWide[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        fHistoYieldMesonWide->SetBinError(iPt,fMesonYieldsCorResidualBckFuncWideError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-
-        if (fIsMC) {
-            fHistoYieldTrueMesonWide->SetBinContent(iPt,fMesonTrueYieldsWide[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueMesonWide->SetBinError(iPt,fMesonTrueYieldsWideError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueMesonReweightedWide->SetBinContent(iPt,fMesonTrueYieldsReweightedWide[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueMesonReweightedWide->SetBinError(iPt,fMesonTrueYieldsReweightedWideError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueMesonUnweightedWide->SetBinContent(iPt,fMesonTrueYieldsUnweightedWide[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueMesonUnweightedWide->SetBinError(iPt,fMesonTrueYieldsUnweightedWideError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecMesonWide->SetBinContent(iPt,fMesonTrueSecYieldsWide[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecMesonWide->SetBinError(iPt,fMesonTrueSecYieldsWideError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecFromK0SMesonWide->SetBinContent(iPt,fMesonTrueSecFromK0SYieldsWide[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecFromK0SMesonWide->SetBinError(iPt,fMesonTrueSecFromK0SYieldsWideError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecFromLambdaMesonWide->SetBinContent(iPt,fMesonTrueSecFromLambdaYieldsWide[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldTrueSecFromLambdaMesonWide->SetBinError(iPt,fMesonTrueSecFromLambdaYieldsWideError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        }
-        fHistoYieldMesonPerEventWide->SetBinContent(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFuncWide[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        fHistoYieldMesonPerEventWide->SetBinError(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFuncWideError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
 
         // Histos for integration at the left of the peak
         fHistoMassMesonLeft->SetBinContent(iPt,fMesonMassLeft[iPt-1]);
@@ -4302,38 +3540,21 @@ void FillPtHistos()
         fHistoFWHMMesonLeft->SetBinContent(iPt,fMesonFWHMLeft[iPt-1]);
         fHistoFWHMMesonLeft->SetBinError(iPt,fMesonFWHMLeftError[iPt-1]);
 
-        fHistoSignMesonLeft->SetBinContent(iPt,fMesonSignLeft[iPt-1]);
-        fHistoSignMesonLeft->SetBinError(iPt,fMesonSignLeftError[iPt-1]);
-        fHistoSBMesonLeft->SetBinContent(iPt,fMesonSBLeft[iPt-1]);
-        fHistoSBMesonLeft->SetBinError(iPt,fMesonSBLeftError[iPt-1]);
+        // fill secondary histograms
+        if (fIsMC){
+            for (Int_t k = 0; k< 3; k++){
+                for (Int_t j = 0; j< 4; j++){
+                    fHistoYieldTrueSecMeson[k][j]->SetBinContent(iPt,fMesonTrueSecYields[k][j][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                    fHistoYieldTrueSecMeson[k][j]->SetBinError(iPt,fMesonTrueSecYieldsError[k][j][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                }
+            }
+        }    
 
-        fHistoYieldMesonLeft->SetBinContent(iPt,fMesonYieldsCorResidualBckFuncLeft[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        fHistoYieldMesonLeft->SetBinError(iPt,fMesonYieldsCorResidualBckFuncLeftError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        fHistoYieldMesonLeftPerEvent->SetBinContent(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFuncLeft[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        fHistoYieldMesonLeftPerEvent->SetBinError(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFuncLeftError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-
-        // Narrow integration window
-        fHistoSignMesonLeftNarrow->SetBinContent(iPt,fMesonSignLeftNarrow[iPt-1]);
-        fHistoSignMesonLeftNarrow->SetBinError(iPt,fMesonSignLeftNarrowError[iPt-1]);
-        fHistoSBMesonLeftNarrow->SetBinContent(iPt,fMesonSBLeftNarrow[iPt-1]);
-        fHistoSBMesonLeftNarrow->SetBinError(iPt,fMesonSBLeftNarrowError[iPt-1]);
-
-        fHistoYieldMesonLeftNarrow->SetBinContent(iPt,fMesonYieldsCorResidualBckFuncLeftNarrow[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        fHistoYieldMesonLeftNarrow->SetBinError(iPt,fMesonYieldsCorResidualBckFuncLeftNarrowError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        fHistoYieldMesonLeftPerEventNarrow->SetBinContent(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFuncLeftNarrow[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        fHistoYieldMesonLeftPerEventNarrow->SetBinError(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFuncLeftNarrowError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-
-        // Wide integration window
-        fHistoSignMesonLeftWide->SetBinContent(iPt,fMesonSignLeftWide[iPt-1]);
-        fHistoSignMesonLeftWide->SetBinError(iPt,fMesonSignLeftWideError[iPt-1]);
-        fHistoSBMesonLeftWide->SetBinContent(iPt,fMesonSBLeftWide[iPt-1]);
-        fHistoSBMesonLeftWide->SetBinError(iPt,fMesonSBLeftWideError[iPt-1]);
-
-        fHistoYieldMesonLeftWide->SetBinContent(iPt,fMesonYieldsCorResidualBckFuncLeftWide[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        fHistoYieldMesonLeftWide->SetBinError(iPt,fMesonYieldsCorResidualBckFuncLeftWideError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        fHistoYieldMesonLeftPerEventWide->SetBinContent(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFuncLeftWide[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-        fHistoYieldMesonLeftPerEventWide->SetBinError(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFuncLeftWideError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+        
+        
     }
+    
+    
 }
 
 //****************************************************************************
@@ -4914,94 +4135,6 @@ void FitTrueInvMassPureGaussianInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSin
     }
 }
 
-//****************************************************************************
-//*** Fit of Signal+ BG for symmetric decays (alpha < 0.1) with **************
-//*** Gaussian + Exponential + quadratic BG **********************************
-//****************************************************************************
-void FitPeakPosInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Int_t ptBin, Bool_t vary){
-
-    //    cout<<"Start Fitting spectra"<<endl;
-    fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(0.05,0.3);
-    Double_t mesonAmplitude =fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
-    Double_t mesonAmplitudeMin;
-    Double_t mesonAmplitudeMax;
-    if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
-        mesonAmplitudeMin = mesonAmplitude*80./100.;
-        mesonAmplitudeMax = mesonAmplitude*115./100.;
-        if (fMode == 2 || fMode == 3) {
-            mesonAmplitudeMin = mesonAmplitude*98./100.;
-            mesonAmplitudeMax = mesonAmplitude*400./100.;
-        }
-        if (fMode == 4 || fMode == 5) {
-            mesonAmplitudeMin = mesonAmplitude*10./100.;
-            mesonAmplitudeMax = mesonAmplitude*400./100.;
-            if( fEnergyFlag.CompareTo("8TeV") == 0  ){
-              mesonAmplitudeMin = mesonAmplitude*90./100.;
-              mesonAmplitudeMax = mesonAmplitude*400./100.;
-            }
-        }
-
-    } else {
-        mesonAmplitudeMin = mesonAmplitude*80./110.;
-        mesonAmplitudeMax = mesonAmplitude*115./100.;
-    }
-    fFitReco = NULL;
-    fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x+[6]*x*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x+[6]*x*x)",0.05,0.3);
-
-    fFitGausExp = NULL;
-    fFitGausExp = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",0.05,0.3);
-
-    fFitLinearBck = NULL;
-    fFitLinearBck = new TF1("Linear","[0]+[1]*x+[2]*x*x",0.05,0.3);
-
-
-    fFitReco->SetParameter(0,mesonAmplitude);
-    fFitReco->SetParameter(1,fMesonMassExpect);
-    fFitReco->SetParameter(2,fMesonWidthExpect);
-    if(vary){
-        fFitReco->SetParameter(3,fMesonLambdaTail);
-    } else {
-        fFitReco->FixParameter(3,fMesonLambdaTail);
-    }
-    fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
-    fFitReco->SetParLimits(1,fMesonMassRange[0],fMesonMassRange[1]);
-    fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
-    if(vary){fFitReco->SetParLimits(3,fMesonLambdaTailRange[0],fMesonLambdaTailRange[1]);}
-
-    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
-    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
-
-    fFitReco->SetLineColor(3);
-    fFitReco->SetLineWidth(1);
-    fFitReco->SetLineStyle(1);
-
-    fFitGausExp->SetParameter(0,fFitReco->GetParameter(0));
-    fFitGausExp->SetParameter(1,fFitReco->GetParameter(1));
-    fFitGausExp->SetParameter(2,fFitReco->GetParameter(2));
-    fFitGausExp->SetParameter(3,fFitReco->GetParameter(3));
-
-    fFitGausExp->SetParError(0,fFitReco->GetParError(0));
-    fFitGausExp->SetParError(1,fFitReco->GetParError(1));
-    fFitGausExp->SetParError(2,fFitReco->GetParError(2));
-    fFitGausExp->SetParError(3,fFitReco->GetParError(3));
-
-    fFitLinearBck->SetParameter(0,fFitReco->GetParameter(4));
-    fFitLinearBck->SetParameter(1,fFitReco->GetParameter(5));
-    fFitLinearBck->SetParameter(1,fFitReco->GetParameter(6));
-
-    fFitLinearBck->SetParError(0,fFitReco->GetParError(4));
-    fFitLinearBck->SetParError(1,fFitReco->GetParError(5));
-    fFitLinearBck->SetParError(1,fFitReco->GetParError(6));
-
-    if(TString(gMinuit->fCstatu.Data()).CompareTo("CONVERGED") == 0 || TString(gMinuit->fCstatu.Data()).CompareTo("SUCCESSFUL") == 0 ){
-        fFileDataLog << "Parameter for bin " << ptBin << endl;
-        fFileDataLog << "Gausexp: \t" << fFitReco->GetParameter(0) <<"+-" << fFitReco->GetParError(0) << "\t " << fFitReco->GetParameter(1)<<"+-" << fFitReco->GetParError(1) << "\t "<< fFitReco->GetParameter(2) <<"+-" << fFitReco->GetParError(2)<< "\t "<< fFitReco->GetParameter(3) <<"+-" << fFitReco->GetParError(3)<<endl;
-        fFileDataLog << "Quadratic: \t"<<fFitReco->GetParameter(4)<<"+-" << fFitReco->GetParError(4) << "\t "<<fFitReco->GetParameter(5) <<"+-" << fFitReco->GetParError(5) << "\t "<<fFitReco->GetParameter(6) <<"+-" << fFitReco->GetParError(6)<< endl;
-    } else {
-        fFileErrLog << "Fitting failed in " << ptBin << " with status " << gMinuit->fCstatu.Data() <<endl << endl;
-    }
-    fFitReco->DrawCopy("same");
-}
 
 //****************************************************************************
 //*** Fit of subtracted Signal+ BG with CrystalBall tail + Lin BG ************
@@ -5221,6 +4354,53 @@ void FillHistosArrayMCWOEvtWeights(TH1D* fHistoMCMesonPtWithinAcceptanceFill, TH
 }
 
 //****************************************************************************
+//***************** Filling of MC secondary histograms ***********************
+//***************** rebin to proper binning & calculate acc ******************
+//****************************************************************************
+void FillMCSecondaryHistAndCalculateAcceptance(TH2D* mcSecInputSourcePt, TH2D* mcSecInputInAccSourcePt){
+    // MC histo pt vs sourcs
+    // 1-> K0s
+    // 2-> Lambda
+    // 3-> K0L
+    // 5-> p 
+    // 6-> n 
+    // 7-> pi 
+    // 8-> K 
+    // 9-> rho 
+    // 10-> Delta 
+    // 11-> K*
+    // 15-> Rest 
+    Int_t startBin[4]   = {1,2,3,4};
+    Int_t endBin[4]     = {1,2,3,15};
+    
+    for (Int_t i = 0; i < 4; i++){
+        // project correct bin
+        fHistoMCSecPi0Pt[i]             = (TH1D*)mcSecInputSourcePt->ProjectionX(Form("MCSecPi0From%s",nameSecondaries[i].Data()), mcSecInputSourcePt->GetYaxis()->FindBin(startBin[i]), 
+                                                                                 mcSecInputSourcePt->GetYaxis()->FindBin(endBin[i]),"e");     
+        fHistoMCSecPi0Pt[i]->SetTitle(Form("MCSecPi0From%s",nameSecondaries[i].Data()));
+        fHistoMCSecPi0Pt[i]->Sumw2();
+        fHistoMCSecPi0PtWAcc[i]         = (TH1D*)mcSecInputInAccSourcePt->ProjectionX(Form("MCSecPi0From%s_InAcc",nameSecondaries[i].Data()), mcSecInputInAccSourcePt->GetYaxis()->FindBin(startBin[i]), 
+                                                                                      mcSecInputInAccSourcePt->GetYaxis()->FindBin(endBin[i]),"e");     
+        fHistoMCSecPi0PtWAcc[i]->SetTitle(Form("MCSecPi0From%s_InAcc",nameSecondaries[i].Data()));
+        fHistoMCSecPi0PtWAcc[i]->Sumw2();
+
+        // rebin in to current analysis binning
+        fHistoMCSecPi0PtReb[i]          = (TH1D*)fHistoMCSecPi0Pt[i]->Rebin(fNBinsPt,Form("MCSecPi0From%s_Rebinned",nameSecondaries[i].Data()),fBinsPt); // Proper bins in Pt
+        fHistoMCSecPi0PtReb[i]->SetTitle(Form("MCSecPi0From%s_Rebinned",nameSecondaries[i].Data()));
+        fHistoMCSecPi0PtReb[i] ->Divide(fDeltaPt);
+        fHistoMCSecPi0PtWAccReb[i]      = (TH1D*)fHistoMCSecPi0PtWAcc[i]->Rebin(fNBinsPt,Form("MCSecPi0From%s_InAcc_Rebinned",nameSecondaries[i].Data()),fBinsPt); // Proper bins in Pt
+        fHistoMCSecPi0PtWAccReb[i]->SetTitle(Form("MCSecPi0From%s_InAcc_Rebinned",nameSecondaries[i].Data()));
+        fHistoMCSecPi0PtWAccReb[i] ->Divide(fDeltaPt);
+        
+        // calculate acceptance
+        fHistoMCSecPi0AcceptPt[i]       = (TH1D*)fHistoMCSecPi0PtWAccReb[i]->Clone(Form("fMCSecPi0From%sAccepPt",nameSecondaries[i].Data()));
+        fHistoMCSecPi0AcceptPt[i]->SetTitle(Form("fMCSecPi0From%sAccepPt",nameSecondaries[i].Data()));
+        fHistoMCSecPi0AcceptPt[i]->Divide(fHistoMCSecPi0PtWAccReb[i],fHistoMCSecPi0PtReb[i],1.,1.,"B");
+    }
+}    
+
+
+//****************************************************************************
 //***************** Calculation of Meson Acceptance **************************
 //****************************************************************************
 void CalculateMesonAcceptance() {
@@ -5268,35 +4448,43 @@ void CalculateMesonAcceptanceWOEvtWeights() {
 //****************************************************************************
 //***************** Calculation of Meson Efficiency **************************
 //****************************************************************************
-void CalculateMesonEfficiency(TH1D* fMC_fMesonYieldsPt, TH1D* fMC_SecondaryYieldPt, TString nameEfi ) {
-    fHistoMCMesonEffiPt = new TH1D(nameEfi.Data(),"",fNBinsPt,fBinsPt);
+TH1D* CalculateMesonEfficiency(TH1D* fMC_fMesonYieldsPt, TH1D** fMC_SecondaryYieldPt, TString nameEfi ) {
+    TH1D* fHistoMCMesonEffiPt = new TH1D(nameEfi.Data(),"",fNBinsPt,fBinsPt);
         
     fHistoMCMesonEffiPt->Sumw2();
     fHistoMCMesonEffiPt->Add(fMC_fMesonYieldsPt,1.);
-    if (fMC_SecondaryYieldPt) fHistoMCMesonEffiPt->Add(fMC_SecondaryYieldPt,-1.);
-        
+    if (fMC_SecondaryYieldPt){
+        for (Int_t j = 0; j<4; j++){
+            if(fMC_SecondaryYieldPt[j]) fHistoMCMesonEffiPt->Add(fMC_SecondaryYieldPt[j],-1.);
+        }    
+    }    
     fHistoMCMesonEffiPt->Divide(fHistoMCMesonEffiPt,fHistoMCMesonWithinAccepPt,1.,1.,"B");
     fFileDataLog << endl << "Calculation of the Efficiency" << nameEfi.Data()<< endl;
     for ( Int_t i = 1; i < fHistoMCMesonEffiPt->GetNbinsX()+1 ; i++){
         fFileDataLog << "Bin " << i << "\t" << fHistoMCMesonEffiPt->GetBinCenter(i)<< "\t"<< fHistoMCMesonEffiPt->GetBinContent(i) << "\t" << fHistoMCMesonEffiPt->GetBinError(i) <<endl;
     }
+    return fHistoMCMesonEffiPt;
 }
 
 //****************************************************************************
 //***************** Calculation of Meson Efficiency **************************
 //****************************************************************************
-void CalculateMesonEfficiencyWOWeights(TH1D* fMC_fMesonYieldsPt, TH1D* fMC_SecondaryYieldPt, TString nameEfi ) {
-    fHistoMCMesonEffiPt = new TH1D(nameEfi.Data(),"",fNBinsPt,fBinsPt);
+TH1D* CalculateMesonEfficiencyWOWeights(TH1D* fMC_fMesonYieldsPt, TH1D** fMC_SecondaryYieldPt, TString nameEfi ) {
+    TH1D* fHistoMCMesonEffiPt = new TH1D(nameEfi.Data(),"",fNBinsPt,fBinsPt);
         
     fHistoMCMesonEffiPt->Sumw2();
     fHistoMCMesonEffiPt->Add(fMC_fMesonYieldsPt,1.);
-    if (fMC_SecondaryYieldPt) fHistoMCMesonEffiPt->Add(fMC_SecondaryYieldPt,-1.);
-        
+    if (fMC_SecondaryYieldPt){
+        for (Int_t j = 0; j<4; j++){
+            if(fMC_SecondaryYieldPt[j]) fHistoMCMesonEffiPt->Add(fMC_SecondaryYieldPt[j],-1.);
+        }    
+    }        
     fHistoMCMesonEffiPt->Divide(fHistoMCMesonEffiPt,fHistoMCMesonWithinAccepPtWOWeights,1.,1.,"B");
     fFileDataLog << endl << "Calculation of the Efficiency" << nameEfi.Data()<< endl;
     for ( Int_t i = 1; i < fHistoMCMesonEffiPt->GetNbinsX()+1 ; i++){
         fFileDataLog << "Bin " << i << "\t" << fHistoMCMesonEffiPt->GetBinCenter(i)<< "\t"<< fHistoMCMesonEffiPt->GetBinContent(i) << "\t" << fHistoMCMesonEffiPt->GetBinError(i) <<endl;
     }
+    return fHistoMCMesonEffiPt;
 }
 
 //****************************************************************************
@@ -5357,56 +4545,30 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
         fHistoClustersOverlapHeadersPtPerEvent->Scale(1./fNEvents);
         fHistoClustersOverlapHeadersPtPerEvent->Write("ClusterOverlapHeadersPtPerEvent");
     }
-    fHistoYieldMeson->Write();
-    fHistoYieldMesonPerEvent->Write();
-    fHistoSignMeson->Write();
-    fHistoSigndefaultMeson->Write();
-    fHistoSBMeson->Write();
-    fHistoSBdefaultMeson->Write();
     
-    fHistoMassWindowHigh->Write();
-    fHistoMassWindowLow->Write();
-    fHistoMassWindowWideHigh->Write();
-    fHistoMassWindowWideLow->Write();
-    fHistoMassWindowNarrowHigh->Write();
-    fHistoMassWindowNarrowLow->Write();
-
-    fHistoYieldMesonNarrow->Write();
-    fHistoYieldMesonPerEventNarrow->Write();
-    fHistoSignMesonNarrow->Write();
-    fHistoSBMesonNarrow->Write();
-    fHistoSBdefaultNarrowMeson->Write();
-    fHistoSigndefaultNarrowMeson->Write();
+    // write histograms for all integration windows: normal, wide, narrow, left, left wide, left narrow
+    for (Int_t k = 0; k < 6; k++){
+        if (fHistoYieldMeson[k])            fHistoYieldMeson[k]->Write();
+        if (fHistoYieldMesonPerEvent[k])    fHistoYieldMesonPerEvent[k]->Write();
+    
+    }    
+    
+    // write histograms for integration windows: normal, wide, narrow
+    for (Int_t k = 0; k < 3; k++){
+        if (fHistoMassWindowHigh[k])        fHistoMassWindowHigh[k]->Write();
+        if (fHistoMassWindowLow[k])         fHistoMassWindowLow[k]->Write();
+        if (fHistoSigndefaultMeson[k])      fHistoSigndefaultMeson[k]->Write();
+        if (fHistoSBdefaultMeson[k])        fHistoSBdefaultMeson[k]->Write();    
+    }    
 
     fHistoLambdaTail->Write();
-
-    fHistoYieldMesonWide->Write();
-    fHistoYieldMesonPerEventWide->Write();
-    fHistoSignMesonWide->Write();
-    fHistoSBMesonWide->Write();
-
-    if(fPrefix.CompareTo("Pi0") == 0 && fEnergyFlag.CompareTo("7TeV") == 0 ){fHistoMassPosition->Write();}
-    if(fPrefix.CompareTo("Pi0") == 0 && fEnergyFlag.CompareTo("7TeV") == 0 ){fHistoFWHMMesonAlpha01->Write();}
     fHistoMassMeson->Write();
     fHistoMassGaussianMeson->Write();
     fHistoWidthGaussianMeson->Write();
     fHistoFWHMMeson->Write();
     fDeltaPt->Write();
     
-    fHistoYieldMesonLeft->Write();
-    fHistoYieldMesonLeftPerEvent->Write();
-    fHistoSignMesonLeft->Write();
-    fHistoSBMesonLeft->Write();
 
-    fHistoYieldMesonLeftNarrow->Write();
-    fHistoYieldMesonLeftPerEventNarrow->Write();
-    fHistoSignMesonLeftNarrow->Write();
-    fHistoSBMesonLeftNarrow->Write();
-
-    fHistoYieldMesonLeftWide->Write();
-    fHistoYieldMesonLeftPerEventWide->Write();
-    fHistoSignMesonLeftWide->Write();
-    fHistoSBMesonLeftWide->Write();
 
     fHistoMassMesonLeft->Write();
     fHistoFWHMMesonLeft->Write();
@@ -5420,20 +4582,10 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
     TString nameHistoSignal;
     TString titleHistoSignal;
     TString nameHistoSignalLeft;
-    TString nameHistoPeakPos;
     TString nameHistoBckNorm;
     TString fitnameSignal;
     TString nameHistoBckNormLeft;
     TString fitnameSignalLeft;
-    TString nameHistoSignalPos;
-    if (fPrefix.CompareTo("Pi0") == 0 && fEnergyFlag.CompareTo("7TeV") == 0) {
-        for (Int_t ii=fStartPtBin;ii<fNBinsPeakPt;ii++){
-            nameHistoPeakPos = Form("InvMassAlpha01_in_Pt_Bin%02d", ii);
-            if(fHistoMappingPeakPosInvMassPtBin[ii]) fHistoMappingPeakPosInvMassPtBin[ii]->Write(nameHistoPeakPos.Data());
-            fNameFitSignalPos = Form("Signal_InvMassFitPos_in_Pt_Bin%02d", ii);
-            if(fFitPeakPosPtBin[ii]!=0x00) fFitPeakPosPtBin[ii]->Write(fNameFitSignalPos.Data());
-        }
-    }
 
     for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
         if(UseTHnSparse){
@@ -5484,26 +4636,16 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
         if (fHistoMCMesonWithinAccepPtWOWeights) fHistoMCMesonWithinAccepPtWOWeights->Write();
         fHistoMCMesonPt1->Write(); // Proper bins in Pt
         if (fHistoMCMesonPt1WOWeights) fHistoMCMesonPt1WOWeights->Write(); // Proper bins in Pt
-        fHistoYieldTrueMeson->Write();
-        fHistoYieldTrueMesonWide->Write();
-        fHistoYieldTrueMesonNarrow->Write();
-        fHistoYieldTrueMesonReweighted->Write();
-        fHistoYieldTrueMesonReweightedWide->Write();
-        fHistoYieldTrueMesonReweightedNarrow->Write();
-        fHistoYieldTrueMesonUnweighted->Write();
-        fHistoYieldTrueMesonUnweightedWide->Write();
-        fHistoYieldTrueMesonUnweightedNarrow->Write();
-        
         fHistoTrueMesonInvMassVSPt->Write();
-        fHistoYieldTrueSecMeson->Write();
-        fHistoYieldTrueSecFromK0SMeson->Write();
-        fHistoYieldTrueSecFromLambdaMeson->Write();
-        fHistoYieldTrueSecMesonWide->Write();
-        fHistoYieldTrueSecFromK0SMesonWide->Write();
-        fHistoYieldTrueSecFromLambdaMesonWide->Write();
-        fHistoYieldTrueSecMesonNarrow->Write();
-        fHistoYieldTrueSecFromK0SMesonNarrow->Write();
-        fHistoYieldTrueSecFromLambdaMesonNarrow->Write();
+        
+        for (Int_t k = 0; k < 3; k++){ // different integration windows: normal, wide, narrow
+            if (fHistoYieldTrueMeson[k])            fHistoYieldTrueMeson[k]->Write();
+            if (fHistoYieldTrueMesonReweighted[k])  fHistoYieldTrueMesonReweighted[k]->Write();
+            if (fHistoYieldTrueMesonUnweighted[k])  fHistoYieldTrueMesonUnweighted[k]->Write();
+            for (Int_t j = 0; j<4; j++){ // different secondary types: K0s, Lambda, K0L, rest
+               if(fHistoYieldTrueSecMeson[k][j])    fHistoYieldTrueSecMeson[k][j]->Write();
+            }   
+        }   
         for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
             fHistoMappingTrueMesonInvMassPtBins[ii]->Write();
             if (fEnableDCMeson) fHistoMappingTrueMesonDCInvMassPtBins[ii]->Write();
@@ -5533,9 +4675,9 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
                 }
                 
             }
-            if (fHistoMappingTrueSecMesonInvMassPtBins[ii] != 0x00) fHistoMappingTrueSecMesonInvMassPtBins[ii]->Write();
-            if (fHistoMappingTrueSecFromK0SMesonInvMassPtBins[ii] != 0x00) fHistoMappingTrueSecFromK0SMesonInvMassPtBins[ii]->Write();
-            if (fHistoMappingTrueSecFromLambdaMesonInvMassPtBins[ii] != 0x00) fHistoMappingTrueSecFromLambdaMesonInvMassPtBins[ii]->Write();
+            for (Int_t j = 0; j < 4; j++){
+                if (fHistoMappingTrueSecMesonInvMassPtBins[j][ii] != 0x00) fHistoMappingTrueSecMesonInvMassPtBins[j][ii]->Write();
+            }    
             if (fFitTrueSignalInvMassPtBin[ii]!=0x00) fFitTrueSignalInvMassPtBin[ii]->Write();
             if (fFitTrueSignalInvMassPtReweightedBin[ii]!=0x00) fFitTrueSignalInvMassPtReweightedBin[ii]->Write();
             if (fFitTrueSignalInvMassPtUnweightedBin[ii]!=0x00) fFitTrueSignalInvMassPtUnweightedBin[ii]->Write();
@@ -5565,128 +4707,140 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
     cout<<"======================================================"<<endl;
 
     cout << "Begin writing Correction File" << endl;
-    fHistoMCMesonAcceptPt->Write();
-    fHistoTrueMesonInvMassVSPt->Write();
-    fHistoMonteMesonEffiPt->Write();
-    fHistoMonteMesonNarrowEffiPt->Write();
-    fHistoMonteMesonWideEffiPt->Write();
-    fHistoMonteMesonLeftEffiPt->Write();
-    fHistoMonteMesonLeftNarrowEffiPt->Write();
-    fHistoMonteMesonLeftWideEffiPt->Write();
-    fHistoMCTrueMesonEffiPt->Write();
-    fHistoMCTrueMesonEffiPtReweighted->Write();
-    fHistoMCTrueMesonNarrowEffiPt->Write();
-    fHistoMCTrueMesonNarrowEffiPtReweighted->Write();
-    fHistoMCTrueMesonWideEffiPt->Write();
-    fHistoMCTrueMesonWideEffiPtReweighted->Write();
-    cout << "line" << __LINE__ << endl;
-    if (fHistoMCMesonPtWithinAcceptanceWOWeights){
-        fHistoMCMesonAcceptPtWOWeights->Write();
-        fHistoMCTrueMesonEffiPtUnweighted->Write();
-        fHistoMCTrueMesonNarrowEffiPtUnweighted->Write();
-        fHistoMCTrueMesonWideEffiPtUnweighted->Write();
-        fHistoMCMesonPt1WOWeights->SetName("MC_Meson_genPt_properBinning_WOWeights");
-        fHistoMCMesonPt1WOWeights->Write(); // Proper bins in Pt
+    
+    // write event counting histo
+    if (fEventQuality)          fEventQuality->Write();
+    
+    // write acceptance
+    if (fHistoMCMesonAcceptPt)  fHistoMCMesonAcceptPt->Write();
+    // write input spectra with weights
+    if (fHistoMCMesonPt1){
+        fHistoMCMesonPt1->SetName("MC_Meson_genPt");
+        fHistoMCMesonPt1->Write(); // Proper bins in Pt
     }
-    cout << "line" << __LINE__ << endl;
-    if (fHistoMCMesonPtWithinAcceptanceWOEvtWeights){
-        fHistoMCMesonAcceptPtWOEvtWeights->Write();
-        fHistoMCMesonPt1WOEvtWeights->SetName("MC_Meson_genPt_properBinning_WOEvtWeights");
-        fHistoMCMesonPt1WOEvtWeights->Write(); // Proper bins in Pt
+    if (fHistoMCMesonPt){
+        fHistoMCMesonPt->SetName("MC_Meson_genPt_oldBin");
+        fHistoMCMesonPt->Scale(1./fHistoMCMesonPt->GetBinWidth(5));
+        fHistoMCMesonPt->Write(); 
     }
-    fHistoMassMeson->Write();
-    fHistoFWHMMeson->Write();
-    fHistoMassGaussianMeson->Write();
-    fHistoWidthGaussianMeson->Write();
-    fHistoTrueMassMeson->Write();
-    fHistoTrueMassGaussianMeson->Write();
-    fHistoTrueWidthGaussianMeson->Write();
-    fHistoTrueMassMesonReweighted->Write();
-    fHistoTrueMassMesonUnweighted->Write();
-    fHistoTrueFWHMMeson->Write();
-    fHistoTrueFWHMMesonReweighted->Write();
-    fHistoTrueFWHMMesonUnweighted->Write();
-    cout << "line" << __LINE__ << endl;
-    if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5)){
-        if (fHistoTrueMassMesonCaloPhoton) fHistoTrueMassMesonCaloPhoton->Write();
-        if (fHistoTrueMassMesonCaloElectron) fHistoTrueMassMesonCaloElectron->Write();
-        if (fHistoTrueMassMesonCaloConvPhoton) fHistoTrueMassMesonCaloConvPhoton->Write();
-        if (fHistoTrueMassMesonCaloMergedCluster) fHistoTrueMassMesonCaloMergedCluster->Write();
-        if (fHistoTrueMassMesonCaloMergedPartConvCluster) fHistoTrueMassMesonCaloMergedPartConvCluster->Write();
-        if (fHistoTrueFWHMMesonCaloPhoton) fHistoTrueFWHMMesonCaloPhoton->Write();
-        if (fHistoTrueFWHMMesonCaloElectron) fHistoTrueFWHMMesonCaloElectron->Write();
-        if (fHistoTrueFWHMMesonCaloConvPhoton) fHistoTrueFWHMMesonCaloConvPhoton->Write();
-        if (fHistoTrueFWHMMesonCaloMergedCluster) fHistoTrueFWHMMesonCaloMergedCluster->Write();
-        if (fHistoTrueFWHMMesonCaloMergedPartConvCluster) fHistoTrueFWHMMesonCaloMergedPartConvCluster->Write();
-        if (fHistoYieldTrueMesonFixedWindow)fHistoYieldTrueMesonFixedWindow->Write();
-        if (fHistoYieldTrueMesonGammaFixedWindow)fHistoYieldTrueMesonGammaFixedWindow->Write();
-        if (fHistoYieldTrueMesonGammaConvGammaFixedWindow)fHistoYieldTrueMesonGammaConvGammaFixedWindow->Write();
-        if (fHistoYieldTrueMesonConvGammaConvGammaFixedWindow)fHistoYieldTrueMesonConvGammaConvGammaFixedWindow->Write();
-    }
-    cout << "line" << __LINE__ << endl;
-    if (fAdvancedMesonQA && (fMode == 4 || fMode == 5)){
-        if (fHistoTrueMassMesonMixedCaloConvPhoton) fHistoTrueMassMesonMixedCaloConvPhoton->Write();
-        if (fHistoTrueFWHMMesonMixedCaloConvPhoton) fHistoTrueFWHMMesonMixedCaloConvPhoton->Write();
-    }
-    cout << "line" << __LINE__ << endl;
-    fHistoMCMesonPt1->SetName("MC_Meson_genPt");
-    fHistoMCMesonPt1->Write(); // Proper bins in Pt
-    fHistoMCMesonPt->SetName("MC_Meson_genPt_oldBin");
-    fHistoMCMesonPt->Scale(1./fHistoMCMesonPt->GetBinWidth(5));
-    fHistoMCMesonPt->Write(); 
+    
+    // write input spectra w/o particle weights
     if (fHistoMCMesonPtWOWeights){
         fHistoMCMesonPtWOWeights->SetName("MC_Meson_genPt_WOWeights");
         fHistoMCMesonPtWOWeights->Scale(1./fHistoMCMesonPtWOWeights->GetBinWidth(5));
         fHistoMCMesonPtWOWeights->Write(); 
     }
+    // write particle weights
     if (fHistoMCMesonPtWeights){
         fHistoMCMesonPtWeights->Write("MC_Meson_genPt_Weights"); 
     }   
-    cout << "line" << __LINE__ << endl;
-    fEventQuality->Write();
-    fHistoYieldTrueSecMeson->Write();
-    fHistoYieldTrueSecFromK0SMeson->Write();
-    fHistoYieldTrueSecFromLambdaMeson->Write();
-    fHistoYieldTrueSecMesonWide->Write();
-    fHistoYieldTrueSecFromK0SMesonWide->Write();
-    fHistoYieldTrueSecFromLambdaMesonWide->Write();
-    fHistoYieldTrueSecMesonNarrow->Write();
-    fHistoYieldTrueSecFromK0SMesonNarrow->Write();
-    fHistoYieldTrueSecFromLambdaMesonNarrow->Write();
-    fHistoYieldTrueSecFracMeson->Write();
-    fHistoYieldTrueSecFracFromK0SMeson->Write();
-    fHistoYieldTrueSecFracFromLambdaMeson->Write();
-    fHistoYieldTrueSecFracMesonWide->Write();
-    fHistoYieldTrueSecFracFromK0SMesonWide->Write();
-    fHistoYieldTrueSecFracFromLambdaMesonWide->Write();
-    fHistoYieldTrueSecFracMesonNarrow->Write();
-    fHistoYieldTrueSecFracFromK0SMesonNarrow->Write();
-    fHistoYieldTrueSecFracFromLambdaMesonNarrow->Write();
-    cout << "line" << __LINE__ << endl;
-    fHistoYieldTrueMeson->Write();
+
+    // write acceptances & input spectra w/o particle weights
+    if (fHistoMCMesonPtWithinAcceptanceWOWeights){
+        fHistoMCMesonAcceptPtWOWeights->Write();
+        fHistoMCMesonPt1WOWeights->SetName("MC_Meson_genPt_properBinning_WOWeights");
+        fHistoMCMesonPt1WOWeights->Write(); // Proper bins in Pt
+    }
+    // write acceptances & input spectra w/o event weights
+    if (fHistoMCMesonPtWithinAcceptanceWOEvtWeights){
+        fHistoMCMesonAcceptPtWOEvtWeights->Write();
+        fHistoMCMesonPt1WOEvtWeights->SetName("MC_Meson_genPt_properBinning_WOEvtWeights");
+        fHistoMCMesonPt1WOEvtWeights->Write(); // Proper bins in Pt
+    }
+
+    // write efficiencies depending on integration windows: normal, wide, narrow, left, left wide, left narrow
+    for (Int_t k = 0; k < 6; k++){
+        if (fHistoMonteMesonEffiPt[k])          fHistoMonteMesonEffiPt[k]->Write();
+        if (k < 3){
+            if (fHistoMCTrueMesonEffiPt[k])                 fHistoMCTrueMesonEffiPt[k]->Write();
+            if (fHistoMCTrueMesonEffiPtReweighted[k])       fHistoMCTrueMesonEffiPtReweighted[k]->Write();
+            if (fHistoMCMesonPtWithinAcceptanceWOWeights){
+                if (fHistoMCTrueMesonEffiPtUnweighted[k])   fHistoMCTrueMesonEffiPtUnweighted[k]->Write();
+            }    
+        }
+    }    
+        
+    // Write new secondary pi0 MC quantities
+    if( fNewMCOutput ){
+        if (fHistoMCSecPi0SourcePt)         fHistoMCSecPi0SourcePt->Write();
+        if (fHistoMCSecPi0WAccSourcePt)     fHistoMCSecPi0WAccSourcePt->Write();
+        for (Int_t i = 0; i < 4; i++){
+            if(fHistoMCSecPi0Pt[i])         fHistoMCSecPi0Pt[i]->Write();
+            if(fHistoMCSecPi0PtWAcc[i])     fHistoMCSecPi0PtWAcc[i]->Write();
+            if(fHistoMCSecPi0PtReb[i])      fHistoMCSecPi0PtReb[i]->Write();
+            if(fHistoMCSecPi0PtWAccReb[i])  fHistoMCSecPi0PtWAccReb[i]->Write();
+            if(fHistoMCSecPi0AcceptPt[i])   fHistoMCSecPi0AcceptPt[i]->Write();
+        }    
+    }
+    
+    // write different mass and width histos reco
+    if (fHistoMassMeson)            fHistoMassMeson->Write();
+    if (fHistoFWHMMeson)            fHistoFWHMMeson->Write();
+    if (fHistoMassGaussianMeson)    fHistoMassGaussianMeson->Write();
+    if (fHistoWidthGaussianMeson)   fHistoWidthGaussianMeson->Write();
+    
+    // write different mass and width histos validated reco
+    if (fHistoTrueMassMeson) fHistoTrueMassMeson->Write();
+    if (fHistoTrueMassGaussianMeson)    fHistoTrueMassGaussianMeson->Write();
+    if (fHistoTrueWidthGaussianMeson)   fHistoTrueWidthGaussianMeson->Write();
+    if (fHistoTrueMassMesonReweighted)  fHistoTrueMassMesonReweighted->Write();
+    if (fHistoTrueMassMesonUnweighted)  fHistoTrueMassMesonUnweighted->Write();
+    if (fHistoTrueFWHMMeson)            fHistoTrueFWHMMeson->Write();
+    if (fHistoTrueFWHMMesonReweighted)  fHistoTrueFWHMMesonReweighted->Write();
+    if (fHistoTrueFWHMMesonUnweighted)  fHistoTrueFWHMMesonUnweighted->Write();
+    if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5)){
+        if (fHistoTrueMassMesonCaloPhoton)                  fHistoTrueMassMesonCaloPhoton->Write();
+        if (fHistoTrueMassMesonCaloElectron)                fHistoTrueMassMesonCaloElectron->Write();
+        if (fHistoTrueMassMesonCaloConvPhoton)              fHistoTrueMassMesonCaloConvPhoton->Write();
+        if (fHistoTrueMassMesonCaloMergedCluster)           fHistoTrueMassMesonCaloMergedCluster->Write();
+        if (fHistoTrueMassMesonCaloMergedPartConvCluster)   fHistoTrueMassMesonCaloMergedPartConvCluster->Write();
+        if (fHistoTrueFWHMMesonCaloPhoton)                  fHistoTrueFWHMMesonCaloPhoton->Write();
+        if (fHistoTrueFWHMMesonCaloElectron)                fHistoTrueFWHMMesonCaloElectron->Write();
+        if (fHistoTrueFWHMMesonCaloConvPhoton)              fHistoTrueFWHMMesonCaloConvPhoton->Write();
+        if (fHistoTrueFWHMMesonCaloMergedCluster)           fHistoTrueFWHMMesonCaloMergedCluster->Write();
+        if (fHistoTrueFWHMMesonCaloMergedPartConvCluster)   fHistoTrueFWHMMesonCaloMergedPartConvCluster->Write();
+        if (fHistoYieldTrueMesonFixedWindow)                fHistoYieldTrueMesonFixedWindow->Write();
+        if (fHistoYieldTrueMesonGammaFixedWindow)           fHistoYieldTrueMesonGammaFixedWindow->Write();
+        if (fHistoYieldTrueMesonGammaConvGammaFixedWindow)  fHistoYieldTrueMesonGammaConvGammaFixedWindow->Write();
+        if (fHistoYieldTrueMesonConvGammaConvGammaFixedWindow)fHistoYieldTrueMesonConvGammaConvGammaFixedWindow->Write();
+    }
+    if (fAdvancedMesonQA && (fMode == 4 || fMode == 5)){
+        if (fHistoTrueMassMesonMixedCaloConvPhoton)         fHistoTrueMassMesonMixedCaloConvPhoton->Write();
+        if (fHistoTrueFWHMMesonMixedCaloConvPhoton)         fHistoTrueFWHMMesonMixedCaloConvPhoton->Write();
+    }
+    
+    // write reconstructed yield for reconstructed mesons for different integration ranges: normal, wide, narrow
+    for (Int_t k = 0; k < 3; k++){
+        // primary yield
+        if (fHistoYieldTrueMeson[k])            fHistoYieldTrueMeson[k]->Write();
+        if (fHistoYieldTrueMesonReweighted[k])  fHistoYieldTrueMesonReweighted[k]->Write();
+        if (fHistoYieldTrueMesonUnweighted[k])  fHistoYieldTrueMesonUnweighted[k]->Write();
+        // secondary yield
+        for (Int_t j = 0; j<4; j++){
+            if (fHistoYieldTrueSecMeson[k][j])fHistoYieldTrueSecMeson[k][j]->Write();
+            if (fHistoYieldTrueSecFracMeson[k][j])fHistoYieldTrueSecFracMeson[k][j]->Write();
+        }   
+    }
+    
+    // write double counting histos
     if (fEnableDCMeson){
-        if (fHistoYieldTrueMesonDC) fHistoYieldTrueMesonDC->Write();
+        if (fHistoYieldTrueMesonDC)             fHistoYieldTrueMesonDC->Write();
         if (fHistoYieldTrueMesonDC){
-            TH1D* fHistoRatioDCTrueMeson = (TH1D*)fHistoYieldTrueMesonDC->Clone("fHistoRatioDCTrueMeson");
-            fHistoRatioDCTrueMeson->Divide(fHistoRatioDCTrueMeson, fHistoYieldTrueMeson, 1, 1, "B");
+            TH1D* fHistoRatioDCTrueMeson    = (TH1D*)fHistoYieldTrueMesonDC->Clone("fHistoRatioDCTrueMeson");
+            fHistoRatioDCTrueMeson->Divide(fHistoRatioDCTrueMeson, fHistoYieldTrueMeson[0], 1, 1, "B");
             fHistoRatioDCTrueMeson->Write("FractionDoubleCountedMesons");
         }
         if (fHistoTrueMesonMultipleCount) fHistoTrueMesonMultipleCount->Write();
     }
-    cout << "line" << __LINE__ << endl;
-    fHistoYieldTrueMesonWide->Write();
-    fHistoYieldTrueMesonNarrow->Write();
-    fHistoYieldTrueMesonReweighted->Write();
-    fHistoYieldTrueMesonReweightedWide->Write();
-    fHistoYieldTrueMesonReweightedNarrow->Write();
-    fHistoYieldTrueMesonUnweighted->Write();
-    fHistoYieldTrueMesonUnweightedWide->Write();
-    fHistoYieldTrueMesonUnweightedNarrow->Write();
-    cout << "line" << __LINE__ << endl;
-    if (fHistoYieldK0sWithPi0DaughterRec)fHistoYieldK0sWithPi0DaughterRec->Write("K0sWithPi0DaughterRec");
-    if (fHistoYieldLambdaWithPi0DaughterRec)fHistoYieldLambdaWithPi0DaughterRec->Write("LambdaWithPi0DaughterRec");
-    cout << "end writing Correction File" << endl;
     
+    // write mother distributions for reconstructed mesons
+    if (fHistoYieldK0sWithPi0DaughterRec)       fHistoYieldK0sWithPi0DaughterRec->Write("K0sWithPi0DaughterRec");
+    if (fHistoYieldLambdaWithPi0DaughterRec)    fHistoYieldLambdaWithPi0DaughterRec->Write("LambdaWithPi0DaughterRec");
+    
+    // write 2D invariant mass histo validate meson
+    if (fHistoTrueMesonInvMassVSPt)             fHistoTrueMesonInvMassVSPt->Write();
+
+    cout << "end writing Correction File" << endl;
     fOutput2->Write();
     fOutput2->Close();
 }
@@ -5849,10 +5003,52 @@ void Delete(){
     if (fMesonWidthRange)                                       delete fMesonWidthRange;
     if (fMesonLambdaTailRange)                                  delete fMesonLambdaTailRange;
     if (fNRebin)                                                delete fNRebin;
-    if (fGGYields)                                              delete fGGYields;
-    if (fBckYields)                                             delete fBckYields;
-    if (fMesonYields)                                           delete fMesonYields;
-    if (fMesonTrueYields)                                       delete fMesonTrueYields;
+    
+    for (Int_t k = 0; k < 6; k++){   
+        // delete arrays for yields
+        if (fGGYields[k])                                       delete fGGYields[k];
+        if (fBckYields[k])                                      delete fBckYields[k];
+        if (fMesonYields[k])                                    delete fMesonYields[k];
+        if (fMesonYieldsFunc[k])                                delete fMesonYieldsFunc[k];
+        if (fMesonYieldsResidualBckFunc[k])                     delete fMesonYieldsResidualBckFunc[k];
+        if (fMesonYieldsCorResidualBckFunc[k])                  delete fMesonYieldsCorResidualBckFunc[k];
+        if (fMesonYieldsPerEvent[k])                            delete fMesonYieldsPerEvent[k];
+        
+        // delete arrays for errors
+        if (fGGYieldsError[k])                                  delete fGGYieldsError[k];
+        if (fBckYieldsError[k])                                 delete fBckYieldsError[k];
+        if (fMesonYieldsError[k])                               delete fMesonYieldsError[k];
+        if (fMesonYieldsFuncError[k])                           delete fMesonYieldsFuncError[k];
+        if (fMesonYieldsResidualBckFuncError[k])                delete fMesonYieldsResidualBckFuncError[k];
+        if (fMesonYieldsCorResidualBckFuncError[k])             delete fMesonYieldsCorResidualBckFuncError[k];
+        if (fMesonYieldsPerEventError[k])                       delete fMesonYieldsPerEventError[k];
+
+        // delete mass range array
+        if (fMesonCurIntRange[k])                               delete fMesonCurIntRange[k];
+        
+    }    
+    for (Int_t k = 0; k < 3; k++){
+        // delete mass window arrays
+        if (fMassWindowHigh[k])                                 delete fMassWindowHigh[k];
+        if (fMassWindowLow[k])                                  delete fMassWindowLow[k];
+        
+        // delete integration window arrays
+        if (fMesonTrueIntRange[k])                              delete fMesonTrueIntRange[k];
+        if (fMesonTrueIntReweightedRange[k])                    delete fMesonTrueIntReweightedRange[k];
+        if (fMesonTrueIntUnweightedRange[k])                    delete fMesonTrueIntUnweightedRange[k];
+    
+        // delete true meson yield arrays
+        if (fMesonTrueYields[k])                                delete fMesonTrueYields[k];
+        if (fMesonTrueYieldsReweighted[k])                      delete fMesonTrueYieldsReweighted[k];
+        if (fMesonTrueYieldsUnweighted[k])                      delete fMesonTrueYieldsUnweighted[k];
+
+        // delete array for S/B and Significance
+        if (fMesonSBdefault[k])                                 delete fMesonSBdefault[k];
+        if (fMesonSigndefault[k])                               delete fMesonSigndefault[k];
+        if (fMesonSBdefaultError[k])                            delete fMesonSBdefaultError[k];
+        if (fMesonSigndefaultError[k])                          delete fMesonSigndefaultError[k];
+        
+    }    
     if (fMesonTrueYieldsDC)                                     delete fMesonTrueYieldsDC;
     if (fMesonTrueYieldFixedWindow)                             delete fMesonTrueYieldFixedWindow;
     if (fMesonTrueYieldGammaConvGammaFixedWindow)               delete fMesonTrueYieldGammaConvGammaFixedWindow;
@@ -5862,23 +5058,7 @@ void Delete(){
     if (fMesonTrueYieldGammaErrorFixedWindow)                   delete fMesonTrueYieldGammaErrorFixedWindow;
     if (fMesonTrueYieldGammaConvGammaErrorFixedWindow)          delete fMesonTrueYieldGammaConvGammaErrorFixedWindow;
     if (fMesonTrueYieldConvGammaConvGammaErrorFixedWindow)      delete fMesonTrueYieldConvGammaConvGammaErrorFixedWindow;
-    if (fMesonTrueYieldsReweighted)                             delete fMesonTrueYieldsReweighted;
-    if (fMesonTrueYieldsUnweighted)                             delete fMesonTrueYieldsUnweighted;
-    if (fMesonYieldsFunc)                                       delete fMesonYieldsFunc;
-    if (fMesonYieldsResidualBckFunc)                           delete fMesonYieldsResidualBckFunc;
-    if (fMesonYieldsCorResidualBckFunc)                         delete fMesonYieldsCorResidualBckFunc;
-    if (fMesonYieldsPerEvent)                                   delete fMesonYieldsPerEvent;
     if (fMesonMass)                                             delete fMesonMass;
-    if (fMesonSB)                                               delete fMesonSB;
-    if (fMesonSBdefault)                                        delete fMesonSBdefault;
-    if (fMesonSign)                                             delete fMesonSign;
-    if (fMesonSigndefault)                                      delete fMesonSigndefault;
-    if (fMassWindowHigh)                                        delete fMassWindowHigh;
-    if (fMassWindowLow)                                         delete fMassWindowLow;
-    if (fMassWindowWideHigh)                                    delete fMassWindowWideHigh;
-    if (fMassWindowWideLow)                                     delete fMassWindowWideLow;
-    if (fMassWindowNarrowHigh)                                  delete fMassWindowNarrowHigh;
-    if (fMassWindowNarrowLow)                                   delete fMassWindowNarrowLow;
     if (fMesonLambdaTailpar)                                    delete fMesonLambdaTailpar;
     if (fMesonLambdaTailparError)                               delete fMesonLambdaTailparError;
     if (fMesonLambdaTailMCpar)                                  delete fMesonLambdaTailMCpar;
@@ -5887,122 +5067,15 @@ void Delete(){
     if (fMesonTrueSB)                                           delete fMesonTrueSB;
     if (fMesonTrueSign)                                         delete fMesonTrueSign;
     if (fMesonFWHM)                                             delete fMesonFWHM;
-    if (fGGYieldsLeft)                                          delete fGGYieldsLeft;
-    if (fBckYieldsLeft)                                         delete fBckYieldsLeft;
-    if (fMesonYieldsLeft)                                       delete fMesonYieldsLeft;
-    if (fMesonYieldsFuncLeft)                                   delete fMesonYieldsFuncLeft;
-    if (fMesonYieldsResidualBckFuncLeft)                        delete fMesonYieldsResidualBckFuncLeft;
-    if (fMesonYieldsCorResidualBckFuncLeft)                     delete fMesonYieldsCorResidualBckFuncLeft;
-    if (fMesonYieldsLeftPerEvent)                               delete fMesonYieldsLeftPerEvent;
     if (fMesonMassLeft)                                         delete fMesonMassLeft;
-    if (fMesonSBLeft)                                           delete fMesonSBLeft;
-    if (fMesonSignLeft)                                         delete fMesonSignLeft;
     if (fMesonFWHMLeft)                                         delete fMesonFWHMLeft;
-    if (fGGYieldsNarrow)                                        delete fGGYieldsNarrow;
-    if (fBckYieldsNarrow)                                       delete fBckYieldsNarrow;
-    if (fMesonYieldsNarrow)                                     delete fMesonYieldsNarrow;
-    if (fMesonTrueYieldsNarrow)                                 delete fMesonTrueYieldsNarrow;
-    if (fMesonTrueYieldsReweightedNarrow)                       delete fMesonTrueYieldsReweightedNarrow;
-    if (fMesonTrueYieldsUnweightedNarrow)                       delete fMesonTrueYieldsUnweightedNarrow;
-    if (fMesonYieldsFuncNarrow)                                 delete fMesonYieldsFuncNarrow;
-    if (fMesonYieldsResidualBckFuncNarrow)                      delete fMesonYieldsResidualBckFuncNarrow;
-    if (fMesonYieldsCorResidualBckFuncNarrow)                   delete fMesonYieldsCorResidualBckFuncNarrow;
-    if (fMesonYieldsPerEventNarrow)                               delete fMesonYieldsPerEventNarrow;
-    if (fMesonSBNarrow)                                         delete fMesonSBNarrow;
-    if (fMesonSBdefaultNarrow)                                  delete fMesonSBdefaultNarrow;
-    if (fMesonSignNarrow)                                       delete fMesonSignNarrow;
-    if (fMesonSigndefaultNarrow)                                delete fMesonSigndefaultNarrow;
-    if (fGGYieldsLeftNarrow)                                    delete fGGYieldsLeftNarrow;
-    if (fBckYieldsLeftNarrow)                                   delete fBckYieldsLeftNarrow;
-    if (fMesonYieldsLeftNarrow)                                 delete fMesonYieldsLeftNarrow;
-    if (fMesonYieldsFuncLeftNarrow)                             delete fMesonYieldsFuncLeftNarrow;
-    if (fMesonYieldsResidualBckFuncLeftNarrow)                  delete fMesonYieldsResidualBckFuncLeftNarrow;
-    if (fMesonYieldsCorResidualBckFuncLeftNarrow)               delete fMesonYieldsCorResidualBckFuncLeftNarrow;
-    if (fMesonYieldsLeftPerEventNarrow)                         delete fMesonYieldsLeftPerEventNarrow;
-    if (fMesonSBLeftNarrow)                                     delete fMesonSBLeftNarrow;
-    if (fMesonSignLeftNarrow)                                   delete fMesonSignLeftNarrow;
-    if (fGGYieldsWide)                                          delete fGGYieldsWide;
-    if (fBckYieldsWide)                                         delete fBckYieldsWide;
-    if (fMesonYieldsWide)                                       delete fMesonYieldsWide;
-    if (fMesonTrueYieldsWide)                                   delete fMesonTrueYieldsWide;
-    if (fMesonTrueYieldsReweightedWide)                         delete fMesonTrueYieldsReweightedWide;
-    if (fMesonTrueYieldsUnweightedWide)                         delete fMesonTrueYieldsUnweightedWide;
-    if (fMesonYieldsFuncWide)                                   delete fMesonYieldsFuncWide;
-    if (fMesonYieldsResidualBckFuncWide)                        delete fMesonYieldsResidualBckFuncWide;
-    if (fMesonYieldsCorResidualBckFuncWide)                     delete fMesonYieldsCorResidualBckFuncWide;
-    if (fMesonYieldsPerEventWide)                               delete fMesonYieldsPerEventWide;
-    if (fMesonSBWide)                                           delete fMesonSBWide;
-    if (fMesonSignWide)                                         delete fMesonSignWide;
-    if (fGGYieldsLeftWide)                                      delete fGGYieldsLeftWide;
-    if (fBckYieldsLeftWide)                                     delete fBckYieldsLeftWide;
-    if (fMesonYieldsLeftWide)                                   delete fMesonYieldsLeftWide;
-    if (fMesonYieldsFuncLeftWide)                               delete fMesonYieldsFuncLeftWide;
-    if (fMesonYieldsResidualBckFuncLeftWide)                    delete fMesonYieldsResidualBckFuncLeftWide;
-    if (fMesonYieldsCorResidualBckFuncLeftWide)                 delete fMesonYieldsCorResidualBckFuncLeftWide;
-    if (fMesonYieldsLeftPerEventWide)                           delete fMesonYieldsLeftPerEventWide;
-    if (fMesonSBLeftWide)                                       delete fMesonSBLeftWide;
-    if (fMesonSignLeftWide)                                     delete fMesonSignLeftWide;
-    if (fBckYieldsError)                                        delete fBckYieldsError;
-    if (fMesonYieldsError)                                      delete fMesonYieldsError;
-    if (fMesonYieldsFuncError)                                  delete fMesonYieldsFuncError;
-    if (fMesonYieldsResidualBckFuncError)                       delete fMesonYieldsResidualBckFuncError;
-    if (fMesonYieldsCorResidualBckFuncError)                    delete fMesonYieldsCorResidualBckFuncError;
-    if (fMesonYieldsPerEventError)                              delete fMesonYieldsPerEventError;
+    
     if (fMesonMassError)                                        delete fMesonMassError;
-    if (fMesonSBError)                                          delete fMesonSBError;
-    if (fMesonSBdefaultError)                                   delete fMesonSBdefaultError;
-    if (fMesonSBdefaultNarrowError)                             delete fMesonSBdefaultNarrowError;
-    if (fMesonSigndefaultNarrowError)                           delete fMesonSigndefaultNarrowError;
-    if (fMesonSignError)                                       delete fMesonSignError;
-    if (fMesonSigndefaultError)                                   delete fMesonSigndefaultError;
     if (fMesonTrueSBError)                                      delete fMesonTrueSBError;
     if (fMesonTrueSignError)                                    delete fMesonTrueSignError;
     if (fMesonFWHMError)                                        delete fMesonFWHMError;
-    if (fGGYieldsLeftError)                                     delete fGGYieldsLeftError;
-    if (fBckYieldsLeftError)                                    delete fBckYieldsLeftError;
-    if (fMesonYieldsLeftError)                                  delete fMesonYieldsLeftError;
-    if (fMesonYieldsFuncLeftError)                              delete fMesonYieldsFuncLeftError;
-    if (fMesonYieldsResidualBckFuncLeftError)                   delete fMesonYieldsResidualBckFuncLeftError;
-    if (fMesonYieldsCorResidualBckFuncLeftError)                delete fMesonYieldsCorResidualBckFuncLeftError;
-    if (fMesonYieldsLeftPerEventError)                          delete fMesonYieldsLeftPerEventError;
     if (fMesonMassLeftError)                                    delete fMesonMassLeftError;
-    if (fMesonSBLeftError)                                      delete fMesonSBLeftError;
-    if (fMesonSignLeftError)                                    delete fMesonSignLeftError;
     if (fMesonFWHMLeftError)                                    delete fMesonFWHMLeftError;
-    if (fGGYieldsNarrowError)                                   delete fGGYieldsNarrowError;
-    if (fBckYieldsNarrowError)                                  delete fBckYieldsNarrowError;
-    if (fMesonYieldsNarrowError)                                delete fMesonYieldsNarrowError;
-    if (fMesonYieldsFuncNarrowError)                            delete fMesonYieldsFuncNarrowError;
-    if (fMesonYieldsResidualBckFuncNarrowError)                 delete fMesonYieldsResidualBckFuncNarrowError;
-    if (fMesonYieldsCorResidualBckFuncNarrowError)              delete fMesonYieldsCorResidualBckFuncNarrowError;
-    if (fMesonYieldsPerEventNarrowError)                       delete fMesonYieldsPerEventNarrowError;
-    if (fGGYieldsLeftNarrowError)                               delete fGGYieldsLeftNarrowError;
-    if (fBckYieldsLeftNarrowError)                              delete fBckYieldsLeftNarrowError;
-    if (fMesonYieldsLeftNarrowError)                            delete fMesonYieldsLeftNarrowError;
-    if (fMesonYieldsFuncLeftNarrowError)                        delete fMesonYieldsFuncLeftNarrowError;
-    if (fMesonYieldsResidualBckFuncLeftNarrowError)             delete fMesonYieldsResidualBckFuncLeftNarrowError;
-    if (fMesonYieldsCorResidualBckFuncLeftNarrowError)          delete fMesonYieldsCorResidualBckFuncLeftNarrowError;
-    if (fMesonYieldsLeftPerEventNarrowError)                    delete fMesonYieldsLeftPerEventNarrowError;
-    if (fMesonSBLeftNarrowError)                                delete fMesonSBLeftNarrowError;
-    if (fMesonSignLeftNarrowError)                              delete fMesonSignLeftNarrowError;
-    if (fGGYieldsWideError)                                     delete fGGYieldsWideError;
-    if (fBckYieldsWideError)                                    delete fBckYieldsWideError;
-    if (fMesonYieldsWideError)                                  delete fMesonYieldsWideError;
-    if (fMesonYieldsFuncWideError)                              delete fMesonYieldsFuncWideError;
-    if (fMesonYieldsResidualBckFuncWideError)                   delete fMesonYieldsResidualBckFuncWideError;
-    if (fMesonYieldsCorResidualBckFuncWideError)                delete fMesonYieldsCorResidualBckFuncWideError;
-    if (fMesonYieldsPerEventWideError)                          delete fMesonYieldsPerEventWideError;
-    if (fMesonSBWideError)                                      delete fMesonSBWideError;
-    if (fMesonSignWideError)                                    delete fMesonSignWideError;
-    if (fGGYieldsLeftWideError)                                 delete fGGYieldsLeftWideError;
-    if (fBckYieldsLeftWideError)                                delete fBckYieldsLeftWideError;
-    if (fMesonYieldsLeftWideError)                              delete fMesonYieldsLeftWideError;
-    if (fMesonYieldsFuncLeftWideError)                          delete fMesonYieldsFuncLeftWideError;
-    if (fMesonYieldsResidualBckFuncLeftWideError)               delete fMesonYieldsResidualBckFuncLeftWideError;
-    if (fMesonYieldsCorResidualBckFuncLeftWideError)            delete fMesonYieldsCorResidualBckFuncLeftWideError;
-    if (fMesonYieldsLeftPerEventWideError)                      delete fMesonYieldsLeftPerEventWideError;
-    if (fMesonSBLeftWideError)                                  delete fMesonSBLeftWideError;
-    if (fMesonSignLeftWideError)                                delete fMesonSignLeftWideError;
     if (fHistoMappingTrueMesonInvMassPtBins)                    delete fHistoMappingTrueMesonInvMassPtBins;
     if (fHistoMappingTrueMesonDCInvMassPtBins)                  delete fHistoMappingTrueMesonDCInvMassPtBins;
     if (fHistoMappingTrueFullMesonInvMassPtBins)                delete fHistoMappingTrueFullMesonInvMassPtBins;
@@ -6030,9 +5103,6 @@ void Delete(){
     if (fFitInvMassLeftPtBin)                                   delete fFitInvMassLeftPtBin;
     if (fFitSignalPeakPosInvMassLeftPtBin)                      delete fFitSignalPeakPosInvMassLeftPtBin;
     if (fFitBckInvMassLeftPtBin)                                delete fFitBckInvMassLeftPtBin;
-    if (fFitRatioInvMassPtBin)                                  delete fFitRatioInvMassPtBin;
-    if (fMesonFWHMAlpha01)                                      delete fMesonFWHMAlpha01;
-    if (fMesonFWHMAlpha01Error)                                 delete fMesonFWHMAlpha01Error;
     if (fHistoWeightsBGZbinVsMbin)                              delete fHistoWeightsBGZbinVsMbin;
     if (fHistoFillPerEventBGZbinVsMbin)                         delete fHistoFillPerEventBGZbinVsMbin;
     if (fHistoWeightsBGZbinVsPsibin)                            delete fHistoWeightsBGZbinVsPsibin;
@@ -6052,5 +5122,6 @@ void Delete(){
     if (fHistoTrueWidthGaussianMeson)                           delete fHistoTrueWidthGaussianMeson;
     if (fFitSignalGaussianInvMassPtBin)                         delete fFitSignalGaussianInvMassPtBin;
     if (fFitTrueSignalGaussianInvMassPtBin)                     delete fFitTrueSignalGaussianInvMassPtBin;
+    
 }
 
