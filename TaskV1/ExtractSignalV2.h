@@ -62,7 +62,7 @@ Double_t    fCBn                                                        = 0;
 Float_t     pictDrawingCoordinatesFWHM[9]                               = {0.6, 0.8, 0.30, 0.04, 0.15,0.7, 0.1, 0.035,0};
 Int_t       fNRebinGlobal                                               = 2;
 TString     nameSecondaries[4]                                          = {"K0S", "Lambda", "K0L", "Rest"};
-TString     nameIntRange[6]                                             = {"", "Wide", "Narrow", "Left", "LeftNarrow", "LeftWide"};
+TString     nameIntRange[6]                                             = {"", "Wide", "Narrow", "Left", "LeftWide", "LeftNarrow"};
 
 //****************************************************************************
 //******************************** Output files ******************************

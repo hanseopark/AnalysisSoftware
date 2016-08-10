@@ -61,6 +61,17 @@ Double_t FindLargestBin1DHist(TH1* hist ){
     return largestContent;
 }
 
+Double_t FindSmallestBin1DHist(TH1* hist, Double_t maxStart = 1e6 ){
+    Double_t smallesContent     = maxStart;
+    for (Int_t i= 0; i < hist->GetNbinsX(); i++){
+        if (hist->GetBinContent(i) != 0 && smallesContent > hist->GetBinContent(i)){
+            smallesContent = hist->GetBinContent(i);
+        }    
+    }    
+    return smallesContent;
+}
+
+
 void CorrectYieldDalitz(TH1D* histoCorrectedYield,TH1D* histoRawGGYield, TH1D* histoEffiPt, TH1D* histoAcceptance, Double_t deltaRapid, Double_t scaling, Double_t nEvt, TString nameMeson){
     histoCorrectedYield->Sumw2();
     histoCorrectedYield->Add(histoRawGGYield,-1.);
@@ -282,6 +293,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
     // Color and style setting for plotting
     Color_t colorIntRanges[6]                       = {kBlack, kGray+3, kGray+1, kBlue, kBlue+2, kBlue-5};
+    Color_t colorIntRangesSec[6]                    = {kRed+1, kRed+2, kRed-5, kBlue, kBlue+2, kBlue-5};
     Style_t markerStyleIntRanges[6]                 = {20, 24, 24, 20, 24, 24};
     Size_t markerSizeIntRanges[6]                   = {1, 1, 1, 1, 1, 1};
     Color_t  colorCat[6]                            = { kRed+1, 807, 800, kGreen+2, kCyan+2, kBlue+1};
@@ -310,8 +322,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TH1F *histoNumberOfGoodESDTracksVtx             = (TH1F*)fileUncorrected.Get("GoodESDTracks");
     TH1D *histoEventQuality                         = (TH1D*)fileUncorrected.Get("NEvents");
     TH1D *histoUnCorrectedYield[6]                  = {NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D *RatioRaw[6]                               = {NULL, NULL, NULL, NULL, NULL, NULL};
     for (Int_t k= 0; k < 6; k++){
         histoUnCorrectedYield[k]                    = (TH1D*)fileUncorrected.Get(Form("histoYieldMeson%s", nameIntRange[k].Data()));
+        RatioRaw[k]                                 = (TH1D*) histoUnCorrectedYield[k]->Clone(Form("RatioRaw%s_%s",nameIntRange[k].Data(),nameIntRange[0].Data())); 
+        RatioRaw[k]->Divide(RatioRaw[k],histoUnCorrectedYield[0],1.,1.,"B");
     }    
     TH1D *histoFWHMMeson                            = (TH1D*)fileUncorrected.Get("histoFWHMMeson"); 
     TH1D *histoMassMeson                            = (TH1D*)fileUncorrected.Get("histoMassMeson");
@@ -486,10 +501,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     //*******************************************************************************************************
     //******************** Read secondary histograms from current MC corr file ******************************
     //*******************************************************************************************************
-    TH1D *histoYieldTrueSecFracMeson[3][4]          = {{ NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}};
-    TH1D *histoYieldTrueSecFracMeson_orig[3][4]     = {{ NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}};
-    TF1* fitSecFracPurePowerlaw[3][4]               = {{ NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}};
-    TF1* fitSecFracPLWithConst[3][4]                = {{ NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}};
+    TH1D *histoYieldTrueSecFracMeson[3][4]          = { { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}};
+    TH1D *histoYieldTrueSecFracMeson_orig[3][4]     = { { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}};
+    TF1* fitSecFracPurePowerlaw[3][4]               = { { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}};
+    TF1* fitSecFracPLWithConst[3][4]                = { { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}};
     for (Int_t k = 0; k < 3; k++){
         for (Int_t j = 0; j < 4; j++){
             fitSecFracPurePowerlaw[k][j]            = new TF1( Form("fitSecFracPurePowerlawFrom%s%s",nameSecMeson[k].Data(),nameIntRange[k].Data()) ,"[0]/pow(x,[1])");
@@ -528,9 +543,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 histoYieldTrueSecFracMeson[k][j]            = (TH1D*)fileCorrections->Get(Form("TrueSecFrom%sFrac%s",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                 if (histoYieldTrueSecFracMeson[k][j]){
                     histoYieldTrueSecFracMeson_orig[k][j]   = (TH1D*)histoYieldTrueSecFracMeson[k][j]->Clone(Form("TrueSecFrom%sFrac%s_orig",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                    // set fractions to 0 if none of the pt bins is above 1e-3 => 0.1%
                     if (FindLargestBin1DHist(histoYieldTrueSecFracMeson[k][j]) < 1e-3){
                         haveSecUsed[j]                      = kFALSE;
-                        for (Int_t i = 2; i < histoYieldTrueSecFracMeson[k][j]->GetNbinsX()+1; i++){
+                        for (Int_t i = 1; i < histoYieldTrueSecFracMeson[k][j]->GetNbinsX()+1; i++){
                             histoYieldTrueSecFracMeson[k][j]->SetBinContent(i, 0);
                             histoYieldTrueSecFracMeson[k][j]->SetBinError(i, 0);                            
                         }
@@ -540,12 +556,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     haveSecUsed[j]                          = kFALSE;
                     histoYieldTrueSecFracMeson[k][j]        = (TH1D*)histoYieldTrueSecFracMeson[0][0]->Clone(Form("TrueSecFrom%sFrac%s",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                     histoYieldTrueSecFracMeson_orig[k][j]   = (TH1D*)histoYieldTrueSecFracMeson_orig[0][0]->Clone(Form("TrueSecFrom%sFrac%s_orig",nameSecMeson[j].Data(), nameIntRange[k].Data()));
-                }    
+                }
             }    
-            
+        }
+        // modify respective histos
+        for (Int_t k = 0; k < 3; k++){
             // this is a really really ugly hack!
             if (doK0SecCorrectionWithDefaultHisto == 1){
-                for (Int_t i = 2; i < histoYieldTrueSecFracMeson[k][0]->GetNbinsX()+1; i++){
+                for (Int_t i = 1; i < histoYieldTrueSecFracMeson[k][0]->GetNbinsX()+1; i++){
+                    
                     Double_t ptStart        = histoYieldTrueSecFracMeson[k][3]->GetXaxis()->GetBinLowEdge(i);
                     Double_t ptEnd          = histoYieldTrueSecFracMeson[k][3]->GetXaxis()->GetBinUpEdge(i);
                     Double_t binWidth       = ptEnd-ptStart;
@@ -565,13 +584,12 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 }    
             // fit current histo with pure powerlaw fit (goes to 0 at high pt)    
             } else if ( doK0SecCorrectionWithDefaultHisto == 2 ){
-                
                 for (Int_t j = 0; j < 4; j++){
                     if (haveSec[j] && haveSecUsed[j]){
                         cout << "fitting current hist for "<< nameIntRange[k].Data() << " " << nameSecMeson[j].Data() << endl;
                         fitSecFracPurePowerlaw[k][j]->SetRange(minPtMesonSec, maxPtMeson);
                         TFitResultPtr resultCurr    = histoYieldTrueSecFracMeson[k][j]->Fit(fitSecFracPurePowerlaw[k][j],"SNRME+","",minPtMesonSec, maxPtMeson);
-                        for (Int_t i = 2; i < histoYieldTrueSecFracMeson[k][j]->GetNbinsX()+1; i++){
+                        for (Int_t i = 1; i < histoYieldTrueSecFracMeson[k][j]->GetNbinsX()+1; i++){
                             Double_t ptStart        = histoYieldTrueSecFracMeson[k][j]->GetXaxis()->GetBinLowEdge(i);
                             Double_t ptEnd          = histoYieldTrueSecFracMeson[k][j]->GetXaxis()->GetBinUpEdge(i);
                             Double_t binWidth       = ptEnd-ptStart;
@@ -580,9 +598,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                             histoYieldTrueSecFracMeson[k][j]->SetBinContent(i, secFrac);
                             histoYieldTrueSecFracMeson[k][j]->SetBinError(i, errorSecFrac);
                         }
-                    // if secondary fraction for particular komponent not contained, put fraction to 0    
+                    // if secondary fraction for particular component not contained, put fraction to 0    
                     } else {
-                        for (Int_t i = 2; i < histoYieldTrueSecFracMeson[k][j]->GetNbinsX()+1; i++){
+                        for (Int_t i = 1; i < histoYieldTrueSecFracMeson[k][j]->GetNbinsX()+1; i++){
                             histoYieldTrueSecFracMeson[k][j]->SetBinContent(i, 0);
                             histoYieldTrueSecFracMeson[k][j]->SetBinError(i, 0);                            
                         }    
@@ -595,35 +613,27 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                         cout << "fitting current hist for "<< nameIntRange[k].Data() << " " << nameSecMeson[j].Data() << endl;
                         fitSecFracPLWithConst[k][j]->SetRange(minPtMesonSec, maxPtMeson);
                         TFitResultPtr resultCurr  = histoYieldTrueSecFracMeson[k][j]->Fit(fitSecFracPLWithConst[k][j],"SNRME+","",minPtMesonSec, maxPtMeson);
-                        for (Int_t i = 2; i < histoYieldTrueSecFracMeson[k][j]->GetNbinsX()+1; i++){
-                            Double_t ptStart        = histoYieldTrueSecFracMeson[k][j]->GetXaxis()->GetBinLowEdge(i);
-                            Double_t ptEnd          = histoYieldTrueSecFracMeson[k][j]->GetXaxis()->GetBinUpEdge(i);
-                            Double_t binWidth       = ptEnd-ptStart;
-                            Double_t secFrac        = fitSecFracPLWithConst[k][j]->Integral(ptStart, ptEnd, resultCurr->GetParams()) / binWidth;
-                            Double_t errorSecFrac   = fitSecFracPLWithConst[k][j]->IntegralError(ptStart, ptEnd, resultCurr->GetParams(), resultCurr->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
-                            histoYieldTrueSecFracMeson[k][j]->SetBinContent(i, secFrac);
-                            histoYieldTrueSecFracMeson[k][j]->SetBinError(i, errorSecFrac);
-                        }
-                    // if secondary fraction for particular komponent not contained, put fraction to 0    
+                        histoYieldTrueSecFracMeson[k][j]->Fit(fitSecFracPLWithConst[k][j],"NRME+","",minPtMesonSec, maxPtMeson);
+                        (TVirtualFitter::GetFitter())->GetConfidenceIntervals(histoYieldTrueSecFracMeson[k][j]);
+                    // if secondary fraction for particular component not contained, put fraction to 0    
                     } else {
-                        for (Int_t i = 2; i < histoYieldTrueSecFracMeson[k][j]->GetNbinsX()+1; i++){
+                        for (Int_t i = 1; i < histoYieldTrueSecFracMeson[k][j]->GetNbinsX()+1; i++){
                             histoYieldTrueSecFracMeson[k][j]->SetBinContent(i, 0);
                             histoYieldTrueSecFracMeson[k][j]->SetBinError(i, 0);                            
                         }    
                     }    
                 }    
             }   
-            for (Int_t j = 0; j < 4; j++){
-                histoYieldSecMeson[k][j]            = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("SecFracFrom%sMeson%s", nameSecMeson[j].Data(), nameIntRange[k].Data()));
-                histoYieldSecMeson[k][j]->Sumw2();
-                histoYieldSecMeson[k][j]->Multiply(histoYieldTrueSecFracMeson[k][j]);
-                histoYieldSecMeson[k][j]->Scale(scalingFacSec[j]);
-                histoYieldSecMeson[k+3][j]          = (TH1D*)histoUnCorrectedYield[k+3]->Clone(Form("SecFracFrom%sMeson%s", nameSecMeson[j].Data(), nameIntRange[k+3].Data()));
-                histoYieldSecMeson[k+3][j]->Sumw2();
-                histoYieldSecMeson[k+3][j]->Multiply(histoYieldTrueSecFracMeson[k][j]);
-                histoYieldSecMeson[k+3][j]->Scale(scalingFacSec[j]);
-            }
         }    
+        for (Int_t k = 0; k < 6; k++){
+            cout << "k " << k << "\t" << k%3<< endl;
+            for (Int_t j = 0; j < 4; j++){
+                histoYieldSecMeson[k][j]            = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("SecYieldFrom%sMeson%s", nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                histoYieldSecMeson[k][j]->Sumw2();
+                histoYieldSecMeson[k][j]->Multiply(histoYieldTrueSecFracMeson[k%3][j]);
+                histoYieldSecMeson[k][j]->Scale(scalingFacSec[j]);  
+            }
+        }
     // Do gamma-gamma correction for Dalitz channel    
     } else if (doGGCorrection){
         for (Int_t k = 0; k < 3; k++){
@@ -1505,10 +1515,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
         if (mode==2 || mode == 3){
 
-            // read additional histos
-            TH1D* histoTrueFWHMCaloPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloPhoton");
-            TH1D* histoTrueFWHMCaloConvPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloConvPhoton");
-            TH1D* histoTrueFWHMCaloMergedClusterMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloMergedCluster");
+            // read additional histos   
+            TH1D* histoTrueFWHMCaloPhotonMeson          = (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloPhoton");
+            TH1D* histoTrueFWHMCaloConvPhotonMeson      = (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloConvPhoton");
+            TH1D* histoTrueFWHMCaloMergedClusterMeson   = (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloMergedCluster");
             
             // start plotting
             histoFWHMMeson->GetYaxis()->SetRangeUser(minFWHM, maxFWHMAdd); 
@@ -1820,7 +1830,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             for (Int_t j = 0; j < 4; j++){
                 if (haveSec[j]){
                     DrawGammaSetMarker(histoYieldTrueSecFracMeson_orig[0][j], markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
-                    histoYieldTrueSecFracMeson_orig[0][j]->DrawCopy("e1,same");  
+                    histoYieldTrueSecFracMeson_orig[0][j]->DrawCopy("p,e1,same");  
                     legendSecFrac->AddEntry(histoYieldTrueSecFracMeson_orig[0][j],Form("#it{r}_{%s}",nameSecMesonPlot[j].Data()));
                     if (doK0SecCorrectionWithDefaultHisto == 0 && fitSecFracPLWithConst[0][j]){
                         fitSecFracPLWithConst[0][j]->SetLineColor(colorSec[j]);  
@@ -1851,8 +1861,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             for (Int_t j = 0; j < 4; j++){
                 if (haveSecUsed[j]){
                     DrawGammaSetMarker(histoYieldTrueSecFracMeson[0][j], markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
-                    histoYieldTrueSecFracMeson[0][j]->DrawCopy("e1,same");  
-                    legendSecFracUsed->AddEntry(histoYieldTrueSecFracMeson_orig[0][j],Form("#it{r}_{%s}",nameSecMesonPlot[j].Data()));
+                    histoYieldTrueSecFracMeson[0][j]->DrawCopy("p,e1,same");  
+                    legendSecFracUsed->AddEntry(histoYieldTrueSecFracMeson[0][j],Form("#it{r}_{%s}",nameSecMesonPlot[j].Data()));
                     if (doK0SecCorrectionWithDefaultHisto == 0 && fitSecFracPLWithConst[0][j]){
                         fitSecFracPLWithConst[0][j]->SetLineColor(colorSec[j]);  
                         fitSecFracPLWithConst[0][j]->Draw("same");
@@ -1876,6 +1886,23 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             canvasSecFrac->Update();
             canvasSecFrac->SaveAs(Form("%s/%s_FracSecondariesSmoothed_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
 
+            // plot K0s component for different integration ranges
+            canvasSecFrac->cd();
+            histo2DDummySecHad->DrawCopy();        
+            TLegend* legendSecFracK0s  = GetAndSetLegend2(0.65, 0.93-3*0.035*1.15, 0.94, 0.93, 0.035, 1, "", 42, 0.125);            
+            for (Int_t k = 0; k < 3; k++){
+                DrawGammaSetMarker(histoYieldTrueSecFracMeson[k][0], markerStyleIntRanges[k] , markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);  
+                histoYieldTrueSecFracMeson[k][0]->DrawCopy("p,e1,same");  
+                legendSecFracK0s->AddEntry(histoYieldTrueSecFracMeson[k][0],Form("#it{r}_{K^{0}_{s}} %s",nameIntRangePlot[k].Data()));
+            }    
+            legendSecFracK0s->Draw();
+            
+            PutProcessLabelAndEnergyOnPlot(0.15, 0.93, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            canvasSecFrac->Update();
+            canvasSecFrac->SaveAs(Form("%s/%s_FracSecondariesFromK0sDiffIntRanges_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
+
+            
+            // plot all fractions in Logy scale
             canvasSecFrac->cd();
             canvasSecFrac->SetTopMargin(0.01);
             canvasSecFrac->SetLogy(1);
@@ -1903,6 +1930,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             histo2DDummySecHad->DrawCopy();
             for (Int_t j = 0; j < 4; j++){
                 if (haveSecUsed[j]){
+                    DrawGammaSetMarker(histoYieldTrueSecFracMeson[0][j], markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
                     histoYieldTrueSecFracMeson[0][j]->DrawCopy("e1,same");        
                     if (doK0SecCorrectionWithDefaultHisto == 0 && fitSecFracPLWithConst[0][j]){
                         fitSecFracPLWithConst[0][j]->Draw("same");
@@ -1917,8 +1945,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             
             PutProcessLabelAndEnergyOnPlot(0.15, 0.93, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
             canvasSecFrac->Update();
-            canvasSecFrac->SaveAs(Form("%s/%s_FracSecondariesSmoothedLogy_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
-
+            canvasSecFrac->SaveAs(Form("%s/%s_FracSecondariesSmoothedLogy_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));            
             delete canvasSecFrac;
             
         }
@@ -2091,6 +2118,95 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     canvasRAWYield->SaveAs(Form("%s/%s_%s_RAWYieldPt_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
     delete canvasRAWYield;
 
+    
+     // **************************************************************************************
+    // ************** Plot raw yield with differnt yield extraction methods ***********
+    // **************************************************************************************
+    TCanvas* canvasRawYield = new TCanvas("canvasRawYield","",1350,1500);  // gives the page size
+    DrawGammaCanvasSettings( canvasRawYield, 0.13, 0.02, 0.02, 0.09);
+    canvasRawYield->SetLogy();
+
+    TPad* padRawYieldHistos = new TPad("padRawYieldHistos", "", 0., 0.3, 1., 1.,-1, -1, -2);
+    DrawGammaPadSettings( padRawYieldHistos, 0.12, 0.02, 0.02, 0.);
+    padRawYieldHistos->Draw();
+
+    TPad* padRawYieldRatios = new TPad("padRawYieldRatios", "", 0., 0., 1., 0.3,-1, -1, -2);
+    DrawGammaPadSettings( padRawYieldRatios, 0.12, 0.02, 0., 0.18);
+    padRawYieldRatios->Draw();
+
+    padRawYieldHistos->cd();
+    padRawYieldHistos->SetLogy(); 
+         
+        TH2F* histo2DDummyPtRaw;
+        histo2DDummyPtRaw               = new TH2F("histo2DDummyPtRaw","histo2DDummyPtRaw",1000,0, histoUnCorrectedYield[0]->GetXaxis()->GetBinUpEdge(histoUnCorrectedYield[0]->GetNbinsX()),
+                                                                                10000, 0.01*FindSmallestBin1DHist(histoUnCorrectedYield[0],1e6 ), 3*histoUnCorrectedYield[0]->GetMaximum());
+        SetStyleHistoTH2ForGraphs(histo2DDummyPtRaw, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", 0.033,0.04, 0.033,0.04, 1,1.35);
+        histo2DDummyPtRaw->DrawCopy();         
+        
+        TLegend* legendYieldRaw = GetAndSetLegend2(0.15,0.03,0.66,0.03+6*0.035, 0.035, 1, "", 42, 0.1);
+        for (Int_t k = 0; k < 6; k++){
+            DrawGammaSetMarker(histoUnCorrectedYield[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
+            histoUnCorrectedYield[k]->DrawCopy("e1,same"); 
+            legendYieldRaw->AddEntry(histoUnCorrectedYield[k],nameIntRangePlot[k].Data());            
+        }    
+        legendYieldRaw->Draw();    
+        PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+    
+    padRawYieldRatios->cd();
+    padRawYieldRatios->SetTickx();
+    padRawYieldRatios->SetTicky();
+    padRawYieldRatios->SetLogy(0);
+    
+        Double_t rangeRatioPtRaw[2]    = {0.5, 1.53};
+        TH2F* histo2DDummyRatioPtRaw;
+        histo2DDummyRatioPtRaw         = new TH2F("histo2DDummyRatioPtRaw","histo2DDummyRatioPtRaw",1000,0, histoUnCorrectedYield[0]->GetXaxis()->GetBinUpEdge(histoUnCorrectedYield[0]->GetNbinsX()),
+                                                                                1000, rangeRatioPtRaw[0], rangeRatioPtRaw[1]);
+        SetStyleHistoTH2ForGraphs(histo2DDummyRatioPtRaw, "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.07,0.1, 0.07,0.1, 0.8,0.55, 510, 505);
+        histo2DDummyRatioPtRaw->DrawCopy();         
+
+        for (Int_t k = 0; k < 6; k++){
+            DrawGammaSetMarker(RatioRaw[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
+            RatioRaw[k]->DrawCopy("e1,same"); 
+
+        }    
+        DrawGammaLines(0., histoUnCorrectedYield[0]->GetXaxis()->GetBinUpEdge(histoUnCorrectedYield[0]->GetNbinsX()),1., 1.,0.1);
+        
+    canvasRawYield->Update();
+    canvasRawYield->SaveAs(Form("%s/%s_%s_RawYieldDiffIntRanges_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
+   
+    padRawYieldHistos->cd();         
+        TH2F* histo2DDummyPtRawSec;
+        histo2DDummyPtRawSec               = new TH2F("histo2DDummyPtRawSec","histo2DDummyPtRawSec",1000,0, histoUnCorrectedYield[0]->GetXaxis()->GetBinUpEdge(histoUnCorrectedYield[0]->GetNbinsX()),
+                                                                                10000, 0.01*FindSmallestBin1DHist(histoYieldSecMeson[0][0],1e6 ), 3*histoUnCorrectedYield[0]->GetMaximum());
+        SetStyleHistoTH2ForGraphs(histo2DDummyPtRawSec, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", 0.033,0.04, 0.033,0.04, 1,1.35);
+        histo2DDummyPtRawSec->DrawCopy();         
+        
+        TLegend* legendYieldRawSec = GetAndSetLegend2(0.15,0.03,0.66,0.03+6*0.035, 0.035, 1, "", 42, 0.1);
+        for (Int_t k = 0; k < 6; k++){
+            DrawGammaSetMarker(histoYieldSecMeson[k][0], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRangesSec[k], colorIntRangesSec[k]);
+            histoYieldSecMeson[k][0]->DrawCopy("e1,same");
+            legendYieldRawSec->AddEntry(histoYieldSecMeson[k][0],nameIntRangePlot[k].Data());
+        }    
+        legendYieldRawSec->Draw();    
+        PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+    
+    padRawYieldRatios->cd();
+    
+        histo2DDummyRatioPtRaw->DrawCopy();         
+
+        TH1D* RatioRawSecK0s[6]        = {NULL, NULL, NULL, NULL, NULL, NULL};
+        for (Int_t k = 0; k < 6; k++){
+            RatioRawSecK0s[k]          = (TH1D*) histoYieldSecMeson[k][0]->Clone(); 
+            RatioRawSecK0s[k]->Divide(RatioRawSecK0s[k],histoYieldSecMeson[0][0],1.,1.,"B");
+            DrawGammaSetMarker(RatioRawSecK0s[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRangesSec[k], colorIntRangesSec[k]);
+            RatioRawSecK0s[k]->DrawCopy("e1,same"); 
+
+        }    
+        DrawGammaLines(0., histoUnCorrectedYield[0]->GetXaxis()->GetBinUpEdge(histoUnCorrectedYield[0]->GetNbinsX()),1., 1.,0.1);
+        
+    canvasRawYield->Update();
+    canvasRawYield->SaveAs(Form("%s/%s_%s_SecRawYieldFromK0sDiffIntRanges_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
+    
     //***********************************************************************************************
     //*********************************** correction for yield **************************************
     //***********************************************************************************************
@@ -2100,21 +2216,24 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TH1D* histoCorrectedYieldFixed[3]       = {NULL, NULL, NULL};
     TH1D* histoCompleteCorr                 = (TH1D*)histoTrueEffiPt[0]->Clone();
     TH1D *RatioTrue[6]                      = {NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1D *RatioNormal                       = NULL;
+    TH1D *RatioNormal[6]                    = {NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D *RatioNormalToTrue                 = NULL;
     TH1D *RatioTrueMCInput                  = NULL;
 
 
     for (Int_t k = 0; k < 6; k++){
-        
+        Int_t m = k;
         histoCorrectedYieldNorm[k]      = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("CorrectedYieldNormEff%s",nameIntRange[k].Data()));
         histoCorrectedYieldTrue[k]      = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("CorrectedYieldTrueEff%s",nameIntRange[k].Data()));
         if (k < 3){
             histoCorrectedYieldFixed[k]     = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("CorrectedYieldEff%sFixed",nameIntRange[k].Data()));
             histoCorrectedYieldTrueFixed[k] = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("CorrectedYieldTrueEff%sFixed",nameIntRange[k].Data()));
-        }    
-        
+        } else {    
+            m = k-3;
+        }
         if (!optDalitz){
             cout << "correcting spectra in " << nameIntRange[k].Data() << endl;
+            cout << k << "\t" << k%3 << "\t" << m << endl;
             CorrectYield(histoCorrectedYieldNorm[k], histoYieldSecMeson[k], histoEffiPt[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
             CorrectYield(histoCorrectedYieldTrue[k], histoYieldSecMeson[k], histoTrueEffiPt[k%3], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
             if (k < 3){
@@ -2135,13 +2254,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }    
 
         RatioTrue[k]                    = (TH1D*) histoCorrectedYieldTrue[k]->Clone(); 
-        RatioTrue[k]->Divide(RatioTrue[k],histoCorrectedYieldTrue[0],1.,1.,"");
+        RatioTrue[k]->Divide(RatioTrue[k],histoCorrectedYieldTrue[0],1.,1.,"B");
+        RatioNormal[k]                  = (TH1D*) histoCorrectedYieldNorm[k]->Clone(); 
+        RatioNormal[k]->Divide(RatioNormal[k],histoCorrectedYieldNorm[0],1.,1.,"B");
         
         if (k == 0){
             RatioTrueMCInput            = (TH1D*) histoMCYieldMeson->Clone();
             RatioTrueMCInput->Divide(RatioTrueMCInput,histoCorrectedYieldTrue[k],1.,1.,"");
-            RatioNormal                 = (TH1D*) histoCorrectedYieldNorm[k]->Clone();  
-            RatioNormal->Divide(RatioNormal,histoCorrectedYieldTrue[k],1.,1.,"");
+            RatioNormalToTrue           = (TH1D*) histoCorrectedYieldNorm[k]->Clone();  
+            RatioNormalToTrue->Divide(RatioNormalToTrue,histoCorrectedYieldTrue[k],1.,1.,"B");
         }    
     }
     
@@ -2153,9 +2274,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     // **************************************************************************************
     // ************** Plot corrected yield with differnt yield extraction methods ***********
     // **************************************************************************************
-    TCanvas* canvasCorrecftedYield = new TCanvas("canvasCorrecftedYield","",1350,1500);  // gives the page size
-    DrawGammaCanvasSettings( canvasCorrecftedYield, 0.13, 0.02, 0.02, 0.09);
-    canvasCorrecftedYield->SetLogy();
+    TCanvas* canvasCorrectedYield = new TCanvas("canvasCorrectedYield","",1350,1500);  // gives the page size
+    DrawGammaCanvasSettings( canvasCorrectedYield, 0.13, 0.02, 0.02, 0.09);
+    canvasCorrectedYield->SetLogy();
 
     TPad* padCorrectedYieldHistos = new TPad("padCorrectedYieldHistos", "", 0., 0.3, 1., 1.,-1, -1, -2);
     DrawGammaPadSettings( padCorrectedYieldHistos, 0.12, 0.02, 0.02, 0.);
@@ -2168,18 +2289,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     padCorrectedYieldHistos->cd();
     padCorrectedYieldHistos->SetLogy(); 
     
-        Double_t minimumPtYield = 1e6;
-        for (Int_t iPt = 1; iPt < histoCorrectedYieldTrue[0]->GetNbinsX()+1; iPt++){
-            if ( histoCorrectedYieldTrue[0]->GetBinContent(iPt) > 0 && minimumPtYield > histoCorrectedYieldTrue[0]->GetBinContent(iPt)){
-                minimumPtYield  = histoCorrectedYieldTrue[0]->GetBinContent(iPt);
-            }    
-        }
-        minimumPtYield          = minimumPtYield*0.01;
-        cout << minimumPtYield << endl;
-            
         TH2F* histo2DDummyPt;
         histo2DDummyPt               = new TH2F("histo2DDummyPt","histo2DDummyPt",1000,0, histoCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrue[0]->GetNbinsX()),
-                                                                                10000, minimumPtYield, 3*histoCorrectedYieldTrue[0]->GetMaximum());
+                                                                                10000, 0.01*FindSmallestBin1DHist(histoCorrectedYieldTrue[0],1e6 ), 3*histoCorrectedYieldTrue[0]->GetMaximum());
         SetStyleHistoTH2ForGraphs(histo2DDummyPt, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", 0.033,0.04, 0.033,0.04, 1,1.35);
         histo2DDummyPt->DrawCopy();         
         
@@ -2214,16 +2326,40 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }    
         DrawGammaLines(0., histoCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrue[0]->GetNbinsX()),1., 1.,0.1);
         
-    canvasCorrecftedYield->Update();
-    canvasCorrecftedYield->SaveAs(Form("%s/%s_%s_CorrectedYieldTrueEff_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
+    canvasCorrectedYield->Update();
+    canvasCorrectedYield->SaveAs(Form("%s/%s_%s_CorrectedYieldTrueEff_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
 
+    padCorrectedYieldHistos->cd();
+    
+        histo2DDummyPt->DrawCopy();         
+        
+        for (Int_t k = 0; k < 6; k++){
+            DrawGammaSetMarker(histoCorrectedYieldNorm[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
+            histoCorrectedYieldNorm[k]->DrawCopy("e1,same"); 
+        }    
+        legendYield3->Draw();    
+        PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+    
+    padCorrectedYieldRatios->cd();
+    
+        histo2DDummyRatioPt->DrawCopy();         
+
+        for (Int_t k = 0; k < 6; k++){
+            DrawGammaSetMarker(RatioNormal[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
+            RatioNormal[k]->DrawCopy("e1,same"); 
+        }    
+        DrawGammaLines(0., histoCorrectedYieldNorm[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldNorm[0]->GetNbinsX()),1., 1.,0.1);
+        
+    canvasCorrectedYield->Update();
+    canvasCorrectedYield->SaveAs(Form("%s/%s_%s_CorrectedYieldNormalEff_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
+    
     // **************************************************************************************
     // ************** Plot corrected yield with differnt efficiencies & MC yield ************
     // **************************** Sanity check for MC *************************************
     // **************************************************************************************
     
     if (kIsMC){
-        canvasCorrecftedYield->cd();
+        canvasCorrectedYield->cd();
 
         padCorrectedYieldHistos->cd();
         padCorrectedYieldHistos->SetLogy(); 
@@ -2261,15 +2397,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             RatioTrue[0]->DrawCopy("p,e2");  
             DrawGammaSetMarker(RatioTrueMCInput, 24, 1., kRed+2, kRed+2);
             RatioTrueMCInput->DrawCopy("e1,same"); 
-            DrawGammaSetMarker(RatioNormal, 25, 1., kGreen+2, kGreen+2); 
-            RatioNormal->DrawCopy("e1,same"); 
+            DrawGammaSetMarker(RatioNormalToTrue, 25, 1., kGreen+2, kGreen+2); 
+            RatioNormalToTrue->DrawCopy("e1,same"); 
             DrawGammaLines(0., histoCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrue[0]->GetNbinsX()),1., 1.,0.1);
             
-        canvasCorrecftedYield->Update();
-        canvasCorrecftedYield->SaveAs(Form("%s/%s_%s_CorrectedYield_SanityCheck_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
+        canvasCorrectedYield->Update();
+        canvasCorrectedYield->SaveAs(Form("%s/%s_%s_CorrectedYield_SanityCheck_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
     }
 
-    delete canvasCorrecftedYield;
+    delete canvasCorrectedYield;
     delete legendYield3;
 
     //***********************************************************************************************
@@ -2474,9 +2610,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //*************************************************************************************************
         //*********************** Plotting Corrected Yield in mt - bins normal eff ************************
         //*************************************************************************************************
-        TCanvas* canvasCorrecftedYieldMt = new TCanvas("canvasCorrecftedYieldMt","",1350,1500);  // gives the page size
-        DrawGammaCanvasSettings( canvasCorrecftedYieldMt, 0.13, 0.02, 0.02, 0.09); 
-        canvasCorrecftedYieldMt->SetLogy(); 
+        TCanvas* canvasCorrectedYieldMt = new TCanvas("canvasCorrectedYieldMt","",1350,1500);  // gives the page size
+        DrawGammaCanvasSettings( canvasCorrectedYieldMt, 0.13, 0.02, 0.02, 0.09); 
+        canvasCorrectedYieldMt->SetLogy(); 
 
         TPad* padCorrectedYieldHistosMt = new TPad("padCorrectedYieldHistosMt", "", 0., 0.3, 1., 1.,-1, -1, -2);
         DrawGammaPadSettings( padCorrectedYieldHistosMt, 0.12, 0.02, 0.02, 0.);
@@ -2489,18 +2625,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         padCorrectedYieldHistosMt->cd();
         padCorrectedYieldHistosMt->SetLogy();  
 
-        Double_t minimumMtYield = 1e6;
-        for (Int_t iMt = 1; iMt < histoCorrectedYieldTrueMt[0]->GetNbinsX()+1; iMt++){
-            if ( histoCorrectedYieldTrueMt[0]->GetBinContent(iMt) > 0 && minimumMtYield > histoCorrectedYieldTrueMt[0]->GetBinContent(iMt)){
-                minimumMtYield  = histoCorrectedYieldTrueMt[0]->GetBinContent(iMt);
-            }    
-        }
-        minimumMtYield          = minimumMtYield*0.01;
-        cout << minimumMtYield << endl;
-
             TH2F* histo2DDummyMt;
             histo2DDummyMt               = new TH2F("histo2DDummyMt","histo2DDummyMt",1000,0, histoCorrectedYieldTrueMt[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrueMt[0]->GetNbinsX()),
-                                                                                    1000, minimumMtYield, 3*histoCorrectedYieldTrueMt[0]->GetMaximum());
+                                                                                    1000, 0.01*FindSmallestBin1DHist(histoCorrectedYieldTrueMt[0],1e6 ), 3*histoCorrectedYieldTrueMt[0]->GetMaximum());
             SetStyleHistoTH2ForGraphs(histo2DDummyMt, "#it{m}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{m}_{T}d#it{m}_{T}d#it{y}} (#it{c}/GeV)^{2}", 0.033,0.04, 0.033,0.04, 1,1.35);
             histo2DDummyMt->DrawCopy();         
             TLegend* legendYield_Mt = GetAndSetLegend2(0.15,0.03,0.66,0.03+6*0.03, 32,1); 
@@ -2531,9 +2658,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }
             DrawGammaLines(0., histoCorrectedYieldTrueMt[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrueMt[0]->GetNbinsX()),1., 1.,0.1);
 
-        canvasCorrecftedYieldMt->Update();
-        canvasCorrecftedYieldMt->SaveAs(Form("%s/%s_%s_CorrectedYield_Mtspectra_TrueEff_%s.%s", outputDir.Data(), nameMeson.Data() ,prefix2.Data() , fCutSelection.Data(), suffix.Data()));
-        delete canvasCorrecftedYieldMt;
+        canvasCorrectedYieldMt->Update();
+        canvasCorrectedYieldMt->SaveAs(Form("%s/%s_%s_CorrectedYield_Mtspectra_TrueEff_%s.%s", outputDir.Data(), nameMeson.Data() ,prefix2.Data() , fCutSelection.Data(), suffix.Data()));
+        delete canvasCorrectedYieldMt;
         delete legendYield_Mt;
             
     }
