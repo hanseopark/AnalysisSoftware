@@ -64,6 +64,8 @@ void ComputeCorrelationFactors(
   StyleSettingsThesis();
   SetPlotStyle();
 
+  if(combMode.CompareTo("systems")==0) mode = "Systems";
+
   TString dateForOutput   = ReturnDateStringForOutput();
   TString collisionSystem = ReturnFullCollisionsSystem(energy);
   TString energyForOutput = energy;
@@ -224,7 +226,7 @@ void ComputeCorrelationFactors(
       Double_t pT  = -1;
       Double_t pT2 = -1;
 
-      Double_t factor = 1;
+      Double_t factor = 0;
       TString tempCorr = "";
       if(iC<iC2){
         tempCorr = Form("%s_%s-%s",vecComb.at(iC).Data(),vecComb.at(iC).Data(),vecComb.at(iC2).Data());
