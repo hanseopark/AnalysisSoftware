@@ -351,9 +351,7 @@ void ExtractSignalV2(   TString meson                   = "",
             if (fHistoMCSecPi0SourcePt && fHistoMCSecPi0WAccSourcePt){
                fHistoMCSecPi0SourcePt->Sumw2();
                fHistoMCSecPi0WAccSourcePt->Sumw2();
-               fNewMCOutput                     =  kTRUE;
-               
-               
+               fNewMCOutput                     =  kTRUE;  
             }    
             cout << "line " << __LINE__ << endl;
         }
@@ -1673,16 +1671,16 @@ void ExtractSignalV2(   TString meson                   = "",
             fNameHistoEffi                      = Form("Meson%sEffiPt",nameIntRange[k].Data());
             cout << fNameHistoEffi.Data() << endl;
             if (fHistoMCMesonPtWithinAcceptanceWOWeights) 
-                fHistoMonteMesonEffiPt[k]       = CalculateMesonEfficiencyWOWeights(fHistoYieldMeson[k], fHistoYieldTrueSecMeson[k], fNameHistoEffi);
+                fHistoMonteMesonEffiPt[k]       = CalculateMesonEfficiency(fHistoYieldMeson[k], fHistoYieldTrueSecMeson[k], fHistoMCMesonWithinAccepPtWOWeights, fNameHistoEffi);
             else 
-                fHistoMonteMesonEffiPt[k]       = CalculateMesonEfficiency(fHistoYieldMeson[k], fHistoYieldTrueSecMeson[k], fNameHistoEffi);
+                fHistoMonteMesonEffiPt[k]       = CalculateMesonEfficiency(fHistoYieldMeson[k], fHistoYieldTrueSecMeson[k], fHistoMCMesonWithinAccepPt, fNameHistoEffi);
             
             fNameHistoEffi                      = Form("Meson%sEffiPt",nameIntRange[k+3].Data());
             cout << fNameHistoEffi.Data() << endl;
             if (fHistoMCMesonPtWithinAcceptanceWOWeights) 
-                fHistoMonteMesonEffiPt[k+3]       = CalculateMesonEfficiencyWOWeights(fHistoYieldMeson[k+3], fHistoYieldTrueSecMeson[k], fNameHistoEffi);
+                fHistoMonteMesonEffiPt[k+3]       = CalculateMesonEfficiency(fHistoYieldMeson[k+3], fHistoYieldTrueSecMeson[k], fHistoMCMesonWithinAccepPtWOWeights, fNameHistoEffi);
             else 
-                fHistoMonteMesonEffiPt[k+3]       = CalculateMesonEfficiency(fHistoYieldMeson[k+3], fHistoYieldTrueSecMeson[k], fNameHistoEffi);
+                fHistoMonteMesonEffiPt[k+3]       = CalculateMesonEfficiency(fHistoYieldMeson[k+3], fHistoYieldTrueSecMeson[k], fHistoMCMesonWithinAccepPt, fNameHistoEffi);
         }    
         
         for (Int_t k = 0; k < 3; k++){
@@ -1690,20 +1688,36 @@ void ExtractSignalV2(   TString meson                   = "",
             fNameHistoEffi                          = Form("TrueMeson%sEffiPtUnweighted",nameIntRange[k].Data());
             cout << fNameHistoEffi.Data() << endl;
             if (fHistoMCMesonPtWithinAcceptanceWOWeights)
-                fHistoMCTrueMesonEffiPtUnweighted[k]= CalculateMesonEfficiencyWOWeights(fHistoYieldTrueMesonUnweighted[k],NULL,fNameHistoEffi);
+                fHistoMCTrueMesonEffiPtUnweighted[k]= CalculateMesonEfficiency(fHistoYieldTrueMesonUnweighted[k], NULL, fHistoMCMesonWithinAccepPtWOWeights, fNameHistoEffi);
             
             // True meson efficiencies with possibly fully weighted inputs on a meson by meson basis in the aliphysics task, should always be used if you start weighting the MC
             // True Meson (only once case, because no normalization)
             fNameHistoEffi                          = Form("TrueMeson%sEffiPt",nameIntRange[k].Data());
             cout << fNameHistoEffi.Data() << endl;
-            fHistoMCTrueMesonEffiPt[k]              = CalculateMesonEfficiency(fHistoYieldTrueMeson[k],NULL,fNameHistoEffi);
+            fHistoMCTrueMesonEffiPt[k]              = CalculateMesonEfficiency(fHistoYieldTrueMeson[k], NULL, fHistoMCMesonWithinAccepPt, fNameHistoEffi);
             
 
             // True meson efficiencies with possibly fully weighted inputs taking the average weight per inv mass bin in the original binning of the TrueMesonInvMass vs pT plot
             // should give on average the same as TrueMesonEffiPt
             fNameHistoEffi                          = Form("TrueMeson%sEffiPtReweighted",nameIntRange[k].Data());
             cout << fNameHistoEffi.Data() << endl;
-            fHistoMCTrueMesonEffiPtReweighted[k]    = CalculateMesonEfficiency(fHistoYieldTrueMesonReweighted[k],NULL,fNameHistoEffi);
+            fHistoMCTrueMesonEffiPtReweighted[k]    = CalculateMesonEfficiency(fHistoYieldTrueMesonReweighted[k], NULL, fHistoMCMesonWithinAccepPt, fNameHistoEffi);
+        
+            if (fNewMCOutput){
+                for (Int_t j = 0; j < 4; j++){
+                    fNameHistoEffi                          = Form("TrueSecFrom%s%sEffiPt",nameSecondaries[j].Data(), nameIntRange[k].Data());   
+                    cout << "trying to create: "<< fNameHistoEffi.Data() << endl;
+                    if (fHistoYieldTrueSecMeson[k][j] && fHistoMCSecPi0PtWAccReb[j]){
+                        fHistoMCTrueSecMesonEffiPt[k][j]        = CalculateMesonEfficiency(fHistoYieldTrueSecMeson[k][j], NULL, fHistoMCSecPi0PtWAccReb[j], fNameHistoEffi);        
+                    } else {
+                        cout << Form("TrueSecFrom%s%sEffiPtReweighted",nameSecondaries[j].Data(), nameIntRange[k].Data()) << " could not be created " << endl;
+                        if (!fHistoYieldTrueSecMeson[k][j])
+                            cout << "true rec yield for " << nameSecondaries[j].Data() << " in int range: " << nameIntRange[k].Data() << " was missing" << endl; 
+                        if (!fHistoMCSecPi0PtWAccReb[j])
+                            cout << "MC yield for " << nameSecondaries[j].Data() << " in acceptance was missing" << endl; 
+                    }
+                }    
+            }    
         }
             
         // Calculation of secondary fractions using unweighted histograms, as secondaries are never weighted
@@ -4448,42 +4462,27 @@ void CalculateMesonAcceptanceWOEvtWeights() {
 //****************************************************************************
 //***************** Calculation of Meson Efficiency **************************
 //****************************************************************************
-TH1D* CalculateMesonEfficiency(TH1D* fMC_fMesonYieldsPt, TH1D** fMC_SecondaryYieldPt, TString nameEfi ) {
-    TH1D* fHistoMCMesonEffiPt = new TH1D(nameEfi.Data(),"",fNBinsPt,fBinsPt);
-        
+TH1D* CalculateMesonEfficiency(TH1D* fMC_fMesonYieldsPt, TH1D** fMC_SecondaryYieldPt, TH1D* histAcc, TString nameEfi ) {
+    
+    // create histo with proper binning
+    TH1D* fHistoMCMesonEffiPt = new TH1D(nameEfi.Data(),"",fNBinsPt,fBinsPt);    
     fHistoMCMesonEffiPt->Sumw2();
+    // add original reconstructed yields
     fHistoMCMesonEffiPt->Add(fMC_fMesonYieldsPt,1.);
+    // subtract secondary yield to get only primary efficiency if wanted
     if (fMC_SecondaryYieldPt){
         for (Int_t j = 0; j<4; j++){
             if(fMC_SecondaryYieldPt[j]) fHistoMCMesonEffiPt->Add(fMC_SecondaryYieldPt[j],-1.);
         }    
     }    
-    fHistoMCMesonEffiPt->Divide(fHistoMCMesonEffiPt,fHistoMCMesonWithinAccepPt,1.,1.,"B");
-    fFileDataLog << endl << "Calculation of the Efficiency" << nameEfi.Data()<< endl;
+    // devide by MC input yield in acceptance
+    fHistoMCMesonEffiPt->Divide(fHistoMCMesonEffiPt, histAcc, 1.,1.,"B");
+    // write efficiency to output file as text
+    fFileDataLog << endl << "Calculation of the Efficiency: " << nameEfi.Data()<< endl;
     for ( Int_t i = 1; i < fHistoMCMesonEffiPt->GetNbinsX()+1 ; i++){
         fFileDataLog << "Bin " << i << "\t" << fHistoMCMesonEffiPt->GetBinCenter(i)<< "\t"<< fHistoMCMesonEffiPt->GetBinContent(i) << "\t" << fHistoMCMesonEffiPt->GetBinError(i) <<endl;
     }
-    return fHistoMCMesonEffiPt;
-}
-
-//****************************************************************************
-//***************** Calculation of Meson Efficiency **************************
-//****************************************************************************
-TH1D* CalculateMesonEfficiencyWOWeights(TH1D* fMC_fMesonYieldsPt, TH1D** fMC_SecondaryYieldPt, TString nameEfi ) {
-    TH1D* fHistoMCMesonEffiPt = new TH1D(nameEfi.Data(),"",fNBinsPt,fBinsPt);
-        
-    fHistoMCMesonEffiPt->Sumw2();
-    fHistoMCMesonEffiPt->Add(fMC_fMesonYieldsPt,1.);
-    if (fMC_SecondaryYieldPt){
-        for (Int_t j = 0; j<4; j++){
-            if(fMC_SecondaryYieldPt[j]) fHistoMCMesonEffiPt->Add(fMC_SecondaryYieldPt[j],-1.);
-        }    
-    }        
-    fHistoMCMesonEffiPt->Divide(fHistoMCMesonEffiPt,fHistoMCMesonWithinAccepPtWOWeights,1.,1.,"B");
-    fFileDataLog << endl << "Calculation of the Efficiency" << nameEfi.Data()<< endl;
-    for ( Int_t i = 1; i < fHistoMCMesonEffiPt->GetNbinsX()+1 ; i++){
-        fFileDataLog << "Bin " << i << "\t" << fHistoMCMesonEffiPt->GetBinCenter(i)<< "\t"<< fHistoMCMesonEffiPt->GetBinContent(i) << "\t" << fHistoMCMesonEffiPt->GetBinError(i) <<endl;
-    }
+    // return pointer to hist
     return fHistoMCMesonEffiPt;
 }
 
@@ -4764,13 +4763,18 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
     if( fNewMCOutput ){
         if (fHistoMCSecPi0SourcePt)         fHistoMCSecPi0SourcePt->Write();
         if (fHistoMCSecPi0WAccSourcePt)     fHistoMCSecPi0WAccSourcePt->Write();
-        for (Int_t i = 0; i < 4; i++){
-            if(fHistoMCSecPi0Pt[i])         fHistoMCSecPi0Pt[i]->Write();
-            if(fHistoMCSecPi0PtWAcc[i])     fHistoMCSecPi0PtWAcc[i]->Write();
-            if(fHistoMCSecPi0PtReb[i])      fHistoMCSecPi0PtReb[i]->Write();
-            if(fHistoMCSecPi0PtWAccReb[i])  fHistoMCSecPi0PtWAccReb[i]->Write();
-            if(fHistoMCSecPi0AcceptPt[i])   fHistoMCSecPi0AcceptPt[i]->Write();
+        for (Int_t j = 0; j < 4; j++){
+            if(fHistoMCSecPi0Pt[j])         fHistoMCSecPi0Pt[j]->Write();
+            if(fHistoMCSecPi0PtWAcc[j])     fHistoMCSecPi0PtWAcc[j]->Write();
+            if(fHistoMCSecPi0PtReb[j])      fHistoMCSecPi0PtReb[j]->Write();
+            if(fHistoMCSecPi0PtWAccReb[j])  fHistoMCSecPi0PtWAccReb[j]->Write();
+            if(fHistoMCSecPi0AcceptPt[j])   fHistoMCSecPi0AcceptPt[j]->Write();
         }    
+        for (Int_t k = 0; k < 3; k++){
+            for (Int_t j = 0; j < 4; j++){
+                if (fHistoMCTrueSecMesonEffiPt[k][j])   fHistoMCTrueSecMesonEffiPt[k][j]->Write();
+            }
+        }
     }
     
     // write different mass and width histos reco

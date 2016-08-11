@@ -202,8 +202,7 @@ void FillHistosArrayMCWOEvtWeights(TH1D* , TH1D*, TH1D*);                       
 void CalculateMesonAcceptance();                                                                            // Calculation of meson acceptance
 void CalculateMesonAcceptanceWOWeights();                                                                   // Calculation of meson acceptance
 void CalculateMesonAcceptanceWOEvtWeights();                                                                // Calculation of meson acceptance
-TH1D* CalculateMesonEfficiency(TH1D*, TH1D**,TString);                                                      // Calculation of meson efficiencies 
-TH1D* CalculateMesonEfficiencyWOWeights(TH1D*, TH1D**,TString);                                             // Calculation of meson efficiencies 
+TH1D* CalculateMesonEfficiency(TH1D*, TH1D**, TH1D*, TString);                                              // Calculation of meson efficiencies 
 void SaveHistos(Int_t, TString, TString, Bool_t);                                                           // Saving standard histograms to a file
 void SaveCorrectionHistos(TString , TString);                                                               // Saving correction histograms to a file
 void Initialize(TString setPi0, Int_t, Int_t);                                                              // Initialization of global variables depending on meson analysed 
@@ -549,6 +548,7 @@ TH1D*       fHistoMonteMesonEffiPt[6]                                   = {NULL,
 TH1D*       fHistoMCTrueMesonEffiPt[3]                                  = {NULL, NULL, NULL};
 TH1D*       fHistoMCTrueMesonEffiPtReweighted[3]                        = {NULL, NULL, NULL};
 TH1D*       fHistoMCTrueMesonEffiPtUnweighted[3]                        = {NULL, NULL, NULL};
+TH1D*       fHistoMCTrueSecMesonEffiPt[3][4]                            = {{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL}};
 
 //****************************************************************************
 //**************************** MC rec sec mesons  ****************************

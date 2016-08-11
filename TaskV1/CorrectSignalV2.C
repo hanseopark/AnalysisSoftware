@@ -296,10 +296,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     Color_t colorIntRangesSec[6]                    = {kRed+1, kRed+2, kRed-5, kBlue, kBlue+2, kBlue-5};
     Style_t markerStyleIntRanges[6]                 = {20, 24, 24, 20, 24, 24};
     Size_t markerSizeIntRanges[6]                   = {1, 1, 1, 1, 1, 1};
-    Color_t  colorCat[6]                            = { kRed+1, 807, 800, kGreen+2, kCyan+2, kBlue+1};
-    Color_t  colorCatMC[6]                          = { kRed+3, 807+2, 800+2, kGreen+4, kCyan+4, kBlue+3};
-    Style_t  styleCat[6]                            = { 20, 21, 29, 33, 20, 21};
-    Style_t  styleCatMC[6]                          = { 24, 25, 30, 27, 24, 25};
+    Color_t colorCat[6]                             = { kRed+1, 807, 800, kGreen+2, kCyan+2, kBlue+1};
+    Color_t colorCatMC[6]                           = { kRed+3, 807+2, 800+2, kGreen+4, kCyan+4, kBlue+3};
+    Style_t styleCat[6]                             = { 20, 21, 29, 33, 20, 21};
+    Style_t styleCatMC[6]                           = { 24, 25, 30, 27, 24, 25};
     Color_t colorSec[4]                             = {kRed+2, 807, kGreen+2, kBlue};
     Style_t markerStyleSec[4]                       = {20, 24, 24, 21};
     Size_t markerSizeSec[4]                         = {1, 1, 1, 1};
@@ -377,7 +377,18 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     for (Int_t k= 0; k < 6; k++){
         histoEffiPt[k]                              = (TH1D*)fileCorrections->Get(Form("Meson%sEffiPt", nameIntRange[k].Data())); //not yet correct MesonEffiPt
     }    
-    TH1D *histoAcceptance                           = (TH1D*)fileCorrections->Get("fMCMesonAccepPt");
+    TH1D* histoAcceptance                           = (TH1D*)fileCorrections->Get("fMCMesonAccepPt");
+    TH1D* histoSecAcceptance[4]                     = {NULL, NULL, NULL, NULL};
+    Bool_t hasNewSecQuantities                      = kFALSE;
+    Int_t nAccHistSec                               = 0;
+    for (Int_t j = 0; j< 4; j++){
+        histoSecAcceptance[j]                       = (TH1D*)fileCorrections->Get(Form("fMCSecPi0From%sAccepPt",nameSecMeson[j].Data()));
+        if (histoSecAcceptance[j]){
+            hasNewSecQuantities                     = kTRUE;
+            nAccHistSec++;
+        }
+    }
+    
     TH1D *histoAcceptanceWOEvtWeights               = (TH1D*)fileCorrections->Get("fMCMesonAccepPtWOEvtWeights");
     
     // load histograms without weighting for comparison of efficiencies & enable the comparison if those are present in the input file
@@ -397,6 +408,19 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         histoEffiPtFixed[k]                         = (TH1D*)histoEffiPt[k]->Clone(Form("Meson%sEffiPtFixed", nameIntRange[k].Data())); 
         histoEffiPtFixed[k]                         = FixEfficiency(histoEffiPtFixed[k],histoEffiPt[k],optionEnergy,centralityString);
     }    
+    // read secondary pi0 efficiencies
+    TH1D* histoSecTrueEffi[3][4]                    = {{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL}};
+    Int_t nEffHistSec                               = 0;
+    for (Int_t j = 0; j< 4; j++){
+        for (Int_t k = 0; k< 3; k++){
+            histoSecTrueEffi[k][j]                  = (TH1D*)fileCorrections->Get(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+        }    
+        if (histoSecTrueEffi[0][j]){
+            nEffHistSec++;
+        }
+    }
+
+    
     if (histoAcceptanceWOWeights && histoTrueEffiPtWOWeights[0] && histoTrueEffiPtWOWeights[1] && histoTrueEffiPtWOWeights[2]) 
         containsWOWeights                           = kTRUE;
     
@@ -626,7 +650,6 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }   
         }    
         for (Int_t k = 0; k < 6; k++){
-            cout << "k " << k << "\t" << k%3<< endl;
             for (Int_t j = 0; j < 4; j++){
                 histoYieldSecMeson[k][j]            = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("SecYieldFrom%sMeson%s", nameSecMeson[j].Data(), nameIntRange[k].Data()));
                 histoYieldSecMeson[k][j]->Sumw2();
@@ -1735,32 +1758,39 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         
         canvasCompEffSimple->Update();
         canvasCompEffSimple->SaveAs(Form("%s/%s_EffiCompW0WeightingNormalRatioAfterFix_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));  
-        
     }    
     
     //**********************************************************************************
     //******************** Acceptance Plot *********************************************
     //**********************************************************************************
     if (kIsMC){
+        // Plot simple primary acceptance
         TCanvas* canvasAcceptance = new TCanvas("canvasAcceptance2","",200,10,1350,900);  // gives the page size
         DrawGammaCanvasSettings( canvasAcceptance, 0.1, 0.01, 0.02, 0.10);
 
+        Double_t rangeAcc[2]    = {0.5, 1.02};
+        if (mode == 0){
+            if (optionEnergy.CompareTo("pPb_5.023TeV")==0){
+                rangeAcc[0]     = 0.2; 
+                rangeAcc[1]     = 1.02;
+                if (kIsEta) 
+                    rangeAcc[0] = 0.1; 
+            } else {    
+                rangeAcc[0]     = 0.7; 
+                rangeAcc[1]     = 1.02; 
+                if (kIsEta) 
+                    rangeAcc[0] = 0.5; 
+            }    
+        } else if (mode == 2 || mode == 4){
+            rangeAcc[0]         = 0.; 
+            rangeAcc[1]         = 0.3;             
+        }
+        
         DrawAutoGammaMesonHistos( histoAcceptance, 
                                     "", "#it{p}_{T} (GeV/#it{c})", Form("A_{%s} in |#it{y}| < %s",textMeson.Data(),rapidityRange.Data()), 
-                                    kTRUE, 1.3, 3e-6, kFALSE,
-                                    kFALSE, 0., 0.7, 
+                                    kFALSE, 1.3, 3e-6, kFALSE,
+                                    kTRUE, rangeAcc[0], rangeAcc[1], 
                                     kFALSE, 0., 10.);
-        if (!kIsEta){
-            if (optionEnergy.CompareTo("pPb_5.023TeV")==0 && mode == 0) histoAcceptance->GetYaxis()->SetRangeUser(0.2,1.02);
-            else if (mode == 0) histoAcceptance->GetYaxis()->SetRangeUser(0.7,1.02);
-            else if (mode == 4 || mode == 2) histoAcceptance->GetYaxis()->SetRangeUser(0.,0.3);
-            else histoAcceptance->GetYaxis()->SetRangeUser(0.7,1.02);
-        } else {
-            if (optionEnergy.CompareTo("pPb_5.023TeV")==0 && mode == 0) histoAcceptance->GetYaxis()->SetRangeUser(0.1,1.);
-            else if (mode == 0) histoAcceptance->GetYaxis()->SetRangeUser(0.5,1.);
-            else if (mode == 4 || mode == 2) histoAcceptance->GetYaxis()->SetRangeUser(0.,0.3);
-            else histoAcceptance->GetYaxis()->SetRangeUser(0.5,1.02);
-        }  
                 
         DrawGammaSetMarker(histoAcceptance, 20, 1.5, kAzure-6, kAzure-6);
         histoAcceptance->DrawCopy("e1"); 
@@ -1770,7 +1800,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         canvasAcceptance->Update();
         canvasAcceptance->SaveAs(Form("%s/%s_Acceptance_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
         
+        // Plot acceptance without weights
         if (containsWOWeights){
+            canvasAcceptance->cd();
             DrawGammaSetMarker(histoAcceptanceWOWeights, 24, 1., kBlack, kBlack);  
             histoAcceptanceWOWeights->DrawCopy("e1, same"); 
 
@@ -1783,6 +1815,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             canvasAcceptance->Update();
             canvasAcceptance->SaveAs(Form("%s/%s_AcceptanceCompWAndW0Weighting_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
 
+            // plot ratio of acceptances with and without weight
             TH1D* histoRatioAccWWOWeighting        =     (TH1D*) histoAcceptance->Clone(); 
             histoRatioAccWWOWeighting->Divide(histoRatioAccWWOWeighting, histoAcceptanceWOWeights, 1., 1., "B");
 
@@ -1799,6 +1832,31 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             canvasAcceptance->SaveAs(Form("%s/%s_AcceptanceCompWAndW0WeightingRatio_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
     
         }
+
+        // Plot acceptance with secondary acceptances
+        if (hasNewSecQuantities){
+            canvasAcceptance->cd();
+            
+            TLegend* legendAccSec = GetAndSetLegend2(0.45, 0.12, 0.65, 0.12+(nAccHistSec+1)*0.03, 28);
+            histoAcceptance->GetYaxis()->SetRangeUser(rangeAcc[0], rangeAcc[1]*1.5);
+            histoAcceptance->DrawCopy("e1");
+            legendAccSec->AddEntry(histoAcceptance,"prim.");
+            for (Int_t j = 0; j < 4; j++){
+                if (histoSecAcceptance[j]){
+                    DrawGammaSetMarker(histoSecAcceptance[j], markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
+                    histoSecAcceptance[j]->Draw("e1,same");
+                    legendAccSec->AddEntry(histoSecAcceptance[j],Form("sec. from %s", nameSecMesonPlot[j].Data()));
+                }    
+            
+            }
+            legendAccSec->Draw();
+            PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 63, 0.03);
+            
+            canvasAcceptance->Update();
+            canvasAcceptance->SaveAs(Form("%s/%s_AcceptanceWithSec_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
+        }    
+
+        
         
         delete canvasAcceptance;
         
@@ -1954,15 +2012,14 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //******************** Efficiency Simple Plot **************************************
         //**********************************************************************************
         TCanvas* canvasEffSimple = new TCanvas("canvasEffSimple","",200,10,1350,900);  // gives the page size
-        DrawGammaCanvasSettings( canvasEffSimple, 0.065, 0.01, 0.035, 0.09);
+        DrawGammaCanvasSettings( canvasEffSimple, 0.065, 0.012, 0.035, 0.09);
 
         TH2F* histo2DDummyEffi;
         histo2DDummyEffi         = new TH2F("histo2DDummyEffi","histo2DDummyEffi",1000,0, histoTrueEffiPtUnmod[0]->GetXaxis()->GetBinUpEdge(histoTrueEffiPtUnmod[0]->GetNbinsX()),
                                                                                 1000, 0, 1.3*histoTrueEffiPtUnmod[0]->GetMaximum());
-        SetStyleHistoTH2ForGraphs(histo2DDummyEffi, "#it{p}_{T} (GeV/#it{c})", "#epsilon_{eff}", 0.032,0.04, 0.04,0.04, 0.76,1.55);
+        SetStyleHistoTH2ForGraphs(histo2DDummyEffi, "#it{p}_{T} (GeV/#it{c})", "#epsilon_{eff}", 0.035,0.04, 0.035,0.04, 0.9,0.8, 510, 505);
         histo2DDummyEffi->DrawCopy();         
 
-        
             DrawGammaSetMarker(histoTrueEffiPtUnmod[0], 20, 1., kBlack, kBlack);
             histoTrueEffiPtUnmod[0]->DrawCopy("same,e1,p");
             if (containsWOWeights){
@@ -1994,6 +2051,44 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
 
         canvasEffSimple->SaveAs(Form("%s/%s_TrueEffSimple_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data())); 
+        
+        //**********************************************************************************
+        //**************** Plot primary efficiency together with sec effis *****************
+        //**********************************************************************************
+        if (hasNewSecQuantities){
+            canvasEffSimple->cd();
+            histo2DDummyEffi->DrawCopy();         
+            
+            TLegend* legendEffWithSec = GetAndSetLegend2(0.12,0.8-(nEffHistSec+2)*0.035,0.4,0.8 , 0.035, 1, "", 42, 0.1);
+            if (containsWOWeights){
+                DrawGammaSetMarker(histoTrueEffiPt[0], 20, 1., kBlack, kBlack);
+                histoTrueEffiPt[0]->DrawCopy("same,e1,p");
+                DrawGammaSetMarker(histoEffiPt[0], 25, 1., kGreen+2, kGreen+2);
+                histoEffiPt[0]->DrawCopy("same,e1,p");
+                legendEffWithSec->AddEntry(histoTrueEffiPt[0],"val. prim");
+                legendEffWithSec->AddEntry(histoEffiPt[0],"rec. prim, as in Data"); 
+            } else if (mode == 4){
+                DrawGammaSetMarker(histoTrueEffiPtUnmod[0], 20, 1., kBlack, kBlack);
+                histoTrueEffiPtUnmod[0]->DrawCopy("same,e1,p");
+                DrawGammaSetMarker(histoEffiPt[0], 25, 1., kGreen+2, kGreen+2);
+                histoEffiPt[0]->DrawCopy("same,e1,p");            
+                legendEffWithSec->AddEntry(histoTrueEffiPtUnmod[0],"val. prim");
+                legendEffWithSec->AddEntry(histoEffiPt[0],"rec. prim, as in Data"); 
+            }    
+            for (Int_t j = 0; j < 4; j++){
+                if (histoSecTrueEffi[0][j]){
+                    DrawGammaSetMarker(histoSecTrueEffi[0][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
+                    histoSecTrueEffi[0][j]->DrawCopy("same,e1");  
+                    legendEffWithSec->AddEntry(histoSecTrueEffi[0][j],Form("val. #pi^{0} from %s",nameSecMesonPlot[j].Data()),"p");
+                }    
+            }    
+            legendEffWithSec->Draw();
+            
+            canvasEffSimple->Update();
+            PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+
+            canvasEffSimple->SaveAs(Form("%s/%s_TrueEffWithSecEffi_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));     
+        }
         delete canvasEffSimple;
 
         //*********************************************************************************
