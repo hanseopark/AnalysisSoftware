@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <fstream>
 #include <math.h>
+#include <string>
 #include <TROOT.h>
 #include <TApplication.h>
 #include <TPaveLabel.h>
@@ -60,6 +61,20 @@ struct SysErrorConversion {
     Double_t error;
     //    TString name;
 };
+
+bool replace(std::string& str, const std::string& from, const std::string& to) {
+    size_t start_pos = str.find(from);
+    if(start_pos == std::string::npos) return false;
+    str.replace(start_pos, from.length(), to);
+    return true;
+}
+Int_t GetBinPosInVec( std::vector<TString> *vec, Int_t size, Double_t lookup){
+  for(Int_t i=0; i<size; i++){
+    if(((TString)vec[i].at(0)).Atof() == lookup) return i;
+  }
+  return -1;
+}
+
 
 void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "triggerFileListPi0.txt",
                                             Int_t   mode                = 4,
@@ -309,6 +324,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         detectionProcess    = ReturnFullTextReconstructionProcess(mode, 0, "#pi^{0}", fMergedClusterCutNrExampl);
     }    
     
+    vector<TString>** ptSysDetail     = new vector<TString>*[MaxNumberOfFiles];
+    for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++) ptSysDetail[iR] = new vector<TString>[50];
+
     //***************************************************************************************************************
     //******************************** Load Pi0 histograms **********************************************************
     //***************************************************************************************************************
@@ -1518,6 +1536,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     Double_t yErrorSysLowRelPi0                             [MaxNumberOfFiles][100];
     Double_t yErrorSysHighRelPi0                            [MaxNumberOfFiles][100];
     Bool_t sysAvailPi0                                      [MaxNumberOfFiles];
+
+    Bool_t sysAvailSinglePi0                                [MaxNumberOfFiles];
+    Int_t numberBinsSysAvailSinglePi0                       [MaxNumberOfFiles];
     
     // graphs for easier reduction of measurements to desired range and systematic errors
     TGraphAsymmErrors* graphsCorrectedYieldShrunkPi0        [MaxNumberOfFiles];
@@ -1598,8 +1619,38 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 counter++;
             }
             fileSysErrPi0.close();
+         // read in detailed systematics
+            string sysFilePi0Det = sysFilePi0[i].Data();
+            if(!replace(sysFilePi0Det, "Averaged", "AveragedSingle")){cout << "WARNING: could not find detailed systematics file " << sysFilePi0Det << ", skipping... " << endl; sysAvailSinglePi0[i] = kFALSE; continue;}
+            ifstream fileSysErrDetailedPi0;
+            fileSysErrDetailedPi0.open(sysFilePi0Det,ios_base::in);
+            if(fileSysErrDetailedPi0.is_open()) sysAvailSinglePi0[i] = kTRUE;
+            else{ sysAvailSinglePi0[i] = kFALSE; continue;}
+            cout << sysFilePi0Det << endl;
+            counter = 0;
+            string line;
+            Int_t counterColumn = 0;
+            while (getline(fileSysErrDetailedPi0, line) && counter < 100) {
+              istringstream ss(line);
+              TString temp="";
+              counterColumn = 0;
+              while(ss && counterColumn < 100){
+                ss >> temp;
+                if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                  ptSysDetail[i][counter].push_back(temp);
+                  counterColumn++;
+                }
+              }
+              if(counter == 0){
+                ptSysDetail[i][counter++].push_back("TotalError");
+                counterColumn++;
+              }else counter++;
+            }
+            numberBinsSysAvailSinglePi0[i] = counter;
+            fileSysErrDetailedPi0.close();
         } else {
             sysAvailPi0[i]             = kFALSE;
+            sysAvailSinglePi0[i]       = kFALSE;
         }
         
         // print out input spectrum from statistical histogram
@@ -2185,6 +2236,51 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             }
             graphWeightsPi0[availableMeasPi0[i]]->Print();
         }   
+
+        //  **********************************************************************************************************************
+        //  **************************************** Combine+write detailed Systematics ******************************************
+        //  **********************************************************************************************************************
+
+        const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSinglePCMEMC_Pi0_%s.dat",outputDir.Data(),optionEnergy.Data());
+        fstream SysErrDatAverSingle;
+        SysErrDatAverSingle.precision(4);
+        cout << SysErrDatnameMeanSingleErr << endl;
+        if(sysAvailSinglePi0[0]){
+          SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
+          for(Int_t iColumn = 0; iColumn < (Int_t)ptSysDetail[0][0].size(); iColumn++) SysErrDatAverSingle << ptSysDetail[0][0].at(iColumn) << "\t";
+          SysErrDatAverSingle << endl;
+          for (Int_t i = 1; i < nrOfTrigToBeComb; i++){
+            if(!sysAvailSinglePi0[i]) continue;
+            for(Int_t iCol = 0; iCol < (Int_t)ptSysDetail[i][0].size(); iCol++){
+              if( ((TString)ptSysDetail[i][0].at(iCol)).CompareTo(((TString)ptSysDetail[0][0].at(iCol))) ){
+                cout << "ERROR: Systematic error type at pos " << iCol << " does not agree for " << availableMeasPi0[i] << " & " << availableMeasPi0[0] << ", returning!" << endl;
+                return;
+              }
+            }
+          }
+
+          for(Int_t i=0; i<nPtBinsReadPi0; i++){
+            SysErrDatAverSingle << xValuesReadPi0[i] << "\t";
+            Int_t nColumns = (Int_t)ptSysDetail[0][0].size();
+            Double_t *errors = new Double_t[nColumns-1];
+            for(Int_t iErr=0; iErr<nColumns-1; iErr++) errors[iErr] = 0;
+            for(Int_t j=0; j<nrOfTrigToBeComb; j++){
+              if(!sysAvailSinglePi0[j]) continue;
+              Int_t pos = GetBinPosInVec(ptSysDetail[j],numberBinsSysAvailSinglePi0[j],xValuesReadPi0[i]);
+              if(pos>-1){
+                for(Int_t iErr=1; iErr<nColumns; iErr++) errors[iErr-1] += weightsReadPi0[availableMeasPi0[j]][i]*((TString)ptSysDetail[j][pos].at(iErr)).Atof();
+              }
+            }
+            for(Int_t iErr=0; iErr<nColumns-1; iErr++) SysErrDatAverSingle << errors[iErr] << "\t";
+            SysErrDatAverSingle << endl;
+            delete[] errors;
+          }
+        }
+        SysErrDatAverSingle.close();
+
+        for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
+          for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
+        }
 
         //  **********************************************************************************************************************
         //  ******************************************* Plotting weights Pi0 *****************************************************
@@ -3709,6 +3805,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         Double_t yErrorSysLowRelEta                             [MaxNumberOfFiles][100];
         Double_t yErrorSysHighRelEta                            [MaxNumberOfFiles][100];
         Bool_t     sysAvailEta                                  [MaxNumberOfFiles];
+
+        Bool_t sysAvailSingleEta                                [MaxNumberOfFiles];
+        Int_t numberBinsSysAvailSingleEta                       [MaxNumberOfFiles];
         
         // create graphs for shrunk spectrum
         TGraphAsymmErrors* graphsCorrectedYieldShrunkEta        [MaxNumberOfFiles];
@@ -3769,8 +3868,38 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 }
                 fileSysErrEta.close();
                 hasSysEta                   = kTRUE;
+             // read in detailed systematics
+                string sysFileEtaDet = sysFileEta[i].Data();
+                if(!replace(sysFileEtaDet, "Averaged", "AveragedSingle")){cout << "WARNING: could not find detailed systematics file " << sysFileEtaDet << ", skipping... " << endl; sysAvailSingleEta[i] = kFALSE; continue;}
+                ifstream fileSysErrDetailedEta;
+                fileSysErrDetailedEta.open(sysFileEtaDet,ios_base::in);
+                if(fileSysErrDetailedEta.is_open()) sysAvailSingleEta[i] = kTRUE;
+                else{ sysAvailSingleEta[i] = kFALSE; continue;}
+                cout << sysFileEtaDet << endl;
+                counter = 0;
+                string line;
+                Int_t counterColumn = 0;
+                while (getline(fileSysErrDetailedEta, line) && counter < 100) {
+                  istringstream ss(line);
+                  TString temp="";
+                  counterColumn = 0;
+                  while(ss && counterColumn < 100){
+                    ss >> temp;
+                    if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                      ptSysDetail[i][counter].push_back(temp);
+                      counterColumn++;
+                    }
+                  }
+                  if(counter == 0){
+                    ptSysDetail[i][counter++].push_back("TotalError");
+                    counterColumn++;
+                  }else counter++;
+                }
+                numberBinsSysAvailSingleEta[i] = counter;
+                fileSysErrDetailedEta.close();
             } else {
                 sysAvailEta[i]              = kFALSE;
+                sysAvailSingleEta[i]        = kTRUE;
             }
             
             cout << "step 1" << endl;
@@ -4161,6 +4290,51 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     else bin++;
                 }   
             }   
+
+            //  **********************************************************************************************************************
+            //  **************************************** Combine+write detailed Systematics ******************************************
+            //  **********************************************************************************************************************
+
+            const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSinglePCMEMC_Eta_%s.dat",outputDir.Data(),optionEnergy.Data());
+            fstream SysErrDatAverSingle;
+            SysErrDatAverSingle.precision(4);
+            cout << SysErrDatnameMeanSingleErr << endl;
+            if(sysAvailSingleEta[0]){
+              SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
+              for(Int_t iColumn = 0; iColumn < (Int_t)ptSysDetail[0][0].size(); iColumn++) SysErrDatAverSingle << ptSysDetail[0][0].at(iColumn) << "\t";
+              SysErrDatAverSingle << endl;
+              for (Int_t i = 1; i < nrOfTrigToBeComb; i++){
+                if(!sysAvailSingleEta[i]) continue;
+                for(Int_t iCol = 0; iCol < (Int_t)ptSysDetail[i][0].size(); iCol++){
+                  if( ((TString)ptSysDetail[i][0].at(iCol)).CompareTo(((TString)ptSysDetail[0][0].at(iCol))) ){
+                    cout << "ERROR: Systematic error type at pos " << iCol << " does not agree for " << availableMeasEta[i] << " & " << availableMeasEta[0] << ", returning!" << endl;
+                    return;
+                  }
+                }
+              }
+
+              for(Int_t i=0; i<nPtBinsReadEta; i++){
+                SysErrDatAverSingle << xValuesReadEta[i] << "\t";
+                Int_t nColumns = (Int_t)ptSysDetail[0][0].size();
+                Double_t *errors = new Double_t[nColumns-1];
+                for(Int_t iErr=0; iErr<nColumns-1; iErr++) errors[iErr] = 0;
+                for(Int_t j=0; j<nrOfTrigToBeComb; j++){
+                  if(!sysAvailSingleEta[j]) continue;
+                  Int_t pos = GetBinPosInVec(ptSysDetail[j],numberBinsSysAvailSingleEta[j],xValuesReadEta[i]);
+                  if(pos>-1){
+                    for(Int_t iErr=1; iErr<nColumns; iErr++) errors[iErr-1] += weightsReadEta[availableMeasEta[j]][i]*((TString)ptSysDetail[j][pos].at(iErr)).Atof();
+                  }
+                }
+                for(Int_t iErr=0; iErr<nColumns-1; iErr++) SysErrDatAverSingle << errors[iErr] << "\t";
+                SysErrDatAverSingle << endl;
+                delete[] errors;
+              }
+            }
+            SysErrDatAverSingle.close();
+
+            for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
+              for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
+            }
 
             //  **********************************************************************************************************************
             //  ******************************************* Plotting weights method for eta ******************************************
@@ -4876,6 +5050,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             Double_t yErrorSysLowRelEtaToPi0                [MaxNumberOfFiles][100];
             Double_t yErrorSysHighRelEtaToPi0               [MaxNumberOfFiles][100];
             Bool_t   sysAvailEtaToPi0                       [MaxNumberOfFiles];
+
+            Bool_t sysAvailSingleEtaToPi0                   [MaxNumberOfFiles];
+            Int_t numberBinsSysAvailSingleEtaToPi0          [MaxNumberOfFiles];
             
             // create graphs for shrunk individual triggers
             TGraphAsymmErrors* graphsEtaToPi0Shrunk         [MaxNumberOfFiles];
@@ -4930,8 +5107,38 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     }
                     fileSysErrEtaToPi0.close();
                     hasSysEtaToPi0              = kTRUE;
+                 // read in detailed systematics
+                    string sysFileEtaToPi0Det = sysFileEtaToPi0[i].Data();
+                    if(!replace(sysFileEtaToPi0Det, "Averaged", "AveragedSingle")){cout << "WARNING: could not find detailed systematics file " << sysFileEtaToPi0Det << ", skipping... " << endl; sysAvailSingleEtaToPi0[i] = kFALSE; continue;}
+                    ifstream fileSysErrDetailedEtaToPi0;
+                    fileSysErrDetailedEtaToPi0.open(sysFileEtaToPi0Det,ios_base::in);
+                    if(fileSysErrDetailedEtaToPi0.is_open()) sysAvailSingleEtaToPi0[i] = kTRUE;
+                    else{ sysAvailSingleEtaToPi0[i] = kFALSE; continue;}
+                    cout << sysFileEtaToPi0Det << endl;
+                    counter = 0;
+                    string line;
+                    Int_t counterColumn = 0;
+                    while (getline(fileSysErrDetailedEtaToPi0, line) && counter < 100) {
+                      istringstream ss(line);
+                      TString temp="";
+                      counterColumn = 0;
+                      while(ss && counterColumn < 100){
+                        ss >> temp;
+                        if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                          ptSysDetail[i][counter].push_back(temp);
+                          counterColumn++;
+                        }
+                      }
+                      if(counter == 0){
+                        ptSysDetail[i][counter++].push_back("TotalError");
+                        counterColumn++;
+                      }else counter++;
+                    }
+                    numberBinsSysAvailSingleEtaToPi0[i] = counter;
+                    fileSysErrDetailedEtaToPi0.close();
                 } else {
                     sysAvailEtaToPi0[i]         = kFALSE;
+                    sysAvailSingleEtaToPi0[i]   = kTRUE;
                 }
                 
                 // fill graphs to be shrunk later
@@ -5180,6 +5387,51 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                         else bin++;
                     }   
                 }   
+
+                //  **********************************************************************************************************************
+                //  **************************************** Combine+write detailed Systematics ******************************************
+                //  **********************************************************************************************************************
+
+                const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSinglePCMEMC_Pi0EtaBinning_%s.dat",outputDir.Data(),optionEnergy.Data());
+                fstream SysErrDatAverSingle;
+                SysErrDatAverSingle.precision(4);
+                cout << SysErrDatnameMeanSingleErr << endl;
+                if(sysAvailSingleEtaToPi0[0]){
+                  SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
+                  for(Int_t iColumn = 0; iColumn < (Int_t)ptSysDetail[0][0].size(); iColumn++) SysErrDatAverSingle << ptSysDetail[0][0].at(iColumn) << "\t";
+                  SysErrDatAverSingle << endl;
+                  for (Int_t i = 1; i < nrOfTrigToBeComb; i++){
+                    if(!sysAvailSingleEtaToPi0[i]) continue;
+                    for(Int_t iCol = 0; iCol < (Int_t)ptSysDetail[i][0].size(); iCol++){
+                      if( ((TString)ptSysDetail[i][0].at(iCol)).CompareTo(((TString)ptSysDetail[0][0].at(iCol))) ){
+                        cout << "ERROR: Systematic error type at pos " << iCol << " does not agree for " << availableMeasEtaToPi0[i] << " & " << availableMeasEtaToPi0[0] << ", returning!" << endl;
+                        return;
+                      }
+                    }
+                  }
+
+                  for(Int_t i=0; i<nPtBinsReadEtaToPi0; i++){
+                    SysErrDatAverSingle << xValuesReadEtaToPi0[i] << "\t";
+                    Int_t nColumns = (Int_t)ptSysDetail[0][0].size();
+                    Double_t *errors = new Double_t[nColumns-1];
+                    for(Int_t iErr=0; iErr<nColumns-1; iErr++) errors[iErr] = 0;
+                    for(Int_t j=0; j<nrOfTrigToBeComb; j++){
+                      if(!sysAvailSingleEtaToPi0[j]) continue;
+                      Int_t pos = GetBinPosInVec(ptSysDetail[j],numberBinsSysAvailSingleEtaToPi0[j],xValuesReadEtaToPi0[i]);
+                      if(pos>-1){
+                        for(Int_t iErr=1; iErr<nColumns; iErr++) errors[iErr-1] += weightsReadEtaToPi0[availableMeasEtaToPi0[j]][i]*((TString)ptSysDetail[j][pos].at(iErr)).Atof();
+                      }
+                    }
+                    for(Int_t iErr=0; iErr<nColumns-1; iErr++) SysErrDatAverSingle << errors[iErr] << "\t";
+                    SysErrDatAverSingle << endl;
+                    delete[] errors;
+                  }
+                }
+                SysErrDatAverSingle.close();
+
+                for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
+                  for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
+                }
 
                 //  **********************************************************************************************************************
                 //  ******************************************* Plotting weights for eta/pi0 *********************************************
