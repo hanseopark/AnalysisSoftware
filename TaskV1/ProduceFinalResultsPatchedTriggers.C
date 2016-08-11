@@ -326,6 +326,12 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     
     vector<TString>** ptSysDetail     = new vector<TString>*[MaxNumberOfFiles];
     for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++) ptSysDetail[iR] = new vector<TString>[50];
+    TString sysStringComb = "PCM";
+    if(mode == 2) sysStringComb = "PCMEMC";
+    else if(mode == 3) sysStringComb = "PCMPHOS";
+    else if(mode == 4) sysStringComb = "EMCEMC";
+    else if(mode == 5) sysStringComb = "PHOS";
+    else if(mode == 10) sysStringComb = "EMCm";
 
     //***************************************************************************************************************
     //******************************** Load Pi0 histograms **********************************************************
@@ -2241,7 +2247,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         //  **************************************** Combine+write detailed Systematics ******************************************
         //  **********************************************************************************************************************
 
-        const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSinglePCMEMC_Pi0_%s.dat",outputDir.Data(),optionEnergy.Data());
+        const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSingle%s_Pi0_%s.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
         fstream SysErrDatAverSingle;
         SysErrDatAverSingle.precision(4);
         cout << SysErrDatnameMeanSingleErr << endl;
@@ -4295,7 +4301,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             //  **************************************** Combine+write detailed Systematics ******************************************
             //  **********************************************************************************************************************
 
-            const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSinglePCMEMC_Eta_%s.dat",outputDir.Data(),optionEnergy.Data());
+            const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSingle%s_Eta_%s.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
             fstream SysErrDatAverSingle;
             SysErrDatAverSingle.precision(4);
             cout << SysErrDatnameMeanSingleErr << endl;
@@ -5392,7 +5398,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 //  **************************************** Combine+write detailed Systematics ******************************************
                 //  **********************************************************************************************************************
 
-                const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSinglePCMEMC_Pi0EtaBinning_%s.dat",outputDir.Data(),optionEnergy.Data());
+                const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSingle%s_Pi0EtaBinning_%s.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
                 fstream SysErrDatAverSingle;
                 SysErrDatAverSingle.precision(4);
                 cout << SysErrDatnameMeanSingleErr << endl;

@@ -1370,15 +1370,18 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
     
     const char *SysErrDatnameMeanSingleErr = Form("SystematicErrorsCalculatedConvCalo/SystematicErrorAveragedSinglePCMEMC_%s_%s%s_%s.dat",meson.Data(),energy.Data(),additionalNameOutput.Data(),dateForOutput.Data());
     fstream SysErrDatAverSingle;
+    SysErrDatAverSingle.precision(4);
     cout << SysErrDatnameMeanSingleErr << endl;
     SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
     SysErrDatAverSingle << "Pt bin\t" ; 
+    SysErrDatAverSingle << "Material\t" ;
     for (Int_t i= 0; i< numberCutStudies; i++){
         SysErrDatAverSingle << nameCutVariationSC[i] << "\t";
     }
     SysErrDatAverSingle << endl; 
     for (Int_t l=0;l< nPtBins;l++){
         SysErrDatAverSingle << ptBins[l] << "\t";
+        SysErrDatAverSingle << errorMaterial <<"\t" ;
         for (Int_t i= 0; i< numberCutStudies; i++){
             SysErrDatAverSingle << errorsMeanCorr[i][l] << "\t";
         }  
