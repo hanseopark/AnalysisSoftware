@@ -24,6 +24,7 @@
 #include <TArrow.h>
 #include <TROOT.h>
 #include <TObjString.h>
+#include <TFile.h>
 #include "TMath.h"
 
 
@@ -60,6 +61,7 @@ void ComputeCorrelationFactors(
 
   gROOT->Reset();
   gROOT->SetStyle("Plain");
+  TH1::AddDirectory(kFALSE);
 
   StyleSettingsThesis();
   SetPlotStyle();
@@ -217,6 +219,7 @@ void ComputeCorrelationFactors(
 
   fstream fCorr;
   fCorr.open(Form("%s/corrFactors/%s_%s_%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),energyForOutput.Data(),mode.Data()), ios::out);
+  TFile *fOutput = new TFile(Form("%s/%s.root",outputDir.Data(),energyForOutput.Data()),"UPDATE");
 
   for(Int_t iC=0; iC<nRead; iC++){
     for(Int_t iC2=0; iC2<nRead; iC2++){
@@ -247,6 +250,7 @@ void ComputeCorrelationFactors(
       }
       fCorr << endl;
       fCorr << tempCorr.Data() << endl;
+      TH1D* histoCorr = new TH1D(Form("%s_%s_%s",mode.Data(),meson.Data(),tempCorr.Data()),Form("%s_%s_%s",mode.Data(),meson.Data(),tempCorr.Data()),1000,0,100);
 
       for(;; binC++, binC2++){
         if( binC == vecNBins.at(iC)+1 || binC2 == vecNBins.at(iC2)+1 ) break;
@@ -298,9 +302,13 @@ void ComputeCorrelationFactors(
         fLog << "\n\tcorrFactor:\t" << factor << "|" << endl;
         fLog << "\t|------------" << endl;
         fCorr << pT << " \t-\t " << factor << endl;
+        histoCorr->SetBinContent(histoCorr->FindBin(pT),factor);
       }
+      histoCorr->Write(Form("%s_%s_%s",mode.Data(),meson.Data(),tempCorr.Data()),TObject::kOverwrite);
     }
   }
+  fOutput->Write();
+  fOutput->Close();
   fCorr.close();
   fLog.close();
 

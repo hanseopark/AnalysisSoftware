@@ -19,7 +19,24 @@ struct AliConvDataObject {
     Double_t errorYTotHigh;
 };
 
-
+Double_t GetCorrFactorFromFile(TFile* fileCorrFactors, Double_t pT,TString mode, TString meson, TString lookup){
+  if(!fileCorrFactors) return 0;
+  if(fileCorrFactors->IsZombie()){
+    cout << "\n\n\n\n\n**************************************************************************************************" << endl;
+    cout << "ERROR: CombinePtPointsSpectra, GetCorrFactorFromFile - File is a ZOMBIE, check filepath - all factors set to zero!!!" << endl;
+    cout << "**************************************************************************************************\n\n\n\n\n" << endl;
+    return 0;
+  }
+  TH1D* histo = (TH1D*)fileCorrFactors->Get(Form("%s_%s_%s",mode.Data(),meson.Data(),lookup.Data()));
+  if(histo == NULL){
+    cout << "\n\n\n\n\n**************************************************************************************************" << endl;
+    cout << "ERROR: CombinePtPointsSpectra, GetCorrFactorFromFile - histo " << Form("%s_%s_%s",mode.Data(),meson.Data(),lookup.Data()) << " could not be found within file - all factors set to zero!!!" << endl;
+    cout << "**************************************************************************************************\n\n\n\n\n" << endl;
+    return 0;
+  }
+  cout << "pT: " << pT  << ", correlation factor for " << meson.Data() << " " << lookup.Data() << ": " << histo->GetBinContent(histo->FindBin(pT)) << " (from GetCorrFactorFromFile)" << endl;
+  return histo->GetBinContent(histo->FindBin(pT));
+}
 
 TGraphAsymmErrors* CombinePtPointsSpectra(  TH1D* histoPCM,        TGraphAsymmErrors* graphSystPCM,
                                             TH1D* histoPHOS,        TGraphAsymmErrors* graphSystPHOS,
@@ -1199,9 +1216,12 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
                                                       TGraphAsymmErrors* &graphStatComb, TGraphAsymmErrors* &graphSystComb,
                                                       TString nameWeightsOutputFile = "output.dat",
                                                       TString energy = "2.76TeV", TString mesonType = "Pi0", Bool_t isV2ClusterMerged = kFALSE,
-						      TGraphAsymmErrors** graphSystCorrFactors = NULL
+                                                      TGraphAsymmErrors** graphSystCorrFactors = NULL, TString fileCorrFactors = ""
                                                     ){
     
+    TFile* fCorrFactors = 0x0;
+    if(!fileCorrFactors.IsNull()) fCorrFactors = new TFile(fileCorrFactors.Data(),"READ");
+
     Int_t maxNMeasurements                      = 11;
     TString nameMeas[11]                        = {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMCal", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "spare", "EMCAL merged","PCMOtherDataset"};
     Bool_t isPresentGeneral[11]                 = {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE};
@@ -1270,7 +1290,7 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
         Double_t yStatErr[11]                   = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         Double_t ySysErr[11]                    = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         Double_t yTotErr[11]                    = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-	Double_t ySysErroCorrFactorRel[11]         = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+        Double_t ySysErroCorrFactorRel[11]         = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         Int_t identCurr[2][11]                  = { {  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10 },
                                                     { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};  
         TString nameMeasPtBin[11]               = {"", "", "", "", "", "", "", "", "", "", ""};
@@ -1300,9 +1320,9 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
                              << "\t"<< graphSyst[meas]->GetErrorYlow(binCounters[meas]-sysOffsets[meas]) << endl;
                         ySysErr[meas]                           = graphSyst[meas]->GetErrorYhigh(binCounters[meas]-sysOffsets[meas]);
                         yTotErr[meas]                           = TMath::Sqrt(yStatErr[meas]*yStatErr[meas]+ySysErr[meas]*ySysErr[meas]);
-			if(energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0 ){
-			ySysErroCorrFactorRel[meas]                = graphSystCorrFactors[meas]->GetErrorYhigh(binCounters[meas]-sysOffsets[meas]) / graphSystCorrFactors[meas]->GetY()[binCounters[meas]-sysOffsets[meas]];
-			}
+                        if(energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0 ){
+                          ySysErroCorrFactorRel[meas]           = graphSystCorrFactors[meas]->GetErrorYhigh(binCounters[meas]-sysOffsets[meas]) / graphSystCorrFactors[meas]->GetY()[binCounters[meas]-sysOffsets[meas]];
+                        }
                         numberOfMeasInPtBin++;
                         Double_t pTDiff = (graphSyst[meas]->GetX()[binCounters[meas]-sysOffsets[meas]] - histoStat[meas]->GetXaxis()->GetBinCenter(binCounters[meas]+1-startOffsets[meas]));
 //                         cout << "p_{T}: "<< graphSyst[meas]->GetX()[binCounters[meas]-sysOffsets[meas]] << "\t" << histoStat[meas]->GetXaxis()->GetBinCenter(binCounters[meas]+1-startOffsets[meas]) << "\t diff: " << pTDiff << endl;
@@ -1374,38 +1394,20 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
                 corrFracEMC_PCMEMC_PCMEMC       = 0.54;
             }    
         } else if (energy.CompareTo("8TeV") == 0 && mesonType.CompareTo("Pi0") == 0){
-            corrFracPCM_PCMEMC_PCM              = 0.8953;
-            corrFracPCM_PCMEMC_PCMEMC           = 0.6631;
-            corrFracEMC_PCMEMC_EMC              = 0.9018-0.00529*xValue[ptBin]-0.000533*xValue[ptBin]*xValue[ptBin];
-            corrFracEMC_PCMEMC_PCMEMC           = 0.8343-0.0105*xValue[ptBin];
+            corrFracPCM_PCMEMC_PCM    = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCM_PCM-PCMEMC");
+            corrFracPCM_PCMEMC_PCMEMC = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMEMC_PCM-PCMEMC");
+            corrFracEMC_PCMEMC_PCMEMC = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMEMC_PCMEMC-EMC");
+            corrFracEMC_PCMEMC_EMC    = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","EMC_PCMEMC-EMC");
         } else if (energy.CompareTo("8TeV") == 0 && mesonType.CompareTo("Eta") == 0){
-            corrFracPCM_PCMEMC_PCM              = 0.8592;
-            corrFracPCM_PCMEMC_PCMEMC           = 0.6203;
-            if (xValue[ptBin] < 8 ){
-                corrFracEMC_PCMEMC_EMC          = 0.662;
-            } else if (xValue[ptBin] > 15){
-                corrFracEMC_PCMEMC_EMC          = 0.9956;
-            } else {
-                corrFracEMC_PCMEMC_EMC          = 0.9;
-            }
-            if (xValue[ptBin] < 8 ){
-                corrFracEMC_PCMEMC_PCMEMC       = 0.5;
-            } else  {
-                corrFracEMC_PCMEMC_PCMEMC       = 0.73;
-            }
+            corrFracPCM_PCMEMC_PCM    = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Eta","PCM_PCM-PCMEMC");
+            corrFracPCM_PCMEMC_PCMEMC = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Eta","PCMEMC_PCM-PCMEMC");
+            corrFracEMC_PCMEMC_EMC    = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Eta","EMC_PCMEMC-EMC");
+            corrFracEMC_PCMEMC_PCMEMC = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Eta","PCMEMC_PCMEMC-EMC");
         } else if (energy.CompareTo("8TeV") == 0 && mesonType.CompareTo("EtaToPi0") == 0){
-            corrFracPCM_PCMEMC_PCM              = 0.8592; // factor from Eta hasn't been evaluted for EtaToPi0 yet
-            corrFracPCM_PCMEMC_PCMEMC           = 0.5764;
-            if (xValue[ptBin] < 8 ){
-                corrFracEMC_PCMEMC_EMC          = 0.625;
-            } else {
-                corrFracEMC_PCMEMC_EMC          = 0.78;
-            }
-            if (xValue[ptBin] < 8 ){
-                corrFracEMC_PCMEMC_PCMEMC       = 0.475;
-            } else  {
-                corrFracEMC_PCMEMC_PCMEMC       = 0.54;
-            }
+            corrFracPCM_PCMEMC_PCM    = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0EtaBinning","PCM_PCM-PCMEMC");
+            corrFracPCM_PCMEMC_PCMEMC = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0EtaBinning","PCMEMC_PCM-PCMEMC");
+            corrFracEMC_PCMEMC_EMC    = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0EtaBinning","EMC_PCMEMC-EMC");
+            corrFracEMC_PCMEMC_PCMEMC = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0EtaBinning","PCMEMC_PCMEMC-EMC");
         }
         
         Double_t cvPCM_PCMPHO                   = 0;
@@ -1420,25 +1422,17 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
         Double_t cvPCM_PCMDal                   = 0.0; //Add correlation 
         
         if (yValue[0]>0 && yValue[5]>0 ){
-        
-         if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
-	  
-	      
-	     Double_t ySysPPRefErroPCMWOMatErr    = TMath::Sqrt( ySysErroCorrFactorRel[0]*ySysErroCorrFactorRel[0] -( 0.09*0.09 ));
-	     Double_t ySysPPRefErroDalitzWOMatErr = TMath::Sqrt( ySysErroCorrFactorRel[5]*ySysErroCorrFactorRel[5] -( 0.09*0.09 ));
-	     cvPCM_PCMDal = (ySysPPRefErroPCMWOMatErr*ySysPPRefErroDalitzWOMatErr) / ( (ySysErr[0]/yValue[0]) * (ySysErr[5]/yValue[5]));
-	     cout <<"cvPCM_PCMDal "<<cvPCM_PCMDal<<nameMeas[0] <<  ":\t sys error : "  << ySysErr[0]/yValue[0] << "\t, pp ref error: wo mat " <<  ySysPPRefErroPCMWOMatErr<< endl;
-  	     cout <<"cvPCM_PCMDal "<<cvPCM_PCMDal<<nameMeas[5] <<  ":\t sys error : "  << ySysErr[5]/yValue[5] << "\t, pp ref error: wo mat " <<  ySysPPRefErroPCMWOMatErr<< endl;
-  	  
-	 } else if( energy.CompareTo("pPb_5.023GeV") == 0 && mesonType.CompareTo("Pi0") == 0 ) {
-	   
-	     cvPCM_PCMDal = (0.09*0.045) /( (ySysErr[0]/yValue[0])*(ySysErr[5]/yValue[5]));   //0.225;       //Add correlation  
-	     cout <<"cvPCM_PCMDal   "<<cvPCM_PCMDal<<" "<< nameMeas[0] <<"\t, total err: " <<  ySysErr[0]/yValue[0]<<" "<<nameMeas[5] <<"\t, total err: " <<  ySysErr[5]/yValue[5] << endl;
-        
-	 }
-	}
-        
-        
+           if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
+             Double_t ySysPPRefErroPCMWOMatErr    = TMath::Sqrt( ySysErroCorrFactorRel[0]*ySysErroCorrFactorRel[0] -( 0.09*0.09 ));
+             Double_t ySysPPRefErroDalitzWOMatErr = TMath::Sqrt( ySysErroCorrFactorRel[5]*ySysErroCorrFactorRel[5] -( 0.09*0.09 ));
+             cvPCM_PCMDal = (ySysPPRefErroPCMWOMatErr*ySysPPRefErroDalitzWOMatErr) / ( (ySysErr[0]/yValue[0]) * (ySysErr[5]/yValue[5]));
+             cout <<"cvPCM_PCMDal "<<cvPCM_PCMDal<<nameMeas[0] <<  ":\t sys error : "  << ySysErr[0]/yValue[0] << "\t, pp ref error: wo mat " <<  ySysPPRefErroPCMWOMatErr<< endl;
+             cout <<"cvPCM_PCMDal "<<cvPCM_PCMDal<<nameMeas[5] <<  ":\t sys error : "  << ySysErr[5]/yValue[5] << "\t, pp ref error: wo mat " <<  ySysPPRefErroPCMWOMatErr<< endl;
+           } else if( energy.CompareTo("pPb_5.023GeV") == 0 && mesonType.CompareTo("Pi0") == 0 ) {
+             cvPCM_PCMDal = (0.09*0.045) /( (ySysErr[0]/yValue[0])*(ySysErr[5]/yValue[5]));   //0.225;       //Add correlation
+             cout <<"cvPCM_PCMDal   "<<cvPCM_PCMDal<<" "<< nameMeas[0] <<"\t, total err: " <<  ySysErr[0]/yValue[0]<<" "<<nameMeas[5] <<"\t, total err: " <<  ySysErr[5]/yValue[5] << endl;
+           }
+        }
         
         Double_t cvPHO_PCMPHO                   = 0.;
         Double_t cvPHO_PHODal                   = 0.;
@@ -1493,58 +1487,36 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
       
         //NOTE  
         Double_t cvEMC_PCM  = 0.;
-	
-	if (yValue[0]>0 && yValue[2]>0 ){
-        
-         if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
-	  
-	     Double_t ySysPPRefErroPCMWOMatErr    = TMath::Sqrt( ySysErroCorrFactorRel[0]*ySysErroCorrFactorRel[0] - (0.09*0.09));
-	     cvEMC_PCM = (ySysPPRefErroPCMWOMatErr*ySysErroCorrFactorRel[2]) / ( (ySysErr[0]/yValue[0]) * (ySysErr[2]/yValue[2]));
-	     cout <<"cvEMC_PCM "<<cvEMC_PCM<<nameMeas[0] <<  ":\t sys error : "  << ySysErr[0]/yValue[0] << "\t, pp ref error: wo mat " <<  ySysPPRefErroPCMWOMatErr<< endl;
-  	     cout <<"cvEMC_PCM "<<cvEMC_PCM<<nameMeas[2] <<  ":\t sys error : "  << ySysErr[2]/yValue[2] << "\t, pp ref error:  " <<  ySysErroCorrFactorRel[2]<< endl;
-  	  
-	 }
-	}
-	
-	
-	
-	Double_t cvEMC_PHOS = 0.;
-	
-	if (yValue[1]>0 && yValue[2]>0 ){
-        
-         if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
-	      
-	     
-             cvEMC_PHOS = (ySysErroCorrFactorRel[1]*ySysErroCorrFactorRel[2]) / ( (ySysErr[1]/yValue[1]) * (ySysErr[2]/yValue[2]));
-	     
-	     cout <<"cvEMC_PHOS "<<cvEMC_PHOS<<" "<<nameMeas[1] <<  ":\t sys error : "  << ySysErr[1]/yValue[1] << "\t, pp ref error:  " <<  ySysErroCorrFactorRel[1]<< endl;
-  	     cout <<"cvEMC_PHOS "<<cvEMC_PHOS<<" "<<nameMeas[2] <<  ":\t sys error : "  << ySysErr[2]/yValue[2] << "\t, pp ref error:  " <<  ySysErroCorrFactorRel[2]<< endl;
-	     cout<<"Hola pedrito"<<endl;
-	     
-  	  
-	 }
-	}
-	
-	
-	Double_t cvEMC_PCMDal = 0.;
-	
-	if (yValue[2]>0 && yValue[5]>0 ){
-        
-         if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
-	  
-	     Double_t ySysPPRefErroDalitzWOMatErr = TMath::Sqrt( ySysErroCorrFactorRel[5]*ySysErroCorrFactorRel[5] - ( 0.09*0.09 ) + (0.045*0.045) );
-	 
-	     cvEMC_PCMDal = (ySysErroCorrFactorRel[2]*ySysPPRefErroDalitzWOMatErr) / ( (ySysErr[2]/yValue[2]) * (ySysErr[5]/yValue[5]));
-	     cout <<"cvEMC_PCMDal "<<cvEMC_PCMDal<<" "<<nameMeas[2] <<  ":\t sys error : "  << ySysErr[2]/yValue[2] << "\t, pp ref error:  " <<  ySysErroCorrFactorRel[2]<< endl;
-  	     cout <<"cvEMC_PCMDal "<<cvEMC_PCMDal<<" "<<nameMeas[5] <<  ":\t sys error : "  << ySysErr[5]/yValue[5] << "\t, pp ref error:  " <<  ySysPPRefErroDalitzWOMatErr<< endl;
-  	  
-	 }
-	}
-	
-	
-	
-	
-	
+        if (yValue[0]>0 && yValue[2]>0 ){
+           if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
+             Double_t ySysPPRefErroPCMWOMatErr    = TMath::Sqrt( ySysErroCorrFactorRel[0]*ySysErroCorrFactorRel[0] - (0.09*0.09));
+             cvEMC_PCM = (ySysPPRefErroPCMWOMatErr*ySysErroCorrFactorRel[2]) / ( (ySysErr[0]/yValue[0]) * (ySysErr[2]/yValue[2]));
+             cout <<"cvEMC_PCM "<<cvEMC_PCM<<nameMeas[0] <<  ":\t sys error : "  << ySysErr[0]/yValue[0] << "\t, pp ref error: wo mat " <<  ySysPPRefErroPCMWOMatErr<< endl;
+             cout <<"cvEMC_PCM "<<cvEMC_PCM<<nameMeas[2] <<  ":\t sys error : "  << ySysErr[2]/yValue[2] << "\t, pp ref error:  " <<  ySysErroCorrFactorRel[2]<< endl;
+          }
+        }
+
+    Double_t cvEMC_PHOS = 0.;
+
+    if (yValue[1]>0 && yValue[2]>0 ){
+      if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
+         cvEMC_PHOS = (ySysErroCorrFactorRel[1]*ySysErroCorrFactorRel[2]) / ( (ySysErr[1]/yValue[1]) * (ySysErr[2]/yValue[2]));
+         cout <<"cvEMC_PHOS "<<cvEMC_PHOS<<" "<<nameMeas[1] <<  ":\t sys error : "  << ySysErr[1]/yValue[1] << "\t, pp ref error:  " <<  ySysErroCorrFactorRel[1]<< endl;
+         cout <<"cvEMC_PHOS "<<cvEMC_PHOS<<" "<<nameMeas[2] <<  ":\t sys error : "  << ySysErr[2]/yValue[2] << "\t, pp ref error:  " <<  ySysErroCorrFactorRel[2]<< endl;
+         cout<<"Hola pedrito"<<endl;
+      }
+    }
+
+
+    Double_t cvEMC_PCMDal = 0.;
+    if (yValue[2]>0 && yValue[5]>0 ){
+       if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
+         Double_t ySysPPRefErroDalitzWOMatErr = TMath::Sqrt( ySysErroCorrFactorRel[5]*ySysErroCorrFactorRel[5] - ( 0.09*0.09 ) + (0.045*0.045) );
+         cvEMC_PCMDal = (ySysErroCorrFactorRel[2]*ySysPPRefErroDalitzWOMatErr) / ( (ySysErr[2]/yValue[2]) * (ySysErr[5]/yValue[5]));
+         cout <<"cvEMC_PCMDal "<<cvEMC_PCMDal<<" "<<nameMeas[2] <<  ":\t sys error : "  << ySysErr[2]/yValue[2] << "\t, pp ref error:  " <<  ySysErroCorrFactorRel[2]<< endl;
+         cout <<"cvEMC_PCMDal "<<cvEMC_PCMDal<<" "<<nameMeas[5] <<  ":\t sys error : "  << ySysErr[5]/yValue[5] << "\t, pp ref error:  " <<  ySysPPRefErroDalitzWOMatErr<< endl;
+       }
+    }
         
                                         //PCM           PHOS            EMCal           PCM-PHOS            PCM-EMCal           PCM-Dalitz          PHOS-Dalitz         EMCal-Dalitz        spare   EMCAL merged    PCMOtherDataset
         Double_t cvMatrix[11][11] = {   { 1,            0,              cvEMC_PCM,      cvPCM_PCMPHO,       cvPCM_PCMEMC,       cvPCM_PCMDal,       0,                  0,                  0,      0,              1,              },
@@ -1672,6 +1644,10 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
     }    
     fileWeightsOutput.close();
     
+    if(fCorrFactors){
+      fCorrFactors->Close();
+      delete fCorrFactors;
+    }
     return returnGraph;
     
 }
@@ -1687,12 +1663,15 @@ TGraphAsymmErrors* CombinePtPointsSpectraTriggerCorrMat(    TH1D** histoStat, TG
                                                             Int_t* startOffsets, Int_t* sysOffsets,
                                                             TGraphAsymmErrors* &graphStatComb, TGraphAsymmErrors* &graphSystComb,
                                                             TString nameWeightsOutputFile = "output.dat",
-                                                            Int_t mode = 2, TString energy = "2.76TeV", TString meson = "Pi0", Bool_t v2ClusterizerMerged = kFALSE
+                                                            Int_t mode = 2, TString energy = "2.76TeV", TString meson = "Pi0", Bool_t v2ClusterizerMerged = kFALSE,
+                                                            TString fileCorrFactors = ""
                                                     ){
     cout << "***************************************************************************************************" << endl;
     cout << "*********************************Starting combination of triggers *********************************" << endl;
     cout << "***************************************************************************************************" << endl;
     
+    TFile* fCorrFactors = 0x0;
+    if(!fileCorrFactors.IsNull()) fCorrFactors = new TFile(fileCorrFactors.Data(),"READ");
     Int_t maxNMeasurements                  = 12;
     TString nameMeas[12]                    = { "INT1", "INT7", "EMC1", "EMC7", "EG2", "EG1",
                                                 "INT1_NLM1", "INT7_NLM1", "EMC1_NLM1", "EMC7_NLM1", "EG2_NLM1", "EG1_NLM1"};
@@ -2189,153 +2168,46 @@ TGraphAsymmErrors* CombinePtPointsSpectraTriggerCorrMat(    TH1D** histoStat, TG
             corrFracEG2_EG2_EG1         = 0.8355;
             corrFracEG1_EG2_EG1         = 0.8733;
             // Definition of correlations coefficients between triggered spectra for pi0 in 8TeV PCM-EMC
-        } else if ( mode == 2 && energy.CompareTo("8TeV") == 0 && meson.CompareTo("Pi0") == 0){
-            if(xValue[ptBin] == 4.25){
-              corrFracINT7_INT7_EMC7      = 0.976805;
-              corrFracEMC7_INT7_EMC7      = 0.859532;
-            }else if(xValue[ptBin] == 4.75){
-              corrFracINT7_INT7_EMC7      = 0.976918;
-              corrFracEMC7_INT7_EMC7      = 0.881726;
-            }else if(xValue[ptBin] == 5.25){
-              corrFracINT7_INT7_EMC7      = 0.976846;
-              corrFracEMC7_INT7_EMC7      = 0.897628;
-            }else if(xValue[ptBin] == 5.75){
-              corrFracINT7_INT7_EMC7      = 0.976589;
-              corrFracEMC7_INT7_EMC7      = 0.908639;
-            }else if(xValue[ptBin] == 10.5){
-              corrFracEMC7_EMC7_EG2       = 0.969019;
-              corrFracEG2_EMC7_EG2        = 0.947267;
-            }else if(xValue[ptBin] == 11.5){
-              corrFracEMC7_EMC7_EG2       = 0.970057;
-              corrFracEG2_EMC7_EG2        = 0.955199;
-            }else if(xValue[ptBin] == 12.5){
-              corrFracEMC7_EMC7_EG2       = 0.970954;
-              corrFracEG2_EMC7_EG2        = 0.959482;
-            }else if(xValue[ptBin] == 13.5){
-              corrFracEMC7_EMC7_EG2       = 0.971707;
-              corrFracEG2_EMC7_EG2        = 0.962173;
-            }else if(xValue[ptBin] == 14.5){
-              corrFracEMC7_EMC7_EG2       = 0.97229;
-              corrFracEG2_EMC7_EG2        = 0.964166;
-            }else if(xValue[ptBin] == 15.5){
-              corrFracEMC7_EMC7_EG2       = 0.972669;
-              corrFracEG2_EMC7_EG2        = 0.965824;
-            }else if(xValue[ptBin] == 19){
-              corrFracEMC7_EMC7_EG2       = 0.971928;
-              corrFracEG2_EMC7_EG2        = 0.969701;
-            }else if(xValue[ptBin] == 21){
-              corrFracEMC7_EMC7_EG2       = 0.969842;
-              corrFracEG2_EMC7_EG2        = 0.970833;
-            }else if(xValue[ptBin] == 24){
-              corrFracEMC7_EMC7_EG2       = 0.964543;
-              corrFracEG2_EMC7_EG2        = 0.970939;
-            }
-
+          } else if ( mode == 2 && energy.CompareTo("8TeV") == 0 && meson.CompareTo("Pi0") == 0){
+              corrFracINT7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"2","Pi0","INT7_INT7-EMC7");
+              corrFracEMC7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"2","Pi0","EMC7_INT7-EMC7");
+              corrFracEMC7_EMC7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"2","Pi0","EMC7_EMC7-EGA");
+              corrFracEG2_EMC7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"2","Pi0","EGA_EMC7-EGA");
           // Definition of correlations coefficients between triggered spectra for pi0 in 8TeV PCM-EMC
           } else if (mode == 2 && energy.CompareTo("8TeV") == 0 && meson.CompareTo("Eta") == 0){
-              if(xValue[ptBin] == 4.5){
-                corrFracINT7_INT7_EMC7      = 0.97671;
-                corrFracEMC7_INT7_EMC7      = 0.814268;
-              }else if(xValue[ptBin] == 5.5){
-                corrFracINT7_INT7_EMC7      = 0.975535;
-                corrFracEMC7_INT7_EMC7      = 0.836971;
-              }else if(xValue[ptBin] == 13.0){
-                corrFracEMC7_EMC7_EG2       = 0.91968;
-                corrFracEG2_EMC7_EG2        = 0.91612;
-              }else if(xValue[ptBin] == 15.0){
-                corrFracEMC7_EMC7_EG2       = 0.920302;
-                corrFracEG2_EMC7_EG2        = 0.926154;
-              }
+                corrFracINT7_INT7_EMC7    = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"2","Eta","INT7_INT7-EMC7");
+                corrFracEMC7_INT7_EMC7    = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"2","Eta","EMC7_INT7-EMC7");
+                corrFracEMC7_EMC7_EG2     = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"2","Eta","EMC7_EMC7-EGA");
+                corrFracEG2_EMC7_EG2      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"2","Eta","EGA_EMC7-EGA");
           // Definition of correlations coefficients between triggered spectra for eta/pi0 in 8TeV PCM-EMC
           } else if (mode == 2 && energy.CompareTo("8TeV") == 0 && meson.CompareTo("EtaToPi0") == 0){
-              if(xValue[ptBin] == 4.5){
-                corrFracINT7_INT7_EMC7      = 0.977787;
-                corrFracEMC7_INT7_EMC7      = 0.790249;
-              }else if(xValue[ptBin] == 5.5){
-                corrFracINT7_INT7_EMC7      = 0.975862;
-                corrFracEMC7_INT7_EMC7      = 0.818402;
-              }else if(xValue[ptBin] == 13.0){
-                corrFracEMC7_EMC7_EG2       = 0.919474;
-                corrFracEG2_EMC7_EG2        = 0.916318;
-              }else if(xValue[ptBin] == 15.0){
-                corrFracEMC7_EMC7_EG2       = 0.923574;
-                corrFracEG2_EMC7_EG2        = 0.928448;
-              }
-          }
+                corrFracINT7_INT7_EMC7    = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"2","Pi0EtaBinning","INT7_INT7-EMC7");
+                corrFracEMC7_INT7_EMC7    = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"2","Pi0EtaBinning","EMC7_INT7-EMC7");
+                corrFracEMC7_EMC7_EG2     = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"2","Pi0EtaBinning","EMC7_EMC7-EGA");
+                corrFracEG2_EMC7_EG2      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"2","Pi0EtaBinning","EGA_EMC7-EGA");
 
           // Definition of correlations coefficients between triggered spectra for pi0 in 8TeV EMC-EMC
-          if (mode == 4 && energy.CompareTo("8TeV") == 0 && meson.CompareTo("Pi0") == 0){
-              if(xValue[ptBin] == 4.75){
-                corrFracINT7_INT7_EMC7      = 0.975173;
-                corrFracEMC7_INT7_EMC7      = 0.8814;
-              }else if(xValue[ptBin] == 5.25){
-                corrFracINT7_INT7_EMC7      = 0.975193;
-                corrFracEMC7_INT7_EMC7      = 0.893558;
-              }else if(xValue[ptBin] == 5.25){
-                corrFracINT7_INT7_EMC7      = 0.975219;
-                corrFracEMC7_INT7_EMC7      = 0.901839;
-              }else if(xValue[ptBin] == 15.5){
-                corrFracEMC7_EMC7_EG2       = 0.946546;
-                corrFracEG2_EMC7_EG2        = 0.925001;
-              }
+          } else if (mode == 4 && energy.CompareTo("8TeV") == 0 && meson.CompareTo("Pi0") == 0){
+                corrFracINT7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Pi0","INT7_INT7-EMC7");
+                corrFracEMC7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Pi0","EMC7_INT7-EMC7");
+                corrFracEMC7_EMC7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Pi0","EMC7_EMC7-EGA");
+                corrFracEG2_EMC7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Pi0","EGA_EMC7-EGA");
           // Definition of correlations coefficients between triggered spectra for eta in 8TeV EMC-EMC
           } else if (mode == 4 && energy.CompareTo("8TeV") == 0 && meson.CompareTo("Eta") == 0){
-              if(xValue[ptBin] == 4.5){
-                corrFracINT7_INT7_EMC7      = 0.976484;
-                corrFracEMC7_INT7_EMC7      = 0.882484;
-              }else if(xValue[ptBin] == 5.5){
-                corrFracINT7_INT7_EMC7      = 0.976528;
-                corrFracEMC7_INT7_EMC7      = 0.899617;
-              }else if(xValue[ptBin] == 11){
-                corrFracINT7_INT7_EMC7      = 0.976818;
-                corrFracINT7_INT7_EG2       = 0.976818;
-                corrFracEMC7_INT7_EMC7      = 0.914128;
-                corrFracEG2_INT7_EG2        = 0.842794;
-                corrFracEMC7_EMC7_EG2       = 0.942287;
-                corrFracEG2_EMC7_EG2        = 0.904322;
-              }else if(xValue[ptBin] == 13){
-                corrFracINT7_INT7_EMC7      = 0.976475;
-                corrFracINT7_INT7_EG2       = 0.976475;
-                corrFracEMC7_INT7_EMC7      = 0.914037;
-                corrFracEG2_INT7_EG2        = 0.864343;
-                corrFracEMC7_EMC7_EG2       = 0.942931;
-                corrFracEG2_EMC7_EG2        = 0.909363;
-              }else if(xValue[ptBin] == 15){
-                corrFracINT7_INT7_EMC7      = 0.975876;
-                corrFracINT7_INT7_EG2       = 0.975876;
-                corrFracEMC7_INT7_EMC7      = 0.913896;
-                corrFracEG2_INT7_EG2        = 0.87742;
-                corrFracEMC7_EMC7_EG2       = 0.943251;
-                corrFracEG2_EMC7_EG2        = 0.91247;
-              }else if(xValue[ptBin] == 22.5){
-                corrFracEMC7_EMC7_EG2       = 0.940874;
-                corrFracEG2_EMC7_EG2        = 0.917386;
-              }else if(xValue[ptBin] == 27.5){
-                corrFracEMC7_EMC7_EG2       = 0.937221;
-                corrFracEG2_EMC7_EG2        = 0.918572;
-              }
+                corrFracINT7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Eta","INT7_INT7-EMC7");
+                corrFracEMC7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Eta","EMC7_INT7-EMC7");
+                corrFracINT7_INT7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Eta","INT7_INT7-EGA");
+                corrFracEG2_INT7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Eta","EGA_INT7-EGA");
+                corrFracEMC7_EMC7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Eta","EMC7_EMC7-EGA");
+                corrFracEG2_EMC7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Eta","EGA_EMC7-EGA");
           // Definition of correlations coefficients between triggered spectra for eta/pi0 in 8TeV EMC-EMC
           } else if (mode == 4 && energy.CompareTo("8TeV") == 0 && meson.CompareTo("EtaToPi0") == 0){
-              if(xValue[ptBin] == 4.5){
-                corrFracINT7_INT7_EMC7      = 0.977542;
-                corrFracEMC7_INT7_EMC7      = 0.856204;
-              }else if(xValue[ptBin] == 5.5){
-                corrFracINT7_INT7_EMC7      = 0.97763;
-                corrFracEMC7_INT7_EMC7      = 0.882649;
-              }else if(xValue[ptBin] == 11){
-                corrFracINT7_INT7_EMC7      = 0.978483;
-                corrFracEMC7_INT7_EMC7      = 0.907749;
-              }else if(xValue[ptBin] == 13){
-                corrFracINT7_INT7_EMC7      = 0.978382;
-                corrFracEMC7_INT7_EMC7      = 0.908641;
-              }else if(xValue[ptBin] == 15){
-                corrFracINT7_INT7_EMC7      = 0.978013;
-                corrFracINT7_INT7_EG2       = 0.978013;
-                corrFracEMC7_INT7_EMC7      = 0.91133;
-                corrFracEG2_INT7_EG2        = 0.872554;
-                corrFracEMC7_EMC7_EG2       = 0.93123;
-                corrFracEG2_EMC7_EG2        = 0.901517;
-              }
+                corrFracINT7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Pi0EtaBinning","INT7_INT7-EMC7");
+                corrFracEMC7_INT7_EMC7      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Pi0EtaBinning","EMC7_INT7-EMC7");
+                corrFracINT7_INT7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Pi0EtaBinning","INT7_INT7-EGA");
+                corrFracEG2_INT7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Pi0EtaBinning","EGA_INT7-EGA");
+                corrFracEMC7_EMC7_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Pi0EtaBinning","EMC7_EMC7-EGA");
+                corrFracEG2_EMC7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Pi0EtaBinning","EGA_EMC7-EGA");
           }
   
         // correlation coefficients for merged cluster analysis cross NLM
@@ -2929,6 +2801,11 @@ TGraphAsymmErrors* CombinePtPointsSpectraTriggerCorrMat(    TH1D** histoStat, TG
         }   
     }   
     fileWeightsOutput.close();
+
+    if(fCorrFactors){
+      fCorrFactors->Close();
+      delete fCorrFactors;
+    }
     return returnGraph;    
 }
 

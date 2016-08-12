@@ -73,7 +73,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                                         TString suffix              = "eps", 
                                         TString isMC                = "", 
                                         TString thesisPlots         = "", 
-                                        TString bWCorrection        = "X"
+                                        TString bWCorrection        = "X",
+                                        TString fileInputCorrFactors= ""
                                     ){
 
     TString date = ReturnDateString();
@@ -702,7 +703,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                                                                                                 xPtLimitsPi0, maxNBinsPi0,
                                                                                                 offSetsPi0, offSetsPi0Sys,
                                                                                                 graphCombPi0InvXSectionStatA, graphCombPi0InvXSectionSysA,
-                                                                                                fileNamePi0OutputWeightingA, "8TeV", "Pi0", kTRUE
+                                                                                                fileNamePi0OutputWeightingA, "8TeV", "Pi0", kTRUE,
+                                                                                                0x0, fileInputCorrFactors
                                                                                             );
 
 
@@ -1549,7 +1551,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //                                                                                                      xPtLimitsPi0, 33,
                                                                                                 offSetsEta, offSetsEtaSys,
                                                                                                 graphCombEtaInvXSectionStatA, graphCombEtaInvXSectionSysA,
-                                                                                                fileNameEtaOutputWeightingA,"8TeV", "Eta", kFALSE
+                                                                                                fileNameEtaOutputWeightingA,"8TeV", "Eta", kFALSE,
+                                                                                                0x0, fileInputCorrFactors
                                                                                             );
     graphCombEtaInvXSectionStatA->Print();
     if (graphCombEtaInvXSectionStatA == NULL) {
@@ -2331,7 +2334,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                                                                                            xPtLimitsEtaWOMerged, maxNBinsEtaW0Merged,
                                                                                            offSetsEtaToPi0, offSetsEtaToPi0Sys,
                                                                                            graphCombEtaToPi0StatA, graphCombEtaToPi0SysA,
-                                                                                           fileNameEtaToPi0OutputWeightingA,"8TeV", "EtaToPi0", kFALSE
+                                                                                           fileNameEtaToPi0OutputWeightingA,"8TeV", "EtaToPi0", kFALSE,
+                                                                                           0x0, fileInputCorrFactors
                                                                                         );
     graphCombEtaToPi0StatA->Print();
     if (graphCombEtaToPi0StatA == NULL) {
