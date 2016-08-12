@@ -91,7 +91,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                             Bool_t  averagedEta         = kFALSE,
                                             Bool_t  v2ClusterizerMerged = kFALSE,
                                             TString nameFileFitsShift   = "",
-                                            Bool_t  hasClusterOutput    = kTRUE
+                                            Bool_t  hasClusterOutput    = kTRUE,
+                                            TString fileInputCorrFactors= ""
                                         ){
 
     //***************************************************************************************************************
@@ -2153,7 +2154,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                                                                                    offSetsPi0 ,offSetsPi0Sys,
                                                                                                    graphCorrectedYieldWeightedAveragePi0Stat, graphCorrectedYieldWeightedAveragePi0Sys,
                                                                                                    nameWeightsLogFilePi0.Data(),
-                                                                                                   mode, optionEnergy, "Pi0", v2ClusterizerMerged 
+                                                                                                   mode, optionEnergy, "Pi0", v2ClusterizerMerged,
+                                                                                                   fileInputCorrFactors
                                                                                                );
     //return;
         // preparations for weight readout
@@ -4209,7 +4211,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                                                                                     offSetsEta ,offSetsEtaSys,
                                                                                                     graphCorrectedYieldWeightedAverageEtaStat, graphCorrectedYieldWeightedAverageEtaSys,
                                                                                                     nameWeightsLogFileEta.Data(),
-                                                                                                    mode, optionEnergy, "Eta", v2ClusterizerMerged
+                                                                                                    mode, optionEnergy, "Eta", v2ClusterizerMerged,
+                                                                                                    fileInputCorrFactors
                                                                                                   );
      //return;
             // Prepare arrays for reading weighting numbers 
@@ -5314,7 +5317,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                                                                                 offSetsEtaToPi0 ,offSetsEtaToPi0Sys,
                                                                                                 graphEtaToPi0WeightedAverageStat, graphEtaToPi0WeightedAverageSys,
                                                                                                 nameWeightsLogFileEtaToPi0.Data(),
-                                                                                                mode, optionEnergy, "EtaToPi0"
+                                                                                                mode, optionEnergy, "EtaToPi0", kFALSE,
+                                                                                                fileInputCorrFactors
                                                                                               );
                 // Reading weights from output file for plotting
                 ifstream fileWeightsEtaToPi0;
