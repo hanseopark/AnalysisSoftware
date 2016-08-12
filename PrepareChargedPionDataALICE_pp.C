@@ -850,6 +850,37 @@ void PrepareChargedPionDataALICE_pp(){
     TH1D* histoChargedKaonSpecHighPtSystPP              = (TH1D*)fileChargedKaonSpectraHighPtFinal->Get("hKaonSpectrumSyst_pp2760");
     histoChargedKaonSpecHighPtStatPP->Scale(0.5);
     histoChargedKaonSpecHighPtSystPP->Scale(0.5);
+
+    // *********************************************************************************************************************
+    // ************************** K0s spectra 2.76 TeV *********************************************************************
+    // ************************** published results + Simone Schuchmann's points *******************************************
+    // ************************** send 20.4.2016 ***************************************************************************
+    // *********************************************************************************************************************
+    TFile* fileNeutralStrangeSpectra                    = new TFile("ExternalInput/NeutralStrange/pp_spectra_18_02_16_extrapol_etaErr_2760GeV.root");
+    TH1D* histoNeutralKaonSpecStatPP2760GeV             = (TH1D*)fileNeutralStrangeSpectra->Get("K0s_corr_staterr_centpp_extrapolated");
+    TH1D* histoNeutralKaonSpecSysPP2760GeV              = (TH1D*)fileNeutralStrangeSpectra->Get("K0s_corr_systerr_centpp_extrapolated");
+    for (Int_t i = 1; i < histoNeutralKaonSpecStatPP2760GeV->GetNbinsX()+1; i++){
+        histoNeutralKaonSpecStatPP2760GeV->SetBinContent(i, histoNeutralKaonSpecStatPP2760GeV->GetBinContent(i)/histoNeutralKaonSpecStatPP2760GeV->GetBinCenter(i)/(2*TMath::Pi()));
+        histoNeutralKaonSpecStatPP2760GeV->SetBinError(i, histoNeutralKaonSpecStatPP2760GeV->GetBinError(i)/histoNeutralKaonSpecStatPP2760GeV->GetBinCenter(i)/(2*TMath::Pi()));
+        histoNeutralKaonSpecSysPP2760GeV->SetBinContent(i, histoNeutralKaonSpecSysPP2760GeV->GetBinContent(i)/histoNeutralKaonSpecSysPP2760GeV->GetBinCenter(i)/(2*TMath::Pi()));
+        histoNeutralKaonSpecSysPP2760GeV->SetBinError(i, histoNeutralKaonSpecSysPP2760GeV->GetBinError(i)/histoNeutralKaonSpecSysPP2760GeV->GetBinCenter(i)/(2*TMath::Pi()));
+    }
+    TH1D* histoLambda1115SpecStatPP2760GeV              = (TH1D*)fileNeutralStrangeSpectra->Get("L_corr_staterr_centpp_extrapolated");
+    TH1D* histoLambda1115SpecSystPP2760GeV              = (TH1D*)fileNeutralStrangeSpectra->Get("L_corr_systerr_centpp_extrapolated");
+    for (Int_t i = 1; i < histoLambda1115SpecStatPP2760GeV->GetNbinsX()+1; i++){
+        histoLambda1115SpecStatPP2760GeV->SetBinContent(i, histoLambda1115SpecStatPP2760GeV->GetBinContent(i)/histoLambda1115SpecStatPP2760GeV->GetBinCenter(i)/(2*TMath::Pi()));
+        histoLambda1115SpecStatPP2760GeV->SetBinError(i, histoLambda1115SpecStatPP2760GeV->GetBinError(i)/histoLambda1115SpecStatPP2760GeV->GetBinCenter(i)/(2*TMath::Pi()));
+        histoLambda1115SpecSystPP2760GeV->SetBinContent(i, histoLambda1115SpecSystPP2760GeV->GetBinContent(i)/histoLambda1115SpecSystPP2760GeV->GetBinCenter(i)/(2*TMath::Pi()));
+        histoLambda1115SpecSystPP2760GeV->SetBinError(i, histoLambda1115SpecSystPP2760GeV->GetBinError(i)/histoLambda1115SpecSystPP2760GeV->GetBinCenter(i)/(2*TMath::Pi()));
+    }
+    TH1D* histoAntiLambda1115SpecStatPP2760GeV           = (TH1D*)fileNeutralStrangeSpectra->Get("AL_corr_staterr_centpp_extrapolated");
+    TH1D* histoAntiLambda1115SpecSystPP2760GeV           = (TH1D*)fileNeutralStrangeSpectra->Get("AL_corr_systerr_centpp_extrapolated");
+    for (Int_t i = 1; i < histoAntiLambda1115SpecStatPP2760GeV->GetNbinsX()+1; i++){
+        histoAntiLambda1115SpecStatPP2760GeV->SetBinContent(i, histoAntiLambda1115SpecStatPP2760GeV->GetBinContent(i)/histoAntiLambda1115SpecStatPP2760GeV->GetBinCenter(i)/(2*TMath::Pi()));
+        histoAntiLambda1115SpecStatPP2760GeV->SetBinError(i, histoAntiLambda1115SpecStatPP2760GeV->GetBinError(i)/histoAntiLambda1115SpecStatPP2760GeV->GetBinCenter(i)/(2*TMath::Pi()));
+        histoAntiLambda1115SpecSystPP2760GeV->SetBinContent(i, histoAntiLambda1115SpecSystPP2760GeV->GetBinContent(i)/histoAntiLambda1115SpecSystPP2760GeV->GetBinCenter(i)/(2*TMath::Pi()));
+        histoAntiLambda1115SpecSystPP2760GeV->SetBinError(i, histoAntiLambda1115SpecSystPP2760GeV->GetBinError(i)/histoAntiLambda1115SpecSystPP2760GeV->GetBinCenter(i)/(2*TMath::Pi()));
+    }
     
     // *********************************************************************************************************************
     // ************************** Low Pt pion data 2.76 TeV ****************************************************************
@@ -1090,8 +1121,14 @@ void PrepareChargedPionDataALICE_pp(){
         histoChargedPionSpecPubSystPP2760GeV->Write("histoChargedPionSpecPubSyst2760GeV");
         histoChargedKaonSpecPubStatPP2760GeV->Write("histoChargedKaonSpecPubStat2760GeV");
         histoChargedKaonSpecPubSystPP2760GeV->Write("histoChargedKaonSpecPubSyst2760GeV");
-        histoProtonSpecPubStatPP2760GeV->Write("histoProtonPionSpecPubStat2760GeV");
+        histoProtonSpecPubStatPP2760GeV->Write("histoProtonSpecPubStat2760GeV");
         histoProtonSpecPubSystPP2760GeV->Write("histoProtonSpecPubSyst2760GeV");
+        histoNeutralKaonSpecStatPP2760GeV->Write("histoNeutralKaonSpecStat2760GeV");
+        histoNeutralKaonSpecSysPP2760GeV->Write("histoNeutralKaonSpecSyst2760GeV");
+        histoLambda1115SpecStatPP2760GeV->Write("histoLambda1115SpecStat2760GeV");
+        histoLambda1115SpecSystPP2760GeV->Write("histoLambda1115SpecSyst2760GeV");
+        histoAntiLambda1115SpecStatPP2760GeV->Write("histoAntiLambda1115SpecStat2760GeV");
+        histoAntiLambda1115SpecSystPP2760GeV->Write("histoAntiLambda1115SpecSyst2760GeV");
 
         histoChargedPionSpecHighPtStatPP2760GeV->Write("histoChargedPionSpecHighPtStat2760GeV");
         histoChargedPionSpecHighPtSystPP2760GeV->Write("histoChargedPionSpecHighPtSyst2760GeV");

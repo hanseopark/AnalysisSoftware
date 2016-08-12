@@ -140,18 +140,18 @@ Double_t FindSmallestBin2DHist(TH2* histo, Double_t maxStart = 1e6 ){
 
 
 //****************************************************************************
-//*********************** Kaon decay simulation ******************************
+//**************** Secondary pion decay simulation ***************************
 //****************************************************************************
-void KaonDecay(     Int_t nEvts             = 1000000, 
-                    Int_t particle          = 0,
-                    TString energy          = "2.76TeV",
-                    Double_t minPt          = 2,
-                    Double_t maxPt          = 50,
-                    TString filename        = "",
-                    TString suffix          = "eps",
-                    TString cutSelection    = "",
-                    Int_t mode              = 0
-              ){
+void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000, 
+                                    Int_t particle          = 0,                // 0 = K0s, 1 = K0l, 2 = Lambda
+                                    TString energy          = "2.76TeV",
+                                    Double_t minPt          = 2,
+                                    Double_t maxPt          = 50,
+                                    TString filename        = "",
+                                    TString suffix          = "eps",
+                                    TString cutSelection    = "",
+                                    Int_t mode              = 0
+                               ){
 
     //*************************************************************************************************
     //******************************** Set Style settings globally ************************************
@@ -171,9 +171,7 @@ void KaonDecay(     Int_t nEvts             = 1000000,
     TString fMesonCutSelection          = "";
     ReturnSeparatedCutNumberAdvanced(cutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
     
-    Double_t fYMaxMother                = 2;
-    
-    
+    Double_t fYMaxMother                = 2;  
     TString centralityString            = GetCentralityString(fEventCutSelection);
     cout << "centrality : "<< centralityString.Data() << endl;
     
@@ -195,7 +193,10 @@ void KaonDecay(     Int_t nEvts             = 1000000,
     
     Double_t yRanges[10]        = { 0.1,    0.3,    0.5,    0.55,   0.6,
                                     0.65,   0.7,    0.75,   0.8,    0.85 };
-    
+    Double_t minDalitz[2]       = {0,0};
+    Double_t maxDalitz[2]       = {2,2};
+                                    
+                                    
     // K0s
     if (particle == 0){
         massParticle                = TDatabasePDG::Instance()->GetParticle(310)->Mass();
@@ -229,7 +230,11 @@ void KaonDecay(     Int_t nEvts             = 1000000,
         masses[1]                   = TDatabasePDG::Instance()->GetParticle(pdgCodesDaughters[1])->Mass();
         masses[2]                   = TDatabasePDG::Instance()->GetParticle(pdgCodesDaughters[2])->Mass();
         branchRatio                 = 0.1952+1/3*0.1254;
-    // Lambda    
+        minDalitz[0]                = (masses[0]+masses[1])*0.8;
+        minDalitz[1]                = (masses[0]+masses[2])*0.8;
+        maxDalitz[0]                = (massParticle-masses[2])*1.2;
+        maxDalitz[1]                = (massParticle-masses[1])*1.2;
+        // Lambda    
     } else if (particle == 2 ){   
         massParticle                = TDatabasePDG::Instance()->GetParticle(3122)->Mass();
         outputlabel                 = "Lambda";
@@ -250,7 +255,7 @@ void KaonDecay(     Int_t nEvts             = 1000000,
     gSystem->Exec("mkdir -p "+fOutputDir);
 
     // define output file name
-    TString nameOutputRootFile          = Form("ToyMCOutput_%s_%s_%dMioEvt.root",outputlabel.Data(), fCollisionSystenWrite.Data(),(Int_t)(nEvts/1e6));
+    TString nameOutputRootFile          = Form("ToyMCOutput_%s_%s_%dMioEvt_%dMeV_%dMeV.root",outputlabel.Data(), fCollisionSystenWrite.Data(),(Int_t)(nEvts/1e6), (Int_t)(minPt*1000), (Int_t)(maxPt*1000));
     cout << "searching for: " << nameOutputRootFile.Data() << endl;
     TFile* exisitingFile            = new TFile(nameOutputRootFile);
     if (!exisitingFile->IsZombie()){
@@ -364,14 +369,14 @@ void KaonDecay(     Int_t nEvts             = 1000000,
             ptDistribution      = FitObject("tcm","ptDistribution","K",partSpectrum,0.4,20.);
             ptDistribution->SetRange(minPt,maxPt);
         } else {
-            cout << "ERROR: undefined energy for data" << endl;
+            cout << "ERROR: undefined energy for kaons" << endl;
             return;
         }    
     } else if (particle == 2){
         if (energy.CompareTo("2.76TeV") == 0){
-            partSpectrum            = (TH1D*)inputFile->Get("histoProtonSpecPubStat2760GeV");
+            partSpectrum            = (TH1D*)inputFile->Get("histoLambda1115SpecStat2760GeV");
             Double_t paramGraph[3]  = {partSpectrum->GetBinContent(1), 6., 0.5};
-            ptDistribution          = FitObject("l","ptDistribution","P",partSpectrum,5.,20.,NULL,"QNRME");
+            ptDistribution          = FitObject("l","ptDistribution","Lambda",partSpectrum,3.,15.,NULL,"QNRME");
             
             Double_t xValues[150];
             Double_t xErr[150];
@@ -379,7 +384,7 @@ void KaonDecay(     Int_t nEvts             = 1000000,
             Double_t yErr[150];
             Int_t nBinsX            = 0;
             Int_t nBinsXOrg         = 0;
-            for (Int_t i = 1; (i< partSpectrum->GetNbinsX()+1 && partSpectrum->GetBinCenter(i) < 12.) ; i++){
+            for (Int_t i = 1; (i< partSpectrum->GetNbinsX()+1 && partSpectrum->GetBinCenter(i) < 10.) ; i++){
                 cout << partSpectrum->GetBinCenter(i) << "\t" << partSpectrum->GetBinContent(i) << endl ;
                 if (partSpectrum->GetBinCenter(i) > 0.2){
                     cout << "bin set at position: " << nBinsX << endl;
@@ -392,7 +397,7 @@ void KaonDecay(     Int_t nEvts             = 1000000,
             }
             nBinsXOrg               = nBinsX;
             for (Int_t i = nBinsXOrg; (i < 150 && xValues[i-1] < 70); i++){
-                xValues[i]          = 12+(i-nBinsXOrg);    
+                xValues[i]          = 10+(i-nBinsXOrg);    
                 xErr[i]             = 0.5;    
                 yValues[i]          = ptDistribution->Eval(xValues[i]);
                 yErr[i]             = ptDistribution->Eval(xValues[i])*0.15;
@@ -441,7 +446,7 @@ void KaonDecay(     Int_t nEvts             = 1000000,
             ptDistribution      = FitObject("tcm","ptDistribution","P",partSpectrum,0.4,20.);
             ptDistribution->SetRange(minPt,maxPt);
         } else {
-            cout << "ERROR: undefined energy for data" << endl;
+            cout << "ERROR: undefined energy for lambda" << endl;
             return;
         }    
     }
@@ -527,6 +532,11 @@ void KaonDecay(     Int_t nEvts             = 1000000,
     }
     TH2D *h2_ptyPiZeroDaughters         = new TH2D("h2_ptyPiZeroDaughters","", 700,0,70,2*fYMaxMother*100,-fYMaxMother,fYMaxMother);  
     h2_ptyPiZeroDaughters->Sumw2();
+    
+    TH2D* h2_DalitzPlot                 = NULL;
+    if (nDaughters == 3){
+        h2_DalitzPlot                   = new TH2D("h2_DalitzPlot", "", (maxDalitz[0]-minDalitz[0])*1000, minDalitz[0],maxDalitz[0], (maxDalitz[1]-minDalitz[1])*1000, minDalitz[1], maxDalitz[1] ); 
+    }    
     //*************************************************************************************************
     
     //**************************** Event loop *********************************************************
@@ -558,41 +568,44 @@ void KaonDecay(     Int_t nEvts             = 1000000,
         particle.SetPtEtaPhiM(ptcurrent, etaCurrent, phiCurrent, massParticle);
         event.SetDecay(particle, nDaughters, masses); // ie. "set the pion to decay to 2 daughters with masses[0], masses[1]
      
-//         if (TMath::Abs(particle.Rapidity()) < fYMaxMother){
-            h1_ptdistribution->Fill(ptcurrent, 1./nEvts);
-            h1_phidistribution->Fill(phiCurrent, 1./nEvts);
-            h1_etadistribution->Fill(etaCurrent, 1./nEvts);
-            h1_ydistribution->Fill(particle.Rapidity(), 1./nEvts);
-     
-    //         cout << "mother pt vector: " << particle.Pt() << endl;   
-            Double_t weight         = event.Generate();
-            Double_t ptDaughter[nDaughters];  
-            for (Int_t i = 0; i < nDaughters; i++){
-                TLorentzVector *pDaughter   = event.GetDecay(i); // these are my daughters !! 
-                ptDaughter[i]               = pDaughter->Pt(); 
-                h1_ptDaughter[i]->Fill(ptDaughter[i],1./nEvts);
-                if (pdgCodesDaughters[i] == 111){
-                    h1_ptPiZeroDaughters->Fill(ptDaughter[i], 1./nEvts);            
-                    h2_ptyPiZeroDaughters->Fill(ptDaughter[i],pDaughter->Rapidity(), 1./nEvts);
-                    h1_yPiZeroDaughters->Fill(pDaughter->Rapidity(), 1./nEvts);
+        h1_ptdistribution->Fill(ptcurrent, 1./nEvts);
+        h1_phidistribution->Fill(phiCurrent, 1./nEvts);
+        h1_etadistribution->Fill(etaCurrent, 1./nEvts);
+        h1_ydistribution->Fill(particle.Rapidity(), 1./nEvts);
+    
+//         cout << "mother pt vector: " << particle.Pt() << endl;   
+        Double_t weight         = event.Generate();
+        Double_t ptDaughter[nDaughters];  
+        TLorentzVector* pDaughter[nDaughters];
+        for (Int_t i = 0; i < nDaughters; i++){
+            pDaughter[i]                = event.GetDecay(i); // these are my daughters !! 
+            ptDaughter[i]               = pDaughter[i]->Pt(); 
+            h1_ptDaughter[i]->Fill(ptDaughter[i],1./nEvts);
+            if (pdgCodesDaughters[i] == 111){
+                h1_ptPiZeroDaughters->Fill(ptDaughter[i], 1./nEvts);            
+                h2_ptyPiZeroDaughters->Fill(ptDaughter[i],pDaughter[i]->Rapidity(), 1./nEvts);
+                h1_yPiZeroDaughters->Fill(pDaughter[i]->Rapidity(), 1./nEvts);
+            }
+            if (i == 0)
+                h2_ptMothervsDaughter->Fill(ptcurrent,ptDaughter[i],1./nEvts);
+            for (Int_t y = 0; y < 10; y++){
+                if (TMath::Abs(pDaughter[i]->Rapidity()) < yRanges[y]){
+                    h1_ptDaughterInRap[y][i]->Fill(ptDaughter[i], 1./nEvts);
+                    if (pdgCodesDaughters[i] == 111)
+                        h1_ptPiZeroInRapDaughters[y]->Fill(ptDaughter[i], 1./nEvts);
                 }
-                if (i == 0)
-                    h2_ptMothervsDaughter->Fill(ptcurrent,ptDaughter[i],1./nEvts);
-                for (Int_t y = 0; y < 10; y++){
-                    if (TMath::Abs(pDaughter->Rapidity()) < yRanges[y]){
-                        h1_ptDaughterInRap[y][i]->Fill(ptDaughter[i], 1./nEvts);
-                        if (pdgCodesDaughters[i] == 111)
-                            h1_ptPiZeroInRapDaughters[y]->Fill(ptDaughter[i], 1./nEvts);
-                    }
-                }    
-            }
-            if (nDaughters > 1){
-                h2_asym_geom->Fill((ptDaughter[0]-ptDaughter[1])/(ptDaughter[0]+ptDaughter[1]), ptcurrent, 1./nEvts);
-            }
-//         } 
-//          else { 
-//             n--;
-//         }    
+            }    
+        }
+        if (nDaughters > 1){
+            h2_asym_geom->Fill((ptDaughter[0]-ptDaughter[1])/(ptDaughter[0]+ptDaughter[1]), ptcurrent, 1./nEvts);
+        }
+        if (nDaughters == 3){
+            TLorentzVector comb1(0.0, 0.0, 0, 0); 
+            comb1.SetPxPyPzE(pDaughter[0]->Px()+pDaughter[1]->Px(),pDaughter[0]->Py()+pDaughter[1]->Py(),pDaughter[0]->Pz()+pDaughter[1]->Pz(),pDaughter[0]->E()+pDaughter[1]->E());
+            TLorentzVector comb2(0.0, 0.0, 0, 0); 
+            comb2.SetPxPyPzE(pDaughter[0]->Px()+pDaughter[2]->Px(),pDaughter[0]->Py()+pDaughter[2]->Py(),pDaughter[0]->Pz()+pDaughter[2]->Pz(),pDaughter[0]->E()+pDaughter[2]->E());
+            h2_DalitzPlot->Fill(comb1.M(),comb2.M(), 1./nEvts);
+        }    
     }
 
     //*************************************************************************************************
@@ -754,6 +767,19 @@ void KaonDecay(     Int_t nEvts             = 1000000,
     h2_asym_geom->Draw("colz");
     canvasQA2D->SaveAs(Form("%s%s_AsymmetryDaughtersVsMotherPt.%s", fOutputDir.Data(), outputlabel.Data(),suffix.Data()));
     
+    if (h2_DalitzPlot){
+        DrawGammaCanvasSettings( canvasQA2D, 0.12, 0.1, 0.02, 0.12);
+        DrawAutoGammaHistoPaper2D(h2_DalitzPlot,
+                                    "",
+                                    Form("#it{M}_{%s%s} (GeV/#it{c})",daughterLabels[0].Data(),daughterLabels[1].Data()),
+                                    Form("#it{M}_{%s%s} (GeV/#it{c})",daughterLabels[0].Data(),daughterLabels[2].Data()),
+                                    0,0,0,
+                                    0,0,5,
+                                    0,0, 50,1,1.1);
+        h2_DalitzPlot->GetZaxis()->SetRangeUser( FindSmallestBin2DHist(h2_DalitzPlot)*0.1, h2_DalitzPlot->GetMaximum()*2);
+        h2_DalitzPlot->Draw("colz");
+        canvasQA2D->SaveAs(Form("%s%s_DalitzPlot.%s", fOutputDir.Data(), outputlabel.Data(),suffix.Data()));
+    }
     
     //*************************************************************************************************
     //********************** Write histograms to file *************************************************
@@ -778,6 +804,7 @@ void KaonDecay(     Int_t nEvts             = 1000000,
         h2_ptMothervsDaughter->Write();
         h2_ptyPiZeroDaughters->Write();
         h1_yPiZeroDaughters->Write();
+        if (h2_DalitzPlot) h2_DalitzPlot->Write();
     fileOutput->Write();
     fileOutput->Close();
 

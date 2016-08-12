@@ -335,6 +335,25 @@ TGraphErrors* CalculateGraphErrRatioToFit (TGraphErrors* graph_Org, TF1* fit){
 }
 
 //**********************************************************************************************************
+// Calculates the ratio of a graph and a spline
+//**********************************************************************************************************
+TGraphErrors* CalculateGraphErrRatioToSpline (TGraphErrors* graph_Org, TSpline* fit){
+    TGraphErrors* graph         = (TGraphErrors*)graph_Org->Clone("Dummy");
+    Double_t * xValue           = graph->GetX(); 
+    Double_t * yValue           = graph->GetY();
+    Double_t* xError            = graph->GetEX();
+    Double_t* yError            = graph->GetEY();
+    Int_t nPoints               = graph->GetN();
+    for (Int_t i = 0; i < nPoints; i++){
+        yValue[i]               = yValue[i]/fit->Eval(xValue[i]);
+        yError[i]               = yError[i]/fit->Eval(xValue[i]);
+    }
+    TGraphErrors* returnGraph   = new TGraphErrors(nPoints,xValue,yValue,xError,yError); 
+    return returnGraph;
+}
+
+
+//**********************************************************************************************************
 // Calculates the ratio of a graph and a fit
 //**********************************************************************************************************
 TGraphAsymmErrors* CalculateGraphErrRatioToFit (TGraphAsymmErrors* graph_Org, TF1* fit){

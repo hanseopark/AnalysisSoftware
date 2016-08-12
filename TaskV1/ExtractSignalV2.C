@@ -1,5 +1,4 @@
 // provided by Gamma Conversion Group, $ALICE_ROOT/PWG4/GammaConv ;https://twiki.cern.ch/twiki/bin/view/ALICE/PWG4GammaConversion
-
 //This file is not supposed to be run on outputfiles of the GammaConv-Software before the 30th Sept 2010.
 
 #include <stdlib.h>
@@ -1115,13 +1114,13 @@ void ExtractSignalV2(   TString meson                   = "",
             }    
             //Significance default
             if ( pow(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt],0.5) != 0){
-                fMesonSigndefault[k][iPt]                       = fMesonYieldsCorResidualBckFunc[k][iPt]/pow(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt],0.5);
-                Double_t a                                      = ( pow(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt], -0.5) -
-                                                                    0.5*fMesonYieldsCorResidualBckFunc[k][iPt]*pow(fMesonYieldsCorResidualBckFunc[k][iPt] +
-                                                                    fTotalBckYields[k][iPt], -1.5) * fMesonYieldsCorResidualBckFuncError[k][iPt]);
-                Double_t b                                      = 0.5*fMesonYieldsCorResidualBckFunc[k][iPt]*pow(fMesonYieldsCorResidualBckFunc[k][iPt]
-                                                                + fTotalBckYields[k][iPt],-1.5) * fTotalBckYieldsError[k][iPt];
-                fMesonSigndefaultError[k][iPt]                  = pow( a*a + b*b, 0.5);
+                fMesonSigndefault[k][iPt]                   = fMesonYieldsCorResidualBckFunc[k][iPt]/pow(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt],0.5);
+                Double_t a                                  = ( pow(fMesonYieldsCorResidualBckFunc[k][iPt] + fTotalBckYields[k][iPt], -0.5) -
+                                                                0.5*fMesonYieldsCorResidualBckFunc[k][iPt]*pow(fMesonYieldsCorResidualBckFunc[k][iPt] +
+                                                                fTotalBckYields[k][iPt], -1.5) * fMesonYieldsCorResidualBckFuncError[k][iPt]);
+                Double_t b                                  = 0.5*fMesonYieldsCorResidualBckFunc[k][iPt]*pow(fMesonYieldsCorResidualBckFunc[k][iPt]
+                                                              + fTotalBckYields[k][iPt],-1.5) * fTotalBckYieldsError[k][iPt];
+                fMesonSigndefaultError[k][iPt]              = pow( a*a + b*b, 0.5);
             } else {
                 fMesonSigndefault[k][iPt]       = 0.;
                 fMesonSigndefaultError[k][iPt]  = 0.;
