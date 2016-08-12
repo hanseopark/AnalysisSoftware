@@ -5310,7 +5310,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             // Calculate averaged eta/pi0 graphs according to statistical and systematic errors taking correctly into account the cross correlations
             if (averagedEta){
                 if(optionEnergy.CompareTo("8TeV")==0 && mode==4) maxNAllowedEta -= 3;
-                if(optionEnergy.CompareTo("8TeV")==0 && mode==2) maxNAllowedEta -= 2;
+                //if(optionEnergy.CompareTo("8TeV")==0 && mode==2) maxNAllowedEta -= 2;
                 // calculate averaged eta/pi0 graphs
                 graphEtaToPi0WeightedAverageTot         = CombinePtPointsSpectraTriggerCorrMat( histoStatEtaToPi0, graphSystEtaToPi0,  
                                                                                                 binningEta,  maxNAllowedEta,
@@ -5599,7 +5599,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 canvasRelTotErr->SaveAs(Form("%s/EtaToPi0_RelErrorsFulldecomp.%s",outputDir.Data(),suffix.Data()));
                 
                 if(optionEnergy.CompareTo("8TeV")==0 && mode==4) maxNAllowedEta += 3;
-                if(optionEnergy.CompareTo("8TeV")==0 && mode==2) maxNAllowedEta += 2;
+                //if(optionEnergy.CompareTo("8TeV")==0 && mode==2) maxNAllowedEta += 2;
             // if averaging wasn't enabled pick values according to predefined ranges ("cherry picking points")            
             } else {
                 graphEtaToPi0WeightedAverageStat        = new TGraphAsymmErrors(nPointFinalEtaToPi0, xValueFinalEtaToPi0, yValueFinalEtaToPi0, 
