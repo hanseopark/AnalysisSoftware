@@ -114,7 +114,7 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
                                         0, 0, 0, 0 ,0,
                                         0, 0, 0};
     // minimum bias trigger                      
-    Bool_t bsmoothMBPi0[23]         = { 0, 1, 1, 1, 1,
+    Bool_t bsmoothMBPi0[23]         = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1 ,1,
@@ -129,7 +129,7 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1 ,1,
-                                        1, 1, 0};
+                                        1, 1, 1};
 
     // EMC7 trigger
     Bool_t bsmoothEMC7Pi0[23]       = { 1, 1, 1, 1, 1,
@@ -333,7 +333,9 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
             if  (nameCutVariationSC[i].CompareTo("YieldExtraction") == 0){
                 if ( meson.CompareTo("Pi0") == 0){
                     for (Int_t k = 0; k < nPtBins; k++){
-                        Double_t error          = 2.;
+                        Double_t error          = 0.5 + 0.155*(ptBins[k]-1.1);
+                        if(ptBins[k]==0.9) error = 3.;
+
                         if (additionalNameOutput.CompareTo("EMC7")==0){
                           error = 1.0;
                           if(ptBins[k]>=9.) error += 0.025*pow(ptBins[k]-9.,2);
@@ -1019,7 +1021,9 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
             if (i==22 && nameCutVariationSC[i].CompareTo("YieldExtraction")==0 ){
                 cout << "pi0etabinning smoothing" << endl;
                 for (Int_t k = 0;k < nPtBins;k++){
-                    Double_t error          = 2.;
+                    Double_t error          = 0.5 + 0.155*(ptBins[k]-1.1);
+                    if(ptBins[k]==0.9) error = 3.;
+
                     if (additionalNameOutput.CompareTo("EMC7")==0){
                       error = 1.0;
                       if(ptBins[k]>=9.) error += 0.025*pow(ptBins[k]-9.,2);
