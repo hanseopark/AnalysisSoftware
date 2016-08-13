@@ -691,11 +691,11 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
                 for (Int_t k = 0;k < nPtBins;k++){
                     Double_t error              = 0.;
                     if (additionalNameOutput.CompareTo("")==0){
-                        error   = 0.;
+                        error   = 1.;                             //1% error from pileUp: with pileUp+SPDtrackCluster cut and without
                     } else if (additionalNameOutput.CompareTo("EMC7")==0){
-                        error   = TMath::Sqrt(2.0*2.0);
+                        error   = TMath::Sqrt(2.0*2.0+1.0*1.0);
                     } else if (additionalNameOutput.CompareTo("EGA")==0){
-                        error   = TMath::Sqrt(2.2*2.2+2.0*2.0);
+                        error   = TMath::Sqrt(2.2*2.2+2.0*2.0+1.0*1.0);
                     }    
                     if (meson.CompareTo("Pi0EtaBinning") == 0){
                         error   = 0.;
@@ -943,10 +943,10 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
         if (numberCutStudies> 7) legendMean->SetNColumns(2);
         
         for(Int_t i = 0;i< numberCutStudies ;i++){
-            if ((additionalNameOutput.CompareTo("") == 0) && i == 10){
-                cout << "not drawing: " << nameCutVariation[i].Data() << endl;
-                continue;
-            }    
+//            if ((additionalNameOutput.CompareTo("") == 0) && i == 10){
+//                cout << "not drawing: " << nameCutVariation[i].Data() << endl;
+//                continue;
+//            }
             if ( meson.CompareTo("Eta") == 0 && i == 1){
                 cout << "not drawing: " << nameCutVariation[i].Data() << endl;
                 continue;
@@ -1029,10 +1029,10 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
 
         for(Int_t i = 0;i< numberCutStudies ;i++){
             cout << i << "\t"<< additionalNameOutput.Data() << endl;
-            if ((additionalNameOutput.CompareTo("") == 0 || additionalNameOutput.CompareTo("INT7") ==0 ) && i == 10){
-                cout << "not drawing: " << nameCutVariation[i].Data() << endl;
-                continue;
-            }    
+//            if ((additionalNameOutput.CompareTo("") == 0 || additionalNameOutput.CompareTo("INT7") ==0 ) && i == 10){
+//                cout << "not drawing: " << nameCutVariation[i].Data() << endl;
+//                continue;
+//            }
             if ( meson.CompareTo("Eta") == 0 && i == 1 && additionalNameOutput.CompareTo("")==0){
                 cout << "not drawing: " << nameCutVariation[i].Data() << endl;
                 continue;
@@ -1258,7 +1258,7 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
             meanErrorsCorr[11]->Draw("pX0,csame");
         }
         // trigger errors
-        if (numberCutStudies>10 && !(additionalNameOutput.CompareTo("") == 0 || additionalNameOutput.CompareTo("INT7") ==0 ) && meson.CompareTo("Pi0EtaBinning") != 0){
+        if (numberCutStudies>10 /*&& !(additionalNameOutput.CompareTo("") == 0 || additionalNameOutput.CompareTo("INT7") ==0 )*/ && meson.CompareTo("Pi0EtaBinning") != 0){
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[10], 25, 1.,color[6],color[6]);
             meanErrorsCorr[10]->Draw("pX0,csame");
         }
@@ -1276,8 +1276,8 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
         if (meson.CompareTo("Pi0EtaBinning") != 0)legendSummedMeanNew->AddEntry(meanErrorsCorr[7],"mat. infront of EMCal","p");
         if (meson.CompareTo("Pi0EtaBinning") != 0)legendSummedMeanNew->AddEntry(meanErrorsCellTiming,"cell timing","p");
         if (numberCutStudies>11) legendSummedMeanNew->AddEntry(meanErrorsCorr[11],"efficiency","p");
-        if (numberCutStudies>10 && !(additionalNameOutput.CompareTo("") == 0) && meson.CompareTo("Pi0EtaBinning") != 0)
-            legendSummedMeanNew->AddEntry(meanErrorsCorr[10],"trigger normalization","p");
+        if (numberCutStudies>10 /*&& !(additionalNameOutput.CompareTo("") == 0) */&& meson.CompareTo("Pi0EtaBinning") != 0)
+            legendSummedMeanNew->AddEntry(meanErrorsCorr[10],"trigger","p");
         if (meson.CompareTo("Pi0EtaBinning") != 0)legendSummedMeanNew->AddEntry(meanErrorsCorr[14],"periods","p");
         DrawGammaSetMarkerTGraphErr(meanErrorsCorrSummedIncMat, 20, 1.,kBlack,kBlack);
         meanErrorsCorrSummedIncMat->Draw("p,csame");
