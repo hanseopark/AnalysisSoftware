@@ -328,7 +328,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
                         histoPi0InvMassRemBGPCMEMCAL[i]->SetBinContent(j,0);
                         histoPi0InvMassRemBGPCMEMCAL[i]->SetBinError(j,0);                                                
                     }    
-                    for (Int_t j = histoPi0InvMassSigPCMEMCAL[i]->GetXaxis()->FindBin(0.30); j < histoPi0InvMassSigPCMEMCAL[i]->GetXaxis()->FindBin(0.70)+1; j++){
+                    for (Int_t j = histoPi0InvMassSigPCMEMCAL[i]->GetXaxis()->FindBin(0.01); j < histoPi0InvMassSigPCMEMCAL[i]->GetXaxis()->FindBin(0.30)+1; j++){
                         Double_t startBinEdge                                   = histoPi0InvMassSigPCMEMCAL[i]->GetXaxis()->GetBinLowEdge(j);
                         Double_t endBinEdge                                     = histoPi0InvMassSigPCMEMCAL[i]->GetXaxis()->GetBinUpEdge(j);
                         Double_t intLinearBack                                  = fitPi0InvMassBGPCMEMCAL[i]->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
@@ -507,7 +507,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
                         histoPi0InvMassRemBGEMCAL[i]->SetBinContent(j,0);
                         histoPi0InvMassRemBGEMCAL[i]->SetBinError(j,0);                                                
                     }    
-                    for (Int_t j = histoPi0InvMassSigEMCAL[i]->GetXaxis()->FindBin(0.30); j < histoPi0InvMassSigEMCAL[i]->GetXaxis()->FindBin(0.70)+1; j++){
+                    for (Int_t j = histoPi0InvMassSigEMCAL[i]->GetXaxis()->FindBin(0.01); j < histoPi0InvMassSigEMCAL[i]->GetXaxis()->FindBin(0.30)+1; j++){
                         Double_t startBinEdge                                   = histoPi0InvMassSigEMCAL[i]->GetXaxis()->GetBinLowEdge(j);
                         Double_t endBinEdge                                     = histoPi0InvMassSigEMCAL[i]->GetXaxis()->GetBinUpEdge(j);
                         Double_t intLinearBack                                  = fitPi0InvMassBGEMCAL[i]->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
