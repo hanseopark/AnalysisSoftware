@@ -320,7 +320,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                     for (Int_t l=0; l < 6; l++){
                         cout << fitPi0InvMassSigPCMEMCAL[i]->GetParameter(l) << "\t +- " << fitPi0InvMassSigPCMEMCAL[i]->GetParError(l) << endl;
                     }
-                    fitPi0InvMassBGPCMEMCAL[i]                                  = new TF1("Linearpp","[0]+[1]*x",0.0,0.3);
+                    fitPi0InvMassBGPCMEMCAL[i]                                  = new TF1("Linearpp","[0]+[1]*x",0.02,0.25);
                     fitPi0InvMassBGPCMEMCAL[i]->SetParameter(0, fitPi0InvMassSigPCMEMCAL[i]->GetParameter(4));
                     fitPi0InvMassBGPCMEMCAL[i]->SetParameter(1, fitPi0InvMassSigPCMEMCAL[i]->GetParameter(5));
                     TVirtualFitter * fitterPCMEMCAL                             = TVirtualFitter::GetFitter();
@@ -332,7 +332,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                         histoPi0InvMassRemBGPCMEMCAL[i]->SetBinContent(j,0);
                         histoPi0InvMassRemBGPCMEMCAL[i]->SetBinError(j,0);
                     }
-                    for (Int_t j = histoPi0InvMassSigPCMEMCAL[i]->GetXaxis()->FindBin(0.30); j < histoPi0InvMassSigPCMEMCAL[i]->GetXaxis()->FindBin(0.70)+1; j++){
+                    for (Int_t j = histoPi0InvMassSigPCMEMCAL[i]->GetXaxis()->FindBin(0.01); j < histoPi0InvMassSigPCMEMCAL[i]->GetXaxis()->FindBin(0.30)+1; j++){
                         Double_t startBinEdge                                   = histoPi0InvMassSigPCMEMCAL[i]->GetXaxis()->GetBinLowEdge(j);
                         Double_t endBinEdge                                     = histoPi0InvMassSigPCMEMCAL[i]->GetXaxis()->GetBinUpEdge(j);
                         Double_t intLinearBack                                  = fitPi0InvMassBGPCMEMCAL[i]->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
@@ -501,7 +501,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                     for (Int_t l=0; l < 6; l++){
                         cout << fitPi0InvMassSigEMCAL[i]->GetParameter(l) << "\t +- " << fitPi0InvMassSigEMCAL[i]->GetParError(l) << endl;
                     }
-                    fitPi0InvMassBGEMCAL[i]                                  = new TF1("Linearpp","[0]+[1]*x",0.0,0.3);
+                    fitPi0InvMassBGEMCAL[i]                                  = new TF1("Linearpp","[0]+[1]*x",0.08,0.30);
                     fitPi0InvMassBGEMCAL[i]->SetParameter(0, fitPi0InvMassSigEMCAL[i]->GetParameter(4));
                     fitPi0InvMassBGEMCAL[i]->SetParameter(1, fitPi0InvMassSigEMCAL[i]->GetParameter(5));
                     TVirtualFitter * fitterEMCAL                             = TVirtualFitter::GetFitter();
@@ -513,7 +513,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                         histoPi0InvMassRemBGEMCAL[i]->SetBinContent(j,0);
                         histoPi0InvMassRemBGEMCAL[i]->SetBinError(j,0);
                     }
-                    for (Int_t j = histoPi0InvMassSigEMCAL[i]->GetXaxis()->FindBin(0.30); j < histoPi0InvMassSigEMCAL[i]->GetXaxis()->FindBin(0.70)+1; j++){
+                    for (Int_t j = histoPi0InvMassSigEMCAL[i]->GetXaxis()->FindBin(0.01); j < histoPi0InvMassSigEMCAL[i]->GetXaxis()->FindBin(0.30)+1; j++){
                         Double_t startBinEdge                                   = histoPi0InvMassSigEMCAL[i]->GetXaxis()->GetBinLowEdge(j);
                         Double_t endBinEdge                                     = histoPi0InvMassSigEMCAL[i]->GetXaxis()->GetBinUpEdge(j);
                         Double_t intLinearBack                                  = fitPi0InvMassBGEMCAL[i]->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
@@ -4513,7 +4513,7 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
     cout << textsizeLabelsInvMass << endl;
 
     TH2F * histo2DPi0InvMassDummy;
-    histo2DPi0InvMassDummy             = new TH2F("histo2DPi0InvMassDummy","histo2DPi0InvMassDummy",11000,0.05,0.255,21000,-1000,20000);
+    histo2DPi0InvMassDummy             = new TH2F("histo2DPi0InvMassDummy","histo2DPi0InvMassDummy",11000,0.02,0.255,21000,-1000,20000);
     SetStyleHistoTH2ForGraphs(histo2DPi0InvMassDummy, "#it{M}_{#gamma#gamma} (GeV/#it{c}^{2})","Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                             0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
 
@@ -4526,10 +4526,11 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
         for (Int_t i =0 ; i < 3; i++){
             if (haveAllPi0InvMassPCMEMCAL[i]){
                 canvasInvMassSamplePlot->cd();
+                histo2DPi0InvMassDummy->GetXaxis()->SetRangeUser(0.02,0.255);
                 histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBGSubPCMEMCAL[i]->GetMinimum(),1.15*histoPi0InvMassSigPlusBGPCMEMCAL[i]->GetMaximum());
                 histo2DPi0InvMassDummy->DrawCopy();
 
-                TLatex *labelInvMassPtRangePCMEMCAL = new TLatex(0.945,0.92,Form("#pi^{0}: %s", histoPi0InvMassSigPCMEMCAL[i]->GetTitle()));
+                TLatex *labelInvMassPtRangePCMEMCAL = new TLatex(0.945,0.9,Form("#pi^{0}: %s", histoPi0InvMassSigPCMEMCAL[i]->GetTitle()));
 
                 DrawGammaSetMarker(histoPi0InvMassSigPlusBGPCMEMCAL[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
                 histoPi0InvMassSigPlusBGPCMEMCAL[i]->SetLineWidth(1);
@@ -4544,17 +4545,17 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
                 fitPi0InvMassSigPCMEMCAL[i]->Draw("same");
 
                 //
-                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.92,collisionSystem8TeV.Data());
+                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem8TeV.Data());
                 SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
                 labelInvMassEnergy->SetTextFont(43);
                 labelInvMassEnergy->Draw();
 
-                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.92-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
+                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
                 SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
                 labelInvMassTrigger->SetTextFont(43);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoPCMEMC  = new TLatex(0.135,0.92-2*0.8*textsizeLabelsPP,"PCM-EMC");
+                TLatex *labelInvMassRecoPCMEMC  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"PCM-EMC");
                 SetStyleTLatex( labelInvMassRecoPCMEMC, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoPCMEMC->SetTextFont(43);
                 labelInvMassRecoPCMEMC->Draw();
@@ -4564,7 +4565,7 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
                 labelInvMassPtRangePCMEMCAL->SetTextFont(43);
                 labelInvMassPtRangePCMEMCAL->Draw();
 
-                TLegend* legendInvMassPCMEMCAL  = GetAndSetLegend2(0.67, 0.90-5*0.75*textsizeLabelsPP, 0.9, 0.9, 0.85*textSizeLabelsPixel);
+                TLegend* legendInvMassPCMEMCAL  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
                 legendInvMassPCMEMCAL->SetMargin(0.25);
                 legendInvMassPCMEMCAL->AddEntry(histoPi0InvMassSigPlusBGPCMEMCAL[i],"Raw real events","l");
                 legendInvMassPCMEMCAL->AddEntry(histoPi0InvMassBGTotPCMEMCAL[i],"Mixed event +","p");
@@ -4582,7 +4583,7 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
                 histo2DEtaInvMassDummy->GetYaxis()->SetRangeUser(histoEtaInvMassSigRemBGSubPCMEMCAL[i]->GetMinimum(),1.1*histoEtaInvMassSigPlusBGPCMEMCAL[i]->GetMaximum());
                 histo2DEtaInvMassDummy->DrawCopy();
 
-                TLatex *labelInvMassPtRangePCMEMCAL = new TLatex(0.945,0.92,Form("#eta: %s", histoEtaInvMassSigPCMEMCAL[i]->GetTitle()));
+                TLatex *labelInvMassPtRangePCMEMCAL = new TLatex(0.945,0.9,Form("#eta: %s", histoEtaInvMassSigPCMEMCAL[i]->GetTitle()));
 
                 DrawGammaSetMarker(histoEtaInvMassSigPlusBGPCMEMCAL[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
                 histoEtaInvMassSigPlusBGPCMEMCAL[i]->SetLineWidth(1);
@@ -4598,17 +4599,17 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
                 fitEtaInvMassSigPCMEMCAL[i]->Draw("same");
 
                 //
-                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.92,collisionSystem8TeV.Data());
+                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem8TeV.Data());
                 SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
                 labelInvMassEnergy->SetTextFont(43);
                 labelInvMassEnergy->Draw();
 
-                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.92-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
+                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
                 SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
                 labelInvMassTrigger->SetTextFont(43);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoPCMEMC  = new TLatex(0.135,0.92-2*0.8*textsizeLabelsPP,"PCM-EMC");
+                TLatex *labelInvMassRecoPCMEMC  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"PCM-EMC");
                 SetStyleTLatex( labelInvMassRecoPCMEMC, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoPCMEMC->SetTextFont(43);
                 labelInvMassRecoPCMEMC->Draw();
@@ -4618,7 +4619,7 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
                 labelInvMassPtRangePCMEMCAL->SetTextFont(43);
                 labelInvMassPtRangePCMEMCAL->Draw();
 
-                TLegend* legendInvMassPCMEMCAL  = GetAndSetLegend2(0.67, 0.9-5*0.75*textsizeLabelsPP, 0.9, 0.9, 0.85*textSizeLabelsPixel);
+                TLegend* legendInvMassPCMEMCAL  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
                 legendInvMassPCMEMCAL->SetMargin(0.25);
                 legendInvMassPCMEMCAL->AddEntry(histoEtaInvMassSigPlusBGPCMEMCAL[i],"Raw real events","l");
                 legendInvMassPCMEMCAL->AddEntry(histoEtaInvMassBGTotPCMEMCAL[i],"Mixed event +","p");
@@ -4634,10 +4635,13 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
 
             if (haveAllPi0InvMassEMCAL[i]){
                 canvasInvMassSamplePlot->cd();
-                histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBGSubEMCAL[i]->GetMinimum(),1.15*histoPi0InvMassSigPlusBGEMCAL[i]->GetMaximum());
+                histo2DPi0InvMassDummy->GetXaxis()->SetRangeUser(0.02,0.3);
+                if(i==1) histo2DPi0InvMassDummy->GetXaxis()->SetRangeUser(0.07,0.3);
+                else if(i==2) histo2DPi0InvMassDummy->GetXaxis()->SetRangeUser(0.08,0.3);
+                histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBGSubEMCAL[i]->GetMinimum(),1.25*histoPi0InvMassSigPlusBGEMCAL[i]->GetMaximum());
                 histo2DPi0InvMassDummy->DrawCopy();
 
-                TLatex *labelInvMassPtRangeEMCAL = new TLatex(0.945,0.92,Form("#pi^{0}: %s", histoPi0InvMassSigEMCAL[i]->GetTitle()));
+                TLatex *labelInvMassPtRangeEMCAL = new TLatex(0.945,0.9,Form("#pi^{0}: %s", histoPi0InvMassSigEMCAL[i]->GetTitle()));
 
                 DrawGammaSetMarker(histoPi0InvMassSigPlusBGEMCAL[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
                 histoPi0InvMassSigPlusBGEMCAL[i]->SetLineWidth(1);
@@ -4652,17 +4656,17 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
                 fitPi0InvMassSigEMCAL[i]->Draw("same");
 
                 //
-                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.92,collisionSystem8TeV.Data());
+                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem8TeV.Data());
                 SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
                 labelInvMassEnergy->SetTextFont(43);
                 labelInvMassEnergy->Draw();
 
-                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.92-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
+                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
                 SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
                 labelInvMassTrigger->SetTextFont(43);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoEMC  = new TLatex(0.135,0.92-2*0.8*textsizeLabelsPP,"EMC");
+                TLatex *labelInvMassRecoEMC  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"EMC");
                 SetStyleTLatex( labelInvMassRecoEMC, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoEMC->SetTextFont(43);
                 labelInvMassRecoEMC->Draw();
@@ -4672,7 +4676,7 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
                 labelInvMassPtRangeEMCAL->SetTextFont(43);
                 labelInvMassPtRangeEMCAL->Draw();
 
-                TLegend* legendInvMassEMCAL  = GetAndSetLegend2(0.67, 0.9-5*0.75*textsizeLabelsPP, 0.9, 0.9, 0.85*textSizeLabelsPixel);
+                TLegend* legendInvMassEMCAL  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
                 legendInvMassEMCAL->SetMargin(0.25);
                 legendInvMassEMCAL->AddEntry(histoPi0InvMassSigPlusBGEMCAL[i],"Raw real events","l");
                 legendInvMassEMCAL->AddEntry(histoPi0InvMassBGTotEMCAL[i],"Mixed event +","p");
@@ -4687,10 +4691,10 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
 
             if (haveAllEtaInvMassEMCAL[i]){
                 canvasInvMassSamplePlot->cd();
-                histo2DEtaInvMassDummy->GetYaxis()->SetRangeUser(histoEtaInvMassSigRemBGSubEMCAL[i]->GetMinimum(),1.1*histoEtaInvMassSigPlusBGEMCAL[i]->GetMaximum());
+                histo2DEtaInvMassDummy->GetYaxis()->SetRangeUser(histoEtaInvMassSigRemBGSubEMCAL[i]->GetMinimum(),1.15*histoEtaInvMassSigPlusBGEMCAL[i]->GetMaximum());
                 histo2DEtaInvMassDummy->DrawCopy();
 
-                TLatex *labelInvMassPtRangeEMCAL = new TLatex(0.945,0.92,Form("#eta: %s", histoEtaInvMassSigEMCAL[i]->GetTitle()));
+                TLatex *labelInvMassPtRangeEMCAL = new TLatex(0.945,0.9,Form("#eta: %s", histoEtaInvMassSigEMCAL[i]->GetTitle()));
 
                 DrawGammaSetMarker(histoEtaInvMassSigPlusBGEMCAL[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
                 histoEtaInvMassSigPlusBGEMCAL[i]->SetLineWidth(1);
@@ -4704,17 +4708,17 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
                 fitEtaInvMassSigEMCAL[i]->SetLineColor(fitColorInvMassSG);
                 fitEtaInvMassSigEMCAL[i]->Draw("same");
 
-                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.92,collisionSystem8TeV.Data());
+                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem8TeV.Data());
                 SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
                 labelInvMassEnergy->SetTextFont(43);
                 labelInvMassEnergy->Draw();
 
-                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.92-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
+                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
                 SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
                 labelInvMassTrigger->SetTextFont(43);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoEMC  = new TLatex(0.135,0.92-2*0.8*textsizeLabelsPP,"EMC");
+                TLatex *labelInvMassRecoEMC  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"EMC");
                 SetStyleTLatex( labelInvMassRecoEMC, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoEMC->SetTextFont(43);
                 labelInvMassRecoEMC->Draw();
@@ -4724,7 +4728,7 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
                 labelInvMassPtRangeEMCAL->SetTextFont(43);
                 labelInvMassPtRangeEMCAL->Draw();
 
-                TLegend* legendInvMassEMCAL  = GetAndSetLegend2(0.67, 0.9-5*0.75*textsizeLabelsPP, 0.9, 0.9, 0.85*textSizeLabelsPixel);
+                TLegend* legendInvMassEMCAL  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
                 legendInvMassEMCAL->SetMargin(0.25);
                 legendInvMassEMCAL->AddEntry(histoEtaInvMassSigPlusBGEMCAL[i],"Raw real events","l");
                 legendInvMassEMCAL->AddEntry(histoEtaInvMassBGTotEMCAL[i],"Mixed event +","p");
@@ -4754,7 +4758,7 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
       histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(0.9*histoPHOSSignalPi0->GetMinimum(),0.9*histoPHOSSignalPi0->GetMaximum());
       histo2DPi0InvMassDummy->DrawCopy();
 
-      TLatex *labelInvMassPtRangePHOSl = new TLatex(0.945,0.92,"#pi^{0}: 1.40 GeV/c < p_{T} < 1.60 GeV/c");
+      TLatex *labelInvMassPtRangePHOSl = new TLatex(0.945,0.9,"#pi^{0}: 1.40 GeV/c < p_{T} < 1.60 GeV/c");
 
       DrawGammaSetMarker(histoPHOSSignalPlusBGPi0, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
       histoPHOSSignalPlusBGPi0->SetLineWidth(1);
@@ -4769,17 +4773,17 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
       fitPHOSlow->Draw("same");
 
       //
-      TLatex *labelInvMassEnergy      = new TLatex(0.135,0.92,collisionSystem8TeV.Data());
+      TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem8TeV.Data());
       SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
       labelInvMassEnergy->SetTextFont(43);
       labelInvMassEnergy->Draw();
 
-      TLatex *labelInvMassTriggerPHOSl      = new TLatex(0.135,0.92-0.8*textsizeLabelsPP,"INT7 triggered");
+      TLatex *labelInvMassTriggerPHOSl      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,"INT7 triggered");
       SetStyleTLatex( labelInvMassTriggerPHOSl, 0.85*textSizeLabelsPixel,4);
       labelInvMassTriggerPHOSl->SetTextFont(43);
       labelInvMassTriggerPHOSl->Draw();
 
-      TLatex *labelInvMassRecoPHOS  = new TLatex(0.135,0.92-2*0.8*textsizeLabelsPP,"PHOS");
+      TLatex *labelInvMassRecoPHOS  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"PHOS");
       SetStyleTLatex( labelInvMassRecoPHOS, 0.85*textSizeLabelsPixel,4);
       labelInvMassRecoPHOS->SetTextFont(43);
       labelInvMassRecoPHOS->Draw();
@@ -4789,7 +4793,7 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
       labelInvMassPtRangePHOSl->SetTextFont(43);
       labelInvMassPtRangePHOSl->Draw();
 
-      TLegend* legendInvMassPHOSl  = GetAndSetLegend2(0.67, 0.9-5*0.75*textsizeLabelsPP, 0.9, 0.9, 0.85*textSizeLabelsPixel);
+      TLegend* legendInvMassPHOSl  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
       legendInvMassPHOSl->SetMargin(0.25);
       legendInvMassPHOSl->AddEntry(histoPHOSSignalPlusBGPi0,"Raw real events","l");
       legendInvMassPHOSl->AddEntry(histoPHOSTotalBGPi0,"Mixed event +","p");
@@ -4814,7 +4818,7 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
       histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(0.9*histoPHOSHighSignalPi0->GetMinimum(),1.6*histoPHOSHighSignalPi0->GetMaximum());
       histo2DPi0InvMassDummy->DrawCopy();
 
-      TLatex *labelInvMassPtRangePHOSh = new TLatex(0.945,0.92,"#pi^{0}: 20.00 GeV/c < p_{T} < 22.00 GeV/c");
+      TLatex *labelInvMassPtRangePHOSh = new TLatex(0.945,0.9,"#pi^{0}: 20.00 GeV/c < p_{T} < 22.00 GeV/c");
 
       DrawGammaSetMarker(histoPHOSHighSignalPlusBGPi0, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
       histoPHOSHighSignalPlusBGPi0->SetLineWidth(1);
@@ -4831,7 +4835,7 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
       //
       labelInvMassEnergy->Draw();
 
-      TLatex *labelInvMassTriggerPHOSh      = new TLatex(0.135,0.92-0.8*textsizeLabelsPP,"PHOS triggered");
+      TLatex *labelInvMassTriggerPHOSh      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,"PHOS triggered");
       SetStyleTLatex( labelInvMassTriggerPHOSh, 0.85*textSizeLabelsPixel,4);
       labelInvMassTriggerPHOSh->SetTextFont(43);
       labelInvMassTriggerPHOSh->Draw();
@@ -4843,7 +4847,7 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
       labelInvMassPtRangePHOSh->SetTextFont(43);
       labelInvMassPtRangePHOSh->Draw();
 
-      TLegend* legendInvMassPHOSh  = GetAndSetLegend2(0.67, 0.9-5*0.75*textsizeLabelsPP, 0.9, 0.9, 0.85*textSizeLabelsPixel);
+      TLegend* legendInvMassPHOSh  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
       legendInvMassPHOSh->SetMargin(0.25);
       legendInvMassPHOSh->AddEntry(histoPHOSHighSignalPlusBGPi0,"Raw real events","l");
       legendInvMassPHOSh->AddEntry(histoPHOSHighTotalBGPi0,"Mixed event +","p");
