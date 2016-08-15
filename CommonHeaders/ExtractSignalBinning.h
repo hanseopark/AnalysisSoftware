@@ -1050,11 +1050,11 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                         break;
                     case 52:
                     case 53:
-                        return 23;      // EMC triggers
+                        return 31;      // EMC triggers
                         break;
                     case 81:
                     case 82:
-                        return 30;      // EGA triggers
+                        return 40;      // EGA triggers
                         break;
                     default:
                         return 3;
@@ -1067,15 +1067,15 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                     case 1:
                     case 10:
                     case 11:
-                        return 13;      // INT triggers
+                        return 8;      // INT triggers
                         break;
                     case 52:
                     case 53:
-                        return 35;      // EMC triggers
+                        return 31;      // EMC triggers
                         break;
                     case 81:
                     case 82:
-                        return 34;      // EGA triggers
+                        return 35;      // EGA triggers
                         break;
                     default:
                         return 13;
@@ -1220,11 +1220,11 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                     case 1:
                     case 10:
                     case 11:
-                        return 6;       // INT triggers
+                        return 7;       // INT triggers
                         break;
                     case 52:
                     case 53:
-                        return 19;      // EMC triggers
+                        return 14;      // EMC triggers
                         break;
                     case 81:
                     case 82:
@@ -1241,17 +1241,16 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                     case 1:
                     case 10:
                     case 11:
-                        return 9;      // INT triggers
+                        return 7;      // INT triggers
                         break;
                     case 52:
                     case 53:
-                        if(meson.CompareTo("Pi0EtaBinning") == 0) return 19;
-                        return 20;      // EMC triggers
+                        return 14;      // EMC triggers
                         break;
                     case 81:
                     case 82:
                         if(meson.CompareTo("Pi0EtaBinning") == 0) return 18;
-                        return 21;      // EGA triggers
+                        return 20;      // EGA triggers
                         break;
                     default:
                         return 9;
