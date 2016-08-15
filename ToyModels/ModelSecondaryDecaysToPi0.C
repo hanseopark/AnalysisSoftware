@@ -250,10 +250,6 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
         masses[1]                   = TDatabasePDG::Instance()->GetParticle(pdgCodesDaughters[1])->Mass();;
         branchRatio                 = 0.3580;
     }
-    // create output directory
-    TString fOutputDir                  = Form("%s/%s/%s/",fCollisionSystenWrite.Data(),outputlabel.Data(), suffix.Data());
-    gSystem->Exec("mkdir -p "+fOutputDir);
-
     // define output file name
     TString nameOutputRootFile          = Form("ToyMCOutput_%s_%s_%dMioEvt_%dMeV_%dMeV.root",outputlabel.Data(), fCollisionSystenWrite.Data(),(Int_t)(nEvts/1e6), (Int_t)(minPt*1000), (Int_t)(maxPt*1000));
     cout << "searching for: " << nameOutputRootFile.Data() << endl;
@@ -262,13 +258,25 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
         cout << "INFO: the file for this energy and rapidity range: " << nameOutputRootFile.Data() << "\t has been generated already" << endl;
         cout << "If you want to rerun the generation, please delete the file" << endl;
         cout << "exiting here!" << endl;
+        
+        cout << "adding output file name to ToyMCOutputs.txt" << endl;
+        gSystem->Exec("echo '"+nameOutputRootFile+"' >> ToyMCOutputs.txt");
         return;
     }    
     delete exisitingFile; 
-    
+
+    // create output directory
+    TString fOutputDir                  = Form("%s/%s_%dMioEvt_%dMeV_%dMeV/",fCollisionSystenWrite.Data(), outputlabel.Data(), (Int_t)(nEvts/1e6), (Int_t)(minPt*1000), (Int_t)(maxPt*1000));
+    gSystem->Exec("mkdir -p "+fOutputDir);
+
+
+    //*************************************************************************************************
+    //************************* Global variables for particle spectra from input **********************
+    //*************************************************************************************************
     TFile* inputFile            = new TFile(filename.Data());
     TH1D* partSpectrum          = NULL; 
     TH1D* partSpectrumAlter     = NULL; 
+    TH1D* chHadDNdEta           = NULL;
     TF1* ptDistribution         = NULL; 
     TSpline3* partParam         = NULL; 
     TH1D* ratioPartSpecToFit    = NULL; 
@@ -279,19 +287,25 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
     TSpline3* partParamExt                  = NULL; 
     TGraphErrors* ratioPartSpecExtToSpline  = NULL; 
 
-    TH1F* partSpectrumFromParam = new TH1F("partSpectrumFromParam","partSpectrumFromParam",7000,0,70); 
-    
+    TH1F* partSpectrumFromParam     = new TH1F("partSpectrumFromParam","partSpectrumFromParam",7000,0,70); 
+    TH1F* partSpectrumFromParamRest = new TH1F("partSpectrumFromParamRest","partSpectrumFromParamRest",7000,0,70); 
     // Data inputs
     TCanvas *canvasFitQA = new TCanvas("canvasFitQA","canvasFitQA",1000,800);
     DrawGammaCanvasSettings( canvasFitQA, 0.08, 0.015, 0.02, 0.08);
     canvasFitQA->cd();
     canvasFitQA->SetLogy(1);
 
-    // K0s
+    // K0s & K0L
     if (particle == 0 || particle == 1 ){
         if (energy.CompareTo("2.76TeV") == 0){
             partSpectrum            = (TH1D*)inputFile->Get("histoChargedKaonSpecPubStat2760GeV");
             partSpectrumAlter       = (TH1D*)inputFile->Get("histoNeutralKaonSpecStat2760GeV");
+            chHadDNdEta             = (TH1D*)inputFile->Get("histoChargedHadrondNdEtaALICEPP2760GeV");
+            if (chHadDNdEta){
+                cout << "found ch. had dist" << endl;
+                chHadDNdEta->Sumw2();
+                chHadDNdEta->Scale(1./chHadDNdEta->Integral());
+            }    
             Double_t paramGraph[3]  = {partSpectrum->GetBinContent(1), 6., 0.5};
             ptDistribution          = FitObject("l","ptDistribution","K",partSpectrum,5.,20.,NULL,"QNRME");
             
@@ -302,9 +316,9 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
             Int_t nBinsX            = 0;
             Int_t nBinsXOrg         = 0;
             for (Int_t i = 1; (i< partSpectrum->GetNbinsX()+1 && partSpectrum->GetBinCenter(i) < 12.) ; i++){
-                cout << partSpectrum->GetBinCenter(i) << "\t" << partSpectrum->GetBinContent(i) << endl ;
+//                 cout << partSpectrum->GetBinCenter(i) << "\t" << partSpectrum->GetBinContent(i) << endl ;
                 if (partSpectrum->GetBinCenter(i) > 0.2){
-                    cout << "bin set at position: " << nBinsX << endl;
+//                     cout << "bin set at position: " << nBinsX << endl;
                     xValues[nBinsX] = partSpectrum->GetBinCenter(i);
                     xErr[nBinsX]    = partSpectrum->GetBinWidth(i)/2;
                     yValues[nBinsX] = partSpectrum->GetBinContent(i);
@@ -322,13 +336,17 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
             }
             cout << nBinsX << endl;
             partSpectrumExt    = new TGraphErrors(nBinsX, xValues, yValues, xErr, yErr);
-            partSpectrumExt->Print();
+//             partSpectrumExt->Print();
             
             partParam               = new TSpline3(partSpectrum);
             partParamExt            = new TSpline3("extendPartSpline",xValues,yValues,nBinsX);
             for (Int_t i = 1; i<partSpectrumFromParam->GetNbinsX()+1; i++ ){
                 partSpectrumFromParam->SetBinContent(i,partParamExt->Eval(partSpectrumFromParam->GetBinCenter(i)));
                 partSpectrumFromParam->SetBinError(i,0);
+                if (partSpectrumFromParamRest->GetBinCenter(i) > minPt && partSpectrumFromParamRest->GetBinCenter(i) < maxPt){
+                    partSpectrumFromParamRest->SetBinContent(i,partParamExt->Eval(partSpectrumFromParamRest->GetBinCenter(i)));
+                    partSpectrumFromParamRest->SetBinError(i,0);
+                }    
 //                 if (i%100 == 0){
 //                     cout << partSpectrumFromParam->GetBinCenter(i) << "\t" << partSpectrumFromParam->GetBinContent(i) << endl;
 //                 }    
@@ -375,8 +393,15 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
     } else if (particle == 2){
         if (energy.CompareTo("2.76TeV") == 0){
             partSpectrum            = (TH1D*)inputFile->Get("histoLambda1115SpecStat2760GeV");
+            chHadDNdEta             = (TH1D*)inputFile->Get("histoChargedHadrondNdEtaALICEPP2760GeV");
+            if (chHadDNdEta){
+                chHadDNdEta->Sumw2();
+                chHadDNdEta->Scale(1./chHadDNdEta->Integral());
+            }    
+
             Double_t paramGraph[3]  = {partSpectrum->GetBinContent(1), 6., 0.5};
             ptDistribution          = FitObject("l","ptDistribution","Lambda",partSpectrum,3.,15.,NULL,"QNRME");
+            TF1* ptDistributionlow  = FitObject("l","ptDistribution","Lambda",partSpectrum,0.5,5,NULL,"QNRME");
             
             Double_t xValues[150];
             Double_t xErr[150];
@@ -410,13 +435,24 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
             partParam               = new TSpline3(partSpectrum);
             partParamExt            = new TSpline3("extendPartSpline",xValues,yValues,nBinsX);
             for (Int_t i = 1; i<partSpectrumFromParam->GetNbinsX()+1; i++ ){
-                partSpectrumFromParam->SetBinContent(i,partParamExt->Eval(partSpectrumFromParam->GetBinCenter(i)));
-                partSpectrumFromParam->SetBinError(i,0);
+                if (partSpectrumFromParam->GetBinCenter(i) < 0.5){
+                    partSpectrumFromParam->SetBinContent(i,ptDistributionlow->Eval(partSpectrumFromParam->GetBinCenter(i)));
+                    partSpectrumFromParam->SetBinError(i,0); 
+                    if (partSpectrumFromParamRest->GetBinCenter(i) > minPt && partSpectrumFromParamRest->GetBinCenter(i) < maxPt){
+                        partSpectrumFromParamRest->SetBinContent(i,ptDistributionlow->Eval(partSpectrumFromParamRest->GetBinCenter(i)));
+                        partSpectrumFromParamRest->SetBinError(i,0);
+                    }    
+                } else {    
+                    partSpectrumFromParam->SetBinContent(i,partParamExt->Eval(partSpectrumFromParam->GetBinCenter(i)));
+                    partSpectrumFromParam->SetBinError(i,0);
+                    if (partSpectrumFromParamRest->GetBinCenter(i) > minPt && partSpectrumFromParamRest->GetBinCenter(i) < maxPt){
+                        partSpectrumFromParamRest->SetBinContent(i,partParamExt->Eval(partSpectrumFromParamRest->GetBinCenter(i)));
+                        partSpectrumFromParamRest->SetBinError(i,0);
+                    }
+                }    
             }
             
-            
-    
-            TH2F* dummyDrawingHist  = new TH2F("dummyDrawingHist","dummyDrawingHist",5000,0,70,10000, 1e-14, 1); 
+            TH2F* dummyDrawingHist  = new TH2F("dummyDrawingHist","dummyDrawingHist",7000,0,70,10000, 1e-14, 1); 
             SetStyleHistoTH2ForGraphs(  dummyDrawingHist, "#it{p}_{T} (GeV/#it{c})", "#it{N}_{X}", 0.028, 0.04, 
                                         0.028, 0.04, 0.9, 0.95, 510, 505);
             dummyDrawingHist->Draw();
@@ -437,6 +473,10 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
             ptDistribution->SetLineColor(kRed+2);
             ptDistribution->Draw("same");
             
+            ptDistributionlow->SetRange(0,50);
+            ptDistributionlow->SetLineColor(kGreen+2);
+            ptDistributionlow->Draw("same");
+            
             ratioPartSpecToFit          = CalculateHistoRatioToFit (partSpectrum, ptDistribution); 
             ratioPartSpecToSpline       = CalculateHistoRatioToSpline (partSpectrum, partParamExt); 
             ratioPartSpecExtToSpline    = CalculateGraphErrRatioToSpline (partSpectrumExt, partParamExt);
@@ -453,7 +493,7 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
         
     
     canvasFitQA->SaveAs(Form("%s%s_PtDistribution_Input.%s", fOutputDir.Data(), outputlabel.Data(), suffix.Data()));    
-//     return;    
+
     
     // plot ratio of input part to fit
     if (ratioPartSpecToFit){
@@ -481,7 +521,22 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
         canvasFitQA->SaveAs(Form("%s%s_RatioToFitDistribution_Input.%s", fOutputDir.Data(), outputlabel.Data(), suffix.Data()));
     }
     
-    
+    // find the scale factor due to the restriction in the pt range
+    Double_t scaleFactor    = partSpectrumFromParam->Integral(partSpectrumFromParam->FindBin(minPt),partSpectrumFromParam->FindBin(maxPt))/partSpectrumFromParam->Integral();
+    cout << scaleFactor << "\t" << partSpectrumFromParam->Integral(partSpectrumFromParam->FindBin(minPt),partSpectrumFromParam->FindBin(maxPt)) << "\t" << partSpectrumFromParam->Integral() << endl;
+    if (scaleFactor < 0){
+        Double_t integralFullHist   = 0;
+        for (Int_t iPt = 1; iPt< partSpectrumFromParam->GetNbinsX()+1; iPt++ ){
+            if (partSpectrumFromParam->GetBinContent(iPt) > 0){
+                integralFullHist    = integralFullHist+partSpectrumFromParam->GetBinContent(iPt);
+            } else {
+                cout << "bin content at " << partSpectrumFromParam->GetBinCenter(iPt) << " smaller 0." << endl;
+            }    
+        }    
+        scaleFactor    = partSpectrumFromParam->Integral(partSpectrumFromParam->FindBin(minPt),partSpectrumFromParam->FindBin(maxPt))/integralFullHist;
+        cout << "recalc scale fac, based on int by hand: "<<  scaleFactor << endl;
+    }
+    // put the input histo to the correct range from which it will be drawn
     ptDistribution->SetRange(minPt,maxPt);
     
     //*************************************************************************************************
@@ -492,14 +547,15 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
     TRandom3 randy3;
     TGenPhaseSpace event;
     
+    //*************************************************************************************************
+    //********************** Create histograms for output *********************************************
+    //*************************************************************************************************
     TH1D* h1_NEvt                       = new TH1D("h1_NEvt","", 1, 0, 1);
     h1_NEvt->SetBinContent(1,nEvts);
-    
     TH2D *h2_ptMothervsDaughter         = new TH2D("h2_ptMothervsDaughter","", 500,0,50,700,0,70);  
     h2_ptMothervsDaughter->Sumw2();
     TH2D *h2_asym_geom                  = new TH2D("h2_asym_geom","", 200,-1,1, 700,0,70);
     h2_asym_geom->Sumw2();
-    
     TH1D *h1_ptdistribution             = new TH1D("h1_ptdistribution","", 700,0,70);  
     h1_ptdistribution->Sumw2();
     TH1D *h1_phidistribution            = new TH1D("h1_phidistribution","", 100,0,2*TMath::Pi());  
@@ -532,13 +588,12 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
     }
     TH2D *h2_ptyPiZeroDaughters         = new TH2D("h2_ptyPiZeroDaughters","", 700,0,70,2*fYMaxMother*100,-fYMaxMother,fYMaxMother);  
     h2_ptyPiZeroDaughters->Sumw2();
-    
     TH2D* h2_DalitzPlot                 = NULL;
     if (nDaughters == 3){
         h2_DalitzPlot                   = new TH2D("h2_DalitzPlot", "", (maxDalitz[0]-minDalitz[0])*1000, minDalitz[0],maxDalitz[0], (maxDalitz[1]-minDalitz[1])*1000, minDalitz[1], maxDalitz[1] ); 
     }    
-    //*************************************************************************************************
     
+    //*************************************************************************************************
     //**************************** Event loop *********************************************************
     //*************************************************************************************************
     for(Int_t n=0; n<nEvts; n++){ // this is the important loop (nEvents)
@@ -546,65 +601,78 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
         if (n%10000000 == 0) 
             cout << "generated " << (Double_t)n/1e6 << " Mio events" << endl;
         
-        Double_t ptcurrent      = ptDistribution->GetRandom();
+        // draw pt to be generated for mother from constructed spectrum restricted to pt range
+        Double_t ptcurrent      = partSpectrumFromParamRest->GetRandom();
         
-//         cout << "mother pt: " << ptcurrent << endl;
-
+        // asume phi is flat
         Double_t phiCurrent     = randy1.Uniform(2*TMath::Pi());
+        
+        // asume theta is flat
         Double_t thetaCurrent   = randy2.Uniform(2*TMath::Pi());
         Double_t etaCurrent     = -1000;
-        if (TMath::Cos(thetaCurrent)*TMath::Cos(thetaCurrent) < 1) 
-            etaCurrent = -0.5* TMath::Log( (1.0-TMath::Cos(thetaCurrent))/(1.0+TMath::Cos(thetaCurrent)) );
-        else 
-            etaCurrent = -1000; 
-//         cout << etaCurrent << endl;
-        // assuming eta as a gaussian
-//         Double_t etaCurrent     = randy2.Gaus(0,2);        
-//         while (abs(etaCurrent) > 1){
-//             etaCurrent          = randy2.Gaus(0,2);
-//         }    
+        // generate eta according to charged hadron distribution 
+        if (chHadDNdEta){
+            etaCurrent          = chHadDNdEta->GetRandom();
+        // otherwise with the assumption theta is flat
+        } else {    
+            if (TMath::Cos(thetaCurrent)*TMath::Cos(thetaCurrent) < 1) 
+                etaCurrent = -0.5* TMath::Log( (1.0-TMath::Cos(thetaCurrent))/(1.0+TMath::Cos(thetaCurrent)) );
+            else 
+                etaCurrent = -1000; 
+        }    
         
+        // create current particle
         TLorentzVector particle(0.0, 0.0, 0, massParticle); 
         particle.SetPtEtaPhiM(ptcurrent, etaCurrent, phiCurrent, massParticle);
-        event.SetDecay(particle, nDaughters, masses); // ie. "set the pion to decay to 2 daughters with masses[0], masses[1]
+        // set decay properties
+        event.SetDecay(particle, nDaughters, masses); 
      
-        h1_ptdistribution->Fill(ptcurrent, 1./nEvts);
-        h1_phidistribution->Fill(phiCurrent, 1./nEvts);
-        h1_etadistribution->Fill(etaCurrent, 1./nEvts);
-        h1_ydistribution->Fill(particle.Rapidity(), 1./nEvts);
+        // filling of input distributions
+        h1_ptdistribution->Fill(ptcurrent, 1./nEvts*scaleFactor);
+        h1_phidistribution->Fill(phiCurrent, 1./nEvts*scaleFactor);
+        h1_etadistribution->Fill(etaCurrent, 1./nEvts*scaleFactor);
+        h1_ydistribution->Fill(particle.Rapidity(), 1./nEvts*scaleFactor);
     
-//         cout << "mother pt vector: " << particle.Pt() << endl;   
+        // let it decay
         Double_t weight         = event.Generate();
+        
+        // look at daughter quantites
         Double_t ptDaughter[nDaughters];  
         TLorentzVector* pDaughter[nDaughters];
         for (Int_t i = 0; i < nDaughters; i++){
             pDaughter[i]                = event.GetDecay(i); // these are my daughters !! 
             ptDaughter[i]               = pDaughter[i]->Pt(); 
-            h1_ptDaughter[i]->Fill(ptDaughter[i],1./nEvts);
+            // look at the different daughters separately
+            h1_ptDaughter[i]->Fill(ptDaughter[i],1./nEvts*scaleFactor);
+            // plot everything only for the pi0s in the decay chain
             if (pdgCodesDaughters[i] == 111){
-                h1_ptPiZeroDaughters->Fill(ptDaughter[i], 1./nEvts);            
-                h2_ptyPiZeroDaughters->Fill(ptDaughter[i],pDaughter[i]->Rapidity(), 1./nEvts);
-                h1_yPiZeroDaughters->Fill(pDaughter[i]->Rapidity(), 1./nEvts);
+                h1_ptPiZeroDaughters->Fill(ptDaughter[i], 1./nEvts*scaleFactor);            
+                h2_ptyPiZeroDaughters->Fill(ptDaughter[i],pDaughter[i]->Rapidity(), 1./nEvts*scaleFactor);
+                h1_yPiZeroDaughters->Fill(pDaughter[i]->Rapidity(), 1./nEvts*scaleFactor);
             }
+            // look at relative quantites to mother
             if (i == 0)
-                h2_ptMothervsDaughter->Fill(ptcurrent,ptDaughter[i],1./nEvts);
+                h2_ptMothervsDaughter->Fill(ptcurrent,ptDaughter[i],1./nEvts*scaleFactor);
+            // make cuts for different y ranges for later analysis
             for (Int_t y = 0; y < 10; y++){
                 if (TMath::Abs(pDaughter[i]->Rapidity()) < yRanges[y]){
-                    h1_ptDaughterInRap[y][i]->Fill(ptDaughter[i], 1./nEvts);
+                    h1_ptDaughterInRap[y][i]->Fill(ptDaughter[i], 1./nEvts*scaleFactor);
                     if (pdgCodesDaughters[i] == 111)
-                        h1_ptPiZeroInRapDaughters[y]->Fill(ptDaughter[i], 1./nEvts);
+                        h1_ptPiZeroInRapDaughters[y]->Fill(ptDaughter[i], 1./nEvts*scaleFactor);
                 }
             }    
         }
+        // look at asymmetry for decays with more than 1 daughter
         if (nDaughters > 1){
-            h2_asym_geom->Fill((ptDaughter[0]-ptDaughter[1])/(ptDaughter[0]+ptDaughter[1]), ptcurrent, 1./nEvts);
+            h2_asym_geom->Fill((ptDaughter[0]-ptDaughter[1])/(ptDaughter[0]+ptDaughter[1]), ptcurrent, 1./nEvts*scaleFactor);
         }
+        // look at Dalitz plot for decays with 3 daug
         if (nDaughters == 3){
             TLorentzVector comb1(0.0, 0.0, 0, 0); 
             comb1.SetPxPyPzE(pDaughter[0]->Px()+pDaughter[1]->Px(),pDaughter[0]->Py()+pDaughter[1]->Py(),pDaughter[0]->Pz()+pDaughter[1]->Pz(),pDaughter[0]->E()+pDaughter[1]->E());
             TLorentzVector comb2(0.0, 0.0, 0, 0); 
             comb2.SetPxPyPzE(pDaughter[0]->Px()+pDaughter[2]->Px(),pDaughter[0]->Py()+pDaughter[2]->Py(),pDaughter[0]->Pz()+pDaughter[2]->Pz(),pDaughter[0]->E()+pDaughter[2]->E());
-            h2_DalitzPlot->Fill(comb1.M(),comb2.M(), 1./nEvts);
+            h2_DalitzPlot->Fill(comb1.M(),comb2.M(), 1./nEvts*scaleFactor);
         }    
     }
 
@@ -627,6 +695,59 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
         h2_asym_geom->Scale(branchRatio);
         h2_ptMothervsDaughter->Scale(branchRatio);
         h2_asym_geom->Scale(branchRatio);
+    
+    }
+
+    //*************************************************************************************************
+    //******************** Determine whether additional offset was accidentally created ***************
+    //*************************************************************************************************    
+    TH1D* h1_ptdistributionPerEv        = (TH1D*)h1_ptdistribution->Clone("h1_ptdistributionPerEv");
+    TF1* ptDistributionRefit            = NULL;
+    if (particle == 0 || particle == 1 ){
+        if (energy.CompareTo("2.76TeV") == 0){
+            ptDistributionRefit         = FitObject("l","ptDistribution","K",h1_ptdistributionPerEv,5.,20.,NULL,"QNRME");
+        } else { 
+          cout << "ranges for second fit not defined" << endl;  
+        }     
+    } else if (particle == 2 ){
+        if (energy.CompareTo("2.76TeV") == 0){
+            ptDistributionRefit         = FitObject("l","ptDistribution","Lambda",h1_ptdistributionPerEv,5.,20.,NULL,"QNRME");
+        } else { 
+          cout << "ranges for second fit not defined" << endl;  
+        }     
+    }
+    
+    Double_t minPtForScaling            = 5;
+    Double_t maxPtForScaling            = 10;
+    Double_t additionalScalingFac       = 1.;
+    if (ptDistributionRefit){
+        additionalScalingFac            = ptDistribution->Integral(minPtForScaling,maxPtForScaling)/ptDistributionRefit->Integral(minPtForScaling,maxPtForScaling);
+        if (additionalScalingFac != 1){
+            cout << "somehow an offset has been generated of: " << additionalScalingFac << endl;
+        }    
+    }
+    // scale if necessary all quantites
+    if (additionalScalingFac != 1){
+        cout << "rescaling the distribution according to offset" << endl;
+        h1_ptdistribution->Scale(additionalScalingFac);
+        h1_ptdistributionPerEv->Scale(additionalScalingFac);
+        h1_phidistribution->Scale(additionalScalingFac);
+        h1_etadistribution->Scale(additionalScalingFac);
+        h1_ydistribution->Scale();
+        for (Int_t i = 0; i < nDaughters; i++){
+            h1_ptDaughter[i]->Scale(additionalScalingFac);
+            for (Int_t y = 0; y < 10; y++){
+                h1_ptDaughterInRap[y][i]->Scale(additionalScalingFac);
+            }    
+        }     
+        h1_ptPiZeroDaughters->Scale(additionalScalingFac);
+        for (Int_t y = 0; y < 10; y++){
+            h1_ptPiZeroInRapDaughters[y]->Scale(additionalScalingFac);
+        }
+        h2_ptMothervsDaughter->Scale(additionalScalingFac);
+        h2_ptyPiZeroDaughters->Scale(additionalScalingFac);
+        h1_yPiZeroDaughters->Scale(additionalScalingFac);
+        if (h2_DalitzPlot) h2_DalitzPlot->Scale(additionalScalingFac);
     
     }
     
@@ -665,9 +786,6 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
     canvasQA->SaveAs(Form("%s%s_PtDistribution_InputGenerated.%s", fOutputDir.Data(), outputlabel.Data(), suffix.Data()));
 
     
-    TH1D* h1_ptdistributionPerEv        = (TH1D*)h1_ptdistribution->Clone("h1_ptdistributionPerEv");
-//     h1_ptdistributionPerEv->Scale(1./(Double_t)nEvts*1/(2*TMath::Pi())* 1/(2*fYMaxMother) *1/h1_ptdistributionPerEv->GetBinWidth(1));
-    
     canvasQA->cd();
     canvasQA->SetLogy(1);
     TLegend* legendSpectra2 = GetAndSetLegend2(0.7, 0.80, 0.95, 0.93, 32,1); 
@@ -705,13 +823,22 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
     //******************************** Plot eta distribution   *****************************************
     //*************************************************************************************************
 
-    DrawAutoGammaMesonHistos(   h1_etadistribution, 
+    TH1D* h1_etadistributionPlot    = (TH1D*)h1_etadistribution->Clone("Plot");
+    if (chHadDNdEta){
+        cout << "renormalizing" << endl;
+        h1_etadistributionPlot->Scale(1/h1_etadistributionPlot->Integral());
+    }
+    DrawAutoGammaMesonHistos(   h1_etadistributionPlot, 
                                 "", "#eta", Form("#it{N}_{%s}",plotLabel.Data()), // (%)", 
-                                kTRUE, 10, 1e-13, kFALSE,
+                                kTRUE, 1000, 1e-3, kFALSE,
                                 kFALSE, 0., 0.7, 
                                 kFALSE, 0., 10.);
-    h1_etadistribution->GetYaxis()->SetTitleOffset(0.85);        
-    h1_etadistribution->DrawClone();
+    h1_etadistributionPlot->GetYaxis()->SetTitleOffset(0.85);        
+    h1_etadistributionPlot->DrawClone();
+    if (chHadDNdEta){
+        DrawGammaSetMarker(chHadDNdEta, 24, 1.5, kRed+2, kRed+2);
+        chHadDNdEta->Draw("same,pe");
+    }    
     canvasQA->SaveAs(Form("%s%s_EtaDistribution_Input.%s", fOutputDir.Data(), outputlabel.Data(),suffix.Data()));
 
     
@@ -807,6 +934,9 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
         if (h2_DalitzPlot) h2_DalitzPlot->Write();
     fileOutput->Write();
     fileOutput->Close();
+
+    cout << "adding output file name to ToyMCOutputs.txt" << endl;
+    gSystem->Exec("echo '"+nameOutputRootFile+"' >> ToyMCOutputs.txt");
 
     
 }
