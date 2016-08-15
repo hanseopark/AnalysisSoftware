@@ -349,17 +349,27 @@ fi
 # LHC15a3aplusMC="2151"; 
 
 
-TRAINDIR=Legotrain-mCalo-20160727_SecEffiAndTMStudiesRerun
-LHC11aData="1564"; 
-LHC15g1aMC="2353";
-LHC12f1aMC="2350"; 
-LHC12f1bMC="2351"; 
+# TRAINDIR=Legotrain-mCalo-20160727_SecEffiAndTMStudiesRerun
+# LHC11aData="1564"; 
+# LHC15g1aMC="2353";
+# LHC12f1aMC="2350"; 
+# LHC12f1bMC="2351"; 
+# 
+# LHC13gData="1568"; 
+# LHC15a3aMC="2348"; 
+# LHC15a3aplusMC="2349"; 
+# LHC15g2MC="2352";
 
-LHC13gData="1568"; 
-LHC15a3aMC="2348"; 
-LHC15a3aplusMC="2349"; 
-LHC15g2MC="2352";
+TRAINDIR=Legotrain-mCalo-20160813_SecEffiAndTMStudiesRerun
+LHC11aData="1777"; 
+LHC15g1aMC="2408";
+LHC12f1aMC="2406"; 
+LHC12f1bMC="2407"; 
 
+LHC13gData="1778"; 
+LHC15a3aMC="2410"; 
+LHC15a3aplusMC="2416"; 
+LHC15g2MC="2415";
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
