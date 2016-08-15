@@ -409,6 +409,27 @@ TH1D* CalculateHistoRatioToFitNLO (TH1D* histo, TF1* fit, Double_t startX){
 }
 
 //**********************************************************************************************************
+// Calculates the ratio of a graph and a fit
+//**********************************************************************************************************
+TGraphAsymmErrors* CalculateGraphErrMultiplicationOfFit (TGraphAsymmErrors* graph_Org, TF1* fit){
+    TGraphAsymmErrors* graph        = (TGraphAsymmErrors*)graph_Org->Clone("Dummy");
+    Double_t * xValue               = graph->GetX();
+    Double_t * yValue               = graph->GetY();
+    Double_t* xErrorLow             = graph->GetEXlow();
+    Double_t* xErrorHigh            = graph->GetEXhigh();
+    Double_t* yErrorLow             = graph->GetEYlow();
+    Double_t* yErrorHigh            = graph->GetEYhigh();
+    Int_t nPoints                   = graph->GetN();
+    for (Int_t i = 0; i < nPoints; i++){
+        yValue[i]                   = yValue[i]*fit->Eval(xValue[i]);
+        yErrorLow[i]                = yErrorLow[i]*fit->Eval(xValue[i]);
+        yErrorHigh[i]               = yErrorHigh[i]*fit->Eval(xValue[i]);
+    }
+    TGraphAsymmErrors* returnGraph  = new TGraphAsymmErrors(nPoints,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh);
+    return returnGraph;
+}
+
+//**********************************************************************************************************
 // Calculates a graph with systematic errors based on an input histogram and two arrays of doubles 
 // containing the relative systematic errors
 //**********************************************************************************************************
