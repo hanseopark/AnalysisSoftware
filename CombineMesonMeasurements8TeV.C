@@ -99,7 +99,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     TString fileNamePHOSMB                      = "ExternalInput/PHOS/8TeV/data_PHOS-MBResultsFullCorrection_PP_NoBinShifting.root";
     TString fileNamePHOSPHOS                    = "ExternalInput/PHOS/8TeV/data_PHOS-PHOSResultsFullCorrection_PP_NoBinShifting.root";
-    TString fileNamePHOSPrelim                  = "ExternalInput/PHOS/8TeV/preliminary/pi0_8TeV_PHOS.root";
+    TString fileNamePHOSprelim                  = "ExternalInput/PHOS/8TeV/preliminary/pi0_8TeV_PHOS.root";
 //    TString fileNamePCMEta                      = "FinalResults/data_PCMResultsFullCorrection_PP_NoBinShifting_usedTosvnEtapaper.root";
     TString fileNameChargedPionPP               = "ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_20_May_2015.root";
     TString fileNameChargedHadronPP             = "ExternalInput/UnidentifiedCharged/ChargedHadrinSpectraPP_20_May_2015.root";
@@ -707,6 +707,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
             cout << "Pi0 sys PHOS" << endl;
             graphPHOSPi0InvXSectionSys->Print();
 
+        TFile* filePHOSprelim                                     = new TFile(fileNamePHOSprelim.Data());
 
     // *******************************************************************************************************
     // ************************** Loading theory calculations ************************************************
@@ -1366,9 +1367,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     cout << WriteParameterToFile(fitPowInvXSectionPi0)<< endl;
 
     TF1* fitPCMTCMInvXSectionPi0    = FitObject("tcm","fitPCMTCMInvCrossSectionPi08TeV","Pi0",graphPCMPi0InvXSectionStat,0.3,8. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
-    cout << WriteParameterToFile(fitPCMTCMInvXSectionPi0)<< endl;
+    //cout << WriteParameterToFile(fitPCMTCMInvXSectionPi0)<< endl;
 
-
+    TF1* fitPHOSTCMInvXSectionPi0    = FitObject("tcm","fitPHOSTCMInvCrossSectionPi08TeV","Pi0",graphPHOSPi0InvXSectionStat,1.0,35. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
     
     // *************************************************************************************************************
     // Shift graphs in Y direction as well if desired
@@ -1633,7 +1634,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // ********************** Ratio to standalone PCM fit ****************************************************
     // *******************************************************************************************************
     TGraphAsymmErrors* graphRatioPi0PCMCombFitPCMStat      = (TGraphAsymmErrors*)graphPCMPi0InvXSectionStat->Clone();
-    graphRatioPi0PCMCombFitPCMStat                         = CalculateGraphErrRatioToFit(graphRatioPi0PCMCombFitPCMStat, fitPCMTCMInvXSectionPi0); 
+    graphRatioPi0PCMCombFitPCMStat                         = CalculateGraphErrRatioToFit(graphRatioPi0PCMCombFitPCMStat, fitPCMTCMInvXSectionPi0);
     TGraphAsymmErrors* graphRatioPi0PCMCombFitPCMSys       = (TGraphAsymmErrors*)graphPCMPi0InvXSectionSys->Clone();
     graphRatioPi0PCMCombFitPCMSys                          = CalculateGraphErrRatioToFit(graphRatioPi0PCMCombFitPCMSys, fitPCMTCMInvXSectionPi0); 
  
@@ -1668,6 +1669,94 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         
     canvasRatioToCombFit->SaveAs(Form("%s/Pi0_RatioOfPCMToCombAndPCMStandaloneFit_PP.%s",outputDir.Data(),suffix.Data()));    
 
+
+    // *******************************************************************************************************
+    // ********************** Ratio of PHOS prelim/final **************************************************
+    // *******************************************************************************************************
+    TGraphErrors* graphRatioPHOSprelimFinalMBstat     = (TGraphErrors*)filePHOSprelim->Get("gInvCrossSectionNoBinShift_MB_PHOS");
+    graphRatioPHOSprelimFinalMBstat                   = CalculateGraphErrRatioToFit(graphRatioPHOSprelimFinalMBstat, fitPHOSTCMInvXSectionPi0);
+    TGraphErrors* graphRatioPHOSprelimFinalMBsys      = (TGraphErrors*)filePHOSprelim->Get("gSysErrInvCrossSectionNoBinShift_MB_PHOS");
+    graphRatioPHOSprelimFinalMBsys                    = CalculateGraphErrRatioToFit(graphRatioPHOSprelimFinalMBsys, fitPHOSTCMInvXSectionPi0);
+    TGraphErrors* graphRatioPHOSprelimFinalPHOSstat   = (TGraphErrors*)filePHOSprelim->Get("gInvCrossSectionNoBinShift_PHOS_PHOS");
+    graphRatioPHOSprelimFinalPHOSstat                 = CalculateGraphErrRatioToFit(graphRatioPHOSprelimFinalPHOSstat, fitPHOSTCMInvXSectionPi0);
+    TGraphErrors* graphRatioPHOSprelimFinalPHOSsys    = (TGraphErrors*)filePHOSprelim->Get("gSysErrInvCrossSectionNoBinShift_PHOS_PHOS");
+    graphRatioPHOSprelimFinalPHOSsys                  = CalculateGraphErrRatioToFit(graphRatioPHOSprelimFinalPHOSsys, fitPHOSTCMInvXSectionPi0);
+
+    canvasRatioToCombFit->cd();
+    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.5,1.95);
+    histo2DPi0RatioToCombFit->GetXaxis()->SetRangeUser(0.8,45);
+    histo2DPi0RatioToCombFit->Draw("copy");
+
+        DrawGammaSetMarkerTGraphErr(graphRatioPHOSprelimFinalMBsys, markerStyleDet[1] ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1], widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphErr(graphRatioPHOSprelimFinalMBstat, markerStyleDet[1] ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1]);
+
+        DrawGammaSetMarkerTGraphErr(graphRatioPHOSprelimFinalPHOSsys, markerStyleDet[1]+4 ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1], widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphErr(graphRatioPHOSprelimFinalPHOSstat, markerStyleDet[1]+4 ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1]);
+
+        graphRatioPHOSprelimFinalMBsys->Draw("E2same");
+        graphRatioPHOSprelimFinalPHOSsys->Draw("E2same");
+
+        graphRatioPHOSprelimFinalMBstat->Draw("p,same,z");
+        graphRatioPHOSprelimFinalPHOSstat->Draw("p,same,z");
+
+        DrawGammaLines(0.8, 45. , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(0.8, 45. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.8, 45. , 0.9, 0.9,0.5, kGray, 7);
+
+        labelRatioToFitEnergy->Draw();
+        labelRatioToFitALICE->Draw();
+        labelRatioToFitPi0->Draw();
+
+        TLegend* legendPi0FitPHOSStandaloneA        = GetAndSetLegend2(0.2, 0.92-(0.05*2), 0.45, 0.92, 38);
+        legendPi0FitPHOSStandaloneA->AddEntry(graphRatioPHOSprelimFinalMBsys,"PHOS MB prelim / final");
+        legendPi0FitPHOSStandaloneA->AddEntry(graphRatioPHOSprelimFinalPHOSsys,"PHOS PHOS prelim / final");
+        legendPi0FitPHOSStandaloneA->Draw("");
+
+    canvasRatioToCombFit->SaveAs(Form("%s/Pi0_RatioOfPHOSprelimToPHOSfinal_PP.%s",outputDir.Data(),suffix.Data()));
+
+    // *******************************************************************************************************
+    // ********************** Ratio of PHOS prelim/comb final **************************************************
+    // *******************************************************************************************************
+    TGraphErrors* graphRatioPHOSprelimMBstat      = (TGraphErrors*)filePHOSprelim->Get("gInvCrossSectionNoBinShift_MB_PHOS");
+    graphRatioPHOSprelimMBstat                         = CalculateGraphErrRatioToFit(graphRatioPHOSprelimMBstat, fitTCMInvXSectionPi0Plot);
+    TGraphErrors* graphRatioPHOSprelimMBsys      = (TGraphErrors*)filePHOSprelim->Get("gSysErrInvCrossSectionNoBinShift_MB_PHOS");
+    graphRatioPHOSprelimMBsys                         = CalculateGraphErrRatioToFit(graphRatioPHOSprelimMBsys, fitTCMInvXSectionPi0Plot);
+    TGraphErrors* graphRatioPHOSprelimPHOSstat    = (TGraphErrors*)filePHOSprelim->Get("gInvCrossSectionNoBinShift_PHOS_PHOS");
+    graphRatioPHOSprelimPHOSstat                       = CalculateGraphErrRatioToFit(graphRatioPHOSprelimPHOSstat, fitTCMInvXSectionPi0Plot);
+    TGraphErrors* graphRatioPHOSprelimPHOSsys      = (TGraphErrors*)filePHOSprelim->Get("gSysErrInvCrossSectionNoBinShift_PHOS_PHOS");
+    graphRatioPHOSprelimPHOSsys                         = CalculateGraphErrRatioToFit(graphRatioPHOSprelimPHOSsys, fitTCMInvXSectionPi0Plot);
+
+    canvasRatioToCombFit->cd();
+    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.5,1.95);
+    histo2DPi0RatioToCombFit->GetXaxis()->SetRangeUser(0.8,45);
+    histo2DPi0RatioToCombFit->Draw("copy");
+
+        DrawGammaSetMarkerTGraphErr(graphRatioPHOSprelimMBsys, markerStyleDet[1] ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1], widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphErr(graphRatioPHOSprelimMBstat, markerStyleDet[1] ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1]);
+
+        DrawGammaSetMarkerTGraphErr(graphRatioPHOSprelimPHOSsys, markerStyleDet[1]+4 ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1], widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphErr(graphRatioPHOSprelimPHOSstat, markerStyleDet[1]+4 ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1]);
+
+        graphRatioPHOSprelimMBsys->Draw("E2same");
+        graphRatioPHOSprelimPHOSsys->Draw("E2same");
+
+        graphRatioPHOSprelimMBstat->Draw("p,same,z");
+        graphRatioPHOSprelimPHOSstat->Draw("p,same,z");
+
+        DrawGammaLines(0.8, 45. , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(0.8, 45. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.8, 45. , 0.9, 0.9,0.5, kGray, 7);
+
+        labelRatioToFitEnergy->Draw();
+        labelRatioToFitALICE->Draw();
+        labelRatioToFitPi0->Draw();
+
+        TLegend* legendPi0FitPHOSStandalone        = GetAndSetLegend2(0.2, 0.92-(0.05*2), 0.45, 0.92, 38);
+        legendPi0FitPHOSStandalone->AddEntry(graphRatioPHOSprelimMBsys,"PHOS MB prelim / combined final");
+        legendPi0FitPHOSStandalone->AddEntry(graphRatioPHOSprelimPHOSsys,"PHOS PHOS prelim / combined final");
+        legendPi0FitPHOSStandalone->Draw("");
+
+    canvasRatioToCombFit->SaveAs(Form("%s/Pi0_RatioOfPHOSprelimToCombFit_PP.%s",outputDir.Data(),suffix.Data()));
 
     // *******************************************************************************************************
     // ************************** Combination of different eta measurements **********************************
@@ -4390,93 +4479,104 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
 ////                                                                                                    &graphCombPi0InvYieldStatRebinnedHadComb, &graphCombPi0InvYieldSysRebinnedHadComb,
 ////                                                                                                    &graphChHadInvYieldPubStatPPHadCombUp, &graphChHadInvYieldPubSystPPHadCombUp )    ;
                                                                                                     
-//    // ***************************************************************************************************************
-//    // ************************** Comparison pi0/pi+-, pi0 updated comb pp 8TeV ***********************
-//    // ***************************************************************************************************************
-//    textSizeLabelsPixel             = 48;
-//    TCanvas* canvasCompYieldPPInd   = new TCanvas("canvasCompYieldPPInd","",200,10,1350,900);  // gives the page size
-//    DrawGammaCanvasSettings( canvasCompYieldPPInd,   0.12, 0.01, 0.01, 0.11);
-//    canvasCompYieldPPInd->SetLogx();
+    // ***************************************************************************************************************
+    // ************************** Comparison pi0/pi+-, pi0 pp 8TeV ***************************************************
+    // ***************************************************************************************************************
 
-//    TH2F * histo2DCompCombinedRatio2;
-//    histo2DCompCombinedRatio2       = new TH2F("histo2DCompCombinedRatio2","histo2DCompCombinedRatio2",1000,0.23,70.,1000,0.2,4.    );
-//    SetStyleHistoTH2ForGraphs(histo2DCompCombinedRatio2, "#it{p}_{T} (GeV/#it{c})","#pi^{0}/#pi^{#pm}", 0.85*textsizeLabelsPP, textsizeLabelsPP,
-//                              0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
-//    histo2DCompCombinedRatio2->GetYaxis()->SetNoExponent(kTRUE);
-////  histo2DCompCombinedRatio2->GetXaxis()->SetLabelOffset(-0.01);
-//    histo2DCompCombinedRatio2->GetXaxis()->SetMoreLogLabels(kTRUE);
-//    histo2DCompCombinedRatio2->GetXaxis()->SetNoExponent(kTRUE);
-//    histo2DCompCombinedRatio2->GetYaxis()->SetRangeUser(0.05,2.45);
-//    histo2DCompCombinedRatio2->DrawCopy();
+    Double_t p9093_d5x1y1_xval[] = { 0.548, 0.648, 0.7481, 0.8481, 0.9481, 1.048, 1.148, 1.248, 1.348,
+                                     1.448, 1.548, 1.648, 1.749, 1.849, 1.949, 2.049, 2.149, 2.249, 2.349,
+                                     2.449, 2.617, 2.867, 3.118, 3.368, 3.725, 4.226, 4.729, 5.426, 6.437,
+                                     7.444, 8.455, 9.462, 11.7, 16.89, 23.47, 36.99 };
+    Double_t p9093_d5x1y1_xerrminus[] = { 0.04800000000000004, 0.04800000000000004, 0.04810000000000003, 0.04809999999999992, 0.04810000000000003, 0.04800000000000004, 0.04799999999999982, 0.04800000000000004, 0.04800000000000004,
+                                          0.04800000000000004, 0.04800000000000004, 0.04799999999999982, 0.049000000000000155, 0.04899999999999993, 0.049000000000000155, 0.04899999999999993, 0.04899999999999993, 0.04899999999999993, 0.04900000000000038,
+                                          0.04899999999999993, 0.11699999999999999, 0.11699999999999999, 0.11799999999999988, 0.11799999999999988, 0.2250000000000001, 0.22599999999999998, 0.2290000000000001, 0.42600000000000016, 0.4370000000000003,
+                                          0.44399999999999995, 0.45500000000000007, 0.46199999999999974, 1.6999999999999993, 1.8900000000000006, 3.469999999999999, 6.990000000000002 };
+    Double_t p9093_d5x1y1_xerrplus[] = { 0.051999999999999935, 0.051999999999999935, 0.05190000000000006, 0.05190000000000006, 0.051899999999999946, 0.052000000000000046, 0.052000000000000046, 0.052000000000000046, 0.051999999999999824,
+                                         0.052000000000000046, 0.052000000000000046, 0.052000000000000046, 0.050999999999999934, 0.050999999999999934, 0.050999999999999934, 0.051000000000000156, 0.051000000000000156, 0.05099999999999971, 0.05099999999999971,
+                                         0.051000000000000156, 0.133, 0.133, 0.13200000000000012, 0.13200000000000012, 0.2749999999999999, 0.274, 0.2709999999999999, 0.5739999999999998, 0.5629999999999997,
+                                         0.556, 0.5449999999999999, 0.5380000000000003, 3.3000000000000007, 3.1099999999999994, 6.530000000000001, 13.009999999999998 };
+    Double_t p9093_d5x1y1_yval[] = { 1.502, 0.976, 0.6514, 0.4465, 0.3123, 0.2231, 0.162, 0.1194, 0.08913,
+                                     0.06728, 0.05137, 0.03968, 0.0308, 0.02412, 0.01897, 0.01509, 0.01204, 0.009758, 0.007881,
+                                     0.006396, 0.004563, 0.002838, 0.001825, 0.001188, 6.746E-4, 3.28E-4, 1.701E-4, 7.501E-5, 2.682E-5,
+                                     1.132E-5, 5.342E-6, 2.821E-6, 6.721E-7, 7.883E-8, 1.096E-8, 7.32E-10 };
+    Double_t p9093_d5x1y1_yerrminus[] = { 0.025470436993502876, 0.01653043049923383, 0.011060362768752208, 0.007561310558421734, 0.005306266194086007, 0.0037212339879265856, 0.002704202827895866, 0.0019991760404976847, 0.0014921546134365566,
+                                          0.0011251364141294155, 8.688200064455238E-4, 6.714072460139226E-4, 5.214962707440965E-4, 4.092867835442528E-4, 3.2247847834545484E-4, 2.5637170274622745E-4, 2.0486532144069672E-4, 1.6666000955238184E-4, 1.352552050606556E-4,
+                                          1.102505733363777E-4, 7.741420412947484E-5, 4.852996007622508E-5, 3.148570443868137E-5, 2.0772167637490315E-5, 1.169934826218965E-5, 6.232708465025458E-6, 3.3812194309154206E-6, 1.6499859418795059E-6, 7.395709313514154E-7,
+                                          3.749271162506121E-7, 2.1025143899626464E-7, 1.330288408579132E-7, 5.421076425397451E-8, 1.0801381786141993E-8, 2.121034360872072E-9, 2.2208906344077367E-10 };
+    Double_t p9093_d5x1y1_yerrplus[] = { 0.025470436993502876, 0.01653043049923383, 0.011060362768752208, 0.007561310558421734, 0.005306266194086007, 0.0037212339879265856, 0.002704202827895866, 0.0019991760404976847, 0.0014921546134365566,
+                                         0.0011251364141294155, 8.688200064455238E-4, 6.714072460139226E-4, 5.214962707440965E-4, 4.092867835442528E-4, 3.2247847834545484E-4, 2.5637170274622745E-4, 2.0486532144069672E-4, 1.6666000955238184E-4, 1.352552050606556E-4,
+                                         1.102505733363777E-4, 7.741420412947484E-5, 4.852996007622508E-5, 3.148570443868137E-5, 2.0772167637490315E-5, 1.169934826218965E-5, 6.232708465025458E-6, 3.3812194309154206E-6, 1.6350133358477538E-6, 7.218146039669743E-7,
+                                         3.5748229676446916E-7, 1.9441290492145835E-7, 1.261577682903435E-7, 5.0316249472710104E-8, 8.770346885386005E-9, 1.816219909592448E-9, 1.9310629741155518E-10 };
+    Int_t p9093_d5x1y1_numpoints = 36;
 
-//        DrawGammaSetMarkerTGraphErr(graphRatioPi0HighPtChPisCombA, markerStyleCombHighPt, markerSizeComparison, colorCombHighPt , colorCombHighPt);
-//        graphRatioPi0HighPtChPisCombA->Draw("E1psame");
-//        DrawGammaSetMarkerTGraphErr(graphRatioPi0LowPtChPisCombA, markerStyleCombLowPt, markerSizeComparison, colorCombLowPt , colorCombLowPt);
-//        graphRatioPi0LowPtChPisCombA->Draw("E1psame");
-//        DrawGammaSetMarkerTGraphErr(graphRatioPi0CMSChPisCombA, 22, markerSizeComparison, kRed+1 , kRed+1);
-//        graphRatioPi0CMSChPisCombA->Draw("E1psame");
+    Double_t xSection = ReturnCorrectXSection( "8TeV", 1);
+    for(Int_t i=0; i<p9093_d5x1y1_numpoints; i++){
+      p9093_d5x1y1_yval[i]     *= xSection*recalcBarn;
+      p9093_d5x1y1_yerrminus[i]*= xSection*recalcBarn;
+      p9093_d5x1y1_yerrplus[i] *= xSection*recalcBarn;
+    }
 
-//        TLegend* legendPi0CompChargedPionsPP    = GetAndSetLegend2(0.15, 0.8, 0.9, 0.90, 0.85* textSizeLabelsPixel);
-//        legendPi0CompChargedPionsPP->SetNColumns(2);
-//        legendPi0CompChargedPionsPP->SetMargin(0.12);
-//        legendPi0CompChargedPionsPP->AddEntry(graphRatioPi0LowPtChPisCombA,"#pi^{0}/#pi^{#pm} low #it{p}_{T} (ALICE)","p");
-//        legendPi0CompChargedPionsPP->AddEntry(graphRatioPi0HighPtChPisCombA,"#pi^{0}/#pi^{#pm} high #it{p}_{T} (ALICE)","p");
-//        legendPi0CompChargedPionsPP->AddEntry(graphRatioPi0CMSChPisCombA,"#pi^{0}/#pi^{#pm} low #it{p}_{T} (#pi^{#pm} from CMS)","p");
-//        legendPi0CompChargedPionsPP->Draw();
-    
-//        labelRatioTheoryPP->Draw();
-        
-//        DrawGammaLines(0., 70 , 1, 1 ,1, kGray, 1);
-   
-//    canvasCompYieldPPInd->Update();
-//    canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedToNeutralOldCharged_PP8TeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
+    TGraphAsymmErrors* p9093_d5x1y1 = new TGraphAsymmErrors(p9093_d5x1y1_numpoints, p9093_d5x1y1_xval, p9093_d5x1y1_yval, p9093_d5x1y1_xerrminus, p9093_d5x1y1_xerrplus, p9093_d5x1y1_yerrminus, p9093_d5x1y1_yerrplus);
+    p9093_d5x1y1->SetName("/HepData/9093/d5x1y1");
+    p9093_d5x1y1->SetTitle("/HepData/9093/d5x1y1");
+    cout << "chargedHadrons:" << endl;
+    p9093_d5x1y1->Print();
 
-//    canvasCompYieldPPInd->cd();
+    TGraphAsymmErrors* graphRatioChargedHadronsInverse = (TGraphAsymmErrors*) p9093_d5x1y1->Clone();
+    Double_t * yValueCharged     = graphRatioChargedHadronsInverse->GetY();
+    Double_t*  yErrorLowCharged  = graphRatioChargedHadronsInverse->GetEYlow();
+    Double_t*  yErrorHighCharged = graphRatioChargedHadronsInverse->GetEYhigh();
+    Double_t * yValueChargedInv     = p9093_d5x1y1->GetY();
+    Double_t*  yErrorLowChargedInv  = p9093_d5x1y1->GetEYlow();
+    Double_t*  yErrorHighChargedInv = p9093_d5x1y1->GetEYhigh();
+    for(Int_t i=0; i<p9093_d5x1y1->GetN(); i++){
+      yValueCharged[i] = 1/yValueChargedInv[i];
+      yErrorLowCharged[i] = yValueCharged[i]*(yErrorLowChargedInv[i]/yValueChargedInv[i]);
+      yErrorHighCharged[i] = yValueCharged[i]*(yErrorHighChargedInv[i]/yValueChargedInv[i]);
+    }
+    TGraphAsymmErrors* graphRatioChargedHadrons = CalculateGraphErrMultiplicationOfFit(graphRatioChargedHadronsInverse, fitTCMInvXSectionPi0Plot);
 
-//    histo2DCompCombinedRatio2->DrawCopy();
+    textSizeLabelsPixel             = 48;
+    TCanvas* canvasCompYieldPPInd   = new TCanvas("canvasCompYieldPPInd","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasCompYieldPPInd,   0.12, 0.01, 0.01, 0.11);
+    canvasCompYieldPPInd->SetLogx();
 
-//        DrawGammaSetMarkerTGraphErr(graphRatioPi0PubChPisCombA, markerStyleCombHighPt, markerSizeComparison, kBlue+2 , kBlue+2);
-//        graphRatioPi0PubChPisCombA->Draw("E1psame");
-//        DrawGammaSetMarkerTGraphErr(graphRatioPi0CMSChPisCombA, 22, markerSizeComparison, kRed+1 , kRed+1);
-//        graphRatioPi0CMSChPisCombA->Draw("E1psame");
+    TH2F * histo2DCompCombinedRatio2;
+    histo2DCompCombinedRatio2       = new TH2F("histo2DCompCombinedRatio2","histo2DCompCombinedRatio2",1000,0.23,70.,1000,0.1,4.    );
+    SetStyleHistoTH2ForGraphs(histo2DCompCombinedRatio2, "#it{p}_{T} (GeV/#it{c})","#pi^{0}/#pi^{#pm}", 0.85*textsizeLabelsPP, textsizeLabelsPP,
+                              0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
+    histo2DCompCombinedRatio2->GetYaxis()->SetNoExponent(kTRUE);
+//  histo2DCompCombinedRatio2->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DCompCombinedRatio2->GetXaxis()->SetMoreLogLabels(kTRUE);
+    histo2DCompCombinedRatio2->GetXaxis()->SetNoExponent(kTRUE);
+    histo2DCompCombinedRatio2->GetYaxis()->SetRangeUser(0.1,1.45);
+    histo2DCompCombinedRatio2->GetYaxis()->SetTitle("#pi^{0}/h^{#pm} (a.u.)");
+    histo2DCompCombinedRatio2->DrawCopy();
 
-//        //graphRatioPi0PubChHadsCombA->Print();
-//        TLegend* legendPi0CompChargedPionsPP2   = GetAndSetLegend2(0.15, 0.86, 0.9, 0.94, 0.85* textSizeLabelsPixel);
-//        legendPi0CompChargedPionsPP2->SetNColumns(2);
-//        legendPi0CompChargedPionsPP2->SetMargin(0.12);
-//        legendPi0CompChargedPionsPP2->AddEntry(graphRatioPi0PubChPisCombA,"#pi^{0}/#pi^{#pm}  (ALICE)","p");
-//        legendPi0CompChargedPionsPP2->AddEntry(graphRatioPi0CMSChPisCombA,"#pi^{0}/#pi^{#pm}  (#pi^{#pm} from CMS)","p");
-//        legendPi0CompChargedPionsPP2->Draw();
-    
-//        labelRatioTheoryPP->Draw();
-        
-//        DrawGammaLines(0., 70 , 1, 1 ,1, kGray, 1);
-   
-//    canvasCompYieldPPInd->Update();
-//    canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedToNeutralPublishedCharged_PP8TeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
+    DrawGammaSetMarkerTGraphAsym(graphRatioChargedHadrons, markerStyleCombHighPt, markerSizeComparison, kBlack , kBlack);
+    graphRatioChargedHadrons->Draw("E1psame");
 
-//    canvasCompYieldPPInd->cd();
+    cout << "graphRatioChargedHadrons:" << endl;
+    graphRatioChargedHadrons->Print();
+    TLegend* legendPi0CompChargedPionsPP3   = GetAndSetLegend2(0.15, 0.84, 0.9, 0.92, 0.85* textSizeLabelsPixel);
+    legendPi0CompChargedPionsPP3->SetNColumns(2);
+    legendPi0CompChargedPionsPP3->SetMargin(0.12);
+    legendPi0CompChargedPionsPP3->AddEntry(graphRatioChargedHadrons,"#pi^{0} (ALICE) / h^{#pm} (ATLAS)","p");
+    legendPi0CompChargedPionsPP3->Draw();
 
-//    histo2DCompCombinedRatio2->GetYaxis()->SetTitle("#pi^{0}/h^{#pm}");
-//    histo2DCompCombinedRatio2->DrawCopy();
+    TLatex *labelRatioTheoryPPA   = new TLatex(0.15,0.8,"#pi^{0}: fit to ALICE combined result");
+    SetStyleTLatex( labelRatioTheoryPPA, 0.85*textsizeLabelsPP,4);
+    labelRatioTheoryPPA->Draw();
+    TLatex *labelRatioTheoryPPAT   = new TLatex(0.15,0.75,"h^{#pm}: measured by ATLAS with N_{ch} >= 1, #it{p}_{T} > 500 MeV, |#eta| < 2.5");
+    SetStyleTLatex( labelRatioTheoryPPAT, 0.85*textsizeLabelsPP,4);
+    labelRatioTheoryPPAT->Draw();
 
-//        DrawGammaSetMarkerTGraphErr(graphRatioPi0PubChHadsCombA, markerStyleCombHighPt, markerSizeComparison, kBlack , kBlack);
-//        graphRatioPi0PubChHadsCombA->Draw("E1psame");
+    labelRatioTheoryPP->Draw();
 
-//        graphRatioPi0PubChHadsCombA->Print();
-//        TLegend* legendPi0CompChargedPionsPP3   = GetAndSetLegend2(0.15, 0.86, 0.9, 0.94, 0.85* textSizeLabelsPixel);
-//        legendPi0CompChargedPionsPP3->SetNColumns(2);
-//        legendPi0CompChargedPionsPP3->SetMargin(0.12);
-//        legendPi0CompChargedPionsPP3->AddEntry(graphRatioPi0PubChHadsCombA,"#pi^{0}/h^{#pm}  (ALICE)","p");
-////      legendPi0CompChargedPionsPP3->AddEntry(graphRatioPi0CMSChPisCombA,"#pi^{0}/#pi^{#pm}  (#pi^{#pm} from CMS)","p");
-//        legendPi0CompChargedPionsPP3->Draw();
-    
-//        labelRatioTheoryPP->Draw();
-        
-//        DrawGammaLines(0., 70 , 1, 1 ,1, kGray, 1);
-   
-//    canvasCompYieldPPInd->Update();
-//    canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedHadronToNeutralPublishedCharged_PP8TeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
+    DrawGammaLines(0.23, 70 , 1, 1 ,1, kGray, 1);
+
+    canvasCompYieldPPInd->Update();
+    canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedHadronToNeutralPions_PP8TeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
 
     // **********************************************************************************************************************
     // **************************Plot example invariant mass bins ***********************************************************
