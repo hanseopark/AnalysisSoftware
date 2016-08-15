@@ -295,6 +295,10 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
     canvasFitQA->cd();
     canvasFitQA->SetLogy(1);
 
+    // careful what the input contains: 
+    // if input is dN/dydpt 1/2pi 1/pt needs to be multiplied with pt
+    // if input is dN/dydpt 1/2pi no need to be multiplied with pt
+    
     // K0s & K0L
     if (particle == 0 || particle == 1 ){
         if (energy.CompareTo("2.76TeV") == 0){
@@ -558,6 +562,8 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
     h2_asym_geom->Sumw2();
     TH1D *h1_ptdistribution             = new TH1D("h1_ptdistribution","", 700,0,70);  
     h1_ptdistribution->Sumw2();
+    TH1D* h1_ptdistributionPerEv        = (TH1D*)h1_ptdistribution->Clone("h1_ptdistributionPerEv");
+    h1_ptdistributionPerEv->Sumw2();
     TH1D *h1_phidistribution            = new TH1D("h1_phidistribution","", 100,0,2*TMath::Pi());  
     h1_phidistribution->Sumw2();
     TH1D *h1_etadistribution            = new TH1D("h1_etadistribution","", 2*fYMaxMother*100,-fYMaxMother,fYMaxMother);  
@@ -620,6 +626,9 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
             else 
                 etaCurrent = -1000; 
         }    
+        // weights
+        Double_t weightFull     = 1./nEvts*scaleFactor*ptcurrent; // if input is dN/dydpt 1/2pi 1/pt needs to be multiplied with pt
+        Double_t weightPartial  = 1./nEvts*scaleFactor;
         
         // create current particle
         TLorentzVector particle(0.0, 0.0, 0, massParticle); 
@@ -628,13 +637,15 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
         event.SetDecay(particle, nDaughters, masses); 
      
         // filling of input distributions
-        h1_ptdistribution->Fill(ptcurrent, 1./nEvts*scaleFactor);
-        h1_phidistribution->Fill(phiCurrent, 1./nEvts*scaleFactor);
-        h1_etadistribution->Fill(etaCurrent, 1./nEvts*scaleFactor);
-        h1_ydistribution->Fill(particle.Rapidity(), 1./nEvts*scaleFactor);
+        h1_ptdistribution->Fill(ptcurrent, weightFull);
+        h1_ptdistributionPerEv->Fill(ptcurrent, weightPartial);
+        h1_phidistribution->Fill(phiCurrent, weightFull);
+        h1_etadistribution->Fill(etaCurrent, weightFull);
+        h1_ydistribution->Fill(particle.Rapidity(), weightFull);
     
         // let it decay
         Double_t weight         = event.Generate();
+        
         
         // look at daughter quantites
         Double_t ptDaughter[nDaughters];  
@@ -643,28 +654,28 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
             pDaughter[i]                = event.GetDecay(i); // these are my daughters !! 
             ptDaughter[i]               = pDaughter[i]->Pt(); 
             // look at the different daughters separately
-            h1_ptDaughter[i]->Fill(ptDaughter[i],1./nEvts*scaleFactor);
+            h1_ptDaughter[i]->Fill(ptDaughter[i],weightFull);
             // plot everything only for the pi0s in the decay chain
             if (pdgCodesDaughters[i] == 111){
-                h1_ptPiZeroDaughters->Fill(ptDaughter[i], 1./nEvts*scaleFactor);            
-                h2_ptyPiZeroDaughters->Fill(ptDaughter[i],pDaughter[i]->Rapidity(), 1./nEvts*scaleFactor);
-                h1_yPiZeroDaughters->Fill(pDaughter[i]->Rapidity(), 1./nEvts*scaleFactor);
+                h1_ptPiZeroDaughters->Fill(ptDaughter[i], weightFull);            
+                h2_ptyPiZeroDaughters->Fill(ptDaughter[i],pDaughter[i]->Rapidity(), weightFull);
+                h1_yPiZeroDaughters->Fill(pDaughter[i]->Rapidity(), weightFull);
             }
             // look at relative quantites to mother
             if (i == 0)
-                h2_ptMothervsDaughter->Fill(ptcurrent,ptDaughter[i],1./nEvts*scaleFactor);
+                h2_ptMothervsDaughter->Fill(ptcurrent,ptDaughter[i],weightFull);
             // make cuts for different y ranges for later analysis
             for (Int_t y = 0; y < 10; y++){
                 if (TMath::Abs(pDaughter[i]->Rapidity()) < yRanges[y]){
-                    h1_ptDaughterInRap[y][i]->Fill(ptDaughter[i], 1./nEvts*scaleFactor);
+                    h1_ptDaughterInRap[y][i]->Fill(ptDaughter[i], weightFull);
                     if (pdgCodesDaughters[i] == 111)
-                        h1_ptPiZeroInRapDaughters[y]->Fill(ptDaughter[i], 1./nEvts*scaleFactor);
+                        h1_ptPiZeroInRapDaughters[y]->Fill(ptDaughter[i], weightFull);
                 }
             }    
         }
         // look at asymmetry for decays with more than 1 daughter
         if (nDaughters > 1){
-            h2_asym_geom->Fill((ptDaughter[0]-ptDaughter[1])/(ptDaughter[0]+ptDaughter[1]), ptcurrent, 1./nEvts*scaleFactor);
+            h2_asym_geom->Fill((ptDaughter[0]-ptDaughter[1])/(ptDaughter[0]+ptDaughter[1]), ptcurrent, weightFull);
         }
         // look at Dalitz plot for decays with 3 daug
         if (nDaughters == 3){
@@ -672,7 +683,7 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
             comb1.SetPxPyPzE(pDaughter[0]->Px()+pDaughter[1]->Px(),pDaughter[0]->Py()+pDaughter[1]->Py(),pDaughter[0]->Pz()+pDaughter[1]->Pz(),pDaughter[0]->E()+pDaughter[1]->E());
             TLorentzVector comb2(0.0, 0.0, 0, 0); 
             comb2.SetPxPyPzE(pDaughter[0]->Px()+pDaughter[2]->Px(),pDaughter[0]->Py()+pDaughter[2]->Py(),pDaughter[0]->Pz()+pDaughter[2]->Pz(),pDaughter[0]->E()+pDaughter[2]->E());
-            h2_DalitzPlot->Fill(comb1.M(),comb2.M(), 1./nEvts*scaleFactor);
+            h2_DalitzPlot->Fill(comb1.M(),comb2.M(), weightFull);
         }    
     }
 
@@ -701,7 +712,6 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
     //*************************************************************************************************
     //******************** Determine whether additional offset was accidentally created ***************
     //*************************************************************************************************    
-    TH1D* h1_ptdistributionPerEv        = (TH1D*)h1_ptdistribution->Clone("h1_ptdistributionPerEv");
     TF1* ptDistributionRefit            = NULL;
     if (particle == 0 || particle == 1 ){
         if (energy.CompareTo("2.76TeV") == 0){
