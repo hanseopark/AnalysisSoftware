@@ -53,6 +53,7 @@ TString     labelsGamma[8]                                              = { "Dir
                                                                             "Phi", "Lambda", "Rest"};
 TString     labelsElectron[9]                                           = { "DirE", "Gamma", "PiN", "Eta", "C", 
                                                                             "B", "WOrZ", "Tau", "Rest"};
+TString     nameSecondaries[4]                                          = {"K0S", "Lambda", "K0L", "Rest"};
 
 //****************************************************************************
 //************************* MC object names **********************************
@@ -141,6 +142,7 @@ void SaveHistos(Int_t, TString, TString);                                       
 void SaveCorrectionHistos(TString , TString);                                                               // Saving correction histograms to a file
 void Delete();                                                                                              // Deleting all pointers
 void SetCorrectMCHistogrammNames(TString);                                                                  // Setting correct histogram names
+Bool_t LoadSecondaryPionsFromExternalFile();                                                                // Loads secondary neutral pion input graphs from file
 
 //****************************************************************************
 //************************** input histograms ********************************
@@ -426,3 +428,11 @@ TH1D*       fHistoMCSecPi0WithinAccepPt                                 = NULL;
 TH1D*       fHistoMCSecPi0WithinAccepPtRebin                            = NULL;
 TH1D*       fHistoMCSecPi0FromK0sWithinAccepPt                          = NULL;
 TH1D*       fHistoMCSecPi0FromK0sWithinAccepPtRebin                     = NULL;
+
+//*****************************************************************************
+//************ Load secondary pion histograms from external file **************
+//*****************************************************************************
+Bool_t      fHaveToyMCInputForSec                                       = kFALSE;
+TFile*      fFileToyMCInput[3]                                          = {NULL, NULL, NULL};
+TH1D*       fHistoYieldToyMCSecInput[3]                                 = {NULL, NULL, NULL};
+TH1D*       fHistoYieldToyMCSecInputReb[3]                              = {NULL, NULL, NULL};

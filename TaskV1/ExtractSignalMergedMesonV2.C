@@ -587,6 +587,18 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     CreatePtHistos();
     FillPtHistos();
     
+    if (!fIsMC && meson.Contains("Pi0") ){
+        fHaveToyMCInputForSec   = LoadSecondaryPionsFromExternalFile();
+        if (fHaveToyMCInputForSec){
+            cout << "I am gonna add the toy MC ouput to the uncorrected file" << endl;
+        } else {
+            cout << "no ToyMC input has been found for the secondaries" << endl;
+        }    
+    }
+
+    
+    
+    
     if (fIsMC){
         FillHistosArrayMC(fHistoMCMesonWithinAccepPt, fHistoMCMesonPt, fDeltaPt);
         if (meson.Contains("Pi0") && fNewMCOutput){
@@ -1766,6 +1778,75 @@ void SetCorrectMCHistogrammNames(TString mesonType){
 }
 
 //****************************************************************************
+//Load secondary neutral pions from toy MC file as generated from data spectra
+// - put them in proper scaling 
+// - rebin them according to current pi0 binning
+//****************************************************************************
+Bool_t LoadSecondaryPionsFromExternalFile(){
+    ifstream in("ToyMCOutputs.txt");
+    
+    // number of ToyMC inputs
+    Int_t nrOfToyMCInput        = 0;
+    // number of triggers which are really used for the respective analysis
+    TString nameToyMCInputs[10];
+    Bool_t usedInput[10]        = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, 
+                                    kFALSE, kFALSE, kFALSE, kFALSE, kFALSE };    
+    while(!in.eof() && nrOfToyMCInput<10 ){
+        in >> nameToyMCInputs[nrOfToyMCInput];
+        cout<< nameToyMCInputs[nrOfToyMCInput] << endl;
+        nrOfToyMCInput++;
+    }
+    if (nrOfToyMCInput==0 || (nrOfToyMCInput==1 && nameToyMCInputs[nrOfToyMCInput].CompareTo("") == 0) ) 
+        return kFALSE;
+    
+    Int_t nSecInputHistsFound       = 0;
+    for (Int_t j = 0; j < 3; j++){
+        cout << "searching for input for " << nameSecondaries[j].Data() << endl;
+        Bool_t foundSourceFile      = kFALSE;
+        TString nameSourceFile      = "";
+        // find correct source file only first one for respective particle will be used from the list
+        for (Int_t f= 0; (f< nrOfToyMCInput && !foundSourceFile); f++){
+            if (!usedInput[f]){
+                if ( nameToyMCInputs[f].Contains(nameSecondaries[j].Data()) ){
+                    foundSourceFile = kTRUE;
+                    nameSourceFile  = nameToyMCInputs[f];
+                }
+            }    
+        }
+        if (foundSourceFile){
+            cout << "found correct input: " << nameSourceFile.Data() << endl;
+            cout << "trying to find " << Form("h1_ptPiZeroInRapDaughters_%1.2f", fYMaxMeson/2) << endl;
+            fFileToyMCInput[j]                  = new TFile(nameSourceFile.Data());
+            fHistoYieldToyMCSecInput[j]         = (TH1D*)fFileToyMCInput[j]->Get(Form("h1_ptPiZeroInRapDaughters_%1.2f", fYMaxMeson/2));
+            if (fHistoYieldToyMCSecInput[j]){
+                nSecInputHistsFound++;
+                fHistoYieldToyMCSecInput[j]->Sumw2();
+                fHistoYieldToyMCSecInput[j]->SetName(Form("histoSecPi0YieldFrom%s_FromToy_orgBinning",nameSecondaries[j].Data()));
+                
+                cout << "found it, rebinning" << endl;
+                fHistoYieldToyMCSecInputReb[j]  =  (TH1D*)fHistoYieldToyMCSecInput[j]->Rebin(fNBinsPt,Form("histoSecPi0YieldFrom%s_FromToy",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
+                if (fHistoYieldToyMCSecInputReb[j]){
+                    fHistoYieldToyMCSecInputReb[j]->Divide(fDeltaPt);
+                    fHistoYieldToyMCSecInput[j]->Scale(1./fHistoYieldToyMCSecInput[j]->GetBinWidth(1));
+                    cout << "that worked" << endl;
+                }    
+            } else {
+                cout << "file didn't contain proper histo" << endl;
+            }    
+        } else {
+           cout << "could not find correct input file" << endl;
+        }
+    }    
+//     cout << nSecInputHistsFound << endl;
+    if (nSecInputHistsFound == 0)
+        return kFALSE;
+    
+    return kTRUE;
+}
+
+
+
+//****************************************************************************
 //*********************** creation of momentum dependent histos **************
 //****************************************************************************
 void CreatePtHistos(){
@@ -2548,7 +2629,14 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3) {
     
         if (fDeltaPt)                                   fDeltaPt->Write();
         if (fHistoYieldMesonM02)                        fHistoYieldMesonM02->Write();
-        
+
+        if (fHaveToyMCInputForSec){
+            cout << "Writing ToyMC input for secondary pi0 correction" << endl;
+            for (Int_t j = 0; j < 3; j++){
+                if (fHistoYieldToyMCSecInput[j])        fHistoYieldToyMCSecInput[j]->Write();
+                if (fHistoYieldToyMCSecInputReb[j])     fHistoYieldToyMCSecInputReb[j]->Write();
+            }
+        }           
         
     fOutput1->Write();
     fOutput1->Close();
@@ -2816,4 +2904,10 @@ void Delete(){
         if (fHistoTrueEffiSecPi0)                               delete fHistoTrueEffiSecPi0;        
         if (fHistoTrueEffiSecPi0FromK0s)                        delete fHistoTrueEffiSecPi0FromK0s;        
     }
+    
+    // Delete Toy MC files
+    for (Int_t j = 0; j < 3; j++){
+        if (fFileToyMCInput[j] )                                   delete fFileToyMCInput[j];
+    }
+    
 }
