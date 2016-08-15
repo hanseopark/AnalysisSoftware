@@ -1096,10 +1096,116 @@ void PrepareChargedPionDataALICE_pp(){
     TGraphAsymmErrors* graphChHadCMSStatPP2760GeV       = ScaleGraph(graphChHadYieldCMSStatPP2760GeV, 64.);
     TGraphAsymmErrors* graphChHadCMSSysPP2760GeV        = ScaleGraph(graphChHadYieldCMSSysPP2760GeV, 64.);
     
+    
+    // *********************************************************************************************************************
+    // ************************************ charged particle density dN/dy *************************************************
+    // ************************************ http://arxiv.org/abs/1509.07541 ************************************************
+    // ************************************ pp 900 GeV, 2.76 TeV, 7 TeV, 8 TeV *********************************************
+    // *********************************************************************************************************************
+    Double_t chHad_dNdeta_xValHist[21]              = { -2.0,   -1.8,   -1.6,   -1.4,   -1.2,
+                                                        -1.0,   -0.8,   -0.6,   -0.4,   -0.2,
+                                                        0.0,    0.2,    0.4,    0.6,    0.8,
+                                                        1.0,    1.2,    1.4,    1.6,    1.8,
+                                                        2.0 };    
+    Double_t chHad_dNdeta_xVal[20]                  = { -1.9,   -1.7,   -1.5,   -1.3,   -1.1, 
+                                                        -0.9,   -0.7,   -0.5,   -0.3,   -0.1,
+                                                        0.1,    0.3,    0.5,    0.7,    0.9,
+                                                        1.1,    1.3,    1.5,    1.7,    1.9};
+    Double_t chHad_dNdeta_xErr[20]                  = { 0.1,    0.1,    0.1,    0.1,    0.1, 
+                                                        0.1,    0.1,    0.1,    0.1,    0.1,
+                                                        0.1,    0.1,    0.1,    0.1,    0.1, 
+                                                        0.1,    0.1,    0.1,    0.1,    0.1};
+    // 900 GeV values
+    Double_t chHad_dNdeta_pp900GeVINEL_yVal[20]     = { 3.08, 3.16, 3.15, 3.16, 3.13,
+                                                        3.08, 3.02, 2.97, 2.93, 2.90,
+                                                        2.91, 2.95, 2.99, 3.02, 3.10,
+                                                        3.14, 3.15, 3.17, 3.16, 3.07 };                        
+    Double_t chHad_dNdeta_pp900GeVINEL_yErrUp[20]   = { 0.14, 0.14, 0.13, 0.13, 0.12,
+                                                        0.12, 0.12, 0.11, 0.11, 0.11,
+                                                        0.11, 0.11, 0.11, 0.12, 0.12,
+                                                        0.12, 0.13, 0.13, 0.13, 0.13};
+    Double_t chHad_dNdeta_pp900GeVINEL_yErrDown[20] = { 0.06, 0.06, 0.06, 0.06, 0.05,
+                                                        0.05, 0.05, 0.05, 0.05, 0.05,
+                                                        0.05, 0.05, 0.05, 0.05, 0.05,
+                                                        0.05, 0.06, 0.06, 0.06, 0.06 };
+
+    TGraphAsymmErrors* graphChHaddNdyINELTotPP900GeV    = new TGraphAsymmErrors(20, chHad_dNdeta_xVal, chHad_dNdeta_pp900GeVINEL_yVal, chHad_dNdeta_xErr,
+                                                                                chHad_dNdeta_xErr, chHad_dNdeta_pp900GeVINEL_yErrDown, chHad_dNdeta_pp900GeVINEL_yErrUp);    
+
+    TH1D* histoChHaddNdyINELTotPP900GeV                 = new TH1D("histoChargedHadrondNdEtaALICEPP900GeV", "histoChargedHadrondNdEtaALICEPP900GeV", 20, chHad_dNdeta_xValHist);
+    for (Int_t i = 1; i< 20+1; i++){
+        histoChHaddNdyINELTotPP900GeV->SetBinContent(i,chHad_dNdeta_pp900GeVINEL_yVal[i-1]);
+        histoChHaddNdyINELTotPP900GeV->SetBinError(i,(chHad_dNdeta_pp900GeVINEL_yErrUp[i-1]+chHad_dNdeta_pp900GeVINEL_yErrDown[i-1])/2.);
+    }
+    
+    // 2760 GeV values
+    Double_t chHad_dNdeta_pp2760GeVINEL_yVal[20]    = { 4.00, 4.08, 4.08, 4.06, 4.01,
+                                                        3.94, 3.86, 3.80, 3.72, 3.71,
+                                                        3.71, 3.74, 3.81, 3.87, 3.95,
+                                                        4.02, 4.06, 4.08, 4.09, 4.02 };                        
+    Double_t chHad_dNdeta_pp2760GeVINEL_yErrUp[20]  = { 0.29, 0.29, 0.29, 0.29, 0.28,
+                                                        0.27, 0.27, 0.26, 0.26, 0.26, 
+                                                        0.26, 0.26, 0.26, 0.27, 0.27,
+                                                        0.28, 0.28, 0.29, 0.29, 0.29 };
+    Double_t chHad_dNdeta_pp2760GeVINEL_yErrDown[20]= { 0.17, 0.18, 0.17, 0.17, 0.17,
+                                                        0.17, 0.16, 0.16, 0.16, 0.16,
+                                                        0.16, 0.16, 0.16, 0.16, 0.17,
+                                                        0.17, 0.17, 0.17, 0.18, 0.17 };
+    TGraphAsymmErrors* graphChHaddNdyINELTotPP2760GeV   = new TGraphAsymmErrors(20, chHad_dNdeta_xVal, chHad_dNdeta_pp2760GeVINEL_yVal, chHad_dNdeta_xErr,
+                                                                                chHad_dNdeta_xErr, chHad_dNdeta_pp2760GeVINEL_yErrDown, chHad_dNdeta_pp2760GeVINEL_yErrUp);    
+    
+    TH1D* histoChHaddNdyINELTotPP2760GeV                = new TH1D("histoChargedHadrondNdEtaALICEPP2760GeV", "histoChargedHadrondNdEtaALICEPP2760GeV", 20, chHad_dNdeta_xValHist);
+    for (Int_t i = 1; i< 20+1; i++){
+        histoChHaddNdyINELTotPP2760GeV->SetBinContent(i,chHad_dNdeta_pp2760GeVINEL_yVal[i-1]);
+        histoChHaddNdyINELTotPP2760GeV->SetBinError(i,(chHad_dNdeta_pp2760GeVINEL_yErrUp[i-1]+chHad_dNdeta_pp2760GeVINEL_yErrDown[i-1])/2.);
+    }
+
+    // 7 TeV values
+    Double_t chHad_dNdeta_pp7TeVINEL_yVal[20]       = { 4.94, 5.00, 5.01, 4.98, 4.92,
+                                                        4.84, 4.74, 4.66, 4.59, 4.55,
+                                                        4.55, 4.59, 4.66, 4.74, 4.84,
+                                                        4.91, 4.97, 5.00, 4.99, 4.94 };
+    Double_t chHad_dNdeta_pp7TeVINEL_yErrUp[20]     = { 0.38, 0.38, 0.38, 0.37, 0.37,
+                                                        0.36, 0.35, 0.35, 0.34, 0.34,
+                                                        0.34, 0.34, 0.35, 0.35, 0.36,
+                                                        0.37, 0.37, 0.38, 0.38, 0.38 };
+    Double_t chHad_dNdeta_pp7TeVINEL_yErrDown[20]   = { 0.19, 0.19, 0.19, 0.19, 0.18,
+                                                        0.18, 0.18, 0.17, 0.17, 0.17, 
+                                                        0.17, 0.17, 0.17, 0.18, 0.18,
+                                                        0.18, 0.19, 0.19, 0.19, 0.20 };
+    TGraphAsymmErrors* graphChHaddNdyINELTotPP7TeV      = new TGraphAsymmErrors(20, chHad_dNdeta_xVal, chHad_dNdeta_pp7TeVINEL_yVal, chHad_dNdeta_xErr,
+                                                                                chHad_dNdeta_xErr, chHad_dNdeta_pp7TeVINEL_yErrDown, chHad_dNdeta_pp7TeVINEL_yErrUp);    
+    TH1D* histoChHaddNdyINELTotPP7TeV                   = new TH1D("histoChargedHadrondNdEtaALICEPP7TeV", "histoChargedHadrondNdEtaALICEPP7TeV", 20, chHad_dNdeta_xValHist);
+    for (Int_t i = 1; i< 20+1; i++){
+        histoChHaddNdyINELTotPP7TeV->SetBinContent(i,chHad_dNdeta_pp7TeVINEL_yVal[i-1]);
+        histoChHaddNdyINELTotPP7TeV->SetBinError(i,(chHad_dNdeta_pp7TeVINEL_yErrUp[i-1]+chHad_dNdeta_pp7TeVINEL_yErrDown[i-1])/2.);
+    }
+    
+    // 8 TeV values
+    Double_t chHad_dNdeta_pp8TeVINEL_yVal[20]       = { 6.16, 6.23, 6.25, 6.21, 6.14,
+                                                        6.04, 5.92, 5.82, 5.73, 5.68,
+                                                        5.68, 5.73, 5.82, 5.91, 6.03,
+                                                        6.13, 6.20, 6.23, 6.22, 6.16 };
+    Double_t chHad_dNdeta_pp8TeVINEL_yErrUp[20]     = { 0.22, 0.20, 0.19, 0.18, 0.17,
+                                                        0.16, 0.16, 0.15, 0.15, 0.15, 
+                                                        0.15, 0.15, 0.15, 0.16, 0.16,
+                                                        0.17, 0.17, 0.19, 0.20, 0.22 };
+    Double_t chHad_dNdeta_pp8TeVINEL_yErrDown[20]   = { 0.16, 0.15, 0.15, 0.14, 0.14,
+                                                        0.14, 0.13, 0.13, 0.13, 0.13,
+                                                        0.13, 0.13, 0.13, 0.14, 0.14,
+                                                        0.14, 0.14, 0.15, 0.15, 0.17 };
+    TGraphAsymmErrors* graphChHaddNdyINELTotPP8TeV      = new TGraphAsymmErrors(20, chHad_dNdeta_xVal, chHad_dNdeta_pp8TeVINEL_yVal, chHad_dNdeta_xErr,
+                                                                                chHad_dNdeta_xErr, chHad_dNdeta_pp8TeVINEL_yErrDown, chHad_dNdeta_pp8TeVINEL_yErrUp);    
+    TH1D* histoChHaddNdyINELTotPP8TeV                   = new TH1D("histoChargedHadrondNdEtaALICEPP8TeV", "histoChargedHadrondNdEtaALICEPP8TeV", 20, chHad_dNdeta_xValHist);
+    for (Int_t i = 1; i< 20+1; i++){
+        histoChHaddNdyINELTotPP8TeV->SetBinContent(i,chHad_dNdeta_pp8TeVINEL_yVal[i-1]);
+        histoChHaddNdyINELTotPP8TeV->SetBinError(i,(chHad_dNdeta_pp8TeVINEL_yErrUp[i-1]+chHad_dNdeta_pp8TeVINEL_yErrDown[i-1])/2.);
+    }
+
     // *********************************************************************************************************************
     // ********************************** Write Output files ***************************************************************
     // *********************************************************************************************************************
-    TFile fileChargedHadronspp(Form("ExternalInput/UnidentifiedCharged/ChargedHadrinSpectraPP_%s.root",dateForOutput.Data()) ,"RECREATE");
+    TFile fileChargedHadronspp(Form("ExternalInput/UnidentifiedCharged/ChargedHadronSpectraPP_%s.root",dateForOutput.Data()) ,"RECREATE");
         graphChHadALICEStatPP2760GeV->Write("graphChargedHadronsALICEStatPP2760GeV");
         graphChHadALICESysPP2760GeV->Write("graphChargedHadronsALICESysPP2760GeV");
         graphChHadATLASStatPP2760GeV->Write("graphChargedHadronsATLASStatPP2760GeV");
@@ -1114,6 +1220,17 @@ void PrepareChargedPionDataALICE_pp(){
         graphChHadALICESysPP7TeV->Write("graphChargedHadronsALICESysPP7TeV");
         graphChHadCMSStatPP7TeV->Write("graphChargedHadronsCMSStatPP7TeV");
         graphChHadCMSSysPP7TeV->Write("graphChargedHadronsCMSSysPP7TeV");
+        
+        graphChHaddNdyINELTotPP900GeV->Write("graphChargedHadrondNdEtaALICEPP900GeV");
+        histoChHaddNdyINELTotPP900GeV->Write("histoChargedHadrondNdEtaALICEPP900GeV");
+        graphChHaddNdyINELTotPP2760GeV->Write("graphChargedHadrondNdEtaALICEPP2760GeV");
+        histoChHaddNdyINELTotPP2760GeV->Write("histoChargedHadrondNdEtaALICEPP2760GeV");
+        graphChHaddNdyINELTotPP7TeV->Write("graphChargedHadrondNdEtaALICEPP7TeV");
+        histoChHaddNdyINELTotPP7TeV->Write("histoChargedHadrondNdEtaALICEPP7TeV");
+        graphChHaddNdyINELTotPP8TeV->Write("graphChargedHadrondNdEtaALICEPP8TeV");
+        histoChHaddNdyINELTotPP8TeV->Write("histoChargedHadrondNdEtaALICEPP8TeV");
+        
+        
     fileChargedHadronspp.Close();
 
     TFile fileChargedPionspp(Form("ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_%s.root",dateForOutput.Data()) ,"RECREATE");
@@ -1161,6 +1278,15 @@ void PrepareChargedPionDataALICE_pp(){
         histoChargedKaonSpecPubSystPP7TeV->Write("histoChargedKaonSpecPubSyst7TeV");
         histoProtonSpecPubStatPP7TeV->Write("histoProtonSpecPubStat7TeV");
         histoProtonSpecPubSystPP7TeV->Write("histoProtonSpecPubSyst7TeV");
+
+        graphChHaddNdyINELTotPP900GeV->Write("graphChargedHadrondNdEtaALICEPP900GeV");
+        histoChHaddNdyINELTotPP900GeV->Write("histoChargedHadrondNdEtaALICEPP900GeV");
+        graphChHaddNdyINELTotPP2760GeV->Write("graphChargedHadrondNdEtaALICEPP2760GeV");
+        histoChHaddNdyINELTotPP2760GeV->Write("histoChargedHadrondNdEtaALICEPP2760GeV");
+        graphChHaddNdyINELTotPP7TeV->Write("graphChargedHadrondNdEtaALICEPP7TeV");
+        histoChHaddNdyINELTotPP7TeV->Write("histoChargedHadrondNdEtaALICEPP7TeV");
+        graphChHaddNdyINELTotPP8TeV->Write("graphChargedHadrondNdEtaALICEPP8TeV");
+        histoChHaddNdyINELTotPP8TeV->Write("histoChargedHadrondNdEtaALICEPP8TeV");
         
     fileChargedPionspp.Close();
     
