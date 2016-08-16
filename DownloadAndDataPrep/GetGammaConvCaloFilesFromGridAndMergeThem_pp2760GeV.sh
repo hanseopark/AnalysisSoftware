@@ -205,8 +205,8 @@ fi
 TRAINDIR=Legotrain-mCalo-20160813_SecEffiAndTMStudiesRerun
 LHC11aData="1777"; 
 LHC15g1aMC="2408";
-LHC12f1aMC="2406"; 
-LHC12f1bMC="2407"; 
+LHC12f1aMC="2428"; 
+LHC12f1bMC="2429"; 
 
 LHC13gData="1778"; 
 LHC15a3aMC="2410"; 
