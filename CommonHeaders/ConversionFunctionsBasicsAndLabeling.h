@@ -3352,10 +3352,12 @@ Double_t xSection8TeVErrDown    = 2.82;         // from https://indico.cern.ch/e
 Double_t xSection8TeVT0AND      = 26.0*1e-3;   // from https://indico.cern.ch/event/486605/contribution/3/attachments/1216371/1776468/PWG-PP_250116.pdf
 Double_t xSection8TeVT0ErrUp    = 1.30;         // from https://indico.cern.ch/event/486605/contribution/3/attachments/1216371/1776468/PWG-PP_250116.pdf
 Double_t xSection8TeVT0ErrDown  = 1.30;         // from https://indico.cern.ch/event/486605/contribution/3/attachments/1216371/1776468/PWG-PP_250116.pdf
+Double_t xSection7TeVINEL       = 73.2*1e-3;
 Double_t xSection7TeV           = 62.22*1e-3;
 Double_t xSection7TeVV0AND      = 54.31*1e-3;
 Double_t xSection7TeVErrUp      = 2.18;
 Double_t xSection7TeVErrDown    = 2.18;
+Double_t xSection900GeVINEL     = 52.5*1e-3;
 Double_t xSection900GeV         = 47.78*1e-3;
 Double_t xSection900GeVV0AND    = 40.06*1e-3;
 Double_t xSection900GeVErrUp    = 2.39;
@@ -3368,41 +3370,47 @@ Double_t recalcBarn             = 1e12;         //NLO in pbarn!!!!
 Double_t factorToInel           = 1/1.12;       // this factor is multiplied with Raa and comes from trigger inelastic effiency for pp
 
 Double_t ReturnCorrectXSection ( TString energy, 
-                                 Int_t isV0AND){
+                                 Int_t selTrig){
     
-Double_t xSectionInt = 0;    
+    Double_t xSectionInt = 0;    
     if(energy.CompareTo("7TeV") == 0){
-        if (isV0AND == 1){
+        if (selTrig == 1){
             xSectionInt = xSection7TeVV0AND;
             cout << "V0AND xSection taken: \t" << xSectionInt << endl;
+        } else if (selTrig == 3){
+            xSectionInt = xSection7TeVINEL;
+            cout << "INEL xSection taken: \t" << xSectionInt << endl;
         } else {
             xSectionInt = xSection7TeV;
             cout << "V0OR xSection taken: \t" << xSectionInt << endl;
         }    
     } else if(energy.CompareTo("2.76TeV") == 0){
-        if (isV0AND == 1){
+        if (selTrig == 1){
             xSectionInt = xSection2760GeVV0AND;
             cout << "V0AND xSection taken: \t" << xSectionInt << endl;
-        } else if (isV0AND == 3){
-            xSectionInt = xSection2760GeVINEL;
-            cout << "V0AND xSection taken: \t" << xSectionInt << endl;            
+        } else if (selTrig == 3){
+            xSectionInt = xSection2760GeVINEL*1e-12;
+            cout << "INEL xSection taken: \t" << xSectionInt << endl;            
         } else {    
             xSectionInt = xSection2760GeV;
             cout << "V0OR xSection taken: \t" << xSectionInt << endl;  
         }
     } else if(energy.CompareTo("900GeV") == 0){
-        if (isV0AND == 1){
+        if (selTrig == 1){
             xSectionInt = xSection900GeVV0AND;
+            cout << "V0AND xSection taken: \t" << xSectionInt << endl;
+        } else if (selTrig == 3){
+            xSectionInt = xSection900GeVINEL;
             cout << "V0AND xSection taken: \t" << xSectionInt << endl;
         } else {
             xSectionInt = xSection900GeV;
             cout << "V0OR xSection taken: \t" << xSectionInt << endl;
         }    
     } else if(energy.CompareTo("8TeV") == 0){
-        if (isV0AND == 1){
+        if (selTrig == 1){
             xSectionInt = xSection8TeVV0AND;
             cout << "V0AND xSection taken: \t" << xSectionInt << endl;
-        } else if (isV0AND == 2){
+        } else if (selTrig == 2){
             xSectionInt = xSection8TeVT0AND;
             cout << "T0AND xSection taken: \t" << xSectionInt << endl;
         } else {
@@ -3507,3 +3515,19 @@ TString ReturnGeneratorNameFromMCName(TString MCname){
     return "";
 }    
 
+Double_t ReturnTriggerRejectionFactor(TString energy, Int_t trigger){
+    Double_t triggerRejec   = 1;
+    if (energy.CompareTo("2.76TeV") == 0){
+        cout << trigger << endl;
+        if (trigger == 51){         // EMC1
+            triggerRejec    = 1228;
+        } else if (trigger == 52){  // EMC7
+            triggerRejec    = 125;
+        } else if (trigger == 85){  // EG2
+            triggerRejec    = 1909;
+        } else if (trigger == 83){  // EG1  
+            triggerRejec    = 7217;
+        }    
+    }
+    return triggerRejec;
+}

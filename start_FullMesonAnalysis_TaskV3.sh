@@ -1681,7 +1681,7 @@ do
     if [ $answer = "0" ]; then
         echo "You are analysing PCM-PCM output";
         mode=0
-        NEvtsToy=1e9
+        NEvtsToy=1e7
         MinPtToy=0.5
         MaxPtToy=50
         correct=1
@@ -2247,7 +2247,7 @@ if [ $mode -lt 10 ]; then
                     mkdir $cutSelection/$energy/$Suffix
                 fi
 
-                if [ $disableToyMC -eq 0 ]; then 
+                if [ $disableToyMC -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then 
                     rm ToyMCOutputs.txt
                     root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
                     root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)

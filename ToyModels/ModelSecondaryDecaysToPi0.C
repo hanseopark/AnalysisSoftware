@@ -525,9 +525,25 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
         canvasFitQA->SaveAs(Form("%s%s_RatioToFitDistribution_Input.%s", fOutputDir.Data(), outputlabel.Data(), suffix.Data()));
     }
     
+    // find the correct factor due to generation in larger phi and y window
+    Double_t minEtaRange            = 0;
+    Double_t maxEtaRange            = 0;
+    Double_t deltaEta               = 0;
+    if (chHadDNdEta){
+        minEtaRange                 = chHadDNdEta->GetBinCenter(1)- chHadDNdEta->GetBinWidth(1)/2;
+        maxEtaRange                 = chHadDNdEta->GetBinCenter(chHadDNdEta->GetNbinsX())+ chHadDNdEta->GetBinWidth(chHadDNdEta->GetNbinsX())/2;
+        deltaEta                    = maxEtaRange-minEtaRange;
+    } else {
+        minEtaRange                 = 0;
+        maxEtaRange                 = 2*TMath::Pi();
+        deltaEta                    = maxEtaRange-minEtaRange;
+    }    
+    Double_t scaleFactorDecayPart   = 2*TMath::Pi()* deltaEta;
+    cout << "scale factor due to particle decay: " << scaleFactorDecayPart << endl;
+    
     // find the scale factor due to the restriction in the pt range
-    Double_t scaleFactor    = partSpectrumFromParam->Integral(partSpectrumFromParam->FindBin(minPt),partSpectrumFromParam->FindBin(maxPt))/partSpectrumFromParam->Integral();
-    cout << scaleFactor << "\t" << partSpectrumFromParam->Integral(partSpectrumFromParam->FindBin(minPt),partSpectrumFromParam->FindBin(maxPt)) << "\t" << partSpectrumFromParam->Integral() << endl;
+    Double_t scaleFactor            = partSpectrumFromParam->Integral(partSpectrumFromParam->FindBin(minPt),partSpectrumFromParam->FindBin(maxPt))/partSpectrumFromParam->Integral();
+    cout << scaleFactor << "\t" << partSpectrumFromParam->Integral(partSpectrumFromParam->FindBin(minPt),partSpectrumFromParam->FindBin(maxPt)) << "\t" << partSpectrumFromParam->Integral() << endl;    
     if (scaleFactor < 0){
         Double_t integralFullHist   = 0;
         for (Int_t iPt = 1; iPt< partSpectrumFromParam->GetNbinsX()+1; iPt++ ){
@@ -627,7 +643,7 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
                 etaCurrent = -1000; 
         }    
         // weights
-        Double_t weightFull     = 1./nEvts*scaleFactor*ptcurrent; // if input is dN/dydpt 1/2pi 1/pt needs to be multiplied with pt
+        Double_t weightFull     = 1./nEvts*scaleFactor*ptcurrent*scaleFactorDecayPart; // if input is dN/dydpt 1/2pi 1/pt needs to be multiplied with pt
         Double_t weightPartial  = 1./nEvts*scaleFactor;
         
         // create current particle
