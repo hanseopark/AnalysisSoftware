@@ -2478,17 +2478,21 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fPeakRange[1]                   = 0.59;
             fFitRange[0]                    = 0.41;
             if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fFitRange[0] = 0.39;}
+            if( fEnergyFlag.CompareTo("7TeV") == 0 ){ fFitRange[0] = 0.37;}
             fFitRange[1]                    = 0.73;
             if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fFitRange[1] = 0.71;}
+            if( fEnergyFlag.CompareTo("7TeV") == 0 ){ fFitRange[1] = 0.72;}
             fBGFitRange[0]                  = 0.67;
             fBGFitRange[1]                  = 0.799;
-            if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fBGFitRange[1] = 0.795;}
+            if( fEnergyFlag.CompareTo("8TeV") == 0 || fEnergyFlag.CompareTo("7TeV") == 0 ){ fBGFitRange[1] = 0.795;}
             fBGFitRangeLeft[0]              = 0.34;
             fBGFitRangeLeft[1]              = 0.44;
             fMesonFitRange[0]               = 0.41;
             if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonFitRange[0] = 0.39;}
+            if( fEnergyFlag.CompareTo("7TeV") == 0 ){ fMesonFitRange[0] = 0.37;}
             fMesonFitRange[1]               = 0.73;
             if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonFitRange[1] = 0.71;}
+            if( fEnergyFlag.CompareTo("7TeV") == 0 ){ fMesonFitRange[1] = 0.72;}
             fMesonWidthExpect               = 0.025;
             fMesonLambdaTail                = 0.012;
             fMesonWidthRange[0]             = 0.018;
@@ -2501,7 +2505,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fMesonIntDeltaRangeWide[1]      = 0.10;
             fMesonIntDeltaRangeNarrow[0]    = -0.060;
             fMesonIntDeltaRangeNarrow[1]    = 0.060;
-            if( fEnergyFlag.CompareTo("8TeV") == 0 ) {
+            if( fEnergyFlag.CompareTo("8TeV") == 0 || fEnergyFlag.CompareTo("7TeV") == 0 ) {
               fMesonIntDeltaRange[0]          = -0.070;
               fMesonIntDeltaRange[1]          = 0.070;
               fMesonIntDeltaRangeWide[0]      = -0.09;
