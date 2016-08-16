@@ -1619,6 +1619,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             fileSysErrPi0.open(sysFilePi0[i].Data(),ios_base::in);
             cout << sysFilePi0[i].Data() << endl;
             Int_t counter = 0;
+            cout << "reading sys file summed" << endl;
             while(!fileSysErrPi0.eof() && counter < 100){
                 Double_t garbage = 0;
                 fileSysErrPi0 >>ptSysRelPi0[i][counter] >> yErrorSysLowRelPi0[i][counter] >> yErrorSysHighRelPi0[i][counter]>>    garbage >> garbage;
@@ -1628,37 +1629,50 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             fileSysErrPi0.close();
          // read in detailed systematics
             string sysFilePi0Det = sysFilePi0[i].Data();
-            if(!replace(sysFilePi0Det, "Averaged", "AveragedSingle")){cout << "WARNING: could not find detailed systematics file " << sysFilePi0Det << ", skipping... " << endl; sysAvailSinglePi0[i] = kFALSE; continue;}
+            if(!replace(sysFilePi0Det, "Averaged", "AveragedSingle")){
+                cout << "WARNING: could not find detailed systematics file " << sysFilePi0Det << ", skipping... " << endl; sysAvailSinglePi0[i] = kFALSE; 
+                continue;
+            }
             ifstream fileSysErrDetailedPi0;
             fileSysErrDetailedPi0.open(sysFilePi0Det,ios_base::in);
-            if(fileSysErrDetailedPi0.is_open()) sysAvailSinglePi0[i] = kTRUE;
-            else{ sysAvailSinglePi0[i] = kFALSE; continue;}
-            cout << sysFilePi0Det << endl;
-            counter = 0;
-            string line;
-            Int_t counterColumn = 0;
-            while (getline(fileSysErrDetailedPi0, line) && counter < 100) {
-              istringstream ss(line);
-              TString temp="";
-              counterColumn = 0;
-              while(ss && counterColumn < 100){
-                ss >> temp;
-                if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
-                  ptSysDetail[i][counter].push_back(temp);
-                  counterColumn++;
-                }
-              }
-              if(counter == 0){
-                ptSysDetail[i][counter++].push_back("TotalError");
-                counterColumn++;
-              }else counter++;
+            if(fileSysErrDetailedPi0.is_open()) 
+                sysAvailSinglePi0[i] = kTRUE;
+            else{
+                sysAvailSinglePi0[i] = kFALSE; 
+                cout << "No single errors were found" << endl;
             }
-            numberBinsSysAvailSinglePi0[i] = counter;
-            fileSysErrDetailedPi0.close();
+            
+            if (sysAvailSinglePi0[i]){
+                cout << sysFilePi0Det << endl;
+                counter = 0;
+                string line;
+                Int_t counterColumn = 0;
+                while (getline(fileSysErrDetailedPi0, line) && counter < 100) {
+                istringstream ss(line);
+                TString temp="";
+                counterColumn = 0;
+                while(ss && counterColumn < 100){
+                    ss >> temp;
+                    if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                    ptSysDetail[i][counter].push_back(temp);
+                    counterColumn++;
+                    }
+                }
+                if(counter == 0){
+                    ptSysDetail[i][counter++].push_back("TotalError");
+                    counterColumn++;
+                }else counter++;
+                }
+                numberBinsSysAvailSinglePi0[i] = counter;
+                fileSysErrDetailedPi0.close();
+            }   
         } else {
             sysAvailPi0[i]             = kFALSE;
             sysAvailSinglePi0[i]       = kFALSE;
         }
+        cout << sysAvailPi0[i] << "\t" << sysAvailSinglePi0[i] << endl;
+//         continue;
+        
         
         // print out input spectrum from statistical histogram
         cout << "step 0" << endl;
@@ -2131,6 +2145,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         }
     }
 
+//     return;
+    
     // create weighted graphs for spectra and supporting graphs
     TString nameWeightsLogFilePi0 =     Form("%s/weightsPi0_%s.dat",outputDir.Data(),isMC.Data());
     TGraphAsymmErrors* graphCorrectedYieldWeightedAveragePi0Stat    = NULL;
@@ -3881,30 +3897,37 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 if(!replace(sysFileEtaDet, "Averaged", "AveragedSingle")){cout << "WARNING: could not find detailed systematics file " << sysFileEtaDet << ", skipping... " << endl; sysAvailSingleEta[i] = kFALSE; continue;}
                 ifstream fileSysErrDetailedEta;
                 fileSysErrDetailedEta.open(sysFileEtaDet,ios_base::in);
-                if(fileSysErrDetailedEta.is_open()) sysAvailSingleEta[i] = kTRUE;
-                else{ sysAvailSingleEta[i] = kFALSE; continue;}
-                cout << sysFileEtaDet << endl;
-                counter = 0;
-                string line;
-                Int_t counterColumn = 0;
-                while (getline(fileSysErrDetailedEta, line) && counter < 100) {
-                  istringstream ss(line);
-                  TString temp="";
-                  counterColumn = 0;
-                  while(ss && counterColumn < 100){
-                    ss >> temp;
-                    if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
-                      ptSysDetail[i][counter].push_back(temp);
-                      counterColumn++;
-                    }
-                  }
-                  if(counter == 0){
-                    ptSysDetail[i][counter++].push_back("TotalError");
-                    counterColumn++;
-                  }else counter++;
+                if(fileSysErrDetailedEta.is_open()) 
+                    sysAvailSingleEta[i] = kTRUE;
+                else{ 
+                    sysAvailSingleEta[i] = kFALSE; 
+                    cout << "couldn't find single errors for eta, jumping" << endl;
                 }
-                numberBinsSysAvailSingleEta[i] = counter;
-                fileSysErrDetailedEta.close();
+                
+                if (sysAvailSingleEta[i]){
+                    cout << sysFileEtaDet << endl;
+                    counter = 0;
+                    string line;
+                    Int_t counterColumn = 0;
+                    while (getline(fileSysErrDetailedEta, line) && counter < 100) {
+                        istringstream ss(line);
+                        TString temp="";
+                        counterColumn = 0;
+                        while(ss && counterColumn < 100){
+                            ss >> temp;
+                            if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                            ptSysDetail[i][counter].push_back(temp);
+                            counterColumn++;
+                            }
+                        }
+                        if(counter == 0){
+                            ptSysDetail[i][counter++].push_back("TotalError");
+                            counterColumn++;
+                        }else counter++;
+                    }
+                    numberBinsSysAvailSingleEta[i] = counter;
+                    fileSysErrDetailedEta.close();
+                }    
             } else {
                 sysAvailEta[i]              = kFALSE;
                 sysAvailSingleEta[i]        = kTRUE;
@@ -5121,30 +5144,37 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     if(!replace(sysFileEtaToPi0Det, "Averaged", "AveragedSingle")){cout << "WARNING: could not find detailed systematics file " << sysFileEtaToPi0Det << ", skipping... " << endl; sysAvailSingleEtaToPi0[i] = kFALSE; continue;}
                     ifstream fileSysErrDetailedEtaToPi0;
                     fileSysErrDetailedEtaToPi0.open(sysFileEtaToPi0Det,ios_base::in);
-                    if(fileSysErrDetailedEtaToPi0.is_open()) sysAvailSingleEtaToPi0[i] = kTRUE;
-                    else{ sysAvailSingleEtaToPi0[i] = kFALSE; continue;}
-                    cout << sysFileEtaToPi0Det << endl;
-                    counter = 0;
-                    string line;
-                    Int_t counterColumn = 0;
-                    while (getline(fileSysErrDetailedEtaToPi0, line) && counter < 100) {
-                      istringstream ss(line);
-                      TString temp="";
-                      counterColumn = 0;
-                      while(ss && counterColumn < 100){
-                        ss >> temp;
-                        if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
-                          ptSysDetail[i][counter].push_back(temp);
-                          counterColumn++;
-                        }
-                      }
-                      if(counter == 0){
-                        ptSysDetail[i][counter++].push_back("TotalError");
-                        counterColumn++;
-                      }else counter++;
+                    if(fileSysErrDetailedEtaToPi0.is_open()) 
+                        sysAvailSingleEtaToPi0[i] = kTRUE;
+                    else{ 
+                        sysAvailSingleEtaToPi0[i] = kFALSE; 
+                        cout << "couldn't find single errors for eta/pi0, jumping" << endl;    
                     }
-                    numberBinsSysAvailSingleEtaToPi0[i] = counter;
-                    fileSysErrDetailedEtaToPi0.close();
+                    
+                    if (sysAvailSingleEtaToPi0[i]){
+                        cout << sysFileEtaToPi0Det << endl;
+                        counter = 0;
+                        string line;
+                        Int_t counterColumn = 0;
+                        while (getline(fileSysErrDetailedEtaToPi0, line) && counter < 100) {
+                            istringstream ss(line);
+                            TString temp="";
+                            counterColumn = 0;
+                            while(ss && counterColumn < 100){
+                                ss >> temp;
+                                if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                                ptSysDetail[i][counter].push_back(temp);
+                                counterColumn++;
+                                }
+                            }
+                            if(counter == 0){
+                                ptSysDetail[i][counter++].push_back("TotalError");
+                                counterColumn++;
+                            }else counter++;
+                        }
+                        numberBinsSysAvailSingleEtaToPi0[i] = counter;
+                        fileSysErrDetailedEtaToPi0.close();
+                    }
                 } else {
                     sysAvailEtaToPi0[i]         = kFALSE;
                     sysAvailSingleEtaToPi0[i]   = kTRUE;
