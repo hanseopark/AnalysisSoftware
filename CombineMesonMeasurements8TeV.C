@@ -232,6 +232,69 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         histoPCMPi0AccTimesEff->Multiply(histoPCMPi0Acc);
         // normalize to full acceptance (delta y and phi)
         histoPCMPi0AccTimesEff->Scale(2*TMath::Pi()*1.6);
+
+        TH1D* histoPi0InvMassSigPlusBGPCM[3];
+        TH1D* histoPi0InvMassSigPCM[3];
+        TH1D* histoPi0InvMassSigRemBGSubPCM[3];
+        TH1D* histoPi0InvMassBGPCM[3];
+        TH1D* histoPi0InvMassRemBGPCM[3];
+        TH1D* histoPi0InvMassBGTotPCM[3];
+        TF1* fitPi0InvMassSigPCM[3];
+        TF1* fitPi0InvMassBGPCM[3];
+        Bool_t haveAllPi0InvMassPCM[3]                 = {kFALSE, kFALSE, kFALSE};
+        if (plotInvMassBins){
+            for (Int_t i = 0; i < 1; i++){
+                histoPi0InvMassSigPCM[i]               = (TH1D*)directoryPCMPi0->Get("InvMassSig_PtBin07");
+                histoPi0InvMassSigPlusBGPCM[i]         = (TH1D*)directoryPCMPi0->Get("InvMassSigPlusBG_PtBin07");
+                histoPi0InvMassBGPCM[i]                = (TH1D*)directoryPCMPi0->Get("InvMassBG_PtBin07");
+                fitPi0InvMassSigPCM[i]                 = (TF1*)directoryPCMPi0->Get("FitInvMassSig_PtBin07");
+                if (histoPi0InvMassSigPCM[i] && histoPi0InvMassSigPlusBGPCM[i] && histoPi0InvMassBGPCM[i] && fitPi0InvMassSigPCM[i]){
+                    haveAllPi0InvMassPCM[i]            = kTRUE;
+                }
+
+
+                if (haveAllPi0InvMassPCM[i]){
+                    histoPi0InvMassSigPCM[i]->Fit(fitPi0InvMassSigPCM[i],"QRME0");
+                    for (Int_t l=0; l < 6; l++){
+                        cout << fitPi0InvMassSigPCM[i]->GetParameter(l) << "\t +- " << fitPi0InvMassSigPCM[i]->GetParError(l) << endl;
+                    }
+                    fitPi0InvMassBGPCM[i]                                  = new TF1("Linearpp","[0]+[1]*x",0.02,0.25);
+                    fitPi0InvMassBGPCM[i]->SetParameter(0, fitPi0InvMassSigPCM[i]->GetParameter(4));
+                    fitPi0InvMassBGPCM[i]->SetParameter(1, fitPi0InvMassSigPCM[i]->GetParameter(5));
+                    TVirtualFitter * fitterPCM                             = TVirtualFitter::GetFitter();
+                    Int_t nFreeParPCM                                      = fitPi0InvMassSigPCM[i]->GetNumberFreeParameters();
+                    double * covMatrixPCM                                  = fitterPCM->GetCovarianceMatrix();
+
+                    histoPi0InvMassRemBGPCM[i]                             = (TH1D*)histoPi0InvMassBGPCM[i]->Clone(Form("Pi0_InvMassRemBG_Example_%s",nameTrigger[i].Data()));
+                    for (Int_t j = 1; j < histoPi0InvMassRemBGPCM[i]->GetNbinsX()+1; j++){
+                        histoPi0InvMassRemBGPCM[i]->SetBinContent(j,0);
+                        histoPi0InvMassRemBGPCM[i]->SetBinError(j,0);
+                    }
+                    for (Int_t j = histoPi0InvMassSigPCM[i]->GetXaxis()->FindBin(0.01); j < histoPi0InvMassSigPCM[i]->GetXaxis()->FindBin(0.30)+1; j++){
+                        Double_t startBinEdge                                   = histoPi0InvMassSigPCM[i]->GetXaxis()->GetBinLowEdge(j);
+                        Double_t endBinEdge                                     = histoPi0InvMassSigPCM[i]->GetXaxis()->GetBinUpEdge(j);
+                        Double_t intLinearBack                                  = fitPi0InvMassBGPCM[i]->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
+                        Double_t errorLinearBck                                 = pow(( pow( (endBinEdge-startBinEdge)*fitPi0InvMassSigPCM[i]->GetParError(4),2) +
+                                                                                        pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fitPi0InvMassSigPCM[i]->GetParError(5),2)
+                                                                                        +2*covMatrixPCM[nFreeParPCM*nFreeParPCM-2]*(endBinEdge-startBinEdge)*0.5*
+                                                                                        (endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
+//                         cout << j << "\t" << intLinearBack << "\t" << errorLinearBck << endl;
+                        histoPi0InvMassRemBGPCM[i]->SetBinContent(j,intLinearBack);
+                        histoPi0InvMassRemBGPCM[i]->SetBinError(j,errorLinearBck);
+                    }
+                    histoPi0InvMassBGTotPCM[i]         = (TH1D*)histoPi0InvMassBGPCM[i]->Clone(Form("Pi0_InvMassTotBG_Example_%s",nameTrigger[i].Data()));
+                    histoPi0InvMassBGTotPCM[i]->Sumw2();
+                    histoPi0InvMassBGTotPCM[i]->Add(histoPi0InvMassRemBGPCM[i]);
+                    histoPi0InvMassSigRemBGSubPCM[i]   = (TH1D*)histoPi0InvMassSigPCM[i]->Clone(Form("Pi0_InvMassSigRemBGSub_Example_%s",nameTrigger[i].Data()));
+                    histoPi0InvMassSigRemBGSubPCM[i]->Sumw2();
+                    histoPi0InvMassSigRemBGSubPCM[i]->Add(histoPi0InvMassRemBGPCM[i],-1);
+                    fitPi0InvMassSigPCM[i]->SetParameter(4, 0);
+                    fitPi0InvMassSigPCM[i]->SetParameter(5, 0);
+                }
+                cout << nameTrigger[i].Data() << "\t" << histoPi0InvMassSigPCM[i] << "\t" << histoPi0InvMassSigPlusBGPCM[i] << "\t" << histoPi0InvMassBGPCM[i] << "\t" << fitPi0InvMassSigPCM[i]
+                      << "\t" << haveAllPi0InvMassPCM[i] << endl;
+            }
+        }
         
     TDirectory* directoryPCMEta                             = (TDirectory*)filePCM->Get("Eta8TeV");
         TH1D* histoPCMEtaMass                               = (TH1D*)directoryPCMEta->Get("MassEta");
@@ -259,6 +322,68 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TH1D* histoPCMEtaToPi0Stat                          = (TH1D*)directoryPCMEta->Get("EtatoPi0RatioConversionBinShifted");
         TGraphAsymmErrors* graphPCMEtaToPi0Sys              = (TGraphAsymmErrors*)directoryPCMEta->Get("EtatoPi0RatioConversionBinShiftedSys");
         
+        TH1D* histoEtaInvMassSigPlusBGPCM[3];
+        TH1D* histoEtaInvMassSigPCM[3];
+        TH1D* histoEtaInvMassSigRemBGSubPCM[3];
+        TH1D* histoEtaInvMassBGPCM[3];
+        TH1D* histoEtaInvMassRemBGPCM[3];
+        TH1D* histoEtaInvMassBGTotPCM[3];
+        TF1* fitEtaInvMassSigPCM[3];
+        TF1* fitEtaInvMassBGPCM[3];
+        Bool_t haveAllEtaInvMassPCM[3]                 = {kFALSE, kFALSE, kFALSE};
+        if (plotInvMassBins){
+            for (Int_t i = 0; i < 1; i++){
+                histoEtaInvMassSigPCM[i]               = (TH1D*)directoryPCMEta->Get("InvMassSig_PtBin06");
+                histoEtaInvMassSigPlusBGPCM[i]         = (TH1D*)directoryPCMEta->Get("InvMassSigPlusBG_PtBin06");
+                histoEtaInvMassBGPCM[i]                = (TH1D*)directoryPCMEta->Get("InvMassBG_PtBin06");
+                fitEtaInvMassSigPCM[i]                 = (TF1*)directoryPCMEta->Get("FitInvMassSig_PtBin06");
+                if (histoEtaInvMassSigPCM[i] && histoEtaInvMassSigPlusBGPCM[i] && histoEtaInvMassBGPCM[i] && fitEtaInvMassSigPCM[i]){
+                    haveAllEtaInvMassPCM[i]            = kTRUE;
+                }
+
+
+                if (haveAllEtaInvMassPCM[i]){
+                    histoEtaInvMassSigPCM[i]->Fit(fitEtaInvMassSigPCM[i],"QRME0");
+                    for (Int_t l=0; l < 6; l++){
+                        cout << fitEtaInvMassSigPCM[i]->GetParameter(l) << "\t +- " << fitEtaInvMassSigPCM[i]->GetParError(l) << endl;
+                    }
+                    fitEtaInvMassBGPCM[i]                                  = new TF1("Linearpp","[0]+[1]*x",0.0,0.3);
+                    fitEtaInvMassBGPCM[i]->SetParameter(0, fitEtaInvMassSigPCM[i]->GetParameter(4));
+                    fitEtaInvMassBGPCM[i]->SetParameter(1, fitEtaInvMassSigPCM[i]->GetParameter(5));
+                    TVirtualFitter * fitterPCM                             = TVirtualFitter::GetFitter();
+                    Int_t nFreeParPCM                                      = fitEtaInvMassSigPCM[i]->GetNumberFreeParameters();
+                    double * covMatrixPCM                                  = fitterPCM->GetCovarianceMatrix();
+
+                    histoEtaInvMassRemBGPCM[i]                             = (TH1D*)histoEtaInvMassBGPCM[i]->Clone(Form("Eta_InvMassRemBG_Example_%s",nameTrigger[i].Data()));
+                    for (Int_t j = 1; j < histoEtaInvMassRemBGPCM[i]->GetNbinsX()+1; j++){
+                        histoEtaInvMassRemBGPCM[i]->SetBinContent(j,0);
+                        histoEtaInvMassRemBGPCM[i]->SetBinError(j,0);
+                    }
+                    for (Int_t j = histoEtaInvMassSigPCM[i]->GetXaxis()->FindBin(0.30); j < histoEtaInvMassSigPCM[i]->GetXaxis()->FindBin(0.70)+1; j++){
+                        Double_t startBinEdge                                   = histoEtaInvMassSigPCM[i]->GetXaxis()->GetBinLowEdge(j);
+                        Double_t endBinEdge                                     = histoEtaInvMassSigPCM[i]->GetXaxis()->GetBinUpEdge(j);
+                        Double_t intLinearBack                                  = fitEtaInvMassBGPCM[i]->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
+                        Double_t errorLinearBck                                 = pow(( pow( (endBinEdge-startBinEdge)*fitEtaInvMassSigPCM[i]->GetParError(4),2) +
+                                                                                        pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fitEtaInvMassSigPCM[i]->GetParError(5),2)
+                                                                                        +2*covMatrixPCM[nFreeParPCM*nFreeParPCM-2]*(endBinEdge-startBinEdge)*0.5*
+                                                                                        (endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
+//                         cout << j << "\t" << intLinearBack << "\t" << errorLinearBck << endl;
+                        histoEtaInvMassRemBGPCM[i]->SetBinContent(j,intLinearBack);
+                        histoEtaInvMassRemBGPCM[i]->SetBinError(j,errorLinearBck);
+                    }
+                    histoEtaInvMassBGTotPCM[i]         = (TH1D*)histoEtaInvMassBGPCM[i]->Clone(Form("Eta_InvMassTotBG_Example_%s",nameTrigger[i].Data()));
+                    histoEtaInvMassBGTotPCM[i]->Sumw2();
+                    histoEtaInvMassBGTotPCM[i]->Add(histoEtaInvMassRemBGPCM[i]);
+                    histoEtaInvMassSigRemBGSubPCM[i]   = (TH1D*)histoEtaInvMassSigPCM[i]->Clone(Form("Eta_InvMassSigRemBGSub_Example_%s",nameTrigger[i].Data()));
+                    histoEtaInvMassSigRemBGSubPCM[i]->Sumw2();
+                    histoEtaInvMassSigRemBGSubPCM[i]->Add(histoEtaInvMassRemBGPCM[i],-1);
+                    fitEtaInvMassSigPCM[i]->SetParameter(4, 0);
+                    fitEtaInvMassSigPCM[i]->SetParameter(5, 0);
+                }
+                cout << nameTrigger[i].Data() << "\t" << histoEtaInvMassSigPCM[i] << "\t" << histoEtaInvMassSigPlusBGPCM[i] << "\t" << histoEtaInvMassBGPCM[i] << "\t" << fitEtaInvMassSigPCM[i]
+                      << "\t" << haveAllEtaInvMassPCM[i] << endl;
+            }
+        }
     cout << "here" << endl;
     Int_t nEvtPCM                                           = histoPCMNumberOfEvents->GetBinContent(1);
     cout << "here" << endl;
@@ -3838,9 +3963,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     SetStyleTLatex( labelRatioTheoryPP22, 0.85*textsizeLabelsPP,4);
     labelRatioTheoryPP22->Draw();
 
+    canvasRatioPP->Update();
+    canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suffix.Data()));
 
-canvasRatioPP->Update();
-canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suffix.Data()));
     // **********************************************************************************************************************
     // ******************************************* Comparison to theory calculations Eta ************************************
     // **********************************************************************************************************************    
@@ -4536,6 +4661,94 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
     }
     TGraphAsymmErrors* graphRatioChargedHadrons = CalculateGraphErrMultiplicationOfFit(graphRatioChargedHadronsInverse, fitTCMInvXSectionPi0Plot);
 
+    // **********************************************************************************************************************
+    // **************************Fit ATLAS charged particles and plot ratio to fit ******************************************
+    // **********************************************************************************************************************
+
+    Double_t paramTCMATLASChargedNew[5]  = { p9093_d5x1y1->GetY()[0],0.1,
+                                             p9093_d5x1y1->GetY()[18],0.6,3.0};
+    TF1* fitATLASTCMInvXSectionCharged    = FitObject("tcm","fitATLASTCMInvXSectionCharged","Pi0",p9093_d5x1y1,0.5,40. ,paramTCMATLASChargedNew,"QNRMEX0+","", kFALSE);
+    //TF1* fitATLASTCMInvXSectionCharged   = FitObject("m","fitATLASTCMInvXSectionCharged","Pi0",p9093_d5x1y1,5,30. ,NULL,"QNRMEX0+","", kFALSE);
+    //Double_t paramGraph[3]                              = {5e9, 6., 0.13};
+    //TF1* fitATLASTCMInvXSectionCharged                   = FitObject("l","fitATLASTCMInvXSectionCharged","Pi0",p9093_d5x1y1,2,35.,paramGraph,"QNRMEX0+");
+    cout << WriteParameterToFile(fitATLASTCMInvXSectionCharged) << endl;
+
+    TCanvas* canvasDummyATLAS       = new TCanvas("canvasDummy2","",200,10,1200,1100);  // gives the page size
+    DrawGammaCanvasSettings( canvasDummyATLAS,  0.15, 0.01, 0.015, 0.08);
+    canvasDummyATLAS->SetLogy();
+    canvasDummyATLAS->SetLogx();
+    TH2F* histo2DDummyATLAS;
+    histo2DDummyATLAS               = new TH2F("histo2DDummyATLAS","histo2DDummyATLAS",1000,0.3,70.,1000,1,5e11);
+    SetStyleHistoTH2ForGraphs(histo2DDummyATLAS, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )", 0.032,0.04, 0.04,0.04, 0.8,1.55);
+    histo2DDummyATLAS->DrawCopy();
+
+    DrawGammaSetMarkerTGraphAsym(p9093_d5x1y1, 24, 1.5, kBlack, kBlack, widthLinesBoxes, kTRUE);
+    p9093_d5x1y1->Draw("pEsame");
+
+//    fitInvXSectionEta->SetLineColor(kBlue+2);
+//    fitInvXSectionEta->Draw("same");
+    fitATLASTCMInvXSectionCharged->SetLineColor(kRed+2);
+    fitATLASTCMInvXSectionCharged->Draw("same");
+
+    TLatex *labelTCCMATLAS1= new TLatex(0.48, 0.94, Form("TCM low:"));
+    TLatex *labelTCCMATLAS2= new TLatex(0.48, 0.90, Form("A_{1}: (%.1e #pm %.1e) - T_{e}: (%.3f #pm %.3f)",fitATLASTCMInvXSectionCharged->GetParameter(0),fitATLASTCMInvXSectionCharged->GetParError(0),fitATLASTCMInvXSectionCharged->GetParameter(1),fitATLASTCMInvXSectionCharged->GetParError(1)));
+    TLatex *labelTCCMATLAS3= new TLatex(0.48, 0.86, Form("TCM high:"));
+    TLatex *labelTCCMATLAS4= new TLatex(0.48, 0.82, Form("A_{2}: (%.1e #pm %.1e) - T: (%.3f #pm %.3f) - n: (%.3f #pm %.3f)",fitATLASTCMInvXSectionCharged->GetParameter(2),fitATLASTCMInvXSectionCharged->GetParError(2),fitATLASTCMInvXSectionCharged->GetParameter(3),fitATLASTCMInvXSectionCharged->GetParError(3),fitATLASTCMInvXSectionCharged->GetParameter(4),fitATLASTCMInvXSectionCharged->GetParError(4)));
+
+    TLatex *labelTCCMATLAS5= new TLatex(0.55, 0.75, Form("Bylinkin-Rostovtsev:"));
+    TLatex *labelTCCMATLAS6= new TLatex(0.55, 0.71, Form("#it{A}_{1} exp(-#it{E}_{T, kin}/#it{T}_{e}) + #it{A}_{2}/#(){1 + #frac{#it{p}_{T}^{2}}{#it{T}^{2}#upoint n}}^{n}"));
+
+    SetStyleTLatex( labelTCCMATLAS1, 0.03,4);
+    labelTCCMATLAS1->Draw();
+    SetStyleTLatex( labelTCCMATLAS2, 0.02,4);
+    labelTCCMATLAS2->Draw();
+    SetStyleTLatex( labelTCCMATLAS3, 0.03,4);
+    labelTCCMATLAS3->Draw();
+    SetStyleTLatex( labelTCCMATLAS4, 0.02,4);
+    labelTCCMATLAS4->Draw();
+    SetStyleTLatex( labelTCCMATLAS5, 0.03,4);
+    labelTCCMATLAS5->Draw();
+    SetStyleTLatex( labelTCCMATLAS6, 0.03,4);
+    labelTCCMATLAS6->Draw();
+
+    canvasDummyATLAS->Update();
+    canvasDummyATLAS->Print(Form("%s/ATLAS_ComparisonWithFit_8TeV.%s",outputDir.Data(),suffix.Data()));
+
+//-------------------------------------------------------------------------------------------------
+
+    TGraphAsymmErrors* graphRatioATLASChargedFit     = (TGraphAsymmErrors*)p9093_d5x1y1->Clone();
+    graphRatioATLASChargedFit                        = CalculateGraphErrRatioToFit(graphRatioATLASChargedFit, fitATLASTCMInvXSectionCharged);
+
+    canvasRatioToCombFit->cd();
+    histo2DPi0RatioToCombFit->GetXaxis()->SetRangeUser(0.5,70);
+    histo2DPi0RatioToCombFit->Draw("copy");
+
+        DrawGammaSetMarkerTGraphAsym(graphRatioATLASChargedFit, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphRatioATLASChargedFit, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0]);
+
+        graphRatioATLASChargedFit->Draw("E2same");
+        graphRatioATLASChargedFit->Draw("p,same,z");
+
+        DrawGammaLines(0.5, 70. , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(0.5, 70. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.5, 70. , 0.9, 0.9,0.5, kGray, 7);
+
+        labelRatioToFitEnergy->Draw();
+        TLatex *labelATLAScharged      = new TLatex(0.82, 0.86, "ATLAS h^{#pm}");
+        SetStyleTLatex( labelATLAScharged, textSizeLabelsPixel,4);
+        labelATLAScharged->SetTextFont(43);
+        labelATLAScharged->Draw();
+
+        TLegend* legendATLAScharged        = GetAndSetLegend2(0.2, 0.92-(0.05*2), 0.45, 0.92, 38);
+        legendATLAScharged->AddEntry(graphRatioATLASChargedFit,"ATLAS h^{#pm} / TCM fit");
+        legendATLAScharged->Draw("");
+
+    canvasRatioToCombFit->SaveAs(Form("%s/ATLAS_charged_RatioToFit.%s",outputDir.Data(),suffix.Data()));
+
+    // **********************************************************************************************************************
+    // ************************** plot ALICE pi0 to ATLAS charged particle comparison ***************************************
+    // **********************************************************************************************************************
+
     textSizeLabelsPixel             = 48;
     TCanvas* canvasCompYieldPPInd   = new TCanvas("canvasCompYieldPPInd","",200,10,1350,900);  // gives the page size
     DrawGammaCanvasSettings( canvasCompYieldPPInd,   0.12, 0.01, 0.01, 0.11);
@@ -4577,6 +4790,36 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
 
     canvasCompYieldPPInd->Update();
     canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedHadronToNeutralPions_PP8TeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+    TGraphAsymmErrors* graphRatioATLASchargedToALICE     = (TGraphAsymmErrors*)graphCombPi0InvXSectionSysA->Clone();
+    graphRatioATLASchargedToALICE                        = CalculateGraphErrRatioToFit(graphRatioATLASchargedToALICE, fitATLASTCMInvXSectionCharged);
+
+    histo2DCompCombinedRatio2->DrawCopy();
+
+    DrawGammaSetMarkerTGraphAsym(graphRatioATLASchargedToALICE, markerStyleCombHighPt, markerSizeComparison, kBlack , kBlack);
+    graphRatioATLASchargedToALICE->Draw("E1psame");
+
+    cout << "graphRatioChargedHadrons:" << endl;
+    graphRatioATLASchargedToALICE->Print();
+    TLegend* legendPi0CompChargedPionsPP4   = GetAndSetLegend2(0.15, 0.84, 0.9, 0.92, 0.85* textSizeLabelsPixel);
+    legendPi0CompChargedPionsPP4->SetNColumns(2);
+    legendPi0CompChargedPionsPP4->SetMargin(0.12);
+    legendPi0CompChargedPionsPP4->AddEntry(graphRatioATLASchargedToALICE,"#pi^{0} (ALICE) / h^{#pm} (ATLAS)","p");
+    legendPi0CompChargedPionsPP4->Draw();
+
+    TLatex *labelRatioTheoryPPA2   = new TLatex(0.15,0.8,"#pi^{0}: ALICE combined result");
+    SetStyleTLatex( labelRatioTheoryPPA2, 0.85*textsizeLabelsPP,4);
+    labelRatioTheoryPPA2->Draw();
+    TLatex *labelRatioTheoryPPAT2   = new TLatex(0.15,0.75,"h^{#pm}: fit to ATLAS with N_{ch} >= 1, #it{p}_{T} > 500 MeV, |#eta| < 2.5");
+    SetStyleTLatex( labelRatioTheoryPPAT2, 0.85*textsizeLabelsPP,4);
+    labelRatioTheoryPPAT2->Draw();
+
+    labelRatioTheoryPP->Draw();
+
+    DrawGammaLines(0.23, 70 , 1, 1 ,1, kGray, 1);
+
+    canvasCompYieldPPInd->Update();
+    canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedHadronToNeutralPions2_PP8TeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
 
     // **********************************************************************************************************************
     // **************************Plot example invariant mass bins ***********************************************************
@@ -4624,6 +4867,116 @@ canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suf
 
     if (plotInvMassBins){
         for (Int_t i =0 ; i < 3; i++){
+            if (haveAllPi0InvMassPCM[i]){
+                canvasInvMassSamplePlot->cd();
+                histo2DPi0InvMassDummy->GetXaxis()->SetRangeUser(0.02,0.255);
+                histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBGSubPCM[i]->GetMinimum(),1.15*histoPi0InvMassSigPlusBGPCM[i]->GetMaximum());
+                histo2DPi0InvMassDummy->DrawCopy();
+
+                TLatex *labelInvMassPtRangePCM = new TLatex(0.945,0.9,"#pi^{0}: 0.5 GeV/#it{c} < #it{p}_{T} < 0.6 GeV/#it{c}");
+
+                DrawGammaSetMarker(histoPi0InvMassSigPlusBGPCM[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
+                histoPi0InvMassSigPlusBGPCM[i]->SetLineWidth(1);
+                histoPi0InvMassSigPlusBGPCM[i]->Draw("hist,e,same");
+                DrawGammaSetMarker(histoPi0InvMassBGTotPCM[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
+                histoPi0InvMassBGTotPCM[i]->Draw("same");
+
+                DrawGammaSetMarker(histoPi0InvMassSigRemBGSubPCM[i], markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
+                histoPi0InvMassSigRemBGSubPCM[i]->Draw("same");
+                fitPi0InvMassSigPCM[i]->SetNpx(1000);
+                fitPi0InvMassSigPCM[i]->SetRange(0,0.255);
+                fitPi0InvMassSigPCM[i]->SetLineColor(fitColorInvMassSG);
+                fitPi0InvMassSigPCM[i]->Draw("same");
+
+                //
+                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem8TeV.Data());
+                SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
+                labelInvMassEnergy->SetTextFont(43);
+                labelInvMassEnergy->Draw();
+
+                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
+                SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
+                labelInvMassTrigger->SetTextFont(43);
+                labelInvMassTrigger->Draw();
+
+                TLatex *labelInvMassRecoPCM  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"PCM");
+                SetStyleTLatex( labelInvMassRecoPCM, 0.85*textSizeLabelsPixel,4);
+                labelInvMassRecoPCM->SetTextFont(43);
+                labelInvMassRecoPCM->Draw();
+
+                SetStyleTLatex( labelInvMassPtRangePCM, 0.85*textSizeLabelsPixel,4);
+                labelInvMassPtRangePCM->SetTextAlign(31);
+                labelInvMassPtRangePCM->SetTextFont(43);
+                labelInvMassPtRangePCM->Draw();
+
+                TLegend* legendInvMassPCM  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
+                legendInvMassPCM->SetMargin(0.25);
+                legendInvMassPCM->AddEntry(histoPi0InvMassSigPlusBGPCM[i],"Raw real events","l");
+                legendInvMassPCM->AddEntry(histoPi0InvMassBGTotPCM[i],"Mixed event +","p");
+                legendInvMassPCM->AddEntry((TObject*)0,"corr. BG","");
+                legendInvMassPCM->AddEntry(histoPi0InvMassSigRemBGSubPCM[i],"BG subtracted","p");
+                legendInvMassPCM->AddEntry(fitPi0InvMassSigPCM[i], "Fit","l");
+                legendInvMassPCM->Draw();
+                canvasInvMassSamplePlot->SaveAs(Form("%s/Pi0_InvMassBinPCM_%s.%s",outputDir.Data(), nameTrigger[i].Data(), suffix.Data()));
+            } else {
+                cout << "missing partial input for invariant mass bin for PCM for trigger: " << nameTrigger[i].Data() << endl;
+            }
+
+            if (haveAllEtaInvMassPCM[i]){
+                canvasInvMassSamplePlot->cd();
+                histo2DEtaInvMassDummy->GetYaxis()->SetRangeUser(histoEtaInvMassSigRemBGSubPCM[i]->GetMinimum(),1.1*histoEtaInvMassSigPlusBGPCM[i]->GetMaximum());
+                histo2DEtaInvMassDummy->DrawCopy();
+
+                TLatex *labelInvMassPtRangePCM = new TLatex(0.945,0.9,"#eta: 2.4 GeV/#it{c} < #it{p}_{T} < 2.8 GeV/#it{c}");
+
+                DrawGammaSetMarker(histoEtaInvMassSigPlusBGPCM[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
+                histoEtaInvMassSigPlusBGPCM[i]->SetLineWidth(1);
+                histoEtaInvMassSigPlusBGPCM[i]->Draw("hist,e,same");
+                DrawGammaSetMarker(histoEtaInvMassBGTotPCM[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
+                histoEtaInvMassBGTotPCM[i]->Draw("same");
+
+
+                DrawGammaSetMarker(histoEtaInvMassSigRemBGSubPCM[i], markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
+                histoEtaInvMassSigRemBGSubPCM[i]->Draw("same");
+                fitEtaInvMassSigPCM[i]->SetNpx(1000);
+                fitEtaInvMassSigPCM[i]->SetRange(0.35,0.695);
+                fitEtaInvMassSigPCM[i]->SetLineColor(fitColorInvMassSG);
+                fitEtaInvMassSigPCM[i]->Draw("same");
+
+                //
+                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem8TeV.Data());
+                SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
+                labelInvMassEnergy->SetTextFont(43);
+                labelInvMassEnergy->Draw();
+
+                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
+                SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
+                labelInvMassTrigger->SetTextFont(43);
+                labelInvMassTrigger->Draw();
+
+                TLatex *labelInvMassRecoPCM  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"PCM");
+                SetStyleTLatex( labelInvMassRecoPCM, 0.85*textSizeLabelsPixel,4);
+                labelInvMassRecoPCM->SetTextFont(43);
+                labelInvMassRecoPCM->Draw();
+
+                SetStyleTLatex( labelInvMassPtRangePCM, 0.85*textSizeLabelsPixel,4);
+                labelInvMassPtRangePCM->SetTextAlign(31);
+                labelInvMassPtRangePCM->SetTextFont(43);
+                labelInvMassPtRangePCM->Draw();
+
+                TLegend* legendInvMassPCM  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
+                legendInvMassPCM->SetMargin(0.25);
+                legendInvMassPCM->AddEntry(histoEtaInvMassSigPlusBGPCM[i],"Raw real events","l");
+                legendInvMassPCM->AddEntry(histoEtaInvMassBGTotPCM[i],"Mixed event +","p");
+                legendInvMassPCM->AddEntry((TObject*)0,"corr. BG","");
+                legendInvMassPCM->AddEntry(histoEtaInvMassSigRemBGSubPCM[i],"BG subtracted","p");
+                legendInvMassPCM->AddEntry(fitEtaInvMassSigPCM[i], "Fit","l");
+                legendInvMassPCM->Draw();
+                canvasInvMassSamplePlot->SaveAs(Form("%s/Eta_InvMassBinPCM_%s.%s",outputDir.Data(), nameTrigger[i].Data(), suffix.Data()));
+            } else {
+                cout << "missing partial input for invariant mass bin for PCM for trigger: " << nameTrigger[i].Data() << endl;
+            }
+
             if (haveAllPi0InvMassPCMEMCAL[i]){
                 canvasInvMassSamplePlot->cd();
                 histo2DPi0InvMassDummy->GetXaxis()->SetRangeUser(0.02,0.255);
