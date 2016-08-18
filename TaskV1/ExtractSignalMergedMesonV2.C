@@ -384,18 +384,22 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         if (meson.Contains("Pi0")){
             fHistoTrueClustersPrimPi0PtM02                  = (TH2F*) TrueContainer->FindObject(fObjectNameTrueClusPrimMesonM02.Data());
             if (fHistoTrueClustersPrimPi0PtM02) fHistoTrueClustersPrimPi0PtM02->Sumw2();
-            fHistoTrueClustersSecPi0PtM02                   = (TH2F*) TrueContainer->FindObject(fObjectNameTrueClusSecMesonM02.Data());
-            if (fHistoTrueClustersSecPi0PtM02) fHistoTrueClustersSecPi0PtM02->Sumw2();
-            fHistoTrueClustersSecPi0FK0sPtM02               = (TH2F*) TrueContainer->FindObject(fObjectNameTrueClusSecMesonFromK0sM02.Data());
-            if (fHistoTrueClustersSecPi0FK0sPtM02) fHistoTrueClustersSecPi0FK0sPtM02->Sumw2();
-            fHistoTrueClustersSecPi0FLambdaPtM02            = (TH2F*) TrueContainer->FindObject(fObjectNameTrueClusSecMesonFromLambdaM02.Data());
-            if (fHistoTrueClustersSecPi0FLambdaPtM02) fHistoTrueClustersSecPi0FLambdaPtM02->Sumw2();
-
-            // remove pi0 from K0s from secondary yield
-            if(fHistoTrueClustersSecPi0FK0sPtM02) fHistoTrueClustersSecPi0PtM02->Add(fHistoTrueClustersSecPi0FK0sPtM02,-1);
             
-            FillMCPrimSecM02HistosArray(    fHistoTrueClustersPrimPi0PtM02, fHistoTrueClustersSecPi0PtM02, fHistoTrueClustersSecPi0FK0sPtM02, fHistoTrueClustersSecPi0FLambdaPtM02
-                                       );
+            
+            fHistoTrueClustersSecPi0PtM02[0]                        = (TH2F*)TrueContainer->FindObject(fObjectNameTrueClusSecMesonFromK0sM02.Data());
+            fHistoTrueClustersSecPi0PtM02[1]                        = (TH2F*)TrueContainer->FindObject(fObjectNameTrueClusSecMesonFromLambdaM02.Data());
+            fHistoTrueClustersSecPi0PtM02[2]                        = (TH2F*)TrueContainer->FindObject(fObjectNameTrueClusSecMesonFromK0lM02.Data());
+            fHistoTrueClustersSecPi0PtM02[3]                        = (TH2F*)TrueContainer->FindObject(fObjectNameTrueClusSecMesonM02.Data());
+            for (Int_t j = 0; j < 4; j++){
+                if (fHistoTrueClustersSecPi0PtM02[j]) fHistoTrueClustersSecPi0PtM02[j]->Sumw2();
+            }    
+            // remove pi0 from other source (K0s, K0l, Lambda) from secondary yield
+            for (Int_t j = 0; j<3; j++){
+                if (fHistoTrueClustersSecPi0PtM02[j]) fHistoTrueClustersSecPi0PtM02[3]->Add(fHistoTrueClustersSecPi0PtM02[j],-1);
+            }    
+
+            
+            FillMCPrimSecM02HistosArray(    fHistoTrueClustersPrimPi0PtM02, fHistoTrueClustersSecPi0PtM02 );
         }
         
         
@@ -421,21 +425,11 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         
         if (meson.Contains("Pi0")){
             cout << "trying to load sec output" << endl;
-            fHistoMCSecPi0WithinAccepPt         = (TH1D*)MCContainer->FindObject(fObjectNameMCMesonAccSecPi0.Data());
-            fHistoMCSecPi0FromK0sWithinAccepPt  = (TH1D*)MCContainer->FindObject(fObjectNameMCMesonAccSecPi0FromK0s.Data());
-            fHistoMCSecPi0Pt                    = (TH1D*)MCContainer->FindObject(fObjectNameMCMesonSecPi0.Data());
-            fHistoMCSecPi0FromK0sPt             = (TH1D*)MCContainer->FindObject(fObjectNameMCMesonSecPi0FromK0s.Data());
-            cout << fObjectNameMCMesonAccSecPi0.Data() << "\t" << fObjectNameMCMesonAccSecPi0FromK0s.Data() << "\t" <<  fObjectNameMCMesonSecPi0.Data() << "\t" << fObjectNameMCMesonSecPi0FromK0s.Data() << endl;   
-            cout << fHistoMCSecPi0WithinAccepPt << "\t" << fHistoMCSecPi0FromK0sWithinAccepPt << "\t" <<  fHistoMCSecPi0Pt << "\t" << fHistoMCSecPi0FromK0sPt << endl;   
-            if (fHistoMCSecPi0WithinAccepPt && fHistoMCSecPi0FromK0sWithinAccepPt && fHistoMCSecPi0Pt && fHistoMCSecPi0FromK0sPt){
-                fHistoMCSecPi0WithinAccepPt->Sumw2();
-                fHistoMCSecPi0FromK0sWithinAccepPt->Sumw2();
-                fHistoMCSecPi0Pt->Sumw2();
-                fHistoMCSecPi0FromK0sPt->Sumw2();
-        
-                // take pi0 from K0s out of sec pi0
-                fHistoMCSecPi0WithinAccepPt->Add(fHistoMCSecPi0FromK0sWithinAccepPt,-1);
-                fHistoMCSecPi0Pt->Add(fHistoMCSecPi0FromK0sPt,-1);
+            fHistoMCSecPi0WithinAccepPtSource   = (TH2D*)MCContainer->FindObject(fObjectNameMCMesonAccSecPi0.Data());
+            fHistoMCSecPi0PtSource              = (TH2D*)MCContainer->FindObject(fObjectNameMCMesonSecPi0.Data());
+            if (fHistoMCSecPi0WithinAccepPtSource && fHistoMCSecPi0PtSource){
+                fHistoMCSecPi0WithinAccepPtSource->Sumw2();
+                fHistoMCSecPi0PtSource->Sumw2();
                 fNewMCOutput                    = kTRUE;
                 cout << "new MC output is being processed" << endl; 
             }    
@@ -568,18 +562,11 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                 fMesonM02TruePrimPi0Yields[iPt]                     = fYields;
                 fMesonM02TruePrimPi0YieldsError[iPt]                = fYieldsError;
 
-                IntegrateHistoM02(fHistoTrueClusSecPi0M02PtBin[iPt], fMesonM02IntRange );
-                fMesonM02TrueSecPi0Yields[iPt]                     = fYields;
-                fMesonM02TrueSecPi0YieldsError[iPt]                = fYieldsError;
-
-                IntegrateHistoM02(fHistoTrueClusSecPi0FK0sM02PtBin[iPt], fMesonM02IntRange );
-                fMesonM02TrueSecPi0FK0sYields[iPt]                  = fYields;
-                fMesonM02TrueSecPi0FK0sYieldsError[iPt]             = fYieldsError;
-
-                IntegrateHistoM02(fHistoTrueClusSecPi0FLambdaM02PtBin[iPt], fMesonM02IntRange );
-                fMesonM02TrueSecPi0FLambdaYields[iPt]               = fYields;
-                fMesonM02TrueSecPi0FLambdaYieldsError[iPt]          = fYieldsError;
-
+                for (Int_t j = 0; j< 4; j++){
+                    IntegrateHistoM02(fHistoTrueClusSecPi0M02PtBin[j][iPt], fMesonM02IntRange );
+                    fMesonM02TrueSecPi0Yields[j][iPt]               = fYields;
+                    fMesonM02TrueSecPi0YieldsError[j][iPt]          = fYieldsError;
+                }
             }
         }
     }
@@ -602,7 +589,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     if (fIsMC){
         FillHistosArrayMC(fHistoMCMesonWithinAccepPt, fHistoMCMesonPt, fDeltaPt);
         if (meson.Contains("Pi0") && fNewMCOutput){
-            FillHistosArrayMCSec(fHistoMCSecPi0WithinAccepPt, fHistoMCSecPi0Pt, fHistoMCSecPi0FromK0sWithinAccepPt, fHistoMCSecPi0FromK0sPt, fDeltaPt);
+            FillHistosArrayMCSecAndCalcAcceptance(fHistoMCSecPi0WithinAccepPtSource, fHistoMCSecPi0PtSource);
         }    
     } 
     
@@ -1342,8 +1329,8 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         if (meson.Contains("Pi0")){
             nameMeson       = Form("%s_MesonPi0ValidatedDisentangled%s", plotPrefix.Data(), plotSuffix.Data());
             cout << nameMeson.Data() << endl;            
-            PlotM02MergedTruePrimSecInPtBins(   fHistoTrueClusPi0M02PtBin, fHistoTrueClusPrimPi0M02PtBin, fHistoTrueClusSecPi0M02PtBin, 
-                                                fHistoTrueClusSecPi0FK0sM02PtBin, fHistoTrueClusSecPi0FLambdaM02PtBin,
+            PlotM02MergedTruePrimSecInPtBins(   fHistoTrueClusPi0M02PtBin, fHistoTrueClusPrimPi0M02PtBin, fHistoTrueClusSecPi0M02PtBin[3], 
+                                                fHistoTrueClusSecPi0M02PtBin[0], fHistoTrueClusSecPi0M02PtBin[1],
                                                 nameMeson, nameCanvas, namePad, fMesonM02PlotRange, 
                                                 fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcessPtBins, fCollisionSystem);
 
@@ -1357,9 +1344,6 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
 
     if (fIsMC){
         CalculateMesonAcceptance();
-        if (meson.Contains("Pi0") && fNewMCOutput){
-            CalculateMesonAcceptanceSec();
-        }
         
         TString fNameHistoEffi      = "TrueMesonEffiMergedPt";
         cout << fNameHistoEffi.Data() << endl;
@@ -1387,20 +1371,15 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         
         // Calculation of secondary fractions
         if (meson.Contains("Pi0")){
-            TString fNameHistoFrac      ="TrueSecFrac";
-            fHistoTruePi0SecFrac        = CalculateSecondaryFractions(fHistoTrueYieldPi0M02, fHistoTrueYieldSecPi0M02, fNameHistoFrac);
-            fNameHistoFrac              ="TrueSecFracFromK0S";
-            fHistoTruePi0SecFracFK0S    = CalculateSecondaryFractions(fHistoTrueYieldPi0M02, fHistoTrueYieldSecPi0FK0sM02, fNameHistoFrac);
-            fNameHistoFrac              ="TrueSecFracFromLambda";
-            fHistoTruePi0SecFracFLambda = CalculateSecondaryFractions(fHistoTrueYieldPi0M02, fHistoTrueYieldSecPi0FLambdaM02, fNameHistoFrac);
-            
+            for (Int_t j = 0; j < 4; j++){
+                TString fNameHistoFrac      = Form("TrueSecFracFrom%s",nameSecondaries[j].Data());
+                fHistoTruePi0SecFrac[j]     = CalculateSecondaryFractions(fHistoTrueYieldPi0M02, fHistoTrueYieldSecPi0M02[j], fNameHistoFrac);
+            }
             if (fNewMCOutput){
-                fNameHistoEffi              = "TrueMesonEffiSecPt";
-                fHistoTrueEffiSecPi0        = CalculateMesonEfficiencySec(fHistoTrueYieldSecPi0M02, fHistoMCSecPi0WithinAccepPtRebin, fNameHistoEffi);
-                
-                fNameHistoEffi              = "TrueMesonEffiSecFromK0sPt";
-                fHistoTrueEffiSecPi0FromK0s = CalculateMesonEfficiencySec(fHistoTrueYieldSecPi0FK0sM02, fHistoMCSecPi0FromK0sWithinAccepPtRebin, fNameHistoEffi);
-                
+                for (Int_t j = 0; j < 4; j++){
+                    fNameHistoEffi              = Form("TrueMesonEffiSecFrom%sPt",nameSecondaries[j].Data());
+                    fHistoTrueEffiSecPi0[j]     = CalculateMesonEfficiencySec(fHistoTrueYieldSecPi0M02[j], fHistoMCSecPi0PtWAccReb[j], fNameHistoEffi);                
+                }                
             }    
         }
         SaveCorrectionHistos(fCutSelection, fPrefix2);   
@@ -1561,9 +1540,9 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fHistoTrueClusOneElectronFromPi0M02PtBin    = new TH1D*[fNBinsPt];
         fHistoTrueClusOneElectronFromEtaM02PtBin    = new TH1D*[fNBinsPt];
         fHistoTrueClusPrimPi0M02PtBin               = new TH1D*[fNBinsPt];
-        fHistoTrueClusSecPi0M02PtBin                = new TH1D*[fNBinsPt];
-        fHistoTrueClusSecPi0FK0sM02PtBin            = new TH1D*[fNBinsPt];
-        fHistoTrueClusSecPi0FLambdaM02PtBin         = new TH1D*[fNBinsPt];
+        for (Int_t j = 0; j < 4; j++){
+            fHistoTrueClusSecPi0M02PtBin[j]         = new TH1D*[fNBinsPt];
+        }
         
         fMesonM02TrueMergedYields                   = new Double_t[fNBinsPt];
         fMesonM02TruePi0Yields                      = new Double_t[fNBinsPt];
@@ -1613,14 +1592,14 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fMesonM02TrueMergedOneElectronFromPi0YieldsError    = new Double_t[fNBinsPt];
         fMesonM02TrueMergedOneElectronFromEtaYields         = new Double_t[fNBinsPt];
         fMesonM02TrueMergedOneElectronFromEtaYieldsError    = new Double_t[fNBinsPt];
+        
         fMesonM02TruePrimPi0Yields                  = new Double_t[fNBinsPt];
-        fMesonM02TrueSecPi0Yields                   = new Double_t[fNBinsPt];
-        fMesonM02TrueSecPi0FK0sYields               = new Double_t[fNBinsPt];
-        fMesonM02TrueSecPi0FLambdaYields            = new Double_t[fNBinsPt];
         fMesonM02TruePrimPi0YieldsError             = new Double_t[fNBinsPt];
-        fMesonM02TrueSecPi0YieldsError              = new Double_t[fNBinsPt];
-        fMesonM02TrueSecPi0FK0sYieldsError          = new Double_t[fNBinsPt];
-        fMesonM02TrueSecPi0FLambdaYieldsError       = new Double_t[fNBinsPt];
+        for (Int_t j = 0; j< 4; j++){
+            fMesonM02TrueSecPi0Yields[j]            = new Double_t[fNBinsPt];
+            fMesonM02TrueSecPi0YieldsError[j]       = new Double_t[fNBinsPt];
+        }    
+        
     }
     
     for(Int_t i = 0;i<fNBinsPt; i++){
@@ -1654,10 +1633,10 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fHistoTrueClusOneElectronFromPi0M02PtBin[i] = NULL;
             fHistoTrueClusOneElectronFromEtaM02PtBin[i] = NULL;
             fHistoTrueClusPrimPi0M02PtBin[i]            = NULL;
-            fHistoTrueClusSecPi0M02PtBin[i]             = NULL;
-            fHistoTrueClusSecPi0FK0sM02PtBin[i]         = NULL;
-            fHistoTrueClusSecPi0FLambdaM02PtBin[i]      = NULL;
-
+            for (Int_t j = 0; j < 4; j++){
+                fHistoTrueClusSecPi0M02PtBin[j][i]      = NULL;
+            }
+            
             fMesonM02TrueMergedYields[i]                = 0.;
             fMesonM02TruePi0Yields[i]                   = 0.;
             fMesonM02TruePi0DCYields[i]                 = 0.;
@@ -1707,13 +1686,11 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fMesonM02TrueMergedOneElectronFromEtaYields[i]      = 0.;
             fMesonM02TrueMergedOneElectronFromEtaYieldsError[i] = 0.;
             fMesonM02TruePrimPi0Yields[i]               = 0.;
-            fMesonM02TrueSecPi0Yields[i]                = 0.;
-            fMesonM02TrueSecPi0FK0sYields[i]            = 0.;
-            fMesonM02TrueSecPi0FLambdaYields[i]         = 0.;
             fMesonM02TruePrimPi0YieldsError[i]          = 0.;
-            fMesonM02TrueSecPi0YieldsError[i]           = 0.;
-            fMesonM02TrueSecPi0FK0sYieldsError[i]       = 0.;
-            fMesonM02TrueSecPi0FLambdaYieldsError[i]    = 0.;            
+            for (Int_t j = 0; j<4; j++){
+                fMesonM02TrueSecPi0Yields[j][i]         = 0.;
+                fMesonM02TrueSecPi0YieldsError[j][i]    = 0.;
+            }    
         }
     }
 }
@@ -1753,10 +1730,8 @@ void SetCorrectMCHistogrammNames(TString mesonType){
     if (mesonType.Contains("Pi0")){
         fObjectNameMCMesonAcc                       = "MC_Pi0InAcc_Pt";
         fObjectNameMCMeson                          = "MC_Pi0_Pt";
-        fObjectNameMCMesonAccSecPi0                 = "MC_Pi0SecInAcc_Pt";
-        fObjectNameMCMesonSecPi0                    = "MC_Pi0Sec_Pt";
-        fObjectNameMCMesonAccSecPi0FromK0s          = "MC_Pi0SecFromK0sInAcc_Pt";
-        fObjectNameMCMesonSecPi0FromK0s             = "MC_Pi0SecFromK0s_Pt";
+        fObjectNameMCMesonAccSecPi0                 = "MC_SecPi0InAcc_Pt_Source";
+        fObjectNameMCMesonSecPi0                    = "MC_SecPi0_Pt_Source";
         fObjectNameMCMesonWOWeights                 = "MC_Pi0_WOWeights_Pt";
         fObjectNameMCMesonDalitzAcc                 = "MC_Pi0DalitzInAcc_Pt";
         fObjectNameMCMesonDalitz                    = "MC_Pi0Dalitz_Pt";
@@ -1764,6 +1739,7 @@ void SetCorrectMCHistogrammNames(TString mesonType){
         fObjectNameTrueClusPrimMesonM02             = "ESD_TrueClusFromPrimPi0_Pt_M02";
         fObjectNameTrueClusSecMesonM02              = "ESD_TrueClusFromSecPi0_Pt_M02";
         fObjectNameTrueClusSecMesonFromK0sM02       = "ESD_TrueClusFromSecPi0FromK0s_Pt_M02";
+        fObjectNameTrueClusSecMesonFromK0lM02       = "ESD_TrueClusFromSecPi0FromK0l_Pt_M02";
         fObjectNameTrueClusSecMesonFromLambdaM02    = "ESD_TrueClusFromSecPi0FromLambda_Pt_M02";
     } else {
         fObjectNameMCMesonAcc                       = "MC_EtaInAcc_Pt";
@@ -1909,12 +1885,10 @@ void CreatePtHistos(){
         if (fPrefix.Contains("Pi0")){
             fHistoTrueYieldPrimPi0M02                   = new TH1D("histoTrueYieldPrimPi0M02", "", fNBinsPt, fBinsPt);
             fHistoTrueYieldPrimPi0M02->Sumw2();
-            fHistoTrueYieldSecPi0M02                    = new TH1D("histoTrueYieldSecPi0M02", "", fNBinsPt, fBinsPt);
-            fHistoTrueYieldSecPi0M02->Sumw2();
-            fHistoTrueYieldSecPi0FK0sM02                = new TH1D("histoTrueYieldSecPi0FK0sM02", "", fNBinsPt, fBinsPt);
-            fHistoTrueYieldSecPi0FK0sM02->Sumw2();
-            fHistoTrueYieldSecPi0FLambdaM02             = new TH1D("histoTrueYieldSecPi0FLambdaM02", "", fNBinsPt, fBinsPt);
-            fHistoTrueYieldSecPi0FLambdaM02->Sumw2();
+            for (Int_t j = 0; j< 4; j++){
+                fHistoTrueYieldSecPi0M02[j]             = new TH1D(Form("histoTrueYieldSecPi0F%sM02", nameSecondaries[j].Data()), "", fNBinsPt, fBinsPt);
+                fHistoTrueYieldSecPi0M02[j]->Sumw2();
+            }
         }
     }
 }
@@ -2004,15 +1978,10 @@ void FillPtHistos(){
                 fHistoTrueYieldPrimPi0M02->SetBinContent(iPt, fMesonM02TruePrimPi0Yields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
                 fHistoTrueYieldPrimPi0M02->SetBinError(iPt, fMesonM02TruePrimPi0YieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
 
-                fHistoTrueYieldSecPi0M02->SetBinContent(iPt, fMesonM02TrueSecPi0Yields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-                fHistoTrueYieldSecPi0M02->SetBinError(iPt, fMesonM02TrueSecPi0YieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-
-                fHistoTrueYieldSecPi0FK0sM02->SetBinContent(iPt, fMesonM02TrueSecPi0FK0sYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-                fHistoTrueYieldSecPi0FK0sM02->SetBinError(iPt, fMesonM02TrueSecPi0FK0sYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-
-                fHistoTrueYieldSecPi0FLambdaM02->SetBinContent(iPt, fMesonM02TrueSecPi0FLambdaYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-                fHistoTrueYieldSecPi0FLambdaM02->SetBinError(iPt, fMesonM02TrueSecPi0FLambdaYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-
+                for (Int_t j = 0; j < 4; j++){
+                    fHistoTrueYieldSecPi0M02[j]->SetBinContent(iPt, fMesonM02TrueSecPi0Yields[j][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                    fHistoTrueYieldSecPi0M02[j]->SetBinError(iPt, fMesonM02TrueSecPi0YieldsError[j][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                }
             }    
         }
     }
@@ -2306,16 +2275,11 @@ void FillMCM02AdditionHistosArray(      TH2F* fTrueMergedPureDummy,
 //******** Fill array of M02 histograms in pT slices for Pi0 Prim/Sec ********
 //****************************************************************************
 void FillMCPrimSecM02HistosArray(   TH2F* fTruePi0PrimM02VsPt, 
-                                    TH2F* fTruePi0SecM02VsPt, 
-                                    TH2F* fTruePi0SecFromK0sM02VsPt,
-                                    TH2F* fTruePi0SecFromLambdaM02VsPt
+                                    TH2F** fTruePi0SecM02VsPt
                                 ) {
 
     for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
         TString fNamePi0PrimM02                 = Form("TrueClusPrimPi0_M02_in_Pt_Bin%02d", iPt);
-        TString fNamePi0SecM02                  = Form("TrueClusSecPi0_M02_in_Pt_Bin%02d", iPt);
-        TString fNameSecPi0FK0sM02              = Form("TrueClusSecPi0FromK0s_M02_in_Pt_Bin%02d", iPt);
-        TString fNameSecPi0FLambdaM02           = Form("TrueClusSecPi0FromLambda_M02_in_Pt_Bin%02d", iPt);
         
         // true prim pi0 clusters
         CheckForNULLForPointer(fHistoTrueClusPrimPi0M02PtBin[iPt]);
@@ -2323,21 +2287,15 @@ void FillMCPrimSecM02HistosArray(   TH2F* fTruePi0PrimM02VsPt,
             fHistoTrueClusPrimPi0M02PtBin[iPt]                  = FillProjectionY(fTruePi0PrimM02VsPt, fNamePi0PrimM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
         }
  
-        // true pi0 clusters from sec
-        CheckForNULLForPointer(fHistoTrueClusSecPi0M02PtBin[iPt]);
+        // fill secondary pt differential histo for pi0 from: K0s, Lambda, K0l, Rest
         if (fTruePi0SecM02VsPt){
-            fHistoTrueClusSecPi0M02PtBin[iPt]                   = FillProjectionY(fTruePi0SecM02VsPt, fNamePi0SecM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
-        }
-        // true pi0 from sec from K0s clusters
-        CheckForNULLForPointer(fHistoTrueClusSecPi0FK0sM02PtBin[iPt]);
-        if (fTruePi0SecFromK0sM02VsPt){
-            fHistoTrueClusSecPi0FK0sM02PtBin[iPt]               = FillProjectionY(fTruePi0SecFromK0sM02VsPt, fNameSecPi0FK0sM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
-        }
- 
-        // true pi0 from sec from Lambda clusters
-        CheckForNULLForPointer(fHistoTrueClusSecPi0FLambdaM02PtBin[iPt]);
-        if (fTruePi0SecFromLambdaM02VsPt){
-            fHistoTrueClusSecPi0FLambdaM02PtBin[iPt]            = FillProjectionY(fTruePi0SecFromLambdaM02VsPt, fNameSecPi0FLambdaM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            for (Int_t j = 0; j< 4; j++){
+                TString fNamePi0SecM02                  = Form("TrueClusSecPi0From%s_M02_in_Pt_Bin%02d", nameSecondaries[j].Data(), iPt);
+                CheckForNULLForPointer(fHistoTrueClusSecPi0M02PtBin[j][iPt]);
+                if (fTruePi0SecM02VsPt[j]){
+                    fHistoTrueClusSecPi0M02PtBin[j][iPt]            = FillProjectionY(fTruePi0SecM02VsPt[j], fNamePi0SecM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+                }
+            }    
         }
     }
 }
@@ -2393,20 +2351,48 @@ void FillHistosArrayMC(TH1D* fHistoMCMesonWithinAccepPtFill, TH1D * fHistoMCMeso
 //****************************************************************************
 //***************** Filling of MC histograms in proper binning ***************
 //****************************************************************************
-void FillHistosArrayMCSec(TH1D* fHistoMCMesonWithinAccepPtFillSec, TH1D * fHistoMCMesonPtFillSec, 
-                          TH1D* fHistoMCMesonWithinAccepPtFillSecFromK0s, TH1D * fHistoMCMesonPtFillSecFromK0s, TH1D * fDeltaPtFill) {
-    fHistoMCMesonWithinAccepPtFillSec->Sumw2();
-    fHistoMCSecPi0WithinAccepPtRebin        = (TH1D*)fHistoMCMesonWithinAccepPtFillSec->Rebin(fNBinsPt,"",fBinsPt); // Proper bins in Pt
-    fHistoMCSecPi0WithinAccepPtRebin->Divide(fDeltaPtFill);
-    fHistoMCMesonPtFillSec->Sumw2();
-    fHistoMCSecPi0PtRebin                   = (TH1D*)fHistoMCMesonPtFillSec->Rebin(fNBinsPt,"",fBinsPt); // Proper bins in Pt
-    fHistoMCSecPi0PtRebin->Divide(fDeltaPtFill);
-    fHistoMCMesonWithinAccepPtFillSecFromK0s->Sumw2();
-    fHistoMCSecPi0FromK0sWithinAccepPtRebin = (TH1D*)fHistoMCMesonWithinAccepPtFillSecFromK0s->Rebin(fNBinsPt,"",fBinsPt); // Proper bins in Pt
-    fHistoMCSecPi0FromK0sWithinAccepPtRebin->Divide(fDeltaPtFill);
-    fHistoMCMesonPtFillSecFromK0s->Sumw2();
-    fHistoMCSecPi0FromK0sPtRebin            = (TH1D*)fHistoMCMesonPtFillSecFromK0s->Rebin(fNBinsPt,"",fBinsPt); // Proper bins in Pt
-    fHistoMCSecPi0FromK0sPtRebin->Divide(fDeltaPtFill);
+void FillHistosArrayMCSecAndCalcAcceptance( TH2D* mcSecInputInAccSourcePt, TH2D * mcSecInputSourcePt ) {
+    
+    // MC histo pt vs sourcs
+    // 1-> K0s
+    // 2-> Lambda
+    // 3-> K0L
+    // 5-> p 
+    // 6-> n 
+    // 7-> pi 
+    // 8-> K 
+    // 9-> rho 
+    // 10-> Delta 
+    // 11-> K*
+    // 15-> Rest 
+    Int_t startBin[4]   = {1,2,3,4};
+    Int_t endBin[4]     = {1,2,3,15};
+    
+    // Filling of secondary histos with different sources
+    for (Int_t j = 0; j < 4; j++){
+        // project correct bin
+        fHistoMCSecPi0Pt[j]             = (TH1D*)mcSecInputSourcePt->ProjectionX(Form("MCSecPi0From%s",nameSecondaries[j].Data()), mcSecInputSourcePt->GetYaxis()->FindBin(startBin[j]), 
+                                                                                 mcSecInputSourcePt->GetYaxis()->FindBin(endBin[j]),"e");     
+        fHistoMCSecPi0Pt[j]->SetTitle(Form("MCSecPi0From%s",nameSecondaries[j].Data()));
+        fHistoMCSecPi0Pt[j]->Sumw2();
+        fHistoMCSecPi0PtWAcc[j]         = (TH1D*)mcSecInputInAccSourcePt->ProjectionX(Form("MCSecPi0From%s_InAcc",nameSecondaries[j].Data()), mcSecInputInAccSourcePt->GetYaxis()->FindBin(startBin[j]), 
+                                                                                      mcSecInputInAccSourcePt->GetYaxis()->FindBin(endBin[j]),"e");     
+        fHistoMCSecPi0PtWAcc[j]->SetTitle(Form("MCSecPi0From%s_InAcc",nameSecondaries[j].Data()));
+        fHistoMCSecPi0PtWAcc[j]->Sumw2();
+
+        // rebin in to current analysis binning
+        fHistoMCSecPi0PtReb[j]          = (TH1D*)fHistoMCSecPi0Pt[j]->Rebin(fNBinsPt,Form("MCSecPi0From%s_Rebinned",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
+        fHistoMCSecPi0PtReb[j]->SetTitle(Form("MCSecPi0From%s_Rebinned",nameSecondaries[j].Data()));
+        fHistoMCSecPi0PtReb[j] ->Divide(fDeltaPt);
+        fHistoMCSecPi0PtWAccReb[j]      = (TH1D*)fHistoMCSecPi0PtWAcc[j]->Rebin(fNBinsPt,Form("MCSecPi0From%s_InAcc_Rebinned",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
+        fHistoMCSecPi0PtWAccReb[j]->SetTitle(Form("MCSecPi0From%s_InAcc_Rebinned",nameSecondaries[j].Data()));
+        fHistoMCSecPi0PtWAccReb[j] ->Divide(fDeltaPt);
+        
+        // calculate acceptance
+        fHistoMCSecPi0AcceptPt[j]       = (TH1D*)fHistoMCSecPi0PtWAccReb[j]->Clone(Form("fMCSecPi0From%sAccepPt",nameSecondaries[j].Data()));
+        fHistoMCSecPi0AcceptPt[j]->SetTitle(Form("fMCSecPi0From%sAccepPt",nameSecondaries[j].Data()));
+        fHistoMCSecPi0AcceptPt[j]->Divide(fHistoMCSecPi0PtWAccReb[j],fHistoMCSecPi0PtReb[j],1.,1.,"B");
+    }
 }
 
 
@@ -2449,17 +2435,6 @@ void CalculateMesonAcceptance() {
     fHistoMCAcceptancePt->Divide(fHistoMCMesonWithinAccepPtRebin,fHistoMCMesonPtRebin,1.,1.,"B");
 }
 
-//****************************************************************************
-//***************** Calculation of Meson Acceptance **************************
-//****************************************************************************
-void CalculateMesonAcceptanceSec() {
-    fHistoMCAcceptanceSecPi0Pt          = new TH1D("fHistoMCAcceptanceSecPi0Pt","",fNBinsPt,fBinsPt);
-    fHistoMCAcceptanceSecPi0Pt->Sumw2();
-    fHistoMCAcceptanceSecPi0Pt->Divide(fHistoMCSecPi0WithinAccepPtRebin,fHistoMCSecPi0PtRebin,1.,1.,"B");
-    fHistoMCAcceptanceSecPi0FromK0sPt   = new TH1D("fHistoMCAcceptanceSecPi0FromK0sPt","",fNBinsPt,fBinsPt);
-    fHistoMCAcceptanceSecPi0FromK0sPt->Sumw2();
-    fHistoMCAcceptanceSecPi0FromK0sPt->Divide(fHistoMCSecPi0FromK0sWithinAccepPtRebin,fHistoMCSecPi0FromK0sPtRebin,1.,1.,"B");
-}
 
 
 //****************************************************************************
@@ -2682,9 +2657,6 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
         if (fHistoTrueYieldElectronM02)             fHistoTrueYieldElectronM02->Write();
         if (fHistoTrueYieldBGM02)                   fHistoTrueYieldBGM02->Write();
         if (fHistoTrueYieldPrimPi0M02)              fHistoTrueYieldPrimPi0M02->Write();
-        if (fHistoTrueYieldSecPi0M02)               fHistoTrueYieldSecPi0M02->Write();
-        if (fHistoTrueYieldSecPi0FK0sM02)           fHistoTrueYieldSecPi0FK0sM02->Write();
-        if (fHistoTrueYieldSecPi0FLambdaM02)        fHistoTrueYieldSecPi0FLambdaM02->Write();
         if (fHistoTrueClustersBGPtSource)           fHistoTrueClustersBGPtSource->Write();
         if (fHistoTrueClustersGammaPtSource)        fHistoTrueClustersGammaPtSource->Write();
         if (fHistoTrueClustersElectronPtSource)     fHistoTrueClustersElectronPtSource->Write();
@@ -2695,27 +2667,12 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
         if (fHistoMCMesonWithinAccepPtRebin)        fHistoMCMesonWithinAccepPtRebin->Write("MC_Meson_WithinAccept_Rebin");
         if (fHistoMCMesonPtWOWeights)               fHistoMCMesonPtWOWeights->Write("MC_Meson_WOWeights");
         if (fHistoMCAcceptancePt)                   fHistoMCAcceptancePt->Write("AcceptancePt");
-        if (fHistoMCSecPi0Pt)                       fHistoMCSecPi0Pt->Write("MC_SecPi0");
-        if (fHistoMCSecPi0PtRebin)                  fHistoMCSecPi0PtRebin->Write("MC_SecPi0_Rebin");
-        if (fHistoMCSecPi0FromK0sPt)                fHistoMCSecPi0FromK0sPt->Write("MC_SecPi0FromK0s");
-        if (fHistoMCSecPi0FromK0sPtRebin)           fHistoMCSecPi0FromK0sPtRebin->Write("MC_SecPi0FromK0s_Rebin");
-        if (fHistoMCSecPi0WithinAccepPt)                fHistoMCSecPi0WithinAccepPt->Write("MC_SecPi0_WithinAccept");
-        if (fHistoMCSecPi0WithinAccepPtRebin)           fHistoMCSecPi0WithinAccepPtRebin->Write("MC_SecPi0_WithinAccept_Rebin");
-        if (fHistoMCSecPi0FromK0sWithinAccepPt)         fHistoMCSecPi0FromK0sWithinAccepPt->Write("MC_SecPi0FromK0s_WithinAccept");
-        if (fHistoMCSecPi0FromK0sWithinAccepPtRebin)    fHistoMCSecPi0FromK0sWithinAccepPtRebin->Write("MC_SecPi0FromK0s_WithinAccept_Rebin");
-        if (fHistoMCAcceptanceSecPi0Pt)             fHistoMCAcceptanceSecPi0Pt->Write("SecPi0AcceptancePt");
-        if (fHistoMCAcceptanceSecPi0FromK0sPt)      fHistoMCAcceptanceSecPi0FromK0sPt->Write("SecPi0FromK0sAcceptancePt");
 
         if (fHistoTrueEffiMerged)                   fHistoTrueEffiMerged->Write("TrueEfficiencyMergedPt");
         if (fHistoTrueEffiPrimMeson)                fHistoTrueEffiPrimMeson->Write("TrueEfficiencyPrimMesonPt");
-        if (fHistoTrueEffiSecPi0)                   fHistoTrueEffiSecPi0->Write("TrueEfficiencySecPi0Pt");
-        if (fHistoTrueEffiSecPi0FromK0s)            fHistoTrueEffiSecPi0FromK0s->Write("TrueEfficiencySecPi0FromK0sPt");
         if (fHistoTruePurityMerged)                 fHistoTruePurityMerged->Write("TruePurityMergedPt");
         if (fHistoTruePi0PurityMerged)              fHistoTruePi0PurityMerged->Write("TruePurityPi0Pt");
         if (fHistoTrueEtaPurityMerged)              fHistoTrueEtaPurityMerged->Write("TruePurityEtaPt");
-        if (fHistoTruePi0SecFrac)                   fHistoTruePi0SecFrac->Write();
-        if (fHistoTruePi0SecFracFK0S)               fHistoTruePi0SecFracFK0S->Write();
-        if (fHistoTruePi0SecFracFLambda)            fHistoTruePi0SecFracFLambda->Write();
         for (Int_t i = 0; i< 9; i++){
             if (fHistoTrueClustersBGPt[i])          fHistoTrueClustersBGPt[i]->Write();
         }
@@ -2725,6 +2682,25 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
         for (Int_t i = 0; i< 9; i++){
             if (fHistoTrueClustersElectronPt[i])    fHistoTrueClustersElectronPt[i]->Write();
         }
+
+        for (Int_t j = 0; j< 4; j++){
+            if (fHistoTrueYieldSecPi0M02[j])        fHistoTrueYieldSecPi0M02[j]->Write();
+            if (fHistoTruePi0SecFrac[j])            fHistoTruePi0SecFrac[j]->Write();
+            if (fHistoTrueEffiSecPi0[j])            fHistoTrueEffiSecPi0[j]->Write();
+        }    
+        
+        if (fNewMCOutput){
+            if (fHistoMCSecPi0PtSource)                 fHistoMCSecPi0PtSource->Write("MC_SecPi0_Source");
+            if (fHistoMCSecPi0WithinAccepPtSource)      fHistoMCSecPi0WithinAccepPtSource->Write("MC_SecPi0_WithinAccept_Source");
+            for (Int_t j = 0; j < 4; j++){
+                if(fHistoMCSecPi0Pt[j])         fHistoMCSecPi0Pt[j]->Write();
+                if(fHistoMCSecPi0PtWAcc[j])     fHistoMCSecPi0PtWAcc[j]->Write();
+                if(fHistoMCSecPi0PtReb[j])      fHistoMCSecPi0PtReb[j]->Write();
+                if(fHistoMCSecPi0PtWAccReb[j])  fHistoMCSecPi0PtWAccReb[j]->Write();
+                if(fHistoMCSecPi0AcceptPt[j])   fHistoMCSecPi0AcceptPt[j]->Write();
+            }    
+        }    
+        
     }
     
     fOutput2->Write();
@@ -2816,13 +2792,11 @@ void Delete(){
         if (fMesonM02TrueMergedOneElectronFromEtaYields)        delete fMesonM02TrueMergedOneElectronFromEtaYields;
         if (fMesonM02TrueMergedOneElectronFromEtaYieldsError)   delete fMesonM02TrueMergedOneElectronFromEtaYieldsError;
         if (fMesonM02TruePrimPi0Yields)                         delete fMesonM02TruePrimPi0Yields;
-        if (fMesonM02TrueSecPi0Yields)                          delete fMesonM02TrueSecPi0Yields;
-        if (fMesonM02TrueSecPi0FK0sYields)                      delete fMesonM02TrueSecPi0FK0sYields;
-        if (fMesonM02TrueSecPi0FLambdaYields)                   delete fMesonM02TrueSecPi0FLambdaYields;
         if (fMesonM02TruePrimPi0YieldsError)                    delete fMesonM02TruePrimPi0YieldsError;
-        if (fMesonM02TrueSecPi0YieldsError)                     delete fMesonM02TrueSecPi0YieldsError;
-        if (fMesonM02TrueSecPi0FK0sYieldsError)                 delete fMesonM02TrueSecPi0FK0sYieldsError;
-        if (fMesonM02TrueSecPi0FLambdaYieldsError)              delete fMesonM02TrueSecPi0FLambdaYieldsError;
+        for (Int_t j = 0; j<4; j++){
+            if (fMesonM02TrueSecPi0Yields[j])                   delete fMesonM02TrueSecPi0Yields[j];
+            if (fMesonM02TrueSecPi0YieldsError[j])              delete fMesonM02TrueSecPi0YieldsError[j];
+        }
     }
     
     for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
@@ -2854,9 +2828,9 @@ void Delete(){
             if (fHistoTrueClusOneElectronFromPi0M02PtBin[ii])       delete fHistoTrueClusOneElectronFromPi0M02PtBin[ii];
             if (fHistoTrueClusOneElectronFromEtaM02PtBin[ii])       delete fHistoTrueClusOneElectronFromEtaM02PtBin[ii];
             if (fHistoTrueClusPrimPi0M02PtBin[ii])                  delete fHistoTrueClusPrimPi0M02PtBin[ii];
-            if (fHistoTrueClusSecPi0M02PtBin[ii])                   delete fHistoTrueClusSecPi0M02PtBin[ii];
-            if (fHistoTrueClusSecPi0FK0sM02PtBin[ii])               delete fHistoTrueClusSecPi0FK0sM02PtBin[ii];
-            if (fHistoTrueClusSecPi0FLambdaM02PtBin[ii])            delete fHistoTrueClusSecPi0FLambdaM02PtBin[ii];
+            for (Int_t j = 0; j<4; j++){
+                if (fHistoTrueClusSecPi0M02PtBin[j][ii])            delete fHistoTrueClusSecPi0M02PtBin[j][ii];
+            }
         }
     }
     
@@ -2888,21 +2862,18 @@ void Delete(){
         if (fHistoTrueYieldElectronM02)                         delete fHistoTrueYieldElectronM02;
         if (fHistoTrueYieldBGM02)                               delete fHistoTrueYieldBGM02;
         if (fHistoTrueYieldPrimPi0M02)                          delete fHistoTrueYieldPrimPi0M02;
-        if (fHistoTrueYieldSecPi0M02)                           delete fHistoTrueYieldSecPi0M02;
-        if (fHistoTrueYieldSecPi0FK0sM02)                       delete fHistoTrueYieldSecPi0FK0sM02;
-        if (fHistoTrueYieldSecPi0FLambdaM02)                    delete fHistoTrueYieldSecPi0FLambdaM02;
+        
         if (fHistoMCAcceptancePt)                               delete fHistoMCAcceptancePt;
-        if (fHistoMCAcceptanceSecPi0Pt)                         delete fHistoMCAcceptanceSecPi0Pt;
-        if (fHistoMCAcceptanceSecPi0FromK0sPt)                  delete fHistoMCAcceptanceSecPi0FromK0sPt;
-        if (fHistoTruePi0SecFrac)                               delete fHistoTruePi0SecFrac;
-        if (fHistoTruePi0SecFracFK0S)                           delete fHistoTruePi0SecFracFK0S;
-        if (fHistoTruePi0SecFracFLambda)                        delete fHistoTruePi0SecFracFLambda;
         if (fHistoTruePurityMerged)                             delete fHistoTruePurityMerged;
         if (fHistoTruePi0PurityMerged)                          delete fHistoTruePi0PurityMerged;
         if (fHistoTrueEtaPurityMerged)                          delete fHistoTrueEtaPurityMerged;
         if (fHistoTrueEffiPrimMeson)                            delete fHistoTrueEffiPrimMeson;        
-        if (fHistoTrueEffiSecPi0)                               delete fHistoTrueEffiSecPi0;        
-        if (fHistoTrueEffiSecPi0FromK0s)                        delete fHistoTrueEffiSecPi0FromK0s;        
+        for (Int_t j = 0; j<4; j++){
+            if (fHistoTrueYieldSecPi0M02[j])                    delete fHistoTrueYieldSecPi0M02[j];
+            if (fHistoTrueEffiSecPi0[j])                        delete fHistoTrueEffiSecPi0[j];        
+            if (fHistoTruePi0SecFrac[j])                        delete fHistoTruePi0SecFrac[j];
+        }
+        
     }
     
     // Delete Toy MC files

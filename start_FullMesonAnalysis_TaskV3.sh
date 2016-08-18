@@ -1734,7 +1734,7 @@ do
         echo "You are analysing EMC-merged output";
         mode=10
         NEvtsToy=1e9
-        MinPtToy=5
+        MinPtToy=10
         MaxPtToy=70
         correct=1
         DoEta=0;
@@ -2541,7 +2541,7 @@ else
                     mkdir $cutSelection/$energy/$Suffix
                 fi
 
-                if [ $disableToyMC -eq 0 ]; then 
+                if [ $disableToyMC -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then 
                     rm ToyMCOutputs.txt
                     root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
                     root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
