@@ -66,7 +66,7 @@ Double_t fBinsEta7TeVConvEMCALPt[17]            = { 0.0, 0.4, 0.6, 1.0, 1.4,
 Int_t fBinsEta7TeVPtRebin[17]                   = { 8, 7, 7, 4, 4, 4,
                                                     4, 4, 5, 5, 5, 
                                                     5, 5, 5, 6, 8, 8};
-nt_t fBinsEta7TeVConvEMCALPtRebin[16]           = { 2, 2, 2, 16, 10,
+Int_t fBinsEta7TeVConvEMCALPtRebin[16]           = { 2, 2, 2, 16, 10,
                                                     8, 8, 8, 8, 8,
                                                     8, 8, 10, 16, 16, 16};
 Int_t fBinsPi0EtaBinning7TeVPtRebin[15]         = { 8, 1, 1, 1, 1,
