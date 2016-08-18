@@ -43,23 +43,30 @@ Int_t fBinsPi07TeVPtRebin[48]                   = { 3, 2, 1, 1, 1, 1,
                                                     1, 1, 2, 2, 3,
                                                     3, 4, 4, 4, 5,
                                                     5, 5, 5};
-Int_t fBinsPi07TeVConvEMCALPtRebin[32]          = { 2, 2, 1, 1, 2,
-                                                    1, 1, 1, 1, 1,
-                                                    1, 1, 1, 1, 1,
-                                                    1, 1, 1, 1, 1,
-                                                    1, 1, 2, 2, 2,
-                                                    2, 4, 4, 4, 5,
-                                                    5, 5};
+Int_t fBinsPi07TeVConvEMCALPtRebin[32]          = { 2, 2, 2, 2, 2,
+                                                    4, 2, 2, 2, 2,
+                                                    2, 2, 2, 2, 2,
+                                                    2, 2, 2, 2, 2,
+                                                    2, 2, 2, 2, 2,
+                                                    2, 4, 4, 8, 8,
+                                                    2, 2};
+Int_t fBinsPi07TeVEMCALPtRebin[32]              = { 2, 2, 2, 2, 2,
+                                                    2, 2, 4, 2, 2,
+                                                    2, 2, 2, 2, 2,
+                                                    2, 2, 2, 2, 2,
+                                                    2, 2, 2, 2, 2,
+                                                    2, 2, 2, 2, 4,
+                                                    8, 20};
 Double_t fBinsEta7TeVPt[18]                     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4,
                                                     1.8, 2.2, 2.6, 3.0, 3.5,
                                                     4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0};
-Double_t fBinsEta7TeVConvEMCALPt[16]            = { 0.0, 0.4, 0.6, 1.0, 1.4,
+Double_t fBinsEta7TeVConvEMCALPt[17]            = { 0.0, 0.4, 0.6, 1.0, 1.4,
                                                     1.8, 2.2, 2.6, 3.0, 3.5,
-                                                    4.0, 6.0, 8.0, 10.0, 12.0, 16.0};
+                                                    4.0, 6.0, 8.0, 10.0, 12.0, 16.0,20};
 Int_t fBinsEta7TeVPtRebin[17]                   = { 8, 7, 7, 4, 4, 4,
                                                     4, 4, 5, 5, 5, 
                                                     5, 5, 5, 6, 8, 8};
-Int_t fBinsEta7TeVConvEMCALPtRebin[15]          = { 8, 5, 16, 10, 8,
+nt_t fBinsEta7TeVConvEMCALPtRebin[16]           = { 2, 2, 2, 16, 10,
                                                     8, 8, 8, 8, 8,
                                                     8, 8, 10, 16, 16, 16};
 Int_t fBinsPi0EtaBinning7TeVPtRebin[15]         = { 8, 1, 1, 1, 1,
