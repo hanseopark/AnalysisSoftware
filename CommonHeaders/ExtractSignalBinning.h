@@ -30,7 +30,7 @@ Double_t fBinsPi07TeVPt[49]                     = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7
                                                     2.8, 3.0, 3.2, 3.4, 3.6,
                                                     3.8, 4.0, 4.3, 4.6, 5.0,  5.5,
                                                     6.0, 6.5, 7.0, 8.0, 10.0,
-																	 12.0,16.0, 20.0, 25.0};
+                                                    12.0,16.0, 20.0, 25.0};
 Double_t fBinsPi07TeVPtDCA[28]                  = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
                                                     1.0, 1.1, 1.2, 1.3, 1.4, 1.6, 1.8, 2.0,
                                                     2.4, 2.8, 3.2, 3.6, 4.0,
@@ -1384,13 +1384,12 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 }
             } else {
                 fStartPtBin     = 1;
-                if (modi == 4 || modi == 2 ) fStartPtBin = 4;
-                fColumn         = 7;
-                fRow            = 6;
+                fColumn         = 4;
+                fRow            = 3;
 
-                if (fNBinsPt > 45) {
-                    cout << "You have chosen to have more than 45 bins, this is not possible, it will be reduced to 45" << endl;
-                    fNBinsPt    = 45;
+                if (fNBinsPt > 11) {
+                    cout << "You have chosen to have more than 11 bins, this is not possible, it will be reduced to 11" << endl;
+                    fNBinsPt    = 11;
                 }
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
                     fBinsPt[i]  = fBinsPi0900GeVPt[i];
@@ -1540,8 +1539,10 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
         } else if (energy.CompareTo("7TeV") == 0) {
             if (directPhoton.CompareTo("directPhoton") == 0){
                 fStartPtBin     = 1;
-                if (modi == 4) fStartPtBin = 7;
-                else if(modi == 2) fStartPtBin = 5;
+                if (modi == 4) 
+                    fStartPtBin = 7;
+                else if(modi == 2) 
+                    fStartPtBin = 5;
                 fColumn         = 5;
                 fRow            = 5;                                
                 if (fNBinsPt > 24) {
@@ -1554,24 +1555,29 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 }
             } else {
                 fStartPtBin     = 1;
-                if (modi == 4) fStartPtBin = 7;
-                else if(modi == 2) fStartPtBin = 5;
+                if (modi == 4) 
+                    fStartPtBin = 7;
+                else if(modi == 2) 
+                    fStartPtBin = 5;
                 fColumn         = 7;
-                fRow            = 5;
+                fRow            = 6;
 
-                if (fNBinsPt > 32) {
-                    cout << "You have chosen to have more than 32 bins, this is not possible, it will be reduced to 32" << endl;
-                    fNBinsPt    = 32;
+                if (fNBinsPt > 45) {
+                    cout << "You have chosen to have more than 45 bins, this is not possible, it will be reduced to 45" << endl;
+                    fNBinsPt    = 45;
                 }
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
                     fBinsPt[i]         = fBinsPi07TeVPt[i];
 
                     if (modi == 2){
-                        if (i < fNBinsPt) fNRebin[i] = fBinsPi07TeVConvEMCALPtRebin[i];
+                        if (i < fNBinsPt)
+                            fNRebin[i]  = fBinsPi07TeVConvEMCALPtRebin[i];
                     } else if (modi == 4){
-                       if (i < fNBinsPt) fNRebin[i] = fBinsPi07TeVEMCALPtRebin[i];
+                       if (i < fNBinsPt) 
+                           fNRebin[i]   = fBinsPi07TeVEMCALPtRebin[i];
                     } else {
-                        if (i < fNBinsPt) fNRebin[i] = fBinsPi07TeVPtRebin[i];
+                        if (i < fNBinsPt) 
+                            fNRebin[i]  = fBinsPi07TeVPtRebin[i];
                     }
                 }
             }
@@ -1666,15 +1672,6 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 fNBinsPt        = 53;
             }    
 
-//            if (modi ==4){
-//                if (trigger.CompareTo("52") == 0 || trigger.CompareTo("81") == 0){
-//                    fNBinsPt 	= 38;
-//                } else if (fNBinsPt > 33){
-//                    cout << "You have chosen to have more than 33 bins, this is not possible, it will be reduced to 33" << endl;
-//                    fNBinsPt 	= 33;
-//                }
-//            }
-
             for (Int_t i = 0; i < fNBinsPt+1; i++) {
                 if (modi == 4 ){
                     if( specialTrigg == 1 ){
@@ -1691,7 +1688,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     } else
                         fBinsPt[i]                 = fBinsPi08TeVPtConvEMCAL[i];
                 } else if (modi == 10){
-                    fBinsPt[i]                 = fBinsPi08TeVPtMerged[i];
+                    fBinsPt[i]                     = fBinsPi08TeVPtMerged[i];
                 } else {
                     if( specialTrigg == 1 ){
                         fBinsPt[i]                 = fBinsPi08TeVTrigger1Pt[i];
@@ -1718,7 +1715,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                         if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCALPtRebin[i];
                     }
                 } else if(modi == 10) {
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPtMergedRebin[i];
+                    if (i < fNBinsPt+1) fNRebin[i]     = fBinsPi08TeVPtMergedRebin[i];
                 } else {
                     if( specialTrigg == 1 ){
                         if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVConvTrigger1PtRebin[i];
@@ -2108,8 +2105,10 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
         //*********************************************************************************************
         } else if (energy.CompareTo("7TeV") == 0) {
             fStartPtBin         = 1;
-            if (modi == 2 ) fStartPtBin = 3;
-            else if (modi == 4) fStartPtBin = 5;
+            if (modi == 2 ) 
+                fStartPtBin     = 3;
+            else if (modi == 4) 
+                fStartPtBin     = 5;
             fColumn             = 5;
             fRow                = 3;
             
@@ -2118,10 +2117,13 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 fNBinsPt        = 16;
             }
             for (Int_t i = 0; i < fNBinsPt+2; i++) {
-                if (modi == 2 || modi == 4) fBinsPt[i]      = fBinsEta7TeVConvEMCALPt[i];
-                else fBinsPt[i]                 = fBinsEta7TeVPt[i];
+                if (modi == 2 || modi == 4) 
+                    fBinsPt[i]      = fBinsEta7TeVConvEMCALPt[i];
+                else 
+                    fBinsPt[i]      = fBinsEta7TeVPt[i];
                 if (modi == 2 || modi == 4){
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsEta7TeVConvEMCALPtRebin[i];
+                    if (i < fNBinsPt+1) 
+                        fNRebin[i]  = fBinsEta7TeVConvEMCALPtRebin[i];
                 } else {
                     if (i < fNBinsPt+1)
                         fNRebin[i]  = fBinsEta7TeVPtRebin[i];
