@@ -312,7 +312,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TString nameIntRange[6]                         = {"", "Wide", "Narrow", "Left", "LeftWide", "LeftNarrow"};
     TString nameIntRangePlot[6]                     = {"right/ normal int", "right/wide int", "right/narrow int", "left/ normal int", "left/wide int", "left/narrow int"};
 
-
+    Int_t pdgSecMeson[3]                            = {310, 3122, 130};
+    Double_t decayLength[3]                         = {0.026844, 0.0789, 15.34};
+    Double_t stacklength                            = 4.5;
+    
     // Color and style setting for plotting
     Color_t colorIntRanges[6]                       = {kBlack, kGray+3, kGray+1, kBlue, kBlue+2, kBlue-5};
     Color_t colorIntRangesSec[6]                    = {kRed+1, kRed+2, kRed-5, kBlue, kBlue+2, kBlue-5};
@@ -412,11 +415,13 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     for (Int_t j = 0; j < 3; j++){
         histoToyMCInputSecPi0[j]                    = (TH1D*)fileUncorrected.Get(Form("histoSecPi0YieldFrom%s_FromToy",nameSecMeson[j].Data()));
         if (histoToyMCInputSecPi0[j]){
-            histoToyMCInputSecPi0[j]->Scale(scaleFactorMeasXSecForToy);
+            Double_t scaleFactStackLength           = -1*(TMath::Exp(-stacklength/decayLength[j])-1);
+            cout << scaleFactStackLength << endl;
+            histoToyMCInputSecPi0[j]->Scale(scaleFactorMeasXSecForToy*scaleFactStackLength);
             foundToyMCInput                         = kTRUE;
         }
     }
-    
+//     return;
     
     // set min and max values for pT
     Double_t maxPtMeson     = histoUnCorrectedYield[0]->GetXaxis()->GetBinUpEdge(histoUnCorrectedYield[0]->GetNbinsX());
@@ -487,12 +492,22 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     }    
     // read secondary pi0 efficiencies
     TH1D* histoSecTrueEffi[3][4]                    = {{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL}};
+    TH1D* histoRatioSecEffDivTrueEff[3][4]          = {{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL}};
+
     Bool_t modifiedSecTrueEffi[3][4]                = {{kFALSE, kFALSE, kFALSE, kFALSE}, {kFALSE, kFALSE, kFALSE, kFALSE}, {kFALSE, kFALSE, kFALSE, kFALSE}};
     Int_t nEffHistSec                               = 0;
     for (Int_t j = 0; j< 4; j++){
         for (Int_t k = 0; k< 3; k++){
             histoSecTrueEffi[k][j]                  = (TH1D*)fileCorrections->Get(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
             if (histoSecTrueEffi[k][j]){
+                histoRatioSecEffDivTrueEff[k][j]    = (TH1D*)histoSecTrueEffi[k][j]->Clone(Form("ratioSecEffDivTrueEff%s%s",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                histoRatioSecEffDivTrueEff[k][j]->Divide(histoRatioSecEffDivTrueEff[k][j],histoTrueEffiPt[k]);
+
+                TF1*  fitConst                      = new TF1("fitConst","[0]");
+                fitConst->SetLineColor(colorSec[j]);
+                histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst);
+                cout << fitConst->GetParameter(0) << "\t +-" << fitConst->GetParError(0) << endl;
+
                 cout << "rel stat. err sec effi: " << k << "\t"<< j << endl;
                 Int_t nBinsActive                   = 0;
                 Int_t nBinsTot                      = 0;
@@ -500,33 +515,71 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     if (histoSecTrueEffi[k][j]->GetBinCenter(iPt) > minPtMeson && histoSecTrueEffi[k][j]->GetBinContent(iPt) != 0){
                         nBinsActive++;
                         nBinsTot++;
-                        cout << histoSecTrueEffi[k][j]->GetBinCenter(iPt) << "\t"<< histoSecTrueEffi[k][j]->GetBinError(iPt)/histoSecTrueEffi[k][j]->GetBinContent(iPt)*100 << endl;
+//                         cout << histoSecTrueEffi[k][j]->GetBinCenter(iPt) << "\t"<< histoSecTrueEffi[k][j]->GetBinError(iPt)/histoSecTrueEffi[k][j]->GetBinContent(iPt)*100 << endl;
                     }  else if (histoSecTrueEffi[k][j]->GetBinCenter(iPt) > minPtMeson){
                         nBinsTot++;
                     }
                 }
-                if ((Double_t)nBinsActive/nBinsTot < 0.75 && optionEnergy.CompareTo("2.76TeV") == 0){
-                    if (j != 0 && histoSecTrueEffi[k][0] && (mode == 4 || mode == 2 || mode == 0)){ // 
-                        histoSecTrueEffi[k][j]      = (TH1D*)histoSecTrueEffi[k][0]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
-                        // crude assumptions
-                        if (mode == 4){
-                            histoSecTrueEffi[k][j]->Scale(1.5);
-                        } else if (mode == 2 ) {
-                            if (j == 3){
-                                histoSecTrueEffi[k][j]->Scale(0.5);
-                            } else {
-                                histoSecTrueEffi[k][j]->Scale(0.1);
-                            }    
-                        } else if  ( mode == 0) {
-                            if (j == 3){
-                                histoSecTrueEffi[k][j]->Scale(0.5);
-                            } else {
+                
+                histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                if (optionEnergy.CompareTo("2.76TeV") == 0){
+                    // crude assumptions // need to be validated for other energies
+                    if (mode == 4 ){
+                        if (j == 0 ){
+                            if ( fitConst->GetParameter(0) > 0.3 && fitConst->GetParameter(0) < 0.7)
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else 
+                                histoSecTrueEffi[k][j]->Scale(0.5);     
+                        } else if ( (j == 1 || j == 2) ){
+                            if ( (fitConst->GetParameter(0) > 0.7 && fitConst->GetParameter(0) < 1.3) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
+                               histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else     
+                                histoSecTrueEffi[k][j]->Scale(1.);
+                        } else if (j == 3) {
+                            if ( (fitConst->GetParameter(0) > 0.6 && fitConst->GetParameter(0) < 1.2) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else     
+                                histoSecTrueEffi[k][j]->Scale(0.75);   
+                        }    
+                    } else if (mode == 2 ) {
+                        if (j == 0){
+                            if ( fitConst->GetParameter(0) > 0.2 && fitConst->GetParameter(0) < 0.3)
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else 
+                                histoSecTrueEffi[k][j]->Scale(0.25);     
+                        } else if (j == 1 || j == 2){
+                            if ( (fitConst->GetParameter(0) > 0. && fitConst->GetParameter(0) < 0.15) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else 
                                 histoSecTrueEffi[k][j]->Scale(0.05);
-                            }    
-                        }
-                        modifiedSecTrueEffi[k][j]   = kTRUE;
-                    }    
+                        } else if (j == 3){
+                            if ( (fitConst->GetParameter(0) > 0.1 && fitConst->GetParameter(0) < 0.3) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else 
+                                histoSecTrueEffi[k][j]->Scale(0.15);   
+                        }    
+                    } else if  ( mode == 0) {
+                        if (j == 0){
+                            if ( fitConst->GetParameter(0) > 0.2 && fitConst->GetParameter(0) < 0.35)
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else 
+                                histoSecTrueEffi[k][j]->Scale(0.25);     
+                        } else if (j == 1 || j == 2){
+                            if ( (fitConst->GetParameter(0) > 0.1 && fitConst->GetParameter(0) < 0.3) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else 
+                                histoSecTrueEffi[k][j]->Scale(0.2);
+                        } else if (j == 3){
+                            if ( (fitConst->GetParameter(0) > 0.0 && fitConst->GetParameter(0) < 0.15) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else 
+                                histoSecTrueEffi[k][j]->Scale(0.1);
+                        }    
+                    }
+                    if ( mode == 0 || mode == 2 || mode == 4)
+                        modifiedSecTrueEffi[k][j]   = kTRUE;    
                 }    
+                
                 if (modifiedSecTrueEffi[k][j])
                     cout << "adjusted sec effi, due to to little stat" << endl;
             }
@@ -2204,7 +2257,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         
         //**********************************************************************************
         //**************** Plot primary efficiency together with sec effis *****************
-        //**********************************************************************************
+        //**********************************************************************************        
         if (hasNewSecQuantities){
             canvasEffSimple->cd();
             histo2DDummyEffi->DrawCopy();         
@@ -2245,6 +2298,35 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
 
             canvasEffSimple->SaveAs(Form("%s/%s_TrueEffWithSecEffi_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));     
+            
+            
+            canvasEffSimple->cd();
+            TH2F* histo2DDummyEffiRatio;
+            histo2DDummyEffiRatio       = new TH2F("histo2DDummyEffiRatio","histo2DDummyEffiRatio",1000,0, histoTrueEffiPtUnmod[0]->GetXaxis()->GetBinUpEdge(histoTrueEffiPtUnmod[0]->GetNbinsX()),
+                                                                                    1000, 0, 2);
+            SetStyleHistoTH2ForGraphs(histo2DDummyEffiRatio, "#it{p}_{T} (GeV/#it{c})", "#epsilon_{sec,eff}/#epsilon_{eff}", 0.035,0.04, 0.035,0.04, 0.9,0.8, 510, 505);
+            histo2DDummyEffiRatio->DrawCopy();         
+
+            
+            TLegend* legendEffWithSecRatio = GetAndSetLegend2(0.12,0.8-(nEffHistSec)*0.035,0.4,0.8 , 0.035, 1, "", 42, 0.1);
+            Bool_t  plotted             = kFALSE;
+            for (Int_t j = 0; j < 4; j++){
+                if (histoSecTrueEffi[0][j]){
+                    plotted                             = kTRUE;
+                    DrawGammaSetMarker(histoRatioSecEffDivTrueEff[0][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
+                    histoRatioSecEffDivTrueEff[0][j]->DrawCopy("same,e1");  
+                    legendEffWithSecRatio->AddEntry(histoRatioSecEffDivTrueEff[0][j],Form("val. #pi^{0} from %s",nameSecMesonPlot[j].Data()),"p");
+                }    
+            }    
+            legendEffWithSecRatio->Draw();
+            
+            canvasEffSimple->Update();
+            PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+
+            if (plotted)
+                canvasEffSimple->SaveAs(Form("%s/%s_RatioSecEffiToTrueEff_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));     
+            
+            
         }
         delete canvasEffSimple;
 
@@ -3145,6 +3227,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             if (histoCorrectedYieldTrueFixed[k])histoCorrectedYieldTrueFixed[k]->Write();
             for (Int_t j = 0; j < 4; j++){
                 if (histoYieldSecMeson[k][j])           histoYieldSecMeson[k][j]->Write();
+                if (histoRatioYieldSecMeson[k][j])      histoRatioYieldSecMeson[k][j]->Write();
+                if (histoSecTrueEffi[k][j])             histoSecTrueEffi[k][j]->Write();
+                if (k == 0){
+                    if (histoSecAcceptance[j])              histoSecAcceptance[j]->Write();
+                }    
+                if (j < 3){
+                    if (histoYieldSecMesonFromToy[k][j])        histoYieldSecMesonFromToy[k][j]->Write();
+                    if (histoRatioYieldSecMesonFromToy[k][j])   histoRatioYieldSecMesonFromToy[k][j]->Write();
+                }
             }
         }    
         

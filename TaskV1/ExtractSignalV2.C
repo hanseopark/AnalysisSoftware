@@ -4473,29 +4473,29 @@ void FillMCSecondaryHistAndCalculateAcceptance(TH2D* mcSecInputSourcePt, TH2D* m
     Int_t startBin[4]   = {1,2,3,4};
     Int_t endBin[4]     = {1,2,3,15};
     
-    for (Int_t i = 0; i < 4; i++){
+    for (Int_t j = 0; j < 4; j++){
         // project correct bin
-        fHistoMCSecPi0Pt[i]             = (TH1D*)mcSecInputSourcePt->ProjectionX(Form("MCSecPi0From%s",nameSecondaries[i].Data()), mcSecInputSourcePt->GetYaxis()->FindBin(startBin[i]), 
-                                                                                 mcSecInputSourcePt->GetYaxis()->FindBin(endBin[i]),"e");     
-        fHistoMCSecPi0Pt[i]->SetTitle(Form("MCSecPi0From%s",nameSecondaries[i].Data()));
-        fHistoMCSecPi0Pt[i]->Sumw2();
-        fHistoMCSecPi0PtWAcc[i]         = (TH1D*)mcSecInputInAccSourcePt->ProjectionX(Form("MCSecPi0From%s_InAcc",nameSecondaries[i].Data()), mcSecInputInAccSourcePt->GetYaxis()->FindBin(startBin[i]), 
-                                                                                      mcSecInputInAccSourcePt->GetYaxis()->FindBin(endBin[i]),"e");     
-        fHistoMCSecPi0PtWAcc[i]->SetTitle(Form("MCSecPi0From%s_InAcc",nameSecondaries[i].Data()));
-        fHistoMCSecPi0PtWAcc[i]->Sumw2();
+        fHistoMCSecPi0Pt[j]             = (TH1D*)mcSecInputSourcePt->ProjectionX(Form("MCSecPi0From%s",nameSecondaries[j].Data()), mcSecInputSourcePt->GetYaxis()->FindBin(startBin[j]), 
+                                                                                 mcSecInputSourcePt->GetYaxis()->FindBin(endBin[j]),"e");     
+        fHistoMCSecPi0Pt[j]->SetTitle(Form("MCSecPi0From%s",nameSecondaries[j].Data()));
+        fHistoMCSecPi0Pt[j]->Sumw2();
+        fHistoMCSecPi0PtWAcc[j]         = (TH1D*)mcSecInputInAccSourcePt->ProjectionX(Form("MCSecPi0From%s_InAcc",nameSecondaries[j].Data()), mcSecInputInAccSourcePt->GetYaxis()->FindBin(startBin[j]), 
+                                                                                      mcSecInputInAccSourcePt->GetYaxis()->FindBin(endBin[j]),"e");     
+        fHistoMCSecPi0PtWAcc[j]->SetTitle(Form("MCSecPi0From%s_InAcc",nameSecondaries[j].Data()));
+        fHistoMCSecPi0PtWAcc[j]->Sumw2();
 
         // rebin in to current analysis binning
-        fHistoMCSecPi0PtReb[i]          = (TH1D*)fHistoMCSecPi0Pt[i]->Rebin(fNBinsPt,Form("MCSecPi0From%s_Rebinned",nameSecondaries[i].Data()),fBinsPt); // Proper bins in Pt
-        fHistoMCSecPi0PtReb[i]->SetTitle(Form("MCSecPi0From%s_Rebinned",nameSecondaries[i].Data()));
-        fHistoMCSecPi0PtReb[i] ->Divide(fDeltaPt);
-        fHistoMCSecPi0PtWAccReb[i]      = (TH1D*)fHistoMCSecPi0PtWAcc[i]->Rebin(fNBinsPt,Form("MCSecPi0From%s_InAcc_Rebinned",nameSecondaries[i].Data()),fBinsPt); // Proper bins in Pt
-        fHistoMCSecPi0PtWAccReb[i]->SetTitle(Form("MCSecPi0From%s_InAcc_Rebinned",nameSecondaries[i].Data()));
-        fHistoMCSecPi0PtWAccReb[i] ->Divide(fDeltaPt);
+        fHistoMCSecPi0PtReb[j]          = (TH1D*)fHistoMCSecPi0Pt[j]->Rebin(fNBinsPt,Form("MCSecPi0From%s_Rebinned",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
+        fHistoMCSecPi0PtReb[j]->SetTitle(Form("MCSecPi0From%s_Rebinned",nameSecondaries[j].Data()));
+        fHistoMCSecPi0PtReb[j] ->Divide(fDeltaPt);
+        fHistoMCSecPi0PtWAccReb[j]      = (TH1D*)fHistoMCSecPi0PtWAcc[j]->Rebin(fNBinsPt,Form("MCSecPi0From%s_InAcc_Rebinned",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
+        fHistoMCSecPi0PtWAccReb[j]->SetTitle(Form("MCSecPi0From%s_InAcc_Rebinned",nameSecondaries[j].Data()));
+        fHistoMCSecPi0PtWAccReb[j] ->Divide(fDeltaPt);
         
         // calculate acceptance
-        fHistoMCSecPi0AcceptPt[i]       = (TH1D*)fHistoMCSecPi0PtWAccReb[i]->Clone(Form("fMCSecPi0From%sAccepPt",nameSecondaries[i].Data()));
-        fHistoMCSecPi0AcceptPt[i]->SetTitle(Form("fMCSecPi0From%sAccepPt",nameSecondaries[i].Data()));
-        fHistoMCSecPi0AcceptPt[i]->Divide(fHistoMCSecPi0PtWAccReb[i],fHistoMCSecPi0PtReb[i],1.,1.,"B");
+        fHistoMCSecPi0AcceptPt[j]       = (TH1D*)fHistoMCSecPi0PtWAccReb[j]->Clone(Form("fMCSecPi0From%sAccepPt",nameSecondaries[j].Data()));
+        fHistoMCSecPi0AcceptPt[j]->SetTitle(Form("fMCSecPi0From%sAccepPt",nameSecondaries[j].Data()));
+        fHistoMCSecPi0AcceptPt[j]->Divide(fHistoMCSecPi0PtWAccReb[j],fHistoMCSecPi0PtReb[j],1.,1.,"B");
     }
 }    
 
