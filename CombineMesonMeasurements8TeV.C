@@ -115,7 +115,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     gSystem->Exec(Form("cp %s %s/InputPCMEMCAL.root", fileNamePCMEMCAL.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/InputPHOS.root", fileNamePHOS.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/InputEMCALLow.root", fileNameEMCALLow.Data(), outputDir.Data()));
-//    gSystem->Exec(Form("cp %s %s/InputEMCALmerged.root", fileNameEMCALmerged.Data(), outputDir.Data()));
+    gSystem->Exec(Form("cp %s %s/InputEMCALmerged.root", fileNameEMCALmerged.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/Theory.root", fileNameTheory.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/ChargedPionsPP.root", fileNameChargedPionPP.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/ChargedHadronsPP.root", fileNameChargedHadronPP.Data(), outputDir.Data()));
@@ -753,35 +753,35 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         }
 
     //************************** Read data for EMCAL merged **************************************************    
-//    TFile* fileEMCALmerged                                  = new TFile(fileNameEMCALmerged.Data());
-//    TDirectory* directoryEMCALmergedPi0                     = (TDirectory*)fileEMCALmerged->Get("Pi08TeV");
-////         TH1D* histoEMCALMergedPi0Eff                        = NULL;
-////         TH1D* histoEMCALMergedPi0Pur                        = NULL;
-//        TH1D* histoEMCALMergedPi0AccTimesEff                = NULL;
-//        TH1D* histoEMCALMergedPi0InvXSectionStat            = NULL;
-//        TH1D* histoEMCALMergedPi0InvXSectionSys             = NULL;
-//        TGraphAsymmErrors* graphEMCALMergedPi0AccTimesEff       = NULL;
-//        TGraphAsymmErrors* graphEMCALMergedPi0Purity            = NULL;
-//        TGraphAsymmErrors* graphEMCALMergedPi0AccTimesEffDivPur = NULL;
-//        TGraphAsymmErrors* graphEMCALMergedPi0InvXSectionStat   = NULL;
-//        TGraphAsymmErrors* graphEMCALMergedPi0InvXSectionSys    = NULL;
-////             histoEMCALMergedPi0Eff                          = (TH1D*)directoryEMCALmergedPi0->Get("EfficiencyPi0");
-////             histoEMCALMergedPi0Pur                          = (TH1D*)directoryEMCALmergedPi0->Get("PurityPi0");
-//            graphEMCALMergedPi0AccTimesEff                  = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get("EffTimesAccPi0_EGA");
-//            //graphEMCALMergedPi0Purity                       = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get("PurityPi0");
-//            //graphEMCALMergedPi0AccTimesEffDivPur            = CalculateGraphErrRatioToOtherTGraphErr(graphEMCALMergedPi0AccTimesEff, graphEMCALMergedPi0Purity,kTRUE);
-//            graphEMCALMergedPi0InvXSectionStat              = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get("graphInvCrossSectionPi0");
-//            graphEMCALMergedPi0InvXSectionSys               = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get("InvCrossSectionPi0Sys");
-//                cout << "EMCAL merged stat" << endl;
-//                for (Int_t i = 0; graphEMCALMergedPi0InvXSectionStat->GetX()[0]< 10; i++){
-//                    graphEMCALMergedPi0InvXSectionStat->RemovePoint(0);
-//                }
-//                graphEMCALMergedPi0InvXSectionStat->Print();
-//                cout << "EMCAL merged sys" << endl;
-//                for (Int_t i = 0; graphEMCALMergedPi0InvXSectionSys->GetX()[0]< 10; i++){
-//                    graphEMCALMergedPi0InvXSectionSys->RemovePoint(0);
-//                }
-//                graphEMCALMergedPi0InvXSectionSys->Print();
+    TFile* fileEMCALmerged                                  = new TFile(fileNameEMCALmerged.Data());
+    TDirectory* directoryEMCALmergedPi0                     = (TDirectory*)fileEMCALmerged->Get("Pi08TeV");
+//         TH1D* histoEMCALMergedPi0Eff                        = NULL;
+//         TH1D* histoEMCALMergedPi0Pur                        = NULL;
+        TH1D* histoEMCALMergedPi0AccTimesEff                = NULL;
+        TH1D* histoEMCALMergedPi0InvXSectionStat            = NULL;
+        TH1D* histoEMCALMergedPi0InvXSectionSys             = NULL;
+        TGraphAsymmErrors* graphEMCALMergedPi0AccTimesEff       = NULL;
+        TGraphAsymmErrors* graphEMCALMergedPi0Purity            = NULL;
+        TGraphAsymmErrors* graphEMCALMergedPi0AccTimesEffDivPur = NULL;
+        TGraphAsymmErrors* graphEMCALMergedPi0InvXSectionStat   = NULL;
+        TGraphAsymmErrors* graphEMCALMergedPi0InvXSectionSys    = NULL;
+//             histoEMCALMergedPi0Eff                          = (TH1D*)directoryEMCALmergedPi0->Get("EfficiencyPi0");
+//             histoEMCALMergedPi0Pur                          = (TH1D*)directoryEMCALmergedPi0->Get("PurityPi0");
+            graphEMCALMergedPi0AccTimesEff                  = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get("EffTimesAccPi0_EGA");
+            //graphEMCALMergedPi0Purity                       = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get("PurityPi0");
+            //graphEMCALMergedPi0AccTimesEffDivPur            = CalculateGraphErrRatioToOtherTGraphErr(graphEMCALMergedPi0AccTimesEff, graphEMCALMergedPi0Purity,kTRUE);
+            graphEMCALMergedPi0InvXSectionStat              = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get("graphInvCrossSectionPi0");
+            graphEMCALMergedPi0InvXSectionSys               = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get("InvCrossSectionPi0Sys");
+                cout << "EMCAL merged stat" << endl;
+                for (Int_t i = 0; graphEMCALMergedPi0InvXSectionStat->GetX()[0]< 10; i++){
+                    graphEMCALMergedPi0InvXSectionStat->RemovePoint(0);
+                }
+                graphEMCALMergedPi0InvXSectionStat->Print();
+                cout << "EMCAL merged sys" << endl;
+                for (Int_t i = 0; graphEMCALMergedPi0InvXSectionSys->GetX()[0]< 10; i++){
+                    graphEMCALMergedPi0InvXSectionSys->RemovePoint(0);
+                }
+                graphEMCALMergedPi0InvXSectionSys->Print();
 //         return;
 
     //************************** Read data for PHOS *****************************************************
@@ -974,7 +974,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     maxNBinsPi0                  = GetBinning( xPtLimitsPi0, "Pi0", "8TeV", 2 );
     maxNBinsPi0--;
 
-    Double_t xPtLimitsPi0WOMerged[50];
+    Double_t xPtLimitsPi0WOMerged[70];
     Int_t maxNBinsPi0W0Merged       = GetBinning( xPtLimitsPi0WOMerged, "Pi0", "8TeV", 2 );
     
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for Pi0
@@ -1058,14 +1058,14 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     ifstream fileWeightsPi0ReadA;
     fileWeightsPi0ReadA.open(fileNamePi0OutputWeightingA,ios_base::in);
     cout << "reading" << fileNamePi0OutputWeightingA << endl;
-    Double_t xValuesPi0ReadA[50];
-    Double_t weightsPi0ReadA[11][50];
+    Double_t xValuesPi0ReadA[70];
+    Double_t weightsPi0ReadA[11][70];
     Int_t availablePi0MeasA[11]        = { -1, -1, -1, -1, -1,
                                         -1, -1, -1, -1, -1,
                                         -1};
     Int_t nMeasSetPi0A                 = 4;
     Int_t nPtBinsPi0ReadA              = 0;
-    while(!fileWeightsPi0ReadA.eof() && nPtBinsPi0ReadA < 50){
+    while(!fileWeightsPi0ReadA.eof() && nPtBinsPi0ReadA < 70){
         TString garbage             = "";
         if (nPtBinsPi0ReadA == 0){
             fileWeightsPi0ReadA >> garbage ;//>> availablePi0Meas[0] >> availablePi0Meas[1] >> availablePi0Meas[2] >> availablePi0Meas[3];
@@ -1338,8 +1338,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TGraphAsymmErrors* graphPCMEMCALPi0InvXSectionStatUnshi     = (TGraphAsymmErrors*)graphPCMEMCALPi0InvXSectionStat->Clone("Pi0UnshiftedStatPCMEMCAL"); 
     TGraphAsymmErrors* graphPCMEMCALPi0InvXSectionSysUnshi      = (TGraphAsymmErrors*)graphPCMEMCALPi0InvXSectionSys->Clone("Pi0UnshiftedSysPCMEMCAL"); 
 
-//    TGraphAsymmErrors* graphEMCALMergedPi0InvXSectionStatUnshi  = (TGraphAsymmErrors*)graphEMCALMergedPi0InvXSectionStat->Clone("Pi0UnshiftedStatEMCALMerged");
-//    TGraphAsymmErrors* graphEMCALMergedPi0InvXSectionSysUnshi   = (TGraphAsymmErrors*)graphEMCALMergedPi0InvXSectionSys->Clone("Pi0UnshiftedSysEMCALMerged");
+    TGraphAsymmErrors* graphEMCALMergedPi0InvXSectionStatUnshi  = (TGraphAsymmErrors*)graphEMCALMergedPi0InvXSectionStat->Clone("Pi0UnshiftedStatEMCALMerged");
+    TGraphAsymmErrors* graphEMCALMergedPi0InvXSectionSysUnshi   = (TGraphAsymmErrors*)graphEMCALMergedPi0InvXSectionSys->Clone("Pi0UnshiftedSysEMCALMerged");
 
 
     // fitting spectrum with intial parameters
@@ -1420,15 +1420,15 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                                                                                     fitTsallisPi0PtMult, 
                                                                                     offSetPi0Shifting[4], nComBinsPi0Shifting[4]);
         
-//        cout << "EMC merged" << endl;
-//        graphEMCALMergedPi0InvXSectionStat       = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA,
-//                                                                                    graphEMCALMergedPi0InvXSectionStat,
-//                                                                                    fitTsallisPi0PtMult,
-//                                                                                    offSetPi0Shifting[9], nComBinsPi0Shifting[9]);
-//        graphEMCALMergedPi0InvXSectionSys        = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA,
-//                                                                                    graphEMCALMergedPi0InvXSectionSys,
-//                                                                                    fitTsallisPi0PtMult,
-//                                                                                    offSetPi0Shifting[9], nComBinsPi0Shifting[9]);
+        cout << "EMC merged" << endl;
+        graphEMCALMergedPi0InvXSectionStat       = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA,
+                                                                                    graphEMCALMergedPi0InvXSectionStat,
+                                                                                    fitTsallisPi0PtMult,
+                                                                                    offSetPi0Shifting[9], nComBinsPi0Shifting[9]);
+        graphEMCALMergedPi0InvXSectionSys        = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA,
+                                                                                    graphEMCALMergedPi0InvXSectionSys,
+                                                                                    fitTsallisPi0PtMult,
+                                                                                    offSetPi0Shifting[9], nComBinsPi0Shifting[9]);
             
         // *************************************************************************************************************
         // Plot control graphs
@@ -1510,8 +1510,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TGraphAsymmErrors* graphEMCALPi0InvXSectionSys_yShifted         = NULL;
     TGraphAsymmErrors* graphPCMEMCALPi0InvXSectionStat_yShifted     = NULL;
     TGraphAsymmErrors* graphPCMEMCALPi0InvXSectionSys_yShifted      = NULL;
-//    TGraphAsymmErrors* graphEMCALMergedPi0InvXSectionStat_yShifted  = NULL;
-//    TGraphAsymmErrors* graphEMCALMergedPi0InvXSectionSys_yShifted   = NULL;
+    TGraphAsymmErrors* graphEMCALMergedPi0InvXSectionStat_yShifted  = NULL;
+    TGraphAsymmErrors* graphEMCALMergedPi0InvXSectionSys_yShifted   = NULL;
         
     if(bWCorrection.Contains("Y") ){
         graphCombPi0InvXSectionTotA_yShifted        = (TGraphAsymmErrors*)graphCombPi0InvXSectionTotAUnshi->Clone("Pi0YShiftedCombTot");
@@ -1541,10 +1541,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphPCMEMCALPi0InvXSectionSys_yShifted     = (TGraphAsymmErrors*)graphPCMEMCALPi0InvXSectionSysUnshi->Clone("Pi0YShiftedPCMEMCStat");
         graphPCMEMCALPi0InvXSectionSys_yShifted     =  ApplyYshiftIndividualSpectra( graphPCMEMCALPi0InvXSectionSys_yShifted, fitInvXSectionPi0);
 
-//        graphEMCALMergedPi0InvXSectionStat_yShifted = (TGraphAsymmErrors*)graphEMCALMergedPi0InvXSectionStatUnshi->Clone("Pi0YShiftedEMCMergedStat");
-//        graphEMCALMergedPi0InvXSectionStat_yShifted =  ApplyYshiftIndividualSpectra( graphEMCALMergedPi0InvXSectionStat_yShifted, fitInvXSectionPi0);
-//        graphEMCALMergedPi0InvXSectionSys_yShifted  = (TGraphAsymmErrors*)graphEMCALMergedPi0InvXSectionSysUnshi->Clone("Pi0YShiftedEMCMergedSys");
-//        graphEMCALMergedPi0InvXSectionSys_yShifted  =  ApplyYshiftIndividualSpectra( graphEMCALMergedPi0InvXSectionSys_yShifted, fitInvXSectionPi0);
+        graphEMCALMergedPi0InvXSectionStat_yShifted = (TGraphAsymmErrors*)graphEMCALMergedPi0InvXSectionStatUnshi->Clone("Pi0YShiftedEMCMergedStat");
+        graphEMCALMergedPi0InvXSectionStat_yShifted =  ApplyYshiftIndividualSpectra( graphEMCALMergedPi0InvXSectionStat_yShifted, fitInvXSectionPi0);
+        graphEMCALMergedPi0InvXSectionSys_yShifted  = (TGraphAsymmErrors*)graphEMCALMergedPi0InvXSectionSysUnshi->Clone("Pi0YShiftedEMCMergedSys");
+        graphEMCALMergedPi0InvXSectionSys_yShifted  =  ApplyYshiftIndividualSpectra( graphEMCALMergedPi0InvXSectionSys_yShifted, fitInvXSectionPi0);
     }
 
     // *************************************************************************************************************
@@ -1590,10 +1590,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     graphRatioPi0PCMEMCALCombFitStat                    = CalculateGraphErrRatioToFit(graphRatioPi0PCMEMCALCombFitStat, fitTCMInvXSectionPi0Plot);
     TGraphAsymmErrors* graphRatioPi0PCMEMCALCombFitSys  = (TGraphAsymmErrors*)graphPCMEMCALPi0InvXSectionSys->Clone();
     graphRatioPi0PCMEMCALCombFitSys                     = CalculateGraphErrRatioToFit(graphRatioPi0PCMEMCALCombFitSys, fitTCMInvXSectionPi0Plot);
-//    TGraphAsymmErrors* graphRatioPi0EMCALMergedCombFitStat  = (TGraphAsymmErrors*)graphEMCALMergedPi0InvXSectionStat->Clone();
-//    graphRatioPi0EMCALMergedCombFitStat                     = CalculateGraphErrRatioToFit(graphRatioPi0EMCALMergedCombFitStat, fitTCMInvXSectionPi0Plot);
-//    TGraphAsymmErrors* graphRatioPi0EMCALMergedCombFitSys   = (TGraphAsymmErrors*)graphEMCALMergedPi0InvXSectionSys->Clone();
-//    graphRatioPi0EMCALMergedCombFitSys                      = CalculateGraphErrRatioToFit(graphRatioPi0EMCALMergedCombFitSys, fitTCMInvXSectionPi0Plot);
+    TGraphAsymmErrors* graphRatioPi0EMCALMergedCombFitStat  = (TGraphAsymmErrors*)graphEMCALMergedPi0InvXSectionStat->Clone();
+    graphRatioPi0EMCALMergedCombFitStat                     = CalculateGraphErrRatioToFit(graphRatioPi0EMCALMergedCombFitStat, fitTCMInvXSectionPi0Plot);
+    TGraphAsymmErrors* graphRatioPi0EMCALMergedCombFitSys   = (TGraphAsymmErrors*)graphEMCALMergedPi0InvXSectionSys->Clone();
+    graphRatioPi0EMCALMergedCombFitSys                      = CalculateGraphErrRatioToFit(graphRatioPi0EMCALMergedCombFitSys, fitTCMInvXSectionPi0Plot);
     
 
     // **********************************************************************************************************************
@@ -1754,6 +1754,74 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //        boxEMCALMergedPi0OnlyRatioPi0->Draw("l");
         
     canvasRatioToCombFit->SaveAs(Form("%s/Pi0_RatioOfIndividualMeasToCombFit_PP.%s",outputDir.Data(),suffix.Data()));
+
+    // **********************************************************************************************************************
+    // *******************************************Plot Ratio of Individual meas to Fit with MERGED **************************
+    // **********************************************************************************************************************
+
+    canvasRatioToCombFit->cd();
+    histo2DPi0RatioToCombFit->Draw("copy");
+
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0PCMCombFitSys, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0PCMCombFitStat, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0]);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0PHOSCombFitSys, markerStyleDet[1] ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1], widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0PHOSCombFitStat, markerStyleDet[1] ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1]);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0EMCALCombFitSys, markerStyleDet[2] ,markerSizeDet[2]*0.5, colorDet[2], colorDet[2], widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0EMCALCombFitStat, markerStyleDet[2] ,markerSizeDet[2]*0.5, colorDet[2], colorDet[2]);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0EMCALMergedCombFitSys, markerStyleDet[9] ,markerSizeDet[9]*0.5, colorDet[9], colorDet[9], widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0EMCALMergedCombFitStat, markerStyleDet[9] ,markerSizeDet[9]*0.5, colorDet[9], colorDet[9]);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0PCMEMCALCombFitSys, markerStyleDet[4] ,markerSizeDet[4]*0.5, colorDet[4], colorDet[4], widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0PCMEMCALCombFitStat, markerStyleDet[4] ,markerSizeDet[4]*0.5, colorDet[4], colorDet[4]);
+
+        graphRatioPi0PCMCombFitSys->Draw("E2same");
+        graphRatioPi0PHOSCombFitSys->Draw("E2same");
+        graphRatioPi0EMCALCombFitSys->Draw("E2same");
+        graphRatioPi0EMCALMergedCombFitSys->Draw("E2same");
+        graphRatioPi0PCMEMCALCombFitSys->Draw("E2same");
+
+        graphRatioPi0PCMCombFitStat->Draw("p,same,z");
+        graphRatioPi0PHOSCombFitStat->Draw("p,same,z");
+        graphRatioPi0EMCALCombFitStat->Draw("p,same,z");
+        graphRatioPi0EMCALMergedCombFitStat->Draw("p,same,z");
+        graphRatioPi0PCMEMCALCombFitStat->Draw("p,same,z");
+
+        DrawGammaLines(0.23, 70. , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(0.23, 70. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.23, 70. , 0.9, 0.9,0.5, kGray, 7);
+
+        labelRatioToFitEnergy->Draw();
+        labelRatioToFitALICE->Draw();
+        labelRatioToFitPi0->Draw();
+
+        //****************** first Column **************************************************
+        textPCMOnlyRatioPi0->Draw();
+        textPHOSOnlyRatioPi0->Draw();
+        textEMCALOnlyRatioPi0->Draw();
+        textPCMEMCALOnlyRatioPi0->Draw();
+        TLatex *textEMCALMergedOnlyRatioPi0         = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[5],"EMCal merged");
+        SetStyleTLatex( textEMCALMergedOnlyRatioPi0, textSizeLabelsPixel,4);
+        textEMCALMergedOnlyRatioPi0->SetTextFont(43);
+        textEMCALMergedOnlyRatioPi0->Draw();
+
+        //****************** second Column *************************************************
+        textStatOnlyRatioPi0->Draw();
+        textSysOnlyRatioPi0->Draw();
+        markerPCMPi0OnlyRatioPi0->DrawMarker(columnsLegendOnlyPi0RatioAbs[1] ,rowsLegendOnlyPi0RatioAbs[1]);
+        markerPHOSPi0OnlyRatioPi0->DrawMarker(columnsLegendOnlyPi0RatioAbs[1] ,rowsLegendOnlyPi0RatioAbs[2]);
+        markerEMCALPi0OnlyRatioPi0->DrawMarker(columnsLegendOnlyPi0RatioAbs[1] ,rowsLegendOnlyPi0RatioAbs[3]);
+        markerPCMEMCALPi0OnlyRatioPi0->DrawMarker(columnsLegendOnlyPi0RatioAbs[1] ,rowsLegendOnlyPi0RatioAbs[4]);
+        TMarker* markerEMCALMergedPi0OnlyRatioPi0   = CreateMarkerFromGraph(graphRatioPi0EMCALMergedCombFitSys, columnsLegendOnlyPi0Ratio[1] ,rowsLegendOnlyPi0Ratio[5],1);
+        markerEMCALMergedPi0OnlyRatioPi0->DrawMarker(columnsLegendOnlyPi0RatioAbs[1] ,rowsLegendOnlyPi0RatioAbs[5]);
+
+        boxPCMPi0OnlyRatioPi0->Draw("l");
+        boxPHOSPi0OnlyRatioPi0->Draw("l");
+        boxEMCALPi0OnlyRatioPi0->Draw("l");
+        boxPCMEMCALPi0OnlyRatioPi0->Draw("l");
+        TBox* boxEMCALMergedPi0OnlyRatioPi0         = CreateBoxFromGraph(graphRatioPi0EMCALMergedCombFitSys, columnsLegendOnlyPi0RatioAbs[2]-0.5*lengthBox , rowsLegendOnlyPi0RatioAbs[5]- heightBox,
+                                                                         columnsLegendOnlyPi0RatioAbs[2]+ 5*lengthBox, rowsLegendOnlyPi0RatioAbs[5]+ heightBox);
+        boxEMCALMergedPi0OnlyRatioPi0->Draw("l");
+
+    canvasRatioToCombFit->SaveAs(Form("%s/Pi0_RatioOfIndividualMeasToCombFitWithMerged_PP.%s",outputDir.Data(),suffix.Data()));
 
     // *******************************************************************************************************
     // ********************** Ratio to standalone PCM fit ****************************************************
@@ -1933,7 +2001,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     
     // Definition of binning for eta meson, take care that it is the correct one
-    Double_t xPtLimitsEtaWOMerged[50];
+    Double_t xPtLimitsEtaWOMerged[70];
     Int_t maxNBinsEtaW0Merged       = GetBinning( xPtLimitsEtaWOMerged, "Eta", "8TeV", 2 );
     maxNBinsEtaW0Merged--;
     for (Int_t i = 0; i< maxNBinsEtaW0Merged; i++){
@@ -1988,14 +2056,14 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     ifstream fileWeightsEtaReadA;
     fileWeightsEtaReadA.open(fileNameEtaOutputWeightingA,ios_base::in);
     cout << "reading" << fileNameEtaOutputWeightingA << endl;
-    Double_t xValuesEtaReadA[50];
-    Double_t weightsEtaReadA[11][50];
+    Double_t xValuesEtaReadA[70];
+    Double_t weightsEtaReadA[11][70];
     Int_t availableEtaMeasA[11]        = { -1, -1, -1, -1, -1,
                                         -1, -1, -1, -1, -1,
                                         -1};
     Int_t nMeasSetEtaA                 = 3;
     Int_t nPtBinsEtaReadA              = 0;
-    while(!fileWeightsEtaReadA.eof() && nPtBinsEtaReadA < 50){
+    while(!fileWeightsEtaReadA.eof() && nPtBinsEtaReadA < 70){
         TString garbage             = "";
         if (nPtBinsEtaReadA == 0){
             fileWeightsEtaReadA >> garbage ;//>> availableEtaMeas[0] >> availableEtaMeas[1] >> availableEtaMeas[2] >> availableEtaMeas[3];
@@ -2771,14 +2839,14 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     ifstream fileWeightsEtaToPi0ReadA;
     fileWeightsEtaToPi0ReadA.open(fileNameEtaToPi0OutputWeightingA,ios_base::in);
     cout << "reading" << fileNameEtaToPi0OutputWeightingA << endl;
-    Double_t xValuesEtaToPi0ReadA[50];
-    Double_t weightsEtaToPi0ReadA[11][50];
+    Double_t xValuesEtaToPi0ReadA[70];
+    Double_t weightsEtaToPi0ReadA[11][70];
     Int_t availableEtaToPi0MeasA[11]        = { -1, -1, -1, -1, -1,
                                         -1, -1, -1, -1, -1,
                                         -1};
     Int_t nMeasSetEtaToPi0A                 = 3;
     Int_t nPtBinsEtaToPi0ReadA              = 0;
-    while(!fileWeightsEtaToPi0ReadA.eof() && nPtBinsEtaToPi0ReadA < 50){
+    while(!fileWeightsEtaToPi0ReadA.eof() && nPtBinsEtaToPi0ReadA < 70){
         TString garbage             = "";
         if (nPtBinsEtaToPi0ReadA == 0){
             fileWeightsEtaToPi0ReadA >> garbage ;//>> availableEtaToPi0Meas[0] >> availableEtaToPi0Meas[1] >> availableEtaToPi0Meas[2] >> availableEtaToPi0Meas[3];
@@ -4810,7 +4878,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TLatex *labelRatioTheoryPPA2   = new TLatex(0.15,0.8,"#pi^{0}: ALICE combined result");
     SetStyleTLatex( labelRatioTheoryPPA2, 0.85*textsizeLabelsPP,4);
     labelRatioTheoryPPA2->Draw();
-    TLatex *labelRatioTheoryPPAT2   = new TLatex(0.15,0.75,"h^{#pm}: fit to ATLAS with N_{ch} >= 1, #it{p}_{T} > 500 MeV, |#eta| < 2.5");
+    TLatex *labelRatioTheoryPPAT2   = new TLatex(0.15,0.75,"h^{#pm}: fit to ATLAS result with N_{ch} >= 1, #it{p}_{T} > 500 MeV, |#eta| < 2.5");
     SetStyleTLatex( labelRatioTheoryPPAT2, 0.85*textsizeLabelsPP,4);
     labelRatioTheoryPPAT2->Draw();
 
@@ -4820,6 +4888,35 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     canvasCompYieldPPInd->Update();
     canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedHadronToNeutralPions2_PP8TeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+    TGraphAsymmErrors* graphRatioATLASchargedToALICEmerged     = (TGraphAsymmErrors*)graphEMCALMergedPi0InvXSectionStat->Clone();
+    graphRatioATLASchargedToALICEmerged                        = CalculateGraphErrRatioToFit(graphRatioATLASchargedToALICEmerged, fitATLASTCMInvXSectionCharged);
+
+    histo2DCompCombinedRatio2->DrawCopy();
+
+    DrawGammaSetMarkerTGraphAsym(graphRatioATLASchargedToALICE, markerStyleCombHighPt, markerSizeComparison, kBlack , kBlack);
+    graphRatioATLASchargedToALICE->Draw("E1psame");
+    DrawGammaSetMarkerTGraphAsym(graphRatioATLASchargedToALICEmerged, markerStyleCombHighPt, markerSizeComparison, colorDet[9] , colorDet[9]);
+    graphRatioATLASchargedToALICEmerged->Draw("E1psame");
+
+    cout << "graphRatioChargedHadrons:" << endl;
+    graphRatioATLASchargedToALICE->Print();
+    TLegend* legendPi0CompChargedPionsPP5   = GetAndSetLegend2(0.15, 0.84, 0.9, 0.92, 0.85* textSizeLabelsPixel);
+    legendPi0CompChargedPionsPP5->SetNColumns(2);
+    legendPi0CompChargedPionsPP5->SetMargin(0.12);
+    legendPi0CompChargedPionsPP5->AddEntry(graphRatioATLASchargedToALICE,"#pi^{0} (ALICE) / h^{#pm} (ATLAS)","p");
+    legendPi0CompChargedPionsPP5->AddEntry(graphRatioATLASchargedToALICEmerged,"#pi^{0} (ALICE merged) / h^{#pm} (ATLAS)","p");
+    legendPi0CompChargedPionsPP5->Draw();
+
+    labelRatioTheoryPPA2->Draw();
+    labelRatioTheoryPPAT2->Draw();
+
+    labelRatioTheoryPP->Draw();
+
+    DrawGammaLines(0.23, 70 , 1, 1 ,1, kGray, 1);
+
+    canvasCompYieldPPInd->Update();
+    canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedHadronToNeutralPionsWithMerged_PP8TeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
 
     // **********************************************************************************************************************
     // **************************Plot example invariant mass bins ***********************************************************

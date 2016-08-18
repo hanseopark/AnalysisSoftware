@@ -364,6 +364,14 @@ function GiveBinning7TeV()
          echo "16 bins --> max p_t = 12 gev ...";
          correctEta=1
          BinsPtEta=16
+     elif [ $answer = 17 ]; then
+         echo "17 bins --> max p_t = 16 gev ...";
+         correctEta=1
+         BinsPtEta=17
+     elif [ $answer = 18 ]; then
+         echo "18 bins --> max p_t = 20 gev ...";
+         correctEta=1
+         BinsPtEta=18
      else
         echo "eta binning was not set correctly. please try again.";
         correctEta=0
@@ -2057,6 +2065,11 @@ do
             else 
                 correct=1
             fi
+
+            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
+                useTHnSparse=0
+                AdvMesonQA="AdvancedMesonQA"
+            fi
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
             echo "No Direct Photon plots will be produced ...";
             directphoton="No"
@@ -2072,6 +2085,11 @@ do
                 correct=0
             else 
                 correct=1
+            fi
+
+            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
+                useTHnSparse=0
+                AdvMesonQA="AdvancedMesonQA"
             fi
         else
             echo "Command not found. Please try again.";
