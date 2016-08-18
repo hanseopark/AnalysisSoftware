@@ -36,6 +36,13 @@ PERIOD=""
 NORMALCUTS=0
 dataFileOK=0
 useTHnSparse=1
+# switch for turning of ToyMC
+disableToyMC=0
+NEvtsToy=1e9
+MinPtToy=0.5
+MaxPtToy=50
+ExtInputFile=""
+
 
 function GiveBinning13TeV()
 {
@@ -1682,6 +1689,9 @@ do
     if [ $answer = "0" ]; then
         echo "You are analysing PCM-PCM output";
         mode=0
+        NEvtsToy=1e7
+        MinPtToy=0.5
+        MaxPtToy=50
         correct=1
     elif [ $answer = "1" ]; then
         echo "You are trying to analyse PCM-Dalitz output, this is the wrong script, please use another one.";
@@ -1691,32 +1701,50 @@ do
     elif [ $answer = "2" ]; then
         echo "You are analysing PCM-EMCAL output";
         mode=2
+        NEvtsToy=1e9
+        MinPtToy=0.5
+        MaxPtToy=50
 #        AdvMesonQA="AdvancedMesonQA"
         correct=1
     elif [ $answer = "3" ]; then
         echo "You are analysing PCM-PHOS output";
         mode=3
+        NEvtsToy=1e9
+        MinPtToy=0.5
+        MaxPtToy=50
         AdvMesonQA="AdvancedMesonQA"
         correct=1
     elif [ $answer = "4" ]; then
         echo "You are analysing EMCAL-EMCAL output";
         mode=4
+        NEvtsToy=1e9
+        MinPtToy=0.5
+        MaxPtToy=50
         AdvMesonQA="AdvancedMesonQA"
         correct=1
     elif [ $answer = "5" ]; then
         echo "You are analysing PHOS-PHOS output";
         mode=5
+        NEvtsToy=1e9
+        MinPtToy=0.5
+        MaxPtToy=50
         AdvMesonQA="AdvancedMesonQA"
         correct=1
     elif [ $answer = "10" ]; then
         echo "You are analysing EMC-merged output";
         mode=10
+        NEvtsToy=1e9
+        MinPtToy=10
+        MaxPtToy=70
         correct=1
         DoEta=0;
         DoPi0InEtaBinning=0;
     elif [ $answer = "11" ]; then
         echo "You are analysing PHOS-merged output";
         mode=11
+        NEvtsToy=1e9
+        MinPtToy=5
+        MaxPtToy=70
         correct=1
         DoEta=0;
         DoPi0InEtaBinning=0;
@@ -1830,20 +1858,28 @@ do
     read answer
     if [ $answer = "7TeV" ] || [ $answer = "7" ]; then
         energy="7TeV";
+        ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
     elif [ $answer = "8TeV" ] || [ $answer = "8" ]; then
         energy="8TeV";
+        ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
     elif [ $answer = "13TeV" ] || [ $answer = "13" ]; then
         energy="13TeV";
+        ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
     elif [ $answer = "13TeVLowB" ]; then
         energy="13TeVLowB";
+        ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
     elif [ $answer = "900GeV" ] || [ $answer = "900" ] || [ $answer = "9" ] || [ $answer = "0.9" ]; then
         energy="900GeV";
+        ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
     elif [ $answer = "2.76TeV" ] || [ $answer = "2" ] || [ $answer = "2.76" ]; then
         energy="2.76TeV";
+        ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
     elif [ $answer = "PbPb_2.76TeV" ] || [ $answer = "PbPb_2.76" ] || [ $answer = "PbPb2" ] || [ $answer = "Pb2" ]; then
         energy="PbPb_2.76TeV";
+        ExtInputFile="";
     elif [ $answer = "pPb_5.023TeV" ] || [ $answer = "pPb_5.023" ] || [ $answer = "pPb5" ];  then
         energy="pPb_5.023TeV";
+        ExtInputFile="";
     fi
     echo "The collision system has been selected to be $energy."
     
@@ -2229,6 +2265,13 @@ if [ $mode -lt 10 ]; then
                     mkdir $cutSelection/$energy/$Suffix
                 fi
 
+                if [ $disableToyMC -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then 
+                    rm ToyMCOutputs.txt
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                fi
+                
                 if [ $ONLYCORRECTION -eq 0 ]; then            
                     echo "CutSelection is $cutSelection";
                     if [ $DoPi0 -eq 1 ]; then
@@ -2498,6 +2541,13 @@ else
                     mkdir $cutSelection/$energy/$Suffix
                 fi
 
+                if [ $disableToyMC -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then 
+                    rm ToyMCOutputs.txt
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                fi
+                
                 if [ $ONLYCORRECTION -eq 0 ]; then            
                     echo "CutSelection is $cutSelection";
                     if [ $DoPi0 -eq 1 ]; then

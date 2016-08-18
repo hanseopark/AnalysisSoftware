@@ -53,6 +53,7 @@ TString     labelsGamma[8]                                              = { "Dir
                                                                             "Phi", "Lambda", "Rest"};
 TString     labelsElectron[9]                                           = { "DirE", "Gamma", "PiN", "Eta", "C", 
                                                                             "B", "WOrZ", "Tau", "Rest"};
+TString     nameSecondaries[4]                                          = {"K0S", "Lambda", "K0L", "Rest"};
 
 //****************************************************************************
 //************************* MC object names **********************************
@@ -61,8 +62,6 @@ TString     fObjectNameMCMesonAcc                                       = "";
 TString     fObjectNameMCMeson                                          = "";
 TString     fObjectNameMCMesonAccSecPi0                                 = "";
 TString     fObjectNameMCMesonSecPi0                                    = "";
-TString     fObjectNameMCMesonAccSecPi0FromK0s                          = "";
-TString     fObjectNameMCMesonSecPi0FromK0s                             = "";
 TString     fObjectNameMCMesonWOWeights                                 = "";
 TString     fObjectNameMCMesonDalitzAcc                                 = "";
 TString     fObjectNameMCMesonDalitz                                    = "";
@@ -98,7 +97,9 @@ TString     fObjectNameTrueClusElectron_Source                          = "";
 TString     fObjectNameTrueClusPrimMesonM02                             = "";
 TString     fObjectNameTrueClusSecMesonM02                              = "";
 TString     fObjectNameTrueClusSecMesonFromK0sM02                       = "";
+TString     fObjectNameTrueClusSecMesonFromK0lM02                       = "";
 TString     fObjectNameTrueClusSecMesonFromLambdaM02                    = "";
+
 
 //****************************************************************************
 //******************************** Functions *********************************
@@ -123,24 +124,24 @@ void CheckForNULLForPointer(TH1D* );                                            
 void FillMCM02HistosArray( TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*);                                       // Fill M02 histograms for MC 
 void FillMCM02AdditionHistosArray( TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*,    // Fill additional M02 histograms for MC     
                                    TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F* );                                                   
-void FillMCPrimSecM02HistosArray( TH2F*, TH2F*, TH2F*, TH2F* );                                             // Fill M02 histograms for MC for Pi0 Prim Sec 
+void FillMCPrimSecM02HistosArray( TH2F*, TH2F** );                                                          // Fill M02 histograms for MC for Pi0 Prim Sec 
 void FillMCBGSeparated(TH2F* );                                                                             // Fill MC BG separated 
 void FillMCElectronSeparated(TH2F* );                                                                       // Fill MC Electron separated 
 void FillMCGammaSeparated(TH2F* );                                                                          // Fill MC Gamma separated 
-void FillHistosArrayMC(TH1D*, TH1D * , TH1D * );                                                            // Rebin MC input histo's
-void FillHistosArrayMCSec(TH1D*, TH1D *, TH1D*, TH1D*, TH1D * );                                            // Rebin Sec MC input histo's
+void FillHistosArrayMC(TH1D*, TH1D * , TH1D* );                                                             // Rebin MC input histo's
+void FillHistosArrayMCSecAndCalcAcceptance(TH2D*, TH2D * );                                                 // Rebin Sec MC input histo's and calc acceptance
 void IntegrateHistoInvMass(TH1D*, Double_t* );                                                              // Integrate invariant mass histogram
 void IntegrateHistoM02(TH1D*, Double_t* );                                                                  // Integrate M02 histogram
 void CalculateMesonAcceptance();                                                                            // Calculation of meson acceptance
-void CalculateMesonAcceptanceSec();                                                                            // Calculation of meson acceptance
 TH1D* CalculateMesonEfficiency(TH1D*, TH1D*,TString);                                                       // Calculation of meson efficiencies 
-TH1D* CalculateMesonEfficiencySec(TH1D*, TH1D*,TString);                                                       // Calculation of meson efficiencies 
+TH1D* CalculateMesonEfficiencySec(TH1D*, TH1D*,TString);                                                    // Calculation of meson efficiencies 
 TH1D* CalculatePurity(TH1D*, TH1D*,TString);                                                                // Calculation of purity
 TH1D* CalculateSecondaryFractions(TH1D*, TH1D*, TString );                                                  // Calculate fraction of secondaries
 void SaveHistos(Int_t, TString, TString);                                                                   // Saving standard histograms to a file
 void SaveCorrectionHistos(TString , TString);                                                               // Saving correction histograms to a file
 void Delete();                                                                                              // Deleting all pointers
 void SetCorrectMCHistogrammNames(TString);                                                                  // Setting correct histogram names
+Bool_t LoadSecondaryPionsFromExternalFile();                                                                // Loads secondary neutral pion input graphs from file
 
 //****************************************************************************
 //************************** input histograms ********************************
@@ -253,9 +254,6 @@ TH2F*       fHistoTrueClusOneElectronFromPi0PtM02                       = NULL;
 TH2F*       fHistoTrueClusOneElectronFromEtaPtM02                       = NULL;
 
 TH2F*       fHistoTrueClustersPrimPi0PtM02                              = NULL;
-TH2F*       fHistoTrueClustersSecPi0PtM02                               = NULL;
-TH2F*       fHistoTrueClustersSecPi0FK0sPtM02                           = NULL;
-TH2F*       fHistoTrueClustersSecPi0FLambdaPtM02                        = NULL;
 
 //****************************************************************************
 //***************************** histos in Pt Bins ****************************
@@ -286,9 +284,6 @@ TH1D**      fHistoTrueClusElectronM02PtBin                              = NULL;
 TH1D**      fHistoTrueClusBGM02PtBin                                    = NULL;
 
 TH1D**      fHistoTrueClusPrimPi0M02PtBin                               = NULL;
-TH1D**      fHistoTrueClusSecPi0M02PtBin                                = NULL;
-TH1D**      fHistoTrueClusSecPi0FK0sM02PtBin                            = NULL;
-TH1D**      fHistoTrueClusSecPi0FLambdaM02PtBin                         = NULL;
 
 //****************************************************************************
 //************************** Yields vs Pt ************************************
@@ -345,31 +340,18 @@ Double_t*   fMesonM02TrueMergedOneElectronFromEtaYields                 = NULL;
 Double_t*   fMesonM02TrueMergedOneElectronFromEtaYieldsError            = NULL;
 
 Double_t*   fMesonM02TruePrimPi0Yields                                  = NULL;
-Double_t*   fMesonM02TrueSecPi0Yields                                   = NULL;
-Double_t*   fMesonM02TrueSecPi0FK0sYields                               = NULL;
-Double_t*   fMesonM02TrueSecPi0FLambdaYields                            = NULL;
 Double_t*   fMesonM02TruePrimPi0YieldsError                             = NULL;
-Double_t*   fMesonM02TrueSecPi0YieldsError                              = NULL;
-Double_t*   fMesonM02TrueSecPi0FK0sYieldsError                          = NULL;
-Double_t*   fMesonM02TrueSecPi0FLambdaYieldsError                       = NULL;
 
 //****************************************************************************
 //************************ correction histograms *****************************
 //****************************************************************************
 TH1D*       fDeltaPt                                                    = NULL;
 TH1D*       fHistoMCAcceptancePt                                        = NULL;
-TH1D*       fHistoMCAcceptanceSecPi0Pt                                  = NULL;
-TH1D*       fHistoMCAcceptanceSecPi0FromK0sPt                           = NULL;
 TH1D*       fHistoTrueEffiMerged                                        = NULL;
 TH1D*       fHistoTrueEffiPrimMeson                                     = NULL;
-TH1D*       fHistoTrueEffiSecPi0                                        = NULL;
-TH1D*       fHistoTrueEffiSecPi0FromK0s                                 = NULL;
 TH1D*       fHistoTruePurityMerged                                      = NULL;
 TH1D*       fHistoTruePi0PurityMerged                                   = NULL;
 TH1D*       fHistoTrueEtaPurityMerged                                   = NULL;
-TH1D*       fHistoTruePi0SecFrac                                        = NULL;
-TH1D*       fHistoTruePi0SecFracFK0S                                    = NULL;
-TH1D*       fHistoTruePi0SecFracFLambda                                 = NULL;
 
 //****************************************************************************
 //****************************************************************************
@@ -400,9 +382,6 @@ TH1D*       fHistoTrueYieldGammaM02                                     = NULL;
 TH1D*       fHistoTrueYieldElectronM02                                  = NULL;
 TH1D*       fHistoTrueYieldBGM02                                        = NULL;
 TH1D*       fHistoTrueYieldPrimPi0M02                                   = NULL;
-TH1D*       fHistoTrueYieldSecPi0M02                                    = NULL;
-TH1D*       fHistoTrueYieldSecPi0FK0sM02                                = NULL;
-TH1D*       fHistoTrueYieldSecPi0FLambdaM02                             = NULL;
 
 //****************************************************************************
 //******************* MC input histograms ************************************
@@ -418,11 +397,34 @@ TH1D*       fHistoMCMesonWithinAccepPt                                  = NULL;
 TH1D*       fHistoMCMesonGGWithinAccepPt                                = NULL;
 TH1D*       fHistoMCMesonDalitzWithinAccepPt                            = NULL;
 TH1D*       fHistoMCMesonWithinAccepPtRebin                             = NULL;
-TH1D*       fHistoMCSecPi0Pt                                            = NULL;
-TH1D*       fHistoMCSecPi0PtRebin                                       = NULL;
-TH1D*       fHistoMCSecPi0FromK0sPt                                     = NULL;
-TH1D*       fHistoMCSecPi0FromK0sPtRebin                                = NULL;
-TH1D*       fHistoMCSecPi0WithinAccepPt                                 = NULL;
-TH1D*       fHistoMCSecPi0WithinAccepPtRebin                            = NULL;
-TH1D*       fHistoMCSecPi0FromK0sWithinAccepPt                          = NULL;
-TH1D*       fHistoMCSecPi0FromK0sWithinAccepPtRebin                     = NULL;
+
+//****************************************************************************
+//**************************** MC rec sec mesons  ****************************
+//****************************************************************************
+TH2F*       fHistoTrueClustersSecPi0PtM02[4]                            = { NULL, NULL, NULL, NULL };
+TH1D**      fHistoTrueClusSecPi0M02PtBin[4]                             = { NULL, NULL, NULL, NULL};    
+
+Double_t*   fMesonM02TrueSecPi0Yields[4]                                = { NULL, NULL, NULL, NULL};    
+Double_t*   fMesonM02TrueSecPi0YieldsError[4]                           = { NULL, NULL, NULL, NULL};    
+TH1D*       fHistoTrueYieldSecPi0M02[4]                                 = { NULL, NULL, NULL, NULL};    
+TH1D*       fHistoTruePi0SecFrac[4]                                     = { NULL, NULL, NULL, NULL};
+TH1D*       fHistoTrueEffiSecPi0[4]                                     = { NULL, NULL, NULL, NULL};
+
+//****************************************************************************
+//******************* Secondary correction histograms ************************
+//****************************************************************************
+TH2D*       fHistoMCSecPi0PtSource                                      = NULL;
+TH2D*       fHistoMCSecPi0WithinAccepPtSource                           = NULL;
+TH1D*       fHistoMCSecPi0Pt[4]                                         = { NULL, NULL, NULL, NULL};
+TH1D*       fHistoMCSecPi0PtWAcc[4]                                     = { NULL, NULL, NULL, NULL};
+TH1D*       fHistoMCSecPi0PtReb[4]                                      = { NULL, NULL, NULL, NULL};
+TH1D*       fHistoMCSecPi0PtWAccReb[4]                                  = { NULL, NULL, NULL, NULL};
+TH1D*       fHistoMCSecPi0AcceptPt[4]                                   = { NULL, NULL, NULL, NULL};
+
+//*****************************************************************************
+//************ Load secondary pion histograms from external file **************
+//*****************************************************************************
+Bool_t      fHaveToyMCInputForSec                                       = kFALSE;
+TFile*      fFileToyMCInput[3]                                          = {NULL, NULL, NULL};
+TH1D*       fHistoYieldToyMCSecInput[3]                                 = {NULL, NULL, NULL};
+TH1D*       fHistoYieldToyMCSecInputReb[3]                              = {NULL, NULL, NULL};

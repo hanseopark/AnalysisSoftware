@@ -348,6 +348,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TH1D*   histoRawClusterPt       [MaxNumberOfFiles];
     TH1D*   histoEfficiencyPi0      [MaxNumberOfFiles];
     TH1D*   histoAcceptancePi0      [MaxNumberOfFiles];
+    
     TH1D*   histoAcceptancePi0WOEvtWeights [MaxNumberOfFiles];
     TH1D*   histoPurityPi0          [MaxNumberOfFiles];
     TH1D*   histoEffTimesAccPi0     [MaxNumberOfFiles];
@@ -381,6 +382,12 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TH1D*   histoInvMassSig         [MaxNumberOfFiles];
     TH1D*   histoInvMassBG          [MaxNumberOfFiles];
     TF1*    fitInvMassSig           [MaxNumberOfFiles];
+
+    // sec corr histos
+    TH1D*   histoSecEffiPi0FromK0s  [MaxNumberOfFiles];
+    TH1D*   histoEffectCorrPi0FromK0s[MaxNumberOfFiles];
+    Bool_t hasSecEffi                                       = kFALSE;
+    Bool_t hasSecCorrFac                                    = kFALSE;
     
     for (Int_t i=0; i< nrOfTrigToBeComb; i++){
         // Define CutSelections
@@ -434,6 +441,18 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         histoAcceptancePi0[i]                               = (TH1D*)fileCorrectedPi0[i]->Get(nameAcceptance.Data());
         histoAcceptancePi0[i]->SetName(Form("Acceptance_%s",  cutNumber[i].Data()));
         histoAcceptancePi0WOEvtWeights[i]                   = (TH1D*)fileCorrectedPi0[i]->Get(nameAcceptanceWOEvtWeights.Data());
+        
+        histoEffectCorrPi0FromK0s[i]                        = NULL;
+        histoEffectCorrPi0FromK0s[i]                        = (TH1D*)fileCorrectedPi0[i]->Get("RatioSecYieldFromK0SMesonFromToyToRaw");
+        if (!histoEffectCorrPi0FromK0s[i] || isMC.CompareTo("MC") == 0 )
+            histoEffectCorrPi0FromK0s[i]                    = (TH1D*)fileCorrectedPi0[i]->Get("RatioSecYieldFromK0SMesonToRaw");
+        if (histoEffectCorrPi0FromK0s[i])
+            hasSecCorrFac                                   = kTRUE;
+        histoSecEffiPi0FromK0s[i]                           = NULL;
+        histoSecEffiPi0FromK0s[i]                           = (TH1D*)fileCorrectedPi0[i]->Get("TrueSecFromK0SEffiPt");
+        if (histoSecEffiPi0FromK0s[i])
+            hasSecEffi                                      = kTRUE;
+        
         if(histoAcceptancePi0WOEvtWeights[i]) histoAcceptancePi0WOEvtWeights[i]->SetName(Form("AcceptanceWOEvtWeights_%s",  cutNumber[i].Data()));
         if (mode == 10){
             histoPurityPi0[i]                               = (TH1D*)fileCorrectedPi0[i]->Get("MesonPurity");
@@ -994,10 +1013,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     
     TH2F * histo2DEffiPi0;
     histo2DEffiPi0 = new TH2F("histo2DEffiPi0","histo2DEffiPi0",1000,0., maxPtGlobalPi0,10000,minEffiPi0, maxEffiPi0);
-    SetStyleHistoTH2ForGraphs(histo2DEffiPi0, "#it{p}_{T} (GeV/#it{c})","#epsilon_{reco} #times #epsilon_{trigg}",
+    SetStyleHistoTH2ForGraphs(histo2DEffiPi0, "#it{p}_{T} (GeV/#it{c})","#epsilon_{#pi^{0}}",
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);
     histo2DEffiPi0->DrawCopy(); 
-    histo2DEffiPi0->SetYTitle("#epsilon_{#pi^{0}}");
 
     Double_t minXLegendEffi = 0.62;
     Int_t nColumnsEffi      = 2; 
@@ -1032,6 +1050,77 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     canvasEffi->Update();
     canvasEffi->SaveAs(Form("%s/Pi0_Efficiency.%s",outputDir.Data(),suffix.Data()));
 
+    if (hasSecEffi){
+        canvasEffi->cd();
+        TH2F * histo2DEffiSecPi0;
+        histo2DEffiSecPi0 = new TH2F("histo2DEffiSecPi0","histo2DEffiSecPi0",1000,0., maxPtGlobalPi0,10000,minEffiPi0, maxEffiPi0);
+        SetStyleHistoTH2ForGraphs(histo2DEffiSecPi0, "#it{p}_{T} (GeV/#it{c})","#epsilon_{sec #pi^{0} from K^{0}_{s}}",
+                                    0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);
+        histo2DEffiSecPi0->DrawCopy(); 
+    
+        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+            if (histoSecEffiPi0FromK0s[i]){
+                DrawGammaSetMarker(histoSecEffiPi0FromK0s[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                histoSecEffiPi0FromK0s[i]->DrawCopy("e1,same"); 
+            }    
+        }
+        legendEffiPi0->Draw();
+
+        labelEnergyEffi->Draw();
+        labelPi0Effi->Draw();
+        labelDetProcEffi->Draw();
+
+        canvasEffi->Update();
+        canvasEffi->SaveAs(Form("%s/Pi0_SecEfficiencyFromK0s.%s",outputDir.Data(),suffix.Data()));        
+    }    
+
+    if (hasSecCorrFac){
+        canvasEffi->cd();
+        canvasEffi->SetLogy(0);
+        canvasEffi->SetLeftMargin(0.1);
+        Double_t minXLegendEffecSec = 0.62;
+        Int_t nColumnsEffecSec      = 2; 
+        if (nrOfTrigToBeComb > 6){
+            minXLegendEffecSec = 0.4;
+            nColumnsEffecSec   = 3; 
+        }
+        Double_t maxYLegendEffecSec = 0.84;
+        Double_t minYLegendEffecSec = maxYLegendEffecSec-(1.05*nrOfTrigToBeComb/nColumnsEffecSec*0.85*textSizeSpectra);
+
+        TH2F * histo2DEffectiveSecCorr;
+        histo2DEffectiveSecCorr = new TH2F("histo2DEffectiveSecCorr","histo2DEffectiveSecCorr",1000,0., maxPtGlobalPi0,10000,0, 0.3);
+        SetStyleHistoTH2ForGraphs(histo2DEffectiveSecCorr, "#it{p}_{T} (GeV/#it{c})","r_{sec #pi^{0} from K^{0}_{s}}",
+                                    0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.17);
+        histo2DEffectiveSecCorr->DrawCopy(); 
+
+        TLegend* legendEffectSec = GetAndSetLegend2(minXLegendEffecSec, minYLegendEffecSec, 0.95, maxYLegendEffecSec ,28, nColumnsEffecSec);
+        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+            if (histoEffectCorrPi0FromK0s[i]){
+                DrawGammaSetMarker(histoEffectCorrPi0FromK0s[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                histoEffectCorrPi0FromK0s[i]->DrawCopy("e1,same"); 
+                legendEffectSec->AddEntry(histoEffectCorrPi0FromK0s[i],triggerNameLabel[i].Data(),"p"); 
+            }    
+        }
+        legendEffectSec->Draw();
+
+        TLatex *labelEnergyEffSec = new TLatex(0.62, maxYLegendEffecSec+0.02+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
+        SetStyleTLatex( labelEnergyEffSec, 0.85*textSizeSpectra,4);
+        labelEnergyEffSec->Draw();
+
+        TLatex *labelPi0EffSec = new TLatex(0.62, maxYLegendEffecSec+0.02+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelPi0EffSec, 0.85*textSizeSpectra,4);
+        labelPi0EffSec->Draw();
+
+        TLatex *labelDetProcEffSec = new TLatex(0.62, maxYLegendEffecSec+0.02,detectionProcess.Data());
+        SetStyleTLatex( labelDetProcEffSec, 0.85*textSizeSpectra,4);
+        labelDetProcEffSec->Draw();
+
+        canvasEffi->Update();
+        canvasEffi->SaveAs(Form("%s/Pi0_EffectiveSecCorrFromK0s.%s",outputDir.Data(),suffix.Data()));        
+        canvasEffi->SetLogy(1);
+        canvasEffi->SetLeftMargin(0.09);
+    }    
+    
     //***************************************************************************************************************
     //************************************ Plotting trigger efficiencies Pi0 ****************************************
     //***************************************************************************************************************
@@ -1619,6 +1708,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             fileSysErrPi0.open(sysFilePi0[i].Data(),ios_base::in);
             cout << sysFilePi0[i].Data() << endl;
             Int_t counter = 0;
+            cout << "reading sys file summed" << endl;
             while(!fileSysErrPi0.eof() && counter < 100){
                 Double_t garbage = 0;
                 fileSysErrPi0 >>ptSysRelPi0[i][counter] >> yErrorSysLowRelPi0[i][counter] >> yErrorSysHighRelPi0[i][counter]>>    garbage >> garbage;
@@ -1628,37 +1718,51 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             fileSysErrPi0.close();
          // read in detailed systematics
             string sysFilePi0Det = sysFilePi0[i].Data();
-            if(!replace(sysFilePi0Det, "Averaged", "AveragedSingle")){cout << "WARNING: could not find detailed systematics file " << sysFilePi0Det << ", skipping... " << endl; sysAvailSinglePi0[i] = kFALSE; continue;}
+
+            if(!replace(sysFilePi0Det, "Averaged", "AveragedSingle")){
+                cout << "WARNING: could not find detailed systematics file " << sysFilePi0Det << ", skipping... " << endl; sysAvailSinglePi0[i] = kFALSE; 
+                continue;
+            }
             ifstream fileSysErrDetailedPi0;
             fileSysErrDetailedPi0.open(sysFilePi0Det,ios_base::in);
-            if(fileSysErrDetailedPi0.is_open()) sysAvailSinglePi0[i] = kTRUE;
-            else{ sysAvailSinglePi0[i] = kFALSE; continue;}
-            cout << sysFilePi0Det << endl;
-            counter = 0;
-            string line;
-            Int_t counterColumn = 0;
-            while (getline(fileSysErrDetailedPi0, line) && counter < 100) {
-              istringstream ss(line);
-              TString temp="";
-              counterColumn = 0;
-              while(ss && counterColumn < 100){
-                ss >> temp;
-                if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
-                  ptSysDetail[i][counter].push_back(temp);
-                  counterColumn++;
-                }
-              }
-              if(counter == 0){
-                ptSysDetail[i][counter++].push_back("TotalError");
-                counterColumn++;
-              }else counter++;
+            if(fileSysErrDetailedPi0.is_open()) 
+                sysAvailSinglePi0[i] = kTRUE;
+            else{
+                sysAvailSinglePi0[i] = kFALSE; 
+                cout << "No single errors were found" << endl;
             }
-            numberBinsSysAvailSinglePi0[i] = counter;
-            fileSysErrDetailedPi0.close();
+            
+            if (sysAvailSinglePi0[i]){
+                cout << sysFilePi0Det << endl;
+                counter = 0;
+                string line;
+                Int_t counterColumn = 0;
+                while (getline(fileSysErrDetailedPi0, line) && counter < 100) {
+                    istringstream ss(line);
+                    TString temp="";
+                    counterColumn = 0;
+                    while(ss && counterColumn < 100){
+                        ss >> temp;
+                        if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                        ptSysDetail[i][counter].push_back(temp);
+                        counterColumn++;
+                        }
+                    }
+                    if(counter == 0){
+                        ptSysDetail[i][counter++].push_back("TotalError");
+                        counterColumn++;
+                    }else counter++;
+                }
+                numberBinsSysAvailSinglePi0[i] = counter;
+                fileSysErrDetailedPi0.close();
+            }   
         } else {
             sysAvailPi0[i]             = kFALSE;
             sysAvailSinglePi0[i]       = kFALSE;
         }
+        cout << sysAvailPi0[i] << "\t" << sysAvailSinglePi0[i] << endl;
+//         continue;
+        
         
         // print out input spectrum from statistical histogram
         cout << "step 0" << endl;
@@ -2131,6 +2235,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         }
     }
 
+//     return;
+    
     // create weighted graphs for spectra and supporting graphs
     TString nameWeightsLogFilePi0 =     Form("%s/weightsPi0_%s.dat",outputDir.Data(),isMC.Data());
     TGraphAsymmErrors* graphCorrectedYieldWeightedAveragePi0Stat    = NULL;
@@ -3881,30 +3987,37 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 if(!replace(sysFileEtaDet, "Averaged", "AveragedSingle")){cout << "WARNING: could not find detailed systematics file " << sysFileEtaDet << ", skipping... " << endl; sysAvailSingleEta[i] = kFALSE; continue;}
                 ifstream fileSysErrDetailedEta;
                 fileSysErrDetailedEta.open(sysFileEtaDet,ios_base::in);
-                if(fileSysErrDetailedEta.is_open()) sysAvailSingleEta[i] = kTRUE;
-                else{ sysAvailSingleEta[i] = kFALSE; continue;}
-                cout << sysFileEtaDet << endl;
-                counter = 0;
-                string line;
-                Int_t counterColumn = 0;
-                while (getline(fileSysErrDetailedEta, line) && counter < 100) {
-                  istringstream ss(line);
-                  TString temp="";
-                  counterColumn = 0;
-                  while(ss && counterColumn < 100){
-                    ss >> temp;
-                    if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
-                      ptSysDetail[i][counter].push_back(temp);
-                      counterColumn++;
-                    }
-                  }
-                  if(counter == 0){
-                    ptSysDetail[i][counter++].push_back("TotalError");
-                    counterColumn++;
-                  }else counter++;
+                if(fileSysErrDetailedEta.is_open()) 
+                    sysAvailSingleEta[i] = kTRUE;
+                else{ 
+                    sysAvailSingleEta[i] = kFALSE; 
+                    cout << "couldn't find single errors for eta, jumping" << endl;
                 }
-                numberBinsSysAvailSingleEta[i] = counter;
-                fileSysErrDetailedEta.close();
+                
+                if (sysAvailSingleEta[i]){
+                    cout << sysFileEtaDet << endl;
+                    counter = 0;
+                    string line;
+                    Int_t counterColumn = 0;
+                    while (getline(fileSysErrDetailedEta, line) && counter < 100) {
+                        istringstream ss(line);
+                        TString temp="";
+                        counterColumn = 0;
+                        while(ss && counterColumn < 100){
+                            ss >> temp;
+                            if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                            ptSysDetail[i][counter].push_back(temp);
+                            counterColumn++;
+                            }
+                        }
+                        if(counter == 0){
+                            ptSysDetail[i][counter++].push_back("TotalError");
+                            counterColumn++;
+                        }else counter++;
+                    }
+                    numberBinsSysAvailSingleEta[i] = counter;
+                    fileSysErrDetailedEta.close();
+                }    
             } else {
                 sysAvailEta[i]              = kFALSE;
                 sysAvailSingleEta[i]        = kTRUE;
@@ -5121,30 +5234,37 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     if(!replace(sysFileEtaToPi0Det, "Averaged", "AveragedSingle")){cout << "WARNING: could not find detailed systematics file " << sysFileEtaToPi0Det << ", skipping... " << endl; sysAvailSingleEtaToPi0[i] = kFALSE; continue;}
                     ifstream fileSysErrDetailedEtaToPi0;
                     fileSysErrDetailedEtaToPi0.open(sysFileEtaToPi0Det,ios_base::in);
-                    if(fileSysErrDetailedEtaToPi0.is_open()) sysAvailSingleEtaToPi0[i] = kTRUE;
-                    else{ sysAvailSingleEtaToPi0[i] = kFALSE; continue;}
-                    cout << sysFileEtaToPi0Det << endl;
-                    counter = 0;
-                    string line;
-                    Int_t counterColumn = 0;
-                    while (getline(fileSysErrDetailedEtaToPi0, line) && counter < 100) {
-                      istringstream ss(line);
-                      TString temp="";
-                      counterColumn = 0;
-                      while(ss && counterColumn < 100){
-                        ss >> temp;
-                        if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
-                          ptSysDetail[i][counter].push_back(temp);
-                          counterColumn++;
-                        }
-                      }
-                      if(counter == 0){
-                        ptSysDetail[i][counter++].push_back("TotalError");
-                        counterColumn++;
-                      }else counter++;
+                    if(fileSysErrDetailedEtaToPi0.is_open()) 
+                        sysAvailSingleEtaToPi0[i] = kTRUE;
+                    else{ 
+                        sysAvailSingleEtaToPi0[i] = kFALSE; 
+                        cout << "couldn't find single errors for eta/pi0, jumping" << endl;    
                     }
-                    numberBinsSysAvailSingleEtaToPi0[i] = counter;
-                    fileSysErrDetailedEtaToPi0.close();
+                    
+                    if (sysAvailSingleEtaToPi0[i]){
+                        cout << sysFileEtaToPi0Det << endl;
+                        counter = 0;
+                        string line;
+                        Int_t counterColumn = 0;
+                        while (getline(fileSysErrDetailedEtaToPi0, line) && counter < 100) {
+                            istringstream ss(line);
+                            TString temp="";
+                            counterColumn = 0;
+                            while(ss && counterColumn < 100){
+                                ss >> temp;
+                                if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                                ptSysDetail[i][counter].push_back(temp);
+                                counterColumn++;
+                                }
+                            }
+                            if(counter == 0){
+                                ptSysDetail[i][counter++].push_back("TotalError");
+                                counterColumn++;
+                            }else counter++;
+                        }
+                        numberBinsSysAvailSingleEtaToPi0[i] = counter;
+                        fileSysErrDetailedEtaToPi0.close();
+                    }
                 } else {
                     sysAvailEtaToPi0[i]         = kFALSE;
                     sysAvailSingleEtaToPi0[i]   = kTRUE;

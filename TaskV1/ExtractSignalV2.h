@@ -122,8 +122,6 @@ TString     fNameHistoTrueGGBck                                         = "";
 TString     fNameHistoTrueContBck                                       = "";
 TString     fNameHistoTrueAllBck                                        = "";
 TString     fNameHistoTrueSec                                           = "";
-TString     fNameHistoTrueSecFromK0S                                    = "";
-TString     fNameHistoTrueSecFromLambda                                 = "";
 TString     fNameHistoEffi                                              = "";
 TString     fNameHistoFrac                                              = "";
 TString     fNameHistoMotherZM                                          = "";
@@ -215,6 +213,7 @@ Double_t CrystalBall(Double_t *,Double_t *);                                    
 void Delete();                                                                                              // Deleting all pointers
 void SetCorrectMCHistogrammNames(TString);                                                                  // Setting correct histogram names
 void FillMCSecondaryHistAndCalculateAcceptance(TH2D*, TH2D*);                                               // Fill secondary MC input histograms and calculate respective acceptance            
+Bool_t LoadSecondaryPionsFromExternalFile();                                                                // Loads secondary neutral pion input graphs from file
 
 //****************************************************************************
 //************************** input histograms ********************************
@@ -592,3 +591,11 @@ TH1D*       fHistoYieldTrueMesonDC                                      = NULL;
 TH1F*       fHistoTrueGammaClusPt                                       = NULL;
 TH1D*       fHistoTrueGammaDCClusPt                                     = NULL;
 TH1F*       fHistoTrueGammaClusMultipleCount                            = NULL;
+
+//*****************************************************************************
+//************ Load secondary pion histograms from external file **************
+//*****************************************************************************
+Bool_t      fHaveToyMCInputForSec                                       = kFALSE;
+TFile*      fFileToyMCInput[3]                                          = {NULL, NULL, NULL};
+TH1D*       fHistoYieldToyMCSecInput[3]                                 = {NULL, NULL, NULL};
+TH1D*       fHistoYieldToyMCSecInputReb[3]                              = {NULL, NULL, NULL};

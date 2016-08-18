@@ -27,7 +27,7 @@ function ChangeStructureIfNeeded()
 # switches to enable/disable certain procedures
 DOWNLOADON=1
 MERGEON=1
-MERGEONBINSSingle=1
+MERGEONBINSSingle=0
 MERGEONBINS=1
 
 # check if train configuration has actually been given
@@ -55,6 +55,7 @@ LHC15g2MC="";
 
 NSlashes=10
 NSlashes2=9
+NSlashes3=11
 
 if [ $1 = "fbock" ]; then 
     BASEDIR=/mnt/additionalStorage/OutputLegoTrains/pp
@@ -349,16 +350,27 @@ fi
 # LHC15a3aplusMC="2151"; 
 
 
-TRAINDIR=Legotrain-mCalo-20160727_SecEffiAndTMStudiesRerun
-LHC11aData="1564"; 
-LHC15g1aMC="2353";
-LHC12f1aMC="2350"; 
-LHC12f1bMC="2351"; 
+# TRAINDIR=Legotrain-mCalo-20160727_SecEffiAndTMStudiesRerun
+# LHC11aData="1564"; 
+# LHC15g1aMC="2353";
+# LHC12f1aMC="2350"; 
+# LHC12f1bMC="2351"; 
+# 
+# LHC13gData="1568"; 
+# LHC15a3aMC="2348"; 
+# LHC15a3aplusMC="2349"; 
+# LHC15g2MC="2352";
 
-LHC13gData="1568"; 
-LHC15a3aMC="2348"; 
-LHC15a3aplusMC="2349"; 
-LHC15g2MC="2352";
+TRAINDIR=Legotrain-mCalo-20160813_SecEffiAndTMStudiesRerun
+LHC11aData="1777"; 
+LHC15g1aMC="2408";
+LHC12f1aMC="2428"; 
+LHC12f1bMC="2429"; 
+
+LHC13gData="1778"; 
+LHC15a3aMC="2410"; 
+LHC15a3aplusMC="2416"; 
+LHC15g2MC="2415";
 
 
 
@@ -665,6 +677,12 @@ elif [ $2 = "LHC13g" ]; then
         if [ $HAVELHC13g == 1 ]; then
             echo "downloading LHC13g"
             CopyFileIfNonExisitent $OUTPUTDIR_LHC13g "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC13gData/merge"
+            runNumbers=`cat runNumbersLHC13g_pass1.txt`
+            echo $runNumbers
+            for runNumber in $runNumbers; do
+                CopyFileIfNonExisitent $OUTPUTDIR_LHC13g/$runNumber "/alice/data/2013/LHC13g/000$runNumber/pass1/PWGGA/GA_pp/$LHC13gData"
+            done;            
+
         fi
         
         if [ $HAVELHC15g2 == 1 ]; then
@@ -712,6 +730,13 @@ elif [ $2 = "LHC13g" ]; then
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC13g/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_LHC13g-pass1_$number.root $number
             root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC13g-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_LHC13g_$number.log\"\)
+            mkdir -p $OUTPUTDIR/LHC13gRunWise
+            runNumbers=`cat runNumbersLHC13g_pass1.txt`
+            echo $runNumbers
+            for runNumber in $runNumbers; do
+                ChangeStructureIfNeeded $OUTPUTDIR_LHC13g/$runNumber/GammaCalo_$number.root $OUTPUTDIR/LHC13gRunWise/GammaCalo_LHC13g-pass1_$runNumber\_$number.root $number
+            done;            
+
         done;
     fi
 
@@ -776,12 +801,34 @@ elif [ $2 = "LHC13g" ]; then
     fi
 
         
+    rm $OUTPUTDIR/GammaCalo_LHC13gRed_*.root
+    ls $OUTPUTDIR/GammaCalo_LHC13g-pass1_*.root > filesForMerging.txt
+    filesForMerging=`cat filesForMerging.txt`    
+    if [ $MERGEON == 1 ]; then    
+        for fileName in $filesForMerging; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
+            echo $number
+            runsForMerging=`cat runNumbersLHC13g_pass1_reduced.txt`
+            TOMERGE="";
+            for run in $runsForMerging; do
+                echo $OUTPUTDIR/LHC13gRunWise/GammaCalo_LHC13g-pass1_$run\_$number.root
+                if [ -f $OUTPUTDIR/LHC13gRunWise/GammaCalo_LHC13g-pass1_$run\_$number.root ]; then
+                    TOMERGE="$TOMERGE $OUTPUTDIR/LHC13gRunWise/GammaCalo_LHC13g-pass1_$run"
+                    TOMERGE+="_$number.root"
+                else 
+                    echo "I couldn't find the file for run $run, number $number, $OUTPUTDIR/LHC13gRunWise/GammaCalo_LHC13g-pass1_$run\_$number.root";
+                fi
+            done;
+            hadd -f $OUTPUTDIR/GammaCalo_LHC13g-pass1-reducedRunList_$number.root $TOMERGE
+        done
+    
+    fi
+
     rm $OUTPUTDIR/GammaCalo_MC_LHC15a3a_LHC15a3aplus_*.root
-    rm $OUTPUTDIR/GammaCalo_MC_LHC15a3aFinerPtHardBins_LHC15a3aplusFinerPtHardBins_*.root
-    
+    rm $OUTPUTDIR/GammaCalo_MC_LHC15a3aFinerPtHardBins_LHC15a3aplusFinerPtHardBins_*.root    
     ls $OUTPUTDIR/GammaCalo_MC_LHC15a3a_*.root > filesForMerging.txt
-    filesForMerging=`cat filesForMerging.txt`
-    
+    filesForMerging=`cat filesForMerging.txt`    
     if [ $MERGEON == 1 ]; then    
         for fileName in $filesForMerging; do
             echo $fileName
