@@ -1047,9 +1047,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         return;
     }    
     // remove bin from 0-0.3 (should have been done automatically in principle)
-//    graphCombPi0InvXSectionStatA->RemovePoint(0);
-//    graphCombPi0InvXSectionSysA->RemovePoint(0);
-//    graphCombPi0InvXSectionTotA->RemovePoint(0);
+    graphCombPi0InvXSectionStatA->RemovePoint(0);
+    graphCombPi0InvXSectionSysA->RemovePoint(0);
+    graphCombPi0InvXSectionTotA->RemovePoint(0);
     cout << __LINE__ << endl;
     graphCombPi0InvXSectionTotA->Print();
 //     return;
@@ -1901,8 +1901,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         labelRatioToFitPi0->Draw();
 
         TLegend* legendPi0FitPHOSStandaloneA        = GetAndSetLegend2(0.2, 0.92-(0.05*2), 0.45, 0.92, 38);
-        legendPi0FitPHOSStandaloneA->AddEntry(graphRatioPHOSprelimFinalMBsys,"PHOS MB prelim / final");
-        legendPi0FitPHOSStandaloneA->AddEntry(graphRatioPHOSprelimFinalPHOSsys,"PHOS PHOS prelim / final");
+        legendPi0FitPHOSStandaloneA->AddEntry(graphRatioPHOSprelimFinalMBsys,"PHOS MB prelim / PHOS final");
+        legendPi0FitPHOSStandaloneA->AddEntry(graphRatioPHOSprelimFinalPHOSsys,"PHOS PHOS prelim / PHOS final");
         legendPi0FitPHOSStandaloneA->Draw("");
 
     canvasRatioToCombFit->SaveAs(Form("%s/Pi0_RatioOfPHOSprelimToPHOSfinal_PP.%s",outputDir.Data(),suffix.Data()));
@@ -5305,6 +5305,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
       TF1* fitPHOSlow                                       = (TF1*)directoryPHOSPi0L->Get("InvMassFinalFit");
 
       canvasInvMassSamplePlot->cd();
+      histo2DPi0InvMassDummy->GetXaxis()->SetRangeUser(0.02,0.3);
       histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(0.9*histoPHOSSignalPi0->GetMinimum(),0.9*histoPHOSSignalPi0->GetMaximum());
       histo2DPi0InvMassDummy->DrawCopy();
 

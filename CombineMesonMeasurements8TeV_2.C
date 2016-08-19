@@ -1093,6 +1093,8 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
                                     graphCombPi0InvXSectionTotA->GetY()[3],0.6,3.0};
     TF1* fitTCMInvXSectionPi0   = FitObject("tcm","fitTCMInvCrossSectionPi08TeV","Pi0",graphCombPi0InvXSectionStatA,0.3,70. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
 
+    TF1* fitTCMInvXSectionPi0highPt   = FitObject("tcm","fitTCMInvXSectionPi0highPt","Pi0",graphCombPi0InvXSectionStatA,8.,70. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
+
     // Tsallis fit
     Double_t paramGraphPi0[3]                              = {5e11, 6., 0.13};
     TF1* fitInvXSectionPi0                       = FitObject("l","fitInvCrossSectionPi08TeV","Pi0",histoEMCALPi0InvXSectionStat,0.3,70.,paramGraphPi0,"QNRMEX0+");
@@ -1333,6 +1335,26 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     graphRatioPi0EMCALMergedCombFitSys                      = CalculateGraphErrRatioToFit(graphRatioPi0EMCALMergedCombFitSys, fitTCMInvXSectionPi0Plot);
 
 
+    TGraphAsymmErrors* graphRatioPi0PCMCombFitStatH      = (TGraphAsymmErrors*)graphPCMPi0InvXSectionStat->Clone();
+    graphRatioPi0PCMCombFitStatH                         = CalculateGraphErrRatioToFit(graphRatioPi0PCMCombFitStatH, fitTCMInvXSectionPi0highPt);
+    TGraphAsymmErrors* graphRatioPi0PCMCombFitSysH       = (TGraphAsymmErrors*)graphPCMPi0InvXSectionSys->Clone();
+    graphRatioPi0PCMCombFitSysH                          = CalculateGraphErrRatioToFit(graphRatioPi0PCMCombFitSysH, fitTCMInvXSectionPi0highPt);
+    TGraphAsymmErrors* graphRatioPi0PHOSCombFitStatH     = (TGraphAsymmErrors*)graphPHOSPi0InvXSectionStat->Clone();
+    graphRatioPi0PHOSCombFitStatH                        = CalculateGraphErrRatioToFit(graphRatioPi0PHOSCombFitStatH, fitTCMInvXSectionPi0highPt);
+    TGraphAsymmErrors* graphRatioPi0PHOSCombFitSysH      = (TGraphAsymmErrors*)graphPHOSPi0InvXSectionSys->Clone();
+    graphRatioPi0PHOSCombFitSysH                         = CalculateGraphErrRatioToFit(graphRatioPi0PHOSCombFitSysH, fitTCMInvXSectionPi0highPt);
+    TGraphAsymmErrors* graphRatioPi0EMCALCombFitStatH    = (TGraphAsymmErrors*)graphEMCALPi0InvXSectionStat->Clone();
+    graphRatioPi0EMCALCombFitStatH                       = CalculateGraphErrRatioToFit(graphRatioPi0EMCALCombFitStatH, fitTCMInvXSectionPi0highPt);
+    TGraphAsymmErrors* graphRatioPi0EMCALCombFitSysH     = (TGraphAsymmErrors*)graphEMCALPi0InvXSectionSys->Clone();
+    graphRatioPi0EMCALCombFitSysH                        = CalculateGraphErrRatioToFit(graphRatioPi0EMCALCombFitSysH, fitTCMInvXSectionPi0highPt);
+    TGraphAsymmErrors* graphRatioPi0PCMEMCALCombFitStatH = (TGraphAsymmErrors*)graphPCMEMCALPi0InvXSectionStat->Clone();
+    graphRatioPi0PCMEMCALCombFitStatH                    = CalculateGraphErrRatioToFit(graphRatioPi0PCMEMCALCombFitStatH, fitTCMInvXSectionPi0highPt);
+    TGraphAsymmErrors* graphRatioPi0PCMEMCALCombFitSysH  = (TGraphAsymmErrors*)graphPCMEMCALPi0InvXSectionSys->Clone();
+    graphRatioPi0PCMEMCALCombFitSysH                     = CalculateGraphErrRatioToFit(graphRatioPi0PCMEMCALCombFitSysH, fitTCMInvXSectionPi0highPt);
+    TGraphAsymmErrors* graphRatioPi0EMCALMergedCombFitStatH  = (TGraphAsymmErrors*)graphEMCALMergedPi0InvXSectionStat->Clone();
+    graphRatioPi0EMCALMergedCombFitStatH                     = CalculateGraphErrRatioToFit(graphRatioPi0EMCALMergedCombFitStatH, fitTCMInvXSectionPi0highPt);
+    TGraphAsymmErrors* graphRatioPi0EMCALMergedCombFitSysH   = (TGraphAsymmErrors*)graphEMCALMergedPi0InvXSectionSys->Clone();
+    graphRatioPi0EMCALMergedCombFitSysH                      = CalculateGraphErrRatioToFit(graphRatioPi0EMCALMergedCombFitSysH, fitTCMInvXSectionPi0highPt);
     // **********************************************************************************************************************
     // ******************************************* Plot Ratio of Comb to Fit ****************************************
     // **********************************************************************************************************************
@@ -1491,6 +1513,48 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         boxEMCALMergedPi0OnlyRatioPi0->Draw("l");
 
     canvasRatioToCombFit->SaveAs(Form("%s/Pi0_RatioOfIndividualMeasToCombFit_PP.%s",outputDir.Data(),suffix.Data()));
+
+
+    // **********************************************************************************************************************
+    // *******************************************Plot Ratio of Individual meas to Fit ******************************************
+    // **********************************************************************************************************************
+
+    canvasRatioToCombFit->cd();
+    histo2DPi0RatioToCombFit->GetXaxis()->SetRangeUser(7.,79.);
+    histo2DPi0RatioToCombFit->Draw("copy");
+
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0PCMCombFitSysH, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0PCMCombFitStatH, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0]);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0PHOSCombFitSysH, markerStyleDet[1] ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1], widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0PHOSCombFitStatH, markerStyleDet[1] ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1]);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0EMCALCombFitSysH, markerStyleDet[2] ,markerSizeDet[2]*0.5, colorDet[2], colorDet[2], widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0EMCALCombFitStatH, markerStyleDet[2] ,markerSizeDet[2]*0.5, colorDet[2], colorDet[2]);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0EMCALMergedCombFitSysH, markerStyleDet[9] ,markerSizeDet[9]*0.5, colorDet[9], colorDet[9], widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0EMCALMergedCombFitStatH, markerStyleDet[9] ,markerSizeDet[9]*0.5, colorDet[9], colorDet[9]);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0PCMEMCALCombFitSysH, markerStyleDet[4] ,markerSizeDet[4]*0.5, colorDet[4], colorDet[4], widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0PCMEMCALCombFitStatH, markerStyleDet[4] ,markerSizeDet[4]*0.5, colorDet[4], colorDet[4]);
+
+        graphRatioPi0PCMCombFitSysH->Draw("E2same");
+        graphRatioPi0PHOSCombFitSysH->Draw("E2same");
+        graphRatioPi0EMCALCombFitSysH->Draw("E2same");
+        graphRatioPi0EMCALMergedCombFitSysH->Draw("E2same");
+        graphRatioPi0PCMEMCALCombFitSysH->Draw("E2same");
+
+        graphRatioPi0PCMCombFitStatH->Draw("p,same,z");
+        graphRatioPi0PHOSCombFitStatH->Draw("p,same,z");
+        graphRatioPi0EMCALCombFitStatH->Draw("p,same,z");
+        graphRatioPi0EMCALMergedCombFitStatH->Draw("p,same,z");
+        graphRatioPi0PCMEMCALCombFitStatH->Draw("p,same,z");
+
+        DrawGammaLines(7, 70. , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(7, 70. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(7, 70. , 0.9, 0.9,0.5, kGray, 7);
+
+        labelRatioToFitEnergy->Draw();
+        labelRatioToFitALICE->Draw();
+        labelRatioToFitPi0->Draw();
+
+    canvasRatioToCombFit->SaveAs(Form("%s/Pi0_RatioOfIndividualMeasToCombFit_PP_highPt.%s",outputDir.Data(),suffix.Data()));
 
     // *******************************************************************************************************
     // ********************** Ratio to standalone PCM fit ****************************************************
