@@ -229,7 +229,7 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
         masses[0]                   = TDatabasePDG::Instance()->GetParticle(pdgCodesDaughters[0])->Mass();
         masses[1]                   = TDatabasePDG::Instance()->GetParticle(pdgCodesDaughters[1])->Mass();
         masses[2]                   = TDatabasePDG::Instance()->GetParticle(pdgCodesDaughters[2])->Mass();
-        branchRatio                 = 0.1952+1/3*0.1254;
+        branchRatio                 = (0.1952+1/3*0.1254); // not all of these are seen in the experiment, correction for that done in the task
         minDalitz[0]                = (masses[0]+masses[1])*0.8;
         minDalitz[1]                = (masses[0]+masses[2])*0.8;
         maxDalitz[0]                = (massParticle-masses[2])*1.2;
@@ -578,6 +578,13 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
     h2_asym_geom->Sumw2();
     TH1D *h1_ptdistribution             = new TH1D("h1_ptdistribution","", 700,0,70);  
     h1_ptdistribution->Sumw2();
+    TH1D *h1_ptdistributionInRap[10];
+    for (Int_t y = 0; y < 10; y++){
+        h1_ptdistributionInRap[y]    = new TH1D(Form("h1_ptdistributionInRap_%1.2f",yRanges[y]),"", 700,0,70);  
+        h1_ptdistributionInRap[y]->Sumw2();
+    }
+
+
     TH1D* h1_ptdistributionPerEv        = (TH1D*)h1_ptdistribution->Clone("h1_ptdistributionPerEv");
     h1_ptdistributionPerEv->Sumw2();
     TH1D *h1_phidistribution            = new TH1D("h1_phidistribution","", 100,0,2*TMath::Pi());  
@@ -604,9 +611,12 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
     TH1D *h1_yPiZeroDaughters           = new TH1D("h1_yPiZeroDaughters","", 2*fYMaxMother*100,-fYMaxMother,fYMaxMother);  
     h1_yPiZeroDaughters->Sumw2();
     TH1D *h1_ptPiZeroInRapDaughters[10];
+    TH1D *h1_ptPiZeroToMotherInRap[10];
     for (Int_t y = 0; y < 10; y++){
         h1_ptPiZeroInRapDaughters[y]    = new TH1D(Form("h1_ptPiZeroInRapDaughters_%1.2f",yRanges[y]),"", 700,0,70);  
         h1_ptPiZeroInRapDaughters[y]->Sumw2();
+        h1_ptPiZeroToMotherInRap[y]     = new TH1D(Form("h1_ptPiZeroToMotherInRap_%1.2f",yRanges[y]),"", 700,0,70);  
+        h1_ptPiZeroToMotherInRap[y]->Sumw2();
     }
     TH2D *h2_ptyPiZeroDaughters         = new TH2D("h2_ptyPiZeroDaughters","", 700,0,70,2*fYMaxMother*100,-fYMaxMother,fYMaxMother);  
     h2_ptyPiZeroDaughters->Sumw2();
@@ -658,7 +668,13 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
         h1_phidistribution->Fill(phiCurrent, weightFull);
         h1_etadistribution->Fill(etaCurrent, weightFull);
         h1_ydistribution->Fill(particle.Rapidity(), weightFull);
-    
+        for (Int_t y = 0; y < 10; y++){
+            if (TMath::Abs(particle.Rapidity()) < yRanges[y]){
+                h1_ptdistributionInRap[y]->Fill(ptcurrent, weightFull);
+            }
+        }    
+        
+        
         // let it decay
         Double_t weight         = event.Generate();
         
@@ -934,6 +950,16 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
         canvasQA2D->SaveAs(Form("%s%s_DalitzPlot.%s", fOutputDir.Data(), outputlabel.Data(),suffix.Data()));
     }
     
+    for (Int_t y = 0; y < 10; y++){
+        TH1D* dummyForRatioDaughter = (TH1D*)h1_ptPiZeroInRapDaughters[y]->Clone(Form("h1_ptPiZeroForRatio_%1.2f",yRanges[y]));
+        dummyForRatioDaughter->Rebin(4);
+        TH1D* dummyForRatioMother   = (TH1D*)h1_ptdistributionInRap[y]->Clone(Form("h1_ptMotherForRatio_%1.2f",yRanges[y]));
+        dummyForRatioMother->Rebin(4);
+        
+        h1_ptPiZeroToMotherInRap[y] = (TH1D*)dummyForRatioDaughter->Clone(Form("h1_ptPiZeroToMotherInRap_%1.2f",yRanges[y]));
+        h1_ptPiZeroToMotherInRap[y]->Divide(h1_ptPiZeroToMotherInRap[y],dummyForRatioMother);
+    
+    }
     //*************************************************************************************************
     //********************** Write histograms to file *************************************************
     //*************************************************************************************************
@@ -953,6 +979,8 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
         h1_ptPiZeroDaughters->Write();
         for (Int_t y = 0; y < 10; y++){
             h1_ptPiZeroInRapDaughters[y]->Write();
+            h1_ptdistributionInRap[y]->Write();
+            h1_ptPiZeroToMotherInRap[y]->Write();
         }
         h2_ptMothervsDaughter->Write();
         h2_ptyPiZeroDaughters->Write();
