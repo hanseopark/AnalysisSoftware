@@ -96,10 +96,12 @@ TGraphAsymmErrors* CombineMuScales( Int_t nPoints,
                                     Double_t* muHalf,
                                     Double_t* muTwo
                                   ){
-    Double_t yValue[nPoints];
-    Double_t yErrorHigh[nPoints];
-    Double_t yErrorLow[nPoints];
-    Double_t ptErr[nPoints];
+    
+    
+    Double_t yValue[400];
+    Double_t yErrorHigh[400];
+    Double_t yErrorLow[400];
+    Double_t ptErr[400];
     
     for (Int_t i = 0; i< nPoints; i++){
         yValue[i]   = mu[i];

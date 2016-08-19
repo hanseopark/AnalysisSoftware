@@ -45,7 +45,9 @@
 #include "Math/BrentRootFinder.h"
 #include "CommonHeaders/PlottingGammaConversionHistos.h"
 #include "CommonHeaders/PlottingGammaConversionAdditional.h"
+#include "CommonHeaders/FittingGammaConversion.h"
 #include "CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
+#include "CommonHeaders/ConversionFunctions.h"
 
 extern TRandom*    gRandom;
 extern TBenchmark*    gBenchmark;
@@ -58,19 +60,6 @@ Double_t    xSection7000GeV = 62.22*1e-3;
 Double_t    xSection8000GeV = 55.74*1e-3;
 // Double_t    recalcBarn      = 1e12; //NLO in pbarn!!!!
 
-
-TGraph* ScaleGraph (TGraph* graph, Double_t scaleFac){
-    TGraph* dummyGraph  = (TGraph*)graph->Clone(Form("%s_Scaled",graph->GetName()));
-    Double_t * xValue   = dummyGraph->GetX();
-    Double_t * yValue   = dummyGraph->GetY();
-    Int_t nPoints       = dummyGraph->GetN();
-    
-    for (Int_t i = 0; i < nPoints; i++){
-        yValue[i]       = yValue[i]*scaleFac;
-    }
-    TGraph* returnGraph = new TGraph(nPoints,xValue,yValue);
-    return returnGraph;
-}
 
 TGraphAsymmErrors* ScaleGraphAsym (TGraphAsymmErrors* graph, Double_t scaleFac){
     TGraphAsymmErrors* dummyGraph   = (TGraphAsymmErrors*)graph->Clone(Form("%s_Scaled",graph->GetName()));
@@ -88,42 +77,6 @@ TGraphAsymmErrors* ScaleGraphAsym (TGraphAsymmErrors* graph, Double_t scaleFac){
         yErrorHigh[i] = yErrorHigh[i]*scaleFac;
     }
     TGraphAsymmErrors* returnGraph  = new TGraphAsymmErrors(nPoints,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh); 
-    return returnGraph;
-}
-
-//**********************************************************************************************************
-// Calculates the ratio of two asymmerror graphs 
-//**********************************************************************************************************
-TGraphAsymmErrors* CalculateAsymGraphRatioToGraph(TGraphAsymmErrors* graphA, TGraphAsymmErrors* graphB){
-  
-    TGraphErrors* graphACopy        = (TGraphErrors*)graphA->Clone("GraphCopy");
-    Double_t* xValue                = graphACopy->GetX(); 
-    Double_t* yValue                = graphACopy->GetY();
-    Double_t* xErrorHigh            = graphACopy->GetEXhigh();
-    Double_t* xErrorLow             = graphACopy->GetEXlow();
-    Double_t* yErrorHigh            = graphACopy->GetEYhigh();
-    Double_t* yErrorLow             = graphACopy->GetEYlow();
-   
-    Int_t nPoints                   = graphACopy->GetN();
-    for (Int_t i = 0; i < nPoints; i++){
-        if (abs(xValue[i]-graphB->GetX()[i]) < 0.0001){
-            if (graphB->GetY()[i] != 0){
-                yValue[i]                   = yValue[i]/graphB->GetY()[i];
-                Double_t yErrorRatioHigh    = yValue[i]*TMath::Sqrt( TMath::Power(graphA->GetEYhigh()[i]/graphA->GetY()[i],2) + TMath::Power(graphB->GetEYhigh()[i]/graphB->GetY()[i],2));
-                yErrorHigh[i]               = yErrorRatioHigh; 
-                Double_t yErrorRatioLow     = yValue[i]*TMath::Sqrt( TMath::Power(graphA->GetEYlow()[i]/graphA->GetY()[i],2) + TMath::Power(graphB->GetEYlow()[i]/graphB->GetY()[i],2));
-                yErrorLow[i]                = yErrorRatioLow; 
-            } else {
-                yValue[i]                   = 0;
-                yErrorHigh[i]               = 0;
-                yErrorLow[i]                = 0;
-            }    
-        } else {
-            cout << "ERROR: graphs don't have same binning " << endl;
-            return NULL;
-        }    
-    }
-    TGraphAsymmErrors* returnGraph      = new TGraphAsymmErrors(nPoints,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh); 
     return returnGraph;
 }
 
@@ -242,9 +195,27 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphAsymmErrors *graphNLOCalcPromGam2760GeV      = new TGraphAsymmErrors(nlinesNLOTwo2760GeV,ptNLOPhotonTwo2760GeV,promptGammaValue2760GeV,ptNLOPhotonTwo2760GeVErr,ptNLOPhotonTwo2760GeVErr,promptGammaErrDown2760GeV,promptGammaErrUp2760GeV);
         graphNLOCalcPromGam2760GeV->RemovePoint(0);
         
+
         TGraphAsymmErrors* graphRatioNLOFragGammaDivTot2760GeV      = CalculateAsymGraphRatioToGraph(graphNLOCalcFragGam2760GeV, graphNLOCalcDirGam2760GeV);
         TGraphAsymmErrors* graphRatioNLOPromptGammaDivTot2760GeV    = CalculateAsymGraphRatioToGraph(graphNLOCalcPromGam2760GeV, graphNLOCalcDirGam2760GeV);
+        TGraphAsymmErrors* graphRatioNLOPromptGammaDivFrag2760GeV   = CalculateAsymGraphRatioToGraph(graphNLOCalcPromGam2760GeV, graphNLOCalcFragGam2760GeV);
+
+        TF1* fitGammaDir2760GeV                            = FitObject("powPure","fitNLOcalcDirGamma2760GeV","Gamma",graphNLOCalcDirGam2760GeV,7,30.,NULL,"QNRMEX0+");
+        TF1* fitGammaFrag2760GeV                           = FitObject("powPure","fitNLOcalcFragGamma2760GeV","Gamma",graphNLOCalcFragGam2760GeV,7,30.,NULL,"QNRMEX0+");
+        TF1* fitGammaPrompt2760GeV                         = FitObject("powPure","fitNLOcalcPromptGamma2760GeV","Gamma",graphNLOCalcPromGam2760GeV,7,30.,NULL,"QNRMEX0+");
         
+        TF1* fitFragDivGammaDir2760GeV                     = CalculateRatioOfTwoFunctions (fitGammaFrag2760GeV, fitGammaDir2760GeV, "ratioFitNLOFragDivDirGamma2760GeV");
+        fitFragDivGammaDir2760GeV->SetRange(2,50);
+        
+        TF1* fitPromptDivGammaDir2760GeV                   = CalculateRatioOfTwoFunctions (fitGammaPrompt2760GeV, fitGammaDir2760GeV, "ratioFitNLOPromptDivDirGamma2760GeV");
+        fitPromptDivGammaDir2760GeV->SetRange(2,50);
+        TF1* fitPromptDivFragGamma2760GeV                   = CalculateRatioOfTwoFunctions (fitGammaPrompt2760GeV, fitGammaFrag2760GeV, "ratioFitNLOPromptDivFragGamma2760GeV");
+        fitPromptDivFragGamma2760GeV->SetRange(10,50);
+
+        graphRatioNLOFragGammaDivTot2760GeV->Fit(fitFragDivGammaDir2760GeV,"QNRMEX0+");
+        graphRatioNLOPromptGammaDivTot2760GeV->Fit(fitPromptDivGammaDir2760GeV,"QNRMEX0+");
+        graphRatioNLOPromptGammaDivFrag2760GeV->Fit(fitPromptDivFragGamma2760GeV,"QNRMEX0+");
+        fitPromptDivFragGamma2760GeV->SetRange(2,100);
         
         // -----------------------------------------------------------------------------------------------------------------------
         // ----------------------------- plotting fragmentation and prompt to total direct ---------------------------------------
@@ -262,7 +233,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
 
             DrawGammaSetMarkerTGraphAsym(graphRatioNLOFragGammaDivTot2760GeV, 0, 0, colorFrag, colorFrag, 1, kTRUE, colorFrag);
             graphRatioNLOFragGammaDivTot2760GeV->Draw("3,same");
-
+            
             DrawGammaSetMarkerTGraphAsym(graphRatioNLOPromptGammaDivTot2760GeV, 0, 0, colorPrompt, colorPrompt, 1, kTRUE, colorPrompt);
             graphRatioNLOPromptGammaDivTot2760GeV->SetFillStyle(3245);
             graphRatioNLOPromptGammaDivTot2760GeV->Draw("3,same");
@@ -374,7 +345,22 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         
         TGraphAsymmErrors* graphRatioNLOFragGammaDivTot5TeV      = CalculateAsymGraphRatioToGraph(graphNLOCalcFragGam5TeV, graphNLOCalcDirGam5TeV);
         TGraphAsymmErrors* graphRatioNLOPromptGammaDivTot5TeV    = CalculateAsymGraphRatioToGraph(graphNLOCalcPromGam5TeV, graphNLOCalcDirGam5TeV);
-        
+        TGraphAsymmErrors* graphRatioNLOPromptGammaDivFrag5TeV   = CalculateAsymGraphRatioToGraph(graphNLOCalcPromGam5TeV, graphNLOCalcFragGam5TeV);
+
+        TF1* fitGammaDir5TeV                            = FitObject("powPure","fitNLOcalcDirGamma5TeV","Gamma",graphNLOCalcDirGam5TeV,7,30.,NULL,"QNRMEX0+");
+        TF1* fitGammaFrag5TeV                           = FitObject("powPure","fitNLOcalcFragGamma5TeV","Gamma",graphNLOCalcFragGam5TeV,7,30.,NULL,"QNRMEX0+");
+        TF1* fitGammaPrompt5TeV                         = FitObject("powPure","fitNLOcalcPromptGamma5TeV","Gamma",graphNLOCalcPromGam5TeV,7,30.,NULL,"QNRMEX0+");
+        TF1* fitFragDivGammaDir5TeV                     = CalculateRatioOfTwoFunctions (fitGammaFrag5TeV, fitGammaDir5TeV, "ratioFitNLOFragDivDirGamma5TeV");
+        fitFragDivGammaDir5TeV->SetRange(2,50);
+        TF1* fitPromptDivGammaDir5TeV                   = CalculateRatioOfTwoFunctions (fitGammaPrompt5TeV, fitGammaDir5TeV, "ratioFitNLOPromptDivDirGamma5TeV");
+        fitPromptDivGammaDir5TeV->SetRange(2,50);
+        TF1* fitPromptDivFragGamma5TeV                  = CalculateRatioOfTwoFunctions (fitGammaPrompt5TeV, fitGammaFrag5TeV, "ratioFitNLOPromptDivFragGamma5TeV");
+        fitPromptDivFragGamma5TeV->SetRange(10,50);
+
+        graphRatioNLOFragGammaDivTot5TeV->Fit(fitFragDivGammaDir5TeV,"QNRMEX0+");
+        graphRatioNLOPromptGammaDivTot5TeV->Fit(fitPromptDivGammaDir5TeV,"QNRMEX0+");
+        graphRatioNLOPromptGammaDivFrag5TeV->Fit(fitPromptDivFragGamma5TeV,"QNRMEX0+");
+        fitPromptDivFragGamma5TeV->SetRange(2,100);
         
         // -----------------------------------------------------------------------------------------------------------------------
         // ----------------------------- plotting fragmentation and prompt to total direct ---------------------------------------
@@ -492,7 +478,22 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         
         TGraphAsymmErrors* graphRatioNLOFragGammaDivTot7TeV      = CalculateAsymGraphRatioToGraph(graphNLOCalcFragGam7TeV, graphNLOCalcDirGam7TeV);
         TGraphAsymmErrors* graphRatioNLOPromptGammaDivTot7TeV    = CalculateAsymGraphRatioToGraph(graphNLOCalcPromGam7TeV, graphNLOCalcDirGam7TeV);
-        
+        TGraphAsymmErrors* graphRatioNLOPromptGammaDivFrag7TeV   = CalculateAsymGraphRatioToGraph(graphNLOCalcPromGam7TeV, graphNLOCalcFragGam7TeV);
+
+        TF1* fitGammaDir7TeV                            = FitObject("powPure","fitNLOcalcDirGamma7TeV","Gamma",graphNLOCalcDirGam7TeV,7,30.,NULL,"QNRMEX0+");
+        TF1* fitGammaFrag7TeV                           = FitObject("powPure","fitNLOcalcFragGamma7TeV","Gamma",graphNLOCalcFragGam7TeV,7,30.,NULL,"QNRMEX0+");
+        TF1* fitGammaPrompt7TeV                         = FitObject("powPure","fitNLOcalcPromptGamma7TeV","Gamma",graphNLOCalcPromGam7TeV,7,30.,NULL,"QNRMEX0+");
+        TF1* fitFragDivGammaDir7TeV                     = CalculateRatioOfTwoFunctions (fitGammaFrag7TeV, fitGammaDir7TeV, "ratioFitNLOFragDivDirGamma7TeV");
+        fitFragDivGammaDir7TeV->SetRange(2,50);
+        TF1* fitPromptDivGammaDir7TeV                   = CalculateRatioOfTwoFunctions (fitGammaPrompt7TeV, fitGammaDir7TeV, "ratioFitNLOPromptDivDirGamma7TeV");
+        fitPromptDivGammaDir7TeV->SetRange(2,50);
+        TF1* fitPromptDivFragGamma7TeV                  = CalculateRatioOfTwoFunctions (fitGammaPrompt7TeV, fitGammaFrag7TeV, "ratioFitNLOPromptDivFragGamma7TeV");
+        fitPromptDivFragGamma7TeV->SetRange(10,50);
+
+        graphRatioNLOFragGammaDivTot7TeV->Fit(fitFragDivGammaDir7TeV,"QNRMEX0+");
+        graphRatioNLOPromptGammaDivTot7TeV->Fit(fitPromptDivGammaDir7TeV,"QNRMEX0+");
+        graphRatioNLOPromptGammaDivFrag7TeV->Fit(fitPromptDivFragGamma7TeV,"QNRMEX0+");
+        fitPromptDivFragGamma7TeV->SetRange(2,100);
         
         // -----------------------------------------------------------------------------------------------------------------------
         // ----------------------------- plotting fragmentation and prompt to total direct ---------------------------------------
@@ -609,7 +610,22 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         
         TGraphAsymmErrors* graphRatioNLOFragGammaDivTot8TeV      = CalculateAsymGraphRatioToGraph(graphNLOCalcFragGam8TeV, graphNLOCalcDirGam8TeV);
         TGraphAsymmErrors* graphRatioNLOPromptGammaDivTot8TeV    = CalculateAsymGraphRatioToGraph(graphNLOCalcPromGam8TeV, graphNLOCalcDirGam8TeV);
-        
+        TGraphAsymmErrors* graphRatioNLOPromptGammaDivFrag8TeV   = CalculateAsymGraphRatioToGraph(graphNLOCalcPromGam8TeV, graphNLOCalcFragGam8TeV);
+
+        TF1* fitGammaDir8TeV                            = FitObject("powPure","fitNLOcalcDirGamma8TeV","Gamma",graphNLOCalcDirGam8TeV,7,30.,NULL,"QNRMEX0+");
+        TF1* fitGammaFrag8TeV                           = FitObject("powPure","fitNLOcalcFragGamma8TeV","Gamma",graphNLOCalcFragGam8TeV,7,30.,NULL,"QNRMEX0+");
+        TF1* fitGammaPrompt8TeV                         = FitObject("powPure","fitNLOcalcPromptGamma8TeV","Gamma",graphNLOCalcPromGam8TeV,7,30.,NULL,"QNRMEX0+");
+        TF1* fitFragDivGammaDir8TeV                     = CalculateRatioOfTwoFunctions (fitGammaFrag8TeV, fitGammaDir8TeV, "ratioFitNLOFragDivDirGamma8TeV");
+        fitFragDivGammaDir8TeV->SetRange(2,50);
+        TF1* fitPromptDivGammaDir8TeV                   = CalculateRatioOfTwoFunctions (fitGammaPrompt8TeV, fitGammaDir8TeV, "ratioFitNLOPromptDivDirGamma8TeV");
+        fitPromptDivGammaDir8TeV->SetRange(2,50);
+        TF1* fitPromptDivFragGamma8TeV                  = CalculateRatioOfTwoFunctions (fitGammaPrompt8TeV, fitGammaFrag8TeV, "ratioFitNLOPromptDivFragGamma8TeV");
+        fitPromptDivFragGamma8TeV->SetRange(10,50);
+
+        graphRatioNLOFragGammaDivTot8TeV->Fit(fitFragDivGammaDir8TeV,"QNRMEX0+");
+        graphRatioNLOPromptGammaDivTot8TeV->Fit(fitPromptDivGammaDir8TeV,"QNRMEX0+");
+        graphRatioNLOPromptGammaDivFrag8TeV->Fit(fitPromptDivFragGamma8TeV,"QNRMEX0+");
+        fitPromptDivFragGamma8TeV->SetRange(2,100);
         
         // -----------------------------------------------------------------------------------------------------------------------
         // ----------------------------- plotting fragmentation and prompt to total direct ---------------------------------------
@@ -732,6 +748,8 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphNLOCalcInvYieldINT7FragGam2760GeV->Write("graphFragmentationPhotonNLOVogelsangInvYieldINT7_2760GeV",TObject::kOverwrite);
             graphRatioNLOFragGammaDivTot2760GeV->Write("graphFragPhotonDivDirectNLOVogelsang_2760GeV",TObject::kOverwrite);
             graphRatioNLOPromptGammaDivTot2760GeV->Write("graphPromptPhotonDivDirectNLOVogelsang_2760GeV",TObject::kOverwrite);
+            graphRatioNLOPromptGammaDivFrag2760GeV->Write("graphPromptPhotonDivFragementationNLOVogelsang_2760GeV",TObject::kOverwrite);
+            fitPromptDivFragGamma2760GeV->Write("ratioFitNLOPromptDivFragGamma2760GeV", TObject::kOverwrite);
             fitTheoryDirectMcGill2760GeV->Write("fitYieldDirectPhotonNLOPaquett_2760GeV",TObject::kOverwrite);
 
             graphNLOCalcDirGam5TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
@@ -745,6 +763,8 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphNLOCalcFragGam5TeV->Write("graphFragmentationPhotonNLOVogelsang_5TeV",TObject::kOverwrite);
             graphRatioNLOFragGammaDivTot5TeV->Write("graphFragPhotonDivDirectNLOVogelsang_5TeV",TObject::kOverwrite);
             graphRatioNLOPromptGammaDivTot5TeV->Write("graphPromptPhotonDivDirectNLOVogelsang_5TeV",TObject::kOverwrite);
+            graphRatioNLOPromptGammaDivFrag5TeV->Write("graphPromptPhotonDivFragementationNLOVogelsang_5TeV",TObject::kOverwrite);
+            fitPromptDivFragGamma5TeV->Write("ratioFitNLOPromptDivFragGamma5TeV", TObject::kOverwrite);
             
             graphNLOCalcDirGam7TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcDirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
@@ -775,7 +795,9 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphNLOCalcInvYieldINT7FragGam7TeV->Write("graphFragmentationPhotonNLOVogelsangInvYieldINT7_7TeV",TObject::kOverwrite);
             graphRatioNLOFragGammaDivTot7TeV->Write("graphFragPhotonDivDirectNLOVogelsang_7TeV",TObject::kOverwrite);
             graphRatioNLOPromptGammaDivTot7TeV->Write("graphPromptPhotonDivDirectNLOVogelsang_7TeV",TObject::kOverwrite);
-
+            graphRatioNLOPromptGammaDivFrag7TeV->Write("graphPromptPhotonDivFragementationNLOVogelsang_7TeV",TObject::kOverwrite);
+            fitPromptDivFragGamma7TeV->Write("ratioFitNLOPromptDivFragGamma7TeV", TObject::kOverwrite);
+            
             graphNLOCalcDirGam8TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcDirGam8TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");            
             graphNLOCalcDirGam8TeV->Write("graphDirectPhotonNLOVogelsang_8TeV",TObject::kOverwrite);
@@ -796,7 +818,9 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphNLOCalcInvYieldFragGam8TeV->Write("graphFragmentationPhotonNLOVogelsangInvYield_8TeV",TObject::kOverwrite);
             graphRatioNLOFragGammaDivTot8TeV->Write("graphFragPhotonDivDirectNLOVogelsang_8TeV",TObject::kOverwrite);
             graphRatioNLOPromptGammaDivTot8TeV->Write("graphPromptPhotonDivDirectNLOVogelsang_8TeV",TObject::kOverwrite);
-
+            graphRatioNLOPromptGammaDivFrag8TeV->Write("graphPromptPhotonDivFragementationNLOVogelsang_8TeV",TObject::kOverwrite);
+            fitPromptDivFragGamma8TeV->Write("ratioFitNLOPromptDivFragGamma8TeV", TObject::kOverwrite);
+            
         fileTheoryGraphsPP->Close();
         delete fileTheoryGraphsPP;
     }
