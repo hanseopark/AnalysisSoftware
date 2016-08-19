@@ -1375,7 +1375,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         cout << textsizeLabelsPP << endl;
 
     TH2F * histo2DPi0RatioToCombFit;
-    histo2DPi0RatioToCombFit               = new TH2F("histo2DPi0RatioToCombFit","histo2DPi0RatioToCombFit",1000,0.23,80.,1000,0.2,4.    );
+    histo2DPi0RatioToCombFit               = new TH2F("histo2DPi0RatioToCombFit","histo2DPi0RatioToCombFit",1000,0.23,70.,1000,0.2,4.    );
     SetStyleHistoTH2ForGraphs(histo2DPi0RatioToCombFit, "#it{p}_{T} (GeV/#it{c})","Data/Fit", 0.85*textsizeLabelsPP, textsizeLabelsPP,
                               0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.65, 510, 505);
     histo2DPi0RatioToCombFit->GetXaxis()->SetMoreLogLabels();
