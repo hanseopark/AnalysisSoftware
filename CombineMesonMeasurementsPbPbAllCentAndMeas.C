@@ -155,8 +155,8 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     TGraphAsymmErrors* grapharrayPi0InvYieldSysPbPb2760GeV[nCent][method];
     TGraphAsymmErrors* grapharrayEtaInvYieldStatPbPb2760GeV[nCent][method];
     TGraphAsymmErrors* grapharrayEtaInvYieldSysPbPb2760GeV[nCent][method];
-    TGraphAsymmErrors* grapharrayEtatoPi0Stat2760GeV[nCent][method];
-    TGraphAsymmErrors* grapharrayEtatoPi0Sys2760GeV[nCent][method];
+    TGraphAsymmErrors* grapharrayEtaToPi0Stat2760GeV[nCent][method];
+    TGraphAsymmErrors* grapharrayEtaToPi0Sys2760GeV[nCent][method];
     TGraphAsymmErrors* grapharrayInvYieldTotPbPb2760GeV[nCent][method];
     TGraphAsymmErrors* grapharrayInvYieldStatPbPb2760GeV[nCent][method];
     TGraphAsymmErrors* grapharrayInvYieldSysPbPb2760GeV[nCent][method];
@@ -170,8 +170,8 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
         grapharrayEtaInvYieldStatPbPb2760GeV[c][m] = NULL;
         grapharrayEtaInvYieldSysPbPb2760GeV[c][m] = NULL;
         histoarrayEtatoPi0Stat2760GeV[c][m] = NULL;
-        grapharrayEtatoPi0Stat2760GeV[c][m] = NULL;
-        grapharrayEtatoPi0Sys2760GeV[c][m] = NULL;
+        grapharrayEtaToPi0Stat2760GeV[c][m] = NULL;
+        grapharrayEtaToPi0Sys2760GeV[c][m] = NULL;
 
         grapharrayInvYieldTotPbPb2760GeV[c][m] = NULL;
         grapharrayInvYieldStatPbPb2760GeV[c][m] = NULL;
@@ -400,11 +400,10 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     grapharrayEtaInvYieldStatPbPb2760GeV[0][0] = new TGraphAsymmErrors(histoarrayEtaInvYieldPbPb2760GeV[0][0]);
     grapharrayEtaInvYieldSysPbPb2760GeV[0][0] = (TGraphAsymmErrors*)graphPCMEtaInvYieldSysPbPb2760GeV_0005->Clone("graphPCMEtaInvYieldSysPbPb2760GeV_0005");
     histoarrayEtatoPi0Stat2760GeV[0][0] = (TH1D*)histoPCMEtatoPi0Stat2760GeV_0005->Clone("histoPCMEtatoPi0Stat2760GeV_0005");
-    grapharrayEtatoPi0Stat2760GeV[0][0] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[0][0]);
-    grapharrayEtatoPi0Stat2760GeV[0][0]->RemovePoint(0);
-    grapharrayEtatoPi0Stat2760GeV[0][0]->RemovePoint(0);
-    grapharrayEtatoPi0Sys2760GeV[0][0] = (TGraphAsymmErrors*)graphPCMEtatoPi0Sys2760GeV_0005->Clone("graphPCMEtatoPi0Sys2760GeV_0005");
-
+    grapharrayEtaToPi0Stat2760GeV[0][0] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[0][0]);
+    grapharrayEtaToPi0Stat2760GeV[0][0]->RemovePoint(0);
+    grapharrayEtaToPi0Stat2760GeV[0][0]->RemovePoint(0);
+    grapharrayEtaToPi0Sys2760GeV[0][0] = (TGraphAsymmErrors*)graphPCMEtatoPi0Sys2760GeV_0005->Clone("graphPCMEtatoPi0Sys2760GeV_0005");
 
     cout << "For the Eta in 5-10% " << endl;
     cout << "PCM" << endl;
@@ -418,10 +417,10 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     grapharrayEtaInvYieldStatPbPb2760GeV[1][0] = new TGraphAsymmErrors(histoarrayEtaInvYieldPbPb2760GeV[1][0]);
     grapharrayEtaInvYieldSysPbPb2760GeV[1][0] = (TGraphAsymmErrors*)graphPCMEtaInvYieldSysPbPb2760GeV_0510->Clone("graphPCMEtaInvYieldSysPbPb2760GeV_0510");
     histoarrayEtatoPi0Stat2760GeV[1][0] = (TH1D*)histoPCMEtatoPi0Stat2760GeV_0510->Clone("histoPCMEtatoPi0Stat2760GeV_0510");
-    grapharrayEtatoPi0Stat2760GeV[1][0] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[1][0]);
-    grapharrayEtatoPi0Stat2760GeV[1][0]->RemovePoint(0);
-    grapharrayEtatoPi0Stat2760GeV[1][0]->RemovePoint(0);
-    grapharrayEtatoPi0Sys2760GeV[1][0] = (TGraphAsymmErrors*)graphPCMEtatoPi0Sys2760GeV_0510->Clone("graphPCMEtatoPi0Sys2760GeV_0510");
+    grapharrayEtaToPi0Stat2760GeV[1][0] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[1][0]);
+    grapharrayEtaToPi0Stat2760GeV[1][0]->RemovePoint(0);
+    grapharrayEtaToPi0Stat2760GeV[1][0]->RemovePoint(0);
+    grapharrayEtaToPi0Sys2760GeV[1][0] = (TGraphAsymmErrors*)graphPCMEtatoPi0Sys2760GeV_0510->Clone("graphPCMEtatoPi0Sys2760GeV_0510");
 
 
     cout << "For the Eta in 0-10% " << endl;
@@ -454,10 +453,10 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     grapharrayEtaInvYieldStatPbPb2760GeV[2][0] = new TGraphAsymmErrors(histoarrayEtaInvYieldPbPb2760GeV[2][0]);
     grapharrayEtaInvYieldSysPbPb2760GeV[2][0] = (TGraphAsymmErrors*)graphPCMEtaInvYieldSysPbPb2760GeV_0010->Clone("graphPCMEtaInvYieldSysPbPb2760GeV_0010");
     histoarrayEtatoPi0Stat2760GeV[2][0] = (TH1D*)histoPCMEtatoPi0Stat2760GeV_0010->Clone("histoPCMEtatoPi0Stat2760GeV_0010");
-    grapharrayEtatoPi0Stat2760GeV[2][0] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[2][0]);
-    grapharrayEtatoPi0Stat2760GeV[2][0]->RemovePoint(0);
-    grapharrayEtatoPi0Stat2760GeV[2][0]->RemovePoint(0);
-    grapharrayEtatoPi0Sys2760GeV[2][0] = (TGraphAsymmErrors*)graphPCMEtatoPi0Sys2760GeV_0010->Clone("graphPCMEtatoPi0Sys2760GeV_0010");
+    grapharrayEtaToPi0Stat2760GeV[2][0] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[2][0]);
+    grapharrayEtaToPi0Stat2760GeV[2][0]->RemovePoint(0);
+    grapharrayEtaToPi0Stat2760GeV[2][0]->RemovePoint(0);
+    grapharrayEtaToPi0Sys2760GeV[2][0] = (TGraphAsymmErrors*)graphPCMEtatoPi0Sys2760GeV_0010->Clone("graphPCMEtatoPi0Sys2760GeV_0010");
 
     histoarrayEtaInvYieldPbPb2760GeV[2][2] = (TH1D*)histoEMCalEtaInvYieldPbPb2760GeV_0010->Clone("histoEMCalEtaInvYieldPbPb2760GeV_0010");
     grapharrayEtaInvYieldStatPbPb2760GeV[2][2] = new TGraphAsymmErrors(histoarrayEtaInvYieldPbPb2760GeV[2][2]);
@@ -465,9 +464,10 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     grapharrayEtaInvYieldStatPbPb2760GeV[2][2]->RemovePoint(grapharrayEtaInvYieldStatPbPb2760GeV[2][2]->GetN()-1);
     grapharrayEtaInvYieldSysPbPb2760GeV[2][2] = (TGraphAsymmErrors*)graphEMCalEtaInvYieldSysPbPb2760GeV_0010->Clone("graphEMCalEtaInvYieldSysPbPb2760GeV_0010");
     histoarrayEtatoPi0Stat2760GeV[2][2] = (TH1D*)histoEMCalEtatoPi0StatPbPb2760GeV_0010->Clone("histoEMCalEtatoPi0StatPbPb2760GeV_0010");
-    grapharrayEtatoPi0Stat2760GeV[2][2] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[2][2]);
-    grapharrayEtatoPi0Sys2760GeV[2][2] = (TGraphAsymmErrors*)graphEMCalEtatoPi0Sys2760GeV_0010->Clone("graphEMCalEtatoPi0Sys2760GeV_0010");
-
+    grapharrayEtaToPi0Stat2760GeV[2][2] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[2][2]);
+    grapharrayEtaToPi0Stat2760GeV[2][2]->RemovePoint(grapharrayEtaToPi0Stat2760GeV[2][2]->GetN()-1);
+    grapharrayEtaToPi0Stat2760GeV[2][2]->RemovePoint(grapharrayEtaToPi0Stat2760GeV[2][2]->GetN()-1);
+    grapharrayEtaToPi0Sys2760GeV[2][2] = (TGraphAsymmErrors*)graphEMCalEtatoPi0Sys2760GeV_0010->Clone("graphEMCalEtatoPi0Sys2760GeV_0010");
 
     cout << "For the Eta in 20-40% " << endl;
     cout << "PCM" << endl;
@@ -482,10 +482,8 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     grapharrayEtaInvYieldStatPbPb2760GeV[4][0] = new TGraphAsymmErrors(histoarrayEtaInvYieldPbPb2760GeV[4][0]);
     grapharrayEtaInvYieldSysPbPb2760GeV[4][0] = (TGraphAsymmErrors*)graphPCMEtaInvYieldSysPbPb2760GeV_2040->Clone("graphPCMEtaInvYieldSysPbPb2760GeV_2040");
     histoarrayEtatoPi0Stat2760GeV[4][0] = (TH1D*)histoPCMEtatoPi0Stat2760GeV_2040->Clone("histoPCMEtatoPi0Stat2760GeV_2040");
-    grapharrayEtatoPi0Stat2760GeV[4][0] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[4][0]);
-    grapharrayEtatoPi0Stat2760GeV[4][0]->RemovePoint(0);
-    grapharrayEtatoPi0Stat2760GeV[4][0]->RemovePoint(0);
-    grapharrayEtatoPi0Sys2760GeV[4][0] = (TGraphAsymmErrors*)graphPCMEtatoPi0Sys2760GeV_2040->Clone("graphPCMEtatoPi0Sys2760GeV_2040");
+    grapharrayEtaToPi0Stat2760GeV[4][0] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[4][0]);
+    grapharrayEtaToPi0Sys2760GeV[4][0] = (TGraphAsymmErrors*)graphPCMEtatoPi0Sys2760GeV_2040->Clone("graphPCMEtatoPi0Sys2760GeV_2040");
 
 
     cout << "For the Eta in 20-50% " << endl;
@@ -518,10 +516,10 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     grapharrayEtaInvYieldStatPbPb2760GeV[5][0] = new TGraphAsymmErrors(histoarrayEtaInvYieldPbPb2760GeV[5][0]);
     grapharrayEtaInvYieldSysPbPb2760GeV[5][0] = (TGraphAsymmErrors*)graphPCMEtaInvYieldSysPbPb2760GeV_2050->Clone("graphPCMEtaInvYieldSysPbPb2760GeV_2050");
     histoarrayEtatoPi0Stat2760GeV[5][0] = (TH1D*)histoPCMEtatoPi0Stat2760GeV_2050->Clone("histoPCMEtatoPi0Stat2760GeV_2050");
-    grapharrayEtatoPi0Stat2760GeV[5][0] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[5][0]);
-    grapharrayEtatoPi0Stat2760GeV[5][0]->RemovePoint(0);
-    grapharrayEtatoPi0Stat2760GeV[5][0]->RemovePoint(0);
-    grapharrayEtatoPi0Sys2760GeV[5][0] = (TGraphAsymmErrors*)graphPCMEtatoPi0Sys2760GeV_2050->Clone("graphPCMEtatoPi0Sys2760GeV_2050");
+    grapharrayEtaToPi0Stat2760GeV[5][0] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[5][0]);
+    grapharrayEtaToPi0Stat2760GeV[5][0]->RemovePoint(0);
+    grapharrayEtaToPi0Stat2760GeV[5][0]->RemovePoint(0);
+    grapharrayEtaToPi0Sys2760GeV[5][0] = (TGraphAsymmErrors*)graphPCMEtatoPi0Sys2760GeV_2050->Clone("graphPCMEtatoPi0Sys2760GeV_2050");
 
     histoarrayEtaInvYieldPbPb2760GeV[5][2] = (TH1D*)histoEMCalEtaInvYieldPbPb2760GeV_2050->Clone("histoEMCalEtaInvYieldPbPb2760GeV_2050");
     grapharrayEtaInvYieldStatPbPb2760GeV[5][2] = new TGraphAsymmErrors(histoarrayEtaInvYieldPbPb2760GeV[5][2]);
@@ -529,8 +527,10 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     grapharrayEtaInvYieldStatPbPb2760GeV[5][2]->RemovePoint(grapharrayEtaInvYieldStatPbPb2760GeV[5][2]->GetN()-1);
     grapharrayEtaInvYieldSysPbPb2760GeV[5][2] = (TGraphAsymmErrors*)graphEMCalEtaInvYieldSysPbPb2760GeV_2050->Clone("graphEMCalEtaInvYieldSysPbPb2760GeV_2050");
     histoarrayEtatoPi0Stat2760GeV[5][2] = (TH1D*)histoEMCalEtatoPi0StatPbPb2760GeV_2050->Clone("histoEMCalEtatoPi0StatPbPb2760GeV_2050");
-    grapharrayEtatoPi0Stat2760GeV[5][2] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[5][2]);
-    grapharrayEtatoPi0Sys2760GeV[5][2] = (TGraphAsymmErrors*)graphEMCalEtatoPi0Sys2760GeV_2050->Clone("graphEMCalEtatoPi0Sys2760GeV_2050");
+    grapharrayEtaToPi0Stat2760GeV[5][2] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[5][2]);
+    grapharrayEtaToPi0Stat2760GeV[5][2]->RemovePoint(grapharrayEtaToPi0Stat2760GeV[5][2]->GetN()-1);
+    grapharrayEtaToPi0Stat2760GeV[5][2]->RemovePoint(grapharrayEtaToPi0Stat2760GeV[5][2]->GetN()-1);
+    grapharrayEtaToPi0Sys2760GeV[5][2] = (TGraphAsymmErrors*)graphEMCalEtatoPi0Sys2760GeV_2050->Clone("graphEMCalEtatoPi0Sys2760GeV_2050");
 
     for(Int_t c=0; c<nCent; c++){
       if(c==3 || c==6 || c==7){
@@ -538,10 +538,10 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
         grapharrayEtaInvYieldSysPbPb2760GeV[c][0] = (TGraphAsymmErrors*)graphPCMEtaInvYieldSysPbPb2760GeV_2040->Clone("graphPCMEtaInvYieldSysPbPb2760GeV_2040");
         grapharrayEtaInvYieldStatPbPb2760GeV[c][0]->Set(0);
         grapharrayEtaInvYieldSysPbPb2760GeV[c][0]->Set(0);
-        grapharrayEtatoPi0Stat2760GeV[c][0] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[4][0]);
-        grapharrayEtatoPi0Sys2760GeV[c][0] = (TGraphAsymmErrors*)graphPCMEtatoPi0Sys2760GeV_2040->Clone("graphPCMEtatoPi0Sys2760GeV_2040");
-        grapharrayEtatoPi0Stat2760GeV[c][0]->Set(0);
-        grapharrayEtatoPi0Sys2760GeV[c][0]->Set(0);
+        grapharrayEtaToPi0Stat2760GeV[c][0] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[4][0]);
+        grapharrayEtaToPi0Sys2760GeV[c][0] = (TGraphAsymmErrors*)graphPCMEtatoPi0Sys2760GeV_2040->Clone("graphPCMEtatoPi0Sys2760GeV_2040");
+        grapharrayEtaToPi0Stat2760GeV[c][0]->Set(0);
+        grapharrayEtaToPi0Sys2760GeV[c][0]->Set(0);
       }
 
       if(c==0 || c==1 || c==3 || c==4 || c==6 || c==7){
@@ -549,29 +549,27 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
         grapharrayEtaInvYieldSysPbPb2760GeV[c][2] = (TGraphAsymmErrors*)graphEMCalEtaInvYieldSysPbPb2760GeV_0010->Clone("graphEMCalEtaInvYieldSysPbPb2760GeV_2040");
         grapharrayEtaInvYieldStatPbPb2760GeV[c][2]->Set(0);
         grapharrayEtaInvYieldSysPbPb2760GeV[c][2]->Set(0);
-        grapharrayEtatoPi0Stat2760GeV[c][2] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[2][2]);
-        grapharrayEtatoPi0Sys2760GeV[c][2] = (TGraphAsymmErrors*)graphEMCalEtatoPi0Sys2760GeV_2050->Clone("graphEMCalEtatoPi0Sys2760GeV_2050");
-        grapharrayEtatoPi0Stat2760GeV[c][2]->Set(0);
-        grapharrayEtatoPi0Sys2760GeV[c][2]->Set(0);
-
+        grapharrayEtaToPi0Stat2760GeV[c][2] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[2][2]);
+        grapharrayEtaToPi0Sys2760GeV[c][2] = (TGraphAsymmErrors*)graphEMCalEtatoPi0Sys2760GeV_0010->Clone("graphEMCalEtatoPi0Sys2760GeV_0010");
+        grapharrayEtaToPi0Stat2760GeV[c][2]->Set(0);
+        grapharrayEtaToPi0Sys2760GeV[c][2]->Set(0);
       }
 
       grapharrayEtaInvYieldStatPbPb2760GeV[c][1] = new TGraphAsymmErrors(histoarrayPi0InvYieldPbPb2760GeV[4][1]);
       grapharrayEtaInvYieldSysPbPb2760GeV[c][1] = (TGraphAsymmErrors*)graphPHOSYieldPi0SysErrPbPb2040->Clone("graphPHOSPi0InvYieldSysPbPb2760GeV_2050");
       grapharrayEtaInvYieldStatPbPb2760GeV[c][1]->Set(0);
       grapharrayEtaInvYieldSysPbPb2760GeV[c][1]->Set(0);
-      grapharrayEtatoPi0Stat2760GeV[c][1] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[4][0]);
-      grapharrayEtatoPi0Sys2760GeV[c][1] = (TGraphAsymmErrors*)graphPCMEtatoPi0Sys2760GeV_2040->Clone("graphPCMEtatoPi0Sys2760GeV_2040");
-      grapharrayEtatoPi0Stat2760GeV[c][1]->Set(0);
-      grapharrayEtatoPi0Sys2760GeV[c][1]->Set(0);
-
+      grapharrayEtaToPi0Stat2760GeV[c][1] = new TGraphAsymmErrors(histoarrayEtatoPi0Stat2760GeV[2][2]);
+      grapharrayEtaToPi0Sys2760GeV[c][1] = (TGraphAsymmErrors*)graphEMCalEtatoPi0Sys2760GeV_0010->Clone("graphEMCalEtatoPi0Sys2760GeV_0010");
+      grapharrayEtaToPi0Stat2760GeV[c][1]->Set(0);
+      grapharrayEtaToPi0Sys2760GeV[c][1]->Set(0);
     }
 
 
     //syst and stat relative errors
     TH1D *statErrorCollectionLHC11h[nCent][11];
-    TGraphAsymmErrors *sysErrorCollectionLHC11h[nCent][11];
     TH1D *statErrorCollectionEtatoPi0LHC11h[nCent][11];
+    TGraphAsymmErrors *sysErrorCollectionLHC11h[nCent][11];
     TGraphAsymmErrors *sysErrorCollectionEtatoPi0LHC11h[nCent][11];
 
     for (Int_t i = 0; i< 11; i++){
@@ -643,11 +641,11 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
       statErrorCollectionEtatoPi0LHC11h[4][0] = (TH1D*)histoarrayEtatoPi0Stat2760GeV[4][0]->Clone("statErrPCMEtatoPi0_2040");
       statErrorCollectionEtatoPi0LHC11h[5][0] = (TH1D*)histoarrayEtatoPi0Stat2760GeV[5][0]->Clone("statErrPCMEtatoPi0_2050");
 
-      sysErrorCollectionEtatoPi0LHC11h[0][0] = (TGraphAsymmErrors*)grapharrayEtatoPi0Sys2760GeV[0][0]->Clone("sysErrPCMEtatoPi0_0005");
-      sysErrorCollectionEtatoPi0LHC11h[1][0] = (TGraphAsymmErrors*)grapharrayEtatoPi0Sys2760GeV[1][0]->Clone("sysErrPCMEtatoPi0_0510");
-      sysErrorCollectionEtatoPi0LHC11h[2][0] = (TGraphAsymmErrors*)grapharrayEtatoPi0Sys2760GeV[2][0]->Clone("sysErrPCMEtatoPi0_0010");
-      sysErrorCollectionEtatoPi0LHC11h[4][0] = (TGraphAsymmErrors*)grapharrayEtatoPi0Sys2760GeV[4][0]->Clone("sysErrPCMEtatoPi0_2040");
-      sysErrorCollectionEtatoPi0LHC11h[5][0] = (TGraphAsymmErrors*)grapharrayEtatoPi0Sys2760GeV[5][0]->Clone("sysErrPCMEtatoPi0_2050");
+      sysErrorCollectionEtatoPi0LHC11h[0][0] = (TGraphAsymmErrors*)grapharrayEtaToPi0Sys2760GeV[0][0]->Clone("sysErrPCMEtatoPi0_0005");
+      sysErrorCollectionEtatoPi0LHC11h[1][0] = (TGraphAsymmErrors*)grapharrayEtaToPi0Sys2760GeV[1][0]->Clone("sysErrPCMEtatoPi0_0510");
+      sysErrorCollectionEtatoPi0LHC11h[2][0] = (TGraphAsymmErrors*)grapharrayEtaToPi0Sys2760GeV[2][0]->Clone("sysErrPCMEtatoPi0_0010");
+      sysErrorCollectionEtatoPi0LHC11h[4][0] = (TGraphAsymmErrors*)grapharrayEtaToPi0Sys2760GeV[4][0]->Clone("sysErrPCMEtatoPi0_2040");
+      sysErrorCollectionEtatoPi0LHC11h[5][0] = (TGraphAsymmErrors*)grapharrayEtaToPi0Sys2760GeV[5][0]->Clone("sysErrPCMEtatoPi0_2050");
 
       statErrorCollectionLHC11h[2][2] = (TH1D*)histoarrayEtaInvYieldPbPb2760GeV[2][2]->Clone("statErrEMCalEta_0010");
       statErrorCollectionLHC11h[5][2] = (TH1D*)histoarrayEtaInvYieldPbPb2760GeV[5][2]->Clone("statErrEMCalEta_2050");
@@ -658,8 +656,8 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
       statErrorCollectionEtatoPi0LHC11h[2][2] = (TH1D*)histoarrayEtatoPi0Stat2760GeV[2][2]->Clone("statErrEMCalEtatoPi0_0010");
       statErrorCollectionEtatoPi0LHC11h[5][2] = (TH1D*)histoarrayEtatoPi0Stat2760GeV[5][2]->Clone("statErrEMCalEtatoPi0_2050");
 
-      sysErrorCollectionEtatoPi0LHC11h[2][2] = (TGraphAsymmErrors*)grapharrayEtatoPi0Sys2760GeV[2][2]->Clone("sysErrEMCalEtatoPi0_0010");
-      sysErrorCollectionEtatoPi0LHC11h[5][2] = (TGraphAsymmErrors*)grapharrayEtatoPi0Sys2760GeV[5][2]->Clone("sysErrEMCalEtatoPi0_2050");
+      sysErrorCollectionEtatoPi0LHC11h[2][2] = (TGraphAsymmErrors*)grapharrayEtaToPi0Sys2760GeV[2][2]->Clone("sysErrEMCalEtatoPi0_0010");
+      sysErrorCollectionEtatoPi0LHC11h[5][2] = (TGraphAsymmErrors*)grapharrayEtaToPi0Sys2760GeV[5][2]->Clone("sysErrEMCalEtatoPi0_2050");
 
     }
 
@@ -846,6 +844,8 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
       fitStop = 10.;
     }
 
+
+
     for(Int_t c = 0; c< nCent; c++){
 
       //Calculating binshifts
@@ -986,81 +986,74 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     }
 
 
-
-    //eta to pi0 ratio
-    cout << "Calculating eta / pi0 ratio" << endl;
-    TGraphAsymmErrors* grapharrayEtatoPi0CombTotPbPb2760GeV[nCent];
-    TGraphAsymmErrors* grapharrayEtatoPi0CombStatPbPb2760GeV[nCent];
-    TGraphAsymmErrors* grapharrayEtatoPi0CombSysPbPb2760GeV[nCent];
+    TGraphAsymmErrors* grapharrayEtaToPi0CombTotPbPb2760GeV[nCent];
+    TGraphAsymmErrors* grapharrayEtaToPi0CombStatPbPb2760GeV[nCent];
+    TGraphAsymmErrors* grapharrayEtaToPi0CombSysPbPb2760GeV[nCent];
     for(Int_t c=0; c<nCent; c++){
-        grapharrayEtatoPi0CombTotPbPb2760GeV[c] = NULL;
-        grapharrayEtatoPi0CombStatPbPb2760GeV[c] = NULL;
-        grapharrayEtatoPi0CombSysPbPb2760GeV[c] = NULL;
+        grapharrayEtaToPi0CombTotPbPb2760GeV[c] = NULL;
+        grapharrayEtaToPi0CombStatPbPb2760GeV[c] = NULL;
+        grapharrayEtaToPi0CombSysPbPb2760GeV[c] = NULL;
     }
-    for(Int_t c=0; c<nCent; c++){
-      if(!(c==3 || c==6 || c==7)){
-        cout << "***********************************************" << endl;
-        cout << "**************** centrality " << c << " *****************" << endl;
-        cout << "***********************************************" << endl;
-        grapharrayEtatoPi0CombTotPbPb2760GeV[c] = CombinePtPointsSpectraFullCorrMat( statErrorCollectionEtatoPi0LHC11h[c],  sysErrorCollectionEtatoPi0LHC11h[c],
-                                                                                    xPtLimitsEta, /*17*/13, offSetsCombEta, offSetsCombEtaSys,
-                                                                                    grapharrayEtatoPi0CombStatPbPb2760GeV[c], grapharrayEtatoPi0CombSysPbPb2760GeV[c], "weightEtatoPi0.dat",1 );
-        if(c==0 || c==1 || c==4){
-            grapharrayEtatoPi0CombTotPbPb2760GeV[c]->RemovePoint(grapharrayEtatoPi0CombTotPbPb2760GeV[c]->GetN()-1);
-            grapharrayEtatoPi0CombTotPbPb2760GeV[c]->RemovePoint(grapharrayEtatoPi0CombTotPbPb2760GeV[c]->GetN()-1);
-            grapharrayEtatoPi0CombTotPbPb2760GeV[c]->RemovePoint(grapharrayEtatoPi0CombTotPbPb2760GeV[c]->GetN()-1);
-            grapharrayEtatoPi0CombTotPbPb2760GeV[c]->RemovePoint(grapharrayEtatoPi0CombTotPbPb2760GeV[c]->GetN()-1);
-            grapharrayEtatoPi0CombStatPbPb2760GeV[c]->RemovePoint(grapharrayEtatoPi0CombStatPbPb2760GeV[c]->GetN()-1);
-            grapharrayEtatoPi0CombStatPbPb2760GeV[c]->RemovePoint(grapharrayEtatoPi0CombStatPbPb2760GeV[c]->GetN()-1);
-            grapharrayEtatoPi0CombStatPbPb2760GeV[c]->RemovePoint(grapharrayEtatoPi0CombStatPbPb2760GeV[c]->GetN()-1);
-            grapharrayEtatoPi0CombStatPbPb2760GeV[c]->RemovePoint(grapharrayEtatoPi0CombStatPbPb2760GeV[c]->GetN()-1);
-            grapharrayEtatoPi0CombSysPbPb2760GeV[c]->RemovePoint(grapharrayEtatoPi0CombSysPbPb2760GeV[c]->GetN()-1);
-            grapharrayEtatoPi0CombSysPbPb2760GeV[c]->RemovePoint(grapharrayEtatoPi0CombSysPbPb2760GeV[c]->GetN()-1);
-            grapharrayEtatoPi0CombSysPbPb2760GeV[c]->RemovePoint(grapharrayEtatoPi0CombSysPbPb2760GeV[c]->GetN()-1);
-            grapharrayEtatoPi0CombSysPbPb2760GeV[c]->RemovePoint(grapharrayEtatoPi0CombSysPbPb2760GeV[c]->GetN()-1);
 
-            grapharrayEtatoPi0CombTotPbPb2760GeV[c]->RemovePoint(0);
-            grapharrayEtatoPi0CombStatPbPb2760GeV[c]->RemovePoint(0);
-            grapharrayEtatoPi0CombSysPbPb2760GeV[c]->RemovePoint(0);
-        } else if(c==2 || c==5 ){
-            grapharrayEtatoPi0CombTotPbPb2760GeV[c]->RemovePoint(0);
-            grapharrayEtatoPi0CombStatPbPb2760GeV[c]->RemovePoint(0);
-            grapharrayEtatoPi0CombSysPbPb2760GeV[c]->RemovePoint(0);
+    if(meson.CompareTo("Eta")==0){
+        // Declaration & calculation of combined spectrum
+      for(Int_t c=0; c<nCent; c++){
+        if(c==0 || c==1 || c==2 || c==4 || c==5){
+          cout << "***********************************************" << endl;
+          cout << "**************** centrality " << c << " *****************" << endl;
+          cout << "***********************************************" << endl;
+          grapharrayEtaToPi0CombTotPbPb2760GeV[c] = CombinePtPointsSpectraFullCorrMat( statErrorCollectionEtatoPi0LHC11h[c], sysErrorCollectionEtatoPi0LHC11h[c],
+                                                                                      xPtLimitsEta, 13, offSetsCombEta, offSetsCombEtaSys,
+                                                                                      grapharrayEtaToPi0CombStatPbPb2760GeV[c], grapharrayEtaToPi0CombSysPbPb2760GeV[c],
+                                                                                      fileNameOutputWeighting,1 );
+          grapharrayEtaToPi0CombTotPbPb2760GeV[c]->RemovePoint(0);
+          grapharrayEtaToPi0CombStatPbPb2760GeV[c]->RemovePoint(0);
+          grapharrayEtaToPi0CombSysPbPb2760GeV[c]->RemovePoint(0);
+
+          if(!(c==2 || c==5)){
+              grapharrayEtaToPi0CombTotPbPb2760GeV[c]->RemovePoint(grapharrayEtaToPi0CombTotPbPb2760GeV[c]->GetN()-1);
+              grapharrayEtaToPi0CombTotPbPb2760GeV[c]->RemovePoint(grapharrayEtaToPi0CombTotPbPb2760GeV[c]->GetN()-1);
+              grapharrayEtaToPi0CombTotPbPb2760GeV[c]->RemovePoint(grapharrayEtaToPi0CombTotPbPb2760GeV[c]->GetN()-1);
+              grapharrayEtaToPi0CombTotPbPb2760GeV[c]->RemovePoint(grapharrayEtaToPi0CombTotPbPb2760GeV[c]->GetN()-1);
+              grapharrayEtaToPi0CombStatPbPb2760GeV[c]->RemovePoint(grapharrayEtaToPi0CombStatPbPb2760GeV[c]->GetN()-1);
+              grapharrayEtaToPi0CombStatPbPb2760GeV[c]->RemovePoint(grapharrayEtaToPi0CombStatPbPb2760GeV[c]->GetN()-1);
+              grapharrayEtaToPi0CombStatPbPb2760GeV[c]->RemovePoint(grapharrayEtaToPi0CombStatPbPb2760GeV[c]->GetN()-1);
+              grapharrayEtaToPi0CombStatPbPb2760GeV[c]->RemovePoint(grapharrayEtaToPi0CombStatPbPb2760GeV[c]->GetN()-1);
+              grapharrayEtaToPi0CombSysPbPb2760GeV[c]->RemovePoint(grapharrayEtaToPi0CombSysPbPb2760GeV[c]->GetN()-1);
+              grapharrayEtaToPi0CombSysPbPb2760GeV[c]->RemovePoint(grapharrayEtaToPi0CombSysPbPb2760GeV[c]->GetN()-1);
+              grapharrayEtaToPi0CombSysPbPb2760GeV[c]->RemovePoint(grapharrayEtaToPi0CombSysPbPb2760GeV[c]->GetN()-1);
+              grapharrayEtaToPi0CombSysPbPb2760GeV[c]->RemovePoint(grapharrayEtaToPi0CombSysPbPb2760GeV[c]->GetN()-1);
+          }
         }
-//           grapharrayEtatoPi0CombTotPbPb2760GeV[c]->Print();
-//           grapharrayEtatoPi0CombTotPbPb2760GeV[c]->Print();
-//           grapharrayEtatoPi0CombTotPbPb2760GeV[c]->Print();
       }
     }
-
-
-
 
     TFile *fCombResults = new TFile(Form("%s/NeutralMesonInputPbPb2760GeV_%s.root", outputDir.Data(),dateForOutput.Data()), "UPDATE");
     fCombResults->cd();
 
     for(Int_t c = 0; c<nCent; c++){
-
+      cout << "writing for centrality " << cent[c].Data() << endl;
       if(!(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetY()==0x0))grapharrayInvYieldCombStatPbPb2760GeV[c]->Write(Form("graphInvYield%sCombPbPb2760GeVStatErr_%s",meson.Data(),cent[c].Data()));
       if(!(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetY()==0x0))grapharrayInvYieldCombSysPbPb2760GeV[c]->Write(Form("graphInvYield%sCombPbPb2760GeVSysErr_%s",meson.Data(),cent[c].Data()));
+
       for(Int_t m = 0; m<3; m++){
           if(!(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetY()==0x0))grapharrayInvYieldStatPbPb2760GeV[c][m]->Write(Form("graphInvYield%s%sPbPb2760GeVStatErr_%s",meson.Data(),meth[m].Data(),cent[c].Data()));
           if(!(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetY()==0x0))grapharrayInvYieldSysPbPb2760GeV[c][m]->Write(Form("graphInvYield%s%sPbPb2760GeVSysErr_%s",meson.Data(),meth[m].Data(),cent[c].Data()));
       }
+
       if(meson.CompareTo("Eta")==0){
         if(!(c==3 || c==6 || c==7)){
-          if(!(grapharrayEtatoPi0CombStatPbPb2760GeV[c]->GetY()==0x0))grapharrayEtatoPi0CombStatPbPb2760GeV[c]->Write(Form("graphEtaToPi0CombPbPb2760GeVStatErr_%s",cent[c].Data()));
-          if(!(grapharrayEtatoPi0CombSysPbPb2760GeV[c]->GetY()==0x0))grapharrayEtatoPi0CombSysPbPb2760GeV[c]->Write(Form("graphEtaToPi0CombPbPb2760GeVSysErr_%s",cent[c].Data()));
+          if(!(grapharrayEtaToPi0CombStatPbPb2760GeV[c]->GetY()==0x0))grapharrayEtaToPi0CombStatPbPb2760GeV[c]->Write(Form("graphEtaToPi0CombPbPb2760GeVStatErr_%s",cent[c].Data()));
+          if(!(grapharrayEtaToPi0CombSysPbPb2760GeV[c]->GetY()==0x0))grapharrayEtaToPi0CombSysPbPb2760GeV[c]->Write(Form("graphEtaToPi0CombPbPb2760GeVSysErr_%s",cent[c].Data()));
           for(Int_t m = 0; m<3; m++){
             if(!(m==1)){
-              if(!(grapharrayEtatoPi0Stat2760GeV[c][m]->GetY()==0x0))grapharrayEtatoPi0Stat2760GeV[c][m]->Write(Form("graphEtaToPi0%sPbPb2760GeVStatErr_%s",meth[m].Data(),cent[c].Data()));
-              if(!(grapharrayEtatoPi0Sys2760GeV[c][m]->GetY()==0x0))grapharrayEtatoPi0Sys2760GeV[c][m]->Write(Form("graphEtaToPi0%sPbPb2760GeVSysErr_%s",meth[m].Data(),cent[c].Data()));
+              cout << "writing for method " << meth[m].Data() << endl;
+              if(!(grapharrayEtaToPi0Stat2760GeV[c][m]->GetY()==0x0))grapharrayEtaToPi0Stat2760GeV[c][m]->Write(Form("graphEtaToPi0%sPbPb2760GeVStatErr_%s",meth[m].Data(),cent[c].Data()));
+              if(!(grapharrayEtaToPi0Sys2760GeV[c][m]->GetY()==0x0))grapharrayEtaToPi0Sys2760GeV[c][m]->Write(Form("graphEtaToPi0%sPbPb2760GeVSysErr_%s",meth[m].Data(),cent[c].Data()));
             }
           }
         }
       }
-
-
     }
     fCombResults->Close();
 

@@ -660,6 +660,27 @@ void QA_Runwise(
 	  doEquidistantXaxis=kTRUE;
     }
     //**************************************************************************************************************
+    else if(select.CompareTo("LHC11h")==0){
+      // PbPb 2.76TeV
+      filePath= "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20160801-1";
+      filePathPhoton = "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20160801-1";
+      fileName = "GammaConvV1_226.root";
+      mode=0;
+      cutNr=2;
+      suffix="pdf";
+      fEnergyFlag = "PbPb_2.76TeV";
+      nSets               = 4;
+      nData               = 1;
+      TString dummyDataSets[4]   = {"LHC11h", "LHC11h", "LHC14a1a", "LHC14a1b"};
+      TString dummyPlotSets[4]   = {"0-10% LHC11h", "20-50% LHC11h", "0-10% LHC14a1a", "20-50% LHC14a1b"};
+      for (Int_t j = 0; j< nSets; j++){
+          DataSets[j]     = dummyDataSets[j];
+          plotDataSets[j] = dummyPlotSets[j];
+      }
+      markerSize=1.5;
+      doEquidistantXaxis=kTRUE;
+    }
+    //**************************************************************************************************************
     else{
         cout << "No valid selection! Returning..." << endl;
         return;

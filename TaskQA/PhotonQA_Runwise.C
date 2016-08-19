@@ -44,6 +44,16 @@ void PhotonQA_Runwise(
 //**************************************************************************************************************
 	TString fDate = ReturnDateString();
 	TString fTextMeasurement = Form("#pi^{0} #rightarrow #gamma#gamma");
+    TString fCentrality[nSets];
+    for(Int_t i=0; i<nSets; i++) {
+      if(fEnergyFlag.Contains("PbPb")){
+        if(plotDataSets[i].Contains("0-10%")) fCentrality[i] = "0-10%";
+        else if(plotDataSets[i].Contains("20-50%")) fCentrality[i] = "20-50%";
+        else fCentrality[i] = "";
+      } else {
+        fCentrality[i] = "";
+      }
+    }
 
 	const Int_t maxSets = 20;
 	if(nSets>maxSets){
@@ -61,9 +71,9 @@ void PhotonQA_Runwise(
 //**************************************************************************************************************
 	for(Int_t i=0; i<nSets; i++){
 		vecDataSet.push_back(DataSets[i].Data());
-		hMarkerStyle[i]=GetDefaultMarkerStyle(fEnergyFlag.Data(),DataSets[i].Data(),"");
-		hMarkerColor[i]=GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),"");
-		hLineColor[i]=GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),"");
+		hMarkerStyle[i]=GetDefaultMarkerStyle(fEnergyFlag.Data(),DataSets[i].Data(),fCentrality[i].Data());
+		hMarkerColor[i]=GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),fCentrality[i].Data());
+		hLineColor[i]=GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),fCentrality[i].Data());
 		hMarkerSize[i]=markerSize;
 	}
 
@@ -109,6 +119,7 @@ void PhotonQA_Runwise(
     //choosing cut to project from tree
     cutTreeProjection = "0004314141";
     if(fEnergyFlag.CompareTo("8TeV")==0){cutTreeProjection = "0005314140"; cutTreeStdCut = kFALSE;}
+    if(fEnergyFlag.CompareTo("PbPb_2.76TeV")==0){cutTreeProjection = "0005310040"; cutTreeStdCut = kFALSE;}
 
 	cout << endl;
     cout << "long cutnumber for PhotonQA: '" << nameCutsPQA << "'\nevent cutnumber for PhotonQA: '"<< nameCutsPQAshort << "'" << endl;
