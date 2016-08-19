@@ -469,6 +469,36 @@ TString ReturnCollisionEnergyOutputString( TString fEnergyFlagOpt){
 }
 
 //************************************************************************************
+//***************** return proper cms-energy for collision system ********************
+//************************************************************************************
+TString ReturnCollisionEnergyStringForTheory( TString fEnergyFlagOpt){ 
+    if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
+        return  "7TeV";
+    } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0) {
+        return  "5TeV";
+    } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
+        return  "8TeV";
+    } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0) {
+        return  "13TeV";
+    } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {
+        return  "2760GeV";
+    } else if( fEnergyFlagOpt.CompareTo("900GeV") == 0) {
+        return  "900GeV";
+    } else if( (fEnergyFlagOpt.CompareTo("PbPb_2.76TeV") == 0) ) {
+        return  "2760GeV";
+    } else if( (fEnergyFlagOpt.CompareTo("PbPb_5TeV") == 0) ) {
+        return  "5TeV";
+    } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0) {
+        return  "5TeV";
+    } else if( fEnergyFlagOpt.CompareTo("pPb_8TeV") == 0) {
+        return  "8TeV";
+    } else {
+        cout << "No correct collision system energy specification, has been given" << endl;
+        return "";     
+    }
+}
+
+//************************************************************************************
 //********************* EventCuts definition *****************************************
 //************************************************************************************
 Int_t GetEventSystemCutPosition ()                      {return 0;}

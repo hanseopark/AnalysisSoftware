@@ -1382,6 +1382,9 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                 }                
             }    
         }
+        
+        CreateRatioHistos();
+        
         SaveCorrectionHistos(fCutSelection, fPrefix2);   
     }
     //******************************************************************************************
@@ -2308,6 +2311,8 @@ void FillMCBGSeparated (TH2F* dummy2D){
         for (Int_t i = 0; i< 9; i++){
             TH1D* dummy1D               = (TH1D*)dummy2D->ProjectionX(Form("TrueClusBG_%s_Pt",labelsBG[i].Data()),i+1,i+1,"e");
             fHistoTrueClustersBGPt[i]   = (TH1D*)dummy1D->Rebin(fNBinsPt,Form("TrueClusBG_%s_Pt",labelsBG[i].Data()),fBinsPt);
+            if (i == 0) fHistoTrueClustersBGPt[9]    = (TH1D*)fHistoTrueClustersBGPt[i]->Clone(Form("TrueClusBG_%s_Pt",labelsBG[9].Data()));
+                else fHistoTrueClustersBGPt[9]->Add(fHistoTrueClustersBGPt[i]); 
         }
     }
 }    
@@ -2395,8 +2400,69 @@ void FillHistosArrayMCSecAndCalcAcceptance( TH2D* mcSecInputInAccSourcePt, TH2D 
     }
 }
 
+//****************************************************************************
+//***** Create ratios of reconstructed yield and different backgrounds *******
+//****************************************************************************
+void CreateRatioHistos(){
+    for (Int_t i = 0; i < 10; i++){
+        fHistoRatioTrueClustersBGPt[i]           = (TH1D*)fHistoTrueClustersBGPt[i]->Clone(Form("RatioTrueClusBG_%s_Pt",labelsBG[i].Data()));
+        fHistoRatioTrueClustersBGPt[i]->Divide(fHistoRatioTrueClustersBGPt[i],fHistoYieldMesonM02,1.,1.,"");
+    }
+    
+    fHistoRatioTrueYieldEtaM02                   = (TH1D*)fHistoTrueYieldEtaM02->Clone("RatioTrueYieldEtaM02");
+    fHistoRatioTrueYieldEtaM02->Divide(fHistoRatioTrueYieldEtaM02,fHistoYieldMesonM02,1.,1.,"");
+    
+    fHistoRatioTrueYieldPi0M02                   = (TH1D*)fHistoTrueYieldPi0M02->Clone("RatioTrueYieldPi0M02");
+    fHistoRatioTrueYieldPi0M02->Divide(fHistoRatioTrueYieldPi0M02,fHistoYieldMesonM02,1.,1.,"");
+    fHistoRatioTrueYieldGammaM02                 = (TH1D*)fHistoTrueYieldGammaM02->Clone("RatioTrueYieldGammaM02");
+    fHistoRatioTrueYieldGammaM02->Divide(fHistoRatioTrueYieldGammaM02,fHistoYieldMesonM02,1.,1.,"");    
+    fHistoRatioTrueYieldElectronM02              = (TH1D*)fHistoTrueYieldElectronM02->Clone("RatioTrueYieldElectronM02");
+    fHistoRatioTrueYieldElectronM02->Divide(fHistoRatioTrueYieldElectronM02,fHistoYieldMesonM02,1.,1.,"");
+    
+    fHistoRatioPi0DCFrac                         = (TH1D*)fHistoTrueYieldPi0DCM02->Clone("RatioPi0DCFrac");
+    fHistoRatioPi0DCFrac->Divide(fHistoRatioPi0DCFrac,fHistoTrueYieldPi0M02,1.,1.,"");
 
+    fHistoRatioPi0GGFrac                         = (TH1D*)fHistoTrueYieldPi0GGM02->Clone("RatioPi0GGFrac");
+    fHistoRatioPi0GGFrac->Divide(fHistoRatioPi0GGFrac,fHistoTrueYieldPi0M02,1.,1.,"B");
+    fHistoRatioPi0DalitzFrac                     = (TH1D*)fHistoTrueYieldPi0DalitzM02->Clone("RatioPi0DalitzFrac");
+    fHistoRatioPi0DalitzFrac->Divide(fHistoRatioPi0DalitzFrac,fHistoTrueYieldPi0M02,1.,1.,"B");
 
+    fHistoRatioEtaDCFrac                         = (TH1D*)fHistoTrueYieldEtaDCM02->Clone("RatioEtaDCFrac");
+    fHistoRatioEtaDCFrac->Divide(fHistoRatioEtaDCFrac,fHistoTrueYieldEtaM02,1.,1.,"B");
+
+    fHistoRatioEtaGGFrac                         = (TH1D*)fHistoTrueYieldEtaGGM02->Clone("RatioEtaGGFrac");
+    fHistoRatioEtaGGFrac->Divide(fHistoRatioEtaGGFrac,fHistoTrueYieldEtaM02,1.,1.,"B");
+
+    fHistoRatioEtaDalitzFrac                     = (TH1D*)fHistoTrueYieldEtaDalitzM02->Clone("RatioEtaDalitzFrac");
+    fHistoRatioEtaDalitzFrac->Divide(fHistoRatioEtaDalitzFrac,fHistoTrueYieldEtaM02,1.,1.,"B");
+        
+    fHistoRatioMergedPureFracPi0                    = (TH1D*)fHistoTrueYieldMergedPureFromPi0M02->Clone("RatioPi0MergedPure");
+    fHistoRatioMergedPureFracPi0->Divide(fHistoRatioMergedPureFracPi0,fHistoTrueYieldPi0M02,1.,1.,"B");
+    fHistoRatioMergedPureFracPi0->Scale(100.);
+    fHistoRatioMergedPartConvFracPi0                = (TH1D*)fHistoTrueYieldMergedPartConvFromPi0M02->Clone("RatioPi0MergedPartConv");
+    fHistoRatioMergedPartConvFracPi0->Divide(fHistoRatioMergedPartConvFracPi0,fHistoTrueYieldPi0M02,1.,1.,"B");
+    fHistoRatioMergedPartConvFracPi0->Scale(100.);
+    fHistoRatioMergedOneGammaFracPi0                = (TH1D*)fHistoTrueYieldMergedOneGammaFromPi0M02->Clone("RatioPi0MergedOneGamma");
+    fHistoRatioMergedOneGammaFracPi0->Divide(fHistoRatioMergedOneGammaFracPi0,fHistoTrueYieldPi0M02,1.,1.,"B");
+    fHistoRatioMergedOneGammaFracPi0->Scale(100.);
+    fHistoRatioMergedOneElectronFracPi0             = (TH1D*)fHistoTrueYieldMergedOneElectronFromPi0M02->Clone("RatioPi0MergedOneElectron");
+    fHistoRatioMergedOneElectronFracPi0->Divide(fHistoRatioMergedOneElectronFracPi0,fHistoTrueYieldPi0M02,1.,1.,"B");
+    fHistoRatioMergedOneElectronFracPi0->Scale(100.);    
+
+    fHistoRatioMergedPureFracEta                    = (TH1D*)fHistoTrueYieldMergedPureFromEtaM02->Clone("RatioEtaMergedPure");
+    fHistoRatioMergedPureFracEta->Divide(fHistoRatioMergedPureFracEta,fHistoTrueYieldEtaM02,1.,1.,"B");
+    fHistoRatioMergedPureFracEta->Scale(100.);
+    fHistoRatioMergedPartConvFracEta                = (TH1D*)fHistoTrueYieldMergedPartConvFromEtaM02->Clone("RatioEtaMergedPartConv");
+    fHistoRatioMergedPartConvFracEta->Divide(fHistoRatioMergedPartConvFracEta,fHistoTrueYieldEtaM02,1.,1.,"B");
+    fHistoRatioMergedPartConvFracEta->Scale(100.);
+    fHistoRatioMergedOneGammaFracEta                = (TH1D*)fHistoTrueYieldMergedOneGammaFromEtaM02->Clone("RatioEtaMergedOneGamma");
+    fHistoRatioMergedOneGammaFracEta->Divide(fHistoRatioMergedOneGammaFracEta,fHistoTrueYieldEtaM02,1.,1.,"B");
+    fHistoRatioMergedOneGammaFracEta->Scale(100.);
+    fHistoRatioMergedOneElectronFracEta             = (TH1D*)fHistoTrueYieldMergedOneElectronFromEtaM02->Clone("RatioEtaMergedOneElectron");
+    fHistoRatioMergedOneElectronFracEta->Divide(fHistoRatioMergedOneElectronFracEta,fHistoTrueYieldEtaM02,1.,1.,"B");
+    fHistoRatioMergedOneElectronFracEta->Scale(100.);    
+    
+}
 
 //****************************************************************************
 //*** Integration of Invariant Mass Histogram in given integration window ****
@@ -2673,9 +2739,30 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
         if (fHistoTruePurityMerged)                 fHistoTruePurityMerged->Write("TruePurityMergedPt");
         if (fHistoTruePi0PurityMerged)              fHistoTruePi0PurityMerged->Write("TruePurityPi0Pt");
         if (fHistoTrueEtaPurityMerged)              fHistoTrueEtaPurityMerged->Write("TruePurityEtaPt");
-        for (Int_t i = 0; i< 9; i++){
+        
+        if (fHistoRatioTrueYieldEtaM02)             fHistoRatioTrueYieldEtaM02->Write();
+        if (fHistoRatioTrueYieldPi0M02)             fHistoRatioTrueYieldPi0M02->Write();
+        if (fHistoRatioTrueYieldGammaM02)           fHistoRatioTrueYieldGammaM02->Write();
+        if (fHistoRatioTrueYieldElectronM02)        fHistoRatioTrueYieldElectronM02->Write();
+        if (fHistoRatioPi0DCFrac)                   fHistoRatioPi0DCFrac->Write();
+        if (fHistoRatioPi0GGFrac)                   fHistoRatioPi0GGFrac->Write();
+        if (fHistoRatioPi0DalitzFrac)               fHistoRatioPi0DalitzFrac->Write();
+        if (fHistoRatioEtaDCFrac)                   fHistoRatioEtaDCFrac->Write();
+        if (fHistoRatioEtaGGFrac)                   fHistoRatioEtaGGFrac->Write();
+        if (fHistoRatioEtaDalitzFrac)               fHistoRatioEtaDalitzFrac->Write();
+        if (fHistoRatioMergedPureFracPi0)           fHistoRatioMergedPureFracPi0->Write();
+        if (fHistoRatioMergedPartConvFracPi0)       fHistoRatioMergedPartConvFracPi0->Write();
+        if (fHistoRatioMergedOneGammaFracPi0)       fHistoRatioMergedOneGammaFracPi0->Write();
+        if (fHistoRatioMergedOneElectronFracPi0)    fHistoRatioMergedOneElectronFracPi0->Write();
+        if (fHistoRatioMergedPureFracEta)           fHistoRatioMergedPureFracEta->Write();
+        if (fHistoRatioMergedPartConvFracEta)       fHistoRatioMergedPartConvFracEta->Write();
+        if (fHistoRatioMergedOneGammaFracEta)       fHistoRatioMergedOneGammaFracEta->Write();
+        if (fHistoRatioMergedOneElectronFracEta)    fHistoRatioMergedOneElectronFracEta->Write();
+        
+        for (Int_t i = 0; i< 10; i++){
             if (fHistoTrueClustersBGPt[i])          fHistoTrueClustersBGPt[i]->Write();
-        }
+            if (fHistoRatioTrueClustersBGPt[i])     fHistoRatioTrueClustersBGPt[i]->Write();
+        }    
         for (Int_t i = 0; i< 8; i++){
             if (fHistoTrueClustersGammaPt[i])       fHistoTrueClustersGammaPt[i]->Write();
         }

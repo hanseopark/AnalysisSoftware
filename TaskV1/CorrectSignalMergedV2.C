@@ -119,7 +119,8 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
                                 Bool_t  kIsMC                   = kFALSE, 
                                 TString optionEnergy            = "", 
                                 TString optionPeriod            = "",
-                                Int_t mode                      = 10
+                                Int_t mode                      = 10, 
+                                TString fileNameTheory          = "ExternalInput/Theory/TheoryCompilationPP.root"
                             ){  
     
     //*************************************************************************************************
@@ -315,7 +316,13 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         }
     }
 
-    
+    // load theory prediction for direct to fragmentation photons
+    TFile* fileTheory                           = new TFile(fileNameTheory.Data());
+    TString nameTheoryGraph                     = Form("graphPromptPhotonDivFragementationNLOVogelsang_%s",((TString)ReturnCollisionEnergyStringForTheory(optionEnergy)).Data());
+    TString nameTheoryFit                       = Form("ratioFitNLOPromptDivFragGamma%s",((TString)ReturnCollisionEnergyStringForTheory(optionEnergy)).Data());
+    TDirectory* directoryTheoDirGamma           = (TDirectory*)fileTheory->Get("DirectPhoton");
+    TGraphAsymmErrors* graphPromptDivFragTheo   = (TGraphAsymmErrors*)directoryTheoDirGamma->Get(nameTheoryGraph.Data());
+    TF1* fitPromptdivFragTheo                   = (TF1*)directoryTheoDirGamma->Get(nameTheoryFit.Data());
     
     // set min and max values for pT
     Double_t maxPtMeson     = histoUnCorrectedYield->GetXaxis()->GetBinUpEdge(histoUnCorrectedYield->GetNbinsX());
@@ -357,6 +364,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     TH1D* histoTrueYieldEtaGGM02                = NULL;
     TH1D* histoTrueYieldEtaDalitzM02            = NULL;
     TH1D* histoTrueYieldGammaM02                = NULL;
+    TH1D* histoTrueYieldDirGammaM02             = NULL;
     TH1D* histoTrueYieldElectronM02             = NULL;
     TH1D* histoRatioTrueYieldEtaM02             = NULL;
     TH1D* histoRatioTrueYieldPi0M02             = NULL;
@@ -379,101 +387,89 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     TH1D* histoRatioMergedOneElectronFrac       = NULL;
     Bool_t  isUpdatedOutputFormat               = kFALSE;
     if (kIsMC){
-        for (Int_t i = 0; i < 9; i++){
+        for (Int_t i = 0; i < 10; i++){
             histoTrueClustersBGPt[i]                = (TH1D*)fileCorrections->Get(Form("TrueClusBG_%s_Pt",labelsBG[i].Data()));
-            histoTrueClustersBGPt[i]->Sumw2();
-            
-            histoRatioTrueClustersBGPt[i]           = (TH1D*)histoTrueClustersBGPt[i]->Clone(Form("RatioTrueClusBG_%s_Pt",labelsBG[i].Data()));
-            histoRatioTrueClustersBGPt[i]->Divide(histoRatioTrueClustersBGPt[i],histoUnCorrectedYield,1.,1.,"");
-            if (i == 0) histoTrueClustersBGPt[9]    = (TH1D*)histoTrueClustersBGPt[i]->Clone(Form("TrueClusBG_%s_Pt",labelsBG[9].Data()));
-                else histoTrueClustersBGPt[9]->Add(histoTrueClustersBGPt[i]); 
+            histoTrueClustersBGPt[i]->Sumw2();            
+            histoRatioTrueClustersBGPt[i]           = (TH1D*)fileCorrections->Get(Form("RatioTrueClusBG_%s_Pt",labelsBG[i].Data()));
         }
-        histoRatioTrueClustersBGPt[9]               = (TH1D*)histoTrueClustersBGPt[9]->Clone(Form("RatioTrueClusBG_%s_Pt",labelsBG[9].Data()));
-        histoRatioTrueClustersBGPt[9]->Divide(histoRatioTrueClustersBGPt[9],histoUnCorrectedYield,1.,1.,"");
         
         histoTrueYieldEtaM02                        = (TH1D*)fileCorrections->Get("histoTrueYieldEtaM02");
-        histoRatioTrueYieldEtaM02                   = (TH1D*)histoTrueYieldEtaM02->Clone("RatioTrueYieldEtaM02");
-        histoRatioTrueYieldEtaM02->Divide(histoRatioTrueYieldEtaM02,histoUnCorrectedYield,1.,1.,"");
-        
+        histoRatioTrueYieldEtaM02                   = (TH1D*)fileCorrections->Get("RatioTrueYieldEtaM02");
         histoTrueYieldPi0M02                        = (TH1D*)fileCorrections->Get("histoTrueYieldPi0M02");
-        histoRatioTrueYieldPi0M02                   = (TH1D*)histoTrueYieldPi0M02->Clone("RatioTrueYieldPi0M02");
-        histoRatioTrueYieldPi0M02->Divide(histoRatioTrueYieldPi0M02,histoUnCorrectedYield,1.,1.,"");
+        histoRatioTrueYieldPi0M02                   = (TH1D*)fileCorrections->Get("RatioTrueYieldPi0M02");
         
         histoTrueYieldGammaM02                      = (TH1D*)fileCorrections->Get("histoTrueYieldGammaM02");
-        histoRatioTrueYieldGammaM02                 = (TH1D*)histoTrueYieldGammaM02->Clone("RatioTrueYieldGammaM02");
-        histoRatioTrueYieldGammaM02->Divide(histoRatioTrueYieldGammaM02,histoUnCorrectedYield,1.,1.,"");
-        
+        histoRatioTrueYieldGammaM02                 = (TH1D*)fileCorrections->Get("RatioTrueYieldGammaM02");
+                
         histoTrueYieldElectronM02                   = (TH1D*)fileCorrections->Get("histoTrueYieldElectronM02");
-        histoRatioTrueYieldElectronM02              = (TH1D*)histoTrueYieldElectronM02->Clone("RatioTrueYieldElectronM02");
-        histoRatioTrueYieldElectronM02->Divide(histoRatioTrueYieldElectronM02,histoUnCorrectedYield,1.,1.,"");
+        histoRatioTrueYieldElectronM02              = (TH1D*)fileCorrections->Get("RatioTrueYieldElectronM02");
         
         histoTrueYieldPi0DCM02                      = (TH1D*)fileCorrections->Get("histoTrueYieldPi0DCM02");
-        histoRatioPi0DCFrac                         = (TH1D*)histoTrueYieldPi0DCM02->Clone("RatioPi0DCFrac");
-        histoRatioPi0DCFrac->Divide(histoRatioPi0DCFrac,histoTrueYieldPi0M02,1.,1.,"");
+        histoRatioPi0DCFrac                         = (TH1D*)fileCorrections->Get("RatioPi0DCFrac");
 
         histoTrueYieldPi0GGM02                      = (TH1D*)fileCorrections->Get("histoTrueYieldPi0GGM02");
-        histoRatioPi0GGFrac                         = (TH1D*)histoTrueYieldPi0GGM02->Clone("RatioPi0GGFrac");
-        histoRatioPi0GGFrac->Divide(histoRatioPi0GGFrac,histoTrueYieldPi0M02,1.,1.,"B");
+        histoRatioPi0GGFrac                         = (TH1D*)fileCorrections->Get("RatioPi0GGFrac");
 
         histoTrueYieldPi0DalitzM02                  = (TH1D*)fileCorrections->Get("histoTrueYieldPi0DalitzM02");
-        histoRatioPi0DalitzFrac                     = (TH1D*)histoTrueYieldPi0DalitzM02->Clone("RatioPi0DalitzFrac");
-        histoRatioPi0DalitzFrac->Divide(histoRatioPi0DalitzFrac,histoTrueYieldPi0M02,1.,1.,"B");
-
+        histoRatioPi0DalitzFrac                     = (TH1D*)fileCorrections->Get("RatioPi0DalitzFrac");
+        
         histoTrueYieldEtaDCM02                      = (TH1D*)fileCorrections->Get("histoTrueYieldEtaDCM02");
-        histoRatioEtaDCFrac                         = (TH1D*)histoTrueYieldEtaDCM02->Clone("RatioEtaDCFrac");
-        histoRatioEtaDCFrac->Divide(histoRatioEtaDCFrac,histoTrueYieldEtaM02,1.,1.,"B");
-
+        histoRatioEtaDCFrac                         = (TH1D*)fileCorrections->Get("RatioEtaDCFrac");
+        
         histoTrueYieldEtaGGM02                      = (TH1D*)fileCorrections->Get("histoTrueYieldEtaGGM02");
-        histoRatioEtaGGFrac                         = (TH1D*)histoTrueYieldEtaGGM02->Clone("RatioEtaGGFrac");
-        histoRatioEtaGGFrac->Divide(histoRatioEtaGGFrac,histoTrueYieldEtaM02,1.,1.,"B");
+        histoRatioEtaGGFrac                         = (TH1D*)fileCorrections->Get("RatioEtaGGFrac");
 
         histoTrueYieldEtaDalitzM02                  = (TH1D*)fileCorrections->Get("histoTrueYieldEtaDalitzM02");
-        histoRatioEtaDalitzFrac                     = (TH1D*)histoTrueYieldEtaDalitzM02->Clone("RatioEtaDalitzFrac");
-        histoRatioEtaDalitzFrac->Divide(histoRatioEtaDalitzFrac,histoTrueYieldEtaM02,1.,1.,"B");
-        
+        histoRatioEtaDalitzFrac                     = (TH1D*)fileCorrections->Get("RatioEtaDalitzFrac");
+
         histoMergedAll                              = (TH1D*)fileCorrections->Get("histoTrueYieldMergedM02");
         histoMergedPure                             = (TH1D*)fileCorrections->Get(Form("histoTrueYieldMergedPureFrom%sM02",nameMeson.Data()));
         cout << "maximum of pure merged: "<< histoMergedPure->GetMaximum() << endl;
         if (!(histoMergedPure->GetMaximum() > 0)){
-            
             histoMergedPure                         = (TH1D*)fileCorrections->Get("histoTrueYieldMergedPureM02");
-            histoRatioMergedPureFrac                = (TH1D*)histoMergedPure->Clone("RatioMergedPure");
-            histoRatioMergedPureFrac->Divide(histoRatioMergedPureFrac,histoMergedAll,1.,1.,"B");
-            histoRatioMergedPureFrac->Scale(100.);
+            histoRatioMergedPureFrac                = (TH1D*)fileCorrections->Get(Form("Ratio%sMergedPure",nameMeson.Data()));
         } else { 
             isUpdatedOutputFormat                   = kTRUE;
-            histoRatioMergedPureFrac                    = (TH1D*)histoMergedPure->Clone("RatioMergedPure");
+            histoRatioMergedPureFrac                = (TH1D*)histoMergedPure->Clone("RatioMergedPure");
             histoRatioMergedPureFrac->Divide(histoRatioMergedPureFrac,histoTrueYieldPi0M02,1.,1.,"B");
             histoRatioMergedPureFrac->Scale(100.);
         }
         if (!isUpdatedOutputFormat){
-            histoMergedPartConv                         = (TH1D*)fileCorrections->Get("histoTrueYieldMergedPartConvM02");
-            histoRatioMergedPartConvFrac                = (TH1D*)histoMergedPartConv->Clone("RatioMergedPartConv");
+            histoMergedPartConv                     = (TH1D*)fileCorrections->Get("histoTrueYieldMergedPartConvM02");
+            histoRatioMergedPartConvFrac            = (TH1D*)histoMergedPartConv->Clone("RatioMergedPartConv");
             histoRatioMergedPartConvFrac->Divide(histoRatioMergedPartConvFrac,histoMergedAll,1.,1.,"B");
             histoRatioMergedPartConvFrac->Scale(100.);
-            histoMergedOneGamma                         = (TH1D*)fileCorrections->Get("histoTrueYieldMergedOneGammaFromMesonM02");
-            histoRatioMergedOneGammaFrac                = (TH1D*)histoMergedOneGamma->Clone("RatioMergedOneGamma");
+            histoMergedOneGamma                     = (TH1D*)fileCorrections->Get("histoTrueYieldMergedOneGammaFromMesonM02");
+            histoRatioMergedOneGammaFrac            = (TH1D*)histoMergedOneGamma->Clone("RatioMergedOneGamma");
             histoRatioMergedOneGammaFrac->Divide(histoRatioMergedOneGammaFrac,histoMergedAll,1.,1.,"B");
             histoRatioMergedOneGammaFrac->Scale(100.);
-            histoMergedOneElectron                      = (TH1D*)fileCorrections->Get("histoTrueYieldMergedOneElectronFromMesonM02");
-            histoRatioMergedOneElectronFrac             = (TH1D*)histoMergedOneElectron->Clone("RatioMergedOneElectron");
+            histoMergedOneElectron                  = (TH1D*)fileCorrections->Get("histoTrueYieldMergedOneElectronFromMesonM02");
+            histoRatioMergedOneElectronFrac         = (TH1D*)histoMergedOneElectron->Clone("RatioMergedOneElectron");
             histoRatioMergedOneElectronFrac->Divide(histoRatioMergedOneElectronFrac,histoMergedAll,1.,1.,"B");
             histoRatioMergedOneElectronFrac->Scale(100.);
         } else {
             cout << "went into identified meson routine" << endl;
-            histoMergedPartConv                         = (TH1D*)fileCorrections->Get(Form("histoTrueYieldMergedPartConvFrom%sM02",nameMeson.Data()));
-            histoRatioMergedPartConvFrac                = (TH1D*)histoMergedPartConv->Clone("RatioMergedPartConv");
-            histoRatioMergedPartConvFrac->Divide(histoRatioMergedPartConvFrac,histoTrueYieldPi0M02,1.,1.,"B");
-            histoRatioMergedPartConvFrac->Scale(100.);
-            histoMergedOneGamma                         = (TH1D*)fileCorrections->Get(Form("histoTrueYieldMergedOneGammaFrom%sM02",nameMeson.Data()));
-            histoRatioMergedOneGammaFrac                = (TH1D*)histoMergedOneGamma->Clone("RatioMergedOneGamma");
-            histoRatioMergedOneGammaFrac->Divide(histoRatioMergedOneGammaFrac,histoTrueYieldPi0M02,1.,1.,"B");
-            histoRatioMergedOneGammaFrac->Scale(100.);
-            histoMergedOneElectron                      = (TH1D*)fileCorrections->Get(Form("histoTrueYieldMergedOneElectronFrom%sM02",nameMeson.Data()));
-            histoRatioMergedOneElectronFrac             = (TH1D*)histoMergedOneElectron->Clone("RatioMergedOneElectron");
-            histoRatioMergedOneElectronFrac->Divide(histoRatioMergedOneElectronFrac,histoTrueYieldPi0M02,1.,1.,"B");
-            histoRatioMergedOneElectronFrac->Scale(100.);
+            histoMergedPartConv                     = (TH1D*)fileCorrections->Get(Form("histoTrueYieldMergedPartConvFrom%sM02",nameMeson.Data()));
+            histoRatioMergedPartConvFrac            = (TH1D*)fileCorrections->Get(Form("Ratio%sMergedPartConv",nameMeson.Data()));
+            histoMergedOneGamma                     = (TH1D*)fileCorrections->Get(Form("histoTrueYieldMergedOneGammaFrom%sM02",nameMeson.Data()));
+            histoRatioMergedOneGammaFrac            = (TH1D*)fileCorrections->Get(Form("Ratio%sMergedOneGamma",nameMeson.Data()));
+            histoMergedOneElectron                  = (TH1D*)fileCorrections->Get(Form("histoTrueYieldMergedOneElectronFrom%sM02",nameMeson.Data()));
+            histoRatioMergedOneElectronFrac         = (TH1D*)fileCorrections->Get(Form("Ratio%sMergedOneElectron",nameMeson.Data()));
         }    
+    }
+    
+    // scale additional photon component according to theory calculations, as only FF photons are in our MC's
+    TH1D* histoRatioAdditionalGammaCorrM02          = NULL;
+    TH1D* histoMesonPurityUnmodPt                   = NULL;
+    if (!kIsMC){
+        histoRatioAdditionalGammaCorrM02            = (TH1D*)fileCorrections->Get("RatioTrueYieldGammaM02");
+        if (fitPromptdivFragTheo){
+            cout << "found theo scaling fac" <<  endl;
+            cout << "adjusting gamma contribution according theory predictions" <<  endl;
+            histoRatioAdditionalGammaCorrM02->Multiply(fitPromptdivFragTheo);
+            histoMesonPurityUnmodPt                 = (TH1D*)histoMesonPurityPt->Clone("histoMesonPurityUnmodPt");
+            histoMesonPurityPt->Add(histoRatioAdditionalGammaCorrM02,-1);
+        }
     }
     
     // loading efficiency
@@ -608,8 +604,6 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
                 if (modifiedSecEff[j])
                     cout << "adjusted sec effi, due to to little stat: " << j << endl;
             }
-
-            
         }
 
         if (histoSecAccPt[0] && histoSecEffiPt[0] )
@@ -856,33 +850,41 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         }    
         delete canvasEffSimple;
 
+    }    
         
-        //*********************************************************************************
-        //************************** Purity Plot ******************************************
-        //*********************************************************************************
-        cout << "Plotting purity" << endl;
-        TCanvas* canvasPurity = new TCanvas("canvasPurity","",200,10,1350,900);
-        DrawGammaCanvasSettings( canvasPurity, 0.06, 0.015, 0.015, 0.08);
+    //*********************************************************************************
+    //************************** Purity Plot ******************************************
+    //*********************************************************************************
+    cout << "Plotting purity" << endl;
+    TCanvas* canvasPurity = new TCanvas("canvasPurity","",200,10,1350,900);
+    DrawGammaCanvasSettings( canvasPurity, 0.06, 0.015, 0.015, 0.08);
 
-        DrawAutoGammaMesonHistos( histoMesonPurityPt, 
-                                    "", "#it{p}_{T} (GeV/#it{c})", "#epsilon_{pur}", 
-                                    kFALSE, 0.75, 3e-6, kFALSE,
-                                    kTRUE, 0., 1, 
-                                    kFALSE, 0., 10.);
-        histoMesonPurityPt->GetYaxis()->SetTitleOffset(0.7);        
-        TLegend* legendPurity = GetAndSetLegend2(0.5, 0.125, 0.65, 0.205, 28);
-        legendPurity->SetMargin(0.2);
-        legendPurity->AddEntry(histoMesonPurityPt,Form("%s Purity",textMeson.Data()));
-        legendPurity->Draw();   
-        
-        PutProcessLabelAndEnergyOnPlot(0.68, 0.25, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
-        canvasPurity->Update();
+    DrawAutoGammaMesonHistos( histoMesonPurityPt, 
+                                "", "#it{p}_{T} (GeV/#it{c})", "#epsilon_{pur}", 
+                                kFALSE, 0.75, 3e-6, kFALSE,
+                                kTRUE, 0., 1, 
+                                kFALSE, 0., 10.);
+    histoMesonPurityPt->GetYaxis()->SetTitleOffset(0.7);        
+    DrawGammaSetMarker(histoMesonPurityPt,  20 , 1.5, kAzure+2, kAzure+2);
+    histoMesonPurityPt->Draw("e1");
+    if (histoMesonPurityUnmodPt){
+        DrawGammaSetMarker(histoMesonPurityUnmodPt,  24 , 1.5, kRed-6, kRed-6);  
+        histoMesonPurityUnmodPt->Draw("same,e1");
+    }    
+    TLegend* legendPurity = GetAndSetLegend2(0.5, 0.125, 0.65, 0.205, 28);
+    legendPurity->SetMargin(0.2);
+    legendPurity->AddEntry(histoMesonPurityPt,Form("%s Purity",textMeson.Data()));
+    if (histoMesonPurityUnmodPt)
+        legendPurity->AddEntry(histoMesonPurityUnmodPt,Form("%s Purity, uncorr add. #gamma",textMeson.Data()));
+    legendPurity->Draw();   
+    
+    PutProcessLabelAndEnergyOnPlot(0.68, 0.25, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
+    canvasPurity->Update();
 
-        canvasPurity->SaveAs(Form("%s/%s_%s_TruePurity_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
-        delete legendPurity;
-        delete canvasPurity;
-        
-    }
+    canvasPurity->SaveAs(Form("%s/%s_%s_TruePurity_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
+    delete legendPurity;
+    delete canvasPurity;
+    
      
     if (kIsMC){ 
         //**********************************************************************************

@@ -3537,3 +3537,25 @@ void ExtractSystematicFromTotal(Int_t nPoints, Double_t* totals, Double_t* stat,
     }    
     return ;
 }    
+
+
+TF1* CalculateRatioOfTwoFunctions (TF1* fit1, TF1* fit2, TString name){
+    Int_t nParFunc1  = fit1->GetNpar();
+    Int_t nParFunc2  = fit2->GetNpar();
+    TString formula1    = fit1->GetExpFormula();
+    TString formula2    = fit2->GetExpFormula();
+    
+    for (Int_t i = 0; i< nParFunc2; i++){
+        formula2.ReplaceAll(Form("[%d]",i), Form("[%d]",i+nParFunc1));
+    }
+    TF1* newFunction = new TF1(name.Data(),Form("(%s)/(%s)",formula1.Data(), formula2.Data()));
+    for (Int_t i = 0; i < nParFunc1; i++ ){
+        newFunction->SetParameter(i, fit1->GetParameter(i));
+    }    
+    for (Int_t j = 0; j < nParFunc2; j++ ){
+        newFunction->SetParameter(nParFunc1+j, fit2->GetParameter(j));
+    }    
+    
+    
+    return newFunction;
+}    

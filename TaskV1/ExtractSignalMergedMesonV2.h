@@ -47,8 +47,8 @@ TFile*      fOutput1                                                    = NULL;
 TFile*      fOutput2                                                    = NULL;
 Double_t    fYields                                                     = 0.;
 Double_t    fYieldsError                                                = 0.;
-TString     labelsBG[9]                                                 = { "PiCh", "P", "KCh", "N", "K0s", 
-                                                                            "Lambda", "Mu", "K0l", "Rest"};
+TString     labelsBG[10]                                                = { "PiCh", "P", "KCh", "N", "K0s", 
+                                                                            "Lambda", "Mu", "K0l", "Rest", "AllNonEM"};
 TString     labelsGamma[8]                                              = { "DirGamma", "PiN", "Eta", "EtaPrim", "Omega", 
                                                                             "Phi", "Lambda", "Rest"};
 TString     labelsElectron[9]                                           = { "DirE", "Gamma", "PiN", "Eta", "C", 
@@ -142,6 +142,7 @@ void SaveCorrectionHistos(TString , TString);                                   
 void Delete();                                                                                              // Deleting all pointers
 void SetCorrectMCHistogrammNames(TString);                                                                  // Setting correct histogram names
 Bool_t LoadSecondaryPionsFromExternalFile();                                                                // Loads secondary neutral pion input graphs from file
+void CreateRatioHistos();                                                                                   // creates ratio histos for MC inputs
 
 //****************************************************************************
 //************************** input histograms ********************************
@@ -229,8 +230,10 @@ TH2F*       fHistoTrueClustersEtaGGPtM02                                = NULL;
 TH2F*       fHistoTrueClustersEtaDalitzPtM02                            = NULL;
 TH2F*       fHistoTrueClustersBGPtM02                                   = NULL;
 TH2F*       fHistoTrueClustersBGPtSource                                = NULL;
-TH1D*       fHistoTrueClustersBGPt[9]                                   = { NULL, NULL, NULL, NULL, NULL,
-                                                                            NULL, NULL, NULL, NULL};
+TH1D*       fHistoTrueClustersBGPt[10]                                   = { NULL, NULL, NULL, NULL, NULL,
+                                                                            NULL, NULL, NULL, NULL, NULL};
+TH1D*       fHistoRatioTrueClustersBGPt[10]                             = { NULL, NULL, NULL, NULL, NULL,
+                                                                            NULL, NULL, NULL, NULL, NULL};
 
 TH2F*       fHistoTrueClustersGammaPtM02                                = NULL;
 TH2F*       fHistoTrueClustersGammaPtSource                             = NULL;
@@ -382,6 +385,27 @@ TH1D*       fHistoTrueYieldGammaM02                                     = NULL;
 TH1D*       fHistoTrueYieldElectronM02                                  = NULL;
 TH1D*       fHistoTrueYieldBGM02                                        = NULL;
 TH1D*       fHistoTrueYieldPrimPi0M02                                   = NULL;
+
+TH1D*       fHistoRatioTrueYieldEtaM02                                  = NULL;
+TH1D*       fHistoRatioTrueYieldPi0M02                                  = NULL;
+TH1D*       fHistoRatioTrueYieldGammaM02                                = NULL;
+TH1D*       fHistoRatioTrueYieldElectronM02                             = NULL;
+TH1D*       fHistoRatioPi0DCFrac                                        = NULL;
+TH1D*       fHistoRatioPi0GGFrac                                        = NULL;
+TH1D*       fHistoRatioPi0DalitzFrac                                    = NULL;
+TH1D*       fHistoRatioEtaDCFrac                                        = NULL;
+TH1D*       fHistoRatioEtaGGFrac                                        = NULL;
+TH1D*       fHistoRatioEtaDalitzFrac                                    = NULL;
+TH1D*       fHistoRatioMergedPureFracPi0                                = NULL;
+TH1D*       fHistoRatioMergedPartConvFracPi0                            = NULL;
+TH1D*       fHistoRatioMergedOneGammaFracPi0                            = NULL;
+TH1D*       fHistoRatioMergedOneElectronFracPi0                         = NULL;
+TH1D*       fHistoRatioMergedPureFracEta                                = NULL;
+TH1D*       fHistoRatioMergedPartConvFracEta                            = NULL;
+TH1D*       fHistoRatioMergedOneGammaFracEta                            = NULL;
+TH1D*       fHistoRatioMergedOneElectronFracEta                         = NULL;
+    
+
 
 //****************************************************************************
 //******************* MC input histograms ************************************
