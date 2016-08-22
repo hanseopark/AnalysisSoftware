@@ -192,7 +192,7 @@ void EventQA(
     //************************** Define output directories*************************************************
     //*****************************************************************************************************    
     TString outputDir                   = Form("%s/%s/EventQA/%s",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
-    TString outputDirRootFile           = Form("%s/%s/EventQA/",cuts.at(cutNr).Data(),fEnergyFlag.Data());
+    TString outputDirRootFile           = Form("%s/%s/EventQA",cuts.at(cutNr).Data(),fEnergyFlag.Data());
     if(addSubfolder) outputDir          +=Form("/%s",DataSets[0].Data());
 
     gSystem->Exec("mkdir -p "+outputDir);
@@ -1172,17 +1172,18 @@ void EventQA(
     for(Int_t iVec=0; iVec<(Int_t)vecGammaCandidates.size(); iVec++){
         TH1D* temp = vecGammaCandidates.at(iVec);
         temp->Sumw2();
-        temp->Scale(1./nEvents[iVec]);
+        temp->Scale(1./temp->Integral());
+        //temp->Scale(1./nEvents[iVec]);
         SetXRange(temp,minB,maxB);
     }
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecGammaCandidates,"","Number of #gamma Candidates","#frac{1}{N_{Events}} #frac{dN}{dNCand}",1,1.1,
+                                vecGammaCandidates,"","Number of #gamma Candidates","#frac{1}{N} #frac{dN}{dNCand}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kFALSE,
                                 0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/GammaCandidates.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                    vecGammaCandidates,"","Number of #gamma Candidates","#frac{1}{N_{Events}} #frac{dN}{dNCand}",1,1.1,
+                                    vecGammaCandidates,"","Number of #gamma Candidates","#frac{1}{N} #frac{dN}{dNCand}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
                                     0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_GammaCandidates.%s", outputDir.Data(), suffix.Data()));

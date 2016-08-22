@@ -218,7 +218,7 @@ void ClusterQA(
         outputDirRootFiles      = Form("%s/%s/ClusterQA",cuts.at(cutNr).Data(),fEnergyFlag.Data());
     } else {
         outputDir               = Form("%s/%s/MergedClusterQA/%s",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
-        outputDirRootFiles      = Form("%s/%s/MergedClusterQA/",cuts.at(cutNr).Data(),fEnergyFlag.Data());
+        outputDirRootFiles      = Form("%s/%s/MergedClusterQA",cuts.at(cutNr).Data(),fEnergyFlag.Data());
     }    
     if(addSubfolder) 
         outputDir       +=Form("/%s",DataSets[0].Data());
@@ -1286,7 +1286,7 @@ void ClusterQA(
                         max->Draw("same");
                         WriteHistogram(fHistClusterTrueElectronEM02);
                         PutProcessLabelAndEnergyOnPlot(0.55, 0.99, 0.06,  "ALICE simulation", fCollisionSystem.Data(), "", 42, 0.03, "");
-                        PutProcessLabelAndEnergyOnPlot((0.12, 0.23, 0.06, "e^{#pm}", "", "", 42, 0.03, "");
+                        PutProcessLabelAndEnergyOnPlot(0.12, 0.23, 0.06, "e^{#pm}", "", "", 42, 0.03, "");
                         cvsEM02->SetLogx(1); cvsEM02->SetLogy(0); cvsEM02->SetLogz(1); cvsEM02->Update();
                         cvsEM02->SaveAs(Form("%s/EVsM02_TrueElectron_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                         cvsEM02->Clear();

@@ -189,7 +189,12 @@ void AnalyseNeutralMesonSignificance(   TString fileNameData    = "myOutput",
                                             20.0, 25., 30., 35., 40.,
                                             45., 50. };
     Int_t maxNbins                      = 15;
-    if (mode == 10) maxNbins            = 21;                                       
+    if (mode == 10) maxNbins            = 21;
+
+    if(optEnergy.CompareTo("8TeV")==0){
+      maxNbins = 13;
+      if(optGenerator.Contains("JetJet")) maxNbins = 18;
+    }
                                             
     //**********************************************************************************
     //**************************** Read data file **************************************

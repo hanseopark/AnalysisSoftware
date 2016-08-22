@@ -4057,7 +4057,7 @@ Style_t GetDefaultTriggerMarker( TString periodName,
         {
         case 0:
             return 20;
-        case 11:
+        case 10:
             return 20;
         case 52:
             return 21;

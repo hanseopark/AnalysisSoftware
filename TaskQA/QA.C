@@ -316,6 +316,95 @@ void QA(    TString select          = "LHC11a",         // set selected
         pathPhotonQA[2] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC15h2/PhotonQA_LHC15h2.root";
     }
     //**************************************************************************************************************
+    else if(select.CompareTo("LHC12+")==0){
+    //LHC12 MB
+        cutNr = 0;
+        nSets = 4;
+        fEnergyFlag = "8TeV";
+        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC12_GammaConvCalo_101.root";
+        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h1_GammaConvCalo_101.root";
+        pathDataSets[2] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h2_GammaConvCalo_101.root";
+        pathDataSets[3] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160628-8TeV-JetJet-QA/LHC16c2_GammaConvCalo_101.root";
+        DataSets[0]="LHC12"; DataSets[1]="LHC15h1"; DataSets[2]="LHC15h2"; DataSets[3]="LHC16c2";
+        plotDataSets[0]="LHC12a-i"; plotDataSets[1]="Pythia8"; plotDataSets[2]="Phojet"; plotDataSets[3]="JetJet";
+        pathPhotonQA[0] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12/PhotonQA_LHC12.root";
+        pathPhotonQA[1] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC15h1/PhotonQA_LHC15h1.root";
+        pathPhotonQA[2] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC15h2/PhotonQA_LHC15h2.root";
+        pathPhotonQA[3] = "";
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC12-kEMC7+")==0){
+    //LHC12
+        cutNr = 1;
+        nSets = 2;
+        fEnergyFlag = "8TeV";
+        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA-Trigger/LHC12-kEMC7_GammaConvCalo_101.root";
+        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160628-8TeV-JetJet-QA/LHC16c2_GammaConvCalo_101.root";
+        DataSets[0]="LHC12"; DataSets[1]="LHC16c2";
+        plotDataSets[0]="LHC12a-i"; plotDataSets[1]="JetJet";
+        pathPhotonQA[0] = "";
+        pathPhotonQA[1] = "";
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC12-kEMCEGA+")==0){
+    //LHC12
+        cutNr = 2;
+        nSets = 2;
+        fEnergyFlag = "8TeV";
+        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA-Trigger/LHC12-kEMCEGA_GammaConvCalo_101.root";
+        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160628-8TeV-JetJet-QA/LHC16c2_GammaConvCalo_101.root";
+        DataSets[0]="LHC12"; DataSets[1]="LHC16c2";
+        plotDataSets[0]="LHC12a-i"; plotDataSets[1]="JetJet";
+        pathPhotonQA[0] = "";
+        pathPhotonQA[1] = "";
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC12-Calo+")==0){
+    //LHC12 MB calo
+        cutNr = 0;
+        nSets = 4;
+        mode = 4;
+        fEnergyFlag = "8TeV";
+        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC12_GammaCalo_101.root";
+        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h1_GammaCalo_101.root";
+        pathDataSets[2] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/LHC15h2_GammaCalo_101.root";
+        pathDataSets[3] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160628-8TeV-JetJet-QA/LHC16c2_GammaCalo_101.root";
+        DataSets[0]="LHC12"; DataSets[1]="LHC15h1"; DataSets[2]="LHC15h2"; DataSets[3]="LHC16c2";
+        plotDataSets[0]="LHC12a-i"; plotDataSets[1]="Pythia8"; plotDataSets[2]="Phojet"; plotDataSets[3]="JetJet";
+        pathPhotonQA[0] = "";
+        pathPhotonQA[1] = "";
+        pathPhotonQA[2] = "";
+        pathPhotonQA[3] = "";
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC12-Calo-kEMC7+")==0){
+    //LHC12
+        cutNr = 1;
+        nSets = 2;
+        mode = 4;
+        fEnergyFlag = "8TeV";
+        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA-Trigger/LHC12-kEMC7_GammaCalo_101.root";
+        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160628-8TeV-JetJet-QA/LHC16c2_GammaCalo_101.root";
+        DataSets[0]="LHC12"; DataSets[1]="LHC16c2";
+        plotDataSets[0]="LHC12a-i"; plotDataSets[1]="JetJet";
+        pathPhotonQA[0] = "";
+        pathPhotonQA[1] = "";
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC12-Calo-kEMCEGA+")==0){
+    //LHC12
+        cutNr = 2;
+        nSets = 2;
+        mode = 4;
+        fEnergyFlag = "8TeV";
+        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA-Trigger/LHC12-kEMCEGA_GammaCalo_101.root";
+        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160628-8TeV-JetJet-QA/LHC16c2_GammaCalo_101.root";
+        DataSets[0]="LHC12"; DataSets[1]="LHC16c2";
+        plotDataSets[0]="LHC12a-i"; plotDataSets[1]="JetJet";
+        pathPhotonQA[0] = "";
+        pathPhotonQA[1] = "";
+    }
+    //**************************************************************************************************************
     else if(select.BeginsWith("LHC12") && select.Length()==6){
     //LHC12 Periodwise
         addSubfolder=kTRUE;

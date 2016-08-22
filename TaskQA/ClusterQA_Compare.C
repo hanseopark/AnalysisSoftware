@@ -59,18 +59,17 @@ void ClusterQA_Compare( TString suffix          = "eps",
     
 	//**************************************************************************************************************
 
-//	const Int_t nSets = 4;
-//	Size_t constMarkerSize = 1.5;
-//	TString outputDir ="LHC12";
-//	TString fEnergyFlag = "8TeV";
-//	TString DataSets[nSets]={"LHC12","LHC12-kEMC7","LHC12-kEMCEGA","LHC12-kEMCEJE"};
-//	TString plotDataSet = "LHC12";
-//	TString cutsDataSets[nSets]={
-//		"0000011_00200009327000008250400000_10000063032230000_0163103100000000",
-//		"0005211_00200009327000008250400000_10000063032230000_0163103100000000",
-//		"0008111_00200009327000008250400000_10000063032230000_0163103100000000",
-//		"0009111_00200009327000008250400000_10000063032230000_0163103100000000"
-//		};
+    const Int_t nSets = 3;
+    Size_t constMarkerSize = 1.5;
+    TString outputDir ="LHC12";
+    TString fEnergyFlag = "8TeV";
+    TString DataSets[nSets]={"LHC12","LHC12-kEMC7","LHC12-kEMCEGA"};
+    TString plotDataSet = "LHC12";
+    TString cutsDataSets[nSets]={
+        "00010113_00200009327000008250400000_1111111063032230000_0163103100000010",
+        "00052113_00200009327000008250400000_1111111063032230000_0163103100000010",
+        "00081113_00200009327000008250400000_1111111063032230000_0163103100000010",
+        };
 
 //**************************************************************************************************************
 
@@ -109,16 +108,16 @@ void ClusterQA_Compare( TString suffix          = "eps",
 
     //**************************************************************************************************************
     // merged cluster settings
-   const Int_t nSets            = 2;
-   Size_t constMarkerSize       = 1;
-   TString outputDir            ="LHC11a_pass4_wSDD";
-   TString fEnergyFlag          = "2.76TeV";
-   TString DataSets[nSets]      = {"LHC11a_pass4_wSDD","LHC11a_pass4_wSDD"};
-   TString plotDataSet          = "LHC11a";
-   TString cutsDataSets[nSets]  = {
-                                    "00003113_1111121053032200000_1111121053022210001_0163301100000000",
-                                    "00051013_1111121053032200000_1111121053022210001_0163301100000000"
-                                   };
+//   const Int_t nSets            = 2;
+//   Size_t constMarkerSize       = 1;
+//   TString outputDir            ="LHC11a_pass4_wSDD";
+//   TString fEnergyFlag          = "2.76TeV";
+//   TString DataSets[nSets]      = {"LHC11a_pass4_wSDD","LHC11a_pass4_wSDD"};
+//   TString plotDataSet          = "LHC11a";
+//   TString cutsDataSets[nSets]  = {
+//                                    "00003113_1111121053032200000_1111121053022210001_0163301100000000",
+//                                    "00051013_1111121053032200000_1111121053022210001_0163301100000000"
+//                                   };
     
     
 //**************************************************************************************************************

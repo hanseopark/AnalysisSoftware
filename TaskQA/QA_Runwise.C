@@ -23,7 +23,7 @@ void QA_Runwise(
     //******************* global settings **************************************************************************
     //**************************************************************************************************************
 
-    TString folderRunlists          = "DownloadAndDataPrep";
+    TString folderRunlists          = "DownloadAndDataPrep/runlists";
 
     const Int_t maxSets             = 20;
     TString DataSets[maxSets];
@@ -322,9 +322,22 @@ void QA_Runwise(
         //LHC12
         doHistsForEverySet  = kFALSE;
         fEnergyFlag         = "8TeV";
-        filePath            = "DataQA/20160125";
-        filePathPhoton      = "DataQA/20160104";
-        fileName            = "GammaConvCalo_120.root";
+        filePath            = "DataQA/20160518";
+        filePathPhoton      = "DataQA/20160518";
+        fileName            = "GammaConvCalo_101.root";
+        nSets               = 1;
+        nData               = 1;
+        DataSets[0]         = "LHC12";
+        plotDataSets[0]     = "LHC12";
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC12-Calo-single")==0){
+        //LHC12
+        doHistsForEverySet  = kFALSE;
+        fEnergyFlag         = "8TeV";
+        filePath            = "DataQA/20160518";
+        filePathPhoton      = "DataQA/20160518";
+        fileName            = "GammaCalo_101.root";
         nSets               = 1;
         nData               = 1;
         DataSets[0]         = "LHC12";
@@ -442,10 +455,11 @@ void QA_Runwise(
     else if(select.BeginsWith("LHC12-kEMC7")){
         //LHC12 Trigger
         doHistsForEverySet  = kFALSE;
-        cutNr               = 0;
+        cutNr               = 1;
         fEnergyFlag         = "8TeV";
-        filePath            = "DataQA/20160125";
-        fileName            = "GammaConvCalo_121.root";
+        filePath            = "DataQA/20160518";
+        fileName            = "GammaConvCalo_101.root";
+        if(select.Contains("-Calo-")) fileName = "GammaCalo_101.root";
         if(select.EndsWith("-single")){
             nSets           = 1;
             nData           = 1;
@@ -466,10 +480,11 @@ void QA_Runwise(
     else if(select.BeginsWith("LHC12-kEMCEGA")){
         //LHC12 Trigger
         doHistsForEverySet  = kFALSE;
-        cutNr               = 0;
+        cutNr               = 2;
         fEnergyFlag         = "8TeV";
-        filePath            = "DataQA/20160125";
-        fileName            = "GammaConvCalo_122.root";
+        filePath            = "DataQA/20160518";
+        fileName            = "GammaConvCalo_101.root";
+        if(select.Contains("-Calo-")) fileName = "GammaCalo_101.root";
         if(select.EndsWith("-single")){
             nSets           = 1;
             nData           = 1;
