@@ -451,7 +451,7 @@ Double_t fBinsEta13TeVPt[8]                     = { 0., 0.4, 1.1, 1.6, 2.0, 3.0,
 //                                                  2.5, 3.0, 3.5, 4.0, 5.0,
 //                                                  6.0, 7.0, 9.0, 12.0};
 Int_t fBinsEta13TeVPtRebin[13]                  = { 8, 8, 5, 5, 5,                          // Rebinning Eta
-                                                    5, 8, 8, 8, 8,
+                                                    8, 8, 8, 8, 8,
                                                     10, 10, 10};
 Double_t fBinsEta13TeVPtDCA[6]                  = { 0., 0.4, 1.1, 1.6,                      // Eta DCA binning for LHC15f
                                                     2.2, 4.0};
