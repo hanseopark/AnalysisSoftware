@@ -285,6 +285,9 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     histoRatioPi0FromK0lDivK0l->Divide(fHistoMCSecPi0FromK0lPtRebinned, fHistoMCK0lPtRebinned);
     
     
+    fHistoMCSecPi0FromK0sPt->Scale(1./nEvtMC);
+    fHistoMCSecPi0FromK0lPt->Scale(1./nEvtMC);
+    
     ScaleMCYield(fHistoMCPi0Pt,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCPi0PtRebinned,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCEtaPt,  deltaRapid,  scaling,  nEvtMC );
@@ -298,6 +301,8 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     ScaleMCYield(fHistoMCKPosPt,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCK0sPt,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCK0sPtRebinned,  deltaRapid,  scaling,  nEvtMC );
+    ScaleMCYield(fHistoMCK0lPt,  deltaRapid,  scaling,  nEvtMC );
+    ScaleMCYield(fHistoMCK0lPtRebinned,  deltaRapid,  scaling,  nEvtMC );
     
     TH1D* fHistoRatioMCPi0DivPi         = NULL;
     TH1D* fHistoRatioMCK0sDivK          = NULL;
@@ -626,7 +631,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     //******************************************************************************************
     //************************ Saving histograms for further processing ************************
     //******************************************************************************************                    
-    TString nameOutput = Form("%s/MCInputCompilation%s_%s.root", outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data());
+    TString nameOutput = Form("%s/MCInputCompilation%s_%s_%d.root", outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data(), mode);
     TFile* fOutput2 = new TFile(nameOutput.Data(),"RECREATE");
     cout << "======================================================" << endl;
     cout << nameOutput << endl;
@@ -643,6 +648,11 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         if (fHistoMCKNegPt)                         fHistoMCKNegPt->Write();
         if (fHistoMCKPosPt)                         fHistoMCKPosPt->Write();
         if (fHistoMCK0sPt)                          fHistoMCK0sPt->Write();
+        if (fHistoMCK0lPt)                          fHistoMCK0lPt->Write();
+        if (fHistoMCK0sPtRebinned)                  fHistoMCK0sPtRebinned->Write();
+        if (fHistoMCK0lPtRebinned)                  fHistoMCK0lPtRebinned->Write();
+        if (fHistoMCSecPi0FromK0sPt)                fHistoMCSecPi0FromK0sPt->Write(Form("MCSecPi0FromK0s_%1.2f",deltaRapid/2.));
+        if (fHistoMCSecPi0FromK0lPt)                fHistoMCSecPi0FromK0lPt->Write(Form("MCSecPi0FromK0l_%1.2f",deltaRapid/2.));
         if (fHistoRatioMCK0sDivDataFit)             fHistoRatioMCK0sDivDataFit->Write("K0sRatioToDataFit");
         if (fHistoRatioMCKDivDataFit)               fHistoRatioMCKDivDataFit->Write("KRatioToDataFit");
         if (fHistoRatioMCPiDivDataFit)              fHistoRatioMCPiDivDataFit->Write("PiRatioToDataFit");

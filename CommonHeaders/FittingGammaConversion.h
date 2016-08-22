@@ -134,7 +134,7 @@ TF1* FitObject( TString type,
             // Tsallis Dummy multiplied with pt
             TF1 *Levy_Dummy = new TF1("Tsallis_Dummy",Form("[0] / ( 2 * TMath::Pi())*([1]-1.)*([1]-2.) / ([1]*[2]*([1]*[2]+%.10f*([1]-2.)))  * x* pow(1.+(sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1])",mass,mass,mass,mass));
             Levy_Dummy->SetParNames("dN/dy","n","T_{Levy} (GeV/c)");
-            Levy_Dummy->SetParameters(2.e11,7., 0.137) ; // standard parameter optimize if necessary
+            Levy_Dummy->SetParameters(2.e11,7., mass) ; // standard parameter optimize if necessary
              Levy_Dummy->SetName(FunctionName);
             return Levy_Dummy;
         } else if(type.BeginsWith("hmpt") || type.BeginsWith("HMPT")){

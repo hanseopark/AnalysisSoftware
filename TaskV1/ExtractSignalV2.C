@@ -4495,10 +4495,10 @@ void FillMCSecondaryHistAndCalculateAcceptance(TH2D* mcSecInputSourcePt, TH2D* m
         // rebin in to current analysis binning
         fHistoMCSecPi0PtReb[j]          = (TH1D*)fHistoMCSecPi0Pt[j]->Rebin(fNBinsPt,Form("MCSecPi0From%s_Rebinned",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
         fHistoMCSecPi0PtReb[j]->SetTitle(Form("MCSecPi0From%s_Rebinned",nameSecondaries[j].Data()));
-        fHistoMCSecPi0PtReb[j] ->Divide(fDeltaPt);
+        fHistoMCSecPi0PtReb[j]->Divide(fDeltaPt);
         fHistoMCSecPi0PtWAccReb[j]      = (TH1D*)fHistoMCSecPi0PtWAcc[j]->Rebin(fNBinsPt,Form("MCSecPi0From%s_InAcc_Rebinned",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
         fHistoMCSecPi0PtWAccReb[j]->SetTitle(Form("MCSecPi0From%s_InAcc_Rebinned",nameSecondaries[j].Data()));
-        fHistoMCSecPi0PtWAccReb[j] ->Divide(fDeltaPt);
+        fHistoMCSecPi0PtWAccReb[j]->Divide(fDeltaPt);
         
         // calculate acceptance
         fHistoMCSecPi0AcceptPt[j]       = (TH1D*)fHistoMCSecPi0PtWAccReb[j]->Clone(Form("fMCSecPi0From%sAccepPt",nameSecondaries[j].Data()));
