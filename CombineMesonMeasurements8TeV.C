@@ -96,6 +96,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TString fileNameTheoryPi0DSS14              = "ExternalInput/Theory/pp8TeV_DSS14.root";
     TString fileNameEtaToPi07TeV                = "ExternalInput/EtaPi0Ratio7000GeV.root";
     TString fileNameEtaToPi02760GeV             = "ExternalInput/CombinedResultsPaperPP2760GeV_2016_07_05_FrediV2Clusterizer.root";
+    TString fileNamePOWHEG8TeV                  = "ExternalInput/Theory/POWHEG_Pythia/powhegDijetShoweredWithPythia_pi0_eta_invariantXsec_NNPDF23LOas0130.root";
 
     TString fileNamePHOSMB                      = "ExternalInput/PHOS/8TeV/data_PHOS-MBResultsFullCorrection_PP_NoBinShifting.root";
     TString fileNamePHOSPHOS                    = "ExternalInput/PHOS/8TeV/data_PHOS-PHOSResultsFullCorrection_PP_NoBinShifting.root";
@@ -843,6 +844,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TFile* fileTheorypp8TeVPi0DSS14                         = new TFile(fileNameTheoryPi0DSS14.Data());
     TFile* fileEtaToPi07000GeV                              = new TFile(fileNameEtaToPi07TeV.Data());
     TFile* fileEtaToPi02760GeV                              = new TFile(fileNameEtaToPi02760GeV.Data());
+    TFile* filePOWHEG8TeV                                   = new TFile(fileNamePOWHEG8TeV.Data());
     TDirectory* directoryfileEtaToPi02760GeV                = (TDirectory*)fileEtaToPi02760GeV->Get("Eta2.76TeV");
         TH1F* histoPythia8InvXSection                       = (TH1F*) fileTheoryPythia8->Get("fHistInvXsec_Pi0");
         TH1F* histoPythia8InvXSectionEta                    = (TH1F*) fileTheoryPythia8->Get("fHistInvXsec_Eta");
@@ -852,6 +854,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         for (int i=0;i<graphPi0DSS14->GetN();i++) graphPi0DSS14->GetY()[i] /= 2.;
         TGraph* graphEtaToPi07000GeV                        = (TGraph*) fileEtaToPi07000GeV->Get("EtaPi0Ratio7000GeV");
         TGraph* graphEtaToPi02760GeV                        = (TGraph*) directoryfileEtaToPi02760GeV->Get("graphRatioEtaToPi0Comb2760GeVTotErr");
+        TGraphAsymmErrors* graphPOWHEGPi08TeV               = (TGraphAsymmErrors*) filePOWHEG8TeV->Get("pi0");
+        while (graphPOWHEGPi08TeV->GetX()[graphPOWHEGPi08TeV->GetN()-1] > 35. )
+            graphPOWHEGPi08TeV->RemovePoint(graphPOWHEGPi08TeV->GetN()-1);
+        while (graphPOWHEGPi08TeV->GetX()[0] < 5. )
+            graphPOWHEGPi08TeV->RemovePoint(0);
 //        TH1F* histoPythia8InvXSection_VarBinning            = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Spec8000GeVVarBinning");
         TGraph* graphNLOCalcPi0MuHalf                       = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecPi0MuHalf8000GeV");
         TGraph* graphNLOCalcPi0MuOne                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecPi0MuOne8000GeV");
@@ -1556,6 +1563,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     histoRatioPythia8_4CToFit                        = CalculateHistoRatioToFit (histoRatioPythia8_4CToFit, fitTCMInvXSectionPi0Plot);
 //    TH1D* histoRatioPythia8VarBinningToFit           = (TH1D*) histoPythia8InvXSection_VarBinning->Clone();
 //    histoRatioPythia8VarBinningToFit                 = CalculateHistoRatioToFit (histoRatioPythia8VarBinningToFit, fitTCMInvXSectionPi0Plot);
+
+    TGraphAsymmErrors* graphRatioPOWHEG8TeV          = (TGraphAsymmErrors*)graphPOWHEGPi08TeV->Clone();
+    graphRatioPOWHEG8TeV                               = CalculateGraphErrRatioToFit (graphRatioPOWHEG8TeV, fitTCMInvXSectionPi0Plot);
 
     TGraph* graphRatioPi0CombNLOMuHalf               = (TGraph*)graphNLOCalcPi0MuHalf->Clone();cout << __LINE__ << endl;
     TGraph* graphRatioPi0CombNLOMuOne                = (TGraph*)graphNLOCalcPi0MuOne->Clone();cout << __LINE__ << endl;
@@ -4033,6 +4043,55 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     canvasRatioPP->Update();
     canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suffix.Data()));
+
+
+    TH2F * ratio2DTheoryPP3       = new TH2F("ratio2DTheoryPP3","ratio2DTheoryPP3",1000,0.23,70.,1000,0.2,5.2);
+    SetStyleHistoTH2ForGraphs(ratio2DTheoryPP3, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{fit}", 0.85*textsizeLabelsPP, textsizeLabelsPP,
+                              0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
+    ratio2DTheoryPP3->GetYaxis()->SetMoreLogLabels(kTRUE);
+    ratio2DTheoryPP3->GetYaxis()->SetNdivisions(505);
+    ratio2DTheoryPP3->GetYaxis()->SetNoExponent(kTRUE);
+    ratio2DTheoryPP3->GetXaxis()->SetMoreLogLabels(kTRUE);
+    ratio2DTheoryPP3->GetXaxis()->SetNoExponent(kTRUE);
+//      ratio2DTheoryPP3->GetYaxis()->SetLabelOffset(0.01);
+    ratio2DTheoryPP3->GetXaxis()->SetLabelFont(42);
+    ratio2DTheoryPP3->GetYaxis()->SetLabelFont(42);
+//      ratio2DTheoryPP3->GetXaxis()->SetLabelOffset(-0.01);
+//    ratio2DTheoryPP3->GetXaxis()->SetTickLength(0.07);
+    ratio2DTheoryPP3->DrawCopy();
+
+    graphRatioPOWHEG8TeV->SetLineWidth(widthCommonFit);
+    graphRatioPOWHEG8TeV->SetLineColor(colorNLO);
+    graphRatioPOWHEG8TeV->SetLineStyle(1);
+    graphRatioPOWHEG8TeV->SetFillStyle(1001);
+    graphRatioPOWHEG8TeV->SetFillColor(colorNLO);
+    graphRatioPOWHEG8TeV->Draw("same,e4");
+
+    histoRatioPythia8ToFit->Draw("same,hist,c");
+
+    DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitStatA, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
+    graphRatioPi0CombCombFitStatA->SetLineWidth(widthLinesBoxes);
+    DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitSysA, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
+    graphRatioPi0CombCombFitSysA->SetLineWidth(0);
+    graphRatioPi0CombCombFitSysA->Draw("2,same");
+    graphRatioPi0CombCombFitStatA->Draw("p,same");
+
+
+    DrawGammaLines(0.23, 70.,1., 1.,0.1,kGray);
+
+    TLegend* legendRatioTheorypp_3Parted3= GetAndSetLegend2(0.15,0.7,0.4,0.96, 0.85* textSizeLabelsPixel);
+    legendRatioTheorypp_3Parted3->AddEntry(graphRatioPi0CombCombFitSysA,"ALICE #pi^{0}","pf");
+    legendRatioTheorypp_3Parted3->AddEntry(histoRatioPythia8ToFit,  "Pythia 8.2, Monash 2013", "l");
+    legendRatioTheorypp_3Parted3->AddEntry(graphRatioPOWHEG8TeV,  "POWHEG + Pythia 8", "f");
+    legendRatioTheorypp_3Parted3->Draw();
+
+    TLatex *labelRatioTheoryPPP22   = new TLatex(0.218,0.67,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
+    SetStyleTLatex( labelRatioTheoryPPP22, 0.85*textsizeLabelsPP,4);
+    labelRatioTheoryPPP22->Draw();
+    labelRatioTheoryPP22->Draw();
+
+    canvasRatioPP->Update();
+    canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP3.%s",outputDir.Data(),suffix.Data()));
 
     // **********************************************************************************************************************
     // ******************************************* Comparison to theory calculations Eta ************************************
