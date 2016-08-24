@@ -46,7 +46,7 @@ ExtInputFile=""
 
 function GiveBinning13TeV()
 {
-    echo "How many p_T bins do you want to use for the Pi0? Max. 16 for 15f, 20 for 15fhi, 17 for low B 15g";
+    echo "How many p_T bins do you want to use for the Pi0? Max. 17 for 15f, 20 for 15fhi, 17 for low B 15g";
     read BinsPtPi0
     correctPi0=1
     echo "You have chosen $BinsPtPi0 bins";
