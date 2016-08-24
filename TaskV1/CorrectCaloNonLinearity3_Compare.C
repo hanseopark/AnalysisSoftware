@@ -314,6 +314,14 @@ void CorrectCaloNonLinearity3_Compare(TString select = "LHC11a-Pythia")
       plotMassData[2]             = kTRUE;
       inputFileNames[3]           = "LHC12-Phojet-Calo";
       plotMassData[3]             = kFALSE;
+    } else if(select.CompareTo("8TeV-JetJet")==0){
+      nNL                         = 2;
+      inputFileNames              = new TString[nNL];
+      plotMassData                = new Bool_t[nNL];
+      inputFileNames[0]           = "LHC12-JetJet-ConvCalo";
+      plotMassData[0]             = kTRUE;
+      inputFileNames[1]           = "LHC12-JetJet-Calo";
+      plotMassData[1]             = kTRUE;
     } else{
         cout << "No valid selection '" << select.Data() << "'' given, returning..." << endl;
         return;
@@ -770,7 +778,7 @@ void CorrectCaloNonLinearity3_Compare(TString select = "LHC11a-Pythia")
 //##############################################################################################################
 
     if(select.Contains("8TeV")){
-      Int_t n=4;
+      Int_t n=6;
         legend->SetNColumns(2);
         legend->SetY1(1.05);
         legend->SetX2(1.5);
@@ -806,13 +814,17 @@ void CorrectCaloNonLinearity3_Compare(TString select = "LHC11a-Pythia")
                 else if(iNL==1) factor /= FunctionNL_kSDM(energy, 0.963379*0.9985*0.9992, -3.61217, -0.614043);
                 else if(iNL==2) factor /= FunctionNL_kSDM(energy, 0.969703*0.989*0.9969*0.9991, -3.80387, -0.200546);
                 else if(iNL==3) factor /= FunctionNL_kSDM(energy, 0.96105*0.999*0.9996, -3.62239, -0.556256);
-                if(iNL>5 && iBin%10>=1) continue;
+                else if(iNL==4) factor /= FunctionNL_kSDM(energy, 0.974859*0.987*0.996, -3.85842, -0.405277);
+                else if(iNL==5) factor /= FunctionNL_kSDM(energy, 0.960596*0.999*0.999, -3.48444, -0.766862);
+                if(iNL>3 && iBin%10>=1) continue;
                 testBarr[iNL]->SetBinContent(iBin,factor);
             }
             if(iNL==0) legend->AddEntry(testBarr[iNL],"Pythia8 - ConvCalo","l");
             else if(iNL==1) legend->AddEntry(testBarr[iNL],"Pythia8 - Calo","l");
             else if(iNL==2) legend->AddEntry(testBarr[iNL],"Phojet - ConvCalo","l");
             else if(iNL==3) legend->AddEntry(testBarr[iNL],"Phojet - Calo","l");
+            else if(iNL==4) legend->AddEntry(testBarr[iNL],"JetJet - ConvCalo","p");
+            else if(iNL==5) legend->AddEntry(testBarr[iNL],"JetJet - Calo","p");
             testBarr[iNL]->DrawCopy("p,same");
         }
         testB->DrawCopy("p,same");
@@ -827,7 +839,7 @@ void CorrectCaloNonLinearity3_Compare(TString select = "LHC11a-Pythia")
 
     // Case 2 - 8TeV : Mass Fitting, then Ratio
     if(select.Contains("8TeV")){
-       Int_t n = 4;
+       Int_t n = 6;
         legend->SetNColumns(2);
         legend->SetY1(1.05);
         legend->SetX2(1.5);
@@ -862,13 +874,17 @@ void CorrectCaloNonLinearity3_Compare(TString select = "LHC11a-Pythia")
                 else if(iNL==1) factor /= (FunctionNL_DPOW(energy, 1.1389201636, -0.1999994717, -0.1622237979, 1.1603460704, -0.1999999989, -0.2194447313) - 0.0025);
                 else if(iNL==2) factor /= (FunctionNL_DPOW(energy, 1.0652493513, -0.0929276101, -0.1113762695, 1.1837801885, -0.1999914832, -0.0854569214) - 0.0145);
                 else if(iNL==3) factor /= (FunctionNL_DPOW(energy, 1.0105301622, -0.0732424689, -0.5000000000, 1.0689250170, -0.1082682369, -0.4388156470) - 0.001);
-                if(iNL>5 && iBin%10>=1) continue;
+                else if(iNL==4) factor /= (FunctionNL_DPOW(energy, 1.0489259285, -0.0759079646, -0.1239772934, 1.1835846739, -0.1998987993, -0.0854186691) - 0.014);
+                else if(iNL==5) factor /= (FunctionNL_DPOW(energy, 0.9922456908, -0.0551212559, -0.5000000000, 1.0513459039, -0.0894163252, -0.5000000000) + 0.002);
+                if(iNL>3 && iBin%10>=1) continue;
                 testBarr[iNL]->SetBinContent(iBin,factor);
             }
             if(iNL==0) legend->AddEntry(testBarr[iNL],"Pythia8 - ConvCalo","l");
             else if(iNL==1) legend->AddEntry(testBarr[iNL],"Pythia8 - Calo","l");
             else if(iNL==2) legend->AddEntry(testBarr[iNL],"Phojet - ConvCalo","l");
             else if(iNL==3) legend->AddEntry(testBarr[iNL],"Phojet - Calo","l");
+            else if(iNL==4) legend->AddEntry(testBarr[iNL],"JetJet - ConvCalo","p");
+            else if(iNL==5) legend->AddEntry(testBarr[iNL],"JetJet - Calo","p");
 
             testBarr[iNL]->DrawCopy("p,same");
         }
