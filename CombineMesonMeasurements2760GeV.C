@@ -61,17 +61,16 @@ struct SysErrorConversion {
     // TString name;
 };
 
-void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "", 
-                                        TString fileNamePCMEMCAL = "", 
-                                        TString fileNameEMCALLow = "",  
+void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "", 
+                                        TString fileNamePCMEMCAL    = "", 
+                                        TString fileNameEMCALLow    = "",  
                                         TString fileNameEMCALmerged = "",  
-                                        TString suffix = "eps", 
-                                        TString isMC= "", 
-                                        TString thesisPlots = "", 
-                                        TString bWCorrection="X",
-                                        Int_t  flagMerged = 2,
-                                        Bool_t plotInvMassBins = kFALSE
-                                        
+                                        TString suffix              = "eps", 
+                                        TString isMC                = "", 
+                                        TString thesisPlots         = "", 
+                                        TString bWCorrection        = "X",
+                                        Int_t  flagMerged           = 2,
+                                        Bool_t plotInvMassBins      = kFALSE                                        
                                     ){
 
     TString date = ReturnDateString();
@@ -1942,8 +1941,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         cout << i << ": "<< xPtLimitsEtaWOMerged[i] <<" - " << xPtLimitsEtaWOMerged[i+1]<< ", " <<endl;
     }
     cout << endl;
-    cout << maxNBinsEtaW0Merged << endl;
-//     return;
+    cout << "Nbins: eta "<< maxNBinsEtaW0Merged << endl;
+
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for Eta                    
     Int_t offSetsEta[11]            = { 0,  0,  0,  0,  0,
                                         0,  0,  0,  0,  0, 
@@ -1957,7 +1956,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
     Int_t nComBinsEtaShifting[11]   = { 6,  0,  11,  0,  10,
                                         0,  0,  0,  0,  0,
                                         0};
-                                        
+    
     // **********************************************************************************************************************
     // ******************************************* Assuming maximal correlation *********************************************
     // **********************************************************************************************************************
@@ -1983,7 +1982,18 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         cout << "Aborting: something went wrong during the combination of the new spectra" << endl;
         return;
     }    
-
+    if (graphCombEtaInvXSectionTotA->GetX()[0] == 0.25){
+        graphCombEtaInvXSectionTotA->RemovePoint(0);
+        cout << "removed first point from tot-graph" << endl; 
+    }    
+    if (graphCombEtaInvXSectionStatA->GetX()[0] == 0.25){
+        graphCombEtaInvXSectionStatA->RemovePoint(0);
+        cout << "removed first point from stat-graph" << endl; 
+    }    
+    if (graphCombEtaInvXSectionSysA->GetX()[0] == 0.25){
+        graphCombEtaInvXSectionSysA->RemovePoint(0);
+        cout << "removed first point from sys-graph" << endl; 
+    }
 //     return;
     
     // Reading weights from output file for plotting
@@ -2071,7 +2081,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         
     canvasWeights->SaveAs(Form("%s/Eta_WeightsA.%s",outputDir.Data(),suffix.Data()));
 
-
+//     return;
     // *********************************************************************************************************************
     // ************************************ Visualize relative errors Eta ******************************************************
     // *********************************************************************************************************************
@@ -2308,6 +2318,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         graphCombEtaInvXSectionTotA->Draw("pEsame");
         DrawGammaSetMarkerTGraphAsym(graphPCMEtaInvXSectionSys, markerStyleDet[0] ,markerSizeDet[0]/2, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
         graphPCMEtaInvXSectionSys->Draw("pEsame");
+        DrawGammaSetMarkerTGraphAsym(graphPCMEtaInvXSectionStat, markerStyleDet[0] ,markerSizeDet[0]/2, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
+        graphPCMEtaInvXSectionStat->Draw("psame");
         DrawGammaSetMarkerTGraphAsym(graphEMCALEtaInvXSectionSys, markerStyleDet[2] ,markerSizeDet[2]/2, colorDet[2], colorDet[2], widthLinesBoxes, kTRUE);
         graphEMCALEtaInvXSectionSys->Draw("pEsame");
         DrawGammaSetMarkerTGraphAsym(graphPCMEMCALEtaInvXSectionSys, markerStyleDet[4] ,markerSizeDet[4]/2, colorDet[4], colorDet[4], widthLinesBoxes, kTRUE);
@@ -2322,6 +2334,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
         delete histo2DDummy3;
     }
     
+//     return;
     
     // *************************************************************************************************************
     // redo fitting after binshifts
@@ -2406,6 +2419,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM = "",
     delete canvasDummy2;
     delete histo2DDummy3;
 
+//     return;
 
     // *************************************************************************************************************
     // Calculate ratios to combined fit

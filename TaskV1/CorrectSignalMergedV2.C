@@ -589,8 +589,15 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
                 fitConst->SetLineColor(colorSec[j]);
                 histoRatioSecEffDivTrueEff[j]->Fit(fitConst);
                 cout << fitConst->GetParameter(0) << "\t +-" << fitConst->GetParError(0) << endl;
-                
-                if (j == 1){
+                if (j == 0){
+                    for (Int_t iPt = histoSecEffiPt[j]->FindBin(minPtMeson); iPt< histoSecEffiPt[j]->GetNbinsX()+1; iPt++ ){
+                        if (histoSecEffiPt[j]->GetBinContent(iPt) == 0){
+                            histoSecEffiPt[j]->SetBinContent(iPt, fitConst->GetParameter(0)*histoTrueEffiPrimMesonPt->GetBinContent(iPt));
+                            histoSecEffiPt[j]->SetBinError(iPt, fitConst->GetParameter(0)*histoTrueEffiPrimMesonPt->GetBinError(iPt));
+                            modifiedSecEff[j]               = kTRUE;
+                        }
+                    }    
+                } else if (j == 1){
                     histoSecEffiPt[j]               = (TH1D*)histoSecEffiPt[0]->Clone(Form("TrueMesonEffiSecFrom%sPt",nameSecMeson[j].Data()));
                     modifiedSecEff[j]               = kTRUE;
                 } else if ( j == 2 ){
@@ -1499,6 +1506,13 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     
     for (Int_t j = 0; j<4; j++){
         if (histoYieldSecMeson[j])          histoYieldSecMeson[j]->Write();
+        if (histoRatioYieldSecMeson[j])     histoRatioYieldSecMeson[j]->Write();
+        if (histoSecEffiPt[j])              histoSecEffiPt[j]->Write();
+        if (histoSecAccPt[j])               histoSecAccPt[j]->Write();
+        if (j < 3){
+            if (histoYieldSecMesonFromToy[j])        histoYieldSecMesonFromToy[j]->Write();
+            if (histoRatioYieldSecMesonFromToy[j])   histoRatioYieldSecMesonFromToy[j]->Write();
+        }
     }
     
     if (histoUnCorrectedYield)              histoUnCorrectedYield->Write();
@@ -1514,6 +1528,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         histoUnCorrectedYieldDrawing->SetName("histoYieldMesonPerEvent");
         histoUnCorrectedYieldDrawing->Write();
     }
+    
     if (deltaPt)                            deltaPt->Write("deltaPt");
     if (kIsMC){
         if (histoRatioMergedPureFrac)           histoRatioMergedPureFrac->Write();

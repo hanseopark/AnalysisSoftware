@@ -172,6 +172,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //***************************************************************************************************************
     TString nameCorrectedYield                          = "CorrectedYieldTrueEff";
     TString nameEfficiency                              = "TrueMesonEffiPt";
+    TString nameSecFK0sEfficiency                       = "TrueSecFromK0SEffiPt";
     TString nameAcceptance                              = "fMCMesonAccepPt";
     TString nameAcceptanceWOEvtWeights                  = "fMCMesonAccepPtWOEvtWeights";
     TString nameMassMC                                  = "histoTrueMassMeson";
@@ -190,6 +191,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         nameEfficiency                                  = "PrimaryMesonEfficiency";
         nameAcceptance                                  = "fHistoMCAcceptancePt";
         nameMCYield                                     = "MCYield_Meson_oldBin";
+        nameSecFK0sEfficiency                           = "TrueMesonEffiSecFromK0SPt";
     }
     
     TString cutNumber       [MaxNumberOfFiles];
@@ -449,7 +451,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         if (histoEffectCorrPi0FromK0s[i])
             hasSecCorrFac                                   = kTRUE;
         histoSecEffiPi0FromK0s[i]                           = NULL;
-        histoSecEffiPi0FromK0s[i]                           = (TH1D*)fileCorrectedPi0[i]->Get("TrueSecFromK0SEffiPt");
+        histoSecEffiPi0FromK0s[i]                           = (TH1D*)fileCorrectedPi0[i]->Get(nameSecFK0sEfficiency.Data());
         if (histoSecEffiPi0FromK0s[i])
             hasSecEffi                                      = kTRUE;
         
@@ -1003,6 +1005,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         maxEffiPi0      = 8e-1;
     } else if (mode == 10){
         maxEffiPi0      = 8e-1;
+        minEffiPi0      = 1e-2;
     } else if (mode == 2){
         if(optionEnergy.CompareTo("8TeV")==0)
             minEffiPi0  = 5e-5;
@@ -1052,8 +1055,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
     if (hasSecEffi){
         canvasEffi->cd();
+        Double_t minEffiSecPi0      = minEffiPi0;
+        Double_t maxEffiSecPi0      = maxEffiPi0;
+        if (mode == 10){
+            maxEffiSecPi0           = 10*maxEffiPi0;
+            minEffiSecPi0           = 5*minEffiPi0;
+        }    
         TH2F * histo2DEffiSecPi0;
-        histo2DEffiSecPi0 = new TH2F("histo2DEffiSecPi0","histo2DEffiSecPi0",1000,0., maxPtGlobalPi0,10000,minEffiPi0, maxEffiPi0);
+        histo2DEffiSecPi0 = new TH2F("histo2DEffiSecPi0","histo2DEffiSecPi0",1000,0., maxPtGlobalPi0,10000,minEffiSecPi0, maxEffiSecPi0);
         SetStyleHistoTH2ForGraphs(histo2DEffiSecPi0, "#it{p}_{T} (GeV/#it{c})","#epsilon_{sec #pi^{0} from K^{0}_{s}}",
                                     0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);
         histo2DEffiSecPi0->DrawCopy(); 
@@ -1188,7 +1197,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         canvasEffi->Update();
         canvasEffi->SaveAs(Form("%s/Pi0_EfficiencyW0TriggEff.%s",outputDir.Data(),suffix.Data()));
     }
-    if (!enableEta) delete canvasEffi;
+//     if (!enableEta) delete canvasEffi;
     
     //***************************************************************************************************************
     //************************************Plotting acceptance Pi0 *************************************************
