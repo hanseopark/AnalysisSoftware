@@ -120,7 +120,7 @@ fi
 # LHC12iData="1673"; 
 # LHC16c2MC="2243";
 
-TRAINDIR=Legotrain-mCalo-vAN20160705-sys
+# TRAINDIR=Legotrain-mCalo-vAN20160705-sys
 # LHC12aData="1680"; 
 # LHC12bData="1683"; 
 # LHC12cData="1686"; 
@@ -145,7 +145,30 @@ TRAINDIR=Legotrain-mCalo-vAN20160705-sys
 # LHC12hData="1697"; 
 # LHC12iData="1700"; 
 # LHC16c2MC="2265";
-LHC16c2MC="2266";
+# LHC16c2MC="2266";
+
+
+# TRAINDIR=Legotrain-mCalo-vAN20160812-V1Clus
+# LHC12aData="1763"; 
+# LHC12bData="1764"; 
+# LHC12cData="1765"; 
+# LHC12dData="1766"; 
+# LHC12fData="1767"; 
+# LHC12hData="1768"; 
+# LHC12iData="1769"; 
+# # LHC16c2MC="2403";
+# LHC16c2MC="2404";
+# LHC16c2MC="2405";
+
+TRAINDIR=Legotrain-mCalo-vAN20160812-V2ClusNewSecTreatWithSys
+LHC12aData="1770"; 
+LHC12bData="1771"; 
+LHC12cData="1772"; 
+LHC12dData="1773"; 
+LHC12fData="1774"; 
+LHC12hData="1775"; 
+LHC12iData="1776"; 
+LHC16c2MC="2402";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -343,7 +366,7 @@ if [ $DOWNLOADON == 1 ]; then
     fi    
 fi
 
-mkdir data-SinglePeriods
+mkdir $OUTPUTDIR/data-SinglePeriods
 
 if [ $HAVELHC12a == 1 ]; then
     ls $OUTPUTDIR_LHC12a/*/GammaCaloMerged_*.root > fileLHC12a.txt
@@ -477,13 +500,14 @@ if [ $MERGEON == 1 ]; then
     configsForMerging=`cat configsForMerging.txt`
     for configForMerging in $configsForMerging; do
         echo $configForMerging
-        number=`echo $configForMerging  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
+        number=`echo $configForMerging  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+        echo $number
         ls $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12*INT7Runlist_$number.root > filesForMerging.txt
         sort filesForMerging.txt
         OUTPUTNAME="";
         fileNames=`cat filesForMerging.txt`
         for fileName in $fileNames; do
-            periodName=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 2 | cut -d "-" -f1 | cut -d "2" -f2`
+            periodName=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "-" -f1 | cut -d "2" -f2`
             echo $periodName
             OUTPUTNAME+="$periodName";
         done;
@@ -493,13 +517,14 @@ if [ $MERGEON == 1 ]; then
     configsForMerging=`cat configsForMerging.txt`
     for configForMerging in $configsForMerging; do
         echo $configForMerging
-        number=`echo $configForMerging  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
+        number=`echo $configForMerging  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+        echo $number        
         ls $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12*EMC7Runlist_$number.root > filesForMerging.txt
         sort filesForMerging.txt
         OUTPUTNAME="";
         fileNames=`cat filesForMerging.txt`
         for fileName in $fileNames; do
-            periodName=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 2 | cut -d "-" -f1 | cut -d "2" -f2`
+            periodName=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "-" -f1 | cut -d "2" -f2`
             echo $periodName
             OUTPUTNAME+="$periodName";
         done;
@@ -509,13 +534,13 @@ if [ $MERGEON == 1 ]; then
     configsForMerging=`cat configsForMerging.txt`
     for configForMerging in $configsForMerging; do
         echo $configForMerging
-        number=`echo $configForMerging  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
+        number=`echo $configForMerging  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
         ls $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12*EGARunlist_$number.root > filesForMerging.txt
         sort filesForMerging.txt
         OUTPUTNAME="";
         fileNames=`cat filesForMerging.txt`
         for fileName in $fileNames; do
-            periodName=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 2 | cut -d "-" -f1 | cut -d "2" -f2`
+            periodName=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "-" -f1 | cut -d "2" -f2`
             echo $periodName
             OUTPUTNAME+="$periodName";
         done;
