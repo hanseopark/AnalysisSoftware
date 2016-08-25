@@ -1114,9 +1114,9 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                 return 3;
             }
         } else if (energy.CompareTo("13TeV") == 0) {
-            return 7;
+            return 2;
         } else if (energy.CompareTo("13TeVLowB") == 0) {
-            return 10;
+            return 2;
         } else if( energy.CompareTo("pPb_5.023TeV") == 0) { 
             if (mode == 0){
                 return 7;
@@ -1289,7 +1289,7 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                 return 6;
             }
         } else if (energy.CompareTo("13TeV") == 0) {
-            return 4;
+            return 2;
         } else if (energy.CompareTo("13TeVLowB") == 0) {
             return 2;
         } else if( energy.CompareTo("pPb_5.023TeV") == 0) { 

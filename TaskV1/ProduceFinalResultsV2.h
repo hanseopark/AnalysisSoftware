@@ -186,6 +186,10 @@ void SelectExampleBin(TString optionEnergy, TString useSameBinningPi0Eta){
     } else if( optionEnergy.CompareTo("PbPb_2.76TeV") == 0 ) {
         fExampleBinPi0     = 7;
         fExampleBinEta     = 6;
+    } else if( optionEnergy.CompareTo("13TeV") == 0 ) {
+        fExampleBinPi0     = 2;
+        fExampleBinEta     = 2;
+        if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
     }
 }
 // ****** FUNCTION TO PLOT MASS AND FWHM TOGETHER ********
