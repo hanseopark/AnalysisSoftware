@@ -996,7 +996,7 @@ function CorrectSignalGammaV2()
 function CreateFinalResults() 
 {
     if [ $mode != 2 ] && [ $mode != 4 ]; then 
-        root -x -l -b -q TaskV1/ProduceFinalResults.C\+\($1,\"\"\,\"kTRUE\"\,$AddPileUpCorr\,$mode\)
+        root -x -l -b -q TaskV1/ProduceFinalResultsV2.C\+\($1,\"\"\,\"kTRUE\"\,$AddPileUpCorr\,$mode\)
     fi    
 }
 
@@ -1119,6 +1119,12 @@ if [[ "$1" == *-*gammaOnly* ]]; then
     DoGamma=1
     echo "gamma calculation only"
 fi
+
+if [[ "$1" == *-*ToyOff* ]]; then
+    disableToyMC=1
+    echo "toy MC switched off"
+fi
+
 
 if [[ "$1" == *-*aPUC* ]]; then
     AddPileUpCorr=kTRUE
@@ -1741,7 +1747,7 @@ do
     if [ $answer = "0" ]; then
         echo "You are analysing PCM-PCM output";
         mode=0
-        NEvtsToy=1e7
+        NEvtsToy=1e8
         MinPtToy=0.5
         MaxPtToy=50
         correct=1
@@ -1753,8 +1759,8 @@ do
     elif [ $answer = "2" ]; then
         echo "You are analysing PCM-EMCAL output";
         mode=2
-        NEvtsToy=1e9
-        MinPtToy=0.5
+        NEvtsToy=1e8
+        MinPtToy=0.7
         MaxPtToy=50
 #        AdvMesonQA="AdvancedMesonQA"
         correct=1
@@ -1769,8 +1775,8 @@ do
     elif [ $answer = "4" ]; then
         echo "You are analysing EMCAL-EMCAL output";
         mode=4
-        NEvtsToy=1e9
-        MinPtToy=0.5
+        NEvtsToy=1e8
+        MinPtToy=1.5
         MaxPtToy=50
         AdvMesonQA="AdvancedMesonQA"
         correct=1
@@ -1785,7 +1791,7 @@ do
     elif [ $answer = "10" ]; then
         echo "You are analysing EMC-merged output";
         mode=10
-        NEvtsToy=1e9
+        NEvtsToy=1e8
         MinPtToy=10
         MaxPtToy=70
         correct=1
@@ -2329,9 +2335,9 @@ if [ $mode -lt 10 ]; then
 
                 if [ $disableToyMC -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then 
                     rm ToyMCOutputs.txt
-                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
-                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
-                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
                 fi
                 
                 if [ $ONLYCORRECTION -eq 0 ]; then            
@@ -2605,24 +2611,24 @@ else
 
                 if [ $disableToyMC -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then 
                     rm ToyMCOutputs.txt
-                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
-                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
-                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
                 fi
                 
                 if [ $ONLYCORRECTION -eq 0 ]; then            
                     echo "CutSelection is $cutSelection";
                     if [ $DoPi0 -eq 1 ]; then
                         if [ -f $DataRootFile ]; then 
-                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kFALSE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\)
+                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kFALSE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\)
                         fi
                         Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaMergedWithoutCorrection_*.root`             
                         if [ $MCFILE -eq 1 ]; then 
-                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\)
+                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\)
                             Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaMergedWithoutCorrection_*$cutSelection*.root`
                             Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistos_*$cutSelection*.root`
                             if [ $MERGINGMC -eq 1 ]; then 
-                                root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Pi0\"\,\"$MCRootFileGJ\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\,1\)
+                                root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$MCRootFileGJ\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\,1\)
                                 Pi0MCcorrectionFILEJJG=`ls $cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistosJJGammaTrigg_*.root`
                                 root -b -x -q -l TaskV1/MergeCorrFactorsJJandJJGammaTrigMergedCluster.C\+\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrectionFILE\"\,\"$cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistosJJ_$cutSelection.root\"\,\"$Pi0MCcorrectionFILEJJG\"\)
                                 
@@ -2630,23 +2636,23 @@ else
                             echo $Pi0dataRAWFILE
                             echo $Pi0MCRAWFILE
                             echo $cutSelection
-                            root -b -x -q -l TaskV1/CompareShapeMergedClusterQuantities.C\+\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCRAWFILE\"\,\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtPi0\,$mode\)
+                            root -b -x -q -l TaskV1/CompareShapeMergedClusterQuantities.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCRAWFILE\"\,\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtPi0\,$mode\)
                         fi    
                     fi
                     
                     if [ $DoEta -eq 1 ]; then
                         if [ -f $DataRootFile ]; then 
-                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kFALSE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\)
+                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kFALSE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\)
                         fi
                         EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaMergedWithoutCorrection_*.root`        
                         if [ $MCFILE -eq 1 ]; then 
-                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Eta\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\)
+                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\)
                             EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedWithoutCorrection_*$cutSelection*.root`
                             EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedCorrectionHistos_*$cutSelection*.root`
                             if [ $MERGINGMC -eq 1 ]; then 
-                                root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\+\(\"Eta\"\,\"$MCRootFileGJ\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\,1\)
+                                root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$MCRootFileGJ\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\,1\)
                             fi
-                            root -b -x -q -l TaskV1/CompareShapeMergedClusterQuantities.C\+\+\(\"$EtadataRAWFILE\"\,\"$EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtEta\,$mode\)
+                            root -b -x -q -l TaskV1/CompareShapeMergedClusterQuantities.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtEta\,$mode\)
                         fi
                     fi 
                 fi
@@ -2664,24 +2670,24 @@ else
                 
                 if [ $DoPi0 -eq 1 ]; then
                     if [ -f $Pi0dataRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
-                          root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Pi0\"\,kFALSE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
+                          root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Pi0\"\,kFALSE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
                     else 
                         PARTLY=1
                     fi
                     if [ -f $Pi0MCRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
-                        root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\+\(\"$Pi0MCRAWFILE\"\,\"$Pi0MCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Pi0\"\,kTRUE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
+                        root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$Pi0MCRAWFILE\"\,\"$Pi0MCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Pi0\"\,kTRUE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
                     else 
                         PARTLY=1
                     fi
                 fi
                 if [ $DoEta -eq 1 ]; then    
                     if [ -f $EtadataRAWFILE ] && [ -f $EtaMCcorrectionFILE ]; then
-                        root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\+\(\"$EtadataRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
+                        root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
                     else 
                             PARTLY=1
                     fi
                     if [ -f $EtaMCRAWFILE ] && [ -f $EtaMCcorrectionFILE ]; then
-                        root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\+\(\"$EtaMCRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
+                        root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$EtaMCRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
                     else 
                             PARTLY=1
                     fi
