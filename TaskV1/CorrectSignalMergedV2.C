@@ -309,9 +309,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     for (Int_t j = 0; j < 3; j++){
         histoToyMCInputSecPi0[j]                    = (TH1D*)fileUncorrected.Get(Form("histoSecPi0YieldFrom%s_FromToy",nameSecMeson[j].Data()));
         if (histoToyMCInputSecPi0[j]){
-            Double_t scaleFactStackLength           = -1*(TMath::Exp(-stacklength/decayLength[j])-1);
-            cout << scaleFactStackLength << endl;
-            histoToyMCInputSecPi0[j]->Scale(scaleFactorMeasXSecForToy*scaleFactStackLength);
+            histoToyMCInputSecPi0[j]->Scale(scaleFactorMeasXSecForToy);
             foundToyMCInput                         = kTRUE;
         }
     }
@@ -469,6 +467,18 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             histoRatioAdditionalGammaCorrM02->Multiply(fitPromptdivFragTheo);
             histoMesonPurityUnmodPt                 = (TH1D*)histoMesonPurityPt->Clone("histoMesonPurityUnmodPt");
             histoMesonPurityPt->Add(histoRatioAdditionalGammaCorrM02,-1);
+        }
+        if (optionEnergy.CompareTo("8TeV") == 0 && nameMeson.CompareTo("Pi0") == 0 ){
+            cout << "adjusting eta contribution according data/MC comparison for eta/pi0" <<  endl;
+            TH1D* histoRatioAdditionalEtaCorrM02    = (TH1D*)fileCorrections->Get("RatioTrueYieldEtaM02");
+            for (Int_t i = histoRatioAdditionalEtaCorrM02->GetXaxis()->FindBin(11); i< histoRatioAdditionalEtaCorrM02->GetNbinsX(); i++){
+                cout << histoRatioAdditionalEtaCorrM02->GetBinCenter(i) << "\t" << histoRatioAdditionalEtaCorrM02->GetBinContent(i) << endl;
+            }    
+            histoRatioAdditionalEtaCorrM02->Scale(0.43/0.407-1.); // this factor is first the measured eta/pi0 in data and the eta/pi0 from the Pythia8, JJ at high pt
+            for (Int_t i = histoRatioAdditionalEtaCorrM02->GetXaxis()->FindBin(11); i< histoRatioAdditionalEtaCorrM02->GetNbinsX(); i++){
+                cout << histoRatioAdditionalEtaCorrM02->GetBinCenter(i) << "\t" << histoRatioAdditionalEtaCorrM02->GetBinContent(i) << endl;
+            }    
+            histoMesonPurityPt->Add(histoRatioAdditionalEtaCorrM02,-1);
         }
     }
     
@@ -856,7 +866,6 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
                 canvasEffSimple->SaveAs(Form("%s/%s_RatioSecEffiToTrueEff_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));                 
         }    
         delete canvasEffSimple;
-
     }    
         
     //*********************************************************************************
@@ -878,11 +887,11 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         DrawGammaSetMarker(histoMesonPurityUnmodPt,  24 , 1.5, kRed-6, kRed-6);  
         histoMesonPurityUnmodPt->Draw("same,e1");
     }    
-    TLegend* legendPurity = GetAndSetLegend2(0.5, 0.125, 0.65, 0.205, 28);
-    legendPurity->SetMargin(0.2);
+    TLegend* legendPurity = GetAndSetLegend2(0.35, 0.125, 0.65, 0.205, 28);
+    legendPurity->SetMargin(0.12);
     legendPurity->AddEntry(histoMesonPurityPt,Form("%s Purity",textMeson.Data()));
     if (histoMesonPurityUnmodPt)
-        legendPurity->AddEntry(histoMesonPurityUnmodPt,Form("%s Purity, uncorr add. #gamma",textMeson.Data()));
+        legendPurity->AddEntry(histoMesonPurityUnmodPt,Form("%s Purity, uncorr add. #gamma,#eta",textMeson.Data()));
     legendPurity->Draw();   
     
     PutProcessLabelAndEnergyOnPlot(0.68, 0.25, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
@@ -1087,6 +1096,30 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         canvasBGRatio->Update();
 
         canvasBGRatio->SaveAs(Form("%s/%s_%s_BGRatioPtCleaner_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
+
+        canvasBGRatio->SetLogy(0);
+
+            DrawAutoGammaMesonHistos(   histoRatioTrueYieldGammaM02,
+                                "", "#it{p}_{T} (GeV/#it{c})", "#it{c}_{i}", 
+                                kTRUE, 0.02, 0, kTRUE,
+                                kFALSE, 0, 0.2, 
+                                kFALSE, 0., 10.);
+            DrawGammaSetMarker(histoRatioTrueYieldGammaM02, 24, 1, kAzure, kAzure);  
+            histoRatioTrueYieldGammaM02->DrawCopy("e1");
+
+            if (kIsEta){
+                histoRatioTrueYieldPi0M02->DrawCopy("e1,same");
+            } else {
+                histoRatioTrueYieldEtaM02->DrawCopy("e1,same");            
+            }
+            histoRatioTrueYieldElectronM02->DrawCopy("e1,same");                    
+            histoRatioTrueClustersBGPt[9]->DrawCopy("e1,same");
+            legendBGRatio2->Draw();   
+            
+            PutProcessLabelAndEnergyOnPlot(0.14, 0.25, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
+        canvasBGRatio->Update();
+
+        canvasBGRatio->SaveAs(Form("%s/%s_%s_BGRatioPtCleanerLinY_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
 
         //**********************************************************************************
         //********************** Plot double counting fraction     ************************
@@ -1334,7 +1367,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             TCanvas* canvasSecFrac2 = new TCanvas("canvasSecFrac","",200,10,1350,900);  // gives the page size
             DrawGammaCanvasSettings( canvasSecFrac2, 0.09, 0.018, 0.04, 0.08);
 
-            Double_t rangeSecRatio[2]   = {0, 1};    
+            Double_t rangeSecRatio[2]   = {0, 0.2};    
             
             TH2F* histo2DDummySecHad2;
             histo2DDummySecHad2         = new TH2F("histo2DDummySecHad2","histo2DDummySecHad2",1000,0, maxPtMeson,

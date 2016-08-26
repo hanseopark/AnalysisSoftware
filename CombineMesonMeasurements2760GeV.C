@@ -4355,8 +4355,20 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
     canvasEtatoPi0combo->Update();
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Theory_Paper.%s",outputDir.Data(), suffix.Data()));
+
+    TF1* etaToPi0ConstData  = new TF1("etaToPi0ConstData","[0]",8,20);
+    TF1* etaToPi0ConstMC    = new TF1("etaToPi0ConstMC","[0]",8,20);
+    graphCombEtaToPi0StatAWOXErr->Fit(etaToPi0ConstData,"QRME0","",8,20);
+    histoPythia8EtaToPi0->Fit(etaToPi0ConstMC,"QRME0","",8,20);
     
-    
+    cout << "***********************************************************************************************************" << endl;
+    cout << "***********************************************************************************************************" << endl;
+    cout << "***********************************************************************************************************" << endl;
+    cout << "high pt eta/pi0 - data: " << etaToPi0ConstData->GetParameter(0) << "+-"<< etaToPi0ConstData->GetParError(0) << endl;
+    cout << "high pt eta/pi0 - pythia 8: " << etaToPi0ConstMC->GetParameter(0) << "+-"<< etaToPi0ConstMC->GetParError(0) << endl;
+    cout << "***********************************************************************************************************" << endl;
+    cout << "***********************************************************************************************************" << endl;
+    cout << "***********************************************************************************************************" << endl;
     //*************************************************************************************************************
     //***************************** Comparison to Charged pions ***************************************************
     //*************************************************************************************************************

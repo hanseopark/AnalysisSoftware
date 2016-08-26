@@ -3539,6 +3539,8 @@ TString ReturnGeneratorNameFromMCName(TString MCname){
         return "Pythia 8.2, Tune 4C";
     } else if (MCname.CompareTo("LHC15g1a") == 0 || MCname.CompareTo("LHC15a3a") == 0 ){
         return "Pythia 6, Perugia 0, p_{T,hard}";
+    } else if (MCname.CompareTo("LHC16c2") == 0 ){
+        return "Pythia 8.2, Monash 2013, p_{T,hard}";
     } else {
         return "undefined";
     }    

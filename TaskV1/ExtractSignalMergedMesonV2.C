@@ -1794,9 +1794,9 @@ Bool_t LoadSecondaryPionsFromExternalFile(){
         }
         if (foundSourceFile){
             cout << "found correct input: " << nameSourceFile.Data() << endl;
-            cout << "trying to find " << Form("h1_ptPiZeroInRapDaughters_%1.2f", fYMaxMeson/2) << endl;
+            cout << "trying to find " << Form("histoPiZeroDaughtersPt_InRap_%1.2f", fYMaxMeson/2) << endl;
             fFileToyMCInput[j]                  = new TFile(nameSourceFile.Data());
-            fHistoYieldToyMCSecInput[j]         = (TH1D*)fFileToyMCInput[j]->Get(Form("h1_ptPiZeroInRapDaughters_%1.2f", fYMaxMeson/2));
+            fHistoYieldToyMCSecInput[j]         = (TH1D*)fFileToyMCInput[j]->Get(Form("histoPiZeroDaughtersPt_InRap_%1.2f", fYMaxMeson/2));
             if (fHistoYieldToyMCSecInput[j]){
                 nSecInputHistsFound++;
                 fHistoYieldToyMCSecInput[j]->Sumw2();

@@ -230,6 +230,9 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     } else {
         fHistoMCEtaPt->Scale(1/0.3941);
     }    
+    TH1D* fHistoMCEtaPtRebinned         = (TH1D*)fHistoMCEtaPt->Clone("fHistoMCEtaPtRebinned");
+    fHistoMCEtaPtRebinned->Rebin(nBinsX,"fHistoMCEtaPtRebinned2",ptBinning);
+    fHistoMCEtaPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCEtaPtRebinned2");
     // ----------- charged pions ------------------------------
     cout << "reading charged pions" << endl;
     TH1D* fHistoMCPiNegPt               = (TH1D*)MCContainer->FindObject("MC_NegPi_Pt");  
@@ -255,6 +258,8 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     // ----------- neutral kaons ------------------------------
     cout << "reading K0s" << endl;
     TH1D* fHistoMCK0sPt                 = (TH1D*)MCContainer->FindObject("MC_K0s_Pt");  
+    TH1D* fHistoMCK0sPtYield            = (TH1D*)fHistoMCK0sPt->Clone("MC_K0s_Pt");
+    fHistoMCK0sPtYield->Sumw2();
     TH1D* fHistoMCK0sPtRebinned         = (TH1D*)fHistoMCK0sPt->Clone("fHistoMCK0sPtRebinned");
     fHistoMCK0sPtRebinned->Rebin(nBinsX,"fHistoMCK0sPtRebinned2",ptBinning);
     fHistoMCK0sPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCK0sPtRebinned2");
@@ -262,6 +267,8 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     // ----------- neutral kaons ------------------------------
     cout << "reading K0l" << endl;
     TH1D* fHistoMCK0lPt                 = (TH1D*)MCContainer->FindObject("MC_K0l_Pt");  
+    TH1D* fHistoMCK0lPtYield            = (TH1D*)fHistoMCK0lPt->Clone("MC_K0l_Pt_Yield");
+    fHistoMCK0lPtYield->Sumw2();
     TH1D* fHistoMCK0lPtRebinned         = (TH1D*)fHistoMCK0lPt->Clone("fHistoMCK0lPtRebinned");
     fHistoMCK0lPtRebinned->Rebin(nBinsX,"fHistoMCK0lPtRebinned2",ptBinning);
     fHistoMCK0lPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCK0lPtRebinned2");
@@ -284,13 +291,15 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     TH1D* histoRatioPi0FromK0lDivK0l    = (TH1D*)fHistoMCSecPi0FromK0lPtRebinned->Clone("ratioPi0FromK0l");
     histoRatioPi0FromK0lDivK0l->Divide(fHistoMCSecPi0FromK0lPtRebinned, fHistoMCK0lPtRebinned);
     
-    
+    fHistoMCK0sPtYield->Scale(1./nEvtMC);
+    fHistoMCK0lPtYield->Scale(1./nEvtMC);
     fHistoMCSecPi0FromK0sPt->Scale(1./nEvtMC);
     fHistoMCSecPi0FromK0lPt->Scale(1./nEvtMC);
     
     ScaleMCYield(fHistoMCPi0Pt,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCPi0PtRebinned,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCEtaPt,  deltaRapid,  scaling,  nEvtMC );
+    ScaleMCYield(fHistoMCEtaPtRebinned,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCPiPt,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCPiPtRebinned,  deltaRapid,  scaling,  nEvtMC );
     ScaleMCYield(fHistoMCPiNegPt,  deltaRapid,  scaling,  nEvtMC );
@@ -308,6 +317,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     TH1D* fHistoRatioMCK0sDivK          = NULL;
     TH1D* fHistoRatioMCKDivPi           = NULL;
     TH1D* fHistoRatioMCK0sDivPi0        = NULL;
+    TH1D* fHistoRatioMCEtaDivPi0        = NULL;
     TCanvas *canvasRatio = new TCanvas("canvasRatio","canvasRatio",1000,800);
     DrawGammaCanvasSettings( canvasRatio, 0.11, 0.02, 0.02, 0.08);
     canvasRatio->cd();
@@ -317,7 +327,49 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     TLatex *labelGeneratorRatio     = new TLatex(0.15,0.12,Form("%s",fGeneratorName.Data()));
     SetStyleTLatex( labelGeneratorRatio, 0.04,4);
     
+    // build ratio eta/pi^0
+    if (fHistoMCPi0Pt && fHistoMCEtaPt){
+        fHistoRatioMCEtaDivPi0 = (TH1D*)fHistoMCEtaPtRebinned->Clone("fHistoRatioMCPi0DivPi");
+        fHistoRatioMCEtaDivPi0->Divide(fHistoRatioMCEtaDivPi0,fHistoMCPi0PtRebinned);
+
+        Double_t maxPtForFit    = 5;
+        Double_t minPtForFit    = 15;
+        if (fGeneratorName.Contains("p_{")){
+            minPtForFit         = 8;
+            maxPtForFit         = 20;
+        }    
+        TF1* etaToPi0ConstMC    = new TF1("etaToPi0ConstMC","[0]",minPtForFit,maxPtForFit);
+        fHistoRatioMCEtaDivPi0->Fit(etaToPi0ConstMC,"QRME0","",minPtForFit,maxPtForFit);
+        cout << "***********************************************************************************************************" << endl;
+        cout << "***********************************************************************************************************" << endl;
+        cout << "***********************************************************************************************************" << endl;
+        cout << "high pt eta/pi0 - MC: " << etaToPi0ConstMC->GetParameter(0) << "+-"<< etaToPi0ConstMC->GetParError(0) << endl;
+        cout << "***********************************************************************************************************" << endl;
+        cout << "***********************************************************************************************************" << endl;
+        cout << "***********************************************************************************************************" << endl;
+
         
+        DrawAutoGammaMesonHistos(   fHistoRatioMCEtaDivPi0, 
+                            "", "#it{p}_{T} (GeV/#it{c})", "#eta/ #pi^{0}", 
+                            kFALSE, 10, 1e-10, kFALSE,
+                            kTRUE, 0., 1.1, 
+                            kTRUE, minPt, maxPt);
+        fHistoRatioMCEtaDivPi0->GetYaxis()->SetTitleOffset(1.2);
+        DrawGammaSetMarker(fHistoRatioMCEtaDivPi0, 20, 1.5, kAzure-6, kAzure-6);
+        fHistoRatioMCEtaDivPi0->DrawClone("pe");
+        
+        etaToPi0ConstMC->SetLineColor(kAzure-6);
+        etaToPi0ConstMC->SetLineStyle(7);
+        etaToPi0ConstMC->Draw("same");
+        
+//         DrawGammaLines(0., 20,1, 1,0.1, kGray+2, 7);
+        labelEnergyRatio->Draw();
+        labelGeneratorRatio->Draw();
+        
+        canvasRatio->SaveAs(Form("%s/EtaToPi0_MC_%s_%s.%s",outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data(), suffix.Data()));    
+    }
+
+    
     // build ratio pi0/pi^\m
     if (fHistoMCPi0Pt && fHistoMCPiPt){
         fHistoRatioMCPi0DivPi = (TH1D*)fHistoMCPi0PtRebinned->Clone("fHistoRatioMCPi0DivPi");
@@ -420,6 +472,8 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         
         canvasRatio->SaveAs(Form("%s/Pi0FromK0sToK0s_MC_%s_%s.%s",outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data(), suffix.Data()));        
     }   
+    
+    
     
     // build ratio pi0 from K0l/ K0l
     if ( histoRatioPi0FromK0lDivK0l){    
@@ -620,8 +674,6 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         labelEnergyRatio->Draw();
         labelGeneratorRatio->Draw();
         
-
-        
         canvasRatio->SaveAs(Form("%s/K_RatioComparisonMCAndData_%s_%s.%s",outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data(), suffix.Data()));
         
       }    
@@ -639,8 +691,10 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
 
         if (fEventQuality)                          fEventQuality->Write("NEvents");
         
-        if (fHistoMCPi0Pt)                          fHistoMCPi0Pt->Write();
-        if (fHistoMCEtaPt)                          fHistoMCEtaPt->Write();
+        if (fHistoMCPi0Pt)                          fHistoMCPi0Pt->Write("MC_Pi0_Pt");
+        if (fHistoMCPi0PtRebinned)                  fHistoMCPi0PtRebinned->Write("MC_Pi0_Pt_Rebinned");
+        if (fHistoMCEtaPt)                          fHistoMCEtaPt->Write("MC_Eta_Pt");
+        if (fHistoMCEtaPtRebinned)                  fHistoMCEtaPtRebinned->Write("MC_Eta_Pt_Rebinned");
         if (fHistoMCPiPt)                           fHistoMCPiPt->Write();
         if (fHistoMCPiNegPt)                        fHistoMCPiNegPt->Write();
         if (fHistoMCPiPosPt)                        fHistoMCPiPosPt->Write();
@@ -648,16 +702,21 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         if (fHistoMCKNegPt)                         fHistoMCKNegPt->Write();
         if (fHistoMCKPosPt)                         fHistoMCKPosPt->Write();
         if (fHistoMCK0sPt)                          fHistoMCK0sPt->Write();
+        if (fHistoMCK0sPtYield)                     fHistoMCK0sPtYield->Write(Form("MCYield_K0s_Pt_%1.2f",deltaRapid/2.));
         if (fHistoMCK0lPt)                          fHistoMCK0lPt->Write();
-        if (fHistoMCK0sPtRebinned)                  fHistoMCK0sPtRebinned->Write();
-        if (fHistoMCK0lPtRebinned)                  fHistoMCK0lPtRebinned->Write();
+        if (fHistoMCK0lPtYield)                     fHistoMCK0lPtYield->Write(Form("MCYield_K0l_Pt_%1.2f",deltaRapid/2.));
+        if (fHistoMCK0sPtRebinned)                  fHistoMCK0sPtRebinned->Write("MC_K0s_Pt_Rebinned");
+        if (fHistoMCK0lPtRebinned)                  fHistoMCK0lPtRebinned->Write("MC_K0l_Pt_Rebinned");
         if (fHistoMCSecPi0FromK0sPt)                fHistoMCSecPi0FromK0sPt->Write(Form("MCSecPi0FromK0s_%1.2f",deltaRapid/2.));
         if (fHistoMCSecPi0FromK0lPt)                fHistoMCSecPi0FromK0lPt->Write(Form("MCSecPi0FromK0l_%1.2f",deltaRapid/2.));
         if (fHistoRatioMCK0sDivDataFit)             fHistoRatioMCK0sDivDataFit->Write("K0sRatioToDataFit");
         if (fHistoRatioMCKDivDataFit)               fHistoRatioMCKDivDataFit->Write("KRatioToDataFit");
         if (fHistoRatioMCPiDivDataFit)              fHistoRatioMCPiDivDataFit->Write("PiRatioToDataFit");
-        if (histoRatioPi0FromK0sDivK0s)             histoRatioPi0FromK0sDivK0s->Write("MCPi0FromK0sToK0s");
-        if (histoRatioPi0FromK0lDivK0l)             histoRatioPi0FromK0lDivK0l->Write("MCPi0FromK0lToK0l");
+        if (histoRatioPi0FromK0sDivK0s)             histoRatioPi0FromK0sDivK0s->Write(Form("MCPi0FromK0sToK0s_%1.2f",deltaRapid/2.));
+        if (histoRatioPi0FromK0lDivK0l)             histoRatioPi0FromK0lDivK0l->Write(Form("MCPi0FromK0lToK0l_%1.2f",deltaRapid/2.));
+        if (fHistoRatioMCEtaDivPi0)                 fHistoRatioMCEtaDivPi0->Write("MCEtaToPi0");
+        if (fHistoRatioMCK0sDivPi0)                 fHistoRatioMCK0sDivPi0->Write("MCK0sToPi0");
+        if (fHistoRatioMCKDivPi)                    fHistoRatioMCKDivPi->Write("MCKToPi");
     fOutput2->Write();
     fOutput2->Close();
 

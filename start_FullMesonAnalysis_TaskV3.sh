@@ -38,7 +38,7 @@ dataFileOK=0
 useTHnSparse=1
 # switch for turning of ToyMC
 disableToyMC=0
-NEvtsToy=1e9
+NEvtsToy=1e7
 MinPtToy=0.5
 MaxPtToy=50
 ExtInputFile=""
@@ -1747,9 +1747,9 @@ do
     if [ $answer = "0" ]; then
         echo "You are analysing PCM-PCM output";
         mode=0
-        NEvtsToy=1e8
-        MinPtToy=0.5
-        MaxPtToy=50
+        NEvtsToy=1e7
+        MinPtToy=0
+        MaxPtToy=70
         correct=1
     elif [ $answer = "1" ]; then
         echo "You are trying to analyse PCM-Dalitz output, this is the wrong script, please use another one.";
@@ -1759,40 +1759,40 @@ do
     elif [ $answer = "2" ]; then
         echo "You are analysing PCM-EMCAL output";
         mode=2
-        NEvtsToy=1e8
-        MinPtToy=0.7
-        MaxPtToy=50
+        NEvtsToy=1e7
+        MinPtToy=0
+        MaxPtToy=70
 #        AdvMesonQA="AdvancedMesonQA"
         correct=1
     elif [ $answer = "3" ]; then
         echo "You are analysing PCM-PHOS output";
         mode=3
-        NEvtsToy=1e9
-        MinPtToy=0.5
-        MaxPtToy=50
+        NEvtsToy=1e7
+        MinPtToy=0
+        MaxPtToy=70
         AdvMesonQA="AdvancedMesonQA"
         correct=1
     elif [ $answer = "4" ]; then
         echo "You are analysing EMCAL-EMCAL output";
         mode=4
-        NEvtsToy=1e8
-        MinPtToy=1.5
-        MaxPtToy=50
+        NEvtsToy=1e7
+        MinPtToy=0
+        MaxPtToy=70
         AdvMesonQA="AdvancedMesonQA"
         correct=1
     elif [ $answer = "5" ]; then
         echo "You are analysing PHOS-PHOS output";
         mode=5
-        NEvtsToy=1e9
-        MinPtToy=0.5
-        MaxPtToy=50
+        NEvtsToy=1e7
+        MinPtToy=0
+        MaxPtToy=70
         AdvMesonQA="AdvancedMesonQA"
         correct=1
     elif [ $answer = "10" ]; then
         echo "You are analysing EMC-merged output";
         mode=10
-        NEvtsToy=1e8
-        MinPtToy=10
+        NEvtsToy=1e7
+        MinPtToy=0
         MaxPtToy=70
         correct=1
         DoEta=0;
@@ -1800,8 +1800,8 @@ do
     elif [ $answer = "11" ]; then
         echo "You are analysing PHOS-merged output";
         mode=11
-        NEvtsToy=1e9
-        MinPtToy=5
+        NEvtsToy=1e7
+        MinPtToy=0
         MaxPtToy=70
         correct=1
         DoEta=0;
@@ -2337,7 +2337,7 @@ if [ $mode -lt 10 ]; then
                     rm ToyMCOutputs.txt
                     root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
                     root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
-                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+#                     root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
                 fi
                 
                 if [ $ONLYCORRECTION -eq 0 ]; then            
@@ -2613,7 +2613,7 @@ else
                     rm ToyMCOutputs.txt
                     root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
                     root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
-                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+#                     root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
                 fi
                 
                 if [ $ONLYCORRECTION -eq 0 ]; then            
