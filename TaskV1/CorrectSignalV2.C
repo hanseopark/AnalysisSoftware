@@ -416,9 +416,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         for (Int_t j = 0; j < 3; j++){
             histoToyMCInputSecPi0[j]                    = (TH1D*)fileUncorrected.Get(Form("histoSecPi0YieldFrom%s_FromToy",nameSecMeson[j].Data()));
             if (histoToyMCInputSecPi0[j]){
-                Double_t scaleFactStackLength           = -1*(TMath::Exp(-stacklength/decayLength[j])-1);
-                cout << scaleFactStackLength << endl;
-                histoToyMCInputSecPi0[j]->Scale(scaleFactorMeasXSecForToy*scaleFactStackLength);
+                histoToyMCInputSecPi0[j]->Scale(scaleFactorMeasXSecForToy);
                 foundToyMCInput                         = kTRUE;
             }
         }
@@ -787,8 +785,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
                     secFrac                 = fitDefaultSecFrac[k][0]->Integral(ptStart, ptEnd, resultSecFrac[k][0]->GetParams()) / binWidth;
                     errorSecFrac            = fitDefaultSecFrac[k][0]->IntegralError(ptStart, ptEnd, resultSecFrac[k][0]->GetParams(), resultSecFrac[k][0]->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
-                    histoYieldTrueSecFracMeson[k][3]->SetBinContent(i, secFrac);
-                    histoYieldTrueSecFracMeson[k][3]->SetBinError(i, errorSecFrac);
+                    histoYieldTrueSecFracMeson[k][0]->SetBinContent(i, secFrac);
+                    histoYieldTrueSecFracMeson[k][0]->SetBinError(i, errorSecFrac);
                     histoYieldTrueSecFracMeson[k][1]->SetBinContent(i, 0);
                     histoYieldTrueSecFracMeson[k][1]->SetBinError(i, 0);
                     histoYieldTrueSecFracMeson[k][2]->SetBinContent(i, 0);
@@ -1202,29 +1200,34 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             Double_t ptEnd = histoBGEstimateA->GetXaxis()->GetBinUpEdge(i);
             Double_t binWidth = ptEnd-ptStart;
             Double_t bgEstimate = (100-fitCorrectionFactorsHistvsPt->Integral(ptStart, ptEnd, resultCorrectionFactorsHistvsPt->GetParams()) / binWidth )/100.;
-            Double_t errorBGEstimate = (fitCorrectionFactorsHistvsPt->IntegralError(ptStart, ptEnd, resultCorrectionFactorsHistvsPt->GetParams(), resultCorrectionFactorsHistvsPt->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
+            Double_t errorBGEstimate = (fitCorrectionFactorsHistvsPt->IntegralError(ptStart, ptEnd, resultCorrectionFactorsHistvsPt->GetParams(), 
+                                                                                    resultCorrectionFactorsHistvsPt->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
             histoBGEstimateA->SetBinContent(i, bgEstimate);
             histoBGEstimateA->SetBinError(i, errorBGEstimate);
             
             if (fitCorrectionFactorsFitvsPt){
                 bgEstimate = (100-fitCorrectionFactorsFitvsPt->Integral(ptStart, ptEnd, resultCorrectionFactorsFitvsPt->GetParams()) / binWidth )/100.;
-                errorBGEstimate = (fitCorrectionFactorsFitvsPt->IntegralError(ptStart, ptEnd, resultCorrectionFactorsFitvsPt->GetParams(), resultCorrectionFactorsFitvsPt->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
+                errorBGEstimate = (fitCorrectionFactorsFitvsPt->IntegralError(ptStart, ptEnd, resultCorrectionFactorsFitvsPt->GetParams(), 
+                                                                              resultCorrectionFactorsFitvsPt->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
                 histoBGEstimateB->SetBinContent(i, bgEstimate);
                 histoBGEstimateB->SetBinError(i, errorBGEstimate);
             }
             
             bgEstimate = (100-fitCorrectionFactorsHistvsPtCatA->Integral(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCatA->GetParams()) / binWidth )/100.;
-            errorBGEstimate = (fitCorrectionFactorsHistvsPtCatA->IntegralError(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCatA->GetParams(), resultCorrectionFactorsHistvsPtCatA->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
+            errorBGEstimate = (fitCorrectionFactorsHistvsPtCatA->IntegralError(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCatA->GetParams(), 
+                                                                               resultCorrectionFactorsHistvsPtCatA->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
             histoBGEstimateCatA->SetBinContent(i, bgEstimate);
             histoBGEstimateCatA->SetBinError(i, errorBGEstimate);
             
             bgEstimate = (100-fitCorrectionFactorsHistvsPtCatC->Integral(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCatC->GetParams()) / binWidth )/100.;
-            errorBGEstimate = (fitCorrectionFactorsHistvsPtCatC->IntegralError(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCatC->GetParams(), resultCorrectionFactorsHistvsPtCatC->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
+            errorBGEstimate = (fitCorrectionFactorsHistvsPtCatC->IntegralError(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCatC->GetParams(), 
+                                                                               resultCorrectionFactorsHistvsPtCatC->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
             histoBGEstimateCatC->SetBinContent(i, bgEstimate);
             histoBGEstimateCatC->SetBinError(i, errorBGEstimate);
             
             bgEstimate = (100-fitCorrectionFactorsHistvsPtCatD->Integral(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCatD->GetParams()) / binWidth )/100.;
-            errorBGEstimate = (fitCorrectionFactorsHistvsPtCatD->IntegralError(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCatD->GetParams(), resultCorrectionFactorsHistvsPtCatD->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
+            errorBGEstimate = (fitCorrectionFactorsHistvsPtCatD->IntegralError(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCatD->GetParams(), 
+                                                                               resultCorrectionFactorsHistvsPtCatD->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
             histoBGEstimateCatD->SetBinContent(i, bgEstimate);
             histoBGEstimateCatD->SetBinError(i, errorBGEstimate);
         }
@@ -1289,6 +1292,34 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     }   
     
     cout << "made it!!" << endl;
+
+    //********************************************************************************************************
+    //************************ Subtracting BG from out of bunch pileup ***************************************
+    //************************ and correcting secondary yield accordingly ************************************
+    //********************************************************************************************************
+    if (!kIsMC && !optDalitz && kDCAFileDataExists){
+        for (Int_t k = 0; k < 6; k++){
+            cout << "subtracting yield from out of bunch collisions for int range: " << nameIntRange[k].Data() << endl;
+            histoUnCorrectedYield[k]->Multiply(histoBGEstimateCatA);
+            // recalculate secondary yield in full MC approach with raw yield corrected for pileup
+            if (doK0SecCorrection){
+                for (Int_t j = 0; j < 4; j++){
+                    cout << "recalculating sec yield for "<< nameSecMeson[j].Data() << " in int range: " << nameIntRange[k].Data() << endl;
+                    histoYieldSecMeson[k][j]            = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("SecYieldFrom%sMeson%s", nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                    histoYieldSecMeson[k][j]->Sumw2();
+                    histoYieldSecMeson[k][j]->Multiply(histoYieldTrueSecFracMeson[k%3][j]);
+                    histoYieldSecMeson[k][j]->Scale(scalingFacSec[j]);  
+                    
+                    histoRatioYieldSecMeson[k][j]       = (TH1D*)histoYieldSecMeson[k][j]->Clone(Form("RatioSecYieldFrom%sMeson%sToRaw", nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                    histoRatioYieldSecMeson[k][j]->Sumw2();
+                    histoRatioYieldSecMeson[k][j]->Divide(histoRatioYieldSecMeson[k][j],histoUnCorrectedYield[k]);
+                }
+            }    
+        }    
+    }
+
+
+
     
     //**********************************************************************************
     //******************** Mass Plot *********************************************
@@ -2553,14 +2584,6 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 CorrectYield(histoCorrectedYieldTrueFixed[k], histoYieldSecMeson[k], histoYieldSecMesonFromToy[k], histoTrueEffiPtFixed[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
                 CorrectYield(histoCorrectedYieldFixed[k], histoYieldSecMeson[k], histoYieldSecMesonFromToy[k], histoEffiPtFixed[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
             }    
-            if (!kIsMC && kDCAFileDataExists){
-                histoCorrectedYieldNorm[k]->Multiply(histoBGEstimateCatA);
-                histoCorrectedYieldTrue[k]->Multiply(histoBGEstimateCatA);
-                if (k < 3){
-                    histoCorrectedYieldFixed[k]->Multiply(histoBGEstimateCatA);
-                    histoCorrectedYieldTrueFixed[k]->Multiply(histoBGEstimateCatA);
-                }    
-            }
         } else {
             CorrectYieldDalitz(histoCorrectedYieldNorm[k], histoYieldGGMeson[k], histoEffiPt[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
             CorrectYieldDalitz(histoCorrectedYieldTrue[k], histoYieldGGMeson[k], histoTrueEffiPt[k%3], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
@@ -2793,13 +2816,13 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             DrawGammaCanvasSettings( canvasSecFrac2, 0.09, 0.018, 0.04, 0.08);
 
             Double_t rangeSecRatio[2]   = {0, 0.30};    
-//             if (mode == 0){
-//                 rangeSecRatio[1]        = 0.025;
-//             } else if (mode == 2){
-//                 rangeSecRatio[1]        = 0.05;
-//             } else if (mode == 4){
-//                 rangeSecRatio[1]        = 0.05;
-//             }    
+            if (mode == 0){
+                rangeSecRatio[1]        = 0.05;
+            } else if (mode == 2){
+                rangeSecRatio[1]        = 0.05;
+            } else if (mode == 4){
+                rangeSecRatio[1]        = 0.05;
+            }    
             
             TH2F* histo2DDummySecHad2;
             histo2DDummySecHad2         = new TH2F("histo2DDummySecHad2","histo2DDummySecHad2",1000,0, maxPtMeson,
@@ -3195,9 +3218,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     Double_t relBGEstimateError[100];
     for (Int_t i = 1; i < nBinsPt +1; i++){
         relBGEstimateError[i] = 0.;
-        if ( TMath::Abs(histoBGEstimateCatA->GetBinContent(i)-histoBGEstimateCatC->GetBinContent(i)) > TMath::Abs(histoBGEstimateCatA->GetBinContent(i)-histoBGEstimateCatD->GetBinContent(i)) && TMath::Abs(histoBGEstimateCatA->GetBinContent(i)-histoBGEstimateA->GetBinContent(i)) > TMath::Abs(histoBGEstimateCatA->GetBinContent(i)-histoBGEstimateA->GetBinContent(i))){
+        if ( TMath::Abs(histoBGEstimateCatA->GetBinContent(i)-histoBGEstimateCatC->GetBinContent(i)) > TMath::Abs(histoBGEstimateCatA->GetBinContent(i)-histoBGEstimateCatD->GetBinContent(i)) &&
+             TMath::Abs(histoBGEstimateCatA->GetBinContent(i)-histoBGEstimateA->GetBinContent(i)) > TMath::Abs(histoBGEstimateCatA->GetBinContent(i)-histoBGEstimateA->GetBinContent(i))){
             relBGEstimate[i] = TMath::Abs(histoBGEstimateCatA->GetBinContent(i)- histoBGEstimateCatC->GetBinContent(i)) *100;
-        } else if ( TMath::Abs(histoBGEstimateCatA->GetBinContent(i)-histoBGEstimateCatD->GetBinContent(i)) > TMath::Abs(histoBGEstimateCatA->GetBinContent(i)-histoBGEstimateCatC->GetBinContent(i)) && TMath::Abs(histoBGEstimateCatA->GetBinContent(i)-histoBGEstimateA->GetBinContent(i)) > TMath::Abs(histoBGEstimateCatA->GetBinContent(i)-histoBGEstimateA->GetBinContent(i))) {
+        } else if ( TMath::Abs(histoBGEstimateCatA->GetBinContent(i)-histoBGEstimateCatD->GetBinContent(i)) > TMath::Abs(histoBGEstimateCatA->GetBinContent(i)-histoBGEstimateCatC->GetBinContent(i)) &&
+                    TMath::Abs(histoBGEstimateCatA->GetBinContent(i)-histoBGEstimateA->GetBinContent(i)) > TMath::Abs(histoBGEstimateCatA->GetBinContent(i)-histoBGEstimateA->GetBinContent(i))) {
             relBGEstimate[i] = TMath::Abs(histoBGEstimateCatA->GetBinContent(i)- histoBGEstimateCatC->GetBinContent(i)) *100;
         } else {
             relBGEstimate[i] = TMath::Abs(histoBGEstimateCatA->GetBinContent(i)- histoBGEstimateA->GetBinContent(i)) *100;
