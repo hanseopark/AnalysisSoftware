@@ -75,9 +75,9 @@ struct SysErrorConversion {
 //____________________________________________________________________________________________________________________________________________
 void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/meike/analysis/software/photonconv/AnalysisSoftware/00010113_00200009227300008250404000_0152103500000000/data_PCMResultsFullCorrection_PP_NoBinShifting.root",
                                         TString fileNamePCMEMCAL    = "", 
-                                        TString fileNameEMCALLow    = "",  
+                                        TString fileNameEMCALLow    = "/home/meike/analysis/data/EMCAL/Pi013TeV_INT7.root",                                         
                                         TString fileNameEMCALmerged = "",  
-                                        TString fileNamePHOS        = "",  
+                                        TString fileNamePHOS        = "/home/meike/analysis/data/PHOS/PHOS_pp13TeV.root",  
                                         TString suffix              = "eps", 
                                         TString isMC                = "", 
                                         TString thesisPlots         = "", 
@@ -110,7 +110,6 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
     Bool_t haveChargedParticles = kFALSE;
     Bool_t havePHOSExternalInput = kFALSE;
     Bool_t havePCM = kFALSE;
-    Bool_t haveEMCAL = kFALSE;
     Bool_t havePCMEMCAL = kFALSE;
     Bool_t havePHOS = kFALSE;
     Bool_t haveEMCALLow = kFALSE;
@@ -122,7 +121,7 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
     if(fileNamePHOS.CompareTo("") != 0)        havePHOS = kTRUE;
 
     TString dateForOutput                       = ReturnDateStringForOutput();
-    TString collisionSystem13TeV              = "pp, #sqrt{#it{s}} = 13 TeV";
+    TString collisionSystem13TeV                = "pp, #sqrt{#it{s}} = 13 TeV";
     TString outputDir                           = Form("%s/%s/CombineMesonMeasurements13TeV%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
     cout << "output directory: "<< outputDir.Data() << endl;
 
@@ -624,8 +623,20 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
     Bool_t haveAllPi0InvMassEMCAL[3]                 = {kFALSE, kFALSE, kFALSE};
     Bool_t haveAllEtaInvMassEMCAL[3]                 = {kFALSE, kFALSE, kFALSE};
     if(haveEMCALLow){
-    TFile* fileEMCALLow                                     = new TFile(fileNameEMCALLow.Data());
-    TH1D* histoEMCALNumberOfEvents                          = (TH1D*)fileEMCALLow->Get("histoNumberOfEvents13TeV");
+      
+    TFile* fileEMCALLow                            = new TFile(fileNameEMCALLow.Data());
+    TDirectory* directoryEMCALPi0                  = (TDirectory*)fileEMCALLow->Get("Pi013TeV");
+    TGraphErrors* graphEMCALPi0Mass                = (TGraphErrors*)directoryEMCALPi0->Get("Pi0_Mass_data");
+    graphEMCALPi0Mass                              = ScaleGraph(graphEMCALPi0Mass, 1000.);
+    TGraphErrors* graphEMCALPi0FWHM                = (TGraphErrors*)directoryEMCALPi0->Get("Pi0_Width_data");
+    graphEMCALPi0FWHM                              = ScaleGraph(graphEMCALPi0FWHM, 1000.);
+
+    for(Int_t i=0; i<4; i++){
+      graphEMCALPi0Mass->SetPoint(i,-1.,-1.);
+      graphEMCALPi0FWHM->SetPoint(i,-1.,-1.);
+    }
+
+    /*TH1D* histoEMCALNumberOfEvents                        = (TH1D*)fileEMCALLow->Get("histoNumberOfEvents13TeV");
     TDirectory* directoryEMCALPi0                           = (TDirectory*)fileEMCALLow->Get("Pi013TeV");
         TGraphAsymmErrors* graphEMCALPi0Mass                = (TGraphAsymmErrors*)directoryEMCALPi0->Get("Pi0_Mass_data");
         graphEMCALPi0Mass                                   = ScaleGraph(graphEMCALPi0Mass, 1000.);
@@ -711,9 +722,11 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
                       << "\t" << haveAllPi0InvMassEMCAL[i] << endl;
             }
         }
+    */
 
+    // ********** Eta meson ********************
 
-    TDirectory* directoryEMCALEta                           = (TDirectory*)fileEMCALLow->Get("Eta13TeV");
+    /*TDirectory* directoryEMCALEta                           = (TDirectory*)fileEMCALLow->Get("Eta13TeV");
         TGraphAsymmErrors* graphEMCALEtaMass                = (TGraphAsymmErrors*)directoryEMCALEta->Get("Eta_Mass_data");
         graphEMCALEtaMass                                   = ScaleGraph(graphEMCALEtaMass, 1000.);
         TGraphAsymmErrors* graphEMCALEtaFWHM                = (TGraphAsymmErrors*)directoryEMCALEta->Get("Eta_Width_data");
@@ -797,7 +810,7 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
                 cout << nameTrigger[i].Data() << "\t" << histoEtaInvMassSigEMCAL[i] << "\t" << histoEtaInvMassSigPlusBGEMCAL[i] << "\t" << histoEtaInvMassBGEMCAL[i] << "\t" << fitEtaInvMassSigEMCAL[i]
                       << "\t" << haveAllEtaInvMassEMCAL[i] << endl;
             }
-        }
+	}*/
     }
     //************************** Read data for EMCAL merged **************************************************   
     if(haveEMCALMerged){
@@ -836,51 +849,68 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
     if(havePHOS){
         TFile* filePHOS                                     = new TFile(fileNamePHOS.Data());
         TDirectory* directoryPHOSPi0                           = (TDirectory*)filePHOS->Get("Pi013TeV");
-            TH1D* histoPHOSPi0Mass                = (TH1D*)directoryPHOSPi0->Get("MassPi0");
+        TDirectory* directoryPHOSEta                           = (TDirectory*)filePHOS->Get("Eta13TeV");
+	TH1D* histoPHOSPi0Mass                                 = (TH1D*)directoryPHOSPi0->Get("pi0_mass2_GS_Data");  // GeV
             histoPHOSPi0Mass->Scale(1000.);
             //for(Int_t k=0; k<6; k++) histoPHOSPi0Mass->SetBinContent(k,0.);
             //for(Int_t k=histoPHOSPi0Mass->GetNbinsX(), j=k-6; k>=j; k--) histoPHOSPi0Mass->SetBinContent(k,0.);
 
-            TH1D* histoPHOSPi0FWHMMeV                = (TH1D*)directoryPHOSPi0->Get("FWHMPi0MeV");
+            TH1D* histoPHOSPi0FWHMMeV                          = (TH1D*)directoryPHOSPi0->Get("pi0_width2_GS_Data");  // GeV
+	    histoPHOSPi0FWHMMeV->Scale(1000.);
             //for(Int_t k=0; k<6; k++) histoPHOSPi0FWHMMeV->SetBinContent(k,-1000.);
            // for(Int_t k=histoPHOSPi0FWHMMeV->GetNbinsX(), j=k-6; k>=j; k--) histoPHOSPi0FWHMMeV->SetBinContent(k,-1000.);
 
-            TH1D* histoPHOSPi0TrueMass              = (TH1D*)directoryPHOSPi0->Get("TrueMassPi0");
-            histoPHOSPi0TrueMass->Scale(1000.);
+            //TH1D* histoPHOSPi0TrueMass              = (TH1D*)directoryPHOSPi0->Get("TrueMassPi0");
+            //histoPHOSPi0TrueMass->Scale(1000.);
            // for(Int_t k=0; k<1; k++) histoPHOSPi0TrueMass->SetBinContent(k,0.);
            // for(Int_t k=histoPHOSPi0TrueMass->GetNbinsX(), j=k-5; k>=j; k--) histoPHOSPi0TrueMass->SetBinContent(k,0.);
 
-            TH1D* histoPHOSPi0TrueFWHMMeV              = (TH1D*)directoryPHOSPi0->Get("TrueFWHMPi0MeV");
+            //TH1D* histoPHOSPi0TrueFWHMMeV              = (TH1D*)directoryPHOSPi0->Get("TrueFWHMPi0MeV");
            // for(Int_t k=0; k<1; k++) histoPHOSPi0TrueFWHMMeV->SetBinContent(k,-1000.);
            // for(Int_t k=histoPHOSPi0TrueFWHMMeV->GetNbinsX(), j=k-5; k>=j; k--) histoPHOSPi0TrueFWHMMeV->SetBinContent(k,-1000.);
 
-            TH1D* histoPHOSPi0Acc                 = (TH1D*)directoryPHOSPi0->Get("AcceptancePi0");
+            //TH1D* histoPHOSPi0Acc                 = (TH1D*)directoryPHOSPi0->Get("AcceptancePi0");
             //for(Int_t k=histoPHOSPi0Acc->GetNbinsX(), j=k-5; k>=j; k--) histoPHOSPi0Acc->SetBinContent(k,0.);
 
-            TH1D* histoPHOSPi0TrueEffPt               = (TH1D*)directoryPHOSPi0->Get("EfficiencyPi0");
+            //TH1D* histoPHOSPi0TrueEffPt               = (TH1D*)directoryPHOSPi0->Get("EfficiencyPi0");
            // for(Int_t k=histoPHOSPi0TrueEffPt->GetNbinsX(), j=k-5; k>=j; k--) histoPHOSPi0TrueEffPt->SetBinContent(k,0.);
 
-            TH1D* histoPHOSPi0AccTimesEff      = (TH1D*)histoPHOSPi0TrueEffPt->Clone("histoPHOSPi0AccTimesEff");
-            histoPHOSPi0AccTimesEff->Multiply(histoPHOSPi0Acc);
-            histoPHOSPi0AccTimesEff->Scale(2*TMath::Pi());
+            //TH1D* histoPHOSPi0AccTimesEff      = (TH1D*)histoPHOSPi0TrueEffPt->Clone("histoPHOSPi0AccTimesEff");
+            //histoPHOSPi0AccTimesEff->Multiply(histoPHOSPi0Acc);
+            //histoPHOSPi0AccTimesEff->Scale(2*TMath::Pi());
             //TH1D* graphPHOSPi0AccTimesEff         = (TH1D*)directoryPHOSPi0->Get("EffTimesAccPi0_MB");
 
-            TH1D* histoPHOSPi0InvXSectionStat                   = (TH1D*)directoryPHOSPi0->Get("InvCrossSectionPi0");
-            TGraphAsymmErrors* graphPHOSPi0InvXSectionStat      = new TGraphAsymmErrors(histoPHOSPi0InvXSectionStat);
-            cout << "Pi0 stat PHOS" << endl;
-            graphPHOSPi0InvXSectionStat->Print();
+	    TH1D* histoPHOSSignalPlusBGPi0                      = (TH1D*)directoryPHOSPi0->Get("hReal1");
+	    //TH1D* histoPHOSTotalBGPi0                           = (TH1D*)directoryPHOSPi0->Get("InvMassBG_PtBin07");
+	    TH1D* histoPHOSSignalPi0                            = (TH1D*)directoryPHOSPi0->Get("hPeak1");
+	    TF1* fitPHOSPi0                                     = (TF1*)directoryPHOSPi0->Get("hFit1");
 
-            TGraphErrors* dummySysGraphPHOS                     = (TGraphErrors*)directoryPHOSPi0->Get("InvCrossSectionPi0Sys");
-            Double_t* xValuePHOS                                = dummySysGraphPHOS->GetX();                  
-            Double_t* yValuePHOS                                = dummySysGraphPHOS->GetY();                  
-            Double_t* xErrPHOS                                  = dummySysGraphPHOS->GetEX();                  
-            Double_t* yErrPHOS                                  = dummySysGraphPHOS->GetEY();                  
+            //TH1D* histoPHOSPi0InvXSectionStat                   = (TH1D*)directoryPHOSPi0->Get("InvCrossSectionPi0");
+	    // TGraphAsymmErrors* graphPHOSPi0InvXSectionStat      = new TGraphAsymmErrors(histoPHOSPi0InvXSectionStat);
+            //cout << "Pi0 stat PHOS" << endl;
+            //graphPHOSPi0InvXSectionStat->Print();
+
+            //TGraphErrors* dummySysGraphPHOS                     = (TGraphErrors*)directoryPHOSPi0->Get("InvCrossSectionPi0Sys");
+            //Double_t* xValuePHOS                                = dummySysGraphPHOS->GetX();                  
+            //Double_t* yValuePHOS                                = dummySysGraphPHOS->GetY();                  
+            //Double_t* xErrPHOS                                  = dummySysGraphPHOS->GetEX();                  
+            //Double_t* yErrPHOS                                  = dummySysGraphPHOS->GetEY();                  
             
-            TGraphAsymmErrors* graphPHOSPi0InvXSectionSys       = new TGraphAsymmErrors(dummySysGraphPHOS->GetN(), xValuePHOS, yValuePHOS, xErrPHOS, xErrPHOS, yErrPHOS, yErrPHOS);
-            cout << "Pi0 sys PHOS" << endl;
-            graphPHOSPi0InvXSectionSys->Print();
+            //TGraphAsymmErrors* graphPHOSPi0InvXSectionSys       = new TGraphAsymmErrors(dummySysGraphPHOS->GetN(), xValuePHOS, yValuePHOS, xErrPHOS, xErrPHOS, yErrPHOS, yErrPHOS);
+            //cout << "Pi0 sys PHOS" << endl;
+            //graphPHOSPi0InvXSectionSys->Print();
 
-            if(havePHOSExternalInput) TFile* filePHOSprelim     = new TFile(fileNamePHOSprelim.Data());
+            TH1D* histoPHOSEtaMass                = (TH1D*)directoryPHOSEta->Get("eta_mass2_GS_Data");
+	    histoPHOSEtaMass->Scale(1000.);
+
+            TH1D* histoPHOSEtaFWHMMeV             = (TH1D*)directoryPHOSEta->Get("eta_width2_GS_Data");
+	    histoPHOSEtaFWHMMeV->Scale(1000.);
+
+	    TH1D* histoPHOSSignalPlusBGEta                      = (TH1D*)directoryPHOSEta->Get("hReal1");
+	    //TH1D* histoPHOSTotalBGEta                           = (TH1D*)directoryPHOSEta->Get("InvMassBG_PtBin07");
+	    TH1D* histoPHOSSignalEta                            = (TH1D*)directoryPHOSEta->Get("hPeak1");
+	    TF1* fitPHOSEta                                     = (TF1*)directoryPHOSEta->Get("hFit1");
+
     }
 
     // *******************************************************************************************************
@@ -1921,6 +1951,7 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
     // ********************** Ratio of PHOS prelim/final **************************************************
     // *******************************************************************************************************
     if(havePHOSExternalInput){
+    TFile* filePHOSprelim     = new TFile(fileNamePHOSprelim.Data());
     TGraphErrors* graphRatioPHOSprelimFinalMBstat     = (TGraphErrors*)filePHOSprelim->Get("gInvCrossSectionNoBinShift_MB_PHOS");
     graphRatioPHOSprelimFinalMBstat                   = CalculateGraphErrRatioToFit(graphRatioPHOSprelimFinalMBstat, fitPHOSTCMInvXSectionPi0);
     TGraphErrors* graphRatioPHOSprelimFinalMBsys      = (TGraphErrors*)filePHOSprelim->Get("gSysErrInvCrossSectionNoBinShift_MB_PHOS");
@@ -3134,7 +3165,7 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
         TH2F * histo2DAllPi0FWHM    = new TH2F("histo2DAllPi0FWHM","histo2DAllPi0FWHM", 20, 0.23, 50. ,1000., -30, 40);
         SetStyleHistoTH2ForGraphs(histo2DAllPi0FWHM, "#it{p}_{T} (GeV/#it{c})", "Peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth, textsizeLabelsWidth,
                                   0.85*textsizeLabelsWidth, textsizeLabelsWidth, 0.8,0.28/(textsizeFacWidth*margin), 512, 505);
-        histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.,32.5);
+        histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.,32.5);  // Pi0 without PHOS
         histo2DAllPi0FWHM->GetYaxis()->SetMoreLogLabels(kTRUE);
         histo2DAllPi0FWHM->GetYaxis()->SetNdivisions(505);
         histo2DAllPi0FWHM->GetYaxis()->SetNoExponent(kTRUE);
@@ -3148,10 +3179,11 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
 	  DrawGammaSetMarker(histoPCMPi0TrueFWHMMeV, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
 	  histoPCMPi0TrueFWHMMeV->Draw("p,same,e");
 	}if(haveEMCALLow){
-	  DrawGammaSetMarkerTGraphAsym(graphEMCALPi0FWHM, markerStyleDet[2], markerSizeDet[2]*0.55, colorDet[2] , colorDet[2]);
+	  //DrawGammaSetMarkerTGraphAsym(graphEMCALPi0FWHM, markerStyleDet[2], markerSizeDet[2]*0.55, colorDet[2] , colorDet[2]);
+	  DrawGammaSetMarkerTGraph(graphEMCALPi0FWHM, markerStyleDet[2], markerSizeDet[2]*0.55, colorDet[2] , colorDet[2]);
 	  graphEMCALPi0FWHM->Draw("p,same,z");
-	  DrawGammaSetMarkerTGraphAsym(graphEMCALPi0FWHMMC, markerStyleDetMC[2], markerSizeDetMC[2]*0.55, colorDetMC[2] , colorDetMC[2]);
-	  graphEMCALPi0FWHMMC->Draw("p,same,z");
+	  //DrawGammaSetMarkerTGraphAsym(graphEMCALPi0FWHMMC, markerStyleDetMC[2], markerSizeDetMC[2]*0.55, colorDetMC[2] , colorDetMC[2]);
+	  //graphEMCALPi0FWHMMC->Draw("p,same,z");
         }if(havePCMEMCAL){
 	  DrawGammaSetMarkerTGraphAsym(graphPCMEMCALPi0FWHM, markerStyleDet[4], markerSizeDet[4]*0.55, colorDet[4] , colorDet[4]);
 	  graphPCMEMCALPi0FWHM->Draw("p,same,z");
@@ -3193,7 +3225,7 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
         TH2F * histo2DAllPi0Mass            = new TH2F("histo2DAllPi0Mass","histo2DAllPi0Mass",20, 0.23, 50., 1000., 120., 175);
         SetStyleHistoTH2ForGraphs(histo2DAllPi0Mass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass, textsizeLabelsMass, 0.85*textsizeLabelsMass, 
                                   textsizeLabelsMass, 0.9, 0.28/(textsizeFacMass*margin), 512, 505);
-        histo2DAllPi0Mass->GetYaxis()->SetRangeUser(122.5,171.8);
+        histo2DAllPi0Mass->GetYaxis()->SetRangeUser(122.5,171.8);  // Pi0 without PHOS
         histo2DAllPi0Mass->GetXaxis()->SetMoreLogLabels(kTRUE);
         histo2DAllPi0Mass->GetYaxis()->SetNdivisions(505);
         histo2DAllPi0Mass->GetYaxis()->SetNoExponent(kTRUE);
@@ -3207,10 +3239,11 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
 	  DrawGammaSetMarker(histoPCMPi0TrueMass, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
 	  histoPCMPi0TrueMass->Draw("p,same,e");
 	}if(haveEMCALLow){
-	  DrawGammaSetMarkerTGraphAsym(graphEMCALPi0Mass, markerStyleDet[2], markerSizeDet[2]*0.55, colorDet[2] , colorDet[2]);
+	  //DrawGammaSetMarkerTGraphAsym(graphEMCALPi0Mass, markerStyleDet[2], markerSizeDet[2]*0.55, colorDet[2] , colorDet[2]);
+	  DrawGammaSetMarkerTGraph(graphEMCALPi0Mass, markerStyleDet[2], markerSizeDet[2]*0.55, colorDet[2] , colorDet[2]);
 	  graphEMCALPi0Mass->Draw("p,same,z");
-	  DrawGammaSetMarkerTGraphAsym(graphEMCALPi0MassMC, markerStyleDetMC[2], markerSizeDetMC[2]*0.55, colorDetMC[2] , colorDetMC[2]);
-	  graphEMCALPi0MassMC->Draw("p,same,z");
+	  //DrawGammaSetMarkerTGraphAsym(graphEMCALPi0MassMC, markerStyleDetMC[2], markerSizeDetMC[2]*0.55, colorDetMC[2] , colorDetMC[2]);
+	  //graphEMCALPi0MassMC->Draw("p,same,z");
         }if(havePCMEMCAL){
 	  DrawGammaSetMarkerTGraphAsym(graphPCMEMCALPi0Mass, markerStyleDet[4], markerSizeDet[4]*0.55, colorDet[4] , colorDet[4]);
 	  graphPCMEMCALPi0Mass->Draw("p,same,z");
@@ -3246,8 +3279,12 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
 	  SetStyleTLatex( textMassPCMEMCAL, textSizeLabelsPixel,4);
 	  textMassPCMEMCAL->SetTextFont(43);
 	  textMassPCMEMCAL->Draw();
-	}if(haveEMCALLow){
 	  TLatex *textMassEMCAL               = new TLatex(columnsLegendMass2[0],rowsLegendMass2[3],"EMCal");
+	  SetStyleTLatex( textMassEMCAL, textSizeLabelsPixel,4);
+	  textMassEMCAL->SetTextFont(43);
+	  textMassEMCAL->Draw();
+	} else {
+	  TLatex *textMassEMCAL               = new TLatex(columnsLegendMass2[0],rowsLegendMass2[2],"EMCal");
 	  SetStyleTLatex( textMassEMCAL, textSizeLabelsPixel,4);
 	  textMassEMCAL->SetTextFont(43);
 	  textMassEMCAL->Draw();
@@ -3276,8 +3313,8 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
 	}if(haveEMCALLow){
 	  TMarker* markerEMCALPi0Mass      = CreateMarkerFromGraph(graphEMCALPi0Mass,columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[3]+ offsetMarkerYMass2 ,scaleMarkerMass2);
 	  markerEMCALPi0Mass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[3]+ offsetMarkerYMass2);
-	  TMarker* markerEMCALPi0MassMC    = CreateMarkerFromGraph(graphEMCALPi0MassMC,columnsLegendMass2[2]+ offsetMarkerXMass2 ,rowsLegendMass2[3]+ offsetMarkerYMass2 ,scaleMarkerMass2);
-	  markerEMCALPi0MassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass2[3]+ offsetMarkerYMass2);
+	  //TMarker* markerEMCALPi0MassMC    = CreateMarkerFromGraph(graphEMCALPi0MassMC,columnsLegendMass2[2]+ offsetMarkerXMass2 ,rowsLegendMass2[3]+ offsetMarkerYMass2 ,scaleMarkerMass2);
+	  //markerEMCALPi0MassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass2[3]+ offsetMarkerYMass2);
         }
 
     canvasMassWidthPi0->Update();
@@ -3287,6 +3324,7 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
     // *********************************** Mass and width for pi0 at 13TeV including PHOS *********************************
     // **********************************************************************************************************************
     if(havePHOS){
+
     canvasMassWidthPi0->cd();
     padWidthPi0->Draw();
     padMassPi0->Draw();
@@ -3299,7 +3337,7 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
     padWidthPi0->cd();
     padWidthPi0->SetLogx(); 
 
-        histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.,32.5);
+    histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.,37.5);  // Pi0 with PHOS
         histo2DAllPi0FWHM->DrawCopy(); 
 
 	if(havePCM){
@@ -3310,80 +3348,22 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
 	}
         DrawGammaSetMarker(histoPHOSPi0FWHMMeV, markerStyleDet[1], markerSizeDet[1]*0.55, colorDet[1] , colorDet[1]);
         histoPHOSPi0FWHMMeV->Draw("p,same,e");
-        DrawGammaSetMarker(histoPHOSPi0TrueFWHMMeV, markerStyleDetMC[1], markerSizeDetMC[1]*0.55, colorDetMC[1] , colorDetMC[1]);
-        histoPHOSPi0TrueFWHMMeV->Draw("p,same,e");
-        if(haveEMCAL){
+        //DrawGammaSetMarker(histoPHOSPi0TrueFWHMMeV, markerStyleDetMC[1], markerSizeDetMC[1]*0.55, colorDetMC[1] , colorDetMC[1]);
+        //histoPHOSPi0TrueFWHMMeV->Draw("p,same,e");
+        if(haveEMCALLow){
 	  graphEMCALPi0FWHM->Draw("p,same,z");
-	  graphEMCALPi0FWHMMC->Draw("p,same,z");
-	}if(havePCMEMCAL){
-	  graphPCMEMCALPi0FWHM->Draw("p,same,z");
-	  graphPCMEMCALPi0FWHMMC->Draw("p,same,z");
+	  //graphEMCALPi0FWHMMC->Draw("p,same,z");
 	}
         labelMassPerf->Draw();
         labelMassEnergy->Draw();
         labelMassPi0->Draw();        
         labelLegendAMass->Draw();
         
-//     //********************************** Defintion of the Legend **************************************************    
-//         Double_t columnsLegendFWHM[4]       = {0.12, 0.44, 0.525, 0.39};
-//         Double_t columnsLegendFWHMAbs[4]    = {4, 1.6, 2.5, 9.8};
-//         Double_t rowsLegendFWHM3[5]         = {0.88, 0.8, 0.74, 0.68, 0.62};
-//         Double_t rowsLegendFWHMAbs3[5]      = {0.2, 26.8, 24.8, 22.8, 20.8 };
-//         //****************** Scale factors ******************
-//         Double_t scaleMarkerFWHM            = 1.2;
-//         
-//         //****************** first Column **************************************************
-//         TLatex *textFWHMPCM2                = new TLatex(columnsLegendFWHM[0],rowsLegendFWHM3[1],"PCM (FWHM/2.36)");
-//         SetStyleTLatex( textFWHMPCM2, textSizeLabelsPixel,4);
-//         textFWHMPCM2->SetTextFont(43);
-//         textFWHMPCM2->Draw();
-//         TLatex *textFWHMPCMEMCAL2           = new TLatex(columnsLegendFWHM[0],rowsLegendFWHM3[2],"PCM-EMCal (FWHM/2.36)");
-//         SetStyleTLatex( textFWHMPCMEMCAL2, textSizeLabelsPixel,4);
-//         textFWHMPCMEMCAL2->SetTextFont(43);
-//         textFWHMPCMEMCAL2->Draw();
-//         TLatex *textFWHMEMCAL2              = new TLatex(columnsLegendFWHM[0],rowsLegendFWHM3[3],"EMCal (FWHM/2.36)");
-//         SetStyleTLatex( textFWHMEMCAL2, textSizeLabelsPixel,4);
-//         textFWHMEMCAL2->SetTextFont(43);
-//         textFWHMEMCAL2->Draw();
-//         TLatex *textFWHMPHOS                = new TLatex(columnsLegendFWHM[0],rowsLegendFWHM3[4],"PHOS (#sigma)");
-//         SetStyleTLatex( textFWHMPHOS, textSizeLabelsPixel,4);
-//         textFWHMPHOS->SetTextFont(43);
-//         textFWHMPHOS->Draw();
-//         
-//         //****************** second Column *************************************************
-//         TLatex *textFWHMData2               = new TLatex(columnsLegendFWHM[1],rowsLegendFWHM3[0] ,"Data");
-//         SetStyleTLatex( textFWHMData2, textSizeLabelsPixel ,4);
-//         textFWHMData2->SetTextFont(43);
-//         textFWHMData2->Draw();
-//         TLatex *textFWHMMC2                 = new TLatex(columnsLegendFWHM[2] ,rowsLegendFWHM3[0],"MC");
-//         SetStyleTLatex( textFWHMMC2, textSizeLabelsPixel,4);
-//         textFWHMMC2->SetTextFont(43);
-//         textFWHMMC2->Draw();
-// 
-//         TMarker* markerPCMPi0FWHM        = CreateMarkerFromHisto(histoPCMPi0FWHMMeV,columnsLegendFWHMAbs[1] ,rowsLegendFWHMAbs3[1] ,scaleMarkerFWHM);
-//         TMarker* markerPCMEMCALPi0FWHM   = CreateMarkerFromGraph(graphPCMEMCALPi0FWHM,columnsLegendFWHMAbs[1],rowsLegendFWHMAbs3[2],scaleMarkerFWHM);
-//         TMarker* markerEMCALPi0FWHM      = CreateMarkerFromGraph(graphEMCALPi0FWHM,columnsLegendFWHMAbs[1],rowsLegendFWHMAbs3[3],scaleMarkerFWHM);
-//         TMarker* markerPHOSPi07TeVFWHM          = CreateMarkerFromHisto(histoPHOSPi0FWHMMeV,columnsLegendFWHMAbs[1],rowsLegendFWHMAbs3[3],scaleMarkerFWHM);
-//     
-//         TMarker* markerPCMPi0FWHMMC      = CreateMarkerFromHisto(histoPCMPi0TrueFWHMMeV,columnsLegendFWHMAbs[2],rowsLegendFWHMAbs3[1],scaleMarkerFWHM);
-//         TMarker* markerPCMEMCALPi0FWHMMC = CreateMarkerFromGraph(graphPCMEMCALPi0FWHMMC,columnsLegendFWHM[2],rowsLegendFWHMAbs3[2],scaleMarkerFWHM);
-//         TMarker* markerEMCALPi0FWHMMC    = CreateMarkerFromGraph(graphEMCALPi0FWHMMC,columnsLegendFWHM[2],rowsLegendFWHMAbs3[3] ,scaleMarkerFWHM);
-//         TMarker* markerPHOSPi07TeVFWHMMC        = CreateMarkerFromHisto(histoPHOSPi0TrueFWHMMeV,columnsLegendFWHMAbs[2],rowsLegendFWHMAbs3[3],scaleMarkerFWHM);
-//         
-//         markerPCMPi0FWHM->DrawMarker(columnsLegendFWHMAbs[1] ,rowsLegendFWHMAbs3[1]);
-//         markerPCMEMCALPi0FWHM->DrawMarker(columnsLegendFWHMAbs[1] ,rowsLegendFWHMAbs3[2]);
-//         markerEMCALPi0FWHM->DrawMarker(columnsLegendFWHMAbs[1] ,rowsLegendFWHMAbs3[3]);
-//         markerPHOSPi07TeVFWHM->DrawMarker(columnsLegendFWHMAbs[1] ,rowsLegendFWHMAbs3[4]);
-//         markerPCMPi0FWHMMC->DrawMarker(columnsLegendFWHMAbs[2] ,rowsLegendFWHMAbs3[1]);
-//         markerPCMEMCALPi0FWHMMC->DrawMarker(columnsLegendFWHMAbs[2],rowsLegendFWHMAbs3[2]);
-//         markerEMCALPi0FWHMMC->DrawMarker(columnsLegendFWHMAbs[2],rowsLegendFWHMAbs3[3]);
-//         markerPHOSPi07TeVFWHMMC->DrawMarker(columnsLegendFWHMAbs[2] ,rowsLegendFWHMAbs3[4]);
-
-
     padMassPi0->cd();
     padMassPi0->SetLogx();
 
-        histo2DAllPi0Mass->DrawCopy(); 
+    histo2DAllPi0Mass->GetYaxis()->SetRangeUser(122.5,171.8);
+    histo2DAllPi0Mass->DrawCopy();
 
         if(havePCM){
 	  histoPCMPi0Mass->Draw("p,same,e");
@@ -3391,16 +3371,12 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
 	}
         DrawGammaSetMarker(histoPHOSPi0Mass, markerStyleDet[1], markerSizeDet[1]*0.55, colorDet[1] , colorDet[1]);
         histoPHOSPi0Mass->Draw("p,same,e");
-        DrawGammaSetMarker(histoPHOSPi0TrueMass, markerStyleDetMC[1], markerSizeDetMC[1]*0.55, colorDetMC[1] , colorDetMC[1]);
-        histoPHOSPi0TrueMass->Draw("p,same,e");
-        if(haveEMCAL){
+        //DrawGammaSetMarker(histoPHOSPi0TrueMass, markerStyleDetMC[1], markerSizeDetMC[1]*0.55, colorDetMC[1] , colorDetMC[1]);
+        //histoPHOSPi0TrueMass->Draw("p,same,e");
+        if(haveEMCALLow){
 	  graphEMCALPi0Mass->Draw("p,same,z");
-	  graphEMCALPi0MassMC->Draw("p,same,z");
-        }if(havePCMEMCAL){
-	  graphPCMEMCALPi0Mass->Draw("p,same,z");
-	  graphPCMEMCALPi0MassMC->Draw("p,same,z");
-        }
-
+	  //graphEMCALPi0MassMC->Draw("p,same,z");
+	}
         DrawGammaLines(0.23, 50. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
 
         labelLegendBMass->Draw();
@@ -3416,22 +3392,17 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
 	  SetStyleTLatex( textMassPCM2, textSizeLabelsPixel,4);
 	  textMassPCM2->SetTextFont(43);
 	  textMassPCM2->Draw();
-	}if(havePCMEMCAL){
-	  TLatex *textMassPCMEMCAL2           = new TLatex(columnsLegendMass2[0],rowsLegendMass3[2],"PCM-EMCal");
-	  SetStyleTLatex( textMassPCMEMCAL2, textSizeLabelsPixel,4);
-	  textMassPCMEMCAL2->SetTextFont(43);
-	  textMassPCMEMCAL2->Draw();
-	}if(haveEMCAL){
-	  TLatex *textMassEMCAL2              = new TLatex(columnsLegendMass2[0],rowsLegendMass3[3],"EMCal");
+	}if(haveEMCALLow){
+	  TLatex *textMassEMCAL2              = new TLatex(columnsLegendMass2[0],rowsLegendMass3[2],"EMCal");
 	  SetStyleTLatex( textMassEMCAL2, textSizeLabelsPixel,4);
 	  textMassEMCAL2->SetTextFont(43);
 	  textMassEMCAL2->Draw();
 	}
-        TLatex *textMassPHOS2               = new TLatex(columnsLegendMass2[0],rowsLegendMass3[4],"PHOS");
-        SetStyleTLatex( textMassPHOS2, textSizeLabelsPixel,4);
-        textMassPHOS2->SetTextFont(43);
-        textMassPHOS2->Draw();
-    
+	  TLatex *textMassPHOS2               = new TLatex(columnsLegendMass2[0],rowsLegendMass3[3],"PHOS");
+	  SetStyleTLatex( textMassPHOS2, textSizeLabelsPixel,4);
+	  textMassPHOS2->SetTextFont(43);
+	  textMassPHOS2->Draw();
+
         //****************** second Column *************************************************
         TLatex *textMassData2               = new TLatex(columnsLegendMass2[1],rowsLegendMass3[0] ,"Data");
         SetStyleTLatex( textMassData2, textSizeLabelsPixel,4);
@@ -3445,17 +3416,15 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
 	if(havePCM){
 	  markerPCMPi0Mass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass3[1]+ offsetMarkerYMass3);
 	  markerPCMPi0MassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass3[1]+ offsetMarkerYMass3);
-	}if(havePCMEMCAL){
-	  markerPCMEMCALPi0Mass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass3[2]+ offsetMarkerYMass3);
-	  markerPCMEMCALPi0MassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass3[2]+ offsetMarkerYMass3);
-	}if(haveEMCAL){
-	  markerEMCALPi0Mass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass3[3]+ offsetMarkerYMass3);
-	  markerEMCALPi0MassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass3[3]+ offsetMarkerYMass3);
-	}
-        TMarker* markerPHOSPi0Mass   = CreateMarkerFromHisto(histoPHOSPi0Mass,columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass3[4]+ offsetMarkerYMass3 ,scaleMarkerMass2);
-        markerPHOSPi0Mass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass3[4]+ offsetMarkerYMass3);
-        TMarker* markerPHOSPi0MassMC = CreateMarkerFromHisto(histoPHOSPi0TrueMass,columnsLegendMass2[2]+ offsetMarkerXMass2 ,rowsLegendMass3[4]+ offsetMarkerYMass3 ,scaleMarkerMass2);
-        markerPHOSPi0MassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass3[4]+ offsetMarkerYMass3);
+	}if(haveEMCALLow){
+	    markerEMCALPi0Mass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass3[2]+ offsetMarkerYMass3);
+	    //markerEMCALPi0MassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass3[2]+ offsetMarkerYMass3);
+	  }
+	  TMarker* markerPHOSPi0Mass   = CreateMarkerFromHisto(histoPHOSPi0Mass,columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass3[3]+ offsetMarkerYMass3 ,scaleMarkerMass2);
+	  markerPHOSPi0Mass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass3[3]+ offsetMarkerYMass3);
+	  //TMarker* markerPHOSPi0MassMC = CreateMarkerFromHisto(histoPHOSPi0TrueMass,columnsLegendMass2[2]+ offsetMarkerXMass2 ,rowsLegendMass3[4]+ offsetMarkerYMass3 ,scaleMarkerMass2);
+	  //markerPHOSPi0MassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass3[4]+ offsetMarkerYMass3);
+
 
     canvasMassWidthPi0->Update();
     canvasMassWidthPi0->Print(Form("%s/Pi0_MassAndWidth_incPHOS.%s",outputDir.Data(),suffix.Data()));
@@ -3486,7 +3455,7 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
         TH2F * histo2DAllEtaFWHM    = new TH2F("histo2DAllEtaFWHM","histo2DAllEtaFWHM", 20, 0.33, 50. ,1000., -5, 92);
         SetStyleHistoTH2ForGraphs(histo2DAllEtaFWHM, "#it{p}_{T} (GeV/#it{c})", "Peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth, textsizeLabelsWidth,
                                   0.85*textsizeLabelsWidth, textsizeLabelsWidth, 0.85,0.28/(textsizeFacWidth*margin), 512, 505);
-//      histo2DAllEtaFWHM->GetYaxis()->SetRangeUser(-1.,25.5);
+	histo2DAllEtaFWHM->GetYaxis()->SetRangeUser(-1.,25.5);   // eta without PHOS
         histo2DAllEtaFWHM->GetYaxis()->SetMoreLogLabels(kTRUE);
         histo2DAllEtaFWHM->GetYaxis()->SetNdivisions(505);
         histo2DAllEtaFWHM->GetYaxis()->SetNoExponent(kTRUE);
@@ -3495,10 +3464,10 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
         histo2DAllEtaFWHM->DrawCopy(); 
 
 	if(haveEMCALLow){
-	  DrawGammaSetMarkerTGraphAsym(graphEMCALEtaFWHM, markerStyleDet[2], markerSizeDet[2]*0.55, colorDet[2] , colorDet[2]);
-	  graphEMCALEtaFWHM->Draw("p,same,z");
-	  DrawGammaSetMarkerTGraphAsym(graphEMCALEtaFWHMMC, markerStyleDetMC[2], markerSizeDetMC[2]*0.55, colorDetMC[2] , colorDetMC[2]);
-	  graphEMCALEtaFWHMMC->Draw("p,same,z");        
+	  //DrawGammaSetMarkerTGraphAsym(graphEMCALEtaFWHM, markerStyleDet[2], markerSizeDet[2]*0.55, colorDet[2] , colorDet[2]);
+	  //graphEMCALEtaFWHM->Draw("p,same,z");
+	  //DrawGammaSetMarkerTGraphAsym(graphEMCALEtaFWHMMC, markerStyleDetMC[2], markerSizeDetMC[2]*0.55, colorDetMC[2] , colorDetMC[2]);
+	  //graphEMCALEtaFWHMMC->Draw("p,same,z");        
         }if(havePCMEMCAL){
 	  DrawGammaSetMarkerTGraphAsym(graphPCMEMCALEtaFWHM, markerStyleDet[4], markerSizeDet[4]*0.55, colorDet[4] , colorDet[4]);
 	  graphPCMEMCALEtaFWHM->Draw("p,same,z");
@@ -3522,7 +3491,7 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
         //****************** first Column **************************************************
         if(havePCM)textMassPCM->Draw();
         if(havePCMEMCAL)textMassPCMEMCAL->Draw();
-        if(haveEMCAL)textMassEMCAL->Draw();
+        //if(haveEMCALLow)textMassEMCAL->Draw();
         //****************** second Column *************************************************
         textMassData->Draw();
         textMassMC->Draw();
@@ -3532,15 +3501,15 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
 	}if(havePCMEMCAL){
 	  markerPCMEMCALPi0Mass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[2]+ offsetMarkerYMass2);
 	  markerPCMEMCALPi0MassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass2[2]+ offsetMarkerYMass2);
-	}if(haveEMCAL){
-	  markerEMCALPi0Mass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[3]+ offsetMarkerYMass2);
-	  markerEMCALPi0MassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass2[3]+ offsetMarkerYMass2);
+	}if(haveEMCALLow){
+	  //markerEMCALPi0Mass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[3]+ offsetMarkerYMass2);
+	  //markerEMCALPi0MassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass2[3]+ offsetMarkerYMass2);
         }
 
     padMassEta->cd();
     padMassEta->SetLogx();
 
-        TH2F * histo2DAllEtaMass    = new TH2F("histo2DAllEtaMass","histo2DAllEtaMass",20, 0.33, 50., 1000., 500., 579);
+        TH2F * histo2DAllEtaMass    = new TH2F("histo2DAllEtaMass","histo2DAllEtaMass",20, 0.33, 50., 1000., 520., 620);
         SetStyleHistoTH2ForGraphs(histo2DAllEtaMass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass, textsizeLabelsMass, 0.85*textsizeLabelsMass, 
                                   textsizeLabelsMass, 0.9, 0.28/(textsizeFacMass*margin), 512, 505);
         histo2DAllEtaMass->GetXaxis()->SetMoreLogLabels(kTRUE);
@@ -3550,11 +3519,11 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
         histo2DAllEtaMass->GetXaxis()->SetLabelOffset(-0.015);
         histo2DAllEtaMass->DrawCopy(); 
 
-	if(haveEMCAL){
-	  DrawGammaSetMarkerTGraphAsym(graphEMCALEtaMass, markerStyleDet[2], markerSizeDet[2]*0.55, colorDet[2] , colorDet[2]);
-	  graphEMCALEtaMass->Draw("p,same,z");
-	  DrawGammaSetMarkerTGraphAsym(graphEMCALEtaMassMC, markerStyleDetMC[2], markerSizeDetMC[2]*0.55, colorDetMC[2] , colorDetMC[2]);
-	  graphEMCALEtaMassMC->Draw("p,same,z");
+	if(haveEMCALLow){
+	  //DrawGammaSetMarkerTGraphAsym(graphEMCALEtaMass, markerStyleDet[2], markerSizeDet[2]*0.55, colorDet[2] , colorDet[2]);
+	  //graphEMCALEtaMass->Draw("p,same,z");
+	  //DrawGammaSetMarkerTGraphAsym(graphEMCALEtaMassMC, markerStyleDetMC[2], markerSizeDetMC[2]*0.55, colorDetMC[2] , colorDetMC[2]);
+	  //graphEMCALEtaMassMC->Draw("p,same,z");
         }if(havePCMEMCAL){
 	  DrawGammaSetMarkerTGraphAsym(graphPCMEMCALEtaMass, markerStyleDet[4], markerSizeDet[4]*0.55, colorDet[4] , colorDet[4]);
 	  graphPCMEMCALEtaMass->Draw("p,same,z");
@@ -3573,6 +3542,116 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
     canvasMassWidthEta->Update();
     canvasMassWidthEta->Print(Form("%s/Eta_MassAndWidth.%s",outputDir.Data(),suffix.Data()));
     }
+
+    // **********************************************************************************************************************
+    // ******************************************* Mass and width for eta at 13TeV including PHOS ***************************
+    // **********************************************************************************************************************
+    if(havePHOS){
+    canvasMassWidthEta->cd();
+    padWidthEta->Draw();
+    padMassEta->Draw();
+    
+    TPad* padMassLegend2                = new TPad("padMassLegend2", "", 0.13, 0.32, 0.48, 0.51,-1, -1, -2);
+    DrawGammaPadSettings( padMassLegend2, 0., 0., 0., 0.);
+    padMassLegend2->SetFillStyle(0);
+    padMassLegend2->Draw();
+    
+    padWidthEta->cd();
+    padWidthEta->SetLogx(); 
+
+    histo2DAllEtaFWHM->GetYaxis()->SetRangeUser(-1.,32.5);   // eta with PHOS
+    histo2DAllEtaFWHM->DrawCopy(); 
+
+	if(havePCM){
+	  DrawGammaSetMarker(histoPCMEtaFWHMMeV, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
+	  histoPCMEtaFWHMMeV->Draw("p,same,e");
+	  DrawGammaSetMarker(histoPCMEtaTrueFWHMMeV, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
+	  histoPCMEtaTrueFWHMMeV->Draw("p,same,e");
+	}
+        DrawGammaSetMarker(histoPHOSEtaFWHMMeV, markerStyleDet[1], markerSizeDet[1]*0.55, colorDet[1] , colorDet[1]);
+        histoPHOSEtaFWHMMeV->Draw("p,same,e");
+        //DrawGammaSetMarker(histoPHOSEtaTrueFWHMMeV, markerStyleDetMC[1], markerSizeDetMC[1]*0.55, colorDetMC[1] , colorDetMC[1]);
+        //histoPHOSEtaTrueFWHMMeV->Draw("p,same,e");
+        if(haveEMCALLow){
+	  //graphEMCALEtaFWHM->Draw("p,same,z");
+	  //graphEMCALEtaFWHMMC->Draw("p,same,z");
+	}
+        labelMassPerf->Draw();
+        labelMassEnergy->Draw();
+        labelMassEta->Draw();        
+        labelLegendAMass->Draw();
+
+    padMassEta->cd();
+    padMassEta->SetLogx();
+
+    histo2DAllEtaMass->GetYaxis()->SetRangeUser(500.,620.);   // eta with PHOS
+    histo2DAllEtaMass->DrawCopy(); 
+
+        if(havePCM){
+	  histoPCMEtaMass->Draw("p,same,e");
+          histoPCMEtaTrueMass->Draw("p,same,e");
+	}
+        DrawGammaSetMarker(histoPHOSEtaMass, markerStyleDet[1], markerSizeDet[1]*0.55, colorDet[1] , colorDet[1]); 
+        histoPHOSEtaMass->Draw("p,same,e");
+        //DrawGammaSetMarker(histoPHOSEtaTrueMass, markerStyleDetMC[1], markerSizeDetMC[1]*0.55, colorDetMC[1] , colorDetMC[1]);
+        //histoPHOSEtaTrueMass->Draw("p,same,e");
+        if(haveEMCALLow){
+	  //graphEMCALEtaMass->Draw("p,same,z");
+	  //graphEMCALEtaMassMC->Draw("p,same,z");
+        }
+
+        DrawGammaLines(0.23, 50. , mesonMassExpectEta*1000., mesonMassExpectEta*1000.,0.1, kGray);
+	padMassEta->Update();
+        labelLegendBMass->Draw();
+        
+        //********************************** Defintion of the Legend **************************************************    
+        Double_t rowsLegendMass3[5]         = {0.8,0.6,0.4,0.2,0.01};
+        Double_t offsetMarkerYMass3         = 0.06;
+
+        padMassLegend2->cd();
+        //****************** first Column **************************************************
+	if(havePCM){
+	  TLatex *textMassPCM2                = new TLatex(columnsLegendMass2[0],rowsLegendMass3[1],"PCM");
+	  SetStyleTLatex( textMassPCM2, textSizeLabelsPixel,4);
+	  textMassPCM2->SetTextFont(43);
+	  textMassPCM2->Draw();
+	}if(haveEMCALLow){
+	  //TLatex *textMassEMCAL2              = new TLatex(columnsLegendMass2[0],rowsLegendMass3[3],"EMCal");
+	  //SetStyleTLatex( textMassEMCAL2, textSizeLabelsPixel,4);
+	  //textMassEMCAL2->SetTextFont(43);
+	  //textMassEMCAL2->Draw();
+	}
+        TLatex *textMassPHOS2               = new TLatex(columnsLegendMass2[0],rowsLegendMass3[2],"PHOS");
+        SetStyleTLatex( textMassPHOS2, textSizeLabelsPixel,4);
+        textMassPHOS2->SetTextFont(43);
+        textMassPHOS2->Draw();
+    
+        //****************** second Column *************************************************
+        TLatex *textMassData2               = new TLatex(columnsLegendMass2[1],rowsLegendMass3[0] ,"Data");
+        SetStyleTLatex( textMassData2, textSizeLabelsPixel,4);
+        textMassData2->SetTextFont(43);
+        textMassData2->Draw();
+        TLatex *textMassMC2                 = new TLatex(columnsLegendMass2[2] ,rowsLegendMass3[0],"MC");
+        SetStyleTLatex( textMassMC2, textSizeLabelsPixel,4);
+        textMassMC2->SetTextFont(43);
+        textMassMC2->Draw();
+        
+	if(havePCM){
+	  markerPCMPi0Mass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass3[1]+ offsetMarkerYMass3);
+	  markerPCMPi0MassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass3[1]+ offsetMarkerYMass3);
+	}if(haveEMCALLow){
+	  //markerEMCALPi0Mass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass3[3]+ offsetMarkerYMass3);
+	  //markerEMCALPi0MassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass3[3]+ offsetMarkerYMass3);
+	}
+        TMarker* markerPHOSEtaMass   = CreateMarkerFromHisto(histoPHOSEtaMass,columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass3[2]+ offsetMarkerYMass3 ,scaleMarkerMass2);
+        markerPHOSEtaMass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass3[2]+ offsetMarkerYMass3);
+        //TMarker* markerPHOSEtaMassMC = CreateMarkerFromHisto(histoPHOSEtaTrueMass,columnsLegendMass2[2]+ offsetMarkerXMass2 ,rowsLegendMass3[4]+ offsetMarkerYMass3 ,scaleMarkerMass2);
+        //markerPHOSEtaMassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass3[4]+ offsetMarkerYMass3);
+
+    canvasMassWidthEta->Update();
+    canvasMassWidthEta->Print(Form("%s/Eta_MassAndWidth_incPHOS.%s",outputDir.Data(),suffix.Data()));
+    }
+
 
     // **********************************************************************************************************************
     // ******************************** Cross section for pi0 single measurement 13TeV ************************************
@@ -5377,6 +5456,107 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
         }
     }
 
+     // **********************************************************************************************************************
+      // **************************Plot example invariant mass bin PHOS ******************************************************
+      // **********************************************************************************************************************
+    if(havePHOS){
+
+      // ***** Pi0 ********
+      canvasInvMassSamplePlot->cd();
+      histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(0.9*histoPHOSSignalPi0->GetMinimum(),1.6*histoPHOSSignalPi0->GetMaximum());
+      histo2DPi0InvMassDummy->DrawCopy();
+
+      TLatex *labelInvMassPtRangePHOS = new TLatex(0.945,0.9,"#pi^{0}: 20.00 GeV/c < p_{T} < 22.00 GeV/c");
+
+      DrawGammaSetMarker(histoPHOSSignalPlusBGPi0, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
+      histoPHOSSignalPlusBGPi0->SetLineWidth(1);
+      histoPHOSSignalPlusBGPi0->Draw("hist,e,same");
+      //DrawGammaSetMarker(histoPHOSTotalBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
+      //histoPHOSTotalBGPi0->Draw("same");
+
+      DrawGammaSetMarker(histoPHOSSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
+      histoPHOSSignalPi0->Draw("same");
+      fitPHOSPi0->SetRange(0,0.255);
+      fitPHOSPi0->SetLineColor(fitColorInvMassSG);
+      fitPHOSPi0->Draw("same");
+
+      //
+      labelInvMassEnergy->Draw();
+
+      TLatex *labelInvMassTriggerPHOSh      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,"PHOS triggered");
+      SetStyleTLatex( labelInvMassTriggerPHOSh, 0.85*textSizeLabelsPixel,4);
+      labelInvMassTriggerPHOSh->SetTextFont(43);
+      labelInvMassTriggerPHOSh->Draw();
+
+     TLatex *labelInvMassRecoPHOS  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"PHOS");
+      SetStyleTLatex( labelInvMassRecoPHOS, 0.85*textSizeLabelsPixel,4);
+      labelInvMassRecoPHOS->SetTextFont(43);
+      labelInvMassRecoPHOS->Draw();
+
+      TLatex *labelInvMassPtRangePHOSh = new TLatex(0.945,0.9,"#pi^{0}: 20.00 GeV/c < p_{T} < 22.00 GeV/c");
+      SetStyleTLatex( labelInvMassPtRangePHOSh, 0.85*textSizeLabelsPixel,4);
+      labelInvMassPtRangePHOSh->SetTextAlign(31);
+      labelInvMassPtRangePHOSh->SetTextFont(43);
+      labelInvMassPtRangePHOSh->Draw();
+
+      TLegend* legendInvMassPHOSh  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
+      legendInvMassPHOSh->SetMargin(0.25);
+      legendInvMassPHOSh->AddEntry(histoPHOSSignalPlusBGPi0,"Raw real events","l");
+      //legendInvMassPHOSh->AddEntry(histoPHOSTotalBGPi0,"Mixed event +","p");
+      legendInvMassPHOSh->AddEntry((TObject*)0,"corr. BG","");
+      legendInvMassPHOSh->AddEntry(histoPHOSSignalPi0,"BG subtracted","p");
+      legendInvMassPHOSh->AddEntry(fitPHOSPi0, "Fit","l");
+      legendInvMassPHOSh->Draw();
+      canvasInvMassSamplePlot->SaveAs(Form("%s/Pi0_InvMassBinPHOS.%s",outputDir.Data(), suffix.Data()));
+
+
+      // ***** Eta ********
+      canvasInvMassSamplePlot->cd();
+      histo2DEtaInvMassDummy->GetYaxis()->SetRangeUser(0.9*histoPHOSSignalEta->GetMinimum(),1.6*histoPHOSSignalEta->GetMaximum());
+      histo2DEtaInvMassDummy->DrawCopy();
+
+      TLatex *labelInvMassPtRangePHOS = new TLatex(0.945,0.9,"#eta: 20.00 GeV/c < p_{T} < 22.00 GeV/c");
+
+      DrawGammaSetMarker(histoPHOSSignalPlusBGEta, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
+      histoPHOSSignalPlusBGEta->SetLineWidth(1);
+      histoPHOSSignalPlusBGEta->Draw("hist,e,same");
+      //DrawGammaSetMarker(histoPHOSTotalBGEta, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
+      //histoPHOSTotalBGEta->Draw("same");
+
+      DrawGammaSetMarker(histoPHOSSignalEta, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
+      histoPHOSSignalEta->Draw("same");
+      fitPHOSEta->SetRange(0,0.255);
+      fitPHOSEta->SetLineColor(fitColorInvMassSG);
+      fitPHOSEta->Draw("same");
+
+      //
+      labelInvMassEnergy->Draw();
+
+      TLatex *labelInvMassTriggerPHOSh      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,"PHOS triggered");
+      SetStyleTLatex( labelInvMassTriggerPHOSh, 0.85*textSizeLabelsPixel,4);
+      labelInvMassTriggerPHOSh->SetTextFont(43);
+      labelInvMassTriggerPHOSh->Draw();
+
+      labelInvMassRecoPHOS->Draw();
+
+      SetStyleTLatex( labelInvMassPtRangePHOSh, 0.85*textSizeLabelsPixel,4);
+      labelInvMassPtRangePHOSh->SetTextAlign(31);
+      labelInvMassPtRangePHOSh->SetTextFont(43);
+      labelInvMassPtRangePHOSh->Draw();
+
+      TLegend* legendInvMassPHOSh  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
+      legendInvMassPHOSh->SetMargin(0.25);
+      legendInvMassPHOSh->AddEntry(histoPHOSSignalPlusBGEta,"Raw real events","l");
+      //legendInvMassPHOSh->AddEntry(histoPHOSTotalBGEta,"Mixed event +","p");
+      legendInvMassPHOSh->AddEntry((TObject*)0,"corr. BG","");
+      legendInvMassPHOSh->AddEntry(histoPHOSSignalEta,"BG subtracted","p");
+      legendInvMassPHOSh->AddEntry(fitPHOSEta, "Fit","l");
+      legendInvMassPHOSh->Draw();
+      canvasInvMassSamplePlot->SaveAs(Form("%s/Eta_InvMassBinPHOS.%s",outputDir.Data(), suffix.Data()));
+
+    }
+
+
       // **********************************************************************************************************************
       // **************************Plot example invariant mass bin PHOS low pt ***********************************************
       // **********************************************************************************************************************
@@ -5418,9 +5598,6 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
       labelInvMassTriggerPHOSl->SetTextFont(43);
       labelInvMassTriggerPHOSl->Draw();
 
-      TLatex *labelInvMassRecoPHOS  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"PHOS");
-      SetStyleTLatex( labelInvMassRecoPHOS, 0.85*textSizeLabelsPixel,4);
-      labelInvMassRecoPHOS->SetTextFont(43);
       labelInvMassRecoPHOS->Draw();
 
       SetStyleTLatex( labelInvMassPtRangePHOSl, 0.85*textSizeLabelsPixel,4);
@@ -5438,6 +5615,9 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
       legendInvMassPHOSl->Draw();
       canvasInvMassSamplePlot->SaveAs(Form("%s/Pi0_InvMassBinPHOSlow.%s",outputDir.Data(), suffix.Data()));
     }
+
+ 
+
       // **********************************************************************************************************************
       // **************************Plot example invariant mass bin PHOS high pt ***********************************************
       // **********************************************************************************************************************
@@ -5452,8 +5632,6 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
       canvasInvMassSamplePlot->cd();
       histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(0.9*histoPHOSHighSignalPi0->GetMinimum(),1.6*histoPHOSHighSignalPi0->GetMaximum());
       histo2DPi0InvMassDummy->DrawCopy();
-
-      TLatex *labelInvMassPtRangePHOSh = new TLatex(0.945,0.9,"#pi^{0}: 20.00 GeV/c < p_{T} < 22.00 GeV/c");
 
       DrawGammaSetMarker(histoPHOSHighSignalPlusBGPi0, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
       histoPHOSHighSignalPlusBGPi0->SetLineWidth(1);
