@@ -872,22 +872,23 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     //************************** Purity Plot ******************************************
     //*********************************************************************************
     cout << "Plotting purity" << endl;
-    TCanvas* canvasPurity = new TCanvas("canvasPurity","",200,10,1350,900);
-    DrawGammaCanvasSettings( canvasPurity, 0.06, 0.015, 0.015, 0.08);
+    TCanvas* canvasPurity = new TCanvas("canvasPurity","",0,0,1000,900);// gives the page size
+    DrawGammaCanvasSettings( canvasPurity, 0.09, 0.017, 0.015, 0.08);
+    canvasPurity->SetLogy(0);
 
     DrawAutoGammaMesonHistos( histoMesonPurityPt, 
-                                "", "#it{p}_{T} (GeV/#it{c})", "#epsilon_{pur}", 
+                                "", "#it{p}_{T} (GeV/#it{c})", "#it{P}_{#pi^{0}}", 
                                 kFALSE, 0.75, 3e-6, kFALSE,
-                                kTRUE, 0., 1, 
+                                kTRUE, 0.6, 1.02, 
                                 kFALSE, 0., 10.);
-    histoMesonPurityPt->GetYaxis()->SetTitleOffset(0.7);        
+    histoMesonPurityPt->GetYaxis()->SetTitleOffset(1.05);        
     DrawGammaSetMarker(histoMesonPurityPt,  20 , 1.5, kAzure+2, kAzure+2);
     histoMesonPurityPt->Draw("e1");
     if (histoMesonPurityUnmodPt){
         DrawGammaSetMarker(histoMesonPurityUnmodPt,  24 , 1.5, kRed-6, kRed-6);  
         histoMesonPurityUnmodPt->Draw("same,e1");
     }    
-    TLegend* legendPurity = GetAndSetLegend2(0.35, 0.125, 0.65, 0.205, 28);
+    TLegend* legendPurity = GetAndSetLegend2(0.2, 0.125, 0.65, 0.205, 28);
     legendPurity->SetMargin(0.12);
     legendPurity->AddEntry(histoMesonPurityPt,Form("%s Purity",textMeson.Data()));
     if (histoMesonPurityUnmodPt)
@@ -1356,7 +1357,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
                 } 
             }             
         }    
-
+        legendSecRAWYield->Draw();
         PutProcessLabelAndEnergyOnPlot(0.13, 0.94, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
         
         canvasRAWYieldSec->Update();

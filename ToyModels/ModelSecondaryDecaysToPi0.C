@@ -305,7 +305,7 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
     // Definition of histograms/ graphs and fits for input parametrisation
     TH1D* histoPartInputPt                  = NULL; 
     TH1D* histoPartInputPtAlter             = NULL; 
-    TH1D* histoPartInputPtFromParam         = new TH1D("histoPartInputPtFromParam","histoPartInputPtFromParam",70000,0,70); 
+    TH1D* histoPartInputPtFromParam         = new TH1D("histoPartInputPtFromParam","histoPartInputPtFromParam",maxPt*100,0,maxPt); 
     TSpline3* splinePart                    = NULL; 
     TH1D* ratioPartSpecToFit                = NULL; 
     TH1D* ratioPartSpecToSpline             = NULL; 
@@ -329,9 +329,10 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
     Double_t paramGraph[10]             = {0,0,0,0,0,0,0,0,0,0};
     Double_t fitRange[2]                = {0, 40};   
     Double_t maxOrSpec                  = 12;
-
+    Double_t etaToBeGenerated           = 0.805;
     // K0s & K0L
     if (particle == 0 || particle == 1 ){
+        etaToBeGenerated                = 0.805;
         if (!kIsMC){
             if (energy.CompareTo("2.76TeV") == 0){
                 histoPartInputPt            = (TH1D*)inputFile->Get("histoChargedKaonSpecPubStat2760GeV");
@@ -422,7 +423,7 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
             yErr[i]             = fitPtPartInput->Eval(xValues[i])*0.15;
             nBinsX++;
         }
-        histoPartInputPtExt         = new TGraphErrors(nBinsX, xValues, yValues, xErr, yErr);
+        histoPartInputPtExt      = new TGraphErrors(nBinsX, xValues, yValues, xErr, yErr);
         splinePart               = new TSpline3(histoPartInputPt);
         splinePartExt            = new TSpline3("extendPartSpline",xValues,yValues,nBinsX);
         for (Int_t i = 1; i<histoPartInputPtFromParam->GetNbinsX()+1; i++ ){
@@ -436,6 +437,7 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
             ratioPartSpecAlterToSpline  = CalculateHistoRatioToSpline (histoPartInputPtAlter, splinePartExt); 
         }
     } else if (particle == 2){
+        etaToBeGenerated            = 1.6;
         TF1* fitPtPartInputlow      = NULL;
         Double_t fitRangeLow[2]     = {0.5, 5};
         if (!kIsMC){
@@ -451,6 +453,26 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
                 fitPtPartInput          = FitObject("l","fitPtPartInput","Lambda",NULL,fitRange[0],fitRange[1]);
                 fitPtPartInputlow       = FitObject("l","fitPtPartInputLow","Lambda",NULL,fitRangeLow[0],fitRangeLow[1]);
             }    
+        } else {
+            histoPartInputPt            = (TH1D*)inputFileMC->Get("MC_Lambda_Pt_Rebinned");
+            for (Int_t y=0; y< 10; y++){
+                if (!histoXCheckDecayProdsPt_InRap){
+                    histoXCheckMotherPt_InRap          = (TH1D*)inputFileMC->Get(Form("MCYield_Lambda_Pt_%1.2f",yRanges[y]));
+                    histoXCheckDecayProdsPt_InRap      = (TH1D*)inputFileMC->Get(Form("MCSecPi0FromLambda_%1.2f",yRanges[y]));
+                    if (histoXCheckDecayProdsPt_InRap){
+                        haveMCxCheckInRap[y] = kTRUE;
+                    }
+                }
+            }
+            fitRange[0]             = 3;
+            fitRange[1]             = 15;
+            paramGraph[0]           = histoPartInputPt->GetBinContent(1);
+            paramGraph[1]           = 6.; 
+            paramGraph[2]           = 0.5;
+            nParam                  = 3;
+            maxOrSpec               = 10;
+            fitPtPartInput          = FitObject("l","fitPtPartInput","Lambda",NULL,fitRange[0],fitRange[1]);
+            fitPtPartInputlow       = FitObject("l","fitPtPartInputLow","Lambda",NULL,fitRangeLow[0],fitRangeLow[1]);
         }    
         if (!histoPartInputPt){
             cout << "INFO: ToyMC not configured for Lambda at this energy & data/MC, aborting here"<< endl;
@@ -467,10 +489,10 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
         histoPartInputPt->Fit(fitPtPartInput,"QNMRE","", fitRange[0],fitRange[1]);
         histoPartInputPt->Fit(fitPtPartInputlow,"QNMRE","", fitRangeLow[0],fitRangeLow[1]);    
             
-        Double_t xValues[150];
-        Double_t xErr[150];
-        Double_t yValues[150];
-        Double_t yErr[150];
+        Double_t xValues[250];
+        Double_t xErr[250];
+        Double_t yValues[250];
+        Double_t yErr[250];
         Int_t nBinsX            = 0;
         Int_t nBinsXOrg         = 0;
         for (Int_t i = 1; (i< histoPartInputPt->GetNbinsX()+1 && histoPartInputPt->GetBinCenter(i) < maxOrSpec) ; i++){
@@ -485,7 +507,7 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
             }
         }
         nBinsXOrg               = nBinsX;
-        for (Int_t i = nBinsXOrg; (i < 150 && xValues[i-1] < 70); i++){
+        for (Int_t i = nBinsXOrg; (i < 250 && xValues[i-1] < maxPt); i++){
             xValues[i]          = maxOrSpec+(i-nBinsXOrg);
             xErr[i]             = 0.5;
             yValues[i]          = fitPtPartInput->Eval(xValues[i]);
@@ -512,40 +534,56 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
 
     // plot input distribution and extended version
     TCanvas *canvasFitQA = new TCanvas("canvasFitQA","canvasFitQA",1000,800);
-    DrawGammaCanvasSettings( canvasFitQA, 0.08, 0.015, 0.02, 0.08);
+    DrawGammaCanvasSettings( canvasFitQA, 0.12, 0.015, 0.02, 0.08);
     canvasFitQA->cd();
     canvasFitQA->SetLogy(1);
     
     TH2F* dummyDrawingHist  = new TH2F("dummyDrawingHist","dummyDrawingHist",5000,0,70,10000, 1e-14, 1); 
     SetStyleHistoTH2ForGraphs(  dummyDrawingHist, "#it{p}_{T}(GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", 0.028, 0.04, 
-                                0.028, 0.04, 0.9, 0.95, 510, 505);
+                                0.028, 0.04, 0.9, 1.25, 510, 505);
     dummyDrawingHist->Draw();
-    
+  
+        TString labelPlot[2]    = {"#Lambda","p"};
+        if (particle < 2){
+            labelPlot[0]        = "#frac{K^{+}+K^{-}}{2}";
+            labelPlot[1]        = "K^{0}_{S}";
+        }    
+        TLegend* legendInput = GetAndSetLegend2(0.6, 0.50, 0.95, 0.93, 32,1);     
+        legendInput->SetMargin(0.15);
         DrawGammaSetMarker(histoPartInputPt, 20, 1.5, kAzure-6, kAzure-6);
         histoPartInputPt->Draw("samepe");
-
+        legendInput->AddEntry(histoPartInputPt,labelPlot[0].Data(),"p");
         if (histoPartInputPtAlter){
             DrawGammaSetMarker(histoPartInputPtAlter, 24, 1.5, kCyan+2, kCyan+2);
             histoPartInputPtAlter->Draw("samepe");
+            legendInput->AddEntry(histoPartInputPtAlter,labelPlot[1].Data(),"p");
         }
         
-        splinePart->SetLineColor(kAzure+2);
         DrawGammaSetMarkerTGraphErr(histoPartInputPtExt, 24, 1.5, kRed+2, kRed+2);
         histoPartInputPtExt->Draw("same,pz");
+        legendInput->AddEntry(histoPartInputPtExt,Form("%s, ext.",labelPlot[0].Data()),"p");
         
-        splinePartExt->SetLineColor(kBlue+2);
-        splinePartExt->Draw("same");
         if (histoPartInputPtFromParam){
             histoPartInputPtFromParam->SetLineColor(kRed-6);
             histoPartInputPtFromParam->Draw("same,pe");
+            
         }
+        splinePartExt->SetLineColor(kBlue+2);
+        splinePartExt->SetLineStyle(5);
+        splinePartExt->Draw("same");
+        
         fitPtPartInput->SetRange(fitRange[0],fitRange[1]);
         fitPtPartInput->SetLineWidth(2);
         fitPtPartInput->SetLineStyle(7);
         fitPtPartInput->SetLineColor(kGreen+2);
         fitPtPartInput->Draw("same");
-    
-    
+
+        legendInput->AddEntry(fitPtPartInput,Form("%s, fit.",labelPlot[0].Data()),"l");
+        legendInput->AddEntry(splinePartExt,Form("%s, param.",labelPlot[0].Data()),"l");
+        if (histoPartInputPtFromParam)
+            legendInput->AddEntry(histoPartInputPtFromParam,Form("%s, from param.",labelPlot[0].Data()),"p");
+        
+        legendInput->Draw();
     canvasFitQA->SaveAs(Form("%s%s_PtDistribution_Input.%s", fOutputDir.Data(), outputlabel.Data(), suffix.Data()));
 
     
@@ -597,9 +635,9 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
     TRandom3* randy3    = new TRandom3(0);
     TGenPhaseSpace event;
     
-    Int_t nBinsPt           = 700; //700;
+    Int_t nBinsPt           = maxPt*10; //700;
     Double_t startBinPt     = 0.;
-    Double_t endBinPt       = 70.;
+    Double_t endBinPt       = maxPt;
     
     //*************************************************************************************************
     //********************** Create histograms for output *********************************************
@@ -679,7 +717,7 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
         // asume theta is flat
         Double_t thetaCurrent   = randy2->Uniform(2*TMath::Pi());
 //         Double_t etaCurrent     = -1000;
-        Double_t etaCurrent     = randy2->Uniform(-0.805,0.805);
+        Double_t etaCurrent     = randy2->Uniform(-etaToBeGenerated,etaToBeGenerated);
         // generate eta according to charged hadron distribution 
 //         if (chHadDNdEta){
 //             etaCurrent          = chHadDNdEta->GetRandom();
