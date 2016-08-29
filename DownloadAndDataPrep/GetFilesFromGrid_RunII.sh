@@ -80,7 +80,9 @@ case "$1" in    # default: echo "no valid period chosen";
 	SYSTEM=PbPb
 	PASS=pass2_lowIR
 	# all 13 runs:
-	RUN=(244917 244918 244975 244980 244982 244983 245061 245064 245066 245068 246390 246391 246392);
+	#RUN=(244917 244918 244975 244980 244982 244983 245061 245064 245066 245068 246390 246391 246392);
+	# runs with MC
+	RUN=(244918 244975 244982 244983 245064 245066 245068 246390 246391 246392);
 	;;
     "LHC15k1a1") # anchored to LHC15oLowIR
 	PERIOD=LHC15k1a1
@@ -147,6 +149,11 @@ Structure() {
 }
 
 Merge() {
+       
+        if [ "$config" == "" ]; then
+	    echo "enter trainconfig";
+	    read config
+	fi
 
 	echo "merge ${#RUN[@]} files";               # not the actual number of downloaded runs!    PRODUCE FILE WITH MERGED RUN NUMBERS!!!
 	declare -i i=0
@@ -373,13 +380,15 @@ fi
 	    if [ $2 = "G" ]; then
 		alien_ls $SOURCEDIR/GammaConvV1_*.root > filesToCopy.txt
 	    else
-		alien_ls $SOURCEDIR/AnalysisResults.root > filesToCopy.txt
+		alien_ls $SOURCEDIR/AnalysisRes*.root > filesToCopy.txt
 	    fi
 	    mkdir -p $OUTPUTDIR  # move below ?
 	    files=`cat filesToCopy.txt`
 	    if [ "$files" = "" ]; then
 		echo "no files found. Search for unmerged run files stage 1"
-		alien_find $SOURCEDIR/Stage_1/*/ GammaConvV1_*.root > UnMergedRunFilesToCopy.txt
+		if [ $2 = "G" ]; then alien_find $SOURCEDIR/Stage_1/*/ GammaConvV1_*.root > UnMergedRunFilesToCopy.txt
+		else                  alien_find $SOURCEDIR/Stage_1/*/ AnalysisResults.root > UnMergedRunFilesToCopy.txt
+		fi
 		unmergedFiles=`cat UnMergedRunFilesToCopy.txt`
 		j=0
 		for fileToCopy in $unmergedFiles; do
@@ -398,7 +407,9 @@ fi
 			    Structure $OUTPUTDIR/$j
 			fi
 		    fi
-		    realpath $OUTPUTDIR/$j/GammaConvV1_*.root >> FilesToMerge.txt
+		    if [ $2 = "G" ]; then realpath $OUTPUTDIR/$j/GammaConvV1_*.root >> FilesToMerge.txt
+		    else                  realpath $OUTPUTDIR/$j/AnalysisResults.root >> FilesToMerge.txt
+		    fi
 		done
 		name=`ls $OUTPUTDIR/1`
 		if [ ! -f $OUTPUTDIR/$name ]; then  
