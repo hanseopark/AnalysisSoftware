@@ -2931,6 +2931,17 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasWeights->SaveAs(Form("%s/EtaToPi0_WeightsA.%s",outputDir.Data(),suffix.Data()));
 
 
+    TF1 *fitEtaToPi0 = new TF1("fitEtaToPi0","[0]",4.,25.);
+    fitEtaToPi0->SetParameter(0,0.45);
+
+    TGraphAsymmErrors* comEtaPi0 = (TGraphAsymmErrors*) graphCombEtaToPi0StatA->Clone();
+    comEtaPi0->Fit(fitEtaToPi0,"QNRMEX0+","",4.,25.);
+    cout << "\n\n\n\n\n++++++++++++++++++++++++++++++++" << endl;
+    cout << fitEtaToPi0->GetParameter(0) << ", +- " << fitEtaToPi0->GetParError(0) << endl;
+    cout << "++++++++++++++++++++++++++++++++\n\n\n\n\n" << endl;
+
+
+
     // *********************************************************************************************************************
     // ************************************ Visualize relative errors EtaToPi0 ******************************************************
     // *********************************************************************************************************************
