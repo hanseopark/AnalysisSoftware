@@ -475,19 +475,25 @@ fi
 # LHC15g2MC="2352";
 
 # TRAINDIR=Legotrain-mCalo-20160813_SecEffiAndTMStudiesRerun
-# LHC11aData="1777"; 
-# LHC15g1aMC="2408";
-# LHC12f1aMC="2406"; 
-# LHC12f1bMC="2407"; 
-# 
-# LHC13gData="1778"; 
-# LHC15a3aMC="2410"; 
-# LHC15a3aplusMC="2416"; 
-# LHC15g2MC="2456";
+# # LHC11aData="1777"; 
+# # LHC15g1aMC="2408";
+# # LHC12f1aMC="2406"; 
+# # LHC12f1bMC="2407"; 
+# LHC15g1aMC="2463";
+# LHC12f1aMC="2460"; 
+# LHC12f1bMC="2461"; 
+# # 
+# # LHC13gData="1778"; 
+# # LHC15a3aMC="2410"; 
+# # LHC15a3aplusMC="2416"; 
+# # LHC15g2MC="2456";
+# LHC15a3aMC="2464"; 
+# LHC15a3aplusMC="2465"; 
+# LHC15g2MC="2462";
 
-TRAINDIR=Legotrain-mCalo-20160815_SysRerun
-LHC11aData="1777"; 
-LHC15g1aMC="2414";
+# TRAINDIR=Legotrain-mCalo-20160815_SysRerun
+# LHC11aData="1777"; 
+# LHC15g1aMC="2414";
 # LHC12f1aMC="2406"; 
 # LHC12f1bMC="2407"; 
 
@@ -496,10 +502,37 @@ LHC15g1aMC="2414";
 # LHC15a3aplusMC="2417"; 
 # LHC15a3aMC="2412"; 
 # LHC15a3aplusMC="2418"; 
-LHC15a3aMC="2413"; 
-LHC15a3aplusMC="2419"; 
+# LHC15a3aMC="2413"; 
+# LHC15a3aplusMC="2419"; 
 # LHC15g2MC="2456";
 
+# TRAINDIR=Legotrain-mCalo-20160827_Sys100ns
+# LHC11aData="1807";
+# LHC13gData="1810"; 
+
+# TRAINDIR=Legotrain-mCalo-20160827_Sys200ns
+# LHC11aData="1808";
+# LHC13gData="1812"; 
+# 
+# TRAINDIR=Legotrain-mCalo-20160827_Sys50ns
+# LHC11aData="1809";
+# LHC13gData="1813"; 
+
+# TRAINDIR=Legotrain-mCalo-20160827_SysEAGG75
+# LHC11aData="1814"; 
+# LHC15g1aMC="2493";
+# 
+# LHC13gData="1816"; 
+# LHC15a3aMC="2489"; 
+# LHC15a3aplusMC="2491"; 
+
+TRAINDIR=Legotrain-mCalo-20160827_SysEAGG125
+LHC11aData="1815"; 
+LHC15g1aMC="2494";
+
+LHC13gData="1817"; 
+LHC15a3aMC="2490"; 
+LHC15a3aplusMC="2492"; 
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
@@ -802,7 +835,7 @@ elif [ $2 = "LHC13g" ]; then
     if [ $DOWNLOADON == 1 ]; then
         if [ $HAVELHC13g == 1 ]; then
             echo "copying LHC13g" 
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC13g "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC13gData/merge"
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC13g "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC13gData/merge_runlist_1"
             runNumbers=`cat runNumbersLHC13g_pass1.txt`
             echo $runNumbers
 #             for runNumber in $runNumbers; do

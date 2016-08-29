@@ -26,7 +26,7 @@ function ChangeStructureIfNeeded()
 # switches to enable/disable certain procedures
 DOWNLOADON=1
 MERGEON=1
-MERGEONBINSSingle=0
+MERGEONBINSSingle=1
 MERGEONBINS=1
 
 # check if train configuration has actually been given
@@ -203,15 +203,21 @@ fi
 # LHC15g2MC="2352";
 
 TRAINDIR=Legotrain-mCalo-20160813_SecEffiAndTMStudiesRerun
-LHC11aData="1777"; 
-LHC15g1aMC="2408";
-LHC12f1aMC="2428"; 
-LHC12f1bMC="2429"; 
+# LHC11aData="1777"; 
+# LHC15g1aMC="2408";
+# LHC12f1aMC="2428"; 
+# LHC12f1bMC="2429"; 
+LHC15g1aMC="2463";
+LHC12f1aMC="2460"; 
+LHC12f1bMC="2461"; 
 
-LHC13gData="1778"; 
-LHC15a3aMC="2410"; 
-LHC15a3aplusMC="2416"; 
-LHC15g2MC="2456";
+# LHC13gData="1778"; 
+# LHC15a3aMC="2410"; 
+# LHC15a3aplusMC="2416"; 
+# LHC15g2MC="2456";
+LHC15a3aMC="2464"; 
+LHC15a3aplusMC="2465"; 
+LHC15g2MC="2462";
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
@@ -481,7 +487,7 @@ elif [ $2 = "LHC13g" ]; then
     if [ $DOWNLOADON == 1 ]; then
         if [ $HAVELHC13g == 1 ]; then
             echo "downloading LHC13g"
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC13g "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC13gData/merge"
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC13g "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC13gData/merge_runlist_1"
             runNumbers=`cat runNumbersLHC13g_pass1.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
