@@ -3538,7 +3538,7 @@ TString ReturnFullTextReconstructionProcess( Int_t mode, Int_t separate = 0, TSt
 
 TString ReturnGeneratorNameFromMCName(TString MCname){
     if (MCname.CompareTo("LHC12f1a") == 0){
-        return "Pythia 6, Perugia 0";
+        return "Pythia 8.1, Tune 4C";
     } else if (MCname.CompareTo("LHC12f1b") == 0){
         return "Phojet";
     } else if (MCname.CompareTo("LHC15g2") == 0){
