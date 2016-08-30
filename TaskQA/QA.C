@@ -333,6 +333,19 @@ void QA(    TString select          = "LHC11a",         // set selected
         pathPhotonQA[3] = "";
     }
     //**************************************************************************************************************
+    else if(select.CompareTo("LHC12+only")==0){
+    //LHC12 only JetJet
+        cutNr = 0;
+        nSets = 2;
+        fEnergyFlag = "8TeV";
+        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA-Trigger/LHC12-kEMCEGA_GammaConvCalo_101.root";
+        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160628-8TeV-JetJet-QA/LHC16c2_GammaConvCalo_101.root";
+        DataSets[0]="LHC12"; DataSets[1]="LHC16c2";
+        plotDataSets[0]="LHC12c-i"; plotDataSets[1]="JetJet";
+        pathPhotonQA[0] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12/PhotonQA_LHC12.root";
+        pathPhotonQA[1] = "";
+    }
+    //**************************************************************************************************************
     else if(select.CompareTo("LHC12-kEMC7+")==0){
     //LHC12
         cutNr = 1;
