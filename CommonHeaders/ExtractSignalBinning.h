@@ -1609,9 +1609,9 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     fStartPtBin = 6;
                 fColumn         = 5;
                 fRow            = 5;                                
-                if (fNBinsPt > 24) {
-                    cout << "You have chosen Direct Photon Plots and more than 24 bins, this is not possible, it will be reduced to 24 bins." << endl;
-                    fNBinsPt    = 24;
+                if (fNBinsPt > 23) {
+                    cout << "You have chosen Direct Photon Plots and more than 23 bins, this is not possible, it will be reduced to 23 bins." << endl;
+                    fNBinsPt    = 23;
                 }
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
                     fBinsPt[i]         = fBinsPi07TeVDirectPhotonPt[i];
