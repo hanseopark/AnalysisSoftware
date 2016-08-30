@@ -812,6 +812,37 @@ function GiveBinningHI()
 #    DoPi0InEtaBinning=1
 }
 
+function GiveBinningHI5020GeV()
+{
+    if [ $DoPi0 -eq 1 ] ; then
+        echo "How many p_T bins do you want to use for Pi0? 13 (7GeV)";
+        read answer
+        if [ $answer = 13 ]; then
+            echo "13 Bins --> Max p_T = 7 GeV ...";
+            correctPi0=1
+            BinsPtPi0=13
+        else
+            echo "Pi0 Binning was not set correctly. Please try again.";
+            correctPi0=0
+        fi
+    fi
+    if [ $DoEta -eq 1 ] || [ $DoPi0InEtaBinning -eq 1 ]; then
+        echo "How many p_T bins do you want to use for Eta? 3 (6GeV)";
+        read answer
+        if [ $answer = 3 ]; then
+            echo "3 Bins --> Max p_T = 6 GeV ...";
+            correctEta=1
+            BinsPtEta=3
+        else
+            echo "Pi0 Binning was not set correctly. Please try again.";
+            correctEta=0
+        fi
+    fi
+#    DoEta=1
+#    DoPi0InEtaBinning=1
+}
+
+
 function GiveBinningpPb()
 {
     if [ $DoPi0 -eq 1 ] || [ $DoGamma -eq 1 ]; then
@@ -1913,7 +1944,7 @@ fi
 correct=0
 while [ $correct -eq 0 ]
 do
-    echo "Which collision system do you want to process? 13TeV (pp@13TeV), 13TeVLowB (pp@13TeV), 8TeV (pp@8TeV), 7TeV (pp@7TeV), 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), PbPb_2.76TeV (PbPb@2.76TeV), pPb_5.023TeV (pPb@5.023TeV)"
+    echo "Which collision system do you want to process? 13TeV (pp@13TeV), 13TeVLowB (pp@13TeV), 8TeV (pp@8TeV), 7TeV (pp@7TeV), 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), PbPb_5.02TeV (PbPb@5.02TeV), PbPb_2.76TeV (PbPb@2.76TeV), pPb_5.023TeV (pPb@5.023TeV)"
     read answer
     if [ $answer = "7TeV" ] || [ $answer = "7" ]; then
         energy="7TeV";
@@ -1935,6 +1966,9 @@ do
         ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
     elif [ $answer = "PbPb_2.76TeV" ] || [ $answer = "PbPb_2.76" ] || [ $answer = "PbPb2" ] || [ $answer = "Pb2" ]; then
         energy="PbPb_2.76TeV";
+        ExtInputFile="";
+    elif [ $answer = "PbPb_5.02TeV" ] || [ $answer = "PbPb_5.02" ] || [ $answer = "PbPb5" ] || [ $answer = "Pb5" ]; then
+        energy="PbPb_5.02TeV";
         ExtInputFile="";
     elif [ $answer = "pPb_5.023TeV" ] || [ $answer = "pPb_5.023" ] || [ $answer = "pPb5" ];  then
         energy="pPb_5.023TeV";
@@ -2148,6 +2182,65 @@ do
                 fi
             fi
         fi
+    elif [ $energy = "PbPb_5.02TeV" ]; then
+        echo "Do you want to produce Direct Photon plots? Yes/No?";
+        read answer
+        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+            echo "Will produce Direct Photon plots ...";
+            directphoton="directPhoton"
+            Con=1
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinningDirectPhotonHI
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else
+                correct=1
+            fi
+        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+            echo "No Direct Photon plots will be produced ...";
+            directphoton="No"
+            Con=0
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinningHI5020GeV
+                correctPi0=1
+                correctEta=1
+            else
+                correctPi0=1
+                correctEta=1
+            fi
+
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else
+                correct=1
+            fi
+        else
+            echo "Command not found. Please try again.";
+        fi
+
+        if [ $ONLYRESULTS -eq 0 ]; then
+            if [ $ONLYCORRECTION -eq 0 ];  then
+                echo "Do you want to use THnSparse for the background? Yes/No?";
+                read answer
+                if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                    echo "Will use THnSparse for the background ...";
+                    useTHnSparse=1
+                elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                    echo "Will NOT use THnSparse for the background ...";
+                    useTHnSparse=0
+                else
+                    echo "Command not found. Please try again.";
+                fi
+            fi
+        fi
+
     elif [ $energy = "PbPb_2.76TeV" ]; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
@@ -2206,7 +2299,7 @@ do
                 fi
             fi    
         fi
-        
+
     elif [ $energy = "pPb_5.023TeV" ]; then
         directphoton="No"
         Con=0
@@ -2712,7 +2805,7 @@ if [ $mode = 10 ] || [ $mode = 11 ]; then
     exit;
 fi
 
-if [ "$energy" != "PbPb_2.76TeV" ]; then
+if [ "$energy" != "PbPb_2.76TeV" ] && [ "$energy" != "PbPb_5.02TeV" ]; then
     if [ "$energy" != "pPb_5.023TeV" ]; then
         Pi0dataCorr=`ls $standardCutMeson/$energy/Pi0_data_GammaConvV1Correction_*.root`
         Pi0MCCorr=`ls $standardCutMeson/$energy/Pi0_MC_GammaConvV1Correction_*.root`

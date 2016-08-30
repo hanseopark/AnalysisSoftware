@@ -3529,6 +3529,43 @@ Color_t GetColorDefaultColor( TString energy,
             }
         }	
     }
+    if (!energy.CompareTo("PbPb_5.02TeV")){
+        if (!kBox){
+            if (!generator.CompareTo("")){
+                if (!centrality.CompareTo("0-10%")){
+                    return kRed+1;
+                } else if (!centrality.CompareTo("0-20%")){
+                    return kRed+1;
+                } else if (!centrality.CompareTo("0-40%")){
+                    return kMagenta+2;
+                } else if (!centrality.CompareTo("0-5%")){
+                    return kRed+1;
+                } else if (!centrality.CompareTo("5-10%")){
+                    return 807;
+                } else if (!centrality.CompareTo("10-20%")){
+                    return 800;
+                } else if (!centrality.CompareTo("20-40%")){
+                    return kGreen+2;
+                } else if (!centrality.CompareTo("40-60%")){
+                    return kCyan+2;
+                } else if (!centrality.CompareTo("60-80%")){
+                    return kBlue+1;
+                } else if (!centrality.CompareTo("40-80%")){
+                    return kCyan+2;
+                }
+            }
+        } else {
+            if (!generator.CompareTo("")){
+                if (!centrality.CompareTo("0-20%")){
+                    return kRed-5;
+                } else if (!centrality.CompareTo("20-40%")){
+                    return kGreen-5;
+                } else if (!centrality.CompareTo("40-80%")){
+                    return kCyan-5;
+                }
+            }
+        }
+    }
     cout << "GetColorDefaultColor(): no valid input parameters given..." << endl;
     return kBlack;
 }
@@ -3662,7 +3699,31 @@ Style_t GetDefaultMarkerStyle( TString energy,
             }	
         }	
 	}
-
+    if (!energy.CompareTo("PbPb_5.02TeV")){
+        if (!generator.CompareTo("")){
+            if (!centrality.CompareTo("0-10%")){
+                return 20;
+            } else if (!centrality.CompareTo("0-20%")){
+                return 20;
+            } else if (!centrality.CompareTo("0-40%")){
+                return 20;
+            } else if (!centrality.CompareTo("0-5%")){
+                return 20;
+            } else if (!centrality.CompareTo("5-10%")){
+                return 21;
+            } else if (!centrality.CompareTo("10-20%")){
+                return 29;
+            } else if (!centrality.CompareTo("20-40%")){
+                return 33;
+            } else if (!centrality.CompareTo("40-60%")){
+                return 20;
+            } else if (!centrality.CompareTo("60-80%")){
+                return 21;
+            } else if (!centrality.CompareTo("40-80%")){
+                return 34;
+            }
+        }
+    }
 	cout << "GetDefaultMarkerStyle(): no valid input parameters given..." << endl;
     return 0;
 }
@@ -3736,6 +3797,32 @@ Size_t GetDefaultMarkerSize( TString energy,
             }	
         }	
     }	
+
+    if (!energy.CompareTo("PbPb_5.02TeV")){
+        if (!generator.CompareTo("")){
+            if (!centrality.CompareTo("0-10%")){
+                return 2;
+            } else if (!centrality.CompareTo("0-20%")){
+                return 2;
+            } else if (!centrality.CompareTo("0-40%")){
+                return 2;
+            } else if (!centrality.CompareTo("0-5%")){
+                return 2;
+            } else if (!centrality.CompareTo("5-10%")){
+                return 2;
+            } else if (!centrality.CompareTo("10-20%")){
+                return 2.5;
+            } else if (!centrality.CompareTo("20-40%")){
+                return 2.5;
+            } else if (!centrality.CompareTo("40-60%")){
+                return 2;
+            } else if (!centrality.CompareTo("60-80%")){
+                return 2;
+            } else if (!centrality.CompareTo("40-80%")){
+	        return 2;
+            }
+        }
+    }
     return 0;
 }
 

@@ -406,6 +406,8 @@ TString ReturnFullCollisionsSystem( TString fEnergyFlagOpt){
         return  "pp, #sqrt{#it{s}} = 2.76 TeV";
     } else if( (fEnergyFlagOpt.CompareTo("PbPb_2.76TeV") == 0) || (fEnergyFlagOpt.CompareTo("HI") == 0) ) {
         return "Pb-Pb, #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
+    } else if( (fEnergyFlagOpt.CompareTo("PbPb_5.02TeV") == 0) ) {
+        return "Pb-Pb, #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
     } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0) {
         return "p-Pb, #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
     } else {
@@ -430,6 +432,8 @@ Double_t ReturnCollisionEnergy( TString fEnergyFlagOpt){
         return 900;
     } else if( (fEnergyFlagOpt.CompareTo("PbPb_2.76TeV") == 0) || (fEnergyFlagOpt.CompareTo("HI") == 0) ) {
         return 2760;
+    } else if( (fEnergyFlagOpt.CompareTo("PbPb_5.02TeV") == 0) ) {
+        return 5020;
     } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0) {
         return 5023;
     } else {
@@ -1312,6 +1316,8 @@ Double_t ReturnCorrectK0ScalingFactor(TString fEnergyFlagOpt, TString cutNr){
     } else if( fEnergyFlagOpt.CompareTo("900GeV") == 0) {
         return 1./0.6 -1.;
     } else if( (fEnergyFlagOpt.CompareTo("PbPb_2.76TeV") == 0) || (fEnergyFlagOpt.CompareTo("HI") == 0) ) {
+        return GetScalingFactorSecCorrection(cutNr.Data());
+    } else if( (fEnergyFlagOpt.CompareTo("PbPb_5.02TeV") == 0) ) {
         return GetScalingFactorSecCorrection(cutNr.Data());
     } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0) {
         // return 0.;
