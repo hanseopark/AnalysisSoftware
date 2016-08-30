@@ -257,7 +257,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
                                                                                     fHistoPrimPartPtSource->GetYaxis()->FindBin(3.),"e");     
         fHistoMCK0sPt                 = (TH1D*)fHistoPrimPartPtSource->ProjectionX( "MC_K0s_Pt", fHistoPrimPartPtSource->GetYaxis()->FindBin(4.), 
                                                                                     fHistoPrimPartPtSource->GetYaxis()->FindBin(4.),"e");     
-        fHistoMCK0lPt                 = (TH1D*)fHistoPrimPartPtSource->ProjectionX( "MC_K0s_Pt", fHistoPrimPartPtSource->GetYaxis()->FindBin(5.), 
+        fHistoMCK0lPt                 = (TH1D*)fHistoPrimPartPtSource->ProjectionX( "MC_K0l_Pt", fHistoPrimPartPtSource->GetYaxis()->FindBin(5.), 
                                                                                     fHistoPrimPartPtSource->GetYaxis()->FindBin(5.),"e");     
         fHistoMCLambdaPt              = (TH1D*)fHistoPrimPartPtSource->ProjectionX( "MC_Lambda_Pt", fHistoPrimPartPtSource->GetYaxis()->FindBin(6.), 
                                                                                     fHistoPrimPartPtSource->GetYaxis()->FindBin(6.),"e");     
@@ -318,8 +318,8 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     // ----------- secondary pions from K0s, K0l, Lambda ------
     //---> K0s
     TH2D* fHistoMCSecPi0PtSource                = (TH2D*)MCContainer->FindObject("MC_SecPi0_Pt_Source");
-    TH1D* fHistoMCSecPi0FromK0sPt               = (TH1D*)fHistoMCSecPi0PtSource->ProjectionX(   "MCSecPi0FromK0s", fHistoMCSecPi0PtSource->GetYaxis()->FindBin(1), 
-                                                                                                fHistoMCSecPi0PtSource->GetYaxis()->FindBin(1),"e");     
+    TH1D* fHistoMCSecPi0FromK0sPt               = (TH1D*)fHistoMCSecPi0PtSource->ProjectionX(   "MCSecPi0FromK0s", fHistoMCSecPi0PtSource->GetYaxis()->FindBin(1.), 
+                                                                                                fHistoMCSecPi0PtSource->GetYaxis()->FindBin(1.),"e");     
     TH1D* fHistoMCSecPi0FromK0sPtRebinned       = (TH1D*)fHistoMCSecPi0FromK0sPt->Clone("MCSecPi0FromK0sRebinned");
     fHistoMCSecPi0FromK0sPtRebinned->Rebin(nBinsX,"MCSecPi0FromK0sRebinned2",ptBinning);
     fHistoMCSecPi0FromK0sPtRebinned             = (TH1D*)gDirectory->Get("MCSecPi0FromK0sRebinned2");
@@ -327,8 +327,8 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     fHistoRatioPi0FromK0sDivK0s->Divide(fHistoMCSecPi0FromK0sPtRebinned, fHistoMCK0sPtRebinned);
 
     //---> K0l
-    TH1D* fHistoMCSecPi0FromK0lPt               = (TH1D*)fHistoMCSecPi0PtSource->ProjectionX(   "MCSecPi0FromK0l", fHistoMCSecPi0PtSource->GetYaxis()->FindBin(3), 
-                                                                                                fHistoMCSecPi0PtSource->GetYaxis()->FindBin(3),"e");     
+    TH1D* fHistoMCSecPi0FromK0lPt               = (TH1D*)fHistoMCSecPi0PtSource->ProjectionX(   "MCSecPi0FromK0l", fHistoMCSecPi0PtSource->GetYaxis()->FindBin(3.), 
+                                                                                                fHistoMCSecPi0PtSource->GetYaxis()->FindBin(3.),"e");     
     TH1D* fHistoMCSecPi0FromK0lPtRebinned       = (TH1D*)fHistoMCSecPi0FromK0lPt->Clone("MCSecPi0FromK0lRebinned");
     fHistoMCSecPi0FromK0lPtRebinned->Rebin(nBinsX,"MCSecPi0FromK0lRebinned2",ptBinning);
     fHistoMCSecPi0FromK0lPtRebinned             = (TH1D*)gDirectory->Get("MCSecPi0FromK0lRebinned2");
@@ -336,8 +336,8 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     fHistoRatioPi0FromK0lDivK0l->Divide(fHistoMCSecPi0FromK0lPtRebinned, fHistoMCK0lPtRebinned);
 
     //---> Lambda
-    TH1D* fHistoMCSecPi0FromLambdaPt            = (TH1D*)fHistoMCSecPi0PtSource->ProjectionX(   "MCSecPi0FromLambda", fHistoMCSecPi0PtSource->GetYaxis()->FindBin(2), 
-                                                                                                fHistoMCSecPi0PtSource->GetYaxis()->FindBin(2),"e");     
+    TH1D* fHistoMCSecPi0FromLambdaPt            = (TH1D*)fHistoMCSecPi0PtSource->ProjectionX(   "MCSecPi0FromLambda", fHistoMCSecPi0PtSource->GetYaxis()->FindBin(2.), 
+                                                                                                fHistoMCSecPi0PtSource->GetYaxis()->FindBin(2.),"e");     
     TH1D* fHistoMCSecPi0FromLambdaPtRebinned    = (TH1D*)fHistoMCSecPi0FromLambdaPt->Clone("MCSecPi0FromLambdaRebinned");
     fHistoMCSecPi0FromLambdaPtRebinned->Rebin(nBinsX,"MCSecPi0FromLambdaRebinned2",ptBinning);
     TH1D* fHistoRatioPi0FromLambdaDivLambda     = NULL;

@@ -1087,17 +1087,26 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         canvasEffi->cd();
         canvasEffi->SetLogy(0);
         canvasEffi->SetLeftMargin(0.1);
+        canvasEffi->SetTopMargin(0.04);
         Double_t minXLegendEffecSec = 0.62;
         Int_t nColumnsEffecSec      = 2; 
         if (nrOfTrigToBeComb > 6){
             minXLegendEffecSec = 0.4;
             nColumnsEffecSec   = 3; 
         }
+        Double_t maxYEffSecCorr     = 0.3;
+        if (mode == 2)
+            maxYEffSecCorr          = 0.04;
+        else if (mode == 4)
+            maxYEffSecCorr          = 0.12;
+        else if (mode == 10)
+            maxYEffSecCorr          = 0.15;
+        
         Double_t maxYLegendEffecSec = 0.84;
         Double_t minYLegendEffecSec = maxYLegendEffecSec-(1.05*nrOfTrigToBeComb/nColumnsEffecSec*0.85*textSizeSpectra);
 
         TH2F * histo2DEffectiveSecCorr;
-        histo2DEffectiveSecCorr = new TH2F("histo2DEffectiveSecCorr","histo2DEffectiveSecCorr",1000,0., maxPtGlobalPi0,10000,0, 0.3);
+        histo2DEffectiveSecCorr = new TH2F("histo2DEffectiveSecCorr","histo2DEffectiveSecCorr",1000,0., maxPtGlobalPi0,10000,0, maxYEffSecCorr);
         SetStyleHistoTH2ForGraphs(histo2DEffectiveSecCorr, "#it{p}_{T} (GeV/#it{c})","r_{sec #pi^{0} from K^{0}_{s}}",
                                     0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.17);
         histo2DEffectiveSecCorr->DrawCopy(); 
@@ -1128,6 +1137,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         canvasEffi->SaveAs(Form("%s/Pi0_EffectiveSecCorrFromK0s.%s",outputDir.Data(),suffix.Data()));        
         canvasEffi->SetLogy(1);
         canvasEffi->SetLeftMargin(0.09);
+        canvasEffi->SetTopMargin(0.015);
     }    
     
     //***************************************************************************************************************

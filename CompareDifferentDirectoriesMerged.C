@@ -186,8 +186,8 @@ void CompareDifferentDirectoriesMerged( TString FolderList = "",
         
         // Set correct histogram name for corrected yield and efficiency
         TString nameCorrectedYield                          = "CorrectedYieldTrueEff";
-        TString nameEfficiency                              = "TrueMesonEffiPrimPt";
-        TString namePurity                                  = "TruePi0PurityMergedPt";
+        TString nameEfficiency                              = "PrimaryMesonEfficiency";
+        TString namePurity                                  = "MesonPurity";
         TString nameAcceptance                              = "fHistoMCAcceptancePt";
         
         // Read histograms and rename them from the original files for each cut
