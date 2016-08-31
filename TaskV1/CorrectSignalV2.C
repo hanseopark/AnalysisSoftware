@@ -2811,7 +2811,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         canvasRAWYieldSec->SaveAs(Form("%s/%s_%s_RAWYieldSecPt_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
         
         
-        if ( histoYieldSecMesonFromToy[0][0] && !kIsMC){
+        if ( (histoYieldSecMesonFromToy[0][0] && !kIsMC) || ( optionEnergy.CompareTo("8TeV")==0 && !kIsMC )){
             TCanvas* canvasSecFrac2 = new TCanvas("canvasSecFrac","",200,10,1350,900);  // gives the page size
             DrawGammaCanvasSettings( canvasSecFrac2, 0.09, 0.018, 0.04, 0.08);
 

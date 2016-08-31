@@ -206,7 +206,7 @@ public:
 		fSignalPi->SetTitle("");
 		fSignalPi->Sumw2();
 		fSignalPi->Add(fBckNormPi,-1.);
-        if(fSignalPi->Integral(fSignalPi->FindBin(0.1),fSignalPi->FindBin(0.145))<=10){
+        if(fSignalPi->Integral(fSignalPi->FindBin(0.1),fSignalPi->FindBin(0.17))<=50){
           cout << "Total integral <= 10 for pi0 in " << name.Data() << ", skipping fit and returning..." << endl;
           return kFALSE;
         }
@@ -216,16 +216,16 @@ public:
 		} else {
 			fSignalPi->Rebin(4);
 		}
-		fSignalPi->GetXaxis()->SetRangeUser( 0.1,0.145);
+        fSignalPi->GetXaxis()->SetRangeUser( 0.,0.3);
 
 		Double_t mesonAmplitude =fSignalPi->GetMaximum();
 		Double_t mesonAmplitudeMinPi  = mesonAmplitude*80./100.;
 		Double_t mesonAmplitudeMaxPi = mesonAmplitude*115./100.;
-		fFitRecoPi = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",0.1,0.145);
+        fFitRecoPi = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",0.05,0.25);
 		fFitRecoPi->SetParameter(0,mesonAmplitude);
 		fFitRecoPi->SetParameter(1,0.135);
 		fFitRecoPi->SetParLimits(0,mesonAmplitudeMinPi,mesonAmplitudeMaxPi);
-		fFitRecoPi->SetParLimits(1,0.1,0.145);
+        fFitRecoPi->SetParLimits(1,0.1,0.2);
 
         if(mode==2){
           fFitRecoPi->SetParameter(2,0.008);
@@ -244,8 +244,8 @@ public:
           fFitRecoPi->SetParLimits(3,0.001,0.05);
         }
         fSignalPi->Draw();
-        fSignalPi->Fit(fFitRecoPi,"SINRMQEC+","",0.1,0.145);
-        TFitResultPtr result = fSignalPi->Fit(fFitRecoPi,"SINRMQEC+","",0.1,0.145);
+        fSignalPi->Fit(fFitRecoPi,"SINRMQEC+","",0.05,0.25);
+        TFitResultPtr result = fSignalPi->Fit(fFitRecoPi,"SINRMQEC+","",0.05,0.25);
 
 		fFitRecoPi->SetLineColor(3);
 		fFitRecoPi->SetLineWidth(1);
@@ -265,14 +265,14 @@ public:
 			TString status = gMinuit->fCstatu.Data();
 			if(doPrint) cout << status.Data() << endl;
 			if (status.Contains("PROBLEMS")){
-				CalculateFWHM(fFitRecoPi,0.1,0.145);
+                CalculateFWHM(fFitRecoPi,0.1,0.15);
 				widthPi = fFWHMFunc;
 				widthPiErr = fFWHMFuncError;
 				massPi = fFitRecoPi->GetParameter(1);
 				massPiErr = fFitRecoPi->GetParError(1);
-				integral = fFitRecoPi->Integral(0.1, 0.145, result->GetParams()) / fSignalPi->GetBinWidth(10);
-				integralErr = fFitRecoPi->IntegralError(0.1, 0.145, result->GetParams(), result->GetCovarianceMatrix().GetMatrixArray() ) / fSignalPi->GetBinWidth(10);
-				integralBG = fFitRecoPi->GetParameter(4)*0.145 + fFitRecoPi->GetParameter(5)/2 *0.145*0.145- (fFitRecoPi->GetParameter(4)*0.1 + fFitRecoPi->GetParameter(5)/2 *0.1*0.1);
+                integral = fFitRecoPi->Integral(0.1, 0.15, result->GetParams()) / fSignalPi->GetBinWidth(10);
+                integralErr = fFitRecoPi->IntegralError(0.1, 0.15, result->GetParams(), result->GetCovarianceMatrix().GetMatrixArray() ) / fSignalPi->GetBinWidth(10);
+                integralBG = fFitRecoPi->GetParameter(4)*0.15 + fFitRecoPi->GetParameter(5)/2 *0.15*0.15- (fFitRecoPi->GetParameter(4)*0.1 + fFitRecoPi->GetParameter(5)/2 *0.1*0.1);
                 if(doPrint) cout << "Pi0 full width: "  << widthPi << "\t +-" << widthPiErr << "\t Mass: "<< massPi << "\t+-" << massPiErr  << endl;
 				if(doPrint) cout << "integral Pi: " << integral << "\t +-" << integralErr << "\t integral BG : "<< integralBG<< endl;
                 if(doLog) fLog << "Pi0 full width: "  << widthPi << "\t +-" << widthPiErr << "\t Mass: "<< massPi << "\t+-" << massPiErr  << endl;
@@ -281,14 +281,14 @@ public:
 				if(doPrint) cout << "here" << endl;
 			}
 		} else {
-			CalculateFWHM(fFitRecoPi,0.1,0.145);
+            CalculateFWHM(fFitRecoPi,0.1,0.17);
 			widthPi = fFWHMFunc;
 			widthPiErr = fFWHMFuncError;
 			massPi = fFitRecoPi->GetParameter(1);
 			massPiErr = fFitRecoPi->GetParError(1);
-			integral = fFitRecoPi->Integral(0.1, 0.145, result->GetParams()) / fSignalPi->GetBinWidth(10);
-			integralErr = fFitRecoPi->IntegralError(0.1, 0.145, result->GetParams(), result->GetCovarianceMatrix().GetMatrixArray() ) / fSignalPi->GetBinWidth(10);
-			integralBG = fFitRecoPi->GetParameter(4)*0.145 + fFitRecoPi->GetParameter(5)/2 *0.145*0.145- (fFitRecoPi->GetParameter(4)*0.1 + fFitRecoPi->GetParameter(5)/2 *0.1*0.1);
+            integral = fFitRecoPi->Integral(0.1, 0.15, result->GetParams()) / fSignalPi->GetBinWidth(10);
+            integralErr = fFitRecoPi->IntegralError(0.1, 0.15, result->GetParams(), result->GetCovarianceMatrix().GetMatrixArray() ) / fSignalPi->GetBinWidth(10);
+            integralBG = fFitRecoPi->GetParameter(4)*0.15 + fFitRecoPi->GetParameter(5)/2 *0.15*0.15- (fFitRecoPi->GetParameter(4)*0.1 + fFitRecoPi->GetParameter(5)/2 *0.1*0.1);
             if(doPrint) cout << "Pi0 full width: "  << widthPi << "\t +-" << widthPiErr << "\t Mass: "<< massPi << "\t+-" << massPiErr  << endl;
 			if(doPrint) cout << "integral Pi: " << integral << "\t +-" << integralErr << "\t integral BG : "<< integralBG<< endl;
             if(doLog) fLog << "Pi0 full width: "  << widthPi << "\t +-" << widthPiErr << "\t Mass: "<< massPi << "\t+-" << massPiErr  << endl;
@@ -299,17 +299,17 @@ public:
 		fSignalEta->SetTitle("");
 		fSignalEta->Sumw2();
 		fSignalEta->Add(fBckNormEta,-1.);
-        if(fSignalEta->Integral(fSignalEta->FindBin(0.5),fSignalEta->FindBin(0.57))<=5){
+        if(fSignalEta->Integral(fSignalEta->FindBin(0.5),fSignalEta->FindBin(0.57))<=25){
           cout << "Total integral <= 5 for eta in " << name.Data() << ", skipping fit and returning..." << endl;
           return kFALSE;
         }
 
 
 		fSignalEta->Rebin(4);
-		fSignalEta->GetXaxis()->SetRangeUser(0.5,0.57);
+        fSignalEta->GetXaxis()->SetRangeUser(0.4,0.7);
 
 
-		fFitRecoEta = new TF1("GaussExpLinearEta","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",0.5,0.57);
+        fFitRecoEta = new TF1("GaussExpLinearEta","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",0.45,0.65);
 		Double_t mesonAmplitudeEta =fSignalEta->GetMaximum();
 		Double_t mesonAmplitudeMinEta  = mesonAmplitudeEta*80./110.;
 		Double_t mesonAmplitudeMaxEta = mesonAmplitudeEta*115./100.;
@@ -317,7 +317,7 @@ public:
 		fFitRecoEta->SetParameter(0,mesonAmplitudeEta);
         fFitRecoEta->SetParameter(1,0.540);
 		fFitRecoEta->SetParLimits(0,mesonAmplitudeMinEta,mesonAmplitudeMaxEta);
-        fFitRecoEta->SetParLimits(1,0.51,0.56);
+        fFitRecoEta->SetParLimits(1,0.45,0.60);
 
         if(mode==2){
           fFitRecoEta->SetParameter(2,0.020);
@@ -337,8 +337,8 @@ public:
         }
 
 		fSignalEta->Draw("");
-        fSignalEta->Fit(fFitRecoEta,"SINRMQEC+","",0.5,0.57);
-        TFitResultPtr resultEta = fSignalEta->Fit(fFitRecoEta,"SINRQMEC+","",0.5,0.57);
+        fSignalEta->Fit(fFitRecoEta,"SINRMQEC+","",0.45,0.65);
+        TFitResultPtr resultEta = fSignalEta->Fit(fFitRecoEta,"SINRQMEC+","",0.45,0.65);
 
 		fFitRecoEta->SetLineColor(3);
 		fFitRecoEta->SetLineWidth(1);
