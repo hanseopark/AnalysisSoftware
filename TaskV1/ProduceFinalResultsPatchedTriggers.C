@@ -165,7 +165,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                         1.5, 1.5, 1.5, 1.5, 1.5,
                                         1.5, 1.5 };
     
-    
+    TString strEG2_A = "EG2";
+    if(optionEnergy.CompareTo("8TeV")==0) strEG2_A = "EGA";
     
     //***************************************************************************************************************
     //********************************** setting correct histo names ************************************************
@@ -2082,7 +2083,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             if (graphPurityPi0[i])
                 graphOrderedPurityPi0[3]        = graphPurityPi0[i];
         } else if ((triggerName[i].CompareTo("EG2") == 0 || triggerName[i].CompareTo("EG2_NLM2") == 0 ||  triggerName[i].CompareTo("EGA") == 0) && graphsCorrectedYieldShrunkPi0[i]){
-            cout << "filling EG2/EGA trigger" << endl;
+            cout << Form("filling %s trigger",strEG2_A.Data()) << endl;
             histoStatPi0[4]     = histoCorrectedYieldPi0ScaledMasked[i];
             graphSystPi0[4]     = graphsCorrectedYieldSysShrunkPi0[i];
             offSetsPi0Sys[4]    = histoStatPi0[4]->GetXaxis()->FindBin(graphSystPi0[4]->GetX()[0])-1;
@@ -2292,7 +2293,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         Int_t nPtBinsReadPi0            = 0;
         
         // labeling and plotting settings
-        TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", "EG2/EGA", "EG1",
+        TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", strEG2_A.Data(), "EG1",
                                             "INT1_NLM1", "INT7_NLM1", "EMC1_NLM1", "EMC7_NLM1", "EG2_NLM1", "EG1_NLM1"};
         Color_t colorTriggWeighted[12]   = {GetDefaultTriggerColorName(nameTriggerWeighted[0], 0),
                                            GetDefaultTriggerColorName(nameTriggerWeighted[1], 0),
@@ -4291,7 +4292,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 if (graphEffTimesAccEta[i])
                     graphOrderedEffTimesAccEta[3]   = graphEffTimesAccEta[i];                
             } else if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && graphsCorrectedYieldShrunkEta[i]){
-                cout << "filling EG2/EGA trigger" << endl;
+                cout << Form("filling %s trigger",strEG2_A.Data()) << endl;
                 histoStatEta[4]     = histoCorrectedYieldEtaScaledMasked[i];
                 graphSystEta[4]     = graphsCorrectedYieldSysShrunkEta[i];
                 offSetsEtaSys[4]    = histoStatEta[4]->GetXaxis()->FindBin(graphSystEta[4]->GetX()[0])-1;
@@ -4355,7 +4356,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             Int_t nMeasSetEta           = nrOfTrigToBeCombEtaRed;
             Int_t nPtBinsReadEta        = 0;
             
-            TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", "EG2/EGA", "EG1",
+            TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", strEG2_A.Data(), "EG1",
                                                 "INT1_NLM1", "INT7_NLM1", "EMC1_NLM1", "EMC7_NLM1", "EG2_NLM1", "EG1_NLM1"};
             Color_t colorTriggWeighted[12]   = {GetDefaultTriggerColorName(nameTriggerWeighted[0], 0),
                                             GetDefaultTriggerColorName(nameTriggerWeighted[1], 0),
@@ -5430,7 +5431,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     graphSystEtaToPi0[3]     = graphsEtaToPi0SysShrunk[i];
                     offSetsEtaToPi0Sys[3]    = histoStatEtaToPi0[3]->GetXaxis()->FindBin(graphSystEtaToPi0[3]->GetX()[0])-1;
                 } else if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && graphsEtaToPi0Shrunk[i]){
-                    cout << "filling EG2/EGA trigger" << endl;
+                    cout << Form("filling %s trigger",strEG2_A.Data()) << endl;
                     histoStatEtaToPi0[4]     = histoEtaToPi0Masked[i];
                     graphSystEtaToPi0[4]     = graphsEtaToPi0SysShrunk[i];
                     offSetsEtaToPi0Sys[4]    = histoStatEtaToPi0[4]->GetXaxis()->FindBin(graphSystEtaToPi0[4]->GetX()[0])-1;
@@ -5470,7 +5471,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 Int_t nMeasSetEtaToPi0              = numberOfTrigg;
                 Int_t nPtBinsReadEtaToPi0           = 0;
             
-                TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", "EG2/EGA", "EG1",
+                TString nameTriggerWeighted[12]  = {"INT1", "INT7", "EMC1", "EMC7", strEG2_A.Data(), "EG1",
                                                     "INT1_NLM1", "INT7_NLM1", "EMC1_NLM1", "EMC7_NLM1", "EG2_NLM1", "EG1_NLM1"};
                 Color_t colorTriggWeighted[12]   = {GetDefaultTriggerColorName(nameTriggerWeighted[0], 0),
                                                 GetDefaultTriggerColorName(nameTriggerWeighted[1], 0),

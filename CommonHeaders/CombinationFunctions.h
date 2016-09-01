@@ -1685,7 +1685,9 @@ TGraphAsymmErrors* CombinePtPointsSpectraTriggerCorrMat(    TH1D** histoStat, TG
     TFile* fCorrFactors = 0x0;
     if(!fileCorrFactors.IsNull()) fCorrFactors = new TFile(fileCorrFactors.Data(),"READ");
     Int_t maxNMeasurements                  = 12;
-    TString nameMeas[12]                    = { "INT1", "INT7", "EMC1", "EMC7", "EG2", "EG1",
+    TString strEG2_A = "EG2";
+    if(energy.CompareTo("8TeV")==0) strEG2_A = "EGA";
+    TString nameMeas[12]                    = { "INT1", "INT7", "EMC1", "EMC7", strEG2_A.Data(), "EG1",
                                                 "INT1_NLM1", "INT7_NLM1", "EMC1_NLM1", "EMC7_NLM1", "EG2_NLM1", "EG1_NLM1"};
     Bool_t isPresentGeneral[12]             = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE,
                                                 kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE};
