@@ -1104,7 +1104,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         else if (mode == 10)
             maxYEffSecCorr          = 0.15;
         
-        Double_t maxYLegendEffecSec = 0.84;
+        Double_t maxYLegendEffecSec = 0.84-0.025;
         Double_t minYLegendEffecSec = maxYLegendEffecSec-(1.05*nrOfTrigToBeComb/nColumnsEffecSec*0.85*textSizeSpectra);
 
         TH2F * histo2DEffectiveSecCorr;
@@ -1185,7 +1185,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         canvasEffi->cd();
         histo2DEffiPi0->DrawCopy(); 
 
-        TLegend* legendEffiPi0W0TriggEff = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
+        TGraphErrors* graphEffBasePi0[12]   = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+        TLegend* legendEffiPi0W0TriggEff    = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
         legendEffiPi0W0TriggEff->SetNColumns(2);
         for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
             if ( triggerName[i].Contains("INT7") || triggerName[i].Contains("MB") || triggerName[i].Contains("INT1") ){
@@ -1194,9 +1195,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 legendEffiPi0W0TriggEff->AddEntry(histoEfficiencyPi0[i],triggerNameLabel[i].Data(),"p"); 
             } else {
                 if (enableTriggerEffPi0[i]){
-                    DrawGammaSetMarker(histoEffBasePi0[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                    histoEffBasePi0[i]->DrawCopy("e1,same"); 
-                    legendEffiPi0W0TriggEff->AddEntry(histoEffBasePi0[i],triggerNameLabel[i].Data(),"p"); 
+                    graphEffBasePi0[i]      = new TGraphErrors(histoEffBasePi0[i]); 
+                    cout << "trying to plot trigg eff" << endl;
+                    DrawGammaSetMarkerTGraph(graphEffBasePi0[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                    graphEffBasePi0[i]->Draw("p,e1,same");
+                    legendEffiPi0W0TriggEff->AddEntry(graphEffBasePi0[i],triggerNameLabel[i].Data(),"p"); 
                 }
             }    
         }
@@ -1209,6 +1212,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         canvasEffi->Update();
         canvasEffi->SaveAs(Form("%s/Pi0_EfficiencyW0TriggEff.%s",outputDir.Data(),suffix.Data()));
     }
+   
 //     if (!enableEta) delete canvasEffi;
     
     //***************************************************************************************************************
@@ -2488,7 +2492,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         histo2DRelSysErr                    = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,0.,maxPtGlobalPi0,1000,0,60.5);
         SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
         histo2DRelSysErr->Draw("copy");
-            TLegend* legendRelSysErr        = GetAndSetLegend2(0.62, 0.92-(0.035*nMeasSetPi0/2), 0.95, 0.92, 32);
+            TLegend* legendRelSysErr        = GetAndSetLegend2(0.62, 0.92-(0.035*(nMeasSetPi0+1)/2), 0.95, 0.92, 32);
             legendRelSysErr->SetNColumns(2);
             for (Int_t i = 0; i < nMeasSetPi0; i++){
                 cout << "plotting graph: " << availableMeasPi0[i] << "\t" <<graphRelSystPi0[availableMeasPi0[i]]->GetName() << endl;
@@ -2513,6 +2517,20 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             labelDetProcRelErr->Draw();
             
         canvasRelSysErr->SaveAs(Form("%s/Pi0_RelSysErr_SingleMeas.%s",outputDir.Data(),suffix.Data()));
+                 
+            
+            DrawGammaSetMarkerTGraphAsym(graphRelErrorPi0Sys, 24, 1.5, kGray+1 , kGray+1);
+//             graphRelErrorPi0Sys->SetLineStyle(7);
+            graphRelErrorPi0Sys->Draw("same,pze1");
+            legendRelSysErr->AddEntry(graphRelErrorPi0Sys,"average","p");
+            legendRelSysErr->Draw();
+
+            labelRelErrEnergy->Draw();
+            labelRelErrPi0->Draw();
+            labelDetProcRelErr->Draw();
+            
+        canvasRelSysErr->SaveAs(Form("%s/Pi0_RelSysErrWithAverage_SingleMeas.%s",outputDir.Data(),suffix.Data()));
+        
         
         // plot stat relative errors for individual triggers    
         TCanvas* canvasRelStatErr           = new TCanvas("canvasRelStatErr","",200,10,1350,900);  // gives the page size

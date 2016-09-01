@@ -2273,13 +2273,19 @@ TGraphAsymmErrors* CombinePtPointsSpectraTriggerCorrMat(    TH1D** histoStat, TG
             corrFracEG21_EG21_EG11     = 1;
             corrFracEG11_EG21_EG11     = 0.9730;
         } else if ( mode == 10 && energy.CompareTo("2.76TeV") == 0 && meson.CompareTo("Pi0") == 0 && v2ClusterizerMerged == kTRUE) {
-            corrFracEMC1_EMC1_EG2      = 0.7456;
-            corrFracEMC1_EMC1_EG1      = 0.7456;
-            corrFracEG2_EMC1_EG2       = 0.8825;
-            corrFracEG1_EMC1_EG1       = 0.8132;
-
-            corrFracEG2_EG2_EG1        = 1;
-            corrFracEG1_EG2_EG1        = 0.9168;
+            corrFracEMC1_EMC1_EG2      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"10","Pi0","EMC1_EMC1-EG2");
+            corrFracEMC1_EMC1_EG1      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"10","Pi0","EMC1_EMC1-EG1");
+            corrFracEG2_EMC1_EG2       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"10","Pi0","EG2_EMC1-EG2");
+            corrFracEG1_EMC1_EG1       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"10","Pi0","EG1_EMC1-EG1");
+            corrFracEG2_EG2_EG1        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"10","Pi0","EG2_EG2-EG1");
+            corrFracEG1_EG2_EG1        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"10","Pi0","EG1_EG2-EG1");   
+//             corrFracEMC1_EMC1_EG2      = 0.7456;
+//             corrFracEMC1_EMC1_EG1      = 0.7456;
+//             corrFracEG2_EMC1_EG2       = 0.8825;
+//             corrFracEG1_EMC1_EG1       = 0.8132;
+// 
+//             corrFracEG2_EG2_EG1        = 1;
+//             corrFracEG1_EG2_EG1        = 0.9168;
         }
   
         // correlation factors for INT1 triggers

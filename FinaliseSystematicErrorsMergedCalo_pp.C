@@ -103,10 +103,10 @@ void FinaliseSystematicErrorsMergedCalo_pp( TString nameDataFileErrors      = ""
     TString nameCutVariation[10];
     TString nameCutVariationSC[10];
     
-    TString nameCutVariation2760GeV[10]     = { "tr. match. to cl.", "M_{02}", "clu. energy calibration", "#it{M}_{#gamma#gamma}", "#alpha_{#gamma#gamma}", 
-                                                "cell time", "Mat. infront of EMCal", "clu. energy scale", "Trigger normalization", "Efficiency" };
-    TString nameCutVariationSC2760GeV[10]   = { "ClusterTrackMatchingCalo", "ClusterM02", "ClusterNonLinearity", "MesonMass", "MesonAlpha",
-                                                "CellTiming",  "ClusterMaterialTRD", "ClusterEnergyScale" , "Trigger", "Efficiency"};
+    TString nameCutVariation2760GeV[10]     = { "tr. match. to cl.", "M_{02}", "clu. energy calibration", "cell E_{agg}", "cell time", 
+                                                "Mat. infront of EMCal", "#pi^{0} resolution", "clu. energy scale", "Trigger normalization", "Efficiency" };
+    TString nameCutVariationSC2760GeV[10]   = { "ClusterTrackMatchingCalo", "ClusterM02", "ClusterNonLinearity",  "CellMinE", "CellTiming",  
+                                                "ClusterMaterialTRD", "MesonResolution", "ClusterEnergyScale" , "Trigger", "Efficiency"};
     
     if (energy.CompareTo("2.76TeV") == 0) {
         for (Int_t i = 0;i < numberCutStudies;i++){
@@ -233,7 +233,7 @@ void FinaliseSystematicErrorsMergedCalo_pp( TString nameDataFileErrors      = ""
         TString nameGraphNeg    = Form("%s_SystErrorRelNeg_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalNameOutput.Data()  );
         cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
         if ( nameCutVariationSC[i].CompareTo("ClusterEnergyScale") == 0 || nameCutVariationSC[i].CompareTo("Trigger") == 0 || 
-            nameCutVariationSC[i].CompareTo("Efficiency") == 0
+            nameCutVariationSC[i].CompareTo("Efficiency") == 0 || nameCutVariationSC[i].CompareTo("MesonResolution") == 0
         ){
           nameGraphPos    = Form("%s_SystErrorRelPos_%s%s",meson.Data(),nameCutVariationSC[0].Data(),additionalNameOutput.Data()  );
           nameGraphNeg    = Form("%s_SystErrorRelNeg_%s%s",meson.Data(),nameCutVariationSC[0].Data(),additionalNameOutput.Data()  );
@@ -287,17 +287,18 @@ void FinaliseSystematicErrorsMergedCalo_pp( TString nameDataFileErrors      = ""
                         additionalNameOutput.Contains("EG1")
                     ){
                         if (additionalNameOutput.Contains("NLM1"))
-                            error   = 2+(-0.01)*ptBins[k]+(0.002)*ptBins[k]*ptBins[k];
+                            error   = 5+(-0.01)*ptBins[k]+(0.002)*ptBins[k]*ptBins[k];
+//                             error   = 2+(-0.01)*ptBins[k]+(0.002)*ptBins[k]*ptBins[k];
 //                            error   = 2.2+(-0.01)*ptBins[k]+(0.005)*ptBins[k]*ptBins[k]; // V1 clusterizer
                         else if (additionalNameOutput.Contains("NLM2"))
                             error   = 1.4+(-0.01)*ptBins[k]+(0.005)*ptBins[k]*ptBins[k];
                     }
-                    if (ptBins[k] > 12){
+//                     if (ptBins[k] > 12){
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
                         errorsMeanErrCorr[i][k] = 0.01*error;
-                    }    
+//                     }    
                 }   
             }
               
@@ -306,14 +307,15 @@ void FinaliseSystematicErrorsMergedCalo_pp( TString nameDataFileErrors      = ""
                 cout << "Cluster M02 smoothing" << endl;
                 if (additionalNameOutput.Contains("NLM1")){
                     for (Int_t k = 0;k < nPtBins;k++){
-                        if ( ptBins[k] > 12 ){
-                            Double_t error              = 1.6+(-0.02)*ptBins[k]+(0.0027)*ptBins[k]*ptBins[k];                            
+//                         if ( ptBins[k] > 12 ){
+                            Double_t error              = 3.2+(-0.02)*ptBins[k]+(0.0027)*ptBins[k]*ptBins[k];                            
+//                             Double_t error              = 1.6+(-0.02)*ptBins[k]+(0.0027)*ptBins[k]*ptBins[k];                            
 //                             Double_t error              = 2.3+(-0.02)*ptBins[k]+(0.007)*ptBins[k]*ptBins[k]; // V1 clusterizer
                             errorsMean[i][k]            = error;
                             errorsMeanErr[i][k]         = error*0.01;
                             errorsMeanCorr[i][k]        = error;
                             errorsMeanErrCorr[i][k]     = error*0.01;
-                        }
+//                         }
                     }     
                 } else if (additionalNameOutput.Contains("NLM2")) {
                     for (Int_t k = 0;k < nPtBins;k++){
@@ -349,7 +351,7 @@ void FinaliseSystematicErrorsMergedCalo_pp( TString nameDataFileErrors      = ""
                                 additionalNameOutput.Contains("EG2")  ||
                                 additionalNameOutput.Contains("EG1")  
                     ){
-                       error   = 2.5+(0.01)*ptBins[k]+(0.0018)*ptBins[k]*ptBins[k]; 
+                       error   = 3.5+(0.01)*ptBins[k]+(0.0018)*ptBins[k]*ptBins[k]; 
 //                        error   = 2.5+(0.01)*ptBins[k]+(0.004)*ptBins[k]*ptBins[k];  // V1 clusterizer
                     }  
                     
@@ -392,6 +394,33 @@ void FinaliseSystematicErrorsMergedCalo_pp( TString nameDataFileErrors      = ""
                 } 
             }    
 
+            // manual smoothing for meson mass errors - variation 3
+            if (nameCutVariationSC[i].CompareTo("MesonResolution")==0 ){
+                cout << "Meson resolution error smoothing" << endl;
+                for (Int_t k = 0;k < nPtBins;k++){
+                    Double_t error              = 700*pow(0.7,ptBins[k]+0.2)+5.;
+                    errorsMean[i][k]            = error;
+                    errorsMeanErr[i][k]         = error*0.01;
+                    errorsMeanCorr[i][k]        = error;
+                    errorsMeanErrCorr[i][k]     = error*0.01;
+                }
+            }    
+            
+            // manual smoothing for cell aggregation - variation 4
+            if (nameCutVariationSC[i].CompareTo("CellMinE")==0 ){
+                cout << "cell Emin error smoothing" << endl;
+                for (Int_t k = 0;k < nPtBins;k++){
+                    Double_t error              = 0;
+                    error                       = 2.;
+                    errorsMean[i][k]            = error;
+                    errorsMeanErr[i][k]         = error*0.01;
+                    errorsMeanCorr[i][k]        = error;
+                    errorsMeanErrCorr[i][k]     = error*0.01;
+
+                }
+            }    
+
+            
             // manual smoothing for meson alpha errors - variation 4
             if (nameCutVariationSC[i].CompareTo("MesonAlpha")==0 ){
                 cout << "Alpha error smoothing" << endl;
@@ -419,8 +448,6 @@ void FinaliseSystematicErrorsMergedCalo_pp( TString nameDataFileErrors      = ""
 //                         }
                     }
                 } 
-
-                
             }    
 
             // manual smoothing for cell time uncertainties - variation 5
@@ -503,9 +530,6 @@ void FinaliseSystematicErrorsMergedCalo_pp( TString nameDataFileErrors      = ""
                     } else if (additionalNameOutput.Contains("EG1")){
                         error   = TMath::Sqrt(8.6*8.6+2*2); // V2 clusterizer 8.6, 2% pileup (trigger EG1/EG2: 5.99%)
 //                         error   = TMath::Sqrt(13.0*13.0+2*2); // V1 clusterizer
-                    }    
-                    if (meson.CompareTo("EtaToPi0") == 0){
-                        error   = 0.;
                     }    
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
