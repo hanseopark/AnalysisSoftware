@@ -187,8 +187,8 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     for (Int_t i=0; i<nMotherParticles; i++)
         if (hasMother[i]) nSpectra++;
     Int_t nRows                                                 = 0;
-    if (nSpectra%2 == 0) nRows                                  = nSpectra/2 + 1;
-    else nRows                                                  = (nSpectra+1)/2 + 1;
+    if (nSpectra%6 == 0) nRows                                  = nSpectra/6 + 1;
+    else nRows                                                  = (nSpectra+1)/6 + 1;
 
     //***************************** Pi0 file ************************************************************************
     TFile* filePi0                                              = new TFile(nameFilePi0);
@@ -250,28 +250,23 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     }
 
     //***************************** Get decay channels  *************************************************************
-    tempBinLabel                                        = "";
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        for (Int_t j=0; j<18; j++) {
+            decayChannelsLatex[i][j]                            = "";
+        }
+    }
+    
+    tempBinLabel                                                = "";
     Int_t counter                                               = 0;
     for (Int_t i=0; i<nMotherParticles; i++) {
         if (histoDecayChannels[i]) {
             for (Int_t bin=2; bin<20; bin++) {
                 if (histoDecayChannels[i]->GetBinContent(bin)) {
                     tempBinLabel                                = histoDecayChannels[i]->GetXaxis()->GetBinLabel(bin);
-                    if (tempBinLabel.Contains("#gamma")) {
-                        if (counter==0)
-                            decayChannelsLatex[i]               = tempBinLabel.Data();
-                        else if (counter==1)
-                            decayChannelsLatex[i]               = decayChannelsLatex[i] + " (" + tempBinLabel;
-                        else
-                            decayChannelsLatex[i]               = decayChannelsLatex[i] + ", " + tempBinLabel;
-                        counter++;
-                    }
+                    if (tempBinLabel.Contains("#gamma"))
+                        decayChannelsLatex[i][bin-2]            = tempBinLabel;
                 }
             }
-            if (counter>1) decayChannelsLatex[i]                = Form("%s)", decayChannelsLatex[i].Data());
-            counter                                             = 0;
-        } else {
-            decayChannelsLatex[i]                               = "";
         }
     }
     
@@ -397,16 +392,18 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     TCanvas *canvasMothers                                      = new TCanvas("canvasMothers","",1100,1200);
     DrawGammaCanvasSettings(canvasMothers, 0.165, 0.02, 0.02, 0.09);
     canvasMothers->SetLogy();
-        
-    TLegend* legendMothers                                      = GetAndSetLegend2(0.5, 0.92-(0.045*nRows), 0.9, 0.92, 40, 2);
-    dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptGenMin, ptGenMax);
-    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-7, 30, 1.0, 1.8);
+    canvasMothers->SetLogx();
+    
+    TLegend* legendMothers                                      = GetAndSetLegend2(0.2, 0.95-(0.04*nRows), 0.95, 0.95, 40, 6);
+    dummyHist                                                   = new TH1D("dummyHist", "", 1000, 5e-2, ptGenMax);
+    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-7, 6e2, 1.0, 1.8);
     dummyHist->Draw();
         
     for (Int_t i=0; i<nMotherParticles; i++) {
         if (histoGammaMotherPtOrBin[i]) {
             DrawGammaSetMarker(         histoGammaMotherPtOrBin[i], cocktailMarker[i], 1, cocktailColor[i],  cocktailColor[i]);
             legendMothers->AddEntry(    histoGammaMotherPtOrBin[i], Form("%s", motherParticlesLatex[i].Data()), "l");
+            histoGammaMotherPtOrBin[i]->SetLineWidth(2);
             histoGammaMotherPtOrBin[i]->Draw("csamehist");
         }
     }
@@ -420,10 +417,11 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     TCanvas *canvasMothersParam                                 = new TCanvas("canvasMothersParam","",1100,1200);
     DrawGammaCanvasSettings(canvasMothersParam, 0.165, 0.02, 0.02, 0.09);
     canvasMothersParam->SetLogy();
+    canvasMothersParam->SetLogx();
     
-    TLegend* legendMothersParam                                 = GetAndSetLegend2(0.5, 0.92-(0.045*nRows), 0.9, 0.92, 40, 2);
-    dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptGenMin, ptGenMax);
-    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-7, 30, 1.0, 1.8);
+    TLegend* legendMothersParam                                 = GetAndSetLegend2(0.2, 0.95-(0.04*nRows), 0.95, 0.95, 40, 6);
+    dummyHist                                                   = new TH1D("dummyHist", "", 1000, 5e-2, ptGenMax);
+    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-7, 6e2, 1.0, 1.8);
     dummyHist->Draw();
     
     for (Int_t i=0; i<nMotherParticles; i++) {
@@ -431,6 +429,7 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
             if (cocktailInputParametrizations[i]) {
                 cocktailInputParametrizations[i]->SetLineColor(cocktailColor[i]);
                 cocktailInputParametrizations[i]->SetLineStyle(2);
+                cocktailInputParametrizations[i]->SetLineWidth(2);
                 cocktailInputParametrizations[i]->Draw("same");
             }
             legendMothersParam->AddEntry(histoGammaMotherPtOrBin[i], Form("%s", motherParticlesLatex[i].Data()), "l");
@@ -447,9 +446,10 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     TCanvas *canvasMothersRatio                                 = new TCanvas("canvasMothersRatio","",1100,1200);
     DrawGammaCanvasSettings(canvasMothersRatio, 0.1, 0.02, 0.02, 0.09);
     canvasMothersRatio->SetLogy();
+    canvasMothersRatio->SetLogx();
     
-    TLegend* legendMothersRatio                                 = GetAndSetLegend2(0.5, 0.5-(0.045*nRows), 0.9, 0.5, 40, 2);
-    dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptGenMin, ptGenMax);
+    TLegend* legendMothersRatio                                 = GetAndSetLegend2(0.13, 0.95-(0.04*nRows), 0.95, 0.95, 40, 5);
+    dummyHist                                                   = new TH1D("dummyHist", "", 1000, 5e-2, ptGenMax);
     SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "ratio X / #pi^{0}", 1e-3, 10, 1.0, 1.2);
     dummyHist->Draw();
 
@@ -461,6 +461,7 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
             tempRatio->Divide(histoGammaMotherPtOrBin[0]);
             DrawGammaSetMarker(             tempRatio, cocktailMarker[i], 1, cocktailColor[i],  cocktailColor[i]);
             legendMothersRatio->AddEntry(   tempRatio, Form("%s / #pi^{0}", motherParticlesLatex[i].Data()), "l");
+            tempRatio->SetLineWidth(2);
             tempRatio->Draw("csamehist");
         }
     }
@@ -476,7 +477,7 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     DrawGammaCanvasSettings(canvasMothersY, 0.165, 0.02, 0.02, 0.09);
     canvasMothersY->SetLogy();
     
-    TLegend* legendMothersY                                     = GetAndSetLegend2(0.5, 0.92-(0.045*nRows), 0.9, 0.92, 40, 2);
+    TLegend* legendMothersY                                     = GetAndSetLegend2(0.2, 0.95-(0.04*nRows), 0.95, 0.95, 40, 6);
     dummyHist                                                   = new TH1D("dummyHist", "", 1000, -fRapidity, fRapidity);
     SetHistogramm(dummyHist, "y", "#frac{1}{N_{ev}} #frac{d#it{N}}{dy}", 5e-3, 1e2, 1.0, 1.8);
     dummyHist->Draw();
@@ -499,7 +500,7 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     DrawGammaCanvasSettings(canvasMothersPhi, 0.165, 0.02, 0.02, 0.09);
     canvasMothersPhi->SetLogy();
 
-    TLegend* legendMothersPhi                                   = GetAndSetLegend2(0.5, 0.92-(0.045*nRows), 0.9, 0.92, 40, 2);
+    TLegend* legendMothersPhi                                   = GetAndSetLegend2(0.2, 0.95-(0.04*nRows), 0.95, 0.95, 40, 6);
     dummyHist                                                   = new TH1D("dummyHist", "", 1000, 0, 7.);
     SetHistogramm(dummyHist, "#phi", "#frac{1}{N_{ev}} #frac{d#it{N}}{d#phi}", 5e-3, 1e2, 1.0, 1.8);
     dummyHist->Draw();
@@ -521,19 +522,23 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     TCanvas *CocktailGammas                                     = new TCanvas("CocktailGammas","",1100,1200);
     DrawGammaCanvasSettings(CocktailGammas, 0.165, 0.02, 0.02, 0.09);
     CocktailGammas->SetLogy();
+    CocktailGammas->SetLogx();
     
-    TLegend* legendGammas                                       = GetAndSetLegend2(0.4, 0.92-(0.045*nRows*1.6), 0.75, 0.95, 40);
-    dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptGenMin, ptGenMax);
-    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-7, 1e2, 1.0, 1.8);
+    TLegend* legendGammas                                       = GetAndSetLegend2(0.2, 0.95-(0.05*nRows), 0.95, 0.95, 40, 6);
+    legendGammas->SetHeader("#gamma from");
+    dummyHist                                                   = new TH1D("dummyHist", "", 1000, 5e-2, ptGenMax);
+    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-7, 8e3, 1.0, 1.8);
     dummyHist->Draw();
     
     DrawGammaSetMarker(     histoGammaSumPtOrBin, 20, 1, kBlack,  kBlack);
     legendGammas->AddEntry( histoGammaSumPtOrBin, "all #gamma", "l");
+    histoGammaSumPtOrBin->SetLineWidth(2);
     histoGammaSumPtOrBin->Draw("chistsame");
     for (Int_t i=0; i<nMotherParticles; i++) {
         if (histoGammaPtOrBin[i]) {
             DrawGammaSetMarker(         histoGammaPtOrBin[i], cocktailMarker[i], 1, cocktailColor[i],  cocktailColor[i]);
-            legendGammas->AddEntry(     histoGammaPtOrBin[i], Form("%s #rightarrow %s", motherParticlesLatex[i].Data(), decayChannelsLatex[i].Data()), "l");
+            legendGammas->AddEntry(     histoGammaPtOrBin[i], motherParticlesLatex[i].Data(), "l");
+            histoGammaPtOrBin[i]->SetLineWidth(2);
             histoGammaPtOrBin[i]->Draw("csamehist");
         }
     }
@@ -548,9 +553,10 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     DrawGammaCanvasSettings(canvasGammasRatio, 0.1, 0.02, 0.02, 0.09);
     canvasGammasRatio->SetLogy();
         
-    TLegend* legendGammasRatio                                  = GetAndSetLegend2(0.4, 0.92-(0.045*nRows*1.6), 0.75, 0.95, 40);
-    dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptGenMin, ptGenMax);
-    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "ratio #gamma / #pi^{0} from different sources", 1e-6, 10, 1.0, 1.2);
+    TLegend* legendGammasRatio                                  = GetAndSetLegend2(0.2, 0.95-(0.05*nRows), 0.95, 0.95, 40, 6);
+    legendGammasRatio->SetHeader("#gamma from");
+    dummyHist                                                   = new TH1D("dummyHist", "", 1000, 5e-2, ptGenMax);
+    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "ratio #gamma / #pi^{0} from different sources", 1e-6, 5e2, 1.0, 1.2);
     dummyHist->Draw();
 
     TH1F* tempRatioGammas                                       = (TH1F*)histoGammaSumPtOrBin->Clone("tempRatioGammas");
@@ -558,6 +564,7 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     tempRatioGammas->Divide(histoGammaMotherPtOrBin[0]);
     DrawGammaSetMarker(             tempRatioGammas, 20, 1, kBlack,  kBlack);
     legendGammasRatio->AddEntry(    tempRatioGammas, "all #gamma", "l");
+    tempRatioGammas->SetLineWidth(2);
     tempRatioGammas->Draw("chistsame");
     for (Int_t i=0; i<nMotherParticles; i++) {
         if (histoGammaPtOrBin[i]) {
@@ -565,7 +572,8 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
             tempRatioGammas->Sumw2();
             tempRatioGammas->Divide(histoGammaMotherPtOrBin[0]);
             DrawGammaSetMarker(             tempRatioGammas, cocktailMarker[i], 1, cocktailColor[i],  cocktailColor[i]);
-            legendGammasRatio->AddEntry(    tempRatioGammas, Form("%s #rightarrow %s", motherParticlesLatex[i].Data(), decayChannelsLatex[i].Data()), "l");
+            legendGammasRatio->AddEntry(    tempRatioGammas, motherParticlesLatex[i].Data(), "l");
+            tempRatioGammas->SetLineWidth(2);
             tempRatioGammas->Draw("csamehist");
         }
     }
@@ -581,9 +589,10 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     DrawGammaCanvasSettings(canvasGammasRatio2, 0.1, 0.02, 0.02, 0.09);
     canvasGammasRatio2->SetLogy();
         
-    TLegend* legendGammasRatio2                                 = GetAndSetLegend2(0.4, 0.92-(0.045*nRows*1.6), 0.75, 0.95, 40);
-    dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptGenMin, ptGenMax);
-    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "ratio #gamma from X / all", 1e-6, 10, 1.0, 1.2);
+    TLegend* legendGammasRatio2                                 = GetAndSetLegend2(0.2, 0.95-(0.05*nRows), 0.95, 0.95, 40, 6);
+    legendGammasRatio2->SetHeader("#gamma from");
+    dummyHist                                                   = new TH1D("dummyHist", "", 1000, 5e-2, ptGenMax);
+    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "ratio #gamma from X / all", 1e-6, 5e2, 1.0, 1.2);
     dummyHist->Draw();
 
     TH1F* tempRatioGammas2                                      = NULL;
@@ -593,7 +602,8 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
             tempRatioGammas2->Sumw2();
             tempRatioGammas2->Divide(histoGammaSumPtOrBin);
             DrawGammaSetMarker(             tempRatioGammas2, cocktailMarker[i], 1, cocktailColor[i],  cocktailColor[i]);
-            legendGammasRatio2->AddEntry(   tempRatioGammas2, Form("%s #rightarrow %s", motherParticlesLatex[i].Data(), decayChannelsLatex[i].Data()), "l");
+            legendGammasRatio2->AddEntry(   tempRatioGammas2, motherParticlesLatex[i].Data(), "l");
+            tempRatioGammas2->SetLineWidth(2);
             tempRatioGammas2->Draw("csamehist");
         }
     }
@@ -609,15 +619,16 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     DrawGammaCanvasSettings(canvasGammasY, 0.165, 0.02, 0.02, 0.09);
     canvasGammasY->SetLogy();
     
-    TLegend* legendGammasY                                      = GetAndSetLegend2(0.5, 0.92-(0.045*nRows*1.6), 0.9, 0.92, 40);
+    TLegend* legendGammasY                                      = GetAndSetLegend2(0.2, 0.95-(0.05*nRows), 0.95, 0.95, 40, 6);
+    legendGammasY->SetHeader("#gamma from");
     dummyHist                                                   = new TH1D("dummyHist", "", 1000, -fRapidity, fRapidity);
-    SetHistogramm(dummyHist, "y", "#frac{1}{N_{ev}} #frac{d#it{N}}{dy}", 1e-5, 1e2, 1.0, 1.8);
+    SetHistogramm(dummyHist, "y", "#frac{1}{N_{ev}} #frac{d#it{N}}{dy}", 1e-5, 5e3, 1.0, 1.8);
     dummyHist->Draw();
     
     for (Int_t i=0; i<nMotherParticles; i++) {
         if (histoGammaYOrBin[i]) {
             DrawGammaSetMarker(         histoGammaYOrBin[i], cocktailMarker[i], 1, cocktailColor[i],  cocktailColor[i]);
-            legendGammasY->AddEntry(    histoGammaYOrBin[i], Form("%s #rightarrow %s", motherParticlesLatex[i].Data(), decayChannelsLatex[i].Data()), "p");
+            legendGammasY->AddEntry(    histoGammaYOrBin[i], motherParticlesLatex[i].Data(), "p");
             histoGammaYOrBin[i]->Draw("same");
         }
     }
@@ -632,15 +643,16 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     DrawGammaCanvasSettings(canvasGammasPhi, 0.165, 0.02, 0.02, 0.09);
     canvasGammasPhi->SetLogy();
     
-    TLegend* legendGammasPhi                                    = GetAndSetLegend2(0.5, 0.92-(0.045*nRows*1.6), 0.9, 0.92, 40);
+    TLegend* legendGammasPhi                                    = GetAndSetLegend2(0.2, 0.95-(0.05*nRows), 0.95, 0.95, 40, 6);
+    legendGammasPhi->SetHeader("#gamma from");
     dummyHist                                                   = new TH1D("dummyHist", "", 1000, 0, 7.);
-    SetHistogramm(dummyHist, "#phi", "#frac{1}{N_{ev}} #frac{d#it{N}}{d#phi}", 1e-5, 1e2, 1.0, 1.8);
+    SetHistogramm(dummyHist, "#phi", "#frac{1}{N_{ev}} #frac{d#it{N}}{d#phi}", 1e-5, 5e3, 1.0, 1.8);
     dummyHist->Draw();
     
     for (Int_t i=0; i<nMotherParticles; i++) {
         if (histoGammaMotherPhiOrBin[i]) {
             DrawGammaSetMarker(         histoGammaPhiOrBin[i], cocktailMarker[i], 1, cocktailColor[i],  cocktailColor[i]);
-            legendGammasPhi->AddEntry(  histoGammaPhiOrBin[i], Form("%s #rightarrow %s", motherParticlesLatex[i].Data(), decayChannelsLatex[i].Data()), "p");
+            legendGammasPhi->AddEntry(  histoGammaPhiOrBin[i], motherParticlesLatex[i].Data(), "p");
             histoGammaPhiOrBin[i]->Draw("same");
         }
     }
@@ -651,36 +663,40 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     delete canvasGammasPhi;
     
     //***************************** Plot mT scaling cross check *****************************************************
-    if (histoGammaMotherPtOrBin[3] && cocktailInputParametrizationsMtScaled[3]) {
-        TCanvas *canvasMtCrossCheck                                 = new TCanvas("canvasMtCrossCheck","",1100,1200);
-        DrawGammaCanvasSettings(canvasMtCrossCheck, 0.165, 0.02, 0.02, 0.09);
-        canvasMtCrossCheck->SetLogy();
-        
-        TLegend* legendMtCrossCheck                                 = NULL;
-        if (cocktailInputParametrizations[3])
-            legendMtCrossCheck                                      = GetAndSetLegend2(0.5, 0.92-(0.045*3), 0.9, 0.92, 40);
-        else
-            legendMtCrossCheck                                      = GetAndSetLegend2(0.5, 0.92-(0.045*2), 0.9, 0.92, 40);
-        dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptGenMin, ptGenMax);
-        SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-7, 30, 1.0, 1.8);
-        dummyHist->Draw();
-        
-        cocktailInputParametrizationsMtScaled[3]->SetLineColor(cocktailColor[3]);
-        cocktailInputParametrizationsMtScaled[3]->SetLineStyle(4);
-        
-        legendMtCrossCheck->AddEntry(histoGammaMotherPtOrBin[3], Form("%s", motherParticlesLatex[3].Data()), "l");
-        if (cocktailInputParametrizations[3]) legendMtCrossCheck->AddEntry(cocktailInputParametrizations[3], Form("%s param.", motherParticlesLatex[3].Data()), "l");
-        legendMtCrossCheck->AddEntry(cocktailInputParametrizationsMtScaled[3], Form("%s m_{T} scaled param.", motherParticlesLatex[3].Data()), "l");
-        
-        histoGammaMotherPtOrBin[3]->Draw("csamehist");
-        if (cocktailInputParametrizations[3]) cocktailInputParametrizations[3]->Draw("same");
-        cocktailInputParametrizationsMtScaled[3]->Draw("same");
-        legendMtCrossCheck->Draw("same");
-        
-        canvasMtCrossCheck->SaveAs(Form("%s/MtScalingOmega_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
-        delete legendMtCrossCheck;
-        delete canvasMtCrossCheck;
+    TCanvas *canvasMtCrossCheck                                 = NULL;
+    TLegend* legendMtCrossCheck                                 = NULL;
+    dummyHist                                                   = NULL;
+    for (Int_t particle=0; particle<nMotherParticles; particle++) {
+        if (histoGammaMotherPtOrBin[particle] && cocktailInputParametrizations[particle] && cocktailInputParametrizationsMtScaled[particle]) {
+            canvasMtCrossCheck                                  = new TCanvas("canvasMtCrossCheck","",1100,1200);
+            legendMtCrossCheck                                  = GetAndSetLegend2(0.5, 0.92-(0.045*3), 0.9, 0.92, 40);
+            
+            DrawGammaCanvasSettings(canvasMtCrossCheck, 0.165, 0.02, 0.02, 0.09);
+            canvasMtCrossCheck->SetLogy();
+            canvasMtCrossCheck->SetLogx();
+            
+            dummyHist                                           = new TH1D("dummyHist", "", 1000, 5e-2, ptGenMax);
+            SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-7, 1e2, 1.0, 1.8);
+            dummyHist->Draw();
+
+            cocktailInputParametrizationsMtScaled[particle]->SetLineColor(cocktailColor[particle]);
+            cocktailInputParametrizationsMtScaled[particle]->SetLineStyle(4);
+            cocktailInputParametrizationsMtScaled[particle]->SetLineWidth(2);
+            
+            legendMtCrossCheck->AddEntry(histoGammaMotherPtOrBin[particle], Form("%s", motherParticlesLatex[particle].Data()), "l");
+            legendMtCrossCheck->AddEntry(cocktailInputParametrizations[particle], Form("%s param.", motherParticlesLatex[particle].Data()), "l");
+            legendMtCrossCheck->AddEntry(cocktailInputParametrizationsMtScaled[particle], Form("%s m_{T} scaled param.", motherParticlesLatex[particle].Data()), "l");
+
+            histoGammaMotherPtOrBin[particle]->Draw("csamehist");
+            cocktailInputParametrizations[particle]->Draw("same");
+            cocktailInputParametrizationsMtScaled[particle]->Draw("same");
+            legendMtCrossCheck->Draw("same");
+
+            canvasMtCrossCheck->SaveAs(Form("%s/MtScaling%s_%.2f_%s.%s",outputDir.Data(), motherParticles[particle].Data(),fRapidity,cutSelection.Data(),suffix.Data()));
+        }
     }
+    delete legendMtCrossCheck;
+    delete canvasMtCrossCheck;
     
     //***************************** Plot pi0 from data vs. cocktail *************************************************
     if (histoPi0YieldData) {
@@ -688,9 +704,10 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
         TCanvas *canvasPi0                                          = new TCanvas("canvasPi0","",1100,1200);
         DrawGammaCanvasSettings(canvasPi0, 0.165, 0.02, 0.02, 0.09);
         canvasPi0->SetLogy();
+        canvasPi0->SetLogx();
         
         TLegend* legendPi0                                          = GetAndSetLegend2(0.5, 0.92-(0.045*2), 0.9, 0.92, 40);
-        dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptMin, ptMax);
+        dummyHist                                                   = new TH1D("dummyHist", "", 1000, 1e-1, ptMax);
         SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", histoPi0YieldData->GetMinimum(0)*0.1, histoPi0YieldData->GetMaximum()*2, 1.0, 1.8);
         dummyHist->Draw();
         

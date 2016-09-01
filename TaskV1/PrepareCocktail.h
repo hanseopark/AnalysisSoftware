@@ -26,8 +26,8 @@ TString motherParticlesPDG[nMotherParticles]            = {"111", "221", "331", 
 TString motherParticlesLatex[nMotherParticles]          = {"#pi^{0}", "#eta", "#eta'", "#omega", "#rho^{0}", "#rho^{+}", "#rho^{-}", "#phi", "J/#psi", "#Delta^{-}", "#Delta^{0}", "#Delta^{+}", "#Delta^{++}",
                                                             "#Sigma^{0}"};
 Int_t motherParticleDec[nMotherParticles]               = {1, 2, 16, 8, 4, 8192, 16384, 32, 64, 2048, 4096, 1024, 512, 128};
-TString decayChannelsLatex[nMotherParticles]            = {""};
-Color_t cocktailColor[nMotherParticles]                 = {kBlue+3, kBlue, kBlue-3, kRed-3, kRed, kRed+3, kAzure+3, kAzure, kAzure-3, kGreen+3, kGreen, kCyan+3, kCyan+1, kCyan-3};
+TString decayChannelsLatex[nMotherParticles][18];
+Color_t cocktailColor[nMotherParticles]                 = {kBlue+3, kRed+1, kGreen+3, kCyan+3, kOrange+2, kAzure, kAzure+2, kGreen-2, kRed, kRed-3, kBlue-3, kCyan+1, kCyan-3, kAzure-3};
 Style_t cocktailMarker[nMotherParticles]                = {20, 21, 24, 25, 20, 21, 24, 25, 20, 21, 24, 25, 20, 21};
 
 //************************** cocktail settings ********************************************
