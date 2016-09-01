@@ -118,7 +118,7 @@ void DrawAutoGammaHistoPaper2D( TH2* histo1,
 Double_t FindSmallestEntryIn2D(TH2F* histo);
 void FillDataHistosArray(TH2F*,TH2F*);                                                                      // Fill invariant mass histograms for Signal 
 TH1D* FillProjectionX (TH2F*, TString, Double_t, Double_t, Int_t);                                          // Fill Projection in according to Y bins
-TH1D* FillProjectionY (TH2F*, TString, Double_t, Double_t, Int_t);                                          // Fill Projection in according to X bins
+TH1D* FillProjectionY (TH2F* fDummy2D, TString name, Double_t minX, Double_t maxX, Int_t rebin, Double_t* array); // Fill Projection in according to X bins
 TH1D* AddPossiblyNotExistingHists(TH1D*, TH1D*, TString );                                                  // Add possibly none existing histos
 void CheckForNULLForPointer(TH1D* );                                                                        // Check if histo is NULL
 void FillMCM02HistosArray( TH2F*, TH2F*, TH2F*, TH2F*, TH2F*, TH2F*);                                       // Fill M02 histograms for MC 
@@ -214,7 +214,11 @@ TH2F*       fHistoClusterMergedNCellsPt                                 = NULL;
 TH2F*       fHistoClusterMergedNCellsArClPt                             = NULL;
 TH2F*       fHistoClusterMergedNCellsArAInclPt                          = NULL;
 TH2F*       fHistoClusterMergedEAroundClE                               = NULL;
-TH2F*       fHistoClusterMergedNPartPt                                     = NULL;
+TH2F*       fHistoClusterMergedNPartPt                                  = NULL;
+TH2F*       fHistoClustersMergedNLMPt                                   = NULL;
+TH1D*       fHistoClustersMergedPtNLMBins[11]                           = { NULL, NULL, NULL, NULL, NULL,
+                                                                            NULL, NULL, NULL, NULL, NULL,
+                                                                            NULL };
 
 //*****************************************************************************
 //************************* true MC histograms ********************************

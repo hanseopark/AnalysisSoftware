@@ -302,6 +302,51 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     if (scaleFactorMeasXSecForToy != 1)
         cout << "The secondary correction from the toy has to be scaled with " << scaleFactorMeasXSecForToy << endl;
 //     return;
+
+    // read pt distribution for different NLM bins (0-10, single NLM bins, 11 (>3), 12 (all))
+    TH1D* histoPtInNLMBins[13]                      = { NULL, NULL, NULL, NULL, NULL,
+                                                        NULL, NULL, NULL, NULL, NULL,
+                                                        NULL, NULL, NULL};                                        
+    TH1D* histoRatioPtInNLMBins[12]                 = { NULL, NULL, NULL, NULL, NULL,
+                                                        NULL, NULL, NULL, NULL, NULL,
+                                                        NULL, NULL};                                        
+    Int_t nNLMBinsFilled                            = 0;
+    Bool_t enableNLMBinsPlotting                    = kFALSE;
+    for (Int_t i = 0; i< 11; i++){
+        histoPtInNLMBins[i]                         = (TH1D*)fileUncorrected.Get(Form("ClusterMergedNLM%d",i+1));
+        if (i > 2){
+            if (!histoPtInNLMBins[11] && histoPtInNLMBins[i]){
+                histoPtInNLMBins[11]                    = (TH1D*)histoPtInNLMBins[i]->Clone("ClusterMergedNLMBigger3");
+                histoPtInNLMBins[11]->Sumw2();
+            } else if (histoPtInNLMBins[i]){
+                histoPtInNLMBins[11]->Add(histoPtInNLMBins[i]);            
+            }                
+        }    
+        if (!histoPtInNLMBins[12] && histoPtInNLMBins[i]){
+            cout << "generated summed histo" << endl; 
+            nNLMBinsFilled++;
+            histoPtInNLMBins[12]                    = (TH1D*)histoPtInNLMBins[i]->Clone("ClusterMergedNLMALL");
+            histoPtInNLMBins[12]->Sumw2();
+        } else if (histoPtInNLMBins[i]){
+            nNLMBinsFilled++;
+            histoPtInNLMBins[12]->Add(histoPtInNLMBins[i]);            
+        }    
+    }
+    cout << "filled " << nNLMBinsFilled << endl;
+    
+    if (nNLMBinsFilled > 1){
+        cout << "I am correct" << endl;
+        enableNLMBinsPlotting                       = kTRUE;
+        for (Int_t i = 0; i< 12; i++ ){
+            cout << i << " found " << histoPtInNLMBins[i] << "\t" << histoPtInNLMBins[12] << endl;
+            if (histoPtInNLMBins[i] && histoPtInNLMBins[12]){
+                cout << "producing ratio of NLM bins for " << i+1 << endl;
+                histoRatioPtInNLMBins[i]            = (TH1D*)histoPtInNLMBins[i]->Clone(Form("RatioClusterMergedNLM%d",i+1));
+                histoRatioPtInNLMBins[i]->Divide(histoRatioPtInNLMBins[i],histoPtInNLMBins[12],1.,1.,"B");
+            }
+        }    
+    }
+    
     
     // read toy MC input if available
     TH1D* histoToyMCInputSecPi0[3]                  = {NULL, NULL, NULL};
@@ -346,7 +391,41 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
 
     TH1D *histoAcceptance                       = (TH1D*)fileCorrections->Get("AcceptancePt");
     
-    
+    // read pt distribution for different NLM bins (0-10, single NLM bins, 11 (>3), 12 (all))
+    TH1D* histoMCPtInNLMBins[13]                = { NULL, NULL, NULL, NULL, NULL,
+                                                    NULL, NULL, NULL, NULL, NULL,
+                                                    NULL, NULL, NULL};                                        
+    TH1D* histoMCRatioPtInNLMBins[12]           = { NULL, NULL, NULL, NULL, NULL,
+                                                    NULL, NULL, NULL, NULL, NULL,
+                                                    NULL, NULL};                                        
+    if (enableNLMBinsPlotting){
+        for (Int_t i = 0; i< 11; i++){
+            histoMCPtInNLMBins[i]                           = (TH1D*)fileCorrections->Get(Form("ClusterMergedNLM%d",i+1));
+            if (histoMCPtInNLMBins[i]){
+                histoMCPtInNLMBins[i]->SetName(Form("ClusterMergedNLM%dMC",i+1));
+                if (i > 2){
+                    if (!histoMCPtInNLMBins[11]){
+                        histoMCPtInNLMBins[11]              = (TH1D*)histoMCPtInNLMBins[i]->Clone("ClusterMergedNLMBigger3MC");
+                        histoMCPtInNLMBins[11]->Sumw2();
+                    } else {
+                        histoMCPtInNLMBins[11]->Add(histoMCPtInNLMBins[i]);            
+                    }                
+                }    
+                if (!histoMCPtInNLMBins[12] ){
+                    histoMCPtInNLMBins[12]                  = (TH1D*)histoMCPtInNLMBins[i]->Clone("ClusterMergedNLMALLMC");
+                    histoMCPtInNLMBins[12]->Sumw2();
+                } else {
+                    histoMCPtInNLMBins[12]->Add(histoMCPtInNLMBins[i]);            
+                }    
+            }
+        }
+        for (Int_t i = 0; i< 12; i++ ){
+            if (histoMCPtInNLMBins[i] && histoMCPtInNLMBins[12]){
+                histoMCRatioPtInNLMBins[i]            = (TH1D*)histoMCPtInNLMBins[i]->Clone(Form("RatioClusterMergedNLM%dMC",i+1));
+                histoMCRatioPtInNLMBins[i]->Divide(histoMCRatioPtInNLMBins[i],histoMCPtInNLMBins[12],1.,1.,"B");
+            }
+        }
+    }
     
     TH1D* histoTrueClustersBGPt[10]             = { NULL, NULL, NULL, NULL, NULL,
                                                     NULL, NULL, NULL, NULL, NULL};                                        
@@ -602,8 +681,12 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
                 if (j == 0){
                     for (Int_t iPt = histoSecEffiPt[j]->FindBin(minPtMeson); iPt< histoSecEffiPt[j]->GetNbinsX()+1; iPt++ ){
                         if (histoSecEffiPt[j]->GetBinContent(iPt) == 0){
-                            histoSecEffiPt[j]->SetBinContent(iPt, fitConst->GetParameter(0)*histoTrueEffiPrimMesonPt->GetBinContent(iPt));
-                            histoSecEffiPt[j]->SetBinError(iPt, fitConst->GetParameter(0)*histoTrueEffiPrimMesonPt->GetBinError(iPt));
+                            Double_t ratioPrevBin           = 2;
+                            if (iPt-1 > histoSecEffiPt[j]->FindBin(minPtMeson) && histoSecEffiPt[j]->GetBinContent(iPt-1) > 0){
+                                ratioPrevBin                = histoSecEffiPt[j]->GetBinContent(iPt-1)/histoTrueEffiPrimMesonPt->GetBinContent(iPt-1);
+                            }    
+                            histoSecEffiPt[j]->SetBinContent(iPt, ratioPrevBin*histoTrueEffiPrimMesonPt->GetBinContent(iPt));
+                            histoSecEffiPt[j]->SetBinError(iPt, ratioPrevBin*histoTrueEffiPrimMesonPt->GetBinError(iPt));
                             modifiedSecEff[j]               = kTRUE;
                         }
                     }    
@@ -1527,6 +1610,66 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
 
     delete canvasCorrecftedYield;
     delete legendYield3;
+    
+    // ********************************************************************************************************************************
+    // **************************************** plotting NLM fractions ****************************************************************
+    // ********************************************************************************************************************************
+    if (enableNLMBinsPlotting && !kIsMC){
+        TCanvas* canvasNLMFractions = new TCanvas("canvasNLMFractions","",200,10,900,900);  // gives the page size
+        DrawGammaCanvasSettings( canvasNLMFractions, 0.1, 0.02, 0.02, 0.08); 
+//         canvasNLMFractions->SetLogy(1);
+
+        Color_t colorNLM[11]        = { kBlack, kRed+1, kBlue+1, kGreen+2, kViolet+1, 
+                                        kOrange, kCyan+2, kMagenta+1, kOrange+7, kGray+1,
+                                        kPink-8 };
+        Style_t markerStyleNLM[11]  = { 20, 21, 29, 34, 33, 
+                                        20, 21, 29, 34, 33,
+                                        20 };
+        Style_t markerStyleNLMMC[11]= { 24, 25, 28, 28, 27, 
+                                        24, 25, 28, 28, 27,
+                                        24 };                                   
+        TH2F* histo2DDummyNLMFrac;
+        histo2DDummyNLMFrac         = new TH2F("histo2DDummyNLMFrac","histo2DDummyNLMFrac",1000,0, maxPtMeson,
+                                                                                100000, 0, 1.2);
+            SetStyleHistoTH2ForGraphs(histo2DDummyNLMFrac, "#it{p}_{T} (GeV/#it{c})", "#it{f}_{X} = cluster_{NLM=X}/cluster_{all NLM}", 0.035   ,0.04, 0.035,0.04, 0.9,1.,510,505);
+//             histo2DDummyNLMFrac->GetYaxis()->SetRangeUser(0,1);
+            histo2DDummyNLMFrac->DrawCopy();         
+        
+            TLegend* legendNLMs = GetAndSetLegend2(0.13, 0.96-4*0.035, 0.45, 0.96, 28,3);
+            for (Int_t i = 0; i < 3; i++){
+                if (histoRatioPtInNLMBins[i]){
+                    legendNLMs->AddEntry((TObject*)0,Form("X=%d",i+1) ,"");
+                    DrawGammaSetMarker(histoRatioPtInNLMBins[i], markerStyleNLM[i], 1, colorNLM[i], colorNLM[i]);  
+                    histoRatioPtInNLMBins[i]->DrawCopy("same, e1");      
+                    legendNLMs->AddEntry(histoRatioPtInNLMBins[i],"Data" ,"p");
+                    if (histoMCRatioPtInNLMBins[i]){
+                        DrawGammaSetMarker(histoMCRatioPtInNLMBins[i], markerStyleNLMMC[i], 1, colorNLM[i], colorNLM[i]);  
+                        histoMCRatioPtInNLMBins[i]->DrawCopy("e1,same");
+                        legendNLMs->AddEntry(histoMCRatioPtInNLMBins[i],"MC","p");
+                    } else {
+                        legendNLMs->AddEntry((TObject*)0,"","");
+                    }    
+                }
+                
+            }    
+            if (histoRatioPtInNLMBins[11]){
+                legendNLMs->AddEntry((TObject*)0,"X>3" ,"");
+                DrawGammaSetMarker(histoRatioPtInNLMBins[11], markerStyleNLM[3], 1, colorNLM[3], colorNLM[3]);  
+                histoRatioPtInNLMBins[11]->DrawCopy("same, e1");      
+                legendNLMs->AddEntry(histoRatioPtInNLMBins[11],"Data","p");
+                if (histoMCRatioPtInNLMBins[11]){
+                    DrawGammaSetMarker(histoMCRatioPtInNLMBins[11], markerStyleNLMMC[3], 1, colorNLM[3], colorNLM[3]);  
+                    histoMCRatioPtInNLMBins[11]->DrawCopy("e1,same");
+                    legendNLMs->AddEntry(histoMCRatioPtInNLMBins[11],"MC","p");
+                } else {
+                    legendNLMs->AddEntry((TObject*)0,"","");
+                }    
+            }
+            legendNLMs->Draw();
+            PutProcessLabelAndEnergyOnPlot(0.65, 0.95, 28, collisionSystem.Data(),fDetectionProcess.Data(), "" , 63, 0.03);
+        canvasNLMFractions->Update();
+        canvasNLMFractions->SaveAs(Form("%s/%s_%s_NLMFractions_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
+    }
     
     // ********************************************************************************************************************************
     // ****************************** Write file with all further needed histograms ***************************************************

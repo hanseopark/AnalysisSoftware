@@ -221,9 +221,18 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     fHistoClusterMergedNCellsArClPt     = (TH2F*)ESDContainer->FindObject("ClusMerged_NCellsAroundClus_Pt");
     fHistoClusterMergedNCellsArAInclPt  = (TH2F*)ESDContainer->FindObject("ClusMerged_NCellsAroundAndInClus_Pt");
     fHistoClusterMergedEAroundClE       = (TH2F*)ESDContainer->FindObject("ClusMerged_EAroundClus_E");
+    fHistoClustersMergedNLMPt           = (TH2F*)ESDContainer->FindObject("ClusMerged_NLM_Pt_AcceptedMeson");
+    if (fHistoClustersMergedNLMPt){
+        for (Int_t i = 0; i< 11; i++ ){
+            fHistoClustersMergedPtNLMBins[i] = FillProjectionY(fHistoClustersMergedNLMPt, Form("ClusterMergedNLM%d",i+1), i+1, i+1, fNBinsClusterPt, fBinsClusterPt);
+        } 
+    }    
     if (fIsMC){
         fHistoClusterMergedNPartPt      = (TH2F*)ESDContainer->FindObject("ClusMerged_NPart_Pt");
     }
+    
+    
+    
     if (fHistoClusterNCellsPt && fHistoClusterMergedNCellsPt && fHistoClusterMergedNCellsArClPt && fHistoClusterMergedNCellsArAInclPt && fHistoClusterMergedEAroundClE ){
         fAdvancedClusterQA              = kTRUE;
         cout << "**************************************************************" << endl;
@@ -2009,16 +2018,21 @@ TH1D* FillProjectionX (TH2F* fDummy2D, TString name, Double_t minY, Double_t max
 //****************************************************************************
 //******************** Projection out of 2D in X *****************************
 //****************************************************************************
-TH1D* FillProjectionY (TH2F* fDummy2D, TString name, Double_t minX, Double_t maxX, Int_t rebin){
+TH1D* FillProjectionY (TH2F* fDummy2D, TString name, Double_t minX, Double_t maxX, Int_t rebin, Double_t* array){
     TH1D* dummy1D           = new TH1D(name.Data(), name.Data(), fDummy2D->GetNbinsY(), 0., fDummy2D->GetYaxis()->GetBinUpEdge(fDummy2D->GetNbinsY()));
     dummy1D->Sumw2();
     Int_t startBin          = fDummy2D->GetXaxis()->FindBin(minX+0.001);
     Int_t endBin            = fDummy2D->GetXaxis()->FindBin(maxX-0.001);
     fDummy2D->ProjectionY(name.Data(),startBin,endBin,"e");
     dummy1D                 = (TH1D*)gDirectory->Get(name.Data());
-    if(rebin>1){
-        dummy1D->Rebin(rebin);
-    }
+    if (array != NULL){
+        TH1D* dummy2        = (TH1D*)dummy1D->Rebin(rebin,name.Data(),array);
+        return dummy2;
+    } else {    
+        if(rebin>1){
+            dummy1D->Rebin(rebin);
+        }
+    }    
     return dummy1D; 
 }
 
@@ -2066,7 +2080,7 @@ void FillDataHistosArray(TH2F* fInvMassVSPtDummy, TH2F* fM02VsPtDummy) {
 
         CheckForNULLForPointer(fHistoM02PtBin[iPt]);
         if (fM02VsPtDummy){
-            fHistoM02PtBin[iPt]         = FillProjectionY(fM02VsPtDummy, fNameHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoM02PtBin[iPt]         = FillProjectionY(fM02VsPtDummy, fNameHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
     }
 }
@@ -2094,36 +2108,36 @@ void FillMCM02HistosArray(  TH2F* fTrueMergedPtVsM02Dummy,
         // true merged clusters        
         CheckForNULLForPointer(fHistoTrueClusMergedM02PtBin[iPt]);
         if (fTrueMergedPtVsM02Dummy){
-            fHistoTrueClusMergedM02PtBin[iPt]                   = FillProjectionY(fTrueMergedPtVsM02Dummy, fNameHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusMergedM02PtBin[iPt]                   = FillProjectionY(fTrueMergedPtVsM02Dummy, fNameHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
         // true merged pi0        
         CheckForNULLForPointer(fHistoTrueClusPi0M02PtBin[iPt]);
         if (fTruePi0PtVsM02){
-            fHistoTrueClusPi0M02PtBin[iPt]                      = FillProjectionY(fTruePi0PtVsM02, fNamePi0HistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusPi0M02PtBin[iPt]                      = FillProjectionY(fTruePi0PtVsM02, fNamePi0HistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
 
         // true merged eta        
         CheckForNULLForPointer(fHistoTrueClusEtaM02PtBin[iPt]);
         if (fTrueEtaPtVsM02){
-            fHistoTrueClusEtaM02PtBin[iPt]                      = FillProjectionY(fTrueEtaPtVsM02, fNameEtaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusEtaM02PtBin[iPt]                      = FillProjectionY(fTrueEtaPtVsM02, fNameEtaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
 
         // true gamma
         CheckForNULLForPointer(fHistoTrueClusGammaM02PtBin[iPt]);
         if (fTrueGammaPtVsM02){
-            fHistoTrueClusGammaM02PtBin[iPt]                    = FillProjectionY(fTrueGammaPtVsM02, fNameGammaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusGammaM02PtBin[iPt]                    = FillProjectionY(fTrueGammaPtVsM02, fNameGammaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
 
         // true electron
         CheckForNULLForPointer(fHistoTrueClusElectronM02PtBin[iPt]);
         if (fTrueElectronPtVsM02){
-            fHistoTrueClusElectronM02PtBin[iPt]                 = FillProjectionY(fTrueElectronPtVsM02, fNameElectronHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusElectronM02PtBin[iPt]                 = FillProjectionY(fTrueElectronPtVsM02, fNameElectronHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
 
         // true BG
         CheckForNULLForPointer(fHistoTrueClusBGM02PtBin[iPt]);
         if (fTrueBGPtVsM02){
-            fHistoTrueClusBGM02PtBin[iPt]                       = FillProjectionY(fTrueBGPtVsM02, fNameBGHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusBGM02PtBin[iPt]                       = FillProjectionY(fTrueBGPtVsM02, fNameBGHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
     }
 }
@@ -2175,99 +2189,99 @@ void FillMCM02AdditionHistosArray(      TH2F* fTrueMergedPureDummy,
         // true merged clusters        
         CheckForNULLForPointer(fHistoTrueClusPureMergedM02PtBin[iPt]);
         if (fTrueMergedPureDummy){
-            fHistoTrueClusPureMergedM02PtBin[iPt]               = FillProjectionY(fTrueMergedPureDummy, fNameHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusPureMergedM02PtBin[iPt]               = FillProjectionY(fTrueMergedPureDummy, fNameHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
         CheckForNULLForPointer(fHistoTrueClusPureMergedFromPi0M02PtBin[iPt]);
         if (fTrueMergedPurePi0Dummy){
-            fHistoTrueClusPureMergedFromPi0M02PtBin[iPt]        = FillProjectionY(fTrueMergedPurePi0Dummy, fNameHistoM02FromPi0, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusPureMergedFromPi0M02PtBin[iPt]        = FillProjectionY(fTrueMergedPurePi0Dummy, fNameHistoM02FromPi0, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
         CheckForNULLForPointer(fHistoTrueClusPureMergedFromEtaM02PtBin[iPt]);
         if (fTrueMergedPureEtaDummy){
-            fHistoTrueClusPureMergedFromEtaM02PtBin[iPt]        = FillProjectionY(fTrueMergedPureEtaDummy, fNameHistoM02FromEta, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusPureMergedFromEtaM02PtBin[iPt]        = FillProjectionY(fTrueMergedPureEtaDummy, fNameHistoM02FromEta, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
         // true merged clusters part conv       
         CheckForNULLForPointer(fHistoTrueClusPartConvMergedM02PtBin[iPt]);
         if (fTruePartConvMergedVsM02Dummy){
-            fHistoTrueClusPartConvMergedM02PtBin[iPt]           = FillProjectionY(fTruePartConvMergedVsM02Dummy, fNamePartConvHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusPartConvMergedM02PtBin[iPt]           = FillProjectionY(fTruePartConvMergedVsM02Dummy, fNamePartConvHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
         CheckForNULLForPointer(fHistoTrueClusPartConvMergedFromPi0M02PtBin[iPt]);
         if (fTruePartConvMergedPi0VsM02Dummy){
-            fHistoTrueClusPartConvMergedFromPi0M02PtBin[iPt]    = FillProjectionY(fTruePartConvMergedPi0VsM02Dummy, fNamePartConvHistoM02FromPi0, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusPartConvMergedFromPi0M02PtBin[iPt]    = FillProjectionY(fTruePartConvMergedPi0VsM02Dummy, fNamePartConvHistoM02FromPi0, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
         CheckForNULLForPointer(fHistoTrueClusPartConvMergedFromEtaM02PtBin[iPt]);
         if (fTruePartConvMergedEtaVsM02Dummy){
-            fHistoTrueClusPartConvMergedFromEtaM02PtBin[iPt]    = FillProjectionY(fTruePartConvMergedEtaVsM02Dummy, fNamePartConvHistoM02FromEta, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusPartConvMergedFromEtaM02PtBin[iPt]    = FillProjectionY(fTruePartConvMergedEtaVsM02Dummy, fNamePartConvHistoM02FromEta, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
         // true cluster with 1 gamma from mesons        
         CheckForNULLForPointer(fHistoTrueClusOneGammaM02PtBin[iPt]);
         if (fTrueOneGammaDummy){
-            fHistoTrueClusOneGammaM02PtBin[iPt]                 = FillProjectionY(fTrueOneGammaDummy, fNameOneGammaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusOneGammaM02PtBin[iPt]                 = FillProjectionY(fTrueOneGammaDummy, fNameOneGammaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
 
         // true cluster with 1 gamma from pi0
         CheckForNULLForPointer(fHistoTrueClusOneGammaFromPi0M02PtBin[iPt]);
         if (fTrueOneGammaFromPi0Dummy){
-            fHistoTrueClusOneGammaFromPi0M02PtBin[iPt]          = FillProjectionY(fTrueOneGammaFromPi0Dummy, fNameOneGammaFromPi0HistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusOneGammaFromPi0M02PtBin[iPt]          = FillProjectionY(fTrueOneGammaFromPi0Dummy, fNameOneGammaFromPi0HistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
 
         // true cluster with 1 gamma from eta
         CheckForNULLForPointer(fHistoTrueClusOneGammaFromEtaM02PtBin[iPt]);
         if (fTrueOneGammaFromEtaDummy){
-            fHistoTrueClusOneGammaFromEtaM02PtBin[iPt]          = FillProjectionY(fTrueOneGammaFromEtaDummy, fNameOneGammaFromEtaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusOneGammaFromEtaM02PtBin[iPt]          = FillProjectionY(fTrueOneGammaFromEtaDummy, fNameOneGammaFromEtaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
 
         // true cluster with 1 electron from meson
         CheckForNULLForPointer(fHistoTrueClusOneElectronM02PtBin[iPt]);
         if (fTrueOneElectronDummy){
-            fHistoTrueClusOneElectronM02PtBin[iPt]              = FillProjectionY(fTrueOneElectronDummy, fNameOneElectronHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusOneElectronM02PtBin[iPt]              = FillProjectionY(fTrueOneElectronDummy, fNameOneElectronHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
 
         // true cluster with 1 electron from pi0
         CheckForNULLForPointer(fHistoTrueClusOneElectronFromPi0M02PtBin[iPt]);
         if (fTrueOneElectronFromPi0Dummy){
-            fHistoTrueClusOneElectronFromPi0M02PtBin[iPt]       = FillProjectionY(fTrueOneElectronFromPi0Dummy, fNameOneElectronFromPi0HistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusOneElectronFromPi0M02PtBin[iPt]       = FillProjectionY(fTrueOneElectronFromPi0Dummy, fNameOneElectronFromPi0HistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
         
         // true cluster with 1 electron from eta
         CheckForNULLForPointer(fHistoTrueClusOneElectronFromEtaM02PtBin[iPt]);
         if (fTrueOneElectronFromEtaDummy){
-            fHistoTrueClusOneElectronFromEtaM02PtBin[iPt]       = FillProjectionY(fTrueOneElectronFromEtaDummy, fNameOneElectronFromEtaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusOneElectronFromEtaM02PtBin[iPt]       = FillProjectionY(fTrueOneElectronFromEtaDummy, fNameOneElectronFromEtaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
 
         // true cluster from pi0 in GG channel
         CheckForNULLForPointer(fHistoTrueClusPi0GGM02PtBin[iPt]);
         if (fTruePi0GGDummy){
-            fHistoTrueClusPi0GGM02PtBin[iPt]                    = FillProjectionY(fTruePi0GGDummy, fNameTruePi0GGM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusPi0GGM02PtBin[iPt]                    = FillProjectionY(fTruePi0GGDummy, fNameTruePi0GGM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
 
         // true cluster from pi0 in Dalitz channel
         CheckForNULLForPointer(fHistoTrueClusPi0DalitzM02PtBin[iPt]);
         if (fTruePi0DalitzDummy){
-            fHistoTrueClusPi0DalitzM02PtBin[iPt]                = FillProjectionY(fTruePi0DalitzDummy, fNameTruePi0DalitzM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusPi0DalitzM02PtBin[iPt]                = FillProjectionY(fTruePi0DalitzDummy, fNameTruePi0DalitzM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
 
         // true cluster from eta in GG channel
         CheckForNULLForPointer(fHistoTrueClusEtaGGM02PtBin[iPt]);
         if (fTrueEtaGGDummy){
-            fHistoTrueClusEtaGGM02PtBin[iPt]                    = FillProjectionY(fTrueEtaGGDummy, fNameTrueEtaGGM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusEtaGGM02PtBin[iPt]                    = FillProjectionY(fTrueEtaGGDummy, fNameTrueEtaGGM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
 
         // true cluster from eta in Dalitz channel
         CheckForNULLForPointer(fHistoTrueClusEtaDalitzM02PtBin[iPt]);
         if (fTrueEtaDalitzDummy){
-            fHistoTrueClusEtaDalitzM02PtBin[iPt]                = FillProjectionY(fTrueEtaDalitzDummy, fNameTrueEtaDalitzM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusEtaDalitzM02PtBin[iPt]                = FillProjectionY(fTrueEtaDalitzDummy, fNameTrueEtaDalitzM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
         
         // true cluster from pi0 double counted
         CheckForNULLForPointer(fHistoTrueClusPi0DCM02PtBin[iPt]);
         if (fTruePi0DCDummy){
-            fHistoTrueClusPi0DCM02PtBin[iPt]                    = FillProjectionY(fTruePi0DCDummy, fNameTruePi0DCM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusPi0DCM02PtBin[iPt]                    = FillProjectionY(fTruePi0DCDummy, fNameTruePi0DCM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
 
         // true cluster from eta double counted
         CheckForNULLForPointer(fHistoTrueClusEtaDCM02PtBin[iPt]);
         if (fTrueEtaDCDummy){
-            fHistoTrueClusEtaDCM02PtBin[iPt]                    = FillProjectionY(fTrueEtaDCDummy, fNameTrueEtaDCM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusEtaDCM02PtBin[iPt]                    = FillProjectionY(fTrueEtaDCDummy, fNameTrueEtaDCM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
         
     }
@@ -2287,7 +2301,7 @@ void FillMCPrimSecM02HistosArray(   TH2F* fTruePi0PrimM02VsPt,
         // true prim pi0 clusters
         CheckForNULLForPointer(fHistoTrueClusPrimPi0M02PtBin[iPt]);
         if (fTruePi0PrimM02VsPt){
-            fHistoTrueClusPrimPi0M02PtBin[iPt]                  = FillProjectionY(fTruePi0PrimM02VsPt, fNamePi0PrimM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+            fHistoTrueClusPrimPi0M02PtBin[iPt]                  = FillProjectionY(fTruePi0PrimM02VsPt, fNamePi0PrimM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
         }
  
         // fill secondary pt differential histo for pi0 from: K0s, Lambda, K0l, Rest
@@ -2296,7 +2310,7 @@ void FillMCPrimSecM02HistosArray(   TH2F* fTruePi0PrimM02VsPt,
                 TString fNamePi0SecM02                  = Form("TrueClusSecPi0From%s_M02_in_Pt_Bin%02d", nameSecondaries[j].Data(), iPt);
                 CheckForNULLForPointer(fHistoTrueClusSecPi0M02PtBin[j][iPt]);
                 if (fTruePi0SecM02VsPt[j]){
-                    fHistoTrueClusSecPi0M02PtBin[j][iPt]            = FillProjectionY(fTruePi0SecM02VsPt[j], fNamePi0SecM02, fBinsPt[iPt], fBinsPt[iPt+1], 4);
+                    fHistoTrueClusSecPi0M02PtBin[j][iPt]            = FillProjectionY(fTruePi0SecM02VsPt[j], fNamePi0SecM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
                 }
             }    
         }
@@ -2657,7 +2671,15 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3) {
             if (fHistoClusterMergedNCellsArAInclPt)     fHistoClusterMergedNCellsArAInclPt->Write("ClusterMergedNCellsAroundAndInClusterPt");        
             if (fHistoClusterMergedEAroundClE)          fHistoClusterMergedEAroundClE->Write("ClusterMergedEAroundClusterE");        
             if (fHistoClusterMergedNPartPt)             fHistoClusterMergedNPartPt->Write("ClusterMergedNPartPointingToClusPt");        
-        }    
+            if (fHistoClustersMergedNLMPt)              fHistoClustersMergedNLMPt->Write("ClusterMergedNLMPt");
+            for (Int_t i = 0; i< 11; i++ ){
+                if (fHistoClustersMergedPtNLMBins[i]){
+                     if (fHistoClustersMergedPtNLMBins[i]->GetEntries() > 0){
+                         fHistoClustersMergedPtNLMBins[i]->Write();
+                     }
+                }
+            }
+        }
         
         for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
             if (fHistoInvMassPtBin[ii])                     fHistoInvMassPtBin[ii]->Write(Form("InvMass_PtBin%i",ii));
@@ -2758,6 +2780,15 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
         if (fHistoRatioMergedPartConvFracEta)       fHistoRatioMergedPartConvFracEta->Write();
         if (fHistoRatioMergedOneGammaFracEta)       fHistoRatioMergedOneGammaFracEta->Write();
         if (fHistoRatioMergedOneElectronFracEta)    fHistoRatioMergedOneElectronFracEta->Write();
+
+        for (Int_t i = 0; i< 11; i++ ){
+            if (fHistoClustersMergedPtNLMBins[i]){
+                if (fHistoClustersMergedPtNLMBins[i]->GetEntries() > 0){
+                    fHistoClustersMergedPtNLMBins[i]->Write();
+                }
+            }
+        }
+
         
         for (Int_t i = 0; i< 10; i++){
             if (fHistoTrueClustersBGPt[i])          fHistoTrueClustersBGPt[i]->Write();

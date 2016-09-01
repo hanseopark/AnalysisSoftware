@@ -211,9 +211,9 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
     Style_t markerScaled[3]             = {25, 24, 27};
 
     Double_t scaleFactors[4][5]         = { {0, 0, 0, 0, 0}, 
-                                            {0., -0.5, 0.5, 0, 0}, 
+                                            {0., -0.2, 0.2, 0, 0}, 
                                             {0.20, -0.2, 0., 0, 0},
-                                            {0.50, -0.5, 0., 0, 0} };
+                                            {-0.2, 0.2, 0., 0, 0} };
     Double_t ptBinning[69]              = {0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
                                            1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
                                            2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9,
@@ -260,7 +260,7 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
             nameResolHist[0]            = Form("ESD_TruePrimary%sPureMerged_MCPt_ResolPt",outputlabel.Data());
             nameResolHist[1]            = Form("ESD_TruePrimary%sMergedPartConv_MCPt_ResolPt",outputlabel.Data());
             nameResolHist[2]            = Form("ESD_TruePrimary%s1Gamma_MCPt_ResolPt",outputlabel.Data());
-            nameResolHist[3]            = Form("ESD_TruePrimary%s1Gamma_MCPt_ResolPt",outputlabel.Data());
+            nameResolHist[3]            = Form("ESD_TruePrimary%s1Electron_MCPt_ResolPt",outputlabel.Data());
 //             nameResolHist[3]            = Form("ESD_TruePrimary%s1Electron_MCPt_ResolPt",outputlabel.Data());
             labelResolHist[0]               = Form("%s fully merged", plotLabel.Data());
             labelResolHist[1]               = Form("%s merged part conv.", plotLabel.Data());
@@ -284,9 +284,9 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
         nameFracHist[0]                 = "";
         if (mode == 10){
             nameFracHist[0]             = "RatioMergedPure";
-            nameFracHist[1]             = "RatioMergedPartConv";
-            nameFracHist[2]             = "RatioMergedOneGamma";
-            nameFracHist[3]             = "RatioMergedOneElectron";
+            nameFracHist[1]             = "RatioPi0MergedPartConv";
+            nameFracHist[2]             = "RatioPi0MergedOneGamma";
+            nameFracHist[3]             = "RatioPi0MergedOneElectron";
         }
         for (Int_t i = 0; (i < 5) && (i < nResolHist); i++){
             cout << "trying to load: " << nameFracHist[i].Data() << endl;

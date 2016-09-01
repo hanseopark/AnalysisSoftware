@@ -1514,7 +1514,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     fStartPtBin = 12;
                 else if (modi == 4 && specialTrigg == 4) 
                     fStartPtBin = 15;
-                else if (modi == 10 && ReturnClusterNLM(clusterCutSelection) == 2) 
+                else if (modi == 10 && ( ReturnClusterNLM(clusterCutSelection) == 2 || ReturnClusterNLM(clusterCutSelection) == 0)) 
                     fStartPtBin = 17;
                 else if (modi == 10 && ReturnClusterNLM(clusterCutSelection) == 1 && (specialTrigg == 0 || specialTrigg == 5))  
                     fStartPtBin = 21;

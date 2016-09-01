@@ -534,15 +534,26 @@ fi
 # LHC15a3aMC="2490"; 
 # LHC15a3aplusMC="2492"; 
 
-TRAINDIR=Legotrain-mCalo-20160813_V1Clus
-LHC11aData="1780"; 
-LHC15g1aMC="2425";
-
-LHC13gData="1781"; 
-LHC15a3aMC="2420"; 
+# TRAINDIR=Legotrain-mCalo-20160813_V1Clus
+# LHC11aData="1780"; 
+# LHC15g1aMC="2425";
+# 
+# LHC13gData="1781"; 
+# # LHC15a3aMC="2420"; 
 # LHC15a3aMC="2421"; 
-LHC15a3aplusMC="2422"; 
+# # LHC15a3aplusMC="2422"; 
 # LHC15a3aplusMC="2424"; 
+
+TRAINDIR=Legotrain-mCalo-20160828_SysAdd
+LHC11aData="1818"; 
+LHC15g1aMC="2495";
+
+LHC13gData="1819"; 
+# LHC15a3aMC="2496"; 
+# LHC15a3aplusMC="2498"; 
+LHC15a3aMC="2497"; 
+LHC15a3aplusMC="2499"; 
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -844,6 +855,7 @@ elif [ $2 = "LHC13g" ]; then
     if [ $DOWNLOADON == 1 ]; then
         if [ $HAVELHC13g == 1 ]; then
             echo "copying LHC13g" 
+#             CopyFileIfNonExisitent $OUTPUTDIR_LHC13g "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC13gData/merge"
             CopyFileIfNonExisitent $OUTPUTDIR_LHC13g "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC13gData/merge_runlist_1"
             runNumbers=`cat runNumbersLHC13g_pass1.txt`
             echo $runNumbers

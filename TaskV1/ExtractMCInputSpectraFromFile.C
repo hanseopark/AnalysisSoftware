@@ -63,8 +63,6 @@ void ScaleMCYield( TH1D* histoCorrectedToBeScaled, Double_t deltaRapid, Double_t
     }
 }
            
-           
-           
 //****************************************************************************
 //********* Main function for extraction of MC inputs ************************
 //****************************************************************************
@@ -236,7 +234,34 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     fHistoMCEtaPtRebinned->Rebin(nBinsX,"fHistoMCEtaPtRebinned2",ptBinning);
     fHistoMCEtaPtRebinned               = (TH1D*)gDirectory->Get("fHistoMCEtaPtRebinned2");
 
-    // ------------ read 2D primary particle histo ------------
+    // ------------ read 2D primary particle histo vs pt --------
+    TH2D* fHistoPrimPartYSource         = NULL;
+    TH1D* fHistoMCPiNegY                = NULL;
+    TH1D* fHistoMCPiPosY                = NULL;
+    TH1D* fHistoMCKNegY                 = NULL;
+    TH1D* fHistoMCKPosY                 = NULL;
+    TH1D* fHistoMCK0sY                  = NULL;
+    TH1D* fHistoMCK0lY                  = NULL;
+    TH1D* fHistoMCLambdaY               = NULL;
+    fHistoPrimPartYSource               = (TH2D*)MCContainer->FindObject("MC_Primary_Y_Source");  
+    if (fHistoPrimPartYSource){
+        fHistoMCPiPosY                  = (TH1D*)fHistoPrimPartYSource->ProjectionX( "MC_PosPi_Y", fHistoPrimPartYSource->GetYaxis()->FindBin(0.), 
+                                                                                    fHistoPrimPartYSource->GetYaxis()->FindBin(0.),"e");     
+        fHistoMCPiNegY                  = (TH1D*)fHistoPrimPartYSource->ProjectionX( "MC_NegPi_Y", fHistoPrimPartYSource->GetYaxis()->FindBin(1.), 
+                                                                                    fHistoPrimPartYSource->GetYaxis()->FindBin(1.),"e");     
+        fHistoMCKPosY                   = (TH1D*)fHistoPrimPartYSource->ProjectionX( "MC_PosK_Y", fHistoPrimPartYSource->GetYaxis()->FindBin(2.), 
+                                                                                    fHistoPrimPartYSource->GetYaxis()->FindBin(2.),"e");     
+        fHistoMCKNegY                   = (TH1D*)fHistoPrimPartYSource->ProjectionX( "MC_NegK_Y", fHistoPrimPartYSource->GetYaxis()->FindBin(3.), 
+                                                                                    fHistoPrimPartYSource->GetYaxis()->FindBin(3.),"e");     
+        fHistoMCK0sY                    = (TH1D*)fHistoPrimPartYSource->ProjectionX( "MC_K0s_Y", fHistoPrimPartYSource->GetYaxis()->FindBin(4.), 
+                                                                                    fHistoPrimPartYSource->GetYaxis()->FindBin(4.),"e");     
+        fHistoMCK0lY                    = (TH1D*)fHistoPrimPartYSource->ProjectionX( "MC_K0l_Y", fHistoPrimPartYSource->GetYaxis()->FindBin(5.), 
+                                                                                    fHistoPrimPartYSource->GetYaxis()->FindBin(5.),"e");     
+        fHistoMCLambdaY                 = (TH1D*)fHistoPrimPartYSource->ProjectionX( "MC_Lambda_Y", fHistoPrimPartYSource->GetYaxis()->FindBin(6.), 
+                                                                                    fHistoPrimPartYSource->GetYaxis()->FindBin(6.),"e");     
+    } 
+    
+    // ------------ read 2D primary particle histo vs pt --------
     TH2D* fHistoPrimPartPtSource        = NULL;
     TH1D* fHistoMCPiNegPt               = NULL;
     TH1D* fHistoMCPiPosPt               = NULL;
@@ -828,6 +853,14 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         if (fHistoMCLambdaPtRebinned)               fHistoMCK0sPtRebinned->Write("MC_Lambda_Pt_Rebinned");
         if (fHistoMCSecPi0FromLambdaPt)             fHistoMCSecPi0FromLambdaPt->Write(Form("MCSecPi0FromLambda_%1.2f",deltaRapid/2.));
         if (fHistoRatioPi0FromLambdaDivLambda)      fHistoRatioPi0FromLambdaDivLambda->Write(Form("MCPi0FromLambdaToLambda_%1.2f",deltaRapid/2.));
+
+        if (fHistoMCPiNegY)                         fHistoMCPiNegY->Write();
+        if (fHistoMCPiPosY)                         fHistoMCPiPosY->Write();
+        if (fHistoMCKNegY)                          fHistoMCKNegY->Write();
+        if (fHistoMCKPosY)                          fHistoMCKPosY->Write();
+        if (fHistoMCK0sY)                           fHistoMCK0sY->Write();        
+        if (fHistoMCK0lY)                           fHistoMCK0lY->Write();
+        if (fHistoMCLambdaY)                        fHistoMCLambdaY->Write();
         
     fOutput2->Write();
     fOutput2->Close();
