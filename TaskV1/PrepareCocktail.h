@@ -36,27 +36,7 @@ Double_t ptGenMax                                       = 20;
 Int_t nParticles                                        = 1000;
 Int_t selectedMothers                                   = 62591;
 Bool_t hasMother[nMotherParticles]                      = {0};
-
-//************************** mT scale factor (AliGenEMlib) ********************************
-const Double_t mtScaleFactor[3][14] = {
-    // {1.0, 0.5, 1.0, 0.9, 0.4, 0.23, 0.054},  // factor for pp from arXiv:1110.3929
-    // {1.0, 0.55, 1.0, 0.9, 0.4, 0.25, 0.004}    // factor for PbPb from arXiv:1110.3929
-    //{1., 0.48, 1.0, 0.9, 0.25, 0.4}, (old values)
-    //{1., 0.48, 1.0, 0.9, 0.4, 0.25}, (nlo values)
-    //{1., 0.48, 1.0, 0.8, 0.4, 0.2, 0.06} (combination of nlo and LHC measurements)
-    //https://aliceinfo.cern.ch/Figure/node/2634
-    //https://aliceinfo.cern.ch/Figure/node/2788
-    //https://aliceinfo.cern.ch/Figure/node/4403
-    //https://aliceinfo.cern.ch/Figure/node/5842
-    //https://aliceinfo.cern.ch/Notes/node/87
-    /*best guess:
-     - pp values for eta/pi0 [arXiv:1205.5724], omega/pi0 [arXiv:1210.5749], phi/(pi+/-) [arXiv:1208.5717] from measured 7 Tev data
-     */
-    {1.0, 0.476, 0.4, 0.85, 1.0, 1.0, 1.0, 0.13, 1.0, 1.0, 1.0, 1.0, 1.0, 0.49}, //pp
-    {1.0, 0.476, 0.4, 0.85, 1.0, 1.0, 1.0, 0.25, 1.0, 1.0, 1.0, 1.0, 1.0, 0.49}, //pPb
-    {1.0, 0.476, 0.4, 0.85, 1.0, 1.0, 1.0, 0.25, 1.0, 1.0, 1.0, 1.0, 1.0, 0.49}, //PbPb
-};
-
+Double_t mtScaleFactor[nMotherParticles]                = {1.};
 
 //************************** Declaration of histograms ************************************
 TH1F* fDeltaPt                                          = NULL;

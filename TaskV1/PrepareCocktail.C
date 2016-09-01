@@ -100,9 +100,6 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     //***************************** Load binning for spectrum *******************************************************
     Initialize(fEnergyFlag, numberOfBins);
 
-    //***************************** Spectra quantity ****************************************************************
-    TString quantityLatex                                       = "#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})";
-
     //***************************** Cocktail file *******************************************************************
     TFile fileCocktail(nameFileCocktail.Data());
     TDirectoryFile* topDirCocktail                              = (TDirectoryFile*)fileCocktail.Get("GammaCocktailMC");
@@ -125,22 +122,15 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     }
     
     //***************************** read cocktail settings **********************************************************
-    cocktailInputParametrizations                               = new TF1*[nMotherParticles];
-    cocktailInputParametrizationsMtScaled                       = new TF1*[nMotherParticles];
-    TF1* paramTemp                                              = NULL;
-    TF1* paramMtTemp                                            = NULL;
-    for (Int_t i=0; i<nMotherParticles; i++) {
-        paramTemp                                               = (TF1*)cocktailSettingsList->FindObject(Form("%s_pt", motherParticlesPDG[i].Data()));
-        paramMtTemp                                             = (TF1*)cocktailSettingsList->FindObject(Form("%s_pt_mtScaled", motherParticlesPDG[i].Data()));
-        if (paramTemp)  cocktailInputParametrizations[i]        = new TF1(*paramTemp);
-        else            cocktailInputParametrizations[i]        = NULL;
-        if (paramMtTemp)
-            cocktailInputParametrizationsMtScaled[i]            = new TF1(*paramMtTemp);
-        else
-            cocktailInputParametrizationsMtScaled[i]            = (TF1*)MtScaledParam(cocktailInputParametrizations[0], i);
-    }
-
     histMtScalingFactors                                        = (TH1F*)cocktailSettingsList->FindObject("histoMtScaleFactor");
+    TString tempBinLabel                                        = "";
+    for (Int_t i=1; i<histMtScalingFactors->GetNbinsX()+1; i++) {
+        tempBinLabel                                            = (TString)histMtScalingFactors->GetXaxis()->GetBinLabel(i);
+        for (Int_t j=0; j<nMotherParticles; j++) {
+            if (tempBinLabel.CompareTo(motherParticlesPDG[j]) == 0)
+                mtScaleFactor[j]                                = histMtScalingFactors->GetBinContent(i);
+        }
+    }
     
     TObject* tempObject                                         = NULL;
     TString tempObjectName                                      = "";
@@ -169,6 +159,21 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
             arr                                                 = tempObjectName.Tokenize("_");
             ptGenMax                                            = (((TObjString*)arr->At(1))->GetString()).Atof();
         }
+    }
+    
+    cocktailInputParametrizations                               = new TF1*[nMotherParticles];
+    cocktailInputParametrizationsMtScaled                       = new TF1*[nMotherParticles];
+    TF1* paramTemp                                              = NULL;
+    TF1* paramMtTemp                                            = NULL;
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        paramTemp                                               = (TF1*)cocktailSettingsList->FindObject(Form("%s_pt", motherParticlesPDG[i].Data()));
+        paramMtTemp                                             = (TF1*)cocktailSettingsList->FindObject(Form("%s_pt_mtScaled", motherParticlesPDG[i].Data()));
+        if (paramTemp)  cocktailInputParametrizations[i]        = new TF1(*paramTemp);
+        else            cocktailInputParametrizations[i]        = NULL;
+        if (paramMtTemp)
+            cocktailInputParametrizationsMtScaled[i]            = new TF1(*paramMtTemp);
+        else
+            cocktailInputParametrizationsMtScaled[i]            = (TF1*)MtScaledParam(cocktailInputParametrizations[0], i);
     }
 
     //***************************** ranges **************************************************************************
@@ -245,7 +250,7 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     }
 
     //***************************** Get decay channels  *************************************************************
-    TString tempBinLabel                                        = "";
+    tempBinLabel                                        = "";
     Int_t counter                                               = 0;
     for (Int_t i=0; i<nMotherParticles; i++) {
         if (histoDecayChannels[i]) {
@@ -814,20 +819,15 @@ void SaveHistos() {
 //************************** Routine to calculate mt scaled params **************************************************
 TF1* MtScaledParam(TF1* param, Int_t particleNumber) {
 
-    if (!param)
+    if (!param || particleNumber==0)
         return NULL;
     
-    Int_t collSysNumber;
-    if (fEnergyFlag.Contains("PbPb"))
-        collSysNumber                           = 2;
-    else if (fEnergyFlag.Contains("pPb"))
-        collSysNumber                           = 1;
-    else
-        collSysNumber                           = 0;
-    
-    Double_t scaleFactor                        = mtScaleFactor[collSysNumber][particleNumber];
+    Double_t scaleFactor                        = mtScaleFactor[particleNumber];
     Double_t mass                               = GetMass(motherParticles[particleNumber]);
     Double_t massPi0                            = GetMass("Pi0");
+    
+    if (!scaleFactor || !mass || !massPi0)
+        return NULL;
     
     Double_t xMin, xMax;
     param->GetRange(xMin, xMax);
@@ -839,6 +839,7 @@ TF1* MtScaledParam(TF1* param, Int_t particleNumber) {
                                                           {return p[2] * paramScaleBase->Eval(5.) / paramScaleBase->Eval(TMath::Sqrt(25. + p[0]*p[0] - p[1]*p[1])) * x[0]/TMath::Sqrt(x[0]*x[0] + p[0]*p[0] - p[1]*p[1])*paramScaleBase->Eval(TMath::Sqrt(x[0]*x[0] + p[0]*p[0] - p[1]*p[1]));},
                                                           xMin, xMax, 3);
     scaledParam->SetParameters(mass, massPi0, scaleFactor);
+    scaledParam->SetName(Form("%s_pt_mtScaled", motherParticlesPDG[particleNumber].Data()));
 
     return scaledParam;
 }
