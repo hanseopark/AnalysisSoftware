@@ -267,8 +267,8 @@ Int_t fBinsPi08TeVEMCALTrigger2PtRebin[42]      = { 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 4, 5,
-                                                    5, 4, 5, 10, 10,
-                                                    10, 16, 2, 2, 2,
+                                                    5, 4, 5, 10, 20,
+                                                    16, 16, 2, 2, 2,
                                                     2, 2};
 Int_t fBinsPi08TeVConvEMCALTrigger1PtRebin[42]  = { 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
@@ -360,13 +360,13 @@ Int_t fBinsEta8TeVConvTrigger2PtRebin[23]      = { 5, 5, 5, 5, 5,
                                                     10, 20, 5};
 Int_t fBinsEta8TeVEMCALTrigger1PtRebin[23]      = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
-                                                    10, 10, 10, 8, 8,
-                                                    10, 10, 10, 10, 10,
+                                                    8, 8, 8, 8, 8,
+                                                    8, 10, 10, 10, 10,
                                                     10, 20, 2};
 Int_t fBinsEta8TeVEMCALTrigger2PtRebin[23]      = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
                                                     5, 5, 5, 16, 16,
-                                                    16, 16, 8, 10, 10,
+                                                    10, 10, 10, 10, 10,
                                                     10, 20, 5};
 Int_t fBinsEta8TeVConvEMCALTrigger1PtRebin[23]  = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
@@ -2366,7 +2366,10 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     if(specialTrigg == 1){
                         if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVEMCALTrigger1PtRebin[i];
                     } else if(specialTrigg == 2){
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVEMCALTrigger2PtRebin[i];
+                        if (i < fNBinsPt+1){
+                          fNRebin[i] = fBinsEta8TeVEMCALTrigger2PtRebin[i];
+                          if(setPi0.CompareTo("Pi0EtaBinning") == 0 && fBinsPt[i]==18) fNRebin[i] = 16;
+                        }
                     } else {
                         if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVEMCALPtRebin[i];
                     }

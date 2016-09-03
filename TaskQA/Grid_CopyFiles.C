@@ -387,36 +387,37 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 //*********************************************************************************************************************************
 //*********************************************************************************************************************************
 
-    const Int_t nSets = 6;
-    const Int_t nData = 0;
+    const Int_t nSets = 12;
+    const Int_t nData = 6;
     TString DataSets[nSets]={
-      //"LHC10b", "LHC10c", "LHC10d", "LHC10e", "LHC10f", "LHC10c_900GeV",
+      "LHC10b", "LHC10c", "LHC10d", "LHC10e", "LHC10f", "LHC10c_900GeV",
       "LHC14j4b", "LHC14j4c", "LHC14j4d", "LHC14j4e", "LHC14j4f", "LHC14j4c_900GeV",
     };
 
-    TString train = "Legotrain-vAN-20160817-7TeV_NL_3";
+    TString train = "Legotrain-vAN-20160903-7TeV_NL_4";
 
     TString runlist[nSets] = {
-      //"merge_runlist_3","merge_runlist_3","merge_runlist_3","merge_runlist_3","merge_runlist_3","merge_runlist_4",
+      "merge_runlist_3","merge_runlist_3","merge_runlist_3","merge_runlist_3","merge_runlist_3","merge_runlist_4",
       "merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_4"
     };
 
     Int_t trainRuns[nSets] = {
-      //1783,1784,1785,1786,1787,1784,
-      2451,2452,2453,2454,2455,2452
+      1824,1825,1826,1827,1828,1825,
+      2509,2510,2511,2512,2513,2510
     };
-    const Int_t nFiles = 2;
-    TString Files[nFiles] = {"GammaCalo_210", "GammaConvCalo_210"};
+    const Int_t nFiles = 9;
+    TString Files[nFiles] = {"GammaCalo_210", "GammaConvCalo_210", "GammaConvV1_79", "OmegaToPiZeroGamma_1", "OmegaToPiZeroGamma_2",
+                             "OmegaToPiZeroGamma_201", "OmegaToPiZeroGamma_202", "OmegaToPiZeroGamma_301", "OmegaToPiZeroGamma_302"};
 
-    const Int_t nMerge = 2;
-    TString strMerge[nMerge]={/*"LHC10",*/"LHC14j4"/*,"LHC10_900GeV"*/,"LHC14j4_900GeV"};
+    const Int_t nMerge = 4;
+    TString strMerge[nMerge]={"LHC10","LHC14j4","LHC10_900GeV","LHC14j4_900GeV"};
     std::vector<Int_t> mergeVec[nMerge];
     std::vector<Int_t>::iterator it;
     for(Int_t i=0; i<nSets; i++){
       if(0<=i && i<=4) mergeVec[0].push_back(i);
-//      if(6<=i && i<=10) mergeVec[1].push_back(i);
-      if(i==5) mergeVec[1].push_back(i);
-//      if(i==11) mergeVec[3].push_back(i);
+      if(6<=i && i<=10) mergeVec[1].push_back(i);
+      if(i==5) mergeVec[2].push_back(i);
+      if(i==11) mergeVec[3].push_back(i);
     }
 
 //*********************************************************************************************************************************

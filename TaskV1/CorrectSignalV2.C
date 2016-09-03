@@ -531,8 +531,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     }
                 }
                 
-                histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                 if (optionEnergy.CompareTo("2.76TeV") == 0){
+                    histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                     // crude assumptions // need to be validated for other energies
                     if (mode == 4 ){
                         if (j == 0 ){

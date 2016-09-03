@@ -2377,11 +2377,17 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
                 if ( fEnergyFlag.CompareTo("8TeV") == 0 ){
                   TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
                   if( trigger.CompareTo("52") == 0 || trigger.CompareTo("81") == 0 || triggerSet == 1 || triggerSet == 2){
-                    fBGFitRange[0]=0.27;
-                    fMesonFitRange[0] = 0.08;
+                    fBGFitRange[0]=0.25;
+                    fMesonFitRange[0] = 0.07;
+                    fMesonFitRange[1] = 0.26;
+                    fMesonIntDeltaRangeWide[0]      = fMesonIntDeltaRange[0]*1.6; // mod.
+                    fMesonIntDeltaRangeWide[1]      = fMesonIntDeltaRange[1]*1.6;// mod.
+                    fMesonIntDeltaRangeNarrow[0]    = fMesonIntDeltaRange[0]*0.4; // mod.
+                    fMesonIntDeltaRangeNarrow[1]    = fMesonIntDeltaRange[1]*0.4; // mod.
                     if(trigger.CompareTo("81")==0 || triggerSet == 2){
-                      fMesonFitRange[1] = 0.30;
-                      fMesonIntDeltaRange[1] = 0.065;
+                      fMesonFitRange[0] = 0.08;
+                      fMesonFitRange[1] = 0.28;
+                      //fMesonIntDeltaRange[1] = 0.065;
                       fMesonIntDeltaRangeWide[1]      = fMesonIntDeltaRange[1]*1.2;// mod.
                       fMesonIntDeltaRangeNarrow[1]    = fMesonIntDeltaRange[1]*0.8; // mod.
                     }
@@ -2487,10 +2493,10 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fPeakRange[0]                   = 0.51;
             fPeakRange[1]                   = 0.59;
             fFitRange[0]                    = 0.41;
-            if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fFitRange[0] = 0.39;}
+            if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fFitRange[0] = 0.38;}
             if( fEnergyFlag.CompareTo("7TeV") == 0 ){ fFitRange[0] = 0.37;}
             fFitRange[1]                    = 0.73;
-            if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fFitRange[1] = 0.71;}
+            if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fFitRange[1] = 0.74;}
             if( fEnergyFlag.CompareTo("7TeV") == 0 ){ fFitRange[1] = 0.72;}
             fBGFitRange[0]                  = 0.67;
             fBGFitRange[1]                  = 0.799;
@@ -2498,10 +2504,10 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fBGFitRangeLeft[0]              = 0.34;
             fBGFitRangeLeft[1]              = 0.44;
             fMesonFitRange[0]               = 0.41;
-            if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonFitRange[0] = 0.39;}
+            if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonFitRange[0] = 0.38;}
             if( fEnergyFlag.CompareTo("7TeV") == 0 ){ fMesonFitRange[0] = 0.37;}
             fMesonFitRange[1]               = 0.73;
-            if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonFitRange[1] = 0.71;}
+            if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonFitRange[1] = 0.74;}
             if( fEnergyFlag.CompareTo("7TeV") == 0 ){ fMesonFitRange[1] = 0.72;}
             fMesonWidthExpect               = 0.025;
             fMesonLambdaTail                = 0.012;
@@ -2515,14 +2521,6 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fMesonIntDeltaRangeWide[1]      = 0.10;
             fMesonIntDeltaRangeNarrow[0]    = -0.060;
             fMesonIntDeltaRangeNarrow[1]    = 0.060;
-            if( fEnergyFlag.CompareTo("8TeV") == 0 || fEnergyFlag.CompareTo("7TeV") == 0 ) {
-              fMesonIntDeltaRange[0]          = -0.070;
-              fMesonIntDeltaRange[1]          = 0.070;
-              fMesonIntDeltaRangeWide[0]      = -0.09;
-              fMesonIntDeltaRangeWide[1]      = 0.09;
-              fMesonIntDeltaRangeNarrow[0]    = -0.050;
-              fMesonIntDeltaRangeNarrow[1]    = 0.050;
-            }
         }
     } else if (setPi0.CompareTo("EtaPrim") == 0){
         fPeakRange                      = new Double_t[2]; 
