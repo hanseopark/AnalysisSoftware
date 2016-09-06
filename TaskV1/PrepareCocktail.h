@@ -88,3 +88,5 @@ void SetHistogramTitles                             (   TH1F* input,
                                                         TString xTitle,
                                                         TString yTitle          );
 void DeleteObjects                                  (                           );
+TH1D* CalculateRatioToTF1                           (   TH1D* hist,
+                                                        TF1* func               );

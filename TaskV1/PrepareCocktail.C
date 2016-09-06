@@ -663,20 +663,73 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     delete canvasGammasPhi;
     
     //***************************** Plot mT scaling cross check *****************************************************
-    TCanvas *canvasMtCrossCheck                                 = NULL;
-    TLegend* legendMtCrossCheck                                 = NULL;
-    dummyHist                                                   = NULL;
+//    TCanvas *canvasMtCrossCheck                                 = NULL;
+//    TLegend* legendMtCrossCheck                                 = NULL;
+//    dummyHist                                                   = NULL;
+//    for (Int_t particle=0; particle<nMotherParticles; particle++) {
+//        if (histoGammaMotherPtOrBin[particle] && cocktailInputParametrizations[particle] && cocktailInputParametrizationsMtScaled[particle]) {
+//            canvasMtCrossCheck                                  = new TCanvas("canvasMtCrossCheck","",1100,1200);
+//            legendMtCrossCheck                                  = GetAndSetLegend2(0.5, 0.92-(0.045*3), 0.9, 0.92, 40);
+//            
+//            DrawGammaCanvasSettings(canvasMtCrossCheck, 0.165, 0.02, 0.02, 0.09);
+//            canvasMtCrossCheck->SetLogy();
+//            canvasMtCrossCheck->SetLogx();
+//            
+//            dummyHist                                           = new TH1D("dummyHist", "", 1000, 5e-2, ptGenMax);
+//            SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-7, 1e2, 1.0, 1.8);
+//            dummyHist->Draw();
+//
+//            cocktailInputParametrizationsMtScaled[particle]->SetLineColor(cocktailColor[particle]);
+//            cocktailInputParametrizationsMtScaled[particle]->SetLineStyle(4);
+//            cocktailInputParametrizationsMtScaled[particle]->SetLineWidth(2);
+//            
+//            legendMtCrossCheck->AddEntry(histoGammaMotherPtOrBin[particle], Form("%s", motherParticlesLatex[particle].Data()), "l");
+//            legendMtCrossCheck->AddEntry(cocktailInputParametrizations[particle], Form("%s param.", motherParticlesLatex[particle].Data()), "l");
+//            legendMtCrossCheck->AddEntry(cocktailInputParametrizationsMtScaled[particle], Form("%s m_{T} scaled param.", motherParticlesLatex[particle].Data()), "l");
+//
+//            histoGammaMotherPtOrBin[particle]->Draw("csamehist");
+//            cocktailInputParametrizations[particle]->Draw("same");
+//            cocktailInputParametrizationsMtScaled[particle]->Draw("same");
+//            legendMtCrossCheck->Draw("same");
+//
+//            canvasMtCrossCheck->SaveAs(Form("%s/MtScaling%s_%.2f_%s.%s",outputDir.Data(), motherParticles[particle].Data(),fRapidity,cutSelection.Data(),suffix.Data()));
+//        }
+//    }
+//    delete legendMtCrossCheck;
+//    delete canvasMtCrossCheck;
+    TCanvas* canvasMtCrossCheck                                     = NULL;
+    TLegend* legendMtCrossCheck                                     = NULL;
+    TPad* padMtCrossCheck                                           = NULL;
+    TPad* padMtCrossCheckRatio                                      = NULL;
+    dummyHist                                                       = NULL;
+    TH1D* dummyHistRatio                                            = NULL;
+    TH1D* tempRatio1                                                = NULL;
+    TH1D* tempRatio2                                                = NULL;
     for (Int_t particle=0; particle<nMotherParticles; particle++) {
         if (histoGammaMotherPtOrBin[particle] && cocktailInputParametrizations[particle] && cocktailInputParametrizationsMtScaled[particle]) {
             canvasMtCrossCheck                                  = new TCanvas("canvasMtCrossCheck","",1100,1200);
+            padMtCrossCheck                                     = new TPad("padMtCrossCheck", "", 0., 0.25, 1., 1.,-1, -1, -2);
+            padMtCrossCheckRatio                                = new TPad("padMtCrossCheckRatio", "", 0., 0., 1., 0.25,-1, -1, -2);
             legendMtCrossCheck                                  = GetAndSetLegend2(0.5, 0.92-(0.045*3), 0.9, 0.92, 40);
+     
+            DrawGammaCanvasSettings(canvasMtCrossCheck, 0.165, 0.015, 0.025, 0.25);
+            DrawGammaPadSettings(padMtCrossCheck,       0.165, 0.015, 0.025, 0.);
+            DrawGammaPadSettings(padMtCrossCheckRatio,  0.165, 0.015, 0.0, 0.25);
             
-            DrawGammaCanvasSettings(canvasMtCrossCheck, 0.165, 0.02, 0.02, 0.09);
-            canvasMtCrossCheck->SetLogy();
-            canvasMtCrossCheck->SetLogx();
+            padMtCrossCheck->Draw();
+            padMtCrossCheck->SetLogy();
+            padMtCrossCheck->SetLogx();
             
+            padMtCrossCheckRatio->Draw();
+            padMtCrossCheckRatio->SetLogx();
+
+            // dummy hist
             dummyHist                                           = new TH1D("dummyHist", "", 1000, 5e-2, ptGenMax);
-            SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-7, 1e2, 1.0, 1.8);
+            dummyHistRatio                                      = new TH1D("dummyHist", "", 1000, 5e-2, ptGenMax);
+            
+            // spectrum + parametrizations
+            padMtCrossCheck->cd();
+            SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 5e-8, 1e2, 1.0, 1.8);
             dummyHist->Draw();
 
             cocktailInputParametrizationsMtScaled[particle]->SetLineColor(cocktailColor[particle]);
@@ -686,18 +739,36 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
             legendMtCrossCheck->AddEntry(histoGammaMotherPtOrBin[particle], Form("%s", motherParticlesLatex[particle].Data()), "l");
             legendMtCrossCheck->AddEntry(cocktailInputParametrizations[particle], Form("%s param.", motherParticlesLatex[particle].Data()), "l");
             legendMtCrossCheck->AddEntry(cocktailInputParametrizationsMtScaled[particle], Form("%s m_{T} scaled param.", motherParticlesLatex[particle].Data()), "l");
-
+            
             histoGammaMotherPtOrBin[particle]->Draw("csamehist");
             cocktailInputParametrizations[particle]->Draw("same");
             cocktailInputParametrizationsMtScaled[particle]->Draw("same");
             legendMtCrossCheck->Draw("same");
-
+            
+            // ratios of parametrizations to spectrum
+            padMtCrossCheckRatio->cd();
+            SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{spec}{param}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
+            dummyHistRatio->GetXaxis()->SetLabelOffset(-0.025);
+            dummyHistRatio->GetYaxis()->SetRangeUser(0,2.3);
+            
+            tempRatio1                                          = (TH1D*)CalculateRatioToTF1((TH1D*)histoGammaMotherPtOrBin[particle], cocktailInputParametrizations[particle]);
+            tempRatio2                                          = (TH1D*)CalculateRatioToTF1((TH1D*)histoGammaMotherPtOrBin[particle], cocktailInputParametrizationsMtScaled[particle]);
+            
+            tempRatio1->SetLineColor(cocktailColor[particle]);
+            tempRatio2->SetLineColor(cocktailColor[particle]);
+            tempRatio1->SetLineStyle(2);
+            tempRatio2->SetLineStyle(4);
+            
+            dummyHistRatio->Draw();
+            tempRatio1->Draw("csamehist");
+            tempRatio2->Draw("csamehist ");
+            
             canvasMtCrossCheck->SaveAs(Form("%s/MtScaling%s_%.2f_%s.%s",outputDir.Data(), motherParticles[particle].Data(),fRapidity,cutSelection.Data(),suffix.Data()));
         }
     }
-    delete legendMtCrossCheck;
-    delete canvasMtCrossCheck;
-    
+
+  
+  
     //***************************** Plot pi0 from data vs. cocktail *************************************************
     if (histoPi0YieldData) {
         
@@ -953,4 +1024,32 @@ void DeleteObjects() {
     delete[] cocktailInputParametrizationsMtScaled;
 }
 
+//************************** Calculate ratio of TF1 to TH1D *********************************************************
+TH1D* CalculateRatioToTF1(TH1D* hist, TF1* func) {
+    
+    if (!hist) return NULL;
+    
+    TH1D* resultHist            = (TH1D*)hist->Clone(Form("%s_to_%s", hist->GetName(), func->GetName()));
+    
+    Double_t tempVal            = 0.;
+    Double_t tempErr            = 0.;
+    
+    for (Int_t i=1; i<hist->GetNbinsX()+1; i++) {
+        if (hist->GetBinContent(i)) {
+            
+            tempVal             = func->Integral(hist->GetXaxis()->GetBinLowEdge(i), hist->GetXaxis()->GetBinUpEdge(i));
+            tempVal             = tempVal/(hist->GetBinContent(i)*hist->GetBinWidth(i));
+            tempErr             = tempVal*hist->GetBinError(i)/hist->GetBinContent(i);
+            
+            resultHist->SetBinContent(i, tempVal);
+            resultHist->SetBinError(  i, tempErr);
+            
+        } else {
+            resultHist->SetBinContent(  i, 0);
+            resultHist->SetBinError(    i, 0);
+        }
+    }
+    
+    return resultHist;
+}
 
