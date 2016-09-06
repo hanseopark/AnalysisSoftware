@@ -23,11 +23,11 @@ Float_t nEvents                                         = 0;
 const Int_t nMotherParticles                            = 14;
 TString motherParticles[nMotherParticles]               = {"Pi0", "Eta", "EtaPrim", "omega", "rho0", "rho+", "rho-", "phi", "J/psi", "Delta-", "Delta0", "Delta+", "Delta++", "Sigma0"};
 TString motherParticlesPDG[nMotherParticles]            = {"111", "221", "331", "223", "113", "213", "-213", "333", "443", "1114", "2114", "2214", "2224", "3212"};
-TString motherParticlesLatex[nMotherParticles]          = {"#pi^{0}", "#eta", "#eta'", "#omega", "#rho^{0}", "#rho^{+}", "#rho^{-}", "#phi", "J/#psi", "#Delta^{-}", "#Delta^{0}", "#Delta^{+}", "#Delta^{++}",
-                                                            "#Sigma^{0}"};
+TString motherParticlesLatex[nMotherParticles]          = {"#pi^{0}", "#eta", "#eta'", "#omega", "#rho^{0}", "#rho^{+}", "#rho^{-}", "#phi", "J/#psi", "#Delta^{-}", "#Delta^{0}", "#Delta^{+}",
+                                                            "#Delta^{++}", "#Sigma^{0}"};
 Int_t motherParticleDec[nMotherParticles]               = {1, 2, 16, 8, 4, 8192, 16384, 32, 64, 2048, 4096, 1024, 512, 128};
 TString decayChannelsLatex[nMotherParticles][18];
-Color_t cocktailColor[nMotherParticles]                 = {kBlue+3, kRed+1, kGreen+3, kCyan+3, kOrange+2, kAzure, kAzure+2, kGreen-2, kRed, kRed-3, kBlue-3, kCyan+1, kCyan-3, kAzure-3};
+Color_t cocktailColor[nMotherParticles]                 = {kRed+2, kBlue+1, kOrange+1, kYellow+2, kAzure-2, kGreen+2, kRed-2, kViolet, kMagenta, kViolet+2, kBlue-3, kTeal+9, kCyan+2, kMagenta+2};
 Style_t cocktailMarker[nMotherParticles]                = {20, 21, 24, 25, 20, 21, 24, 25, 20, 21, 24, 25, 20, 21};
 
 //************************** cocktail settings ********************************************
