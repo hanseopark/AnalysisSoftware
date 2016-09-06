@@ -86,20 +86,36 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     fCutSelection                                               = cutSelection;
     ReturnSeparatedCutNumberAdvanced(fCutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
     
+    Bool_t isPCM                    = 0;
+    Bool_t isCalo                   = 0;
+    if ( mode == 0 || mode == 2 || mode == 3)
+        isPCM                       = 1;
+    if ( mode == 2 || mode == 3 || mode == 4 || mode == 5)
+        isCalo                      = 1;
+    
     //**************************** Determine Centrality *************************************************************
-    centralityString                                            = GetCentralityString(fEventCutSelection);
-    if (centralityString.CompareTo("pp")==0){
-        fTextCent                                               = "MinBias";
+    TString centrality                                          = GetCentralityString(fEventCutSelection);
+    TString collisionSystem                                     = ReturnFullCollisionsSystem(option);
+    TString cent                                                = "";
+    TString textMeasurement                                     = ""; //"#gamma";
+    TString detectionProcess                                    = ReturnFullTextReconstructionProcess(mode);
+    //TString detectionProcess1                                   = "";
+    //TString detectionProcess2                                   = "";
+    //if (isPCM && isCalo){
+    //    detectionProcess1                                       = ReturnFullTextReconstructionProcess(mode,1);
+    //    detectionProcess                                        = detectionProcess1;
+    //    detectionProcess2                                       = ReturnFullTextReconstructionProcess(mode,2);
+    //}
+    detectionProcess                                            = "";
+    if(option.Contains("PbPb")){
+        cent                                                    = Form("%s %s", centrality.Data(), collisionSystem.Data());
     } else {
-        fTextCent                                               = Form("%s central", centralityString.Data());
-    }
-    if (centralityString.CompareTo("pp")!=0 && !centralityString.Contains("0-100%") ){
-        fCollisionSystem                                        = Form("%s %s", centralityString.Data(), fCollisionSystem.Data());
+        cent                                                    = collisionSystem;
     }
     
     //***************************** Load binning for spectrum *******************************************************
     Initialize(fEnergyFlag, numberOfBins);
-
+    
     //***************************** Cocktail file *******************************************************************
     TFile fileCocktail(nameFileCocktail.Data());
     TDirectoryFile* topDirCocktail                              = (TDirectoryFile*)fileCocktail.Get("GammaCocktailMC");
@@ -408,7 +424,9 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
         }
     }
     legendMothers->Draw("same");
-        
+    
+    PutProcessLabelAndEnergyOnPlot(0.25, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+    
     canvasMothers->SaveAs(Form("%s/CocktailMothers_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete legendMothers;
     delete canvasMothers;
@@ -437,6 +455,8 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
         }
     }
     legendMothersParam->Draw("same");
+    
+    PutProcessLabelAndEnergyOnPlot(0.25, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
     
     canvasMothersParam->SaveAs(Form("%s/CocktailMothersInclParam_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete legendMothersParam;
@@ -467,6 +487,8 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     }
     legendMothersRatio->Draw("same");
     
+    PutProcessLabelAndEnergyOnPlot(0.25, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+
     canvasMothersRatio->SaveAs(Form("%s/CocktailMothersRatioToPi0_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete tempRatio;
     delete legendMothersRatio;
@@ -491,6 +513,8 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     }
     legendMothersY->Draw("same");
     
+    PutProcessLabelAndEnergyOnPlot(0.25, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+
     canvasMothersY->SaveAs(Form("%s/CocktailMothersY_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete legendMothersY;
     delete canvasMothersY;
@@ -514,6 +538,8 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     }
     legendMothersPhi->Draw("same");
     
+    PutProcessLabelAndEnergyOnPlot(0.25, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+
     canvasMothersPhi->SaveAs(Form("%s/CocktailMothersPhi_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete legendMothersPhi;
     delete canvasMothersPhi;
@@ -544,6 +570,8 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     }
     legendGammas->Draw("same");
     
+    PutProcessLabelAndEnergyOnPlot(0.25, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+
     CocktailGammas->SaveAs(Form("%s/CocktailGammas_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete legendGammas;
     delete CocktailGammas;
@@ -579,6 +607,8 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     }
     legendGammasRatio->Draw("same");
     
+    PutProcessLabelAndEnergyOnPlot(0.25, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+
     canvasGammasRatio->SaveAs(Form("%s/CocktailGammasRatioToPi0_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete tempRatioGammas;
     delete legendGammasRatio;
@@ -609,6 +639,8 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     }
     legendGammasRatio2->Draw("same");
     
+    PutProcessLabelAndEnergyOnPlot(0.25, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+
     canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAll_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete tempRatioGammas2;
     delete legendGammasRatio2;
@@ -634,6 +666,8 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     }
     legendGammasY->Draw("same");
     
+    PutProcessLabelAndEnergyOnPlot(0.25, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+
     canvasGammasY->SaveAs(Form("%s/CocktailGammasY_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete legendGammasY;
     delete canvasGammasY;
@@ -658,45 +692,13 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     }
     legendGammasPhi->Draw("same");
     
+    PutProcessLabelAndEnergyOnPlot(0.25, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+
     canvasGammasPhi->SaveAs(Form("%s/CocktailGammasPhi_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete legendGammasPhi;
     delete canvasGammasPhi;
     
     //***************************** Plot mT scaling cross check *****************************************************
-//    TCanvas *canvasMtCrossCheck                                 = NULL;
-//    TLegend* legendMtCrossCheck                                 = NULL;
-//    dummyHist                                                   = NULL;
-//    for (Int_t particle=0; particle<nMotherParticles; particle++) {
-//        if (histoGammaMotherPtOrBin[particle] && cocktailInputParametrizations[particle] && cocktailInputParametrizationsMtScaled[particle]) {
-//            canvasMtCrossCheck                                  = new TCanvas("canvasMtCrossCheck","",1100,1200);
-//            legendMtCrossCheck                                  = GetAndSetLegend2(0.5, 0.92-(0.045*3), 0.9, 0.92, 40);
-//            
-//            DrawGammaCanvasSettings(canvasMtCrossCheck, 0.165, 0.02, 0.02, 0.09);
-//            canvasMtCrossCheck->SetLogy();
-//            canvasMtCrossCheck->SetLogx();
-//            
-//            dummyHist                                           = new TH1D("dummyHist", "", 1000, 5e-2, ptGenMax);
-//            SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-7, 1e2, 1.0, 1.8);
-//            dummyHist->Draw();
-//
-//            cocktailInputParametrizationsMtScaled[particle]->SetLineColor(cocktailColor[particle]);
-//            cocktailInputParametrizationsMtScaled[particle]->SetLineStyle(4);
-//            cocktailInputParametrizationsMtScaled[particle]->SetLineWidth(2);
-//            
-//            legendMtCrossCheck->AddEntry(histoGammaMotherPtOrBin[particle], Form("%s", motherParticlesLatex[particle].Data()), "l");
-//            legendMtCrossCheck->AddEntry(cocktailInputParametrizations[particle], Form("%s param.", motherParticlesLatex[particle].Data()), "l");
-//            legendMtCrossCheck->AddEntry(cocktailInputParametrizationsMtScaled[particle], Form("%s m_{T} scaled param.", motherParticlesLatex[particle].Data()), "l");
-//
-//            histoGammaMotherPtOrBin[particle]->Draw("csamehist");
-//            cocktailInputParametrizations[particle]->Draw("same");
-//            cocktailInputParametrizationsMtScaled[particle]->Draw("same");
-//            legendMtCrossCheck->Draw("same");
-//
-//            canvasMtCrossCheck->SaveAs(Form("%s/MtScaling%s_%.2f_%s.%s",outputDir.Data(), motherParticles[particle].Data(),fRapidity,cutSelection.Data(),suffix.Data()));
-//        }
-//    }
-//    delete legendMtCrossCheck;
-//    delete canvasMtCrossCheck;
     TCanvas* canvasMtCrossCheck                                     = NULL;
     TLegend* legendMtCrossCheck                                     = NULL;
     TPad* padMtCrossCheck                                           = NULL;
@@ -710,8 +712,8 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
             canvasMtCrossCheck                                  = new TCanvas("canvasMtCrossCheck","",1100,1200);
             padMtCrossCheck                                     = new TPad("padMtCrossCheck", "", 0., 0.25, 1., 1.,-1, -1, -2);
             padMtCrossCheckRatio                                = new TPad("padMtCrossCheckRatio", "", 0., 0., 1., 0.25,-1, -1, -2);
-            legendMtCrossCheck                                  = GetAndSetLegend2(0.5, 0.92-(0.045*3), 0.9, 0.92, 40);
-     
+            legendMtCrossCheck                                  = GetAndSetLegend2(0.55, 0.87-(0.045*3), 0.9, 0.87, 40);
+            
             DrawGammaCanvasSettings(canvasMtCrossCheck, 0.165, 0.015, 0.025, 0.25);
             DrawGammaPadSettings(padMtCrossCheck,       0.165, 0.015, 0.025, 0.);
             DrawGammaPadSettings(padMtCrossCheckRatio,  0.165, 0.015, 0.0, 0.25);
@@ -745,6 +747,8 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
             cocktailInputParametrizationsMtScaled[particle]->Draw("same");
             legendMtCrossCheck->Draw("same");
             
+            PutProcessLabelAndEnergyOnPlot(0.55, 0.95, 0.045, cent, textMeasurement, detectionProcess, 42, 0.03);
+            
             // ratios of parametrizations to spectrum
             padMtCrossCheckRatio->cd();
             SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{spec}{param}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
@@ -777,7 +781,7 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
         canvasPi0->SetLogy();
         canvasPi0->SetLogx();
         
-        TLegend* legendPi0                                          = GetAndSetLegend2(0.5, 0.92-(0.045*2), 0.9, 0.92, 40);
+        TLegend* legendPi0                                          = GetAndSetLegend2(0.65, 0.87-(0.045*2), 0.9, 0.87, 40);
         dummyHist                                                   = new TH1D("dummyHist", "", 1000, 1e-1, ptMax);
         SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", histoPi0YieldData->GetMinimum(0)*0.1, histoPi0YieldData->GetMaximum()*2, 1.0, 1.8);
         dummyHist->Draw();
@@ -791,6 +795,8 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
         histoPi0YieldData->Draw("same");
         histoGammaMotherPt[0]->Draw("same");
         legendPi0->Draw("same");
+
+        PutProcessLabelAndEnergyOnPlot(0.65, 0.92, 0.03, cent, textMeasurement, detectionProcess, 42, 0.03);
 
         canvasPi0->SaveAs(Form("%s/Pi0DataCocktail_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
         delete legendPi0;
