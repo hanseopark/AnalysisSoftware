@@ -1,7 +1,7 @@
 // provided by Gamma Conversion Group, $ALICE_ROOT/PWGGA/GammaConv ;https://twiki.cern.ch/twiki/bin/view/ALICE/PWG4GammaConversion
 // ***************************************************************************************************************
 // **   Friederike Bock, friederike.bock@cern.ch                                                                **
-// **   Lucas Altenkaemper, lucas.altenkaemper@cern.ch                                                          **
+// **   Lucas Altenkaemper, lucas.altenkamper@cern.ch                                                           **
 // ***************************************************************************************************************
 
 #include <Riostream.h>
@@ -86,12 +86,12 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     fCutSelection                                               = cutSelection;
     ReturnSeparatedCutNumberAdvanced(fCutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
     
-    Bool_t isPCM                    = 0;
-    Bool_t isCalo                   = 0;
+    Bool_t isPCM                                                = 0;
+    Bool_t isCalo                                               = 0;
     if ( mode == 0 || mode == 2 || mode == 3)
-        isPCM                       = 1;
+        isPCM                                                   = 1;
     if ( mode == 2 || mode == 3 || mode == 4 || mode == 5)
-        isCalo                      = 1;
+        isCalo                                                  = 1;
     
     //**************************** Determine Centrality *************************************************************
     TString centrality                                          = GetCentralityString(fEventCutSelection);
@@ -190,6 +190,22 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
             cocktailInputParametrizationsMtScaled[i]            = new TF1(*paramMtTemp);
         else
             cocktailInputParametrizationsMtScaled[i]            = (TF1*)MtScaledParam(cocktailInputParametrizations[0], i);
+    }
+    
+
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        for (Int_t j=0; j<18; j++) {
+            decayChannelsBR[i][j]                               = 0.;
+        }
+    }
+    histoDecayChannelsBR                                        = new TH1F*[nMotherParticles];
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        if (!hasMother[i]) continue;
+        histoDecayChannelsBR[i]                                 = (TH1F*)cocktailSettingsList->FindObject(Form("PythiaBR_%s", motherParticles[i].Data()));
+        for (Int_t j=0; j<18; j++) {
+            if (histoDecayChannelsBR[i]->GetBinContent(j+2))
+                decayChannelsBR[i][j]                           = histoDecayChannelsBR[i]->GetBinContent(j+2);
+        }
     }
 
     //***************************** ranges **************************************************************************
@@ -806,6 +822,7 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     
     //***************************** Save histograms *****************************************************************
     SaveHistos();
+    CreateBRTableLatex();
     
     //***************************** Delete objects ******************************************************************
     DeleteObjects();
@@ -872,44 +889,6 @@ TH1F* ConvertYieldHisto(TH1F* input){
     return input;
 }
 
-//************************** Routine for saving histograms **********************************************************
-void SaveHistos() {
-    TString nameOutput                  = Form("%s/%s/GammaCocktail%s_%.2f_%s.root", fCutSelection.Data(), fEnergyFlag.Data(), fPeriodFlag.Data(), fRapidity, fCutSelection.Data());
-    cout << "INFO: writing into: " << nameOutput << endl;
-    TFile *outputFile                   = new TFile(nameOutput,"UPDATE");
-    
-    // write number of events
-    histoNEvents->Write("NEvents", TObject::kOverwrite);
-    
-    // write binning histogram
-    fDeltaPt->Write("deltaPt", TObject::kOverwrite);
-    
-    // write projections
-    histoGammaSumPtOrBin->Write(histoGammaSumPtOrBin->GetName(), TObject::kOverwrite);
-    histoGammaSumYOrBin->Write(histoGammaSumYOrBin->GetName(), TObject::kOverwrite);
-    for (Int_t i=0; i<nMotherParticles; i++) {
-        if (histoGammaPtOrBin[i])           histoGammaPtOrBin[i]->Write(histoGammaPtOrBin[i]->GetName(), TObject::kOverwrite);
-        if (histoGammaYOrBin[i])            histoGammaYOrBin[i]->Write(histoGammaYOrBin[i]->GetName(), TObject::kOverwrite);
-        if (histoGammaPhiOrBin[i])          histoGammaPhiOrBin[i]->Write(histoGammaPhiOrBin[i]->GetName(), TObject::kOverwrite);
-        if (histoGammaMotherPtOrBin[i])     histoGammaMotherPtOrBin[i]->Write(histoGammaMotherPtOrBin[i]->GetName(), TObject::kOverwrite);
-        if (histoGammaMotherYOrBin[i])      histoGammaMotherYOrBin[i]->Write(histoGammaMotherYOrBin[i]->GetName(), TObject::kOverwrite);
-        if (histoGammaMotherPhiOrBin[i])    histoGammaMotherPhiOrBin[i]->Write(histoGammaMotherPhiOrBin[i]->GetName(), TObject::kOverwrite);
-    }
-
-    // write rebinned histograms
-    histoGammaSumPt->Write(histoGammaSumPt->GetName(), TObject::kOverwrite);
-    for (Int_t i=0; i<nMotherParticles; i++) {
-        if (histoGammaPt[i])                histoGammaPt[i]->Write(histoGammaPt[i]->GetName(), TObject::kOverwrite);
-        if (histoGammaMotherPt[i])          histoGammaMotherPt[i]->Write(histoGammaMotherPt[i]->GetName(), TObject::kOverwrite);
-    }
-    
-    // write input parametrizations and mt scaled ones
-    for (Int_t i=0; i<nMotherParticles; i++) {
-        if (cocktailInputParametrizations[i])           cocktailInputParametrizations[i]->Write(cocktailInputParametrizations[i]->GetName(), TObject::kOverwrite);
-        if (cocktailInputParametrizationsMtScaled[i])   cocktailInputParametrizationsMtScaled[i]->Write(cocktailInputParametrizationsMtScaled[i]->GetName(), TObject::kOverwrite);
-    }
-}
-
 //************************** Routine to calculate mt scaled params **************************************************
 TF1* MtScaledParam(TF1* param, Int_t particleNumber) {
 
@@ -936,6 +915,35 @@ TF1* MtScaledParam(TF1* param, Int_t particleNumber) {
     scaledParam->SetName(Form("%s_pt_mtScaled", motherParticlesPDG[particleNumber].Data()));
 
     return scaledParam;
+}
+
+//************************** Calculate ratio of TF1 to TH1D *********************************************************
+TH1D* CalculateRatioToTF1(TH1D* hist, TF1* func) {
+    
+    if (!hist) return NULL;
+    
+    TH1D* resultHist            = (TH1D*)hist->Clone(Form("%s_to_%s", hist->GetName(), func->GetName()));
+    
+    Double_t tempVal            = 0.;
+    Double_t tempErr            = 0.;
+    
+    for (Int_t i=1; i<hist->GetNbinsX()+1; i++) {
+        if (hist->GetBinContent(i)) {
+            
+            tempVal             = func->Integral(hist->GetXaxis()->GetBinLowEdge(i), hist->GetXaxis()->GetBinUpEdge(i));
+            tempVal             = tempVal/(hist->GetBinContent(i)*hist->GetBinWidth(i));
+            tempErr             = tempVal*hist->GetBinError(i)/hist->GetBinContent(i);
+            
+            resultHist->SetBinContent(  i, tempVal);
+            resultHist->SetBinError(    i, tempErr);
+            
+        } else {
+            resultHist->SetBinContent(  i, 0);
+            resultHist->SetBinError(    i, 0);
+        }
+    }
+    
+    return resultHist;
 }
 
 //************************** Return partile mass ********************************************************************
@@ -1030,32 +1038,107 @@ void DeleteObjects() {
     delete[] cocktailInputParametrizationsMtScaled;
 }
 
-//************************** Calculate ratio of TF1 to TH1D *********************************************************
-TH1D* CalculateRatioToTF1(TH1D* hist, TF1* func) {
+//************************** Routine for saving histograms **********************************************************
+void SaveHistos() {
+    TString nameOutput                  = Form("%s/%s/GammaCocktail%s_%.2f_%s.root", fCutSelection.Data(), fEnergyFlag.Data(), fPeriodFlag.Data(), fRapidity, fCutSelection.Data());
+    cout << "INFO: writing into: " << nameOutput << endl;
+    TFile *outputFile                   = new TFile(nameOutput,"UPDATE");
     
-    if (!hist) return NULL;
+    // write number of events
+    histoNEvents->Write("NEvents", TObject::kOverwrite);
     
-    TH1D* resultHist            = (TH1D*)hist->Clone(Form("%s_to_%s", hist->GetName(), func->GetName()));
+    // write binning histogram
+    fDeltaPt->Write("deltaPt", TObject::kOverwrite);
     
-    Double_t tempVal            = 0.;
-    Double_t tempErr            = 0.;
+    // write projections
+    histoGammaSumPtOrBin->Write(histoGammaSumPtOrBin->GetName(), TObject::kOverwrite);
+    histoGammaSumYOrBin->Write(histoGammaSumYOrBin->GetName(), TObject::kOverwrite);
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        if (histoGammaPtOrBin[i])           histoGammaPtOrBin[i]->Write(histoGammaPtOrBin[i]->GetName(), TObject::kOverwrite);
+        if (histoGammaYOrBin[i])            histoGammaYOrBin[i]->Write(histoGammaYOrBin[i]->GetName(), TObject::kOverwrite);
+        if (histoGammaPhiOrBin[i])          histoGammaPhiOrBin[i]->Write(histoGammaPhiOrBin[i]->GetName(), TObject::kOverwrite);
+        if (histoGammaMotherPtOrBin[i])     histoGammaMotherPtOrBin[i]->Write(histoGammaMotherPtOrBin[i]->GetName(), TObject::kOverwrite);
+        if (histoGammaMotherYOrBin[i])      histoGammaMotherYOrBin[i]->Write(histoGammaMotherYOrBin[i]->GetName(), TObject::kOverwrite);
+        if (histoGammaMotherPhiOrBin[i])    histoGammaMotherPhiOrBin[i]->Write(histoGammaMotherPhiOrBin[i]->GetName(), TObject::kOverwrite);
+    }
     
-    for (Int_t i=1; i<hist->GetNbinsX()+1; i++) {
-        if (hist->GetBinContent(i)) {
-            
-            tempVal             = func->Integral(hist->GetXaxis()->GetBinLowEdge(i), hist->GetXaxis()->GetBinUpEdge(i));
-            tempVal             = tempVal/(hist->GetBinContent(i)*hist->GetBinWidth(i));
-            tempErr             = tempVal*hist->GetBinError(i)/hist->GetBinContent(i);
-            
-            resultHist->SetBinContent(i, tempVal);
-            resultHist->SetBinError(  i, tempErr);
-            
-        } else {
-            resultHist->SetBinContent(  i, 0);
-            resultHist->SetBinError(    i, 0);
+    // write rebinned histograms
+    histoGammaSumPt->Write(histoGammaSumPt->GetName(), TObject::kOverwrite);
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        if (histoGammaPt[i])                histoGammaPt[i]->Write(histoGammaPt[i]->GetName(), TObject::kOverwrite);
+        if (histoGammaMotherPt[i])          histoGammaMotherPt[i]->Write(histoGammaMotherPt[i]->GetName(), TObject::kOverwrite);
+    }
+    
+    // write input parametrizations and mt scaled ones
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        if (cocktailInputParametrizations[i])           cocktailInputParametrizations[i]->Write(cocktailInputParametrizations[i]->GetName(), TObject::kOverwrite);
+        if (cocktailInputParametrizationsMtScaled[i])   cocktailInputParametrizationsMtScaled[i]->Write(cocktailInputParametrizationsMtScaled[i]->GetName(), TObject::kOverwrite);
+    }
+}
+
+//************************** Create tex file containing BR table ****************************************************
+void CreateBRTableLatex() {
+
+    // tex file
+    TString texFileName                  = Form("%s/%s/GammaCocktail%s_%.2f_%s_BranchingRatioTable.tex", fCutSelection.Data(), fEnergyFlag.Data(), fPeriodFlag.Data(), fRapidity, fCutSelection.Data());
+    ofstream texFile;
+    texFile.open(texFileName);
+
+    // table
+    texFile << "{\\def\\arraystretch{1.2}\\tabcolsep=5pt" << endl;
+    texFile << "  \\begin{tabular}{c | c | c | c}" << endl;
+    texFile << "    particle & mass (MeV) & decay & branching ratio \\\\" << endl;
+    texFile << "    \\hline" << endl;
+    
+    TString tempMother                  = "";
+    TString tempChannel                 = "";
+    TString tempBR                      = "";
+    Int_t counter                       = 0;
+
+    // last mother
+    Int_t lastMother                    = 0;
+    for (Int_t i=nMotherParticles-1; i>=0; i--) {
+        if(hasMother[i]) {
+            lastMother                  = i;
+            break;
         }
     }
     
-    return resultHist;
+    // loop over particles
+    for(Int_t particle=0; particle<nMotherParticles; particle++) {
+        if(!hasMother[particle]) continue;
+        
+        tempMother                      = motherParticlesLatex[particle];
+        tempMother.ReplaceAll("#", "\\");
+        
+        // loop over channels
+        counter                         = 0;
+        for (Int_t channel=0; channel<18; channel++) {
+            if (decayChannelsLatex[particle][channel]=="") continue;
+            
+            tempChannel                 = decayChannelsLatex[particle][channel];
+            tempChannel.ReplaceAll("#", "\\");
+            
+            tempBR                      = Form("%.3e", decayChannelsBR[particle][channel]);
+            tempBR.ReplaceAll("e", " \\times 10^{");
+            tempBR                      = tempBR + "}";
+            
+            if (counter==0)
+                texFile << "    $" << tempMother.Data() << "$ & $" << Form("%.2f", GetMass(motherParticles[particle].Data())*1e3) << "$ & ";
+            else
+                texFile << "    &  & ";
+            
+            texFile << "$" << tempChannel.Data() << "$ & ";
+            texFile << "$" << tempBR.Data() << "$ \\\\" << endl;
+            
+            counter++;
+        }
+    
+        if (counter && particle<lastMother) texFile << "    \\hline" << endl;
+    }
+    
+    texFile << "  \\end{tabular}" << endl;
+    texFile << "}";
+    texFile.close();
 }
 

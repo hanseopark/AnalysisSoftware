@@ -23,9 +23,10 @@ TString motherParticlesPDG[nMotherParticles]            = {"111", "221", "331", 
 TString motherParticlesLatex[nMotherParticles]          = {"#pi^{0}", "#eta", "#eta'", "#omega", "#rho^{0}", "#rho^{+}", "#rho^{-}", "#phi", "J/#psi", "#Delta^{-}", "#Delta^{0}", "#Delta^{+}",
                                                             "#Delta^{++}", "#Sigma^{0}"};
 Int_t motherParticleDec[nMotherParticles]               = {1, 2, 16, 8, 4, 8192, 16384, 32, 64, 2048, 4096, 1024, 512, 128};
-TString decayChannelsLatex[nMotherParticles][18];
 Color_t cocktailColor[nMotherParticles]                 = {kRed+2, kBlue+1, kOrange+1, kYellow+2, kAzure-2, kGreen+2, kRed-2, kViolet, kMagenta, kViolet+2, kBlue-3, kTeal+9, kCyan+2, kMagenta+2};
 Style_t cocktailMarker[nMotherParticles]                = {20, 21, 24, 25, 20, 21, 24, 25, 20, 21, 24, 25, 20, 21};
+TString decayChannelsLatex[nMotherParticles][18];
+Double_t decayChannelsBR[nMotherParticles][18];
 
 //************************** cocktail settings ********************************************
 Double_t ptGenMin                                       = 0;
@@ -41,6 +42,7 @@ TH1F* histoNEvents                                      = NULL;
 TH1F* histMtScalingFactors                              = NULL;
 TH1D* histoPi0YieldData                                 = NULL;
 TH1F** histoDecayChannels                               = NULL;
+TH1F** histoDecayChannelsBR                             = NULL;
 TH1F** histoPythiaBRs                                   = NULL;
 TH2F* histoGammaSumPtY                                  = NULL;
 TH2F* histoGammaSumPtPhi                                = NULL;
@@ -87,3 +89,4 @@ void SetHistogramTitles                             (   TH1F* input,
 void DeleteObjects                                  (                           );
 TH1D* CalculateRatioToTF1                           (   TH1D* hist,
                                                         TF1* func               );
+void CreateBRTableLatex                             (                           );
