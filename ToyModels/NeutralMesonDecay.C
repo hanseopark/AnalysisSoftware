@@ -133,7 +133,7 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
     
     StyleSettingsThesis(suffix);  
     SetPlotStyle();
-
+    TString fCollisionSystem             = ReturnFullCollisionsSystem(energy);
     TString fCollisionSystenWrite       = ReturnCollisionEnergyOutputString(energy);
     TString fOutputDir                  = Form("%s/%s/",fCollisionSystenWrite.Data(),suffix.Data());
     gSystem->Exec("mkdir -p "+fOutputDir);
@@ -703,7 +703,7 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
         for (Int_t i = 0; i<3; i++){
             DrawGammaSetMarker(h1_ptReweightedRecMCRebModFrac[i], markerScaled[i], 1.5, colorScaled[i], colorScaled[i]);
             h1_ptReweightedRecMCRebModFrac[i]->Draw("same,pe");
-            legendSpectra3->AddEntry(h1_ptReweightedRecMCRebModFrac[i],Form("rec. %s, var %d",plotLabel.Data(),i),"pe");
+            legendSpectra3->AddEntry(h1_ptReweightedRecMCRebModFrac[i],Form("rec. %s, var %d",plotLabel.Data(),i+1),"pe");
         }
         legendSpectra3->Draw();
         canvasQA->SaveAs(Form("%s%s_PtDistribution_RecSpec%s.%s",fOutputDir.Data(), outputlabel.Data(), subMode.Data(), suffix.Data()));
@@ -821,9 +821,7 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
             histoResolutionInput[j]->GetZaxis()->SetRangeUser(1e-7, histoResolutionInput[j]->GetMaximum());
             histoResolutionInput[j]->GetYaxis()->SetTitleOffset(1.05);
             histoResolutionInput[j]->Draw("colz");
-            TLatex *labelProcess = new TLatex(0.65,0.9,Form("%s",labelResolHist[j].Data()));
-            SetStyleTLatex( labelProcess, 0.04,4);
-            labelProcess->Draw();
+            PutProcessLabelAndEnergyOnPlot(0.15, 0.25, 28, fCollisionSystem.Data(), "mEMC", labelResolHist[j].Data(), 63, 0.03);
 
             canvasQA2D->SaveAs(Form("%s%s_Resolutions%d.%s",fOutputDir.Data(),outputlabel.Data(),j,suffix.Data()));
         }

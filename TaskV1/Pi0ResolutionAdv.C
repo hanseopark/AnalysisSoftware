@@ -382,19 +382,33 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
     TList *TrueConversionContainer = (TList*)HistosGammaConversion->FindObject(Form("%s True histograms",optionCutSelection.Data()));
 
     //************************** Histo loading *************************************************************************
+//             nameResolHist[0]            = Form("ESD_TruePrimary%sPureMerged_MCPt_ResolPt",outputlabel.Data());
+//             nameResolHist[1]            = Form("ESD_TruePrimary%sMergedPartConv_MCPt_ResolPt",outputlabel.Data());
+//             nameResolHist[2]            = Form("ESD_TruePrimary%s1Gamma_MCPt_ResolPt",outputlabel.Data());
+//             nameResolHist[3]            = Form("ESD_TruePrimary%s1Electron_MCPt_ResolPt",outputlabel.Data());
 
     //****************************** Resolution dPt vs Pt **********************************************
     TH2F * Resolution_Pi0_MCPt_ResolPt              = (TH2F*)TrueConversionContainer->FindObject(Form("ESD_TruePrimary%s_MCPt_ResolPt",mesonName.Data()) ); //
-    Resolution_Pi0_MCPt_ResolPt->Sumw2();
+    if (Resolution_Pi0_MCPt_ResolPt) Resolution_Pi0_MCPt_ResolPt->Sumw2();
     
     TH2F* Resolution_Pi0_MCPt_ResolPt_Merged        = NULL;
     TH2F* Resolution_Pi0_MCPt_ResolPt_PartMerged    = NULL;
+    TH2F* Resolution_Pi0_MCPt_ResolPt_Gamma         = NULL;
+    TH2F* Resolution_Pi0_MCPt_ResolPt_Electron      = NULL;
     if ( mode == 10 || mode == 11 ){
-        Resolution_Pi0_MCPt_ResolPt_Merged          = (TH2F*)TrueConversionContainer->FindObject(Form("ESD_TruePrimary%sMerged_MCPt_ResolPt",mesonName.Data()) ); //
+        Resolution_Pi0_MCPt_ResolPt_Merged          = (TH2F*)TrueConversionContainer->FindObject(Form("ESD_TruePrimary%sPureMerged_MCPt_ResolPt",mesonName.Data()) ); //
         Resolution_Pi0_MCPt_ResolPt_Merged->Sumw2();
-        Resolution_Pi0_MCPt_ResolPt_PartMerged      = (TH2F*)Resolution_Pi0_MCPt_ResolPt->Clone("Resolution_Pi0_MCPt_ResolPt_PartMerged");
+        Resolution_Pi0_MCPt_ResolPt_PartMerged      = (TH2F*)TrueConversionContainer->FindObject(Form("ESD_TruePrimary%sMergedPartConv_MCPt_ResolPt",mesonName.Data()));
         Resolution_Pi0_MCPt_ResolPt_PartMerged->Sumw2();
-        Resolution_Pi0_MCPt_ResolPt_PartMerged->Add(Resolution_Pi0_MCPt_ResolPt_Merged,-1);
+        Resolution_Pi0_MCPt_ResolPt_Gamma           = (TH2F*)TrueConversionContainer->FindObject(Form("ESD_TruePrimary%s1Gamma_MCPt_ResolPt",mesonName.Data()));
+        Resolution_Pi0_MCPt_ResolPt_Gamma->Sumw2();
+        Resolution_Pi0_MCPt_ResolPt_Electron        = (TH2F*)TrueConversionContainer->FindObject(Form("ESD_TruePrimary%s1Electron_MCPt_ResolPt",mesonName.Data()));
+        Resolution_Pi0_MCPt_ResolPt_Electron->Sumw2();
+        Resolution_Pi0_MCPt_ResolPt                 = (TH2F*)Resolution_Pi0_MCPt_ResolPt_Merged->Clone(Form("ESD_TruePrimary%s_MCPt_ResolPt",mesonName.Data()) ); //
+        Resolution_Pi0_MCPt_ResolPt->Sumw2();
+        Resolution_Pi0_MCPt_ResolPt->Add(Resolution_Pi0_MCPt_ResolPt_PartMerged);
+        Resolution_Pi0_MCPt_ResolPt->Add(Resolution_Pi0_MCPt_ResolPt_Gamma);
+        Resolution_Pi0_MCPt_ResolPt->Add(Resolution_Pi0_MCPt_ResolPt_Electron);
     }    
     cout << "hier noch " << Resolution_Pi0_MCPt_ResolPt<<endl;
      
