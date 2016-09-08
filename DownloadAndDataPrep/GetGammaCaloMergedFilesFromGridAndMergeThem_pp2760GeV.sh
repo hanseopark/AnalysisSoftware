@@ -545,14 +545,21 @@ fi
 # LHC15a3aplusMC="2424"; 
 
 TRAINDIR=Legotrain-mCalo-20160828_SysAdd
-LHC11aData="1818"; 
-LHC15g1aMC="2495";
+# LHC11aData="1818"; 
+# LHC15g1aMC="2495";
+LHC11aData="1822"; 
+LHC15g1aMC="2508";
 
-LHC13gData="1819"; 
+# LHC13gData="1819"; 
+# # LHC15a3aMC="2496"; 
+# # LHC15a3aplusMC="2498"; 
+# LHC15a3aMC="2497"; 
+# LHC15a3aplusMC="2499"; 
+LHC13gData="1823"; 
 # LHC15a3aMC="2496"; 
 # LHC15a3aplusMC="2498"; 
-LHC15a3aMC="2497"; 
-LHC15a3aplusMC="2499"; 
+LHC15a3aMC="2506"; 
+LHC15a3aplusMC="2507"; 
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
