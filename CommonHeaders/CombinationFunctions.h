@@ -2871,7 +2871,12 @@ TGraphAsymmErrors* CalculateWeightedQuantity(   TGraphAsymmErrors** graphs,
         cout << meas         << endl;
         cout << graphs[meas] << endl;
         cout << weights[meas] << endl;
+
         if (graphs[meas] && weights[meas]){
+            cout << "measurement :" << meas << endl;
+            graphs[meas]->Print();
+            cout << "weights :" << meas << endl;
+            weights[meas]->Print();
             available[meas]         = kTRUE;
             offsets[meas]           = 0;
             correctBin[meas]        = kFALSE;
