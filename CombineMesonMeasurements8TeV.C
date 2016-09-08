@@ -2932,7 +2932,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
 
     TF1 *fitEtaToPi0 = new TF1("fitEtaToPi0","[0]",4.,25.);
-    fitEtaToPi0->SetParameter(0,0.45);
+    fitEtaToPi0->SetParameter(0,0.48);
 
     TGraphAsymmErrors* comEtaPi0 = (TGraphAsymmErrors*) graphCombEtaToPi0StatA->Clone();
     comEtaPi0->Fit(fitEtaToPi0,"QNRMEX0+","",4.,25.);

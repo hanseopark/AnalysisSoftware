@@ -502,12 +502,12 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
             graphEMCALMergedPi0InvXSectionStat              = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get("graphInvCrossSectionPi0");
             graphEMCALMergedPi0InvXSectionSys               = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get("InvCrossSectionPi0Sys");
                 cout << "EMCAL merged stat" << endl;
-                for (Int_t i = 0; graphEMCALMergedPi0InvXSectionStat->GetX()[0]< 10; i++){
+                for (Int_t i = 0; graphEMCALMergedPi0InvXSectionStat->GetX()[0]< 14; i++){
                     graphEMCALMergedPi0InvXSectionStat->RemovePoint(0);
                 }
                 graphEMCALMergedPi0InvXSectionStat->Print();
                 cout << "EMCAL merged sys" << endl;
-                for (Int_t i = 0; graphEMCALMergedPi0InvXSectionSys->GetX()[0]< 10; i++){
+                for (Int_t i = 0; graphEMCALMergedPi0InvXSectionSys->GetX()[0]< 14; i++){
                     graphEMCALMergedPi0InvXSectionSys->RemovePoint(0);
                 }
                 Double_t * yValue               = graphEMCALMergedPi0InvXSectionSys->GetY();
@@ -694,7 +694,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
                                         0,  0,  0,  0,  0,
                                         0};
     Int_t offSetsPi0Sys[11]         = { 1,  6,  7,  0,  5,
-                                        0,  0,  0,  0,  33,
+                                        0,  0,  0,  0,  36,
                                         0};
     Int_t offSetPi0Shifting[11]     = { 0,  0,  0,  0,  0,
                                         0,  0,  0,  0,  0,

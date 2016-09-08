@@ -2388,8 +2388,8 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
                       fMesonFitRange[0] = 0.08;
                       fMesonFitRange[1] = 0.28;
                       //fMesonIntDeltaRange[1] = 0.065;
-                      fMesonIntDeltaRangeWide[1]      = fMesonIntDeltaRange[1]*1.2;// mod.
-                      fMesonIntDeltaRangeNarrow[1]    = fMesonIntDeltaRange[1]*0.8; // mod.
+                      //fMesonIntDeltaRangeWide[1]      = fMesonIntDeltaRange[1]*1.2;// mod.
+                      //fMesonIntDeltaRangeNarrow[1]    = fMesonIntDeltaRange[1]*0.8; // mod.
                     }
                   }
                 }

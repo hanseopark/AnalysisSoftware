@@ -66,6 +66,11 @@ void ComputeCorrelationFactors(
   StyleSettingsThesis();
   SetPlotStyle();
 
+  TString mesonPlot = "";
+  if(meson.CompareTo("Pi0") == 0) mesonPlot = "#pi^{0}";
+  else if(meson.CompareTo("Eta") == 0) mesonPlot = "#eta";
+  else if(meson.CompareTo("Pi0EtaBinning") == 0 || meson.CompareTo("EtaToPi0") == 0) mesonPlot = "#eta/#pi^{0}";
+
   if(combMode.CompareTo("systems")==0) mode = "Systems";
 
   TString dateForOutput   = ReturnDateStringForOutput();
@@ -84,7 +89,7 @@ void ComputeCorrelationFactors(
   gSystem->Exec("mkdir -p "+outputDir);
   gSystem->Exec("mkdir -p "+outputDir+"/sys");
   gSystem->Exec("mkdir -p "+outputDir+"/corrFactors");
-  //gSystem->Exec("mkdir -p "+outputDir+"/sysOverlaps");
+  gSystem->Exec("mkdir -p "+outputDir+"/corrPlotting");
   gSystem->Exec(Form("cp %s %s/%s_%s_%s_mode%s.config", fileInput.Data(), outputDir.Data(), meson.Data(), combMode.Data(), energyForOutput.Data(), mode.Data()));
 
   cout << "running combination mode: " << combMode.Data() << endl;
@@ -213,6 +218,40 @@ void ComputeCorrelationFactors(
   //--------------------------------- calculate correlation factors
   //---------------------------------------------------------------------------------------------------------------
 
+  Int_t textSizeLabelsPixel           = 900*0.04;
+
+  TCanvas* canvasWeights = new TCanvas("canvasWeights","",200,10,1350,900);  // gives the page size
+  DrawGammaCanvasSettings( canvasWeights, 0.08, 0.02, 0.035, 0.09);
+  canvasWeights->SetLogx();
+
+  Int_t plotErr = 0;
+  TH2F * histo2DPi0Weights;
+  Double_t minCorrYaxis = 0.45;
+  if(combMode.CompareTo("systems") == 0) minCorrYaxis = 0.35;
+  histo2DPi0Weights = new TH2F("histo2DPi0Weights","histo2DPi0Weights",11000,vecUseMinPt.at(0),vecUseMaxPt.at(nRead-1),1000,minCorrYaxis,1.05);
+  SetStyleHistoTH2ForGraphs(histo2DPi0Weights, "#it{p}_{T} (GeV/#it{c})","#rho_{A_B}",0.035,0.04, 0.035,0.04, 1.,1.);
+  histo2DPi0Weights->GetXaxis()->SetMoreLogLabels();
+  histo2DPi0Weights->GetXaxis()->SetLabelOffset(-0.01);
+  histo2DPi0Weights->GetYaxis()->SetTitleOffset(0.8);
+  histo2DPi0Weights->Draw("copy");
+
+  TLatex *labelWeightsEnergy      = new TLatex(0.8,0.20,collisionSystem.Data());
+  SetStyleTLatex( labelWeightsEnergy, 0.85*textSizeLabelsPixel,4);
+  labelWeightsEnergy->SetTextFont(43);
+  labelWeightsEnergy->Draw();
+  TLatex *labelWeightsPi0 = 0x0;
+  if(meson.CompareTo("Pi0EtaBinning") == 0 || meson.CompareTo("EtaToPi0") == 0) labelWeightsPi0 = new TLatex(0.8,0.16,Form("%s",mesonPlot.Data()));
+  else labelWeightsPi0 = new TLatex(0.8,0.16,Form("%s #rightarrow #gamma#gamma",mesonPlot.Data()));
+  SetStyleTLatex( labelWeightsPi0, 0.85*textSizeLabelsPixel,4);
+  labelWeightsPi0->SetTextFont(43);
+  labelWeightsPi0->Draw();
+
+  Color_t colorTrigg      [10] = {kBlack, kGray+1, kRed+2, kBlue+2, kGreen+3, kCyan+2, kViolet, kMagenta+2,  kRed-2, kBlue-2};
+  Marker_t markerTrigg    [10] = {20, 20, 21, 34, 29, 33, 21, 27, 28, 30 };
+  Int_t iTrigg = 0;
+
+  TLegend* legendWeights   = GetAndSetLegend2(0.09, 0.11, 0.4, 0.1+(0.035*8), 32);
+
   fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
   fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
   fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n" << endl;
@@ -231,8 +270,10 @@ void ComputeCorrelationFactors(
 
       Double_t factor = 0;
       TString tempCorr = "";
+      TString tempPlot = "";
       if(iC<iC2){
         tempCorr = Form("%s_%s-%s",vecComb.at(iC).Data(),vecComb.at(iC).Data(),vecComb.at(iC2).Data());
+        tempPlot = Form("%s_%s",vecComb.at(iC).Data(),vecComb.at(iC2).Data());
         cout << "\n\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         cout << "correlation factors " << vecComb.at(iC) << "_" << vecComb.at(iC) << "-" << vecComb.at(iC2) << endl;
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -241,6 +282,7 @@ void ComputeCorrelationFactors(
         fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
       }else{
         tempCorr = Form("%s_%s-%s",vecComb.at(iC).Data(),vecComb.at(iC2).Data(),vecComb.at(iC).Data());
+        tempPlot = Form("%s_%s",vecComb.at(iC).Data(),vecComb.at(iC2).Data());
         cout << "\n\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         cout << "correlation factors " << vecComb.at(iC) << "_" << vecComb.at(iC2) << "-" << vecComb.at(iC) << endl;
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -251,6 +293,7 @@ void ComputeCorrelationFactors(
       fCorr << endl;
       fCorr << tempCorr.Data() << endl;
       TH1D* histoCorr = new TH1D(Form("%s_%s_%s",mode.Data(),meson.Data(),tempCorr.Data()),Form("%s_%s_%s",mode.Data(),meson.Data(),tempCorr.Data()),1000,0,100);
+      for(Int_t iBin=1; iBin<histoCorr->GetNbinsX()+1; iBin++) histoCorr->SetBinContent(iBin,0.);
 
       for(;; binC++, binC2++){
         if( binC == vecNBins.at(iC)+1 || binC2 == vecNBins.at(iC2)+1 ) break;
@@ -303,10 +346,50 @@ void ComputeCorrelationFactors(
         fLog << "\t|------------" << endl;
         fCorr << pT << " \t-\t " << factor << endl;
         histoCorr->SetBinContent(histoCorr->FindBin(pT),factor);
+        if(factor>0 && factor<=plotErr){
+          cout << "\n\n\tWARNING: point out of range (" << factor <<  ") for generated plots, please adjust y-range of histograms!!!\n\n" << endl;
+          fLog << "\n\n\tWARNING: point out of range (" << factor <<  ") for generated plots, please adjust y-range of histograms!!!\n\n" << endl;
+          plotErr++;
+        }
       }
+      histoCorr->SetMarkerSize(2.);
+      histoCorr->SetMarkerColor(colorTrigg[iTrigg]);
+      histoCorr->SetMarkerStyle(markerTrigg[iTrigg++]);
+      histoCorr->Draw("p,same");
+      legendWeights->AddEntry(histoCorr,tempPlot.Data(),"p");
       histoCorr->Write(Form("%s_%s_%s",mode.Data(),meson.Data(),tempCorr.Data()),TObject::kOverwrite);
     }
   }
+
+  legendWeights->SetMargin(0.15);
+  legendWeights->Draw();
+  canvasWeights->RedrawAxis();
+
+  labelWeightsEnergy->Draw();
+  labelWeightsPi0->Draw();
+
+  DrawGammaLines(vecUseMinPt.at(0),vecUseMaxPt.at(nRead-1), 1., 1.,0.1, kGray, 1);
+  DrawGammaLines(vecUseMinPt.at(0),vecUseMaxPt.at(nRead-1), 0.98, 0.98,0.1, kGray, 3);
+  DrawGammaLines(vecUseMinPt.at(0),vecUseMaxPt.at(nRead-1), 0.96, 0.96,0.1, kGray, 7);
+  DrawGammaLines(vecUseMinPt.at(0),vecUseMaxPt.at(nRead-1), 0.94, 0.94,0.1, kGray, 3);
+  DrawGammaLines(vecUseMinPt.at(0),vecUseMaxPt.at(nRead-1), 0.92, 0.92,0.1, kGray, 7);
+  DrawGammaLines(vecUseMinPt.at(0),vecUseMaxPt.at(nRead-1), 0.9, 0.9,0.1, kGray, 1);
+  DrawGammaLines(vecUseMinPt.at(0),vecUseMaxPt.at(nRead-1), 0.8, 0.8,0.1, kGray, 3);
+  DrawGammaLines(vecUseMinPt.at(0),vecUseMaxPt.at(nRead-1), 0.7, 0.7,0.1, kGray, 7);
+
+  canvasWeights->SaveAs(Form("%s/corrPlotting/%s_%s_%s_corrFactors.%s",outputDir.Data(),energyForOutput.Data(),mode.Data(),meson.Data(),suffix.Data()));
+
+  if(plotErr>0){
+    cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    cout << "\n\t|-----------" << endl;
+    cout << "\t|total plotting errors:\t" << plotErr << "| -> adjust y-range in ComputeCorrelationFactors!" << endl;
+    cout << "\t|------------" << endl;
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fLog << "\n\t|------------" << endl;
+    fLog << "\n\ttotal plotting errors:\t" << plotErr << "| -> adjust y-range in ComputeCorrelationFactors!" << endl;
+    fLog << "\t|------------" << endl;
+  }
+
   fOutput->Write();
   fOutput->Close();
   fCorr.close();

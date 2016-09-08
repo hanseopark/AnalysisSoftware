@@ -713,7 +713,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         for (Int_t j = 0; j < 4; j++){
             fitSecFracPurePowerlaw[k][j]            = new TF1( Form("fitSecFracPurePowerlawFrom%s%s",nameSecMeson[k].Data(),nameIntRange[k].Data()) ,"[0]/pow(x,[1])");
             fitSecFracPLWithConst[k][j]             = new TF1( Form("fitSecFracPLWithConstFrom%s%s",nameSecMeson[k].Data(),nameIntRange[k].Data()) ,"[0]/pow(x,[1])+[2]");
-            if ( (mode == 2 || mode == 4)) fitSecFracPLWithConst[k][j]->SetParLimits(1,0,1000);
+            if ( optionEnergy.CompareTo("8TeV") == 0 ){
+               if ( mode != 2 && mode != 4 ) fitSecFracPLWithConst[k][j]->SetParLimits(1,0,1000);
+            }else if ( (mode == 2 || mode == 4) ) fitSecFracPLWithConst[k][j]->SetParLimits(1,0,1000);
         }    
     }
     TH1D* histoYieldSecMeson[6][4]                  = { { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL},
