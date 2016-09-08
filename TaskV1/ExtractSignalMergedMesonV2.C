@@ -2818,6 +2818,40 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
                 if(fHistoMCSecPi0AcceptPt[j])   fHistoMCSecPi0AcceptPt[j]->Write();
             }    
         }    
+
+        TString titleHistoSignal    = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",fBinsPt[fExampleBin],fBinsPt[fExampleBin+1]);
+        if (fHistoM02PtBin[fExampleBin]){
+            fHistoM02PtBin[fExampleBin]->SetTitle(titleHistoSignal.Data());
+            fHistoM02PtBin[fExampleBin]->Write();
+        }
+        if (fHistoTrueClusMergedM02PtBin[fExampleBin])                  fHistoTrueClusMergedM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusPi0M02PtBin[fExampleBin])                     fHistoTrueClusPi0M02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusPi0DCM02PtBin[fExampleBin])                   fHistoTrueClusPi0DCM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusPi0GGM02PtBin[fExampleBin])                   fHistoTrueClusPi0GGM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusPi0DalitzM02PtBin[fExampleBin])               fHistoTrueClusPi0DalitzM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusEtaM02PtBin[fExampleBin])                     fHistoTrueClusEtaM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusEtaDCM02PtBin[fExampleBin])                   fHistoTrueClusEtaDCM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusEtaGGM02PtBin[fExampleBin])                   fHistoTrueClusEtaGGM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusEtaDalitzM02PtBin[fExampleBin])               fHistoTrueClusEtaDalitzM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusGammaM02PtBin[fExampleBin])                   fHistoTrueClusGammaM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusElectronM02PtBin[fExampleBin])                fHistoTrueClusElectronM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusBGM02PtBin[fExampleBin])                      fHistoTrueClusBGM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusPartConvMergedM02PtBin[fExampleBin])          fHistoTrueClusPartConvMergedM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusPartConvMergedFromPi0M02PtBin[fExampleBin])   fHistoTrueClusPartConvMergedFromPi0M02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusPartConvMergedFromEtaM02PtBin[fExampleBin])   fHistoTrueClusPartConvMergedFromEtaM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusPureMergedM02PtBin[fExampleBin])              fHistoTrueClusPureMergedM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusPureMergedFromPi0M02PtBin[fExampleBin])       fHistoTrueClusPureMergedFromPi0M02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusPureMergedFromEtaM02PtBin[fExampleBin])       fHistoTrueClusPureMergedFromEtaM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusOneGammaM02PtBin[fExampleBin])                fHistoTrueClusOneGammaM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusOneGammaFromPi0M02PtBin[fExampleBin])         fHistoTrueClusOneGammaFromPi0M02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusOneGammaFromEtaM02PtBin[fExampleBin])         fHistoTrueClusOneGammaFromEtaM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusOneElectronM02PtBin[fExampleBin])             fHistoTrueClusOneElectronM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusOneElectronFromPi0M02PtBin[fExampleBin])      fHistoTrueClusOneElectronFromPi0M02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusOneElectronFromEtaM02PtBin[fExampleBin])      fHistoTrueClusOneElectronFromEtaM02PtBin[fExampleBin]->Write();
+        if (fHistoTrueClusPrimPi0M02PtBin[fExampleBin])                 fHistoTrueClusPrimPi0M02PtBin[fExampleBin]->Write();
+        for (Int_t j = 0; j<4; j++){
+            if (fHistoTrueClusSecPi0M02PtBin[j][fExampleBin])           fHistoTrueClusSecPi0M02PtBin[j][fExampleBin]->Write();
+        }
         
     }
     

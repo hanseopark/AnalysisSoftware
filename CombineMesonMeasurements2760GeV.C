@@ -701,8 +701,39 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
                 graphEMCALMergedPi0InvXSectionSys->Print();
             }    
         }    
-//         return;
+        TH1D* histoDataM02[6];
+        TH1D* histoMCrecM02[6];
+        TH1D* histoTruePi0M02[6];
+        TH1D* histoTrueEtaM02[6];
+        TH1D* histoTrueGammaM02[6];
+        TH1D* histoTrueElectronM02[6];
+        TH1D* histoTrueBGM02[6];
+        TH1D* histoTruePi0PureMergedM02[6];
+        TH1D* histoTruePi0PConvMergedM02[6];
+        TH1D* histoTruePi0OneGammaM02[6];
+        TH1D* histoTruePi0OneElectronM02[6];
+        Bool_t haveAllPi0M02EMCm[6]                 = {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE};
+        if (plotInvMassBins){
+            for (Int_t i = 0; i < 6; i++){
+                histoDataM02[i]                     = (TH1D*)directoryEMCALmergedPi0->Get(Form("Data_M02_Example_%s",nameTrigger[i].Data()));
+                histoMCrecM02[i]                    = (TH1D*)directoryEMCALmergedPi0->Get(Form("MCRec_M02_Example_%s",nameTrigger[i].Data()));
+                histoTruePi0M02[i]                  = (TH1D*)directoryEMCALmergedPi0->Get(Form("TruePi0_M02_Example_%s",nameTrigger[i].Data()));
+                histoTrueEtaM02[i]                  = (TH1D*)directoryEMCALmergedPi0->Get(Form("TrueEta_M02_Example_%s",nameTrigger[i].Data()));
+                histoTrueGammaM02[i]                = (TH1D*)directoryEMCALmergedPi0->Get(Form("TrueGamma_M02_Example_%s",nameTrigger[i].Data()));
+                histoTrueElectronM02[i]             = (TH1D*)directoryEMCALmergedPi0->Get(Form("TrueElectron_M02_Example_%s",nameTrigger[i].Data()));
+                histoTrueBGM02[i]                   = (TH1D*)directoryEMCALmergedPi0->Get(Form("TrueBG_M02_Example_%s",nameTrigger[i].Data()));
+                histoTruePi0PureMergedM02[i]        = (TH1D*)directoryEMCALmergedPi0->Get(Form("TruePi0PureMerged_M02_Example_%s",nameTrigger[i].Data()));
+                histoTruePi0PConvMergedM02[i]       = (TH1D*)directoryEMCALmergedPi0->Get(Form("TruePi0PartConvMerged_M02_Example_%s",nameTrigger[i].Data()));
+                histoTruePi0OneGammaM02[i]          = (TH1D*)directoryEMCALmergedPi0->Get(Form("TruePi0OneGamma_M02_Example_%s",nameTrigger[i].Data()));
+                histoTruePi0OneElectronM02[i]       = (TH1D*)directoryEMCALmergedPi0->Get(Form("TruePi0OneElectron_M02_Example_%s",nameTrigger[i].Data()));
 
+                if (histoDataM02[i] && histoMCrecM02[i] && histoTruePi0M02[i] && histoTrueEtaM02[i]){
+                    haveAllPi0M02EMCm[i]            = kTRUE;
+                    cout << nameTrigger[i].Data() << "\t found M02 hists" << endl;
+                }
+            }    
+        }    
+        
     //************************** Read data for PHOS *****************************************************
     
     TFile* filePHOS                                         = new TFile(fileNamePHOS);
@@ -4988,7 +5019,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
             } else {
                 cout << "missing partial input for invariant mass bin for PCM-EMC for trigger: " << nameTrigger[i].Data() << endl;
             }            
-        }    
+        }        
     }    
     
     

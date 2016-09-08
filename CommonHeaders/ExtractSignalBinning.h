@@ -1071,7 +1071,31 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                         break;
                 }    
             } else if ( mode == 10 ){ 
-                return 20;
+                switch (trigger){
+                    case 0:             // INT1 13g
+                    case 1:             // INT1 13g
+                    case 3:             // INT1 11a
+                    case 10:            // INT7 13g
+                    case 11:            // INT8 13g
+                        return 22;
+                        break;
+                    case 51:            // EMC1
+                        return 26;
+                        break;
+                    case 52:            // EMC7
+                        return 22;
+                        break;
+                    case 85:            // EG2
+                        return 26;
+                        break;
+                    case 83:            // EG1
+                        return 26;
+                        break;
+                    default:
+                        return 20;
+                        break;
+                }
+                
             } else {
                 return 7;
             }               

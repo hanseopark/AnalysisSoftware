@@ -391,6 +391,19 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TH1D*   histoEffectCorrPi0FromK0s[MaxNumberOfFiles];
     Bool_t hasSecEffi                                       = kFALSE;
     Bool_t hasSecCorrFac                                    = kFALSE;
+ 
+    TH1D* histoDataM02              [MaxNumberOfFiles];
+    TH1D* histoMCrecM02             [MaxNumberOfFiles];
+    TH1D* histoTruePi0M02           [MaxNumberOfFiles];
+    TH1D* histoTrueEtaM02           [MaxNumberOfFiles];
+    TH1D* histoTrueGammaM02         [MaxNumberOfFiles];
+    TH1D* histoTrueElectronM02      [MaxNumberOfFiles];
+    TH1D* histoTrueBGM02            [MaxNumberOfFiles];
+    TH1D* histoTruePi0PureMerged    [MaxNumberOfFiles];
+    TH1D* histoTruePi0PConvMerged   [MaxNumberOfFiles];
+    TH1D* histoTruePi0OneGammaM02   [MaxNumberOfFiles];
+    TH1D* histoTruePi0OneElectronM02[MaxNumberOfFiles];
+
     
     for (Int_t i=0; i< nrOfTrigToBeComb; i++){
         // Define CutSelections
@@ -460,6 +473,28 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         if (mode == 10){
             histoPurityPi0[i]                               = (TH1D*)fileCorrectedPi0[i]->Get("MesonPurity");
             histoPurityPi0[i]->SetName(Form("Purity_%s",  cutNumber[i].Data()));
+            histoDataM02[i]                                 = (TH1D*)fileCorrectedPi0[i]->Get(Form("Data_M02_in_Pt_Bin%d",exampleBin));
+            if (histoDataM02[i]) histoDataM02[i]->SetName(Form("Data_M02_Example_%s",triggerName[i].Data()));
+            histoMCrecM02[i]                                = (TH1D*)fileCorrectedPi0[i]->Get(Form("MCrec_M02_in_Pt_Bin%d",exampleBin));
+            if (histoMCrecM02[i]) histoMCrecM02[i]->SetName(Form("MCRec_M02_Example_%s",triggerName[i].Data()));
+            histoTruePi0M02[i]                              = (TH1D*)fileCorrectedPi0[i]->Get(Form("TrueClusPi0_M02_in_Pt_Bin%d",exampleBin));
+            if (histoTruePi0M02[i]) histoTruePi0M02[i]->SetName(Form("TruePi0_M02_Example_%s",triggerName[i].Data()));
+            histoTrueEtaM02[i]                              = (TH1D*)fileCorrectedPi0[i]->Get(Form("TrueClusEta_M02_in_Pt_Bin%d",exampleBin));
+            if (histoTrueEtaM02[i]) histoTrueEtaM02[i]->SetName(Form("TrueEta_M02_Example_%s",triggerName[i].Data()));
+            histoTrueGammaM02[i]                            = (TH1D*)fileCorrectedPi0[i]->Get(Form("TrueClusGamma_M02_in_Pt_Bin%d",exampleBin));
+            if (histoTrueGammaM02[i]) histoTrueGammaM02[i]->SetName(Form("TrueGamma_M02_Example_%s",triggerName[i].Data()));
+            histoTrueElectronM02[i]                         = (TH1D*)fileCorrectedPi0[i]->Get(Form("TrueClusElectron_M02_in_Pt_Bin%d",exampleBin));
+            if (histoTrueElectronM02[i]) histoTrueElectronM02[i]->SetName(Form("TrueElectron_M02_Example_%s",triggerName[i].Data()));
+            histoTrueBGM02[i]                               = (TH1D*)fileCorrectedPi0[i]->Get(Form("TrueClusBG_M02_in_Pt_Bin%d",exampleBin));
+            if (histoTrueBGM02[i]) histoTrueBGM02[i]->SetName(Form("TrueBG_M02_Example_%s",triggerName[i].Data()));
+            histoTruePi0PureMerged[i]                       = (TH1D*)fileCorrectedPi0[i]->Get(Form("TrueClusMergedPureFromPi0_M02_in_Pt_Bin%d",exampleBin));
+            if (histoTruePi0PureMerged[i]) histoTruePi0PureMerged[i]->SetName(Form("TruePi0PureMerged_M02_Example_%s",triggerName[i].Data()));
+            histoTruePi0PConvMerged[i]                      = (TH1D*)fileCorrectedPi0[i]->Get(Form("TrueClusPartConvMergedFromPi0_M02_in_Pt_Bin%d",exampleBin));
+            if (histoTruePi0PConvMerged[i]) histoTruePi0PConvMerged[i]->SetName(Form("TruePi0PartConvMerged_M02_Example_%s",triggerName[i].Data()));
+            histoTruePi0OneGammaM02[i]                      = (TH1D*)fileCorrectedPi0[i]->Get(Form("TrueClusOneGammaFromPi0_M02_in_Pt_Bin%d",exampleBin));
+            if (histoTruePi0OneGammaM02[i]) histoTruePi0OneGammaM02[i]->SetName(Form("TruePi0OneGamma_M02_Example_%s",triggerName[i].Data()));
+            histoTruePi0OneElectronM02[i]                   = (TH1D*)fileCorrectedPi0[i]->Get(Form("TrueClusOneElectronFromPi0_M02_in_Pt_Bin%d",exampleBin));            
+            if (histoTruePi0OneElectronM02[i]) histoTruePi0OneElectronM02[i]->SetName(Form("TruePi0OneElectron_M02_Example_%s",triggerName[i].Data()));
         }    
 
         histoRawYieldPi0[i]                                 = (TH1D*)fileCorrectedPi0[i]->Get("histoYieldMesonPerEvent");
@@ -2675,6 +2710,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             cout << "Aborted in CalculateWeightedQuantity" << endl;
             return;
         }
+        
         if (mode == 10){
             graphPurityPi0Weighted                      = CalculateWeightedQuantity(    graphOrderedPurityPi0, 
                                                                                         graphWeightsPi0,
@@ -6043,6 +6079,20 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 if (histoTriggerEffPi0[i])              histoTriggerEffPi0[i]->Write(Form("TriggerEfficiencyPi0_%s",triggerName[i].Data()),TObject::kOverwrite);
                 if (histoEffBasePi0[i])                 histoEffBasePi0[i]->Write(Form("EfficiencyBasePi0_%s",triggerName[i].Data()),TObject::kOverwrite);
             }
+            if (mode == 10){
+                if (histoPurityPi0[i])                  histoPurityPi0[i]->Write(Form("PurityPi0_%s",  triggerName[i].Data()),TObject::kOverwrite);
+                if (histoDataM02[i])                    histoDataM02[i]->Write(Form("Data_M02_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (histoMCrecM02[i])                   histoMCrecM02[i]->Write(Form("MCRec_M02_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (histoTruePi0M02[i])                 histoTruePi0M02[i]->Write(Form("TruePi0_M02_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (histoTrueEtaM02[i])                 histoTrueEtaM02[i]->Write(Form("TrueEta_M02_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (histoTrueGammaM02[i])               histoTrueGammaM02[i]->Write(Form("TrueGamma_M02_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (histoTrueElectronM02[i])            histoTrueElectronM02[i]->Write(Form("TrueElectron_M02_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (histoTrueBGM02[i])                  histoTrueBGM02[i]->Write(Form("TrueBG_M02_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (histoTruePi0PureMerged[i])          histoTruePi0PureMerged[i]->Write(Form("TruePi0PureMerged_M02_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (histoTruePi0PConvMerged[i])         histoTruePi0PConvMerged[i]->Write(Form("TruePi0PartConvMerged_M02_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (histoTruePi0OneGammaM02[i])         histoTruePi0OneGammaM02[i]->Write(Form("TruePi0OneGamma_M02_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+                if (histoTruePi0OneElectronM02[i])      histoTruePi0OneElectronM02[i]->Write(Form("TruePi0OneElectron_M02_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
+            }    
         }
         
         if (enableEta && mode != 10){

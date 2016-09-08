@@ -3569,3 +3569,25 @@ Double_t ReturnTriggerRejectionFactor(TString energy, Int_t trigger){
     }
     return triggerRejec;
 }
+
+TString ReturnTriggerName(Int_t trigger){
+    cout << trigger << endl;
+    if (trigger == 1 || trigger == 3 || trigger == 0){  // INT1
+        return "INT1";
+    } else if (trigger == 10 ){                         // INT7
+        return "INT7";
+    } else if (trigger == 11){                          // INT7
+        return "INT8";
+    } else if (trigger == 51){                          // EMC1
+        return "EMC1";
+    } else if (trigger == 52){                          // EMC7
+        return "EMC7";
+    } else if (trigger == 81){                          // EGA
+        return "EGA";
+    } else if (trigger == 85){                          // EG2
+        return "EG2";
+    } else if (trigger == 83){                          // EG1  
+        return "EG1";
+    }    
+    return "";
+}

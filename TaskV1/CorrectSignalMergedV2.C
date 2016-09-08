@@ -41,7 +41,8 @@
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
 #include "../CommonHeaders/PlottingGammaConversionAdditional.h"
 #include "../CommonHeaders/FittingGammaConversion.h"
-#include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
+#include "../CommonHeaders/ExtractSignalBinning.h"
+// #include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "../CommonHeaders/ConversionFunctions.h"
 
 struct SysErrorConversion {
@@ -169,6 +170,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     //********************************** Set global options *******************************************
     //*************************************************************************************************
     TString collisionSystem                     = ReturnFullCollisionsSystem(optionEnergy);
+    
     Double_t energy                             = ReturnCollisionEnergy( optionEnergy);
     Double_t doubleAddFactorK0s                 = ReturnCorrectK0ScalingFactor( optionEnergy,  fEventCutSelection);
     cout << "The additional K0 correction factor is: "  << doubleAddFactorK0s << endl;
@@ -224,6 +226,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     TString rapidityRange                       = "";
     Double_t deltaRapid                         = ReturnRapidityStringAndDouble(fMesonCutSelection, rapidityRange);
     TString trigger                             = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+    TString nameTrigger                         = ReturnTriggerName(trigger.Atoi());
     
     //Variable defintion
     Double_t scaling                            = 1./(2.*TMath::Pi());
@@ -1223,7 +1226,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             
             PutProcessLabelAndEnergyOnPlot(0.14, 0.95, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
         canvasDCFrac->Update();
-        canvasDCFrac->SaveAs(Form("%s/%s_%s_Pi0DCFra#it{c}_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
+        canvasDCFrac->SaveAs(Form("%s/%s_%s_Pi0DCFrac_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
 
             histoRatioEtaDCFrac->Scale(100);
             DrawAutoGammaMesonHistos( histoRatioEtaDCFrac,
@@ -1236,7 +1239,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             
             PutProcessLabelAndEnergyOnPlot(0.14, 0.95, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
         canvasDCFrac->Update();
-        canvasDCFrac->SaveAs(Form("%s/%s_%s_EtaDCFra#it{c}_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
+        canvasDCFrac->SaveAs(Form("%s/%s_%s_EtaDCFrac_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
 
         //**********************************************************************************
         //********************** Plot decay channel decompositions     ************************
@@ -1672,6 +1675,228 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     }
     
     // ********************************************************************************************************************************
+    // ************************** find example bin in original file and put it into output ********************************************
+    // ********************************************************************************************************************************
+    Int_t fExampleBin                       = ReturnSingleInvariantMassBinPlotting (nameMeson, optionEnergy, mode, trigger.Atoi(), -1);
+    TH1D* histoDataM02ExBin                 = (TH1D*)fileUncorrected.Get(Form("M02_PtBin%d",fExampleBin));    
+    if(histoDataM02ExBin){
+        histoDataM02ExBin->SetName(Form("Data_M02_in_Pt_Bin%d",fExampleBin));\
+        histoDataM02ExBin->Scale(1./histoDataM02ExBin->Integral());
+    }
+    TH1D* histoMCrecM02ExBin                = (TH1D*)fileCorrections->Get(Form("M02_in_Pt_Bin%d",fExampleBin));
+    TH1D* histoTruePi0M02ExBin              = (TH1D*)fileCorrections->Get(Form("TrueClusPi0_M02_in_Pt_Bin%d",fExampleBin));
+    TH1D* histoTrueEtaM02ExBin              = (TH1D*)fileCorrections->Get(Form("TrueClusEta_M02_in_Pt_Bin%d",fExampleBin));
+    TH1D* histoTrueGammaM02ExBin            = (TH1D*)fileCorrections->Get(Form("TrueClusGamma_M02_in_Pt_Bin%d",fExampleBin));
+    TH1D* histoTrueElectronM02ExBin         = (TH1D*)fileCorrections->Get(Form("TrueClusElectron_M02_in_Pt_Bin%d",fExampleBin));
+    TH1D* histoTrueBGM02ExBin               = (TH1D*)fileCorrections->Get(Form("TrueClusBG_M02_in_Pt_Bin%d",fExampleBin));
+    TH1D* histoTruePi0PureMergedM02ExBin    = (TH1D*)fileCorrections->Get(Form("TrueClusMergedPureFromPi0_M02_in_Pt_Bin%d",fExampleBin));
+    TH1D* histoTruePi0PConvMergedM02ExBin   = (TH1D*)fileCorrections->Get(Form("TrueClusPartConvMergedFromPi0_M02_in_Pt_Bin%d",fExampleBin));
+    TH1D* histoTruePi0OneGammaM02ExBin      = (TH1D*)fileCorrections->Get(Form("TrueClusOneGammaFromPi0_M02_in_Pt_Bin%d",fExampleBin));
+    TH1D* histoTruePi0OneElectronM02ExBin   = (TH1D*)fileCorrections->Get(Form("TrueClusOneElectronFromPi0_M02_in_Pt_Bin%d",fExampleBin));
+    if(histoMCrecM02ExBin){
+        histoMCrecM02ExBin->SetName(Form("MCrec_M02_in_Pt_Bin%d",fExampleBin));
+        Int_t integMC = histoMCrecM02ExBin->Integral();
+        histoMCrecM02ExBin->Scale(1./integMC);
+        histoTruePi0M02ExBin->Scale(1./integMC);
+        histoTrueEtaM02ExBin->Scale(1./integMC);
+        histoTrueGammaM02ExBin->Scale(1./integMC);
+        histoTrueBGM02ExBin->Scale(1./integMC);
+        histoTrueElectronM02ExBin->Scale(1./integMC);
+        histoTruePi0PureMergedM02ExBin->Scale(1./integMC);
+        histoTruePi0PConvMergedM02ExBin->Scale(1./integMC);
+        histoTruePi0OneGammaM02ExBin->Scale(1./integMC);
+        histoTruePi0OneElectronM02ExBin->Scale(1./integMC);
+    }
+    
+    if (histoDataM02ExBin && histoMCrecM02ExBin){
+        Double_t textSizeLabelsPixel                 = 50*3/5;
+        TCanvas* canvasM02SamplePlot    = new TCanvas("canvasM02SamplePlot","",0,0,750,750);  // gives the page size
+        DrawGammaCanvasSettings( canvasM02SamplePlot,  0.08, 0.01, 0.015, 0.08);
+        canvasM02SamplePlot->SetLogy(1);
+        
+        Style_t markerStyleM02MCrec     = 1;
+        Size_t markerSizeM02MCrec       = 0;
+        Color_t markerColorM02MCrec     = kBlack;
+        Style_t markerStyleM02Data      = 20;
+        Size_t markerSizeM02Data        = 1.2;
+        Color_t markerColorM02Data      = kBlack;
+        Style_t markerStyleM02MC        = 24;
+        Size_t markerSizeM02MC          = 1.3;
+        Color_t markerColorM02MC        = kRed+2;
+        Style_t markerStyleM02Pi0       = 20;
+        Size_t markerSizeM02Pi0         = 1.2;
+        Color_t markerColorM02Pi0       = kBlack;
+        Style_t markerStyleM02Eta       = 24;
+        Size_t markerSizeM02Eta         = 1.2;
+        Color_t markerColorM02Eta       = kAzure+2;
+        Style_t markerStyleM02Gamma     = 24;
+        Size_t markerSizeM02Gamma       = 0;
+        Color_t markerColorM02Gamma     = kRed-6;
+        Style_t markerStyleM02Elec      = 24;
+        Size_t markerSizeM02Elec        = 0;
+        Color_t markerColorM02Elec      = kGreen-5;
+        Style_t markerStyleM02BG        = 24;
+        Size_t markerSizeM02BG          = 0;
+        Color_t markerColorM02BG        = kGray+2;
+                
+        Double_t marginM02          = 0.07*750;
+        Double_t textsizeLabelsM02  = 0;
+        Double_t textsizeFacM02     = 0;
+        Double_t minYAxisM02        = 0.00001;
+        if (canvasM02SamplePlot->XtoPixel(canvasM02SamplePlot->GetX2()) < canvasM02SamplePlot->YtoPixel(canvasM02SamplePlot->GetY1())){
+            textsizeLabelsM02       = (Double_t)textSizeLabelsPixel/canvasM02SamplePlot->XtoPixel(canvasM02SamplePlot->GetX2()) ;
+            textsizeFacM02          = (Double_t)1./canvasM02SamplePlot->XtoPixel(canvasM02SamplePlot->GetX2()) ;
+        } else {
+            textsizeLabelsM02       = (Double_t)textSizeLabelsPixel/canvasM02SamplePlot->YtoPixel(canvasM02SamplePlot->GetY1());
+            textsizeFacM02          = (Double_t)1./canvasM02SamplePlot->YtoPixel(canvasM02SamplePlot->GetY1());
+        }
+        cout << textsizeLabelsM02 << endl;
+
+        TH2F * histo2DPi0M02Dummy;
+        histo2DPi0M02Dummy             = new TH2F("histo2DPi0M02Dummy","histo2DPi0M02Dummy",11000,0.0,2.,10000,0,1.2);
+        SetStyleHistoTH2ForGraphs(histo2DPi0M02Dummy, "#it{#lambda}_{0}","#it{P}",0.85*textsizeLabelsM02, textsizeLabelsM02,
+                                0.85*textsizeLabelsM02, textsizeLabelsM02,0.88, 0.115/(textsizeFacM02*marginM02));
+        
+        canvasM02SamplePlot->cd();
+        histo2DPi0M02Dummy->GetYaxis()->SetRangeUser(minYAxisM02,1.2);
+        histo2DPi0M02Dummy->DrawCopy();
+
+        
+        TLatex *labelM02PtRange = new TLatex(0.965,0.93,Form("#pi^{0}: %s", histoMCrecM02ExBin->GetTitle()));
+        SetStyleTLatex( labelM02PtRange, 0.85*textSizeLabelsPixel,4);
+        labelM02PtRange->SetTextAlign(31);
+        labelM02PtRange->SetTextFont(43);
+
+        TLatex *labelM02Energy      = new TLatex(0.11,0.93-1*0.8*textsizeLabelsM02,collisionSystem.Data());
+        SetStyleTLatex( labelM02Energy, 0.85*textSizeLabelsPixel,4);
+        labelM02Energy->SetTextFont(43);
+        
+        TLatex *labelM02Trigger      = new TLatex(0.11,0.93-2*0.8*textsizeLabelsM02,Form("%s triggered",nameTrigger.Data()));
+        SetStyleTLatex( labelM02Trigger, 0.85*textSizeLabelsPixel,4);
+        labelM02Trigger->SetTextFont(43);
+
+        TLatex *labelM02Reco  = new TLatex(0.11,0.93-3*0.8*textsizeLabelsM02,"mEMC");
+        SetStyleTLatex( labelM02Reco, 0.85*textSizeLabelsPixel,4);
+        labelM02Reco->SetTextFont(43);
+        TLatex *labelM02Simulation  = new TLatex(0.11,0.93,"ALICE simulation");
+        SetStyleTLatex( labelM02Simulation, 0.85*textSizeLabelsPixel,4);
+        labelM02Simulation->SetTextFont(43);
+        TLatex *labelM02Performance  = new TLatex(0.11,0.93,"ALICE performance");
+        SetStyleTLatex( labelM02Performance, 0.85*textSizeLabelsPixel,4);
+        labelM02Performance->SetTextFont(43);
+        
+        histoMCrecM02ExBin->SetMinimum(minYAxisM02);
+        histoTruePi0M02ExBin->SetMinimum(minYAxisM02);
+        histoTrueGammaM02ExBin->SetMinimum(minYAxisM02);
+        histoTrueEtaM02ExBin->SetMinimum(minYAxisM02);
+        histoTrueElectronM02ExBin->SetMinimum(minYAxisM02);
+        histoTrueBGM02ExBin->SetMinimum(minYAxisM02);
+        DrawGammaSetMarker(histoMCrecM02ExBin, markerStyleM02MCrec, markerSizeM02MCrec, markerColorM02MCrec, markerColorM02MCrec);
+        histoMCrecM02ExBin->SetLineWidth(3);
+        histoMCrecM02ExBin->Draw("hist,e,same");
+        DrawGammaSetMarker(histoTrueGammaM02ExBin, markerStyleM02Gamma, markerSizeM02Gamma, markerColorM02Gamma, markerColorM02Gamma);
+        histoTrueGammaM02ExBin->SetLineWidth(3);
+        histoTrueGammaM02ExBin->SetFillColor(markerColorM02Gamma);
+        histoTrueGammaM02ExBin->SetFillStyle(3154);
+        histoTrueGammaM02ExBin->Draw("hist,B,same");
+        histoTrueGammaM02ExBin->Draw("hist,same");
+        DrawGammaSetMarker(histoTrueElectronM02ExBin, markerStyleM02Elec, markerSizeM02Elec, markerColorM02Elec, markerColorM02Elec);
+        histoTrueElectronM02ExBin->SetLineWidth(3);
+        histoTrueElectronM02ExBin->SetFillColor(markerColorM02Elec);
+        histoTrueElectronM02ExBin->SetFillStyle(3145);
+        histoTrueElectronM02ExBin->Draw("b,same,hist");
+        histoTrueElectronM02ExBin->Draw("same,hist");
+        DrawGammaSetMarker(histoTrueBGM02ExBin, markerStyleM02BG, markerSizeM02BG, markerColorM02BG, markerColorM02BG);
+        histoTrueBGM02ExBin->SetLineWidth(3);
+        histoTrueBGM02ExBin->Draw("hist,same");
+        DrawGammaSetMarker(histoTruePi0M02ExBin, markerStyleM02Pi0, markerSizeM02Pi0, markerColorM02Pi0, markerColorM02Pi0);
+        histoTruePi0M02ExBin->Draw("p,same");
+        DrawGammaSetMarker(histoTrueEtaM02ExBin, markerStyleM02Eta, markerSizeM02Eta, markerColorM02Eta, markerColorM02Eta);
+        histoTrueEtaM02ExBin->Draw("p,same");
+        labelM02PtRange->Draw();
+        labelM02Energy->Draw();
+        labelM02Trigger->Draw();
+        labelM02Reco->Draw();
+        labelM02Simulation->Draw();
+        
+        histo2DPi0M02Dummy->Draw("AXIS,same");
+        
+        TLegend* legendM02Val  = GetAndSetLegend2(0.75, 0.89-6*0.75*textsizeLabelsM02, 0.9, 0.89, 0.85*textSizeLabelsPixel);
+        legendM02Val->SetMargin(0.05/(0.9-0.75));
+        legendM02Val->AddEntry(histoMCrecM02ExBin,"Clusters","l");
+        legendM02Val->AddEntry(histoTruePi0M02ExBin,"Real #pi^{0}","p");
+        legendM02Val->AddEntry(histoTrueEtaM02ExBin,"Real #eta","p");
+        legendM02Val->AddEntry(histoTrueGammaM02ExBin,"#gamma BG","f");
+        legendM02Val->AddEntry(histoTrueElectronM02ExBin,"e^{#pm} BG","f");
+        legendM02Val->AddEntry(histoTrueBGM02ExBin,"Had. BG","l");
+        legendM02Val->Draw();
+        canvasM02SamplePlot->SaveAs(Form("%s/Pi0_ValidatedM02BinMEMC_%s.%s",outputDir.Data(), nameTrigger.Data(), suffix.Data()));
+        
+        histo2DPi0M02Dummy->DrawCopy();
+        histoTruePi0PConvMergedM02ExBin->SetMinimum(minYAxisM02);
+        histoTruePi0OneGammaM02ExBin->SetMinimum(minYAxisM02);
+        histoTruePi0PureMergedM02ExBin->SetMinimum(minYAxisM02);
+        histoTruePi0OneElectronM02ExBin->SetMinimum(minYAxisM02);
+        TH1D* histoTruePi0MergedM02ExBin = (TH1D*)histoTruePi0PureMergedM02ExBin->Clone(Form("TrueClusMergedPi0_M02_in_Pt_Bin%d",fExampleBin));
+        histoTruePi0MergedM02ExBin->Add(histoTruePi0PConvMergedM02ExBin);
+        TH1D* histoTruePi0SinglePartM02ExBin = (TH1D*)histoTruePi0OneGammaM02ExBin->Clone(Form("TrueClusSinglePartPi0_M02_in_Pt_Bin%d",fExampleBin));
+        histoTruePi0SinglePartM02ExBin->Add(histoTruePi0OneElectronM02ExBin);
+        
+        DrawGammaSetMarker(histoTruePi0MergedM02ExBin, markerStyleM02Gamma, markerSizeM02Gamma, markerColorM02Gamma, markerColorM02Gamma);
+        histoTruePi0MergedM02ExBin->SetLineWidth(3);
+        histoTruePi0MergedM02ExBin->SetFillColor(markerColorM02Gamma);
+        histoTruePi0MergedM02ExBin->SetFillStyle(3154);
+        histoTruePi0MergedM02ExBin->Draw("hist,B,same");
+        histoTruePi0MergedM02ExBin->Draw("hist,same");
+        DrawGammaSetMarker(histoTruePi0SinglePartM02ExBin, markerStyleM02Elec, markerSizeM02Elec, markerColorM02Elec, markerColorM02Elec);
+        histoTruePi0SinglePartM02ExBin->SetLineWidth(3);
+        histoTruePi0SinglePartM02ExBin->SetFillColor(markerColorM02Elec);
+        histoTruePi0SinglePartM02ExBin->SetFillStyle(3145);
+        histoTruePi0SinglePartM02ExBin->Draw("b,same,hist");
+        histoTruePi0SinglePartM02ExBin->Draw("same,hist");
+        DrawGammaSetMarker(histoTruePi0M02ExBin, markerStyleM02Pi0, markerSizeM02Pi0, markerColorM02Pi0, markerColorM02Pi0);
+        histoTruePi0M02ExBin->Draw("p,same");
+
+        histo2DPi0M02Dummy->Draw("AXIS,same");
+        labelM02PtRange->Draw();
+        labelM02Energy->Draw();
+        labelM02Trigger->Draw();
+        labelM02Reco->Draw();
+        labelM02Simulation->Draw();
+        
+        TLegend* legendM02ValPi0  = GetAndSetLegend2(0.67, 0.89-3*0.75*textsizeLabelsM02, 0.9, 0.89, 0.85*textSizeLabelsPixel);
+        legendM02ValPi0->SetMargin(0.05/(0.9-0.67));
+        legendM02ValPi0->AddEntry(histoTruePi0M02ExBin,"All #pi^{0}","p");
+        legendM02ValPi0->AddEntry(histoTruePi0MergedM02ExBin,"Both #gamma in clus.","f");
+        legendM02ValPi0->AddEntry(histoTruePi0SinglePartM02ExBin,"1 #gamma in clus.","f");
+        legendM02ValPi0->Draw();
+        canvasM02SamplePlot->SaveAs(Form("%s/Pi0_ValidatedM02BinOnlyPi0MEMC_%s.%s",outputDir.Data(), nameTrigger.Data(), suffix.Data()));
+
+        
+        histo2DPi0M02Dummy->DrawCopy();
+        histoDataM02ExBin->SetMinimum(minYAxisM02);
+        DrawGammaSetMarker(histoDataM02ExBin, markerStyleM02Data, markerSizeM02Data, markerColorM02Data, markerColorM02Data);
+        histoDataM02ExBin->Draw("p,same");
+        DrawGammaSetMarker(histoMCrecM02ExBin, markerStyleM02MC, markerSizeM02MC, markerColorM02MC, markerColorM02MC);
+        histoMCrecM02ExBin->Draw("p,same");
+
+        histo2DPi0M02Dummy->Draw("AXIS,same");
+        labelM02PtRange->Draw();
+        labelM02Energy->Draw();
+        labelM02Trigger->Draw();
+        labelM02Reco->Draw();
+        labelM02Performance->Draw();
+        
+        TLegend* legendM02Data  = GetAndSetLegend2(0.8, 0.89-2*0.75*textsizeLabelsM02, 0.9, 0.89, 0.85*textSizeLabelsPixel);
+        legendM02Data->SetMargin(0.05/(0.9-0.8));
+        legendM02Data->AddEntry(histoDataM02ExBin,"Data","p");
+        legendM02Data->AddEntry(histoMCrecM02ExBin,"MC","p");
+        legendM02Data->Draw();
+        canvasM02SamplePlot->SaveAs(Form("%s/Pi0_DataVsMCM02BinOnlyPi0MEMC_%s.%s",outputDir.Data(), nameTrigger.Data(), suffix.Data()));
+        
+    }
+    
+    // ********************************************************************************************************************************
     // ****************************** Write file with all further needed histograms ***************************************************
     // ********************************************************************************************************************************    
     cout << "writing corrected file" << endl;    
@@ -1713,6 +1938,20 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         if (histoRatioMergedOneGammaFrac)       histoRatioMergedOneGammaFrac->Write();
         if (histoRatioMergedOneElectronFrac)    histoRatioMergedOneElectronFrac->Write();
     }
+    
+    //write example bins
+    if (histoDataM02ExBin)                      histoDataM02ExBin->Write();
+    if (histoMCrecM02ExBin)                     histoMCrecM02ExBin->Write();
+    if (histoTruePi0M02ExBin)                   histoTruePi0M02ExBin->Write();
+    if (histoTrueEtaM02ExBin)                   histoTrueEtaM02ExBin->Write();
+    if (histoTrueGammaM02ExBin)                 histoTrueGammaM02ExBin->Write();
+    if (histoTrueElectronM02ExBin)              histoTrueElectronM02ExBin->Write();
+    if (histoTrueBGM02ExBin)                    histoTrueBGM02ExBin->Write();
+    if (histoTruePi0PureMergedM02ExBin)         histoTruePi0PureMergedM02ExBin->Write();
+    if (histoTruePi0PConvMergedM02ExBin)        histoTruePi0PConvMergedM02ExBin->Write();
+    if (histoTruePi0OneGammaM02ExBin)           histoTruePi0OneGammaM02ExBin->Write();
+    if (histoTruePi0OneElectronM02ExBin)        histoTruePi0OneElectronM02ExBin->Write();
+    
     correctedOutput->Write();
     correctedOutput->Close();
     
