@@ -50,7 +50,7 @@ void FinaliseSystematicErrorsMergedCalo_pp( TString nameDataFileErrors      = ""
                                             TString suffix                  = "eps"
                                         ){
     
-    if (numberCutStudies > 10) {
+    if (numberCutStudies > 11) {
         cout << "ERROR: Too many variations set" << endl;
         return ;
     }    
@@ -100,13 +100,13 @@ void FinaliseSystematicErrorsMergedCalo_pp( TString nameDataFileErrors      = ""
     const Int_t nCuts                       = numberCutStudies;
     Double_t* ptBins;
     Double_t* ptBinsErr;
-    TString nameCutVariation[10];
-    TString nameCutVariationSC[10];
+    TString nameCutVariation[11];
+    TString nameCutVariationSC[11];
     
-    TString nameCutVariation2760GeV[10]     = { "tr. match. to cl.", "M_{02}", "clu. energy calibration", "cell E_{agg}", "cell time", 
-                                                "Mat. infront of EMCal", "#pi^{0} resolution", "clu. energy scale", "Trigger normalization", "Efficiency" };
-    TString nameCutVariationSC2760GeV[10]   = { "ClusterTrackMatchingCalo", "ClusterM02", "ClusterNonLinearity",  "CellMinE", "CellTiming",  
-                                                "ClusterMaterialTRD", "MesonResolution", "ClusterEnergyScale" , "Trigger", "Efficiency"};
+    TString nameCutVariation2760GeV[11]     = { "tr. match. to cl.", "M_{02}", "clu. energy calibration", "cell E_{agg}", "cell time", 
+                                                "Mat. infront of EMCal", "#pi^{0} resolution", "clu. energy scale", "Trigger normalization", "Efficiency", "Secondary corr." };
+    TString nameCutVariationSC2760GeV[11]   = { "ClusterTrackMatchingCalo", "ClusterM02", "ClusterNonLinearity",  "CellMinE", "CellTiming",  
+                                                "ClusterMaterialTRD", "MesonResolution", "ClusterEnergyScale" , "Trigger", "Efficiency", "Secondary"};
     
     if (energy.CompareTo("2.76TeV") == 0) {
         for (Int_t i = 0;i < numberCutStudies;i++){
@@ -118,26 +118,33 @@ void FinaliseSystematicErrorsMergedCalo_pp( TString nameDataFileErrors      = ""
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************
     // ***************************************************************************************************
-    Bool_t bsmooth[10]                      = { 0, 0, 0, 0, 0,
-                                                0, 0, 0, 0, 0
+    Bool_t bsmooth[11]                      = { 0, 0, 0, 0, 0,
+                                                0, 0, 0, 0, 0,
+                                                0
                                               };
-    Bool_t bsmoothMBPi0[10]                 = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1
+    Bool_t bsmoothMBPi0[11]                 = { 1, 1, 1, 1, 1,
+                                                1, 1, 1, 1, 1,
+                                                1
                                               };
-    Bool_t bsmoothINT7Pi0[10]               = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1
+    Bool_t bsmoothINT7Pi0[11]               = { 1, 1, 1, 1, 1,
+                                                1, 1, 1, 1, 1,
+                                                1
                                               };
-    Bool_t bsmoothEMC1Pi0[10]               = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1
+    Bool_t bsmoothEMC1Pi0[11]               = { 1, 1, 1, 1, 1,
+                                                1, 1, 1, 1, 1,
+                                                1
                                               };
-    Bool_t bsmoothEMC7Pi0[10]               = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1
+    Bool_t bsmoothEMC7Pi0[11]               = { 1, 1, 1, 1, 1,
+                                                1, 1, 1, 1, 1,
+                                                1
                                               };
-    Bool_t bsmoothEG2Pi0[10]                = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1
+    Bool_t bsmoothEG2Pi0[11]                = { 1, 1, 1, 1, 1,
+                                                1, 1, 1, 1, 1,
+                                                1
                                               };
-    Bool_t bsmoothEG1Pi0[10]                = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1
+    Bool_t bsmoothEG1Pi0[11]                = { 1, 1, 1, 1, 1,
+                                                1, 1, 1, 1, 1,
+                                                1
                                               };
                           
     for (Int_t i = 0; i < numberCutStudies; i++){
@@ -233,7 +240,8 @@ void FinaliseSystematicErrorsMergedCalo_pp( TString nameDataFileErrors      = ""
         TString nameGraphNeg    = Form("%s_SystErrorRelNeg_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalNameOutput.Data()  );
         cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
         if ( nameCutVariationSC[i].CompareTo("ClusterEnergyScale") == 0 || nameCutVariationSC[i].CompareTo("Trigger") == 0 || 
-            nameCutVariationSC[i].CompareTo("Efficiency") == 0 || nameCutVariationSC[i].CompareTo("MesonResolution") == 0
+            nameCutVariationSC[i].CompareTo("Efficiency") == 0 || nameCutVariationSC[i].CompareTo("MesonResolution") == 0 || 
+            nameCutVariationSC[i].CompareTo("Secondary") == 0
         ){
           nameGraphPos    = Form("%s_SystErrorRelPos_%s%s",meson.Data(),nameCutVariationSC[0].Data(),additionalNameOutput.Data()  );
           nameGraphNeg    = Form("%s_SystErrorRelNeg_%s%s",meson.Data(),nameCutVariationSC[0].Data(),additionalNameOutput.Data()  );
@@ -394,11 +402,22 @@ void FinaliseSystematicErrorsMergedCalo_pp( TString nameDataFileErrors      = ""
                 } 
             }    
 
-            // manual smoothing for meson mass errors - variation 3
+            // manual smoothing for meson resolution errors 
             if (nameCutVariationSC[i].CompareTo("MesonResolution")==0 ){
                 cout << "Meson resolution error smoothing" << endl;
                 for (Int_t k = 0;k < nPtBins;k++){
                     Double_t error              = 700*pow(0.7,ptBins[k]+0.2)+5.;
+                    errorsMean[i][k]            = error;
+                    errorsMeanErr[i][k]         = error*0.01;
+                    errorsMeanCorr[i][k]        = error;
+                    errorsMeanErrCorr[i][k]     = error*0.01;
+                }
+            }    
+            // manual smoothing for Secondary errors 
+            if (nameCutVariationSC[i].CompareTo("Secondary")==0 ){
+                cout << "Meson resolution error smoothing" << endl;
+                for (Int_t k = 0;k < nPtBins;k++){
+                    Double_t error              = 1.8;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
