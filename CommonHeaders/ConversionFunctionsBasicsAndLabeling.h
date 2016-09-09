@@ -356,6 +356,8 @@ TString ReturnFullTextMeson(TString fEnergyFlagOpt,
         return Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 8 TeV ",textProcessOpt.Data());
     } else if(fEnergyFlagOpt.CompareTo("13TeV") == 0){
         return Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 13 TeV ",textProcessOpt.Data());
+    } else if(fEnergyFlagOpt.CompareTo("5TeV") == 0){
+        return Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 5 TeV ",textProcessOpt.Data());
     } else if( fEnergyFlagOpt.CompareTo("900GeV") == 0) {
         return  Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 900 GeV ",textProcessOpt.Data());
     } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {
@@ -404,6 +406,8 @@ TString ReturnFullCollisionsSystem( TString fEnergyFlagOpt){
         return  "pp, #sqrt{#it{s}} = 8 TeV";
     } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0) {
         return  "pp, #sqrt{#it{s}} = 13TeV";
+    } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0) {
+        return  "pp, #sqrt{#it{s}} = 5TeV";
     } else if( fEnergyFlagOpt.CompareTo("900GeV") == 0) {
         return  "pp, #sqrt{#it{s}} = 900 GeV";
     } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {
@@ -1315,6 +1319,8 @@ Double_t ReturnCorrectK0ScalingFactor(TString fEnergyFlagOpt, TString cutNr){
     } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0) {
         cout << "Caution: no correct K0 Scaling factor for 13TeV available yet" << endl;
         return  1./0.75 -1.;
+    } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0) {
+        return  1./0.75 -1.;	
     } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {
         return  1./0.685 -1.;
     } else if( fEnergyFlagOpt.CompareTo("900GeV") == 0) {
