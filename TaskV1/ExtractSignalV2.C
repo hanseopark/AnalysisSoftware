@@ -2380,10 +2380,10 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
                     fBGFitRange[0]=0.25;
                     fMesonFitRange[0] = 0.07;
                     fMesonFitRange[1] = 0.26;
-                    fMesonIntDeltaRangeWide[0]      = fMesonIntDeltaRange[0]*1.6; // mod.
-                    fMesonIntDeltaRangeWide[1]      = fMesonIntDeltaRange[1]*1.6;// mod.
-                    fMesonIntDeltaRangeNarrow[0]    = fMesonIntDeltaRange[0]*0.4; // mod.
-                    fMesonIntDeltaRangeNarrow[1]    = fMesonIntDeltaRange[1]*0.4; // mod.
+//                    fMesonIntDeltaRangeWide[0]      = fMesonIntDeltaRange[0]*1.6; // mod.
+//                    fMesonIntDeltaRangeWide[1]      = fMesonIntDeltaRange[1]*1.6;// mod.
+//                    fMesonIntDeltaRangeNarrow[0]    = fMesonIntDeltaRange[0]*0.4; // mod.
+//                    fMesonIntDeltaRangeNarrow[1]    = fMesonIntDeltaRange[1]*0.4; // mod.
                     if(trigger.CompareTo("81")==0 || triggerSet == 2){
                       fMesonFitRange[0] = 0.08;
                       fMesonFitRange[1] = 0.28;

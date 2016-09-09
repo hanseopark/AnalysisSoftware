@@ -3582,7 +3582,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         canvasEffi->cd();
         TH2F * histo2DEffiEta;
         histo2DEffiEta = new TH2F("histo2DEffiEta","histo2DEffiEta",1000,0., maxPtGlobalEta,10000,minEffiEta, maxEffiEta);
-        SetStyleHistoTH2ForGraphs(histo2DEffiEta, "#it{p}_{T} (GeV/#it{c})","#epsilon_{reco} #times #epsilon_{trigg}",
+        SetStyleHistoTH2ForGraphs(histo2DEffiEta, "#it{p}_{T} (GeV/#it{c})","#epsilon_{#eta} #times #epsilon_{trigg}",
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
         histo2DEffiEta->DrawCopy(); 
         histo2DEffiEta->SetYTitle("#epsilon_{#eta}");
