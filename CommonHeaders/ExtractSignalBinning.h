@@ -518,7 +518,40 @@ Double_t fBinsPi013TeVLowBDirectPhotonPtDCAzDist[16] = { 0.0, 0.4, 0.6, 0.8, 1.0
                                                          1.2, 1.4, 1.6, 1.8, 2.0,
                                                          2.5, 4.0, 6.0, 9.0, 12.0,
                                                          16.0};
-
+//******************** Pt binning for pp, 5 TeV ***************************************************
+Double_t fBinsPi05TeVPt[22]                     = { 0.0, 0.3, 0.4, 0.6, 0.8,
+                                                    1.0, 1.2, 1.4, 1.6, 1.8,
+                                                    2.0, 2.2, 2.4, 2.6, 2.9,
+                                                    3.3, 3.9, 5.1, 6.5, 8.0,
+						    11.0,16.0};
+Double_t fBinsPi05TeVPtDCA[15]                  = { 0.0, 0.3, 0.4, 0.6, 0.8,
+                                                    1.0, 1.2, 1.4, 1.6, 1.8,
+                                                    2.0, 2.4, 3.0, 5.0, 10.};
+Int_t fBinsPi05TeVPtRebin[21]                   = { 2, 2, 2, 2, 2,
+                                                    2, 2, 2, 2, 2,
+                                                    2, 2, 2, 2, 2,
+                                                    2, 4, 4, 4, 4, 
+						    4};
+Double_t fBinsPi05TeVDirectPhotonPt[24]         = { 0.0, 0.3, 0.6, 0.8, 1.0,
+                                                    1.2, 1.4, 1.6, 1.8, 2.0,
+                                                    2.4, 2.8, 3.2, 3.6, 4.2,
+                                                    4.8, 5.8, 7.0, 8.5, 10.0,
+                                                    12.0, 16.0, 20.0, 25.0};
+Int_t fBinsPi05TeVDirectPhotonPtRebin[23]       = { 2, 2, 1, 1, 1, 
+                                                    1, 1, 1, 1, 1, 
+                                                    1, 1, 1, 2, 2,
+                                                    2, 2, 4, 4, 4,
+                                                    5, 5, 5};
+Double_t fBinsEta5TeVPt[14]                     = { 0.0, 0.5, 1.0, 1.5, 2.0,
+                                                    2.5, 3.0, 3.5, 4.0, 5.0,
+                                                    6.0, 7.0, 9.0, 12.0};
+Int_t fBinsEta5TeVPtRebin[13]                   = { 8, 8, 5, 5, 5,
+						    8, 8, 8, 8, 8,
+                                                    10, 10, 10};
+Double_t fBinsEtaPrim5TeVPt[8]                  = {0.0, 0.5, 1.0, 2.0, 3.0,
+                                                    4.0, 6.0, 10.0}; 
+Int_t fBinsEtaPrim5TeVPtRebin[7]                = { 8, 2, 2, 2, 2, 
+                                                    2, 2};
 //******************** Pt binning for pp, 2.76 TeV ***************************************************
 Double_t fBinsPi02760GeVPt[25]                  = { 0.0, 0.4, 0.6, 0.8, 1.0,
                                                     1.2, 1.4, 1.6, 1.8, 2.0,
@@ -1958,6 +1991,40 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 if (fNBinsPt-fStartPtBin > nBinsPlot) fRow++;
             }
         //*********************************************************************************************
+        //********************************** Pi0 for pp 5TeV*******************************************
+        //*********************************************************************************************
+        } else if (energy.CompareTo("5TeV") == 0) {
+            if (directPhoton.CompareTo("directPhoton") == 0){
+                fStartPtBin     = 1;
+                fColumn         = 5;
+                fRow            = 5;                                
+                if (fNBinsPt > 23) {
+                    cout << "You have chosen Direct Photon Plots and more than 23 bins, this is not possible, it will be reduced to 23 bins." << endl;
+                    fNBinsPt    = 23;
+                }
+                for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                    fBinsPt[i]         = fBinsPi05TeVDirectPhotonPt[i];
+                    if (i < fNBinsPt+1) fNRebin[i] = fBinsPi05TeVDirectPhotonPtRebin[i];
+                }
+            } else {
+                fStartPtBin     = 1;
+                fColumn         = 5;
+                fRow            = 5;
+                if (fNBinsPt > 21){
+                    cout << "You have chosen to have more than 21 bins, this is not possible, it will be reduced to 21" << endl;
+                    fNBinsPt    = 21;
+                }
+                for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                    fBinsPt[i]         = fBinsPi05TeVPt[i];
+                        if (i < fNBinsPt) 
+                            fNRebin[i]  = fBinsPi05TeVPtRebin[i];
+                    }
+                Int_t nBinsPlot     = fColumn*fRow -1;
+                if (fNBinsPt-fStartPtBin > nBinsPlot) fColumn++;
+                nBinsPlot           = fColumn*fRow -1;
+                if (fNBinsPt-fStartPtBin > nBinsPlot) fRow++;
+                }
+        //*********************************************************************************************
         //********************************** Pi0 for pPb 5.023TeV**************************************
         //*********************************************************************************************
         } else if( energy.CompareTo("pPb_5.023TeV") == 0) { 
@@ -2531,6 +2598,22 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
             nBinsPlot           = fColumn*fRow -1;
             if (fNBinsPt-fStartPtBin > nBinsPlot) fRow++;
         //*********************************************************************************************
+        //********************************** Eta for pp 5TeV*******************************************
+        //*********************************************************************************************
+        } else if (energy.CompareTo("5TeV") == 0) {
+            fStartPtBin         = 1;
+            fColumn             = 5;
+            fRow                = 3;            
+            if (fNBinsPt > 13) {
+                cout << "You have chosen to have more than 13 bins for Eta, this is not possible, it will be reduced to 13" << endl;
+                fNBinsPt        = 18;
+            }
+            for (Int_t i = 0; i < fNBinsPt+2; i++) {
+	      fBinsPt[i]      = fBinsEta5TeVPt[i];	    
+	      if (i < fNBinsPt+1)
+		fNRebin[i]  = fBinsEta5TeVPtRebin[i];
+                }            
+        //*********************************************************************************************
         //********************************** Eta for pPb 5.023TeV**************************************
         //*********************************************************************************************                
         } else if( energy.CompareTo("pPb_5.023TeV") == 0) { 
@@ -2693,7 +2776,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     fNRebin[i]  = fBinsEtaPrim7TeVPtRebin[i];
             }            
         }
-    }
+     }
 }
 
 //*************************************************************************************************
