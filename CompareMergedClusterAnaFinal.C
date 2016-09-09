@@ -788,7 +788,7 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
     canvasAcceptanceTimesEff->Print(Form("%s/Pi0_EfficiencyDiffPur.%s",outputDir.Data(),suffix.Data()));
     
     canvasAcceptanceTimesEff->SetLogy(0);
-        hist2DEffDivPur->GetYaxis()->SetRangeUser(0,0.42);
+        hist2DEffDivPur->GetYaxis()->SetRangeUser(0,0.8);
         hist2DEffDivPur->DrawCopy(); 
         
         DrawGammaSetMarkerTGraphAsym(graphDiClusV2Pi0Efficiency,25, markerSizeDet[1], colorDet[1] , colorDet[1]);
