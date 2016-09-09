@@ -1017,9 +1017,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     
     TH2F * histo2DEffiPi0;
     histo2DEffiPi0 = new TH2F("histo2DEffiPi0","histo2DEffiPi0",1000,0., maxPtGlobalPi0,10000,minEffiPi0, maxEffiPi0);
-    SetStyleHistoTH2ForGraphs(histo2DEffiPi0, "#it{p}_{T} (GeV/#it{c})","#epsilon_{#pi^{0}}",
+    SetStyleHistoTH2ForGraphs(histo2DEffiPi0, "#it{p}_{T} (GeV/#it{c})","#epsilon_{#pi^{0}} #times #epsilon_{trigg}",
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);
     histo2DEffiPi0->DrawCopy(); 
+    histo2DEffiPi0->SetYTitle("#epsilon_{#pi^{0}}");
 
     Double_t minXLegendEffi = 0.62;
     Int_t nColumnsEffi      = 2; 

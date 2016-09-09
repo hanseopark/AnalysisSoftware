@@ -4675,6 +4675,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     canvasEtatoPi0combo->Update();
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Theory_Paper.%s",outputDir.Data(), suffix.Data()));
+
+    canvasEtatoPi0combo->SetLogx(kFALSE);
+    canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Theory_Paper_LIN.%s",outputDir.Data(), suffix.Data()));
     
     
     //*************************************************************************************************************
