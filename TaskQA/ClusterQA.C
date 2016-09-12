@@ -1,7 +1,6 @@
 /*******************************************************************************
  ******  provided by Gamma Conversion Group, PWGGA,                        *****
  ******     Daniel Muehlheim, d.muehlheim@cern.ch                          ***** 
- ******     Mike Sas, msas@nikhef.nl                                       ***** 
  *******************************************************************************/
 
 
@@ -535,6 +534,11 @@ void ClusterQA(
     std::vector<TH1D*> vecClusterDistanceRowWithin;
     std::vector<TH1D*> vecClusterDistanceColumnWithin;
 
+    const Int_t nEM02_bins = 8;
+    Double_t EM02_bins[nEM02_bins]={0.7,1.0,1.5,2.0,4.0,8.0,12.0,16.0};
+    std::vector<TH2D*> vecClusterEM02;
+    std::vector<TH1D*>* vecClusterEM02_TH1D = new std::vector<TH1D*>[nEM02_bins];
+
     std::vector<TH2D*> vecESDMother;
     std::vector<TH2D*> vecESDMotherMatched;
     std::vector<TH2D*> vecESDTrueMeson[2];
@@ -1047,6 +1051,7 @@ void ClusterQA(
                                     "E (GeV)","#lambda_{0}^{2}",1,1,
                                     0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterEM02AfterQA, Form("%s/EVsM02_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+                vecClusterEM02.push_back(new TH2D(*fHistClusterEM02AfterQA));
             } else cout << "INFO: Object |fHistClusterEM02AfterQA| could not be found! Skipping Draw..." << endl;
             
             if ( !runMergedClust ){ // only do if its not a merged cluster cut
@@ -2502,6 +2507,37 @@ void ClusterQA(
                                         0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ClusterDistanceColumnWithin.%s", outputDir.Data(), suffix.Data()));
         DeleteVecTH1D(vecClusterDistanceColumnWithin);
+
+        for(Int_t iEM02 = 0; iEM02<nEM02_bins-1; iEM02++){
+          for(Int_t iVec=0; iVec<(Int_t)vecClusterEM02.size(); iVec++){
+              TH2D* temp = vecClusterEM02.at(iVec);
+              temp->GetXaxis()->SetRangeUser(0.1,0.5);
+              temp->GetYaxis()->SetRangeUser(0.,30.);
+              TH1D* temp1D = (TH1D*) temp->ProjectionY(Form("projEM02_%i_%i",iVec,iEM02),temp->GetXaxis()->FindBin(EM02_bins[iEM02]+0.001),temp->GetXaxis()->FindBin(EM02_bins[iEM02+1]-0.001));
+              Double_t nEntries = temp1D->Integral(1,temp1D->GetNbinsX());
+              temp1D->Sumw2();
+              temp1D->Scale(1./nEntries);
+              temp1D->GetXaxis()->SetRangeUser(0.1,0.5);
+              vecClusterEM02_TH1D[iEM02].push_back(temp1D);
+          }
+          Int_t Xmin, Xmax = 0;
+          GetMinMaxBin(vecClusterEM02_TH1D[iEM02],Xmin,Xmax);
+          for(Int_t iVec=0; iVec<(Int_t)vecClusterEM02_TH1D[iEM02].size(); iVec++){
+            ((TH1D*)vecClusterEM02_TH1D[iEM02].at(iVec))->GetXaxis()->SetRange(Xmin,Xmax);
+          }
+          DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                      vecClusterEM02_TH1D[iEM02],"",Form("#lambda_{0}^{2} for %.01f < E_{#mbox{cluster}} < %.01f GeV",EM02_bins[iEM02],EM02_bins[iEM02+1]),"#frac{1}{N} #frac{dN}{d#lambda_{0}^{2}}",1,1.1,
+                                      labelData, colorCompare, kTRUE, 2, 5, kFALSE,
+                                      0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+          SaveCanvas(canvas, Form("%s/Comparison/ClusterEM02_bin%i.%s", outputDir.Data(), iEM02, suffix.Data()),kFALSE,kTRUE);
+
+          DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                          vecClusterEM02_TH1D[iEM02],"","#lambda_{0}^{2}","#frac{1}{N} #frac{dN}{d#lambda_{0}^{2}}",1,1.1,
+                                          labelData, colorCompare, kTRUE, 2, 5, kFALSE,
+                                          0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+          SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ClusterEM02_bin%i.%s", outputDir.Data(), iEM02, suffix.Data()));
+        }
+        DeleteVecTH2D(vecClusterEM02);
     }
     
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -2877,7 +2913,7 @@ void ClusterQA(
             DrawPeriodQAHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                 temp,"","Cell ID",Form("Difference between %s and Data #frac{dN}{dCellID}",plotDataSets[iVec].Data()),1,1,
                                 0.75,0.92,0.03,fCollisionSystem,fTrigger[0],"");
-            SaveCanvasAndWriteHistogram(canvas, temp, Form("%s/Comparison/ClusterEnergyFracCells_%s.%s", outputDir.Data(), DataSets[iVec].Data(), suffix.Data()));
+            SaveCanvas(canvas, Form("%s/Comparison/ClusterEnergyFracCells_%s.%s", outputDir.Data(), DataSets[iVec].Data(), suffix.Data()));
         }
         // frequency of cells included in cluster
         for(Int_t iVec=1; iVec<(Int_t)vecClusterIncludedCells.size(); iVec++){
@@ -2889,7 +2925,7 @@ void ClusterQA(
             DrawPeriodQAHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                 temp,"","Cell ID in accepted Clusters",Form("Difference between %s and Data #frac{d#it{N}}{d#it{Cell ID}}",plotDataSets[iVec].Data()),1,1,
                                 0.75,0.92,0.03,fCollisionSystem,fTrigger[0],"");
-            SaveCanvasAndWriteHistogram(canvas, temp, Form("%s/Comparison/ClusterIncludedCells_%s.%s", outputDir.Data(), DataSets[iVec].Data(), suffix.Data()));
+            SaveCanvas(canvas, Form("%s/Comparison/ClusterIncludedCells_%s.%s", outputDir.Data(), DataSets[iVec].Data(), suffix.Data()));
         }
         DeleteVecTH1D(vecClusterEnergyFracCells);
         DeleteVecTH1D(vecClusterIncludedCells);
@@ -2983,6 +3019,10 @@ void ClusterQA(
 
     const char* nameOutput = Form("%s/ClusterQA_%s.root",outputDirRootFiles.Data(),DataSets[0].Data());
     TFile* fOutput = new TFile(nameOutput,"UPDATE");
+
+    for(Int_t iEM02 = 0; iEM02<nEM02_bins-1; iEM02++){
+      WriteHistogramTH1DVec(fOutput,vecClusterEM02_TH1D[iEM02],Form("EM02_%i",iEM02));
+    }
 
     //---------------------------------------------------------------------------------------------------------------
     //---------------------------- Cluster distribution on detector MC vs Data --------------------------------------

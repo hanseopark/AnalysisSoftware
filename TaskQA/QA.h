@@ -1,3 +1,8 @@
+/*******************************************************************************
+ ******  provided by Gamma Conversion Group, PWGGA,                        *****
+ ******     Daniel Muehlheim, d.muehlheim@cern.ch                          *****
+ *******************************************************************************/
+
 #ifndef QA_H
 #define QA_H
 
@@ -645,7 +650,7 @@ void WriteHistogramTF1Vec(TFile* file, std::vector<TF1*> vec, TString dir){
 
 void DeleteVecTH1D(std::vector<TH1D*> vec){
 	for(Int_t i=0; i<(Int_t) vec.size(); i++){
-		delete vec.at(i);
+        delete vec.at(i);
 	}
 }
 void DeleteVecTH2D(std::vector<TH2D*> vec){

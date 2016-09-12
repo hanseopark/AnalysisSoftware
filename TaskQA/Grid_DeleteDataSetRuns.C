@@ -1,3 +1,8 @@
+/*******************************************************************************
+ ******  provided by Gamma Conversion Group, PWGGA,                        *****
+ ******     Daniel Muehlheim, d.muehlheim@cern.ch                          *****
+ *******************************************************************************/
+
 void readin(TString fileRuns, std::vector<TString> &vec);
 
 void Grid_DeleteDataSetRuns(TString folder = "/home/daniel/data/work/pcgGit/AnalysisSoftware")

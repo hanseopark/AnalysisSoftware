@@ -1,7 +1,6 @@
 /*******************************************************************************
  ******  provided by Gamma Conversion Group, PWGGA,                        *****
  ******     Daniel Muehlheim, d.muehlheim@cern.ch                          ***** 
- ******     Mike Sas, msas@nikhef.nl                                       ***** 
  *******************************************************************************/
 
 #include "QA.h"
