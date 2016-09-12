@@ -251,7 +251,7 @@ void CutStudiesOverviewMerged(  TString CombineCutsName     = "CombineCuts.dat",
         } else if (cutVariationName.Contains("ClusterM02")){    
             TString fMinM02Cut                                  = fClusterMergedCutSelection(GetClusterMinM02CutPosition(fClusterMergedCutSelection),1);
             TString fMaxM02Cut                                  = fClusterMergedCutSelection(GetClusterMaxM02CutPosition(fClusterMergedCutSelection),1);
-            cutStringsName[i]                                   = Form("%s%s",fMinM02Cut.Data(),fMaxM02Cut.Data());
+            cutStringsName[i]                                   = AnalyseMergedM02Cut(fMinM02Cut.Atoi(),fMaxM02Cut.Atoi());
 //             AnalyseM02Cut(fMinM02Cut.Atoi(), fMaxM02Cut.Atoi());
         } else if (cutVariationName.Contains("ClusterNCells")){    
             TString fNCellsCut                                  = fClusterCutSelection(GetClusterMinNCellsCutPosition(fClusterCutSelection),1);
@@ -840,11 +840,11 @@ void CutStudiesOverviewMerged(  TString CombineCutsName     = "CombineCuts.dat",
         TCanvas* canvasPurityMeson = new TCanvas("canvasPurityMeson","",1350,1500);  // gives the page size
         DrawGammaCanvasSettings( canvasPurityMeson,  0.13, 0.02, 0.02, 0.09);
         // Define upper panel
-        TPad* padPurity = new TPad("padPurity", "", 0., 0.25, 1., 1.,-1, -1, -2);
-        DrawGammaPadSettings( padPurity, 0.12, 0.02, 0.04, 0.);
+        TPad* padPurity = new TPad("padPurity", "", 0., 0.33, 1., 1.,-1, -1, -2);
+        DrawGammaPadSettings( padPurity, 0.12, 0.02, 0.02, 0.);
         padPurity->Draw();
         // Define lower panel
-        TPad* padPurityRatios = new TPad("padPurityRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
+        TPad* padPurityRatios = new TPad("padPurityRatios", "", 0., 0., 1., 0.33,-1, -1, -2);
         DrawGammaPadSettings( padPurityRatios, 0.12, 0.02, 0.0, 0.2);
         padPurityRatios->Draw();
 
@@ -858,7 +858,7 @@ void CutStudiesOverviewMerged(  TString CombineCutsName     = "CombineCuts.dat",
                 DrawAutoGammaMesonHistos( histoPurityCut[i],
                                         "", "#it{p}_{T} (GeV/#it{c})", Form("#epsilon_{pur,%s}",textMeson.Data()),
                                         kFALSE, 5., 10e-10,kFALSE,
-                                        kTRUE, 0.4, 1.05,
+                                        kTRUE, 0.45, 1.05,
                                         kFALSE, 0., 10.);
                 histoPurityCut[i]->DrawCopy("e1,p");
                 legendPurityMeson->AddEntry(histoPurityCut[i],Form("standard: %s",cutStringsName[i].Data()));

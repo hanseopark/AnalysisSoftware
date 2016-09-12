@@ -235,13 +235,13 @@ void ComputeCorrelationFactors(
   histo2DPi0Weights->GetYaxis()->SetTitleOffset(0.8);
   histo2DPi0Weights->Draw("copy");
 
-  TLatex *labelWeightsEnergy      = new TLatex(0.8,0.20,collisionSystem.Data());
+  TLatex *labelWeightsEnergy      = new TLatex(0.75,0.20,collisionSystem.Data());
   SetStyleTLatex( labelWeightsEnergy, 0.85*textSizeLabelsPixel,4);
   labelWeightsEnergy->SetTextFont(43);
   labelWeightsEnergy->Draw();
   TLatex *labelWeightsPi0 = 0x0;
-  if(meson.CompareTo("Pi0EtaBinning") == 0 || meson.CompareTo("EtaToPi0") == 0) labelWeightsPi0 = new TLatex(0.8,0.16,Form("%s",mesonPlot.Data()));
-  else labelWeightsPi0 = new TLatex(0.8,0.16,Form("%s #rightarrow #gamma#gamma",mesonPlot.Data()));
+  if(meson.CompareTo("Pi0EtaBinning") == 0 || meson.CompareTo("EtaToPi0") == 0) labelWeightsPi0 = new TLatex(0.75,0.16,Form("%s",mesonPlot.Data()));
+  else labelWeightsPi0 = new TLatex(0.75,0.16,Form("%s #rightarrow #gamma#gamma",mesonPlot.Data()));
   SetStyleTLatex( labelWeightsPi0, 0.85*textSizeLabelsPixel,4);
   labelWeightsPi0->SetTextFont(43);
   labelWeightsPi0->Draw();
@@ -250,8 +250,8 @@ void ComputeCorrelationFactors(
   Marker_t markerTrigg    [10] = {20, 20, 21, 34, 29, 33, 21, 27, 28, 30 };
   Int_t iTrigg = 0;
 
-  TLegend* legendWeights   = GetAndSetLegend2(0.09, 0.11, 0.4, 0.1+(0.035*8), 32);
-
+  TLegend* legendWeights   = GetAndSetLegend2(0.11, 0.11, 0.42, 0.1+(0.035*8), 32);
+  legendWeights->SetMargin(0.15);
   fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
   fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
   fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n" << endl;
@@ -360,8 +360,6 @@ void ComputeCorrelationFactors(
       histoCorr->Write(Form("%s_%s_%s",mode.Data(),meson.Data(),tempCorr.Data()),TObject::kOverwrite);
     }
   }
-
-  legendWeights->SetMargin(0.15);
   legendWeights->Draw();
   canvasWeights->RedrawAxis();
 

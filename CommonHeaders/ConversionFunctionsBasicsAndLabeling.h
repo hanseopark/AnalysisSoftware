@@ -2922,6 +2922,75 @@ TString AnalyseM02Cut(Int_t minM02, Int_t maxM02){
 }	
 
 //************************************************************************************
+//********* Analyzes the M02 cut for merged ana, return correct cut label ************
+//************************************************************************************
+TString AnalyseMergedM02Cut(Int_t minM02, Int_t maxM02){
+    Double_t fMinM02 = 0.;
+    cout << minM02 << "\t" << maxM02 << endl;
+    switch(minM02){
+        case 0: 
+            fMinM02=0.1;
+            break;
+        case 1: 
+            fMinM02=-10; 
+            break;
+        case 2: 
+            fMinM02=-10; 
+            break;
+        case 3: 
+            fMinM02=-10; 
+            break;
+        case 4: 
+            fMinM02=-10; 
+            break;
+        case 5: 
+            fMinM02=-10; 
+            break;
+        case 6: 
+            fMinM02=0.30; 
+            break;
+        case 7: 
+            fMinM02=0.27; 
+            break;
+        case 8: 
+            fMinM02=0.25; 
+            break;
+        default:
+            fMinM02=-10;
+            break;
+      
+    }
+    
+    Double_t fMaxM02 = 1000.;
+    switch(maxM02){
+        case 0: 
+            fMaxM02=1000;
+            break;
+        case 1: 
+            fMaxM02=-10; 
+            break;
+        case 2: 
+            fMaxM02=-10; 
+            break;
+        case 3: 
+            fMaxM02=-10; 
+            break;
+        default:
+            fMaxM02 = -10;
+            break;
+    }
+    if (fMinM02 != -10 && fMaxM02 != -10)
+      return Form("%1.3f < M_{02} < %3.3f", fMinM02, fMaxM02);
+    else if (fMinM02 != -10)
+      return Form("M_{02} > %1.3f, #it{p}_{T} dependent upper limit %d ", fMinM02, maxM02);
+    else if (fMinM02 != -10)
+      return Form("M_{02} < %1.3f, #it{p}_{T} dependent lower limit %d ", fMaxM02, minM02);
+    else 
+      return Form("M_{02}: #it{p}_{T} dependent lower (%d) & upper (%d) limit  ", minM02, maxM02);
+} 
+
+
+//************************************************************************************
 //********************* Analyzes the phi cut, return correct cut value ***************
 //************************************************************************************
 TString AnalyseAcceptanceCutPhiCluster(Int_t minPhi, Int_t maxPhi){
