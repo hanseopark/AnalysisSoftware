@@ -23,7 +23,7 @@ void QA_Runwise(
     //******************* global settings **************************************************************************
     //**************************************************************************************************************
 
-    TString folderRunlists          = "DownloadAndDataPrep";
+    TString folderRunlists          = "DownloadAndDataPrep/runlists";
 
     const Int_t maxSets             = 20;
     TString DataSets[maxSets];
@@ -236,7 +236,7 @@ void QA_Runwise(
     //**************************************************************************************************************
     else if(select.CompareTo("LHC11aMerged")==0){
         //LHC11a + JJ MC for merged ana
-        folderRunlists      = "DownloadAndDataPrep";
+        folderRunlists      = "DownloadAndDataPrep/runlists";
         doEquidistantXaxis  = kTRUE;
         fEnergyFlag         = "2.76TeV";
         filePath            = "DataQA";
@@ -251,7 +251,7 @@ void QA_Runwise(
     //**************************************************************************************************************
     else if(select.CompareTo("LHC13gMerged")==0){
         //LHC11a + JJ MC for merged ana
-        folderRunlists      = "DownloadAndDataPrep";
+        folderRunlists      = "DownloadAndDataPrep/runlists";
         doEquidistantXaxis  = kTRUE;
         fEnergyFlag         = "2.76TeV";
         filePath            = "DataQA";
