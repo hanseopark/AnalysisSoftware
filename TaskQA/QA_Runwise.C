@@ -23,7 +23,7 @@ void QA_Runwise(
     //******************* global settings **************************************************************************
     //**************************************************************************************************************
 
-    TString folderRunlists          = "DownloadAndDataPrep/runlists";
+    TString folderRunlists          = "DownloadAndDataPrep";
 
     const Int_t maxSets             = 20;
     TString DataSets[maxSets];
@@ -692,6 +692,23 @@ void QA_Runwise(
           DataSets[j]     = dummyDataSets[j];
           plotDataSets[j] = dummyPlotSets[j];
       }
+      markerSize=1.5;
+      doEquidistantXaxis=kTRUE;
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC15o")==0){
+      // PbPb 5.02TeV
+      mode=0;
+      suffix="pdf";
+      fEnergyFlag = "PbPb_5.02TeV";
+      nSets = 2;
+      nData = 1;
+      cutNr = 2;  // 20-50%
+      filePath= "/home/meike/analysis/data/GridOutput/GammaConv/PbPb/";
+      filePathPhoton = "/home/meike/analysis/data/GridOutput/PhotonQA/PbPb/";
+      fileName = "GammaConvV1.root";
+      DataSets[0]="LHC15o"; DataSets[1]="LHC15k1a1";
+      plotDataSets[0]="LHC15o 20-50%"; plotDataSets[1]="LHC15k1a1 20-50%";
       markerSize=1.5;
       doEquidistantXaxis=kTRUE;
     }

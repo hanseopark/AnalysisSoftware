@@ -813,6 +813,21 @@ void QA(    TString select          = "LHC11a",         // set selected
 		pathPhotonQA[0] = "/home/ceres/danisch/GridOutputPhotonQA/LHC15g/PhotonQA_LHC15g.root";
     }
     //**************************************************************************************************************
+    else if(select.CompareTo("LHC15o")==0){
+	        mode = 0;
+		suffix="pdf";
+		nSets = 2;
+		cutNr = 2;  // 20-50%
+		fEnergyFlag = "PbPb_5.02TeV";
+		DataSets[0]="LHC15o"; DataSets[1]="LHC15k1a1";
+		plotDataSets[0]="LHC15o 20-50%"; plotDataSets[1]="LHC15k1a1 20-50%";
+		labelData=plotDataSets[0];
+		pathDataSets[0]="/home/meike/analysis/data/GridOutput/GammaConv/PbPb/LHC15o/GammaConvV1_246_LHC15oLowIRp2_ESD_train244_10runs.root";
+		pathDataSets[1]="/home/meike/analysis/data/GridOutput/GammaConv/PbPb/LHC15k1a1/GammaConvV1_246_ESD_train297_10runs.root";
+		pathPhotonQA[0]="/home/meike/analysis/data/GridOutput/PhotonQA/PbPb/LHC15o/PhotonQA_LHC15o.root";
+		pathPhotonQA[1]="/home/meike/analysis/data/GridOutput/PhotonQA/PbPb/LHC15k1a1/PhotonQA_LHC15k1a1.root";
+    }
+    //**************************************************************************************************************
     else{
         cout << "No valid selection! Returning..." << endl;
         return;
