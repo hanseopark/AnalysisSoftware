@@ -5653,7 +5653,7 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
 	labelInvMassTriggerPHOS[i]->SetTextFont(43);
 	labelInvMassTriggerPHOS[i]->Draw();
 	labelInvMassRecoPHOS->Draw();
-	labelPtRangePi0PHOS = Form("#pi^{0}: %0.1f GeV/c < p_{T} < %0.1f GeV/c",PtRangeLowPi0PHOS[i],PtRangeUpPi0PHOS[i]);
+	labelPtRangePi0PHOS = Form("#pi^{0}: %0.1f GeV/#it{c} < #it{p}_{T} < %0.1f GeV/#it{c}",PtRangeLowPi0PHOS[i],PtRangeUpPi0PHOS[i]); 
 	labelInvMassPtRangePi0PHOS[i] = new TLatex(0.945,0.9,labelPtRangePi0PHOS); 
 	SetStyleTLatex(labelInvMassPtRangePi0PHOS[i], 0.85*textSizeLabelsPixel,4);
 	labelInvMassPtRangePi0PHOS[i]->SetTextAlign(31);
@@ -5711,7 +5711,7 @@ void CombineMesonMeasurements13TeV(     TString fileNamePCM         = "/home/mei
 	labelInvMassTriggerPHOS[5]->Draw();
 	labelInvMassRecoPHOS->Draw();
 
-	labelPtRangeEtaPHOS = Form("#pi^{0}: %0.1f GeV/c < p_{T} < %0.1f GeV/c",PtRangeLowEtaPHOS[i],PtRangeUpEtaPHOS[i]);
+	labelPtRangeEtaPHOS = Form("#eta: %0.1f GeV/#it{c} < #it{p}_{T} < %0.1f GeV/#it{c}",PtRangeLowEtaPHOS[i],PtRangeUpEtaPHOS[i]); 
 	labelInvMassPtRangeEtaPHOS[i] = new TLatex(0.945,0.9,labelPtRangeEtaPHOS); 
 	SetStyleTLatex(labelInvMassPtRangeEtaPHOS[i], 0.85*textSizeLabelsPixel,4);
 	labelInvMassPtRangeEtaPHOS[i]->SetTextAlign(31);
