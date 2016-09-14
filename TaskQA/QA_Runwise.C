@@ -614,7 +614,6 @@ void QA_Runwise(
     //**************************************************************************************************************
     else if(select.CompareTo("LHC15f")==0){
 	  mode=0;
-	  suffix="pdf";
 	  fEnergyFlag = "13TeV";
 	  nSets = 2;
 	  nData = 1;
@@ -630,7 +629,6 @@ void QA_Runwise(
     else if(select.CompareTo("LHC15h")==0){
 	  cutNr=0;
 	  mode=0;
-	  suffix="pdf";
 	  fEnergyFlag = "13TeV";
 	  nSets = 1;
 	  nData = 1;
@@ -646,7 +644,6 @@ void QA_Runwise(
     else if(select.CompareTo("LHC15i")==0){
 	  cutNr=0;
 	  mode=0;
-	  suffix="pdf";
 	  fEnergyFlag = "13TeV";
 	  nSets = 1;
 	  nData = 1;
@@ -662,7 +659,6 @@ void QA_Runwise(
     else if(select.CompareTo("LHC15g")==0){
 	  cutNr=0;
 	  mode=0;
-	  suffix="pdf";
 	  fEnergyFlag = "13TeV";
 	  nSets = 1;
 	  nData = 1;
@@ -699,7 +695,6 @@ void QA_Runwise(
     else if(select.CompareTo("LHC15o")==0){
       // PbPb 5.02TeV
       mode=0;
-      suffix="pdf";
       fEnergyFlag = "PbPb_5.02TeV";
       nSets = 2;
       nData = 1;

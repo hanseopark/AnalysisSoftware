@@ -767,7 +767,6 @@ void QA(    TString select          = "LHC11a",         // set selected
     //**************************************************************************************************************
     else if(select.CompareTo("LHC15f")==0){
 	        mode = 0;
-		suffix="pdf";
 		nSets = 2;
 		fEnergyFlag = "13TeV";
 		DataSets[0]="LHC15f_ESD"; DataSets[1]="LHC15g3a3_ESD";
@@ -782,7 +781,6 @@ void QA(    TString select          = "LHC11a",         // set selected
     //**************************************************************************************************************
     else if(select.CompareTo("LHC15h")==0){
 	        mode = 0;
-		suffix="pdf";
 		nSets = 1;
 		fEnergyFlag = "13TeV";
 		DataSets[0]="LHC15h";
@@ -793,7 +791,6 @@ void QA(    TString select          = "LHC11a",         // set selected
     //**************************************************************************************************************
     else if(select.CompareTo("LHC15i")==0){
 	        mode = 0;
-		suffix="pdf";
 		nSets = 1;
 		fEnergyFlag = "13TeV";
 		DataSets[0]="LHC15i";
@@ -804,7 +801,6 @@ void QA(    TString select          = "LHC11a",         // set selected
     //**************************************************************************************************************
     else if(select.CompareTo("LHC15g")==0){
 	        mode = 0;
-		suffix="pdf";
 		nSets = 1;
 		fEnergyFlag = "13TeV";
 		DataSets[0]="LHC15g";
@@ -815,7 +811,6 @@ void QA(    TString select          = "LHC11a",         // set selected
     //**************************************************************************************************************
     else if(select.CompareTo("LHC15o")==0){
 	        mode = 0;
-		suffix="pdf";
 		nSets = 2;
 		cutNr = 2;  // 20-50%
 		fEnergyFlag = "PbPb_5.02TeV";
