@@ -67,7 +67,7 @@ extern TMinuit*    gMinuit;
 // *** save results   
 
 //____________________________________________________________________________________________________________________________________________
-void CombineMesonMeasurementsPbPb5TeV(     TString fileNamePCM         = "/home/meike/analysis/results/photonconvResults/PbPb/LHC15oLowIRp2-LHC15k1a1-LHC15k1a2-LHC15k1a3/10010013_00200009247602008250404000_0652501500000000/PbPb_5.02TeV/Pi0_data_GammaConvV1WithoutCorrection_10010013_00200009247602008250404000_0652501500000000.root",
+void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/meike/analysis/results/photonconvResults/PbPb/LHC15oLowIRp2-LHC15k1a1-LHC15k1a2-LHC15k1a3/11210013_00200009247602008250404000_0652501500000000/PbPb_5.02TeV/Pi0_data_GammaConvV1WithoutCorrection_11210013_00200009247602008250404000_0652501500000000.root",
                                         TString fileNamePCMEMCAL    = "", 
                                         TString fileNameEMCAL       = "",                                          
                                         TString fileNamePHOS        = "",  
@@ -105,7 +105,43 @@ void CombineMesonMeasurementsPbPb5TeV(     TString fileNamePCM         = "/home/
 
     TString dateForOutput                       = ReturnDateStringForOutput();
     cout << "date for output: " << dateForOutput << endl;
-    TString collisionSystemPbPb5TeV                = "pp, #sqrt{#it{s}_{NN}} = 5.02 TeV";
+
+    TString centralityString;
+    Int_t exampleBinPi0PCM;
+    Int_t yMaxInvMassPi0PCM;
+    if(fileNamePCM.Contains("10110013")) {
+      centralityString =  "0-10%";
+      exampleBinPi0PCM = 3;
+      yMaxInvMassPi0PCM = 25000;
+    }
+    if(fileNamePCM.Contains("11210013")){
+      centralityString =  "10-20%";
+      exampleBinPi0PCM = 3;
+      yMaxInvMassPi0PCM = 15000;
+    }
+    if(fileNamePCM.Contains("12510013")){
+      centralityString =  "20-50%";
+      exampleBinPi0PCM = 3;
+      yMaxInvMassPi0PCM = 10000;
+    }
+    if(fileNamePCM.Contains("15910013")){
+      centralityString =  "50-90%";
+      exampleBinPi0PCM = 3;
+      yMaxInvMassPi0PCM = 1000;
+    }
+    if(fileNamePCM.Contains("10010013")){
+      centralityString =  "0-100%";
+      exampleBinPi0PCM = 1;
+      yMaxInvMassPi0PCM = 600000;
+    }
+    TString collisionSystemPbPb5TeV;
+    collisionSystemPbPb5TeV.Form("pp, #sqrt{#it{s}_{NN}} = 5.02 TeV, %s", centralityString.Data());
+
+    Double_t fBinsPi0HI5020GeVPt[14]  = { 0.0, 1.0, 1.4,
+					  1.6, 1.8, 2.0, 2.2,
+					  2.4, 2.6, 3.0, 3.5,
+					  4.0, 5.0, 7.0};
+
     TString outputDir                           = Form("%s/%s/CombineMesonMeasurements5TeV%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
     cout << "output directory: "<< outputDir.Data() << endl;
 
@@ -181,16 +217,6 @@ void CombineMesonMeasurementsPbPb5TeV(     TString fileNamePCM         = "/home/
     Size_t   sizeMarkerNLO                      = 1;
     Width_t  widthLineNLO                       = 2.;
 
-    Int_t    binExInvMass[11]                   = { 7,  0,  12, 0,  7,
-                                                    0,  0,  0,  0,  0,
-                                                    0 };
-    Double_t rangePtExMin[11]                   = { 1.6,    1.4,    2.6,    0.0,    1.6,
-                                                    0.0,    0.0,    0.0,    9.0,    0.0,
-                                                    20.0 };
-                                            
-    Double_t rangePtExMax[11]                   = { 1.8,    1.6,    3.0,    0.0,    1.8,
-                                                    0.0,    0.0,    0.0,    10.,    0.0, 
-                                                    22.0 };
     
     for (Int_t i = 0; i < 11; i++){
         colorDet[i]                             = GetDefaultColorDiffDetectors(nameMeasGlobal[i].Data(), kFALSE, kFALSE, kTRUE);
@@ -216,9 +242,10 @@ void CombineMesonMeasurementsPbPb5TeV(     TString fileNamePCM         = "/home/
       // *********
 
         TH1D* histoPCMPi0Mass                               = (TH1D*)filePCM->Get("histoMassMeson"); 
-	histoPCMPi0Mass->Scale(1000);
+	histoPCMPi0Mass->Scale(1000); // [MeV]
         TH1D* histoPCMPi0FWHMMeV                            = (TH1D*)filePCM->Get("histoFWHMMeson");
 	histoPCMPi0FWHMMeV->Scale(1000);
+	histoPCMPi0FWHMMeV->Scale(1/2.35);  // sigma [MeV]
 
         TH1D* histoPi0InvMassSigPlusBGPCM[3];
         TH1D* histoPi0InvMassSigPCM[3];
@@ -230,10 +257,10 @@ void CombineMesonMeasurementsPbPb5TeV(     TString fileNamePCM         = "/home/
         TF1* fitPi0InvMassBGPCM[3];
         if (plotInvMassBins){
             for (Int_t i = 0; i < 1; i++){
-                histoPi0InvMassSigPCM[i]               = (TH1D*)filePCM->Get("fHistoMappingSignalInvMass_in_Pt_Bin01");
-                histoPi0InvMassSigPlusBGPCM[i]         = (TH1D*)filePCM->Get("Mapping_GG_InvMass_in_Pt_Bin01");
-                histoPi0InvMassBGPCM[i]                = (TH1D*)filePCM->Get("Mapping_BckNorm_InvMass_in_Pt_Bin01");
-                fitPi0InvMassSigPCM[i]                 = (TF1*)filePCM->Get("Signal_InvMassFit_in_Pt_Bin01");
+	        histoPi0InvMassSigPCM[i]               = (TH1D*)filePCM->Get(Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d",exampleBinPi0PCM));
+                histoPi0InvMassSigPlusBGPCM[i]         = (TH1D*)filePCM->Get(Form("Mapping_GG_InvMass_in_Pt_Bin%02d",exampleBinPi0PCM));
+                histoPi0InvMassBGPCM[i]                = (TH1D*)filePCM->Get(Form("Mapping_BckNorm_InvMass_in_Pt_Bin%02d",exampleBinPi0PCM));
+                fitPi0InvMassSigPCM[i]                 = (TF1*)filePCM->Get(Form("Signal_InvMassFit_in_Pt_Bin%02d",exampleBinPi0PCM));
 
                 if (histoPi0InvMassSigPCM[i] && histoPi0InvMassSigPlusBGPCM[i] && histoPi0InvMassBGPCM[i] && fitPi0InvMassSigPCM[i]){
                     haveAllPi0InvMassPCM[i]            = kTRUE;
@@ -290,6 +317,10 @@ void CombineMesonMeasurementsPbPb5TeV(     TString fileNamePCM         = "/home/
     // **************************************** Mass and width for pi0  *****************************************************
     // **********************************************************************************************************************
     if(plotMassAndWidth){
+
+      Double_t pTMaxPi0PCM = 12.;
+      Double_t pTMinPi0PCM = 0.63;
+
       Double_t arrayBoundariesX1_4[2];
       Double_t arrayBoundariesY1_4[3];
       Double_t relativeMarginsX[3];
@@ -328,10 +359,10 @@ void CombineMesonMeasurementsPbPb5TeV(     TString fileNamePCM         = "/home/
       }
       cout << textsizeLabelsWidth << endl;
         
-      TH2F * histo2DAllPi0FWHM    = new TH2F("histo2DAllPi0FWHM","histo2DAllPi0FWHM", 20, 0.43, 20. ,1000., -30, 40);
+      TH2F * histo2DAllPi0FWHM    = new TH2F("histo2DAllPi0FWHM","histo2DAllPi0FWHM", 20, pTMinPi0PCM, pTMaxPi0PCM ,1000., -30, 40);
       SetStyleHistoTH2ForGraphs(histo2DAllPi0FWHM, "#it{p}_{T} (GeV/#it{c})", "Peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth, textsizeLabelsWidth,
 				0.85*textsizeLabelsWidth, textsizeLabelsWidth, 0.8,0.28/(textsizeFacWidth*margin), 512, 505);
-      histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.,17.5); 
+      histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-0.5.,7.5); 
       histo2DAllPi0FWHM->GetYaxis()->SetMoreLogLabels(kTRUE);
       histo2DAllPi0FWHM->GetYaxis()->SetNdivisions(505);
       histo2DAllPi0FWHM->GetYaxis()->SetNoExponent(kTRUE);
@@ -375,10 +406,10 @@ void CombineMesonMeasurementsPbPb5TeV(     TString fileNamePCM         = "/home/
 	textsizeFacMass                 = (Double_t)1./padMassPi0->YtoPixel(padMassPi0->GetY1());
       }
         
-      TH2F * histo2DAllPi0Mass            = new TH2F("histo2DAllPi0Mass","histo2DAllPi0Mass",20, 0.43, 20., 1000., 120., 175);
+      TH2F * histo2DAllPi0Mass            = new TH2F("histo2DAllPi0Mass","histo2DAllPi0Mass",20, pTMinPi0PCM, pTMaxPi0PCM , 1000., 120., 175);
       SetStyleHistoTH2ForGraphs(histo2DAllPi0Mass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass, textsizeLabelsMass, 0.85*textsizeLabelsMass, 
 				textsizeLabelsMass, 0.9, 0.28/(textsizeFacMass*margin), 512, 505);
-      histo2DAllPi0Mass->GetYaxis()->SetRangeUser(131.5,141.8); 
+      histo2DAllPi0Mass->GetYaxis()->SetRangeUser(133.,138.); 
       histo2DAllPi0Mass->GetXaxis()->SetMoreLogLabels(kTRUE);
       histo2DAllPi0Mass->GetYaxis()->SetNdivisions(505);
       histo2DAllPi0Mass->GetYaxis()->SetNoExponent(kTRUE);
@@ -390,7 +421,7 @@ void CombineMesonMeasurementsPbPb5TeV(     TString fileNamePCM         = "/home/
       histoPCMPi0Mass->Draw("p,same,e");
       //DrawGammaSetMarker(histoPCMPi0TrueMass, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
       //histoPCMPi0TrueMass->Draw("p,same,e");
-      DrawGammaLines(0.43, 50. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
+      DrawGammaLines(pTMinPi0PCM, pTMaxPi0PCM , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
 
       TLatex *labelLegendBMass            = new TLatex(0.13,0.22,"b)");
       SetStyleTLatex( labelLegendBMass, textSizeLabelsPixel,4);
@@ -431,7 +462,7 @@ void CombineMesonMeasurementsPbPb5TeV(     TString fileNamePCM         = "/home/
       //markerPCMPi0MassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass2[1]+ offsetMarkerYMass2);
 
       canvasMassWidthPi0->Update();
-      canvasMassWidthPi0->Print(Form("%s/Pi0_MassAndWidth.%s",outputDir.Data(),suffix.Data()));
+      canvasMassWidthPi0->Print(Form("%s/Pi0_MassAndWidth_%s.%s",outputDir.Data(), centralityString.Data(), suffix.Data()));
 
 
     }
@@ -492,10 +523,10 @@ void CombineMesonMeasurementsPbPb5TeV(     TString fileNamePCM         = "/home/
             if (haveAllPi0InvMassPCM[i]){
                 canvasInvMassSamplePlot->cd();
                 histo2DPi0InvMassDummy->GetXaxis()->SetRangeUser(InvMassMinPi0,InvMassMaxPi0);
-                histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBGSubPCM[i]->GetMinimum(),600000);
+                histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBGSubPCM[i]->GetMinimum(), yMaxInvMassPi0PCM);
                 histo2DPi0InvMassDummy->DrawCopy();
 
-                TLatex *labelInvMassPtRangePi0PCM = new TLatex(0.945,0.9,"#pi^{0}: 1.0 GeV/#it{c} < #it{p}_{T} < 1.4 GeV/#it{c}");
+		TLatex *labelInvMassPtRangePi0PCM = new TLatex(0.945,0.9,Form("#pi^{0}: %0.1f GeV/#it{c} < #it{p}_{T} < %0.1f GeV/#it{c}", fBinsPi0HI5020GeVPt[exampleBinPi0PCM], fBinsPi0HI5020GeVPt[exampleBinPi0PCM+1]));
 
                 DrawGammaSetMarker(histoPi0InvMassSigPlusBGPCM[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
                 histoPi0InvMassSigPlusBGPCM[i]->SetLineWidth(1);
@@ -507,6 +538,7 @@ void CombineMesonMeasurementsPbPb5TeV(     TString fileNamePCM         = "/home/
                 histoPi0InvMassSigRemBGSubPCM[i]->Draw("same");
                 fitPi0InvMassSigPCM[i]->SetNpx(1000);
                 fitPi0InvMassSigPCM[i]->SetRange(0,0.255);
+                fitPi0InvMassSigPCM[i]->SetLineWidth(2);
                 fitPi0InvMassSigPCM[i]->SetLineColor(fitColorInvMassSG);
                 fitPi0InvMassSigPCM[i]->Draw("same");
 
@@ -549,7 +581,7 @@ void CombineMesonMeasurementsPbPb5TeV(     TString fileNamePCM         = "/home/
                 legendInvMassPi0PCM->AddEntry(histoPi0InvMassSigRemBGSubPCM[i],"BG subtracted","p");
                 legendInvMassPi0PCM->AddEntry(fitPi0InvMassSigPCM[i], "Fit","l");
                 legendInvMassPi0PCM->Draw();
-                canvasInvMassSamplePlot->SaveAs(Form("%s/Pi0_InvMassBinPCM_%s.%s",outputDir.Data(), nameTrigger[i].Data(), suffix.Data()));
+                canvasInvMassSamplePlot->SaveAs(Form("%s/Pi0_InvMassBinPCM_%s_%s.%s",outputDir.Data(), nameTrigger[i].Data(), centralityString.Data(), suffix.Data()));
             } else {
                 cout << "missing partial input for Pi0 invariant mass bin for PCM for trigger: " << nameTrigger[i].Data() << endl;
             }
