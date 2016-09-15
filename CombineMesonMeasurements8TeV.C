@@ -2481,8 +2481,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     fitTCMInvXSectionEta->Draw("same");
 
     fitTCMDecomposedEtaL->SetLineColor(kAzure);
+    fitTCMDecomposedEtaL->SetLineStyle(2);
     fitTCMDecomposedEtaL->Draw("same");
-    fitTCMDecomposedEtaH->SetLineColor(kGreen);
+    fitTCMDecomposedEtaH->SetLineColor(kGreen+2);
+    fitTCMDecomposedEtaH->SetLineStyle(8);
     fitTCMDecomposedEtaH->Draw("same");
     
     TLatex *labelTCMEta1= new TLatex(0.48, 0.94, Form("TCM low:"));
@@ -2555,8 +2557,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     fitTCMInvXSectionPi0Plot->Draw("same");
 
     fitTCMDecomposedPi0L->SetLineColor(kAzure);
+    fitTCMDecomposedPi0L->SetLineStyle(2);
     fitTCMDecomposedPi0L->Draw("same");
-    fitTCMDecomposedPi0H->SetLineColor(kGreen);
+    fitTCMDecomposedPi0H->SetLineColor(kGreen+2);
+    fitTCMDecomposedPi0H->SetLineStyle(8);
     fitTCMDecomposedPi0H->Draw("same");
 
     TLatex *labelTCMPi01= new TLatex(0.48, 0.94, Form("TCM low:"));
