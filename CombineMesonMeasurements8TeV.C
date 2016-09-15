@@ -217,13 +217,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         histoPCMPi0InvXSectionStat->SetBinContent(1,0);
         histoPCMPi0InvXSectionStat->SetBinError(1,1);
         TGraphAsymmErrors* graphPCMPi0InvXSectionStat       = new TGraphAsymmErrors(histoPCMPi0InvXSectionStat);
-        graphPCMPi0InvXSectionStat->RemovePoint(graphPCMPi0InvXSectionStat->GetN()-1);
+        //graphPCMPi0InvXSectionStat->RemovePoint(graphPCMPi0InvXSectionStat->GetN()-1);
         graphPCMPi0InvXSectionStat->RemovePoint(0);
         cout << "Pi0 stat PCM" << endl;
         graphPCMPi0InvXSectionStat->Print();
         TGraphAsymmErrors* graphPCMPi0InvXSectionSysA       = (TGraphAsymmErrors*)directoryPCMPi0->Get("InvCrossSectionPi0SysA");
         TGraphAsymmErrors* graphPCMPi0InvXSectionSys        = (TGraphAsymmErrors*)directoryPCMPi0->Get("InvCrossSectionPi0Sys");
-        graphPCMPi0InvXSectionSys->RemovePoint(graphPCMPi0InvXSectionSys->GetN()-1);
+        //graphPCMPi0InvXSectionSys->RemovePoint(graphPCMPi0InvXSectionSys->GetN()-1);
         graphPCMPi0InvXSectionSys->RemovePoint(graphPCMPi0InvXSectionSys->GetN()-1);
         cout << "Pi0 sys PCM" << endl;
         graphPCMPi0InvXSectionSys->Print();
