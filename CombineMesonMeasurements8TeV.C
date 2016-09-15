@@ -3015,7 +3015,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     
     canvasRelTotErr->cd();
     TH2F * histo2DRelTotErrEtaToPi0;
-    histo2DRelTotErrEtaToPi0                 = new TH2F("histo2DRelTotErrEtaToPi0","histo2DRelTotErrEtaToPi0",11000,0.33,50.,1000,0,60.5);
+    histo2DRelTotErrEtaToPi0                 = new TH2F("histo2DRelTotErrEtaToPi0","histo2DRelTotErrEtaToPi0",11000,0.33,50.,1000,0,70.5);
+    histo2DRelTotErrEtaToPi0->GetYaxis()->SetRangeUser(0,60.5);
     SetStyleHistoTH2ForGraphs(histo2DRelTotErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelTotErrEtaToPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelTotErrEtaToPi0->GetXaxis()->SetLabelOffset(-0.01);    
@@ -3035,7 +3036,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         
     canvasRelTotErr->SaveAs(Form("%s/EtaToPi0_RelTotErr.%s",outputDir.Data(),suffix.Data()));
             
-    histo2DRelTotErrEtaToPi0->GetYaxis()->SetRangeUser(0,50.5);
+    histo2DRelTotErrEtaToPi0->GetYaxis()->SetRangeUser(0,65.5);
     histo2DRelTotErrEtaToPi0->GetYaxis()->SetTitle("Err (%)");
     histo2DRelTotErrEtaToPi0->Draw("copy");
         
@@ -3043,9 +3044,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphCombEtaToPi0RelTotA->Draw("p,same,z");
         DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0RelStatA, markerStyleComb, markerSizeComb, colorComb-6 , colorComb-6);
         graphCombEtaToPi0RelStatA->Draw("l,x0,same,e1");
-        DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0RelTotA, markerStyleComb, markerSizeComb, colorComb+2, colorComb+2);
-        graphCombEtaToPi0RelTotA->SetLineStyle(7);
-        graphCombEtaToPi0RelTotA->Draw("l,x0,same,e1");
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0RelSysA, markerStyleComb, markerSizeComb, colorComb+2, colorComb+2);
+        graphCombEtaToPi0RelSysA->SetLineStyle(7);
+        graphCombEtaToPi0RelSysA->Draw("l,x0,same,e1");
 
         legendRelTotErr3->Draw();
 
@@ -4675,6 +4676,32 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     canvasEtatoPi0combo->Update();
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Theory_Paper.%s",outputDir.Data(), suffix.Data()));
+
+    canvasEtatoPi0combo->SetRightMargin(0.02);
+    histo2DEtatoPi0combo->GetXaxis()->SetLabelOffset(0.);
+    histo2DEtatoPi0combo->GetXaxis()->SetRangeUser(0.,25.0);
+    histo2DEtatoPi0combo->Draw("copy");
+    legendXsectionPaperEtaToPi02->Draw();
+
+    labelEtaPi0Label3->Draw();
+    labelEtaPi0Label2->Draw();
+    labelEtaPi0Label->Draw();
+
+    // plotting data
+    graphCombEtaToPi0SysA->Draw("2,same");
+    graphCombEtaToPi0StatA->Draw("p,same");
+
+        // plotting NLO
+        graphNLOEtaToPi0MuHalf->Draw("same,c");
+        graphNLOEtaToPi0MuOne->Draw("same,c");
+        graphNLOEtaToPi0MuTwo->Draw("same,c");
+
+        // plotting labels
+        labelEnergyEtaToPi0->Draw();
+        labelALICEEtaToPi0->Draw();
+        labelPi0EtaToPi0->Draw();
+
+    histo2DEtatoPi0combo->Draw("axis,same");
 
     canvasEtatoPi0combo->SetLogx(kFALSE);
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Theory_Paper_LIN.%s",outputDir.Data(), suffix.Data()));

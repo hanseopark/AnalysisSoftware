@@ -2875,9 +2875,9 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphCombEtaToPi0RelTotA->Draw("p,same,z");
         DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0RelStatA, markerStyleComb, markerSizeComb, colorComb-6 , colorComb-6);
         graphCombEtaToPi0RelStatA->Draw("l,x0,same,e1");
-        DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0RelTotA, markerStyleComb, markerSizeComb, colorComb+2, colorComb+2);
-        graphCombEtaToPi0RelTotA->SetLineStyle(7);
-        graphCombEtaToPi0RelTotA->Draw("l,x0,same,e1");
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0RelSysA, markerStyleComb, markerSizeComb, colorComb+2, colorComb+2);
+        graphCombEtaToPi0RelSysA->SetLineStyle(7);
+        graphCombEtaToPi0RelSysA->Draw("l,x0,same,e1");
 
         legendRelTotErr3->Draw();
 
