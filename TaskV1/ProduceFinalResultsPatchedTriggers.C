@@ -3343,6 +3343,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TH1D*   histoEtaInvMassSig          [MaxNumberOfFiles];
     TH1D*   histoEtaInvMassBG           [MaxNumberOfFiles];
     TF1*    fitEtaInvMassSig            [MaxNumberOfFiles];
+
+    TH1D* histoCorrectedYieldPi0EtaBinBinShift[MaxNumberOfFiles];
+    TH1D* histoCorrectedYieldEtaBinShift[MaxNumberOfFiles];
     
     // create pointers for weighted graphs and supporting figutes
     TGraphAsymmErrors* graphCorrectedYieldWeightedAverageEtaStat    = NULL;
@@ -3526,23 +3529,26 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 } else {
                     TFile *fileFitsBinShift                     = new TFile(nameFileFitsShift);
                     TF1* fitBinShiftPi0                         = (TF1*)fileFitsBinShift->Get("TsallisFitPi0");
+                    if(!fitBinShiftPi0) fitBinShiftPi0          = (TF1*)fileFitsBinShift->Get("Pi08TeV/TsallisFitPi0");
                     TF1* fitBinShiftEta                         = (TF1*)fileFitsBinShift->Get("TsallisFitEta");
+                    if(!fitBinShiftEta) fitBinShiftEta          = (TF1*)fileFitsBinShift->Get("Eta8TeV/TsallisFitEta");
+                    cout << fitBinShiftPi0 << " - " << fitBinShiftEta << endl;
                     histoCorrectedYieldPi0EtaBin[i]             = (TH1D*)fileCorrectedPi0EtaBin[i]->Get(nameCorrectedYield.Data());
                     histoCorrectedYieldPi0EtaBin[i]->SetName(Form("CorrectedYieldPi0EtaBin_%s",cutNumber[i].Data()));
                     cout << "shifting pi0 in eta binning: " <<  cutNumber[i].Data() << endl;
-                    TH1D* histoCorrectedYieldPi0EtaBinBinShift  = (TH1D*)histoCorrectedYieldPi0EtaBin[i]->Clone(Form("CorrectedYieldPi0EtaBinBinShifted_%s",cutNumber[i].Data()));
-                    histoCorrectedYieldPi0EtaBinBinShift        = ApplyYshiftIndividualSpectra( histoCorrectedYieldPi0EtaBinBinShift, fitBinShiftPi0);
+                    histoCorrectedYieldPi0EtaBinBinShift[i]     = (TH1D*)histoCorrectedYieldPi0EtaBin[i]->Clone(Form("CorrectedYieldPi0EtaBinBinShifted_%s",cutNumber[i].Data()));
+                    histoCorrectedYieldPi0EtaBinBinShift[i]     = ApplyYshiftIndividualSpectra( histoCorrectedYieldPi0EtaBinBinShift[i], fitBinShiftPi0);
                     cout << "shifting eta: " <<  cutNumber[i].Data() << endl;
-                    TH1D* histoCorrectedYieldEtaBinShift        = (TH1D*)histoCorrectedYieldEta[i]->Clone(Form("CorrectedYieldEtaBinShifted_%s",cutNumber[i].Data()));
-                    histoCorrectedYieldEtaBinShift              = ApplyYshiftIndividualSpectra( histoCorrectedYieldEtaBinShift, fitBinShiftEta);
+                    histoCorrectedYieldEtaBinShift[i]           = (TH1D*)histoCorrectedYieldEta[i]->Clone(Form("CorrectedYieldEtaBinShifted_%s",cutNumber[i].Data()));
+                    histoCorrectedYieldEtaBinShift[i]           = ApplyYshiftIndividualSpectra( histoCorrectedYieldEtaBinShift[i], fitBinShiftEta);
 
                     if(optionEnergy.CompareTo("8TeV")==0 && mode==4){
-                      histoEtaToPi0[i]                            = (TH1D*)histoCorrectedYieldPi0EtaBinBinShift->Clone(Form("EtaToPi0_%s", cutNumber[i].Data()));
-                      for(Int_t iB=1; iB<=histoCorrectedYieldPi0EtaBinBinShift->GetNbinsX(); iB++){histoEtaToPi0[i]->SetBinContent(iB,histoCorrectedYieldEtaBinShift->GetBinContent(iB));}
-                      histoEtaToPi0[i]->Divide(histoEtaToPi0[i],histoCorrectedYieldPi0EtaBinBinShift,1.,1.,"");
+                      histoEtaToPi0[i]                            = (TH1D*)histoCorrectedYieldPi0EtaBinBinShift[i]->Clone(Form("EtaToPi0_%s", cutNumber[i].Data()));
+                      for(Int_t iB=1; iB<=histoCorrectedYieldPi0EtaBinBinShift[i]->GetNbinsX(); iB++){histoEtaToPi0[i]->SetBinContent(iB,histoCorrectedYieldEtaBinShift[i]->GetBinContent(iB));}
+                      histoEtaToPi0[i]->Divide(histoEtaToPi0[i],histoCorrectedYieldPi0EtaBinBinShift[i],1.,1.,"");
                     }else{
-                      histoEtaToPi0[i]                            = (TH1D*)histoCorrectedYieldEtaBinShift->Clone(Form("EtaToPi0%s_%s", addNameBinshift.Data(), cutNumber[i].Data()));
-                      histoEtaToPi0[i]->Divide(histoEtaToPi0[i],histoCorrectedYieldPi0EtaBinBinShift,1.,1.,"");
+                      histoEtaToPi0[i]                            = (TH1D*)histoCorrectedYieldEtaBinShift[i]->Clone(Form("EtaToPi0%s_%s", addNameBinshift.Data(), cutNumber[i].Data()));
+                      histoEtaToPi0[i]->Divide(histoEtaToPi0[i],histoCorrectedYieldPi0EtaBinBinShift[i],1.,1.,"");
                     }
                 }    
             }
@@ -3555,6 +3561,85 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 histoCorrectedYieldEta[i]->Scale(0.8613) ;
                 histoRawYieldEta[i]->Scale(0.8613) ;
             }
+        }
+
+        //***************************************************************************************************************
+        //************************************Plotting binshift corrections *********************************************
+        //***************************************************************************************************************
+
+        if(doBinShiftForEtaToPi0){
+          canvasEffi->cd();
+          canvasEffi->SetLeftMargin(0.1);
+          canvasEffi->SetLogy(0);
+          TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., maxPtGlobalEta);
+          SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (Y) / no shift",
+                                  0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
+          histoBinShift->GetYaxis()->SetRangeUser(0.8,1.05);
+          histoBinShift->DrawCopy();
+
+          TLegend* legendBinShift = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
+          legendBinShift->SetNColumns(2);
+          for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+              histoCorrectedYieldPi0EtaBinBinShift[i]->Divide(histoCorrectedYieldPi0EtaBinBinShift[i],histoCorrectedYieldPi0EtaBin[i],1.,1.,"B");
+              DrawGammaSetMarker(histoCorrectedYieldPi0EtaBinBinShift[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+              histoCorrectedYieldPi0EtaBinBinShift[i]->DrawCopy("hist p same");
+              legendBinShift->AddEntry(histoCorrectedYieldPi0EtaBinBinShift[i],triggerNameLabel[i].Data(),"p");
+          }
+          legendBinShift->Draw();
+
+          labelEnergyEffi->Draw();
+          TLatex *labelBinShiftPi0 = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
+          SetStyleTLatex( labelBinShiftPi0, 0.85*textSizeSpectra,4);
+          labelBinShiftPi0->Draw();
+          labelDetProcEffi->Draw();
+
+          canvasEffi->Update();
+          canvasEffi->SaveAs(Form("%s/Pi0_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+
+          histoBinShift->DrawCopy();
+
+          TLegend* legendBinShift2 = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
+          legendBinShift2->SetNColumns(2);
+          for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+              histoCorrectedYieldEtaBinShift[i]->Divide(histoCorrectedYieldEtaBinShift[i],histoCorrectedYieldEta[i],1.,1.,"B");
+              DrawGammaSetMarker(histoCorrectedYieldEtaBinShift[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+              histoCorrectedYieldEtaBinShift[i]->DrawCopy("hist p same");
+              legendBinShift2->AddEntry(histoCorrectedYieldEtaBinShift[i],triggerNameLabel[i].Data(),"p");
+          }
+          legendBinShift2->Draw();
+
+          labelEnergyEffi->Draw();
+          TLatex *labelBinShiftEta = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+          SetStyleTLatex( labelBinShiftEta, 0.85*textSizeSpectra,4);
+          labelBinShiftEta->Draw();
+          labelDetProcEffi->Draw();
+
+          canvasEffi->Update();
+          canvasEffi->SaveAs(Form("%s/Eta_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+
+          histoBinShift->GetYaxis()->SetRangeUser(0.95,1.05);
+          histoBinShift->DrawCopy();
+
+          TLegend* legendBinShift3 = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
+          legendBinShift3->SetNColumns(2);
+          for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+              histoCorrectedYieldEtaBinShift[i]->Divide(histoCorrectedYieldEtaBinShift[i],histoCorrectedYieldPi0EtaBinBinShift[i],1.,1.,"B");
+              DrawGammaSetMarker(histoCorrectedYieldEtaBinShift[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+              histoCorrectedYieldEtaBinShift[i]->DrawCopy("hist p same");
+              legendBinShift3->AddEntry(histoCorrectedYieldEtaBinShift[i],triggerNameLabel[i].Data(),"p");
+          }
+          legendBinShift3->Draw();
+
+          labelEnergyEffi->Draw();
+          TLatex *labelBinShiftEtaToPi0 = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta/#pi^{0}");
+          SetStyleTLatex( labelBinShiftEtaToPi0, 0.85*textSizeSpectra,4);
+          labelBinShiftEtaToPi0->Draw();
+          labelDetProcEffi->Draw();
+
+          canvasEffi->Update();
+          canvasEffi->SaveAs(Form("%s/EtaToPi0_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+          canvasEffi->SetLogy(1);
+          canvasEffi->SetLeftMargin(0.09);
         }
 
         //***************************************************************************************************************
