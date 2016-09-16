@@ -1,0 +1,20 @@
+// number of different triggers/systems to be combined:
+2
+
+// 1st trigger/system definition: NAME NBins MinPt MaxPt (pT region to be considered for correlation factor determination) PathToDetailedSystematics
+PCM 29 0.3 12.0 eps/8TeV/SystematicErrorAveragedSinglePCM_Pi0_8TeV_2016_08_19.dat
+
+// 2nd trigger/system definition: NAME NBins MinPt MaxPt (pT region to be considered for correlation factor determination) PathToDetailedSystematics
+PCMEMC 40 0.8 35.0 eps/8TeV/2016_09_08/FinalResultsTriggersPatched_PCMEMCAL/SystematicErrorAveragedSinglePCMEMC_Pi0_8TeV.dat
+
+// define correlations between triggers/systems:
+// either in % of respective error, or specifiy directly the size of uncorrelated error
+
+// example: ClusterMinEnergy, 100% of ClusterMinEnergy Error is uncorrelated in PCMEMC with respect to PCM
+PCMEMC PCM ClusterMinEnergy 100%
+
+// example: Material, 50% of Material Error is uncorrelated in PCM with respect to PCMEMC. For each pT bin, the material error is multiplied with 50% and considered as uncorrelated (in general, error may vary with pT so that absolute sizes of uncorrelated errors per pT bin vary
+PCM PCMEMC Material 50%
+
+// example: ClusterNonLinearity, 2% ClusterNonLinearity Error is uncorrelated in PCMEMC with respect to EMC. For each pT bin, the uncorrelated error is taken to be constant at 2%
+PCMEMC EMC ClusterNonLinearity 2.0
