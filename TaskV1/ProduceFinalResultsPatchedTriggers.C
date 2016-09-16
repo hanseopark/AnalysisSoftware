@@ -3514,7 +3514,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                      doBinShiftForEtaToPi0                  = kTRUE;   
                      addNameBinshift                        = "YShifted";
                 }
-                
+
                 if (! doBinShiftForEtaToPi0){
                     histoCorrectedYieldPi0EtaBin[i]             = (TH1D*)fileCorrectedPi0EtaBin[i]->Get(nameCorrectedYield.Data());
                     histoCorrectedYieldPi0EtaBin[i]->SetName(Form("CorrectedYieldPi0EtaBin_%s",cutNumber[i].Data()));
@@ -3623,7 +3623,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           TLegend* legendBinShift3 = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
           legendBinShift3->SetNColumns(2);
           for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-              histoCorrectedYieldEtaBinShift[i]->Divide(histoCorrectedYieldEtaBinShift[i],histoCorrectedYieldPi0EtaBinBinShift[i],1.,1.,"B");
+              if(optionEnergy.CompareTo("8TeV")==0 && mode==4){
+                TH1D* histoCorrectedYieldEtaBinShiftTEMP = (TH1D*)histoCorrectedYieldPi0EtaBinBinShift[i]->Clone(Form("Pi0EtaBinning_%i", i));
+                for(Int_t iB=1; iB<=histoCorrectedYieldPi0EtaBinBinShift[i]->GetNbinsX(); iB++){histoCorrectedYieldEtaBinShiftTEMP->SetBinContent(iB,histoCorrectedYieldEtaBinShift[i]->GetBinContent(iB));}
+                histoCorrectedYieldEtaBinShiftTEMP->Divide(histoCorrectedYieldEtaBinShiftTEMP,histoCorrectedYieldPi0EtaBinBinShift[i],1.,1.,"B");
+                histoCorrectedYieldEtaBinShift[i] = histoCorrectedYieldEtaBinShiftTEMP;
+              }else{
+                histoCorrectedYieldEtaBinShift[i]->Divide(histoCorrectedYieldEtaBinShift[i],histoCorrectedYieldPi0EtaBinBinShift[i],1.,1.,"B");
+              }
               DrawGammaSetMarker(histoCorrectedYieldEtaBinShift[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
               histoCorrectedYieldEtaBinShift[i]->DrawCopy("hist p same");
               legendBinShift3->AddEntry(histoCorrectedYieldEtaBinShift[i],triggerNameLabel[i].Data(),"p");
