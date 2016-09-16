@@ -3529,9 +3529,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 } else {
                     TFile *fileFitsBinShift                     = new TFile(nameFileFitsShift);
                     TF1* fitBinShiftPi0                         = (TF1*)fileFitsBinShift->Get("TsallisFitPi0");
-                    if(!fitBinShiftPi0) fitBinShiftPi0          = (TF1*)fileFitsBinShift->Get("Pi08TeV/TsallisFitPi0");
+                    if(!fitBinShiftPi0 || optionEnergy.CompareTo("8TeV")==0) fitBinShiftPi0 = (TF1*)fileFitsBinShift->Get("Pi08TeV/TsallisFitPi0");
                     TF1* fitBinShiftEta                         = (TF1*)fileFitsBinShift->Get("TsallisFitEta");
-                    if(!fitBinShiftEta) fitBinShiftEta          = (TF1*)fileFitsBinShift->Get("Eta8TeV/TsallisFitEta");
+                    if(!fitBinShiftEta || optionEnergy.CompareTo("8TeV")==0) fitBinShiftEta = (TF1*)fileFitsBinShift->Get("Eta8TeV/TsallisFitEta");
                     cout << fitBinShiftPi0 << " - " << fitBinShiftEta << endl;
                     histoCorrectedYieldPi0EtaBin[i]             = (TH1D*)fileCorrectedPi0EtaBin[i]->Get(nameCorrectedYield.Data());
                     histoCorrectedYieldPi0EtaBin[i]->SetName(Form("CorrectedYieldPi0EtaBin_%s",cutNumber[i].Data()));

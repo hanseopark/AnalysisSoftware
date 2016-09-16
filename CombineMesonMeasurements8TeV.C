@@ -1379,6 +1379,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TF1* fitTsallisPi0PtMult                 = FitObject("tmpt","TsallisMultWithPtPi08TeV","Pi0");
         fitTsallisPi0PtMult->SetParameters(fitInvXSectionPi0->GetParameter(0),fitInvXSectionPi0->GetParameter(1), fitInvXSectionPi0->GetParameter(2));
         
+        TGraphAsymmErrors* graphCombPi0InvXSectionTotANoShift = (TGraphAsymmErrors*) graphCombPi0InvXSectionTotA->Clone("Pi0_NoShift");
+
         graphCombPi0InvXSectionTotA              = ApplyXshift(graphCombPi0InvXSectionTotA, fitTsallisPi0PtMult);
         cout << "comb" << endl;
         graphCombPi0InvXSectionStatA->Print();
@@ -1388,16 +1390,16 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                                                                                     0, graphCombPi0InvXSectionStatA->GetN());
         graphCombPi0InvXSectionSysA              = ApplyXshiftIndividualSpectra (   graphCombPi0InvXSectionTotA, 
                                                                                     graphCombPi0InvXSectionSysA, 
-                                                                                    fitTsallisPi0PtMult, 
+                                                                                    fitTsallisPi0PtMult,
                                                                                     0, graphCombPi0InvXSectionSysA->GetN());
         cout << "PCM" << endl;        
         graphPCMPi0InvXSectionStat               = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA,
                                                                                     graphPCMPi0InvXSectionStat,
-                                                                                    fitTsallisPi0PtMult, 
+                                                                                    fitTsallisPi0PtMult,
                                                                                     offSetPi0Shifting[0], nComBinsPi0Shifting[0]);
         graphPCMPi0InvXSectionSys                = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA, 
                                                                                     graphPCMPi0InvXSectionSys, 
-                                                                                    fitTsallisPi0PtMult, 
+                                                                                    fitTsallisPi0PtMult,
                                                                                     offSetPi0Shifting[0], nComBinsPi0Shifting[0]);
         cout << "PHOS" << endl;        
         graphPHOSPi0InvXSectionStat              = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA, 
@@ -1420,11 +1422,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         cout << "PCM-EMC" << endl;        
         graphPCMEMCALPi0InvXSectionStat          = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA,
                                                                                     graphPCMEMCALPi0InvXSectionStat,
-                                                                                    fitTsallisPi0PtMult, 
+                                                                                    fitTsallisPi0PtMult,
                                                                                     offSetPi0Shifting[4], nComBinsPi0Shifting[4]);
         graphPCMEMCALPi0InvXSectionSys           = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA, 
                                                                                     graphPCMEMCALPi0InvXSectionSys, 
-                                                                                    fitTsallisPi0PtMult, 
+                                                                                    fitTsallisPi0PtMult,
                                                                                     offSetPi0Shifting[4], nComBinsPi0Shifting[4]);
         
         cout << "EMC merged" << endl;
@@ -1437,6 +1439,48 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                                                                                     fitTsallisPi0PtMult,
                                                                                     offSetPi0Shifting[9], nComBinsPi0Shifting[9]);
             
+        //***************************************************************************************************************
+        //************************************Plotting binshift corrections *********************************************
+        //***************************************************************************************************************
+
+        TCanvas* canvasShift = new TCanvas("canvasShift","",0,0,1000,900);// gives the page size
+        DrawGammaCanvasSettings( canvasShift, 0.10, 0.017, 0.015, 0.08);
+
+        Size_t textSizeSpectra          = 0.04;
+        TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., 35.);
+        SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (X) / no shift",
+                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
+        histoBinShift->GetYaxis()->SetRangeUser(0.95,1.05);
+        histoBinShift->DrawCopy();
+
+        Int_t numberPoints   = graphCombPi0InvXSectionTotANoShift->GetN();
+        Double_t *xPoint     = graphCombPi0InvXSectionTotANoShift->GetX();
+        Double_t* xvalueErrUp  = graphCombPi0InvXSectionTotANoShift->GetEXhigh();
+        Double_t* xvalueErrLow = graphCombPi0InvXSectionTotANoShift->GetEXlow();
+        Double_t *xPointShift= graphCombPi0InvXSectionTotA->GetX();
+        for (Int_t i=0; i<numberPoints; i++) {
+          graphCombPi0InvXSectionTotANoShift->SetPoint(i,xPoint[i],xPointShift[i]/xPoint[i]);
+          graphCombPi0InvXSectionTotANoShift->SetPointError(i,xvalueErrLow[i],xvalueErrUp[i],0,0);
+        }
+        DrawGammaSetMarkerTGraphAsym(graphCombPi0InvXSectionTotANoShift, markerStyleComb, markerSizeComb, colorComb , colorComb);
+        graphCombPi0InvXSectionTotANoShift->Draw("p same");
+
+        TLatex *labelRatioToFitBinShift   = new TLatex(0.72, 0.91, collisionSystem8TeV.Data());
+        SetStyleTLatex( labelRatioToFitBinShift, textSizeLabelsPixel,4);
+        labelRatioToFitBinShift->SetTextFont(43);
+        labelRatioToFitBinShift->Draw();
+        TLatex *labelRatioToFitALICEBinShift    = new TLatex(0.852, 0.86, "ALICE");
+        SetStyleTLatex( labelRatioToFitALICEBinShift, textSizeLabelsPixel,4);
+        labelRatioToFitALICEBinShift->SetTextFont(43);
+        labelRatioToFitALICEBinShift->Draw();
+        TLatex *labelRatioToFitPi0BinShift      = new TLatex(0.826, 0.807, "#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelRatioToFitPi0BinShift, textSizeLabelsPixel,4);
+        labelRatioToFitPi0BinShift->SetTextFont(43);
+        labelRatioToFitPi0BinShift->Draw();
+
+        canvasShift->Update();
+        canvasShift->SaveAs(Form("%s/BinShiftCorrection_Pi0.%s",outputDir.Data(),suffix.Data()));
+
         // *************************************************************************************************************
         // Plot control graphs
         // *************************************************************************************************************
@@ -2277,7 +2321,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         
     canvasRelTotErr->SaveAs(Form("%s/Eta_RelTotErrZoomed.%s",outputDir.Data(),suffix.Data()));
     
-    histo2DRelTotErrEta->GetYaxis()->SetRangeUser(0,60.5);
+    histo2DRelTotErrEta->GetYaxis()->SetRangeUser(0,65.5);
     histo2DRelTotErrEta->GetYaxis()->SetTitle("Err (%)");
     histo2DRelTotErrEta->Draw("copy");
         
@@ -2330,6 +2374,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TF1* fitTsallisEtaPtMult                 = FitObject("tmpt","TsallisMultWithPtEta8TeV","Eta");
         fitTsallisEtaPtMult->SetParameters(paramGraphEta[0],paramGraphEta[1], paramGraphEta[2]) ; // standard parameter optimize if necessary
 //         fitTsallisEtaPtMult->SetParameters(paramTCMEta[0],paramTCMEta[1], paramTCMEta[2], paramTCMEta[3], paramTCMEta[4]) ; // standard parameter optimize if necessary
+
+        TGraphAsymmErrors* graphCombEtaInvXSectionTotANoShift = (TGraphAsymmErrors*) graphCombEtaInvXSectionTotA->Clone("Eta_NoShift");
+
         graphCombEtaInvXSectionTotA              = ApplyXshift(graphCombEtaInvXSectionTotA, fitTsallisEtaPtMult);
         
         graphCombEtaInvXSectionStatA             = ApplyXshiftIndividualSpectra (   graphCombEtaInvXSectionTotA, 
@@ -2338,15 +2385,15 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                                                                                     0, graphCombEtaInvXSectionStatA->GetN(),"Eta");
         graphCombEtaInvXSectionSysA              = ApplyXshiftIndividualSpectra (   graphCombEtaInvXSectionTotA, 
                                                                                     graphCombEtaInvXSectionSysA, 
-                                                                                    fitTsallisEtaPtMult, 
+                                                                                    fitTsallisEtaPtMult,
                                                                                     0, graphCombEtaInvXSectionSysA->GetN(), "Eta");
         graphPCMEtaInvXSectionStat               = ApplyXshiftIndividualSpectra(    graphCombEtaInvXSectionTotA,
                                                                                     graphPCMEtaInvXSectionStat,
-                                                                                    fitTsallisEtaPtMult, 
+                                                                                    fitTsallisEtaPtMult,
                                                                                     offSetEtaShifting[0], nComBinsEtaShifting[0], "Eta");
         graphPCMEtaInvXSectionSys                = ApplyXshiftIndividualSpectra(    graphCombEtaInvXSectionTotA, 
                                                                                     graphPCMEtaInvXSectionSys, 
-                                                                                    fitTsallisEtaPtMult, 
+                                                                                    fitTsallisEtaPtMult,
                                                                                     offSetEtaShifting[0], nComBinsEtaShifting[0], "Eta");
         graphEMCALEtaInvXSectionStat             = ApplyXshiftIndividualSpectra(    graphCombEtaInvXSectionTotA, 
                                                                                     graphEMCALEtaInvXSectionStat, 
@@ -2358,12 +2405,54 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                                                                                     offSetEtaShifting[2], nComBinsEtaShifting[2], "Eta");
         graphPCMEMCALEtaInvXSectionStat          = ApplyXshiftIndividualSpectra(    graphCombEtaInvXSectionTotA,
                                                                                     graphPCMEMCALEtaInvXSectionStat,
-                                                                                    fitTsallisEtaPtMult, 
+                                                                                    fitTsallisEtaPtMult,
                                                                                     offSetEtaShifting[4], nComBinsEtaShifting[4], "Eta");
         graphPCMEMCALEtaInvXSectionSys           = ApplyXshiftIndividualSpectra(    graphCombEtaInvXSectionTotA, 
                                                                                     graphPCMEMCALEtaInvXSectionSys, 
-                                                                                    fitTsallisEtaPtMult, 
+                                                                                    fitTsallisEtaPtMult,
                                                                                     offSetEtaShifting[4], nComBinsEtaShifting[4], "Eta");
+
+        //***************************************************************************************************************
+        //************************************Plotting binshift corrections *********************************************
+        //***************************************************************************************************************
+
+        TCanvas* canvasShift = new TCanvas("canvasShift","",0,0,1000,900);// gives the page size
+        DrawGammaCanvasSettings( canvasShift, 0.10, 0.017, 0.015, 0.08);
+
+        Size_t textSizeSpectra          = 0.04;
+        TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., 35.);
+        SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (X) / no shift",
+                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
+        histoBinShift->GetYaxis()->SetRangeUser(0.95,1.05);
+        histoBinShift->DrawCopy();
+
+        Int_t numberPoints   = graphCombEtaInvXSectionTotANoShift->GetN();
+        Double_t *xPoint     = graphCombEtaInvXSectionTotANoShift->GetX();
+        Double_t* xvalueErrUp  = graphCombEtaInvXSectionTotANoShift->GetEXhigh();
+        Double_t* xvalueErrLow = graphCombEtaInvXSectionTotANoShift->GetEXlow();
+        Double_t *xPointShift= graphCombEtaInvXSectionTotA->GetX();
+        for (Int_t i=0; i<numberPoints; i++) {
+          graphCombEtaInvXSectionTotANoShift->SetPoint(i,xPoint[i],xPointShift[i]/xPoint[i]);
+          graphCombEtaInvXSectionTotANoShift->SetPointError(i,xvalueErrLow[i],xvalueErrUp[i],0,0);
+        }
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionTotANoShift, markerStyleComb, markerSizeComb, colorComb , colorComb);
+        graphCombEtaInvXSectionTotANoShift->Draw("p same");
+
+        TLatex *labelRatioToFitBinShift   = new TLatex(0.72, 0.91, collisionSystem8TeV.Data());
+        SetStyleTLatex( labelRatioToFitBinShift, textSizeLabelsPixel,4);
+        labelRatioToFitBinShift->SetTextFont(43);
+        labelRatioToFitBinShift->Draw();
+        TLatex *labelRatioToFitALICEBinShift    = new TLatex(0.852, 0.86, "ALICE");
+        SetStyleTLatex( labelRatioToFitALICEBinShift, textSizeLabelsPixel,4);
+        labelRatioToFitALICEBinShift->SetTextFont(43);
+        labelRatioToFitALICEBinShift->Draw();
+        TLatex *labelRatioToFitPi0BinShift      = new TLatex(0.826, 0.807, "#eta #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelRatioToFitPi0BinShift, textSizeLabelsPixel,4);
+        labelRatioToFitPi0BinShift->SetTextFont(43);
+        labelRatioToFitPi0BinShift->Draw();
+
+        canvasShift->Update();
+        canvasShift->SaveAs(Form("%s/BinShiftCorrection_Eta.%s",outputDir.Data(),suffix.Data()));
 
         // *************************************************************************************************************
         // Plot control graphs
