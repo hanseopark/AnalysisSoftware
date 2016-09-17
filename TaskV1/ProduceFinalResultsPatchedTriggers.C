@@ -52,9 +52,9 @@
 #include "../CommonHeaders/CombinationFunctions.h"
 
 extern TRandom*    gRandom;
-extern TBenchmark*    gBenchmark;
+extern TBenchmark* gBenchmark;
 extern TSystem*    gSystem;
-extern TMinuit*      gMinuit;
+extern TMinuit*    gMinuit;
 
 struct SysErrorConversion {
     Double_t value;
@@ -3346,6 +3346,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
     TH1D* histoCorrectedYieldPi0EtaBinBinShift[MaxNumberOfFiles];
     TH1D* histoCorrectedYieldEtaBinShift[MaxNumberOfFiles];
+    TF1* fitBinShiftPi0TCM                      = 0x0;
+    TF1* fitBinShiftEtaTCM                      = 0x0;
     
     // create pointers for weighted graphs and supporting figutes
     TGraphAsymmErrors* graphCorrectedYieldWeightedAverageEtaStat    = NULL;
@@ -3529,9 +3531,15 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 } else {
                     TFile *fileFitsBinShift                     = new TFile(nameFileFitsShift);
                     TF1* fitBinShiftPi0                         = (TF1*)fileFitsBinShift->Get("TsallisFitPi0");
-                    if(!fitBinShiftPi0 || optionEnergy.CompareTo("8TeV")==0) fitBinShiftPi0 = (TF1*)fileFitsBinShift->Get("Pi08TeV/TsallisFitPi0");
+                    if(!fitBinShiftPi0 || optionEnergy.CompareTo("8TeV")==0){
+                      fitBinShiftPi0 = (TF1*)fileFitsBinShift->Get("Pi08TeV/TsallisFitPi0");
+                      fitBinShiftPi0TCM = (TF1*)fileFitsBinShift->Get("Pi08TeV/TwoComponentModelFitPi0");
+                    }
                     TF1* fitBinShiftEta                         = (TF1*)fileFitsBinShift->Get("TsallisFitEta");
-                    if(!fitBinShiftEta || optionEnergy.CompareTo("8TeV")==0) fitBinShiftEta = (TF1*)fileFitsBinShift->Get("Eta8TeV/TsallisFitEta");
+                    if(!fitBinShiftEta || optionEnergy.CompareTo("8TeV")==0){
+                      fitBinShiftEta = (TF1*)fileFitsBinShift->Get("Eta8TeV/TsallisFitEta");
+                      fitBinShiftEtaTCM = (TF1*)fileFitsBinShift->Get("Eta8TeV/TwoComponentModelFitEta");
+                    }
                     cout << fitBinShiftPi0 << " - " << fitBinShiftEta << endl;
                     histoCorrectedYieldPi0EtaBin[i]             = (TH1D*)fileCorrectedPi0EtaBin[i]->Get(nameCorrectedYield.Data());
                     histoCorrectedYieldPi0EtaBin[i]->SetName(Form("CorrectedYieldPi0EtaBin_%s",cutNumber[i].Data()));
@@ -6056,6 +6064,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TH1D* histoInvXSectionWeightedAverageEtaStat                = 0;
     TGraphAsymmErrors* graphInvXSectionWeightedAverageEtaSys    = 0;
     TH1D* histoEtaToPi0WeightedAverageStat                      = 0;
+    TH1D* histoEtaToPi0ExtendedUsingFit                         = 0;
     graphCorrectedYieldWeightedAveragePi0Stat->Print();
     if (graphCorrectedYieldWeightedAveragePi0Stat){
         graphInvXSectionWeightedAveragePi0Stat                  = ScaleGraph(graphCorrectedYieldWeightedAveragePi0Stat,xSection*recalcBarn);
@@ -6108,6 +6117,22 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             for (Int_t i = 0; i < graphEtaToPi0WeightedAverageStat->GetN(); i++){
                 histoEtaToPi0WeightedAverageStat->SetBinContent(i+firstBinEtaToPi0, graphEtaToPi0WeightedAverageStat->GetY()[i]);
                 histoEtaToPi0WeightedAverageStat->SetBinError(i+firstBinEtaToPi0, graphEtaToPi0WeightedAverageStat->GetEYlow()[i]);
+            }
+
+            if(optionEnergy.CompareTo("8TeV") == 0){
+              histoEtaToPi0ExtendedUsingFit = new TH1D("EtaToPi0_extendedFit","EtaToPi0_extendedFit",maxNAllowedEta,binningEta);
+              Int_t i = 0;
+              for (; i < graphEtaToPi0WeightedAverageStat->GetN(); i++){
+              //for (; graphEtaToPi0WeightedAverageStat->GetX()[i] < 10.; i++){
+                histoEtaToPi0ExtendedUsingFit->SetBinContent(i+firstBinEtaToPi0, graphEtaToPi0WeightedAverageStat->GetY()[i]);
+                histoEtaToPi0ExtendedUsingFit->SetBinError(i+firstBinEtaToPi0, graphEtaToPi0WeightedAverageStat->GetEYlow()[i]);
+                cout << i << ", " << firstBinEtaToPi0 << ", " << graphEtaToPi0WeightedAverageStat->GetY()[i] << ", " << graphEtaToPi0WeightedAverageStat->GetEYlow()[i] << endl;
+              }
+              for (; i+firstBinEtaToPi0 <= maxNAllowedEta; i++){
+                histoEtaToPi0ExtendedUsingFit->SetBinContent(i+firstBinEtaToPi0, graphInvXSectionWeightedAverageEtaStat->GetY()[i]/fitBinShiftPi0TCM->Eval((binningEta[i+firstBinEtaToPi0]+binningEta[i+firstBinEtaToPi0-1])/2));
+                histoEtaToPi0ExtendedUsingFit->SetBinError(i+firstBinEtaToPi0, graphInvXSectionWeightedAverageEtaStat->GetEYlow()[i]/graphInvXSectionWeightedAverageEtaStat->GetY()[i]);
+                cout << i << ", " << firstBinEtaToPi0 << ", " << graphInvXSectionWeightedAverageEtaStat->GetY()[i] << ", " << fitBinShiftPi0TCM->Eval((binningEta[i+firstBinEtaToPi0]+binningEta[i+firstBinEtaToPi0-1])/2) << endl;
+              }
             }
         }    
         
@@ -6236,6 +6261,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             }
             if (doEtaToPi0){
                 if (histoEtaToPi0WeightedAverageStat)       histoEtaToPi0WeightedAverageStat->Write(Form("EtaToPi0%sStatError",addNameBinshift.Data()),TObject::kOverwrite);
+                if (histoEtaToPi0ExtendedUsingFit)          histoEtaToPi0ExtendedUsingFit->Write(Form("EtaToPi0_extendedWithFit%s",addNameBinshift.Data()),TObject::kOverwrite);
                 if (graphEtaToPi0WeightedAverageStat)       graphEtaToPi0WeightedAverageStat->Write(Form("graphEtaToPi0%sStatError",addNameBinshift.Data()),TObject::kOverwrite);
                 if (graphEtaToPi0WeightedAverageSys )       graphEtaToPi0WeightedAverageSys->Write(Form("EtaToPi0%sSystError",addNameBinshift.Data()),TObject::kOverwrite);
                 for (Int_t i=0; i< nrOfTrigToBeComb; i++){
