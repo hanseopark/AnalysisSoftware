@@ -1111,6 +1111,8 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         TF1* fitTsallisPi0PtMult                 = FitObject("tmpt","TsallisMultWithPtPi08TeV","Pi0");
         fitTsallisPi0PtMult->SetParameters(fitInvXSectionPi0->GetParameter(0),fitInvXSectionPi0->GetParameter(1), fitInvXSectionPi0->GetParameter(2));
 
+        TGraphAsymmErrors* graphCombPi0InvXSectionTotANoShift = (TGraphAsymmErrors*) graphCombPi0InvXSectionTotA->Clone("Pi0_NoShift");
+
         graphCombPi0InvXSectionTotA              = ApplyXshift(graphCombPi0InvXSectionTotA, fitTsallisPi0PtMult);
         cout << "comb" << endl;
         graphCombPi0InvXSectionStatA->Print();
@@ -1168,6 +1170,48 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
                                                                                     graphEMCALMergedPi0InvXSectionSys,
                                                                                     fitTsallisPi0PtMult,
                                                                                     offSetPi0Shifting[9], nComBinsPi0Shifting[9]);
+
+        //***************************************************************************************************************
+        //************************************Plotting binshift corrections *********************************************
+        //***************************************************************************************************************
+
+        TCanvas* canvasShift = new TCanvas("canvasShift","",0,0,1000,900);// gives the page size
+        DrawGammaCanvasSettings( canvasShift, 0.10, 0.017, 0.015, 0.08);
+
+        Size_t textSizeSpectra          = 0.04;
+        TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., 70.);
+        SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (X) / no shift",
+                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
+        histoBinShift->GetYaxis()->SetRangeUser(0.95,1.05);
+        histoBinShift->DrawCopy();
+
+        Int_t numberPoints   = graphCombPi0InvXSectionTotANoShift->GetN();
+        Double_t *xPoint     = graphCombPi0InvXSectionTotANoShift->GetX();
+        Double_t* xvalueErrUp  = graphCombPi0InvXSectionTotANoShift->GetEXhigh();
+        Double_t* xvalueErrLow = graphCombPi0InvXSectionTotANoShift->GetEXlow();
+        Double_t *xPointShift= graphCombPi0InvXSectionTotA->GetX();
+        for (Int_t i=0; i<numberPoints; i++) {
+          graphCombPi0InvXSectionTotANoShift->SetPoint(i,xPoint[i],xPointShift[i]/xPoint[i]);
+          graphCombPi0InvXSectionTotANoShift->SetPointError(i,xvalueErrLow[i],xvalueErrUp[i],0,0);
+        }
+        DrawGammaSetMarkerTGraphAsym(graphCombPi0InvXSectionTotANoShift, markerStyleComb, markerSizeComb, colorComb , colorComb);
+        graphCombPi0InvXSectionTotANoShift->Draw("p same");
+
+        TLatex *labelRatioToFitBinShift   = new TLatex(0.72, 0.91, collisionSystem8TeV.Data());
+        SetStyleTLatex( labelRatioToFitBinShift, textSizeLabelsPixel,4);
+        labelRatioToFitBinShift->SetTextFont(43);
+        labelRatioToFitBinShift->Draw();
+        TLatex *labelRatioToFitALICEBinShift    = new TLatex(0.852, 0.86, "ALICE");
+        SetStyleTLatex( labelRatioToFitALICEBinShift, textSizeLabelsPixel,4);
+        labelRatioToFitALICEBinShift->SetTextFont(43);
+        labelRatioToFitALICEBinShift->Draw();
+        TLatex *labelRatioToFitPi0BinShift      = new TLatex(0.826, 0.807, "#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelRatioToFitPi0BinShift, textSizeLabelsPixel,4);
+        labelRatioToFitPi0BinShift->SetTextFont(43);
+        labelRatioToFitPi0BinShift->Draw();
+
+        canvasShift->Update();
+        canvasShift->SaveAs(Form("%s/BinShiftCorrection_Pi0.%s",outputDir.Data(),suffix.Data()));
 
         // *************************************************************************************************************
         // Plot control graphs
