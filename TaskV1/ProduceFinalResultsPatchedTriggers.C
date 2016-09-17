@@ -3579,9 +3579,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           canvasEffi->cd();
           canvasEffi->SetLeftMargin(0.1);
           canvasEffi->SetLogy(0);
-          TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., maxPtGlobalEta);
+          TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., 100.);
           SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (Y) / no shift",
                                   0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
+          histoBinShift->GetXaxis()->SetRangeUser(0.,maxPtGlobalPi0);
           histoBinShift->GetYaxis()->SetRangeUser(0.8,1.05);
           histoBinShift->DrawCopy();
 
@@ -3604,6 +3605,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           canvasEffi->Update();
           canvasEffi->SaveAs(Form("%s/Pi0_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
 
+          histoBinShift->GetXaxis()->SetRangeUser(0.,maxPtGlobalEta);
           histoBinShift->DrawCopy();
 
           TLegend* legendBinShift2 = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
@@ -3625,6 +3627,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           canvasEffi->Update();
           canvasEffi->SaveAs(Form("%s/Eta_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
 
+          histoBinShift->GetXaxis()->SetRangeUser(0.,maxPtGlobalEta);
+          if(optionEnergy.CompareTo("8TeV")==0 && mode==4) histoBinShift->GetXaxis()->SetRangeUser(0.,20.);
           histoBinShift->GetYaxis()->SetRangeUser(0.95,1.05);
           histoBinShift->DrawCopy();
 
@@ -4888,7 +4892,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 graphCorrectedYieldWeightedAverageEtaSys->RemovePoint(0);
             }    
         }
-
         
         //***************************************************************************************************************
         //************************************Plotting Mass Eta reduced range  ******************************************
@@ -5003,7 +5006,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             canvasEffi->SaveAs(Form("%s/Eta_EfficiencyW0TriggEff_Weighted.%s",outputDir.Data(),suffix.Data()));
         }
         delete histo2DEffiEta;
-        delete canvasEffi;
         
         //***************************************************************************************************************
         //************************************* Acceptance weighted *****************************************************
@@ -5351,6 +5353,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             Bool_t sysAvailSingleEtaToPi0                   [MaxNumberOfFiles];
             Int_t numberBinsSysAvailSingleEtaToPi0          [MaxNumberOfFiles];
             
+            TGraphAsymmErrors* graphEtaToPi0BinShiftWeighted = NULL;
+            TGraphAsymmErrors* graphEtaToPi0BinShift        [MaxNumberOfFiles];
+
+
             // create graphs for shrunk individual triggers
             TGraphAsymmErrors* graphsEtaToPi0Shrunk         [MaxNumberOfFiles];
             TGraphAsymmErrors* graphsEtaToPi0SysShrunk      [MaxNumberOfFiles];
@@ -5385,6 +5391,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 graphSystEtaToPi0[j]        = NULL;
                 histoRelStatEtaToPi0[j]     = NULL;
                 graphRelSystEtaToPi0[j]     = NULL;
+                graphEtaToPi0BinShift[j]    = NULL;
             }    
             
             for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
@@ -5570,26 +5577,36 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     histoStatEtaToPi0[0]     = histoEtaToPi0Masked[i];
                     graphSystEtaToPi0[0]     = graphsEtaToPi0SysShrunk[i];
                     offSetsEtaToPi0Sys[0]    = histoStatEtaToPi0[0]->GetXaxis()->FindBin(graphSystEtaToPi0[0]->GetX()[0])-1;
+                    if (histoCorrectedYieldEtaBinShift[i])
+                        graphEtaToPi0BinShift[0]   = new TGraphAsymmErrors(histoCorrectedYieldEtaBinShift[i]);
                 } else if (triggerName[i].Contains("INT7") && graphsEtaToPi0Shrunk[i]){   
                     cout << "filling INT7 trigger" << endl;
                     histoStatEtaToPi0[1]     = histoEtaToPi0Masked[i];
                     graphSystEtaToPi0[1]     = graphsEtaToPi0SysShrunk[i];
                     offSetsEtaToPi0Sys[1]    = histoStatEtaToPi0[1]->GetXaxis()->FindBin(graphSystEtaToPi0[1]->GetX()[0])-1;
+                    if (histoCorrectedYieldEtaBinShift[i])
+                        graphEtaToPi0BinShift[1]   = new TGraphAsymmErrors(histoCorrectedYieldEtaBinShift[i]);
                 } else if (triggerName[i].Contains("EMC1") && graphsEtaToPi0Shrunk[i]){   
                     cout << "filling EMC1 trigger" << endl;
                     histoStatEtaToPi0[2]     = histoEtaToPi0Masked[i];
                     graphSystEtaToPi0[2]     = graphsEtaToPi0SysShrunk[i];
                     offSetsEtaToPi0Sys[2]    = histoStatEtaToPi0[2]->GetXaxis()->FindBin(graphSystEtaToPi0[2]->GetX()[0])-1;
+                    if (histoCorrectedYieldEtaBinShift[i])
+                        graphEtaToPi0BinShift[2]   = new TGraphAsymmErrors(histoCorrectedYieldEtaBinShift[i]);
                 } else if (triggerName[i].Contains("EMC7") && graphsEtaToPi0Shrunk[i]){   
                     cout << "filling EMC7 trigger" << endl;
                     histoStatEtaToPi0[3]     = histoEtaToPi0Masked[i];
                     graphSystEtaToPi0[3]     = graphsEtaToPi0SysShrunk[i];
                     offSetsEtaToPi0Sys[3]    = histoStatEtaToPi0[3]->GetXaxis()->FindBin(graphSystEtaToPi0[3]->GetX()[0])-1;
+                    if (histoCorrectedYieldEtaBinShift[i])
+                        graphEtaToPi0BinShift[3]   = new TGraphAsymmErrors(histoCorrectedYieldEtaBinShift[i]);
                 } else if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && graphsEtaToPi0Shrunk[i]){
                     cout << Form("filling %s trigger",strEG2_A.Data()) << endl;
                     histoStatEtaToPi0[4]     = histoEtaToPi0Masked[i];
                     graphSystEtaToPi0[4]     = graphsEtaToPi0SysShrunk[i];
                     offSetsEtaToPi0Sys[4]    = histoStatEtaToPi0[4]->GetXaxis()->FindBin(graphSystEtaToPi0[4]->GetX()[0])-1;
+                    if (histoCorrectedYieldEtaBinShift[i])
+                        graphEtaToPi0BinShift[4]   = new TGraphAsymmErrors(histoCorrectedYieldEtaBinShift[i]);
 
                     if(optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2)) offSetsEtaToPi0Sys[4]+=2;
                 } else if (triggerName[i].Contains("EG1") && graphsEtaToPi0Shrunk[i]){   
@@ -5597,6 +5614,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     histoStatEtaToPi0[5]     = histoEtaToPi0Masked[i];
                     graphSystEtaToPi0[5]     = graphsEtaToPi0SysShrunk[i];
                     offSetsEtaToPi0Sys[5]    = histoStatEtaToPi0[5]->GetXaxis()->FindBin(graphSystEtaToPi0[5]->GetX()[0])-1;
+                    if (histoCorrectedYieldEtaBinShift[i])
+                        graphEtaToPi0BinShift[5]   = new TGraphAsymmErrors(histoCorrectedYieldEtaBinShift[i]);
                 }
             }
             
@@ -5696,6 +5715,73 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     }   
                 }   
 
+
+                if(doBinShiftForEtaToPi0){
+                  cout << __LINE__ << endl;
+                  cout << "combine EtaToPi0BinShift" << endl;
+                  graphEtaToPi0BinShiftWeighted                     = CalculateWeightedQuantity(  graphEtaToPi0BinShift,
+                                                                                                  graphWeightsEtaToPi0,
+                                                                                                  binningEta,  maxNAllowedEta,
+                                                                                                  MaxNumberOfFiles
+                                                                                              );
+                  if (!graphEtaToPi0BinShiftWeighted){
+                      cout << "Aborted in CalculateWeightedQuantity" << endl;
+                      return;
+                  }
+                  while (graphEtaToPi0BinShiftWeighted->GetY()[0] == -10000) graphEtaToPi0BinShiftWeighted->RemovePoint(0);
+                }
+
+                //***************************************************************************************************************
+                //************************************Plotting binshift corrections *********************************************
+                //***************************************************************************************************************
+
+                if(doBinShiftForEtaToPi0){
+                  canvasEffi->cd();
+                  canvasEffi->SetLeftMargin(0.1);
+                  canvasEffi->SetLogy(0);
+
+                  TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., 100.);
+                  SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (Y) / no shift",
+                                          0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
+                  histoBinShift->GetXaxis()->SetRangeUser(0.,maxPtGlobalEta);
+                  if(optionEnergy.CompareTo("8TeV")==0 && mode==4) histoBinShift->GetXaxis()->SetRangeUser(0.,20.);
+                  histoBinShift->GetYaxis()->SetRangeUser(0.95,1.05);
+                  histoBinShift->DrawCopy();
+
+                  TLegend* legendBinShift3 = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
+                  legendBinShift3->SetNColumns(2);
+
+                  for (Int_t j = 0; j< graphEtaToPi0BinShiftWeighted->GetN(); j++){
+                    graphEtaToPi0BinShiftWeighted->GetEYlow()[j]=0;
+                    graphEtaToPi0BinShiftWeighted->GetEYhigh()[j]=0;
+                  }
+                  DrawGammaSetMarkerTGraphAsym(graphEtaToPi0BinShiftWeighted, 20, 1, kGray+2, kGray+2);
+                  graphEtaToPi0BinShiftWeighted->Draw("p same");
+        //          if(optionEnergy.CompareTo("8TeV")==0 && mode==4){
+        //            TH1D* histoCorrectedYieldEtaBinShiftTEMP = (TH1D*)histoCorrectedYieldPi0EtaBinBinShift[i]->Clone(Form("Pi0EtaBinning_%i", i));
+        //            for(Int_t iB=1; iB<=histoCorrectedYieldPi0EtaBinBinShift[i]->GetNbinsX(); iB++){histoCorrectedYieldEtaBinShiftTEMP->SetBinContent(iB,histoCorrectedYieldEtaBinShift[i]->GetBinContent(iB));}
+        //            histoCorrectedYieldEtaBinShiftTEMP->Divide(histoCorrectedYieldEtaBinShiftTEMP,histoCorrectedYieldPi0EtaBinBinShift[i],1.,1.,"B");
+        //            histoCorrectedYieldEtaBinShift[i] = histoCorrectedYieldEtaBinShiftTEMP;
+        //          }else{
+        //            histoCorrectedYieldEtaBinShift[i]->Divide(histoCorrectedYieldEtaBinShift[i],histoCorrectedYieldPi0EtaBinBinShift[i],1.,1.,"B");
+        //          }
+        //          DrawGammaSetMarker(histoCorrectedYieldEtaBinShift[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+        //          histoCorrectedYieldEtaBinShift[i]->DrawCopy("hist p same");
+        //          legendBinShift3->AddEntry(histoCorrectedYieldEtaBinShift[i],triggerNameLabel[i].Data(),"p");
+        //          legendBinShift3->Draw();
+
+                  labelEnergyEffi->Draw();
+                  TLatex *labelBinShiftEtaToPi0 = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta/#pi^{0}");
+                  SetStyleTLatex( labelBinShiftEtaToPi0, 0.85*textSizeSpectra,4);
+                  labelBinShiftEtaToPi0->Draw();
+                  labelDetProcEffi->Draw();
+
+                  canvasEffi->Update();
+                  canvasEffi->SaveAs(Form("%s/EtaToPi0_%s_CombinedBinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+                  canvasEffi->SetLogy(1);
+                  canvasEffi->SetLeftMargin(0.09);
+                }
+                delete canvasEffi;
                 //  **********************************************************************************************************************
                 //  **************************************** Combine+write detailed Systematics ******************************************
                 //  **********************************************************************************************************************
