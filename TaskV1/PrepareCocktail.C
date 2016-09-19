@@ -1123,9 +1123,12 @@ void CreateBRTableLatex() {
             tempBR.ReplaceAll("e", " \\times 10^{");
             tempBR                      = tempBR + "}";
             
-            if (counter==0)
-                texFile << "    $" << tempMother.Data() << "$ & $" << Form("%.2f", GetMass(motherParticles[particle].Data())*1e3) << "$ & ";
-            else
+            if (counter==0) {
+                if (cocktailInputParametrizations[particle])
+                    texFile << "    $" << Form("%s", tempMother.Data()) << "$ & $" << Form("%.2f", GetMass(motherParticles[particle].Data())*1e3) << "$ & ";
+                else
+                    texFile << "    $" << Form("%s (%.2f)", tempMother.Data(), mtScaleFactor[particle]) << "$ & $" << Form("%.2f", GetMass(motherParticles[particle].Data())*1e3) << "$ & ";
+            } else
                 texFile << "    &  & ";
             
             texFile << "$" << tempChannel.Data() << "$ & ";
