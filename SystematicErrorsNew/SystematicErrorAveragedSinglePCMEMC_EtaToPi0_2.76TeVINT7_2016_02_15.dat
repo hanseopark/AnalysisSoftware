@@ -1,0 +1,4 @@
+Pt bin	YieldExtraction	dEdxE	dEdxPi	TPCCluster	SinglePt	Chi2	Qt	Alpha	ConvPhi	ClusterMinEnergy	ClusterNCells	ClusterNonLinearity	ClusterTrackMatching	ClusterM02	CellTiming	ClusterMaterialTRD	Trigger	Efficiency	YieldExtraction	
+2.5	10	2.03578	2.72	1.2	4.37	5.13875	5.875	1.58	1	2.47324	2.12132	4.175	5.87132	2.5375	0	0	0	5.38516	0.97492	17.1874
+3.5	10	2.03578	2.948	1.2	4.498	5.23675	6.095	1.58	1	2.47324	2.12132	4.315	4.85066	2.6975	0	0	0	5.38516	2.2159	17.22
+5	10	2.03578	3.44	1.2	4.84	5.515	6.5	1.58	1	2.47324	2.12132	4.6	4.375	3.05	0	0	0	5.38516	1.33156	17.5499

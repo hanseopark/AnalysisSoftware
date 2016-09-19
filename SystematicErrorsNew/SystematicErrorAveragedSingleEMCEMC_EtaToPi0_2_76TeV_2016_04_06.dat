@@ -1,0 +1,5 @@
+Pt bin	YieldExtraction	OpeningAngle	ClusterMinEnergy	ClusterNCells	ClusterNonLinearity	ClusterTrackMatchingCalo	ClusterM02	ClusterMaterialTRD	ClusterEnergyScale	CellTiming	Trigger	Efficiency	YieldExtraction	
+2.5	12.5	0.5	2.99401	0.5	5.23656	6.15625	0.8375	0	3.81348	0	0	5.38516	0.901584	16.616
+3.5	12.5	1.77125	2.18665	0.5	4.48087	6.30625	0.8875	0	2.48078	0	0	5.38516	0.703437	16.1463
+5	12.5	5.325	2.04637	0.5	4.61024	6.625	1	0	1.56541	0	0	5.38516	1.12169	16.9675
+7	12.5	5.665	2.03736	0.5	5.12025	7.225	1.22	0	1.15662	0	0	5.38516	2.6952	17.6139
