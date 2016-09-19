@@ -52,44 +52,121 @@ TString collisionSystem;
 TString textPeriod;
 TString textDate;
 TString mesonLatex;
+TString detectionProcess;
 
+//**********************************************************************************
+//******************** Helper function for 2D histo plotting ***********************
+//**********************************************************************************
+void DrawAutoGammaHistoPaper2D( TH2* histo1,
+                    TString Title, TString XTitle, TString YTitle,
+                    Bool_t YRangeMax, Double_t YMaxFactor, Double_t YMinimum,
+                    Bool_t YRange, Double_t YMin ,Double_t YMax,
+                    Bool_t XRange, Double_t XMin, Double_t XMax, Double_t xOffset, Double_t yOffset) {
+    if (YRangeMax && !XRange){
+        YRange = kFALSE;
+        Double_t maxRangeR = histo1->GetMaximum();
+        Double_t minRangeR = histo1->GetMinimum();
+        if(YMinimum > minRangeR){minRangeR = YMinimum;}
+        histo1->GetYaxis()->SetRangeUser(minRangeR, maxRangeR*YMaxFactor);
+    }
+    if (YRangeMax && XRange){
+        YRange = kFALSE;
+        Double_t maxRangeR = histo1->GetMaximum();
+        Double_t minRangeR = histo1->GetMinimum();
+        if(YMinimum > minRangeR){minRangeR = YMinimum;}
+        histo1->GetYaxis()->SetRangeUser(minRangeR, maxRangeR*YMaxFactor);
+        histo1->GetXaxis()->SetRangeUser(XMin, XMax);
+    }
+    if (YRange && XRange){
+        histo1->GetYaxis()->SetRangeUser(YMin, YMax);
+        histo1->GetXaxis()->SetRangeUser(XMin, XMax);
+    }
+    if (!YRangeMax && !YRange && XRange){
+        histo1->GetXaxis()->SetRangeUser(XMin, XMax);
+    }
+
+    if (YRange && !XRange){
+        histo1->GetYaxis()->SetRangeUser(YMin, YMax);
+    }
+
+    histo1->SetTitle(Title.Data());
+
+    if(XTitle.CompareTo("") != 0){
+        histo1->SetXTitle(XTitle.Data());
+    }
+    if(YTitle.CompareTo("") != 0){
+        histo1->SetYTitle(YTitle.Data());
+    }
+
+    histo1->GetYaxis()->SetLabelFont(42);
+    histo1->GetXaxis()->SetLabelFont(42);
+    histo1->GetYaxis()->SetTitleFont(62);
+    histo1->GetXaxis()->SetTitleFont(62);
+    histo1->GetYaxis()->SetLabelSize(0.045);
+    histo1->GetYaxis()->SetTitleSize(0.05);
+    histo1->GetYaxis()->SetDecimals();
+    histo1->GetXaxis()->SetTitleOffset(xOffset);
+    histo1->GetYaxis()->SetTitleOffset(yOffset);
+    histo1->GetXaxis()->SetTitleSize(0.05);
+    histo1->GetXaxis()->SetLabelSize(0.045);
+}
+
+//**********************************************************************************
+//******************** Plotting 2D resolution matrix *******************************
+//**********************************************************************************
 void PlotStandard2D( TH2* histo2D, 
                      TString nameOutput,
                      TString title, 
                      TString xTitle, 
                      TString yTitle, 
+                     Bool_t kRangeYAutoMax,
+                     Double_t maxFacY,
+                     Double_t startYAuto,
                      Bool_t kRangeY, 
                      Double_t startY, 
                      Double_t endY, 
                      Bool_t kRangeX, 
                      Double_t startX, 
-                     Double_t endX, 
+                     Double_t endX,                
+                     Double_t startZ,
                      Int_t logX, 
                      Int_t logZ, 
                      Float_t* floatLogo, 
-                     Int_t canvasSizeX      = 500, 
-                     Int_t canvasSizeY      = 500
+                     Double_t offsetX,
+                     Double_t offsetY,
+                     TString additionalLabel  = "",
+                     Int_t canvasSizeX        = 500, 
+                     Int_t canvasSizeY        = 500
                    ){
-    
-    TCanvas * canvasStandard = new TCanvas("canvasStandard","",10,10,canvasSizeX,canvasSizeY);  // gives the page size		
+  
+    TCanvas *canvasStandard = new TCanvas("canvasStandard","canvasStandard",canvasSizeX,canvasSizeY);
+    DrawGammaCanvasSettings( canvasStandard, 0.115, 0.11, 0.02, 0.11); 
     canvasStandard->SetLogx(logX);
     canvasStandard->SetLogz(logZ);
-    canvasStandard->SetRightMargin(0.12);
-    canvasStandard->SetLeftMargin(0.13);
-    canvasStandard->SetBottomMargin(0.11);
-    canvasStandard->SetTopMargin(0.04);
     canvasStandard->cd();
-    DrawAutoGammaHisto2D(	histo2D,
-                    title.Data(), xTitle.Data(), yTitle.Data(),"",kRangeY, startY, endY, kRangeX, startX, endX);
+    
+    DrawAutoGammaHistoPaper2D(	histo2D,
+                                title.Data(), xTitle.Data(), yTitle.Data(),
+                                kRangeYAutoMax, maxFacY, startYAuto, 
+                                kRangeY, startY, endY, 
+                                kRangeX, startX, endX,
+                                offsetX, offsetY                               
+                             );
+    histo2D->GetZaxis()->SetRangeUser(startZ, histo2D->GetMaximum());
+
     histo2D->SetTitle(title.Data());
     histo2D->Draw("colz");
-    DrawAliceLogoPerformance(floatLogo[0],floatLogo[1],floatLogo[2],floatLogo[3],0.00, textDate,collisionSystem, textGenerator,textPeriod,canvasSizeX,canvasSizeY);	
+    
+    PutProcessLabelAndEnergyOnPlot(floatLogo[0], floatLogo[1], 28, collisionSystem.Data(), detectionProcess.Data(), additionalLabel.Data(), 63, 0.03);
+
     canvasStandard->Update();
     canvasStandard->SaveAs(nameOutput.Data());
     delete canvasStandard;
 }
 
-
+//**********************************************************************************
+//******************** Plotting resolution slices **********************************
+//**********************************************************************************
 void ProduceProjectionsPlotWithFits(  TH1D** histos, 
                                       TF1** fitData, 
                                       Double_t* floatArray, 
@@ -232,6 +309,24 @@ void ProduceProjectionsPlotWithFits(  TH1D** histos,
 }
 
 
+//**********************************************************************************
+//******************* return minimum for 2 D histo  ********************************
+//**********************************************************************************
+Double_t FindSmallestEntryIn2D(TH2* histo){
+    Double_t minimum = 1;
+    for (Int_t i = 1; i<histo->GetNbinsX(); i++){
+        for (Int_t j = 1; j<histo->GetNbinsY(); j++){
+            if (histo->GetBinContent(i,j) < minimum && histo->GetBinContent(i,j) > 0){
+                minimum = histo->GetBinContent(i,j);
+            }
+        }
+    }
+    return minimum;
+}
+
+//**********************************************************************************
+//********************** Main function for resolution ******************************
+//**********************************************************************************
 void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
                        const char *fileMonteCarloInput      = "", 
                        TString optionCutSelection           = "", 
@@ -253,7 +348,7 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
         mesonLatex ="#eta"; // 
     
     collisionSystem                 = ReturnFullCollisionsSystem(optEnergy);
-    TString detectionProcess        = ReturnFullTextReconstructionProcess(mode);
+    detectionProcess                = ReturnFullTextReconstructionProcess(mode);
     if (collisionSystem.CompareTo("") == 0){
         cout << "No correct collision system specification, has been given" << endl;
         return;     
@@ -295,8 +390,8 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
     //**********************************************************************************************************************
 
     //Array defintion for printing Logo 
-    Float_t floatLocationRightDown2D[4]=	{0.65,0.2,0.11, 0.02};
-    
+    Float_t floatLocationRightDown2D[4]=	{0.15,0.25,0.11, 0.02};
+
     //**********************************************************************************************************************
     //******************************** Defintion of arrays for rebinning ***************************************************
     //**********************************************************************************************************************
@@ -393,22 +488,22 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
     
     TH2F* Resolution_Pi0_MCPt_ResolPt_Merged        = NULL;
     TH2F* Resolution_Pi0_MCPt_ResolPt_PartMerged    = NULL;
-    TH2F* Resolution_Pi0_MCPt_ResolPt_Gamma         = NULL;
-    TH2F* Resolution_Pi0_MCPt_ResolPt_Electron      = NULL;
+    TH2F* Resolution_Pi0_MCPt_ResolPt_OneGamma         = NULL;
+    TH2F* Resolution_Pi0_MCPt_ResolPt_OneElectron      = NULL;
     if ( mode == 10 || mode == 11 ){
         Resolution_Pi0_MCPt_ResolPt_Merged          = (TH2F*)TrueConversionContainer->FindObject(Form("ESD_TruePrimary%sPureMerged_MCPt_ResolPt",mesonName.Data()) ); //
         Resolution_Pi0_MCPt_ResolPt_Merged->Sumw2();
         Resolution_Pi0_MCPt_ResolPt_PartMerged      = (TH2F*)TrueConversionContainer->FindObject(Form("ESD_TruePrimary%sMergedPartConv_MCPt_ResolPt",mesonName.Data()));
         Resolution_Pi0_MCPt_ResolPt_PartMerged->Sumw2();
-        Resolution_Pi0_MCPt_ResolPt_Gamma           = (TH2F*)TrueConversionContainer->FindObject(Form("ESD_TruePrimary%s1Gamma_MCPt_ResolPt",mesonName.Data()));
-        Resolution_Pi0_MCPt_ResolPt_Gamma->Sumw2();
-        Resolution_Pi0_MCPt_ResolPt_Electron        = (TH2F*)TrueConversionContainer->FindObject(Form("ESD_TruePrimary%s1Electron_MCPt_ResolPt",mesonName.Data()));
-        Resolution_Pi0_MCPt_ResolPt_Electron->Sumw2();
+        Resolution_Pi0_MCPt_ResolPt_OneGamma        = (TH2F*)TrueConversionContainer->FindObject(Form("ESD_TruePrimary%s1Gamma_MCPt_ResolPt",mesonName.Data()));
+        Resolution_Pi0_MCPt_ResolPt_OneGamma->Sumw2();
+        Resolution_Pi0_MCPt_ResolPt_OneElectron     = (TH2F*)TrueConversionContainer->FindObject(Form("ESD_TruePrimary%s1Electron_MCPt_ResolPt",mesonName.Data()));
+        Resolution_Pi0_MCPt_ResolPt_OneElectron->Sumw2();
         Resolution_Pi0_MCPt_ResolPt                 = (TH2F*)Resolution_Pi0_MCPt_ResolPt_Merged->Clone(Form("ESD_TruePrimary%s_MCPt_ResolPt",mesonName.Data()) ); //
         Resolution_Pi0_MCPt_ResolPt->Sumw2();
         Resolution_Pi0_MCPt_ResolPt->Add(Resolution_Pi0_MCPt_ResolPt_PartMerged);
-        Resolution_Pi0_MCPt_ResolPt->Add(Resolution_Pi0_MCPt_ResolPt_Gamma);
-        Resolution_Pi0_MCPt_ResolPt->Add(Resolution_Pi0_MCPt_ResolPt_Electron);
+        Resolution_Pi0_MCPt_ResolPt->Add(Resolution_Pi0_MCPt_ResolPt_OneGamma);
+        Resolution_Pi0_MCPt_ResolPt->Add(Resolution_Pi0_MCPt_ResolPt_OneElectron);
     }    
     cout << "hier noch " << Resolution_Pi0_MCPt_ResolPt<<endl;
      
@@ -552,6 +647,13 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
         ResolutionFittingRebined( Resolution_Pi0_MCPt_ResolPt_Merged, Resolution_Pi0Merged_PtRes, fitResolution_Pi0Merged_PtRes, maxNBinsPt, ptbinning, ptbinningReb, Resolution_Meson_MeanMerged,
                                   Resolution_Meson_SigmaMerged, "gaus", minFitRange, maxFitRange, precision, "Resolution_Pi0Merged_PtRes");
 
+         for (Int_t i = 0; i < maxNBinsPt; i++){
+            Resolution_Meson_MeanMerged->SetBinContent(i+1, Resolution_Pi0Merged_PtRes[i]->GetMean());
+            Resolution_Meson_MeanMerged->SetBinError(i+1, Resolution_Pi0Merged_PtRes[i]->GetMeanError());
+            Resolution_Meson_SigmaMerged->SetBinContent(i+1, Resolution_Pi0Merged_PtRes[i]->GetRMS());
+            Resolution_Meson_SigmaMerged->SetBinError(i+1, Resolution_Pi0Merged_PtRes[i]->GetRMSError());
+        }
+ 
         Resolution_Meson_SigmaMerged->Scale(100);
         Resolution_Meson_MeanMerged->Scale(100);
         
@@ -573,26 +675,63 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
         Resolution_Meson_SigmaPartMerged->Scale(100);
         Resolution_Meson_MeanPartMerged->Scale(100);
 
+        TH1D* Resolution_Pi0OneGamma_PtRes[maxNBinsPt];
+        TF1*  fitResolution_Pi0OneGamma_PtRes[maxNBinsPt];
+        TH1F *Resolution_Meson_MeanOneGamma = new TH1F("Resolution_Meson_MeanOneGamma", "mean meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ;    
+        TH1F *Resolution_Meson_SigmaOneGamma = new TH1F("Resolution_Meson_SigmaOneGamma", "sigma meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ; 
+        
+        ResolutionFittingRebined( Resolution_Pi0_MCPt_ResolPt_OneGamma, Resolution_Pi0OneGamma_PtRes, fitResolution_Pi0OneGamma_PtRes, maxNBinsPt, ptbinning, ptbinningReb, Resolution_Meson_MeanOneGamma,
+                                  Resolution_Meson_SigmaOneGamma, "gaus", minFitRange, maxFitRange, precision, "Resolution_Pi0OneGamma_PtRes");
+
+        for (Int_t i = 0; i < maxNBinsPt; i++){
+            Resolution_Meson_MeanOneGamma->SetBinContent(i+1, Resolution_Pi0OneGamma_PtRes[i]->GetMean());
+            Resolution_Meson_MeanOneGamma->SetBinError(i+1, Resolution_Pi0OneGamma_PtRes[i]->GetMeanError());
+            Resolution_Meson_SigmaOneGamma->SetBinContent(i+1, Resolution_Pi0OneGamma_PtRes[i]->GetRMS());
+            Resolution_Meson_SigmaOneGamma->SetBinError(i+1, Resolution_Pi0OneGamma_PtRes[i]->GetRMSError());
+        }
+ 
+        Resolution_Meson_SigmaOneGamma->Scale(100);
+        Resolution_Meson_MeanOneGamma->Scale(100);
+
+        TH1D* Resolution_Pi0OneElectron_PtRes[maxNBinsPt];
+        TF1*  fitResolution_Pi0OneElectron_PtRes[maxNBinsPt];
+        TH1F *Resolution_Meson_MeanOneElectron = new TH1F("Resolution_Meson_MeanOneElectron", "mean meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ;    
+        TH1F *Resolution_Meson_SigmaOneElectron = new TH1F("Resolution_Meson_SigmaOneElectron", "sigma meson Resolution dPt vs Pt", maxNBinsPt,  ptbinning) ; 
+        
+        ResolutionFittingRebined( Resolution_Pi0_MCPt_ResolPt_OneElectron, Resolution_Pi0OneElectron_PtRes, fitResolution_Pi0OneElectron_PtRes, maxNBinsPt, ptbinning, ptbinningReb, Resolution_Meson_MeanOneElectron,
+                                  Resolution_Meson_SigmaOneElectron, "gaus", minFitRange, maxFitRange, precision, "Resolution_Pi0OneElectron_PtRes");
+
+        for (Int_t i = 0; i < maxNBinsPt; i++){
+            Resolution_Meson_MeanOneElectron->SetBinContent(i+1, Resolution_Pi0OneElectron_PtRes[i]->GetMean());
+            Resolution_Meson_MeanOneElectron->SetBinError(i+1, Resolution_Pi0OneElectron_PtRes[i]->GetMeanError());
+            Resolution_Meson_SigmaOneElectron->SetBinContent(i+1, Resolution_Pi0OneElectron_PtRes[i]->GetRMS());
+            Resolution_Meson_SigmaOneElectron->SetBinError(i+1, Resolution_Pi0OneElectron_PtRes[i]->GetRMSError());
+        }
+ 
+        Resolution_Meson_SigmaOneElectron->Scale(100);
+        Resolution_Meson_MeanOneElectron->Scale(100);
+
         
         padEPGdPtVsPt1->cd();
         histo2DMean->GetYaxis()->SetRangeUser(-38.5,17.5);
         histo2DMean->GetXaxis()->SetRangeUser(0,50);        
         histo2DMean->DrawCopy(); 
 
-            StylingSliceHistos(Resolution_Meson_MeanMerged,0.8);
-            Resolution_Meson_MeanMerged->SetMarkerColor(kBlue+2);
-            Resolution_Meson_MeanMerged->SetLineColor(kBlue-8);
+            DrawGammaSetMarker(Resolution_Meson_MeanMerged, 21, 1, kAzure, kAzure);  
             Resolution_Meson_MeanMerged->Draw("same,pe");
-            StylingSliceHistos(Resolution_Meson_MeanPartMerged,0.8);
-            Resolution_Meson_MeanPartMerged->SetMarkerStyle(24);
-            Resolution_Meson_MeanPartMerged->SetMarkerColor(kGreen+2);
-            Resolution_Meson_MeanPartMerged->SetLineColor(kGreen-8);
+            DrawGammaSetMarker(Resolution_Meson_MeanPartMerged, 20, 1, kRed+2, kRed+2);  
             Resolution_Meson_MeanPartMerged->Draw("same,pe");
+            DrawGammaSetMarker(Resolution_Meson_MeanOneGamma, 25, 1, kGreen+2, kGreen+2);  
+            Resolution_Meson_MeanOneGamma->Draw("same,pe");
+            DrawGammaSetMarker(Resolution_Meson_MeanOneElectron, 24, 1, kViolet+2, kViolet+2);          
+            Resolution_Meson_MeanOneElectron->Draw("same,pe");
             
             PutProcessLabelAndEnergyOnPlot(0.17, 0.95, 0.04, collisionSystem.Data(), fTextMeasurement.Data(), detectionProcess.Data());
-            TLegend* legendMean2 = GetAndSetLegend2(0.17, 0.78-(0.04*2), 0.35, 0.78, 0.04, 1, "", 42, 0.15);
-            legendMean2->AddEntry(Resolution_Meson_MeanMerged,"#mu Gauss, pure merged");
+            TLegend* legendMean2 = GetAndSetLegend2(0.17, 0.78-(0.04*4), 0.35, 0.78, 0.04, 1, "", 42, 0.15);
+            legendMean2->AddEntry(Resolution_Meson_MeanMerged,"#mu Histo, pure merged");
             legendMean2->AddEntry(Resolution_Meson_MeanPartMerged,"#mu Histo, part. merged");
+            legendMean2->AddEntry(Resolution_Meson_MeanOneGamma,"#mu Histo, only 1 #gamma");
+            legendMean2->AddEntry(Resolution_Meson_MeanOneElectron,"#mu Histo, only 1 e^{#pm}");
             legendMean2->Draw();
             
 //         padEPGdPtVsPt1->Update();
@@ -601,19 +740,21 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
         histo2DSigma->GetXaxis()->SetRangeUser(0,50);                
         histo2DSigma->DrawCopy(); 
 
-            StylingSliceHistos(Resolution_Meson_SigmaMerged,0.8);
-            Resolution_Meson_SigmaMerged->SetMarkerColor(kBlue+2);
-            Resolution_Meson_SigmaMerged->SetLineColor(kBlue-8);
+            DrawGammaSetMarker(Resolution_Meson_SigmaMerged, 21, 1, kAzure, kAzure);  
             Resolution_Meson_SigmaMerged->Draw("same,pe");
-            StylingSliceHistos(Resolution_Meson_SigmaPartMerged,0.8);
-            Resolution_Meson_SigmaPartMerged->SetMarkerStyle(24);
-            Resolution_Meson_SigmaPartMerged->SetMarkerColor(kGreen+2);
-            Resolution_Meson_SigmaPartMerged->SetLineColor(kGreen-8);
+            DrawGammaSetMarker(Resolution_Meson_SigmaPartMerged, 20, 1, kRed+2, kRed+2);  
             Resolution_Meson_SigmaPartMerged->Draw("same,pe");
+            DrawGammaSetMarker(Resolution_Meson_SigmaOneGamma, 25, 1, kGreen+2, kGreen+2);  
+            Resolution_Meson_SigmaOneGamma->Draw("same,pe");
+            DrawGammaSetMarker(Resolution_Meson_SigmaOneElectron, 24, 1, kViolet+2, kViolet+2);          
+            Resolution_Meson_SigmaOneElectron->Draw("same,pe");
 
-            TLegend* legendSigma2 = GetAndSetLegend2(0.17, 0.96-(0.04*2), 0.35, 0.96, 0.04, 1, "", 42, 0.15);
-            legendSigma2->AddEntry(Resolution_Meson_SigmaMerged,"#sigma Gauss, pure merged");
+            TLegend* legendSigma2 = GetAndSetLegend2(0.17, 0.96-(0.04*4), 0.35, 0.96, 0.04, 1, "", 42, 0.15);
+            legendSigma2->AddEntry(Resolution_Meson_SigmaMerged,"RMS, pure merged");
             legendSigma2->AddEntry(Resolution_Meson_SigmaPartMerged,"RMS, part. merged");
+            legendSigma2->AddEntry(Resolution_Meson_SigmaOneGamma,"RMS, only 1 #gamma");
+            legendSigma2->AddEntry(Resolution_Meson_SigmaOneElectron,"RMS, only 1 e^{#pm}");
+            
             legendSigma2->Draw();
 
         padEPGdPtVsPt2->Update();
@@ -626,7 +767,10 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
 
         PlotStandard2D( Resolution_Pi0_MCPt_ResolPt_Merged, Form("%s/Resolution2D_PureMerged%s.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()), "", 
                         "#it{p}_{T,MC} (GeV/#it{c})", Form ("(#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data()), 
-                        kFALSE, -10, 10, kFALSE, 0, 50, 0, 1, floatLocationRightDown2D, 600, 600);
+                        0, 0, 0,
+                        0, -10, 10, 
+                        0, 0, 50, FindSmallestEntryIn2D(Resolution_Pi0_MCPt_ResolPt_Merged),
+                        0, 1, floatLocationRightDown2D, 1, 1., Form("%s fully merged", mesonLatex.Data()), 1000, 800);
         
         ProduceProjectionsPlotWithFits( Resolution_Pi0PartMerged_PtRes ,fitResolution_Pi0PartMerged_PtRes, ptbinning, maxNBinsPt ,nColumns, nRows, Form(" (p^{%s}_{T,rec} -p^{%s}_{T,MC})/p^{%s}_{T,MC}",
                                         mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data()), Form ("N_{%s}", mesonLatex.Data()), "MC" , Form("fit %s",mesonLatex.Data()),
@@ -634,8 +778,22 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
 
         PlotStandard2D( Resolution_Pi0_MCPt_ResolPt_PartMerged, Form("%s/Resolution2D_PartMerged%s.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()), "", 
                         "#it{p}_{T,MC} (GeV/#it{c})", Form ("(#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data()), 
-                        kFALSE, -10, 10, kFALSE, 0, 50, 0, 1, floatLocationRightDown2D, 600, 600);
-    
+                        0, 0, 0,
+                        0, -10, 10, 
+                        0, 0, 50, FindSmallestEntryIn2D(Resolution_Pi0_MCPt_ResolPt_Merged),
+                        0, 1, floatLocationRightDown2D, 1, 1., Form("%s merged part conv.", mesonLatex.Data()), 1000, 800);
+        PlotStandard2D( Resolution_Pi0_MCPt_ResolPt_OneGamma, Form("%s/Resolution2D_OneGamma%s.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()), "", 
+                        "#it{p}_{T,MC} (GeV/#it{c})", Form ("(#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data()), 
+                        0, 0, 0,
+                        0, -10, 10, 
+                        0, 0, 50, FindSmallestEntryIn2D(Resolution_Pi0_MCPt_ResolPt_OneGamma),
+                        0, 1, floatLocationRightDown2D, 1, 1., Form("%s only 1 #gamma", mesonLatex.Data()), 1000, 800);
+        PlotStandard2D( Resolution_Pi0_MCPt_ResolPt_OneElectron, Form("%s/Resolution2D_OneElectron%s.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()), "", 
+                        "#it{p}_{T,MC} (GeV/#it{c})", Form ("(#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data()), 
+                        0, 0, 0,
+                        0, -10, 10, 
+                        0, 0, 50, FindSmallestEntryIn2D(Resolution_Pi0_MCPt_ResolPt_OneElectron),
+                        0, 1, floatLocationRightDown2D, 1, 1., Form("%s only 1 e^{#pm}", mesonLatex.Data()), 1000, 800);    
     }
 
     ProduceProjectionsPlotWithFits( Resolution_Pi0_PtRes ,fitResolution_Pi0_PtRes, ptbinning, maxNBinsPt ,nColumns, nRows, Form(" (p^{%s}_{T,rec} -p^{%s}_{T,MC})/p^{%s}_{T,MC}", mesonLatex.Data(),
@@ -644,8 +802,11 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
 
     PlotStandard2D( Resolution_Pi0_MCPt_ResolPt, Form("%s/Resolution2D%s.%s",outputDirectory.Data(),mesonName.Data(),suffix.Data()), "", 
                      "#it{p}_{T,MC} (GeV/#it{c})", Form ("(#it{p}^{%s}_{T,rec} -#it{p}^{%s}_{T,MC})/#it{p}^{%s}_{T,MC}",mesonLatex.Data(), mesonLatex.Data(), mesonLatex.Data()), 
-                     kFALSE, -10, 10, kFALSE, 0, 50, 0, 1, floatLocationRightDown2D, 600, 600);
-    
+                    0, 0, 0,
+                    0, -10, 10, 
+                    0, 0, 50, FindSmallestEntryIn2D(Resolution_Pi0_MCPt_ResolPt),
+                    0, 1, floatLocationRightDown2D, 1, 1., "", 1000, 800);
+
     delete padEPGdPtVsPt1;  
     delete padEPGdPtVsPt2;  
     delete canvasEPGdPtVsPt;

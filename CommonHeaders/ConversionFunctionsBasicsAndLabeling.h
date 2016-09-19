@@ -3553,20 +3553,29 @@ TString ReturnFullTextReconstructionProcess( Int_t mode, Int_t separate = 0, TSt
             case 10:
                 if (clusterCutNumber.CompareTo("") != 0){
                     Int_t nlm = ReturnClusterNLM(clusterCutNumber);
-                    if (meson.CompareTo("") == 0) return Form("rec. w/ EMCal m. cl., %d lm", nlm );
-                    else return Form("%s rec. w/ EMCal m. cl., %d lm", meson.Data(), nlm);                    
+                    if (meson.CompareTo("") == 0) return Form("rec. w/ mEMCal, %d lm", nlm );
+                    else return Form("%s rec. mEMCal, %d lm", meson.Data(), nlm);                    
                 } else {    
-                    if (meson.CompareTo("") == 0) return "rec. w/ EMCal m. cl.";
-                    else return Form("%s rec. w/ EMCal m. cl.", meson.Data());
+                    if (meson.CompareTo("") == 0) return "rec. w/ mEMCal";
+                    else return Form("%s rec. mEMCal", meson.Data());
                 }    
             case 11:
                 if (clusterCutNumber.CompareTo("") != 0){
                     Int_t nlm = ReturnClusterNLM(clusterCutNumber);
-                    if (meson.CompareTo("") == 0) return Form("rec. w/ PHOS m. cl., %d lm", nlm );
-                    else return Form("%s rec. w/ PHOS m. cl., %d lm", meson.Data(), nlm);                    
+                    if (meson.CompareTo("") == 0) return Form("rec. w/ mPHOS, %d lm", nlm );
+                    else return Form("%s rec. w/ mPHOS, %d lm", meson.Data(), nlm);                    
                 } else {    
-                    if (meson.CompareTo("") == 0) return "rec. w/ PHOS m. cl.";
-                    else return Form("%s rec. w/ PHOS m. cl.", meson.Data());
+                    if (meson.CompareTo("") == 0) return "rec. w/ mPHOS";
+                    else return Form("%s rec. w/ mPHOS", meson.Data());
+                }    
+            case 12:
+                if (clusterCutNumber.CompareTo("") != 0){
+                    Int_t nlm = ReturnClusterNLM(clusterCutNumber);
+                    if (meson.CompareTo("") == 0) return Form("rec. w/ mDCal, %d lm", nlm );
+                    else return Form("%s rec. w/ mDCal, %d lm", meson.Data(), nlm);                    
+                } else {    
+                    if (meson.CompareTo("") == 0) return "rec. w/ mDCal";
+                    else return Form("%s rec. w/ mDCal", meson.Data());
                 }    
             default:
                 return "not known";

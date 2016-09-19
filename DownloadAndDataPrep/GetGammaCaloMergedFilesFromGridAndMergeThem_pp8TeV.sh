@@ -160,15 +160,28 @@ fi
 # LHC16c2MC="2404";
 # LHC16c2MC="2405";
 
-TRAINDIR=Legotrain-mCalo-vAN20160812-V2ClusNewSecTreatWithSys
-LHC12aData="1770"; 
-LHC12bData="1771"; 
-LHC12cData="1772"; 
-LHC12dData="1773"; 
-LHC12fData="1774"; 
-LHC12hData="1775"; 
-LHC12iData="1776"; 
-LHC16c2MC="2402";
+# TRAINDIR=Legotrain-mCalo-vAN20160812-V2ClusNewSecTreatWithSys
+# LHC12aData="1770"; 
+# LHC12bData="1771"; 
+# LHC12cData="1772"; 
+# LHC12dData="1773"; 
+# LHC12fData="1774"; 
+# LHC12hData="1775"; 
+# LHC12iData="1776"; 
+# LHC16c2MC="2402";
+
+TRAINDIR=Legotrain-mCalo-vAN20160831-V2ClusSys
+LHC12aData="1829"; 
+LHC12bData="1830"; 
+LHC12cData="1831"; 
+LHC12dData="1832"; 
+LHC12fData="1833"; 
+LHC12hData=""; 
+LHC12iData="1835"; 
+# LHC16c2MC="2502";
+# LHC16c2MC="2503";
+# LHC16c2MC="2504";
+LHC16c2MC="2505";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -496,7 +509,7 @@ fi
 
 if [ $MERGEON == 1 ]; then
     rm $OUTPUTDIR/GammaCaloMerged_data_*.root
-    ls $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12h-pass2-INT7Runlist_*.root > configsForMerging.txt
+    ls $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12i-pass2-INT7Runlist_*.root > configsForMerging.txt
     configsForMerging=`cat configsForMerging.txt`
     for configForMerging in $configsForMerging; do
         echo $configForMerging
@@ -513,7 +526,7 @@ if [ $MERGEON == 1 ]; then
         done;
         hadd -f $OUTPUTDIR/GammaCaloMerged_data_LHC12$OUTPUTNAME-pass2-INT7Runlist_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12*INT7Runlist_$number.root
     done;
-    ls $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12h-pass2-EMC7Runlist_*.root > configsForMerging.txt
+    ls $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12i-pass2-EMC7Runlist_*.root > configsForMerging.txt
     configsForMerging=`cat configsForMerging.txt`
     for configForMerging in $configsForMerging; do
         echo $configForMerging
@@ -530,7 +543,7 @@ if [ $MERGEON == 1 ]; then
         done;
         hadd -f $OUTPUTDIR/GammaCaloMerged_data_LHC12$OUTPUTNAME-pass2-EMC7Runlist_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12*EMC7Runlist_$number.root
     done;
-    ls $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12h-pass2-EGARunlist_*.root > configsForMerging.txt
+    ls $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12i-pass2-EGARunlist_*.root > configsForMerging.txt
     configsForMerging=`cat configsForMerging.txt`
     for configForMerging in $configsForMerging; do
         echo $configForMerging
