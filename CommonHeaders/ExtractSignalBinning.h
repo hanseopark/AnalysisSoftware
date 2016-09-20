@@ -1411,7 +1411,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
     //*************************************************************************************************
 
     fBinsClusterPt          = new Double_t[100];
-    if( energy.CompareTo("2.76TeV") == 0){
+    if( energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("PbPb_2.76TeV") == 0 || energy.CompareTo("PbPb_5TeV") == 0){
       fNBinsClusterPt       = fNBinsCluster2760GeVPt;
       for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
         fBinsClusterPt[iPt] = fBinsCluster2760GeVPt[iPt];
