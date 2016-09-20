@@ -2450,7 +2450,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             delete[] errors;
           }
         }
-        SysErrDatAverSingle.close();
 
         for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
           for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
@@ -2519,6 +2518,13 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TGraphAsymmErrors* graphRelErrorPi0Stat       = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAveragePi0Stat, "relativeStatErrorPi0");
         TGraphAsymmErrors* graphRelErrorPi0Sys        = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAveragePi0Sys, "relativeSysErrorPi0");
 
+        SysErrDatAverSingle << "\n\n pt \t Stat err \t sys err \t tot err " << endl;
+        for (Int_t i = 0; i < graphRelErrorPi0Tot->GetN(); i++){
+            if (graphRelErrorPi0Stat->GetY()[i] > 0) SysErrDatAverSingle << graphRelErrorPi0Stat->GetX()[i] << "\t" << graphRelErrorPi0Stat->GetY()[i] <<"\t" << graphRelErrorPi0Sys->GetY()[i] <<  "\t" << graphRelErrorPi0Tot->GetY()[i] << endl; 
+        }    
+        SysErrDatAverSingle<< endl;
+        SysErrDatAverSingle.close();
+        
         // plot sys relative errors for individual triggers   
         TCanvas* canvasRelSysErr            = new TCanvas("canvasRelSysErr","",200,10,1350,900);  // gives the page size
         DrawGammaCanvasSettings( canvasRelSysErr, 0.08, 0.02, 0.035, 0.09);
@@ -3603,7 +3609,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           labelDetProcEffi->Draw();
 
           canvasEffi->Update();
-          canvasEffi->SaveAs(Form("%s/Pi0_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+          canvasEffi->SaveAs(Form("%s/Pi0EtaBinning_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
 
           histoBinShift->GetXaxis()->SetRangeUser(0.,maxPtGlobalEta);
           histoBinShift->DrawCopy();
@@ -4631,7 +4637,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 delete[] errors;
               }
             }
-            SysErrDatAverSingle.close();
 
             for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
               for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
@@ -4692,6 +4697,13 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             TGraphAsymmErrors* graphRelErrorEtaTot        = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAverageEtaTot, "relativeTotalErrorEta");
             TGraphAsymmErrors* graphRelErrorEtaStat       = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAverageEtaStat, "relativeStatErrorEta");
             TGraphAsymmErrors* graphRelErrorEtaSys        = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAverageEtaSys, "relativeSysErrorEta");
+
+            SysErrDatAverSingle << "\n\n pt \t Stat err \t sys err \t tot err " << endl;
+            for (Int_t i = 0; i < graphRelErrorEtaTot->GetN(); i++){
+                if (graphRelErrorEtaStat->GetY()[i] > 0) SysErrDatAverSingle << graphRelErrorEtaStat->GetX()[i] << "\t" << graphRelErrorEtaStat->GetY()[i] <<"\t" << graphRelErrorEtaSys->GetY()[i] <<  "\t" << graphRelErrorEtaTot->GetY()[i] << endl; 
+            }    
+            SysErrDatAverSingle<< endl;
+            SysErrDatAverSingle.close();
 
             // plot sys relative errors for individual triggers   
             TCanvas* canvasRelSysErr            = new TCanvas("canvasRelSysErr","",200,10,1350,900);  // gives the page size
@@ -5786,7 +5798,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 //  **************************************** Combine+write detailed Systematics ******************************************
                 //  **********************************************************************************************************************
 
-                const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSingle%s_Pi0EtaBinning_%s.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
+                const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSingle%s_EtaToPi0_%s.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
                 fstream SysErrDatAverSingle;
                 SysErrDatAverSingle.precision(4);
                 cout << SysErrDatnameMeanSingleErr << endl;
@@ -5821,7 +5833,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     delete[] errors;
                   }
                 }
-                SysErrDatAverSingle.close();
 
                 for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
                   for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
@@ -5883,6 +5894,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 TGraphAsymmErrors* graphRelErrorEtaToPi0Stat       = CalculateRelErrUpAsymmGraph( graphEtaToPi0WeightedAverageStat, "relativeStatErrorEtaToPi0");
                 TGraphAsymmErrors* graphRelErrorEtaToPi0Sys        = CalculateRelErrUpAsymmGraph( graphEtaToPi0WeightedAverageSys, "relativeSysErrorEtaToPi0");
 
+                SysErrDatAverSingle << "\n\n pt \t Stat err \t sys err \t tot err " << endl;
+                for (Int_t i = 0; i < graphRelErrorEtaToPi0Tot->GetN(); i++){
+                    if (graphRelErrorEtaToPi0Stat->GetY()[i] > 0) SysErrDatAverSingle << graphRelErrorEtaToPi0Stat->GetX()[i] << "\t" << graphRelErrorEtaToPi0Stat->GetY()[i] <<"\t" << graphRelErrorEtaToPi0Sys->GetY()[i] <<  "\t" << graphRelErrorEtaToPi0Tot->GetY()[i] << endl; 
+                }    
+                SysErrDatAverSingle<< endl;
+                SysErrDatAverSingle.close();
+
+                
                 // plot sys relative errors for individual triggers   
                 TCanvas* canvasRelSysErr            = new TCanvas("canvasRelSysErr","",200,10,1350,900);  // gives the page size
                 DrawGammaCanvasSettings( canvasRelSysErr, 0.08, 0.02, 0.035, 0.09);
