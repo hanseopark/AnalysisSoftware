@@ -486,7 +486,7 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
     
     TLegend* legendMothersRatio                                 = GetAndSetLegend2(0.13, 0.95-(0.04*nRows), 0.95, 0.95, 40, 5);
     dummyHist                                                   = new TH1D("dummyHist", "", 1000, 5e-2, ptGenMax);
-    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "ratio X / #pi^{0}", 1e-3, 10, 1.0, 1.2);
+    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "X / #pi^{0}", 1e-3, 10, 1.0, 1.2);
     dummyHist->Draw();
 
     TH1F* tempRatio                                             = NULL;
@@ -594,13 +594,13 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
 
     //***************************** Plot cocktail gammas to pi0 ratio ***********************************************
     TCanvas *canvasGammasRatio                                  = new TCanvas("canvasGammasRatio","",1100,1200);
-    DrawGammaCanvasSettings(canvasGammasRatio, 0.1, 0.02, 0.02, 0.09);
+    DrawGammaCanvasSettings(canvasGammasRatio, 0.12, 0.02, 0.02, 0.09);
     canvasGammasRatio->SetLogy();
         
     TLegend* legendGammasRatio                                  = GetAndSetLegend2(0.2, 0.95-(0.05*nRows), 0.95, 0.95, 40, 6);
     legendGammasRatio->SetHeader("#gamma from");
     dummyHist                                                   = new TH1D("dummyHist", "", 1000, 5e-2, ptGenMax);
-    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "ratio #gamma / #pi^{0} from different sources", 1e-6, 5e2, 1.0, 1.2);
+    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#gamma_{decay} / #pi^{0}", 1e-6, 5e2, 1.0, 1.3);
     dummyHist->Draw();
 
     TH1F* tempRatioGammas                                       = (TH1F*)histoGammaSumPtOrBin->Clone("tempRatioGammas");
@@ -632,13 +632,13 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
 
     //***************************** Plot cocktail gammas to all gammas ratio ****************************************
     TCanvas *canvasGammasRatio2                                 = new TCanvas("canvasGammasRatio2","",1100,1200);
-    DrawGammaCanvasSettings(canvasGammasRatio2, 0.1, 0.02, 0.02, 0.09);
+    DrawGammaCanvasSettings(canvasGammasRatio2, 0.12, 0.02, 0.02, 0.09);
     canvasGammasRatio2->SetLogy();
         
     TLegend* legendGammasRatio2                                 = GetAndSetLegend2(0.2, 0.95-(0.05*nRows), 0.95, 0.95, 40, 6);
     legendGammasRatio2->SetHeader("#gamma from");
     dummyHist                                                   = new TH1D("dummyHist", "", 1000, 5e-2, ptGenMax);
-    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "ratio #gamma from X / all", 1e-6, 5e2, 1.0, 1.2);
+    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#gamma_{source} / #gamma_{decay}", 1e-6, 5e2, 1.0, 1.3);
     dummyHist->Draw();
 
     TH1F* tempRatioGammas2                                      = NULL;
