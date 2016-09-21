@@ -67,7 +67,7 @@ extern TMinuit*    gMinuit;
 // *** save results   
 
 //____________________________________________________________________________________________________________________________________________
-void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/meike/analysis/results/photonconvResults/PbPb/LHC15oLowIRp2-LHC15k1a1-LHC15k1a2-LHC15k1a3/11210013_00200009247602008250404000_0652501500000000/PbPb_5.02TeV/Pi0_data_GammaConvV1WithoutCorrection_11210013_00200009247602008250404000_0652501500000000.root",
+void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/meike/analysis/results/photonconvResults/PbPb/LHC15oLowIRp2-LHC15k1a1-LHC15k1a2-LHC15k1a3/15910013_00200009247602008250404000_0652501500000000/PbPb_5.02TeV/Pi0_data_GammaConvV1WithoutCorrection_15910013_00200009247602008250404000_0652501500000000.root",
                                         TString fileNamePCMEMCAL    = "", 
                                         TString fileNameEMCAL       = "",                                          
                                         TString fileNamePHOS        = "",  
@@ -135,7 +135,7 @@ void CombineMesonMeasurementsPbPb5TeV(  TString fileNamePCM         = "/home/mei
       yMaxInvMassPi0PCM = 600000;
     }
     TString collisionSystemPbPb5TeV;
-    collisionSystemPbPb5TeV.Form("pp, #sqrt{#it{s}_{NN}} = 5.02 TeV, %s", centralityString.Data());
+    collisionSystemPbPb5TeV.Form("PbPb, #sqrt{#it{s}_{NN}} = 5.02 TeV, %s", centralityString.Data());
 
     Double_t fBinsPi0HI5020GeVPt[14]  = { 0.0, 1.0, 1.4,
 					  1.6, 1.8, 2.0, 2.2,
