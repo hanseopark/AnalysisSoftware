@@ -2450,6 +2450,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             delete[] errors;
           }
         }
+        SysErrDatAverSingle.close();
 
         for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
           for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
@@ -2518,12 +2519,19 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TGraphAsymmErrors* graphRelErrorPi0Stat       = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAveragePi0Stat, "relativeStatErrorPi0");
         TGraphAsymmErrors* graphRelErrorPi0Sys        = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAveragePi0Sys, "relativeSysErrorPi0");
 
-        SysErrDatAverSingle << "\n\n pt \t Stat err \t sys err \t tot err " << endl;
-        for (Int_t i = 0; i < graphRelErrorPi0Tot->GetN(); i++){
-            if (graphRelErrorPi0Stat->GetY()[i] > 0) SysErrDatAverSingle << graphRelErrorPi0Stat->GetX()[i] << "\t" << graphRelErrorPi0Stat->GetY()[i] <<"\t" << graphRelErrorPi0Sys->GetY()[i] <<  "\t" << graphRelErrorPi0Tot->GetY()[i] << endl; 
-        }    
-        SysErrDatAverSingle<< endl;
-        SysErrDatAverSingle.close();
+        const char *SysErrDatnameMeanSingleErrCheck = Form("%s/SystematicErrorAveragedSingle%s_Pi0_%s_Check.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
+        fstream SysErrDatAverSingleCheck;
+        SysErrDatAverSingleCheck.precision(4);
+        cout << SysErrDatnameMeanSingleErrCheck << endl;
+        if(sysAvailSinglePi0[0]){
+          SysErrDatAverSingleCheck.open(SysErrDatnameMeanSingleErrCheck, ios::out);
+          SysErrDatAverSingleCheck << "pt \t Stat err \t sys err \t tot err " << endl;
+          for (Int_t i = 0; i < graphRelErrorPi0Tot->GetN(); i++){
+              if (graphRelErrorPi0Stat->GetY()[i] > 0) SysErrDatAverSingleCheck << graphRelErrorPi0Stat->GetX()[i] << "\t" << graphRelErrorPi0Stat->GetY()[i] <<"\t" << graphRelErrorPi0Sys->GetY()[i] <<  "\t" << graphRelErrorPi0Tot->GetY()[i] << endl;
+          }
+          SysErrDatAverSingleCheck << endl;
+          SysErrDatAverSingleCheck.close();
+        }
         
         // plot sys relative errors for individual triggers   
         TCanvas* canvasRelSysErr            = new TCanvas("canvasRelSysErr","",200,10,1350,900);  // gives the page size
@@ -3584,11 +3592,14 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         if(doBinShiftForEtaToPi0){
           canvasEffi->cd();
           canvasEffi->SetLeftMargin(0.1);
+          canvasEffi->SetBottomMargin(0.1);
           canvasEffi->SetLogy(0);
+          canvasEffi->SetLogx(1);
           TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., 100.);
           SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (Y) / no shift",
-                                  0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
-          histoBinShift->GetXaxis()->SetRangeUser(0.,maxPtGlobalPi0);
+                                  0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 1.1, 1.2);
+          histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalPi0,maxPtGlobalPi0);
+          histoBinShift->GetXaxis()->SetMoreLogLabels();
           histoBinShift->GetYaxis()->SetRangeUser(0.8,1.05);
           histoBinShift->DrawCopy();
 
@@ -3608,10 +3619,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           labelBinShiftPi0->Draw();
           labelDetProcEffi->Draw();
 
+          canvasEffi->RedrawAxis();
           canvasEffi->Update();
           canvasEffi->SaveAs(Form("%s/Pi0EtaBinning_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
 
-          histoBinShift->GetXaxis()->SetRangeUser(0.,maxPtGlobalEta);
+          histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalEta,maxPtGlobalEta);
           histoBinShift->DrawCopy();
 
           TLegend* legendBinShift2 = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
@@ -3630,11 +3642,12 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           labelBinShiftEta->Draw();
           labelDetProcEffi->Draw();
 
+          canvasEffi->RedrawAxis();
           canvasEffi->Update();
           canvasEffi->SaveAs(Form("%s/Eta_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
 
-          histoBinShift->GetXaxis()->SetRangeUser(0.,maxPtGlobalEta);
-          if(optionEnergy.CompareTo("8TeV")==0 && mode==4) histoBinShift->GetXaxis()->SetRangeUser(0.,20.);
+          histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalEta,maxPtGlobalEta);
+          if(optionEnergy.CompareTo("8TeV")==0 && mode==4) histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalEta,20.);
           histoBinShift->GetYaxis()->SetRangeUser(0.95,1.05);
           histoBinShift->DrawCopy();
 
@@ -3661,10 +3674,13 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           labelBinShiftEtaToPi0->Draw();
           labelDetProcEffi->Draw();
 
+          canvasEffi->RedrawAxis();
           canvasEffi->Update();
           canvasEffi->SaveAs(Form("%s/EtaToPi0_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
           canvasEffi->SetLogy(1);
+          canvasEffi->SetLogx(0);
           canvasEffi->SetLeftMargin(0.09);
+          canvasEffi->SetBottomMargin(0.08);
         }
 
         //***************************************************************************************************************
@@ -4637,6 +4653,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 delete[] errors;
               }
             }
+            SysErrDatAverSingle.close();
 
             for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
               for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
@@ -4698,12 +4715,19 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             TGraphAsymmErrors* graphRelErrorEtaStat       = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAverageEtaStat, "relativeStatErrorEta");
             TGraphAsymmErrors* graphRelErrorEtaSys        = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAverageEtaSys, "relativeSysErrorEta");
 
-            SysErrDatAverSingle << "\n\n pt \t Stat err \t sys err \t tot err " << endl;
-            for (Int_t i = 0; i < graphRelErrorEtaTot->GetN(); i++){
-                if (graphRelErrorEtaStat->GetY()[i] > 0) SysErrDatAverSingle << graphRelErrorEtaStat->GetX()[i] << "\t" << graphRelErrorEtaStat->GetY()[i] <<"\t" << graphRelErrorEtaSys->GetY()[i] <<  "\t" << graphRelErrorEtaTot->GetY()[i] << endl; 
-            }    
-            SysErrDatAverSingle<< endl;
-            SysErrDatAverSingle.close();
+            const char *SysErrDatnameMeanSingleErrCheck = Form("%s/SystematicErrorAveragedSingle%s_Eta_%s_Check.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
+            fstream SysErrDatAverSingleCheck;
+            SysErrDatAverSingleCheck.precision(4);
+            cout << SysErrDatnameMeanSingleErrCheck << endl;
+            if(sysAvailSingleEta[0]){
+              SysErrDatAverSingleCheck.open(SysErrDatnameMeanSingleErrCheck, ios::out);
+              SysErrDatAverSingleCheck << "pt \t Stat err \t sys err \t tot err " << endl;
+              for (Int_t i = 0; i < graphRelErrorEtaTot->GetN(); i++){
+                  if (graphRelErrorEtaStat->GetY()[i] > 0) SysErrDatAverSingleCheck << graphRelErrorEtaStat->GetX()[i] << "\t" << graphRelErrorEtaStat->GetY()[i] <<"\t" << graphRelErrorEtaSys->GetY()[i] <<  "\t" << graphRelErrorEtaTot->GetY()[i] << endl;
+              }
+              SysErrDatAverSingleCheck << endl;
+              SysErrDatAverSingleCheck.close();
+            }
 
             // plot sys relative errors for individual triggers   
             TCanvas* canvasRelSysErr            = new TCanvas("canvasRelSysErr","",200,10,1350,900);  // gives the page size
@@ -5750,12 +5774,15 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 if(doBinShiftForEtaToPi0){
                   canvasEffi->cd();
                   canvasEffi->SetLeftMargin(0.1);
+                  canvasEffi->SetBottomMargin(0.1);
                   canvasEffi->SetLogy(0);
+                  canvasEffi->SetLogx(1);
 
                   TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., 100.);
                   SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (Y) / no shift",
-                                          0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
-                  histoBinShift->GetXaxis()->SetRangeUser(0.,maxPtGlobalEta);
+                                          0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 1.1, 1.2);
+                  histoBinShift->GetXaxis()->SetMoreLogLabels();
+                  histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalEta,maxPtGlobalEta);
                   if(optionEnergy.CompareTo("8TeV")==0 && mode==4) histoBinShift->GetXaxis()->SetRangeUser(0.,20.);
                   histoBinShift->GetYaxis()->SetRangeUser(0.95,1.05);
                   histoBinShift->DrawCopy();
@@ -5788,10 +5815,13 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                   labelBinShiftEtaToPi0->Draw();
                   labelDetProcEffi->Draw();
 
+                  canvasEffi->RedrawAxis();
                   canvasEffi->Update();
                   canvasEffi->SaveAs(Form("%s/EtaToPi0_%s_CombinedBinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
                   canvasEffi->SetLogy(1);
+                  canvasEffi->SetLogx(0);
                   canvasEffi->SetLeftMargin(0.09);
+                  canvasEffi->SetBottomMargin(0.08);
                 }
                 delete canvasEffi;
                 //  **********************************************************************************************************************
@@ -5833,6 +5863,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     delete[] errors;
                   }
                 }
+                SysErrDatAverSingle.close();
 
                 for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
                   for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
@@ -5894,12 +5925,19 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 TGraphAsymmErrors* graphRelErrorEtaToPi0Stat       = CalculateRelErrUpAsymmGraph( graphEtaToPi0WeightedAverageStat, "relativeStatErrorEtaToPi0");
                 TGraphAsymmErrors* graphRelErrorEtaToPi0Sys        = CalculateRelErrUpAsymmGraph( graphEtaToPi0WeightedAverageSys, "relativeSysErrorEtaToPi0");
 
-                SysErrDatAverSingle << "\n\n pt \t Stat err \t sys err \t tot err " << endl;
-                for (Int_t i = 0; i < graphRelErrorEtaToPi0Tot->GetN(); i++){
-                    if (graphRelErrorEtaToPi0Stat->GetY()[i] > 0) SysErrDatAverSingle << graphRelErrorEtaToPi0Stat->GetX()[i] << "\t" << graphRelErrorEtaToPi0Stat->GetY()[i] <<"\t" << graphRelErrorEtaToPi0Sys->GetY()[i] <<  "\t" << graphRelErrorEtaToPi0Tot->GetY()[i] << endl; 
-                }    
-                SysErrDatAverSingle<< endl;
-                SysErrDatAverSingle.close();
+                const char *SysErrDatnameMeanSingleErrCheck = Form("%s/SystematicErrorAveragedSingle%s_EtaToPi0_%s_Check.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
+                fstream SysErrDatAverSingleCheck;
+                SysErrDatAverSingleCheck.precision(4);
+                cout << SysErrDatnameMeanSingleErrCheck << endl;
+                if(sysAvailSingleEtaToPi0[0]){
+                  SysErrDatAverSingleCheck.open(SysErrDatnameMeanSingleErrCheck, ios::out);
+                  SysErrDatAverSingleCheck << "pt \t Stat err \t sys err \t tot err " << endl;
+                  for (Int_t i = 0; i < graphRelErrorEtaToPi0Tot->GetN(); i++){
+                      if (graphRelErrorEtaToPi0Stat->GetY()[i] > 0) SysErrDatAverSingleCheck << graphRelErrorEtaToPi0Stat->GetX()[i] << "\t" << graphRelErrorEtaToPi0Stat->GetY()[i] <<"\t" << graphRelErrorEtaToPi0Sys->GetY()[i] <<  "\t" << graphRelErrorEtaToPi0Tot->GetY()[i] << endl;
+                  }
+                  SysErrDatAverSingleCheck << endl;
+                  SysErrDatAverSingleCheck.close();
+                }
 
                 
                 // plot sys relative errors for individual triggers   
