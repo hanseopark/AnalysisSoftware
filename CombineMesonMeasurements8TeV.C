@@ -869,8 +869,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TGraph* graphNLOEtaToPi0MuHalf                      = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcEtaOverPi0MuHalf8000GeV");
         TGraph* graphNLOEtaToPi0MuOne                       = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcEtaOverPi0MuOne8000GeV");
         TGraph* graphNLOEtaToPi0MuTwo                       = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcEtaOverPi0MuTwo8000GeV");
-        TGraph* graphNLODSSCalcMuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcDSSInvSecPi0MuTwo8000GeV");
-        TGraph* graphNLOCGCCalcMuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcCGCInvCrossSec8000GeV");
+        //TGraph* graphNLODSSCalcMuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcDSSInvSecPi0MuTwo8000GeV");
+        //TGraph* graphNLOCGCCalcMuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcCGCInvCrossSec8000GeV");
         //TGraphAsymmErrors* graphNLODSS14Calc                = (TGraphAsymmErrors*)fileTheoryCompilation->Get("graphNLOCalcDSS14InvCrossSec8000GeV");
     
         while (graphNLOCalcEtaMuHalf->GetX()[graphNLOCalcEtaMuHalf->GetN()-1] > 37. )
@@ -886,6 +886,17 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphNLOEtaToPi0MuOne->Print();
         cout << "mu two" << endl;
         graphNLOEtaToPi0MuTwo->Print();
+
+        TGraphAsymmErrors* graphNLOEtaToPi0                = new TGraphAsymmErrors();
+        for(Int_t iB=0; iB<graphNLOEtaToPi0MuOne->GetN(); iB++){
+          Double_t deltaHigh = graphNLOEtaToPi0MuTwo->GetY()[iB]-graphNLOEtaToPi0MuOne->GetY()[iB];
+          Double_t value = graphNLOEtaToPi0MuOne->GetY()[iB];
+          Double_t deltaLow = graphNLOEtaToPi0MuOne->GetY()[iB]-graphNLOEtaToPi0MuOne->GetY()[iB];
+          if(iB>0) deltaLow = graphNLOEtaToPi0MuOne->GetY()[iB]-graphNLOEtaToPi0MuHalf->GetY()[iB-1];
+          cout << iB << ", " << deltaLow << ", " << value << ", " << deltaHigh << endl;
+          graphNLOEtaToPi0->SetPoint(iB,graphNLOEtaToPi0MuOne->GetX()[iB],value);
+          graphNLOEtaToPi0->SetPointError(iB,0,0,deltaLow,deltaHigh);
+        }
         
     // *******************************************************************************************************
     // ************************** Loading charged pion results ***********************************************
@@ -4742,14 +4753,16 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     histo2DEtatoPi0combo->Draw("copy");
 
     textSizeLabelsPixel = 48;
-    TLegend* legendXsectionPaperEtaToPi02     = GetAndSetLegend2(0.32, 0.69, 0.65, 0.69+0.045*6, textSizeLabelsPixel);
+    TLegend* legendXsectionPaperEtaToPi02     = GetAndSetLegend2(0.15, 0.735, 0.48, 0.735+0.045*5, 0.85*textSizeLabelsPixel);
     legendXsectionPaperEtaToPi02->SetNColumns(1);
     legendXsectionPaperEtaToPi02->SetMargin(0.2);
     legendXsectionPaperEtaToPi02->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
-    legendXsectionPaperEtaToPi02->AddEntry((TObject*)0,"NLO, PDF:CTEQ6M5 < #splitline{#pi^{0} FF:DSS07}{#eta  FF:AESSS}","");
-    legendXsectionPaperEtaToPi02->AddEntry(graphNLOEtaToPi0MuHalf,"#mu = 0.5 #it{p}_{T}","l");
-    legendXsectionPaperEtaToPi02->AddEntry(graphNLOEtaToPi0MuOne,"#mu = #it{p}_{T}","l");
-    legendXsectionPaperEtaToPi02->AddEntry(graphNLOEtaToPi0MuTwo,"#mu = 2 #it{p}_{T}","l");
+    legendXsectionPaperEtaToPi02->AddEntry(graphNLOEtaToPi0,"NLO, PDF:CTEQ6M5","f");
+    legendXsectionPaperEtaToPi02->AddEntry((TObject*)0,"#pi^{0} FF:DSS07, #eta FF:AESSS","");
+    legendXsectionPaperEtaToPi02->AddEntry((TObject*)0,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}","");
+    //legendXsectionPaperEtaToPi02->AddEntry(graphNLOEtaToPi0MuHalf,"#mu = 0.5 #it{p}_{T}","l");
+    //legendXsectionPaperEtaToPi02->AddEntry(graphNLOEtaToPi0MuOne,"#mu = #it{p}_{T}","l");
+    //legendXsectionPaperEtaToPi02->AddEntry(graphNLOEtaToPi0MuTwo,"#mu = 2 #it{p}_{T}","l");
     legendXsectionPaperEtaToPi02->Draw();
 
     // plotting data
@@ -4761,18 +4774,24 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     graphCombEtaToPi0SysA->Draw("2,same");
     graphCombEtaToPi0StatA->Draw("p,same");
 
-        // plotting NLO
-        DrawGammaNLOTGraph( graphNLOEtaToPi0MuHalf, widthCommonFit, styleLineNLOMuHalf, colorNLO);
-        graphNLOEtaToPi0MuHalf->Draw("same,c");
-        DrawGammaNLOTGraph( graphNLOEtaToPi0MuOne, widthCommonFit, styleLineNLOMuOne, colorNLO);
-        graphNLOEtaToPi0MuOne->Draw("same,c");
-        DrawGammaNLOTGraph( graphNLOEtaToPi0MuTwo, widthCommonFit, styleLineNLOMuTwo, colorNLO);
-        graphNLOEtaToPi0MuTwo->Draw("same,c");
+    // plotting NLO
+    graphNLOEtaToPi0->SetLineWidth(widthCommonFit);
+    graphNLOEtaToPi0->SetLineColor(colorNLO);
+    graphNLOEtaToPi0->SetLineStyle(1);
+    graphNLOEtaToPi0->SetFillStyle(1001);
+    graphNLOEtaToPi0->SetFillColor(colorNLO);
+    graphNLOEtaToPi0->Draw("same,e4");
+//        DrawGammaNLOTGraph( graphNLOEtaToPi0MuHalf, widthCommonFit, styleLineNLOMuHalf, colorNLO);
+//        graphNLOEtaToPi0MuHalf->Draw("same,c");
+//        DrawGammaNLOTGraph( graphNLOEtaToPi0MuOne, widthCommonFit, styleLineNLOMuOne, colorNLO);
+//        graphNLOEtaToPi0MuOne->Draw("same,c");
+//        DrawGammaNLOTGraph( graphNLOEtaToPi0MuTwo, widthCommonFit, styleLineNLOMuTwo, colorNLO);
+//        graphNLOEtaToPi0MuTwo->Draw("same,c");
 
         // plotting labels
-        labelEnergyEtaToPi0->Draw();
-        labelALICEEtaToPi0->Draw();
-        labelPi0EtaToPi0->Draw();
+        labelEnergyEtaToPi02->Draw();
+        labelALICEEtaToPi02->Draw();
+        labelPi0EtaToPi02->Draw();
 
     histo2DEtatoPi0combo->Draw("axis,same");
 
@@ -4789,15 +4808,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     graphCombEtaToPi0SysA->Draw("2,same");
     graphCombEtaToPi0StatA->Draw("p,same");
 
-        // plotting NLO
-        graphNLOEtaToPi0MuHalf->Draw("same,c");
-        graphNLOEtaToPi0MuOne->Draw("same,c");
-        graphNLOEtaToPi0MuTwo->Draw("same,c");
+    // plotting NLO
+    graphNLOEtaToPi0->Draw("same,e4");
 
-        // plotting labels
-        labelEnergyEtaToPi0->Draw();
-        labelALICEEtaToPi0->Draw();
-        labelPi0EtaToPi0->Draw();
+    // plotting labels
+    labelEnergyEtaToPi02->Draw();
+    labelALICEEtaToPi02->Draw();
+    labelPi0EtaToPi02->Draw();
 
     histo2DEtatoPi0combo->Draw("axis,same");
 
