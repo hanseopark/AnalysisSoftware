@@ -1444,12 +1444,14 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         //***************************************************************************************************************
 
         TCanvas* canvasShift = new TCanvas("canvasShift","",0,0,1000,900);// gives the page size
-        DrawGammaCanvasSettings( canvasShift, 0.10, 0.017, 0.015, 0.08);
+        DrawGammaCanvasSettings( canvasShift, 0.10, 0.017, 0.015, 0.1);
+        canvasShift->SetLogx(1);
 
         Size_t textSizeSpectra          = 0.04;
-        TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., 35.);
+        TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0.23, 40.);
         SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (X) / no shift",
-                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
+                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 1.1, 1.2);
+        histoBinShift->GetXaxis()->SetMoreLogLabels(1);
         histoBinShift->GetYaxis()->SetRangeUser(0.95,1.05);
         histoBinShift->DrawCopy();
 
@@ -1480,6 +1482,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         canvasShift->Update();
         canvasShift->SaveAs(Form("%s/BinShiftCorrection_Pi0.%s",outputDir.Data(),suffix.Data()));
+        canvasShift->SetLogx(0);
 
         // *************************************************************************************************************
         // Plot control graphs
@@ -2417,12 +2420,14 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         //***************************************************************************************************************
 
         TCanvas* canvasShift = new TCanvas("canvasShift","",0,0,1000,900);// gives the page size
-        DrawGammaCanvasSettings( canvasShift, 0.10, 0.017, 0.015, 0.08);
+        DrawGammaCanvasSettings( canvasShift, 0.10, 0.017, 0.015, 0.1);
+        canvasShift->SetLogx(1);
 
         Size_t textSizeSpectra          = 0.04;
-        TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., 35.);
+        TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0.33, 40.);
         SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (X) / no shift",
-                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
+                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 1.1, 1.2);
+        histoBinShift->GetXaxis()->SetMoreLogLabels(1);
         histoBinShift->GetYaxis()->SetRangeUser(0.95,1.05);
         histoBinShift->DrawCopy();
 
@@ -2453,6 +2458,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         canvasShift->Update();
         canvasShift->SaveAs(Form("%s/BinShiftCorrection_Eta.%s",outputDir.Data(),suffix.Data()));
+        canvasShift->SetLogx(0);
 
         // *************************************************************************************************************
         // Plot control graphs
@@ -4130,15 +4136,16 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     DrawGammaLines(0.23, 70.,1., 1.,0.5,kGray+2);
 
-    TLegend* legendRatioTheorypp_3Parted2= GetAndSetLegend2(0.15,0.7,0.4,0.96, 0.85* textSizeLabelsPixel);
+    TLegend* legendRatioTheorypp_3Parted2= GetAndSetLegend2(0.15,0.65,0.4,0.96, 0.85* textSizeLabelsPixel);
     legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombCombFitSysA,"ALICE #pi^{0}","pf");
-    legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombNLOMuHalf, "NLO, PDF:CTEQ6M5 - FF:DSS07 #mu = 0.5 #it{p}_{T}", "l");
-    legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombNLOMuOne,  "NLO, PDF:CTEQ6M5 - FF:DSS07 #mu = #it{p}_{T}", "l");
-    legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombNLOMuTwo,  "NLO, PDF:CTEQ6M5 - FF:DSS07 #mu = 2 #it{p}_{T}", "l");
+    legendRatioTheorypp_3Parted2->AddEntry((TObject*)0,"NLO, PDF:CTEQ6M5 - FF:DSS07", "");
+    legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombNLOMuHalf, "#mu = 0.5 #it{p}_{T}", "l");
+    legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombNLOMuOne,  "#mu = #it{p}_{T}", "l");
+    legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombNLOMuTwo,  "#mu = 2 #it{p}_{T}", "l");
     legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0DSS14,  "NLO, PDF:MSTW08 - FF:DSS14", "f");
     legendRatioTheorypp_3Parted2->Draw();
 
-    TLatex *labelRatioTheoryPPP2   = new TLatex(0.218,0.67,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
+    TLatex *labelRatioTheoryPPP2   = new TLatex(0.218,0.62,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
     SetStyleTLatex( labelRatioTheoryPPP2, 0.85*textsizeLabelsPP,4);
     labelRatioTheoryPPP2->Draw();
 
@@ -4698,7 +4705,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphCombEtaToPi0SysA->Draw("2,same");
         graphCombEtaToPi0StatA->Draw("p,same");
 
-        TLegend* legendXsectionPaperEtaToPi0     = GetAndSetLegend2(0.12, 0.64, 0.45, 0.64+0.055*3, textSizeLabelsPixel);
+        TLegend* legendXsectionPaperEtaToPi0     = GetAndSetLegend2(0.12, 0.8, 0.45, 0.96, 0.85*textSizeLabelsPixel);
         legendXsectionPaperEtaToPi0->SetNColumns(1);
         legendXsectionPaperEtaToPi0->SetMargin(0.2);
         legendXsectionPaperEtaToPi0->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
@@ -4712,9 +4719,20 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphEtaToPi02760GeV->Draw("same,p");
         
         // plotting labels
-        labelEnergyEtaToPi0->Draw();
-        labelALICEEtaToPi0->Draw();
-        labelPi0EtaToPi0->Draw();
+        TLatex *labelEnergyEtaToPi02 = new TLatex(0.75, 0.92,collisionSystem8TeV.Data());
+        SetStyleTLatex( labelEnergyEtaToPi02, 0.85*textsizeLabelsEtaToPi0,4);
+        labelEnergyEtaToPi02->Draw();
+
+        TLatex *labelALICEEtaToPi02 = new TLatex(0.75, 0.92-(1*textsizeLabelsEtaToPi0*0.85),"ALICE");
+        SetStyleTLatex( labelALICEEtaToPi02, 0.85*textsizeLabelsEtaToPi0,4);
+        labelALICEEtaToPi02->Draw();
+
+        TLatex *labelPi0EtaToPi02 = new TLatex(0.75, 0.92-(2*textsizeLabelsEtaToPi0*0.85),"#eta/#pi^{0}");
+        SetStyleTLatex( labelPi0EtaToPi02, 0.85*textsizeLabelsEtaToPi0,4);
+        labelPi0EtaToPi02->Draw();
+//        labelEnergyEtaToPi0->Draw();
+//        labelALICEEtaToPi0->Draw();
+//        labelPi0EtaToPi0->Draw();
 
     histo2DEtatoPi0combo->Draw("axis,same");
 
@@ -4724,29 +4742,15 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     histo2DEtatoPi0combo->Draw("copy");
 
     textSizeLabelsPixel = 48;
-    TLegend* legendXsectionPaperEtaToPi02     = GetAndSetLegend2(0.32, 0.735, 0.65, 0.735+0.045*5, textSizeLabelsPixel);
+    TLegend* legendXsectionPaperEtaToPi02     = GetAndSetLegend2(0.32, 0.69, 0.65, 0.69+0.045*6, textSizeLabelsPixel);
     legendXsectionPaperEtaToPi02->SetNColumns(1);
     legendXsectionPaperEtaToPi02->SetMargin(0.2);
     legendXsectionPaperEtaToPi02->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
-    legendXsectionPaperEtaToPi02->AddEntry(graphNLOEtaToPi0MuHalf,"NLO, #mu = 0.5 #it{p}_{T}","l");
-    legendXsectionPaperEtaToPi02->AddEntry(graphNLOEtaToPi0MuOne,"NLO, #mu = #it{p}_{T}","l");
-    legendXsectionPaperEtaToPi02->AddEntry(graphNLOEtaToPi0MuTwo,"NLO, #mu = 2 #it{p}_{T}","l");
+    legendXsectionPaperEtaToPi02->AddEntry((TObject*)0,"NLO, PDF:CTEQ6M5 < #splitline{#pi^{0} FF:DSS07}{#eta  FF:AESSS}","");
+    legendXsectionPaperEtaToPi02->AddEntry(graphNLOEtaToPi0MuHalf,"#mu = 0.5 #it{p}_{T}","l");
+    legendXsectionPaperEtaToPi02->AddEntry(graphNLOEtaToPi0MuOne,"#mu = #it{p}_{T}","l");
+    legendXsectionPaperEtaToPi02->AddEntry(graphNLOEtaToPi0MuTwo,"#mu = 2 #it{p}_{T}","l");
     legendXsectionPaperEtaToPi02->Draw();
-
-    TLatex *labelEtaPi0Label3         = new TLatex(0.652,0.862,"PDF:CTEQ6M5");
-    SetStyleTLatex( labelEtaPi0Label3, textSizeLabelsPixel,4);
-    labelEtaPi0Label3->SetTextFont(43);
-    labelEtaPi0Label3->Draw();
-    TLatex *labelEtaPi0Label2         = new TLatex(0.64,0.806,"#pi^{0} FF:DSS07");
-    SetStyleTLatex( labelEtaPi0Label2, textSizeLabelsPixel,4);
-    labelEtaPi0Label2->SetTextFont(43);
-    labelEtaPi0Label2->Draw();
-    TLatex *labelEtaPi0Label         = new TLatex(0.652,0.753,"#eta FF:AESSS");
-    SetStyleTLatex( labelEtaPi0Label, textSizeLabelsPixel,4);
-    labelEtaPi0Label->SetTextFont(43);
-    labelEtaPi0Label->Draw();
-
-
 
     // plotting data
     graphCombEtaToPi0StatA->Print();
@@ -4780,10 +4784,6 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     histo2DEtatoPi0combo->GetXaxis()->SetRangeUser(0.,25.0);
     histo2DEtatoPi0combo->Draw("copy");
     legendXsectionPaperEtaToPi02->Draw();
-
-    labelEtaPi0Label3->Draw();
-    labelEtaPi0Label2->Draw();
-    labelEtaPi0Label->Draw();
 
     // plotting data
     graphCombEtaToPi0SysA->Draw("2,same");
