@@ -51,12 +51,12 @@ Int_t GetPosInVec( std::vector<TString> vec, TString lookup){
 }
 
 void ComputeCorrelationFactors(
-                                    TString fileInput = "input.txt",
-                                    TString combMode = "triggers",
-                                    TString meson = "",
-                                    TString energy = "",
-                                    TString mode = "",
-                                    TString suffix = "eps"
+                                    TString fileInput   = "input.txt",
+                                    TString combMode    = "triggers",
+                                    TString meson       = "",
+                                    TString energy      = "",
+                                    Int_t mode          = -1,
+                                    TString suffix      = "eps"
                                    ){
 
     //---------------------------------------------------------------------------------------------------------------
@@ -77,18 +77,21 @@ void ComputeCorrelationFactors(
     else if(meson.CompareTo("Pi0EtaBinning") == 0 || meson.CompareTo("EtaToPi0") == 0) 
         mesonPlot           = "#eta/#pi^{0}";
 
+    TString modeOutput      = Form("%d",mode);
     if(combMode.CompareTo("systems")==0) 
-        mode                = "Systems";
-
-    TString dateForOutput   = ReturnDateStringForOutput();
-    TString collisionSystem = ReturnFullCollisionsSystem(energy);
-    TString energyForOutput = energy;
-    TString outputDir       = Form("%s/%s/ComputeCorrelationFactors_%s",suffix.Data(),dateForOutput.Data(), energyForOutput.Data());
+        modeOutput                = "Systems";
+        
+    
+    TString dateForOutput           = ReturnDateStringForOutput();
+    TString fCollisionSystenWrite   = ReturnCollisionEnergyOutputString(energy);
+    TString collisionSystem         = ReturnFullCollisionsSystem(energy);
+    TString outputDir               = Form("%s/%s/ComputeCorrelationFactors_%s",suffix.Data(),dateForOutput.Data(), fCollisionSystenWrite.Data());
+    TString detectionProcess        = ReturnFullTextReconstructionProcess(mode);
 
     fstream fLog;
-    fLog.open(Form("%s/%s_%s_%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),energyForOutput.Data(),mode.Data()), ios::out);
+    fLog.open(Form("%s/%s_%s_%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),fCollisionSystenWrite.Data(),modeOutput.Data()), ios::out);
     fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-    fLog << "Energy: " << energyForOutput.Data() << endl;
+    fLog << "Energy: " << fCollisionSystenWrite.Data() << endl;
     fLog << collisionSystem.Data() << endl;
     fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
@@ -97,7 +100,7 @@ void ComputeCorrelationFactors(
     gSystem->Exec("mkdir -p "+outputDir+"/sys");
     gSystem->Exec("mkdir -p "+outputDir+"/corrFactors");
     gSystem->Exec("mkdir -p "+outputDir+"/corrPlotting");
-    gSystem->Exec(Form("cp %s %s/%s_%s_%s_mode%s.config", fileInput.Data(), outputDir.Data(), meson.Data(), combMode.Data(), energyForOutput.Data(), mode.Data()));
+    gSystem->Exec(Form("cp %s %s/%s_%s_%s_mode%s.config", fileInput.Data(), outputDir.Data(), meson.Data(), combMode.Data(), fCollisionSystenWrite.Data(), modeOutput.Data()));
 
     cout << "running combination mode: " << combMode.Data() << endl;
     fLog << "running combination mode: " << combMode.Data() << endl;
@@ -256,6 +259,8 @@ void ComputeCorrelationFactors(
     Double_t minCorrYaxis       = 0.45;
     if(combMode.CompareTo("systems") == 0) 
         minCorrYaxis            = 0.35;
+    if (combMode.CompareTo("triggers") == 0 && energy.CompareTo("2.76TeV") == 0 && ( mode == 2 || mode == 4 ) )
+        minCorrYaxis            = 0.15;
     
     // dummy hist
     histo2DPi0Weights           = new TH2F("histo2DPi0Weights","histo2DPi0Weights",11000,vecUseMinPt.at(0),vecUseMaxPt.at(nMeasTot-1),1000,minCorrYaxis,1.05);
@@ -266,20 +271,30 @@ void ComputeCorrelationFactors(
     histo2DPi0Weights->Draw("copy");
 
     // labels
-    TLatex *labelWeightsEnergy  = new TLatex(0.75,0.20,collisionSystem.Data());
+    TLatex *labelWeightsEnergy  = new TLatex(0.95,0.20,collisionSystem.Data());
     SetStyleTLatex( labelWeightsEnergy, 0.85*textSizeLabelsPixel,4);
     labelWeightsEnergy->SetTextFont(43);
+    labelWeightsEnergy->SetTextAlign(31);
     labelWeightsEnergy->Draw();
     
     TLatex *labelWeightsPi0     = 0x0;
     if(meson.CompareTo("Pi0EtaBinning") == 0 || meson.CompareTo("EtaToPi0") == 0) 
-        labelWeightsPi0         = new TLatex(0.75,0.16,Form("%s",mesonPlot.Data()));
+        labelWeightsPi0         = new TLatex(0.95,0.16,Form("%s",mesonPlot.Data()));
     else 
-        labelWeightsPi0         = new TLatex(0.75,0.16,Form("%s #rightarrow #gamma#gamma",mesonPlot.Data()));
+        labelWeightsPi0         = new TLatex(0.95,0.16,Form("%s #rightarrow #gamma#gamma",mesonPlot.Data()));
     SetStyleTLatex( labelWeightsPi0, 0.85*textSizeLabelsPixel,4);
     labelWeightsPi0->SetTextFont(43);
+    labelWeightsPi0->SetTextAlign(31);
     labelWeightsPi0->Draw();
 
+    TLatex *labelWeightsDetectionProcess  = new TLatex(0.95,0.12,detectionProcess.Data());
+    SetStyleTLatex( labelWeightsDetectionProcess, 0.85*textSizeLabelsPixel,4);
+    labelWeightsDetectionProcess->SetTextFont(43);
+    labelWeightsDetectionProcess->SetTextAlign(31);
+    if (modeOutput.CompareTo("Systems") != 0)
+        labelWeightsDetectionProcess->Draw();
+    
+    
     // colors, markers
     Color_t colorTrigg[30]      = { kBlack, kGray+1, kRed+2, kBlue+2, kGreen+3, kCyan+2, kViolet+1, kMagenta+2,  kRed-2, kBlue-2,
                                     807, kAzure+2, kGreen-2, kMagenta-2, kYellow+2, kAzure-5, kPink-2, kCyan-5,  kRed-2, kBlue-2,
@@ -291,7 +306,8 @@ void ComputeCorrelationFactors(
     Int_t iColumnsLegend        = 1;
     
     // legend
-    TLegend* legendWeights      = GetAndSetLegend2(0.11, 0.11, 0.42, 0.1+(0.035*8), 32);
+    Int_t maxNLegendColumn      = 8;
+    TLegend* legendWeights      = GetAndSetLegend2(0.11, 0.11, 0.42, 0.1+(0.035*maxNLegendColumn), 32);
     legendWeights->SetMargin(0.15);
     
     //---------------------------------------------------------------------------------------------------------------
@@ -302,8 +318,8 @@ void ComputeCorrelationFactors(
     fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n" << endl;
 
     fstream fCorr;
-    fCorr.open(Form("%s/corrFactors/%s_%s_%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),energyForOutput.Data(),mode.Data()), ios::out);
-    TFile *fOutput              = new TFile(Form("%s/%s.root",outputDir.Data(),energyForOutput.Data()),"UPDATE");
+    fCorr.open(Form("%s/corrFactors/%s_%s_%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),fCollisionSystenWrite.Data(),modeOutput.Data()), ios::out);
+    TFile *fOutput              = new TFile(Form("%s/%s.root",outputDir.Data(),fCollisionSystenWrite.Data()),"UPDATE");
 
     // Calculate rho_AB for A = iMeasA and B = iMeasB
     for(Int_t iMeasA=0; iMeasA<nMeasTot; iMeasA++){
@@ -343,7 +359,7 @@ void ComputeCorrelationFactors(
             fCorr << tempCorr.Data() << endl;
             
             // create correlations histogram
-            TH1D* histoCorr         = new TH1D(Form("%s_%s_%s",mode.Data(),meson.Data(),tempCorr.Data()),Form("%s_%s_%s",mode.Data(),meson.Data(),tempCorr.Data()),10000,0,100);
+            TH1D* histoCorr         = new TH1D(Form("%s_%s_%s",modeOutput.Data(),meson.Data(),tempCorr.Data()),Form("%s_%s_%s",modeOutput.Data(),meson.Data(),tempCorr.Data()),10000,0,100);
             // set all bin 0 for correlations histogram
             for(Int_t iBin=1; iBin<histoCorr->GetNbinsX()+1; iBin++) 
                 histoCorr->SetBinContent(iBin,0.);
@@ -429,8 +445,9 @@ void ComputeCorrelationFactors(
                 histoCorr->SetMarkerSize(2.);
                 histoCorr->SetMarkerColor(colorTrigg[iTrigg]);
                 histoCorr->SetMarkerStyle(markerTrigg[iTrigg]);
-                if (iTrigg > 8)     iColumnsLegend  = 2;
-                if (iTrigg > 16)    iColumnsLegend  = 3;
+                if (iTrigg > maxNLegendColumn)     iColumnsLegend  = 2;
+                if (iTrigg > 2*maxNLegendColumn)   iColumnsLegend  = 3;
+                if (iTrigg > 3*maxNLegendColumn)   iColumnsLegend  = 4;
                 iTrigg++;
                 histoCorr->Draw("p,same");
                 legendWeights->SetNColumns(iColumnsLegend);
@@ -439,11 +456,14 @@ void ComputeCorrelationFactors(
                cout << "not plotting " << tempCorr.Data() << ", no correlation factors different from 0 found!" << endl;
             }     
             // write to output
-            histoCorr->Write(Form("%s_%s_%s",mode.Data(),meson.Data(),tempCorr.Data()),TObject::kOverwrite);    
+            histoCorr->Write(Form("%s_%s_%s",modeOutput.Data(),meson.Data(),tempCorr.Data()),TObject::kOverwrite);    
         }
     }
  
     legendWeights->SetX2(0.11+0.15*iColumnsLegend);
+    if(iTrigg < maxNLegendColumn)
+        legendWeights->SetY2(0.1+(0.035*iTrigg));
+    
     legendWeights->Draw();
     canvasWeights->RedrawAxis();
 
@@ -459,7 +479,7 @@ void ComputeCorrelationFactors(
     DrawGammaLines(vecUseMinPt.at(0),vecUseMaxPt.at(nMeasTot-1), 0.8, 0.8,0.1, kGray, 3);
     DrawGammaLines(vecUseMinPt.at(0),vecUseMaxPt.at(nMeasTot-1), 0.7, 0.7,0.1, kGray, 7);
 
-    canvasWeights->SaveAs(Form("%s/corrPlotting/%s_%s_%s_corrFactors.%s",outputDir.Data(),energyForOutput.Data(),mode.Data(),meson.Data(),suffix.Data()));
+    canvasWeights->SaveAs(Form("%s/corrPlotting/%s_%s_%s_corrFactors.%s",outputDir.Data(),fCollisionSystenWrite.Data(),modeOutput.Data(),meson.Data(),suffix.Data()));
 
     if(plotErr>0){
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
