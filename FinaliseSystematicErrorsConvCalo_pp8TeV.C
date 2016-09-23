@@ -65,12 +65,10 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
     // ***************************************************************************************************
     // ***************************** labeling and color settings *****************************************
     // ***************************************************************************************************
-    TString date = ReturnDateString();
-    TString dateForOutput = ReturnDateStringForOutput();
-    TString collisionSystem= ReturnFullCollisionsSystem(energy);
+    TString date                = ReturnDateString();
+    TString dateForOutput       = ReturnDateStringForOutput();
+    TString collisionSystem     = ReturnFullCollisionsSystem(energy);
     
-    Color_t color[23] = {860,894,807,880,418,403,802,923,634,432,404,435,420,407,416,830,404,608,kCyan-2,860,894,807,880};
-    Color_t markerStyle[23] = {24,21,22,23,20,25,26,27,28,29,30,31,32,33,24,21,22,23,20,25,26,27,28};
     
     // ***************************************************************************************************
     // ******************************* general variable definition  **************************************
@@ -91,12 +89,19 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
                                             "Chi2", "Qt", "Alpha", "ConvPhi", "ClusterMinEnergy",
                                             "ClusterNCells", "ClusterNonLinearity", "ClusterTrackMatching", "ClusterM02", "CellTiming",
                                             "ClusterMaterialTRD", "Trigger", "Efficiency", "ClusterEnergyScale", "ClusterTime",
-                                            "ClusterizationEnergy", "Periods", "YieldExtraction"};
+                                            "ClusterizationEnergy", "Periods", "YieldExtractionPi0"};
 
     if (meson.CompareTo("Pi0EtaBinning") == 0){
         nameCutVariation8TeV[0]          = "Yield extraction #eta";
     }
 
+    Color_t color[23];
+    Color_t markerStyle[23];
+    for (Int_t k = 0; k < 23; k++){
+        color[k]        = GetColorSystematics( nameCutVariationSC8TeV[k], 2); 
+        markerStyle[k]  = GetMarkerStyleSystematics( nameCutVariationSC8TeV[k], 2); 
+    }
+    
     
     if (energy.CompareTo("8TeV") == 0) {
         for (Int_t i = 0; i < numberCutStudies; i++){
@@ -104,6 +109,7 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
             nameCutVariationSC[i] = nameCutVariationSC8TeV[i];
         }
     }
+    
     
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************
@@ -1288,7 +1294,7 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
 
         // PCM material
         if ( meson.CompareTo("Pi0EtaBinning") != 0 ){
-            DrawGammaSetMarkerTGraphErr(graphMaterialError, 24, 1.,color[10],color[10]);
+            DrawGammaSetMarkerTGraphErr(graphMaterialError, GetMarkerStyleSystematics( "InnerMaterial", 2), 1.,GetColorSystematics( "InnerMaterial", 2),GetColorSystematics( "InnerMaterial", 2));
             graphMaterialError->Draw("pX0,csame");
             legendMeanNew->AddEntry(graphMaterialError,"Inner Material","p");
         }
@@ -1506,7 +1512,7 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
         }
         // PCM Material budget 
         if (meson.CompareTo("Pi0EtaBinning") != 0){
-            DrawGammaSetMarkerTGraphErr(graphMaterialError, 24, 1.,color[4],color[4]);
+            DrawGammaSetMarkerTGraphErr(graphMaterialError, GetMarkerStyleSystematics( "InnerMaterial", 2), 1.,GetColorSystematics( "InnerMaterial", 2),GetColorSystematics( "InnerMaterial", 2));
             graphMaterialError->Draw("pX0,csame");
         }
         // Track matching V0 to EMCAL - 12

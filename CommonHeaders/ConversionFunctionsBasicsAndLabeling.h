@@ -3613,7 +3613,9 @@ TString ReturnFullTextReconstructionProcess( Int_t mode, Int_t separate = 0, TSt
     }    
 }
 
-
+//************************************************************************************
+//******* Return correct generator name from MC name *********************************
+//************************************************************************************
 TString ReturnGeneratorNameFromMCName(TString MCname){
     if (MCname.CompareTo("LHC12f1a") == 0){
         return "Pythia 8.1, Tune 4C";
@@ -3631,6 +3633,9 @@ TString ReturnGeneratorNameFromMCName(TString MCname){
     return "";
 }    
 
+//************************************************************************************
+//** Return correct trigger rejection factor based on trigger cutnumber and energy ***
+//************************************************************************************
 Double_t ReturnTriggerRejectionFactor(TString energy, Int_t trigger){
     Double_t triggerRejec   = 1;
     if (energy.CompareTo("2.76TeV") == 0){
@@ -3648,6 +3653,9 @@ Double_t ReturnTriggerRejectionFactor(TString energy, Int_t trigger){
     return triggerRejec;
 }
 
+//************************************************************************************
+//************ Return correct trigger name based on trigger cutnumber ****************
+//************************************************************************************
 TString ReturnTriggerName(Int_t trigger){
     cout << trigger << endl;
     if (trigger == 1 || trigger == 3 || trigger == 0){  // INT1
@@ -3669,3 +3677,5 @@ TString ReturnTriggerName(Int_t trigger){
     }    
     return "";
 }
+
+

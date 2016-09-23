@@ -71,8 +71,6 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
     TString energyForOutput                 = energy;
     energyForOutput.ReplaceAll(".","_");
     
-    Color_t color[20] = {860,894,807,880,418,403,802,923,634,432,404,435,420,407,416,830,404,608,kCyan-2,1};
-    Color_t markerStyle[20] = {24,21,22,23,20,25,26,27,28,29,30,31,32,33,24,21,22,23,20,25};
     
     // ***************************************************************************************************
     // ******************************* general variable definition  **************************************
@@ -93,11 +91,18 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
     TString nameCutVariationSC2760GeV[19] = {"YieldExtraction", "dEdxE", "dEdxPi", "TPCCluster", "SinglePt",
                                             "Chi2", "Qt", "Alpha", "ConvPhi", "ClusterMinEnergy",
                                             "ClusterNCells", "ClusterNonLinearity", "ClusterTrackMatching", "ClusterM02", "CellTiming",
-                                            "ClusterMaterialTRD", "Trigger", "Efficiency", "YieldExtraction"};
+                                            "ClusterMaterialTRD", "Trigger", "Efficiency", "YieldExtractionPi0"};
     if (meson.CompareTo("EtaToPi0") == 0){
         nameCutVariation2760GeV[0]          = "Yield extraction #eta";
     }
 
+    Color_t color[20]; 
+    Style_t markerStyle[20];
+    
+    for (Int_t k = 0; k < 19; k++){
+        color[k]        = GetColorSystematics( nameCutVariationSC2760GeV[k], 2); 
+        markerStyle[k]  = GetMarkerStyleSystematics( nameCutVariationSC2760GeV[k], 2); 
+    }
     
     if (energy.CompareTo("2.76TeV") == 0) {
         for (Int_t i = 0; i < numberCutStudies; i++){
@@ -1209,7 +1214,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
 
         // PCM material
         if ( meson.CompareTo("EtaToPi0") != 0 ){
-            DrawGammaSetMarkerTGraphErr(graphMaterialError, 24, 1.,color[10],color[10]);
+            DrawGammaSetMarkerTGraphErr(graphMaterialError, GetMarkerStyleSystematics( "InnerMaterial", 2), 1.,GetColorSystematics( "InnerMaterial", 2),GetColorSystematics( "InnerMaterial", 2));
             graphMaterialError->Draw("pX0,csame");
             legendMeanNew->AddEntry(graphMaterialError,"Inner Material","p");
         }
@@ -1301,14 +1306,13 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
     for (Int_t i= 0; i< numberCutStudies; i++){
         SysErrDatAverSingle << nameCutVariationSC[i] << "\t";
     }
-    SysErrDatAverSingle << endl; 
+    SysErrDatAverSingle << "InnerMaterial" << endl; 
     for (Int_t l=0;l< nPtBins;l++){
         SysErrDatAverSingle << ptBins[l] << "\t";
         for (Int_t i= 0; i< numberCutStudies; i++){
             SysErrDatAverSingle << errorsMeanCorr[i][l] << "\t";
-        }  
-        
-        SysErrDatAverSingle << errorsMeanCorrMatSummed[l] << endl;
+        }
+        SysErrDatAverSingle << errorsMat[l] << "\t" << errorsMeanCorrMatSummed[l] << endl;
     }
     
     
@@ -1405,7 +1409,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         }
         // PCM Material budget 
         if (meson.CompareTo("EtaToPi0") != 0){
-            DrawGammaSetMarkerTGraphErr(graphMaterialError, 24, 1.,color[4],color[4]);
+            DrawGammaSetMarkerTGraphErr(graphMaterialError, GetMarkerStyleSystematics( "InnerMaterial", 2), 1.,GetColorSystematics( "InnerMaterial", 2),GetColorSystematics( "InnerMaterial", 2));
             graphMaterialError->Draw("pX0,csame");
         }
         // Track matching V0 to EMCAL - 12
