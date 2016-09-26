@@ -75,8 +75,6 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
     // ***************************************************************************************************
     // ******************************* general variable definition  **************************************
     // ***************************************************************************************************
-    Int_t 	numberOfEntriesPos = 0;
-    Int_t 	numberOfEntriesNeg = 0;
     const Int_t nPtBins = numberOfPtBins;
     const Int_t nCuts = numberCutStudies;
     Double_t* ptBins;

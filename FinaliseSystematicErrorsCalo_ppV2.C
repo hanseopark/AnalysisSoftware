@@ -71,20 +71,9 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
     TString energyForOutput                 = energy;
     energyForOutput.ReplaceAll(".","_");
     
-    Color_t color[20]                       = { kBlue, kRed+1, kOrange+7, kPink+8, kGreen+2, 
-                                                kYellow+2, kOrange+2, kBlue+2, kCyan-2, kViolet+1, 
-                                                kAzure+1, kAzure+4, kPink+4, kOrange, 407, 
-                                                416, 830, 404, kPink-6, 1};
-    Color_t markerStyle[20]                 = { 24, 21, 22, 23, 20, 
-                                                25, 26, 27, 28, 29,
-                                                30, 31, 32, 33, 24, 
-                                                21, 22, 23, 20, 25};
-    
     // ***************************************************************************************************
     // ******************************* general variable definition  **************************************
     // ***************************************************************************************************
-    Int_t   numberOfEntriesPos              = 0;
-    Int_t   numberOfEntriesNeg              = 0;
     const Int_t nPtBins                     = numberOfPtBins;
     const Int_t nCuts                       = numberCutStudies;
     Double_t* ptBins;

@@ -71,20 +71,9 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
     TString energyForOutput                 = energy;
     energyForOutput.ReplaceAll(".","_");
     
-    Color_t color[20]                       = { kBlue, kRed+1, kOrange+7, kPink+8, kGreen+2, 
-                                                kYellow+2, kOrange+2, kBlue+2, kCyan-2, kViolet+1, 
-                                                kAzure+1, kAzure+4, kPink+4, kOrange, 407, 
-                                                416, 830, 404, kPink-6, 1};
-    Color_t markerStyle[20]                 = { 24, 21, 22, 23, 20, 
-                                                25, 26, 27, 28, 29,
-                                                30, 31, 32, 33, 24, 
-                                                21, 22, 23, 20, 25};
-    
     // ***************************************************************************************************
     // ******************************* general variable definition  **************************************
     // ***************************************************************************************************
-    Int_t   numberOfEntriesPos              = 0;
-    Int_t   numberOfEntriesNeg              = 0;
     const Int_t nPtBins                     = numberOfPtBins;
     const Int_t nCuts                       = numberCutStudies;
     Double_t* ptBins;
@@ -92,21 +81,24 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
     TString nameCutVariation[16];
     TString nameCutVariationSC[16];
     
-    TString nameCutVariation8TeV[16]     = { "yield extraction", "#theta_{#gamma#gamma}", "min E_{cluster}", "min # cells", "clu. energy calibration",
-                                                "tr. match. to cl.", "M_{02}", "mat. infront of EMCal", "clu. energy scale", "cell time",
-                                                "trigger normalization", "efficiency", "clu. timing","clusterization energy", "periods", "yield extraction #pi^{0}" };
     TString nameCutVariationSC8TeV[16]   = { "YieldExtraction", "OpeningAngle", "ClusterMinEnergy", "ClusterNCells", "ClusterNonLinearity",
                                                 "ClusterTrackMatchingCalo", "ClusterM02","ClusterMaterialTRD", "ClusterEnergyScale" , "CellTiming", 
                                                 "Trigger", "Efficiency", "ClusterTime", "ClusterizationEnergy", "Periods", "YieldExtraction"};
+
+    Color_t color[16];
+    Color_t markerStyle[16];
+    for (Int_t k =0; k<16; k++ ){
+        color[k]        = GetColorSystematics( nameCutVariationSC8TeV[k], 4 );
+        markerStyle[k]  = GetMarkerStyleSystematics( nameCutVariationSC8TeV[k], 4 );
+    }
+
+    for (Int_t i = 0; i < numberCutStudies; i++){
+        nameCutVariation[i]     = GetSystematicsName(nameCutVariationSC8TeV[i]);
+        nameCutVariationSC[i]   = nameCutVariationSC8TeV[i];
+    }
+
     if (meson.CompareTo("Pi0EtaBinning") == 0){
         nameCutVariation8TeV[0]          = "Yield extraction #eta";
-    }
-    
-    if (energy.CompareTo("8TeV") == 0) {
-        for (Int_t i = 0;i < numberCutStudies;i++){
-            nameCutVariation[i]             = nameCutVariation8TeV[i];
-            nameCutVariationSC[i]           = nameCutVariationSC8TeV[i];
-        }
     }
     
     // ***************************************************************************************************

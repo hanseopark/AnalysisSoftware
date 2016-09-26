@@ -97,7 +97,7 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
         nameCutVariation[i]     = GetSystematicsName(nameCutVariationSC8TeV[i]);
         nameCutVariationSC[i]   = nameCutVariationSC8TeV[i];
     }
-    if (meson.CompareTo("EtaToPi0") == 0){
+    if (meson.CompareTo("Pi0EtaBinning") == 0){
         nameCutVariation[0]     = "Yield extraction #eta";
     }
         
