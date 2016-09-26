@@ -75,7 +75,41 @@ Int_t GetBinPosInVec( std::vector<TString> *vec, Int_t size, Double_t lookup){
   return -1;
 }
 
+//***************************************************************************************************************
+//************************* Get correct order of triggers for combinations **************************************
+//***************************************************************************************************************
+Int_t GetOrderedTrigger(TString triggerNameDummy){
+    if ((triggerNameDummy.CompareTo("MB") == 0 || triggerNameDummy.CompareTo("INT1") == 0  || triggerNameDummy.CompareTo("MB_NLM2") == 0 || triggerNameDummy.CompareTo("INT1_NLM2") == 0 ) ){
+        return 0;
+    } else if ((triggerNameDummy.CompareTo("INT7") == 0 || triggerNameDummy.CompareTo("INT7_NLM2") == 0) ){   
+        return 1;    
+    } else if ((triggerNameDummy.CompareTo("EMC1") == 0 || triggerNameDummy.CompareTo("EMC1_NLM2") == 0 ) ){   
+        return 2; 
+    } else if ((triggerNameDummy.CompareTo("EMC7") == 0 || triggerNameDummy.CompareTo("EMC7_NLM2") == 0 ) ){   
+        return 3;
+    } else if ((triggerNameDummy.CompareTo("EG2") == 0 || triggerNameDummy.CompareTo("EG2_NLM2") == 0 ||  triggerNameDummy.CompareTo("EGA") == 0) ){
+        return 4;
+    } else if ((triggerNameDummy.CompareTo("EG1") == 0 || triggerNameDummy.CompareTo("EG1_NLM2") == 0 ) ){   
+        return 5;        
+    } else if ((triggerNameDummy.CompareTo("MB_NLM1") == 0 || triggerNameDummy.CompareTo("INT1_NLM1") == 0  ) ){
+        return 6;
+    } else if (triggerNameDummy.CompareTo("INT7_NLM1") == 0 ){   
+        return 7;
+    } else if (triggerNameDummy.CompareTo("EMC1_NLM1") == 0 ){   
+        return 8;
+    } else if (triggerNameDummy.CompareTo("EMC7_NLM1") == 0 ){   
+        return 9;
+    } else if (triggerNameDummy.CompareTo("EG2_NLM1") == 0 ){   
+        return 10;
+    } else if (triggerNameDummy.CompareTo("EG1_NLM1") == 0 ){   
+        return 11;
+    } else 
+     return -1;
+}
 
+//***************************************************************************************************************
+//***************************** Main function *******************************************************************
+//***************************************************************************************************************
 void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "triggerFileListPi0.txt",
                                             Int_t   mode                = 4,
                                             Int_t   numberOfTrigg       = 6,
@@ -1717,7 +1751,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TGraphAsymmErrors* graphOrderedEffTimesAccPi0           [MaxNumberOfFiles];
     TGraphAsymmErrors* graphPurityPi0                       [MaxNumberOfFiles];
     TGraphAsymmErrors* graphOrderedPurityPi0                [MaxNumberOfFiles];
-        
+    
+    Int_t nRelSysErrPi0Sources          = 0;
+    TGraphAsymmErrors* graphRelSysErrPi0Source              [30][MaxNumberOfFiles];
+    TGraphAsymmErrors* graphOrderedRelSysErrPi0Source       [30][MaxNumberOfFiles];
+    for (Int_t j = 0; j< 30; j++){
+        for (Int_t k = 0; k< MaxNumberOfFiles; k++){
+            graphRelSysErrPi0Source[j][k]           = NULL;
+            graphOrderedRelSysErrPi0Source[j][k]    = NULL;
+        }    
+    }
     // definition of predefined arrays for trigger correlation filling
     TH1D*               histoStatPi0    [12]; 
     TGraphAsymmErrors*  graphSystPi0    [12];
@@ -1757,6 +1800,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         graphOrderedPurityPi0[j]        = NULL;
     }    
     
+    
     //****************************************************************************************************************
     //************* Processing of each individual trigger, reducing ranges & adding systematics **********************
     //****************************************************************************************************************
@@ -1767,13 +1811,13 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             ifstream  fileSysErrPi0;
             fileSysErrPi0.open(sysFilePi0[i].Data(),ios_base::in);
             cout << sysFilePi0[i].Data() << endl;
-            Int_t counter = 0;
+            Int_t iPtBin = 0;
             cout << "reading sys file summed" << endl;
-            while(!fileSysErrPi0.eof() && counter < 100){
+            while(!fileSysErrPi0.eof() && iPtBin < 100){
                 Double_t garbage = 0;
-                fileSysErrPi0 >>ptSysRelPi0[i][counter] >> yErrorSysLowRelPi0[i][counter] >> yErrorSysHighRelPi0[i][counter]>>    garbage >> garbage;
-                cout << counter << "\t"<< ptSysRelPi0[i][counter]<< "\t"  << yErrorSysLowRelPi0[i][counter] << "\t"  <<yErrorSysHighRelPi0[i][counter] << "\t"  << endl;;
-                counter++;
+                fileSysErrPi0 >>ptSysRelPi0[i][iPtBin] >> yErrorSysLowRelPi0[i][iPtBin] >> yErrorSysHighRelPi0[i][iPtBin]>>    garbage >> garbage;
+                cout << iPtBin << "\t"<< ptSysRelPi0[i][iPtBin]<< "\t"  << yErrorSysLowRelPi0[i][iPtBin] << "\t"  <<yErrorSysHighRelPi0[i][iPtBin] << "\t"  << endl;;
+                iPtBin++;
             }
             fileSysErrPi0.close();
          // read in detailed systematics
@@ -1794,26 +1838,26 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             
             if (sysAvailSinglePi0[i]){
                 cout << sysFilePi0Det << endl;
-                counter = 0;
+                iPtBin = 0;
                 string line;
-                Int_t counterColumn = 0;
-                while (getline(fileSysErrDetailedPi0, line) && counter < 100) {
+                Int_t iPtBinColumn = 0;
+                while (getline(fileSysErrDetailedPi0, line) && iPtBin < 100) {
                     istringstream ss(line);
                     TString temp="";
-                    counterColumn = 0;
-                    while(ss && counterColumn < 100){
+                    iPtBinColumn = 0;
+                    while(ss && iPtBinColumn < 100){
                         ss >> temp;
-                        if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
-                        ptSysDetail[i][counter].push_back(temp);
-                        counterColumn++;
+                        if( !(iPtBin==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                            ptSysDetail[i][iPtBin].push_back(temp);
+                            iPtBinColumn++;
                         }
                     }
-                    if(counter == 0){
-                        ptSysDetail[i][counter++].push_back("TotalError");
-                        counterColumn++;
-                    }else counter++;
+                    if(iPtBin == 0){
+                        ptSysDetail[i][iPtBin++].push_back("TotalError");
+                        iPtBinColumn++;
+                    }else iPtBin++;
                 }
-                numberBinsSysAvailSinglePi0[i] = counter;
+                numberBinsSysAvailSinglePi0[i] = iPtBin;
                 fileSysErrDetailedPi0.close();
             }   
         } else {
@@ -1970,24 +2014,52 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         
         // put systematics on graphs
         if (graphsCorrectedYieldSysRemoved0Pi0[i]){
+            if (sysAvailSinglePi0[i]){
+                nRelSysErrPi0Sources                    = (Int_t)ptSysDetail[i][0].size()-1;
+                for (Int_t k = 0; k < nRelSysErrPi0Sources; k++ ){
+                    graphRelSysErrPi0Source[k][i]       = (TGraphAsymmErrors*) graphsCorrectedYieldSysRemoved0Pi0[i]->Clone(Form("RelSysErrPi0Source%s_%s",((TString)ptSysDetail[i][0].at(k+1)).Data(), triggerName[i].Data()));
+                    cout << Form("RelSysErrSource%s_%s",((TString)ptSysDetail[i][0].at(k+1)).Data(), triggerName[i].Data()) << endl;
+                }    
+            }    
             for (Int_t j = 0; j< graphsCorrectedYieldSysRemoved0Pi0[i]->GetN(); j++){
                 if (sysAvailPi0[i]){
                     Int_t counter = 0;
                     while(counter < 100 && TMath::Abs(graphsCorrectedYieldSysRemoved0Pi0[i]->GetX()[j] - ptSysRelPi0[i][counter])> 0.001) counter++;
                     if (counter < 100){
                         cout << ptSysRelPi0[i][counter]<< "\t found it" << endl;
-                        Double_t yErrorSysLowDummy = TMath::Abs(yErrorSysLowRelPi0[i][counter]/100*graphsCorrectedYieldSysRemoved0Pi0[i]->GetY()[j]);
+                        Double_t yErrorSysLowDummy  = TMath::Abs(yErrorSysLowRelPi0[i][counter]/100*graphsCorrectedYieldSysRemoved0Pi0[i]->GetY()[j]);
                         Double_t yErrorSysHighDummy = yErrorSysHighRelPi0[i][counter]/100*graphsCorrectedYieldSysRemoved0Pi0[i]->GetY()[j];
                         graphsCorrectedYieldSysRemoved0Pi0[i]->SetPointEYlow(j,yErrorSysLowDummy);
                         graphsCorrectedYieldSysRemoved0Pi0[i]->SetPointEYhigh(j,yErrorSysHighDummy);
+                        if (sysAvailSinglePi0[i]){
+                            for (Int_t k = 0; k < nRelSysErrPi0Sources; k++ ){
+                                graphRelSysErrPi0Source[k][i]->SetPoint(j, graphsCorrectedYieldSysRemoved0Pi0[i]->GetX()[j] ,((TString)ptSysDetail[i][counter+1].at(k+1)).Atof());
+                                graphRelSysErrPi0Source[k][i]->SetPointEYhigh(j,0);
+                                graphRelSysErrPi0Source[k][i]->SetPointEYlow(j,0);
+                            }    
+                        }    
                     } else {
                         graphsCorrectedYieldSysRemoved0Pi0[i]->SetPointEYlow(j,0);
                         graphsCorrectedYieldSysRemoved0Pi0[i]->SetPointEYhigh(j,0);
+                        if (sysAvailSinglePi0[i]){
+                            for (Int_t k = 0; k < nRelSysErrPi0Sources; k++ ){
+                                graphRelSysErrPi0Source[k][i]->SetPoint(j, graphsCorrectedYieldSysRemoved0Pi0[i]->GetX()[j] ,0);
+                                graphRelSysErrPi0Source[k][i]->SetPointEYlow(j,0);
+                                graphRelSysErrPi0Source[k][i]->SetPointEYhigh(j,0);
+                            }    
+                        }
                     }
                 } else {
                     graphsCorrectedYieldSysRemoved0Pi0[i]->SetPointEYlow(j,0);
                     graphsCorrectedYieldSysRemoved0Pi0[i]->SetPointEYhigh(j,0);
                     averagedPi0 = kFALSE;
+                    if (sysAvailSinglePi0[i]){
+                        for (Int_t k = 0; k < nRelSysErrPi0Sources; k++ ){
+                            graphRelSysErrPi0Source[k][i]->SetPoint(j, graphsCorrectedYieldSysRemoved0Pi0[i]->GetX()[j] ,0);
+                            graphRelSysErrPi0Source[k][i]->SetPointEYlow(j,0);
+                            graphRelSysErrPi0Source[k][i]->SetPointEYhigh(j,0);
+                        }    
+                    }
                 }
             }
         }
@@ -2036,266 +2108,41 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         }
         
         // Set correct trigger order for combination function
-        if ((triggerName[i].CompareTo("MB") == 0 || triggerName[i].CompareTo("INT1") == 0  || triggerName[i].CompareTo("MB_NLM2") == 0 || triggerName[i].CompareTo("INT1_NLM2") == 0 ) 
-            && graphsCorrectedYieldShrunkPi0[i]){
-            cout << "filling MB trigger" << endl;
-            histoStatPi0[0]     = histoCorrectedYieldPi0ScaledMasked[i];
-            graphSystPi0[0]     = graphsCorrectedYieldSysShrunkPi0[i];
-            offSetsPi0Sys[0]    = histoStatPi0[0]->GetXaxis()->FindBin(graphSystPi0[0]->GetX()[0])-1;            
+        Int_t nCorrOrder    = GetOrderedTrigger(triggerName[i]);
+        if (nCorrOrder == -1){
+            cout << "ERROR: trigger name not defined" << endl;
+            return;
+        }    
+        
+        if ( graphsCorrectedYieldShrunkPi0[i]){  
+            histoStatPi0[nCorrOrder]    = histoCorrectedYieldPi0ScaledMasked[i];
+            graphSystPi0[nCorrOrder]    = graphsCorrectedYieldSysShrunkPi0[i];
+            offSetsPi0Sys[nCorrOrder]   = histoStatPi0[nCorrOrder]->GetXaxis()->FindBin(graphSystPi0[nCorrOrder]->GetX()[0])-1;            
             if (graphMassPi0Data[i]) 
-                graphOrderedMassPi0Data[0]      = graphMassPi0Data[i];
+                graphOrderedMassPi0Data[nCorrOrder]         = graphMassPi0Data[i];
             if (graphMassPi0MC[i]) 
-                graphOrderedMassPi0MC[0]        = graphMassPi0MC[i];
+                graphOrderedMassPi0MC[nCorrOrder]           = graphMassPi0MC[i];
             if (graphWidthPi0Data[i]) 
-                graphOrderedWidthPi0Data[0]     = graphWidthPi0Data[i];
+                graphOrderedWidthPi0Data[nCorrOrder]        = graphWidthPi0Data[i];
             if (graphWidthPi0MC[i]) 
-                graphOrderedWidthPi0MC[0]       = graphWidthPi0MC[i];
+                graphOrderedWidthPi0MC[nCorrOrder]          = graphWidthPi0MC[i];
             if (graphAcceptancePi0[i])
-                graphOrderedAcceptancePi0[0]    = graphAcceptancePi0[i];
+                graphOrderedAcceptancePi0[nCorrOrder]       = graphAcceptancePi0[i];
             if (graphEfficiencyPi0[i])
-                graphOrderedEfficiencyPi0[0]    = graphEfficiencyPi0[i];
+                graphOrderedEfficiencyPi0[nCorrOrder]       = graphEfficiencyPi0[i];
             if (graphEffTimesAccPi0[i])
-                graphOrderedEffTimesAccPi0[0]   = graphEffTimesAccPi0[i];
+                graphOrderedEffTimesAccPi0[nCorrOrder]      = graphEffTimesAccPi0[i];
             if (graphPurityPi0[i])
-                graphOrderedPurityPi0[0]        = graphPurityPi0[i];
-        } else if ((triggerName[i].CompareTo("INT7") == 0 || triggerName[i].CompareTo("INT7_NLM2") == 0) && graphsCorrectedYieldShrunkPi0[i]){   
-            cout << "filling INT7 trigger" << endl;
-            histoStatPi0[1]     = histoCorrectedYieldPi0ScaledMasked[i];
-            graphSystPi0[1]     = graphsCorrectedYieldSysShrunkPi0[i];
-            offSetsPi0Sys[1]    = histoStatPi0[1]->GetXaxis()->FindBin(graphSystPi0[1]->GetX()[0])-1;
-            if(optionEnergy.CompareTo("8TeV")==0 && mode == 2) offSetsPi0Sys[1]+=3;
-            if (graphMassPi0Data[i]) 
-                graphOrderedMassPi0Data[1]      = graphMassPi0Data[i];
-            if (graphMassPi0MC[i]) 
-                graphOrderedMassPi0MC[1]        = graphMassPi0MC[i];
-            if (graphWidthPi0Data[i]) 
-                graphOrderedWidthPi0Data[1]     = graphWidthPi0Data[i];
-            if (graphWidthPi0MC[i]) 
-                graphOrderedWidthPi0MC[1]       = graphWidthPi0MC[i];
-            if (graphAcceptancePi0[i])
-                graphOrderedAcceptancePi0[1]    = graphAcceptancePi0[i];
-            if (graphEfficiencyPi0[i])
-                graphOrderedEfficiencyPi0[1]    = graphEfficiencyPi0[i];
-            if (graphEffTimesAccPi0[i])
-                graphOrderedEffTimesAccPi0[1]   = graphEffTimesAccPi0[i];
-            if (graphPurityPi0[i])
-                graphOrderedPurityPi0[1]        = graphPurityPi0[i];
-        } else if ((triggerName[i].CompareTo("EMC1") == 0 || triggerName[i].CompareTo("EMC1_NLM2") == 0 ) && graphsCorrectedYieldShrunkPi0[i]){   
-            cout << "filling EMC1 trigger" << endl;
-            histoStatPi0[2]     = histoCorrectedYieldPi0ScaledMasked[i];
-            graphSystPi0[2]     = graphsCorrectedYieldSysShrunkPi0[i];
-            offSetsPi0Sys[2]    = histoStatPi0[2]->GetXaxis()->FindBin(graphSystPi0[2]->GetX()[0])-1;
-            if (graphMassPi0Data[i]) 
-                graphOrderedMassPi0Data[2]      = graphMassPi0Data[i];
-            if (graphMassPi0MC[i]) 
-                graphOrderedMassPi0MC[2]        = graphMassPi0MC[i];
-            if (graphWidthPi0Data[i]) 
-                graphOrderedWidthPi0Data[2]     = graphWidthPi0Data[i];
-            if (graphWidthPi0MC[i]) 
-                graphOrderedWidthPi0MC[2]       = graphWidthPi0MC[i];
-            if (graphAcceptancePi0[i])
-                graphOrderedAcceptancePi0[2]    = graphAcceptancePi0[i];
-            if (graphEfficiencyPi0[i])
-                graphOrderedEfficiencyPi0[2]    = graphEfficiencyPi0[i];
-            if (graphEffTimesAccPi0[i])
-                graphOrderedEffTimesAccPi0[2]   = graphEffTimesAccPi0[i];
-            if (graphPurityPi0[i])
-                graphOrderedPurityPi0[2]        = graphPurityPi0[i];
-        } else if ((triggerName[i].CompareTo("EMC7") == 0 || triggerName[i].CompareTo("EMC7_NLM2") == 0 ) && graphsCorrectedYieldShrunkPi0[i]){   
-            cout << "filling EMC7 trigger" << endl;
-            histoStatPi0[3]     = histoCorrectedYieldPi0ScaledMasked[i];
-            graphSystPi0[3]     = graphsCorrectedYieldSysShrunkPi0[i];
-            offSetsPi0Sys[3]    = histoStatPi0[3]->GetXaxis()->FindBin(graphSystPi0[3]->GetX()[0])-1;
-            if (graphMassPi0Data[i]) 
-                graphOrderedMassPi0Data[3]      = graphMassPi0Data[i];
-            if (graphMassPi0MC[i]) 
-                graphOrderedMassPi0MC[3]        = graphMassPi0MC[i];
-            if (graphWidthPi0Data[i]) 
-                graphOrderedWidthPi0Data[3]     = graphWidthPi0Data[i];
-            if (graphWidthPi0MC[i]) 
-                graphOrderedWidthPi0MC[3]       = graphWidthPi0MC[i];
-            if (graphAcceptancePi0[i])
-                graphOrderedAcceptancePi0[3]    = graphAcceptancePi0[i];
-            if (graphEfficiencyPi0[i])
-                graphOrderedEfficiencyPi0[3]    = graphEfficiencyPi0[i];
-            if (graphEffTimesAccPi0[i])
-                graphOrderedEffTimesAccPi0[3]   = graphEffTimesAccPi0[i];
-            if (graphPurityPi0[i])
-                graphOrderedPurityPi0[3]        = graphPurityPi0[i];
-        } else if ((triggerName[i].CompareTo("EG2") == 0 || triggerName[i].CompareTo("EG2_NLM2") == 0 ||  triggerName[i].CompareTo("EGA") == 0) && graphsCorrectedYieldShrunkPi0[i]){
-            cout << Form("filling %s trigger",strEG2_A.Data()) << endl;
-            histoStatPi0[4]     = histoCorrectedYieldPi0ScaledMasked[i];
-            graphSystPi0[4]     = graphsCorrectedYieldSysShrunkPi0[i];
-            offSetsPi0Sys[4]    = histoStatPi0[4]->GetXaxis()->FindBin(graphSystPi0[4]->GetX()[0])-1;
-            if(optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2)) offSetsPi0Sys[4]+=4;
-
-            if (graphMassPi0Data[i]) 
-                graphOrderedMassPi0Data[4]      = graphMassPi0Data[i];
-            if (graphMassPi0MC[i]) 
-                graphOrderedMassPi0MC[4]        = graphMassPi0MC[i];
-            if (graphWidthPi0Data[i]) 
-                graphOrderedWidthPi0Data[4]     = graphWidthPi0Data[i];
-            if (graphWidthPi0MC[i]) 
-                graphOrderedWidthPi0MC[4]       = graphWidthPi0MC[i];
-            if (graphAcceptancePi0[i])
-                graphOrderedAcceptancePi0[4]    = graphAcceptancePi0[i];
-            if (graphEfficiencyPi0[i])
-                graphOrderedEfficiencyPi0[4]    = graphEfficiencyPi0[i];
-            if (graphEffTimesAccPi0[i])
-                graphOrderedEffTimesAccPi0[4]   = graphEffTimesAccPi0[i];
-            if (graphPurityPi0[i])
-                graphOrderedPurityPi0[4]        = graphPurityPi0[i];
-        } else if ((triggerName[i].CompareTo("EG1") == 0 || triggerName[i].CompareTo("EG1_NLM2") == 0 ) && graphsCorrectedYieldShrunkPi0[i]){   
-            cout << "filling EG1 trigger" << endl;
-            histoStatPi0[5]     = histoCorrectedYieldPi0ScaledMasked[i];
-            graphSystPi0[5]     = graphsCorrectedYieldSysShrunkPi0[i];
-            offSetsPi0Sys[5]    = histoStatPi0[5]->GetXaxis()->FindBin(graphSystPi0[5]->GetX()[0])-1;
-            if (graphMassPi0Data[i]) 
-                graphOrderedMassPi0Data[5]      = graphMassPi0Data[i];
-            if (graphMassPi0MC[i]) 
-                graphOrderedMassPi0MC[5]        = graphMassPi0MC[i];
-            if (graphWidthPi0Data[i]) 
-                graphOrderedWidthPi0Data[5]     = graphWidthPi0Data[i];
-            if (graphWidthPi0MC[i]) 
-                graphOrderedWidthPi0MC[5]       = graphWidthPi0MC[i];
-            if (graphAcceptancePi0[i])
-                graphOrderedAcceptancePi0[5]    = graphAcceptancePi0[i];
-            if (graphEfficiencyPi0[i])
-                graphOrderedEfficiencyPi0[5]    = graphEfficiencyPi0[i];
-            if (graphEffTimesAccPi0[i])
-                graphOrderedEffTimesAccPi0[5]   = graphEffTimesAccPi0[i];
-            if (graphPurityPi0[i])
-                graphOrderedPurityPi0[5]        = graphPurityPi0[i];
-        } else if ((triggerName[i].CompareTo("MB_NLM1") == 0 || triggerName[i].CompareTo("INT1_NLM1") == 0  ) && graphsCorrectedYieldShrunkPi0[i]){
-            cout << "filling MB trigger NLM1" << endl;
-            histoStatPi0[6]     = histoCorrectedYieldPi0ScaledMasked[i];
-            graphSystPi0[6]     = graphsCorrectedYieldSysShrunkPi0[i];
-            offSetsPi0Sys[6]    = histoStatPi0[6]->GetXaxis()->FindBin(graphSystPi0[6]->GetX()[0])-1;            
-            if (graphMassPi0Data[i]) 
-                graphOrderedMassPi0Data[6]      = graphMassPi0Data[i];
-            if (graphMassPi0MC[i]) 
-                graphOrderedMassPi0MC[6]        = graphMassPi0MC[i];
-            if (graphWidthPi0Data[i]) 
-                graphOrderedWidthPi0Data[6]     = graphWidthPi0Data[i];
-            if (graphWidthPi0MC[i]) 
-                graphOrderedWidthPi0MC[6]       = graphWidthPi0MC[i];
-            if (graphAcceptancePi0[i])
-                graphOrderedAcceptancePi0[6]    = graphAcceptancePi0[i];
-            if (graphEfficiencyPi0[i])
-                graphOrderedEfficiencyPi0[6]    = graphEfficiencyPi0[i];
-            if (graphEffTimesAccPi0[i])
-                graphOrderedEffTimesAccPi0[6]   = graphEffTimesAccPi0[i];
-            if (graphPurityPi0[i])
-                graphOrderedPurityPi0[6]        = graphPurityPi0[i];
-        } else if (triggerName[i].CompareTo("INT7_NLM1") == 0 && graphsCorrectedYieldShrunkPi0[i]){   
-            cout << "filling INT7 trigger NLM1" << endl;
-            histoStatPi0[7]     = histoCorrectedYieldPi0ScaledMasked[i];
-            graphSystPi0[7]     = graphsCorrectedYieldSysShrunkPi0[i];
-            offSetsPi0Sys[7]    = histoStatPi0[7]->GetXaxis()->FindBin(graphSystPi0[7]->GetX()[0])-1;
-            if (graphMassPi0Data[i]) 
-                graphOrderedMassPi0Data[7]      = graphMassPi0Data[i];
-            if (graphMassPi0MC[i]) 
-                graphOrderedMassPi0MC[7]        = graphMassPi0MC[i];
-            if (graphWidthPi0Data[i]) 
-                graphOrderedWidthPi0Data[7]     = graphWidthPi0Data[i];
-            if (graphWidthPi0MC[i]) 
-                graphOrderedWidthPi0MC[7]       = graphWidthPi0MC[i];
-            if (graphAcceptancePi0[i])
-                graphOrderedAcceptancePi0[7]    = graphAcceptancePi0[i];
-            if (graphEfficiencyPi0[i])
-                graphOrderedEfficiencyPi0[7]    = graphEfficiencyPi0[i];
-            if (graphEffTimesAccPi0[i])
-                graphOrderedEffTimesAccPi0[7]   = graphEffTimesAccPi0[i];
-            if (graphPurityPi0[i])
-                graphOrderedPurityPi0[7]        = graphPurityPi0[i];
-        } else if (triggerName[i].CompareTo("EMC1_NLM1") == 0  && graphsCorrectedYieldShrunkPi0[i]){   
-            cout << "filling EMC1 trigger NLM1" << endl;
-            histoStatPi0[8]     = histoCorrectedYieldPi0ScaledMasked[i];
-            graphSystPi0[8]     = graphsCorrectedYieldSysShrunkPi0[i];
-            offSetsPi0Sys[8]    = histoStatPi0[8]->GetXaxis()->FindBin(graphSystPi0[8]->GetX()[0])-1;
-            if (graphMassPi0Data[i]) 
-                graphOrderedMassPi0Data[8]      = graphMassPi0Data[i];
-            if (graphMassPi0MC[i]) 
-                graphOrderedMassPi0MC[8]        = graphMassPi0MC[i];
-            if (graphWidthPi0Data[i]) 
-                graphOrderedWidthPi0Data[8]     = graphWidthPi0Data[i];
-            if (graphWidthPi0MC[i]) 
-                graphOrderedWidthPi0MC[8]       = graphWidthPi0MC[i];
-            if (graphAcceptancePi0[i])
-                graphOrderedAcceptancePi0[8]    = graphAcceptancePi0[i];
-            if (graphEfficiencyPi0[i])
-                graphOrderedEfficiencyPi0[8]    = graphEfficiencyPi0[i];
-            if (graphEffTimesAccPi0[i])
-                graphOrderedEffTimesAccPi0[8]   = graphEffTimesAccPi0[i];
-            if (graphPurityPi0[i])
-                graphOrderedPurityPi0[8]        = graphPurityPi0[i];
-        } else if (triggerName[i].CompareTo("EMC7_NLM1") == 0  && graphsCorrectedYieldShrunkPi0[i]){   
-            cout << "filling EMC7 trigger NLM1" << endl;
-            histoStatPi0[9]     = histoCorrectedYieldPi0ScaledMasked[i];
-            graphSystPi0[9]     = graphsCorrectedYieldSysShrunkPi0[i];
-            offSetsPi0Sys[9]    = histoStatPi0[9]->GetXaxis()->FindBin(graphSystPi0[9]->GetX()[0])-1;
-            if (graphMassPi0Data[i]) 
-                graphOrderedMassPi0Data[9]      = graphMassPi0Data[i];
-            if (graphMassPi0MC[i]) 
-                graphOrderedMassPi0MC[9]        = graphMassPi0MC[i];
-            if (graphWidthPi0Data[i]) 
-                graphOrderedWidthPi0Data[9]     = graphWidthPi0Data[i];
-            if (graphWidthPi0MC[i]) 
-                graphOrderedWidthPi0MC[9]       = graphWidthPi0MC[i];
-            if (graphAcceptancePi0[i])
-                graphOrderedAcceptancePi0[9]    = graphAcceptancePi0[i];
-            if (graphEfficiencyPi0[i])
-                graphOrderedEfficiencyPi0[9]    = graphEfficiencyPi0[i];
-            if (graphEffTimesAccPi0[i])
-                graphOrderedEffTimesAccPi0[9]   = graphEffTimesAccPi0[i];
-            if (graphPurityPi0[i])
-                graphOrderedPurityPi0[9]        = graphPurityPi0[i];
-        } else if (triggerName[i].CompareTo("EG2_NLM1") == 0 && graphsCorrectedYieldShrunkPi0[i]){   
-            cout << "filling EG2 trigger NLM1" << endl;
-            histoStatPi0[10]     = histoCorrectedYieldPi0ScaledMasked[i];
-            graphSystPi0[10]     = graphsCorrectedYieldSysShrunkPi0[i];
-            offSetsPi0Sys[10]    = histoStatPi0[10]->GetXaxis()->FindBin(graphSystPi0[10]->GetX()[0])-1;
-            if (graphMassPi0Data[i]) 
-                graphOrderedMassPi0Data[10]     = graphMassPi0Data[i];
-            if (graphMassPi0MC[i]) 
-                graphOrderedMassPi0MC[10]       = graphMassPi0MC[i];
-            if (graphWidthPi0Data[i]) 
-                graphOrderedWidthPi0Data[10]    = graphWidthPi0Data[i];
-            if (graphWidthPi0MC[i]) 
-                graphOrderedWidthPi0MC[10]      = graphWidthPi0MC[i];
-            if (graphAcceptancePi0[i])
-                graphOrderedAcceptancePi0[10]   = graphAcceptancePi0[i];
-            if (graphEfficiencyPi0[i])
-                graphOrderedEfficiencyPi0[10]   = graphEfficiencyPi0[i];
-            if (graphEffTimesAccPi0[i])
-                graphOrderedEffTimesAccPi0[10]  = graphEffTimesAccPi0[i];
-            if (graphPurityPi0[i])
-                graphOrderedPurityPi0[10]       = graphPurityPi0[i];
-        } else if (triggerName[i].CompareTo("EG1_NLM1") == 0 && graphsCorrectedYieldShrunkPi0[i]){   
-            cout << "filling EG1 trigger NLM1" << endl;
-            histoStatPi0[11]     = histoCorrectedYieldPi0ScaledMasked[i];
-            graphSystPi0[11]     = graphsCorrectedYieldSysShrunkPi0[i];
-            offSetsPi0Sys[11]    = histoStatPi0[11]->GetXaxis()->FindBin(graphSystPi0[11]->GetX()[0])-1;
-            if (graphMassPi0Data[i]) 
-                graphOrderedMassPi0Data[11]     = graphMassPi0Data[i];
-            if (graphMassPi0MC[i]) 
-                graphOrderedMassPi0MC[11]       = graphMassPi0MC[i];
-            if (graphWidthPi0Data[i]) 
-                graphOrderedWidthPi0Data[11]    = graphWidthPi0Data[i];
-            if (graphWidthPi0MC[i]) 
-                graphOrderedWidthPi0MC[11]      = graphWidthPi0MC[i];
-            if (graphAcceptancePi0[i])
-                graphOrderedAcceptancePi0[11]   = graphAcceptancePi0[i];
-            if (graphEfficiencyPi0[i])
-                graphOrderedEfficiencyPi0[11]   = graphEfficiencyPi0[i];
-            if (graphEffTimesAccPi0[i])
-                graphOrderedEffTimesAccPi0[11]  = graphEffTimesAccPi0[i];
-            if (graphPurityPi0[i])
-                graphOrderedPurityPi0[11]       = graphPurityPi0[i];
-        }
+                graphOrderedPurityPi0[nCorrOrder]           = graphPurityPi0[i];
+            if (sysAvailSinglePi0[i]){
+                for (Int_t k = 0; k < nRelSysErrPi0Sources; k++ ){
+                    if (graphRelSysErrPi0Source[k][i])
+                        graphOrderedRelSysErrPi0Source[k][nCorrOrder]   = graphRelSysErrPi0Source[k][i];
+                }    
+            }            
+        } 
     }
 
-//     return;
     
     // create weighted graphs for spectra and supporting graphs
     TString nameWeightsLogFilePi0 =     Form("%s/weightsPi0_%s.dat",outputDir.Data(),isMC.Data());
@@ -2310,7 +2157,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TGraphAsymmErrors* graphEfficiencyPi0Weighted                   = NULL;
     TGraphAsymmErrors* graphEffTimesAccPi0Weighted                  = NULL;
     TGraphAsymmErrors* graphPurityPi0Weighted                       = NULL;
-    
+    TGraphAsymmErrors* graphRelSysErrPi0SourceWeighted[30];
+    for (Int_t k = 0; k < 30; k++){
+        graphRelSysErrPi0SourceWeighted[k]                          = NULL;
+    }    
     // Calculate averaged pi0 spectrum & respective supporting graphs according to statistical and systematic errors taking correctly into account the cross correlations
     if (averagedPi0){
         cout << maxNAllowedPi0 << endl;
@@ -2411,50 +2261,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             graphWeightsPi0[availableMeasPi0[i]]->Print();
         }   
 
-        //  **********************************************************************************************************************
-        //  **************************************** Combine+write detailed Systematics ******************************************
-        //  **********************************************************************************************************************
-
-        const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSingle%s_Pi0_%s.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
-        fstream SysErrDatAverSingle;
-        SysErrDatAverSingle.precision(4);
-        cout << SysErrDatnameMeanSingleErr << endl;
-        if(sysAvailSinglePi0[0]){
-          SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
-          for(Int_t iColumn = 0; iColumn < (Int_t)ptSysDetail[0][0].size(); iColumn++) SysErrDatAverSingle << ptSysDetail[0][0].at(iColumn) << "\t";
-          SysErrDatAverSingle << endl;
-          for (Int_t i = 1; i < nrOfTrigToBeComb; i++){
-            if(!sysAvailSinglePi0[i]) continue;
-            for(Int_t iCol = 0; iCol < (Int_t)ptSysDetail[i][0].size(); iCol++){
-              if( ((TString)ptSysDetail[i][0].at(iCol)).CompareTo(((TString)ptSysDetail[0][0].at(iCol))) ){
-                cout << "ERROR: Systematic error type at pos " << iCol << " does not agree for " << availableMeasPi0[i] << " & " << availableMeasPi0[0] << ", returning!" << endl;
-                return;
-              }
-            }
-          }
-
-          for(Int_t i=0; i<nPtBinsReadPi0; i++){
-            SysErrDatAverSingle << xValuesReadPi0[i] << "\t";
-            Int_t nColumns = (Int_t)ptSysDetail[0][0].size();
-            Double_t *errors = new Double_t[nColumns-1];
-            for(Int_t iErr=0; iErr<nColumns-1; iErr++) errors[iErr] = 0;
-            for(Int_t j=0; j<nrOfTrigToBeComb; j++){
-              if(!sysAvailSinglePi0[j]) continue;
-              Int_t pos = GetBinPosInVec(ptSysDetail[j],numberBinsSysAvailSinglePi0[j],xValuesReadPi0[i]);
-              if(pos>-1){
-                for(Int_t iErr=1; iErr<nColumns; iErr++) errors[iErr-1] += weightsReadPi0[availableMeasPi0[j]][i]*((TString)ptSysDetail[j][pos].at(iErr)).Atof();
-              }
-            }
-            for(Int_t iErr=0; iErr<nColumns-1; iErr++) SysErrDatAverSingle << errors[iErr] << "\t";
-            SysErrDatAverSingle << endl;
-            delete[] errors;
-          }
-        }
-        SysErrDatAverSingle.close();
-
-        for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
-          for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
-        }
 
         //  **********************************************************************************************************************
         //  ******************************************* Plotting weights Pi0 *****************************************************
@@ -2649,7 +2455,24 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             
         canvasRelTotErr->SaveAs(Form("%s/Pi0_RelErrorsFulldecomp.%s",outputDir.Data(),suffix.Data()));
         
-        //return;
+        // Calculate relative sys error weighted
+        if (sysAvailSinglePi0[0]){
+            for (Int_t k = 0; k< nRelSysErrPi0Sources ; k++ ){
+                graphRelSysErrPi0SourceWeighted[k]      = CalculateWeightedQuantity(    graphOrderedRelSysErrPi0Source[k], 
+                                                                                        graphWeightsPi0,
+                                                                                        binningPi0,  maxNAllowedPi0,
+                                                                                        MaxNumberOfFiles
+                                                                                   );
+                if (!graphRelSysErrPi0SourceWeighted[k]){
+                    cout << "Aborted in CalculateWeightedQuantity for " << endl;
+                    return;
+                } else {
+                    graphRelSysErrPi0SourceWeighted[k]->SetName(Form("RelSysErrPi0SourceWeighted%s", ((TString)ptSysDetail[0][0].at(k+1)).Data()));
+                }    
+            }    
+            
+        }
+        
         // Calculation of averaged supporting plots with weights from spectra
         if (mode != 10){
             graphMassPi0DataWeighted                    = CalculateWeightedQuantity(    graphOrderedMassPi0Data, 
@@ -2764,6 +2587,15 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 cout << "I don't have a weighted Pi0 purity graph" << endl;
                 
         }    
+        
+        if (sysAvailSinglePi0[0]){
+            for (Int_t k = 0; k < nRelSysErrPi0Sources; k++){
+                if (graphRelSysErrPi0SourceWeighted[k])
+                    while (graphRelSysErrPi0SourceWeighted[k]->GetY()[0] == -10000 )   graphRelSysErrPi0SourceWeighted[k]->RemovePoint(0);
+                else 
+                    cout << "I don't have a weighted Pi0 rel sys err graph for error source: " << k << endl;
+            }    
+        }    
         if (graphAcceptancePi0Weighted)
             while (graphAcceptancePi0Weighted->GetY()[0] == -10000)     graphAcceptancePi0Weighted->RemovePoint(0);
         else 
@@ -2779,6 +2611,107 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         else 
             cout << "I don't have a weighted Pi0 acceptance x efficiency graph" << endl;
 
+        
+        //  **********************************************************************************************************************
+        //  **************************************** Combine+write detailed Systematics ******************************************
+        //  **********************************************************************************************************************
+
+        const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSingle%s_Pi0_%s.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
+        fstream SysErrDatAverSingle;
+        SysErrDatAverSingle.precision(4);
+        cout << SysErrDatnameMeanSingleErr << endl;
+        if(sysAvailSinglePi0[0] && graphRelSysErrPi0SourceWeighted[0]){
+            SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
+            for(Int_t iColumn = 0; iColumn < (Int_t)ptSysDetail[0][0].size(); iColumn++) SysErrDatAverSingle << ptSysDetail[0][0].at(iColumn) << "\t";
+            SysErrDatAverSingle << endl;
+            for (Int_t i = 1; i < nrOfTrigToBeComb; i++){
+                if(!sysAvailSinglePi0[i]) continue;
+                for(Int_t iCol = 0; iCol < (Int_t)ptSysDetail[i][0].size(); iCol++){
+                    if( ((TString)ptSysDetail[i][0].at(iCol)).CompareTo(((TString)ptSysDetail[0][0].at(iCol))) ){
+                        cout << "ERROR: Systematic error type at pos " << iCol << " does not agree for " << availableMeasPi0[i] << " & " << availableMeasPi0[0] << ", returning!" << endl;
+                        return;
+                    }
+                }
+            }
+
+            for(Int_t i=0; i<graphRelSysErrPi0SourceWeighted[0]->GetN(); i++){
+                SysErrDatAverSingle << graphRelSysErrPi0SourceWeighted[0]->GetX()[i] << "\t";
+                Int_t nColumns = (Int_t)ptSysDetail[0][0].size();
+                for(Int_t iErr=0; iErr<nColumns-1; iErr++) 
+                    SysErrDatAverSingle << graphRelSysErrPi0SourceWeighted[iErr]->GetY()[i] << "\t";
+                SysErrDatAverSingle << endl;
+                
+            }
+        }
+        SysErrDatAverSingle.close();
+
+        // ***************************************************************************************************
+        // ********************* Plot all mean erros separately after smoothing ******************************
+        // ***************************************************************************************************    
+        TCanvas* canvasNewSysErrMean = new TCanvas("canvasNewSysErrMean","",200,10,1350,900);// gives the page size
+        DrawGammaCanvasSettings( canvasNewSysErrMean, 0.08, 0.01, 0.015, 0.09);
+        
+            // create dummy histo
+            TH2D *histo2DNewSysErrMean ;
+            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 100,0.,maxPtGlobalPi0,1000.,-0.5,30.);
+            SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
+                                    1,0.9, 510, 510);
+            histo2DNewSysErrMean->Draw();
+
+            // Give legend position for plotting
+            Double_t minXLegend     = 0.12;
+            Double_t maxYLegend     = 0.95;
+            Double_t widthLegend    = 0.25;
+            if (nRelSysErrPi0Sources> 7)  
+                widthLegend         = 0.5;
+            Double_t heightLegend   = 1.05* 0.035 * (nRelSysErrPi0Sources+3);
+            if (nRelSysErrPi0Sources> 7)  
+                heightLegend        = 1.05* 0.035 * (nRelSysErrPi0Sources/2+1);
+
+            // create legend
+            TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
+            legendMeanNew->SetMargin(0.1);
+            if (nRelSysErrPi0Sources> 7) legendMeanNew->SetNColumns(2);
+
+            for(Int_t i = 0;i< nRelSysErrPi0Sources-1 ;i++){    
+                DrawGammaSetMarkerTGraphAsym(graphRelSysErrPi0SourceWeighted[i], GetMarkerStyleSystematics(  ptSysDetail[0][0].at(i+1), mode), 1.,
+                                            GetColorSystematics( ptSysDetail[0][0].at(i+1), mode),GetColorSystematics( ptSysDetail[0][0].at(i+1), mode));
+                graphRelSysErrPi0SourceWeighted[i]->Draw("pX0,csame");
+                legendMeanNew->AddEntry(graphRelSysErrPi0SourceWeighted[i],GetSystematicsName(ptSysDetail[0][0].at(i+1)),"p");
+            }
+            
+            DrawGammaSetMarkerTGraphAsym(graphRelSysErrPi0SourceWeighted[nRelSysErrPi0Sources-1], 20, 1.,kBlack,kBlack);
+            graphRelSysErrPi0SourceWeighted[nRelSysErrPi0Sources-1]->Draw("p,csame");
+            legendMeanNew->AddEntry(graphRelSysErrPi0SourceWeighted[nRelSysErrPi0Sources-1],"quad. sum.","p");
+            legendMeanNew->Draw();
+
+            // labeling
+            TLatex *labelEnergySysDetailed = new TLatex(0.95, 0.93,collisionSystem.Data());
+            labelEnergySysDetailed->SetTextAlign(31);
+            SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
+            labelEnergySysDetailed->Draw();
+
+            TLatex *labelPi0SysDetailed     = new TLatex(0.95, 0.93-0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
+            labelPi0SysDetailed->SetTextAlign(31);
+            SetStyleTLatex( labelPi0SysDetailed, 0.85*textSizeSpectra,4);
+            labelPi0SysDetailed->Draw();
+
+            TLatex *labelDetProcSysDetailed = new TLatex(0.95, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
+            labelDetProcSysDetailed->SetTextAlign(31);
+            SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4);
+            labelDetProcSysDetailed->Draw();
+
+        canvasNewSysErrMean->Update();
+        canvasNewSysErrMean->SaveAs(Form("%s/Pi0_SysErrorsSeparatedSourcesReweighted_%s.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+
+        
+        
+        
+        for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
+            for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
+        }
+        
+        
     // if averaging wasn't enabled pick values according to predefined ranges ("cherry picking points")    
     } else {
        graphCorrectedYieldWeightedAveragePi0Stat        = new TGraphAsymmErrors(nPointFinalPi0, xValueFinalPi0, yValueFinalPi0, 
@@ -3401,6 +3334,27 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TH1D*   histoTriggerEffEta      [MaxNumberOfFiles];
     Bool_t  enableTriggerEffEta     [MaxNumberOfFiles];
     Bool_t  enableTriggerEffEtaAll                                  = kFALSE;
+
+    Int_t nRelSysErrEtaSources          = 0;
+    TGraphAsymmErrors* graphRelSysErrEtaSource              [30][MaxNumberOfFiles];
+    TGraphAsymmErrors* graphOrderedRelSysErrEtaSource       [30][MaxNumberOfFiles];
+    TGraphAsymmErrors* graphRelSysErrEtaSourceWeighted      [30];
+    Int_t nRelSysErrEtaToPi0Sources     = 0;
+    TGraphAsymmErrors* graphRelSysErrEtaToPi0Source         [30][MaxNumberOfFiles];
+    TGraphAsymmErrors* graphOrderedRelSysErrEtaToPi0Source  [30][MaxNumberOfFiles];
+    TGraphAsymmErrors* graphRelSysErrEtaToPi0SourceWeighted [30];
+    for (Int_t j = 0; j< 30; j++){
+        graphRelSysErrEtaSourceWeighted[j]          = NULL;
+        graphRelSysErrEtaToPi0SourceWeighted[j]     = NULL;
+        for (Int_t k = 0; k< MaxNumberOfFiles; k++){
+            graphRelSysErrEtaSource[j][k]               = NULL;
+            graphOrderedRelSysErrEtaSource[j][k]        = NULL;
+            graphRelSysErrEtaToPi0Source[j][k]          = NULL;
+            graphOrderedRelSysErrEtaToPi0Source[j][k]   = NULL;
+        }    
+    }
+    Bool_t sysAvailSingleEtaToPi0                           [MaxNumberOfFiles];
+    Bool_t sysAvailSingleEta                                [MaxNumberOfFiles];
 
     // read eta files if we are not in mode 10
     if (enableEta && mode != 10){        
@@ -4121,7 +4075,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         Double_t yErrorSysHighRelEta                            [MaxNumberOfFiles][100];
         Bool_t     sysAvailEta                                  [MaxNumberOfFiles];
 
-        Bool_t sysAvailSingleEta                                [MaxNumberOfFiles];
         Int_t numberBinsSysAvailSingleEta                       [MaxNumberOfFiles];
         
         // create graphs for shrunk spectrum
@@ -4290,6 +4243,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
               continue;
             // shorten graphs at the end according to range set in ptFromSpecEta
             } else if (ptFromSpecEta[i][1] > -1) {
+                
                 for (Int_t f = histoCorrectedYieldEtaScaledMasked[i]->GetXaxis()->FindBin(ptFromSpecEta[i][1]); f < histoCorrectedYieldEtaScaledMasked[i]->GetNbinsX()+1; f++ ){
                     histoCorrectedYieldEtaScaledMasked[i]->SetBinContent(f,0.);
                     histoCorrectedYieldEtaScaledMasked[i]->SetBinError(f,0.);
@@ -4331,6 +4285,15 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             while (graphsCorrectedYieldSysRemoved0Eta[i]->GetY()[0] == 0) graphsCorrectedYieldSysRemoved0Eta[i]->RemovePoint(0);
 //             graphsCorrectedYieldSysRemoved0Eta[i]->Print();
             
+            if (graphsCorrectedYieldSysRemoved0Eta[i]){
+                if (sysAvailSingleEta[i]){
+                    nRelSysErrEtaSources                    = (Int_t)ptSysDetail[i][0].size()-1;
+                    for (Int_t k = 0; k < nRelSysErrEtaSources; k++ ){
+                        graphRelSysErrEtaSource[k][i]       = (TGraphAsymmErrors*) graphsCorrectedYieldSysRemoved0Eta[i]->Clone(Form("RelSysErrEtaSource%s_%s",((TString)ptSysDetail[i][0].at(k+1)).Data(), triggerName[i].Data()));
+                        cout << Form("RelSysErrSource%s_%s",((TString)ptSysDetail[i][0].at(k+1)).Data(), triggerName[i].Data()) << endl;
+                    }    
+                }
+            }
             // shrink systematics graphs at the end & fill systematics
             for (Int_t j = 0; j< graphsCorrectedYieldSysRemoved0Eta[i]->GetN(); j++){
                 if (sysAvailEta[i]){
@@ -4342,17 +4305,38 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                         Double_t yErrorSysHighDummy = yErrorSysHighRelEta[i][counter]/100*graphsCorrectedYieldSysRemoved0Eta[i]->GetY()[j];
                         graphsCorrectedYieldSysRemoved0Eta[i]->SetPointEYlow(j,yErrorSysLowDummy);
                         graphsCorrectedYieldSysRemoved0Eta[i]->SetPointEYhigh(j,yErrorSysHighDummy);
+                        if (sysAvailSingleEta[i]){
+                            for (Int_t k = 0; k < nRelSysErrEtaSources; k++ ){
+                                graphRelSysErrEtaSource[k][i]->SetPoint(j, graphsCorrectedYieldSysRemoved0Eta[i]->GetX()[j] ,((TString)ptSysDetail[i][counter+1].at(k+1)).Atof());
+                                graphRelSysErrEtaSource[k][i]->SetPointEYhigh(j,0);
+                                graphRelSysErrEtaSource[k][i]->SetPointEYlow(j,0);
+                            }    
+                        }
                     } else {
                         graphsCorrectedYieldSysRemoved0Eta[i]->SetPointEYlow(j,0);
                         graphsCorrectedYieldSysRemoved0Eta[i]->SetPointEYhigh(j,0);
+                        if (sysAvailSingleEta[i]){
+                            for (Int_t k = 0; k < nRelSysErrEtaSources; k++ ){
+                                graphRelSysErrEtaSource[k][i]->SetPoint(j, graphsCorrectedYieldSysRemoved0Eta[i]->GetX()[j] ,0);
+                                graphRelSysErrEtaSource[k][i]->SetPointEYlow(j,0);
+                                graphRelSysErrEtaSource[k][i]->SetPointEYhigh(j,0);
+                            }    
+                        }
                     }
                 } else {
                     graphsCorrectedYieldSysRemoved0Eta[i]->SetPointEYlow(j,0);
                     graphsCorrectedYieldSysRemoved0Eta[i]->SetPointEYhigh(j,0);
                     averagedEta = kFALSE;
+                    if (sysAvailSingleEta[i]){
+                        for (Int_t k = 0; k < nRelSysErrEtaSources; k++ ){
+                            graphRelSysErrEtaSource[k][i]->SetPoint(j, graphsCorrectedYieldSysRemoved0Eta[i]->GetX()[j] ,0);
+                            graphRelSysErrEtaSource[k][i]->SetPointEYlow(j,0);
+                            graphRelSysErrEtaSource[k][i]->SetPointEYhigh(j,0);
+                        }    
+                    }
                 }
             }
-            
+               
             // Shrink graphs to desired range from below
             cout << "step 3" << endl;
             while (graphsCorrectedYieldShrunkEta[i]->GetX()[0] < ptFromSpecEta[i][0]) 
@@ -4394,125 +4378,42 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 graphsCorrectedYieldSysShrunkEta[i]->SetPointEYhigh(j,yErrorSysHighFinalEta[nPointFinalEta]);
                 nPointFinalEta++;
             }
+
+            // Set correct trigger order for combination function
+            Int_t nCorrOrder    = GetOrderedTrigger(triggerName[i]);
+            if (nCorrOrder == -1){
+                cout << "ERROR: trigger name not defined" << endl;
+                return;
+            }    
             
             // fill inputs for combinations function in correct order
-            if ( (triggerName[i].Contains("MB") || triggerName[i].Contains("INT1")) && graphsCorrectedYieldShrunkEta[i]){
-                cout << "filling MB trigger" << endl;
-                histoStatEta[0]     = histoCorrectedYieldEtaScaledMasked[i];
-                graphSystEta[0]     = graphsCorrectedYieldSysShrunkEta[i];
-                offSetsEtaSys[0]    = histoStatEta[0]->GetXaxis()->FindBin(graphSystEta[0]->GetX()[0])-1;
+            if ( graphsCorrectedYieldShrunkEta[i]){
+                histoStatEta[nCorrOrder]     = histoCorrectedYieldEtaScaledMasked[i];
+                graphSystEta[nCorrOrder]     = graphsCorrectedYieldSysShrunkEta[i];
+                offSetsEtaSys[nCorrOrder]    = histoStatEta[nCorrOrder]->GetXaxis()->FindBin(graphSystEta[nCorrOrder]->GetX()[0])-1;
                 if (graphMassEtaData[i]) 
-                    graphOrderedMassEtaData[0]      = graphMassEtaData[i];
+                    graphOrderedMassEtaData[nCorrOrder]      = graphMassEtaData[i];
                 if (graphMassEtaMC[i]) 
-                    graphOrderedMassEtaMC[0]        = graphMassEtaMC[i];
+                    graphOrderedMassEtaMC[nCorrOrder]        = graphMassEtaMC[i];
                 if (graphWidthEtaData[i]) 
-                    graphOrderedWidthEtaData[0]     = graphWidthEtaData[i];
+                    graphOrderedWidthEtaData[nCorrOrder]     = graphWidthEtaData[i];
                 if (graphWidthEtaMC[i]) 
-                    graphOrderedWidthEtaMC[0]       = graphWidthEtaMC[i];
+                    graphOrderedWidthEtaMC[nCorrOrder]       = graphWidthEtaMC[i];
                 if (graphAcceptanceEta[i])
-                    graphOrderedAcceptanceEta[0]    = graphAcceptanceEta[i];
+                    graphOrderedAcceptanceEta[nCorrOrder]    = graphAcceptanceEta[i];
                 if (graphEfficiencyEta[i])
-                    graphOrderedEfficiencyEta[0]    = graphEfficiencyEta[i];
+                    graphOrderedEfficiencyEta[nCorrOrder]    = graphEfficiencyEta[i];
                 if (graphEffTimesAccEta[i])
-                    graphOrderedEffTimesAccEta[0]   = graphEffTimesAccEta[i];                
-            } else if (triggerName[i].Contains("INT7") && graphsCorrectedYieldShrunkEta[i]){   
-                cout << "filling INT7 trigger" << endl;
-                histoStatEta[1]     = histoCorrectedYieldEtaScaledMasked[i];
-                graphSystEta[1]     = graphsCorrectedYieldSysShrunkEta[i];
-                offSetsEtaSys[1]    = histoStatEta[1]->GetXaxis()->FindBin(graphSystEta[1]->GetX()[0])-1;
-                if (graphMassEtaData[i]) 
-                    graphOrderedMassEtaData[1]      = graphMassEtaData[i];
-                if (graphMassEtaMC[i]) 
-                    graphOrderedMassEtaMC[1]        = graphMassEtaMC[i];
-                if (graphWidthEtaData[i]) 
-                    graphOrderedWidthEtaData[1]     = graphWidthEtaData[i];
-                if (graphWidthEtaMC[i]) 
-                    graphOrderedWidthEtaMC[1]       = graphWidthEtaMC[i];
-                if (graphAcceptanceEta[i])
-                    graphOrderedAcceptanceEta[1]    = graphAcceptanceEta[i];
-                if (graphEfficiencyEta[i])
-                    graphOrderedEfficiencyEta[1]    = graphEfficiencyEta[i];
-                if (graphEffTimesAccEta[i])
-                    graphOrderedEffTimesAccEta[1]   = graphEffTimesAccEta[i];                
-            } else if (triggerName[i].Contains("EMC1") && graphsCorrectedYieldShrunkEta[i]){   
-                cout << "filling EMC1 trigger" << endl;
-                histoStatEta[2]     = histoCorrectedYieldEtaScaledMasked[i];
-                graphSystEta[2]     = graphsCorrectedYieldSysShrunkEta[i];
-                offSetsEtaSys[2]    = histoStatEta[2]->GetXaxis()->FindBin(graphSystEta[2]->GetX()[0])-1;
-                if (graphMassEtaData[i]) 
-                    graphOrderedMassEtaData[2]      = graphMassEtaData[i];
-                if (graphMassEtaMC[i]) 
-                    graphOrderedMassEtaMC[2]        = graphMassEtaMC[i];
-                if (graphWidthEtaData[i]) 
-                    graphOrderedWidthEtaData[2]     = graphWidthEtaData[i];
-                if (graphWidthEtaMC[i]) 
-                    graphOrderedWidthEtaMC[2]       = graphWidthEtaMC[i];
-                if (graphAcceptanceEta[i])
-                    graphOrderedAcceptanceEta[2]    = graphAcceptanceEta[i];
-                if (graphEfficiencyEta[i])
-                    graphOrderedEfficiencyEta[2]    = graphEfficiencyEta[i];
-                if (graphEffTimesAccEta[i])
-                    graphOrderedEffTimesAccEta[2]   = graphEffTimesAccEta[i];                
-            } else if (triggerName[i].Contains("EMC7") && graphsCorrectedYieldShrunkEta[i]){   
-                cout << "filling EMC7 trigger" << endl;
-                histoStatEta[3]     = histoCorrectedYieldEtaScaledMasked[i];
-                graphSystEta[3]     = graphsCorrectedYieldSysShrunkEta[i];
-                offSetsEtaSys[3]    = histoStatEta[3]->GetXaxis()->FindBin(graphSystEta[3]->GetX()[0])-1;
-                if (graphMassEtaData[i]) 
-                    graphOrderedMassEtaData[3]      = graphMassEtaData[i];
-                if (graphMassEtaMC[i]) 
-                    graphOrderedMassEtaMC[3]        = graphMassEtaMC[i];
-                if (graphWidthEtaData[i]) 
-                    graphOrderedWidthEtaData[3]     = graphWidthEtaData[i];
-                if (graphWidthEtaMC[i]) 
-                    graphOrderedWidthEtaMC[3]       = graphWidthEtaMC[i];
-                if (graphAcceptanceEta[i])
-                    graphOrderedAcceptanceEta[3]    = graphAcceptanceEta[i];
-                if (graphEfficiencyEta[i])
-                    graphOrderedEfficiencyEta[3]    = graphEfficiencyEta[i];
-                if (graphEffTimesAccEta[i])
-                    graphOrderedEffTimesAccEta[3]   = graphEffTimesAccEta[i];                
-            } else if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && graphsCorrectedYieldShrunkEta[i]){
-                cout << Form("filling %s trigger",strEG2_A.Data()) << endl;
-                histoStatEta[4]     = histoCorrectedYieldEtaScaledMasked[i];
-                graphSystEta[4]     = graphsCorrectedYieldSysShrunkEta[i];
-                offSetsEtaSys[4]    = histoStatEta[4]->GetXaxis()->FindBin(graphSystEta[4]->GetX()[0])-1;
-                if(optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2)) offSetsEtaSys[4]+=2;
-
-                if (graphMassEtaData[i]) 
-                    graphOrderedMassEtaData[4]      = graphMassEtaData[i];
-                if (graphMassEtaMC[i]) 
-                    graphOrderedMassEtaMC[4]        = graphMassEtaMC[i];
-                if (graphWidthEtaData[i]) 
-                    graphOrderedWidthEtaData[4]     = graphWidthEtaData[i];
-                if (graphWidthEtaMC[i]) 
-                    graphOrderedWidthEtaMC[4]       = graphWidthEtaMC[i];
-                if (graphAcceptanceEta[i])
-                    graphOrderedAcceptanceEta[4]    = graphAcceptanceEta[i];
-                if (graphEfficiencyEta[i])
-                    graphOrderedEfficiencyEta[4]    = graphEfficiencyEta[i];
-                if (graphEffTimesAccEta[i])
-                    graphOrderedEffTimesAccEta[4]   = graphEffTimesAccEta[i];                
-            } else if (triggerName[i].Contains("EG1") && graphsCorrectedYieldShrunkEta[i]){   
-                cout << "filling EG1 trigger" << endl;
-                histoStatEta[5]     = histoCorrectedYieldEtaScaledMasked[i];
-                graphSystEta[5]     = graphsCorrectedYieldSysShrunkEta[i];
-                offSetsEtaSys[5]    = histoStatEta[5]->GetXaxis()->FindBin(graphSystEta[5]->GetX()[0])-1;
-                if (graphMassEtaData[i]) 
-                    graphOrderedMassEtaData[5]      = graphMassEtaData[i];
-                if (graphMassEtaMC[i]) 
-                    graphOrderedMassEtaMC[5]        = graphMassEtaMC[i];
-                if (graphWidthEtaData[i]) 
-                    graphOrderedWidthEtaData[5]     = graphWidthEtaData[i];
-                if (graphWidthEtaMC[i]) 
-                    graphOrderedWidthEtaMC[5]       = graphWidthEtaMC[i];
-                if (graphAcceptanceEta[i])
-                    graphOrderedAcceptanceEta[5]    = graphAcceptanceEta[i];
-                if (graphEfficiencyEta[i])
-                    graphOrderedEfficiencyEta[5]    = graphEfficiencyEta[i];
-                if (graphEffTimesAccEta[i])
-                    graphOrderedEffTimesAccEta[5]   = graphEffTimesAccEta[i];                
+                    graphOrderedEffTimesAccEta[nCorrOrder]   = graphEffTimesAccEta[i];                
+                if (sysAvailSingleEta[i]){
+                    for (Int_t k = 0; k < nRelSysErrEtaSources; k++ ){
+                        if (graphRelSysErrEtaSource[k][i])
+                            graphOrderedRelSysErrEtaSource[k][nCorrOrder]    = graphRelSysErrEtaSource[k][i];
+                    }    
+                }            
             }
+            if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2)) 
+                offSetsEtaSys[4]+=2;
         }
         
         TString nameWeightsLogFileEta =     Form("%s/weightsEta_%s.dat",outputDir.Data(),isMC.Data());
@@ -4613,51 +4514,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     else bin++;
                 }   
             }   
-
-            //  **********************************************************************************************************************
-            //  **************************************** Combine+write detailed Systematics ******************************************
-            //  **********************************************************************************************************************
-
-            const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSingle%s_Eta_%s.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
-            fstream SysErrDatAverSingle;
-            SysErrDatAverSingle.precision(4);
-            cout << SysErrDatnameMeanSingleErr << endl;
-            if(sysAvailSingleEta[0]){
-              SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
-              for(Int_t iColumn = 0; iColumn < (Int_t)ptSysDetail[0][0].size(); iColumn++) SysErrDatAverSingle << ptSysDetail[0][0].at(iColumn) << "\t";
-              SysErrDatAverSingle << endl;
-              for (Int_t i = 1; i < nrOfTrigToBeComb; i++){
-                if(!sysAvailSingleEta[i]) continue;
-                for(Int_t iCol = 0; iCol < (Int_t)ptSysDetail[i][0].size(); iCol++){
-                  if( ((TString)ptSysDetail[i][0].at(iCol)).CompareTo(((TString)ptSysDetail[0][0].at(iCol))) ){
-                    cout << "ERROR: Systematic error type at pos " << iCol << " does not agree for " << availableMeasEta[i] << " & " << availableMeasEta[0] << ", returning!" << endl;
-                    return;
-                  }
-                }
-              }
-
-              for(Int_t i=0; i<nPtBinsReadEta; i++){
-                SysErrDatAverSingle << xValuesReadEta[i] << "\t";
-                Int_t nColumns = (Int_t)ptSysDetail[0][0].size();
-                Double_t *errors = new Double_t[nColumns-1];
-                for(Int_t iErr=0; iErr<nColumns-1; iErr++) errors[iErr] = 0;
-                for(Int_t j=0; j<nrOfTrigToBeComb; j++){
-                  if(!sysAvailSingleEta[j]) continue;
-                  Int_t pos = GetBinPosInVec(ptSysDetail[j],numberBinsSysAvailSingleEta[j],xValuesReadEta[i]);
-                  if(pos>-1){
-                    for(Int_t iErr=1; iErr<nColumns; iErr++) errors[iErr-1] += weightsReadEta[availableMeasEta[j]][i]*((TString)ptSysDetail[j][pos].at(iErr)).Atof();
-                  }
-                }
-                for(Int_t iErr=0; iErr<nColumns-1; iErr++) SysErrDatAverSingle << errors[iErr] << "\t";
-                SysErrDatAverSingle << endl;
-                delete[] errors;
-              }
-            }
-            SysErrDatAverSingle.close();
-
-            for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
-              for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
-            }
 
             //  **********************************************************************************************************************
             //  ******************************************* Plotting weights method for eta ******************************************
@@ -4829,7 +4685,25 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 
             canvasRelTotErr->SaveAs(Form("%s/Eta_RelErrorsFulldecomp.%s",outputDir.Data(),suffix.Data()));
             
+            // Calculate relative sys error weighted
+            if (sysAvailSingleEta[0]){
+                for (Int_t k = 0; k< nRelSysErrEtaSources ; k++ ){
+                    graphRelSysErrEtaSourceWeighted[k]      = CalculateWeightedQuantity(    graphOrderedRelSysErrEtaSource[k], 
+                                                                                            graphWeightsEta,
+                                                                                            binningEta,  maxNAllowedEta,
+                                                                                            MaxNumberOfFiles
+                                                                                    );
+                    if (!graphRelSysErrEtaSourceWeighted[k]){
+                        cout << "Aborted in CalculateWeightedQuantity for " << endl;
+                        return;
+                    } else {
+                        graphRelSysErrEtaSourceWeighted[k]->SetName(Form("RelSysErrEtaSourceWeighted%s", ((TString)ptSysDetail[0][0].at(k+1)).Data()));
+                    }    
+                }    
+                
+            }
 
+            
             // create averaged supporting graphs
             graphMassEtaDataWeighted                        = CalculateWeightedQuantity(    graphOrderedMassEtaData, 
                                                                                             graphWeightsEta,
@@ -4903,6 +4777,112 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             while (graphAcceptanceEtaWeighted->GetY()[0] == -10000)  graphAcceptanceEtaWeighted->RemovePoint(0);
             while (graphEfficiencyEtaWeighted->GetY()[0] == -10000)  graphEfficiencyEtaWeighted->RemovePoint(0);
             while (graphEffTimesAccEtaWeighted->GetY()[0] == -10000) graphEffTimesAccEtaWeighted->RemovePoint(0);
+            if (sysAvailSingleEta[0]){
+                for (Int_t k = 0; k < nRelSysErrEtaSources; k++){
+                    if (graphRelSysErrEtaSourceWeighted[k])
+                        while (graphRelSysErrEtaSourceWeighted[k]->GetY()[0] == -10000 )   graphRelSysErrEtaSourceWeighted[k]->RemovePoint(0);
+                    else 
+                        cout << "I don't have a weighted Eta rel sys err graph for error source: " << k << endl;
+                }    
+            }    
+
+
+            //  **********************************************************************************************************************
+            //  **************************************** Combine+write detailed Systematics ******************************************
+            //  **********************************************************************************************************************
+
+            const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSingle%s_Eta_%s.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
+            fstream SysErrDatAverSingle;
+            SysErrDatAverSingle.precision(4);
+            cout << SysErrDatnameMeanSingleErr << endl;
+            if(sysAvailSingleEta[0] && graphRelSysErrEtaSourceWeighted[0]){
+                SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
+                for(Int_t iColumn = 0; iColumn < (Int_t)ptSysDetail[0][0].size(); iColumn++) SysErrDatAverSingle << ptSysDetail[0][0].at(iColumn) << "\t";
+                SysErrDatAverSingle << endl;
+                for (Int_t i = 1; i < nrOfTrigToBeComb; i++){
+                    if(!sysAvailSingleEta[i]) continue;
+                    for(Int_t iCol = 0; iCol < (Int_t)ptSysDetail[i][0].size(); iCol++){
+                        if( ((TString)ptSysDetail[i][0].at(iCol)).CompareTo(((TString)ptSysDetail[0][0].at(iCol))) ){
+                            cout << "ERROR: Systematic error type at pos " << iCol << " does not agree for " << availableMeasEta[i] << " & " << availableMeasEta[0] << ", returning!" << endl;
+                            return;
+                        }
+                    }
+                }
+
+                for(Int_t i=0; i<graphRelSysErrEtaSourceWeighted[0]->GetN(); i++){
+                    SysErrDatAverSingle << graphRelSysErrEtaSourceWeighted[0]->GetX()[i] << "\t";
+                    Int_t nColumns = (Int_t)ptSysDetail[0][0].size();
+                    for(Int_t iErr=0; iErr<nColumns-1; iErr++) 
+                        SysErrDatAverSingle << graphRelSysErrEtaSourceWeighted[iErr]->GetY()[i] << "\t";
+                    SysErrDatAverSingle << endl;
+                    
+                }
+            }
+            SysErrDatAverSingle.close();
+
+            // ***************************************************************************************************
+            // ********************* Plot all mean erros separately after smoothing ******************************
+            // ***************************************************************************************************    
+            TCanvas* canvasNewSysErrMean = new TCanvas("canvasNewSysErrMean","",200,10,1350,900);// gives the page size
+            DrawGammaCanvasSettings( canvasNewSysErrMean, 0.08, 0.01, 0.015, 0.09);
+            
+                // create dummy histo
+                TH2D *histo2DNewSysErrMean ;
+                histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 100,0.,maxPtGlobalEta,1000.,-0.5,50.);
+                SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
+                                        1,0.9, 510, 510);
+                histo2DNewSysErrMean->Draw();
+
+                // Give legend position for plotting
+                Double_t minXLegend     = 0.12;
+                Double_t maxYLegend     = 0.95;
+                Double_t widthLegend    = 0.25;
+                if (nRelSysErrEtaSources> 7)  
+                    widthLegend         = 0.5;
+                Double_t heightLegend   = 1.05* 0.035 * (nRelSysErrEtaSources+3);
+                if (nRelSysErrEtaSources> 7)  
+                    heightLegend        = 1.05* 0.035 * (nRelSysErrEtaSources/2+1);
+
+                // create legend
+                TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
+                legendMeanNew->SetMargin(0.1);
+                if (nRelSysErrEtaSources> 7) legendMeanNew->SetNColumns(2);
+
+                for(Int_t i = 0;i< nRelSysErrEtaSources-1 ;i++){    
+                    DrawGammaSetMarkerTGraphAsym(graphRelSysErrEtaSourceWeighted[i], GetMarkerStyleSystematics(  ptSysDetail[0][0].at(i+1), mode), 1.,
+                                                GetColorSystematics( ptSysDetail[0][0].at(i+1), mode),GetColorSystematics( ptSysDetail[0][0].at(i+1), mode));
+                    graphRelSysErrEtaSourceWeighted[i]->Draw("pX0,csame");
+                    legendMeanNew->AddEntry(graphRelSysErrEtaSourceWeighted[i],GetSystematicsName(ptSysDetail[0][0].at(i+1)),"p");
+                }
+                
+                DrawGammaSetMarkerTGraphAsym(graphRelSysErrEtaSourceWeighted[nRelSysErrEtaSources-1], 20, 1.,kBlack,kBlack);
+                graphRelSysErrEtaSourceWeighted[nRelSysErrEtaSources-1]->Draw("p,csame");
+                legendMeanNew->AddEntry(graphRelSysErrEtaSourceWeighted[nRelSysErrEtaSources-1],"quad. sum.","p");
+                legendMeanNew->Draw();
+
+                // labeling
+                TLatex *labelEnergySysDetailed = new TLatex(0.95, 0.93,collisionSystem.Data());
+                labelEnergySysDetailed->SetTextAlign(31);
+                SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
+                labelEnergySysDetailed->Draw();
+
+                TLatex *labelEtaSysDetailed     = new TLatex(0.95, 0.93-0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+                labelEtaSysDetailed->SetTextAlign(31);
+                SetStyleTLatex( labelEtaSysDetailed, 0.85*textSizeSpectra,4);
+                labelEtaSysDetailed->Draw();
+
+                TLatex *labelDetProcSysDetailed = new TLatex(0.95, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
+                labelDetProcSysDetailed->SetTextAlign(31);
+                SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4);
+                labelDetProcSysDetailed->Draw();
+
+            canvasNewSysErrMean->Update();
+            canvasNewSysErrMean->SaveAs(Form("%s/Eta_SysErrorsSeparatedSourcesReweighted_%s.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+
+            // delete detailed sys array
+            for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
+                for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
+            }
             
         // if averaging wasn't enabled pick values according to predefined ranges ("cherry picking points")        
         } else {
@@ -5386,7 +5366,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             Double_t yErrorSysHighRelEtaToPi0               [MaxNumberOfFiles][100];
             Bool_t   sysAvailEtaToPi0                       [MaxNumberOfFiles];
 
-            Bool_t sysAvailSingleEtaToPi0                   [MaxNumberOfFiles];
             Int_t numberBinsSysAvailSingleEtaToPi0          [MaxNumberOfFiles];
             
             TGraphAsymmErrors* graphEtaToPi0BinShiftWeighted = NULL;
@@ -5539,6 +5518,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 cout << "sys shrunk 2" << endl;
                 while (graphsEtaToPi0SysRemoved0[i]->GetY()[0] == 0) graphsEtaToPi0SysRemoved0[i]->RemovePoint(0);
 //                 graphsEtaToPi0SysRemoved0[i]->Print();
+             
+                if (graphsEtaToPi0SysRemoved0[i]){
+                    if (sysAvailSingleEtaToPi0[i]){
+                        nRelSysErrEtaToPi0Sources                    = (Int_t)ptSysDetail[i][0].size()-1;
+                        for (Int_t k = 0; k < nRelSysErrEtaToPi0Sources; k++ ){
+                            graphRelSysErrEtaToPi0Source[k][i]       = (TGraphAsymmErrors*) graphsEtaToPi0SysRemoved0[i]->Clone(Form("RelSysErrEtaToPi0Source%s_%s",((TString)ptSysDetail[i][0].at(k+1)).Data(), triggerName[i].Data()));
+                            cout << Form("RelSysErrEtaToPi0Source%s_%s",((TString)ptSysDetail[i][0].at(k+1)).Data(), triggerName[i].Data()) << endl;
+                        }    
+                    }
+                }
                 
                 // put systematics on graph
                 for (Int_t j = 0; j< graphsEtaToPi0SysRemoved0[i]->GetN(); j++){
@@ -5551,14 +5540,35 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                             Double_t yErrorSysHighDummy = yErrorSysHighRelEtaToPi0[i][counter]/100*graphsEtaToPi0SysRemoved0[i]->GetY()[j];
                             graphsEtaToPi0SysRemoved0[i]->SetPointEYlow(j,yErrorSysLowDummy);
                             graphsEtaToPi0SysRemoved0[i]->SetPointEYhigh(j,yErrorSysHighDummy);
+                            if (sysAvailSingleEtaToPi0[i]){
+                                for (Int_t k = 0; k < nRelSysErrEtaToPi0Sources; k++ ){
+                                    graphRelSysErrEtaToPi0Source[k][i]->SetPoint(j, graphsEtaToPi0SysRemoved0[i]->GetX()[j] ,((TString)ptSysDetail[i][counter+1].at(k+1)).Atof());
+                                    graphRelSysErrEtaToPi0Source[k][i]->SetPointEYhigh(j,0);
+                                    graphRelSysErrEtaToPi0Source[k][i]->SetPointEYlow(j,0);
+                                }    
+                            }
                         } else {
                             graphsEtaToPi0SysRemoved0[i]->SetPointEYlow(j,0);
                             graphsEtaToPi0SysRemoved0[i]->SetPointEYhigh(j,0);
+                            if (sysAvailSingleEtaToPi0[i]){
+                                for (Int_t k = 0; k < nRelSysErrEtaToPi0Sources; k++ ){
+                                    graphRelSysErrEtaToPi0Source[k][i]->SetPoint(j, graphsEtaToPi0SysRemoved0[i]->GetX()[j] ,0);
+                                    graphRelSysErrEtaToPi0Source[k][i]->SetPointEYhigh(j,0);
+                                    graphRelSysErrEtaToPi0Source[k][i]->SetPointEYlow(j,0);
+                                }    
+                            }
                         }
                     } else {
                         graphsEtaToPi0SysRemoved0[i]->SetPointEYlow(j,0);
                         graphsEtaToPi0SysRemoved0[i]->SetPointEYhigh(j,0);
                         averagedEta = kFALSE;
+                        if (sysAvailSingleEtaToPi0[i]){
+                            for (Int_t k = 0; k < nRelSysErrEtaToPi0Sources; k++ ){
+                                graphRelSysErrEtaToPi0Source[k][i]->SetPoint(j, graphsEtaToPi0SysRemoved0[i]->GetX()[j] ,0);
+                                graphRelSysErrEtaToPi0Source[k][i]->SetPointEYhigh(j,0);
+                                graphRelSysErrEtaToPi0Source[k][i]->SetPointEYlow(j,0);
+                            }    
+                        }
                     }
                 }
                 
@@ -5606,53 +5616,31 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     graphsEtaToPi0SysShrunk[i]->SetPointEYhigh(j,yErrorSysHighFinalEtaToPi0[nPointFinalEtaToPi0]);
                     nPointFinalEtaToPi0++;
                 }
-                    
-                // fill inputs for combinations function in correct order
-                if ( (triggerName[i].Contains("MB") || triggerName[i].Contains("INT1")) && graphsEtaToPi0Shrunk[i]){
-                    cout << "filling MB trigger" << endl;
-                    histoStatEtaToPi0[0]     = histoEtaToPi0Masked[i];
-                    graphSystEtaToPi0[0]     = graphsEtaToPi0SysShrunk[i];
-                    offSetsEtaToPi0Sys[0]    = histoStatEtaToPi0[0]->GetXaxis()->FindBin(graphSystEtaToPi0[0]->GetX()[0])-1;
-                    if (histoCorrectedYieldEtaBinShift[i])
-                        graphEtaToPi0BinShift[0]   = new TGraphAsymmErrors(histoCorrectedYieldEtaBinShift[i]);
-                } else if (triggerName[i].Contains("INT7") && graphsEtaToPi0Shrunk[i]){   
-                    cout << "filling INT7 trigger" << endl;
-                    histoStatEtaToPi0[1]     = histoEtaToPi0Masked[i];
-                    graphSystEtaToPi0[1]     = graphsEtaToPi0SysShrunk[i];
-                    offSetsEtaToPi0Sys[1]    = histoStatEtaToPi0[1]->GetXaxis()->FindBin(graphSystEtaToPi0[1]->GetX()[0])-1;
-                    if (histoCorrectedYieldEtaBinShift[i])
-                        graphEtaToPi0BinShift[1]   = new TGraphAsymmErrors(histoCorrectedYieldEtaBinShift[i]);
-                } else if (triggerName[i].Contains("EMC1") && graphsEtaToPi0Shrunk[i]){   
-                    cout << "filling EMC1 trigger" << endl;
-                    histoStatEtaToPi0[2]     = histoEtaToPi0Masked[i];
-                    graphSystEtaToPi0[2]     = graphsEtaToPi0SysShrunk[i];
-                    offSetsEtaToPi0Sys[2]    = histoStatEtaToPi0[2]->GetXaxis()->FindBin(graphSystEtaToPi0[2]->GetX()[0])-1;
-                    if (histoCorrectedYieldEtaBinShift[i])
-                        graphEtaToPi0BinShift[2]   = new TGraphAsymmErrors(histoCorrectedYieldEtaBinShift[i]);
-                } else if (triggerName[i].Contains("EMC7") && graphsEtaToPi0Shrunk[i]){   
-                    cout << "filling EMC7 trigger" << endl;
-                    histoStatEtaToPi0[3]     = histoEtaToPi0Masked[i];
-                    graphSystEtaToPi0[3]     = graphsEtaToPi0SysShrunk[i];
-                    offSetsEtaToPi0Sys[3]    = histoStatEtaToPi0[3]->GetXaxis()->FindBin(graphSystEtaToPi0[3]->GetX()[0])-1;
-                    if (histoCorrectedYieldEtaBinShift[i])
-                        graphEtaToPi0BinShift[3]   = new TGraphAsymmErrors(histoCorrectedYieldEtaBinShift[i]);
-                } else if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && graphsEtaToPi0Shrunk[i]){
-                    cout << Form("filling %s trigger",strEG2_A.Data()) << endl;
-                    histoStatEtaToPi0[4]     = histoEtaToPi0Masked[i];
-                    graphSystEtaToPi0[4]     = graphsEtaToPi0SysShrunk[i];
-                    offSetsEtaToPi0Sys[4]    = histoStatEtaToPi0[4]->GetXaxis()->FindBin(graphSystEtaToPi0[4]->GetX()[0])-1;
-                    if (histoCorrectedYieldEtaBinShift[i])
-                        graphEtaToPi0BinShift[4]   = new TGraphAsymmErrors(histoCorrectedYieldEtaBinShift[i]);
 
-                    if(optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2)) offSetsEtaToPi0Sys[4]+=2;
-                } else if (triggerName[i].Contains("EG1") && graphsEtaToPi0Shrunk[i]){   
-                    cout << "filling EG1 trigger" << endl;
-                    histoStatEtaToPi0[5]     = histoEtaToPi0Masked[i];
-                    graphSystEtaToPi0[5]     = graphsEtaToPi0SysShrunk[i];
-                    offSetsEtaToPi0Sys[5]    = histoStatEtaToPi0[5]->GetXaxis()->FindBin(graphSystEtaToPi0[5]->GetX()[0])-1;
+                // Set correct trigger order for combination function
+                Int_t nCorrOrder    = GetOrderedTrigger(triggerName[i]);
+                if (nCorrOrder == -1){
+                    cout << "ERROR: trigger name not defined" << endl;
+                    return;
+                }    
+                
+                // fill inputs for combinations function in correct order
+                if ( graphsEtaToPi0Shrunk[i]){
+                    histoStatEtaToPi0[nCorrOrder]     = histoEtaToPi0Masked[i];
+                    graphSystEtaToPi0[nCorrOrder]     = graphsEtaToPi0SysShrunk[i];
+                    offSetsEtaToPi0Sys[nCorrOrder]    = histoStatEtaToPi0[nCorrOrder]->GetXaxis()->FindBin(graphSystEtaToPi0[nCorrOrder]->GetX()[0])-1;
                     if (histoCorrectedYieldEtaBinShift[i])
-                        graphEtaToPi0BinShift[5]   = new TGraphAsymmErrors(histoCorrectedYieldEtaBinShift[i]);
-                }
+                        graphEtaToPi0BinShift[nCorrOrder]   = new TGraphAsymmErrors(histoCorrectedYieldEtaBinShift[i]);
+                    if (sysAvailSingleEtaToPi0[i]){
+                        for (Int_t k = 0; k < nRelSysErrEtaToPi0Sources; k++ ){
+                            if (graphRelSysErrEtaToPi0Source[k][i])
+                                graphOrderedRelSysErrEtaToPi0Source[k][nCorrOrder]    = graphRelSysErrEtaToPi0Source[k][i];
+                        }    
+                    }            
+                } 
+                if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2)) 
+                    offSetsEtaToPi0Sys[4]+=2;
+                    
             }
             
             TString nameWeightsLogFileEtaToPi0                  = Form("%s/weightsEtaToPi0_%s.dat",outputDir.Data(),isMC.Data());
@@ -5753,13 +5741,32 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
 
                 if(doBinShiftForEtaToPi0){
-                  cout << __LINE__ << endl;
-                  cout << "combine EtaToPi0BinShift" << endl;
-                  graphEtaToPi0BinShiftWeighted                     = CalculateWeightedQuantity(  graphEtaToPi0BinShift,
-                                                                                                  graphWeightsEtaToPi0,
-                                                                                                  binningEta,  maxNAllowedEta,
-                                                                                                  MaxNumberOfFiles
-                                                                                              );
+                    // Calculate relative sys error weighted
+                    if (sysAvailSingleEtaToPi0[0]){
+                        for (Int_t k = 0; k< nRelSysErrEtaToPi0Sources ; k++ ){
+                            graphRelSysErrEtaToPi0SourceWeighted[k]      = CalculateWeightedQuantity(   graphOrderedRelSysErrEtaToPi0Source[k], 
+                                                                                                        graphWeightsEtaToPi0,
+                                                                                                        binningEta,  maxNAllowedEta,
+                                                                                                        MaxNumberOfFiles
+                                                                                            );
+                            if (!graphRelSysErrEtaToPi0SourceWeighted[k]){
+                                cout << "Aborted in CalculateWeightedQuantity for " << endl;
+                                return;
+                            } else {
+                                graphRelSysErrEtaToPi0SourceWeighted[k]->SetName(Form("RelSysErrEtaToPi0SourceWeighted%s", ((TString)ptSysDetail[0][0].at(k+1)).Data()));
+                            }    
+                        }    
+                        
+                    }
+
+                    
+                    cout << __LINE__ << endl;
+                    cout << "combine EtaToPi0BinShift" << endl;
+                    graphEtaToPi0BinShiftWeighted                     = CalculateWeightedQuantity(  graphEtaToPi0BinShift,
+                                                                                                    graphWeightsEtaToPi0,
+                                                                                                    binningEta,  maxNAllowedEta,
+                                                                                                    MaxNumberOfFiles
+                                                                                                  );
                   if (!graphEtaToPi0BinShiftWeighted){
                       cout << "Aborted in CalculateWeightedQuantity" << endl;
                       return;
@@ -5824,50 +5831,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                   canvasEffi->SetBottomMargin(0.08);
                 }
                 delete canvasEffi;
-                //  **********************************************************************************************************************
-                //  **************************************** Combine+write detailed Systematics ******************************************
-                //  **********************************************************************************************************************
-
-                const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSingle%s_EtaToPi0_%s.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
-                fstream SysErrDatAverSingle;
-                SysErrDatAverSingle.precision(4);
-                cout << SysErrDatnameMeanSingleErr << endl;
-                if(sysAvailSingleEtaToPi0[0]){
-                  SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
-                  for(Int_t iColumn = 0; iColumn < (Int_t)ptSysDetail[0][0].size(); iColumn++) SysErrDatAverSingle << ptSysDetail[0][0].at(iColumn) << "\t";
-                  SysErrDatAverSingle << endl;
-                  for (Int_t i = 1; i < nrOfTrigToBeComb; i++){
-                    if(!sysAvailSingleEtaToPi0[i]) continue;
-                    for(Int_t iCol = 0; iCol < (Int_t)ptSysDetail[i][0].size(); iCol++){
-                      if( ((TString)ptSysDetail[i][0].at(iCol)).CompareTo(((TString)ptSysDetail[0][0].at(iCol))) ){
-                        cout << "ERROR: Systematic error type at pos " << iCol << " does not agree for " << availableMeasEtaToPi0[i] << " & " << availableMeasEtaToPi0[0] << ", returning!" << endl;
-                        return;
-                      }
-                    }
-                  }
-
-                  for(Int_t i=0; i<nPtBinsReadEtaToPi0; i++){
-                    SysErrDatAverSingle << xValuesReadEtaToPi0[i] << "\t";
-                    Int_t nColumns = (Int_t)ptSysDetail[0][0].size();
-                    Double_t *errors = new Double_t[nColumns-1];
-                    for(Int_t iErr=0; iErr<nColumns-1; iErr++) errors[iErr] = 0;
-                    for(Int_t j=0; j<nrOfTrigToBeComb; j++){
-                      if(!sysAvailSingleEtaToPi0[j]) continue;
-                      Int_t pos = GetBinPosInVec(ptSysDetail[j],numberBinsSysAvailSingleEtaToPi0[j],xValuesReadEtaToPi0[i]);
-                      if(pos>-1){
-                        for(Int_t iErr=1; iErr<nColumns; iErr++) errors[iErr-1] += weightsReadEtaToPi0[availableMeasEtaToPi0[j]][i]*((TString)ptSysDetail[j][pos].at(iErr)).Atof();
-                      }
-                    }
-                    for(Int_t iErr=0; iErr<nColumns-1; iErr++) SysErrDatAverSingle << errors[iErr] << "\t";
-                    SysErrDatAverSingle << endl;
-                    delete[] errors;
-                  }
-                }
-                SysErrDatAverSingle.close();
-
-                for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
-                  for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
-                }
 
                 //  **********************************************************************************************************************
                 //  ******************************************* Plotting weights for eta/pi0 *********************************************
@@ -6040,7 +6003,117 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 canvasRelTotErr->SaveAs(Form("%s/EtaToPi0_RelErrorsFulldecomp.%s",outputDir.Data(),suffix.Data()));
                 
                 if(optionEnergy.CompareTo("8TeV")==0 && mode==4) maxNAllowedEta += 3;
-                //if(optionEnergy.CompareTo("8TeV")==0 && mode==2) maxNAllowedEta += 2;
+
+
+
+
+                if (sysAvailSingleEtaToPi0[0]){
+                    for (Int_t k = 0; k < nRelSysErrEtaToPi0Sources; k++){
+                        if (graphRelSysErrEtaToPi0SourceWeighted[k])
+                            while (graphRelSysErrEtaToPi0SourceWeighted[k]->GetY()[0] == -10000 )   graphRelSysErrEtaToPi0SourceWeighted[k]->RemovePoint(0);
+                        else 
+                            cout << "I don't have a weighted EtaToPi0 rel sys err graph for error source: " << k << endl;
+                    }    
+                }    
+
+
+                //  **********************************************************************************************************************
+                //  **************************************** Combine+write detailed Systematics ******************************************
+                //  **********************************************************************************************************************
+
+                const char *SysErrDatnameMeanSingleErr = Form("%s/SystematicErrorAveragedSingle%s_EtaToPi0_%s.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
+                fstream SysErrDatAverSingle;
+                SysErrDatAverSingle.precision(4);
+                cout << SysErrDatnameMeanSingleErr << endl;
+                if(sysAvailSingleEtaToPi0[0] && graphRelSysErrEtaToPi0SourceWeighted[0]){
+                    SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
+                    for(Int_t iColumn = 0; iColumn < (Int_t)ptSysDetail[0][0].size(); iColumn++) SysErrDatAverSingle << ptSysDetail[0][0].at(iColumn) << "\t";
+                    SysErrDatAverSingle << endl;
+                    for (Int_t i = 1; i < nrOfTrigToBeComb; i++){
+                        if(!sysAvailSingleEtaToPi0[i]) continue;
+                        for(Int_t iCol = 0; iCol < (Int_t)ptSysDetail[i][0].size(); iCol++){
+                            if( ((TString)ptSysDetail[i][0].at(iCol)).CompareTo(((TString)ptSysDetail[0][0].at(iCol))) ){
+                                cout << "ERROR: Systematic error type at pos " << iCol << " does not agree for " << availableMeasEtaToPi0[i] << " & " << availableMeasEtaToPi0[0] << ", returning!" << endl;
+                                return;
+                            }
+                        }
+                    }
+
+                    for(Int_t i=0; i<graphRelSysErrEtaToPi0SourceWeighted[0]->GetN(); i++){
+                        SysErrDatAverSingle << graphRelSysErrEtaToPi0SourceWeighted[0]->GetX()[i] << "\t";
+                        Int_t nColumns = (Int_t)ptSysDetail[0][0].size();
+                        for(Int_t iErr=0; iErr<nColumns-1; iErr++) 
+                            SysErrDatAverSingle << graphRelSysErrEtaToPi0SourceWeighted[iErr]->GetY()[i] << "\t";
+                        SysErrDatAverSingle << endl;
+                        
+                    }
+                }
+                SysErrDatAverSingle.close();
+
+                // ***************************************************************************************************
+                // ********************* Plot all mean erros separately after smoothing ******************************
+                // ***************************************************************************************************    
+                TCanvas* canvasNewSysErrMean = new TCanvas("canvasNewSysErrMean","",200,10,1350,900);// gives the page size
+                DrawGammaCanvasSettings( canvasNewSysErrMean, 0.08, 0.01, 0.015, 0.09);
+                
+                    // create dummy histo
+                    TH2D *histo2DNewSysErrMean ;
+                    histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 100,0.,maxPtGlobalEta,1000.,-0.5,50.);
+                    SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
+                                            1,0.9, 510, 510);
+                    histo2DNewSysErrMean->Draw();
+
+                    // Give legend position for plotting
+                    Double_t minXLegend     = 0.12;
+                    Double_t maxYLegend     = 0.95;
+                    Double_t widthLegend    = 0.25;
+                    if (nRelSysErrEtaToPi0Sources> 7)  
+                        widthLegend         = 0.5;
+                    Double_t heightLegend   = 1.05* 0.035 * (nRelSysErrEtaToPi0Sources+3);
+                    if (nRelSysErrEtaToPi0Sources> 7)  
+                        heightLegend        = 1.05* 0.035 * (nRelSysErrEtaToPi0Sources/2+1);
+
+                    // create legend
+                    TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
+                    legendMeanNew->SetMargin(0.1);
+                    if (nRelSysErrEtaToPi0Sources> 7) legendMeanNew->SetNColumns(2);
+
+                    for(Int_t i = 0;i< nRelSysErrEtaToPi0Sources-1 ;i++){    
+                        DrawGammaSetMarkerTGraphAsym(graphRelSysErrEtaToPi0SourceWeighted[i], GetMarkerStyleSystematics(  ptSysDetail[0][0].at(i+1), mode), 1.,
+                                                    GetColorSystematics( ptSysDetail[0][0].at(i+1), mode),GetColorSystematics( ptSysDetail[0][0].at(i+1), mode));
+                        graphRelSysErrEtaToPi0SourceWeighted[i]->Draw("pX0,csame");
+                        legendMeanNew->AddEntry(graphRelSysErrEtaToPi0SourceWeighted[i],GetSystematicsName(ptSysDetail[0][0].at(i+1)),"p");
+                    }
+                    
+                    DrawGammaSetMarkerTGraphAsym(graphRelSysErrEtaToPi0SourceWeighted[nRelSysErrEtaToPi0Sources-1], 20, 1.,kBlack,kBlack);
+                    graphRelSysErrEtaToPi0SourceWeighted[nRelSysErrEtaToPi0Sources-1]->Draw("p,csame");
+                    legendMeanNew->AddEntry(graphRelSysErrEtaToPi0SourceWeighted[nRelSysErrEtaToPi0Sources-1],"quad. sum.","p");
+                    legendMeanNew->Draw();
+
+                    // labeling
+                    TLatex *labelEnergySysDetailed = new TLatex(0.95, 0.93,collisionSystem.Data());
+                    labelEnergySysDetailed->SetTextAlign(31);
+                    SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
+                    labelEnergySysDetailed->Draw();
+
+                    TLatex *labelEtaToPi0SysDetailed     = new TLatex(0.95, 0.93-0.99*textSizeSpectra*0.85,"#eta/#pi^{0}");
+                    labelEtaToPi0SysDetailed->SetTextAlign(31);
+                    SetStyleTLatex( labelEtaToPi0SysDetailed, 0.85*textSizeSpectra,4);
+                    labelEtaToPi0SysDetailed->Draw();
+
+                    TLatex *labelDetProcSysDetailed = new TLatex(0.95, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
+                    labelDetProcSysDetailed->SetTextAlign(31);
+                    SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4);
+                    labelDetProcSysDetailed->Draw();
+
+                canvasNewSysErrMean->Update();
+                canvasNewSysErrMean->SaveAs(Form("%s/EtaToPi0_SysErrorsSeparatedSourcesReweighted_%s.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+
+                // delete detailed sys array
+                for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
+                    for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
+                }
+                
             // if averaging wasn't enabled pick values according to predefined ranges ("cherry picking points")            
             } else {
                 graphEtaToPi0WeightedAverageStat        = new TGraphAsymmErrors(nPointFinalEtaToPi0, xValueFinalEtaToPi0, yValueFinalEtaToPi0, 
@@ -6316,6 +6389,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             if (graphWidthPi0DataWeighted)                  graphWidthPi0DataWeighted->Write("Pi0_Width_data", TObject::kOverwrite);
             if (graphWidthPi0MCWeighted)                    graphWidthPi0MCWeighted->Write("Pi0_Width_MC", TObject::kOverwrite);            
         }
+        if (sysAvailSinglePi0[0]){
+            for (Int_t k = 0; k< nRelSysErrPi0Sources ; k++ ){
+                if (graphRelSysErrPi0SourceWeighted[k]) graphRelSysErrPi0SourceWeighted[k]->Write(graphRelSysErrPi0SourceWeighted[k]->GetName(), TObject::kOverwrite);
+            }
+        }
         for (Int_t i=0; i< nrOfTrigToBeComb; i++){
             cout << "trigger: " << triggerName[i].Data() << endl; 
             if (histoAcceptancePi0[i])                  histoAcceptancePi0[i]->Write(Form("AcceptancePi0_%s",triggerName[i].Data()),TObject::kOverwrite);
@@ -6379,6 +6457,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             if (graphMassEtaMCWeighted)                     graphMassEtaMCWeighted->Write("Eta_Mass_MC", TObject::kOverwrite);
             if (graphWidthEtaDataWeighted)                  graphWidthEtaDataWeighted->Write("Eta_Width_data", TObject::kOverwrite);
             if (graphWidthEtaMCWeighted)                    graphWidthEtaMCWeighted->Write("Eta_Width_MC", TObject::kOverwrite);
+            if (sysAvailSingleEta[0]){
+                for (Int_t k = 0; k< nRelSysErrEtaSources ; k++ ){
+                    if (graphRelSysErrEtaSourceWeighted[k]) graphRelSysErrEtaSourceWeighted[k]->Write(graphRelSysErrEtaSourceWeighted[k]->GetName(), TObject::kOverwrite);
+                }
+            }
 
             for (Int_t i=0; i< nrOfTrigToBeComb; i++){
                 if (histoAcceptanceEta[i])                  histoAcceptanceEta[i]->Write(Form("AcceptanceEta_%s",triggerName[i].Data()),TObject::kOverwrite);
