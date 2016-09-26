@@ -92,22 +92,25 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
     TString nameCutVariation[13];
     TString nameCutVariationSC[13];
     
-    TString nameCutVariation2760GeV[13]     = { "Yield extraction", "#theta_{#gamma#gamma}", "min E_{cluster}", "min # cells", "clu. energy calibration", 
-                                                "tr. match. to cl.", "M_{02}", "Mat. infront of EMCal", "clu. energy scale", "cell time", 
-                                                "Trigger normalization", "Efficiency", "Yield extraction #pi^{0}" };
     TString nameCutVariationSC2760GeV[13]   = { "YieldExtraction", "OpeningAngle", "ClusterMinEnergy", "ClusterNCells", "ClusterNonLinearity", 
                                                 "ClusterTrackMatchingCalo", "ClusterM02","ClusterMaterialTRD", "ClusterEnergyScale" , "CellTiming", 
-                                                "Trigger", "Efficiency", "YieldExtraction"};
-    if (meson.CompareTo("EtaToPi0") == 0){
-        nameCutVariation2760GeV[0]          = "Yield extraction #eta";
+                                                "Trigger", "Efficiency", "YieldExtractionPi0"};
+                                                
+    Color_t color[20];
+    Color_t markerStyle[20];
+    for (Int_t k =0; k<13; k++ ){
+        color[k]        = GetColorSystematics( nameCutVariationSC2760GeV[k], 4 ); 
+        markerStyle[k]  = GetMarkerStyleSystematics( nameCutVariationSC2760GeV[k], 4 );     
     }
     
-    if (energy.CompareTo("2.76TeV") == 0) {
-        for (Int_t i = 0;i < numberCutStudies;i++){
-            nameCutVariation[i]             = nameCutVariation2760GeV[i];
-            nameCutVariationSC[i]           = nameCutVariationSC2760GeV[i];
-        }
+    for (Int_t i = 0; i < numberCutStudies; i++){
+        nameCutVariation[i]     = GetSystematicsName(nameCutVariationSC2760GeV[i]);
+        nameCutVariationSC[i]   = nameCutVariationSC2760GeV[i];
     }
+    if (meson.CompareTo("EtaToPi0") == 0){
+        nameCutVariation[0]     = "Yield extraction #eta";
+    }
+
     
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************

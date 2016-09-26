@@ -74,15 +74,6 @@ void FinaliseSystematicErrorsMergedCalo_pp( TString nameDataFileErrors      = ""
     TString collisionSystem                 = ReturnFullCollisionsSystem(energy);
     TString energyForOutput                 = energy;
     energyForOutput.ReplaceAll(".","_");
-
-    Color_t color[20]                       = { kBlue, kRed+1, kOrange+7, kPink+8, kGreen+2, 
-                                                kYellow+2, kOrange+2, kBlue+2, kCyan-2, kViolet+1, 
-                                                kAzure+1, kAzure+4, kPink+4, kOrange, 407, 
-                                                416, 830, 404, kPink-6, 1};
-    Color_t markerStyle[20]                 = { 24, 21, 22, 23, 20, 
-                                                25, 26, 27, 28, 29,
-                                                30, 31, 32, 33, 24, 
-                                                21, 22, 23, 20, 25};
     
     TString textMeson                       = ReturnMesonString (meson);                                                
     TString labelMesonReco                  = textMeson;
@@ -94,7 +85,7 @@ void FinaliseSystematicErrorsMergedCalo_pp( TString nameDataFileErrors      = ""
     // ***************************************************************************************************
     // ******************************* general variable definition  **************************************
     // ***************************************************************************************************
-    Int_t   numberOfEntriesPos              = 0;
+    Int_t   numberOfEntriesPos              = 0;    
     Int_t   numberOfEntriesNeg              = 0;
     const Int_t nPtBins                     = numberOfPtBins;
     const Int_t nCuts                       = numberCutStudies;
@@ -103,16 +94,19 @@ void FinaliseSystematicErrorsMergedCalo_pp( TString nameDataFileErrors      = ""
     TString nameCutVariation[11];
     TString nameCutVariationSC[11];
     
-    TString nameCutVariation2760GeV[11]     = { "tr. match. to cl.", "M_{02}", "clu. energy calibration", "cell E_{agg}", "cell time", 
-                                                "Mat. infront of EMCal", "#pi^{0} resolution", "clu. energy scale", "Trigger normalization", "Efficiency", "Secondary corr." };
     TString nameCutVariationSC2760GeV[11]   = { "ClusterTrackMatchingCalo", "ClusterM02", "ClusterNonLinearity",  "CellMinE", "CellTiming",  
                                                 "ClusterMaterialTRD", "MesonResolution", "ClusterEnergyScale" , "Trigger", "Efficiency", "Secondary"};
     
-    if (energy.CompareTo("2.76TeV") == 0) {
-        for (Int_t i = 0;i < numberCutStudies;i++){
-            nameCutVariation[i]             = nameCutVariation2760GeV[i];
-            nameCutVariationSC[i]           = nameCutVariationSC2760GeV[i];
-        }
+    Color_t color[20];
+    Color_t markerStyle[20];
+    for (Int_t k = 0; k < 11; k++ ){
+        color[k]        = GetColorSystematics( nameCutVariationSC2760GeV[k], 10 ); 
+        markerStyle[k]  = GetMarkerStyleSystematics( nameCutVariationSC2760GeV[k], 10 );     
+    }
+
+    for (Int_t i = 0; i < numberCutStudies; i++){
+        nameCutVariation[i]     = GetSystematicsName(nameCutVariationSC2760GeV[i]);
+        nameCutVariationSC[i]   = nameCutVariationSC2760GeV[i];
     }
     
     // ***************************************************************************************************

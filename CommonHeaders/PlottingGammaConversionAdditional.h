@@ -4281,122 +4281,207 @@ void DrawMergedClusterLambdaCuts (Int_t nlm = 1, Float_t maxPt = 50.05){
 Color_t GetColorSystematics(    TString variationName, 
                                 TString mode
                             ){    
-    if (mode == 2){
-        if (variationName.CompareTo("YieldExtraction") == 0)
-            return 860;
-        if (variationName.CompareTo("dEdxE") == 0)
-            return 894;
-        if (variationName.CompareTo("dEdxPi") == 0)
-            return 807;
-        if (variationName.CompareTo("TPCCluster") == 0)
-            return 880;
-        if (variationName.CompareTo("SinglePt") == 0)
-            return 418;
-        if (variationName.CompareTo("Chi2") == 0)
-            return 403;
-        if (variationName.CompareTo("Qt") == 0)
-            return 802;
-        if (variationName.CompareTo("Alpha") == 0)
-            return 923;
-        if (variationName.CompareTo("ConvPhi") == 0)
-            return 634;
-        if (variationName.CompareTo("ClusterMinEnergy") == 0)
-            return 432;
-        if (variationName.CompareTo("ClusterNCells") == 0)
-            return 404;
-        if (variationName.CompareTo("ClusterNonLinearity") == 0)
-            return 435;
-        if (variationName.CompareTo("ClusterTrackMatching") == 0)
-            return 420;
-        if (variationName.CompareTo("ClusterM02") == 0)
-            return 407;
-        if (variationName.CompareTo("CellTiming") == 0)
-            return 416;
-        if (variationName.CompareTo("ClusterMaterialTRD") == 0)
-            return 830;
-        if (variationName.CompareTo("Trigger") == 0)
-            return 404;
-        if (variationName.CompareTo("Efficiency") == 0)
-            return 608;
-        if (variationName.CompareTo("YieldExtractionPi0") == 0)
-            return kCyan-2;
-        if (variationName.CompareTo("ClusterTime") == 0)
-            return 860;
-        if (variationName.CompareTo("ClusterizationEnergy") == 0)
-            return 894;
-        if (variationName.CompareTo("Periods") == 0)
-            return 807;
-        if (variationName.CompareTo("InnerMaterial") == 0)
-            return kGreen+2;
-    } else if (mode == 4) {
-        return kBlack;
-    } else if (mode == 10) {
-        return kBlack;
-    }    
+
+   
+    if ( variationName.CompareTo("YieldExtraction") == 0 )
+        return kBlue;
+    if ( variationName.CompareTo("dEdxE") == 0 )
+        return kRed+1;
+    if ( variationName.CompareTo("dEdxPi") == 0 )
+        return kOrange+7;
+    if ( variationName.CompareTo("TPCCluster") == 0 )
+        return kPink+8;
+    if ( variationName.CompareTo("SinglePt") == 0 )
+        return kGreen+2;
+    if ( variationName.CompareTo("Chi2") == 0 )
+        return kYellow+2;
+    if ( variationName.CompareTo("Qt") == 0 )
+        return kOrange+2;
+    if ( variationName.CompareTo("Alpha") == 0 )
+        return kBlue+2;
+    if ( variationName.CompareTo("ConvPhi") == 0 )
+        return kCyan-2;
+    if ( variationName.CompareTo("ClusterMinEnergy") == 0 )
+        return kViolet+1;
+    if ( variationName.CompareTo("ClusterNCells") == 0 )
+        return kAzure+1;
+    if ( variationName.CompareTo("ClusterNonLinearity") == 0 )
+        return kAzure+4;
+    if ( variationName.CompareTo("ClusterEnergyScale") == 0 )
+        return kPink+4;
+    if ( variationName.CompareTo("ClusterTrackMatching") == 0 || variationName.CompareTo("ClusterTrackMatchingCalo") == 0 )
+        return kOrange;
+    if ( variationName.CompareTo("ClusterM02") == 0 )
+        return 407;
+    if ( variationName.CompareTo("CellTiming") == 0 )
+        return kTeal-5;
+    if ( variationName.CompareTo("ClusterMaterialTRD") == 0 )
+        return kOrange+5;
+    if ( variationName.CompareTo("Trigger") == 0 )
+        return 404;
+    if ( variationName.CompareTo("Efficiency") == 0 )
+        return kPink-6;
+    if ( variationName.CompareTo("YieldExtractionPi0") == 0 )
+        return 860;
+    if ( variationName.CompareTo("ClusterTime") == 0 )
+        return kBlue-4;
+    if ( variationName.CompareTo("ClusterizationEnergy") == 0 )
+        return kRed-4;
+    if ( variationName.CompareTo("Periods") == 0 )
+        return kGreen-4;
+    if ( variationName.CompareTo("InnerMaterial") == 0 )
+        return kMagenta-2;
+    if ( variationName.CompareTo("OpeningAngle") == 0 )
+        return kCyan-3;
+    if ( variationName.CompareTo("MesonResolution") == 0 )
+        return kPink-3;
+    if ( variationName.CompareTo("Secondary") == 0 )
+        return kViolet-3;
+    if ( variationName.CompareTo("CellMinE") == 0 )
+        return kSpring-6;
+
     cout << "GetColorSystematics(): no valid input parameters given..." << endl;
     return kBlack;
 }
 
 //**********************************************************************************
-//**********************************************************************************
+//************** Determine marker style for systematics ****************************
 //**********************************************************************************
 Style_t GetMarkerStyleSystematics(  TString variationName, 
                                     TString mode
                                   ){    
     
-    if (mode == 2){
-        if (variationName.CompareTo("YieldExtraction") == 0)
-            return 24;
-        if (variationName.CompareTo("dEdxE") == 0)
-            return 21;
-        if (variationName.CompareTo("dEdxPi") == 0)
-            return 22;
-        if (variationName.CompareTo("TPCCluster") == 0)
-            return 23;
-        if (variationName.CompareTo("SinglePt") == 0)
-            return 20;
-        if (variationName.CompareTo("Chi2") == 0)
-            return 25;
-        if (variationName.CompareTo("Qt") == 0)
-            return 26;
-        if (variationName.CompareTo("Alpha") == 0)
-            return 27;
-        if (variationName.CompareTo("ConvPhi") == 0)
-            return 28;
-        if (variationName.CompareTo("ClusterMinEnergy") == 0)
-            return 29;
-        if (variationName.CompareTo("ClusterNCells") == 0)
-            return 30;
-        if (variationName.CompareTo("ClusterNonLinearity") == 0)
-            return 31;
-        if (variationName.CompareTo("ClusterTrackMatching") == 0)
-            return 32;
-        if (variationName.CompareTo("ClusterM02") == 0)
-            return 33;
-        if (variationName.CompareTo("CellTiming") == 0)
-            return 24;
-        if (variationName.CompareTo("ClusterMaterialTRD") == 0)
-            return 21;
-        if (variationName.CompareTo("Trigger") == 0)
-            return 22;
-        if (variationName.CompareTo("Efficiency") == 0)
-            return 23;
-        if (variationName.CompareTo("YieldExtractionPi0") == 0)
-            return 20;
-        if (variationName.CompareTo("ClusterTime") == 0)
-            return 25;
-        if (variationName.CompareTo("ClusterizationEnergy") == 0)
-            return 24;
-        if (variationName.CompareTo("Periods") == 0)
-            return 21;
-        if (variationName.CompareTo("InnerMaterial") == 0)
-            return 20;
-    } else if (mode == 4) {
+    if ( variationName.CompareTo("YieldExtraction") == 0 )
+        return 24;
+    if ( variationName.CompareTo("dEdxE") == 0 )
+        return 21;
+    if ( variationName.CompareTo("dEdxPi") == 0 )
+        return 22;
+    if ( variationName.CompareTo("TPCCluster") == 0 )
+        return 23;
+    if ( variationName.CompareTo("SinglePt") == 0 )
         return 20;
-    } else if (mode == 10) {
+    if ( variationName.CompareTo("Chi2") == 0 )
+        return 25;
+    if ( variationName.CompareTo("Qt") == 0 )
+        return 26;
+    if ( variationName.CompareTo("Alpha") == 0 )
+        return 27;
+    if ( variationName.CompareTo("ConvPhi") == 0 )
+        return 28;
+    if ( variationName.CompareTo("ClusterMinEnergy") == 0 )
+        return 29;
+    if ( variationName.CompareTo("ClusterNCells") == 0 )
+        return 30;
+    if ( variationName.CompareTo("ClusterNonLinearity") == 0 )
+        return 31;
+    if ( variationName.CompareTo("ClusterEnergyScale") == 0 )
+        return 29;
+    if ( variationName.CompareTo("ClusterTrackMatching") == 0 || variationName.CompareTo("ClusterTrackMatchingCalo") == 0 )
+        return 32;
+    if ( variationName.CompareTo("ClusterM02") == 0 )
+        return 33;
+    if ( variationName.CompareTo("CellTiming") == 0 )
+        return 24;
+    if ( variationName.CompareTo("ClusterMaterialTRD") == 0 )
+        return 21;
+    if ( variationName.CompareTo("Trigger") == 0 )
+        return 22;
+    if ( variationName.CompareTo("Efficiency") == 0 )
+        return 23;
+    if ( variationName.CompareTo("YieldExtractionPi0") == 0 )
         return 20;
-    }    
+    if ( variationName.CompareTo("ClusterTime") == 0 )
+        return 25;
+    if ( variationName.CompareTo("ClusterizationEnergy") == 0 )
+        return 24;
+    if ( variationName.CompareTo("Periods") == 0 )
+        return 21;
+    if ( variationName.CompareTo("InnerMaterial") == 0 )
+        return 20;
+    if ( variationName.CompareTo("OpeningAngle") == 0 )
+        return 25;
+    if ( variationName.CompareTo("MesonResolution") == 0 )
+        return 24;
+    if ( variationName.CompareTo("Secondary") == 0 )
+        return 30;
+    if ( variationName.CompareTo("CellMinE") == 0 )
+        return 33;
+    
     cout << "GetMarkerStyleSystematics(): no valid input parameters given..." << endl;
     return 20;
 }
+
+//**********************************************************************************
+//********************** Determine name for systematics ****************************
+//**********************************************************************************
+TString GetSystematicsName  (  TString variationName = "" ){    
+    
+    if ( variationName.CompareTo("YieldExtraction") == 0 )
+        return "yield extraction";
+    if ( variationName.CompareTo("dEdxE") == 0 )
+        return "dE/dx e-line";
+    if ( variationName.CompareTo("dEdxPi") == 0 )
+        return "dE/dx #pi-line";
+    if ( variationName.CompareTo("TPCCluster") == 0 )
+        return "TPC cluster";
+    if ( variationName.CompareTo("SinglePt") == 0 )
+        return "single e^{#pm} #it{p}_{T}";
+    if ( variationName.CompareTo("Chi2") == 0 || variationName.CompareTo("PsiPairChi2") == 0 )
+        return "2D #chi^{2} #gamma, #psi_{pair} #gamma";
+    if ( variationName.CompareTo("Qt") == 0 )
+        return "2D q_{T}";
+    if ( variationName.CompareTo("Alpha") == 0 )
+        return "#alpha meson";
+    if ( variationName.CompareTo("ConvPhi") == 0 )
+        return "#varphi_{conv}";
+    if ( variationName.CompareTo("ClusterMinEnergy") == 0 )
+        return "min E_{cluster}";
+    if ( variationName.CompareTo("ClusterNCells") == 0 )
+        return "min # cells";
+    if ( variationName.CompareTo("ClusterNonLinearity") == 0 )
+        return "clu. energy calibration";
+    if ( variationName.CompareTo("ClusterEnergyScale") == 0 )
+        return "clu. energy scale";
+    if ( variationName.CompareTo("ClusterTrackMatching") == 0 )
+        return "V^{0}-tr. match. to cl.";
+    if ( variationName.CompareTo("ClusterTrackMatchingCalo") == 0 )
+        return "tr. match. to cl.";
+    if ( variationName.CompareTo("ClusterM02") == 0 )
+        return "#lambda_{0}^{2}";
+    if ( variationName.CompareTo("CellTiming") == 0 )
+        return "cell time";
+    if ( variationName.CompareTo("ClusterMaterialTRD") == 0 )
+        return "mat. infront of EMCal";
+    if ( variationName.CompareTo("Trigger") == 0 )
+        return "trigger normalization";
+    if ( variationName.CompareTo("Efficiency") == 0 )
+        return "efficiency";
+    if ( variationName.CompareTo("YieldExtractionPi0") == 0 )
+        return "yield extraction #pi^{0}";
+    if ( variationName.CompareTo("YieldExtractionEta") == 0 )
+        return "yield extraction #eta";
+    if ( variationName.CompareTo("ClusterTime") == 0 )
+        return "clu. timing";
+    if ( variationName.CompareTo("ClusterizationEnergy") == 0 )
+        return "clusterization energy";
+    if ( variationName.CompareTo("Periods") == 0 )
+        return "periods";
+    if ( variationName.CompareTo("InnerMaterial") == 0 )
+        return "inner material";
+    if ( variationName.CompareTo("Material") == 0 )
+        return "material";
+    if ( variationName.CompareTo("OpeningAngle") == 0 )
+        return "#theta_{#gamma#gamma}";
+    if ( variationName.CompareTo("MesonResolution") == 0 )
+        return "#pi^{0} resolution";
+    if ( variationName.CompareTo("Secondary") == 0 )
+        return "secondary corr.";
+    if ( variationName.CompareTo("CellMinE") == 0 )
+        return "cell E_{agg}";
+    
+    cout << "GetSystematicsName(): no valid input parameters given..." << endl;
+    return "";
+    
+}    
 

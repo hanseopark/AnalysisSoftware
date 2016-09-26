@@ -80,20 +80,11 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
     TString nameCutVariation[23];
     TString nameCutVariationSC[23];
     
-    TString nameCutVariation8TeV[23] = {"Yield extraction", "dE/dx e-line", "dE/dx #pi-line", "TPC cluster", "Single e^{#pm} #it{p}_{T}",
-                                            "2D #chi^{2} #gamma, #psi_{pair} #gamma","2D q_{T}","#alpha meson", "#varphi_{conv}", "min E_{cluster}",
-                                            "min # cells", "clu. energy calibration", "V0 tr. match. to cl.", "M_{02}", "cell time",
-                                            "Mat. infront of EMCal", "Trigger normalization", "Efficiency", "clu. energy scale",
-                                            "clu. timing","clusterization energy", "periods", "Yield extraction #pi^{0}"};
     TString nameCutVariationSC8TeV[23] = {"YieldExtraction", "dEdxE", "dEdxPi", "TPCCluster", "SinglePt",
                                             "Chi2", "Qt", "Alpha", "ConvPhi", "ClusterMinEnergy",
                                             "ClusterNCells", "ClusterNonLinearity", "ClusterTrackMatching", "ClusterM02", "CellTiming",
                                             "ClusterMaterialTRD", "Trigger", "Efficiency", "ClusterEnergyScale", "ClusterTime",
                                             "ClusterizationEnergy", "Periods", "YieldExtractionPi0"};
-
-    if (meson.CompareTo("Pi0EtaBinning") == 0){
-        nameCutVariation8TeV[0]          = "Yield extraction #eta";
-    }
 
     Color_t color[23];
     Color_t markerStyle[23];
@@ -102,15 +93,14 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
         markerStyle[k]  = GetMarkerStyleSystematics( nameCutVariationSC8TeV[k], 2); 
     }
     
-    
-    if (energy.CompareTo("8TeV") == 0) {
-        for (Int_t i = 0; i < numberCutStudies; i++){
-            nameCutVariation[i] = nameCutVariation8TeV[i];
-            nameCutVariationSC[i] = nameCutVariationSC8TeV[i];
-        }
+    for (Int_t i = 0; i < numberCutStudies; i++){
+        nameCutVariation[i]     = GetSystematicsName(nameCutVariationSC8TeV[i]);
+        nameCutVariationSC[i]   = nameCutVariationSC8TeV[i];
     }
-    
-    
+    if (meson.CompareTo("EtaToPi0") == 0){
+        nameCutVariation[0]     = "Yield extraction #eta";
+    }
+        
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************
     // ***************************************************************************************************

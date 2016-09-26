@@ -84,17 +84,10 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
     TString nameCutVariation[19];
     TString nameCutVariationSC[19];
     
-    TString nameCutVariation2760GeV[19] = {"Yield extraction", "dE/dx e-line", "dE/dx #pi-line", "TPC cluster", "Single e^{#pm} #it{p}_{T}",
-                                            "2D #chi^{2} #gamma, #psi_{pair} #gamma","2D q_{T}","#alpha meson", "#varphi_{conv}", "min E_{cluster}",
-                                            "min # cells", "clu. energy calibration", "V0 tr. match. to cl.", "M_{02}", "cell time",
-                                            "Mat. infront of EMCal", "Trigger normalization", "Efficiency", "Yield extraction #pi^{0}"};      
     TString nameCutVariationSC2760GeV[19] = {"YieldExtraction", "dEdxE", "dEdxPi", "TPCCluster", "SinglePt",
                                             "Chi2", "Qt", "Alpha", "ConvPhi", "ClusterMinEnergy",
                                             "ClusterNCells", "ClusterNonLinearity", "ClusterTrackMatching", "ClusterM02", "CellTiming",
                                             "ClusterMaterialTRD", "Trigger", "Efficiency", "YieldExtractionPi0"};
-    if (meson.CompareTo("EtaToPi0") == 0){
-        nameCutVariation2760GeV[0]          = "Yield extraction #eta";
-    }
 
     Color_t color[20]; 
     Style_t markerStyle[20];
@@ -104,11 +97,12 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         markerStyle[k]  = GetMarkerStyleSystematics( nameCutVariationSC2760GeV[k], 2); 
     }
     
-    if (energy.CompareTo("2.76TeV") == 0) {
-        for (Int_t i = 0; i < numberCutStudies; i++){
-            nameCutVariation[i] = nameCutVariation2760GeV[i];
-            nameCutVariationSC[i] = nameCutVariationSC2760GeV[i];
-        }
+    for (Int_t i = 0; i < numberCutStudies; i++){
+        nameCutVariation[i]     = GetSystematicsName(nameCutVariationSC2760GeV[i]);
+        nameCutVariationSC[i]   = nameCutVariationSC2760GeV[i];
+    }
+    if (meson.CompareTo("EtaToPi0") == 0){
+        nameCutVariation[0]     = "Yield extraction #eta";
     }
     
     // ***************************************************************************************************
