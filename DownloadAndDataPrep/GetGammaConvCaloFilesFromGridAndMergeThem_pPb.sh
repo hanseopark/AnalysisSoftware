@@ -138,9 +138,28 @@ fi
 # LHC13bData="541"; 
 # LHC13cData="542"; 
 
-TRAINDIR=Legotrain-Sys-ConvCalo-200ns
-LHC13bData="543"; 
-LHC13cData="544"; 
+# TRAINDIR=Legotrain-Sys-ConvCalo-200ns
+# LHC13bData="543"; 
+# LHC13cData="544"; 
+
+TRAINDIR=Legotrain-vAN20160901-sys-PCMEMC
+# LHC13bData="563"; 
+# LHC13cData="564"; 
+
+# LHC13b2_efix_p1MC="763"; 
+# LHC13b2_efix_p2MC="767"; 
+# LHC13b2_efix_p3MC="768"; 
+# LHC13b2_efix_p4MC="769";
+
+LHC13b2_efix_p1MC="770"; 
+LHC13b2_efix_p2MC="771"; 
+LHC13b2_efix_p3MC="772"; 
+LHC13b2_efix_p4MC="773";
+
+# LHC13b2_efix_p1MC="774"; 
+# LHC13b2_efix_p2MC="775"; 
+# LHC13b2_efix_p3MC="776"; 
+# LHC13b2_efix_p4MC="777";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
