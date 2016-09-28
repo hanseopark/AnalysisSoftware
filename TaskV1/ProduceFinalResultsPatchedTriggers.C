@@ -1811,6 +1811,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             ifstream  fileSysErrPi0;
             fileSysErrPi0.open(sysFilePi0[i].Data(),ios_base::in);
             cout << sysFilePi0[i].Data() << endl;
+            gSystem->Exec(Form("cp %s %s/SystematicErrorAveraged_Pi0_%s.txt", sysFilePi0[i].Data(), outputDir.Data(),triggerName[i].Data()));
+   
+            
             Int_t iPtBin = 0;
             cout << "reading sys file summed" << endl;
             while(!fileSysErrPi0.eof() && iPtBin < 100){
@@ -1829,9 +1832,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             }
             ifstream fileSysErrDetailedPi0;
             fileSysErrDetailedPi0.open(sysFilePi0Det,ios_base::in);
-            if(fileSysErrDetailedPi0.is_open()) 
+            if(fileSysErrDetailedPi0.is_open()) {
                 sysAvailSinglePi0[i] = kTRUE;
-            else{
+                gSystem->Exec(Form("cp %s %s/SystematicErrorAveragedSingle_Pi0_%s.txt", ((TString)sysFilePi0Det).Data(), outputDir.Data(),triggerName[i].Data()));
+            } else{
                 sysAvailSinglePi0[i] = kFALSE; 
                 cout << "No single errors were found" << endl;
             }
@@ -2173,7 +2177,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                                                                                    mode, optionEnergy, "Pi0", v2ClusterizerMerged,
                                                                                                    fileInputCorrFactors
                                                                                                );
-    //return;
+        
         // preparations for weight readout
         Double_t xValuesReadPi0[100];
         Double_t weightsReadPi0[12][100];
@@ -2269,14 +2273,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
         TCanvas* canvasWeights = new TCanvas("canvasWeights","",200,10,1350,900);// gives the page size
         DrawGammaCanvasSettings( canvasWeights, 0.08, 0.02, 0.035, 0.09);
-//         canvasWeights->SetLogx();
     
         TH2F * histo2DWeights;
         histo2DWeights = new TH2F("histo2DWeights","histo2DWeights",11000,0.,maxPtGlobalPi0,1000,-0.5,1.1);
         SetStyleHistoTH2ForGraphs(histo2DWeights, "#it{p}_{T} (GeV/#it{c})","#omega_{a} for BLUE",0.035,0.04, 0.035,0.04, 1.,1.);
-//         histo2DWeights->GetXaxis()->SetMoreLogLabels();
-//         histo2DWeights->GetXaxis()->SetLabelOffset(-0.01);
-    //  histo2DWeights->GetYaxis()->SetRangeUser(-10,10);
         histo2DWeights->Draw("copy");
         
             TLegend* legendWeightsPi0 = GetAndSetLegend2(0.12, 0.14, 0.55, 0.14+(0.035*nMeasSetPi0/2*1.35), 32);
@@ -2320,11 +2320,15 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 graphRelSystPi0[i]      = CalculateRelErrUpAsymmGraph( graphSystPi0[i], Form("relativeSysErrorPi0_%s", nameTriggerWeighted[i].Data()));
         }
         
-        
         TGraphAsymmErrors* graphRelErrorPi0Tot        = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAveragePi0Tot, "relativeTotalErrorPi0");
-        TGraphAsymmErrors* graphRelErrorPi0Stat       = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAveragePi0Stat, "relativeStatErrorPi0");
-        TGraphAsymmErrors* graphRelErrorPi0Sys        = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAveragePi0Sys, "relativeSysErrorPi0");
+        while (graphRelErrorPi0Tot->GetY()[0] < 0 ) graphRelErrorPi0Tot->RemovePoint(0);
 
+        TGraphAsymmErrors* graphRelErrorPi0Stat       = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAveragePi0Stat, "relativeStatErrorPi0");
+        while (graphRelErrorPi0Stat->GetY()[0] < 0 ) graphRelErrorPi0Stat->RemovePoint(0);
+        
+        TGraphAsymmErrors* graphRelErrorPi0Sys        = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAveragePi0Sys, "relativeSysErrorPi0");
+        while (graphRelErrorPi0Sys->GetY()[0] < 0 ) graphRelErrorPi0Sys->RemovePoint(0);
+        
         const char *SysErrDatnameMeanSingleErrCheck = Form("%s/SystematicErrorAveragedSingle%s_Pi0_%s_Check.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
         fstream SysErrDatAverSingleCheck;
         SysErrDatAverSingleCheck.precision(4);
@@ -2455,6 +2459,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             
         canvasRelTotErr->SaveAs(Form("%s/Pi0_RelErrorsFulldecomp.%s",outputDir.Data(),suffix.Data()));
         
+        
         // Calculate relative sys error weighted
         if (sysAvailSinglePi0[0]){
             for (Int_t k = 0; k< nRelSysErrPi0Sources ; k++ ){
@@ -2468,10 +2473,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     return;
                 } else {
                     graphRelSysErrPi0SourceWeighted[k]->SetName(Form("RelSysErrPi0SourceWeighted%s", ((TString)ptSysDetail[0][0].at(k+1)).Data()));
+                    while (graphRelSysErrPi0SourceWeighted[k]->GetY()[0] == -10000 )   graphRelSysErrPi0SourceWeighted[k]->RemovePoint(0);
                 }    
-            }    
-            
+            }       
         }
+//         return;
         
         // Calculation of averaged supporting plots with weights from spectra
         if (mode != 10){
@@ -2588,14 +2594,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 
         }    
         
-        if (sysAvailSinglePi0[0]){
-            for (Int_t k = 0; k < nRelSysErrPi0Sources; k++){
-                if (graphRelSysErrPi0SourceWeighted[k])
-                    while (graphRelSysErrPi0SourceWeighted[k]->GetY()[0] == -10000 )   graphRelSysErrPi0SourceWeighted[k]->RemovePoint(0);
-                else 
-                    cout << "I don't have a weighted Pi0 rel sys err graph for error source: " << k << endl;
-            }    
-        }    
+        
         if (graphAcceptancePi0Weighted)
             while (graphAcceptancePi0Weighted->GetY()[0] == -10000)     graphAcceptancePi0Weighted->RemovePoint(0);
         else 
@@ -2819,6 +2818,35 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
             canvasMass->Update();
             canvasMass->SaveAs(Form("%s/Pi0_%s_Mass_Weighted.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+
+            TGraphAsymmErrors* graphMassDifferencePi0DatavsMC       = CalculateAsymGraphDifferenceToGraph(graphMassPi0DataWeighted,graphMassPi0MCWeighted);
+            graphMassDifferencePi0DatavsMC->Print();
+
+            TGraphAsymmErrors* graphMassRelDifferencePi0DatavsMC    = CalculateAsymGraphRatioToGraph(graphMassDifferencePi0DatavsMC,graphMassPi0MCWeighted);
+            graphMassRelDifferencePi0DatavsMC->Print();
+            graphMassRelDifferencePi0DatavsMC = ScaleGraph(graphMassRelDifferencePi0DatavsMC, 100.);
+            
+            canvasMass->cd();
+            TH2F * histo2DRelMassDiffPi0       = new TH2F("histo2DRelMassDiffPi0","histo2DRelMassDiffPi0",1000,0., maxPtGlobalPi0,10000,-3, 3);
+            SetStyleHistoTH2ForGraphs(histo2DRelMassDiffPi0, "#it{p}_{T} (GeV/#it{c})","#it{M}_{#pi^{0}, data}-#it{M}_{#pi^{0}, MC}/ #it{M}_{#pi^{0}, MC} (%)", 
+                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.4);
+
+            
+            histo2DRelMassDiffPi0->DrawCopy();    
+            
+            if (graphMassRelDifferencePi0DatavsMC){
+                DrawGammaSetMarkerTGraphAsym(graphMassRelDifferencePi0DatavsMC, 20, 1, kBlack, kBlack);
+                graphMassRelDifferencePi0DatavsMC->Draw("p,e1,same");
+            }    
+            DrawGammaLines(0., maxPtGlobalPi0 , 0., 0., 1, kGray+2, 7);
+//             legendMassPi0Weighted->Draw();
+            labelEnergyMass->Draw();
+            labelPi0Mass->Draw();
+            labelDetProcMass->Draw();
+
+            canvasMass->Update();
+            canvasMass->SaveAs(Form("%s/Pi0_%s_RelMassDiff_Weighted.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+            
         }
         //***************************************************************************************************************
         //************************************Plotting Width Pi0 reduced range  *****************************************
@@ -4992,6 +5020,32 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
             canvasMass->Update();
             canvasMass->SaveAs(Form("%s/Eta_%s_Mass_Weighted.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+            
+            TGraphAsymmErrors* graphMassDifferenceEtaDatavsMC       = CalculateAsymGraphDifferenceToGraph(graphMassEtaDataWeighted,graphMassEtaMCWeighted);
+            TGraphAsymmErrors* graphMassRelDifferenceEtaDatavsMC    = CalculateAsymGraphRatioToGraph(graphMassDifferenceEtaDatavsMC,graphMassEtaMCWeighted);
+            graphMassRelDifferenceEtaDatavsMC = ScaleGraph(graphMassRelDifferenceEtaDatavsMC, 100.);
+
+            canvasMass->cd();
+            TH2F * histo2DRelMassDiffEta       = new TH2F("histo2DRelMassDiffEta","histo2DRelMassDiffEta",1000,0., maxPtGlobalEta,10000,-5, 5);
+            SetStyleHistoTH2ForGraphs(histo2DRelMassDiffEta, "#it{p}_{T} (GeV/#it{c})","#it{M}_{#eta, data}-#it{M}_{#eta, MC}/ #it{M}_{#eta, MC} (%)", 
+                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.4);
+
+            
+            histo2DRelMassDiffEta->DrawCopy();    
+            
+            if (graphMassRelDifferenceEtaDatavsMC){
+                DrawGammaSetMarkerTGraphAsym(graphMassRelDifferenceEtaDatavsMC, 20, 1, kBlack, kBlack);
+                graphMassRelDifferenceEtaDatavsMC->Draw("p,e1,same");
+            }    
+            DrawGammaLines(0., maxPtGlobalEta , 0., 0., 1, kGray+2, 7);
+//             legendMassEtaWeighted->Draw();
+            labelEnergyMass->Draw();
+            labelEtaMass->Draw();
+            labelDetProcMass->Draw();
+
+            canvasMass->Update();
+            canvasMass->SaveAs(Form("%s/Eta_%s_RelMassDiff_Weighted.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+
         }
         delete canvasMass;
         //***************************************************************************************************************
