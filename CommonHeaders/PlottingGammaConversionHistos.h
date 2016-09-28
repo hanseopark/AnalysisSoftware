@@ -1524,12 +1524,15 @@ void SetStyleTLatex( TLatex* text,
                      Width_t lineWidth, 
                      Color_t textColor = 1, 
                      Font_t textFont = 42, 
-                     Bool_t kNDC = kTRUE){
+                     Bool_t kNDC = kTRUE,
+                     Short_t align = 11
+                   ){
     if (kNDC) {text->SetNDC();}
     text->SetTextFont(textFont);
     text->SetTextColor(textColor);
     text->SetTextSize(textSize);
     text->SetLineWidth(lineWidth);
+    text->SetTextAlign(align);
 }
 
 void SetStyleHisto( TH1* histo, 

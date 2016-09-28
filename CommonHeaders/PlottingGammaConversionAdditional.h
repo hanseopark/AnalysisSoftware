@@ -3952,7 +3952,7 @@ Size_t GetDefaultMarkerSizeDiffDetectors( TString detector,
         }  else if (detector.CompareTo("EMCal high pT") == 0){
             return 2.2;
         } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0){
-            return 2.2;
+            return 2.6;
         } else {
             return 2.2;
         }
@@ -3972,7 +3972,7 @@ Size_t GetDefaultMarkerSizeDiffDetectors( TString detector,
         }  else if (detector.CompareTo("EMCal high pT") == 0){
             return 2.2;
         } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0){
-            return 2.2;
+            return 2.6;
         } else {
             return 2.2;
         }
