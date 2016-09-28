@@ -274,7 +274,7 @@ TGraphErrors* CalculateGraphRatioToGraph(TGraphErrors* graphA, TGraphErrors* gra
         yValue[i]                   = yValue[i]/graphB->GetY()[i];
         cout<<i<<" A EY "<< graphA->GetEY()[i]<<" A Y "<<graphA->GetY()[i]<<" B EY "<<graphB->GetEY()[i]<<" B Y"<<graphB->GetY()[i]<<endl;
         Double_t yErrorRatio        = yValue[i]*TMath::Sqrt( TMath::Power(graphA->GetEY()[i]/graphA->GetY()[i],2) + TMath::Power(graphB->GetEY()[i]/graphB->GetY()[i],2));
-        yError[i] = yErrorRatio; 
+        yError[i] = TMath::Abs(yErrorRatio); 
     }     
     TGraphErrors* returnGraph       = new TGraphErrors(nPoints,xValue,yValue,xError,yError); 
     return returnGraph;    
@@ -299,14 +299,44 @@ TGraphAsymmErrors* CalculateAsymGraphRatioToGraph(TGraphAsymmErrors* graphA, TGr
             if (graphB->GetY()[i] != 0){
                 yValue[i]                   = yValue[i]/graphB->GetY()[i];
                 Double_t yErrorRatioHigh    = yValue[i]*TMath::Sqrt( TMath::Power(graphA->GetEYhigh()[i]/graphA->GetY()[i],2) + TMath::Power(graphB->GetEYhigh()[i]/graphB->GetY()[i],2));
-                yErrorHigh[i]               = yErrorRatioHigh; 
+                yErrorHigh[i]               = TMath::Abs(yErrorRatioHigh); 
                 Double_t yErrorRatioLow     = yValue[i]*TMath::Sqrt( TMath::Power(graphA->GetEYlow()[i]/graphA->GetY()[i],2) + TMath::Power(graphB->GetEYlow()[i]/graphB->GetY()[i],2));
-                yErrorLow[i]                = yErrorRatioLow; 
+                yErrorLow[i]                = TMath::Abs(yErrorRatioLow); 
             } else {
                 yValue[i]                   = 0;
                 yErrorHigh[i]               = 0;
                 yErrorLow[i]                = 0;
             }    
+        } else {
+            cout << "ERROR: graphs don't have same binning " << endl;
+            return NULL;
+        }    
+    }
+    TGraphAsymmErrors* returnGraph      = new TGraphAsymmErrors(nPoints,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh); 
+    return returnGraph;
+}
+
+//**********************************************************************************************************
+// Calculates the difference of two asymmerror graphs 
+//**********************************************************************************************************
+TGraphAsymmErrors* CalculateAsymGraphDifferenceToGraph(TGraphAsymmErrors* graphA, TGraphAsymmErrors* graphB){
+  
+    TGraphErrors* graphACopy        = (TGraphErrors*)graphA->Clone("GraphCopy");
+    Double_t* xValue                = graphACopy->GetX(); 
+    Double_t* yValue                = graphACopy->GetY();
+    Double_t* xErrorHigh            = graphACopy->GetEXhigh();
+    Double_t* xErrorLow             = graphACopy->GetEXlow();
+    Double_t* yErrorHigh            = graphACopy->GetEYhigh();
+    Double_t* yErrorLow             = graphACopy->GetEYlow();
+   
+    Int_t nPoints                   = graphACopy->GetN();
+    for (Int_t i = 0; i < nPoints; i++){
+        if (abs(xValue[i]-graphB->GetX()[i]) < 0.0001){
+            yValue[i]                   = yValue[i]-graphB->GetY()[i];
+            Double_t yErrorRatioHigh    = TMath::Sqrt( TMath::Power(graphA->GetEYhigh()[i],2) + TMath::Power(graphB->GetEYhigh()[i],2));
+            yErrorHigh[i]               = yErrorRatioHigh; 
+            Double_t yErrorRatioLow     = TMath::Sqrt( TMath::Power(graphA->GetEYlow()[i],2) + TMath::Power(graphB->GetEYlow()[i],2));
+            yErrorLow[i]                = yErrorRatioLow; 
         } else {
             cout << "ERROR: graphs don't have same binning " << endl;
             return NULL;

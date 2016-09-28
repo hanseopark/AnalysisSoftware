@@ -2819,7 +2819,7 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
             }    
         }    
 
-        TString titleHistoSignal    = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",fBinsPt[fExampleBin],fBinsPt[fExampleBin+1]);
+        TString titleHistoSignal    = Form("%3.1f GeV/#it{c} < #it{p}_{T} < %3.1f GeV/#it{c}",fBinsPt[fExampleBin],fBinsPt[fExampleBin+1]);
         if (fHistoM02PtBin[fExampleBin]){
             fHistoM02PtBin[fExampleBin]->SetTitle(titleHistoSignal.Data());
             fHistoM02PtBin[fExampleBin]->Write();

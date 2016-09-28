@@ -1801,7 +1801,7 @@ TGraphAsymmErrors* CombinePtPointsSpectraTriggerCorrMat(    TH1D** histoStat, TG
                         nameMeasPtBin[numberOfMeasInPtBin]  = nameMeas[meas];
                         yValue[meas]                        = histoStat[meas]->GetBinContent(binCounters[meas]+1-startOffsets[meas]);
                         yStatErr[meas]                      = histoStat[meas]->GetBinError(binCounters[meas]+1-startOffsets[meas]);
-                        cout << "Full: "<< binCounters[meas]-sysOffsets[meas] << "\t"<< graphSyst[meas]->GetX()[binCounters[meas]-sysOffsets[meas]] 
+                        cout << "Sys: "<< binCounters[meas]-sysOffsets[meas] << "\t"<< graphSyst[meas]->GetX()[binCounters[meas]-sysOffsets[meas]] 
                              << "\t"<< graphSyst[meas]->GetErrorYhigh(binCounters[meas]-sysOffsets[meas]) 
                              << "\t"<< graphSyst[meas]->GetErrorYlow(binCounters[meas]-sysOffsets[meas]) << endl;
                         ySysErr[meas]                       = graphSyst[meas]->GetErrorYhigh(binCounters[meas]-sysOffsets[meas]);
@@ -2098,8 +2098,6 @@ TGraphAsymmErrors* CombinePtPointsSpectraTriggerCorrMat(    TH1D** histoStat, TG
             corrFracEG2_EMC7_EG2        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"4","Pi0EtaBinning","EGA_EMC7-EGA");
         }
 
-
-  
         // correlation factors for INT1 triggers
         Double_t cvINT1_INT7              = 0.;
         if (yValue[0]>0 && yValue[1]>0 ){

@@ -161,8 +161,9 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     TString  nameMeasGlobal[11]                 = { "PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMCal",
                                                     "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "EMCal high pT", "EMCal merged",
                                                     "PCMOtherDataset"};
+//     TString  nameMeasGlobalLabel[11]            = { "PCM^{2}", "PHOS^{2}", "EMC^{2}", "PCM-PHOS", "PCM-EMC",
     TString  nameMeasGlobalLabel[11]            = { "PCM", "PHOS", "EMC", "PCM-PHOS", "PCM-EMC",
-                                                    "PCM-Dalitz", "PHOS-Dalitz", "EMC-Dalitz", "EMC high pT", "EMC merged",
+                                                    "PCM-Dalitz", "PHOS-Dalitz", "EMC-Dalitz", "EMC high pT", "mEMC",
                                                     "PCMOtherDataset"};
     TString  nameTrigger[6]                     = {"INT1", "INT7", "EMC1", "EMC7", "EG2", "EG1"};
     
@@ -1021,12 +1022,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         legendWeightsOld->Draw();
 
         TLatex *labelWeightsEnergy      = new TLatex(0.7,0.20,collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelWeightsEnergy, 0.85*textSizeLabelsPixel,4);
-        labelWeightsEnergy->SetTextFont(43);
+        SetStyleTLatex( labelWeightsEnergy, 0.85*textSizeLabelsPixel, 4, 1, 43);
         labelWeightsEnergy->Draw();
         TLatex *labelWeightsPi0         = new TLatex(0.7,0.16,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelWeightsPi0, 0.85*textSizeLabelsPixel,4);
-        labelWeightsPi0->SetTextFont(43);
+        SetStyleTLatex( labelWeightsPi0, 0.85*textSizeLabelsPixel, 4, 1, 43 );
         labelWeightsPi0->Draw();
 
 //      DrawGammaLines(0.23, 70. , 0.8, 0.8,0.1, kGray, 3);
@@ -1264,12 +1263,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         legendRatioToOld->Draw();
 
         TLatex *labelRatioToOldEnergy   = new TLatex(0.15,0.89,collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelRatioToOldEnergy, 0.85*textSizeLabelsPixel,4);
-        labelRatioToOldEnergy->SetTextFont(43);
+        SetStyleTLatex( labelRatioToOldEnergy, 0.85*textSizeLabelsPixel, 4, 1, 43);
         labelRatioToOldEnergy->Draw();
         TLatex *labelRatioToOldPi0      = new TLatex(0.15,0.85,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRatioToOldPi0, 0.85*textSizeLabelsPixel,4);
-        labelRatioToOldPi0->SetTextFont(43);
+        SetStyleTLatex( labelRatioToOldPi0, 0.85*textSizeLabelsPixel, 4, 1, 43);
         labelRatioToOldPi0->Draw();
         
     canvasRatioToOldCombined->SaveAs(Form("%s/Pi0_RatioOfCombToCombOld_PP2760GeV.%s",outputDir.Data(),suffix.Data()));
@@ -1300,12 +1297,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         legendRelSysErr->Draw();
 
         TLatex *labelRelSysErrEnergy    = new TLatex(0.15,0.89,collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelRelSysErrEnergy, 0.85*textSizeLabelsPixel,4);
-        labelRelSysErrEnergy->SetTextFont(43);
+        SetStyleTLatex( labelRelSysErrEnergy, 0.85*textSizeLabelsPixel, 4, 1, 43);
         labelRelSysErrEnergy->Draw();
         TLatex *labelRelSysErrPi0       = new TLatex(0.15,0.85,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRelSysErrPi0, 0.85*textSizeLabelsPixel,4);
-        labelRelSysErrPi0->SetTextFont(43);
+        SetStyleTLatex( labelRelSysErrPi0, 0.85*textSizeLabelsPixel, 4, 1, 43);
         labelRelSysErrPi0->Draw();
         
     canvasRelSysErr->SaveAs(Form("%s/Pi0_RelSysErr.%s",outputDir.Data(),suffix.Data()));
@@ -1348,12 +1343,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         legendRelStatErr->Draw();
 
         TLatex *labelRelStatErrEnergy   = new TLatex(0.75,0.89,collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelRelStatErrEnergy, 0.85*textSizeLabelsPixel,4);
-        labelRelStatErrEnergy->SetTextFont(43);
+        SetStyleTLatex( labelRelStatErrEnergy, 0.85*textSizeLabelsPixel, 4, 1, 43);
         labelRelStatErrEnergy->Draw();
         TLatex *labelRelStatErrPi0      = new TLatex(0.75,0.85,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRelStatErrPi0, 0.85*textSizeLabelsPixel,4);
-        labelRelStatErrPi0->SetTextFont(43);
+        SetStyleTLatex( labelRelStatErrPi0, 0.85*textSizeLabelsPixel, 4, 1, 43);
         labelRelStatErrPi0->Draw();
         
     canvasRelStatErr->SaveAs(Form("%s/Pi0_RelStatErr.%s",outputDir.Data(),suffix.Data()));
@@ -1397,17 +1390,15 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphCombPi0InvXSectionRelTotA->Draw("p,same,z");
 
         TLegend* legendRelTotErr = GetAndSetLegend2(0.14, 0.92-(0.035*2), 0.45, 0.92, 32);
-        legendRelTotErr->AddEntry(graphCombPi0InvXSectionRelTotOld,"PCM, PHOS","p");
+        legendRelTotErr->AddEntry(graphCombPi0InvXSectionRelTotOld,"PCM^{2}, PHOS^{2}","p");
         legendRelTotErr->AddEntry(graphCombPi0InvXSectionRelTotA,"All","p");
         legendRelTotErr->Draw();
 
         TLatex *labelRelTotErrEnergy    = new TLatex(0.75,0.89,collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelRelTotErrEnergy, 0.85*textSizeLabelsPixel,4);
-        labelRelTotErrEnergy->SetTextFont(43);
+        SetStyleTLatex( labelRelTotErrEnergy, 0.85*textSizeLabelsPixel, 4, 1, 43);        
         labelRelTotErrEnergy->Draw();
         TLatex *labelRelTotErrPi0       = new TLatex(0.75,0.85,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRelTotErrPi0, 0.85*textSizeLabelsPixel,4);
-        labelRelTotErrPi0->SetTextFont(43);
+        SetStyleTLatex( labelRelTotErrPi0, 0.85*textSizeLabelsPixel, 4, 1, 43);
         labelRelTotErrPi0->Draw();
         
     canvasRelTotErr->SaveAs(Form("%s/Pi0_RelTotErr.%s",outputDir.Data(),suffix.Data()));
@@ -1588,16 +1579,13 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphCombPi0InvXSectionTotANoShift->Draw("p same");
 
         TLatex *labelRatioToFitBinShift   = new TLatex(0.72, 0.91, collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelRatioToFitBinShift, textSizeLabelsPixel,4);
-        labelRatioToFitBinShift->SetTextFont(43);
+        SetStyleTLatex( labelRatioToFitBinShift, textSizeLabelsPixel, 4, 1, 43);
         labelRatioToFitBinShift->Draw();
         TLatex *labelRatioToFitALICEBinShift    = new TLatex(0.852, 0.86, "ALICE");
-        SetStyleTLatex( labelRatioToFitALICEBinShift, textSizeLabelsPixel,4);
-        labelRatioToFitALICEBinShift->SetTextFont(43);
+        SetStyleTLatex( labelRatioToFitALICEBinShift, textSizeLabelsPixel, 4, 1, 43);
         labelRatioToFitALICEBinShift->Draw();
         TLatex *labelRatioToFitPi0BinShift      = new TLatex(0.826, 0.807, "#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRatioToFitPi0BinShift, textSizeLabelsPixel,4);
-        labelRatioToFitPi0BinShift->SetTextFont(43);
+        SetStyleTLatex( labelRatioToFitPi0BinShift, textSizeLabelsPixel, 4, 1, 43);
         labelRatioToFitPi0BinShift->Draw();
 
         canvasShift->Update();
@@ -1656,8 +1644,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 //     TF1* fitTCMInvXSectionPi02  = FitObject("tcm","fitTCMInvCrossSectionPi02760GeV2","Pi0",graphCombPi0InvXSectionTotA,0.4,40.,paramTCMPi0New,"QNRMEX0+","", kFALSE);
 //     cout << WriteParameterToFile(fitTCMInvXSectionPi02)<< endl;
 
-    TF1* fitPowInvXSectionPi0   = FitObject("m","fitPowInvXSectionPi02760GeV","Pi0",graphCombPi0InvXSectionTotA,5,40. ,NULL,"QNRMEX0+","", kFALSE);
-    cout << WriteParameterToFile(fitPowInvXSectionPi0)<< endl;
+//     TF1* fitPowInvXSectionPi0   = FitObject("m","fitPowInvXSectionPi02760GeV","Pi0",graphCombPi0InvXSectionTotA,5,40. ,NULL,"QNRMEX0+","", kFALSE);
+//     cout << WriteParameterToFile(fitPowInvXSectionPi0)<< endl;
     
     TF1* fitPCMTCMInvXSectionPi0    = FitObject("tcm","fitPCMTCMInvCrossSectionPi02760GeV","Pi0",graphPCMPi0InvXSectionStat,0.4,8. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPCMTCMInvXSectionPi0)<< endl;
@@ -1790,6 +1778,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.05,2.45);
     histo2DPi0RatioToCombFit->Draw("copy");
 
+        ProduceGraphAsymmWithoutXErrors(graphRatioPi0CombCombFitStatA);
+ 
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitSysA, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
         graphRatioPi0CombCombFitSysA->Draw("E2same");
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitStatA, markerStyleComb, markerSizeComb, colorComb , colorComb);
@@ -1799,17 +1789,14 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaLines(0.23, 70. , 1.1, 1.1,0.1, kGray, 7);
         DrawGammaLines(0.23, 70. , 0.9, 0.9,0.1, kGray, 7);
 
-        TLatex *labelRatioToFitEnergy   = new TLatex(0.665, 0.91, collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelRatioToFitEnergy, textSizeLabelsPixel,4);
-        labelRatioToFitEnergy->SetTextFont(43);
+        TLatex *labelRatioToFitEnergy   = new TLatex(0.95, 0.92, collisionSystem2760GeV.Data());
+        SetStyleTLatex( labelRatioToFitEnergy, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelRatioToFitEnergy->Draw();
-        TLatex *labelRatioToFitALICE    = new TLatex(0.852, 0.86, "ALICE");
-        SetStyleTLatex( labelRatioToFitALICE, textSizeLabelsPixel,4);
-        labelRatioToFitALICE->SetTextFont(43);
+        TLatex *labelRatioToFitALICE    = new TLatex(0.95, 0.87, "ALICE");
+        SetStyleTLatex( labelRatioToFitALICE, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelRatioToFitALICE->Draw();
-        TLatex *labelRatioToFitPi0      = new TLatex(0.826, 0.807, "#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRatioToFitPi0, textSizeLabelsPixel,4);
-        labelRatioToFitPi0->SetTextFont(43);
+        TLatex *labelRatioToFitPi0      = new TLatex(0.95, 0.817, "#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelRatioToFitPi0, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelRatioToFitPi0->Draw();
 
     canvasRatioToCombFit->SaveAs(Form("%s/Pi0_RatioOfCombToCombFit_PP2760GeV.%s",outputDir.Data(),suffix.Data()));
@@ -1821,6 +1808,12 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     canvasRatioToCombFit->cd();
     histo2DPi0RatioToCombFit->Draw("copy");
     
+        ProduceGraphAsymmWithoutXErrors(graphRatioPi0PCMCombFitStat);
+        ProduceGraphAsymmWithoutXErrors(graphRatioPi0PHOSCombFitStat);
+        ProduceGraphAsymmWithoutXErrors(graphRatioPi0EMCALCombFitStat);
+        ProduceGraphAsymmWithoutXErrors(graphRatioPi0EMCALMergedCombFitStat);
+        ProduceGraphAsymmWithoutXErrors(graphRatioPi0PCMEMCALCombFitStat);
+        
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0PCMCombFitSys, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0PCMCombFitStat, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0]);
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0PHOSCombFitSys, markerStyleDet[1] ,markerSizeDet[1]*0.5, colorDet[1], colorDet[1], widthLinesBoxes, kTRUE);
@@ -1854,42 +1847,35 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     
         //****************************** Definition of the Legend ******************************************
         //**************** Row def ************************
-        Double_t rowsLegendOnlyPi0Ratio[6]          = {0.91, 0.855, 0.805, 0.755, 0.705, 0.655};
-        Double_t rowsLegendOnlyPi0RatioAbs[6]       = {0.91, 2.165, 2.035, 1.905, 1.765, 1.635};
-        Double_t columnsLegendOnlyPi0Ratio[3]       = {0.115, 0.375, 0.46};
-        Double_t columnsLegendOnlyPi0RatioAbs[3]    = {0.115, 1.8, 2.7};
-        Double_t lengthBox                          = 0.2;
+        Double_t rowsLegendOnlyPi0Ratio[6]          = {0.92, 0.867, 0.807, 0.747, 0.687, 0.627};
+        Double_t rowsLegendOnlyPi0RatioAbs[6]       = {0.92, 2.18, 2.03, 1.87, 1.73, 1.56 };
+        Double_t columnsLegendOnlyPi0Ratio[3]       = {0.115, 0.325, 0.41};
+        Double_t columnsLegendOnlyPi0RatioAbs[3]    = {0.115, 1.3, 1.95};
+        Double_t lengthBox                          = 0.15;
         Double_t heightBox                          = 0.08/2;
         //****************** first Column **************************************************
-        TLatex *textPCMOnlyRatioPi0                 = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[1],"PCM");
-        SetStyleTLatex( textPCMOnlyRatioPi0, textSizeLabelsPixel,4);
-        textPCMOnlyRatioPi0->SetTextFont(43);
+        TLatex *textPCMOnlyRatioPi0                 = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[1],nameMeasGlobalLabel[0]);
+        SetStyleTLatex( textPCMOnlyRatioPi0, textSizeLabelsPixel,4, 1, 43);
         textPCMOnlyRatioPi0->Draw();
-        TLatex *textPHOSOnlyRatioPi0                = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[2],"PHOS");
-        SetStyleTLatex( textPHOSOnlyRatioPi0, textSizeLabelsPixel,4);
-        textPHOSOnlyRatioPi0->SetTextFont(43);
+        TLatex *textPHOSOnlyRatioPi0                = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[2],nameMeasGlobalLabel[1]);
+        SetStyleTLatex( textPHOSOnlyRatioPi0, textSizeLabelsPixel,4, 1, 43);
         textPHOSOnlyRatioPi0->Draw();
-        TLatex *textEMCALOnlyRatioPi0               = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[3],"EMC");
-        SetStyleTLatex( textEMCALOnlyRatioPi0, textSizeLabelsPixel,4);
-        textEMCALOnlyRatioPi0->SetTextFont(43);
+        TLatex *textEMCALOnlyRatioPi0               = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[3],nameMeasGlobalLabel[2]);
+        SetStyleTLatex( textEMCALOnlyRatioPi0, textSizeLabelsPixel,4, 1, 43);
         textEMCALOnlyRatioPi0->Draw();
-        TLatex *textPCMEMCALOnlyRatioPi0            = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[4],"PCM-EMC");
-        SetStyleTLatex( textPCMEMCALOnlyRatioPi0, textSizeLabelsPixel,4);
-        textPCMEMCALOnlyRatioPi0->SetTextFont(43);
+        TLatex *textPCMEMCALOnlyRatioPi0            = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[4],nameMeasGlobalLabel[4]);
+        SetStyleTLatex( textPCMEMCALOnlyRatioPi0, textSizeLabelsPixel,4, 1, 43);
         textPCMEMCALOnlyRatioPi0->Draw();
-        TLatex *textEMCALMergedOnlyRatioPi0         = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[5],"EMC merged");
-        SetStyleTLatex( textEMCALMergedOnlyRatioPi0, textSizeLabelsPixel,4);
-        textEMCALMergedOnlyRatioPi0->SetTextFont(43);
+        TLatex *textEMCALMergedOnlyRatioPi0         = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[5],nameMeasGlobalLabel[9]);
+        SetStyleTLatex( textEMCALMergedOnlyRatioPi0, textSizeLabelsPixel,4, 1, 43);
         textEMCALMergedOnlyRatioPi0->Draw();
         
         //****************** second Column *************************************************
         TLatex *textStatOnlyRatioPi0                = new TLatex(columnsLegendOnlyPi0Ratio[1],rowsLegendOnlyPi0Ratio[0] ,"stat");
-        SetStyleTLatex( textStatOnlyRatioPi0, textSizeLabelsPixel,4);
-        textStatOnlyRatioPi0->SetTextFont(43);
+        SetStyleTLatex( textStatOnlyRatioPi0, textSizeLabelsPixel,4, 1, 43);
         textStatOnlyRatioPi0->Draw();
         TLatex *textSysOnlyRatioPi0                 = new TLatex(columnsLegendOnlyPi0Ratio[2] ,rowsLegendOnlyPi0Ratio[0],"syst");
-        SetStyleTLatex( textSysOnlyRatioPi0, textSizeLabelsPixel,4);
-        textSysOnlyRatioPi0->SetTextFont(43);
+        SetStyleTLatex( textSysOnlyRatioPi0, textSizeLabelsPixel,4, 1, 43);
         textSysOnlyRatioPi0->Draw();
         TMarker* markerPCMPi0OnlyRatioPi0           = CreateMarkerFromGraph(graphRatioPi0PCMCombFitSys,columnsLegendOnlyPi0Ratio[1] ,rowsLegendOnlyPi0Ratio[1],1);
         markerPCMPi0OnlyRatioPi0->DrawMarker(columnsLegendOnlyPi0RatioAbs[1] ,rowsLegendOnlyPi0RatioAbs[1]);
@@ -2143,8 +2129,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
         labelWeightsEnergy->Draw();
         TLatex *labelWeightsEta         = new TLatex(0.7,0.16,"#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelWeightsEta, 0.85*textSizeLabelsPixel,4);
-        labelWeightsEta->SetTextFont(43);
+        SetStyleTLatex( labelWeightsEta, 0.85*textSizeLabelsPixel,4, 1, 43);
         labelWeightsEta->Draw();
 
 //      DrawGammaLines(0.33, 25. , 0.8, 0.8,0.1, kGray, 3);
@@ -2181,8 +2166,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
         labelRelSysErrEnergy->Draw();
         TLatex *labelRelSysErrEta       = new TLatex(0.15,0.85,"#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRelSysErrEta, 0.85*textSizeLabelsPixel,4);
-        labelRelSysErrEta->SetTextFont(43);
+        SetStyleTLatex( labelRelSysErrEta, 0.85*textSizeLabelsPixel,4, 1, 43);
         labelRelSysErrEta->Draw();
         
     canvasRelSysErr->SaveAs(Form("%s/Eta_RelSysErr.%s",outputDir.Data(),suffix.Data()));
@@ -2225,8 +2209,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
         labelRelStatErrEnergy->Draw();
         TLatex *labelRelStatErrEta      = new TLatex(0.75,0.85,"#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRelStatErrEta, 0.85*textSizeLabelsPixel,4);
-        labelRelStatErrEta->SetTextFont(43);
+        SetStyleTLatex( labelRelStatErrEta, 0.85*textSizeLabelsPixel,4, 1, 43);
         labelRelStatErrEta->Draw();
         
     canvasRelStatErr->SaveAs(Form("%s/Eta_RelStatErr.%s",outputDir.Data(),suffix.Data()));
@@ -2268,8 +2251,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
         labelRelTotErrEnergy->Draw();
         TLatex *labelRelTotErrEta       = new TLatex(0.75,0.85,"#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRelTotErrEta, 0.85*textSizeLabelsPixel,4);
-        labelRelTotErrEta->SetTextFont(43);
+        SetStyleTLatex( labelRelTotErrEta, 0.85*textSizeLabelsPixel,4, 1, 43);
         labelRelTotErrEta->Draw();
         
     canvasRelTotErr->SaveAs(Form("%s/Eta_RelTotErr.%s",outputDir.Data(),suffix.Data()));
@@ -2403,16 +2385,13 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphCombEtaInvXSectionTotANoShift->Draw("p same");
 
         TLatex *labelRatioToFitBinShift   = new TLatex(0.72, 0.91, collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelRatioToFitBinShift, textSizeLabelsPixel,4);
-        labelRatioToFitBinShift->SetTextFont(43);
+        SetStyleTLatex( labelRatioToFitBinShift, textSizeLabelsPixel,4, 1, 43);
         labelRatioToFitBinShift->Draw();
         TLatex *labelRatioToFitALICEBinShift    = new TLatex(0.852, 0.86, "ALICE");
-        SetStyleTLatex( labelRatioToFitALICEBinShift, textSizeLabelsPixel,4);
-        labelRatioToFitALICEBinShift->SetTextFont(43);
+        SetStyleTLatex( labelRatioToFitALICEBinShift, textSizeLabelsPixel,4, 1, 43);
         labelRatioToFitALICEBinShift->Draw();
         TLatex *labelRatioToFitPi0BinShift      = new TLatex(0.826, 0.807, "#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRatioToFitPi0BinShift, textSizeLabelsPixel,4);
-        labelRatioToFitPi0BinShift->SetTextFont(43);
+        SetStyleTLatex( labelRatioToFitPi0BinShift, textSizeLabelsPixel,4, 1, 43);
         labelRatioToFitPi0BinShift->Draw();
 
         canvasShift->Update();
@@ -2590,6 +2569,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(0.05,2.55);
     histo2DEtaRatioToCombFit->Draw("copy");
 
+        ProduceGraphAsymmWithoutXErrors(graphRatioEtaCombCombFitStatA);
         DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitSysA, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
         graphRatioEtaCombCombFitSysA->Draw("E2same");
         DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitStatA, markerStyleComb, markerSizeComb, colorComb , colorComb);
@@ -2602,8 +2582,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         labelRatioToFitEnergy->Draw();
         labelRatioToFitALICE->Draw();
         TLatex *labelRatioToFitEta      = new TLatex(0.852,0.82,"#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRatioToFitEta, textSizeLabelsPixel,4);
-        labelRatioToFitEta->SetTextFont(43);
+        SetStyleTLatex( labelRatioToFitEta, textSizeLabelsPixel,4, 1, 43);
         labelRatioToFitEta->Draw();
 
     canvasRatioToCombFit->SaveAs(Form("%s/Eta_RatioOfCombToCombFit_PP2760GeV.%s",outputDir.Data(),suffix.Data()));
@@ -2614,7 +2593,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     
     canvasRatioToCombFit->cd();
     histo2DEtaRatioToCombFit->Draw("copy");
-    
+        ProduceGraphAsymmWithoutXErrors(graphRatioEtaPCMCombFitStat);
+        ProduceGraphAsymmWithoutXErrors(graphRatioEtaEMCALCombFitStat);
+        ProduceGraphAsymmWithoutXErrors(graphRatioEtaPCMEMCALCombFitStat);
+        
         DrawGammaSetMarkerTGraphAsym(graphRatioEtaPCMCombFitSys, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
         DrawGammaSetMarkerTGraphAsym(graphRatioEtaPCMCombFitStat, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0]);
         DrawGammaSetMarkerTGraphAsym(graphRatioEtaEMCALCombFitSys, markerStyleDet[2] ,markerSizeDet[2]*0.5, colorDet[2], colorDet[2], widthLinesBoxes, kTRUE);
@@ -2645,27 +2627,22 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         Double_t columnsLegendOnlyEtaRatioAbs[3]    = {0.115, 1.2, 1.62};
 
         //****************** first Column **************************************************
-        TLatex *textPCMOnlyRatioEta                 = new TLatex(columnsLegendOnlyEtaRatio[0],rowsLegendOnlyEtaRatio[1],"PCM");
-        SetStyleTLatex( textPCMOnlyRatioEta, textSizeLabelsPixel,4);
-        textPCMOnlyRatioEta->SetTextFont(43);
+        TLatex *textPCMOnlyRatioEta                 = new TLatex(columnsLegendOnlyEtaRatio[0],rowsLegendOnlyEtaRatio[1],nameMeasGlobalLabel[0]);
+        SetStyleTLatex( textPCMOnlyRatioEta, textSizeLabelsPixel,4, 1, 43);
         textPCMOnlyRatioEta->Draw();
-        TLatex *textEMCALOnlyRatioEta               = new TLatex(columnsLegendOnlyEtaRatio[0],rowsLegendOnlyEtaRatio[2],"EMC");
-        SetStyleTLatex( textEMCALOnlyRatioEta, textSizeLabelsPixel,4);
-        textEMCALOnlyRatioEta->SetTextFont(43);
+        TLatex *textEMCALOnlyRatioEta               = new TLatex(columnsLegendOnlyEtaRatio[0],rowsLegendOnlyEtaRatio[2],nameMeasGlobalLabel[2]);
+        SetStyleTLatex( textEMCALOnlyRatioEta, textSizeLabelsPixel,4, 1, 43);
         textEMCALOnlyRatioEta->Draw();
-        TLatex *textPCMEMCALOnlyRatioEta            = new TLatex(columnsLegendOnlyEtaRatio[0],rowsLegendOnlyEtaRatio[3],"PCM-EMC");
-        SetStyleTLatex( textPCMEMCALOnlyRatioEta, textSizeLabelsPixel,4);
-        textPCMEMCALOnlyRatioEta->SetTextFont(43);
+        TLatex *textPCMEMCALOnlyRatioEta            = new TLatex(columnsLegendOnlyEtaRatio[0],rowsLegendOnlyEtaRatio[3],nameMeasGlobalLabel[4]);
+        SetStyleTLatex( textPCMEMCALOnlyRatioEta, textSizeLabelsPixel,4, 1, 43);
         textPCMEMCALOnlyRatioEta->Draw();
         
         //****************** second Column *************************************************
         TLatex *textStatOnlyRatioEta                = new TLatex(columnsLegendOnlyEtaRatio[1],rowsLegendOnlyEtaRatio[0] ,"stat");
-        SetStyleTLatex( textStatOnlyRatioEta, textSizeLabelsPixel,4);
-        textStatOnlyRatioEta->SetTextFont(43);
+        SetStyleTLatex( textStatOnlyRatioEta, textSizeLabelsPixel,4, 1, 43);
         textStatOnlyRatioEta->Draw();
         TLatex *textSysOnlyRatioEta                 = new TLatex(columnsLegendOnlyEtaRatio[2] ,rowsLegendOnlyEtaRatio[0],"syst");
-        SetStyleTLatex( textSysOnlyRatioEta, textSizeLabelsPixel,4);
-        textSysOnlyRatioEta->SetTextFont(43);
+        SetStyleTLatex( textSysOnlyRatioEta, textSizeLabelsPixel,4, 1, 43);
         textSysOnlyRatioEta->Draw();
         TMarker* markerPCMEtaOnlyRatioEta           = CreateMarkerFromGraph(graphRatioEtaPCMCombFitSys,columnsLegendOnlyEtaRatio[1] ,rowsLegendOnlyEtaRatio[1],1);
         markerPCMEtaOnlyRatioEta->DrawMarker(columnsLegendOnlyEtaRatioAbs[1] ,rowsLegendOnlyEtaRatioAbs[1]);
@@ -2849,8 +2826,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
         labelWeightsEnergy->Draw();
         TLatex *labelWeightsEtaToPi0         = new TLatex(0.7,0.16,"#eta/#pi^{0}");
-        SetStyleTLatex( labelWeightsEtaToPi0, 0.85*textSizeLabelsPixel,4);
-        labelWeightsEtaToPi0->SetTextFont(43);
+        SetStyleTLatex( labelWeightsEtaToPi0, 0.85*textSizeLabelsPixel,4, 1, 43);
         labelWeightsEtaToPi0->Draw();
 
 //      DrawGammaLines(0.33, 25. , 0.8, 0.8,0.1, kGray, 3);
@@ -2887,8 +2863,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
         labelRelSysErrEnergy->Draw();
         TLatex *labelRelSysErrEtaToPi0       = new TLatex(0.15,0.85,"#eta/#pi^{0}");
-        SetStyleTLatex( labelRelSysErrEtaToPi0, 0.85*textSizeLabelsPixel,4);
-        labelRelSysErrEtaToPi0->SetTextFont(43);
+        SetStyleTLatex( labelRelSysErrEtaToPi0, 0.85*textSizeLabelsPixel,4, 1, 43);
         labelRelSysErrEtaToPi0->Draw();
         
     canvasRelSysErr->SaveAs(Form("%s/EtaToPi0_RelSysErr.%s",outputDir.Data(),suffix.Data()));
@@ -2918,8 +2893,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
         labelRelStatErrEnergy->Draw();
         TLatex *labelRelStatErrEtaToPi0      = new TLatex(0.75,0.85,"#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRelStatErrEtaToPi0, 0.85*textSizeLabelsPixel,4);
-        labelRelStatErrEtaToPi0->SetTextFont(43);
+        SetStyleTLatex( labelRelStatErrEtaToPi0, 0.85*textSizeLabelsPixel,4, 1, 43);
         labelRelStatErrEtaToPi0->Draw();
         
     canvasRelStatErr->SaveAs(Form("%s/EtaToPi0_RelStatErr.%s",outputDir.Data(),suffix.Data()));
@@ -2949,8 +2923,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
         labelRelTotErrEnergy->Draw();
         TLatex *labelRelTotErrEtaToPi0       = new TLatex(0.75,0.85,"#eta/#pi^{0}");
-        SetStyleTLatex( labelRelTotErrEtaToPi0, 0.85*textSizeLabelsPixel,4);
-        labelRelTotErrEtaToPi0->SetTextFont(43);
+        SetStyleTLatex( labelRelTotErrEtaToPi0, 0.85*textSizeLabelsPixel,4, 1, 43);
         labelRelTotErrEtaToPi0->Draw();
         
     canvasRelTotErr->SaveAs(Form("%s/EtaToPi0_RelTotErr.%s",outputDir.Data(),suffix.Data()));
@@ -3044,21 +3017,17 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         histoPCMPi0TrueFWHMMeV->Draw("p,same,e");
 
         TLatex *labelLegendAMass    = new TLatex(0.13,0.06,"a)");
-        SetStyleTLatex( labelLegendAMass, textSizeLabelsPixel,4);
-        labelLegendAMass->SetTextFont(43);
+        SetStyleTLatex( labelLegendAMass, textSizeLabelsPixel,4, 1, 43);
         labelLegendAMass->Draw();
 
         TLatex *labelMassPerf       = new TLatex(0.13,0.87,"ALICE performance");
-        SetStyleTLatex( labelMassPerf, textSizeLabelsPixel,4);
-        labelMassPerf->SetTextFont(43);
+        SetStyleTLatex( labelMassPerf, textSizeLabelsPixel,4, 1, 43);
         labelMassPerf->Draw();        
         TLatex *labelMassEnergy     = new TLatex(0.13,0.78,collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelMassEnergy, textSizeLabelsPixel,4);
-        labelMassEnergy->SetTextFont(43);
+        SetStyleTLatex( labelMassEnergy, textSizeLabelsPixel,4, 1, 43);
         labelMassEnergy->Draw();
         TLatex *labelMassPi0        = new TLatex(0.13,0.69,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelMassPi0, textSizeLabelsPixel,4);
-        labelMassPi0->SetTextFont(43);
+        SetStyleTLatex( labelMassPi0, textSizeLabelsPixel,4, 1, 43);
         labelMassPi0->Draw();        
                 
     padMassPi0->cd();
@@ -3103,8 +3072,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaLines(0.23, 25. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
 
         TLatex *labelLegendBMass            = new TLatex(0.13,0.22,"b)");
-        SetStyleTLatex( labelLegendBMass, textSizeLabelsPixel,4);
-        labelLegendBMass->SetTextFont(43);
+        SetStyleTLatex( labelLegendBMass, textSizeLabelsPixel,4, 1, 43);
         labelLegendBMass->Draw();
         
         //********************************** Defintion of the Legend **************************************************    
@@ -3118,27 +3086,22 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         
         padMassLegend1->cd();
         //****************** first Column **************************************************
-        TLatex *textMassPCM                 = new TLatex(columnsLegendMass2[0],rowsLegendMass2[1],"PCM");
-        SetStyleTLatex( textMassPCM, textSizeLabelsPixel,4);
-        textMassPCM->SetTextFont(43);
+        TLatex *textMassPCM                 = new TLatex(columnsLegendMass2[0],rowsLegendMass2[1],nameMeasGlobalLabel[0]);
+        SetStyleTLatex( textMassPCM, textSizeLabelsPixel,4, 1, 43);
         textMassPCM->Draw();
-        TLatex *textMassPCMEMCAL            = new TLatex(columnsLegendMass2[0],rowsLegendMass2[2],"PCM-EMC");
-        SetStyleTLatex( textMassPCMEMCAL, textSizeLabelsPixel,4);
-        textMassPCMEMCAL->SetTextFont(43);
+        TLatex *textMassPCMEMCAL            = new TLatex(columnsLegendMass2[0],rowsLegendMass2[2],nameMeasGlobalLabel[4]);
+        SetStyleTLatex( textMassPCMEMCAL, textSizeLabelsPixel,4, 1, 43);
         textMassPCMEMCAL->Draw();
-        TLatex *textMassEMCAL               = new TLatex(columnsLegendMass2[0],rowsLegendMass2[3],"EMC");
-        SetStyleTLatex( textMassEMCAL, textSizeLabelsPixel,4);
-        textMassEMCAL->SetTextFont(43);
+        TLatex *textMassEMCAL               = new TLatex(columnsLegendMass2[0],rowsLegendMass2[3],nameMeasGlobalLabel[2]);
+        SetStyleTLatex( textMassEMCAL, textSizeLabelsPixel,4, 1, 43);
         textMassEMCAL->Draw();
     
         //****************** second Column *************************************************
         TLatex *textMassData                = new TLatex(columnsLegendMass2[1],rowsLegendMass2[0] ,"Data");
-        SetStyleTLatex( textMassData, textSizeLabelsPixel,4);
-        textMassData->SetTextFont(43);
+        SetStyleTLatex( textMassData, textSizeLabelsPixel,4, 1, 43);
         textMassData->Draw();
         TLatex *textMassMC                  = new TLatex(columnsLegendMass2[2] ,rowsLegendMass2[0],"MC");
-        SetStyleTLatex( textMassMC, textSizeLabelsPixel,4);
-        textMassMC->SetTextFont(43);
+        SetStyleTLatex( textMassMC, textSizeLabelsPixel,4, 1, 43);
         textMassMC->Draw();
         
         TMarker* markerPCMPi0Mass        = CreateMarkerFromHisto(histoPCMPi0Mass,columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[1]+ offsetMarkerYMass2 ,scaleMarkerMass2);
@@ -3208,30 +3171,24 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 //         
 //         //****************** first Column **************************************************
 //         TLatex *textFWHMPCM2                = new TLatex(columnsLegendFWHM[0],rowsLegendFWHM3[1],"PCM (FWHM/2.36)");
-//         SetStyleTLatex( textFWHMPCM2, textSizeLabelsPixel,4);
-//         textFWHMPCM2->SetTextFont(43);
+//         SetStyleTLatex( textFWHMPCM2, textSizeLabelsPixel,4, 1, 43);
 //         textFWHMPCM2->Draw();
 //         TLatex *textFWHMPCMEMCAL2           = new TLatex(columnsLegendFWHM[0],rowsLegendFWHM3[2],"PCM-EMC (FWHM/2.36)");
-//         SetStyleTLatex( textFWHMPCMEMCAL2, textSizeLabelsPixel,4);
-//         textFWHMPCMEMCAL2->SetTextFont(43);
+//         SetStyleTLatex( textFWHMPCMEMCAL2, textSizeLabelsPixel,4, 1, 43);
 //         textFWHMPCMEMCAL2->Draw();
 //         TLatex *textFWHMEMCAL2              = new TLatex(columnsLegendFWHM[0],rowsLegendFWHM3[3],"EMC (FWHM/2.36)");
-//         SetStyleTLatex( textFWHMEMCAL2, textSizeLabelsPixel,4);
-//         textFWHMEMCAL2->SetTextFont(43);
+//         SetStyleTLatex( textFWHMEMCAL2, textSizeLabelsPixel,4, 1, 43);
 //         textFWHMEMCAL2->Draw();
 //         TLatex *textFWHMPHOS                = new TLatex(columnsLegendFWHM[0],rowsLegendFWHM3[4],"PHOS (#sigma)");
-//         SetStyleTLatex( textFWHMPHOS, textSizeLabelsPixel,4);
-//         textFWHMPHOS->SetTextFont(43);
+//         SetStyleTLatex( textFWHMPHOS, textSizeLabelsPixel,4, 1, 43);
 //         textFWHMPHOS->Draw();
 //         
 //         //****************** second Column *************************************************
 //         TLatex *textFWHMData2               = new TLatex(columnsLegendFWHM[1],rowsLegendFWHM3[0] ,"Data");
-//         SetStyleTLatex( textFWHMData2, textSizeLabelsPixel ,4);
-//         textFWHMData2->SetTextFont(43);
+//         SetStyleTLatex( textFWHMData2, textSizeLabelsPixel ,4, 1, 43);
 //         textFWHMData2->Draw();
 //         TLatex *textFWHMMC2                 = new TLatex(columnsLegendFWHM[2] ,rowsLegendFWHM3[0],"MC");
-//         SetStyleTLatex( textFWHMMC2, textSizeLabelsPixel,4);
-//         textFWHMMC2->SetTextFont(43);
+//         SetStyleTLatex( textFWHMMC2, textSizeLabelsPixel,4, 1, 43);
 //         textFWHMMC2->Draw();
 // 
 //         TMarker* markerPCMPi0FWHM        = CreateMarkerFromHisto(histoPCMPi0FWHMMeV,columnsLegendFWHMAbs[1] ,rowsLegendFWHMAbs3[1] ,scaleMarkerFWHM);
@@ -3283,31 +3240,25 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
         padMassLegend2->cd();
         //****************** first Column **************************************************
-        TLatex *textMassPCM2                = new TLatex(columnsLegendMass2[0],rowsLegendMass3[1],"PCM");
-        SetStyleTLatex( textMassPCM2, textSizeLabelsPixel,4);
-        textMassPCM2->SetTextFont(43);
+        TLatex *textMassPCM2                = new TLatex(columnsLegendMass2[0],rowsLegendMass3[1],nameMeasGlobalLabel[0]);
+        SetStyleTLatex( textMassPCM2, textSizeLabelsPixel,4, 1, 43);
         textMassPCM2->Draw();
-        TLatex *textMassPCMEMCAL2           = new TLatex(columnsLegendMass2[0],rowsLegendMass3[2],"PCM-EMC");
-        SetStyleTLatex( textMassPCMEMCAL2, textSizeLabelsPixel,4);
-        textMassPCMEMCAL2->SetTextFont(43);
+        TLatex *textMassPCMEMCAL2           = new TLatex(columnsLegendMass2[0],rowsLegendMass3[2],nameMeasGlobalLabel[4]);
+        SetStyleTLatex( textMassPCMEMCAL2, textSizeLabelsPixel,4, 1, 43);
         textMassPCMEMCAL2->Draw();
-        TLatex *textMassEMCAL2              = new TLatex(columnsLegendMass2[0],rowsLegendMass3[3],"EMC");
-        SetStyleTLatex( textMassEMCAL2, textSizeLabelsPixel,4);
-        textMassEMCAL2->SetTextFont(43);
+        TLatex *textMassEMCAL2              = new TLatex(columnsLegendMass2[0],rowsLegendMass3[3],nameMeasGlobalLabel[2]);
+        SetStyleTLatex( textMassEMCAL2, textSizeLabelsPixel,4, 1, 43);
         textMassEMCAL2->Draw();
-        TLatex *textMassPHOS2               = new TLatex(columnsLegendMass2[0],rowsLegendMass3[4],"PHOS");
-        SetStyleTLatex( textMassPHOS2, textSizeLabelsPixel,4);
-        textMassPHOS2->SetTextFont(43);
+        TLatex *textMassPHOS2               = new TLatex(columnsLegendMass2[0],rowsLegendMass3[4],nameMeasGlobalLabel[1]);
+        SetStyleTLatex( textMassPHOS2, textSizeLabelsPixel,4, 1, 43);
         textMassPHOS2->Draw();
     
         //****************** second Column *************************************************
         TLatex *textMassData2               = new TLatex(columnsLegendMass2[1],rowsLegendMass3[0] ,"Data");
-        SetStyleTLatex( textMassData2, textSizeLabelsPixel,4);
-        textMassData2->SetTextFont(43);
+        SetStyleTLatex( textMassData2, textSizeLabelsPixel,4, 1, 43);
         textMassData2->Draw();
         TLatex *textMassMC2                 = new TLatex(columnsLegendMass2[2] ,rowsLegendMass3[0],"MC");
-        SetStyleTLatex( textMassMC2, textSizeLabelsPixel,4);
-        textMassMC2->SetTextFont(43);
+        SetStyleTLatex( textMassMC2, textSizeLabelsPixel,4, 1, 43);
         textMassMC2->Draw();
         
         markerPCMPi0Mass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass3[1]+ offsetMarkerYMass3);
@@ -3380,8 +3331,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         labelLegendAMass->Draw();
         labelMassEnergy->Draw();
         TLatex *labelMassEta                = new TLatex(0.13,0.69,"#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelMassEta, textSizeLabelsPixel,4);
-        labelMassEta->SetTextFont(43);
+        SetStyleTLatex( labelMassEta, textSizeLabelsPixel,4, 1, 43);
         labelMassEta->Draw();
 
         padMassLegend3->cd();
@@ -3487,16 +3437,13 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         SetStyleTLatex( labelDetSysXSectionPi0, 0.035,4);
         labelDetSysXSectionPi0->Draw();
 
-        TLegend* legendXSectionPi0          = new TLegend(0.62,0.62,0.9,0.86);
-        legendXSectionPi0->SetFillColor(0);
-        legendXSectionPi0->SetLineColor(0);
-        legendXSectionPi0->SetTextFont(42);
-        legendXSectionPi0->SetTextSize(0.035);
-        legendXSectionPi0->AddEntry(graphPCMPi0InvXSectionSys,"PCM","fp");
-        legendXSectionPi0->AddEntry(graphPHOSPi0InvXSectionSys,"PHOS","fp");
-        legendXSectionPi0->AddEntry(graphEMCALPi0InvXSectionSys,"EMC","fp");
-        legendXSectionPi0->AddEntry(graphPCMEMCALPi0InvXSectionSys,"PCM-EMC","fp");
-        legendXSectionPi0->AddEntry(graphEMCALMergedPi0InvXSectionSys,"EMC merged","fp");
+                                                
+        TLegend* legendXSectionPi0          = GetAndSetLegend2(0.62, 0.62,0.9,0.86,0.035, 1, "", 42, 0);;
+        legendXSectionPi0->AddEntry(graphPCMPi0InvXSectionSys,nameMeasGlobalLabel[0],"fp");
+        legendXSectionPi0->AddEntry(graphPHOSPi0InvXSectionSys,nameMeasGlobalLabel[1],"fp");
+        legendXSectionPi0->AddEntry(graphEMCALPi0InvXSectionSys,nameMeasGlobalLabel[2],"fp");
+        legendXSectionPi0->AddEntry(graphPCMEMCALPi0InvXSectionSys,nameMeasGlobalLabel[4],"fp");
+        legendXSectionPi0->AddEntry(graphEMCALMergedPi0InvXSectionSys,nameMeasGlobalLabel[9],"fp");
         legendXSectionPi0->Draw();
    
     canvasXSectionPi0->SaveAs(Form("%s/Pi0_InvXSectionCompAllSystems.%s",outputDir.Data(),suffix.Data()));
@@ -3572,15 +3519,11 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         SetStyleTLatex( labelDetSysXSectionEta, 0.035,4);
         labelDetSysXSectionEta->Draw();
 
-        TLegend* legendXSectionEta          = new TLegend(0.62,0.72,0.9,0.86);
-        legendXSectionEta->SetFillColor(0);
-        legendXSectionEta->SetLineColor(0);
-        legendXSectionEta->SetTextFont(42);
-        legendXSectionEta->SetTextSize(0.035);
-        legendXSectionEta->AddEntry(graphPCMEtaInvXSectionSys,"PCM","fp");
-//      legendXSectionEta->AddEntry(graphPHOSPi0InvXSectionSys,"PHOS","fp");
-        legendXSectionEta->AddEntry(graphEMCALEtaInvXSectionSys,"EMC","fp");
-        legendXSectionEta->AddEntry(graphPCMEMCALEtaInvXSectionSys,"PCM-EMC","fp");
+        TLegend* legendXSectionEta          = GetAndSetLegend2(0.62, 0.72,0.9,0.86, 0.035, 1, "", 42, 0);
+        legendXSectionEta->AddEntry(graphPCMEtaInvXSectionSys,nameMeasGlobalLabel[0],"fp");
+//      legendXSectionEta->AddEntry(graphPHOSPi0InvXSectionSys,nameMeasGlobalLabel[1],"fp");
+        legendXSectionEta->AddEntry(graphEMCALEtaInvXSectionSys,nameMeasGlobalLabel[2],"fp");
+        legendXSectionEta->AddEntry(graphPCMEMCALEtaInvXSectionSys,nameMeasGlobalLabel[4],"fp");
         legendXSectionEta->Draw();
    
     canvasXSectionEta->SaveAs(Form("%s/Eta_InvXSectionCompAllSystems.%s",outputDir.Data(),suffix.Data()));
@@ -3625,7 +3568,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     
         TH2F * histo2DAccEff;
         histo2DAccEff                = new TH2F("histo2DAccEff", "histo2DAccEff",1000, 0.23,  70, 1000, 8e-5, 2e-0 );
-        SetStyleHistoTH2ForGraphs( histo2DAccEff, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#epsilon = 2#pi#upoint#Delta","y#upoint#it{A}#upoint#it{#epsilon}_{eff}/#it{P}"),
+        SetStyleHistoTH2ForGraphs( histo2DAccEff, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#it{#varepsilon} = 2#pi#upoint#Delta","#it{y}#upoint#it{A}#upoint#it{#varepsilon}_{rec} / #it{P}"),
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.04);//(#times #epsilon_{pur})
         histo2DAccEff->GetYaxis()->SetLabelOffset(0.001);
         histo2DAccEff->GetXaxis()->SetLabelOffset(-0.01);
@@ -3645,10 +3588,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphEMCALMergedPi0AccTimesEffDivPur->Draw("p,same,e");
 
         TLegend* legendEffiAccPi0           = GetAndSetLegend2(0.55, 0.13, 0.83, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
-        legendEffiAccPi0->AddEntry(histoPCMPi0AccTimesEff,"PCM","p");
-        legendEffiAccPi0->AddEntry(graphPCMEMCALPi0AccTimesEff,"PCM-EMC","p");
-        legendEffiAccPi0->AddEntry(graphEMCALPi0AccTimesEff,"EMC","p");
-        legendEffiAccPi0->AddEntry(graphEMCALMergedPi0AccTimesEffDivPur,"EMC, merged","p");
+        legendEffiAccPi0->AddEntry(histoPCMPi0AccTimesEff,nameMeasGlobalLabel[0],"p");
+        legendEffiAccPi0->AddEntry(graphPCMEMCALPi0AccTimesEff,nameMeasGlobalLabel[4],"p");
+        legendEffiAccPi0->AddEntry(graphEMCALPi0AccTimesEff,nameMeasGlobalLabel[2],"p");
+        legendEffiAccPi0->AddEntry(graphEMCALMergedPi0AccTimesEffDivPur,nameMeasGlobalLabel[9],"p");
         legendEffiAccPi0->Draw();
 
         TLatex *labelPerfEffi               = new TLatex(0.15,0.92,"ALICE performance");
@@ -3681,11 +3624,11 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphEMCALMergedPi0AccTimesEffDivPur->Draw("p,same,e");
 
         TLegend* legendEffiAccPi02          = GetAndSetLegend2(0.55, 0.13, 0.83, 0.13+(5*textSizeLabelsRel),textSizeLabelsPixel);
-        legendEffiAccPi02->AddEntry(histoPCMPi0AccTimesEff,"PCM","p");
-        legendEffiAccPi02->AddEntry(graphPCMEMCALPi0AccTimesEff,"PCM-EMC","p");
-        legendEffiAccPi02->AddEntry(graphEMCALPi0AccTimesEff,"EMC","p");
-        legendEffiAccPi02->AddEntry(graphEMCALMergedPi0AccTimesEffDivPur,"EMC, merged","p");
-        legendEffiAccPi02->AddEntry(graphPHOSPi0AccTimesEff,"PHOS","p");
+        legendEffiAccPi02->AddEntry(histoPCMPi0AccTimesEff,nameMeasGlobalLabel[0],"p");
+        legendEffiAccPi02->AddEntry(graphPCMEMCALPi0AccTimesEff,nameMeasGlobalLabel[4],"p");
+        legendEffiAccPi02->AddEntry(graphEMCALPi0AccTimesEff,nameMeasGlobalLabel[2],"p");
+        legendEffiAccPi02->AddEntry(graphEMCALMergedPi0AccTimesEffDivPur,nameMeasGlobalLabel[9],"p");
+        legendEffiAccPi02->AddEntry(graphPHOSPi0AccTimesEff,nameMeasGlobalLabel[1],"p");
         legendEffiAccPi02->Draw();
 
         labelPerfEffi->Draw();
@@ -3702,7 +3645,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     
         TH2F * histo2DAccEffEta;
         histo2DAccEffEta                = new TH2F("histo2DAccEffEta", "histo2DAccEffEta",1000, 0.33,  25, 1000, 8e-4, 1.5e-0 );
-        SetStyleHistoTH2ForGraphs( histo2DAccEffEta, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#epsilon = 2#pi#upoint#Delta","y#upoint#it{A}#upoint#it{#epsilon}_{eff}/#it{P}"),  
+        SetStyleHistoTH2ForGraphs( histo2DAccEffEta, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#it{#varepsilon} = 2#pi#upoint#Delta","#it{y}#upoint#it{A}#upoint#it{#varepsilon}_{rec} / #it{P}"),  
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.04);//(#times #epsilon_{pur})
         histo2DAccEffEta->GetYaxis()->SetLabelOffset(0.001);
         histo2DAccEffEta->GetXaxis()->SetLabelOffset(-0.01);
@@ -3719,9 +3662,9 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphEMCALEtaAccTimesEff->Draw("p,same,z");
         
         TLegend* legendEffiAccEta           = GetAndSetLegend2(0.62, 0.13, 0.9, 0.13+(3*textSizeLabelsRel),textSizeLabelsPixel);
-        legendEffiAccEta->AddEntry(histoPCMEtaAccTimesEff,"PCM","p");
-        legendEffiAccEta->AddEntry(graphPCMEMCALEtaAccTimesEff,"PCM-EMC","p");
-        legendEffiAccEta->AddEntry(graphEMCALEtaAccTimesEff,"EMC","p");
+        legendEffiAccEta->AddEntry(histoPCMEtaAccTimesEff,nameMeasGlobalLabel[0],"p");
+        legendEffiAccEta->AddEntry(graphPCMEMCALEtaAccTimesEff,nameMeasGlobalLabel[2],"p");
+        legendEffiAccEta->AddEntry(graphEMCALEtaAccTimesEff,nameMeasGlobalLabel[1],"p");
         legendEffiAccEta->Draw();
 
         labelPerfEffi->Draw();
@@ -3740,7 +3683,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     
         TH2F * histo2DTriggerEffPi0;
         histo2DTriggerEffPi0                = new TH2F("histo2DTriggerEffPi0", "histo2DTriggerEffPi0",1000, 0.,  21, 1000, 0, 1.15 );
-        SetStyleHistoTH2ForGraphs( histo2DTriggerEffPi0, "#it{p}_{T} (GeV/#it{c})", "#epsilon_{Trig}",  
+        SetStyleHistoTH2ForGraphs( histo2DTriggerEffPi0, "#it{p}_{T} (GeV/#it{c})", "#it{#varepsilon}_{Trig}",  
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 0.95);//(#times #epsilon_{pur})
             histo2DTriggerEffPi0->GetXaxis()->SetMoreLogLabels(kTRUE);
         histo2DTriggerEffPi0->DrawCopy(); 
@@ -3759,17 +3702,17 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         histoEMCALPi0TriggerEff[3]->Draw("p,same,e");
 
 
-        TLatex *labelPerfTriggEff               = new TLatex(0.6,0.425,"ALICE simulation");
+        TLatex *labelPerfTriggEff               = new TLatex(0.64,0.425,"ALICE simulation");
         SetStyleTLatex( labelPerfTriggEff, textSizeLabelsRel,4);
         labelPerfTriggEff->Draw();
-        TLatex *labelEnergyTriggEff             = new TLatex(0.6,0.378,collisionSystem2760GeV.Data());
+        TLatex *labelEnergyTriggEff             = new TLatex(0.64,0.378,collisionSystem2760GeV.Data());
         SetStyleTLatex( labelEnergyTriggEff, textSizeLabelsRel,4);
         labelEnergyTriggEff->Draw();
-        TLatex *labelDetSysTriggEffPi0          = new TLatex(0.6,0.33,"#pi^{0} #rightarrow #gamma#gamma");
+        TLatex *labelDetSysTriggEffPi0          = new TLatex(0.64,0.33,"#pi^{0} #rightarrow #gamma#gamma");
         SetStyleTLatex( labelDetSysTriggEffPi0, textSizeLabelsRel,4);
         labelDetSysTriggEffPi0->Draw();
 
-        TLegend* legendTriggEffPi0              = GetAndSetLegend2(0.415, 0.13, 0.9, 0.13+(3*textSizeLabelsRel),textSizeLabelsPixel,3);
+        TLegend* legendTriggEffPi0              = GetAndSetLegend2(0.475, 0.13, 0.9, 0.13+(3*textSizeLabelsRel),textSizeLabelsPixel,3, "", 43, 0.15);
         legendTriggEffPi0->AddEntry((TObject*)0, Form("%s    ",nameTrigger[2].Data()),"");
         legendTriggEffPi0->AddEntry(histoPCMEMCALPi0TriggerEff[0],"       ","p");
         legendTriggEffPi0->AddEntry(histoEMCALPi0TriggerEff[0],"","p");
@@ -3781,10 +3724,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         legendTriggEffPi0->AddEntry(histoEMCALPi0TriggerEff[3],"","p");
         legendTriggEffPi0->Draw();
 
-        TLatex *labelPCMEMCALTriggEff           = new TLatex(0.6,0.275,"PCM-EMC");
+        TLatex *labelPCMEMCALTriggEff           = new TLatex(0.64,0.275,nameMeasGlobalLabel[4]);
         SetStyleTLatex( labelPCMEMCALTriggEff, textSizeLabelsRel,4);
         labelPCMEMCALTriggEff->Draw();
-        TLatex *labelEMCALTriggEff              = new TLatex(0.84,0.275,"EMC");
+        TLatex *labelEMCALTriggEff              = new TLatex(0.85,0.275,nameMeasGlobalLabel[2]);
         SetStyleTLatex( labelEMCALTriggEff, textSizeLabelsRel,4);
         labelEMCALTriggEff->Draw();
         
@@ -3808,7 +3751,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
         labelPerfTriggEff->Draw();
         labelEnergyTriggEff->Draw();
-        TLatex *labelDetSysTriggEffEta          = new TLatex(0.6,0.33,"#eta #rightarrow #gamma#gamma");
+        TLatex *labelDetSysTriggEffEta          = new TLatex(0.64,0.33,"#eta #rightarrow #gamma#gamma");
         SetStyleTLatex( labelDetSysTriggEffEta, 0.85*textSizeLabelsRel,4);
         labelDetSysTriggEffEta->Draw();
         labelPCMEMCALTriggEff->Draw();
@@ -3891,23 +3834,20 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         TLatex *labelRatioTheoryNLO   = new TLatex(0.155,0.93,"NLO, PDF: CTEQ6M5 FF: DSS07");
         SetStyleTLatex( labelRatioTheoryNLO, 0.85*textsizeLabelsPP,4);
         labelRatioTheoryNLO->Draw();
-        TLegend* legendRatioPi0OldTheo= GetAndSetLegend2(0.15,0.91-3*0.9*textsizeLabelsPP,0.4,0.91, 0.85* textSizeLabelsPixel);
-        legendRatioPi0OldTheo->SetMargin(0.2);
+        TLegend* legendRatioPi0OldTheo= GetAndSetLegend2(0.15,0.91-3*0.9*textsizeLabelsPP,0.4,0.91, 0.85* textSizeLabelsPixel, 1, "", 43, 0.2);
         legendRatioPi0OldTheo->AddEntry(graphRatioPi0CombNLOMuHalf, "#mu = 0.5 #it{p}_{T}", "l");  
         legendRatioPi0OldTheo->AddEntry(graphRatioPi0CombNLOMuOne,  "#mu = #it{p}_{T}", "l");  
         legendRatioPi0OldTheo->AddEntry(graphRatioPi0CombNLOMuTwo,  "#mu = 2 #it{p}_{T}", "l");  
         legendRatioPi0OldTheo->Draw();
         
         // lower left corner
-        TLegend* legendRatioPi0OldTheo3= GetAndSetLegend2(0.15,0.14,0.4,0.15+2*0.85*textsizeLabelsPP, 0.85* textSizeLabelsPixel);
-        legendRatioPi0OldTheo3->SetMargin(0.2);
+        TLegend* legendRatioPi0OldTheo3= GetAndSetLegend2(0.15,0.14,0.4,0.15+2*0.85*textsizeLabelsPP, 0.85* textSizeLabelsPixel, 1, "", 43, 0.2);
         legendRatioPi0OldTheo3->AddEntry(graphRatioPi0CombNLODSS14,  "NLO, PDF: MSTW FF: DSS14", "f");  
         legendRatioPi0OldTheo3->AddEntry(histoRatioPi0Pythia8ToFit,  "Pythia 8.2, Monash 2013", "l");  
         legendRatioPi0OldTheo3->Draw();
 
         // upper right corner
-        TLegend* legendRatioPi0OldTheo2= GetAndSetLegend2(0.72,0.91-1*0.85*textsizeLabelsPP,0.95,0.91, 0.85* textSizeLabelsPixel);
-        legendRatioPi0OldTheo2->SetMargin(0.27);
+        TLegend* legendRatioPi0OldTheo2= GetAndSetLegend2(0.72,0.91-1*0.85*textsizeLabelsPP,0.95,0.91, 0.85* textSizeLabelsPixel, 1, "", 43, 0.27);
         legendRatioPi0OldTheo2->AddEntry(graphRatioPi0CombCombFitSysA,"#pi^{0} ALICE","pf");
         legendRatioPi0OldTheo2->Draw();
         
@@ -4008,14 +3948,12 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         legendRatioPi0OldTheo->Draw();
         
         // lower left corner
-        TLegend* legendRatioEtaOldTheo3= GetAndSetLegend2(0.15,0.14,0.4,0.15+1*0.85*textsizeLabelsPP, 0.85* textSizeLabelsPixel);
-        legendRatioEtaOldTheo3->SetMargin(0.2);
+        TLegend* legendRatioEtaOldTheo3= GetAndSetLegend2(0.15,0.14,0.4,0.15+1*0.85*textsizeLabelsPP, 0.85* textSizeLabelsPixel, 1, "", 43, 0.2);
         legendRatioEtaOldTheo3->AddEntry(histoRatioPi0Pythia8ToFit,  "Pythia 8.2, Monash 2013", "l");  
         legendRatioEtaOldTheo3->Draw();
 
         // upper right corner
-        TLegend* legendRatioEtaOldTheo2= GetAndSetLegend2(0.72,0.91-1*0.85*textsizeLabelsPP,0.95,0.91, 0.85* textSizeLabelsPixel);
-        legendRatioEtaOldTheo2->SetMargin(0.27);
+        TLegend* legendRatioEtaOldTheo2= GetAndSetLegend2(0.72,0.91-1*0.85*textsizeLabelsPP,0.95,0.91, 0.85* textSizeLabelsPixel, 1, "", 43, 0.27);
         legendRatioEtaOldTheo2->AddEntry(graphRatioPi0CombCombFitSysA,"#eta ALICE","pf");
         legendRatioEtaOldTheo2->Draw();
         labelRatioTheoryPP2->Draw();
@@ -4116,29 +4054,23 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         
         
         TLatex *labelEnergyXSectionPaper= new TLatex(0.95, 0.91, collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelEnergyXSectionPaper, textsizeLabelsXSecUp,4);
-        labelEnergyXSectionPaper->SetTextAlign(31);
+        SetStyleTLatex( labelEnergyXSectionPaper, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 31);
         labelEnergyXSectionPaper->Draw();
         TLatex *labelALICEXSectionPaper= new TLatex(0.95,0.87,"ALICE");
-        SetStyleTLatex( labelALICEXSectionPaper, textsizeLabelsXSecUp,4);
-        labelALICEXSectionPaper->SetTextAlign(31);
+        SetStyleTLatex( labelALICEXSectionPaper, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 31);
         labelALICEXSectionPaper->Draw();
         TLatex *labelDetSysXSectionPaper= new TLatex(0.95,0.83,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelDetSysXSectionPaper, textsizeLabelsXSecUp,4);
-        labelDetSysXSectionPaper->SetTextAlign(31);
+        SetStyleTLatex( labelDetSysXSectionPaper, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 31);
         labelDetSysXSectionPaper->Draw();
         
-        TLegend* legendXsectionPaper    = GetAndSetLegend2(0.17, 0.14, 0.5, 0.14+0.05*3, textSizeLabelsPixel);
-        legendXsectionPaper->SetNColumns(1);
-        legendXsectionPaper->SetMargin(0.2);
+        TLegend* legendXsectionPaper    = GetAndSetLegend2(0.17, 0.14, 0.5, 0.14+0.05*3, textSizeLabelsPixel, 1, "", 43, 0.2);
         legendXsectionPaper->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
         legendXsectionPaper->AddEntry(graphNLODSS14Calc,"NLO, PDF: MSTW FF: DSS14","f");
 //         legendXsectionPaper->AddEntry((TObject*)0,"Phys.Rev. D91 no. 1, (2015) 014035","");
         legendXsectionPaper->AddEntry(histoPythia8InvXSectionPi0,"Pythia 8.2, Monash 2013","l");
         legendXsectionPaper->Draw();
 
-        TLegend* legendXsectionPaper2     = GetAndSetLegend2(0.17, 0.05, 0.5, 0.11, textSizeLabelsPixel);        
-        legendXsectionPaper2->SetMargin(0.2);
+        TLegend* legendXsectionPaper2     = GetAndSetLegend2(0.17, 0.05, 0.5, 0.11, textSizeLabelsPixel, 1, "", 43, 0.2);
         legendXsectionPaper2->AddEntry(fitTCMInvXSectionPi0,"#it{A}_{e} exp(-#it{E}_{T, kin}/#it{T}_{e}) + #it{A}/#(){1 + #frac{#it{p}_{T}^{2}}{#it{T}^{2}#upoint n}}^{n}","l");
         legendXsectionPaper2->Draw();
         
@@ -4239,42 +4171,36 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         fitTCMInvXSectionEta->Draw("same");
 
         // labels lower left corner
-        TLegend* legendXsectionPaperEta    = GetAndSetLegend2(0.17, 0.11, 0.5, 0.11+0.05*1, textSizeLabelsPixel);
-        legendXsectionPaperEta->SetNColumns(1);
-        legendXsectionPaperEta->SetMargin(0.2);
+        TLegend* legendXsectionPaperEta    = GetAndSetLegend2(0.17, 0.11, 0.5, 0.11+0.05*1, textSizeLabelsPixel, 1, "", 43, 0.2);
         legendXsectionPaperEta->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
         legendXsectionPaperEta->Draw();
         legendXsectionPaper2->Draw();
         
         TLatex *labelEnergyXSectionPaperEta= new TLatex(0.18, 0.13+0.05*3, collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelEnergyXSectionPaperEta, textsizeLabelsXSecUp,4);
+        SetStyleTLatex( labelEnergyXSectionPaperEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
         labelEnergyXSectionPaperEta->Draw();
         TLatex *labelALICEXSectionPaperEta= new TLatex(0.18,0.13+0.05*2,"ALICE");
-        SetStyleTLatex( labelALICEXSectionPaperEta, textsizeLabelsXSecUp,4);
+        SetStyleTLatex( labelALICEXSectionPaperEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
         labelALICEXSectionPaperEta->Draw();
         TLatex *labelDetSysXSectionPaperEta = new TLatex(0.18,0.13+0.05*1,"#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelDetSysXSectionPaperEta, textsizeLabelsXSecUp,4);
+        SetStyleTLatex( labelDetSysXSectionPaperEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
         labelDetSysXSectionPaperEta->Draw();
         
 
         // labels upper right corner
-        TLegend* legendXsectionPaperEtaTheo     = GetAndSetLegend2(0.59, 0.95-0.04*2, 0.59+0.33, 0.95, textSizeLabelsPixel);
-        legendXsectionPaperEtaTheo->SetNColumns(1);
-        legendXsectionPaperEtaTheo->SetMargin(0.2);
+        TLegend* legendXsectionPaperEtaTheo     = GetAndSetLegend2(0.59, 0.95-0.04*2, 0.59+0.33, 0.95, textSizeLabelsPixel, 1, "", 43, 0.2);
         legendXsectionPaperEtaTheo->AddEntry(histoPythia8InvXSectionEta,"Pythia 8.2,","l");
         legendXsectionPaperEtaTheo->AddEntry((TObject*)0,"Monash 2013","");
         legendXsectionPaperEtaTheo->Draw();
 
         TLatex *labelNLOHeaderEta= new TLatex(0.60, 0.805, "NLO, PDF: CTEQ6M5");
-        SetStyleTLatex( labelNLOHeaderEta, textsizeLabelsXSecUp,4);
+        SetStyleTLatex( labelNLOHeaderEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
         labelNLOHeaderEta->Draw();
         TLatex *labelNLOHeaderEta2= new TLatex(0.695, 0.765, "FF: AESSS");
-        SetStyleTLatex( labelNLOHeaderEta2, textsizeLabelsXSecUp,4);
+        SetStyleTLatex( labelNLOHeaderEta2, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
         labelNLOHeaderEta2->Draw();
                 
-        TLegend* legendXsectionPaperEtaTheo2     = GetAndSetLegend2(0.73, 0.755-0.048*3, 0.95, 0.755, textSizeLabelsPixel);
-        legendXsectionPaperEtaTheo2->SetNColumns(1);
-        legendXsectionPaperEtaTheo2->SetMargin(0.27);
+        TLegend* legendXsectionPaperEtaTheo2     = GetAndSetLegend2(0.73, 0.755-0.048*3, 0.95, 0.755, textSizeLabelsPixel, 1, "", 43, 0.27);
         legendXsectionPaperEtaTheo2->AddEntry(graphNLOCalcEtaMuHalf,"#mu = 0.5 #it{p}_{T}","l");
         legendXsectionPaperEtaTheo2->AddEntry(graphNLOCalcEtaMuOne,"#mu = #it{p}_{T}","l");
 //         legendXsectionPaperEtaTheo2->AddEntry((TObject*)0,"","");
@@ -4391,21 +4317,21 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         histoEMCALEtaToPi0Stat->Draw("p,same,e");
     
         TLegend* legendEtaToPi0 = GetAndSetLegend2(0.67, 0.15, 0.9, 0.15+(textsizeLabelsEtaToPi0*3*0.9), textSizeLabelsPixel);
-        legendEtaToPi0->AddEntry(graphPCMEtaToPi0Sys,"PCM","pf");
-        legendEtaToPi0->AddEntry(graphPCMEMCALEtaToPi0Sys,"PCM-EMC","pf");
-        legendEtaToPi0->AddEntry(graphEMCALEtaToPi0Sys,"EMC","pf");
+        legendEtaToPi0->AddEntry(graphPCMEtaToPi0Sys,nameMeasGlobalLabel[0],"pf");
+        legendEtaToPi0->AddEntry(graphPCMEMCALEtaToPi0Sys,nameMeasGlobalLabel[4],"pf");
+        legendEtaToPi0->AddEntry(graphEMCALEtaToPi0Sys,nameMeasGlobalLabel[2],"pf");
         legendEtaToPi0->Draw();
 
         TLatex *labelEnergyEtaToPi0 = new TLatex(0.13, 0.92,collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelEnergyEtaToPi0, 0.85*textsizeLabelsEtaToPi0,4);
+        SetStyleTLatex( labelEnergyEtaToPi0, 0.85*textsizeLabelsEtaToPi0,4, 1, 42, kTRUE, 11);
         labelEnergyEtaToPi0->Draw();
         
         TLatex *labelALICEEtaToPi0 = new TLatex(0.13, 0.92-(1*textsizeLabelsEtaToPi0*0.85),"ALICE");
-        SetStyleTLatex( labelALICEEtaToPi0, 0.85*textsizeLabelsEtaToPi0,4);
+        SetStyleTLatex( labelALICEEtaToPi0, 0.85*textsizeLabelsEtaToPi0,4, 1, 42, kTRUE, 11);
         labelALICEEtaToPi0->Draw();
         
         TLatex *labelPi0EtaToPi0 = new TLatex(0.13, 0.92-(2*textsizeLabelsEtaToPi0*0.9),"#eta/#pi^{0}");
-        SetStyleTLatex( labelPi0EtaToPi0, textsizeLabelsEtaToPi0,4);
+        SetStyleTLatex( labelPi0EtaToPi0, textsizeLabelsEtaToPi0,4, 1, 42, kTRUE, 11);
         labelPi0EtaToPi0->Draw();
 
     histo2DEtatoPi0combo->Draw("axis,same");
@@ -4462,8 +4388,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         labelALICEEtaToPi0->Draw();
         labelPi0EtaToPi0->Draw();
 
-        TLegend* legendEtaToPi0Theory = GetAndSetLegend2(0.48, 0.95, 0.9, 0.95-(textsizeLabelsEtaToPi0*4*0.9), textSizeLabelsPixel*0.85);
-        legendEtaToPi0Theory->SetMargin(0.16);
+        TLegend* legendEtaToPi0Theory = GetAndSetLegend2(0.48, 0.95, 0.9, 0.95-(textsizeLabelsEtaToPi0*4*0.9), textSizeLabelsPixel*0.85, 1, "", 43, 0.16);
         legendEtaToPi0Theory->AddEntry(graphCombEtaToPi0SysA,"Data","pf");
         legendEtaToPi0Theory->AddEntry(graphNLOEtaToPi0,"NLO, PDF:CTEQ6M5 ","pf");
         legendEtaToPi0Theory->AddEntry((TObject*)0,"#pi^{0} FF: DSS07, #eta FF: AESSS","");
@@ -4629,9 +4554,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphErr(graphRatioPi0CMSChPisCombA, 22, markerSizeComparison, kRed+1 , kRed+1);
         graphRatioPi0CMSChPisCombA->Draw("E1psame");
 
-        TLegend* legendPi0CompChargedPionsPP    = GetAndSetLegend2(0.15, 0.8, 0.9, 0.90, 0.85* textSizeLabelsPixel);
-        legendPi0CompChargedPionsPP->SetNColumns(2);
-        legendPi0CompChargedPionsPP->SetMargin(0.12);
+        TLegend* legendPi0CompChargedPionsPP    = GetAndSetLegend2(0.15, 0.8, 0.9, 0.90, 0.85* textSizeLabelsPixel, 2, "", 43, 0.12);
         legendPi0CompChargedPionsPP->AddEntry(graphRatioPi0LowPtChPisCombA,"#pi^{0}/#pi^{#pm} low #it{p}_{T} (ALICE)","p");
         legendPi0CompChargedPionsPP->AddEntry(graphRatioPi0HighPtChPisCombA,"#pi^{0}/#pi^{#pm} high #it{p}_{T} (ALICE)","p");
         legendPi0CompChargedPionsPP->AddEntry(graphRatioPi0CMSChPisCombA,"#pi^{0}/#pi^{#pm} low #it{p}_{T} (#pi^{#pm} from CMS)","p");
@@ -4654,9 +4577,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphRatioPi0CMSChPisCombA->Draw("E1psame");
 
         graphRatioPi0PubChHadsCombA->Print();
-        TLegend* legendPi0CompChargedPionsPP2   = GetAndSetLegend2(0.15, 0.86, 0.9, 0.94, 0.85* textSizeLabelsPixel);
-        legendPi0CompChargedPionsPP2->SetNColumns(2);
-        legendPi0CompChargedPionsPP2->SetMargin(0.12);
+        TLegend* legendPi0CompChargedPionsPP2   = GetAndSetLegend2(0.15, 0.86, 0.9, 0.94, 0.85* textSizeLabelsPixel,2, "", 43, 0.12);
         legendPi0CompChargedPionsPP2->AddEntry(graphRatioPi0PubChPisCombA,"#pi^{0}/#pi^{#pm}  (ALICE)","p");
         legendPi0CompChargedPionsPP2->AddEntry(graphRatioPi0CMSChPisCombA,"#pi^{0}/#pi^{#pm}  (#pi^{#pm} from CMS)","p");
         legendPi0CompChargedPionsPP2->Draw();
@@ -4678,9 +4599,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphRatioPi0PubChHadsCombA->Draw("E1psame");
 
         graphRatioPi0PubChHadsCombA->Print();
-        TLegend* legendPi0CompChargedPionsPP3   = GetAndSetLegend2(0.15, 0.86, 0.9, 0.94, 0.85* textSizeLabelsPixel);
-        legendPi0CompChargedPionsPP3->SetNColumns(2);
-        legendPi0CompChargedPionsPP3->SetMargin(0.12);
+        TLegend* legendPi0CompChargedPionsPP3   = GetAndSetLegend2(0.15, 0.86, 0.9, 0.94, 0.85* textSizeLabelsPixel,2, "", 43, 0.12);
         legendPi0CompChargedPionsPP3->AddEntry(graphRatioPi0PubChHadsCombA,"#pi^{0}/h^{#pm}  (ALICE)","p");
 //      legendPi0CompChargedPionsPP3->AddEntry(graphRatioPi0CMSChPisCombA,"#pi^{0}/#pi^{#pm}  (#pi^{#pm} from CMS)","p");
         legendPi0CompChargedPionsPP3->Draw();
@@ -4708,9 +4627,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0StatToChFitCMS, markerStyleCombHighPt, markerSizeComparison, kRed+1 , kRed+1);
         graphRatioPi0StatToChFitCMS->Draw("E1psame");
         
-        TLegend* legendPi0CompChargedPionsToFits   = GetAndSetLegend2(0.15, 0.85, 0.6, 0.92, 0.85* textSizeLabelsPixel);
-        legendPi0CompChargedPionsToFits->SetNColumns(3);
-        legendPi0CompChargedPionsToFits->SetMargin(0.25);
+        TLegend* legendPi0CompChargedPionsToFits   = GetAndSetLegend2(0.15, 0.85, 0.6, 0.92, 0.85* textSizeLabelsPixel, 3, "", 43, 0.25);
         legendPi0CompChargedPionsToFits->AddEntry(graphRatioPi0SysToChFitALICE,"ALICE","fp");
         legendPi0CompChargedPionsToFits->AddEntry(graphRatioPi0SysToChFitATLAS,"ATLAS","fp");
         legendPi0CompChargedPionsToFits->AddEntry(graphRatioPi0SysToChFitCMS,"CMS","fp");
@@ -4750,9 +4667,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphRatioChHadStatToChFitCMS, markerStyleCombHighPt, markerSizeComparison, kRed+1 , kRed+1);
         graphRatioChHadStatToChFitCMS->Draw("E1psame");
         
-        TLegend* legendPi0CompChargedPionsFits   = GetAndSetLegend2(0.15, 0.85, 0.6, 0.92, 0.85* textSizeLabelsPixel);
-        legendPi0CompChargedPionsFits->SetNColumns(3);
-        legendPi0CompChargedPionsFits->SetMargin(0.25);
+        TLegend* legendPi0CompChargedPionsFits   = GetAndSetLegend2(0.15, 0.85, 0.6, 0.92, 0.85* textSizeLabelsPixel,3, "", 43, 0.25);
         legendPi0CompChargedPionsFits->AddEntry(graphRatioChHadSysToChFitALICE,"ALICE","fp");
         legendPi0CompChargedPionsFits->AddEntry(graphRatioChHadSysToChFitATLAS,"ATLAS","fp");
         legendPi0CompChargedPionsFits->AddEntry(graphRatioChHadSysToChFitCMS,"CMS","fp");
@@ -4807,6 +4722,16 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     graphHFE                    = ScaleGraph(graphHFE, 1e6);
     TF1* fitPowInvXSectionHFE   = FitObject("powPure","fitPowInvXSectionHFE2760GeV","HFE",graphHFE,3,10. ,NULL,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvXSectionHFE)<< endl;
+
+    TF1* fitPowInvXSectionPi0Tot   = FitObject("powPure","fitPowInvXSectionPi02760GeVTot","Pi0",graphCombPi0InvXSectionTotA,6,40. ,NULL,"QNRMEX0+","", kFALSE);
+    cout << WriteParameterToFile(fitPowInvXSectionPi0Tot)<< endl;
+    TF1* fitPowInvXSectionPi0Stat   = FitObject("powPure","fitPowInvXSectionPi02760GeV","Pi0",graphCombPi0InvXSectionStatA,6,40. ,NULL,"QNRMEX0+","", kFALSE);
+    cout << WriteParameterToFile(fitPowInvXSectionPi0Stat)<< endl;
+    TF1* fitPowInvXSectionEtaTot   = FitObject("powPure","fitPowInvXSectionEta2760GeVTot","Eta",graphCombEtaInvXSectionTotA,6,20. ,NULL,"QNRMEX0+","", kFALSE);
+    cout << WriteParameterToFile(fitPowInvXSectionEtaTot)<< endl;
+    TF1* fitPowInvXSectionEtaStat   = FitObject("powPure","fitPowInvXSectionEta2760GeVStat","Eta",graphCombEtaInvXSectionStatA,6,20. ,NULL,"QNRMEX0+","", kFALSE);
+    cout << WriteParameterToFile(fitPowInvXSectionEtaStat)<< endl;
+
     
     canvasXSectionPi0->cd();
     TH2F * histo2DXSectionWithHFE;
@@ -4829,10 +4754,17 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionStatA, markerStyleComb, markerSizeComb, kGray+2 , kGray+2);
         graphCombEtaInvXSectionStatA->Draw("p,same,z");
         DrawGammaSetMarkerTF1( fitTCMInvXSectionPi0, 7, 2, colorComb); 
+        fitPowInvXSectionPi0Tot->SetRange(6,40);
+        DrawGammaSetMarkerTF1( fitPowInvXSectionPi0Tot, 1, 2, colorComb-2); 
+        fitPowInvXSectionPi0Tot->Draw("same");
         fitTCMInvXSectionPi0->Draw("same");
-
+        
         fitTCMInvXSectionEta->SetRange(0.6,50.);
         DrawGammaSetMarkerTF1( fitTCMInvXSectionEta, 7, 2, kGray+2); 
+        
+        fitPowInvXSectionEtaTot->SetRange(6,20);
+        DrawGammaSetMarkerTF1( fitPowInvXSectionEtaTot, 1, 2, kGray+1); 
+        fitPowInvXSectionEtaTot->Draw("same");
         fitTCMInvXSectionEta->Draw("same");
 
         fitPowInvXSectionHFE->SetRange(5,50.);
@@ -4914,29 +4846,26 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
                 fitPi0InvMassSigPCMEMCAL[i]->SetLineColor(fitColorInvMassSG);
                 fitPi0InvMassSigPCMEMCAL[i]->Draw("same");
                 
-                //  
-                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.93,collisionSystem2760GeV.Data());
-                SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
-                labelInvMassEnergy->SetTextFont(43);
+                TLatex *labelInvMassPerf      = new TLatex(0.135,0.93,"ALICE performance");
+                SetStyleTLatex( labelInvMassPerf, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+                labelInvMassPerf->Draw();
+
+                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.93-0.8*textsizeLabelsPP,collisionSystem2760GeV.Data());
+                SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
                 labelInvMassEnergy->Draw();
                 
-                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.93-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
-                SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
-                labelInvMassTrigger->SetTextFont(43);
+                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.93-2*0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
+                SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel, 4, 1, 43, kTRUE, 11);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoPCMEMC  = new TLatex(0.135,0.93-2*0.8*textsizeLabelsPP,"PCM-EMC");
-                SetStyleTLatex( labelInvMassRecoPCMEMC, 0.85*textSizeLabelsPixel,4);
-                labelInvMassRecoPCMEMC->SetTextFont(43);
+                TLatex *labelInvMassRecoPCMEMC  = new TLatex(0.135,0.93-3*0.8*textsizeLabelsPP,nameMeasGlobalLabel[4]);
+                SetStyleTLatex( labelInvMassRecoPCMEMC, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
                 labelInvMassRecoPCMEMC->Draw();
                 
-                SetStyleTLatex( labelInvMassPtRangePCMEMCAL, 0.85*textSizeLabelsPixel,4);
-                labelInvMassPtRangePCMEMCAL->SetTextAlign(31);
-                labelInvMassPtRangePCMEMCAL->SetTextFont(43);
+                SetStyleTLatex( labelInvMassPtRangePCMEMCAL, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
                 labelInvMassPtRangePCMEMCAL->Draw();
 
-                TLegend* legendInvMassPCMEMCAL  = GetAndSetLegend2(0.67, 0.91-5*0.75*textsizeLabelsPP, 0.9, 0.91, 0.85*textSizeLabelsPixel);
-                legendInvMassPCMEMCAL->SetMargin(0.25);
+                TLegend* legendInvMassPCMEMCAL  = GetAndSetLegend2(0.67, 0.91-5*0.75*textsizeLabelsPP, 0.9, 0.91, 0.85*textSizeLabelsPixel, 1, "", 43, 0.25);
                 legendInvMassPCMEMCAL->AddEntry(histoPi0InvMassSigPlusBGPCMEMCAL[i],"Raw real events","l");
                 legendInvMassPCMEMCAL->AddEntry(histoPi0InvMassBGTotPCMEMCAL[i],"Mixed event +","p");
                 legendInvMassPCMEMCAL->AddEntry((TObject*)0,"corr. BG","");
@@ -4950,7 +4879,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
             if (haveAllEtaInvMassPCMEMCAL[i]){
                 canvasInvMassSamplePlot->cd();
-                histo2DEtaInvMassDummy->GetYaxis()->SetRangeUser(histoEtaInvMassSigRemBGSubPCMEMCAL[i]->GetMinimum(),1.1*histoEtaInvMassSigPlusBGPCMEMCAL[i]->GetMaximum());
+                histo2DEtaInvMassDummy->GetYaxis()->SetRangeUser(histoEtaInvMassSigRemBGSubPCMEMCAL[i]->GetMinimum()*0.95,1.15*histoEtaInvMassSigPlusBGPCMEMCAL[i]->GetMaximum());
                 histo2DEtaInvMassDummy->DrawCopy();
 
                 TLatex *labelInvMassPtRangePCMEMCAL = new TLatex(0.955,0.93,Form("#eta: %s", histoEtaInvMassSigPCMEMCAL[i]->GetTitle()));
@@ -4967,30 +4896,27 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
                 fitEtaInvMassSigPCMEMCAL[i]->SetRange(0.35,0.695);
                 fitEtaInvMassSigPCMEMCAL[i]->SetLineColor(fitColorInvMassSG);
                 fitEtaInvMassSigPCMEMCAL[i]->Draw("same");
+
+                TLatex *labelInvMassPerf      = new TLatex(0.135,0.93,"ALICE performance");
+                SetStyleTLatex( labelInvMassPerf, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+                labelInvMassPerf->Draw();
                 
-                //  
-                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.93,collisionSystem2760GeV.Data());
-                SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
-                labelInvMassEnergy->SetTextFont(43);
+                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.93-0.8*textsizeLabelsPP,collisionSystem2760GeV.Data());
+                SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
                 labelInvMassEnergy->Draw();
                 
-                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.93-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
-                SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
-                labelInvMassTrigger->SetTextFont(43);
+                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.93-2*0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
+                SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoPCMEMC  = new TLatex(0.135,0.93-2*0.8*textsizeLabelsPP,"PCM-EMC");
-                SetStyleTLatex( labelInvMassRecoPCMEMC, 0.85*textSizeLabelsPixel,4);
-                labelInvMassRecoPCMEMC->SetTextFont(43);
+                TLatex *labelInvMassRecoPCMEMC  = new TLatex(0.135,0.93-3*0.8*textsizeLabelsPP,nameMeasGlobalLabel[4]);
+                SetStyleTLatex( labelInvMassRecoPCMEMC, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
                 labelInvMassRecoPCMEMC->Draw();
                 
-                SetStyleTLatex( labelInvMassPtRangePCMEMCAL, 0.85*textSizeLabelsPixel,4);
-                labelInvMassPtRangePCMEMCAL->SetTextAlign(31);
-                labelInvMassPtRangePCMEMCAL->SetTextFont(43);
+                SetStyleTLatex( labelInvMassPtRangePCMEMCAL, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
                 labelInvMassPtRangePCMEMCAL->Draw();
 
-                TLegend* legendInvMassPCMEMCAL  = GetAndSetLegend2(0.67, 0.91-5*0.75*textsizeLabelsPP, 0.9, 0.91, 0.85*textSizeLabelsPixel);
-                legendInvMassPCMEMCAL->SetMargin(0.25);
+                TLegend* legendInvMassPCMEMCAL  = GetAndSetLegend2(0.67, 0.91-5*0.75*textsizeLabelsPP, 0.9, 0.91, 0.85*textSizeLabelsPixel, 1, "", 43, 0.25);
                 legendInvMassPCMEMCAL->AddEntry(histoEtaInvMassSigPlusBGPCMEMCAL[i],"Raw real events","l");
                 legendInvMassPCMEMCAL->AddEntry(histoEtaInvMassBGTotPCMEMCAL[i],"Mixed event +","p");
                 legendInvMassPCMEMCAL->AddEntry((TObject*)0,"corr. BG","");
@@ -5023,28 +4949,26 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
                 fitPi0InvMassSigEMCAL[i]->Draw("same");
                 
                 //  
-                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.93,collisionSystem2760GeV.Data());
-                SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
-                labelInvMassEnergy->SetTextFont(43);
+                TLatex *labelInvMassPerf      = new TLatex(0.135,0.93,"ALICE performance");
+                SetStyleTLatex( labelInvMassPerf, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+                labelInvMassPerf->Draw();
+
+                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.93-0.8*textsizeLabelsPP,collisionSystem2760GeV.Data());
+                SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
                 labelInvMassEnergy->Draw();
                 
-                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.93-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
-                SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
-                labelInvMassTrigger->SetTextFont(43);
+                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.93-0.8*2*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
+                SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoEMC  = new TLatex(0.135,0.93-2*0.8*textsizeLabelsPP,"EMC");
-                SetStyleTLatex( labelInvMassRecoEMC, 0.85*textSizeLabelsPixel,4);
-                labelInvMassRecoEMC->SetTextFont(43);
+                TLatex *labelInvMassRecoEMC  = new TLatex(0.135,0.93-3*0.8*textsizeLabelsPP,nameMeasGlobalLabel[2]);
+                SetStyleTLatex( labelInvMassRecoEMC, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
                 labelInvMassRecoEMC->Draw();
                 
-                SetStyleTLatex( labelInvMassPtRangeEMCAL, 0.85*textSizeLabelsPixel,4);
-                labelInvMassPtRangeEMCAL->SetTextAlign(31);
-                labelInvMassPtRangeEMCAL->SetTextFont(43);
+                SetStyleTLatex( labelInvMassPtRangeEMCAL, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
                 labelInvMassPtRangeEMCAL->Draw();
 
-                TLegend* legendInvMassEMCAL  = GetAndSetLegend2(0.67, 0.91-5*0.75*textsizeLabelsPP, 0.9, 0.91, 0.85*textSizeLabelsPixel);
-                legendInvMassEMCAL->SetMargin(0.25);
+                TLegend* legendInvMassEMCAL  = GetAndSetLegend2(0.67, 0.91-5*0.75*textsizeLabelsPP, 0.9, 0.91, 0.85*textSizeLabelsPixel,1, "", 43, 0.25);
                 legendInvMassEMCAL->AddEntry(histoPi0InvMassSigPlusBGEMCAL[i],"Raw real events","l");
                 legendInvMassEMCAL->AddEntry(histoPi0InvMassBGTotEMCAL[i],"Mixed event +","p");
                 legendInvMassEMCAL->AddEntry((TObject*)0,"corr. BG","");
@@ -5075,28 +4999,26 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
                 fitEtaInvMassSigEMCAL[i]->SetLineColor(fitColorInvMassSG);
                 fitEtaInvMassSigEMCAL[i]->Draw("same");
                 
-                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.93,collisionSystem2760GeV.Data());
-                SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
-                labelInvMassEnergy->SetTextFont(43);
+                TLatex *labelInvMassPerf      = new TLatex(0.135,0.93,"ALICE performance");
+                SetStyleTLatex( labelInvMassPerf, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+                labelInvMassPerf->Draw();
+                
+                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.93-0.8*textsizeLabelsPP,collisionSystem2760GeV.Data());
+                SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
                 labelInvMassEnergy->Draw();
                 
-                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.93-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
-                SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
-                labelInvMassTrigger->SetTextFont(43);
+                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.93-2*0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
+                SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoEMC  = new TLatex(0.135,0.93-2*0.8*textsizeLabelsPP,"EMC");
-                SetStyleTLatex( labelInvMassRecoEMC, 0.85*textSizeLabelsPixel,4);
-                labelInvMassRecoEMC->SetTextFont(43);
+                TLatex *labelInvMassRecoEMC  = new TLatex(0.135,0.93-3*0.8*textsizeLabelsPP,nameMeasGlobalLabel[2]);
+                SetStyleTLatex( labelInvMassRecoEMC, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
                 labelInvMassRecoEMC->Draw();
                 
-                SetStyleTLatex( labelInvMassPtRangeEMCAL, 0.85*textSizeLabelsPixel,4);
-                labelInvMassPtRangeEMCAL->SetTextAlign(31);
-                labelInvMassPtRangeEMCAL->SetTextFont(43);
+                SetStyleTLatex( labelInvMassPtRangeEMCAL, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
                 labelInvMassPtRangeEMCAL->Draw();
 
-                TLegend* legendInvMassEMCAL  = GetAndSetLegend2(0.67, 0.91-5*0.75*textsizeLabelsPP, 0.9, 0.91, 0.85*textSizeLabelsPixel);
-                legendInvMassEMCAL->SetMargin(0.25);
+                TLegend* legendInvMassEMCAL  = GetAndSetLegend2(0.67, 0.91-5*0.75*textsizeLabelsPP, 0.9, 0.91, 0.85*textSizeLabelsPixel, 1, "", 43, 0.25);
                 legendInvMassEMCAL->AddEntry(histoEtaInvMassSigPlusBGEMCAL[i],"Raw real events","l");
                 legendInvMassEMCAL->AddEntry(histoEtaInvMassBGTotEMCAL[i],"Mixed event +","p");
                 legendInvMassEMCAL->AddEntry((TObject*)0,"corr. BG","");

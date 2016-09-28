@@ -1708,7 +1708,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         histoTruePi0OneElectronM02ExBin->Scale(1./integMC);
     }
     
-    if (histoDataM02ExBin && histoMCrecM02ExBin){
+    if (histoDataM02ExBin && histoMCrecM02ExBin && !kIsMC){
         Double_t textSizeLabelsPixel                 = 50*3/5;
         TCanvas* canvasM02SamplePlot    = new TCanvas("canvasM02SamplePlot","",0,0,750,750);  // gives the page size
         DrawGammaCanvasSettings( canvasM02SamplePlot,  0.08, 0.01, 0.015, 0.08);

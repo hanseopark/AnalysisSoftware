@@ -4700,7 +4700,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
         nameHistoSignal     = Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d", ii);
         nameHistoSignalLeft = Form("fHistoMappingSignalInvMassLeft_in_Pt_Bin%02d", ii); //Added 12.12.2014
         fitnameSignal       = Form("Signal_InvMassFit_in_Pt_Bin%02d", ii);
-        titleHistoSignal    = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",fBinsPt[ii],fBinsPt[ii+1]),
+        titleHistoSignal    = Form("%3.1f GeV/#it{c} < #it{p}_{T} < %3.1f GeV/#it{c}",fBinsPt[ii],fBinsPt[ii+1]),
         fHistoMappingBackNormInvMassPtBin[ii]->Write(nameHistoBckNorm.Data());
         fHistoMappingSignalInvMassPtBin[ii]->SetTitle(titleHistoSignal.Data());
         fHistoMappingSignalInvMassPtBin[ii]->Write(nameHistoSignal.Data());
