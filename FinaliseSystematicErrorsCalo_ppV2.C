@@ -715,8 +715,15 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
         
     }
     
-    // Error for inner material budget
-    Double_t errorMaterial = 0;
+    Int_t nMaterialError    = -1;
+    for (Int_t j = 0; j < nCuts; j++){
+       if (nameCutVariationSC[j].CompareTo("ClusterMaterialTRD")==0)
+           nMaterialError   = j;
+    }    
+    if ( nMaterialError == -1) {
+        cout << "ERROR: couldn't find material error related to TRD, aborting" << endl;
+        return;
+    }
     
     // Calculate sqrt of summed errors for final errors, add material budget errors 
     for (Int_t l = 0;l < nPtBins;l++){
@@ -728,9 +735,9 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
         errorsNegErrSummed[l]           = errorsNegSummed[l]*0.001;
 
         // add EMCal material errors
-        errorsPosCorrMatSummed[l]       = pow(errorsPosCorrSummed[l]+ pow(errorMaterial ,2.) + pow(errorsPosCorr[7][l],2) ,0.5);
-        errorsMeanCorrMatSummed[l]      = pow(errorsMeanCorrSummed[l]+ pow(errorMaterial ,2.)+ pow(errorsMeanCorr[7][l],2),0.5);
-        errorsNegCorrMatSummed[l]       = -pow(errorsNegCorrSummed[l]+ pow(errorMaterial ,2.)+ pow(errorsNegCorr[7][l],2),0.5);
+        errorsPosCorrMatSummed[l]       = pow(errorsPosCorrSummed[l]+ pow(errorMaterial ,2.) + pow(errorsPosCorr[nMaterialError][l],2) ,0.5);
+        errorsMeanCorrMatSummed[l]      = pow(errorsMeanCorrSummed[l]+ pow(errorMaterial ,2.)+ pow(errorsMeanCorr[nMaterialError][l],2),0.5);
+        errorsNegCorrMatSummed[l]       = -pow(errorsNegCorrSummed[l]+ pow(errorMaterial ,2.)+ pow(errorsNegCorr[nMaterialError][l],2),0.5);
         
         errorsPosCorrSummed[l]          = pow(errorsPosCorrSummed[l],0.5);
         errorsMeanCorrSummed[l]         = pow(errorsMeanCorrSummed[l],0.5);
