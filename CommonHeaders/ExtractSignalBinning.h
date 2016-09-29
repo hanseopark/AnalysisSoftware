@@ -825,9 +825,9 @@ Int_t fBinsPi0pPbConvEMCALPtRebin[37]           = { 10, 8, 8, 8, 8,
                                                     4, 2, 1, 1, 1,
                                                     1, 1, 1, 1, 1,
                                                     1, 1, 1, 1, 1,
-                                                    1, 1, 1, 1, 1,
-                                                    1, 2, 2, 4, 5,
-                                                    5, 5, 5, 8, 8,
+                                                    1, 1, 1, 1, 2,
+                                                    2, 4, 4, 4, 5,
+                                                    5, 5, 8, 8, 8,
                                                     8, 10};
 Int_t fBinsPi0pPbConvEMCALTrigPtRebin[42]       = { 10, 8, 8, 8, 8,
                                                     4, 4, 4, 4, 4,
@@ -911,7 +911,7 @@ Int_t fBinsEtapPbPtRebin[22]                    = { 10, 8,  8,  8,  5,
 Int_t fBinsEtapPbConvEMCALPtRebin[22]           = { 10, 10,  10,  10,  8,
                                                     8,   5,  5,  5,  5,
                                                     5,   5,  8,  8,  8,
-                                                    8,   12, 12, 20, 20,
+                                                    12,  12, 12, 20, 20,
                                                     20,  20};
 Int_t fBinsEtapPbConvEMCALTrigPtRebin[26]       = { 10, 10,  10,  10,  8,
                                                     8,   8,  8,  8,  8,
@@ -1425,7 +1425,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
     //*************************************************************************************************
 
     fBinsClusterPt          = new Double_t[100];
-    if( energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("PbPb_2.76TeV") == 0 || energy.CompareTo("PbPb_5TeV") == 0){
+    if( energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("PbPb_2.76TeV") == 0 || energy.CompareTo("PbPb_5TeV") == 0 || energy.CompareTo("pPb_5.023TeV") == 0){
       fNBinsClusterPt       = fNBinsCluster2760GeVPt;
       for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
         fBinsClusterPt[iPt] = fBinsCluster2760GeVPt[iPt];
