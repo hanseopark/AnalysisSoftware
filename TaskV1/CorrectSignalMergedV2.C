@@ -1711,12 +1711,12 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     if (histoDataM02ExBin && histoMCrecM02ExBin && !kIsMC){
         Double_t textSizeLabelsPixel                 = 50*3/5;
         TCanvas* canvasM02SamplePlot    = new TCanvas("canvasM02SamplePlot","",0,0,750,750);  // gives the page size
-        DrawGammaCanvasSettings( canvasM02SamplePlot,  0.08, 0.01, 0.015, 0.08);
+        DrawGammaCanvasSettings( canvasM02SamplePlot,  0.08, 0.01, 0.015, 0.085);
         canvasM02SamplePlot->SetLogy(1);
         
         Style_t markerStyleM02MCrec     = 1;
         Size_t markerSizeM02MCrec       = 0;
-        Color_t markerColorM02MCrec     = kBlack;
+        Color_t markerColorM02MCrec     = kRed+2;
         Style_t markerStyleM02Data      = 20;
         Size_t markerSizeM02Data        = 1.2;
         Color_t markerColorM02Data      = kBlack;
@@ -1731,13 +1731,13 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         Color_t markerColorM02Eta       = kAzure+2;
         Style_t markerStyleM02Gamma     = 24;
         Size_t markerSizeM02Gamma       = 0;
-        Color_t markerColorM02Gamma     = kRed-6;
+        Color_t markerColorM02Gamma     = 807;
         Style_t markerStyleM02Elec      = 24;
         Size_t markerSizeM02Elec        = 0;
         Color_t markerColorM02Elec      = kGreen-5;
         Style_t markerStyleM02BG        = 24;
         Size_t markerSizeM02BG          = 0;
-        Color_t markerColorM02BG        = kGray+2;
+        Color_t markerColorM02BG        = kBlue+2;
                 
         Double_t marginM02          = 0.07*750;
         Double_t textsizeLabelsM02  = 0;
@@ -1754,34 +1754,39 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
 
         TH2F * histo2DPi0M02Dummy;
         histo2DPi0M02Dummy             = new TH2F("histo2DPi0M02Dummy","histo2DPi0M02Dummy",11000,0.0,2.,10000,0,1.2);
-        SetStyleHistoTH2ForGraphs(histo2DPi0M02Dummy, "#it{#lambda}_{0}","#it{P}",0.85*textsizeLabelsM02, textsizeLabelsM02,
+        SetStyleHistoTH2ForGraphs(histo2DPi0M02Dummy, "#it{#lambda}_{0}^{2}","#it{P}",0.85*textsizeLabelsM02, textsizeLabelsM02,
                                 0.85*textsizeLabelsM02, textsizeLabelsM02,0.88, 0.115/(textsizeFacM02*marginM02));
         
         canvasM02SamplePlot->cd();
         histo2DPi0M02Dummy->GetYaxis()->SetRangeUser(minYAxisM02,1.2);
+        histo2DPi0M02Dummy->GetYaxis()->SetTickLength(0.025);
+        histo2DPi0M02Dummy->GetXaxis()->SetTickLength(0.025);
         histo2DPi0M02Dummy->DrawCopy();
 
+        TString range = histoMCrecM02ExBin->GetTitle();
+        range.ReplaceAll("#it{p}_{T}","#it{E}_{T}");
         
-        TLatex *labelM02PtRange = new TLatex(0.965,0.93,Form("#pi^{0}: %s", histoMCrecM02ExBin->GetTitle()));
+        TLatex *labelM02PtRange = new TLatex(0.965,0.925,Form("%s", range.Data()));
+//         TLatex *labelM02PtRange = new TLatex(0.965,0.93,Form("#pi^{0}: %s", histoMCrecM02ExBin->GetTitle()));
         SetStyleTLatex( labelM02PtRange, 0.85*textSizeLabelsPixel,4);
         labelM02PtRange->SetTextAlign(31);
         labelM02PtRange->SetTextFont(43);
 
-        TLatex *labelM02Energy      = new TLatex(0.11,0.93-1*0.8*textsizeLabelsM02,collisionSystem.Data());
+        TLatex *labelM02Energy      = new TLatex(0.11,0.925-1*0.8*textsizeLabelsM02,collisionSystem.Data());
         SetStyleTLatex( labelM02Energy, 0.85*textSizeLabelsPixel,4);
         labelM02Energy->SetTextFont(43);
         
-        TLatex *labelM02Trigger      = new TLatex(0.11,0.93-2*0.8*textsizeLabelsM02,Form("%s triggered",nameTrigger.Data()));
+        TLatex *labelM02Trigger      = new TLatex(0.11,0.925-2*0.8*textsizeLabelsM02,Form("%s triggered",nameTrigger.Data()));
         SetStyleTLatex( labelM02Trigger, 0.85*textSizeLabelsPixel,4);
         labelM02Trigger->SetTextFont(43);
 
-        TLatex *labelM02Reco  = new TLatex(0.11,0.93-3*0.8*textsizeLabelsM02,"mEMC");
+        TLatex *labelM02Reco  = new TLatex(0.11,0.925-3*0.8*textsizeLabelsM02,"mEMC");
         SetStyleTLatex( labelM02Reco, 0.85*textSizeLabelsPixel,4);
         labelM02Reco->SetTextFont(43);
-        TLatex *labelM02Simulation  = new TLatex(0.11,0.93,"ALICE simulation");
+        TLatex *labelM02Simulation  = new TLatex(0.11,0.925,"ALICE simulation");
         SetStyleTLatex( labelM02Simulation, 0.85*textSizeLabelsPixel,4);
         labelM02Simulation->SetTextFont(43);
-        TLatex *labelM02Performance  = new TLatex(0.11,0.93,"ALICE performance");
+        TLatex *labelM02Performance  = new TLatex(0.11,0.925,"ALICE performance");
         SetStyleTLatex( labelM02Performance, 0.85*textSizeLabelsPixel,4);
         labelM02Performance->SetTextFont(43);
         
@@ -1792,7 +1797,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         histoTrueElectronM02ExBin->SetMinimum(minYAxisM02);
         histoTrueBGM02ExBin->SetMinimum(minYAxisM02);
         DrawGammaSetMarker(histoMCrecM02ExBin, markerStyleM02MCrec, markerSizeM02MCrec, markerColorM02MCrec, markerColorM02MCrec);
-        histoMCrecM02ExBin->SetLineWidth(3);
+        histoMCrecM02ExBin->SetLineWidth(3.5);
         histoMCrecM02ExBin->Draw("hist,e,same");
         DrawGammaSetMarker(histoTrueGammaM02ExBin, markerStyleM02Gamma, markerSizeM02Gamma, markerColorM02Gamma, markerColorM02Gamma);
         histoTrueGammaM02ExBin->SetLineWidth(3);
@@ -1807,7 +1812,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         histoTrueElectronM02ExBin->Draw("b,same,hist");
         histoTrueElectronM02ExBin->Draw("same,hist");
         DrawGammaSetMarker(histoTrueBGM02ExBin, markerStyleM02BG, markerSizeM02BG, markerColorM02BG, markerColorM02BG);
-        histoTrueBGM02ExBin->SetLineWidth(3);
+        histoTrueBGM02ExBin->SetLineWidth(3.5);
         histoTrueBGM02ExBin->Draw("hist,same");
         DrawGammaSetMarker(histoTruePi0M02ExBin, markerStyleM02Pi0, markerSizeM02Pi0, markerColorM02Pi0, markerColorM02Pi0);
         histoTruePi0M02ExBin->Draw("p,same");
@@ -1824,8 +1829,8 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         TLegend* legendM02Val  = GetAndSetLegend2(0.75, 0.89-6*0.75*textsizeLabelsM02, 0.9, 0.89, 0.85*textSizeLabelsPixel);
         legendM02Val->SetMargin(0.05/(0.9-0.75));
         legendM02Val->AddEntry(histoMCrecM02ExBin,"Clusters","l");
-        legendM02Val->AddEntry(histoTruePi0M02ExBin,"Real #pi^{0}","p");
-        legendM02Val->AddEntry(histoTrueEtaM02ExBin,"Real #eta","p");
+        legendM02Val->AddEntry(histoTruePi0M02ExBin,"#pi^{0}","p");
+        legendM02Val->AddEntry(histoTrueEtaM02ExBin,"#eta BG","p");
         legendM02Val->AddEntry(histoTrueGammaM02ExBin,"#gamma BG","f");
         legendM02Val->AddEntry(histoTrueElectronM02ExBin,"e^{#pm} BG","f");
         legendM02Val->AddEntry(histoTrueBGM02ExBin,"Had. BG","l");

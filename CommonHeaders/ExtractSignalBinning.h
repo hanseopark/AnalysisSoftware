@@ -796,14 +796,14 @@ Double_t fBinsPi0pPbPtEMCTrig[43]                = { 0.0, 0.3, 0.4, 0.5, 0.6,
                                                     15.0, 16.0, 17.0, 18.0, 20.0,
                                                     22.0, 26.0, 30.0};
 
-Double_t fBinsPi0pPbEMCALPt[35] 		=  {0.0, 0.3, 0.4, 0.5, 0.6,
-                                                0.7, 0.8, 1.0, 1.2, 1.4,
-                                                1.6, 1.8, 2.0, 2.2, 2.4,
-                                                2.6, 2.8, 3.0, 3.2, 3.4,
-                                                3.6, 3.8, 4.0, 4.5, 5.0,
-                                                5.5, 6.0, 7.0, 8.0, 10.0,
-                                                12.0, 16.0, 20.0, 24.0,
-                                                30.0};
+Double_t fBinsPi0pPbEMCALPt[35]                  = {0.0, 0.3, 0.4, 0.5, 0.6,
+                                                    0.7, 0.8, 1.0, 1.2, 1.4,
+                                                    1.6, 1.8, 2.0, 2.2, 2.4,
+                                                    2.6, 2.8, 3.0, 3.2, 3.4,
+                                                    3.6, 3.8, 4.0, 4.5, 5.0,
+                                                    5.5, 6.0, 7.0, 8.0, 10.0,
+                                                    12.0, 16.0, 20.0, 24.0,
+                                                    30.0};
 
 Double_t fBinsPi0pPbPtDCA[13]                   = { 0.0, 0.4, 0.5, 0.6, 0.7,
                                                     0.8, 1.0, 1.4, 1.8, 2.4,
@@ -821,14 +821,13 @@ Int_t fBinsPi0pPbPtRebin[37]                    = { 10, 8, 4, 2, 2,
                                                     4, 5, 8, 8, 10,
                                                     10,10, 10, 10,10,
                                                     10,10};
-Int_t fBinsPi0pPbConvEMCALPtRebin[37]           = { 10, 8, 8, 8, 8,
+Int_t fBinsPi0pPbConvEMCALPtRebin[34]           = { 10, 8, 8, 8, 8,
                                                     4, 2, 1, 1, 1,
                                                     1, 1, 1, 1, 1,
                                                     1, 1, 1, 1, 1,
                                                     1, 1, 1, 1, 2,
-                                                    2, 4, 4, 4, 5,
-                                                    5, 5, 8, 8, 8,
-                                                    8, 10};
+                                                    2, 4, 4, 5, 5, 
+                                                    8, 8, 8, 10};
 Int_t fBinsPi0pPbConvEMCALTrigPtRebin[42]       = { 10, 8, 8, 8, 8,
                                                     4, 4, 4, 4, 4,
                                                     4, 4, 4, 4, 4,
@@ -885,11 +884,11 @@ Double_t fBinsEtapPbPt[23]                      = { 0., 0.3, 0.5, 0.7, 0.9,
                                                     3.0, 3.5, 4.,  5.,  6.,
                                                     8.,  10,  12., 14., 16., 
                                                     20., 25., 30.};
-Double_t fBinsEtaEMCALpPbPt[22] 		= {0., 0.3, 0.5, 0.7, 0.9, 
-                                                1.1, 1.4, 1.8, 2.2, 2.6,
-                                                3.0, 3.5, 4.,  5.,  6.,
-                                                8.,  10,  12., 16., 
-                                                20., 25., 30.};
+Double_t fBinsEtaEMCALpPbPt[22]                 = { 0., 0.3, 0.5, 0.7, 0.9, 
+                                                    1.1, 1.4, 1.8, 2.2, 2.6,
+                                                    3.0, 3.5, 4.,  5.,  6.,
+                                                    8.,  10,  12., 16., 
+                                                    20., 25., 30.};
 Double_t fBinsEtapPbPtEMCTrig[27]               = { 0., 0.3, 0.5, 0.7, 0.9, 
                                                     1.1, 1.4, 1.8, 2.2, 2.6,
                                                     3.0, 3.5, 4.,  5.,  6.,
@@ -908,11 +907,11 @@ Int_t fBinsEtapPbPtRebin[22]                    = { 10, 8,  8,  8,  5,
                                                     4,   5,  8,  8,  8,
                                                     8,   10, 10, 10, 10,
                                                     10,  10};
-Int_t fBinsEtapPbConvEMCALPtRebin[22]           = { 10, 10,  10,  10,  8,
+Int_t fBinsEtapPbConvEMCALPtRebin[21]           = { 10, 10,  10,  10,  8,
                                                     8,   5,  5,  5,  5,
                                                     5,   5,  8,  8,  8,
-                                                    12,  12, 12, 20, 20,
-                                                    20,  20};
+                                                    12,  12, 20, 20, 20,
+                                                    20};
 Int_t fBinsEtapPbConvEMCALTrigPtRebin[26]       = { 10, 10,  10,  10,  8,
                                                     8,   8,  8,  8,  8,
                                                     8,   8,  8,  8,  8,
@@ -1972,7 +1971,10 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 }
                     
                 TString MinBias = eventCutSelection(GetEventCentralityMinCutPosition(),2);
-                if (fNBinsPt > 37 && specialTrigg == 0){
+                if (specialTrigg == 0 && ( modi == 2 || modi == 4 ) && fNBinsPt > 34 ){
+                    cout << "You have chosen to have more than 34 bins, this is not possible, it will be reduced to 34 for calo analysis" << endl;
+                    fNBinsPt    = 34;                                        
+                } else if (fNBinsPt > 37 && specialTrigg == 0){
                     cout << "You have chosen to have more than 37 bins, this is not possible, it will be reduced to 37 for calo analysis" << endl;
                     fNBinsPt    = 37;                                        
                 } else if (fNBinsPt > 42 ){
@@ -1997,6 +1999,8 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                         fNRebin[i]  = fBinsPi0pPbConvEMCALTrigEG1PtRebin[i];
                     } else {
                         fBinsPt[i]  = fBinsPi0pPbPt[i];
+                        if (modi == 2 || modi == 4) 
+                            fBinsPt[i]  = fBinsPi0pPbEMCALPt[i];
                         if (i < fNBinsPt+1){
                             fNRebin[i]                         = fBinsPi0pPbPtRebin[i];
                             if (modi == 2 ) fNRebin[i]         = fBinsPi0pPbConvEMCALPtRebin[i];
@@ -2514,6 +2518,9 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
             if (fNBinsPt > 16 && modi < 2) {
                 cout << "You have chosen to have more than 16 bins, this is not possible, it will be reduced to 16" << endl;
                 fNBinsPt        = 16;
+            } else if (fNBinsPt > 21 && ( modi == 2 || modi == 4) && specialTrigg == 0 ) {
+                cout << "You have chosen to have more than 21 bins, this is not possible, it will be reduced to 21" << endl;
+                fNBinsPt        = 21;                
             } else if (fNBinsPt > 22 && specialTrigg == 0){        
                 cout << "You have chosen to have more than 22 bins, this is not possible, it will be reduced to 22" << endl;
                 fNBinsPt        = 22;
@@ -2549,6 +2556,8 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     }    
                 } else {
                     fBinsPt[i]      = fBinsEtapPbPt[i];
+                    if (modi == 2 || modi == 4)
+                        fBinsPt[i]      = fBinsEtaEMCALpPbPt[i];
                     if (i < fNBinsPt+1){                  
                         fNRebin[i]  = fBinsEtapPbPtRebin[i];
                         if (modi == 2) 

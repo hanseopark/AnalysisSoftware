@@ -4065,7 +4065,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         
         TLegend* legendXsectionPaper    = GetAndSetLegend2(0.17, 0.14, 0.5, 0.14+0.05*3, textSizeLabelsPixel, 1, "", 43, 0.2);
         legendXsectionPaper->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
-        legendXsectionPaper->AddEntry(graphNLODSS14Calc,"NLO, PDF: MSTW FF: DSS14","f");
+        legendXsectionPaper->AddEntry(graphNLODSS14Calc,"NLO, PDF: MSTW, FF: DSS14","f");
 //         legendXsectionPaper->AddEntry((TObject*)0,"Phys.Rev. D91 no. 1, (2015) 014035","");
         legendXsectionPaper->AddEntry(histoPythia8InvXSectionPi0,"Pythia 8.2, Monash 2013","l");
         legendXsectionPaper->Draw();
@@ -4408,11 +4408,14 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     cout << "***********************************************************************************************************" << endl;
     cout << "***********************************************************************************************************" << endl;
     cout << "***********************************************************************************************************" << endl;
-    cout << "high pt eta/pi0 - data: " << etaToPi0ConstData->GetParameter(0) << "+-"<< etaToPi0ConstData->GetParError(0) << endl;
+    cout << "high pt eta/pi0 - data, stat: " << etaToPi0ConstData->GetParameter(0) << "+-"<< etaToPi0ConstData->GetParError(0) << endl;
+    graphCombEtaToPi0TotA->Fit(etaToPi0ConstData,"QRME0","",8,20);
+    cout << "high pt eta/pi0 - data, tot: " << etaToPi0ConstData->GetParameter(0) << "+-"<< etaToPi0ConstData->GetParError(0) << endl;
     cout << "high pt eta/pi0 - pythia 8: " << etaToPi0ConstMC->GetParameter(0) << "+-"<< etaToPi0ConstMC->GetParError(0) << endl;
     cout << "***********************************************************************************************************" << endl;
     cout << "***********************************************************************************************************" << endl;
     cout << "***********************************************************************************************************" << endl;
+//     return;
     //*************************************************************************************************************
     //***************************** Comparison to Charged pions ***************************************************
     //*************************************************************************************************************
