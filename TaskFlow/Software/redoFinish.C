@@ -19,9 +19,12 @@ Bool_t bPropagateErrorAlsoFromNIT = kFALSE; // propagate error also from non-iso
 Bool_t bMinimumBiasReferenceFlow = kTRUE; // store in CRH for reference flow the result obtained wihout rebinning in multiplicity (kTRUE)
 Bool_t checkForCommonHistResults = kTRUE; // check explicitely if the TList AliFlowCommonHistResults is available in the output
 
-void redoFinish(TString mergedFileName = "GammaConvFlow_45.root",TString outputFileName = "AnalysisResults45.root")
+void redoFinish(Int_t UniqueFileID = 0)
 {
   LoadLibraries();
+  
+  TString mergedFileName = Form("GammaConvFlow_%i.root", UniqueFileID);
+  TString outputFileName = Form("AnalysisResults%i.root", UniqueFileID);
 
   TString mergedFileFullPathName(gSystem->pwd());
   mergedFileFullPathName+="/";

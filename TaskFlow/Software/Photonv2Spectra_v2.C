@@ -1,11 +1,12 @@
-#include "Photonv2Spectra_V1.h"
+#include "DirectPhotonFlowFunctions.h"
 
 void Photonv2Spectra_v2(
-                        TString InputFileName = "AnalysisResults53.root",
+                        Int_t Trainconfig = 53,
                         TString CentralityLow = "20",
                         TString CentralityHigh = "40",
-                        Int_t Trainconfig = 53,
-                        TString SaveName = "53"){
+                        TString CutNumber = "",
+                        TString AdditionalDirName = ""
+                       ){
   
   //InputFileName: standard flow output
   //CentralityLow
@@ -24,7 +25,7 @@ void Photonv2Spectra_v2(
   //======================================================================================================================================
   
   bool reb = kTRUE;
-  TString dirdetectSP = "SP_V0";
+  TString dirdetectSP = Form("SP_V0_%s",CutNumber.Data());
   
   Color_t colorIncl = GetColorDefaultColor("PbPb_2.76TeV","",Form("%s-%s%%",CentralityLow.Data(),CentralityHigh.Data()));
   Marker_t markerIncl = GetDefaultMarkerStyle("PbPb_2.76TeV","",Form("%s-%s%%",CentralityLow.Data(),CentralityHigh.Data()));
@@ -38,11 +39,11 @@ void Photonv2Spectra_v2(
     
   //======================================================================================================================================
   //======================================================================================================================================
-    
+  TString InputFileName = Form("AnalysisResults%i.root",Trainconfig);
   TString fileSPv0Redo = InputFileName.Data();
-  cout << Form("SPVZEROQa_in_%s%scc_tC%i_v2SPv2Qa",CentralityLow.Data(),CentralityHigh.Data(),Trainconfig) << endl;
-  TString directoryQaRedo = Form("SPVZEROQa_in_%s%scc_tC%i_v2_0SPv2Qa",CentralityLow.Data(),CentralityHigh.Data(),Trainconfig);
-  TString directoryQbRedo = Form("SPVZEROQb_in_%s%scc_tC%i_v2_0SPv2Qb",CentralityLow.Data(),CentralityHigh.Data(),Trainconfig);
+  cout << Form("SPVZEROQa_in_%s%scc_tC%i_v2%sSPv2Qa_%s",CentralityLow.Data(),CentralityHigh.Data(),Trainconfig,AdditionalDirName.Data(),CutNumber.Data()) << endl;
+  TString directoryQaRedo = Form("SPVZEROQa_in_%s%scc_tC%i_v2%sSPv2Qa_%s",CentralityLow.Data(),CentralityHigh.Data(),Trainconfig,AdditionalDirName.Data(),CutNumber.Data());
+  TString directoryQbRedo = Form("SPVZEROQb_in_%s%scc_tC%i_v2%sSPv2Qb_%s",CentralityLow.Data(),CentralityHigh.Data(),Trainconfig,AdditionalDirName.Data(),CutNumber.Data());
 
   TH1D *v2InclGamma        = (TH1D*)IncluSPv0(fileSPv0Redo,directoryQaRedo,directoryQbRedo,dirdetectSP,reb);
   TH1D *v2InclGammaSpectra = (TH1D*)Spectra(fileSPv0Redo,directoryQaRedo,directoryQbRedo,dirdetectSP,reb);
@@ -105,17 +106,15 @@ void Photonv2Spectra_v2(
   
   //======================================================================================================================================
   //======================================================================================================================================
+  gSystem->mkdir(Form("Results_%s",CutNumber.Data()));
   
-  TFile *InclusivePhotonv2_File = new TFile("InclusivePhotonv2_SmallCC.root","UPDATE");
-  v2InclGamma->Write(Form("%s%s_tC%s",CentralityLow.Data(),CentralityHigh.Data(),SaveName.Data()));
+  TFile *InclusivePhotonv2_File = new TFile(Form("Results_%s/InclusivePhotonv2_uncorrected_%s.root",CutNumber.Data(),CutNumber.Data()),"UPDATE");
+  v2InclGamma->Write(Form("%s_tC%i%s",CutNumber.Data(),Trainconfig,AdditionalDirName.Data()));
+  v2InclGammaSpectra->Write(Form("%s_tC%i%s_Spectra",CutNumber.Data(),Trainconfig,AdditionalDirName.Data()));
   InclusivePhotonv2_File->Close();
-  
-  TFile *InclusivePhotonv2_spectra_File = new TFile("InclusivePhotonv2_SmallCC_unmerged_spectra.root","UPDATE");
-  v2InclGammaSpectra->Write(Form("%s%s_tC%s_Spectra",CentralityLow.Data(),CentralityHigh.Data(),SaveName.Data()));
-  InclusivePhotonv2_spectra_File->Close();
 
-  gSystem->mkdir("plots");
-  f1->SaveAs(Form("plots/v2_gammaincl_%s%s_%s.eps",CentralityLow.Data(),CentralityHigh.Data(),SaveName.Data()));
+  gSystem->mkdir(Form("Results_%s/v2GammaInclusiveUncorrected",CutNumber.Data()));
+  f1->SaveAs(Form("Results_%s/v2GammaInclusiveUncorrected/v2_gammaincl_%s_%i%s.eps",CutNumber.Data(),CutNumber.Data(),Trainconfig,AdditionalDirName.Data()));
   
   //======================================================================================================================================
   //======================================================================================================================================

@@ -37,6 +37,7 @@
 #include "TGraphAsymmErrors.h" 
 #include "TEllipse.h"
 #include "TPaveText.h"
+#include "TRandom3.h"
 #include "/home/mike/alicesw/aliphysics/master/src/PWG/FLOW/Base/AliFlowCommonHistResults.h"
 #include "/home/mike/alicesw/aliphysics/master/src/PWG/FLOW/Base/AliFlowCommonHist.h"
 #include "/home/mike/afterburner_v3/AnalysisSoftware/CommonHeaders/PlottingGammaConversionAdditional.h"
@@ -71,7 +72,181 @@ void libs()
   gSystem->Load("libPWGflowTasks");
 }
 
+//Function that masks points from bin# start to bin# end
+void MaskPoints(TH1F* histo, const int start, const int end){
+  for(int i=start;i<end;i++){
+    histo->SetBinContent(i,-10);
+  }
+}
 
+TH1F* Getv2HistStyle(){
+ 
+  TH1F*  histoEmpty = new TH1F("","",100,0,8);
+  histoEmpty->SetLineColor(kRed+1);
+  histoEmpty->SetMarkerColor(kRed+1);
+  histoEmpty->SetMarkerStyle(25);
+  histoEmpty->GetXaxis()->SetTitle("#it{p}_{T}(GeV/c)");
+  histoEmpty->GetYaxis()->SetTitle("v_{2}");
+  histoEmpty->GetXaxis()->SetTitleSize(0.06);
+  histoEmpty->GetYaxis()->SetTitleSize(0.07);
+  histoEmpty->GetXaxis()->SetTitleOffset(0.8);
+  histoEmpty->GetYaxis()->SetTitleOffset(0.85);
+  histoEmpty->GetXaxis()->SetRangeUser(0.0,6.2);
+  histoEmpty->GetYaxis()->SetRangeUser(0,0.249);
+  
+  return histoEmpty;
+}
+
+TH1F* GetSystHistStyle(){
+ 
+  TH1F*  histoEmpty = new TH1F("","",100,0,8);
+  histoEmpty->SetLineColor(kRed+1);
+  histoEmpty->SetMarkerColor(kRed+1);
+  histoEmpty->SetMarkerStyle(25);
+  histoEmpty->GetXaxis()->SetTitle("#it{p}_{T}(GeV/c)");
+  histoEmpty->GetYaxis()->SetTitle("% syst");
+  histoEmpty->GetXaxis()->SetTitleSize(0.06);
+  histoEmpty->GetYaxis()->SetTitleSize(0.07);
+  histoEmpty->GetXaxis()->SetTitleOffset(0.8);
+  histoEmpty->GetYaxis()->SetTitleOffset(0.85);
+  histoEmpty->GetXaxis()->SetRangeUser(0.0,6.2);
+  histoEmpty->GetYaxis()->SetRangeUser(0,59.9);
+  
+  return histoEmpty;
+}
+
+TH1F* GetPurityHistStyle(){
+ 
+  TH1F*  histoEmpty = new TH1F("","",100,0,8);
+  histoEmpty->SetLineColor(kBlack);
+  histoEmpty->SetMarkerColor(kBlack);
+  histoEmpty->SetMarkerStyle(25);
+  histoEmpty->GetXaxis()->SetTitle("#it{p}_{T}(GeV/c)");
+  histoEmpty->GetYaxis()->SetTitle("purity");
+  histoEmpty->GetXaxis()->SetTitleSize(0.06);
+  histoEmpty->GetYaxis()->SetTitleSize(0.07);
+  histoEmpty->GetXaxis()->SetTitleOffset(0.8);
+  histoEmpty->GetYaxis()->SetTitleOffset(0.85);
+  histoEmpty->GetXaxis()->SetRangeUser(0.0,6.2);
+  histoEmpty->GetYaxis()->SetRangeUser(0.6,1.0);
+  
+  return histoEmpty;
+}
+
+TH1F* GetNHistStyle(){
+ 
+  TH1F*  histoEmpty = new TH1F("","",100,0,8);
+  histoEmpty->SetLineColor(kBlack);
+  histoEmpty->SetMarkerColor(kBlack);
+  histoEmpty->SetMarkerStyle(25);
+  histoEmpty->GetXaxis()->SetTitle("#it{p}_{T}(GeV/c)");
+  histoEmpty->GetYaxis()->SetTitle("n");
+  histoEmpty->GetXaxis()->SetTitleSize(0.06);
+  histoEmpty->GetYaxis()->SetTitleSize(0.07);
+  histoEmpty->GetXaxis()->SetTitleOffset(0.8);
+  histoEmpty->GetYaxis()->SetTitleOffset(0.85);
+  histoEmpty->GetXaxis()->SetRangeUser(0.0,6.2);
+  histoEmpty->GetYaxis()->SetRangeUser(0.6,1.0);
+  
+  return histoEmpty;
+}
+
+TH1F* GetRGammaHistStyle(){
+ 
+  TH1F*  histoEmpty = new TH1F("","",100,0,8);
+  histoEmpty->SetLineColor(kBlack);
+  histoEmpty->SetMarkerColor(kBlack);
+  histoEmpty->SetMarkerStyle(25);
+  histoEmpty->GetXaxis()->SetTitle("#it{p}_{T}(GeV/c)");
+  histoEmpty->GetYaxis()->SetTitle("R_{#gamma}");
+  histoEmpty->GetXaxis()->SetTitleSize(0.06);
+  histoEmpty->GetYaxis()->SetTitleSize(0.06);
+  histoEmpty->GetXaxis()->SetTitleOffset(0.8);
+  histoEmpty->GetYaxis()->SetTitleOffset(0.85);
+  histoEmpty->GetXaxis()->SetRangeUser(0.0,6.2);
+  histoEmpty->GetYaxis()->SetRangeUser(0.94,1.49);
+  
+  return histoEmpty;
+}
+
+TH1F* Getv2InclRatioHistStyle(){
+ 
+  TH1F*  histoEmpty = new TH1F("","",100,0,8);
+  histoEmpty->SetLineColor(kBlack);
+  histoEmpty->SetMarkerColor(kBlack);
+  histoEmpty->SetMarkerStyle(25);
+  histoEmpty->GetXaxis()->SetTitle("#it{p}_{T}(GeV/c)");
+  histoEmpty->GetYaxis()->SetTitle("Ratio");
+  histoEmpty->GetXaxis()->SetTitleSize(0.06);
+  histoEmpty->GetYaxis()->SetTitleSize(0.07);
+  histoEmpty->GetXaxis()->SetTitleOffset(0.8);
+  histoEmpty->GetYaxis()->SetTitleOffset(0.85);
+  histoEmpty->GetXaxis()->SetRangeUser(0.0,6.2);
+  histoEmpty->GetYaxis()->SetRangeUser(0.8,1.2);
+  
+  return histoEmpty;
+}
+
+void DrawInfoLabelOnPlot(TString cent1, TString cent2, Int_t place){
+  
+  TLatex T1;
+  T1.SetTextSize(0.04);
+  T1.SetTextAlign(12);
+  T1.SetNDC();
+  
+  if(place==1){
+    T1.DrawLatex(0.15, 0.94, Form("#bf{%s-%s %% PbPb, #sqrt{s_{_{NN}}}=2.76TeV}",cent1.Data(),cent2.Data()));
+    T1.DrawLatex(0.15, 0.88, "#bf{#gamma_{incl} #rightarrow e^{+}e^{-}}");
+  }
+  
+  if(place==2){
+    T1.DrawLatex(0.48, 0.94, Form("#bf{%s-%s %% PbPb, #sqrt{s_{_{NN}}}=2.76TeV}",cent1.Data(),cent2.Data()));
+    T1.DrawLatex(0.77, 0.88, "#bf{#gamma_{incl} #rightarrow e^{+}e^{-}}");
+  }
+}
+
+void DrawDirectInfoLabelOnPlot(TString cent1, TString cent2, Int_t place){
+  
+  TLatex T1;
+  T1.SetTextSize(0.04);
+  T1.SetTextAlign(12);
+  T1.SetNDC();
+  
+  if(place==1){
+    T1.DrawLatex(0.15, 0.94, Form("#bf{%s-%s %% PbPb, #sqrt{s_{_{NN}}}=2.76TeV}",cent1.Data(),cent2.Data()));
+    T1.DrawLatex(0.15, 0.88, "#bf{#gamma_{direct}}");
+  }
+  
+  if(place==2){
+    T1.DrawLatex(0.48, 0.94, Form("#bf{%s-%s %% PbPb, #sqrt{s_{_{NN}}}=2.76TeV}",cent1.Data(),cent2.Data()));
+    T1.DrawLatex(0.87, 0.88, "#bf{#gamma_{direct}}");
+  }
+  
+}
+
+void DrawRGammaInfoLabelOnPlot(TString cent1, TString cent2, Int_t place){
+  
+  TLatex T1;
+  T1.SetTextSize(0.04);
+  T1.SetTextAlign(12);
+  T1.SetNDC();
+  
+  if(place==1){
+    T1.DrawLatex(0.15, 0.94, Form("#bf{%s-%s %% PbPb, #sqrt{s_{_{NN}}}=2.76TeV}",cent1.Data(),cent2.Data()));
+  }
+  
+  if(place==2){
+    T1.DrawLatex(0.48, 0.94, Form("#bf{%s-%s %% PbPb, #sqrt{s_{_{NN}}}=2.76TeV}",cent1.Data(),cent2.Data()));
+  }
+  
+}
+
+void SetProperMargins(){
+  gPad->SetLeftMargin(0.12);
+  gPad->SetRightMargin(0.01);
+  gPad->SetBottomMargin(0.11);
+  gPad->SetTopMargin(0.01);
+}
 
 //------------------------------------------------------------------
 TH1D *PionSubtr(TH1D *v2Incl, TH1D *v2Pions,TH1D *Purity)

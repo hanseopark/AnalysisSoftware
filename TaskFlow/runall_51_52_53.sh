@@ -1,0 +1,6 @@
+root -b -x -q -l 'Software/redoFinish.C(51)'
+root -b -x -q -l 'Software/redoFinish.C(52)'
+root -b -x -q -l 'Software/redoFinish.C(53)'
+root -b -x -q -l 'Software/Photonv2Spectra_v2.C+(51,"0","20","_0")'
+root -b -x -q -l 'Software/Photonv2Spectra_v2.C+(52,"20","40","_0")'
+root -b -x -q -l 'Software/Photonv2Spectra_v2.C+(53,"40","80","_0")'
