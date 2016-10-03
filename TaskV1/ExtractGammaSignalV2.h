@@ -211,6 +211,7 @@ TList*      CaloContainer                                           = NULL;
 TH1D*       fHistoGammaCaloPt                                       = NULL;
 TH1D*       fHistoGammaCaloPtOrBin                                  = NULL;
 TH1D*       fHistoGammaMCrecCaloPt                                  = NULL;
+TH1D*       fHistoGammaMCrecCaloPtOrBin                             = NULL;
 TH1D*       fHistoGammaMCAllInEMCAccPt                              = NULL;
 TH1D*       fHistoGammaMCAllInEMCAccPtOrBin                         = NULL;
 TH1D*       fHistoGammaTrueCaloPt                                   = NULL;

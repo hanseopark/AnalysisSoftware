@@ -67,6 +67,22 @@ void CorrectGammaEffiResol(TH1D* histoGammaCorr, TH1D *histoAllSec, TH1D *histoK
     }
 }
 
+void CorrectGammaEffiResol(TH1D* histoGammaCorr, TH1D *histoAllSec, TH1D *histoK0sSec, TH1D* histoPurity, TH1D* histoRecoEff, Double_t deltaEta, Double_t scaling, Double_t nEvt){
+    histoGammaCorr->Scale(1./nEvt);
+    histoGammaCorr->Add(histoAllSec,-1);
+    histoGammaCorr->Add(histoK0sSec,-1);
+    histoGammaCorr->Multiply(histoGammaCorr,histoPurity,1.,1.,"");
+    histoGammaCorr->Divide(histoGammaCorr,histoRecoEff,1.,1.,"");
+    histoGammaCorr->Scale(1./deltaEta);
+    histoGammaCorr->Scale(scaling);
+    for (Int_t i = 1; i < histoGammaCorr->GetNbinsX()+1 ; i++){
+        Double_t newBinContent = histoGammaCorr->GetBinContent(i)/histoGammaCorr->GetBinCenter(i);
+        Double_t newBinError = histoGammaCorr->GetBinError(i)/histoGammaCorr->GetBinCenter(i);
+        histoGammaCorr->SetBinContent(i,newBinContent);
+        histoGammaCorr->SetBinError(i,newBinError);
+    }
+}
+
 void CorrectGammaSecAndPurity(TH1D* histoGammaCorr, TH1D* histoSecGamma, TH1D* histoSecGammaAddK0s, TH1D* histoPurity){
     histoGammaCorr->Sumw2();
     histoGammaCorr->Add(histoSecGamma,-1);
@@ -89,6 +105,18 @@ void CorrectGammaUnfoldResol(TH1D* histoGammaCorr, TH1D* histoConvProb, TH1D* hi
     }
 }
 
+void CorrectGammaUnfoldResol(TH1D* histoGammaCorr, TH1D* histoRecoEff, Double_t deltaEta, Double_t scaling, Double_t nEvt){
+    histoGammaCorr->Divide(histoGammaCorr,histoRecoEff,1.,1.,"");
+    histoGammaCorr->Scale(1./deltaEta);
+    histoGammaCorr->Scale(scaling);
+    histoGammaCorr->Scale(1./nEvt);
+    for (Int_t i = 1; i < histoGammaCorr->GetNbinsX()+1 ; i++){
+        Double_t newBinContent = histoGammaCorr->GetBinContent(i)/histoGammaCorr->GetBinCenter(i);
+        Double_t newBinError = histoGammaCorr->GetBinError(i)/histoGammaCorr->GetBinCenter(i);
+        histoGammaCorr->SetBinContent(i,newBinContent);
+        histoGammaCorr->SetBinError(i,newBinError);
+    }
+}
 
 void CorrectGammaMC(TH1D* histoMCGammaSpec_MCPtCorr,  Double_t deltaEta, Double_t scaling, Double_t nEvtMC){
     histoMCGammaSpec_MCPtCorr->Scale(1./deltaEta);
@@ -127,8 +155,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         cout << "This macro isn't designed to run for Dalitz or the old software version" << endl;
         return;
     } else if ( mode == 4 || mode == 5){
-        cout << "This macro can't yet deal with these modi" << endl;
-        return;
+        cout << "WARNING: this macro is still under construction for this mode" << endl;
+        //cout << "This macro can't yet deal with these modi" << endl;
+        //return;
     } else if ( mode == 2 || mode == 3){
         cout << "WARNING: running hybrid mode, this macro is still under construction for this mode" << endl;    
     }
@@ -141,7 +170,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //*****************************************************************************************
     //*************************** Determine K0s scaling factor ********************************
     //*****************************************************************************************
-    Double_t doubleAddFactorK0s = ReturnCorrectK0ScalingFactor( option,  cutSelection);
+    Double_t doubleAddFactorK0s     = ReturnCorrectK0ScalingFactor( option,  cutSelection);
     if(isMC.CompareTo("kTRUE") == 0){
         doubleAddFactorK0s = 0.;
         cout<<" MC --> doubleAddFactorK0s = 0"<<endl;
@@ -171,78 +200,85 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //*****************************************************************************************
     //*************************** Determine centrality from CutString *************************
     //*****************************************************************************************        
-    TString centrality          = GetCentralityString(fEventCutSelection);
-    TString collisionSystem     = ReturnFullCollisionsSystem(option);
-    TString cent                = "";
-    TString textMeasurement     = "#gamma";
-    TString detectionProcess    = ReturnFullTextReconstructionProcess(mode);
-    TString detectionProcess1   = "";
-    TString detectionProcess2   = "";
+    TString centrality              = GetCentralityString(fEventCutSelection);
+    TString collisionSystem         = ReturnFullCollisionsSystem(option);
+    TString cent                    = "";
+    TString textMeasurement         = "#gamma";
+    TString detectionProcess        = ReturnFullTextReconstructionProcess(mode);
+    TString detectionProcess1       = "";
+    TString detectionProcess2       = "";
     if (isPCM && isCalo){
-        detectionProcess1       = ReturnFullTextReconstructionProcess(mode,1);
-        detectionProcess        = detectionProcess1;
-        detectionProcess2       = ReturnFullTextReconstructionProcess(mode,2);
+        detectionProcess1           = ReturnFullTextReconstructionProcess(mode,1);
+        detectionProcess            = detectionProcess1;
+        detectionProcess2           = ReturnFullTextReconstructionProcess(mode,2);
     }
     if(option.Contains("PbPb")){
-        cent        = Form("%s %s", centrality.Data(), collisionSystem.Data());
+        cent                        = Form("%s %s", centrality.Data(), collisionSystem.Data());
     } else {
-        cent        = collisionSystem; 
+        cent                        = collisionSystem;
     }    
     
     //******************************************************************************************
     //***************************** Set output directory ***************************************
     //******************************************************************************************
-    TString outputDir           = Form("%s/%s/%s/CorrectGammaV2",cutSelection.Data(),option.Data(),suffix.Data());
+    TString outputDir               = Form("%s/%s/%s/CorrectGammaV2",cutSelection.Data(),option.Data(),suffix.Data());
     gSystem->Exec("mkdir -p "+outputDir);
 
     //******************************************************************************************
     //************************ Define additional global variables ******************************
     //******************************************************************************************
-    TString textPi0New      = Form("Gamma_%s",nameMeson.Data());
+    TString textPi0New              = Form("Gamma_%s",nameMeson.Data());
     
     TString textPrefix2;
     if (isMC.CompareTo("kTRUE")==0){
-        textPrefix2         = "MC";
+        textPrefix2                 = "MC";
     } else {
-        textPrefix2         = "data";
+        textPrefix2                 = "data";
     }
     
-    Double_t deltaEta       = ReturnDeltaEta(fGammaCutSelection);
-    Double_t eta            = deltaEta*0.5;
-    Double_t deltaEtaCalo   = 0;
-    Double_t deltaPhiCalo   = 0;
-    Double_t minPhiCalo     = 0;
-    Double_t maxPhiCalo     = 0;
-    Double_t etaCalo        = 0;
-    if (isPCM && isCalo){
-        deltaEtaCalo   = ReturnDeltaEtaCalo(fClusterCutSelection);
-        etaCalo        = deltaEtaCalo*0.5;
-        deltaPhiCalo   = ReturnDeltaPhiCalo(fClusterCutSelection);
+    Double_t deltaEta               = ReturnDeltaEta(fGammaCutSelection);
+    Double_t eta                    = deltaEta*0.5;
+    Double_t deltaEtaCalo           = 0;
+    Double_t deltaPhiCalo           = 0;
+    Double_t minPhiCalo             = 0;
+    Double_t maxPhiCalo             = 0;
+    Double_t etaCalo                = 0;
+    if (/*isPCM &&*/ isCalo){
+        deltaEtaCalo                = ReturnDeltaEtaCalo(fClusterCutSelection);
+        etaCalo                     = deltaEtaCalo*0.5;
+        deltaPhiCalo                = ReturnDeltaPhiCalo(fClusterCutSelection);
         TString phiMinCut(fClusterCutSelection(GetClusterPhiMinCutPosition(fClusterCutSelection),1));
         TString phiMaxCut(fClusterCutSelection(GetClusterPhiMaxCutPosition(fClusterCutSelection),1));
-        minPhiCalo     = AnalyseClusterMinPhiCut(phiMinCut.Atoi());
-        maxPhiCalo     = AnalyseClusterMaxPhiCut(phiMaxCut.Atoi());
+        minPhiCalo                  = AnalyseClusterMinPhiCut(phiMinCut.Atoi());
+        maxPhiCalo                  = AnalyseClusterMaxPhiCut(phiMaxCut.Atoi());
     }
     
-    Double_t scaling        = 1./(2.*TMath::Pi());
-    Bool_t kDoPileup = kFALSE;
+    Double_t scaling                = 1./(2.*TMath::Pi());
+    if (isCalo && !isPCM) scaling   = 1./deltaPhiCalo;
+    
+    Bool_t kDoPileup                = kFALSE;
     if (fEstimatePileup.CompareTo("EstimateTrainPileUp") == 0)
-        kDoPileup = kTRUE;
+        kDoPileup                   = kTRUE;
     
     // Read True Combinatorial Background
     TString combinatorics[17]                               = { "Elec+Elec","Elec+Pion","Elec+Kaon","Elec+Proton","Elec+Muon","Pion+Pion","Pion+Kaon","Pion+Proton",
                                                                 "Pion+Muon","Kaon+Kaon","Kaon+Proton","Kaon+Muon","Proton+Proton","Proton+Muon","Muon+Muon","Rest","All"};
-
+    TString combinatoricsCalo[10]                           = { "Elec","Pion","Proton","Kaon","Neutron","K0s","Lambda","Muon","Rest","All"};
+    
     Color_t colorsCombinatorics[17]                         = { kAzure-1, kRed+1, kOrange+7, kMagenta+2, kRed-9,
                                                                 kBlue-6, kAzure+5, kPink, kCyan-3, kGreen-3,
                                                                 kSpring+9, kGreen+2, kBlue+2, kMagenta-6, kSpring+4,
-                                                                kCyan+2, 809
-                                                              };
+                                                                kCyan+2, 809};
+    Color_t colorsCombinatoricsCalo[10]                     = { kAzure-1, kRed+1, kOrange+7, kMagenta+2, kRed-9,
+                                                                kBlue-6, kAzure+5, kPink, kCyan-3, kGreen-3};
+    
     Style_t markersCombinatorics[17]                        = { 20, 21, 24, 25, 27,
                                                                 28, 29, 30, 33, 34, 
                                                                 20, 21, 24, 25, 27,
-                                                                28, 29
-                                                              };
+                                                                28, 29};
+    Style_t markersCombinatoricsCalo[10]                    = { 20, 21, 24, 25, 27,
+                                                                28, 29, 30, 33, 34};
+    
     TString decays[9]                                       = { "Pi0","Eta","Etap","Omega","Rho",
                                                                 "Phi","Sigma", "All decays","direct #gamma"
                                                               };
@@ -261,12 +297,22 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     // reading uncorrected quantities
     TString fileNameUncorrected             = nameUnCorrectedFile;
     TFile*  fileUnCorrected                 = new TFile(fileNameUncorrected.Data());
-    TH1D*   histoESDConvGammaPt             = (TH1D*)fileUnCorrected->Get("ESD_ConvGamma_Pt");
-    TH1D*   histoGamma_OriginalBin_Pt       = (TH1D*)fileUnCorrected->Get("ESD_ConvGamma_Pt_OriginalBinning");
     TH1D*   histoEventQuality               = (TH1D*)fileUnCorrected->Get("NEvents");
+    TH1D*   histoESDConvGammaPt             = NULL;
+    TH1D*   histoESDConvGammaPt_OriginalBin = NULL;
+    TH1D*   histoESDCaloGammaPt             = NULL;
+    TH1D*   histoESDCaloGammaPt_OriginalBin = NULL;
+    if (isPCM) {
+        histoESDConvGammaPt                 = (TH1D*)fileUnCorrected->Get("ESD_ConvGamma_Pt");
+        histoESDConvGammaPt_OriginalBin     = (TH1D*)fileUnCorrected->Get("ESD_ConvGamma_Pt_OriginalBinning");
+    }
+    if (isCalo) {
+        histoESDCaloGammaPt                 = (TH1D*)fileUnCorrected->Get("ESD_CaloGamma_Pt");
+        histoESDCaloGammaPt_OriginalBin     = (TH1D*)fileUnCorrected->Get("ESD_CaloGamma_Pt_OriginalBinning");
+    }
 
     // reading pileup correction factors
-    TFile *doPileUpCorr;
+    TFile *doPileUpCorr                     = NULL;
     if (kDoPileup){ 
         doPileUpCorr                        = new  TFile(Form("%s/%s/%s_%s_GammaConvV1DCAHistogramms%s_%s.root", cutSelection.Data(), option.Data(), nameMeson.Data(),
                                                               textPrefix2.Data(), optionPeriod.Data(), cutSelection.Data()));
@@ -276,14 +322,20 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         doPileUpCorr                        = 0;
     }    
     
-    TH1D*   histoESDConvGammaPtPileUp;
-    TH1D*   histoPhotonDCAzFullPt;
-    TH1D*   histoPileUpCorrectionFactor;
+    TH1D*   histoESDConvGammaPtPileUp       = NULL;
+    TH1D*   histoESDCaloGammaPtPileUp       = NULL;
+    TH1D*   histoPhotonDCAzFullPt           = NULL;
+    TH1D*   histoPileUpCorrectionFactor     = NULL;
     if(doPileUpCorr){
-        histoESDConvGammaPtPileUp           = (TH1D*)fileUnCorrected->Get("ESD_ConvGamma_Pt_PileUp");
+        if (isPCM) {
+            histoESDConvGammaPtPileUp       = (TH1D*)fileUnCorrected->Get("ESD_ConvGamma_Pt_PileUp");
+            histoPileUpCorrectionFactor     = (TH1D*)histoESDConvGammaPtPileUp->Clone("PileUpCorrectionFactor");
+            histoPileUpCorrectionFactor->Divide(histoPileUpCorrectionFactor,histoESDConvGammaPt,1,1,"B");
+        }
+        if (isCalo) {       // is this the best way to do this? how to deal with mode dependence in pileup correction (especially for PCM-Calo) ??
+            histoESDCaloGammaPtPileUp       = (TH1D*)fileUnCorrected->Get("ESD_CaloGamma_Pt_PileUp");
+        }
         histoPhotonDCAzFullPt               = (TH1D*)fileUnCorrected->Get("ESD_GammaPtDCAzBin_Full");
-        histoPileUpCorrectionFactor         = (TH1D*)histoESDConvGammaPtPileUp->Clone("PileUpCorrectionFactor");
-        histoPileUpCorrectionFactor->Divide(histoPileUpCorrectionFactor,histoESDConvGammaPt,1,1,"B");
     }
 
     // Calculate number of events used for normalization
@@ -308,26 +360,28 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TH1D*   histoGammaConvProb_MCPt             = NULL;
     TH1D*   histoGammaPrimaryRecoEff_Pt         = NULL;
     TH1D*   histoGammaPrimaryRecoEff_MCPt       = NULL;
-    
-    if ( isPCM ) {
+    if ( isPCM || isCalo ) {
         // reconstructed validated photons / all reconstructed photon candidates in MC
-        histoGammaPurity_Pt                 = (TH1D*)fileCorrections->Get("GammaPurity_Pt"); 
+        histoGammaPurity_Pt                     = (TH1D*)fileCorrections->Get("GammaPurity_Pt");
         // reconstructed validated primary photons / (all reconstructed photon candidates in MC - validated reconstructed secondary photons)
         // rescaling of histoGammaPurity_Pt for primary photons
-        histoGammaTruePurity_Pt             = (TH1D*)fileCorrections->Get("GammaTruePurity_Pt"); 
+        histoGammaTruePurity_Pt                 = (TH1D*)fileCorrections->Get("GammaTruePurity_Pt");
         // reconstructed validated primary photons / (all reconstructed photon candidates in MC - validated reconstructed secondary photons)
         // rescaling of histoGammaPurity_Pt for primary photons
         // rebinned
-        histoGammaTruePurity_OriginalBin_Pt = (TH1D*)fileCorrections->Get("GammaTruePurity_OriginalBinning_Pt"); 
-        // converted photons MC/ all generated photons (always based on primaries only)
-        histoGammaConvProb_MCPt             = (TH1D*)fileCorrections->Get("GammaConvProb_MCPt");
-        // reconstructed validated primary photons vs rec pt / converted MC photons vs MCpt 
-        // this reconstruction efficiency includes the transverse momentum resolution correction and the acceptance correction    
-        histoGammaPrimaryRecoEff_Pt         = (TH1D*)fileCorrections->Get("GammaPrimaryRecoEff_Pt");
-        // reconstructed validated primary photons vs MC pt / converted MC photons vs MCpt 
-        // this reconstruction efficiency includes the acceptance correction        
-        histoGammaPrimaryRecoEff_MCPt       = (TH1D*)fileCorrections->Get("GammaPrimaryRecoEff_MCPt");
+        histoGammaTruePurity_OriginalBin_Pt     = (TH1D*)fileCorrections->Get("GammaTruePurity_OriginalBinning_Pt");
+        // reconstructed validated primary photons vs rec pt / converted MC photons vs MCpt
+        // this reconstruction efficiency includes the transverse momentum resolution correction and the acceptance correction
+        histoGammaPrimaryRecoEff_Pt             = (TH1D*)fileCorrections->Get("GammaPrimaryRecoEff_Pt");
+        // reconstructed validated primary photons vs MC pt / converted MC photons vs MCpt
+        // this reconstruction efficiency includes the acceptance correction
+        histoGammaPrimaryRecoEff_MCPt           = (TH1D*)fileCorrections->Get("GammaPrimaryRecoEff_MCPt");
     }
+    if ( isPCM ) {
+        // converted photons MC/ all generated photons (always based on primaries only)
+        histoGammaConvProb_MCPt                 = (TH1D*)fileCorrections->Get("GammaConvProb_MCPt");
+    }
+    
     // Pileup histograms from MC, same definition as above just corrected for MC pileup contribution
     TH1D*   histoGammaPurity_PileUp_Pt;
     TH1D*   histoGammaTruePurity_PileUp_Pt;
@@ -339,7 +393,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoGammaRecoEff_PileUp_Pt             = (TH1D*)fileCorrections->Get("GammaRecoEff_PileUp_Pt");
         histoGammaPrimaryRecoEff_PileUp_Pt      = (TH1D*)fileCorrections->Get("GammaPrimaryRecoEff_PileUp_Pt");
     }
-        
+    
     TH1D*   histoGammaCaloPurity_Pt             = NULL;
     TH1D*   histoGammaCaloTruePurity_Pt         = NULL;
     TH1D*   histoGammaCaloTruePurity_OrigBin_Pt = NULL;
@@ -348,24 +402,22 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     // Calorimeter photons 
     if ( isPCM && isCalo ){
         // reconstructed validated photons / all reconstructed photon candidates in MC
-        histoGammaCaloPurity_Pt             = (TH1D*)fileCorrections->Get("GammaCaloPurity_Pt"); 
+        histoGammaCaloPurity_Pt                 = (TH1D*)fileCorrections->Get("GammaCaloPurity_Pt");
         // reconstructed validated primary photons / (all reconstructed photon candidates in MC - validated reconstructed secondary photons)
         // rescaling of histoGammaPurity_Pt for primary photons
-        histoGammaCaloTruePurity_Pt         = (TH1D*)fileCorrections->Get("GammaCaloTruePurity_Pt"); 
+        histoGammaCaloTruePurity_Pt             = (TH1D*)fileCorrections->Get("GammaCaloTruePurity_Pt");
         // reconstructed validated primary photons / (all reconstructed photon candidates in MC - validated reconstructed secondary photons)
         // rescaling of histoGammaPurity_Pt for primary photons
         // rebinned
-        histoGammaCaloTruePurity_OrigBin_Pt = (TH1D*)fileCorrections->Get("GammaCaloTruePurity_OriginalBinning_Pt"); 
+        histoGammaCaloTruePurity_OrigBin_Pt     = (TH1D*)fileCorrections->Get("GammaCaloTruePurity_OriginalBinning_Pt");
         // reconstructed validated primary photons vs rec pt / converted MC photons vs MCpt 
         // this reconstruction efficiency includes the transverse momentum resolution correction and the acceptance correction    
-        histoGammaCaloPrimaryRecoEff_Pt     = (TH1D*)fileCorrections->Get("GammaCaloPrimaryRecoEff_Pt");
+        histoGammaCaloPrimaryRecoEff_Pt         = (TH1D*)fileCorrections->Get("GammaCaloPrimaryRecoEff_Pt");
         // reconstructed validated primary photons vs MC pt / converted MC photons vs MCpt 
         // this reconstruction efficiency includes the acceptance correction        
-        histoGammaCaloPrimaryRecoEff_MCPt   = (TH1D*)fileCorrections->Get("GammaCaloPrimaryRecoEff_MCPt");
-    
+        histoGammaCaloPrimaryRecoEff_MCPt       = (TH1D*)fileCorrections->Get("GammaCaloPrimaryRecoEff_MCPt");
     }
     
-
     TH1D*   histoMCrecBackground_Pt                         = NULL;
     TH1D*   histoMCrecGamma_Pt                              = NULL;
     TH1D*   histoMCrecGamma_OriginalBin_Pt                  = NULL;
@@ -375,18 +427,20 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TH1D*   histoMCGammaConv_MCPt                           = NULL;
     TH1D*   histoGammaTrueConv_Pt                           = NULL;
     TH1D*   histoGammaTruePrimaryConv_Pt                    = NULL;
-    TH2D*   histoGammaTruePrimary_recPt_MCPt                = NULL;
-    if (isPCM){
+    TH2D*   histoGammaTruePrimaryConv_recPt_MCPt            = NULL;
+    if (isPCM ||isCalo){
         // reconstructed background in MC
         histoMCrecBackground_Pt                             = (TH1D*)fileCorrections->Get("MCrec_Background");
+        // MC input for all gamma, regardless of source
+        histoMCAllGamma_MCPt                                = (TH1D*)fileCorrections->Get("MC_AllGamma_MCPt");
+        histoMCAllGamma_OriginalBin_MCPt                    = (TH1D*)fileCorrections->Get("MC_AllGamma_OriginalBinning_MCPt");
+    }
+    if (isPCM) {
         // reconstructed photon candidates in MC
         histoMCrecGamma_Pt                                  = (TH1D*)fileCorrections->Get("MCrec_ConvGamma_Pt");
         histoMCrecGamma_OriginalBin_Pt                      = (TH1D*)fileCorrections->Get("MCrec_ConvGamma_OriginalBinning_Pt");
         // reconstructed photon candidates in MC - validated secondary photons
         histoMCrecPrimaryGamma_Pt                           = (TH1D*)fileCorrections->Get("MCrec_PrimaryConvGamma_Pt");
-        // MC input for all gamma, regardless of source
-        histoMCAllGamma_MCPt                                = (TH1D*)fileCorrections->Get("MC_AllGamma_MCPt");
-        histoMCAllGamma_OriginalBin_MCPt                    = (TH1D*)fileCorrections->Get("MC_AllGamma_OriginalBinning_MCPt");
         // MC converted photons regardless of source
         histoMCGammaConv_MCPt                               = (TH1D*)fileCorrections->Get("MC_ConvGamma_MCPt");
         // validated reconstructed photons
@@ -394,36 +448,39 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         // validated reconstructed primary photons
         histoGammaTruePrimaryConv_Pt                        = (TH1D*)fileCorrections->Get("TruePrimaryConvGamma_Pt");
         // response matrix for photons recPt vs MC pt
-        histoGammaTruePrimary_recPt_MCPt                    = (TH2D*)fileCorrections->Get("TruePrimaryConvGamma_recPt_MCPt");
+        histoGammaTruePrimaryConv_recPt_MCPt                = (TH2D*)fileCorrections->Get("TruePrimaryConvGamma_recPt_MCPt");
         // response matrix for photons recPt vs MC pt rebinned
     }
     
     TH1D*   histoMCrecCaloBackground_Pt                     = NULL;
     TH1D*   histoMCrecGammaCalo_Pt                          = NULL;
+    TH1D*   histoMCrecGammaCalo_OriginalBin_Pt              = NULL;
     TH1D*   histoMCrecPrimaryGammaCalo_Pt                   = NULL;
     TH1D*   histoMCAllGammaCalo_MCPt                        = NULL;
     TH1D*   histoMCAllGammaCalo_OriginalBin_MCPt            = NULL;
-    TH1D*   histoGammaCaloTrue_Pt                           = NULL;
-    TH1D*   histoGammaCaloTruePrimary_Pt                    = NULL;
-    TH2D*   histoGammaCaloTruePrimary_recPt_MCPt            = NULL;
+    TH1D*   histoGammaTrueCalo_Pt                           = NULL;
+    TH1D*   histoGammaTruePrimaryCalo_Pt                    = NULL;
+    TH2D*   histoGammaTruePrimaryCalo_recPt_MCPt            = NULL;
     if (isPCM && isCalo){
         // reconstructed background in MC
         histoMCrecCaloBackground_Pt                         = (TH1D*)fileCorrections->Get("MCrec_Calo_Background");
-        // reconstructed photon candidates in MC
-        histoMCrecGammaCalo_Pt                              = (TH1D*)fileCorrections->Get("MCrec_CaloGamma_Pt");
-        // reconstructed photon candidates in MC - validated secondary photons
-        histoMCrecPrimaryGammaCalo_Pt                       = (TH1D*)fileCorrections->Get("MCrec_PrimaryCaloGamma_Pt");
         // MC input for all gamma, regardless of source
         histoMCAllGammaCalo_MCPt                            = (TH1D*)fileCorrections->Get("MC_AllGammaEMCAcc_MCPt");
         histoMCAllGammaCalo_OriginalBin_MCPt                = (TH1D*)fileCorrections->Get("MC_AllGammaEMCAcc_OriginalBinning_MCPt");
-        // validated reconstructed photons
-        histoGammaCaloTrue_Pt                               = (TH1D*)fileCorrections->Get("TrueCaloGamma_Pt");
-        // validated reconstructed primary photons
-        histoGammaCaloTruePrimary_Pt                        = (TH1D*)fileCorrections->Get("TruePrimaryCaloGamma_Pt");
-        // response matrix for photons recPt vs MC pt
-        histoGammaCaloTruePrimary_recPt_MCPt                = (TH2D*)fileCorrections->Get("TruePrimaryCaloGamma_recPt_MCPt");
     }
-    
+    if (isCalo) {
+        // reconstructed photon candidates in MC
+        histoMCrecGammaCalo_Pt                              = (TH1D*)fileCorrections->Get("MCrec_CaloGamma_Pt");
+        histoMCrecGammaCalo_OriginalBin_Pt                  = (TH1D*)fileCorrections->Get("MCrec_CaloGamma_OriginalBinning_Pt");
+        // reconstructed photon candidates in MC - validated secondary photons
+        histoMCrecPrimaryGammaCalo_Pt                       = (TH1D*)fileCorrections->Get("MCrec_PrimaryCaloGamma_Pt");
+        // validated reconstructed photons
+        histoGammaTrueCalo_Pt                               = (TH1D*)fileCorrections->Get("TrueCaloGamma_Pt");
+        // validated reconstructed primary photons
+        histoGammaTruePrimaryCalo_Pt                        = (TH1D*)fileCorrections->Get("TruePrimaryCaloGamma_Pt");
+        // response matrix for photons recPt vs MC pt
+        histoGammaTruePrimaryCalo_recPt_MCPt                = (TH2D*)fileCorrections->Get("TruePrimaryCaloGamma_recPt_MCPt");
+    }
     
     // Pileup histograms, same definition as above just corrected for MC pileup contributions
     TH1D*   histoMCrecGamma_PileUp_Pt;
@@ -435,33 +492,52 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             histoPileUpCorrectionFactorMC->Divide(histoPileUpCorrectionFactorMC,histoMCrecGamma_Pt,1,1,"B");
         }
     }
-    
-    TH1F*   histoEventQualityMC                                 = (TH1F*)fileCorrections->Get("NEvents");
 
-    TH1D**  histoPhotonSource_MCPt                              = new TH1D*[9];
-    
+    TH1D**  histoPhotonSource_MCPt                          = new TH1D*[9];
     for(Int_t i = 0;i<7;i++){
-        cout << __LINE__ << endl;
-        histoPhotonSource_MCPt[i]                               = (TH1D*)fileCorrections->Get(Form("MC_DecayGamma%s_Pt",decays[i].Data()));
+        histoPhotonSource_MCPt[i]                           = (TH1D*)fileCorrections->Get(Form("MC_DecayGamma%s_Pt",decays[i].Data()));
         histoPhotonSource_MCPt[i]->Sumw2();
-        if (i == 0) histoPhotonSource_MCPt[7]                   = (TH1D*)histoPhotonSource_MCPt[0]->Clone("MC_DecayGammaAll_Pt");
+        if (i == 0) histoPhotonSource_MCPt[7]               = (TH1D*)histoPhotonSource_MCPt[0]->Clone("MC_DecayGammaAll_Pt");
         else histoPhotonSource_MCPt[7]->Add(histoPhotonSource_MCPt[i]);
     }
-    cout << __LINE__ << endl;
-    histoPhotonSource_MCPt[8]                                   = (TH1D*)histoMCAllGamma_OriginalBin_MCPt->Clone("MC_DirectPhotons");
-    cout << __LINE__ << endl;
+    histoPhotonSource_MCPt[8]                               = (TH1D*)histoMCAllGamma_OriginalBin_MCPt->Clone("MC_DirectPhotons");
     histoPhotonSource_MCPt[8]->Sumw2();
     histoPhotonSource_MCPt[8]->Add(histoPhotonSource_MCPt[7],-1);
-    
-    TH1D**  histoCombinatorialSpecies_Pt                        = new TH1D*[17];
-    for(Int_t i = 0;i<17;i++){
-        histoCombinatorialSpecies_Pt[i]                         = (TH1D*)fileCorrections->Get(Form("ESD_TrueComb%s_Pt",combinatorics[i].Data()));
-        histoCombinatorialSpecies_Pt[i]->SetMinimum(1e-10);
+
+    TH1D**  histoCombinatorialSpecies_Pt                    = NULL;
+    TH1D**  histoCombinatorialSpeciesCalo_Pt                = NULL;
+    if (isPCM) {
+        histoCombinatorialSpecies_Pt                        = new TH1D*[17];
+        for(Int_t i = 0;i<17;i++){
+            histoCombinatorialSpecies_Pt[i]                 = (TH1D*)fileCorrections->Get(Form("ESD_TrueComb%s_Pt",combinatorics[i].Data()));
+            histoCombinatorialSpecies_Pt[i]->SetMinimum(1e-10);
+        }
     }
+    if (isCalo) {
+        histoCombinatorialSpeciesCalo_Pt                    = new TH1D*[10];
+        for(Int_t i = 0;i<10;i++){
+            histoCombinatorialSpeciesCalo_Pt[i]             = (TH1D*)fileCorrections->Get(Form("ESD_TrueComb%s_Pt",combinatoricsCalo[i].Data()));
+            histoCombinatorialSpeciesCalo_Pt[i]->SetMinimum(1e-10);
+        }
+    }
+    
     // Read secondary contamination histos
-    TH1D*   histoGammaTrueSecConv_Pt                            = (TH1D*)fileCorrections->Get("TrueSecondaryConvGamma_Pt");
-    TH1D*   histoGammaTrueSecConvGammaFromXFromK0s_Pt           = (TH1D*)fileCorrections->Get("TrueSecondaryConvGammaFromXFromK0s_Pt");
-    TH1D*   histoGammaTrueSecConvGammaFromXFromLambda_Pt        = (TH1D*)fileCorrections->Get("TrueSecondaryConvGammaFromXFromLambda_Pt");
+    TH1D*   histoGammaTrueSecConv_Pt                            = NULL;
+    TH1D*   histoGammaTrueSecConvGammaFromXFromK0s_Pt           = NULL;
+    TH1D*   histoGammaTrueSecConvGammaFromXFromLambda_Pt        = NULL;
+    if (isPCM) {
+        histoGammaTrueSecConv_Pt                                = (TH1D*)fileCorrections->Get("TrueSecondaryConvGamma_Pt");
+        histoGammaTrueSecConvGammaFromXFromK0s_Pt               = (TH1D*)fileCorrections->Get("TrueSecondaryConvGammaFromXFromK0s_Pt");
+        histoGammaTrueSecConvGammaFromXFromLambda_Pt            = (TH1D*)fileCorrections->Get("TrueSecondaryConvGammaFromXFromLambda_Pt");
+    }
+    TH1D*   histoGammaTrueSecCalo_Pt                            = NULL;
+    TH1D*   histoGammaTrueSecCaloGammaFromXFromK0s_Pt           = NULL;
+    TH1D*   histoGammaTrueSecCaloGammaFromXFromLambda_Pt        = NULL;
+    if (isCalo) {
+        histoGammaTrueSecCalo_Pt                                = (TH1D*)fileCorrections->Get("TrueSecondaryCaloGamma_Pt");
+        histoGammaTrueSecCaloGammaFromXFromK0s_Pt               = (TH1D*)fileCorrections->Get("TrueSecondaryCaloGammaFromXFromK0s_Pt");
+        histoGammaTrueSecCaloGammaFromXFromLambda_Pt            = (TH1D*)fileCorrections->Get("TrueSecondaryCaloGammaFromXFromLambda_Pt");
+    }
     TH1D*   histoFracAllGammaToSec_Pt                           = (TH1D*)fileCorrections->Get("FracAllGammaToSec");
     TH1D*   histoFracAllGammaToSecFromXFromK0s_Pt               = (TH1D*)fileCorrections->Get("FracAllGammaToSecFromXFromK0s");
     TH1D*   histoFracAllGammaToSecFromXFromLambda_Pt            = (TH1D*)fileCorrections->Get("FracAllGammaToSecFromXFromLambda");
@@ -477,7 +553,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoFracAllGammaToSecFromXFromK0s_PileUp_Pt            = (TH1D*)fileCorrections->Get("FracAllGammaToSecFromXFromK0sPileUp");
         histoMCrecPhotonDCAzFullPt                              = (TH1D*)fileCorrections->Get("MCrec_GammaPtDCAzBin_Full");     // category must be adapted
     }
+    
     // Determine number of events in MC
+    TH1F*   histoEventQualityMC                                 = (TH1F*)fileCorrections->Get("NEvents");
     Float_t nEvtMC;
     if (option.CompareTo("PbPb_2.76TeV") == 0){
         nEvtMC = histoEventQualityMC->GetBinContent(1);
@@ -486,22 +564,29 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     }
 
     // Determine maximum pT
-    Double_t maxPtGamma                                     = histoESDConvGammaPt->GetXaxis()->GetBinUpEdge(histoESDConvGammaPt->GetNbinsX());
-    
-    
+    Double_t maxPtGamma;
+    if (isPCM || !isCalo) maxPtGamma                            = histoESDConvGammaPt->GetXaxis()->GetBinUpEdge(histoESDConvGammaPt->GetNbinsX());
+    if (isCalo || !isPCM) maxPtGamma                            = histoESDCaloGammaPt->GetXaxis()->GetBinUpEdge(histoESDCaloGammaPt->GetNbinsX());
+
     // Proper Scaling Background
-    TH1D *ScalingGammaBackground_Pt                         = (TH1D*) histoESDConvGammaPt->Clone("ScalingGammaBackground_Pt");
-    ScalingGammaBackground_Pt->Divide(ScalingGammaBackground_Pt, histoMCrecGamma_Pt, 1., 1, "");
+    TH1D *ScalingGammaBackground_Pt                             = NULL;
+    if (isPCM || !isCalo) {
+        ScalingGammaBackground_Pt                               = (TH1D*) histoESDConvGammaPt->Clone("ScalingGammaBackground_Pt");
+        ScalingGammaBackground_Pt->Divide(ScalingGammaBackground_Pt, histoMCrecGamma_Pt, 1., 1, "");
+    }
+    if (isCalo || !isPCM) {
+        ScalingGammaBackground_Pt                               = (TH1D*) histoESDCaloGammaPt->Clone("ScalingGammaBackground_Pt");
+        ScalingGammaBackground_Pt->Divide(ScalingGammaBackground_Pt, histoMCrecGammaCalo_Pt, 1., 1, "");
+    }
     ScalingGammaBackground_Pt->Scale(nEvtMC/nEvt);
     histoMCrecBackground_Pt->Scale(1./nEvtMC);
-    TH1D *histoGammaMCBackground_Pt                         = (TH1D*)histoMCrecBackground_Pt->Clone("histoGammaMCBackground_Pt");
+    TH1D *histoGammaMCBackground_Pt                             = (TH1D*)histoMCrecBackground_Pt->Clone("histoGammaMCBackground_Pt");
     histoMCrecBackground_Pt->Multiply(ScalingGammaBackground_Pt);
 
-    //**********************************************************************************
+    //**********************************************************************************  // other modes ?!
     //******************** PrimVtx DCA Plot ********************************************
     //**********************************************************************************
-
-    if( doPileUpCorr && isPCM ){      
+    if( doPileUpCorr && isPCM ){
         TCanvas *canvasPileUpCorrFactor = GetAndSetCanvas("canvasPileUpCorrFactor");
 
             DrawGammaSetMarker(histoPileUpCorrectionFactor, 20, 3, 1, 1);
@@ -525,44 +610,79 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //**********************************************************************************
     //******************** Background Plot *********************************************
     //**********************************************************************************
-    TCanvas *canvasBackground = GetAndSetCanvas("canvasBackground");
+    TCanvas *canvasBackground               = GetAndSetCanvas("canvasBackground");
     canvasBackground->SetLogy();
 
-        TH1D* histoGammaRawSpectrum_PtMC = (TH1D*) histoMCrecGamma_Pt->Clone("histoGammaRawSpectrum_PtMC");
-        histoGammaRawSpectrum_PtMC->Scale(1./nEvtMC);
-        TH1D* histoGammaRawSpectrum_Pt = (TH1D*) histoESDConvGammaPt->Clone("histoGammaRawSpectrum_Pt");
-        histoGammaRawSpectrum_Pt->Scale(1./nEvt);
+        TH1D* histoGammaRawSpectrum_PtMC    = NULL;
+        TH1D* histoGammaRawSpectrum_Pt      = NULL;
+        TLegend* legendBackground           = GetAndSetLegend(0.6,0.7,2,1);
+        if (isPCM || !isCalo) {
+            histoGammaRawSpectrum_PtMC      = (TH1D*) histoMCrecGamma_Pt->Clone("histoGammaRawSpectrum_PtMC");
+            histoGammaRawSpectrum_PtMC->Scale(1./nEvtMC);
+            histoGammaRawSpectrum_Pt        = (TH1D*) histoESDConvGammaPt->Clone("histoGammaRawSpectrum_Pt");
+            histoGammaRawSpectrum_Pt->Scale(1./nEvt);
+            
+            DrawGammaSetMarker(histoGammaRawSpectrum_Pt, 20, 1.0, 1, 1);
+            DrawGammaSetMarker(histoMCrecBackground_Pt, 20, 1.0, 2, 2);
+            
+            SetHistogramm(histoMCrecBackground_Pt,"#it{p}_{T} (GeV/#it{c})",Form("Background for #gamma in |#eta| < %g",eta));
+            SetHistogramm(histoGammaRawSpectrum_Pt,"#it{p}_{T} (GeV/#it{c})","Raw yield",1e-8,5);
+            
+            histoGammaRawSpectrum_Pt->DrawCopy("");
+            histoMCrecBackground_Pt->Draw("same");
+        }
+        if (isCalo || !isPCM) {
+            histoGammaRawSpectrum_PtMC      = (TH1D*) histoMCrecGammaCalo_Pt->Clone("histoGammaRawSpectrum_PtMC");
+            histoGammaRawSpectrum_PtMC->Scale(1./nEvtMC);
+            histoGammaRawSpectrum_Pt        = (TH1D*) histoESDCaloGammaPt->Clone("histoGammaRawSpectrum_Pt");
+            histoGammaRawSpectrum_Pt->Scale(1./nEvt);
+            
+            DrawGammaSetMarker(histoGammaRawSpectrum_Pt, 20, 1.0, 1, 1);
+            DrawGammaSetMarker(histoMCrecBackground_Pt, 20, 1.0, 2, 2);
+            
+            SetHistogramm(histoMCrecBackground_Pt,"#it{p}_{T} (GeV/#it{c})",Form("Background for #gamma in |#eta| < %g",eta));
+            SetHistogramm(histoGammaRawSpectrum_Pt,"#it{p}_{T} (GeV/#it{c})","Raw yield",1e-10,1e-2);
+            
+            histoGammaRawSpectrum_Pt->DrawCopy("");
+            histoMCrecBackground_Pt->Draw("same");
+        }
 
-        DrawGammaSetMarker(histoGammaRawSpectrum_Pt, 20, 1.0, 1, 1);
-        DrawGammaSetMarker(histoMCrecBackground_Pt, 20, 1.0, 2, 2);
-
-        SetHistogramm(histoMCrecBackground_Pt,"#it{p}_{T} (GeV/#it{c})",Form("Background for #gamma in |#eta| < %g",eta));
-        SetHistogramm(histoGammaRawSpectrum_Pt,"#it{p}_{T} (GeV/#it{c})","Raw yield",1e-8,5);
-
-        histoGammaRawSpectrum_Pt->DrawCopy("");
-        histoMCrecBackground_Pt->Draw("same");
-        
-        TLegend* legendBackground = GetAndSetLegend(0.6,0.7,2,1);
         legendBackground->AddEntry(histoGammaRawSpectrum_Pt,"raw #gamma spectrum","pl");
         legendBackground->AddEntry(histoMCrecBackground_Pt,"#gamma background","pl");
         legendBackground->Draw();
-
+    
         // labeling
         PutProcessLabelAndEnergyOnPlot( 0.6, 0.95, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
-        
+
     canvasBackground->SaveAs(Form("%s/%s_Background_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasBackground;
     
-    //****************************************************************************************** 
+    //******************************************************************************************
     //************************ Calculating background from Secondaries *************************
-    //****************************************************************************************** 
-    TH1D *histoSecondaryGammaSpecPt                 = (TH1D*) histoESDConvGammaPt->Clone("SecondaryGammaSpecPt");
-    TH1D *histoSecondaryGammaFromXFromK0sSpecPt     = (TH1D*) histoESDConvGammaPt->Clone("SecondaryGammaSpecFromXFromK0sPt");
+    //******************************************************************************************
+    TH1D *histoSecondaryGammaSpecPt                 = NULL;
+    TH1D *histoSecondaryGammaFromXFromK0sSpecPt     = NULL;
+    if (isPCM || !isCalo) {
+        histoSecondaryGammaSpecPt                 = (TH1D*)histoESDConvGammaPt->Clone("SecondaryGammaSpecPt");
+        histoSecondaryGammaFromXFromK0sSpecPt     = (TH1D*)histoESDConvGammaPt->Clone("SecondaryGammaSpecFromXFromK0sPt");
+    }
+    if (isCalo || !isPCM) {
+        histoSecondaryGammaSpecPt                 = (TH1D*)histoESDCaloGammaPt->Clone("SecondaryGammaSpecPt");
+        histoSecondaryGammaFromXFromK0sSpecPt     = (TH1D*)histoESDCaloGammaPt->Clone("SecondaryGammaSpecFromXFromK0sPt");
+    }
     histoSecondaryGammaSpecPt->Multiply(histoFracAllGammaToSec_Pt);
     histoSecondaryGammaFromXFromK0sSpecPt->Multiply(histoFracAllGammaToSecFromXFromK0s_Pt);
     
-    histoGammaTrueSecConv_Pt->Scale(1./nEvtMC);
-    histoGammaTrueSecConvGammaFromXFromK0s_Pt->Scale(1./nEvtMC);
+    if (isPCM || !isCalo) {
+        histoGammaTrueSecConv_Pt->Scale(1./nEvtMC);
+        histoGammaTrueSecConvGammaFromXFromK0s_Pt->Scale(1./nEvtMC);
+        histoGammaTrueSecConvGammaFromXFromLambda_Pt->Scale(1./nEvtMC);
+    }
+    if (isCalo || !isPCM) {
+        histoGammaTrueSecCalo_Pt->Scale(1./nEvtMC);
+        histoGammaTrueSecCaloGammaFromXFromK0s_Pt->Scale(1./nEvtMC);
+        histoGammaTrueSecCaloGammaFromXFromLambda_Pt->Scale(1./nEvtMC);
+    }
     histoSecondaryGammaSpecPt->Scale(1./nEvt);
     histoSecondaryGammaFromXFromK0sSpecPt->Scale(1./nEvt);
     histoSecondaryGammaFromXFromK0sSpecPt->Scale(doubleAddFactorK0s);
@@ -580,32 +700,56 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoSecondaryGammaFromXFromK0sSpecPtPileUp->Scale(doubleAddFactorK0s);
     }
     
-    // plotting secondary spectra
-    TCanvas *canvasSecSpec = GetAndSetCanvas("canvasSecSpec");
+    //**********************************************************************************
+    //******************** Secondary Spectra Plot **************************************
+    //**********************************************************************************
+    TCanvas *canvasSecSpec          = GetAndSetCanvas("canvasSecSpec");
     canvasSecSpec->SetLogy();
+    
+        TLegend* legendSecSpec      = GetAndSetLegend(0.45,0.7,5);
+
+        if (isPCM || !isCalo) {
+            SetHistogramm(histoGammaTrueSecConvGammaFromXFromK0s_Pt,"#it{p}_{T} (GeV/#it{c})","Secondary Converted #gamma");
+            SetHistogramm(histoGammaTrueSecConvGammaFromXFromLambda_Pt,"#it{p}_{T} (GeV/#it{c})","Secondary Converted #gamma");
+            SetHistogramm(histoGammaTrueSecConv_Pt,"#it{p}_{T} (GeV/#it{c})","Secondary Converted #gamma",1e-10,1e-1);
+            DrawGammaSetMarker(histoGammaTrueSecConv_Pt, 20, 1.0, kRed+1, kRed+1);
+            DrawGammaSetMarker(histoGammaTrueSecConvGammaFromXFromK0s_Pt, 24, 1.0, kRed-6, kRed-6);
+            DrawGammaSetMarker(histoGammaTrueSecConvGammaFromXFromLambda_Pt, 21, 1.0, kRed-6, kRed-6);
+
+            histoGammaTrueSecConv_Pt->Draw();
+            histoGammaTrueSecConvGammaFromXFromK0s_Pt->Draw("same");
+            histoGammaTrueSecConvGammaFromXFromLambda_Pt->Draw("same");
+            
+            legendSecSpec->AddEntry(histoGammaTrueSecConv_Pt,"Raw MC Sec #gamma Spectrum","pl");
+            legendSecSpec->AddEntry(histoGammaTrueSecConvGammaFromXFromK0s_Pt,"Raw MC Sec #gamma from X from K^{0}_{s}","pl");
+            legendSecSpec->AddEntry(histoGammaTrueSecConvGammaFromXFromLambda_Pt,"Raw MC Sec #gamma from X from #Lambda","pl");
+        }
+    
+        if (isCalo || !isPCM) {
+            SetHistogramm(histoGammaTrueSecCaloGammaFromXFromK0s_Pt,"#it{p}_{T} (GeV/#it{c})","Secondary Converted #gamma");
+            SetHistogramm(histoGammaTrueSecCaloGammaFromXFromLambda_Pt,"#it{p}_{T} (GeV/#it{c})","Secondary Converted #gamma");
+            SetHistogramm(histoGammaTrueSecCalo_Pt,"#it{p}_{T} (GeV/#it{c})","Secondary Converted #gamma",1e-10,1e-1);
+            DrawGammaSetMarker(histoGammaTrueSecCalo_Pt, 20, 1.0, kRed+1, kRed+1);
+            DrawGammaSetMarker(histoGammaTrueSecCaloGammaFromXFromK0s_Pt, 24, 1.0, kRed-6, kRed-6);
+            DrawGammaSetMarker(histoGammaTrueSecCaloGammaFromXFromLambda_Pt, 21, 1.0, kRed-6, kRed-6);
+        
+            histoGammaTrueSecCalo_Pt->Draw();
+            histoGammaTrueSecCaloGammaFromXFromK0s_Pt->Draw("same");
+            histoGammaTrueSecCaloGammaFromXFromLambda_Pt->Draw("same");
+            
+            legendSecSpec->AddEntry(histoGammaTrueSecCalo_Pt,"Raw MC Sec #gamma Spectrum","pl");
+            legendSecSpec->AddEntry(histoGammaTrueSecCaloGammaFromXFromK0s_Pt,"Raw MC Sec #gamma from X from K^{0}_{s}","pl");
+            legendSecSpec->AddEntry(histoGammaTrueSecCaloGammaFromXFromLambda_Pt,"Raw MC Sec #gamma from X from #Lambda","pl");
+        }
 
         SetHistogramm(histoSecondaryGammaSpecPt, "#it{p}_{T} (GeV/#it{c})","Secondary Converted #gamma");
         SetHistogramm(histoSecondaryGammaFromXFromK0sSpecPt,"#it{p}_{T} (GeV/#it{c})","Secondary Converted #gamma");
-        SetHistogramm(histoGammaTrueSecConvGammaFromXFromK0s_Pt,"#it{p}_{T} (GeV/#it{c})","Secondary Converted #gamma");
-        SetHistogramm(histoGammaTrueSecConvGammaFromXFromLambda_Pt,"#it{p}_{T} (GeV/#it{c})","Secondary Converted #gamma");
-        SetHistogramm(histoGammaTrueSecConv_Pt,"#it{p}_{T} (GeV/#it{c})","Secondary Converted #gamma",1e-10,1e-1);
-
-        DrawGammaSetMarker(histoGammaTrueSecConv_Pt, 20, 1.0, kRed+1, kRed+1);
-        DrawGammaSetMarker(histoGammaTrueSecConvGammaFromXFromK0s_Pt, 24, 1.0, kRed-6, kRed-6);
-        DrawGammaSetMarker(histoGammaTrueSecConvGammaFromXFromLambda_Pt, 21, 1.0, kRed-6, kRed-6);
         DrawGammaSetMarker(histoSecondaryGammaSpecPt, 21, 1.0, kBlue+1, kBlue+1);
         DrawGammaSetMarker(histoSecondaryGammaFromXFromK0sSpecPt, 25, 1.0, kBlue-6, kBlue-6);
 
-        histoGammaTrueSecConv_Pt->Draw();
-        histoGammaTrueSecConvGammaFromXFromK0s_Pt->Draw("same");
-        histoGammaTrueSecConvGammaFromXFromLambda_Pt->Draw("same");
         histoSecondaryGammaSpecPt->Draw("same");
         histoSecondaryGammaFromXFromK0sSpecPt->DrawCopy("same");
 
-        TLegend* legendSecSpec = GetAndSetLegend(0.45,0.7,5);
-        legendSecSpec->AddEntry(histoGammaTrueSecConv_Pt,"Raw MC Sec #gamma Spectrum","pl");
-        legendSecSpec->AddEntry(histoGammaTrueSecConvGammaFromXFromK0s_Pt,"Raw MC Sec #gamma from X from K^{0}_{s}","pl");
-        legendSecSpec->AddEntry(histoGammaTrueSecConvGammaFromXFromLambda_Pt,"Raw MC Sec #gamma from X from #Lambda","pl");
         legendSecSpec->AddEntry(histoSecondaryGammaSpecPt,"Raw data Sec #gamma Spectrum ","pl");
         legendSecSpec->AddEntry(histoSecondaryGammaFromXFromK0sSpecPt,"Raw data Sec #gamma from X from K^{0}_{s}","pl");
         legendSecSpec->AddEntry((TObject*)0, "(scaled with K^{0}_{s} factor)","");
@@ -616,7 +760,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     canvasSecSpec->SaveAs(Form("%s/%s_SecondarySpectra_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasSecSpec;
     
-    // plotting secondary fractions
+    //**********************************************************************************
+    //******************** Secondary Fractions Plot ************************************
+    //**********************************************************************************
     TCanvas *canvasSecFrac = GetAndSetCanvas("canvasSecFrac");
     canvasSecFrac->SetTopMargin(0.035);
 
@@ -642,14 +788,14 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         
     canvasSecFrac->SaveAs(Form("%s/%s_SecondaryGammaFraction_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasSecFrac;
-
+    
     //**********************************************************************************
     //******************** Purity Plot *************************************************
     //**********************************************************************************
     // Plain Purity plotted
     TCanvas *canvasPurity = GetAndSetCanvas("canvasPurity");
 
-        if ( isPCM ){
+        if ( (isPCM && !isCalo) || (isCalo && !isPCM) ){
             DrawGammaSetMarker(histoGammaPurity_Pt, 24, 1.0, kRed+2, kRed+2);
             DrawGammaSetMarker(histoGammaTruePurity_Pt, 20, 1.0, 1, 1);
             if(doPileUpCorr)DrawGammaSetMarker(histoGammaTruePurity_PileUp_Pt, 20, 1.0, kBlue+2, kBlue+2);
@@ -672,8 +818,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             PutProcessLabelAndEnergyOnPlot( 0.18, 0.5, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
         
             canvasPurity->SaveAs(Form("%s/%s_Purity_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
-        } 
-        
+        }
         if ( isPCM && isCalo ){
             DrawGammaSetMarker(histoGammaCaloPurity_Pt, 24, 1.0, kRed+2, kRed+2);
             DrawGammaSetMarker(histoGammaCaloTruePurity_Pt, 20, 1.0, 1, 1);
@@ -692,11 +837,11 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             canvasPurity->SaveAs(Form("%s/%s_PurityCalo_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
         }
     delete canvasPurity;
-
+    
+    //**********************************************************************************
+    //******************** Conversion Prob Plot ****************************************
+    //**********************************************************************************
     if ( isPCM ){
-        //**********************************************************************************
-        //******************** Conversion Prob Plot ****************************************
-        //**********************************************************************************
         TCanvas *canvasConvProb = GetAndSetCanvas("canvasConvProb");
             DrawGammaSetMarker(histoGammaConvProb_MCPt, 20, 1.0, 1, 1);
             SetHistogramm(histoGammaConvProb_MCPt, "#it{p}_{T} (GeV/#it{c})",Form("#it{P}_{conv} in |#eta| < %g",eta), 0.04, 0.10);
@@ -716,11 +861,10 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     }
 
     //**********************************************************************************
-    //******************** Reconstructin Eff Plot **************************************
+    //******************** Reconstruction Eff Plot *************************************
     //**********************************************************************************
-    // drawing reco Efficiency
     TCanvas *canvasRecoEff = GetAndSetCanvas("canvasRecoEff");
-        if ( isPCM ){
+        if ( (isPCM && !isCalo) || (isCalo && !isPCM) ){
             DrawGammaSetMarker(histoGammaPrimaryRecoEff_MCPt, 20, 1.0, 1, 1);
             SetHistogramm(histoGammaPrimaryRecoEff_MCPt,"#it{p}_{T,MC} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
             histoGammaPrimaryRecoEff_MCPt->Draw();
@@ -740,149 +884,152 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         
         }    
     delete canvasRecoEff;
-    
-    // draw comparison of reco efficiencies
+
+    //**********************************************************************************
+    //******************** Reconstruction Eff Comparison Plot **************************
+    //**********************************************************************************
     TCanvas* canvasCompRecoEff = GetAndSetCanvas("canvasCompRecoEff");
-    DrawGammaCanvasSettings( canvasCompRecoEff,0.1, 0.015, 0.02, 0.09);
-    TPad* padCompRecoEff = new TPad("padCompRecoEff", "", 0., 0.25, 1., 1.,-1, -1, -2);
-    DrawGammaPadSettings( padCompRecoEff, 0.10, 0.015, 0.02, 0.);
-    padCompRecoEff->Draw();
-    TPad* padBinCompRecoEffRatio = new TPad("padBinCompRecoEffRatio", "", 0., 0., 1., 0.25,-1, -1, -2);
-    DrawGammaPadSettings( padBinCompRecoEffRatio,  0.1, 0.015, 0.0, 0.3);
-    padBinCompRecoEffRatio->Draw();
+        DrawGammaCanvasSettings( canvasCompRecoEff,0.1, 0.015, 0.02, 0.09);
+        TPad* padCompRecoEff = new TPad("padCompRecoEff", "", 0., 0.25, 1., 1.,-1, -1, -2);
+        DrawGammaPadSettings( padCompRecoEff, 0.10, 0.015, 0.02, 0.);
+        padCompRecoEff->Draw();
+        TPad* padBinCompRecoEffRatio = new TPad("padBinCompRecoEffRatio", "", 0., 0., 1., 0.25,-1, -1, -2);
+        DrawGammaPadSettings( padBinCompRecoEffRatio,  0.1, 0.015, 0.0, 0.3);
+        padBinCompRecoEffRatio->Draw();
 
-    if (isPCM){
-        padCompRecoEff->cd();
-        SetHistogramm(histoGammaPrimaryRecoEff_MCPt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
-        SetHistogramm(histoGammaPrimaryRecoEff_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0.05, 1.0);
-        if(doPileUpCorr)SetHistogramm(histoGammaPrimaryRecoEff_PileUp_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
+        if ( (isPCM && !isCalo) || (isCalo && !isPCM) ){
+            padCompRecoEff->cd();
+            SetHistogramm(histoGammaPrimaryRecoEff_MCPt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
+            SetHistogramm(histoGammaPrimaryRecoEff_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0.05, 1.0);
+            if(doPileUpCorr)SetHistogramm(histoGammaPrimaryRecoEff_PileUp_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
 
-        DrawGammaSetMarker(histoGammaPrimaryRecoEff_MCPt, 20, 1.0, kBlack, kBlack);
-        DrawGammaSetMarker(histoGammaPrimaryRecoEff_Pt, 24, 1.0, kBlue+1, kBlue+1);
-        if(doPileUpCorr)DrawGammaSetMarker(histoGammaPrimaryRecoEff_PileUp_Pt, 20, 1.0, 5, 5);
+            DrawGammaSetMarker(histoGammaPrimaryRecoEff_MCPt, 20, 1.0, kBlack, kBlack);
+            DrawGammaSetMarker(histoGammaPrimaryRecoEff_Pt, 24, 1.0, kBlue+1, kBlue+1);
+            if(doPileUpCorr)DrawGammaSetMarker(histoGammaPrimaryRecoEff_PileUp_Pt, 20, 1.0, 5, 5);
 
-        histoGammaPrimaryRecoEff_Pt->Draw("e1");
-        if(doPileUpCorr)histoGammaPrimaryRecoEff_PileUp_Pt->Draw("e1,same");
-        histoGammaPrimaryRecoEff_MCPt->Draw("same,e1");
+            histoGammaPrimaryRecoEff_Pt->Draw("e1");
+            if(doPileUpCorr)histoGammaPrimaryRecoEff_PileUp_Pt->Draw("e1,same");
+            histoGammaPrimaryRecoEff_MCPt->Draw("same,e1");
 
-        TLegend* legendCompRecoEff;
-        if(doPileUpCorr)
-            legendCompRecoEff = GetAndSetLegend(0.15 ,0.05,3,1);
-        else
-            legendCompRecoEff = GetAndSetLegend(0.15 ,0.05,2,1);
-        legendCompRecoEff->SetTextSize(0.04);
-        legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_MCPt,"MC pT Reconstruction Efficiency (unfolding)");
-        legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_Pt,"Reconstruction Efficiency for primary  #gamma");
-        if(doPileUpCorr)legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_PileUp_Pt,"Reconstruction Efficiency for primary  #gamma Pile Up");
-        legendCompRecoEff->Draw();
+            TLegend* legendCompRecoEff;
+            if(doPileUpCorr)
+                legendCompRecoEff = GetAndSetLegend(0.15 ,0.05,3,1);
+            else
+                legendCompRecoEff = GetAndSetLegend(0.15 ,0.05,2,1);
+            legendCompRecoEff->SetTextSize(0.04);
+            legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_MCPt,"MC pT Reconstruction Efficiency (unfolding)");
+            legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_Pt,"Reconstruction Efficiency for primary  #gamma");
+            if(doPileUpCorr)legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_PileUp_Pt,"Reconstruction Efficiency for primary  #gamma Pile Up");
+            legendCompRecoEff->Draw();
         
-        PutProcessLabelAndEnergyOnPlot( 0.75, 0.95, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
-    }
-
-    TH1D* histoGammaResolCorrEff_Pt = NULL;
-    if (isPCM){
-        histoGammaResolCorrEff_Pt = (TH1D*)histoGammaPrimaryRecoEff_Pt->Clone("histoGammaResolCorrEff_Pt");
-        histoGammaResolCorrEff_Pt->Divide(histoGammaPrimaryRecoEff_MCPt);
-
-        padBinCompRecoEffRatio->cd();
-        TH1D* histoGammaPrimaryRecoEff_PileUp_PtRatio;
-        if(doPileUpCorr){
-            histoGammaPrimaryRecoEff_PileUp_PtRatio = (TH1D*)histoGammaPrimaryRecoEff_PileUp_Pt->Clone("GammaPrimaryRecoEffRatioPileUp");
-            histoGammaPrimaryRecoEff_PileUp_PtRatio->Divide(histoGammaPrimaryRecoEff_MCPt);
+            PutProcessLabelAndEnergyOnPlot( 0.75, 0.95, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
         }
-        SetStyleHistoTH1ForGraphs(  histoGammaResolCorrEff_Pt, "#it{p}_{T} (GeV/#it{c})","#frac{Reco Eff x}{Primary MC Reco Eff}" , 0.14, 0.15,
-                                    0.12, 0.10,  0.85, 0.4, 510, 505);
-        histoGammaResolCorrEff_Pt->GetYaxis()->SetRangeUser(0.7,1.25);
 
-        histoGammaResolCorrEff_Pt->DrawCopy("e1");
-        if(doPileUpCorr)histoGammaPrimaryRecoEff_PileUp_PtRatio->DrawCopy("e1,same");
+        TH1D* histoGammaResolCorrEff_Pt = NULL;
+        if ( (isPCM && !isCalo) || (isCalo && !isPCM) ) {
+            histoGammaResolCorrEff_Pt = (TH1D*)histoGammaPrimaryRecoEff_Pt->Clone("histoGammaResolCorrEff_Pt");
+            histoGammaResolCorrEff_Pt->Divide(histoGammaPrimaryRecoEff_MCPt);
+
+            padBinCompRecoEffRatio->cd();
+            TH1D* histoGammaPrimaryRecoEff_PileUp_PtRatio;
+            if(doPileUpCorr){
+                histoGammaPrimaryRecoEff_PileUp_PtRatio = (TH1D*)histoGammaPrimaryRecoEff_PileUp_Pt->Clone("GammaPrimaryRecoEffRatioPileUp");
+                histoGammaPrimaryRecoEff_PileUp_PtRatio->Divide(histoGammaPrimaryRecoEff_MCPt);
+            }
+            SetStyleHistoTH1ForGraphs(  histoGammaResolCorrEff_Pt, "#it{p}_{T} (GeV/#it{c})","#frac{Reco Eff x}{Primary MC Reco Eff}" , 0.14, 0.15,
+                                        0.12, 0.10,  0.85, 0.4, 510, 505);
+            histoGammaResolCorrEff_Pt->GetYaxis()->SetRangeUser(0.7,1.25);
+
+            histoGammaResolCorrEff_Pt->DrawCopy("e1");
+            if(doPileUpCorr)histoGammaPrimaryRecoEff_PileUp_PtRatio->DrawCopy("e1,same");
         
-        DrawGammaLines(0., maxPtGamma,1, 1,0.5);
+            DrawGammaLines(0., maxPtGamma,1, 1,0.5,kGray+2,2);
+            
+            canvasCompRecoEff ->SaveAs(Form("%s/%s_CompRecEff_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
+        }
+        if (isPCM && isCalo){
+            padCompRecoEff->cd();
+            SetHistogramm(histoGammaCaloPrimaryRecoEff_MCPt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
+            SetHistogramm(histoGammaCaloPrimaryRecoEff_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0.05, 1.0);
+        
+            DrawGammaSetMarker(histoGammaCaloPrimaryRecoEff_MCPt, 20, 1.0, kBlack, kBlack);
+            DrawGammaSetMarker(histoGammaCaloPrimaryRecoEff_Pt, 24, 1.0, kBlue+1, kBlue+1);
+        
+            histoGammaCaloPrimaryRecoEff_Pt->Draw("e1");
+            histoGammaCaloPrimaryRecoEff_MCPt->Draw("same,e1");
+
+            TLegend* legendCompRecoEff = GetAndSetLegend(0.15 ,0.05,3,1);
+            legendCompRecoEff->SetTextSize(0.04);
+            legendCompRecoEff->AddEntry(histoGammaCaloPrimaryRecoEff_MCPt,"MC pT Reconstruction Efficiency (unfolding)");
+            legendCompRecoEff->AddEntry(histoGammaCaloPrimaryRecoEff_Pt,"Reconstruction Efficiency for primary  #gamma");
+            legendCompRecoEff->Draw();
+        
+            PutProcessLabelAndEnergyOnPlot( 0.75, 0.95, 0.035, cent, textMeasurement, detectionProcess2, 42, 0.03);
+        }
+
+        TH1D* histoGammaCaloResolCorrEff_Pt = NULL;
+        if (isPCM && isCalo){
+            histoGammaCaloResolCorrEff_Pt = (TH1D*)histoGammaCaloPrimaryRecoEff_Pt->Clone("histoGammaCaloResolCorrEff_Pt");
+            histoGammaCaloResolCorrEff_Pt->Divide(histoGammaCaloPrimaryRecoEff_MCPt);
+
+            padBinCompRecoEffRatio->cd();
+            SetStyleHistoTH1ForGraphs(  histoGammaCaloResolCorrEff_Pt, "#it{p}_{T} (GeV/#it{c})","#frac{Reco Eff x}{Primary MC Reco Eff}" , 0.14, 0.15,
+                                        0.12, 0.10,  0.85, 0.4, 510, 505);
+            histoGammaCaloResolCorrEff_Pt->GetYaxis()->SetRangeUser(0.7,1.25);
+
+            histoGammaCaloResolCorrEff_Pt->DrawCopy("e1");
+        
+            DrawGammaLines(0., maxPtGamma,1, 1,0.5,kGray+2,2);
     
-        canvasCompRecoEff ->SaveAs(Form("%s/%s_CompRecEff_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
-    }
-    if (isPCM && isCalo){
-        padCompRecoEff->cd();
-        SetHistogramm(histoGammaCaloPrimaryRecoEff_MCPt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
-        SetHistogramm(histoGammaCaloPrimaryRecoEff_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0.05, 1.0);
-        
-        DrawGammaSetMarker(histoGammaCaloPrimaryRecoEff_MCPt, 20, 1.0, kBlack, kBlack);
-        DrawGammaSetMarker(histoGammaCaloPrimaryRecoEff_Pt, 24, 1.0, kBlue+1, kBlue+1);
-        
-        histoGammaCaloPrimaryRecoEff_Pt->Draw("e1");
-        histoGammaCaloPrimaryRecoEff_MCPt->Draw("same,e1");
-
-        TLegend* legendCompRecoEff = GetAndSetLegend(0.15 ,0.05,3,1);
-        legendCompRecoEff->SetTextSize(0.04);
-        legendCompRecoEff->AddEntry(histoGammaCaloPrimaryRecoEff_MCPt,"MC pT Reconstruction Efficiency (unfolding)");
-        legendCompRecoEff->AddEntry(histoGammaCaloPrimaryRecoEff_Pt,"Reconstruction Efficiency for primary  #gamma");
-        legendCompRecoEff->Draw();
-        
-        PutProcessLabelAndEnergyOnPlot( 0.75, 0.95, 0.035, cent, textMeasurement, detectionProcess2, 42, 0.03);
-    }
-
-    TH1D* histoGammaCaloResolCorrEff_Pt = NULL;
-    if (isPCM && isCalo){
-        histoGammaCaloResolCorrEff_Pt = (TH1D*)histoGammaCaloPrimaryRecoEff_Pt->Clone("histoGammaCaloResolCorrEff_Pt");
-        histoGammaCaloResolCorrEff_Pt->Divide(histoGammaCaloPrimaryRecoEff_MCPt);
-
-        padBinCompRecoEffRatio->cd();
-        SetStyleHistoTH1ForGraphs(  histoGammaCaloResolCorrEff_Pt, "#it{p}_{T} (GeV/#it{c})","#frac{Reco Eff x}{Primary MC Reco Eff}" , 0.14, 0.15,  
-                                    0.12, 0.10,  0.85, 0.4, 510, 505);
-        histoGammaCaloResolCorrEff_Pt->GetYaxis()->SetRangeUser(0.7,1.25);
-
-        histoGammaCaloResolCorrEff_Pt->DrawCopy("e1");
-        
-        DrawGammaLines(0., maxPtGamma,1, 1,0.5);
-    
-        canvasCompRecoEff ->SaveAs(Form("%s/%s_CompCaloRecEff_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
-    }
+            canvasCompRecoEff ->SaveAs(Form("%s/%s_CompCaloRecEff_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
+        }
         
     delete padCompRecoEff;
     delete padBinCompRecoEffRatio;
     delete canvasCompRecoEff;
-    
+
     //**********************************************************************************
     //******************** Response Matrix for detector resolution *********************
     //**********************************************************************************
     if (isPCM){
-        SetStyleHistoTH2ForGraphs(  histoGammaTruePrimary_recPt_MCPt, "Reconstructed #it{p}_{T} (GeV/#it{c})","MC #it{p}_{T} (GeV/#it{c})", 0.035, 0.04,  
+        SetStyleHistoTH2ForGraphs(  histoGammaTruePrimaryConv_recPt_MCPt, "Reconstructed #it{p}_{T} (GeV/#it{c})","MC #it{p}_{T} (GeV/#it{c})", 0.035, 0.04,  
                                     0.035, 0.04, 0.9, 1.0, 510, 510);
-        histoGammaTruePrimary_recPt_MCPt->GetYaxis()->SetRangeUser(0,25);
-        histoGammaTruePrimary_recPt_MCPt->GetXaxis()->SetRangeUser(0,25);
+        histoGammaTruePrimaryConv_recPt_MCPt->GetYaxis()->SetRangeUser(0,25);
+        histoGammaTruePrimaryConv_recPt_MCPt->GetXaxis()->SetRangeUser(0,25);
     }
-    if (isPCM && isCalo){
-        SetStyleHistoTH2ForGraphs(  histoGammaCaloTruePrimary_recPt_MCPt, "Reconstructed #it{p}_{T} (GeV/#it{c})","MC #it{p}_{T} (GeV/#it{c})", 0.035, 0.04,  
+    if (isCalo){
+        SetStyleHistoTH2ForGraphs(  histoGammaTruePrimaryCalo_recPt_MCPt, "Reconstructed #it{p}_{T} (GeV/#it{c})","MC #it{p}_{T} (GeV/#it{c})", 0.035, 0.04,  
                                     0.035, 0.04, 0.9, 1.0, 510, 510);
-        histoGammaCaloTruePrimary_recPt_MCPt->GetYaxis()->SetRangeUser(0,25);
-        histoGammaCaloTruePrimary_recPt_MCPt->GetXaxis()->SetRangeUser(0,25);
-        
+        histoGammaTruePrimaryCalo_recPt_MCPt->GetYaxis()->SetRangeUser(0,25);
+        histoGammaTruePrimaryCalo_recPt_MCPt->GetXaxis()->SetRangeUser(0,25);
     }
-    // Plotting response matrix
+
+    //**********************************************************************************
+    //******************** Response Matrix Plot ****************************************
+    //**********************************************************************************
     TCanvas * canvasResponseMatrix = new TCanvas("canvasResponseMatrix","",480,440);  // gives the page size
     DrawGammaCanvasSettings( canvasResponseMatrix, 0.09, 0.105, 0.02, 0.085);    
     canvasResponseMatrix->SetLogz(1);
     canvasResponseMatrix->cd();
 
         if (isPCM){
-            histoGammaTruePrimary_recPt_MCPt->Draw("colz");
+            histoGammaTruePrimaryConv_recPt_MCPt->Draw("colz");
             PutProcessLabelAndEnergyOnPlot( 0.18, 0.95, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
             canvasResponseMatrix->SaveAs(Form("%s/%s_ResponseMatrix_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
         } 
         
-        if (isPCM && isCalo){
-            histoGammaCaloTruePrimary_recPt_MCPt->Draw("colz");
+        if (isCalo){
+            histoGammaTruePrimaryCalo_recPt_MCPt->Draw("colz");
             PutProcessLabelAndEnergyOnPlot( 0.18, 0.95, 0.035, cent, textMeasurement, detectionProcess2, 42, 0.03);
             canvasResponseMatrix->SaveAs(Form("%s/%s_ResponseMatrixCalo_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
             
         }    
     
 //     delete canvasResponseMatrix;
-    
+
     //**********************************************************************************
     //************************ Unfolding of inclusive gamma spectrum *******************
     //**********************************************************************************
-    
     TH1D* histoGammaCorrUnfoldReso_Pt                   = NULL;
     TH1D* histoGammaCorrUnfoldReso_BinByBin_Pt          = NULL;
     TH1D* histoGammaCorrUnfoldResoPileUp_Pt             = NULL;
@@ -893,24 +1040,24 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     // do the same with MC rec gammas as a sanity check
     TH1D* histoMCrecGammaCorr_Pt                        = NULL;
 
-    if (isPCM){
+    if (isPCM && !isCalo){
         // determine secondary contribution in orginal binning
-        TH1D *histoSecondaryGammaSpecPtOriginalBin             = (TH1D*) histoGamma_OriginalBin_Pt->Clone("SecondaryGammaSpecPt");
-        TH1D *histoSecondaryGammaFromXFromK0sSpecPtOriginalBin = (TH1D*) histoGamma_OriginalBin_Pt->Clone("SecondaryGammaSpecFromXFromK0sPt");
+        TH1D *histoSecondaryGammaSpecPtOriginalBin             = (TH1D*) histoESDConvGammaPt_OriginalBin->Clone("SecondaryGammaSpecPt");
+        TH1D *histoSecondaryGammaFromXFromK0sSpecPtOriginalBin = (TH1D*) histoESDConvGammaPt_OriginalBin->Clone("SecondaryGammaSpecFromXFromK0sPt");
         histoSecondaryGammaSpecPtOriginalBin->Multiply(histoFracAllGammaToSec_OriginalBin_Pt);
         histoSecondaryGammaFromXFromK0sSpecPtOriginalBin->Multiply(histoFracAllGammaToSecFromXFromK0s_OriginalBin_Pt);
         histoSecondaryGammaFromXFromK0sSpecPtOriginalBin->Scale(doubleAddFactorK0s);
 
         //subtract secondary contribution from inclusive spectrum
-        CorrectGammaSecAndPurity(histoGamma_OriginalBin_Pt, histoSecondaryGammaSpecPtOriginalBin, histoSecondaryGammaFromXFromK0sSpecPtOriginalBin, histoGammaTruePurity_OriginalBin_Pt );
+        CorrectGammaSecAndPurity(histoESDConvGammaPt_OriginalBin, histoSecondaryGammaSpecPtOriginalBin, histoSecondaryGammaFromXFromK0sSpecPtOriginalBin, histoGammaTruePurity_OriginalBin_Pt );
         CorrectGammaSecAndPurity(histoMCrecGamma_OriginalBin_Pt, histoSecondaryGammaSpecPtOriginalBin, histoSecondaryGammaFromXFromK0sSpecPtOriginalBin, histoGammaTruePurity_OriginalBin_Pt );
         
         // create histograms for unfolding for different techniques
-        histoGammaCorrUnfoldReso_Pt             = (TH1D*) histoGamma_OriginalBin_Pt->Clone("histoGammaCorrUnfoldReso_Pt");
+        histoGammaCorrUnfoldReso_Pt             = (TH1D*) histoESDConvGammaPt_OriginalBin->Clone("histoGammaCorrUnfoldReso_Pt");
         histoMCrecGammaCorr_Pt                  = (TH1D*) histoMCrecGamma_OriginalBin_Pt->Clone("GammaSpecCorrESDMC");
-        histoGammaCorrUnfoldReso_BinByBin_Pt    = (TH1D*) histoGamma_OriginalBin_Pt->Clone("histoGammaCorrUnfoldReso_BinByBin_Pt");
-        // TH1D *histoGammaCorrUnfoldReso_SvD_Pt       = (TH1D*) histoGamma_OriginalBin_Pt->Clone("histoGammaCorrUnfoldReso_SvD_Pt");
-        // TH1D *histoGammaCorrUnfoldReso_TUnfold_Pt   = (TH1D*) histoGamma_OriginalBin_Pt->Clone("histoGammaCorrUnfoldReso_TUnfold_Pt");
+        histoGammaCorrUnfoldReso_BinByBin_Pt    = (TH1D*) histoESDConvGammaPt_OriginalBin->Clone("histoGammaCorrUnfoldReso_BinByBin_Pt");
+        // TH1D *histoGammaCorrUnfoldReso_SvD_Pt       = (TH1D*) histoESDConvGammaPt_OriginalBin->Clone("histoGammaCorrUnfoldReso_SvD_Pt");
+        // TH1D *histoGammaCorrUnfoldReso_TUnfold_Pt   = (TH1D*) histoESDConvGammaPt_OriginalBin->Clone("histoGammaCorrUnfoldReso_TUnfold_Pt");
 
         // Unfolding setup:
         // RooUnfoldResponse constructor - create from already-filled histograms
@@ -920,7 +1067,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         // in "truth" for unmeasured events (inefficiency).
         // "measured" and/or "truth" can be specified as 0 (1D case only) or an empty histograms (no entries) as a shortcut
         // to indicate, respectively, no fakes and/or no inefficiency.
-        RooUnfoldResponse   response(0,0,histoGammaTruePrimary_recPt_MCPt);
+        RooUnfoldResponse   response(0,0,histoGammaTruePrimaryConv_recPt_MCPt);
         
         // unfold with different techniques, but same response matrix
         RooUnfoldBayes      unfold_Spectrum (&response,histoGammaCorrUnfoldReso_Pt, 4);
@@ -933,12 +1080,12 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoGammaCorrUnfoldReso_Pt             = (TH1D*) unfold_Spectrum.Hreco();
         histoMCrecGammaCorr_Pt                  = (TH1D*) unfold_SpectrumMCrec.Hreco();
         histoMCrecGammaCorr_Pt                  = RebinTH1D(histoMCrecGammaCorr_Pt,histoESDConvGammaPt,kTRUE);
-        histoGammaResolCorrUnfold_Pt            = (TH1D*) histoGamma_OriginalBin_Pt->Clone("histoGammaResolCorrUnfold_Pt");
+        histoGammaResolCorrUnfold_Pt            = (TH1D*) histoESDConvGammaPt_OriginalBin->Clone("histoGammaResolCorrUnfold_Pt");
         histoGammaResolCorrUnfold_Pt->Divide(histoGammaCorrUnfoldReso_Pt);    
         histoGammaCorrUnfoldReso_Pt             = RebinTH1D(histoGammaCorrUnfoldReso_Pt,histoESDConvGammaPt,kTRUE);
 
         histoGammaCorrUnfoldReso_BinByBin_Pt    = (TH1D*) unfold_SpectrumBinByBin.Hreco();
-        histoGammaResolCorrUnfold_BinByBin_Pt   = (TH1D*) histoGamma_OriginalBin_Pt->Clone("histoGammaResolCorrUnfold_BinByBin_Pt");
+        histoGammaResolCorrUnfold_BinByBin_Pt   = (TH1D*) histoESDConvGammaPt_OriginalBin->Clone("histoGammaResolCorrUnfold_BinByBin_Pt");
         histoGammaResolCorrUnfold_BinByBin_Pt->Divide(histoGammaCorrUnfoldReso_BinByBin_Pt);
 
         histoGammaCorrUnfoldReso_BinByBin_Pt    = RebinTH1D(histoGammaCorrUnfoldReso_BinByBin_Pt,histoESDConvGammaPt,kTRUE);
@@ -969,8 +1116,74 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         DrawGammaSetMarker(histoMCrecGammaCorr_Pt, 20, 1.0, kGreen-1, kGreen-1);
         //SetHistogramm(histoGammaCorrUnfoldReso_SvD_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}");
         //SetHistogramm(histoGammaCorrUnfoldReso_TUnfold_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}");
-    }    
+    }
+    
+    if (isCalo && !isPCM) {
+        // determine secondary contribution in orginal binning
+        TH1D *histoSecondaryGammaSpecPtOriginalBin             = (TH1D*) histoESDCaloGammaPt_OriginalBin->Clone("SecondaryGammaSpecPt");
+        TH1D *histoSecondaryGammaFromXFromK0sSpecPtOriginalBin = (TH1D*) histoESDCaloGammaPt_OriginalBin->Clone("SecondaryGammaSpecFromXFromK0sPt");
+        histoSecondaryGammaSpecPtOriginalBin->Multiply(histoFracAllGammaToSec_OriginalBin_Pt);
+        histoSecondaryGammaFromXFromK0sSpecPtOriginalBin->Multiply(histoFracAllGammaToSecFromXFromK0s_OriginalBin_Pt);
+        histoSecondaryGammaFromXFromK0sSpecPtOriginalBin->Scale(doubleAddFactorK0s);
 
+        //subtract secondary contribution from inclusive spectrum
+        CorrectGammaSecAndPurity(histoESDCaloGammaPt_OriginalBin, histoSecondaryGammaSpecPtOriginalBin, histoSecondaryGammaFromXFromK0sSpecPtOriginalBin, histoGammaTruePurity_OriginalBin_Pt );
+        CorrectGammaSecAndPurity(histoMCrecGammaCalo_OriginalBin_Pt, histoSecondaryGammaSpecPtOriginalBin, histoSecondaryGammaFromXFromK0sSpecPtOriginalBin, histoGammaTruePurity_OriginalBin_Pt );
+        
+        // create histograms for unfolding for different techniques
+        histoGammaCorrUnfoldReso_Pt             = (TH1D*) histoESDCaloGammaPt_OriginalBin->Clone("histoGammaCorrUnfoldReso_Pt");
+        histoMCrecGammaCorr_Pt                  = (TH1D*) histoMCrecGammaCalo_OriginalBin_Pt->Clone("GammaSpecCorrESDMC");
+        histoGammaCorrUnfoldReso_BinByBin_Pt    = (TH1D*) histoESDCaloGammaPt_OriginalBin->Clone("histoGammaCorrUnfoldReso_BinByBin_Pt");
+
+        // Unfolding setup:
+        // RooUnfoldResponse constructor - create from already-filled histograms
+        // "response" gives the response matrix, measured X truth.
+        // "measured" and "truth" give the projections of "response" onto the X-axis and Y-axis respectively,
+        // but with additional entries in "measured" for measurements with no corresponding truth (fakes/background) and
+        // in "truth" for unmeasured events (inefficiency).
+        // "measured" and/or "truth" can be specified as 0 (1D case only) or an empty histograms (no entries) as a shortcut
+        // to indicate, respectively, no fakes and/or no inefficiency.
+        RooUnfoldResponse   response(0,0,histoGammaTruePrimaryCalo_recPt_MCPt);
+
+        // unfold with different techniques, but same response matrix
+        RooUnfoldBayes      unfold_Spectrum (&response,histoGammaCorrUnfoldReso_Pt, 4);
+        RooUnfoldBayes      unfold_SpectrumMCrec (&response,histoMCrecGammaCorr_Pt, 4);
+        RooUnfoldBinByBin   unfold_SpectrumBinByBin (&response,histoGammaCorrUnfoldReso_BinByBin_Pt);
+        
+        // get histograms from RooUnfold and rebin them
+        histoGammaCorrUnfoldReso_Pt             = (TH1D*) unfold_Spectrum.Hreco();
+        histoMCrecGammaCorr_Pt                  = (TH1D*) unfold_SpectrumMCrec.Hreco();
+        histoMCrecGammaCorr_Pt                  = RebinTH1D(histoMCrecGammaCorr_Pt,histoESDCaloGammaPt,kTRUE);
+        histoGammaResolCorrUnfold_Pt            = (TH1D*) histoESDCaloGammaPt_OriginalBin->Clone("histoGammaResolCorrUnfold_Pt");
+        histoGammaResolCorrUnfold_Pt->Divide(histoGammaCorrUnfoldReso_Pt);
+        histoGammaCorrUnfoldReso_Pt             = RebinTH1D(histoGammaCorrUnfoldReso_Pt,histoESDCaloGammaPt,kTRUE);
+
+        histoGammaCorrUnfoldReso_BinByBin_Pt    = (TH1D*) unfold_SpectrumBinByBin.Hreco();
+        histoGammaResolCorrUnfold_BinByBin_Pt   = (TH1D*) histoESDCaloGammaPt_OriginalBin->Clone("histoGammaResolCorrUnfold_BinByBin_Pt");
+        histoGammaResolCorrUnfold_BinByBin_Pt->Divide(histoGammaCorrUnfoldReso_BinByBin_Pt);
+        
+        histoGammaCorrUnfoldReso_BinByBin_Pt    = RebinTH1D(histoGammaCorrUnfoldReso_BinByBin_Pt,histoESDCaloGammaPt,kTRUE);
+
+        // Correct inclusive photon spectrum with conversion probability & reco efficiency (both versus MC pt)
+        histoGammaCorrUnfoldReso_PtNotCorrected = (TH1D*) histoGammaCorrUnfoldReso_Pt->Clone("GammaUnfoldNotCorrected");
+        CorrectGammaUnfoldResol(histoGammaCorrUnfoldReso_Pt, histoGammaPrimaryRecoEff_MCPt, deltaEtaCalo, scaling, nEvt);
+        CorrectGammaUnfoldResol(histoMCrecGammaCorr_Pt, histoGammaPrimaryRecoEff_MCPt, deltaEtaCalo, scaling, nEvt);
+        CorrectGammaUnfoldResol(histoGammaCorrUnfoldReso_BinByBin_Pt, histoGammaPrimaryRecoEff_MCPt, deltaEtaCalo, scaling, nEvt);
+
+        // Correct inclusive photon spectrum for pileup contribution
+        if(doPileUpCorr){
+            histoGammaCorrUnfoldResoPileUp_Pt         = (TH1D*) histoGammaCorrUnfoldReso_Pt->Clone("GammaUnfoldPileUp");
+            histoGammaCorrUnfoldResoPileUp_Pt->Multiply(histoPileUpCorrectionFactor);
+        }
+
+        SetHistogramm(histoGammaCorrUnfoldReso_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}");
+        DrawGammaSetMarker(histoGammaCorrUnfoldReso_Pt, 20, 1.0, 1, 1);
+        SetHistogramm(histoGammaCorrUnfoldReso_BinByBin_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}");
+        DrawGammaSetMarker(histoGammaCorrUnfoldReso_BinByBin_Pt, 24, 1.0, kBlue, kBlue);
+        SetHistogramm(histoMCrecGammaCorr_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}");
+        DrawGammaSetMarker(histoMCrecGammaCorr_Pt, 20, 1.0, kGreen-1, kGreen-1);
+    }
+    
     TH1D *histoGammaCaloCorrUnfoldReso_Pt                   = NULL;
     TH1D *histoGammaCaloCorrUnfoldReso_BinByBin_Pt          = NULL;
     TH1D *histoGammaCaloCorrUnfoldResoPileUp_Pt             = NULL;
@@ -980,21 +1193,21 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     
 //     if (isPCM && isCalo){
 //         // determine secondary contribution in orginal binning
-//         TH1D *histoSecondaryGammaSpecPtOriginalBin             = (TH1D*) histoGamma_OriginalBin_Pt->Clone("SecondaryGammaSpecPt");
-//         TH1D *histoSecondaryGammaFromXFromK0sSpecPtOriginalBin = (TH1D*) histoGamma_OriginalBin_Pt->Clone("SecondaryGammaSpecFromXFromK0sPt");
+//         TH1D *histoSecondaryGammaSpecPtOriginalBin             = (TH1D*) histoESDConvGammaPt_OriginalBin->Clone("SecondaryGammaSpecPt");
+//         TH1D *histoSecondaryGammaFromXFromK0sSpecPtOriginalBin = (TH1D*) histoESDConvGammaPt_OriginalBin->Clone("SecondaryGammaSpecFromXFromK0sPt");
 //         histoSecondaryGammaSpecPtOriginalBin->Multiply(histoFracAllGammaToSec_OriginalBin_Pt);
 //         histoSecondaryGammaFromXFromK0sSpecPtOriginalBin->Multiply(histoFracAllGammaToSecFromXFromK0s_OriginalBin_Pt);
 //         histoSecondaryGammaFromXFromK0sSpecPtOriginalBin->Scale(doubleAddFactorK0s);
 // 
 //         //subtract secondary contribution from inclusive spectrum
-//         CorrectGammaSecAndPurity(histoGamma_OriginalBin_Pt, histoSecondaryGammaSpecPtOriginalBin, histoSecondaryGammaFromXFromK0sSpecPtOriginalBin, histoGammaTruePurity_OriginalBin_Pt );
+//         CorrectGammaSecAndPurity(histoESDConvGammaPt_OriginalBin, histoSecondaryGammaSpecPtOriginalBin, histoSecondaryGammaFromXFromK0sSpecPtOriginalBin, histoGammaTruePurity_OriginalBin_Pt );
 //         
 //         
 //         // create histograms for unfolding for different techniques
-//         histoGammaCorrUnfoldReso_Pt             = (TH1D*) histoGamma_OriginalBin_Pt->Clone("histoGammaCorrUnfoldReso_Pt");
-//         histoGammaCorrUnfoldReso_BinByBin_Pt    = (TH1D*) histoGamma_OriginalBin_Pt->Clone("histoGammaCorrUnfoldReso_BinByBin_Pt");
-//         // TH1D *histoGammaCorrUnfoldReso_SvD_Pt       = (TH1D*) histoGamma_OriginalBin_Pt->Clone("histoGammaCorrUnfoldReso_SvD_Pt");
-//         // TH1D *histoGammaCorrUnfoldReso_TUnfold_Pt   = (TH1D*) histoGamma_OriginalBin_Pt->Clone("histoGammaCorrUnfoldReso_TUnfold_Pt");
+//         histoGammaCorrUnfoldReso_Pt             = (TH1D*) histoESDConvGammaPt_OriginalBin->Clone("histoGammaCorrUnfoldReso_Pt");
+//         histoGammaCorrUnfoldReso_BinByBin_Pt    = (TH1D*) histoESDConvGammaPt_OriginalBin->Clone("histoGammaCorrUnfoldReso_BinByBin_Pt");
+//         // TH1D *histoGammaCorrUnfoldReso_SvD_Pt       = (TH1D*) histoESDConvGammaPt_OriginalBin->Clone("histoGammaCorrUnfoldReso_SvD_Pt");
+//         // TH1D *histoGammaCorrUnfoldReso_TUnfold_Pt   = (TH1D*) histoESDConvGammaPt_OriginalBin->Clone("histoGammaCorrUnfoldReso_TUnfold_Pt");
 // 
 //         // Unfolding setup:
 //         // RooUnfoldResponse constructor - create from already-filled histograms
@@ -1004,7 +1217,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 //         // in "truth" for unmeasured events (inefficiency).
 //         // "measured" and/or "truth" can be specified as 0 (1D case only) or an empty histograms (no entries) as a shortcut
 //         // to indicate, respectively, no fakes and/or no inefficiency.
-//         RooUnfoldResponse   response(0,0,histoGammaTruePrimary_recPt_MCPt);
+//         RooUnfoldResponse   response(0,0,histoGammaTruePrimaryConv_recPt_MCPt);
 //         
 //         // unfold with different techniques, but same response matrix
 //         RooUnfoldBayes      unfold_Spectrum (&response,histoGammaCorrUnfoldReso_Pt, 4);
@@ -1014,12 +1227,12 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 //         
 //         // get histograms from RooUnfold and rebin them 
 //         histoGammaCorrUnfoldReso_Pt             = (TH1D*) unfold_Spectrum.Hreco();
-//         histoGammaResolCorrUnfold_Pt            = (TH1D*) histoGamma_OriginalBin_Pt->Clone("histoGammaResolCorrUnfold_Pt");
+//         histoGammaResolCorrUnfold_Pt            = (TH1D*) histoESDConvGammaPt_OriginalBin->Clone("histoGammaResolCorrUnfold_Pt");
 //         histoGammaResolCorrUnfold_Pt->Divide(histoGammaCorrUnfoldReso_Pt);    
 //         histoGammaCorrUnfoldReso_Pt             = RebinTH1D(histoGammaCorrUnfoldReso_Pt,histoESDConvGammaPt,kTRUE);
 // 
 //         histoGammaCorrUnfoldReso_BinByBin_Pt    = (TH1D*) unfold_SpectrumBinByBin.Hreco();
-//         histoGammaResolCorrUnfold_BinByBin_Pt   = (TH1D*) histoGamma_OriginalBin_Pt->Clone("histoGammaResolCorrUnfold_BinByBin_Pt");
+//         histoGammaResolCorrUnfold_BinByBin_Pt   = (TH1D*) histoESDConvGammaPt_OriginalBin->Clone("histoGammaResolCorrUnfold_BinByBin_Pt");
 //         histoGammaResolCorrUnfold_BinByBin_Pt->Divide(histoGammaCorrUnfoldReso_BinByBin_Pt);
 // 
 //         histoGammaCorrUnfoldReso_BinByBin_Pt    = RebinTH1D(histoGammaCorrUnfoldReso_BinByBin_Pt,histoESDConvGammaPt,kTRUE);
@@ -1049,12 +1262,18 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 //         //SetHistogramm(histoGammaCorrUnfoldReso_TUnfold_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}");
 //     }    
     
-    
-    // Plotting corrected photon spectrum
+    //**********************************************************************************
+    //******************** Corrected Photon Spectrum Plot ******************************
+    //**********************************************************************************
     TCanvas *canvasCorrGammaSpecUnfold          = GetAndSetCanvas("canvasCorrGammaSpecUnfold");
     canvasCorrGammaSpecUnfold->SetLogy();
-        TH1D *Dummy                             = (TH1D*)histoESDConvGammaPt->Clone("Dummy");
-        SetHistogramm(Dummy,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",1e-8,10);
+        TH1D* Dummy                             = NULL;
+        if (isPCM && !isCalo) Dummy             = (TH1D*)histoESDConvGammaPt->Clone("Dummy");
+        if (isCalo && !isPCM) Dummy             = (TH1D*)histoESDCaloGammaPt->Clone("Dummy");
+    
+        if (isPCM && !isCalo) SetHistogramm(Dummy,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",1e-8,10);
+        if (isCalo && !isPCM) SetHistogramm(Dummy,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",1e-10,1e-2);
+
         Dummy->Reset();
         Dummy->Draw();
         histoGammaCorrUnfoldReso_Pt->DrawCopy("same");
@@ -1072,9 +1291,13 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     canvasCorrGammaSpecUnfold->SaveAs(Form("%s/%s_%s_CorrGammaUnfoldSpectrumPurityMinusSec_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasCorrGammaSpecUnfold;
 
-    // plotting resolution correction
-    TCanvas *canvasResolutionCorr          = GetAndSetCanvas("canvasResolutionCorr");
-        TH1D *Dummy2                            = (TH1D*)histoESDConvGammaPt->Clone("Dummy2");
+    //**********************************************************************************
+    //******************** Resolution Correction Plot **********************************
+    //**********************************************************************************
+    TCanvas *canvasResolutionCorr               = GetAndSetCanvas("canvasResolutionCorr");
+        TH1D* Dummy2                            = NULL;
+        if (isPCM && !isCalo) Dummy2            = (TH1D*)histoESDConvGammaPt->Clone("Dummy2");
+        if (isCalo && !isPCM) Dummy2            = (TH1D*)histoESDCaloGammaPt->Clone("Dummy2");
         SetHistogramm(Dummy2,"#it{p}_{T} (GeV/#it{c})", "resolution correction",0,2);
         Dummy2->Reset();
         Dummy2->Draw();
@@ -1100,22 +1323,25 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         legendResolutionCorr->Draw();
 
         PutProcessLabelAndEnergyOnPlot( 0.18, 0.3, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
-
  
     canvasResolutionCorr->SaveAs(Form("%s/%s_%s_ResolutionCorrection_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasResolutionCorr;
-
     
+    //******************************************************************************************
     //****************************************************************************************** 
     //****************************************************************************************** 
-    //****************************************************************************************** 
-    cout << __LINE__ << endl;
-
-    
     // copy raw inc gamma spectrum and correct for secondary contamination, purity, conversion probability & reco effi (vs rec pt with sec correction)
-    TH1D* histoGammaCorrEffiReso_Pt      = (TH1D*)histoESDConvGammaPt->Clone("CorrGammaSpecPurityMinusSec");
-    CorrectGammaEffiResol( histoGammaCorrEffiReso_Pt, histoSecondaryGammaSpecPt, histoSecondaryGammaFromXFromK0sSpecPt, 
-                          histoGammaTruePurity_Pt, histoGammaConvProb_MCPt, histoGammaPrimaryRecoEff_Pt, deltaEta, scaling, nEvt);
+    TH1D* histoGammaCorrEffiReso_Pt                 = NULL;
+    if (isPCM && !isCalo) {
+        histoGammaCorrEffiReso_Pt = (TH1D*)histoESDConvGammaPt->Clone("CorrGammaSpecPurityMinusSec");
+        CorrectGammaEffiResol( histoGammaCorrEffiReso_Pt, histoSecondaryGammaSpecPt, histoSecondaryGammaFromXFromK0sSpecPt,
+                              histoGammaTruePurity_Pt, histoGammaConvProb_MCPt, histoGammaPrimaryRecoEff_Pt, deltaEta, scaling, nEvt);
+    }
+    if (isCalo && !isPCM) {
+        histoGammaCorrEffiReso_Pt = (TH1D*)histoESDCaloGammaPt->Clone("CorrGammaSpecPurityMinusSec");
+        CorrectGammaEffiResol( histoGammaCorrEffiReso_Pt, histoSecondaryGammaSpecPt, histoSecondaryGammaFromXFromK0sSpecPt,
+                              histoGammaTruePurity_Pt, histoGammaPrimaryRecoEff_Pt, deltaEtaCalo, scaling, nEvt);
+    }
     DrawGammaSetMarker(histoGammaCorrEffiReso_Pt, 20, 1.0, kGreen+2, kGreen+2);
     SetHistogramm(histoGammaCorrEffiReso_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}");
     
@@ -1143,29 +1369,28 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt->Draw("same");
     }
 
-   
-    //*************************************************************************************************    
+    //*************************************************************************************************
     //********** Sanity check for photon spectrum (do we get back what we put in) *********************
     //*************************************************************************************************
     // correct input inc gamma spectrum for delta Eta, delta phi & number of events
     TH1D* histoMCGammaSpec_MCPt                      = (TH1D*)histoMCAllGamma_MCPt->Clone("GammaSpecMC");
-    CorrectGammaMC(histoMCGammaSpec_MCPt, deltaEta, scaling, nEvtMC);
+    if (isPCM && !isCalo) CorrectGammaMC(histoMCGammaSpec_MCPt, deltaEta, scaling, nEvtMC);
+    if (isCalo && !isPCM) CorrectGammaMC(histoMCGammaSpec_MCPt, deltaEtaCalo, scaling, nEvtMC);
     DrawGammaSetMarker(histoMCGammaSpec_MCPt, 20, 1.0, 2, 2);
     SetHistogramm(histoMCGammaSpec_MCPt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}");
-            
+
     //*************************************************************************************************
     //********************************* Comparison Gamma Spec *****************************************
     //*************************************************************************************************
-
-    TH1D* histoRatioGammaCorrMinusSecGammaUnfold    = (TH1D*)histoGammaCorrEffiReso_Pt->Clone("histoRatioGammaCorrMinusSecGammaUnfold");
+    TH1D* histoRatioGammaCorrMinusSecGammaUnfold            = (TH1D*)histoGammaCorrEffiReso_Pt->Clone("histoRatioGammaCorrMinusSecGammaUnfold");
     histoRatioGammaCorrMinusSecGammaUnfold->Divide(histoGammaCorrUnfoldReso_Pt);
-    TH1D* histoRatioGammaCorrMinusSecGammaPileUp;
-    TH1D* histoRatioGammaCorrMinusSecGammaPileUpNoMCUpdate;
+    TH1D* histoRatioGammaCorrMinusSecGammaPileUp            = NULL;
+    TH1D* histoRatioGammaCorrMinusSecGammaPileUpNoMCUpdate  = NULL;
     if(doPileUpCorr){
-        histoRatioGammaCorrMinusSecGammaPileUp           = (TH1D*)histoGammaCorrEffiReso_Pt->Clone("histoRatioGammaCorrMinusSecGammaPileUp");
+        histoRatioGammaCorrMinusSecGammaPileUp              = (TH1D*)histoGammaCorrEffiReso_Pt->Clone("histoRatioGammaCorrMinusSecGammaPileUp");
         histoRatioGammaCorrMinusSecGammaPileUp->Divide(histoGammaCorrEffiReso_PileUp_Pt);
 
-        histoRatioGammaCorrMinusSecGammaPileUpNoMCUpdate = (TH1D*)histoGammaCorrEffiReso_Pt->Clone("histoRatioGammaCorrMinusSecGammaPileUp");
+        histoRatioGammaCorrMinusSecGammaPileUpNoMCUpdate    = (TH1D*)histoGammaCorrEffiReso_Pt->Clone("histoRatioGammaCorrMinusSecGammaPileUp");
         histoRatioGammaCorrMinusSecGammaPileUpNoMCUpdate->Divide(histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt);
     }
     
@@ -1194,7 +1419,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 //     canvasGammaSpecComp->SaveAs(Form("%s/%s_%s_GammaSpectraRatios_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
 //     delete canvasGammaSpecComp;
 //     
-   
+
     //*************************************************************************************************
     //********************************* Decay gamma to all gamma **************************************
     //*************************************************************************************************
@@ -1224,7 +1449,6 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         
     canvasRatioAllDiffDecay->SaveAs(Form("%s/%s_AllGammaDivDecayGammaSpectrumMC_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasRatioAllDiffDecay;
-
    
     //*************************************************************************************************
     //********************************* Gamma from Decay **********************************************
@@ -1252,8 +1476,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         
     canvasDecayGammaSpecMC->SaveAs(Form("%s/%s_DecayGammaSpectrumMC_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasDecayGammaSpecMC;
-
-       
+    
     //*************************************************************************************************
     //******************************* Gamma Combinatorial Background **********************************
     //*************************************************************************************************
@@ -1262,67 +1485,119 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     canvasCombBackSpecMC->SetLogy();
 
         TLegend* legendCombSpectra = GetAndSetLegend(0.25,0.68,6,3);
-        for(Int_t i = 0;i<17;i++){
-            SetHistogramm(histoCombinatorialSpecies_Pt[i],"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}");
-            DrawGammaSetMarker(histoCombinatorialSpecies_Pt[i], markersCombinatorics[i], 1., colorsCombinatorics[i], colorsCombinatorics[i]);
-            histoCombinatorialSpecies_Pt[i]->Scale(1./nEvtMC);
-
-            if(i==0) histoCombinatorialSpecies_Pt[i]->DrawCopy("");
-            else histoCombinatorialSpecies_Pt[i]->DrawCopy("same");
-
-            legendCombSpectra->AddEntry(histoCombinatorialSpecies_Pt[i],combinatorics[i]);
+        if (isPCM && !isCalo) {
+            for(Int_t i = 0;i<17;i++){
+                SetHistogramm(histoCombinatorialSpecies_Pt[i],"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}");
+                DrawGammaSetMarker(histoCombinatorialSpecies_Pt[i], markersCombinatorics[i], 1., colorsCombinatorics[i], colorsCombinatorics[i]);
+                histoCombinatorialSpecies_Pt[i]->Scale(1./nEvtMC);
+            
+                if(i==0) histoCombinatorialSpecies_Pt[i]->DrawCopy("");
+                else histoCombinatorialSpecies_Pt[i]->DrawCopy("same");
+            
+                legendCombSpectra->AddEntry(histoCombinatorialSpecies_Pt[i],combinatorics[i]);
+            }
+        }
+        if (isCalo && !isPCM) {
+            for(Int_t i = 0;i<10;i++){
+                SetHistogramm(histoCombinatorialSpeciesCalo_Pt[i],"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}");
+                DrawGammaSetMarker(histoCombinatorialSpeciesCalo_Pt[i], markersCombinatoricsCalo[i], 1., colorsCombinatoricsCalo[i], colorsCombinatoricsCalo[i]);
+                histoCombinatorialSpeciesCalo_Pt[i]->Scale(1./nEvtMC);
+                
+                if(i==0) histoCombinatorialSpeciesCalo_Pt[i]->DrawCopy("");
+                else histoCombinatorialSpeciesCalo_Pt[i]->DrawCopy("same");
+                
+                legendCombSpectra->AddEntry(histoCombinatorialSpeciesCalo_Pt[i],combinatoricsCalo[i]);
+            }
         }
 
         legendCombSpectra->Draw();
         PutProcessLabelAndEnergyOnPlot( 0.75, 0.68, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
-
-        
+    
     canvasCombBackSpecMC->SaveAs(Form("%s/%s_CombBackSpectrumMC_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasCombBackSpecMC;
-
+    
     // plot ratio to real primary photons
-    TCanvas *canvasSignalToCombBackgroundRatio = GetAndSetCanvas("canvasSignalToCombBackgroundRatio");
+    TCanvas *canvasSignalToCombBackgroundRatio      = GetAndSetCanvas("canvasSignalToCombBackgroundRatio");
     canvasSignalToCombBackgroundRatio->SetLogy();
 
-        TLegend* legendSignalToCombBackgroundRatio = GetAndSetLegend(0.15,0.76,4,3);
-        TH1D **histoSignalToCombBackgroundRatio = new TH1D*[17];
-        TH1D *SummedSmallContributionsCombBack; //10,11,12,13,14,15
-        
-        for(Int_t i = 0;i<16;i++){
-            histoSignalToCombBackgroundRatio[i] = (TH1D*) histoCombinatorialSpecies_Pt[i]->Clone(Form("ESD_TrueCombRatioSignal_%s_Pt",combinatorics[i].Data()));
-            histoSignalToCombBackgroundRatio[i]->Scale(nEvtMC);
+        TLegend* legendSignalToCombBackgroundRatio  = GetAndSetLegend(0.15,0.76,4,3);
+        TH1D **histoSignalToCombBackgroundRatio     = NULL;
+        TH1D *SummedSmallContributionsCombBack      = NULL; //10,11,12,13,14,15
+        if (isPCM && !isCalo) {
+            histoSignalToCombBackgroundRatio        = new TH1D*[17];
             
-            if(i==9){
-                SummedSmallContributionsCombBack = (TH1D*)histoSignalToCombBackgroundRatio[i]->Clone("SummedSmallContributions");
-                SetHistogramm(SummedSmallContributionsCombBack,"#it{p}_{T} (GeV/#it{c})","SummedSmallContributions",10,5e7);
-                SummedSmallContributionsCombBack->SetMinimum(1e-5);
+            for(Int_t i = 0;i<16;i++){
+                histoSignalToCombBackgroundRatio[i] = (TH1D*) histoCombinatorialSpecies_Pt[i]->Clone(Form("ESD_TrueCombRatioSignal_%s_Pt",combinatorics[i].Data()));
+                histoSignalToCombBackgroundRatio[i]->Scale(nEvtMC);
+                
+                if(i==9){
+                    SummedSmallContributionsCombBack = (TH1D*)histoSignalToCombBackgroundRatio[i]->Clone("SummedSmallContributions");
+                    SetHistogramm(SummedSmallContributionsCombBack,"#it{p}_{T} (GeV/#it{c})","SummedSmallContributions",10,5e7);
+                    SummedSmallContributionsCombBack->SetMinimum(1e-5);
+                }
+                
+                if(i>9){
+                    SummedSmallContributionsCombBack->Add(histoSignalToCombBackgroundRatio[i]);
+                }
+                histoSignalToCombBackgroundRatio[i]->Divide(histoSignalToCombBackgroundRatio[i],histoGammaTruePrimaryConv_Pt,1,1,"");
+                SetHistogramm(histoSignalToCombBackgroundRatio[i],"#it{p}_{T} (GeV/#it{c})","identified BG/ real primary photons",10,5e7);
+                histoSignalToCombBackgroundRatio[i]->SetMinimum(1e-5);
+                
+                if(i==0){
+                    histoSignalToCombBackgroundRatio[i]->GetYaxis()->SetRangeUser(1e-5,100);
+                    histoSignalToCombBackgroundRatio[i]->DrawCopy("e1");
+                }
+                if(i<9){
+                    DrawGammaSetMarker(histoSignalToCombBackgroundRatio[i], markersCombinatorics[i], 1., colorsCombinatorics[i], colorsCombinatorics[i]);
+                    histoSignalToCombBackgroundRatio[i]->DrawCopy("e1same");
+                }
+                else continue;
+                
+                legendSignalToCombBackgroundRatio->AddEntry(histoSignalToCombBackgroundRatio[i],combinatorics[i]);
             }
             
-            if(i>9){
-                SummedSmallContributionsCombBack->Add(histoSignalToCombBackgroundRatio[i]);
-            }
-            histoSignalToCombBackgroundRatio[i]->Divide(histoSignalToCombBackgroundRatio[i],histoGammaTruePrimaryConv_Pt,1,1,"");
-            SetHistogramm(histoSignalToCombBackgroundRatio[i],"#it{p}_{T} (GeV/#it{c})","identified BG/ real primary photons",10,5e7);
-            histoSignalToCombBackgroundRatio[i]->SetMinimum(1e-5);
-            
-            if(i==0){
-                histoSignalToCombBackgroundRatio[i]->GetYaxis()->SetRangeUser(1e-5,100);
-                histoSignalToCombBackgroundRatio[i]->DrawCopy("e1");
-            }
-            if(i<9){
-                DrawGammaSetMarker(histoSignalToCombBackgroundRatio[i], markersCombinatorics[i], 1., colorsCombinatorics[i], colorsCombinatorics[i]);
-                histoSignalToCombBackgroundRatio[i]->DrawCopy("e1same");
-            }
-            else continue;
-            
-            legendSignalToCombBackgroundRatio->AddEntry(histoSignalToCombBackgroundRatio[i],combinatorics[i]);
+            SummedSmallContributionsCombBack->Divide(SummedSmallContributionsCombBack,histoGammaTruePrimaryConv_Pt,1,1,"");
+            legendSignalToCombBackgroundRatio->AddEntry(SummedSmallContributionsCombBack,"Protos+Kaons+Muons");
         }
-
-        SummedSmallContributionsCombBack->Divide(SummedSmallContributionsCombBack,histoGammaTruePrimaryConv_Pt,1,1,"");
+        if (isCalo && !isPCM) {
+            histoSignalToCombBackgroundRatio        = new TH1D*[10];
+        
+            for(Int_t i = 0;i<10;i++){
+                histoSignalToCombBackgroundRatio[i] = (TH1D*) histoCombinatorialSpeciesCalo_Pt[i]->Clone(Form("ESD_TrueCombRatioSignal_%s_Pt",combinatoricsCalo[i].Data()));
+                histoSignalToCombBackgroundRatio[i]->Scale(nEvtMC);
+            
+                if(i==2){
+                    SummedSmallContributionsCombBack = (TH1D*)histoSignalToCombBackgroundRatio[i]->Clone("SummedSmallContributions");
+                    SetHistogramm(SummedSmallContributionsCombBack,"#it{p}_{T} (GeV/#it{c})","SummedSmallContributions",10,5e7);
+                    SummedSmallContributionsCombBack->SetMinimum(1e-5);
+                }
+            
+                if(i>2){
+                    SummedSmallContributionsCombBack->Add(histoSignalToCombBackgroundRatio[i]);
+                }
+                histoSignalToCombBackgroundRatio[i]->Divide(histoSignalToCombBackgroundRatio[i],histoGammaTruePrimaryCalo_Pt,1,1,"");
+                SetHistogramm(histoSignalToCombBackgroundRatio[i],"#it{p}_{T} (GeV/#it{c})","identified BG/ real primary photons",10,5e7);
+                histoSignalToCombBackgroundRatio[i]->SetMinimum(1e-5);
+            
+                if(i==0){
+                    histoSignalToCombBackgroundRatio[i]->GetYaxis()->SetRangeUser(1e-5,100);
+                    histoSignalToCombBackgroundRatio[i]->DrawCopy("e1");
+                }
+                if(i<2){
+                    DrawGammaSetMarker(histoSignalToCombBackgroundRatio[i], markersCombinatoricsCalo[i], 1., colorsCombinatoricsCalo[i], colorsCombinatoricsCalo[i]);
+                    histoSignalToCombBackgroundRatio[i]->DrawCopy("e1same");
+                }
+                else continue;
+            
+                legendSignalToCombBackgroundRatio->AddEntry(histoSignalToCombBackgroundRatio[i],combinatoricsCalo[i]);
+            }
+            
+            SummedSmallContributionsCombBack->Divide(SummedSmallContributionsCombBack,histoGammaTruePrimaryCalo_Pt,1,1,"");
+            legendSignalToCombBackgroundRatio->AddEntry(SummedSmallContributionsCombBack,"p+K+n+K0s+Lambda+mu");
+        }
+   
         DrawGammaSetMarker(SummedSmallContributionsCombBack, markersCombinatorics[10], 1., colorsCombinatorics[10], colorsCombinatorics[10]);
-       
         SummedSmallContributionsCombBack->DrawCopy("e1same");
-        legendSignalToCombBackgroundRatio->AddEntry(SummedSmallContributionsCombBack,"Protos+Kaons+Muons");
         legendSignalToCombBackgroundRatio->Draw();
         
         PutProcessLabelAndEnergyOnPlot( 0.2, 0.76, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
@@ -1331,54 +1606,94 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     delete canvasSignalToCombBackgroundRatio;
 
     // plot ratio to summed total MC BG
-    TCanvas *canvasRatioCombBackToBack = GetAndSetCanvas("canvasRatioCombBackToBack");
+    TCanvas *canvasRatioCombBackToBack              = GetAndSetCanvas("canvasRatioCombBackToBack");
 
     canvasRatioCombBackToBack->SetLogy();
-        TLegend* legendRatioCombBackToBack = GetAndSetLegend(0.15,0.76,4,3);
+        TLegend* legendRatioCombBackToBack          = GetAndSetLegend(0.15,0.76,4,3);
         
-        TH1D **histoRatioCombBackToBack = new TH1D*[17];
-        TH1D *SummedSmallContributionsCombBackToBack; //10,11,12,13,14,15
-        for(Int_t i = 0;i<16;i++){
-
-            histoRatioCombBackToBack[i] = (TH1D*) histoCombinatorialSpecies_Pt[i]->Clone(Form("ESD_TrueCombRatioSignal_%s_Pt",combinatorics[i].Data()));
+        TH1D **histoRatioCombBackToBack                 = NULL;
+        TH1D *SummedSmallContributionsCombBackToBack    = NULL; //10,11,12,13,14,15
+        if (isPCM && !isCalo) {
+            histoRatioCombBackToBack                    = new TH1D*[17];
+   
+            for(Int_t i = 0;i<16;i++){
             
-            if(i==9){
-                SummedSmallContributionsCombBackToBack = (TH1D*)histoRatioCombBackToBack[i]->Clone("SummedSmallContributions");
-                SetHistogramm(SummedSmallContributionsCombBackToBack,"#it{p}_{T} (GeV/#it{c})","SummedSmallContributions",10,5e7);
-                SummedSmallContributionsCombBackToBack->SetMinimum(1e-5);
+                histoRatioCombBackToBack[i] = (TH1D*) histoCombinatorialSpecies_Pt[i]->Clone(Form("ESD_TrueCombRatioSignal_%s_Pt",combinatorics[i].Data()));
+            
+                if(i==9){
+                    SummedSmallContributionsCombBackToBack = (TH1D*)histoRatioCombBackToBack[i]->Clone("SummedSmallContributions");
+                    SetHistogramm(SummedSmallContributionsCombBackToBack,"#it{p}_{T} (GeV/#it{c})","SummedSmallContributions",10,5e7);
+                    SummedSmallContributionsCombBackToBack->SetMinimum(1e-5);
+                }
+            
+                if(i>9){
+                    SummedSmallContributionsCombBackToBack->Add(histoRatioCombBackToBack[i]);
+                }
+                histoRatioCombBackToBack[i]->Divide(histoRatioCombBackToBack[i],histoGammaMCBackground_Pt,1,1,"B");
+                SetHistogramm(histoRatioCombBackToBack[i],"#it{p}_{T} (GeV/#it{c})","identified BG/Total BG",10,5e7);
+                histoRatioCombBackToBack[i]->SetMinimum(1e-5);
+            
+                if(i==0){
+                    histoRatioCombBackToBack[i]->GetYaxis()->SetRangeUser(1e-4,400);
+                    histoRatioCombBackToBack[i]->DrawCopy("e1");
+                }
+                if(i<9){
+                    DrawGammaSetMarker(histoRatioCombBackToBack[i], markersCombinatorics[i], 1., colorsCombinatorics[i], colorsCombinatorics[i]);
+                    histoRatioCombBackToBack[i]->DrawCopy("e1same");
+                }
+                else continue;
+            
+                legendRatioCombBackToBack->AddEntry(histoRatioCombBackToBack[i],combinatorics[i]);
             }
             
-            if(i>9){
-                SummedSmallContributionsCombBackToBack->Add(histoRatioCombBackToBack[i]);
-            }
-            histoRatioCombBackToBack[i]->Divide(histoRatioCombBackToBack[i],histoGammaMCBackground_Pt,1,1,"B");
-            SetHistogramm(histoRatioCombBackToBack[i],"#it{p}_{T} (GeV/#it{c})","identified BG/Total BG",10,5e7);
-            histoRatioCombBackToBack[i]->SetMinimum(1e-5);
-            
-            if(i==0){
-                histoRatioCombBackToBack[i]->GetYaxis()->SetRangeUser(1e-4,400);
-                histoRatioCombBackToBack[i]->DrawCopy("e1");
-            }
-            if(i<9){
-                DrawGammaSetMarker(histoRatioCombBackToBack[i], markersCombinatorics[i], 1., colorsCombinatorics[i], colorsCombinatorics[i]);
-                histoRatioCombBackToBack[i]->DrawCopy("e1same");
-            }
-            else continue;
-            
-            legendRatioCombBackToBack->AddEntry(histoRatioCombBackToBack[i],combinatorics[i]);
+            legendRatioCombBackToBack->AddEntry(SummedSmallContributionsCombBackToBack,"Protos+Kaons+Muons");
         }
+        if (isCalo && !isPCM) {
+            histoRatioCombBackToBack                    = new TH1D*[10];
+            
+            for(Int_t i = 0;i<9;i++){
+                
+                histoRatioCombBackToBack[i] = (TH1D*) histoCombinatorialSpeciesCalo_Pt[i]->Clone(Form("ESD_TrueCombRatioSignal_%s_Pt",combinatoricsCalo[i].Data()));
+                
+                if(i==2){
+                    SummedSmallContributionsCombBackToBack = (TH1D*)histoRatioCombBackToBack[i]->Clone("SummedSmallContributions");
+                    SetHistogramm(SummedSmallContributionsCombBackToBack,"#it{p}_{T} (GeV/#it{c})","SummedSmallContributions",10,5e7);
+                    SummedSmallContributionsCombBackToBack->SetMinimum(1e-5);
+                }
+                
+                if(i>2){
+                    SummedSmallContributionsCombBackToBack->Add(histoRatioCombBackToBack[i]);
+                }
+                histoRatioCombBackToBack[i]->Divide(histoRatioCombBackToBack[i],histoGammaMCBackground_Pt,1,1,"B");
+                SetHistogramm(histoRatioCombBackToBack[i],"#it{p}_{T} (GeV/#it{c})","identified BG/Total BG",10,5e7);
+                histoRatioCombBackToBack[i]->SetMinimum(1e-5);
+                
+                if(i==0){
+                    histoRatioCombBackToBack[i]->GetYaxis()->SetRangeUser(1e-4,400);
+                    histoRatioCombBackToBack[i]->DrawCopy("e1");
+                }
+                if(i<2){
+                    DrawGammaSetMarker(histoRatioCombBackToBack[i], markersCombinatoricsCalo[i], 1., colorsCombinatoricsCalo[i], colorsCombinatoricsCalo[i]);
+                    histoRatioCombBackToBack[i]->DrawCopy("e1same");
+                }
+                else continue;
+                
+                legendRatioCombBackToBack->AddEntry(histoRatioCombBackToBack[i],combinatoricsCalo[i]);
+            }
+            
+            legendRatioCombBackToBack->AddEntry(SummedSmallContributionsCombBackToBack,"p+K+n+K0s+Lambda+mu");
+        }
+    
         
         SummedSmallContributionsCombBackToBack->Divide(SummedSmallContributionsCombBackToBack,histoGammaMCBackground_Pt,1,1,"B");
         DrawGammaSetMarker(SummedSmallContributionsCombBackToBack, markersCombinatorics[10], 1., colorsCombinatorics[10], colorsCombinatorics[10]);
         SummedSmallContributionsCombBackToBack->DrawCopy("e1same");
-        legendRatioCombBackToBack->AddEntry(SummedSmallContributionsCombBackToBack,"Protos+Kaons+Muons");
         legendRatioCombBackToBack->Draw();
         
         PutProcessLabelAndEnergyOnPlot( 0.75, 0.3, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
     
     canvasRatioCombBackToBack->SaveAs(Form("%s/%s_RatioCombBackToBack_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasRatioCombBackToBack;
-
     
     //*************************************************************************************************
     //*********************** Compare Gamma Yields MC/Reconstructed *************************************
@@ -1423,9 +1738,13 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     canvasPurBackGammaSpec->SaveAs(Form("%s/%s_%s_GammaSpectraComparison_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasPurBackGammaSpec;
         
-    
-    CorrectGammaMC(histoMCGammaConv_MCPt, deltaEta, scaling, nEvtMC);
-    CorrectGammaMC(histoGammaTrueConv_Pt, deltaEta, scaling, nEvtMC);
+    if (isPCM && !isCalo) {
+        CorrectGammaMC(histoMCGammaConv_MCPt, deltaEta, scaling, nEvtMC);
+        CorrectGammaMC(histoGammaTrueConv_Pt, deltaEta, scaling, nEvtMC);
+    }
+    if (isCalo && !isPCM) {
+        CorrectGammaMC(histoGammaTrueCalo_Pt, deltaEtaCalo, scaling, nEvtMC);
+    }
 
     TCanvas *canvasGammaPurityConvBin = GetAndSetCanvas("canvasGammaPurityConvBin");
     DrawGammaCanvasSettings(canvasGammaPurityConvBin,0.1, 0.015, 0.02, 0.09);
@@ -1475,10 +1794,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     
     canvasGammaPurityConvBin->SaveAs(Form("%s/%s_%s_GammaSpec_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasGammaPurityConvBin;
-    
+
     TH1D* histoGammaCorrFac_Pt           = (TH1D*) histoGammaPrimaryRecoEff_Pt->Clone("GammaCorrFac_Pt");
-    histoGammaCorrFac_Pt->Multiply(histoGammaConvProb_MCPt);
-    
+    if (isPCM && !isCalo) histoGammaCorrFac_Pt->Multiply(histoGammaConvProb_MCPt);
     
     //***********************************************************************************************************
     //******************************* Write output file for photons *********************************************
@@ -1488,61 +1806,71 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         //________________________ writing MC quantities to file _____________________________
         // input spectrum corrected for deta, dPhi, Nevt
-        histoMCGammaSpec_MCPt->Write("GammaSpecMC");
-    
+        if (histoMCGammaSpec_MCPt) histoMCGammaSpec_MCPt->Write("GammaSpecMC", TObject::kOverwrite);
+
         // reconstructed MC gamma spectrum corrected deta, dPhi, Nevt
-        histoMCrecGammaCorr_Pt->Write("GammaSpecCorrESDMC");
+        if (histoMCrecGammaCorr_Pt) histoMCrecGammaCorr_Pt->Write("GammaSpecCorrESDMC", TObject::kOverwrite);
     
         // split in different source (pi0,eta,...)
         for (Int_t i= 0; i< 8; i++){
-            histoPhotonSource_MCPt[i]->Write();
+            if (histoPhotonSource_MCPt[i]) histoPhotonSource_MCPt[i]->Write(histoPhotonSource_MCPt[i]->GetName(), TObject::kOverwrite);
         }    
         // pure direct photons
-        histoPhotonSource_MCPt[8]->Write("MC_DirectPhoton_Pt");
+        if (histoPhotonSource_MCPt[8]) histoPhotonSource_MCPt[8]->Write("MC_DirectPhoton_Pt", TObject::kOverwrite);
         // input spectrum of converted photons corrected for deta, dphi, Nevt
-        histoMCGammaConv_MCPt->Write("MC_ConvGamma_MCPt");
+        if (histoMCGammaConv_MCPt) histoMCGammaConv_MCPt->Write("MC_ConvGamma_MCPt", TObject::kOverwrite);
         // reconstructed MC true photons corrected for deta, dphi, Nevt
-        histoGammaTrueConv_Pt->Write("TrueConvGamma_Pt");
+        if (histoGammaTrueConv_Pt) histoGammaTrueConv_Pt->Write("TrueConvGamma_Pt", TObject::kOverwrite);
+        if (histoGammaTrueCalo_Pt) histoGammaTrueCalo_Pt->Write("TrueCaloGamma_Pt", TObject::kOverwrite);
         // recontructed MC photon candidates, uncorrected
-        histoMCrecGamma_Pt->Write("MCrec_ConvGamma_Pt");
-        
+        if (histoMCrecGamma_Pt) histoMCrecGamma_Pt->Write("MCrec_ConvGamma_Pt", TObject::kOverwrite);
+        if (histoMCrecGammaCalo_Pt) histoMCrecGammaCalo_Pt->Write("MCrec_CaloGamma_Pt", TObject::kOverwrite);
+
         // summed reconstructed BG in MC
-        histoMCrecBackground_Pt->Write("MCrec_Background");
+        if (histoMCrecBackground_Pt) histoMCrecBackground_Pt->Write("MCrec_Background", TObject::kOverwrite);
         // combinatorial histos split
-        for(Int_t i = 0;i<17;i++)
-            histoCombinatorialSpecies_Pt[i]->Write();
-        
-        //_________________________ writing correction factors to file _________________________        
+        if (histoCombinatorialSpecies_Pt) {
+            for (Int_t i = 0;i<17;i++) histoCombinatorialSpecies_Pt[i]->Write(histoCombinatorialSpecies_Pt[i]->GetName(), TObject::kOverwrite);
+        }
+        if (histoCombinatorialSpeciesCalo_Pt) {
+            for (Int_t i=0; i<10; i++) histoCombinatorialSpeciesCalo_Pt[i]->Write(histoCombinatorialSpeciesCalo_Pt[i]->GetName(), TObject::kOverwrite);
+        }
+
+        //_________________________ writing correction factors to file _________________________
         // photon purity without secondary subtraction
-        histoGammaPurity_Pt->Write("GammaPurityWSec_Pt");
+        if (histoGammaPurity_Pt) histoGammaPurity_Pt->Write("GammaPurityWSec_Pt", TObject::kOverwrite);
+        if (histoGammaCaloPurity_Pt) histoGammaCaloPurity_Pt->Write("histoGammaCaloPurityWSec_Pt", TObject::kOverwrite);
         // photon purity with secondary subtraction
-        histoGammaTruePurity_Pt->Write("GammaPurityWOSec_Pt");
+        if (histoGammaTruePurity_Pt) histoGammaTruePurity_Pt->Write("GammaPurityWOSec_Pt", TObject::kOverwrite);
+        if (histoGammaCaloTruePurity_Pt) histoGammaCaloTruePurity_Pt->Write("GammaCaloPurityWOSec_Pt", TObject::kOverwrite);
         // photon reconstruction efficiency including resolution correction
-        histoGammaPrimaryRecoEff_Pt->Write("GammaRecoEff_WithResolCorr_Pt");
+        if (histoGammaPrimaryRecoEff_Pt) histoGammaPrimaryRecoEff_Pt->Write("GammaRecoEff_WithResolCorr_Pt", TObject::kOverwrite);
+        if (histoGammaCaloPrimaryRecoEff_Pt) histoGammaCaloPrimaryRecoEff_Pt->Write("GammaCaloRecoEff_WithResolCorr_Pt", TObject::kOverwrite);
         // photon reconstruction efficiency without resolution correction
-        histoGammaPrimaryRecoEff_MCPt->Write("GammaRecoEff_MCPt");
+        if (histoGammaPrimaryRecoEff_MCPt) histoGammaPrimaryRecoEff_MCPt->Write("GammaRecoEff_MCPt", TObject::kOverwrite);
+        if (histoGammaCaloPrimaryRecoEff_MCPt) histoGammaCaloPrimaryRecoEff_MCPt->Write("GammaCaloRecoEff_MCPt", TObject::kOverwrite);
         // photon conversion probability
-        histoGammaConvProb_MCPt->Write("GammaConvProb_Pt");
+        if (histoGammaConvProb_MCPt) histoGammaConvProb_MCPt->Write("GammaConvProb_Pt", TObject::kOverwrite);
         // resolution correction in case of unfolding
-        histoGammaResolCorrUnfold_Pt->Write("GammaResolCorrUnfold_Pt");
+        if (histoGammaResolCorrUnfold_Pt) histoGammaResolCorrUnfold_Pt->Write("GammaResolCorrUnfold_Pt", TObject::kOverwrite);
         // photon correction factors (conv Prob, efficiency incl. resolution correction)
-        histoGammaCorrFac_Pt->Write("GammaCorrFac_Pt");
-        
+        if (histoGammaCorrFac_Pt) histoGammaCorrFac_Pt->Write("GammaCorrFac_Pt", TObject::kOverwrite);
+
         // ________________________ writing data quantities to file
         // uncorrected spectrum (scaled by 1/Nevt)
-        histoGammaRawSpectrum_Pt->Write("GammaRaw_Pt");
-        
+        if (histoGammaRawSpectrum_Pt) histoGammaRawSpectrum_Pt->Write("GammaRaw_Pt", TObject::kOverwrite);
         // corrected spectrum (legacy corrections: purity, effi incl resolution correction, secondaries, conv prob, plus trivial factors  )
-        histoGammaCorrEffiReso_Pt->Write("GammaCorrEffiResol_Pt");
+        if (histoGammaCorrEffiReso_Pt) histoGammaCorrEffiReso_Pt->Write("GammaCorrEffiResol_Pt", TObject::kOverwrite);
         // corrected spectrum (unfolding corrections: purity, secondaries, unfolding resolution correction, effi without unfolding corr, conv prob, plus trivial factors )
-        histoGammaCorrUnfoldReso_Pt->Write("GammaCorrUnfold_Pt");
+        if (histoGammaCorrUnfoldReso_Pt) histoGammaCorrUnfoldReso_Pt->Write("GammaCorrUnfold_Pt", TObject::kOverwrite);
         if(doPileUpCorr){
+            // pileup correction factor
+            if (histoPileUpCorrectionFactor) histoPileUpCorrectionFactor->Write("PileUpCorrectionFactor", TObject::kOverwrite);
             // same as histoGammaCorrEffiReso_Pt with additional pileup correction
-            histoGammaCorrEffiReso_PileUp_Pt->Write("GammaCorrEffiResolPileup_Pt");
+            if (histoGammaCorrEffiReso_PileUp_Pt) histoGammaCorrEffiReso_PileUp_Pt->Write("GammaCorrEffiResolPileup_Pt", TObject::kOverwrite);
             // same as histoGammaCorrUnfoldReso_Pt with additional pileup correction
-            histoGammaCorrUnfoldResoPileUp_Pt->Write("GammaCorrUnfoldPileUp_Pt");
+            if (histoGammaCorrUnfoldResoPileUp_Pt) histoGammaCorrUnfoldResoPileUp_Pt->Write("GammaCorrUnfoldPileUp_Pt", TObject::kOverwrite);
         }
         
     fileCorrectedOutput->Close();
-
 }

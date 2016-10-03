@@ -240,6 +240,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
         }
         if (fEnableCalo){
             fHistoGammaMCrecCaloPt                              = (TH1D*) fHistoGammaCaloPt->Clone("MCrec_CaloGamma_Pt");
+            fHistoGammaMCrecCaloPtOrBin                         = (TH1D*) fHistoGammaCaloPtOrBin->Clone("MCrec_CaloGamma_OriginalBinning_Pt");
         }
         
         // MC container (contains all input MC histograms)    
@@ -536,7 +537,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
         CalculateGammaCorrection();
         
         //**************************** Calculate pilepup correction factors for MC *********************************
-        if(pileUpCorrection && !addSig && !(mode == 4 || mode == 5)){
+        if(pileUpCorrection && !addSig && !(mode == 4 || mode == 5)){ // how to deal with pileup correction for other modes?
             FillDCAHistogramsFromTree(dcaTree,kTRUE);
             CalculatePileUpBackground(kTRUE);
             CalculatePileUpGammaCorrection();
@@ -1723,6 +1724,7 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3,Bool_t PileUpCorrecti
         if (fHistoGammaMCrecConvPt) fHistoGammaMCrecConvPt->Write("MCrec_ConvGamma_Pt",TObject::kOverwrite);
         if (fHistoGammaMCrecConvPtOrBin) fHistoGammaMCrecConvPtOrBin->Write("MCrec_ConvGamma_OriginalBinning_Pt",TObject::kOverwrite);
         if (fHistoGammaMCrecCaloPt) fHistoGammaMCrecCaloPt->Write("MCrec_CaloGamma_Pt",TObject::kOverwrite);
+        if (fHistoGammaMCrecCaloPtOrBin) fHistoGammaMCrecCaloPtOrBin->Write("MCrec_CaloGamma_OriginalBinning_Pt",TObject::kOverwrite);
         if (fHistoGammaMCrecPrimaryConvPt) fHistoGammaMCrecPrimaryConvPt->Write("MCrec_PrimaryConvGamma_Pt",TObject::kOverwrite);
         if (fHistoGammaMCrecPrimaryCaloPt) fHistoGammaMCrecPrimaryCaloPt->Write("MCrec_PrimaryCaloGamma_Pt",TObject::kOverwrite);
 
@@ -1745,10 +1747,10 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3,Bool_t PileUpCorrecti
         if (fHistoGammaTruePrimaryCaloPtOrBin) fHistoGammaTruePrimaryCaloPtOrBin->Write("TruePrimaryCaloGamma_Pt_OriginalBinning",TObject::kOverwrite);
         if (fHistoGammaTrueSecondaryCaloPt) fHistoGammaTrueSecondaryCaloPt->Write("TrueSecondaryCaloGamma_Pt",TObject::kOverwrite);
         if (fHistoGammaTrueSecondaryCaloPtOrBin) fHistoGammaTrueSecondaryCaloPtOrBin->Write("TrueSecondaryCaloGamma_Pt_OriginalBinning",TObject::kOverwrite);
-        if (fHistoGammaTrueSecondaryCaloFromK0sPt) fHistoGammaTrueSecondaryCaloFromK0sPt->Write("TrueSecondaryCaloGammaFromK0s_Pt",TObject::kOverwrite);
-        if (fHistoGammaTrueSecondaryCaloFromK0sPtOrBin) fHistoGammaTrueSecondaryCaloFromK0sPtOrBin->Write("TrueSecondaryCaloGammaFromK0s_Pt_OriginalBinning",TObject::kOverwrite);
-        if (fHistoGammaTrueSecondaryCaloFromLambdaPt) fHistoGammaTrueSecondaryCaloFromLambdaPt->Write("TrueSecondaryCaloGammaFromLambda_Pt",TObject::kOverwrite);
-        if (fHistoGammaTrueSecondaryCaloFromLambdaPtOrBin) fHistoGammaTrueSecondaryCaloFromLambdaPtOrBin->Write("TrueSecondaryCaloGammaFromLambda_Pt_OriginalBinning",TObject::kOverwrite);
+        if (fHistoGammaTrueSecondaryCaloFromK0sPt) fHistoGammaTrueSecondaryCaloFromK0sPt->Write("TrueSecondaryCaloGammaFromXFromK0s_Pt",TObject::kOverwrite);
+        if (fHistoGammaTrueSecondaryCaloFromK0sPtOrBin) fHistoGammaTrueSecondaryCaloFromK0sPtOrBin->Write("TrueSecondaryCaloGammaFromXFromK0s_Pt_OriginalBinning",TObject::kOverwrite);
+        if (fHistoGammaTrueSecondaryCaloFromLambdaPt) fHistoGammaTrueSecondaryCaloFromLambdaPt->Write("TrueSecondaryCaloGammaFromXFromLambda_Pt",TObject::kOverwrite);
+        if (fHistoGammaTrueSecondaryCaloFromLambdaPtOrBin) fHistoGammaTrueSecondaryCaloFromLambdaPtOrBin->Write("TrueSecondaryCaloGammaFromXFromLambda_Pt_OriginalBinning",TObject::kOverwrite);
         
         // write fractions of secondary photons
         if (fHistoFracAllGammaToSec) fHistoFracAllGammaToSec->Write("FracAllGammaToSec",TObject::kOverwrite);
