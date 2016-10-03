@@ -412,7 +412,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 fHistoGammaTruePrimaryCaloUnConvMCPt->Add(fHistoGammaTruePrimaryCaloConvMCPt);
                 
             } else {
-                fHistoGammaTrueCaloUnConvPt                     = (TH1D*)TrueConversionContainer->FindObject("TrueClusGamma_Pt");
+                fHistoGammaTrueCaloUnConvPt                     = (TH1D*)TrueConversionContainer->FindObject("TrueClusUnConvGamma_Pt");
                 fHistoGammaTrueCaloUnConvPt->SetName("TrueClusUnConvGamma_Pt");
                 fHistoGammaTrueCaloUnConvPt->Sumw2();
                 fHistoGammaTrueCaloUnConvPtOrBin                = (TH1D*)fHistoGammaTrueCaloUnConvPt->Clone("TrueClusUnConvGamma_Pt_OriginalBinning");
@@ -425,10 +425,9 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 fHistoGammaTrueCaloConvPtOrBin->Sumw2();
                 RebinSpectrum(fHistoGammaTrueCaloConvPt);
                 
-                fHistoGammaTrueCaloPt                           = (TH1D*)fHistoGammaTrueCaloUnConvPt->Clone("TrueClusGamma_Pt");
-                fHistoGammaTrueCaloPt->Add(fHistoGammaTrueCaloConvPt);
-                fHistoGammaTrueCaloPtOrBin                      = (TH1D*)fHistoGammaTrueCaloUnConvPtOrBin->Clone("TrueClusGamma_Pt_OriginalBinning");
-                fHistoGammaTrueCaloPtOrBin->Add(fHistoGammaTrueCaloConvPtOrBin);
+                fHistoGammaTrueCaloPt                           = (TH1D*)TrueConversionContainer->FindObject("TrueClusGamma_Pt");
+                fHistoGammaTrueCaloPtOrBin                      = (TH1D*)fHistoGammaTrueCaloPt->Clone("TrueClusGamma_Pt_OriginalBinning");
+                RebinSpectrum(fHistoGammaTrueCaloPt);
                 
                 fHistoGammaTruePrimaryCaloUnConvPt              = (TH1D*)TrueConversionContainer->FindObject("TruePrimaryClusGamma_Pt");
                 fHistoGammaTruePrimaryCaloUnConvPt->SetName("TruePrimaryClusUnConvGamma_Pt");
