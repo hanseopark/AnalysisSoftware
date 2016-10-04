@@ -2871,20 +2871,25 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             TH2F * histo2DRelMassDiffPi0       = new TH2F("histo2DRelMassDiffPi0","histo2DRelMassDiffPi0",1000,0., maxPtGlobalPi0,10000,-3, 3);
             SetStyleHistoTH2ForGraphs(histo2DRelMassDiffPi0, "#it{p}_{T} (GeV/#it{c})","#it{M}_{#pi^{0}, data}-#it{M}_{#pi^{0}, MC}/ #it{M}_{#pi^{0}, MC} (%)", 
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.4);
-
-            
             histo2DRelMassDiffPi0->DrawCopy();    
             
-            
-            
             if (graphMassRelDifferencePi0DatavsMC){
-                TF1* pol0    = new TF1("pol0","[0]",0,maxPtGlobalPi0); //
-                graphMassRelDifferencePi0DatavsMC->Fit(pol0,"QNRMEX0+","",0,maxPtGlobalPi0);
+              TF1 *fitPi0RelMassDiff = new TF1("fitPi0RelMassDiff","[0]",0.,maxPtGlobalPi0);
+              fitPi0RelMassDiff->SetParameter(0,0.);
+              graphMassRelDifferencePi0DatavsMC->Fit(fitPi0RelMassDiff,"QNRMEX0+","",0.,maxPtGlobalPi0);
+              fitPi0RelMassDiff->SetLineColor(kRed);
+              fitPi0RelMassDiff->SetLineWidth(0.5);
+              fitPi0RelMassDiff->Draw("same");
+
+              TLegend* legendPi0RelMassDiff = GetAndSetLegend2(0.15, 0.12, 0.6, 0.12+(0.035*1), 0.035, 2, "", 42, 0.15);
+              legendPi0RelMassDiff->AddEntry(fitPi0RelMassDiff,"fit with constant");
+              legendPi0RelMassDiff->AddEntry((TObject*)0,Form("%0.4f #pm %0.4f", fitPi0RelMassDiff->GetParameter(0), fitPi0RelMassDiff->GetParError(0)),"");
+              legendPi0RelMassDiff->Draw();
                 
-                DrawGammaSetMarkerTGraphAsym(graphMassRelDifferencePi0DatavsMC, 20, 1, kBlack, kBlack);
-                graphMassRelDifferencePi0DatavsMC->Draw("p,e1,same");
+              DrawGammaSetMarkerTGraphAsym(graphMassRelDifferencePi0DatavsMC, 20, 1, kBlack, kBlack);
+              graphMassRelDifferencePi0DatavsMC->Draw("p,e1,same");
                 
-                cout << "average rel mass diff: " << pol0->GetParameter(0) << "+-"<< pol0->GetParError(0) << endl;
+              cout << "average rel mass diff: " << fitPi0RelMassDiff->GetParameter(0) << "+-"<< fitPi0RelMassDiff->GetParError(0) << endl;
             }    
             DrawGammaLines(0., maxPtGlobalPi0 , 0., 0., 1, kGray+2, 7);
 //             legendMassPi0Weighted->Draw();
@@ -5120,13 +5125,23 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             TH2F * histo2DRelMassDiffEta       = new TH2F("histo2DRelMassDiffEta","histo2DRelMassDiffEta",1000,0., maxPtGlobalEta,10000,-5, 5);
             SetStyleHistoTH2ForGraphs(histo2DRelMassDiffEta, "#it{p}_{T} (GeV/#it{c})","#it{M}_{#eta, data}-#it{M}_{#eta, MC}/ #it{M}_{#eta, MC} (%)", 
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.4);
-
-            
             histo2DRelMassDiffEta->DrawCopy();    
             
             if (graphMassRelDifferenceEtaDatavsMC){
-                DrawGammaSetMarkerTGraphAsym(graphMassRelDifferenceEtaDatavsMC, 20, 1, kBlack, kBlack);
-                graphMassRelDifferenceEtaDatavsMC->Draw("p,e1,same");
+              TF1 *fitEtaRelMassDiff = new TF1("fitEtaRelMassDiff","[0]",0.,maxPtGlobalEta);
+              fitEtaRelMassDiff->SetParameter(0,0.);
+              graphMassRelDifferenceEtaDatavsMC->Fit(fitEtaRelMassDiff,"QNRMEX0+","",0.,maxPtGlobalEta);
+              fitEtaRelMassDiff->SetLineColor(kRed);
+              fitEtaRelMassDiff->SetLineWidth(0.5);
+              fitEtaRelMassDiff->Draw("same");
+
+              TLegend* legendEtaRelMassDiff = GetAndSetLegend2(0.15, 0.12, 0.6, 0.12+(0.035*1), 0.035, 2, "", 42, 0.15);
+              legendEtaRelMassDiff->AddEntry(fitEtaRelMassDiff,"fit with constant");
+              legendEtaRelMassDiff->AddEntry((TObject*)0,Form("%0.4f #pm %0.4f", fitEtaRelMassDiff->GetParameter(0), fitEtaRelMassDiff->GetParError(0)),"");
+              legendEtaRelMassDiff->Draw();
+
+              DrawGammaSetMarkerTGraphAsym(graphMassRelDifferenceEtaDatavsMC, 20, 1, kBlack, kBlack);
+              graphMassRelDifferenceEtaDatavsMC->Draw("p,e1,same");
             }    
             DrawGammaLines(0., maxPtGlobalEta , 0., 0., 1, kGray+2, 7);
 //             legendMassEtaWeighted->Draw();
