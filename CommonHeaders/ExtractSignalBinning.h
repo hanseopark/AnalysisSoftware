@@ -13,6 +13,7 @@ Double_t *fBinsClusterPt                        = NULL;
 Int_t fNBinsPtDCAzDist                          = 0;
 Double_t *fBinsPtDCAzDist                       = NULL;
 Int_t fExampleBin                               = 0;
+Double_t fExampleBinScaleFac                    = 1.0;
 Int_t fNBinsPeakPt                              = 12;
 Double_t fBinsPeakPt[13]                        = { 0.0, 0.4, 0.6, 0.8, 1.0,
                                                     1.2, 1.4, 1.6, 2.0, 3.0,
@@ -1007,7 +1008,7 @@ Int_t fBinsPi0pPbDirectPhotonPtRebin[19]        = { 4, 4, 2, 2, 2,
 //*************************************************************************************************
 //******************** Initialize Single bin for invariant mass plot ******************************
 //*************************************************************************************************                                                    
-Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t mode, Int_t trigger, Int_t triggerSet = -1){
+Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t mode, Int_t trigger, Double_t &scaleFac, Int_t triggerSet = -1){
 
     if (triggerSet != -1){
         if (energy.CompareTo("2.76TeV") == 0){
@@ -1404,7 +1405,8 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                     case 1:
                     case 10:
                     case 11:
-                        return 6;      // INT triggers
+                        if (meson.CompareTo("Eta") == 0) scaleFac = 4.0;
+                        return 7;      // INT triggers
                         break;
                     case 51:
                     case 52:
@@ -1457,7 +1459,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
     //*************************************************************************************************
 
     fBinsClusterPt          = new Double_t[100];
-    if( energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("PbPb_2.76TeV") == 0 || energy.CompareTo("PbPb_5.02TeV") == 0){
+    if( energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("PbPb_2.76TeV") == 0 || energy.CompareTo("PbPb_5.02TeV") == 0 || energy.CompareTo("pPb_5.023TeV") == 0){
       fNBinsClusterPt       = fNBinsCluster2760GeVPt;
       for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
         fBinsClusterPt[iPt] = fBinsCluster2760GeVPt[iPt];
@@ -1489,7 +1491,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
     Int_t specialTrigg      = 0;
     
     // Initialize bin for single invariant mass plot
-    fExampleBin             = ReturnSingleInvariantMassBinPlotting (setPi0, energy, modi, trigger.Atoi(), triggerSet);
+    fExampleBin             = ReturnSingleInvariantMassBinPlotting (setPi0, energy, modi, trigger.Atoi(), fExampleBinScaleFac, triggerSet);
     
     //*************************************************************************************************
     //************************************ Binning for Pi0 ********************************************

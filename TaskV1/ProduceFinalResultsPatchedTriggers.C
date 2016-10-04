@@ -450,7 +450,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         ReturnSeparatedCutNumberAdvanced(cutNumber[i].Data(),fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);    
         
         TString trigger                                     = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
-        Int_t exampleBin                                    = ReturnSingleInvariantMassBinPlotting ("Pi0", optionEnergy, mode, trigger.Atoi());
+        Double_t scaleFacSinBin                             = 1.0;
+        Int_t exampleBin                                    = ReturnSingleInvariantMassBinPlotting ("Pi0", optionEnergy, mode, trigger.Atoi(), scaleFacSinBin);
         
         FileNameCorrectedPi0[i]                             = Form("%s/%s/Pi0_%s_GammaConvV1Correction_%s.root", cutNumber[i].Data(), optionEnergy.Data(), isMC.Data(), 
                                                                     cutNumber[i].Data());
@@ -3454,7 +3455,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             ReturnSeparatedCutNumberAdvanced(cutNumber[i].Data(),fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
         
             TString trigger                                 = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
-            Int_t exampleBin                                = ReturnSingleInvariantMassBinPlotting ("Eta", optionEnergy, mode, trigger.Atoi());
+            Double_t scaleFacSinBin                         = 1.0;
+            Int_t exampleBin                                = ReturnSingleInvariantMassBinPlotting ("Eta", optionEnergy, mode, trigger.Atoi(), scaleFacSinBin);
 
             FileNameCorrectedEta[i]                         = Form("%s/%s/Eta_%s_GammaConvV1Correction_%s.root", cutNumber[i].Data(), optionEnergy.Data(), isMC.Data(), 
                                                                         cutNumber[i].Data());

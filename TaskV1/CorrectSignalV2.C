@@ -301,7 +301,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     
     // Initialize bin for single invariant mass plot
     Int_t fExampleBin       = 2;
-    fExampleBin             = ReturnSingleInvariantMassBinPlotting (nameMeson, optionEnergy, mode, trigger.Atoi(), triggerSet);
+    Double_t scaleFacSinBin = 1.0;
+    fExampleBin             = ReturnSingleInvariantMassBinPlotting (nameMeson, optionEnergy, mode, trigger.Atoi(), scaleFacSinBin, triggerSet);
     
     //Variable defintion
     Double_t scaling        = 1./(2.*TMath::Pi());

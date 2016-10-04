@@ -1700,7 +1700,8 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     // ********************************************************************************************************************************
     // ************************** find example bin in original file and put it into output ********************************************
     // ********************************************************************************************************************************
-    Int_t fExampleBin                       = ReturnSingleInvariantMassBinPlotting (nameMeson, optionEnergy, mode, trigger.Atoi(), -1);
+    Double_t scaleFactorSingleBin           = 1.0;
+    Int_t fExampleBin                       = ReturnSingleInvariantMassBinPlotting (nameMeson, optionEnergy, mode, trigger.Atoi(), scaleFactorSingleBin, -1);
     TH1D* histoDataM02ExBin                 = (TH1D*)fileUncorrected.Get(Form("M02_PtBin%d",fExampleBin));    
     if(histoDataM02ExBin){
         histoDataM02ExBin->SetName(Form("Data_M02_in_Pt_Bin%d",fExampleBin));\
