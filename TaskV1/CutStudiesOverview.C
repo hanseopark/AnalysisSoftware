@@ -284,7 +284,9 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             cutStringsName[i]                                   = AnalyseTPCdEdxCutElectronLine(fdEdxCut.Atoi());
         } else if (cutVariationName.Contains("dEdxPi")){    
             TString fdEdxCut                                    = fGammaCutSelection(GetPhotonPiDedxSigmaCutPosition(fGammaCutSelection),3);
-            cutStringsName[i]                                   = AnalyseTPCdEdxCutPionLine(fdEdxCut.Data());
+            cutStringsName[i]                                   = fdEdxCut.Data();
+            cout << fdEdxCut.Data() << "\t" << cutStringsName[i].Data() << endl;
+//             cutStringsName[i]                                   = AnalyseTPCdEdxCutPionLine(fdEdxCut.Data());
         } else if (cutVariationName.Contains("TOF")){
             TString fTOFelectronPIDCut                          = fGammaCutSelection(GetPhotonTOFelectronPIDCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalyseTOFelectronPIDCut(fTOFelectronPIDCut.Atoi());
@@ -1282,9 +1284,9 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         // Plot corrected yield in upper panel
         padCorrectedYield->cd();            
         TLegend* legendCorrectedYieldMeson = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*NumberOfCuts, 1500*0.75*0.032); 
-        if (cutVariationName.Contains("dEdxPi")){
-            legendCorrectedYieldMeson->SetTextSize(0.02);
-        }
+//         if (cutVariationName.Contains("dEdxPi")){
+//             legendCorrectedYieldMeson->SetTextSize(0.02);
+//         }
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i == 0){
                 DrawAutoGammaMesonHistos( histoCorrectedYieldCut[i],
