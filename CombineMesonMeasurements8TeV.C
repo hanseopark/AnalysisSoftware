@@ -849,6 +849,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TDirectory* directoryfileEtaToPi02760GeV                = (TDirectory*)fileEtaToPi02760GeV->Get("Eta2.76TeV");
         TH1F* histoPythia8InvXSection                       = (TH1F*) fileTheoryPythia8->Get("fHistInvXsec_Pi0");
         TH1F* histoPythia8InvXSectionEta                    = (TH1F*) fileTheoryPythia8->Get("fHistInvXsec_Eta");
+        TH1F* histoPythia8EtaToPi0                          = (TH1F*) histoPythia8InvXSectionEta->Clone("Pythia8EtaToPi0");
+        histoPythia8EtaToPi0->Divide(histoPythia8InvXSection);
         TH1F* histoPythia8_4CInvXSection                    = (TH1F*) fileTheoryPythia8_4C->Get("fHistInvXsec_Pi0");
         TH1F* histoPythia8_4CInvXSectionEta                 = (TH1F*) fileTheoryPythia8_4C->Get("fHistInvXsec_Eta");
         TGraphAsymmErrors* graphPi0DSS14                    = (TGraphAsymmErrors*)fileTheorypp8TeVPi0DSS14->Get("fGraphInvXsec_Pi0");
@@ -4753,11 +4755,17 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     histo2DEtatoPi0combo->Draw("copy");
 
+    DrawGammaSetMarker(histoPythia8EtaToPi0, 24, 1.5, kRed+2 , kRed+2);
+    histoPythia8EtaToPi0->SetLineWidth(widthCommonFit);
+    histoPythia8EtaToPi0->GetXaxis()->SetRangeUser(0.3,30.);
+    histoPythia8EtaToPi0->Draw("same,hist,l");
+
     textSizeLabelsPixel = 48;
     TLegend* legendXsectionPaperEtaToPi02     = GetAndSetLegend2(0.15, 0.735, 0.48, 0.735+0.045*5, 0.85*textSizeLabelsPixel);
     legendXsectionPaperEtaToPi02->SetNColumns(1);
     legendXsectionPaperEtaToPi02->SetMargin(0.2);
     legendXsectionPaperEtaToPi02->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
+    legendXsectionPaperEtaToPi02->AddEntry(histoPythia8EtaToPi0,"Pythia 8.2, Monash 2013","l");
     legendXsectionPaperEtaToPi02->AddEntry(graphNLOEtaToPi0,"NLO, PDF:CTEQ6M5","f");
     legendXsectionPaperEtaToPi02->AddEntry((TObject*)0,"#pi^{0} FF:DSS07, #eta FF:AESSS","");
     legendXsectionPaperEtaToPi02->AddEntry((TObject*)0,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}","");
@@ -4808,6 +4816,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // plotting data
     graphCombEtaToPi0SysA->Draw("2,same");
     graphCombEtaToPi0StatA->Draw("p,same");
+
+    //plotting MC
+    histoPythia8EtaToPi0->Draw("same,hist,l");
 
     // plotting NLO
     graphNLOEtaToPi0->Draw("same,e4");
