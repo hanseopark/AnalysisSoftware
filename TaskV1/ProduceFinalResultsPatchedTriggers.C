@@ -2710,17 +2710,17 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             legendMeanNew->Draw();
 
             // labeling
-            TLatex *labelEnergySysDetailed = new TLatex(0.95, 0.93,collisionSystem.Data());
+            TLatex *labelEnergySysDetailed = new TLatex(0.7, 0.93,collisionSystem.Data());
             labelEnergySysDetailed->SetTextAlign(31);
             SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
             labelEnergySysDetailed->Draw();
 
-            TLatex *labelPi0SysDetailed     = new TLatex(0.95, 0.93-0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
+            TLatex *labelPi0SysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
             labelPi0SysDetailed->SetTextAlign(31);
             SetStyleTLatex( labelPi0SysDetailed, 0.85*textSizeSpectra,4);
             labelPi0SysDetailed->Draw();
 
-            TLatex *labelDetProcSysDetailed = new TLatex(0.95, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
+            TLatex *labelDetProcSysDetailed = new TLatex(0.7, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
             labelDetProcSysDetailed->SetTextAlign(31);
             SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4);
             labelDetProcSysDetailed->Draw();
@@ -4975,17 +4975,17 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 legendMeanNew->Draw();
 
                 // labeling
-                TLatex *labelEnergySysDetailed = new TLatex(0.95, 0.93,collisionSystem.Data());
+                TLatex *labelEnergySysDetailed = new TLatex(0.7, 0.93,collisionSystem.Data());
                 labelEnergySysDetailed->SetTextAlign(31);
                 SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
                 labelEnergySysDetailed->Draw();
 
-                TLatex *labelEtaSysDetailed     = new TLatex(0.95, 0.93-0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+                TLatex *labelEtaSysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
                 labelEtaSysDetailed->SetTextAlign(31);
                 SetStyleTLatex( labelEtaSysDetailed, 0.85*textSizeSpectra,4);
                 labelEtaSysDetailed->Draw();
 
-                TLatex *labelDetProcSysDetailed = new TLatex(0.95, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
+                TLatex *labelDetProcSysDetailed = new TLatex(0.7, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
                 labelDetProcSysDetailed->SetTextAlign(31);
                 SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4);
                 labelDetProcSysDetailed->Draw();
@@ -6264,17 +6264,17 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     legendMeanNew->Draw();
 
                     // labeling
-                    TLatex *labelEnergySysDetailed = new TLatex(0.95, 0.93,collisionSystem.Data());
+                    TLatex *labelEnergySysDetailed = new TLatex(0.7, 0.93,collisionSystem.Data());
                     labelEnergySysDetailed->SetTextAlign(31);
                     SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
                     labelEnergySysDetailed->Draw();
 
-                    TLatex *labelEtaToPi0SysDetailed     = new TLatex(0.95, 0.93-0.99*textSizeSpectra*0.85,"#eta/#pi^{0}");
+                    TLatex *labelEtaToPi0SysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#eta/#pi^{0}");
                     labelEtaToPi0SysDetailed->SetTextAlign(31);
                     SetStyleTLatex( labelEtaToPi0SysDetailed, 0.85*textSizeSpectra,4);
                     labelEtaToPi0SysDetailed->Draw();
 
-                    TLatex *labelDetProcSysDetailed = new TLatex(0.95, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
+                    TLatex *labelDetProcSysDetailed = new TLatex(0.7, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
                     labelDetProcSysDetailed->SetTextAlign(31);
                     SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4);
                     labelDetProcSysDetailed->Draw();
