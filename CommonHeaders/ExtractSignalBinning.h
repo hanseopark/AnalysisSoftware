@@ -295,10 +295,10 @@ Int_t fBinsPi08TeVConvEMCALPtRebin[28]          = { 2, 2,
                                                     2, 2, 2, 4, 4,
                                                     4, 4, 5, 8, 16,
                                                     2};
-Int_t fBinsPi08TeVPtMergedRebin[53]             = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                    2, 2, 2, 2, 2, 4, 4, 4, 4, 4,
-                                                    4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-                                                    4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+Int_t fBinsPi08TeVPtMergedRebin[53]             = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                    1, 1, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                    2, 2, 2, 2, 4, 4, 4, 4, 4, 4,
                                                     4, 4, 4, 4, 4, 4, 4, 4, 5, 5,
                                                     5, 5, 5};
 
@@ -585,13 +585,13 @@ Int_t fBinsPi02760GeVConvEMCALPtTrig11aRebin[25]= {4, 4, 2, 2, 2,
                                                     2, 2, 2, 2, 2, 
                                                     2, 2, 4, 4, 5,
                                                     5, 5, 10, 10, 10};
-Int_t fBinsPi02760GeVPtMergedRebin[32]          = { 2, 2, 2, 2, 2,
-                                                    2, 2, 2, 2, 2, 
-                                                    2, 2, 2, 2, 2, 
+Int_t fBinsPi02760GeVPtMergedRebin[32]          = { 4, 4, 4, 4, 4,
+                                                    4, 4, 4, 4, 4, 
+                                                    4, 4, 4, 4, 4, 
                                                     4, 4, 4, 4, 4,
                                                     4, 4, 4, 4, 4, 
                                                     4, 4, 4, 4, 4,
-                                                    5, 5 };
+                                                    4, 4 };
 
 Double_t fBinsPi02760GeVFullHaitoMerged[34]     =  {    0.0,    0.4,    0.6,    0.8,    1.0, 
                                                         1.2,    1.4,    1.6,    1.8,    2.0, 
@@ -1166,8 +1166,7 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                     default:
                         return 3;
                         break;
-                }   
-                
+                }     
             } else if (mode == 4){      // EMC-EMC
                 switch (trigger){
                     case 0:
@@ -1186,6 +1185,26 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                         break;
                     default:
                         return 13;
+                        break;
+                }   
+            } else if (mode == 10){      // EMC-EMC
+                switch (trigger){
+                    case 0:
+                    case 1:
+                    case 10:
+                    case 11:
+                        return 38;      // INT triggers
+                        break;
+                    case 52:
+                    case 53:
+                        return 45;      // EMC triggers
+                        break;
+                    case 81:
+                    case 82:
+                        return 50;      // EGA triggers
+                        break;
+                    default:
+                        return 38;
                         break;
                 }   
             } else {                    // other modes

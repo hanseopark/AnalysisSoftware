@@ -664,7 +664,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         DrawAutoGammaHistoPaper2D(fHistoClustersMergedPtM02,
                                 " ",
                                 "#it{p}_{T} (GeV/#it{c})",
-                                "#lambda_{0}^{2}",
+                                "#sigma_{long}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
                                 1,minPtPlotting, maxPtPlotting,0.8,0.8);
@@ -695,7 +695,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         DrawAutoGammaHistoPaper2D(fHistoClustersMergedPtM02AccMeson,
                                 " ",
                                 "#it{p}_{T} (GeV/#it{c})",
-                                "#lambda_{0}^{2}",
+                                "#sigma_{long}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
                                 1,minPtPlotting, maxPtPlotting,0.8,0.8);
@@ -724,7 +724,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         DrawAutoGammaHistoPaper2D(fHistoClustersMergedEM02AccMeson,
                                 " ",
                                 "#it{E} (GeV)",
-                                "#lambda_{0}^{2}",
+                                "#sigma_{long}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
                                 1,2.95, maxPtPlotting,0.8,0.8);
@@ -750,7 +750,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         DrawAutoGammaHistoPaper2D(fHistoTrueClusPartConvMergedPtM02,
                                 " ",
                                 "#it{p}_{T} (GeV/#it{c})",
-                                "#lambda_{0}^{2}",
+                                "#sigma_{long}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
                                 1,minPtPlotting, maxPtPlotting,0.8,0.8);
@@ -780,7 +780,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         DrawAutoGammaHistoPaper2D(fHistoTrueClusPureMergedPtM02,
                                 " ",
                                 "#it{p}_{T} (GeV/#it{c})",
-                                "#lambda_{0}^{2}",
+                                "#sigma_{long}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
                                 1,minPtPlotting, maxPtPlotting,0.8,0.8);
@@ -810,7 +810,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         DrawAutoGammaHistoPaper2D(fHistoTrueClusOneGammaPtM02,
                                 " ",
                                 "#it{p}_{T} (GeV/#it{c})",
-                                "#lambda_{0}^{2}",
+                                "#sigma_{long}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
                                 1,minPtPlotting, maxPtPlotting,0.8,0.8);
@@ -840,7 +840,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         DrawAutoGammaHistoPaper2D(fHistoTrueClusOneElectronPtM02,
                                 " ",
                                 "#it{p}_{T} (GeV/#it{c})",
-                                "#lambda_{0}^{2}",
+                                "#sigma_{long}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
                                 1,minPtPlotting, maxPtPlotting,0.8,0.8);
@@ -873,7 +873,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         DrawAutoGammaHistoPaper2D(dumm2D,
                                 " ",
                                 "#it{p}_{T} (GeV/#it{c})",
-                                "#lambda_{0}^{2}",
+                                "#sigma_{long}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
                                 1,minPtPlotting, maxPtPlotting,0.8,0.8);
@@ -906,7 +906,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         DrawAutoGammaHistoPaper2D(dumm2D,
                                 " ",
                                 "#it{p}_{T} (GeV/#it{c})",
-                                "#lambda_{0}^{2}",
+                                "#sigma_{long}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
                                 1,minPtPlotting, maxPtPlotting,0.8,0.8);
@@ -937,7 +937,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         DrawAutoGammaHistoPaper2D(fHistoTrueClustersGammaPtM02,
                                 " ",
                                 "#it{p}_{T} (GeV/#it{c})",
-                                "#lambda_{0}^{2}",
+                                "#sigma_{long}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
                                 1,minPtPlotting, maxPtPlotting,0.8,0.8);
@@ -968,7 +968,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         DrawAutoGammaHistoPaper2D(fHistoTrueClustersElectronPtM02,
                                 " ",
                                 "#it{p}_{T} (GeV/#it{c})",
-                                "#lambda_{0}^{2}",
+                                "#sigma_{long}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
                                 1,minPtPlotting, maxPtPlotting,0.8,0.8);
@@ -1000,7 +1000,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         DrawAutoGammaHistoPaper2D(fHistoTrueClustersBGPtM02,
                                 " ",
                                 "#it{p}_{T} (GeV/#it{c})",
-                                "#lambda_{0}^{2}",
+                                "#sigma_{long}^{2}",
                                 0,0,0,
                                 1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
                                 1,minPtPlotting, maxPtPlotting,0.8,0.8);
@@ -2080,7 +2080,7 @@ void FillDataHistosArray(TH2F* fInvMassVSPtDummy, TH2F* fM02VsPtDummy) {
 
         CheckForNULLForPointer(fHistoM02PtBin[iPt]);
         if (fM02VsPtDummy){
-            fHistoM02PtBin[iPt]         = FillProjectionY(fM02VsPtDummy, fNameHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoM02PtBin[iPt]         = FillProjectionY(fM02VsPtDummy, fNameHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
     }
 }
@@ -2108,36 +2108,36 @@ void FillMCM02HistosArray(  TH2F* fTrueMergedPtVsM02Dummy,
         // true merged clusters        
         CheckForNULLForPointer(fHistoTrueClusMergedM02PtBin[iPt]);
         if (fTrueMergedPtVsM02Dummy){
-            fHistoTrueClusMergedM02PtBin[iPt]                   = FillProjectionY(fTrueMergedPtVsM02Dummy, fNameHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusMergedM02PtBin[iPt]                   = FillProjectionY(fTrueMergedPtVsM02Dummy, fNameHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
         // true merged pi0        
         CheckForNULLForPointer(fHistoTrueClusPi0M02PtBin[iPt]);
         if (fTruePi0PtVsM02){
-            fHistoTrueClusPi0M02PtBin[iPt]                      = FillProjectionY(fTruePi0PtVsM02, fNamePi0HistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusPi0M02PtBin[iPt]                      = FillProjectionY(fTruePi0PtVsM02, fNamePi0HistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
 
         // true merged eta        
         CheckForNULLForPointer(fHistoTrueClusEtaM02PtBin[iPt]);
         if (fTrueEtaPtVsM02){
-            fHistoTrueClusEtaM02PtBin[iPt]                      = FillProjectionY(fTrueEtaPtVsM02, fNameEtaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusEtaM02PtBin[iPt]                      = FillProjectionY(fTrueEtaPtVsM02, fNameEtaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
 
         // true gamma
         CheckForNULLForPointer(fHistoTrueClusGammaM02PtBin[iPt]);
         if (fTrueGammaPtVsM02){
-            fHistoTrueClusGammaM02PtBin[iPt]                    = FillProjectionY(fTrueGammaPtVsM02, fNameGammaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusGammaM02PtBin[iPt]                    = FillProjectionY(fTrueGammaPtVsM02, fNameGammaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
 
         // true electron
         CheckForNULLForPointer(fHistoTrueClusElectronM02PtBin[iPt]);
         if (fTrueElectronPtVsM02){
-            fHistoTrueClusElectronM02PtBin[iPt]                 = FillProjectionY(fTrueElectronPtVsM02, fNameElectronHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusElectronM02PtBin[iPt]                 = FillProjectionY(fTrueElectronPtVsM02, fNameElectronHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
 
         // true BG
         CheckForNULLForPointer(fHistoTrueClusBGM02PtBin[iPt]);
         if (fTrueBGPtVsM02){
-            fHistoTrueClusBGM02PtBin[iPt]                       = FillProjectionY(fTrueBGPtVsM02, fNameBGHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusBGM02PtBin[iPt]                       = FillProjectionY(fTrueBGPtVsM02, fNameBGHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
     }
 }
@@ -2189,99 +2189,99 @@ void FillMCM02AdditionHistosArray(      TH2F* fTrueMergedPureDummy,
         // true merged clusters        
         CheckForNULLForPointer(fHistoTrueClusPureMergedM02PtBin[iPt]);
         if (fTrueMergedPureDummy){
-            fHistoTrueClusPureMergedM02PtBin[iPt]               = FillProjectionY(fTrueMergedPureDummy, fNameHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusPureMergedM02PtBin[iPt]               = FillProjectionY(fTrueMergedPureDummy, fNameHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
         CheckForNULLForPointer(fHistoTrueClusPureMergedFromPi0M02PtBin[iPt]);
         if (fTrueMergedPurePi0Dummy){
-            fHistoTrueClusPureMergedFromPi0M02PtBin[iPt]        = FillProjectionY(fTrueMergedPurePi0Dummy, fNameHistoM02FromPi0, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusPureMergedFromPi0M02PtBin[iPt]        = FillProjectionY(fTrueMergedPurePi0Dummy, fNameHistoM02FromPi0, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
         CheckForNULLForPointer(fHistoTrueClusPureMergedFromEtaM02PtBin[iPt]);
         if (fTrueMergedPureEtaDummy){
-            fHistoTrueClusPureMergedFromEtaM02PtBin[iPt]        = FillProjectionY(fTrueMergedPureEtaDummy, fNameHistoM02FromEta, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusPureMergedFromEtaM02PtBin[iPt]        = FillProjectionY(fTrueMergedPureEtaDummy, fNameHistoM02FromEta, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
         // true merged clusters part conv       
         CheckForNULLForPointer(fHistoTrueClusPartConvMergedM02PtBin[iPt]);
         if (fTruePartConvMergedVsM02Dummy){
-            fHistoTrueClusPartConvMergedM02PtBin[iPt]           = FillProjectionY(fTruePartConvMergedVsM02Dummy, fNamePartConvHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusPartConvMergedM02PtBin[iPt]           = FillProjectionY(fTruePartConvMergedVsM02Dummy, fNamePartConvHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
         CheckForNULLForPointer(fHistoTrueClusPartConvMergedFromPi0M02PtBin[iPt]);
         if (fTruePartConvMergedPi0VsM02Dummy){
-            fHistoTrueClusPartConvMergedFromPi0M02PtBin[iPt]    = FillProjectionY(fTruePartConvMergedPi0VsM02Dummy, fNamePartConvHistoM02FromPi0, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusPartConvMergedFromPi0M02PtBin[iPt]    = FillProjectionY(fTruePartConvMergedPi0VsM02Dummy, fNamePartConvHistoM02FromPi0, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
         CheckForNULLForPointer(fHistoTrueClusPartConvMergedFromEtaM02PtBin[iPt]);
         if (fTruePartConvMergedEtaVsM02Dummy){
-            fHistoTrueClusPartConvMergedFromEtaM02PtBin[iPt]    = FillProjectionY(fTruePartConvMergedEtaVsM02Dummy, fNamePartConvHistoM02FromEta, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusPartConvMergedFromEtaM02PtBin[iPt]    = FillProjectionY(fTruePartConvMergedEtaVsM02Dummy, fNamePartConvHistoM02FromEta, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
         // true cluster with 1 gamma from mesons        
         CheckForNULLForPointer(fHistoTrueClusOneGammaM02PtBin[iPt]);
         if (fTrueOneGammaDummy){
-            fHistoTrueClusOneGammaM02PtBin[iPt]                 = FillProjectionY(fTrueOneGammaDummy, fNameOneGammaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusOneGammaM02PtBin[iPt]                 = FillProjectionY(fTrueOneGammaDummy, fNameOneGammaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
 
         // true cluster with 1 gamma from pi0
         CheckForNULLForPointer(fHistoTrueClusOneGammaFromPi0M02PtBin[iPt]);
         if (fTrueOneGammaFromPi0Dummy){
-            fHistoTrueClusOneGammaFromPi0M02PtBin[iPt]          = FillProjectionY(fTrueOneGammaFromPi0Dummy, fNameOneGammaFromPi0HistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusOneGammaFromPi0M02PtBin[iPt]          = FillProjectionY(fTrueOneGammaFromPi0Dummy, fNameOneGammaFromPi0HistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
 
         // true cluster with 1 gamma from eta
         CheckForNULLForPointer(fHistoTrueClusOneGammaFromEtaM02PtBin[iPt]);
         if (fTrueOneGammaFromEtaDummy){
-            fHistoTrueClusOneGammaFromEtaM02PtBin[iPt]          = FillProjectionY(fTrueOneGammaFromEtaDummy, fNameOneGammaFromEtaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusOneGammaFromEtaM02PtBin[iPt]          = FillProjectionY(fTrueOneGammaFromEtaDummy, fNameOneGammaFromEtaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
 
         // true cluster with 1 electron from meson
         CheckForNULLForPointer(fHistoTrueClusOneElectronM02PtBin[iPt]);
         if (fTrueOneElectronDummy){
-            fHistoTrueClusOneElectronM02PtBin[iPt]              = FillProjectionY(fTrueOneElectronDummy, fNameOneElectronHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusOneElectronM02PtBin[iPt]              = FillProjectionY(fTrueOneElectronDummy, fNameOneElectronHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
 
         // true cluster with 1 electron from pi0
         CheckForNULLForPointer(fHistoTrueClusOneElectronFromPi0M02PtBin[iPt]);
         if (fTrueOneElectronFromPi0Dummy){
-            fHistoTrueClusOneElectronFromPi0M02PtBin[iPt]       = FillProjectionY(fTrueOneElectronFromPi0Dummy, fNameOneElectronFromPi0HistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusOneElectronFromPi0M02PtBin[iPt]       = FillProjectionY(fTrueOneElectronFromPi0Dummy, fNameOneElectronFromPi0HistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
         
         // true cluster with 1 electron from eta
         CheckForNULLForPointer(fHistoTrueClusOneElectronFromEtaM02PtBin[iPt]);
         if (fTrueOneElectronFromEtaDummy){
-            fHistoTrueClusOneElectronFromEtaM02PtBin[iPt]       = FillProjectionY(fTrueOneElectronFromEtaDummy, fNameOneElectronFromEtaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusOneElectronFromEtaM02PtBin[iPt]       = FillProjectionY(fTrueOneElectronFromEtaDummy, fNameOneElectronFromEtaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
 
         // true cluster from pi0 in GG channel
         CheckForNULLForPointer(fHistoTrueClusPi0GGM02PtBin[iPt]);
         if (fTruePi0GGDummy){
-            fHistoTrueClusPi0GGM02PtBin[iPt]                    = FillProjectionY(fTruePi0GGDummy, fNameTruePi0GGM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusPi0GGM02PtBin[iPt]                    = FillProjectionY(fTruePi0GGDummy, fNameTruePi0GGM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
 
         // true cluster from pi0 in Dalitz channel
         CheckForNULLForPointer(fHistoTrueClusPi0DalitzM02PtBin[iPt]);
         if (fTruePi0DalitzDummy){
-            fHistoTrueClusPi0DalitzM02PtBin[iPt]                = FillProjectionY(fTruePi0DalitzDummy, fNameTruePi0DalitzM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusPi0DalitzM02PtBin[iPt]                = FillProjectionY(fTruePi0DalitzDummy, fNameTruePi0DalitzM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
 
         // true cluster from eta in GG channel
         CheckForNULLForPointer(fHistoTrueClusEtaGGM02PtBin[iPt]);
         if (fTrueEtaGGDummy){
-            fHistoTrueClusEtaGGM02PtBin[iPt]                    = FillProjectionY(fTrueEtaGGDummy, fNameTrueEtaGGM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusEtaGGM02PtBin[iPt]                    = FillProjectionY(fTrueEtaGGDummy, fNameTrueEtaGGM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
 
         // true cluster from eta in Dalitz channel
         CheckForNULLForPointer(fHistoTrueClusEtaDalitzM02PtBin[iPt]);
         if (fTrueEtaDalitzDummy){
-            fHistoTrueClusEtaDalitzM02PtBin[iPt]                = FillProjectionY(fTrueEtaDalitzDummy, fNameTrueEtaDalitzM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusEtaDalitzM02PtBin[iPt]                = FillProjectionY(fTrueEtaDalitzDummy, fNameTrueEtaDalitzM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
         
         // true cluster from pi0 double counted
         CheckForNULLForPointer(fHistoTrueClusPi0DCM02PtBin[iPt]);
         if (fTruePi0DCDummy){
-            fHistoTrueClusPi0DCM02PtBin[iPt]                    = FillProjectionY(fTruePi0DCDummy, fNameTruePi0DCM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusPi0DCM02PtBin[iPt]                    = FillProjectionY(fTruePi0DCDummy, fNameTruePi0DCM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
 
         // true cluster from eta double counted
         CheckForNULLForPointer(fHistoTrueClusEtaDCM02PtBin[iPt]);
         if (fTrueEtaDCDummy){
-            fHistoTrueClusEtaDCM02PtBin[iPt]                    = FillProjectionY(fTrueEtaDCDummy, fNameTrueEtaDCM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusEtaDCM02PtBin[iPt]                    = FillProjectionY(fTrueEtaDCDummy, fNameTrueEtaDCM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
         
     }
@@ -2301,7 +2301,7 @@ void FillMCPrimSecM02HistosArray(   TH2F* fTruePi0PrimM02VsPt,
         // true prim pi0 clusters
         CheckForNULLForPointer(fHistoTrueClusPrimPi0M02PtBin[iPt]);
         if (fTruePi0PrimM02VsPt){
-            fHistoTrueClusPrimPi0M02PtBin[iPt]                  = FillProjectionY(fTruePi0PrimM02VsPt, fNamePi0PrimM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+            fHistoTrueClusPrimPi0M02PtBin[iPt]                  = FillProjectionY(fTruePi0PrimM02VsPt, fNamePi0PrimM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
  
         // fill secondary pt differential histo for pi0 from: K0s, Lambda, K0l, Rest
@@ -2310,7 +2310,7 @@ void FillMCPrimSecM02HistosArray(   TH2F* fTruePi0PrimM02VsPt,
                 TString fNamePi0SecM02                  = Form("TrueClusSecPi0From%s_M02_in_Pt_Bin%02d", nameSecondaries[j].Data(), iPt);
                 CheckForNULLForPointer(fHistoTrueClusSecPi0M02PtBin[j][iPt]);
                 if (fTruePi0SecM02VsPt[j]){
-                    fHistoTrueClusSecPi0M02PtBin[j][iPt]            = FillProjectionY(fTruePi0SecM02VsPt[j], fNamePi0SecM02, fBinsPt[iPt], fBinsPt[iPt+1], 4, NULL);
+                    fHistoTrueClusSecPi0M02PtBin[j][iPt]            = FillProjectionY(fTruePi0SecM02VsPt[j], fNamePi0SecM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
                 }
             }    
         }
