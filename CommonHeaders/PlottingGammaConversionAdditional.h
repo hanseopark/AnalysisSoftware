@@ -4329,7 +4329,7 @@ Color_t GetColorSystematics(    TString variationName,
         return kRed-4;
     if ( variationName.CompareTo("Periods") == 0 )
         return kGreen-4;
-    if ( variationName.CompareTo("InnerMaterial") == 0 )
+    if ( variationName.CompareTo("InnerMaterial") == 0 || variationName.CompareTo("Material") == 0)
         return kMagenta-2;
     if ( variationName.CompareTo("OpeningAngle") == 0 )
         return kCyan-3;
@@ -4340,7 +4340,7 @@ Color_t GetColorSystematics(    TString variationName,
     if ( variationName.CompareTo("CellMinE") == 0 )
         return kSpring-6;
 
-    cout << "GetColorSystematics(): no valid input parameters given..." << endl;
+    cout << "GetColorSystematics(): no valid input parameters given for '" << variationName.Data() <<  "'..." << endl;
     return kBlack;
 }
 
@@ -4397,7 +4397,7 @@ Style_t GetMarkerStyleSystematics(  TString variationName,
         return 24;
     if ( variationName.CompareTo("Periods") == 0 )
         return 21;
-    if ( variationName.CompareTo("InnerMaterial") == 0 )
+    if ( variationName.CompareTo("InnerMaterial") == 0 || variationName.CompareTo("Material") == 0 )
         return 20;
     if ( variationName.CompareTo("OpeningAngle") == 0 )
         return 25;
@@ -4408,7 +4408,7 @@ Style_t GetMarkerStyleSystematics(  TString variationName,
     if ( variationName.CompareTo("CellMinE") == 0 )
         return 33;
     
-    cout << "GetMarkerStyleSystematics(): no valid input parameters given..." << endl;
+    cout << "GetMarkerStyleSystematics(): no valid input parameters given for '" << variationName.Data() <<  "'..." << endl;
     return 20;
 }
 
