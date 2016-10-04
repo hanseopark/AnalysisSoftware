@@ -4411,17 +4411,17 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             // shrink systematics graphs at the end & fill systematics
             for (Int_t j = 0; j< graphsCorrectedYieldSysRemoved0Eta[i]->GetN(); j++){
                 if (sysAvailEta[i]){
-                    Int_t counter = 0;
-                    while(counter < 100 && TMath::Abs(graphsCorrectedYieldSysRemoved0Eta[i]->GetX()[j] - ptSysRelEta[i][counter])> 0.001) counter++;
-                    if (counter < 100){
-                        cout << ptSysRelEta[i][counter]<< "\t found it" << endl;
-                        Double_t yErrorSysLowDummy = TMath::Abs(yErrorSysLowRelEta[i][counter]/100*graphsCorrectedYieldSysRemoved0Eta[i]->GetY()[j]);
-                        Double_t yErrorSysHighDummy = yErrorSysHighRelEta[i][counter]/100*graphsCorrectedYieldSysRemoved0Eta[i]->GetY()[j];
+                    Int_t counter2 = 0;
+                    while(counter2 < 100 && TMath::Abs(graphsCorrectedYieldSysRemoved0Eta[i]->GetX()[j] - ptSysRelEta[i][counter2])> 0.001) counter2++;
+                    if (counter2 < 100){
+                        cout << ptSysRelEta[i][counter2]<< "\t found it" << endl;
+                        Double_t yErrorSysLowDummy = TMath::Abs(yErrorSysLowRelEta[i][counter2]/100*graphsCorrectedYieldSysRemoved0Eta[i]->GetY()[j]);
+                        Double_t yErrorSysHighDummy = yErrorSysHighRelEta[i][counter2]/100*graphsCorrectedYieldSysRemoved0Eta[i]->GetY()[j];
                         graphsCorrectedYieldSysRemoved0Eta[i]->SetPointEYlow(j,yErrorSysLowDummy);
                         graphsCorrectedYieldSysRemoved0Eta[i]->SetPointEYhigh(j,yErrorSysHighDummy);
                         if (sysAvailSingleEta[i]){
                             for (Int_t k = 0; k < nRelSysErrEtaSources; k++ ){
-                                graphRelSysErrEtaSource[k][i]->SetPoint(j, graphsCorrectedYieldSysRemoved0Eta[i]->GetX()[j] ,((TString)ptSysDetail[i][counter+1].at(k+1)).Atof());
+                                graphRelSysErrEtaSource[k][i]->SetPoint(j, graphsCorrectedYieldSysRemoved0Eta[i]->GetX()[j] ,((TString)ptSysDetail[i][counter2+1].at(k+1)).Atof());
                                 graphRelSysErrEtaSource[k][i]->SetPointEYhigh(j,0);
                                 graphRelSysErrEtaSource[k][i]->SetPointEYlow(j,0);
                             }    
@@ -4472,12 +4472,12 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 yErrorHighFinalEta[nPointFinalEta] = graphsCorrectedYieldShrunkEta[i]->GetEYhigh()[j];
                 yErrorLowFinalEta[nPointFinalEta] = graphsCorrectedYieldShrunkEta[i]->GetEYlow()[j];
                 if (sysAvailEta[i]){
-                    Int_t counter = 0;
-                    while(counter < 100 && TMath::Abs(xValueFinalEta[nPointFinalEta] - ptSysRelEta[i][counter])> 0.001) counter++;
-                    if (counter < 100){
-                        cout << ptSysRelEta[i][counter]<< "\t found it" << endl;
-                        yErrorSysLowFinalEta[nPointFinalEta] = TMath::Abs(yErrorSysLowRelEta[i][counter]/100*graphsCorrectedYieldShrunkEta[i]->GetY()[j]);
-                        yErrorSysHighFinalEta[nPointFinalEta] = yErrorSysHighRelEta[i][counter]/100*graphsCorrectedYieldShrunkEta[i]->GetY()[j];
+                    Int_t counter2 = 0;
+                    while(counter2 < 100 && TMath::Abs(xValueFinalEta[nPointFinalEta] - ptSysRelEta[i][counter2])> 0.001) counter2++;
+                    if (counter2 < 100){
+                        cout << ptSysRelEta[i][counter2]<< "\t found it" << endl;
+                        yErrorSysLowFinalEta[nPointFinalEta] = TMath::Abs(yErrorSysLowRelEta[i][counter2]/100*graphsCorrectedYieldShrunkEta[i]->GetY()[j]);
+                        yErrorSysHighFinalEta[nPointFinalEta] = yErrorSysHighRelEta[i][counter2]/100*graphsCorrectedYieldShrunkEta[i]->GetY()[j];
                         
                     } else {
                         yErrorSysLowFinalEta[nPointFinalEta] = 0;
@@ -5532,6 +5532,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             Double_t yErrorSysHighFinalEtaToPi0             [100];
 
             Double_t ptSysRelEtaToPi0                       [MaxNumberOfFiles][100];
+            Int_t ptSysRelEtaToPi0NBins                     = 0;
             Double_t yErrorSysLowRelEtaToPi0                [MaxNumberOfFiles][100];
             Double_t yErrorSysHighRelEtaToPi0               [MaxNumberOfFiles][100];
             Bool_t   sysAvailEtaToPi0                       [MaxNumberOfFiles];
@@ -5594,6 +5595,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                         cout << counter << "\t"<< ptSysRelEtaToPi0[i][counter]<< "\t"  << yErrorSysLowRelEtaToPi0[i][counter] << "\t"  <<yErrorSysHighRelEtaToPi0[i][counter] << "\t"  << endl;;
                         counter++;
                     }
+                    ptSysRelEtaToPi0NBins = counter;
                     fileSysErrEtaToPi0.close();
                     hasSysEtaToPi0              = kTRUE;
                  // read in detailed systematics
@@ -5702,17 +5704,18 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 // put systematics on graph
                 for (Int_t j = 0; j< graphsEtaToPi0SysRemoved0[i]->GetN(); j++){
                     if (sysAvailEtaToPi0[i]){
-                        Int_t counter = 0;
-                        while(counter < 100 && TMath::Abs(graphsEtaToPi0SysRemoved0[i]->GetX()[j] - ptSysRelEtaToPi0[i][counter])> 0.001) counter++;
-                        if (counter < 100){
-                            cout << ptSysRelEtaToPi0[i][counter]<< "\t found it" << endl;
-                            Double_t yErrorSysLowDummy  = TMath::Abs(yErrorSysLowRelEtaToPi0[i][counter]/100*graphsEtaToPi0SysRemoved0[i]->GetY()[j]);
-                            Double_t yErrorSysHighDummy = yErrorSysHighRelEtaToPi0[i][counter]/100*graphsEtaToPi0SysRemoved0[i]->GetY()[j];
+                        Int_t counter2 = 0;
+                        while(counter2 < 100 && TMath::Abs(graphsEtaToPi0SysRemoved0[i]->GetX()[j] - ptSysRelEtaToPi0[i][counter2])> 0.001) counter2++;
+                        cout << "counter: " << counter2 << ", NBins read: " << ptSysRelEtaToPi0NBins << endl;
+                        if (counter2 < 100 && counter2 < ptSysRelEtaToPi0NBins){
+                            cout << "counter: " << counter2 << ", " << ptSysRelEtaToPi0[i][counter2]<< "\t found it" << endl;
+                            Double_t yErrorSysLowDummy  = TMath::Abs(yErrorSysLowRelEtaToPi0[i][counter2]/100*graphsEtaToPi0SysRemoved0[i]->GetY()[j]);
+                            Double_t yErrorSysHighDummy = yErrorSysHighRelEtaToPi0[i][counter2]/100*graphsEtaToPi0SysRemoved0[i]->GetY()[j];
                             graphsEtaToPi0SysRemoved0[i]->SetPointEYlow(j,yErrorSysLowDummy);
                             graphsEtaToPi0SysRemoved0[i]->SetPointEYhigh(j,yErrorSysHighDummy);
                             if (sysAvailSingleEtaToPi0[i]){
                                 for (Int_t k = 0; k < nRelSysErrEtaToPi0Sources; k++ ){
-                                    graphRelSysErrEtaToPi0Source[k][i]->SetPoint(j, graphsEtaToPi0SysRemoved0[i]->GetX()[j] ,((TString)ptSysDetail[i][counter+1].at(k+1)).Atof());
+                                    graphRelSysErrEtaToPi0Source[k][i]->SetPoint(j, graphsEtaToPi0SysRemoved0[i]->GetX()[j] ,((TString)ptSysDetail[i][counter2+1].at(k+1)).Atof());
                                     graphRelSysErrEtaToPi0Source[k][i]->SetPointEYhigh(j,0);
                                     graphRelSysErrEtaToPi0Source[k][i]->SetPointEYlow(j,0);
                                 }    
