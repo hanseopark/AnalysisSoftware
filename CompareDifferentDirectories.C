@@ -151,6 +151,7 @@ void CompareDifferentDirectories( 	TString FolderList = "",
     TH1D *histoAcceptanceCut[ConstNumberOfCuts];
     TH1D *histoRawYieldCut[ConstNumberOfCuts];
     TH1D *histoMassCut[ConstNumberOfCuts];
+    TH1D *histoWidthCut[ConstNumberOfCuts];
     TH1D *histoSBCut[ConstNumberOfCuts];
 
     TH1D *histoRatioCorrectedYieldCut[ConstNumberOfCuts];
@@ -158,6 +159,7 @@ void CompareDifferentDirectories( 	TString FolderList = "",
     TH1D *histoRatioAcceptanceCut[ConstNumberOfCuts];
     TH1D *histoRatioRawYieldCut[ConstNumberOfCuts];
     TH1D *histoRatioMassCut[ConstNumberOfCuts];
+    TH1D *histoRatioWidthCut[ConstNumberOfCuts];
     TH1D *histoRatioSBCut[ConstNumberOfCuts];
     
     Double_t maxPt	= 0;
@@ -204,6 +206,8 @@ void CompareDifferentDirectories( 	TString FolderList = "",
         histoRawYieldCut[i]->SetName(Form("histoYieldMesonPerEvent_%s",cutStringsName[i].Data()));
         histoMassCut[i]             = (TH1D*)Cutuncorrfile[i]->Get("histoMassGaussianMeson");
         histoMassCut[i]->SetName(Form("histoMassGaussianMeson_%s",cutStringsName[i].Data()));
+        histoWidthCut[i]             = (TH1D*)Cutuncorrfile[i]->Get("histoFWHMMeson");
+        histoWidthCut[i]->SetName(Form("histoWidthGaussianMeson_%s",cutStringsName[i].Data()));
         histoSBCut[i]               = (TH1D*)Cutuncorrfile[i]->Get("histoSBdefaultMeson");
         histoSBCut[i]->SetName(Form("histoSBdefaultMeson_%s",cutNumber[i].Data()));
         
@@ -222,6 +226,8 @@ void CompareDifferentDirectories( 	TString FolderList = "",
         histoRatioRawYieldCut[i]->Divide(histoRatioRawYieldCut[i],histoRawYieldCut[0],1.,1.,"B");
         histoRatioMassCut[i]        = (TH1D*) histoMassCut[i]->Clone(Form("histoRatioMassCut_%s",cutStringsName[i].Data()));
         histoRatioMassCut[i]->Divide(histoRatioMassCut[i],histoMassCut[0],1.,1.,"B");
+        histoRatioWidthCut[i]        = (TH1D*) histoWidthCut[i]->Clone(Form("histoRatioWidthCut_%s",cutStringsName[i].Data()));
+        histoRatioWidthCut[i]->Divide(histoRatioWidthCut[i],histoWidthCut[0],1.,1.,"B");
 
         histoRatioSBCut[i]          = (TH1D*) histoSBCut[i]->Clone(Form("histoRatioSBCut_%s", cutStringsName[i].Data()));
         histoRatioSBCut[i]->Divide(histoRatioSBCut[i],histoSBCut[0],1.,1.,"B");
@@ -651,7 +657,7 @@ void CompareDifferentDirectories( 	TString FolderList = "",
 
     // draw efficiency in upper panel
     padMass->cd();
-    if (mode == 2 || mode == 3 ) padMass->SetLogy(1);
+    if ( (mode == 2 || mode == 3) && optionEnergy.CompareTo("8TeV")!=0 ) padMass->SetLogy(1);
     else padMass->SetLogy(0);
 
     TLegend* legendMass = GetAndSetLegend2(0.15,0.93-0.03*NumberOfCuts,0.3,0.93, 1500*0.75*0.032);
@@ -665,6 +671,8 @@ void CompareDifferentDirectories( 	TString FolderList = "",
                                     kFALSE, 5., 10e-10,kFALSE,
                                     kTRUE, massMin, 0.1425,
                                     kFALSE, 0., 10.);
+            if (optionEnergy.CompareTo("8TeV") == 0) histoMassCut[i]->GetYaxis()->SetRangeUser(massMin,0.15);
+            if (optionEnergy.CompareTo("8TeV") == 0 && cutVariationName.Contains("Calo") && cutVariationName.Contains("EGA")) histoMassCut[i]->GetYaxis()->SetRangeUser(0.12,0.20);
             if ( !meson.Contains("Pi0") )histoMassCut[i]->GetYaxis()->SetRangeUser(0.4,0.6);
             histoMassCut[i]->GetYaxis()->SetTitleOffset(1.4);
             histoMassCut[i]->DrawCopy("e1,p");
@@ -711,6 +719,82 @@ void CompareDifferentDirectories( 	TString FolderList = "",
     canvasMassMeson->Update();
     canvasMassMeson->SaveAs(Form("%s/%s_%s_Mass.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
     delete canvasMassMeson;
+
+    //**************************************************************************************
+    //********************* Plotting Width **************************************************
+    //**************************************************************************************
+
+    TCanvas* canvasWidthMeson = new TCanvas("canvasWidthMeson","",1350,1500);  // gives the page size
+    DrawGammaCanvasSettings( canvasWidthMeson,  0.13, 0.02, 0.02, 0.09);
+    // Define upper panel
+    TPad* padWidth = new TPad("padWidth", "", 0., 0.25, 1., 1.,-1, -1, -2);
+    DrawGammaPadSettings( padWidth, 0.12, 0.02, 0.02, 0.);
+    padWidth->Draw();
+    // Define lower panel
+    TPad* padWidthRatios = new TPad("padWidthRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
+    DrawGammaPadSettings( padWidthRatios, 0.12, 0.02, 0.0, 0.2);
+    padWidthRatios->Draw();
+
+    // draw efficiency in upper panel
+    padWidth->cd();
+    if ( (mode == 2 || mode == 3) && optionEnergy.CompareTo("8TeV")!=0 ) padWidth->SetLogy(1);
+    else padWidth->SetLogy(0);
+
+    TLegend* legendWidth = GetAndSetLegend2(0.15,0.93-0.03*NumberOfCuts,0.3,0.93, 1500*0.75*0.032);
+    for(Int_t i = 0; i< NumberOfCuts; i++){
+        if(i == 0){
+            DrawGammaSetMarker(histoWidthCut[i], 20, 1., color[0], color[0]);
+            DrawAutoGammaMesonHistos( histoWidthCut[i],
+                                    "", "#it{p}_{T} (GeV/#it{c})", Form("#it{#sigma}_{%s} (GeV/c^{2})",textMeson.Data()),
+                                    kFALSE, 5., 10e-10,kFALSE,
+                                    kTRUE, 0., 0.05,
+                                    kFALSE, 0., 10.);
+            if (optionEnergy.CompareTo("8TeV") == 0 && cutVariationName.Contains("Calo") && cutVariationName.Contains("EGA")) histoWidthCut[i]->GetYaxis()->SetRangeUser(0.,0.10);
+            histoWidthCut[i]->GetYaxis()->SetTitleOffset(1.4);
+            histoWidthCut[i]->DrawCopy("e1,p");
+            legendWidth->AddEntry(histoWidthCut[i],Form("standard: %s",cutStringsName[i].Data()));
+        } else {
+            if(i<20){
+                DrawGammaSetMarker(histoWidthCut[i], 20+i, 1.,color[i],color[i]);
+            } else {
+                DrawGammaSetMarker(histoWidthCut[i], 20+i, 1.,color[i-20],color[i-20]);
+            }
+            histoWidthCut[i]->DrawCopy("same,e1,p");
+            legendWidth->AddEntry(histoWidthCut[i],cutStringsName[i].Data());
+        }
+    }
+    legendWidth->Draw();
+
+    labelCollisionSystem4->Draw();
+    if (labelDetProcess2)labelDetProcess2->Draw();
+
+    // Draw ratio of efficiencies in lower panel
+    padWidthRatios->cd();
+    if( optionEnergy.Contains("Pb") ) padWidthRatios->SetLogy(0);
+    else padWidthRatios->SetLogy(0);
+
+    for(Int_t i = 0; i< NumberOfCuts; i++){
+        if(i==0){
+            Double_t minYRatio = 0.8;
+            Double_t maxYRatio = 1.2;
+            SetStyleHistoTH1ForGraphs(histoRatioWidthCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.08, 0.1, 0.75, 0.5, 510,505);
+            DrawGammaSetMarker(histoRatioWidthCut[i], 20, 1.,color[0],color[0]);
+            histoRatioWidthCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
+            histoRatioWidthCut[i]->DrawCopy("p,e1");
+        } else{
+            if(i<20){
+                DrawGammaSetMarker(histoRatioWidthCut[i], 20+i, 1.,color[i],color[i]);
+            } else {
+                DrawGammaSetMarker(histoRatioWidthCut[i], 20+i, 1.,color[i-20],color[i-20]);
+            }
+            histoRatioWidthCut[i]->DrawCopy("same,e1,p");
+        }
+        DrawGammaLines(0., maxPt,1., 1.,0.1);
+    }
+
+    canvasWidthMeson->Update();
+    canvasWidthMeson->SaveAs(Form("%s/%s_%s_Width.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
+    delete canvasWidthMeson;
 
     //**************************************************************************************
     //************************ Plotting SB  ************************************************
