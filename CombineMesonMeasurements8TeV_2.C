@@ -1,5 +1,6 @@
 /****************************************************************************************************************************
 ******         provided by Gamma Conversion Group, PWG4,                                                     *****
+******        Daniel Mühlheim, d.muehlheim@cern.ch                                                        *****
 ******        Friederike Bock, friederike.bock@cern.ch                                                    *****
 *****************************************************************************************************************************/
 
@@ -216,13 +217,13 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         histoPCMPi0InvXSectionStat->SetBinContent(1,0);
         histoPCMPi0InvXSectionStat->SetBinError(1,1);
         TGraphAsymmErrors* graphPCMPi0InvXSectionStat       = new TGraphAsymmErrors(histoPCMPi0InvXSectionStat);
-        graphPCMPi0InvXSectionStat->RemovePoint(graphPCMPi0InvXSectionStat->GetN()-1);
+        //graphPCMPi0InvXSectionStat->RemovePoint(graphPCMPi0InvXSectionStat->GetN()-1);
         graphPCMPi0InvXSectionStat->RemovePoint(0);
         cout << "Pi0 stat PCM" << endl;
         graphPCMPi0InvXSectionStat->Print();
         TGraphAsymmErrors* graphPCMPi0InvXSectionSysA       = (TGraphAsymmErrors*)directoryPCMPi0->Get("InvCrossSectionPi0SysA");
         TGraphAsymmErrors* graphPCMPi0InvXSectionSys        = (TGraphAsymmErrors*)directoryPCMPi0->Get("InvCrossSectionPi0Sys");
-        graphPCMPi0InvXSectionSys->RemovePoint(graphPCMPi0InvXSectionSys->GetN()-1);
+        //graphPCMPi0InvXSectionSys->RemovePoint(graphPCMPi0InvXSectionSys->GetN()-1);
         graphPCMPi0InvXSectionSys->RemovePoint(graphPCMPi0InvXSectionSys->GetN()-1);
         cout << "Pi0 sys PCM" << endl;
         graphPCMPi0InvXSectionSys->Print();
@@ -599,8 +600,8 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         TGraph* graphNLOEtaToPi0MuHalf                      = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcEtaOverPi0MuHalf8000GeV");
         TGraph* graphNLOEtaToPi0MuOne                       = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcEtaOverPi0MuOne8000GeV");
         TGraph* graphNLOEtaToPi0MuTwo                       = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcEtaOverPi0MuTwo8000GeV");
-        TGraph* graphNLODSSCalcMuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcDSSInvSecPi0MuTwo8000GeV");
-        TGraph* graphNLOCGCCalcMuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcCGCInvCrossSec8000GeV");
+        //TGraph* graphNLODSSCalcMuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcDSSInvSecPi0MuTwo8000GeV");
+        //TGraph* graphNLOCGCCalcMuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcCGCInvCrossSec8000GeV");
         //TGraphAsymmErrors* graphNLODSS14Calc                = (TGraphAsymmErrors*)fileTheoryCompilation->Get("graphNLOCalcDSS14InvCrossSec8000GeV");
 
         while (graphNLOCalcEtaMuHalf->GetX()[graphNLOCalcEtaMuHalf->GetN()-1] > 37. )
@@ -685,7 +686,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     maxNBinsPi0                  = GetBinning( xPtLimitsPi0, "Pi0", "8TeV", 11 );
 //    maxNBinsPi0--;
 
-    Double_t xPtLimitsPi0WOMerged[50];
+    Double_t xPtLimitsPi0WOMerged[70];
     Int_t maxNBinsPi0W0Merged       = GetBinning( xPtLimitsPi0WOMerged, "Pi0", "8TeV", 11 );
 
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for Pi0
@@ -1019,7 +1020,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     canvasRelTotErr->SaveAs(Form("%s/Pi0_RelTotErr.%s",outputDir.Data(),suffix.Data()));
 
 
-    histo2DRelTotErrPi0->GetYaxis()->SetRangeUser(0,30.5);
+    histo2DRelTotErrPi0->GetYaxis()->SetRangeUser(0,40.5);
     histo2DRelTotErrPi0->Draw("copy");
         graphCombPi0InvXSectionRelTotA->Draw("p,same,z");
 
@@ -1177,11 +1178,13 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
 
         TCanvas* canvasShift = new TCanvas("canvasShift","",0,0,1000,900);// gives the page size
         DrawGammaCanvasSettings( canvasShift, 0.10, 0.017, 0.015, 0.08);
+        canvasShift->SetLogx(1);
 
         Size_t textSizeSpectra          = 0.04;
-        TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., 70.);
+        TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0.23, 70.);
         SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (X) / no shift",
-                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
+                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 1.1,1.2);
+        histoBinShift->GetXaxis()->SetMoreLogLabels(1);
         histoBinShift->GetYaxis()->SetRangeUser(0.95,1.05);
         histoBinShift->DrawCopy();
 
@@ -1212,6 +1215,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
 
         canvasShift->Update();
         canvasShift->SaveAs(Form("%s/BinShiftCorrection_Pi0.%s",outputDir.Data(),suffix.Data()));
+        canvasShift->SetLogx(0);
 
         // *************************************************************************************************************
         // Plot control graphs
@@ -1764,8 +1768,10 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     fitTCMInvXSectionPi0Plot->Draw("same");
 
     fitTCMDecomposedPi0L->SetLineColor(kAzure);
+    fitTCMDecomposedPi0L->SetLineStyle(2);
     fitTCMDecomposedPi0L->Draw("same");
-    fitTCMDecomposedPi0H->SetLineColor(kGreen);
+    fitTCMDecomposedPi0H->SetLineColor(kGreen+2);
+    fitTCMDecomposedPi0H->SetLineStyle(8);
     fitTCMDecomposedPi0H->Draw("same");
 
     TLatex *labelTCMPi01= new TLatex(0.48, 0.94, Form("TCM low:"));
