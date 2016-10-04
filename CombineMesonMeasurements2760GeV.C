@@ -107,6 +107,9 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     }  
     
     TString nameFinalResDat                     = Form("%s/CombinedResults%s_FitResults.dat",outputDir.Data(),bWCorrection.Data());
+    fstream  fileFitsOutput;
+    fileFitsOutput.open(nameFinalResDat.Data(), ios::out);  
+
     cout << outputDir.Data() << endl;
     cout << fileNamePCM.Data() << endl;
 
@@ -664,9 +667,15 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 //             histoEMCALMergedPi0Pur                          = (TH1D*)directoryEMCALmergedPi0->Get("PurityPi0");
             graphEMCALMergedPi0AccTimesEff                  = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get("EffTimesAccPi0");
             graphEMCALMergedPi0Purity                       = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get("PurityPi0");
+            while (graphEMCALMergedPi0AccTimesEff->GetX()[0] < 16 ) 
+                graphEMCALMergedPi0AccTimesEff->RemovePoint(0);
+            while (graphEMCALMergedPi0Purity->GetX()[0] < 16 ) 
+                graphEMCALMergedPi0Purity->RemovePoint(0);
             graphEMCALMergedPi0AccTimesEffDivPur            = CalculateGraphErrRatioToOtherTGraphErr(graphEMCALMergedPi0AccTimesEff, graphEMCALMergedPi0Purity,kTRUE);
             graphEMCALMergedPi0InvXSectionStat              = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get("graphInvCrossSectionPi0");
             graphEMCALMergedPi0InvXSectionSys               = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get("InvCrossSectionPi0Sys");
+            if (graphEMCALMergedPi0AccTimesEffDivPur->GetX()[0] < 16 ) graphEMCALMergedPi0AccTimesEffDivPur->RemovePoint(0);
+            
             if (flagMerged == 1 || flagMerged == 4){
                 cout << "EMCAL merged stat" << endl;
                 for (Int_t i = 0; graphEMCALMergedPi0InvXSectionStat->GetX()[0]< 9; i++){
@@ -1637,10 +1646,11 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     fitInvXSectionPi0           = FitObject("l","fitInvCrossSectionPi02760GeV","Pi0",graphCombPi0InvXSectionTotA,0.4,40.,paramGraphPi0,"QNRMEX0+");
     fitInvXSectionPi0           = FitObject("l","fitInvCrossSectionPi02760GeV","Pi0",graphCombPi0InvXSectionTotA,0.4,40. ,paramGraphPi0,"QNRMEX0+");
     cout << WriteParameterToFile(fitInvXSectionPi0)<< endl;    
-    
+    fileFitsOutput <<  WriteParameterToFile(fitInvXSectionPi0)<< endl;    
     //Two component model from Bylinkin
     fitTCMInvXSectionPi0        = FitObject("tcm","fitTCMInvCrossSectionPi02760GeV","Pi0",graphCombPi0InvXSectionTotA,0.4,40. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitTCMInvXSectionPi0)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitTCMInvXSectionPi0)<< endl;    
 //     TF1* fitTCMInvXSectionPi02  = FitObject("tcm","fitTCMInvCrossSectionPi02760GeV2","Pi0",graphCombPi0InvXSectionTotA,0.4,40.,paramTCMPi0New,"QNRMEX0+","", kFALSE);
 //     cout << WriteParameterToFile(fitTCMInvXSectionPi02)<< endl;
 
@@ -1649,7 +1659,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     
     TF1* fitPCMTCMInvXSectionPi0    = FitObject("tcm","fitPCMTCMInvCrossSectionPi02760GeV","Pi0",graphPCMPi0InvXSectionStat,0.4,8. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPCMTCMInvXSectionPi0)<< endl;
-
+    fileFitsOutput <<  WriteParameterToFile(fitPCMTCMInvXSectionPi0)<< endl;    
 //     return;
     
     // *************************************************************************************************************
@@ -2442,6 +2452,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     fitInvXSectionEta        = FitObject("l","fitInvCrossSectionEta2760GeV","Eta",graphCombEtaInvXSectionTotA,0.5,20.,paramGraphEta,"QNRMEX0+");
     fitInvXSectionEta        = FitObject("l","fitInvCrossSectionEta2760GeV","Eta",graphCombEtaInvXSectionTotA,0.5,20. ,paramGraphEta,"QNRMEX0+");
     cout << WriteParameterToFile(fitInvXSectionEta)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitInvXSectionEta)<< endl;    
     
     // Two component model by Bylinkin
     TF1* fitTCMInvXSectionEta= FitObject("tcm","fitTCMInvCrossSectionEta2760GeV","Eta",graphCombEtaInvXSectionTotA,0.5,20.,paramTCMEta,"QNRMEX0+","", kFALSE);
@@ -2452,7 +2463,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 // //      graphCombEtaInvXSectionTotA->Fit(fitTCMDecomposedH,"QNRMEX0+","",5,20);
 //  fitTCMDecomposedH->SetParameters(fitTCMInvXSectionEta->GetParameter(2),fitTCMInvXSectionEta->GetParameter(3), fitTCMInvXSectionEta->GetParameter(4));
     cout << WriteParameterToFile(fitTCMInvXSectionEta)<< endl;
-    
+    fileFitsOutput <<  WriteParameterToFile(fitTCMInvXSectionEta)<< endl;    
     
     // *************************************************************************************************************
     // Shift spectra in Y  direction as well if desired
@@ -3791,11 +3802,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         ratio2DTheoryPP->GetYaxis()->SetNoExponent(kTRUE);
         ratio2DTheoryPP->GetXaxis()->SetMoreLogLabels(kTRUE);
         ratio2DTheoryPP->GetXaxis()->SetNoExponent(kTRUE);
-//      ratio2DTheoryPP->GetYaxis()->SetLabelOffset(0.01);
         ratio2DTheoryPP->GetXaxis()->SetLabelFont(42);
         ratio2DTheoryPP->GetYaxis()->SetLabelFont(42);
-//      ratio2DTheoryPP->GetXaxis()->SetLabelOffset(-0.01);
-    //    ratio2DTheoryPP->GetXaxis()->SetTickLength(0.07);
         ratio2DTheoryPP->DrawCopy(); 
 
         graphRatioPi0CombNLODSS14->RemovePoint(0);
@@ -3827,7 +3835,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphRatioPi0CombCombFitSysA->Draw("2,same");
         graphRatioPi0CombCombFitStatAWOXErr->Draw("p,same");
 
-        
+        TBox* boxErrorSigma2760GeVRatioPi0 = CreateBoxConv(kGray+1, 0.28, 1.-(0.0544 ), 0.32, 1.+(0.0544));
+        boxErrorSigma2760GeVRatioPi0->Draw();
         DrawGammaLines(0.23, 70.,1., 1.,0.1,kGray);
 
         // upper left corner
@@ -3883,6 +3892,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphRatioPi0CombCombFitSysA->Draw("2,same");
         graphRatioPi0CombCombFitStatAWOXErr->Draw("p,same");
 
+        boxErrorSigma2760GeVRatioPi0->Draw();
         DrawGammaLines(0.23, 70.,1., 1.,0.1,kGray);
 
         TLegend* legendRatioTheoryPPNew= GetAndSetLegend2(0.15,0.92-0.85*textsizeLabelsPP*3,0.4,0.92, 0.85*textSizeLabelsPixel);
@@ -3939,7 +3949,9 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphRatioEtaCombCombFitSysA->Draw("2,same");
         graphRatioEtaCombCombFitStatAWOXErr->Draw("p,same");
 
-        DrawGammaLines(0.23, 70.,1., 1.,0.1,kGray);
+        TBox* boxErrorSigma2760GeVRatioEta = CreateBoxConv(kGray+1, 0.40, 1.-(0.0544), 0.44, 1.+(0.0544));        
+        boxErrorSigma2760GeVRatioEta->Draw();
+        DrawGammaLines(0.33, 25.,1., 1.,0.1,kGray);
 
         // upper left corner
         TLatex *labelRatioTheoryNLOEta   = new TLatex(0.155,0.93,"NLO, PDF: CTEQ6M5 FF: AESSS");
@@ -4063,8 +4075,9 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         SetStyleTLatex( labelDetSysXSectionPaper, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 31);
         labelDetSysXSectionPaper->Draw();
         
-        TLegend* legendXsectionPaper    = GetAndSetLegend2(0.17, 0.14, 0.5, 0.14+0.05*3, textSizeLabelsPixel, 1, "", 43, 0.2);
-        legendXsectionPaper->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
+        TLegend* legendXsectionPaper    = GetAndSetLegend2(0.17, 0.14, 0.5, 0.14+0.05*4, textSizeLabelsPixel, 1, "", 43, 0.2);
+        legendXsectionPaper->AddEntry(graphCombPi0InvXSectionSysA,"Data,","pf");
+        legendXsectionPaper->AddEntry((TObject*)0,"Norm. unc. 5.4%","");
         legendXsectionPaper->AddEntry(graphNLODSS14Calc,"NLO, PDF: MSTW, FF: DSS14","f");
 //         legendXsectionPaper->AddEntry((TObject*)0,"Phys.Rev. D91 no. 1, (2015) 014035","");
         legendXsectionPaper->AddEntry(histoPythia8InvXSectionPi0,"Pythia 8.2, Monash 2013","l");
@@ -4093,6 +4106,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 //         DrawGammaNLOTGraph( graphRatioPi0CombCGC, widthCommonFit, styleLineCGC, colorCGC);
 //         graphRatioPi0CombCGC->Draw("same,c");
 
+        boxErrorSigma2760GeVRatioPi0->Draw();
         
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombNLODSS14, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
         graphRatioPi0CombNLODSS14->Draw("3,same");
@@ -4133,11 +4147,13 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphRatioPi0CombCombFitSysA->SetLineWidth(0);
         graphRatioPi0CombCombFitSysA->Draw("2,same");
         graphRatioPi0CombCombFitStatAWOXErr->Draw("p,same");
-
+        
+        boxErrorSigma2760GeVRatioPi0->Draw();
+        
         DrawGammaLines(0.23, 70.,1., 1.,0.1,kGray);
         
     canvasInvSectionPaper->Print(Form("%s/Pi0_InvXSectionWithRatios_Paper.%s",outputDir.Data(),suffix.Data()));
-
+    
     padInvSectionSpec->cd();
     padInvSectionSpec->SetLogy(1);
     padInvSectionSpec->SetLogx(1);
@@ -4171,18 +4187,19 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         fitTCMInvXSectionEta->Draw("same");
 
         // labels lower left corner
-        TLegend* legendXsectionPaperEta    = GetAndSetLegend2(0.17, 0.11, 0.5, 0.11+0.05*1, textSizeLabelsPixel, 1, "", 43, 0.2);
-        legendXsectionPaperEta->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
+        TLegend* legendXsectionPaperEta    = GetAndSetLegend2(0.17, 0.11, 0.5, 0.11+0.05*2, textSizeLabelsPixel, 1, "", 43, 0.2);
+        legendXsectionPaperEta->AddEntry(graphCombPi0InvXSectionSysA,"Data,","pf");
+        legendXsectionPaperEta->AddEntry((TObject*)0,"Norm. unc. 5.4%","");
         legendXsectionPaperEta->Draw();
         legendXsectionPaper2->Draw();
         
-        TLatex *labelEnergyXSectionPaperEta= new TLatex(0.18, 0.13+0.05*3, collisionSystem2760GeV.Data());
+        TLatex *labelEnergyXSectionPaperEta= new TLatex(0.18, 0.13+0.05*4, collisionSystem2760GeV.Data());
         SetStyleTLatex( labelEnergyXSectionPaperEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
         labelEnergyXSectionPaperEta->Draw();
-        TLatex *labelALICEXSectionPaperEta= new TLatex(0.18,0.13+0.05*2,"ALICE");
+        TLatex *labelALICEXSectionPaperEta= new TLatex(0.18,0.13+0.05*3,"ALICE");
         SetStyleTLatex( labelALICEXSectionPaperEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
         labelALICEXSectionPaperEta->Draw();
-        TLatex *labelDetSysXSectionPaperEta = new TLatex(0.18,0.13+0.05*1,"#eta #rightarrow #gamma#gamma");
+        TLatex *labelDetSysXSectionPaperEta = new TLatex(0.18,0.13+0.05*2,"#eta #rightarrow #gamma#gamma");
         SetStyleTLatex( labelDetSysXSectionPaperEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
         labelDetSysXSectionPaperEta->Draw();
         
@@ -4238,6 +4255,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphRatioEtaCombCombFitSysA->Draw("2,same");
         graphRatioEtaCombCombFitStatAWOXErr->Draw("p,same");
         
+        boxErrorSigma2760GeVRatioEta->Draw();
         DrawGammaLines(0.33, 25.,1., 1.,0.1,kGray);
         
     padInvSectionPythiaRatio->cd();
@@ -4266,6 +4284,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphRatioEtaCombCombFitSysA->Draw("2,same");
         graphRatioEtaCombCombFitStatAWOXErr->Draw("p,same");
 
+        boxErrorSigma2760GeVRatioEta->Draw();
         DrawGammaLines(0.33, 25.,1., 1.,0.1,kGray);
         
     canvasInvSectionPaper->Print(Form("%s/Eta_InvXSectionWithRatios_Paper.%s",outputDir.Data(),suffix.Data()));
@@ -4482,11 +4501,14 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
                                                                                                     &graphChHadInvYieldPubStatPPHadCombUp, &graphChHadInvYieldPubSystPPHadCombUp )    ;
 
     TF1* fitPowInvYieldChHadALICE       = FitObject("powPure","fitPowInvYieldChHadALICE","pi0",graphChargedHadronsStatPP,7,50. ,NULL,"QNRMEX0+","", kFALSE);
-    cout << WriteParameterToFile(fitPowInvYieldChHadALICE)<< endl;                                                                                                    
+    cout << WriteParameterToFile(fitPowInvYieldChHadALICE)<< endl;                       
+    fileFitsOutput <<  WriteParameterToFile(fitPowInvYieldChHadALICE)<< endl;    
     TF1* fitPowInvYieldChHadATLAS       = FitObject("powPure","fitPowInvYieldChHadATLAS","pi0",graphChargedHadronsStatPPATLAS,7,70. ,NULL,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvYieldChHadATLAS)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitPowInvYieldChHadATLAS)<< endl;    
     TF1* fitPowInvYieldChHadCMS         = FitObject("powPure","fitPowInvYieldChHadCMS","pi0",graphChargedHadronsStatPPCMS,7,70. ,NULL,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvYieldChHadCMS)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitPowInvYieldChHadCMS)<< endl;    
 
     TGraphAsymmErrors* graphRatioChHadStatToChFitALICE      = CalculateGraphErrRatioToFit(graphChargedHadronsStatPP, fitPowInvYieldChHadALICE);
     TGraphAsymmErrors* graphRatioChHadSysToChFitALICE       = CalculateGraphErrRatioToFit(graphChargedHadronsSysPP, fitPowInvYieldChHadALICE);
@@ -4725,15 +4747,20 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     graphHFE                    = ScaleGraph(graphHFE, 1e6);
     TF1* fitPowInvXSectionHFE   = FitObject("powPure","fitPowInvXSectionHFE2760GeV","HFE",graphHFE,3,10. ,NULL,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvXSectionHFE)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitPowInvXSectionHFE)<< endl;    
 
     TF1* fitPowInvXSectionPi0Tot   = FitObject("powPure","fitPowInvXSectionPi02760GeVTot","Pi0",graphCombPi0InvXSectionTotA,6,40. ,NULL,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvXSectionPi0Tot)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitPowInvXSectionPi0Tot)<< endl;    
     TF1* fitPowInvXSectionPi0Stat   = FitObject("powPure","fitPowInvXSectionPi02760GeV","Pi0",graphCombPi0InvXSectionStatA,6,40. ,NULL,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvXSectionPi0Stat)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitPowInvXSectionPi0Stat)<< endl;    
     TF1* fitPowInvXSectionEtaTot   = FitObject("powPure","fitPowInvXSectionEta2760GeVTot","Eta",graphCombEtaInvXSectionTotA,6,20. ,NULL,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvXSectionEtaTot)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitPowInvXSectionEtaTot)<< endl;    
     TF1* fitPowInvXSectionEtaStat   = FitObject("powPure","fitPowInvXSectionEta2760GeVStat","Eta",graphCombEtaInvXSectionStatA,6,20. ,NULL,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvXSectionEtaStat)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitPowInvXSectionEtaStat)<< endl;    
 
     
     canvasXSectionPi0->cd();
@@ -5035,7 +5062,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         }        
     }    
     
-    
+    // close fit log file
+    fileFitsOutput.close();
  // **********************************************************************************************************************
  // ************************* Saving of final results ********************************************************************
  // **********************************************************************************************************************

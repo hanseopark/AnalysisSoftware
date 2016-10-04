@@ -1204,9 +1204,32 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             legendBGRatio2->Draw();   
             
             PutProcessLabelAndEnergyOnPlot(0.14, 0.25, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
-        canvasBGRatio->Update();
 
+        canvasBGRatio->Update();
         canvasBGRatio->SaveAs(Form("%s/%s_%s_BGRatioPtCleanerLinY_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
+
+            DrawGammaSetMarker(histoRatioTrueYieldGammaM02, 21, 1, kAzure, kAzure);  
+            histoRatioTrueYieldGammaM02->DrawCopy("e1");
+
+            if (kIsEta){
+                DrawGammaSetMarker(histoRatioTrueYieldPi0M02, 20, 1, kMagenta+2, kMagenta+2);  
+                histoRatioTrueYieldPi0M02->DrawCopy("e1,same");
+            } else {
+                DrawGammaSetMarker(histoRatioTrueYieldEtaM02, 20, 1, kMagenta+2, kMagenta+2);  
+                histoRatioTrueYieldEtaM02->DrawCopy("e1,same");            
+            }
+            DrawGammaSetMarker(histoRatioTrueYieldElectronM02, 21, 1, kGreen+3, kGreen+3);  
+            histoRatioTrueYieldElectronM02->DrawCopy("e1,same");            
+            
+            for (Int_t i = 0; i < 9; i++){
+                DrawGammaSetMarker(histoRatioTrueClustersBGPt[i], markerStyleBGPlot[i], 1, colorBGPlot[i], colorBGPlot[i]);  
+                histoRatioTrueClustersBGPt[i]->DrawCopy("e1,same");
+            }    
+            legendBGRatio->Draw();   
+            
+            PutProcessLabelAndEnergyOnPlot(0.70, 0.94, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
+        canvasBGRatio->Update();
+        canvasBGRatio->SaveAs(Form("%s/%s_%s_BGRatioPtLinY_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
 
         //**********************************************************************************
         //********************** Plot double counting fraction     ************************
@@ -1754,7 +1777,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
 
         TH2F * histo2DPi0M02Dummy;
         histo2DPi0M02Dummy             = new TH2F("histo2DPi0M02Dummy","histo2DPi0M02Dummy",11000,0.0,2.,10000,0,1.2);
-        SetStyleHistoTH2ForGraphs(histo2DPi0M02Dummy, "#it{#lambda}_{0}^{2}","#it{P}",0.85*textsizeLabelsM02, textsizeLabelsM02,
+        SetStyleHistoTH2ForGraphs(histo2DPi0M02Dummy, "#it{#sigma}_{long}^{2}","#it{P}",0.85*textsizeLabelsM02, textsizeLabelsM02,
                                 0.85*textsizeLabelsM02, textsizeLabelsM02,0.88, 0.115/(textsizeFacM02*marginM02));
         
         canvasM02SamplePlot->cd();

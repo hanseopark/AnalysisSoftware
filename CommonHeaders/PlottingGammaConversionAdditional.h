@@ -4312,7 +4312,7 @@ Color_t GetColorSystematics(    TString variationName,
     if ( variationName.CompareTo("ClusterTrackMatching") == 0 || variationName.CompareTo("ClusterTrackMatchingCalo") == 0 )
         return kOrange;
     if ( variationName.CompareTo("ClusterM02") == 0 )
-        return 407;
+        return kGreen-6;
     if ( variationName.CompareTo("CellTiming") == 0 )
         return kTeal-5;
     if ( variationName.CompareTo("ClusterMaterialTRD") == 0 )
