@@ -3674,8 +3674,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         
         TLegend* legendEffiAccEta           = GetAndSetLegend2(0.62, 0.13, 0.9, 0.13+(3*textSizeLabelsRel),textSizeLabelsPixel);
         legendEffiAccEta->AddEntry(histoPCMEtaAccTimesEff,nameMeasGlobalLabel[0],"p");
-        legendEffiAccEta->AddEntry(graphPCMEMCALEtaAccTimesEff,nameMeasGlobalLabel[2],"p");
-        legendEffiAccEta->AddEntry(graphEMCALEtaAccTimesEff,nameMeasGlobalLabel[1],"p");
+        legendEffiAccEta->AddEntry(graphPCMEMCALEtaAccTimesEff,nameMeasGlobalLabel[4],"p");
+        legendEffiAccEta->AddEntry(graphEMCALEtaAccTimesEff,nameMeasGlobalLabel[2],"p");
         legendEffiAccEta->Draw();
 
         labelPerfEffi->Draw();
