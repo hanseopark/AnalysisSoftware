@@ -142,7 +142,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                         TString isMC                        = "kFALSE",
                         TString option                      = "", 
                         TString optionPeriod                = "", 
-                        TString fEstimatePileup             = "",//Bool_t kDoPileup = kFALSE, 
+                        TString fEstimatePileup             = "",
                         Int_t mode                          = 9
                     ){
     
@@ -243,7 +243,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     Double_t minPhiCalo             = 0;
     Double_t maxPhiCalo             = 0;
     Double_t etaCalo                = 0;
-    if (/*isPCM &&*/ isCalo){
+    if (isCalo){
         deltaEtaCalo                = ReturnDeltaEtaCalo(fClusterCutSelection);
         etaCalo                     = deltaEtaCalo*0.5;
         deltaPhiCalo                = ReturnDeltaPhiCalo(fClusterCutSelection);
@@ -254,7 +254,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     }
     
     Double_t scaling                = 1./(2.*TMath::Pi());
-    if (isCalo && !isPCM) scaling   = 1./deltaPhiCalo;
+    Double_t scalingCalo            = 0.;
+    if (isCalo) scalingCalo         = 1./deltaPhiCalo;
     
     Bool_t kDoPileup                = kFALSE;
     if (fEstimatePileup.CompareTo("EstimateTrainPileUp") == 0)
@@ -326,16 +327,11 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TH1D*   histoESDCaloGammaPtPileUp       = NULL;
     TH1D*   histoPhotonDCAzFullPt           = NULL;
     TH1D*   histoPileUpCorrectionFactor     = NULL;
-    if(doPileUpCorr){
-        if (isPCM) {
-            histoESDConvGammaPtPileUp       = (TH1D*)fileUnCorrected->Get("ESD_ConvGamma_Pt_PileUp");
-            histoPileUpCorrectionFactor     = (TH1D*)histoESDConvGammaPtPileUp->Clone("PileUpCorrectionFactor");
-            histoPileUpCorrectionFactor->Divide(histoPileUpCorrectionFactor,histoESDConvGammaPt,1,1,"B");
-        }
-        if (isCalo) {       // is this the best way to do this? how to deal with mode dependence in pileup correction (especially for PCM-Calo) ??
-            histoESDCaloGammaPtPileUp       = (TH1D*)fileUnCorrected->Get("ESD_CaloGamma_Pt_PileUp");
-        }
+    if(doPileUpCorr && isPCM){
         histoPhotonDCAzFullPt               = (TH1D*)fileUnCorrected->Get("ESD_GammaPtDCAzBin_Full");
+        histoESDConvGammaPtPileUp           = (TH1D*)fileUnCorrected->Get("ESD_ConvGamma_Pt_PileUp");
+        histoPileUpCorrectionFactor         = (TH1D*)histoESDConvGammaPtPileUp->Clone("PileUpCorrectionFactor");
+        histoPileUpCorrectionFactor->Divide(histoPileUpCorrectionFactor,histoESDConvGammaPt,1,1,"B");
     }
 
     // Calculate number of events used for normalization
@@ -485,7 +481,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     // Pileup histograms, same definition as above just corrected for MC pileup contributions
     TH1D*   histoMCrecGamma_PileUp_Pt;
     TH1D*   histoPileUpCorrectionFactorMC;
-    if(doPileUpCorr){
+    if(doPileUpCorr && isPCM){
         histoMCrecGamma_PileUp_Pt                           = (TH1D*)fileCorrections->Get("MCrec_ConvGamma_Pt_PileUp");
         if (histoMCrecGamma_PileUp_Pt){
             histoPileUpCorrectionFactorMC                   = (TH1D*)histoMCrecGamma_PileUp_Pt->Clone("PileUpCorrectionFactorMC");
@@ -545,10 +541,10 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TH1D*   histoFracAllGammaToSecFromXFromK0s_OriginalBin_Pt   = (TH1D*)fileCorrections->Get("FracAllGammaToSecFromXFromK0sOriginalBinning");
     TH1D*   histoFracAllGammaToSecFromXFromLambda_OriginalBin_Pt= (TH1D*)fileCorrections->Get("FracAllGammaToSecFromXFromLambdaOriginalBinning");
 
-    TH1D*   histoFracAllGammaToSec_PileUp_Pt;
-    TH1D*   histoFracAllGammaToSecFromXFromK0s_PileUp_Pt;
-    TH1D*   histoMCrecPhotonDCAzFullPt;
-    if(doPileUpCorr){
+    TH1D*   histoFracAllGammaToSec_PileUp_Pt                    = NULL;
+    TH1D*   histoFracAllGammaToSecFromXFromK0s_PileUp_Pt        = NULL;
+    TH1D*   histoMCrecPhotonDCAzFullPt                          = NULL;
+    if(doPileUpCorr&&isPCM){
         histoFracAllGammaToSec_PileUp_Pt                        = (TH1D*)fileCorrections->Get("FracAllGammaToSecPileUp");
         histoFracAllGammaToSecFromXFromK0s_PileUp_Pt            = (TH1D*)fileCorrections->Get("FracAllGammaToSecFromXFromK0sPileUp");
         histoMCrecPhotonDCAzFullPt                              = (TH1D*)fileCorrections->Get("MCrec_GammaPtDCAzBin_Full");     // category must be adapted
@@ -558,9 +554,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TH1F*   histoEventQualityMC                                 = (TH1F*)fileCorrections->Get("NEvents");
     Float_t nEvtMC;
     if (option.CompareTo("PbPb_2.76TeV") == 0){
-        nEvtMC = histoEventQualityMC->GetBinContent(1);
+        nEvtMC                                                  = histoEventQualityMC->GetBinContent(1);
     } else {
-        nEvtMC = GetNEvents(histoEventQualityMC);
+        nEvtMC                                                  = GetNEvents(histoEventQualityMC);
     }
 
     // Determine maximum pT
@@ -583,7 +579,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TH1D *histoGammaMCBackground_Pt                             = (TH1D*)histoMCrecBackground_Pt->Clone("histoGammaMCBackground_Pt");
     histoMCrecBackground_Pt->Multiply(ScalingGammaBackground_Pt);
 
-    //**********************************************************************************  // other modes ?!
+    //**********************************************************************************
     //******************** PrimVtx DCA Plot ********************************************
     //**********************************************************************************
     if( doPileUpCorr && isPCM ){
@@ -640,7 +636,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             DrawGammaSetMarker(histoGammaRawSpectrum_Pt, 20, 1.0, 1, 1);
             DrawGammaSetMarker(histoMCrecBackground_Pt, 20, 1.0, 2, 2);
             
-            SetHistogramm(histoMCrecBackground_Pt,"#it{p}_{T} (GeV/#it{c})",Form("Background for #gamma in |#eta| < %g",eta));
+            SetHistogramm(histoMCrecBackground_Pt,"#it{p}_{T} (GeV/#it{c})",Form("Background for #gamma in |#eta| < %g",etaCalo));
             SetHistogramm(histoGammaRawSpectrum_Pt,"#it{p}_{T} (GeV/#it{c})","Raw yield",1e-10,1e-2);
             
             histoGammaRawSpectrum_Pt->DrawCopy("");
@@ -688,9 +684,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     histoSecondaryGammaFromXFromK0sSpecPt->Scale(doubleAddFactorK0s);
 
     // Correct the secondary fractions for pileup
-    TH1D *histoSecondaryGammaSpecPtPileUp;
-    TH1D *histoSecondaryGammaFromXFromK0sSpecPtPileUp;
-    if(doPileUpCorr){
+    TH1D *histoSecondaryGammaSpecPtPileUp               = NULL;
+    TH1D *histoSecondaryGammaFromXFromK0sSpecPtPileUp   = NULL;
+    if(doPileUpCorr && isPCM){
         histoSecondaryGammaSpecPtPileUp             = (TH1D*) histoESDConvGammaPtPileUp->Clone("SecondaryGammaSpecPtPileUp");
         histoSecondaryGammaFromXFromK0sSpecPtPileUp = (TH1D*) histoESDConvGammaPtPileUp->Clone("SecondaryGammaSpecFromXFromK0sPtPileUp");
         histoSecondaryGammaSpecPtPileUp->Multiply(histoFracAllGammaToSec_PileUp_Pt);
@@ -792,7 +788,6 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //**********************************************************************************
     //******************** Purity Plot *************************************************
     //**********************************************************************************
-    // Plain Purity plotted
     TCanvas *canvasPurity = GetAndSetCanvas("canvasPurity");
 
         if ( (isPCM && !isCalo) || (isCalo && !isPCM) ){
@@ -800,7 +795,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             DrawGammaSetMarker(histoGammaTruePurity_Pt, 20, 1.0, 1, 1);
             if(doPileUpCorr)DrawGammaSetMarker(histoGammaTruePurity_PileUp_Pt, 20, 1.0, kBlue+2, kBlue+2);
             
-            SetHistogramm(histoGammaTruePurity_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{pur,#gamma} in |#eta| < %g",eta),0.6, 1.);
+            if (isPCM && !isCalo) SetHistogramm(histoGammaTruePurity_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{pur,#gamma} in |#eta| < %g",eta),0.6, 1.);
+            if (isCalo && !isPCM) SetHistogramm(histoGammaTruePurity_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{pur,#gamma} in |#eta| < %g",etaCalo),0.6, 1.);
             histoGammaTruePurity_Pt->Draw();
             histoGammaPurity_Pt->Draw("same");
             if(doPileUpCorr)histoGammaTruePurity_PileUp_Pt->Draw("same");
@@ -864,9 +860,18 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //******************** Reconstruction Eff Plot *************************************
     //**********************************************************************************
     TCanvas *canvasRecoEff = GetAndSetCanvas("canvasRecoEff");
-        if ( (isPCM && !isCalo) || (isCalo && !isPCM) ){
+        if ( isPCM && !isCalo ){
             DrawGammaSetMarker(histoGammaPrimaryRecoEff_MCPt, 20, 1.0, 1, 1);
             SetHistogramm(histoGammaPrimaryRecoEff_MCPt,"#it{p}_{T,MC} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
+            histoGammaPrimaryRecoEff_MCPt->Draw();
+        
+            PutProcessLabelAndEnergyOnPlot( 0.75, 0.95, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
+        
+            canvasRecoEff->SaveAs(Form("%s/%s_ReconstructionEff_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
+        }
+        if ( isCalo && !isPCM ){
+            DrawGammaSetMarker(histoGammaPrimaryRecoEff_MCPt, 20, 1.0, 1, 1);
+            SetHistogramm(histoGammaPrimaryRecoEff_MCPt,"#it{p}_{T,MC} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.0);
             histoGammaPrimaryRecoEff_MCPt->Draw();
         
             PutProcessLabelAndEnergyOnPlot( 0.75, 0.95, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
@@ -899,9 +904,17 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         if ( (isPCM && !isCalo) || (isCalo && !isPCM) ){
             padCompRecoEff->cd();
-            SetHistogramm(histoGammaPrimaryRecoEff_MCPt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
-            SetHistogramm(histoGammaPrimaryRecoEff_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0.05, 1.0);
-            if(doPileUpCorr)SetHistogramm(histoGammaPrimaryRecoEff_PileUp_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
+            
+            if (isPCM && !isCalo) {
+                SetHistogramm(histoGammaPrimaryRecoEff_MCPt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
+                SetHistogramm(histoGammaPrimaryRecoEff_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0.05, 1.0);
+                if(doPileUpCorr)SetHistogramm(histoGammaPrimaryRecoEff_PileUp_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
+            }
+            if (isCalo && !isPCM) {
+                SetHistogramm(histoGammaPrimaryRecoEff_MCPt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.0);
+                SetHistogramm(histoGammaPrimaryRecoEff_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0.05, 1.0);
+                if(doPileUpCorr)SetHistogramm(histoGammaPrimaryRecoEff_PileUp_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.0);
+            }
 
             DrawGammaSetMarker(histoGammaPrimaryRecoEff_MCPt, 20, 1.0, kBlack, kBlack);
             DrawGammaSetMarker(histoGammaPrimaryRecoEff_Pt, 24, 1.0, kBlue+1, kBlue+1);
@@ -949,8 +962,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         }
         if (isPCM && isCalo){
             padCompRecoEff->cd();
-            SetHistogramm(histoGammaCaloPrimaryRecoEff_MCPt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
-            SetHistogramm(histoGammaCaloPrimaryRecoEff_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0.05, 1.0);
+            SetHistogramm(histoGammaCaloPrimaryRecoEff_MCPt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.0);
+            SetHistogramm(histoGammaCaloPrimaryRecoEff_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0.05, 1.0);
         
             DrawGammaSetMarker(histoGammaCaloPrimaryRecoEff_MCPt, 20, 1.0, kBlack, kBlack);
             DrawGammaSetMarker(histoGammaCaloPrimaryRecoEff_Pt, 24, 1.0, kBlue+1, kBlue+1);
@@ -1166,15 +1179,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         // Correct inclusive photon spectrum with conversion probability & reco efficiency (both versus MC pt)
         histoGammaCorrUnfoldReso_PtNotCorrected = (TH1D*) histoGammaCorrUnfoldReso_Pt->Clone("GammaUnfoldNotCorrected");
-        CorrectGammaUnfoldResol(histoGammaCorrUnfoldReso_Pt, histoGammaPrimaryRecoEff_MCPt, deltaEtaCalo, scaling, nEvt);
-        CorrectGammaUnfoldResol(histoMCrecGammaCorr_Pt, histoGammaPrimaryRecoEff_MCPt, deltaEtaCalo, scaling, nEvt);
-        CorrectGammaUnfoldResol(histoGammaCorrUnfoldReso_BinByBin_Pt, histoGammaPrimaryRecoEff_MCPt, deltaEtaCalo, scaling, nEvt);
-
-        // Correct inclusive photon spectrum for pileup contribution
-        if(doPileUpCorr){
-            histoGammaCorrUnfoldResoPileUp_Pt         = (TH1D*) histoGammaCorrUnfoldReso_Pt->Clone("GammaUnfoldPileUp");
-            histoGammaCorrUnfoldResoPileUp_Pt->Multiply(histoPileUpCorrectionFactor);
-        }
+        CorrectGammaUnfoldResol(histoGammaCorrUnfoldReso_Pt, histoGammaPrimaryRecoEff_MCPt, deltaEtaCalo, scalingCalo, nEvt);
+        CorrectGammaUnfoldResol(histoMCrecGammaCorr_Pt, histoGammaPrimaryRecoEff_MCPt, deltaEtaCalo, scalingCalo, nEvt);
+        CorrectGammaUnfoldResol(histoGammaCorrUnfoldReso_BinByBin_Pt, histoGammaPrimaryRecoEff_MCPt, deltaEtaCalo, scalingCalo, nEvt);
 
         SetHistogramm(histoGammaCorrUnfoldReso_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}");
         DrawGammaSetMarker(histoGammaCorrUnfoldReso_Pt, 20, 1.0, 1, 1);
@@ -1340,7 +1347,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     if (isCalo && !isPCM) {
         histoGammaCorrEffiReso_Pt = (TH1D*)histoESDCaloGammaPt->Clone("CorrGammaSpecPurityMinusSec");
         CorrectGammaEffiResol( histoGammaCorrEffiReso_Pt, histoSecondaryGammaSpecPt, histoSecondaryGammaFromXFromK0sSpecPt,
-                              histoGammaTruePurity_Pt, histoGammaPrimaryRecoEff_Pt, deltaEtaCalo, scaling, nEvt);
+                              histoGammaTruePurity_Pt, histoGammaPrimaryRecoEff_Pt, deltaEtaCalo, scalingCalo, nEvt);
     }
     DrawGammaSetMarker(histoGammaCorrEffiReso_Pt, 20, 1.0, kGreen+2, kGreen+2);
     SetHistogramm(histoGammaCorrEffiReso_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}");
@@ -1375,7 +1382,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     // correct input inc gamma spectrum for delta Eta, delta phi & number of events
     TH1D* histoMCGammaSpec_MCPt                      = (TH1D*)histoMCAllGamma_MCPt->Clone("GammaSpecMC");
     if (isPCM && !isCalo) CorrectGammaMC(histoMCGammaSpec_MCPt, deltaEta, scaling, nEvtMC);
-    if (isCalo && !isPCM) CorrectGammaMC(histoMCGammaSpec_MCPt, deltaEtaCalo, scaling, nEvtMC);
+    if (isCalo && !isPCM) CorrectGammaMC(histoMCGammaSpec_MCPt, deltaEtaCalo, scalingCalo, nEvtMC);
     DrawGammaSetMarker(histoMCGammaSpec_MCPt, 20, 1.0, 2, 2);
     SetHistogramm(histoMCGammaSpec_MCPt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}");
 
@@ -1743,7 +1750,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         CorrectGammaMC(histoGammaTrueConv_Pt, deltaEta, scaling, nEvtMC);
     }
     if (isCalo && !isPCM) {
-        CorrectGammaMC(histoGammaTrueCalo_Pt, deltaEtaCalo, scaling, nEvtMC);
+        CorrectGammaMC(histoGammaTrueCalo_Pt, deltaEtaCalo, scalingCalo, nEvtMC);
     }
 
     TCanvas *canvasGammaPurityConvBin = GetAndSetCanvas("canvasGammaPurityConvBin");
