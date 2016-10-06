@@ -75,8 +75,8 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
     // ***************************************************************************************************
     const Int_t nPtBins = numberOfPtBins;
     const Int_t nCuts = numberCutStudies;
-    Double_t* ptBins;
-    Double_t* ptBinsErr;
+    Double_t* ptBins = 0x0;
+    Double_t* ptBinsErr = 0x0;
     TString nameCutVariation[23];
     TString nameCutVariationSC[23];
     
@@ -1014,7 +1014,7 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
             }
 
             // manual smoothing for pi0 in eta binning - variation 22
-            if (i==22 && nameCutVariationSC[i].CompareTo("YieldExtraction")==0 ){
+            if (i==22 && nameCutVariationSC[i].CompareTo("YieldExtractionPi0")==0 ){
                 cout << "pi0etabinning smoothing" << endl;
                 for (Int_t k = 0;k < nPtBins;k++){
                     Double_t error          = 0.5 + 0.155*(ptBins[k]-1.1);
@@ -1208,7 +1208,7 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
         SetStyleTLatex( labelCentrality, 0.038,4);
         labelCentrality->Draw();
 
-        TLatex *labelTrig;
+        TLatex *labelTrig = 0x0;
         if (additionalNameOutput.CompareTo("")==0){
             labelTrig= new TLatex(0.75,0.84,Form("LHC12 - INT7"));
         } else if (additionalNameOutput.CompareTo("EMC7")==0){
@@ -1216,8 +1216,11 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
         } else if (additionalNameOutput.CompareTo("EGA")==0){
             labelTrig= new TLatex(0.7,0.84,Form("LHC12 - EMC L1-GA, INT7"));
         }
-        SetStyleTLatex( labelTrig, 0.038,4);
-        labelTrig->Draw();
+
+        if(labelTrig){
+          SetStyleTLatex( labelTrig, 0.038,4);
+          labelTrig->Draw();
+        }
         
     canvasSysErrMean->Update();
     canvasSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/SysMean_%s_%s%s_%s.%s",meson.Data(), energy.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));

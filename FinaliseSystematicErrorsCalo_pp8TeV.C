@@ -76,14 +76,14 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
     // ***************************************************************************************************
     const Int_t nPtBins                     = numberOfPtBins;
     const Int_t nCuts                       = numberCutStudies;
-    Double_t* ptBins;
-    Double_t* ptBinsErr;
+    Double_t* ptBins = 0x0;
+    Double_t* ptBinsErr = 0x0;
     TString nameCutVariation[16];
     TString nameCutVariationSC[16];
     
     TString nameCutVariationSC8TeV[16]   = { "YieldExtraction", "OpeningAngle", "ClusterMinEnergy", "ClusterNCells", "ClusterNonLinearity",
                                                 "ClusterTrackMatchingCalo", "ClusterM02","ClusterMaterialTRD", "ClusterEnergyScale" , "CellTiming", 
-                                                "Trigger", "Efficiency", "ClusterTime", "ClusterizationEnergy", "Periods", "YieldExtraction"};
+                                                "Trigger", "Efficiency", "ClusterTime", "ClusterizationEnergy", "Periods", "YieldExtractionPi0"};
 
     Color_t color[16];
     Color_t markerStyle[16];
@@ -98,7 +98,7 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
     }
 
     if (meson.CompareTo("Pi0EtaBinning") == 0){
-        nameCutVariation8TeV[0]          = "Yield extraction #eta";
+        nameCutVariation[0]          = "Yield extraction #eta";
     }
     
     // ***************************************************************************************************
@@ -789,7 +789,7 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
             }
 
             // manual smoothing for pi0 in eta binning - variation 15
-            if (i==15 && nameCutVariationSC[i].CompareTo("YieldExtraction")==0 ){
+            if (i==15 && nameCutVariationSC[i].CompareTo("YieldExtractionPi0")==0 ){
                 cout << "pi0etabinning smoothing" << endl;
                 Double_t error                  = 3.;
                 for (Int_t k = 0;k < nPtBins;k++){
@@ -971,7 +971,7 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
         SetStyleTLatex( labelCentrality, 0.038,4);
         labelCentrality->Draw();
 
-        TLatex *labelTrig;
+        TLatex *labelTrig = 0x0;
         if (additionalNameOutput.CompareTo("")==0){
             labelTrig= new TLatex(0.75,0.84,Form("LHC12 - INT7"));
         } else if (additionalNameOutput.CompareTo("EMC7")==0){
@@ -979,8 +979,11 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
         } else if (additionalNameOutput.CompareTo("EGA")==0){
             labelTrig= new TLatex(0.7,0.84,Form("LHC12 - EMC L1-GA, INT7"));
         }
-        SetStyleTLatex( labelTrig, 0.038,4);
-        labelTrig->Draw();
+
+        if(labelTrig){
+          SetStyleTLatex( labelTrig, 0.038,4);
+          labelTrig->Draw();
+        }
         
     canvasSysErrMean->Update();
     canvasSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMean_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
