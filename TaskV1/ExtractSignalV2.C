@@ -1365,7 +1365,7 @@ void ExtractSignalV2(   TString meson                   = "",
         cout << "Example bin: "<< fExampleBin << endl;
         PlotExampleInvMassBinsV2(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin],
                             fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                            fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerSet, fExampleBinScaleFac);
+                            fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerSet, fExampleBinScaleFac,fMode);
         
     } else {
         nameMesonSub    = Form("%s_MesonSubtracted%s", plotPrefix.Data(), plotSuffix.Data());
@@ -1402,7 +1402,7 @@ void ExtractSignalV2(   TString meson                   = "",
         
         PlotExampleInvMassBinsV2(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalRemainingBGSubInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin], 
                             fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                            fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerSet, fExampleBinScaleFac);
+                            fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerSet, fExampleBinScaleFac,fMode);
 
     }
 

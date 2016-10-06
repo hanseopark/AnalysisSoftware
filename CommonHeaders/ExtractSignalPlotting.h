@@ -154,7 +154,8 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
                                 TString decayChannel,
                                 TString detectionChannel                = "",
                                 Int_t triggerSet                        = 0,
-                                Double_t scaleFacSignal                 = 1.0
+                                Double_t scaleFacSignal                 = 1.0,
+                                Int_t detMode = 0
                              ){
     TString triggerStr; 
         if (triggerSet == 52){
@@ -342,7 +343,7 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     labelTrigger->SetTextFont(43);
     labelTrigger->Draw();
     
-    TLatex *labelInvMassRecoPCM  = new TLatex(0.135,0.9-3*0.9*textsizeLabelsPP,"PCM");
+    TLatex *labelInvMassRecoPCM  = new TLatex(0.135,0.9-3*0.9*textsizeLabelsPP,ReturnTextReconstructionProcess(detMode));
     SetStyleTLatex( labelInvMassRecoPCM, 0.85*textSizeLabelsPixel,4);
     labelInvMassRecoPCM->SetTextFont(43);
     labelInvMassRecoPCM->Draw();
