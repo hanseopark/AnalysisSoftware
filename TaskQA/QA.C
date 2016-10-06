@@ -751,16 +751,15 @@ void QA(    TString select          = "LHC11a",         // set selected
         //pathPhotonQA[2] = "";
     }
     //**************************************************************************************************************
-    // TESTING XROOTD
-    else if(select.CompareTo("LHC12-XROOTD")==0){
-    //LHC12 with/without xROOTd fix
-        labelData = "LHC12i, new XrootD";
+    else if(select.CompareTo("LHC15h1b-Match")==0){
+        labelData = "ESD";
         nSets = 2;
+        mode = 4;
         fEnergyFlag = "8TeV";
-        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20150903-LHC12_pass2/GammaConvCalo_LHC12i-pass1_117.root";
-        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20150903-LHC12_pass2-oldXrootD/GammaConvCalo_LHC12i-pass1_117.root";
-        DataSets[0]="LHC12"; DataSets[1]="LHC12";
-        plotDataSets[0]="LHC12i"; plotDataSets[1]="LHC12i, old XrootD";
+        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA/2080_20160519-0918/LHC15h1b_GammaCalo_101.root";
+        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20161003-8TeV-validAOD_matching/2120_20160522-1851/LHC15h1b_GammaCalo_101.root";
+        DataSets[0]="LHC15h1b"; DataSets[1]="LHC15h1b";
+        plotDataSets[0]="ESD"; plotDataSets[1]="AOD";
         pathPhotonQA[0] = "";
         pathPhotonQA[1] = "";
     }
