@@ -291,19 +291,23 @@ TString ReturnTextReconstructionProcess(Int_t mode){
         case 0:
             return "PCM";
         case 1: 
-            return "PCM, Dalitz";
+            return "PCM-Dal";
         case 2:
-            return "PCM, EMCal";
+            return "PCM-EMC";
         case 3: 
-            return "PCM, PHOS";
+            return "PCM-PHOS";
         case 4:
-            return "EMCal, EMCal";
+            return "EMC";
         case 5: 
-            return "PHOS, PHOS";
+            return "PHOS";
         case 6:
-            return "Dalitz, EMCal";
+            return "EMC-Dal";
         case 7:
-            return "Dalitz, PHOS";
+            return "PHOS-Dal";
+        case 10:
+            return "mEMC";
+        case 11:
+            return "mPHOS";
         default:
             return "not known";
     }
