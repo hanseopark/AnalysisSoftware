@@ -4,6 +4,7 @@
 
 TString 	collisionSystem;
 TString 	fileNameSysErr;
+TFile*  fileConversionsPP;
 TFile* 	fileConversionsPi0PP;
 TFile* 	fileConversionsEtaPP;
 TF1* 		fitInvCrossSectionPi0Comb2760GeV;
