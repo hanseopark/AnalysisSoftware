@@ -45,7 +45,6 @@
 #include "../CommonHeaders/FittingGammaConversion.h"
 #include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "../CommonHeaders/ConversionFunctions.h"
-#include "../CommonHeaders/CombinationFunctions.h"
 
 //****************************************************************************
 //*********************** Function to scale the MC input yields **************
@@ -63,7 +62,8 @@ void ScaleMCYield( TH1D* histoCorrectedToBeScaled, Double_t deltaRapid, Double_t
         histoCorrectedToBeScaled->SetBinError(i,newBinError);
     }
 }
-         
+           
+           
            
 //****************************************************************************
 //********* Main function for extraction of MC inputs ************************
@@ -107,7 +107,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
 
     TString rapidityRange               = "";
     Double_t deltaRapid                 = ReturnRapidityStringAndDouble(fMesonCutSelection, rapidityRange);
-
+    
     //Variable defintion
     Double_t scaling                    = 1./(2.*TMath::Pi());
 
@@ -163,7 +163,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     } else if (mode == 4 ){
         nameMainDir                 = "GammaCalo";
     } else if (mode == 0 ){
-        nameMainDir                 = "GammaConvV1";
+        nameMainDir                 = "GammaConv";
     } else {
         cout << "ERROR: Wrong mode aborting here!" << endl;
         return;
@@ -205,7 +205,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     TList *MCContainer                  = (TList*)HistosGammaConversion->FindObject(Form("%s MC histograms",fCutSelection.Data()));
     // ----------- read pi0 -----------------------------------
     cout << "reading pi0" << endl;
-    TH1D* fHistoMCPi0GGPt               = (TH1D*)MCContainer->FindObject("MC_Pi0_Pt");
+    TH1D* fHistoMCPi0GGPt               = (TH1D*)MCContainer->FindObject("MC_Pi0_Pt");  
     TH1D* fHistoMCPi0DalitzPt           = (TH1D*)MCContainer->FindObject("MC_Pi0Dalitz_Pt");  
     TH1D* fHistoMCPi0Pt                 = (TH1D*)fHistoMCPi0GGPt->Clone("MC_Pi0_All_Pt");
     fHistoMCPi0Pt->Sumw2();
@@ -222,7 +222,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     
     // ----------- read eta -----------------------------------
     cout << "reading eta" << endl;
-    TH1D* fHistoMCEtaGGPt               = (TH1D*)MCContainer->FindObject("MC_Eta_Pt");
+    TH1D* fHistoMCEtaGGPt               = (TH1D*)MCContainer->FindObject("MC_Eta_Pt");  
     TH1D* fHistoMCEtaDalitzPt           = (TH1D*)MCContainer->FindObject("MC_EtaDalitz_Pt");  
     TH1D* fHistoMCEtaPt                 = (TH1D*)fHistoMCEtaGGPt->Clone("MC_Eta_All_Pt");
     fHistoMCEtaPt->Sumw2();
@@ -327,8 +327,8 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     fHistoRatioPi0FromK0sDivK0s->Divide(fHistoMCSecPi0FromK0sPtRebinned, fHistoMCK0sPtRebinned);
 
     //---> K0l
-    TH1D* fHistoMCSecPi0FromK0lPt               = (TH1D*)fHistoMCSecPi0PtSource->ProjectionX(   "MCSecPi0FromK0l", fHistoMCSecPi0PtSource->GetYaxis()->FindBin(3.),
-                                                                                                fHistoMCSecPi0PtSource->GetYaxis()->FindBin(3.),"e");
+    TH1D* fHistoMCSecPi0FromK0lPt               = (TH1D*)fHistoMCSecPi0PtSource->ProjectionX(   "MCSecPi0FromK0l", fHistoMCSecPi0PtSource->GetYaxis()->FindBin(3.), 
+                                                                                                fHistoMCSecPi0PtSource->GetYaxis()->FindBin(3.),"e");     
     TH1D* fHistoMCSecPi0FromK0lPtRebinned       = (TH1D*)fHistoMCSecPi0FromK0lPt->Clone("MCSecPi0FromK0lRebinned");
     fHistoMCSecPi0FromK0lPtRebinned->Rebin(nBinsX,"MCSecPi0FromK0lRebinned2",ptBinning);
     fHistoMCSecPi0FromK0lPtRebinned             = (TH1D*)gDirectory->Get("MCSecPi0FromK0lRebinned2");
@@ -345,7 +345,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         fHistoRatioPi0FromLambdaDivLambda       = (TH1D*)fHistoMCSecPi0FromLambdaPtRebinned->Clone("ratioPi0FromLambda");
         fHistoRatioPi0FromLambdaDivLambda->Divide(fHistoMCSecPi0FromLambdaPtRebinned, fHistoMCLambdaPtRebinned);
     }    
-
+    
     // scale yield to per event quantities
     fHistoMCK0sPtYield->Scale(1./nEvtMC);
     fHistoMCK0lPtYield->Scale(1./nEvtMC);
@@ -622,11 +622,13 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         fHistoRatioMCPi0DivDataFit  = CalculateHistoRatioToSpline (fHistoMCPi0PtRebinned, paramPions); 
         
         fHistoChargedKaonData       = (TH1D*)fileDataInput->Get("histoChargedKaonSpecPubStat2760GeV");
-        TF1* fitChargedKaons        =  FitObject("l","fitChargedKaons","K",fHistoChargedKaonData,0.1,20.,NULL,"QNRMEI");
+        TF1* fitChargedKaons        =  FitObject("l","ptDistribution","K",fHistoChargedKaonData,0.1,20.,NULL,"QNRMEI");
         TSpline5* paramKaons        = new TSpline5(fHistoChargedKaonData);
+        
         fHistoRatioDataKDivDataFit  = CalculateHistoRatioToSpline (fHistoChargedKaonData, paramKaons); 
         fHistoRatioMCK0sDivDataFit  = CalculateHistoRatioToSpline (fHistoMCK0sPtRebinned, paramKaons); 
         fHistoRatioMCKDivDataFit    = CalculateHistoRatioToSpline (fHistoMCKPtRebinned, paramKaons); 
+        
         
         
         TCanvas *canvasFitQA = new TCanvas("canvasFitQA","canvasFitQA",1000,800);
@@ -672,8 +674,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         
         canvasFitQA->SaveAs(Form("%s/Pi_ComparisonMCAndData_%s_%s.%s",outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data(), suffix.Data()));
         
-
-        DrawAutoGammaMesonHistos(   fHistoChargedKaonData,
+        DrawAutoGammaMesonHistos(   fHistoChargedKaonData, 
                             "", "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", 
                             kTRUE, 10, 1e-10, kFALSE,
                             kFALSE, 0., 0.7, 
@@ -779,215 +780,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         labelGeneratorRatio->Draw();
         
         canvasRatio->SaveAs(Form("%s/K_RatioComparisonMCAndData_%s_%s.%s",outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data(), suffix.Data()));
-
-      } else if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0){
-
-        TString cent = "";
-        if(fCentralityString.CompareTo("0-5%")) cent = "0005";
-        else if(fCentralityString.CompareTo("5-10%")) cent = "0510";
-        else if(fCentralityString.CompareTo("0-10%")) cent = "0010";
-        else if(fCentralityString.CompareTo("20-40%") || fCentralityString.CompareTo("20-50%")) cent = "2040";
-
-        fHistoChargedPionData       = (TH1D*)fileDataInput->Get(Form("histoChargedPionSpecPubStat2760GeV_%s",cent.Data()));
-        TF1* fitChargedPions        = FitObject("oHag","fitChargedPions","Pi0",fHistoChargedPionData,0.1,20.,NULL,"QNRMEI");
-
-        TSpline5* paramPions        = new TSpline5(fHistoChargedPionData);
-        fHistoRatioDataPiDivDataFit = CalculateHistoRatioToSpline (fHistoChargedPionData, paramPions);
-        fHistoRatioMCPiDivDataFit   = CalculateHistoRatioToSpline (fHistoMCPiPtRebinned, paramPions);
-        fHistoRatioMCPi0DivDataFit  = CalculateHistoRatioToSpline (fHistoMCPi0PtRebinned, paramPions);
-
-        fHistoChargedKaonData       = (TH1D*)fileDataInput->Get(Form("histoChargedKaonSpecPubStat2760GeV_%s",cent.Data()));
-        TF1* fitChargedKaons        =  FitObject("oHag","fitChargedKaons","K",fHistoChargedKaonData,0.1,20.,NULL,"QNRMEI");
-        TSpline5* paramKaons        = new TSpline5(fHistoChargedKaonData);
-        fHistoRatioDataKDivDataFit  = CalculateHistoRatioToSpline (fHistoChargedKaonData, paramKaons);
-        fHistoRatioMCK0sDivDataFit  = CalculateHistoRatioToSpline (fHistoMCK0sPtRebinned, paramKaons);
-        fHistoRatioMCKDivDataFit    = CalculateHistoRatioToSpline (fHistoMCKPtRebinned, paramKaons);
-
-
-        TH1D* ratioDataToMCKaon = (TH1D*)fHistoChargedKaonData->Clone();
-        ratioDataToMCKaon->Divide(fHistoChargedKaonData,fHistoMCKPtRebinned,1.,1.,"");
-
-        TCanvas *canvasFitQA = new TCanvas("canvasFitQA","canvasFitQA",1000,800);
-        DrawGammaCanvasSettings( canvasFitQA, 0.12, 0.02, 0.02, 0.08);
-        canvasFitQA->cd();
-        canvasFitQA->SetLogy(1);
-
-        DrawAutoGammaMesonHistos(   fHistoChargedPionData,
-                            "", "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",
-                            kTRUE, 10, 1e-10, kFALSE,
-                            kFALSE, 0., 0.7,
-                            kFALSE, 0., 10.);
-        fHistoChargedPionData->GetYaxis()->SetTitleOffset(1.3);
-        DrawGammaSetMarker(fHistoChargedPionData, 20, 1.5, kAzure-6, kAzure-6);
-        fHistoChargedPionData->DrawClone("pe");
-
-        DrawGammaSetMarker(fHistoMCPiPtRebinned, 20, 1.5, kRed+2, kRed+2);
-        fHistoMCPiPtRebinned->Draw("same,pe");
-        DrawGammaSetMarker(fHistoMCPi0PtRebinned, 24, 1.5, kGreen+2, kGreen+2);
-        fHistoMCPi0PtRebinned->Draw("same,pe");
-
-        fitChargedPions->SetLineColor(kAzure-6);
-        fitChargedPions->Draw("same");
-        paramPions->SetLineColor(kAzure+2);
-        paramPions->Draw("same");
-
-        fHistoChargedPionData->Draw("same,pe");
-
-        TLegend* legendSpectraPi = GetAndSetLegend2(0.73, 0.70, 0.95, 0.95, 32,1);
-        legendSpectraPi->AddEntry(fHistoChargedPionData,"Data: #frac{#pi^{+}+#pi^{-}}{2}","p");
-        legendSpectraPi->AddEntry(fitChargedPions,"Data: fit","l");
-        legendSpectraPi->AddEntry(fHistoMCPiPtRebinned,"MC: #frac{#pi^{+}+#pi^{-}}{2}","p");
-        legendSpectraPi->AddEntry(fHistoMCPi0PtRebinned,"MC: #pi^{0}","p");
-        legendSpectraPi->Draw();
-
-        TLatex *labelEnergySpectra        = new TLatex(0.15,0.16,Form("%s",fCollisionSystem.Data()));
-        SetStyleTLatex( labelEnergySpectra, 0.04,4);
-        labelEnergySpectra->Draw();
-        TLatex *labelGeneratorSpectra     = new TLatex(0.15,0.12,Form("%s",fGeneratorName.Data()));
-        SetStyleTLatex( labelGeneratorSpectra, 0.04,4);
-        labelGeneratorSpectra->Draw();
-
-
-        canvasFitQA->SaveAs(Form("%s/Pi_ComparisonMCAndData_%s_%s_%s.%s",outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data(), fCentralityString.Data(), suffix.Data()));
-
-        DrawAutoGammaMesonHistos(   fHistoChargedKaonData,
-                            "", "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",
-                            kTRUE, 10, 1e-10, kFALSE,
-                            kFALSE, 0., 0.7,
-                            kFALSE, 0., 10.);
-        fHistoChargedKaonData->GetYaxis()->SetTitleOffset(1.3);
-        DrawGammaSetMarker(fHistoChargedKaonData, 20, 1.5, kAzure-6, kAzure-6);
-        fHistoChargedKaonData->DrawClone("pe");
-
-        DrawGammaSetMarker(fHistoMCKPtRebinned, 20, 1.5, kRed+2, kRed+2);
-        fHistoMCKPtRebinned->Draw("same,pe");
-        DrawGammaSetMarker(fHistoMCK0sPtRebinned, 24, 1.5, kGreen+2, kGreen+2);
-        fHistoMCK0sPtRebinned->Draw("same,pe");
-        fitChargedKaons->SetLineColor(kAzure-6);
-        fitChargedKaons->Draw("same");
-        fHistoChargedKaonData->Draw("same,pe");
-        paramKaons->SetLineColor(kAzure+2);
-        paramKaons->Draw("same");
-
-        TLegend* legendSpectraK = GetAndSetLegend2(0.73, 0.70, 0.95, 0.95, 32,1);
-        legendSpectraK->AddEntry(fHistoChargedKaonData,"Data: #frac{K^{+}+K^{-}}{2}","p");
-        legendSpectraK->AddEntry(fitChargedKaons,"Data: fit","l");
-        legendSpectraK->AddEntry(fHistoMCKPtRebinned,"MC: #frac{K^{+}+K^{-}}{2}","p");
-        legendSpectraK->AddEntry(fHistoMCK0sPtRebinned,"MC: K^{0}_{s}","p");
-        legendSpectraK->Draw();
-        labelEnergySpectra->Draw();
-        labelGeneratorSpectra->Draw();
-
-        canvasFitQA->SaveAs(Form("%s/K_ComparisonMCAndData_%s_%s_%s.%s",outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data(), fCentralityString.Data(), suffix.Data()));
-
-        canvasRatio->cd();
-        Double_t maxScaleY      = 2;
-        Double_t scaleFac       = 0.1;
-        DrawAutoGammaMesonHistos(   fHistoRatioDataPiDivDataFit,
-                            "", "#it{p}_{T} (GeV/#it{c})", "Data/Fit",
-                            kFALSE, 10, 1e-10, kFALSE,
-                            kTRUE, 0., maxScaleY,
-                            kTRUE, minPt, maxPt);
-        fHistoRatioDataPiDivDataFit->GetYaxis()->SetTitleOffset(0.85);
-        DrawGammaSetMarker(fHistoRatioDataPiDivDataFit, 20, 1.5, kAzure-6, kAzure-6);
-        fHistoRatioDataPiDivDataFit->DrawClone("pe");
-        DrawGammaSetMarker(fHistoRatioMCPiDivDataFit, 20, 1.5, kRed+2, kRed+2);
-        fHistoRatioMCPiDivDataFit->Draw("same,pe");
-        DrawGammaSetMarker(fHistoRatioMCPi0DivDataFit, 24, 1.5, kGreen+2, kGreen+2);
-        fHistoRatioMCPi0DivDataFit->Draw("same,pe");
-
-
-        TLegend* legendRatioPi = GetAndSetLegend2(0.12, 0.70, 0.32, 0.95, 32,1);
-        legendRatioPi->AddEntry(fHistoRatioDataPiDivDataFit,"Data: #frac{#pi^{+}+#pi^{-}}{2}","p");
-        if (optionPeriod.CompareTo("LHC15a3a") == 0 || optionPeriod.CompareTo("LHC15g1a") == 0){
-            legendRatioPi->AddEntry(fHistoRatioMCPiDivDataFit,Form("MC: #frac{#pi^{+}+#pi^{-}}{2}, scaled by %1.2f",scaleFac) ,"p");
-            legendRatioPi->AddEntry(fHistoRatioMCPi0DivDataFit,Form("MC: #pi^{0}, scaled by %1.2f",scaleFac),"p");
-        } else {
-            legendRatioPi->AddEntry(fHistoRatioMCPiDivDataFit,"MC: #frac{#pi^{+}+#pi^{-}}{2}","p");
-            legendRatioPi->AddEntry(fHistoRatioMCPi0DivDataFit,"MC: #pi^{0}","p");
-        }
-        legendRatioPi->Draw();
-
-        DrawGammaLines(minPt, maxPt,1, 1,0.1, kGray+2, 7);
-        labelEnergyRatio->Draw();
-        labelGeneratorRatio->Draw();
-
-        canvasRatio->SaveAs(Form("%s/Pi_RatioComparisonMCAndData_%s_%s_%s.%s",outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data(), fCentralityString.Data(), suffix.Data()));
-
-        canvasRatio->cd();
-
-        DrawAutoGammaMesonHistos(   fHistoRatioDataKDivDataFit,
-                            "", "#it{p}_{T} (GeV/#it{c})", "Data/Fit",
-                            kFALSE, 10, 1e-10, kFALSE,
-                            kTRUE, 0., maxScaleY,
-                            kTRUE, minPt, maxPt);
-        fHistoRatioDataKDivDataFit->GetYaxis()->SetTitleOffset(0.85);
-        DrawGammaSetMarker(fHistoRatioDataKDivDataFit, 20, 1.5, kAzure-6, kAzure-6);
-        fHistoRatioDataKDivDataFit->DrawClone("pe");
-
-
-        DrawGammaSetMarker(fHistoRatioMCKDivDataFit, 20, 1.5, kRed+2, kRed+2);
-        fHistoRatioMCKDivDataFit->Draw("same,pe");
-        DrawGammaSetMarker(fHistoRatioMCK0sDivDataFit, 24, 1.5, kGreen+2, kGreen+2);
-        fHistoRatioMCK0sDivDataFit->Draw("same,pe");
-
-        DrawGammaLines(minPt, maxPt,1, 1,0.1, kGray+2, 7);
-
-        TLegend* legendRatioK = GetAndSetLegend2(0.12, 0.70, 0.32, 0.95, 32,1);
-        legendRatioK->AddEntry(fHistoRatioDataKDivDataFit,"Data: #frac{K^{+}+K^{-}}{2}","p");
-        if (optionPeriod.CompareTo("LHC15a3a") == 0 || optionPeriod.CompareTo("LHC15g1a") == 0){
-            legendRatioK->AddEntry(fHistoRatioMCKDivDataFit,Form("MC: #frac{K^{+}+K^{-}}{2}, scaled by %1.2f",scaleFac) ,"p");
-            legendRatioK->AddEntry(fHistoRatioMCK0sDivDataFit,Form("MC: K^{0}_{s}, scaled by %1.2f",scaleFac) ,"p");
-        } else {
-            legendRatioK->AddEntry(fHistoRatioMCKDivDataFit,"MC: #frac{K^{+}+K^{-}}{2}","p");
-            legendRatioK->AddEntry(fHistoRatioMCK0sDivDataFit,"MC: K^{0}_{s}","p");
-        }
-        legendRatioK->Draw();
-
-        labelEnergyRatio->Draw();
-        labelGeneratorRatio->Draw();
-
-        canvasRatio->SaveAs(Form("%s/K_RatioComparisonMCAndData_%s_%s_%s.%s",outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data(), fCentralityString.Data(), suffix.Data()));
-
-
-//         TGraphErrors* a    = NULL;
-//         TGraphErrors* b    = NULL;
-//         TGraphErrors* c= NULL;
-//         TGraphErrors* d = NULL;
-//         TGraphErrors* graphDataToMCPi = CalculateRatioBetweenSpectraWithDifferentBinning(
-//                                                                                                         fHistoMCPiPtRebinned, fHistoMCPiPtRebinned,
-//                                                                                                         fHistoChargedPionData, fHistoChargedPionData,
-//                                                                                                         kTRUE,  kTRUE,
-//                                                                                                         &a, &b,
-//                                                                                                         &c, &d )    ;
-//
-//                                                                                                         TGraphErrors* e    = NULL;
-//         TGraphErrors* f    = NULL;
-//         TGraphErrors* g= NULL;
-//         TGraphErrors* h = NULL;
-//         TGraphErrors* graphDataToMCK = CalculateRatioBetweenSpectraWithDifferentBinning(
-//                                                                                                         fHistoMCKPtRebinned, fHistoMCKPtRebinned,
-//                                                                                                         fHistoChargedKaonData, fHistoChargedKaonData,
-//                                                                                                         kTRUE,  kTRUE,
-//                                                                                                         &e, &f,
-//                                                                                                         &g, &h )    ;
-//         canvasRatio->cd();
-//
-//                 DrawAutoGammaMesonHistos(   fHistoRatioDataKDivDataFit,
-//                             "", "#it{p}_{T} (GeV/#it{c})", "Data/Fit",
-//                             kFALSE, 10, 1e-10, kFALSE,
-//                             kTRUE, 0., 30,
-//                             kTRUE, minPt, 4);
-//
-//         DrawGammaSetMarkerTGraphErr(graphRatioLowPtChargedPionsCombPPCMS,22,markerSizeComparison, kRed , kRed);
-//         graphDataToMCPi->Draw();
-//         graphDataToMCPi->GetYaxis()->SetRangeUser(0.,30.);
-//         DrawGammaSetMarkerTGraphErr(graphRatioLowPtChargedPionsCombPPCMS,22,markerSizeComparison, kRed , kRed);
-//         graphDataToMCK->Draw("same");
-//
-//         canvasRatio->SaveAs(Form("%s/RatioComparisonMCAndData_%s_%s_%s.%s",outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data(), fCentralityString.Data(), suffix.Data()));
-//
-
+        
       }    
     }
     delete canvasRatio;        

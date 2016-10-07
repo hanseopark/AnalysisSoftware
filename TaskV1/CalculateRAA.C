@@ -45,7 +45,7 @@
 #include "../CommonHeaders/ConversionFunctions.h"
 #include "CalculateRAA.h"
 
-void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fileNamePi0pp = "CombinedResultsPaperX.root",/*TString fileNameEtapp = "CombinedResultsPaperX.root",*/ TString suffix = "gif", TString textMeson = "Pi0" ,TString makeBinShiftWithFunction = "", TString option = "", TString multFlag= "",Bool_t optNoBinShift=kFALSE, TString fileName2 = "", Int_t mode = 9){
+void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fileNamePi0pp = "CombinedResultsPaperX.root",TString fileNameEtapp = "CombinedResultsPaperX.root", TString suffix = "gif", TString textMeson = "Pi0" ,TString makeBinShiftWithFunction = "", TString option = "", TString multFlag= "",Bool_t optNoBinShift=kFALSE, TString fileName2 = "", Int_t mode = 9){
 	gROOT->Reset();	
 	gROOT->SetStyle("Plain");
 	
@@ -62,73 +62,29 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 	nCollErr = GetNCollErrFromCutNumber(cutSel.Data());
 	cout << "Ncoll = " << nColl << " +- " << nCollErr << endl;
 	
-
-    //file from soon to be published paper, Fredi email from 4th Oct 2016
-    //saved in ExternalInputPbPb/NeutralMesonpp2760GeVReference folder
-    cout << "Pi0 in pp 2.76TeV" << endl;
-    fileConversionsPP =      new TFile(fileNamePi0pp);
-    TDirectory *folderConversionsPi0PP = (TDirectory*)fileConversionsPP->Get("Pi02.76TeV");
-    fitInvCrossSectionPi0Comb2760GeV = (TF1*)folderConversionsPi0PP->Get("TsallisFitPi0");
-    fitInvCrossSectionPi0Comb2760GeV->SetParameter(0, fitInvCrossSectionPi0Comb2760GeV->GetParameter(0)*1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    graphInvSectionCombPi02760GeV = (TGraphAsymmErrors*)folderConversionsPi0PP->Get("graphInvCrossSectionPi0Comb2760GeVATotErr_yShifted");
-    graphInvSectionCombPi02760GeV = ScaleGraph(graphInvSectionCombPi02760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    graphInvSectionPCMPi02760GeV=       (TGraphAsymmErrors*)folderConversionsPi0PP->Get("graphInvCrossSectionPi0PCM2760GeVStatErr_yShifted");
-    graphInvSectionPCMPi02760GeV = ScaleGraph(graphInvSectionPCMPi02760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    graphInvSectionPCMSysPi02760GeV=        (TGraphAsymmErrors*)folderConversionsPi0PP->Get("graphInvCrossSectionPi0PCM2760GeVSysErr_yShifted"); //WITH material budget
-    graphInvSectionPCMSysPi02760GeV = ScaleGraph(graphInvSectionPCMSysPi02760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    TGraphAsymmErrors *graphInvSectionPCMSysPi02760GeVforRAA = (TGraphAsymmErrors*)graphInvSectionPCMSysPi02760GeV->Clone("graphInvCrossSectionPi0PCM2760GeVSysErrforRAA_yShifted");
-
-      // subtraction of material budget error:
-      Int_t Pi0PCMbins = graphInvSectionPCMSysPi02760GeVforRAA->GetN();
-      Double_t yPi0relErrWM[Pi0PCMbins];
-      Double_t *yPi0WM = graphInvSectionPCMSysPi02760GeVforRAA->GetY();
-      Double_t yPi0ErrWM[Pi0PCMbins];
-      Double_t yPi0ErrorWOM[Pi0PCMbins];
-      Double_t yPi0relErrorWOM[Pi0PCMbins];
-
-      for(Int_t i = 0;i<graphInvSectionPCMSysPi02760GeVforRAA->GetN();i++){
-
-        yPi0relErrWM[i] = graphInvSectionPCMSysPi02760GeVforRAA->GetErrorYlow(i);
-        yPi0ErrWM[i] = (yPi0relErrWM[i] * 100.)/yPi0WM[i];
-
-        yPi0ErrorWOM[i] = TMath::Sqrt( (yPi0ErrWM[i]*yPi0ErrWM[i]) - (9.*9.) );
-        yPi0relErrorWOM[i] = (yPi0WM[i]*yPi0ErrorWOM[i])/100.;
-
-        graphInvSectionPCMSysPi02760GeVforRAA->SetPointError(i,graphInvSectionPCMSysPi02760GeVforRAA->GetErrorXlow(i),graphInvSectionPCMSysPi02760GeVforRAA->GetErrorXlow(i),
-                                                                yPi0relErrorWOM[i],yPi0relErrorWOM[i]);
-      }
-
-    cout << "Eta in pp 2.76TeV" << endl;
-    TDirectory *folderConversionsEtaPP = (TDirectory*)fileConversionsPP->Get("Eta2.76TeV");
-    fitInvCrossSectionEtaComb2760GeV = (TF1*)folderConversionsEtaPP->Get("TsallisFitEta");
-    fitInvCrossSectionEtaComb2760GeV->SetParameter(0, fitInvCrossSectionEtaComb2760GeV->GetParameter(0)*1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    graphInvSectionCombEta2760GeV = (TGraphAsymmErrors*)folderConversionsEtaPP->Get("graphInvCrossSectionEtaComb2760GeVATotErr_yShifted");
-    graphInvSectionCombEta2760GeV = ScaleGraph(graphInvSectionCombEta2760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    graphInvSectionPCMEta2760GeV=       (TGraphAsymmErrors*)folderConversionsEtaPP->Get("graphInvCrossSectionEtaPCM2760GeVStatErr_yShifted");
-    graphInvSectionPCMEta2760GeV = ScaleGraph(graphInvSectionPCMEta2760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    graphInvSectionPCMSysEta2760GeV=        (TGraphAsymmErrors*)folderConversionsEtaPP->Get("graphInvCrossSectionEtaPCM2760GeVSysErr_yShifted");  //WITH material budget
-    graphInvSectionPCMSysEta2760GeV = ScaleGraph(graphInvSectionPCMSysEta2760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    TGraphAsymmErrors *graphInvSectionPCMSysEta2760GeVforRAA = (TGraphAsymmErrors*)graphInvSectionPCMSysEta2760GeV->Clone("graphInvCrossSectionEtaPCM2760GeVSysErrforRAA_yShifted");
-
-      // subtraction of material budget error:
-      Int_t EtaPCMbins = graphInvSectionPCMSysEta2760GeVforRAA->GetN();
-      Double_t yEtarelErrWM[EtaPCMbins];
-      Double_t *yEtaWM = graphInvSectionPCMSysEta2760GeVforRAA->GetY();
-      Double_t yEtaErrWM[EtaPCMbins];
-      Double_t yEtaErrorWOM[EtaPCMbins];
-      Double_t yEtarelErrorWOM[EtaPCMbins];
-
-      for(Int_t i = 0;i<graphInvSectionPCMSysEta2760GeVforRAA->GetN();i++){
-
-        yEtarelErrWM[i] = graphInvSectionPCMSysEta2760GeVforRAA->GetErrorYlow(i);
-        yEtaErrWM[i] = (yEtarelErrWM[i] * 100.)/yEtaWM[i];
-
-        yEtaErrorWOM[i] = TMath::Sqrt( (yEtaErrWM[i]*yEtaErrWM[i]) - (9.*9.) );
-        yEtarelErrorWOM[i] = (yEtaWM[i]*yEtaErrorWOM[i])/100.;
-
-        graphInvSectionPCMSysEta2760GeVforRAA->SetPointError(i,graphInvSectionPCMSysEta2760GeVforRAA->GetErrorXlow(i),graphInvSectionPCMSysEta2760GeVforRAA->GetErrorXlow(i),
-                                                                yEtarelErrorWOM[i],yEtarelErrorWOM[i]);
-      }
+	
+	cout << "Pi0 in pp 2.76TeV" << endl;	
+ 	fileConversionsPi0PP = 		new TFile(fileNamePi0pp);
+	fitInvCrossSectionPi0Comb2760GeV = (TF1*)fileConversionsPi0PP->Get("fitInvCrossSectionPi0Comb2760GeV_YShift");
+	fitInvCrossSectionPi0Comb2760GeV->SetParameter(0, fitInvCrossSectionPi0Comb2760GeV->GetParameter(0)*1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+	graphInvSectionCombPi02760GeV = (TGraphAsymmErrors*)fileConversionsPi0PP->Get("graphInvCrossSectionPi0Comb2760GeV_YShifted");
+	graphInvSectionCombPi02760GeV = ScaleGraph(graphInvSectionCombPi02760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+ 	graphInvSectionPCMPi02760GeV= 		(TGraphAsymmErrors*)fileConversionsPi0PP->Get("graphInvCrossSectionPi0PCMStat2760GeV_YShifted");
+	graphInvSectionPCMPi02760GeV = ScaleGraph(graphInvSectionPCMPi02760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+	graphInvSectionPCMSysPi02760GeV= 		(TGraphAsymmErrors*)fileConversionsPi0PP->Get("graphInvCrossSectionPi0PCMSysForRAA2760GeV_YShifted");
+	graphInvSectionPCMSysPi02760GeV = ScaleGraph(graphInvSectionPCMSysPi02760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+	graphInvSectionPCMSysPi02760GeV->RemovePoint(graphInvSectionPCMSysPi02760GeV->GetN()-1);
+	
+	cout << "Eta in pp 2.76TeV" << endl;
+ 	fileConversionsEtaPP = 		new TFile(fileNameEtapp); 
+	fitInvCrossSectionEtaComb2760GeV = (TF1*)fileConversionsEtaPP->Get("fitInvCrossSectionEtaComb2760GeV_YShift");
+	fitInvCrossSectionEtaComb2760GeV->SetParameter(0, fitInvCrossSectionEtaComb2760GeV->GetParameter(0)*1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+	graphInvSectionCombEta2760GeV = (TGraphAsymmErrors*)fileConversionsEtaPP->Get("graphInvCrossSectionEtaComb2760GeV_YShifted");
+	graphInvSectionCombEta2760GeV = ScaleGraph(graphInvSectionCombEta2760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+ 	graphInvSectionPCMEta2760GeV= 		(TGraphAsymmErrors*)fileConversionsEtaPP->Get("graphInvCrossSectionEtaPCMStat2760GeV_YShifted");
+	graphInvSectionPCMEta2760GeV = ScaleGraph(graphInvSectionPCMEta2760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+	graphInvSectionPCMSysEta2760GeV= 		(TGraphAsymmErrors*)fileConversionsEtaPP->Get("graphInvCrossSectionEtaPCMSysForRAA2760GeV_YShifted");
+	graphInvSectionPCMSysEta2760GeV = ScaleGraph(graphInvSectionPCMSysEta2760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
 
 
 	if (textMeson.CompareTo("Pi0")==0){
@@ -368,7 +324,7 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 
 		Double_t parametersBinShiftForQCDfit[5];
 		GetFitParameter("qcd",GetCentralityString(cutSel),parametersBinShiftForQCDfit);
-		cout << "GetCentralityString(cutSel): " << GetCentralityString(cutSel) << endl;
+		cout << "GetCentralityString(cutSel): " << GetCentralityString(cutSel) << endl; 
 		for( Int_t i = 0; i < 5; i++){
 			cout << "parameter " << i << "\t" << parametersBinShiftForQCDfit[i] << endl;
 		}
@@ -395,8 +351,8 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 		legendYieldBinShifted->AddEntry(histoCorrYieldBinShifted,"Yield Corr (iter)","p");
 		legendYieldBinShifted->AddEntry(fitBinShifting,legendEntryFunction,"l");
 		legendYieldBinShifted->Draw();
-
-        DrawAliceLogoPi0WorkInProgress(pictDrawingCoordinates[0], pictDrawingCoordinates[1], pictDrawingCoordinates[2], pictDrawingCoordinates[3], pictDrawingCoordinates[4], pictDrawingCoordinates[5], pictDrawingCoordinates[6], pictDrawingCoordinates[7], pictDrawingCoordinates[8],collisionSystem, pictDrawingOptions[1], pictDrawingOptions[2], kTRUE,1350,1125,kFALSE,centralityString);
+		
+		DrawAliceLogoPi0WorkInProgress(pictDrawingCoordinates[0], pictDrawingCoordinates[1], pictDrawingCoordinates[2], pictDrawingCoordinates[3], pictDrawingCoordinates[4], pictDrawingCoordinates[5], pictDrawingCoordinates[6], pictDrawingCoordinates[7], pictDrawingCoordinates[8],collisionSystem, pictDrawingOptions[1], pictDrawingOptions[2], kTRUE,1350,1125,kFALSE,centralityString);
 		
 		padBinShiftedRatios->cd();
 		padBinShiftedRatios->SetLogy(0);
@@ -652,7 +608,7 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 
 		Double_t parametersBinShiftForQCDfit[5];
 		GetFitParameter("qcd",GetCentralityString(cutSel),parametersBinShiftForQCDfit);
-		cout << "GetCentralityString(cutSel): " << GetCentralityString(cutSel) << endl;
+		cout << "GetCentralityString(cutSel): " << GetCentralityString(cutSel) << endl; 
 		for( Int_t i = 0; i < 5; i++){
 			cout << "parameter " << i << "\t" << parametersBinShiftForQCDfit[i] << endl;
 		}

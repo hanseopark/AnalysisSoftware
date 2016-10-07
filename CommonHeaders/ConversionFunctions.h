@@ -1709,8 +1709,6 @@ TF1 *BinShiftTH1D(TH1D *UnshiftedYield, TH1D **ShiftedYield, TString mesonType =
         CurrentFit              = FitObject("rad","fitBinShifting",mesonType.Data(),CurrentHist,minPtForFitsDummy,maxPtPi0BS,parameters,"QNRME+");
     } else if(BinShiftType.BeginsWith("qcd") || BinShiftType.BeginsWith("QCD")){
         CurrentFit              = FitObject("qcd","fitBinShifting",mesonType.Data(),CurrentHist,minPtForFitsDummy,maxPtPi0BS,parameters,"QNRME+");
-    } else if(BinShiftType.BeginsWith("oHag") || BinShiftType.BeginsWith("OHAG")){
-        CurrentFit              = FitObject("oHag","fitBinShifting",mesonType.Data(),CurrentHist,minPtForFitsDummy,maxPtPi0BS,parameters,"QNRME+");
     } else if(BinShiftType.BeginsWith("xqcd") || BinShiftType.BeginsWith("XQCD")){
         CurrentFit              = FitObject("xqcd","fitBinShifting",mesonType.Data(),CurrentHist,minPtForFitsDummy,maxPtPi0BS,parameters,"QNRME+");
     } else if(BinShiftType.BeginsWith("tcm") || BinShiftType.BeginsWith("TCM")){

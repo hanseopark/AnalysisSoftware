@@ -1935,7 +1935,7 @@ do
         ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
     elif [ $answer = "PbPb_2.76TeV" ] || [ $answer = "PbPb_2.76" ] || [ $answer = "PbPb2" ] || [ $answer = "Pb2" ]; then
         energy="PbPb_2.76TeV";
-        ExtInputFile="ExternalInputPbPb/IdentifiedSpectraPbPb_2016_08_30.root";
+        ExtInputFile="";
     elif [ $answer = "pPb_5.023TeV" ] || [ $answer = "pPb_5.023" ] || [ $answer = "pPb5" ];  then
         energy="pPb_5.023TeV";
         ExtInputFile="";
