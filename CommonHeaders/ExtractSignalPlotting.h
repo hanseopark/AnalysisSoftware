@@ -155,7 +155,7 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
                                 TString detectionChannel                = "",
                                 Int_t triggerSet                        = 0,
                                 Double_t scaleFacSignal                 = 1.0,
-                                Int_t detMode = 0
+                                Int_t detMode                           = 0
                              ){
     TString triggerStr; 
         if (triggerSet == 52){
@@ -171,76 +171,76 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
         } else {
             triggerStr = "MB triggered";
         }
-    TH1D* histoPi0InvMassSigPlusBGPCM;
-    TH1D* histoPi0InvMassSigPCM;
-    TH1D* histoPi0InvMassSigRemBGSubPCM;
-    TH1D* histoPi0InvMassBGPCM;
-    TH1D* histoPi0InvMassRemBGPCM;
-    TH1D* histoPi0InvMassBGTotPCM;
-    TF1* fitPi0InvMassSigPCM;
-    TF1* fitPi0InvMassBGPCM;
-    histoPi0InvMassSigPCM               = (TH1D*)histoInvMassSubtracted->Clone("InvMassSig_PtBin07");
-    histoPi0InvMassSigPlusBGPCM         = (TH1D*)histoInvMassSignalWithBG->Clone("InvMassSigPlusBG_PtBin07");
-    histoPi0InvMassBGPCM                = (TH1D*)histoInvMassBG->Clone("InvMassBG_PtBin07");
-    fitPi0InvMassSigPCM                 = (TF1*)fitSignal->Clone("FitInvMassSig_PtBin07");
+    TH1D* histoPi0InvMassSigPlusBG;
+    TH1D* histoPi0InvMassSig;
+    TH1D* histoPi0InvMassSigRemBGSub;
+    TH1D* histoPi0InvMassBG;
+    TH1D* histoPi0InvMassRemBG;
+    TH1D* histoPi0InvMassBGTot;
+    TF1* fitPi0InvMassSig;
+    TF1* fitPi0InvMassBG;
+    histoPi0InvMassSig               = (TH1D*)histoInvMassSubtracted->Clone("InvMassSig_PtBin07");
+    histoPi0InvMassSigPlusBG         = (TH1D*)histoInvMassSignalWithBG->Clone("InvMassSigPlusBG_PtBin07");
+    histoPi0InvMassBG                = (TH1D*)histoInvMassBG->Clone("InvMassBG_PtBin07");
+    fitPi0InvMassSig                 = (TF1*)fitSignal->Clone("FitInvMassSig_PtBin07");
 
-    histoPi0InvMassSigPCM->Fit(fitPi0InvMassSigPCM,"QRME0");
+    histoPi0InvMassSig->Fit(fitPi0InvMassSig,"QRME0");
     for (Int_t l=0; l < 6; l++){
-        cout << fitPi0InvMassSigPCM->GetParameter(l) << "\t +- " << fitPi0InvMassSigPCM->GetParError(l) << endl;
+        cout << fitPi0InvMassSig->GetParameter(l) << "\t +- " << fitPi0InvMassSig->GetParError(l) << endl;
     }
     if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
-        fitPi0InvMassBGPCM                                  = new TF1("Linearpp","[0]+[1]*x",0.02,0.25);
+        fitPi0InvMassBG                                  = new TF1("Linearpp","[0]+[1]*x",0.02,0.25);
     } else {
-        fitPi0InvMassBGPCM                                  = new TF1("Linearpp","[0]+[1]*x",0.00,0.3);
+        fitPi0InvMassBG                                  = new TF1("Linearpp","[0]+[1]*x",0.00,0.3);
     }
 
-    fitPi0InvMassBGPCM->SetParameter(0, fitPi0InvMassSigPCM->GetParameter(4));
-    fitPi0InvMassBGPCM->SetParameter(1, fitPi0InvMassSigPCM->GetParameter(5));
-    TVirtualFitter * fitterPCM                             = TVirtualFitter::GetFitter();
-    Int_t nFreeParPCM                                      = fitPi0InvMassSigPCM->GetNumberFreeParameters();
-    double * covMatrixPCM                                  = fitterPCM->GetCovarianceMatrix();
+    fitPi0InvMassBG->SetParameter(0, fitPi0InvMassSig->GetParameter(4));
+    fitPi0InvMassBG->SetParameter(1, fitPi0InvMassSig->GetParameter(5));
+    TVirtualFitter * fitter                             = TVirtualFitter::GetFitter();
+    Int_t nFreePar                                      = fitPi0InvMassSig->GetNumberFreeParameters();
+    double * covMatrix                                  = fitter->GetCovarianceMatrix();
 
-    histoPi0InvMassRemBGPCM                             = (TH1D*)histoPi0InvMassBGPCM->Clone("Pi0_InvMassRemBG_Example");
-    for (Int_t j = 1; j < histoPi0InvMassRemBGPCM->GetNbinsX()+1; j++){
-        histoPi0InvMassRemBGPCM->SetBinContent(j,0);
-        histoPi0InvMassRemBGPCM->SetBinError(j,0);
+    histoPi0InvMassRemBG                             = (TH1D*)histoPi0InvMassBG->Clone("Pi0_InvMassRemBG_Example");
+    for (Int_t j = 1; j < histoPi0InvMassRemBG->GetNbinsX()+1; j++){
+        histoPi0InvMassRemBG->SetBinContent(j,0);
+        histoPi0InvMassRemBG->SetBinError(j,0);
     }
     if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
-        for (Int_t j = histoPi0InvMassSigPCM->GetXaxis()->FindBin(0.01); j < histoPi0InvMassSigPCM->GetXaxis()->FindBin(0.30)+1; j++){
-            Double_t startBinEdge                                   = histoPi0InvMassSigPCM->GetXaxis()->GetBinLowEdge(j);
-            Double_t endBinEdge                                     = histoPi0InvMassSigPCM->GetXaxis()->GetBinUpEdge(j);
-            Double_t intLinearBack                                  = fitPi0InvMassBGPCM->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
-            Double_t errorLinearBck                                 = pow(( pow( (endBinEdge-startBinEdge)*fitPi0InvMassSigPCM->GetParError(4),2) +
-            pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fitPi0InvMassSigPCM->GetParError(5),2)
-            +2*covMatrixPCM[nFreeParPCM*nFreeParPCM-2]*(endBinEdge-startBinEdge)*0.5*
+        for (Int_t j = histoPi0InvMassSig->GetXaxis()->FindBin(0.01); j < histoPi0InvMassSig->GetXaxis()->FindBin(0.30)+1; j++){
+            Double_t startBinEdge                                   = histoPi0InvMassSig->GetXaxis()->GetBinLowEdge(j);
+            Double_t endBinEdge                                     = histoPi0InvMassSig->GetXaxis()->GetBinUpEdge(j);
+            Double_t intLinearBack                                  = fitPi0InvMassBG->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
+            Double_t errorLinearBck                                 = pow(( pow( (endBinEdge-startBinEdge)*fitPi0InvMassSig->GetParError(4),2) +
+            pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fitPi0InvMassSig->GetParError(5),2)
+            +2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*
             (endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
-            histoPi0InvMassRemBGPCM->SetBinContent(j,intLinearBack);
-            histoPi0InvMassRemBGPCM->SetBinError(j,errorLinearBck);
+            histoPi0InvMassRemBG->SetBinContent(j,intLinearBack);
+            histoPi0InvMassRemBG->SetBinError(j,errorLinearBck);
         }
     } else {
-        for (Int_t j = histoPi0InvMassSigPCM->GetXaxis()->FindBin(0.30); j < histoPi0InvMassSigPCM->GetXaxis()->FindBin(0.70)+1; j++){
-            Double_t startBinEdge                                   = histoPi0InvMassSigPCM->GetXaxis()->GetBinLowEdge(j);
-            Double_t endBinEdge                                     = histoPi0InvMassSigPCM->GetXaxis()->GetBinUpEdge(j);
-            Double_t intLinearBack                                  = fitPi0InvMassBGPCM->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
-            Double_t errorLinearBck                                 = pow(( pow( (endBinEdge-startBinEdge)*fitPi0InvMassSigPCM->GetParError(4),2) +
-            pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fitPi0InvMassSigPCM->GetParError(5),2)
-            +2*covMatrixPCM[nFreeParPCM*nFreeParPCM-2]*(endBinEdge-startBinEdge)*0.5*
+        for (Int_t j = histoPi0InvMassSig->GetXaxis()->FindBin(0.30); j < histoPi0InvMassSig->GetXaxis()->FindBin(0.70)+1; j++){
+            Double_t startBinEdge                                   = histoPi0InvMassSig->GetXaxis()->GetBinLowEdge(j);
+            Double_t endBinEdge                                     = histoPi0InvMassSig->GetXaxis()->GetBinUpEdge(j);
+            Double_t intLinearBack                                  = fitPi0InvMassBG->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
+            Double_t errorLinearBck                                 = pow(( pow( (endBinEdge-startBinEdge)*fitPi0InvMassSig->GetParError(4),2) +
+            pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fitPi0InvMassSig->GetParError(5),2)
+            +2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*
             (endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
-            histoPi0InvMassRemBGPCM->SetBinContent(j,intLinearBack);
-            histoPi0InvMassRemBGPCM->SetBinError(j,errorLinearBck);
+            histoPi0InvMassRemBG->SetBinContent(j,intLinearBack);
+            histoPi0InvMassRemBG->SetBinError(j,errorLinearBck);
         }
     }
 
-    histoPi0InvMassBGTotPCM         = (TH1D*)histoPi0InvMassBGPCM->Clone("Pi0_InvMassTotBG_Example");
-    histoPi0InvMassBGTotPCM->Sumw2();
-    histoPi0InvMassBGTotPCM->Add(histoPi0InvMassRemBGPCM);
-    histoPi0InvMassSigRemBGSubPCM   = (TH1D*)histoPi0InvMassSigPCM->Clone("Pi0_InvMassSigRemBGSub_Example");
-    histoPi0InvMassSigRemBGSubPCM->Sumw2();
-    histoPi0InvMassSigRemBGSubPCM->Add(histoPi0InvMassRemBGPCM,-1);
+    histoPi0InvMassBGTot         = (TH1D*)histoPi0InvMassBG->Clone("Pi0_InvMassTotBG_Example");
+    histoPi0InvMassBGTot->Sumw2();
+    histoPi0InvMassBGTot->Add(histoPi0InvMassRemBG);
+    histoPi0InvMassSigRemBGSub   = (TH1D*)histoPi0InvMassSig->Clone("Pi0_InvMassSigRemBGSub_Example");
+    histoPi0InvMassSigRemBGSub->Sumw2();
+    histoPi0InvMassSigRemBGSub->Add(histoPi0InvMassRemBG,-1);
 
-    fitPi0InvMassSigPCM->SetParameter(4, 0);
-    fitPi0InvMassSigPCM->SetParameter(5, 0);
-    histoPi0InvMassSigRemBGSubPCM->Scale(scaleFacSignal);
+    fitPi0InvMassSig->SetParameter(4, 0);
+    fitPi0InvMassSig->SetParameter(5, 0);
+    histoPi0InvMassSigRemBGSub->Scale(scaleFacSignal);
         
     Double_t textSizeLabelsPixel                 = 100*3/5;
     TCanvas* canvasInvMassSamplePlot    = new TCanvas("canvasInvMassSamplePlotNew","",0,0,1500,1500);  // gives the page size
@@ -290,37 +290,37 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     TLatex *labelInvMassPtRange;
     if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
         labelInvMassPtRange = new TLatex(0.95,0.9, Form("#pi^{0}: %3.1f GeV/#it{c} < #it{p}_{T} < %3.1f GeV/#it{c}",startPt,endPt));
-        fitPi0InvMassSigPCM->SetRange(0,0.255);
+        fitPi0InvMassSig->SetRange(0,0.255);
     } else {
         labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < #it{p}_{T} < %3.1f GeV/#it{c}",startPt,endPt));
-        fitPi0InvMassSigPCM->SetRange(0.35,0.695);
+        fitPi0InvMassSig->SetRange(0.35,0.695);
     }
-    fitPi0InvMassSigPCM->SetNpx(10000);
-    fitPi0InvMassSigPCM->SetLineColor(fitColorInvMassSG);
-    fitPi0InvMassSigPCM->SetLineWidth(4);
+    fitPi0InvMassSig->SetNpx(10000);
+    fitPi0InvMassSig->SetLineColor(fitColorInvMassSG);
+    fitPi0InvMassSig->SetLineWidth(4);
         
-    TH1D* histoFit  = (TH1D*)fitPi0InvMassSigPCM->GetHistogram();
+    TH1D* histoFit  = (TH1D*)fitPi0InvMassSig->GetHistogram();
     histoFit->SetTitle("");
     histoFit->Scale(scaleFacSignal);
 
     canvasInvMassSamplePlot->cd();
-    histo1DInvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBGSubPCM->GetMinimum(),1.15*histoPi0InvMassSigPlusBGPCM->GetMaximum());
+    histo1DInvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBGSub->GetMinimum(),1.15*histoPi0InvMassSigPlusBG->GetMaximum());
     histo1DInvMassDummy->Draw("AXIS");
     
-    DrawGammaSetMarker(histoPi0InvMassSigPlusBGPCM, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
-    histoPi0InvMassSigPlusBGPCM->SetLineWidth(1);
-    histoPi0InvMassSigPlusBGPCM->Draw("hist,e,same");
-    DrawGammaSetMarker(histoPi0InvMassBGTotPCM, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
-    histoPi0InvMassBGTotPCM->Draw("same");
+    DrawGammaSetMarker(histoPi0InvMassSigPlusBG, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
+    histoPi0InvMassSigPlusBG->SetLineWidth(1);
+    histoPi0InvMassSigPlusBG->Draw("hist,e,same");
+    DrawGammaSetMarker(histoPi0InvMassBGTot, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
+    histoPi0InvMassBGTot->Draw("same");
 
     Int_t nLegendLines      = 5;
     if (scaleFacSignal == 1.0){
-        DrawGammaSetMarker(histoPi0InvMassSigRemBGSubPCM, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
-        histoPi0InvMassSigRemBGSubPCM->Draw("same");    
-        fitPi0InvMassSigPCM->Draw("same");
+        DrawGammaSetMarker(histoPi0InvMassSigRemBGSub, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
+        histoPi0InvMassSigRemBGSub->Draw("same");    
+        fitPi0InvMassSig->Draw("same");
     } else {
-        DrawGammaSetMarker(histoPi0InvMassSigRemBGSubPCM, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
-        histoPi0InvMassSigRemBGSubPCM->Draw("same");
+        DrawGammaSetMarker(histoPi0InvMassSigRemBGSub, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
+        histoPi0InvMassSigRemBGSub->Draw("same");
         
         histoFit->SetLineColor(fitColorInvMassSG);
         histoFit->SetLineWidth(4);
@@ -343,10 +343,10 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     labelTrigger->SetTextFont(43);
     labelTrigger->Draw();
     
-    TLatex *labelInvMassRecoPCM  = new TLatex(0.135,0.9-3*0.9*textsizeLabelsPP,ReturnTextReconstructionProcess(detMode));
-    SetStyleTLatex( labelInvMassRecoPCM, 0.85*textSizeLabelsPixel,4);
-    labelInvMassRecoPCM->SetTextFont(43);
-    labelInvMassRecoPCM->Draw();
+    TLatex *labelInvMassReco  = new TLatex(0.135,0.9-3*0.9*textsizeLabelsPP, ReturnTextReconstructionProcess(detMode));
+    SetStyleTLatex( labelInvMassReco, 0.85*textSizeLabelsPixel,4);
+    labelInvMassReco->SetTextFont(43);
+    labelInvMassReco->Draw();
 
     SetStyleTLatex( labelInvMassPtRange, 0.85*textSizeLabelsPixel,4);
     labelInvMassPtRange->SetTextAlign(31);
@@ -355,14 +355,14 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
 
     TLegend* legendInvMass  = GetAndSetLegend2(0.67, 0.87-nLegendLines*0.75*textsizeLabelsPP, 0.9, 0.87, 0.85*textSizeLabelsPixel);
     legendInvMass->SetMargin(0.25);
-    legendInvMass->AddEntry(histoPi0InvMassSigPlusBGPCM,"Raw real events","l");
-    legendInvMass->AddEntry(histoPi0InvMassBGTotPCM,"Mixed event +","p");
+    legendInvMass->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","l");
+    legendInvMass->AddEntry(histoPi0InvMassBGTot,"Mixed event +","p");
     legendInvMass->AddEntry((TObject*)0,"corr. BG","");
-    legendInvMass->AddEntry(histoPi0InvMassSigRemBGSubPCM,"BG subtracted","p");
+    legendInvMass->AddEntry(histoPi0InvMassSigRemBGSub,"BG subtracted","p");
     if (scaleFacSignal != 1.0){
         legendInvMass->AddEntry((TObject*)0,Form("scaled by %2.1f",scaleFacSignal),"");
     }    
-    legendInvMass->AddEntry(fitPi0InvMassSigPCM, "Fit","l");
+    legendInvMass->AddEntry(fitPi0InvMassSig, "Fit","l");
     legendInvMass->Draw();
 
     canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBin.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), suffix.Data()));
