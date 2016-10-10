@@ -61,6 +61,9 @@ void CompileCorrectGammaV2(){
     } else if (homedirectory.CompareTo("/home/meike") == 0){
       gSystem->AddIncludePath("-I/home/meike/analysis/software/photonconv/AnalysisSoftware/RooUnfold/src");
       gSystem->Load("/home/meike/analysis/software/photonconv/AnalysisSoftware/RooUnfold/libRooUnfold");
+    } else if (homedirectory.CompareTo("/home/nschmidt") == 0){
+      gSystem->AddIncludePath("-I//media/nschmidt/Daten4/CommitSoft/AnalysisSoftware/RooUnfold/src");
+      gSystem->Load("/media/nschmidt/Daten4/CommitSoft/AnalysisSoftware/RooUnfold/libRooUnfold");
     } else {
         cout << "You have not defined where RooUnfold can be found on your system! This macro can't run without it!" << endl;
         return;
