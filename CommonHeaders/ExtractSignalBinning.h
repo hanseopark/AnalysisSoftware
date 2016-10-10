@@ -415,8 +415,8 @@ Int_t fBinsPi0900GeVPtRebin[11]                 = { 4, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 4, 
                                                     4};
 Double_t fBinsEta900GeVPt[4]                    = { 0., 0.9, 1.8, 3.0};
-Int_t fBinsEta900GeVPtRebin[4]                  = { 8, 5, 5};
-Int_t fBinsPi0EtaBinning900GeVPtRebin[4]        = { 8, 4, 4};
+Int_t fBinsEta900GeVPtRebin[3]                  = { 8, 5, 5};
+Int_t fBinsPi0EtaBinning900GeVPtRebin[3]        = { 8, 4, 4};
 Double_t fBinsPi0900GeVDirectPhotonPt[8]        = { 0.0, 0.6, 0.8, 1.0, 1.3, 
                                                     2.0, 3.0, 4.5};
 Int_t fBinsPi0900GeVDirectPhotonPtRebin[7]      = { 4, 2, 2, 2, 2, 
