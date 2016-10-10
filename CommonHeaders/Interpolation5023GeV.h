@@ -26,7 +26,7 @@ Double_t* ExtractRelErrDownAsymmGraphClone(TGraphAsymmErrors* graph);
 TGraphAsymmErrors* CalculateSystErrors(TGraphErrors* spectrum,TGraphAsymmErrors* g1,TGraphAsymmErrors* g2);
 
 //TF1* RebinWithFitToTGraph(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins, TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters,Double_t probability);
-TF1* RebinWithFitToTGraph(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TF1* CurrentFit, TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters);
+TF1* RebinWithFitToTGraph(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TF1* CurrentFit, TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters,Int_t fixParNumber);
 TF1* FillTGraphEYWithFitErr(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters);
 TGraphErrors *GetInterpolSpectrum2D(TGraphErrors *g1, TGraphErrors *g2,Double_t d1, Double_t d2,Double_t dSqrts);
 TGraphAsymmErrors* GetChargeParticlesRpPb2013(TString typeErr);
@@ -42,7 +42,7 @@ void SavingFiles(TString outputDir,TString System);
 
 Double_t	xSection2760GeVppINEL    =  62.8*1e-3;
 Double_t        xSectionpPb5023GeVINEL   =  70*1e-3;
-Double_t	xSection7TeVINEL         =  73.2*1e-3;
+//Double_t	xSection7TeVINEL         =  73.2*1e-3;
 //Double_t        recalcBarn               =  1e12; 
 Double_t 	fNcoll = 6.9;
 Double_t 	fTpPb     =   0.0983e3*(1/recalcBarn);
@@ -265,7 +265,7 @@ NbPoints){
 	
 	
 	
-TF1* RebinWithFitToTGraph(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TF1* CurrentFit, TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters){
+TF1* RebinWithFitToTGraph(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TF1* CurrentFit, TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters, Int_t fixParNumber){
   
  	
 	Int_t     nOldPoints       = spectrum->GetN();
@@ -307,6 +307,12 @@ TF1* RebinWithFitToTGraph(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSp
 
 	       CurrentFit->SetRange(minPt,maxPt);
  	       CurrentFit->SetParameters(parameters[0],parameters[1],parameters[2]); // standard
+	       
+	       if( fixParNumber > -1 && fixParNumber < 3 ){
+		 CurrentFit->FixParameter(fixParNumber,parameters[fixParNumber]);
+	       } else if ( fixParNumber > -1 ){
+		 cout<<"WARNING: the number of parameter is wrong"<<endl;
+	       }
 	
 	
 	       spectrum->Fit(CurrentFit,"SQNRME+","",minPt,maxPt);  //One time
@@ -1050,7 +1056,32 @@ Double_t* ExtractRelErrDownAsymmGraphClone(TGraphAsymmErrors* graph){
 
 
 
-
+TGraphAsymmErrors* ProduceTGraphAsymmToPlotErrors(TGraphAsymmErrors *graph){
+  
+  
+	TGraphAsymmErrors* newGraph      = (TGraphAsymmErrors*)graph->Clone();
+   	 Int_t nNewPoints            = newGraph->GetN();
+	 Double_t *xNewValue         = newGraph->GetX();
+	 Double_t *yNewValue         = newGraph->GetY();
+	 Double_t *yErrlow           = newGraph->GetEYlow();
+	 Double_t *yErrhigh          = newGraph->GetEYhigh();
+	 Double_t *xErrlow	     = newGraph->GetEXlow();	
+	 Double_t *xErrhigh	     = newGraph->GetEXhigh();	
+	 
+	  
+	 for(Int_t iNewPoint = 0 ; iNewPoint < nNewPoints; iNewPoint++){
+	   
+		   yNewValue[iNewPoint] = yErrlow[iNewPoint]/yNewValue[iNewPoint]*100;
+		   yErrlow[iNewPoint]  = 0;
+		   yErrhigh[iNewPoint] = 0;
+		   xErrlow[iNewPoint]  = 0;
+		   xErrhigh[iNewPoint] = 0;
+	 }
+	 
+	 return newGraph;
+  
+}
+	 
 
 
 

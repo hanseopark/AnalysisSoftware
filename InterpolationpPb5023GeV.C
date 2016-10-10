@@ -58,19 +58,17 @@
   
 
 
-void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPileUpCorrection", TString suffix="pdf", TString outputDir="OutputRpPb_yShift_Individual",TString FitFuncName="Tsallis", TString thesisPlots="" )//Bylinkin
+void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPileUpCorrection", TString suffix="pdf", TString outputDir="OutputRpPb_yShift_Individual",TString FitFuncName="Tsallis", TString thesisPlots="", Int_t fixParam=1)//Bylinkin
 {
 
 	
 	gROOT->SetStyle("Plain");
         TH1::AddDirectory(kFALSE);
 	
-	if(thesisPlots.EqualTo("thesis") ){
-	  
+	if(thesisPlots.EqualTo("thesis") ){  
 	StyleSettingsThesis(suffix);
 	cout<<"Entre a thesis plots"<<endl;
 	}else {
-	
 	StyleSettings();
 	}
 	
@@ -101,13 +99,30 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	if (System.CompareTo("PHOS")==0 ){
 
 	  //	  pTLimitLow=0.8;
-
 	}
+	
+	if ( System.CompareTo("EMCal") == 0 || System.CompareTo("EMCAL") == 0 || FitFuncName.CompareTo("Bylinkin") == 0 ){
+	
+	  cout<<"WARNING: Fix parameter not applied for Bylinkin or for EMCAl system";
+	  
+	  fixParam = -1;
+	    
+	}
+	  
+	  
 	cout << "pT Limit:  "<<pTLimit << endl;
 	cout << " low pT Limit:  "<<pTLimitLow << endl;
 	cout << "SytemsLabel:  "<<SystemLabel.Data() << endl;
 	TString dateForOutput = ReturnDateStringForOutput();
-	outputDir = Form("%s/%s/%s/%s/%s/%s",outputDir.Data(),dateForOutput.Data(),System.Data(),suffix.Data(),resultsType.Data(),FitFuncName.Data());
+	
+	if( fixParam < 0 ) { 
+	  
+	  outputDir = Form("%s/%s/%s/%s/%s/%s",outputDir.Data(),dateForOutput.Data(),System.Data(),suffix.Data(),resultsType.Data(),FitFuncName.Data());
+	
+	} else {
+	  TString funcName = Form("%sParam_n_Fixed",FitFuncName.Data());  
+	  outputDir = Form("%s/%s/%s/%s/%s/%s",outputDir.Data(),dateForOutput.Data(),System.Data(),suffix.Data(),resultsType.Data(),funcName.Data());
+	}
 	gSystem->Exec("mkdir -p "+outputDir);
 	
 	Bool_t PileUpCorrection = kFALSE;
@@ -120,13 +135,17 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	TString fileNameNeutralPionPHOSResultsPP	="ExternalInputpPb/PHOS/CombinedResultsPP_ShiftedX_PaperRAA_ConsiderPileup7TeVPHOSData.root";
 	TString fileNameNeutralPionCombResultspPb	="ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2016_06_06.root"; //low pT Cut
 	TString fileNameNeutralPionPCMResultspPb        ="ExternalInputpPb/PCM/data_PCMResults_pPb_20151111_standard_CatErrors.root";
-	TString fileNameNeutralPionDalitzResultspPb	="ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20160601.root";//data_PCMResults_Dalitz_pPb_20150806.root";
+	TString fileNameNeutralPionDalitzResultspPb	="ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20160929.root";//data_PCMResults_Dalitz_pPb_20150806.root";data_PCMResults_Dalitz_pPb_20160601.root
 	TString fileNameNeutralPionEMCalResultspPb	="ExternalInputpPb/EMCAL/data_EMCalEMCalResults_160602_newhighptbinningPi0_pPb.root";//data_EMCalEMCalResults_160215_pPb_5023_Mike.root";
 	TString fileNameNeutralPionPHOSResultspPb       ="ExternalInputpPb/PHOS/20160601_Pi0InvariantSpectrum_pPb_PHOS.root";//InvariantYield_Pi0_pPb_Graph_PHOS_20160415.root";
 	TString fileNameRpPbPHOS  	                ="ExternalInputpPb/PHOS/data_PHOSResults_RpPb_20160405.root";
 	TString fileNamePHOSSystErrCancellation         ="ExternalInputpPb/PHOS/ComponentCancelSys.root";
 	//	TFile* CommonFile=new TFile("ExternalInputpPb/Combined_pPbResults_2016_03_31.root");// Common Fit for YShift
-	TFile* CommonFile=new TFile("ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2016_06_03.root");// Common Fit for YShift
+	TFile* CommonFile=new TFile("ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2016_10_07.root");// Common Fit for YShift
+	
+	TString nameRebinSpectraFitsDat = Form("%s/RebinSpectraFitsParam.dat",outputDir.Data());
+ 	fstream  fileRebinSpectraFits;
+ 	fileRebinSpectraFits.open(nameRebinSpectraFitsDat.Data(), ios::out);  
 
 	//PHOS Input
 
@@ -396,6 +415,30 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	graphAsymmChargedParticlesRpPbSystErr = GetChargeParticlesRpPb2013("Syst");
 	graphAsymmChargedParticlesRpPbStatErr = GetChargeParticlesRpPb2013("Stat");
 	
+	//GA pp Input	
+        TFile*  fileNeutralPionCombResultsPP       = new TFile(fileNameNeutralPionCombResultsPP.Data());
+	TFile*  fileNeutralPionPHOSResultsPP       = new TFile(fileNameNeutralPionPHOSResultsPP.Data());
+	TFile*	fileNeutralPionEMCalResultsPP      = new TFile(fileNameNeutralPionEMCalResultsPP.Data());
+	TFile*  fileNeutralPionEMCalResultsPP7TeV  = new TFile(fileNameNeutralPionEMCalResultsPP7TeV.Data());
+
+	TString graphNameInvCrossSectionPi07TeVStatSystErr;
+	TString graphNameInvCrossSectionPi07TeVStatErr;
+	TString graphNameInvCrossSectionPi07TeVSysErr;
+	
+	TString graphNameInvCrossSectionPi02760GeVStatSystErr;
+	TString graphNameInvCrossSectionPi02760GeVStatErr;
+	TString graphNameInvCrossSectionPi02760GeVSysErr;
+	
+	TGraphAsymmErrors*  graphInvCrossSectionPi0Comb7TeVStatSystErr;
+	TGraphAsymmErrors*  graphInvCrossSectionPi07TeVStatSystErr;
+	TGraphAsymmErrors*  graphInvCrossSectionPi07TeVStatErr;
+	TGraphAsymmErrors*  graphInvCrossSectionPi07TeVSystErr;
+	
+	TGraphAsymmErrors*  graphInvCrossSectionPi0Comb2760GeVStatSystErr;   	
+	TGraphAsymmErrors*  graphInvCrossSectionPi02760GeVStatSystErr;   	
+        TGraphAsymmErrors*  graphInvCrossSectionPi02760GeVStatErr;   	
+	TGraphAsymmErrors*  graphInvCrossSectionPi02760GeVSystErr;   	
+	
 
 	TString fileNamePythia8 = "ExternalInputpPb/pythia8-5.02TeV-part-1.root";
 	
@@ -405,6 +448,12 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	Double_t *Parameters2760GeV = NULL;
 	Double_t *Parameters7TeV    = NULL;
 	
+	//This part obtain the "n" parameter from the fit of the combined spectrum///
+	graphInvCrossSectionPi0Comb7TeVStatSystErr    = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get("graphInvCrossSectionPi0Comb7TeV");
+	graphInvCrossSectionPi0Comb2760GeVStatSystErr = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get("graphInvCrossSectionPi0Comb2760GeV");
+	
+	
+		
 	
 	if( FitFuncName.CompareTo("Tsallis") == 0 ){
 	  
@@ -425,6 +474,32 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	    Parameters7TeV[2] = 1.24671e-01;
 	  }	  
 	  fitNameLabel = "Tsallis";
+	  
+	  if( fixParam == 1  ){ //No applied for EMCal
+	    
+	    cout<<"Entro a fix param"<<endl;
+	  
+	      TF1* FitToCombined2760GeV = FitObject("l","FitToCombined2760GeV","Pi0");
+	       FitToCombined2760GeV->SetRange(0.3,8.0);
+ 	       FitToCombined2760GeV->SetParameters(Parameters2760GeV[0],Parameters2760GeV[1],Parameters2760GeV[2]); 
+	       graphInvCrossSectionPi0Comb2760GeVStatSystErr->Fit(FitToCombined2760GeV,"SQNRME+","",0.3,8.0); 
+	       //FitToCombined2760GeV->Print();
+	       
+	       Parameters2760GeV[1] = FitToCombined2760GeV->GetParameter(1);
+	       cout<<"2760GeV   "<<FitToCombined2760GeV->GetParameter(1)<<endl;
+	       
+	       TF1* FitToCombined7TeV = FitObject("l","FitToCombined7TeV","Pi0");
+	       FitToCombined7TeV->SetRange(0.3,14.0);
+ 	       FitToCombined7TeV->SetParameters(Parameters7TeV[0],Parameters7TeV[1],Parameters7TeV[2]); 
+	       graphInvCrossSectionPi0Comb7TeVStatSystErr->Fit(FitToCombined7TeV,"SQNRME+","",0.3,14.0); 
+	       
+	      // FitToCombined7TeV->Print();
+	       
+	       Parameters7TeV[1] = FitToCombined7TeV->GetParameter(1);
+	       cout<<"7TeV   "<<FitToCombined7TeV->GetParameter(1)<<endl;
+	       
+	  }
+	  
 
 	  
 	  
@@ -490,27 +565,7 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	graphppPythia->Print();
 	
 
-	//GA pp Input	
-        TFile*  fileNeutralPionCombResultsPP       = new TFile(fileNameNeutralPionCombResultsPP.Data());
-	TFile*  fileNeutralPionPHOSResultsPP       = new TFile(fileNameNeutralPionPHOSResultsPP.Data());
-	TFile*	fileNeutralPionEMCalResultsPP      = new TFile(fileNameNeutralPionEMCalResultsPP.Data());
-	TFile*  fileNeutralPionEMCalResultsPP7TeV  = new TFile(fileNameNeutralPionEMCalResultsPP7TeV.Data());
-
-	TString graphNameInvCrossSectionPi07TeVStatSystErr;
-	TString graphNameInvCrossSectionPi07TeVStatErr;
-	TString graphNameInvCrossSectionPi07TeVSysErr;
 	
-	TString graphNameInvCrossSectionPi02760GeVStatSystErr;
-	TString graphNameInvCrossSectionPi02760GeVStatErr;
-	TString graphNameInvCrossSectionPi02760GeVSysErr;
-	
-	TGraphAsymmErrors*  graphInvCrossSectionPi07TeVStatSystErr;
-	TGraphAsymmErrors*  graphInvCrossSectionPi07TeVStatErr;
-	TGraphAsymmErrors*  graphInvCrossSectionPi07TeVSystErr;
-	
-	TGraphAsymmErrors*  graphInvCrossSectionPi02760GeVStatSystErr;   	
-        TGraphAsymmErrors*  graphInvCrossSectionPi02760GeVStatErr;   	
-	TGraphAsymmErrors*  graphInvCrossSectionPi02760GeVSystErr;   	
 	
 	
 	if ( resultsType.CompareTo("Comb") == 0   ){
@@ -607,9 +662,9 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	graphInvCrossSectionPi07TeVSystErr->Print();
 	
 	TDirectory* fNeutralPionEMCalpPbContainer = (TDirectory*) fileNeutralPionEMCalResultsPP->GetDirectory("Pi02.76TeV");	
-           graphInvCrossSectionPi02760GeVStatErr      	= (TGraphAsymmErrors*)fNeutralPionEMCalpPbContainer->Get(graphNameInvCrossSectionPi02760GeVStatErr.Data());	
+        graphInvCrossSectionPi02760GeVStatErr      	= (TGraphAsymmErrors*)fNeutralPionEMCalpPbContainer->Get(graphNameInvCrossSectionPi02760GeVStatErr.Data());	
 	graphInvCrossSectionPi02760GeVSystErr      	= (TGraphAsymmErrors*)fNeutralPionEMCalpPbContainer->Get(graphNameInvCrossSectionPi02760GeVSysErr.Data());	
-	graphInvCrossSectionPi02760GeVStatSystErr    =  CalculateCombinedSysAndStatError( graphInvCrossSectionPi02760GeVStatErr ,graphInvCrossSectionPi02760GeVSystErr );	
+	graphInvCrossSectionPi02760GeVStatSystErr    	=  CalculateCombinedSysAndStatError( graphInvCrossSectionPi02760GeVStatErr ,graphInvCrossSectionPi02760GeVSystErr );	
 	cout<<"Entro a Comb"<<endl;
 	
 	
@@ -734,10 +789,6 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	
 	canvasRatioNoPileUpAndPileUpCorr->SaveAs(Form("%s/Ratio_NoPileUpAndPileUpCorr.%s",outputDir.Data(),suffix.Data()));
 	
-	
-	
-	
-	
 	  
 	  
 	}
@@ -770,9 +821,6 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	
 	
 	cout<<"LLego 1"<<endl;
-	
-	
-	
 	
 	
 	
@@ -827,11 +875,7 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	if (System.CompareTo("PHOS")==0  ) minPt=0.8;
 		Float_t maxPt = graphInvYieldPi02760GeVStatSystErr->GetXaxis()->GetBinUpEdge(graphInvYieldPi02760GeVStatSystErr->GetXaxis()->GetNbins());
 		//Float_t maxPt = 8.;
-	
-	
-	
-	
-	
+		
 	TGraphErrors* graphInvYieldPi02760GeVBinStatSystErr;
 	TGraphErrors* graphInvYieldPi02760GeVBinStatErr;
 	
@@ -842,20 +886,19 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 
 	
 	cout<<"Rebinning graphInvYieldPi02760GeVStatSystErr to pPb"<<endl;
+
 	
-	TF1* fitPi02760GeVBinStatSystErr    = RebinWithFitToTGraph(graphInvYieldPi02760GeVStatSystErr,&graphAInvYieldPi02760GeVBinStatSystErr,graphInvYieldPi0pPb5023GeVYShiftedComplErr,0,fitType.Data(),minPt,maxPt,Parameters2760GeV);
+	TF1* fitPi02760GeVBinStatSystErr    = RebinWithFitToTGraph(graphInvYieldPi02760GeVStatSystErr,&graphAInvYieldPi02760GeVBinStatSystErr,graphInvYieldPi0pPb5023GeVYShiftedComplErr,0,fitType.Data(),minPt,maxPt,Parameters2760GeV,fixParam);
 	fitPi02760GeVBinStatSystErr->SetName("Fit2760GeVRebin");	
 	cout<<"Rebinning graphInvYieldPi02760GeVSystErr to pPb"<<endl;
-		
-	TF1* fitPi02760GeVBinSystErr        = RebinWithFitToTGraph(graphInvYieldPi02760GeVSystErr,  &graphAInvYieldPi02760GeVBinSystErr,graphAInvYieldPi02760GeVBinStatSystErr,fitPi02760GeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters2760GeV);
-	TF1* fitPi02760GeVBinStatErr	    = FillTGraphEYWithFitErr(graphInvYieldPi02760GeVStatErr,&graphAInvYieldPi02760GeVBinStatErr,graphAInvYieldPi02760GeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters2760GeV);
-	// TF1*fitLow=FitObject("tcm1","fitInvCrossSectionPi0276Low","Pi0");	
-	// TF1*fitHigh=FitObject("tcm2","fitInvCrossSectionPi0276High","Pi0");	
-	// fitLow->SetParameters(fitPi02760GeVBinStatSystErr->GetParameter(0),fitPi02760GeVBinStatSystErr->GetParameter(1));
-	// fitHigh->SetParameters(fitPi02760GeVBinStatSystErr->GetParameter(2),fitPi02760GeVBinStatSystErr->GetParameter(3),fitPi02760GeVBinStatSystErr->GetParameter(4));
-	// fitLow->SetRange(minPt,maxPt); 
-	// fitHigh->SetRange(minPt,maxPt);
+	
+	TString fitPi02760GeVBinStatSystErrParamToFile =  WriteParameterToFileLatexTable(fitPi02760GeVBinStatSystErr,kTRUE);
+ 	fileRebinSpectraFits << fitPi02760GeVBinStatSystErrParamToFile << endl;
 
+		
+	TF1* fitPi02760GeVBinSystErr        = RebinWithFitToTGraph(graphInvYieldPi02760GeVSystErr,  &graphAInvYieldPi02760GeVBinSystErr,graphAInvYieldPi02760GeVBinStatSystErr,fitPi02760GeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters2760GeV,fixParam);
+	TF1* fitPi02760GeVBinStatErr	    = FillTGraphEYWithFitErr(graphInvYieldPi02760GeVStatErr,&graphAInvYieldPi02760GeVBinStatErr,graphAInvYieldPi02760GeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters2760GeV);
+	
 
 	TGraphAsymmErrors* TGraphAymmmRatioToFitPi0PP2760GeV = (TGraphAsymmErrors*) CalculateGraphErrRatioToFit(graphInvYieldPi02760GeVStatSystErr,fitPi02760GeVBinStatSystErr);
 	
@@ -866,7 +909,7 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	
 	TH2F * histo2DRatioToFitPi0PP2760GeV = new TH2F("histo2DRatioToFitPi0PP2760GeV","histo2DRatioToFitPi0PP2760GeV",1000,0.,pTLimit,1000,0.3,2.5);
 	SetStyleHistoTH2ForGraphs(histo2DRatioToFitPi0PP2760GeV, "#it{p}_{T} (GeV/#it{c})","Data/Fit", 0.05,0.064, 0.05,0.06, 0.8,0.6, 512, 505); 
-		histo2DRatioToFitPi0PP2760GeV->GetYaxis()->SetRangeUser(0.8,1.2);
+		histo2DRatioToFitPi0PP2760GeV->GetYaxis()->SetRangeUser(0.5,1.5);
 	//	histo2DRatioToFitPi0PP2760GeV->GetYaxis()->SetRangeUser(0.4,1.6);
 	histo2DRatioToFitPi0PP2760GeV->DrawCopy(); 
 	
@@ -908,13 +951,17 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	 cout<<"Rebinning graphInvYieldPi07TeVStatSystErr to "<<endl;
 	
 	
-	 TF1* fitPi07TeVBinStatSystErr    = RebinWithFitToTGraph(graphInvYieldPi07TeVStatSystErr,&graphAInvYieldPi07TeVBinStatSystErr,   graphInvYieldPi0pPb5023GeVYShiftedComplErr,0,fitType.Data(),minPt,maxPt,Parameters7TeV);
+	 TF1* fitPi07TeVBinStatSystErr    = RebinWithFitToTGraph(graphInvYieldPi07TeVStatSystErr,&graphAInvYieldPi07TeVBinStatSystErr,   graphInvYieldPi0pPb5023GeVYShiftedComplErr,0,fitType.Data(),minPt,maxPt,Parameters7TeV,fixParam);
+	 
+	 TString fitPi07TeVBinSystErrParamToFile =  WriteParameterToFileLatexTable(fitPi07TeVBinStatSystErr,kTRUE);
+ 	 fileRebinSpectraFits << fitPi07TeVBinSystErrParamToFile << endl;
+	
 
 
 	cout<<"Rebinning graphInvYieldPi07TeVSystErr to "<<endl;
 	
 	
-	 TF1* fitPi07TeVBinSystErr        = RebinWithFitToTGraph(graphInvYieldPi07TeVSystErr,&graphAInvYieldPi07TeVBinSystErr,   graphAInvYieldPi07TeVBinStatSystErr,fitPi07TeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters7TeV);
+	 TF1* fitPi07TeVBinSystErr        = RebinWithFitToTGraph(graphInvYieldPi07TeVSystErr,&graphAInvYieldPi07TeVBinSystErr,   graphAInvYieldPi07TeVBinStatSystErr,fitPi07TeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters7TeV,fixParam);
 	 TF1* fitPi07TeVBinStatErr	  = FillTGraphEYWithFitErr(graphInvYieldPi07TeVStatErr,&graphAInvYieldPi07TeVBinStatErr,graphAInvYieldPi07TeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters7TeV);
 	
 	 fitPi07TeVBinSystErr->Draw("");
@@ -939,7 +986,7 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	
 	 TH2F * histo2DRatioToFitPi0PP7TeV = new TH2F("histo2DRatioToFitPi0PP7TeV","histo2DRatioToFitPi0PP7TeV",1000,0.,pTLimit,1000,0.3,2.5);
 	SetStyleHistoTH2ForGraphs(histo2DRatioToFitPi0PP7TeV, "#it{p}_{T} (GeV/#it{c})","Data/Fit", 0.05,0.064, 0.05,0.06, 0.8,0.6, 512, 505); 
-	histo2DRatioToFitPi0PP7TeV->GetYaxis()->SetRangeUser(0.8,1.2);
+	histo2DRatioToFitPi0PP7TeV->GetYaxis()->SetRangeUser(0.5,1.5);
 	//	histo2DRatioToFitPi0PP7TeV->GetYaxis()->SetRangeUser(0.4,1.6);
 	histo2DRatioToFitPi0PP7TeV->DrawCopy(); 
 	
@@ -964,6 +1011,85 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	
 	
 	canvasRatioToFitPi0PP7TeV->SaveAs(Form("%s/RatiotoFit_Pi0PP7TeV_%s_%s.%s",outputDir.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
+	
+	
+	
+	///////////////////////////////////////////
+	cout<<"Just for test Checking Statistic errors"<<endl;
+	 
+	TGraphAsymmErrors* graphInvYieldPi07TeVStatErrClone      = ProduceTGraphAsymmToPlotErrors(graphInvYieldPi07TeVStatErr);
+	TGraphAsymmErrors* graphAInvYieldPi07TeVBinStatErrClone  = ProduceTGraphAsymmToPlotErrors(graphAInvYieldPi07TeVBinStatErr);
+	
+	 
+        TCanvas* canvasCrossCheckStatisticalErrPP7TeV = new TCanvas("canvasCrossCheckStatisticalErrPP7TeV","Cross-check statistical errors of pp 7 TeV",200,10,1200,700);
+	 
+	
+	DrawGammaCanvasSettings( canvasCrossCheckStatisticalErrPP7TeV,  0.1, 0.01, 0.015, 0.13);
+	canvasCrossCheckStatisticalErrPP7TeV->SetLogx();
+	TH2F * histo2DStatisticTestPi0PP7TeV = new TH2F("histo2DStatisticTestPi0PP7TeV","histo2DStatisticTestPi0PP7TeV",1000,0.3,pTLimit,1000,0.0,50);
+	SetStyleHistoTH2ForGraphs(histo2DStatisticTestPi0PP7TeV, "#it{p}_{T} (GeV/#it{c})","Statistical error %", 0.05,0.064, 0.05,0.06, 0.8,0.6, 512, 505); 
+	histo2DStatisticTestPi0PP7TeV->GetYaxis()->SetRangeUser(0.001,30.0);
+	histo2DStatisticTestPi0PP7TeV->GetXaxis()->SetRangeUser(0.3,20.0);
+	histo2DStatisticTestPi0PP7TeV->DrawCopy(); 
+	
+	DrawGammaSetMarkerTGraphAsym(    graphInvYieldPi07TeVStatErrClone,20,1, kRed , kRed,1,kTRUE,0);
+	graphInvYieldPi07TeVStatErrClone->Draw("p,same,e");
+	
+	DrawGammaSetMarkerTGraphAsym(graphAInvYieldPi07TeVBinStatErrClone,20,1, kBlue,kBlue,1,kTRUE,0);
+	graphAInvYieldPi07TeVBinStatErrClone->Draw("p,same,e");
+	
+	TLegend* legendStatisticalErrPP7TeV = new TLegend(0.2,0.75,0.6,0.95);
+	legendStatisticalErrPP7TeV->SetFillColor(0);
+	legendStatisticalErrPP7TeV->SetLineColor(0);
+	legendStatisticalErrPP7TeV->SetNColumns(1);
+	legendStatisticalErrPP7TeV->SetTextSize(0.03);
+	legendStatisticalErrPP7TeV->AddEntry(graphInvYieldPi07TeVStatErrClone,"Measured pp #sqrt{s} = 7 TeV","pef");
+	legendStatisticalErrPP7TeV->AddEntry(graphAInvYieldPi07TeVBinStatErrClone,"Calculated pp #sqrt{s} = 7 TeV","pef");
+	legendStatisticalErrPP7TeV->Draw();
+	
+	canvasCrossCheckStatisticalErrPP7TeV->SaveAs(Form("%s/StatisticalErr_Pi0PP7TeV_%s_%s.%s",outputDir.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
+	
+	
+	
+	TGraphAsymmErrors* graphInvYieldPi02760GeVStatErrClone      = ProduceTGraphAsymmToPlotErrors(graphInvYieldPi02760GeVStatErr);
+	TGraphAsymmErrors* graphAInvYieldPi02760GeVBinStatErrClone  = ProduceTGraphAsymmToPlotErrors(graphAInvYieldPi02760GeVBinStatErr);
+	
+	 
+        TCanvas* canvasCrossCheckStatisticalErrPP2760GeV = new TCanvas("canvasCrossCheckStatisticalErrPP2760GeV","Cross-check statistical errors of pp 7 TeV",200,10,1200,700);
+	 
+	
+	DrawGammaCanvasSettings( canvasCrossCheckStatisticalErrPP2760GeV,  0.1, 0.01, 0.015, 0.13);
+	canvasCrossCheckStatisticalErrPP2760GeV->SetLogx();
+	TH2F * histo2DStatisticTestPi0PP2760GeV = new TH2F("histo2DStatisticTestPi0PP2760GeV","histo2DStatisticTestPi0PP2760GeV",1000,0.3,pTLimit,1000,0.0,50);
+	SetStyleHistoTH2ForGraphs(histo2DStatisticTestPi0PP2760GeV, "#it{p}_{T} (GeV/#it{c})","Statistical error %", 0.05,0.064, 0.05,0.06, 0.8,0.6, 512, 505); 
+	histo2DStatisticTestPi0PP2760GeV->GetYaxis()->SetRangeUser(0.001,30.0);
+	histo2DStatisticTestPi0PP2760GeV->GetXaxis()->SetRangeUser(0.3,20.0);
+	histo2DStatisticTestPi0PP2760GeV->DrawCopy(); 
+	
+	DrawGammaSetMarkerTGraphAsym(graphInvYieldPi02760GeVStatErrClone,20,1, kRed , kRed,1,kTRUE,0);
+	graphInvYieldPi02760GeVStatErrClone->Draw("p,same,e");
+	
+	DrawGammaSetMarkerTGraphAsym(graphAInvYieldPi02760GeVBinStatErrClone,20,1, kBlue,kBlue,1,kTRUE,0);
+	
+	graphAInvYieldPi02760GeVBinStatErrClone->Draw("p,same,e");
+	
+	
+	TLegend* legendStatisticalErrPP2760GeV = new TLegend(0.2,0.75,0.6,0.95);
+	legendStatisticalErrPP2760GeV->SetFillColor(0);
+	legendStatisticalErrPP2760GeV->SetLineColor(0);
+	legendStatisticalErrPP2760GeV->SetNColumns(1);
+	legendStatisticalErrPP2760GeV->SetTextSize(0.03);
+	legendStatisticalErrPP2760GeV->AddEntry(graphInvYieldPi02760GeVStatErrClone,"Measured pp #sqrt{s} = 2.76 TeV","pef");
+	legendStatisticalErrPP2760GeV->AddEntry(graphAInvYieldPi02760GeVBinStatErrClone,"Calculated pp #sqrt{s} = 2.76 TeV","pef");
+	
+	legendStatisticalErrPP2760GeV->Draw();
+	
+	
+	
+	canvasCrossCheckStatisticalErrPP2760GeV->SaveAs(Form("%s/StatisticalErr_Pi0PP2760GeV_%s_%s.%s",outputDir.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
+	
+	//////////////////////////////////////////////////////////////////////////
+	
 	
 	graphInvYieldPi02760GeVBinStatSystErr    	= ConvertTGraphAsymmErrorstoTGraphErrors(graphAInvYieldPi02760GeVBinStatSystErr);
 	graphInvYieldPi07TeVBinStatSystErr    		= ConvertTGraphAsymmErrorstoTGraphErrors(graphAInvYieldPi07TeVBinStatSystErr);
