@@ -159,8 +159,15 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
             arr                                                 = tempObjectName.Tokenize("_");
             selectedMothers                                     = (((TObjString*)arr->At(1))->GetString()).Atoi();
             for (Int_t j=0; j<nMotherParticles; j++) {
-                if (selectedMothers&motherParticleDec[j])
-                    hasMother[j]                                = kTRUE;
+                if (selectedMothers&motherParticleDec[j]) {
+                    TH2F* tempHist                              = (TH2F*)histoListCocktail->FindObject(Form("Pt_Y_Gamma_From_%s", motherParticles[j].Data()));
+                    if (tempHist) {
+                        if (tempHist->GetEntries())
+                            hasMother[j]                        = kTRUE;
+                    } else {
+                        hasMother[j]                            = kFALSE;
+                    }
+                }
             }
         }
         if (tempObjectName.BeginsWith("nParticles")) {
@@ -210,7 +217,7 @@ void PrepareCocktail(   TString nameFileCocktail    = "",
 
     //***************************** ranges **************************************************************************
     Double_t deltaRap                                           = 2*rapidity;
-    Double_t deltaEta                                           = 2*0.9;
+    Double_t deltaEta                                           = 2*0.9;                    // this must be taken from cut or sth., also if rap = 0.8 and eta = 0.9 -> we are missing photons
     Double_t deltaPtGen                                         = ptGenMax-ptGenMin;
     Double_t deltaPhi                                           = 2*TMath::Pi();
     
