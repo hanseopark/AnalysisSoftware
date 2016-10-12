@@ -422,17 +422,19 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
             ptbinning[i]             = ptbinningStandard[i];
         }            
     } else {
-        maxNBinsPt          = 17;       
+        maxNBinsPt          = 21;
         nColumns            = 5;
-        nRows               = 4;
-        Double_t ptbinningStandard[18]  = { 10., 11., 12., 13., 14., 
+        nRows               = 5;
+        Double_t ptbinningStandard[22]  = { 10., 11., 12., 13., 14.,
                                             15., 16., 18., 20., 22., 
                                             24., 26., 28., 30., 35., 
-                                            40., 45., 50 };
-        Int_t ptbinningRebStandard[17]  = { 10, 10, 10, 10, 10,
+                                            40., 45., 50 , 60., 70.,
+                                            80., 100.};
+        Int_t ptbinningRebStandard[21]  = { 10, 10, 10, 10, 10,
                                             10, 10, 10, 10, 10,
                                             10, 10, 10, 10, 10,
-                                            10, 10 };  
+                                            10, 10, 10, 10, 10,
+                                            10};
         for (Int_t i = 0; i < maxNBinsPt+1; i++){
             if (i < maxNBinsPt) 
                 ptbinningReb[i]      = ptbinningRebStandard[i];
