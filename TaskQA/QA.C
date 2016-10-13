@@ -461,16 +461,16 @@ void QA(    TString select          = "LHC11a",         // set selected
         pathPhotonQA[2] = Form("/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/%s/PhotonQA_%s.root",DataSets[2].Data(),DataSets[2].Data());
     }
     //**************************************************************************************************************
-    else if(select.CompareTo("LHC12g-Vertex")==0){
-        //LHC12g-p2 VertexCheck
+    else if(select.CompareTo("LHC12-Vertex")==0){
+        //LHC12 VertexCheck
         addSubfolder=kTRUE;
         cutNr = 0;
         nSets = 2;
         fEnergyFlag="8TeV";
         select.Remove(select.Length()-7,select.Length());
-        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20151027-LHC12a_QA_MC_p2/VertexCheck/GammaConvCalo_LHC12g_pass2_120.root";
-        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20151027-LHC12a_QA_MC_p2/VertexCheck/GammaConvCalo_MC_LHC15h1g_pass2_120.root";
-        DataSets[0]=select; DataSets[1]="LHC15h1g";
+        pathDataSets[0] = "/home/daniel/Desktop/Grid/Legotrain-vAN-20161012-8TeV-smear_vertex/LHC12_GammaConvCalo_101.root";
+        pathDataSets[1] = "/home/daniel/Desktop/Grid/Legotrain-vAN-20161012-8TeV-smear_vertex/LHC15h1_GammaConvCalo_101.root";
+        DataSets[0]=select; DataSets[1]="LHC15h1";
         plotDataSets[0]=select; plotDataSets[1]="Pythia8";
     }
     //**************************************************************************************************************

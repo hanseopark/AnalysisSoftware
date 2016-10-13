@@ -765,7 +765,7 @@ void SetTH1RangeForLogY(TH1* hist, Int_t minX, Int_t maxX){
 }
 
 void GetMinMaxBin(TH1* hist, Int_t &iMin, Int_t &iMax){
-
+    if(!hist) {cout << "INFO: NULL pointer given to GetMinMaxBin!'" << endl; return;}
 	iMin = 1;
 	iMax = hist->GetNbinsX();
 	Double_t min = hist->GetBinContent(iMin);

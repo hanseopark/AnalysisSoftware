@@ -237,6 +237,8 @@ void EventQA(
 
     std::vector<TH1D*> vecNEvents;
     std::vector<TH1D*> vecVertexZ;
+    std::vector<TH1D*> vecVertexX; //only if available
+    std::vector<TH1D*> vecVertexY; //only if available
     std::vector<TH1D*> vecNGoodTracks;
     std::vector<TH1D*> vecGammaCandidates;
     std::vector<TH1D*> vecMergedCandidates;
@@ -415,6 +417,30 @@ void EventQA(
             WriteHistogram(fHistVertexZ);
             vecVertexZ.push_back(new TH1D(*fHistVertexZ));
         } else cout << "INFO: Object |fHistVertexZ| could not be found! Skipping Draw..." << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        // vertex X distribution, if available
+        TH1D* fHistVertexX = (TH1D*)ESDContainer->FindObject("VertexX");
+        if(fHistVertexX){
+            GetMinMaxBin(fHistVertexX,minB,maxB);
+            SetXRange(fHistVertexX,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
+                                fHistVertexX,"","x-Vertex (cm)","#frac{dN}{dx}",1,1,
+                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            WriteHistogram(fHistVertexX);
+            vecVertexX.push_back(new TH1D(*fHistVertexX));
+        }
+        //-------------------------------------------------------------------------------------------------------------------------------
+        // vertex Y distribution, if available
+        TH1D* fHistVertexY = (TH1D*)ESDContainer->FindObject("VertexY");
+        if(fHistVertexY){
+            GetMinMaxBin(fHistVertexY,minB,maxB);
+            SetXRange(fHistVertexY,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
+                                fHistVertexY,"","y-Vertex (cm)","#frac{dN}{dy}",1,1,
+                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            WriteHistogram(fHistVertexY);
+            vecVertexY.push_back(new TH1D(*fHistVertexY));
+        }
         //-------------------------------------------------------------------------------------------------------------------------------
         // number of good tracks in central acceptance (|\eta| < 0.8)
         TH1D* fHistNGoodTracks = (TH1D*)ESDContainer->FindObject("GoodESDTracks");
@@ -1122,6 +1148,52 @@ void EventQA(
                         labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
                         0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Vertex_Z.%s", outputDir.Data(), suffix.Data()));
+    if(vecVertexX.size()>0){
+      //-------------------------------------------------------------------------------------------------------------------------------
+      // x-vertex distribution
+      GetMinMaxBin(vecVertexX,minB,maxB);
+      for(Int_t iVec=0; iVec<(Int_t)vecVertexX.size(); iVec++){
+          TH1D* temp = vecVertexX.at(iVec);
+          temp->Sumw2();
+          temp->Scale(1./temp->Integral());
+          //temp->Scale(1./nEvents[iVec]);
+          SetXRange(temp,minB,maxB);
+      }
+      DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                          vecVertexX,"","Vertex x (cm)","#frac{1}{N} #frac{dN}{dx}",1,1.1,
+                          labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                          0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+      SaveCanvas(canvas, Form("%s/Comparison/Vertex_X.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+
+      DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                          vecVertexX,"","Vertex x (cm)","#frac{1}{N} #frac{dN}{dx}",1,1.1,
+                          labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                          0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+      SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Vertex_X.%s", outputDir.Data(), suffix.Data()));
+    }
+    if(vecVertexY.size()>0){
+      //-------------------------------------------------------------------------------------------------------------------------------
+      // x-vertex distribution
+      GetMinMaxBin(vecVertexY,minB,maxB);
+      for(Int_t iVec=0; iVec<(Int_t)vecVertexY.size(); iVec++){
+          TH1D* temp = vecVertexY.at(iVec);
+          temp->Sumw2();
+          temp->Scale(1./temp->Integral());
+          //temp->Scale(1./nEvents[iVec]);
+          SetXRange(temp,minB,maxB);
+      }
+      DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                          vecVertexY,"","Vertex y (cm)","#frac{1}{N} #frac{dN}{dy}",1,1.1,
+                          labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                          0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+      SaveCanvas(canvas, Form("%s/Comparison/Vertex_Y.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+
+      DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                          vecVertexY,"","Vertex y (cm)","#frac{1}{N} #frac{dN}{dy}",1,1.1,
+                          labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                          0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+      SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Vertex_Y.%s", outputDir.Data(), suffix.Data()));
+    }
     //-------------------------------------------------------------------------------------------------------------------------------
     // number of good tracks
     GetMinMaxBin(vecNGoodTracks,minB,maxB);
