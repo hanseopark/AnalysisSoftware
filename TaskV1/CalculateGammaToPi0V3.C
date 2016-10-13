@@ -51,6 +51,7 @@ extern TSystem    *gSystem;
 
 void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                                 TString nameFilePi0     = "",
+                                TString nameFileCocktail= "",
                                 TString cutSel          = "",
                                 TString suffix          = "pdf",
                                 TString nameMeson       = "",
@@ -81,9 +82,6 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
    TString nameFinalResDat                      = Form("%s/%s/Gamma_%s_FinalExtraction_%s.dat",cutSel.Data(),option.Data(), textPrefix2.Data(), cutSel.Data());
    fstream fileFinalResults;
    fileFinalResults.open(nameFinalResDat.Data(), ios::out);
-
-// Determine cocktail file depending on collision system and centrality -> see header
-   FindCocktailFile(fEventCutSelection, fGammaCutSelection, centrality,option);
 
    if (!fEstimatePileup.CompareTo("EstimateTrainPileUp"))
       kDoPileup                                 = kTRUE;
@@ -555,25 +553,9 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
 //**********************************************************************************
    Bool_t doCocktailLoading                     = kTRUE;
    if (doCocktailLoading){  
-      cocktailFile                                = new TFile(Form("CocktailInput/%s.root",fcocktailFunc.Data()));
+      cocktailFile                                = new TFile(nameFileCocktail);
 
-      if (fcocktailFuncMtScaledEta.CompareTo("") != 0) {
-         cocktailFileMtScaledEta                 = new TFile(Form("CocktailInput/%s.root",fcocktailFuncMtScaledEta.Data()));
-         cocktailDirMtScaledEta                  = (TDirectoryFile*) cocktailFileMtScaledEta->Get(fcocktailFuncMtScaledEta);
-      } else {
-         cout << "fcocktailFuncMtScaledEta not defined" << endl;
-         cocktailFileMtScaledEta                 = NULL;
-      }
-
-      if (fcocktailFuncChargedPions.CompareTo("") != 0) {
-         cocktailFileChargedPions                = new TFile(Form("CocktailInput/%s.root",fcocktailFuncChargedPions.Data()));
-         cocktailDirChargedPions                 = (TDirectoryFile*) cocktailFileChargedPions->Get(fcocktailFuncChargedPions);
-      } else {
-         cout << "fcocktailFuncChargedPions not defined" << endl;
-         cocktailFileChargedPions                = NULL;
-      }
-
-      cout<<"loading cocktail file: CocktailInput/"<<fcocktailFunc<<".root"<<endl;
+      cout<<"loading cocktail file: "<<nameFileCocktail<<endl;
 
       if (!option.CompareTo("7TeV") || !option.CompareTo("13TeV")){
          cocktailPi0                                 = (TH1D* )cocktailFile->Get("Pi0_Pt");
@@ -688,6 +670,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
       DrawGammaSetMarker(histoDoubleRatioFitPi0YieldPurity, 20, 2.0, kBlue+2, kBlue+2);   
 
       histoDoubleRatioFitPi0YieldPurity->DrawCopy("same,E1");
+      DrawGammaLines(0., 16 , 1.0, 1.0,0.1, kGray+2 ,7);
       histoDoubleRatioConversionTrueEffPurity->DrawCopy("same,E1");
 
       TLegend* legendDoubleConversionFit                  = GetAndSetLegend(0.14,0.7,4,1,"Direct Photon Signal via Conversions");

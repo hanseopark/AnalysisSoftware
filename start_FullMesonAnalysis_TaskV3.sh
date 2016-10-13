@@ -225,28 +225,32 @@ function GiveBinningDirectPhoton7TeV()
     DoPi0InEtaBinning=0;
     DoEta=0;
 
-    echo "How many p_T bins do you want to use for the Pi0? 19(10GeV), 20(12GeV), 21(16GeV), 22(20GeV) 23 (25GeV)";
+    echo "How many p_T bins do you want to use for the Pi0? 19(8GeV), 20(10GeV), 21(12GeV), 22(16GeV) 23 (20GeV)";
     read answer
     if [ $answer = 19 ]; then
         echo "19 Bins --> Max p_T = 8 GeV ...";
         correctPi0=1
         BinsPtPi0=19
     elif [ $answer = 20 ]; then
-        echo "20 Bins --> Max p_T = 12 GeV ...";
+        echo "20 Bins --> Max p_T = 10 GeV ...";
         correctPi0=1
         BinsPtPi0=20
     elif [ $answer = 21 ]; then
-        echo "21 Bins --> Max p_T = 16 GeV ...";
+        echo "21 Bins --> Max p_T = 12 GeV ...";
         correctPi0=1
         BinsPtPi0=21
     elif [ $answer = 22 ]; then
-        echo "22 Bins --> Max p_T = 20 GeV ...";
+        echo "22 Bins --> Max p_T = 16 GeV ...";
         correctPi0=1
         BinsPtPi0=22
     elif [ $answer = 23 ]; then
-        echo "23 Bins --> Max p_T = 25 GeV ...";
+        echo "23 Bins --> Max p_T = 20 GeV ...";
         correctPi0=1
         BinsPtPi0=23
+    elif [ $answer = 24 ]; then
+        echo "24 Bins --> Max p_T = 25 GeV ...";
+        correctPi0=1
+        BinsPtPi0=24
     else
         echo "Pi0 Binning was not set correctly. Please try again.";
         correctPi0=0

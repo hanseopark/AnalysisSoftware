@@ -86,15 +86,16 @@ Double_t fBinsEtaPrim7TeVPt[8]                  = {0.0, 0.5, 1.0, 2.0, 3.0,
                                                     4.0, 6.0, 10.0}; 
 Int_t fBinsEtaPrim7TeVPtRebin[7]                = { 8, 2, 2, 2, 2, 
                                                     2, 2};
-Double_t fBinsPi07TeVDirectPhotonPt[24]         = { 0.0, 0.3, 0.6, 0.8, 1.0,
-                                                    1.2, 1.4, 1.6, 1.8, 2.0,
-                                                    2.4, 2.8, 3.2, 3.6, 4.2,
-                                                    4.8, 5.8, 7.0, 8.5, 10.0,
-                                                    12.0, 16.0, 20.0, 25.0};
-Int_t fBinsPi07TeVDirectPhotonPtRebin[23]       = { 2, 2, 1, 1, 1, 
-                                                    1, 1, 1, 1, 1, 
-                                                    1, 1, 1, 2, 2,
-                                                    2, 2, 4, 4, 4,
+Double_t fBinsPi07TeVDirectPhotonPt[24]         = { 0.0, 0.3, 0.6, 0.8,
+                                                    1.0, 1.2, 1.4, 1.6,
+                                                    1.8, 2.0, 2.2, 2.4,
+                                                    2.8, 3.0, 3.5, 4.0,
+                                                    4.5, 5.0, 6.0, 7.0,
+                                                    9.0, 12., 16., 20.};
+Int_t fBinsPi07TeVDirectPhotonPtRebin[23]       = { 3, 2, 1, 1, 1,
+                                                    1, 1, 1, 1, 1,
+                                                    2, 2, 2, 3, 3,
+                                                    4, 4, 4, 5, 5,
                                                     5, 5, 5};
 
 //******************** Pt binning for pp, 8 TeV ***************************************************
@@ -1137,8 +1138,9 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                         return 3;       // INT triggers
                         break;
                     case 52:
+                        return 33;
                     case 53:
-                        return 39;      // EMC triggers
+                        return 33;      // EMC triggers
                         break;
                     case 81:
                     case 82:    
@@ -1336,6 +1338,7 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                         return 6;       // INT triggers
                         break;
                     case 52:
+                        return 14;
                     case 53:
                         return 11;      // EMC triggers
                         break;
