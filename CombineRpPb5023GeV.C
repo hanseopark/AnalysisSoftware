@@ -159,12 +159,15 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
 
     
  
-  TString fileNameRpPb                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2016_06_13.root";
-  TString fileNameRpPbCombined                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_Comb_2016_06_13.root";
-  TString fileNameRpPbPCM                     = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2016_06_13.root";
-  TString fileNameRpPbDalitz                  = "ExternalInputpPb/InputRpPb/Pi0RpPb_Dalitz_2016_06_13.root";
-  TString fileNameRpPbPHOS                    = "ExternalInputpPb/InputRpPb/Pi0RpPb_PHOS_2016_06_13.root";
-  TString fileNameRpPbEMCal                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_EMCal_2016_06_13.root";
+  TString fileNameRpPb                        = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2016_10_13.root";
+  TString fileNameRpPbCombined                = "ExternalInputpPb/InputRpPb/Pi0RpPb_Comb_2016_06_13.root";
+  TString fileNameRpPbPCM                     = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2016_10_13.root";
+  TString fileNameRpPbDalitz                  = "ExternalInputpPb/InputRpPb/Pi0RpPb_Dalitz_2016_10_13.root";
+  TString fileNameRpPbPHOS                    = "ExternalInputpPb/InputRpPb/Pi0RpPb_PHOS_2016_10_13.root";
+  TString fileNameRpPbEMCal                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_EMCal_2016_10_13.root";
+  //File to load the correlation factors
+  TString corrFactorsFileName 		      = "ExternalInputpPb/InputRpPb/CorrelationFactors/RpPb_5.023TeV_2016_09_27.root";
+  
   TFile* fileNeutralPionRpPb                           = new TFile(fileNameRpPb.Data());
   TFile* fileNeutralPionRpPbComb                           = new TFile(fileNameRpPbCombined.Data());
   TFile* fileNeutralPionRpPbPCM                           = new TFile(fileNameRpPbPCM.Data());
@@ -197,6 +200,8 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   TString nameHistoPHOSAlpha                         = "Pi0_RpPb_PHOS_Alpha";
   TString nameHistoEMCalAlpha                        = "Pi0_RpPb_EMCal_Alpha";
   TString nameHistoCombAlpha                        = "Pi0_RpPb_Comb_Alpha";
+  
+ 
    
     
   TString collisionSystempPb                          = "p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV"; 
@@ -340,12 +345,14 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
     
   TGraphAsymmErrors* graphCombPi0InvCrossSectionStatpPb5023GeV= NULL;
   TGraphAsymmErrors* graphCombPi0InvCrossSectionSyspPb5023GeV = NULL;
+  
+  
     
   TGraphAsymmErrors* graphCombPi0InvCrossSectionTotpPb5023GeV = CombinePtPointsSpectraFullCorrMat(   statErrorCollection,    sysErrorCollection,     
 												      pTLimits, Ntotal,
 												      offSets, offSetsSys,
 												      graphCombPi0InvCrossSectionStatpPb5023GeV, graphCombPi0InvCrossSectionSyspPb5023GeV,
-												      fileNameOutputWeightingOld,"pPb_5.023GeV_RpPb","Pi0",kFALSE,sysErrorPPReference
+												      fileNameOutputWeightingOld,"pPb_5.023GeV_RpPb","Pi0",kFALSE,sysErrorPPReference,corrFactorsFileName.Data()
 												      ); 
   graphCombPi0InvCrossSectionStatpPb5023GeV->Print();
 
@@ -1005,6 +1012,25 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
      
   graphInvYieldPi0CombpPb5023GeVSysClone->Write("CombinedPi0RpPbSystErr");
   graphInvYieldPi0CombpPb5023GeVStaClone->Write("CombinedPi0RpPbStatErr");
+  
+  
+  fResults.Close();
+
+  TFile fPaperPlots(Form("%s/PaperPlotsRpPb_%s.root",outputDir.Data(), dateForOutput.Data()),"RECREATE");
+     
+  graphInvYieldPi0CombpPb5023GeVSysClone->Write("CombinedPi0RpPbSystErr");
+  graphInvYieldPi0CombpPb5023GeVStaClone->Write("CombinedPi0RpPbStatErr");
+  graphPi0ESP09sPi0KKP->Write("EPS09s_KKP_NLO");
+  graphPi0ESP09sPi0AKK->Write("EPS09s_AKK_NLO");
+  graphPi0DSS5000->Write("EPS09s_fDSS_NLO");
+  graphAsymmErrorsPi0DSS5000->Write("EPS09s_fDSS_errors");
+         
+  graphPi0CGC->Write("CGC");
+  graphCombppreferenceStatErr->Write("ppRefStat");
+  graphCombppreferenceSystErr->Write("ppRefSyst");
+
+
+  fPaperPlots.Close();
 
 
 
