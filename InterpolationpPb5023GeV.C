@@ -58,7 +58,7 @@
   
 
 
-void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPileUpCorrection", TString suffix="pdf", TString outputDir="OutputRpPb_yShift_Individual",TString FitFuncName="Tsallis", TString thesisPlots="", Int_t fixParam=1)//Bylinkin
+void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPileUpCorrection", TString suffix="pdf", TString outputDir="OutputRpPb_yShift_Individual",TString FitFuncName="Tsallis", TString thesisPlots="", Int_t fixParam=-1)//Bylinkin
 {
 
 	
@@ -882,7 +882,7 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	
 	
 	Float_t minPt = 0.4;
-	if (System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) minPt=1.0; 
+	if (System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) minPt=1.0;
 	if (System.CompareTo("PHOS")==0  ) minPt=0.8;
 		Float_t maxPt = graphInvYieldPi02760GeVStatSystErr->GetXaxis()->GetBinUpEdge(graphInvYieldPi02760GeVStatSystErr->GetXaxis()->GetNbins());
 		//Float_t maxPt = 8.;
