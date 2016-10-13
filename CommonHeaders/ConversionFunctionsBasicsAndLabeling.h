@@ -3625,6 +3625,8 @@ TString ReturnGeneratorNameFromMCName(TString MCname){
         return "Pythia 8.1, Tune 4C";
     } else if (MCname.CompareTo("LHC12f1b") == 0){
         return "Phojet";
+    } else if (MCname.Contains("LHC14j4")){
+        return "Pythia 6, Perugia-2011";
     } else if (MCname.CompareTo("LHC15g2") == 0){
         return "Pythia 8.2, Tune 4C";
     } else if (MCname.CompareTo("LHC15g1a") == 0 || MCname.CompareTo("LHC15a3a") == 0 ){

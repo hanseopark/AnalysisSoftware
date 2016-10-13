@@ -345,7 +345,18 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
                 nParam                  = 3;
                 maxOrSpec               = 12;
                 fitPtPartInput          = FitObject("l","fitPtPartInput","K",NULL,fitRange[0],fitRange[1]);
-            }    
+            } else if (energy.CompareTo("7TeV") == 0){
+              histoPartInputPt            = (TH1D*)inputFile->Get("histoChargedKaonSpecPubStat7TeV");
+              histoPartInputPtAlter       = (TH1D*)inputFile->Get("histoNeutralKaonSpecStat7TeV");
+              fitRange[0]             = 2;
+              fitRange[1]             = 20;
+              paramGraph[0]           = histoPartInputPt->GetBinContent(1);
+              paramGraph[1]           = 6.;
+              paramGraph[2]           = 0.5;
+              nParam                  = 3;
+              maxOrSpec               = 12;
+              fitPtPartInput          = FitObject("l","fitPtPartInput","K",NULL,fitRange[0],fitRange[1]);
+            }
         } else {
             if (particle == 0){
                 histoPartInputPt            = (TH1D*)inputFileMC->Get("MC_K0s_Pt_Rebinned");
@@ -371,6 +382,9 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
                 }
             }
             if (energy.CompareTo("2.76TeV") == 0){
+                fitRange[0]             = 5;
+                fitRange[1]             = 20;
+            } else if (energy.CompareTo("7TeV") == 0){
                 fitRange[0]             = 5;
                 fitRange[1]             = 20;
             } else if (energy.CompareTo("8TeV") == 0){
@@ -452,7 +466,18 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
                 maxOrSpec               = 10;
                 fitPtPartInput          = FitObject("l","fitPtPartInput","Lambda",NULL,fitRange[0],fitRange[1]);
                 fitPtPartInputlow       = FitObject("l","fitPtPartInputLow","Lambda",NULL,fitRangeLow[0],fitRangeLow[1]);
-            }    
+            } else if (energy.CompareTo("7TeV") == 0){
+              histoPartInputPt            = (TH1D*)inputFile->Get("histoLambda1115SpecStat2760GeV");
+              fitRange[0]             = 3;
+              fitRange[1]             = 15;
+              paramGraph[0]           = histoPartInputPt->GetBinContent(1);
+              paramGraph[1]           = 6.;
+              paramGraph[2]           = 0.5;
+              nParam                  = 3;
+              maxOrSpec               = 10;
+              fitPtPartInput          = FitObject("l","fitPtPartInput","Lambda",NULL,fitRange[0],fitRange[1]);
+              fitPtPartInputlow       = FitObject("l","fitPtPartInputLow","Lambda",NULL,fitRangeLow[0],fitRangeLow[1]);
+            }
         } else {
             histoPartInputPt            = (TH1D*)inputFileMC->Get("MC_Lambda_Pt_Rebinned");
             for (Int_t y=0; y< 10; y++){
@@ -466,6 +491,10 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
             }
             fitRange[0]             = 3;
             fitRange[1]             = 15;
+            if (energy.CompareTo("7TeV") == 0){
+               fitRange[0]             = 3;
+               fitRange[1]             = 20;
+            }
             paramGraph[0]           = histoPartInputPt->GetBinContent(1);
             paramGraph[1]           = 6.; 
             paramGraph[2]           = 0.5;
@@ -704,7 +733,7 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
     
     for(Long_t n=0; n<nEvts; n++){// this is the important loop (nEvents)
         // give a bit of stat in the printouts
-        if (n%10000000 == 0) 
+        if (n%1000000 == 0)
             cout << "generated " << (Double_t)n/1e6 << " Mio events" << endl;
         
         // draw pt to be generated for mother from constructed spectrum restricted to pt range

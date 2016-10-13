@@ -638,8 +638,9 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
       TFile* fileDataInput          = new TFile(nameExternalInput.Data());
       TH1D* fHistoChargedPionData   = NULL;
       TH1D* fHistoChargedKaonData   = NULL;
-      if (optionEnergy.CompareTo("2.76TeV") == 0){
+      if (optionEnergy.CompareTo("2.76TeV") == 0 || optionEnergy.CompareTo("7TeV") == 0){
         fHistoChargedPionData       = (TH1D*)fileDataInput->Get("histoChargedPionSpecPubStat2760GeV");
+        if( optionEnergy.CompareTo("7TeV") == 0 ) fHistoChargedPionData       = (TH1D*)fileDataInput->Get("histoChargedPionSpecPubStat7TeV");
         TF1* fitChargedPions        = FitObject("l","fitChargedPions","Pi0",fHistoChargedPionData,0.1,20.,NULL,"QNRMEI");
         TSpline5* paramPions        = new TSpline5(fHistoChargedPionData);
         fHistoRatioDataPiDivDataFit = CalculateHistoRatioToSpline (fHistoChargedPionData, paramPions); 
@@ -647,6 +648,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         fHistoRatioMCPi0DivDataFit  = CalculateHistoRatioToSpline (fHistoMCPi0PtRebinned, paramPions); 
         
         fHistoChargedKaonData       = (TH1D*)fileDataInput->Get("histoChargedKaonSpecPubStat2760GeV");
+        if( optionEnergy.CompareTo("7TeV") == 0 ) fHistoChargedKaonData       = (TH1D*)fileDataInput->Get("histoChargedKaonSpecPubStat7TeV");
         TF1* fitChargedKaons        =  FitObject("l","ptDistribution","K",fHistoChargedKaonData,0.1,20.,NULL,"QNRMEI");
         TSpline5* paramKaons        = new TSpline5(fHistoChargedKaonData);
         
