@@ -445,116 +445,7 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	TString fitType  = "l";
 	TString fitNameLabel = "Tsallis";
 	
-	Double_t *Parameters2760GeV = NULL;
-	Double_t *Parameters7TeV    = NULL;
 	
-	//This part obtain the "n" parameter from the fit of the combined spectrum///
-	graphInvCrossSectionPi0Comb7TeVStatSystErr    = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get("graphInvCrossSectionPi0Comb7TeV");
-	graphInvCrossSectionPi0Comb2760GeVStatSystErr = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get("graphInvCrossSectionPi0Comb2760GeV");
-	
-	
-		
-	
-	if( FitFuncName.CompareTo("Tsallis") == 0 ){
-	  
-	  fitType = "l";
-	  Parameters2760GeV = new Double_t[3];// = {2.4e+10,6.88,0.139}; //2.,5.,0.18
-	  Parameters2760GeV[0] = 2.4e+10;
-	  Parameters2760GeV[1] = 6.88;
-	  Parameters2760GeV[2] = 0.139;
-	  
-	  Parameters7TeV    = new Double_t[3];// = {13.7e+09,7.,0.13};
-	  Parameters7TeV[0] = 1.45613e+11;
-	  Parameters7TeV[1] = 7;
-	  Parameters7TeV[2] = 0.15;
- 
-          if( resultsType.CompareTo("PHOS") == 0 || resultsType.CompareTo("PHOSPileUpCorrection") == 0  ){  
-	    Parameters7TeV[0] = 2.26842e+11;
-	    Parameters7TeV[1] = 6.70106e+00;
-	    Parameters7TeV[2] = 1.24671e-01;
-	  }	  
-	  fitNameLabel = "Tsallis";
-	  
-	  if( fixParam == 1  ){ //No applied for EMCal
-	    
-	    cout<<"Entro a fix param"<<endl;
-	  
-	      TF1* FitToCombined2760GeV = FitObject("l","FitToCombined2760GeV","Pi0");
-	       FitToCombined2760GeV->SetRange(0.3,8.0);
- 	       FitToCombined2760GeV->SetParameters(Parameters2760GeV[0],Parameters2760GeV[1],Parameters2760GeV[2]); 
-	       graphInvCrossSectionPi0Comb2760GeVStatSystErr->Fit(FitToCombined2760GeV,"SQNRME+","",0.3,8.0); 
-	       //FitToCombined2760GeV->Print();
-	       
-	       Parameters2760GeV[1] = FitToCombined2760GeV->GetParameter(1);
-	       cout<<"2760GeV   "<<FitToCombined2760GeV->GetParameter(1)<<endl;
-	       
-	       TF1* FitToCombined7TeV = FitObject("l","FitToCombined7TeV","Pi0");
-	       FitToCombined7TeV->SetRange(0.3,14.0);
- 	       FitToCombined7TeV->SetParameters(Parameters7TeV[0],Parameters7TeV[1],Parameters7TeV[2]); 
-	       graphInvCrossSectionPi0Comb7TeVStatSystErr->Fit(FitToCombined7TeV,"SQNRME+","",0.3,14.0); 
-	       
-	      // FitToCombined7TeV->Print();
-	       
-	       Parameters7TeV[1] = FitToCombined7TeV->GetParameter(1);
-	       cout<<"7TeV   "<<FitToCombined7TeV->GetParameter(1)<<endl;
-	       
-	  }
-	  
-
-	  
-	  
-	} else if ( FitFuncName.CompareTo("Bylinkin") == 0){
-	    
-	  fitType = "tcm";
-	  
-	  
-	  Parameters2760GeV = new Double_t[5];// = { 2.4e+10, 0.3, 1e+10,0.3,8};
-	  // Parameters2760GeV[0] = 2.4e+10;
-	  // Parameters2760GeV[1] = 0.3;
-	  // Parameters2760GeV[2] = 1e+10;
-	  // Parameters2760GeV[3] = 0.3;
-	  // Parameters2760GeV[4] = 3.8;
-	  // Parameters2760GeV[0] =  18.2676*xSection2760GeVppINEL* recalcBarn ;//7.4e+1;
-	  // Parameters2760GeV[1] = 0.164972;
-	  // Parameters2760GeV[2] =1.28029*xSection2760GeVppINEL* recalcBarn ;
-	  // Parameters2760GeV[3] =0.702793;
-	  // Parameters2760GeV[4] =3.16247 ;
-
-	  Parameters2760GeV[0] =   4.31440e+09 ;//7.4e+1;
-	  Parameters2760GeV[1] =  4.48647e-01 ;
-	  Parameters2760GeV[2] =   1.31062e+11  ;
-	  Parameters2760GeV[3]=    3.49106e-01 ;
-	  Parameters2760GeV[4] =  2.78576e+00;	  
-	  Parameters7TeV    = new Double_t[5];// = { 7.4e+10, 0.3, 1e+09,0.3,8};
-	  // Parameters7TeV[0] =  18.2676*xSection7TeVINEL* recalcBarn ;
-	  // Parameters7TeV[1] =  0.164972;
-	  // Parameters7TeV[2] = 1.28029*xSection7TeVINEL* recalcBarn ;
-	  // Parameters7TeV[3] =0.702793;
-	  // Parameters7TeV[4] =3.16247 ;
-	  Parameters7TeV[0] = 1.68474e+09   ;
-	  Parameters7TeV[1] =5.57627e-01 ;
-	  Parameters7TeV[2] = 1.51358e+11  ;
-	  Parameters7TeV[3] = 3.98235e-01;
-	  Parameters7TeV[4] =  2.80009e+00;
-
-          if( resultsType.CompareTo("PHOS") == 0 || resultsType.CompareTo("PHOSPileUpCorrection") == 0   ){  
-	    Parameters2760GeV[0] = 8.0e+11;
-	    Parameters2760GeV[1] = 1.5e-01;
-	    Parameters2760GeV[2] = 1.2e+10;
-	    Parameters2760GeV[3] = 9.8e-01;
-	    Parameters2760GeV[4] = 2.1e+00;
-	  }
-          if( resultsType.CompareTo("PHOS") == 0 || resultsType.CompareTo("PHOSPileUpCorrection") == 0 ||  resultsType.CompareTo("Comb") == 0 ){  
-	    Parameters7TeV[0] = 8.04497e+11;
-	    Parameters7TeV[1] = 1.57053e-01;
-	    Parameters7TeV[2] = 1.19825e+10;
-	    Parameters7TeV[3] = 9.85130e-01;
-	    Parameters7TeV[4] = 2.13631e+00;
-	  }	
-	  
-         fitNameLabel = "Bylinkin-Rostovtsev";
-    
-	}
 	
 	
 	
@@ -868,10 +759,130 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	
 	
 	/////////////////////////////////////////////////Rebinning ////////////////////////////////////////////////////
+	Double_t *Parameters2760GeV = NULL;
+	Double_t *Parameters7TeV    = NULL;
+	
+	//This part obtain the "n" parameter from the fit of the combined spectrum///
+	graphInvCrossSectionPi0Comb7TeVStatSystErr    = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get("graphInvCrossSectionPi0Comb7TeV");
+	graphInvCrossSectionPi0Comb2760GeVStatSystErr = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get("graphInvCrossSectionPi0Comb2760GeV");
+	
+	
+		
+	
+	if( FitFuncName.CompareTo("Tsallis") == 0 ){
+	  
+	  fitType = "l";
+	  Parameters2760GeV = new Double_t[3];// = {2.4e+10,6.88,0.139}; //2.,5.,0.18
+	  Parameters2760GeV[0] = 2.4e+10;
+	  Parameters2760GeV[1] = 6.88;
+	  Parameters2760GeV[2] = 0.139;
+	  
+	  Parameters7TeV    = new Double_t[3];// = {13.7e+09,7.,0.13};
+	  Parameters7TeV[0] = 1.45613e+11;
+	  Parameters7TeV[1] = 7;
+	  Parameters7TeV[2] = 0.15;
+ 
+          if( resultsType.CompareTo("PHOS") == 0 || resultsType.CompareTo("PHOSPileUpCorrection") == 0  ){  
+	    Parameters7TeV[0] = 2.26842e+11;
+	    Parameters7TeV[1] = 6.70106e+00;
+	    Parameters7TeV[2] = 1.24671e-01;
+	  }	  
+	  fitNameLabel = "Tsallis";
+	  
+	  if( fixParam == 1  ){ //No applied for EMCal
+	    
+               Float_t minPt2760GeV = 0.4;
+	       if (System.CompareTo("PHOS")== 0 ) minPt2760GeV = 0.8;
+	       Float_t maxPt2760GeV = graphInvYieldPi02760GeVStatSystErr->GetXaxis()->GetBinUpEdge(graphInvYieldPi02760GeVStatSystErr->GetXaxis()->GetNbins());
+	       cout<<"maxPt2760GeV: "<<maxPt2760GeV<<endl;
+	       
+	       TF1* FitToCombined2760GeV = FitObject("l","FitToCombined2760GeV","Pi0");
+	       FitToCombined2760GeV->SetRange(minPt2760GeV,maxPt2760GeV);
+ 	       FitToCombined2760GeV->SetParameters(Parameters2760GeV[0],Parameters2760GeV[1],Parameters2760GeV[2]); 
+	       graphInvCrossSectionPi0Comb2760GeVStatSystErr->Fit(FitToCombined2760GeV,"SQNRME+","",minPt2760GeV,maxPt2760GeV); 
+	       
+	       TString FitToCombined2760GeVParamToFile =  WriteParameterToFileLatexTable(FitToCombined2760GeV,kTRUE);
+	       fileRebinSpectraFits << FitToCombined2760GeVParamToFile << endl;
+	       
+	       Parameters2760GeV[1] = FitToCombined2760GeV->GetParameter(1);
+
+	       Float_t minPt7TeV = 0.3;
+	       if (System.CompareTo("PHOS")== 0 ) minPt7TeV = 0.8;
+	      
+	       Float_t maxPt7TeV = graphInvYieldPi07TeVStatSystErr->GetXaxis()->GetBinUpEdge(graphInvYieldPi07TeVStatSystErr->GetXaxis()->GetNbins());
+	       cout<<"maxPt7TeV: "<<maxPt7TeV<<endl;
+	       TF1* FitToCombined7TeV = FitObject("l","FitToCombined7TeV","Pi0");
+	      
+	       FitToCombined7TeV->SetRange(minPt7TeV,maxPt7TeV);
+ 	       FitToCombined7TeV->SetParameters(Parameters7TeV[0],Parameters7TeV[1],Parameters7TeV[2]); 
+	       graphInvCrossSectionPi0Comb7TeVStatSystErr->Fit(FitToCombined7TeV,"SQNRME+","",minPt7TeV,maxPt7TeV); 
+	       TString FitToCombined7TeVParamToFile =  WriteParameterToFileLatexTable(FitToCombined7TeV,kTRUE);
+	       fileRebinSpectraFits << FitToCombined7TeVParamToFile << endl;
+	       Parameters7TeV[1] = FitToCombined7TeV->GetParameter(1);
+
+	       
+	             
+	  }
+	  
+
+	  
+	  
+	} else if ( FitFuncName.CompareTo("Bylinkin") == 0){
+	    
+	  fitType = "tcm";
+	  
+	  
+	  Parameters2760GeV = new Double_t[5];// = { 2.4e+10, 0.3, 1e+10,0.3,8};
+	  // Parameters2760GeV[0] = 2.4e+10;
+	  // Parameters2760GeV[1] = 0.3;
+	  // Parameters2760GeV[2] = 1e+10;
+	  // Parameters2760GeV[3] = 0.3;
+	  // Parameters2760GeV[4] = 3.8;
+	  // Parameters2760GeV[0] =  18.2676*xSection2760GeVppINEL* recalcBarn ;//7.4e+1;
+	  // Parameters2760GeV[1] = 0.164972;
+	  // Parameters2760GeV[2] =1.28029*xSection2760GeVppINEL* recalcBarn ;
+	  // Parameters2760GeV[3] =0.702793;
+	  // Parameters2760GeV[4] =3.16247 ;
+
+	  Parameters2760GeV[0] =   4.31440e+09 ;//7.4e+1;
+	  Parameters2760GeV[1] =  4.48647e-01 ;
+	  Parameters2760GeV[2] =   1.31062e+11  ;
+	  Parameters2760GeV[3]=    3.49106e-01 ;
+	  Parameters2760GeV[4] =  2.78576e+00;	  
+	  Parameters7TeV    = new Double_t[5];// = { 7.4e+10, 0.3, 1e+09,0.3,8};
+	  // Parameters7TeV[0] =  18.2676*xSection7TeVINEL* recalcBarn ;
+	  // Parameters7TeV[1] =  0.164972;
+	  // Parameters7TeV[2] = 1.28029*xSection7TeVINEL* recalcBarn ;
+	  // Parameters7TeV[3] =0.702793;
+	  // Parameters7TeV[4] =3.16247 ;
+	  Parameters7TeV[0] = 1.68474e+09   ;
+	  Parameters7TeV[1] =5.57627e-01 ;
+	  Parameters7TeV[2] = 1.51358e+11  ;
+	  Parameters7TeV[3] = 3.98235e-01;
+	  Parameters7TeV[4] =  2.80009e+00;
+
+          if( resultsType.CompareTo("PHOS") == 0 || resultsType.CompareTo("PHOSPileUpCorrection") == 0   ){  
+	    Parameters2760GeV[0] = 8.0e+11;
+	    Parameters2760GeV[1] = 1.5e-01;
+	    Parameters2760GeV[2] = 1.2e+10;
+	    Parameters2760GeV[3] = 9.8e-01;
+	    Parameters2760GeV[4] = 2.1e+00;
+	  }
+          if( resultsType.CompareTo("PHOS") == 0 || resultsType.CompareTo("PHOSPileUpCorrection") == 0 ||  resultsType.CompareTo("Comb") == 0 ){  
+	    Parameters7TeV[0] = 8.04497e+11;
+	    Parameters7TeV[1] = 1.57053e-01;
+	    Parameters7TeV[2] = 1.19825e+10;
+	    Parameters7TeV[3] = 9.85130e-01;
+	    Parameters7TeV[4] = 2.13631e+00;
+	  }	
+	  
+         fitNameLabel = "Bylinkin-Rostovtsev";
+    
+	}
 	
 	
 	Float_t minPt = 0.4;
-	if (System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) minPt=1.;
+	if (System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) minPt=1.0; 
 	if (System.CompareTo("PHOS")==0  ) minPt=0.8;
 		Float_t maxPt = graphInvYieldPi02760GeVStatSystErr->GetXaxis()->GetBinUpEdge(graphInvYieldPi02760GeVStatSystErr->GetXaxis()->GetNbins());
 		//Float_t maxPt = 8.;
@@ -888,7 +899,7 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	cout<<"Rebinning graphInvYieldPi02760GeVStatSystErr to pPb"<<endl;
 
 	
-	TF1* fitPi02760GeVBinStatSystErr    = RebinWithFitToTGraph(graphInvYieldPi02760GeVStatSystErr,&graphAInvYieldPi02760GeVBinStatSystErr,graphInvYieldPi0pPb5023GeVYShiftedComplErr,0,fitType.Data(),minPt,maxPt,Parameters2760GeV,fixParam);
+	TF1* fitPi02760GeVBinStatSystErr    = RebinWithFitToTGraphWithMeanErr(graphInvYieldPi02760GeVStatSystErr,&graphAInvYieldPi02760GeVBinStatSystErr,graphInvYieldPi0pPb5023GeVYShiftedComplErr,0,fitType.Data(),minPt,maxPt,Parameters2760GeV,fixParam);
 	fitPi02760GeVBinStatSystErr->SetName("Fit2760GeVRebin");	
 	cout<<"Rebinning graphInvYieldPi02760GeVSystErr to pPb"<<endl;
 	
@@ -896,7 +907,7 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
  	fileRebinSpectraFits << fitPi02760GeVBinStatSystErrParamToFile << endl;
 
 		
-	TF1* fitPi02760GeVBinSystErr        = RebinWithFitToTGraph(graphInvYieldPi02760GeVSystErr,  &graphAInvYieldPi02760GeVBinSystErr,graphAInvYieldPi02760GeVBinStatSystErr,fitPi02760GeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters2760GeV,fixParam);
+	TF1* fitPi02760GeVBinSystErr        = RebinWithFitToTGraphWithMeanErr(graphInvYieldPi02760GeVSystErr,  &graphAInvYieldPi02760GeVBinSystErr,graphAInvYieldPi02760GeVBinStatSystErr,fitPi02760GeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters2760GeV,fixParam);
 	TF1* fitPi02760GeVBinStatErr	    = FillTGraphEYWithFitErr(graphInvYieldPi02760GeVStatErr,&graphAInvYieldPi02760GeVBinStatErr,graphAInvYieldPi02760GeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters2760GeV);
 	
 
@@ -936,7 +947,7 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	
 	
 	minPt = 0.30;
-	if (System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) minPt=0.6;
+	if (System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) minPt=0.60;
 	if (System.CompareTo("PHOS")==0) minPt=0.8;
 	 maxPt = graphInvYieldPi07TeVStatSystErr->GetXaxis()->GetBinUpEdge(graphInvYieldPi07TeVStatSystErr->GetXaxis()->GetNbins());
 	
@@ -951,8 +962,8 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	 cout<<"Rebinning graphInvYieldPi07TeVStatSystErr to "<<endl;
 	
 	
-	 TF1* fitPi07TeVBinStatSystErr    = RebinWithFitToTGraph(graphInvYieldPi07TeVStatSystErr,&graphAInvYieldPi07TeVBinStatSystErr,   graphInvYieldPi0pPb5023GeVYShiftedComplErr,0,fitType.Data(),minPt,maxPt,Parameters7TeV,fixParam);
-	 
+	 TF1* fitPi07TeVBinStatSystErr    = RebinWithFitToTGraphWithMeanErr(graphInvYieldPi07TeVStatSystErr,&graphAInvYieldPi07TeVBinStatSystErr,   graphInvYieldPi0pPb5023GeVYShiftedComplErr,0,fitType.Data(),minPt,maxPt,Parameters7TeV,fixParam);
+	 fitPi07TeVBinStatSystErr->SetName("Fit7TeVRebin");	
 	 TString fitPi07TeVBinSystErrParamToFile =  WriteParameterToFileLatexTable(fitPi07TeVBinStatSystErr,kTRUE);
  	 fileRebinSpectraFits << fitPi07TeVBinSystErrParamToFile << endl;
 	
@@ -961,7 +972,7 @@ void InterpolationpPb5023GeV(TString System="PCM", TString resultsType ="PCMPile
 	cout<<"Rebinning graphInvYieldPi07TeVSystErr to "<<endl;
 	
 	
-	 TF1* fitPi07TeVBinSystErr        = RebinWithFitToTGraph(graphInvYieldPi07TeVSystErr,&graphAInvYieldPi07TeVBinSystErr,   graphAInvYieldPi07TeVBinStatSystErr,fitPi07TeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters7TeV,fixParam);
+	 TF1* fitPi07TeVBinSystErr        = RebinWithFitToTGraphWithMeanErr(graphInvYieldPi07TeVSystErr,&graphAInvYieldPi07TeVBinSystErr,   graphAInvYieldPi07TeVBinStatSystErr,fitPi07TeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters7TeV,fixParam);
 	 TF1* fitPi07TeVBinStatErr	  = FillTGraphEYWithFitErr(graphInvYieldPi07TeVStatErr,&graphAInvYieldPi07TeVBinStatErr,graphAInvYieldPi07TeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters7TeV);
 	
 	 fitPi07TeVBinSystErr->Draw("");
