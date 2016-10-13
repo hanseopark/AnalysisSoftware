@@ -1,9 +1,10 @@
-// provided by Gamma Conversion Group, $ALICE_ROOT/PWG4/GammaConv ;https://twiki.cern.ch/twiki/bin/view/ALICE/PWG4GammaConversion
+// provided by Gamma Conversion Group, $ALICE_PHYSICS/PWGGA/GammaConv ;https://twiki.cern.ch/twiki/bin/view/ALICE/PWG4GammaConversion
 
 //************************** Some general definitions *************************************
 //TString fDate                                         = "";
 TString fEnergyFlag                                     = "";
 TString fPeriodFlag                                     = "";
+TString fdirectphoton                                   = "";
 TString fSuffix                                         = "";
 TString fCutSelection                                   = "";
 TString fEventCutSelection                              = "";
@@ -45,7 +46,6 @@ TH1F* histMtScalingFactors                              = NULL;
 TH1D* histoPi0YieldData                                 = NULL;
 TH1F** histoDecayChannels                               = NULL;
 TH1F** histoDecayChannelsBR                             = NULL;
-TH1F** histoPythiaBRs                                   = NULL;
 TH2F* histoGammaSumPtY                                  = NULL;
 TH2F* histoGammaSumPtPhi                                = NULL;
 TH1F* histoGammaSumPtOrBin                              = NULL;

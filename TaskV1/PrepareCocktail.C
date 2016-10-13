@@ -1,4 +1,4 @@
-// provided by Gamma Conversion Group, $ALICE_ROOT/PWGGA/GammaConv ;https://twiki.cern.ch/twiki/bin/view/ALICE/PWG4GammaConversion
+// provided by Gamma Conversion Group, $ALICE_PHYSICS/PWGGA/GammaConv ;https://twiki.cern.ch/twiki/bin/view/ALICE/PWG4GammaConversion
 // ***************************************************************************************************************
 // **   Friederike Bock, friederike.bock@cern.ch                                                                **
 // **   Lucas Altenkaemper, lucas.altenkamper@cern.ch                                                           **
@@ -53,6 +53,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
                         TString suffix                  = "eps",
                         TString cutSelection            = "",
                         TString option                  = "",
+                        TString directphotonPlots       = "",
                         Double_t rapidity               = 0.85,
                         TString period                  = "",
                         Int_t numberOfBins              = 30,
@@ -74,6 +75,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     //fDate                                                     = ReturnDateString();
     fEnergyFlag                                                 = option;
     fPeriodFlag                                                 = period;
+    fdirectphoton                                               = directphotonPlots;
     fSuffix                                                     = suffix;
     fMode                                                       = mode;
     fRapidity                                                   = rapidity;
@@ -218,7 +220,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
 
     //***************************** ranges **************************************************************************
     Double_t deltaRap                                           = 2*rapidity;
-    Double_t deltaEta                                           = 2*0.9;                // should this be taken from somewhere?
+    Double_t deltaEta                                           = 2*0.9;
     Double_t deltaPtGen                                         = ptGenMax-ptGenMin;
     Double_t deltaPhi                                           = 2*TMath::Pi();
     cout << "================================"  << endl;
@@ -851,7 +853,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
 //************************** Initialize binning *********************************************************************
 void Initialize(TString energy, Int_t numberOfBins){
     
-    InitializeBinning("Pi0", numberOfBins, energy, "directPhoton", fMode, fEventCutSelection, fClusterCutSelection);
+    InitializeBinning("Pi0", numberOfBins, energy, fdirectphoton, fMode, fEventCutSelection, fClusterCutSelection);
     
     fDeltaPt                                    = new TH1F("deltaPt","",fNBinsPt,fBinsPt);
     for(Int_t iPt=fStartPtBin+1;iPt<fNBinsPt+1;iPt++){
@@ -1013,6 +1015,15 @@ Double_t GetMass(TString particleName) {
         mass                                = particle->Mass();
     } else if (particleName.CompareTo("Sigma0") == 0) {
         particle                            = pdg->GetParticle(3212);
+        mass                                = particle->Mass();
+    } else if (particleName.CompareTo("K0s") == 0) {
+        particle                            = pdg->GetParticle(310);
+        mass                                = particle->Mass();
+    } else if (particleName.CompareTo("K0l") == 0) {
+        particle                            = pdg->GetParticle(130);
+        mass                                = particle->Mass();
+    } else if (particleName.CompareTo("Lambda") == 0) {
+        particle                            = pdg->GetParticle(3122);
         mass                                = particle->Mass();
     } else {
         mass                                = -1;
