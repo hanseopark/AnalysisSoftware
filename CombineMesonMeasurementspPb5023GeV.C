@@ -262,12 +262,19 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   TGraphAsymmErrors* graphRatioCombDalitzSys          = (TGraphAsymmErrors*)graphDalitzYieldPi0pPbSystErr->Clone();
   TH1D* histoRatioCombDalitzStat          = (TH1D*)histoDalitzYieldPi0pPbStat->Clone();
  
-  TGraphAsymmErrors* temp02                           = new TGraphAsymmErrors(histoDalitzYieldPi0pPbStat);
+  TGraphAsymmErrors* graphRatioCombDalitzStat          = new TGraphAsymmErrors(histoDalitzYieldPi0pPbStat);
+    
+  graphRatioCombDalitzStat->RemovePoint(0);
+  graphRatioCombDalitzStat->RemovePoint(graphRatioCombDalitzStat->GetN()-1);
+  graphDalitzYieldPi0pPbSystErr->RemovePoint(graphDalitzYieldPi0pPbSystErr->GetN()-1);
+  
+  TH1D* histoDalitzYieldPi0pPbStat2=GraphAsymErrorsToHist_withErrors(graphRatioCombDalitzStat, "histoDalitzYieldPi0pPbStat2"); //Just for the combined
+  
 
   cout<<"Dalitz systematic"<<endl;
-  graphRatioCombDalitzSys->Print();
+  graphDalitzYieldPi0pPbSystErr->Print();
   cout<<"Dalitz statistic"<<endl;
-  temp02->Print();
+  histoDalitzYieldPi0pPbStat2->Print();
     
   // **************************************************************************************
   // ****************************** Reading PCM *******************************************
@@ -431,7 +438,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   statErrorCollection[0]          = (TH1D*)histoPCMYieldPi0pPbStat->Clone("statErrPCMPi0");
   statErrorCollection[1]          = (TH1D*)histoPHOSYieldPi0pPbStat->Clone("statErrPHOSPi0");
   statErrorCollection[2]          = (TH1D*)histoEMCalYieldPi0pPbStat->Clone("statErrEMCalPi0");
-  statErrorCollection[5]          = (TH1D*)histoDalitzYieldPi0pPbStat->Clone("statErrDalitzPi0");
+  statErrorCollection[5]          = (TH1D*)histoDalitzYieldPi0pPbStat2->Clone("statErrDalitzPi0");
     
   sysErrorCollection[0]           = (TGraphAsymmErrors*)graphPCMYieldPi0pPbSystErr->Clone("sysErrPCMPi0");
   sysErrorCollection[1]           = (TGraphAsymmErrors*)graphPHOSYieldPi0pPbSystErr->Clone("sysErrPHOSPi0");
