@@ -4818,7 +4818,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     graphCombEtaToPi0StatA->Draw("p,same");
 
     //plotting MC
-    histoPythia8EtaToPi0->Draw("same,hist,l");
+    histoPythia8EtaToPi0->Draw("same,hist,c");
 
     // plotting NLO
     graphNLOEtaToPi0->Draw("same,e4");

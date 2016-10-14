@@ -348,7 +348,7 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
             } else if (energy.CompareTo("7TeV") == 0){
               histoPartInputPt            = (TH1D*)inputFile->Get("histoChargedKaonSpecPubStat7TeV");
               histoPartInputPtAlter       = (TH1D*)inputFile->Get("histoNeutralKaonSpecStat7TeV");
-              fitRange[0]             = 2;
+              fitRange[0]             = 5;
               fitRange[1]             = 20;
               paramGraph[0]           = histoPartInputPt->GetBinContent(1);
               paramGraph[1]           = 6.;
@@ -467,9 +467,12 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
                 fitPtPartInput          = FitObject("l","fitPtPartInput","Lambda",NULL,fitRange[0],fitRange[1]);
                 fitPtPartInputlow       = FitObject("l","fitPtPartInputLow","Lambda",NULL,fitRangeLow[0],fitRangeLow[1]);
             } else if (energy.CompareTo("7TeV") == 0){
+// **************************************
+// NEED TO ADD 7 TEV LAMBDA SPECTRA!!!!!*
+// **************************************
               histoPartInputPt            = (TH1D*)inputFile->Get("histoLambda1115SpecStat2760GeV");
               fitRange[0]             = 3;
-              fitRange[1]             = 15;
+              fitRange[1]             = 20;
               paramGraph[0]           = histoPartInputPt->GetBinContent(1);
               paramGraph[1]           = 6.;
               paramGraph[2]           = 0.5;
