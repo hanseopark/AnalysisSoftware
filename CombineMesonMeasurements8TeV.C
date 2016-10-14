@@ -4758,7 +4758,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     DrawGammaSetMarker(histoPythia8EtaToPi0, 24, 1.5, kRed+2 , kRed+2);
     histoPythia8EtaToPi0->SetLineWidth(widthCommonFit);
     histoPythia8EtaToPi0->GetXaxis()->SetRangeUser(0.3,30.);
-    histoPythia8EtaToPi0->Draw("same,hist,l");
+    histoPythia8EtaToPi0->Draw("same,hist,c");
 
     textSizeLabelsPixel = 48;
     TLegend* legendXsectionPaperEtaToPi02     = GetAndSetLegend2(0.15, 0.735, 0.48, 0.735+0.045*5, 0.85*textSizeLabelsPixel);
