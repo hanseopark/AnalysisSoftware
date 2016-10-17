@@ -3455,12 +3455,12 @@ TString AnalyseChi2MesonCut(Int_t chi2GammaCut){   // Set Cut
 // ******************************************************************************************
 // ************************ Set correct xSection for pp *************************************
 // ******************************************************************************************
-Double_t xSection8TeVV0AND      = 56.4*1e-3;   // from https://indico.cern.ch/event/486605/contribution/3/attachments/1216371/1776468/PWG-PP_250116.pdf
-Double_t xSection8TeVErrUp      = 2.82;         // from https://indico.cern.ch/event/486605/contribution/3/attachments/1216371/1776468/PWG-PP_250116.pdf
-Double_t xSection8TeVErrDown    = 2.82;         // from https://indico.cern.ch/event/486605/contribution/3/attachments/1216371/1776468/PWG-PP_250116.pdf
-Double_t xSection8TeVT0AND      = 26.0*1e-3;   // from https://indico.cern.ch/event/486605/contribution/3/attachments/1216371/1776468/PWG-PP_250116.pdf
-Double_t xSection8TeVT0ErrUp    = 1.30;         // from https://indico.cern.ch/event/486605/contribution/3/attachments/1216371/1776468/PWG-PP_250116.pdf
-Double_t xSection8TeVT0ErrDown  = 1.30;         // from https://indico.cern.ch/event/486605/contribution/3/attachments/1216371/1776468/PWG-PP_250116.pdf
+Double_t xSection8TeVV0AND      = 55.17*1e-3;   // from https://indico.cern.ch/event/572410/contributions/2316455/attachments/1344575/2027859/0928_vdMscan_v2.pdf
+Double_t xSection8TeVErrUp      = 1.08;         // from https://indico.cern.ch/event/572410/contributions/2316455/attachments/1344575/2027859/0928_vdMscan_v2.pdf
+Double_t xSection8TeVErrDown    = 1.08;         // from https://indico.cern.ch/event/572410/contributions/2316455/attachments/1344575/2027859/0928_vdMscan_v2.pdf
+Double_t xSection8TeVT0AND      = 25.24*1e-3;   // from https://indico.cern.ch/event/572410/contributions/2316455/attachments/1344575/2027859/0928_vdMscan_v2.pdf
+Double_t xSection8TeVT0ErrUp    = 0.42;         // from https://indico.cern.ch/event/572410/contributions/2316455/attachments/1344575/2027859/0928_vdMscan_v2.pdf
+Double_t xSection8TeVT0ErrDown  = 0.42;         // from https://indico.cern.ch/event/572410/contributions/2316455/attachments/1344575/2027859/0928_vdMscan_v2.pdf
 Double_t xSection7TeVINEL       = 73.2*1e-3;
 Double_t xSection7TeV           = 62.22*1e-3;
 Double_t xSection7TeVV0AND      = 54.31*1e-3;
