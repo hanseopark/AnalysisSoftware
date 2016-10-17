@@ -785,9 +785,9 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         return;
     }
     // remove bin from 0-0.3 (should have been done automatically in principle)
-    graphCombPi0InvXSectionStatA->RemovePoint(0);
-    graphCombPi0InvXSectionSysA->RemovePoint(0);
-    graphCombPi0InvXSectionTotA->RemovePoint(0);
+//    graphCombPi0InvXSectionStatA->RemovePoint(0);
+//    graphCombPi0InvXSectionSysA->RemovePoint(0);
+//    graphCombPi0InvXSectionTotA->RemovePoint(0);
     cout << __LINE__ << endl;
     graphCombPi0InvXSectionTotA->Print();
 //     return;
@@ -1812,10 +1812,32 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
 
     canvasDummy2->Update();
     canvasDummy2->Print(Form("%s/ComparisonWithFitPi0_8TeV.%s",outputDir.Data(),suffix.Data()));
+    //********************************************************************************************************
+    canvasDummy2->Clear();
+    histo2DDummy3->DrawCopy();
+
+    graphCombPi0InvXSectionStatAUnshi->Draw("pEsame");
+    graphCombPi0InvXSectionStatA->Draw("pEsame");
+
+    fitInvXSectionPi0->SetLineColor(kRed+2);
+    fitInvXSectionPi0->Draw("same");
+
+    TLatex *labelTCMEta20 = new TLatex(0.35, 0.90, Form("dN/dy: (%.1e #pm %.1e) - n: (%.3f #pm %.3f) - T_{Levy} (GeV/c): (%.3f #pm %.3f)",fitInvXSectionPi0->GetParameter(0),fitInvXSectionPi0->GetParError(0),fitInvXSectionPi0->GetParameter(1),fitInvXSectionPi0->GetParError(1),fitInvXSectionPi0->GetParameter(2),fitInvXSectionPi0->GetParError(2)));
+    SetStyleTLatex( labelTCMEta20, 0.02,4);
+    labelTCMEta20->Draw();
+
+    labelRelSysErrEnergyC->Draw();
+    labelRelSysErrPi0C->Draw();
+
+    TLegend* legendWithFitPi02   = GetAndSetLegend2(0.17, 0.14, 0.5, 0.14+(0.035*3), 32);
+    legendWithFitPi02->AddEntry(fitInvXSectionPi0,"Levy-Tsallis","l");
+    legendWithFitPi02->Draw();
+
+    canvasDummy2->Update();
+    canvasDummy2->Print(Form("%s/ComparisonWithFit_Tsallis_Pi0_8TeV.%s",outputDir.Data(),suffix.Data()));
+
     delete canvasDummy2;
     delete histo2DDummy3;
-
-
 
     // **********************************************************************************************************************
     // ******************************************* Mass and width for pi0 at 8TeV ****************************************

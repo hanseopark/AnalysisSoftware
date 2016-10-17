@@ -1068,9 +1068,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         return;
     }    
     // remove bin from 0-0.3 (should have been done automatically in principle)
-    graphCombPi0InvXSectionStatA->RemovePoint(0);
-    graphCombPi0InvXSectionSysA->RemovePoint(0);
-    graphCombPi0InvXSectionTotA->RemovePoint(0);
+//    graphCombPi0InvXSectionStatA->RemovePoint(0);
+//    graphCombPi0InvXSectionSysA->RemovePoint(0);
+//    graphCombPi0InvXSectionTotA->RemovePoint(0);
     cout << __LINE__ << endl;
     graphCombPi0InvXSectionTotA->Print();
 //     return;
@@ -1542,7 +1542,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // Tsallis function    
     graphCombPi0InvXSectionTotA->Fit(fitInvXSectionPi0,"QNRMEX0+","",0.3,35.);
     fitInvXSectionPi0           = FitObject("l","fitInvCrossSectionPi08TeV","Pi0",graphCombPi0InvXSectionTotA,0.3,35.,paramGraphPi0,"QNRMEX0+");
-    fitInvXSectionPi0           = FitObject("l","fitInvCrossSectionPi08TeV","Pi0",graphCombPi0InvXSectionTotA,0.3,35.,paramGraphPi0,"QNRMEX0+");
+    //fitInvXSectionPi0           = FitObject("l","fitInvCrossSectionPi08TeV","Pi0",graphCombPi0InvXSectionTotA,0.3,35.,paramGraphPi0,"QNRMEX0+");
     cout << WriteParameterToFile(fitInvXSectionPi0)<< endl;    
     
     //Two component model from Bylinkin
@@ -2514,7 +2514,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // Tsallis function
     graphCombEtaInvXSectionTotA->Fit(fitInvXSectionEta,"QNRMEX0+","",0.4,35.);
     fitInvXSectionEta        = FitObject("l","fitInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,0.4,35.,paramGraphEta,"QNRMEX0+");
-    fitInvXSectionEta        = FitObject("l","fitInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,0.4,35. ,paramGraphEta,"QNRMEX0+");
+    //fitInvXSectionEta        = FitObject("l","fitInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,0.4,35.,paramGraphEta,"QNRMEX0+");
     cout << WriteParameterToFile(fitInvXSectionEta)<< endl;
     
     // Two component model by Bylinkin
@@ -2634,6 +2634,28 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     canvasDummy2->Update();
     canvasDummy2->Print(Form("%s/ComparisonWithFitEta_8TeV.%s",outputDir.Data(),suffix.Data()));
+//********************************************************************************************************
+    canvasDummy2->Clear();
+    histo2DDummy3->DrawCopy();
+
+    graphCombEtaInvXSectionTotA->Draw("pEsame");
+
+    fitInvXSectionEta->SetLineColor(kRed+2);
+    fitInvXSectionEta->Draw("same");
+
+    TLatex *labelTCMEta10 = new TLatex(0.35, 0.90, Form("dN/dy: (%.1e #pm %.1e) - n: (%.3f #pm %.3f) - T_{Levy} (GeV/c): (%.3f #pm %.3f)",fitInvXSectionEta->GetParameter(0),fitInvXSectionEta->GetParError(0),fitInvXSectionEta->GetParameter(1),fitInvXSectionEta->GetParError(1),fitInvXSectionEta->GetParameter(2),fitInvXSectionEta->GetParError(2)));
+    SetStyleTLatex( labelTCMEta10, 0.02,4);
+    labelTCMEta10->Draw();
+
+    labelRelSysErrEnergyC->Draw();
+    labelRelSysErrEtaC->Draw();
+
+    TLegend* legendWithFitEta2   = GetAndSetLegend2(0.17, 0.14, 0.5, 0.14+(0.035*3), 32);
+    legendWithFitEta2->AddEntry(fitInvXSectionEta,"Levy-Tsallis","l");
+    legendWithFitEta2->Draw();
+
+    canvasDummy2->Update();
+    canvasDummy2->Print(Form("%s/ComparisonWithFit_Tsallis_Eta_8TeV.%s",outputDir.Data(),suffix.Data()));
 
     delete histo2DDummy3;
     canvasDummy2->Clear();
@@ -2707,6 +2729,30 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     canvasDummy2->Update();
     canvasDummy2->Print(Form("%s/ComparisonWithFitPi0_8TeV.%s",outputDir.Data(),suffix.Data()));
+    //********************************************************************************************************
+    canvasDummy2->Clear();
+    histo2DDummy3->DrawCopy();
+
+    graphCombPi0InvXSectionStatAUnshi->Draw("pEsame");
+    graphCombPi0InvXSectionStatA->Draw("pEsame");
+
+    fitInvXSectionPi0->SetLineColor(kRed+2);
+    fitInvXSectionPi0->Draw("same");
+
+    TLatex *labelTCMEta20 = new TLatex(0.35, 0.90, Form("dN/dy: (%.1e #pm %.1e) - n: (%.3f #pm %.3f) - T_{Levy} (GeV/c): (%.3f #pm %.3f)",fitInvXSectionPi0->GetParameter(0),fitInvXSectionPi0->GetParError(0),fitInvXSectionPi0->GetParameter(1),fitInvXSectionPi0->GetParError(1),fitInvXSectionPi0->GetParameter(2),fitInvXSectionPi0->GetParError(2)));
+    SetStyleTLatex( labelTCMEta20, 0.02,4);
+    labelTCMEta20->Draw();
+
+    labelRelSysErrEnergyC->Draw();
+    labelRelSysErrPi0C->Draw();
+
+    TLegend* legendWithFitPi02   = GetAndSetLegend2(0.17, 0.14, 0.5, 0.14+(0.035*3), 32);
+    legendWithFitPi02->AddEntry(fitInvXSectionPi0,"Levy-Tsallis","l");
+    legendWithFitPi02->Draw();
+
+    canvasDummy2->Update();
+    canvasDummy2->Print(Form("%s/ComparisonWithFit_Tsallis_Pi0_8TeV.%s",outputDir.Data(),suffix.Data()));
+
     delete canvasDummy2;
     delete histo2DDummy3;
 
