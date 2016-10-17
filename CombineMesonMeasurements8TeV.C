@@ -3821,8 +3821,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     
         TH2F * histo2DAccEff;
         histo2DAccEff                = new TH2F("histo2DAccEff", "histo2DAccEff",1000, 0.23,  70, 1000, 8e-5, 2e-0 );
-        SetStyleHistoTH2ForGraphs( histo2DAccEff, "#it{p}_{T} (GeV/#it{c})", "#it{A} #times #it{#epsilon}_{eff} #times #it{#Delta#phi} #times #it{#DeltaY} / #it{P}",
-                                0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);//(#times #epsilon_{pur})
+        SetStyleHistoTH2ForGraphs( histo2DAccEff, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#it{#varepsilon} = 2#pi#upoint#Delta","#it{y}#upoint#it{A}#upoint#it{#varepsilon}_{rec}"),
+                                0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);
         histo2DAccEff->GetYaxis()->SetLabelOffset(0.001);
         histo2DAccEff->GetXaxis()->SetLabelOffset(-0.01);
         histo2DAccEff->GetXaxis()->SetMoreLogLabels(kTRUE);
@@ -3898,8 +3898,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     
         TH2F * histo2DAccEffEta;
         histo2DAccEffEta                = new TH2F("histo2DAccEffEta", "histo2DAccEffEta",1000, 0.33,  50, 1000, 8e-4, 1.5e-0 );
-        SetStyleHistoTH2ForGraphs( histo2DAccEffEta, "#it{p}_{T} (GeV/#it{c})", "#it{A} #times #it{#epsilon}_{eff} #times #it{#Delta#phi} #times #it{#DeltaY} / #it{P}",
-                                0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.1);//(#times #epsilon_{pur})
+        SetStyleHistoTH2ForGraphs( histo2DAccEffEta, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#it{#varepsilon} = 2#pi#upoint#Delta","#it{y}#upoint#it{A}#upoint#it{#varepsilon}_{rec}"),
+                                0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.);
         histo2DAccEffEta->GetYaxis()->SetLabelOffset(0.001);
         histo2DAccEffEta->GetXaxis()->SetLabelOffset(-0.01);
         histo2DAccEffEta->GetXaxis()->SetMoreLogLabels(kTRUE);
@@ -4093,8 +4093,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //        legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0CombNLOMuHalf, "NLO, DSS07 #mu = 0.5 #it{p}_{T}", "l");
 //        legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0CombNLOMuOne,  "NLO, DSS07 #mu = #it{p}_{T}", "l");
 //        legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0CombNLOMuTwo,  "NLO, DSS07 #mu = 2 #it{p}_{T}", "l");
-        legendRatioTheorypp_3Parted->AddEntry(histoRatioPythia8ToFit,  "Pythia 8.2, Monash 2013", "l");
-        legendRatioTheorypp_3Parted->AddEntry(histoRatioPythia8_4CToFit,  "Pythia 8.2, Tune 4C", "l");
+        legendRatioTheorypp_3Parted->AddEntry(histoRatioPythia8ToFit,  "PYTHIA 8.2, Monash 2013", "l");
+        legendRatioTheorypp_3Parted->AddEntry(histoRatioPythia8_4CToFit,  "PYTHIA 8.2, Tune 4C", "l");
         legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0DSS14,  "NLO, PDF:MSTW08 - FF:DSS14", "f");
         legendRatioTheorypp_3Parted->Draw();
 
@@ -4207,8 +4207,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     TLegend* legendRatioTheorypp_3Parted3= GetAndSetLegend2(0.15,0.7,0.4,0.96, 0.85* textSizeLabelsPixel);
     legendRatioTheorypp_3Parted3->AddEntry(graphRatioPi0CombCombFitSysA,"ALICE #pi^{0}","pf");
-    legendRatioTheorypp_3Parted3->AddEntry(histoRatioPythia8ToFit,  "Pythia 8.2, Monash 2013", "l");
-    legendRatioTheorypp_3Parted3->AddEntry(graphRatioPOWHEG8TeV,  "POWHEG + Pythia 8", "f");
+    legendRatioTheorypp_3Parted3->AddEntry(histoRatioPythia8ToFit,  "PYTHIA 8.2, Monash 2013", "l");
+    legendRatioTheorypp_3Parted3->AddEntry(graphRatioPOWHEG8TeV,  "POWHEG + PYTHIA 8", "f");
     legendRatioTheorypp_3Parted3->Draw();
 
     TLatex *labelRatioTheoryPPP22   = new TLatex(0.218,0.67,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
@@ -4266,8 +4266,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         TLegend* legendRatioTheoryppEta_3Parted= GetAndSetLegend2(0.15,0.86-(0.85*textsizeLabelsPP*5),0.40,0.96, 0.85* textSizeLabelsPixel);
         legendRatioTheoryppEta_3Parted->AddEntry(graphRatioEtaCombCombFitSysA,"ALICE #eta","pf");
-        legendRatioTheoryppEta_3Parted->AddEntry(histoRatioPythia8ToFitEta,  "Pythia 8.2, Monash 2013", "l");
-        legendRatioTheoryppEta_3Parted->AddEntry(histoRatioPythia8_4CToFitEta,  "Pythia 8.2, Tune 4C", "l");
+        legendRatioTheoryppEta_3Parted->AddEntry(histoRatioPythia8ToFitEta,  "PYTHIA 8.2, Monash 2013", "l");
+        legendRatioTheoryppEta_3Parted->AddEntry(histoRatioPythia8_4CToFitEta,  "PYTHIA 8.2, Tune 4C", "l");
         legendRatioTheoryppEta_3Parted->AddEntry((TObject*)0, "NLO, PDF:CTEQ6M5 - FF:AESSS", "");
         legendRatioTheoryppEta_3Parted->AddEntry(graphRatioEtaCombNLOMuHalf, "#mu = 0.5 #it{p}_{T}", "l");
         legendRatioTheoryppEta_3Parted->AddEntry(graphRatioEtaCombNLOMuOne,  "#mu = #it{p}_{T}", "l");
@@ -4407,8 +4407,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //        legendXsectionPaper->AddEntry(graphNLOCalcPi0MuHalf, "NLO, DSS07 #mu = 0.5 #it{p}_{T}", "l");
 //        legendXsectionPaper->AddEntry(graphNLOCalcPi0MuOne,  "NLO, DSS07 #mu = #it{p}_{T}", "l");
 //        legendXsectionPaper->AddEntry(graphNLOCalcPi0MuTwo,  "NLO, DSS07 #mu = 2 #it{p}_{T}", "l");
-        legendXsectionPaper->AddEntry(histoPythia8_4CInvXSection,"Pythia 8.2, Tune 4C","l");
-        legendXsectionPaper->AddEntry(histoPythia8InvXSection,"Pythia 8.2, Monash 2013","l");
+        legendXsectionPaper->AddEntry(histoPythia8_4CInvXSection,"PYTHIA 8.2, Tune 4C","l");
+        legendXsectionPaper->AddEntry(histoPythia8InvXSection,"PYTHIA 8.2, Monash 2013","l");
         legendXsectionPaper->AddEntry(graphPi0DSS14,  "NLO, PDF:MSTW08 - FF:DSS14", "f");
         legendXsectionPaper->Draw();
 
@@ -4549,8 +4549,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendXsectionPaperEta->SetNColumns(1);
         legendXsectionPaperEta->SetMargin(0.2);
         legendXsectionPaperEta->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
-        legendXsectionPaperEta->AddEntry(histoPythia8_4CInvXSection,"Pythia 8.2, Tune 4C","l");
-        legendXsectionPaperEta->AddEntry(histoPythia8InvXSection,"Pythia 8.2, Monash 2013","l");
+        legendXsectionPaperEta->AddEntry(histoPythia8_4CInvXSection,"PYTHIA 8.2, Tune 4C","l");
+        legendXsectionPaperEta->AddEntry(histoPythia8InvXSection,"PYTHIA 8.2, Monash 2013","l");
         legendXsectionPaperEta->AddEntry((TObject*)0, "", "");
         legendXsectionPaperEta->AddEntry(graphNLOCalcEtaMuHalf,"#mu = 0.5 #it{p}_{T}","l");
         legendXsectionPaperEta->AddEntry(graphNLOCalcEtaMuOne,"#mu = #it{p}_{T}","l");
@@ -4765,7 +4765,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     legendXsectionPaperEtaToPi02->SetNColumns(1);
     legendXsectionPaperEtaToPi02->SetMargin(0.2);
     legendXsectionPaperEtaToPi02->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
-    legendXsectionPaperEtaToPi02->AddEntry(histoPythia8EtaToPi0,"Pythia 8.2, Monash 2013","l");
+    legendXsectionPaperEtaToPi02->AddEntry(histoPythia8EtaToPi0,"PYTHIA 8.2, Monash 2013","l");
     legendXsectionPaperEtaToPi02->AddEntry(graphNLOEtaToPi0,"NLO, PDF:CTEQ6M5","f");
     legendXsectionPaperEtaToPi02->AddEntry((TObject*)0,"#pi^{0} FF:DSS07, #eta FF:AESSS","");
     legendXsectionPaperEtaToPi02->AddEntry((TObject*)0,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}","");
@@ -4809,7 +4809,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     canvasEtatoPi0combo->SetRightMargin(0.02);
     histo2DEtatoPi0combo->GetXaxis()->SetLabelOffset(0.);
-    histo2DEtatoPi0combo->GetXaxis()->SetRangeUser(0.,25.0);
+    histo2DEtatoPi0combo->GetXaxis()->SetRangeUser(0.,30.0);
     histo2DEtatoPi0combo->Draw("copy");
     legendXsectionPaperEtaToPi02->Draw();
 

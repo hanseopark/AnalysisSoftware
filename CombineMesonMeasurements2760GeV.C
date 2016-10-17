@@ -3852,7 +3852,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         // lower left corner
         TLegend* legendRatioPi0OldTheo3= GetAndSetLegend2(0.15,0.14,0.4,0.15+2*0.85*textsizeLabelsPP, 0.85* textSizeLabelsPixel, 1, "", 43, 0.2);
         legendRatioPi0OldTheo3->AddEntry(graphRatioPi0CombNLODSS14,  "NLO, PDF: MSTW FF: DSS14", "f");  
-        legendRatioPi0OldTheo3->AddEntry(histoRatioPi0Pythia8ToFit,  "Pythia 8.2, Monash 2013", "l");  
+        legendRatioPi0OldTheo3->AddEntry(histoRatioPi0Pythia8ToFit,  "PYTHIA 8.2, Monash 2013", "l");
         legendRatioPi0OldTheo3->Draw();
 
         // upper right corner
@@ -3899,7 +3899,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         legendRatioTheoryPPNew->AddEntry(graphRatioPi0CombCombFitSysA,"#pi^{0} ALICE","pf");
         legendRatioTheoryPPNew->AddEntry(graphRatioPi0CombNLODSS14,"NLO, PDF: MSTW FF: DSS14","f");
 //         legendRatioTheoryPPNew->AddEntry((TObject*)0,"Phys.Rev. D91 no. 1, (2015) 014035","");
-        legendRatioTheoryPPNew->AddEntry(histoRatioPi0Pythia8ToFit,  "Pythia 8.2, Monash 2013", "l");  
+        legendRatioTheoryPPNew->AddEntry(histoRatioPi0Pythia8ToFit,  "PYTHIA 8.2, Monash 2013", "l");
         legendRatioTheoryPPNew->Draw();
 
         TLatex *labelRatioTheoryPP   = new TLatex(0.15,0.93,collisionSystem2760GeV.Data());
@@ -3961,7 +3961,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         
         // lower left corner
         TLegend* legendRatioEtaOldTheo3= GetAndSetLegend2(0.15,0.14,0.4,0.15+1*0.85*textsizeLabelsPP, 0.85* textSizeLabelsPixel, 1, "", 43, 0.2);
-        legendRatioEtaOldTheo3->AddEntry(histoRatioPi0Pythia8ToFit,  "Pythia 8.2, Monash 2013", "l");  
+        legendRatioEtaOldTheo3->AddEntry(histoRatioPi0Pythia8ToFit,  "PYTHIA 8.2, Monash 2013", "l");
         legendRatioEtaOldTheo3->Draw();
 
         // upper right corner
@@ -4080,7 +4080,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         legendXsectionPaper->AddEntry((TObject*)0,"Norm. unc. 5.4%","");
         legendXsectionPaper->AddEntry(graphNLODSS14Calc,"NLO, PDF: MSTW, FF: DSS14","f");
 //         legendXsectionPaper->AddEntry((TObject*)0,"Phys.Rev. D91 no. 1, (2015) 014035","");
-        legendXsectionPaper->AddEntry(histoPythia8InvXSectionPi0,"Pythia 8.2, Monash 2013","l");
+        legendXsectionPaper->AddEntry(histoPythia8InvXSectionPi0,"PYTHIA 8.2, Monash 2013","l");
         legendXsectionPaper->Draw();
 
         TLegend* legendXsectionPaper2     = GetAndSetLegend2(0.17, 0.05, 0.5, 0.11, textSizeLabelsPixel, 1, "", 43, 0.2);
@@ -4206,7 +4206,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
         // labels upper right corner
         TLegend* legendXsectionPaperEtaTheo     = GetAndSetLegend2(0.59, 0.95-0.04*2, 0.59+0.33, 0.95, textSizeLabelsPixel, 1, "", 43, 0.2);
-        legendXsectionPaperEtaTheo->AddEntry(histoPythia8InvXSectionEta,"Pythia 8.2,","l");
+        legendXsectionPaperEtaTheo->AddEntry(histoPythia8InvXSectionEta,"PYTHIA 8.2,","l");
         legendXsectionPaperEtaTheo->AddEntry((TObject*)0,"Monash 2013","");
         legendXsectionPaperEtaTheo->Draw();
 
@@ -4411,7 +4411,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         legendEtaToPi0Theory->AddEntry(graphCombEtaToPi0SysA,"Data","pf");
         legendEtaToPi0Theory->AddEntry(graphNLOEtaToPi0,"NLO, PDF:CTEQ6M5 ","pf");
         legendEtaToPi0Theory->AddEntry((TObject*)0,"#pi^{0} FF: DSS07, #eta FF: AESSS","");
-        legendEtaToPi0Theory->AddEntry(histoPythia8EtaToPi0,"Pythia 8.2, Monash 2013","l");
+        legendEtaToPi0Theory->AddEntry(histoPythia8EtaToPi0,"PYTHIA 8.2, Monash 2013","l");
         legendEtaToPi0Theory->Draw();
         
     histo2DEtatoPi0combo->Draw("axis,same");

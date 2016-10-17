@@ -1087,10 +1087,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     
     TH2F * histo2DEffiPi0;
     histo2DEffiPi0 = new TH2F("histo2DEffiPi0","histo2DEffiPi0",1000,0., maxPtGlobalPi0,10000,minEffiPi0, maxEffiPi0);
-    SetStyleHistoTH2ForGraphs(histo2DEffiPi0, "#it{p}_{T} (GeV/#it{c})","#epsilon_{#pi^{0}} #times #epsilon_{trigg}",
-                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);
+    SetStyleHistoTH2ForGraphs(histo2DEffiPi0, "#it{p}_{T} (GeV/#it{c})","#it{#varepsilon}_{#pi^{0}}#upoint#it{#kappa}_{trigg}",
+                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.05);
     histo2DEffiPi0->DrawCopy(); 
-    histo2DEffiPi0->SetYTitle("#epsilon_{#pi^{0}}");
+    histo2DEffiPi0->SetYTitle("#it{#varepsilon}_{#pi^{0}}");
 
     Double_t minXLegendEffi = 0.62;
     Int_t nColumnsEffi      = 2; 
@@ -1135,7 +1135,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         }    
         TH2F * histo2DEffiSecPi0;
         histo2DEffiSecPi0 = new TH2F("histo2DEffiSecPi0","histo2DEffiSecPi0",1000,0., maxPtGlobalPi0,10000,minEffiSecPi0, maxEffiSecPi0);
-        SetStyleHistoTH2ForGraphs(histo2DEffiSecPi0, "#it{p}_{T} (GeV/#it{c})","#epsilon_{sec #pi^{0} from K^{0}_{s}}",
+        SetStyleHistoTH2ForGraphs(histo2DEffiSecPi0, "#it{p}_{T} (GeV/#it{c})","#it{#varepsilon}_{sec #pi^{0} from K^{0}_{s}}",
                                     0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);
         histo2DEffiSecPi0->DrawCopy(); 
     
@@ -1226,8 +1226,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         
         TH2F * histo2DTriggerEffiPi0;
         histo2DTriggerEffiPi0 = new TH2F("histo2DTriggerEffiPi0","histo2DTriggerEffiPi0",1000,0., maxPtGlobalPi0,10000,minEffiTrigPi0, maxEffiTrigPi0);
-        SetStyleHistoTH2ForGraphs(histo2DTriggerEffiPi0, "#it{p}_{T} (GeV/#it{c})","#epsilon_{Trigger, #pi^{0}}", 
-                                    0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);
+        SetStyleHistoTH2ForGraphs(histo2DTriggerEffiPi0, "#it{p}_{T} (GeV/#it{c})","#it{#kappa}_{trigg, #pi^{0}}",
+                                    0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.05);
         histo2DTriggerEffiPi0->DrawCopy(); 
 
         TLegend* legendTriggerEffiPi0 = GetAndSetLegend2(0.62, 0.165, 0.95, 0.165+(1.05*nRealTriggers/2*0.85*textSizeSpectra),28);
@@ -3757,10 +3757,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         canvasEffi->cd();
         TH2F * histo2DEffiEta;
         histo2DEffiEta = new TH2F("histo2DEffiEta","histo2DEffiEta",1000,0., maxPtGlobalEta,10000,minEffiEta, maxEffiEta);
-        SetStyleHistoTH2ForGraphs(histo2DEffiEta, "#it{p}_{T} (GeV/#it{c})","#epsilon_{#eta} #times #epsilon_{trigg}",
-                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
+        SetStyleHistoTH2ForGraphs(histo2DEffiEta, "#it{p}_{T} (GeV/#it{c})","#it{#varepsilon}_{#eta}#upoint#it{#kappa}_{trigg}",
+                                0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.05);
         histo2DEffiEta->DrawCopy(); 
-        histo2DEffiEta->SetYTitle("#epsilon_{#eta}");
+        histo2DEffiEta->SetYTitle("#it{#varepsilon}_{#eta}");
 
         TLegend* legendEffiEta = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);
         legendEffiEta->SetNColumns(2);
@@ -3794,8 +3794,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             
             TH2F * histo2DTriggerEffiEta;
             histo2DTriggerEffiEta = new TH2F("histo2DTriggerEffiEta","histo2DTriggerEffiEta",1000,0., maxPtGlobalEta,10000,minEffiTrigEta, maxEffiTrigEta);
-            SetStyleHistoTH2ForGraphs(histo2DTriggerEffiEta, "#it{p}_{T} (GeV/#it{c})","#epsilon_{Trigger, #eta}", 
-                                        0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);
+            SetStyleHistoTH2ForGraphs(histo2DTriggerEffiEta, "#it{p}_{T} (GeV/#it{c})","#it{#kappa}_{trigg, #eta}",
+                                        0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.05);
             histo2DTriggerEffiEta->DrawCopy(); 
 
             TLegend* legendTriggerEffiEta = GetAndSetLegend2(0.62, 0.165, 0.95, 0.165+(1.05*nRealTriggers/2*0.85*textSizeSpectra),28);
