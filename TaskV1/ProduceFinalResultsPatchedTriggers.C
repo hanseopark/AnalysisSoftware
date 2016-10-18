@@ -357,6 +357,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
    
     gSystem->Exec(Form("cp %s %s/configurationFile.txt", fileListNamePi0.Data(), outputDir.Data()));
     
+    TString nameFinalResDat                     = Form("%s/FitResults.dat",outputDir.Data());
+    fstream  fileFitsOutput;
+    fileFitsOutput.open(nameFinalResDat.Data(), ios::out);  
+
+    
     // put correct labels if only 1 set of NLM is used for merged ana
     if (fNLMmin > 0 && mode == 10){
         detectionProcess    = ReturnFullTextReconstructionProcess(mode, 0, "#pi^{0}", fMergedClusterCutNrExampl);
@@ -752,8 +757,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 
                     
                 TF1* pol0 = new TF1("pol0","[0]",minPt[i],maxPt[i]); //
-                
                 histoRatioRawClusterPt[i]->Fit(pol0,"NRME+","",minPt[i],maxPt[i]);
+                
+                fileFitsOutput << triggerNameLabel[i].Data() << "-" << triggerNameLabel[trigSteps[i][0]].Data() << endl;
+                fileFitsOutput << WriteParameterToFile(pol0) << endl;
+                
                 TH1D* triggRejecCLPol0 = (TH1D*)histoRatioRawClusterPt[i]->Clone(Form("CL_%i",i));
                 for (Int_t j = 1; j < triggRejecCLPol0->GetNbinsX()+1; j++){
                     triggRejecCLPol0->SetBinContent(j,triggRejecFac[i][trigSteps[i][0]]);
@@ -771,6 +779,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 pol0->SetRange(minPt[i],maxPt[i]);
                 pol0->Draw("same");
                 histoRatioRawClusterPt[i]->DrawCopy("e,same"); 
+
+                TF1* pol1 = new TF1("pol1","[0]+[1]*x",minPt[i],maxPt[i]); //
+                histoRatioRawClusterPt[i]->Fit(pol1,"NRME0+","",minPt[i],maxPt[i]);
+                fileFitsOutput << WriteParameterToFile(pol1) << endl;
+                
             }
         }
         legendTriggReject->Draw();
@@ -1716,17 +1729,17 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TH1D*     histoCorrectedYieldPi0ScaledMasked            [MaxNumberOfFiles];
     histoCorrectedYieldPi0Scaled[0]                         = (TH1D*)histoCorrectedYieldPi0[0]->Clone(Form("CorrectedYieldPi0Scaled_%s", triggerName[0].Data()));
     for (Int_t i = 1; i< nrOfTrigToBeComb; i++){
-        cout << triggerName[i].Data() << endl;
+        fileFitsOutput << triggerName[i].Data() << endl;
         histoCorrectedYieldPi0Scaled[i] = (TH1D*)histoCorrectedYieldPi0[i]->Clone(Form("CorrectedYieldPi0Scaled_%s", triggerName[i].Data()));
         histoCorrectedYieldPi0Scaled[i]->Sumw2();
         histoCorrectedYieldPi0Scaled[i]->Scale(1./triggRejecFac[i][trigSteps[i][0]]);
-        cout << trigSteps[i][0] << "\t" << trigSteps[i][1] << "\t" << trigSteps[i][2] << endl;
+        fileFitsOutput << trigSteps[i][0] << "\t" << trigSteps[i][1] << "\t" << trigSteps[i][2] << endl;
         if (trigSteps[i][1]!= trigSteps[i][0]){
-            cout << triggRejecFac[i][trigSteps[i][0]] << "\t" << triggRejecFac[trigSteps[i][0]][trigSteps[i][1]] << endl;
+            fileFitsOutput << triggRejecFac[i][trigSteps[i][0]] << "\t" << triggRejecFac[trigSteps[i][0]][trigSteps[i][1]] << endl;
             histoCorrectedYieldPi0Scaled[i]->Scale(1./triggRejecFac[trigSteps[i][0]][trigSteps[i][1]]);
         }
         if (trigSteps[i][2]!= trigSteps[i][1]){
-            cout << triggRejecFac[i][trigSteps[i][0]] << "\t" << triggRejecFac[trigSteps[i][0]][trigSteps[i][1]] << "\t"<< triggRejecFac[trigSteps[i][1]][trigSteps[i][2]] << endl;
+            fileFitsOutput << triggRejecFac[i][trigSteps[i][0]] << "\t" << triggRejecFac[trigSteps[i][0]][trigSteps[i][1]] << "\t"<< triggRejecFac[trigSteps[i][1]][trigSteps[i][2]] << endl;
             histoCorrectedYieldPi0Scaled[i]->Scale(1./triggRejecFac[trigSteps[i][1]][trigSteps[i][2]]);
         }
     }
@@ -2889,7 +2902,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
               DrawGammaSetMarkerTGraphAsym(graphMassRelDifferencePi0DatavsMC, 20, 1, kBlack, kBlack);
               graphMassRelDifferencePi0DatavsMC->Draw("p,e1,same");
                 
-              cout << "average rel mass diff: " << fitPi0RelMassDiff->GetParameter(0) << "+-"<< fitPi0RelMassDiff->GetParError(0) << endl;
+              fileFitsOutput << "average rel mass diff: " << fitPi0RelMassDiff->GetParameter(0) << "+-"<< fitPi0RelMassDiff->GetParError(0) << endl;
             }    
             DrawGammaLines(0., maxPtGlobalPi0 , 0., 0., 1, kGray+2, 7);
 //             legendMassPi0Weighted->Draw();
@@ -4158,16 +4171,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         TH1D*     histoCorrectedYieldEtaScaledMasked            [MaxNumberOfFiles];
         histoCorrectedYieldEtaScaled[0]                         = (TH1D*)histoCorrectedYieldEta[0]->Clone(Form("CorrectedYieldEtaScaled_%s", triggerName[0].Data()));
         for (Int_t i = 1; i< nrOfTrigToBeComb; i++){
-            cout << triggerName[i].Data() << endl;
+            fileFitsOutput << triggerName[i].Data() << endl;
             histoCorrectedYieldEtaScaled[i] = (TH1D*)histoCorrectedYieldEta[i]->Clone(Form("CorrectedYieldEtaScaled_%s", triggerName[i].Data()));
             histoCorrectedYieldEtaScaled[i]->Sumw2();
             histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFac[i][trigSteps[i][0]]);
             if (trigSteps[i][1]!= trigSteps[i][0]){
-                cout << triggRejecFac[i][trigSteps[i][0]] << "\t" << triggRejecFac[trigSteps[i][0]][trigSteps[i][1]] << endl;
+                fileFitsOutput << triggRejecFac[i][trigSteps[i][0]] << "\t" << triggRejecFac[trigSteps[i][0]][trigSteps[i][1]] << endl;
                 histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFac[trigSteps[i][0]][trigSteps[i][1]]);
             }
             if (trigSteps[i][2]!= trigSteps[i][1]){
-                cout << triggRejecFac[i][trigSteps[i][0]] << "\t" << triggRejecFac[trigSteps[i][0]][trigSteps[i][1]] << "\t"<< triggRejecFac[trigSteps[i][1]][trigSteps[i][2]] << endl;
+                fileFitsOutput << triggRejecFac[i][trigSteps[i][0]] << "\t" << triggRejecFac[trigSteps[i][0]][trigSteps[i][1]] << "\t"<< triggRejecFac[trigSteps[i][1]][trigSteps[i][2]] << endl;
                 histoCorrectedYieldEtaScaled[i]->Scale(1./triggRejecFac[trigSteps[i][1]][trigSteps[i][2]]);
             }
         }
@@ -5135,6 +5148,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
               fitEtaRelMassDiff->SetLineWidth(0.5);
               fitEtaRelMassDiff->Draw("same");
 
+              fileFitsOutput << "average rel mass diff: " << fitEtaRelMassDiff->GetParameter(0) << "+-"<< fitEtaRelMassDiff->GetParError(0) << endl;
+              
               TLegend* legendEtaRelMassDiff = GetAndSetLegend2(0.15, 0.12, 0.6, 0.12+(0.035*1), 0.035, 2, "", 42, 0.15);
               legendEtaRelMassDiff->AddEntry(fitEtaRelMassDiff,"fit with constant");
               legendEtaRelMassDiff->AddEntry((TObject*)0,Form("%0.4f #pm %0.4f", fitEtaRelMassDiff->GetParameter(0), fitEtaRelMassDiff->GetParError(0)),"");
@@ -6673,5 +6688,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     fileOutputForComparisonFullyCorrected->Write();
     fileOutputForComparisonFullyCorrected->Close();
     
-    cout << WriteParameterToFile(fitInvYieldPi0) << endl;
+    fileFitsOutput << WriteParameterToFile(fitInvYieldPi0) << endl;
+    fileFitsOutput.close();
 }
