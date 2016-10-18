@@ -1383,6 +1383,7 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                         break;
                     case 52:
                     case 53:
+                        if(meson.CompareTo("Pi0EtaBinning") == 0) return 15;
                         return 14;      // EMC triggers
                         break;
                     case 81:

@@ -2392,7 +2392,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
                   if( trigger.CompareTo("52") == 0 || trigger.CompareTo("81") == 0 || triggerSet == 1 || triggerSet == 2){
                     fBGFitRange[0]=0.25;
                     fPeakRange[1] = 0.19;
-                    fMesonFitRange[0] = 0.07;
+                    fMesonFitRange[0] = 0.04;
                     fMesonFitRange[1] = 0.26;
                     fMesonWidthExpect = 0.012;
                     fMesonWidthRange[0] = 0.001;
