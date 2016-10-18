@@ -5642,7 +5642,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
       histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(0.9*histoPHOSHighSignalPi0->GetMinimum(),1.6*histoPHOSHighSignalPi0->GetMaximum());
       histo2DPi0InvMassDummy->DrawCopy();
 
-      TLatex *labelInvMassPtRangePHOSh = new TLatex(0.945,0.9,"#pi^{0}: 20.00 GeV/c < p_{T} < 22.00 GeV/c");
+      TLatex *labelInvMassPtRangePHOSh = new TLatex(0.945,0.9,"#pi^{0}: 22.00 GeV/c < p_{T} < 26.00 GeV/c");
 
       DrawGammaSetMarker(histoPHOSHighSignalPlusBGPi0, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
       histoPHOSHighSignalPlusBGPi0->SetLineWidth(1);

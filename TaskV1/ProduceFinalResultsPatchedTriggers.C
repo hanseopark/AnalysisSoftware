@@ -1452,6 +1452,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         minWidthPi0             = 0.0;
         maxWidthPi0             = 0.0125;
     }    
+    if (mode == 4 && optionEnergy.CompareTo("8TeV")==0){
+      maxWidthPi0        = 0.0395;
+    }
     TH2F * histo2DWidthPi0      = new TH2F("histo2DWidthPi0","histo2DWidthPi0",1000,0., maxPtGlobalPi0,10000,minWidthPi0, maxWidthPi0);
     SetStyleHistoTH2ForGraphs(histo2DWidthPi0, "#it{p}_{T} (GeV/#it{c})","#sigma_{#pi^{0}} (Mev/#it{c}^{2})", 
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);

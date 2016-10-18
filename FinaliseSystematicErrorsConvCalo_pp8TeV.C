@@ -898,7 +898,7 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
                         } else if (additionalNameOutput.CompareTo("EMC7")==0){
                             error   = 5000*pow(0.5,ptBins[k]+6)+5.+5.;
                         } else if (additionalNameOutput.CompareTo("EGA")==0){
-                            error   = 5000*pow(0.5,ptBins[k]-2.5)+5.+5.;
+                            error   = 5000*pow(0.5,ptBins[k]-1.)+5.+5.;
                         }
                     } else {
                         Double_t error1 = 0;
@@ -915,7 +915,7 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
                         } else if (additionalNameOutput.CompareTo("EMC7")==0){
                             error2  = 5000*pow(0.5,ptBins[k]+6)+5.+5.;
                         } else if (additionalNameOutput.CompareTo("EGA")==0){
-                            error2  = 5000*pow(0.5,ptBins[k]-2.5)+5.+5.;
+                            error2  = 5000*pow(0.5,ptBins[k]-1.)+5.+5.;
                         }
                         error = TMath::Sqrt(error1*error1+error2*error2);
                         cout << error << endl;                        
