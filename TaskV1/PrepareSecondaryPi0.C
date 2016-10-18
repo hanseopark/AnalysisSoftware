@@ -50,6 +50,7 @@
 #include "../CommonHeaders/ExtractSignalBinning.h"
 
 void PrepareSecondaryPi0(   TString nameFileCocktail        = "",
+                            TString nameFileData            = "",
                             TString suffix                  = "eps",
                             TString cutSelection            = "",
                             TString option                  = "",
@@ -219,8 +220,8 @@ void PrepareSecondaryPi0(   TString nameFileCocktail        = "",
     }
 
     //***************************** ranges **************************************************************************
-    Double_t deltaRap                                           = 2*rapidity;
-    Double_t deltaEta                                           = 2*0.9;
+    Double_t deltaRap                                           = 2*rapidity;           // these factors might need to be changed (and applied)
+    Double_t deltaEta                                           = 2*0.9;                // if the solid angle of the measurement differs from 2pi*deltaEta
     Double_t deltaPtGen                                         = ptGenMax-ptGenMin;
     Double_t deltaPhi                                           = 2*TMath::Pi();
     cout << "================================"  << endl;
@@ -240,9 +241,20 @@ void PrepareSecondaryPi0(   TString nameFileCocktail        = "",
     else nRows                                                  = (nSpectra+1)/6 + 1;
 
     //***************************** Get number of events (cocktail) *************************************************
-    histoNEvents                                                = (TH1F*)histoListCocktail->FindObject("NEvents");
-    nEvents                                                     = histoNEvents->GetEntries();
-    cout << nEvents << " events" << endl;
+    histoNEventsCocktail                                        = (TH1F*)histoListCocktail->FindObject("NEvents");
+    nEventsCocktail                                             = histoNEventsCocktail->GetEntries();
+    cout << nEventsCocktail << " cocktail events" << endl;
+
+    //***************************** Get number of events (data) *****************************************************
+    TFile fileData(nameFileData.Data());
+    histoNEventsData                                            = (TH1F*)fileData.Get("NEvents");
+    // calculate number of events for normalization
+    if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0){
+        nEventsData                                             = histoNEventsData->GetBinContent(1);
+    } else {
+        nEventsData                                             =  GetNEvents(histoNEventsData);
+    }
+    cout << nEventsData << " data events" << endl;
 
     //***************************** Read histograms from cocktail file **********************************************
     histoDecayChannels                                          = new TH1F*[nMotherParticles];
@@ -252,8 +264,6 @@ void PrepareSecondaryPi0(   TString nameFileCocktail        = "",
     histoPi0MotherPtPhi                                         = new TH2F*[nMotherParticles];
     for (Int_t i=0; i<nMotherParticles; i++) {
         if (hasMother[i]) {
-            cout << "searching for mother[" << i << "] = " << motherParticles[i].Data() << endl;
-            
             histoDecayChannels[i]                               = (TH1F*)histoListCocktail->FindObject(Form("DecayChannels_%s", motherParticles[i].Data()));
             
             histoPi0PtY[i]                                      = (TH2F*)histoListCocktail->FindObject(Form("Pt_Y_Pi0_From_%s", motherParticles[i].Data()));
@@ -308,14 +318,16 @@ void PrepareSecondaryPi0(   TString nameFileCocktail        = "",
     histoPi0MotherPtOrBin                                       = new TH1F*[nMotherParticles];
     histoPi0MotherYOrBin                                        = new TH1F*[nMotherParticles];
     histoPi0MotherPhiOrBin                                      = new TH1F*[nMotherParticles];
+    histoPi0PtOrBin2                                            = new TH1F*[nMotherParticles];
     for (Int_t i=0; i<nMotherParticles; i++) {
+        // pi0
         if (histoPi0PtY[i]) {
-            histoPi0PtOrBin[i]                                  = (TH1F*)histoPi0PtY[i]->ProjectionX(Form("Pi0_From_%s_Pt_OrBin", motherParticles[i].Data()), 1, histoPi0PtY[i]->GetNbinsY(), "e");
+            histoPi0PtOrBin[i]                                  = (TH1F*)histoPi0PtY[i]->ProjectionX(Form("Pi0_From_%s_Pt_OrBin", motherParticles[i].Data()),1,histoPi0PtY[i]->GetNbinsY(),"e");
             SetHistogramTitles(histoPi0PtOrBin[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoPi0PtOrBin[i]->Sumw2();
-            histoPi0PtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
             histoPi0PtOrBin[i]->Scale(deltaPhi);
-            histoPi0YOrBin[i]                                   = (TH1F*)histoPi0PtY[i]->ProjectionY(Form("Pi0_From_%s_Y_OrBin", motherParticles[i].Data()), 1, histoPi0PtY[i]->GetNbinsX(), "e");
+            histoPi0PtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
+            histoPi0YOrBin[i]                                   = (TH1F*)histoPi0PtY[i]->ProjectionY(Form("Pi0_From_%s_Y_OrBin", motherParticles[i].Data()),1,histoPi0PtY[i]->GetNbinsX(),"e");
             SetHistogramTitles(histoPi0YOrBin[i],"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoPi0YOrBin[i]->Sumw2();
             histoPi0YOrBin[i]->Scale(deltaPhi);
@@ -324,20 +336,32 @@ void PrepareSecondaryPi0(   TString nameFileCocktail        = "",
             histoPi0YOrBin[i]                                   = NULL;
         }
         if (histoPi0PtPhi[i]) {
-            histoPi0PhiOrBin[i]                                 = (TH1F*)histoPi0PtPhi[i]->ProjectionY(Form("Pi0_From_%s_Phi_OrBin", motherParticles[i].Data()), 1, histoPi0PtPhi[i]->GetNbinsX(), "e");
+            histoPi0PhiOrBin[i]                                 = (TH1F*)histoPi0PtPhi[i]->ProjectionY(Form("Pi0_From_%s_Phi_OrBin", motherParticles[i].Data()),1,histoPi0PtPhi[i]->GetNbinsX(),"e");
             SetHistogramTitles(histoPi0PhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoPi0PhiOrBin[i]->Sumw2();
-            histoPi0PhiOrBin[i]->Scale(deltaRap);
-        } else
+            histoPi0PhiOrBin[i]->Scale(deltaPhi);
+            if (doPi0PtOrBinFromPtPhi) {
+                histoPi0PtOrBin2[i]                             = (TH1F*)histoPi0PtPhi[i]->ProjectionX(Form("Pi0_From_%s_Pt_OrBin_2", motherParticles[i].Data()),1,histoPi0PtPhi[i]->GetNbinsY(),"e");
+                SetHistogramTitles(histoPi0PtOrBin2[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
+                histoPi0PtOrBin2[i]->Sumw2();
+                histoPi0PtOrBin2[i]->Scale(deltaPhi);
+                histoPi0PtOrBin2[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
+            } else {
+                histoPi0PtOrBin2[i]                             = NULL;
+            }
+        } else {
             histoPi0PhiOrBin[i]                                 = NULL;
+            histoPi0PtOrBin2[i]                                 = NULL;
+        }
         
+        // mother
         if (histoPi0MotherPtY[i]) {
-            histoPi0MotherPtOrBin[i]                            = (TH1F*)histoPi0MotherPtY[i]->ProjectionX(Form("%s_Pt_OrBin", motherParticles[i].Data()), 1, histoPi0MotherPtY[i]->GetNbinsY(), "e");
+            histoPi0MotherPtOrBin[i]                            = (TH1F*)histoPi0MotherPtY[i]->ProjectionX(Form("%s_Pt_OrBin", motherParticles[i].Data()),1,histoPi0MotherPtY[i]->GetNbinsY(),"e");
             SetHistogramTitles(histoPi0MotherPtOrBin[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoPi0MotherPtOrBin[i]->Sumw2();
-            histoPi0MotherPtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
             histoPi0MotherPtOrBin[i]->Scale(deltaPhi);
-            histoPi0MotherYOrBin[i]                             = (TH1F*)histoPi0MotherPtY[i]->ProjectionY(Form("%s_Y_OrBin", motherParticles[i].Data()), 1, histoPi0MotherPtY[i]->GetNbinsX(), "e");
+            histoPi0MotherPtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
+            histoPi0MotherYOrBin[i]                             = (TH1F*)histoPi0MotherPtY[i]->ProjectionY(Form("%s_Y_OrBin", motherParticles[i].Data()),1,histoPi0MotherPtY[i]->GetNbinsX(),"e");
             SetHistogramTitles(histoPi0MotherYOrBin[i],"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoPi0MotherYOrBin[i]->Sumw2();
             histoPi0MotherYOrBin[i]->Scale(deltaPhi);
@@ -346,10 +370,10 @@ void PrepareSecondaryPi0(   TString nameFileCocktail        = "",
             histoPi0MotherYOrBin[i]                             = NULL;
         }
         if (histoPi0MotherPtPhi[i]) {
-            histoPi0MotherPhiOrBin[i]                           = (TH1F*)histoPi0MotherPtPhi[i]->ProjectionY(Form("%s_Phi_OrBin", motherParticles[i].Data()), 1, histoPi0MotherPtPhi[i]->GetNbinsX(), "e");
+            histoPi0MotherPhiOrBin[i]                           = (TH1F*)histoPi0MotherPtPhi[i]->ProjectionY(Form("%s_Phi_OrBin", motherParticles[i].Data()),1,histoPi0MotherPtPhi[i]->GetNbinsX(),"e");
             SetHistogramTitles(histoPi0MotherPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoPi0MotherPhiOrBin[i]->Sumw2();
-            histoPi0MotherPhiOrBin[i]->Scale(deltaRap);
+            histoPi0MotherPhiOrBin[i]->Scale(deltaPhi);
         } else
             histoPi0MotherPhiOrBin[i]                           = NULL;
     }
@@ -361,12 +385,13 @@ void PrepareSecondaryPi0(   TString nameFileCocktail        = "",
     
     //***************************** Scale spectra *******************************************************************
     for (Int_t i=0; i<nMotherParticles; i++) {
-        if (histoPi0PtOrBin[i])           histoPi0PtOrBin[i]->Scale(        1./nEvents);
-        if (histoPi0YOrBin[i])            histoPi0YOrBin[i]->Scale(         1./nEvents);
-        if (histoPi0PhiOrBin[i])          histoPi0PhiOrBin[i]->Scale(       1./nEvents);
-        if (histoPi0MotherPtOrBin[i])     histoPi0MotherPtOrBin[i]->Scale(  1./nEvents);
-        if (histoPi0MotherYOrBin[i])      histoPi0MotherYOrBin[i]->Scale(   1./nEvents);
-        if (histoPi0MotherPhiOrBin[i])    histoPi0MotherPhiOrBin[i]->Scale( 1./nEvents);
+        if (histoPi0PtOrBin[i])           histoPi0PtOrBin[i]->Scale(        1./nEventsCocktail);
+        if (histoPi0PtOrBin2[i])          histoPi0PtOrBin2[i]->Scale(       1./nEventsCocktail);
+        if (histoPi0YOrBin[i])            histoPi0YOrBin[i]->Scale(         1./nEventsCocktail);
+        if (histoPi0PhiOrBin[i])          histoPi0PhiOrBin[i]->Scale(       1./nEventsCocktail);
+        if (histoPi0MotherPtOrBin[i])     histoPi0MotherPtOrBin[i]->Scale(  1./nEventsCocktail);
+        if (histoPi0MotherYOrBin[i])      histoPi0MotherYOrBin[i]->Scale(   1./nEventsCocktail);
+        if (histoPi0MotherPhiOrBin[i])    histoPi0MotherPhiOrBin[i]->Scale( 1./nEventsCocktail);
     }
 
     //***************************** Rebin pt spectra ****************************************************************
@@ -393,8 +418,8 @@ void PrepareSecondaryPi0(   TString nameFileCocktail        = "",
     
     //***************************** Transform yields ****************************************************************
     for (Int_t i=0; i<nMotherParticles; i++) {
-        if (histoPi0Pt[i])        histoPi0Pt[i]                 = ConvertYieldHisto(histoPi0Pt[i]);
-        if (histoPi0MotherPt[i])  histoPi0MotherPt[i]           = ConvertYieldHisto(histoPi0MotherPt[i]);
+        if (histoPi0Pt[i])        histoPi0Pt[i]                 = CalculateRawYield(histoPi0Pt[i],       deltaRap, nEventsData);
+        if (histoPi0MotherPt[i])  histoPi0MotherPt[i]           = CalculateRawYield(histoPi0MotherPt[i], deltaRap, nEventsData);
     }
 
     
@@ -445,34 +470,21 @@ void RebinSpectrum(TH1F *Spectrum, TString NewName){
     
     *Spectrum = *((TH1F*)Spectrum->Rebin(fNBinsPt,NewName,fBinsPt));
     Spectrum->Divide(fDeltaPt);
-    
 }
 
 //************************** Convert yield histo ********************************************************************
-TH1F* ConvertYieldHisto(TH1F* input){
+TH1F* CalculateRawYield(TH1F* input, Double_t deltaRap, Float_t nEventsData){
     
     if (!input) {
         cout << "Error: Histogram is NULL" << endl;
         return NULL;
     }
     
-    Int_t nBins                     = input->GetNbinsX();
-    Double_t newValue               = 0;
-    Double_t newErrorValue          = 0;
-    Double_t correctionValue        = 1;
+    input->Scale(deltaRap);
+    input->Scale(nEventsData);
     
-    // divide py 2*pi
-    input->Scale(1/(2*TMath::Pi()));
-    
-    // divide by pT
-    for(Int_t i=0;i<nBins;i++){
-        correctionValue             = 1/(input->GetBinCenter(i+1));
-        input->SetBinContent(i+1,   input->GetBinContent(i+1)*correctionValue);
-        input->SetBinError(i+1,     input->GetBinError(i+1)*correctionValue);
-    }
-    
-    SetHistogramTitles(input,"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
-    
+    SetHistogramTitles(input,"","#it{p}_{T} (GeV/#it{c})","almost raw yield");
+
     return input;
 }
 
@@ -621,6 +633,7 @@ void DeleteObjects() {
     delete[] histoDecayChannels;
     delete[] histoPi0PtPhi;
     delete[] histoPi0PtOrBin;
+    if (histoPi0PtOrBin2) delete[] histoPi0PtOrBin2;
     delete[] histoPi0Pt;
     delete[] histoPi0YOrBin;
     delete[] histoPi0PhiOrBin;
@@ -638,17 +651,20 @@ void DeleteObjects() {
 void SaveHistos() {
     TString nameOutput                  = Form("%s/%s/HadronicCocktail%s_%.2f_%s.root", fCutSelection.Data(), fEnergyFlag.Data(), fPeriodFlag.Data(), fRapidity, fCutSelection.Data());
     cout << "INFO: writing into: " << nameOutput << endl;
-    TFile *outputFile                   = new TFile(nameOutput,"UPDATE");
+    TFile *outputFile                   = new TFile(nameOutput,"RECREATE");
     
     // write number of events
-    histoNEvents->Write("NEvents", TObject::kOverwrite);
+    histoNEventsCocktail->Write("nEventsCocktail", TObject::kOverwrite);
+    histoNEventsData->Write(    "nEventsData",     TObject::kOverwrite);
     
     // write binning histogram
     fDeltaPt->Write("deltaPt", TObject::kOverwrite);
     
     // write projections
     for (Int_t i=0; i<nMotherParticles; i++) {
+        if (i<1 || i>3) continue;      // write only K0s, K0l, Lambda
         if (histoPi0PtOrBin[i])        histoPi0PtOrBin[i]->Write(        histoPi0PtOrBin[i]->GetName(),        TObject::kOverwrite);
+        if (histoPi0PtOrBin2[i])       histoPi0PtOrBin2[i]->Write(       histoPi0PtOrBin2[i]->GetName(),       TObject::kOverwrite);
         if (histoPi0YOrBin[i])         histoPi0YOrBin[i]->Write(         histoPi0YOrBin[i]->GetName(),         TObject::kOverwrite);
         if (histoPi0PhiOrBin[i])       histoPi0PhiOrBin[i]->Write(       histoPi0PhiOrBin[i]->GetName(),       TObject::kOverwrite);
         if (histoPi0MotherPtOrBin[i])  histoPi0MotherPtOrBin[i]->Write(  histoPi0MotherPtOrBin[i]->GetName(),  TObject::kOverwrite);
@@ -658,12 +674,14 @@ void SaveHistos() {
     
     // write rebinned histograms
     for (Int_t i=0; i<nMotherParticles; i++) {
+        if (i<1 || i>3) continue;// write only K0s, K0l, Lambda
         if (histoPi0Pt[i])       histoPi0Pt[i]->Write(histoPi0Pt[i]->GetName(),             TObject::kOverwrite);
         if (histoPi0MotherPt[i]) histoPi0MotherPt[i]->Write(histoPi0MotherPt[i]->GetName(), TObject::kOverwrite);
     }
     
     // write input parametrizations and mt scaled ones
     for (Int_t i=0; i<nMotherParticles; i++) {
+        if (i<1 || i>3) continue;                     // write only K0s, K0l, Lambda
         if (cocktailInputParametrizations[i])         cocktailInputParametrizations[i]->Write(          cocktailInputParametrizations[i]->GetName(),         TObject::kOverwrite);
         if (cocktailInputParametrizationsMtScaled[i]) cocktailInputParametrizationsMtScaled[i]->Write(  cocktailInputParametrizationsMtScaled[i]->GetName(), TObject::kOverwrite);
     }

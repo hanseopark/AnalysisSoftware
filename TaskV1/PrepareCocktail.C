@@ -219,8 +219,8 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     }
 
     //***************************** ranges **************************************************************************
-    Double_t deltaRap                                           = 2*rapidity;
-    Double_t deltaEta                                           = 2*0.9;
+    Double_t deltaRap                                           = 2*rapidity;       // these factors might need to be changed (and applied)
+    Double_t deltaEta                                           = 2*0.9;            // if the solid angle of the measurement differs from 2pi*deltaEta
     Double_t deltaPtGen                                         = ptGenMax-ptGenMin;
     Double_t deltaPhi                                           = 2*TMath::Pi();
     cout << "================================"  << endl;
@@ -322,29 +322,42 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     histoGammaSumPtOrBin                                        = (TH1F*)histoGammaSumPtY->ProjectionX("Gamma_Pt_OrBin", 1, histoGammaSumPtY->GetNbinsY(), "e");
     SetHistogramTitles(histoGammaSumPtOrBin,"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
     histoGammaSumPtOrBin->Sumw2();
-    histoGammaSumPtOrBin->GetXaxis()->SetRangeUser(ptMin, ptMax);
     histoGammaSumPtOrBin->Scale(deltaPhi);
+    histoGammaSumPtOrBin->GetXaxis()->SetRangeUser(ptMin, ptMax);
     histoGammaSumYOrBin                                         = (TH1F*)histoGammaSumPtY->ProjectionY("Gamma_Y_OrBin", 1, histoGammaSumPtY->GetNbinsX(), "e");
     SetHistogramTitles(histoGammaSumYOrBin,"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
+    histoGammaSumYOrBin->Sumw2();
     histoGammaSumYOrBin->Scale(deltaPhi);
     histoGammaSumPhiOrBin                                       = (TH1F*)histoGammaSumPtPhi->ProjectionY("Gamma_Phi_OrBin", 1, histoGammaSumPtPhi->GetNbinsX(), "e");
     SetHistogramTitles(histoGammaSumPhiOrBin,"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
-    histoGammaSumPhiOrBin->Scale(deltaRap);
+    histoGammaSumPhiOrBin->Sumw2();
+    histoGammaSumPhiOrBin->Scale(deltaPhi);
+    if(doGammaPtOrBinFromPtPhi) {
+        histoGammaSumPtOrBin2                                   = (TH1F*)histoGammaSumPtPhi->ProjectionX("Gamma_Pt_OrBin_2", 1, histoGammaSumPtY->GetNbinsY(), "e");
+        SetHistogramTitles(histoGammaSumPtOrBin2,"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
+        histoGammaSumPtOrBin2->Sumw2();
+        histoGammaSumPtOrBin2->Scale(deltaPhi);
+        histoGammaSumPtOrBin2->GetXaxis()->SetRangeUser(ptMin, ptMax);
+    } else {
+        histoGammaSumPtOrBin2                                   = NULL;
+    }
     
     histoGammaPtOrBin                                           = new TH1F*[nMotherParticles];
+    histoGammaPtOrBin2                                          = new TH1F*[nMotherParticles];
     histoGammaYOrBin                                            = new TH1F*[nMotherParticles];
     histoGammaPhiOrBin                                          = new TH1F*[nMotherParticles];
     histoGammaMotherPtOrBin                                     = new TH1F*[nMotherParticles];
     histoGammaMotherYOrBin                                      = new TH1F*[nMotherParticles];
     histoGammaMotherPhiOrBin                                    = new TH1F*[nMotherParticles];
     for (Int_t i=0; i<nMotherParticles; i++) {
+        // gamma
         if (histoGammaPtY[i]) {
-            histoGammaPtOrBin[i]                                = (TH1F*)histoGammaPtY[i]->ProjectionX(Form("Gamma_From_%s_Pt_OrBin", motherParticles[i].Data()), 1, histoGammaPtY[i]->GetNbinsY(), "e");
+            histoGammaPtOrBin[i]                                = (TH1F*)histoGammaPtY[i]->ProjectionX(Form("Gamma_From_%s_Pt_OrBin", motherParticles[i].Data()),1,histoGammaPtY[i]->GetNbinsY(),"e");
             SetHistogramTitles(histoGammaPtOrBin[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoGammaPtOrBin[i]->Sumw2();
-            histoGammaPtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
             histoGammaPtOrBin[i]->Scale(deltaPhi);
-            histoGammaYOrBin[i]                                 = (TH1F*)histoGammaPtY[i]->ProjectionY(Form("Gamma_From_%s_Y_OrBin", motherParticles[i].Data()), 1, histoGammaPtY[i]->GetNbinsX(), "e");
+            histoGammaPtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
+            histoGammaYOrBin[i]                                 = (TH1F*)histoGammaPtY[i]->ProjectionY(Form("Gamma_From_%s_Y_OrBin", motherParticles[i].Data()),1,histoGammaPtY[i]->GetNbinsX(),"e");
             SetHistogramTitles(histoGammaYOrBin[i],"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoGammaYOrBin[i]->Sumw2();
             histoGammaYOrBin[i]->Scale(deltaPhi);
@@ -353,20 +366,32 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
             histoGammaYOrBin[i]                                 = NULL;
         }
         if (histoGammaPtPhi[i]) {
-            histoGammaPhiOrBin[i]                               = (TH1F*)histoGammaPtPhi[i]->ProjectionY(Form("Gamma_From_%s_Phi_OrBin", motherParticles[i].Data()), 1, histoGammaPtPhi[i]->GetNbinsX(), "e");
+            histoGammaPhiOrBin[i]                               = (TH1F*)histoGammaPtPhi[i]->ProjectionY(Form("Gamma_From_%s_Phi_OrBin",motherParticles[i].Data()),1,histoGammaPtPhi[i]->GetNbinsX(),"e");
             SetHistogramTitles(histoGammaPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoGammaPhiOrBin[i]->Sumw2();
-            histoGammaPhiOrBin[i]->Scale(deltaRap);
-        } else
+            histoGammaPhiOrBin[i]->Scale(deltaPhi);
+            if (doGammaPtOrBinFromPtPhi) {
+                histoGammaPtOrBin2[i]                           = (TH1F*)histoGammaPtPhi[i]->ProjectionX(Form("Gamma_From_%s_Pt_OrBin_2",motherParticles[i].Data()),1,histoGammaPtY[i]->GetNbinsY(),"e");
+                SetHistogramTitles(histoGammaPtOrBin2[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
+                histoGammaPtOrBin2[i]->Sumw2();
+                histoGammaPtOrBin2[i]->Scale(deltaPhi);
+                histoGammaPtOrBin2[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
+            } else {
+                histoGammaPtOrBin2[i]                           = NULL;
+            }
+        } else {
             histoGammaPhiOrBin[i]                               = NULL;
+            histoGammaPtOrBin2[i]                               = NULL;
+        }
         
+        //mother
         if (histoGammaMotherPtY[i]) {
-            histoGammaMotherPtOrBin[i]                          = (TH1F*)histoGammaMotherPtY[i]->ProjectionX(Form("%s_Pt_OrBin", motherParticles[i].Data()), 1, histoGammaMotherPtY[i]->GetNbinsY(), "e");
+            histoGammaMotherPtOrBin[i]                          = (TH1F*)histoGammaMotherPtY[i]->ProjectionX(Form("%s_Pt_OrBin",motherParticles[i].Data()),1,histoGammaMotherPtY[i]->GetNbinsY(),"e");
             SetHistogramTitles(histoGammaMotherPtOrBin[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoGammaMotherPtOrBin[i]->Sumw2();
-            histoGammaMotherPtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
             histoGammaMotherPtOrBin[i]->Scale(deltaPhi);
-            histoGammaMotherYOrBin[i]                           = (TH1F*)histoGammaMotherPtY[i]->ProjectionY(Form("%s_Y_OrBin", motherParticles[i].Data()), 1, histoGammaMotherPtY[i]->GetNbinsX(), "e");
+            histoGammaMotherPtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
+            histoGammaMotherYOrBin[i]                           = (TH1F*)histoGammaMotherPtY[i]->ProjectionY(Form("%s_Y_OrBin",motherParticles[i].Data()),1,histoGammaMotherPtY[i]->GetNbinsX(),"e");
             SetHistogramTitles(histoGammaMotherYOrBin[i],"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoGammaMotherYOrBin[i]->Sumw2();
             histoGammaMotherYOrBin[i]->Scale(deltaPhi);
@@ -375,10 +400,10 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
             histoGammaMotherYOrBin[i]                           = NULL;
         }
         if (histoGammaMotherPtPhi[i]) {
-            histoGammaMotherPhiOrBin[i]                         = (TH1F*)histoGammaMotherPtPhi[i]->ProjectionY(Form("%s_Phi_OrBin", motherParticles[i].Data()), 1, histoGammaMotherPtPhi[i]->GetNbinsX(), "e");
+            histoGammaMotherPhiOrBin[i]                         = (TH1F*)histoGammaMotherPtPhi[i]->ProjectionY(Form("%s_Phi_OrBin",motherParticles[i].Data()),1,histoGammaMotherPtPhi[i]->GetNbinsX(),"e");
             SetHistogramTitles(histoGammaMotherPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoGammaMotherPhiOrBin[i]->Sumw2();
-            histoGammaMotherPhiOrBin[i]->Scale(deltaRap);
+            histoGammaMotherPhiOrBin[i]->Scale(deltaPhi);
         } else
             histoGammaMotherPhiOrBin[i]                         = NULL;
     }
@@ -389,16 +414,18 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     }
 
     //***************************** Scale spectra *******************************************************************
-    histoGammaSumPtOrBin->Scale(1./nEvents);
-    histoGammaSumYOrBin->Scale(1./nEvents);
-    histoGammaSumPhiOrBin->Scale(1./nEvents);
+    histoGammaSumPtOrBin->Scale(                                1./nEvents);
+    if (histoGammaSumPtOrBin2) histoGammaSumPtOrBin2->Scale(    1./nEvents);
+    histoGammaSumYOrBin->Scale(                                 1./nEvents);
+    histoGammaSumPhiOrBin->Scale(                               1./nEvents);
     for (Int_t i=0; i<nMotherParticles; i++) {
-        if (histoGammaPtOrBin[i])           histoGammaPtOrBin[i]->Scale(1./nEvents);
-        if (histoGammaYOrBin[i])            histoGammaYOrBin[i]->Scale(1./nEvents);
-        if (histoGammaPhiOrBin[i])          histoGammaPhiOrBin[i]->Scale(1./nEvents);
-        if (histoGammaMotherPtOrBin[i])     histoGammaMotherPtOrBin[i]->Scale(1./nEvents);
-        if (histoGammaMotherYOrBin[i])      histoGammaMotherYOrBin[i]->Scale(1./nEvents);
-        if (histoGammaMotherPhiOrBin[i])    histoGammaMotherPhiOrBin[i]->Scale(1./nEvents);
+        if (histoGammaPtOrBin[i])           histoGammaPtOrBin[i]->Scale(        1./nEvents);
+        if (histoGammaPtOrBin2[i])          histoGammaPtOrBin2[i]->Scale(       1./nEvents);
+        if (histoGammaYOrBin[i])            histoGammaYOrBin[i]->Scale(         1./nEvents);
+        if (histoGammaPhiOrBin[i])          histoGammaPhiOrBin[i]->Scale(       1./nEvents);
+        if (histoGammaMotherPtOrBin[i])     histoGammaMotherPtOrBin[i]->Scale(  1./nEvents);
+        if (histoGammaMotherYOrBin[i])      histoGammaMotherYOrBin[i]->Scale(   1./nEvents);
+        if (histoGammaMotherPhiOrBin[i])    histoGammaMotherPhiOrBin[i]->Scale( 1./nEvents);
     }
 
     //***************************** Rebin pt spectra ****************************************************************
@@ -1051,7 +1078,7 @@ void DeleteObjects() {
     delete cocktailInputList;
 
     delete fDeltaPt;
-
+    
     delete[] histoDecayChannels;
     delete[] histoGammaPtPhi;
     delete[] histoGammaPtOrBin;
@@ -1081,15 +1108,17 @@ void SaveHistos() {
     fDeltaPt->Write("deltaPt", TObject::kOverwrite);
     
     // write projections
-    histoGammaSumPtOrBin->Write(histoGammaSumPtOrBin->GetName(), TObject::kOverwrite);
-    histoGammaSumYOrBin->Write(histoGammaSumYOrBin->GetName(), TObject::kOverwrite);
+    histoGammaSumPtOrBin->Write(                            histoGammaSumPtOrBin->GetName(),    TObject::kOverwrite);
+    if (histoGammaSumPtOrBin2) histoGammaSumPtOrBin2->Write(histoGammaSumPtOrBin2->GetName(),   TObject::kOverwrite);
+    histoGammaSumYOrBin->Write(                             histoGammaSumYOrBin->GetName(),     TObject::kOverwrite);
     for (Int_t i=0; i<nMotherParticles; i++) {
-        if (histoGammaPtOrBin[i])           histoGammaPtOrBin[i]->Write(histoGammaPtOrBin[i]->GetName(), TObject::kOverwrite);
-        if (histoGammaYOrBin[i])            histoGammaYOrBin[i]->Write(histoGammaYOrBin[i]->GetName(), TObject::kOverwrite);
-        if (histoGammaPhiOrBin[i])          histoGammaPhiOrBin[i]->Write(histoGammaPhiOrBin[i]->GetName(), TObject::kOverwrite);
-        if (histoGammaMotherPtOrBin[i])     histoGammaMotherPtOrBin[i]->Write(histoGammaMotherPtOrBin[i]->GetName(), TObject::kOverwrite);
-        if (histoGammaMotherYOrBin[i])      histoGammaMotherYOrBin[i]->Write(histoGammaMotherYOrBin[i]->GetName(), TObject::kOverwrite);
-        if (histoGammaMotherPhiOrBin[i])    histoGammaMotherPhiOrBin[i]->Write(histoGammaMotherPhiOrBin[i]->GetName(), TObject::kOverwrite);
+        if (histoGammaPtOrBin[i])           histoGammaPtOrBin[i]->Write(        histoGammaPtOrBin[i]->GetName(),        TObject::kOverwrite);
+        if (histoGammaPtOrBin2[i])          histoGammaPtOrBin2[i]->Write(       histoGammaPtOrBin[i]->GetName(),        TObject::kOverwrite);
+        if (histoGammaYOrBin[i])            histoGammaYOrBin[i]->Write(         histoGammaYOrBin[i]->GetName(),         TObject::kOverwrite);
+        if (histoGammaPhiOrBin[i])          histoGammaPhiOrBin[i]->Write(       histoGammaPhiOrBin[i]->GetName(),       TObject::kOverwrite);
+        if (histoGammaMotherPtOrBin[i])     histoGammaMotherPtOrBin[i]->Write(  histoGammaMotherPtOrBin[i]->GetName(),  TObject::kOverwrite);
+        if (histoGammaMotherYOrBin[i])      histoGammaMotherYOrBin[i]->Write(   histoGammaMotherYOrBin[i]->GetName(),   TObject::kOverwrite);
+        if (histoGammaMotherPhiOrBin[i])    histoGammaMotherPhiOrBin[i]->Write( histoGammaMotherPhiOrBin[i]->GetName(), TObject::kOverwrite);
     }
     
     // write rebinned histograms
