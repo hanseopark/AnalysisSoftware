@@ -3002,6 +3002,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         return;
     }    
 
+    graphCombEtaToPi0StatA->RemovePoint(0);
+    graphCombEtaToPi0SysA->RemovePoint(0);
+    graphCombEtaToPi0TotA->RemovePoint(0);
+
 //     return;
     
     // Reading weights from output file for plotting

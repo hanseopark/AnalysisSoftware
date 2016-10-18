@@ -2320,6 +2320,9 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
                 if (setPi0.CompareTo("Pi0EtaBinning") == 0){
                   fMesonFitRange[1] = 0.30;
                   fMesonWidthExpect = 0.025;
+                  fMesonIntDeltaRange[0] = -0.038;
+                  fMesonIntDeltaRange[1] = 0.028;
+                  fMesonIntDeltaRangeWide[1] = 0.032;
                 }
               }
               if( trigger.CompareTo("52") == 0 || triggerSet == 1){
