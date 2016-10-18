@@ -66,7 +66,7 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
     //file from soon to be published paper, Fredi email from 4th Oct 2016
     //saved in ExternalInputPbPb/NeutralMesonpp2760GeVReference folder
     cout << "Pi0 in pp 2.76TeV" << endl;
-    fileConversionsPP =      new TFile(fileNamePi0pp);
+    fileConversionsPP =      new TFile(fileNamepp);
     TDirectory *folderConversionsPi0PP = (TDirectory*)fileConversionsPP->Get("Pi02.76TeV");
     fitInvCrossSectionPi0Comb2760GeV = (TF1*)folderConversionsPi0PP->Get("TsallisFitPi0");
     fitInvCrossSectionPi0Comb2760GeV->SetParameter(0, fitInvCrossSectionPi0Comb2760GeV->GetParameter(0)*1./(xSection2760GeVpp*recalcBarn)*factorToInel);

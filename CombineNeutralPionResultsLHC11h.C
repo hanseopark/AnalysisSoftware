@@ -81,25 +81,37 @@ void ScaleMCYield(TH1D* histoCorrectedToBeScaled, Double_t deltaRapid, Double_t 
 }
 
 
-void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbPbLHC11h = "data_PCMResults_PbPb_2.76TeV", Bool_t runDrawReweighted = kTRUE){
+void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
+                                     TString nameFilePbPbLHC11h = "data_PCMResults_PbPb_2.76TeV",
+                                     Bool_t runDrawReweighted = kTRUE,
+                                     Bool_t runPPplotting = kTRUE,
+                                     Bool_t ThesisPlotting = kTRUE
+
+){
 
 	gROOT->Reset();   
 	gROOT->SetStyle("Plain");
 	
-    TString nameFilePP = "LHC11hInputFiles/data_PCMResultsFullCorrection_PP_NoBinShifting.root";
-    TString nameFilePPpaper = "LHC11hInputFiles/CombinedResultsPaperX_18_Feb_2014.root";
-	TString nameFilePi0PbPbLHC10h = "LHC11hInputFiles/data_PCMResults_PbPb_2.76TeV_LHC10h.root";
-	TString nameFileEtaPbPbLHC10h = "LHC11hInputFiles/data_PCMResults_PbPb_2.76TeV_LHC10hEta.root";
-	
 	TString dateForOutput = ReturnDateStringForOutput();
-	TString outputDir = Form("%s/%s/CombineNeutralPionResults",suffix.Data(),dateForOutput.Data());
+
+    //file from soon to be published paper, Fredi email from 4th Oct 2016
+    //saved in ExternalInputPbPb/NeutralMesonpp2760GeVReference folder
+    TString nameFilePP = "ExternalInputPbPb/NeutralMesonspp276GeVReference/CombinedResultsPaperPP2760GeV_2016_10_03_FrediV2Clusterizer.root";
+	TString nameFilePi0PbPbLHC10h = "ExternalInputPbPb/data_PCMResults_PbPb_2.76TeV_LHC10h.root";
+    TString nameFilePi0PbPbPaper = "FinalResults/CombinedResultsPbPb_ShiftedX_PaperRAA_13_Aug_2014.root";
+    TString nameFileChargedPionKaonSpectra = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/RAA_Kaon_08052014.root";
+    TString nameFileChargedPionKaonRAA = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/RAA_Pion_08052014.root";
+    TString nameFileOtherExp = "ExternalInputPbPb/OtherExperiments/DataCompilationFromOtherEnergiesPbPbWithEta.root";
+
+	TString outputDir = Form("%s/%s/NeutralMesonsPCMResults",suffix.Data(),dateForOutput.Data());
 	gSystem->Exec("mkdir -p "+outputDir);
-	gSystem->Exec(Form("cp %s %s/InputFilePCMPionPP.root ",nameFilePP.Data(),outputDir.Data() ));
-    gSystem->Exec(Form("cp %s %s/InputFilePionPPPaper.root ",nameFilePPpaper.Data(),outputDir.Data() ));
+    gSystem->Exec(Form("cp %s %s/InputFilePionPPPaper.root ",nameFilePP.Data(),outputDir.Data() ));
     gSystem->Exec(Form("cp %s %s/InputFilePCMPionPbPbLHC10h.root ",nameFilePi0PbPbLHC10h.Data(),outputDir.Data() ));
-	gSystem->Exec(Form("cp %s %s/InputFilePCMEtaPbPbLHC10h.root ",nameFileEtaPbPbLHC10h.Data(),outputDir.Data() ));
+    gSystem->Exec(Form("cp %s %s/InputFilePionPbPbPaper.root ",nameFilePi0PbPbPaper.Data(),outputDir.Data() ));
 	gSystem->Exec(Form("cp %s %s/InputFilePCMPbPbLHC11h.root ",nameFilePbPbLHC11h.Data(),outputDir.Data() ));
-	
+    gSystem->Exec(Form("cp %s %s/InputFileChargedSpectra.root ",nameFileChargedPionKaonSpectra.Data(),outputDir.Data() ));
+    gSystem->Exec(Form("cp %s %s/InputFileChargedRaa.root ",nameFileChargedPionKaonRAA.Data(),outputDir.Data() ));
+    gSystem->Exec(Form("cp %s %s/InputFileOtherExp.root ",nameFileOtherExp.Data(),outputDir.Data() ));
    
 	StyleSettingsThesis();  
 	SetPlotStyle();
@@ -192,30 +204,31 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	Size_t   markerSizePi0PP900GeV = 1.8;
 	Size_t   markerSizePi0PP2760GeV  = 2.2;
 	
+
 	TString collisionSystemPP2760GeV = "pp #sqrt{#it{s}} = 2.76 TeV";      
 	TString collisionSystemPP7TeV = "pp #sqrt{#it{s}} = 7 TeV";      
 	TString collisionSystemPP900GeV = "pp #sqrt{#it{s}} = 0.9 TeV";     
-	TString collisionSystemPbPb0005 = "0-5% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";      
-	TString collisionSystemPbPb0010 = "0-10% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";      
-	TString collisionSystemPbPb0510 = "5-10% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";     
-	TString collisionSystemPbPb1020 = "10-20% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";    
-	TString collisionSystemPbPb2030 = "20-30% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";    
-	TString collisionSystemPbPb3040 = "30-40% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";    
-	TString collisionSystemPbPb2040 = "20-40% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";    
-	TString collisionSystemPbPb2050 = "20-50% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";    
-	TString collisionSystemPbPb3050 = "30-50% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";    
-	TString collisionSystemPbPb4060 = "40-60% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";    
-	TString collisionSystemPbPb6080 = "60-80% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";    
-	TString collisionSystemPbPb6070 = "60-70% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";    
-	TString collisionSystemPbPb7080 = "70-80% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";    
-	TString collisionSystemPbPb7590 = "75-90% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";    
-	TString collisionSystemPbPb8090 = "80-90% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";    
-	TString collisionSystemPbPb4050 = "40-50% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";    
-	TString collisionSystemPbPb5060 = "50-60% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";    
-	TString collisionSystemPbPb0020 = "0-20% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";     
-	TString collisionSystemPbPb0080 = "0-80% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";     
-	TString collisionSystemPbPb0040 = "0-40% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";     
-	TString collisionSystemPbPb4080 = "40-80% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";     
+	TString collisionSystemPbPb0005 = "0#font[122]{-}5% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb0010 = "0#font[122]{-}10% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb0510 = "5#font[122]{-}10% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb1020 = "10#font[122]{-}20% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb2030 = "20#font[122]{-}30% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb3040 = "30#font[122]{-}40% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb2040 = "20#font[122]{-}40% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb2050 = "20#font[122]{-}50% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb3050 = "30#font[122]{-}50% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb4060 = "40#font[122]{-}60% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb6080 = "60#font[122]{-}80% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb6070 = "60#font[122]{-}70% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb7080 = "70#font[122]{-}80% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb7590 = "75#font[122]{-}90% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb8090 = "80#font[122]{-}90% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb4050 = "40#font[122]{-}50% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb5060 = "50#font[122]{-}60% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb0020 = "0#font[122]{-}20% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb0080 = "0#font[122]{-}80% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb0040 = "0#font[122]{-}40% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPbPb4080 = "40#font[122]{-}80% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
 	
 	Size_t markerSizeComparison = 0.5;
 	Double_t maxPtMesonEffFit = 12.;
@@ -224,6 +237,9 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	TF1* fitTrueEffi = new TF1("EffiFitDummy","1 - [0]*exp([1]*x)+[1]");
 	fitTrueEffi->SetRange(minPtMesonEffFit,maxPtMesonEffFit);
    
+    TLatex *thesisLabel = new TLatex(0.6,0.9,"This thesis");
+    SetStyleTLatex( thesisLabel, 0.038,4);
+
 	TLatex *labelRawPi0PbPb = new TLatex(0.6,0.9,"#pi^{0} #rightarrow #gamma #gamma #rightarrow e^{+}e^{-} e^{+}e^{-}");
 	SetStyleTLatex( labelRawPi0PbPb, 0.038,4);
 
@@ -237,77 +253,319 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	SetStyleTLatex( labelLegendAMass, 0.08,4);
 
 
-/////////////////////////////////////////////////////////////// External file ////////////////////////////////////////////////////////////////////////////
 
-
-	TFile *filePublished = new TFile("FinalResults/CombinedResultsPbPb_ShiftedX_PaperRAA_13_Aug_2014.root");
-    TGraphAsymmErrors* graphYieldsPublished0010 = (TGraphAsymmErrors*)filePublished->Get("InvYieldPbPbPCMStatErr_0010"); 
-    TGraphAsymmErrors* graphYieldsSysPublished0010 = (TGraphAsymmErrors*)filePublished->Get("InvYieldPbPbPCMSysErr_0010"); 
-    
-    TGraphAsymmErrors* graphYieldsPublished2040 = (TGraphAsymmErrors*)filePublished->Get("InvYieldPbPbPCMStatErr_2040"); 
-    TGraphAsymmErrors* graphYieldsSysPublished2040 = (TGraphAsymmErrors*)filePublished->Get("InvYieldPbPbPCMSysErr_2040"); 
-	
-    TGraphAsymmErrors* graphRAAPublished0005 = (TGraphAsymmErrors*)filePublished->Get("graphRAAStatErr_0005"); 
-	TGraphAsymmErrors* graphRAASysPublished0005 = (TGraphAsymmErrors*)filePublished->Get("graphRAASysErr_0005"); 
-	
-
-    TGraphAsymmErrors* graphRAAPublished0010 = (TGraphAsymmErrors*)filePublished->Get("graphRAAStatErr_0010"); 
-	TGraphAsymmErrors* graphRAASysPublished0010 = (TGraphAsymmErrors*)filePublished->Get("graphRAASysErr_0010"); 
-	
-	TGraphAsymmErrors* graphRAAPublished2040 = (TGraphAsymmErrors*)filePublished->Get("graphRAAStatErr_2040"); 
-	TGraphAsymmErrors* graphRAASysPublished2040 = (TGraphAsymmErrors*)filePublished->Get("graphRAASysErr_2040"); 
-
-	
-////////////////////////////////////////////////////////////////// LHC10h file //////////////////////////////////////////////////////////////////////////////   
-    TFile*   filePCMPbPbLHC10h = new TFile(nameFilePi0PbPbLHC10h.Data()); //data_PCMResults_PbPb_2.76TeV_LHC10h.root
-     
-//////////////////////// Pi0 ////////////////////////////   
+    //PbPb PCM only - 2011 data
+    TFile*   filePCMPbPbLHC11h = new TFile(nameFilePbPbLHC11h.Data());
     cout << "Pi0 0-10%" << endl;
-    TDirectory* directoryPi0PbPbLHC10h0010 = (TDirectory*)filePCMPbPbLHC10h->Get("Pi0_PbPb_2.76TeV_0-10%"); 
+    TDirectory* directoryPi0PbPbLHC11h0010 = (TDirectory*)filePCMPbPbLHC11h->Get("Pi0_PbPb_2.76TeV_0-10%");
+        TH1D* histoPCMPi0CorrectedSpecPbPbLHC11h0010                 = (TH1D*)directoryPi0PbPbLHC11h0010->Get("CorrectedYieldPi0");
+        TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC11h0010 = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h0010->Get("Pi0SystError");
 
-        TH1D* histoPCMPi0CorrectedSpecPbPbLHC10h0010                 = (TH1D*)directoryPi0PbPbLHC10h0010->Get("CorrectedYieldPi0");   
-        TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC10h0010 = (TGraphAsymmErrors*)directoryPi0PbPbLHC10h0010->Get("Pi0SystErrorA"); 
+        TH1D* histoPCMPi0MassDataPbPbLHC11h0010         = (TH1D*)directoryPi0PbPbLHC11h0010->Get("MassPi0");
+        histoPCMPi0MassDataPbPbLHC11h0010->Scale(1000.);
+        TH1D* histoPCMPi0MassMCPbPbLHC11h0010           = (TH1D*)directoryPi0PbPbLHC11h0010->Get("TrueMassPi0");
+        histoPCMPi0MassMCPbPbLHC11h0010->Scale(1000.);
+
+        TH1D* histoPCMPi0WidthDataPbPbLHC11h0010        = (TH1D*)directoryPi0PbPbLHC11h0010->Get("FWHMPi0MeV");
+        TH1D* histoPCMPi0WidthMCPbPbLHC11h0010          = (TH1D*)directoryPi0PbPbLHC11h0010->Get("TrueFWHMPi0MeV");
+        TH1D* histoPi0TrueEffiPtPbPbLHC11h0010          = (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_Efficiency");
+        TH1D* histoPi0AcceptPtPbPbLHC11h0010            = (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_Acceptance");
+        TH1D* histoMCYieldPi0PtPbPbLHC11h0010           = (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_HIJING_Input_Reweighted");
+        TH1D* histoMCYieldPi0PtPbPbLHC11hWOWeights0010  = (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_HIJING_Input");
+        //    TH1D* histoPi0WeightsPbPbLHC11h0010       = (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_HIJING_Weights");
+        TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSig0010   = (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_HIJING_Input_Reweighted_AddedSig");
+        TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSigWOWeights0010 = (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_HIJING_Input_AddedSig");
+        TH1D* histoPi0RawYieldPbPbLHC11h0010            = (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_RawYieldPerEvent");
+
+        TGraphAsymmErrors* graphPi0RAA0010              = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h0010->Get("Pi0RAA");
+        TGraphAsymmErrors* graphPi0RAASys0010           = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h0010->Get("Pi0RAASys");
+
+    cout << "0-5%" << endl;
+    TDirectory* directoryPi0PbPbLHC11h0005 = (TDirectory*)filePCMPbPbLHC11h->Get("Pi0_PbPb_2.76TeV_0-5%");
+
+        TH1D* histoPCMPi0CorrectedSpecPbPbLHC11h0005                 = (TH1D*)directoryPi0PbPbLHC11h0005->Get("CorrectedYieldPi0");
+        TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC11h0005 = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h0005->Get("Pi0SystError");
+
+        TH1D* histoPCMPi0MassDataPbPbLHC11h0005         = (TH1D*)directoryPi0PbPbLHC11h0005->Get("MassPi0");
+        histoPCMPi0MassDataPbPbLHC11h0005->Scale(1000.);
+        TH1D* histoPCMPi0MassMCPbPbLHC11h0005           = (TH1D*)directoryPi0PbPbLHC11h0005->Get("TrueMassPi0");
+        histoPCMPi0MassMCPbPbLHC11h0005->Scale(1000.);
+        TH1D* histoPCMPi0WidthDataPbPbLHC11h0005        = (TH1D*)directoryPi0PbPbLHC11h0005->Get("FWHMPi0MeV");
+        TH1D* histoPCMPi0WidthMCPbPbLHC11h0005          = (TH1D*)directoryPi0PbPbLHC11h0005->Get("TrueFWHMPi0MeV");
+        TH1D* histoPi0TrueEffiPtPbPbLHC11h0005          = (TH1D*)directoryPi0PbPbLHC11h0005->Get("Pi0_Efficiency");
+        TH1D* histoPi0AcceptPtPbPbLHC11h0005            = (TH1D*)directoryPi0PbPbLHC11h0005->Get("Pi0_Acceptance");
+        TH1D* histoMCYieldPi0PtPbPbLHC11h0005           = (TH1D*)directoryPi0PbPbLHC11h0005->Get("Pi0_HIJING_Input_Reweighted");
+        TH1D* histoMCYieldPi0PtPbPbLHC11hWOWeights0005  = (TH1D*)directoryPi0PbPbLHC11h0005->Get("Pi0_HIJING_Input");
+        //    TH1D* histoPi0WeightsPbPbLHC11h0005       = (TH1D*)directoryPi0PbPbLHC11h0005->Get("Pi0_HIJING_Weights");
+        TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSig0005   = (TH1D*)directoryPi0PbPbLHC11h0005->Get("Pi0_HIJING_Input_Reweighted_AddedSig");
+        TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSigWOWeights0005 = (TH1D*)directoryPi0PbPbLHC11h0005->Get("Pi0_HIJING_Input_AddedSig");
+        TH1D* histoPi0RawYieldPbPbLHC11h0005            = (TH1D*)directoryPi0PbPbLHC11h0005->Get("Pi0_RawYieldPerEvent");
+
+        TGraphAsymmErrors* graphPi0RAA0005              = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h0005->Get("Pi0RAA");
+        TGraphAsymmErrors* graphPi0RAASys0005           = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h0005->Get("Pi0RAASys");
+
+    cout << "5-10%" << endl;
+    TDirectory* directoryPi0PbPbLHC11h0510 = (TDirectory*)filePCMPbPbLHC11h->Get("Pi0_PbPb_2.76TeV_5-10%");
+
+        TH1D* histoPCMPi0CorrectedSpecPbPbLHC11h0510                 = (TH1D*)directoryPi0PbPbLHC11h0510->Get("CorrectedYieldPi0");
+        TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC11h0510 = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h0510->Get("Pi0SystError");
+
+        TH1D* histoPCMPi0MassDataPbPbLHC11h0510         = (TH1D*)directoryPi0PbPbLHC11h0510->Get("MassPi0");
+        histoPCMPi0MassDataPbPbLHC11h0510->Scale(1000.);
+        TH1D* histoPCMPi0MassMCPbPbLHC11h0510           = (TH1D*)directoryPi0PbPbLHC11h0510->Get("TrueMassPi0");
+        histoPCMPi0MassMCPbPbLHC11h0510->Scale(1000.);
+
+        TH1D* histoPCMPi0WidthDataPbPbLHC11h0510        = (TH1D*)directoryPi0PbPbLHC11h0510->Get("FWHMPi0MeV");
+        TH1D* histoPCMPi0WidthMCPbPbLHC11h0510          = (TH1D*)directoryPi0PbPbLHC11h0510->Get("TrueFWHMPi0MeV");
+        TH1D* histoPi0TrueEffiPtPbPbLHC11h0510          = (TH1D*)directoryPi0PbPbLHC11h0510->Get("Pi0_Efficiency");
+        TH1D* histoPi0AcceptPtPbPbLHC11h0510            = (TH1D*)directoryPi0PbPbLHC11h0510->Get("Pi0_Acceptance");
+        TH1D* histoMCYieldPi0PtPbPbLHC11h0510           = (TH1D*)directoryPi0PbPbLHC11h0510->Get("Pi0_HIJING_Input_Reweighted");
+        TH1D* histoMCYieldPi0PtPbPbLHC11hWOWeights0510  = (TH1D*)directoryPi0PbPbLHC11h0510->Get("Pi0_HIJING_Input");
+        //    TH1D* histoPi0WeightsPbPbLHC11h0510       = (TH1D*)directoryPi0PbPbLHC11h0510->Get("Pi0_HIJING_Weights");
+        TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSig0510   = (TH1D*)directoryPi0PbPbLHC11h0510->Get("Pi0_HIJING_Input_Reweighted_AddedSig");
+        TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSigWOWeights0510 = (TH1D*)directoryPi0PbPbLHC11h0510->Get("Pi0_HIJING_Input_AddedSig");
+        TH1D* histoPi0RawYieldPbPbLHC11h0510            = (TH1D*)directoryPi0PbPbLHC11h0510->Get("Pi0_RawYieldPerEvent");
+
+    cout << "20-40%" << endl;
+    TDirectory* directoryPi0PbPbLHC11h2040 = (TDirectory*)filePCMPbPbLHC11h->Get("Pi0_PbPb_2.76TeV_20-40%");
+
+        TH1D* histoPCMPi0CorrectedSpecPbPbLHC11h2040                 = (TH1D*)directoryPi0PbPbLHC11h2040->Get("CorrectedYieldPi0");
+        TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC11h2040 = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h2040->Get("Pi0SystError");
+
+        TH1D* histoPCMPi0MassDataPbPbLHC11h2040         = (TH1D*)directoryPi0PbPbLHC11h2040->Get("MassPi0");
+        histoPCMPi0MassDataPbPbLHC11h2040->Scale(1000.);
+        TH1D* histoPCMPi0MassMCPbPbLHC11h2040           = (TH1D*)directoryPi0PbPbLHC11h2040->Get("TrueMassPi0");
+        histoPCMPi0MassDataPbPbLHC11h2040->Scale(1000.);
+
+        TH1D* histoPCMPi0WidthDataPbPbLHC11h2040        = (TH1D*)directoryPi0PbPbLHC11h2040->Get("FWHMPi0MeV");
+        TH1D* histoPCMPi0WidthMCPbPbLHC11h2040          = (TH1D*)directoryPi0PbPbLHC11h2040->Get("TrueFWHMPi0MeV");
+        TH1D* histoPi0TrueEffiPtPbPbLHC11h2040          = (TH1D*)directoryPi0PbPbLHC11h2040->Get("Pi0_Efficiency");
+        TH1D* histoPi0AcceptPtPbPbLHC11h2040            = (TH1D*)directoryPi0PbPbLHC11h2040->Get("Pi0_Acceptance");
+        TH1D* histoMCYieldPi0PtPbPbLHC11h2040           = (TH1D*)directoryPi0PbPbLHC11h2040->Get("Pi0_HIJING_Input_Reweighted");
+        TH1D* histoMCYieldPi0PtPbPbLHC11hWOWeights2040  = (TH1D*)directoryPi0PbPbLHC11h2040->Get("Pi0_HIJING_Input");
+        //    TH1D* histoPi0WeightsPbPbLHC11h2040       = (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_HIJING_Weights");
+        TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSig2040   = (TH1D*)directoryPi0PbPbLHC11h2040->Get("Pi0_HIJING_Input_Reweighted_AddedSig");
+        TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSigWOWeights2040 = (TH1D*)directoryPi0PbPbLHC11h2040->Get("Pi0_HIJING_Input_AddedSig");
+        TH1D* histoPi0RawYieldPbPbLHC11h2040            = (TH1D*)directoryPi0PbPbLHC11h2040->Get("Pi0_RawYieldPerEvent");
+
+        TGraphAsymmErrors* graphPi0RAA2040              = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h2040->Get("Pi0RAA");
+        TGraphAsymmErrors* graphPi0RAASys2040           = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h2040->Get("Pi0RAASys");
+
+    cout << "20-50%" << endl;
+    TDirectory* directoryPi0PbPbLHC11h2050 = (TDirectory*)filePCMPbPbLHC11h->Get("Pi0_PbPb_2.76TeV_20-50%");
+
+        TH1D* histoPCMPi0CorrectedSpecPbPbLHC11h2050                 = (TH1D*)directoryPi0PbPbLHC11h2050->Get("CorrectedYieldPi0");
+        TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC11h2050 = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h2050->Get("Pi0SystError");
+
+        TH1D* histoPCMPi0MassDataPbPbLHC11h2050         = (TH1D*)directoryPi0PbPbLHC11h2050->Get("MassPi0");
+        histoPCMPi0MassDataPbPbLHC11h2050->Scale(1000.);
+        TH1D* histoPCMPi0MassMCPbPbLHC11h2050           = (TH1D*)directoryPi0PbPbLHC11h2050->Get("TrueMassPi0");
+        histoPCMPi0MassMCPbPbLHC11h2050->Scale(1000.);
+
+        TH1D* histoPCMPi0WidthDataPbPbLHC11h2050        = (TH1D*)directoryPi0PbPbLHC11h2050->Get("FWHMPi0MeV");
+        TH1D* histoPCMPi0WidthMCPbPbLHC11h2050          = (TH1D*)directoryPi0PbPbLHC11h2050->Get("TrueFWHMPi0MeV");
+        TH1D* histoPi0TrueEffiPtPbPbLHC11h2050          = (TH1D*)directoryPi0PbPbLHC11h2050->Get("Pi0_Efficiency");
+        TH1D* histoPi0AcceptPtPbPbLHC11h2050            = (TH1D*)directoryPi0PbPbLHC11h2050->Get("Pi0_Acceptance");
+        TH1D* histoMCYieldPi0PtPbPbLHC11h2050           = (TH1D*)directoryPi0PbPbLHC11h2050->Get("Pi0_HIJING_Input_Reweighted");
+        TH1D* histoMCYieldPi0PtPbPbLHC11hWOWeights2050  = (TH1D*)directoryPi0PbPbLHC11h2050->Get("Pi0_HIJING_Input");
+        //    TH1D* histoPi0WeightsPbPbLHC11h2050       = (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_HIJING_Weights");
+        TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSig2050   = (TH1D*)directoryPi0PbPbLHC11h2050->Get("Pi0_HIJING_Input_Reweighted_AddedSig");
+        TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSigWOWeights2050 = (TH1D*)directoryPi0PbPbLHC11h2050->Get("Pi0_HIJING_Input_AddedSig");
+        TH1D* histoPi0RawYieldPbPbLHC11h2050            = (TH1D*)directoryPi0PbPbLHC11h2050->Get("Pi0_RawYieldPerEvent");
+
+        TGraphAsymmErrors* graphPi0RAA2050              = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h2050->Get("Pi0RAA");
+        TGraphAsymmErrors* graphPi0RAASys2050           = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h2050->Get("Pi0RAASys");
+
+
+    cout << "Eta 0-10%" << endl;
+    TDirectory* directoryEtaPbPbLHC11h0010 = (TDirectory*)filePCMPbPbLHC11h->Get("Eta_PbPb_2.76TeV_0-10%");
+
+        TH1D* histoPCMEtaCorrectedSpecPbPbLHC11h0010                 = (TH1D*)directoryEtaPbPbLHC11h0010->Get("CorrectedYieldEta");
+        TGraphAsymmErrors* graphPCMEtaCorrectedSpecSysPbPbLHC11h0010 =        (TGraphAsymmErrors*)directoryEtaPbPbLHC11h0010->Get("EtaSystError");
+
+        TH1D* histoPCMEtaMassDataPbPbLHC11h0010         = (TH1D*)directoryEtaPbPbLHC11h0010->Get("MassEta");
+        histoPCMEtaMassDataPbPbLHC11h0010->Scale(1000.);
+        TH1D* histoPCMEtaMassMCPbPbLHC11h0010           = (TH1D*)directoryEtaPbPbLHC11h0010->Get("TrueMassEta");
+        histoPCMEtaMassMCPbPbLHC11h0010->Scale(1000.);
+
+        TH1D* histoPCMEtaWidthDataPbPbLHC11h0010        = (TH1D*)directoryEtaPbPbLHC11h0010->Get("FWHMEtaMeV");
+        TH1D* histoPCMEtaWidthMCPbPbLHC11h0010          = (TH1D*)directoryEtaPbPbLHC11h0010->Get("TrueFWHMEtaMeV");
+        TH1D* histoEtaTrueEffiPtPbPbLHC11h0010          = (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_Efficiency");
+        TH1D* histoEtaAcceptPtPbPbLHC11h0010            = (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_Acceptance");
+        TH1D* histoMCYieldEtaPtPbPbLHC11h0010           = (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_HIJING_Input_Reweighted");
+        TH1D* histoMCYieldEtaPtPbPbLHC11hWOWeights0010  = (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_HIJING_Input");
+        //    TH1D* histoEtaWeightsPbPbLHC11h0010       = (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_HIJING_Weights");
+        TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSig0010   = (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_HIJING_Input_Reweighted_AddedSig");
+        TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSigWOWeights0010 = (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_HIJING_Input_AddedSig");
+        TH1D* histoEtaRawYieldPbPbLHC11h0010            = (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_RawYieldPerEvent");
+
+        TGraphAsymmErrors* graphEtaRAA0010              = (TGraphAsymmErrors*)directoryEtaPbPbLHC11h0010->Get("EtaRAA");
+        TGraphAsymmErrors* graphEtaRAASys0010           = (TGraphAsymmErrors*)directoryEtaPbPbLHC11h0010->Get("EtaRAASys");
+
+    cout << "0-5%" << endl;
+    TDirectory* directoryEtaPbPbLHC11h0005 = (TDirectory*)filePCMPbPbLHC11h->Get("Eta_PbPb_2.76TeV_0-5%");
+
+        TH1D* histoPCMEtaCorrectedSpecPbPbLHC11h0005                 = (TH1D*)directoryEtaPbPbLHC11h0005->Get("CorrectedYieldEta");
+        TGraphAsymmErrors* graphPCMEtaCorrectedSpecSysPbPbLHC11h0005 = (TGraphAsymmErrors*)directoryEtaPbPbLHC11h0005->Get("EtaSystError");
+
+        TH1D* histoPCMEtaMassDataPbPbLHC11h0005         = (TH1D*)directoryEtaPbPbLHC11h0005->Get("MassEta");
+        histoPCMEtaMassDataPbPbLHC11h0005->Scale(1000.);
+        TH1D* histoPCMEtaMassMCPbPbLHC11h0005           = (TH1D*)directoryEtaPbPbLHC11h0005->Get("TrueMassEta");
+        histoPCMEtaMassMCPbPbLHC11h0005->Scale(1000.);
+
+        TH1D* histoPCMEtaWidthDataPbPbLHC11h0005        = (TH1D*)directoryEtaPbPbLHC11h0005->Get("FWHMEtaMeV");
+        TH1D* histoPCMEtaWidthMCPbPbLHC11h0005          = (TH1D*)directoryEtaPbPbLHC11h0005->Get("TrueFWHMEtaMeV");
+        TH1D* histoEtaTrueEffiPtPbPbLHC11h0005          = (TH1D*)directoryEtaPbPbLHC11h0005->Get("Eta_Efficiency");
+        TH1D* histoEtaAcceptPtPbPbLHC11h0005            = (TH1D*)directoryEtaPbPbLHC11h0005->Get("Eta_Acceptance");
+        TH1D* histoMCYieldEtaPtPbPbLHC11h0005           = (TH1D*)directoryEtaPbPbLHC11h0005->Get("Eta_HIJING_Input_Reweighted");
+        TH1D* histoMCYieldEtaPtPbPbLHC11hWOWeights0005  = (TH1D*)directoryEtaPbPbLHC11h0005->Get("Eta_HIJING_Input");
+        //    TH1D* histoEtaWeightsPbPbLHC11h0005 = (TH1D*)directoryEtaPbPbLHC11h0005->Get("Eta_HIJING_Weights");
+        TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSig0005   = (TH1D*)directoryEtaPbPbLHC11h0005->Get("Eta_HIJING_Input_Reweighted_AddedSig");
+        TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSigWOWeights0005 = (TH1D*)directoryEtaPbPbLHC11h0005->Get("Eta_HIJING_Input_AddedSig");
+        TH1D* histoEtaRawYieldPbPbLHC11h0005            = (TH1D*)directoryEtaPbPbLHC11h0005->Get("Eta_RawYieldPerEvent");
+
+        TGraphAsymmErrors* graphEtaRAA0005              = (TGraphAsymmErrors*)directoryEtaPbPbLHC11h0005->Get("EtaRAA");
+        TGraphAsymmErrors* graphEtaRAASys0005           = (TGraphAsymmErrors*)directoryEtaPbPbLHC11h0005->Get("EtaRAASys");
+
+    cout << "5-10%" << endl;
+    TDirectory* directoryEtaPbPbLHC11h0510 = (TDirectory*)filePCMPbPbLHC11h->Get("Eta_PbPb_2.76TeV_5-10%");
+
+        TH1D* histoPCMEtaCorrectedSpecPbPbLHC11h0510                 = (TH1D*)directoryEtaPbPbLHC11h0510->Get("CorrectedYieldEta");
+        TGraphAsymmErrors* graphPCMEtaCorrectedSpecSysPbPbLHC11h0510 = (TGraphAsymmErrors*)directoryEtaPbPbLHC11h0510->Get("EtaSystError");
+
+        TH1D* histoPCMEtaMassDataPbPbLHC11h0510         = (TH1D*)directoryEtaPbPbLHC11h0510->Get("MassEta");
+        histoPCMEtaMassDataPbPbLHC11h0510->Scale(1000.);
+        TH1D* histoPCMEtaMassMCPbPbLHC11h0510           = (TH1D*)directoryEtaPbPbLHC11h0510->Get("TrueMassEta");
+        histoPCMEtaMassMCPbPbLHC11h0510->Scale(1000.);
+
+        TH1D* histoPCMEtaWidthDataPbPbLHC11h0510        = (TH1D*)directoryEtaPbPbLHC11h0510->Get("FWHMEtaMeV");
+        TH1D* histoPCMEtaWidthMCPbPbLHC11h0510          = (TH1D*)directoryEtaPbPbLHC11h0510->Get("TrueFWHMEtaMeV");
+        TH1D* histoEtaTrueEffiPtPbPbLHC11h0510          = (TH1D*)directoryEtaPbPbLHC11h0510->Get("Eta_Efficiency");
+        TH1D* histoEtaAcceptPtPbPbLHC11h0510            = (TH1D*)directoryEtaPbPbLHC11h0510->Get("Eta_Acceptance");
+        TH1D* histoMCYieldEtaPtPbPbLHC11h0510           = (TH1D*)directoryEtaPbPbLHC11h0510->Get("Eta_HIJING_Input_Reweighted");
+        TH1D* histoMCYieldEtaPtPbPbLHC11hWOWeights0510  = (TH1D*)directoryEtaPbPbLHC11h0510->Get("Eta_HIJING_Input");
+        //    TH1D* histoEtaWeightsPbPbLHC11h0510       = (TH1D*)directoryEtaPbPbLHC11h0510->Get("Eta_HIJING_Weights");
+        TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSig0510   = (TH1D*)directoryEtaPbPbLHC11h0510->Get("Eta_HIJING_Input_Reweighted_AddedSig");
+        TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSigWOWeights0510 = (TH1D*)directoryEtaPbPbLHC11h0510->Get("Eta_HIJING_Input_AddedSig");
+        TH1D* histoEtaRawYieldPbPbLHC11h0510            = (TH1D*)directoryEtaPbPbLHC11h0510->Get("Eta_RawYieldPerEvent");
+
+    cout << "20-40%" << endl;
+    TDirectory* directoryEtaPbPbLHC11h2040 = (TDirectory*)filePCMPbPbLHC11h->Get("Eta_PbPb_2.76TeV_20-40%");
+
+        TH1D* histoPCMEtaCorrectedSpecPbPbLHC11h2040                 = (TH1D*)directoryEtaPbPbLHC11h2040->Get("CorrectedYieldEta");
+        TGraphAsymmErrors* graphPCMEtaCorrectedSpecSysPbPbLHC11h2040 = (TGraphAsymmErrors*)directoryEtaPbPbLHC11h2040->Get("EtaSystError");
+
+        TH1D* histoPCMEtaMassDataPbPbLHC11h2040         = (TH1D*)directoryEtaPbPbLHC11h2040->Get("MassEta");
+        histoPCMEtaMassDataPbPbLHC11h2040->Scale(1000.);
+        TH1D* histoPCMEtaMassMCPbPbLHC11h2040           = (TH1D*)directoryEtaPbPbLHC11h2040->Get("TrueMassEta");
+        histoPCMEtaMassMCPbPbLHC11h2040->Scale(1000.);
+
+        TH1D* histoPCMEtaWidthDataPbPbLHC11h2040        = (TH1D*)directoryEtaPbPbLHC11h2040->Get("FWHMEtaMeV");
+        TH1D* histoPCMEtaWidthMCPbPbLHC11h2040          = (TH1D*)directoryEtaPbPbLHC11h2040->Get("TrueFWHMEtaMeV");
+        TH1D* histoEtaTrueEffiPtPbPbLHC11h2040          = (TH1D*)directoryEtaPbPbLHC11h2040->Get("Eta_Efficiency");
+        TH1D* histoEtaAcceptPtPbPbLHC11h2040            = (TH1D*)directoryEtaPbPbLHC11h2040->Get("Eta_Acceptance");
+        TH1D* histoMCYieldEtaPtPbPbLHC11h2040           = (TH1D*)directoryEtaPbPbLHC11h2040->Get("Eta_HIJING_Input_Reweighted");
+        TH1D* histoMCYieldEtaPtPbPbLHC11hWOWeights2040  = (TH1D*)directoryEtaPbPbLHC11h2040->Get("Eta_HIJING_Input");
+        //    TH1D* histoEtaWeightsPbPbLHC11h0010       = (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_HIJING_Weights");
+        TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSig2040   = (TH1D*)directoryEtaPbPbLHC11h2040->Get("Eta_HIJING_Input_Reweighted_AddedSig");
+        TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSigWOWeights2040 = (TH1D*)directoryEtaPbPbLHC11h2040->Get("Eta_HIJING_Input_AddedSig");
+        TH1D* histoEtaRawYieldPbPbLHC11h2040            = (TH1D*)directoryEtaPbPbLHC11h2040->Get("Eta_RawYieldPerEvent");
+
+        TGraphAsymmErrors* graphEtaRAA2040              = (TGraphAsymmErrors*)directoryEtaPbPbLHC11h2040->Get("EtaRAA");
+        TGraphAsymmErrors* graphEtaRAASys2040           = (TGraphAsymmErrors*)directoryEtaPbPbLHC11h2040->Get("EtaRAASys");
+
+    cout << "20-50%" << endl;
+    TDirectory* directoryEtaPbPbLHC11h2050 = (TDirectory*)filePCMPbPbLHC11h->Get("Eta_PbPb_2.76TeV_20-50%");
+
+        TH1D* histoPCMEtaCorrectedSpecPbPbLHC11h2050                 = (TH1D*)directoryEtaPbPbLHC11h2050->Get("CorrectedYieldEta");
+        TGraphAsymmErrors* graphPCMEtaCorrectedSpecSysPbPbLHC11h2050 = (TGraphAsymmErrors*)directoryEtaPbPbLHC11h2050->Get("EtaSystError");
+
+        TH1D* histoPCMEtaMassDataPbPbLHC11h2050         = (TH1D*)directoryEtaPbPbLHC11h2050->Get("MassEta");
+        histoPCMEtaMassDataPbPbLHC11h2050->Scale(1000.);
+        TH1D* histoPCMEtaMassMCPbPbLHC11h2050           = (TH1D*)directoryEtaPbPbLHC11h2050->Get("TrueMassEta");
+        histoPCMEtaMassMCPbPbLHC11h2050->Scale(1000.);
+
+        TH1D* histoPCMEtaWidthDataPbPbLHC11h2050        = (TH1D*)directoryEtaPbPbLHC11h2050->Get("FWHMEtaMeV");
+        TH1D* histoPCMEtaWidthMCPbPbLHC11h2050          = (TH1D*)directoryEtaPbPbLHC11h2050->Get("TrueFWHMEtaMeV");
+        TH1D* histoEtaTrueEffiPtPbPbLHC11h2050          = (TH1D*)directoryEtaPbPbLHC11h2050->Get("Eta_Efficiency");
+        TH1D* histoEtaAcceptPtPbPbLHC11h2050            = (TH1D*)directoryEtaPbPbLHC11h2050->Get("Eta_Acceptance");
+        TH1D* histoMCYieldEtaPtPbPbLHC11h2050           = (TH1D*)directoryEtaPbPbLHC11h2050->Get("Eta_HIJING_Input_Reweighted");
+        TH1D* histoMCYieldEtaPtPbPbLHC11hWOWeights2050  = (TH1D*)directoryEtaPbPbLHC11h2050->Get("Eta_HIJING_Input");
+        TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSig2050   = (TH1D*)directoryEtaPbPbLHC11h2050->Get("Eta_HIJING_Input_Reweighted_AddedSig");
+        TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSigWOWeights2050 = (TH1D*)directoryEtaPbPbLHC11h2050->Get("Eta_HIJING_Input_AddedSig");
+        TH1D* histoEtaRawYieldPbPbLHC11h2050            = (TH1D*)directoryEtaPbPbLHC11h2050->Get("Eta_RawYieldPerEvent");
+
+        TGraphAsymmErrors* graphEtaRAA2050              = (TGraphAsymmErrors*)directoryEtaPbPbLHC11h2050->Get("EtaRAA");
+        TGraphAsymmErrors* graphEtaRAASys2050           = (TGraphAsymmErrors*)directoryEtaPbPbLHC11h2050->Get("EtaRAASys");
+
+
+
+    //Pi0 PbPb paper results (combined PCM + PHOS)
+    TFile *filePublished    = new TFile(nameFilePi0PbPbPaper.Data());
+    TGraphAsymmErrors* graphYieldsPublished0010     = (TGraphAsymmErrors*)filePublished->Get("InvYieldPbPbPCMStatErr_0010");
+    TGraphAsymmErrors* graphYieldsSysPublished0010  = (TGraphAsymmErrors*)filePublished->Get("InvYieldPbPbPCMSysErr_0010");
+    TGraphAsymmErrors* graphYieldsPublished2040     = (TGraphAsymmErrors*)filePublished->Get("InvYieldPbPbPCMStatErr_2040");
+    TGraphAsymmErrors* graphYieldsSysPublished2040  = (TGraphAsymmErrors*)filePublished->Get("InvYieldPbPbPCMSysErr_2040");
+
+    TGraphAsymmErrors* graphRAAPublished0005        = (TGraphAsymmErrors*)filePublished->Get("graphRAAStatErr_0510");
+	TGraphAsymmErrors* graphRAASysPublished0005     = (TGraphAsymmErrors*)filePublished->Get("graphRAASysErr_0510");
+    TGraphAsymmErrors* graphRAAPublished0510        = (TGraphAsymmErrors*)filePublished->Get("graphRAAStatErr_0510");
+    TGraphAsymmErrors* graphRAASysPublished0510     = (TGraphAsymmErrors*)filePublished->Get("graphRAASysErr_0510");
+    TGraphAsymmErrors* graphRAAPublished0010        = (TGraphAsymmErrors*)filePublished->Get("graphRAAStatErr_0010");
+	TGraphAsymmErrors* graphRAASysPublished0010     = (TGraphAsymmErrors*)filePublished->Get("graphRAASysErr_0010");
+	TGraphAsymmErrors* graphRAAPublished2040        = (TGraphAsymmErrors*)filePublished->Get("graphRAAStatErr_2040");
+	TGraphAsymmErrors* graphRAASysPublished2040     = (TGraphAsymmErrors*)filePublished->Get("graphRAASysErr_2040");
+
+	
+    //Pi0 PbPb PCM only results
+    TFile *filePCMPbPbLHC10h    = new TFile(nameFilePi0PbPbLHC10h.Data());
+    cout << "Pi0 0-5%" << endl;
+    TDirectory* directoryPi0PbPbLHC10h0005 = (TDirectory*)filePCMPbPbLHC10h->Get("Pi0_PbPb_2.76TeV_0-5%");
+        TH1D* histoPCMPi0CorrectedSpecPbPbLHC10h0005                 = (TH1D*)directoryPi0PbPbLHC10h0005->Get("CorrectedYieldPi0");
+        TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC10h0005 = (TGraphAsymmErrors*)directoryPi0PbPbLHC10h0005->Get("Pi0SystErrorA");
+        TH1D* histoPi0TrueEffiPtPbPbLHC10h0005                       = (TH1D*)directoryPi0PbPbLHC10h0005->Get("Pi0_Efficiency");
+        TH1D* histoPi0RawYieldPbPbLHC10h0005                         = (TH1D*)directoryPi0PbPbLHC10h0005->Get("Pi0_RawYieldPerEvent");
+
+    cout << "Pi0 5-10%" << endl;
+    TDirectory* directoryPi0PbPbLHC10h0510 = (TDirectory*)filePCMPbPbLHC10h->Get("Pi0_PbPb_2.76TeV_5-10%");
+        TH1D* histoPCMPi0CorrectedSpecPbPbLHC10h0510                 = (TH1D*)directoryPi0PbPbLHC10h0510->Get("CorrectedYieldPi0");
+        TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC10h0510 = (TGraphAsymmErrors*)directoryPi0PbPbLHC10h0510->Get("Pi0SystErrorA");
+        TH1D* histoPi0TrueEffiPtPbPbLHC10h0510                       = (TH1D*)directoryPi0PbPbLHC10h0510->Get("Pi0_Efficiency");
+        TH1D* histoPi0RawYieldPbPbLHC10h0510                         = (TH1D*)directoryPi0PbPbLHC10h0510->Get("Pi0_RawYieldPerEvent");
+
+    cout << "Pi0 0-10%" << endl;
+    TDirectory* directoryPi0PbPbLHC10h0010 = (TDirectory*)filePCMPbPbLHC10h->Get("Pi0_PbPb_2.76TeV_0-10%");
+        TH1D* histoPCMPi0CorrectedSpecPbPbLHC10h0010                 = (TH1D*)directoryPi0PbPbLHC10h0010->Get("CorrectedYieldPi0");
+        TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC10h0010 = (TGraphAsymmErrors*)directoryPi0PbPbLHC10h0010->Get("Pi0SystErrorA");
         TH1D* histoPi0TrueEffiPtPbPbLHC10h0010                       = (TH1D*)directoryPi0PbPbLHC10h0010->Get("Pi0_Efficiency");
         TH1D* histoPi0RawYieldPbPbLHC10h0010                         = (TH1D*)directoryPi0PbPbLHC10h0010->Get("Pi0_RawYieldPerEvent");
 
-
     cout << "20-40%" << endl;
-    TDirectory* directoryPi0PbPbLHC10h2040 = (TDirectory*)filePCMPbPbLHC10h->Get("Pi0_PbPb_2.76TeV_20-40%"); 
-    
+    TDirectory* directoryPi0PbPbLHC10h2040 = (TDirectory*)filePCMPbPbLHC10h->Get("Pi0_PbPb_2.76TeV_20-40%");
         TH1D* histoPCMPi0CorrectedSpecPbPbLHC10h2040                 = (TH1D*)directoryPi0PbPbLHC10h2040->Get("CorrectedYieldPi0");   
         TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC10h2040 = (TGraphAsymmErrors*)directoryPi0PbPbLHC10h2040->Get("Pi0SystErrorA"); 
         TH1D* histoPi0TrueEffiPtPbPbLHC10h2040                       = (TH1D*)directoryPi0PbPbLHC10h2040->Get("Pi0_Efficiency");
         TH1D* histoPi0RawYieldPbPbLHC10h2040                         = (TH1D*)directoryPi0PbPbLHC10h2040->Get("Pi0_RawYieldPerEvent");
 
 
-		
-/////////////////////////////////////////////// Charged pions/kaons file /////////////////////////////////////////////////////////
-		
-	TFile *fileChargedKaonRAA = new TFile("ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/RAA_Kaon_08052014.root");
-	TH1D *histoStatChargedKaon0005 = (TH1D*)fileChargedKaonRAA->Get("RAAKaon_Stat_0_5");
-	TH1D *histoSystChargedKaon0005 = (TH1D*)fileChargedKaonRAA->Get("RAAKaon_Syst_0_5");
-// 	histoStatChargedKaon0005->Scale(0.5);
-// 	histoSystChargedKaon0005->Scale(0.5);
-
-	TGraphAsymmErrors* graphChargedKaonRAA0005 = new TGraphAsymmErrors(histoStatChargedKaon0005); 
-	TGraphAsymmErrors* graphChargedKaonRAASys0005 = new TGraphAsymmErrors(histoSystChargedKaon0005); 
+    //Charged pion and kaon spectra
+	TFile *fileChargedKaonRAA   = new TFile(nameFileChargedPionKaonSpectra.Data());
+	TH1D *histoStatChargedKaon0005                  = (TH1D*)fileChargedKaonRAA->Get("RAAKaon_Stat_0_5");
+	TH1D *histoSystChargedKaon0005                  = (TH1D*)fileChargedKaonRAA->Get("RAAKaon_Syst_0_5");
+	TGraphAsymmErrors* graphChargedKaonRAA0005      = new TGraphAsymmErrors(histoStatChargedKaon0005);
+	TGraphAsymmErrors* graphChargedKaonRAASys0005   = new TGraphAsymmErrors(histoSystChargedKaon0005);
 	
-	TH1D *histoStatChargedKaon0510 = (TH1D*)fileChargedKaonRAA->Get("RAAKaon_Stat_5_10");
-	TH1D *histoSystChargedKaon0510 = (TH1D*)fileChargedKaonRAA->Get("RAAKaon_Syst_5_10");
-// 	histoStatChargedKaon0510->Scale(0.5);
-// 	histoSystChargedKaon0510->Scale(0.5);
-	
-	TGraphAsymmErrors* graphChargedKaonRAA0510 = new TGraphAsymmErrors(histoStatChargedKaon0510); 
-	TGraphAsymmErrors* graphChargedKaonRAASys0510 = new TGraphAsymmErrors(histoSystChargedKaon0510); 
+	TH1D *histoStatChargedKaon0510                  = (TH1D*)fileChargedKaonRAA->Get("RAAKaon_Stat_5_10");
+	TH1D *histoSystChargedKaon0510                  = (TH1D*)fileChargedKaonRAA->Get("RAAKaon_Syst_5_10");
+	TGraphAsymmErrors* graphChargedKaonRAA0510      = new TGraphAsymmErrors(histoStatChargedKaon0510);
+	TGraphAsymmErrors* graphChargedKaonRAASys0510   = new TGraphAsymmErrors(histoSystChargedKaon0510);
 
-
-	TH1D* histoStatChargedKaon0010 = (TH1D*)histoStatChargedKaon0510->Clone("histoStatChargedKaon0010");
-	TH1D* histoSystChargedKaon0010 = (TH1D*)histoSystChargedKaon0510->Clone("histoSystChargedKaon0010");
+	TH1D* histoStatChargedKaon0010                  = (TH1D*)histoStatChargedKaon0510->Clone("histoStatChargedKaon0010");
+	TH1D* histoSystChargedKaon0010                  = (TH1D*)histoSystChargedKaon0510->Clone("histoSystChargedKaon0010");
 	histoStatChargedKaon0010->Add(histoStatChargedKaon0005);
 	histoSystChargedKaon0010->Add(histoSystChargedKaon0005);
 	histoStatChargedKaon0010->Scale(0.5);
 	histoSystChargedKaon0010->Scale(0.5);
-
 	for (Int_t i = 1; i < histoSystChargedKaon0010->GetNbinsX()+1; i++){
 		Double_t relErrLowerCent = 0;
 		if (histoSystChargedKaon0005->GetBinContent(i) != 0){
@@ -324,42 +582,33 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 			histoSystChargedKaon0010->SetBinError(i, histoSystChargedKaon0010->GetBinContent(i)*relErrLowerCent/100);
 		}         
 	}   
+	TGraphAsymmErrors* graphChargedKaonRAA0010      = new TGraphAsymmErrors(histoStatChargedKaon0010);
+	TGraphAsymmErrors* graphChargedKaonRAASys0010   = new TGraphAsymmErrors(histoSystChargedKaon0010);
 
-	TGraphAsymmErrors* graphChargedKaonRAA0010 = new TGraphAsymmErrors(histoStatChargedKaon0010); 
-	TGraphAsymmErrors* graphChargedKaonRAASys0010 = new TGraphAsymmErrors(histoSystChargedKaon0010); 
-
-	TH1D *histoStatChargedKaon2040 = (TH1D*)fileChargedKaonRAA->Get("RAAKaon_Stat_20_40");
-	TH1D *histoSystChargedKaon2040 = (TH1D*)fileChargedKaonRAA->Get("RAAKaon_Syst_20_40");
-	TGraphAsymmErrors* graphChargedKaonRAA2040 = new TGraphAsymmErrors(histoStatChargedKaon2040); 
-	TGraphAsymmErrors* graphChargedKaonRAASys2040 = new TGraphAsymmErrors(histoSystChargedKaon2040); 
+	TH1D *histoStatChargedKaon2040                  = (TH1D*)fileChargedKaonRAA->Get("RAAKaon_Stat_20_40");
+	TH1D *histoSystChargedKaon2040                  = (TH1D*)fileChargedKaonRAA->Get("RAAKaon_Syst_20_40");
+	TGraphAsymmErrors* graphChargedKaonRAA2040      = new TGraphAsymmErrors(histoStatChargedKaon2040);
+	TGraphAsymmErrors* graphChargedKaonRAASys2040   = new TGraphAsymmErrors(histoSystChargedKaon2040);
 
 
+    //Charged pion and kaon Raa
+	TFile *fileChargedPionRAA                       = new TFile(nameFileChargedPionKaonRAA.Data());
+	TH1D *histoStatChargedPion0005                  = (TH1D*)fileChargedPionRAA->Get("RAAPion_Stat_0_5");
+	TH1D *histoSystChargedPion0005                  = (TH1D*)fileChargedPionRAA->Get("RAAPion_Syst_0_5");
+	TGraphAsymmErrors* graphChargedPionRAA0005      = new TGraphAsymmErrors(histoStatChargedPion0005);
+	TGraphAsymmErrors* graphChargedPionRAASys0005   = new TGraphAsymmErrors(histoSystChargedPion0005);
 	
-	TFile *fileChargedPionRAA = new TFile("ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/RAA_Pion_08052014.root");
-	TH1D *histoStatChargedPion0005 = (TH1D*)fileChargedPionRAA->Get("RAAPion_Stat_0_5");
-	TH1D *histoSystChargedPion0005 = (TH1D*)fileChargedPionRAA->Get("RAAPion_Syst_0_5");
-// 	histoStatChargedPion0005->Scale(0.5);
-// 	histoSystChargedPion0005->Scale(0.5);
+	TH1D *histoStatChargedPion0510                  = (TH1D*)fileChargedPionRAA->Get("RAAPion_Stat_5_10");
+	TH1D *histoSystChargedPion0510                  = (TH1D*)fileChargedPionRAA->Get("RAAPion_Syst_5_10");
+	TGraphAsymmErrors* graphChargedPionRAA0510      = new TGraphAsymmErrors(histoStatChargedPion0510);
+	TGraphAsymmErrors* graphChargedPionRAASys0510   = new TGraphAsymmErrors(histoSystChargedPion0510);
 
-	TGraphAsymmErrors* graphChargedPionRAA0005 = new TGraphAsymmErrors(histoStatChargedPion0005); 
-	TGraphAsymmErrors* graphChargedPionRAASys0005 = new TGraphAsymmErrors(histoSystChargedPion0005); 
-	
-	TH1D *histoStatChargedPion0510 = (TH1D*)fileChargedPionRAA->Get("RAAPion_Stat_5_10");
-	TH1D *histoSystChargedPion0510 = (TH1D*)fileChargedPionRAA->Get("RAAPion_Syst_5_10");
-// 	histoStatChargedPion0510->Scale(0.5);
-// 	histoSystChargedPion0510->Scale(0.5);
-	
-	TGraphAsymmErrors* graphChargedPionRAA0510 = new TGraphAsymmErrors(histoStatChargedPion0510); 
-	TGraphAsymmErrors* graphChargedPionRAASys0510 = new TGraphAsymmErrors(histoSystChargedPion0510); 
-
-
-	TH1D* histoStatChargedPion0010 = (TH1D*)histoStatChargedPion0510->Clone("histoStatChargedPion0010");
-	TH1D* histoSystChargedPion0010 = (TH1D*)histoSystChargedPion0510->Clone("histoSystChargedPion0010");
+	TH1D* histoStatChargedPion0010                  = (TH1D*)histoStatChargedPion0510->Clone("histoStatChargedPion0010");
+	TH1D* histoSystChargedPion0010                  = (TH1D*)histoSystChargedPion0510->Clone("histoSystChargedPion0010");
 	histoStatChargedPion0010->Add(histoStatChargedPion0005);
 	histoSystChargedPion0010->Add(histoSystChargedPion0005);
 	histoStatChargedPion0010->Scale(0.5);
 	histoSystChargedPion0010->Scale(0.5);
-
 	for (Int_t i = 1; i < histoSystChargedPion0010->GetNbinsX()+1; i++){
 		Double_t relErrLowerCent = 0;
 		if (histoSystChargedPion0005->GetBinContent(i) != 0){
@@ -376,434 +625,167 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 			histoSystChargedPion0010->SetBinError(i, histoSystChargedPion0010->GetBinContent(i)*relErrLowerCent/100);
 		}         
 	}   
-
-	TGraphAsymmErrors* graphChargedPionRAA0010 = new TGraphAsymmErrors(histoStatChargedPion0010); 
-	TGraphAsymmErrors* graphChargedPionRAASys0010 = new TGraphAsymmErrors(histoSystChargedPion0010); 
+	TGraphAsymmErrors* graphChargedPionRAA0010      = new TGraphAsymmErrors(histoStatChargedPion0010);
+	TGraphAsymmErrors* graphChargedPionRAASys0010   = new TGraphAsymmErrors(histoSystChargedPion0010);
 	
-	TH1D *histoStatChargedPion2040 = (TH1D*)fileChargedPionRAA->Get("RAAPion_Stat_20_40");
-	TH1D *histoSystChargedPion2040 = (TH1D*)fileChargedPionRAA->Get("RAAPion_Syst_20_40");
-	TGraphAsymmErrors* graphChargedPionRAA2040 = new TGraphAsymmErrors(histoStatChargedPion2040); 
-	TGraphAsymmErrors* graphChargedPionRAASys2040 = new TGraphAsymmErrors(histoSystChargedPion2040); 
+	TH1D *histoStatChargedPion2040                  = (TH1D*)fileChargedPionRAA->Get("RAAPion_Stat_20_40");
+	TH1D *histoSystChargedPion2040                  = (TH1D*)fileChargedPionRAA->Get("RAAPion_Syst_20_40");
+	TGraphAsymmErrors* graphChargedPionRAA2040      = new TGraphAsymmErrors(histoStatChargedPion2040);
+	TGraphAsymmErrors* graphChargedPionRAASys2040   = new TGraphAsymmErrors(histoSystChargedPion2040);
 	
 
-////////////////////////////////////////////////// PHENIX adn SPS file //////////////////////////////////////////////////////////////////
-	
-	TFile *filePHENIX = new TFile("ExternalInputPbPb/OtherExperiments/DataCompilationFromOtherEnergiesPbPbWithEta.root");
-	TGraphErrors* 	graphWA98_17_3GeVRAA_0013= (TGraphErrors*)filePHENIX->Get("graphWA98RAA_0013");
-	TGraphErrors* graphPHENIX200GeVRAA_0010= (TGraphErrors*)filePHENIX->Get("graphPHENIX200GeVRAA_0010");
-	TGraphErrors* graphPHENIX200GeVRAA_2040= (TGraphErrors*)filePHENIX->Get("graphPHENIX200GeVRAA_2040");
-	TGraphErrors* graphPHENIX39GeVRAA_0010= (TGraphErrors*)filePHENIX->Get("graphPHENIX39GeVRAA_0010");
-	TGraphErrors* graphPHENIX39GeVRAA_2040= (TGraphErrors*)filePHENIX->Get("graphPHENIX39GeVRAA_2040");
-	TGraphErrors* graphPHENIX62GeVRAA_0010= (TGraphErrors*)filePHENIX->Get("graphPHENIX62GeVRAA_0010");
-	TGraphErrors* graphPHENIX62GeVRAA_2040= (TGraphErrors*)filePHENIX->Get("graphPHENIX62GeVRAA_2040");
-	TGraphErrors* graphPHENIX200GeVRAAvsNPartAt7GeVc = (TGraphErrors*)filePHENIX->Get("graphPHENIX200GeVRAAvsNPartAt7GeVc");
-	TGraphErrors* graphPHENIX62GeVRAAvsNPartAt7GeVc = (TGraphErrors*)filePHENIX->Get("graphPHENIX62GeVRAAvsNPartAt7GeVc");
-	TGraphErrors* graphPHENIX39GeVRAAvsNPartAt7GeVc = (TGraphErrors*)filePHENIX->Get("graphPHENIX39GeVRAAvsNPartAt7GeVc");
+	//RHIC and SPS results
+	TFile *filePHENIX   = new TFile(nameFileOtherExp.Data());
+	TGraphErrors* 	graphWA98_17_3GeVRAA_0013           = (TGraphErrors*)filePHENIX->Get("graphWA98RAA_0013");
+	TGraphErrors* graphPHENIX200GeVRAA_0010             = (TGraphErrors*)filePHENIX->Get("graphPHENIX200GeVRAA_0010");
+	TGraphErrors* graphPHENIX200GeVRAA_2040             = (TGraphErrors*)filePHENIX->Get("graphPHENIX200GeVRAA_2040");
+	TGraphErrors* graphPHENIX39GeVRAA_0010              = (TGraphErrors*)filePHENIX->Get("graphPHENIX39GeVRAA_0010");
+	TGraphErrors* graphPHENIX39GeVRAA_2040              = (TGraphErrors*)filePHENIX->Get("graphPHENIX39GeVRAA_2040");
+	TGraphErrors* graphPHENIX62GeVRAA_0010              = (TGraphErrors*)filePHENIX->Get("graphPHENIX62GeVRAA_0010");
+	TGraphErrors* graphPHENIX62GeVRAA_2040              = (TGraphErrors*)filePHENIX->Get("graphPHENIX62GeVRAA_2040");
+	TGraphErrors* graphPHENIX200GeVRAAvsNPartAt7GeVc    = (TGraphErrors*)filePHENIX->Get("graphPHENIX200GeVRAAvsNPartAt7GeVc");
+	TGraphErrors* graphPHENIX62GeVRAAvsNPartAt7GeVc     = (TGraphErrors*)filePHENIX->Get("graphPHENIX62GeVRAAvsNPartAt7GeVc");
+	TGraphErrors* graphPHENIX39GeVRAAvsNPartAt7GeVc     = (TGraphErrors*)filePHENIX->Get("graphPHENIX39GeVRAAvsNPartAt7GeVc");
 
-	TGraphAsymmErrors* graphEtaRAAPHENIX0010 = (TGraphAsymmErrors*)filePHENIX->Get("graphPHENIX200GeVEtaRAA_0010"); 
-// 	TGraphAsymmErrors* graphPi0RAAPHENIX0010 = (TGraphAsymmErrors*)filePHENIX->Get("graphPHENIX200GeVRAA_0010"); 
-	TGraphAsymmErrors* graphEtaRAAPHENIX2040 = (TGraphAsymmErrors*)filePHENIX->Get("graphPHENIX200GeVEtaRAA_2040"); 
-// 	TGraphAsymmErrors* graphPi0RAAPHENIX2040 = (TGraphAsymmErrors*)filePHENIX->Get("graphPHENIX200GeVRAA_2040"); 
-	TGraphAsymmErrors* graphEtaRAAPHENIX2060 = (TGraphAsymmErrors*)filePHENIX->Get("graphPHENIX200GeVEtaRAA_2060"); 
+	TGraphAsymmErrors* graphEtaRAAPHENIX0010            = (TGraphAsymmErrors*)filePHENIX->Get("graphPHENIX200GeVEtaRAA_0010");
+	TGraphAsymmErrors* graphEtaRAAPHENIX2040            = (TGraphAsymmErrors*)filePHENIX->Get("graphPHENIX200GeVEtaRAA_2040");
+	TGraphAsymmErrors* graphEtaRAAPHENIX2060            = (TGraphAsymmErrors*)filePHENIX->Get("graphPHENIX200GeVEtaRAA_2060");
 
 	Double_t normErr0010 = pow(pow(xSection2760GeVErrpp/(xSection2760GeVpp*1e3),2)+pow((tAAErr0010/tAA0010),2)+pow((commonCentralityErr0010/100),2),0.5);
 	Double_t normErr2040 = pow(pow(xSection2760GeVErrpp/(xSection2760GeVpp*1e3),2)+pow((tAAErr2040/tAA2040),2)+pow((commonCentralityErr2040/100),2),0.5);
 	Double_t normErr2050 = pow(pow(xSection2760GeVErrpp/(xSection2760GeVpp*1e3),2)+pow((tAAErr2040/tAA2040),2)+pow((commonCentralityErr2040/100),2),0.5);
 	
 	
-////////////////////////////////////////////////////////////////// PP file //////////////////////////////////////////////////////////////////////////////
-	TFile* fileNeutralPionDataPP = new TFile(nameFilePP.Data());
+    //PP PCM only
+//     TFile* fileNeutralPionDataPP = new TFile(nameFilePP.Data());
+// 	TDirectory* directoryPi07TeV =      (TDirectory*)fileNeutralPionDataPP->Get("Pi07TeV");
+// 	TH1D* histoAccPi07TeV =             (TH1D*)directoryPi07TeV->Get("AcceptancePi0");
+// 	TH1D* histoTrueEffPtPi07TeV =       (TH1D*)directoryPi07TeV->Get("EfficiencyPi0");
+// 	TH1D* histoRawYieldPi07TeV =        (TH1D*)directoryPi07TeV->Get("RAWYieldPerEventsPi0");
+// 	TDirectory* directoryEta7TeV =      (TDirectory*)fileNeutralPionDataPP->Get("Eta7TeV");
+// 	TH1D* histoCorrectedYieldEta7TeV = (TH1D*)directoryEta7TeV->Get("CorrectedYieldEta");
+// 	TGraphAsymmErrors* graphCorrectedYieldSysEta7TeV =   (TGraphAsymmErrors*)directoryEta7TeV->Get("EtaSystError");
+// 	TH1D* histoAccEta7TeV =             (TH1D*)directoryEta7TeV->Get("AcceptanceEta");
+// 	TH1D* histoTrueEffPtEta7TeV =       (TH1D*)directoryEta7TeV->Get("EfficiencyEta");
+// 	TH1D* histoRawYieldEta7TeV =        (TH1D*)directoryEta7TeV->Get("RAWYieldPerEventsEta");
+// 	TH1D* histoEtaMassData7TeV =        (TH1D*)directoryEta7TeV->Get("MassEta");
+// 	TH1D* histoEtaWidthData7TeV =       (TH1D*)directoryEta7TeV->Get("FWHMEtaMeV");
+// 	TH1D* histoEtaMassMC7TeV =          (TH1D*)directoryEta7TeV->Get("TrueMassEta");
+// 	TH1D* histoEtaWidthMC7TeV =         (TH1D*)directoryEta7TeV->Get("TrueFWHMEtaMeV");
+// 	TH1D* histoRatioEtaPi07TeV=        (TH1D*)directoryEta7TeV->Get("EtatoPi0RatioConversion");
+// 	TGraphAsymmErrors* graphRatioEtaPi0SystErr7TeV=             (TGraphAsymmErrors*)directoryEta7TeV->Get("EtatoPi0RatioConversionSys");
+//
+// 	histoEtaMassData7TeV->Scale(1000.);
+// 	histoEtaMassMC7TeV->Scale(1000.);
+// 	histoEtaMassData7TeV->SetBinContent(histoEtaMassData7TeV->GetNbinsX(),0);
+// 	histoEtaMassMC7TeV->SetBinContent(histoEtaMassMC7TeV->GetNbinsX(),0);
+// 	histoEtaWidthData7TeV->SetBinContent(histoEtaWidthData7TeV->GetNbinsX(),10000.);
+// 	histoEtaWidthMC7TeV->SetBinContent(histoEtaWidthMC7TeV->GetNbinsX(),10000.);
+//
+// 	TDirectory* directoryPi0900GeV =    (TDirectory*)fileNeutralPionDataPP->Get("Pi0900GeV");
+// 	TH1D* histoAccPi0900GeV =           (TH1D*)directoryPi0900GeV->Get("AcceptancePi0");
+// 	TH1D* histoTrueEffPtPi0900GeV =  (TH1D*)directoryPi0900GeV->Get("EfficiencyPi0");
+// 	TH1D* histoRawYieldPi0900GeV =      (TH1D*)directoryPi0900GeV->Get("RAWYieldPerEventsPi0");
+// 	TDirectory* directoryEta900GeV =    (TDirectory*)fileNeutralPionDataPP->Get("Eta900GeV");
+// 	TH1D* histoCorrectedYieldEta900GeV =     (TH1D*)directoryEta900GeV->Get("CorrectedYieldEta");
+// 	TGraphAsymmErrors* graphCorrectedYieldSysEta900GeV =  (TGraphAsymmErrors*)directoryEta900GeV->Get("EtaSystError");
+// 	TH1D* histoAccEta900GeV =           (TH1D*)directoryEta900GeV->Get("AcceptanceEta");
+// 	TH1D* histoTrueEffPtEta900GeV =  (TH1D*)directoryEta900GeV->Get("EfficiencyEta");
+// 	TH1D* histoRawYieldEta900GeV =      (TH1D*)directoryEta900GeV->Get("RAWYieldPerEventsEta");
+// 	TH1D* histoRatioEtaPi0900GeV=      (TH1D*)directoryEta900GeV->Get("EtatoPi0RatioConversion");
+// 	TGraphAsymmErrors* graphRatioEtaPi0SystErr900GeV=           (TGraphAsymmErrors*)directoryEta900GeV->Get("EtatoPi0RatioConversionSys");
 	
-	TDirectory* directoryPi07TeV =      (TDirectory*)fileNeutralPionDataPP->Get("Pi07TeV"); 
-	TH1D* histoAccPi07TeV =             (TH1D*)directoryPi07TeV->Get("AcceptancePi0");
-	TH1D* histoTrueEffPtPi07TeV =       (TH1D*)directoryPi07TeV->Get("EfficiencyPi0");
-	TH1D* histoRawYieldPi07TeV =        (TH1D*)directoryPi07TeV->Get("RAWYieldPerEventsPi0");
-	TDirectory* directoryEta7TeV =      (TDirectory*)fileNeutralPionDataPP->Get("Eta7TeV");
-	TH1D* histoCorrectedYieldEta7TeV = (TH1D*)directoryEta7TeV->Get("CorrectedYieldEta");
-	TGraphAsymmErrors* graphCorrectedYieldSysEta7TeV =   (TGraphAsymmErrors*)directoryEta7TeV->Get("EtaSystError");
-	TH1D* histoAccEta7TeV =             (TH1D*)directoryEta7TeV->Get("AcceptanceEta");
-	TH1D* histoTrueEffPtEta7TeV =       (TH1D*)directoryEta7TeV->Get("EfficiencyEta");
-	TH1D* histoRawYieldEta7TeV =        (TH1D*)directoryEta7TeV->Get("RAWYieldPerEventsEta");
-	TH1D* histoEtaMassData7TeV =        (TH1D*)directoryEta7TeV->Get("MassEta");
-	TH1D* histoEtaWidthData7TeV =       (TH1D*)directoryEta7TeV->Get("FWHMEtaMeV");
-	TH1D* histoEtaMassMC7TeV =          (TH1D*)directoryEta7TeV->Get("TrueMassEta");
-	TH1D* histoEtaWidthMC7TeV =         (TH1D*)directoryEta7TeV->Get("TrueFWHMEtaMeV");
-	TH1D* histoRatioEtaPi07TeV=        (TH1D*)directoryEta7TeV->Get("EtatoPi0RatioConversion");   
-	TGraphAsymmErrors* graphRatioEtaPi0SystErr7TeV=             (TGraphAsymmErrors*)directoryEta7TeV->Get("EtatoPi0RatioConversionSys");
+// 	TDirectory* directoryPi02760GeV =   (TDirectory*)fileNeutralPionDataPP->Get("Pi02.76TeV");
+// 	TH1D* histoAccPi02760GeV =          (TH1D*)directoryPi02760GeV->Get("AcceptancePi0");
+// 	TH1D* histoTrueEffPtPi02760GeV =    (TH1D*)directoryPi02760GeV->Get("EfficiencyPi0");
+// 	TH1D* histoRawYieldPi02760GeV =  (TH1D*)directoryPi02760GeV->Get("RAWYieldPerEventsPi0");
+// 	TH1D* graphInvSectionPCMPi02760GeV =  (TH1D*)directoryPi02760GeV->Get("CorrectedYieldPi0");
+// 	TGraphAsymmErrors* graphInvSectionPCMSysPi02760GeV = (TGraphAsymmErrors*)directoryPi02760GeV->Get("Pi0SystError");
+// 	TDirectory* directoryEta2760GeV =   (TDirectory*)fileNeutralPionDataPP->Get("Eta2.76TeV");
+// 	TH1D* histoAccEta2760GeV =          (TH1D*)directoryEta2760GeV->Get("AcceptanceEta");
+// 	TH1D* histoTrueEffPtEta2760GeV =    (TH1D*)directoryEta2760GeV->Get("EfficiencyEta");
+// 	TH1D* graphInvSectionPCMEta2760GeV =  (TH1D*)directoryEta2760GeV->Get("CorrectedYieldEta");
+// 	TGraphAsymmErrors* graphInvSectionPCMSysEta2760GeV = (TGraphAsymmErrors*)directoryEta2760GeV->Get("EtaSystError");
+// 	TH1D* histoRawYieldEta2760GeV =  (TH1D*)directoryEta2760GeV->Get("RAWYieldPerEventsEta");
+// 	TH1D* histoRatioEtaPi02760GeV=     (TH1D*)directoryEta2760GeV->Get("EtatoPi0RatioConversion");
+// 	TGraphAsymmErrors* graphRatioEtaPi0SystErr2760GeV=          (TGraphAsymmErrors*)directoryEta2760GeV->Get("EtatoPi0RatioConversionSys");
+//
+// 	TH1D* histoEtaPCMMassData2760GeV =     (TH1D*)directoryEta2760GeV->Get("MassEta");
+// 	TH1D* histoEtaPCMWidthData2760GeV =    (TH1D*)directoryEta2760GeV->Get("FWHMEtaMeV");
+// 	TH1D* histoEtaPCMMassMC2760GeV =       (TH1D*)directoryEta2760GeV->Get("TrueMassEta");
+// 	TH1D* histoEtaPCMWidthMC2760GeV =      (TH1D*)directoryEta2760GeV->Get("TrueFWHMEtaMeV");
+// 	histoEtaPCMMassData2760GeV->Scale(1000.);
+// 	histoEtaPCMMassMC2760GeV->Scale(1000.);
+// 	histoEtaPCMMassData2760GeV->SetBinContent(histoEtaPCMMassData2760GeV->GetNbinsX(),0);
+// 	histoEtaPCMMassMC2760GeV->SetBinContent(histoEtaPCMMassMC2760GeV->GetNbinsX(),0);
+// 	histoEtaPCMWidthData2760GeV->SetBinContent(histoEtaPCMWidthData2760GeV->GetNbinsX(),10000.);
+// 	histoEtaPCMWidthMC2760GeV->SetBinContent(histoEtaPCMWidthMC2760GeV->GetNbinsX(),10000.);
+//
+// 	TH1D* histoPi0PCMMassData2760GeV =      (TH1D*)directoryPi02760GeV->Get("MassPi0");
+// 	TH1D* histoPi0PCMWidthData2760GeV =     (TH1D*)directoryPi02760GeV->Get("FWHMPi0MeV");
+// 	TH1D* histoPi0PCMMassMC2760GeV =        (TH1D*)directoryPi02760GeV->Get("TrueMassPi0");
+// 	TH1D* histoPi0PCMWidthMC2760GeV =          (TH1D*)directoryPi02760GeV->Get("TrueFWHMPi0MeV");
+// 	histoPi0PCMMassData2760GeV->Scale(1000.);
+// 	histoPi0PCMMassMC2760GeV->Scale(1000.);
+// 	histoPi0PCMMassData2760GeV->SetBinContent(histoPi0PCMMassData2760GeV->GetNbinsX(),0);
+// 	histoPi0PCMMassMC2760GeV->SetBinContent(histoPi0PCMMassMC2760GeV->GetNbinsX(),0);
+// 	histoPi0PCMWidthData2760GeV->SetBinContent(histoPi0PCMWidthData2760GeV->GetNbinsX(),10000.);
+// 	histoPi0PCMWidthMC2760GeV->SetBinContent(histoPi0PCMWidthMC2760GeV->GetNbinsX(),10000.);
 
-	histoEtaMassData7TeV->Scale(1000.);
-	histoEtaMassMC7TeV->Scale(1000.);
-	histoEtaMassData7TeV->SetBinContent(histoEtaMassData7TeV->GetNbinsX(),0);
-	histoEtaMassMC7TeV->SetBinContent(histoEtaMassMC7TeV->GetNbinsX(),0);
-	histoEtaWidthData7TeV->SetBinContent(histoEtaWidthData7TeV->GetNbinsX(),10000.);
-	histoEtaWidthMC7TeV->SetBinContent(histoEtaWidthMC7TeV->GetNbinsX(),10000.);
+// 	TFile*   fileCocktail =                new TFile("CocktailInput/cocktail_allCentpluspp.root");
+// 	TDirectory* directoryCocktailpp2760GeV =           (TDirectory*)fileCocktail->Get("cocktail_pp_2760GeV_qcd");
+// 	TH1D* histoEtaFromCocktailpp2760GeV = (TH1D*)directoryCocktailpp2760GeV->Get("ptEta");
+// 	TDirectory* directoryCocktail0010 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_0010_qcd");
+// 	TH1D* histoEtaFromCocktail0010 = (TH1D*)directoryCocktail0010->Get("ptEta");
+// 	TDirectory* directoryCocktail0510 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_0510_qcd");
+// 	TH1D* histoEtaFromCocktail0510 = (TH1D*)directoryCocktail0510->Get("ptEta");
+// 	TDirectory* directoryCocktail1020 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_1020_qcd");
+// 	TH1D* histoEtaFromCocktail1020 = (TH1D*)directoryCocktail1020->Get("ptEta");
+// 	TDirectory* directoryCocktail2040 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_2040_qcd");
+// 	TH1D* histoEtaFromCocktail2040 = (TH1D*)directoryCocktail2040->Get("ptEta");
+// 	TDirectory* directoryCocktail4060 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_4060_qcd");
+// 	TH1D* histoEtaFromCocktail4060 = (TH1D*)directoryCocktail4060->Get("ptEta");
+// 	TDirectory* directoryCocktail6080 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_6080_qcd");
+// 	TH1D* histoEtaFromCocktail6080 = (TH1D*)directoryCocktail6080->Get("ptEta");
+// 	cout << "here 7TeV" << endl;
+	
+	TFile* fileConversionsPP = new TFile(nameFilePP.Data());
+	cout << "Pi0 in pp 2.76TeV" << endl;
+    TDirectory *folderConversionsPi0PP = (TDirectory*)fileConversionsPP->Get("Pi02.76TeV");
+    TF1* fitInvCrossSectionPi0Comb2760GeV = (TF1*)folderConversionsPi0PP->Get("TsallisFitPi0");
+    fitInvCrossSectionPi0Comb2760GeV->SetParameter(0, fitInvCrossSectionPi0Comb2760GeV->GetParameter(0)*1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+    TGraphAsymmErrors* graphInvSectionPCMPi02760GeV=       (TGraphAsymmErrors*)folderConversionsPi0PP->Get("graphInvCrossSectionPi0PCM2760GeVStatErr");
+    graphInvSectionPCMPi02760GeV = ScaleGraph(graphInvSectionPCMPi02760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+    TGraphAsymmErrors* graphInvSectionPCMSysPi02760GeV=        (TGraphAsymmErrors*)folderConversionsPi0PP->Get("graphInvCrossSectionPi0PCM2760GeVSysErr");
+    graphInvSectionPCMSysPi02760GeV = ScaleGraph(graphInvSectionPCMSysPi02760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
 
-	TDirectory* directoryPi0900GeV =    (TDirectory*)fileNeutralPionDataPP->Get("Pi0900GeV"); 
-	TH1D* histoAccPi0900GeV =           (TH1D*)directoryPi0900GeV->Get("AcceptancePi0");
-	TH1D* histoTrueEffPtPi0900GeV =  (TH1D*)directoryPi0900GeV->Get("EfficiencyPi0");
-	TH1D* histoRawYieldPi0900GeV =      (TH1D*)directoryPi0900GeV->Get("RAWYieldPerEventsPi0");
-	TDirectory* directoryEta900GeV =    (TDirectory*)fileNeutralPionDataPP->Get("Eta900GeV"); 
-	TH1D* histoCorrectedYieldEta900GeV =     (TH1D*)directoryEta900GeV->Get("CorrectedYieldEta");
-	TGraphAsymmErrors* graphCorrectedYieldSysEta900GeV =  (TGraphAsymmErrors*)directoryEta900GeV->Get("EtaSystError");
-	TH1D* histoAccEta900GeV =           (TH1D*)directoryEta900GeV->Get("AcceptanceEta");
-	TH1D* histoTrueEffPtEta900GeV =  (TH1D*)directoryEta900GeV->Get("EfficiencyEta");
-	TH1D* histoRawYieldEta900GeV =      (TH1D*)directoryEta900GeV->Get("RAWYieldPerEventsEta");
-	TH1D* histoRatioEtaPi0900GeV=      (TH1D*)directoryEta900GeV->Get("EtatoPi0RatioConversion");   
-	TGraphAsymmErrors* graphRatioEtaPi0SystErr900GeV=           (TGraphAsymmErrors*)directoryEta900GeV->Get("EtatoPi0RatioConversionSys");
-	
-	TDirectory* directoryPi02760GeV =   (TDirectory*)fileNeutralPionDataPP->Get("Pi02.76TeV"); 
-	TH1D* histoAccPi02760GeV =          (TH1D*)directoryPi02760GeV->Get("AcceptancePi0");
-	TH1D* histoTrueEffPtPi02760GeV =    (TH1D*)directoryPi02760GeV->Get("EfficiencyPi0");
-	TH1D* histoRawYieldPi02760GeV =  (TH1D*)directoryPi02760GeV->Get("RAWYieldPerEventsPi0");
-	TH1D* histoCorrectedYieldPi02760GeV =  (TH1D*)directoryPi02760GeV->Get("CorrectedYieldPi0");
-	TGraphAsymmErrors* graphCorrectedYieldSysPi02760GeV = (TGraphAsymmErrors*)directoryPi02760GeV->Get("Pi0SystError"); 
-	TDirectory* directoryEta2760GeV =   (TDirectory*)fileNeutralPionDataPP->Get("Eta2.76TeV"); 
-	TH1D* histoAccEta2760GeV =          (TH1D*)directoryEta2760GeV->Get("AcceptanceEta");
-	TH1D* histoTrueEffPtEta2760GeV =    (TH1D*)directoryEta2760GeV->Get("EfficiencyEta");
-	TH1D* histoCorrectedYieldEta2760GeV =  (TH1D*)directoryEta2760GeV->Get("CorrectedYieldEta");
-	TGraphAsymmErrors* graphCorrectedYieldSysEta2760GeV = (TGraphAsymmErrors*)directoryEta2760GeV->Get("EtaSystError");
-	TH1D* histoRawYieldEta2760GeV =  (TH1D*)directoryEta2760GeV->Get("RAWYieldPerEventsEta");
-	TH1D* histoEtaMassData2760GeV =     (TH1D*)directoryEta2760GeV->Get("MassEta");
-	TH1D* histoEtaWidthData2760GeV =    (TH1D*)directoryEta2760GeV->Get("FWHMEtaMeV");
-	TH1D* histoEtaMassMC2760GeV =       (TH1D*)directoryEta2760GeV->Get("TrueMassEta");
-	TH1D* histoEtaWidthMC2760GeV =      (TH1D*)directoryEta2760GeV->Get("TrueFWHMEtaMeV");
-	TH1D* histoRatioEtaPi02760GeV=     (TH1D*)directoryEta2760GeV->Get("EtatoPi0RatioConversion");   
-	TGraphAsymmErrors* graphRatioEtaPi0SystErr2760GeV=          (TGraphAsymmErrors*)directoryEta2760GeV->Get("EtatoPi0RatioConversionSys");
+    TDirectory *folderConversionsPi0PPSupporting = (TDirectory*)folderConversionsPi0PP->Get("Supporting");
+    TH1D* histoTrueEffPtPi02760GeV =    (TH1D*)folderConversionsPi0PPSupporting->Get("Pi0CorrectionFactorPCM");
+    TH1D* histoPi0PCMMassData2760GeV =     (TH1D*)folderConversionsPi0PPSupporting->Get("Pi0MassDataPCM");
+    TH1D* histoPi0PCMWidthData2760GeV =    (TH1D*)folderConversionsPi0PPSupporting->Get("Pi0WidthDataPCM");
+    TH1D* histoPi0PCMMassMC2760GeV =       (TH1D*)folderConversionsPi0PPSupporting->Get("Pi0MassMCPCM");
+    TH1D* histoPi0PCMWidthMC2760GeV =      (TH1D*)folderConversionsPi0PPSupporting->Get("Pi0WidthMCPCM");
+    histoPi0PCMMassData2760GeV->Scale(1000.);
+    histoPi0PCMMassMC2760GeV->Scale(1000.);
 
-	histoEtaMassData2760GeV->Scale(1000.);
-	histoEtaMassMC2760GeV->Scale(1000.);
-	histoEtaMassData2760GeV->SetBinContent(histoEtaMassData2760GeV->GetNbinsX(),0);
-	histoEtaMassMC2760GeV->SetBinContent(histoEtaMassMC2760GeV->GetNbinsX(),0);
-	histoEtaWidthData2760GeV->SetBinContent(histoEtaWidthData2760GeV->GetNbinsX(),10000.);
-	histoEtaWidthMC2760GeV->SetBinContent(histoEtaWidthMC2760GeV->GetNbinsX(),10000.);
-	
-	TH1D* histoPCMMassDataPP2760GeV =      (TH1D*)directoryPi02760GeV->Get("MassPi0");
-	TH1D* histoPCMWidthDataPP2760GeV =     (TH1D*)directoryPi02760GeV->Get("FWHMPi0MeV");
-	TH1D* histoPCMMassMCPP2760GeV =        (TH1D*)directoryPi02760GeV->Get("TrueMassPi0");
-	TH1D* histoPCMWidthMCPP2760GeV =          (TH1D*)directoryPi02760GeV->Get("TrueFWHMPi0MeV");
-	histoPCMMassDataPP2760GeV->Scale(1000.);
-	histoPCMMassMCPP2760GeV->Scale(1000.);
-	histoPCMMassDataPP2760GeV->SetBinContent(histoPCMMassDataPP2760GeV->GetNbinsX(),0);
-	histoPCMMassMCPP2760GeV->SetBinContent(histoPCMMassMCPP2760GeV->GetNbinsX(),0);
-	histoPCMWidthDataPP2760GeV->SetBinContent(histoPCMWidthDataPP2760GeV->GetNbinsX(),10000.);
-	histoPCMWidthMCPP2760GeV->SetBinContent(histoPCMWidthMCPP2760GeV->GetNbinsX(),10000.);
+    cout << "Eta in pp 2.76TeV" << endl;
+    TDirectory *folderConversionsEtaPP = (TDirectory*)fileConversionsPP->Get("Eta2.76TeV");
+    TF1* fitInvCrossSectionEtaComb2760GeV = (TF1*)folderConversionsEtaPP->Get("TsallisFitEta");
+    fitInvCrossSectionEtaComb2760GeV->SetParameter(0, fitInvCrossSectionEtaComb2760GeV->GetParameter(0)*1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+    TGraphAsymmErrors* graphInvSectionPCMEta2760GeV=       (TGraphAsymmErrors*)folderConversionsEtaPP->Get("graphInvCrossSectionEtaPCM2760GeVStatErr");
+    graphInvSectionPCMEta2760GeV = ScaleGraph(graphInvSectionPCMEta2760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+    TGraphAsymmErrors* graphInvSectionPCMSysEta2760GeV=        (TGraphAsymmErrors*)folderConversionsEtaPP->Get("graphInvCrossSectionEtaPCM2760GeVSysErr");
+    graphInvSectionPCMSysEta2760GeV = ScaleGraph(graphInvSectionPCMSysEta2760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
 
-	
-	
-	
-	TFile*   fileCocktail =                new TFile("CocktailInput/cocktail_allCentpluspp.root");
-	TDirectory* directoryCocktailpp2760GeV =           (TDirectory*)fileCocktail->Get("cocktail_pp_2760GeV_qcd"); 
-	TH1D* histoEtaFromCocktailpp2760GeV = (TH1D*)directoryCocktailpp2760GeV->Get("ptEta"); 
-	TDirectory* directoryCocktail0010 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_0010_qcd"); 
-	TH1D* histoEtaFromCocktail0010 = (TH1D*)directoryCocktail0010->Get("ptEta");  
-	TDirectory* directoryCocktail0510 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_0510_qcd"); 
-	TH1D* histoEtaFromCocktail0510 = (TH1D*)directoryCocktail0510->Get("ptEta");  
-	TDirectory* directoryCocktail1020 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_1020_qcd"); 
-	TH1D* histoEtaFromCocktail1020 = (TH1D*)directoryCocktail1020->Get("ptEta");  
-	TDirectory* directoryCocktail2040 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_2040_qcd"); 
-	TH1D* histoEtaFromCocktail2040 = (TH1D*)directoryCocktail2040->Get("ptEta");  
-	TDirectory* directoryCocktail4060 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_4060_qcd"); 
-	TH1D* histoEtaFromCocktail4060 = (TH1D*)directoryCocktail4060->Get("ptEta");  
-	TDirectory* directoryCocktail6080 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_6080_qcd"); 
-	TH1D* histoEtaFromCocktail6080 = (TH1D*)directoryCocktail6080->Get("ptEta");  
-	cout << "here 7TeV" << endl;
-	
-	TFile* fileNeutralPionCombDataPP = new TFile(nameFilePPpaper.Data());
-	TGraphAsymmErrors* graphInvYieldPi0Comb7TeV= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb7TeV");
-	graphInvYieldPi0Comb7TeV = ScaleGraph(graphInvYieldPi0Comb7TeV,1./xSection7TeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0Comb7TeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb7TeVStatErr");
-	graphInvYieldPi0Comb7TeVStatErr = ScaleGraph(graphInvYieldPi0Comb7TeVStatErr,1./xSection7TeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0Comb7TeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb7TeVSysErr");
-	graphInvYieldPi0Comb7TeVSysErr = ScaleGraph(graphInvYieldPi0Comb7TeVSysErr,1./xSection7TeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0PCM7TeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PCMStat7TeV");
-	graphInvYieldPi0PCM7TeVStatErr = ScaleGraph(graphInvYieldPi0PCM7TeVStatErr,1./xSection7TeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0PCM7TeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PCMSys7TeV");
-	graphInvYieldPi0PCM7TeVSysErr = ScaleGraph(graphInvYieldPi0PCM7TeVSysErr,1./xSection7TeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0PHOS7TeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PHOSStat7TeV");
-	graphInvYieldPi0PHOS7TeVStatErr = ScaleGraph(graphInvYieldPi0PHOS7TeVStatErr,1./xSection7TeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0PHOS7TeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PHOSSys7TeV");
-	graphInvYieldPi0PHOS7TeVSysErr = ScaleGraph(graphInvYieldPi0PHOS7TeVSysErr,1./xSection7TeVppINEL);
-	cout << "here 2.76TeV" << endl;
-	TGraphAsymmErrors* graphInvYieldPi0Comb2760GeV= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb2760GeV");
-	graphInvYieldPi0Comb2760GeV = ScaleGraph(graphInvYieldPi0Comb2760GeV,1./xSection2760GeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0Comb2760GeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb2760GeVStatErr");
-	graphInvYieldPi0Comb2760GeVStatErr = ScaleGraph(graphInvYieldPi0Comb2760GeVStatErr,1./xSection2760GeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0Comb2760GeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb2760GeVSysErr");
-	graphInvYieldPi0Comb2760GeVSysErr = ScaleGraph(graphInvYieldPi0Comb2760GeVSysErr,1./xSection2760GeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0PCM2760GeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PCM2760GeVStatErr");
-	graphInvYieldPi0PCM2760GeVStatErr = ScaleGraph(graphInvYieldPi0PCM2760GeVStatErr,1./xSection2760GeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0PCM2760GeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PCM2760GeVSysErr");
-	graphInvYieldPi0PCM2760GeVSysErr = ScaleGraph(graphInvYieldPi0PCM2760GeVSysErr,1./xSection2760GeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0PHOS2760GeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PHOS2760GeVStatErr");
-	graphInvYieldPi0PHOS2760GeVStatErr = ScaleGraph(graphInvYieldPi0PHOS2760GeVStatErr,1./xSection2760GeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0PHOS2760GeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PHOS2760GeVSysErr");
-	graphInvYieldPi0PHOS2760GeVSysErr = ScaleGraph(graphInvYieldPi0PHOS2760GeVSysErr,1./xSection2760GeVppINEL);
-	
-	cout << "here 900 GeV" << endl;
-	TGraphAsymmErrors* graphInvYieldPi0Comb900GeV= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb900GeV");
-	graphInvYieldPi0Comb900GeV = ScaleGraph(graphInvYieldPi0Comb900GeV,1./xSection900GeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0Comb900GeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb900GeVStatErr");
-	graphInvYieldPi0Comb900GeVStatErr = ScaleGraph(graphInvYieldPi0Comb900GeVStatErr,1./xSection900GeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0Comb900GeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0Comb900GeVSysErr");
-	graphInvYieldPi0Comb900GeVSysErr = ScaleGraph(graphInvYieldPi0Comb900GeVSysErr,1./xSection900GeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0PCM900GeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PCMStat900GeV");
-	graphInvYieldPi0PCM900GeVStatErr = ScaleGraph(graphInvYieldPi0PCM900GeVStatErr,1./xSection900GeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0PCM900GeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PCMSys900GeV");
-	graphInvYieldPi0PCM900GeVSysErr = ScaleGraph(graphInvYieldPi0PCM900GeVSysErr,1./xSection900GeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0PHOS900GeVStatErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PHOSStat900GeV");
-	graphInvYieldPi0PHOS900GeVStatErr = ScaleGraph(graphInvYieldPi0PHOS900GeVStatErr,1./xSection900GeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0PHOS900GeVSysErr= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PHOSSys900GeV");
-	graphInvYieldPi0PHOS900GeVSysErr = ScaleGraph(graphInvYieldPi0PHOS900GeVSysErr,1./xSection900GeVppINEL);
-      
-////////////////////////////////////////////////////////////////// LHC11h file //////////////////////////////////////////////////////////////////////////////   
-	TFile*   filePCMPbPbLHC11h = new TFile(nameFilePbPbLHC11h.Data());
-     
-//////////////////////// Pi0 ////////////////////////////   
-	cout << "Pi0 0-10%" << endl;
-	TDirectory* directoryPi0PbPbLHC11h0010 = (TDirectory*)filePCMPbPbLHC11h->Get("Pi0_PbPb_2.76TeV_0-10%"); 
+    TDirectory *folderConversionsEtaPPSupporting = (TDirectory*)folderConversionsEtaPP->Get("Supporting");
+    TH1D* histoTrueEffPtEta2760GeV =    (TH1D*)folderConversionsEtaPPSupporting->Get("EtaCorrectionFactorPCM");
+    TH1D* histoEtaPCMMassData2760GeV =     (TH1D*)folderConversionsEtaPPSupporting->Get("EtaMassDataPCM");
+    TH1D* histoEtaPCMWidthData2760GeV =    (TH1D*)folderConversionsEtaPPSupporting->Get("EtaWidthDataPCM");
+    TH1D* histoEtaPCMMassMC2760GeV =       (TH1D*)folderConversionsEtaPPSupporting->Get("EtaMassMCPCM");
+    TH1D* histoEtaPCMWidthMC2760GeV =      (TH1D*)folderConversionsEtaPPSupporting->Get("EtaWidthMCPCM");
+    histoEtaPCMMassData2760GeV->Scale(1000.);
+    histoEtaPCMMassMC2760GeV->Scale(1000.);
 
-		TH1D* histoPCMPi0CorrectedSpecPbPbLHC11h0010 				 = (TH1D*)directoryPi0PbPbLHC11h0010->Get("CorrectedYieldPi0");   
-		TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC11h0010 = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h0010->Get("Pi0SystError"); 
-		
-		TH1D* histoPCMPi0MassDataPbPbLHC11h0010 		= (TH1D*)directoryPi0PbPbLHC11h0010->Get("MassPi0");
-		histoPCMPi0MassDataPbPbLHC11h0010->Scale(1000.);
-		TH1D* histoPCMPi0MassMCPbPbLHC11h0010 			= (TH1D*)directoryPi0PbPbLHC11h0010->Get("TrueMassPi0");
-		histoPCMPi0MassMCPbPbLHC11h0010->Scale(1000.);
-	
-		TH1D* histoPCMPi0WidthDataPbPbLHC11h0010 		= (TH1D*)directoryPi0PbPbLHC11h0010->Get("FWHMPi0MeV");
-		TH1D* histoPCMPi0WidthMCPbPbLHC11h0010 			= (TH1D*)directoryPi0PbPbLHC11h0010->Get("TrueFWHMPi0MeV");
-		TH1D* histoPi0TrueEffiPtPbPbLHC11h0010 			= (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_Efficiency");
-		TH1D* histoPi0AcceptPtPbPbLHC11h0010 			= (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_Acceptance");
-		TH1D* histoMCYieldPi0PtPbPbLHC11h0010		 	= (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_HIJING_Input_Reweighted");
-		TH1D* histoMCYieldPi0PtPbPbLHC11hWOWeights0010 	= (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_HIJING_Input");
-		//    TH1D* histoPi0WeightsPbPbLHC11h0010	 	= (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_HIJING_Weights");
-		TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSig0010 	= (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_HIJING_Input_Reweighted_AddedSig");
-		TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSigWOWeights0010 = (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_HIJING_Input_AddedSig");
-		TH1D* histoPi0RawYieldPbPbLHC11h0010 			= (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_RawYieldPerEvent");
-	
-		TGraphAsymmErrors* graphPi0RAA0010 				= (TGraphAsymmErrors*)directoryPi0PbPbLHC11h0010->Get("Pi0RAA"); 
-		TGraphAsymmErrors* graphPi0RAASys0010 			= (TGraphAsymmErrors*)directoryPi0PbPbLHC11h0010->Get("Pi0RAASys"); 
-   
-	cout << "0-5%" << endl;
-	TDirectory* directoryPi0PbPbLHC11h0005 = (TDirectory*)filePCMPbPbLHC11h->Get("Pi0_PbPb_2.76TeV_0-5%"); 
-	
-		TH1D* histoPCMPi0CorrectedSpecPbPbLHC11h0005 				 = (TH1D*)directoryPi0PbPbLHC11h0005->Get("CorrectedYieldPi0");   
-		TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC11h0005 = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h0005->Get("Pi0SystError"); 
-		
-		TH1D* histoPCMPi0MassDataPbPbLHC11h0005 		= (TH1D*)directoryPi0PbPbLHC11h0005->Get("MassPi0");
-		histoPCMPi0MassDataPbPbLHC11h0005->Scale(1000.);
-		TH1D* histoPCMPi0MassMCPbPbLHC11h0005 			= (TH1D*)directoryPi0PbPbLHC11h0005->Get("TrueMassPi0");
-		histoPCMPi0MassMCPbPbLHC11h0005->Scale(1000.);
-		TH1D* histoPCMPi0WidthDataPbPbLHC11h0005 		= (TH1D*)directoryPi0PbPbLHC11h0005->Get("FWHMPi0MeV");
-		TH1D* histoPCMPi0WidthMCPbPbLHC11h0005 			= (TH1D*)directoryPi0PbPbLHC11h0005->Get("TrueFWHMPi0MeV");
-		TH1D* histoPi0TrueEffiPtPbPbLHC11h0005 			= (TH1D*)directoryPi0PbPbLHC11h0005->Get("Pi0_Efficiency");
-		TH1D* histoPi0AcceptPtPbPbLHC11h0005 			= (TH1D*)directoryPi0PbPbLHC11h0005->Get("Pi0_Acceptance");
-		TH1D* histoMCYieldPi0PtPbPbLHC11h0005 			= (TH1D*)directoryPi0PbPbLHC11h0005->Get("Pi0_HIJING_Input_Reweighted");
-		TH1D* histoMCYieldPi0PtPbPbLHC11hWOWeights0005 	= (TH1D*)directoryPi0PbPbLHC11h0005->Get("Pi0_HIJING_Input");
-		//    TH1D* histoPi0WeightsPbPbLHC11h0005 		= (TH1D*)directoryPi0PbPbLHC11h0005->Get("Pi0_HIJING_Weights");
-		TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSig0005 	= (TH1D*)directoryPi0PbPbLHC11h0005->Get("Pi0_HIJING_Input_Reweighted_AddedSig");
-		TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSigWOWeights0005 = (TH1D*)directoryPi0PbPbLHC11h0005->Get("Pi0_HIJING_Input_AddedSig");
-		TH1D* histoPi0RawYieldPbPbLHC11h0005 			= (TH1D*)directoryPi0PbPbLHC11h0005->Get("Pi0_RawYieldPerEvent");
-
-		TGraphAsymmErrors* graphPi0RAA0005 				= (TGraphAsymmErrors*)directoryPi0PbPbLHC11h0005->Get("Pi0RAA"); 
-		TGraphAsymmErrors* graphPi0RAASys0005 			= (TGraphAsymmErrors*)directoryPi0PbPbLHC11h0005->Get("Pi0RAASys"); 
- 
-	cout << "5-10%" << endl;
-	TDirectory* directoryPi0PbPbLHC11h0510 = (TDirectory*)filePCMPbPbLHC11h->Get("Pi0_PbPb_2.76TeV_5-10%"); 
-   
-		TH1D* histoPCMPi0CorrectedSpecPbPbLHC11h0510 				 = (TH1D*)directoryPi0PbPbLHC11h0510->Get("CorrectedYieldPi0");   
-		TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC11h0510 = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h0510->Get("Pi0SystError"); 
-		
-		TH1D* histoPCMPi0MassDataPbPbLHC11h0510 		= (TH1D*)directoryPi0PbPbLHC11h0510->Get("MassPi0");
-		histoPCMPi0MassDataPbPbLHC11h0510->Scale(1000.);
-		TH1D* histoPCMPi0MassMCPbPbLHC11h0510 			= (TH1D*)directoryPi0PbPbLHC11h0510->Get("TrueMassPi0");
-		histoPCMPi0MassMCPbPbLHC11h0510->Scale(1000.);
-		
-		TH1D* histoPCMPi0WidthDataPbPbLHC11h0510 		= (TH1D*)directoryPi0PbPbLHC11h0510->Get("FWHMPi0MeV");
-		TH1D* histoPCMPi0WidthMCPbPbLHC11h0510 			= (TH1D*)directoryPi0PbPbLHC11h0510->Get("TrueFWHMPi0MeV");
-		TH1D* histoPi0TrueEffiPtPbPbLHC11h0510 			= (TH1D*)directoryPi0PbPbLHC11h0510->Get("Pi0_Efficiency");
-		TH1D* histoPi0AcceptPtPbPbLHC11h0510 			= (TH1D*)directoryPi0PbPbLHC11h0510->Get("Pi0_Acceptance");
-		TH1D* histoMCYieldPi0PtPbPbLHC11h0510 			= (TH1D*)directoryPi0PbPbLHC11h0510->Get("Pi0_HIJING_Input_Reweighted");
-		TH1D* histoMCYieldPi0PtPbPbLHC11hWOWeights0510 	= (TH1D*)directoryPi0PbPbLHC11h0510->Get("Pi0_HIJING_Input");
-		//    TH1D* histoPi0WeightsPbPbLHC11h0510 		= (TH1D*)directoryPi0PbPbLHC11h0510->Get("Pi0_HIJING_Weights");
-		TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSig0510 	= (TH1D*)directoryPi0PbPbLHC11h0510->Get("Pi0_HIJING_Input_Reweighted_AddedSig");
-		TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSigWOWeights0510 = (TH1D*)directoryPi0PbPbLHC11h0510->Get("Pi0_HIJING_Input_AddedSig");
-		TH1D* histoPi0RawYieldPbPbLHC11h0510 			= (TH1D*)directoryPi0PbPbLHC11h0510->Get("Pi0_RawYieldPerEvent");
-   
-	cout << "20-40%" << endl;
-	TDirectory* directoryPi0PbPbLHC11h2040 = (TDirectory*)filePCMPbPbLHC11h->Get("Pi0_PbPb_2.76TeV_20-40%"); 
-	
-		TH1D* histoPCMPi0CorrectedSpecPbPbLHC11h2040 				 = (TH1D*)directoryPi0PbPbLHC11h2040->Get("CorrectedYieldPi0");   
-		TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC11h2040 = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h2040->Get("Pi0SystError"); 
-		
-		TH1D* histoPCMPi0MassDataPbPbLHC11h2040 		= (TH1D*)directoryPi0PbPbLHC11h2040->Get("MassPi0");
-		histoPCMPi0MassDataPbPbLHC11h2040->Scale(1000.);
-		TH1D* histoPCMPi0MassMCPbPbLHC11h2040 			= (TH1D*)directoryPi0PbPbLHC11h2040->Get("TrueMassPi0");
-		histoPCMPi0MassDataPbPbLHC11h2040->Scale(1000.);
-		
-		TH1D* histoPCMPi0WidthDataPbPbLHC11h2040 		= (TH1D*)directoryPi0PbPbLHC11h2040->Get("FWHMPi0MeV");
-		TH1D* histoPCMPi0WidthMCPbPbLHC11h2040 			= (TH1D*)directoryPi0PbPbLHC11h2040->Get("TrueFWHMPi0MeV");
-		TH1D* histoPi0TrueEffiPtPbPbLHC11h2040 			= (TH1D*)directoryPi0PbPbLHC11h2040->Get("Pi0_Efficiency");
-		TH1D* histoPi0AcceptPtPbPbLHC11h2040 			= (TH1D*)directoryPi0PbPbLHC11h2040->Get("Pi0_Acceptance");
-		TH1D* histoMCYieldPi0PtPbPbLHC11h2040 			= (TH1D*)directoryPi0PbPbLHC11h2040->Get("Pi0_HIJING_Input_Reweighted");
-		TH1D* histoMCYieldPi0PtPbPbLHC11hWOWeights2040 	= (TH1D*)directoryPi0PbPbLHC11h2040->Get("Pi0_HIJING_Input");
-		//    TH1D* histoPi0WeightsPbPbLHC11h2040 		= (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_HIJING_Weights");
-		TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSig2040 	= (TH1D*)directoryPi0PbPbLHC11h2040->Get("Pi0_HIJING_Input_Reweighted_AddedSig");
-		TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSigWOWeights2040 = (TH1D*)directoryPi0PbPbLHC11h2040->Get("Pi0_HIJING_Input_AddedSig");
-		TH1D* histoPi0RawYieldPbPbLHC11h2040 			= (TH1D*)directoryPi0PbPbLHC11h2040->Get("Pi0_RawYieldPerEvent");
-
-		TGraphAsymmErrors* graphPi0RAA2040 				= (TGraphAsymmErrors*)directoryPi0PbPbLHC11h2040->Get("Pi0RAA"); 
-		TGraphAsymmErrors* graphPi0RAASys2040 			= (TGraphAsymmErrors*)directoryPi0PbPbLHC11h2040->Get("Pi0RAASys"); 
-	
-	cout << "20-50%" << endl;
-	TDirectory* directoryPi0PbPbLHC11h2050 = (TDirectory*)filePCMPbPbLHC11h->Get("Pi0_PbPb_2.76TeV_20-50%"); 
-	
-		TH1D* histoPCMPi0CorrectedSpecPbPbLHC11h2050 				 = (TH1D*)directoryPi0PbPbLHC11h2050->Get("CorrectedYieldPi0");   
-		TGraphAsymmErrors* graphPCMPi0CorrectedSpecSysPbPbLHC11h2050 = (TGraphAsymmErrors*)directoryPi0PbPbLHC11h2050->Get("Pi0SystError"); 
-		
-		TH1D* histoPCMPi0MassDataPbPbLHC11h2050 		= (TH1D*)directoryPi0PbPbLHC11h2050->Get("MassPi0");
-		histoPCMPi0MassDataPbPbLHC11h2050->Scale(1000.);
-		TH1D* histoPCMPi0MassMCPbPbLHC11h2050 			= (TH1D*)directoryPi0PbPbLHC11h2050->Get("TrueMassPi0");
-		histoPCMPi0MassMCPbPbLHC11h2050->Scale(1000.);
-		
-		TH1D* histoPCMPi0WidthDataPbPbLHC11h2050 		= (TH1D*)directoryPi0PbPbLHC11h2050->Get("FWHMPi0MeV");
-		TH1D* histoPCMPi0WidthMCPbPbLHC11h2050 			= (TH1D*)directoryPi0PbPbLHC11h2050->Get("TrueFWHMPi0MeV");
-		TH1D* histoPi0TrueEffiPtPbPbLHC11h2050 			= (TH1D*)directoryPi0PbPbLHC11h2050->Get("Pi0_Efficiency");
-		TH1D* histoPi0AcceptPtPbPbLHC11h2050 			= (TH1D*)directoryPi0PbPbLHC11h2050->Get("Pi0_Acceptance");
-		TH1D* histoMCYieldPi0PtPbPbLHC11h2050 			= (TH1D*)directoryPi0PbPbLHC11h2050->Get("Pi0_HIJING_Input_Reweighted");
-		TH1D* histoMCYieldPi0PtPbPbLHC11hWOWeights2050 	= (TH1D*)directoryPi0PbPbLHC11h2050->Get("Pi0_HIJING_Input");
-		//    TH1D* histoPi0WeightsPbPbLHC11h2050 		= (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_HIJING_Weights");
-		TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSig2050 	= (TH1D*)directoryPi0PbPbLHC11h2050->Get("Pi0_HIJING_Input_Reweighted_AddedSig");
-		TH1D* histoMCYieldPi0PtPbPbLHC11hAddedSigWOWeights2050 = (TH1D*)directoryPi0PbPbLHC11h2050->Get("Pi0_HIJING_Input_AddedSig");
-		TH1D* histoPi0RawYieldPbPbLHC11h2050 			= (TH1D*)directoryPi0PbPbLHC11h2050->Get("Pi0_RawYieldPerEvent");
-		
-		TGraphAsymmErrors* graphPi0RAA2050 				= (TGraphAsymmErrors*)directoryPi0PbPbLHC11h2050->Get("Pi0RAA"); 
-		TGraphAsymmErrors* graphPi0RAASys2050 			= (TGraphAsymmErrors*)directoryPi0PbPbLHC11h2050->Get("Pi0RAASys"); 
-	
-   
-   
-//////////////////////// Eta ////////////////////////////
-	cout << "Eta 0-10%" << endl;
-	TDirectory* directoryEtaPbPbLHC11h0010 = (TDirectory*)filePCMPbPbLHC11h->Get("Eta_PbPb_2.76TeV_0-10%"); 
-	
-		TH1D* histoPCMEtaCorrectedSpecPbPbLHC11h0010 				 = (TH1D*)directoryEtaPbPbLHC11h0010->Get("CorrectedYieldEta");   
-		TGraphAsymmErrors* graphPCMEtaCorrectedSpecSysPbPbLHC11h0010 =        (TGraphAsymmErrors*)directoryEtaPbPbLHC11h0010->Get("EtaSystError"); 
-		
-		TH1D* histoPCMEtaMassDataPbPbLHC11h0010 		= (TH1D*)directoryEtaPbPbLHC11h0010->Get("MassEta");
-		histoPCMEtaMassDataPbPbLHC11h0010->Scale(1000.);
-		TH1D* histoPCMEtaMassMCPbPbLHC11h0010	 		= (TH1D*)directoryEtaPbPbLHC11h0010->Get("TrueMassEta");
-		histoPCMEtaMassMCPbPbLHC11h0010->Scale(1000.);
-		
-		TH1D* histoPCMEtaWidthDataPbPbLHC11h0010 		= (TH1D*)directoryEtaPbPbLHC11h0010->Get("FWHMEtaMeV");
-		TH1D* histoPCMEtaWidthMCPbPbLHC11h0010 			= (TH1D*)directoryEtaPbPbLHC11h0010->Get("TrueFWHMEtaMeV");
-		TH1D* histoEtaTrueEffiPtPbPbLHC11h0010 			= (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_Efficiency");
-		TH1D* histoEtaAcceptPtPbPbLHC11h0010 			= (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_Acceptance");
-		TH1D* histoMCYieldEtaPtPbPbLHC11h0010 			= (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_HIJING_Input_Reweighted");
-		TH1D* histoMCYieldEtaPtPbPbLHC11hWOWeights0010 	= (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_HIJING_Input");
-		//    TH1D* histoEtaWeightsPbPbLHC11h0010 		= (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_HIJING_Weights");
-		TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSig0010 	= (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_HIJING_Input_Reweighted_AddedSig");
-		TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSigWOWeights0010 = (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_HIJING_Input_AddedSig");
-		TH1D* histoEtaRawYieldPbPbLHC11h0010 			= (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_RawYieldPerEvent");
-		
-		TGraphAsymmErrors* graphEtaRAA0010 				= (TGraphAsymmErrors*)directoryEtaPbPbLHC11h0010->Get("EtaRAA"); 
-		TGraphAsymmErrors* graphEtaRAASys0010 			= (TGraphAsymmErrors*)directoryEtaPbPbLHC11h0010->Get("EtaRAASys"); 
-
-	cout << "0-5%" << endl;
-	TDirectory* directoryEtaPbPbLHC11h0005 = (TDirectory*)filePCMPbPbLHC11h->Get("Eta_PbPb_2.76TeV_0-5%"); 
-
-		TH1D* histoPCMEtaCorrectedSpecPbPbLHC11h0005 				 = (TH1D*)directoryEtaPbPbLHC11h0005->Get("CorrectedYieldEta");   
-		TGraphAsymmErrors* graphPCMEtaCorrectedSpecSysPbPbLHC11h0005 = (TGraphAsymmErrors*)directoryEtaPbPbLHC11h0005->Get("EtaSystError"); 
-
-		TH1D* histoPCMEtaMassDataPbPbLHC11h0005 		= (TH1D*)directoryEtaPbPbLHC11h0005->Get("MassEta");
-		histoPCMEtaMassDataPbPbLHC11h0005->Scale(1000.);
-		TH1D* histoPCMEtaMassMCPbPbLHC11h0005			= (TH1D*)directoryEtaPbPbLHC11h0005->Get("TrueMassEta");
-		histoPCMEtaMassMCPbPbLHC11h0005->Scale(1000.);
-
-		TH1D* histoPCMEtaWidthDataPbPbLHC11h0005 		= (TH1D*)directoryEtaPbPbLHC11h0005->Get("FWHMEtaMeV");
-		TH1D* histoPCMEtaWidthMCPbPbLHC11h0005 			= (TH1D*)directoryEtaPbPbLHC11h0005->Get("TrueFWHMEtaMeV");
-		TH1D* histoEtaTrueEffiPtPbPbLHC11h0005 			= (TH1D*)directoryEtaPbPbLHC11h0005->Get("Eta_Efficiency");
-		TH1D* histoEtaAcceptPtPbPbLHC11h0005 			= (TH1D*)directoryEtaPbPbLHC11h0005->Get("Eta_Acceptance");
-		TH1D* histoMCYieldEtaPtPbPbLHC11h0005 			= (TH1D*)directoryEtaPbPbLHC11h0005->Get("Eta_HIJING_Input_Reweighted");
-		TH1D* histoMCYieldEtaPtPbPbLHC11hWOWeights0005 	= (TH1D*)directoryEtaPbPbLHC11h0005->Get("Eta_HIJING_Input");
-		//    TH1D* histoEtaWeightsPbPbLHC11h0005 = (TH1D*)directoryEtaPbPbLHC11h0005->Get("Eta_HIJING_Weights");
-		TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSig0005 	= (TH1D*)directoryEtaPbPbLHC11h0005->Get("Eta_HIJING_Input_Reweighted_AddedSig");
-		TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSigWOWeights0005 = (TH1D*)directoryEtaPbPbLHC11h0005->Get("Eta_HIJING_Input_AddedSig");
-		TH1D* histoEtaRawYieldPbPbLHC11h0005 			= (TH1D*)directoryEtaPbPbLHC11h0005->Get("Eta_RawYieldPerEvent");
-
-		TGraphAsymmErrors* graphEtaRAA0005 				= (TGraphAsymmErrors*)directoryEtaPbPbLHC11h0005->Get("EtaRAA"); 
-		TGraphAsymmErrors* graphEtaRAASys0005 			= (TGraphAsymmErrors*)directoryEtaPbPbLHC11h0005->Get("EtaRAASys"); 
-
-	cout << "5-10%" << endl;
-	TDirectory* directoryEtaPbPbLHC11h0510 = (TDirectory*)filePCMPbPbLHC11h->Get("Eta_PbPb_2.76TeV_5-10%"); 
-	
-		TH1D* histoPCMEtaCorrectedSpecPbPbLHC11h0510 				 = (TH1D*)directoryEtaPbPbLHC11h0510->Get("CorrectedYieldEta");   
-		TGraphAsymmErrors* graphPCMEtaCorrectedSpecSysPbPbLHC11h0510 = (TGraphAsymmErrors*)directoryEtaPbPbLHC11h0510->Get("EtaSystError"); 
-		
-		TH1D* histoPCMEtaMassDataPbPbLHC11h0510 		= (TH1D*)directoryEtaPbPbLHC11h0510->Get("MassEta");
-		histoPCMEtaMassDataPbPbLHC11h0510->Scale(1000.);
-		TH1D* histoPCMEtaMassMCPbPbLHC11h0510 			= (TH1D*)directoryEtaPbPbLHC11h0510->Get("TrueMassEta");
-		histoPCMEtaMassMCPbPbLHC11h0510->Scale(1000.);
-		
-		TH1D* histoPCMEtaWidthDataPbPbLHC11h0510 		= (TH1D*)directoryEtaPbPbLHC11h0510->Get("FWHMEtaMeV");
-		TH1D* histoPCMEtaWidthMCPbPbLHC11h0510 			= (TH1D*)directoryEtaPbPbLHC11h0510->Get("TrueFWHMEtaMeV");
-		TH1D* histoEtaTrueEffiPtPbPbLHC11h0510 			= (TH1D*)directoryEtaPbPbLHC11h0510->Get("Eta_Efficiency");
-		TH1D* histoEtaAcceptPtPbPbLHC11h0510 			= (TH1D*)directoryEtaPbPbLHC11h0510->Get("Eta_Acceptance");
-		TH1D* histoMCYieldEtaPtPbPbLHC11h0510 			= (TH1D*)directoryEtaPbPbLHC11h0510->Get("Eta_HIJING_Input_Reweighted");
-		TH1D* histoMCYieldEtaPtPbPbLHC11hWOWeights0510 	= (TH1D*)directoryEtaPbPbLHC11h0510->Get("Eta_HIJING_Input");
-		//    TH1D* histoEtaWeightsPbPbLHC11h0510 		= (TH1D*)directoryEtaPbPbLHC11h0510->Get("Eta_HIJING_Weights");
-		TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSig0510 	= (TH1D*)directoryEtaPbPbLHC11h0510->Get("Eta_HIJING_Input_Reweighted_AddedSig");
-		TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSigWOWeights0510 = (TH1D*)directoryEtaPbPbLHC11h0510->Get("Eta_HIJING_Input_AddedSig");
-		TH1D* histoEtaRawYieldPbPbLHC11h0510 			= (TH1D*)directoryEtaPbPbLHC11h0510->Get("Eta_RawYieldPerEvent");
-	
-	cout << "20-40%" << endl;
-	TDirectory* directoryEtaPbPbLHC11h2040 = (TDirectory*)filePCMPbPbLHC11h->Get("Eta_PbPb_2.76TeV_20-40%");
-	
-		TH1D* histoPCMEtaCorrectedSpecPbPbLHC11h2040 				 = (TH1D*)directoryEtaPbPbLHC11h2040->Get("CorrectedYieldEta");   
-		TGraphAsymmErrors* graphPCMEtaCorrectedSpecSysPbPbLHC11h2040 = (TGraphAsymmErrors*)directoryEtaPbPbLHC11h2040->Get("EtaSystError"); 
-		
-		TH1D* histoPCMEtaMassDataPbPbLHC11h2040 		= (TH1D*)directoryEtaPbPbLHC11h2040->Get("MassEta");
-		histoPCMEtaMassDataPbPbLHC11h2040->Scale(1000.);
-		TH1D* histoPCMEtaMassMCPbPbLHC11h2040 			= (TH1D*)directoryEtaPbPbLHC11h2040->Get("TrueMassEta");
-		histoPCMEtaMassMCPbPbLHC11h2040->Scale(1000.);
-		
-		TH1D* histoPCMEtaWidthDataPbPbLHC11h2040 		= (TH1D*)directoryEtaPbPbLHC11h2040->Get("FWHMEtaMeV");
-		TH1D* histoPCMEtaWidthMCPbPbLHC11h2040 			= (TH1D*)directoryEtaPbPbLHC11h2040->Get("TrueFWHMEtaMeV");
-		TH1D* histoEtaTrueEffiPtPbPbLHC11h2040 			= (TH1D*)directoryEtaPbPbLHC11h2040->Get("Eta_Efficiency");
-		TH1D* histoEtaAcceptPtPbPbLHC11h2040 			= (TH1D*)directoryEtaPbPbLHC11h2040->Get("Eta_Acceptance");
-		TH1D* histoMCYieldEtaPtPbPbLHC11h2040 			= (TH1D*)directoryEtaPbPbLHC11h2040->Get("Eta_HIJING_Input_Reweighted");
-		TH1D* histoMCYieldEtaPtPbPbLHC11hWOWeights2040 	= (TH1D*)directoryEtaPbPbLHC11h2040->Get("Eta_HIJING_Input");
-		//    TH1D* histoEtaWeightsPbPbLHC11h0010 		= (TH1D*)directoryEtaPbPbLHC11h0010->Get("Eta_HIJING_Weights");
-		TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSig2040 	= (TH1D*)directoryEtaPbPbLHC11h2040->Get("Eta_HIJING_Input_Reweighted_AddedSig");
-		TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSigWOWeights2040 = (TH1D*)directoryEtaPbPbLHC11h2040->Get("Eta_HIJING_Input_AddedSig");
-		TH1D* histoEtaRawYieldPbPbLHC11h2040 			= (TH1D*)directoryEtaPbPbLHC11h2040->Get("Eta_RawYieldPerEvent");
-		
-		TGraphAsymmErrors* graphEtaRAA2040 				= (TGraphAsymmErrors*)directoryEtaPbPbLHC11h2040->Get("EtaRAA"); 
-		TGraphAsymmErrors* graphEtaRAASys2040 			= (TGraphAsymmErrors*)directoryEtaPbPbLHC11h2040->Get("EtaRAASys"); 
-	
-	cout << "20-50%" << endl;
-	TDirectory* directoryEtaPbPbLHC11h2050 = (TDirectory*)filePCMPbPbLHC11h->Get("Eta_PbPb_2.76TeV_20-50%"); 
-	
-		TH1D* histoPCMEtaCorrectedSpecPbPbLHC11h2050 				 = (TH1D*)directoryEtaPbPbLHC11h2050->Get("CorrectedYieldEta");   
-		TGraphAsymmErrors* graphPCMEtaCorrectedSpecSysPbPbLHC11h2050 = (TGraphAsymmErrors*)directoryEtaPbPbLHC11h2050->Get("EtaSystError"); 
-
-		TH1D* histoPCMEtaMassDataPbPbLHC11h2050 		= (TH1D*)directoryEtaPbPbLHC11h2050->Get("MassEta");
-		histoPCMEtaMassDataPbPbLHC11h2050->Scale(1000.);
-		TH1D* histoPCMEtaMassMCPbPbLHC11h2050 			= (TH1D*)directoryEtaPbPbLHC11h2050->Get("TrueMassEta");
-		histoPCMEtaMassMCPbPbLHC11h2050->Scale(1000.);
-
-		TH1D* histoPCMEtaWidthDataPbPbLHC11h2050 		= (TH1D*)directoryEtaPbPbLHC11h2050->Get("FWHMEtaMeV");
-		TH1D* histoPCMEtaWidthMCPbPbLHC11h2050 			= (TH1D*)directoryEtaPbPbLHC11h2050->Get("TrueFWHMEtaMeV");
-		TH1D* histoEtaTrueEffiPtPbPbLHC11h2050 			= (TH1D*)directoryEtaPbPbLHC11h2050->Get("Eta_Efficiency");
-		TH1D* histoEtaAcceptPtPbPbLHC11h2050 			= (TH1D*)directoryEtaPbPbLHC11h2050->Get("Eta_Acceptance");
-		TH1D* histoMCYieldEtaPtPbPbLHC11h2050 			= (TH1D*)directoryEtaPbPbLHC11h2050->Get("Eta_HIJING_Input_Reweighted");
-		TH1D* histoMCYieldEtaPtPbPbLHC11hWOWeights2050 	= (TH1D*)directoryEtaPbPbLHC11h2050->Get("Eta_HIJING_Input");
-		TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSig2050 	= (TH1D*)directoryEtaPbPbLHC11h2050->Get("Eta_HIJING_Input_Reweighted_AddedSig");
-		TH1D* histoMCYieldEtaPtPbPbLHC11hAddedSigWOWeights2050 = (TH1D*)directoryEtaPbPbLHC11h2050->Get("Eta_HIJING_Input_AddedSig");
-		TH1D* histoEtaRawYieldPbPbLHC11h2050 			= (TH1D*)directoryEtaPbPbLHC11h2050->Get("Eta_RawYieldPerEvent");
-
-		TGraphAsymmErrors* graphEtaRAA2050 				= (TGraphAsymmErrors*)directoryEtaPbPbLHC11h2050->Get("EtaRAA"); 
-		TGraphAsymmErrors* graphEtaRAASys2050 			= (TGraphAsymmErrors*)directoryEtaPbPbLHC11h2050->Get("EtaRAASys");    
-   
 		
 	Width_t  widthLinesBoxes            = 1.4;
 	Width_t  widthCommonFit             = 2.;
@@ -835,9 +817,6 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	SetStyleHistoTH2ForGraphs(histo2DEffEta, "#it{p}_{T} (GeV/#it{c})","#epsilon_{reco, #eta}  ",0.03,0.04, 0.03,0.04, 1.,1.);
 	histo2DEffEta->Draw("copy");
 	
-// 	DrawGammaSetMarker(histoTrueEffPtEta2760GeV, markerStyleSpectrum2760GeVMC, markerSizePi0PP2760GeV, colorPi02760GeV, colorPi02760GeV);  
-// 	histoTrueEffPtEta2760GeV->DrawCopy("pe1,same");    
-	
 	DrawGammaSetMarker(histoEtaTrueEffiPtPbPbLHC11h0005, markerStylePbPb0005, markerSizePbPb0005, colorCombPbPb0005, colorCombPbPb0005); 
 // 	histoEtaTrueEffiPtPbPbLHC11h0005->DrawCopy("e1,same");    
 	DrawGammaSetMarker(histoEtaTrueEffiPtPbPbLHC11h0010, markerStylePbPb0510, markerSizePbPb0510, colorCombPbPb0510, colorCombPbPb0510); 
@@ -859,9 +838,15 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	legendEffiEtaLHC11h->AddEntry(histoEtaTrueEffiPtPbPbLHC11h0010,"0-10% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV","p");
 // 	legendEffiEtaLHC11h->AddEntry(histoEtaTrueEffiPtPbPbLHC11h2040,"20-40% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV","p");
 	legendEffiEtaLHC11h->AddEntry(histoEtaTrueEffiPtPbPbLHC11h2050,"20-50% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV","p");
-// 	legendEffiEtaLHC11h->AddEntry(histoTrueEffPtEta2760GeV,"pp #sqrt{#it{s}} = 2.76 TeV","p");
-	legendEffiEtaLHC11h->Draw();	
-	
+
+    if(runPPplotting){
+      DrawGammaSetMarker(histoTrueEffPtEta2760GeV, markerStyleSpectrum2760GeVMC, markerSizePi0PP2760GeV, colorPi02760GeV, colorPi02760GeV);
+      histoTrueEffPtEta2760GeV->DrawCopy("pe1,same");
+      legendEffiEtaLHC11h->AddEntry(histoTrueEffPtEta2760GeV,"pp #sqrt{#it{s}} = 2.76 TeV","p");
+    }
+
+    if(ThesisPlotting) thesisLabel->Draw();
+	legendEffiEtaLHC11h->Draw();
 	canvasEffEta->SaveAs(Form("%s/EfficiencyEtaLHC11h.%s",outputDir.Data(),suffix.Data()));
 	
 	
@@ -872,9 +857,6 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	SetStyleHistoTH2ForGraphs(histo2DEffPi0, "#it{p}_{T} (GeV/#it{c})","#epsilon_{reco, #pi^{0}}  ",0.03,0.04, 0.03,0.04, 1.,1.);
 	histo2DEffPi0->Draw("copy");
 
-// 	DrawGammaSetMarker(histoTrueEffPtPi02760GeV, markerStyleSpectrum2760GeVMC-1, markerSizePi0PP2760GeV, colorPi02760GeV, colorPi02760GeV);   
-// 	histoTrueEffPtPi02760GeV->DrawCopy("pe1,same");
-	
 	DrawGammaSetMarker(histoPi0TrueEffiPtPbPbLHC11h0010, markerStylePbPb0010, markerSizePbPb0010, colorCombPbPb0010, colorCombPbPb0010); 
 	histoPi0TrueEffiPtPbPbLHC11h0010->DrawCopy("e1,same");
 	DrawGammaSetMarker(histoPi0TrueEffiPtPbPbLHC11h0005, markerStylePbPb0005, markerSizePbPb0005, colorCombPbPb0005, colorCombPbPb0005); 
@@ -895,13 +877,17 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	legendEffiPi0LHC11h->AddEntry(histoPi0TrueEffiPtPbPbLHC11h0010,"0-10% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV","p");
 // 	legendEffiPi0LHC11h->AddEntry(histoPi0TrueEffiPtPbPbLHC11h2040,"20-40% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV","p");
 	legendEffiPi0LHC11h->AddEntry(histoPi0TrueEffiPtPbPbLHC11h2050,"20-50% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV","p");
-// 	legendEffiPi0LHC11h->AddEntry(histoTrueEffPtPi02760GeV,"pp #sqrt{#it{s}} = 2.76 TeV","p");
-	legendEffiPi0LHC11h->Draw();
-// 	legendEffiPi0LHC11h->Draw();
 
+    if(runPPplotting){
+      DrawGammaSetMarker(histoTrueEffPtPi02760GeV, markerStyleSpectrum2760GeVMC-1, markerSizePi0PP2760GeV, colorPi02760GeV, colorPi02760GeV);
+      histoTrueEffPtPi02760GeV->DrawCopy("pe1,same");
+      legendEffiPi0LHC11h->AddEntry(histoTrueEffPtPi02760GeV,"pp #sqrt{#it{s}} = 2.76 TeV","p");
+    }
+
+	legendEffiPi0LHC11h->Draw();
+    if(ThesisPlotting) thesisLabel->Draw();
 	canvasEffPi0->SaveAs(Form("%s/EfficiencyPi0LHC11h.%s",outputDir.Data(),suffix.Data()));
 
-	
 	canvasEffPi0->cd();
 	histo2DEffPi0->GetYaxis()->SetTitle("#epsilon_{reco}  ");
 	histo2DEffPi0->Draw("copy");
@@ -1064,7 +1050,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 // 	legendAcceptanceEta->AddEntry(histoAccEta2760GeV,"pp #sqrt{#it{s}} = 2.76 TeV","p");
 // 	legendAcceptanceEta->AddEntry((TObject*)0, " |#eta| < 0.9, |y| < 0.8","");
 	legendAcceptanceEta->Draw();
-	
+	if(ThesisPlotting) thesisLabel->Draw();
 	canvasAcceptanceEta->SaveAs(Form("%s/AcceptanceEtaLHC11h.%s",outputDir.Data(),suffix.Data()));
 	
 
@@ -1108,7 +1094,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 // 	legendAcceptancePi0->AddEntry(histoAccPi02760GeV,"pp #sqrt{#it{s}} = 2.76 TeV","p");
 // 	legendAcceptancePi0->AddEntry((TObject*)0, " |#eta| < 0.9, |y| < 0.8","");
 	legendAcceptancePi0->Draw();
-	
+	if(ThesisPlotting) thesisLabel->Draw();
 	canvasAcceptancePi0->SaveAs(Form("%s/AcceptancePi0LHC11h.%s",outputDir.Data(),suffix.Data()));
 
 	
@@ -1261,10 +1247,10 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	pad6PartMassWidth1->SetLogx();
 	histo2DPi0FWHM->DrawCopy();
 			
-	DrawGammaSetMarker(histoPCMWidthDataPP2760GeV, markerStyleSpectrum2760GeV, markerSizePi0PP2760GeV, colorPi02760GeV, colorPi02760GeV);
-	histoPCMWidthDataPP2760GeV->DrawCopy("same,e1,p"); 
-	DrawGammaSetMarker(histoPCMWidthMCPP2760GeV, markerStyleSpectrum2760GeVMC, markerSizePi0PP2760GeV, colorMCPythiaPP2760GeV, colorMCPythiaPP2760GeV);
-	histoPCMWidthMCPP2760GeV->DrawCopy("same,e1,p"); 
+	DrawGammaSetMarker(histoPi0PCMWidthData2760GeV, markerStyleSpectrum2760GeV, markerSizePi0PP2760GeV, colorPi02760GeV, colorPi02760GeV);
+	histoPi0PCMWidthData2760GeV->DrawCopy("same,e1,p");
+	DrawGammaSetMarker(histoPi0PCMWidthMC2760GeV, markerStyleSpectrum2760GeVMC, markerSizePi0PP2760GeV, colorMCPythiaPP2760GeV, colorMCPythiaPP2760GeV);
+	histoPi0PCMWidthMC2760GeV->DrawCopy("same,e1,p");
 
 	TLatex *labelMassPi0PP = new TLatex(0.2,0.9,collisionSystemPP2760GeV.Data());
 	SetStyleTLatex( labelMassPi0PP, 0.062,4);
@@ -1278,10 +1264,10 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	pad6PartMassWidth2->SetLogx();
 	histo2DPi0Mass->DrawCopy();
 
-	DrawGammaSetMarker(histoPCMMassDataPP2760GeV , markerStyleSpectrum2760GeV, markerSizePi0PP2760GeV, colorPi02760GeV, colorPi02760GeV);               
-	histoPCMMassDataPP2760GeV->DrawCopy("same,e1,p"); 
-	DrawGammaSetMarker(histoPCMMassMCPP2760GeV , markerStyleSpectrum2760GeVMC , markerSizePi0PP2760GeV, colorMCPythiaPP2760GeV, colorMCPythiaPP2760GeV);               
-	histoPCMMassMCPP2760GeV->DrawCopy("same,e1,p"); 
+	DrawGammaSetMarker(histoPi0PCMMassData2760GeV , markerStyleSpectrum2760GeV, markerSizePi0PP2760GeV, colorPi02760GeV, colorPi02760GeV);
+	histoPi0PCMMassData2760GeV->DrawCopy("same,e1,p");
+	DrawGammaSetMarker(histoPi0PCMMassMC2760GeV , markerStyleSpectrum2760GeVMC , markerSizePi0PP2760GeV, colorMCPythiaPP2760GeV, colorMCPythiaPP2760GeV);
+	histoPi0PCMMassMC2760GeV->DrawCopy("same,e1,p");
 
 	DrawGammaLines(0.35, 20. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,1.,1.);
 	TLatex *labelLegendDMass = new TLatex(0.92,0.9,"d)");
@@ -1362,7 +1348,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 
 	pad6PartMassWidth4->Update();
 
-	canvas6PartMassWidth->Update();  
+    if(ThesisPlotting) thesisLabel->Draw();
+	canvas6PartMassWidth->Update();
 	canvas6PartMassWidth->SaveAs(Form("%s/MassWidth_Pi0.%s",outputDir.Data(),suffix.Data()));
 	delete pad6PartMassWidth1; 
 	delete pad6PartMassWidth2; 
@@ -1414,10 +1401,10 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	pad6PartEtaMassWidth1LHC11h->SetLogx();
 	histo2DEtaFWHMLHC11h->DrawCopy();
 			
-	DrawGammaSetMarker(histoEtaWidthData2760GeV, markerStyleSpectrum2760GeV, markerSizePi0PP2760GeV, colorPi02760GeV, colorPi02760GeV);
-	histoEtaWidthData2760GeV->DrawCopy("same,e1,p"); 
-	DrawGammaSetMarker(histoEtaWidthMC2760GeV, markerStyleSpectrum2760GeVMC, markerSizePi0PP2760GeV, colorMCPythiaPP2760GeV, colorMCPythiaPP2760GeV);
-	histoEtaWidthMC2760GeV->DrawCopy("same,e1,p"); 
+	DrawGammaSetMarker(histoEtaPCMWidthData2760GeV, markerStyleSpectrum2760GeV, markerSizePi0PP2760GeV, colorPi02760GeV, colorPi02760GeV);
+	histoEtaPCMWidthData2760GeV->DrawCopy("same,e1,p");
+	DrawGammaSetMarker(histoEtaPCMWidthMC2760GeV, markerStyleSpectrum2760GeVMC, markerSizePi0PP2760GeV, colorMCPythiaPP2760GeV, colorMCPythiaPP2760GeV);
+	histoEtaPCMWidthMC2760GeV->DrawCopy("same,e1,p");
 
 	labelMassPi0PP->Draw();
 // 	TLatex *labelLegendAMass = new TLatex(0.92,0.88,"a)");
@@ -1430,10 +1417,10 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	pad6PartEtaMassWidth2LHC11h->SetLogx();
 	histo2DEtaMassLHC11h->DrawCopy();
 
-	DrawGammaSetMarker(histoEtaMassData2760GeV , markerStyleSpectrum2760GeV, markerSizePi0PP2760GeV, colorPi02760GeV, colorPi02760GeV);               
-	histoEtaMassData2760GeV->DrawCopy("same,e1,p"); 
-	DrawGammaSetMarker(histoEtaMassMC2760GeV , markerStyleSpectrum2760GeVMC , markerSizePi0PP2760GeV, colorMCPythiaPP2760GeV, colorMCPythiaPP2760GeV);               
-	histoEtaMassMC2760GeV->DrawCopy("same,e1,p"); 
+	DrawGammaSetMarker(histoEtaPCMMassData2760GeV , markerStyleSpectrum2760GeV, markerSizePi0PP2760GeV, colorPi02760GeV, colorPi02760GeV);
+	histoEtaPCMMassData2760GeV->DrawCopy("same,e1,p");
+	DrawGammaSetMarker(histoEtaPCMMassMC2760GeV , markerStyleSpectrum2760GeVMC , markerSizePi0PP2760GeV, colorMCPythiaPP2760GeV, colorMCPythiaPP2760GeV);
+	histoEtaPCMMassMC2760GeV->DrawCopy("same,e1,p");
 
 	DrawGammaLines(0.35, 20. , mesonMassExpectEta*1000., mesonMassExpectEta*1000.,1.,1.);
 	labelLegendDMass->Draw();
@@ -1497,6 +1484,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	labelLegendEMass->Draw();
 
 	pad6PartEtaMassWidth4LHC11h->Update();
+    if(ThesisPlotting) thesisLabel->Draw();
 
 	canvas6PartEtaMassWidthLHC11h->Update();  
 	canvas6PartEtaMassWidthLHC11h->SaveAs(Form("%s/MassWidth_Eta.%s",outputDir.Data(),suffix.Data()));
@@ -1520,17 +1508,6 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	SetStyleHistoTH2ForGraphs(histo2DEtaSpectra, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV/#it{c})^{-2}", 0.03,0.04, 0.03,0.04, 0.95,1.4);
 	histo2DEtaSpectra->DrawCopy(); 
 	
-// 	graphCorrectedYieldSysEta2760GeV = ScaleGraph(graphCorrectedYieldSysEta2760GeV,1e1);
-// 	histoCorrectedYieldEta2760GeV->Scale(1e1);
-// 	DrawGammaSetMarkerTGraphAsym(graphCorrectedYieldSysEta2760GeV, markerStylePP,markerSizePP, kBlack , kBlack, widthLinesBoxes, kTRUE);//, colorCombPbPb1020-5);
-// 	graphCorrectedYieldSysEta2760GeV->Draw("E2same");
-// 	DrawGammaSetMarker(histoCorrectedYieldEta2760GeV, markerStylePP,markerSizePP, kBlack , kBlack);
-// 	histoCorrectedYieldEta2760GeV->Draw("p,same,e1");
-// 	
-// 	histoEtaFromCocktailpp2760GeV->SetLineWidth(2.);
-// 	histoEtaFromCocktailpp2760GeV->SetLineColor(kBlack);
-// 	histoEtaFromCocktailpp2760GeV->Draw("hist, l,same");
-
 	DrawGammaSetMarker(histoPCMEtaCorrectedSpecPbPbLHC11h0005, markerStylePbPb0005,markerSizePbPb0005, colorCombPbPb0005 , colorCombPbPb0005);
 //  histoPCMEtaCorrectedSpecPbPbLHC11h0005->Draw("p,same,e1");
 	DrawGammaSetMarkerTGraphAsym(graphPCMEtaCorrectedSpecSysPbPbLHC11h0005, markerStylePbPb0005,markerSizePbPb0005, colorCombPbPb0005 , colorCombPbPb0005, widthLinesBoxes, kTRUE);
@@ -1576,15 +1553,29 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 // 	legendEtaSpectra->AddEntry((TObject*)0, collisionSystemPbPb2050.Data(),"");
 //  legendEtaSpectra->AddEntry(histoPCMEtaCorrectedSpecPbPbLHC11h2040,"measured","pf"); //graphPCMEtaCorrectedSpecSysPbPbLHC11h2040
 //  legendEtaSpectra->AddEntry((TObject*)0, collisionSystemPbPb2040.Data(),"");
-	
+
+    if(runPPplotting){
+      graphInvSectionPCMSysEta2760GeV = ScaleGraph(graphInvSectionPCMSysEta2760GeV,1e1);
+      graphInvSectionPCMEta2760GeV = ScaleGraph(graphInvSectionPCMEta2760GeV,1e1);
+      DrawGammaSetMarkerTGraphAsym(graphInvSectionPCMSysEta2760GeV, markerStylePP,markerSizePP, kBlack , kBlack, widthLinesBoxes, kTRUE);//, colorCombPbPb1020-5);
+      graphInvSectionPCMSysEta2760GeV->Draw("E2same");
+      DrawGammaSetMarkerTGraphAsym(graphInvSectionPCMEta2760GeV, markerStylePP,markerSizePP, kBlack , kBlack);
+      graphInvSectionPCMEta2760GeV->Draw("p,same,e1");
+
+//      histoEtaFromCocktailpp2760GeV->SetLineWidth(2.);
+//      histoEtaFromCocktailpp2760GeV->SetLineColor(kBlack);
+//      histoEtaFromCocktailpp2760GeV->Draw("hist, l,same");
+
+      legendEtaSpectra->AddEntry(graphInvSectionPCMSysEta2760GeV,"measured","pf");
 //	legendEtaSpectra->AddEntry(histoEtaFromCocktailpp2760GeV,"m_{T} scaled","l");
-// 	legendEtaSpectra->AddEntry(graphCorrectedYieldSysEta2760GeV,"measured","pf");
 // 	legendEtaSpectra->AddEntry((TObject*)0, collisionSystemPP2760GeV.Data(),"");
 //  legendEtaSpectra->AddEntry(graphInvSectionCombSysPi02760GeVPlot,collisionSystemPP.Data(),"pf");
 //  legendEtaSpectra->AddEntry(fitInvCrossSectionPi0Comb2760GeV,"Tsallis Fit","l");
 //  legendEtaSpectra->AddEntry(fitInvCrossSectionPi0Comb2760GeVPow,"Powerlaw Fit","l");
-	legendEtaSpectra->Draw();
+    }
 
+    if(ThesisPlotting) thesisLabel->Draw();
+	legendEtaSpectra->Draw();
 	canvasEtaSpectra->Update();
 	canvasEtaSpectra->Print(Form("%s/SpectraEtaPbPbLHC11h.%s",outputDir.Data(),suffix.Data()));
 	
@@ -1597,15 +1588,6 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	SetStyleHistoTH2ForGraphs(histo2DPi0Spectra, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV/#it{c})^{-2}", 0.03,0.04, 0.03,0.04, 0.95,1.4);
 	histo2DPi0Spectra->DrawCopy(); 
 
-	
-// 	graphCorrectedYieldSysPi02760GeV->RemovePoint(17);
-// 	DrawGammaSetMarkerTGraphAsym(graphCorrectedYieldSysPi02760GeV, markerStylePP,markerSizePP, kBlack , kBlack, widthLinesBoxes, kTRUE);//, colorCombPbPb1020-5);
-// 	graphCorrectedYieldSysPi02760GeV->Draw("E2same");   
-
-// 	histoCorrectedYieldPi02760GeV->SetBinContent(19,0);
-// 	DrawGammaSetMarker(histoCorrectedYieldPi02760GeV, markerStylePP,markerSizePP, kBlack , kBlack);
-// 	histoCorrectedYieldPi02760GeV->Draw("p,same,e1");
-	
 	DrawGammaSetMarker(histoPCMPi0CorrectedSpecPbPbLHC11h0005, markerStylePbPb0005,markerSizePbPb0005, colorCombPbPb0005 , colorCombPbPb0005);
 //  histoPCMPi0CorrectedSpecPbPbLHC11h0005->Draw("p,same,e1");
 	DrawGammaSetMarkerTGraphAsym(graphPCMPi0CorrectedSpecSysPbPbLHC11h0005, markerStylePbPb0005,markerSizePbPb0005, colorCombPbPb0005 , colorCombPbPb0005, widthLinesBoxes, kTRUE);
@@ -1650,10 +1632,23 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 // 	legendPi0Spectra->AddEntry((TObject*)0, collisionSystemPbPb2040.Data(),"");
 	legendPi0Spectra->AddEntry(graphPCMPi0CorrectedSpecSysPbPbLHC11h2050,Form("PCM, %s ",collisionSystemPbPb2050.Data()),"pf"); //graphPCMPi0CorrectedSpecSysPbPbLHC11h2050
 // 	legendPi0Spectra->AddEntry((TObject*)0, collisionSystemPbPb2050.Data(),"");
-// 	legendPi0Spectra->AddEntry(graphCorrectedYieldSysPi02760GeV,"PCM","pf");
-// 	legendPi0Spectra->AddEntry((TObject*)0, collisionSystemPP2760GeV.Data(),"");
+
+    if(runPPplotting){
+
+        graphInvSectionPCMSysPi02760GeV->RemovePoint(17);
+        DrawGammaSetMarkerTGraphAsym(graphInvSectionPCMSysPi02760GeV, markerStylePP,markerSizePP, kBlack , kBlack, widthLinesBoxes, kTRUE);//, colorCombPbPb1020-5);
+        graphInvSectionPCMSysPi02760GeV->Draw("E2same");
+
+        graphInvSectionPCMPi02760GeV->RemovePoint(19);
+        DrawGammaSetMarkerTGraphAsym(graphInvSectionPCMPi02760GeV, markerStylePP,markerSizePP, kBlack , kBlack);
+        graphInvSectionPCMPi02760GeV->Draw("p,same,e1");
+
+        legendPi0Spectra->AddEntry(graphInvSectionPCMSysPi02760GeV,"PCM","pf");
+        legendPi0Spectra->AddEntry((TObject*)0, collisionSystemPP2760GeV.Data(),"");
+    }
+
+    if(ThesisPlotting) thesisLabel->Draw();
 	legendPi0Spectra->Draw();
-	
 	canvasPi0Spectra->Update();
 	canvasPi0Spectra->Print(Form("%s/SpectraPi0PbPbLHC11h.%s",outputDir.Data(),suffix.Data()));
 
@@ -1767,7 +1762,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 // 	legendPi0RAA->AddEntry(graphPi0RAASys2040,"PCM #pi^{0} R_{AA} (2010) - 20-40%");
 	legendPi0RAA->AddEntry(graphPi0RAA2050,"PCM #pi^{0} R_{AA} - 20-50%", "pl");
 	legendPi0RAA->Draw();
-	
+	if(ThesisPlotting) thesisLabel->Draw();
 	canvasRAA->Update();
 	canvasRAA->SaveAs(Form("%s/RAAPi0PbPbLHC11h.%s",outputDir.Data(),suffix.Data()));
 
@@ -2136,7 +2131,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 // 	legendChargedRAAcomp->AddEntry(graphChargedPionRAASys2040,"#pi^{#pm} R_{AA} - 20-40%");
 // 	legendChargedRAAcomp->AddEntry(graphPi0RAASys2040,"PCM measured #pi^{0} R_{AA} - 20-40%");
 	legendChargedRAAcomp1->Draw();
-	
+	if(ThesisPlotting) thesisLabel->Draw();
 	canvasRAA->Update();
 	canvasRAA->SaveAs(Form("%s/RAAPi0WithChargedPions0010.%s",outputDir.Data(),suffix.Data()));
 
@@ -2211,7 +2206,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	legendChargedRAAcomp->AddEntry(graphRAAPublished2040,"PCM-PHOS #pi^{0} R_{AA} (EPJC 74 (2014) 3108)", "pl");
 	legendChargedRAAcomp->AddEntry(graphPi0RAA2040,"PCM #pi^{0} R_{AA} (2010)", "pl");
 	legendChargedRAAcomp->Draw();
-	
+	if(ThesisPlotting) thesisLabel->Draw();
 	canvasRAA->Update();
 	canvasRAA->SaveAs(Form("%s/RAAPi0WithChargedPions2040.%s",outputDir.Data(),suffix.Data()));
 
@@ -2302,6 +2297,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	TBox* boxErrorNorm0010_Single = CreateBoxConv(colorComb0005Box, 0.2, 1.-normErr0010 , 0.5, 1.+normErr0010);
 	boxErrorNorm0010_Single->Draw();
 	DrawGammaLines(0., 19.5 , 1, 1 ,1,kGray);
+    if(ThesisPlotting) thesisLabel->Draw();
 	canvasRAAasPaper->Update();
 	canvasRAAasPaper->Print(Form("%s/RAAPi0asPaper0010.%s",outputDir.Data(),suffix.Data()));
 	
@@ -2365,7 +2361,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	TBox* boxErrorNorm2050_Single = CreateBoxConv(colorComb2050Box, 0.2, 1.-normErr2050 , 0.5, 1.+normErr2050);
 // 	boxErrorNorm2050_Single->Draw();
 	DrawGammaLines(0., 19.5 , 1, 1 ,1,kGray);
-	
+	if(ThesisPlotting) thesisLabel->Draw();
 	canvasRAAasPaper->Update();
 	canvasRAAasPaper->Print(Form("%s/RAAPi0asPaper2040.%s",outputDir.Data(),suffix.Data()));
 
@@ -2415,7 +2411,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 // 	legendEtaRAA->AddEntry(graphEtaRAASys2040,"PCM #eta R_{AA} (2011) - 20-40%");
 	legendEtaRAA->AddEntry(graphEtaRAA2050,"PCM #eta R_{AA} - 20-50%","pl");
 	legendEtaRAA->Draw();
-	
+	if(ThesisPlotting) thesisLabel->Draw();
 	canvasRAA->Update();
 	canvasRAA->SaveAs(Form("%s/RAAEtaPbPbLHC11h.%s",outputDir.Data(),suffix.Data()));
 	
@@ -2465,7 +2461,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	legendEtaRAAcomp1->AddEntry(graphEtaRAASys0010,"PCM #eta R_{AA} - 0-10%", "pl");
 	legendEtaRAAcomp1->AddEntry(graphEtaRAASys2040,"PCM #eta R_{AA} - 20-40%", "pl");
 	legendEtaRAAcomp1->Draw();
-	
+	if(ThesisPlotting) thesisLabel->Draw();
 	canvasRAA->Update();
 	canvasRAA->SaveAs(Form("%s/RAAEtaWithPHENIX.%s",outputDir.Data(),suffix.Data()));
 	
@@ -2495,6 +2491,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	legendEtaRAAcomp2->AddEntry(graphEtaRAA0010,"PCM #eta R_{AA} (2011) - 0-10%", "pl");
  	legendEtaRAAcomp2->AddEntry(graphEtaRAA2050,"PCM #eta R_{AA} (2011) - 20-50%","pl");
 	legendEtaRAAcomp2->Draw();
+    if(ThesisPlotting) thesisLabel->Draw();
 
 	canvasRAA->Update();
 	canvasRAA->SaveAs(Form("%s/RAAEtaWithPHENIX2.%s",outputDir.Data(),suffix.Data()));
@@ -2572,7 +2569,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 // 	legendChargedRAAcomp3->AddEntry(graphChargedPionRAASys2040,"#pi^{#pm} R_{AA} - 20-40%");
 // 	legendChargedRAAcomp3->AddEntry(graphPi0RAASys2040,"PCM measured #pi^{0} R_{AA} - 20-40%");
 	legendChargedRAAcomp3->Draw();
-	
+	if(ThesisPlotting) thesisLabel->Draw();
 	canvasRAA->Update();
 	canvasRAA->SaveAs(Form("%s/RAAEtaWithChargedKaons0010.%s",outputDir.Data(),suffix.Data()));
 
@@ -2618,7 +2615,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 // 	legendChargedRAAcomp->AddEntry(graphChargedPionRAASys2040,"#pi^{#pm} R_{AA} - 20-40%");
 	legendChargedRAAcomp4->AddEntry(graphEtaRAA2040,"PCM #eta R_{AA} (2011) - 20-40%", "lp");
 	legendChargedRAAcomp4->Draw();
-	
+	if(ThesisPlotting) thesisLabel->Draw();
 	canvasRAA->Update();
 	canvasRAA->SaveAs(Form("%s/RAAEtaWithChargedKaons2040.%s",outputDir.Data(),suffix.Data()));
 
@@ -3034,7 +3031,6 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	//**************************** Pi0 reweighting evalulation 20-50 % LHC11h***********
 	//**********************************************************************************
 	TF1* fitYieldDataQCDPi0PbPbLHC11h2050 = NULL;
-
 	if (directoryPi0PbPbLHC11h2050){
 		canvasSpectraMC->cd();
 		histo2DSpectraMC->DrawCopy(); 
@@ -3198,20 +3194,20 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 	TF1* fitYieldDataQCDEtaPbPbLHC11h0005 = NULL;
 	if (directoryEtaPbPbLHC11h0005){
 		canvasSpectraMC->cd();
-		histo2DSpectraMC->DrawCopy(); 
+		histo2DSpectraMC->DrawCopy();
 
 		histoMCYieldEtaPtPbPbLHC11h0005->SetMarkerStyle(markerStylePbPb6080MC);
 		histoMCYieldEtaPtPbPbLHC11h0005->Draw("hist,pe1,same");
 
 		histoPCMEtaCorrectedSpecPbPbLHC11h0005->Draw("hist,pe1,same");
-		
-		fitYieldDataQCDEtaPbPbLHC11h0005 = FitObject("l","fitYieldDataQCDEtaPbPbLHC11h0005","Eta",histoPCMEtaCorrectedSpecPbPbLHC11h0005,1.4,10,NULL,"QNRME+");
+
+		fitYieldDataQCDEtaPbPbLHC11h0005 = FitObject("l","fitYieldDataQCDEtaPbPbLHC11h0005","Eta",histoPCMEtaCorrectedSpecPbPbLHC11h0005,1.,10,NULL,"QNRME+");
 		DrawGammaSetMarkerTF1(fitYieldDataQCDEtaPbPbLHC11h0005, 1, 1.5, colorCombPbPb6080);
 		fitYieldDataQCDEtaPbPbLHC11h0005->SetLineWidth(2);
 		fitYieldDataQCDEtaPbPbLHC11h0005->Draw("same");
 
 		forOutput= WriteParameterToFile(fitYieldDataQCDEtaPbPbLHC11h0005);
-		fileFinalResults<< forOutput.Data()<< endl;  
+		fileFinalResults<< forOutput.Data()<< endl;
 
 		canvasSpectraMC->Update();
 		canvasSpectraMC->Print(Form("%s/Eta_MCInputSpectraFittedPbPbLHC11h0005.%s",outputDir.Data(),suffix.Data()));
@@ -3223,7 +3219,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 
 		canvasFraction2->cd();
 		if (histoEtaRatioMCUnweightedtoDataFitQCDPbPb0005) DrawGammaSetMarker(histoEtaRatioMCUnweightedtoDataFitQCDPbPb0005, markerStylePbPb0510,markerSizePbPb0510, colorCombPbPb0510 , colorCombPbPb0510 );
-		
+
 		DrawGammaSetMarker(histoEtaRatioDatatoFitQCDPbPb0005, markerStylePbPb1020,markerSizePbPb1020, kBlack , kBlack);
 		DrawAutoGammaMesonHistos( histoEtaRatioDatatoFitQCDPbPb0005,
 					"", "#it{p}_{T} (GeV/#it{c})", "Spectrum/ fit to Spectrum",
@@ -3231,11 +3227,11 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 					kTRUE, -0.5, 8.,
 					kTRUE, 0., 10);
 		histoEtaRatioDatatoFitQCDPbPb0005->Draw("same,e,p");
-		
+
 		DrawGammaSetMarker(histoEtaRatioMCtoDataFitQCDPbPb0005, markerStylePbPb0005,markerSizePbPb0005, colorCombPbPb0005 , colorCombPbPb0005);
-		if (runDrawReweighted) histoEtaRatioMCtoDataFitQCDPbPb0005->Draw("same,e,p");  
-		if (histoEtaRatioMCUnweightedtoDataFitQCDPbPb0005) histoEtaRatioMCUnweightedtoDataFitQCDPbPb0005->Draw("same,e,p");  
-		
+		if (runDrawReweighted) histoEtaRatioMCtoDataFitQCDPbPb0005->Draw("same,e,p");
+		if (histoEtaRatioMCUnweightedtoDataFitQCDPbPb0005) histoEtaRatioMCUnweightedtoDataFitQCDPbPb0005->Draw("same,e,p");
+
 		TLegend* legendEtaFit0005 = new TLegend(0.16,0.8,0.4,0.9);
 		legendEtaFit0005->SetFillColor(0);
 		legendEtaFit0005->SetLineColor(0);
@@ -3249,7 +3245,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 		SetStyleTLatex( labelRatioMCData0005, 0.04,4);
 		labelRatioMCData0005->Draw();
 		DrawGammaLines(0., 30.,1., 1.,0.1);
-		
+
 		canvasFraction2->Update();
 		canvasFraction2->SaveAs(Form("%s/Eta_Ratio_MCLHC11h_To_DataFitLHC11h_PbPb0005.%s",outputDir.Data(),suffix.Data()));
 	}
@@ -3268,7 +3264,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 
 		histoPCMEtaCorrectedSpecPbPbLHC11h0510->Draw("hist,pe1,same");
 		
-		fitYieldDataQCDEtaPbPbLHC11h0510 = FitObject("l","fitYieldDataQCDEtaPbPbLHC11h0510","Eta",histoPCMEtaCorrectedSpecPbPbLHC11h0510,1.4,10,NULL,"QNRME+");
+		fitYieldDataQCDEtaPbPbLHC11h0510 = FitObject("l","fitYieldDataQCDEtaPbPbLHC11h0510","Eta",histoPCMEtaCorrectedSpecPbPbLHC11h0510,1.,10,NULL,"QNRME+");
 		DrawGammaSetMarkerTF1(fitYieldDataQCDEtaPbPbLHC11h0510, 1, 1.5, colorCombPbPb6080);
 		fitYieldDataQCDEtaPbPbLHC11h0510->Draw("same");
 		
@@ -3331,7 +3327,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 
 		histoPCMEtaCorrectedSpecPbPbLHC11h2040->Draw("hist,pe1,same");
 		
-		fitYieldDataQCDEtaPbPbLHC11h2040 = FitObject("l","fitYieldDataQCDEtaPbPbLHC11h2040","Eta",histoPCMEtaCorrectedSpecPbPbLHC11h2040,1.4,10,NULL,"QNRME+");
+		fitYieldDataQCDEtaPbPbLHC11h2040 = FitObject("l","fitYieldDataQCDEtaPbPbLHC11h2040","Eta",histoPCMEtaCorrectedSpecPbPbLHC11h2040,1.,10,NULL,"QNRME+");
 		DrawGammaSetMarkerTF1(fitYieldDataQCDEtaPbPbLHC11h2040, 1, 1.5, colorCombPbPb6080);
 		fitYieldDataQCDEtaPbPbLHC11h2040->Draw("same");
 		
@@ -3397,7 +3393,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf", TString nameFilePbP
 
 		histoPCMEtaCorrectedSpecPbPbLHC11h2050->Draw("hist,pe1,same");
 		
-		fitYieldDataQCDEtaPbPbLHC11h2050 = FitObject("l","fitYieldDataQCDEtaPbPbLHC11h2050","Eta",histoPCMEtaCorrectedSpecPbPbLHC11h2050,1.4,10,NULL,"QNRME+");
+		fitYieldDataQCDEtaPbPbLHC11h2050 = FitObject("l","fitYieldDataQCDEtaPbPbLHC11h2050","Eta",histoPCMEtaCorrectedSpecPbPbLHC11h2050,1.,10,NULL,"QNRME+");
 		DrawGammaSetMarkerTF1(fitYieldDataQCDEtaPbPbLHC11h2050, 1, 1.5, colorCombPbPb6080);
 		fitYieldDataQCDEtaPbPbLHC11h2050->Draw("same");
 		

@@ -3683,9 +3683,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
             }
 
         } else {
-            if(ptBin == 2) mesonAmplitudeMin = mesonAmplitude*40./100.;
-            else if(ptBin == 3) mesonAmplitudeMin = mesonAmplitude*60./100.;
-            else mesonAmplitudeMin = mesonAmplitude*30./100.;
+            mesonAmplitudeMin = mesonAmplitude*30./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
             if (fMode == 2 || fMode == 3){
                 mesonAmplitudeMin = mesonAmplitude*10./100.;

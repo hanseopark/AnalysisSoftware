@@ -133,7 +133,7 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     //___________________________________ Declaration of files _____________________________________________
     TString fileNamePHOS                    = "ExternalInputPbPb/PHOS/LHC10h_PHOS_pi0_PbPb_06022014.root";
     TString fileNameEMCal                   = "ExternalInputPbPb/EMCAL/LHC11h_EMCal_pi0eta_PbPb_10092015.root";
-    TString fileNamePCMPub                  = "LHC11hInputFiles/data_PCMResults_PbPb_2.76TeV_LHC10h.root";
+    TString fileNamePCMPub                  = "ExternalInputPbPb/data_PCMResults_PbPb_2.76TeV_LHC10h.root";
 
     TString outputDir                       = Form("%s/%s/NeutralMesonMeasurementsPbPb2760GeVAllCent%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
     TString rootFiles                       = Form("%s/rootFiles",outputDir.Data());

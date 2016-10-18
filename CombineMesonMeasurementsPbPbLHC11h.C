@@ -197,11 +197,11 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     TString fileNameEPOS                    = "ExternalInputPbPb/Theory/EPOS/pi0_eta_Anders19Feb2016_NoUrQMD.root";
     TString fileNameEPOScharged             = "ExternalInputPbPb/Theory/EPOS/Epos_sumChargedPionsKaons.root";
 
-    TString fileNamePP2760GeVpublished      = "LHC11hInputFiles/CombinedResultsPaperPP2760GeV_2016_07_05_FrediV2Clusterizer.root"; //"LHC11hInputFiles/CombinedResultsPaperPP2760GeV_2016_01_08.root";
+    TString fileNamePP2760GeVpublished      = "ExternalInputPbPb/NeutralMesonspp276GeVReference/CombinedResultsPaperPP2760GeV_2016_10_03_FrediV2Clusterizer.root";
     TString fileNamePPPHOS                  = "ExternalInput/PHOS/2.76TeV/LHC11a_PHOS_pi0_pp2760_noBWCorr_FDcorr_20140218.root";
-    TString fileFinalResultsPi0PPforRAA     = "LHC11hInputFiles/CombinedResultsPaperX_18_Feb_2014.root";
-    TString fileFinalResultsEtaPPforRAA     = "LHC11hInputFiles/CombinedResultsEta2760X_2015_09_01.root";
-    TString fileNamePCMPublished            = "LHC11hInputFiles/data_PCMResults_PbPb_2.76TeV_LHC10h.root";
+//     TString fileFinalResultsPi0PPforRAA     = "LHC11hInputFiles/CombinedResultsPaperX_18_Feb_2014.root";
+//     TString fileFinalResultsEtaPPforRAA     = "LHC11hInputFiles/CombinedResultsEta2760X_2015_09_01.root";
+    TString fileNamePCMPublished            = "ExternalInputPbPb/data_PCMResults_PbPb_2.76TeV_LHC10h.root";
 
     TString fileNamePHOS                    = "ExternalInputPbPb/PHOS/LHC10h_PHOS_pi0_PbPb_06022014.root";
     TString fileNameEMCal                   = "ExternalInputPbPb/EMCAL/LHC11h_EMCal_pi0eta_PbPb_10092015.root";
@@ -5535,16 +5535,20 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
                                                                                                   xPtLimitsEta, 13, offSetsEtaRAA, offSetsEtaRAASys,
                                                                                                   graphCombRAAStatPbPb2760GeV_2050, graphCombRAASysPbPb2760GeV_2050,
                                                                                                     Form("%s/2050LHC11h_WeightingRAA%s.dat",outputDir.Data(),meson.Data()),1);
-        for(Int_t a =0; a<2; a++){
+//         for(Int_t a =0; a<1; a++){
           graphCombRAATotPbPb2760GeV_0010->RemovePoint(0);
           graphCombRAAStatPbPb2760GeV_0010->RemovePoint(0);
           graphCombRAASysPbPb2760GeV_0010->RemovePoint(0);
           graphCombRAATotPbPb2760GeV_2050->RemovePoint(0);
           graphCombRAAStatPbPb2760GeV_2050->RemovePoint(0);
           graphCombRAASysPbPb2760GeV_2050->RemovePoint(0);
-
-        }
+//         }
     }
+
+//     graphCombRAATotPbPb2760GeV_0010->Print();
+//     graphCombRAAStatPbPb2760GeV_0010->Print();
+//     graphCombRAASysPbPb2760GeV_0010->Print();
+//     return;
 
 
     TCanvas* canvasRAAcombo = new TCanvas("canvasRAAcombo","",200,10,1200,1100);  //200,10,1350,900);  // gives the page size
@@ -6486,7 +6490,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
                                                                                                   xPtLimitsEta, /*17*/13, offSetsEta, offSetsEtaSys,
                                                                                                   graphCombEtatoPi0StatPbPb2760GeV_2050, graphCombEtatoPi0SysPbPb2760GeV_2050, "weightEtatoPi0_2050.dat",1 );
 
-      for(Int_t a=0; a<2;a++){
+//       for(Int_t a=0; a<2;a++){
         graphCombEtatoPi0TotPbPb2760GeV_0010->RemovePoint(0);
         graphCombEtatoPi0StatPbPb2760GeV_0010->RemovePoint(0);
         graphCombEtatoPi0SysPbPb2760GeV_0010->RemovePoint(0);
@@ -6495,13 +6499,14 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         graphCombEtatoPi0StatPbPb2760GeV_2050->RemovePoint(0);
         graphCombEtatoPi0SysPbPb2760GeV_2050->RemovePoint(0);
 
-      }
+//       }
 //       graphCombEtatoPi0TotPbPb2760GeV_0010->Print();
 //       graphCombEtatoPi0StatPbPb2760GeV_0010->Print();
 //       graphCombEtatoPi0SysPbPb2760GeV_0010->Print();
 //       graphCombEtatoPi0TotPbPb2760GeV_2050->Print();
 //       graphCombEtatoPi0StatPbPb2760GeV_2050->Print();
 //       graphCombEtatoPi0SysPbPb2760GeV_2050->Print();
+//       return;
 
 
         TCanvas* canvasEtatoPi0combo = new TCanvas("canvasEtatoPi0combo","",200,10,1200,1100);  //200,10,1350,900);  // gives the page size
