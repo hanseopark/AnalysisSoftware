@@ -28,6 +28,7 @@ void WorldDataPi0Eta(void){
     Double_t xErr[100];
     Double_t statErr[100];
     Double_t sysErr[100];
+    Double_t sysErrB[100];
     Double_t a = 0;
     Double_t b = 0;
     Double_t c = 0;
@@ -321,7 +322,8 @@ void WorldDataPi0Eta(void){
     
     
     while(!Phenix200GeV.eof()){
-        Phenix200GeV >> pt[lines] >> value[lines] >> totErr[lines] >> statErr[lines] >> sysErr[lines];
+        Phenix200GeV >> pt[lines] >> value[lines] >> statErr[lines] >> sysErr[lines] >> sysErrB[lines];
+        totErr[lines] = TMath::Sqrt(statErr[lines]*statErr[lines]+ sysErr[lines]*sysErr[lines] + sysErrB[lines]*sysErrB[lines]);
         xErr[lines] = 0.;	
         lines++;
     }
