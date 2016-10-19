@@ -365,7 +365,7 @@ Int_t fBinsEta8TeVConvTrigger2PtRebin[23]      = { 5, 5, 5, 5, 5,
 Int_t fBinsEta8TeVEMCALTrigger1PtRebin[23]      = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
                                                     8, 8, 8, 8, 8,
-                                                    8, 10, 10, 10, 10,
+                                                    8, 8, 10, 10, 10,
                                                     10, 20, 2};
 Int_t fBinsEta8TeVEMCALTrigger2PtRebin[23]      = { 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
