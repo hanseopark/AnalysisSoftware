@@ -1,0 +1,15 @@
+0.1258  0.0179  0.0090 
+0.3669  0.0581  0.0060 
+0.6215  0.1155  0.0137 
+0.8641  0.1835  0.0399 
+1.1246  0.2796  0.0467 
+1.3932	0.3127	0.1443 
+
+
+read off value from plot
+
+\bibitem{Tikhomirov:1995pf}
+  V.~Tikhomirov  [HELIOS Collaboration],
+  %``Low p(T) pi0 and eta production in p Be interactions at 450-GeV,''
+%\href{http://www.slac.stanford.edu/spires/find/hep/www?irn=4386540}{SPIRES entry}
+{\it 6th International Conference on Hadron Spectroscopy (HADRON 95), Manchester, England, 10-14 Jul 1995}

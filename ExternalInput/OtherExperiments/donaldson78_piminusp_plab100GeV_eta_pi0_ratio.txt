@@ -1,0 +1,9 @@
+1.6 2.0 0.46 0.04 0.40 0.50
+2.0 2.5 0.45 0.09 0.00 0.05 
+2.5 3.0 0.71 0.24 0.00 0.10 
+
+
+
+DONALDSON 78 PRL 40,684
+P IN GEV 100. RE(Q=E) P- P --> ETA X; RE(Q=P) P- P --> PI0 X,x=pt, y= sig(Q=E)/sig(Q=P)
+x1 to x2 y +- dy XL1 to XL2
