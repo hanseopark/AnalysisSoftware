@@ -1,6 +1,7 @@
 /****************************************************************************************************************************
  ******     provided by Gamma Conversion Group, PWGGA,                                                                  *****
  ******        Friederike Bock, friederike.bock@cern.ch                                                                 *****
+ ******        Daniel Muehlheim, d.muehlheim@cern.ch                                                                    *****
  *****************************************************************************************************************************/
 
 #include <Riostream.h>
@@ -919,6 +920,13 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 pol0->Draw("same");
                 histoRatioRawClusterPt[i]->DrawCopy("e1,same"); 
 
+                TF1* pol1 = new TF1("pol1","[0]+[1]*x",minPt[i],maxPt[i]); //
+                histoRatioRawClusterPt[i]->Fit(pol1,"NRME0+","",minPt[i],maxPt[i]);
+                pol1->SetLineColor(colorTrigg[i]-2);
+                pol1->SetLineStyle(9);
+                pol1->SetRange(minPt[i],maxPt[i]);
+                pol1->Draw("same");
+                
                 TLegend* legendTriggRejectSingle = GetAndSetLegend2(0.33, 0.12, 0.92, 0.12+(1.05*(2)*textSizeSpectra2),textPixelPP);
                 legendTriggRejectSingle->SetMargin(0.02);
                 legendTriggRejectSingle->SetNColumns(3);

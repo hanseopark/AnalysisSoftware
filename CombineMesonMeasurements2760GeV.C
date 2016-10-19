@@ -89,6 +89,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     TString collisionSystem2760GeV              = "pp, #sqrt{#it{s}} = 2.76 TeV";
     
     TString fileNameTheory                      = "ExternalInput/Theory/TheoryCompilationPP.root";
+    TString fileNameEtaToPi0WorldData           = "ExternalInput/WorldDataPi0Eta.root";
     TString fileNamePHOS                        = "ExternalInput/PHOS/2.76TeV/LHC11a_PHOS_pi0_pp2760_noBWCorr_FDcorr_20140218.root";
     TString fileNamePCMEta                      = "FinalResults/data_PCMResultsFullCorrection_PP_NoBinShifting_usedTosvnEtapaper.root";
     TString fileNameChargedPionPP               = "ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_20_May_2015.root";
@@ -813,14 +814,12 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         while (graphNLOCalcEtaMuTwo->GetX()[graphNLOCalcEtaMuTwo->GetN()-1] > 22. )
             graphNLOCalcEtaMuTwo->RemovePoint(graphNLOCalcEtaMuTwo->GetN()-1);
             
-//         cout << "mu half" << endl;
-//         graphNLOEtaToPi0MuHalf->Print();
-//         cout << "mu one" << endl;
-//         graphNLOEtaToPi0MuOne->Print();
-//         cout << "mu two" << endl;
-//         graphNLOEtaToPi0MuTwo->Print();
-        
-        
+    // *******************************************************************************************************
+    // ************************** Loading theory calculations ************************************************
+    // *******************************************************************************************************        
+    TFile* fileEtaToPi0Compilation                          = new TFile(fileNameEtaToPi0WorldData.Data());
+        TGraphErrors* graphPHENIXEtaToPi0200GeV             = (TGraphErrors*)fileEtaToPi0Compilation->Get("Phenix200GeV");
+        TGraphAsymmErrors* graphALICEEtaToPi07TeV           = (TGraphAsymmErrors*)fileEtaToPi0Compilation->Get("Alice7TeV");
         
 //         return;
     // *******************************************************************************************************
@@ -3694,7 +3693,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     
         TH2F * histo2DTriggerEffPi0;
         histo2DTriggerEffPi0                = new TH2F("histo2DTriggerEffPi0", "histo2DTriggerEffPi0",1000, 0.,  21, 1000, 0, 1.15 );
-        SetStyleHistoTH2ForGraphs( histo2DTriggerEffPi0, "#it{p}_{T} (GeV/#it{c})", "#it{#varepsilon}_{Trig}",  
+        SetStyleHistoTH2ForGraphs( histo2DTriggerEffPi0, "#it{p}_{T} (GeV/#it{c})", "#it{#kappa}_{Trig}",  
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 0.95);//(#times #epsilon_{pur})
             histo2DTriggerEffPi0->GetXaxis()->SetMoreLogLabels(kTRUE);
         histo2DTriggerEffPi0->DrawCopy(); 
@@ -4358,6 +4357,9 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     canvasEtatoPi0combo->Update();
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_differentSystems.%s",outputDir.Data(), suffix.Data()));
 
+    // ***************************************************************************************************************
+    // ******************************* Plotting eta/pi0 ratio for combined measurement *******************************
+    // ***************************************************************************************************************    
     histo2DEtatoPi0combo->Draw("copy");
 
         TGraphAsymmErrors* graphCombEtaToPi0StatAWOXErr = (TGraphAsymmErrors*)graphCombEtaToPi0StatA->Clone("graphCombEtaToPi0StatAWOXErr");
@@ -4383,17 +4385,13 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     canvasEtatoPi0combo->Update();
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Paper.%s",outputDir.Data(), suffix.Data()));
 
-        // plotting NLO
-//         graphNLOEtaToPi0->RemovePoint(0);
+    
+    // ***************************************************************************************************************
+    // ********************** Plotting eta/pi0 ratio for combined measurement + Theory *******************************
+    // ***************************************************************************************************************    
+    histo2DEtatoPi0combo->Draw("copy");
         DrawGammaSetMarkerTGraphAsym(graphNLOEtaToPi0, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
         graphNLOEtaToPi0->Draw("3,same");
-
-//         DrawGammaNLOTGraph( graphNLOEtaToPi0MuHalf, widthCommonFit, styleLineNLOMuHalf, colorNLO);
-//         graphNLOEtaToPi0MuHalf->Draw("same,c");
-//         DrawGammaNLOTGraph( graphNLOEtaToPi0MuOne, widthCommonFit, styleLineNLOMuOne, colorNLO);
-//         graphNLOEtaToPi0MuOne->Draw("same,c");
-//         DrawGammaNLOTGraph( graphNLOEtaToPi0MuTwo, widthCommonFit, styleLineNLOMuTwo, colorNLO);
-//         graphNLOEtaToPi0MuTwo->Draw("same,c");
 
         DrawGammaSetMarker(histoPythia8EtaToPi0, 24, 1.5, kRed+2 , kRed+2);  
         histoPythia8EtaToPi0->SetLineWidth(widthCommonFit);
@@ -4419,6 +4417,44 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     canvasEtatoPi0combo->Update();
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Theory_Paper.%s",outputDir.Data(), suffix.Data()));
 
+    // ***************************************************************************************************************
+    // **************** Plotting eta/pi0 ratio for combined measurement + Theory + other energies ********************
+    // ***************************************************************************************************************    
+    canvasEtatoPi0combo->cd();
+    histo2DEtatoPi0combo->Draw("copy");
+        graphNLOEtaToPi0->Draw("3,same");
+        histoPythia8EtaToPi0->Draw("same,hist,l");
+
+        graphCombEtaToPi0SysA->Draw("2,same");
+               
+        DrawGammaSetMarkerTGraphErr(graphPHENIXEtaToPi0200GeV, 25, 2., kGray+2, kGray+2, widthLinesBoxes, kFALSE);
+        graphPHENIXEtaToPi0200GeV->Draw("p,same");
+        DrawGammaSetMarkerTGraphAsym(graphALICEEtaToPi07TeV, 24, 2.2, kBlack, kBlack, widthLinesBoxes, kFALSE);
+        graphALICEEtaToPi07TeV->Draw("p,same");
+        
+        graphCombEtaToPi0StatAWOXErr->Draw("p,same");
+        
+        TLegend* legendEtaToPi0Theory2 = GetAndSetLegend2(0.13, 0.95, 0.46, 0.95-(textsizeLabelsEtaToPi0*4*0.9), textSizeLabelsPixel*0.85, 1, "", 43, 0.16);
+        legendEtaToPi0Theory2->AddEntry(graphCombEtaToPi0SysA,Form("ALICE, %s",collisionSystem2760GeV.Data()),"pf");
+        legendEtaToPi0Theory2->AddEntry(graphNLOEtaToPi0,"NLO, PDF:CTEQ6M5 ","pf");
+        legendEtaToPi0Theory2->AddEntry((TObject*)0,"#pi^{0} FF: DSS07, #eta FF: AESSS","");
+        legendEtaToPi0Theory2->AddEntry(histoPythia8EtaToPi0,"PYTHIA 8.2, Monash 2013","l");
+        legendEtaToPi0Theory2->Draw();
+
+        TLegend* legendEtaToPi0WorldData = GetAndSetLegend2(0.53, 0.145+(textsizeLabelsEtaToPi0*2*0.9), 0.9, 0.145, textSizeLabelsPixel*0.85, 1, "", 43, 0.16);
+        legendEtaToPi0WorldData->AddEntry(graphALICEEtaToPi07TeV,"ALICE, pp, #sqrt{#it{s}} = 7 TeV","p");
+        legendEtaToPi0WorldData->AddEntry(graphPHENIXEtaToPi0200GeV,"PHENIX, pp, #sqrt{#it{s}} = 0.2 TeV", "p");
+        legendEtaToPi0WorldData->Draw();
+        
+    histo2DEtatoPi0combo->Draw("axis,same");
+
+    canvasEtatoPi0combo->Update();
+    canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Theory_WorldData_Paper.%s",outputDir.Data(), suffix.Data()));
+
+
+    // ***************************************************************************************************************
+    // ******************************** fitting eta/pi0 **************************************************************
+    // ***************************************************************************************************************    
     TF1* etaToPi0ConstData  = new TF1("etaToPi0ConstData","[0]",8,20);
     TF1* etaToPi0ConstMC    = new TF1("etaToPi0ConstMC","[0]",8,20);
     graphCombEtaToPi0StatAWOXErr->Fit(etaToPi0ConstData,"QRME0","",8,20);
