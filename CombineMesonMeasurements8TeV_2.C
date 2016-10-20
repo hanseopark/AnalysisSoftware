@@ -2442,7 +2442,8 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         graphRatioPi0CombCombFitSysA->Draw("2,same");
         graphRatioPi0CombCombFitStatA->Draw("p,same");
 
-
+        TBox* boxErrorSigmaRatio = CreateBoxConv(kGray+1, 0.3, 1.-(0.0196 ), 0.34, 1.+(0.0196));
+        boxErrorSigmaRatio->Draw();
         DrawGammaLines(0.23, 110.,1., 1.,0.1,kGray);
 
         TLegend* legendRatioTheorypp_3Parted= GetAndSetLegend2(0.35,0.71,0.6,0.97, 0.85* textSizeLabelsPixel);
@@ -2505,7 +2506,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     graphRatioPi0CombCombFitSysA->Draw("2,same");
     graphRatioPi0CombCombFitStatA->Draw("p,same");
 
-
+    boxErrorSigmaRatio->Draw();
     DrawGammaLines(0.23, 110.,1., 1.,0.1,kGray);
 
     TLegend* legendRatioTheorypp_3Parted2= GetAndSetLegend2(0.15,0.7,0.4,0.96, 0.85* textSizeLabelsPixel);
@@ -2705,6 +2706,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         graphRatioPi0CombCombFitSysA->Draw("2,same");
         graphRatioPi0CombCombFitStatA->Draw("p,same");
 
+        boxErrorSigmaRatio->Draw();
         DrawGammaLines(0.23, 110.,1., 1.,0.1,kGray);
 
     padInvSectionPythiaRatio->cd();
@@ -2742,6 +2744,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         graphRatioPi0CombCombFitSysA->Draw("2,same");
         graphRatioPi0CombCombFitStatA->Draw("p,same");
 
+        boxErrorSigmaRatio->Draw();
         DrawGammaLines(0.23, 110.,1., 1.,0.1,kGray);
 
     canvasInvSectionPaper->Print(Form("%s/Pi0_InvXSectionWithRatios_Paper.%s",outputDir.Data(),suffix.Data()));

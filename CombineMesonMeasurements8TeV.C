@@ -1160,11 +1160,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         labelWeightsEnergy->Draw();
         labelWeightsPi0->Draw();
 
-//      DrawGammaLines(0.23, 70. , 0.8, 0.8,0.1, kGray, 3);
-        DrawGammaLines(0.23, 70. , 0.5, 0.5,0.1, kGray, 7);
-        DrawGammaLines(0.23, 70. , 0.4, 0.4,0.1, kGray, 1);
-        DrawGammaLines(0.23, 70. , 0.3, 0.3,0.1, kGray, 7);
-        DrawGammaLines(0.23, 70. , 0.2, 0.2,0.1, kGray, 3);
+//      DrawGammaLines(0.23, 50. , 0.8, 0.8,0.1, kGray, 3);
+        DrawGammaLines(0.23, 50. , 0.5, 0.5,0.1, kGray, 7);
+        DrawGammaLines(0.23, 50. , 0.4, 0.4,0.1, kGray, 1);
+        DrawGammaLines(0.23, 50. , 0.3, 0.3,0.1, kGray, 7);
+        DrawGammaLines(0.23, 50. , 0.2, 0.2,0.1, kGray, 3);
         
     canvasWeights->SaveAs(Form("%s/Pi0_WeightsA.%s",outputDir.Data(),suffix.Data()));
     
@@ -1701,9 +1701,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitStatA, markerStyleComb, markerSizeComb, colorComb , colorComb);
         graphRatioPi0CombCombFitStatA->Draw("p,same,z");
 
-        DrawGammaLines(0.23, 70. , 1., 1.,0.1, kGray+2);
-        DrawGammaLines(0.23, 70. , 1.1, 1.1,0.1, kGray, 7);
-        DrawGammaLines(0.23, 70. , 0.9, 0.9,0.1, kGray, 7);
+        DrawGammaLines(0.23, 50. , 1., 1.,0.1, kGray+2);
+        DrawGammaLines(0.23, 50. , 1.1, 1.1,0.1, kGray, 7);
+        DrawGammaLines(0.23, 50. , 0.9, 0.9,0.1, kGray, 7);
 
         TLatex *labelRatioToFitEnergy   = new TLatex(0.72, 0.91, collisionSystem8TeV.Data());
         SetStyleTLatex( labelRatioToFitEnergy, textSizeLabelsPixel,4);
@@ -1750,9 +1750,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //        graphRatioPi0EMCALMergedCombFitStat->Draw("p,same,z");
         graphRatioPi0PCMEMCALCombFitStat->Draw("p,same,z");
 
-        DrawGammaLines(0.23, 70. , 1., 1.,0.5, kGray+2);
-        DrawGammaLines(0.23, 70. , 1.1, 1.1,0.5, kGray, 7);
-        DrawGammaLines(0.23, 70. , 0.9, 0.9,0.5, kGray, 7);
+        DrawGammaLines(0.23, 50. , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(0.23, 50. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.23, 50. , 0.9, 0.9,0.5, kGray, 7);
         
         labelRatioToFitEnergy->Draw();
         labelRatioToFitALICE->Draw();
@@ -1856,9 +1856,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphRatioPi0EMCALMergedCombFitStat->Draw("p,same,z");
         graphRatioPi0PCMEMCALCombFitStat->Draw("p,same,z");
 
-        DrawGammaLines(0.23, 70. , 1., 1.,0.5, kGray+2);
-        DrawGammaLines(0.23, 70. , 1.1, 1.1,0.5, kGray, 7);
-        DrawGammaLines(0.23, 70. , 0.9, 0.9,0.5, kGray, 7);
+        DrawGammaLines(0.23, 50. , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(0.23, 50. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.23, 50. , 0.9, 0.9,0.5, kGray, 7);
 
         labelRatioToFitEnergy->Draw();
         labelRatioToFitALICE->Draw();
@@ -1918,9 +1918,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphRatioPi0PCMCombFitStat->Draw("p,same,z");
         graphRatioPi0PCMCombFitPCMStat->Draw("p,same,z");
 
-        DrawGammaLines(0.23, 70. , 1., 1.,0.5, kGray+2);
-        DrawGammaLines(0.23, 70. , 1.1, 1.1,0.5, kGray, 7);
-        DrawGammaLines(0.23, 70. , 0.9, 0.9,0.5, kGray, 7);
+        DrawGammaLines(0.23, 16. , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(0.23, 16. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.23, 16. , 0.9, 0.9,0.5, kGray, 7);
         
         labelRatioToFitEnergy->Draw();
         labelRatioToFitALICE->Draw();
@@ -4134,8 +4134,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphRatioPi0CombCombFitSysA->Draw("2,same");
         graphRatioPi0CombCombFitStatA->Draw("p,same");
 
-        
-        DrawGammaLines(0.23, 70.,1., 1.,0.5,kGray+2);
+        TBox* boxErrorSigmaRatio = CreateBoxConv(kGray+1, 0.3, 1.-(0.0196 ), 0.34, 1.+(0.0196));
+        boxErrorSigmaRatio->Draw();
+        DrawGammaLines(0.23, 60.,1., 1.,0.5,kGray+2);
 
         TLegend* legendRatioTheorypp_3Parted= GetAndSetLegend2(0.35,0.71,0.6,0.97, 0.85* textSizeLabelsPixel);
     //    legendRatioTheorypp_3Parted->SetNColumns(2);
@@ -4161,7 +4162,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP.%s",outputDir.Data(),suffix.Data()));
 
 
-    TH2F * ratio2DTheoryPP2       = new TH2F("ratio2DTheoryPP2","ratio2DTheoryPP2",1000,0.23,70.,1000,0.2,5.2);
+    TH2F * ratio2DTheoryPP2       = new TH2F("ratio2DTheoryPP2","ratio2DTheoryPP2",1000,0.23,60.,1000,0.2,5.2);
     SetStyleHistoTH2ForGraphs(ratio2DTheoryPP2, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{fit}", 0.85*textsizeLabelsPP, textsizeLabelsPP,
                               0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
     ratio2DTheoryPP2->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -4197,8 +4198,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     graphRatioPi0CombCombFitSysA->Draw("2,same");
     graphRatioPi0CombCombFitStatA->Draw("p,same");
 
-
-    DrawGammaLines(0.23, 70.,1., 1.,0.5,kGray+2);
+    boxErrorSigmaRatio->Draw();
+    DrawGammaLines(0.23, 60.,1., 1.,0.5,kGray+2);
 
     TLegend* legendRatioTheorypp_3Parted2= GetAndSetLegend2(0.15,0.65,0.4,0.96, 0.85* textSizeLabelsPixel);
     legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombCombFitSysA,"ALICE #pi^{0}","pf");
@@ -4221,7 +4222,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suffix.Data()));
 
 
-    TH2F * ratio2DTheoryPP3       = new TH2F("ratio2DTheoryPP3","ratio2DTheoryPP3",1000,0.23,70.,1000,0.2,5.2);
+    TH2F * ratio2DTheoryPP3       = new TH2F("ratio2DTheoryPP3","ratio2DTheoryPP3",1000,0.23,60.,1000,0.2,5.2);
     SetStyleHistoTH2ForGraphs(ratio2DTheoryPP3, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{fit}", 0.85*textsizeLabelsPP, textsizeLabelsPP,
                               0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
     ratio2DTheoryPP3->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -4252,8 +4253,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     graphRatioPi0CombCombFitSysA->Draw("2,same");
     graphRatioPi0CombCombFitStatA->Draw("p,same");
 
-
-    DrawGammaLines(0.23, 70.,1., 1.,0.5,kGray+2);
+    boxErrorSigmaRatio->Draw();
+    DrawGammaLines(0.23, 60.,1., 1.,0.5,kGray+2);
 
     TLegend* legendRatioTheorypp_3Parted3= GetAndSetLegend2(0.15,0.7,0.4,0.96, 0.85* textSizeLabelsPixel);
     legendRatioTheorypp_3Parted3->AddEntry(graphRatioPi0CombCombFitSysA,"ALICE #pi^{0}","pf");
@@ -4311,8 +4312,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphRatioEtaCombCombFitSysA->Draw("2,same");
         graphRatioEtaCombCombFitStatA->Draw("p,same");
 
-        DrawGammaLines(0.23, 70. , 1., 1.,0.5, kGray+2);
-        //DrawGammaLines(0.23, 70.,1., 1.,0.5,kGray+2);
+        boxErrorSigmaRatio->Draw();
+        DrawGammaLines(0.23, 50. , 1., 1.,0.5, kGray+2);
 
         TLegend* legendRatioTheoryppEta_3Parted= GetAndSetLegend2(0.15,0.86-(0.85*textsizeLabelsPP*5),0.40,0.96, 0.85* textSizeLabelsPixel);
         legendRatioTheoryppEta_3Parted->AddEntry(graphRatioEtaCombCombFitSysA,"ALICE #eta","pf");
@@ -4488,6 +4489,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         ratio2DNLO->GetXaxis()->SetTickLength(0.07);
         ratio2DNLO->DrawCopy();
 
+        TLegend* legendXsectionPaperPi02     = GetAndSetLegend2(0.17, 0.8, 0.4, 0.83+0.05*1, textSizeLabelsPixel*0.8);
+        legendXsectionPaperPi02->AddEntry(boxErrorSigmaRatio,"norm. unc. 1.96%","f");
+        legendXsectionPaperPi02->Draw();
+
 //        graphRatioPi0CombNLODSS14->RemovePoint(0);
 //        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombNLODSS14, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
 //        graphRatioPi0CombNLODSS14->Draw("3,same");
@@ -4511,8 +4516,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphRatioPi0CombCombFitSysA->Draw("2,same");
         graphRatioPi0CombCombFitStatA->Draw("p,same");
         
-        DrawGammaLines(0.23, 70. , 1., 1.,0.5, kGray+2);
-        //DrawGammaLines(0.23, 70.,1., 1.,0.1,kGray);
+        boxErrorSigmaRatio->Draw();
+        DrawGammaLines(0.23, 60. , 1., 1.,0.5, kGray+2);
         
     padInvSectionPythiaRatio->cd();
     padInvSectionPythiaRatio->SetLogx(1);
@@ -4549,8 +4554,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphRatioPi0CombCombFitSysA->Draw("2,same");
         graphRatioPi0CombCombFitStatA->Draw("p,same");
 
-        DrawGammaLines(0.23, 70. , 1., 1.,0.5, kGray+2);
-        //DrawGammaLines(0.23, 70.,1., 1.,0.1,kGray);
+        boxErrorSigmaRatio->Draw();
+        DrawGammaLines(0.23, 60. , 1., 1.,0.5, kGray+2);
         
     canvasInvSectionPaper->Print(Form("%s/Pi0_InvXSectionWithRatios_Paper.%s",outputDir.Data(),suffix.Data()));
 
@@ -4629,6 +4634,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         ratio2DNLOEta->GetXaxis()->SetTickLength(0.07);
         ratio2DNLOEta->DrawCopy();
 
+        TLegend* legendXsectionPaperEta2     = GetAndSetLegend2(0.17, 0.8, 0.4, 0.83+0.05*1, textSizeLabelsPixel*0.8);
+        legendXsectionPaperEta2->AddEntry(boxErrorSigmaRatio,"norm. unc. 1.96%","f");
+        legendXsectionPaperEta2->Draw();
+
         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuHalf, widthCommonFit, styleLineNLOMuHalf, colorNLO);
         graphRatioEtaCombNLOMuHalf->Draw("same,c");
         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuOne, widthCommonFit, styleLineNLOMuOne, colorNLO);
@@ -4643,8 +4652,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphRatioEtaCombCombFitSysA->Draw("2,same");
         graphRatioEtaCombCombFitStatA->Draw("p,same");
         
-        DrawGammaLines(0.23, 70. , 1., 1.,0.5, kGray+2);
-        //DrawGammaLines(0.33, 25.,1., 1.,0.1,kGray);
+        boxErrorSigmaRatio->Draw();
+        DrawGammaLines(0.23, 50. , 1., 1.,0.5, kGray+2);
         
     padInvSectionPythiaRatio->cd();
     padInvSectionPythiaRatio->SetLogx(1);
@@ -4682,8 +4691,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphRatioEtaCombCombFitSysA->Draw("2,same");
         graphRatioEtaCombCombFitStatA->Draw("p,same");
 
-        DrawGammaLines(0.23, 70. , 1., 1.,0.5, kGray+2);
-        //DrawGammaLines(0.33, 25.,1., 1.,0.1,kGray);
+        boxErrorSigmaRatio->Draw();
+        DrawGammaLines(0.23, 50. , 1., 1.,0.5, kGray+2);
         
     canvasInvSectionPaper->Print(Form("%s/Eta_InvXSectionWithRatios_Paper.%s",outputDir.Data(),suffix.Data()));
 
