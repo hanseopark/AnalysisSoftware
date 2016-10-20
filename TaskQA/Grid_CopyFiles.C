@@ -815,35 +815,37 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
     //*********************************************************************************************************************************
     //*********************************************************************************************************************************
 
-        const Int_t nSets = 14;
+        const Int_t nSets = 21;
         const Int_t nData = 7;
         TString DataSets[nSets]={
           "LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i",
           "LHC15h1a1", "LHC15h1b", "LHC15h1c", "LHC15h1d", "LHC15h1f", "LHC15h1h", "LHC15h1i",
-          //"LHC15h2a", "LHC15h2b", "LHC15h2c", "LHC15h2d", "LHC15h2f", "LHC15h2h", "LHC15h2i"
+          "LHC15h2a", "LHC15h2b", "LHC15h2c", "LHC15h2d", "LHC15h2f", "LHC15h2h", "LHC15h2i"
         };
 
         TString train = "Legotrain-vAN-20161012-8TeV-smear_vertex";
         Int_t trainRuns[nSets] = {1872,1873,1874,1875,1876,1877,1878,
                                   2546,2547,2548,2549,2550,2551,2552,
-                                  //2389,2390,2391,2392,2385,2393,2394
+                                  2560,2554,2555,2556,2557,2558,2559
                                  };
 
         TString runlist[nSets] = {"merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9",
                                   "merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2",
-                                  //"merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2"
+                                  "merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2"
                                  };
 
         const Int_t nFiles = 1;
         TString Files[nFiles] = { "GammaConvCalo_101"};
 
-        const Int_t nMerge = 2;
-        TString strMerge[nMerge]={"LHC12", "LHC15h1"};
+        const Int_t nMerge = 4;
+        TString strMerge[nMerge]={"LHC12", "LHC15h1", "LHC15h2", "LHC15h"};
         std::vector<Int_t> mergeVec[nMerge];
         std::vector<Int_t>::iterator it;
         for(Int_t i=0; i<nSets; i++){
           if(0<=i && i<=6) mergeVec[0].push_back(i);
           if(7<=i && i<=13) mergeVec[1].push_back(i);
+          if(14<=i && i<=20) mergeVec[2].push_back(i);
+          if(7<=i && i<=20) mergeVec[3].push_back(i);
         }
     //---------------------------------------------------------------------------------------------------
 

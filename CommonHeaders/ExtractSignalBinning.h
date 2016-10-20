@@ -1763,6 +1763,9 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
             if ((fNBinsPt - fStartPtBin) > 29){
                 fColumn     = 6;
                 fRow        = 6;
+            } else if ((fNBinsPt - fStartPtBin) < 8){
+                fColumn     = 4;
+                fRow        = 2;
             } else if ((fNBinsPt - fStartPtBin) < 12){
                 fColumn     = 4;
                 fRow        = 3;
@@ -2353,28 +2356,27 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
           if (modi == 4 && specialTrigg == 1) fStartPtBin = 10;
           if (modi == 4 && specialTrigg == 2) fStartPtBin = 14;
 
-          fColumn             = 4;
-          fRow                = 3;
+          fColumn             = 6;
+          fRow                = 5;
 
-          if (fNBinsPt - fStartPtBin > 29){
+          if ((fNBinsPt - fStartPtBin) > 29){
               fColumn     = 6;
               fRow        = 6;
-          }
-          if (fNBinsPt - fStartPtBin < 25){
-              fColumn     = 5;
-              fRow        = 5;
-          }
-          if (fNBinsPt - fStartPtBin < 20){
-              fColumn     = 5;
-              fRow        = 4;
-          }
-          if (fNBinsPt - fStartPtBin < 16){
+          } else if ((fNBinsPt - fStartPtBin) < 8){
               fColumn     = 4;
-              fRow        = 4;
-          }
-          if (fNBinsPt - fStartPtBin < 10){
+              fRow        = 2;
+          } else if ((fNBinsPt - fStartPtBin) < 12){
               fColumn     = 4;
               fRow        = 3;
+          } else if ((fNBinsPt - fStartPtBin) < 16){
+              fColumn     = 4;
+              fRow        = 4;
+          } else if ((fNBinsPt - fStartPtBin) < 20){
+              fColumn     = 5;
+              fRow        = 4;
+          } else if ((fNBinsPt - fStartPtBin) < 25){
+              fColumn     = 5;
+              fRow        = 5;
           }
 
           if (fNBinsPt > 16 && modi != 2 && modi != 3 && modi != 4) {
