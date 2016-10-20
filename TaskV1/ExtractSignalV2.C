@@ -574,7 +574,11 @@ void ExtractSignalV2(   TString meson                   = "",
         // Fitting the subtracted spectra
         fFileErrLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << "normal range/right normalization" << endl;
 
-        fFitSignalInvMassPtBin[iPt]=0x00;
+        fFitSignalInvMassPtBin[iPt]     =0x00;
+        fMesonResidualBGlin[iPt]        = 0;
+        fMesonResidualBGlinError[iPt]   = 0;
+        fMesonResidualBGcon[iPt]        = 0;
+        fMesonResidualBGconError[iPt]   = 0;
         if(fCrysFitting==0){
             fFileErrLog << "Using exp fit"<<endl;
             fFileDataLog << "Subtracted mixed event" << endl;
@@ -584,6 +588,14 @@ void ExtractSignalV2(   TString meson                   = "",
             fFitBckInvMassPtBin[iPt]                    = fFitLinearBck;
             fMesonYieldsResidualBckFunc[0][iPt]         = fIntLinearBck;
             fMesonYieldsResidualBckFuncError[0][iPt]    = fIntLinearBckError;
+            fMesonResidualBGlin[iPt]                    = fFitBckInvMassPtBin[iPt]->GetParameter(1);
+            fMesonResidualBGlinError[iPt]               = fFitBckInvMassPtBin[iPt]->GetParError(1);
+            fMesonResidualBGcon[iPt]                    = fFitBckInvMassPtBin[iPt]->GetParameter(0);
+            fMesonResidualBGconError[iPt]               = fFitBckInvMassPtBin[iPt]->GetParError(0);
+            if (fFitReco)
+                fMesonChi2[iPt]                         = fFitReco->GetChisquare()/fFitReco->GetNDF();
+            else 
+                fMesonChi2[iPt]                         = -1;
         } else {
             fFileErrLog << "Using Crystal Ball function"<<endl;
             FitCBSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE,Form("CBFitFuncNormalBin%02d",iPt),kFALSE);
@@ -616,6 +628,7 @@ void ExtractSignalV2(   TString meson                   = "",
             fMesonCurIntRange[0][1]         = fMesonMass[iPt] + fMesonIntDeltaRange[1];
             fMesonCurIntRange[1][1]         = fMesonMass[iPt] + fMesonIntDeltaRangeWide[1];
             fMesonCurIntRange[2][1]         = fMesonMass[iPt] + fMesonIntDeltaRangeNarrow[1];
+            
         } else {
             fMesonMass[iPt]                 = fMesonMassExpect;
             fMesonMassError[iPt]            = 0.;
@@ -624,7 +637,7 @@ void ExtractSignalV2(   TString meson                   = "",
             fMesonCurIntRange[2][0]         = fMesonMassExpect + fMesonIntDeltaRangeNarrow[0];
             fMesonCurIntRange[0][1]         = fMesonMassExpect + fMesonIntDeltaRange[1];
             fMesonCurIntRange[1][1]         = fMesonMassExpect + fMesonIntDeltaRangeWide[1];
-            fMesonCurIntRange[2][1]        = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
+            fMesonCurIntRange[2][1]         = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
         }
 
         for (Int_t k = 0; k < 3; k++){
@@ -1654,7 +1667,85 @@ void ExtractSignalV2(   TString meson                   = "",
 
     if (fIsMC) canvasMesonFWHM->SaveAs(Form("%s/%s_MC_MesonFWHM_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasMesonFWHM->SaveAs(Form("%s/%s_data_MesonFWHM_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+
+    ///*********************** Chi2 fit
+    TCanvas* canvasChi2 = new TCanvas("canvasChi2","",1550,1200);  // gives the page size
+    canvasChi2->SetTickx();
+    canvasChi2->SetTicky();
+
+    DrawGammaSetMarker(fHistoChi2, 20, 1., kBlack, kBlack);
+    fHistoChi2->SetTitle("");
+    fHistoChi2->GetXaxis()->SetTitle("p_{T} (GeV/c)");
+    fHistoChi2->GetYaxis()->SetTitle("#it{#chi^{2}}/ndf");
+    fHistoChi2->Draw("pe");
+
+    canvasChi2->Update();
     
+    if (fIsMC) canvasChi2->SaveAs(Form("%s/%s_MC_Chi2_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    else canvasChi2->SaveAs(Form("%s/%s_data_Chi2_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    
+    ///*********************** Residual BG slope
+    TCanvas* canvasResidualBGslope = new TCanvas("canvasResidualBGslope","",1550,1200);  // gives the page size
+    canvasResidualBGslope->SetTickx();
+    canvasResidualBGslope->SetTicky();
+
+    DrawGammaSetMarker(fHistoResidualBGlin, 20, 1., kBlack, kBlack);
+    fHistoResidualBGlin->SetTitle("");
+    fHistoResidualBGlin->GetXaxis()->SetTitle("p_{T} (GeV/c)");
+    fHistoResidualBGlin->GetYaxis()->SetTitle("#it{b} - slope of residual BG under peak");
+    fHistoResidualBGlin->Draw("pe");
+
+    canvasResidualBGslope->Update();
+    
+    TLegend* legendResidualBGslope = new TLegend(0.15,0.8,0.4,0.95);
+    legendResidualBGslope->SetFillColor(0);
+    legendResidualBGslope->SetLineColor(0);
+    legendResidualBGslope->SetTextSize(0.04);
+    legendResidualBGslope->AddEntry(fHistoResidualBGlin,"slope of residual BG","p");
+    legendResidualBGslope->Draw();
+
+    if (fIsMC) canvasResidualBGslope->SaveAs(Form("%s/%s_MC_ResidualBGslope_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    else canvasResidualBGslope->SaveAs(Form("%s/%s_data_ResidualBGslope_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+
+    ///*********************** Residual BG const
+    TCanvas* canvasResidualBGconst = new TCanvas("canvasResidualBGconst","",1550,1200);  // gives the page size
+    canvasResidualBGconst->SetTickx();
+    canvasResidualBGconst->SetTicky();
+
+    DrawGammaSetMarker(fHistoResidualBGcon, 20, 1., kBlack, kBlack);
+    fHistoResidualBGcon->SetTitle("");
+    fHistoResidualBGcon->GetXaxis()->SetTitle("p_{T} (GeV/c)");
+    fHistoResidualBGcon->GetYaxis()->SetTitle("#it{a} - const of residual BG under peak");
+    fHistoResidualBGcon->Draw("pe");
+
+    canvasResidualBGconst->Update();
+    
+    TLegend* legendResidualBGconst = new TLegend(0.15,0.8,0.4,0.95);
+    legendResidualBGconst->SetFillColor(0);
+    legendResidualBGconst->SetLineColor(0);
+    legendResidualBGconst->SetTextSize(0.04);
+    legendResidualBGconst->AddEntry(fHistoResidualBGcon,"const of residual BG","p");
+    legendResidualBGconst->Draw();
+
+    if (fIsMC) canvasResidualBGconst->SaveAs(Form("%s/%s_MC_ResidualBGconst_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    else canvasResidualBGconst->SaveAs(Form("%s/%s_data_ResidualBGconst_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+
+    ///*********************** Residual BG const
+    TCanvas* canvasRatioResBGToTotBG = new TCanvas("canvasRatioResBGToTotBG","",1550,1200);  // gives the page size
+    canvasRatioResBGToTotBG->SetTickx();
+    canvasRatioResBGToTotBG->SetTicky();
+
+    
+    DrawGammaSetMarker(fHistoRatioResBGYield, 20, 1., kBlack, kBlack);
+    fHistoRatioResBGYield->SetTitle("");
+    fHistoRatioResBGYield->GetXaxis()->SetTitle("p_{T} (GeV/c)");
+    fHistoRatioResBGYield->GetYaxis()->SetTitle("res BG/tot BG");
+    fHistoRatioResBGYield->Draw("pe");
+
+    canvasRatioResBGToTotBG->Update();
+    
+    if (fIsMC) canvasRatioResBGToTotBG->SaveAs(Form("%s/%s_MC_RatioResBGToTotBG_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    else canvasRatioResBGToTotBG->SaveAs(Form("%s/%s_data_RatioResBGToTotBG_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
     
     if(fIsMC){
         // Rebin MC histograms for acceptance and input with possible weights
@@ -2687,12 +2778,15 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fMesonTrueYieldGammaConvGammaErrorFixedWindow                   = new Double_t[fNBinsPt];
     fMesonTrueYieldConvGammaConvGammaErrorFixedWindow               = new Double_t[fNBinsPt];
 
-    
-    
     fMesonLambdaTailpar                                             = new Double_t[fNBinsPt];
     fMesonLambdaTailparError                                        = new Double_t[fNBinsPt];
     fMesonLambdaTailMCpar                                           = new Double_t[fNBinsPt];
     fMesonLambdaTailMCparError                                      = new Double_t[fNBinsPt];
+    fMesonResidualBGlin                                             = new Double_t[fNBinsPt];
+    fMesonResidualBGlinError                                        = new Double_t[fNBinsPt];
+    fMesonResidualBGcon                                             = new Double_t[fNBinsPt];
+    fMesonResidualBGconError                                        = new Double_t[fNBinsPt];
+    fMesonChi2                                                      = new Double_t[fNBinsPt];
     
     // initialize pt-arrays for different mass & width fitting procedures
     fMesonMass                                                      = new Double_t[fNBinsPt];
@@ -3528,6 +3622,14 @@ void CreatePtHistos(){
     fHistoLambdaTail                    = new TH1D("histoLambdaTail","",fNBinsPt,fBinsPt);
     fHistoLambdaTail->Sumw2();
 
+    fHistoResidualBGlin                 = new TH1D("histoResidualBGlin","",fNBinsPt,fBinsPt);
+    fHistoResidualBGlin->Sumw2();
+    fHistoResidualBGcon                 = new TH1D("histoResidualBGcon","",fNBinsPt,fBinsPt);
+    fHistoResidualBGcon->Sumw2();
+    fHistoRatioResBGYield               = new TH1D("histoRatioResBGYield","",fNBinsPt,fBinsPt);
+    fHistoRatioResBGYield->Sumw2();
+    fHistoChi2                          = new TH1D("histoChi2","",fNBinsPt,fBinsPt);
+    fHistoChi2->Sumw2();
 
     // create secondary histos
     for (Int_t k = 0; k < 3; k++){
@@ -3629,7 +3731,19 @@ void FillPtHistos()
         }
         fHistoLambdaTail->SetBinContent(iPt,fMesonLambdaTailpar[iPt-1]);
         fHistoLambdaTail->SetBinError(iPt,fMesonLambdaTailparError[iPt-1]);
-
+        fHistoResidualBGlin->SetBinContent(iPt,fMesonResidualBGlin[iPt-1]);
+        fHistoResidualBGlin->SetBinError(iPt,fMesonResidualBGlinError[iPt-1]);
+        fHistoResidualBGcon->SetBinContent(iPt,fMesonResidualBGcon[iPt-1]);
+        fHistoResidualBGcon->SetBinError(iPt,fMesonResidualBGconError[iPt-1]);
+        if (fTotalBckYields[0][iPt-1] != 0){
+            fHistoRatioResBGYield->SetBinContent(iPt,fMesonYieldsResidualBckFunc[0][iPt-1]/fTotalBckYields[0][iPt-1]);
+            fHistoRatioResBGYield->SetBinError(iPt,0);
+        } else {
+            fHistoRatioResBGYield->SetBinContent(iPt,0);
+            fHistoRatioResBGYield->SetBinError(iPt,0);            
+        }
+        fHistoChi2->SetBinContent(iPt,fMesonChi2[iPt-1]);
+        fHistoChi2->SetBinError(iPt,0);
         
         // filling histogram arrays for normal, wide, narrow
         for (Int_t k = 0; k < 3; k++){
@@ -4692,6 +4806,10 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
     }    
 
     fHistoLambdaTail->Write();
+    fHistoResidualBGcon->Write();
+    fHistoResidualBGlin->Write();
+    fHistoRatioResBGYield->Write();
+    fHistoChi2->Write();
     fHistoMassMeson->Write();
     fHistoMassGaussianMeson->Write();
     fHistoWidthGaussianMeson->Write();
@@ -5206,7 +5324,12 @@ void Delete(){
     if (fMesonLambdaTailparError)                               delete fMesonLambdaTailparError;
     if (fMesonLambdaTailMCpar)                                  delete fMesonLambdaTailMCpar;
     if (fMesonLambdaTailMCparError)                             delete fMesonLambdaTailMCparError;
-
+    if (fMesonResidualBGlin)                                    delete fMesonResidualBGlin;
+    if (fMesonResidualBGlinError)                               delete fMesonResidualBGlinError;
+    if (fMesonResidualBGcon)                                    delete fMesonResidualBGcon;
+    if (fMesonResidualBGconError)                               delete fMesonResidualBGconError;
+    if (fMesonChi2)                                             delete fMesonChi2;
+    
     if (fMesonTrueSB)                                           delete fMesonTrueSB;
     if (fMesonTrueSign)                                         delete fMesonTrueSign;
     if (fMesonFWHM)                                             delete fMesonFWHM;

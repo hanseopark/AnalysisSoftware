@@ -742,6 +742,14 @@ void PrepareChargedPionDataALICE_pp(){
     
     // *********************************************************************************************************************
     // *********************************** CMS charged pion results 2.76 TeV ***********************************************
+    //     @article{CMS:2012gva,
+    //         author         = "CMS Collaboration",
+    //         title          = "{Spectra of identified charged hadrons at sqrt(s) = 0.9, 2.76 and 7 TeV via tracker energy loss}",
+    //         collaboration  = "CMS",
+    //         year           = "2012",
+    //         reportNumber   = "CMS-PAS-FSQ-12-014",
+    //         SLACcitation   = "%%CITATION = CMS-PAS-FSQ-12-014;%%"
+    //     }
     // *********************************************************************************************************************
     Double_t chPionCMS_xval[22]             = { 0.125, 0.175, 0.225, 0.275, 0.325,
                                                 0.375, 0.425, 0.475, 0.525, 0.575,

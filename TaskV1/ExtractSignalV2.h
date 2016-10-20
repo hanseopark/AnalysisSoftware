@@ -384,6 +384,12 @@ Double_t*   fMesonLambdaTailpar                                         = NULL;
 Double_t*   fMesonLambdaTailparError                                    = NULL;
 Double_t*   fMesonLambdaTailMCpar                                       = NULL;
 Double_t*   fMesonLambdaTailMCparError                                  = NULL;
+Double_t*   fMesonResidualBGlin                                         = NULL;
+Double_t*   fMesonResidualBGlinError                                    = NULL;
+Double_t*   fMesonResidualBGcon                                         = NULL;
+Double_t*   fMesonResidualBGconError                                    = NULL;
+Double_t*   fMesonChi2                                                  = NULL;
+
 TH1D*       fHistoMassMeson                                             = NULL;
 TH1D*       fHistoFWHMMeson                                             = NULL;
 TH1D*       fHistoTrueMassMeson                                         = NULL;
@@ -503,6 +509,10 @@ TH1D*       fHistoSigndefaultMeson[3]                                   = { NULL
 TH1D*       fHistoTrueSignMeson                                         = NULL;
 TH1D*       fHistoTrueSBMeson                                           = NULL;
 TH1D*       fHistoLambdaTail                                            = NULL;
+TH1D*       fHistoResidualBGlin                                         = NULL;
+TH1D*       fHistoResidualBGcon                                         = NULL;
+TH1D*       fHistoChi2                                                  = NULL;
+TH1D*       fHistoRatioResBGYield                                       = NULL;
 
 Double_t*   fMassWindowHigh[3]                                          = { NULL, NULL, NULL};
 Double_t*   fMassWindowLow[3]                                           = { NULL, NULL, NULL};

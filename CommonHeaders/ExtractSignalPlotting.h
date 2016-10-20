@@ -366,6 +366,49 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     legendInvMass->Draw();
 
     canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBin.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), suffix.Data()));
+    
+    canvasInvMassSamplePlot->cd();
+    histo1DInvMassDummy->Draw();
+    histo1DInvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBGSub->GetMinimum(),1.15*histoPi0InvMassSigPlusBG->GetMaximum());
+    histo1DInvMassDummy->Draw("AXIS");
+    
+    DrawGammaSetMarker(histoPi0InvMassSigPlusBG, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
+    histoPi0InvMassSigPlusBG->SetLineWidth(1);
+    histoPi0InvMassSigPlusBG->Draw("hist,e,same");
+    DrawGammaSetMarker(histoPi0InvMassBG, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
+    histoPi0InvMassBG->Draw("same");
+    DrawGammaSetMarker(histoPi0InvMassRemBG, markerStyleInvMassMBG, markerSizeInvMassMBG, kGreen+2, kGreen+2);
+    histoPi0InvMassRemBG->Draw("same");
+
+    
+    if (scaleFacSignal == 1.0){
+        histoPi0InvMassSigRemBGSub->Draw("same");    
+        fitPi0InvMassSig->Draw("same");
+    } else {
+        histoPi0InvMassSigRemBGSub->Draw("same");    
+        histoFit->Draw("c,same");
+    }
+
+    labelALICE->Draw();
+    labelInvMassEnergy->Draw();
+    labelTrigger->Draw();
+    labelInvMassReco->Draw();
+    labelInvMassPtRange->Draw();
+
+    TLegend* legendInvMass2  = GetAndSetLegend2(0.67, 0.87-nLegendLines*0.75*textsizeLabelsPP, 0.9, 0.87, 0.85*textSizeLabelsPixel);
+    legendInvMass2->SetMargin(0.25);
+    legendInvMass2->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","l");
+    legendInvMass2->AddEntry(histoPi0InvMassBG,"Mixed event BG","p");
+    legendInvMass2->AddEntry(histoPi0InvMassRemBG,"Corr. BG","p");
+    legendInvMass2->AddEntry(histoPi0InvMassSigRemBGSub,"BG subtracted","p");
+    if (scaleFacSignal != 1.0){
+        legendInvMass2->AddEntry((TObject*)0,Form("scaled by %2.1f",scaleFacSignal),"");
+    }    
+    legendInvMass2->AddEntry(fitPi0InvMassSig, "Fit","l");
+    legendInvMass2->Draw();
+
+    canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGFurtherSplit.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), suffix.Data()));
+    
 }
 
 

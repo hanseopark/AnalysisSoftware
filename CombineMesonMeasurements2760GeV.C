@@ -70,6 +70,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
                                         TString thesisPlots         = "", 
                                         TString bWCorrection        = "X",
                                         Int_t  flagMerged           = 2,
+                                        TString fileNameCorrFactors = "",
                                         Bool_t plotInvMassBins      = kFALSE                                        
                                     ){
 
@@ -945,7 +946,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
                                                                                                 xPtLimitsPi0WOMerged, 17,
                                                                                                 offSetsPi0, offSetsPi0Sys,
                                                                                                 graphCombPi0InvXSectionStatOld, graphCombPi0InvXSectionSysOld,
-                                                                                                fileNamePi0OutputWeightingOld,1
+                                                                                                fileNamePi0OutputWeightingOld, "2.76TeV", "Pi0", kTRUE, 
+                                                                                                NULL, fileNameCorrFactors
                                                                                              );
     if (graphCombPi0InvXSectionTotOld == NULL) {
         cout << "Aborting: something went wrong during the combination of the old spectra" << endl;
@@ -1120,7 +1122,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
                                                                                                 xPtLimitsPi0, maxNBinsPi0,
                                                                                                 offSetsPi0, offSetsPi0Sys,
                                                                                                 graphCombPi0InvXSectionStatA, graphCombPi0InvXSectionSysA,
-                                                                                                fileNamePi0OutputWeightingA, "2.76TeV", "Pi0", kTRUE
+                                                                                                fileNamePi0OutputWeightingA, "2.76TeV", "Pi0", kTRUE, 
+                                                                                                NULL, fileNameCorrFactors
                                                                                             );
     
     
@@ -1398,7 +1401,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphCombPi0InvXSectionRelTotA->Draw("p,same,z");
 
         TLegend* legendRelTotErr = GetAndSetLegend2(0.14, 0.92-(0.035*2), 0.45, 0.92, 32);
-        legendRelTotErr->AddEntry(graphCombPi0InvXSectionRelTotOld,"PCM^{2}, PHOS^{2}","p");
+        legendRelTotErr->AddEntry(graphCombPi0InvXSectionRelTotOld,"PCM, PHOS","p");
         legendRelTotErr->AddEntry(graphCombPi0InvXSectionRelTotA,"All","p");
         legendRelTotErr->Draw();
 
@@ -1568,7 +1571,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaCanvasSettings( canvasShift, 0.10, 0.017, 0.015, 0.08);
 
         Size_t textSizeSpectra          = 0.04;
-        TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., 35.);
+        TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0.,40);
         SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (X) / no shift",
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
         histoBinShift->GetYaxis()->SetRangeUser(0.95,1.05);
@@ -1586,14 +1589,14 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphCombPi0InvXSectionTotANoShift, markerStyleComb, markerSizeComb, colorComb , colorComb);
         graphCombPi0InvXSectionTotANoShift->Draw("p same");
 
-        TLatex *labelRatioToFitBinShift   = new TLatex(0.72, 0.91, collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelRatioToFitBinShift, textSizeLabelsPixel, 4, 1, 43);
+        TLatex *labelRatioToFitBinShift   = new TLatex(0.94, 0.91, collisionSystem2760GeV.Data());
+        SetStyleTLatex( labelRatioToFitBinShift, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelRatioToFitBinShift->Draw();
-        TLatex *labelRatioToFitALICEBinShift    = new TLatex(0.852, 0.86, "ALICE");
-        SetStyleTLatex( labelRatioToFitALICEBinShift, textSizeLabelsPixel, 4, 1, 43);
+        TLatex *labelRatioToFitALICEBinShift    = new TLatex(0.94, 0.86, "ALICE");
+        SetStyleTLatex( labelRatioToFitALICEBinShift, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelRatioToFitALICEBinShift->Draw();
-        TLatex *labelRatioToFitPi0BinShift      = new TLatex(0.826, 0.807, "#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRatioToFitPi0BinShift, textSizeLabelsPixel, 4, 1, 43);
+        TLatex *labelRatioToFitPi0BinShift      = new TLatex(0.94, 0.807, "#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelRatioToFitPi0BinShift, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelRatioToFitPi0BinShift->Draw();
 
         canvasShift->Update();
@@ -2044,7 +2047,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 //                                                                                                      xPtLimitsPi0, 33,
                                                                                                 offSetsEta, offSetsEtaSys,
                                                                                                 graphCombEtaInvXSectionStatA, graphCombEtaInvXSectionSysA,
-                                                                                                fileNameEtaOutputWeightingA,"2.76TeV", "Eta", kFALSE
+                                                                                                fileNameEtaOutputWeightingA,"2.76TeV", "Eta", kFALSE, 
+                                                                                                NULL, fileNameCorrFactors
                                                                                             );
     graphCombEtaInvXSectionStatA->Print();
     if (graphCombEtaInvXSectionStatA == NULL) {
@@ -2375,7 +2379,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaCanvasSettings( canvasShift, 0.10, 0.017, 0.015, 0.08);
 
         Size_t textSizeSpectra          = 0.04;
-        TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., 35.);
+        TH1F * histoBinShift = new TH1F("histoBinShift","histoBinShift",1000,0., 20.);
         SetStyleHistoTH1ForGraphs(histoBinShift, "#it{p}_{T} (GeV/#it{c})","bin shifted (X) / no shift",
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.2);
         histoBinShift->GetYaxis()->SetRangeUser(0.95,1.05);
@@ -2393,14 +2397,14 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionTotANoShift, markerStyleComb, markerSizeComb, colorComb , colorComb);
         graphCombEtaInvXSectionTotANoShift->Draw("p same");
 
-        TLatex *labelRatioToFitBinShift   = new TLatex(0.72, 0.91, collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelRatioToFitBinShift, textSizeLabelsPixel,4, 1, 43);
+        TLatex *labelRatioToFitBinShift   = new TLatex(0.94, 0.91, collisionSystem2760GeV.Data());
+        SetStyleTLatex( labelRatioToFitBinShift, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
         labelRatioToFitBinShift->Draw();
-        TLatex *labelRatioToFitALICEBinShift    = new TLatex(0.852, 0.86, "ALICE");
-        SetStyleTLatex( labelRatioToFitALICEBinShift, textSizeLabelsPixel,4, 1, 43);
+        TLatex *labelRatioToFitALICEBinShift    = new TLatex(0.94, 0.86, "ALICE");
+        SetStyleTLatex( labelRatioToFitALICEBinShift, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
         labelRatioToFitALICEBinShift->Draw();
-        TLatex *labelRatioToFitPi0BinShift      = new TLatex(0.826, 0.807, "#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRatioToFitPi0BinShift, textSizeLabelsPixel,4, 1, 43);
+        TLatex *labelRatioToFitPi0BinShift      = new TLatex(0.94, 0.807, "#eta #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelRatioToFitPi0BinShift, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);;
         labelRatioToFitPi0BinShift->Draw();
 
         canvasShift->Update();
@@ -2435,7 +2439,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         fitInvXSectionEta->SetLineColor(kBlue+2);
         fitInvXSectionEta->Draw("same");
         
-        canvasDummy2->Update();
+//         canvasDummy2->Update();
         canvasDummy2->Print(Form("%s/ComparisonShiftedEta_2760GeV.%s",outputDir.Data(),suffix.Data()));
         delete canvasDummy2;
         delete histo2DDummy3;
@@ -2753,8 +2757,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
                                                                                            xPtLimitsEtaWOMerged, maxNBinsEtaW0Merged,
                                                                                            offSetsEtaToPi0, offSetsEtaToPi0Sys,
                                                                                            graphCombEtaToPi0StatA, graphCombEtaToPi0SysA,
-                                                                                           fileNameEtaToPi0OutputWeightingA,"2.76TeV", "EtaToPi0", kFALSE
+                                                                                           fileNameEtaToPi0OutputWeightingA,"2.76TeV", "EtaToPi0", kFALSE,
+                                                                                           NULL, fileNameCorrFactors
                                                                                         );
+
     graphCombEtaToPi0StatA->Print();
     if (graphCombEtaToPi0StatA == NULL) {
         cout << "Aborting: something went wrong during the combination of the new spectra" << endl;
@@ -2916,7 +2922,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     TGraphAsymmErrors* graphCombEtaToPi0RelSysA        = CalculateRelErrUpAsymmGraph( graphCombEtaToPi0SysA, "relativeSysErrorEtaToPi0_MethodA");
     TGraphAsymmErrors* graphCombEtaToPi0RelTotA        = CalculateRelErrUpAsymmGraph( graphCombEtaToPi0TotA, "relativeTotalErrorEtaToPi0_MethodA");
     
-    
+    while(graphCombEtaToPi0RelStatA->GetX()[0] < 0.6) graphCombEtaToPi0RelStatA->RemovePoint(0);
+    while(graphCombEtaToPi0RelSysA->GetX()[0] < 0.6) graphCombEtaToPi0RelSysA->RemovePoint(0);
+    while(graphCombEtaToPi0RelTotA->GetX()[0] < 0.6) graphCombEtaToPi0RelTotA->RemovePoint(0);
+
     canvasRelTotErr->cd();
     TH2F * histo2DRelTotErrEtaToPi0;
     histo2DRelTotErrEtaToPi0                 = new TH2F("histo2DRelTotErrEtaToPi0","histo2DRelTotErrEtaToPi0",11000,0.33,25.,1000,0,60.5);
@@ -4452,6 +4461,33 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Theory_WorldData_Paper.%s",outputDir.Data(), suffix.Data()));
 
 
+    // ***************************************************************************************************************
+    // **************** Plotting eta/pi0 ratio for combined measurement + other energies ********************
+    // ***************************************************************************************************************        
+    canvasEtatoPi0combo->cd();
+    histo2DEtatoPi0combo->Draw("copy");
+        
+        graphCombEtaToPi0SysA->Draw("2,same");
+               
+        DrawGammaSetMarkerTGraphErr(graphPHENIXEtaToPi0200GeV, 25, 2., kGray+2, kGray+2, widthLinesBoxes, kFALSE);
+        graphPHENIXEtaToPi0200GeV->Draw("p,same");
+        DrawGammaSetMarkerTGraphAsym(graphALICEEtaToPi07TeV, 24, 2.2, kBlack, kBlack, widthLinesBoxes, kFALSE);
+        graphALICEEtaToPi07TeV->Draw("p,same");
+        
+        graphCombEtaToPi0StatAWOXErr->Draw("p,same");
+        
+        TLegend* legendEtaToPi0WorldData2 = GetAndSetLegend2(0.13, 0.95, 0.46, 0.95-(textsizeLabelsEtaToPi0*3*0.9), textSizeLabelsPixel*0.85, 1, "", 43, 0.16);
+        legendEtaToPi0WorldData2->AddEntry(graphCombEtaToPi0SysA,Form("ALICE, %s",collisionSystem2760GeV.Data()),"pf");
+        legendEtaToPi0WorldData2->AddEntry(graphALICEEtaToPi07TeV,"ALICE, pp, #sqrt{#it{s}} = 7 TeV","p");
+        legendEtaToPi0WorldData2->AddEntry(graphPHENIXEtaToPi0200GeV,"PHENIX, pp, #sqrt{#it{s}} = 0.2 TeV", "p");
+        legendEtaToPi0WorldData2->Draw();
+        
+    histo2DEtatoPi0combo->Draw("axis,same");
+
+    canvasEtatoPi0combo->Update();
+    canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_WorldData_Paper.%s",outputDir.Data(), suffix.Data()));
+    
+    
     // ***************************************************************************************************************
     // ******************************** fitting eta/pi0 **************************************************************
     // ***************************************************************************************************************    
