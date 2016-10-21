@@ -1687,13 +1687,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         cout << textsizeLabelsPP << endl;
     
     TH2F * histo2DPi0RatioToCombFit;
-    histo2DPi0RatioToCombFit               = new TH2F("histo2DPi0RatioToCombFit","histo2DPi0RatioToCombFit",1000,0.23,50.,1000,0.2,4.    );
+    histo2DPi0RatioToCombFit               = new TH2F("histo2DPi0RatioToCombFit","histo2DPi0RatioToCombFit",1000,0.23,50.,1000,0.2,3.0);
     SetStyleHistoTH2ForGraphs(histo2DPi0RatioToCombFit, "#it{p}_{T} (GeV/#it{c})","Data/Fit", 0.85*textsizeLabelsPP, textsizeLabelsPP, 
                               0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.65, 510, 505);
     histo2DPi0RatioToCombFit->GetXaxis()->SetMoreLogLabels();
     histo2DPi0RatioToCombFit->GetXaxis()->SetLabelOffset(-0.01);
 //  histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(-10,10);
-    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.05,2.45);
+    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.6,2.1);
     histo2DPi0RatioToCombFit->Draw("copy");
 
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitSysA, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
@@ -1725,6 +1725,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // **********************************************************************************************************************
     
     canvasRatioToCombFit->cd();
+    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.05,2.45);
     histo2DPi0RatioToCombFit->Draw("copy");
     
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0PCMCombFitSys, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
@@ -1789,11 +1790,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //        textEMCALMergedOnlyRatioPi0->Draw();
         
         //****************** second Column *************************************************
-        TLatex *textStatOnlyRatioPi0                = new TLatex(columnsLegendOnlyPi0Ratio[1],rowsLegendOnlyPi0Ratio[0] ,"stat");
+        TLatex *textStatOnlyRatioPi0                = new TLatex(columnsLegendOnlyPi0Ratio[1]+0.01,rowsLegendOnlyPi0Ratio[0] ,"stat");
         SetStyleTLatex( textStatOnlyRatioPi0, textSizeLabelsPixel,4);
         textStatOnlyRatioPi0->SetTextFont(43);
         textStatOnlyRatioPi0->Draw();
-        TLatex *textSysOnlyRatioPi0                 = new TLatex(columnsLegendOnlyPi0Ratio[2] ,rowsLegendOnlyPi0Ratio[0],"syst");
+        TLatex *textSysOnlyRatioPi0                 = new TLatex(columnsLegendOnlyPi0Ratio[2]+0.02 ,rowsLegendOnlyPi0Ratio[0],"syst");
         SetStyleTLatex( textSysOnlyRatioPi0, textSizeLabelsPixel,4);
         textSysOnlyRatioPi0->SetTextFont(43);
         textSysOnlyRatioPi0->Draw();
@@ -1869,7 +1870,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         textPHOSOnlyRatioPi0->Draw();
         textEMCALOnlyRatioPi0->Draw();
         textPCMEMCALOnlyRatioPi0->Draw();
-        TLatex *textEMCALMergedOnlyRatioPi0         = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[5],"EMCal merged");
+        TLatex *textEMCALMergedOnlyRatioPi0         = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[5],"mEMC");
         SetStyleTLatex( textEMCALMergedOnlyRatioPi0, textSizeLabelsPixel,4);
         textEMCALMergedOnlyRatioPi0->SetTextFont(43);
         textEMCALMergedOnlyRatioPi0->Draw();
@@ -1904,6 +1905,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
  
     canvasRatioToCombFit->cd();
     histo2DPi0RatioToCombFit->GetXaxis()->SetRangeUser(0.23,16);
+    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.5,2.4);
     histo2DPi0RatioToCombFit->Draw("copy");
     
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0PCMCombFitSys, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
@@ -2805,7 +2807,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     histo2DEtaRatioToCombFit->GetXaxis()->SetMoreLogLabels();
     histo2DEtaRatioToCombFit->GetXaxis()->SetLabelOffset(-0.01);
 //  histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(-10,10);
-    histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(0.05,2.55);
+    histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(0.3,1.8);
     histo2DEtaRatioToCombFit->Draw("copy");
 
         DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitSysA, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
@@ -2838,6 +2840,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // **********************************************************************************************************************
     
     canvasRatioToCombFit->cd();
+    histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(0.05,2.55);
     histo2DEtaRatioToCombFit->Draw("copy");
     
         DrawGammaSetMarkerTGraphAsym(graphRatioEtaPCMCombFitSys, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
@@ -2884,11 +2887,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         textPCMEMCALOnlyRatioEta->Draw();
         
         //****************** second Column *************************************************
-        TLatex *textStatOnlyRatioEta                = new TLatex(columnsLegendOnlyEtaRatio[1],rowsLegendOnlyEtaRatio[0] ,"stat");
+        TLatex *textStatOnlyRatioEta                = new TLatex(columnsLegendOnlyEtaRatio[1]-0.05,rowsLegendOnlyEtaRatio[0] ,"stat");
         SetStyleTLatex( textStatOnlyRatioEta, textSizeLabelsPixel,4);
         textStatOnlyRatioEta->SetTextFont(43);
         textStatOnlyRatioEta->Draw();
-        TLatex *textSysOnlyRatioEta                 = new TLatex(columnsLegendOnlyEtaRatio[2] ,rowsLegendOnlyEtaRatio[0],"syst");
+        TLatex *textSysOnlyRatioEta                 = new TLatex(columnsLegendOnlyEtaRatio[2]-0.05 ,rowsLegendOnlyEtaRatio[0],"syst");
         SetStyleTLatex( textSysOnlyRatioEta, textSizeLabelsPixel,4);
         textSysOnlyRatioEta->SetTextFont(43);
         textSysOnlyRatioEta->Draw();
@@ -3947,7 +3950,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasAcceptanceTimesEff->cd();
     
         TH2F * histo2DAccEffEta;
-        histo2DAccEffEta                = new TH2F("histo2DAccEffEta", "histo2DAccEffEta",1000, 0.33,  50, 1000, 8e-4, 1.5e-0 );
+        histo2DAccEffEta                = new TH2F("histo2DAccEffEta", "histo2DAccEffEta",1000, 0.33,  50, 1000, 5e-4, 1.5e-0 );
         SetStyleHistoTH2ForGraphs( histo2DAccEffEta, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#it{#varepsilon} = 2#pi#upoint#Delta","#it{y}#upoint#it{A}#upoint#it{#varepsilon}_{rec}"),
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.);
         histo2DAccEffEta->GetYaxis()->SetLabelOffset(0.001);
@@ -4086,7 +4089,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         }
         cout << textsizeLabelsPP << endl;
 
-        TH2F * ratio2DTheoryPP       = new TH2F("ratio2DTheoryPP","ratio2DTheoryPP",1000,0.23,60.,1000,0.2,2.85);
+        TH2F * ratio2DTheoryPP       = new TH2F("ratio2DTheoryPP","ratio2DTheoryPP",1000,0.23,60.,1000,0.6,2.2);
         SetStyleHistoTH2ForGraphs(ratio2DTheoryPP, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{fit}", 0.85*textsizeLabelsPP, textsizeLabelsPP, 
                                   0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
         ratio2DTheoryPP->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -4134,11 +4137,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphRatioPi0CombCombFitSysA->Draw("2,same");
         graphRatioPi0CombCombFitStatA->Draw("p,same");
 
-        TBox* boxErrorSigmaRatio = CreateBoxConv(kGray+1, 0.3, 1.-(0.0196 ), 0.34, 1.+(0.0196));
+        TBox* boxErrorSigmaRatio = CreateBoxConv(kGray+3, 0.3, 1.-(0.0196 ), 0.35, 1.+(0.0196));
         boxErrorSigmaRatio->Draw();
         DrawGammaLines(0.23, 60.,1., 1.,0.5,kGray+2);
 
-        TLegend* legendRatioTheorypp_3Parted= GetAndSetLegend2(0.35,0.71,0.6,0.97, 0.85* textSizeLabelsPixel);
+        TLegend* legendRatioTheorypp_3Parted= GetAndSetLegend2(0.35,0.77,0.6,0.97, 0.85* textSizeLabelsPixel);
     //    legendRatioTheorypp_3Parted->SetNColumns(2);
         legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0CombCombFitSysA,"ALICE #pi^{0}","pf");
 //        legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0CombNLOMuHalf, "NLO, DSS07 #mu = 0.5 #it{p}_{T}", "l");
@@ -4149,7 +4152,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0DSS14,  "NLO, PDF:MSTW08 - FF:DSS14", "f");
         legendRatioTheorypp_3Parted->Draw();
 
-        TLatex *labelRatioTheoryPPP   = new TLatex(0.418,0.68,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
+        TLatex *labelRatioTheoryPPP   = new TLatex(0.418,0.74,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
         SetStyleTLatex( labelRatioTheoryPPP, 0.85*textsizeLabelsPP,4);
         labelRatioTheoryPPP->Draw();
         
@@ -4162,7 +4165,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP.%s",outputDir.Data(),suffix.Data()));
 
 
-    TH2F * ratio2DTheoryPP2       = new TH2F("ratio2DTheoryPP2","ratio2DTheoryPP2",1000,0.23,60.,1000,0.2,5.2);
+    TH2F * ratio2DTheoryPP2       = new TH2F("ratio2DTheoryPP2","ratio2DTheoryPP2",1000,0.23,60.,1000,0.5,3.6);
     SetStyleHistoTH2ForGraphs(ratio2DTheoryPP2, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{fit}", 0.85*textsizeLabelsPP, textsizeLabelsPP,
                               0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
     ratio2DTheoryPP2->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -4207,12 +4210,16 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombNLOMuHalf, "#mu = 0.5 #it{p}_{T}", "l");
     legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombNLOMuOne,  "#mu = #it{p}_{T}", "l");
     legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombNLOMuTwo,  "#mu = 2 #it{p}_{T}", "l");
-    legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0DSS14,  "NLO, PDF:MSTW08 - FF:DSS14", "f");
+    //legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0DSS14,  "NLO, PDF:MSTW08 - FF:DSS14", "f");
     legendRatioTheorypp_3Parted2->Draw();
 
-    TLatex *labelRatioTheoryPPP2   = new TLatex(0.218,0.62,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
-    SetStyleTLatex( labelRatioTheoryPPP2, 0.85*textsizeLabelsPP,4);
-    labelRatioTheoryPPP2->Draw();
+    TLegend* legendRatioTheorypp_3Parted22= GetAndSetLegend2(0.15,0.14,0.4,0.18, 0.85* textSizeLabelsPixel);
+    legendRatioTheorypp_3Parted22->AddEntry(graphRatioPi0DSS14,  "NLO, PDF:MSTW08 - FF:DSS14, 0.5#it{p}_{T} < #mu < 2#it{p}_{T}", "f");
+    legendRatioTheorypp_3Parted22->Draw();
+
+//    TLatex *labelRatioTheoryPPP2   = new TLatex(0.218,0.62,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
+//    SetStyleTLatex( labelRatioTheoryPPP2, 0.85*textsizeLabelsPP,4);
+//    labelRatioTheoryPPP2->Draw();
 
     TLatex *labelRatioTheoryPP22   = new TLatex(0.78,0.925,collisionSystem8TeV.Data());
     SetStyleTLatex( labelRatioTheoryPP22, 0.85*textsizeLabelsPP,4);
@@ -4222,7 +4229,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suffix.Data()));
 
 
-    TH2F * ratio2DTheoryPP3       = new TH2F("ratio2DTheoryPP3","ratio2DTheoryPP3",1000,0.23,60.,1000,0.2,5.2);
+    TH2F * ratio2DTheoryPP3       = new TH2F("ratio2DTheoryPP3","ratio2DTheoryPP3",1000,0.23,60.,1000,0.4,3.0);
     SetStyleHistoTH2ForGraphs(ratio2DTheoryPP3, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{fit}", 0.85*textsizeLabelsPP, textsizeLabelsPP,
                               0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
     ratio2DTheoryPP3->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -4450,10 +4457,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         SetStyleTLatex( labelDetSysXSectionPaper, textsizeLabelsXSecUp,4);
         labelDetSysXSectionPaper->Draw();
         
-        TLegend* legendXsectionPaper    = GetAndSetLegend2(0.17, 0.18, 0.5, 0.28+0.05*3, textSizeLabelsPixel);
+        TLegend* legendXsectionPaper    = GetAndSetLegend2(0.17, 0.18, 0.5, 0.28+0.05*4, textSizeLabelsPixel);
         legendXsectionPaper->SetNColumns(1);
         legendXsectionPaper->SetMargin(0.2);
         legendXsectionPaper->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
+        legendXsectionPaper->AddEntry((TObject*)0,"norm. unc. 1.96%","");
 //        legendXsectionPaper->AddEntry(graphNLODSS14Calc,"NLO, DSS14 ","f");
 //        legendXsectionPaper->AddEntry(graphNLOCalcPi0MuHalf, "NLO, DSS07 #mu = 0.5 #it{p}_{T}", "l");
 //        legendXsectionPaper->AddEntry(graphNLOCalcPi0MuOne,  "NLO, DSS07 #mu = #it{p}_{T}", "l");
@@ -4475,7 +4483,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         
     padInvSectionNLORatio->cd();
     padInvSectionNLORatio->SetLogx(1);
-        TH2F * ratio2DNLO               = new TH2F("ratio2DNLO","ratio2DNLO",1000,0.23,60.,1000,0.55,2.45);
+        TH2F * ratio2DNLO               = new TH2F("ratio2DNLO","ratio2DNLO",1000,0.23,60.,1000,0.6,1.95);
         SetStyleHistoTH2ForGraphs(ratio2DNLO, "#it{p}_{T} (GeV/#it{c})","#frac{NLO, Data}{fit}", 0.85*textsizeLabelsXSecMiddle, textsizeLabelsXSecMiddle, 
                                   0.85*textsizeLabelsXSecMiddle,textsizeLabelsXSecMiddle, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 505);
         ratio2DNLO->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -4489,9 +4497,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         ratio2DNLO->GetXaxis()->SetTickLength(0.07);
         ratio2DNLO->DrawCopy();
 
-        TLegend* legendXsectionPaperPi02     = GetAndSetLegend2(0.17, 0.8, 0.4, 0.83+0.05*1, textSizeLabelsPixel*0.8);
-        legendXsectionPaperPi02->AddEntry(boxErrorSigmaRatio,"norm. unc. 1.96%","f");
-        legendXsectionPaperPi02->Draw();
+//        TLegend* legendXsectionPaperPi02     = GetAndSetLegend2(0.17, 0.8, 0.4, 0.83+0.05*1, textSizeLabelsPixel*0.8);
+//        legendXsectionPaperPi02->AddEntry(boxErrorSigmaRatio,"norm. unc. 1.96%","f");
+//        legendXsectionPaperPi02->Draw();
 
 //        graphRatioPi0CombNLODSS14->RemovePoint(0);
 //        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombNLODSS14, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
@@ -4521,7 +4529,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         
     padInvSectionPythiaRatio->cd();
     padInvSectionPythiaRatio->SetLogx(1);
-        TH2F * ratio2DPythia            = new TH2F("ratio2DPythia","ratio2DPythia",1000,0.23,60.,1000,0.55,2.45);
+        TH2F * ratio2DPythia            = new TH2F("ratio2DPythia","ratio2DPythia",1000,0.23,60.,1000,0.6,1.95);
         SetStyleHistoTH2ForGraphs(ratio2DPythia, "#it{p}_{T} (GeV/#it{c})","#frac{Pythia, Data}{fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown, 
                                   0.85*textsizeLabelsXSecDown,textsizeLabelsXSecDown, 0.9,0.2/(textsizeFacXSecDown*marginXSec), 510, 505);
         ratio2DPythia->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -4600,10 +4608,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         SetStyleTLatex( labelDetSysXSectionPaperEta, textsizeLabelsXSecUp,4);
         labelDetSysXSectionPaperEta->Draw();
         
-        TLegend* legendXsectionPaperEta     = GetAndSetLegend2(0.17, 0.13, 0.5, 0.23+0.05*5, textSizeLabelsPixel);
+        TLegend* legendXsectionPaperEta     = GetAndSetLegend2(0.17, 0.13, 0.5, 0.23+0.05*6, textSizeLabelsPixel);
         legendXsectionPaperEta->SetNColumns(1);
         legendXsectionPaperEta->SetMargin(0.2);
         legendXsectionPaperEta->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
+        legendXsectionPaperEta->AddEntry((TObject*)0, "norm. unc. 1.96%", "");
         legendXsectionPaperEta->AddEntry(histoPythia8_4CInvXSection,"PYTHIA 8.2, Tune 4C","l");
         legendXsectionPaperEta->AddEntry(histoPythia8InvXSection,"PYTHIA 8.2, Monash 2013","l");
         legendXsectionPaperEta->AddEntry((TObject*)0, "", "");
@@ -4620,7 +4629,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         
     padInvSectionNLORatio->cd();
     padInvSectionNLORatio->SetLogx(1);
-        TH2F * ratio2DNLOEta                = new TH2F("ratio2DNLOEta","ratio2DNLOEta",1000,0.23,50.,1000,0.35,3.2);
+        TH2F * ratio2DNLOEta                = new TH2F("ratio2DNLOEta","ratio2DNLOEta",1000,0.23,50.,1000,0.35,3.15);
         SetStyleHistoTH2ForGraphs(ratio2DNLOEta, "#it{p}_{T} (GeV/#it{c})","#frac{NLO, Data}{fit}", 0.85*textsizeLabelsXSecMiddle, textsizeLabelsXSecMiddle, 
                                   0.85*textsizeLabelsXSecMiddle,textsizeLabelsXSecMiddle, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 505);
         ratio2DNLOEta->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -4634,9 +4643,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         ratio2DNLOEta->GetXaxis()->SetTickLength(0.07);
         ratio2DNLOEta->DrawCopy();
 
-        TLegend* legendXsectionPaperEta2     = GetAndSetLegend2(0.17, 0.8, 0.4, 0.83+0.05*1, textSizeLabelsPixel*0.8);
-        legendXsectionPaperEta2->AddEntry(boxErrorSigmaRatio,"norm. unc. 1.96%","f");
-        legendXsectionPaperEta2->Draw();
+//        TLegend* legendXsectionPaperEta2     = GetAndSetLegend2(0.17, 0.8, 0.4, 0.83+0.05*1, textSizeLabelsPixel*0.8);
+//        legendXsectionPaperEta2->AddEntry(boxErrorSigmaRatio,"norm. unc. 1.96%","f");
+//        legendXsectionPaperEta2->Draw();
 
         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuHalf, widthCommonFit, styleLineNLOMuHalf, colorNLO);
         graphRatioEtaCombNLOMuHalf->Draw("same,c");
@@ -4657,7 +4666,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         
     padInvSectionPythiaRatio->cd();
     padInvSectionPythiaRatio->SetLogx(1);
-        TH2F * ratio2DPythiaEta             = new TH2F("ratio2DPythiaEta","ratio2DPythiaEta",1000,0.23,50.,1000,0.35,3.2);
+        TH2F * ratio2DPythiaEta             = new TH2F("ratio2DPythiaEta","ratio2DPythiaEta",1000,0.23,50.,1000,0.35,3.15);
         SetStyleHistoTH2ForGraphs(ratio2DPythiaEta, "#it{p}_{T} (GeV/#it{c})","#frac{Pythia, Data}{fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown, 
                                   0.85*textsizeLabelsXSecDown,textsizeLabelsXSecDown, 0.9,0.2/(textsizeFacXSecDown*marginXSec), 510, 505);
         ratio2DPythiaEta->GetYaxis()->SetMoreLogLabels(kTRUE);
