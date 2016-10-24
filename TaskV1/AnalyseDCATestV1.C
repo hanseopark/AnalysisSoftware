@@ -1377,10 +1377,12 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 			fColumn 					= 5;
 			fRow 						= 4;
 
-			if (fNBinsPt > 21) {
-				cout << "You have chosen to have more than 21 bins, this is not possible, it will be reduced to 21" << endl;
-				fNBinsPt 				= 21;
+			if (fNBinsPt > 27) {
+				cout << "You have chosen to have more than 27 bins, this is not possible, it will be reduced to 27" << endl;
+				fNBinsPt 				= 27;
 			}
+         if (fNBinsPt > 20) fRow = 5;
+			if (fNBinsPt > 25) fRow = 6;
 			for (Int_t i = 0; i < fNBinsPt+1; i++) {
 				fBinsPt[i] 				= fBinsPi07TeVPtDCA[i];
 			}
@@ -1604,10 +1606,12 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 			fColumn 					= 5;
 			fRow 						= 3;
 			
-			if (fNBinsPt > 12) {
-				cout << "You have chosen to have more than 12 bins for Eta, this is not possible, it will be reduced to 12" << endl;
-				fNBinsPt 				= 12;
+			if (fNBinsPt > 17) {
+				cout << "You have chosen to have more than 17 bins for Eta, this is not possible, it will be reduced to 17" << endl;
+				fNBinsPt 				= 17;
 			}
+			if (fNBinsPt > 15) fRow = 4;
+
 			for (Int_t i = 0; i < fNBinsPt+2; i++) {
 				fBinsPt[i] 				= fBinsEta7TeVPt[i];
 			}

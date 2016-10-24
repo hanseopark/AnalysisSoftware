@@ -1567,14 +1567,19 @@ void ExtractSignalV2(   TString meson                   = "",
     FillPtHistos();
     
     if (!fIsMC && meson.Contains("Pi0") ){
-        fHaveToyMCInputForSec   = LoadSecondaryPionsFromExternalFile();
-        if (fHaveToyMCInputForSec){
-            cout << "I am gonna add the toy MC ouput to the uncorrected file" << endl;
-        } else {
-            cout << "no ToyMC input has been found for the secondaries" << endl;
-        }    
-    }
-        
+       fHaveCocktailInputForSec= LoadSecondaryPionsFromCocktailFile(cutSelection,optionEnergy);
+       if(!fHaveCocktailInputForSec) 
+          fHaveToyMCInputForSec   = LoadSecondaryPionsFromExternalFile();
+
+      if (fHaveCocktailInputForSec){
+               cout << "SECONDARIES: I am gonna add the cocktail output to the uncorrected file" << endl;
+      } else if (fHaveToyMCInputForSec){
+               cout << "SECONDARIES: I am gonna add the toy MC output to the uncorrected file" << endl;
+      } else {
+               cout << "SECONDARIES: no ToyMC or cocktail input has been found for the secondaries" << endl;
+      }
+     }
+    
     ///*********************** Lambda tail
     TCanvas* canvasLambdaTail = new TCanvas("canvasLambdaTail","",1550,1200);  // gives the page size
     canvasLambdaTail->SetTickx();
@@ -3032,17 +3037,17 @@ Bool_t LoadSecondaryPionsFromExternalFile(){
             cout << "found correct input: " << nameSourceFile.Data() << endl;
             cout << "trying to find " << Form("histoPiZeroDaughtersPt_InRap_%1.2f", fYMaxMeson/2) << endl;
             fFileToyMCInput[j]                  = new TFile(nameSourceFile.Data());
-            fHistoYieldToyMCSecInput[j]         = (TH1D*)fFileToyMCInput[j]->Get(Form("histoPiZeroDaughtersPt_InRap_%1.2f", fYMaxMeson/2));
-            if (fHistoYieldToyMCSecInput[j]){
+            fHistoYieldExternSecInput[j]         = (TH1D*)fFileToyMCInput[j]->Get(Form("histoPiZeroDaughtersPt_InRap_%1.2f", fYMaxMeson/2));
+            if (fHistoYieldExternSecInput[j]){
                 nSecInputHistsFound++;
-                fHistoYieldToyMCSecInput[j]->Sumw2();
-                fHistoYieldToyMCSecInput[j]->SetName(Form("histoSecPi0YieldFrom%s_FromToy_orgBinning",nameSecondaries[j].Data()));
+                fHistoYieldExternSecInput[j]->Sumw2();
+                fHistoYieldExternSecInput[j]->SetName(Form("histoSecPi0YieldFrom%s_FromToy_orgBinning",nameSecondaries[j].Data()));
                 
                 cout << "found it, rebinning" << endl;
-                fHistoYieldToyMCSecInputReb[j]  =  (TH1D*)fHistoYieldToyMCSecInput[j]->Rebin(fNBinsPt,Form("histoSecPi0YieldFrom%s_FromToy",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
-                if (fHistoYieldToyMCSecInputReb[j]){
-                    fHistoYieldToyMCSecInputReb[j]->Divide(fDeltaPt);
-                    fHistoYieldToyMCSecInput[j]->Scale(1./fHistoYieldToyMCSecInput[j]->GetBinWidth(1));
+                fHistoYieldExternSecInputReb[j]  =  (TH1D*)fHistoYieldExternSecInput[j]->Rebin(fNBinsPt,Form("histoSecPi0YieldFrom%s_FromToy",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
+                if (fHistoYieldExternSecInputReb[j]){
+                    fHistoYieldExternSecInputReb[j]->Divide(fDeltaPt);
+                    fHistoYieldExternSecInput[j]->Scale(1./fHistoYieldExternSecInput[j]->GetBinWidth(1));
                     cout << "that worked" << endl;
                 }    
             } else {
@@ -3058,6 +3063,39 @@ Bool_t LoadSecondaryPionsFromExternalFile(){
     
     return kTRUE;
 }
+
+
+//******************************************************************************
+// Load secondary neutral pions from cocktail file
+// - put them in proper scaling
+// - rebin them according to current pi0 binning
+//******************************************************************************
+Bool_t LoadSecondaryPionsFromCocktailFile(TString cutSelection, TString optionEnergy){
+   TString nameCocktailFile                    =Form("%s/%s/HadronicCocktail_%.2f_%s.root",cutSelection.Data(),optionEnergy.Data(),fYMaxMeson/2,cutSelection.Data());
+   fFileCocktailInput                  = new TFile(nameCocktailFile.Data());
+        if (fFileCocktailInput){
+           for (Int_t j = 0; j < 3; j++){
+            cout << "found correct input: " << nameCocktailFile.Data() << endl;
+            cout << "trying to find " << Form("Pi0_From_%s_Pt_OrBin", nameSecondariesCocktail[j].Data()) << endl;
+
+            fHistoYieldExternSecInput[j]         = (TH1D*)fFileCocktailInput->Get(Form("Pi0_From_%s_Pt_OrBin", nameSecondariesCocktail[j].Data()));
+            if (fHistoYieldExternSecInput[j]){
+                fHistoYieldExternSecInput[j]->Sumw2();
+                fHistoYieldExternSecInput[j]->SetName(Form("histoSecPi0YieldFrom%s_FromCocktail_orgBinning",nameSecondaries[j].Data())); // Proper bins in Pt
+
+                fHistoYieldExternSecInputReb[j]  =  (TH1D*)fHistoYieldExternSecInput[j]->Rebin(fNBinsPt,Form("histoSecPi0YieldFrom%s_FromCocktail",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
+                if (fHistoYieldExternSecInputReb[j]){
+                    fHistoYieldExternSecInputReb[j]->Divide(fDeltaPt);
+                    fHistoYieldExternSecInput[j]->Scale(1./fHistoYieldExternSecInput[j]->GetBinWidth(1));
+                }
+            } else {
+                cout << "file didn't contain proper histo" << endl;
+            }
+        }
+      }
+    return kTRUE;
+}
+
 
 //****************************************************************************
 //******************** Projection out of 2D in X *****************************
@@ -4884,11 +4922,11 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
     }
 
     
-    if (fHaveToyMCInputForSec){
-        cout << "Writing ToyMC input for secondary pi0 correction" << endl;
+    if (fHaveToyMCInputForSec||fHaveCocktailInputForSec){
+        cout << "Writing input for secondary pi0 correction" << endl;
         for (Int_t j = 0; j < 3; j++){
-            if (fHistoYieldToyMCSecInput[j])        fHistoYieldToyMCSecInput[j]->Write();
-            if (fHistoYieldToyMCSecInputReb[j])     fHistoYieldToyMCSecInputReb[j]->Write();
+            if (fHistoYieldExternSecInput[j])        fHistoYieldExternSecInput[j]->Write();
+            if (fHistoYieldExternSecInputReb[j])     fHistoYieldExternSecInputReb[j]->Write();
         }
     }    
     cout << "End writing Uncorrected File" << endl;
@@ -5343,6 +5381,7 @@ void Delete(){
     for (Int_t j = 0; j < 3; j++){
         if (fFileToyMCInput[j] )                                   delete fFileToyMCInput[j];
     }
+    if (fFileCocktailInput)                                     delete fFileCocktailInput;
     
 }
 

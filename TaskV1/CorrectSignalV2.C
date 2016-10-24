@@ -347,7 +347,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     //***********************************Reading data file **************************************************
     //*******************************************************************************************************
     // File definitions
-    TFile fileUncorrected(fileNameUnCorrectedFile.Data());  
+    TFile fileUncorrected(fileNameUnCorrectedFile.Data());
     if (fileUncorrected.IsZombie()) return;
     TH1F *histoNumberOfGoodESDTracksVtx             = (TH1F*)fileUncorrected.Get("GoodESDTracks");
     TH1D *histoEventQuality                         = (TH1D*)fileUncorrected.Get("NEvents");
@@ -357,7 +357,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         histoUnCorrectedYield[k]                    = (TH1D*)fileUncorrected.Get(Form("histoYieldMeson%s", nameIntRange[k].Data()));
         RatioRaw[k]                                 = (TH1D*) histoUnCorrectedYield[k]->Clone(Form("RatioRaw%s_%s",nameIntRange[k].Data(),nameIntRange[0].Data())); 
         RatioRaw[k]->Divide(RatioRaw[k],histoUnCorrectedYield[0],1.,1.,"B");
-    }    
+    }
     TH1D *histoFWHMMeson                            = (TH1D*)fileUncorrected.Get("histoFWHMMeson"); 
     TH1D *histoMassMeson                            = (TH1D*)fileUncorrected.Get("histoMassMeson");
     TH1D *histoWidthGaussianMeson                   = (TH1D*)fileUncorrected.Get("histoWidthGaussianMeson"); 
@@ -369,7 +369,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TH1D *deltaPt                                   = (TH1D*)fileUncorrected.Get("deltaPt");
     for (Int_t i = 0; i < deltaPt->GetNbinsX() +1; i++){
         deltaPt->SetBinError(i, 0);
-    }  
+    }
     // calculate number of events
     Float_t nEvt    = 0;
     if (kCollisionSystem == 1){
@@ -379,51 +379,66 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         // BinContent 5 - Zvertex-position, BinContent 4 - no Trigger Bit, BinContent 7 - PileUp 
     }
 
-    Double_t scaleFactorMeasXSecForToy              = 1;
+    Double_t scaleFactorMeasXSecForExternalInput              = 1;
     if ( kCollisionSystem == 0){
         // obtain effective xSection
-        Int_t isV0AND           = 0; 
+        Int_t isV0AND           = 0;
         if (histoEventQuality->GetNbinsX() > 7){
             if (histoEventQuality->GetBinContent(9) > 0){
-                isV0AND         = 1; 
+                isV0AND         = 1;
             }
         }
         if (optionEnergy.CompareTo("8TeV") == 0){
             isV0AND             = 1;
-        }    
+        }
         if (trigger.Atoi() == 10 || trigger.Atoi() == 52 || trigger.Atoi() == 83  || trigger.Atoi() == 85 || trigger.Atoi() == 81 ){
             isV0AND             = 1;
-        }    
-        
+        }
+
         Double_t xSectionEff    = ReturnCorrectXSection( optionEnergy, isV0AND);
         Double_t xSectionINEL   = ReturnCorrectXSection( optionEnergy, 3);
         if (xSectionINEL != 0){
-            scaleFactorMeasXSecForToy               = xSectionEff/xSectionINEL;
-        }    
-    } 
+            scaleFactorMeasXSecForExternalInput               = xSectionEff/xSectionINEL;
+        }
+    }
     // The trigger rejection factor has to be given externally 
     Double_t triggerRejection                       = ReturnTriggerRejectionFactor(optionEnergy, trigger.Atoi());
     cout << "trigger rejection factor set to: " << triggerRejection << endl;
     if (triggerRejection != 1.)
-        scaleFactorMeasXSecForToy                   = scaleFactorMeasXSecForToy*triggerRejection;
-    if (scaleFactorMeasXSecForToy != 1)
-        cout << "The secondary correction from the toy has to be scaled with " << scaleFactorMeasXSecForToy << endl;
-//     return;
-    
-    // read toy MC input if available
-    TH1D* histoToyMCInputSecPi0[3]                  = {NULL, NULL, NULL};
-    Bool_t foundToyMCInput                          = kFALSE;
+        scaleFactorMeasXSecForExternalInput                   = scaleFactorMeasXSecForExternalInput*triggerRejection;
+    if (scaleFactorMeasXSecForExternalInput != 1)
+        cout << "The secondary correction from the cocktail or toy has to be scaled with " << scaleFactorMeasXSecForExternalInput << endl;
+
+    // read cocktail input if available
+    TString strExternalInputName                       = "";
+    TH1D* histoExternalInputSecPi0[3]                  = {NULL, NULL, NULL};
+    Bool_t foundCocktailInput                          = kFALSE;
     if (!kIsMC){
         for (Int_t j = 0; j < 3; j++){
-            histoToyMCInputSecPi0[j]                    = (TH1D*)fileUncorrected.Get(Form("histoSecPi0YieldFrom%s_FromToy",nameSecMeson[j].Data()));
-            if (histoToyMCInputSecPi0[j]){
-                histoToyMCInputSecPi0[j]->Scale(scaleFactorMeasXSecForToy);
-                foundToyMCInput                         = kTRUE;
+            histoExternalInputSecPi0[j]                    = (TH1D*)fileUncorrected.Get(Form("histoSecPi0YieldFrom%s_FromCocktail",nameSecMeson[j].Data()));
+            if (histoExternalInputSecPi0[j]){
+                histoExternalInputSecPi0[j]->Scale(scaleFactorMeasXSecForExternalInput);
+                foundCocktailInput                         = kTRUE;
+                cout << "Using the cocktail input for secondary correction" << endl;
+                if (j==0) strExternalInputName = "Cocktail";
             }
         }
-    }    
-//     return;
-    
+    }
+    // read toy MC input if available
+    Bool_t foundToyMCInput                          = kFALSE;
+    // only use toyMC if cocktail input is not available
+    if (!kIsMC && !foundCocktailInput){
+        for (Int_t j = 0; j < 3; j++){
+            histoExternalInputSecPi0[j]                    = (TH1D*)fileUncorrected.Get(Form("histoSecPi0YieldFrom%s_FromToy",nameSecMeson[j].Data()));
+            if (histoExternalInputSecPi0[j]){
+                histoExternalInputSecPi0[j]->Scale(scaleFactorMeasXSecForExternalInput);
+                foundToyMCInput                         = kTRUE;
+                cout << "Using the toyMC input for secondary correction" << endl;
+                if (j==0) strExternalInputName = "Toy";
+            }
+        }
+    }
+
     // set min and max values for pT
     Double_t maxPtMeson     = histoUnCorrectedYield[0]->GetXaxis()->GetBinUpEdge(histoUnCorrectedYield[0]->GetNbinsX());
     Double_t minPtMeson     = 0;
@@ -432,14 +447,14 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         ptBin++;
         minPtMeson          = histoUnCorrectedYield[0]->GetXaxis()->GetBinLowEdge(ptBin);
     }
-    
+
     Double_t minPtMesonSec  = 0.3;
     if (mode == 2)
         minPtMesonSec       = minPtMeson;
     else if (mode == 4)
         minPtMesonSec       = minPtMeson;
     cout << "minimum pT: " << minPtMeson << ", maximum pT: " << maxPtMeson << endl;
-    
+
 
     //*******************************************************************************************************
     //***********************************Reading MC correction file *****************************************
@@ -453,14 +468,14 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     }
     if (kIsMC){
         for (Int_t j = 0; j < 3; j++){
-            histoToyMCInputSecPi0[j]                    = (TH1D*)fileCorrections->Get(Form("MCSecPi0From%s_Rebinned",nameSecMeson[j].Data()));
-            if (histoToyMCInputSecPi0[j]){
-                histoToyMCInputSecPi0[j]->Scale(1/nEvt);
+            histoExternalInputSecPi0[j]                    = (TH1D*)fileCorrections->Get(Form("MCSecPi0From%s_Rebinned",nameSecMeson[j].Data()));
+            if (histoExternalInputSecPi0[j]){
+                histoExternalInputSecPi0[j]->Scale(1/nEvt);
                 foundToyMCInput                         = kTRUE;
             }
         }
-    
-    }    
+    }
+
     TH1D* histoAcceptance                           = (TH1D*)fileCorrections->Get("fMCMesonAccepPt");
     TH1D* histoSecAcceptance[4]                     = {NULL, NULL, NULL, NULL};
     Bool_t hasNewSecQuantities                      = kFALSE;
@@ -481,9 +496,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             nAccHistSec++;
         }
     }
-    
+
     TH1D *histoAcceptanceWOEvtWeights               = (TH1D*)fileCorrections->Get("fMCMesonAccepPtWOEvtWeights");
-    
+
     // load histograms without weighting for comparison of efficiencies & enable the comparison if those are present in the input file
     Bool_t containsWOWeights                        = kFALSE;
     TH1D* histoAcceptanceWOWeights                  = NULL;
@@ -492,7 +507,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TH1D* histoTrueEffiPt[3]                        = {NULL, NULL, NULL};
     TH1D* histoTrueEffiPtFixed[3]                   = {NULL, NULL, NULL};
     TH1D* histoEffiPtFixed[3]                       = {NULL, NULL, NULL};
-    
+
     for (Int_t k = 0; k < 3; k++){
         histoTrueEffiPtWOWeights[k]                 = (TH1D*)fileCorrections->Get(Form("TrueMeson%sEffiPtUnweighted", nameIntRange[k].Data())); 
         histoTrueEffiPt[k]                          = (TH1D*)fileCorrections->Get(Form("TrueMeson%sEffiPt", nameIntRange[k].Data())); 
@@ -503,7 +518,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     }    
     // read secondary pi0 efficiencies
     TH1D* histoSecTrueEffi[3][4]                    = {{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL}};
+    TH1D* histoSecTrueEffiFromFit[3][4]             = {{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL}};
     TH1D* histoRatioSecEffDivTrueEff[3][4]          = {{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL}};
+    TF1*  fithistoRatioSecEffDivTrueEff[3][4]       = {{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL}};
 
     Bool_t modifiedSecTrueEffi[3][4]                = {{kFALSE, kFALSE, kFALSE, kFALSE}, {kFALSE, kFALSE, kFALSE, kFALSE}, {kFALSE, kFALSE, kFALSE, kFALSE}};
     Int_t nEffHistSec                               = 0;
@@ -513,6 +530,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             if (histoSecTrueEffi[k][j]){
                 histoRatioSecEffDivTrueEff[k][j]    = (TH1D*)histoSecTrueEffi[k][j]->Clone(Form("ratioSecEffDivTrueEff%s%s",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                 histoRatioSecEffDivTrueEff[k][j]->Divide(histoRatioSecEffDivTrueEff[k][j],histoTrueEffiPt[k]);
+                // fit the K0s efficieny ratio with an exponential if cocktail or toyMC input is used
+                if(j==0 && (foundCocktailInput || foundToyMCInput))
+                   fithistoRatioSecEffDivTrueEff[k][j] = FitObject("h",Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"Pi0",histoRatioSecEffDivTrueEff[k][0],minPtMesonSec,maxPtMeson,NULL,"QNRME+");
 
                 TF1*  fitConst                      = new TF1("fitConst","[0]");
                 fitConst->SetLineColor(colorSec[j]);
@@ -526,12 +546,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     if (histoSecTrueEffi[k][j]->GetBinCenter(iPt) > minPtMeson && histoSecTrueEffi[k][j]->GetBinContent(iPt) != 0){
                         nBinsActive++;
                         nBinsTot++;
-//                         cout << histoSecTrueEffi[k][j]->GetBinCenter(iPt) << "\t"<< histoSecTrueEffi[k][j]->GetBinError(iPt)/histoSecTrueEffi[k][j]->GetBinContent(iPt)*100 << endl;
                     }  else if (histoSecTrueEffi[k][j]->GetBinCenter(iPt) > minPtMeson){
                         nBinsTot++;
                     }
                 }
-                
+
                 if (optionEnergy.CompareTo("2.76TeV") == 0){
                     histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                     // crude assumptions // need to be validated for other energies
@@ -589,13 +608,25 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     }
                     if ( mode == 0 || mode == 2 || mode == 4)
                         modifiedSecTrueEffi[k][j]   = kTRUE;    
-                }    
-                
+                }
+
+                // use the fits from the MC efficiency ratio to get the secondary efficiencies for the raw yield calculation
+                if (foundCocktailInput||foundToyMCInput){
+                   histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                   // for the K0s (j==0) use the exponential fit and for the other particles use the constant fit
+                   if(j==0){
+                     histoSecTrueEffi[k][j] ->Multiply(fithistoRatioSecEffDivTrueEff[k][j]);
+                   } else {
+                     histoSecTrueEffi[k][j] ->Scale(fitConst->GetParameter(0));
+                   }
+                   cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
+                }
+
                 if (modifiedSecTrueEffi[k][j])
                     cout << "adjusted sec effi, due to to little stat" << endl;
             }
-        }    
-        
+        }
+
         if (histoSecTrueEffi[0][j]){
             nEffHistSec++;
         }
@@ -723,9 +754,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                                                         { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL} };
     TH1D* histoRatioYieldSecMeson[6][4]             = { { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL},
                                                         { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL} };
-    TH1D* histoYieldSecMesonFromToy[6][3]           = { { NULL, NULL, NULL}, { NULL, NULL, NULL}, { NULL, NULL, NULL},
+    TH1D* histoYieldSecMesonFromExternalInput[6][3] = { { NULL, NULL, NULL}, { NULL, NULL, NULL}, { NULL, NULL, NULL},
                                                         { NULL, NULL, NULL}, { NULL, NULL, NULL}, { NULL, NULL, NULL} };
-    TH1D* histoRatioYieldSecMesonFromToy[6][3]      = { { NULL, NULL, NULL}, { NULL, NULL, NULL}, { NULL, NULL, NULL},
+    TH1D* histoRatioYieldSecMesonFromExtInput[6][3] = { { NULL, NULL, NULL}, { NULL, NULL, NULL}, { NULL, NULL, NULL},
                                                         { NULL, NULL, NULL}, { NULL, NULL, NULL}, { NULL, NULL, NULL} };
     TH1D* histoYieldTrueGGFracMeson[3]              = { NULL, NULL, NULL };
     TH1D* histoYieldGGMeson[6]                      = { NULL, NULL, NULL, NULL, NULL, NULL };
@@ -843,25 +874,26 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             for (Int_t j = 0; j < 4; j++){
                 histoYieldSecMeson[k][j]            = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("SecYieldFrom%sMeson%s", nameSecMeson[j].Data(), nameIntRange[k].Data()));
                 histoYieldSecMeson[k][j]->Sumw2();
-                histoYieldSecMeson[k][j]->Multiply(histoYieldTrueSecFracMeson[k%3][j]);
+                histoYieldSecMeson[k][j]->Multiply(histoYieldTrueSecFracMeson[k][j]);
                 histoYieldSecMeson[k][j]->Scale(scalingFacSec[j]);  
                 
                 histoRatioYieldSecMeson[k][j]       = (TH1D*)histoYieldSecMeson[k][j]->Clone(Form("RatioSecYieldFrom%sMeson%sToRaw", nameSecMeson[j].Data(), nameIntRange[k].Data()));
                 histoRatioYieldSecMeson[k][j]->Sumw2();
                 histoRatioYieldSecMeson[k][j]->Divide(histoRatioYieldSecMeson[k][j],histoUnCorrectedYield[k]);
             }
-            // create secondary yield from Toy MC input and sec effi and acc
+            // create secondary yield from external input (Cocktail or Toy) and sec effi and acc
+
             for (Int_t j = 0; j < 3; j++){
-                if (histoSecAcceptance[j] && histoSecTrueEffi[k%3][j] && histoToyMCInputSecPi0[j]){
-                    histoYieldSecMesonFromToy[k][j] = (TH1D*)histoToyMCInputSecPi0[j]->Clone(Form("SecYieldFrom%sMeson%sFromToy", nameSecMeson[j].Data(), nameIntRange[k].Data()));
-                    histoYieldSecMesonFromToy[k][j]->Sumw2();
-                    histoYieldSecMesonFromToy[k][j]->Multiply(histoSecAcceptance[j]);
-                    histoYieldSecMesonFromToy[k][j]->Multiply(histoSecTrueEffi[k%3][j]);
+                if (histoSecAcceptance[j] && histoSecTrueEffi[k][j] && histoExternalInputSecPi0[j]){
+                    histoYieldSecMesonFromExternalInput[k][j] = (TH1D*)histoExternalInputSecPi0[j]->Clone(Form("SecYieldFrom%sMeson%sFrom%s", nameSecMeson[j].Data(), nameIntRange[k].Data(),strExternalInputName.Data()));
+                    histoYieldSecMesonFromExternalInput[k][j]->Sumw2();
+                    histoYieldSecMesonFromExternalInput[k][j]->Multiply(histoSecAcceptance[j]);
+                    histoYieldSecMesonFromExternalInput[k][j]->Multiply(histoSecTrueEffi[k][j]);
                     
-                    histoRatioYieldSecMesonFromToy[k][j]    = (TH1D*)histoYieldSecMesonFromToy[k][j]->Clone(Form("RatioSecYieldFrom%sMeson%sFromToyToRaw", nameSecMeson[j].Data(), nameIntRange[k].Data()));
-                    histoRatioYieldSecMesonFromToy[k][j]->Sumw2();
-                    histoRatioYieldSecMesonFromToy[k][j]->Scale(nEvt);
-                    histoRatioYieldSecMesonFromToy[k][j]->Divide(histoRatioYieldSecMesonFromToy[k][j],histoUnCorrectedYield[k]);
+                    histoRatioYieldSecMesonFromExtInput[k][j]    = (TH1D*)histoYieldSecMesonFromExternalInput[k][j]->Clone(Form("RatioSecYieldFrom%sMeson%sFrom%sToRaw", nameSecMeson[j].Data(), nameIntRange[k].Data(),strExternalInputName.Data()));
+                    histoRatioYieldSecMesonFromExtInput[k][j]->Sumw2();
+                    histoRatioYieldSecMesonFromExtInput[k][j]->Scale(nEvt);
+                    histoRatioYieldSecMesonFromExtInput[k][j]->Divide(histoRatioYieldSecMesonFromExtInput[k][j],histoUnCorrectedYield[k]);
                     
                 }    
             }    
@@ -1310,7 +1342,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     cout << "recalculating sec yield for "<< nameSecMeson[j].Data() << " in int range: " << nameIntRange[k].Data() << endl;
                     histoYieldSecMeson[k][j]            = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("SecYieldFrom%sMeson%s", nameSecMeson[j].Data(), nameIntRange[k].Data()));
                     histoYieldSecMeson[k][j]->Sumw2();
-                    histoYieldSecMeson[k][j]->Multiply(histoYieldTrueSecFracMeson[k%3][j]);
+                    histoYieldSecMeson[k][j]->Multiply(histoYieldTrueSecFracMeson[k][j]);
                     histoYieldSecMeson[k][j]->Scale(scalingFacSec[j]);  
                     
                     histoRatioYieldSecMeson[k][j]       = (TH1D*)histoYieldSecMeson[k][j]->Clone(Form("RatioSecYieldFrom%sMeson%sToRaw", nameSecMeson[j].Data(), nameIntRange[k].Data()));
@@ -2294,21 +2326,21 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 legendEff->AddEntry(histoTrueEffiPtUnmod[0],"validated efficiency");            
             } else {
                 legendEff->AddEntry(histoTrueEffiPtUnmod[0],"validated efficiency");
-            }    
+            }
             legendEff->Draw();
-        
+
         canvasEffSimple->Update();
         PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
 
         canvasEffSimple->SaveAs(Form("%s/%s_TrueEffSimple_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data())); 
-        
+
         //**********************************************************************************
         //**************** Plot primary efficiency together with sec effis *****************
         //**********************************************************************************        
         if (hasNewSecQuantities){
             canvasEffSimple->cd();
-            histo2DDummyEffi->DrawCopy();         
-            
+            histo2DDummyEffi->DrawCopy();
+
             TLegend* legendEffWithSec = GetAndSetLegend2(0.12,0.8-(nEffHistSec+2)*0.035,0.4,0.8 , 0.035, 1, "", 42, 0.1);
             if (containsWOWeights){
                 DrawGammaSetMarker(histoTrueEffiPt[0], 20, 1., kBlack, kBlack);
@@ -2321,7 +2353,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 DrawGammaSetMarker(histoTrueEffiPtUnmod[0], 20, 1., kBlack, kBlack);
                 histoTrueEffiPtUnmod[0]->DrawCopy("same,e1,p");
                 DrawGammaSetMarker(histoEffiPt[0], 25, 1., kGreen+2, kGreen+2);
-                histoEffiPt[0]->DrawCopy("same,e1,p");            
+                histoEffiPt[0]->DrawCopy("same,e1,p");
                 legendEffWithSec->AddEntry(histoTrueEffiPtUnmod[0],"val. prim");
                 legendEffWithSec->AddEntry(histoEffiPt[0],"rec. prim, as in Data"); 
             } else {
@@ -2337,16 +2369,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                         legendEffWithSec->AddEntry(histoSecTrueEffi[0][j],Form("val. #pi^{0} from %s",nameSecMesonPlot[j].Data()),"p");
                     else 
                         legendEffWithSec->AddEntry(histoSecTrueEffi[0][j],Form("val. #pi^{0} from %s adj.",nameSecMesonPlot[j].Data()),"p");
-                }    
-            }    
+                }
+            }
             legendEffWithSec->Draw();
-            
+
             canvasEffSimple->Update();
             PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
 
             canvasEffSimple->SaveAs(Form("%s/%s_TrueEffWithSecEffi_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));     
-            
-            
+
             canvasEffSimple->cd();
             TH2F* histo2DDummyEffiRatio;
             histo2DDummyEffiRatio       = new TH2F("histo2DDummyEffiRatio","histo2DDummyEffiRatio",1000,0, histoTrueEffiPtUnmod[0]->GetXaxis()->GetBinUpEdge(histoTrueEffiPtUnmod[0]->GetNbinsX()),
@@ -2354,7 +2385,6 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             SetStyleHistoTH2ForGraphs(histo2DDummyEffiRatio, "#it{p}_{T} (GeV/#it{c})", "#epsilon_{sec,eff}/#epsilon_{eff}", 0.035,0.04, 0.035,0.04, 0.9,0.8, 510, 505);
             histo2DDummyEffiRatio->DrawCopy();         
 
-            
             TLegend* legendEffWithSecRatio = GetAndSetLegend2(0.12,0.8-(nEffHistSec)*0.035,0.4,0.8 , 0.035, 1, "", 42, 0.1);
             Bool_t  plotted             = kFALSE;
             for (Int_t j = 0; j < 4; j++){
@@ -2363,17 +2393,19 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     DrawGammaSetMarker(histoRatioSecEffDivTrueEff[0][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
                     histoRatioSecEffDivTrueEff[0][j]->DrawCopy("same,e1");  
                     legendEffWithSecRatio->AddEntry(histoRatioSecEffDivTrueEff[0][j],Form("val. #pi^{0} from %s",nameSecMesonPlot[j].Data()),"p");
-                }    
-            }    
+                }
+            }
+            fithistoRatioSecEffDivTrueEff[0][0]->SetLineColor(kRed);
+            fithistoRatioSecEffDivTrueEff[0][0]->SetLineWidth(5);
+            fithistoRatioSecEffDivTrueEff[0][0]->Draw("same");
+
             legendEffWithSecRatio->Draw();
-            
             canvasEffSimple->Update();
             PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
 
             if (plotted)
-                canvasEffSimple->SaveAs(Form("%s/%s_RatioSecEffiToTrueEff_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));     
-            
-            
+                canvasEffSimple->SaveAs(Form("%s/%s_RatioSecEffiToTrueEff_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
+
         }
         delete canvasEffSimple;
 
@@ -2391,7 +2423,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 DrawGammaSetMarker(histoTrueEffiPtUnmod[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
                 histoTrueEffiPtUnmod[k]->DrawCopy("same,e1,p");
                 legendTrueEff->AddEntry(histoTrueEffiPt[k],nameIntRangePlot[k].Data());
-            }    
+            }
                     
             PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
             
@@ -2581,16 +2613,16 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
         if (!optDalitz){
             cout << "correcting spectra in " << nameIntRange[k].Data() << endl;
-            cout << k << "\t" << k%3 << "\t" << m << endl;
-            CorrectYield(histoCorrectedYieldNorm[k], histoYieldSecMeson[k], histoYieldSecMesonFromToy[k] ,histoEffiPt[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
-            CorrectYield(histoCorrectedYieldTrue[k], histoYieldSecMeson[k], histoYieldSecMesonFromToy[k], histoTrueEffiPt[k%3], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
+            cout << k << "\t" << k << "\t" << m << endl;
+            CorrectYield(histoCorrectedYieldNorm[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k] ,histoEffiPt[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
+            CorrectYield(histoCorrectedYieldTrue[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k], histoTrueEffiPt[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
             if (k < 3){
-                CorrectYield(histoCorrectedYieldTrueFixed[k], histoYieldSecMeson[k], histoYieldSecMesonFromToy[k], histoTrueEffiPtFixed[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
-                CorrectYield(histoCorrectedYieldFixed[k], histoYieldSecMeson[k], histoYieldSecMesonFromToy[k], histoEffiPtFixed[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
+                CorrectYield(histoCorrectedYieldTrueFixed[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k], histoTrueEffiPtFixed[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
+                CorrectYield(histoCorrectedYieldFixed[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k], histoEffiPtFixed[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
             }    
         } else {
             CorrectYieldDalitz(histoCorrectedYieldNorm[k], histoYieldGGMeson[k], histoEffiPt[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
-            CorrectYieldDalitz(histoCorrectedYieldTrue[k], histoYieldGGMeson[k], histoTrueEffiPt[k%3], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
+            CorrectYieldDalitz(histoCorrectedYieldTrue[k], histoYieldGGMeson[k], histoTrueEffiPt[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
         }    
 
         RatioTrue[k]                    = (TH1D*) histoCorrectedYieldTrue[k]->Clone(); 
@@ -2787,18 +2819,18 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 histoYieldSecMeson[0][j]->DrawCopy("same,e1");  
                 legendSecRAWYield->AddEntry(histoYieldSecMeson[0][j],Form("#pi^{0} from %s",nameSecMesonPlot[j].Data()),"p");
             } else if ( j < 3){ //!kIsMC &&
-                if (histoYieldSecMesonFromToy[0][j] && histoYieldSecMesonFromToy[0][j]->GetEntries()){
+                if (histoYieldSecMesonFromExternalInput[0][j] && histoYieldSecMesonFromExternalInput[0][j]->GetEntries()){
 //                     if (!kIsMC) legendSecRAWYield->AddEntry((TObject*)0,Form("#pi^{0} from %s",nameSecMesonPlot[j].Data()),"");
                     legendSecRAWYield->AddEntry((TObject*)0,Form("#pi^{0} from %s",nameSecMesonPlot[j].Data()),"");
                 }    
             }    
             if (j < 3){
-                if (histoYieldSecMesonFromToy[0][j] ){ //&& !kIsMC 
-                    if (histoYieldSecMesonFromToy[0][j]->GetEntries() > 0){
+                if (histoYieldSecMesonFromExternalInput[0][j] ){ //&& !kIsMC 
+                    if (histoYieldSecMesonFromExternalInput[0][j]->GetEntries() > 0){
                         cout << "plotting toy approach" << endl;
-                        DrawGammaSetMarker(histoYieldSecMesonFromToy[0][j],  markerStyleSecFromToy[j] , markerSizeSecFromToy[j], colorSecFromToy[j], colorSecFromToy[j]);  
-                        histoYieldSecMesonFromToy[0][j]->DrawCopy("same,e1");  
-                        legendSecRAWYield->AddEntry(histoYieldSecMesonFromToy[0][j],"Toy appr.","p");
+                        DrawGammaSetMarker(histoYieldSecMesonFromExternalInput[0][j],  markerStyleSecFromToy[j] , markerSizeSecFromToy[j], colorSecFromToy[j], colorSecFromToy[j]);  
+                        histoYieldSecMesonFromExternalInput[0][j]->DrawCopy("same,e1");  
+                        legendSecRAWYield->AddEntry(histoYieldSecMesonFromExternalInput[0][j],"Toy appr.","p");
                     } else if (histoYieldSecMeson[0][j] &&  haveSecUsed[j]){ //!kIsMC &&
                         legendSecRAWYield->AddEntry((TObject*)0,"","");
                     } 
@@ -2815,7 +2847,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         canvasRAWYieldSec->SaveAs(Form("%s/%s_%s_RAWYieldSecPt_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
         
         
-        if ( (histoYieldSecMesonFromToy[0][0] && !kIsMC) || ( optionEnergy.CompareTo("8TeV")==0 && !kIsMC )){
+        if ( (histoYieldSecMesonFromExternalInput[0][0] && !kIsMC) ){
             TCanvas* canvasSecFrac2 = new TCanvas("canvasSecFrac","",200,10,1350,900);  // gives the page size
             DrawGammaCanvasSettings( canvasSecFrac2, 0.09, 0.018, 0.04, 0.08);
 
@@ -2842,16 +2874,16 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     histoRatioYieldSecMeson[0][j]->DrawCopy("same,e1");  
                     legendSecRAWRatio->AddEntry(histoRatioYieldSecMeson[0][j],Form("#pi^{0} from %s",nameSecMesonPlot[j].Data()),"p");
                 } else if (!kIsMC && j < 3){
-                    if (histoRatioYieldSecMesonFromToy[0][j] && histoRatioYieldSecMesonFromToy[0][j]->GetEntries()){
+                    if (histoRatioYieldSecMesonFromExtInput[0][j] && histoRatioYieldSecMesonFromExtInput[0][j]->GetEntries()){
                         if (!kIsMC) legendSecRAWRatio->AddEntry((TObject*)0,Form("#pi^{0} from %s",nameSecMesonPlot[j].Data()),"");
                     }    
                 }    
                 if (j < 3){
-                    if (histoRatioYieldSecMesonFromToy[0][j] && !kIsMC ){
-                        if (histoRatioYieldSecMesonFromToy[0][j]->GetEntries() > 0){
-                            DrawGammaSetMarker(histoRatioYieldSecMesonFromToy[0][j],  markerStyleSecFromToy[j] , markerSizeSecFromToy[j], colorSecFromToy[j], colorSecFromToy[j]);  
-                            histoRatioYieldSecMesonFromToy[0][j]->DrawCopy("same,e1");  
-                            legendSecRAWRatio->AddEntry(histoRatioYieldSecMesonFromToy[0][j],"Toy appr.","p");
+                    if (histoRatioYieldSecMesonFromExtInput[0][j] && !kIsMC ){
+                        if (histoRatioYieldSecMesonFromExtInput[0][j]->GetEntries() > 0){
+                            DrawGammaSetMarker(histoRatioYieldSecMesonFromExtInput[0][j],  markerStyleSecFromToy[j] , markerSizeSecFromToy[j], colorSecFromToy[j], colorSecFromToy[j]);  
+                            histoRatioYieldSecMesonFromExtInput[0][j]->DrawCopy("same,e1");  
+                            legendSecRAWRatio->AddEntry(histoRatioYieldSecMesonFromExtInput[0][j],"Toy appr.","p");
                         } else if (histoRatioYieldSecMeson[0][j] && !kIsMC && haveSecUsed[j]){
                             legendSecRAWRatio->AddEntry((TObject*)0,"","");
                         } 
@@ -3277,8 +3309,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     if (histoSecAcceptance[j])              histoSecAcceptance[j]->Write();
                 }    
                 if (j < 3){
-                    if (histoYieldSecMesonFromToy[k][j])        histoYieldSecMesonFromToy[k][j]->Write();
-                    if (histoRatioYieldSecMesonFromToy[k][j])   histoRatioYieldSecMesonFromToy[k][j]->Write();
+                    if (histoYieldSecMesonFromExternalInput[k][j])        histoYieldSecMesonFromExternalInput[k][j]->Write();
+                    if (histoRatioYieldSecMesonFromExtInput[k][j])   histoRatioYieldSecMesonFromExtInput[k][j]->Write();
                 }
             }
         }    

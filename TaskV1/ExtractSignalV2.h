@@ -62,6 +62,7 @@ Double_t    fCBn                                                        = 0;
 Float_t     pictDrawingCoordinatesFWHM[9]                               = {0.6, 0.8, 0.30, 0.04, 0.15,0.7, 0.1, 0.035,0};
 Int_t       fNRebinGlobal                                               = 2;
 TString     nameSecondaries[4]                                          = {"K0S", "Lambda", "K0L", "Rest"};
+TString     nameSecondariesCocktail[4]                                  = {"K0s", "Lambda", "K0l", "Rest"};
 TString     nameIntRange[6]                                             = {"", "Wide", "Narrow", "Left", "LeftWide", "LeftNarrow"};
 
 //****************************************************************************
@@ -214,6 +215,7 @@ void Delete();                                                                  
 void SetCorrectMCHistogrammNames(TString);                                                                  // Setting correct histogram names
 void FillMCSecondaryHistAndCalculateAcceptance(TH2D*, TH2D*);                                               // Fill secondary MC input histograms and calculate respective acceptance            
 Bool_t LoadSecondaryPionsFromExternalFile();                                                                // Loads secondary neutral pion input graphs from file
+Bool_t LoadSecondaryPionsFromCocktailFile(TString, TString);                                                // Loads secondary neutral pion input graphs from file
 
 //****************************************************************************
 //************************** input histograms ********************************
@@ -606,6 +608,8 @@ TH1F*       fHistoTrueGammaClusMultipleCount                            = NULL;
 //************ Load secondary pion histograms from external file **************
 //*****************************************************************************
 Bool_t      fHaveToyMCInputForSec                                       = kFALSE;
+Bool_t      fHaveCocktailInputForSec                                    = kFALSE;
 TFile*      fFileToyMCInput[3]                                          = {NULL, NULL, NULL};
-TH1D*       fHistoYieldToyMCSecInput[3]                                 = {NULL, NULL, NULL};
-TH1D*       fHistoYieldToyMCSecInputReb[3]                              = {NULL, NULL, NULL};
+TFile*      fFileCocktailInput                                          = NULL;
+TH1D*       fHistoYieldExternSecInput[3]                                = {NULL, NULL, NULL};
+TH1D*       fHistoYieldExternSecInputReb[3]                             = {NULL, NULL, NULL};

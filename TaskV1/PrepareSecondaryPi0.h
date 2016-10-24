@@ -1,3 +1,5 @@
+
+
 // provided by Gamma Conversion Group, $ALICE_PHYSICS/PWGGA/GammaConv ;https://twiki.cern.ch/twiki/bin/view/ALICE/PWG4GammaConversion
 
 //************************** Some general definitions *************************************
@@ -16,8 +18,7 @@ Double_t    ptMin                                       = 0;
 Double_t    ptMax                                       = 20;
 Double_t    fRapidity                                   = 0;
 Int_t       fMode                                       = 0;
-Float_t     nEventsCocktail                             = 0;
-Float_t     nEventsData                                 = 0;
+Float_t     nEvents                                     = 0;
 
 const Int_t nMotherParticles                            = 16;
 TString     motherParticles[nMotherParticles]           = {"Eta","K0s","K0l","Lambda","rho0","EtaPrim","omega","rho+","rho-","phi","J/psi","Delta-","Delta0","Delta+","Delta++","Sigma0"};
@@ -30,9 +31,6 @@ Style_t     cocktailMarker[nMotherParticles]            = {20,21,24,25,20,21,24,
 TString     decayChannelsLatex[nMotherParticles][18];
 Double_t    decayChannelsBR[nMotherParticles][18];
 
-// this switch is to check the scaling factors by producing the pi0 pt spec also from the pi0 pt vs phi dist
-Bool_t doPi0PtOrBinFromPtPhi                            = kTRUE;
-
 //************************** cocktail settings ********************************************
 Double_t ptGenMin                                       = 0;
 Double_t ptGenMax                                       = 20;
@@ -43,8 +41,7 @@ Double_t mtScaleFactor[nMotherParticles]                = {1.};
 
 //************************** Declaration of histograms ************************************
 TH1F*  fDeltaPt                                         = NULL;
-TH1F*  histoNEventsCocktail                             = NULL;
-TH1F*  histoNEventsData                                 = NULL;
+TH1F*  histoNEvents                                     = NULL;
 TH1F*  histMtScalingFactors                             = NULL;
 TH1D*  histoPi0YieldData                                = NULL;
 TH1F** histoDecayChannels                               = NULL;
@@ -54,7 +51,6 @@ TH2F** histoPi0PtPhi                                    = NULL;
 TH2F** histoPi0MotherPtY                                = NULL;
 TH2F** histoPi0MotherPtPhi                              = NULL;
 TH1F** histoPi0PtOrBin                                  = NULL;
-TH1F** histoPi0PtOrBin2                                 = NULL;
 TH1F** histoPi0YOrBin                                   = NULL;
 TH1F** histoPi0PhiOrBin                                 = NULL;
 TH1F** histoPi0MotherPtOrBin                            = NULL;
@@ -71,22 +67,21 @@ TF1** cocktailInputParametrizationsMtScaled             = NULL;
 TF1* paramScaleBase                                     = NULL;
 
 //************************** Methods ******************************************************
-void Initialize                                     (   TString     energy,
-                                                        Int_t       numberOfBins        );
-void RebinSpectrum                                  (   TH1F*       Spectrum,
-                                                        TString     NewName             );
-TH1F* CalculateRawYield                             (   TH1F*       input,
-                                                        Double_t    deltaRap,
-                                                        Float_t     nEventsData         );
-void SaveHistos                                     (                                   );
-TF1* MtScaledParam                                  (   TF1*        param,
-                                                        Int_t       particleNumber      );
-Double_t GetMass                                    (   TString     particle            );
-void SetHistogramTitles                             (   TH1F*       input,
-                                                        TString     title,
-                                                        TString     xTitle,
-                                                        TString     yTitle              );
-void DeleteObjects                                  (                                   );
-TH1D* CalculateRatioToTF1                           (   TH1D*       hist,
-                                                        TF1*        func                );
-void CreateBRTableLatex                             (                                   );
+void Initialize                                     (   TString energy,
+                                                        Int_t numberOfBins      );
+void RebinSpectrum                                  (   TH1F *Spectrum,
+                                                        TString NewName         );
+TH1F* ConvertYieldHisto                             (   TH1F* input             );
+void SaveHistos                                     (                           );
+TF1* MtScaledParam                                  (   TF1* param,
+                                                        Int_t particleNumber    );
+Double_t GetMass                                    (   TString particle        );
+void SetHistogramTitles                             (   TH1F* input,
+                                                        TString title,
+                                                        TString xTitle,
+                                                        TString yTitle          );
+void DeleteObjects                                  (                           );
+TH1D* CalculateRatioToTF1                           (   TH1D* hist,
+                                                        TF1* func               );
+void CreateBRTableLatex                             (                           );
+
