@@ -1107,7 +1107,7 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                         return 22;
                         break;
                     case 51:            // EMC1
-                        return 26;
+                        return 24;
                         break;
                     case 52:            // EMC7
                         return 22;

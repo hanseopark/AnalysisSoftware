@@ -839,11 +839,35 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
                             0.85*textSizeSpectra2,textSizeSpectra2, 0.85*textSizeSpectra2,textSizeSpectra2, 0.85,1.18);
     histo2DTriggRejectLinear->GetXaxis()->SetRangeUser(0,25);
     histo2DTriggRejectLinear->DrawCopy(); 
+
+        Double_t minPtEMC1  = 4.5; 
+        Double_t maxPtEMC1  = 20.0; 
+
+        TF1* pol0V1FitEMC1INT1 = new TF1("pol0V1FitEMC1INT1","[0]",minPtEMC1,maxPtEMC1); //
+        histoTriggRejectEMC1vsINT1v1ClusNLM1->Fit(pol0V1FitEMC1INT1,"NRME0+","",minPtEMC1,maxPtEMC1);
+        TF1* pol0V2FitEMC1INT1 = new TF1("pol0V2FitEMC1INT1","[0]",minPtEMC1,maxPtEMC1); //
+        histoTriggRejectEMC1vsINT1v2Clus->Fit(pol0V2FitEMC1INT1,"NRME0+","",minPtEMC1,maxPtEMC1);
+        
         DrawGammaSetMarker(histoTriggRejectEMC1vsINT1v1ClusNLM1,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+        histoTriggRejectEMC1vsINT1v1ClusNLM1->Scale(pol0V2FitEMC1INT1->GetParameter(0)/pol0V1FitEMC1INT1->GetParameter(0));
         histoTriggRejectEMC1vsINT1v1ClusNLM1->Draw("p,same,e");
         DrawGammaSetMarker(histoTriggRejectEMC1vsINT1v2Clus,markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
         histoTriggRejectEMC1vsINT1v2Clus->Draw("p,same,e");
 
+        
+        TF1* pol1V1FitEMC1INT1 = new TF1("pol1V1FitEMC1INT1","[0]+[1]*x",minPtEMC1,maxPtEMC1); //
+        histoTriggRejectEMC1vsINT1v1ClusNLM1->Fit(pol1V1FitEMC1INT1,"NRME0+","",minPtEMC1,maxPtEMC1);
+        pol1V1FitEMC1INT1->SetLineColor(colorDet[2]);
+        pol1V1FitEMC1INT1->SetLineStyle(9);
+        pol1V1FitEMC1INT1->SetRange(minPtEMC1,maxPtEMC1);
+        pol1V1FitEMC1INT1->Draw("same");
+        TF1* pol1V2FitEMC1INT1 = new TF1("pol1V2FitEMC1INT1","[0]+[1]*x",minPtEMC1,maxPtEMC1); //
+        histoTriggRejectEMC1vsINT1v2Clus->Fit(pol1V2FitEMC1INT1,"NRME0+","",minPtEMC1,maxPtEMC1);
+        pol1V2FitEMC1INT1->SetLineColor(colorDet[1]);
+        pol1V2FitEMC1INT1->SetLineStyle(9);
+        pol1V2FitEMC1INT1->SetRange(minPtEMC1,maxPtEMC1);
+        pol1V2FitEMC1INT1->Draw("same");
+        
         TLegend* legendTriggerRejectEMC1           = GetAndSetLegend2(0.72, 0.13, 0.85, 0.13+(2*textSizeLabelsRel),textSizeLabelsPixel);
         legendTriggerRejectEMC1->AddEntry(histoTriggRejectEMC1vsINT1v2Clus,"V2 clus","p");
         legendTriggerRejectEMC1->AddEntry(histoTriggRejectEMC1vsINT1v1ClusNLM1,"V1 clus","p");
@@ -866,10 +890,33 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
     histo2DTriggRejectLinear->GetXaxis()->SetRangeUser(0,25);
     histo2DTriggRejectLinear->DrawCopy(); 
 
+        Double_t minPtEMC7  = 2.8; 
+        Double_t maxPtEMC7  = 15.0; 
+
+        TF1* pol0V1FitEMC7INT7 = new TF1("pol0V1FitEMC7INT7","[0]",minPtEMC7,maxPtEMC7); //
+        histoTriggRejectEMC7vsINT7v1ClusNLM1->Fit(pol0V1FitEMC7INT7,"NRME0+","",minPtEMC7,maxPtEMC7);
+        TF1* pol0V2FitEMC7INT7 = new TF1("pol0V2FitEMC7INT7","[0]",minPtEMC7,maxPtEMC7); //
+        histoTriggRejectEMC7vsINT7v2Clus->Fit(pol0V2FitEMC7INT7,"NRME0+","",minPtEMC7,maxPtEMC7);
+
         DrawGammaSetMarker(histoTriggRejectEMC7vsINT7v1ClusNLM1,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+        histoTriggRejectEMC7vsINT7v1ClusNLM1->Scale(pol0V2FitEMC7INT7->GetParameter(0)/pol0V1FitEMC7INT7->GetParameter(0));
         histoTriggRejectEMC7vsINT7v1ClusNLM1->Draw("p,same,e");
         DrawGammaSetMarker(histoTriggRejectEMC7vsINT7v2Clus,markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
         histoTriggRejectEMC7vsINT7v2Clus->Draw("p,same,e");
+
+        
+        TF1* pol1V1FitEMC7INT7 = new TF1("pol1V1FitEMC7INT7","[0]+[1]*x",minPtEMC7,maxPtEMC7); //
+        histoTriggRejectEMC7vsINT7v1ClusNLM1->Fit(pol1V1FitEMC7INT7,"NRME0+","",minPtEMC7,maxPtEMC7);
+        pol1V1FitEMC7INT7->SetLineColor(colorDet[2]);
+        pol1V1FitEMC7INT7->SetLineStyle(9);
+        pol1V1FitEMC7INT7->SetRange(minPtEMC7,maxPtEMC7);
+        pol1V1FitEMC7INT7->Draw("same");
+        TF1* pol1V2FitEMC7INT7 = new TF1("pol1V2FitEMC7INT7","[0]+[1]*x",minPtEMC7,maxPtEMC7); //
+        histoTriggRejectEMC7vsINT7v2Clus->Fit(pol1V2FitEMC7INT7,"NRME0+","",minPtEMC7,maxPtEMC7);
+        pol1V2FitEMC7INT7->SetLineColor(colorDet[1]);
+        pol1V2FitEMC7INT7->SetLineStyle(9);
+        pol1V2FitEMC7INT7->SetRange(minPtEMC7,maxPtEMC7);
+        pol1V2FitEMC7INT7->Draw("same");
 
         legendTriggerRejectEMC1->Draw();
 
@@ -889,11 +936,33 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
     histo2DTriggRejectLinear->GetXaxis()->SetRangeUser(0,30);
     histo2DTriggRejectLinear->DrawCopy(); 
 
+        Double_t minPtEG2   = 4.5; 
+        Double_t maxPtEG2   = 18.0; 
+            
+        TF1* pol0V1FitEG2EMC7 = new TF1("pol0V1FitEG2EMC7","[0]",minPtEG2,maxPtEG2); //
+        histoTriggRejectEG2vsEMC7v1ClusNLM1->Fit(pol0V1FitEG2EMC7,"NRME0+","",minPtEG2,maxPtEG2);
+        TF1* pol0V2FitEG2EMC7 = new TF1("pol0V2FitEG2EMC7","[0]",minPtEG2,maxPtEG2); //
+        histoTriggRejectEG2vsEMC7v2Clus->Fit(pol0V2FitEG2EMC7,"NRME0+","",minPtEG2,maxPtEG2);
+    
         DrawGammaSetMarker(histoTriggRejectEG2vsEMC7v1ClusNLM1,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+        histoTriggRejectEG2vsEMC7v1ClusNLM1->Scale(pol0V2FitEG2EMC7->GetParameter(0)/pol0V1FitEG2EMC7->GetParameter(0));
         histoTriggRejectEG2vsEMC7v1ClusNLM1->Draw("p,same,e");
         DrawGammaSetMarker(histoTriggRejectEG2vsEMC7v2Clus,markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
         histoTriggRejectEG2vsEMC7v2Clus->Draw("p,same,e");
 
+        TF1* pol1V1FitEG2EMC7 = new TF1("pol1V1FitEG2EMC7","[0]+[1]*x",minPtEG2,maxPtEG2); //
+        histoTriggRejectEG2vsEMC7v1ClusNLM1->Fit(pol1V1FitEG2EMC7,"NRME0+","",minPtEG2,maxPtEG2);
+        pol1V1FitEG2EMC7->SetLineColor(colorDet[2]);
+        pol1V1FitEG2EMC7->SetLineStyle(9);
+        pol1V1FitEG2EMC7->SetRange(minPtEG2,maxPtEG2);
+        pol1V1FitEG2EMC7->Draw("same");
+        TF1* pol1V2FitEG2EMC7 = new TF1("pol1V2FitEG2EMC7","[0]+[1]*x",minPtEG2,maxPtEG2); //
+        histoTriggRejectEG2vsEMC7v2Clus->Fit(pol1V2FitEG2EMC7,"NRME0+","",minPtEG2,maxPtEG2);
+        pol1V2FitEG2EMC7->SetLineColor(colorDet[1]);
+        pol1V2FitEG2EMC7->SetLineStyle(9);
+        pol1V2FitEG2EMC7->SetRange(minPtEG2,maxPtEG2);
+        pol1V2FitEG2EMC7->Draw("same");
+        
         legendTriggerRejectEMC1->Draw();
 
     labelEnergyTriggerReject->Draw();
@@ -912,11 +981,33 @@ void CompareMergedClusterAnaFinal   (   TString fileNameMergedHaitao            
     histo2DTriggRejectLinear->GetXaxis()->SetRangeUser(0,50);
     histo2DTriggRejectLinear->DrawCopy(); 
 
+        Double_t minPtEG1   = 6.5; 
+        Double_t maxPtEG1   = 40.0; 
+    
+        TF1* pol0V1FitEG1EG2 = new TF1("pol0V1FitEG1EG2","[0]",minPtEG1,maxPtEG1); //
+        histoTriggRejectEG1vsEG2v1ClusNLM1->Fit(pol0V1FitEG1EG2,"NRME0+","",minPtEG1,maxPtEG1);
+        TF1* pol0V2FitEG1EG2 = new TF1("pol0V2FitEG1EG2","[0]",minPtEG1,maxPtEG1); //
+        histoTriggRejectEG1vsEG2v2Clus->Fit(pol0V2FitEG1EG2,"NRME0+","",minPtEG1,maxPtEG1);
+
         DrawGammaSetMarker(histoTriggRejectEG1vsEG2v1ClusNLM1,markerStyleDet[2], markerSizeDet[2], colorDet[2] , colorDet[2]);
+        histoTriggRejectEG1vsEG2v1ClusNLM1->Scale(pol0V2FitEG1EG2->GetParameter(0)/pol0V1FitEG1EG2->GetParameter(0));
         histoTriggRejectEG1vsEG2v1ClusNLM1->Draw("p,same,e");
         DrawGammaSetMarker(histoTriggRejectEG1vsEG2v2Clus,markerStyleDet[1], markerSizeDet[1], colorDet[1] , colorDet[1]);
         histoTriggRejectEG1vsEG2v2Clus->Draw("p,same,e");
-
+        
+        TF1* pol1V1FitEG1EG2 = new TF1("pol1V1FitEG1EG2","[0]+[1]*x",minPtEG1,maxPtEG1); //
+        histoTriggRejectEG1vsEG2v1ClusNLM1->Fit(pol1V1FitEG1EG2,"NRME0+","",minPtEG1,maxPtEG1);
+        pol1V1FitEG1EG2->SetLineColor(colorDet[2]);
+        pol1V1FitEG1EG2->SetLineStyle(9);
+        pol1V1FitEG1EG2->SetRange(minPtEG1,maxPtEG1);
+        pol1V1FitEG1EG2->Draw("same");
+        TF1* pol1V2FitEG1EG2 = new TF1("pol1V2FitEG1EG2","[0]+[1]*x",minPtEG1,maxPtEG1); //
+        histoTriggRejectEG1vsEG2v2Clus->Fit(pol1V2FitEG1EG2,"NRME0+","",minPtEG1,maxPtEG1);
+        pol1V2FitEG1EG2->SetLineColor(colorDet[1]);
+        pol1V2FitEG1EG2->SetLineStyle(9);
+        pol1V2FitEG1EG2->SetRange(minPtEG1,maxPtEG1);
+        pol1V2FitEG1EG2->Draw("same");
+        
         legendTriggerRejectEMC1->Draw();
 
     labelEnergyTriggerReject->Draw();

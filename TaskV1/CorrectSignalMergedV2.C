@@ -1964,6 +1964,50 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         legendM02ValPi0->Draw();
         canvasM02SamplePlot->SaveAs(Form("%s/Pi0_ValidatedM02BinOnlyPi0MEMC_%s.%s",outputDir.Data(), nameTrigger.Data(), suffix.Data()));
 
+        //****************************************************************************
+        // plotting decomposed pi0 signal further split ******************************
+        //****************************************************************************
+        histo2DPi0M02Dummy->DrawCopy();
+        
+        
+        DrawGammaSetMarker(histoTruePi0OneGammaM02ExBin, markerStyleM02Gamma, markerSizeM02Gamma, markerColorM02Gamma, markerColorM02Gamma);
+        histoTruePi0OneGammaM02ExBin->SetLineWidth(3);
+        histoTruePi0OneGammaM02ExBin->SetFillColor(markerColorM02Gamma);
+        histoTruePi0OneGammaM02ExBin->SetFillStyle(3154);
+        histoTruePi0OneGammaM02ExBin->Draw("hist,B,same");
+        histoTruePi0OneGammaM02ExBin->Draw("hist,same");
+        
+        DrawGammaSetMarker(histoTruePi0OneElectronM02ExBin, markerStyleM02Elec, markerSizeM02Elec, markerColorM02Elec, markerColorM02Elec);
+        histoTruePi0OneElectronM02ExBin->SetLineWidth(3);
+        histoTruePi0OneElectronM02ExBin->SetFillColor(markerColorM02Elec);
+        histoTruePi0OneElectronM02ExBin->SetFillStyle(3145);
+        histoTruePi0OneElectronM02ExBin->Draw("b,same,hist");
+        histoTruePi0OneElectronM02ExBin->Draw("same,hist");
+
+        DrawGammaSetMarker(histoTruePi0PureMergedM02ExBin, 24, markerSizeM02Pi0, kBlack, kBlack);
+        histoTruePi0PureMergedM02ExBin->Draw("p,same");
+        DrawGammaSetMarker(histoTruePi0PConvMergedM02ExBin, 25, markerSizeM02Pi0, kBlue+1, kBlue+1);
+        histoTruePi0PConvMergedM02ExBin->Draw("p,same");
+        DrawGammaSetMarker(histoTruePi0M02ExBin, markerStyleM02Pi0, markerSizeM02Pi0, markerColorM02Pi0, markerColorM02Pi0);
+        histoTruePi0M02ExBin->Draw("p,same");
+
+        histo2DPi0M02Dummy->Draw("AXIS,same");
+        labelM02PtRange->Draw();
+        labelM02Energy->Draw();
+        labelM02Trigger->Draw();
+        labelM02Reco->Draw();
+        labelM02Simulation->Draw();
+        
+        TLegend* legendM02ValPi02  = GetAndSetLegend2(0.67, 0.89-6*0.75*textsizeLabelsM02, 0.9, 0.89, 0.85*textSizeLabelsPixel);
+        legendM02ValPi02->SetMargin(0.05/(0.9-0.67));
+        legendM02ValPi02->AddEntry(histoTruePi0M02ExBin,"All #pi^{0}","p");
+        legendM02ValPi02->AddEntry(histoTruePi0PureMergedM02ExBin,"Both #gamma in clus.","p");
+        legendM02ValPi02->AddEntry(histoTruePi0PConvMergedM02ExBin,"Both #gamma in clus.","p");
+        legendM02ValPi02->AddEntry((TObject*)0,"part conv.","");
+        legendM02ValPi02->AddEntry(histoTruePi0OneGammaM02ExBin,"1 #gamma in clus.","f");
+        legendM02ValPi02->AddEntry(histoTruePi0OneElectronM02ExBin,"1 e^{#pm} in clus.","f");
+        legendM02ValPi02->Draw();
+        canvasM02SamplePlot->SaveAs(Form("%s/Pi0_ValidatedM02BinOnlyPi0FurtherDetailsMEMC_%s.%s",outputDir.Data(), nameTrigger.Data(), suffix.Data()));
         
         //****************************************************************************
         // plotting data vs MC comp **************************************************

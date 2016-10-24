@@ -1,5 +1,33 @@
 // provided by Gamma Conversion Group, $ALICE_ROOT/PWGGA/GammaConv ;https://twiki.cern.ch/twiki/bin/view/ALICE/PWG4GammaConversion
 
+/*
+//************************************************************************************
+//************ Return correct trigger name based on trigger cutnumber ****************
+//************************************************************************************
+TString ReturnTriggerName(Int_t trigger){
+    cout << trigger << endl;
+    if (trigger == 1 || trigger == 3 || trigger == 0){  // INT1
+        return "INT1";
+    } else if (trigger == 10 ){                         // INT7
+        return "INT7";
+    } else if (trigger == 11){                          // INT7
+        return "INT8";
+    } else if (trigger == 51){                          // EMC1
+        return "EMC1";
+    } else if (trigger == 52){                          // EMC7
+        return "EMC7";
+    } else if (trigger == 81){                          // EGA
+        return "EGA";
+    } else if (trigger == 85){                          // EG2
+        return "EG2";
+    } else if (trigger == 83){                          // EG1  
+        return "EG1";
+    }    
+    return "";
+}*/
+
+
+
 //________________________________ Plotting Invariant mass in a single p_t bin ____________________________________________
 void PlotInvMassSinglePtBin(    TH1D* fHistoMappingGGInvMassPtBinPlot, 
                                 TH1D* fHistoMappingBackNormInvMassPtBinPlot, 
@@ -157,20 +185,9 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
                                 Double_t scaleFacSignal                 = 1.0,
                                 Int_t detMode                           = 0
                              ){
-    TString triggerStr; 
-        if (triggerSet == 52){
-            triggerStr = "EMC7 triggered"; 
-        } else if ( triggerSet == 81 ){
-            triggerStr = "EGA triggered";
-        } else if ( triggerSet == 53 ){
-            triggerStr = "EMC8 triggered"; 
-        } else if ( triggerSet == 82 ){
-            triggerStr = "EGA triggered"; 
-        } else if ( triggerSet == 01 ){
-            triggerStr = "INT7 triggered"; 
-        } else {
-            triggerStr = "MB triggered";
-        }
+    
+    TString triggerStr = Form("%s triggered", ((TString)ReturnTriggerName(triggerSet)).Data());
+    
     TH1D* histoPi0InvMassSigPlusBG;
     TH1D* histoPi0InvMassSig;
     TH1D* histoPi0InvMassSigRemBGSub;
@@ -3164,7 +3181,7 @@ void PlotM02MergedInPtBins(     TH1D**      fHistoM02PtBinPlot,
             if (fHistoM02PtBinPlot[iPt]){
                     DrawGammaHisto( fHistoM02PtBinPlot[iPt],
                                     Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                    "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                    "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                     fPlottingM02Range[0], fPlottingM02Range[1], 0, 0.7);
             } else {
                  continue;
@@ -3834,7 +3851,7 @@ void PlotM02MergedMCInPtBins(       TH1D**      fHistoMergedRecPtBinPlot,
                 if (fHistoMergedRecPtBinPlot[iPt]){
                     DrawGammaHisto( fHistoMergedRecPtBinPlot[iPt],
                                     Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                    "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                    "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                     fPlottingM02Range[0],fPlottingM02Range[1],0,0.8);
                 } else {
                     continue;
@@ -3847,7 +3864,7 @@ void PlotM02MergedMCInPtBins(       TH1D**      fHistoMergedRecPtBinPlot,
                 if (fHistoMergedValPtBinPlot[iPt]){
                     DrawGammaHistoColored(  fHistoMergedValPtBinPlot[iPt],
                                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                            "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                            "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                             fPlottingM02Range[0],fPlottingM02Range[1],0,kBlue+1, 24);
                 }
             }
@@ -3855,7 +3872,7 @@ void PlotM02MergedMCInPtBins(       TH1D**      fHistoMergedRecPtBinPlot,
                 if (fHistoMergedPartConvValPtBinPlot[iPt]){
                     DrawGammaHistoColored(  fHistoMergedPartConvValPtBinPlot[iPt],
                                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                            "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                            "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                             fPlottingM02Range[0],fPlottingM02Range[1],0,kGreen+2, 24);
                 }
             }
@@ -3863,7 +3880,7 @@ void PlotM02MergedMCInPtBins(       TH1D**      fHistoMergedRecPtBinPlot,
                 if (fHistoValGammaPtBinPlot[iPt]){
                     DrawGammaHistoColored(  fHistoValGammaPtBinPlot[iPt],
                                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                            "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                            "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                             fPlottingM02Range[0],fPlottingM02Range[1],0,kRed+2, 25);
                 }
             }
@@ -3871,7 +3888,7 @@ void PlotM02MergedMCInPtBins(       TH1D**      fHistoMergedRecPtBinPlot,
                 if (fHistoValElectronPtBinPlot[iPt]){
                     DrawGammaHistoColored(  fHistoValElectronPtBinPlot[iPt],
                                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                            "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                            "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                             fPlottingM02Range[0],fPlottingM02Range[1],0,807, 25);
                 }
             }
@@ -3879,7 +3896,7 @@ void PlotM02MergedMCInPtBins(       TH1D**      fHistoMergedRecPtBinPlot,
                 if (fHistoBGPtBinPlot[iPt]){
                     DrawGammaHistoColored(  fHistoBGPtBinPlot[iPt],
                                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                            "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                            "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                             fPlottingM02Range[0],fPlottingM02Range[1],0,kGray+2);
                 }
             }
@@ -4071,7 +4088,7 @@ void PlotM02MergedTrueInPtBins(     TH1D**      fHistoMergedValPtBinPlot,
                 if (fHistoMergedValPtBinPlot[iPt]){
                     DrawGammaHisto( fHistoMergedValPtBinPlot[iPt],
                                     Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                    "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                    "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                     fPlottingM02Range[0],fPlottingM02Range[1],0,0.8);
                 } else {
                     continue;
@@ -4084,7 +4101,7 @@ void PlotM02MergedTrueInPtBins(     TH1D**      fHistoMergedValPtBinPlot,
                 if (fHistoMergedPartConvValPtBinPlot[iPt]){
                     DrawGammaHistoColored(  fHistoMergedPartConvValPtBinPlot[iPt],
                                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                            "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                            "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                             fPlottingM02Range[0],fPlottingM02Range[1],0,kGray+2, 20);
                 }
             }
@@ -4092,7 +4109,7 @@ void PlotM02MergedTrueInPtBins(     TH1D**      fHistoMergedValPtBinPlot,
                 if (fHistoPi0ValPtBinPlot[iPt]){
                     DrawGammaHistoColored(  fHistoPi0ValPtBinPlot[iPt],
                                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                            "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                            "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                             fPlottingM02Range[0],fPlottingM02Range[1],0,kBlue+1, 24);
                 }
             }
@@ -4100,7 +4117,7 @@ void PlotM02MergedTrueInPtBins(     TH1D**      fHistoMergedValPtBinPlot,
                 if (fHistoPi0PartConvValPtBinPlot[iPt]){
                     DrawGammaHistoColored(  fHistoPi0PartConvValPtBinPlot[iPt],
                                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                            "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                            "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                             fPlottingM02Range[0],fPlottingM02Range[1],0,kAzure-4, 24);
                 }
             }
@@ -4108,7 +4125,7 @@ void PlotM02MergedTrueInPtBins(     TH1D**      fHistoMergedValPtBinPlot,
                 if (fHistoEtaValPtBinPlot[iPt]){
                     DrawGammaHistoColored(  fHistoEtaValPtBinPlot[iPt],
                                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                            "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                            "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                             fPlottingM02Range[0],fPlottingM02Range[1],0,kGreen+2, 25);
                 }
             }
@@ -4116,7 +4133,7 @@ void PlotM02MergedTrueInPtBins(     TH1D**      fHistoMergedValPtBinPlot,
                 if (fHistoEtaPartConvValPtBinPlot[iPt]){
                     DrawGammaHistoColored(  fHistoEtaPartConvValPtBinPlot[iPt],
                                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                            "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                            "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                             fPlottingM02Range[0],fPlottingM02Range[1],0,kSpring+5,25);
                 }
             }
@@ -4299,7 +4316,7 @@ void PlotM02MergedTruePrimSecInPtBins(      TH1D**      fHistoPi0ValPtBinPlot,
                 if (fHistoPi0ValPtBinPlot[iPt]){
                     DrawGammaHisto( fHistoPi0ValPtBinPlot[iPt],
                                     Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                    "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                    "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                     fPlottingM02Range[0],fPlottingM02Range[1],0);
                 } else {
                     continue;
@@ -4312,7 +4329,7 @@ void PlotM02MergedTruePrimSecInPtBins(      TH1D**      fHistoPi0ValPtBinPlot,
                 if (fHistoPi0PrimValPtBinPlot[iPt]){
                     DrawGammaHistoColored(  fHistoPi0PrimValPtBinPlot[iPt],
                                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                            "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                            "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                             fPlottingM02Range[0],fPlottingM02Range[1],0,kRed+1, 24);
                 }
             }
@@ -4320,7 +4337,7 @@ void PlotM02MergedTruePrimSecInPtBins(      TH1D**      fHistoPi0ValPtBinPlot,
                 if (fHistoPi0SecValPtBinPlot[iPt]){
                     DrawGammaHistoColored(  fHistoPi0SecValPtBinPlot[iPt],
                                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                            "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                            "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                             fPlottingM02Range[0],fPlottingM02Range[1],0,kBlue+1, 24);
                 }
             }
@@ -4328,7 +4345,7 @@ void PlotM02MergedTruePrimSecInPtBins(      TH1D**      fHistoPi0ValPtBinPlot,
                 if (fHistoPi0SecFK0sValPtBinPlot[iPt]){
                     DrawGammaHistoColored(  fHistoPi0SecFK0sValPtBinPlot[iPt],
                                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                            "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                            "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                             fPlottingM02Range[0],fPlottingM02Range[1],0,kAzure-4, 25);
                 }
             }
@@ -4336,7 +4353,7 @@ void PlotM02MergedTruePrimSecInPtBins(      TH1D**      fHistoPi0ValPtBinPlot,
                 if (fHistoPi0SecFLambdaValPtBinPlot[iPt]){
                     DrawGammaHistoColored(  fHistoPi0SecFLambdaValPtBinPlot[iPt],
                                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}", startPt, endPt),
-                                            "#lambda_{0}^{2}", Form("dN_{%s}/d#lambda_{0}^{2}", decayChannel.Data()),
+                                            "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
                                             fPlottingM02Range[0],fPlottingM02Range[1],0,kGreen+2, 26);
                 }
             }

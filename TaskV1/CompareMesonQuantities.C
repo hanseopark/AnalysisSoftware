@@ -44,6 +44,21 @@
 #include "../CommonHeaders/ConversionFunctions.h"
 #include "../CommonHeaders/PlottingMeson.h"
 
+//**********************************************************************************
+//******************* return minimum for 1D histo  *********************************
+//**********************************************************************************
+Double_t FindSmallestEntryIn1D(TH1* histo){
+    Double_t minimum = 1;
+    for (Int_t i = 1; i<histo->GetNbinsX(); i++){
+        if (histo->GetBinContent(i) < minimum ){
+            minimum = histo->GetBinContent(i);
+        }
+    }
+    return minimum;
+}
+
+
+
 void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData", 
                                 const char *mcFilename          = "rawSignalMC", 
                                 TString fCutSelection           = "", 
@@ -54,289 +69,504 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                                 Int_t mode                      = 0
                            )
 {
-	gROOT->Reset();
-	// mode:	0 // new output PCM-PCM
-	//			1 // new output PCM dalitz
-	//			2 // new output PCM-Calo
-	//			3 // new output Calo-Calo
+    gROOT->Reset();
+    // mode:    0 // new output PCM-PCM
+    //          1 // new output PCM dalitz
+    //          2 // new output PCM-Calo
+    //          3 // new output Calo-Calo
     //          4 // new output EMCAL-EMCAL
     //          5 // new output PHOS-PHOS
-	//			9 // old output PCM-PCM
+    //          9 // old output PCM-PCM
 
 
-	StyleSettingsThesis(fSuffix);	
-	SetPlotStyle();
-	TFile fileRawSignalData(dataFilename);
-	TFile fileRawSignalMC(mcFilename);
-	
+    StyleSettingsThesis(fSuffix);	
+    SetPlotStyle();
+
+    TString DetectionChannel    = ReturnFullTextReconstructionProcess(mode);           
+    TString date                = ReturnDateString();
+    TString textAlice           = "ALICE performance";
+    TString textProcess         = ReturnMesonString (mesonType);
+    TString decayChannel        = Form("%s #rightarrow #gamma#gamma", textProcess.Data());
+    TString energyText          = ReturnFullCollisionsSystem(energyFlag);
+    if (energyText.CompareTo("") == 0){
+        cout << "No correct collision system specification, has been given" << endl;
+        return;
+    }
+    if(textProcess.CompareTo("") == 0 ){
+        cout << "Meson unknown" << endl;
+        return ;
+    }
+
+    TFile fileRawSignalData(dataFilename);
+    TFile fileRawSignalMC(mcFilename);
+                
+    
+    cout << dataFilename << endl;
+    cout << mcFilename << endl;
+    cout << fCutSelection.Data() << endl;
+    cout << mesonType.Data() << endl;
+    cout << fSuffix.Data()<< endl;
+    cout << energyFlag.Data() << endl;
+    cout << numberOfBins << endl;
+    
+    TH1D* histoChi2Data                 = (TH1D*) fileRawSignalData.Get("histoChi2");
+    TH1D* histoConstResBGData           = (TH1D*) fileRawSignalData.Get("histoResidualBGcon");
+    TH1D* histoLinResBGData             = (TH1D*) fileRawSignalData.Get("histoResidualBGlin");
+    TH1D* histoResBGYieldVsTotBGData    = (TH1D*) fileRawSignalData.Get("histoRatioResBGYield");
+    TH1D* histoLambdaTailData           = (TH1D*) fileRawSignalData.Get("histoLambdaTail");
+    TH1D* histoChi2MC                   = (TH1D*) fileRawSignalMC.Get("histoChi2");
+    TH1D* histoConstResBGMC             = (TH1D*) fileRawSignalMC.Get("histoResidualBGcon");
+    TH1D* histoLinResBGMC               = (TH1D*) fileRawSignalMC.Get("histoResidualBGlin");
+    TH1D* histoResBGYieldVsTotBGMC      = (TH1D*) fileRawSignalMC.Get("histoRatioResBGYield");
+    TH1D* histoLambdaTailMC             = (TH1D*) fileRawSignalMC.Get("histoLambdaTail");
+    
+    Double_t* fMesonRange               = NULL;
+    TString outputDir                   = Form("%s/%s/%s/ExtractSignal",fCutSelection.Data(),energyFlag.Data(),fSuffix.Data());
+    TString nameLineShapePlot           = Form("%s/%s_MesonLineShapeCompared_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data());
+    TString nameLineShapePlotLeft       = Form("%s/%s_MesonLineShapeComparedLeft_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data());
+    
+    TString fEventCutSelection          = "";
+    TString fGammaCutSelection          = "";
+    TString fClusterCutSelection        = "";
+    TString fElectronCutSelection       = "";
+    TString fMesonCutSelection          = "";
+    ReturnSeparatedCutNumberAdvanced(fCutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
+    
+    InitializeBinning(mesonType, numberOfBins, energyFlag, "", mode, fEventCutSelection, fClusterCutSelection);
+    
+    if (mesonType.CompareTo("Pi0") == 0 || mesonType.CompareTo("Pi0EtaBinning") == 0){
+        fMesonRange         = new Double_t[2]; 
+        fMesonRange[0]      = 0.; 
+        fMesonRange[1]      = 0.3;
+    } else if (mesonType.CompareTo("Eta") == 0){
+        fMesonRange         = new Double_t[2]; 
+        fMesonRange[0]      = 0.35; 
+        fMesonRange[1]      = 0.79;
+    } else if (mesonType.CompareTo("EtaPrim") == 0){
+        fMesonRange         = new Double_t[2];
+        fMesonRange[0]      = 0.9; 	
+        fMesonRange[1]      = 1.;;
+    }
+
+    cout << fStartPtBin << endl;
+    
+    //******************************* Reading histograms **************************************************************
+    TH1D *  histoSignalDataInvMassPtBin[100];
+    TH1D *  histoSignalMCInvMassPtBin[100];
+    TH1D *  histoTrueMCInvMassPtBin[100];
+
+    for(Int_t j=0;j<2;j++){
+        TCanvas * canvasDummy = new TCanvas("canvasDummy","",2800,1800);  // gives the page size	
+        canvasDummy->SetTopMargin(0.02);
+        canvasDummy->SetBottomMargin(0.02);
+        canvasDummy->SetRightMargin(0.02);
+        canvasDummy->SetLeftMargin(0.02);
+        TString histonameSignal;
+        TString histonameMCTruth;
+        for(Int_t iPt=fStartPtBin; iPt<fNBinsPt; iPt++){
+            Double_t startPt    = fBinsPt[iPt];    
+            Double_t endPt      = fBinsPt[iPt+1];    
+            
+            if(j==0){
+                histonameSignal = Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d", iPt);
+            }else{
+                histonameSignal = Form("fHistoMappingSignalInvMassLeft_in_Pt_Bin%02d", iPt);
+            }
+            histoSignalDataInvMassPtBin[iPt]    = (TH1D*)fileRawSignalData.Get(histonameSignal);
+            histoSignalMCInvMassPtBin[iPt]      = (TH1D*)fileRawSignalMC.Get(histonameSignal);
+            
+            Double_t integralData               = histoSignalDataInvMassPtBin[iPt]->Integral(histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001),
+                                                                                             histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001));
+            Double_t integralMC                 = histoSignalMCInvMassPtBin[iPt]->Integral(histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001), 
+                                                                                           histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001));
+            if (integralData < 0 || integralMC < 0 || j == 1){
+                integralData                    = histoSignalDataInvMassPtBin[iPt]->GetMaximum();
+                integralMC                      = histoSignalMCInvMassPtBin[iPt]->GetMaximum();
+            }
+            histoSignalDataInvMassPtBin[iPt]->Scale(1./integralData);
+            histoSignalMCInvMassPtBin[iPt]->Scale(1./integralMC);
+            histonameMCTruth = Form("Mapping_TrueMeson_InvMass_in_Pt_Bin%02d", iPt);
+            histoTrueMCInvMassPtBin[iPt]=(TH1D*)fileRawSignalMC.Get(histonameMCTruth);
+            if(j==0)histoTrueMCInvMassPtBin[iPt]->Scale(1./integralMC);
+            
+            if (j == 0){
+                histoLinResBGData->SetBinContent(histoLinResBGData->FindBin((endPt-startPt)/2),histoLinResBGData->GetBinContent(histoLinResBGData->FindBin((endPt-startPt)/2))/integralData) ;
+                histoLinResBGData->SetBinError(histoLinResBGData->FindBin((endPt-startPt)/2),histoLinResBGData->GetBinError(histoLinResBGData->FindBin((endPt-startPt)/2))/integralData) ;
+                histoConstResBGData->SetBinContent(histoConstResBGData->FindBin((endPt-startPt)/2),histoConstResBGData->GetBinContent(histoConstResBGData->FindBin((endPt-startPt)/2))/integralData) ;
+                histoConstResBGData->SetBinError(histoConstResBGData->FindBin((endPt-startPt)/2),histoConstResBGData->GetBinError(histoConstResBGData->FindBin((endPt-startPt)/2))/integralData) ;
+                histoLinResBGMC->SetBinContent(histoLinResBGMC->FindBin((endPt-startPt)/2),histoLinResBGMC->GetBinContent(histoLinResBGMC->FindBin((endPt-startPt)/2))/integralMC) ;
+                histoLinResBGMC->SetBinError(histoLinResBGMC->FindBin((endPt-startPt)/2),histoLinResBGMC->GetBinError(histoLinResBGMC->FindBin((endPt-startPt)/2))/integralMC) ;
+                histoConstResBGMC->SetBinContent(histoConstResBGMC->FindBin((endPt-startPt)/2),histoConstResBGMC->GetBinContent(histoConstResBGMC->FindBin((endPt-startPt)/2))/integralMC) ;
+                histoConstResBGMC->SetBinError(histoConstResBGMC->FindBin((endPt-startPt)/2),histoConstResBGMC->GetBinError(histoConstResBGMC->FindBin((endPt-startPt)/2))/integralMC) ;
+            }
+        }
+        
+        delete canvasDummy;
+        
+        TCanvas * canvasLineShape = new TCanvas("CanvasLineShape","",2800,1800);  // gives the page size	
+        canvasLineShape->SetTopMargin(0.00);
+        canvasLineShape->SetBottomMargin(0.00);
+        canvasLineShape->SetRightMargin(0.00);
+        canvasLineShape->SetLeftMargin(0.00);
+        
+        TPad * padLineShape = new TPad("PadLineShape","",0.0,0.0,1.,1.,0);   // gives the size of the histo areas 
+        padLineShape->SetFillColor(0);
+        padLineShape->GetFrame()->SetFillColor(0);
+        padLineShape->SetBorderMode(0);
+        padLineShape->SetLogy(0);
+        padLineShape->Divide(fColumn,fRow,0.0,0.0);
+        padLineShape->Draw();
+        
+        cout<<"fColumn: "<<fColumn<<" fRow: "<<fRow<<endl;
+        
+        Double_t relWidthLogo;
+        if (mesonType.CompareTo("Pi0") == 0){
+            relWidthLogo=0.5;
+        } else {
+            relWidthLogo=0.3;
+        }
+        Double_t padXWidth = 1400/fColumn; 
+        Double_t padYWidth = 900/fRow;
+        
+        
+        Int_t place = 0;
+        for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
+            cout<<"Pt: "<<iPt<<" of "<<fNBinsPt<<endl;
+            Double_t startPt = fBinsPt[iPt];	
+            Double_t endPt = fBinsPt[iPt+1];	
+            
+            cout << startPt << "\t" << endPt << endl;
+            
+            place = place + 1;						//give the right place in the page
+            if(place == fColumn) {
+                
+                iPt--;
+                padLineShape->cd(place);
+                
+                Double_t nPixels = 13;
+                Double_t textHeight = 0.08;
+                                
+                Double_t startTextX = 0.10;
+                Double_t startTextY = 0.8;
+                Double_t differenceText = textHeight*1.25;
+
+                TLatex *alice = 		new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
+                TLatex *latexDate = 	new TLatex(startTextX, (startTextY-1.25*differenceText), date.Data());
+                TLatex *energy = 		new TLatex(startTextX, (startTextY-2.25*differenceText), energyText.Data());
+                TLatex *process = 		new TLatex(startTextX, (startTextY-3.25*differenceText), decayChannel.Data());
+                TLatex *detprocess = 	new TLatex(startTextX, (startTextY-4.25*differenceText), DetectionChannel.Data());
+
+                alice->SetNDC();
+                alice->SetTextColor(1);
+                alice->SetTextSize(textHeight*1.3);
+                alice->Draw();
+
+                latexDate->SetNDC();
+                latexDate->SetTextColor(1);
+                latexDate->SetTextSize(textHeight);
+                latexDate->Draw();
+        
+                energy->SetNDC();
+                energy->SetTextColor(1);
+                energy->SetTextSize(textHeight);
+                energy->Draw();
+
+                process->SetNDC(); 
+                process->SetTextColor(1);
+                process->SetTextSize(textHeight);
+                process->Draw();
+
+                detprocess->SetNDC(); 
+                detprocess->SetTextColor(1);
+                detprocess->SetTextSize(textHeight);
+                detprocess->Draw();
+
+                
+                TLegend* legendLineShape = new TLegend(startTextX,startTextY-4.75*differenceText,1,startTextY-(4.75+2.)*differenceText);
+                legendLineShape->SetTextSize(textHeight);			
+                legendLineShape->SetTextFont(62);
+                legendLineShape->SetFillColor(0);
+                legendLineShape->SetFillStyle(0);
+                legendLineShape->SetLineWidth(0);
+                legendLineShape->SetLineColor(0);
+                legendLineShape->SetMargin(0.15);
+                Size_t markersize = histoSignalDataInvMassPtBin[fStartPtBin]->GetMarkerSize();
+                histoSignalDataInvMassPtBin[fStartPtBin]->SetMarkerSize(2*markersize);
+                legendLineShape->AddEntry(histoSignalDataInvMassPtBin[fStartPtBin],"Data","ep");
+                Size_t markersize2 = histoSignalMCInvMassPtBin[fStartPtBin]->GetMarkerSize();
+                histoSignalMCInvMassPtBin[fStartPtBin]->SetMarkerSize(2*markersize2);
+                legendLineShape->AddEntry(histoSignalMCInvMassPtBin[fStartPtBin],"MC reconstructed","ep");
+                if (j == 0){
+                    Size_t linesize = histoTrueMCInvMassPtBin[fStartPtBin]->GetLineWidth();
+                    histoTrueMCInvMassPtBin[fStartPtBin]->SetLineWidth(linesize);
+                    legendLineShape->AddEntry(histoTrueMCInvMassPtBin[fStartPtBin],"MC truth" ,"l");
+                }    
+                legendLineShape->Draw();
+                
+            } else {	
+                
+                padLineShape->cd(place);
+                padLineShape->cd(place)->SetTopMargin(0.12);
+                padLineShape->cd(place)->SetBottomMargin(0.15);
+                padLineShape->cd(place)->SetRightMargin(0.05);
+                padLineShape->cd(place)->SetLeftMargin(0.15);
+
+                Double_t maxY   = histoTrueMCInvMassPtBin[iPt]->GetMaximum();
+                if (maxY < histoSignalDataInvMassPtBin[iPt]->GetMaximum()) 
+                    maxY        = histoSignalDataInvMassPtBin[iPt]->GetMaximum();
+                if (maxY < histoSignalMCInvMassPtBin[iPt]->GetMaximum()) 
+                    maxY        = histoSignalMCInvMassPtBin[iPt]->GetMaximum();
+                maxY            = maxY*1.4; 
+
+                Double_t minY   = FindSmallestEntryIn1D(histoTrueMCInvMassPtBin[iPt]);
+                if (minY > FindSmallestEntryIn1D(histoSignalDataInvMassPtBin[iPt])) 
+                    minY        = FindSmallestEntryIn1D(histoSignalDataInvMassPtBin[iPt]);
+                if (minY > FindSmallestEntryIn1D(histoSignalMCInvMassPtBin[iPt])) 
+                    minY        = FindSmallestEntryIn1D(histoSignalMCInvMassPtBin[iPt]);
+                
+                if (j == 0){
+                    if (histoTrueMCInvMassPtBin[iPt]) {
+                        histoTrueMCInvMassPtBin[iPt]->GetYaxis()->SetRangeUser(minY,maxY);
+                        DrawGammaHistoColored( histoTrueMCInvMassPtBin[iPt], 
+                                Form("%3.2f GeV/c < p_{t} < %3.2f GeV/c",startPt,endPt),
+                                "M_{#gamma#gamma} (GeV/c^{2})", "",
+                                fMesonRange[0],fMesonRange[1],1,634,-1);
+                        histoTrueMCInvMassPtBin[iPt]->GetYaxis()->SetRangeUser(minY,maxY);
+                        histoTrueMCInvMassPtBin[iPt]->Draw("hist");
+                        
+                    }
+                    if (histoSignalDataInvMassPtBin[iPt]) {
+                        DrawGammaHistoColored( histoSignalDataInvMassPtBin[iPt], 
+                                Form("%3.2f GeV/c < p_{t} < %3.2f GeV/c",startPt,endPt),
+                                "M_{#gamma#gamma} (GeV/c^{2})", "",
+                                fMesonRange[0],fMesonRange[1],0,1,20,0.8);
+                    }
+                    if (histoSignalMCInvMassPtBin[iPt]){ 
+                        DrawGammaHistoColored( histoSignalMCInvMassPtBin[iPt], 
+                                Form("%3.2f GeV/c < p_{t} < %3.2f GeV/c",startPt,endPt),
+                                "M_{#gamma#gamma} (GeV/c^{2})", "",
+                                fMesonRange[0],fMesonRange[1],0,860,1,0.8);
+                    }
+                } else {
+                    if (histoSignalDataInvMassPtBin[iPt]) {
+                        histoSignalDataInvMassPtBin[iPt]->GetYaxis()->SetRangeUser(minY,maxY);
+                        DrawGammaHistoColored( histoSignalDataInvMassPtBin[iPt], 
+                                Form("%3.2f GeV/c < p_{t} < %3.2f GeV/c",startPt,endPt),
+                                "M_{#gamma#gamma} (GeV/c^{2})", "",
+                                fMesonRange[0],fMesonRange[1],1,1,20,0.8);
+                    }
+                    if (histoSignalMCInvMassPtBin[iPt]){ 
+                        DrawGammaHistoColored( histoSignalMCInvMassPtBin[iPt], 
+                                Form("%3.2f GeV/c < p_{t} < %3.2f GeV/c",startPt,endPt),
+                                "M_{#gamma#gamma} (GeV/c^{2})", "",
+                                fMesonRange[0],fMesonRange[1],0,860,1,0.8);
+                    }
+                    
+                }    
+            }
+        }
+        cout << "saving" << endl;
+        cout << nameLineShapePlot.Data() << endl;
+        if(j==0) {
+            canvasLineShape->SaveAs(nameLineShapePlot.Data());
+        } else {
+            canvasLineShape->SaveAs(nameLineShapePlotLeft.Data());
+        }
+        cout << "deleting" << endl;
+        delete padLineShape;
+        delete canvasLineShape;
+    }
+    
+    // **************************************************************************************************************
+    // ************************ Chi2/ndf compared MC vs Data ********************************************************
+    // **************************************************************************************************************
+    TCanvas* canvasChi2 = new TCanvas("canvasChi2","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasChi2, 0.092, 0.01, 0.02, 0.082);
+        
+    Double_t maxChi2    = histoChi2Data->GetMaximum();
+    if (maxChi2 < histoChi2MC->GetMaximum())
+        maxChi2         = histoChi2MC->GetMaximum();
+    maxChi2             = maxChi2*1.2; 
+    
+    histoChi2Data->GetYaxis()->SetRangeUser(0, maxChi2);
+    DrawAutoGammaMesonHistos( histoChi2Data, 
+                                "", "#it{p}_{T} (GeV/#it{c})", "#it{#chi}^{2}/ndf", 
+                                kFALSE, 0., 0.7, kFALSE,
+                                kFALSE, 0., 0.7, 
+                                kFALSE, 0., 10.);
+    DrawGammaSetMarker(histoChi2Data, 20, 0.8, kBlack, kBlack); 
+    histoChi2Data->DrawCopy("same,e1,p");
+    DrawGammaSetMarker(histoChi2MC, 24, 0.8, kRed+2, kRed+2);
+    histoChi2MC->DrawCopy("same,e1,p"); 
+    
+    TLegend* legendChi2 = GetAndSetLegend2(0.85, 0.13, 0.95, 0.13+(0.035*2), 0.035, 1, "", 42, 0.25);
+    legendChi2->AddEntry(histoChi2Data,"Data");
+    legendChi2->AddEntry(histoChi2MC,"MC");
+    legendChi2->Draw();
+    PutProcessLabelAndEnergyOnPlot(0.15, 0.25, 0.035, energyText.Data(), decayChannel.Data(), DetectionChannel.Data());
+    
+    canvasChi2->Update();
+    canvasChi2->SaveAs(Form("%s/%s_Chi2_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()));
+
+    // **************************************************************************************************************
+    // ************************ Res BG yield/ tot BG yield compared MC vs Data **************************************
+    // **************************************************************************************************************
+    TCanvas* canvasResBGYieldDivTotBG = new TCanvas("canvasResBGYieldDivTotBG","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasResBGYieldDivTotBG, 0.092, 0.01, 0.02, 0.082);
+        
+    Double_t maxResBGYieldDivTotBG    = histoResBGYieldVsTotBGData->GetMaximum();
+    if (maxResBGYieldDivTotBG < histoResBGYieldVsTotBGMC->GetMaximum())
+        maxResBGYieldDivTotBG         = histoResBGYieldVsTotBGMC->GetMaximum();
+    maxResBGYieldDivTotBG             = maxResBGYieldDivTotBG*1.2; 
+    
+    Double_t minResBGYieldDivTotBG    = histoResBGYieldVsTotBGData->GetMinimum();
+    if (minResBGYieldDivTotBG > histoResBGYieldVsTotBGMC->GetMinimum())
+        minResBGYieldDivTotBG         = histoResBGYieldVsTotBGMC->GetMinimum();
+    if (minResBGYieldDivTotBG < 0) 
+        minResBGYieldDivTotBG         = minResBGYieldDivTotBG*1.4;
+    else 
+        minResBGYieldDivTotBG         = minResBGYieldDivTotBG*0.6;
+    
+    
+    histoResBGYieldVsTotBGData->GetYaxis()->SetRangeUser(minResBGYieldDivTotBG, maxResBGYieldDivTotBG);
+    DrawAutoGammaMesonHistos( histoResBGYieldVsTotBGData, 
+                                "", "#it{p}_{T} (GeV/#it{c})", "Res BG/ Tot BG", 
+                                kFALSE, 0., 0.7, kFALSE,
+                                kFALSE, 0., 0.7, 
+                                kFALSE, 0., 10.);
+    DrawGammaSetMarker(histoResBGYieldVsTotBGData, 20, 0.8, kBlack, kBlack); 
+    histoResBGYieldVsTotBGData->DrawCopy("same,e1,p");
+    DrawGammaSetMarker(histoResBGYieldVsTotBGMC, 24, 0.8, kRed+2, kRed+2);
+    histoResBGYieldVsTotBGMC->DrawCopy("same,e1,p"); 
+    
+    TLegend* legendResBGYieldDivTotBG = GetAndSetLegend2(0.85, 0.13, 0.95, 0.13+(0.035*2), 0.035, 1, "", 42, 0.25);
+    legendResBGYieldDivTotBG->AddEntry(histoResBGYieldVsTotBGData,"Data");
+    legendResBGYieldDivTotBG->AddEntry(histoResBGYieldVsTotBGMC,"MC");
+    legendResBGYieldDivTotBG->Draw();
+    PutProcessLabelAndEnergyOnPlot(0.15, 0.25, 0.035, energyText.Data(), decayChannel.Data(), DetectionChannel.Data());
+    
+    canvasResBGYieldDivTotBG->Update();
+    canvasResBGYieldDivTotBG->SaveAs(Form("%s/%s_ResBGYieldDivTotBG_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()));
+    
+    // **************************************************************************************************************
+    // ************************ Res BG slope compared MC vs Data ****************************************************
+    // **************************************************************************************************************
+    TCanvas* canvasResBGSlope = new TCanvas("canvasResBGSlope","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasResBGSlope, 0.092, 0.01, 0.035, 0.082);
+        
+    Double_t maxResBGSlope    = histoLinResBGData->GetMaximum();
+    if (maxResBGSlope < histoLinResBGMC->GetMaximum())
+        maxResBGSlope         = histoLinResBGMC->GetMaximum();
+    maxResBGSlope             = maxResBGSlope*1.2; 
+    
+    Double_t minResBGSlope    = histoLinResBGData->GetMinimum();
+    if (minResBGSlope > histoLinResBGMC->GetMinimum())
+        minResBGSlope         = histoLinResBGMC->GetMinimum();
+    if (minResBGSlope < 0) 
+        minResBGSlope         = minResBGSlope*1.4;
+    else 
+        minResBGSlope         = minResBGSlope*0.6;
+    
+    
+    histoLinResBGData->GetYaxis()->SetRangeUser(minResBGSlope, maxResBGSlope);
+    DrawAutoGammaMesonHistos( histoLinResBGData, 
+                                "", "#it{p}_{T} (GeV/#it{c})", "Res BG slope #it{b}", 
+                                kFALSE, 0., 0.7, kFALSE,
+                                kFALSE, 0., 0.7, 
+                                kFALSE, 0., 10.);
+    DrawGammaSetMarker(histoLinResBGData, 20, 0.8, kBlack, kBlack); 
+    histoLinResBGData->DrawCopy("same,e1,p");
+    DrawGammaSetMarker(histoLinResBGMC, 24, 0.8, kRed+2, kRed+2);
+    histoLinResBGMC->DrawCopy("same,e1,p"); 
+    
+    TLegend* legendResBGSlope = GetAndSetLegend2(0.85, 0.13, 0.95, 0.13+(0.035*2), 0.035, 1, "", 42, 0.25);
+    legendResBGSlope->AddEntry(histoLinResBGData,"Data");
+    legendResBGSlope->AddEntry(histoLinResBGMC,"MC");
+    legendResBGSlope->Draw();
+    PutProcessLabelAndEnergyOnPlot(0.15, 0.95, 0.035, energyText.Data(), decayChannel.Data(), DetectionChannel.Data());
+    
+    canvasResBGSlope->Update();
+    canvasResBGSlope->SaveAs(Form("%s/%s_ResBGSlope_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()));
+
+    // **************************************************************************************************************
+    // ************************ Res BG const compared MC vs Data ****************************************************
+    // **************************************************************************************************************
+    TCanvas* canvasResBGConst = new TCanvas("canvasResBGConst","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasResBGConst, 0.092, 0.01, 0.035, 0.082);
+        
+    Double_t maxResBGConst    = histoConstResBGData->GetMaximum();
+    if (maxResBGConst < histoConstResBGMC->GetMaximum())
+        maxResBGConst         = histoConstResBGMC->GetMaximum();
+    maxResBGConst             = maxResBGConst*1.2; 
+    
+    Double_t minResBGConst    = histoConstResBGData->GetMinimum();
+    if (minResBGConst > histoConstResBGMC->GetMinimum())
+        minResBGConst         = histoConstResBGMC->GetMinimum();
+    if (minResBGConst < 0) 
+        minResBGConst         = minResBGConst*1.4;
+    else 
+        minResBGConst         = minResBGConst*0.6;
+    
+    histoConstResBGData->GetYaxis()->SetRangeUser(minResBGConst, maxResBGConst);
+    DrawAutoGammaMesonHistos( histoConstResBGData, 
+                                "", "#it{p}_{T} (GeV/#it{c})", "Res BG const #it{a}", 
+                                kFALSE, 0., 0.7, kFALSE,
+                                kFALSE, 0., 0.7, 
+                                kFALSE, 0., 10.);
+    DrawGammaSetMarker(histoConstResBGData, 20, 0.8, kBlack, kBlack); 
+    histoConstResBGData->DrawCopy("same,e1,p");
+    DrawGammaSetMarker(histoConstResBGMC, 24, 0.8, kRed+2, kRed+2);
+    histoConstResBGMC->DrawCopy("same,e1,p"); 
+    
+    TLegend* legendResBGConst = GetAndSetLegend2(0.85, 0.13, 0.95, 0.13+(0.035*2), 0.035, 1, "", 42, 0.25);
+    legendResBGConst->AddEntry(histoConstResBGData,"Data");
+    legendResBGConst->AddEntry(histoConstResBGMC,"MC");
+    legendResBGConst->Draw();
+    PutProcessLabelAndEnergyOnPlot(0.15, 0.95, 0.035, energyText.Data(), decayChannel.Data(), DetectionChannel.Data());
+    
+    canvasResBGConst->Update();
+    canvasResBGConst->SaveAs(Form("%s/%s_ResBGConst_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()));
 
 
-	cout << dataFilename << endl;
-	cout << mcFilename << endl;
-	cout << fCutSelection.Data() << endl;
-	cout << mesonType.Data() << endl;
-	cout << fSuffix.Data()<< endl;
-	cout << energyFlag.Data() << endl;
-	cout << numberOfBins << endl;
-	
-	Double_t 	*fMesonRange = 		NULL;
-	TString outputDir = 			Form("%s/%s/%s/ExtractSignal",fCutSelection.Data(),energyFlag.Data(),fSuffix.Data());
-	TString nameLineShapePlot=		Form("%s/%s_MesonLineShapeCompared_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data());
-	TString nameLineShapePlotLeft=		Form("%s/%s_MesonLineShapeComparedLeft_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data());
-	
-	TString fEventCutSelection = "";
-	TString fGammaCutSelection = "";
-	TString fClusterCutSelection = "";
-	TString fElectronCutSelection = "";
-	TString fMesonCutSelection = "";
-	ReturnSeparatedCutNumberAdvanced(fCutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
-	
-	InitializeBinning(mesonType, numberOfBins, energyFlag, "", mode, fEventCutSelection, fClusterCutSelection);
-	
-	if (mesonType.CompareTo("Pi0") == 0 || mesonType.CompareTo("Pi0EtaBinning") == 0){
-		fMesonRange 		= new Double_t[2]; 
-		fMesonRange[0]		= 0.; 
-		fMesonRange[1]		= 0.3;
-	} else if (mesonType.CompareTo("Eta") == 0){
-		fMesonRange 		= new Double_t[2]; 
-		fMesonRange[0]		= 0.35; 
-		fMesonRange[1]		= 0.79;
-	} else if (mesonType.CompareTo("EtaPrim") == 0){
-		fMesonRange 			= new Double_t[2];
-		fMesonRange[0]			= 0.9; 	
-		fMesonRange[1]			= 1.;;
-	}
-
-	
-	cout << fStartPtBin << endl;
-	
-	//****************************** Specification of collision system ************************************************
-	/*TString 	fTextMeasurement;
-	string 	textProcess;
-	if(mesonType.CompareTo("Pi0") == 0|| mesonType.CompareTo("Pi0EtaBinning") == 0){textProcess = "#pi^{0}";}
-	else {textProcess = "#eta";}
-
-	if(energyFlag.CompareTo("7TeV") == 0){
-		fTextMeasurement = Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 7 TeV ",textProcess.c_str());
-	} else if(energyFlag.CompareTo("8TeV") == 0){
-		fTextMeasurement = Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 8 TeV ",textProcess.c_str());
-	} else if( energyFlag.CompareTo("2.76TeV") == 0) {	
-		fTextMeasurement = Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 2.76 TeV ",textProcess.c_str());
-	} else if( energyFlag.CompareTo("900GeV") == 0) {	
-		fTextMeasurement = Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 900 GeV ",textProcess.c_str());
-	} else if( energyFlag.CompareTo("HI") == 0) {
-		if(mesonType.CompareTo("Eta") == 0){
-			cout << "No eta analysis can be carried out for Heavy Ions" << endl;
-			return;
-		}
-		if(mesonType.CompareTo("Pi0EtaBinning") == 0){
-			cout << "No Pi0 Analysis in eta binning can be carried out for Heavy Ions" << endl;
-			return;
-		}	
-		fTextMeasurement = Form("PbPb #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 2.76 TeV ",textProcess.c_str());
-	} else {
-		cout << "No correct collision system specification, has been given" << endl;
-		return;
-		
-	}*/
-
-
-	//******************************* Reading histograms **************************************************************
-	TH1D *  histoSignalDataInvMassPtBin[50];
-	TH1D *  histoSignalMCInvMassPtBin[50];
-	TH1D *  histoTrueMCInvMassPtBin[50];
-
-	for(Int_t j=0;j<2;j++){
-
-		TCanvas * canvasDummy = new TCanvas("canvasDummy","",2800,1800);  // gives the page size	
-		canvasDummy->SetTopMargin(0.02);
-		canvasDummy->SetBottomMargin(0.02);
-		canvasDummy->SetRightMargin(0.02);
-		canvasDummy->SetLeftMargin(0.02);
-		TString histonameSignal;
-		TString histonameMCTruth;
-		for(Int_t iPt=fStartPtBin; iPt<fNBinsPt; iPt++){
-			
-			if(j==0){
-				histonameSignal = Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d", iPt);
-			}else{
-				histonameSignal = Form("fHistoMappingSignalInvMassLeft_in_Pt_Bin%02d", iPt);
-			}
-			histoSignalDataInvMassPtBin[iPt]=(TH1D*)fileRawSignalData.Get(histonameSignal);
-			histoSignalDataInvMassPtBin[iPt]->Scale(1./histoSignalDataInvMassPtBin[iPt]->GetMaximum());
-			histoSignalMCInvMassPtBin[iPt]=(TH1D*)fileRawSignalMC.Get(histonameSignal);
-			histoSignalMCInvMassPtBin[iPt]->Scale(1./histoSignalMCInvMassPtBin[iPt]->GetMaximum());
-			histonameMCTruth = Form("Mapping_TrueMeson_InvMass_in_Pt_Bin%02d", iPt);
-			histoTrueMCInvMassPtBin[iPt]=(TH1D*)fileRawSignalMC.Get(histonameMCTruth);
-			histoTrueMCInvMassPtBin[iPt]->Scale(1./histoTrueMCInvMassPtBin[iPt]->GetMaximum());
-		}	
-		
-		delete canvasDummy;
-		
-		TCanvas * canvasLineShape = new TCanvas("CanvasLineShape","",2800,1800);  // gives the page size	
-		canvasLineShape->SetTopMargin(0.00);
-		canvasLineShape->SetBottomMargin(0.00);
-		canvasLineShape->SetRightMargin(0.00);
-		canvasLineShape->SetLeftMargin(0.00);
-		
-		TPad * padLineShape = new TPad("PadLineShape","",0.0,0.0,1.,1.,0);   // gives the size of the histo areas 
-		padLineShape->SetFillColor(0);
-		padLineShape->GetFrame()->SetFillColor(0);
-		padLineShape->SetBorderMode(0);
-		padLineShape->SetLogy(0);
-		padLineShape->Divide(fColumn,fRow,0.0,0.0);
-		padLineShape->Draw();
-		
-		cout<<"fColumn: "<<fColumn<<" fRow: "<<fRow<<endl;
-		
-		Double_t relWidthLogo;
-		if (mesonType.CompareTo("Pi0") == 0){
-			relWidthLogo=0.5;
-		} else {
-			relWidthLogo=0.3;
-		}
-		Double_t padXWidth = 1400/fColumn; 
-		Double_t padYWidth = 900/fRow;
-		
-		
-		Int_t place = 0;
-		for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
-			cout<<"Pt: "<<iPt<<" of "<<fNBinsPt<<endl;
-			Double_t startPt = fBinsPt[iPt];	
-			Double_t endPt = fBinsPt[iPt+1];	
-			
-			cout << startPt << "\t" << endPt << endl;
-			
-			place = place + 1;						//give the right place in the page
-			if(place == fColumn) {
-				
-				iPt--;
-				padLineShape->cd(place);
-				
-				Double_t nPixels = 13;
-				Double_t textHeight = 0.08;
-				
-				/*if (padLineShape->cd(place)->XtoPixel(padLineShape->cd(place)->GetX2()) < padLineShape->cd(place)->YtoPixel(padLineShape->cd(place)->GetY1())){
-					textHeight = (Double_t)nPixels/padLineShape->cd(place)->XtoPixel(padLineShape->cd(place)->GetX2()) ;
-				} else {
-					textHeight = (Double_t)nPixels/padLineShape->cd(place)->YtoPixel(padLineShape->cd(place)->GetY1());
-				}*/
-				
-				TString textAlice = "ALICE performance";
-
-				TString textProcess = ReturnMesonString (mesonType);
-				if(textProcess.CompareTo("") == 0 ){
-					cout << "Meson unknown" << endl;
-					return ;
-				}
-				
-				TString decayChannel = Form("%s #rightarrow #gamma#gamma", textProcess.Data());
-				TString energyText = ReturnFullCollisionsSystem(energyFlag);
-				if (energyText.CompareTo("") == 0){
-					cout << "No correct collision system specification, has been given" << endl;
-					return;
-				}
-				TString DetectionChannel = ReturnFullTextReconstructionProcess(mode);			
-				TString date=ReturnDateString();
-				Double_t startTextX = 0.10;
-				Double_t startTextY = 0.8;
-				Double_t differenceText = textHeight*1.25;
-
-				TLatex *alice = 		new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
-				TLatex *latexDate = 	new TLatex(startTextX, (startTextY-1.25*differenceText), date.Data());
-				TLatex *energy = 		new TLatex(startTextX, (startTextY-2.25*differenceText), energyText.Data());
-				TLatex *process = 		new TLatex(startTextX, (startTextY-3.25*differenceText), decayChannel.Data());
-				TLatex *detprocess = 	new TLatex(startTextX, (startTextY-4.25*differenceText), DetectionChannel.Data());
-
-				alice->SetNDC();
-				alice->SetTextColor(1);
-				alice->SetTextSize(textHeight*1.3);
-				alice->Draw();
-
-				latexDate->SetNDC();
-				latexDate->SetTextColor(1);
-				latexDate->SetTextSize(textHeight);
-				latexDate->Draw();
-		
-				energy->SetNDC();
-				energy->SetTextColor(1);
-				energy->SetTextSize(textHeight);
-				energy->Draw();
-
-				process->SetNDC(); 
-				process->SetTextColor(1);
-				process->SetTextSize(textHeight);
-				process->Draw();
-
-				detprocess->SetNDC(); 
-				detprocess->SetTextColor(1);
-				detprocess->SetTextSize(textHeight);
-				detprocess->Draw();
-
-				
-				TLegend* legendLineShape = new TLegend(startTextX,startTextY-4.75*differenceText,1,startTextY-(4.75+2.)*differenceText);
-				legendLineShape->SetTextSize(textHeight);			
-				legendLineShape->SetTextFont(62);
-				legendLineShape->SetFillColor(0);
-				legendLineShape->SetFillStyle(0);
-				legendLineShape->SetLineWidth(0);
-				legendLineShape->SetLineColor(0);
-				legendLineShape->SetMargin(0.15);
-				Size_t markersize = histoSignalDataInvMassPtBin[fStartPtBin]->GetMarkerSize();
-				histoSignalDataInvMassPtBin[fStartPtBin]->SetMarkerSize(2*markersize);
-				legendLineShape->AddEntry(histoSignalDataInvMassPtBin[fStartPtBin],"Data","ep");
-				Size_t markersize2 = histoSignalMCInvMassPtBin[fStartPtBin]->GetMarkerSize();
-				histoSignalMCInvMassPtBin[fStartPtBin]->SetMarkerSize(2*markersize2);
-				legendLineShape->AddEntry(histoSignalMCInvMassPtBin[fStartPtBin],"MC reconstructed","ep");
-				Size_t linesize = histoTrueMCInvMassPtBin[fStartPtBin]->GetLineWidth();
-				histoTrueMCInvMassPtBin[fStartPtBin]->SetLineWidth(linesize);
-				legendLineShape->AddEntry(histoTrueMCInvMassPtBin[fStartPtBin],"MC truth" ,"l");
-				legendLineShape->Draw();
-				
-			} else {	
-				
-				padLineShape->cd(place);
-				padLineShape->cd(place)->SetTopMargin(0.12);
-				padLineShape->cd(place)->SetBottomMargin(0.15);
-				padLineShape->cd(place)->SetRightMargin(0.05);
-				padLineShape->cd(place)->SetLeftMargin(0.15);
-		
-				if (histoTrueMCInvMassPtBin[iPt]) {
-					DrawGammaHistoColored( histoTrueMCInvMassPtBin[iPt], 
-							Form("%3.2f GeV/c < p_{t} < %3.2f GeV/c",startPt,endPt),
-							"M_{#gamma#gamma} (GeV/c^{2})", "Counts",
-							fMesonRange[0],fMesonRange[1],1,634,-1);
-				}
-				cout << "here" << endl;
-				if (histoSignalDataInvMassPtBin[iPt]) {
-					DrawGammaHistoColored( histoSignalDataInvMassPtBin[iPt], 
-							Form("%3.2f GeV/c < p_{t} < %3.2f GeV/c",startPt,endPt),
-							"M_{#gamma#gamma} (GeV/c^{2})", "Counts",
-							fMesonRange[0],fMesonRange[1],0,1,20,0.8);
-				}
-				cout << "here" << endl;
-				if (histoSignalMCInvMassPtBin[iPt]){ 
-					DrawGammaHistoColored( histoSignalMCInvMassPtBin[iPt], 
-							Form("%3.2f GeV/c < p_{t} < %3.2f GeV/c",startPt,endPt),
-							"M_{#gamma#gamma} (GeV/c^{2})", "Counts",
-							fMesonRange[0],fMesonRange[1],0,860,1,0.8);
-				}
-				cout << "here" << endl;
-			}
-			
-		}
-		cout << "saving" << endl;
-		cout << nameLineShapePlot.Data() << endl;
-		if(j==0) {
-			canvasLineShape->SaveAs(nameLineShapePlot.Data());
-		} else {
-			canvasLineShape->SaveAs(nameLineShapePlotLeft.Data());
-		}
-		cout << "deleting" << endl;
-		delete padLineShape;
-		delete canvasLineShape;
-
-	}
+    // **************************************************************************************************************
+    // ************************ Res BG const compared MC vs Data ****************************************************
+    // **************************************************************************************************************
+    TCanvas* canvasLambda = new TCanvas("canvasLambda","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasLambda, 0.092, 0.01, 0.035, 0.082);
+        
+    Double_t maxLambda    = histoLambdaTailData->GetMaximum();
+    if (maxLambda < histoLambdaTailMC->GetMaximum())
+        maxLambda         = histoLambdaTailMC->GetMaximum();
+    maxLambda             = maxLambda*1.2; 
+    
+    Double_t minLambda    = histoLambdaTailData->GetMinimum();
+    if (minLambda > histoLambdaTailMC->GetMinimum())
+        minLambda         = histoLambdaTailMC->GetMinimum();
+    if (minLambda < 0) 
+        minLambda         = minLambda*1.4;
+    else 
+        minLambda         = minLambda*0.6;
+    
+    histoLambdaTailData->GetYaxis()->SetRangeUser(minLambda, maxLambda);
+    DrawAutoGammaMesonHistos( histoLambdaTailData, 
+                                "", "#it{p}_{T} (GeV/#it{c})", "#it{#lambda}", 
+                                kFALSE, 0., 0.7, kFALSE,
+                                kFALSE, 0., 0.7, 
+                                kFALSE, 0., 10.);
+    DrawGammaSetMarker(histoLambdaTailData, 20, 0.8, kBlack, kBlack); 
+    histoLambdaTailData->DrawCopy("same,e1,p");
+    DrawGammaSetMarker(histoLambdaTailMC, 24, 0.8, kRed+2, kRed+2);
+    histoLambdaTailMC->DrawCopy("same,e1,p"); 
+    
+    TLegend* legendLambda = GetAndSetLegend2(0.85, 0.13, 0.95, 0.13+(0.035*2), 0.035, 1, "", 42, 0.25);
+    legendLambda->AddEntry(histoLambdaTailData,"Data");
+    legendLambda->AddEntry(histoLambdaTailMC,"MC");
+    legendLambda->Draw();
+    PutProcessLabelAndEnergyOnPlot(0.15, 0.95, 0.035, energyText.Data(), decayChannel.Data(), DetectionChannel.Data());
+    
+    canvasLambda->Update();
+    canvasLambda->SaveAs(Form("%s/%s_LambdaTail_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()));
+    
 }
 
 
