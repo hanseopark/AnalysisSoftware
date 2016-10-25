@@ -41,7 +41,7 @@
 #include "TGraphAsymmErrors.h"
 #include "TDatabasePDG.h"
 #include "TParticlePDG.h"
-#include "PrepareSecondaryPi0.h"
+#include "PrepareSecondaries.h"
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
 #include "../CommonHeaders/PlottingGammaConversionAdditional.h"
 #include "../CommonHeaders/FittingGammaConversion.h"
@@ -49,7 +49,7 @@
 #include "../CommonHeaders/ConversionFunctions.h"
 #include "../CommonHeaders/ExtractSignalBinning.h"
 
-void PrepareSecondaryPi0(   TString nameFileCocktail        = "",
+void PrepareSecondaries(    TString nameFileCocktail        = "",
                             TString suffix                  = "eps",
                             TString cutSelection            = "",
                             TString option                  = "",
