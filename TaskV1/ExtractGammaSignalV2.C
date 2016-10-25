@@ -421,13 +421,16 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 RebinSpectrum(fHistoGammaTrueCaloUnConvPt);
 
                 fHistoGammaTrueCaloConvPt                       = (TH1D*)TrueConversionContainer->FindObject("TrueClusConvGamma_Pt");
+                fHistoGammaTrueCaloConvPt->SetName("TrueClusConvGamma_Pt");
                 fHistoGammaTrueCaloConvPt->Sumw2();
                 fHistoGammaTrueCaloConvPtOrBin                  = (TH1D*)fHistoGammaTrueCaloConvPt->Clone("TrueClusConvGamma_Pt_OriginalBinning");
                 fHistoGammaTrueCaloConvPtOrBin->Sumw2();
                 RebinSpectrum(fHistoGammaTrueCaloConvPt);
                 
                 fHistoGammaTrueCaloPt                           = (TH1D*)TrueConversionContainer->FindObject("TrueClusGamma_Pt");
+                fHistoGammaTrueCaloPt->Sumw2();
                 fHistoGammaTrueCaloPtOrBin                      = (TH1D*)fHistoGammaTrueCaloPt->Clone("TrueClusGamma_Pt_OriginalBinning");
+                fHistoGammaTrueCaloPtOrBin->Sumw2();
                 RebinSpectrum(fHistoGammaTrueCaloPt);
                 
                 fHistoGammaTruePrimaryCaloUnConvPt              = (TH1D*)TrueConversionContainer->FindObject("TruePrimaryClusGamma_Pt");
@@ -520,7 +523,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 fHistoGammaTruePrimaryCaloMCPt->Add(fHistoGammaTruePrimaryCaloConvMCPt);
                 
                 // combinatorial BG distributions
-                fHistoCombinatorialBackground                   = (TH2D*)TrueConversionContainer->FindObject("ESD_TrueClusPhotonBG_Pt");
+                fHistoCombinatorialBackground                   = (TH2D*)TrueConversionContainer->FindObject("ESD_TrueClusPhotonPlusConvBG_Pt");
                 fHistoCombinatorialSpecies                      = new TH1D*[10];
                 fHistoCombinatorialSpecies[nContamination]      = (TH1D*)fHistoCombinatorialBackground->ProjectionX(Form("ESD_TrueComb%s_Pt",fContamination[nContamination].Data()));
                 fHistoCombinatorialSpecies[nContamination]->Sumw2();
@@ -537,7 +540,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
         CalculateGammaCorrection();
         
         //**************************** Calculate pilepup correction factors for MC *********************************
-        if(pileUpCorrection && !addSig && !(mode == 4 || mode == 5)){ // how to deal with pileup correction for other modes?
+        if(pileUpCorrection && !addSig && !(mode == 4 || mode == 5)){
             FillDCAHistogramsFromTree(dcaTree,kTRUE);
             CalculatePileUpBackground(kTRUE);
             CalculatePileUpGammaCorrection();
