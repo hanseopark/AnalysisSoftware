@@ -323,7 +323,6 @@ void ExtractGammaSignalV2(      TString meson               = "",
             fHistoCombinatorialSpecies[nCombinatorics]              = (TH1D*)fHistoCombinatorialBackground->ProjectionX(Form("ESD_TrueComb%s_Pt",fCombinatorics[nCombinatorics].Data()));
             fHistoCombinatorialSpecies[nCombinatorics]->Sumw2();
             RebinSpectrum(fHistoCombinatorialSpecies[nCombinatorics]);
-    
             for(Int_t i = 0; i<nCombinatorics; i++){
                 fHistoCombinatorialSpecies[i]                       = (TH1D*)fHistoCombinatorialBackground->ProjectionX(Form("ESD_TrueComb%s_Pt",fCombinatorics[i].Data()),i+1,i+1);
                 fHistoCombinatorialSpecies[i]->Sumw2();
@@ -524,10 +523,10 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 
                 // combinatorial BG distributions
                 fHistoCombinatorialBackground                   = (TH2D*)TrueConversionContainer->FindObject("ESD_TrueClusPhotonPlusConvBG_Pt");
-                fHistoCombinatorialSpecies                      = new TH1D*[10];
+                fHistoCombinatorialSpecies                      = new TH1D*[11];
                 fHistoCombinatorialSpecies[nContamination]      = (TH1D*)fHistoCombinatorialBackground->ProjectionX(Form("ESD_TrueComb%s_Pt",fContamination[nContamination].Data()));
                 fHistoCombinatorialSpecies[nContamination]->Sumw2();
-                RebinSpectrum(fHistoCombinatorialSpecies[9]);
+                RebinSpectrum(fHistoCombinatorialSpecies[nContamination]);
                 for(Int_t i = 0; i<nContamination; i++){
                     fHistoCombinatorialSpecies[i]               = (TH1D*)fHistoCombinatorialBackground->ProjectionX(Form("ESD_TrueComb%s_Pt",fContamination[i].Data()),i+1,i+1);
                     fHistoCombinatorialSpecies[i]->Sumw2();

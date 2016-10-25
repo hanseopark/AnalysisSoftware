@@ -39,9 +39,9 @@ TString     fCombinatorics[17]                                      = { "Elec+El
                                                                         "Kaon+Proton",   "Kaon+Muon",   "Proton+Proton",    "Proton+Muon",   "Muon+Muon",
                                                                         "Rest",          "All"
                                                                       };
-Int_t       nContamination                                          = 9;
-TString     fContamination[10]                                      = { "Elec", "Pion", "Proton", "Kaon",   "Neutron", 
-                                                                        "K0s",  "Lambda", "Muon", "Rest",   "All"
+Int_t       nContamination                                          = 10;
+TString     fContamination[11]                                      = { "Electron", "Pion", "Proton",   "Kaon", "Neutron", "K0s",
+                                                                        "Lambda",   "Muon", "K0l",      "Rest", "All"
                                                                       };
 
 // exemplary pt bins for DCAz distributions
