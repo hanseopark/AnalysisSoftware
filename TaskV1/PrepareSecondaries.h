@@ -1,9 +1,8 @@
-
-
 // provided by Gamma Conversion Group, $ALICE_PHYSICS/PWGGA/GammaConv ;https://twiki.cern.ch/twiki/bin/view/ALICE/PWG4GammaConversion
 
 //************************** Some general definitions *************************************
 //TString     fDate                                     = "";
+TString     fAnalyzedMeson                              = "";
 TString     fEnergyFlag                                 = "";
 TString     fPeriodFlag                                 = "";
 TString     fdirectphoton                               = "";
@@ -43,45 +42,49 @@ Double_t mtScaleFactor[nMotherParticles]                = {1.};
 TH1F*  fDeltaPt                                         = NULL;
 TH1F*  histoNEvents                                     = NULL;
 TH1F*  histMtScalingFactors                             = NULL;
-TH1D*  histoPi0YieldData                                = NULL;
+TH1D*  histoMesonDaughterYieldData                      = NULL;
 TH1F** histoDecayChannels                               = NULL;
 TH1F** histoDecayChannelsBR                             = NULL;
-TH2F** histoPi0PtY                                      = NULL;
-TH2F** histoPi0PtPhi                                    = NULL;
-TH2F** histoPi0MotherPtY                                = NULL;
-TH2F** histoPi0MotherPtPhi                              = NULL;
-TH1F** histoPi0PtOrBin                                  = NULL;
-TH1F** histoPi0YOrBin                                   = NULL;
-TH1F** histoPi0PhiOrBin                                 = NULL;
-TH1F** histoPi0MotherPtOrBin                            = NULL;
-TH1F** histoPi0MotherYOrBin                             = NULL;
-TH1F** histoPi0MotherPhiOrBin                           = NULL;
-TH1F** histoPi0Pt                                       = NULL;
-TH1F** histoPi0MotherPt                                 = NULL;
+TH2F** histoMesonDaughterPtY                            = NULL;
+TH2F** histoMesonDaughterPtPhi                          = NULL;
+TH2F** histoMesonMotherPtY                              = NULL;
+TH2F** histoMesonMotherPtPhi                            = NULL;
+TH1F** histoMesonDaughterPtOrBin                        = NULL;
+TH1F** histoMesonDaughterYOrBin                         = NULL;
+TH1F** histoMesonDaughterPhiOrBin                       = NULL;
+TH1F** histoMesonMotherPtOrBin                          = NULL;
+TH1F** histoMesonMotherYOrBin                           = NULL;
+TH1F** histoMesonMotherPhiOrBin                         = NULL;
+TH2F** histoGammaFromXFromMotherPtY                     = NULL;
+TH2F** histoGammaFromXFromMotherPtPhi                   = NULL;
+TH1F** histoGammaFromXFromMotherPtOrBin                 = NULL;
+TH1F** histoGammaFromXFromMotherYOrBin                  = NULL;
+TH1F** histoGammaFromXFromMotherPhiOrBin                = NULL;
+
 
 //************************** Cocktail input ***********************************************
 TFile* cocktailInputFile                                = NULL;
 TList* cocktailInputList                                = NULL;
-TF1** cocktailInputParametrizations                     = NULL;
-TF1** cocktailInputParametrizationsMtScaled             = NULL;
-TF1* paramScaleBase                                     = NULL;
+TF1**  cocktailInputParametrizations                    = NULL;
+TF1**  cocktailInputParametrizationsMtScaled            = NULL;
+TF1*   paramScaleBase                                   = NULL;
 
 //************************** Methods ******************************************************
-void Initialize                                     (   TString energy,
-                                                        Int_t numberOfBins      );
-void RebinSpectrum                                  (   TH1F *Spectrum,
+void        Initialize                              (   TString meson,
+                                                        TString energy,
+                                                        Int_t   numberOfBins    );
+void        RebinSpectrum                           (   TH1F*   Spectrum,
                                                         TString NewName         );
-TH1F* ConvertYieldHisto                             (   TH1F* input             );
-void SaveHistos                                     (                           );
-TF1* MtScaledParam                                  (   TF1* param,
-                                                        Int_t particleNumber    );
-Double_t GetMass                                    (   TString particle        );
-void SetHistogramTitles                             (   TH1F* input,
+void        SaveMesonHistos                         (                           );
+void        SavePhotonHistos                        (                           );
+TF1*        MtScaledParam                           (   TF1*    param,
+                                                        Int_t   particleNumber  );
+Double_t    GetMass                                 (   TString particle        );
+void        SetHistogramTitles                      (   TH1F*   input,
                                                         TString title,
                                                         TString xTitle,
                                                         TString yTitle          );
-void DeleteObjects                                  (                           );
-TH1D* CalculateRatioToTF1                           (   TH1D* hist,
-                                                        TF1* func               );
-void CreateBRTableLatex                             (                           );
+TH1D*       CalculateRatioToTF1                     (   TH1D*   hist,
+                                                        TF1*    func            );
+void        CreateBRTableLatex                      (                           );
 
