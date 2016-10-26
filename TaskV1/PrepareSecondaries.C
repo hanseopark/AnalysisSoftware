@@ -223,6 +223,7 @@ void PrepareSecondaries(    TString     meson                       = "",
         }
     }
     
+    cocktailInputParametrizationPi0                             = (TF1*)cocktailSettingsList->FindObject("111_pt");
     cocktailInputParametrizations                               = new TF1*[nMotherParticles];
     cocktailInputParametrizationsMtScaled                       = new TF1*[nMotherParticles];
     TF1* paramTemp                                              = NULL;
@@ -234,8 +235,12 @@ void PrepareSecondaries(    TString     meson                       = "",
         else            cocktailInputParametrizations[i]        = NULL;
         if (paramMtTemp)
             cocktailInputParametrizationsMtScaled[i]            = new TF1(*paramMtTemp);
-        else
-            cocktailInputParametrizationsMtScaled[i]            = (TF1*)MtScaledParam(cocktailInputParametrizations[0], i);
+        else {
+            if (cocktailInputParametrizationPi0)
+                cocktailInputParametrizationsMtScaled[i]        = (TF1*)MtScaledParam(cocktailInputParametrizationPi0, i);
+            else
+                cocktailInputParametrizationsMtScaled[i]        = (TF1*)MtScaledParam(cocktailInputParametrizations[0], i);
+        }
     }
     
     for (Int_t i=0; i<nMotherParticles; i++) {
@@ -462,6 +467,45 @@ void PrepareSecondaries(    TString     meson                       = "",
         if (histoGammaFromXFromMotherPhiOrBin[i])   histoGammaFromXFromMotherPhiOrBin[i]->Scale(1./nEvents);
     }
 
+    //***************************** calculate (pi0 from X)/pi0_param ************************************************
+    histoRatioPi0FromXToPi0Param                                = new TH1F*[nMotherParticles];
+    if (fAnalyzedMeson.CompareTo("Pi0") == 0) {
+        if (cocktailInputParametrizationPi0) {
+            for (Int_t i=0; i<nMotherParticles; i++) {
+                if(histoMesonDaughterPtOrBin[i]) {
+                    histoRatioPi0FromXToPi0Param[i]             = (TH1F*)histoMesonDaughterPtOrBin[i]->Clone(Form("Ratio_Pi0_From_%s_To_Pi0Param",motherParticles[i].Data()));
+                    SetHistogramTitles(histoRatioPi0FromXToPi0Param[i],"","#it{p}_{T} (GeV/#it{c})",Form("(#pi^{0} from %s)/#pi^{0} param.",motherParticlesLatex[i].Data()));
+                    Double_t binContent                         = 0.;
+                    Double_t binError                           = 0.;
+                    Double_t binIntegralParam                   = 0.;
+                    for(Int_t bin=1; bin<histoRatioPi0FromXToPi0Param[i]->GetNbinsX()+1; bin++) {
+                        // get bin content & error
+                        binContent                              = histoRatioPi0FromXToPi0Param[i]->GetBinContent(i) * histoRatioPi0FromXToPi0Param[i]->GetBinWidth(i);
+                        binError                                = histoRatioPi0FromXToPi0Param[i]->GetBinError(i);
+                        binIntegralParam                        = cocktailInputParametrizationPi0->Integral(histoRatioPi0FromXToPi0Param[i]->GetXaxis()->GetBinLowEdge(i),histoRatioPi0FromXToPi0Param[i]->GetXaxis()->GetBinUpEdge(i));
+                        
+                        // set new bin content & error
+                        if(binIntegralParam) {
+                            histoRatioPi0FromXToPi0Param[i]->SetBinContent( i, binContent/binIntegralParam);
+                            histoRatioPi0FromXToPi0Param[i]->SetBinError(   i, binError/binIntegralParam);
+                        } else {
+                            histoRatioPi0FromXToPi0Param[i]->SetBinContent( i, 0);
+                            histoRatioPi0FromXToPi0Param[i]->SetBinError(   i, 0);
+                        }
+                    }
+                } else {
+                    histoRatioPi0FromXToPi0Param[i]             = NULL;
+                }
+            }
+        } else {
+            cout << "Pi0 param missing, can't calculate histoRatioPi0FromXToPi0Param." << endl;
+            for (Int_t i=0; i<nMotherParticles; i++)
+                histoRatioPi0FromXToPi0Param[i]                 = NULL;
+        }
+    } else {
+        for (Int_t i=0; i<nMotherParticles; i++)
+            histoRatioPi0FromXToPi0Param[i]                     = NULL;
+    }
     
     //
     // ******************************************
@@ -473,16 +517,6 @@ void PrepareSecondaries(    TString     meson                       = "",
     // * PP      LLLLLL   OOOO     TT    SSSSS  *
     // ******************************************
     //
-    
-    // adapt plotting range for original binned histograms
-    ///if (!producePlotsInOrPtRange) {
-    //    ptGenMin = ptMin;
-    //    ptGenMax = ptMax;
-    //}
-    //
-    // plotting
-    //
-    
     
     //***************************** Save histograms *****************************************************************
     SaveMesonHistos();
@@ -655,12 +689,11 @@ void SetHistogramTitles(TH1F* input, TString title, TString xTitle, TString yTit
     input->GetYaxis()->SetTitle(yTitle);
 }
 
-
 //************************** Routine for saving histograms **********************************************************
 void SaveMesonHistos() {
     TString nameOutput                  = Form("%s/%s/Secondary%s%s_%.2f_%s.root",fCutSelection.Data(),fEnergyFlag.Data(),fAnalyzedMeson.Data(),fPeriodFlag.Data(),fRapidity,fCutSelection.Data());
     cout << "INFO: writing into: " << nameOutput << endl;
-    TFile *outputFile                   = new TFile(nameOutput,"UPDATE");
+    TFile *outputFile                   = new TFile(nameOutput,"RECREATE");
     
     // write number of events
     histoNEvents->Write("NEvents", TObject::kOverwrite);
@@ -674,13 +707,25 @@ void SaveMesonHistos() {
         if (histoMesonMotherYOrBin[i])      histoMesonMotherYOrBin[i]->Write(       histoMesonMotherYOrBin[i]->GetName(),       TObject::kOverwrite);
         if (histoMesonMotherPhiOrBin[i])    histoMesonMotherPhiOrBin[i]->Write(     histoMesonMotherPhiOrBin[i]->GetName(),     TObject::kOverwrite);
     }
+
+    // write input params
+    if (cocktailInputParametrizationPi0)                cocktailInputParametrizationPi0->Write(         cocktailInputParametrizationPi0->GetName(),         TObject::kOverwrite);
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        if (cocktailInputParametrizations[i])           cocktailInputParametrizations[i]->Write(        cocktailInputParametrizations[i]->GetName(),        TObject::kOverwrite);
+        if (cocktailInputParametrizationsMtScaled[i])   cocktailInputParametrizationsMtScaled[i]->Write(cocktailInputParametrizationsMtScaled[i]->GetName(),TObject::kOverwrite);
+    }
+
+    // write ratio pi0 from X to pi0 param
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        if (histoRatioPi0FromXToPi0Param[i]) histoRatioPi0FromXToPi0Param[i]->Write(histoRatioPi0FromXToPi0Param[i]->GetName(), TObject::kOverwrite);
+    }
 }
 
 //************************** Routine for saving histograms **********************************************************
 void SavePhotonHistos() {
     TString nameOutput                  = Form("%s/%s/SecondaryGamma%s_%.2f_%s.root",fCutSelection.Data(),fEnergyFlag.Data(),fPeriodFlag.Data(),fRapidity,fCutSelection.Data());
     cout << "INFO: writing into: " << nameOutput << endl;
-    TFile *outputFile                   = new TFile(nameOutput,"UPDATE");
+    TFile *outputFile                   = new TFile(nameOutput,"RECREATE");
     
     // write number of events
     histoNEvents->Write("NEvents", TObject::kOverwrite);

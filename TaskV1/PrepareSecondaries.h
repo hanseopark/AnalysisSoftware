@@ -42,7 +42,7 @@ Double_t mtScaleFactor[nMotherParticles]                = {1.};
 TH1F*  fDeltaPt                                         = NULL;
 TH1F*  histoNEvents                                     = NULL;
 TH1F*  histMtScalingFactors                             = NULL;
-TH1D*  histoMesonDaughterYieldData                      = NULL;
+TH1F** histoRatioPi0FromXToPi0Param                     = NULL;
 TH1F** histoDecayChannels                               = NULL;
 TH1F** histoDecayChannelsBR                             = NULL;
 TH2F** histoMesonDaughterPtY                            = NULL;
@@ -61,12 +61,12 @@ TH1F** histoGammaFromXFromMotherPtOrBin                 = NULL;
 TH1F** histoGammaFromXFromMotherYOrBin                  = NULL;
 TH1F** histoGammaFromXFromMotherPhiOrBin                = NULL;
 
-
 //************************** Cocktail input ***********************************************
 TFile* cocktailInputFile                                = NULL;
 TList* cocktailInputList                                = NULL;
 TF1**  cocktailInputParametrizations                    = NULL;
 TF1**  cocktailInputParametrizationsMtScaled            = NULL;
+TF1*   cocktailInputParametrizationPi0                  = NULL;
 TF1*   paramScaleBase                                   = NULL;
 
 //************************** Methods ******************************************************
