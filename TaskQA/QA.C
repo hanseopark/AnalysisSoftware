@@ -285,6 +285,18 @@ void QA(    TString select          = "LHC11a",         // set selected
         pathPhotonQA[1] = Form("/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20150922/%s/PhotonQA_%s.root",DataSets[1].Data(),DataSets[1].Data());
     }
     //**************************************************************************************************************
+    else if(select.CompareTo("LHC10test")==0){
+    //LHC10
+        nSets = 2;
+        fEnergyFlag = "7TeV";
+        pathDataSets[0] = "/home/daniel/Desktop/Grid/Legotrain-vAN-20161022-7TeV_std_trackmatching/LHC10_GammaConvCalo_207.root";
+        pathDataSets[1] = "/home/daniel/Desktop/Grid/Legotrain-vAN-20161022-7TeV_std_trackmatching/LHC14j4_GammaConvCalo_207.root";
+        DataSets[0]="LHC10_pass4"; DataSets[1]="LHC14j4";
+        plotDataSets[0]="LHC10bcdef"; plotDataSets[1]="Pythia8";
+        pathPhotonQA[0] = "";
+        pathPhotonQA[1] = "";
+    }
+    //**************************************************************************************************************
     else if(select.BeginsWith("LHC10") && select.Length()==6){
     //LHC10
         addSubfolder=kTRUE;
@@ -299,6 +311,20 @@ void QA(    TString select          = "LHC11a",         // set selected
         plotDataSets[0]=select; plotDataSets[1]="Pythia8";
         pathPhotonQA[0] = Form("/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20150922/%s/PhotonQA_%s.root",DataSets[0].Data(),DataSets[0].Data());
         pathPhotonQA[1] = Form("/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20150922/%s/PhotonQA_%s.root",DataSets[1].Data(),DataSets[1].Data());
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC12-matchingTest")==0){
+    //LHC12
+        nSets = 3;
+        fEnergyFlag = "8TeV";
+        pathDataSets[0] = "/home/daniel/Desktop/Grid/Legotrain-vAN-20161027-8TeV-stdMB_trMatch/LHC12_GammaConvCalo_108.root";
+        pathDataSets[1] = "/home/daniel/Desktop/Grid/Legotrain-vAN-20161027-8TeV-stdMB_trMatch/LHC15h1_GammaConvCalo_108.root";
+        pathDataSets[2] = "/home/daniel/Desktop/Grid/Legotrain-vAN-20161027-8TeV-stdMB_trMatch/LHC15h2_GammaConvCalo_108.root";
+        DataSets[0]="LHC12"; DataSets[1]="LHC15h1"; DataSets[2]="LHC15h2";
+        plotDataSets[0]="LHC12a-i"; plotDataSets[1]="Pythia8"; plotDataSets[2]="Phojet";
+        pathPhotonQA[0] = "";
+        pathPhotonQA[1] = "";
+        pathPhotonQA[2] = "";
     }
     //**************************************************************************************************************
     else if(select.CompareTo("LHC12")==0){

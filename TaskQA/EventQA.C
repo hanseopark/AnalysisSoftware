@@ -1046,7 +1046,7 @@ void EventQA(
         // Invariant mass of BG candidates
         TH2D* ESDBackground = NULL;
         if (mode != 10 && mode != 11){
-            TH2D* ESDBackground = (TH2D*) ESDContainer->FindObject("ESD_Background_InvMass_Pt");
+            ESDBackground = (TH2D*) ESDContainer->FindObject("ESD_Background_InvMass_Pt");
             if(ESDBackground){
                 WriteHistogram(ESDBackground);
                 vecESDBackground.push_back(new TH2D(*ESDBackground));
@@ -1528,7 +1528,7 @@ void EventQA(
     if (isConv){
         for(Int_t i=0; i<nSets; i++){
             temp.clear();
-            if((Int_t)vecInvMassBeforeAfter[0].size()>0 && (Int_t)vecInvMassBeforeAfter[1].size()>0){
+            if((Int_t)vecInvMassBeforeAfter[0].size()>=i+1 && (Int_t)vecInvMassBeforeAfter[1].size()>=i+1){
                 temp.push_back(vecInvMassBeforeAfter[0].at(i));
                 temp.push_back(vecInvMassBeforeAfter[1].at(i));
 
