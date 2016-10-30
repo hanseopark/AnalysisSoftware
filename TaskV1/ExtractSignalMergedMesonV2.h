@@ -26,6 +26,7 @@ Bool_t      fAdvancedMesonQA                                            = kFALSE
 Bool_t      fAdvancedClusterQA                                          = kFALSE;
 Bool_t      fAdditionalLabels                                           = kFALSE;
 Bool_t      fNewMCOutput                                                = kFALSE;
+Bool_t      fEnableExoticsQA                                            = kFALSE;
 TString     fEventCutSelection                                          = "";
 TString     fClusterCutSelection                                        = "";
 TString     fClusterMergedCutSelection                                  = "";
@@ -116,6 +117,7 @@ void DrawAutoGammaHistoPaper2D( TH2* histo1,
                                 Bool_t YRange, Double_t YMin ,Double_t YMax,
                                 Bool_t XRange, Double_t XMin, Double_t XMax, Double_t xOffset=1, Double_t yOffset=1.);
 Double_t FindSmallestEntryIn2D(TH2F* histo);
+Double_t FindSmallestEntryIn1D(TH1* histo);
 void FillDataHistosArray(TH2F*,TH2F*);                                                                      // Fill invariant mass histograms for Signal 
 TH1D* FillProjectionX (TH2F*, TString, Double_t, Double_t, Int_t);                                          // Fill Projection in according to Y bins
 TH1D* FillProjectionY (TH2F* fDummy2D, TString name, Double_t minX, Double_t maxX, Int_t rebin, Double_t* array); // Fill Projection in according to X bins
@@ -130,6 +132,7 @@ void FillMCElectronSeparated(TH2F* );                                           
 void FillMCGammaSeparated(TH2F* );                                                                          // Fill MC Gamma separated 
 void FillHistosArrayMC(TH1D*, TH1D * , TH1D* );                                                             // Rebin MC input histo's
 void FillHistosArrayMCSecAndCalcAcceptance(TH2D*, TH2D * );                                                 // Rebin Sec MC input histo's and calc acceptance
+void FillExoticsM02HistosArray( TH2F* );                                                                    // Fill M02 histograms for excluded exotics 
 void IntegrateHistoInvMass(TH1D*, Double_t* );                                                              // Integrate invariant mass histogram
 void IntegrateHistoM02(TH1D*, Double_t* );                                                                  // Integrate M02 histogram
 void CalculateMesonAcceptance();                                                                            // Calculation of meson acceptance
@@ -197,10 +200,12 @@ Double_t    fFWHMFuncError;
 //*********************** dedicated cluster histograms ************************
 //*****************************************************************************
 TH1D*       fHistoClustersPt                                            = NULL;
+TH1D*       fHistoClustersE                                             = NULL;
 TH1D*       fHistoClustersOverlapHeadersPt                              = NULL;
 TH2F*       fHistoClustersMergedPtM02                                   = NULL;
 TH2F*       fHistoClustersMergedPtM02AccMeson                           = NULL;
 TH2F*       fHistoClustersMergedEM02AccMeson                            = NULL;
+TH1D*       fHistoClustersMergedE                                       = NULL;
 TH1D*       fHistoClusterCandidates                                     = NULL;
 TH1D*       fHistoClusterMergedCandidates                               = NULL;
 TH2F*       fHistoTrackVsClusterCandidates                              = NULL;
@@ -409,8 +414,6 @@ TH1D*       fHistoRatioMergedPartConvFracEta                            = NULL;
 TH1D*       fHistoRatioMergedOneGammaFracEta                            = NULL;
 TH1D*       fHistoRatioMergedOneElectronFracEta                         = NULL;
     
-
-
 //****************************************************************************
 //******************* MC input histograms ************************************
 //****************************************************************************
@@ -456,3 +459,15 @@ Bool_t      fHaveToyMCInputForSec                                       = kFALSE
 TFile*      fFileToyMCInput[3]                                          = {NULL, NULL, NULL};
 TH1D*       fHistoYieldToyMCSecInput[3]                                 = {NULL, NULL, NULL};
 TH1D*       fHistoYieldToyMCSecInputReb[3]                              = {NULL, NULL, NULL};
+
+//****************************************************************************
+//******************* Exotics QA histograms **********************************
+//****************************************************************************
+TH2F*       fHistoExoticsEtaPhi                                         = NULL;
+TH2F*       fHistoExoticsEvsM02                                         = NULL;
+TH2F*       fHistoExoticsEvsNCells                                      = NULL;
+TH2F*       fHistoExoticsEvsEstar                                       = NULL;
+TH1D**      fHistoExoticsM02EBin                                        = NULL;
+TH1D*       fHistoExoticsBelowM02MinBaseCut                             = NULL;
+TH1D*       fHistoExoticsBelowM02MinCut                                 = NULL;
+TH1D*       fHistoExoticsAboveM02MinCut                                 = NULL;

@@ -3640,6 +3640,132 @@ void PlotInvMassMergedMCInPtBins(   TH1D**      fHistoMergedRecPtBinPlot,
     delete canvasDataSpectra;
 }
 
+//__________________________________________ Plotting all M02 bins _______________________________________________
+void PlotM02ExoticsInEBins(     TH1D**      fHistoM02PtBinPlot, 
+                                TString     namePlot, 
+                                TString     nameCanvas, 
+                                TString     namePad, 
+                                Double_t*   fPlottingM02Range, 
+                                TString     dateDummy, 
+                                TString     fMesonType, 
+                                Int_t       fRowPlot, 
+                                Int_t       fColumnPlot, 
+                                Int_t       fStartBinPtRange, 
+                                Int_t       fNumberPtBins, 
+                                Double_t*   fRangeBinsPt, 
+                                TString     fDecayChannel, 
+                                Bool_t      fMonteCarloInfo, 
+                                TString     decayChannel,  
+                                TString     fDetectionChannel, 
+                                TString     fEnergy
+                              ){
+    TGaxis::SetMaxDigits(3);
+    TCanvas * canvasDataSpectra         = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
+    DrawGammaCanvasSettings(canvasDataSpectra, 0.0, 0., 0., 0.);
+
+    TPad * padDataSpectra               = new TPad(namePad.Data(),"",0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+    padDataSpectra->SetFillColor(0);
+    padDataSpectra->GetFrame()->SetFillColor(0);
+    padDataSpectra->SetBorderMode(0);
+    padDataSpectra->SetLogy(1);
+    padDataSpectra->Divide(fColumnPlot,fRowPlot,0.0,0.0);
+    padDataSpectra->Draw();
+
+    cout<<"fColumnPlot: "<<fColumnPlot<<" fRowPlot: "<<fRowPlot<<endl;
+    cout << fMesonType.Data() << endl;
+    Int_t place                         = 0;
+    for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++){
+        cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
+        Double_t startPt                = fRangeBinsPt[iPt];
+        Double_t endPt                  = fRangeBinsPt[iPt+1];
+
+        place                           = place + 1;  //give the right place in the page
+        if (place == fColumnPlot){
+            iPt--;
+            padDataSpectra->cd(place);
+
+            cout << "entered ALICE plotting" << endl;
+            TString textAlice           = "ALICE performance";
+            TString textEvents;
+            if(fMonteCarloInfo){
+                textEvents              = "MC";
+            } else {
+                textEvents              = "Data";
+            }
+            Double_t nPixels            = 13;
+            Double_t textHeight         = 0.08;
+            if (padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) < padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1())){
+                textHeight              = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
+            } else {
+                textHeight              = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
+            }   
+            
+            Double_t startTextX         = 0.10;
+            Double_t startTextY         = 0.9;
+            Double_t differenceText     = textHeight*1.25;
+
+            TLatex *alice               = new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
+            TLatex *latexDate           = new TLatex(startTextX, (startTextY-1.25*differenceText), dateDummy.Data());
+            TLatex *energy              = new TLatex(startTextX, (startTextY-2.25*differenceText), fEnergy);
+            TLatex *process             = new TLatex(startTextX, (startTextY-3.25*differenceText), fDecayChannel);
+            TLatex *detprocess          = new TLatex(startTextX, (startTextY-4.25*differenceText), fDetectionChannel);
+            TLatex *events              = new TLatex(startTextX, (startTextY-5.25*differenceText), Form("%s: %2.1e events",textEvents.Data(), fNEvents));
+
+            alice->SetNDC();
+            alice->SetTextColor(1);
+            alice->SetTextSize(textHeight*1.3);
+            alice->Draw();
+
+            latexDate->SetNDC();
+            latexDate->SetTextColor(1);
+            latexDate->SetTextSize(textHeight);
+            latexDate->Draw();
+
+            energy->SetNDC();
+            energy->SetTextColor(1);
+            energy->SetTextSize(textHeight);
+            energy->Draw();
+
+            process->SetNDC(); 
+            process->SetTextColor(1);
+            process->SetTextSize(textHeight);
+            process->Draw();
+
+            detprocess->SetNDC(); 
+            detprocess->SetTextColor(1);
+            detprocess->SetTextSize(textHeight);
+            detprocess->Draw();
+
+            events->SetNDC();
+            events->SetTextColor(1);
+            events->SetTextSize(textHeight);
+            events->Draw();
+            
+        } else {            
+            padDataSpectra->cd(place);
+            padDataSpectra->cd(place)->SetTopMargin(0.12);
+            padDataSpectra->cd(place)->SetBottomMargin(0.15);
+            padDataSpectra->cd(place)->SetRightMargin(0.02);
+//             cout << "place: " << place << "\t "<< startPt << " < #it{p}_{T} < " << endPt  << endl;
+            int remaining               = (place-1)%fColumnPlot;
+            if (remaining > 0) padDataSpectra->cd(place)->SetLeftMargin(0.15);
+            else padDataSpectra->cd(place)->SetLeftMargin(0.25);
+            if (fHistoM02PtBinPlot[iPt]){
+                    DrawGammaHisto( fHistoM02PtBinPlot[iPt],
+                                    Form("%3.2f GeV/#it{c} < #it{E} < %3.2f GeV", startPt, endPt),
+                                    "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
+                                    0, 0.5, 0.0001, 0.7);
+            } else {
+                 continue;
+            }
+        }
+    }
+    canvasDataSpectra->Print(namePlot.Data());
+    delete padDataSpectra;
+    delete canvasDataSpectra;
+}
+
+
 //__________________________________________ Plotting all Invariant Mass bins _______________________________________________
 void PlotInvMassMergedTrueInPtBins( TH1D**      fHistoMergedValPtBinPlot, 
                                     TH1D**      fHistoMergedPartConvValPtBinPlot, 

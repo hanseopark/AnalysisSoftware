@@ -205,12 +205,16 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
 
     TList *ESDContainer                 = (TList*) HistosGammaConversion->FindObject(Form("%s ESD histograms",fCutSelectionRead.Data()));
     fHistoClustersPt                    = (TH1D*)ESDContainer->FindObject("ClusGamma_Pt");
+    fHistoClustersE                     = (TH1D*)ESDContainer->FindObject("ClusGamma_E");
     if (fIsMC){
         fHistoClustersOverlapHeadersPt  = (TH1D*)ESDContainer->FindObject("ClusGammaOverlapHeaders_Pt");
     }
     fHistoClustersMergedPtM02           = (TH2F*)ESDContainer->FindObject("ClusMerged_Pt_M02");
     fHistoClustersMergedPtM02AccMeson   = (TH2F*)ESDContainer->FindObject("ClusMerged_Pt_M02_AcceptedMeson");
     fHistoClustersMergedEM02AccMeson    = (TH2F*)ESDContainer->FindObject("ClusMerged_E_M02_AcceptedMeson");
+    if (fHistoClustersMergedEM02AccMeson)
+        fHistoClustersMergedE           = (TH1D*)fHistoClustersMergedEM02AccMeson->ProjectionX("ClusMerged_E");
+    
     fHistoClusterCandidates             = (TH1D*)ESDContainer->FindObject("GammaCandidates");
     fHistoClusterMergedCandidates       = (TH1D*)ESDContainer->FindObject("MergedCandidates");
     fHistoTrackVsClusterCandidates      = (TH2F*)ESDContainer->FindObject("GoodESDTracksVsGammaCandidates");
@@ -231,8 +235,6 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         fHistoClusterMergedNPartPt      = (TH2F*)ESDContainer->FindObject("ClusMerged_NPart_Pt");
     }
     
-    
-    
     if (fHistoClusterNCellsPt && fHistoClusterMergedNCellsPt && fHistoClusterMergedNCellsArClPt && fHistoClusterMergedNCellsArAInclPt && fHistoClusterMergedEAroundClE ){
         fAdvancedClusterQA              = kTRUE;
         cout << "**************************************************************" << endl;
@@ -242,7 +244,36 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         
     fNumberOfGoodESDTracks              = (TH1D*)ESDContainer->FindObject("GoodESDTracks");
     fEventQuality                       = (TH1D*)ESDContainer->FindObject("NEvents");
+    if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0){
+        fNEvents                        = fEventQuality->GetBinContent(1);
+    } else {
+        fNEvents                        =  GetNEvents(fEventQuality);
+    }
+    
+    cout << Form("CaloCuts_%s",fClusterCutSelection.Data()) << endl;
+    TList *CaloPreCuts                  = (TList*) HistosGammaConversion->FindObject(Form("CaloCuts_%s",fClusterCutSelection.Data()));
+    if(CaloPreCuts == NULL){
+        cout << "couldn't find ClusterCuts output, disabling Exotics QA" << endl;
+        fEnableExoticsQA                = kFALSE;
+    } else {
+        fHistoExoticsEtaPhi             = (TH2F*)CaloPreCuts->FindObject(Form("EtaPhi_Exotics %s",fClusterCutSelection.Data()));
+        if (fHistoExoticsEtaPhi) cout << "found EtaPhi for exotics" << endl;
+        fHistoExoticsEvsM02             = (TH2F*)CaloPreCuts->FindObject(Form("EVsM02_Exotics %s",fClusterCutSelection.Data()));
+        if (fHistoExoticsEvsM02) cout << "found EvsM02 for exotics" << endl;
+        fHistoExoticsEvsNCells          = (TH2F*)CaloPreCuts->FindObject(Form("ClusterEnergyVsNCells_Exotics %s",fClusterCutSelection.Data()));
+        if (fHistoExoticsEvsNCells) cout << "found EvsNCells for exotics" << endl;
+        fHistoExoticsEvsEstar           = (TH2F*)CaloPreCuts->FindObject(Form("ClusterEnergyVsEnergystar_Exotics %s",fClusterCutSelection.Data()));
+        if (fHistoExoticsEvsEstar) cout << "found EvEstar for exotics" << endl;
+        if (fHistoExoticsEtaPhi && fHistoExoticsEvsM02 && fHistoExoticsEvsNCells && fHistoExoticsEvsEstar)
+            fEnableExoticsQA            = kTRUE;
         
+        if (fEnableExoticsQA){
+            FillExoticsM02HistosArray(fHistoExoticsEvsM02);
+        }    
+        
+        
+    }
+    
     TString rapidityRange;
     fYMaxMeson                          = ReturnRapidityStringAndDouble(fMesonCutSelection, rapidityRange);
         
@@ -258,11 +289,6 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     
     
     fMesonMassExpect                    = TDatabasePDG::Instance()->GetParticle(fMesonId)->Mass();
-    if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0){
-        fNEvents                        = fEventQuality->GetBinContent(1);
-    } else {
-        fNEvents                        =  GetNEvents(fEventQuality);
-    }
 
     FillDataHistosArray( fHistoInvMassVsPt, fHistoClustersMergedPtM02AccMeson );
     
@@ -1116,6 +1142,250 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         canvasInvMassVsPt->SaveAs(Form("%s/%s_%s_InvMassVsPt%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
 
+    //******************************************************************************************
+    //********************** Plotting extended exotics QA if available *************************
+    //******************************************************************************************            
+    if (fEnableExoticsQA){
+        if(fHistoExoticsEvsM02){
+            canvasPtM02->cd();
+            
+            fHistoExoticsEvsM02->Sumw2();
+            fHistoExoticsEvsM02->Scale(1./fNEvents);
+            if (minZM02 == 0) minZM02     = FindSmallestEntryIn2D(fHistoExoticsEvsM02);
+            if (maxZM02 == 0) maxZM02     = fHistoExoticsEvsM02->GetMaximum();
+            DrawAutoGammaHistoPaper2D(fHistoExoticsEvsM02,
+                                    " ",
+                                    "#it{E} (GeV)",
+                                    "#sigma_{long}^{2}",
+                                    0,0,0,
+                                    1,fMesonM02PlotRange[0],fMesonM02PlotRange[1],
+                                    1,2.95, maxPtPlotting,0.8,0.8);
+            fHistoExoticsEvsM02->GetXaxis()->SetMoreLogLabels();
+            fHistoExoticsEvsM02->GetXaxis()->SetLabelOffset(-0.02);
+            fHistoExoticsEvsM02->GetZaxis()->SetLabelSize(0.051);
+            fHistoExoticsEvsM02->GetZaxis()->SetRangeUser(minZM02,maxZM02);
+            fHistoExoticsEvsM02->GetXaxis()->SetTickLength(0.05);
+            fHistoExoticsEvsM02->DrawCopy("COLZ");
+            PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
+            
+            canvasPtM02->Update();
+            canvasPtM02->SaveAs(Form("%s/%s_%s_EVsM02_RejectedExotics%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
+        }
+
+        TCanvas* canvasYieldExo = new TCanvas("canvasYieldExo","",1900,2100);
+        DrawGammaCanvasSettings(canvasYieldExo, 0.08, 0.015, 0.02, 0.08);
+        canvasYieldExo->SetLogx(0); 
+        canvasYieldExo->SetLogy(1); 
+        canvasYieldExo->cd();
+        
+        if (fHistoExoticsAboveM02MinCut && fHistoExoticsBelowM02MinBaseCut && fHistoExoticsBelowM02MinCut){
+            fHistoExoticsAboveM02MinCut->Sumw2();
+            fHistoExoticsAboveM02MinCut->Scale(1./fNEvents);
+            fHistoExoticsAboveM02MinCut->Divide(fDeltaPt);
+            fHistoExoticsBelowM02MinBaseCut->Sumw2();
+            fHistoExoticsBelowM02MinBaseCut->Scale(1./fNEvents);
+            fHistoExoticsBelowM02MinBaseCut->Divide(fDeltaPt);
+            fHistoExoticsBelowM02MinCut->Sumw2();
+            fHistoExoticsBelowM02MinCut->Scale(1./fNEvents);
+            fHistoExoticsBelowM02MinCut->Divide(fDeltaPt);
+                        
+            TH1D* clusterEdummy     = NULL;
+            if (fHistoClustersE){
+                clusterEdummy   = (TH1D*)fHistoClustersE->Clone("fHistoClusterEDummy");
+                clusterEdummy   = (TH1D*)clusterEdummy->Rebin(fNBinsPt,"fHistoClusterEDummy2",fBinsPt);
+                clusterEdummy->Sumw2();
+                clusterEdummy->Scale(1./fNEvents);
+                clusterEdummy->Divide(fDeltaPt);
+            }    
+            TH1D* clusterEmdummy  = NULL;
+            if (fHistoClustersMergedE){
+                clusterEmdummy   = (TH1D*)fHistoClustersMergedE->Clone("fHistoClusterEmergedDummy");
+                clusterEmdummy   = (TH1D*)clusterEmdummy->Rebin(fNBinsPt,"fHistoClusterEmergedDummy2",fBinsPt);
+                clusterEmdummy->Sumw2();
+                clusterEmdummy->Scale(1./fNEvents);
+                clusterEmdummy->Divide(fDeltaPt);
+            }    
+            Double_t maxYExo   = fHistoExoticsAboveM02MinCut->GetMaximum();
+            Double_t minYExo   = FindSmallestEntryIn1D(fHistoExoticsAboveM02MinCut);
+            if (maxYExo < fHistoExoticsBelowM02MinBaseCut->GetMaximum())
+                maxYExo = fHistoExoticsBelowM02MinBaseCut->GetMaximum();
+            if (maxYExo < fHistoExoticsBelowM02MinCut->GetMaximum())
+                maxYExo = fHistoExoticsBelowM02MinCut->GetMaximum();
+            if (clusterEdummy){
+                if (maxYExo < clusterEdummy->GetMaximum())
+                    maxYExo = clusterEdummy->GetMaximum();
+            }    
+            if (clusterEmdummy){
+                if (maxYExo < clusterEmdummy->GetMaximum())
+                    maxYExo = clusterEmdummy->GetMaximum();
+            }    
+            maxYExo = 100*maxYExo;
+            if (minYExo > FindSmallestEntryIn1D(fHistoExoticsBelowM02MinBaseCut))
+                minYExo = FindSmallestEntryIn1D(fHistoExoticsBelowM02MinBaseCut);
+            if (minYExo > FindSmallestEntryIn1D(fHistoExoticsBelowM02MinCut))
+                minYExo = FindSmallestEntryIn1D(fHistoExoticsBelowM02MinCut);
+            if (clusterEdummy){
+                if (minYExo > FindSmallestEntryIn1D(clusterEdummy))
+                    minYExo = FindSmallestEntryIn1D(clusterEdummy);
+            }    
+            if (clusterEmdummy){
+                if (minYExo > FindSmallestEntryIn1D(clusterEmdummy))
+                    minYExo = FindSmallestEntryIn1D(clusterEmdummy);
+            }    
+            minYExo = 0.1*minYExo;
+                
+            DrawAutoGammaMesonHistos(   fHistoExoticsBelowM02MinBaseCut, 
+                                        "", "E (GeV)", "counts/event", 
+                                        kFALSE, 2.,1e-6, kFALSE,
+                                        kTRUE, minYExo, maxYExo, 
+                                        kFALSE, 0, 50);
+            fHistoExoticsBelowM02MinBaseCut->GetYaxis()->SetTitleOffset(1);
+            DrawGammaSetMarker(fHistoExoticsBelowM02MinBaseCut, 21, 1.5, kGreen+2, kGreen+2); 
+            fHistoExoticsBelowM02MinBaseCut->Draw("e,p");
+            DrawGammaSetMarker(fHistoExoticsAboveM02MinCut, 25, 1.5, kBlue+1, kBlue+1); 
+            fHistoExoticsAboveM02MinCut->Draw("same,e,p");
+            DrawGammaSetMarker(fHistoExoticsBelowM02MinCut, 24, 1.5, kRed+1, kRed+1); 
+            fHistoExoticsBelowM02MinCut->Draw("same,e,p");
+            if (clusterEdummy){
+                DrawGammaSetMarker(clusterEdummy, 20, 2, kBlack, kBlack); 
+                clusterEdummy->Draw("same,e,p");
+            }    
+            if (clusterEmdummy){
+                DrawGammaSetMarker(clusterEmdummy, 30, 3.5, kBlack, kBlack); 
+                clusterEmdummy->Draw("same,e,p");
+            }    
+            
+            TLegend* legendExotics = GetAndSetLegend2(0.65,0.8-0.035*3*1.05,0.95,0.8,0.035,1,"",42,0.1);
+            legendExotics->AddEntry(fHistoExoticsBelowM02MinBaseCut,"0 < #sigma_{long}^{2} < 0.1","p");
+            legendExotics->AddEntry(fHistoExoticsBelowM02MinCut,"0.1 < #sigma_{long}^{2} < 0.27","p");
+            legendExotics->AddEntry(fHistoExoticsAboveM02MinCut,"0.27 < #sigma_{long}^{2} < #infty","p");
+            legendExotics->Draw();
+            
+            TLegend* legendExotics2 = GetAndSetLegend2(0.13,0.94-0.035*3*1.05,0.43,0.94,0.035,1,"Good clusters",42,0.1);
+            if (clusterEdummy)legendExotics2->AddEntry(clusterEdummy,"#sigma_{long}^{2} > 0.1","p");
+            if (clusterEmdummy)legendExotics2->AddEntry(clusterEmdummy,"merged cl. #sigma_{long}^{2} > 0.27","p");
+            legendExotics2->Draw();
+            
+            PutProcessLabelAndEnergyOnPlot(0.65, 0.95, 0.035, fCollisionSystem.Data(), fDetectionProcess.Data(), "rejected exotics", 42, 0.03, "", 1, 1.1);
+
+            canvasYieldExo->Update();
+            canvasYieldExo->SaveAs(Form("%s/%s_%s_ExoticsRej_YieldPerEvent%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
+        }
+        delete canvasYieldExo;
+
+        
+        
+        TCanvas* canvasNCellsVsPt = new TCanvas("canvasNCellsVsPt","",1900,1500);
+        DrawGammaCanvasSettings(canvasNCellsVsPt, 0.09, 0.13, 0.02, 0.1);
+        canvasNCellsVsPt->SetLogx(1); 
+        canvasNCellsVsPt->SetLogy(0); 
+        canvasNCellsVsPt->SetLogz(1);         
+        canvasNCellsVsPt->cd();
+        Double_t minZNcells     = 0;
+        Double_t maxZNcells     = 0;
+        
+        if(fHistoExoticsEvsNCells){
+            fHistoExoticsEvsNCells->Sumw2();
+            fHistoExoticsEvsNCells->Scale(1./fNEvents);
+            maxZNcells     = fHistoExoticsEvsNCells->GetMaximum();
+            minZNcells     = FindSmallestEntryIn2D(fHistoExoticsEvsNCells);
+
+            DrawAutoGammaHistoPaper2D(fHistoExoticsEvsNCells,
+                                    " ",
+                                    "#it{E} (GeV)",
+                                    "#it{N}_{cells in cluster}",
+                                    0,0,0,
+                                    1,0.7,50.0,
+                                    1,-0.5,99.5,
+                                    0.9,0.8);
+            fHistoExoticsEvsNCells->GetYaxis()->SetMoreLogLabels();
+            fHistoExoticsEvsNCells->GetYaxis()->SetLabelOffset(-0.001);
+            fHistoExoticsEvsNCells->GetZaxis()->SetLabelOffset(-0.008);
+            fHistoExoticsEvsNCells->GetZaxis()->SetLabelSize(0.051);
+            fHistoExoticsEvsNCells->GetXaxis()->SetTickLength(0.03);
+            fHistoExoticsEvsNCells->GetZaxis()->SetRangeUser(minZNcells,maxZNcells);
+            fHistoExoticsEvsNCells->DrawCopy("COLZ");
+            PutProcessLabelAndEnergyOnPlot(0.52, 0.96, 0.045, fCollisionSystem.Data(), fDetectionProcess.Data(), "", 42, 0.03, "", 1, 1.1);
+
+            canvasNCellsVsPt->Update();
+            canvasNCellsVsPt->SaveAs(Form("%s/%s_%s_ExoticsRej_ENCells%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
+        }
+        delete canvasNCellsVsPt;
+
+        TCanvas* canvasEvsEstar = new TCanvas("canvasEvsEstar","",1900,1500);
+        DrawGammaCanvasSettings(canvasEvsEstar, 0.09, 0.13, 0.02, 0.1);
+        canvasEvsEstar->SetLogx(1); 
+        canvasEvsEstar->SetLogy(1); 
+        canvasEvsEstar->SetLogz(1);         
+        canvasEvsEstar->cd();
+        Double_t minZEstar     = 0;
+        Double_t maxZEstar     = 0;
+        
+        if(fHistoExoticsEvsEstar){
+            fHistoExoticsEvsEstar->Sumw2();
+            fHistoExoticsEvsEstar->Scale(1./fNEvents);
+            maxZEstar     = fHistoExoticsEvsEstar->GetMaximum();
+            minZEstar     = FindSmallestEntryIn2D(fHistoExoticsEvsEstar);
+
+            DrawAutoGammaHistoPaper2D(fHistoExoticsEvsEstar,
+                                    " ",
+                                    "#it{E} (GeV)",
+                                    "#it{E}_{star} (GeV)",
+                                    0,0,0,
+                                    1,0.7,50.0,
+                                    1,0.7,50.0,
+                                    0.9,0.8);
+            fHistoExoticsEvsEstar->GetYaxis()->SetMoreLogLabels();
+            fHistoExoticsEvsEstar->GetYaxis()->SetLabelOffset(-0.001);
+            fHistoExoticsEvsEstar->GetZaxis()->SetLabelOffset(-0.008);
+            fHistoExoticsEvsEstar->GetZaxis()->SetLabelSize(0.051);
+            fHistoExoticsEvsEstar->GetXaxis()->SetTickLength(0.03);
+            fHistoExoticsEvsEstar->GetZaxis()->SetRangeUser(minZEstar,maxZEstar);
+            fHistoExoticsEvsEstar->DrawCopy("COLZ");
+            PutProcessLabelAndEnergyOnPlot(0.52, 0.96, 0.045, fCollisionSystem.Data(), fDetectionProcess.Data(), "", 42, 0.03, "", 1, 1.1);
+
+            canvasEvsEstar->Update();
+            canvasEvsEstar->SaveAs(Form("%s/%s_%s_ExoticsRej_EvsEstar%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
+        }
+        delete canvasEvsEstar;
+
+        TCanvas* canvasExoticsEtaPhi = new TCanvas("canvasExoticsEtaPhi","",1900,1500);
+        DrawGammaCanvasSettings(canvasExoticsEtaPhi, 0.09, 0.13, 0.02, 0.1);
+        canvasExoticsEtaPhi->SetLogx(0); 
+        canvasExoticsEtaPhi->SetLogy(0); 
+        canvasExoticsEtaPhi->SetLogz(1);         
+        canvasExoticsEtaPhi->cd();
+        Double_t minZExoEtaPhi     = 0;
+        Double_t maxZExoEtaPhi     = 0;
+        
+        if(fHistoExoticsEtaPhi){
+            fHistoExoticsEtaPhi->Sumw2();
+            fHistoExoticsEtaPhi->Scale(1./fNEvents);
+            maxZExoEtaPhi     = fHistoExoticsEtaPhi->GetMaximum();
+            minZExoEtaPhi     = FindSmallestEntryIn2D(fHistoExoticsEtaPhi);
+
+            DrawAutoGammaHistoPaper2D(fHistoExoticsEtaPhi,
+                                    " ",
+                                    "#it{E} (GeV)",
+                                    "#it{E}_{star} (GeV)",
+                                    0,0,0,
+                                    1,0.7,50.0,
+                                    1,0.7,50.0,
+                                    0.9,0.8);
+            fHistoExoticsEtaPhi->GetYaxis()->SetMoreLogLabels();
+            fHistoExoticsEtaPhi->GetYaxis()->SetLabelOffset(-0.001);
+            fHistoExoticsEtaPhi->GetZaxis()->SetLabelOffset(-0.008);
+            fHistoExoticsEtaPhi->GetZaxis()->SetLabelSize(0.051);
+            fHistoExoticsEtaPhi->GetXaxis()->SetTickLength(0.03);
+            fHistoExoticsEtaPhi->GetZaxis()->SetRangeUser(minZExoEtaPhi,maxZExoEtaPhi);
+            fHistoExoticsEtaPhi->DrawCopy("COLZ");
+            PutProcessLabelAndEnergyOnPlot(0.52, 0.96, 0.045, fCollisionSystem.Data(), fDetectionProcess.Data(), "", 42, 0.03, "", 1, 1.1);
+
+            canvasExoticsEtaPhi->Update();
+            canvasExoticsEtaPhi->SaveAs(Form("%s/%s_%s_ExoticsRej_EtaPhi%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
+        }
+        delete canvasExoticsEtaPhi;
+    }
     
     if (fAdvancedClusterQA){
         TCanvas* canvasNCellsVsPt = new TCanvas("canvasNCellsVsPt","",1900,1500);
@@ -1293,9 +1563,6 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             canvasNCellsVsPt->Update();
             canvasNCellsVsPt->SaveAs(Form("%s/%s_%s_NParticlePointingToClPt_MergedClusters%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
         }
-        
-        
-        
     }    
     
     fFileErrLog.close();
@@ -1321,6 +1588,13 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     PlotM02MergedInPtBins(  fHistoM02PtBin, nameMeson, nameCanvas, namePad, fMesonM02PlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, 
                             fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcessPtBins, fCollisionSystem);
 
+    if (fEnableExoticsQA){
+        nameMeson   = Form("%s_RejectedExoticsM02%s", plotPrefix.Data(), plotSuffix.Data());
+        cout << nameMeson.Data() << endl;
+        PlotM02ExoticsInEBins(  fHistoExoticsM02EBin, nameMeson, nameCanvas, namePad, fMesonM02PlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, 
+                                fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcessPtBins, fCollisionSystem);
+    }
+        
     if (fIsMC){
         nameMeson       = Form("%s_MesonM02Split%s", plotPrefix.Data(), plotSuffix.Data());
         cout << nameMeson.Data() << endl;
@@ -1478,6 +1752,19 @@ Double_t FindSmallestEntryIn2D(TH2F* histo){
 }
 
 
+//**********************************************************************************
+//******************* return minimum for 2 D histo  ********************************
+//**********************************************************************************
+Double_t FindSmallestEntryIn1D(TH1* histo){
+    Double_t minimum = 1;
+    for (Int_t i = 1; i<histo->GetNbinsX(); i++){
+        if (histo->GetBinContent(i) < minimum && histo->GetBinContent(i) > 0){
+            minimum = histo->GetBinContent(i);
+        }
+    }
+    return minimum;
+}
+
 
 //****************************************************************************
 //****** Initialization of arrays and variables, histograms for analysis *****
@@ -1523,6 +1810,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
  
     fHistoInvMassPtBin                  = new TH1D*[fNBinsPt];
     fHistoM02PtBin                      = new TH1D*[fNBinsPt];
+    fHistoExoticsM02EBin                = new TH1D*[fNBinsPt];
     fMesonM02Yields                     = new Double_t[fNBinsPt];
     fMesonM02YieldsError                = new Double_t[fNBinsPt];
     
@@ -1617,6 +1905,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     for(Int_t i = 0;i<fNBinsPt; i++){
         fHistoInvMassPtBin[i]               = NULL;
         fHistoM02PtBin[i]                   = NULL;
+        fHistoExoticsM02EBin[i]             = NULL;
         fMesonM02Yields[i]                  = 0.;
         fMesonM02YieldsError[i]             = 0.;
         if (fIsMC){
@@ -1845,6 +2134,14 @@ void CreatePtHistos(){
     fHistoYieldMesonM02                 = new TH1D("histoYieldMesonM02", "", fNBinsPt, fBinsPt);
     fHistoYieldMesonM02->Sumw2();
     
+    fHistoExoticsBelowM02MinBaseCut     = new TH1D("histoYieldExoticsBelowMinBaseCut", "", fNBinsPt, fBinsPt);
+    fHistoExoticsBelowM02MinBaseCut->Sumw2();
+    
+    fHistoExoticsBelowM02MinCut         = new TH1D("histoYieldExoticsBelowMinCut", "", fNBinsPt, fBinsPt);
+    fHistoExoticsBelowM02MinCut->Sumw2();
+    fHistoExoticsAboveM02MinCut         = new TH1D("histoYieldExoticsAboveMinCut", "", fNBinsPt, fBinsPt);
+    fHistoExoticsAboveM02MinCut->Sumw2();
+    
     if (fIsMC){
         fHistoTrueYieldMergedM02                  = new TH1D("histoTrueYieldMergedM02", "", fNBinsPt, fBinsPt);
         fHistoTrueYieldMergedM02->Sumw2();
@@ -1916,7 +2213,29 @@ void FillPtHistos(){
         
         fHistoYieldMesonM02->SetBinContent(iPt, fMesonM02Yields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
         fHistoYieldMesonM02->SetBinError(iPt, fMesonM02YieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+    
         
+        if (fEnableExoticsQA){
+            if (fHistoExoticsM02EBin[iPt-1]){
+                Double_t integErr   = 0;
+                Double_t integ      = fHistoExoticsM02EBin[iPt-1]->IntegralAndError(fHistoExoticsM02EBin[iPt-1]->FindBin(0), fHistoExoticsM02EBin[iPt-1]->FindBin(0.1),integErr);
+                
+                fHistoExoticsBelowM02MinBaseCut->SetBinContent(iPt, integ);
+                fHistoExoticsBelowM02MinBaseCut->SetBinError(iPt, integErr);
+
+                integErr            = 0;
+                integ               = fHistoExoticsM02EBin[iPt-1]->IntegralAndError(fHistoExoticsM02EBin[iPt-1]->FindBin(0.1+0.0001), fHistoExoticsM02EBin[iPt-1]->FindBin(0.27),integErr);
+
+                fHistoExoticsBelowM02MinCut->SetBinContent(iPt, integ);
+                fHistoExoticsBelowM02MinCut->SetBinError(iPt, integErr);
+                
+                integErr            = 0;
+                integ               = fHistoExoticsM02EBin[iPt-1]->IntegralAndError(fHistoExoticsM02EBin[iPt-1]->FindBin(0.27+0.0001), fHistoExoticsM02EBin[iPt-1]->GetNbinsX(),integErr);
+                fHistoExoticsAboveM02MinCut->SetBinContent(iPt, integ);
+                fHistoExoticsAboveM02MinCut->SetBinError(iPt, integErr);
+            }
+
+        }
         if (fIsMC){
             fHistoTrueYieldMergedM02->SetBinContent(iPt, fMesonM02TrueMergedYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
             fHistoTrueYieldMergedM02->SetBinError(iPt, fMesonM02TrueMergedYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
@@ -2318,6 +2637,22 @@ void FillMCPrimSecM02HistosArray(   TH2F* fTruePi0PrimM02VsPt,
 }
 
 //****************************************************************************
+//*************** Fill array of M02 histograms in pT slices for MC ***********
+//****************************************************************************
+void FillExoticsM02HistosArray(  TH2F* fExoticsM02 ) {
+    cout << __LINE__ << endl;
+    for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
+        TString fNameHistoM02                           = Form("ExoticClusters_M02_in_E_Bin%02d", iPt);
+        // true merged clusters        
+        CheckForNULLForPointer(fHistoExoticsM02EBin[iPt]);
+        if (fExoticsM02){
+            fHistoExoticsM02EBin[iPt]                   = FillProjectionY(fExoticsM02, fNameHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 1, NULL);
+        }
+    }
+}
+
+
+//****************************************************************************
 //***************** Filling MC BG separated **********************************
 //****************************************************************************
 void FillMCBGSeparated (TH2F* dummy2D){
@@ -2639,6 +2974,14 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3) {
         fHistoClustersPtPerEvent->Divide(fDeltaPtCluster);
         fHistoClustersPtPerEvent->Scale(1./fNEvents);
     }
+    
+    TH1D*   fHistoClustersEPerEvent   = NULL;
+    if (fHistoClustersE){
+        fHistoClustersEPerEvent    = (TH1D*)fHistoClustersE->Rebin(fNBinsClusterPt,"ClusterEPerEvent",fBinsClusterPt);
+        fHistoClustersEPerEvent->Divide(fDeltaPtCluster);
+        fHistoClustersEPerEvent->Scale(1./fNEvents);
+    }
+    
     TH1D*   fHistoClustersOverlapHeadersPtPerEvent   = NULL;
     if (fHistoClustersOverlapHeadersPt){
         fHistoClustersOverlapHeadersPtPerEvent   = (TH1D*)fHistoClustersOverlapHeadersPt->Rebin(fNBinsClusterPt,"ClusterOverlapHeadersPtPerEvent",fBinsClusterPt);
@@ -2654,6 +2997,8 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3) {
 
         if (fHistoClustersPt)                           fHistoClustersPt->Write("ClusterPt");
         if (fHistoClustersPtPerEvent)                   fHistoClustersPtPerEvent->Write("ClusterPtPerEvent");
+        if (fHistoClustersE)                            fHistoClustersE->Write("ClusterE");
+        if (fHistoClustersEPerEvent)                    fHistoClustersE->Write("ClusterEPerEvent");
         if (fDeltaPtCluster)                            fDeltaPtCluster->Write();
         
         if (fHistoClustersOverlapHeadersPt)             fHistoClustersOverlapHeadersPt->Write("ClusterOverlapHeadersPt");
@@ -2684,6 +3029,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3) {
         for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
             if (fHistoInvMassPtBin[ii])                     fHistoInvMassPtBin[ii]->Write(Form("InvMass_PtBin%i",ii));
             if (fHistoM02PtBin[ii])                         fHistoM02PtBin[ii]->Write(Form("M02_PtBin%i",ii));
+            if (fHistoExoticsM02EBin[ii])                   fHistoExoticsM02EBin[ii]->Write(Form("M02_ExoticsRejected_EBin%i",ii));
             if (fIsMC){
                 if (fHistoTrueClusMergedM02PtBin[ii])       fHistoTrueClusMergedM02PtBin[ii]->Write(Form("ValidatedMerged_M02_PtBin%i",ii));
             }
@@ -2868,6 +3214,7 @@ void Delete(){
     if (fMesonM02PlotRange)                                     delete fMesonM02PlotRange;
     
     if (fHistoClustersPt)                                       delete fHistoClustersPt;
+    if (fHistoClustersE)                                        delete fHistoClustersE;
     if (fHistoClustersOverlapHeadersPt)                         delete fHistoClustersOverlapHeadersPt;
     if (fHistoClustersMergedPtM02)                              delete fHistoClustersMergedPtM02;
     if (fHistoClustersMergedPtM02AccMeson)                      delete fHistoClustersMergedPtM02AccMeson;
@@ -2954,6 +3301,7 @@ void Delete(){
     for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
         if (fHistoInvMassPtBin[ii])                             delete fHistoInvMassPtBin[ii];
         if (fHistoM02PtBin[ii])                                 delete fHistoM02PtBin[ii];
+        if (fHistoExoticsM02EBin[ii])                           delete fHistoExoticsM02EBin[ii];
         if (fIsMC){
             if (fHistoTrueClusMergedM02PtBin[ii])                   delete fHistoTrueClusMergedM02PtBin[ii];
             if (fHistoTrueClusPi0M02PtBin[ii])                      delete fHistoTrueClusPi0M02PtBin[ii];
