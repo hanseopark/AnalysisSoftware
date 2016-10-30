@@ -765,9 +765,13 @@ function GiveBinning2760GeVMerged()
 function GiveBinningHI()
 {
     if [ $DoPi0 -eq 1 ] ; then
-        echo "How many p_T bins do you want to use for Pi0?  19 (10GeV), 20(12GeV), 21(14GeV)";
+        echo "How many p_T bins do you want to use for Pi0?  19 (10GeV), 20(12GeV), 21(14GeV), 22(16GeV), 23(18GeV), 24(20GeV), 25(25GeV), 26(30GeV)";
         read answer
-        if [ $answer = 20 ]; then
+        if [ $answer = 19 ]; then
+            echo "19 Bins --> Max p_T = 10 GeV ...";
+            correctPi0=1
+            BinsPtPi0=19
+        elif [ $answer = 20 ]; then
             echo "20 Bins --> Max p_T = 12 GeV ...";
             correctPi0=1
             BinsPtPi0=20
@@ -775,48 +779,64 @@ function GiveBinningHI()
             echo "21 Bins --> Max p_T = 14 GeV ...";
             correctPi0=1
             BinsPtPi0=21
-        elif [ $answer = 19 ]; then
-            echo "19 Bins --> Max p_T = 10 GeV ...";
+        elif [ $answer = 22 ]; then
+            echo "22 Bins --> Max p_T = 16 GeV ...";
             correctPi0=1
-            BinsPtPi0=19
+            BinsPtPi0=22
+        elif [ $answer = 23 ]; then
+            echo "23 Bins --> Max p_T = 18 GeV ...";
+            correctPi0=1
+            BinsPtPi0=23
+        elif [ $answer = 24 ]; then
+            echo "24 Bins --> Max p_T = 20 GeV ...";
+            correctPi0=1
+            BinsPtPi0=24
+        elif [ $answer = 25 ]; then
+            echo "25 Bins --> Max p_T = 25 GeV ...";
+            correctPi0=1
+            BinsPtPi0=25
+        elif [ $answer = 26 ]; then
+            echo "26 Bins --> Max p_T = 30 GeV ...";
+            correctPi0=1
+            BinsPtPi0=26
         else
             echo "Pi0 Binning was not set correctly. Please try again.";
             correctPi0=0
         fi
     fi
     if [ $DoEta -eq 1 ] || [ $DoPi0InEtaBinning -eq 1 ]; then
-        echo "How many p_T bins do you want to use for Eta? 10(6GeV), 11(8GeV), 12(10GeV), 13(10GeV), 8(10GeV), 9(10GeV), 15 (19GeV)";
+        echo "How many p_T bins do you want to use for Eta? 8(8GeV), 9(10GeV), 10(12GeV), 11(15GeV), 12(20GeV), 13(25GeV), 14(30GeV)";
         read answer
-        if [ $answer = 11 ]; then
-            echo "11 Bins --> Max p_T = 8 GeV ...";
+        if [ $answer = 8 ]; then
+            echo "8 Bins --> Max p_T = 8 GeV ...";
             correctEta=1
-            BinsPtEta=11
-        elif [ $answer = 12 ]; then
-            echo "12 Bins --> Max p_T = 10 GeV ...";
-            correctEta=1
-            BinsPtEta=12
-        elif [ $answer = 13 ]; then
-            echo "13 Bins --> Max p_T = 10 GeV ...";
-            correctEta=1
-            BinsPtEta=13
+            BinsPtEta=8
         elif [ $answer = 9 ]; then
             echo "9 Bins --> Max p_T = 10 GeV ...";
             correctEta=1
             BinsPtEta=9
-        elif [ $answer = 8 ]; then
-            echo "8 Bins --> Max p_T = 10 GeV ...";
-            correctEta=1
-            BinsPtEta=9
-        elif [ $answer = 15 ]; then
-            echo "15 Bins --> Max p_T = 19 GeV ...";
-            correctEta=1
-            BinsPtEta=15
         elif [ $answer = 10 ]; then
-            echo "10 Bins --> Max p_T = 6 GeV ...";
+            echo "10 Bins --> Max p_T = 12 GeV ...";
             correctEta=1
             BinsPtEta=10    
+        elif [ $answer = 11 ]; then
+            echo "11 Bins --> Max p_T = 15 GeV ...";
+            correctEta=1
+            BinsPtEta=11
+        elif [ $answer = 12 ]; then
+            echo "12 Bins --> Max p_T = 20 GeV ...";
+            correctEta=1
+            BinsPtEta=12
+        elif [ $answer = 13 ]; then
+            echo "13 Bins --> Max p_T = 25 GeV ...";
+            correctEta=1
+            BinsPtEta=13
+        elif [ $answer = 14 ]; then
+            echo "14 Bins --> Max p_T = 30 GeV ...";
+            correctEta=1
+            BinsPtEta=14
         else
-            echo "Pi0 Binning was not set correctly. Please try again.";
+            echo "Eta Binning was not set correctly. Please try again.";
             correctEta=0
         fi
     fi

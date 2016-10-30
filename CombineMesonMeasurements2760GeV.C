@@ -1316,7 +1316,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         
     canvasRelSysErr->SaveAs(Form("%s/Pi0_RelSysErr.%s",outputDir.Data(),suffix.Data()));
     
-    histo2DRelSysErr->GetYaxis()->SetRangeUser(0,30.5);
+    histo2DRelSysErr->GetYaxis()->SetRangeUser(0,38.5);
     histo2DRelSysErr->Draw("copy");
 
         for (Int_t i = 0; i < nMeasSetPi0A; i++){
@@ -1362,7 +1362,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         
     canvasRelStatErr->SaveAs(Form("%s/Pi0_RelStatErr.%s",outputDir.Data(),suffix.Data()));
 
-    histo2DRelStatErr->GetYaxis()->SetRangeUser(0,30.5);
+    histo2DRelStatErr->GetYaxis()->SetRangeUser(0,38.5);
     histo2DRelStatErr->Draw("copy");
         for (Int_t i = 0; i < nMeasSetPi0A; i++){
             statErrorRelCollectionPi0[availablePi0MeasA[i]]->Draw("p,same,z");
@@ -1382,6 +1382,9 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     TGraphAsymmErrors* graphCombPi0InvXSectionRelTotA        = CalculateRelErrUpAsymmGraph( graphCombPi0InvXSectionTotA, "relativeTotalErrorPi0_MethodA");
     TGraphAsymmErrors* graphCombPi0InvXSectionRelTotOld      = CalculateRelErrUpAsymmGraph( graphCombPi0InvXSectionTotOld, "relativeTotalErrorPi0_Old");
 
+    while (graphCombPi0InvXSectionRelStatA->GetX()[graphCombPi0InvXSectionRelStatA->GetN()-1] > 40 )graphCombPi0InvXSectionRelStatA->RemovePoint(graphCombPi0InvXSectionRelStatA->GetN()-1);
+    while (graphCombPi0InvXSectionRelSysA->GetX()[graphCombPi0InvXSectionRelSysA->GetN()-1] > 40 )graphCombPi0InvXSectionRelSysA->RemovePoint(graphCombPi0InvXSectionRelSysA->GetN()-1);
+    while (graphCombPi0InvXSectionRelTotA->GetX()[graphCombPi0InvXSectionRelTotA->GetN()-1] > 40 )graphCombPi0InvXSectionRelTotA->RemovePoint(graphCombPi0InvXSectionRelTotA->GetN()-1);
     
     TCanvas* canvasRelTotErr            = new TCanvas("canvasRelTotErr","",200,10,1350,900);  // gives the page size
     DrawGammaCanvasSettings( canvasRelTotErr, 0.08, 0.02, 0.035, 0.09);
@@ -1415,7 +1418,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     canvasRelTotErr->SaveAs(Form("%s/Pi0_RelTotErr.%s",outputDir.Data(),suffix.Data()));
     
     
-    histo2DRelTotErrPi0->GetYaxis()->SetRangeUser(0,30.5);
+    histo2DRelTotErrPi0->GetYaxis()->SetRangeUser(0,38.5);
     histo2DRelTotErrPi0->Draw("copy");
         graphCombPi0InvXSectionRelTotOld->Draw("p,same,z");
         graphCombPi0InvXSectionRelTotA->Draw("p,same,z");
@@ -1427,7 +1430,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         
     canvasRelTotErr->SaveAs(Form("%s/Pi0_RelTotErrZoomed.%s",outputDir.Data(),suffix.Data()));
 
-    histo2DRelTotErrPi0->GetYaxis()->SetRangeUser(0,30.5);
+    histo2DRelTotErrPi0->GetYaxis()->SetRangeUser(0,38.5);
     histo2DRelTotErrPi0->GetYaxis()->SetTitle("Err (%)");
     histo2DRelTotErrPi0->Draw("copy");
 
@@ -5329,6 +5332,37 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
                 
     fFitsResults.Close();
 
+ // **********************************************************************************************************************
+ // ************************* Saving comparison to comb for diff measurements ********************************************
+ // **********************************************************************************************************************
+    
+    TString nameOutputCommonFileCompOnly    = Form("ComparisonsPaperPP2760GeV_%s.root", dateForOutput.Data());
+        
+    TFile fCompResults(nameOutputCommonFileCompOnly.Data(), "RECREATE");
+        
+        graphRatioPi0CombCombFitStatA->Write("Pi0_RatioCombToCombFit_Stat");
+        graphRatioPi0CombCombFitSysA->Write("Pi0_RatioCombToCombFit_Syst");
+        graphRatioPi0PCMCombFitStat->Write("Pi0_RatioPCMToCombFit_Stat");
+        graphRatioPi0PCMCombFitSys->Write("Pi0_RatioPCMToCombFit_Syst");
+        graphRatioPi0PHOSCombFitStat->Write("Pi0_RatioPHOSToCombFit_Stat");
+        graphRatioPi0PHOSCombFitSys->Write("Pi0_RatioPHOSToCombFit_Syst");
+        graphRatioPi0EMCALCombFitStat->Write("Pi0_RatioEMCToCombFit_Stat");
+        graphRatioPi0EMCALCombFitSys->Write("Pi0_RatioEMCToCombFit_Syst");
+        graphRatioPi0PCMEMCALCombFitStat->Write("Pi0_RatioPCMEMCToCombFit_Stat");
+        graphRatioPi0PCMEMCALCombFitSys->Write("Pi0_RatioPCMEMCToCombFit_Syst");
+        graphRatioPi0EMCALMergedCombFitStat->Write("Pi0_RatiomEMCToCombFit_Stat");
+        graphRatioPi0EMCALMergedCombFitSys->Write("Pi0_RatiomEMCToCombFit_Syst");
+
+        graphRatioEtaCombCombFitStatA->Write("Eta_RatioCombToCombFit_Stat");
+        graphRatioEtaCombCombFitSysA->Write("Eta_RatioCombToCombFit_Syst");        
+        graphRatioEtaPCMCombFitStat->Write("Eta_RatioPCMToCombFit_Stat");
+        graphRatioEtaPCMCombFitSys->Write("Eta_RatioPCMToCombFit_Syst");
+        graphRatioEtaEMCALCombFitStat->Write("Eta_RatioEMCToCombFit_Stat");
+        graphRatioEtaEMCALCombFitSys->Write("Eta_RatioEMCToCombFit_Syst");
+        graphRatioEtaPCMEMCALCombFitStat->Write("Eta_RatioPCMEMCToCombFit_Stat");
+        graphRatioEtaPCMEMCALCombFitSys->Write("Eta_RatioPCMEMCToCombFit_Syst");
+       
+    fCompResults.Close();
     
 }
     
