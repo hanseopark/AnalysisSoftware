@@ -719,11 +719,12 @@ Double_t fBinsPi0HIPt[25]                       = { 0.0, 0.4, 0.6, 0.8, 1.0,
                                                     2.2, 2.4, 2.6, 3.0, 3.5,
                                                     4.0, 5.0, 6.0, 8.0, 10.0, 
                                                     12.0, 14.0,16.0, 20.,25.};
-Double_t fBinsPi0HIPtLHC11h[24]                 = { 0.0, 0.4, 0.6, 0.8, 1.0, //same as the above but for the last bins, similar to the EMCal bins {4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 20.0, 30.0}; 
+Double_t fBinsPi0HIPtLHC11h[27]                 = { 0.0, 0.4, 0.6, 0.8, 1.0, //same as the above but for the last bins, similar to the EMCal bins {4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 20.0, 30.0}; 
                                                     1.2, 1.4, 1.6, 1.8, 2.0,
                                                     2.2, 2.4, 2.6, 3.0, 3.5,
                                                     4.0, 5.0, 6.0, 8.0, 10.0, 
-                                                    12.0, 14.0, 20.,30.};
+                                                    12.0, 14.0, 16.0, 18.0, 20.0,
+                                                    25.0, 30.0};
 Double_t fBinsPi0HIPtNew[18]                    = { 0.0, 0.5, 0.8, 1.0, 1.2,
                                                     1.4, 1.6, 1.8, 2.0, 2.2, 
                                                     2.4, 2.6, 3.0, 4.0, 6.0, 
@@ -754,11 +755,18 @@ Int_t fBinsPi0HIPtRebin[24]                     = { 10, 8, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 4, 4, 4, 4,
                                                     4, 8, 8, 8};
-Int_t fBinsPi0HIPtLHC11hRebin[23]               = { 10, 4, 2, 2, 2,
+Int_t fBinsPi0HIPtLHC11hRebin[26]               = { 10, 4, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 4, 4, 4, 4,
-                                                    4, 8, 8};
+                                                    4, 8, 8, 8, 10,
+                                                    10 };
+Int_t fBinsPi0HIPtLHC11hPCMEMCRebin[26]         = { 10, 4, 2, 2, 2,
+                                                    2, 2, 2, 2, 2,
+                                                    2, 2, 2, 2, 2,
+                                                    2, 4, 4, 4, 5,
+                                                    5, 10, 10, 10, 10,
+                                                    10 };
 Int_t fBinsPi0HIPtRebinNew[17]                  = {10, 4, 4, 4, 4,
                                                     4, 4, 4, 4, 4,
                                                     4, 4, 4, 4, 5,
@@ -774,6 +782,9 @@ Double_t fBinsEtaHIPtLHC11h[17]                 = { 0.0, 0.6, 1.0, 1.4, 1.8,
 Double_t fBinsEtaHIPtLHC11hLessBins[13]         = { 0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 
                                                     4., 6.0, 8.0, 10., 12., 
                                                     15., 19.};
+Double_t fBinsEtaHIPtLHC11hEMCBins[15]          = { 0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 
+                                                    4., 6.0, 8.0, 10., 12., 
+                                                    15., 18., 24., 30.};
 Int_t fBinsEtaHIPtRebin[4]                      = { 10, 8, 5, 5};
 Int_t fBinsEtaHIPtRebinLHC11h[16]               = { 10, 8, 8, 4, 4,
                                                     4, 5, 5, 8, 8, 8,
@@ -781,9 +792,9 @@ Int_t fBinsEtaHIPtRebinLHC11h[16]               = { 10, 8, 8, 4, 4,
 Int_t fBinsEtaHIPtRebinLHC11hFinerBinning[15]   = { 10, 8, 5, 5, 5,
                                                     5, 5, 5, 5, 5,
                                                     8, 8, 8, 8, 8};
-Int_t fBinsEtaHIPtRebinLHC11hLessBins[12]       = { 10, 8, 5, 5, 5,
+Int_t fBinsEtaHIPtRebinLHC11hLessBins[14]       = { 10, 8, 5, 5, 5,
                                                     5, 5, 8, 10, 10,
-                                                    10, 10};
+                                                    10, 10, 10, 10};
 
 Int_t fBinsPi0EtaBinningHIPtRebin[4]            = { 10, 2, 2, 2};
 
@@ -1301,7 +1312,17 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                 return 7;
             }
         } else if( energy.CompareTo("PbPb_2.76TeV") == 0) {     
-            return 4;
+            if (mode == 0){
+                scaleFac    = 20;
+                return 4;
+            } else if (mode == 2){
+                scaleFac    = 5;
+                return 8;
+            } else if (mode == 4){
+                scaleFac    = 1.5;
+                return 10;
+            } else
+                return 4;
         } else if( energy.CompareTo("PbPb_5.02TeV") == 0) {
             if (mode == 4){
               return 10;
@@ -1487,7 +1508,17 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                 return 6;
             }
         } else if( energy.CompareTo("PbPb_2.76TeV") == 0) {     
-            return 4;
+            if (mode == 0){
+                scaleFac    = 20;
+                return 4;
+            } else if (mode == 2){
+                scaleFac    = 2;
+                return 7;
+            } else if (mode == 4){
+                scaleFac    = 1;
+                return 9;
+            } else
+                return 4;
         } else if( energy.CompareTo("PbPb_5.02TeV") == 0) {
 	    return 1;
         }
@@ -2166,20 +2197,35 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 fRow            = 4;
                 
                 if (modi == 5) fStartPtBin = 4;
-                
-                if (fNBinsPt > 20){
-                    fColumn     = 6;
-                }
-                
-                if (fNBinsPt > 24) {
-                    cout << "You have chosen to have more than 24 bins, this is not possible, it will be reduced to 24" << endl;
-                    fNBinsPt    = 24;
+                if (modi == 4){
+                    fStartPtBin     = 6;
+                    fColumn         = 5;
+                    fRow            = 4;                        
+                } else if (modi == 2){
+                    fStartPtBin     = 4;
+                    fColumn         = 6;
+                    fRow            = 4;
+                } else if (modi == 0){
+                   if (fNBinsPt > 20){
+                        fColumn         = 4;
+                   }    
+                }              
+                if ( (fNBinsPt-fStartPtBin+1) > fColumn*fRow) 
+                    fRow++;
+                if ( (fNBinsPt-fStartPtBin+1) > fColumn*fRow)
+                    fColumn++;
+
+                if (fNBinsPt > 26) {
+                    cout << "You have chosen to have more than 26 bins, this is not possible, it will be reduced to 24" << endl;
+                    fNBinsPt    = 26;
                 }
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
                     fBinsPt[i]  = fBinsPi0HIPtLHC11h[i]; 
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0HIPtLHC11hRebin[i]; 
-//                                         fBinsPt[i]         = fBinsPi0HIPt[i];
-//                                         if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0HIPtRebin[i];
+                    if (modi == 0){
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0HIPtLHC11hRebin[i]; 
+                    } else {
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0HIPtLHC11hPCMEMCRebin[i]; 
+                    }    
                 }
             }
         //*********************************************************************************************
@@ -2204,11 +2250,14 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 fRow            = 4;
                 
                 if (modi == 4){
-                  fStartPtBin     = 6;
-                  fColumn         = 4;
-                  fRow            = 5;
+                    fStartPtBin     = 6;
+                    fColumn         = 4;
+                    fRow            = 5;
+                } else if (modi == 2){
+                    fStartPtBin     = 3;
+                    fColumn         = 5;
+                    fRow            = 5;
                 }
-                
 //                 if (fNBinsPt > 13) {
 //                     cout << "You have chosen to have more than 13 bins, this is not possible, it will be reduced to 13" << endl;
 //                     fNBinsPt    = 13;
@@ -2728,23 +2777,37 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
         //*********************************************************************************************    
         } else if( energy.CompareTo("PbPb_2.76TeV") == 0) { 
             fStartPtBin         = 2;
-            if (modi == 4) 
-                fStartPtBin     = 6;
             fColumn             = 3;
             fRow                = 3;
-            
-            if (modi != 4 && modi != 2 &&    fNBinsPt > 13) {
-                cout << "You have chosen to have more than 13 bins, this is not possible, it will be reduced to 13" << endl;
-                fNBinsPt        = 13;
+            if (modi == 4){ 
+                fStartPtBin     = 5;
+                fRow            = 2;
+            } else if (modi == 2) {
+                fStartPtBin     = 3;
+            }
+            if ( (fNBinsPt-fStartPtBin+1) > fColumn*fRow)
+                fColumn++;
+            if ( (fNBinsPt-fStartPtBin+1) > fColumn*fRow) 
+                fRow++;
+                
+            if (modi != 4 && modi != 2 &&    fNBinsPt > 12) {
+                cout << "You have chosen to have more than 12 bins, this is not possible, it will be reduced to 12" << endl;
+                fNBinsPt        = 12;
             }
             if (modi == 4 || modi == 2) 
-                fColumn         = 5;
-            if ((modi == 4 || modi == 2) &&    fNBinsPt > 15) {
-                cout << "You have chosen to have more than 15 bins, this is not possible, it will be reduced to 15" << endl;
-                fNBinsPt        = 15;
+                fColumn         = 4;
+            if ((modi == 4 || modi == 2) &&   fNBinsPt > 14) {
+                cout << "You have chosen to have more than 14 bins, this is not possible, it will be reduced to 14" << endl;
+                fNBinsPt        = 14;
             }
             for (Int_t i = 0; i < fNBinsPt+1; i++) {
-                fBinsPt[i]         = fBinsEtaHIPtLHC11hLessBins[i]; //fBinsEtaHIPtLHC11h[i];
+                
+                if (modi == 0)
+                    fBinsPt[i]         = fBinsEtaHIPtLHC11hLessBins[i]; //fBinsEtaHIPtLHC11h[i];
+                else if (modi == 2 || modi == 4) 
+                    fBinsPt[i]         = fBinsEtaHIPtLHC11hEMCBins[i];
+                else 
+                    fBinsPt[i]         = fBinsEtaHIPtLHC11hLessBins[i]; 
                 if (i < fNBinsPt+1) fNRebin[i] = fBinsEtaHIPtRebinLHC11hLessBins[i]; // fBinsEtaHIPtRebinLHC11h[i]; //fBinsEtaHIPtRebinLHC11hFinerBinning[i];
             } 
 

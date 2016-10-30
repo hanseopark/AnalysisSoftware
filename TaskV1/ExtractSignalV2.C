@@ -576,11 +576,11 @@ void ExtractSignalV2(   TString meson                   = "",
         // Fitting the subtracted spectra
         fFileErrLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << "normal range/right normalization" << endl;
 
-        fFitSignalInvMassPtBin[iPt]     =0x00;
-        fMesonResidualBGlin[iPt]        = 0;
-        fMesonResidualBGlinError[iPt]   = 0;
-        fMesonResidualBGcon[iPt]        = 0;
-        fMesonResidualBGconError[iPt]   = 0;
+        fFitSignalInvMassPtBin[iPt]             = 0x00;
+        fMesonResidualBGlin[iPt]                = 0;
+        fMesonResidualBGlinError[iPt]           = 0;
+        fMesonResidualBGcon[iPt]                = 0;
+        fMesonResidualBGconError[iPt]           = 0;
         if(fCrysFitting==0){
             fFileErrLog << "Using exp fit"<<endl;
             fFileDataLog << "Subtracted mixed event" << endl;
@@ -595,9 +595,37 @@ void ExtractSignalV2(   TString meson                   = "",
             fMesonResidualBGcon[iPt]                    = fFitBckInvMassPtBin[iPt]->GetParameter(0);
             fMesonResidualBGconError[iPt]               = fFitBckInvMassPtBin[iPt]->GetParError(0);
             if (fFitReco)
-                fMesonChi2[iPt]                         = fFitReco->GetChisquare()/fFitReco->GetNDF();
+                fMesonChi2[0][iPt]                      = fFitReco->GetChisquare()/fFitReco->GetNDF();
             else 
-                fMesonChi2[iPt]                         = -1;
+                fMesonChi2[0][iPt]                      = -1;
+            FitSubtractedPol2InvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE);
+            fFitSignalWithOtherBGInvMassPtBin[0][iPt]   = fFitReco;
+            fFitBckOtherInvMassPtBin[0][iPt]            = fFitLinearBck;
+            fMesonYieldsResBckOtherFunc[0][iPt]         = fIntLinearBck;
+            fMesonYieldsResBckOtherFuncError[0][iPt]    = fIntLinearBckError;
+            if (fFitReco)
+                fMesonChi2[1][iPt]                      = fFitReco->GetChisquare()/fFitReco->GetNDF();
+            else 
+                fMesonChi2[1][iPt]                      = -1;
+            FitSubtractedExp1InvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE);
+            fFitSignalWithOtherBGInvMassPtBin[1][iPt]   = fFitReco;
+            fFitBckOtherInvMassPtBin[1][iPt]            = fFitLinearBck;
+            fMesonYieldsResBckOtherFunc[1][iPt]         = fIntLinearBck;
+            fMesonYieldsResBckOtherFuncError[1][iPt]    = fIntLinearBckError;
+            if (fFitReco)
+                fMesonChi2[2][iPt]                      = fFitReco->GetChisquare()/fFitReco->GetNDF();
+            else 
+                fMesonChi2[2][iPt]                      = -1;
+            FitSubtractedExp2InvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE);
+            fFitSignalWithOtherBGInvMassPtBin[2][iPt]   = fFitReco;
+            fFitBckOtherInvMassPtBin[2][iPt]            = fFitLinearBck;
+            fMesonYieldsResBckOtherFunc[2][iPt]         = fIntLinearBck;
+            fMesonYieldsResBckOtherFuncError[2][iPt]    = fIntLinearBckError;
+            if (fFitReco)
+                fMesonChi2[3][iPt]                      = fFitReco->GetChisquare()/fFitReco->GetNDF();
+            else 
+                fMesonChi2[3][iPt]                      = -1;
+            
         } else {
             fFileErrLog << "Using Crystal Ball function"<<endl;
             FitCBSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE,Form("CBFitFuncNormalBin%02d",iPt),kFALSE);
@@ -1346,6 +1374,7 @@ void ExtractSignalV2(   TString meson                   = "",
     TString nameMesonSub    = "";
     TString nameCanvasSub   = "";
     TString namePadSub      = "";
+    TString labelsOtherFits[3]  = {"pol2 BG", "a exp(bx) BG", "a + b exp(cx) BG"};
     if (fCrysFitting == 0){
         nameMesonSub    = Form("%s_MesonSubtracted%s", plotPrefix.Data(), plotSuffix.Data());
         nameCanvasSub   = "MesonCanvasSubtracted";
@@ -1354,6 +1383,14 @@ void ExtractSignalV2(   TString meson                   = "",
         PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin, fHistoMappingTrueMesonInvMassPtBins, fFitSignalInvMassPtBin, nameMesonSub, nameCanvasSub, namePadSub,
                                             fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
                                             fCollisionSystem, "MC validated");
+        nameMesonSub    = Form("%s_MesonSubtractedWithOther%s", plotPrefix.Data(), plotSuffix.Data());
+        nameCanvasSub   = "MesonCanvasSubtractedWithOther";
+        namePadSub      = "MesonPadSubtractedWithOther";
+        cout << nameMesonSub.Data() << endl;        
+        
+        PlotWithManyFitSubtractedInvMassInPtBins(   fHistoMappingSignalInvMassPtBin, fFitSignalInvMassPtBin, fFitSignalWithOtherBGInvMassPtBin, 3, labelsOtherFits, nameMesonSub,
+                                                    nameCanvasSub, namePadSub, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, 
+                                                    fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem, "MC validated", kTRUE, "pol1 BG");
         nameMesonSub    = Form("%s_MesonSubtractedWithFits%s", plotPrefix.Data(), plotSuffix.Data());
         nameCanvasSub   = "MesonCanvasSubtractedWithFits";
         namePadSub      = "MesonPadSubtractedWithFits";
@@ -1675,6 +1712,99 @@ void ExtractSignalV2(   TString meson                   = "",
     if (fIsMC) canvasMesonFWHM->SaveAs(Form("%s/%s_MC_MesonFWHM_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasMesonFWHM->SaveAs(Form("%s/%s_data_MesonFWHM_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
 
+    // **************************************************************************************************************
+    // ************************ Chi2/ndf compared MC vs Data ********************************************************
+    // **************************************************************************************************************
+    TCanvas* canvasChi2 = new TCanvas("canvasChi2","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasChi2, 0.092, 0.01, 0.02, 0.082);
+        
+    Double_t maxChi2    = fHistoChi2[0]->GetMaximum();
+    for (Int_t m = 1; m < 4; m++){
+        if (maxChi2 < fHistoChi2[m]->GetMaximum())
+            maxChi2     = fHistoChi2[m]->GetMaximum();
+    }
+    maxChi2             = maxChi2*1.2; 
+
+    TLegend* legendChi2 = GetAndSetLegend2(0.75, 0.95-(0.035*4), 0.95, 0.95, 0.035, 1, "", 42, 0.25);
+    
+    fHistoChi2[0]->GetYaxis()->SetRangeUser(0, maxChi2);
+    DrawAutoGammaMesonHistos( fHistoChi2[0], 
+                                "", "#it{p}_{T} (GeV/#it{c})", "#it{#chi}^{2}/ndf", 
+                                kFALSE, 0., 0.7, kFALSE,
+                                kFALSE, 0., 0.7, 
+                                kFALSE, 0., 10.);
+    DrawGammaSetMarker(fHistoChi2[0], 20, 2, kCyan+2, kCyan+2); 
+    fHistoChi2[0]->DrawCopy("same,e1,p");
+    legendChi2->AddEntry(fHistoChi2[0],"pol1 BG","p");
+    
+    Color_t colorFit[3] = {kRed+1, kAzure+2, 807};
+    Style_t styleFit[3] = {34, 21, 33};
+
+    for (Int_t m = 1; m < 4; m++){
+        DrawGammaSetMarker(fHistoChi2[m], styleFit[m-1], 2, colorFit[m-1], colorFit[m-1]);
+        fHistoChi2[m]->DrawCopy("same,e1,p"); 
+        legendChi2->AddEntry(fHistoChi2[m],labelsOtherFits[m-1],"p");
+    }
+    fHistoChi2[0]->DrawCopy("same,e1,p");
+    legendChi2->Draw();
+
+    
+    PutProcessLabelAndEnergyOnPlot(0.15, 0.25, 0.035, fCollisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+    canvasChi2->Update();
+    if (fIsMC) canvasChi2->SaveAs(Form("%s/%s_MC_Chi2FitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    else canvasChi2->SaveAs(Form("%s/%s_data_Chi2FitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+
+    // **************************************************************************************************************
+    // ************************ ResBG compared MC vs Data ********************************************************
+    // **************************************************************************************************************
+    TCanvas* canvasResBG = new TCanvas("canvasResBG","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasResBG, 0.092, 0.01, 0.02, 0.082);
+        
+    Double_t maxResBG    = fHistoResBGYield[0]->GetMaximum();
+    for (Int_t m = 1; m < 4; m++){
+        if (maxResBG < fHistoResBGYield[m]->GetMaximum())
+            maxResBG     = fHistoResBGYield[m]->GetMaximum();
+    }
+    maxResBG             = maxResBG*1.2; 
+
+    Double_t minResBG    = fHistoResBGYield[0]->GetMinimum();
+    for (Int_t m = 1; m < 4; m++){
+        if (minResBG > fHistoResBGYield[m]->GetMinimum())
+            minResBG     = fHistoResBGYield[m]->GetMinimum();
+    }
+    if (minResBG < 0)
+        minResBG             = minResBG*1.4; 
+    else 
+        minResBG             = minResBG*0.8;
+    
+    TLegend* legendResBG = GetAndSetLegend2(0.75, 0.80-(0.035*4), 0.95, 0.80, 0.035, 1, "", 42, 0.25);
+    
+    fHistoResBGYield[0]->GetYaxis()->SetRangeUser(minResBG, maxResBG);
+    DrawAutoGammaMesonHistos( fHistoResBGYield[0], 
+                                "", "#it{p}_{T} (GeV/#it{c})", "Res BG yield", 
+                                kFALSE, 0., 0.7, kFALSE,
+                                kFALSE, 0., 0.7, 
+                                kFALSE, 0., 10.);
+    DrawGammaSetMarker(fHistoResBGYield[0], 20, 2, kCyan+2, kCyan+2); 
+    fHistoResBGYield[0]->DrawCopy("same,e1,p");
+    legendResBG->AddEntry(fHistoResBGYield[0],"pol1 BG","p");
+    
+    for (Int_t m = 1; m < 4; m++){
+        DrawGammaSetMarker(fHistoResBGYield[m], styleFit[m-1], 2, colorFit[m-1], colorFit[m-1]);
+        fHistoResBGYield[m]->DrawCopy("same,e1,p"); 
+        legendResBG->AddEntry(fHistoResBGYield[m],labelsOtherFits[m-1],"p");
+    }
+    fHistoResBGYield[0]->DrawCopy("same,e1,p");
+    legendResBG->Draw();
+
+    PutProcessLabelAndEnergyOnPlot(0.70, 0.95, 0.035, fCollisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+    canvasResBG->Update();
+    if (fIsMC) canvasResBG->SaveAs(Form("%s/%s_MC_ResBGYieldFitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    else canvasResBG->SaveAs(Form("%s/%s_data_ResBGYieldFitComp_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+
+    // **************************************************************************************************************
+    // Filling MC hists
+    // **************************************************************************************************************
     
     if(fIsMC){
         // Rebin MC histograms for acceptance and input with possible weights
@@ -2671,6 +2801,11 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fMesonYieldsPerEventError[k]                                = new Double_t[fNBinsPt];
     }    
     
+    for (Int_t m = 0; m < 3; m++){
+        fMesonYieldsResBckOtherFunc[m]                              = new Double_t[fNBinsPt];
+        fMesonYieldsResBckOtherFuncError[m]                         = new Double_t[fNBinsPt];        
+    }
+    
     // initialize variable for different integration windows: normal, wide, narrow
     for (Int_t k = 0; k < 3; k++ ){
         // initialize pt arrays for integration ranges
@@ -2721,7 +2856,9 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fMesonResidualBGlinError                                        = new Double_t[fNBinsPt];
     fMesonResidualBGcon                                             = new Double_t[fNBinsPt];
     fMesonResidualBGconError                                        = new Double_t[fNBinsPt];
-    fMesonChi2                                                      = new Double_t[fNBinsPt];
+    for (Int_t m = 0; m < 4; m++){
+        fMesonChi2[m]                                               = new Double_t[fNBinsPt];
+    }
     
     // initialize pt-arrays for different mass & width fitting procedures
     fMesonMass                                                      = new Double_t[fNBinsPt];
@@ -2827,6 +2964,12 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     
     fFitSignalPeakPosInvMassPtBin                                   = new TF1*[fNBinsPt];
     fFitBckInvMassPtBin                                             = new TF1*[fNBinsPt];
+
+    for (Int_t m = 0; m < 3; m++){
+        fFitSignalWithOtherBGInvMassPtBin[m]                        = new TF1*[fNBinsPt];
+        fFitBckOtherInvMassPtBin[m]                                 = new TF1*[fNBinsPt];
+    }
+    
     // Histograms for normalization on the left of the peak
     fHistoMappingBackNormInvMassLeftPtBin                           = new TH1D*[fNBinsPt];
     fHistoMappingSignalInvMassLeftPtBin                             = new TH1D*[fNBinsPt];
@@ -2889,6 +3032,12 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
 
         fFitSignalPeakPosInvMassPtBin[i]                                    = NULL;
         fFitBckInvMassPtBin[i]                                              = NULL;
+        
+        for (Int_t m = 0; m < 3; m++){
+            fFitSignalWithOtherBGInvMassPtBin[m][i]                         = NULL;
+            fFitBckOtherInvMassPtBin[m][i]                                  = NULL;
+        }
+            
         // Histograms for normalization on the left of the peak
         fHistoMappingBackNormInvMassLeftPtBin[i]                            = NULL;
         fHistoMappingSignalInvMassLeftPtBin[i]                              = NULL;
@@ -3596,9 +3745,15 @@ void CreatePtHistos(){
     fHistoResidualBGcon->Sumw2();
     fHistoRatioResBGYield               = new TH1D("histoRatioResBGYield","",fNBinsPt,fBinsPt);
     fHistoRatioResBGYield->Sumw2();
-    fHistoChi2                          = new TH1D("histoChi2","",fNBinsPt,fBinsPt);
-    fHistoChi2->Sumw2();
-
+    fHistoRatioResBGYieldToSPlusResBG   = new TH1D("histoRatioResBGYieldToSPlusResBG","",fNBinsPt,fBinsPt);
+    fHistoRatioResBGYieldToSPlusResBG->Sumw2();
+    for (Int_t m = 0; m < 4; m++){
+        fHistoChi2[m]                   = new TH1D(Form("histoChi2_%d",m),"",fNBinsPt,fBinsPt);
+        fHistoChi2[m]->Sumw2();
+        fHistoResBGYield[m]             = new TH1D(Form("histoResBGYield_%d",m),"",fNBinsPt,fBinsPt);
+        fHistoResBGYield[m]->Sumw2();
+    }
+    
     // create secondary histos
     for (Int_t k = 0; k < 3; k++){
         for (Int_t j = 0; j < 4; j++){
@@ -3612,13 +3767,12 @@ void CreatePtHistos(){
 //****************************************************************************
 //*************** Fill momentum dependent histograms from arrays *************
 //****************************************************************************
-void FillPtHistos()
-{
+void FillPtHistos(){
+    
     for(Int_t iPt=fStartPtBin+1;iPt<fNBinsPt+1;iPt++){
 
         fDeltaPt->SetBinContent(iPt,fBinsPt[iPt]-fBinsPt[iPt-1]);
         fDeltaPt->SetBinError(iPt,0);
-
 
         fHistoMassMeson->SetBinContent(iPt,fMesonMass[iPt-1]);
         fHistoMassMeson->SetBinError(iPt,fMesonMassError[iPt-1]);
@@ -3712,8 +3866,29 @@ void FillPtHistos()
             Double_t error      = ratio * TMath::Sqrt(relErrorA*relErrorA+relErrorB*relErrorB);
             fHistoRatioResBGYield->SetBinError(iPt,error);  
         } 
-        fHistoChi2->SetBinContent(iPt,fMesonChi2[iPt-1]);
-        fHistoChi2->SetBinError(iPt,0);
+        if ((fMesonYieldsResidualBckFunc[0][iPt-1] + fMesonYieldsCorResidualBckFunc[0][iPt-1]) > 0){
+            Double_t ratio      = fMesonYieldsResidualBckFunc[0][iPt-1]/(fMesonYieldsResidualBckFunc[0][iPt-1] + fMesonYieldsCorResidualBckFunc[0][iPt-1]);
+            fHistoRatioResBGYieldToSPlusResBG->SetBinContent(iPt,ratio);
+            
+            Double_t relErrorA  = fMesonYieldsResidualBckFuncError[0][iPt-1]/fMesonYieldsResidualBckFunc[0][iPt-1];
+            Double_t relErrorB  = TMath::Sqrt(fMesonYieldsCorResidualBckFuncError[0][iPt-1]*fMesonYieldsCorResidualBckFuncError[0][iPt-1] 
+                                               + fMesonYieldsResidualBckFuncError[0][iPt-1]*fMesonYieldsResidualBckFuncError[0][iPt-1]) /
+                                  (fMesonYieldsResidualBckFunc[0][iPt-1]+fMesonYieldsCorResidualBckFunc[0][iPt-1]);
+            Double_t error      = ratio * TMath::Sqrt(relErrorA*relErrorA+relErrorB*relErrorB);
+            fHistoRatioResBGYieldToSPlusResBG->SetBinError(iPt,error);  
+        }
+        for (Int_t m = 0; m < 4; m++){
+            fHistoChi2[m]->SetBinContent(iPt,fMesonChi2[m][iPt-1]);
+            fHistoChi2[m]->SetBinError(iPt,0);
+        }
+       
+        fHistoResBGYield[0]->SetBinContent(iPt,fMesonYieldsResidualBckFunc[0][iPt-1]);
+        fHistoResBGYield[0]->SetBinError(iPt,fMesonYieldsResidualBckFuncError[0][iPt-1]);
+        for (Int_t m = 0; m < 3; m++){
+            fHistoResBGYield[m+1]->SetBinContent(iPt,fMesonYieldsResBckOtherFunc[m][iPt-1]);
+            fHistoResBGYield[m+1]->SetBinError(iPt,fMesonYieldsResBckOtherFuncError[m][iPt-1]);
+        }
+        
         
         // filling histogram arrays for normal, wide, narrow
         for (Int_t k = 0; k < 3; k++){
@@ -3723,8 +3898,6 @@ void FillPtHistos()
             fHistoSBdefaultMeson[k]->SetBinError(iPt,fMesonSBdefaultError[k][iPt-1]);
             fHistoSigndefaultMeson[k]->SetBinContent(iPt,fMesonSigndefault[k][iPt-1]);
             fHistoSigndefaultMeson[k]->SetBinError(iPt,fMesonSigndefaultError[k][iPt-1]);
-
-            
         }
 
         // filling histogram arrays for normal, wide, narrow, left, left wide, left narrow
@@ -3766,14 +3939,10 @@ void FillPtHistos()
                     fHistoYieldTrueSecMeson[k][j]->SetBinError(iPt,fMesonTrueSecYieldsError[k][j][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
                 }
             }
-        }    
-
-        
-        
+        }   
     }
-    
-    
 }
+
 
 //****************************************************************************
 //******** Fit of Signal+ BG with Gaussian + Exponential + Linear BG *********
@@ -3972,6 +4141,527 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     }
     fFitReco->DrawCopy("same");
 }
+
+//****************************************************************************
+//******** Fit of Signal+ BG with Gaussian + Exponential + Pol2 BG *********
+//****************************************************************************
+void FitSubtractedPol2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_t* fMesonIntDeltaRangeFit, Int_t ptBin, Bool_t vary){
+
+    //    cout<<"Start Fitting spectra"<<endl;
+    fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
+    Double_t mesonAmplitude = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
+    Double_t mesonAmplitudeMin;
+    Double_t mesonAmplitudeMax;
+    
+    if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0){
+        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+            if(ptBin == 1) mesonAmplitudeMin = mesonAmplitude*70./100.;
+            else if(ptBin > 1 && ptBin < 4) mesonAmplitudeMin = mesonAmplitude*90./100.;
+            else if(ptBin > 17) mesonAmplitudeMin = mesonAmplitude*80./100.;
+            else mesonAmplitudeMin = mesonAmplitude*98./100.;
+            mesonAmplitudeMax = mesonAmplitude*115./100.;
+            if (fMode == 2 || fMode == 3) {
+                mesonAmplitudeMin = mesonAmplitude*98./100.;
+                mesonAmplitudeMax = mesonAmplitude*600./100.;
+            }
+            if (fMode == 4 || fMode == 5) {
+                mesonAmplitudeMin = mesonAmplitude*10./100.;
+                mesonAmplitudeMax = mesonAmplitude*400./100.;
+            }
+        } else {
+            mesonAmplitudeMin = mesonAmplitude*30./100.;
+            mesonAmplitudeMax = mesonAmplitude*115./100.;
+            if (fMode == 2 || fMode == 3){
+                mesonAmplitudeMin = mesonAmplitude*10./100.;
+            }
+            if (fMode == 4 || fMode == 5){
+                mesonAmplitudeMin = mesonAmplitude*5./100.;
+            }
+        }
+    } else {
+        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+            mesonAmplitudeMin = mesonAmplitude*98./100.;
+            mesonAmplitudeMax = mesonAmplitude*115./100.;
+            if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
+            if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV")){
+                if ((ptBin > 2)&&ptBin<100 ){
+                    fMesonWidthRange[0]         = 0.001; 
+                    fMesonWidthRange[1]         = 0.009;
+                }
+                mesonAmplitudeMin = mesonAmplitude*98./100.;
+                mesonAmplitudeMax = mesonAmplitude*115./100.;
+            }
+            if (fMode == 0 && !fEnergyFlag.CompareTo("7TeV")){
+                if ((ptBin > 2)&&ptBin<100 ){
+                    fMesonWidthRange[0]         = 0.001;
+                    fMesonWidthRange[1]         = 0.009;
+                }
+                mesonAmplitudeMin = mesonAmplitude*98./100.;
+                mesonAmplitudeMax = mesonAmplitude*115./100.;
+            }
+            if (fMode == 2 || fMode == 3) {
+                mesonAmplitudeMin = mesonAmplitude*98./100.;
+                mesonAmplitudeMax = mesonAmplitude*600./100.;
+            }
+            if (fMode == 4 || fMode == 5) {
+                mesonAmplitudeMin = mesonAmplitude*10./100.;
+                mesonAmplitudeMax = mesonAmplitude*400./100.;
+                if( fEnergyFlag.CompareTo("8TeV") == 0 ){
+                  mesonAmplitudeMin = mesonAmplitude*90./100.;
+                  mesonAmplitudeMax = mesonAmplitude*400./100.;
+                }
+            }
+            
+        } else {
+            mesonAmplitudeMin = mesonAmplitude*50./100.;
+            mesonAmplitudeMax = mesonAmplitude*115./100.;
+            if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV") ){
+                mesonAmplitudeMin = mesonAmplitude*65./100.;
+                if(ptBin > 2)  mesonAmplitudeMin = mesonAmplitude*85./100.;
+                mesonAmplitudeMax = mesonAmplitude*115./100.;
+                if(ptBin < 3) mesonAmplitudeMax = mesonAmplitude*100/100.;
+            }
+            if (fMode == 2 || fMode == 3){
+                mesonAmplitudeMin = mesonAmplitude*10./100.;
+                if( fEnergyFlag.CompareTo("8TeV") == 0 ){
+                  mesonAmplitudeMin = mesonAmplitude*20./100.;
+                  mesonAmplitudeMax = mesonAmplitude*115./100.;
+                }
+            }
+            if (fMode == 4 || fMode == 5){
+                mesonAmplitudeMin = mesonAmplitude*5./100.;
+            }
+        }
+    }
+    
+    fFitReco        = NULL;
+    fFitReco        = new TF1("GaussExpPol2","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x+[6]*x*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x+[6]*x*x)",fMesonFitRange[0],fMesonFitRange[1]);
+
+    fFitGausExp     = NULL;
+    fFitGausExp     = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
+
+    fFitLinearBck   = NULL;
+    fFitLinearBck   = new TF1("BGfit","[0]+[1]*x+[2]*x*x",fMesonFitRange[0],fMesonFitRange[1]);
+
+
+    fFitReco->SetParameter(0,mesonAmplitude);
+    fFitReco->SetParameter(1,fMesonMassExpect);
+    fFitReco->SetParameter(2,fMesonWidthExpect);
+    if (fMesonLambdaTail == fMesonLambdaTailRange[0] && fMesonLambdaTail == fMesonLambdaTailRange[1] ){
+        fFitReco->FixParameter(3,fMesonLambdaTail);
+    } else {
+        fFitReco->SetParameter(3,fMesonLambdaTail);
+        fFitReco->SetParLimits(3,fMesonLambdaTailRange[0],fMesonLambdaTailRange[1]);
+    }    
+    fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
+    fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
+    fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
+    
+
+    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
+    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
+    
+    fFitReco->SetLineColor(3);
+    fFitReco->SetLineWidth(1);
+    fFitReco->SetLineStyle(1);
+
+    fFitGausExp->SetParameter(0,fFitReco->GetParameter(0));
+    fFitGausExp->SetParameter(1,fFitReco->GetParameter(1));
+    fFitGausExp->SetParameter(2,fFitReco->GetParameter(2));
+    fFitGausExp->SetParameter(3,fFitReco->GetParameter(3));
+
+    fFitGausExp->SetParError(0,fFitReco->GetParError(0));
+    fFitGausExp->SetParError(1,fFitReco->GetParError(1));
+    fFitGausExp->SetParError(2,fFitReco->GetParError(2));
+    fFitGausExp->SetParError(3,fFitReco->GetParError(3));
+
+    fFitLinearBck->SetParameter(0,fFitReco->GetParameter(4));
+    fFitLinearBck->SetParameter(1,fFitReco->GetParameter(5));
+    fFitLinearBck->SetParameter(2,fFitReco->GetParameter(6));
+
+    fFitLinearBck->SetParError(0,fFitReco->GetParError(4));
+    fFitLinearBck->SetParError(1,fFitReco->GetParError(5));
+    fFitLinearBck->SetParError(2,fFitReco->GetParError(6));
+
+    Int_t binCenterStart;
+    Double_t startBinEdge;
+    Int_t binCenterEnd;
+    Double_t endBinEdge;
+
+    TVirtualFitter * fitter = TVirtualFitter::GetFitter();
+
+    fIntLinearBck = 0;
+    fIntLinearBckError = 0;
+    if(TString(gMinuit->fCstatu.Data()).CompareTo("CONVERGED") == 0 || TString(gMinuit->fCstatu.Data()).CompareTo("SUCCESSFUL") == 0 || TString(gMinuit->fCstatu.Data()).CompareTo("PROBLEMS") == 0){
+        binCenterStart  = fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+fMesonIntDeltaRangeFit[0]);
+        startBinEdge    = fHistoMappingSignalInvMassPtBinSingle->GetBinCenter(binCenterStart)- 0.5*fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
+        binCenterEnd    = fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+fMesonIntDeltaRangeFit[1]);
+        endBinEdge      = fHistoMappingSignalInvMassPtBinSingle->GetBinCenter(binCenterEnd)+ 0.5*fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
+
+        Int_t nFreePar      = fFitReco->GetNumberFreeParameters();
+        double * covMatrix  = fitter->GetCovarianceMatrix();
+
+        Float_t intBack     = fFitLinearBck->Integral(startBinEdge, endBinEdge);
+        Float_t errorBck    = fFitLinearBck->IntegralError(startBinEdge, endBinEdge);
+        
+        fFileDataLog << "Parameter for bin " << ptBin << endl;
+        fFileDataLog << "Pol2: \t"<<fFitReco->GetParameter(4)<<"+-" << fFitReco->GetParError(4) << "\t "<<fFitReco->GetParameter(5) <<"+-" << fFitReco->GetParError(5)<< "\t "<<fFitReco->GetParameter(6) <<"+-" << fFitReco->GetParError(6)<<endl;
+
+        fIntLinearBck       = intBack/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
+        fIntLinearBckError  = errorBck/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
+    } else {
+        fFileErrLog << "Fitting failed in " << ptBin << " with status " << gMinuit->fCstatu.Data() <<endl << endl;
+    }
+}
+
+
+//****************************************************************************
+//******** Fit of Signal+ BG with Gaussian + Exponential + Exp1 *********
+//****************************************************************************
+void FitSubtractedExp1InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_t* fMesonIntDeltaRangeFit, Int_t ptBin, Bool_t vary){
+
+    //    cout<<"Start Fitting spectra"<<endl;
+    fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
+    Double_t mesonAmplitude = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
+    Double_t mesonAmplitudeMin;
+    Double_t mesonAmplitudeMax;
+    
+    if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0){
+        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+            if(ptBin == 1) mesonAmplitudeMin = mesonAmplitude*70./100.;
+            else if(ptBin > 1 && ptBin < 4) mesonAmplitudeMin = mesonAmplitude*90./100.;
+            else if(ptBin > 17) mesonAmplitudeMin = mesonAmplitude*80./100.;
+            else mesonAmplitudeMin = mesonAmplitude*98./100.;
+            mesonAmplitudeMax = mesonAmplitude*115./100.;
+            if (fMode == 2 || fMode == 3) {
+                mesonAmplitudeMin = mesonAmplitude*98./100.;
+                mesonAmplitudeMax = mesonAmplitude*600./100.;
+            }
+            if (fMode == 4 || fMode == 5) {
+                mesonAmplitudeMin = mesonAmplitude*10./100.;
+                mesonAmplitudeMax = mesonAmplitude*400./100.;
+            }
+        } else {
+            mesonAmplitudeMin = mesonAmplitude*30./100.;
+            mesonAmplitudeMax = mesonAmplitude*115./100.;
+            if (fMode == 2 || fMode == 3){
+                mesonAmplitudeMin = mesonAmplitude*10./100.;
+            }
+            if (fMode == 4 || fMode == 5){
+                mesonAmplitudeMin = mesonAmplitude*5./100.;
+            }
+        }
+    } else {
+        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+            mesonAmplitudeMin = mesonAmplitude*98./100.;
+            mesonAmplitudeMax = mesonAmplitude*115./100.;
+            if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
+            if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV")){
+                if ((ptBin > 2)&&ptBin<100 ){
+                    fMesonWidthRange[0]         = 0.001; 
+                    fMesonWidthRange[1]         = 0.009;
+                }
+                mesonAmplitudeMin = mesonAmplitude*98./100.;
+                mesonAmplitudeMax = mesonAmplitude*115./100.;
+            }
+            if (fMode == 0 && !fEnergyFlag.CompareTo("7TeV")){
+                if ((ptBin > 2)&&ptBin<100 ){
+                    fMesonWidthRange[0]         = 0.001;
+                    fMesonWidthRange[1]         = 0.009;
+                }
+                mesonAmplitudeMin = mesonAmplitude*98./100.;
+                mesonAmplitudeMax = mesonAmplitude*115./100.;
+            }
+            if (fMode == 2 || fMode == 3) {
+                mesonAmplitudeMin = mesonAmplitude*98./100.;
+                mesonAmplitudeMax = mesonAmplitude*600./100.;
+            }
+            if (fMode == 4 || fMode == 5) {
+                mesonAmplitudeMin = mesonAmplitude*10./100.;
+                mesonAmplitudeMax = mesonAmplitude*400./100.;
+                if( fEnergyFlag.CompareTo("8TeV") == 0 ){
+                  mesonAmplitudeMin = mesonAmplitude*90./100.;
+                  mesonAmplitudeMax = mesonAmplitude*400./100.;
+                }
+            }
+            
+        } else {
+            mesonAmplitudeMin = mesonAmplitude*50./100.;
+            mesonAmplitudeMax = mesonAmplitude*115./100.;
+            if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV") ){
+                mesonAmplitudeMin = mesonAmplitude*65./100.;
+                if(ptBin > 2)  mesonAmplitudeMin = mesonAmplitude*85./100.;
+                mesonAmplitudeMax = mesonAmplitude*115./100.;
+                if(ptBin < 3) mesonAmplitudeMax = mesonAmplitude*100/100.;
+            }
+            if (fMode == 2 || fMode == 3){
+                mesonAmplitudeMin = mesonAmplitude*10./100.;
+                if( fEnergyFlag.CompareTo("8TeV") == 0 ){
+                  mesonAmplitudeMin = mesonAmplitude*20./100.;
+                  mesonAmplitudeMax = mesonAmplitude*115./100.;
+                }
+            }
+            if (fMode == 4 || fMode == 5){
+                mesonAmplitudeMin = mesonAmplitude*5./100.;
+            }
+        }
+    }
+    
+    fFitReco        = NULL;
+    fFitReco        = new TF1("GaussExpPol2","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]*exp([5]*x))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]*exp([5]*x))",fMesonFitRange[0],fMesonFitRange[1]);
+
+    fFitGausExp     = NULL;
+    fFitGausExp     = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
+
+    fFitLinearBck   = NULL;
+    fFitLinearBck   = new TF1("BGfit","[0]*exp([1]*x)",fMesonFitRange[0],fMesonFitRange[1]);
+
+
+    fFitReco->SetParameter(0,mesonAmplitude);
+    fFitReco->SetParameter(1,fMesonMassExpect);
+    fFitReco->SetParameter(2,fMesonWidthExpect);
+    if (fMesonLambdaTail == fMesonLambdaTailRange[0] && fMesonLambdaTail == fMesonLambdaTailRange[1] ){
+        fFitReco->FixParameter(3,fMesonLambdaTail);
+    } else {
+        fFitReco->SetParameter(3,fMesonLambdaTail);
+        fFitReco->SetParLimits(3,fMesonLambdaTailRange[0],fMesonLambdaTailRange[1]);
+    }    
+    fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
+    fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
+    fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
+    
+
+    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
+    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
+    
+    fFitReco->SetLineColor(3);
+    fFitReco->SetLineWidth(1);
+    fFitReco->SetLineStyle(1);
+
+    fFitGausExp->SetParameter(0,fFitReco->GetParameter(0));
+    fFitGausExp->SetParameter(1,fFitReco->GetParameter(1));
+    fFitGausExp->SetParameter(2,fFitReco->GetParameter(2));
+    fFitGausExp->SetParameter(3,fFitReco->GetParameter(3));
+
+    fFitGausExp->SetParError(0,fFitReco->GetParError(0));
+    fFitGausExp->SetParError(1,fFitReco->GetParError(1));
+    fFitGausExp->SetParError(2,fFitReco->GetParError(2));
+    fFitGausExp->SetParError(3,fFitReco->GetParError(3));
+
+    fFitLinearBck->SetParameter(0,fFitReco->GetParameter(4));
+    fFitLinearBck->SetParameter(1,fFitReco->GetParameter(5));
+    fFitLinearBck->SetParameter(2,fFitReco->GetParameter(6));
+
+    fFitLinearBck->SetParError(0,fFitReco->GetParError(4));
+    fFitLinearBck->SetParError(1,fFitReco->GetParError(5));
+
+    Int_t binCenterStart;
+    Double_t startBinEdge;
+    Int_t binCenterEnd;
+    Double_t endBinEdge;
+
+    TVirtualFitter * fitter = TVirtualFitter::GetFitter();
+
+    fIntLinearBck = 0;
+    fIntLinearBckError = 0;
+    if( TString(gMinuit->fCstatu.Data()).CompareTo("CONVERGED") == 0 || TString(gMinuit->fCstatu.Data()).CompareTo("SUCCESSFUL") == 0 || 
+        TString(gMinuit->fCstatu.Data()).CompareTo("PROBLEMS") == 0){
+        binCenterStart  = fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+fMesonIntDeltaRangeFit[0]);
+        startBinEdge    = fHistoMappingSignalInvMassPtBinSingle->GetBinCenter(binCenterStart)- 0.5*fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
+        binCenterEnd    = fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+fMesonIntDeltaRangeFit[1]);
+        endBinEdge      = fHistoMappingSignalInvMassPtBinSingle->GetBinCenter(binCenterEnd)+ 0.5*fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
+
+        Int_t nFreePar      = fFitReco->GetNumberFreeParameters();
+        double * covMatrix  = fitter->GetCovarianceMatrix();
+
+        Float_t intBack     = fFitLinearBck->Integral(startBinEdge, endBinEdge);
+        Float_t errorBck    = fFitLinearBck->IntegralError(startBinEdge, endBinEdge);
+        
+        fFileDataLog << "Parameter for bin " << ptBin << endl;
+        fFileDataLog << "Exp1: \t"<<fFitReco->GetParameter(4)<<"+-" << fFitReco->GetParError(4) << "\t "<<fFitReco->GetParameter(5) <<"+-" << fFitReco->GetParError(5)<< "\t "
+                     << fFitReco->GetParameter(6) <<"+-" << fFitReco->GetParError(6)<<endl;
+
+        fIntLinearBck       = intBack/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
+        fIntLinearBckError  = errorBck/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
+    } else {
+        fFileErrLog << "Fitting failed in " << ptBin << " with status " << gMinuit->fCstatu.Data() <<endl << endl;
+    }
+}
+
+//****************************************************************************
+//******** Fit of Signal+ BG with Gaussian + Exponential + Exp2 *********
+//****************************************************************************
+void FitSubtractedExp2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_t* fMesonIntDeltaRangeFit, Int_t ptBin, Bool_t vary){
+
+    //    cout<<"Start Fitting spectra"<<endl;
+    fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
+    Double_t mesonAmplitude = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
+    Double_t mesonAmplitudeMin;
+    Double_t mesonAmplitudeMax;
+    
+    if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0){
+        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+            if(ptBin == 1) mesonAmplitudeMin = mesonAmplitude*70./100.;
+            else if(ptBin > 1 && ptBin < 4) mesonAmplitudeMin = mesonAmplitude*90./100.;
+            else if(ptBin > 17) mesonAmplitudeMin = mesonAmplitude*80./100.;
+            else mesonAmplitudeMin = mesonAmplitude*98./100.;
+            mesonAmplitudeMax = mesonAmplitude*115./100.;
+            if (fMode == 2 || fMode == 3) {
+                mesonAmplitudeMin = mesonAmplitude*98./100.;
+                mesonAmplitudeMax = mesonAmplitude*600./100.;
+            }
+            if (fMode == 4 || fMode == 5) {
+                mesonAmplitudeMin = mesonAmplitude*10./100.;
+                mesonAmplitudeMax = mesonAmplitude*400./100.;
+            }
+        } else {
+            mesonAmplitudeMin = mesonAmplitude*30./100.;
+            mesonAmplitudeMax = mesonAmplitude*115./100.;
+            if (fMode == 2 || fMode == 3){
+                mesonAmplitudeMin = mesonAmplitude*10./100.;
+            }
+            if (fMode == 4 || fMode == 5){
+                mesonAmplitudeMin = mesonAmplitude*5./100.;
+            }
+        }
+    } else {
+        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+            mesonAmplitudeMin = mesonAmplitude*98./100.;
+            mesonAmplitudeMax = mesonAmplitude*115./100.;
+            if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
+            if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV")){
+                if ((ptBin > 2)&&ptBin<100 ){
+                    fMesonWidthRange[0]         = 0.001; 
+                    fMesonWidthRange[1]         = 0.009;
+                }
+                mesonAmplitudeMin = mesonAmplitude*98./100.;
+                mesonAmplitudeMax = mesonAmplitude*115./100.;
+            }
+            if (fMode == 0 && !fEnergyFlag.CompareTo("7TeV")){
+                if ((ptBin > 2)&&ptBin<100 ){
+                    fMesonWidthRange[0]         = 0.001;
+                    fMesonWidthRange[1]         = 0.009;
+                }
+                mesonAmplitudeMin = mesonAmplitude*98./100.;
+                mesonAmplitudeMax = mesonAmplitude*115./100.;
+            }
+            if (fMode == 2 || fMode == 3) {
+                mesonAmplitudeMin = mesonAmplitude*98./100.;
+                mesonAmplitudeMax = mesonAmplitude*600./100.;
+            }
+            if (fMode == 4 || fMode == 5) {
+                mesonAmplitudeMin = mesonAmplitude*10./100.;
+                mesonAmplitudeMax = mesonAmplitude*400./100.;
+                if( fEnergyFlag.CompareTo("8TeV") == 0 ){
+                  mesonAmplitudeMin = mesonAmplitude*90./100.;
+                  mesonAmplitudeMax = mesonAmplitude*400./100.;
+                }
+            }
+            
+        } else {
+            mesonAmplitudeMin = mesonAmplitude*50./100.;
+            mesonAmplitudeMax = mesonAmplitude*115./100.;
+            if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV") ){
+                mesonAmplitudeMin = mesonAmplitude*65./100.;
+                if(ptBin > 2)  mesonAmplitudeMin = mesonAmplitude*85./100.;
+                mesonAmplitudeMax = mesonAmplitude*115./100.;
+                if(ptBin < 3) mesonAmplitudeMax = mesonAmplitude*100/100.;
+            }
+            if (fMode == 2 || fMode == 3){
+                mesonAmplitudeMin = mesonAmplitude*10./100.;
+                if( fEnergyFlag.CompareTo("8TeV") == 0 ){
+                  mesonAmplitudeMin = mesonAmplitude*20./100.;
+                  mesonAmplitudeMax = mesonAmplitude*115./100.;
+                }
+            }
+            if (fMode == 4 || fMode == 5){
+                mesonAmplitudeMin = mesonAmplitude*5./100.;
+            }
+        }
+    }
+    
+    fFitReco        = NULL;
+    fFitReco        = new TF1("GaussExpPol2","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*exp([6]*x))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*exp([6]*x))",fMesonFitRange[0],fMesonFitRange[1]);
+
+    fFitGausExp     = NULL;
+    fFitGausExp     = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
+
+    fFitLinearBck   = NULL;
+    fFitLinearBck   = new TF1("BGfit","[0]+[1]*exp([2]*x)",fMesonFitRange[0],fMesonFitRange[1]);
+
+
+    fFitReco->SetParameter(0,mesonAmplitude);
+    fFitReco->SetParameter(1,fMesonMassExpect);
+    fFitReco->SetParameter(2,fMesonWidthExpect);
+    if (fMesonLambdaTail == fMesonLambdaTailRange[0] && fMesonLambdaTail == fMesonLambdaTailRange[1] ){
+        fFitReco->FixParameter(3,fMesonLambdaTail);
+    } else {
+        fFitReco->SetParameter(3,fMesonLambdaTail);
+        fFitReco->SetParLimits(3,fMesonLambdaTailRange[0],fMesonLambdaTailRange[1]);
+    }    
+    fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
+    fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
+    fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
+    
+
+    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
+    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
+    
+    fFitReco->SetLineColor(3);
+    fFitReco->SetLineWidth(1);
+    fFitReco->SetLineStyle(1);
+
+    fFitGausExp->SetParameter(0,fFitReco->GetParameter(0));
+    fFitGausExp->SetParameter(1,fFitReco->GetParameter(1));
+    fFitGausExp->SetParameter(2,fFitReco->GetParameter(2));
+    fFitGausExp->SetParameter(3,fFitReco->GetParameter(3));
+
+    fFitGausExp->SetParError(0,fFitReco->GetParError(0));
+    fFitGausExp->SetParError(1,fFitReco->GetParError(1));
+    fFitGausExp->SetParError(2,fFitReco->GetParError(2));
+    fFitGausExp->SetParError(3,fFitReco->GetParError(3));
+
+    fFitLinearBck->SetParameter(0,fFitReco->GetParameter(4));
+    fFitLinearBck->SetParameter(1,fFitReco->GetParameter(5));
+    fFitLinearBck->SetParameter(2,fFitReco->GetParameter(6));
+
+    fFitLinearBck->SetParError(0,fFitReco->GetParError(4));
+    fFitLinearBck->SetParError(1,fFitReco->GetParError(5));
+    fFitLinearBck->SetParError(2,fFitReco->GetParError(6));
+
+    Int_t binCenterStart;
+    Double_t startBinEdge;
+    Int_t binCenterEnd;
+    Double_t endBinEdge;
+
+    TVirtualFitter * fitter = TVirtualFitter::GetFitter();
+
+    fIntLinearBck = 0;
+    fIntLinearBckError = 0;
+    if( TString(gMinuit->fCstatu.Data()).CompareTo("CONVERGED") == 0 || TString(gMinuit->fCstatu.Data()).CompareTo("SUCCESSFUL") == 0 || 
+        TString(gMinuit->fCstatu.Data()).CompareTo("PROBLEMS") == 0){
+        binCenterStart  = fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+fMesonIntDeltaRangeFit[0]);
+        startBinEdge    = fHistoMappingSignalInvMassPtBinSingle->GetBinCenter(binCenterStart)- 0.5*fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
+        binCenterEnd    = fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+fMesonIntDeltaRangeFit[1]);
+        endBinEdge      = fHistoMappingSignalInvMassPtBinSingle->GetBinCenter(binCenterEnd)+ 0.5*fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
+
+        Int_t nFreePar      = fFitReco->GetNumberFreeParameters();
+        double * covMatrix  = fitter->GetCovarianceMatrix();
+
+        Float_t intBack     = fFitLinearBck->Integral(startBinEdge, endBinEdge);
+        Float_t errorBck    = fFitLinearBck->IntegralError(startBinEdge, endBinEdge);
+        
+        fFileDataLog << "Parameter for bin " << ptBin << endl;
+        fFileDataLog << "Exp1: \t"<<fFitReco->GetParameter(4)<<"+-" << fFitReco->GetParError(4) << "\t "<<fFitReco->GetParameter(5) <<"+-" << fFitReco->GetParError(5)<< "\t "
+                     << fFitReco->GetParameter(6) <<"+-" << fFitReco->GetParError(6)<<endl;
+
+        fIntLinearBck       = intBack/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
+        fIntLinearBckError  = errorBck/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
+    } else {
+        fFileErrLog << "Fitting failed in " << ptBin << " with status " << gMinuit->fCstatu.Data() <<endl << endl;
+    }
+}
+
 
 //****************************************************************************
 //************* Fit of Signal+ BG with Gaussian + Linear BG ******************
@@ -4798,7 +5488,11 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
     fHistoResidualBGcon->Write();
     fHistoResidualBGlin->Write();
     fHistoRatioResBGYield->Write();
-    fHistoChi2->Write();
+    fHistoRatioResBGYieldToSPlusResBG->Write();
+    for (Int_t m = 0; m < 4; m++){
+        fHistoChi2[m]->Write();
+        fHistoResBGYield[m]->Write();
+    }    
     fHistoMassMeson->Write();
     fHistoMassGaussianMeson->Write();
     fHistoWidthGaussianMeson->Write();
@@ -4821,6 +5515,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
     TString nameHistoSignalLeft;
     TString nameHistoBckNorm;
     TString fitnameSignal;
+    TString fitnameSignalOther;
     TString nameHistoBckNormLeft;
     TString fitnameSignalLeft;
 
@@ -4842,6 +5537,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
         nameHistoSignal     = Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d", ii);
         nameHistoSignalLeft = Form("fHistoMappingSignalInvMassLeft_in_Pt_Bin%02d", ii); //Added 12.12.2014
         fitnameSignal       = Form("Signal_InvMassFit_in_Pt_Bin%02d", ii);
+        fitnameSignalOther   = Form("Signal_InvMassFitWithOther_in_Pt_Bin%02d", ii);
         titleHistoSignal    = Form("%3.1f GeV/#it{c} < #it{p}_{T} < %3.1f GeV/#it{c}",fBinsPt[ii],fBinsPt[ii+1]),
         fHistoMappingBackNormInvMassPtBin[ii]->Write(nameHistoBckNorm.Data());
         fHistoMappingSignalInvMassPtBin[ii]->SetTitle(titleHistoSignal.Data());
@@ -4853,7 +5549,13 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
             fitnameSignalLeft = Form("SignalnewLeft_InvMassFit_in_Pt_Bin%02d", ii);
             if(fFitInvMassLeftPtBin[ii]!=0x00) fFitInvMassLeftPtBin[ii]->Write(fitnameSignalLeft.Data());
         }
-        if(fFitSignalInvMassPtBin[ii]!=0x00) fFitSignalInvMassPtBin[ii]->Write(fitnameSignal.Data());
+        if (fFitSignalInvMassPtBin[ii]!=0x00) fFitSignalInvMassPtBin[ii]->Write(fitnameSignal.Data());
+        fitnameSignalOther   = Form("Signal_InvMassFitWithPol2_in_Pt_Bin%02d", ii);
+        if (fFitSignalWithOtherBGInvMassPtBin[0][ii] != 0x00) fFitSignalWithOtherBGInvMassPtBin[0][ii]->Write(fitnameSignalOther.Data());
+        fitnameSignalOther   = Form("Signal_InvMassFitWithExp1_in_Pt_Bin%02d", ii);
+        if (fFitSignalWithOtherBGInvMassPtBin[1][ii] != 0x00) fFitSignalWithOtherBGInvMassPtBin[1][ii]->Write(fitnameSignalOther.Data());
+        fitnameSignalOther   = Form("Signal_InvMassFitWithExp2_in_Pt_Bin%02d", ii);
+        if (fFitSignalWithOtherBGInvMassPtBin[2][ii] != 0x00) fFitSignalWithOtherBGInvMassPtBin[2][ii]->Write(fitnameSignalOther.Data());
         
         if (fCrysFitting==1 ){ //|| fMode == 4
             if (fHistoMappingSignalRemainingBGSubInvMassPtBin[ii]) fHistoMappingSignalRemainingBGSubInvMassPtBin[ii]->Write();
@@ -5253,6 +5955,11 @@ void Delete(){
     if (fMesonWidthRange)                                       delete fMesonWidthRange;
     if (fMesonLambdaTailRange)                                  delete fMesonLambdaTailRange;
     if (fNRebin)                                                delete fNRebin;
+
+    for (Int_t m = 0; m< 3; m++){
+        if (fMesonYieldsResBckOtherFunc[m])                     delete fMesonYieldsResBckOtherFunc[m];
+        if (fMesonYieldsResBckOtherFuncError[m])                delete fMesonYieldsResBckOtherFuncError[m];
+    }    
     
     for (Int_t k = 0; k < 6; k++){   
         // delete arrays for yields
@@ -5317,7 +6024,9 @@ void Delete(){
     if (fMesonResidualBGlinError)                               delete fMesonResidualBGlinError;
     if (fMesonResidualBGcon)                                    delete fMesonResidualBGcon;
     if (fMesonResidualBGconError)                               delete fMesonResidualBGconError;
-    if (fMesonChi2)                                             delete fMesonChi2;
+    for (Int_t m = 0; m < 4; m++){
+        if (fMesonChi2[m])                                      delete fMesonChi2[m];
+    }
     
     if (fMesonTrueSB)                                           delete fMesonTrueSB;
     if (fMesonTrueSign)                                         delete fMesonTrueSign;
@@ -5362,6 +6071,10 @@ void Delete(){
     if (fHistoFillPerEventBGZbinVsMbin)                         delete fHistoFillPerEventBGZbinVsMbin;
     if (fHistoWeightsBGZbinVsPsibin)                            delete fHistoWeightsBGZbinVsPsibin;
     if (fHistoFillPerEventBGZbinVsPsibin)                       delete fHistoFillPerEventBGZbinVsPsibin;
+    for (Int_t m = 0; m < 3; m++){
+        if (fFitSignalWithOtherBGInvMassPtBin[m])               delete fFitSignalWithOtherBGInvMassPtBin[m];
+        if (fFitBckOtherInvMassPtBin[m])                        delete fFitBckOtherInvMassPtBin[m];
+    }    
     // delete Gaussian fit histograms
     if (fMesonMassGaussian)                                     delete fMesonMassGaussian;
     if (fMesonMassGaussianError)                                delete fMesonMassGaussianError;

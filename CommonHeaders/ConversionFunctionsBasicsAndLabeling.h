@@ -3683,6 +3683,8 @@ TString ReturnTriggerName(Int_t trigger){
         return "EMC1";
     } else if (trigger == 52){                          // EMC7
         return "EMC7";
+    } else if (trigger == 80){                          // EGA
+        return "EGA";
     } else if (trigger == 81){                          // EGA
         return "EGA";
     } else if (trigger == 85){                          // EG2

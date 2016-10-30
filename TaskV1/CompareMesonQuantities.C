@@ -109,27 +109,35 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
     cout << energyFlag.Data() << endl;
     cout << numberOfBins << endl;
     
-    TH1D* histoChi2Data                 = (TH1D*) fileRawSignalData.Get("histoChi2");
-    TH1D* histoConstResBGData           = (TH1D*) fileRawSignalData.Get("histoResidualBGcon");
-    TH1D* histoLinResBGData             = (TH1D*) fileRawSignalData.Get("histoResidualBGlin");
-    TH1D* histoResBGYieldVsTotBGData    = (TH1D*) fileRawSignalData.Get("histoRatioResBGYield");
-    TH1D* histoLambdaTailData           = (TH1D*) fileRawSignalData.Get("histoLambdaTail");
-    TH1D* histoChi2MC                   = (TH1D*) fileRawSignalMC.Get("histoChi2");
-    TH1D* histoConstResBGMC             = (TH1D*) fileRawSignalMC.Get("histoResidualBGcon");
-    TH1D* histoLinResBGMC               = (TH1D*) fileRawSignalMC.Get("histoResidualBGlin");
-    TH1D* histoResBGYieldVsTotBGMC      = (TH1D*) fileRawSignalMC.Get("histoRatioResBGYield");
-    TH1D* histoLambdaTailMC             = (TH1D*) fileRawSignalMC.Get("histoLambdaTail");
+    TH1D* histoChi2Data                     = (TH1D*) fileRawSignalData.Get("histoChi2_0");
+    TH1D* histoChi2_Pol2_Data               = (TH1D*) fileRawSignalData.Get("histoChi2_1");
+    TH1D* histoChi2_Exp1_Data               = (TH1D*) fileRawSignalData.Get("histoChi2_2");
+    TH1D* histoChi2_Exp2_Data               = (TH1D*) fileRawSignalData.Get("histoChi2_3");
+    TH1D* histoConstResBGData               = (TH1D*) fileRawSignalData.Get("histoResidualBGcon");
+    TH1D* histoLinResBGData                 = (TH1D*) fileRawSignalData.Get("histoResidualBGlin");
+    TH1D* histoResBGYieldVsTotBGData        = (TH1D*) fileRawSignalData.Get("histoRatioResBGYield");
+    TH1D* histoResBGYieldVsResBGPlSigData   = (TH1D*) fileRawSignalData.Get("histoRatioResBGYieldToSPlusResBG");
+    TH1D* histoLambdaTailData               = (TH1D*) fileRawSignalData.Get("histoLambdaTail");
+    TH1D* histoChi2MC                       = (TH1D*) fileRawSignalMC.Get("histoChi2_0");
+    TH1D* histoChi2_Pol2_MC                 = (TH1D*) fileRawSignalMC.Get("histoChi2_1");
+    TH1D* histoChi2_Exp1_MC                 = (TH1D*) fileRawSignalMC.Get("histoChi2_2");
+    TH1D* histoChi2_Exp2_MC                 = (TH1D*) fileRawSignalMC.Get("histoChi2_3");
+    TH1D* histoConstResBGMC                 = (TH1D*) fileRawSignalMC.Get("histoResidualBGcon");
+    TH1D* histoLinResBGMC                   = (TH1D*) fileRawSignalMC.Get("histoResidualBGlin");
+    TH1D* histoResBGYieldVsTotBGMC          = (TH1D*) fileRawSignalMC.Get("histoRatioResBGYield");
+    TH1D* histoResBGYieldVsResBGPlSigMC     = (TH1D*) fileRawSignalMC.Get("histoRatioResBGYieldToSPlusResBG");
+    TH1D* histoLambdaTailMC                 = (TH1D*) fileRawSignalMC.Get("histoLambdaTail");
     
-    Double_t* fMesonRange               = NULL;
-    TString outputDir                   = Form("%s/%s/%s/ExtractSignal",fCutSelection.Data(),energyFlag.Data(),fSuffix.Data());
-    TString nameLineShapePlot           = Form("%s/%s_MesonLineShapeCompared_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data());
-    TString nameLineShapePlotLeft       = Form("%s/%s_MesonLineShapeComparedLeft_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data());
+    Double_t* fMesonRange                   = NULL;
+    TString outputDir                       = Form("%s/%s/%s/ExtractSignal",fCutSelection.Data(),energyFlag.Data(),fSuffix.Data());
+    TString nameLineShapePlot               = Form("%s/%s_MesonLineShapeCompared_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data());
+    TString nameLineShapePlotLeft           = Form("%s/%s_MesonLineShapeComparedLeft_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data());
     
-    TString fEventCutSelection          = "";
-    TString fGammaCutSelection          = "";
-    TString fClusterCutSelection        = "";
-    TString fElectronCutSelection       = "";
-    TString fMesonCutSelection          = "";
+    TString fEventCutSelection              = "";
+    TString fGammaCutSelection              = "";
+    TString fClusterCutSelection            = "";
+    TString fElectronCutSelection           = "";
+    TString fMesonCutSelection              = "";
     ReturnSeparatedCutNumberAdvanced(fCutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
     
     InitializeBinning(mesonType, numberOfBins, energyFlag, "", mode, fEventCutSelection, fClusterCutSelection);
@@ -394,9 +402,9 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                                 kFALSE, 0., 0.7, kFALSE,
                                 kFALSE, 0., 0.7, 
                                 kFALSE, 0., 10.);
-    DrawGammaSetMarker(histoChi2Data, 20, 0.8, kBlack, kBlack); 
+    DrawGammaSetMarker(histoChi2Data, 20, 2, kBlack, kBlack); 
     histoChi2Data->DrawCopy("same,e1,p");
-    DrawGammaSetMarker(histoChi2MC, 24, 0.8, kRed+2, kRed+2);
+    DrawGammaSetMarker(histoChi2MC, 24, 2, kRed+1, kRed+1);
     histoChi2MC->DrawCopy("same,e1,p"); 
     
     TLegend* legendChi2 = GetAndSetLegend2(0.85, 0.13, 0.95, 0.13+(0.035*2), 0.035, 1, "", 42, 0.25);
@@ -408,6 +416,75 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
     canvasChi2->Update();
     canvasChi2->SaveAs(Form("%s/%s_Chi2_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()));
 
+    canvasChi2->cd();
+    maxChi2    = histoChi2_Pol2_Data->GetMaximum();
+    if (maxChi2 < histoChi2_Pol2_MC->GetMaximum())
+        maxChi2         = histoChi2_Pol2_MC->GetMaximum();
+    maxChi2             = maxChi2*1.2; 
+    
+    histoChi2_Pol2_Data->GetYaxis()->SetRangeUser(0, maxChi2);
+    DrawAutoGammaMesonHistos( histoChi2_Pol2_Data, 
+                                "", "#it{p}_{T} (GeV/#it{c})", "#it{#chi}^{2}/ndf", 
+                                kFALSE, 0., 0.7, kFALSE,
+                                kFALSE, 0., 0.7, 
+                                kFALSE, 0., 10.);
+    DrawGammaSetMarker(histoChi2_Pol2_Data, 20, 2, kBlack, kBlack); 
+    histoChi2_Pol2_Data->DrawCopy("same,e1,p");
+    DrawGammaSetMarker(histoChi2_Pol2_MC, 24, 2, kRed+1, kRed+1);
+    histoChi2_Pol2_MC->DrawCopy("same,e1,p"); 
+    
+    legendChi2->Draw();
+    PutProcessLabelAndEnergyOnPlot(0.15, 0.25, 0.035, energyText.Data(), decayChannel.Data(), DetectionChannel.Data());
+    
+    canvasChi2->Update();
+    canvasChi2->SaveAs(Form("%s/%s_Chi2_WithPol2BG_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()));
+
+    canvasChi2->cd();
+    maxChi2    = histoChi2_Exp1_Data->GetMaximum();
+    if (maxChi2 < histoChi2_Exp1_MC->GetMaximum())
+        maxChi2         = histoChi2_Exp1_MC->GetMaximum();
+    maxChi2             = maxChi2*1.2; 
+    
+    histoChi2_Exp1_Data->GetYaxis()->SetRangeUser(0, maxChi2);
+    DrawAutoGammaMesonHistos( histoChi2_Exp1_Data, 
+                                "", "#it{p}_{T} (GeV/#it{c})", "#it{#chi}^{2}/ndf", 
+                                kFALSE, 0., 0.7, kFALSE,
+                                kFALSE, 0., 0.7, 
+                                kFALSE, 0., 10.);
+    DrawGammaSetMarker(histoChi2_Exp1_Data, 20, 2, kBlack, kBlack); 
+    histoChi2_Exp1_Data->DrawCopy("same,e1,p");
+    DrawGammaSetMarker(histoChi2_Exp1_MC, 24, 2, kRed+1, kRed+1);
+    histoChi2_Exp1_MC->DrawCopy("same,e1,p"); 
+    
+    legendChi2->Draw();
+    PutProcessLabelAndEnergyOnPlot(0.15, 0.25, 0.035, energyText.Data(), decayChannel.Data(), DetectionChannel.Data());
+    
+    canvasChi2->Update();
+    canvasChi2->SaveAs(Form("%s/%s_Chi2_WithExp1BG_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()));
+
+    canvasChi2->cd();
+    maxChi2    = histoChi2_Exp2_Data->GetMaximum();
+    if (maxChi2 < histoChi2_Exp2_MC->GetMaximum())
+        maxChi2         = histoChi2_Exp2_MC->GetMaximum();
+    maxChi2             = maxChi2*1.2; 
+    
+    histoChi2_Exp2_Data->GetYaxis()->SetRangeUser(0, maxChi2);
+    DrawAutoGammaMesonHistos( histoChi2_Exp2_Data, 
+                                "", "#it{p}_{T} (GeV/#it{c})", "#it{#chi}^{2}/ndf", 
+                                kFALSE, 0., 0.7, kFALSE,
+                                kFALSE, 0., 0.7, 
+                                kFALSE, 0., 10.);
+    DrawGammaSetMarker(histoChi2_Exp2_Data, 20, 2, kBlack, kBlack); 
+    histoChi2_Exp2_Data->DrawCopy("same,e1,p");
+    DrawGammaSetMarker(histoChi2_Exp2_MC, 24, 2, kRed+1, kRed+1);
+    histoChi2_Exp2_MC->DrawCopy("same,e1,p"); 
+    
+    legendChi2->Draw();
+    PutProcessLabelAndEnergyOnPlot(0.15, 0.25, 0.035, energyText.Data(), decayChannel.Data(), DetectionChannel.Data());
+    
+    canvasChi2->Update();
+    canvasChi2->SaveAs(Form("%s/%s_Chi2_WithExp2BG_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()));
+    
     // **************************************************************************************************************
     // ************************ Res BG yield/ tot BG yield compared MC vs Data **************************************
     // **************************************************************************************************************
@@ -434,9 +511,9 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                                 kFALSE, 0., 0.7, kFALSE,
                                 kFALSE, 0., 0.7, 
                                 kFALSE, 0., 10.);
-    DrawGammaSetMarker(histoResBGYieldVsTotBGData, 20, 0.8, kBlack, kBlack); 
+    DrawGammaSetMarker(histoResBGYieldVsTotBGData, 20, 2, kBlack, kBlack); 
     histoResBGYieldVsTotBGData->DrawCopy("same,e1,p");
-    DrawGammaSetMarker(histoResBGYieldVsTotBGMC, 24, 0.8, kRed+2, kRed+2);
+    DrawGammaSetMarker(histoResBGYieldVsTotBGMC, 24, 2, kRed+1, kRed+1);
     histoResBGYieldVsTotBGMC->DrawCopy("same,e1,p"); 
     
     TLegend* legendResBGYieldDivTotBG = GetAndSetLegend2(0.85, 0.13, 0.95, 0.13+(0.035*2), 0.035, 1, "", 42, 0.25);
@@ -447,6 +524,46 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
     
     canvasResBGYieldDivTotBG->Update();
     canvasResBGYieldDivTotBG->SaveAs(Form("%s/%s_ResBGYieldDivTotBG_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()));
+    
+    // **************************************************************************************************************
+    // ************************ Res BG yield/ Res BG + Signal yield compared MC vs Data **************************************
+    // **************************************************************************************************************
+    TCanvas* canvasResBGYieldDivResBGPlSig = new TCanvas("canvasResBGYieldDivResBGPlSig","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasResBGYieldDivResBGPlSig, 0.092, 0.01, 0.02, 0.082);
+        
+    Double_t maxResBGYieldDivResBGPlSig    = histoResBGYieldVsResBGPlSigData->GetMaximum();
+    if (maxResBGYieldDivResBGPlSig < histoResBGYieldVsResBGPlSigMC->GetMaximum())
+        maxResBGYieldDivResBGPlSig         = histoResBGYieldVsResBGPlSigMC->GetMaximum();
+    maxResBGYieldDivResBGPlSig             = maxResBGYieldDivResBGPlSig*1.2; 
+    
+    Double_t minResBGYieldDivResBGPlSig    = histoResBGYieldVsResBGPlSigData->GetMinimum();
+    if (minResBGYieldDivResBGPlSig > histoResBGYieldVsResBGPlSigMC->GetMinimum())
+        minResBGYieldDivResBGPlSig         = histoResBGYieldVsResBGPlSigMC->GetMinimum();
+    if (minResBGYieldDivResBGPlSig < 0) 
+        minResBGYieldDivResBGPlSig         = minResBGYieldDivResBGPlSig*1.4;
+    else 
+        minResBGYieldDivResBGPlSig         = minResBGYieldDivResBGPlSig*0.6;
+    
+    
+    histoResBGYieldVsResBGPlSigData->GetYaxis()->SetRangeUser(minResBGYieldDivResBGPlSig, maxResBGYieldDivResBGPlSig);
+    DrawAutoGammaMesonHistos( histoResBGYieldVsResBGPlSigData, 
+                                "", "#it{p}_{T} (GeV/#it{c})", "Res BG/ (Res BG + Signal)", 
+                                kFALSE, 0., 0.7, kFALSE,
+                                kFALSE, 0., 0.7, 
+                                kFALSE, 0., 10.);
+    DrawGammaSetMarker(histoResBGYieldVsResBGPlSigData, 20, 2, kBlack, kBlack); 
+    histoResBGYieldVsResBGPlSigData->DrawCopy("same,e1,p");
+    DrawGammaSetMarker(histoResBGYieldVsResBGPlSigMC, 24, 2, kRed+1, kRed+1);
+    histoResBGYieldVsResBGPlSigMC->DrawCopy("same,e1,p"); 
+    
+    TLegend* legendResBGYieldDivResBGPlSig = GetAndSetLegend2(0.85, 0.13, 0.95, 0.13+(0.035*2), 0.035, 1, "", 42, 0.25);
+    legendResBGYieldDivResBGPlSig->AddEntry(histoResBGYieldVsResBGPlSigData,"Data");
+    legendResBGYieldDivResBGPlSig->AddEntry(histoResBGYieldVsResBGPlSigMC,"MC");
+    legendResBGYieldDivResBGPlSig->Draw();
+    PutProcessLabelAndEnergyOnPlot(0.15, 0.25, 0.035, energyText.Data(), decayChannel.Data(), DetectionChannel.Data());
+    
+    canvasResBGYieldDivResBGPlSig->Update();
+    canvasResBGYieldDivResBGPlSig->SaveAs(Form("%s/%s_ResBGYieldDivResBGPlSig_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()));
     
     // **************************************************************************************************************
     // ************************ Res BG slope compared MC vs Data ****************************************************
@@ -474,9 +591,9 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                                 kFALSE, 0., 0.7, kFALSE,
                                 kFALSE, 0., 0.7, 
                                 kFALSE, 0., 10.);
-    DrawGammaSetMarker(histoLinResBGData, 20, 0.8, kBlack, kBlack); 
+    DrawGammaSetMarker(histoLinResBGData, 20, 2, kBlack, kBlack); 
     histoLinResBGData->DrawCopy("same,e1,p");
-    DrawGammaSetMarker(histoLinResBGMC, 24, 0.8, kRed+2, kRed+2);
+    DrawGammaSetMarker(histoLinResBGMC, 24, 2, kRed+1, kRed+1);
     histoLinResBGMC->DrawCopy("same,e1,p"); 
     
     TLegend* legendResBGSlope = GetAndSetLegend2(0.85, 0.13, 0.95, 0.13+(0.035*2), 0.035, 1, "", 42, 0.25);
@@ -513,9 +630,9 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                                 kFALSE, 0., 0.7, kFALSE,
                                 kFALSE, 0., 0.7, 
                                 kFALSE, 0., 10.);
-    DrawGammaSetMarker(histoConstResBGData, 20, 0.8, kBlack, kBlack); 
+    DrawGammaSetMarker(histoConstResBGData, 20, 2, kBlack, kBlack); 
     histoConstResBGData->DrawCopy("same,e1,p");
-    DrawGammaSetMarker(histoConstResBGMC, 24, 0.8, kRed+2, kRed+2);
+    DrawGammaSetMarker(histoConstResBGMC, 24, 2, kRed+1, kRed+1);
     histoConstResBGMC->DrawCopy("same,e1,p"); 
     
     TLegend* legendResBGConst = GetAndSetLegend2(0.85, 0.13, 0.95, 0.13+(0.035*2), 0.035, 1, "", 42, 0.25);
@@ -553,9 +670,9 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                                 kFALSE, 0., 0.7, kFALSE,
                                 kFALSE, 0., 0.7, 
                                 kFALSE, 0., 10.);
-    DrawGammaSetMarker(histoLambdaTailData, 20, 0.8, kBlack, kBlack); 
+    DrawGammaSetMarker(histoLambdaTailData, 20, 2, kBlack, kBlack); 
     histoLambdaTailData->DrawCopy("same,e1,p");
-    DrawGammaSetMarker(histoLambdaTailMC, 24, 0.8, kRed+2, kRed+2);
+    DrawGammaSetMarker(histoLambdaTailMC, 24, 2, kRed+1, kRed+1);
     histoLambdaTailMC->DrawCopy("same,e1,p"); 
     
     TLegend* legendLambda = GetAndSetLegend2(0.85, 0.13, 0.95, 0.13+(0.035*2), 0.035, 1, "", 42, 0.25);

@@ -186,6 +186,9 @@ TH1D* CalculateSecondaryFractions(TH1D* histoRawYield, TH1D* histoRawYieldSec, T
 void CreatePtHistos();                                                                                      // Creat pt dependent histograms
 void FillPtHistos();                                                                                        // Fill pt dependent histograms
 void FitSubtractedInvMassInPtBins(TH1D * ,Double_t *, Int_t, Bool_t );                                      // Fits the invariant mass histos with a gaussian plus exponential plus lin BG
+void FitSubtractedPol2InvMassInPtBins(TH1D*, Double_t*, Int_t, Bool_t );                                    // Fits the invariant mass histos with a gaussian plus exponential plus pol2 BG
+void FitSubtractedExp1InvMassInPtBins(TH1D* , Double_t* , Int_t , Bool_t );                                 // Fits the invariant mass histos with a gaussian plus exponential plus exp BG
+void FitSubtractedExp2InvMassInPtBins(TH1D* , Double_t* , Int_t , Bool_t );                                 // Fits the invariant mass histos with a gaussian plus exponential plus exp BG
 void FitSubtractedPureGaussianInvMassInPtBins(TH1D*, Int_t);                                                // Fits the invariant mass histos with a pure gaussian plus lin BG
 void FitTrueInvMassInPtBins(TH1D * ,Double_t *, Int_t, Bool_t);                                             // Fits the true invariant mass histos with a gaussian plus exponential plus lin BG
 void FitTrueInvMassPureGaussianInPtBins(TH1D * , Int_t);                                                    // Fits the true invariant mass histos with a gaussian plus lin BG
@@ -363,14 +366,17 @@ Double_t*   fMesonTrueYieldsUnweightedError[3]                          = {NULL,
 TH1D*       fHistoYieldTrueMesonReweighted[3]                           = {NULL, NULL, NULL};
 TH1D*       fHistoYieldTrueMesonUnweighted[3]                           = {NULL, NULL, NULL};
 
-
+Double_t*   fMesonYieldsResBckOtherFunc[3]                              = { NULL, NULL, NULL};
+Double_t*   fMesonYieldsResBckOtherFuncError[3]                         = { NULL, NULL, NULL};
 
 //****************************************************************************
 //************* histos, fits, doubles for pure Standard fitting **************
 //****************************************************************************
 TF1**       fFitSignalInvMassPtBin                                      = NULL;
+TF1**       fFitSignalWithOtherBGInvMassPtBin[3]                        = { NULL, NULL, NULL };
 TF1**       fFitRemainingBGInvMassPtBin                                 = NULL;
 TF1**       fFitBckInvMassPtBin                                         = NULL;
+TF1**       fFitBckOtherInvMassPtBin[3]                                 = { NULL, NULL, NULL };
 TF1**       fFitTrueSignalInvMassPtBin                                  = NULL;
 TF1**       fFitTrueSignalInvMassPtReweightedBin                        = NULL;
 TF1**       fFitTrueSignalInvMassPtUnweightedBin                        = NULL;
@@ -390,7 +396,7 @@ Double_t*   fMesonResidualBGlin                                         = NULL;
 Double_t*   fMesonResidualBGlinError                                    = NULL;
 Double_t*   fMesonResidualBGcon                                         = NULL;
 Double_t*   fMesonResidualBGconError                                    = NULL;
-Double_t*   fMesonChi2                                                  = NULL;
+Double_t*   fMesonChi2[4]                                               = {NULL, NULL, NULL, NULL};
 
 TH1D*       fHistoMassMeson                                             = NULL;
 TH1D*       fHistoFWHMMeson                                             = NULL;
@@ -513,8 +519,10 @@ TH1D*       fHistoTrueSBMeson                                           = NULL;
 TH1D*       fHistoLambdaTail                                            = NULL;
 TH1D*       fHistoResidualBGlin                                         = NULL;
 TH1D*       fHistoResidualBGcon                                         = NULL;
-TH1D*       fHistoChi2                                                  = NULL;
+TH1D*       fHistoChi2[4]                                               = { NULL, NULL, NULL, NULL };
 TH1D*       fHistoRatioResBGYield                                       = NULL;
+TH1D*       fHistoRatioResBGYieldToSPlusResBG                           = NULL;
+TH1D*       fHistoResBGYield[4]                                         = { NULL, NULL, NULL, NULL };
 
 Double_t*   fMassWindowHigh[3]                                          = { NULL, NULL, NULL};
 Double_t*   fMassWindowLow[3]                                           = { NULL, NULL, NULL};

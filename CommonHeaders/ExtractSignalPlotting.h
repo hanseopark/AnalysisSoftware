@@ -1520,6 +1520,214 @@ void PlotWithFitSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtB
     delete canvasDataFit;
 }
 
+//____________________________ Plotting Invariant Mass Subtracted for all bins ________________________________________________________
+void PlotWithManyFitSubtractedInvMassInPtBins(  TH1D ** fHistoMappingSignalInvMassPtBinPlot, 
+                                                TF1 ** fFitSignalInvMassPtBinPlot, 
+                                                TF1 *** fFitSigWithOtherBGInvMassPtBinPlot, 
+                                                Int_t nFits,
+                                                TString* fTextFitAdd,
+                                                TString namePlot, 
+                                                TString nameCanvas, 
+                                                TString namePad, 
+                                                Double_t* fPlottingRangeMeson, 
+                                                TString dateDummy, 
+                                                TString fMesonType, 
+                                                Int_t fRowPlot, 
+                                                Int_t fColumnPlot, 
+                                                Int_t fStartBinPtRange, 
+                                                Int_t fNumberPtBins, 
+                                                Double_t* fRangeBinsPt, 
+                                                TString fDecayChannel,
+                                                Bool_t fMonteCarloInfo, 
+                                                TString decayChannel, 
+                                                TString fDetectionChannel, 
+                                                TString fEnergy, 
+                                                TString fTextMCvalidated    = "",
+                                                Bool_t labelData            = kTRUE, 
+                                                TString fTextFit            = "Fit", 
+                                                TString fTextMGammaGamma    = "mixed evt. subtr. #it{M}_{#gamma#gamma}" ){
+    
+    TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
+    canvasDataFit->SetTopMargin(0.00);
+    canvasDataFit->SetBottomMargin(0.00);
+    canvasDataFit->SetRightMargin(0.00);
+    canvasDataFit->SetLeftMargin(0.00);
+
+    TPad * padDataFit               = new TPad(namePad.Data(),"",-0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+    padDataFit->SetFillColor(0);
+    padDataFit->GetFrame()->SetFillColor(0);
+    padDataFit->SetBorderMode(0);
+    padDataFit->Divide(fColumnPlot,fRowPlot,0.0,0.0);
+    padDataFit->SetLeftMargin(0.);
+    padDataFit->SetRightMargin(0.);
+    padDataFit->SetTopMargin(0.);
+    padDataFit->SetBottomMargin(0.);
+    padDataFit->Draw();
+
+    cout << fMesonType.Data() << endl;
+    Int_t place                     = 0;
+    for(Int_t iPt = fStartBinPtRange; iPt < fNumberPtBins; iPt++){
+        Double_t startPt            = fRangeBinsPt[iPt];
+        Double_t endPt              = fRangeBinsPt[iPt+1];
+
+        place                       = place + 1; //give the right place in the page
+        if (place == fColumnPlot){
+            iPt--;
+            padDataFit->cd(place);
+
+            TString textAlice       = "ALICE performance";
+            TString textEvents;
+            if(fMonteCarloInfo){
+                textEvents          = "MC";
+            } else {
+                textEvents          = "Data";
+            }
+            Double_t nPixels        = 13;
+            Double_t textHeight     = 0.08;
+            if (padDataFit->cd(place)->XtoPixel(padDataFit->cd(place)->GetX2()) < padDataFit->cd(place)->YtoPixel(padDataFit->cd(place)->GetY1())){
+                textHeight          = (Double_t)nPixels/padDataFit->cd(place)->XtoPixel(padDataFit->cd(place)->GetX2()) ;
+            } else {
+                textHeight          = (Double_t)nPixels/padDataFit->cd(place)->YtoPixel(padDataFit->cd(place)->GetY1());
+            }
+            Double_t startTextX     = 0.10;
+            Double_t startTextY     = 0.9;
+            Double_t differenceText = textHeight*1.25;
+
+            TLatex *alice           = new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
+            TLatex *latexDate       = new TLatex(startTextX, (startTextY-1.25*differenceText), dateDummy.Data());
+            TLatex *energy          = new TLatex(startTextX, (startTextY-2.25*differenceText), fEnergy);
+            TLatex *process         = new TLatex(startTextX, (startTextY-3.25*differenceText), fDecayChannel);
+            TLatex *detprocess      = new TLatex(startTextX, (startTextY-4.25*differenceText), fDetectionChannel);
+            TLatex *events          = new TLatex(startTextX, (startTextY-5.25*differenceText), Form("%s: %2.1e events",textEvents.Data(), fNEvents));
+
+            alice->SetNDC();
+            alice->SetTextColor(1);
+            alice->SetTextSize(textHeight*1.3);
+            alice->Draw();
+
+            latexDate->SetNDC();
+            latexDate->SetTextColor(1);
+            latexDate->SetTextSize(textHeight);
+            latexDate->Draw();
+    
+            energy->SetNDC();
+            energy->SetTextColor(1);
+            energy->SetTextSize(textHeight);
+            energy->Draw();
+
+            process->SetNDC(); 
+            process->SetTextColor(1);
+            process->SetTextSize(textHeight);
+            process->Draw();
+
+            detprocess->SetNDC(); 
+            detprocess->SetTextColor(1);
+            detprocess->SetTextSize(textHeight);
+            detprocess->Draw();
+
+            events->SetNDC();
+            events->SetTextColor(1);
+            events->SetTextSize(textHeight);
+            events->Draw();
+
+            if (fMonteCarloInfo) {
+                Double_t totalheightLeg     = 2.;
+                totalheightLeg = totalheightLeg+nFits;
+                
+                TLegend* legendMC           = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+totalheightLeg)*differenceText);
+                legendMC->SetTextSize(textHeight);
+                legendMC->SetTextFont(62);
+                legendMC->SetLineColor(0);
+                legendMC->SetLineWidth(0);
+                legendMC->SetFillStyle(0);
+                legendMC->SetFillColor(0);
+                legendMC->SetMargin(0.15);
+                if (labelData){
+                    Size_t markersize       = fHistoMappingSignalInvMassPtBinPlot[iPt]->GetMarkerSize();
+                    fHistoMappingSignalInvMassPtBinPlot[iPt]->SetMarkerSize(3*markersize);
+                    legendMC->AddEntry(fHistoMappingSignalInvMassPtBinPlot[iPt],fTextMGammaGamma.Data(),"ep");
+                }
+                if (fFitSignalInvMassPtBinPlot[iPt]!=0x00){
+                    Size_t linewidth        = fFitSignalInvMassPtBinPlot[iPt]->GetLineWidth();
+                    fFitSignalInvMassPtBinPlot[iPt]->SetLineWidth(3*linewidth);
+                    legendMC->AddEntry(fFitSignalInvMassPtBinPlot[iPt],fTextFit.Data(),"l");
+                }
+                for (Int_t m = 0; (m < nFits && m < 3); m++){
+                    if (fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]!=0x00){
+                        Size_t linewidth        = fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->GetLineWidth();
+                        fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineWidth(3*linewidth);
+                        legendMC->AddEntry(fFitSigWithOtherBGInvMassPtBinPlot[m][iPt],fTextFitAdd[m].Data(),"l");
+                    }
+                }    
+                
+                legendMC->Draw();
+            }else {
+                TLegend* legendData         = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+2.+nFits)*differenceText);
+                legendData->SetTextSize(textHeight);
+                legendData->SetTextFont(62);
+                legendData->SetFillColor(0);
+                legendData->SetFillStyle(0);
+                legendData->SetLineWidth(0);
+                legendData->SetLineColor(0);
+                legendData->SetMargin(0.15);
+                Size_t markersize           = fHistoMappingSignalInvMassPtBinPlot[iPt]->GetMarkerSize();
+                fHistoMappingSignalInvMassPtBinPlot[iPt]->SetMarkerSize(3*markersize);
+                legendData->AddEntry(fHistoMappingSignalInvMassPtBinPlot[iPt],fTextMGammaGamma.Data(),"ep");
+                if (fFitSignalInvMassPtBinPlot[iPt]!=0x00){
+                    Size_t linewidth        = fFitSignalInvMassPtBinPlot[iPt]->GetLineWidth();
+                    fFitSignalInvMassPtBinPlot[iPt]->SetLineWidth(3*linewidth);
+                    legendData->AddEntry(fFitSignalInvMassPtBinPlot[iPt],fTextFit.Data(),"l");
+                }
+                for (Int_t m = 0; (m < nFits && m < 3); m++){
+                    if (fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]!=0x00){
+                        Size_t linewidth        = fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->GetLineWidth();
+                        fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineWidth(3*linewidth);
+                        legendData->AddEntry(fFitSigWithOtherBGInvMassPtBinPlot[m][iPt],fTextFitAdd[m].Data(),"l");
+                    }
+                }    
+                legendData->Draw();
+            }
+
+        } else {
+
+            padDataFit->cd(place);
+            padDataFit->cd(place)->SetTopMargin(0.12);
+            padDataFit->cd(place)->SetBottomMargin(0.15);
+            padDataFit->cd(place)->SetRightMargin(0.02);
+            int remaining = (place-1)%fColumnPlot;
+            if (remaining > 0) padDataFit->cd(place)->SetLeftMargin(0.15);
+            else padDataFit->cd(place)->SetLeftMargin(0.25);
+
+            cout << startPt << "-" << endPt <<endl;
+            DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],
+                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                            fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
+
+            if (fFitSignalInvMassPtBinPlot[iPt]!=0x00){
+                fFitSignalInvMassPtBinPlot[iPt]->SetLineColor(kCyan+3);
+                fFitSignalInvMassPtBinPlot[iPt]->SetLineWidth(1.5);
+                fFitSignalInvMassPtBinPlot[iPt]->DrawCopy("same");
+            } 
+            Color_t colorFit[3]     = {kRed+1, kAzure+2, 807};
+            Style_t styleFit[3]     = {7, 3, 6};
+            
+            for (Int_t m = 0; (m < nFits && m < 3); m++){
+                if (fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]){
+                    cout << m << "\t"<< iPt << "\t" << fFitSigWithOtherBGInvMassPtBinPlot[m][iPt] << endl;
+                    fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineColor(colorFit[m]);
+                    fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineStyle(styleFit[m]);
+                    fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineWidth(1.5);
+                    fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->DrawCopy("same");    
+                }   
+            }    
+        }
+    }
+    canvasDataFit->Print(namePlot.Data());
+    delete padDataFit;
+    delete canvasDataFit;
+}
+
 
 //____________________________ Plotting Invariant Mass Subtracted for all bins ________________________________________________________
 void PlotWith2FitsSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtBinPlot, 
