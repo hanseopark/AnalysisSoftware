@@ -137,6 +137,39 @@ Double_t FindSmallestBin2DHist(TH2* histo, Double_t maxStart = 1e6 ){
     return minimum;
 }
 
+//**********************************************************************************
+//******************* convert yield histo  ********************************
+//**********************************************************************************
+TH1D* ConvertYieldHisto(TH1D* input, Bool_t DivideBy2pi, Bool_t DivideByPt, Bool_t MultiplyBy2pi, Bool_t MultiplyByPt){
+
+    if (!input) {
+        cout << "Error: Histogram is NULL" << endl;
+        return NULL;
+    }
+
+    Int_t nBins                 = input->GetNbinsX();
+    Double_t newValue           = 0;
+    Double_t newErrorValue      = 0;
+    Double_t correctionValue    = 1;
+
+    //correct by 2pi if specified
+    if (DivideBy2pi) input->Scale(1/(2*TMath::Pi()));
+    if (MultiplyBy2pi) input->Scale(2*TMath::Pi());
+
+    for(Int_t i=0;i<nBins;i++){
+
+        //correct by 1/Pt if specified
+        if(DivideByPt)    correctionValue  = 1/(input->GetBinCenter(i+1));
+        if(MultiplyByPt)  correctionValue  = input->GetBinCenter(i+1);
+
+        //set the value and error of the bin
+        input->SetBinContent(i+1,input->GetBinContent(i+1)*correctionValue);
+        input->SetBinError(i+1,input->GetBinError(i+1)*correctionValue);
+    }
+
+    return input;
+}
+
 
 //****************************************************************************
 //**************** Secondary pion decay simulation ***************************
@@ -467,10 +500,18 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
                 fitPtPartInput          = FitObject("l","fitPtPartInput","Lambda",NULL,fitRange[0],fitRange[1]);
                 fitPtPartInputlow       = FitObject("l","fitPtPartInputLow","Lambda",NULL,fitRangeLow[0],fitRangeLow[1]);
             } else if (energy.CompareTo("7TeV") == 0){
-// **************************************
-// NEED TO ADD 7 TEV LAMBDA SPECTRA!!!!!*
-// **************************************
-              histoPartInputPt            = (TH1D*)inputFile->Get("histoLambda1115SpecStat2760GeV");
+              TFile* inputLambda      = new TFile("ExternalInput/OtherParticles/Lambda-pp7TeV-Preliminary.root");
+              TFile* inputAntiLambda  = new TFile("ExternalInput/OtherParticles/AntiLambda-pp7TeV-Preliminary.root");
+              TH1D* hInputLambda      = (TH1D*)inputLambda->Get("fHistPtLambdaStatAndSystExceptNormalization");
+              TH1D* hInputAntiLambda  = (TH1D*)inputAntiLambda->Get("fHistPtAntiLambdaStatAndSystExceptNormalization");
+              if(hInputLambda && hInputAntiLambda){
+                hInputLambda->Scale(0.5);
+                hInputLambda->Add(hInputAntiLambda,0.5);
+                histoPartInputPt = ConvertYieldHisto(hInputLambda, kTRUE, kTRUE, kFALSE, kFALSE);
+              }else {
+                cout << "\n\n\n\n\tWARNING: " << __LINE__ << " using 2.76 TeV Lambda reference instead of 7 TeV!!\n\n\n\n" << endl;
+                histoPartInputPt            = (TH1D*)inputFile->Get("histoLambda1115SpecStat2760GeV");
+              }
               fitRange[0]             = 3;
               fitRange[1]             = 20;
               paramGraph[0]           = histoPartInputPt->GetBinContent(1);
