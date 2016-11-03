@@ -14,6 +14,8 @@ TString     fElectronCutSelection                           = "";
 TString     fMesonCutSelection                              = "";
 Double_t    ptMin                                           = 0;
 Double_t    ptMax                                           = 20;
+Double_t    ptPlotMin                                       = 0;
+Double_t    ptPlotMax                                       = 20;
 Double_t    fRapidity                                       = 0;
 Int_t       fMode                                           = 0;
 Float_t     nEvents                                         = 0;
@@ -72,6 +74,7 @@ TH1F**      histoGammaMotherPhiOrBin                        = NULL;
 //************************** Cocktail input ***********************************************
 TFile*      cocktailInputFile                               = NULL;
 TList*      cocktailInputList                               = NULL;
+TF1*        cocktailInputParametrizationProton              = NULL;
 TF1**       cocktailInputParametrizations                   = NULL;
 TF1**       cocktailInputParametrizationsMtScaled           = NULL;
 TF1*        paramScaleBase                                  = NULL;
