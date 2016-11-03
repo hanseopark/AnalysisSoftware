@@ -3310,8 +3310,51 @@ void PutProcessLabelAndEnergyOnPlot( Double_t startTextX,
     }
 }
 
+void PutThisThesisLabel(Double_t startTextX,
+                        Double_t startTextY,
+                        Size_t textHeight,
+                        Size_t textHeightRel = 0.03,
+                        Float_t textHeightFac = 1.25,
+                        Style_t textFont = 62,
+                        Color_t textColor = 1) {
 
-Color_t GetColorDefaultColor( TString energy, 
+  Double_t differenceText = textHeight*textHeightFac;
+  if (textFont == 63 || textFont == 43)
+    differenceText        = textHeightRel*textHeightFac;
+  
+  TString labelString     = "- this thesis -";
+  TLatex *label           = new TLatex(startTextX, (startTextY-differenceText), labelString);
+
+  label->SetNDC();
+  label->SetTextColor(1);
+  label->SetTextFont(textFont);
+  label->SetTextSize(textHeight);
+  label->Draw();
+}
+
+void PutALICESimulationLabel(Double_t startTextX,
+                             Double_t startTextY,
+                             Size_t textHeight,
+                             Size_t textHeightRel = 0.03,
+                             Float_t textHeightFac = 1.25,
+                             Style_t textFont = 62,
+                             Color_t textColor = 1) {
+  
+  Double_t differenceText = textHeight*textHeightFac;
+  if (textFont == 63 || textFont == 43)
+    differenceText        = textHeightRel*textHeightFac;
+  
+  TString labelString     = "ALICE Simulation";
+  TLatex *label           = new TLatex(startTextX, (startTextY-differenceText), labelString);
+  
+  label->SetNDC();
+  label->SetTextColor(1);
+  label->SetTextFont(textFont);
+  label->SetTextSize(textHeight);
+  label->Draw();
+}
+
+Color_t GetColorDefaultColor( TString energy,
                             TString generator, 
                             TString centrality, 
                             Bool_t kBox = kFALSE){
