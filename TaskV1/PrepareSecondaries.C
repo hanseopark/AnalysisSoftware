@@ -109,20 +109,8 @@ void PrepareSecondaries(    TString     meson                       = "",
     TString collisionSystem                                     = ReturnFullCollisionsSystem(option);
     TString cent                                                = "";
     TString textMeasurement                                     = ""; //"#gamma";
-    TString detectionProcess                                    = ReturnFullTextReconstructionProcess(mode);
-    //TString detectionProcess1                                   = "";
-    //TString detectionProcess2                                   = "";
-    //if (isPCM && isCalo){
-    //    detectionProcess1                                       = ReturnFullTextReconstructionProcess(mode,1);
-    //    detectionProcess                                        = detectionProcess1;
-    //    detectionProcess2                                       = ReturnFullTextReconstructionProcess(mode,2);
-    //}
-    detectionProcess                                            = "";
-    if(option.Contains("PbPb")){
-        cent                                                    = Form("%s %s", centrality.Data(), collisionSystem.Data());
-    } else {
-        cent                                                    = collisionSystem;
-    }
+    if (option.Contains("PbPb")) cent                           = Form("%s %s", centrality.Data(), collisionSystem.Data());
+    else                         cent                           = collisionSystem;
     
     //***************************** Load binning for spectrum *******************************************************
     fAnalyzedMeson                                              = "";
@@ -258,18 +246,47 @@ void PrepareSecondaries(    TString     meson                       = "",
         }
     }
 
-    //***************************** ranges **************************************************************************
-    Double_t deltaRap                                           = 2*rapidity;
-    Double_t deltaEta                                           = 2*0.9;
+    //***************************** ranges and scaling factors ******************************************************
     Double_t deltaPtGen                                         = ptGenMax-ptGenMin;
+    Double_t deltaRap                                           = 2*rapidity;
+    Double_t deltaEta                                           = ReturnDeltaEta(fGammaCutSelection);   // 2*0.9
+    Double_t eta                                                = deltaEta*0.5;                         // 0.9
     Double_t deltaPhi                                           = 2*TMath::Pi();
-    cout << "================================"  << endl;
-    cout << "deltaRap   "   << deltaRap         << endl;
-    cout << "deltaEta   "   << deltaEta         << endl;
-    cout << "deltaPtGen "   << deltaPtGen       << endl;
-    cout << "deltaPt    "   << ptMax - ptMin    << endl;
-    cout << "deltaPhi   "   << deltaPhi         << endl;
-    cout << "================================"  << endl;
+    Double_t deltaEtaCalo                                       = 0;
+    Double_t deltaPhiCalo                                       = 0;
+    Double_t minPhiCalo                                         = 0;
+    Double_t maxPhiCalo                                         = 0;
+    Double_t etaCalo                                            = 0;
+    if (isCalo){
+        deltaEtaCalo                                            = ReturnDeltaEtaCalo(fClusterCutSelection);
+        etaCalo                                                 = deltaEtaCalo*0.5;
+        deltaPhiCalo                                            = ReturnDeltaPhiCalo(fClusterCutSelection);
+        TString phiMinCut(fClusterCutSelection(                 GetClusterPhiMinCutPosition(fClusterCutSelection),1));
+        TString phiMaxCut(fClusterCutSelection(                 GetClusterPhiMaxCutPosition(fClusterCutSelection),1));
+        minPhiCalo                                              = AnalyseClusterMinPhiCut(phiMinCut.Atoi());
+        maxPhiCalo                                              = AnalyseClusterMaxPhiCut(phiMaxCut.Atoi());
+    }
+    
+    Double_t scalingEta                                         = 1.;
+    Double_t scalingPhi                                         = 1.;
+    if (isCalo) {
+        scalingEta                                              = deltaEtaCalo/deltaEta;
+        scalingPhi                                              = deltaPhiCalo/deltaPhi;
+    }
+    
+    cout << "========================================"  << endl;
+    cout << "deltaRap         = "     << deltaRap       << endl;
+    cout << "deltaPtGen       = "     << deltaPtGen     << endl;
+    cout << "deltaPt          = "     << ptMax - ptMin  << endl;
+    cout << "deltaEta         = "     << deltaEta       << endl;
+    if (isCalo)
+        cout << "deltaEtaCalo     = " << deltaEtaCalo   << endl;
+    cout << "deltaPhi         = "     << deltaPhi       << endl;
+    if (isCalo)
+        cout << "deltaPhiCalo     = " << deltaPhiCalo   << endl;
+    cout << "add. scaling eta = "     << scalingEta     << endl;
+    cout << "add. scaling phi = "     << scalingPhi     << endl;
+    cout << "========================================"  << endl;
 
     //***************************** Get number of spectra ***********************************************************
     Int_t nSpectra                                              = 0;
@@ -455,16 +472,18 @@ void PrepareSecondaries(    TString     meson                       = "",
     }
     
     //***************************** Scale spectra *******************************************************************
+    Double_t totalScalingFactor                                 = 1./nEvents;
+    totalScalingFactor                                          = totalScalingFactor*scalingEta*scalingPhi;
     for (Int_t i=0; i<nMotherParticles; i++) {
-        if (histoMesonDaughterPtOrBin[i])           histoMesonDaughterPtOrBin[i]->Scale(        1./nEvents);
-        if (histoMesonDaughterYOrBin[i])            histoMesonDaughterYOrBin[i]->Scale(         1./nEvents);
-        if (histoMesonDaughterPhiOrBin[i])          histoMesonDaughterPhiOrBin[i]->Scale(       1./nEvents);
-        if (histoMesonMotherPtOrBin[i])             histoMesonMotherPtOrBin[i]->Scale(          1./nEvents);
-        if (histoMesonMotherYOrBin[i])              histoMesonMotherYOrBin[i]->Scale(           1./nEvents);
-        if (histoMesonMotherPhiOrBin[i])            histoMesonMotherPhiOrBin[i]->Scale(         1./nEvents);
-        if (histoGammaFromXFromMotherPtOrBin[i])    histoGammaFromXFromMotherPtOrBin[i]->Scale( 1./nEvents);
-        if (histoGammaFromXFromMotherYOrBin[i])     histoGammaFromXFromMotherYOrBin[i]->Scale(  1./nEvents);
-        if (histoGammaFromXFromMotherPhiOrBin[i])   histoGammaFromXFromMotherPhiOrBin[i]->Scale(1./nEvents);
+        if (histoMesonDaughterPtOrBin[i])           histoMesonDaughterPtOrBin[i]->Scale(        totalScalingFactor);
+        if (histoMesonDaughterYOrBin[i])            histoMesonDaughterYOrBin[i]->Scale(         totalScalingFactor);
+        if (histoMesonDaughterPhiOrBin[i])          histoMesonDaughterPhiOrBin[i]->Scale(       totalScalingFactor);
+        if (histoMesonMotherPtOrBin[i])             histoMesonMotherPtOrBin[i]->Scale(          totalScalingFactor);
+        if (histoMesonMotherYOrBin[i])              histoMesonMotherYOrBin[i]->Scale(           totalScalingFactor);
+        if (histoMesonMotherPhiOrBin[i])            histoMesonMotherPhiOrBin[i]->Scale(         totalScalingFactor);
+        if (histoGammaFromXFromMotherPtOrBin[i])    histoGammaFromXFromMotherPtOrBin[i]->Scale( totalScalingFactor);
+        if (histoGammaFromXFromMotherYOrBin[i])     histoGammaFromXFromMotherYOrBin[i]->Scale(  totalScalingFactor);
+        if (histoGammaFromXFromMotherPhiOrBin[i])   histoGammaFromXFromMotherPhiOrBin[i]->Scale(totalScalingFactor);
     }
 
     //***************************** calculate (pi0 from X)/pi0_param ************************************************
