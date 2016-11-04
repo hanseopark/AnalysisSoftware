@@ -102,20 +102,8 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     TString collisionSystem                                     = ReturnFullCollisionsSystem(option);
     TString cent                                                = "";
     TString textMeasurement                                     = ""; //"#gamma";
-    TString detectionProcess                                    = ReturnFullTextReconstructionProcess(mode);
-    //TString detectionProcess1                                   = "";
-    //TString detectionProcess2                                   = "";
-    //if (isPCM && isCalo){
-    //    detectionProcess1                                       = ReturnFullTextReconstructionProcess(mode,1);
-    //    detectionProcess                                        = detectionProcess1;
-    //    detectionProcess2                                       = ReturnFullTextReconstructionProcess(mode,2);
-    //}
-    detectionProcess                                            = "";
-    if(option.Contains("PbPb")){
-        cent                                                    = Form("%s %s", centrality.Data(), collisionSystem.Data());
-    } else {
-        cent                                                    = collisionSystem;
-    }
+    if(option.Contains("PbPb")) cent                            = Form("%s %s", centrality.Data(), collisionSystem.Data());
+    else                        cent                            = collisionSystem;
     
     //***************************** Load binning for spectrum *******************************************************
     Initialize(fEnergyFlag, numberOfBins);
@@ -221,18 +209,47 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
         }
     }
 
-    //***************************** ranges **************************************************************************
-    Double_t deltaRap                                           = 2*rapidity;       // these factors might need to be changed (and applied)
-    Double_t deltaEta                                           = 2*0.9;            // if the solid angle of the measurement differs from 2pi*deltaEta
+    //***************************** ranges and scaling factors ******************************************************
     Double_t deltaPtGen                                         = ptGenMax-ptGenMin;
+    Double_t deltaRap                                           = 2*rapidity;
+    Double_t deltaEta                                           = ReturnDeltaEta(fGammaCutSelection);   // 2*0.9
+    Double_t eta                                                = deltaEta*0.5;                         // 0.9
     Double_t deltaPhi                                           = 2*TMath::Pi();
-    cout << "================================"  << endl;
-    cout << "deltaRap   "   << deltaRap         << endl;
-    cout << "deltaEta   "   << deltaEta         << endl;
-    cout << "deltaPtGen "   << deltaPtGen       << endl;
-    cout << "deltaPt    "   << ptMax - ptMin    << endl;
-    cout << "deltaPhi   "   << deltaPhi         << endl;
-    cout << "================================"  << endl;
+    Double_t deltaEtaCalo                                       = 0;
+    Double_t deltaPhiCalo                                       = 0;
+    Double_t minPhiCalo                                         = 0;
+    Double_t maxPhiCalo                                         = 0;
+    Double_t etaCalo                                            = 0;
+    if (isCalo){
+        deltaEtaCalo                                            = ReturnDeltaEtaCalo(fClusterCutSelection);
+        etaCalo                                                 = deltaEtaCalo*0.5;
+        deltaPhiCalo                                            = ReturnDeltaPhiCalo(fClusterCutSelection);
+        TString phiMinCut(fClusterCutSelection(                 GetClusterPhiMinCutPosition(fClusterCutSelection),1));
+        TString phiMaxCut(fClusterCutSelection(                 GetClusterPhiMaxCutPosition(fClusterCutSelection),1));
+        minPhiCalo                                              = AnalyseClusterMinPhiCut(phiMinCut.Atoi());
+        maxPhiCalo                                              = AnalyseClusterMaxPhiCut(phiMaxCut.Atoi());
+    }
+    
+    Double_t scalingEta                                         = 1.;
+    Double_t scalingPhi                                         = 1.;
+    if (isCalo) {
+        scalingEta                                              = deltaEtaCalo/deltaEta;
+        scalingPhi                                              = deltaPhiCalo/deltaPhi;
+    }
+    
+    cout << "========================================"  << endl;
+    cout << "deltaRap         = "     << deltaRap       << endl;
+    cout << "deltaPtGen       = "     << deltaPtGen     << endl;
+    cout << "deltaPt          = "     << ptMax - ptMin  << endl;
+    cout << "deltaEta         = "     << deltaEta       << endl;
+    if (isCalo)
+        cout << "deltaEtaCalo     = " << deltaEtaCalo   << endl;
+    cout << "deltaPhi         = "     << deltaPhi       << endl;
+    if (isCalo)
+        cout << "deltaPhiCalo     = " << deltaPhiCalo   << endl;
+    cout << "add. scaling eta = "     << scalingEta     << endl;
+    cout << "add. scaling phi = "     << scalingPhi     << endl;
+    cout << "========================================"  << endl;
 
     //***************************** Get number of spectra ***********************************************************
     Int_t nSpectra                                              = 0;
@@ -502,7 +519,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     }
     legendMothers->Draw("same");
     
-    PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+    PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
     if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.17, 0.032, 0.03, 1.25, 42);
     else PutALICESimulationLabel(                   0.22, 0.17, 0.032, 0.03, 1.25, 42);
     
@@ -538,7 +555,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     }
     legendMothersParam->Draw("same");
     
-    PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+    PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
     if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.17, 0.032, 0.03, 1.25, 42);
     else PutALICESimulationLabel(                   0.22, 0.17, 0.032, 0.03, 1.25, 42);
 
@@ -595,7 +612,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     }
     legendMothersRatio->Draw("same");
     
-    PutProcessLabelAndEnergyOnPlot(                 0.7, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+    PutProcessLabelAndEnergyOnPlot(                 0.7, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
     if (producePlotsForThesis) PutThisThesisLabel(  0.7, 0.17, 0.032, 0.03, 1.25, 42);
     else PutALICESimulationLabel(                   0.7, 0.17, 0.032, 0.03, 1.25, 42);
     
@@ -624,7 +641,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     }
     legendMothersY->Draw("same");
     
-    PutProcessLabelAndEnergyOnPlot(                 0.2, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+    PutProcessLabelAndEnergyOnPlot(                 0.2, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
     if (producePlotsForThesis) PutThisThesisLabel(  0.2, 0.17, 0.032, 0.03, 1.25, 42);
     else PutALICESimulationLabel(                   0.2, 0.17, 0.032, 0.03, 1.25, 42);
     
@@ -652,7 +669,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     }
     legendMothersPhi->Draw("same");
     
-    PutProcessLabelAndEnergyOnPlot(                 0.2, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+    PutProcessLabelAndEnergyOnPlot(                 0.2, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
     if (producePlotsForThesis) PutThisThesisLabel(  0.2, 0.17, 0.032, 0.03, 1.25, 42);
     else PutALICESimulationLabel(                   0.2, 0.17, 0.032, 0.03, 1.25, 42);
 
@@ -689,7 +706,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     }
     legendGammas->Draw("same");
     
-    PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+    PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
     if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.17, 0.032, 0.03, 1.25, 42);
     else PutALICESimulationLabel(                   0.22, 0.17, 0.032, 0.03, 1.25, 42);
 
@@ -733,7 +750,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     }
     legendGammasRatio->Draw("same");
     
-    PutProcessLabelAndEnergyOnPlot(                 0.18, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+    PutProcessLabelAndEnergyOnPlot(                 0.18, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
     if (producePlotsForThesis) PutThisThesisLabel(  0.18, 0.17, 0.032, 0.03, 1.25, 42);
     else PutALICESimulationLabel(                   0.18, 0.17, 0.032, 0.03, 1.25, 42);
 
@@ -772,7 +789,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     }
     legendGammasRatio2->Draw("same");
     
-    PutProcessLabelAndEnergyOnPlot(                 0.18, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+    PutProcessLabelAndEnergyOnPlot(                 0.18, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
     if (producePlotsForThesis) PutThisThesisLabel(  0.18, 0.17, 0.032, 0.03, 1.25, 42);
     else PutALICESimulationLabel(                   0.18, 0.17, 0.032, 0.03, 1.25, 42);
 
@@ -802,7 +819,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     }
     legendGammasY->Draw("same");
     
-    PutProcessLabelAndEnergyOnPlot(                 0.2, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+    PutProcessLabelAndEnergyOnPlot(                 0.2, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
     if (producePlotsForThesis) PutThisThesisLabel(  0.2, 0.17, 0.032, 0.03, 1.25, 42);
     else PutALICESimulationLabel(                   0.2, 0.17, 0.032, 0.03, 1.25, 42);
 
@@ -831,7 +848,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     }
     legendGammasPhi->Draw("same");
     
-    PutProcessLabelAndEnergyOnPlot(                 0.2, 0.22, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+    PutProcessLabelAndEnergyOnPlot(                 0.2, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
     if (producePlotsForThesis) PutThisThesisLabel(  0.2, 0.17, 0.032, 0.03, 1.25, 42);
     else PutALICESimulationLabel(                   0.2, 0.17, 0.032, 0.03, 1.25, 42);
 
@@ -889,7 +906,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
             cocktailInputParametrizationsMtScaled[particle]->Draw("same");
             legendMtCrossCheck->Draw("same");
             
-            PutProcessLabelAndEnergyOnPlot(                 0.22, 0.30, 0.032, cent, textMeasurement, detectionProcess, 42, 0.03);
+            PutProcessLabelAndEnergyOnPlot(                 0.22, 0.30, 0.032, cent, textMeasurement, "", 42, 0.03);
             if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.25, 0.032, 0.03, 1.25, 42);
             else PutALICESimulationLabel(                   0.22, 0.25, 0.032, 0.03, 1.25, 42);
 
@@ -916,16 +933,29 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
   
     //***************************** Plot pi0 from data vs. cocktail *************************************************
     if (histoPi0YieldData) {
+        // get proper pt range for plotting
+        for (Int_t i=1; i<histoPi0YieldData->GetNbinsX()+1; i++) {
+            if (histoPi0YieldData->GetBinContent(i)) {
+                ptPlotMin                                           = histoPi0YieldData->GetXaxis()->GetBinLowEdge(i);
+                break;
+            }
+        }
+        ptPlotMin                                                   = ptPlotMin/2;
+        if(ptPlotMin == 0 || ptPlotMin < 1e-3) ptPlotMin            = 1e-3;
+        ptPlotMax                                                   = ptMax*2;
+        
         
         TCanvas *canvasPi0                                          = new TCanvas("canvasPi0","",1100,1200);
-        DrawGammaCanvasSettings(canvasPi0, 0.15, 0.01, 0.01, 0.075);
+        DrawGammaCanvasSettings(canvasPi0, 0.16, 0.01, 0.01, 0.075);
         canvasPi0->SetLogy();
         canvasPi0->SetLogx();
         
-        TLegend* legendPi0                                          = GetAndSetLegend2(0.65, 0.87-(0.045*2), 0.9, 0.87, 40);
+        TLegend* legendPi0                                          = GetAndSetLegend2(0.7, 0.95-(0.045*2), 0.85, 0.95, 40);
         legendPi0->SetBorderSize(0);
-        dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptMin, ptMax);
-        SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", histoPi0YieldData->GetMinimum(0)*0.1, histoPi0YieldData->GetMaximum()*2, 1.0, 1.8);
+        dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
+        SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", histoPi0YieldData->GetMinimum(0)*0.1, histoPi0YieldData->GetMaximum()*2, 1.0, 1.7);
+        dummyHist->SetLabelOffset(-0.015, "X");
+        dummyHist->SetTitleOffset(0.8, "X");
         dummyHist->Draw();
         
         DrawGammaSetMarker(histoPi0YieldData, 24, 1, kBlack,  kBlack);
@@ -938,9 +968,9 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
         histoGammaMotherPt[0]->Draw("same");
         legendPi0->Draw("same");
 
-        PutProcessLabelAndEnergyOnPlot(                 0.22, 0.30, 0.03, cent, textMeasurement, detectionProcess, 42, 0.03);
-        if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.25, 0.032, 0.03, 1.25, 42);
-        else PutALICESimulationLabel(                   0.22, 0.25, 0.032, 0.03, 1.25, 42);
+        PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.03, cent, textMeasurement, "", 42, 0.03);
+        if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.17, 0.032, 0.03, 1.25, 42);
+        else PutALICESimulationLabel(                   0.22, 0.17, 0.032, 0.03, 1.25, 42);
 
         canvasPi0->SaveAs(Form("%s/Pi0DataCocktail_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
         delete legendPi0;
