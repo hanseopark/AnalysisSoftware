@@ -3310,13 +3310,14 @@ void PutProcessLabelAndEnergyOnPlot( Double_t startTextX,
     }
 }
 
-void PutThisThesisLabel(Double_t startTextX,
-                        Double_t startTextY,
-                        Size_t textHeight,
-                        Size_t textHeightRel = 0.03,
-                        Float_t textHeightFac = 1.25,
-                        Style_t textFont = 62,
-                        Color_t textColor = 1) {
+void PutThisThesisLabel(Double_t    startTextX,
+                        Double_t    startTextY,
+                        Size_t      textHeight,
+                        Size_t      textHeightRel   = 0.03,
+                        Float_t     textHeightFac   = 1.25,
+                        Style_t     textFont        = 62,
+                        Color_t     textColor       = 1,
+                        Bool_t      alignLeft       = kTRUE) {
 
   Double_t differenceText = textHeight*textHeightFac;
   if (textFont == 63 || textFont == 43)
@@ -3325,6 +3326,7 @@ void PutThisThesisLabel(Double_t startTextX,
   TString labelString     = "- this thesis -";
   TLatex *label           = new TLatex(startTextX, (startTextY-differenceText), labelString);
 
+  if(!alignLeft) label->SetTextAlign(31);
   label->SetNDC();
   label->SetTextColor(1);
   label->SetTextFont(textFont);
@@ -3332,21 +3334,23 @@ void PutThisThesisLabel(Double_t startTextX,
   label->Draw();
 }
 
-void PutALICESimulationLabel(Double_t startTextX,
-                             Double_t startTextY,
-                             Size_t textHeight,
-                             Size_t textHeightRel = 0.03,
-                             Float_t textHeightFac = 1.25,
-                             Style_t textFont = 62,
-                             Color_t textColor = 1) {
+void PutALICESimulationLabel(Double_t   startTextX,
+                             Double_t   startTextY,
+                             Size_t     textHeight,
+                             Size_t     textHeightRel   = 0.03,
+                             Float_t    textHeightFac   = 1.25,
+                             Style_t    textFont        = 62,
+                             Color_t    textColor       = 1,
+                             Bool_t     alignLeft       = kTRUE) {
   
   Double_t differenceText = textHeight*textHeightFac;
   if (textFont == 63 || textFont == 43)
     differenceText        = textHeightRel*textHeightFac;
   
-  TString labelString     = "ALICE Simulation";
+  TString labelString     = "ALICE simulation";
   TLatex *label           = new TLatex(startTextX, (startTextY-differenceText), labelString);
   
+  if(!alignLeft) label->SetTextAlign(31);
   label->SetNDC();
   label->SetTextColor(1);
   label->SetTextFont(textFont);
