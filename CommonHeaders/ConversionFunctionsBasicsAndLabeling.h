@@ -3695,4 +3695,40 @@ TString ReturnTriggerName(Int_t trigger){
     return "";
 }
 
+//************************************************************************************
+//******************* Analyse kappa cut **********************************************
+//************************************************************************************
+Bool_t AnalyseKappaCut(Int_t cutValue, Double_t kappaMin, Double_t kappaMax){
+    switch (cutValue) {
+        case 0: // completely open
+            kappaMin = -200;
+            kappaMax = 200;
+            break;
+        case 1: // mainly pi pi
+            kappaMin = -20;
+            kappaMax = -13;
+            break;
+        case 2: // mainly pi e
+            kappaMin = -11;
+            kappaMax = -6;
+            break;
+        case 3: // signal
+            kappaMin = -3;
+            kappaMax = 5;
+            break;
+        case 4: // remaining
+            kappaMin = 11;
+            kappaMax = 20;
+            break;
+        case 5: // -5-10 full signal peak(including background)
+            kappaMin = -5;
+            kappaMax = 10;
+            break;
+        default:
+            cout << "wrong kappa cut value" << endl;
+            return kFALSE;
+    }
+    
+    return kTRUE;
+}
 
