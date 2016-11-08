@@ -157,10 +157,16 @@ TH1D*       fHistoGammaMCBackground                                             
 TH1D*       fHistoSecondaryGammaFromXFromK0sMCRecoEffMCPt                                       = NULL;
 TH1D*       fHistoSecondaryGammaFromXFromK0lMCRecoEffMCPt                                       = NULL;
 TH1D*       fHistoSecondaryGammaFromXFromLambdaMCRecoEffMCPt                                    = NULL;
-
 TH1D*       fHistoSecondaryGammaFromXFromK0sMCRecoEffMCPtOrBin                                  = NULL;
 TH1D*       fHistoSecondaryGammaFromXFromK0lMCRecoEffMCPtOrBin                                  = NULL;
 TH1D*       fHistoSecondaryGammaFromXFromLambdaMCRecoEffMCPtOrBin                               = NULL;
+
+TH1D*       fHistoSecondaryGammaFromXFromK0sMCRecoEffPt                                         = NULL;
+TH1D*       fHistoSecondaryGammaFromXFromK0lMCRecoEffPt                                         = NULL;
+TH1D*       fHistoSecondaryGammaFromXFromLambdaMCRecoEffPt                                      = NULL;
+TH1D*       fHistoSecondaryGammaFromXFromK0sMCRecoEffPtOrBin                                    = NULL;
+TH1D*       fHistoSecondaryGammaFromXFromK0lMCRecoEffPtOrBin                                    = NULL;
+TH1D*       fHistoSecondaryGammaFromXFromLambdaMCRecoEffPtOrBin                                 = NULL;
 
 TH2D*       fHistoGammaTrueSecondaryFromXFromK0sConv_MCPt_rectPt_MC_Rebin                       = NULL;
 TH2D*       fHistoGammaTrueSecondaryFromXFromK0lConv_MCPt_rectPt_MC_Rebin                       = NULL;
