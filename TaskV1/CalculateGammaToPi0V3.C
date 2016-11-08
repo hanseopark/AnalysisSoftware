@@ -339,9 +339,10 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
       padConversionGammaRatio                   ->Draw();
       padConversionGamma                        ->cd();
       padConversionGamma                        ->SetLogy();
+      padConversionGamma                        ->SetLogx();
    // Upper part of plot with histograms
       textSizeSpectra=0.035;
-      TH2F * histoDummy2                        = new TH2F("histoDummy2","histoDummy2",1000,0., 16,10000,5e-9, 9);
+      TH2F * histoDummy2                        = new TH2F("histoDummy2","histoDummy2",1000,0.3, 16,10000,5e-9, 9);
       SetStyleHistoTH2ForGraphs(histoDummy2, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c})",
                                  0.85*textSizeSpectra,textSizeSpectra, textSizeSpectra,textSizeSpectra, 0.77,1.7);
       histoDummy2                               ->Draw();
@@ -360,6 +361,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
       leg_ConversionGammaSpeccanvas             ->Draw();
    // Lower part of plot with ratio
       padConversionGammaRatio                   ->cd();
+      padConversionGammaRatio                   ->SetLogx();
 
       histRatioConversionGammaA                 = (TH1D*) histoGammaSpecCorrPurity->Clone("histRatioConversionGammaA");
       histRatioConversionGammaA                 = CalculateHistoRatioToFit(histRatioConversionGammaA,ConversionGammaFitA);
@@ -580,12 +582,13 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
       TCanvas* cocktailCanvasMesonSpec               = GetAndSetCanvas("cocktailCanvasMesonSpec", 0.12, 0.1, 1000 ,1350);
       DrawGammaCanvasSettings( cocktailCanvasMesonSpec, 0.16, 0.02, 0.015, 0.07);
       cocktailCanvasMesonSpec->SetLogy();
+      cocktailCanvasMesonSpec->SetLogx();
 
       DrawAutoGammaMesonHistos( cocktailPi0, 
                         "", "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c})", 
                         kTRUE, 20.,5e-10, kFALSE,
                         kFALSE, -0.004, 0.020, 
-                        kTRUE, 0.,(histoCorrectedPi0Yield->GetXaxis())->GetBinUpEdge(histoCorrectedPi0Yield->GetNbinsX()),62,0.04,62,0.03,0.8,1.5);
+                        kTRUE, 0.2,(histoCorrectedPi0Yield->GetXaxis())->GetBinUpEdge(histoCorrectedPi0Yield->GetNbinsX()),62,0.04,62,0.03,0.8,1.5);
       DrawGammaSetMarker(cocktailPi0, 20, 2.0,colorCocktailPi0,colorCocktailPi0);
 
       cocktailPi0->Draw("chist");
@@ -658,10 +661,11 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
       TCanvas *canvasConversionFitDoubleRatioSum              = new TCanvas("canvasConversionFitDoubleRatioSum","",0.095,0.09,1000,815);
       DrawGammaCanvasSettings( canvasConversionFitDoubleRatioSum, 0.09, 0.02, 0.02, 0.09);
       canvasConversionFitDoubleRatioSum->cd();
+      canvasConversionFitDoubleRatioSum->SetLogx();
 
-      TH2F * histo2DDoubleRatioPlotting = new TH2F("histo2DDoubleRatioPlotting","histo2DDoubleRatioPlotting",1000,0.0,20.,1000,0.85,1.65);
+      TH2F * histo2DDoubleRatioPlotting = new TH2F("histo2DDoubleRatioPlotting","histo2DDoubleRatioPlotting",1000,0.3,40.,1000,0.85,1.65);
       SetStyleHistoTH2ForGraphs(histo2DDoubleRatioPlotting, "#it{p}_{T} (GeV/#it{c})","(#gamma_{inc}/#pi^{0})/(#gamma_{decay}/#pi^{0})", 0.04,0.04, 0.04,0.04, 1.,1.);
-      histo2DDoubleRatioPlotting->GetXaxis()->SetRangeUser(0.,histoDoubleRatioConversionTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioConversionTrueEffPurity->GetNbinsX()));
+      histo2DDoubleRatioPlotting->GetXaxis()->SetRangeUser(0.,histoDoubleRatioConversionTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioConversionTrueEffPurity->GetNbinsX())*1.5);
       histo2DDoubleRatioPlotting->GetXaxis()->SetTitleFont(62);
       histo2DDoubleRatioPlotting->GetYaxis()->SetTitleFont(62);
       histo2DDoubleRatioPlotting->DrawCopy(); 
