@@ -253,39 +253,39 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
     //*********************************************************************************************************************************
     //*********************************************************************************************************************************
 
-    const Int_t nSets = 2;
-    const Int_t nData = 0;
-    TString DataSets[nSets]={
-      "LHC16c2",
-      "LHC16c2"
-    };
-    TString PrefixDataSets[nSets]={
-      "/alice/sim/2016/LHC16c2/",
-      "/alice/sim/2016/LHC16c2/"
-    };
-
-    TString train = "Legotrain-vAN-20161102-8TeV_rerunJetJetMatching";
-    Int_t trainRuns[nSets] = {2590,2591};
-    TString runlist[nSets] = {"merge","merge"};
-
-    const Int_t nFiles = 5;
-    TString Files[nFiles] = {"GammaConvCalo_101","GammaConvCalo_121","GammaCalo_101","GammaCalo_115","GammaCalo_117"};
-
-//    const Int_t nSets = 1;
+//    const Int_t nSets = 2;
 //    const Int_t nData = 0;
 //    TString DataSets[nSets]={
+//      "LHC16c2",
 //      "LHC16c2"
 //    };
 //    TString PrefixDataSets[nSets]={
+//      "/alice/sim/2016/LHC16c2/",
 //      "/alice/sim/2016/LHC16c2/"
 //    };
 
-//    TString train = "Legotrain-vAN-20161011-8TeV-mergedStd100_AOD";
-//    Int_t trainRuns[nSets] = {213};
-//    TString runlist[nSets] = {"merge"};
+//    TString train = "Legotrain-vAN-20161102-8TeV_rerunJetJetMatching";
+//    Int_t trainRuns[nSets] = {2590,2591};
+//    TString runlist[nSets] = {"merge","merge"};
 
-//    const Int_t nFiles = 1;
-//    TString Files[nFiles] = {"GammaCaloMerged_116"};
+//    const Int_t nFiles = 5;
+//    TString Files[nFiles] = {"GammaConvCalo_101","GammaConvCalo_121","GammaCalo_101","GammaCalo_115","GammaCalo_117"};
+
+    const Int_t nSets = 1;
+    const Int_t nData = 0;
+    TString DataSets[nSets]={
+      "LHC16c2"
+    };
+    TString PrefixDataSets[nSets]={
+      "/alice/sim/2016/LHC16c2/"
+    };
+
+    TString train = "Legotrain-vAN-20161107-8TeV-GammaCalo_AOD";
+    Int_t trainRuns[nSets] = {253};
+    TString runlist[nSets] = {"merge"};
+
+    const Int_t nFiles = 3;
+    TString Files[nFiles] = {"GammaCalo_101","GammaCalo_115","GammaCalo_117"};
 
     //---------------------------------------------------------------------------------------------------
 
