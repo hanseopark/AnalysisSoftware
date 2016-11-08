@@ -3220,29 +3220,29 @@ Bool_t LoadSecondaryPionsFromExternalFile(){
 // - rebin them according to current pi0 binning
 //******************************************************************************
 Bool_t LoadSecondaryPionsFromCocktailFile(TString cutSelection, TString optionEnergy){
-   TString nameCocktailFile                    =Form("%s/%s/HadronicCocktail_%.2f_%s.root",cutSelection.Data(),optionEnergy.Data(),fYMaxMeson/2,cutSelection.Data());
+   TString nameCocktailFile                    =Form("%s/%s/SecondaryPi0%s_%.2f_%s.root",cutSelection.Data(),optionEnergy.Data(),fPeriodFlag.Data(),fYMaxMeson/2,cutSelection.Data());
    fFileCocktailInput                  = new TFile(nameCocktailFile.Data());
-        if (fFileCocktailInput){
-           for (Int_t j = 0; j < 3; j++){
-            cout << "found correct input: " << nameCocktailFile.Data() << endl;
-            cout << "trying to find " << Form("Pi0_From_%s_Pt_OrBin", nameSecondariesCocktail[j].Data()) << endl;
-
-            fHistoYieldExternSecInput[j]         = (TH1D*)fFileCocktailInput->Get(Form("Pi0_From_%s_Pt_OrBin", nameSecondariesCocktail[j].Data()));
-            if (fHistoYieldExternSecInput[j]){
-                fHistoYieldExternSecInput[j]->Sumw2();
-                fHistoYieldExternSecInput[j]->SetName(Form("histoSecPi0YieldFrom%s_FromCocktail_orgBinning",nameSecondaries[j].Data())); // Proper bins in Pt
-
-                fHistoYieldExternSecInputReb[j]  =  (TH1D*)fHistoYieldExternSecInput[j]->Rebin(fNBinsPt,Form("histoSecPi0YieldFrom%s_FromCocktail",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
-                if (fHistoYieldExternSecInputReb[j]){
-                    fHistoYieldExternSecInputReb[j]->Divide(fDeltaPt);
-                    fHistoYieldExternSecInput[j]->Scale(1./fHistoYieldExternSecInput[j]->GetBinWidth(1));
-                }
-            } else {
-                cout << "file didn't contain proper histo" << endl;
+   if (fFileCocktailInput){
+      for (Int_t j = 0; j < 3; j++){
+         cout << "found correct input: " << nameCocktailFile.Data() << endl;
+         cout << "trying to find " << Form("Pi0_From_%s_Pt_OrBin", nameSecondariesCocktail[j].Data()) << endl;
+         
+         fHistoYieldExternSecInput[j]         = (TH1D*)fFileCocktailInput->Get(Form("Pi0_From_%s_Pt_OrBin", nameSecondariesCocktail[j].Data()));
+         if (fHistoYieldExternSecInput[j]){
+            fHistoYieldExternSecInput[j]->Sumw2();
+            fHistoYieldExternSecInput[j]->SetName(Form("histoSecPi0YieldFrom%s_FromCocktail_orgBinning",nameSecondaries[j].Data())); // Proper bins in Pt
+            
+            fHistoYieldExternSecInputReb[j]  =  (TH1D*)fHistoYieldExternSecInput[j]->Rebin(fNBinsPt,Form("histoSecPi0YieldFrom%s_FromCocktail",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
+            if (fHistoYieldExternSecInputReb[j]){
+               fHistoYieldExternSecInputReb[j]->Divide(fDeltaPt);
+               fHistoYieldExternSecInput[j]->Scale(1./fHistoYieldExternSecInput[j]->GetBinWidth(1));
             }
-        }
+         } else {
+            cout << "file didn't contain proper histo" << endl;
+         }
       }
-    return kTRUE;
+      return kTRUE;
+   }
 }
 
 
