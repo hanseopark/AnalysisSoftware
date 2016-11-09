@@ -1280,7 +1280,11 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         canvasConvProb->SaveAs(Form("%s/%s_ConversionProb_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
         delete canvasConvProb;
-        TCanvas *canvasConvProbSec = GetAndSetCanvas("canvasConvProbSec");
+        
+        // secondary reco eff plot (only used for cocktail sec corr)
+        if (hasCocktailInput) {
+            TCanvas *canvasConvProbSec = GetAndSetCanvas("canvasConvProbSec");
+            
             DrawGammaSetMarker(histoGammaSecondaryFromXFromK0sConvProb_MCPt, 20, 1.0, 1, 1);
             DrawGammaSetMarker(histoGammaSecondaryFromXFromK0lConvProb_MCPt, 22, 1.0, kBlue-4, kBlue-4);
             DrawGammaSetMarker(histoGammaSecondaryFromXFromLambdaConvProb_MCPt, 24, 1.0, kCyan+2, kCyan+2);
@@ -1288,7 +1292,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             histoGammaSecondaryFromXFromK0sConvProb_MCPt->Draw();
             histoGammaSecondaryFromXFromK0lConvProb_MCPt->Draw("same");
             histoGammaSecondaryFromXFromLambdaConvProb_MCPt->Draw("same");
-
+            
             TF1 *fConvK0s  = new TF1("line","[0]",2.5,25.);
             TF1 *fConvK0l  = new TF1("line","[0]",2.5,25.);
             TF1 *fConvLambda  = new TF1("line","[0]",2.5,25.);
@@ -1304,7 +1308,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             DrawGammaLines(0., maxPtGamma,parameterProbK0s[0], parameterProbK0s[0],1,1,2);
             DrawGammaLines(0., maxPtGamma,parameterProbK0l[0], parameterProbK0l[0],1,kBlue-4,2);
             DrawGammaLines(0., maxPtGamma,parameterProbLambda[0], parameterProbLambda[0],1,kCyan+2,2);
-
+            
             PutProcessLabelAndEnergyOnPlot( 0.75, 0.3, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
             TLegend* legendSecConvProb = GetAndSetLegend(0.55,0.75,4);
             legendSecConvProb->AddEntry(histoGammaSecondaryFromXFromK0sConvProb_MCPt,"Secondary #gamma from K^{0}_{S}","p");
@@ -1312,8 +1316,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             legendSecConvProb->AddEntry(histoGammaSecondaryFromXFromLambdaConvProb_MCPt,"Secondary #gamma from #Lambda","p");
             legendSecConvProb->Draw();
             
-        canvasConvProbSec->SaveAs(Form("%s/%s_ConversionProbSecondaries_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
-        delete canvasConvProbSec;
+            canvasConvProbSec->SaveAs(Form("%s/%s_ConversionProbSecondaries_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
+            delete canvasConvProbSec;
+        }
     }
 
     cout << __LINE__ << endl;
@@ -1351,7 +1356,10 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         
         }    
     delete canvasRecoEff;
-    TCanvas *canvasRecoEffSec = GetAndSetCanvas("canvasRecoEffSec");
+    
+    // secondary reco eff plot (only used for cocktail sec corr)
+    if (hasCocktailInput) {
+        TCanvas *canvasRecoEffSec = GetAndSetCanvas("canvasRecoEffSec");
         if ( isPCM && !isCalo ){
             DrawGammaSetMarker(histoGammaSecondaryFromXFromK0lRecoEff_Pt, 20, 1.0, 1, 1);
             DrawGammaSetMarker(histoGammaSecondaryFromXFromK0sRecoEff_Pt, 22, 1.0, kBlue-4, kBlue-4);
@@ -1360,18 +1368,19 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             histoGammaSecondaryFromXFromK0lRecoEff_Pt->Draw();
             histoGammaSecondaryFromXFromK0sRecoEff_Pt->Draw("same");
             histoGammaSecondaryFromXFromLambdaRecoEff_Pt->Draw("same");
-        
+            
             PutProcessLabelAndEnergyOnPlot( 0.75, 0.95, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
             TLegend* legendSecRecoEff = GetAndSetLegend(0.40,0.76,4);
             legendSecRecoEff->AddEntry(histoGammaSecondaryFromXFromK0sRecoEff_Pt,"Secondary #gamma from K^{0}_{S}","p");
             legendSecRecoEff->AddEntry(histoGammaSecondaryFromXFromK0lRecoEff_Pt,"Secondary #gamma from K^{0}_{L}","p");
             legendSecRecoEff->AddEntry(histoGammaSecondaryFromXFromLambdaRecoEff_Pt,"Secondary #gamma from #Lambda","p");
             legendSecRecoEff->Draw();
-        
+            
             canvasRecoEffSec->SaveAs(Form("%s/%s_ReconstructionEffSec_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
         }
-
-    delete canvasRecoEffSec;
+        
+        delete canvasRecoEffSec;
+    }
 
     cout << __LINE__ << endl;
 
@@ -1525,21 +1534,25 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             PutProcessLabelAndEnergyOnPlot( 0.18, 0.95, 0.035, cent, textMeasurement, detectionProcess2, 42, 0.03);
             canvasResponseMatrix->SaveAs(Form("%s/%s_ResponseMatrixCalo_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
             
-        }    
-    TCanvas * canvasResponseMatrixSec = new TCanvas("canvasResponseMatrixSec","",480,440);  // gives the page size
-    DrawGammaCanvasSettings( canvasResponseMatrixSec, 0.09, 0.105, 0.02, 0.085);    
-    canvasResponseMatrixSec->SetLogz(1);
-    canvasResponseMatrixSec->cd();
-
+        }
+    //     delete canvasResponseMatrix;
+    
+    // response matrix for cocktail secondary corr
+    if (hasCocktailInput) {
+        TCanvas* canvasResponseMatrixSec = new TCanvas("canvasResponseMatrixSec","",480,440);  // gives the page size
+        DrawGammaCanvasSettings( canvasResponseMatrixSec, 0.09, 0.105, 0.02, 0.085);
+        canvasResponseMatrixSec->SetLogz(1);
+        canvasResponseMatrixSec->cd();
+        
         if (isPCM){
-            SetStyleHistoTH2ForGraphs(  histoGammaTrueSecondaryFromXFromK0s_MCPt_recPtOrBin, "Reconstructed #it{p}_{T} (GeV/#it{c})","MC #it{p}_{T} (GeV/#it{c})", 0.035, 0.04,  
-                                    0.035, 0.04, 0.9, 1.0, 510, 510);
+            SetStyleHistoTH2ForGraphs(  histoGammaTrueSecondaryFromXFromK0s_MCPt_recPtOrBin, "Reconstructed #it{p}_{T} (GeV/#it{c})","MC #it{p}_{T} (GeV/#it{c})", 0.035, 0.04,
+                                      0.035, 0.04, 0.9, 1.0, 510, 510);
             histoGammaTrueSecondaryFromXFromK0s_MCPt_recPtOrBin->Draw("colz");
             PutProcessLabelAndEnergyOnPlot( 0.18, 0.95, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
             canvasResponseMatrixSec->SaveAs(Form("%s/%s_ResponseMatrixSecK0s_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
-        } 
-//     delete canvasResponseMatrix;
-
+        }
+        
+    }
     cout << __LINE__ << endl;
 
     //**********************************************************************************
