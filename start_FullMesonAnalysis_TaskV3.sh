@@ -1075,6 +1075,12 @@ function CreateGammaFinalResults()
     root -x -l -b -q TaskV1/CalculateGammaToPi0V2.C++\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\",$mode\,\"$ESTIMATEPILEUP\"\)
 }
 
+function CreateGammaFinalResultsV3()
+{
+    root -x -l -b -q TaskV1/CalculateGammaToPi0V3.C++\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\",$mod\)
+}
+
+
 function Usage() 
 {
     echo -e "
@@ -2007,7 +2013,27 @@ do
         ExtInputFile="";
     fi
     echo "The collision system has been selected to be $energy."
-    
+
+    echo "Is a cocktail file available? Yes/No?"
+    read answer
+    if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+        echo "Please enter the filepath of the cocktail file."
+            read CocktailRootFile
+            if [ -f $CocktailRootFile ]; then
+                echo "The cocktail file specified is $CocktailRootFile"
+                useCocktail=1
+                    echo "Please enter the rapidity used in the cocktail, e.g. 0.80"
+                    read cocktailRapidity
+                        echo "Rapidity of $cocktailRapidity has been chosen."
+            else
+                echo "No cocktail file specified, it will not be used."
+                useCocktail=0
+            fi
+    elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+        echo "Will not use cocktail input for secondary correction or double ratio."
+        useCocktail=0
+    fi
+
     if [ $energy = "7TeV" ]; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
@@ -2459,14 +2485,17 @@ if [ $mode -lt 10 ]; then
                     mkdir $cutSelection/$energy/$Suffix
                 fi
 
-                if [ $disableToyMC -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then 
+                if [ $disableToyMC -eq 0 ] && [ $useCocktail -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then
                     rm ToyMCOutputs.txt
                     root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
                     root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
                     root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
                 fi
-                
-                if [ $ONLYCORRECTION -eq 0 ]; then            
+                if [ $useCocktail -eq 1 ] && [ $ONLYCORRECTION -eq 0 ]; then
+                    root -b -x -l -q TaskV1/PrepareSecondaries.C\+\(\"Pi0\"\,\"$CocktailRootFile\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,$cocktailRapidity\,\"\"\,$BinsPtPi0\,$mode,kFALSE\)
+                fi
+
+                if [ $ONLYCORRECTION -eq 0 ]; then
                     echo "CutSelection is $cutSelection";
                     if [ $DoPi0 -eq 1 ]; then
                         optionsPi0Data=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
@@ -2618,15 +2647,14 @@ if [ $mode -lt 10 ]; then
                         PARTLY=1
                     fi
                 fi
-                
                 if [ $DoGamma -eq 1 ]; then
+
                     if [ -f $Pi0dataRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
                         if [ $NEWGammaMacros == 0 ]; then
                             CorrectSignalGamma $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE
                         else 
                             CorrectSignalGammaV2 $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE
                         fi
-                        
                     else 
                         PARTLY=1
                     fi
@@ -2639,16 +2667,22 @@ if [ $mode -lt 10 ]; then
                     else 
                         PARTLY=1
                     fi
+                    if [ $useCocktail -eq 1 ] && [ -f $Pi0dataRAWFILE ]; then
+                        root -b -x -l -q TaskV1/PrepareCocktail.C\+\(\"$CocktailRootFile\"\,\"$Pi0dataRAWFILE\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,$cocktailRapidity\,\"\"\,$BinsPtPi0\,$mode\)
+                    fi
                     Pi0dataCorr=`ls $cutSelection/$energy/Pi0_data_GammaConvV1Correction_*.root`
                     GammaPi0dataCorr=`ls $cutSelection/$energy/Gamma_Pi0_data_GammaConvV1Correction_*.root`
-                    if [ $NEWGammaMacros == 0 ]; then 
-                        CreateGammaFinalResults $GammaPi0dataCorr $Pi0dataCorr $cutSelection $Suffix Pi0 kFALSE;
-                    fi    
+                    GammaCocktailFile=`ls $cutSelection/$energy/GammaCocktail_$cocktailRapidity*.root`
+                    if [ -f $GammaCocktailFile  ]; then
+                        CreateGammaFinalResultsV3 $GammaPi0dataCorr $Pi0dataCorr $GammaCocktailFile $cutSelection $Suffix Pi0 kFALSE;
+                    else
+                        CreateGammaFinalResults $GammaPi0dataCorr $Pi0dataCorr $cutSelection $Suffix Pi0 kTRUE;
+                    fi
     #                Pi0MCCorr=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1Correction_*.root`
     #                GammaPi0MCCorr=`ls $cutSelection/$energy/Gamma_Pi0_MC_GammaConvV1Correction_*.root`
     #                CreateGammaFinalResults $GammaPi0MCCorr $Pi0MCCorr $cutSelection $Suffix Pi0 kTRUE;
                 fi
-                
+
                 if [ $DoPi0InEtaBinning -eq 1 ]; then    
                     if [ -f $Pi0EtadataRAWFILE ] && [ -f $Pi0EtaMCcorrectionFILE ] ; then
                         CorrectSignal $Pi0EtadataRAWFILE $Pi0EtaMCcorrectionFILE $cutSelection $Suffix Pi0EtaBinning kFALSE $ESTIMATEPILEUP $directphoton 
