@@ -1471,35 +1471,36 @@ void CalculateGammaCorrection(){
         // ==========================================
         
         // ======== Secondary fractions =============
-        fHistoFracAllGammaToSecOrBin                                = (TH1D*) fHistoGammaConvPtOrBin->Clone("FracAllGammaToSecOriginalBinning");
+        fHistoFracAllGammaToSecOrBin                                = (TH1D*)fHistoGammaConvPtOrBin->Clone("FracAllGammaToSecOriginalBinning");
         fHistoFracAllGammaToSecOrBin->Divide(fHistoGammaTrueSecondaryConvPtOrBin,fHistoFracAllGammaToSecOrBin,1,1,"B");
         fHistoFracAllGammaToSec                                     = (TH1D*) fHistoGammaConvPt->Clone("FracAllGammaToSec");
         fHistoFracAllGammaToSec->Divide(fHistoGammaTrueSecondaryConvPt,fHistoFracAllGammaToSec,1,1,"B");
 
-        fHistoFracAllGammaToSecFromXFromK0s                         = (TH1D*) fHistoGammaConvPt->Clone("FracAllGammaToSecFromXFromK0s");
+        fHistoFracAllGammaToSecFromXFromK0s                         = (TH1D*)fHistoGammaConvPt->Clone("FracAllGammaToSecFromXFromK0s");
         fHistoFracAllGammaToSecFromXFromK0s->Divide(fHistoGammaTrueSecondaryConvGammaFromXFromK0sPt,fHistoFracAllGammaToSecFromXFromK0s,1,1,"B");
 
-        fHistoFracAllGammaToSecFromXFromK0sOrBin                    = (TH1D*) fHistoGammaConvPtOrBin->Clone("FracAllGammaToSecFromXFromK0sOriginalBinning");
+        fHistoFracAllGammaToSecFromXFromK0sOrBin                    = (TH1D*)fHistoGammaConvPtOrBin->Clone("FracAllGammaToSecFromXFromK0sOriginalBinning");
         fHistoFracAllGammaToSecFromXFromK0sOrBin->Divide(fHistoGammaTrueSecondaryConvGammaFromXFromK0sPtOrBin,fHistoFracAllGammaToSecFromXFromK0sOrBin,1,1,"B");
         
-        if(fHistoGammaTrueSecondaryConvGammaFromXFromK0lPt){
-            fHistoFracAllGammaToSecFromXFromK0l                     = (TH1D*) fHistoGammaConvPt->Clone("FracAllGammaToSecFromXFromK0l");
+        if(nHistogramDimension==2){
+            fHistoFracAllGammaToSecFromXFromK0l                     = (TH1D*)fHistoGammaConvPt->Clone("FracAllGammaToSecFromXFromK0l");
             fHistoFracAllGammaToSecFromXFromK0l->Divide(fHistoGammaTrueSecondaryConvGammaFromXFromK0lPt,fHistoFracAllGammaToSecFromXFromK0l,1,1,"B");
 
-            fHistoFracAllGammaToSecFromXFromK0lOrBin                = (TH1D*) fHistoGammaConvPtOrBin->Clone("FracAllGammaToSecFromXFromK0lOriginalBinning");
+            fHistoFracAllGammaToSecFromXFromK0lOrBin                = (TH1D*)fHistoGammaConvPtOrBin->Clone("FracAllGammaToSecFromXFromK0lOriginalBinning");
             fHistoFracAllGammaToSecFromXFromK0lOrBin->Divide(fHistoGammaTrueSecondaryConvGammaFromXFromK0lPtOrBin,fHistoFracAllGammaToSecFromXFromK0lOrBin,1,1,"B");
         }
-        fHistoFracAllGammaToSecFromXFromLambda                      = (TH1D*) fHistoGammaConvPt->Clone("FracAllGammaToSecFromXFromLambda");
+        
+        fHistoFracAllGammaToSecFromXFromLambda                      = (TH1D*)fHistoGammaConvPt->Clone("FracAllGammaToSecFromXFromLambda");
         fHistoFracAllGammaToSecFromXFromLambda->Divide(fHistoGammaTrueSecondaryConvGammaFromXFromLambdaPt,fHistoFracAllGammaToSecFromXFromLambda,1,1,"B");
 
-        fHistoFracAllGammaToSecFromXFromLambdaOrBin                 = (TH1D*) fHistoGammaConvPtOrBin->Clone("FracAllGammaToSecFromXFromLambdaOriginalBinning");
+        fHistoFracAllGammaToSecFromXFromLambdaOrBin                 = (TH1D*)fHistoGammaConvPtOrBin->Clone("FracAllGammaToSecFromXFromLambdaOriginalBinning");
         fHistoFracAllGammaToSecFromXFromLambdaOrBin->Divide(fHistoGammaTrueSecondaryConvGammaFromXFromLambdaPtOrBin,fHistoFracAllGammaToSecFromXFromLambdaOrBin,1,1,"B");
         
         if(fUseCocktail){
-            fHistoFracAllGammaToSecRest                             = (TH1D*) fHistoGammaConvPt->Clone("FracAllGammaToSecRest");
+            fHistoFracAllGammaToSecRest                             = (TH1D*)fHistoGammaConvPt->Clone("FracAllGammaToSecRest");
             fHistoFracAllGammaToSecRest->Divide(fHistoGammaTrueSecondaryConvGammaRestPt,fHistoFracAllGammaToSecRest,1,1,"B");
             
-            fHistoFracAllGammaToSecRestOrBin                        = (TH1D*) fHistoGammaConvPtOrBin->Clone("FracAllGammaToSecRestOriginalBinning");
+            fHistoFracAllGammaToSecRestOrBin                        = (TH1D*)fHistoGammaConvPtOrBin->Clone("FracAllGammaToSecRestOriginalBinning");
             fHistoFracAllGammaToSecRestOrBin->Divide(fHistoGammaTrueSecondaryConvGammaRestPtOrBin,fHistoFracAllGammaToSecRestOrBin,1,1,"B");
         }
         // ==========================================
@@ -1751,10 +1752,9 @@ void CalculateGammaCorrection(){
         
         // secondary response matrices
         if(fUseCocktail && nHistogramDimension==2){
-            xAxis                                                   = fHistoGammaTruePrimaryCaloUnConv_recPt_MCPt_MC->GetXaxis();
-            yAxis                                                   = fHistoGammaTruePrimaryCaloUnConv_recPt_MCPt_MC->GetYaxis();
+            xAxis                                                   = fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC->GetXaxis();
+            yAxis                                                   = fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC->GetYaxis();
 
-            fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC->SetBins(250,0,25,250,0,25);
             fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC_Rebin = new TH2D("ESD_TrueSecondaryClusGammaFromXFromK0s_MCPt_recPt_Rebin","",fNBinsPt,fBinsPt,fNBinsPt,fBinsPt);
             for(Int_t x = 1; x<fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC->GetNbinsX()+1; x++){
                 for(Int_t y = 1; y<fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC->GetNbinsY()+1; y++){
@@ -1764,8 +1764,19 @@ void CalculateGammaCorrection(){
                     fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC_Rebin->Fill(xcenter,ycenter,binContent);
                 }
             }
+            if (fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC->GetNbinsX()!=250 || fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC->GetNbinsY()!=250) {
+                TH1D* fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC_Original = (TH1D*)fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC->Clone("fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC_Original");
+                fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC = new TH2D("ESD_TrueSecondaryClusGammaFromXFromK0s_MCPt_recPt","",250,0,25,250,0,25);
+                for(Int_t x = 1; x<fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC_Original->GetNbinsX()+1; x++){
+                    for(Int_t y = 1; y<fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC_Original->GetNbinsY()+1; y++){
+                        Double_t binContent                             = fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC_Original->GetBinContent(x,y);
+                        Double_t xcenter                                = xAxis->GetBinCenter(x);
+                        Double_t ycenter                                = yAxis->GetBinCenter(y);
+                        fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC->Fill(xcenter,ycenter,binContent);
+                    }
+                }
+            }
             
-            fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC->SetBins(250,0,25,250,0,25);
             fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC_Rebin = new TH2D("ESD_TrueSecondaryClusGammaFromXFromK0l_MCPt_recPt_Rebin","",fNBinsPt,fBinsPt,fNBinsPt,fBinsPt);
             for(Int_t x = 1; x<fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC->GetNbinsX()+1; x++){
                 for(Int_t y = 1; y<fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC->GetNbinsY()+1; y++){
@@ -1775,8 +1786,19 @@ void CalculateGammaCorrection(){
                     fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC_Rebin->Fill(xcenter,ycenter,binContent);
                 }
             }
+            if (fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC->GetNbinsX()!=250 || fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC->GetNbinsY()!=250) {
+                TH1D* fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC_Original = (TH1D*)fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC->Clone("fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC_Original");
+                fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC = new TH2D("ESD_TrueSecondaryClusGammaFromXFromK0l_MCPt_recPt","",250,0,25,250,0,25);
+                for(Int_t x = 1; x<fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC_Original->GetNbinsX()+1; x++){
+                    for(Int_t y = 1; y<fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC_Original->GetNbinsY()+1; y++){
+                        Double_t binContent                             = fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC_Original->GetBinContent(x,y);
+                        Double_t xcenter                                = xAxis->GetBinCenter(x);
+                        Double_t ycenter                                = yAxis->GetBinCenter(y);
+                        fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC->Fill(xcenter,ycenter,binContent);
+                    }
+                }
+            }
 
-            fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC->SetBins(250,0,25,250,0,25);
             fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC_Rebin = new TH2D("ESD_TrueSecondaryClusGammaFromXFromLambda_MCPt_recPt_Rebin","",fNBinsPt,fBinsPt,fNBinsPt,fBinsPt);
             for(Int_t x = 1; x<fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC->GetNbinsX()+1; x++){
                 for(Int_t y = 1; y<fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC->GetNbinsY()+1; y++){
@@ -1786,27 +1808,55 @@ void CalculateGammaCorrection(){
                     fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC_Rebin->Fill(xcenter,ycenter,binContent);
                 }
             }
+            if (fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC->GetNbinsX()!=250 || fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC->GetNbinsY()!=250) {
+                TH1D* fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC_Original = (TH1D*)fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC->Clone("fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC_Original");
+                fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC = new TH2D("ESD_TrueSecondaryClusGammaFromXFromLambda_MCPt_recPt","",250,0,25,250,0,25);
+                for(Int_t x = 1; x<fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC_Original->GetNbinsX()+1; x++){
+                    for(Int_t y = 1; y<fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC_Original->GetNbinsY()+1; y++){
+                        Double_t binContent                             = fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC_Original->GetBinContent(x,y);
+                        Double_t xcenter                                = xAxis->GetBinCenter(x);
+                        Double_t ycenter                                = yAxis->GetBinCenter(y);
+                        fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC->Fill(xcenter,ycenter,binContent);
+                    }
+                }
+            }
         }
         // ==========================================
 
         // ======== Secondary fractions =============
-        fHistoFracAllGammaToSec                                     = (TH1D*) fHistoGammaCaloPt->Clone("FracAllGammaToSec");
+        fHistoFracAllGammaToSec                                     = (TH1D*)fHistoGammaCaloPt->Clone("FracAllGammaToSec");
         fHistoFracAllGammaToSec->Divide(fHistoGammaTrueSecondaryCaloPt,fHistoFracAllGammaToSec,1,1,"B");
 
-        fHistoFracAllGammaToSecOrBin                                = (TH1D*) fHistoGammaCaloPtOrBin->Clone("FracAllGammaToSecOriginalBinning");
+        fHistoFracAllGammaToSecOrBin                                = (TH1D*)fHistoGammaCaloPtOrBin->Clone("FracAllGammaToSecOriginalBinning");
         fHistoFracAllGammaToSecOrBin->Divide(fHistoGammaTrueSecondaryCaloPtOrBin,fHistoFracAllGammaToSecOrBin,1,1,"B");
 
-        fHistoFracAllGammaToSecFromXFromK0s                         = (TH1D*) fHistoGammaCaloPt->Clone("FracAllGammaToSecFromXFromK0s");
+        fHistoFracAllGammaToSecFromXFromK0s                         = (TH1D*)fHistoGammaCaloPt->Clone("FracAllGammaToSecFromXFromK0s");
         fHistoFracAllGammaToSecFromXFromK0s->Divide(fHistoGammaTrueSecondaryCaloFromXFromK0sPt,fHistoFracAllGammaToSecFromXFromK0s,1,1,"B");
 
-        fHistoFracAllGammaToSecFromXFromK0sOrBin                    = (TH1D*) fHistoGammaCaloPtOrBin->Clone("FracAllGammaToSecFromXFromK0sOriginalBinning");
+        fHistoFracAllGammaToSecFromXFromK0sOrBin                    = (TH1D*)fHistoGammaCaloPtOrBin->Clone("FracAllGammaToSecFromXFromK0sOriginalBinning");
         fHistoFracAllGammaToSecFromXFromK0sOrBin->Divide(fHistoGammaTrueSecondaryCaloFromXFromK0sPtOrBin,fHistoFracAllGammaToSecFromXFromK0sOrBin,1,1,"B");
 
-        fHistoFracAllGammaToSecFromXFromLambda                      = (TH1D*) fHistoGammaCaloPt->Clone("FracAllGammaToSecFromXFromLambda");
+        if (nHistogramDimension==2) {
+            fHistoFracAllGammaToSecFromXFromK0l                     = (TH1D*)fHistoGammaCaloPt->Clone("FracAllGammaToSecFromXFromK0l");
+            fHistoFracAllGammaToSecFromXFromK0l->Divide(fHistoGammaTrueSecondaryCaloFromXFromK0lPt,fHistoFracAllGammaToSecFromXFromK0l,1,1,"B");
+
+            fHistoFracAllGammaToSecFromXFromK0lOrBin                = (TH1D*)fHistoGammaCaloPtOrBin->Clone("FracAllGammaToSecFromXFromK0lOriginalBinning");
+            fHistoFracAllGammaToSecFromXFromK0lOrBin->Divide(fHistoGammaTrueSecondaryCaloFromXFromK0lPtOrBin,fHistoFracAllGammaToSecFromXFromK0lOrBin,1,1,"B");
+        }
+
+        fHistoFracAllGammaToSecFromXFromLambda                      = (TH1D*)fHistoGammaCaloPt->Clone("FracAllGammaToSecFromXFromLambda");
         fHistoFracAllGammaToSecFromXFromLambda->Divide(fHistoGammaTrueSecondaryCaloFromXFromLambdaPt,fHistoFracAllGammaToSecFromXFromLambda,1,1,"B");
 
-        fHistoFracAllGammaToSecFromXFromLambdaOrBin                 = (TH1D*) fHistoGammaCaloPtOrBin->Clone("FracAllGammaToSecFromXFromLambdaOriginalBinning");
+        fHistoFracAllGammaToSecFromXFromLambdaOrBin                 = (TH1D*)fHistoGammaCaloPtOrBin->Clone("FracAllGammaToSecFromXFromLambdaOriginalBinning");
         fHistoFracAllGammaToSecFromXFromLambdaOrBin->Divide(fHistoGammaTrueSecondaryCaloFromXFromLambdaPtOrBin,fHistoFracAllGammaToSecFromXFromLambdaOrBin,1,1,"B");
+        
+        if(fUseCocktail){
+            fHistoFracAllGammaToSecRest                             = (TH1D*)fHistoGammaCaloPt->Clone("FracAllGammaToSecRest");
+            fHistoFracAllGammaToSecRest->Divide(fHistoGammaTrueSecondaryCaloRestPt,fHistoFracAllGammaToSecRest,1,1,"B");
+            
+            fHistoFracAllGammaToSecRestOrBin                        = (TH1D*)fHistoGammaCaloPtOrBin->Clone("FracAllGammaToSecRestOriginalBinning");
+            fHistoFracAllGammaToSecRestOrBin->Divide(fHistoGammaTrueSecondaryCaloRestPtOrBin,fHistoFracAllGammaToSecRestOrBin,1,1,"B");
+        }
         // ==========================================
 
         // ================= PURITY =================
@@ -1814,13 +1864,13 @@ void CalculateGammaCorrection(){
         fHistoGammaMCPurity->Sumw2();
         fHistoGammaMCPurity->Divide(fHistoGammaTrueCaloPt,fHistoGammaCaloPt,1,1,"B");
 
-        fHistoGammaMCrecPrimaryCaloPt                               = (TH1D*) fHistoGammaCaloPt->Clone("MCrec_PrimaryCaloGamma_Pt");
+        fHistoGammaMCrecPrimaryCaloPt                               = (TH1D*)fHistoGammaCaloPt->Clone("MCrec_PrimaryCaloGamma_Pt");
         fHistoGammaMCrecPrimaryCaloPt->Add(fHistoGammaTrueSecondaryCaloPt,-1);
         fHistoGammaMCTruePurity                                     = new TH1D("GammaTruePurity_Pt","",fNBinsPt,fBinsPt);
         fHistoGammaMCTruePurity->Sumw2();
         fHistoGammaMCTruePurity->Divide(fHistoGammaTruePrimaryCaloPt,fHistoGammaMCrecPrimaryCaloPt,1,1,"B");
 
-        fHistoGammaMCrecPrimaryCaloPtOrBin                          = (TH1D*) fHistoGammaCaloPtOrBin->Clone("MC_ESDPrimaryCaloGammaPt");
+        fHistoGammaMCrecPrimaryCaloPtOrBin                          = (TH1D*)fHistoGammaCaloPtOrBin->Clone("MC_ESDPrimaryCaloGammaPt");
         fHistoGammaMCrecPrimaryCaloPtOrBin->Add(fHistoGammaTrueSecondaryCaloPtOrBin,-1);
         fHistoGammaMCTruePurityOrBin                                = (TH1D*)fHistoGammaMCrecPrimaryCaloPtOrBin->Clone("GammaTruePurity_OriginalBinning_Pt");
         fHistoGammaMCTruePurityOrBin->Sumw2();
@@ -2200,7 +2250,6 @@ void SaveHistos(Int_t isMC, TString fCutID, TString fPrefix3,Bool_t PileUpCorrec
             }
         }
 
-        
         // write raw photons distribution
         if (fHistoGammaCaloPt)          fHistoGammaCaloPt->Write("ESD_CaloGamma_Pt",TObject::kOverwrite);
         if (fHistoGammaCaloPtOrBin)     fHistoGammaCaloPtOrBin->Write("ESD_CaloGamma_Pt_OriginalBinning",TObject::kOverwrite);
