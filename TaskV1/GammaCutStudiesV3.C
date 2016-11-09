@@ -718,7 +718,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         }
 
         
-        nameCurrentCorrectedFile = Form("%s/%s/Gamma_Pi0_data_GammaConvV1_InclusiveRatio_0-100.root",cutSelection[i].Data(),energy.Data());
+        nameCurrentCorrectedFile = Form("%s/%s/Gamma_Pi0_data_GammaConvV1_InclusiveRatio_pp.root",cutSelection[i].Data(),energy.Data());
         fileCurrentFinal[i] = new TFile(nameCurrentCorrectedFile);
         if (fileCurrentFinal[i]->IsZombie()) haveOutputGammaToPi0=0;
         
@@ -747,8 +747,8 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             histoPi0SpectrumRatio[i] = (TH1D*) histoPi0Spectrum[i]->Clone(Form("histoPi0SpectrumRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoPi0SpectrumRatio[i]->Divide(histoPi0SpectrumRatio[i],histoPi0Spectrum[0],1,1,"b");
             SetHistogramm(histoPi0SpectrumRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #pi^{0} Spectra",0.0,2.0);
-
-            histoPi0SpectrumFit[i] = (TH1D*) fileCurrentFinal[i]->Get("CorrectedYieldTrueEffPi0Fit");
+//missing
+           /* histoPi0SpectrumFit[i] = (TH1D*) fileCurrentFinal[i]->Get("CorrectedYieldTrueEffPi0Fit");
             if(i == 1 && cutVariationName.Contains("IntRange")) histoPi0SpectrumFit[i] = (TH1D*) fileCurrentFinal[i]->Get("CorrectedYieldTrueEffPi0FitWide");
             if(i == 2 && cutVariationName.Contains("IntRange")) histoPi0SpectrumFit[i] = (TH1D*) fileCurrentFinal[i]->Get("CorrectedYieldTrueEffPi0FitNarrow");
             histoPi0SpectrumFit[i]->SetTitle("");
@@ -756,7 +756,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             histoPi0SpectrumFitRatio[i] = (TH1D*) histoPi0SpectrumFit[i]->Clone(Form("histoPi0SpectrumFitRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoPi0SpectrumFitRatio[i]->Divide(histoPi0SpectrumFitRatio[i],histoPi0SpectrumFit[0],1,1,"b");
             SetHistogramm(histoPi0SpectrumFitRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #pi^{0} Spectra",0.0,2.0);
-            
+            */
             histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get("IncRatioPurity_trueEff");
             if(i == 1 && cutVariationName.Contains("IntRange")) histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get("IncRatioPurity_trueEffWide");
             if(i == 2 && cutVariationName.Contains("IntRange")) histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get("IncRatioPurity_trueEffNarrow");
@@ -812,7 +812,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
 
             PlotCanvas(i,number,canvasGammaSpectrum,histoIncGamma[i],legendGammaSpectrum,canvasGammaSpectrumRatio,histoIncGammaRatio[i],legendGammaSpectrumRatio,cutStringsName[i],One);
             PlotCanvas(i,number,canvasPi0Spectrum,histoPi0Spectrum[i],legendPi0Spectrum,canvasPi0SpectrumRatio,histoPi0SpectrumRatio[i],legendPi0SpectrumRatio,cutStringsName[i],One);
-            PlotCanvas(i,number,canvasPi0SpectrumFit,histoPi0SpectrumFit[i],legendPi0SpectrumFit,canvasPi0SpectrumFitRatio,histoPi0SpectrumFitRatio[i],legendPi0SpectrumFitRatio,cutStringsName[i],One);
+            //PlotCanvas(i,number,canvasPi0SpectrumFit,histoPi0SpectrumFit[i],legendPi0SpectrumFit,canvasPi0SpectrumFitRatio,histoPi0SpectrumFitRatio[i],legendPi0SpectrumFitRatio,cutStringsName[i],One);
             PlotCanvas(i,number,canvasIncGammaToPi0Ratio,histoIncGammaToPi0Ratio[i],legendIncGammaToPi0Ratio,canvasIncGammaToPi0RatioRatio,histoIncGammaToPi0RatioRatio[i],
                        legendIncGammaToPi0RatioRatio,cutStringsName[i],One);
             PlotCanvas(i,number,canvasIncGammaToPi0RatioFit,histoIncGammaToPi0RatioFit[i],legendIncGammaToPi0RatioFit,canvasIncGammaToPi0RatioFitRatio,histoIncGammaToPi0RatioFitRatio[i],
@@ -1005,7 +1005,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         //******************** Output of the systematic Error due to Signal extraction for Pi0Fit ****
         //*************************************************************************************************
 
-        CalculateSystematicsGraphsWOBound (histoPi0SpectrumFit, cutSelection, NumberOfCutsPi0, "Pi0Fit", "Gamma", outputDir, outputFileDir, cutVariationName);
+        //CalculateSystematicsGraphsWOBound (histoPi0SpectrumFit, cutSelection, NumberOfCutsPi0, "Pi0Fit", "Gamma", outputDir, outputFileDir, cutVariationName);
 
     }
     return;
