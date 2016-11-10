@@ -1361,7 +1361,28 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 	if (setPi0.CompareTo("Pi0") == 0){
 		fNBinsPt 			= numberOfBins;
 		fBinsPt 						= new Double_t[33];
-        if (fEnergyFlag.CompareTo("13TeV") == 0) {
+        if (fEnergyFlag.CompareTo("5TeV") == 0) {
+			fStartPtBin					= 1;
+			fColumn 					= 4;
+			fRow 						= 4;
+			if (fNBinsPt > 15) {
+				cout << "You have chosen to have more than 15 bins, this is not possible, it will be reduced to 15" << endl;
+				fNBinsPt 				= 15;
+			}
+			for (Int_t i = 0; i < fNBinsPt+1; i++) {
+				fBinsPt[i] 				= fBinsPi05TeVPtDCA[i];
+			}
+			fExampleBin 			         	= 7;
+			nIterBGFit 					= 10;
+			fMaxYFracBGOverIntHist                          = 30;
+			optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing3";
+			optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing5";
+			optionBGSmoothingVar2 		= "BackDecreasingWindow,BackSmoothing7";
+			Int_t nBinsPlot 			= fColumn*fRow -1;
+			if (fNBinsPt-fStartPtBin > nBinsPlot) fColumn++;
+			nBinsPlot 					= fColumn*fRow -1;
+			if (fNBinsPt-fStartPtBin > nBinsPlot) fRow++;			
+        } else if (fEnergyFlag.CompareTo("13TeV") == 0) {
 			fStartPtBin					= 1;
 			fColumn 					= 5;
 			fRow 						= 4;
@@ -1593,7 +1614,30 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 	} else if (setPi0.CompareTo("Eta") == 0){
 		fNBinsPt 						= numberOfBins;
 		fBinsPt							= new Double_t[20];
-		if (fEnergyFlag.CompareTo("13TeV") == 0) {
+		if (fEnergyFlag.CompareTo("5TeV") == 0) {
+			fStartPtBin					= 1;
+			fColumn 					= 3;
+			fRow                = 3;
+			if ((fNBinsPt-fStartPtBin) < 6) 
+			        fRow            = 2;
+			if (fNBinsPt > 8) {
+				cout << "You have chosen to have more than 8 bins for Eta, this is not possible, it will be reduced to 8" << endl;
+				fNBinsPt 				= 8;
+			}
+			for (Int_t i = 0; i < fNBinsPt+2; i++) {
+				fBinsPt[i] 				= fBinsEta5TeVPtDCA[i];
+			}
+			fExampleBin 			        	= 3;
+			nIterBGFit 					= 10;
+			optionBGSmoothingStandard 	= "BackDecreasingWindow,BackSmoothing3";
+			optionBGSmoothingVar1 		= "BackDecreasingWindow,BackSmoothing5";
+			optionBGSmoothingVar2 		= "BackDecreasingWindow,BackSmoothing7";
+			fMaxYFracBGOverIntHist                          = 30;
+			Int_t nBinsPlot 			= fColumn*fRow -1;
+			if (fNBinsPt-fStartPtBin > nBinsPlot) fColumn++;
+			nBinsPlot 					= fColumn*fRow -1;
+			if (fNBinsPt-fStartPtBin > nBinsPlot) fRow++;
+		}else if (fEnergyFlag.CompareTo("13TeV") == 0) {
 			fStartPtBin					= 1;
 			fColumn 					= 3;
 			fRow                = 3;

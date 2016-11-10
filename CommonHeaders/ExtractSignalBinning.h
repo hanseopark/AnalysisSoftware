@@ -531,7 +531,7 @@ Double_t fBinsPi05TeVPt[30]                     = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.8
 						    5.5, 6.0, 7.0, 8.0, 10.0, 12.0};
 Double_t fBinsPi05TeVPtDCA[16]                  = { 0.0, 0.3, 0.4, 0.6, 0.8,
                                                     1.0, 1.2, 1.4, 1.6, 1.8,
-                                                    2.0, 2.4, 3.0, 5.0, 10.};
+                                                    2.0, 2.4, 3.0, 5.0, 10., 12.0};
 /* Int_t fBinsPi05TeVPtRebin[21]                   = { 2, 2, 2, 2, 2, */
 /*                                                     2, 2, 2, 2, 2, */
 /*                                                     2, 2, 2, 2, 2, */
@@ -2068,7 +2068,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 fColumn         = 5;
                 fRow            = 5;                                
                 if (fNBinsPt > 17) {
-                    cout << "You have chosen Direct Photon Plots and more than 23 bins, this is not possible, it will be reduced to 23 bins." << endl;
+                    cout << "You have chosen Direct Photon Plots and more than 17 bins, this is not possible, it will be reduced to 17 bins." << endl;
                     fNBinsPt    = 17;
                 }
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
@@ -2080,7 +2080,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 fColumn         = 6;
                 fRow            = 5;
                 if (fNBinsPt > 29){
-                    cout << "You have chosen to have more than 21 bins, this is not possible, it will be reduced to 29" << endl;
+                    cout << "You have chosen to have more than 29 bins, this is not possible, it will be reduced to 29" << endl;
                     fNBinsPt    = 29;
                 }
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
