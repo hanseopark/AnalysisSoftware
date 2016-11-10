@@ -88,130 +88,120 @@ void ExtractGammaSignalV2(      TString meson               = "",
     gSystem->Exec("mkdir -p "+fOutputDir);
 
     //************************************ Set global variables ****************************************
-    fDate                                       = ReturnDateString();
-    fDirectPhoton                               = directphotonPlots;
-    fEnergyFlag                                 = option;
-    fPrefix                                     = meson;
-    fPeriodFlag                                 = period;
-    fSuffix                                     = suffix;
-    fMeson                                      = meson;
-    fMode                                       = mode;
+    fDate                                                                       = ReturnDateString();
+    fDirectPhoton                                                               = directphotonPlots;
+    fEnergyFlag                                                                 = option;
+    fPrefix                                                                     = meson;
+    fPeriodFlag                                                                 = period;
+    fSuffix                                                                     = suffix;
+    fMeson                                                                      = meson;
+    fMode                                                                       = mode;
     cout << "Pictures are saved as " << suffix.Data() << endl;
 
     //************************ Detect correct folder name ****************************************
-    TString nameMainDir                         = "";
-    if (fMode == 0) 
-        nameMainDir                             = "GammaConvV1";
-    else if (fMode == 2 || fMode == 3) 
-        nameMainDir                             = "GammaConvCalo";
-    else if (fMode == 4 || fMode == 5) 
-        nameMainDir                             = "GammaCalo";
-
+    TString nameMainDir                                                         = "";
+    if (fMode == 0)                     nameMainDir                             = "GammaConvV1";
+    else if (fMode == 2 || fMode == 3)  nameMainDir                             = "GammaConvCalo";
+    else if (fMode == 4 || fMode == 5)  nameMainDir                             = "GammaCalo";
     
     //************************************ Separate cutstrings ***********************************
-    fCutSelection                               = cutSelection;
-    fCutSelectionRead                           = cutSelection;
+    fCutSelection                                                               = cutSelection;
+    fCutSelectionRead                                                           = cutSelection;
     ReturnSeparatedCutNumberAdvanced( fCutSelection,fEventCutNumber, fGammaCutNumber, fClusterCutNumber, fElectronCutNumber, fMesonCutNumber, fMode);
     
-    fEventCutSelectionRead                      = fEventCutNumber.Data();
-    fGammaCutSelectionRead                      = fGammaCutNumber.Data();
-    fMesonCutSelectionRead                      = fMesonCutNumber.Data();
+    fEventCutSelectionRead                                                      = fEventCutNumber.Data();
+    fGammaCutSelectionRead                                                      = fGammaCutNumber.Data();
+    fMesonCutSelectionRead                                                      = fMesonCutNumber.Data();
     if (addSig) {
         cout << "running added Signal" << endl;
         cout << fEventCutNumber.Data() << endl;
         fEventCutNumber.Replace(GetEventRejectExtraSignalsCutPosition(),1,"2");
         cout << fEventCutNumber.Data() << endl;
-        fEventCutSelectionRead                  = fEventCutNumber;
-        fGammaCutSelectionRead                  = fGammaCutNumber;
-        fMesonCutSelectionRead                  = fMesonCutNumber;
-        if (fMode==9) fCutSelectionRead         = Form("%s%s_%s", fEventCutNumber.Data(), fGammaCutNumber.Data(), fMesonCutNumber.Data());
-        else if (fMode==0) fCutSelectionRead    = Form("%s_%s_%s",fEventCutNumber.Data(), fGammaCutNumber.Data(), fMesonCutNumber.Data());
+        fEventCutSelectionRead                                                  = fEventCutNumber;
+        fGammaCutSelectionRead                                                  = fGammaCutNumber;
+        fMesonCutSelectionRead                                                  = fMesonCutNumber;
+        if (fMode==9)       fCutSelectionRead                                   = Form("%s%s_%s", fEventCutNumber.Data(), fGammaCutNumber.Data(), fMesonCutNumber.Data());
+        else if (fMode==0)  fCutSelectionRead                                   = Form("%s_%s_%s",fEventCutNumber.Data(), fGammaCutNumber.Data(), fMesonCutNumber.Data());
         cout << fCutSelectionRead.Data() << endl;
     }
     // set global variables for rap and BG number
     TString rapidityRange;
-    fYMaxMeson                          = ReturnRapidityStringAndDouble(fMesonCutSelectionRead, rapidityRange);
+    fYMaxMeson                                                                  = ReturnRapidityStringAndDouble(fMesonCutSelectionRead, rapidityRange);
     
     //***************************** Load binning for spectrum *******************************************
     Initialize(fMeson, fEnergyFlag, numberOfBins, fMode, addSig);
 
     //****************************** Set specific histogram names****************************************
-    ObjectNameDCGammaConvRPt                = "ESD_TrueDoubleCountConvGamma_R_Pt";
-    ObjectNameGammaConvMultipleCount        = "ESD_TrueMultipleCountConvGamma";
+    ObjectNameDCGammaConvRPt                                                    = "ESD_TrueDoubleCountConvGamma_R_Pt";
+    ObjectNameGammaConvMultipleCount                                            = "ESD_TrueMultipleCountConvGamma";
 
-    //****************************** Specification of collision system ************************************************
+    //****************************** Specification of collision system **********************************
     TString textProcess = ReturnMesonString (fPrefix);
     if(textProcess.CompareTo("") == 0 ){
         cout << "Meson unknown" << endl;
         return ;
     }
     
-    fTextMeasurement = Form("%s #rightarrow #gamma#gamma", textProcess.Data());
-    fCollisionSystem = ReturnFullCollisionsSystem(fEnergyFlag);
+    fTextMeasurement                                                            = Form("%s #rightarrow #gamma#gamma", textProcess.Data());
+    fCollisionSystem                                                            = ReturnFullCollisionsSystem(fEnergyFlag);
     if (fCollisionSystem.CompareTo("") == 0){
         cout << "No correct collision system specification, has been given" << endl;
         return;
     }
-    fDetectionProcess = ReturnFullTextReconstructionProcess(fMode);
+    fDetectionProcess                                                           = ReturnFullTextReconstructionProcess(fMode);
     
     //***************************** Specification Data/MC ***********************************************
     if(isMC.CompareTo("kTRUE") == 0){
-        fIsMC                               = 1;
-        fPrefix2                            = "MC";
+        fIsMC                                                                   = 1;
+        fPrefix2                                                                = "MC";
     } else {
-        fIsMC                               = 0;
-        fPrefix2                            = "data";
+        fIsMC                                                                   = 0;
+        fPrefix2                                                                = "data";
     }
     
     //************************************** Read file ***************************************************
     TFile f(file.Data());
-
     TList *TopDir =(TList*)f.Get(nameMainDir.Data());
     if(TopDir == NULL){
         cout<<"ERROR: TopDir not Found"<<endl;
         return;
     }
-    TList* HistosGammaConversion            = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
+    TList* HistosGammaConversion                                                = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
     if (!HistosGammaConversion){
       cout << "ERROR: folder with Cutnumber - " <<   fCutSelectionRead.Data() << "not contained in file " << file.Data() << endl;
       return;
     }    
-    TList* ESDContainer                     = (TList*)HistosGammaConversion->FindObject(Form("%s ESD histograms",fCutSelectionRead.Data()));
+    TList* ESDContainer                                                         = (TList*)HistosGammaConversion->FindObject(Form("%s ESD histograms",fCutSelectionRead.Data()));
     if (fEnablePCM){
-        TList* ConvCutsContainer            = (TList*) HistosGammaConversion->FindObject(Form("ConvCuts_%s",fGammaCutSelectionRead.Data()));
-
-        fHistoPhotonIsSelected              = (TH1D*)ConvCutsContainer->FindObject(Form("IsPhotonSelected %s",fGammaCutSelectionRead.Data()));
+        TList* ConvCutsContainer                                                = (TList*)HistosGammaConversion->FindObject(Form("ConvCuts_%s",fGammaCutSelectionRead.Data()));
+        fHistoPhotonIsSelected                                                  = (TH1D*)ConvCutsContainer->FindObject(Form("IsPhotonSelected %s",fGammaCutSelectionRead.Data()));
         fHistoPhotonIsSelected->Scale(1./fHistoPhotonIsSelected->GetEntries());
     }
     
     // general histograms
-    fNumberOfGoodESDTracks                  = (TH1D*)ESDContainer->FindObject("GoodESDTracks");
-    fEventQuality                           = (TH1D*)ESDContainer->FindObject("NEvents");
-    
-    if (option.CompareTo("PbPb_2.76TeV") == 0){
-        fNEvnt                              = fEventQuality->GetBinContent(1);
-    } else {
-        fNEvnt                              = GetNEvents(fEventQuality);
-    }
+    fNumberOfGoodESDTracks                                                      = (TH1D*)ESDContainer->FindObject("GoodESDTracks");
+    fEventQuality                                                               = (TH1D*)ESDContainer->FindObject("NEvents");
+    if (option.CompareTo("PbPb_2.76TeV") == 0)  fNEvnt                          = fEventQuality->GetBinContent(1);
+    else                                        fNEvnt                          = GetNEvents(fEventQuality);
     
     // *******************************************************************************************************
     // ******************************* Read histograms from data for PCM *************************************
     // *******************************************************************************************************
     if (fEnablePCM){
         // read reconstructed gamma histograms
-        fHistoGammaConvPt                   = (TH1D*)ESDContainer->FindObject("ESD_ConvGamma_Pt");
+        fHistoGammaConvPt                                                       = (TH1D*)ESDContainer->FindObject("ESD_ConvGamma_Pt");
         fHistoGammaConvPt->Sumw2();
-        fHistoGammaConvPtOrBin              = (TH1D*)fHistoGammaConvPt->Clone("ESD_ConvGamma_Pt_OriginalBinning");
+        fHistoGammaConvPtOrBin                                                  = (TH1D*)fHistoGammaConvPt->Clone("ESD_ConvGamma_Pt_OriginalBinning");
         RebinSpectrum(fHistoGammaConvPt,"");
         
         // read dca tree for conversions
         if(!addSig && !(mode == 4 || mode == 5)){
-            DCAContainer                    = (TList*) HistosGammaConversion->FindObject(Form("%s Photon DCA tree",fCutSelectionRead.Data()));
+            DCAContainer                                                        = (TList*)HistosGammaConversion->FindObject(Form("%s Photon DCA tree",fCutSelectionRead.Data()));
             if(DCAContainer){
-                dcaTree                     = (TTree*)DCAContainer->FindObject("ESD_ConvGamma_Pt_Dcaz_R_Eta");
+                dcaTree                                                         = (TTree*)DCAContainer->FindObject("ESD_ConvGamma_Pt_Dcaz_R_Eta");
                 FillDCAHistogramsFromTree(dcaTree,kFALSE);
                 CalculatePileUpBackground(kFALSE);
-                pileUpCorrection            = kTRUE;
+                pileUpCorrection                                                = kTRUE;
             }         
         }
     }
@@ -221,17 +211,17 @@ void ExtractGammaSignalV2(      TString meson               = "",
     // *******************************************************************************************************
     if (fEnableCalo){
         if (mode == 2 || mode == 3){
-            CaloContainer                                                       = (TList*) HistosGammaConversion->FindObject(Form("%s Cluster Output",fCutSelectionRead.Data()));
-            fHistoGammaCaloPt                                                   = (TH1D*) CaloContainer->FindObject("ClusGamma_Pt");
+            CaloContainer                                                       = (TList*)HistosGammaConversion->FindObject(Form("%s Cluster Output",fCutSelectionRead.Data()));
+            fHistoGammaCaloPt                                                   = (TH1D*)CaloContainer->FindObject("ClusGamma_Pt");
             fHistoGammaCaloPt->Sumw2();
             fHistoGammaCaloPtOrBin                                              = (TH1D*)fHistoGammaCaloPt->Clone("ClusGamma_Pt_OriginalBinning");
             RebinSpectrum(fHistoGammaCaloPt,"");
         } else if ( mode == 4 || mode == 5){
-            fHistoGammaCaloPt                                                   = (TH1D*) ESDContainer->FindObject("ClusGamma_Pt");
+            fHistoGammaCaloPt                                                   = (TH1D*)ESDContainer->FindObject("ClusGamma_Pt");
             fHistoGammaCaloPt->Sumw2();
             fHistoGammaCaloPtOrBin                                              = (TH1D*)fHistoGammaCaloPt->Clone("ClusGamma_Pt_OriginalBinning");
             RebinSpectrum(fHistoGammaCaloPt,"");
-        }    
+        }
     }
     
     //************************************** Load cocktail input (if available) *********************************
@@ -243,12 +233,12 @@ void ExtractGammaSignalV2(      TString meson               = "",
     if(fIsMC){
         // copy reconstructed photon histo for MC
         if (fEnablePCM){
-            fHistoGammaMCrecConvPt                                              = (TH1D*) fHistoGammaConvPt->Clone("MCrec_ConvGamma_Pt");
-            fHistoGammaMCrecConvPtOrBin                                         = (TH1D*) fHistoGammaConvPtOrBin->Clone("MCrec_ConvGamma_Pt_OriginalBinning");
+            fHistoGammaMCrecConvPt                                              = (TH1D*)fHistoGammaConvPt->Clone("MCrec_ConvGamma_Pt");
+            fHistoGammaMCrecConvPtOrBin                                         = (TH1D*)fHistoGammaConvPtOrBin->Clone("MCrec_ConvGamma_Pt_OriginalBinning");
         }
         if (fEnableCalo){
-            fHistoGammaMCrecCaloPt                                              = (TH1D*) fHistoGammaCaloPt->Clone("MCrec_CaloGamma_Pt");
-            fHistoGammaMCrecCaloPtOrBin                                         = (TH1D*) fHistoGammaCaloPtOrBin->Clone("MCrec_CaloGamma_OriginalBinning_Pt");
+            fHistoGammaMCrecCaloPt                                              = (TH1D*)fHistoGammaCaloPt->Clone("MCrec_CaloGamma_Pt");
+            fHistoGammaMCrecCaloPtOrBin                                         = (TH1D*)fHistoGammaCaloPtOrBin->Clone("MCrec_CaloGamma_OriginalBinning_Pt");
         }
         
         // MC container (contains all input MC histograms)    
@@ -338,7 +328,6 @@ void ExtractGammaSignalV2(      TString meson               = "",
             fHistoGammaTruePrimaryConvPt->Sumw2();
             fHistoGammaTruePrimaryConvPtOrBin                                   = (TH1D*)fHistoGammaTruePrimaryConvPt->Clone("TruePrimaryConvGamma_Pt_OriginalBinning");
             RebinSpectrum(fHistoGammaTruePrimaryConvPt);
-    
             
             fHistoTrueGammaConvDCRVSPt                                          = (TH2D*)TrueConversionContainer->FindObject(ObjectNameDCGammaConvRPt.Data());
             if (fHistoTrueGammaConvDCRVSPt != NULL) fEnableDCConv               = kTRUE;
@@ -1764,18 +1753,6 @@ void CalculateGammaCorrection(){
                     fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC_Rebin->Fill(xcenter,ycenter,binContent);
                 }
             }
-            if (fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC->GetNbinsX()!=250 || fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC->GetNbinsY()!=250) {
-                TH1D* fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC_Original = (TH1D*)fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC->Clone("fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC_Original");
-                fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC = new TH2D("ESD_TrueSecondaryClusGammaFromXFromK0s_MCPt_recPt","",250,0,25,250,0,25);
-                for(Int_t x = 1; x<fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC_Original->GetNbinsX()+1; x++){
-                    for(Int_t y = 1; y<fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC_Original->GetNbinsY()+1; y++){
-                        Double_t binContent                             = fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC_Original->GetBinContent(x,y);
-                        Double_t xcenter                                = xAxis->GetBinCenter(x);
-                        Double_t ycenter                                = yAxis->GetBinCenter(y);
-                        fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC->Fill(xcenter,ycenter,binContent);
-                    }
-                }
-            }
             
             fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC_Rebin = new TH2D("ESD_TrueSecondaryClusGammaFromXFromK0l_MCPt_recPt_Rebin","",fNBinsPt,fBinsPt,fNBinsPt,fBinsPt);
             for(Int_t x = 1; x<fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC->GetNbinsX()+1; x++){
@@ -1786,18 +1763,6 @@ void CalculateGammaCorrection(){
                     fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC_Rebin->Fill(xcenter,ycenter,binContent);
                 }
             }
-            if (fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC->GetNbinsX()!=250 || fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC->GetNbinsY()!=250) {
-                TH1D* fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC_Original = (TH1D*)fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC->Clone("fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC_Original");
-                fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC = new TH2D("ESD_TrueSecondaryClusGammaFromXFromK0l_MCPt_recPt","",250,0,25,250,0,25);
-                for(Int_t x = 1; x<fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC_Original->GetNbinsX()+1; x++){
-                    for(Int_t y = 1; y<fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC_Original->GetNbinsY()+1; y++){
-                        Double_t binContent                             = fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC_Original->GetBinContent(x,y);
-                        Double_t xcenter                                = xAxis->GetBinCenter(x);
-                        Double_t ycenter                                = yAxis->GetBinCenter(y);
-                        fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC->Fill(xcenter,ycenter,binContent);
-                    }
-                }
-            }
 
             fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC_Rebin = new TH2D("ESD_TrueSecondaryClusGammaFromXFromLambda_MCPt_recPt_Rebin","",fNBinsPt,fBinsPt,fNBinsPt,fBinsPt);
             for(Int_t x = 1; x<fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC->GetNbinsX()+1; x++){
@@ -1806,18 +1771,6 @@ void CalculateGammaCorrection(){
                     Double_t xcenter                                = xAxis->GetBinCenter(x);
                     Double_t ycenter                                = yAxis->GetBinCenter(y);
                     fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC_Rebin->Fill(xcenter,ycenter,binContent);
-                }
-            }
-            if (fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC->GetNbinsX()!=250 || fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC->GetNbinsY()!=250) {
-                TH1D* fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC_Original = (TH1D*)fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC->Clone("fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC_Original");
-                fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC = new TH2D("ESD_TrueSecondaryClusGammaFromXFromLambda_MCPt_recPt","",250,0,25,250,0,25);
-                for(Int_t x = 1; x<fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC_Original->GetNbinsX()+1; x++){
-                    for(Int_t y = 1; y<fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC_Original->GetNbinsY()+1; y++){
-                        Double_t binContent                             = fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC_Original->GetBinContent(x,y);
-                        Double_t xcenter                                = xAxis->GetBinCenter(x);
-                        Double_t ycenter                                = yAxis->GetBinCenter(y);
-                        fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC->Fill(xcenter,ycenter,binContent);
-                    }
                 }
             }
         }
@@ -1901,7 +1854,6 @@ void CalculateGammaCorrection(){
             fHistoSecondaryGammaFromXFromK0sMCRecoEffMCPtOrBin      = (TH1D*)fHistoGammaTrueSecondaryCaloFromXFromK0sMCPtOrBin->Clone("SecondaryGammaFromXFromK0sRecoEff_MCPtOrBin");
             fHistoSecondaryGammaFromXFromK0sMCRecoEffMCPtOrBin->Sumw2();
             fHistoSecondaryGammaFromXFromK0sMCRecoEffMCPtOrBin->Divide(fHistoGammaTrueSecondaryCaloFromXFromK0sMCPtOrBin,fHistoAllSecondaryGammaFromXFromK0sPtOrBin,1,1,"B");
-            fHistoSecondaryGammaFromXFromK0sMCRecoEffMCPtOrBin->SetBins(250,0,25);
             
             fHistoSecondaryGammaFromXFromK0sMCRecoEffPt             = new TH1D("SecondaryGammaFromXFromK0sRecoEff_Pt","",fNBinsPt,fBinsPt);
             fHistoSecondaryGammaFromXFromK0sMCRecoEffPt->Sumw2();
@@ -1910,7 +1862,6 @@ void CalculateGammaCorrection(){
             fHistoSecondaryGammaFromXFromK0sMCRecoEffPtOrBin        = (TH1D*)fHistoGammaTrueSecondaryCaloFromXFromK0sPtOrBin->Clone("SecondaryGammaFromXFromK0sRecoEff_PtOrBin");
             fHistoSecondaryGammaFromXFromK0sMCRecoEffPtOrBin->Sumw2();
             fHistoSecondaryGammaFromXFromK0sMCRecoEffPtOrBin->Divide(fHistoGammaTrueSecondaryCaloFromXFromK0sPtOrBin,fHistoAllSecondaryGammaFromXFromK0sPtOrBin,1,1,"B");
-            fHistoSecondaryGammaFromXFromK0sMCRecoEffPtOrBin->SetBins(250,0,25);
 
             // K0l
             fHistoSecondaryGammaFromXFromK0lMCRecoEffMCPt           = new TH1D("SecondaryGammaFromXFromK0lRecoEff_MCPt","",fNBinsPt,fBinsPt);
@@ -1920,7 +1871,6 @@ void CalculateGammaCorrection(){
             fHistoSecondaryGammaFromXFromK0lMCRecoEffMCPtOrBin      = (TH1D*)fHistoGammaTrueSecondaryCaloFromXFromK0lMCPtOrBin->Clone("SecondaryGammaFromXFromK0lRecoEff_MCPtOrBin");
             fHistoSecondaryGammaFromXFromK0lMCRecoEffMCPtOrBin->Sumw2();
             fHistoSecondaryGammaFromXFromK0lMCRecoEffMCPtOrBin->Divide(fHistoGammaTrueSecondaryCaloFromXFromK0lMCPtOrBin,fHistoAllSecondaryGammaFromXFromK0lPtOrBin,1,1,"B");
-            fHistoSecondaryGammaFromXFromK0lMCRecoEffMCPtOrBin->SetBins(250,0,25);
 
             fHistoSecondaryGammaFromXFromK0lMCRecoEffPt             = new TH1D("SecondaryGammaFromXFromK0lRecoEff_Pt","",fNBinsPt,fBinsPt);
             fHistoSecondaryGammaFromXFromK0lMCRecoEffPt->Sumw2();
@@ -1929,7 +1879,6 @@ void CalculateGammaCorrection(){
             fHistoSecondaryGammaFromXFromK0lMCRecoEffPtOrBin        = (TH1D*)fHistoGammaTrueSecondaryCaloFromXFromK0lPtOrBin->Clone("SecondaryGammaFromXFromK0lRecoEff_PtOrBin");
             fHistoSecondaryGammaFromXFromK0lMCRecoEffPtOrBin->Sumw2();
             fHistoSecondaryGammaFromXFromK0lMCRecoEffPtOrBin->Divide(fHistoGammaTrueSecondaryCaloFromXFromK0lPtOrBin,fHistoAllSecondaryGammaFromXFromK0lPtOrBin,1,1,"B");
-            fHistoSecondaryGammaFromXFromK0lMCRecoEffPtOrBin->SetBins(250,0,25);
 
             // Lambda
             fHistoSecondaryGammaFromXFromLambdaMCRecoEffMCPt        = new TH1D("SecondaryGammaFromXFromLambdaRecoEff_MCPt","",fNBinsPt,fBinsPt);
@@ -1939,7 +1888,6 @@ void CalculateGammaCorrection(){
             fHistoSecondaryGammaFromXFromLambdaMCRecoEffMCPtOrBin   = (TH1D*)fHistoGammaTrueSecondaryCaloFromXFromLambdaMCPtOrBin->Clone("SecondaryGammaFromXFromLambdaRecoEff_MCPtOrBin");
             fHistoSecondaryGammaFromXFromLambdaMCRecoEffMCPtOrBin->Sumw2();
             fHistoSecondaryGammaFromXFromLambdaMCRecoEffMCPtOrBin->Divide(fHistoGammaTrueSecondaryCaloFromXFromLambdaMCPtOrBin,fHistoAllSecondaryGammaFromXFromLambdaPtOrBin,1,1,"B");
-            fHistoSecondaryGammaFromXFromLambdaMCRecoEffMCPtOrBin->SetBins(250,0,25);
 
             fHistoSecondaryGammaFromXFromLambdaMCRecoEffPt          = new TH1D("SecondaryGammaFromXFromLambdaRecoEff_Pt","",fNBinsPt,fBinsPt);
             fHistoSecondaryGammaFromXFromLambdaMCRecoEffPt->Sumw2();
@@ -1948,7 +1896,6 @@ void CalculateGammaCorrection(){
             fHistoSecondaryGammaFromXFromLambdaMCRecoEffPtOrBin     = (TH1D*)fHistoGammaTrueSecondaryCaloFromXFromLambdaPtOrBin->Clone("SecondaryGammaFromXFromLambdaRecoEff_PtOrBin");
             fHistoSecondaryGammaFromXFromLambdaMCRecoEffPtOrBin->Sumw2();
             fHistoSecondaryGammaFromXFromLambdaMCRecoEffPtOrBin->Divide(fHistoGammaTrueSecondaryCaloFromXFromLambdaPtOrBin,fHistoAllSecondaryGammaFromXFromLambdaPtOrBin,1,1,"B");
-            fHistoSecondaryGammaFromXFromLambdaMCRecoEffPtOrBin->SetBins(250,0,25);
         }
         // ==========================================
 
@@ -3697,7 +3644,6 @@ Bool_t LoadSecondariesFromCocktailFile(TString cutSelection, TString optionEnerg
         fHistoSecondaryGammaCocktailFromXFromK0sPt->Sumw2();
         fHistoSecondaryGammaCocktailFromXFromK0sPt->Scale(fHistoSecondaryGammaCocktailFromXFromK0sPt->GetBinWidth(1));
         fHistoSecondaryGammaCocktailFromXFromK0sPtOrBin         = (TH1D*)fHistoSecondaryGammaCocktailFromXFromK0sPt->Clone("CocktailSecondaryGammaFromXFromK0s_PtOrBin");
-        fHistoSecondaryGammaCocktailFromXFromK0sPtOrBin->SetBins(250,0,25);
         RebinSpectrum(fHistoSecondaryGammaCocktailFromXFromK0sPt);
         
         // K0l
@@ -3709,7 +3655,6 @@ Bool_t LoadSecondariesFromCocktailFile(TString cutSelection, TString optionEnerg
         fHistoSecondaryGammaCocktailFromXFromK0lPt->Sumw2();
         fHistoSecondaryGammaCocktailFromXFromK0lPt->Scale(fHistoSecondaryGammaCocktailFromXFromK0lPt->GetBinWidth(1));
         fHistoSecondaryGammaCocktailFromXFromK0lPtOrBin         = (TH1D*)fHistoSecondaryGammaCocktailFromXFromK0lPt->Clone("CocktailSecondaryGammaFromXFromK0l_PtOrBin");
-        fHistoSecondaryGammaCocktailFromXFromK0lPtOrBin->SetBins(250,0,25);
         RebinSpectrum(fHistoSecondaryGammaCocktailFromXFromK0lPt);
         
         // Lambda
@@ -3721,8 +3666,29 @@ Bool_t LoadSecondariesFromCocktailFile(TString cutSelection, TString optionEnerg
         fHistoSecondaryGammaCocktailFromXFromLambdaPt->Sumw2();
         fHistoSecondaryGammaCocktailFromXFromLambdaPt->Scale(fHistoSecondaryGammaCocktailFromXFromLambdaPt->GetBinWidth(1));
         fHistoSecondaryGammaCocktailFromXFromLambdaPtOrBin      = (TH1D*)fHistoSecondaryGammaCocktailFromXFromLambdaPt->Clone("CocktailSecondaryGammaFromXFromLambda_PtOrBin");
-        fHistoSecondaryGammaCocktailFromXFromLambdaPtOrBin->SetBins(250,0,25);
         RebinSpectrum(fHistoSecondaryGammaCocktailFromXFromLambdaPt);
+        
+        // set bins
+        Int_t       nBins   = 0;
+        Double_t    xMin    = 0.;
+        Double_t    xMax    = 0.;
+        if (fEnablePCM && !fEnableCalo) {
+            nBins           = fHistoGammaConvPtOrBin->GetNbinsX();
+            xMin            = fHistoGammaConvPtOrBin->GetXaxis()->GetXmin();
+            xMax            = fHistoGammaConvPtOrBin->GetXaxis()->GetXmax();
+        } else if (fEnableCalo && !fEnablePCM) {
+            nBins           = fHistoGammaCaloPtOrBin->GetNbinsX();
+            xMin            = fHistoGammaCaloPtOrBin->GetXaxis()->GetXmin();
+            xMax            = fHistoGammaCaloPtOrBin->GetXaxis()->GetXmax();
+        } else {
+            cout << "Will use " << fHistoGammaConvPtOrBin->GetName() << " for original binning of secondary gamma spectra from cocktail." << endl;
+            nBins           = fHistoGammaConvPtOrBin->GetNbinsX();
+            xMin            = fHistoGammaConvPtOrBin->GetXaxis()->GetXmin();
+            xMax            = fHistoGammaConvPtOrBin->GetXaxis()->GetXmax();
+        }
+        fHistoSecondaryGammaCocktailFromXFromK0sPtOrBin->SetBins(   nBins,xMin,xMax);
+        fHistoSecondaryGammaCocktailFromXFromK0lPtOrBin->SetBins(   nBins,xMin,xMax);
+        fHistoSecondaryGammaCocktailFromXFromLambdaPtOrBin->SetBins(nBins,xMin,xMax);
         
         // all spectra found
         return kTRUE;
