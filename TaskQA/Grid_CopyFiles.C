@@ -782,25 +782,35 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
       //"LHC15h2a", "LHC15h2b", "LHC15h2c", "LHC15h2d", "LHC15h2f", "LHC15h2h", "LHC15h2i"
     };
 
-    TString train = "Legotrain-vAN-20161102-8TeV-rerunTrackMatch_Merged_CaloTree";
-    Int_t trainRuns[nSets] = {1898,1899,1900,1901,1902,1903,1904,
-                              1899,1900,1901,1902,1903,1904,
-                              1900,1901,1902,1903,1904
-                              //2374,2375,2376,2377,2378,2379,2380,
-                              //2389,2390,2391,2392,2385,2393,2394
+    TString train = "Legotrain-vAN-20161110-8TeV-std_new";
+    Int_t trainRuns[nSets] = {
+                              1911,1912,1913,1914,1915,1916,1917,
+                              1912,1913,1914,1915,1916,1917,
+                              1913,1914,1915,1916,1917
+                              //2623,2624,2625,2626,2627,2628,2629,
+                              //2630,2631,2632,2633,2634,2635,2636
                              };
 
-    TString runlist[nSets] = {"merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9",
+    TString runlist[nSets] = {
+                              "merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9","merge_runlist_9",
                               "merge_runlist_10","merge_runlist_10","merge_runlist_10","merge_runlist_10","merge_runlist_10","merge_runlist_10",
                               "merge_runlist_11","merge_runlist_11","merge_runlist_11","merge_runlist_11","merge_runlist_11"
                               //"merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2",
                               //"merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2"
                              };
 
-    const Int_t nFiles = 14;
-    TString Files[nFiles] = { "GammaCalo_101","GammaCalo_115","GammaCalo_116","GammaCalo_117","GammaCalo_118",
-                              "GammaConvCalo_101","GammaConvCalo_121","GammaConvCalo_122","GammaConvCalo_123","GammaConvCalo_124",
-                              "GammaCaloMerged_109","GammaCaloMerged_110","GammaCaloMerged_116","GammaCaloMerged_117"};
+    const Int_t nFiles = 17;
+    TString Files[nFiles] = {
+                              "GammaCalo_101","GammaCalo_105","GammaCalo_107","GammaCalo_112","GammaCalo_124",
+                              "GammaCalo_126","GammaCalo_130","GammaCalo_144","GammaCalo_146","GammaCalo_150",
+                              "GammaConvCalo_101","GammaConvCalo_104","GammaConvCalo_107","GammaConvCalo_134",
+                              "GammaConvCalo_137","GammaConvCalo_164","GammaConvCalo_167"
+                            };
+//    const Int_t nFiles = 5;
+//    TString Files[nFiles] = {
+//                              "GammaCalo_107","GammaCalo_119","GammaCalo_120",
+//                              "GammaConvCalo_130","GammaConvCalo_131"
+//                            };
 
     const Int_t nMerge = 3;
     TString strMerge[nMerge]={"LHC12", "LHC12-kEMC7", "LHC12-kEMCEGA"/*, "LHC15h"*/};
@@ -811,6 +821,7 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
       if(7<=i && i<=12) mergeVec[1].push_back(i);
       if(13<=i && i<=17) mergeVec[2].push_back(i);
       //if(18<=i && i<=31) mergeVec[3].push_back(i);
+//      if(0<=i && i<=13) mergeVec[0].push_back(i);
     }
 
     //*********************************************************************************************************************************

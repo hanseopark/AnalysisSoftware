@@ -1373,8 +1373,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //    graphCombPi0InvXSectionTotA->Fit(fitTCMDecomposedH,"QNRMEX0+","",4,35);
 //    Double_t paramTCMPi0New[5]  = { fitTCMDecomposedL->GetParameter(0),fitTCMDecomposedL->GetParameter(1),
 //                                    fitTCMDecomposedH->GetParameter(0),fitTCMDecomposedH->GetParameter(1),fitTCMDecomposedH->GetParameter(2)};
-    Double_t paramTCMPi0New[5]  = { graphCombPi0InvXSectionTotA->GetY()[0],0.1,
-                                    graphCombPi0InvXSectionTotA->GetY()[3],0.6,3.0};
+    Double_t paramTCMPi0New[5]  = { graphCombPi0InvXSectionTotA->GetY()[1],0.1,
+                                    graphCombPi0InvXSectionTotA->GetY()[4],0.6,3.0};
     TF1* fitTCMInvXSectionPi0   = FitObject("tcm","fitTCMInvCrossSectionPi08TeV","Pi0",graphCombPi0InvXSectionStatA,0.3,35. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
 
     // Tsallis fit 
@@ -3267,7 +3267,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TH2F * histo2DAllPi0FWHM    = new TH2F("histo2DAllPi0FWHM","histo2DAllPi0FWHM", 20, 0.23, 50. ,1000., -30, 40);
         SetStyleHistoTH2ForGraphs(histo2DAllPi0FWHM, "#it{p}_{T} (GeV/#it{c})", "Peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth, textsizeLabelsWidth,
                                   0.85*textsizeLabelsWidth, textsizeLabelsWidth, 0.8,0.28/(textsizeFacWidth*margin), 512, 505);
-        histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.,32.5);
+        histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.,35.5);
         histo2DAllPi0FWHM->GetYaxis()->SetMoreLogLabels(kTRUE);
         histo2DAllPi0FWHM->GetYaxis()->SetNdivisions(505);
         histo2DAllPi0FWHM->GetYaxis()->SetNoExponent(kTRUE);
@@ -3422,7 +3422,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     padWidthPi0->cd();
     padWidthPi0->SetLogx(); 
 
-        histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.,32.5);
+        histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.,35.5);
         histo2DAllPi0FWHM->DrawCopy(); 
 
         DrawGammaSetMarker(histoPCMPi0FWHMMeV, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);

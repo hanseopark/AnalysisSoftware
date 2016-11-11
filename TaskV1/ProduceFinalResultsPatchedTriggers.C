@@ -219,7 +219,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         nameEfficiency                                  = "MesonEffiPt";
         nameMassMC                                      = "histoMassMesonRecMC";
         nameWidthMC                                     = "histoFWHMMesonRecMC";
-    } else if (mode == 2 || mode == 3){
+    } else if ( (mode == 2 || mode == 3) && optionEnergy.CompareTo("8TeV")!=0){
         nameMassMC                                      = "histoMassMesonRecMC";
         nameWidthMC                                     = "histoFWHMMesonRecMC";        
     } else if (mode == 10){
