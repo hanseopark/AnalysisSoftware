@@ -1802,8 +1802,8 @@ void CalculateGammaCorrection(){
 
         fHistoFracAllGammaToSecFromXFromLambdaOrBin                 = (TH1D*)fHistoGammaCaloPtOrBin->Clone("FracAllGammaToSecFromXFromLambdaOriginalBinning");
         fHistoFracAllGammaToSecFromXFromLambdaOrBin->Divide(fHistoGammaTrueSecondaryCaloFromXFromLambdaPtOrBin,fHistoFracAllGammaToSecFromXFromLambdaOrBin,1,1,"B");
-        
-        if(fUseCocktail){
+
+        if(nHistogramDimension==2 && fUseCocktail){
             fHistoFracAllGammaToSecRest                             = (TH1D*)fHistoGammaCaloPt->Clone("FracAllGammaToSecRest");
             fHistoFracAllGammaToSecRest->Divide(fHistoGammaTrueSecondaryCaloRestPt,fHistoFracAllGammaToSecRest,1,1,"B");
             
@@ -1842,7 +1842,7 @@ void CalculateGammaCorrection(){
         fHistoGammaMCPrimaryRecoEffMCPt                             = new TH1D("GammaPrimaryRecoEff_MCPt","",fNBinsPt,fBinsPt);
         fHistoGammaMCPrimaryRecoEffMCPt->Sumw2();
         fHistoGammaMCPrimaryRecoEffMCPt->Divide(fHistoGammaTruePrimaryCaloMCPt,fHistoGammaMCAllPt,1,1,"B");
-        
+
         // secondary reco eff
         if(fUseCocktail && nHistogramDimension==2){
             
@@ -2134,7 +2134,7 @@ void SaveHistos(Int_t isMC, TString fCutID, TString fPrefix3,Bool_t PileUpCorrec
         }
     
         // write secondary gamma cocktail spectra
-        if(fUseCocktail){
+        if(fUseCocktail && nHistogramDimension==2){
             if (fHistoSecondaryGammaCocktailFromXFromK0sPt)             fHistoSecondaryGammaCocktailFromXFromK0sPt->Write("CocktailSecondaryGammaFromXFromK0s_Pt",TObject::kOverwrite);
             if (fHistoSecondaryGammaCocktailFromXFromK0lPt)             fHistoSecondaryGammaCocktailFromXFromK0lPt->Write("CocktailSecondaryGammaFromXFromK0l_Pt",TObject::kOverwrite);
             if (fHistoSecondaryGammaCocktailFromXFromLambdaPt)          fHistoSecondaryGammaCocktailFromXFromLambdaPt->Write("CocktailSecondaryGammaFromXFromLambda_Pt",TObject::kOverwrite);
@@ -3630,6 +3630,7 @@ Bool_t LoadSecondariesFromCocktailFile(TString cutSelection, TString optionEnerg
     // search for cocktail file
     TString nameCocktailFile                                    = Form("%s/%s/SecondaryGamma%s_%.2f_%s.root",cutSelection.Data(),optionEnergy.Data(),fPeriodFlag.Data(),fYMaxMeson/2,cutSelection.Data());
     fFileCocktailInput                                          = new TFile(nameCocktailFile.Data());
+    if (fFileCocktailInput->IsZombie()) fFileCocktailInput      = NULL;
 
     // get secondary spectra from cocktail file
     if (fFileCocktailInput){
