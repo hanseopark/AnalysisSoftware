@@ -295,17 +295,22 @@ void ProduceTheoryGraphsPP(){
         cout << nlinesNLOEta2760GeV << "         "  << ptNLOEta2760GeV[nlinesNLOEta2760GeV] << "         "  << muHalfEta2760GeV[nlinesNLOEta2760GeV] << "         "  << muOneEta2760GeV[nlinesNLOEta2760GeV] << "         "  << muTwoEta2760GeV[nlinesNLOEta2760GeV] << endl;;
     }
     fileNLOEta2760GeV.close();
-    TGraph* graphNLOCalcInvSecEtaMuHalf2760GeV = new TGraph(nlinesNLOEta2760GeV,ptNLOEta2760GeV,muHalfEta2760GeV); 
+    TGraph* graphNLOCalcInvSecEtaMuHalf2760GeV          = new TGraph(nlinesNLOEta2760GeV,ptNLOEta2760GeV,muHalfEta2760GeV); 
     graphNLOCalcInvSecEtaMuHalf2760GeV->RemovePoint(0);
     graphNLOCalcInvSecEtaMuHalf2760GeV->RemovePoint(0);
-    TGraph* graphNLOCalcInvSecEtaMuOne2760GeV = new TGraph(nlinesNLOEta2760GeV,ptNLOEta2760GeV,muOneEta2760GeV); 
+    TGraph* graphNLOCalcInvSecEtaMuOne2760GeV           = new TGraph(nlinesNLOEta2760GeV,ptNLOEta2760GeV,muOneEta2760GeV); 
     graphNLOCalcInvSecEtaMuOne2760GeV->RemovePoint(0);
-    TGraph* graphNLOCalcInvSecEtaMuTwo2760GeV = new TGraph(nlinesNLOEta2760GeV,ptNLOEta2760GeV,muTwoEta2760GeV); 
+    TGraph* graphNLOCalcInvSecEtaMuTwo2760GeV           = new TGraph(nlinesNLOEta2760GeV,ptNLOEta2760GeV,muTwoEta2760GeV); 
     graphNLOCalcInvSecEtaMuTwo2760GeV->RemovePoint(0);
-
-    TGraph* graphNLOCalcInvYieldEtaMuHalf2760GeV = ScaleGraph(graphNLOCalcInvSecEtaMuHalf2760GeV, 1/(xSection2760GeV*recalcBarn));
-    TGraph* graphNLOCalcInvYieldEtaMuOne2760GeV =  ScaleGraph(graphNLOCalcInvSecEtaMuOne2760GeV, 1/(xSection2760GeV*recalcBarn));
-    TGraph* graphNLOCalcInvYieldEtaMuTwo2760GeV =  ScaleGraph(graphNLOCalcInvSecEtaMuTwo2760GeV, 1/(xSection2760GeV*recalcBarn));
+    TGraphAsymmErrors* graphNLOCalcInvSecEta2760GeV     = CombineMuScales(nlinesNLOEta2760GeV, ptNLOEta2760GeV, muOneEta2760GeV, muHalfEta2760GeV, muTwoEta2760GeV);
+    graphNLOCalcInvSecEta2760GeV->RemovePoint(0);
+    graphNLOCalcInvSecEta2760GeV->RemovePoint(0);
+    
+    
+    TGraph* graphNLOCalcInvYieldEtaMuHalf2760GeV        = ScaleGraph(graphNLOCalcInvSecEtaMuHalf2760GeV, 1/(xSection2760GeV*recalcBarn));
+    TGraph* graphNLOCalcInvYieldEtaMuOne2760GeV         = ScaleGraph(graphNLOCalcInvSecEtaMuOne2760GeV, 1/(xSection2760GeV*recalcBarn));
+    TGraph* graphNLOCalcInvYieldEtaMuTwo2760GeV         = ScaleGraph(graphNLOCalcInvSecEtaMuTwo2760GeV, 1/(xSection2760GeV*recalcBarn));
+    TGraphAsymmErrors* graphNLOCalcInvYieldEta2760GeV   = ScaleGraphAsym(graphNLOCalcInvSecEta2760GeV, 1/(xSection2760GeV*recalcBarn));
     
     Double_t       ptNLOPi02760GeV[100];
     Double_t       muHalfPi02760GeV[100];
@@ -847,7 +852,8 @@ void ProduceTheoryGraphsPP(){
         graphNLOCalcInvSecEtaMuHalf2760GeV->Write("graphNLOCalcInvSecEtaMuHalf2760GeV", TObject::kOverwrite);
         graphNLOCalcInvSecEtaMuOne2760GeV->Write("graphNLOCalcInvSecEtaMuOne2760GeV", TObject::kOverwrite);
         graphNLOCalcInvSecEtaMuTwo2760GeV->Write("graphNLOCalcInvSecEtaMuTwo2760GeV", TObject::kOverwrite);
-
+        graphNLOCalcInvSecEta2760GeV->Write("graphNLOCalcAESSSInvSecEta2760GeV", TObject::kOverwrite);
+        
         graphNLOCalcInvSecEtaMuHalf900GeV->Write("graphNLOCalcInvSecEtaMuHalf900GeV", TObject::kOverwrite);
         graphNLOCalcInvSecEtaMuOne900GeV->Write("graphNLOCalcInvSecEtaMuOne900GeV", TObject::kOverwrite);
         graphNLOCalcInvSecEtaMuTwo900GeV->Write("graphNLOCalcInvSecEtaMuTwo900GeV", TObject::kOverwrite);
@@ -888,7 +894,8 @@ void ProduceTheoryGraphsPP(){
         graphNLOCalcInvYieldEtaMuHalf2760GeV->Write("graphNLOCalcInvYieldEtaMuHalf2760GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuOne2760GeV->Write("graphNLOCalcInvYieldEtaMuOne2760GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuTwo2760GeV->Write("graphNLOCalcInvYieldEtaMuTwo2760GeV", TObject::kOverwrite);
-
+        graphNLOCalcInvYieldEta2760GeV->Write("graphNLOCalcAESSSInvYieldEta2760GeV", TObject::kOverwrite);
+        
         graphNLOCalcInvYieldEtaMuHalf900GeV->Write("graphNLOCalcInvYieldEtaMuHalf900GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuOne900GeV->Write("graphNLOCalcInvYieldEtaMuOne900GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuTwo900GeV->Write("graphNLOCalcInvYieldEtaMuTwo900GeV", TObject::kOverwrite);
