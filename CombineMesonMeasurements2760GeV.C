@@ -179,7 +179,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     Size_t   markerSizeDet[11];
     Size_t   markerSizeDetMC[11];
 
-    Color_t  colorCGC                           = kGreen-3;
+    Color_t  colorCGC                           = kCyan-8;
     Color_t  colorNLO                           = kAzure-4;
     Style_t  styleMarkerNLOMuHalf               = 24;
     Style_t  styleMarkerNLOMuOne                = 27;
@@ -796,6 +796,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         TGraph* graphNLOCalcEtaMuHalf                       = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecEtaMuHalf2760GeV");
         TGraph* graphNLOCalcEtaMuOne                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecEtaMuOne2760GeV");
         TGraph* graphNLOCalcEtaMuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecEtaMuTwo2760GeV");
+        TGraphAsymmErrors* graphNLOEtaAESSCalc              = (TGraphAsymmErrors*)fileTheoryCompilation->Get("graphNLOCalcAESSSInvSecEta2760GeV");
         TGraphAsymmErrors* graphNLOEtaToPi0                 = (TGraphAsymmErrors*)fileTheoryCompilation->Get("graphNLOCalcEtaOverPi02760GeV_AESSS_DSS07");
         TGraph* graphNLOEtaToPi0MuHalf                      = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcEtaOverPi0MuHalf2760GeV");
         TGraph* graphNLOEtaToPi0MuOne                       = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcEtaOverPi0MuOne2760GeV");
@@ -4780,7 +4781,95 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     canvasCompYieldPPInd->Update();
     canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedHadronToFit_PP2760GeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
 
-    
+
+    canvasXSectionPi0->cd();
+    TH2F * histo2DXSectionWithEtaAndPi0;
+    histo2DXSectionWithEtaAndPi0          = new TH2F("histo2DXSectionWithEtaAndPi0","histo2DXSectionWithEtaAndPi0",11000,0.23,70.,1000,2e-3,10e11);
+    SetStyleHistoTH2ForGraphs(histo2DXSectionWithEtaAndPi0, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 1.,1.45);
+    histo2DXSectionWithEtaAndPi0->GetXaxis()->SetMoreLogLabels();
+    histo2DXSectionWithEtaAndPi0->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DXSectionWithEtaAndPi0->Draw("copy");
+
+        // scale eta graphs
+        Double_t scaleFacEtaForCombPlot                             = 1e-2;
+        TGraphAsymmErrors* graphCombEtaInvXSectionStatAWOXErrCopy   = (TGraphAsymmErrors*) graphCombEtaInvXSectionStatAWOXErr->Clone("graphCombEtaInvXSectionStatAWOXErrCopy");
+        TGraphAsymmErrors* graphCombEtaInvXSectionSysACopy          = (TGraphAsymmErrors*) graphCombEtaInvXSectionSysA->Clone("graphCombEtaInvXSectionSysACopy");
+        graphCombEtaInvXSectionStatAWOXErrCopy                      = ScaleGraph(graphCombEtaInvXSectionStatAWOXErrCopy,scaleFacEtaForCombPlot);
+        graphCombEtaInvXSectionSysACopy                             = ScaleGraph(graphCombEtaInvXSectionSysACopy,scaleFacEtaForCombPlot);
+        TH1D* histFitTCMInvXSectionEta                              = (TH1D*)fitTCMInvXSectionEta->GetHistogram();
+        histFitTCMInvXSectionEta->Scale(scaleFacEtaForCombPlot);
+        histoPythia8InvXSectionEta->Scale(scaleFacEtaForCombPlot);
+        TGraphAsymmErrors* graphNLOEtaAESSCalcCopy                  = (TGraphAsymmErrors*)graphNLOEtaAESSCalc->Clone("graphNLOEtaAESSCalcCopy");
+        TGraph* graphNLOCalcEtaMuHalfCopy                           = (TGraph*)graphNLOCalcEtaMuHalf->Clone("graphNLOCalcEtaMuHalfCopy");
+        TGraph* graphNLOCalcEtaMuOneCopy                            = (TGraph*)graphNLOCalcEtaMuOne->Clone("graphNLOCalcEtaMuOneCopy");
+        TGraph* graphNLOCalcEtaMuTwoCopy                            = (TGraph*)graphNLOCalcEtaMuTwo->Clone("graphNLOCalcEtaMuTwoCopy");
+        graphNLOEtaAESSCalcCopy                                     = ScaleGraph(graphNLOEtaAESSCalcCopy,scaleFacEtaForCombPlot);
+        graphNLOCalcEtaMuHalfCopy                                   = ScaleGraph(graphNLOCalcEtaMuHalfCopy,scaleFacEtaForCombPlot);
+        graphNLOCalcEtaMuOneCopy                                    = ScaleGraph(graphNLOCalcEtaMuOneCopy,scaleFacEtaForCombPlot);
+        graphNLOCalcEtaMuTwoCopy                                    = ScaleGraph(graphNLOCalcEtaMuTwoCopy,scaleFacEtaForCombPlot);
+        
+        // plotting Pythia 8.2 Monash
+        DrawGammaSetMarker(histoPythia8InvXSectionPi0, 24, 1.5, kRed+2 , kRed+2);  
+        histoPythia8InvXSectionPi0->SetLineWidth(widthCommonFit);
+        histoPythia8InvXSectionPi0->Draw("same,hist,l");
+        DrawGammaSetMarker(histoPythia8InvXSectionEta, 24, 1.5, kRed+2 , kRed+2);  
+        histoPythia8InvXSectionEta->SetLineWidth(widthCommonFit);
+        histoPythia8InvXSectionEta->Draw("same,hist,l");
+
+        // plotting NLO calcs pi0
+        DrawGammaSetMarkerTGraphAsym(graphNLODSS14Calc, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
+        graphNLODSS14Calc->Draw("3,same");
+        
+        // plotting NLO calcs eta
+        DrawGammaSetMarkerTGraphAsym(graphNLOEtaAESSCalcCopy, 0, 0, colorCGC, colorCGC, widthLinesBoxes, kTRUE, colorCGC);
+        graphNLOEtaAESSCalcCopy->Draw("3,same");       
+
+        // plot data
+        graphCombPi0InvXSectionSysA->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionSysACopy, markerStyleComb+4, markerSizeComb, kBlack , kBlack, widthLinesBoxes, kTRUE);
+        graphCombEtaInvXSectionSysACopy->Draw("E2same");
+        
+        graphCombPi0InvXSectionStatAWOXErr->Draw("p,same,z");
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionStatAWOXErrCopy, markerStyleComb+4, markerSizeComb, kBlack , kBlack);
+        graphCombEtaInvXSectionStatAWOXErrCopy->Draw("p,same,z");
+        
+        // plots fits
+        fitTCMInvXSectionPi0->Draw("same");                
+        SetStyleHisto(histFitTCMInvXSectionEta, 2, 7, kGray+2);
+        histFitTCMInvXSectionEta->Draw("same,c");
+                        
+        // labels lower left corner
+        TLegend* legendXsectionPaperAll    = GetAndSetLegend2(0.17, 0.19, 0.5, 0.19+0.04*1, textSizeLabelsPixel, 2, "", 43, 0.4);
+        legendXsectionPaperAll->AddEntry(graphCombPi0InvXSectionSysA,"#pi^{0}","pf");
+        legendXsectionPaperAll->AddEntry(graphCombEtaInvXSectionSysACopy,"#eta (x 10^{-2})","pf");
+        legendXsectionPaperAll->Draw();
+        TLegend* legendXsectionPaper3     = GetAndSetLegend2(0.17, 0.05+0.08, 0.5, 0.11+0.08, textSizeLabelsPixel, 1, "", 43, 0.2);
+        legendXsectionPaper3->AddEntry(fitTCMInvXSectionPi0,"#it{A}_{e} exp(-#it{E}_{T, kin}/#it{T}_{e}) + #it{A}/#(){1 + #frac{#it{p}_{T}^{2}}{#it{T}^{2}#upoint n}}^{n}","l");
+        legendXsectionPaper3->Draw();
+        
+        TLatex *labelEnergyXSectionPaperAll = new TLatex(0.18, 0.20+0.04*3, collisionSystem2760GeV.Data());
+        SetStyleTLatex( labelEnergyXSectionPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+        labelEnergyXSectionPaperAll->Draw();
+        TLatex *labelALICEXSectionPaperAll  = new TLatex(0.18,0.20+0.04*2,"ALICE");
+        SetStyleTLatex( labelALICEXSectionPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+        labelALICEXSectionPaperAll->Draw();
+        TLatex *labelALICENormUnPaperAll    = new TLatex(0.18,0.20+0.05*1,"Norm. unc. 5.4%");
+        SetStyleTLatex( labelALICENormUnPaperAll, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 11);
+        labelALICENormUnPaperAll->Draw();
+        
+
+        // labels upper right corner
+        TLegend* legendXsectionPaperPyBoth  = GetAndSetLegend2(0.54, 0.95-0.04*4-0.04*0.75*2, 0.59+0.33, 0.95, textSizeLabelsPixel, 1, "", 43, 0.18);
+        legendXsectionPaperPyBoth->AddEntry(histoPythia8InvXSectionEta,"PYTHIA 8.2","l");
+        legendXsectionPaperPyBoth->AddEntry((TObject*)0,"Monash 2013","");
+        legendXsectionPaperPyBoth->AddEntry(graphNLODSS14Calc,"#pi^{0} pQCD NLO ","f");
+        legendXsectionPaperPyBoth->AddEntry((TObject*)0,"#scale[0.75]{PDF: MSTW, FF: DSS14}","");
+        legendXsectionPaperPyBoth->AddEntry(graphNLOEtaAESSCalcCopy,"#eta pQCD NLO ","f");        
+        legendXsectionPaperPyBoth->AddEntry((TObject*)0,"#scale[0.75]{PDF: CTEQ6M5, FF: AESSS}","");
+        legendXsectionPaperPyBoth->Draw();
+
+    canvasXSectionPi0->SaveAs(Form("%s/InvXSection_Pi0_Eta_Theory.%s",outputDir.Data(),suffix.Data()));
+
     // **********************************************************************************************************************
     // *********************************** HFE results for 2.76TeV **********************************************************
     // **********************************************************************************************************************

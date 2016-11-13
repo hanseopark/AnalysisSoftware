@@ -1532,7 +1532,37 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
     cout << "meson not defined" << endl;
     return 0;    
 }    
-                                                    
+                                              
+void InitializeClusterBinning (TString energy, Int_t modi ){                                              
+    fBinsClusterPt          = new Double_t[100];
+    if( energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("PbPb_2.76TeV") == 0 || energy.CompareTo("PbPb_5.02TeV") == 0 || energy.CompareTo("pPb_5.023TeV") == 0){
+      fNBinsClusterPt       = fNBinsCluster2760GeVPt;
+      for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
+        fBinsClusterPt[iPt] = fBinsCluster2760GeVPt[iPt];
+      }
+    } else if( energy.CompareTo("7TeV") == 0){
+      fNBinsClusterPt       = fNBinsCluster8TeVPt;
+      for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
+        fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
+      }
+    } else if( energy.CompareTo("8TeV") == 0){
+      if(modi == 10){
+        fNBinsClusterPt       = fNBinsCluster8TeVMergedPt;
+        for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
+          fBinsClusterPt[iPt] = fBinsCluster8TeVMergedPt[iPt];
+        }
+      }else{
+        fNBinsClusterPt       = fNBinsCluster8TeVPt;
+        for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
+          fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
+        }
+      }
+    } else {
+      fNBinsClusterPt       = 0;
+      fBinsClusterPt        = NULL;
+    }                                              
+}    
+                                              
 //*************************************************************************************************
 //******************** Initialize binning for analysis stream  ************************************
 //*************************************************************************************************

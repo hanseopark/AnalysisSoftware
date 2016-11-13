@@ -3563,11 +3563,37 @@ Color_t GetColorDefaultColor( TString energy,
                 } else if (!centrality.CompareTo("40-80%")){
                     return kCyan+2;	
                 }	
-            }	
+            } else {
+                if (!centrality.CompareTo("0-10%")){
+                    return kRed+3;
+                } else if (!centrality.CompareTo("0-20%")){
+                    return kRed+3;
+                } else if (!centrality.CompareTo("0-40%")){
+                    return kMagenta+4;
+                } else if (!centrality.CompareTo("0-5%")){
+                    return kRed+2;
+                } else if (!centrality.CompareTo("5-10%")){
+                    return 809;
+                } else if (!centrality.CompareTo("10-20%")){
+                    return 802;
+                } else if (!centrality.CompareTo("20-40%")){
+                    return kGreen+4;
+                } else if (!centrality.CompareTo("40-60%")){
+                    return kCyan+3;
+                } else if (!centrality.CompareTo("60-80%")){
+                    return kBlue+3;
+                } else if (!centrality.CompareTo("40-80%")){
+                    return kCyan+3; 
+                }
+            }    
         } else {
             if (!generator.CompareTo("")){
-                if (!centrality.CompareTo("0-20%")){
+                if (!centrality.CompareTo("0-10%")){
+                    return kRed-6;
+                } else if (!centrality.CompareTo("0-20%")){
                     return kRed-5;
+                } else if (!centrality.CompareTo("10-20%")){
+                    return 800-3;
                 } else if (!centrality.CompareTo("20-40%")){
                     return kGreen-5;
                 } else if (!centrality.CompareTo("40-80%")){
@@ -3731,7 +3757,29 @@ Style_t GetDefaultMarkerStyle( TString energy,
             } else if (!centrality.CompareTo("40-80%")){
                 return 34;	
             }	
-        }	
+        } else {
+            if (!centrality.CompareTo("0-10%")){
+                return 24;
+            } else if (!centrality.CompareTo("0-20%")){
+                return 24;
+            } else if (!centrality.CompareTo("0-40%")){
+                return 24;
+            } else if (!centrality.CompareTo("0-5%")){
+                return 24;
+            } else if (!centrality.CompareTo("5-10%")){
+                return 25;
+            } else if (!centrality.CompareTo("10-20%")){
+                return 30;
+            } else if (!centrality.CompareTo("20-40%")){
+                return 27;
+            } else if (!centrality.CompareTo("40-60%")){
+                return 24;
+            } else if (!centrality.CompareTo("60-80%")){
+                return 25;
+            } else if (!centrality.CompareTo("40-80%")){
+                return 28;  
+            }
+        }    
 	}
     if (!energy.CompareTo("PbPb_5.02TeV")){
         if (!generator.CompareTo("LHC15o")){

@@ -1211,6 +1211,40 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                 maxYExo = fHistoExoticsBelowM02MinBaseCut->GetMaximum();
             if (maxYExo < fHistoExoticsBelowM02MinCut->GetMaximum())
                 maxYExo = fHistoExoticsBelowM02MinCut->GetMaximum();
+            maxYExo = 100*maxYExo;
+            if (minYExo > FindSmallestEntryIn1D(fHistoExoticsBelowM02MinBaseCut))
+                minYExo = FindSmallestEntryIn1D(fHistoExoticsBelowM02MinBaseCut);
+            if (minYExo > FindSmallestEntryIn1D(fHistoExoticsBelowM02MinCut))
+                minYExo = FindSmallestEntryIn1D(fHistoExoticsBelowM02MinCut);
+            minYExo = 0.1*minYExo;
+                
+            DrawAutoGammaMesonHistos(   fHistoExoticsBelowM02MinBaseCut, 
+                                        "", "E (GeV)", "counts/event", 
+                                        kFALSE, 2.,1e-6, kFALSE,
+                                        kTRUE, minYExo, maxYExo, 
+                                        kFALSE, 0, 50);
+            fHistoExoticsBelowM02MinBaseCut->GetYaxis()->SetTitleOffset(1);
+            DrawGammaSetMarker(fHistoExoticsBelowM02MinBaseCut, 21, 1.5, kGreen+2, kGreen+2); 
+            fHistoExoticsBelowM02MinBaseCut->Draw("e,p");
+            DrawGammaSetMarker(fHistoExoticsAboveM02MinCut, 25, 1.5, kBlue+1, kBlue+1); 
+            fHistoExoticsAboveM02MinCut->Draw("same,e,p");
+            DrawGammaSetMarker(fHistoExoticsBelowM02MinCut, 24, 1.5, kRed+1, kRed+1); 
+            fHistoExoticsBelowM02MinCut->Draw("same,e,p");
+            
+            TLegend* legendExotics = GetAndSetLegend2(0.65,0.8-0.035*3*1.05,0.95,0.8,0.035,1,"",42,0.1);
+            legendExotics->AddEntry(fHistoExoticsBelowM02MinBaseCut,"0 < #sigma_{long}^{2} < 0.1","p");
+            legendExotics->AddEntry(fHistoExoticsBelowM02MinCut,"0.1 < #sigma_{long}^{2} < 0.27","p");
+            legendExotics->AddEntry(fHistoExoticsAboveM02MinCut,"0.27 < #sigma_{long}^{2} < #infty","p");
+            legendExotics->Draw();
+            
+            
+            PutProcessLabelAndEnergyOnPlot(0.65, 0.95, 0.035, fCollisionSystem.Data(), fDetectionProcess.Data(), "rejected exotics", 42, 0.03, "", 1, 1.1);
+
+            canvasYieldExo->Update();
+            canvasYieldExo->SaveAs(Form("%s/%s_%s_ExoticsRej_YieldPerEvent%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
+
+            
+            maxYExo = maxYExo/100;
             if (clusterEdummy){
                 if (maxYExo < clusterEdummy->GetMaximum())
                     maxYExo = clusterEdummy->GetMaximum();
@@ -1219,11 +1253,8 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                 if (maxYExo < clusterEmdummy->GetMaximum())
                     maxYExo = clusterEmdummy->GetMaximum();
             }    
-            maxYExo = 100*maxYExo;
-            if (minYExo > FindSmallestEntryIn1D(fHistoExoticsBelowM02MinBaseCut))
-                minYExo = FindSmallestEntryIn1D(fHistoExoticsBelowM02MinBaseCut);
-            if (minYExo > FindSmallestEntryIn1D(fHistoExoticsBelowM02MinCut))
-                minYExo = FindSmallestEntryIn1D(fHistoExoticsBelowM02MinCut);
+            maxYExo = maxYExo*100;
+            minYExo = minYExo/0.1;
             if (clusterEdummy){
                 if (minYExo > FindSmallestEntryIn1D(clusterEdummy))
                     minYExo = FindSmallestEntryIn1D(clusterEdummy);
@@ -1255,10 +1286,6 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                 clusterEmdummy->Draw("same,e,p");
             }    
             
-            TLegend* legendExotics = GetAndSetLegend2(0.65,0.8-0.035*3*1.05,0.95,0.8,0.035,1,"",42,0.1);
-            legendExotics->AddEntry(fHistoExoticsBelowM02MinBaseCut,"0 < #sigma_{long}^{2} < 0.1","p");
-            legendExotics->AddEntry(fHistoExoticsBelowM02MinCut,"0.1 < #sigma_{long}^{2} < 0.27","p");
-            legendExotics->AddEntry(fHistoExoticsAboveM02MinCut,"0.27 < #sigma_{long}^{2} < #infty","p");
             legendExotics->Draw();
             
             TLegend* legendExotics2 = GetAndSetLegend2(0.13,0.94-0.035*3*1.05,0.43,0.94,0.035,1,"Good clusters",42,0.1);
@@ -1269,7 +1296,8 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             PutProcessLabelAndEnergyOnPlot(0.65, 0.95, 0.035, fCollisionSystem.Data(), fDetectionProcess.Data(), "rejected exotics", 42, 0.03, "", 1, 1.1);
 
             canvasYieldExo->Update();
-            canvasYieldExo->SaveAs(Form("%s/%s_%s_ExoticsRej_YieldPerEvent%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
+            canvasYieldExo->SaveAs(Form("%s/%s_%s_ExoticsRejWithGood_YieldPerEvent%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
+           
         }
         delete canvasYieldExo;
 

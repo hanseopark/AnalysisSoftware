@@ -21,6 +21,7 @@ mkdir FinalResults
 mkdir CocktailInput
 mkdir RooUnfold
 mkdir DownloadAndDataPrep
+mkdir DownloadAndDataPrep/runlists
 mkdir ToyModels
 
 ln -sf $PHOTONCONVDIR/SystematicErrorsNew/* SystematicErrorsNew/

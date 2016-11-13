@@ -1391,6 +1391,16 @@ void ExtractSignalV2(   TString meson                   = "",
         PlotWithManyFitSubtractedInvMassInPtBins(   fHistoMappingSignalInvMassPtBin, fFitSignalInvMassPtBin, fFitSignalWithOtherBGInvMassPtBin, 3, labelsOtherFits, nameMesonSub,
                                                     nameCanvasSub, namePadSub, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, 
                                                     fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem, "MC validated", kTRUE, "pol1 BG");
+
+        nameMesonSub    = Form("%s_MesonSubtractedWithOtherOnlyBGFits%s", plotPrefix.Data(), plotSuffix.Data());
+        nameCanvasSub   = "MesonCanvasSubtractedWithOtherOnlyBGFits";
+        namePadSub      = "MesonPadSubtractedWithOtherOnlyBGFits";
+        cout << nameMesonSub.Data() << endl;        
+        
+        PlotWithManyFitSubtractedInvMassInPtBins(   fHistoMappingSignalInvMassPtBin, fFitBckInvMassPtBin, fFitBckOtherInvMassPtBin, 3, labelsOtherFits, nameMesonSub,
+                                                    nameCanvasSub, namePadSub, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, 
+                                                    fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem, "MC validated", kTRUE, "pol1 BG");
+
         nameMesonSub    = Form("%s_MesonSubtractedWithFits%s", plotPrefix.Data(), plotSuffix.Data());
         nameCanvasSub   = "MesonCanvasSubtractedWithFits";
         namePadSub      = "MesonPadSubtractedWithFits";
@@ -6073,6 +6083,7 @@ void Delete(){
     if (fHistoFillPerEventBGZbinVsPsibin)                       delete fHistoFillPerEventBGZbinVsPsibin;
     for (Int_t m = 0; m < 3; m++){
         if (fFitSignalWithOtherBGInvMassPtBin[m])               delete fFitSignalWithOtherBGInvMassPtBin[m];
+        
         if (fFitBckOtherInvMassPtBin[m])                        delete fFitBckOtherInvMassPtBin[m];
     }    
     // delete Gaussian fit histograms
