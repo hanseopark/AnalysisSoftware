@@ -25,6 +25,8 @@
 #include "TH1F.h"
 #include "TH2F.h"
 #include "TF1.h"
+#include "TList.h"
+#include "TFitResultPtr.h"
 #include "TVirtualFitter.h"
 #include "TObject.h"
 #include "TCanvas.h"
@@ -59,7 +61,8 @@ void PrepareSecondaries(    TString     meson                       = "",
                             TString     period                      = "",
                             Int_t       numberOfBins                = 30,
                             Int_t       mode                        = 0,
-                            Bool_t      producePlotsInOrPtRange     = kFALSE
+                            Bool_t      producePlotsInOrPtRange     = kFALSE,
+                            Bool_t      doRapidityCorrection        = kFALSE
                      ) {
     
     gROOT->Reset();
@@ -383,6 +386,40 @@ void PrepareSecondaries(    TString     meson                       = "",
             }
         }
     }
+    
+    //***************************** Correct for non-flat y distributions ********************************************
+    histoMesonDaughterPtYCorr                                   = new TH2F*[nMotherParticles];
+    histoGammaFromXFromMotherPtYCorr                            = new TH2F*[nMotherParticles];
+    listYSlicesMesonDaughter                                    = new TList*[nMotherParticles];
+    listYSlicesGammaFromXFromMother                             = new TList*[nMotherParticles];
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        if (doRapidityCorrection) {
+            if (histoMesonDaughterPtY[i]){
+                histoMesonDaughterPtYCorr[i]                    = (TH2F*)histoMesonDaughterPtY[i]->Clone(Form("%s_yCorr", histoMesonDaughterPtY[i]->GetName()));
+                listYSlicesMesonDaughter[i]                     = new TList;
+                listYSlicesMesonDaughter[i]->SetName(Form("%s_ySlices", histoMesonDaughterPtY[i]->GetName()));
+                CorrectForNonFlatRapidity(histoMesonDaughterPtYCorr[i], histoMesonDaughterPtY[i], listYSlicesMesonDaughter[i]);
+            } else {
+                histoMesonDaughterPtYCorr[i]                    = NULL;
+                listYSlicesMesonDaughter[i]                     = NULL;
+            }
+            
+            if (histoGammaFromXFromMotherPtY[i]) {
+                histoGammaFromXFromMotherPtYCorr[i]             = (TH2F*)histoGammaFromXFromMotherPtY[i]->Clone(Form("%s_yCorr", histoGammaFromXFromMotherPtY[i]->GetName()));
+                listYSlicesGammaFromXFromMother[i]              = new TList;
+                listYSlicesGammaFromXFromMother[i]->SetName(Form("%s_ySlices",  histoGammaFromXFromMotherPtY[i]->GetName()));
+                CorrectForNonFlatRapidity(histoGammaFromXFromMotherPtYCorr[i],  histoGammaFromXFromMotherPtY[i], listYSlicesGammaFromXFromMother[i]);
+            } else {
+                histoGammaFromXFromMotherPtYCorr[i]             = NULL;
+                listYSlicesGammaFromXFromMother[i]              = NULL;
+            }
+        } else {
+            histoMesonDaughterPtYCorr[i]                        = NULL;
+            listYSlicesMesonDaughter[i]                         = NULL;
+            histoGammaFromXFromMotherPtYCorr[i]                 = NULL;
+            listYSlicesGammaFromXFromMother[i]                  = NULL;
+        }
+    }
 
     //***************************** Project from 2D histograms ******************************************************
     // mesons
@@ -393,18 +430,27 @@ void PrepareSecondaries(    TString     meson                       = "",
     histoMesonMotherYOrBin                                      = new TH1F*[nMotherParticles];
     histoMesonMotherPhiOrBin                                    = new TH1F*[nMotherParticles];
     for (Int_t i=0; i<nMotherParticles; i++) {
-        if (histoMesonDaughterPtY[i]) {
-            histoMesonDaughterPtOrBin[i]                        = (TH1F*)histoMesonDaughterPtY[i]->ProjectionX(Form("%s_From_%s_Pt_OrBin",fAnalyzedMeson.Data(),motherParticles[i].Data()),1,histoMesonDaughterPtY[i]->GetNbinsY(),"e");
+        
+        // project pt distributions (from corrected pt-y histograms)
+        if (histoMesonDaughterPtYCorr[i]) {
+            histoMesonDaughterPtOrBin[i]                        = (TH1F*)histoMesonDaughterPtYCorr[i]->ProjectionX(Form("%s_From_%s_Pt_OrBin",fAnalyzedMeson.Data(),motherParticles[i].Data()),1,histoMesonDaughterPtY[i]->GetNbinsY(),"e");
             SetHistogramTitles(histoMesonDaughterPtOrBin[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoMesonDaughterPtOrBin[i]->Sumw2();
             histoMesonDaughterPtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
+        } else {
+            histoMesonDaughterPtOrBin[i]                        = NULL;
+        }
+        
+        // project y distributions
+        if (histoMesonDaughterPtY[i]) {
             histoMesonDaughterYOrBin[i]                         = (TH1F*)histoMesonDaughterPtY[i]->ProjectionY(Form("%s_From_%s_Y_OrBin",fAnalyzedMeson.Data(),motherParticles[i].Data()),1,histoMesonDaughterPtY[i]->GetNbinsX(),"e");
             SetHistogramTitles(histoMesonDaughterYOrBin[i],"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoMesonDaughterYOrBin[i]->Sumw2();
         } else {
-            histoMesonDaughterPtOrBin[i]                        = NULL;
             histoMesonDaughterYOrBin[i]                         = NULL;
         }
+        
+        // project phi distributions
         if (histoMesonDaughterPtPhi[i]) {
             histoMesonDaughterPhiOrBin[i]                       = (TH1F*)histoMesonDaughterPtPhi[i]->ProjectionY(Form("%s_From_%s_Phi_OrBin",fAnalyzedMeson.Data(),motherParticles[i].Data()),1,histoMesonDaughterPtPhi[i]->GetNbinsX(),"e");
             SetHistogramTitles(histoMesonDaughterPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
@@ -412,6 +458,7 @@ void PrepareSecondaries(    TString     meson                       = "",
         } else
             histoMesonDaughterPhiOrBin[i]                       = NULL;
         
+        // project pt and y distributions
         if (histoMesonMotherPtY[i]) {
             histoMesonMotherPtOrBin[i]                          = (TH1F*)histoMesonMotherPtY[i]->ProjectionX(Form("%s_Pt_OrBin",motherParticles[i].Data()),1,histoMesonMotherPtY[i]->GetNbinsY(),"e");
             SetHistogramTitles(histoMesonMotherPtOrBin[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
@@ -425,6 +472,8 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoMesonMotherPtOrBin[i]                          = NULL;
             histoMesonMotherYOrBin[i]                           = NULL;
         }
+        
+        // project phi distributions
         if (histoMesonMotherPtPhi[i]) {
             histoMesonMotherPhiOrBin[i]                         = (TH1F*)histoMesonMotherPtPhi[i]->ProjectionY(Form("%s_Phi_OrBin",motherParticles[i].Data()),1,histoMesonMotherPtPhi[i]->GetNbinsX(),"e");
             SetHistogramTitles(histoMesonMotherPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
@@ -444,19 +493,27 @@ void PrepareSecondaries(    TString     meson                       = "",
     histoGammaFromXFromMotherPhiOrBin                           = new TH1F*[nMotherParticles];
     for (Int_t i=0; i<nMotherParticles; i++) {
         if(doSecondaryGamma) {
-            if (histoGammaFromXFromMotherPtY[i]) {
-                histoGammaFromXFromMotherPtOrBin[i]             = (TH1F*)histoGammaFromXFromMotherPtY[i]->ProjectionX(Form("Gamma_From_X_From_%s_Pt_OrBin",motherParticles[i].Data()),1,histoGammaFromXFromMotherPtY[i]->GetNbinsY(),"e");
+            
+            // project pt distributions (from corrected pt-y histograms)
+            if (histoGammaFromXFromMotherPtYCorr[i]) {
+                histoGammaFromXFromMotherPtOrBin[i]             = (TH1F*)histoGammaFromXFromMotherPtYCorr[i]->ProjectionX(Form("Gamma_From_X_From_%s_Pt_OrBin",motherParticles[i].Data()),1,histoGammaFromXFromMotherPtY[i]->GetNbinsY(),"e");
                 SetHistogramTitles(histoGammaFromXFromMotherPtOrBin[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
                 histoGammaFromXFromMotherPtOrBin[i]->Sumw2();
                 histoGammaFromXFromMotherPtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
+            } else {
+                histoGammaFromXFromMotherPtOrBin[i]             = NULL;
+            }
+            
+            // project y distributions
+            if (histoGammaFromXFromMotherPtY[i]) {
                 histoGammaFromXFromMotherYOrBin[i]              = (TH1F*)histoGammaFromXFromMotherPtY[i]->ProjectionY(Form("Gamma_From_X_From_%s_Y_OrBin",motherParticles[i].Data()),1,histoGammaFromXFromMotherPtY[i]->GetNbinsX(),"e");
                 SetHistogramTitles(histoGammaFromXFromMotherYOrBin[i],"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
                 histoGammaFromXFromMotherYOrBin[i]->Sumw2();
             } else {
-                histoGammaFromXFromMotherPtOrBin[i]             = NULL;
                 histoGammaFromXFromMotherYOrBin[i]              = NULL;
             }
             
+            // project phi distributions
             if (histoGammaFromXFromMotherPtPhi[i]) {
                 histoGammaFromXFromMotherPhiOrBin[i]            = (TH1F*)histoGammaFromXFromMotherPtPhi[i]->ProjectionY(Form("Gamma_From_X_From_%s_Phi_OrBin",motherParticles[i].Data()),1,histoGammaFromXFromMotherPtPhi[i]->GetNbinsX(),"e");
                 SetHistogramTitles(histoGammaFromXFromMotherPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
@@ -717,6 +774,13 @@ void SaveMesonHistos() {
     // write number of events
     histoNEvents->Write("NEvents", TObject::kOverwrite);
     
+    // write y vs pt histograms
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        if (histoMesonDaughterPtY[i])       histoMesonDaughterPtY[i]->Write(        histoMesonDaughterPtY[i]->GetName(),        TObject::kOverwrite);
+        if (histoMesonDaughterPtYCorr[i])   histoMesonDaughterPtYCorr[i]->Write(    histoMesonDaughterPtYCorr[i]->GetName(),    TObject::kOverwrite);
+        if (listYSlicesMesonDaughter[i])    listYSlicesMesonDaughter[i]->Write(     listYSlicesMesonDaughter[i]->GetName(),     TObject::kSingleKey);
+    }
+    
     // write projections
     for (Int_t i=0; i<nMotherParticles; i++) {
         if (histoMesonDaughterPtOrBin[i])   histoMesonDaughterPtOrBin[i]->Write(    histoMesonDaughterPtOrBin[i]->GetName(),    TObject::kOverwrite);
@@ -749,11 +813,18 @@ void SavePhotonHistos() {
     // write number of events
     histoNEvents->Write("NEvents", TObject::kOverwrite);
     
+    // write y vs pt histograms
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        if (histoGammaFromXFromMotherPtYCorr[i])    histoGammaFromXFromMotherPtYCorr[i]->Write( histoGammaFromXFromMotherPtYCorr[i]->GetName(), TObject::kOverwrite);
+        if (histoGammaFromXFromMotherPtY[i])        histoGammaFromXFromMotherPtY[i]->Write(     histoGammaFromXFromMotherPtY[i]->GetName(),     TObject::kOverwrite);
+        if (listYSlicesGammaFromXFromMother[i])     listYSlicesGammaFromXFromMother[i]->Write(  listYSlicesGammaFromXFromMother[i]->GetName(),  TObject::kSingleKey);
+    }
+    
     // write projections
     for (Int_t i=0; i<nMotherParticles; i++) {
-        if (histoGammaFromXFromMotherPtOrBin[i])    histoGammaFromXFromMotherPtOrBin[i]->Write( histoGammaFromXFromMotherPtOrBin[i]->GetName(),     TObject::kOverwrite);
-        if (histoGammaFromXFromMotherYOrBin[i])     histoGammaFromXFromMotherYOrBin[i]->Write(  histoGammaFromXFromMotherYOrBin[i]->GetName(),      TObject::kOverwrite);
-        if (histoGammaFromXFromMotherPhiOrBin[i])   histoGammaFromXFromMotherPhiOrBin[i]->Write(histoGammaFromXFromMotherPhiOrBin[i]->GetName(),    TObject::kOverwrite);
+        if (histoGammaFromXFromMotherPtOrBin[i])    histoGammaFromXFromMotherPtOrBin[i]->Write( histoGammaFromXFromMotherPtOrBin[i]->GetName(), TObject::kOverwrite);
+        if (histoGammaFromXFromMotherYOrBin[i])     histoGammaFromXFromMotherYOrBin[i]->Write(  histoGammaFromXFromMotherYOrBin[i]->GetName(),  TObject::kOverwrite);
+        if (histoGammaFromXFromMotherPhiOrBin[i])   histoGammaFromXFromMotherPhiOrBin[i]->Write(histoGammaFromXFromMotherPhiOrBin[i]->GetName(),TObject::kOverwrite);
     }
 }
 
@@ -825,3 +896,85 @@ void CreateBRTableLatex() {
     texFile << "}";
     texFile.close();
 }
+
+//************************** Function to correct for non-flat rapidity distribution *********************************
+void CorrectForNonFlatRapidity(TH2F* histCorr, TH2F* histOr, TList* list) {
+    
+    Int_t       nBinsPt                     = histOr->GetNbinsX();
+    TH1F**      ySlice                      = new TH1F*[nBinsPt];
+    TH1F*       ySliceTemp                  = NULL;
+    TF1**       yFit                        = new TF1*[nBinsPt];
+    Double_t    nEntriesFirstSlice          = 0.;
+    Double_t    fitdNdy                     = 0.;
+    Double_t    fitdNdyErr                  = 0.;
+    Double_t    histoMindNdy                = 0.;
+    Double_t    histoMindNdyErr             = 0.;
+    Double_t    histoMaxdNdy                = 0.;
+    Double_t    histoMaxdNdyErr             = 0.;
+    Double_t    corrFactor                  = 0.;
+    Int_t       fitStatus                   = 0;
+    
+    for (Int_t ptBin=1; ptBin<nBinsPt+1; ptBin++) {
+
+        // initialize
+        ySlice[ptBin-1]                     = NULL;
+        yFit[ptBin-1]                       = NULL;
+        
+        // project y distribution
+        ySlice[ptBin-1]                     = (TH1F*)histOr->ProjectionY(Form("%s_ptBin%d", histOr->GetName(), ptBin),ptBin,ptBin,"e");
+        ySlice[ptBin-1]->Sumw2();
+        
+        // test for entries
+        if (ptBin==1) nEntriesFirstSlice    = ySlice[ptBin-1]->GetEntries();
+        if (ySlice[ptBin-1]->GetEntries()<nEntriesFirstSlice*0.1) continue;
+
+        // fit y distribution with constant
+        yFit[ptBin-1]                       = new TF1(Form("%s_ptBin%d_fit", histOr->GetName(), ptBin), "[0]", -fRapidity, fRapidity);
+        TFitResultPtr fitResult             = ySlice[ptBin-1]->Fit(yFit[ptBin-1], "SQNRIME");
+        fitStatus                           = fitResult;
+        if (!(fitStatus==0 || fitStatus>=1000)) continue;
+        
+        // get fit value
+        fitdNdy                             = yFit[ptBin-1]->GetParameter(0);
+        fitdNdyErr                          = yFit[ptBin-1]->GetParError(0);
+        
+        // test for maximum deviation from fit value in histogram
+        histoMindNdy                        = ySlice[ptBin-1]->GetMinimum(0.);
+        histoMindNdyErr                     = ySlice[ptBin-1]->GetBinError(GetMinimumBinAboveThreshold(ySlice[ptBin-1],0.));
+        histoMaxdNdy                        = ySlice[ptBin-1]->GetMaximum();
+        histoMaxdNdyErr                     = ySlice[ptBin-1]->GetBinError(ySlice[ptBin-1]->GetMaximumBin());
+        if ( ((fitdNdy-fitdNdyErr)<(histoMindNdy+histoMindNdyErr)) || ((fitdNdy+fitdNdyErr)>(histoMaxdNdy-histoMaxdNdyErr)) ) continue;
+        
+        // correct y vs. pt hist for non-flat y dist.
+        for (Int_t yBin=1; yBin<histOr->GetNbinsY()+1; yBin++) {
+            
+            if (!histOr->GetBinContent(ptBin, yBin)) continue;
+            
+            corrFactor                      = fitdNdy / histOr->GetBinContent(ptBin, yBin);
+            histCorr->SetBinContent(ptBin,  yBin, histOr->GetBinContent(ptBin, yBin)*corrFactor);
+            histCorr->SetBinError(ptBin,    yBin, histOr->GetBinError(ptBin, yBin)*corrFactor);
+        }
+        
+        // add to list
+        list->Add(ySlice[ptBin-1]);
+        list->Add(yFit[ptBin-1]);
+    }
+}
+
+//************************** Function to correct for non-flat rapidity distribution *********************************
+Int_t GetMinimumBinAboveThreshold(TH1F* hist, Double_t thres) {
+
+    TH1F*       histTemp        = (TH1F*)hist->Clone("histTemp");
+    Double_t    tempBinContent  = 0.;
+    
+    for (Int_t i=1; i<hist->GetNbinsX()+1; i++) {
+        tempBinContent          = histTemp->GetBinContent(i);
+        if (tempBinContent>thres)   histTemp->SetBinContent(i, 1/tempBinContent);
+        else                        histTemp->SetBinContent(i, 0);
+    }
+    
+    return histTemp->GetMaximumBin();
+}
+
+
+

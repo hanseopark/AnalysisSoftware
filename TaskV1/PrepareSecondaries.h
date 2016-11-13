@@ -46,6 +46,7 @@ TH1F** histoRatioPi0FromXToPi0Param                     = NULL;
 TH1F** histoDecayChannels                               = NULL;
 TH1F** histoDecayChannelsBR                             = NULL;
 TH2F** histoMesonDaughterPtY                            = NULL;
+TH2F** histoMesonDaughterPtYCorr                        = NULL;
 TH2F** histoMesonDaughterPtPhi                          = NULL;
 TH2F** histoMesonMotherPtY                              = NULL;
 TH2F** histoMesonMotherPtPhi                            = NULL;
@@ -56,10 +57,15 @@ TH1F** histoMesonMotherPtOrBin                          = NULL;
 TH1F** histoMesonMotherYOrBin                           = NULL;
 TH1F** histoMesonMotherPhiOrBin                         = NULL;
 TH2F** histoGammaFromXFromMotherPtY                     = NULL;
+TH2F** histoGammaFromXFromMotherPtYCorr                 = NULL;
 TH2F** histoGammaFromXFromMotherPtPhi                   = NULL;
 TH1F** histoGammaFromXFromMotherPtOrBin                 = NULL;
 TH1F** histoGammaFromXFromMotherYOrBin                  = NULL;
 TH1F** histoGammaFromXFromMotherPhiOrBin                = NULL;
+
+//************************** Declaration of lists *****************************************
+TList** listYSlicesMesonDaughter                        = NULL;
+TList** listYSlicesGammaFromXFromMother                 = NULL;
 
 //************************** Cocktail input ***********************************************
 TFile* cocktailInputFile                                = NULL;
@@ -86,5 +92,10 @@ void        SetHistogramTitles                      (   TH1F*   input,
                                                         TString yTitle          );
 TH1D*       CalculateRatioToTF1                     (   TH1D*   hist,
                                                         TF1*    func            );
+void        CorrectForNonFlatRapidity               (   TH2F*   histCorr,
+                                                        TH2F*   histOr,
+                                                        TList*  list            );
 void        CreateBRTableLatex                      (                           );
+Int_t       GetMinimumBinAboveThreshold             (   TH1F*       hist,
+                                                        Double_t    thres       );
 
