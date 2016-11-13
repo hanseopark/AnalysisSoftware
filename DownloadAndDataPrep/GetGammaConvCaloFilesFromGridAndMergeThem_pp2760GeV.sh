@@ -202,23 +202,39 @@ fi
 # LHC15a3aplusMC="2349"; 
 # LHC15g2MC="2352";
 
-TRAINDIR=Legotrain-mCalo-20160813_SecEffiAndTMStudiesRerun
-# LHC11aData="1777"; 
-# LHC15g1aMC="2408";
-# LHC12f1aMC="2428"; 
-# LHC12f1bMC="2429"; 
-LHC15g1aMC="2463";
-LHC12f1aMC="2460"; 
-LHC12f1bMC="2461"; 
+# TRAINDIR=Legotrain-mCalo-20160813_SecEffiAndTMStudiesRerun
+# # LHC11aData="1777"; 
+# # LHC15g1aMC="2408";
+# # LHC12f1aMC="2428"; 
+# # LHC12f1bMC="2429"; 
+# LHC15g1aMC="2463";
+# LHC12f1aMC="2460"; 
+# LHC12f1bMC="2461"; 
+# 
+# # LHC13gData="1778"; 
+# # LHC15a3aMC="2410"; 
+# # LHC15a3aplusMC="2416"; 
+# # LHC15g2MC="2456";
+# LHC15a3aMC="2464"; 
+# LHC15a3aplusMC="2465"; 
+# LHC15g2MC="2462";
 
-# LHC13gData="1778"; 
-# LHC15a3aMC="2410"; 
-# LHC15a3aplusMC="2416"; 
-# LHC15g2MC="2456";
-LHC15a3aMC="2464"; 
-LHC15a3aplusMC="2465"; 
-LHC15g2MC="2462";
+TRAINDIR=Legotrain-vAN20161029_TMEffi
+# LHC11aData="1905";
+# LHC11aData="1894";
+LHC15g1aMC="2606";
+# LHC12f1aMC="2592"; 
+# LHC12f1bMC="2593"; 
 
+# LHC13gData="1907";
+# LHC13gData="1895";
+# LHC15a3aMC="2600"; 
+# LHC15a3aplusMC="2601"; 
+LHC15a3aMC="2610"; 
+LHC15a3aplusMC="2602"; 
+# LHC15a3aMC="2596"; 
+# LHC15a3aplusMC="2605"; 
+# LHC15g2MC="2594";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -295,7 +311,7 @@ echo "**************************************************************************
             CopyFileIfNonExisitent $OUTPUTDIR_LHC15g1a "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC15g1aMC/merge"
             
             echo "copying LHC11aJetJet" 
-            runNumbers=`cat runNumbersLHC11aJetJet.txt`
+            runNumbers=`cat runlists/runNumbersLHC11aJetJet.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 echo $runNumber
@@ -488,7 +504,7 @@ elif [ $2 = "LHC13g" ]; then
         if [ $HAVELHC13g == 1 ]; then
             echo "downloading LHC13g"
             CopyFileIfNonExisitent $OUTPUTDIR_LHC13g "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC13gData/merge_runlist_1"
-            runNumbers=`cat runNumbersLHC13g_pass1.txt`
+            runNumbers=`cat runlists/runNumbersLHC13g_pass1.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 echo $runNumber    
@@ -514,7 +530,7 @@ elif [ $2 = "LHC13g" ]; then
         fi
         
         echo "copying LHC13gJetJet in bins" 
-        runNumbers=`cat runNumbersLHC13gJetJet.txt`
+        runNumbers=`cat runlists/runNumbersLHC13gJetJet.txt`
         echo $runNumbers
         for runNumber in $runNumbers; do
             echo $runNumber
@@ -544,7 +560,7 @@ elif [ $2 = "LHC13g" ]; then
             root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC13g-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_LHC13g_$number.log\"\)
             
             mkdir -p $OUTPUTDIR/LHC13gRunWise
-            runNumbers=`cat runNumbersLHC13g_pass1.txt`
+            runNumbers=`cat runlists/runNumbersLHC13g_pass1.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 ChangeStructureIfNeeded $OUTPUTDIR_LHC13g/$runNumber/GammaConvCalo_$number.root $OUTPUTDIR/LHC13gRunWise/GammaConvCalo_LHC13g-pass1_$runNumber\_$number.root $number
@@ -621,7 +637,7 @@ elif [ $2 = "LHC13g" ]; then
             echo $fileName
             number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
             echo $number
-            runsForMerging=`cat runNumbersLHC13g_pass1_reduced.txt`
+            runsForMerging=`cat runlists/runNumbersLHC13g_pass1_reduced.txt`
             TOMERGE="";
             for run in $runsForMerging; do
                 echo $OUTPUTDIR/LHC13gRunWise/GammaConvCalo_LHC13g-pass1_$run\_$number.root

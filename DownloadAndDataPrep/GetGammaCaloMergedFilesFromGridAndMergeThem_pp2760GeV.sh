@@ -561,9 +561,17 @@ fi
 # LHC15a3aMC="2506"; 
 # LHC15a3aplusMC="2507"; 
 
-TRAINDIR=Legotrain-mCalo-20161024_Exotics
-LHC11aData="1886"; 
-LHC13gData="1885"; 
+# TRAINDIR=Legotrain-mCalo-20161024_Exotics
+# LHC11aData="1886"; 
+# LHC13gData="1885"; 
+
+TRAINDIR=Legotrain-vAN20161029_TMEffi
+LHC11aData="1905";
+LHC15g1aMC="2604";
+
+LHC13gData="1907";
+LHC15a3aMC="2608"; 
+LHC15a3aplusMC="2609"; 
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
@@ -634,7 +642,7 @@ if [ $2 = "LHC11a" ]; then
         if [ $HAVELHC11a == 1 ]; then
             echo "downloading LHC11a"
             CopyFileIfNonExisitent $OUTPUTDIR_LHC11a "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC11aData/merge_runlist_1"
-#             runNumbers=`cat runNumbersLHC11a_pass4_wSDD.txt`
+#             runNumbers=`cat runlists/runNumbersLHC11a_pass4_wSDD.txt`
 #             echo $runNumbers
 #             for runNumber in $runNumbers; do
 #                 echo $runNumber
@@ -655,7 +663,7 @@ if [ $2 = "LHC11a" ]; then
             CopyFileIfNonExisitent $OUTPUTDIR_LHC15g1a "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC15g1aMC/merge"
 
             echo "copying LHC11aJetJet" 
-            runNumbers=`cat runNumbersLHC11aJetJet.txt`
+            runNumbers=`cat runlists/runNumbersLHC11aJetJet.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 echo $runNumber
@@ -670,7 +678,7 @@ if [ $2 = "LHC11a" ]; then
             echo "downloading LHC15g1b"
             CopyFileIfNonExisitent $OUTPUTDIR_LHC15g1b "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC15g1bMC/merge"
             echo "copying LHC11aJetJet - gamma" 
-            runNumbers=`cat runNumbersLHC11aJetJet.txt`
+            runNumbers=`cat runlists/runNumbersLHC11aJetJet.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 echo $runNumber
@@ -868,7 +876,7 @@ elif [ $2 = "LHC13g" ]; then
             echo "copying LHC13g" 
 #             CopyFileIfNonExisitent $OUTPUTDIR_LHC13g "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC13gData/merge"
             CopyFileIfNonExisitent $OUTPUTDIR_LHC13g "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC13gData/merge_runlist_1"
-            runNumbers=`cat runNumbersLHC13g_pass1.txt`
+            runNumbers=`cat runlists/runNumbersLHC13g_pass1.txt`
             echo $runNumbers
 #             for runNumber in $runNumbers; do
 #                 echo $runNumber    
@@ -886,7 +894,7 @@ elif [ $2 = "LHC13g" ]; then
             CopyFileIfNonExisitent $OUTPUTDIR_LHC15a3a "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC15a3aMC/merge"
 
             echo "copying LHC15a3a single bins" 
-            runNumbers=`cat runNumbersLHC13gJetJet.txt`
+            runNumbers=`cat runlists/runNumbersLHC13gJetJet.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 echo $runNumber
@@ -903,7 +911,7 @@ elif [ $2 = "LHC13g" ]; then
             echo "copying LHC15a3a_plus" 
             CopyFileIfNonExisitent $OUTPUTDIR_LHC15a3aplus "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC15a3aplusMC/merge"
             echo "copying LHC15a3a_plus single bins" 
-            runNumbers=`cat runNumbersLHC13gJetJet.txt`
+            runNumbers=`cat runlists/runNumbersLHC13gJetJet.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 echo $runNumber
@@ -919,7 +927,7 @@ elif [ $2 = "LHC13g" ]; then
             echo "copying LHC15a3b" 
             CopyFileIfNonExisitent $OUTPUTDIR_LHC15a3b "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC15a3bMC/merge"
             echo "copying LHC15a3b single bins" 
-            runNumbers=`cat runNumbersLHC13gJetJet.txt`
+            runNumbers=`cat runlists/runNumbersLHC13gJetJet.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 echo $runNumber
