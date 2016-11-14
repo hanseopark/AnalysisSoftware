@@ -884,11 +884,8 @@ void CalculatePileUpBackground(Bool_t doMC){
         // loop over photon categories
         Int_t category;
         for (Int_t catIter = 0; catIter < 4; catIter++) {
-            if (catIter == 0) {
-                category            = 5;
-            } else {
-                category            = catIter;
-            }
+            if (catIter == 0)   category                                                    = 5;
+            else                category                                                    = catIter;
             
             // MCrec gamma
             fMCrecGammaPtDCAzBins[catIter][0]                                               = (TH1D*)fESDGammaPtDCAz[category]->ProjectionY(Form("MCrec_GammaPtDCAzBin_Full_%s", categoryName[catIter].Data()));
@@ -1130,15 +1127,15 @@ void CalculatePileUpBackground(Bool_t doMC){
         // plotting ratios + fits
         TCanvas *RatioWithWithoutPileUpCanvasMC                                     = GetAndSetCanvas("canvasRatioWithWithoutPileUpMC");
         
-        SetHistogramm(fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
-        SetHistogramm(fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
-        SetHistogramm(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
-        SetHistogramm(fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
+        SetHistogramm(fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
+        SetHistogramm(fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
+        SetHistogramm(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
+        SetHistogramm(fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
         
-        DrawGammaSetMarker(fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning, 24, 1.0, kBlack, kBlack);
+        DrawGammaSetMarker(fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning, 20, 1.0, kBlack, kBlack);
         DrawGammaSetMarker(fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning, 24, 1.0, kRed, kRed);
-        DrawGammaSetMarker(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning, 24, 1.0, kBlue-9, kBlue-9);
-        DrawGammaSetMarker(fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning, 24, 1.0, kBlue+3, kBlue+3);
+        DrawGammaSetMarker(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning, 25, 1.0, kBlue-9, kBlue-9);
+        DrawGammaSetMarker(fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning, 28, 1.0, kBlue+3, kBlue+3);
 
         if (fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinning) fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->SetLineColor(kBlack);
         if (fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning) fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->SetLineColor(kRed);
@@ -1327,15 +1324,15 @@ void CalculatePileUpBackground(Bool_t doMC){
         // plotting ratio + fit
         TCanvas *RatioWithWithoutPileUpCanvas                               = GetAndSetCanvas("canvasRatioWithWithoutPileUp");
 
-        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0],"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
-        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[0],"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
-        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[1],"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
-        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[2],"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.25);
+        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0],"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
+        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[0],"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
+        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[1],"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
+        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[2],"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
 
-        DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0], 25, 1.0, kGray+2, kGray+2);
-        DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[0], 24, 1.0, kBlack, kBlack);
+        DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0], 28, 1.0, kGray+2, kGray+2);
+        DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[0], 20, 1.0, kBlack, kBlack);
         DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[1], 24, 1.0, kBlue-2, kBlue-2);
-        DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[2], 24, 1.0, kGreen+2, kGreen+2);
+        DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[2], 25, 1.0, kGreen+2, kGreen+2);
 
         fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0]->DrawCopy("");
         fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[0]->DrawCopy("same");
@@ -1924,7 +1921,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
 
     // initializing binning used for the DCAz distributions
     if(!addSig && !(mode == 4 || mode == 5)){
-        if (fBinsPtDCAzDist && fNBinsPtDCAzDist ) {
+        if (fBinsPtDCAzDist && fNBinsPtDCAzDist) {
             if (fBinsPtDCAzDist[0] == fBinsPt[0] && fBinsPtDCAzDist[fNBinsPtDCAzDist] == fBinsPt[fNBinsPt]) {
                 cout << "A different binning will be used for the DCAz distributions." << endl;
 
@@ -1958,6 +1955,14 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[0]                         = "BackDecreasingWindow";                   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
+    } else if ((fEnergyFlag.CompareTo("7TeV") == 0) && (fMeson.CompareTo("Pi0") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
+        nIterationsShowBackground[0]                    = 12;
+        nIterationsShowBackground[1]                    = 12;
+        nIterationsShowBackground[2]                    = 18;
+        nIterationsShowBackground[3]                    = 20;
+        optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
+        optionShowBackground[1]                         = "nosmoothing";
+        optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
     } else {
         cout << "WARNING: No ShowBackground-options defined, using the default ones." << endl;
         nIterationsShowBackground[0]                    = 12;
@@ -2856,7 +2861,7 @@ void PlotAdditionalDCAz(Int_t isMC, TString fCutID){
         RatioWithWithoutPileUpMC                            = (TH1D*)InputMC->Get(Form("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning"));
 
         DrawGammaSetMarker(RatioWithWithoutPileUpData, 20, 1.0, kBlack, kBlack);
-        DrawGammaSetMarker(RatioWithWithoutPileUpMC, 20, 1.0, kRed, kRed);
+        DrawGammaSetMarker(RatioWithWithoutPileUpMC, 24, 1.0, kRed, kRed);
 
         TCanvas *canvasComparisonWithWithoutPileUp      = GetAndSetCanvas("canvasComparisonWithWithoutPileUp");
         TLegend* legendComparisonWithWithoutPileUp      = GetAndSetLegend(0.3,0.75,2.4,1);
@@ -2909,7 +2914,7 @@ void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBi
     cout<<"fColumnPlot: "<<fColumnPlot<<" fRowPlot: "<<fRowPlot<<endl;
     
     Int_t place                                 = 0;
-    for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins+1;iPt++){
+    for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++){
         cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
         Double_t startPt                        = fRangeBinsPt[iPt];
         Double_t endPt                          = fRangeBinsPt[iPt+1];
@@ -2984,7 +2989,7 @@ void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBi
             legendData->SetLineWidth(0);
             legendData->SetLineColor(0);
             legendData->SetMargin(0.15);
-            legendData->AddEntry(ESDGammaPtDCAzBins[iPt],ESDGammaPtDCAzBins[iPt]->GetName(),"l");
+            legendData->AddEntry(ESDGammaPtDCAzBins[iPt],textEvents,"l");
             legendData->AddEntry(ESDGammaPtDCAzBinsBack[iPt],ESDGammaPtDCAzBinsBack[iPt]->GetName(),"l");
             if(ESDGammaPtDCAzBinsBackB)legendData->AddEntry(ESDGammaPtDCAzBinsBackB[iPt],ESDGammaPtDCAzBinsBackB[iPt]->GetName(),"l");
             legendData->Draw();
@@ -2995,8 +3000,8 @@ void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBi
             padDataSpectra->cd(place)->SetBottomMargin(0.15);
             padDataSpectra->cd(place)->SetRightMargin(0.02);
             int remaining                       = (place-1)%fColumnPlot;
-            if (remaining > 0) padDataSpectra->cd(place)->SetLeftMargin(0.15);
-            else padDataSpectra->cd(place)->SetLeftMargin(0.25);
+            if (remaining > 0)  padDataSpectra->cd(place)->SetLeftMargin(0.15);
+            else                padDataSpectra->cd(place)->SetLeftMargin(0.25);
             
             DrawDCAzHisto(  ESDGammaPtDCAzBins[iPt],
                           Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
@@ -3052,7 +3057,7 @@ void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D*** ESDGammaPtDCAzB
     cout<<"fColumnPlot: "<<fColumnPlot<<" fRowPlot: "<<fRowPlot<<endl;
     
     Int_t place                                 = 0;
-    for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins+1;iPt++){
+    for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++){
         cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
         Double_t startPt                        = fRangeBinsPt[iPt];
         Double_t endPt                          = fRangeBinsPt[iPt+1];
