@@ -227,7 +227,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                     ){
     
     gROOT->Reset();
-    Int_t nIterationsUnfolding = 8;
+    
+    Int_t   nIterationsUnfolding                = 5;
+    Bool_t  useUnfoldingForCocktailSecondaries  = kFALSE;
     
     //****************************************************************************************
     //*************************** Catch old versions *****************************************
@@ -758,9 +760,15 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoGammaSecGammaFromXFromLambda_Cocktail_Raw_PtOrBin->Sumw2();
         
         if ( isPCM && !isCalo ) {
+
             // K0s: calculate raw yield
-            hasCocktailInput                                            = ConvertCocktailSecondaryToRaw(histoGammaSecGammaFromXFromK0s_Cocktail_Raw_Pt, histoGammaSecondaryFromXFromK0sConvProb_MCPt,histoGammaSecondaryFromXFromK0sRecoEff_MCPt,histoGammaTrueSecondaryFromXFromK0s_MCPt_recPt,nEvt,kTRUE,nIterationsUnfolding);
-            hasCocktailInput                                            = ConvertCocktailSecondaryToRaw(histoGammaSecGammaFromXFromK0s_Cocktail_Raw_PtOrBin,histoGammaSecondaryFromXFromK0sConvProb_MCPtOrBin,histoGammaSecondaryFromXFromK0sRecoEff_MCPtOrBin,histoGammaTrueSecondaryFromXFromK0s_MCPt_recPtOrBin,nEvt,kTRUE,nIterationsUnfolding);
+            if (useUnfoldingForCocktailSecondaries) {
+                hasCocktailInput                                        = ConvertCocktailSecondaryToRaw(histoGammaSecGammaFromXFromK0s_Cocktail_Raw_Pt, histoGammaSecondaryFromXFromK0sConvProb_MCPt,histoGammaSecondaryFromXFromK0sRecoEff_MCPt,histoGammaTrueSecondaryFromXFromK0s_MCPt_recPt,nEvt,kTRUE,nIterationsUnfolding);
+                hasCocktailInput                                        = ConvertCocktailSecondaryToRaw(histoGammaSecGammaFromXFromK0s_Cocktail_Raw_PtOrBin,histoGammaSecondaryFromXFromK0sConvProb_MCPtOrBin,histoGammaSecondaryFromXFromK0sRecoEff_MCPtOrBin,histoGammaTrueSecondaryFromXFromK0s_MCPt_recPtOrBin,nEvt,kTRUE,nIterationsUnfolding);
+            } else {
+                hasCocktailInput                                        = ConvertCocktailSecondaryToRaw(histoGammaSecGammaFromXFromK0s_Cocktail_Raw_Pt, histoGammaSecondaryFromXFromK0sConvProb_MCPt,histoGammaSecondaryFromXFromK0sRecoEff_Pt,histoGammaTrueSecondaryFromXFromK0s_MCPt_recPt,nEvt,kFALSE);
+                hasCocktailInput                                        = ConvertCocktailSecondaryToRaw(histoGammaSecGammaFromXFromK0s_Cocktail_Raw_PtOrBin,histoGammaSecondaryFromXFromK0sConvProb_MCPtOrBin,histoGammaSecondaryFromXFromK0sRecoEff_PtOrBin,histoGammaTrueSecondaryFromXFromK0s_MCPt_recPtOrBin,nEvt,kFALSE);
+            }
    
             // K0l: calculate raw yield
             hasCocktailInput                                            = ConvertCocktailSecondaryToRaw(histoGammaSecGammaFromXFromK0l_Cocktail_Raw_Pt,histoGammaSecondaryFromXFromK0lConvProb_MCPt,histoGammaSecondaryFromXFromK0lRecoEff_Pt,histoGammaTrueSecondaryFromXFromK0l_MCPt_recPt,nEvt,kFALSE);
@@ -773,8 +781,13 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         
         if ( isCalo && !isPCM ) {
             // K0s: calculate raw yield
-            hasCocktailInput                                            = ConvertCocktailSecondaryToRaw(histoGammaSecGammaFromXFromK0s_Cocktail_Raw_Pt,histoGammaSecondaryFromXFromK0sRecoEff_MCPt,histoGammaTrueSecondaryFromXFromK0s_MCPt_recPt,nEvt,kTRUE,nIterationsUnfolding);
-            hasCocktailInput                                            = ConvertCocktailSecondaryToRaw(histoGammaSecGammaFromXFromK0s_Cocktail_Raw_PtOrBin,histoGammaSecondaryFromXFromK0sRecoEff_MCPtOrBin,histoGammaTrueSecondaryFromXFromK0s_MCPt_recPtOrBin,nEvt,kTRUE,nIterationsUnfolding);
+            if (useUnfoldingForCocktailSecondaries) {
+                hasCocktailInput                                        = ConvertCocktailSecondaryToRaw(histoGammaSecGammaFromXFromK0s_Cocktail_Raw_Pt,histoGammaSecondaryFromXFromK0sRecoEff_MCPt,histoGammaTrueSecondaryFromXFromK0s_MCPt_recPt,nEvt,kTRUE,nIterationsUnfolding);
+                hasCocktailInput                                        = ConvertCocktailSecondaryToRaw(histoGammaSecGammaFromXFromK0s_Cocktail_Raw_PtOrBin,histoGammaSecondaryFromXFromK0sRecoEff_MCPtOrBin,histoGammaTrueSecondaryFromXFromK0s_MCPt_recPtOrBin,nEvt,kTRUE,nIterationsUnfolding);
+            } else {
+                hasCocktailInput                                        = ConvertCocktailSecondaryToRaw(histoGammaSecGammaFromXFromK0s_Cocktail_Raw_Pt,histoGammaSecondaryFromXFromK0sRecoEff_Pt,histoGammaTrueSecondaryFromXFromK0s_MCPt_recPt,nEvt,kFALSE);
+                hasCocktailInput                                        = ConvertCocktailSecondaryToRaw(histoGammaSecGammaFromXFromK0s_Cocktail_Raw_PtOrBin,histoGammaSecondaryFromXFromK0sRecoEff_PtOrBin,histoGammaTrueSecondaryFromXFromK0s_MCPt_recPtOrBin,nEvt,kFALSE);
+            }
             
             // K0l: calculate raw yield
             hasCocktailInput                                            = ConvertCocktailSecondaryToRaw(histoGammaSecGammaFromXFromK0l_Cocktail_Raw_Pt,histoGammaSecondaryFromXFromK0lRecoEff_Pt,histoGammaTrueSecondaryFromXFromK0l_MCPt_recPt,nEvt,kFALSE);
