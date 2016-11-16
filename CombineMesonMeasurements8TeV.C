@@ -836,6 +836,109 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         TFile* filePHOSprelim                                     = new TFile(fileNamePHOSprelim.Data());
 
+        //***************************************************************************************************************
+        //*******************************Plotting trigger rejection factors = fits log scale all in one *****************
+        //***************************************************************************************************************
+
+        TFile* filePHOSPHOS                                     = new TFile(fileNamePHOSPHOS.Data());
+        TDirectory* directoryPHOSPHOSRejection                  = (TDirectory*)filePHOSPHOS->Get("RejectionFactor");
+
+        TString triggerNameLabel[3] = {"EMC7/INT7","EGA/EMC7","PHOS/INT7"};
+        TH1F* histoTriggerReject[3];
+        histoTriggerReject[0] = (TH1F*)fileEMCALLow->Get("TriggRejectvsPt_EMC7_INT7");
+        histoTriggerReject[1] = (TH1F*)fileEMCALLow->Get("TriggRejectvsPt_EGA_EMC7");
+        histoTriggerReject[2] = (TH1F*)directoryPHOSPHOSRejection->Get("fHistRejection");
+
+        Double_t minPt[3] = {4.1,12.5,6.};
+        Double_t maxPt[3] = {30.,50.,25.};
+        Double_t triggRejecFac[3] = {67.0,222.51,12393.35};
+        Double_t triggRejecFacErr[3] = {1.1,4.02,1500};
+
+        Size_t textSizeSpectra2         = 0.0415;
+        Int_t textPixelPP               = textSizeSpectra2*1100;
+        TCanvas* canvasTriggerReject    = new TCanvas("canvasTriggerReject","",0,0,1500,1100);// gives the page size
+        DrawGammaCanvasSettings( canvasTriggerReject, 0.076, 0.015, 0.015, 0.085);
+        canvasTriggerReject->SetLogy(1);
+
+        Double_t minTriggReject = 0.1;
+        Double_t maxTriggReject = 60000;
+
+        TH2F * histo2DTriggReject = new TH2F("histo2DTriggReject","histo2DTriggReject",1000,0., 50.,10000,minTriggReject, maxTriggReject);
+        SetStyleHistoTH2ForGraphs(histo2DTriggReject, "#it{p}_{T} (GeV/#it{c})","#it{R}_{Trig}", //"#frac{N_{clus,trig A}/N_{Evt, trig A}}{N_{clus,trig B}/N_{Evt,trig B}}",
+                                0.85*textSizeSpectra2,textSizeSpectra2, 0.85*textSizeSpectra2,textSizeSpectra2, 0.85,0.85);
+        histo2DTriggReject->DrawCopy();
+
+        TLegend* legendTriggReject = GetAndSetLegend2(0.33, 0.12, 0.92, 0.12+(0.9*3*textSizeSpectra2),textPixelPP);
+        legendTriggReject->SetMargin(0.02);
+        legendTriggReject->SetNColumns(3);
+        for (Int_t i = 0; i< 3; i++){
+          Color_t color, colorShade = kBlack;
+
+          if(i==0){
+            color = kBlue+2;
+            colorShade = kBlue-6;
+            DrawGammaSetMarker(histoTriggerReject[i], markerTrigg[i], sizeTrigg[4], colorDet[4], colorDet[4]);
+            histoTriggerReject[i]->DrawCopy("e,same");
+            legendTriggReject->AddEntry(histoTriggerReject[i],Form("   %s",triggerNameLabel[i].Data()),"p");
+            legendTriggReject->AddEntry((TObject*)0,Form("       %3.1f < #it{p}_{T} < %3.1f",minPt[i],maxPt[i]),"");
+            legendTriggReject->AddEntry((TObject*)0,Form("               %3.1f #pm %3.1f",triggRejecFac[i], triggRejecFacErr[i]),"");
+          }else if(i==1){
+            color = kGreen+3;
+            colorShade = kGreen-8;
+            DrawGammaSetMarker(histoTriggerReject[i], markerTrigg[i], sizeTrigg[4], colorDet[2], colorDet[2]);
+            histoTriggerReject[i]->DrawCopy("e,same");
+            legendTriggReject->AddEntry(histoTriggerReject[i],Form("   %s",triggerNameLabel[i].Data()),"p");
+            legendTriggReject->AddEntry((TObject*)0,Form("     %3.1f < #it{p}_{T} < %3.1f",minPt[i],maxPt[i]),"");
+            legendTriggReject->AddEntry((TObject*)0,Form("             %3.1f #pm %3.1f",triggRejecFac[i], triggRejecFacErr[i]),"");
+          }else if(i==2){
+            color = kRed+2;
+            colorShade = kRed-6;
+            DrawGammaSetMarker(histoTriggerReject[i], markerTrigg[i], sizeTrigg[4], colorDet[1], colorDet[1]);
+            histoTriggerReject[i]->DrawCopy("e,same");
+            legendTriggReject->AddEntry(histoTriggerReject[i],Form("   %s",triggerNameLabel[i].Data()),"p");
+            legendTriggReject->AddEntry((TObject*)0,Form("       %3.1f < #it{p}_{T} < %3.1f",minPt[i],maxPt[i]),"");
+            legendTriggReject->AddEntry((TObject*)0,Form("         %3.1f #pm %3.1f",triggRejecFac[i], triggRejecFacErr[i]),"");
+          }
+          TF1* pol0 = new TF1("pol0","[0]",minPt[i],maxPt[i]); //
+          histoTriggerReject[i]->Fit(pol0,"NRME+","",minPt[i],maxPt[i]);
+
+          TH1D* triggRejecCLPol0 = (TH1D*)histoTriggerReject[i]->Clone(Form("CL_%i",i));
+          for (Int_t j = 1; j < triggRejecCLPol0->GetNbinsX()+1; j++){
+            triggRejecCLPol0->SetBinContent(j,triggRejecFac[i]);
+            triggRejecCLPol0->SetBinError(j,triggRejecFacErr[i]);
+          }
+          triggRejecCLPol0->SetStats(kFALSE);
+          triggRejecCLPol0->SetFillColor(colorShade);
+          triggRejecCLPol0->SetMarkerSize(0);
+          triggRejecCLPol0->Draw("e3,same");
+
+          pol0->SetParameter(0,triggRejecFac[i]);
+          pol0->SetParError(0,triggRejecFacErr[i]);
+          pol0->SetLineColor(color);
+          pol0->SetLineStyle(7);
+          pol0->SetRange(minPt[i],maxPt[i]);
+          pol0->Draw("same");
+          histoTriggerReject[i]->DrawCopy("e,same");
+        }
+        legendTriggReject->Draw();
+        histo2DTriggReject->Draw("same,axis");
+        TLatex *labelPerfTriggRejec = new TLatex(0.7, 0.92,"ALICE performance");
+
+        SetStyleTLatex( labelPerfTriggRejec, textSizeSpectra2,4);
+        labelPerfTriggRejec->Draw();
+
+        TLatex *labelPerfTriggFitRange = new TLatex(0.523, 0.12+(0.9*3*textSizeSpectra2)+0.01, "Fit range (GeV/#it{c})");
+        SetStyleTLatex( labelPerfTriggFitRange, textSizeSpectra2,4);
+        labelPerfTriggFitRange->Draw();
+
+        TLatex *labelPerfTriggRejecFac = new TLatex(0.753, 0.12+(0.9*3*textSizeSpectra2)+0.01, "Trigger rejection");
+        SetStyleTLatex( labelPerfTriggRejecFac, textSizeSpectra2,4);
+        labelPerfTriggRejecFac->Draw();
+
+        canvasTriggerReject->Update();
+        canvasTriggerReject->SaveAs(Form("%s/TriggerRejectionFactors.%s",outputDir.Data(),suffix.Data()));
+        delete canvasTriggerReject;
+
     // *******************************************************************************************************
     // ************************** Loading theory calculations ************************************************
     // *******************************************************************************************************        
@@ -3321,10 +3424,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
             textsizeFacMass                 = (Double_t)1./padMassPi0->YtoPixel(padMassPi0->GetY1());
         }
         
-        TH2F * histo2DAllPi0Mass            = new TH2F("histo2DAllPi0Mass","histo2DAllPi0Mass",20, 0.23, 50., 1000., 120., 175);
+        TH2F * histo2DAllPi0Mass            = new TH2F("histo2DAllPi0Mass","histo2DAllPi0Mass",20, 0.23, 50., 1000., 120., 190);
         SetStyleHistoTH2ForGraphs(histo2DAllPi0Mass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass, textsizeLabelsMass, 0.85*textsizeLabelsMass, 
                                   textsizeLabelsMass, 0.9, 0.28/(textsizeFacMass*margin), 512, 505);
-        histo2DAllPi0Mass->GetYaxis()->SetRangeUser(122.9,172.8);
+        histo2DAllPi0Mass->GetYaxis()->SetRangeUser(122.5,179.5);
         histo2DAllPi0Mass->GetXaxis()->SetMoreLogLabels(kTRUE);
         histo2DAllPi0Mass->GetYaxis()->SetNdivisions(505);
         histo2DAllPi0Mass->GetYaxis()->SetNoExponent(kTRUE);
@@ -5647,7 +5750,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
       // **************************Plot example invariant mass bin PHOS high pt ***********************************************
       // **********************************************************************************************************************
 
-      TFile* filePHOSPHOS                                     = new TFile(fileNamePHOSPHOS.Data());
+      //TFile* filePHOSPHOS                                     = new TFile(fileNamePHOSPHOS.Data());
       TDirectory* directoryPHOSPi0H                           = (TDirectory*)filePHOSPHOS->Get("Pi08TeV");
       TH1D* histoPHOSHighSignalPlusBGPi0                      = (TH1D*)directoryPHOSPi0H->Get("InvMassSigPlusBG_PtBin07");
       TH1D* histoPHOSHighTotalBGPi0                           = (TH1D*)directoryPHOSPi0H->Get("InvMassBG_PtBin07");

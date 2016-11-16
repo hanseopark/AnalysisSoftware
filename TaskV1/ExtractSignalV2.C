@@ -2481,13 +2481,6 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
                 fMesonIntDeltaRange[0] = -0.05;
                 fMesonIntDeltaRangeWide[0] = fMesonIntDeltaRange[0]*1.2;// mod.
                 fMesonIntDeltaRangeNarrow[0] = fMesonIntDeltaRange[0]*0.8; // mod.
-//                if (setPi0.CompareTo("Pi0EtaBinning") == 0){
-//                  fMesonFitRange[1] = 0.30;
-//                  fMesonWidthExpect = 0.025;
-//                  fMesonIntDeltaRange[0] = -0.038;
-//                  fMesonIntDeltaRange[1] = 0.028;
-//                  fMesonIntDeltaRangeWide[1] = 0.032;
-//                }
               }
               if( trigger.CompareTo("52") == 0 || triggerSet == 1){
                 fMesonFitRange[0] = 0.03;
@@ -2564,10 +2557,13 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
                     fMesonWidthExpect = 0.012;
                     fMesonWidthRange[0] = 0.001;
                     fMesonWidthRange[1] = 0.030;
-//                    fMesonIntDeltaRangeWide[0]      = fMesonIntDeltaRange[0]*1.6; // mod.
-//                    fMesonIntDeltaRangeWide[1]      = fMesonIntDeltaRange[1]*1.6;// mod.
-//                    fMesonIntDeltaRangeNarrow[0]    = fMesonIntDeltaRange[0]*0.4; // mod.
-//                    fMesonIntDeltaRangeNarrow[1]    = fMesonIntDeltaRange[1]*0.4; // mod.
+                    if(trigger.CompareTo("52")==0 || triggerSet == 1){
+                      if (setPi0.CompareTo("Pi0EtaBinning") == 0){
+                        fMesonFitRange[0] = 0.06;
+                        fMesonFitRange[1] = 0.25;
+                      }
+                    }
+
                     if(trigger.CompareTo("81")==0 || triggerSet == 2){
                       fMesonIntDeltaRange[1] = 0.06;
                       fMesonIntDeltaRangeWide[1] = fMesonIntDeltaRange[1]*1.2;// mod.
@@ -2585,6 +2581,10 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
                       fMesonLambdaTail         = 0.01;
                       fMesonLambdaTailRange[0] = 0.01;
                       fMesonLambdaTailRange[1] = 0.01;
+                      if (setPi0.CompareTo("Pi0EtaBinning") == 0){
+                        fMesonFitRange[0] = 0.08;
+                        fMesonFitRange[1] = 0.28;
+                      }
                     }
                   }
                 }
