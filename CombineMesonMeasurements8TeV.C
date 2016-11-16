@@ -3324,7 +3324,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TH2F * histo2DAllPi0Mass            = new TH2F("histo2DAllPi0Mass","histo2DAllPi0Mass",20, 0.23, 50., 1000., 120., 175);
         SetStyleHistoTH2ForGraphs(histo2DAllPi0Mass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass, textsizeLabelsMass, 0.85*textsizeLabelsMass, 
                                   textsizeLabelsMass, 0.9, 0.28/(textsizeFacMass*margin), 512, 505);
-        histo2DAllPi0Mass->GetYaxis()->SetRangeUser(122.5,172.4);
+        histo2DAllPi0Mass->GetYaxis()->SetRangeUser(122.9,172.8);
         histo2DAllPi0Mass->GetXaxis()->SetMoreLogLabels(kTRUE);
         histo2DAllPi0Mass->GetYaxis()->SetNdivisions(505);
         histo2DAllPi0Mass->GetYaxis()->SetNoExponent(kTRUE);
@@ -5752,6 +5752,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
             if(graphCombPi0InvXSectionSysA_yShifted)graphCombPi0InvXSectionSysA_yShifted->Write("graphInvCrossSectionPi0Comb8TeVASysErr_yShifted");
 
         }    
+
         directoryPi0->mkdir("Supporting");
         directoryPi0->cd("Supporting");
             // Writing full correction factors
@@ -5815,6 +5816,16 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
             if(graphCombEtaInvXSectionStatA_yShifted)graphCombEtaInvXSectionStatA_yShifted->Write("graphInvCrossSectionEtaComb8TeVAStatErr_yShifted");
             if(graphCombEtaInvXSectionSysA_yShifted)graphCombEtaInvXSectionSysA_yShifted->Write("graphInvCrossSectionEtaComb8TeVASysErr_yShifted");
         }    
+
+        histoPCMEtaToPi0Stat->Write("histoRatioEtaToPi0PCM8TeVStatErr");
+        graphPCMEtaToPi0Sys->Write("graphRatioEtaToPi0PCM8TeVSysErr");
+        histoEMCALEtaToPi0Stat->Write("histoRatioEtaToPi0EMCAL8TeVStatErr");
+        graphEMCALEtaToPi0Sys->Write("graphRatioEtaToPi0EMCAL8TeVSysErr");
+        histoPCMEMCALEtaToPi0Stat->Write("histoRatioEtaToPi0PCMEMCAL8TeVStatErr");
+        graphPCMEMCALEtaToPi0Sys->Write("graphRatioEtaToPi0PCMEMCAL8TeVSysErr");
+        graphCombEtaToPi0TotA->Write("graphRatioEtaToPi0Comb8TeVTotErr");
+        graphCombEtaToPi0StatA->Write("graphRatioEtaToPi0Comb8TeVStatErr");
+        graphCombEtaToPi0SysA->Write("graphRatioEtaToPi0Comb8TeVSysErr");
 
         directoryEta->mkdir("Supporting");
         directoryEta->cd("Supporting");

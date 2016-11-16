@@ -50,8 +50,12 @@
 
 TGraphErrors *GetInterpolSpectrum2D(TGraphErrors *g1, TGraphErrors *g2, Double_t d1, Double_t d2,Double_t dSqrts);
 TH1D* ConvertYieldHisto(TH1D* input, Bool_t DivideBy2pi, Bool_t DivideByPt, Bool_t MultiplyBy2pi, Bool_t MultiplyByPt);
+TF1* DoFitWithTsallis(TGraphErrors* graph, TString name, TString particle, Double_t p0, Double_t p1, Double_t p2);
 void PlotInterpolationPtBins(TGraphErrors** gPtvSqrts,TGraphErrors** gPtvsEnergies, TF1** fPowerlaw, TGraphErrors* gRpPb,Int_t fColumnPlot, Int_t fRowPlot,TString namePlot);
 void PlotAlphavsPt(TGraphErrors* gAlpha, TString method, TString thesisPlotLabel, TString namePlot);
+void PlotWithFit(TCanvas *canvas, TH2F hist, TGraphErrors* graph, TGraphErrors* graphRebin, TF1* fit, TString name, TString outputDir, TString suffix, Color_t* colorTrigg);
+void SetStyleTGraphErrorsForGraphs(TGraphErrors* graph, TString XTitle, TString YTitle, Size_t xLableSize, Size_t xTitleSize, Size_t yLableSize, Size_t yTitleSize, Float_t xTitleOffset = 1, Float_t yTitleOffset = 1, Int_t xNDivisions = 510, Int_t yNDivisions = 510);
+void SetStyleTGraphAsymmErrorsForGraphs(TGraphAsymmErrors* graph, TString XTitle, TString YTitle, Size_t xLableSize, Size_t xTitleSize, Size_t yLableSize, Size_t yTitleSize, Float_t xTitleOffset = 1, Float_t yTitleOffset = 1, Int_t xNDivisions = 510, Int_t yNDivisions = 510);
 
 void RemoveZerosAndPrint(TGraphErrors* graph, TString d){
   cout << d.Data() << endl;
@@ -59,56 +63,12 @@ void RemoveZerosAndPrint(TGraphErrors* graph, TString d){
   graph->Print();
 }
 
-void SetStyleTGraphErrorsForGraphs(TGraphErrors* graph, TString XTitle, TString YTitle, Size_t xLableSize, Size_t xTitleSize, Size_t yLableSize, Size_t yTitleSize, Float_t xTitleOffset = 1, Float_t yTitleOffset = 1, Int_t xNDivisions = 510, Int_t yNDivisions = 510){
-    graph->GetXaxis()->SetTitle(XTitle);
-    graph->GetYaxis()->SetTitle(YTitle);
-    graph->SetTitle("");
-
-    graph->GetXaxis()->SetLabelSize(xLableSize);
-    graph->GetXaxis()->SetTitleSize(xTitleSize);
-    graph->GetXaxis()->SetTitleOffset(xTitleOffset);
-    graph->GetXaxis()->SetNdivisions(xNDivisions,kTRUE);
-
-    graph->GetXaxis()->SetLabelFont(42);
-    graph->GetYaxis()->SetLabelFont(42);
-    graph->GetXaxis()->SetTitleFont(62);
-    graph->GetYaxis()->SetTitleFont(62);
-
-
-    graph->GetYaxis()->SetDecimals();
-    graph->GetYaxis()->SetLabelSize(yLableSize);
-    graph->GetYaxis()->SetTitleSize(yTitleSize);
-    graph->GetYaxis()->SetTitleOffset(yTitleOffset);
-    graph->GetYaxis()->SetNdivisions(yNDivisions,kTRUE);
-}
-
-void SetStyleTGraphAsymmErrorsForGraphs(TGraphAsymmErrors* graph, TString XTitle, TString YTitle, Size_t xLableSize, Size_t xTitleSize, Size_t yLableSize, Size_t yTitleSize, Float_t xTitleOffset = 1, Float_t yTitleOffset = 1, Int_t xNDivisions = 510, Int_t yNDivisions = 510){
-    graph->GetXaxis()->SetTitle(XTitle);
-    graph->GetYaxis()->SetTitle(YTitle);
-    graph->SetTitle("");
-
-    graph->GetXaxis()->SetLabelSize(xLableSize);
-    graph->GetXaxis()->SetTitleSize(xTitleSize);
-    graph->GetXaxis()->SetTitleOffset(xTitleOffset);
-    graph->GetXaxis()->SetNdivisions(xNDivisions,kTRUE);
-
-    graph->GetXaxis()->SetLabelFont(42);
-    graph->GetYaxis()->SetLabelFont(42);
-    graph->GetXaxis()->SetTitleFont(62);
-    graph->GetYaxis()->SetTitleFont(62);
-
-
-    graph->GetYaxis()->SetDecimals();
-    graph->GetYaxis()->SetLabelSize(yLableSize);
-    graph->GetYaxis()->SetTitleSize(yTitleSize);
-    graph->GetYaxis()->SetTitleOffset(yTitleOffset);
-    graph->GetYaxis()->SetNdivisions(yNDivisions,kTRUE);
-}
-
 TGraphErrors*      graphAlpha = 0x0;
 TGraphErrors**     graphPtvsSqrts = 0x0;
 TGraphErrors**     gPtvsEnergiesSystem = 0x0;
 TF1**              fPowerlawSystem = 0x0;
+
+void CalculateStatPlusSysErrors(TH1D* histStat, TH1D* histSys);
 
 void SecondaryInterpolation(TString suffix ="eps"){
 
@@ -124,22 +84,11 @@ void SecondaryInterpolation(TString suffix ="eps"){
   SetPlotStyle();
 
   TString optionEnergy = "8TeV";
-//  Float_t pT_low        = 0.3;
-//  Float_t pT_high       = 20.;
-
-//  cout << "pT low: " << pT_low << endl;
-//  cout << "pT_high: " << pT_high << endl;
-
   TString dateForOutput = ReturnDateStringForOutput();
   TString outputDir = Form("SecondaryInterpolation/%s/%s/%s",dateForOutput.Data(),optionEnergy.Data(),suffix.Data());
   gSystem->Exec("mkdir -p "+outputDir);
 
   Color_t colorTrigg      [10]                = {kBlack, kGray+1, kRed+2, kBlue+2, kGreen+3, kCyan+2, kViolet, kMagenta+2,  kRed-2, kBlue-2};
-  Color_t colorTriggShade [10]                = {kGray+1, kGray, kRed-6, kBlue-6, kGreen-8, kCyan-6, kViolet-8, kMagenta-8,  kRed-8, kBlue-8};
-  Marker_t markerTrigg    [10]                = {20, 20, 21, 34, 29, 33, 21, 27, 28, 30 };
-  Marker_t markerTriggMC  [10]                = {24, 24, 25, 28, 30, 27, 25, 27, 28, 30 };
-
-  Size_t sizeTrigg        [10]                = {1.5, 1.5, 1.5, 2, 2.2, 2., 1.5, 2., 2.5, 1.5 };
 
   //*************************************************************************************************
   //*************************** read input
@@ -151,8 +100,14 @@ void SecondaryInterpolation(TString suffix ="eps"){
 
   TH1D* hChargedKaon2760GeV   = (TH1D*)inputFile->Get("histoChargedKaonSpecPubStat2760GeV");
   TH1D* hChargedKaon7TeV      = (TH1D*)inputFile->Get("histoChargedKaonSpecPubStat7TeV");
+  TH1D* hChargedKaon2760GeVSys= (TH1D*)inputFile->Get("histoChargedKaonSpecPubSyst2760GeV");
+  TH1D* hChargedKaon7TeVSys   = (TH1D*)inputFile->Get("histoChargedKaonSpecPubSyst7TeV");
+  CalculateStatPlusSysErrors(hChargedKaon2760GeV,hChargedKaon2760GeVSys);
+  CalculateStatPlusSysErrors(hChargedKaon7TeV,hChargedKaon7TeVSys);
 
   TH1D* hLambda2760GeV        = (TH1D*)inputFile->Get("histoLambda1115SpecStat2760GeV");
+  TH1D* hLambda2760GeVSys     = (TH1D*)inputFile->Get("histoLambda1115SpecSyst2760GeV");
+  CalculateStatPlusSysErrors(hLambda2760GeV,hLambda2760GeVSys);
   TH1D* hLambda7TeV           = 0x0;
 
   TH1D* hInput7TeVLambda      = (TH1D*)inputLambda->Get("fHistPtLambdaStatAndSystExceptNormalization");
@@ -166,52 +121,47 @@ void SecondaryInterpolation(TString suffix ="eps"){
     return;
   }
 
+  TH1D* hProton2760GeV   = (TH1D*)inputFile->Get("histoProtonSpecPubStat2760GeV");
+  TH1D* hProton7TeV      = (TH1D*)inputFile->Get("histoProtonSpecPubStat7TeV");
+  TH1D* hProton2760GeVSys= (TH1D*)inputFile->Get("histoProtonSpecPubSyst2760GeV");
+  TH1D* hProton7TeVSys   = (TH1D*)inputFile->Get("histoProtonSpecPubSyst7TeV");
+  CalculateStatPlusSysErrors(hProton2760GeV,hProton2760GeVSys);
+  CalculateStatPlusSysErrors(hProton7TeV,hProton7TeVSys);
+
+  //*************************************************************************************************
 
   TGraphErrors* graphChargedKaon2760GeV = new TGraphErrors(hChargedKaon2760GeV);
   RemoveZerosAndPrint(graphChargedKaon2760GeV,"graphChargedKaon2760GeV");
-
   TGraphErrors* graphChargedKaon7TeV    = new TGraphErrors(hChargedKaon7TeV);
   RemoveZerosAndPrint(graphChargedKaon7TeV,"graphChargedKaon7TeV");
 
   TGraphErrors* graphLambda2760GeV      = new TGraphErrors(hLambda2760GeV);
   graphLambda2760GeV->RemovePoint(graphLambda2760GeV->GetN()-1);
   RemoveZerosAndPrint(graphLambda2760GeV,"graphLambda2760GeV");
-
   TGraphErrors* graphLambda7TeV         = new TGraphErrors(hLambda7TeV);
   RemoveZerosAndPrint(graphLambda7TeV,"graphLambda7TeV");
+
+  TGraphErrors* graphProton2760GeV = new TGraphErrors(hProton2760GeV);
+  RemoveZerosAndPrint(graphProton2760GeV,"graphProton2760GeV");
+  TGraphErrors* graphProton7TeV = new TGraphErrors(hProton7TeV);
+  RemoveZerosAndPrint(graphProton7TeV,"graphProton7TeV");
 
   //*************************************************************************************************
   //*************************** Fits
   //*************************************************************************************************
 
-  Double_t paramFitKaon2760[3] = {0.15, 6., 0.13};
-  TF1* fitKaon2760      = FitObject("l","fitKaon2760","K",graphChargedKaon2760GeV,graphChargedKaon2760GeV->GetX()[0],graphChargedKaon2760GeV->GetX()[graphChargedKaon2760GeV->GetN()-1],paramFitKaon2760,"QNRMEX0+");
+  TF1* fitKaon2760 = DoFitWithTsallis(graphChargedKaon2760GeV,"fitKaon2760","K", 0.2,7.,0.2);
+  TF1* fitKaon7 = DoFitWithTsallis(graphChargedKaon7TeV,"fitKaon7","K", 0.2,7.,0.2);
 
-  Double_t paramFitKaon7[3] = {0.15, 6., 0.13};
-  TF1* fitKaon7      = FitObject("l","fitKaon7","K",graphChargedKaon7TeV,graphChargedKaon7TeV->GetX()[0],graphChargedKaon7TeV->GetX()[graphChargedKaon7TeV->GetN()-1],paramFitKaon7,"QNRMEX0+");
+  TF1* fitLambda2760 = DoFitWithTsallis(graphLambda2760GeV,"fitLambda2760","Lambda", 0.1,7.,0.2);
+  TF1* fitLambda7 = DoFitWithTsallis(graphLambda7TeV,"fitLambda7","Lambda", 0.1,7.,0.2);
 
-  Double_t paramFitLambda2760[3] = {0.15, 6., 0.13};
-  TF1* fitLambda2760      = FitObject("l","fitLambda2760","Lambda",graphLambda2760GeV,graphLambda2760GeV->GetX()[0],graphLambda2760GeV->GetX()[graphLambda2760GeV->GetN()-1],paramFitLambda2760,"QNRMEX0+");
+  TF1* fitProton2760 = DoFitWithTsallis(graphProton2760GeV,"fitProton2760","P", 0.15,7.,0.2);
+  TF1* fitProton7 = DoFitWithTsallis(graphProton7TeV,"fitProton7","P", 0.15,7.,0.2);
 
-  Double_t paramFitLambda7[3] = {0.15, 6., 0.13};
-  TF1* fitLambda7      = FitObject("l","fitLambda7","Lambda",graphLambda7TeV,graphLambda7TeV->GetX()[0],graphLambda7TeV->GetX()[graphLambda7TeV->GetN()-1],paramFitLambda7,"QNRMEX0+");
-
-//  Double_t paramTCMKaon2760[5]  = { graphChargedKaon2760GeV->GetY()[0],0.1,
-//                                    graphChargedKaon2760GeV->GetY()[20],0.6,3.0};
-//  TF1* fitKaon2760  = FitObject("tcm","fitKaon2760","Pi0",graphChargedKaon2760GeV,graphChargedKaon2760GeV->GetX()[0],graphChargedKaon2760GeV->GetX()[graphChargedKaon2760GeV->GetN()-1],paramTCMKaon2760,"QNRMEX0+","", kFALSE);
-
-//  Double_t paramTCMKaon7[5]  = { graphChargedKaon7TeV->GetY()[0],0.1,
-//                                 graphChargedKaon7TeV->GetY()[15],0.6,3.0};
-//  TF1* fitKaon7  = FitObject("tcm","fitKaon7","Pi0",graphChargedKaon7TeV,graphChargedKaon7TeV->GetX()[0],graphChargedKaon7TeV->GetX()[graphChargedKaon7TeV->GetN()-1],paramTCMKaon7,"QNRMEX0+","", kFALSE);
-
-//  Double_t paramTCMLambda2760[5]  = { graphLambda2760GeV->GetY()[0],0.1,
-//                                    graphLambda2760GeV->GetY()[15],0.6,3.0};
-//  TF1* fitLambda2760  = FitObject("tcm","fitLambda2760","Pi0",graphLambda2760GeV,graphLambda2760GeV->GetX()[0],graphLambda2760GeV->GetX()[graphLambda2760GeV->GetN()-1],paramTCMLambda2760,"QNRMEX0+","", kFALSE);
-
-//  Double_t paramTCMLambda7[5]  = { graphLambda7TeV->GetY()[0],0.1,
-//                                 graphLambda7TeV->GetY()[15],0.6,3.0};
-//  TF1* fitLambda7  = FitObject("tcm","fitLambda7","Pi0",graphLambda7TeV,graphLambda7TeV->GetX()[0],graphLambda7TeV->GetX()[graphLambda7TeV->GetN()-1],paramTCMLambda7,"QNRMEX0+","", kFALSE);
-
+  //*************************************************************************************************
+  //*************************** rebin of 2.76 TeV spectra according to 7 TeV
+  //*************************************************************************************************
 
   TGraphErrors* graphChargedKaon2760GeVrebin = (TGraphErrors*) graphChargedKaon7TeV->Clone("graphChargedKaon2760GeVrebin");
   for(Int_t i = 0; i<graphChargedKaon2760GeVrebin->GetN(); i++){
@@ -223,6 +173,12 @@ void SecondaryInterpolation(TString suffix ="eps"){
   for(Int_t i = 0; i<graphLambda2760GeVrebin->GetN(); i++){
     graphLambda2760GeVrebin->SetPoint(i,graphLambda7TeV->GetX()[i],fitLambda2760->Eval(graphLambda7TeV->GetX()[i]));
     graphLambda2760GeVrebin->SetPointError(i,graphLambda7TeV->GetEX()[i],hLambda2760GeV->GetBinError(hLambda2760GeV->FindBin(graphLambda7TeV->GetX()[i])));
+  }
+
+  TGraphErrors* graphProton2760GeVrebin = (TGraphErrors*) graphProton7TeV->Clone("graphProton7TeV");
+  for(Int_t i = 0; i<graphProton2760GeVrebin->GetN(); i++){
+    graphProton2760GeVrebin->SetPoint(i,graphProton7TeV->GetX()[i],fitProton2760->Eval(graphProton7TeV->GetX()[i]));
+    graphProton2760GeVrebin->SetPointError(i,graphProton7TeV->GetEX()[i],hProton2760GeV->GetBinError(hProton2760GeV->FindBin(graphProton7TeV->GetX()[i])));
   }
 
   //*************************************************************************************************
@@ -267,20 +223,32 @@ void SecondaryInterpolation(TString suffix ="eps"){
     return;
   }
 
-  Double_t paramFitKaon8[3] = {0.15, 6., 0.13};
-  TF1* fitKaon8      = FitObject("l","fitKaon8","K",graphKaon8TeV,graphKaon8TeV->GetX()[0],graphKaon8TeV->GetX()[graphKaon8TeV->GetN()-1],paramFitKaon8,"QNRMEX0+");
+  TGraphErrors*  graphProton8TeV = GetInterpolSpectrum2D(
+                                   graphProton2760GeVrebin,
+                                   graphProton7TeV,
+                                   2760,
+                                   7000,
+                                   8000);
 
-  Double_t paramFitLambda8[3] = {0.15, 6., 0.13};
-  TF1* fitLambda8      = FitObject("l","fitLambda8","Lambda",graphLambda8TeV,graphLambda8TeV->GetX()[0],graphLambda8TeV->GetX()[graphLambda8TeV->GetN()-1],paramFitLambda8,"QNRMEX0+");
+  if(graphAlpha && graphPtvsSqrts && gPtvsEnergiesSystem && fPowerlawSystem ){
+    PlotInterpolationPtBins(graphPtvsSqrts,gPtvsEnergiesSystem,fPowerlawSystem,graphProton8TeV,9,7,Form("%s/Proton_Pt_vs_Sqrts.%s",outputDir.Data(),suffix.Data()));
+    PlotAlphavsPt(graphAlpha, "pp", "Proton", Form("%s/Proton_Alpha_vs_Pt.%s", outputDir.Data(),suffix.Data()));
+  }else{
+    cout << "ERROR: NULL pointer - returning..." << endl;
+    cout << graphAlpha << endl;
+    cout << graphPtvsSqrts << endl;
+    cout << gPtvsEnergiesSystem << endl;
+    cout << fPowerlawSystem << endl;
+    return;
+  }
 
-//  Double_t paramTCMKaon8[5]  = { graphKaon8TeV->GetY()[0],0.1,
-//                                 graphKaon8TeV->GetY()[18],0.6,3.0};
-//  TF1* fitKaon8  = FitObject("tcm","fitKaon8","Pi0",graphKaon8TeV,graphKaon8TeV->GetX()[0],graphKaon8TeV->GetX()[graphKaon8TeV->GetN()-1],paramTCMKaon8,"QNRMEX0+","", kFALSE);
+  //*************************************************************************************************
+  //*************************** Fit extrapolations
+  //*************************************************************************************************
 
-//  Double_t paramTCMLambda8[5]  = { graphLambda8TeV->GetY()[0],0.1,
-//                                   graphLambda8TeV->GetY()[15],0.6,3.0};
-//  TF1* fitLambda8  = FitObject("tcm","fitLambda8","Pi0",graphLambda8TeV,graphLambda8TeV->GetX()[0],graphLambda8TeV->GetX()[graphLambda8TeV->GetN()-1],paramTCMLambda8,"QNRMEX0+","", kFALSE);
-
+  TF1* fitKaon8 = DoFitWithTsallis(graphKaon8TeV,"fitKaon8","K", 0.3,6.5,0.2);
+  TF1* fitLambda8 = DoFitWithTsallis(graphLambda8TeV,"fitLambda8","Lambda", 0.1,6.5,0.2);
+  TF1* fitProton8 = DoFitWithTsallis(graphProton8TeV,"fitProton8","P", 0.15,6.5,0.2);
 
   //*************************************************************************************************
   //*************************** plotting
@@ -292,60 +260,18 @@ void SecondaryInterpolation(TString suffix ="eps"){
   canvasDummy2->SetLogx();
   TH2F * histo2DDummy2 = new TH2F("histo2DDummy2","histo2DDummy2",1000,0.1,30.,1000,1e-10,2);
   SetStyleHistoTH2ForGraphs(histo2DDummy2, "#it{p}_{T} (GeV/#it{c})","", 0.032,0.04, 0.04,0.04, 0.8,1.55);
-  histo2DDummy2->DrawCopy();
 
-  DrawGammaSetMarkerTGraphErr(graphChargedKaon2760GeV, 20., 1., colorTrigg[0], colorTrigg[0], 1.4, kTRUE);
-  graphChargedKaon2760GeV->Draw("pEsame");
-  DrawGammaSetMarkerTGraphErr(graphChargedKaon2760GeVrebin, 20., 1., colorTrigg[1], colorTrigg[1], 1.4, kTRUE);
-  graphChargedKaon2760GeVrebin->Draw("pEsame");
+  PlotWithFit(canvasDummy2, *histo2DDummy2, graphChargedKaon2760GeV, graphChargedKaon2760GeVrebin, fitKaon2760, "input_Kaon2760_withFit", outputDir, suffix, colorTrigg);
+  PlotWithFit(canvasDummy2, *histo2DDummy2, graphLambda2760GeV, graphLambda2760GeVrebin, fitLambda2760, "input_Lambda2760_withFit", outputDir, suffix, colorTrigg);
+  PlotWithFit(canvasDummy2, *histo2DDummy2, graphProton2760GeV, graphProton2760GeVrebin, fitProton2760, "input_Proton2760_withFit", outputDir, suffix, colorTrigg);
 
-  fitKaon2760->SetLineColor(colorTrigg[1]);
-  fitKaon2760->Draw("same");
+  PlotWithFit(canvasDummy2, *histo2DDummy2, graphChargedKaon7TeV, 0x0, fitKaon7, "input_Kaon7_withFit", outputDir, suffix, colorTrigg);
+  PlotWithFit(canvasDummy2, *histo2DDummy2, graphLambda7TeV, 0x0, fitLambda7, "input_Lambda7_withFit", outputDir, suffix, colorTrigg);
+  PlotWithFit(canvasDummy2, *histo2DDummy2, graphProton7TeV, 0x0, fitProton7, "input_Proton7_withFit", outputDir, suffix, colorTrigg);
 
-  canvasDummy2->Update();
-  canvasDummy2->Print(Form("%s/inputKaon2760_withFit.%s",outputDir.Data(),suffix.Data()));
-
-  //**************************************************************************************************
-  canvasDummy2->Clear();
-  histo2DDummy2->DrawCopy();
-
-  DrawGammaSetMarkerTGraphErr(graphChargedKaon7TeV, 20., 1., colorTrigg[0], colorTrigg[0], 1.4, kTRUE);
-  graphChargedKaon7TeV->Draw("pEsame");
-
-  fitKaon7->SetLineColor(colorTrigg[0]);
-  fitKaon7->Draw("same");
-
-  canvasDummy2->Update();
-  canvasDummy2->Print(Form("%s/inputKaon7_withFit.%s",outputDir.Data(),suffix.Data()));
-
-  //**************************************************************************************************
-  canvasDummy2->Clear();
-  histo2DDummy2->DrawCopy();
-
-  DrawGammaSetMarkerTGraphErr(graphLambda2760GeV, 20., 1., colorTrigg[0], colorTrigg[0], 1.4, kTRUE);
-  graphLambda2760GeV->Draw("pEsame");
-  DrawGammaSetMarkerTGraphErr(graphLambda2760GeVrebin, 20., 1., colorTrigg[1], colorTrigg[1], 1.4, kTRUE);
-  graphLambda2760GeVrebin->Draw("pEsame");
-
-  fitLambda2760->SetLineColor(colorTrigg[1]);
-  fitLambda2760->Draw("same");
-
-  canvasDummy2->Update();
-  canvasDummy2->Print(Form("%s/inputLambda2760_withFit.%s",outputDir.Data(),suffix.Data()));
-
-  //**************************************************************************************************
-  canvasDummy2->Clear();
-  histo2DDummy2->DrawCopy();
-
-  DrawGammaSetMarkerTGraphErr(graphLambda7TeV, 20., 1., colorTrigg[0], colorTrigg[0], 1.4, kTRUE);
-  graphLambda7TeV->Draw("pEsame");
-
-  fitLambda7->SetLineColor(colorTrigg[0]);
-  fitLambda7->Draw("same");
-
-  canvasDummy2->Update();
-  canvasDummy2->Print(Form("%s/inputLambda7_withFit.%s",outputDir.Data(),suffix.Data()));
-
+  PlotWithFit(canvasDummy2, *histo2DDummy2, graphKaon8TeV, 0x0, fitKaon8, "input_Kaon8_withFit", outputDir, suffix, colorTrigg);
+  PlotWithFit(canvasDummy2, *histo2DDummy2, graphLambda8TeV, 0x0, fitLambda8, "input_Lambda8_withFit", outputDir, suffix, colorTrigg);
+  PlotWithFit(canvasDummy2, *histo2DDummy2, graphProton8TeV, 0x0, fitProton8, "input_Proton8_withFit", outputDir, suffix, colorTrigg);
 
   //**************************************************************************************************
   //**************************************************************************************************
@@ -389,6 +315,28 @@ void SecondaryInterpolation(TString suffix ="eps"){
 
   canvasDummy2->Update();
   canvasDummy2->Print(Form("%s/inputLambda_withFit.%s",outputDir.Data(),suffix.Data()));
+
+
+  canvasDummy2->Clear();
+  histo2DDummy2->DrawCopy();
+
+  DrawGammaSetMarkerTGraphErr(graphProton2760GeVrebin, 20., 1., colorTrigg[1], colorTrigg[1], 1.4, kTRUE);
+  graphProton2760GeVrebin->Draw("pEsame");
+  DrawGammaSetMarkerTGraphErr(graphProton7TeV, 20., 1., colorTrigg[0], colorTrigg[0], 1.4, kTRUE);
+  graphProton7TeV->Draw("pEsame");
+  DrawGammaSetMarkerTGraphErr(graphProton8TeV, 21., 1., colorTrigg[2], colorTrigg[2], 1.4, kTRUE);
+  graphProton8TeV->Draw("pEsame");
+
+  fitProton2760->SetLineColor(colorTrigg[1]);
+  fitProton2760->Draw("same");
+  fitProton7->SetLineColor(colorTrigg[0]);
+  fitProton7->Draw("same");
+  fitProton8->SetLineColor(colorTrigg[2]);
+  fitProton8->Draw("same");
+
+
+  canvasDummy2->Update();
+  canvasDummy2->Print(Form("%s/inputProton_withFit.%s",outputDir.Data(),suffix.Data()));
 
 
 
@@ -593,4 +541,141 @@ void PlotAlphavsPt(TGraphErrors* gAlpha, TString method, TString thesisPlotLabel
 
     canvasAlphavsPt->Print(namePlot.Data());
     delete canvasAlphavsPt;
+}
+
+
+//________________________________________________________________________________________________________________________
+TF1* DoFitWithTsallis(TGraphErrors* graph, TString name, TString particle, Double_t p0, Double_t p1, Double_t p2){
+
+  cout << "-----------------------------------" << endl;
+  cout << "fit: '" << name.Data() << "' for '" << particle.Data() << "'" << endl;
+
+  Double_t paramFit[3] = {p0, p1, p2};
+  TF1* fit = FitObject("l",name.Data(),particle.Data(),graph,graph->GetX()[0],graph->GetX()[graph->GetN()-1],paramFit,"QNRMEX0+");
+
+  cout << "chi2/ndf: " << fit->GetChisquare()/fit->GetNDF() << endl;
+  cout << endl;
+
+  paramFit[0]=fit->GetParameter(0);
+  paramFit[1]=fit->GetParameter(1);
+  paramFit[2]=fit->GetParameter(2);
+  fit = FitObject("l",name.Data(),particle.Data(),graph,graph->GetX()[0],graph->GetX()[graph->GetN()-1],paramFit,"QNRMEX0+");
+
+  cout << "p0: " << fit->GetParameter(0) << " +- " << fit->GetParError(0) << endl;
+  cout << "p1: " << fit->GetParameter(1) << " +- " << fit->GetParError(1) << endl;
+  cout << "p2: " << fit->GetParameter(2) << " +- " << fit->GetParError(2) << endl;
+  cout << "chi2/ndf: " << fit->GetChisquare()/fit->GetNDF() << endl;
+  cout << "-----------------------------------" << endl;
+  cout << endl;
+  return fit;
+}
+
+//________________________________________________________________________________________________________________________
+void CalculateStatPlusSysErrors(TH1D* histStat, TH1D* histSys){
+
+  for(Int_t i=1; i<=histStat->GetNbinsX(); i++){
+    histStat->SetBinError(i,TMath::Sqrt(TMath::Power(histStat->GetBinError(i),2)+TMath::Power(histSys->GetBinError(i),2)));
+  }
+
+  return;
+}
+
+//________________________________________________________________________________________________________________________
+void PlotWithFit(TCanvas* canvas, TH2F hist, TGraphErrors* graph, TGraphErrors* graphRebin, TF1* fit, TString name, TString outputDir, TString suffix, Color_t *colorTrigg){
+
+  canvas->Clear();
+  hist.DrawCopy();
+
+  DrawGammaSetMarkerTGraphErr(graph, 20., 1., colorTrigg[0], colorTrigg[0], 1.4, kTRUE);
+  graph->Draw("pEsame");
+  if(graphRebin){
+    DrawGammaSetMarkerTGraphErr(graphRebin, 20., 1., colorTrigg[1], colorTrigg[1], 1.4, kTRUE);
+    graphRebin->Draw("pEsame");
+  }
+
+  fit->SetLineColor(colorTrigg[1]);
+  fit->Draw("same");
+
+  canvas->Update();
+  canvas->Print(Form("%s/%s.%s",outputDir.Data(),name.Data(),suffix.Data()));
+
+  canvas->SetLogy(kFALSE);
+  if(graphRebin){
+    canvas->Clear();
+    hist.GetYaxis()->SetRangeUser(0.5,1.5);
+    hist.DrawCopy();
+
+    TGraphErrors* graphRatio = CalculateGraphErrRatioToFit (graph, fit);
+    TGraphErrors* graphRebinRatio = CalculateGraphErrRatioToFit (graphRebin, fit);
+
+    DrawGammaSetMarkerTGraphErr(graphRatio, 20., 1., colorTrigg[0], colorTrigg[0], 1.4, kTRUE);
+    graphRatio->Draw("pEsame");
+    DrawGammaSetMarkerTGraphErr(graphRebinRatio, 20., 1., colorTrigg[1], colorTrigg[1], 1.4, kTRUE);
+    graphRebinRatio->Draw("pEsame");
+
+    canvas->Update();
+    canvas->Print(Form("%s/%s_ratio.%s",outputDir.Data(),name.Data(),suffix.Data()));
+  }else{
+    canvas->Clear();
+    hist.GetYaxis()->SetRangeUser(0,2.);
+    hist.DrawCopy();
+
+    TGraphErrors* graphRatio = CalculateGraphErrRatioToFit (graph, fit);
+
+    DrawGammaSetMarkerTGraphErr(graphRatio, 20., 1., colorTrigg[0], colorTrigg[0], 1.4, kTRUE);
+    graphRatio->Draw("pEsame");
+
+    canvas->Update();
+    canvas->Print(Form("%s/%s_ratio.%s",outputDir.Data(),name.Data(),suffix.Data()));
+  }
+  canvas->SetLogy();
+
+  return;
+}
+
+//________________________________________________________________________________________________________________________
+void SetStyleTGraphErrorsForGraphs(TGraphErrors* graph, TString XTitle, TString YTitle, Size_t xLableSize, Size_t xTitleSize, Size_t yLableSize, Size_t yTitleSize, Float_t xTitleOffset, Float_t yTitleOffset, Int_t xNDivisions, Int_t yNDivisions){
+    graph->GetXaxis()->SetTitle(XTitle);
+    graph->GetYaxis()->SetTitle(YTitle);
+    graph->SetTitle("");
+
+    graph->GetXaxis()->SetLabelSize(xLableSize);
+    graph->GetXaxis()->SetTitleSize(xTitleSize);
+    graph->GetXaxis()->SetTitleOffset(xTitleOffset);
+    graph->GetXaxis()->SetNdivisions(xNDivisions,kTRUE);
+
+    graph->GetXaxis()->SetLabelFont(42);
+    graph->GetYaxis()->SetLabelFont(42);
+    graph->GetXaxis()->SetTitleFont(62);
+    graph->GetYaxis()->SetTitleFont(62);
+
+
+    graph->GetYaxis()->SetDecimals();
+    graph->GetYaxis()->SetLabelSize(yLableSize);
+    graph->GetYaxis()->SetTitleSize(yTitleSize);
+    graph->GetYaxis()->SetTitleOffset(yTitleOffset);
+    graph->GetYaxis()->SetNdivisions(yNDivisions,kTRUE);
+}
+//________________________________________________________________________________________________________________________
+void SetStyleTGraphAsymmErrorsForGraphs(TGraphAsymmErrors* graph, TString XTitle, TString YTitle, Size_t xLableSize, Size_t xTitleSize, Size_t yLableSize, Size_t yTitleSize, Float_t xTitleOffset, Float_t yTitleOffset, Int_t xNDivisions, Int_t yNDivisions){
+    graph->GetXaxis()->SetTitle(XTitle);
+    graph->GetYaxis()->SetTitle(YTitle);
+    graph->SetTitle("");
+
+    graph->GetXaxis()->SetLabelSize(xLableSize);
+    graph->GetXaxis()->SetTitleSize(xTitleSize);
+    graph->GetXaxis()->SetTitleOffset(xTitleOffset);
+    graph->GetXaxis()->SetNdivisions(xNDivisions,kTRUE);
+
+    graph->GetXaxis()->SetLabelFont(42);
+    graph->GetYaxis()->SetLabelFont(42);
+    graph->GetXaxis()->SetTitleFont(62);
+    graph->GetYaxis()->SetTitleFont(62);
+
+
+    graph->GetYaxis()->SetDecimals();
+    graph->GetYaxis()->SetLabelSize(yLableSize);
+    graph->GetYaxis()->SetTitleSize(yTitleSize);
+    graph->GetYaxis()->SetTitleOffset(yTitleOffset);
+    graph->GetYaxis()->SetNdivisions(yNDivisions,kTRUE);
 }

@@ -2575,16 +2575,16 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
                       fMesonIntDeltaRange[0] = -0.06;
                       fMesonIntDeltaRangeWide[0] = fMesonIntDeltaRange[0]*1.2;// mod.
                       fMesonIntDeltaRangeNarrow[0] = fMesonIntDeltaRange[0]*0.8; // mod.
-                      fBGFitRange[0]=0.29;
+                      fBGFitRange[0]=0.25;
                       fBGFitRange[1]=0.31;
                       fMesonFitRange[0] = 0.08;
-                      fMesonFitRange[1] = 0.27;
+                      fMesonFitRange[1] = 0.31;
                       fMesonWidthExpect = 0.03;
                       fMesonWidthRange[0] = 0.020;
                       fMesonWidthRange[1] = 0.060;
-                      //fMesonIntDeltaRange[1] = 0.065;
-                      //fMesonIntDeltaRangeWide[1]      = fMesonIntDeltaRange[1]*1.2;// mod.
-                      //fMesonIntDeltaRangeNarrow[1]    = fMesonIntDeltaRange[1]*0.8; // mod.
+                      fMesonLambdaTail         = 0.01;
+                      fMesonLambdaTailRange[0] = 0.01;
+                      fMesonLambdaTailRange[1] = 0.01;
                     }
                   }
                 }
