@@ -107,6 +107,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TString fileNameChargedHadronPP             = "ExternalInput/UnidentifiedCharged/ChargedHadrinSpectraPP_20_May_2015.root";
     TString outputDir                           = Form("%s/%s/CombineMesonMeasurements8TeV%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
     
+    fstream fLog;
+    fLog.open(Form("%s/CombineMeson8TeV.log",outputDir.Data()), ios::out);
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fLog << dateForOutput.Data() << endl;
+
     TString nameFinalResDat                     = Form("%s/CombinedResults%s_FitResults.dat",outputDir.Data(),bWCorrection.Data());
     cout << outputDir.Data() << endl;
     cout << fileNamePCM.Data() << endl;
@@ -1659,7 +1664,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //     TF1* fitTCMInvXSectionPi02  = FitObject("tcm","fitTCMInvCrossSectionPi08TeV2","Pi0",graphCombPi0InvXSectionTotA,0.4,40.,paramTCMPi0New,"QNRMEX0+","", kFALSE);
 //     cout << WriteParameterToFile(fitTCMInvXSectionPi02)<< endl;
 
-    TF1* fitPowInvXSectionPi0   = FitObject("m","fitPowInvXSectionPi08TeV","Pi0",graphCombPi0InvXSectionTotA,5,35. ,NULL,"QNRMEX0+","", kFALSE);
+    Double_t paramPi0Power[3] = {100,0.5,6.5};
+    TF1* fitPowInvXSectionPi0   = FitObject("m","fitPowInvXSectionPi08TeV","Pi0",graphCombPi0InvXSectionTotA,5,35. ,paramPi0Power,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvXSectionPi0)<< endl;
 
     TF1* fitPCMTCMInvXSectionPi0    = FitObject("tcm","fitPCMTCMInvCrossSectionPi08TeV","Pi0",graphPCMPi0InvXSectionStat,0.3,8. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
@@ -1667,6 +1673,16 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     TF1* fitPHOSTCMInvXSectionPi0    = FitObject("tcm","fitPHOSTCMInvCrossSectionPi08TeV","Pi0",graphPHOSPi0InvXSectionStat,1.0,35. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
     
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fLog << "Pi0 - Tsallis" << endl;
+    fLog << WriteParameterToFile(fitInvXSectionPi0)<< endl;
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fLog << "Pi0 - TCM" << endl;
+    fLog << WriteParameterToFile(fitTCMInvXSectionPi0) << endl;
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fLog << "Pi0 - PowerLaw" << endl;
+    fLog << WriteParameterToFile(fitPowInvXSectionPi0) << endl;
+
     // *************************************************************************************************************
     // Shift graphs in Y direction as well if desired
     // *************************************************************************************************************
@@ -2635,6 +2651,15 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     fitTCMDecomposedEtaH->SetRange(0.3,40);
 
     cout << WriteParameterToFile(fitTCMInvXSectionEta)<< endl;
+
+
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fLog << "Eta - Tsallis" << endl;
+    fLog << WriteParameterToFile(fitInvXSectionEta)<< endl;
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fLog << "Eta - TCM" << endl;
+    fLog << WriteParameterToFile(fitTCMInvXSectionEta) << endl;
+
     
     // *************************************************************************************************************
     // Shift spectra in Y  direction as well if desired
@@ -3209,7 +3234,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     cout << fitEtaToPi0->GetParameter(0) << ", +- " << fitEtaToPi0->GetParError(0) << endl;
     cout << "++++++++++++++++++++++++++++++++\n\n\n\n\n" << endl;
 
-
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fLog << "Eta/Pi0 - Fit pol0: 4. < pT < 25.0" << endl;
+    fLog << fitEtaToPi0->GetParameter(0) << ", +- " << fitEtaToPi0->GetParError(0) << endl;
 
     // *********************************************************************************************************************
     // ************************************ Visualize relative errors EtaToPi0 ******************************************************
@@ -5377,18 +5404,22 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 fitPi0InvMassSigPCM[i]->SetLineColor(fitColorInvMassSG);
                 fitPi0InvMassSigPCM[i]->Draw("same");
 
-                //
-                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem8TeV.Data());
+                TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+                SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
+                labelALICE->SetTextFont(43);
+                labelALICE->Draw();
+
+                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-0.9*0.8*textsizeLabelsPP,collisionSystem8TeV.Data());
                 SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
                 labelInvMassEnergy->SetTextFont(43);
                 labelInvMassEnergy->Draw();
 
-                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
+                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.9*2*0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
                 SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
                 labelInvMassTrigger->SetTextFont(43);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoPCM  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"PCM");
+                TLatex *labelInvMassRecoPCM  = new TLatex(0.135,0.9-0.9*3*0.8*textsizeLabelsPP,"PCM");
                 SetStyleTLatex( labelInvMassRecoPCM, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoPCM->SetTextFont(43);
                 labelInvMassRecoPCM->Draw();
@@ -5398,7 +5429,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 labelInvMassPtRangePCM->SetTextFont(43);
                 labelInvMassPtRangePCM->Draw();
 
-                TLegend* legendInvMassPCM  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
+                TLegend* legendInvMassPCM  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
                 legendInvMassPCM->SetMargin(0.25);
                 legendInvMassPCM->AddEntry(histoPi0InvMassSigPlusBGPCM[i],"Raw real events","l");
                 legendInvMassPCM->AddEntry(histoPi0InvMassBGTotPCM[i],"Mixed event +","p");
@@ -5432,18 +5463,22 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 fitEtaInvMassSigPCM[i]->SetLineColor(fitColorInvMassSG);
                 fitEtaInvMassSigPCM[i]->Draw("same");
 
-                //
-                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem8TeV.Data());
+                TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+                SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
+                labelALICE->SetTextFont(43);
+                labelALICE->Draw();
+
+                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-0.9*0.8*textsizeLabelsPP,collisionSystem8TeV.Data());
                 SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
                 labelInvMassEnergy->SetTextFont(43);
                 labelInvMassEnergy->Draw();
 
-                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
+                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.9*2*0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
                 SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
                 labelInvMassTrigger->SetTextFont(43);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoPCM  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"PCM");
+                TLatex *labelInvMassRecoPCM  = new TLatex(0.135,0.9-0.9*3*0.8*textsizeLabelsPP,"PCM");
                 SetStyleTLatex( labelInvMassRecoPCM, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoPCM->SetTextFont(43);
                 labelInvMassRecoPCM->Draw();
@@ -5453,7 +5488,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 labelInvMassPtRangePCM->SetTextFont(43);
                 labelInvMassPtRangePCM->Draw();
 
-                TLegend* legendInvMassPCM  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
+                TLegend* legendInvMassPCM  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
                 legendInvMassPCM->SetMargin(0.25);
                 legendInvMassPCM->AddEntry(histoEtaInvMassSigPlusBGPCM[i],"Raw real events","l");
                 legendInvMassPCM->AddEntry(histoEtaInvMassBGTotPCM[i],"Mixed event +","p");
@@ -5486,18 +5521,22 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 fitPi0InvMassSigPCMEMCAL[i]->SetLineColor(fitColorInvMassSG);
                 fitPi0InvMassSigPCMEMCAL[i]->Draw("same");
 
-                //
-                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem8TeV.Data());
+                TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+                SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
+                labelALICE->SetTextFont(43);
+                labelALICE->Draw();
+
+                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-0.9*0.8*textsizeLabelsPP,collisionSystem8TeV.Data());
                 SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
                 labelInvMassEnergy->SetTextFont(43);
                 labelInvMassEnergy->Draw();
 
-                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
+                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.9*2*0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
                 SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
                 labelInvMassTrigger->SetTextFont(43);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoPCMEMC  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"PCM-EMC");
+                TLatex *labelInvMassRecoPCMEMC  = new TLatex(0.135,0.9-0.9*3*0.8*textsizeLabelsPP,"PCM-EMC");
                 SetStyleTLatex( labelInvMassRecoPCMEMC, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoPCMEMC->SetTextFont(43);
                 labelInvMassRecoPCMEMC->Draw();
@@ -5507,7 +5546,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 labelInvMassPtRangePCMEMCAL->SetTextFont(43);
                 labelInvMassPtRangePCMEMCAL->Draw();
 
-                TLegend* legendInvMassPCMEMCAL  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
+                TLegend* legendInvMassPCMEMCAL  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
                 legendInvMassPCMEMCAL->SetMargin(0.25);
                 legendInvMassPCMEMCAL->AddEntry(histoPi0InvMassSigPlusBGPCMEMCAL[i],"Raw real events","l");
                 legendInvMassPCMEMCAL->AddEntry(histoPi0InvMassBGTotPCMEMCAL[i],"Mixed event +","p");
@@ -5540,18 +5579,22 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 fitEtaInvMassSigPCMEMCAL[i]->SetLineColor(fitColorInvMassSG);
                 fitEtaInvMassSigPCMEMCAL[i]->Draw("same");
 
-                //
-                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem8TeV.Data());
+                TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+                SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
+                labelALICE->SetTextFont(43);
+                labelALICE->Draw();
+
+                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-0.9*0.8*textsizeLabelsPP,collisionSystem8TeV.Data());
                 SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
                 labelInvMassEnergy->SetTextFont(43);
                 labelInvMassEnergy->Draw();
 
-                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
+                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.9*2*0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
                 SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
                 labelInvMassTrigger->SetTextFont(43);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoPCMEMC  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"PCM-EMC");
+                TLatex *labelInvMassRecoPCMEMC  = new TLatex(0.135,0.9-0.9*3*0.8*textsizeLabelsPP,"PCM-EMC");
                 SetStyleTLatex( labelInvMassRecoPCMEMC, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoPCMEMC->SetTextFont(43);
                 labelInvMassRecoPCMEMC->Draw();
@@ -5561,7 +5604,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 labelInvMassPtRangePCMEMCAL->SetTextFont(43);
                 labelInvMassPtRangePCMEMCAL->Draw();
 
-                TLegend* legendInvMassPCMEMCAL  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
+                TLegend* legendInvMassPCMEMCAL  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
                 legendInvMassPCMEMCAL->SetMargin(0.25);
                 legendInvMassPCMEMCAL->AddEntry(histoEtaInvMassSigPlusBGPCMEMCAL[i],"Raw real events","l");
                 legendInvMassPCMEMCAL->AddEntry(histoEtaInvMassBGTotPCMEMCAL[i],"Mixed event +","p");
@@ -5578,7 +5621,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
             if (haveAllPi0InvMassEMCAL[i]){
                 canvasInvMassSamplePlot->cd();
                 histo2DPi0InvMassDummy->GetXaxis()->SetRangeUser(0.02,0.3);
-                if(i==1) histo2DPi0InvMassDummy->GetXaxis()->SetRangeUser(0.07,0.3);
+                if(i==1) histo2DPi0InvMassDummy->GetXaxis()->SetRangeUser(0.02,0.3);
                 else if(i==2) histo2DPi0InvMassDummy->GetXaxis()->SetRangeUser(0.08,0.3);
                 histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBGSubEMCAL[i]->GetMinimum(),1.25*histoPi0InvMassSigPlusBGEMCAL[i]->GetMaximum());
                 histo2DPi0InvMassDummy->DrawCopy();
@@ -5597,18 +5640,22 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 fitPi0InvMassSigEMCAL[i]->SetLineColor(fitColorInvMassSG);
                 fitPi0InvMassSigEMCAL[i]->Draw("same");
 
-                //
-                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem8TeV.Data());
+                TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+                SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
+                labelALICE->SetTextFont(43);
+                labelALICE->Draw();
+
+                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-0.9*0.8*textsizeLabelsPP,collisionSystem8TeV.Data());
                 SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
                 labelInvMassEnergy->SetTextFont(43);
                 labelInvMassEnergy->Draw();
 
-                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
+                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.9*0.8*2*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
                 SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
                 labelInvMassTrigger->SetTextFont(43);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoEMC  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"EMC");
+                TLatex *labelInvMassRecoEMC  = new TLatex(0.135,0.9-0.9*0.8*3*textsizeLabelsPP,"EMC");
                 SetStyleTLatex( labelInvMassRecoEMC, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoEMC->SetTextFont(43);
                 labelInvMassRecoEMC->Draw();
@@ -5618,7 +5665,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 labelInvMassPtRangeEMCAL->SetTextFont(43);
                 labelInvMassPtRangeEMCAL->Draw();
 
-                TLegend* legendInvMassEMCAL  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
+                TLegend* legendInvMassEMCAL  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
                 legendInvMassEMCAL->SetMargin(0.25);
                 legendInvMassEMCAL->AddEntry(histoPi0InvMassSigPlusBGEMCAL[i],"Raw real events","l");
                 legendInvMassEMCAL->AddEntry(histoPi0InvMassBGTotEMCAL[i],"Mixed event +","p");
@@ -5650,17 +5697,22 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 fitEtaInvMassSigEMCAL[i]->SetLineColor(fitColorInvMassSG);
                 fitEtaInvMassSigEMCAL[i]->Draw("same");
 
-                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem8TeV.Data());
+                TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+                SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
+                labelALICE->SetTextFont(43);
+                labelALICE->Draw();
+
+                TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-0.9*0.8*textsizeLabelsPP,collisionSystem8TeV.Data());
                 SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
                 labelInvMassEnergy->SetTextFont(43);
                 labelInvMassEnergy->Draw();
 
-                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
+                TLatex *labelInvMassTrigger      = new TLatex(0.135,0.9-0.9*0.8*2*textsizeLabelsPP,Form("%s triggered",nameTrigger[i].Data()));
                 SetStyleTLatex( labelInvMassTrigger, 0.85*textSizeLabelsPixel,4);
                 labelInvMassTrigger->SetTextFont(43);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoEMC  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"EMC");
+                TLatex *labelInvMassRecoEMC  = new TLatex(0.135,0.9-0.9*3*0.8*textsizeLabelsPP,"EMC");
                 SetStyleTLatex( labelInvMassRecoEMC, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoEMC->SetTextFont(43);
                 labelInvMassRecoEMC->Draw();
@@ -5670,7 +5722,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 labelInvMassPtRangeEMCAL->SetTextFont(43);
                 labelInvMassPtRangeEMCAL->Draw();
 
-                TLegend* legendInvMassEMCAL  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
+                TLegend* legendInvMassEMCAL  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
                 legendInvMassEMCAL->SetMargin(0.25);
                 legendInvMassEMCAL->AddEntry(histoEtaInvMassSigPlusBGEMCAL[i],"Raw real events","l");
                 legendInvMassEMCAL->AddEntry(histoEtaInvMassBGTotEMCAL[i],"Mixed event +","p");
@@ -5715,18 +5767,22 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
       fitPHOSlow->SetLineColor(fitColorInvMassSG);
       fitPHOSlow->Draw("same");
 
-      //
-      TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9,collisionSystem8TeV.Data());
+      TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+      SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
+      labelALICE->SetTextFont(43);
+      labelALICE->Draw();
+
+      TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-0.9*0.8*textsizeLabelsPP,collisionSystem8TeV.Data());
       SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
       labelInvMassEnergy->SetTextFont(43);
       labelInvMassEnergy->Draw();
 
-      TLatex *labelInvMassTriggerPHOSl      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,"INT7 triggered");
+      TLatex *labelInvMassTriggerPHOSl      = new TLatex(0.135,0.9-0.9*2*0.8*textsizeLabelsPP,"INT7 triggered");
       SetStyleTLatex( labelInvMassTriggerPHOSl, 0.85*textSizeLabelsPixel,4);
       labelInvMassTriggerPHOSl->SetTextFont(43);
       labelInvMassTriggerPHOSl->Draw();
 
-      TLatex *labelInvMassRecoPHOS  = new TLatex(0.135,0.9-2*0.8*textsizeLabelsPP,"PHOS");
+      TLatex *labelInvMassRecoPHOS  = new TLatex(0.135,0.9-0.9*3*0.8*textsizeLabelsPP,"PHOS");
       SetStyleTLatex( labelInvMassRecoPHOS, 0.85*textSizeLabelsPixel,4);
       labelInvMassRecoPHOS->SetTextFont(43);
       labelInvMassRecoPHOS->Draw();
@@ -5736,7 +5792,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
       labelInvMassPtRangePHOSl->SetTextFont(43);
       labelInvMassPtRangePHOSl->Draw();
 
-      TLegend* legendInvMassPHOSl  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
+      TLegend* legendInvMassPHOSl  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
       legendInvMassPHOSl->SetMargin(0.25);
       legendInvMassPHOSl->AddEntry(histoPHOSSignalPlusBGPi0,"Raw real events","l");
       legendInvMassPHOSl->AddEntry(histoPHOSTotalBGPi0,"Mixed event +","p");
@@ -5775,10 +5831,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
       fitPHOShigh->SetLineColor(fitColorInvMassSG);
       fitPHOShigh->Draw("same");
 
-      //
+      labelALICE->Draw();
       labelInvMassEnergy->Draw();
 
-      TLatex *labelInvMassTriggerPHOSh      = new TLatex(0.135,0.9-0.8*textsizeLabelsPP,"PHOS triggered");
+      TLatex *labelInvMassTriggerPHOSh      = new TLatex(0.135,0.9-0.9*2*0.8*textsizeLabelsPP,"PHOS triggered");
       SetStyleTLatex( labelInvMassTriggerPHOSh, 0.85*textSizeLabelsPixel,4);
       labelInvMassTriggerPHOSh->SetTextFont(43);
       labelInvMassTriggerPHOSh->Draw();
@@ -5790,7 +5846,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
       labelInvMassPtRangePHOSh->SetTextFont(43);
       labelInvMassPtRangePHOSh->Draw();
 
-      TLegend* legendInvMassPHOSh  = GetAndSetLegend2(0.67, 0.88-5*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
+      TLegend* legendInvMassPHOSh  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
       legendInvMassPHOSh->SetMargin(0.25);
       legendInvMassPHOSh->AddEntry(histoPHOSHighSignalPlusBGPi0,"Raw real events","l");
       legendInvMassPHOSh->AddEntry(histoPHOSHighTotalBGPi0,"Mixed event +","p");

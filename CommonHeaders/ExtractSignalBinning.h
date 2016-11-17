@@ -1433,7 +1433,7 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                         break;
                     case 81:
                     case 82:
-                        return 20;      // EGA triggers
+                        return 19;      // EGA triggers
                         break;
                     default:
                         return 6;
