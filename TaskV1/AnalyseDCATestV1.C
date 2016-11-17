@@ -1399,7 +1399,10 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 				fBinsPt[i] 				= fBinsPi07TeVPtDCA[i];
 			}
 			fExampleBin 				= 10;
-			nIterBGFit 					= 13;
+			nIterBGFit 					= 12;
+            optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+            optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+            optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
 		} else if (fEnergyFlag.CompareTo("8TeV") == 0) {
 			fStartPtBin					= 1;
 			fColumn 					= 5;
@@ -1629,6 +1632,9 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
 			}
 			fExampleBin 				= 6;
 			nIterBGFit 					= 13;
+            optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+            optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+            optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
 		} else if (fEnergyFlag.CompareTo("8TeV") == 0) {
 			fStartPtBin					= 1;
 			fColumn 					= 5;
