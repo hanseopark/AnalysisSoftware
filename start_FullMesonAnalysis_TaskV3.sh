@@ -1896,62 +1896,12 @@ do
         cat CutSelection.log
         correct=1
     elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-        if [ $mode = 0 ]; then
-            if [ $dataFileOK -eq 1 ] ; then
-                root -b -q -x -l TaskV1/MakeCutLog.C\(\"$DataRootFile\"\,\"CutSelection.log\"\)
-                correct=1
-            else 
-                root -b -q -x -l TaskV1/MakeCutLog.C\(\"$MCRootFile\"\,\"CutSelection.log\"\)
-                correct=1
-            fi
-        elif [ $mode = 9 ]; then
-            if [ $dataFileOK -eq 1 ] ; then
-                root -b -q -x -l TaskV1/MakeCutLog.C\(\"$DataRootFile\"\,\"CutSelection.log\"\)
-                correct=1
-            else 
-                root -b -q -x -l TaskV1/MakeCutLog.C\(\"$MCRootFile\"\,\"CutSelection.log\"\)
-                correct=1
-            fi
-        elif [ $mode = 2 ]; then 
-            if [ $dataFileOK -eq 1 ] ; then
-                root -b -q -x -l TaskV1/MakeCutLogConvCalo.C\(\"$DataRootFile\"\,\"CutSelection.log\"\)
-                correct=1
-            else 
-                root -b -q -x -l TaskV1/MakeCutLogConvCalo.C\(\"$MCRootFile\"\,\"CutSelection.log\"\)
-                correct=1
-            fi
-        elif [ $mode = 3 ]; then 
-            if [ $dataFileOK -eq 1 ] ; then
-                root -b -q -x -l TaskV1/MakeCutLogConvCalo.C\(\"$DataRootFile\"\,\"CutSelection.log\"\)
-                correct=1
-            else 
-                root -b -q -x -l TaskV1/MakeCutLogConvCalo.C\(\"$MCRootFile\"\,\"CutSelection.log\"\)
-                correct=1
-            fi
-        elif [ $mode = 4 ]; then 
-            if [ $dataFileOK -eq 1 ] ; then
-                root -b -q -x -l TaskV1/MakeCutLogCalo.C\(\"$DataRootFile\"\,\"CutSelection.log\"\)
-                correct=1
-            else 
-                root -b -q -x -l TaskV1/MakeCutLogCalo.C\(\"$MCRootFile\"\,\"CutSelection.log\"\)
-                correct=1
-            fi
-        elif [ $mode = 5 ]; then 
-            if [ $dataFileOK -eq 1 ] ; then
-                root -b -q -x -l TaskV1/MakeCutLogCalo.C\(\"$DataRootFile\"\,\"CutSelection.log\"\)
-                correct=1
-            else 
-                root -b -q -x -l TaskV1/MakeCutLogCalo.C\(\"$MCRootFile\"\,\"CutSelection.log\"\)
-                correct=1
-            fi
-        elif [ $mode = 10 ]; then     
-            root -b -q -x -l TaskV1/MakeCutLogCaloMerged.C\(\"$DataRootFile\"\,\"CutSelection.log\"\)
+        if [ $dataFileOK -eq 1 ] ; then
+            root -b -q -x -l TaskV1/MakeCutLog.C\(\"$DataRootFile\"\,\"CutSelection.log\"\,$mode\)
             correct=1
-        elif [ $mode = 11 ]; then     
-            root -b -q -x -l TaskV1/MakeCutLogCaloMerged.C\(\"$DataRootFile\"\,\"CutSelection.log\"\)
+        else 
+            root -b -q -x -l TaskV1/MakeCutLog.C\(\"$MCRootFile\"\,\"CutSelection.log\"\,$mode\)
             correct=1
-       else 
-            echo "mode not correctly set!" 
         fi
     else
         echo "Command not found. Please try again.";

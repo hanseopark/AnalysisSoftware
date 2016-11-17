@@ -151,23 +151,14 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     }
                 
     //***************************** Load file ***********************************************************************
-    TFile f(file.Data());
-    
-    TString nameMainDir             = "";
-    if (mode == 10 || mode == 11){
-        nameMainDir                 = "GammaCaloMerged";
-    } else if (mode == 2 ){
-        nameMainDir                 = "GammaConvCalo";
-    } else if (mode == 4 ){
-        nameMainDir                 = "GammaCalo";
-    } else if (mode == 0 ){
-        nameMainDir                 = "GammaConv";
-    } else {
-        cout << "ERROR: Wrong mode aborting here!" << endl;
+    TFile* f                        = new TFile(file.Data());
+    TString autoDetectedMainDir     = AutoDetectMainTList(mode , f);
+    if (autoDetectedMainDir.CompareTo("") == 0){
+        cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
         return;
     }
     
-    TList *TopDir                   = (TList*)f.Get(nameMainDir.Data());
+    TList *TopDir                   = (TList*)f->Get(autoDetectedMainDir.Data());
     if(TopDir == NULL){
         cout<<"ERROR: TopDir not Found"<<endl;
         return;

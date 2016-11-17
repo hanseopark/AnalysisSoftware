@@ -236,79 +236,37 @@ void ExtractSignalDalitz(TString meson="", TString file="", TString cutSelection
 	
 	
 	//************************* Start of Main routine ***************************************************************
-	const char* fFileErrLogDatname = Form("%s/%s/%s_%s_FileErrLogDalitz%s_%s.dat",cutSelection.Data(),fEnergyFlag.Data(),fPrefix.Data(),fPrefix2.Data(),fPeriodFlag.Data(),fCutSelectionRead.Data());
-	fFileErrLog.open(fFileErrLogDatname, ios::out);
+    const char* fFileErrLogDatname = Form("%s/%s/%s_%s_FileErrLogDalitz%s_%s.dat",cutSelection.Data(),fEnergyFlag.Data(),fPrefix.Data(),fPrefix2.Data(),fPeriodFlag.Data(),fCutSelectionRead.Data());
+    fFileErrLog.open(fFileErrLogDatname, ios::out);
 
-	
+    TFile* f                       = new TFile(file.Data());
+    cout <<"EventSelection: "<<fEventCutSelection.Data()<<", PhotonCut: " << fGammaCutSelection.Data() << ", ElectronCut: " << fElectronCutSelection.Data() << ", MesonCut: " << fMesonCutSelection.Data() << endl;
+    
+    TString autoDetectedMainDir    = AutoDetectMainTList(fMode , f);
+    if (autoDetectedMainDir.CompareTo("") == 0){
+        cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
+        return;
+    }
+    
+    TList* GammaConvDalitzV1        = (TList*)f->Get(autoDetectedMainDir.Data());
+    if( ! GammaConvDalitzV1 ) {
+        cout<<"ERROR: GammaConvDalitzV1 is not found in the file"<<endl;
 
-	TFile f(file.Data());
-	
-	
-		   
-	
-	
-	cout <<"EventSelection: "<<fEventCutSelection.Data()<<", PhotonCut: " << fGammaCutSelection.Data() << ", ElectronCut: " << fElectronCutSelection.Data() << ", MesonCut: " << fMesonCutSelection.Data() << endl;
-	
-	TString nameOutputDir = "";
-	
-	if( fMode == 9 || fMode == 1 ){
-	  
-	     nameOutputDir = "GammaConvDalitzV1";
-	}
-	
-	
-	else if( fMode == 6 || fMode == 7 ){
-	  
-	    nameOutputDir = "GammaConvDalitzCalo";
-	  
-	}
-	
-	TList* GammaConvDalitzV1 = (TList*)f.Get(nameOutputDir.Data());
+    }
 
-      
-	  
-	
-	
-        if( ! GammaConvDalitzV1 ) {
+    TList* fHistosGammaConversionDalitz = (TList*) GammaConvDalitzV1->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()) );
+    if( ! fHistosGammaConversionDalitz ){
+        cout<<Form("Cut Number %s",fCutSelectionRead.Data())<<" is not found in the file"<<endl;
+        return;
+    }
 
-                    Int_t iTrain = 1;
+    TList *fESDContainer        = (TList*) fHistosGammaConversionDalitz->FindObject( Form("%s ESD histograms",   fCutSelectionRead.Data()));
+    TList *fBackgroundContainer = (TList*) fHistosGammaConversionDalitz->FindObject( Form("%s Back histograms",  fCutSelectionRead.Data()));
+    TList *fMotherContainer     = (TList*) fHistosGammaConversionDalitz->FindObject( Form("%s Mother histograms",fCutSelectionRead.Data()));
+    TList *fQAContainer         = (TList*) fHistosGammaConversionDalitz->FindObject( Form("%s QA histograms",    fCutSelectionRead.Data()));
 
-                    while( ! GammaConvDalitzV1 && iTrain <= 100 ) {
-                            
-                          GammaConvDalitzV1 = (TList*)f.Get(Form("%s_%d",nameOutputDir.Data(),iTrain));
-                           
-                          iTrain++;
-                    
-                    }         
-                   if( ! GammaConvDalitzV1 ) {
-		     
-			 GammaConvDalitzV1 = (TList*)f.Get("GammaConvDalitzCalo");
-                    }
-            
-                    if( ! GammaConvDalitzV1 ) {
-                        cout<<"ERROR: GammaConvDalitzV1 is not found in the file"<<endl;
-
-                        return;
-                    }
-            
-        }
-  	
-
-	TList* fHistosGammaConversionDalitz = (TList*) GammaConvDalitzV1->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()) );
-	if( ! fHistosGammaConversionDalitz ){		
-		cout<<Form("Cut Number %s",fCutSelectionRead.Data())<<" is not found in the file"<<endl;
-		return;
-	}
-	
-	TList *fESDContainer        = (TList*) fHistosGammaConversionDalitz->FindObject( Form("%s ESD histograms",   fCutSelectionRead.Data()));
-	TList *fBackgroundContainer = (TList*) fHistosGammaConversionDalitz->FindObject( Form("%s Back histograms",  fCutSelectionRead.Data()));
-        TList *fMotherContainer     = (TList*) fHistosGammaConversionDalitz->FindObject( Form("%s Mother histograms",fCutSelectionRead.Data()));
-	TList *fQAContainer         = (TList*) fHistosGammaConversionDalitz->FindObject( Form("%s QA histograms",    fCutSelectionRead.Data()));
-       
-      
-	
-        fNumberOfGoodESDTracksVtx = (TH1F*)fESDContainer->FindObject("GoodESDTracks");
-        fEventQuality = (TH1F*)fESDContainer->FindObject("NEvents");
+    fNumberOfGoodESDTracksVtx = (TH1F*)fESDContainer->FindObject("GoodESDTracks");
+    fEventQuality = (TH1F*)fESDContainer->FindObject("NEvents");
 	
 	TString  nameInvMassPi0 = "ESD_DalitzBackground_InvMass_Pt";
 	TString  nameInvBackPi0 = "ESD_DalitzMother_InvMass_Pt";

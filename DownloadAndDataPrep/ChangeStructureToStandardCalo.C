@@ -1,9 +1,48 @@
+#include <Riostream.h>
+#include <fstream>
+#include "TMath.h"
+#include <stdlib.h>
+#include <fstream>
+#include <math.h>
+#include <TROOT.h>
+#include <TApplication.h>
+#include <TPaveLabel.h>
+#include <TSystem.h>
+#include <TFrame.h>
+#include <TStyle.h>
+#include <TString.h>
+#include "TGaxis.h"
+#include "TFile.h"
+#include "TH1F.h"
+#include "TH1D.h"
+#include "TH2F.h"
+#include "TF1.h"
+#include "TVirtualFitter.h"
+#include "TObject.h"
+#include "TCanvas.h"
+#include "TMultiGraph.h"
+#include "TLegend.h"
+#include "TDatabasePDG.h"
+#include "TMinuit.h"
+#include "TLatex.h"
+#include "TASImage.h"
+#include "TPostScript.h"
+#include "TGraphErrors.h"
+#include "TArrow.h"
+#include "TMarker.h"
+#include "TGraphAsymmErrors.h" 
+#include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
+#include "../CommonHeaders/ConversionFunctions.h"
+
 void ChangeStructureToStandardCalo(TString nameInputFile, TString namefileOutput, TString nameInputList){
 
    TFile *fileInput = NULL;
    fileInput = new TFile(nameInputFile.Data());
    cout << fileInput << endl;
   
+   TString autodetectedString   = AutoDetectMainTList(2 , fileInput);
+   cout << "auto: " << autodetectedString << endl;
+   
    TList *listInput =(TList*)fileInput->Get(nameInputList.Data());
    if (listInput == NULL){ 
       return;

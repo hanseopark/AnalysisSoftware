@@ -109,7 +109,7 @@ echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
 root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC10b/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_LHC10b-pass4_$number.root\"\,\"GammaConvCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC10b-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC10b_$number.log\"\)
+root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_LHC10b-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC10b_$number.log\"\,2\)
 done;
 
 ls $OUTPUTDIR_LHC10c/GammaConvCalo_*.root > fileLHC10c.txt
@@ -119,7 +119,7 @@ echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
 root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC10c/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_LHC10c-pass4_$number.root\"\,\"GammaConvCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC10c-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC10c_$number.log\"\)
+root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_LHC10c-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC10c_$number.log\"\,2\)
 done;
 
 ls $OUTPUTDIR_LHC10d/GammaConvCalo_*.root > fileLHC10d.txt
@@ -129,7 +129,7 @@ echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
 root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC10d/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_LHC10d-pass4_$number.root\"\,\"GammaConvCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC10d-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC10d_$number.log\"\)
+root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_LHC10d-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC10d_$number.log\"\,2\)
 done;
 
 ls $OUTPUTDIR_LHC10e/GammaConvCalo_*.root > fileLHC10e.txt
@@ -139,7 +139,7 @@ echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
 root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC10e/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_LHC10e-pass4_$number.root\"\,\"GammaConvCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC10e-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC10e_$number.log\"\)
+root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_LHC10e-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC10e_$number.log\"\,2\)
 done;
 
 ls $OUTPUTDIR_LHC10f/GammaConvCalo_*.root > fileLHC10f.txt
@@ -149,7 +149,7 @@ echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
 root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC10f/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_LHC10f-pass4_$number.root\"\,\"GammaConvCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC10f-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC10f_$number.log\"\)
+root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_LHC10f-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC10f_$number.log\"\,2\)
 done;
 
 # Change structure of MC files
@@ -160,7 +160,7 @@ echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
 root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14j4b/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14j4b_$number.root\"\,\"GammaConvCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14j4b_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14j4b_$number.log\"\)
+root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14j4b_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14j4b_$number.log\"\,2\)
 done;
 
 ls $OUTPUTDIR_LHC14j4c/GammaConvCalo_*.root > fileLHC14j4c.txt
@@ -170,7 +170,7 @@ echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
 root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14j4c/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14j4c_$number.root\"\,\"GammaConvCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14j4c_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14j4c_$number.log\"\)
+root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14j4c_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14j4c_$number.log\"\,2\)
 done;
 
 ls $OUTPUTDIR_LHC14j4d/GammaConvCalo_*.root > fileLHC14j4d.txt
@@ -180,7 +180,7 @@ echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
 root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14j4d/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14j4d_$number.root\"\,\"GammaConvCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14j4d_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14j4d_$number.log\"\)
+root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14j4d_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14j4d_$number.log\"\,2\)
 done;
 
 ls $OUTPUTDIR_LHC14j4e/GammaConvCalo_*.root > fileLHC14j4e.txt
@@ -190,7 +190,7 @@ echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
 root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14j4e/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14j4e_$number.root\"\,\"GammaConvCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14j4e_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14j4e_$number.log\"\)
+root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14j4e_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14j4e_$number.log\"\,2\)
 done;
 
 
@@ -201,7 +201,7 @@ echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
 root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14j4f/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14j4f_$number.root\"\,\"GammaConvCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14j4f_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14j4f_$number.log\"\)
+root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14j4f_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14j4f_$number.log\"\,2\)
 done;
 
 # Merge data files

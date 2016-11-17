@@ -884,8 +884,7 @@ do
 	correct=1
     elif [ $answer = "No" ]; then
 	if [ $pp2760 -eq 0 ]; then
-	   
-	   root -b -q TaskV1/MakeCutLogDalitz.C\(\"$DataRootFile\"\,\"CutSelection.log\"\,$mode\) 
+	   root -b -q -x -l TaskV1/MakeCutLog.C\(\"$DataRootFile\"\,\"CutSelection.log\"\,$mode\) 
 	   correct=1
 	else 
  	  root -b -q -x -l TaskV1/MakeCutLog.C\(\"$MCRootFileAddSig\"\,\"CutSelection.log\"\,$mode\)

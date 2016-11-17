@@ -1,5 +1,5 @@
 if [ $1 = "fbock" ]; then 
-   PHOTONCONVDIR=/home/fbock/Photon/Software/PCGGIT/AnalysisSoftware
+   PHOTONCONVDIR=/home/fbock/Photon/Software/PCGGIT
 elif [ $1 = "leardini" ]; then 
    PHOTONCONVDIR=/home/admin1/leardini/newSoftware/AnalysisSoftware
 elif [ $1 = "dmuhlhei" ]; then
@@ -21,7 +21,6 @@ mkdir FinalResults
 mkdir CocktailInput
 mkdir RooUnfold
 mkdir DownloadAndDataPrep
-mkdir DownloadAndDataPrep/runlists
 mkdir ToyModels
 
 ln -sf $PHOTONCONVDIR/SystematicErrorsNew/* SystematicErrorsNew/

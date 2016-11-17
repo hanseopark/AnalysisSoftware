@@ -216,7 +216,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC
       number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
       echo $number
       root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC13b/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC13b-pass3_$number.root\"\,\"GammaCalo_$number\"\)
-      root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC13b-pass3_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC13b_$number.log\"\)
+      root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC13b-pass3_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC13b_$number.log\"\,4\)
 
    done;
 
@@ -227,7 +227,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC
       number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
       echo $number
       root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC13c/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC13c-pass3_$number.root\"\,\"GammaCalo_$number\"\)
-      root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC13c-pass3_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC13c_$number.log\"\)
+      root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC13c-pass3_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC13c_$number.log\"\,4\)
    done;
    
    ls $OUTPUTDIR_LHC13d/GammaCalo_*.root > fileLHC13d.txt
@@ -237,7 +237,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC
       number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
       echo $number
       root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC13d/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC13d-pass3_$number.root\"\,\"GammaCalo_$number\"\)
-      root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC13d-pass3_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC13d_$number.log\"\)
+      root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC13d-pass3_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC13d_$number.log\"\,4\)
    done;
    
    ls $OUTPUTDIR_LHC13e/GammaCalo_*.root > fileLHC13e.txt
@@ -247,7 +247,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC
       number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
       echo $number
       root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC13e/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC13e-pass3_$number.root\"\,\"GammaCalo_$number\"\)
-      root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC13e-pass3_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC13e_$number.log\"\)
+      root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC13e-pass3_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC13e_$number.log\"\,4\)
    done;
    
    ls $OUTPUTDIR_LHC13f/GammaCalo_*.root > fileLHC13f.txt
@@ -257,7 +257,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC
       number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
       echo $number
       root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC13f/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC13f-pass3_$number.root\"\,\"GammaCalo_$number\"\)
-      root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC13f-pass3_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC13f_$number.log\"\)
+      root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC13f-pass3_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC13f_$number.log\"\,4\)
    done;
 
    ls $OUTPUTDIR_LHC13b2_efix_p1/GammaCalo_*.root > fileLHC13b2_efix_p1.txt
@@ -267,7 +267,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC
       number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
       echo $number
       root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC13b2_efix_p1/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p1_$number.root\"\,\"GammaCalo_$number\"\)
-      root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p1_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC13b2_efix_p1_$number.log\"\)
+      root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p1_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC13b2_efix_p1_$number.log\"\,4\)
    done;
 #    
    ls $OUTPUTDIR_LHC13b2_efix_p2/GammaCalo_*.root > fileLHC13b2_efix_p2.txt
@@ -277,7 +277,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC
       number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
       echo $number
       root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC13b2_efix_p2/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p2_$number.root\"\,\"GammaCalo_$number\"\)
-      root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p2_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC13b2_efix_p2_$number.log\"\)
+      root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p2_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC13b2_efix_p2_$number.log\"\,4\)
    done;
 # 
    ls $OUTPUTDIR_LHC13b2_efix_p3/GammaCalo_*.root > fileLHC13b2_efix_p3.txt
@@ -287,7 +287,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC
       number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
       echo $number
       root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC13b2_efix_p3/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p3_$number.root\"\,\"GammaCalo_$number\"\)
-      root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p3_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC13b2_efix_p3_$number.log\"\)
+      root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p3_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC13b2_efix_p3_$number.log\"\,4\)
    done;
 
    ls $OUTPUTDIR_LHC13b2_efix_p4/GammaCalo_*.root > fileLHC13b2_efix_p4.txt
@@ -297,7 +297,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC
       number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
       echo $number
       root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC13b2_efix_p4/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p4_$number.root\"\,\"GammaCalo_$number\"\)
-      root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p4_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC13b2_efix_p4_$number.log\"\)
+      root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p4_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC13b2_efix_p4_$number.log\"\,4\)
    done;
 
    ls $OUTPUTDIR_LHC13e7/GammaCalo_*.root > fileLHC13e7.txt
@@ -307,7 +307,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC
       number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
       echo $number
       root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC13e7/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC13e7_$number.root\"\,\"GammaCalo_$number\"\)
-      root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC13e7_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC13e7_$number.log\"\)
+      root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC13e7_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC13e7_$number.log\"\,4\)
    done;
 
    

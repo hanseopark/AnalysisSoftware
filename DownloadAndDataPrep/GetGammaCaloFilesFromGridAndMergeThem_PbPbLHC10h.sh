@@ -88,7 +88,7 @@ if [ $3 = "AODmc" ]; then
       number=`echo $fileName  | cut -d "/" -f 10 | cut -d "_" -f 2 | cut -d "." -f1`
       echo $number
       root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC13d2_A/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_GA_PbPb_MC_AOD_LHC13d2_$number.root\"\,\"GammaCalo_$number\"\)
-      root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_GA_PbPb_MC_AOD_LHC13d2_$number.root\"\,\"$OUTPUTDIR/CutSelectionCalo_LHC13d2_AOD_$number.log\"\)
+      root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_GA_PbPb_MC_AOD_LHC13d2_$number.root\"\,\"$OUTPUTDIR/CutSelectionCalo_LHC13d2_AOD_$number.log\"\,4\)
 
    done;
    
@@ -99,7 +99,7 @@ if [ $3 = "AODmc" ]; then
       number=`echo $fileName  | cut -d "/" -f 10 | cut -d "_" -f 2 | cut -d "." -f1`
       echo $number
       root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC13d2b_A/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_GA_PbPb_MC_AOD_LHC13d2b_$number.root\"\,\"GammaCalo_$number\"\)
-      root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_GA_PbPb_MC_AOD_LHC13d2b_$number.root\"\,\"$OUTPUTDIR/CutSelectionCalo_LHC13d2b_AOD_$number.log\"\)
+      root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_GA_PbPb_MC_AOD_LHC13d2b_$number.root\"\,\"$OUTPUTDIR/CutSelectionCalo_LHC13d2b_AOD_$number.log\"\,4\)
    done;
    
    rm $OUTPUTDIR/GammaCalo_GA_PbPb_MC_AOD_LHC13d2_LHC13d2b_*.root
@@ -124,7 +124,7 @@ else
       number=`echo $fileName  | cut -d "/" -f 10 | cut -d "_" -f 2 | cut -d "." -f1`
       echo $number
       root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC13d2_A/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_GA_PbPb_MC_LHC13d2_$number.root\"\,\"GammaCalo_$number\"\)
-      root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_GA_PbPb_MC_LHC13d2_$number.root\"\,\"$OUTPUTDIR/CutSelectionCalo_LHC13d2_$number.log\"\)
+      root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_GA_PbPb_MC_LHC13d2_$number.root\"\,\"$OUTPUTDIR/CutSelectionCalo_LHC13d2_$number.log\"\,4\)
 
    done;
    
@@ -135,7 +135,7 @@ else
       number=`echo $fileName  | cut -d "/" -f 10 | cut -d "_" -f 2 | cut -d "." -f1`
       echo $number
       root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC13d2b_A/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_GA_PbPb_MC_LHC13d2b_$number.root\"\,\"GammaCalo_$number\"\)
-      root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_GA_PbPb_MC_LHC13d2b_$number.root\"\,\"$OUTPUTDIR/CutSelectionCalo_LHC13d2b_$number.log\"\)
+      root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_GA_PbPb_MC_LHC13d2b_$number.root\"\,\"$OUTPUTDIR/CutSelectionCalo_LHC13d2b_$number.log\"\,4\)
    done;
    
    
@@ -162,7 +162,7 @@ if [ $2 = "AODdata" ]; then
       number=`echo $fileName  | cut -d "/" -f 10 | cut -d "_" -f 2 | cut -d "." -f1`
       echo $number
       root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC10h_A/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_GA_PbPb_LHC10h-pass2_$number.root\"\,\"GammaCalo_$number\"\)
-      root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_GA_PbPb_LHC10h-pass2_$number.root\"\,\"$OUTPUTDIR/CutSelectionCalo_LHC10h_$number.log\"\)
+      root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_GA_PbPb_LHC10h-pass2_$number.root\"\,\"$OUTPUTDIR/CutSelectionCalo_LHC10h_$number.log\"\,4\)
    done;   
 else 
    ls $OUTPUTDIR_LHC10h_A/GammaCalo_*.root > fileLHC10h.txt
@@ -172,6 +172,6 @@ else
       number=`echo $fileName  | cut -d "/" -f 10 | cut -d "_" -f 2 | cut -d "." -f1`
       echo $number
       root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC10h_A/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_GA_PbPb_LHC10h-pass2_$number.root\"\,\"GammaCalo_$number\"\)
-      root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_GA_PbPb_LHC10h-pass2_$number.root\"\,\"$OUTPUTDIR/CutSelectionCalo_LHC10h_$number.log\"\)
+      root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_GA_PbPb_LHC10h-pass2_$number.root\"\,\"$OUTPUTDIR/CutSelectionCalo_LHC10h_$number.log\"\,4\)
    done;
 fi   

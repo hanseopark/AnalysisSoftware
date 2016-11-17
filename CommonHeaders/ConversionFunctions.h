@@ -5,6 +5,7 @@
 #include "TObjString.h"
 #include "TRandom.h"
 #include "TSpline.h"
+#include "TKey.h"
 
 //*********************** declaration of functions defined in this header ***********************************
 Float_t             CalculateMeanPt(const TF1* );
@@ -56,6 +57,7 @@ TH1D*               ConvertChargedHadronHisto(TH1D* , TH1D* );
 TGraphAsymmErrors*  ApplyYshiftIndividualSpectra(TGraphAsymmErrors * , TF1 *);
 Double_t            bin_shift_x(TF1 *, Double_t , Double_t , Double_t );
 Int_t               GetBinning(TObject *, Double_t* );
+TString             AutoDetectMainTList(Int_t);
 
 //*********************** definition of functions defined in this header ***********************************
 Float_t CalculateMeanPt(const TF1* fit){
@@ -3589,3 +3591,36 @@ TF1* CalculateRatioOfTwoFunctions (TF1* fit1, TF1* fit2, TString name){
     
     return newFunction;
 }    
+
+
+TString AutoDetectMainTList(Int_t mode , TFile* fFile){
+    TKey *key;
+    TIter next(fFile->GetListOfKeys());
+    TString mainDir = "";
+    while ((key=(TKey*)next())){
+        cout << Form(" - found TopDir: %s",key->GetName());
+        mainDir = key->GetName();
+    }
+    cout << endl;
+    TString nominalMainDir     = "";
+    if (mode == 9 || mode == 0) 
+        nominalMainDir         = "GammaConvV1";
+    else if( mode == 1 )
+	     nominalMainDir        = "GammaConvDalitzV1";
+    else if (mode == 2 || mode == 3) 
+        nominalMainDir         = "GammaConvCalo";
+    else if (mode == 4 || mode == 5) 
+        nominalMainDir         = "GammaCalo";
+    else if( mode == 6 || mode == 7 )
+	    nominalMainDir         = "GammaConvDalitzCalo";
+    else if (mode == 10 || mode == 11 ) 
+        nominalMainDir         = "GammaCaloMerged";
+
+    TObjArray *arr;
+    arr             = mainDir.Tokenize("_");
+    TString start   = ((TObjString*)arr->At(0))->GetString();;
+    if (start.CompareTo(nominalMainDir.Data()) == 0)
+        return mainDir;
+    else 
+        return "";
+}

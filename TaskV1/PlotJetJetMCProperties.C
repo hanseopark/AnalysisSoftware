@@ -307,15 +307,6 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     if (mode == 10) acceptanceOf    = "#gamma in EMCal acc.";
     if (mode == 11) acceptanceOf    = "#gamma in PHOS acc.";
     
-    TString nameMainDir = "";
-    if (mode == 9 || mode == 0) 
-        nameMainDir     = "GammaConvV1";
-    else if (mode == 2 || mode == 3) 
-        nameMainDir     = "GammaConvCalo";
-    else if (mode == 4 || mode == 5) 
-        nameMainDir     = "GammaCalo";
-    else if (mode == 10 || mode == 11) 
-        nameMainDir     = "GammaCaloMerged";
     cout << __LINE__ << endl;
     for (Int_t i=0; i< nrOfPtHardBins; i++){
         // Define CutSelections
@@ -330,7 +321,14 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         fileInput[i]                                = new TFile(fileNameInput[i]);	
         if (fileInput[i]->IsZombie()) return;
 
-        TList *TopDir =(TList*)fileInput[i]->Get(nameMainDir.Data());
+        TString autoDetectedMainDir                 = AutoDetectMainTList(mode , fileInput[i]);
+        if (autoDetectedMainDir.CompareTo("") == 0){
+            cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
+            return;
+        }
+
+        //************************** Container Loading ********************************************************************
+        TList *TopDir                   = (TList*)fileInput[i]->Get(autoDetectedMainDir.Data());
         if(TopDir == NULL){
             cout<<"ERROR: TopDir not Found"<<endl;
             return;

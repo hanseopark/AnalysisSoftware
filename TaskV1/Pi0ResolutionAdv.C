@@ -459,24 +459,23 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
 
     //**********************************************************************************************************************
     //****************************************** Loading of Histograms *****************************************************
-    //**********************************************************************************************************************
-    
-    TFile fileMC(fileMonteCarloInput);  
-    
+    //**********************************************************************************************************************    
+    TFile* fileMC                   = new TFile(fileMonteCarloInput);  
+    TString autoDetectedMainDir     = AutoDetectMainTList(mode , fileMC);
+    if (autoDetectedMainDir.CompareTo("") == 0){
+        cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
+        return;
+    }
+
     //************************** Container Loading ********************************************************************
-    TString nameOutputContainer = "GammaConvV1";
-    if (mode == 2 || mode == 3) nameOutputContainer = "GammaConvCalo";
-        else if (mode == 4 || mode == 5) nameOutputContainer = "GammaCalo";
-        else if (mode == 10 || mode == 11) nameOutputContainer = "GammaCaloMerged";
-      
-    TList *TopDir =(TList*)fileMC.Get(nameOutputContainer.Data());
+    TList *TopDir                   = (TList*)fileMC->Get(autoDetectedMainDir.Data());
     if(TopDir == NULL){
         cout<<"ERROR: TopDir not Found"<<endl;
         return;
     }
-    TList *HistosGammaConversion = (TList*)TopDir->FindObject(Form("Cut Number %s",optionCutSelection.Data()));
+    TList *HistosGammaConversion    = (TList*)TopDir->FindObject(Form("Cut Number %s",optionCutSelection.Data()));
     //    TList *MCContainer = (TList*)HistosGammaConversion->FindObject(Form("%s MC histograms",optionCutSelection.Data()));
-    TList *TrueConversionContainer = (TList*)HistosGammaConversion->FindObject(Form("%s True histograms",optionCutSelection.Data()));
+    TList *TrueConversionContainer  = (TList*)HistosGammaConversion->FindObject(Form("%s True histograms",optionCutSelection.Data()));
 
     //************************** Histo loading *************************************************************************
 //             nameResolHist[0]            = Form("ESD_TruePrimary%sPureMerged_MCPt_ResolPt",outputlabel.Data());

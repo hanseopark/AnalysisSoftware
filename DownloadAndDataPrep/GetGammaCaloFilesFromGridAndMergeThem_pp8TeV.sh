@@ -140,123 +140,123 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge_runl
 ls $OUTPUTDIR_LHC12a/GammaCalo_*.root > fileLHC12a.txt
 fileNumbers=`cat fileLHC12a.txt`
 for fileName in $fileNumbers; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12a/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12a-pass1_$number.root\"\,\"GammaCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC12a-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12a_$number.log\"\)
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+    echo $number
+    root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12a/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12a-pass1_$number.root\"\,\"GammaCalo_$number\"\)
+    root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC12a-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12a_$number.log\"\,4\)
 
 done;
 
 ls $OUTPUTDIR_LHC12b/GammaCalo_*.root > fileLHC12b.txt
 fileNumbers=`cat fileLHC12b.txt`
 for fileName in $fileNumbers; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12b/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12b-pass1_$number.root\"\,\"GammaCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC12b-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12b_$number.log\"\)
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+    echo $number
+    root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12b/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12b-pass1_$number.root\"\,\"GammaCalo_$number\"\)
+    root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC12b-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12b_$number.log\"\,4\)
 done;
 
 ls $OUTPUTDIR_LHC12c/GammaCalo_*.root > fileLHC12c.txt
 fileNumbers=`cat fileLHC12c.txt`
 for fileName in $fileNumbers; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12c/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12c-pass1_$number.root\"\,\"GammaCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC12c-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12c_$number.log\"\)
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+    echo $number
+    root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12c/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12c-pass1_$number.root\"\,\"GammaCalo_$number\"\)
+    root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC12c-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12c_$number.log\"\,4\)
 done;
 
 ls $OUTPUTDIR_LHC12d/GammaCalo_*.root > fileLHC12d.txt
 fileNumbers=`cat fileLHC12d.txt`
 for fileName in $fileNumbers; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12d/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12d-pass1_$number.root\"\,\"GammaCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC12d-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12d_$number.log\"\)
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+    echo $number
+    root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12d/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12d-pass1_$number.root\"\,\"GammaCalo_$number\"\)
+    root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC12d-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12d_$number.log\"\,4\)
 done;
 
 ls $OUTPUTDIR_LHC12e/GammaCalo_*.root > fileLHC12e.txt
 fileNumbers=`cat fileLHC12e.txt`
 for fileName in $fileNumbers; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12e/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12e-pass1_$number.root\"\,\"GammaCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC12e-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12e_$number.log\"\)
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+    echo $number
+    root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12e/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12e-pass1_$number.root\"\,\"GammaCalo_$number\"\)
+    root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC12e-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12e_$number.log\"\,4\)
 done;
 
 ls $OUTPUTDIR_LHC12f/GammaCalo_*.root > fileLHC12f.txt
 fileNumbers=`cat fileLHC12f.txt`
 for fileName in $fileNumbers; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12f/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12f-pass1_$number.root\"\,\"GammaCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC12f-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12f_$number.log\"\)
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+    echo $number
+    root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12f/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12f-pass1_$number.root\"\,\"GammaCalo_$number\"\)
+    root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC12f-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12f_$number.log\"\,4\)
 done;
 
 ls $OUTPUTDIR_LHC12g/GammaCalo_*.root > fileLHC12g.txt
 fileNumbers=`cat fileLHC12g.txt`
 for fileName in $fileNumbers; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12g/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12g-pass1_$number.root\"\,\"GammaCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC12g-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12g_$number.log\"\)
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+    echo $number
+    root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12g/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12g-pass1_$number.root\"\,\"GammaCalo_$number\"\)
+    root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC12g-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12g_$number.log\"\,4\)
 done;
 
 ls $OUTPUTDIR_LHC12h/GammaCalo_*.root > fileLHC12h.txt
 fileNumbers=`cat fileLHC12h.txt`
 for fileName in $fileNumbers; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12h/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12h-pass1_$number.root\"\,\"GammaCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC12h-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12h_$number.log\"\)
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+    echo $number
+    root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12h/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12h-pass1_$number.root\"\,\"GammaCalo_$number\"\)
+    root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC12h-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12h_$number.log\"\,4\)
 done;
 
 ls $OUTPUTDIR_LHC12i/GammaCalo_*.root > fileLHC12i.txt
 fileNumbers=`cat fileLHC12i.txt`
 for fileName in $fileNumbers; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12i/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12i-pass1_$number.root\"\,\"GammaCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC12i-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12i_$number.log\"\)
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+    echo $number
+    root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC12i/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC12i-pass1_$number.root\"\,\"GammaCalo_$number\"\)
+    root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC12i-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12i_$number.log\"\,4\)
 done;
 
 # Change structure of MC files
 ls $OUTPUTDIR_LHC14e2a/GammaCalo_*.root > fileLHC14e2a.txt
 fileNumbers=`cat fileLHC14e2a.txt`
 for fileName in $fileNumbers; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC14e2a/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC14e2a_$number.root\"\,\"GammaCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14e2a_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a_$number.log\"\)
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+    echo $number
+    root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC14e2a/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC14e2a_$number.root\"\,\"GammaCalo_$number\"\)
+    root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14e2a_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a_$number.log\"\,4\)
 done;
 
 ls $OUTPUTDIR_LHC14e2b/GammaCalo_*.root > fileLHC14e2b.txt
 fileNumbers=`cat fileLHC14e2b.txt`
 for fileName in $fileNumbers; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC14e2b/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC14e2b_$number.root\"\,\"GammaCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14e2b_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b_$number.log\"\)
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+    echo $number
+    root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC14e2b/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC14e2b_$number.root\"\,\"GammaCalo_$number\"\)
+    root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14e2b_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b_$number.log\"\,4\)
 done;
 
 ls $OUTPUTDIR_LHC14e2c/GammaCalo_*.root > fileLHC14e2c.txt
 fileNumbers=`cat fileLHC14e2c.txt`
 for fileName in $fileNumbers; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC14e2c/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC14e2c_$number.root\"\,\"GammaCalo_$number\"\)
-root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14e2c_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c_$number.log\"\)
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+    echo $number
+    root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC14e2c/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC14e2c_$number.root\"\,\"GammaCalo_$number\"\)
+    root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14e2c_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c_$number.log\"\,4\)
 done;
 
 # Merge data files
@@ -264,34 +264,34 @@ rm $OUTPUTDIR/GammaCalo_LHC12ab*-pass1_*.root
 ls $OUTPUTDIR/GammaCalo_LHC12a-pass1_*.root > filesForMerging.txt
 filesForMerging=`cat filesForMerging.txt`
 for fileName in $filesForMerging; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
-echo $number
-if [ -f $OUTPUTDIR/GammaCalo_LHC12a-pass1_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_LHC12b-pass1_$number.root ] ; then
-hadd -f $OUTPUTDIR/GammaCalo_LHC12ab-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12a-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12b-pass1_$number.root
-fi
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
+    echo $number
+    if [ -f $OUTPUTDIR/GammaCalo_LHC12a-pass1_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_LHC12b-pass1_$number.root ] ; then
+        hadd -f $OUTPUTDIR/GammaCalo_LHC12ab-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12a-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12b-pass1_$number.root
+    fi
 done
 
 ls $OUTPUTDIR/GammaCalo_LHC12ab-pass1_*.root > filesForMerging.txt
 filesForMerging=`cat filesForMerging.txt`
 for fileName in $filesForMerging; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
-echo $number
-if [ -f $OUTPUTDIR/GammaCalo_LHC12ab-pass1_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_LHC12c-pass1_$number.root ] ; then
-hadd -f $OUTPUTDIR/GammaCalo_LHC12abc-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12ab-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12c-pass1_$number.root
-fi
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
+    echo $number
+    if [ -f $OUTPUTDIR/GammaCalo_LHC12ab-pass1_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_LHC12c-pass1_$number.root ] ; then
+        hadd -f $OUTPUTDIR/GammaCalo_LHC12abc-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12ab-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12c-pass1_$number.root
+    fi
 done
 
 ls $OUTPUTDIR/GammaCalo_LHC12abc-pass1_*.root > filesForMerging.txt
 filesForMerging=`cat filesForMerging.txt`
 for fileName in $filesForMerging; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
-echo $number
-if [ -f $OUTPUTDIR/GammaCalo_LHC12abc-pass1_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_LHC12d-pass1_$number.root ] ; then
-hadd -f $OUTPUTDIR/GammaCalo_LHC12abcd-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12abc-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12d-pass1_$number.root
-fi
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
+    echo $number
+    if [ -f $OUTPUTDIR/GammaCalo_LHC12abc-pass1_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_LHC12d-pass1_$number.root ] ; then
+        hadd -f $OUTPUTDIR/GammaCalo_LHC12abcd-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12abc-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12d-pass1_$number.root
+    fi
 done
 
 # 	if [ "$LHC12eData" != "" ]; then
@@ -353,45 +353,45 @@ done
 ls $OUTPUTDIR/GammaCalo_LHC12abcd-pass1_*.root > filesForMerging.txt
 filesForMerging=`cat filesForMerging.txt`
 for fileName in $filesForMerging; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
-echo $number
-if [ -f $OUTPUTDIR/GammaCalo_LHC12abcd-pass1_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_LHC12f-pass1_$number.root ] ; then
-hadd -f $OUTPUTDIR/GammaCalo_LHC12abcdf-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12abcd-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12f-pass1_$number.root
-fi
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
+    echo $number
+    if [ -f $OUTPUTDIR/GammaCalo_LHC12abcd-pass1_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_LHC12f-pass1_$number.root ] ; then
+        hadd -f $OUTPUTDIR/GammaCalo_LHC12abcdf-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12abcd-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12f-pass1_$number.root
+    fi
 done
 
 ls $OUTPUTDIR/GammaCalo_LHC12abcdf-pass1_*.root > filesForMerging.txt
 filesForMerging=`cat filesForMerging.txt`
 for fileName in $filesForMerging; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
-echo $number
-if [ -f $OUTPUTDIR/GammaCalo_LHC12abcdf-pass1_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_LHC12g-pass1_$number.root ] ; then
-hadd -f $OUTPUTDIR/GammaCalo_LHC12abcdfg-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12abcdf-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12g-pass1_$number.root
-fi
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
+    echo $number
+    if [ -f $OUTPUTDIR/GammaCalo_LHC12abcdf-pass1_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_LHC12g-pass1_$number.root ] ; then
+        hadd -f $OUTPUTDIR/GammaCalo_LHC12abcdfg-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12abcdf-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12g-pass1_$number.root
+    fi
 done
 
 ls $OUTPUTDIR/GammaCalo_LHC12abcdfg-pass1_*.root > filesForMerging.txt
 filesForMerging=`cat filesForMerging.txt`
 for fileName in $filesForMerging; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
-echo $number
-if [ -f $OUTPUTDIR/GammaCalo_LHC12abcdfg-pass1_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_LHC12h-pass1_$number.root ] ; then
-hadd -f $OUTPUTDIR/GammaCalo_LHC12abcdfgh-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12abcdfg-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12h-pass1_$number.root
-fi
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
+    echo $number
+    if [ -f $OUTPUTDIR/GammaCalo_LHC12abcdfg-pass1_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_LHC12h-pass1_$number.root ] ; then
+        hadd -f $OUTPUTDIR/GammaCalo_LHC12abcdfgh-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12abcdfg-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12h-pass1_$number.root
+    fi
 done
 
 ls $OUTPUTDIR/GammaCalo_LHC12abcdfgh-pass1_*.root > filesForMerging.txt
 filesForMerging=`cat filesForMerging.txt`
 for fileName in $filesForMerging; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
-echo $number
-if [ -f $OUTPUTDIR/GammaCalo_LHC12abcdfgh-pass1_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_LHC12i-pass1_$number.root ] ; then
-hadd -f $OUTPUTDIR/GammaCalo_LHC12abcdfghi-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12abcdfgh-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12i-pass1_$number.root
-fi
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
+    echo $number
+    if [ -f $OUTPUTDIR/GammaCalo_LHC12abcdfgh-pass1_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_LHC12i-pass1_$number.root ] ; then
+        hadd -f $OUTPUTDIR/GammaCalo_LHC12abcdfghi-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12abcdfgh-pass1_$number.root $OUTPUTDIR/GammaCalo_LHC12i-pass1_$number.root
+    fi
 done
 # 	fi
 
@@ -400,23 +400,23 @@ rm $OUTPUTDIR/GammaCalo_MC_LHC14e2a_LHC14e2b_*.root
 ls $OUTPUTDIR/GammaCalo_MC_LHC14e2a_*.root > filesForMerging.txt
 filesForMerging=`cat filesForMerging.txt`
 for fileName in $filesForMerging; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
-echo $number
-if [ -f $OUTPUTDIR/GammaCalo_MC_LHC14e2a_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_MC_LHC14e2b_$number.root ] ; then
-hadd -f $OUTPUTDIR/GammaCalo_MC_LHC14e2a_LHC14e2b_$number.root $OUTPUTDIR/GammaCalo_MC_LHC14e2a_$number.root $OUTPUTDIR/GammaCalo_MC_LHC14e2b_$number.root
-fi
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
+    echo $number
+    if [ -f $OUTPUTDIR/GammaCalo_MC_LHC14e2a_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_MC_LHC14e2b_$number.root ] ; then
+        hadd -f $OUTPUTDIR/GammaCalo_MC_LHC14e2a_LHC14e2b_$number.root $OUTPUTDIR/GammaCalo_MC_LHC14e2a_$number.root $OUTPUTDIR/GammaCalo_MC_LHC14e2b_$number.root
+    fi
 done
 
 ls $OUTPUTDIR/GammaCalo_MC_LHC14e2a_LHC14e2b_*.root > filesForMerging.txt
 filesForMerging=`cat filesForMerging.txt`
 for fileName in $filesForMerging; do
-echo $fileName
-number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 5 | cut -d "." -f1`
-echo $number
-if [ -f $OUTPUTDIR/GammaCalo_MC_LHC14e2a_LHC14e2b_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_MC_LHC14e2c_$number.root ] ; then
-hadd -f $OUTPUTDIR/GammaCalo_MC_LHC14e2a_LHC14e2b_LHC14e2c_$number.root $OUTPUTDIR/GammaCalo_MC_LHC14e2a_LHC14e2b_$number.root $OUTPUTDIR/GammaCalo_MC_LHC14e2c_$number.root
-fi
+    echo $fileName
+    number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 5 | cut -d "." -f1`
+    echo $number
+    if [ -f $OUTPUTDIR/GammaCalo_MC_LHC14e2a_LHC14e2b_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_MC_LHC14e2c_$number.root ] ; then
+        hadd -f $OUTPUTDIR/GammaCalo_MC_LHC14e2a_LHC14e2b_LHC14e2c_$number.root $OUTPUTDIR/GammaCalo_MC_LHC14e2a_LHC14e2b_$number.root $OUTPUTDIR/GammaCalo_MC_LHC14e2c_$number.root
+    fi
 done
 
 

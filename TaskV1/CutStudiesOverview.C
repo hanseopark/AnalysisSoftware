@@ -338,10 +338,12 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             cutStringsName[i]                                   = AnalyseMCSmearingCut(fMCSmearing.Atoi());      
         } else if (cutVariationName.Contains("ClusterTrackMatchingCalo")){    
             TString fTrackMatching                              = fClusterCutSelection(GetClusterTrackMatchingCutPosition(fClusterCutSelection),1);
-            cutStringsName[i]                                   = AnalyseTrackMatchingCaloCut(fTrackMatching.Atoi());
+            TString fClusterType                                = fClusterCutSelection(GetClusterTypeCutPosition(fClusterCutSelection),1);
+            cutStringsName[i]                                   = AnalyseTrackMatchingCaloCut(fTrackMatching.Atoi(), fClusterType.Atoi());
         } else if (cutVariationName.Contains("ClusterTrackMatching")){    
             TString fTrackMatching                              = fClusterCutSelection(GetClusterTrackMatchingCutPosition(fClusterCutSelection),1);
-            cutStringsName[i]                                   = AnalyseTrackMatchingCut(fTrackMatching.Atoi());
+            TString fClusterType                                = fClusterCutSelection(GetClusterTypeCutPosition(fClusterCutSelection),1);
+            cutStringsName[i]                                   = AnalyseTrackMatchingCut(fTrackMatching.Atoi(), fClusterType.Atoi());
         } else if (cutVariationName.Contains("ClusterMaterialTRD")){    
             TString fMinPhi                                     = fClusterCutSelection(GetClusterPhiMinCutPosition(fClusterCutSelection),1);
             TString fMaxPhi                                     = fClusterCutSelection(GetClusterPhiMaxCutPosition(fClusterCutSelection),1);

@@ -13,11 +13,12 @@ function CopyFileIfNonExisitent()
 
 function ChangeStructureIfNeeded()
 {
-    if [ -f $2 ]; then 
-        echo "already changed"
-    else
-        root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$1\"\,\"$2\"\,\"GammaCalo_$3\"\)
-    fi    
+#     if [ -f $2 ]; then 
+#         echo "already changed"
+#     else
+        cp $1 $2
+#         root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$1\"\,\"$2\"\,\"GammaCalo_$3\"\)
+#     fi    
 }
 
 # copies files from grid
@@ -378,19 +379,31 @@ fi
 # LHC15a3aplusMC="2465"; 
 # LHC15g2MC="2462";
 
-TRAINDIR=Legotrain-vAN20161029_TMEffi
+# TRAINDIR=Legotrain-vAN20161029_TMEffi
+# # LHC11aData="1905";
+# LHC11aData="1894";
+# LHC15g1aMC="2606";
+# LHC12f1aMC="2592"; 
+# LHC12f1bMC="2593"; 
+# 
+# # LHC13gData="1907";
+# LHC13gData="1895";
+# LHC15a3aMC="2596"; 
+# LHC15a3aplusMC="2605"; 
+# LHC15g2MC="2594";
+
+TRAINDIR=Legotrain-vAN20161111_TMEffi
 # LHC11aData="1905";
 LHC11aData="1894";
-LHC15g1aMC="2606";
+LHC15g1aMC="2652";
 LHC12f1aMC="2592"; 
 LHC12f1bMC="2593"; 
 
 # LHC13gData="1907";
 LHC13gData="1895";
-LHC15a3aMC="2596"; 
-LHC15a3aplusMC="2605"; 
+LHC15a3aMC="2644"; 
+LHC15a3aplusMC="2645"; 
 LHC15g2MC="2594";
-
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -488,7 +501,7 @@ if [ $2 = "LHC11a" ]; then
             CopyFileIfNonExisitent $OUTPUTDIR_LHC15g1a "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC15g1aMC/merge"
             
             echo "copying LHC11aJetJet" 
-            runNumbers=`cat runNumbersLHC11aJetJet.txt`
+            runNumbers=`cat runlists/runNumbersLHC11aJetJet.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 echo $runNumber
@@ -509,7 +522,7 @@ if [ $2 = "LHC11a" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC11a/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_LHC11a-pass4_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC11a-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_LHC11a_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC11a-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_LHC11a_$number.log\"\,4\)
         done;
     fi
     
@@ -521,7 +534,7 @@ if [ $2 = "LHC11a" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC12f1a/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_MC_LHC12f1a_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC12f1a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC12f1a_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC12f1a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC12f1a_$number.log\"\,4\)
         done;
     fi
     
@@ -533,7 +546,7 @@ if [ $2 = "LHC11a" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC12f1b/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_MC_LHC12f1b_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC12f1b_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC12f1b_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC12f1b_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC12f1b_$number.log\"\,4\)
         done;
     fi
     
@@ -545,7 +558,7 @@ if [ $2 = "LHC11a" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC12i3/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_MC_LHC12i3_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC12i3_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC12i3_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC12i3_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC12i3_$number.log\"\,4\)
         done;
     fi
 
@@ -557,7 +570,7 @@ if [ $2 = "LHC11a" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC15g1a/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_MC_LHC15g1a_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC15g1a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC15g1a_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC15g1a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC15g1a_$number.log\"\,4\)
         done;
 
         if [ $MERGEONBINSSingle = 1 ]; then
@@ -719,7 +732,7 @@ elif [ $2 = "LHC13g" ]; then
         fi
         
         echo "copying LHC13gJetJet in bins" 
-        runNumbers=`cat runNumbersLHC13gJetJet.txt`
+        runNumbers=`cat runlists/runNumbersLHC13gJetJet.txt`
         echo $runNumbers
         for runNumber in $runNumbers; do
             echo $runNumber
@@ -747,9 +760,9 @@ elif [ $2 = "LHC13g" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC13g/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_LHC13g-pass1_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC13g-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_LHC13g_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC13g-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_LHC13g_$number.log\"\,4\)
             mkdir -p $OUTPUTDIR/LHC13gRunWise
-            runNumbers=`cat runNumbersLHC13g_pass1.txt`
+            runNumbers=`cat runlists/runNumbersLHC13g_pass1.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 ChangeStructureIfNeeded $OUTPUTDIR_LHC13g/$runNumber/GammaCalo_$number.root $OUTPUTDIR/LHC13gRunWise/GammaCalo_LHC13g-pass1_$runNumber\_$number.root $number
@@ -766,7 +779,7 @@ elif [ $2 = "LHC13g" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC15g2/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_MC_LHC15g2_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC15g2_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC15g2_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC15g2_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC15g2_$number.log\"\,4\)
         done;
     fi
     
@@ -778,7 +791,7 @@ elif [ $2 = "LHC13g" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC15a3a/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_MC_LHC15a3a_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC15a3a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC15a3a_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC15a3a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC15a3a_$number.log\"\,4\)
         done;
     fi
     
@@ -790,7 +803,7 @@ elif [ $2 = "LHC13g" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC15a3aplus/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_MC_LHC15a3aplus_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC15a3aplus_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC15a3aplus_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC15a3aplus_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC15a3aplus_$number.log\"\,4\)
         done;
     fi
     
@@ -827,7 +840,7 @@ elif [ $2 = "LHC13g" ]; then
             echo $fileName
             number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 3 | cut -d "." -f1`
             echo $number
-            runsForMerging=`cat runNumbersLHC13g_pass1_reduced.txt`
+            runsForMerging=`cat runlists/runNumbersLHC13g_pass1_reduced.txt`
             TOMERGE="";
             for run in $runsForMerging; do
                 echo $OUTPUTDIR/LHC13gRunWise/GammaCalo_LHC13g-pass1_$run\_$number.root

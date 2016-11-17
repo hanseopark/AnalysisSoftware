@@ -2752,61 +2752,91 @@ TString AnalysePPMultiplicityCut(Int_t minMult, Int_t maxMult){
 //************************************************************************************
 //******** Analyzes the cluster track matching cuts, return correct cut label ********
 //************************************************************************************
-TString AnalyseTrackMatchingCut(Int_t trackmatching ){
-    switch(trackmatching) {
-        case 0:
-            return "no track missmatch cut for V0s";
-        case 1:
-            return "TrMatch excl. #Delta#eta < 0.008, -0.03 < #Delta#varphi_{+} < 0.03, -0.03 < #Delta#varphi_{-} < 0.03 for V0s";
-        case 2:
-            return "TrMatch excl. #Delta#eta < 0.012, -0.05 < #Delta#varphi_{+} < 0.04, -0.04 < #Delta#varphi_{-} < 0.05 for V0s";
-        case 3:
-            return "TrMatch excl. #Delta#eta < 0.016, -0.09 < #Delta#varphi_{+} < 0.06, -0.06 < #Delta#varphi_{-} < 0.09 for V0s";
-        case 4:
-            return "TrMatch excl. #Delta#eta < 0.018, -0.11 < #Delta#varphi_{+} < 0.07, -0.07 < #Delta#varphi_{-} < 0.11 for V0s";
-        case 5:
-            return "TrMatch excl. #Delta#eta < 0.020, -0.13 < #Delta#varphi_{+} < 0.08, -0.08 < #Delta#varphi_{-} < 0.13 for V0s";
-        case 6:
-            return "TrMatch excl. #Delta#eta < 0.022, -0.15 < #Delta#varphi_{+} < 0.10, -0.10 < #Delta#varphi_{-} < 0.15 for V0s";
-        case 7:
-            return "TrMatch excl. #Delta#eta < 0.005, -0.03 < #Delta#varphi_{+} < 0.03, -0.03 < #Delta#varphi_{-} < 0.03 for V0s";
-        case 8:
-            return "TrMatch excl. #Delta#eta < 0.010, -0.09 < #Delta#varphi_{+} < 0.07, -0.07 < #Delta#varphi_{-} < 0.09 for V0s";
-        case 9:
-            return "TrMatch excl. #Delta#eta < 0.015, -0.15 < #Delta#varphi_{+} < 0.11, -0.11 < #Delta#varphi_{-} < 0.15 for V0s";
-        default:
-            return "track missmatch not defined ";
-    }
+TString AnalyseTrackMatchingCut(Int_t trackmatching, Int_t clusterType ){
+    if (clusterType == 1){
+        switch(trackmatching) {
+            case 0:
+                return "TM disabled";
+            case 1:
+                return "TM #Delta#eta < 0.008, -0.03 < #Delta#varphi_{+,-} < 0.03 for V0s";
+            case 2:
+                return "TM #Delta#eta < 0.012, -0.05(-0.04) < #Delta#varphi_{+(-)} < 0.04(0.05) for V0s";
+            case 3:
+                return "TM #Delta#eta < 0.016, -0.09(-0.06) < #Delta#varphi_{+(-)} < 0.06(0.09) for V0s";
+            case 4:
+                return "TM #Delta#eta < 0.018, -0.11(-0.07) < #Delta#varphi_{+(-)} < 0.07(0.11) for V0s";
+            case 5:
+                return "TM #Delta#eta < 0.020, -0.13(-0.08) < #Delta#varphi_{+(-)} < 0.08(0.13) for V0s";
+            case 6:
+                return "TM #Delta#eta #leq 0.010 + #left(#frac{1}{#it{p}_{T} + (1/(0.03-0.010))^{1/2.5}}#right^{2.5}, #Delta#phi #leq 0.015 + #left(#frac{1}{#it{p}_{T} + (1/(0.08-0.015))^{1/2}}#right^{2} for V0s";
+            case 7:
+                return "TM #Delta#eta #leq 0.010 + #left(#frac{1}{#it{p}_{T} + (1/(0.04-0.010))^{1/2.5}}#right^{2.5}, #Delta#phi #leq 0.015 + #left(#frac{1}{#it{p}_{T} + (1/(0.09-0.015))^{1/2}}#right^{2} for V0s";
+            case 8:
+                return "TM #Delta#eta #leq 0.010 + #left(#frac{1}{#it{p}_{T} + (1/(0.05-0.010))^{1/2.5}}#right^{2.5}, #Delta#phi #leq 0.015 + #left(#frac{1}{#it{p}_{T} + (1/(0.10-0.015))^{1/1.75}}#right^{1.75} for V0s";
+            case 9:
+                return "TM #Delta#eta #leq 0.015 + #left(#frac{1}{#it{p}_{T} + (1/(0.06-0.015))^{1/2.5}}#right^{2.5}, #Delta#phi #leq 0.020 + #left(#frac{1}{#it{p}_{T} + (1/(0.12-0.020))^{1/1.75}}#right^{1.75} for V0s";
+            default:
+                return "track missmatch not defined ";
+        }
+    } else if (clusterType == 2){
+        switch(trackmatching) {
+            case 0:
+                return "TM disabled";
+            case 1:
+                return "TrMatch excl. #Delta#eta < 0.005, -0.03 < #Delta#varphi_{+} < 0.03 for V0s";
+            case 2:
+                return "TrMatch excl. #Delta#eta < 0.010, -0.09(-0.07) < #Delta#varphi_{+} < 0.07(0.09) for V0s";
+            case 3:
+                return "TrMatch excl. #Delta#eta < 0.015, -0.15(-0.11) < #Delta#varphi_{+} < 0.11(0.15) for V0s";
+            default:
+                return "track missmatch not defined ";
+        }
+    }    
 }  
 
 //************************************************************************************
 //**** Analyzes the cluster track matching cuts for calo, return correct cut label ***
 //************************************************************************************
-TString AnalyseTrackMatchingCaloCut(Int_t trackmatching ){
-    switch(trackmatching) {
-        case 0:
-            return "no track matching exclusion";
-        case 1:
-            return "TrMatch excl. #Delta#eta < 0.008, -0.03 < #Delta#varphi_{+} < 0.03, -0.03 < #Delta#varphi_{-} < 0.03";
-        case 2:
-            return "TrMatch excl. #Delta#eta < 0.012, -0.05 < #Delta#varphi_{+} < 0.04, -0.04 < #Delta#varphi_{-} < 0.05";
-        case 3:
-            return "TrMatch excl. #Delta#eta < 0.016, -0.09 < #Delta#varphi_{+} < 0.06, -0.06 < #Delta#varphi_{-} < 0.09";
-        case 4:
-            return "TrMatch excl. #Delta#eta < 0.018, -0.11 < #Delta#varphi_{+} < 0.07, -0.07 < #Delta#varphi_{-} < 0.11";
-        case 5:
-            return "TrMatch excl. #Delta#eta < 0.020, -0.13 < #Delta#varphi_{+} < 0.08, -0.08 < #Delta#varphi_{-} < 0.13";
-        case 6:
-            return "TrMatch excl. #Delta#eta < 0.022, -0.15 < #Delta#varphi_{+} < 0.10, -0.10 < #Delta#varphi_{-} < 0.15";
-        case 7:
-            return "TrMatch excl. #Delta#eta < 0.005, -0.03 < #Delta#varphi_{+} < 0.03, -0.03 < #Delta#varphi_{-} < 0.03";
-        case 8:
-            return "TrMatch excl. #Delta#eta < 0.010, -0.09 < #Delta#varphi_{+} < 0.07, -0.07 < #Delta#varphi_{-} < 0.09";
-        case 9:
-            return "TrMatch excl. #Delta#eta < 0.015, -0.15 < #Delta#varphi_{+} < 0.11, -0.11 < #Delta#varphi_{-} < 0.15";
-        default:
-            return "track missmatch not defined ";
-    }
+TString AnalyseTrackMatchingCaloCut(Int_t trackmatching, Int_t clusterType ){
+    if (clusterType == 1){
+        switch(trackmatching) {
+            case 0:
+                return "TM disabled";
+            case 1:
+                return "TM #Delta#eta < 0.008, -0.03 < #Delta#varphi_{+,-} < 0.03";
+            case 2:
+                return "TM #Delta#eta < 0.012, -0.05(-0.04) < #Delta#varphi_{+(-)} < 0.04(0.05)";
+            case 3:
+                return "TM #Delta#eta < 0.016, -0.09(-0.06) < #Delta#varphi_{+(-)} < 0.06(0.09)";
+            case 4:
+                return "TM #Delta#eta < 0.018, -0.11(-0.07) < #Delta#varphi_{+(-)} < 0.07(0.11)";
+            case 5:
+                return "TM #Delta#eta < 0.020, -0.13(-0.08) < #Delta#varphi_{+(-)} < 0.08(0.13)";
+            case 6:
+                return "TM #Delta#eta #leq 0.010 + #left(#frac{1}{#it{p}_{T} + (1/(0.03-0.010))^{1/2.5}}#right^{2.5}, #Delta#phi #leq 0.015 + #left(#frac{1}{#it{p}_{T} + (1/(0.08-0.015))^{1/2}}#right^{2}";
+            case 7:
+                return "TM #Delta#eta #leq 0.010 + #left(#frac{1}{#it{p}_{T} + (1/(0.04-0.010))^{1/2.5}}#right^{2.5}, #Delta#phi #leq 0.015 + #left(#frac{1}{#it{p}_{T} + (1/(0.09-0.015))^{1/2}}#right^{2}";
+            case 8:
+                return "TM #Delta#eta #leq 0.010 + #left(#frac{1}{#it{p}_{T} + (1/(0.05-0.010))^{1/2.5}}#right^{2.5}, #Delta#phi #leq 0.015 + #left(#frac{1}{#it{p}_{T} + (1/(0.10-0.015))^{1/1.75}}#right^{1.75}";
+            case 9:
+                return "TM #Delta#eta #leq 0.015 + #left(#frac{1}{#it{p}_{T} + (1/(0.06-0.015))^{1/2.5}}#right^{2.5}, #Delta#phi #leq 0.020 + #left(#frac{1}{#it{p}_{T} + (1/(0.12-0.020))^{1/1.75}}#right^{1.75}";
+            default:
+                return "track missmatch not defined ";
+        }
+    } else if (clusterType == 2){
+        switch(trackmatching) {
+            case 0:
+                return "TM disabled";
+            case 1:
+                return "TrMatch excl. #Delta#eta < 0.005, -0.03 < #Delta#varphi_{+} < 0.03";
+            case 2:
+                return "TrMatch excl. #Delta#eta < 0.010, -0.09(-0.07) < #Delta#varphi_{+} < 0.07(0.09)";
+            case 3:
+                return "TrMatch excl. #Delta#eta < 0.015, -0.15(-0.11) < #Delta#varphi_{+} < 0.11(0.15)";
+            default:
+                return "track missmatch not defined ";
+        }
+    }    
 }  
 
 //************************************************************************************

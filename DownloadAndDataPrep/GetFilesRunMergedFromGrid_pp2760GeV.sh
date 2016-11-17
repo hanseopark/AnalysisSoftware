@@ -67,7 +67,7 @@ if [ $LHC12f1aMC != "" ]; then
    mkdir -p $OUTPUTDIR_LHC12f1aMC
    rm runNumbersLHC12f1aFailedRunMerge.txt
    echo "copying LHC12f1a MC" 
-   runNumbers=`cat runNumbersLHC12f1a.txt`
+   runNumbers=`cat runlists/runNumbersLHC12f1a.txt`
    for runNumber in $runNumbers; do
       echo $runNumber
       runNumberlocal=$runNumber
@@ -89,7 +89,7 @@ if [ $LHC12f1aMC != "" ]; then
       fi     
    done;
 
-#    runNumbersBroken=`cat runNumbersLHC12f1a.txt`
+#    runNumbersBroken=`cat runlists/runNumbersLHC12f1a.txt`
    runNumbersBroken=`cat runNumbersLHC12f1aFailedRunMerge.txt`
    for runNumber in $runNumbersBroken; do
       echo "copying stage_1 output for " $runNumber
@@ -116,7 +116,7 @@ if [ $LHC12f1bMC != "" ]; then
    mkdir -p $OUTPUTDIR_LHC12f1bMC
    rm runNumbersLHC12f1bFailedRunMerge.txt
    echo "copying LHC12f1b MC" 
-   runNumbers=`cat runNumbersLHC12f1b.txt`
+   runNumbers=`cat runlists/runNumbersLHC12f1b.txt`
    for runNumber in $runNumbers; do
       echo $runNumber
       runNumberlocal=$runNumber
@@ -138,7 +138,7 @@ if [ $LHC12f1bMC != "" ]; then
       fi     
    done;
 
-#    runNumbersBroken=`cat runNumbersLHC12f1b.txt`
+#    runNumbersBroken=`cat runlists/runNumbersLHC12f1b.txt`
    runNumbersBroken=`cat runNumbersLHC12f1bFailedRunMerge.txt`
    for runNumber in $runNumbersBroken; do
       echo "copying stage_1 output for " $runNumber
@@ -167,7 +167,7 @@ if [ $LHC11aData != "" ]; then
    mkdir -p $OUTPUTDIR_LHC11a
    rm runNumbersLHC11aFailedRunMerge.txt
    echo "copying LHC11a MC" 
-   runNumbers=`cat runNumbersLHC11a.txt`
+   runNumbers=`cat runlists/runNumbersLHC11a.txt`
    for runNumber in $runNumbers; do
       echo $runNumber
       mkdir -p $OUTPUTDIR_LHC11a/$runNumber
@@ -224,7 +224,7 @@ fi
 #    mkdir -p $OUTPUTDIR_LHC13c
 #    rm runNumbersLHC13cFailedRunMerge.txt
 #    echo "copying LHC13c MC" 
-#    runNumbers=`cat runNumbersLHC13c.txt`
+#    runNumbers=`cat runlists/runNumbersLHC13c.txt`
 #    for runNumber in $runNumbers; do
 #       echo $runNumber
 #       

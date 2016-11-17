@@ -156,7 +156,7 @@ if [ $HAVELHC11h == 1 ]; then
         number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
         echo $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC11h/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_LHC11h-pass2_$number.root $number
-        root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_LHC11h-pass2_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_LHC11h_$number.log\"\)
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC11h-pass2_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_LHC11h_$number.log\"\,4\)
     done;
 fi
 
@@ -168,7 +168,7 @@ if [ $HAVELHC14a1a == 1 ]; then
         number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
         echo $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC14a1a/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_MC_LHC14a1a_$number.root $number
-        root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14a1a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC14a1a_$number.log\"\)
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14a1a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC14a1a_$number.log\"\,4\)
     done;
 fi
 
@@ -180,7 +180,7 @@ if [ $HAVELHC14a1b == 1 ]; then
         number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
         echo $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC14a1b/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_MC_LHC14a1b_$number.root $number
-        root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14a1b_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC14a1b_$number.log\"\)
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14a1b_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC14a1b_$number.log\"\,4\)
     done;
 fi
 
@@ -192,6 +192,6 @@ if [ $HAVELHC14a1c == 1 ]; then
         number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
         echo $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC14a1c/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_MC_LHC14a1c_$number.root $number
-        root -b -l -q -x ../TaskV1/MakeCutLogCalo.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14a1c_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC14a1c_$number.log\"\)
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14a1c_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC14a1c_$number.log\"\,4\)
     done;
 fi

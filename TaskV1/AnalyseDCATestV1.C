@@ -113,11 +113,23 @@ void AnalyseDCATestV1(TString meson="", TString fileData="",  TString fileData2=
 	TString outputDir 						= Form("%s/%s/%s/%s/AnalyseDCATests", cutSelection.Data(), optionEnergy.Data(), optionPeriod.Data(), suffix.Data());
 	gSystem->Exec("mkdir -p "+outputDir);
 
+    
 	// read out files 
-	TFile f(fileData.Data());
-	TFile f2(fileData2.Data());
-	TList *TopDir 							= (TList*)f.Get("GammaConvV1");
-	TList *TopDir2 							= (TList*)f2.Get("GammaConvV1");
+	TFile* f                                = new TFile(fileData);
+    TString autoDetectedMainDir             = AutoDetectMainTList(mode , f);
+    if (autoDetectedMainDir.CompareTo("") == 0){
+        cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
+        return;
+    }
+    TFile* f2                                = new TFile(fileData2);
+    TString autoDetectedMainDir2             = AutoDetectMainTList(mode , f2);
+    if (autoDetectedMainDir2.CompareTo("") == 0){
+        cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
+        return;
+    }
+    
+    TList *TopDir 							= (TList*)f->Get(autoDetectedMainDir.Data());
+	TList *TopDir2 							= (TList*)f2->Get(autoDetectedMainDir2.Data());
 	if(TopDir == NULL){
 		cout<<"ERROR: TopDir not Found"<<endl;
 		return;

@@ -15,11 +15,12 @@ function CopyFileIfNonExisitent()
 
 function ChangeStructureIfNeeded()
 {
-    if [ -f $2 ]; then 
-        echo "already changed"
-    else
-        root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$1\"\,\"$2\"\,\"GammaConvCalo_$3\"\)
-    fi    
+    cp $1 $2
+#     if [ -f $2 ]; then 
+#         echo "already changed"
+#     else
+#         root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$1\"\,\"$2\"\,\"GammaConvCalo_$3\"\)
+#     fi    
 }
 
 
@@ -219,22 +220,38 @@ fi
 # LHC15a3aplusMC="2465"; 
 # LHC15g2MC="2462";
 
-TRAINDIR=Legotrain-vAN20161029_TMEffi
+# TRAINDIR=Legotrain-vAN20161029_TMEffi
+# # LHC11aData="1905";
+# # LHC11aData="1894";
+# LHC15g1aMC="2606";
+# # LHC12f1aMC="2592"; 
+# # LHC12f1bMC="2593"; 
+# 
+# # LHC13gData="1907";
+# # LHC13gData="1895";
+# # LHC15a3aMC="2600"; 
+# # LHC15a3aplusMC="2601"; 
+# LHC15a3aMC="2610"; 
+# LHC15a3aplusMC="2602"; 
+# # LHC15a3aMC="2596"; 
+# # LHC15a3aplusMC="2605"; 
+# # LHC15g2MC="2594";
+
+TRAINDIR=Legotrain-vAN20161111_TMEffi
 # LHC11aData="1905";
-# LHC11aData="1894";
-LHC15g1aMC="2606";
-# LHC12f1aMC="2592"; 
-# LHC12f1bMC="2593"; 
+LHC11aData="1894";
+LHC15g1aMC="2652";
+LHC12f1aMC="2592"; 
+LHC12f1bMC="2593"; 
 
 # LHC13gData="1907";
-# LHC13gData="1895";
-# LHC15a3aMC="2600"; 
-# LHC15a3aplusMC="2601"; 
-LHC15a3aMC="2610"; 
-LHC15a3aplusMC="2602"; 
-# LHC15a3aMC="2596"; 
-# LHC15a3aplusMC="2605"; 
-# LHC15g2MC="2594";
+LHC13gData="1895";
+# LHC15a3aMC="2646"; 
+LHC15a3aMC="2647"; 
+# LHC15a3aplusMC="2648"; 
+LHC15a3aplusMC="2649"; 
+LHC15g2MC="2594";
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -332,7 +349,7 @@ echo "**************************************************************************
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC11a/GammaConvCalo_$number.root $OUTPUTDIR/GammaConvCalo_LHC11a-pass4_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC11a-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_LHC11a_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_LHC11a-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_LHC11a_$number.log\"\,2\)
         done;
     fi
 
@@ -344,7 +361,7 @@ echo "**************************************************************************
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC12f1a/GammaConvCalo_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC12f1a_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC12f1a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_MC_LHC12f1a_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC12f1a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_MC_LHC12f1a_$number.log\"\,2\)
         done;
     fi
     
@@ -356,7 +373,7 @@ echo "**************************************************************************
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC12f1b/GammaConvCalo_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC12f1b_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC12f1b_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_MC_LHC12f1b_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC12f1b_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_MC_LHC12f1b_$number.log\"\,2\)
         done;
     fi
     
@@ -368,7 +385,7 @@ echo "**************************************************************************
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC12i3/GammaConvCalo_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC12i3_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC12i3_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_MC_LHC12i3_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC12i3_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_MC_LHC12i3_$number.log\"\,2\)
         done;
     fi
     
@@ -398,7 +415,7 @@ echo "**************************************************************************
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC15g1a/GammaConvCalo_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC15g1a_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC15g1a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_MC_LHC15g1a_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC15g1a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_MC_LHC15g1a_$number.log\"\,2\)
         done;
     fi
    
@@ -557,7 +574,7 @@ elif [ $2 = "LHC13g" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC13g/GammaConvCalo_$number.root $OUTPUTDIR/GammaConvCalo_LHC13g-pass1_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC13g-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_LHC13g_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_LHC13g-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_LHC13g_$number.log\"\,2\)
             
             mkdir -p $OUTPUTDIR/LHC13gRunWise
             runNumbers=`cat runlists/runNumbersLHC13g_pass1.txt`
@@ -576,7 +593,7 @@ elif [ $2 = "LHC13g" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC15g2/GammaConvCalo_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC15g2_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC15g2_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_MC_LHC15g2_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC15g2_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_MC_LHC15g2_$number.log\"\,2\)
         done;
     fi
 
@@ -588,7 +605,7 @@ elif [ $2 = "LHC13g" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC15a3a/GammaConvCalo_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC15a3a_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC15a3a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_MC_LHC15a3a_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC15a3a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_MC_LHC15a3a_$number.log\"\,2\)
         done;
     fi    
 
@@ -600,7 +617,7 @@ elif [ $2 = "LHC13g" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC15a3aplus/GammaConvCalo_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC15a3aplus_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC15a3aplus_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_MC_LHC15a3aplus_$number.log\"\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC15a3aplus_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvCalo_MC_LHC15a3aplus_$number.log\"\,2\)
         done;
     fi
     

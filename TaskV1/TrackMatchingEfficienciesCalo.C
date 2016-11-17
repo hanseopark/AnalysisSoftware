@@ -267,18 +267,14 @@ void TrackMatchingEfficienciesCalo(   TString fileMonteCarloInput          = "",
     //****************************************** Loading of Histograms *****************************************************
     //**********************************************************************************************************************
     
-    TFile fileMC(fileMonteCarloInput.Data());  
+    TFile* fileMC                       = new TFile(fileMonteCarloInput.Data());  
+    TString autoDetectedMainDir         = AutoDetectMainTList(mode , fileMC);
+    if (autoDetectedMainDir.CompareTo("") == 0){
+        cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
+        return;
+    }
     
-    //************************** Container Loading ********************************************************************
-    TString nameOutputContainer     = "";
-    if (mode == 2 || mode == 3) 
-        nameOutputContainer         = "GammaConvCalo";
-    else if (mode == 4 || mode == 5) 
-        nameOutputContainer         = "GammaCalo";
-    else if (mode == 10 || mode == 11) 
-        nameOutputContainer         = "GammaCaloMerged";
-      
-    TList* TopDir                   = (TList*)fileMC.Get(nameOutputContainer.Data());
+    TList* TopDir                       = (TList*)fileMC->Get(autoDetectedMainDir.Data());
     if(TopDir == NULL){
         cout<<"ERROR: TopDir not Found"<<endl;
         return;
@@ -487,12 +483,12 @@ void TrackMatchingEfficienciesCalo(   TString fileMonteCarloInput          = "",
     TCanvas* canvasTMEffi = new TCanvas("canvasTMEffi","",200,10,1100,900);  // gives the page size
     DrawGammaCanvasSettings( canvasTMEffi, 0.075, 0.02, 0.02, 0.09);
 
-        Double_t rangeTMEffi[2]     = {0., 1.02};
+        Double_t rangeTMEffi[2]     = {0., 1.3};
 
         Double_t maxPt              = fBinsClusterPt[fNBinsClusterPt];
         if (nameTrigger.Contains("INT") || nameTrigger.Contains("MB")){
             maxPt                   = 15;
-            rangeTMEffi[1]          = 1.3;
+//             rangeTMEffi[1]          = 1.3;
         }    
         TH2F * histo2DTMEff         = new TH2F("histo2DTMEff", "histo2DTMEff",1000, 0., maxPt , 1000, rangeTMEffi[0], rangeTMEffi[1] );
         SetStyleHistoTH2ForGraphs(  histo2DTMEff, "#it{p}_{T} (GeV/#it{c})", "#varepsilon_{TM}", 

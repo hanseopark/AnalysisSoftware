@@ -241,14 +241,14 @@ void AnalyseNeutralMesonSignificance(   TString fileNameData    = "myOutput",
     //**********************************************************************************
     //**************************** Read data file **************************************
     //**********************************************************************************
-    TFile fileData(fileNameData.Data());
-    TString nameMainDir                             = "";
-    if (mode == 9 || mode == 0) nameMainDir         = "GammaConvV1";
-    else if (mode == 2 || mode == 3) nameMainDir    = "GammaConvCalo";
-    else if (mode == 4 || mode == 5) nameMainDir    = "GammaCalo";
-    else if (mode == 10 || mode == 11) nameMainDir  = "GammaCaloMerged";
-    
-    TList *TopDirData =(TList*)fileData.Get(nameMainDir.Data());
+    TFile* fileData                         = new TFile(fileNameData);
+    TString autoDetectedMainDir             = AutoDetectMainTList(mode , fileData);
+    if (autoDetectedMainDir.CompareTo("") == 0){
+        cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
+        return;
+    }
+
+    TList *TopDirData =(TList*)fileData->Get(autoDetectedMainDir.Data());
     if(TopDirData == NULL){
         cout<<"ERROR: TopDirData not Found"<<endl;
         return;
@@ -313,7 +313,7 @@ void AnalyseNeutralMesonSignificance(   TString fileNameData    = "myOutput",
     //**************************** Read MC file ****************************************
     //**********************************************************************************    
     TFile* fileMC                       = new TFile(fileNameMC.Data());
-    TList *TopDirMC                     = (TList*)fileMC->Get(nameMainDir.Data());
+    TList *TopDirMC                     = (TList*)fileMC->Get(autoDetectedMainDir.Data());
     if(TopDirMC == NULL){
         cout<<"ERROR: TopDirMC not Found"<<endl;
         return;

@@ -233,18 +233,15 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
     TString labelResolHist[5];
     Int_t nResolHist                = 1;
     if (fileName.CompareTo("")!= 0 && cutSting.CompareTo("") != 0){
-        TFile* resolutionFile   = new TFile(fileName.Data());
-        //************************** Container Loading ********************************************************************
-        TString nameOutputContainer = "GammaConvV1";
-        if (mode == 2 || mode == 3){ 
-            nameOutputContainer     = "GammaConvCalo";  
-        } else if (mode == 4 || mode == 5) {
-            nameOutputContainer     = "GammaCalo";
-        } else if (mode == 10 || mode == 11) {
-            nameOutputContainer     = "GammaCaloMerged";
-            nResolHist              = 4;
+        TFile* resolutionFile           = new TFile(fileName.Data());
+        TString autoDetectedMainDir     = AutoDetectMainTList(mode , resolutionFile);
+        if (autoDetectedMainDir.CompareTo("") == 0){
+            cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
+            return;
         }
-        TList *TopDir                   = (TList*)resolutionFile->Get(nameOutputContainer.Data());
+        
+        //************************** Container Loading ********************************************************************
+        TList* TopDir                   = (TList*)resolutionFile->Get(autoDetectedMainDir.Data());
         if(TopDir == NULL){
             cout<<"ERROR: TopDir not Found"<<endl;
             return;

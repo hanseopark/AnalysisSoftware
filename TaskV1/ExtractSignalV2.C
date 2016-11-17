@@ -249,17 +249,14 @@ void ExtractSignalV2(   TString meson                   = "",
     const char* fFileErrLogDatname = Form("%s/%s/%s_%s_FileErrLog%s_%s.dat",cutSelection.Data(),fEnergyFlag.Data(),fPrefix.Data(),fPrefix2.Data(),fPeriodFlag.Data(),fCutSelectionRead.Data());
     fFileErrLog.open(fFileErrLogDatname, ios::out);
 
-    TFile f(file.Data());
-    
-    TString nameMainDir     = "";
-    if (mode == 9 || mode == 0) 
-        nameMainDir         = "GammaConvV1";
-    else if (mode == 2 || mode == 3) 
-        nameMainDir         = "GammaConvCalo";
-    else if (mode == 4 || mode == 5) 
-        nameMainDir         = "GammaCalo";
-    
-    TList *TopDir =(TList*)f.Get(nameMainDir.Data());
+    TFile* f                        = new TFile(file.Data());
+    TString autoDetectedMainDir     = AutoDetectMainTList(mode , f);
+    if (autoDetectedMainDir.CompareTo("") == 0){
+        cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
+        return;
+    }
+
+    TList *TopDir                   = (TList*)f->Get(autoDetectedMainDir.Data());
     if(TopDir == NULL){
         cout<<"ERROR: TopDir not Found"<<endl;
         return;
@@ -2688,7 +2685,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         if (fMode == 4){
             fPeakRange[0]                   = 0.51;
             fPeakRange[1]                   = 0.59;
-            fFitRange[0]                    = 0.41;
+            fFitRange[0]                    = 0.38;
             if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fFitRange[0] = 0.38;}
             if( fEnergyFlag.CompareTo("7TeV") == 0 ){ fFitRange[0] = 0.37;}
             fFitRange[1]                    = 0.73;
@@ -2699,7 +2696,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             if( fEnergyFlag.CompareTo("8TeV") == 0 || fEnergyFlag.CompareTo("7TeV") == 0 ){ fBGFitRange[1] = 0.795;}
             fBGFitRangeLeft[0]              = 0.34;
             fBGFitRangeLeft[1]              = 0.44;
-            fMesonFitRange[0]               = 0.41;
+            fMesonFitRange[0]               = 0.38;
             if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonFitRange[0] = 0.38;}
             if( fEnergyFlag.CompareTo("7TeV") == 0 ){ fMesonFitRange[0] = 0.37;}
             fMesonFitRange[1]               = 0.73;

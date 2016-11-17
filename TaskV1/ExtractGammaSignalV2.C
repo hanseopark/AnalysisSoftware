@@ -97,12 +97,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
     fMeson                                                                      = meson;
     fMode                                                                       = mode;
     cout << "Pictures are saved as " << suffix.Data() << endl;
-
-    //************************ Detect correct folder name ****************************************
-    TString nameMainDir                                                         = "";
-    if (fMode == 0)                     nameMainDir                             = "GammaConvV1";
-    else if (fMode == 2 || fMode == 3)  nameMainDir                             = "GammaConvCalo";
-    else if (fMode == 4 || fMode == 5)  nameMainDir                             = "GammaCalo";
+    
     
     //************************************ Separate cutstrings ***********************************
     fCutSelection                                                               = cutSelection;
@@ -160,8 +155,14 @@ void ExtractGammaSignalV2(      TString meson               = "",
     }
     
     //************************************** Read file ***************************************************
-    TFile f(file.Data());
-    TList *TopDir =(TList*)f.Get(nameMainDir.Data());
+    TFile* f                                                                    = new TFile(file.Data());
+    TString autoDetectedMainDir                                                 = AutoDetectMainTList(mode , f);
+    if (autoDetectedMainDir.CompareTo("") == 0){
+        cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
+        return;
+    }
+
+    TList *TopDir =(TList*)f->Get(autoDetectedMainDir.Data());
     if(TopDir == NULL){
         cout<<"ERROR: TopDir not Found"<<endl;
         return;

@@ -393,7 +393,7 @@ if [ $HAVELHC12a == 1 ]; then
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12a/INT7/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12a-pass2-INT7Runlist_$number.root $number
 #         ChangeStructureIfNeeded $OUTPUTDIR_LHC12a/EMC7/GammaCaloMerged_$number.root $OUTPUTDIR/GammaCaloMerged_LHC12a-pass2-EMC7Runlist_$number.root $number
 #         ChangeStructureIfNeeded $OUTPUTDIR_LHC12a/EGA/GammaCaloMerged_$number.root $OUTPUTDIR/GammaCaloMerged_LHC12a-pass2-EGARunlist_$number.root $number
-        root -b -l -q -x ../TaskV1/MakeCutLogCaloMerged.C\(\"$OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12a-pass2-INT7Runlist_$number.root\"\,\"$OUTPUTDIR/data-SinglePeriods/CutSelection_LHC12a_$number.log\"\)
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12a-pass2-INT7Runlist_$number.root\"\,\"$OUTPUTDIR/data-SinglePeriods/CutSelection_LHC12a_$number.log\"\,10\)
     done;
 fi
 
@@ -407,7 +407,7 @@ if [ $HAVELHC12b == 1 ]; then
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12b/INT7/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12b-pass2-INT7Runlist_$number.root $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12b/EMC7/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12b-pass2-EMC7Runlist_$number.root $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12b/EGA/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12b-pass2-EGARunlist_$number.root $number
-        root -b -l -q -x ../TaskV1/MakeCutLogCaloMerged.C\(\"$OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12b-pass2-INT7Runlist_$number.root\"\,\"$OUTPUTDIR/data-SinglePeriods/CutSelection_LHC12b_$number.log\"\)
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12b-pass2-INT7Runlist_$number.root\"\,\"$OUTPUTDIR/data-SinglePeriods/CutSelection_LHC12b_$number.log\"\,10\)
     done;
 fi
 if [ $HAVELHC12c == 1 ]; then
@@ -420,7 +420,7 @@ if [ $HAVELHC12c == 1 ]; then
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12c/INT7/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12c-pass2-INT7Runlist_$number.root $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12c/EMC7/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12c-pass2-EMC7Runlist_$number.root $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12c/EGA/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12c-pass2-EGARunlist_$number.root $number
-        root -b -l -q -x ../TaskV1/MakeCutLogCaloMerged.C\(\"$OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12c-pass2-INT7Runlist_$number.root\"\,\"$OUTPUTDIR/data-SinglePeriods/CutSelection_LHC12c_$number.log\"\)
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12c-pass2-INT7Runlist_$number.root\"\,\"$OUTPUTDIR/data-SinglePeriods/CutSelection_LHC12c_$number.log\"\,10\)
     done;
 fi
 if [ $HAVELHC12d == 1 ]; then
@@ -433,7 +433,7 @@ if [ $HAVELHC12d == 1 ]; then
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12d/INT7/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12d-pass2-INT7Runlist_$number.root $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12d/EMC7/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12d-pass2-EMC7Runlist_$number.root $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12d/EGA/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12d-pass2-EGARunlist_$number.root $number
-        root -b -l -q -x ../TaskV1/MakeCutLogCaloMerged.C\(\"$OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12d-pass2-INT7Runlist_$number.root\"\,\"$OUTPUTDIR/data-SinglePeriods/CutSelection_LHC12d_$number.log\"\)
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12d-pass2-INT7Runlist_$number.root\"\,\"$OUTPUTDIR/data-SinglePeriods/CutSelection_LHC12d_$number.log\"\,10\)
     done;
 fi
 if [ $HAVELHC12f == 1 ]; then
@@ -446,7 +446,7 @@ if [ $HAVELHC12f == 1 ]; then
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12f/INT7/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12f-pass2-INT7Runlist_$number.root $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12f/EMC7/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12f-pass2-EMC7Runlist_$number.root $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12f/EGA/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12f-pass2-EGARunlist_$number.root $number
-        root -b -l -q -x ../TaskV1/MakeCutLogCaloMerged.C\(\"$OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12f-pass2-INT7Runlist_$number.root\"\,\"$OUTPUTDIR/data-SinglePeriods/CutSelection_LHC12f_$number.log\"\)
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12f-pass2-INT7Runlist_$number.root\"\,\"$OUTPUTDIR/data-SinglePeriods/CutSelection_LHC12f_$number.log\"\,10\)
     done;
 fi
 if [ $HAVELHC12h == 1 ]; then
@@ -459,7 +459,7 @@ if [ $HAVELHC12h == 1 ]; then
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12h/INT7/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12h-pass2-INT7Runlist_$number.root $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12h/EMC7/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12h-pass2-EMC7Runlist_$number.root $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12h/EGA/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12h-pass2-EGARunlist_$number.root $number
-        root -b -l -q -x ../TaskV1/MakeCutLogCaloMerged.C\(\"$OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12h-pass2-INT7Runlist_$number.root\"\,\"$OUTPUTDIR/data-SinglePeriods/CutSelection_LHC12h_$number.log\"\)
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12h-pass2-INT7Runlist_$number.root\"\,\"$OUTPUTDIR/data-SinglePeriods/CutSelection_LHC12h_$number.log\"\,10\)
     done;
 fi
 
@@ -473,7 +473,7 @@ if [ $HAVELHC12i == 1 ]; then
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12i/INT7/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12i-pass2-INT7Runlist_$number.root $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12i/EMC7/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12i-pass2-EMC7Runlist_$number.root $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC12i/EGA/GammaCaloMerged_$number.root $OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12i-pass2-EGARunlist_$number.root $number
-        root -b -l -q -x ../TaskV1/MakeCutLogCaloMerged.C\(\"$OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12i-pass2-INT7Runlist_$number.root\"\,\"$OUTPUTDIR/data-SinglePeriods/CutSelection_LHC12i_$number.log\"\)
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/data-SinglePeriods/GammaCaloMerged_LHC12i-pass2-INT7Runlist_$number.root\"\,\"$OUTPUTDIR/data-SinglePeriods/CutSelection_LHC12i_$number.log\"\,10\)
     done;
 fi
 
@@ -486,7 +486,7 @@ if [ $HAVELHC16c2 == 1 ]; then
         number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
         echo $number
         ChangeStructureIfNeeded $OUTPUTDIR_LHC16c2/GammaCaloMerged_$number.root $OUTPUTDIR/GammaCaloMerged_MC_LHC16c2_$number.root $number
-        root -b -l -q -x ../TaskV1/MakeCutLogCaloMerged.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC16c2_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC16c2_$number.log\"\)
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC16c2_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC16c2_$number.log\"\,10\)
     done;
     
     binNumbersJJ=`cat binsJetJetLHC16c2.txt`

@@ -348,7 +348,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC12a/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_LHC12a-pass1_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12a-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12a_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12a-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12a_$number.log\"\,2\)
 
 	done;
 
@@ -359,7 +359,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC12b/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_LHC12b-pass1_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12b-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12b_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12b-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12b_$number.log\"\,2\)
 	done;
 	
 	ls $OUTPUTDIR_LHC12c/GammaConvCalo_*.root > fileLHC12c.txt
@@ -369,7 +369,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC12c/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_LHC12c-pass1_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12c-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12c_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12c-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12c_$number.log\"\,2\)
 	done;
 	
 	ls $OUTPUTDIR_LHC12d/GammaConvCalo_*.root > fileLHC12d.txt
@@ -379,7 +379,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC12d/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_LHC12d-pass1_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12d-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12d_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12d-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12d_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC12e/GammaConvCalo_*.root > fileLHC12e.txt
@@ -389,7 +389,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC12e/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_LHC12e-pass1_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12e-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12e_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12e-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12e_$number.log\"\,2\)
 	done;
 	
 	ls $OUTPUTDIR_LHC12f/GammaConvCalo_*.root > fileLHC12f.txt
@@ -399,7 +399,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC12f/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_LHC12f-pass1_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12f-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12f_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12f-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12f_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC12g/GammaConvCalo_*.root > fileLHC12g.txt
@@ -409,7 +409,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC12g/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_LHC12g-pass1_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12g-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12g_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12g-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12g_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC12h/GammaConvCalo_*.root > fileLHC12h.txt
@@ -419,7 +419,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC12h/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_LHC12h-pass1_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12h-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12h_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12h-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12h_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC12i/GammaConvCalo_*.root > fileLHC12i.txt
@@ -429,7 +429,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC12i/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_LHC12i-pass1_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12i-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12i_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_LHC12i-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC12i_$number.log\"\,2\)
 	done;
 
 	# Change structure of MC files
@@ -440,7 +440,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2a/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2aa/GammaConvCalo_*.root > fileLHC14e2a.txt
@@ -450,7 +450,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2aa/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12a_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12a_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a-LHC12a_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12a_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a-LHC12a_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2ab/GammaConvCalo_*.root > fileLHC14e2a.txt
@@ -460,7 +460,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2ab/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12b_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12b_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a-LHC12b_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12b_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a-LHC12b_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2ac/GammaConvCalo_*.root > fileLHC14e2a.txt
@@ -470,7 +470,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2ac/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12c_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12c_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a-LHC12c_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12c_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a-LHC12c_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2ad/GammaConvCalo_*.root > fileLHC14e2a.txt
@@ -480,7 +480,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2ad/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12d_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12d_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a-LHC12d_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12d_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a-LHC12d_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2af/GammaConvCalo_*.root > fileLHC14e2a.txt
@@ -490,7 +490,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2af/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12f_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12f_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a-LHC12f_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12f_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a-LHC12f_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2ag/GammaConvCalo_*.root > fileLHC14e2a.txt
@@ -500,7 +500,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2ag/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12g_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12g_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a-LHC12g_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12g_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a-LHC12g_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2ah/GammaConvCalo_*.root > fileLHC14e2a.txt
@@ -510,7 +510,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2ah/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12h_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12h_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a-LHC12h_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12h_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a-LHC12h_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2ai/GammaConvCalo_*.root > fileLHC14e2a.txt
@@ -520,7 +520,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2ai/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12i_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12i_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a-LHC12i_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2a-LHC12i_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2a-LHC12i_$number.log\"\,2\)
 	done;
 	
 	ls $OUTPUTDIR_LHC14e2b/GammaConvCalo_*.root > fileLHC14e2b.txt
@@ -530,7 +530,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2b/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2ba/GammaConvCalo_*.root > fileLHC14e2b.txt
@@ -540,7 +540,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2ba/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12a_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12a_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b-LHC12a_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12a_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b-LHC12a_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2bb/GammaConvCalo_*.root > fileLHC14e2b.txt
@@ -550,7 +550,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2bb/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12b_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12b_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b-LHC12b_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12b_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b-LHC12b_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2bc/GammaConvCalo_*.root > fileLHC14e2b.txt
@@ -560,7 +560,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2bc/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12c_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12c_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b-LHC12c_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12c_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b-LHC12c_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2bd/GammaConvCalo_*.root > fileLHC14e2b.txt
@@ -570,7 +570,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2bd/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12d_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12d_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b-LHC12d_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12d_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b-LHC12d_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2bf/GammaConvCalo_*.root > fileLHC14e2b.txt
@@ -580,7 +580,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2bf/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12f_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12f_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b-LHC12f_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12f_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b-LHC12f_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2bg/GammaConvCalo_*.root > fileLHC14e2b.txt
@@ -590,7 +590,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2bg/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12g_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12g_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b-LHC12g_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12g_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b-LHC12g_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2bh/GammaConvCalo_*.root > fileLHC14e2b.txt
@@ -600,7 +600,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2bh/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12h_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12h_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b-LHC12h_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12h_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b-LHC12h_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2bi/GammaConvCalo_*.root > fileLHC14e2b.txt
@@ -610,7 +610,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2bi/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12i_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12i_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b-LHC12i_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2b-LHC12i_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2b-LHC12i_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2c/GammaConvCalo_*.root > fileLHC14e2c.txt
@@ -620,7 +620,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2c/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2ca/GammaConvCalo_*.root > fileLHC14e2c.txt
@@ -630,7 +630,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2ca/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12a_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12a_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c-LHC12a_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12a_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c-LHC12a_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2cb/GammaConvCalo_*.root > fileLHC14e2c.txt
@@ -640,7 +640,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2cb/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12b_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12b_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c-LHC12b_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12b_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c-LHC12b_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2cc/GammaConvCalo_*.root > fileLHC14e2c.txt
@@ -650,7 +650,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2cc/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12c_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12c_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c-LHC12c_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12c_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c-LHC12c_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2cd/GammaConvCalo_*.root > fileLHC14e2c.txt
@@ -660,7 +660,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2cd/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12d_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12d_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c-LHC12d_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12d_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c-LHC12d_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2cf/GammaConvCalo_*.root > fileLHC14e2c.txt
@@ -670,7 +670,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2cf/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12f_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12f_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c-LHC12f_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12f_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c-LHC12f_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2cg/GammaConvCalo_*.root > fileLHC14e2c.txt
@@ -680,7 +680,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2cg/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12g_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12g_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c-LHC12g_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12g_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c-LHC12g_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2ch/GammaConvCalo_*.root > fileLHC14e2c.txt
@@ -690,7 +690,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2ch/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12h_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12h_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c-LHC12h_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12h_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c-LHC12h_$number.log\"\,2\)
 	done;
 
 	ls $OUTPUTDIR_LHC14e2ci/GammaConvCalo_*.root > fileLHC14e2c.txt
@@ -700,7 +700,7 @@ alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC12iData/merge/Gamm
 		number=`echo $fileName  | cut -d "/" -f $((NSlashes+1)) | cut -d "_" -f 2 | cut -d "." -f1`
 		echo $number
 		root -l -b -q -x ChangeStructureToStandardConvCalo.C\(\"$OUTPUTDIR_LHC14e2ci/GammaConvCalo_$number.root\"\,\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12i_$number.root\"\,\"GammaConvCalo_$number\"\)
-		root -b -l -q -x ../TaskV1/MakeCutLogConvCalo.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12i_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c-LHC12i_$number.log\"\)
+		root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_MC_LHC14e2c-LHC12i_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14e2c-LHC12i_$number.log\"\,2\)
 	done;
 	
 	# Merge data files
