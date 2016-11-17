@@ -412,7 +412,7 @@ void CalculateSystematicsGraphsWOBound( TH1D** histoArray,
     SystErrGraphNegGamma->SetName(Form("%s_SystErrorRelNeg_%s", prefix.Data(), cutVariationName.Data()));
     TGraphAsymmErrors* SystErrGraphPosGamma = new TGraphAsymmErrors(NBinsPt+1, BinsXCenter, LargestDiffGammaRelPos, BinsXWidth, BinsXWidth, LargestDiffGammaRelErrorPos, LargestDiffGammaRelErrorPos);
     SystErrGraphPosGamma->SetName(Form("%s_SystErrorRelPos_%s", prefix.Data(), cutVariationName.Data()));
-    const char* Outputname = Form("%s/%s_SystematicErrorCuts.root", prefixCommonSysFile.Data(),outputFileDir.Data());
+    const char* Outputname = Form("%s/%s_SystematicErrorCuts.root",outputFileDir.Data(),prefixCommonSysFile.Data());
     TFile* SystematicErrorFile = new TFile(Outputname,"UPDATE");
     SystErrGraphPosGamma->Write(Form("%s_SystErrorRelPos_%s_%s",prefix.Data(), cutVariationName.Data(),(GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
     SystErrGraphNegGamma->Write(Form("%s_SystErrorRelNeg_%s_%s",prefix.Data(), cutVariationName.Data(),(GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
