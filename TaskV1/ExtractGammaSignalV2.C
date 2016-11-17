@@ -58,7 +58,8 @@ void ExtractGammaSignalV2(      TString meson               = "",
                                 TString period              = "",
                                 Int_t numberOfBins          = 30,
                                 Bool_t addSig               = 0,
-                                Int_t mode                  = 0
+                                Int_t mode                  = 0,
+                                Int_t nPileupMethod         = 0
                             ) {
 
     //********************************* Catch modes which are not supported ****************************
@@ -96,6 +97,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
     fSuffix                                                                     = suffix;
     fMeson                                                                      = meson;
     fMode                                                                       = mode;
+    nPileupMethodUsed                                                           = nPileupMethod;
     cout << "Pictures are saved as " << suffix.Data() << endl;
     
     
@@ -1319,7 +1321,7 @@ void CalculatePileUpBackground(Bool_t doMC){
 
         fESDGammaPtPileUp                                                   = (TH1D*)fHistoGammaConvPt->Clone("ESD_ConvGamma_Pt_PileUp");
         fESDGammaPtPileUp->Sumw2();
-        fESDGammaPtPileUp->Multiply(fESDGammaPileUpCorrFactor[0]);
+        fESDGammaPtPileUp->Multiply(fESDGammaPileUpCorrFactor[nPileupMethodUsed]);
         
         // plotting ratio + fit
         TCanvas *RatioWithWithoutPileUpCanvas                               = GetAndSetCanvas("canvasRatioWithWithoutPileUp");

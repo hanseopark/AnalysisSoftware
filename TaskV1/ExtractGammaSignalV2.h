@@ -28,6 +28,7 @@ TString     fMesonCutSelectionRead                                  = "";
 
 TString     fHistogramDimension                                     = "";
 Int_t       nHistogramDimension                                     = 1;
+Int_t       nPileupMethodUsed                                       = 0;
 
 Int_t       fNBinsPtDummy                                           = 0;
 Double_t*   fBinsPtDummy                                            = NULL;
