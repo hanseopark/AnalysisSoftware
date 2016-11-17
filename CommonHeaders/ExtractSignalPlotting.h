@@ -190,17 +190,21 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     
     TH1D* histoPi0InvMassSigPlusBG;
     TH1D* histoPi0InvMassSig;
+    TH1D* histoPi0InvMassSigRemBG;
     TH1D* histoPi0InvMassSigRemBGSub;
     TH1D* histoPi0InvMassBG;
     TH1D* histoPi0InvMassRemBG;
     TH1D* histoPi0InvMassBGTot;
     TF1* fitPi0InvMassSig;
+    TF1* fitPi0InvMassSigRemBG;
     TF1* fitPi0InvMassBG;
     histoPi0InvMassSig               = (TH1D*)histoInvMassSubtracted->Clone("InvMassSig_PtBin07");
+    histoPi0InvMassSigRemBG          = (TH1D*)histoInvMassSubtracted->Clone("InvMassSigPlRemBG_PtBin07");
     histoPi0InvMassSigPlusBG         = (TH1D*)histoInvMassSignalWithBG->Clone("InvMassSigPlusBG_PtBin07");
     histoPi0InvMassBG                = (TH1D*)histoInvMassBG->Clone("InvMassBG_PtBin07");
     fitPi0InvMassSig                 = (TF1*)fitSignal->Clone("FitInvMassSig_PtBin07");
-
+    fitPi0InvMassSigRemBG            = (TF1*)fitSignal->Clone("FitInvMassOrig_PtBin07");
+    
     histoPi0InvMassSig->Fit(fitPi0InvMassSig,"QRME0");
     for (Int_t l=0; l < 6; l++){
         cout << fitPi0InvMassSig->GetParameter(l) << "\t +- " << fitPi0InvMassSig->GetParError(l) << endl;
@@ -258,7 +262,8 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     fitPi0InvMassSig->SetParameter(4, 0);
     fitPi0InvMassSig->SetParameter(5, 0);
     histoPi0InvMassSigRemBGSub->Scale(scaleFacSignal);
-        
+    histoPi0InvMassSigRemBG->Scale(scaleFacSignal);
+    
     Double_t textSizeLabelsPixel                 = 100*3/5;
     TCanvas* canvasInvMassSamplePlot    = new TCanvas("canvasInvMassSamplePlotNew","",0,0,1500,1500);  // gives the page size
     DrawGammaCanvasSettings( canvasInvMassSamplePlot,  0.09, 0.012, 0.035, 0.08);
@@ -304,21 +309,31 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     }
 
 
+    // Set range for fits and labels
     TLatex *labelInvMassPtRange;
     if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
         labelInvMassPtRange = new TLatex(0.95,0.9, Form("#pi^{0}: %3.1f GeV/#it{c} < #it{p}_{T} < %3.1f GeV/#it{c}",startPt,endPt));
         fitPi0InvMassSig->SetRange(0,0.255);
+        fitPi0InvMassSigRemBG->SetRange(0,0.255);
     } else {
         labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < #it{p}_{T} < %3.1f GeV/#it{c}",startPt,endPt));
         fitPi0InvMassSig->SetRange(0.35,0.695);
+        fitPi0InvMassSigRemBG->SetRange(0.35,0.695);
     }
+    // Set fit colors
     fitPi0InvMassSig->SetNpx(10000);
     fitPi0InvMassSig->SetLineColor(fitColorInvMassSG);
     fitPi0InvMassSig->SetLineWidth(4);
+    fitPi0InvMassSigRemBG->SetNpx(10000);
+    fitPi0InvMassSigRemBG->SetLineColor(fitColorInvMassSG);
+    fitPi0InvMassSigRemBG->SetLineWidth(4);
         
     TH1D* histoFit  = (TH1D*)fitPi0InvMassSig->GetHistogram();
     histoFit->SetTitle("");
     histoFit->Scale(scaleFacSignal);
+    TH1D* histoFitWBG  = (TH1D*)fitPi0InvMassSigRemBG->GetHistogram();
+    histoFitWBG->SetTitle("");
+    histoFitWBG->Scale(scaleFacSignal);
 
     canvasInvMassSamplePlot->cd();
     histo1DInvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBGSub->GetMinimum(),1.15*histoPi0InvMassSigPlusBG->GetMaximum());
@@ -374,7 +389,7 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     legendInvMass->SetMargin(0.25);
     legendInvMass->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","l");
     legendInvMass->AddEntry(histoPi0InvMassBGTot,"Mixed event +","p");
-    legendInvMass->AddEntry((TObject*)0,"corr. BG","");
+    legendInvMass->AddEntry((TObject*)0,"rem. BG","");
     legendInvMass->AddEntry(histoPi0InvMassSigRemBGSub,"BG subtracted","p");
     if (scaleFacSignal != 1.0){
         legendInvMass->AddEntry((TObject*)0,Form("scaled by %2.1f",scaleFacSignal),"");
@@ -416,7 +431,7 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     legendInvMass2->SetMargin(0.25);
     legendInvMass2->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","l");
     legendInvMass2->AddEntry(histoPi0InvMassBG,"Mixed event BG","p");
-    legendInvMass2->AddEntry(histoPi0InvMassRemBG,"Corr. BG","p");
+    legendInvMass2->AddEntry(histoPi0InvMassRemBG,"Rem. BG","p");
     legendInvMass2->AddEntry(histoPi0InvMassSigRemBGSub,"BG subtracted","p");
     if (scaleFacSignal != 1.0){
         legendInvMass2->AddEntry((TObject*)0,Form("scaled by %2.1f",scaleFacSignal),"");
@@ -425,6 +440,51 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     legendInvMass2->Draw();
 
     canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGFurtherSplit.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), suffix.Data()));
+
+    // Plot Invariant mass sample bin with linear BG in Signal
+    canvasInvMassSamplePlot->cd();
+    histo1DInvMassDummy->Draw();
+    histo1DInvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBG->GetMinimum(),1.15*histoPi0InvMassSigPlusBG->GetMaximum());
+    histo1DInvMassDummy->Draw("AXIS");
+    
+    DrawGammaSetMarker(histoPi0InvMassSigPlusBG, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
+    histoPi0InvMassSigPlusBG->SetLineWidth(1);
+    histoPi0InvMassSigPlusBG->Draw("hist,e,same");
+    DrawGammaSetMarker(histoPi0InvMassBG, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
+    histoPi0InvMassBG->Draw("same");
+    
+    if (scaleFacSignal == 1.0){
+        DrawGammaSetMarker(histoPi0InvMassSigRemBG, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
+        histoPi0InvMassSigRemBG->Draw("same");    
+        fitPi0InvMassSigRemBG->Draw("same");
+    } else {
+        DrawGammaSetMarker(histoPi0InvMassSigRemBG, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
+        histoPi0InvMassSigRemBG->Draw("same");
+        
+        histoFitWBG->SetLineColor(fitColorInvMassSG);
+        histoFitWBG->SetLineWidth(4);
+        histoFitWBG->Draw("c,same");
+    }
+
+    labelALICE->Draw();
+    labelInvMassEnergy->Draw();
+    labelTrigger->Draw();
+    labelInvMassReco->Draw();
+    labelInvMassPtRange->Draw();
+
+    TLegend* legendInvMass3  = GetAndSetLegend2(0.62, 0.87-nLegendLines*0.75*textsizeLabelsPP, 0.9, 0.87, 0.85*textSizeLabelsPixel);
+    legendInvMass3->SetMargin(0.22);
+    legendInvMass3->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","l");
+    legendInvMass3->AddEntry(histoPi0InvMassBG,"Mixed event BG","p");
+    legendInvMass3->AddEntry(histoPi0InvMassSigRemBG,"Mixed evt. BG sub.","p");
+    if (scaleFacSignal != 1.0){
+        legendInvMass3->AddEntry((TObject*)0,Form("scaled by %2.1f",scaleFacSignal),"");
+    }    
+    legendInvMass3->AddEntry(fitPi0InvMassSigRemBG, "Signal fit +","l");
+    legendInvMass3->AddEntry((TObject*)0,"linear BG fit","");
+    legendInvMass3->Draw();
+
+    canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGInFit.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), suffix.Data()));
     
 }
 
