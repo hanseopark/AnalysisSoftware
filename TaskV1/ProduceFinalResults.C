@@ -168,7 +168,7 @@ void  ProduceFinalResults( const char *fileNamePi0 = "myOutput",
         if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("8TeV") == 0) {
         fExampleBinPi0     = 7;
-        fExampleBinEta     = 6;
+        fExampleBinEta     = 3;
         if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("2.76TeV") == 0) {
         fExampleBinPi0     = 7;
