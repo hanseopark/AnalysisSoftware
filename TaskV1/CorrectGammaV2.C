@@ -228,7 +228,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     
     gROOT->Reset();
     
-    Int_t   nIterationsUnfolding                = 5;
+    Int_t   nIterationsUnfolding                = 4;
     Bool_t  useUnfoldingForCocktailSecondaries  = kFALSE;
     
     //****************************************************************************************
