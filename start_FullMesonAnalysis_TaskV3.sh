@@ -2617,11 +2617,11 @@ if [ $mode -lt 10 ]; then
                     else 
                         PARTLY=1
                     fi
-                    if [ $useCocktail -eq 1 ] && [ -f $Pi0dataRAWFILE ]; then
-                        root -b -x -l -q TaskV1/PrepareCocktail.C\+\(\"$CocktailRootFile\"\,\"$Pi0dataRAWFILE\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,$cocktailRapidity\,\"\"\,$BinsPtPi0\,$mode\)
-                    fi
                     Pi0dataCorr=`ls $cutSelection/$energy/Pi0_data_GammaConvV1Correction_*.root`
                     GammaPi0dataCorr=`ls $cutSelection/$energy/Gamma_Pi0_data_GammaConvV1Correction_*.root`
+                    if [ $useCocktail -eq 1 ] && [ -f $Pi0dataCorr ]; then
+                        root -b -x -l -q TaskV1/PrepareCocktail.C\+\(\"$CocktailRootFile\"\,\"$Pi0dataCorr\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,$cocktailRapidity\,\"\"\,$BinsPtPi0\,$mode\)
+                    fi
                     GammaCocktailFile=`ls $cutSelection/$energy/GammaCocktail_$cocktailRapidity*.root`
                     if [ $useCocktail  ]; then
                         CreateGammaFinalResultsV3 $GammaPi0dataCorr $Pi0dataCorr $GammaCocktailFile $cutSelection $Suffix Pi0 kFALSE;
