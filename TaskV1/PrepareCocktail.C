@@ -267,6 +267,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
         cout << "WARNING: No pi0 file specified!" << endl;
         histoPi0YieldData                                       = NULL;
     }
+    if (histoPi0YieldData) cout << "Found the corrected pi0 yield in " << nameFilePi0.Data() << ", will produce cocktail and data pi0 plot." << endl;
 
     //***************************** Get number of events (cocktail) *************************************************
     histoNEvents                                                = (TH1F*)histoListCocktail->FindObject("NEvents");
@@ -316,7 +317,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
             histoGammaMotherPtPhi[i]                            = NULL;
         }
     }
-
+  
     //***************************** Get decay channels  *************************************************************
     for (Int_t i=0; i<nMotherParticles; i++) {
         for (Int_t j=0; j<18; j++) {
@@ -337,7 +338,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
             }
         }
     }
-    
+
     //***************************** Project from 2D histograms ******************************************************
     histoGammaSumPtOrBin                                        = (TH1F*)histoGammaSumPtY->ProjectionX("Gamma_Pt_OrBin", 1, histoGammaSumPtY->GetNbinsY(), "e");
     SetHistogramTitles(histoGammaSumPtOrBin,"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
@@ -492,8 +493,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     }
     if (ptPlotMin == 0 || ptPlotMin < 3e-1)
         ptPlotMin = 3e-1;
-    
-    
+
     TH1D* dummyHist                                             = NULL;
     //***************************** Plot cocktail mothers (pt) ******************************************************
     TCanvas *canvasMothers                                      = new TCanvas("canvasMothers","",1100,1200);
@@ -562,7 +562,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     canvasMothersParam->SaveAs(Form("%s/CocktailMothersInclParam_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete legendMothersParam;
     delete canvasMothersParam;
-    
+  
     //***************************** Plot ratio cocktail mothers to pi0 (pt) *****************************************
     TCanvas *canvasMothersRatio                                 = new TCanvas("canvasMothersRatio","",1100,1200);
     DrawGammaCanvasSettings(canvasMothersRatio, 0.08, 0.01, 0.01, 0.075);
@@ -580,34 +580,33 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     TH1F* tempRatio                                             = NULL;
     Bool_t isMtScaled                                           = kFALSE;
     for (Int_t i=1; i<nMotherParticles; i++) {
-        
         //if (!cocktailInputParametrizations[i]) isMtScaled       = kTRUE;
         
         // baryons
-        if (cocktailInputParametrizationProton && ((i>= 9 && i<=13) || i==16) ) {
+        if (cocktailInputParametrizationProton && ((i>= 9 && i<=13) || i==16) && histoGammaMotherPtOrBin[i]) {
             tempRatio                                           = (TH1F*)histoGammaMotherPtOrBin[i]->Clone("tempRatio");
             tempRatio->Sumw2();
             tempRatio->Divide(cocktailInputParametrizationProton);
-            DrawGammaSetMarker(                             tempRatio, cocktailMarker[i], 1, cocktailColor[i],  cocktailColor[i]);
-            if(isMtScaled)  legendMothersRatio->AddEntry(   tempRatio, Form("%s / p *",   motherParticlesLatex[i].Data()), "l"); //from m_{T} scaling
-            else            legendMothersRatio->AddEntry(   tempRatio, Form("%s / p",       motherParticlesLatex[i].Data()), "l");
+            DrawGammaSetMarker(                             tempRatio, cocktailMarker[i], 1,  cocktailColor[i],  cocktailColor[i]);
+            if(isMtScaled)  legendMothersRatio->AddEntry(   tempRatio, Form("%s / p *",       motherParticlesLatex[i].Data()), "l"); //from m_{T} scaling
+            else            legendMothersRatio->AddEntry(   tempRatio, Form("%s / p",         motherParticlesLatex[i].Data()), "l");
             tempRatio->SetLineWidth(2);
             tempRatio->Draw("csamehist");
         }
-        
+      
         // mesons
-        if (histoGammaMotherPtOrBin[0] && histoGammaMotherPtOrBin[i]) {
+        else if (histoGammaMotherPtOrBin[0] && histoGammaMotherPtOrBin[i]) {
             tempRatio                                           = (TH1F*)histoGammaMotherPtOrBin[i]->Clone("tempRatio");
             tempRatio->Sumw2();
             tempRatio->Divide(histoGammaMotherPtOrBin[0]);
-            DrawGammaSetMarker(                             tempRatio, cocktailMarker[i], 1, cocktailColor[i],  cocktailColor[i]);
-            if(isMtScaled)  legendMothersRatio->AddEntry(   tempRatio, Form("%s / #pi^{0} *",     motherParticlesLatex[i].Data()), "l");
-            else            legendMothersRatio->AddEntry(   tempRatio, Form("%s / #pi^{0}",         motherParticlesLatex[i].Data()), "l");
+            DrawGammaSetMarker(                             tempRatio, cocktailMarker[i], 1,  cocktailColor[i],  cocktailColor[i]);
+            if(isMtScaled)  legendMothersRatio->AddEntry(   tempRatio, Form("%s / #pi^{0} *", motherParticlesLatex[i].Data()), "l");
+            else            legendMothersRatio->AddEntry(   tempRatio, Form("%s / #pi^{0}",   motherParticlesLatex[i].Data()), "l");
             tempRatio->SetLineWidth(2);
             if(i!=0 && i%2==0) tempRatio->SetLineStyle(9);
             tempRatio->Draw("csamehist");
         }
-        
+      
         //isMtScaled                                              = kFALSE;
     }
     legendMothersRatio->Draw("same");
@@ -615,7 +614,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     PutProcessLabelAndEnergyOnPlot(                 0.7, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
     if (producePlotsForThesis) PutThisThesisLabel(  0.7, 0.17, 0.032, 0.03, 1.25, 42);
     else PutALICESimulationLabel(                   0.7, 0.17, 0.032, 0.03, 1.25, 42);
-    
+
     canvasMothersRatio->SaveAs(Form("%s/CocktailMothersRatio_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete tempRatio;
     delete legendMothersRatio;
@@ -676,7 +675,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     canvasMothersPhi->SaveAs(Form("%s/CocktailMothersPhi_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete legendMothersPhi;
     delete canvasMothersPhi;
-    
+
     //***************************** Plot cocktail gammas (pt) *******************************************************
     TCanvas *canvasGammas                                       = new TCanvas("canvasGammas","",1100,1200);
     DrawGammaCanvasSettings(canvasGammas, 0.15, 0.01, 0.01, 0.075);
@@ -826,7 +825,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     canvasGammasY->SaveAs(Form("%s/CocktailGammasY_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete legendGammasY;
     delete canvasGammasY;
-    
+
     //***************************** Plot cocktail mothers (phi) *****************************************************
     TCanvas *canvasGammasPhi                                    = new TCanvas("canvasGammasPhi","",1100,1200);
     DrawGammaCanvasSettings(canvasGammasPhi, 0.12, 0.025, 0.01, 0.075);
@@ -855,7 +854,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     canvasGammasPhi->SaveAs(Form("%s/CocktailGammasPhi_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete legendGammasPhi;
     delete canvasGammasPhi;
-    
+
     //***************************** Plot mT scaling cross check *****************************************************
     TCanvas* canvasMtCrossCheck                                 = NULL;
     TLegend* legendMtCrossCheck                                 = NULL;
@@ -930,7 +929,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
             canvasMtCrossCheck->SaveAs(Form("%s/MtScaling%s_%.2f_%s.%s",outputDir.Data(), motherParticles[particle].Data(),fRapidity,cutSelection.Data(),suffix.Data()));
         }
     }
-  
+
     //***************************** Plot pi0 from data vs. cocktail *************************************************
     if (histoPi0YieldData) {
         // get proper pt range for plotting
@@ -977,14 +976,13 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
         delete canvasPi0;
     }
     delete dummyHist;
-    
+  
     //***************************** Save histograms *****************************************************************
     SaveHistos();
     CreateBRTableLatex();
-    
+
     //***************************** Delete objects ******************************************************************
     DeleteObjects();
-
 }
 
 //************************** Initialize binning *********************************************************************
