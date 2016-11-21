@@ -340,10 +340,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         Bool_t haveAllEtaInvMassPCM[3]                 = {kFALSE, kFALSE, kFALSE};
         if (plotInvMassBins){
             for (Int_t i = 0; i < 1; i++){
-                histoEtaInvMassSigPCM[i]               = (TH1D*)directoryPCMEta->Get("InvMassSig_PtBin06");
-                histoEtaInvMassSigPlusBGPCM[i]         = (TH1D*)directoryPCMEta->Get("InvMassSigPlusBG_PtBin06");
-                histoEtaInvMassBGPCM[i]                = (TH1D*)directoryPCMEta->Get("InvMassBG_PtBin06");
-                fitEtaInvMassSigPCM[i]                 = (TF1*)directoryPCMEta->Get("FitInvMassSig_PtBin06");
+                histoEtaInvMassSigPCM[i]               = (TH1D*)directoryPCMEta->Get("InvMassSig_PtBin03");
+                histoEtaInvMassSigPlusBGPCM[i]         = (TH1D*)directoryPCMEta->Get("InvMassSigPlusBG_PtBin03");
+                histoEtaInvMassBGPCM[i]                = (TH1D*)directoryPCMEta->Get("InvMassBG_PtBin03");
+                fitEtaInvMassSigPCM[i]                 = (TF1*)directoryPCMEta->Get("FitInvMassSig_PtBin03");
                 if (histoEtaInvMassSigPCM[i] && histoEtaInvMassSigPlusBGPCM[i] && histoEtaInvMassBGPCM[i] && fitEtaInvMassSigPCM[i]){
                     haveAllEtaInvMassPCM[i]            = kTRUE;
                 }
@@ -394,10 +394,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     cout << "here" << endl;
     Int_t nEvtPCM                                           = histoPCMNumberOfEvents->GetBinContent(1);
     cout << "here" << endl;
-    //histoPCMPi0Mass->Scale(1000.);
-    //histoPCMPi0TrueMass->Scale(1000.);
-    //histoPCMEtaMass->Scale(1000.);
-    //histoPCMEtaTrueMass->Scale(1000.);
+    histoPCMPi0Mass->Scale(1000.);
+    histoPCMPi0TrueMass->Scale(1000.);
+    histoPCMEtaMass->Scale(1000.);
+    histoPCMEtaTrueMass->Scale(1000.);
     cout << "here" << endl;
     //************************** Read data for PCMEMCAL **************************************************
     TFile* filePCMEMCAL                                     = new TFile(fileNamePCMEMCAL.Data());
@@ -5447,7 +5447,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 histo2DEtaInvMassDummy->GetYaxis()->SetRangeUser(histoEtaInvMassSigRemBGSubPCM[i]->GetMinimum(),1.1*histoEtaInvMassSigPlusBGPCM[i]->GetMaximum());
                 histo2DEtaInvMassDummy->DrawCopy();
 
-                TLatex *labelInvMassPtRangePCM = new TLatex(0.945,0.9,"#eta: 2.4 GeV/#it{c} < #it{p}_{T} < 2.8 GeV/#it{c}");
+                TLatex *labelInvMassPtRangePCM = new TLatex(0.945,0.9,"#eta: 1.0 GeV/#it{c} < #it{p}_{T} < 1.4 GeV/#it{c}");
 
                 DrawGammaSetMarker(histoEtaInvMassSigPlusBGPCM[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
                 histoEtaInvMassSigPlusBGPCM[i]->SetLineWidth(1);
