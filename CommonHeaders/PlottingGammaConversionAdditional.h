@@ -3614,7 +3614,7 @@ Color_t GetColorDefaultColor( TString energy,
 	  return kGreen+2;
 	} else return kBlack;
       }
-      else if (!generator.CompareTo("LHC15k1a1") || !generator.CompareTo("LHC15k1a2") || !generator.CompareTo("LHC15k1a3")){
+      else if (!generator.CompareTo("LHC15k1a1") || !generator.CompareTo("LHC15k1a2") || !generator.CompareTo("LHC15k1a3") || !generator.CompareTo("LHC16h4")){
 	if (!centrality.CompareTo("0-10%")){
 	  return kRed-7;
 	} else if (!centrality.CompareTo("10-20%")){
@@ -3623,7 +3623,7 @@ Color_t GetColorDefaultColor( TString energy,
 	  return kOrange+1;
 	} else if (!centrality.CompareTo("50-90%")){
 	  return kGreen+1;
-	} else return kGray+2;
+	} else return kBlue+1;
       }
     }
     cout << "GetColorDefaultColor(): no valid input parameters given..." << endl;
@@ -3784,24 +3784,24 @@ Style_t GetDefaultMarkerStyle( TString energy,
     if (!energy.CompareTo("PbPb_5.02TeV")){
         if (!generator.CompareTo("LHC15o")){
 	  if (!centrality.CompareTo("0-10%")){
-	    return 20;
+	    return 24;
 	  } else if (!centrality.CompareTo("10-20%")){
-	    return 20;
+	    return 30;
 	  } else if (!centrality.CompareTo("20-50%")){
-	    return 20;
+	    return 27;
 	  } else if (!centrality.CompareTo("50-90%")){
-	    return 20;
-	  } else return 20;
-        } else if (!generator.CompareTo("LHC15k1a1") || !generator.CompareTo("LHC15k1a2") || !generator.CompareTo("LHC15k1a3")){
+	    return 28;
+	  } else return 25;
+        } else if (!generator.CompareTo("LHC15k1a1") || !generator.CompareTo("LHC15k1a2") || !generator.CompareTo("LHC15k1a3") || !generator.CompareTo("LHC16h4")){
 	  if (!centrality.CompareTo("0-10%")){
 	    return 24;
 	  } else if (!centrality.CompareTo("10-20%")){
-	    return 24;
+	    return 30;
 	  } else if (!centrality.CompareTo("20-50%")){
-	    return 24;
+	    return 27;
 	  } else if (!centrality.CompareTo("50-90%")){
-	    return 24;
-	  } else return 20;
+	    return 28;
+	  } else return 25;
 	}
     }
 	cout << "GetDefaultMarkerStyle(): no valid input parameters given..." << endl;
