@@ -88,7 +88,9 @@ void EventQA_Runwise(
     for(Int_t i=0; i<nSets; i++) {
       if(fEnergyFlag.Contains("PbPb")){
         if(plotDataSets[i].Contains("0-10%")) fCentrality[i] = "0-10%";
+        else if(plotDataSets[i].Contains("10-20%")) fCentrality[i] = "10-20%";
         else if(plotDataSets[i].Contains("20-50%")) fCentrality[i] = "20-50%";
+        else if(plotDataSets[i].Contains("50-90%")) fCentrality[i] = "50-90%";
         else fCentrality[i] = "";
       } else {
         fCentrality[i] = "";
@@ -123,7 +125,8 @@ void EventQA_Runwise(
     Float_t xPosLabel = 0.8;
     if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0)
         xPosLabel = 0.75;
-    
+    if(fEnergyFlag.Contains("PbPb"))
+        xPosLabel = 0.75;
 
     //*************************************************************************************************************
     // runNumbers
