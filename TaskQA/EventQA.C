@@ -87,7 +87,8 @@ void EventQA(
 
     Color_t colorCompare[maxSets]       = {kBlack, kRed+1, kMagenta+2, 807, 800, kGreen+2, kCyan+2, kBlue+1, kOrange+2, kAzure, kViolet, kGray+1};
     TString nameMainDir[maxSets];
-
+    Double_t processLabelOffsetX1       = 0.82;
+    Double_t processLabelOffsetX2       = 0.65;
 
     TString* fCutSelection              = new TString[nSets];
     TString* fEventCutSelection         = new TString[nSets];
@@ -174,6 +175,21 @@ void EventQA(
             ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fClusterCutSelection[i], fMClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
         }    
     }
+
+    Int_t fIsHeavyIonInt = -1;
+    Bool_t fIsPbPb = kFALSE;
+    TString fIsHeavyIon = fEventCutSelection[0](0,1);
+    fIsHeavyIonInt = fIsHeavyIon.Atoi();
+    if(fIsHeavyIonInt > 0 & fIsHeavyIonInt < 8){
+      cout << "Detected from event cuts that dataset is PbPb" << endl;
+      cout << "Will produce centrality and event plane angle histograms" << endl;
+      fIsPbPb = kTRUE;
+      processLabelOffsetX1 = 0.76;
+      processLabelOffsetX2 = 0.58;
+    }else if (fIsHeavyIonInt == -1){
+      cout << "ERROR detecting collision system" << endl;
+    }
+
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "Obtaining trigger - ";
     TString* fTrigger       = new TString[nSets];
@@ -243,6 +259,8 @@ void EventQA(
     std::vector<TH1D*> vecGammaCandidates;
     std::vector<TH1D*> vecMergedCandidates;
     std::vector<TH1D*> vecV0Mult;
+    std::vector<TH1D*> vecCentrality;
+    std::vector<TH1D*> vecEventPlaneAngle;
 
     std::vector<TH1D*> vecInvMassBeforeAfter[2];
 
@@ -401,7 +419,7 @@ void EventQA(
             AdjustHistRange(fHistNEvents,1,10,kTRUE,1,0.1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistNEvents,"","","# of Entries",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(canvas, fHistNEvents, Form("%s/NEvents_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             vecNEvents.push_back(new TH1D(*fHistNEvents));
         }
@@ -413,7 +431,7 @@ void EventQA(
             SetXRange(fHistVertexZ,minB,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                 fHistVertexZ,"","z-Vertex (cm)","#frac{dN}{dz}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             WriteHistogram(fHistVertexZ);
             vecVertexZ.push_back(new TH1D(*fHistVertexZ));
         } else cout << "INFO: Object |fHistVertexZ| could not be found! Skipping Draw..." << endl;
@@ -425,7 +443,7 @@ void EventQA(
             SetXRange(fHistVertexX,minB,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                 fHistVertexX,"","x-Vertex (cm)","#frac{dN}{dx}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             WriteHistogram(fHistVertexX);
             vecVertexX.push_back(new TH1D(*fHistVertexX));
         }
@@ -437,7 +455,7 @@ void EventQA(
             SetXRange(fHistVertexY,minB,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                 fHistVertexY,"","y-Vertex (cm)","#frac{dN}{dy}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             WriteHistogram(fHistVertexY);
             vecVertexY.push_back(new TH1D(*fHistVertexY));
         }
@@ -449,7 +467,7 @@ void EventQA(
             SetXRange(fHistNGoodTracks,minB,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistNGoodTracks,"","N_{Good Tracks}","#frac{dN}{dN_{Good Tracks}}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             WriteHistogram(fHistNGoodTracks);
             vecNGoodTracks.push_back(new TH1D(*fHistNGoodTracks));
         } else cout << "INFO: Object |fHistNGoodTracks| could not be found! Skipping Draw..." << endl;
@@ -462,7 +480,7 @@ void EventQA(
             SetXRange(fHistV0Mult,minB,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistV0Mult,"","V0 Multiplicity","#frac{dN}{dV0Mult}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             WriteHistogram(fHistV0Mult);
             vecV0Mult.push_back(new TH1D(*fHistV0Mult));
         } else cout << "INFO: Object |V0 Multiplicity| could not be found! Skipping Draw..." << endl;
@@ -475,7 +493,7 @@ void EventQA(
             SetXRange(fHistGammaCandidates,1,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistGammaCandidates,"","N_{#gamma candidates}","#frac{dN}{dN_{Cand}}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             WriteHistogram(fHistGammaCandidates);
             vecGammaCandidates.push_back(new TH1D(*fHistGammaCandidates));
         } else cout << "INFO: Object |GammaCandidates| could not be found! Skipping Draw..." << endl;
@@ -489,7 +507,7 @@ void EventQA(
                 SetXRange(fHistMergedCandidates,1,maxB);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                     fHistMergedCandidates,"","N_{meson candidates}","#frac{dN}{dN_{Cand}}",1,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 WriteHistogram(fHistMergedCandidates);
                 vecMergedCandidates.push_back(new TH1D(*fHistMergedCandidates));
             } else cout << "INFO: Object |MergedCandidates| could not be found! Skipping Draw..." << endl;
@@ -510,7 +528,7 @@ void EventQA(
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                 fHistSPDtracklets_clusters_before,"",
                                 "N_{SPD tracklets}","N_{SPD clusters}",1,1.4,
-                                0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             TF1 *cut = new TF1("cut","65. + 4 * x",fHistSPDtracklets_clusters_before->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_before->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
             cut->SetLineColor(kRed);
             cut->SetLineStyle(2);
@@ -529,7 +547,7 @@ void EventQA(
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                 fHistSPDtracklets_clusters_beforePileUp,"",
                                 "N_{SPD tracklets}","N_{SPD clusters}",1,1.4,
-                                0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             TF1 *cut = new TF1("cut","65. + 4 * x",fHistSPDtracklets_clusters_beforePileUp->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_beforePileUp->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
             cut->SetLineColor(kRed);
             cut->SetLineStyle(2);
@@ -548,7 +566,7 @@ void EventQA(
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                 fHistSPDtracklets_clusters,"",
                                 "N_{SPD tracklets}","N_{SPD clusters}",1,1.4,
-                                0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             TF1 *cut = new TF1("cut","65. + 4 * x",fHistSPDtracklets_clusters->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
             cut->SetLineColor(kRed);
             cut->SetLineStyle(2);
@@ -569,10 +587,36 @@ void EventQA(
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                 fHistTracksVsCandidates,"",
                                 "N_{Good Tracks}","N_{GammaCandidates}",1,1.4,
-                                0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTracksVsCandidates, Form("%s/GoodESDTracksVsGammaCandidates_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |GoodESDTracksVsGammaCandidates| could not be found! Skipping Draw..." << endl;
         
+        //-------------------------------------------------------------------------------------------------------------------------------
+	// centrality
+	if(fIsPbPb){
+	  TH1D* fHistCentrality = (TH1D*)ESDContainer->FindObject("Centrality");
+	  if(fHistCentrality){
+	    fHistCentrality->Rebin(4);
+            GetMinMaxBin(fHistCentrality,minB,maxB);
+            SetXRange(fHistCentrality,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
+				 fHistCentrality,"","centrality (%)","",1,1,
+				 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            WriteHistogram(fHistCentrality);
+            vecCentrality.push_back(new TH1D(*fHistCentrality));
+	  } else cout << "INFO: Object |fHistCentrality| could not be found! Skipping Draw..." << endl;
+	  // event plane angle
+	  TH1D* fHistEventPlaneAngle = (TH1D*)ConvEventCutsContainer->FindObject(Form("EventPlaneAngle %s",fEventCutSelection[i].Data()));
+	  if(fHistEventPlaneAngle){
+	    GetMinMaxBin(fHistEventPlaneAngle,minB,maxB);
+            SetXRange(fHistEventPlaneAngle,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
+				 fHistEventPlaneAngle,"","event plane angle (rad)","",1,1,
+				 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            WriteHistogram(fHistEventPlaneAngle);
+            vecEventPlaneAngle.push_back(new TH1D(*fHistEventPlaneAngle));
+	  } else cout << "INFO: Object |fHistEventPlaneAngle| could not be found! Skipping Draw..." << endl;
+	}
         //-------------------------------------------------------------------------------------------------------------------------------
 
         Float_t nEventsBin1 = fHistNEvents->GetBinContent(1);
@@ -650,7 +694,7 @@ void EventQA(
             if(fHistAcceptance){
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                     fHistAcceptance,"","","# of Entries",1,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 SaveCanvasAndWriteHistogram(canvas, fHistAcceptance, Form("%s/AcceptanceCuts_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             } else cout << "INFO: Object |AcceptanceCuts| could not be found! Skipping Draw..." << endl;
             //-------------------------------------------------------------------------------------------------------------------------------
@@ -658,7 +702,7 @@ void EventQA(
             if(fHistCutIndex){
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                     fHistCutIndex,"","","# of Entries",1,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 SaveCanvasAndWriteHistogram(canvas, fHistCutIndex, Form("%s/IsPhotonSelected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             } else cout << "INFO: Object |fHistCutIndex| could not be found! Skipping Draw..." << endl;
             //-------------------------------------------------------------------------------------------------------------------------------
@@ -667,7 +711,7 @@ void EventQA(
             if(fHistClusterIdentificationCuts){
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                     fHistClusterIdentificationCuts,"","","# of Entries",1,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 SaveCanvasAndWriteHistogram(canvas, fHistClusterIdentificationCuts, Form("%s/ClusterQualityCuts_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             } else if(fHistClusterIdentificationCuts2D && fHistClusterIdentificationCuts2D->IsA()==TH2F::Class()){
                 GetMinMaxBinY(fHistClusterIdentificationCuts2D,minB,maxB);
@@ -782,7 +826,7 @@ void EventQA(
                 DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistGammaAlphaQt,"",
                                     "#alpha = (#it{p}^{+}_{L}-#it{p}^{-}_{L})/(#it{p}^{+}_{L}+#it{p}^{-}_{L})","#it{q}_{T} (GeV/#it{c})",1,1.4,
-                                    0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 DrawArmenterosLines(kFALSE);
                 SaveCanvasAndWriteHistogram(cvsQuadratic, fHistGammaAlphaQt, Form("%s/Armenteros_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             } else cout << Form("INFO: Object |Armenteros_before %s| could not be found! Skipping Draw...",ContainerGammaCut.Data()) << endl;
@@ -808,7 +852,7 @@ void EventQA(
                     DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                         histodEdx,"",
                                         "#it{p} (GeV/#it{c})","d#it{E}/d#it{x}",1,1.4,
-                                        0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                        processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                     SaveCanvasAndWriteHistogram(cvsQuadratic, histodEdx, Form("%s/dEdx_Candidates_%s_%s.%s", outputDir.Data(), str[iBefore].Data(),DataSets[i].Data(), suffix.Data()));
                 } else cout << Form("INFO: Object |Gamma_dEdx_%s %s| could not be found! Skipping Draw...",str[iBefore].Data(),iCutNumber.Data()) << endl;
                 //-------------------------------------------------------------------------------------------------------------------------------
@@ -824,7 +868,7 @@ void EventQA(
                     DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                         histonSigmadEdx,"",
                                         "#it{p} (GeV/#it{c})","#it{n} #sigma_{e^{#pm}} d#it{E}/d#it{x}",1,1.4,
-                                        0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                        processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                         SaveCanvasAndWriteHistogram(cvsQuadratic, histonSigmadEdx, Form("%s/nSigma_dEdx_Candidates_%s_%s.%s", outputDir.Data(), str[iBefore].Data(),DataSets[i].Data(), suffix.Data()));
                 } else cout << Form("INFO: Object |Gamma_dEdxSig_%s %s| could not be found! Skipping Draw...",str[iBefore].Data(),iCutNumber.Data()) << endl;
                 //-------------------------------------------------------------------------------------------------------------------------------
@@ -839,7 +883,7 @@ void EventQA(
                     DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                         histoTOF,"",
                                         "#it{p} (GeV/#it{c})","#it{t}_{measured}-#it{t}_{expected}",1,1.4,
-                                        0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                        processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                     SaveCanvasAndWriteHistogram(cvsQuadratic, histoTOF, Form("%s/TOF_Candidates_%s_%s.%s", outputDir.Data(),str[iBefore].Data(), DataSets[i].Data(), suffix.Data()));
                     } else cout << Form("INFO: Object |Gamma_TOF_%s %s| could not be found! Skipping Draw...",str[iBefore].Data(),iCutNumber.Data()) << endl;
                 }
@@ -856,7 +900,7 @@ void EventQA(
                     DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                         histonSigmaTOF,"",
                                         "#it{p} (GeV/#it{c})","#it{n} #sigma_{e^{#pm}} TOF",1,1.4,
-                                        0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                        processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                     SaveCanvasAndWriteHistogram(cvsQuadratic, histonSigmaTOF, Form("%s/nSigma_TOF_Candidates_%s_%s.%s", outputDir.Data(), str[iBefore].Data(),DataSets[i].Data(), suffix.Data()));
                 } else cout << Form("INFO: Object |Gamma_TOFSig_%s %s| could not be found! Skipping Draw...",str[iBefore].Data(),iCutNumber.Data()) << endl;
                 //-------------------------------------------------------------------------------------------------------------------------------
@@ -866,7 +910,7 @@ void EventQA(
                     fHistInvMass->Scale(1./fHistConvGamma->Integral());
                     DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                         fHistInvMass,"","M_{e^{+}e^{-}} (GeV/#it{c}^{2})","#frac{d#it{N}_{#gamma}}{#it{N} d#it{M}_{e^{+}e^{-}}} (GeV/#it{c}^{2})^{-1}",1,1,
-                                        0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                        processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                     WriteHistogram(fHistInvMass);
                     vecInvMassBeforeAfter[iBefore].push_back(new TH1D(*fHistInvMass));
                 } else cout << Form("INFO: Object |InvMass_%s %s| could not be found! Skipping Draw...",str[iBefore].Data(),iCutNumber.Data()) << endl;
@@ -943,7 +987,7 @@ void EventQA(
             SetXRange(Pi0Pt,minB,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 Pi0Pt,"","#it{p}_{T}^{#pi^{0}}","#frac{dN^{#pi^{0}}}{d#it{p}_{T}}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             WriteHistogram(Pi0Pt);
             vecPi0Pt.push_back(new TH1D(*Pi0Pt));
 
@@ -952,7 +996,7 @@ void EventQA(
             SetXRange(Pi0Y,minB,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 Pi0Y,"","Y^{#pi^{0}}","#frac{dN^{#pi^{0}}}{dY}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             WriteHistogram(Pi0Y);
             vecPi0Y.push_back(new TH1D(*Pi0Y));
         } else cout << "INFO: Object |"<< namePi0MesonY.Data()<<"| could not be found! Skipping Draw..." << endl;
@@ -965,7 +1009,7 @@ void EventQA(
             SetXRange(Pi0Alpha,minB,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 Pi0Alpha,"","#alpha^{#pi^{0}}","#frac{dN^{#pi^{0}}}{d#alpha}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             WriteHistogram(Pi0Alpha);
             vecPi0Alpha.push_back(new TH1D(*Pi0Alpha));
         }else cout << "INFO: Object |"<< namePi0MesonAlpha.Data()<<"| could not be found! Skipping Draw..." << endl;
@@ -978,7 +1022,7 @@ void EventQA(
             SetXRange(Pi0OpenAngle,minB,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 Pi0OpenAngle,"","#theta_{#pi^{0}}","#frac{dN^{#pi^{0}}}{d#theta}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             WriteHistogram(Pi0OpenAngle);
             vecPi0OpenAngle.push_back(new TH1D(*Pi0OpenAngle));
         }else cout << "INFO: Object |"<< namePi0MesonOpen.Data()<<"| could not be found! Skipping Draw..." << endl;
@@ -995,7 +1039,7 @@ void EventQA(
                 SetXRange(EtaPt,minB,maxB);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                     EtaPt,"","#it{p}_{T}^{#eta}","#frac{dN^{#eta}}{d#it{p}_{T}}",1,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 WriteHistogram(EtaPt);
                 vecEtaPt.push_back(new TH1D(*EtaPt));
 
@@ -1004,7 +1048,7 @@ void EventQA(
                 SetXRange(EtaY,minB,maxB);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                     EtaY,"","Y^{#eta}","#frac{dN^{#eta}}{dY}",1,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 WriteHistogram(EtaY);
                 vecEtaY.push_back(new TH1D(*EtaY));
             }else cout << "INFO: Object |ESD_MotherEta_Pt_Y| could not be found! Skipping Draw..." << endl;
@@ -1017,7 +1061,7 @@ void EventQA(
                 SetXRange(EtaAlpha,minB,maxB);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                     EtaAlpha,"","#alpha^{#eta}","#frac{dN^{#eta}}{d#alpha}",1,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 WriteHistogram(EtaAlpha);
                 vecEtaAlpha.push_back(new TH1D(*EtaAlpha));
             }else cout << "INFO: Object |ESD_MotherEta_Pt_Alpha| could not be found! Skipping Draw..." << endl;
@@ -1030,7 +1074,7 @@ void EventQA(
                 SetXRange(EtaOpenAngle,minB,maxB);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                     EtaOpenAngle,"","#theta_{#eta}","#frac{dN^{#eta}}{d#theta}",1,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 WriteHistogram(EtaOpenAngle);
                 vecEtaOpenAngle.push_back(new TH1D(*EtaOpenAngle));
             }else cout << "INFO: Object |ESD_MotherEta_Pt_OpenAngle| could not be found! Skipping Draw..." << endl;
@@ -1119,13 +1163,13 @@ void EventQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                 vecNEvents,"","","N_{Events}",1,1.1,
                                 labelData, colorCompare, kFALSE, 1.1, 1.1, kTRUE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/NEvents.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                     vecNEvents,"","","N_{Events}",1,1.1,
                                     labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_NEvents.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // z-vertex distribution
@@ -1140,13 +1184,13 @@ void EventQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                         vecVertexZ,"","Vertex z (cm)","#frac{1}{N} #frac{dN}{dz}",1,1.1,
                         labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                        processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Vertex_Z.%s", outputDir.Data(), suffix.Data()));
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                         vecVertexZ,"","Vertex z (cm)","#frac{1}{N} #frac{dN}{dz}",1,1.1,
                         labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                        processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Vertex_Z.%s", outputDir.Data(), suffix.Data()));
     if(vecVertexX.size()>0){
       //-------------------------------------------------------------------------------------------------------------------------------
@@ -1162,13 +1206,13 @@ void EventQA(
       DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                           vecVertexX,"","Vertex x (cm)","#frac{1}{N} #frac{dN}{dx}",1,1.1,
                           labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                          0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                          processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
       SaveCanvas(canvas, Form("%s/Comparison/Vertex_X.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
       DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                           vecVertexX,"","Vertex x (cm)","#frac{1}{N} #frac{dN}{dx}",1,1.1,
                           labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                          0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                          processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
       SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Vertex_X.%s", outputDir.Data(), suffix.Data()));
     }
     if(vecVertexY.size()>0){
@@ -1185,13 +1229,13 @@ void EventQA(
       DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                           vecVertexY,"","Vertex y (cm)","#frac{1}{N} #frac{dN}{dy}",1,1.1,
                           labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                          0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                          processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
       SaveCanvas(canvas, Form("%s/Comparison/Vertex_Y.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
       DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                           vecVertexY,"","Vertex y (cm)","#frac{1}{N} #frac{dN}{dy}",1,1.1,
                           labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                          0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                          processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
       SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Vertex_Y.%s", outputDir.Data(), suffix.Data()));
     }
     //-------------------------------------------------------------------------------------------------------------------------------
@@ -1207,13 +1251,13 @@ void EventQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                 vecNGoodTracks,"","Number of Good Tracks","#frac{1}{N} #frac{dN}{dNTracks}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/NGoodTracks.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                     vecNGoodTracks,"","Number of Good Tracks","#frac{1}{N} #frac{dN}{dNTracks}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_NGoodTracks.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // VZERO multiplicity
@@ -1229,14 +1273,14 @@ void EventQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                 vecV0Mult,"","V0 Multiplicity","#frac{1}{N} #frac{dN}{dV0Mult}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/V0Mult.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
     TGaxis::SetExponentOffset(0, 0, "x");
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                 vecV0Mult,"","V0 Multiplicity","#frac{1}{N} #frac{dN}{dV0Mult}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_V0Mult.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // Gamma candidates
@@ -1251,13 +1295,13 @@ void EventQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                 vecGammaCandidates,"","Number of #gamma Candidates","#frac{1}{N} #frac{dN}{dNCand}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/GammaCandidates.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                     vecGammaCandidates,"","Number of #gamma Candidates","#frac{1}{N} #frac{dN}{dNCand}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_GammaCandidates.%s", outputDir.Data(), suffix.Data()));
 
     if(isMergedCalo){
@@ -1273,16 +1317,57 @@ void EventQA(
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecMergedCandidates,"","Number of meson Candidates","#frac{1}{N_{Events}} #frac{dN}{dNCand}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/MergedCandidates.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                         vecMergedCandidates,"","Number of meson Candidates","#frac{1}{N_{Events}} #frac{dN}{dNCand}",1,1.1,
                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MergedCandidates.%s", outputDir.Data(), suffix.Data()));
     }    
-    
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // centrality
+    if(fIsPbPb){
+      GetMinMaxBin(vecCentrality,minB,maxB);
+      for(Int_t iVec=0; iVec<(Int_t)vecCentrality.size(); iVec++){
+        TH1D* temp = vecCentrality.at(iVec);
+        temp->Sumw2();
+        temp->Scale(1./temp->Integral());
+        SetXRange(temp,minB,maxB);
+      }
+      DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+				  vecCentrality,"","Centrality (%)","",1,1.1,
+				  labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
+				  processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+      SaveCanvas(canvas, Form("%s/Comparison/Centrality.%s", outputDir.Data(), suffix.Data()));
+
+      DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+				       vecCentrality,"","Centrality (%)","",1,1.1,
+				       labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
+				       processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+      SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Centrality.%s", outputDir.Data(), suffix.Data()));
+      //Event Plane Angle
+      GetMinMaxBin(vecEventPlaneAngle,minB,maxB);
+      for(Int_t iVec=0; iVec<(Int_t)vecEventPlaneAngle.size(); iVec++){
+        TH1D* temp = vecEventPlaneAngle.at(iVec);
+        temp->Sumw2();
+        temp->Scale(1./temp->Integral());
+        SetXRange(temp,minB,maxB);
+      }
+      DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+				  vecEventPlaneAngle,"","Event Plane Angle (rad)","",1,1.1,
+				  labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
+				  processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+      SaveCanvas(canvas, Form("%s/Comparison/EventPlaneAngle.%s", outputDir.Data(), suffix.Data()));
+
+      DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+				       vecEventPlaneAngle,"","Event Plane Angle (rad)","",1,1.1,
+				       labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
+				       processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+      SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_EventPlaneAngle.%s", outputDir.Data(), suffix.Data()));
+    }
+
     //-------------------------------------------------------------------------------------------------------------------------------
     //---------------------------------------- Meson histogram comparisons ----------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
@@ -1298,13 +1383,13 @@ void EventQA(
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                     signalPi0,"","M_{#gamma#gamma}","#frac{1}{N} #frac{1}{N} #frac{dN}{dM_{#gamma#gamma}}",1,1.1,
                                     labelData, colorCompare, kFALSE, 1, 1, kFALSE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Pi0.%s", outputDir.Data(), suffix.Data()));
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                         signalPi0,"","M_{#gamma#gamma}","#frac{1}{N} #frac{1}{N} #frac{dN}{dM_{#gamma#gamma}}",1,1.1,
                                         labelData, colorCompare, kFALSE, 1, 1, kTRUE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pi0.%s", outputDir.Data(), suffix.Data()));
         //-------------------------------------------------------------------------------------------------------------------------------
         // subtracted signal eta
@@ -1317,13 +1402,13 @@ void EventQA(
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                     signalEta,"","M_{#gamma#gamma}","#frac{1}{N} #frac{1}{N} #frac{dN}{dM_{#gamma#gamma}}",1,1.1,
                                     labelData, colorCompare, kFALSE, 1, 1, kFALSE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Eta.%s", outputDir.Data(), suffix.Data()));
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                         signalEta,"","M_{#gamma#gamma}","#frac{1}{N} #frac{1}{N} #frac{dN}{dM_{#gamma#gamma}}",1,1.1,
                                         labelData, colorCompare, kFALSE, 1, 1, kTRUE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Eta.%s", outputDir.Data(), suffix.Data()));
     }    
   
@@ -1341,14 +1426,14 @@ void EventQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kTRUE,kTRUE,kFALSE,
                                 vecPi0Pt,"","#it{p}_{T}^{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{d#it{p}_{T}}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Pi0_Pt.%s", outputDir.Data(), suffix.Data()), kTRUE, kTRUE);
     TGaxis::SetExponentOffset(0, 0, "x");
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                     vecPi0Pt,"","#it{p}_{T}^{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{d#it{p}_{T}}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pi0_Pt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // alpha distribution Pi0
@@ -1364,14 +1449,14 @@ void EventQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                 vecPi0Alpha,"","#alpha^{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{d#alpha}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Pi0_Alpha.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
     TGaxis::SetExponentOffset(0, 0, "x");
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecPi0Alpha,"","#alpha^{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{d#alpha}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pi0_Alpha.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // y distribution Pi0
@@ -1387,14 +1472,14 @@ void EventQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                 vecPi0Y,"","Y^{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{dY}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Pi0_Y.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
     TGaxis::SetExponentOffset(0, 0, "x");
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                     vecPi0Y,"","Y^{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{dY}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pi0_Y.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // opening angle Pi0
@@ -1410,14 +1495,14 @@ void EventQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                 vecPi0OpenAngle,"","#theta_{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{d#theta}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Pi0_OpenAngle.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
     TGaxis::SetExponentOffset(0, 0, "x");
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                     vecPi0OpenAngle,"","#theta_{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{d#theta}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pi0_OpenAngle.%s", outputDir.Data(), suffix.Data()));
     
     if (!isMergedCalo){
@@ -1435,14 +1520,14 @@ void EventQA(
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kTRUE,kTRUE,kFALSE,
                                     vecEtaPt,"","#it{p}_{T}^{#eta}","#frac{1}{N} #frac{dN^{#eta}}{d#it{p}_{T}}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Eta_Pt.%s", outputDir.Data(), suffix.Data()), kTRUE, kTRUE);
         TGaxis::SetExponentOffset(0, 0, "x");
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                         vecEtaPt,"","#it{p}_{T}^{#eta}","#frac{1}{N} #frac{dN^{#eta}}{d#it{p}_{T}}",1,1.1,
                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Eta_Pt.%s", outputDir.Data(), suffix.Data()));
         //-------------------------------------------------------------------------------------------------------------------------------
         // alpha distribution eta
@@ -1458,14 +1543,14 @@ void EventQA(
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecEtaAlpha,"","#alpha^{#eta}","#frac{1}{N} #frac{dN^{#eta}}{d#alpha}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Eta_Alpha.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
         TGaxis::SetExponentOffset(0, 0, "x");
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                         vecEtaAlpha,"","#alpha^{#eta}","#frac{1}{N} #frac{dN^{#eta}}{d#alpha}",1,1.1,
                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Eta_Alpha.%s", outputDir.Data(), suffix.Data()));
         //-------------------------------------------------------------------------------------------------------------------------------
         // y distribution eta
@@ -1481,14 +1566,14 @@ void EventQA(
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecEtaY,"","Y^{#eta}","#frac{1}{N} #frac{dN^{#eta}}{dY}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Eta_Y.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
         TGaxis::SetExponentOffset(0, 0, "x");
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                         vecEtaY,"","Y^{#eta}","#frac{1}{N} #frac{dN^{#eta}}{dY}",1,1.1,
                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Eta_Y.%s", outputDir.Data(), suffix.Data()));
         //-------------------------------------------------------------------------------------------------------------------------------
         // opening angle distribution eta
@@ -1504,14 +1589,14 @@ void EventQA(
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecEtaOpenAngle,"","#theta_{#eta}","#frac{1}{N} #frac{dN^{#eta}}{d#theta}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Eta_OpenAngle.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
         TGaxis::SetExponentOffset(0, 0, "x");
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                         vecEtaOpenAngle,"","#theta_{#eta}","#frac{1}{N} #frac{dN^{#eta}}{d#theta}",1,1.1,
                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        processLabelOffsetX1,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Eta_OpenAngle.%s", outputDir.Data(), suffix.Data()));
     }
     
@@ -1537,7 +1622,7 @@ void EventQA(
                 DrawGammaSetMarker(vecInvMassBeforeAfter[0].at(i),20,0.8, kBlack , kBlack);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                     vecInvMassBeforeAfter[0].at(i),"","M_{e^{+}e^{-}} (GeV/#it{c}^{2})","#frac{d#it{N}_{#gamma}}{#it{N}_{#gamma} d#it{M}_{e^{+}e^{-}}} (GeV/#it{c}^{2})^{-1}",1,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 DrawGammaSetMarker(vecInvMassBeforeAfter[1].at(i),20,0.8, kRed , kRed);
                 vecInvMassBeforeAfter[1].at(i)->Draw("e,histsame");
 
