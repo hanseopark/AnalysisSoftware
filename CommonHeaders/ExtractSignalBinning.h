@@ -1548,16 +1548,9 @@ void InitializeClusterBinning (TString energy, Int_t modi ){
         fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
       }
     } else if( energy.CompareTo("8TeV") == 0){
-      if(modi == 10){
-        fNBinsClusterPt       = fNBinsCluster8TeVMergedPt;
-        for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
-          fBinsClusterPt[iPt] = fBinsCluster8TeVMergedPt[iPt];
-        }
-      }else{
-        fNBinsClusterPt       = fNBinsCluster8TeVPt;
-        for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
-          fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
-        }
+      fNBinsClusterPt       = fNBinsCluster8TeVMergedPt;
+      for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
+        fBinsClusterPt[iPt] = fBinsCluster8TeVMergedPt[iPt];
       }
     } else {
       fNBinsClusterPt       = 0;
