@@ -698,13 +698,12 @@ void QA_Runwise(
       fEnergyFlag = "PbPb_5.02TeV";
       nSets = 2;
       nData = 1;
-      cutNr = 2;  // 20-50%
+      cutNr = 4;  // 0-100%
       filePath= "/home/meike/analysis/data/GridOutput/GammaConv/PbPb/";
-      filePathPhoton = "/home/meike/analysis/data/GridOutput/PhotonQA/PbPb/";
-      fileName = "GammaConvV1.root";
-      DataSets[0]="LHC15o"; DataSets[1]="LHC15k1a1";
-      plotDataSets[0]="LHC15o 20-50%"; plotDataSets[1]="LHC15k1a1 20-50%";
-      markerSize=1.5;
+      filePathPhoton = "";
+      fileName = "GammaConvV1_246.root";
+      DataSets[0]="LHC15o"; DataSets[1]="LHC16h4";
+      plotDataSets[0]="LHC15o 0-100%"; plotDataSets[1]="LHC16h4 0-100%";
       doEquidistantXaxis=kTRUE;
     }
     //**************************************************************************************************************

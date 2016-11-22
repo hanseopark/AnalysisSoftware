@@ -836,16 +836,18 @@ void QA(    TString select          = "LHC11a",         // set selected
     //**************************************************************************************************************
     else if(select.CompareTo("LHC15o")==0){
 	        mode = 0;
-		nSets = 2;
-		cutNr = 2;  // 20-50%
+		nSets = 5;
+		cutNr = 4;  // 0-100%
 		fEnergyFlag = "PbPb_5.02TeV";
-		DataSets[0]="LHC15o"; DataSets[1]="LHC15k1a1";
-		plotDataSets[0]="LHC15o 20-50%"; plotDataSets[1]="LHC15k1a1 20-50%";
-		labelData=plotDataSets[0];
-		pathDataSets[0]="/home/meike/analysis/data/GridOutput/GammaConv/PbPb/LHC15o/GammaConvV1_246_LHC15oLowIRp2_ESD_train244_10runs.root";
-		pathDataSets[1]="/home/meike/analysis/data/GridOutput/GammaConv/PbPb/LHC15k1a1/GammaConvV1_246_ESD_train297_10runs.root";
-		pathPhotonQA[0]="/home/meike/analysis/data/GridOutput/PhotonQA/PbPb/LHC15o/PhotonQA_LHC15o.root";
-		pathPhotonQA[1]="/home/meike/analysis/data/GridOutput/PhotonQA/PbPb/LHC15k1a1/PhotonQA_LHC15k1a1.root";
+		DataSets[0]="LHC15o_HighIR_pass1_AOD"; DataSets[1]="LHC16h4"; DataSets[2]="LHC15o_HighIR_pass1pidfix_AOD";  DataSets[3]="LHC15o_HighIR_pass1_ESD";  DataSets[4]="LHC15o_LowIR_pass2_ESD";  
+		plotDataSets[0]="HighIR p1 AOD"; plotDataSets[1]="MC"; plotDataSets[2]="HighIR p1pidfix"; plotDataSets[3]="HighIR p1 ESD"; plotDataSets[4]="LowIR";
+		labelData="LHC15o 0-100%";
+		pathDataSets[0]="/home/meike/analysis/data/GridOutput/GammaConv/PbPb/LHC15o_HighIR_pass1_AOD/GammaConvV1_246.root";
+		pathDataSets[1]="/home/meike/analysis/data/GridOutput/GammaConv/PbPb/LHC16h4/GammaConvV1_246.root";
+		pathDataSets[2]="/home/meike/analysis/data/GridOutput/GammaConv/PbPb/LHC15o_HighIR_pass1pidfix_AOD/GammaConvV1_246.root";
+		pathDataSets[3]="/home/meike/analysis/data/GridOutput/GammaConv/PbPb/LHC15o_HighIR_pass1_ESD/GammaConvV1_246.root";
+		pathDataSets[4]="/home/meike/analysis/data/GridOutput/GammaConv/PbPb/LHC15o_LowIR_pass2_ESD/GammaConvV1_246_10runs.root";
+		pathPhotonQA[0]=""; pathPhotonQA[1]=""; pathPhotonQA[2]=""; pathPhotonQA[3]=""; pathPhotonQA[4]="";
     }
     //**************************************************************************************************************
     else{
