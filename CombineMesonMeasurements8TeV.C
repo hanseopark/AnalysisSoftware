@@ -4276,7 +4276,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         boxErrorSigmaRatio->Draw();
         DrawGammaLines(0.23, 60.,1., 1.,0.5,kGray+2);
 
-        TLegend* legendRatioTheorypp_3Parted= GetAndSetLegend2(0.35,0.77,0.6,0.97, 0.85* textSizeLabelsPixel);
+        TLegend* legendRatioTheorypp_3Parted= GetAndSetLegend2(0.2,0.77,0.45,0.97, 0.85* textSizeLabelsPixel);
     //    legendRatioTheorypp_3Parted->SetNColumns(2);
         legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0CombCombFitSysA,"ALICE #pi^{0}","pf");
 //        legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0CombNLOMuHalf, "NLO, DSS07 #mu = 0.5 #it{p}_{T}", "l");
@@ -4287,11 +4287,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0DSS14,  "NLO, PDF:MSTW08 - FF:DSS14", "f");
         legendRatioTheorypp_3Parted->Draw();
 
-        TLatex *labelRatioTheoryPPP   = new TLatex(0.418,0.74,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
+        TLatex *labelRatioTheoryPPP   = new TLatex(0.268,0.74,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
         SetStyleTLatex( labelRatioTheoryPPP, 0.85*textsizeLabelsPP,4);
         labelRatioTheoryPPP->Draw();
         
-        TLatex *labelRatioTheoryPP   = new TLatex(0.15,0.925,collisionSystem8TeV.Data());
+        TLatex *labelRatioTheoryPP   = new TLatex(0.78,0.925,collisionSystem8TeV.Data());
         SetStyleTLatex( labelRatioTheoryPP, 0.85*textsizeLabelsPP,4);
         labelRatioTheoryPP->Draw();
     
