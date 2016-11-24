@@ -3653,6 +3653,20 @@ Style_t GetDefaultMarkerStyle( TString energy,
             return 30;
         }
     }
+    if (!energy.CompareTo("5TeV")){
+        if (!generator.CompareTo("LHC15n")){
+            return 20;
+        }
+        else if(generator.Contains("LHC16h8a")){
+            return 29;
+        }
+        else if(generator.Contains("LHC16h8b")){
+            return 30;
+        }
+        else {
+            return 24;
+        } 
+    }
     if (!energy.CompareTo("7TeV")){
         if (!generator.CompareTo("")){
             return 20;
@@ -3819,6 +3833,13 @@ Size_t GetDefaultMarkerSize( TString energy,
         }
     }
     if (!energy.CompareTo("2.76TeV")){
+        if (!generator.CompareTo("")){
+            return 2.2;
+        } else {
+            return 2.2;
+        }
+    }
+    if (!energy.CompareTo("5TeV")){
         if (!generator.CompareTo("")){
             return 2.2;
         } else {

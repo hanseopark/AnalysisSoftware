@@ -707,6 +707,22 @@ void QA_Runwise(
       doEquidistantXaxis=kTRUE;
     }
     //**************************************************************************************************************
+    else if(select.CompareTo("LHC15n")==0){
+      // pp 5.02TeV
+      mode=0;
+      fEnergyFlag = "5TeV";
+      nSets = 3;
+      nData = 1;
+      cutNr = 0;  // 
+      filePath= "/afs/cern.ch/user/h/hmurakam/Hikari/Photon/Grid/OutputLegoTrains/pp/";
+      filePathPhoton = "/afs/cern.ch/user/h/hmurakam/Hikari/Photon/Grid/OutputLegoTrains/pp/";//pp/$select/$runnumber/AnalysisResults
+      fileName = "GammaConvV1_28.root";
+      DataSets[0]="LHC15n"; DataSets[1]="LHC16h8a"; DataSets[2]="LHC16h8b";
+      plotDataSets[0]="LHC15n"; plotDataSets[1]="LHC16h8a PYT8"; plotDataSets[2]="LHC16h8b PYT6";
+      markerSize=1.5;
+      doEquidistantXaxis=kTRUE;
+    }
+    //**************************************************************************************************************
     else{
         cout << "No valid selection! Returning..." << endl;
         return;
