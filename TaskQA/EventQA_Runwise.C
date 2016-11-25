@@ -301,6 +301,8 @@ void EventQA_Runwise(
 
     TH1D* hVertexZMean[nSets];
     TH1D* hVertexZRMS[nSets];
+    TH1D* hCentralityMean[nSets];
+    TH1D* hEventPlaneAngleMean[nSets];
     TH1D* hFracWVtxOutside10cm[nSets];
     TH1D* hFracWOVtx[nSets];
     TH1D* hFracPileUp[nSets];
@@ -439,6 +441,20 @@ void EventQA_Runwise(
         hVertexZRMS[i]              = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hVertexZ-RMS; Run Number ; #sigma_{z-vertex} (cm)",hNBin,hFBin,hLBin);
         EditTH1(globalRuns, doEquidistantXaxis, hVertexZRMS[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
         vecHistos[i].push_back(hVertexZRMS[i]);
+
+	if(fEnergyFlag.Contains("PbPb")){
+	  histoName                   = "hCentrality-Mean";
+	  if(i==0) vecHistosName.push_back(histoName);
+	  hCentralityMean[i]             = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hCentrality-Mean; Run Number ; #bar{cent} (%)",hNBin,hFBin,hLBin);
+	  EditTH1(globalRuns, doEquidistantXaxis, hCentralityMean[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+	  vecHistos[i].push_back(hCentralityMean[i]);
+
+	  histoName                   = "hEventPlaneAngle-Mean";
+	  if(i==0) vecHistosName.push_back(histoName);
+	  hEventPlaneAngleMean[i]     = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hEventPlaneAngle-Mean; Run Number ; #bar{e.p.a.} (rad)",hNBin,hFBin,hLBin);
+	  EditTH1(globalRuns, doEquidistantXaxis, hEventPlaneAngleMean[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+	  vecHistos[i].push_back(hEventPlaneAngleMean[i]);
+	}
 
         histoName                   = "hFracWVtxOutside10cm";
         if(i==0) vecHistosName.push_back(histoName);
@@ -740,6 +756,9 @@ void EventQA_Runwise(
             TList* ConvCutsContainer    = (TList*) TopContainer->FindObject(Form("ConvCuts_%s",fGammaCutSelection.Data()));
                 if(isConv && ConvCutsContainer == NULL) {cout << "ERROR: " << Form("ConvCuts_%s",fGammaCutSelection.Data()) << " not found in File" << endl; return;}
                 else if(ConvCutsContainer) ConvCutsContainer->SetOwner(kTRUE);
+            TList* EventCutsContainer    = (TList*) TopContainer->FindObject(Form("ConvEventCuts_%s",fEventCutSelection.Data()));
+                if(isConv && EventCutsContainer == NULL) {cout << "ERROR: " << Form("ConvEventCuts_%s",fEventCutSelection.Data()) << " not found in File" << endl; return;}
+                else if(EventCutsContainer) EventCutsContainer->SetOwner(kTRUE);
             //--------------------------------------------------------------------------------------------------------
             if(doEquidistantXaxis) bin  = mapBin[fRunNumber];
             else bin = fRunNumber.Atoi() - hFBin;
@@ -875,6 +894,26 @@ void EventQA_Runwise(
                     vecVertexZRatio[i-1].push_back(tempVertexRatio);
                 }
             }else cout << "INFO: Object |VertexZ| could not be found! Skipping Fill..." << endl;
+
+	    if(fEnergyFlag.Contains("PbPb")){
+	      //--------------------------------------------------------------------------------------------------------
+	      //--------------------------------------- centrality -----------------------------------------------------
+	      //--------------------------------------------------------------------------------------------------------
+	      TH1D* Centrality               = (TH1D*) ESDContainer->FindObject("Centrality");
+	      if(Centrality){
+                hCentralityMean[i]->SetBinContent(bin, Centrality->GetMean());
+                hCentralityMean[i]->SetBinError(bin, Centrality->GetMeanError());
+	      }else cout << "INFO: Object |Centrality| could not be found! Skipping Fill..." << endl;
+
+	      //--------------------------------------------------------------------------------------------------------
+	      //--------------------------------------- event plane angle ----------------------------------------------
+	      //--------------------------------------------------------------------------------------------------------
+	      TH1D* EventPlaneAngle          = (TH1D*) EventCutsContainer->FindObject(Form("EventPlaneAngle %s",fEventCutSelection.Data()));
+	      if(EventPlaneAngle){
+                hEventPlaneAngleMean[i]->SetBinContent(bin, EventPlaneAngle->GetMean());
+                hEventPlaneAngleMean[i]->SetBinError(bin, EventPlaneAngle->GetMeanError());
+	      }else cout << "INFO: Object |EventPlaneAngle| could not be found! Skipping Fill..." << endl;
+	    }
 
             //--------------------------------------------------------------------------------------------------------
             //------------------------- Calorimeter selection histograms ---------------------------------------------
