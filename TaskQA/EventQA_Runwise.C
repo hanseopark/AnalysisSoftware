@@ -123,10 +123,22 @@ void EventQA_Runwise(
     }
 
     Float_t xPosLabel = 0.8;
+    Bool_t drawVerticalLines = kFALSE;
+    Int_t nLines;        // number of vertical lines
+    Int_t runRanges[10]; // array of bin numbers where to draw vertical lines
+    TLine* verticalLines[10];
     if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0)
         xPosLabel = 0.75;
-    if(fEnergyFlag.Contains("PbPb"))
+    if(fEnergyFlag.Contains("PbPb")){
         xPosLabel = 0.75;
+	if (fEnergyFlag.CompareTo("PbPb_5.02TeV") == 0){
+	  drawVerticalLines = kTRUE;
+	  nLines = 6;
+	  runRanges[0] = 10; runRanges[1] = 16; runRanges[2] = 21;
+	  runRanges[3] = 24; runRanges[4] = 60; runRanges[5] = 63;
+	}
+    }
+    if (nLines > 10) cout << "ERROR: nLines cannot be larger than 10. Increase size of runRanges[10] and verticalLines[10]" << endl;
 
     //*************************************************************************************************************
     // runNumbers
@@ -863,6 +875,7 @@ void EventQA_Runwise(
                     vecVertexZRatio[i-1].push_back(tempVertexRatio);
                 }
             }else cout << "INFO: Object |VertexZ| could not be found! Skipping Fill..." << endl;
+
             //--------------------------------------------------------------------------------------------------------
             //------------------------- Calorimeter selection histograms ---------------------------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -1130,6 +1143,8 @@ void EventQA_Runwise(
     Double_t topMargin      = 0.04; 
     Double_t bottomMargin   = 0.09;
     DrawGammaCanvasSettings(canvas, leftMar, rightMar, topMargin, bottomMargin);
+    Double_t yMax;  // min of y range for vertical lines
+    Double_t yMin;  // max of y range for vertical lines
 
     // Plot single periods as well
     if(doHistsForEverySet) {
@@ -1309,6 +1324,17 @@ void EventQA_Runwise(
                 ((TH1D*) vecHistos[i].at(h))->Draw(draw.Data());
                 if(i<nData) DrawFit(((TH1D*) vecHistos[i].at(h)),i,fitValues[i][h],rangesRuns[i],DataSets[i],plotDataSets[i],0.15,0.9,0.03,1);
             }
+	    if (drawVerticalLines){
+	      canvas->Update();
+	      yMax = canvas->GetUymax();
+	      yMin = canvas->GetUymin();
+	      for(Int_t lineBin=0; lineBin<nLines; lineBin++){
+		verticalLines[lineBin] = new TLine(runRanges[lineBin],yMin,runRanges[lineBin],yMax);
+		verticalLines[lineBin]->SetLineWidth(1);
+		verticalLines[lineBin]->SetLineStyle(2);
+		verticalLines[lineBin]->Draw("same");
+	      }
+	    }
             legend->Draw();
 
             if(doTrigger){
@@ -1334,6 +1360,11 @@ void EventQA_Runwise(
                 else SaveCanvas(canvas, Form("%s/%s.%s", outputDir.Data(), vecHistosName.at(h).Data(),suffix.Data()));
             }
             legend->Clear();
+	    if(drawVerticalLines){
+	      for(Int_t lineBin=0; lineBin<nLines; lineBin++){
+		delete verticalLines[lineBin];
+	      }
+	    }
         }
     }
 
@@ -1381,8 +1412,7 @@ void EventQA_Runwise(
                         ratio[j]->Draw(draw.Data());
                         legend->AddEntry(ratio[j],ratioSets[j]->Data(),"p");
                     }
-
-                    legend->Draw();
+		    legend->Draw();
                     outputDirDataSet = Form("%s/%s",outputDir.Data(), DataSets[i].Data());
                     gSystem->Exec("mkdir -p "+outputDirDataSet+"/TrendingRatios");
 
