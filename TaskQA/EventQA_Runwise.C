@@ -1184,6 +1184,7 @@ void EventQA_Runwise(
     DrawGammaCanvasSettings(canvas, leftMar, rightMar, topMargin, bottomMargin);
     Double_t yMax;  // min of y range for vertical lines
     Double_t yMin;  // max of y range for vertical lines
+    Bool_t adjustedRange;
 
     // Plot single periods as well
     if(doHistsForEverySet) {
@@ -1353,8 +1354,8 @@ void EventQA_Runwise(
             if( ((TString)vecHistosName.at(h)).CompareTo("hNEvents")==0 ||
                 ((TString)vecHistosName.at(h)).CompareTo("hNEventsMinBias")==0 ||
                 ((TString)vecHistosName.at(h)).CompareTo("hNEventsAll")==0 )
-                AdjustHistRange(vecHistos,10,10,h,nSets,kTRUE);
-            else AdjustHistRange(vecHistos,1.1,1.1,h,nSets,kTRUE);
+	      adjustedRange = AdjustHistRange(vecHistos,10,10,h,nSets,kTRUE, &yMin, &yMax);
+            else adjustedRange = AdjustHistRange(vecHistos,1.1,1.1,h,nSets,kTRUE, &yMin, &yMax);
             for(Int_t i=nSets-1; i>=0; i--)            {
                 TString draw;
                 if(h==0) draw = (i==nSets-1)?"p":"p, same";
@@ -1364,9 +1365,11 @@ void EventQA_Runwise(
                 if(i<nData) DrawFit(((TH1D*) vecHistos[i].at(h)),i,fitValues[i][h],rangesRuns[i],DataSets[i],plotDataSets[i],0.15,0.9,0.03,1);
             }
 	    if (drawVerticalLines){
-	      canvas->Update();
-	      yMax = canvas->GetUymax();
-	      yMin = canvas->GetUymin();
+	      if(!adjustedRange){
+		canvas->Update();
+		yMax = canvas->GetUymax();
+		yMin = canvas->GetUymin();
+	      }
 	      for(Int_t lineBin=0; lineBin<nLines; lineBin++){
 		verticalLines[lineBin] = new TLine(runRanges[lineBin],yMin,runRanges[lineBin],yMax);
 		verticalLines[lineBin]->SetLineWidth(1);

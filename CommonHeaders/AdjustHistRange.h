@@ -167,6 +167,44 @@ void AdjustHistRange(std::vector<TH1D*> vectorhist[], Double_t factorLow, Double
   return;
 }
 
+//overloaded function for AdjustHistRange
+//This function calls AdjustHistRange for all histograms in the same vector
+//and returns the global max and min
+//The return value is true if the range was successfully adjusted
+Bool_t AdjustHistRange(std::vector<TH1D*> vectorhist[], Double_t factorLow, Double_t factorHigh, Int_t h, Int_t nSets, Bool_t useBinError, Double_t *min, Double_t *max){
+
+  Double_t Max_global,Min_global;
+  Double_t A,B;
+
+  Bool_t successRange = AdjustHistRange(vectorhist[0].at(h),factorLow,factorHigh, useBinError, &A, &B);
+
+  Int_t iRange = 1;
+  if(!successRange){
+	  while(!successRange && iRange<nSets) successRange = AdjustHistRange(vectorhist[iRange++].at(h),factorLow,factorHigh, useBinError, &A, &B);
+  }
+
+  if(iRange>=nSets){
+	  cout << "ERROR in AdjustHistRange, iRange>nSets, returning..." << endl;
+	  return kFALSE;
+  }
+
+  Min_global = A;
+  Max_global = B;
+
+  for(Int_t i=iRange; i<nSets; i++){
+	  if(!AdjustHistRange(vectorhist[i].at(h),factorLow,factorHigh, useBinError, &A, &B)) continue;
+	  if(A<Min_global) Min_global=A;
+	  if(B>Max_global) Max_global=B;
+  }
+
+  for(Int_t i=0; i<nSets; i++) vectorhist[i].at(h)->GetYaxis()->SetRangeUser(Min_global, Max_global);
+
+  *min = Min_global;
+  *max = Max_global;
+
+  return kTRUE;
+}
+
 
 
 
