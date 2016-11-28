@@ -20,16 +20,16 @@ void EventQA_CompareCentralities_Runwise( TString suffix  = "eps",
 
     //**************************************************************************************************************
     // LHC15o
-      const Int_t nSets           = 2;
+      const Int_t nSets           = 4;
       Size_t constMarkerSize      = 1;
       TString fEnergyFlag         = "PbPb_5.02TeV";
       TString period              = "LHC15o";                // used for marker style and color
       TString dataSet             = "LHC15o";                // used for filename and histo names inside 
-      TString centralities[nSets] = {"0-10%","50-90%"};      // used for legend and marker style and color
+      TString centralities[nSets] = {"0-10%","10-20%","20-50%","50-90%"};      // used for legend and marker style and color
       TString cutsDataSets[nSets] = {
 	"10110013_00200009247602008250404000_0652501500000000",
-	//"11210013_00200009247602008250404000_0652501500000000",
-	//"12510013_00200009247602008250404000_0652501500000000",
+	"11210013_00200009247602008250404000_0652501500000000",
+	"12510013_00200009247602008250404000_0652501500000000",
 	"15910013_00200009247602008250404000_0652501500000000"  
       };
                       
@@ -63,6 +63,18 @@ void EventQA_CompareCentralities_Runwise( TString suffix  = "eps",
         cout << "No correct collision system specification, has been given" << endl;
         return;
     }
+
+    Bool_t drawVerticalLines = kFALSE;
+    Int_t nLines;        // number of vertical lines
+    Int_t runRanges[10]; // array of bin numbers where to draw vertical lines
+    TLine* verticalLines[10];
+    if (fEnergyFlag.CompareTo("PbPb_5.02TeV") == 0){
+      drawVerticalLines = kTRUE;
+      nLines = 6;
+      runRanges[0] = 10; runRanges[1] = 16; runRanges[2] = 21;
+      runRanges[3] = 24; runRanges[4] = 60; runRanges[5] = 63;
+    }
+    if (nLines > 10) cout << "ERROR: nLines cannot be larger than 10. Increase size of runRanges[10] and verticalLines[10]" << endl;
 
     TString fDetectionProcess = ReturnFullTextReconstructionProcess(mode);
 
@@ -200,31 +212,33 @@ void EventQA_CompareCentralities_Runwise( TString suffix  = "eps",
     cout << "Output file: " << nameOutput << endl;
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
-    Int_t nTopRows = (nSets-1)/(3) + 1;
+    Int_t nTopRows = 1;
     TCanvas* canvas = new TCanvas("canvas","",200,10,1350,(846.+nTopRows*54.));  // gives the page size
     Double_t leftMar = 0.09; Double_t rightMar = 0.02; Double_t topMargin = (nTopRows*54.)/(846.+nTopRows*54.); Double_t bottomMargin = 0.09;
     DrawGammaCanvasSettings(canvas, leftMar, rightMar, topMargin, bottomMargin);
-
+    Double_t yMax;  // min of y range for vertical lines
+    Double_t yMin;  // max of y range for vertical lines
+    Bool_t adjustedRange = kFALSE;
 //****************************** Combined Trending Histograms ************************************************
 
     TLegend *legend = new TLegend(0.12,0.99 - (nTopRows*0.04),0.95,0.98);
-    legend->SetNColumns(3);
+    legend->SetNColumns(4);
     legend->SetFillColor(0);
     legend->SetLineColor(0);
     legend->SetTextSize(0.03);
     legend->SetTextFont(42);
+
 //---------
 
         for(Int_t h=0; h<(Int_t)vecHistosRunwise[0].size(); h++){
             cout << h << " " << vecHistosRunwiseName[0].at(h).Data() <<  ", " ;
             Double_t scaleFactor    = 1.2;
-            if ( h==0 || vecHistosRunwiseName[0].at(h).Contains("hCaloNClusters") || vecHistosRunwiseName[0].at(h).Contains("hCaloMergedNClusters") ||  
-                vecHistosRunwiseName[0].at(h).Contains("hConvNCandidates") ) 
+            if ( h==0 || vecHistosRunwiseName[0].at(h).Contains("hConvNCandidates") )
                 scaleFactor    = 12.;
             if (vecHistosRunwiseName[0].at(h).Contains("hTracksGood-Mean"))
                 scaleFactor    = 2.5;
             
-            AdjustHistRange(vecHistosRunwise, scaleFactor, scaleFactor, h, nSets, kTRUE);
+            adjustedRange = AdjustHistRange(vecHistosRunwise, scaleFactor, scaleFactor, h, nSets, kTRUE, &yMin, &yMax);
             for(Int_t i=0; i<nSets; i++){
                 TString draw;
                 if(h==0) draw = (i==0)?"p":"p, same";
@@ -233,14 +247,31 @@ void EventQA_CompareCentralities_Runwise( TString suffix  = "eps",
                 legend->AddEntry(((TH1D*) vecHistosRunwise[i].at(h)),centralities[i].Data(),"p");
             }
             legend->Draw();           
+	    if (drawVerticalLines){
+	      if(!adjustedRange){
+		canvas->Update();
+		yMax = gPad->GetUymax();
+		yMin = gPad->GetUymin();
+	      }
+	      for(Int_t lineBin=0; lineBin<nLines; lineBin++){
+		verticalLines[lineBin] = new TLine(runRanges[lineBin],yMin,runRanges[lineBin],yMax);
+		verticalLines[lineBin]->SetLineWidth(1);
+		verticalLines[lineBin]->SetLineStyle(2);
+		verticalLines[lineBin]->Draw("same");
+	      }
+	    }
 	    
 	    PutProcessLabelAndEnergyOnPlot(0.75, 0.97-nTopRows*0.06, 0.03, fCollisionSystem.Data(), "", "");
-            if ( h==0 || vecHistosRunwiseName[0].at(h).Contains("hCaloNClusters") || vecHistosRunwiseName[0].at(h).Contains("hCaloMergedNClusters") ||  
-                vecHistosRunwiseName[0].at(h).Contains("hConvNCandidates") || vecHistosRunwiseName[0].at(h).Contains("hTracksGood-Mean")  
+            if ( h==0 ||  vecHistosRunwiseName[0].at(h).Contains("hConvNCandidates") || vecHistosRunwiseName[0].at(h).Contains("hTracksGood-Mean")
                ) 
                SaveWriteCanvas(canvas, Form("EventQA_CompareCentralities/%s/Runwise/%s.%s", dataSet.Data(), vecHistosRunwiseName[0].at(h).Data(),suffix.Data()), kFALSE, kTRUE);
             else SaveWriteCanvas(canvas, Form("EventQA_CompareCentralities/%s/Runwise/%s.%s", dataSet.Data(), vecHistosRunwiseName[0].at(h).Data(),suffix.Data()));
             legend->Clear();
+	    if(drawVerticalLines){
+	      for(Int_t lineBin=0; lineBin<nLines; lineBin++){
+		delete verticalLines[lineBin];
+	      }
+	    }
         }
         cout << endl;
 

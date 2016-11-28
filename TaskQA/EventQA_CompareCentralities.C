@@ -21,17 +21,16 @@ void EventQA_CompareCentralities( TString suffix  = "eps",
     //choose which data sets to process
     //**************************************************************************************************************
     // LHC15o
-    const Int_t nSets           = 2;
+    const Int_t nSets           = 4;
     Size_t constMarkerSize      = 1;
     TString fEnergyFlag         = "PbPb_5.02TeV";
     TString period              = "LHC15o";                                 // for GetDefaultMarkerStyle and legend
     TString dataSet             = "LHC15o_HighIR_pass1_AOD";                // used for filename 
-    //TString centralities[nSets] = {"0-10%","10-20%","20-50%","50-90%"};     // used for plot and marker style and color
-    TString centralities[nSets] = {"0-10%","50-90%"};  
+    TString centralities[nSets] = {"0-10%","10-20%","20-50%","50-90%"};     // used for plot and marker style and color
     TString cutsDataSets[nSets] = {
       "10110013_00200009247602008250404000_0652501500000000",
-      //"11210013_00200009247602008250404000_0652501500000000",
-      //"12510013_00200009247602008250404000_0652501500000000",
+      "11210013_00200009247602008250404000_0652501500000000",
+      "12510013_00200009247602008250404000_0652501500000000",
       "15910013_00200009247602008250404000_0652501500000000"  
     };
                      
@@ -165,41 +164,40 @@ void EventQA_CompareCentralities( TString suffix  = "eps",
     cout << "Output file: " << nameOutput << endl;
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
-    Int_t nTopRows = (nSets-1)/(3) + 1;
+    Int_t nTopRows = 1;
     TCanvas* canvas = new TCanvas("canvas","",200,10,1350,(846.+nTopRows*54.));  // gives the page size
     canvas->SetLogy(1);
     Double_t leftMar = 0.09; Double_t rightMar = 0.02; Double_t topMargin = (nTopRows*54.)/(846.+nTopRows*54.); Double_t bottomMargin = 0.09;
     DrawGammaCanvasSettings(canvas, leftMar, rightMar, topMargin, bottomMargin);
-
+    Double_t scaleFactor = 5.0;
 
 //****************************** Combined Comparison Histograms ************************************************
     TLegend *legend = new TLegend(0.12,0.99 - (nTopRows*0.04),0.95,0.98);
-    legend->SetNColumns(3);
+    legend->SetNColumns(4);
     legend->SetFillColor(0);
     legend->SetLineColor(0);
     legend->SetTextSize(0.03);
     legend->SetTextFont(42);
 
-    canvas->SetLogy(1);
     for(Int_t h=0; h<(Int_t)vecHistos[0].size(); h++){
-        cout << h << ", ";    
-        AdjustHistRange(vecHistos,5,5,h,nSets,kFALSE);
+        cout << h << ", ";
+	if ( vecHistosNameForSaving[0].at(h).Contains("VertexZ") || vecHistosNameForSaving[0].at(h).Contains("EventPlaneAngle")) scaleFactor = 1.2;
+        AdjustHistRange(vecHistos,scaleFactor,scaleFactor,h,nSets,kFALSE);
+	if ( vecHistosNameForSaving[0].at(h).Contains("V0Mult") ) ((TH1D*) vecHistos[0].at(h))->GetXaxis()->SetRangeUser(0,(((TH1D*) vecHistos[0].at(h))->GetXaxis()->GetXmax()));
         for(Int_t i=0; i<nSets; i++) {
             TString draw;
             if(h==0) draw = (i==0)?"p":"p, same";
             else draw = (i==0)?"px0e1":"px0e1, same";
-	    canvas->SetLogy(1);
             ((TH1D*) vecHistos[i].at(h))->Draw(draw.Data());
             legend->AddEntry(((TH1D*) vecHistos[i].at(h)),centralities[i],"p");
         }
-	canvas->SetLogy(1);
         legend->Draw();
         if ( vecHistosNameForSaving[0].at(h).Contains("Candidates") ) 
             PutProcessLabelAndEnergyOnPlot(0.75, 0.97-nTopRows*0.06, 0.03, fCollisionSystem.Data(),"","");
         else 
             PutProcessLabelAndEnergyOnPlot(0.75, 0.97-nTopRows*0.06, 0.03, fCollisionSystem.Data(), "", "");
-	canvas->SetLogy(1);
-        SaveWriteCanvas(canvas, Form("EventQA_CompareCentralities/%s/Periodwise/%s.%s", dataSet.Data(), vecHistosNameForSaving[0].at(h).Data(),suffix.Data()), kFALSE, kTRUE);
+	if ( vecHistosNameForSaving[0].at(h).Contains("VertexZ") || vecHistosNameForSaving[0].at(h).Contains("EventPlaneAngle")) SaveWriteCanvas(canvas, Form("EventQA_CompareCentralities/%s/Periodwise/%s.%s", dataSet.Data(), vecHistosNameForSaving[0].at(h).Data(),suffix.Data()));
+        else SaveWriteCanvas(canvas, Form("EventQA_CompareCentralities/%s/Periodwise/%s.%s", dataSet.Data(), vecHistosNameForSaving[0].at(h).Data(),suffix.Data()), kFALSE, kTRUE);
         legend->Clear();
         // if(h==9) TGaxis::SetExponentOffset(0, 0, "x");
     }
@@ -208,7 +206,7 @@ void EventQA_CompareCentralities( TString suffix  = "eps",
     fOutput->Write();
     fOutput->Close();
 
-    cout << "Done with EventQA_CompareCentraliries" << endl;
+    cout << "Done with EventQA_CompareCentralities" << endl;
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
 
