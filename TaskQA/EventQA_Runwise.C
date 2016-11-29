@@ -756,9 +756,9 @@ void EventQA_Runwise(
             TList* ConvCutsContainer    = (TList*) TopContainer->FindObject(Form("ConvCuts_%s",fGammaCutSelection.Data()));
                 if(isConv && ConvCutsContainer == NULL) {cout << "ERROR: " << Form("ConvCuts_%s",fGammaCutSelection.Data()) << " not found in File" << endl; return;}
                 else if(ConvCutsContainer) ConvCutsContainer->SetOwner(kTRUE);
-            TList* EventCutsContainer    = (TList*) TopContainer->FindObject(Form("ConvEventCuts_%s",fEventCutSelection.Data()));
-                if(isConv && EventCutsContainer == NULL) {cout << "ERROR: " << Form("ConvEventCuts_%s",fEventCutSelection.Data()) << " not found in File" << endl; return;}
-                else if(EventCutsContainer) EventCutsContainer->SetOwner(kTRUE);
+            TList* ConvEventCutsContainer    = (TList*) TopContainer->FindObject(Form("ConvEventCuts_%s",fEventCutSelection.Data()));
+                if(ConvEventCutsContainer == NULL) {cout << "ERROR: " << Form("ConvEventCuts_%s",fEventCutSelection.Data()) << " not found in File" << endl; return;}
+                else ConvEventCutsContainer->SetOwner(kTRUE);
             //--------------------------------------------------------------------------------------------------------
             if(doEquidistantXaxis) bin  = mapBin[fRunNumber];
             else bin = fRunNumber.Atoi() - hFBin;
@@ -908,10 +908,10 @@ void EventQA_Runwise(
 	      //--------------------------------------------------------------------------------------------------------
 	      //--------------------------------------- event plane angle ----------------------------------------------
 	      //--------------------------------------------------------------------------------------------------------
-	      TH1D* EventPlaneAngle          = (TH1D*) EventCutsContainer->FindObject(Form("EventPlaneAngle %s",fEventCutSelection.Data()));
+	      TH1D* EventPlaneAngle          = (TH1D*) ConvEventCutsContainer->FindObject(Form("EventPlaneAngle %s",fEventCutSelection.Data()));
 	      if(EventPlaneAngle){
-                hEventPlaneAngleMean[i]->SetBinContent(bin, EventPlaneAngle->GetMean());
-                hEventPlaneAngleMean[i]->SetBinError(bin, EventPlaneAngle->GetMeanError());
+		 hEventPlaneAngleMean[i]->SetBinContent(bin, EventPlaneAngle->GetMean());
+		 hEventPlaneAngleMean[i]->SetBinError(bin, EventPlaneAngle->GetMeanError());
 	      }else cout << "INFO: Object |EventPlaneAngle| could not be found! Skipping Fill..." << endl;
 	    }
 
