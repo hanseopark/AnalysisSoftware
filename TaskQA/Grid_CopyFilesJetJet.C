@@ -242,50 +242,50 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
 //      "/alice/sim/2016/LHC16c2/"
 //    };
 
-//    TString train = "Legotrain-vAN-20160628-8TeV-JetJet-QA";
-//    Int_t trainRuns[nSets] = {2195};
-//    TString runlist[nSets] = {"runwise"};
-
-//    const Int_t nFiles = 2;
-//    TString Files[nFiles] = {"GammaCalo_101","GammaConvCalo_101"};
-
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-
-//    const Int_t nSets = 1;
-//    const Int_t nData = 0;
-//    TString DataSets[nSets]={
-//      "LHC16c2"
-//    };
-//    TString PrefixDataSets[nSets]={
-//      "/alice/sim/2016/LHC16c2/"
-//    };
-
-//    TString train = "Legotrain-vAN-20161122-8TeV-TMeffi_CCPT3";
-//    Int_t trainRuns[nSets] = {2661};
+//    TString train = "Legotrain-vAN-20161127-8TeV-std_ConvCalo";
+//    Int_t trainRuns[nSets] = {2679};
 //    TString runlist[nSets] = {"merge"};
 
 //    const Int_t nFiles = 2;
-//    TString Files[nFiles] = {"GammaConvCalo_101","GammaCalo_101"};
+//    TString Files[nFiles] = {"GammaConvCalo_100","GammaConvCalo_101"};
 
-    const Int_t nSets = 2;
+    //*********************************************************************************************************************************
+    //*********************************************************************************************************************************
+    //*********************************************************************************************************************************
+
+    const Int_t nSets = 1;
     const Int_t nData = 0;
     TString DataSets[nSets]={
-      "LHC16c2",
       "LHC16c2"
     };
     TString PrefixDataSets[nSets]={
-      "/alice/sim/2016/LHC16c2/",
       "/alice/sim/2016/LHC16c2/"
     };
 
-    TString train = "Legotrain-vAN-20161108-8TeV-merged_new_AOD";
-    Int_t trainRuns[nSets] = {260,261};
-    TString runlist[nSets] = {"merge","merge"};
+    TString train = "Legotrain-vAN-20161125-8TeV-mergedAndVariations";
+    Int_t trainRuns[nSets] = {289};
+    TString runlist[nSets] = {"merge"};
 
-    const Int_t nFiles = 4;
-    TString Files[nFiles] = {"GammaCaloMerged_109","GammaCaloMerged_110","GammaCaloMerged_116","GammaCaloMerged_117"};
+    const Int_t nFiles = 3;
+    TString Files[nFiles] = {"GammaCalo_123","GammaCaloMerged_107","GammaCaloMerged_171"};
+
+//    const Int_t nSets = 2;
+//    const Int_t nData = 0;
+//    TString DataSets[nSets]={
+//      "LHC16c2",
+//      "LHC16c2"
+//    };
+//    TString PrefixDataSets[nSets]={
+//      "/alice/sim/2016/LHC16c2/",
+//      "/alice/sim/2016/LHC16c2/"
+//    };
+
+//    TString train = "Legotrain-vAN-20161108-8TeV-merged_new_AOD";
+//    Int_t trainRuns[nSets] = {260,261};
+//    TString runlist[nSets] = {"merge","merge"};
+
+//    const Int_t nFiles = 4;
+//    TString Files[nFiles] = {"GammaCaloMerged_109","GammaCaloMerged_110","GammaCaloMerged_116","GammaCaloMerged_117"};
 
     //---------------------------------------------------------------------------------------------------
 

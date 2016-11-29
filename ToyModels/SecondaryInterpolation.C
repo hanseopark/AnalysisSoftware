@@ -815,6 +815,9 @@ TGraphErrors* RemoveSysErrors (TGraphErrors* graph, TGraphErrors* refGraph){
     Double_t* yErrorRef         = refGraph->GetEY();
 
     for (Int_t i = 0; i < nPointsR; i++){
+      if(((yErrorR[i]*yErrorR[i])-(yErrorRef[i]*yErrorRef[i]))<0.)
+        yErrorR[i]               = yErrorRef[i]*yErrorRef[i];
+      else
         yErrorR[i]               = TMath::Sqrt((yErrorR[i]*yErrorR[i])-(yErrorRef[i]*yErrorRef[i]));
     }
 

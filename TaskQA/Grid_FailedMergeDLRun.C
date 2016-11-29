@@ -85,17 +85,17 @@ void Grid_FailedMergeDLRun(TString folder = "/home/daniel/data/work/pcgGit/Analy
 //    Int_t first[nRuns] = {1};
 //    Int_t last[nRuns] = {24};
 
-    const Int_t nFiles = 1;
-    TString Tag = "20160524";
-    TString DataSetsFile[nFiles] = {"GammaConvCalo_101.root"};
+    const Int_t nFiles = 2;
+    TString Tag = "20161127";
+    TString DataSetsFile[nFiles] = {"GammaConvCalo_100.root","GammaConvCalo_101.root"};
 
-    TString prefix = "/alice/sim/2015/LHC15h2b/";
-    TString suffix = "/AOD178/PWGGA/GA_pp_MC_AOD/130_20160622-2049/";
-    TString DataSet = "LHC15h2b";
+    TString prefix = "/alice/sim/2016/LHC16c2/";
+    TString suffix = "/PWGGA/GA_pp_MC/2679_20161124-1407/";
+    TString DataSet = "LHC16c2";
     const Int_t nRuns = 1;
-    Int_t run[nRuns] = {177597};
-    Int_t first[nRuns] = {1};
-    Int_t last[nRuns] = {25};
+    TString run[nRuns] = {/*"10/193051","20/192349","6/192349","15/192073","12/187488",*/"7/187488"/*,"1/187488","5/185687","10/184215","11/182692","19/182692","1/193051"*/};
+    Int_t first[nRuns] = {/*39,42,49,47,33,*/43/*,45,22,54,26,26,17*/};
+    Int_t last[nRuns] = {/*43,47,53,52,39,*/47/*,49,27,58,30,31,21*/};
 //    const Int_t nFiles = 2;
 //    TString Tag = "20160518";
 //    TString DataSetsFile[nFiles] = {"GammaConvV1_70.root", "AnalysisResults.root"};
@@ -222,18 +222,18 @@ void Grid_FailedMergeDLRun(TString folder = "/home/daniel/data/work/pcgGit/Analy
 
 	for(Int_t iRun=0; iRun<nRuns; iRun++)
 	{
-		TString PathDataSet = Form("%s%i%s",prefix.Data(),run[iRun],suffix.Data());
+        TString PathDataSet = Form("%s%s%s",prefix.Data(),run[iRun].Data(),suffix.Data());
 
 		TString fPathGrid;
 		TString fPathLocal;
 		for(Int_t k=0; k<nFiles; k++)
 		{
-			TString merge = Form("hadd %s/DataQA/%s/%s/%i/%s", folder.Data(), Tag.Data(), DataSet.Data(), run[iRun], DataSetsFile[k].Data());
+            TString merge = Form("hadd %s/DataQA/%s/%s/%s/%s", folder.Data(), Tag.Data(), DataSet.Data(), run[iRun].Data(), DataSetsFile[k].Data());
 
 			for(Int_t j=first[iRun]; j<=last[iRun]; j++)
 			{
 					fPathGrid = Form("%s%04i/%s", PathDataSet.Data(), j, (DataSetsFile[k]).Data());
-					fPathLocal = Form("%s/DataQA/%s/%s/%i", folder.Data(), Tag.Data(), DataSet.Data(), run[iRun]);
+                    fPathLocal = Form("%s/DataQA/%s/%s/%s", folder.Data(), Tag.Data(), DataSet.Data(), run[iRun].Data());
 					//gSystem->Exec(Form("mkdir -p %s",fPathLocal.Data()));
 
 					fPathLocal+="/"; fPathLocal+=j; fPathLocal+="_"; fPathLocal+=DataSetsFile[k];
@@ -262,7 +262,7 @@ void Grid_FailedMergeDLRun(TString folder = "/home/daniel/data/work/pcgGit/Analy
             cout << "Deleting files..." << endl;
             for(Int_t j=first[iRun]; j<=last[iRun]; j++)
             {
-              fPathLocal = Form("%s/DataQA/%s/%s/%i", folder.Data(), Tag.Data(), DataSet.Data(), run[iRun]);
+              fPathLocal = Form("%s/DataQA/%s/%s/%s", folder.Data(), Tag.Data(), DataSet.Data(), run[iRun].Data());
               fPathLocal+="/"; fPathLocal+=j; fPathLocal+="_"; fPathLocal+=DataSetsFile[k];
               cout << "... " << Form("rm %s",fPathLocal.Data()) << endl;
               gSystem->Exec(Form("rm %s",fPathLocal.Data()));

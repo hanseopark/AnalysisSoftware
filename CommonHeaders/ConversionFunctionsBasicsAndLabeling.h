@@ -3694,7 +3694,14 @@ Double_t ReturnTriggerRejectionFactor(TString energy, Int_t trigger){
         } else if (trigger == 83){  // EG1  
             triggerRejec    = 7217;
         }    
-    }
+    }else  if (energy.CompareTo("8TeV") == 0){
+      cout << trigger << endl;
+      if (trigger == 52){  // EMC7
+          triggerRejec    = 67.3;
+      } else if (trigger == 81){  // EGA
+          triggerRejec    = 15075;
+      }
+  }
     return triggerRejec;
 }
 
