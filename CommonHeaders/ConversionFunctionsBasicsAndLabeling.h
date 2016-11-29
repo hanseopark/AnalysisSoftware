@@ -217,6 +217,13 @@ void ReturnSeparatedCutNumberAdvanced(  TString cutSel,
         gammaCutNumber      = objstrGamma->GetString();
         clusterCutNumber    = objstrCluster->GetString();
         mesonCutNumber      = objstrMeson->GetString();        
+    } else if (type == 12){ // flow
+        objstrEvent         = (TObjString*)arr->At(0);
+        objstrGamma         = (TObjString*)arr->At(1);
+
+        eventCutNumber      = objstrEvent->GetString();
+        gammaCutNumber      = objstrGamma->GetString();
+
     }    
     
     cout << cutSel.Data() << "\t" << eventCutNumber.Data() << "\t" << gammaCutNumber.Data() << "\t" <<  clusterCutNumber.Data() << "\t" <<electronCutNumber.Data() << "\t" << mesonCutNumber.Data() << endl;

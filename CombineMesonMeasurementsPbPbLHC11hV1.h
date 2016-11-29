@@ -453,6 +453,8 @@ TGraphAsymmErrors*  graphPCMEtaRAASysPbPb2760GeVYShifted_2050;
 TGraphAsymmErrors*  graphEMCalEtaRAAStatPbPb2760GeVYShifted_2050;
 TGraphAsymmErrors*  graphEMCalEtaRAASysPbPb2760GeVYShifted_2050;
 
+TGraphAsymmErrors *graphPHOSPi0InvYieldStatPbPb2760GeV_0010;
+TGraphAsymmErrors *graphPHOSPi0InvYieldSysPbPb2760GeV_0010;
 
 //Raa calculated for each meas with comb fit
 TGraphAsymmErrors* graphRAAPCM0010;
@@ -694,6 +696,8 @@ TH2F * histo2DInvYieldSectionPi0LHC11h;
 TLatex *labelRatioToFitPi0;
 TLatex *labelRelSysErrPi0;
 TLatex *labelWeightsPi0;
+TGraphErrors *graphEPOSpred_0010;
+TGraphErrors *graphEPOSpred_2050;
 TH1D *histoEPOSpred_0010;
 TH1D *histoEPOSpred_2050;
 TLatex *labelFactorLower;

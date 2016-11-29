@@ -1275,7 +1275,9 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         gWHDG_Eta_Raa_2050->SetPointError(i, 0.000001, 0.000001, WHDG_Eta_Raa_2050[i] - WHDG_Eta_low_2050[i], WHDG_Eta_high_2050[i] - WHDG_Eta_Raa_2050[i]);
     }
     
-    
+    //*********************************************************************************************************************************
+    //*************************************************************** EPOS ************************************************************
+
     const Int_t nFilesEpos = 6;
     TString label[nFilesEpos] = {"Epos_pi0_PbPb_2760GeV_00_to_05", "Epos_pi0_PbPb_2760GeV_05_to_10", "Epos_pi0_PbPb_2760GeV_10_to_20", 
                     "Epos_pi0_PbPb_2760GeV_20_to_40", "Epos_pi0_PbPb_2760GeV_40_to_60", "Epos_pi0_PbPb_2760GeV_60_to_80"};
@@ -1326,7 +1328,50 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         gEpos[iFile]->Print();
     }    
 
-	
+    //EPOS(2?) (file from Anders Knospe)
+    //necessary to do -> dndptpy[iPoint] = dndptpy[iPoint]/(pt[iPoint]*2*TMath::Pi())
+    TFile* filePredictionEpos = new TFile("ExternalInputPbPb/Theory/EPOS/pi0_eta_Anders19Feb2016_NoUrQMD.root");
+    TH1D *histoEPOSPi0_0010 = (TH1D*)filePredictionEpos->Get("rb_pi0_pt_cent0_10");
+    for (Int_t i = 1; i < histoEPOSPi0_0010->GetNbinsX()+1 ; i++){
+        Double_t newBinContent = histoEPOSPi0_0010->GetBinContent(i)/(2*TMath::Pi()*histoEPOSPi0_0010->GetBinCenter(i));
+        Double_t newBinError = histoEPOSPi0_0010->GetBinError(i)/(2*TMath::Pi()*histoEPOSPi0_0010->GetBinCenter(i));
+        histoEPOSPi0_0010->SetBinContent(i,newBinContent);
+        histoEPOSPi0_0010->SetBinError(i,newBinError);
+    }
+    TH1D *histoEPOSEta_0010 = (TH1D*)filePredictionEpos->Get("rb_eta_pt_cent0_10");
+    for (Int_t i = 1; i < histoEPOSEta_0010->GetNbinsX()+1 ; i++){
+        Double_t newBinContent = histoEPOSEta_0010->GetBinContent(i)/(2*TMath::Pi()*histoEPOSEta_0010->GetBinCenter(i));
+        Double_t newBinError = histoEPOSEta_0010->GetBinError(i)/(2*TMath::Pi()*histoEPOSEta_0010->GetBinCenter(i));
+        histoEPOSEta_0010->SetBinContent(i,newBinContent);
+        histoEPOSEta_0010->SetBinError(i,newBinError);
+    }
+    TH1D *histoEPOSPi0_2050 = (TH1D*)filePredictionEpos->Get("rb_pi0_pt_cent20_50");
+    for (Int_t i = 1; i < histoEPOSPi0_2050->GetNbinsX()+1 ; i++){
+        Double_t newBinContent = histoEPOSPi0_2050->GetBinContent(i)/(2*TMath::Pi()*histoEPOSPi0_2050->GetBinCenter(i));
+        Double_t newBinError = histoEPOSPi0_2050->GetBinError(i)/(2*TMath::Pi()*histoEPOSPi0_2050->GetBinCenter(i));
+        histoEPOSPi0_2050->SetBinContent(i,newBinContent);
+        histoEPOSPi0_2050->SetBinError(i,newBinError);
+    }
+    TH1D *histoEPOSEta_2050 = (TH1D*)filePredictionEpos->Get("rb_eta_pt_cent20_50");
+    for (Int_t i = 1; i < histoEPOSEta_2050->GetNbinsX()+1 ; i++){
+        Double_t newBinContent = histoEPOSEta_2050->GetBinContent(i)/(2*TMath::Pi()*histoEPOSEta_2050->GetBinCenter(i));
+        Double_t newBinError = histoEPOSEta_2050->GetBinError(i)/(2*TMath::Pi()*histoEPOSEta_2050->GetBinCenter(i));
+        histoEPOSEta_2050->SetBinContent(i,newBinContent);
+        histoEPOSEta_2050->SetBinError(i,newBinError);
+    }
+
+    TH1D* histoEPOSEtaToPi0Ratio_0010 = (TH1D*)histoEPOSEta_0010->Clone("histoEPOSEtaToPi0Ratio_0010");
+    histoEPOSEtaToPi0Ratio_0010->Divide(histoEPOSEta_0010,histoEPOSPi0_0010,1.,1.,"");
+    TH1D* histoEPOSEtaToPi0Ratio_2050 = (TH1D*)histoEPOSEta_2050->Clone("histoEPOSEtaToPi0Ratio_2050");
+    histoEPOSEtaToPi0Ratio_2050->Divide(histoEPOSEta_2050,histoEPOSPi0_2050,1.,1.,"");
+
+    TGraphErrors *graphEPOSPi0_0010 = new TGraphErrors(histoEPOSPi0_0010);
+    TGraphErrors *graphEPOSEta_0010 = new TGraphErrors(histoEPOSEta_0010);
+    TGraphErrors *graphEPOSPi0_2050 = new TGraphErrors(histoEPOSPi0_2050);
+    TGraphErrors *graphEPOSEta_2050 = new TGraphErrors(histoEPOSEta_2050);
+    TGraphErrors *graphEPOSEtaToPi0Ratio_0010 = new TGraphErrors(histoEPOSEtaToPi0Ratio_0010);
+    TGraphErrors *graphEPOSEtaToPi0Ratio_2050 = new TGraphErrors(histoEPOSEtaToPi0Ratio_2050);
+
 	//*********************************************************************************************************************************
 	//************************************************************** EPOS 3 ***********************************************************
     // Calculation for 0-10% (for LHC11h -> is worse than old EPOS...)
@@ -1371,8 +1416,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     fEposEtaTxt.close();
     TGraphErrors* graphEPOSEta_0010 = new TGraphErrors(iPoint, Etapt, Etadndptpy, 0, Etadndptpy_staterr);
     
-    
-    
+
 	//*********************************************************************************************************************************
 	//********************************************************** Nemchick *************************************************************
     
@@ -1745,6 +1789,17 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
             gEpos[iFile]->Write(labelOut[iFile]);
 			gEposWOErr[iFile]->Write(labelOutWOErr[iFile]);
         }
+        //EPOS2
+        graphEPOSPi0_0010->Write("graphEPOS_Pi0_0010");
+        graphEPOSEta_0010->Write("graphEPOS_Eta_0010");
+        graphEPOSPi0_2050->Write("graphEPOS_Pi0_2050");
+        graphEPOSEta_2050->Write("graphEPOS_Eta_2050");
+        graphEPOSEtaToPi0Ratio_0010->Write("graphEPOS_EtaToPi0_0010");
+        graphEPOSEtaToPi0Ratio_2050->Write("graphEPOS_EtaToPi0_2050");
+        //EPOS3
+        graphEPOSPi0_0010->Write("graphEpos3_pi0_pt_cent0_10");
+        graphEPOSEta_0010->Write("graphEpos3_eta_pt_cent0_10");
+
         Kopeliovich_YieldHydro_0005->Write("graphKopeliovichHydroYield0005");
         Kopeliovich_YieldELoss_0005->Write("graphKopeliovichELossYield0005");
         Kopeliovich_YieldTotal_0005->Write("graphKopeliovichTotalYield0005");
@@ -1790,9 +1845,6 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         graphEtaRAAJetQuenching_0010->Write("graphEtaRAAJetQuenching_0010");
         graphEtaToPi0JetQuenching_0010->Write("graphEtaToPi0JetQuenching_0010");
 
-        graphEPOSPi0_0010->Write("epos_pi0_pt_cent0_10");
-        graphEPOSEta_0010->Write("epos_eta_pt_cent0_10");
-		
 		graphNLOCalcmuHalfDSS14InvSecPi02760GeV->Write("graphNLOCalcmuHalfDSS14InvSecPi02760GeV");
 		graphNLOCalcmuTwoDSS14InvSecPi02760GeV->Write("graphNLOCalcmuTwoDSS14InvSecPi02760GeV");
 		graphNLOCalcDSS14InvSecPi02760GeV->Write("graphNLOCalcDSS14InvCrossSecPi02760GeV");

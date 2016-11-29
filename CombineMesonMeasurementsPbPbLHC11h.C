@@ -62,11 +62,10 @@ struct SysErrorConversion {
 };
 
 void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
-                                        TString fileNamePCM = "",
                                         TString suffix = "pdf",
                                         Bool_t PaperPi0 = kTRUE,
                                         Bool_t noXerrorBars = kTRUE,
-                                        TString bWCorrection=""){
+                                        TString bWCorrection="X"){
 
     gROOT->Reset();
     gROOT->SetStyle("Plain");
@@ -76,7 +75,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
     TString dateForOutput           = ReturnDateStringForOutput();
     cout << dateForOutput.Data() << endl;
-
 
     //___________________________________ Labels definition _____________________________________________
 
@@ -156,8 +154,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     TLatex *labelPreliminaryEtaToPi0 = new TLatex(0.65,0.15,"ALICE Preliminary");
     SetStyleTLatex( labelPreliminaryEtaToPi0, 0.04,4);
 
-
-
     for (Int_t i = 0; i < 11; i++){
         colorDet[i]                 = GetDefaultColorDiffDetectors(nameMeasGlobal[i].Data(), kFALSE, kFALSE, kTRUE);
         colorDetMC[i]               = GetDefaultColorDiffDetectors(nameMeasGlobal[i].Data(), kTRUE, kFALSE, kTRUE);
@@ -175,44 +171,28 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     } else if (meson.CompareTo("Eta")==0){
         mass = TDatabasePDG::Instance()->GetParticle(221)->Mass();
     }
-
     Double_t normErr0010 = pow(pow(xSection2760GeVErrpp/(xSection2760GeVpp*1e3),2)+pow((tAAErr0010/tAA0010),2)+pow((commonCentralityErr0010/100),2),0.5);
     Double_t normErr2040 = pow(pow(xSection2760GeVErrpp/(xSection2760GeVpp*1e3),2)+pow((tAAErr2040/tAA2040),2)+pow((commonCentralityErr2040/100),2),0.5);
     Double_t normErr2050 = pow(pow(xSection2760GeVErrpp/(xSection2760GeVpp*1e3),2)+pow((tAAErr2050/tAA2050),2)+pow((commonCentralityErr2040/100),2),0.5);
 
-    TBox* boxErrorNorm0010 = CreateBoxConv(kRed-7, 0.25, 1.-normErr0010 , 0.5, 1.+normErr0010);
-    TBox* boxErrorNorm2050 = CreateBoxConv(kAzure-4, 0.5, 1.-normErr2050 , 0.75, 1.+normErr2050);
-
-    TBox* boxErrorNorm0010_Single = CreateBoxConv(colorComb0005Box, 0.2, 1.-normErr0010 , 0.5, 1.+normErr0010);
-    TBox* boxErrorNorm2040_Single = CreateBoxConv(colorComb2040Box, 0.2, 1.-normErr2040 , 0.5, 1.+normErr2040);
-    TBox* boxErrorNorm2050_Single = CreateBoxConv(colorCombo2050, 0.2, 1.-normErr2050 , 0.5, 1.+normErr2050);
-
-    TBox* boxErrorNorm0010Only = CreateBoxConv(kRed-7, 0.25, 1.-normErr0010 , 0.5, 1.+normErr0010);
-    TBox* boxErrorNorm2050Only = CreateBoxConv(kAzure-4, 0.25, 1.-normErr2050 , 0.5, 1.+normErr2050);
-    TBox* boxErrorNorm2050EPOnly = CreateBoxConv(kBlue-7, 0.25, 1.-normErr2050 , 0.5, 1.+normErr2050);
+    TBox* boxErrorNorm0010          = CreateBoxConv(kRed-7, 0.25, 1.-normErr0010 , 0.5, 1.+normErr0010);
+    TBox* boxErrorNorm2050          = CreateBoxConv(kAzure-4, 0.5, 1.-normErr2050 , 0.75, 1.+normErr2050);
+    TBox* boxErrorNorm0010_Single   = CreateBoxConv(colorComb0005Box, 0.2, 1.-normErr0010 , 0.5, 1.+normErr0010);
+    TBox* boxErrorNorm2040_Single   = CreateBoxConv(colorComb2040Box, 0.2, 1.-normErr2040 , 0.5, 1.+normErr2040);
+    TBox* boxErrorNorm2050_Single   = CreateBoxConv(colorCombo2050, 0.2, 1.-normErr2050 , 0.5, 1.+normErr2050);
+    TBox* boxErrorNorm0010Only      = CreateBoxConv(kRed-7, 0.25, 1.-normErr0010 , 0.5, 1.+normErr0010);
+    TBox* boxErrorNorm2050Only      = CreateBoxConv(kAzure-4, 0.25, 1.-normErr2050 , 0.5, 1.+normErr2050);
+    TBox* boxErrorNorm2050EPOnly    = CreateBoxConv(kBlue-7, 0.25, 1.-normErr2050 , 0.5, 1.+normErr2050);
 
     //___________________________________ Declaration of files _____________________________________________
 
     TString fileNameTheory                  = "ExternalInputPbPb/Theory/TheoryCompilationPbPbforLHC11h.root";
-    TString fileNameEPOS                    = "ExternalInputPbPb/Theory/EPOS/pi0_eta_Anders19Feb2016_NoUrQMD.root";
-    TString fileNameEPOScharged             = "ExternalInputPbPb/Theory/EPOS/Epos_sumChargedPionsKaons.root";
-
-    TString fileNamePP2760GeVpublished      = "ExternalInputPbPb/NeutralMesonspp276GeVReference/CombinedResultsPaperPP2760GeV_2016_10_03_FrediV2Clusterizer.root";
-    TString fileNamePPPHOS                  = "ExternalInput/PHOS/2.76TeV/LHC11a_PHOS_pi0_pp2760_noBWCorr_FDcorr_20140218.root";
-//     TString fileFinalResultsPi0PPforRAA     = "LHC11hInputFiles/CombinedResultsPaperX_18_Feb_2014.root";
-//     TString fileFinalResultsEtaPPforRAA     = "LHC11hInputFiles/CombinedResultsEta2760X_2015_09_01.root";
-    TString fileNamePCMPublished            = "ExternalInputPbPb/data_PCMResults_PbPb_2.76TeV_LHC10h.root";
-
-    TString fileNamePHOS                    = "ExternalInputPbPb/PHOS/LHC10h_PHOS_pi0_PbPb_06022014.root";
-    TString fileNameEMCal                   = "ExternalInputPbPb/EMCAL/LHC11h_EMCal_pi0eta_PbPb_10092015.root";
-    TString fileNameChargedRatios           = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/PbPb276.fullpT.RATIOS.20140329.root";
-    TString fileNameChargedPionRAA          = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/RAA_Pion_08052014.root";
-    TString fileNameChargedKaonRAA          = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/RAA_Kaon_08052014.root";
+    TString fileNameALICEData               = Form("%s/%s/CombineMesonMeasurementsPbPb2760GeVX/InputALICEResultsPbPb2760GeV_%s.root",suffix.Data(),dateForOutput.Data(),dateForOutput.Data());
     TString fileNameDataOtherEnergyInput    = "ExternalInputPbPb/OtherExperiments/DataCompilationFromOtherEnergiesPbPbWithEta.root";
 
     TString outputDir                       = Form("%s/%s/CombineMesonMeasurementsPbPb2760GeV%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
     TString paperPlots                      = Form("%s/PaperPlots_%s",outputDir.Data(),dateForOutput.Data());
-    TString PubNotePlots                      = Form("%s/PubNotePlots_%s",outputDir.Data(),dateForOutput.Data());
+    TString PubNotePlots                    = Form("%s/PubNotePlots_%s",outputDir.Data(),dateForOutput.Data());
     TString rootFiles                       = Form("%s/rootFiles",outputDir.Data());
     TString nameFinalResDat                 = Form("%s/CombinedResults%s_FitResults.dat",outputDir.Data(),bWCorrection.Data());
 
@@ -220,18 +200,9 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     gSystem->Exec("mkdir -p "+paperPlots);
     gSystem->Exec("mkdir -p "+PubNotePlots);
     gSystem->Exec("mkdir -p "+rootFiles);
-    gSystem->Exec(Form("cp %s %s/Theory.root",          fileNameTheory.Data(), rootFiles.Data()));
-    gSystem->Exec(Form("cp %s %s/InputPP.root",         fileNamePP2760GeVpublished.Data(), rootFiles.Data()));
-    gSystem->Exec(Form("cp %s %s/InputPCM.root",        fileNamePCM.Data(), rootFiles.Data()));
-    gSystem->Exec(Form("cp %s %s/InputPHOS.root",       fileNamePHOS.Data(), rootFiles.Data()));
-    gSystem->Exec(Form("cp %s %s/InputEMCalFull.root",  fileNameEMCal.Data(), rootFiles.Data()));
-    gSystem->Exec(Form("cp %s %s/ChargedRatios.root",   fileNameChargedRatios.Data(), rootFiles.Data()));
-    gSystem->Exec(Form("cp %s %s/ChargedPionRAA.root",  fileNameChargedPionRAA.Data(), rootFiles.Data()));
-    gSystem->Exec(Form("cp %s %s/ChargedKaonRAA.root",  fileNameChargedKaonRAA.Data(), rootFiles.Data()));
+    gSystem->Exec(Form("cp %s %s/Theory.root",                fileNameTheory.Data(), rootFiles.Data()));
+    gSystem->Exec(Form("cp %s %s/InputALICEData.root",        fileNameALICEData.Data(), rootFiles.Data()));
     gSystem->Exec(Form("cp %s %s/OtherExperimentsInput.root", fileNameDataOtherEnergyInput.Data(), rootFiles.Data()));
-
-
-
 
     //*********************************************************************************************************//
     //*************************************        Theory inputs      *****************************************//
@@ -240,7 +211,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
     //**************************** pQCD calculation ****************************//
     //inv yield = inv cross sec/xSection2760GeVppINEL
-
     //****************************     Pi0 DSS14    ****************************//
     TGraphAsymmErrors *graphNLOCalcmuHalfDSS14InvSecPi02760GeV  = (TGraphAsymmErrors*)fileTheoryGraphs->Get("graphNLOCalcmuHalfDSS14InvSecPi02760GeV");
     TGraphAsymmErrors *graphNLOCalcmuTwoDSS14InvSecPi02760GeV   = (TGraphAsymmErrors*)fileTheoryGraphs->Get("graphNLOCalcmuTwoDSS14InvSecPi02760GeV");
@@ -256,7 +226,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     }
     graphNLOCalcDSS14InvYieldPi0Band->RemovePoint(0);
     graphNLOCalcDSS14InvYieldPi0Band = ScaleGraph(graphNLOCalcDSS14InvYieldPi0Band,1./xSection2760GeVppINEL);
-
 
     //****************************     Eta DSS07    ****************************//
     TGraphAsymmErrors* graphNLOCalcmuHalfDSS07InvSecEta2760GeV = (TGraphAsymmErrors*)fileTheoryGraphs->Get("graphNLOCalcmuHalfDSS07InvSecEta2760GeV");
@@ -275,148 +244,44 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     graphNLOCalcDSS07InvYieldEtaBand = ScaleGraph(graphNLOCalcDSS07InvYieldEtaBand,1./xSection2760GeVppINEL);
 
 
+    //**************************************** EPOS **********************************************
+    //New EPOS (2?) (file from Anders email of the 19th Feb. 2016)
+    TGraphErrors *graphEPOSPi0_0010 = (TGraphErrors*)fileTheoryGraphs->Get("graphEPOS_Pi0_0010");
+    TGraphErrors *graphEPOSEta_0010 = (TGraphErrors*)fileTheoryGraphs->Get("graphEPOS_Eta_0010");
+    TGraphErrors *graphEPOSPi0_2050 = (TGraphErrors*)fileTheoryGraphs->Get("graphEPOS_Pi0_2050");
+    TGraphErrors *graphEPOSEta_2050 = (TGraphErrors*)fileTheoryGraphs->Get("graphEPOS_Eta_2050");
+    TGraphErrors *graphEPOSEtaToPi0_0010 = (TGraphErrors*)fileTheoryGraphs->Get("graphEPOS_EtaToPi0_0010");
+    TGraphErrors *graphEPOSEtaToPi0_2050 = (TGraphErrors*)fileTheoryGraphs->Get("graphEPOS_EtaToPi0_2050");
 
-    //**************************** EPOS ****************************//
-    //EPOS from published pi0 paper:
-    TGraph *gEPOS_Spec_0005 = (TGraph*)fileTheoryGraphs->Get("graphEPOSSpecWOErr0005");
-    TGraph *gEPOS_Spec_0510 = (TGraph*)fileTheoryGraphs->Get("graphEPOSSpecWOErr0510");
-
-    Int_t xbins = gEPOS_Spec_0005->GetN();
-    Double_t *xgraph0010 = gEPOS_Spec_0005->GetX();
-    Double_t *ygraph0005 = gEPOS_Spec_0005->GetY();
-    Double_t *ygraph0510 = gEPOS_Spec_0510->GetY();
-    Double_t ygraph0010[xbins];
-    for(Int_t n=0; n<gEPOS_Spec_0005->GetN(); n++){
-      ygraph0010[n] = (ygraph0005[n] + ygraph0510[n])/2;
-    }
-    TGraphErrors *gEPOS_Spec_0010 = new TGraphErrors(xbins,xgraph0010,ygraph0010,0,0);
-    TGraph *gEPOS_Spec_2040 = (TGraph*)fileTheoryGraphs->Get("graphEPOSSpecWOErr2040");
-
-
-    //EPOS3 input for 0-10%
-//     TGraphErrors *graphEPOS3Pi0_0010 = (TGraphErrors*)fileTheoryGraphs->Get("epos_pi0_pt_cent0_10");
-//     TH1D *histoEPOS3Pi0_0010 = (TH1D*)GraphToHist(graphEPOS3Pi0_0010,14,"histoEPOS3Pi0_0010");
-//
-//     TGraphErrors *graphEPOS3Eta_0010 = (TGraphErrors*)fileTheoryGraphs->Get("epos_eta_pt_cent0_10");
-//     TH1D *histoEPOS3Eta_0010 = (TH1D*)GraphToHist(graphEPOS3Eta_0010,14,"histoEPOS3Eta_0010");
-
-    //New EPOS (maybe 2?) (file from Anders email of the 19th Feb. 2016)
-    //necessary to do -> dndptpy[iPoint] = dndptpy[iPoint]/(pt[iPoint]*2*TMath::Pi());
-    TFile* filePredictionEpos = new TFile(fileNameEPOS.Data());
-    TH1D *histoEPOSPi0_0010 = (TH1D*)filePredictionEpos->Get("rb_pi0_pt_cent0_10");
-    for (Int_t i = 1; i < histoEPOSPi0_0010->GetNbinsX()+1 ; i++){
-        Double_t newBinContent = histoEPOSPi0_0010->GetBinContent(i)/(2*TMath::Pi()*histoEPOSPi0_0010->GetBinCenter(i));
-        Double_t newBinError = histoEPOSPi0_0010->GetBinError(i)/(2*TMath::Pi()*histoEPOSPi0_0010->GetBinCenter(i));
-        histoEPOSPi0_0010->SetBinContent(i,newBinContent);
-        histoEPOSPi0_0010->SetBinError(i,newBinError);
-    }
-    TH1D *histoEPOSEta_0010 = (TH1D*)filePredictionEpos->Get("rb_eta_pt_cent0_10");
-    for (Int_t i = 1; i < histoEPOSEta_0010->GetNbinsX()+1 ; i++){
-        Double_t newBinContent = histoEPOSEta_0010->GetBinContent(i)/(2*TMath::Pi()*histoEPOSEta_0010->GetBinCenter(i));
-        Double_t newBinError = histoEPOSEta_0010->GetBinError(i)/(2*TMath::Pi()*histoEPOSEta_0010->GetBinCenter(i));
-        histoEPOSEta_0010->SetBinContent(i,newBinContent);
-        histoEPOSEta_0010->SetBinError(i,newBinError);
-    }
-    TH1D *histoEPOSPi0_2050 = (TH1D*)filePredictionEpos->Get("rb_pi0_pt_cent20_50");
-    for (Int_t i = 1; i < histoEPOSPi0_2050->GetNbinsX()+1 ; i++){
-        Double_t newBinContent = histoEPOSPi0_2050->GetBinContent(i)/(2*TMath::Pi()*histoEPOSPi0_2050->GetBinCenter(i));
-        Double_t newBinError = histoEPOSPi0_2050->GetBinError(i)/(2*TMath::Pi()*histoEPOSPi0_2050->GetBinCenter(i));
-        histoEPOSPi0_2050->SetBinContent(i,newBinContent);
-        histoEPOSPi0_2050->SetBinError(i,newBinError);
-    }
-    TH1D *histoEPOSEta_2050 = (TH1D*)filePredictionEpos->Get("rb_eta_pt_cent20_50");
-    for (Int_t i = 1; i < histoEPOSEta_2050->GetNbinsX()+1 ; i++){
-        Double_t newBinContent = histoEPOSEta_2050->GetBinContent(i)/(2*TMath::Pi()*histoEPOSEta_2050->GetBinCenter(i));
-        Double_t newBinError = histoEPOSEta_2050->GetBinError(i)/(2*TMath::Pi()*histoEPOSEta_2050->GetBinCenter(i));
-        histoEPOSEta_2050->SetBinContent(i,newBinContent);
-        histoEPOSEta_2050->SetBinError(i,newBinError);
-    }
-
-    DrawGammaSetMarker(histoEPOSPi0_0010,5,2,colorEPOS0010,colorEPOS0010);
-    histoEPOSPi0_0010->SetLineWidth(2);
-    histoEPOSPi0_0010->SetLineStyle(5);
-    DrawGammaSetMarker(histoEPOSPi0_2050,5,2,colorEPOS2050,colorEPOS2050);
-    histoEPOSPi0_2050->SetLineWidth(2);
-    histoEPOSPi0_2050->SetLineStyle(5);
-
-    DrawGammaSetMarker(histoEPOSEta_0010,5,2,colorEPOS0010,colorEPOS0010);
-    histoEPOSEta_0010->SetLineWidth(2);
-    histoEPOSEta_0010->SetLineStyle(5);
-    DrawGammaSetMarker(histoEPOSEta_2050,5,2,colorEPOS2050,colorEPOS2050);
-    histoEPOSEta_2050->SetLineWidth(2);
-    histoEPOSEta_2050->SetLineStyle(5);
-
+    DrawGammaSetMarkerTGraphErr(graphEPOSPi0_0010, 0, 0, colorEPOS0010,colorEPOS0010, 2, kFALSE, colorEPOS0010);
+    DrawGammaSetMarkerTGraphErr(graphEPOSPi0_2050, 0, 0, colorEPOS2050,colorEPOS2050, 2, kFALSE, colorEPOS2050);
+    DrawGammaSetMarkerTGraphErr(graphEPOSEta_0010, 0, 0, colorEPOS0010,colorEPOS0010, 2, kFALSE, colorEPOS0010);
+    DrawGammaSetMarkerTGraphErr(graphEPOSEta_2050, 0, 0, colorEPOS2050,colorEPOS2050, 2, kFALSE, colorEPOS2050);
     if(meson.CompareTo("Pi0")==0){
-        histoEPOSpred_0010 = (TH1D*)histoEPOSPi0_0010->Clone("histoEPOSpred_0010");
-        histoEPOSpred_2050 = (TH1D*)histoEPOSPi0_2050->Clone("histoEPOSpred_2050");
+        graphEPOSpred_0010 = (TGraphErrors*)graphEPOSPi0_0010->Clone("graphEPOSpred_0010");
+        graphEPOSpred_2050 = (TGraphErrors*)graphEPOSPi0_2050->Clone("graphEPOSpred_2050");
     } else if(meson.CompareTo("Eta")==0){
-        histoEPOSpred_0010 = (TH1D*)histoEPOSEta_0010->Clone("histoEPOSpred_0010");
-        histoEPOSpred_2050 = (TH1D*)histoEPOSEta_2050->Clone("histoEPOSpred_2050");
+        graphEPOSpred_0010 = (TGraphErrors*)graphEPOSEta_0010->Clone("graphEPOSpred_0010");
+        graphEPOSpred_2050 = (TGraphErrors*)graphEPOSEta_2050->Clone("graphEPOSpred_2050");
     }
-    //here
-    DrawGammaSetMarker(histoEPOSpred_0010,5,2,colorEPOS0010,colorEPOS0010);
-    histoEPOSpred_0010->SetLineWidth(2);
-    histoEPOSpred_0010->SetLineStyle(5);
-    TH1D *histoEPOSpredScaledforPlot_0010 = (TH1D*)histoEPOSpred_0010->Clone("histoEPOSpredScaledforPlot_0010");
-    histoEPOSpredScaledforPlot_0010->Scale(4);
-    DrawGammaSetMarker(histoEPOSpredScaledforPlot_0010,1,2,colorEPOS0010,colorEPOS0010);
-    histoEPOSpredScaledforPlot_0010->SetLineWidth(2);
-
-    DrawGammaSetMarker(histoEPOSpred_2050,5,2,colorEPOS2050,colorEPOS2050);
-    histoEPOSpred_2050->SetLineWidth(2);
-    histoEPOSpred_2050->SetLineStyle(5);
-
-    TH1D* histoEPOSEtaToPi0Ratio_0010 = (TH1D*)histoEPOSEta_0010->Clone("histoEPOSEtaToPi0Ratio_0010");
-    histoEPOSEtaToPi0Ratio_0010->Divide(histoEPOSEta_0010,histoEPOSPi0_0010,1.,1.,"");
-    TH1D* histoEPOSEtaToPi0Ratio_2050 = (TH1D*)histoEPOSEta_2050->Clone("histoEPOSEtaToPi0Ratio_2050");
-    histoEPOSEtaToPi0Ratio_2050->Divide(histoEPOSEta_2050,histoEPOSPi0_2050,1.,1.,"");
-
-    //EPOS predictions for charged pions and kaons (summed) from Astrid email on 25 April 2016
-    //necessary to do -> dndptpy[iPoint] = dndptpy[iPoint]/(pt[iPoint]*2*TMath::Pi());
-    TFile* filePredictionChargedEpos = new TFile(fileNameEPOScharged.Data());
-    TH1D* histoNOUrQMDPionEPOS_0010 = (TH1D*)filePredictionChargedEpos->Get("NoUrQMD_pix_pt_cent0_10");
-    for (Int_t i = 1; i < histoNOUrQMDPionEPOS_0010->GetNbinsX()+1 ; i++){
-        Double_t newBinContent = histoNOUrQMDPionEPOS_0010->GetBinContent(i)/(2*2*TMath::Pi()*histoNOUrQMDPionEPOS_0010->GetBinCenter(i));
-        Double_t newBinError = histoNOUrQMDPionEPOS_0010->GetBinError(i)/(2*2*TMath::Pi()*histoNOUrQMDPionEPOS_0010->GetBinCenter(i));
-        histoNOUrQMDPionEPOS_0010->SetBinContent(i,newBinContent);
-        histoNOUrQMDPionEPOS_0010->SetBinError(i,newBinError);
-    }
-    TH1D* histoNOUrQMDKaonEPOS_0010 = (TH1D*)filePredictionChargedEpos->Get("NoUrQMD_Kx_pt_cent0_10");
-    for (Int_t i = 1; i < histoNOUrQMDKaonEPOS_0010->GetNbinsX()+1 ; i++){
-        Double_t newBinContent = histoNOUrQMDKaonEPOS_0010->GetBinContent(i)/(2*2*TMath::Pi()*histoNOUrQMDKaonEPOS_0010->GetBinCenter(i));
-        Double_t newBinError = histoNOUrQMDKaonEPOS_0010->GetBinError(i)/(2*2*TMath::Pi()*histoNOUrQMDKaonEPOS_0010->GetBinCenter(i));
-        histoNOUrQMDKaonEPOS_0010->SetBinContent(i,newBinContent);
-        histoNOUrQMDKaonEPOS_0010->SetBinError(i,newBinError);
-    }
-    TH1D* histoUrQMDPionEPOS_0010 = (TH1D*)filePredictionChargedEpos->Get("UrQMD_pix_pt_cent0_10");
-    for (Int_t i = 1; i < histoUrQMDPionEPOS_0010->GetNbinsX()+1 ; i++){
-        Double_t newBinContent = histoUrQMDPionEPOS_0010->GetBinContent(i)/(2*2*TMath::Pi()*histoUrQMDPionEPOS_0010->GetBinCenter(i));
-        Double_t newBinError = histoUrQMDPionEPOS_0010->GetBinError(i)/(2*2*TMath::Pi()*histoUrQMDPionEPOS_0010->GetBinCenter(i));
-        histoUrQMDPionEPOS_0010->SetBinContent(i,newBinContent);
-        histoUrQMDPionEPOS_0010->SetBinError(i,newBinError);
-    }
-    TH1D* histoUrQMDKaonEPOS_0010 = (TH1D*)filePredictionChargedEpos->Get("UrQMD_Kx_pt_cent0_10");
-    for (Int_t i = 1; i < histoUrQMDKaonEPOS_0010->GetNbinsX()+1 ; i++){
-        Double_t newBinContent = histoUrQMDKaonEPOS_0010->GetBinContent(i)/(2*2*TMath::Pi()*histoUrQMDKaonEPOS_0010->GetBinCenter(i));
-        Double_t newBinError = histoUrQMDKaonEPOS_0010->GetBinError(i)/(2*2*TMath::Pi()*histoUrQMDKaonEPOS_0010->GetBinCenter(i));
-        histoUrQMDKaonEPOS_0010->SetBinContent(i,newBinContent);
-        histoUrQMDKaonEPOS_0010->SetBinError(i,newBinError);
-    }
+    DrawGammaSetMarkerTGraphError(graphEPOSpred_0010, 0, 0, colorEPOS0010,colorEPOS0010, 2, kFALSE, colorEPOS0010);
+    TGraphErrors *graphEPOSpredScaledforPlot_0010 = (TGraphErrors*)graphEPOSpred_0010->Clone("graphEPOSpredScaledforPlot_0010");
+    graphEPOSpredScaledforPlot_0010 = ScaleGraph(graphEPOSpredScaledforPlot_0010,4);
+    DrawGammaSetMarkerTGraphErr(graphEPOSpredScaledforPlot_0010, 0, 0, colorEPOS0010,colorEPOS0010, 2, kFALSE, colorEPOS0010);
+    DrawGammaSetMarkerTGraphErr(graphEPOSpred_2050, 0, 0, colorEPOS2050,colorEPOS2050, 2, kFALSE, colorEPOS2050);
+    DrawGammaSetMarkerTGraphErr(histoEPOSEtaToPi0Ratio_0010, 0, 0, colorEPOS0010,colorEPOS0010, 2, kFALSE, colorEPOS0010);
+    DrawGammaSetMarkerTGraphErr(histoEPOSEtaToPi0Ratio_2050, 0, 0, colorEPOS2050,colorEPOS2050, 2, kFALSE, colorEPOS2050);
 
 
-    //**************************** Cracow model ****************************//
+    //**************************************** Cracow **********************************************
     TGraphAsymmErrors *TheoryCracowPi0LowPt_0010 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("TheoryCracowPi0LowPt_0010");
     TGraphAsymmErrors *TheoryCracowPi0LowPt_2050 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("TheoryCracowPi0LowPt_2050");
-
     TGraphAsymmErrors *TheoryCracowEtaLowPt_0010 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("TheoryCracowEtaLowPt_0010");
     TGraphAsymmErrors *TheoryCracowEtaLowPt_2050 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("TheoryCracowEtaLowPt_2050");
-
     TGraphAsymmErrors* TheoryCracowEtaToPi0LowPt_0010 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("TheoryCracowEtaToPi0LowPt_0010");
     TGraphAsymmErrors* TheoryCracowEtaToPi0LowPt_2050 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("TheoryCracowEtaToPi0LowPt_2050");
-
     TGraphAsymmErrors *TheoryCracowChargedPionLowPt_0010 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("TheoryCracowChargedPionLowPt_0010");
     TGraphAsymmErrors *TheoryCracowChargedKaonLowPt_0010 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("TheoryCracowChargedKaonLowPt_0010");
-
     TGraphAsymmErrors* TheoryCracowLowPt_0010 = NULL;
     TGraphAsymmErrors* TheoryCracowLowPt_2050 = NULL;
     if(meson.CompareTo("Pi0")==0){
@@ -426,19 +291,15 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
         TheoryCracowLowPt_0010 = (TGraphAsymmErrors*)TheoryCracowEtaLowPt_0010->Clone("TheoryCracowLowPt_0010");
         TheoryCracowLowPt_2050 = (TGraphAsymmErrors*)TheoryCracowEtaLowPt_2050->Clone("TheoryCracowLowPt_2050");
     }
-
     TGraphAsymmErrors *TheoryCracowLowPtScaledforPlot_0010 = (TGraphAsymmErrors*)TheoryCracowLowPt_0010->Clone("TheoryCracowLowPtScaledforPlot_0010");
     TheoryCracowLowPtScaledforPlot_0010 = ScaleGraph(TheoryCracowLowPtScaledforPlot_0010,4);
     DrawGammaSetMarkerTGraphAsym(TheoryCracowLowPtScaledforPlot_0010, 0, 0, colorCracow0010,colorCracow0010, 5, kTRUE, colorCracow0010);
-
     DrawGammaSetMarkerTGraphAsym(TheoryCracowLowPt_0010, 0, 0, colorCracow0010,colorCracow0010, 5, kTRUE,colorCracow0010);
     DrawGammaSetMarkerTGraphAsym(TheoryCracowLowPt_2050, 0, 0, colorCracow2050,colorCracow2050, 5, kTRUE,colorCracow2050);
-
     DrawGammaSetMarkerTGraphAsym(TheoryCracowPi0LowPt_0010, 0, 0, kBlue+1,kBlue+1, 5, kTRUE, kBlue+1);
     DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaLowPt_0010, 0, 0, kRed+1,kRed+1, 5, kTRUE, kRed+1);
     DrawGammaSetMarkerTGraphAsym(TheoryCracowChargedPionLowPt_0010, 0, 0, kCyan+2,kCyan+2, 5, kTRUE, kCyan+2);
     DrawGammaSetMarkerTGraphAsym(TheoryCracowChargedKaonLowPt_0010, 0, 0, kMagenta+1,kMagenta+1, 5, kTRUE, kMagenta+1);
-
     Int_t nBins = TheoryCracowPi0LowPt_0010->GetN();
     Double_t *xBins = TheoryCracowPi0LowPt_0010->GetX();
     Double_t *yKaons = TheoryCracowChargedKaonLowPt_0010->GetY();
@@ -452,24 +313,13 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     Double_t yEtaToPi0_2050[nBins];
     Double_t yEtaToKaon[nBins];
     Double_t yPi0ToPions[nBins];
-
     for(Int_t n=0; n<TheoryCracowPi0LowPt_0010->GetN(); n++){
-
       yKaonsToPions[n] = yKaons[n]/yPions[n];
-//       cout << "Kaons/Pions = " << yKaons[n] << " / " << yPions[n] << " = " << yKaonsToPions[n] << endl;
-
       yEtaToPi0[n] = yEta[n]/yPi0[n];
-//       cout << "Kaons/Pions = " << yEta[n] << " / " << yPi0[n] << " = " << yEtaToPi0[n] << endl;
       yEtaToPi0_2050[n] = yEta_2050[n]/yPi0_2050[n];
-
       yEtaToKaon[n] = yEta[n]/yKaons[n];
-//       cout << "Kaons/Pions = " << yEta[n] << " / " << yKaons[n] << " = " << yEtaToKaon[n] << endl;
-
       yPi0ToPions[n] = yPi0[n]/yPions[n];
-//       cout << "Kaons/Pions = " << yPi0[n] << " / " << yPions[n] << " = " << yPi0ToPions[n] << endl;
-
     }
-
     TGraphAsymmErrors *TheoryCracowChargedKaonToPionLowPt_0010 = new TGraphAsymmErrors(nBins,xBins,yKaonsToPions,0,0,0,0);
     TGraphAsymmErrors *TheoryCracowEtaToPi0_0010 = new TGraphAsymmErrors(nBins,xBins,yEtaToPi0,0,0,0,0);
     TGraphAsymmErrors *TheoryCracowEtaToPi0_2050 = new TGraphAsymmErrors(nBins,xBins,yEtaToPi0_2050,0,0,0,0);
@@ -477,11 +327,9 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     TGraphAsymmErrors *TheoryCracowPi0ToChargedPionLowPt_0010 = new TGraphAsymmErrors(nBins,xBins,yPi0ToPions,0,0,0,0);
 
 
-
     //**************************** Jet Quenching NLO arXiv:1506.00838 ****************************//
     TGraphAsymmErrors* graphPi0RAAJetQuenching_0010 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("graphPi0RAAJetQuenching_0010");
     TGraphAsymmErrors* graphEtaRAAJetQuenching_0010 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("graphEtaRAAJetQuenching_0010");
-
     TGraphAsymmErrors* graphEtaToPi0JetQuenching_0010 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("graphEtaToPi0JetQuenching_0010");
 
 
@@ -490,7 +338,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     gWHDG_Raa_0005 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("graphWHDGRAA0005");
     gWHDG_Raa_0010 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("graphWHDGRAA0010");
     gWHDG_Raa_2050 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("graphWHDGRAA2050");
-
     gWHDG_Eta_Raa_0010 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("graphWHDGetaRAA0010");
     gWHDG_Eta_Raa_2050 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("graphWHDGetaRAA2050");
 
@@ -504,477 +351,103 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     //*********************************************************************************************************//
     //********************************        Other experiment inputs     *************************************//
     //*********************************************************************************************************//
-
     TFile* fileDataOtherEnergies = new TFile(fileNameDataOtherEnergyInput);
-
     graphWA98_17_3GeVRAA_0013= (TGraphErrors*)fileDataOtherEnergies->Get("graphWA98RAA_0013");
-
     graphPHENIX200GeVRAA_0010= (TGraphErrors*)fileDataOtherEnergies->Get("graphPHENIX200GeVRAA_0010");
     graphPHENIX200GeVRAA_2040= (TGraphErrors*)fileDataOtherEnergies->Get("graphPHENIX200GeVRAA_2040");
     graphPHENIX39GeVRAA_0010= (TGraphErrors*)fileDataOtherEnergies->Get("graphPHENIX39GeVRAA_0010");
     graphPHENIX39GeVRAA_2040= (TGraphErrors*)fileDataOtherEnergies->Get("graphPHENIX39GeVRAA_2040");
     graphPHENIX62GeVRAA_0010= (TGraphErrors*)fileDataOtherEnergies->Get("graphPHENIX62GeVRAA_0010");
     graphPHENIX62GeVRAA_2040= (TGraphErrors*)fileDataOtherEnergies->Get("graphPHENIX62GeVRAA_2040");
-
     graphPHENIX200GeVEtaRAA_0010= (TGraphErrors*)fileDataOtherEnergies->Get("graphPHENIX200GeVEtaRAA_0010");
     graphPHENIX200GeVEtaRAA_2040= (TGraphErrors*)fileDataOtherEnergies->Get("graphPHENIX200GeVEtaRAA_2040");
     graphPHENIX200GeVEtaRAA_2060= (TGraphErrors*)fileDataOtherEnergies->Get("graphPHENIX200GeVEtaRAA_2060");
 
-    TGraphAsymmErrors* graphEtaRAAPhenix0010 = (TGraphAsymmErrors*)fileDataOtherEnergies->Get("graphPHENIX200GeVEtaRAA_0010");
-    TGraphAsymmErrors* graphEtaRAAPhenix2040 = (TGraphAsymmErrors*)fileDataOtherEnergies->Get("graphPHENIX200GeVEtaRAA_2040");
-    TGraphAsymmErrors* graphEtaRAAPhenix2060 = (TGraphAsymmErrors*)fileDataOtherEnergies->Get("graphPHENIX200GeVEtaRAA_2060");
 
-
-
+    TFile* fileDataALICE = new TFile(fileNameALICEData);
     //*********************************************************************************************************//
     //**********************************     Charged pions and kaons     **************************************//
     //*********************************************************************************************************//
+    TDirectoryFile* directoryChargedPbPb = (TDirectoryFile*)fileDataALICE->Get("ChargedParticles_PbPb_2.76TeV");
+    TGraphAsymmErrors* graphChargedRatioKaonToPion0010      = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedRatioKaonToPion0010");
+    TGraphAsymmErrors* graphChargedRatioKaonToPionSys0010   = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedRatioKaonToPionSys0010");
+    TGraphAsymmErrors* graphChargedRatioKaonToPion2040      = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedRatioKaonToPion2040");
+    TGraphAsymmErrors* graphChargedRatioKaonToPionSys2040   = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedRatioKaonToPionSys2040");
 
-    //**************************** Charged ratios ****************************//
-    TFile* fileDataALICEChargedRatioKaonToPion  = new TFile(fileNameChargedRatios);
-    TH1D *histoStatChargedRatioKaonToPion0005 = (TH1D*)fileDataALICEChargedRatioKaonToPion->Get("hstat_PbPb276_0005_kaon_to_pion_sum");
-    TH1D *histoSystChargedRatioKaonToPion0005 = (TH1D*)fileDataALICEChargedRatioKaonToPion->Get("hsys_PbPb276_0005_kaon_to_pion_sum");
-    TGraphAsymmErrors* graphChargedRatioKaonToPion0005 = new TGraphAsymmErrors(histoStatChargedRatioKaonToPion0005);
-    TGraphAsymmErrors* graphChargedRatioKaonToPionSys0005 = new TGraphAsymmErrors(histoSystChargedRatioKaonToPion0005);
-
-    TH1D *histoStatChargedRatioKaonToPion0510 = (TH1D*)fileDataALICEChargedRatioKaonToPion->Get("hstat_PbPb276_0510_kaon_to_pion_sum");
-    TH1D *histoSystChargedRatioKaonToPion0510 = (TH1D*)fileDataALICEChargedRatioKaonToPion->Get("hsys_PbPb276_0510_kaon_to_pion_sum");
-    TGraphAsymmErrors* graphChargedRatioKaonToPion0510 = new TGraphAsymmErrors(histoStatChargedRatioKaonToPion0510);
-    TGraphAsymmErrors* graphChargedRatioKaonToPionSys0510 = new TGraphAsymmErrors(histoSystChargedRatioKaonToPion0510);
-
-    TH1D* histoStatChargedRatioKaonToPion0010 = (TH1D*)histoStatChargedRatioKaonToPion0510->Clone("histoStatChargedRatioKaonToPion0010");
-    TH1D* histoSystChargedRatioKaonToPion0010 = (TH1D*)histoSystChargedRatioKaonToPion0510->Clone("histoSystChargedRatioKaonToPion0010");
-    histoStatChargedRatioKaonToPion0010->Add(histoStatChargedRatioKaonToPion0005);
-    histoSystChargedRatioKaonToPion0010->Add(histoSystChargedRatioKaonToPion0005);
-    histoStatChargedRatioKaonToPion0010->Scale(0.5);
-    histoSystChargedRatioKaonToPion0010->Scale(0.5);
-    for (Int_t i = 1; i < histoSystChargedRatioKaonToPion0010->GetNbinsX()+1; i++){
-        Double_t relErrLowerCent = 0;
-        if (histoSystChargedRatioKaonToPion0005->GetBinContent(i) != 0){
-            relErrLowerCent= histoSystChargedRatioKaonToPion0005->GetBinError(i)/histoSystChargedRatioKaonToPion0005->GetBinContent(i)*100 ;
-        }
-        Double_t relErrHigherCent = 0;
-        if (histoSystChargedRatioKaonToPion0510->GetBinContent(i) != 0){
-            relErrHigherCent = histoSystChargedRatioKaonToPion0510->GetBinError(i)/histoSystChargedRatioKaonToPion0510->GetBinContent(i)*100 ;
-        }
-
-        if (relErrHigherCent > relErrLowerCent){
-            histoSystChargedRatioKaonToPion0010->SetBinError(i, histoSystChargedRatioKaonToPion0010->GetBinContent(i)*relErrHigherCent/100);
-        } else {
-            histoSystChargedRatioKaonToPion0010->SetBinError(i, histoSystChargedRatioKaonToPion0010->GetBinContent(i)*relErrLowerCent/100);
-        }
-    }
-    TGraphAsymmErrors* graphChargedRatioKaonToPion0010 = new TGraphAsymmErrors(histoStatChargedRatioKaonToPion0010);
-    TGraphAsymmErrors* graphChargedRatioKaonToPionSys0010 = new TGraphAsymmErrors(histoSystChargedRatioKaonToPion0010);
-
-    TH1D *histoStatChargedRatioKaonToPion2040 = (TH1D*)fileDataALICEChargedRatioKaonToPion->Get("hstat_PbPb276_2040_kaon_to_pion_sum");
-    TH1D *histoSystChargedRatioKaonToPion2040 = (TH1D*)fileDataALICEChargedRatioKaonToPion->Get("hsys_PbPb276_2040_kaon_to_pion_sum");
-    TGraphAsymmErrors* graphChargedRatioKaonToPion2040 = new TGraphAsymmErrors(histoStatChargedRatioKaonToPion2040);
-    TGraphAsymmErrors* graphChargedRatioKaonToPionSys2040 = new TGraphAsymmErrors(histoSystChargedRatioKaonToPion2040);
-
-
-    //**************************** Charged pion ****************************//
-    TFile* fileDataALICEChargedPionRAA = new TFile(fileNameChargedPionRAA);
-
-    TH1D *histoStatChargedPion0005 = (TH1D*)fileDataALICEChargedPionRAA->Get("RAAPion_Stat_0_5");
-    TH1D *histoSystChargedPion0005 = (TH1D*)fileDataALICEChargedPionRAA->Get("RAAPion_Syst_0_5");
-    TGraphAsymmErrors* graphChargedPionRAA0005 = new TGraphAsymmErrors(histoStatChargedPion0005);
-    TGraphAsymmErrors* graphChargedPionRAASys0005 = new TGraphAsymmErrors(histoSystChargedPion0005);
-
-    TH1D *histoStatChargedPion0510 = (TH1D*)fileDataALICEChargedPionRAA->Get("RAAPion_Stat_5_10");
-    TH1D *histoSystChargedPion0510 = (TH1D*)fileDataALICEChargedPionRAA->Get("RAAPion_Syst_5_10");
-    TGraphAsymmErrors* graphChargedPionRAA0510 = new TGraphAsymmErrors(histoStatChargedPion0510);
-    TGraphAsymmErrors* graphChargedPionRAASys0510 = new TGraphAsymmErrors(histoSystChargedPion0510);
-
-    TH1D* histoStatChargedPion0010 = (TH1D*)histoStatChargedPion0510->Clone("histoStatChargedPion0010");
-    TH1D* histoSystChargedPion0010 = (TH1D*)histoSystChargedPion0510->Clone("histoSystChargedPion0010");
-    histoStatChargedPion0010->Add(histoStatChargedPion0005);
-    histoSystChargedPion0010->Add(histoSystChargedPion0005);
-    histoStatChargedPion0010->Scale(0.5);
-    histoSystChargedPion0010->Scale(0.5);
-    for (Int_t i = 1; i < histoSystChargedPion0010->GetNbinsX()+1; i++){
-        Double_t relErrLowerCent = 0;
-        if (histoSystChargedPion0005->GetBinContent(i) != 0){
-            relErrLowerCent= histoSystChargedPion0005->GetBinError(i)/histoSystChargedPion0005->GetBinContent(i)*100 ;
-        }
-        Double_t relErrHigherCent = 0;
-        if (histoSystChargedPion0510->GetBinContent(i) != 0){
-            relErrHigherCent = histoSystChargedPion0510->GetBinError(i)/histoSystChargedPion0510->GetBinContent(i)*100 ;
-        }
-
-        if (relErrHigherCent > relErrLowerCent){
-            histoSystChargedPion0010->SetBinError(i, histoSystChargedPion0010->GetBinContent(i)*relErrHigherCent/100);
-        } else {
-            histoSystChargedPion0010->SetBinError(i, histoSystChargedPion0010->GetBinContent(i)*relErrLowerCent/100);
-        }
-    }
-    TGraphAsymmErrors* graphChargedPionRAA0010 = new TGraphAsymmErrors(histoStatChargedPion0010);
-    TGraphAsymmErrors* graphChargedPionRAASys0010 = new TGraphAsymmErrors(histoSystChargedPion0010);
-
-    TH1D *histoStatChargedPion2040 = (TH1D*)fileDataALICEChargedPionRAA->Get("RAAPion_Stat_20_40");
-    TH1D *histoSystChargedPion2040 = (TH1D*)fileDataALICEChargedPionRAA->Get("RAAPion_Syst_20_40");
-    TGraphAsymmErrors* graphChargedPionRAA2040 = new TGraphAsymmErrors(histoStatChargedPion2040);
-    TGraphAsymmErrors* graphChargedPionRAASys2040 = new TGraphAsymmErrors(histoSystChargedPion2040);
-
-
-    //**************************** Charged kaon ****************************//
-    TFile* fileDataALICEChargedKaonRAA = new TFile(fileNameChargedKaonRAA);
-
-    TH1D *histoStatChargedKaon0005 = (TH1D*)fileDataALICEChargedKaonRAA->Get("RAAKaon_Stat_0_5");
-    TH1D *histoSystChargedKaon0005 = (TH1D*)fileDataALICEChargedKaonRAA->Get("RAAKaon_Syst_0_5");
-    TGraphAsymmErrors* graphChargedKaonRAA0005 = new TGraphAsymmErrors(histoStatChargedKaon0005);
-    TGraphAsymmErrors* graphChargedKaonRAASys0005 = new TGraphAsymmErrors(histoSystChargedKaon0005);
-
-    TH1D *histoStatChargedKaon0510 = (TH1D*)fileDataALICEChargedKaonRAA->Get("RAAKaon_Stat_5_10");
-    TH1D *histoSystChargedKaon0510 = (TH1D*)fileDataALICEChargedKaonRAA->Get("RAAKaon_Syst_5_10");
-    TGraphAsymmErrors* graphChargedKaonRAA0510 = new TGraphAsymmErrors(histoStatChargedKaon0510);
-    TGraphAsymmErrors* graphChargedKaonRAASys0510 = new TGraphAsymmErrors(histoSystChargedKaon0510);
-
-    TH1D* histoStatChargedKaon0010 = (TH1D*)histoStatChargedKaon0510->Clone("histoStatChargedKaon0010");
-    TH1D* histoSystChargedKaon0010 = (TH1D*)histoSystChargedKaon0510->Clone("histoSystChargedKaon0010");
-    histoStatChargedKaon0010->Add(histoStatChargedKaon0005);
-    histoSystChargedKaon0010->Add(histoSystChargedKaon0005);
-    histoStatChargedKaon0010->Scale(0.5);
-    histoSystChargedKaon0010->Scale(0.5);
-    for (Int_t i = 1; i < histoSystChargedKaon0010->GetNbinsX()+1; i++){
-        Double_t relErrLowerCent = 0;
-        if (histoSystChargedKaon0005->GetBinContent(i) != 0){
-            relErrLowerCent= histoSystChargedKaon0005->GetBinError(i)/histoSystChargedKaon0005->GetBinContent(i)*100 ;
-        }
-        Double_t relErrHigherCent = 0;
-        if (histoSystChargedKaon0510->GetBinContent(i) != 0){
-            relErrHigherCent = histoSystChargedKaon0510->GetBinError(i)/histoSystChargedKaon0510->GetBinContent(i)*100 ;
-        }
-
-        if (relErrHigherCent > relErrLowerCent){
-            histoSystChargedKaon0010->SetBinError(i, histoSystChargedKaon0010->GetBinContent(i)*relErrHigherCent/100);
-        } else {
-            histoSystChargedKaon0010->SetBinError(i, histoSystChargedKaon0010->GetBinContent(i)*relErrLowerCent/100);
-        }
-    }
-    TGraphAsymmErrors* graphChargedKaonRAA0010 = new TGraphAsymmErrors(histoStatChargedKaon0010);
-    TGraphAsymmErrors* graphChargedKaonRAASys0010 = new TGraphAsymmErrors(histoSystChargedKaon0010);
-
-    TH1D *histoStatChargedKaon2040 = (TH1D*)fileDataALICEChargedKaonRAA->Get("RAAKaon_Stat_20_40");
-    TH1D *histoSystChargedKaon2040 = (TH1D*)fileDataALICEChargedKaonRAA->Get("RAAKaon_Syst_20_40");
-    TGraphAsymmErrors* graphChargedKaonRAA2040 = new TGraphAsymmErrors(histoStatChargedKaon2040);
-    TGraphAsymmErrors* graphChargedKaonRAASys2040 = new TGraphAsymmErrors(histoSystChargedKaon2040);
+    TGraphAsymmErrors* graphChargedPionRAA0010      = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedPionRAA0010");
+    TGraphAsymmErrors* graphChargedPionRAASys0010   = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedPionRAASys0010");
+    TGraphAsymmErrors* graphChargedPionRAA2040      = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedPionRAA2040");
+    TGraphAsymmErrors* graphChargedPionRAASys2040   = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedPionRAASys2040");
+    TGraphAsymmErrors* graphChargedKaonRAA0010      = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedKaonRAA0010");
+    TGraphAsymmErrors* graphChargedKaonRAASys0010   = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedKaonRAASys0010");
+    TGraphAsymmErrors* graphChargedKaonRAA2040      = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedKaonRAA2040");
+    TGraphAsymmErrors* graphChargedKaonRAASys2040   = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedKaonRAASys2040");
 
     for(Int_t i=0; i<6; i++){
-
       graphChargedKaonRAA0010->RemovePoint(0);
       graphChargedKaonRAASys0010->RemovePoint(0);
       graphChargedKaonRAA2040->RemovePoint(0);
       graphChargedKaonRAASys2040->RemovePoint(0);
-
     }
 
     //*********************************************************************************************************//
-    //***************************************     LHC data input     ******************************************//
+    //*****************************************  Neutral mesons   *********************************************//
     //*********************************************************************************************************//
-
-    //**************************** PP 2.76TeV ****************************//
-    fileFinalResultsPP =        new TFile(fileNamePP2760GeVpublished.Data());
-
-    cout << "For the Pi0 in PP" << endl;
-    TDirectoryFile* directoryPi0PP2760GeV         = (TDirectoryFile*)fileFinalResultsPP->Get("Pi02.76TeV");
-
-    cout << "Pi0 in PP, combined input" << endl; // combo of PCM, EMCal, PCM+EMCal, EMCal merged, PHOS
-    graphInvSectionCombStatPi02760GeV = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0Comb2760GeVAStatErr");
-      graphInvSectionCombStatPi02760GeV = ScaleGraph(graphInvSectionCombStatPi02760GeV,1./xSection2760GeVppINEL);
-    graphInvSectionCombSysPi02760GeV = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0Comb2760GeVASysErr");
-      graphInvSectionCombSysPi02760GeV = ScaleGraph(graphInvSectionCombSysPi02760GeV,1./xSection2760GeVppINEL);
-
-//       graphInvSectionCombStatPi02760GeV->Print();
-//       graphInvSectionCombSysPi02760GeV->Print();
-//       return;
-
-    graphInvSectionCombStatPi02760GeVPlot = (TGraphAsymmErrors*)graphInvSectionCombStatPi02760GeV->Clone("graphInvSectionCombStatPi02760GeVPlot");
-      DrawGammaSetMarkerTGraphAsym(graphInvSectionCombStatPi02760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack);
-      if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvSectionCombStatPi02760GeVPlot);
-    graphInvSectionCombSysPi02760GeVPlot = (TGraphAsymmErrors*)graphInvSectionCombSysPi02760GeV->Clone("graphInvSectionCombSysPi02760GeVPlot");
-      DrawGammaSetMarkerTGraphAsym(graphInvSectionCombSysPi02760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack, widthLinesBoxes, kTRUE);
-
-    TF1 *fitInvCrossSectionTsallisPi0Comb2760GeV = (TF1*)directoryPi0PP2760GeV->Get("TsallisFitPi0");
-      fitInvCrossSectionTsallisPi0Comb2760GeV->SetParameter(0, fitInvCrossSectionTsallisPi0Comb2760GeV->GetParameter(0)*1./xSection2760GeVppINEL);
-      // ---> Tsallis fit is used for both bin-shifts
-    TF1 *fitInvCrossSectionTCMPi0Comb2760GeV = (TF1*)directoryPi0PP2760GeV->Get("TwoComponentModelFitPi0");
-      fitInvCrossSectionTCMPi0Comb2760GeV->SetParameter(0, fitInvCrossSectionTCMPi0Comb2760GeV->GetParameter(0)*1./xSection2760GeVppINEL);
-      fitInvCrossSectionTCMPi0Comb2760GeV->SetParameter(2, fitInvCrossSectionTCMPi0Comb2760GeV->GetParameter(2)*1./xSection2760GeVppINEL);
-
-    graphInvSectionCombStatPi02760GeVforRAA = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0Comb2760GeVAStatErr_yShifted");
-      graphInvSectionCombStatPi02760GeVforRAA = ScaleGraph(graphInvSectionCombStatPi02760GeVforRAA,1./xSection2760GeVppINEL);
-    graphInvSectionCombSysPi02760GeVforRAA = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0Comb2760GeVASysErr_yShifted");
-      graphInvSectionCombSysPi02760GeVforRAA = ScaleGraph(graphInvSectionCombSysPi02760GeVforRAA,1./xSection2760GeVppINEL);
-
-//       graphInvSectionCombStatPi02760GeVforRAA->Print();
-//       graphInvSectionCombSysPi02760GeVforRAA->Print();
-//       return;
-
-    cout << "Pi0 in PP, PCM input" << endl;
-    graphInvSectionPCMStatPi02760GeV = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PCM2760GeVStatErr");
-      graphInvSectionPCMStatPi02760GeV = ScaleGraph(graphInvSectionPCMStatPi02760GeV,1./xSection2760GeVppINEL);
-    graphInvSectionPCMSysPi02760GeV = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PCM2760GeVSysErr");
-      graphInvSectionPCMSysPi02760GeV = ScaleGraph(graphInvSectionPCMSysPi02760GeV,1./xSection2760GeVppINEL);
-
-//       graphInvSectionPCMStatPi02760GeV->Print();
-//       graphInvSectionPCMSysPi02760GeV->Print();
-//       return;
-
-    graphInvSectionPCMStatPi02760GeVforRAA =       (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PCM2760GeVStatErr_yShifted");
-      graphInvSectionPCMStatPi02760GeVforRAA = ScaleGraph(graphInvSectionPCMStatPi02760GeVforRAA,1./xSection2760GeVppINEL);
-    //WITH material budget error
-    graphInvSectionPCMSysPi02760GeV_yShifted =       (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PCM2760GeVSysErr_yShifted");
-      graphInvSectionPCMSysPi02760GeV_yShifted = ScaleGraph(graphInvSectionPCMSysPi02760GeV_yShifted,1./xSection2760GeVppINEL);
-
-      // subtraction of material budget error:
-      Int_t pi0PCMbins = graphInvSectionPCMSysPi02760GeV_yShifted->GetN();
-      Double_t *xWM = graphInvSectionPCMSysPi02760GeV_yShifted->GetX();
-      Double_t *yWM = graphInvSectionPCMSysPi02760GeV_yShifted->GetY();
-      Double_t xErrWM[pi0PCMbins];
-      Double_t yErrWM[pi0PCMbins];
-      Double_t yrelErrWM[pi0PCMbins];
-      Double_t yErrorWOM[pi0PCMbins];
-      Double_t yrelErrorWOM[pi0PCMbins];
-
-      for(Int_t i = 0;i<graphInvSectionPCMSysPi02760GeV_yShifted->GetN();i++){
-
-        xErrWM[i] = graphInvSectionPCMSysPi02760GeV_yShifted->GetErrorXlow(i);
-        yrelErrWM[i] = graphInvSectionPCMSysPi02760GeV_yShifted->GetErrorYlow(i);
-        yErrWM[i] = (yrelErrWM[i] * 100.)/yWM[i];
-
-        yErrorWOM[i] = TMath::Sqrt( (yErrWM[i]*yErrWM[i]) - (9.*9.) );
-        yrelErrorWOM[i] = (yWM[i]*yErrorWOM[i])/100.;
-//           cout << "yErrWM[i] " << yErrWM[i] << endl;
-//           cout << "yErrorWOM[i] " << yErrorWOM[i] << endl;
-
-      }
-      //WITHOUT material budget error
-      graphInvSectionPCMSysPi02760GeVforRAA = new TGraphAsymmErrors(pi0PCMbins,xWM,yWM,xErrWM,xErrWM,yrelErrorWOM,yrelErrorWOM);
-
-//       graphInvSectionPCMStatPi02760GeVforRAA->Print();
-//       graphInvSectionPCMSysPi02760GeVforRAA->Print();
-//       return;
-
-
-    cout << "Pi0 in PP, PHOS input" << endl;
-    graphInvSectionPHOSStatPi02760GeV = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PHOS2760GeVStatErr");
-      graphInvSectionPHOSStatPi02760GeV = ScaleGraph(graphInvSectionPHOSStatPi02760GeV,1./xSection2760GeVppINEL);
-    graphInvSectionPHOSSysPi02760GeV = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PHOS2760GeVSysErr");
-      graphInvSectionPHOSSysPi02760GeV = ScaleGraph(graphInvSectionPHOSSysPi02760GeV,1./xSection2760GeVppINEL);
-
-    graphInvSectionPHOSStatPi02760GeVforRAA =       (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PHOS2760GeVStatErr_yShifted");
-      graphInvSectionPHOSStatPi02760GeVforRAA = ScaleGraph(graphInvSectionPHOSStatPi02760GeVforRAA,1./xSection2760GeVppINEL);
-    //WITH common errors
-    graphInvSectionPHOSSysPi02760GeV_yShifted =       (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PHOS2760GeVSysErr_yShifted");
-      graphInvSectionPHOSSysPi02760GeV_yShifted = ScaleGraph(graphInvSectionPHOSSysPi02760GeV_yShifted,1./xSection2760GeVppINEL);
-
-      TFile *filePPPHOS =        new TFile(fileNamePPPHOS.Data());
-      TDirectoryFile* directoryPHOSPi02760GeV = (TDirectoryFile*)filePPPHOS->Get("pp2760");
-      TH1D *histoPi0PhosSysRAA2760GeV =     (TH1D*)directoryPHOSPi02760GeV->Get("hPi02760GeVSysTypeB"); //already divided by xsection
-      TGraphAsymmErrors *graphPi0PhosSysRAA2760GeV = new TGraphAsymmErrors(histoPi0PhosSysRAA2760GeV);
-        graphPi0PhosSysRAA2760GeV->RemovePoint(0);
-
-      // taking type B error histo
-      Int_t pi0PHOSbins = graphInvSectionPHOSSysPi02760GeV_yShifted->GetN();
-      Double_t *xsys = graphInvSectionPHOSSysPi02760GeV_yShifted->GetX();
-      Double_t *ysys = graphInvSectionPHOSSysPi02760GeV_yShifted->GetY();
-      Double_t xsysErr[pi0PHOSbins];
-      Double_t ysysErrtypeB[pi0PHOSbins];
-      Double_t percentErrorUp;
-      Double_t percentErrorLow;
-
-      //WITHOUT common errors (type B)
-      graphInvSectionPHOSSysPi02760GeVforRAA = new TGraphAsymmErrors(pi0PHOSbins);
-      for(Int_t i = 0;i<graphInvSectionPHOSSysPi02760GeV_yShifted->GetN();i++){
-
-        graphInvSectionPHOSSysPi02760GeVforRAA->SetPoint(i,xsys[i],ysys[i]);
-
-        percentErrorLow = (graphPi0PhosSysRAA2760GeV->GetErrorYlow(i)*100)/graphPi0PhosSysRAA2760GeV->GetY()[i];
-        ysysErrtypeB[i] = percentErrorLow*ysys[i]/100;
-
-        graphInvSectionPHOSSysPi02760GeVforRAA->SetPointError(i,graphInvSectionPHOSSysPi02760GeV_yShifted->GetErrorXlow(i),graphInvSectionPHOSSysPi02760GeV_yShifted->GetErrorXhigh(i),ysysErrtypeB[i],ysysErrtypeB[i]);
-
-//           cout << "x: " << graphPi0PhosSysRAA2760GeV->GetX()[i] << " = " << xsys[i] << " \n"
-//               << "y: " << graphPi0PhosSysRAA2760GeV->GetY()[i] <<" \n"
-//               << "yerr: " << graphPi0PhosSysRAA2760GeV->GetErrorYlow(i) <<" \n"
-//               << "% err: " << percentErrorLow <<" \n" << endl;
-      }
-
-
-    cout << "Pi0 in PP, EMCal input" << endl;
-    graphInvSectionEMCalStatPi02760GeV = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0EMCAL2760GeVStatErr");
-    graphInvSectionEMCalStatPi02760GeV = ScaleGraph(graphInvSectionEMCalStatPi02760GeV,1./xSection2760GeVppINEL);
-    graphInvSectionEMCalSysPi02760GeV = (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0EMCAL2760GeVSysErr");
-    graphInvSectionEMCalSysPi02760GeV = ScaleGraph(graphInvSectionEMCalSysPi02760GeV,1./xSection2760GeVppINEL);
-
-//       graphInvSectionEMCalStatPi02760GeV->Print();
-//       graphInvSectionEMCalSysPi02760GeV->Print();
-//       return;
-
-    graphInvSectionEMCalStatPi02760GeVforRAA =       (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PCMEMCAL2760GeVStatErr_yShifted");
-      graphInvSectionEMCalStatPi02760GeVforRAA = ScaleGraph(graphInvSectionEMCalStatPi02760GeVforRAA,1./xSection2760GeVppINEL);
-    //WITH common errors
-    graphInvSectionEMCalSysPi02760GeV_yShifted =       (TGraphAsymmErrors*)directoryPi0PP2760GeV->Get("graphInvCrossSectionPi0PCMEMCAL2760GeVSysErr_yShifted");
-      graphInvSectionEMCalSysPi02760GeV_yShifted = ScaleGraph(graphInvSectionEMCalSysPi02760GeV_yShifted,1./xSection2760GeVppINEL);
-
-      // subtraction of common errors (material budget and resolution(?)):
-      Int_t pi0EMCalbins = graphInvSectionEMCalSysPi02760GeV_yShifted->GetN();
-      Double_t *xWCommonErr = graphInvSectionEMCalSysPi02760GeV_yShifted->GetX();
-      Double_t *yWCommonErr = graphInvSectionEMCalSysPi02760GeV_yShifted->GetY();
-      Double_t xErrWCommonErr[pi0EMCalbins];
-      Double_t yErrWCommonErr[pi0EMCalbins];
-      Double_t yrelErrWCommonErr[pi0EMCalbins];
-      Double_t yErrorWOCommonErr[pi0EMCalbins];
-      Double_t yrelErrorWOCommonErr[pi0EMCalbins];
-
-      for(Int_t i = 0;i<graphInvSectionEMCalSysPi02760GeV_yShifted->GetN();i++){
-
-        xErrWCommonErr[i] = graphInvSectionEMCalSysPi02760GeV_yShifted->GetErrorXlow(i);
-        yrelErrWCommonErr[i] = graphInvSectionEMCalSysPi02760GeV_yShifted->GetErrorYlow(i);
-        yErrWCommonErr[i] = (yrelErrWCommonErr[i] * 100.)/yWCommonErr[i];
-        yErrorWOCommonErr[i] = TMath::Sqrt( (yErrWCommonErr[i]*yErrWCommonErr[i]) - (5.2*5.2) ); // 3% (rougly en. scale) and 4.24 (3% for TRD mat, 3% for TOF mat added in quadrature)
-        yrelErrorWOCommonErr[i] = (yWCommonErr[i]*yErrorWOCommonErr[i])/100.;
-//         cout << "yErrWCommonErr[i] " << yErrWCommonErr[i] << endl;
-//         cout << "yrelErrorWOCommonErr[i] = " << yrelErrorWOCommonErr[i] << endl;
-//         cout << "from (yWCommonErr[i] " << yWCommonErr[i] << " yErrorWOCommonErr[i])/100. " << yErrorWOCommonErr[i] << endl;
-      }
-      //WITHOUT common errors
-      graphInvSectionEMCalSysPi02760GeVforRAA = new TGraphAsymmErrors(pi0EMCalbins,xWCommonErr,yWCommonErr,xErrWCommonErr,xErrWCommonErr,yrelErrorWOCommonErr,yrelErrorWOCommonErr);
-
-//       graphInvSectionEMCalStatPi02760GeVforRAA->Print();
-//       graphInvSectionEMCalSysPi02760GeVforRAA->Print();
-//       return;
-
-
-
-
-    cout << "For the Eta in PP" << endl;
-    TDirectoryFile* directoryEtaPP2760GeV         = (TDirectoryFile*)fileFinalResultsPP->Get("Eta2.76TeV");
-
-    cout << "Eta in PP, combined input" << endl; // combo of PCM, EMCal, PCM+EMCal, EMCal merged
-    graphInvSectionCombStatEta2760GeV = (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaComb2760GeVAStatErr");
-      graphInvSectionCombStatEta2760GeV = ScaleGraph(graphInvSectionCombStatEta2760GeV,1./xSection2760GeVppINEL);
-    graphInvSectionCombSysEta2760GeV = (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaComb2760GeVASysErr");
-      graphInvSectionCombSysEta2760GeV = ScaleGraph(graphInvSectionCombSysEta2760GeV,1./xSection2760GeVppINEL);
-
-//       graphInvSectionCombStatEta2760GeV->Print();
-//       graphInvSectionCombSysEta2760GeV->Print();
-//       return;
-
-    graphInvSectionCombStatEta2760GeVPlot = (TGraphAsymmErrors*)graphInvSectionCombStatEta2760GeV->Clone("graphInvSectionCombStatEta2760GeVPlot");
-      DrawGammaSetMarkerTGraphAsym(graphInvSectionCombStatEta2760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack);
-      if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvSectionCombStatEta2760GeVPlot);
-    graphInvSectionCombSysEta2760GeVPlot = (TGraphAsymmErrors*)graphInvSectionCombSysEta2760GeV->Clone("graphInvSectionCombSysEta2760GeVPlot");
-      DrawGammaSetMarkerTGraphAsym(graphInvSectionCombSysEta2760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack, widthLinesBoxes, kTRUE);
-
-    TF1 *fitInvCrossSectionTsallisEtaComb2760GeV = (TF1*)directoryEtaPP2760GeV->Get("TsallisFitEta");
-      fitInvCrossSectionTsallisEtaComb2760GeV->SetParameter(0, fitInvCrossSectionTsallisEtaComb2760GeV->GetParameter(0)*1./xSection2760GeVppINEL);
-      // ---> Tsallis fit is used for both bin-shifts
-    TF1 *fitInvCrossSectionTCMEtaComb2760GeV = (TF1*)directoryEtaPP2760GeV->Get("TwoComponentModelFitEta");
-      fitInvCrossSectionTCMEtaComb2760GeV->SetParameter(0, fitInvCrossSectionTCMEtaComb2760GeV->GetParameter(0)*1./xSection2760GeVppINEL);
-      fitInvCrossSectionTCMEtaComb2760GeV->SetParameter(2, fitInvCrossSectionTCMEtaComb2760GeV->GetParameter(2)*1./xSection2760GeVppINEL);
-
-    graphInvSectionCombStatEta2760GeVforRAA = (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaComb2760GeVAStatErr_yShifted");
-      graphInvSectionCombStatEta2760GeVforRAA = ScaleGraph(graphInvSectionCombStatEta2760GeVforRAA,1./xSection2760GeVppINEL);
-    graphInvSectionCombSysEta2760GeVforRAA = (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaComb2760GeVASysErr_yShifted");
-      graphInvSectionCombSysEta2760GeVforRAA = ScaleGraph(graphInvSectionCombSysEta2760GeVforRAA,1./xSection2760GeVppINEL);
-
-//       graphInvSectionCombStatEta2760GeVforRAA->Print();
-//       graphInvSectionCombSysEta2760GeVforRAA->Print();
-//       return;
-
-    cout << "Eta in PP, PCM input" << endl;
-    graphInvSectionPCMStatEta2760GeV = (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaPCM2760GeVStatErr");
-      graphInvSectionPCMStatEta2760GeV = ScaleGraph(graphInvSectionPCMStatEta2760GeV,1./xSection2760GeVppINEL);
-    graphInvSectionPCMSysEta2760GeV = (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaPCM2760GeVSysErr");
-      graphInvSectionPCMSysEta2760GeV = ScaleGraph(graphInvSectionPCMSysEta2760GeV,1./xSection2760GeVppINEL);
-
-//       graphInvSectionPCMStatEta2760GeV->Print();
-//       graphInvSectionPCMSysEta2760GeV->Print();
-//       return;
-
-    graphInvSectionPCMStatEta2760GeVforRAA =       (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaPCM2760GeVStatErr_yShifted");
-      graphInvSectionPCMStatEta2760GeVforRAA = ScaleGraph(graphInvSectionPCMStatEta2760GeVforRAA,1./xSection2760GeVppINEL);
-    //WITH material budget error
-    graphInvSectionPCMSysEta2760GeV_yShifted =       (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaPCM2760GeVSysErr_yShifted");
-      graphInvSectionPCMSysEta2760GeV_yShifted = ScaleGraph(graphInvSectionPCMSysEta2760GeV_yShifted,1./xSection2760GeVppINEL);
-
-      // subtraction of material budget error:
-      Int_t etaPCMbins = graphInvSectionPCMSysEta2760GeV_yShifted->GetN();
-      Double_t *xetaWM = graphInvSectionPCMSysEta2760GeV_yShifted->GetX();
-      Double_t *yetaWM = graphInvSectionPCMSysEta2760GeV_yShifted->GetY();
-      Double_t xetaErrWM[etaPCMbins];
-      Double_t yetaErrWM[etaPCMbins];
-      Double_t yetarelErrWM[etaPCMbins];
-      Double_t yetaErrorWOM[etaPCMbins];
-      Double_t yetarelErrorWOM[etaPCMbins];
-
-      for(Int_t i = 0;i<graphInvSectionPCMSysEta2760GeV_yShifted->GetN();i++){
-
-        xetaErrWM[i] = graphInvSectionPCMSysEta2760GeV_yShifted->GetErrorXlow(i);
-        yetarelErrWM[i] = graphInvSectionPCMSysEta2760GeV_yShifted->GetErrorYlow(i);
-        yetaErrWM[i] = (yetarelErrWM[i] * 100.)/yetaWM[i];
-
-        yetaErrorWOM[i] = TMath::Sqrt( (yetaErrWM[i]*yetaErrWM[i]) - (9.*9.) );
-        yetarelErrorWOM[i] = (yetaWM[i]*yetaErrorWOM[i])/100.;
-//           cout << "yetaErrWM[i] " << yetaErrWM[i] << endl;
-//           cout << "yetaErrorWOM[i] " << yetaErrorWOM[i] << endl;
-
-      }
-      //WITHOUT material budget error
-      graphInvSectionPCMSysEta2760GeVforRAA = new TGraphAsymmErrors(etaPCMbins,xetaWM,yetaWM,xetaErrWM,xetaErrWM,yetarelErrorWOM,yetarelErrorWOM);
-
-//       graphInvSectionPCMStatEta2760GeVforRAA->Print();
-//       graphInvSectionPCMSysEta2760GeVforRAA->Print();
-//       return;
-
-
-    cout << "Eta in PP, EMCal input" << endl;
-    graphInvSectionEMCalStatEta2760GeV = (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaEMCAL2760GeVStatErr");
-    graphInvSectionEMCalStatEta2760GeV = ScaleGraph(graphInvSectionEMCalStatEta2760GeV,1./xSection2760GeVppINEL);
-    graphInvSectionEMCalSysEta2760GeV = (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaEMCAL2760GeVSysErr");
-    graphInvSectionEMCalSysEta2760GeV = ScaleGraph(graphInvSectionEMCalSysEta2760GeV,1./xSection2760GeVppINEL);
-
-//       graphInvSectionEMCalStatEta2760GeV->Print();
-//       graphInvSectionEMCalSysEta2760GeV->Print();
-//       return;
-
-    graphInvSectionEMCalStatEta2760GeVforRAA =       (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaEMCAL2760GeVStatErr_yShifted");
-      graphInvSectionEMCalStatEta2760GeVforRAA = ScaleGraph(graphInvSectionEMCalStatEta2760GeVforRAA,1./xSection2760GeVppINEL);
-    //WITH common errors
-    graphInvSectionEMCalSysEta2760GeV_yShifted =       (TGraphAsymmErrors*)directoryEtaPP2760GeV->Get("graphInvCrossSectionEtaEMCAL2760GeVSysErr_yShifted");
-      graphInvSectionEMCalSysEta2760GeV_yShifted = ScaleGraph(graphInvSectionEMCalSysEta2760GeV_yShifted,1./xSection2760GeVppINEL);
-
-      // subtraction of common errors (material budget and resolution (?)):
-      Int_t etaEMCalbins = graphInvSectionEMCalSysEta2760GeV_yShifted->GetN();
-      Double_t *xetaWCommonErr = graphInvSectionEMCalSysEta2760GeV_yShifted->GetX();
-      Double_t *yetaWCommonErr = graphInvSectionEMCalSysEta2760GeV_yShifted->GetY();
-      Double_t xetaErrWCommonErr[etaEMCalbins];
-      Double_t yetaErrWCommonErr[etaEMCalbins];
-      Double_t yetarelErrWCommonErr[etaEMCalbins];
-      Double_t yetaErrorWOCommonErr[etaEMCalbins];
-      Double_t yetarelErrorWOCommonErr[etaEMCalbins];
-
-      for(Int_t i = 0;i<graphInvSectionEMCalSysEta2760GeV_yShifted->GetN();i++){
-
-        xetaErrWCommonErr[i] = graphInvSectionEMCalSysEta2760GeV_yShifted->GetErrorXlow(i);
-        yetarelErrWCommonErr[i] = graphInvSectionEMCalSysEta2760GeV_yShifted->GetErrorYlow(i);
-        yetaErrWCommonErr[i] = (yetarelErrWCommonErr[i] * 100.)/yetaWCommonErr[i];
-
-        yetaErrorWOCommonErr[i] = TMath::Sqrt( (yetaErrWCommonErr[i]*yetaErrWCommonErr[i]) - (6.5*6.5) ); // 5% (rougly en. scale) and 4.24 (3% for TRD mat, 3% for TOF mat added in quadrature)
-        yetarelErrorWOCommonErr[i] = (yetaWCommonErr[i]*yetaErrorWOCommonErr[i])/100.;
-//         cout << "yrelErrorWOCommonErr[i] = " << yrelErrorWOCommonErr[i] << endl;
-
-      }
-      //WITHOUT common errors
-      graphInvSectionEMCalSysEta2760GeVforRAA = new TGraphAsymmErrors(etaEMCalbins,xetaWCommonErr,yetaWCommonErr,xetaErrWCommonErr,xetaErrWCommonErr,yetarelErrorWOCommonErr,yetarelErrorWOCommonErr);
-
-//       graphInvSectionEMCalStatEta2760GeVforRAA->Print();
-//       graphInvSectionEMCalSysEta2760GeVforRAA->Print();
-//       return;
-
-
+    TDirectoryFile* directoryNeutralMesonPP = (TDirectoryFile*)fileDataALICE->Get("NeutralMesons_PP_2.76TeV");
+    //already scaled by 1./xSection2760GeVppINEL
+    graphInvSectionCombStatPi02760GeV           = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0Comb2760GeVAStatErr");
+    graphInvSectionCombSysPi02760GeV            = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0Comb2760GeVASysErr");
+    graphInvSectionCombStatPi02760GeVPlot       = (TGraphAsymmErrors*)graphInvSectionCombStatPi02760GeV->Clone("graphInvSectionCombStatPi02760GeVPlot");
+    graphInvSectionCombSysPi02760GeVPlot        = (TGraphAsymmErrors*)graphInvSectionCombSysPi02760GeV->Clone("graphInvSectionCombSysPi02760GeVPlot");
+    DrawGammaSetMarkerTGraphAsym(graphInvSectionCombStatPi02760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack);
+    if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvSectionCombStatPi02760GeVPlot);
+    DrawGammaSetMarkerTGraphAsym(graphInvSectionCombSysPi02760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack, widthLinesBoxes, kTRUE);
+    TF1 *fitInvCrossSectionTsallisPi0Comb2760GeV = (TF1*)directoryNeutralMesonPP->Get("TsallisFitPi0");// ---> Tsallis fit is used for both bin-shifts
+    TF1 *fitInvCrossSectionTCMPi0Comb2760GeV     = (TF1*)directoryNeutralMesonPP->Get("TwoComponentModelFitPi0");
+    graphInvSectionCombStatPi02760GeVforRAA     = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0Comb2760GeVAStatErr_yShifted");
+    graphInvSectionCombSysPi02760GeVforRAA      = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0Comb2760GeVASysErr_yShifted");
+
+    graphInvSectionPCMStatPi02760GeV            = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0PCM2760GeVStatErr");
+    graphInvSectionPCMSysPi02760GeV             = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0PCM2760GeVSysErr");
+    graphInvSectionPCMStatPi02760GeVforRAA      = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0PCM2760GeVStatErr_yShifted");
+    graphInvSectionPCMSysPi02760GeV_yShifted    = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0PCM2760GeVSysErr_yShifted");//WITH material budget error
+    graphInvSectionPCMSysPi02760GeVforRAA       = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0PCM2760GeVSysErr_forRAA");//WITHOUT common errors
+
+    graphInvSectionPHOSStatPi02760GeV           = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0PHOS2760GeVStatErr");
+    graphInvSectionPHOSSysPi02760GeV            = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0PHOS2760GeVSysErr");
+    graphInvSectionPHOSStatPi02760GeVforRAA     = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0PHOS2760GeVStatErr_yShifted");
+    graphInvSectionPHOSSysPi02760GeV_yShifted   = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0PHOS2760GeVSysErr_yShifted");//WITH common errors
+    graphInvSectionPHOSSysPi02760GeVforRAA      = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0PHOS2760GeVSysErr_forRAA");//WITHOUT common errors
+
+    graphInvSectionEMCalStatPi02760GeV          = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0EMCAL2760GeVStatErr");
+    graphInvSectionEMCalSysPi02760GeV           = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0EMCAL2760GeVSysErr");
+    graphInvSectionEMCalStatPi02760GeVforRAA    = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0EMCAL2760GeVStatErr_yShifted");
+    graphInvSectionEMCalSysPi02760GeV_yShifted  = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0EMCAL2760GeVSysErr_yShifted");//WITH common errors
+    graphInvSectionEMCalSysPi02760GeVforRAA     = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0EMCAL2760GeVSysErr_forRAA");//WITHOUT common errors
+
+    graphInvSectionCombStatEta2760GeV           = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionEtaComb2760GeVAStatErr");
+    graphInvSectionCombSysEta2760GeV            = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionEtaComb2760GeVASysErr");
+    graphInvSectionCombStatEta2760GeVPlot       = (TGraphAsymmErrors*)graphInvSectionCombStatEta2760GeV->Clone("graphInvSectionCombStatEta2760GeVPlot");
+    graphInvSectionCombSysEta2760GeVPlot        = (TGraphAsymmErrors*)graphInvSectionCombSysEta2760GeV->Clone("graphInvSectionCombSysEta2760GeVPlot");
+    DrawGammaSetMarkerTGraphAsym(graphInvSectionCombStatEta2760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack);
+    if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphInvSectionCombStatEta2760GeVPlot);
+    DrawGammaSetMarkerTGraphAsym(graphInvSectionCombSysEta2760GeVPlot, markerStylepp,markerSizepp, kBlack , kBlack, widthLinesBoxes, kTRUE);
+    TF1 *fitInvCrossSectionTsallisEtaComb2760GeV = (TF1*)directoryNeutralMesonPP->Get("TsallisFitEta");// ---> Tsallis fit is used for both bin-shifts
+    TF1 *fitInvCrossSectionTCMEtaComb2760GeV     = (TF1*)directoryNeutralMesonPP->Get("TwoComponentModelFitEta");
+    graphInvSectionCombStatEta2760GeVforRAA     = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionEtaComb2760GeVAStatErr_yShifted");
+    graphInvSectionCombSysEta2760GeVforRAA      = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionEtaComb2760GeVASysErr_yShifted");
+
+    graphInvSectionPCMStatEta2760GeV            = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionEtaPCM2760GeVStatErr");
+    graphInvSectionPCMSysEta2760GeV             = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionEtaPCM2760GeVSysErr");
+    graphInvSectionPCMStatEta2760GeVforRAA      = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionEtaPCM2760GeVStatErr_yShifted");
+    graphInvSectionPCMSysEta2760GeV_yShifted    = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionEtaPCM2760GeVSysErr_yShifted");//WITH material budget error
+    graphInvSectionPCMSysEta2760GeVforRAA       = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionEtaPCM2760GeVSysErr_forRAA");//WITHOUT material budget error
+
+    graphInvSectionEMCalStatEta2760GeV          = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionEtaEMCAL2760GeVStatErr");
+    graphInvSectionEMCalSysEta2760GeV           = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionEtaEMCAL2760GeVSysErr");
+    graphInvSectionEMCalStatEta2760GeVforRAA    = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionEtaEMCAL2760GeVStatErr_yShifted");
+    graphInvSectionEMCalSysEta2760GeV_yShifted  = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionEtaEMCAL2760GeVSysErr_yShifted");//WITH common errors
+    graphInvSectionEMCalSysEta2760GeVforRAA     = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionEtaEMCAL2760GeVSysErr_forRAA");//WITHOUT common errors
 
     //===================== loading pp inputs =============================
     TFile* fEtatoPi0input = new TFile("EtaToPi0InputsForCombination.root");
@@ -1004,432 +477,92 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     //======================================================================
 
 
-    //**************************** PHOS ****************************//
-    cout << "For the Pi0 and Eta in PbPb, loading PHOS histos" << endl;
-    TFile *filePHOSPbPb =       new TFile(fileNamePHOS);
-    TDirectory *directoryPHOSPi0PbPb0010 = (TDirectory*)filePHOSPbPb->Get("pi0_PbPb_2760_Centrality_0-10%");
-
-    cout << "PHOS: 0-10%" << endl;
-        histoPi0PHOSPbPb0010 =      (TH1D*)directoryPHOSPi0PbPb0010->Get("hPi0_PbPb_cen7_NoBW_Stat");
-        histoPi0PHOSSysPbPb0010 =   (TH1D*)directoryPHOSPi0PbPb0010->Get("hPi0_PbPb_cen7_NoBW_Syst");
-        TGraphAsymmErrors *graphPHOSPi0InvYieldStatPbPb2760GeV_0010 = new TGraphAsymmErrors(histoPi0PHOSPbPb0010);
-        TGraphAsymmErrors *graphPHOSPi0InvYieldSysPbPb2760GeV_0010 = new TGraphAsymmErrors(histoPi0PHOSSysPbPb0010);
-
-        histoPi0PHOSSysRAAPbPb0010 =    (TH1D*)directoryPHOSPi0PbPb0010->Get("hPi0_PbPb_cen7_SystRaa"); //bin shifted
-        graphSysErrRAAYieldPi0PHOSPbPb0010 = new TGraphAsymmErrors(histoPi0PHOSSysRAAPbPb0010);
-
-        graphPHOSPi0InvYieldStatPbPb2760GeV_0010->RemovePoint(0);
-        graphPHOSPi0InvYieldStatPbPb2760GeV_0010->RemovePoint(0);
-        graphPHOSPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(0);
-        graphPHOSPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(0);
-        graphSysErrRAAYieldPi0PHOSPbPb0010->RemovePoint(0);
-        graphSysErrRAAYieldPi0PHOSPbPb0010->RemovePoint(0);
-
-        Double_t error1;
-        Double_t error2;
-        for(Int_t i=0;i<graphPHOSPi0InvYieldStatPbPb2760GeV_0010->GetN();i++){
-
-          graphSysErrRAAYieldPi0PHOSPbPb0010->SetPoint(i,graphPHOSPi0InvYieldStatPbPb2760GeV_0010->GetX()[i],graphPHOSPi0InvYieldStatPbPb2760GeV_0010->GetY()[i]);
-
-          percentErrorLow = (graphSysErrRAAYieldPi0PHOSPbPb0010->GetErrorYlow(i)*100)/graphSysErrRAAYieldPi0PHOSPbPb0010->GetY()[i];
-          graphSysErrRAAYieldPi0PHOSPbPb0010->SetPointError(i,graphPHOSPi0InvYieldStatPbPb2760GeV_0010->GetErrorXlow(i),graphPHOSPi0InvYieldStatPbPb2760GeV_0010->GetErrorXhigh(i),(percentErrorLow*graphPHOSPi0InvYieldStatPbPb2760GeV_0010->GetY()[i]/100.),(percentErrorLow*graphPHOSPi0InvYieldStatPbPb2760GeV_0010->GetY()[i]/100.));
-
-//           error1 = (graphPHOSPi0InvYieldSysPbPb2760GeV_0010->GetErrorYlow(i)*100)/graphPHOSPi0InvYieldSysPbPb2760GeV_0010->GetY()[i];
-//           error2 = (graphSysErrRAAYieldPi0PHOSPbPb0010->GetErrorYlow(i)*100)/graphSysErrRAAYieldPi0PHOSPbPb0010->GetY()[i];
-//
-//           cout << "x: " << graphPHOSPi0InvYieldSysPbPb2760GeV_0010->GetX()[i] << " " << graphSysErrRAAYieldPi0PHOSPbPb0010->GetX()[i] << " \n" <<
-//           "y: " << graphPHOSPi0InvYieldSysPbPb2760GeV_0010->GetY()[i] << " " << graphSysErrRAAYieldPi0PHOSPbPb0010->GetY()[i] <<" \n" <<
-//           "err: " << graphPHOSPi0InvYieldSysPbPb2760GeV_0010->GetErrorYlow(i) << " " << graphSysErrRAAYieldPi0PHOSPbPb0010->GetErrorYlow(i) <<" \n" <<
-//           "syst err full: " << error1 << " syst err raa: " << error2 << "\n " <<
-//           "diff: " << TMath::Sqrt( (error1*error1) - (error2*error2) ) << endl;
-
-        }
-        graphPHOSPi0InvYieldStatPbPb2760GeV_0010->RemovePoint(graphPHOSPi0InvYieldStatPbPb2760GeV_0010->GetN()-1);
-        graphPHOSPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(graphPHOSPi0InvYieldSysPbPb2760GeV_0010->GetN()-1);
-        graphSysErrRAAYieldPi0PHOSPbPb0010->RemovePoint(graphSysErrRAAYieldPi0PHOSPbPb0010->GetN()-1);
-        graphPHOSPi0InvYieldStatPbPb2760GeV_0010->RemovePoint(graphPHOSPi0InvYieldStatPbPb2760GeV_0010->GetN()-1);
-        graphPHOSPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(graphPHOSPi0InvYieldSysPbPb2760GeV_0010->GetN()-1);
-        graphSysErrRAAYieldPi0PHOSPbPb0010->RemovePoint(graphSysErrRAAYieldPi0PHOSPbPb0010->GetN()-1);
-
-//         graphPHOSPi0InvYieldStatPbPb2760GeV_0010->Print();
-//         graphPHOSPi0InvYieldSysPbPb2760GeV_0010->Print();
-//         graphSysErrRAAYieldPi0PHOSPbPb0010->Print();
-//         return;
-
-    //**************************** PCM Pb-Pb data 2011 ****************************//
-    cout << "For the Pi0 and Eta in PbPb, loading PCM histos" << endl;
-    TFile* filePCM = new TFile(fileNamePCM.Data());
-
-    cout << "For the Pi0 in 0-10% " << endl;
-    TDirectoryFile* directoryPCMPi0PbPb2760GeV_0010         = (TDirectoryFile*)filePCM->Get("Pi0_PbPb_2.76TeV_0-10%");
-        TH1D* histoPCMPi0MassPbPb2760GeV_0010               = (TH1D*)directoryPCMPi0PbPb2760GeV_0010->Get("MassPi0");
-        TH1D* histoPCMPi0FWHMMeVPbPb2760GeV_0010            = (TH1D*)directoryPCMPi0PbPb2760GeV_0010->Get("FWHMPi0MeV");
-        TH1D* histoPCMPi0TrueMassPbPb2760GeV_0010           = (TH1D*)directoryPCMPi0PbPb2760GeV_0010->Get("TrueMassPi0");
-        TH1D* histoPCMPi0TrueFWHMMeVPbPb2760GeV_0010        = (TH1D*)directoryPCMPi0PbPb2760GeV_0010->Get("TrueFWHMPi0MeV");
-
-        TH1D* histoPCMPi0InvYieldPbPb2760GeV_0010                   = (TH1D*)directoryPCMPi0PbPb2760GeV_0010->Get("CorrectedYieldPi0");
-        TGraphAsymmErrors* graphPCMPi0InvYieldStatPbPb2760GeV_0010  = new TGraphAsymmErrors(histoPCMPi0InvYieldPbPb2760GeV_0010);
-            graphPCMPi0InvYieldStatPbPb2760GeV_0010->RemovePoint(0);
-
-        TH1D* histoPCMPi0InvYieldPbPb2760GeVYshifted_0010                   = (TH1D*)directoryPCMPi0PbPb2760GeV_0010->Get("CorrectedYieldBinShiftedPi0");
-        TGraphAsymmErrors* graphPCMPi0InvYieldStatPbPb2760GeVwithYshift_0010  = new TGraphAsymmErrors(histoPCMPi0InvYieldPbPb2760GeVYshifted_0010);
-            graphPCMPi0InvYieldStatPbPb2760GeVwithYshift_0010->RemovePoint(0);
-
-        //WITH material budget error
-        TGraphAsymmErrors* graphPCMPi0InvYieldSysPbPb2760GeV_0010       = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_0010->Get("Pi0SystError");
-//             graphPCMPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(graphPCMPi0InvYieldSysPbPb2760GeV_0010->GetN()-1);
-
-        //WITHOUT material budget error
-        TGraphAsymmErrors* graphPCMPi0InvYieldSysWOMat2760GeV_0010          = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_0010->Get("Pi0SystErrorA");
-//             graphPCMPi0InvYieldSysWOMat2760GeV_0010->RemovePoint(graphPCMPi0InvYieldSysWOMat2760GeV_0010->GetN()-1);
-
-//         graphPCMPi0InvYieldStatPbPb2760GeV_0010->Print();
-//         graphPCMPi0InvYieldSysPbPb2760GeV_0010->Print();
-//         graphPCMPi0InvYieldSysWOMat2760GeV_0010->Print();
-//         return;
-
-        TGraphAsymmErrors* graphPCMPi0RAAStatPbPb2760GeV_0010   = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_0010->Get("Pi0RAA");
-        TH1D* histoPCMPi0RAAStatPbPb2760GeV_0010 = (TH1D*)GraphAsymErrorsToHist(graphPCMPi0RAAStatPbPb2760GeV_0010,14,"histoPCMPi0RAAStatPbPb2760GeV_0010");
-        TGraphAsymmErrors* graphPCMPi0RAASysPbPb2760GeV_0010    = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_0010->Get("Pi0RAASys");
-
-    cout << "For the Pi0 in 20-40% " << endl;
-    TDirectoryFile* directoryPCMPi0PbPb2760GeV_2040                 = (TDirectoryFile*)filePCM->Get("Pi0_PbPb_2.76TeV_20-40%");
-        TH1D* histoPCMPi0MassPbPb2760GeV_2040                       = (TH1D*)directoryPCMPi0PbPb2760GeV_2040->Get("MassPi0");
-        TH1D* histoPCMPi0FWHMMeVPbPb2760GeV_2040                    = (TH1D*)directoryPCMPi0PbPb2760GeV_2040->Get("FWHMPi0MeV");
-        TH1D* histoPCMPi0TrueMassPbPb2760GeV_2040                   = (TH1D*)directoryPCMPi0PbPb2760GeV_2040->Get("TrueMassPi0");
-        TH1D* histoPCMPi0TrueFWHMMeVPbPb2760GeV_2040                = (TH1D*)directoryPCMPi0PbPb2760GeV_2040->Get("TrueFWHMPi0MeV");
-
-        TH1D* histoPCMPi0InvYieldPbPb2760GeV_2040                   = (TH1D*)directoryPCMPi0PbPb2760GeV_2040->Get("CorrectedYieldPi0");
-        TGraphAsymmErrors* graphPCMPi0InvYieldStatPbPb2760GeV_2040  = new TGraphAsymmErrors(histoPCMPi0InvYieldPbPb2760GeV_2040);
-            graphPCMPi0InvYieldStatPbPb2760GeV_2040->RemovePoint(0);
-
-        //WITH material budget error
-        TGraphAsymmErrors* graphPCMPi0InvYieldSysPbPb2760GeV_2040       = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_2040->Get("Pi0SystError");
-            graphPCMPi0InvYieldSysPbPb2760GeV_2040->RemovePoint(graphPCMPi0InvYieldSysPbPb2760GeV_2040->GetN()-1);
-
-        //WITHOUT material budget error
-        TGraphAsymmErrors* graphPCMPi0InvYieldSysWOMat2760GeV_2040          = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_2040->Get("Pi0SystErrorA");
-            graphPCMPi0InvYieldSysWOMat2760GeV_2040->RemovePoint(graphPCMPi0InvYieldSysWOMat2760GeV_2040->GetN()-1);
-
-        TGraphAsymmErrors* graphPCMPi0RAAStatPbPb2760GeV_2040   = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_2040->Get("Pi0RAA");
-        TH1D* histoPCMPi0RAAStatPbPb2760GeV_2040 = (TH1D*)GraphAsymErrorsToHist(graphPCMPi0RAAStatPbPb2760GeV_2040,14,"histoPCMPi0RAAStatPbPb2760GeV_2040");
-        TGraphAsymmErrors* graphPCMPi0RAASysPbPb2760GeV_2040    = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_2040->Get("Pi0RAASys");
-
-    cout << "For the Pi0 in 20-50% " << endl;
-    TDirectory* directoryPCMPi0PbPb2760GeV_2050                     = (TDirectory*)filePCM->Get("Pi0_PbPb_2.76TeV_20-50%");
-        TH1D* histoPCMPi0MassPbPb2760GeV_2050                       = (TH1D*)directoryPCMPi0PbPb2760GeV_2050->Get("MassPi0");
-        TH1D* histoPCMPi0FWHMMeVPbPb2760GeV_2050                    = (TH1D*)directoryPCMPi0PbPb2760GeV_2050->Get("FWHMPi0MeV");
-        TH1D* histoPCMPi0TrueMassPbPb2760GeV_2050                   = (TH1D*)directoryPCMPi0PbPb2760GeV_2050->Get("TrueMassPi0");
-        TH1D* histoPCMPi0TrueFWHMMeVPbPb2760GeV_2050                = (TH1D*)directoryPCMPi0PbPb2760GeV_2050->Get("TrueFWHMPi0MeV");
-
-        TH1D* histoPCMPi0InvYieldPbPb2760GeV_2050                   = (TH1D*)directoryPCMPi0PbPb2760GeV_2050->Get("CorrectedYieldPi0");
-        TGraphAsymmErrors* graphPCMPi0InvYieldStatPbPb2760GeV_2050  = new TGraphAsymmErrors(histoPCMPi0InvYieldPbPb2760GeV_2050);
-            graphPCMPi0InvYieldStatPbPb2760GeV_2050->RemovePoint(0);
-
-        TH1D* histoPCMPi0InvYieldPbPb2760GeVYshifted_2050                  = (TH1D*)directoryPCMPi0PbPb2760GeV_2050->Get("CorrectedYieldBinShiftedPi0");
-        TGraphAsymmErrors* graphPCMPi0InvYieldStatPbPb2760GeVwithYshift_2050  = new TGraphAsymmErrors(histoPCMPi0InvYieldPbPb2760GeVYshifted_2050);
-            graphPCMPi0InvYieldStatPbPb2760GeVwithYshift_2050->RemovePoint(0);
-
-        //WITH material budget error
-        TGraphAsymmErrors* graphPCMPi0InvYieldSysPbPb2760GeV_2050       = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_2050->Get("Pi0SystError");
-//             graphPCMPi0InvYieldSysPbPb2760GeV_2050->RemovePoint(graphPCMPi0InvYieldSysPbPb2760GeV_2050->GetN()-1);
-
-        //WITHOUT material budget error
-        TGraphAsymmErrors* graphPCMPi0InvYieldSysWOMat2760GeV_2050          = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_2050->Get("Pi0SystErrorA");
-//             graphPCMPi0InvYieldSysWOMat2760GeV_2050->RemovePoint(graphPCMPi0InvYieldSysWOMat2760GeV_2050->GetN()-1);
-
-        TGraphAsymmErrors* graphPCMPi0RAAStatPbPb2760GeV_2050   = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_2050->Get("Pi0RAA");
-        TH1D* histoPCMPi0RAAStatPbPb2760GeV_2050 = (TH1D*)GraphAsymErrorsToHist(graphPCMPi0RAAStatPbPb2760GeV_2050,14,"histoPCMPi0RAAStatPbPb2760GeV_2050");
-        TGraphAsymmErrors* graphPCMPi0RAASysPbPb2760GeV_2050    = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_2050->Get("Pi0RAASys");
-
-//         graphPCMPi0InvYieldStatPbPb2760GeV_2050->Print();
-//         graphPCMPi0InvYieldSysPbPb2760GeV_2050->Print();
-//         graphPCMPi0InvYieldSysWOMat2760GeV_2050->Print();
-//         return;
-
-
-//============================================================================================================================================================
-    //**************************** PCM Pb-Pb published data 2010 ****************************//
-    cout << "Loading 2010 PCM histos" << endl;
-    TFile* filePCMPublished                                     = new TFile(fileNamePCMPublished.Data());
-    cout << "For the published Pi0 in 0-10% " << endl;
-    TDirectoryFile* directoryPCMPublishedPi0PbPb2760GeV_0010                = (TDirectoryFile*)filePCMPublished->Get("Pi0_PbPb_2.76TeV_0-10%");
-        TH1D* histoPCMPublishedPi0InvYieldPbPb2760GeV_0010                  = (TH1D*)directoryPCMPublishedPi0PbPb2760GeV_0010->Get("CorrectedYieldPi0");
-        TGraphAsymmErrors* graphPCMPi0InvYieldStat2010PbPb2760GeV_0010 = new TGraphAsymmErrors(histoPCMPublishedPi0InvYieldPbPb2760GeV_0010);
-        TGraphAsymmErrors* graphPCMPi0InvYieldSys2010PbPb2760GeV_0010      = (TGraphAsymmErrors*)directoryPCMPublishedPi0PbPb2760GeV_0010->Get("Pi0SystError");
-
-        TGraphAsymmErrors* graphPCMPi0RAAStat2010PbPb2760GeV_0010   = (TGraphAsymmErrors*)directoryPCMPublishedPi0PbPb2760GeV_0010->Get("RAA");
-//         TH1D* histoPCMPublishedPi0RAAStatPbPb2760GeV_0010 = (TH1D*)GraphAsymErrorsToHist(graphPCMPublishedPi0RAAStat2760GeV_0010,12,"histoPCMPublishedPi0RAAStatPbPb2760GeV_0010");
-        TGraphAsymmErrors* graphPCMPi0RAASys2010PbPb2760GeV_0010           = (TGraphAsymmErrors*)directoryPCMPublishedPi0PbPb2760GeV_0010->Get("RAASys");
-
-    TDirectoryFile* directoryPCMPublishedPi0PbPb2760GeV_2040                = (TDirectoryFile*)filePCMPublished->Get("Pi0_PbPb_2.76TeV_20-40%");
-        TH1D* histoPCMPublishedPi0InvYieldPbPb2760GeV_2040                  = (TH1D*)directoryPCMPublishedPi0PbPb2760GeV_2040->Get("CorrectedYieldPi0");
-        TGraphAsymmErrors* graphPCMPi0InvYieldStat2010PbPb2760GeV_2040 = new TGraphAsymmErrors(histoPCMPublishedPi0InvYieldPbPb2760GeV_2040);
-        TGraphAsymmErrors* graphPCMPi0InvYieldSys2010PbPb2760GeV_2040      = (TGraphAsymmErrors*)directoryPCMPublishedPi0PbPb2760GeV_2040->Get("Pi0SystError");
-
-        TGraphAsymmErrors* graphPCMPi0RAAStat2010PbPb2760GeV_2040   = (TGraphAsymmErrors*)directoryPCMPublishedPi0PbPb2760GeV_2040->Get("RAA");
-//         TH1D* histoPCMPublishedPi0RAAStatPbPb2760GeV_2040 = (TH1D*)GraphAsymErrorsToHist(graphPCMPublishedPi0RAAStat2760GeV_2040,12,"histoPCMPublishedPi0RAAStatPbPb2760GeV_2040");
-        TGraphAsymmErrors* graphPCMPi0RAASys2010PbPb2760GeV_2040           = (TGraphAsymmErrors*)directoryPCMPublishedPi0PbPb2760GeV_2040->Get("RAASys");
-//============================================================================================================================================================
-
-
-    cout << "For the Eta in 0-10% " << endl;
-    TDirectory* directoryPCMEtaPbPb2760GeV_0010                     = (TDirectory*)filePCM->Get("Eta_PbPb_2.76TeV_0-10%");
-        TH1D* histoPCMEtaMassPbPb2760GeV_0010                       = (TH1D*)directoryPCMEtaPbPb2760GeV_0010->Get("MassEta");
-        TH1D* histoPCMEtaFWHMMeVPbPb2760GeV_0010                    = (TH1D*)directoryPCMEtaPbPb2760GeV_0010->Get("FWHMEtaMeV");
-        TH1D* histoPCMEtaTrueMassPbPb2760GeV_0010                   = (TH1D*)directoryPCMEtaPbPb2760GeV_0010->Get("TrueMassEta");
-        TH1D* histoPCMEtaTrueFWHMMeVPbPb2760GeV_0010                = (TH1D*)directoryPCMEtaPbPb2760GeV_0010->Get("TrueFWHMEtaMeV");
-
-        TH1D* histoPCMEtaInvYieldPbPb2760GeV_0010                   = (TH1D*)directoryPCMEtaPbPb2760GeV_0010->Get("CorrectedYieldEta");
-        TGraphAsymmErrors* graphPCMEtaInvYieldStatPbPb2760GeV_0010  = new TGraphAsymmErrors(histoPCMEtaInvYieldPbPb2760GeV_0010);
-            graphPCMEtaInvYieldStatPbPb2760GeV_0010->RemovePoint(0);
-            graphPCMEtaInvYieldStatPbPb2760GeV_0010->RemovePoint(0);
-
-        TH1D* histoPCMEtaInvYieldPbPb2760GeVYshifted_0010                  = (TH1D*)directoryPCMEtaPbPb2760GeV_0010->Get("CorrectedYieldBinShiftedEta");
-        TGraphAsymmErrors* graphPCMEtaInvYieldStatPbPb2760GeVwithYshift_0010  = new TGraphAsymmErrors(histoPCMEtaInvYieldPbPb2760GeVYshifted_0010);
-            graphPCMEtaInvYieldStatPbPb2760GeVwithYshift_0010->RemovePoint(0);
-            graphPCMEtaInvYieldStatPbPb2760GeVwithYshift_0010->RemovePoint(0);
-
-        //WITH material budget error
-        TGraphAsymmErrors* graphPCMEtaInvYieldSysPbPb2760GeV_0010       = (TGraphAsymmErrors*)directoryPCMEtaPbPb2760GeV_0010->Get("EtaSystError");
-//             graphPCMEtaInvYieldSysPbPb2760GeV_0010->RemovePoint(graphPCMEtaInvYieldSysPbPb2760GeV_0010->GetN()-1);
-
-        //WITHOUT material budget error
-        TGraphAsymmErrors* graphPCMEtaInvYieldSysWOMat2760GeV_0010          = (TGraphAsymmErrors*)directoryPCMEtaPbPb2760GeV_0010->Get("EtaSystErrorA");
-//             graphPCMEtaInvYieldSysWOMat2760GeV_0010->RemovePoint(graphPCMEtaInvYieldSysWOMat2760GeV_0010->GetN()-1);
-
-        TGraphAsymmErrors* graphPCMEtaRAAStatPbPb2760GeV_0010   = (TGraphAsymmErrors*)directoryPCMEtaPbPb2760GeV_0010->Get("EtaRAA");
-        TH1D* histoPCMEtaRAAStatPbPb2760GeV_0010 = (TH1D*)GraphAsymErrorsToHist(graphPCMEtaRAAStatPbPb2760GeV_0010,10,"histoPCMEtaRAAStatPbPb2760GeV_0010");
-        TGraphAsymmErrors* graphPCMEtaRAASysPbPb2760GeV_0010    = (TGraphAsymmErrors*)directoryPCMEtaPbPb2760GeV_0010->Get("EtaRAASys");
-
-        TH1D* histoPCMEtatoPi0Stat2760GeV_0010                  = (TH1D*)directoryPCMEtaPbPb2760GeV_0010->Get("EtatoPi0Ratio");
-        TGraphAsymmErrors* graphPCMEtatoPi0Stat2760GeV_0010 = new TGraphAsymmErrors(histoPCMEtatoPi0Stat2760GeV_0010);
-            graphPCMEtatoPi0Stat2760GeV_0010->RemovePoint(0);
-            graphPCMEtatoPi0Stat2760GeV_0010->RemovePoint(0);
-
-        TGraphAsymmErrors* graphPCMEtatoPi0Sys2760GeV_0010  = (TGraphAsymmErrors*)directoryPCMEtaPbPb2760GeV_0010->Get("EtatoPi0RatioSys");
-//         graphPCMEtatoPi0Sys2760GeV_0010->RemovePoint(graphPCMEtatoPi0Sys2760GeV_0010->GetN()-1);
-
-//         graphPCMEtaInvYieldStatPbPb2760GeV_0010->Print();
-//         graphPCMEtaInvYieldSysPbPb2760GeV_0010->Print();
-//         graphPCMEtaInvYieldSysWOMat2760GeV_0010->Print();
-//         graphPCMEtatoPi0Stat2760GeV_0010->Print();
-//         graphPCMEtatoPi0Sys2760GeV_0010->Print();
-//         return;
-
-
-    cout << "For the Eta in 20-40% " << endl;
-    TDirectoryFile* directoryPCMEtaPbPb2760GeV_2040                 = (TDirectoryFile*)filePCM->Get("Eta_PbPb_2.76TeV_20-40%");
-        TH1D* histoPCMEtaMassPbPb2760GeV_2040                       = (TH1D*)directoryPCMEtaPbPb2760GeV_2040->Get("MassEta");
-        TH1D* histoPCMEtaFWHMMeVPbPb2760GeV_2040                    = (TH1D*)directoryPCMEtaPbPb2760GeV_2040->Get("FWHMEtaMeV");
-        TH1D* histoPCMEtaTrueMassPbPb2760GeV_2040                   = (TH1D*)directoryPCMEtaPbPb2760GeV_2040->Get("TrueMassEta");
-        TH1D* histoPCMEtaTrueFWHMMeVPbPb2760GeV_2040                = (TH1D*)directoryPCMEtaPbPb2760GeV_2040->Get("TrueFWHMEtaMeV");
-
-        TH1D* histoPCMEtaInvYieldPbPb2760GeV_2040                   = (TH1D*)directoryPCMEtaPbPb2760GeV_2040->Get("CorrectedYieldEta");
-        TGraphAsymmErrors* graphPCMEtaInvYieldStatPbPb2760GeV_2040  = new TGraphAsymmErrors(histoPCMEtaInvYieldPbPb2760GeV_2040);
-            graphPCMEtaInvYieldStatPbPb2760GeV_2040->RemovePoint(0);
-
-        //WITH material budget error
-        TGraphAsymmErrors* graphPCMEtaInvYieldSysPbPb2760GeV_2040       = (TGraphAsymmErrors*)directoryPCMEtaPbPb2760GeV_2040->Get("EtaSystError");
-            graphPCMEtaInvYieldSysPbPb2760GeV_2040->RemovePoint(graphPCMEtaInvYieldSysPbPb2760GeV_2040->GetN()-1);
-
-
-    cout << "For the Eta in 20-50% " << endl;
-    TDirectory* directoryPCMEtaPbPb2760GeV_2050                     = (TDirectory*)filePCM->Get("Eta_PbPb_2.76TeV_20-50%");
-        TH1D* histoPCMEtaMassPbPb2760GeV_2050                       = (TH1D*)directoryPCMEtaPbPb2760GeV_2050->Get("MassEta");
-        TH1D* histoPCMEtaFWHMMeVPbPb2760GeV_2050                    = (TH1D*)directoryPCMEtaPbPb2760GeV_2050->Get("FWHMEtaMeV");
-        TH1D* histoPCMEtaTrueMassPbPb2760GeV_2050                   = (TH1D*)directoryPCMEtaPbPb2760GeV_2050->Get("TrueMassEta");
-        TH1D* histoPCMEtaTrueFWHMMeVPbPb2760GeV_2050                = (TH1D*)directoryPCMEtaPbPb2760GeV_2050->Get("TrueFWHMEtaMeV");
-
-        TH1D* histoPCMEtaInvYieldPbPb2760GeV_2050                   = (TH1D*)directoryPCMEtaPbPb2760GeV_2050->Get("CorrectedYieldEta");
-        TGraphAsymmErrors* graphPCMEtaInvYieldStatPbPb2760GeV_2050  = new TGraphAsymmErrors(histoPCMEtaInvYieldPbPb2760GeV_2050);
-            graphPCMEtaInvYieldStatPbPb2760GeV_2050->RemovePoint(0);
-            graphPCMEtaInvYieldStatPbPb2760GeV_2050->RemovePoint(0);
-
-        TH1D* histoPCMEtaInvYieldPbPb2760GeVYshifted_2050                  = (TH1D*)directoryPCMEtaPbPb2760GeV_2050->Get("CorrectedYieldBinShiftedEta");
-        TGraphAsymmErrors* graphPCMEtaInvYieldStatPbPb2760GeVwithYshift_2050  = new TGraphAsymmErrors(histoPCMEtaInvYieldPbPb2760GeVYshifted_2050);
-            graphPCMEtaInvYieldStatPbPb2760GeVwithYshift_2050->RemovePoint(0);
-            graphPCMEtaInvYieldStatPbPb2760GeVwithYshift_2050->RemovePoint(0);
-
-        //WITH material budget error
-        TGraphAsymmErrors* graphPCMEtaInvYieldSysPbPb2760GeV_2050       = (TGraphAsymmErrors*)directoryPCMEtaPbPb2760GeV_2050->Get("EtaSystError");
-//         graphPCMEtaInvYieldSysPbPb2760GeV_2050->RemovePoint(graphPCMEtaInvYieldSysPbPb2760GeV_2050->GetN()-1);
-
-        //WITHOUT material budget error
-        TGraphAsymmErrors* graphPCMEtaInvYieldSysWOMat2760GeV_2050  = (TGraphAsymmErrors*)directoryPCMEtaPbPb2760GeV_2050->Get("EtaSystErrorA");
-//         graphPCMEtaInvYieldSysWOMat2760GeV_2050->RemovePoint(graphPCMEtaInvYieldSysWOMat2760GeV_2050->GetN()-1);
-
-        TGraphAsymmErrors* graphPCMEtaRAAStatPbPb2760GeV_2050   = (TGraphAsymmErrors*)directoryPCMEtaPbPb2760GeV_2050->Get("EtaRAA");
-        TH1D* histoPCMEtaRAAStatPbPb2760GeV_2050 = (TH1D*)GraphAsymErrorsToHist(graphPCMEtaRAAStatPbPb2760GeV_2050,10,"histoPCMEtaRAAStatPbPb2760GeV_2050");
-        TGraphAsymmErrors* graphPCMEtaRAASysPbPb2760GeV_2050    = (TGraphAsymmErrors*)directoryPCMEtaPbPb2760GeV_2050->Get("EtaRAASys");
-
-        TH1D* histoPCMEtatoPi0Stat2760GeV_2050                  = (TH1D*)directoryPCMEtaPbPb2760GeV_2050->Get("EtatoPi0Ratio");
-        TGraphAsymmErrors* graphPCMEtatoPi0Stat2760GeV_2050 = new TGraphAsymmErrors(histoPCMEtatoPi0Stat2760GeV_2050);
-            graphPCMEtatoPi0Stat2760GeV_2050->RemovePoint(0);
-            graphPCMEtatoPi0Stat2760GeV_2050->RemovePoint(0);
-
-        TGraphAsymmErrors* graphPCMEtatoPi0Sys2760GeV_2050  = (TGraphAsymmErrors*)directoryPCMEtaPbPb2760GeV_2050->Get("EtatoPi0RatioSys");
-//             graphPCMEtatoPi0Sys2760GeV_2050->RemovePoint(graphPCMEtatoPi0Sys2760GeV_2050->GetN()-1);
-
-//         graphPCMEtaInvYieldStatPbPb2760GeV_2050->Print();
-//         graphPCMEtaInvYieldSysPbPb2760GeV_2050->Print();
-//         graphPCMEtaInvYieldSysWOMat2760GeV_2050->Print();
-//         graphPCMEtatoPi0Stat2760GeV_2050->Print();
-//         graphPCMEtatoPi0Sys2760GeV_2050->Print();
-//         return;
-
-
-    //**************************** EMCal Pb-Pb data 2011 ****************************//
-    cout << "For the Pi0 and Eta in PbPb, loading EMCal histos" << endl;
-    TFile* fileEMCal                                = new TFile(fileNameEMCal.Data());
-
-    TDirectory* directoryEMCalPi0PbPb2760GeV                = (TDirectory*)fileEMCal->Get("Pi02.76TeV_PbPb");
-    cout << "Pi0 0-10%" << endl;
-        TH1D* histoEMCalPi0InvYieldPbPb2760GeV_0010         = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("LuciaBinningInvYieldPbPbStatErrPi_0010");
-        TGraphAsymmErrors* graphEMCalPi0InvYieldStatPbPb2760GeV_0010        = new TGraphAsymmErrors(histoEMCalPi0InvYieldPbPb2760GeV_0010);
-            graphEMCalPi0InvYieldStatPbPb2760GeV_0010->RemovePoint(graphEMCalPi0InvYieldStatPbPb2760GeV_0010->GetN()-1);
-            graphEMCalPi0InvYieldStatPbPb2760GeV_0010->RemovePoint(graphEMCalPi0InvYieldStatPbPb2760GeV_0010->GetN()-1);
-
-        TH1D* histoEMCalPi0InvYieldSysPbPb2760GeV_0010  = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("LuciaBinningInvYieldPbPbSysErrPi_0010");
-        TGraphAsymmErrors* graphEMCalPi0InvYieldSysPbPb2760GeV_0010     = new TGraphAsymmErrors(histoEMCalPi0InvYieldSysPbPb2760GeV_0010);
-            graphEMCalPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetN()-1);
-            graphEMCalPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetN()-1);
-
-        TH1D* histoEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010  = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("EMCalSysPion010forRAA");
-        TGraphAsymmErrors* graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010     = new TGraphAsymmErrors(histoEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010);
-
-//         graphEMCalPi0InvYieldStatPbPb2760GeV_0010->Print();
-//         graphEMCalPi0InvYieldSysPbPb2760GeV_0010->Print();
-//         graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->Print();
-//         return;
-
-    cout << "Pi0 20-50%" << endl;
-        TH1D* histoEMCalPi0InvYieldPbPb2760GeV_2050         = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("LuciaBinningInvYieldPbPbStatErrPi_2050");
-        TGraphAsymmErrors* graphEMCalPi0InvYieldStatPbPb2760GeV_2050        = new TGraphAsymmErrors(histoEMCalPi0InvYieldPbPb2760GeV_2050);
-            graphEMCalPi0InvYieldStatPbPb2760GeV_2050->RemovePoint(graphEMCalPi0InvYieldStatPbPb2760GeV_2050->GetN()-1);
-            graphEMCalPi0InvYieldStatPbPb2760GeV_2050->RemovePoint(graphEMCalPi0InvYieldStatPbPb2760GeV_2050->GetN()-1);
-
-        TH1D* histoEMCalPi0InvYieldSysPbPb2760GeV_2050  = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("LuciaBinningInvYieldPbPbSysErrPi_2050");
-        TGraphAsymmErrors* graphEMCalPi0InvYieldSysPbPb2760GeV_2050     = new TGraphAsymmErrors(histoEMCalPi0InvYieldSysPbPb2760GeV_2050);
-            graphEMCalPi0InvYieldSysPbPb2760GeV_2050->RemovePoint(graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetN()-1);
-            graphEMCalPi0InvYieldSysPbPb2760GeV_2050->RemovePoint(graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetN()-1);
-
-        TH1D* histoEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050  = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("EMCalSysPion2050forRAA");
-        TGraphAsymmErrors* graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050     = new TGraphAsymmErrors(histoEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050);
-
-//         graphEMCalPi0InvYieldStatPbPb2760GeV_2050->Print();
-//         graphEMCalPi0InvYieldSysPbPb2760GeV_2050->Print();
-//         graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->Print();
-//         return;
-
-
-    TDirectory* directoryEMCalEtaPbPb2760GeV                = (TDirectory*)fileEMCal->Get("Eta2.76TeV_PbPb");
-    cout << "Eta 0-10%" << endl;
-        TH1D* histoEMCalEtaInvYieldPbPb2760GeV_0010         = (TH1D*)directoryEMCalEtaPbPb2760GeV->Get("InvYieldPbPbStatErrEta_0010");
-        TGraphAsymmErrors* graphEMCalEtaInvYieldStatPbPb2760GeV_0010        = new TGraphAsymmErrors(histoEMCalEtaInvYieldPbPb2760GeV_0010);
-            graphEMCalEtaInvYieldStatPbPb2760GeV_0010->RemovePoint(graphEMCalEtaInvYieldStatPbPb2760GeV_0010->GetN()-1);
-            graphEMCalEtaInvYieldStatPbPb2760GeV_0010->RemovePoint(graphEMCalEtaInvYieldStatPbPb2760GeV_0010->GetN()-1);
-
-        TH1D*   histoEMCalEtaInvYieldSysPbPb2760GeV_0010    = (TH1D*)directoryEMCalEtaPbPb2760GeV->Get("InvYieldPbPbSysErrEta_0010");
-        TGraphAsymmErrors* graphEMCalEtaInvYieldSysPbPb2760GeV_0010     = new TGraphAsymmErrors(histoEMCalEtaInvYieldSysPbPb2760GeV_0010);
-            graphEMCalEtaInvYieldSysPbPb2760GeV_0010->RemovePoint(graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetN()-1);
-            graphEMCalEtaInvYieldSysPbPb2760GeV_0010->RemovePoint(graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetN()-1);
-
-        TH1D* histoEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010  = (TH1D*)directoryEMCalEtaPbPb2760GeV->Get("EMCalSysEta010forRAA");
-        TGraphAsymmErrors* graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010     = new TGraphAsymmErrors(histoEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010);
-
-        TH1D*   histoEMCalEtatoPi0StatPbPb2760GeV_0010  = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("StatErrEtatoPi0Ratio_0010");
-        TGraphAsymmErrors* graphEMCalEtatoPi0Stat2760GeV_0010   = new TGraphAsymmErrors(histoEMCalEtatoPi0StatPbPb2760GeV_0010);
-            graphEMCalEtatoPi0Stat2760GeV_0010->RemovePoint(graphEMCalEtatoPi0Stat2760GeV_0010->GetN()-1);
-            graphEMCalEtatoPi0Stat2760GeV_0010->RemovePoint(graphEMCalEtatoPi0Stat2760GeV_0010->GetN()-1);
-
-        TH1D*   histoEMCalEtatoPi0SysPbPb2760GeV_0010   = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("SysErrEtatoPi0Ratio_0010");
-        TGraphAsymmErrors* graphEMCalEtatoPi0Sys2760GeV_0010    = new TGraphAsymmErrors(histoEMCalEtatoPi0SysPbPb2760GeV_0010);
-            graphEMCalEtatoPi0Sys2760GeV_0010->RemovePoint(graphEMCalEtatoPi0Sys2760GeV_0010->GetN()-1);
-            graphEMCalEtatoPi0Sys2760GeV_0010->RemovePoint(graphEMCalEtatoPi0Sys2760GeV_0010->GetN()-1);
-
-//         graphEMCalEtaInvYieldStatPbPb2760GeV_0010->Print();
-//         graphEMCalEtaInvYieldSysPbPb2760GeV_0010->Print();
-//         graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->Print();
-//         graphEMCalEtatoPi0Stat2760GeV_0010->Print();
-//         graphEMCalEtatoPi0Sys2760GeV_0010->Print();
-//         return;
-
-
-    cout << "Eta 20-50%" << endl;
-        TH1D* histoEMCalEtaInvYieldPbPb2760GeV_2050         = (TH1D*)directoryEMCalEtaPbPb2760GeV->Get("InvYieldPbPbStatErrEta_2050");
-        TGraphAsymmErrors* graphEMCalEtaInvYieldStatPbPb2760GeV_2050        = new TGraphAsymmErrors(histoEMCalEtaInvYieldPbPb2760GeV_2050);
-            graphEMCalEtaInvYieldStatPbPb2760GeV_2050->RemovePoint(graphEMCalEtaInvYieldStatPbPb2760GeV_2050->GetN()-1);
-            graphEMCalEtaInvYieldStatPbPb2760GeV_2050->RemovePoint(graphEMCalEtaInvYieldStatPbPb2760GeV_2050->GetN()-1);
-
-        TH1D*   histoEMCalEtaInvYieldSysPbPb2760GeV_2050    = (TH1D*)directoryEMCalEtaPbPb2760GeV->Get("InvYieldPbPbSysErrEta_2050");
-        TGraphAsymmErrors* graphEMCalEtaInvYieldSysPbPb2760GeV_2050     = new TGraphAsymmErrors(histoEMCalEtaInvYieldSysPbPb2760GeV_2050);
-            graphEMCalEtaInvYieldSysPbPb2760GeV_2050->RemovePoint(graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetN()-1);
-            graphEMCalEtaInvYieldSysPbPb2760GeV_2050->RemovePoint(graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetN()-1);
-
-        TH1D* histoEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050  = (TH1D*)directoryEMCalEtaPbPb2760GeV->Get("EMCalSysEta2050forRAA");
-        TGraphAsymmErrors* graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050     = new TGraphAsymmErrors(histoEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050);
-
-        TH1D*   histoEMCalEtatoPi0StatPbPb2760GeV_2050  = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("StatErrEtatoPi0Ratio_2050");
-        TGraphAsymmErrors* graphEMCalEtatoPi0Stat2760GeV_2050   = new TGraphAsymmErrors(histoEMCalEtatoPi0StatPbPb2760GeV_2050);
-            graphEMCalEtatoPi0Stat2760GeV_2050->RemovePoint(graphEMCalEtatoPi0Stat2760GeV_2050->GetN()-1);
-            graphEMCalEtatoPi0Stat2760GeV_2050->RemovePoint(graphEMCalEtatoPi0Stat2760GeV_2050->GetN()-1);
-
-        TH1D*   histoEMCalEtatoPi0SysPbPb2760GeV_2050   = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("SysErrEtatoPi0Ratio_2050");
-        TGraphAsymmErrors* graphEMCalEtatoPi0Sys2760GeV_2050    = new TGraphAsymmErrors(histoEMCalEtatoPi0SysPbPb2760GeV_2050);
-            graphEMCalEtatoPi0Sys2760GeV_2050->RemovePoint(graphEMCalEtatoPi0Sys2760GeV_2050->GetN()-1);
-            graphEMCalEtatoPi0Sys2760GeV_2050->RemovePoint(graphEMCalEtatoPi0Sys2760GeV_2050->GetN()-1);
-
-//         graphEMCalEtaInvYieldStatPbPb2760GeV_2050->Print();
-//         graphEMCalEtaInvYieldSysPbPb2760GeV_2050->Print();
-//         graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->Print();
-//         graphEMCalEtatoPi0Stat2760GeV_2050->Print();
-//         graphEMCalEtatoPi0Sys2760GeV_2050->Print();
-//         return;
-
-
-    TDirectory* directoryEMCalRAAPbPb2760GeV                = (TDirectory*)fileEMCal->Get("RAA2.76TeV_PbPb");
-        cout << "Pi0 RAA 0-10%" << endl;
-        TH1D*   histoEMCalPi0RAAStatPbPb2760GeV_0010    = (TH1D*)directoryEMCalRAAPbPb2760GeV->Get("RAAStatErrPion_0010");
-        TGraphAsymmErrors* graphEMCalPi0RaaStatPbPb2760GeV_0010     = new TGraphAsymmErrors(histoEMCalPi0RAAStatPbPb2760GeV_0010);
-
-        TH1D*   histoEMCalPi0RAASystPbPb2760GeV_0010    = (TH1D*)directoryEMCalRAAPbPb2760GeV->Get("RAASystErrPion_0010");
-        TGraphAsymmErrors* graphEMCalPi0RAASysPbPb2760GeV_0010  = new TGraphAsymmErrors(histoEMCalPi0RAASystPbPb2760GeV_0010);
-
-        cout << "Pi0 RAA 20-50%" << endl;
-        TH1D*   histoEMCalPi0RAAStatPbPb2760GeV_2050    = (TH1D*)directoryEMCalRAAPbPb2760GeV->Get("RAAStatErrPion_2050");
-        TGraphAsymmErrors* graphEMCalPi0RaaStatPbPb2760GeV_2050     = new TGraphAsymmErrors(histoEMCalPi0RAAStatPbPb2760GeV_2050);
-
-        TH1D*   histoEMCalPi0RAASystPbPb2760GeV_2050    = (TH1D*)directoryEMCalRAAPbPb2760GeV->Get("RAASystErrPion_2050");
-        TGraphAsymmErrors* graphEMCalPi0RAASysPbPb2760GeV_2050  = new TGraphAsymmErrors(histoEMCalPi0RAASystPbPb2760GeV_2050);
-
-//         graphEMCalPi0RaaStatPbPb2760GeV_0010->Print();
-//         graphEMCalPi0RAASysPbPb2760GeV_0010->Print();
-//         graphEMCalPi0RaaStatPbPb2760GeV_2050->Print();
-//         graphEMCalPi0RAASysPbPb2760GeV_2050->Print();
-//         return;
-
-        cout << "Eta RAA 0-10%" << endl;
-        TH1D*   histoEMCalEtaRAAStatPbPb2760GeV_0010    = (TH1D*)directoryEMCalRAAPbPb2760GeV->Get("RAAStatErrEta_0010");
-        TGraphAsymmErrors* graphEMCalEtaRaaStatPbPb2760GeV_0010     = new TGraphAsymmErrors(histoEMCalEtaRAAStatPbPb2760GeV_0010);
-
-        TH1D*   histoEMCalEtaRAASystPbPb2760GeV_0010    = (TH1D*)directoryEMCalRAAPbPb2760GeV->Get("RAASystErrEta_0010");
-        TGraphAsymmErrors* graphEMCalEtaRAASysPbPb2760GeV_0010  = new TGraphAsymmErrors(histoEMCalEtaRAASystPbPb2760GeV_0010);
-
-        cout << "Eta RAA 20-50%" << endl;
-        TH1D*   histoEMCalEtaRAAStatPbPb2760GeV_2050    = (TH1D*)directoryEMCalRAAPbPb2760GeV->Get("RAAStatErrEta_2050");
-        TGraphAsymmErrors* graphEMCalEtaRaaStatPbPb2760GeV_2050     = new TGraphAsymmErrors(histoEMCalEtaRAAStatPbPb2760GeV_2050);
-
-        TH1D*   histoEMCalEtaRAASystPbPb2760GeV_2050    = (TH1D*)directoryEMCalRAAPbPb2760GeV->Get("RAASystErrEta_2050");
-        TGraphAsymmErrors* graphEMCalEtaRAASysPbPb2760GeV_2050  = new TGraphAsymmErrors(histoEMCalEtaRAASystPbPb2760GeV_2050);
-
-//         graphEMCalEtaRaaStatPbPb2760GeV_0010->Print();
-//         graphEMCalEtaRAASysPbPb2760GeV_0010->Print();
-//         graphEMCalEtaRaaStatPbPb2760GeV_2050->Print();
-//         graphEMCalEtaRAASysPbPb2760GeV_2050->Print();
-//         return;
-
-
+    TDirectoryFile* directoryNeutralMesonPbPb   = (TDirectoryFile*)fileDataALICE->Get("NeutralMesons_PbPb_2.76TeV");
+
+    histoPi0PHOSPbPb0010                        = (TH1D*)directoryNeutralMesonPbPb->Get("histoInvYieldPi0PHOSPbPb2760GeVStatErr_0010");
+    graphPHOSPi0InvYieldStatPbPb2760GeV_0010    = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0PHOSPbPb2760GeVStatErr_0010");
+    graphPHOSPi0InvYieldSysPbPb2760GeV_0010     = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0PHOSPbPb2760GeVSysErr_0010");
+    graphSysErrRAAYieldPi0PHOSPbPb0010          = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0PHOSPbPb2760GeVSysErr_forRAA_0010");
+
+    histoPCMPi0InvYieldPbPb2760GeV_0010         = (TH1D*)directoryNeutralMesonPbPb->Get("histoInvYieldPi0PCMPbPb2760GeVStatErr_0010");
+    graphPCMPi0InvYieldStatPbPb2760GeV_0010     = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0PCMPbPb2760GeVStatErr_0010");
+    graphPCMPi0InvYieldSysPbPb2760GeV_0010      = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0PCMPbPb2760GeVSysErr_0010");
+    graphPCMPi0InvYieldStatPbPb2760GeVwithYshift_0010 = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0PCMPbPb2760GeVStatErr_yShifted_0010");
+    graphPCMPi0InvYieldSysWOMat2760GeV_0010     = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0PCMPbPb2760GeVSysErr_forRAA_0010");
+    histoPCMPi0RAAStatPbPb2760GeV_0010          = (TH1D*)directoryNeutralMesonPbPb->Get("histoRAAPi0PCMPbPb2760GeVStatErr_0010");
+    graphPCMPi0RAAStatPbPb2760GeV_0010          = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphRAAPi0PCMPbPb2760GeVStatErr_0010");
+    graphPCMPi0RAASysPbPb2760GeV_0010           = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphRAAPi0PCMPbPb2760GeVSysErr_0010");
+
+    histoPCMPi0InvYieldPbPb2760GeV_2050         = (TH1D*)directoryNeutralMesonPbPb->Get("histoInvYieldPi0PCMPbPb2760GeVStatErr_2050");
+    graphPCMPi0InvYieldStatPbPb2760GeV_2050     = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0PCMPbPb2760GeVStatErr_2050");
+    graphPCMPi0InvYieldSysPbPb2760GeV_2050      = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0PCMPbPb2760GeVSysErr_2050");
+    graphPCMPi0InvYieldStatPbPb2760GeVwithYshift_2050 = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0PCMPbPb2760GeVStatErr_yShifted_2050");
+    graphPCMPi0InvYieldSysWOMat2760GeV_2050     = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0PCMPbPb2760GeVSysErr_forRAA_2050");
+    histoPCMPi0RAAStatPbPb2760GeV_2050          = (TH1D*)directoryNeutralMesonPbPb->Get("histoRAAPi0PCMPbPb2760GeVStatErr_2050");
+    graphPCMPi0RAAStatPbPb2760GeV_2050          = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphRAAPi0PCMPbPb2760GeVStatErr_2050");
+    graphPCMPi0RAASysPbPb2760GeV_2050           = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphRAAPi0PCMPbPb2760GeVSysErr_2050");
+
+    histoPCMEtaInvYieldPbPb2760GeV_0010         = (TH1D*)directoryNeutralMesonPbPb->Get("histoInvYieldEtaPCMPbPb2760GeVStatErr_0010");
+    graphPCMEtaInvYieldStatPbPb2760GeV_0010     = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldEtaPCMPbPb2760GeVStatErr_0010");
+    graphPCMEtaInvYieldSysPbPb2760GeV_0010      = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldEtaPCMPbPb2760GeVSysErr_0010");
+    graphPCMEtaInvYieldStatPbPb2760GeVwithYshift_0010 = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldEtaPCMPbPb2760GeVStatErr_yShifted_0010");
+    graphPCMEtaInvYieldSysWOMat2760GeV_0010     = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldEtaPCMPbPb2760GeVSysErr_forRAA_0010");
+    histoPCMEtaRAAStatPbPb2760GeV_0010          = (TH1D*)directoryNeutralMesonPbPb->Get("histoRAAEtaPCMPbPb2760GeVStatErr_0010");
+    graphPCMEtaRAAStatPbPb2760GeV_0010          = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphRAAEtaPCMPbPb2760GeVStatErr_0010");
+    graphPCMEtaRAASysPbPb2760GeV_0010           = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphRAAEtaPCMPbPb2760GeVSysErr_0010");
+    histoPCMEtatoPi0Stat2760GeV_0010            = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("histoEtaToPi0RatioPCMPbPb2760GeVStatErr_0010");
+    graphPCMEtatoPi0Stat2760GeV_0010            = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphEtaToPi0RatioPCMPbPb2760GeVStatErr_0010");
+    graphPCMEtatoPi0Sys2760GeV_0010             = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphEtaToPi0RatioPCMPbPb2760GeVSysErr_0010");
+
+    histoPCMEtaInvYieldPbPb2760GeV_2050         = (TH1D*)directoryNeutralMesonPbPb->Get("histoInvYieldEtaPCMPbPb2760GeVStatErr_2050");
+    graphPCMEtaInvYieldStatPbPb2760GeV_2050     = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldEtaPCMPbPb2760GeVStatErr_2050");
+    graphPCMEtaInvYieldSysPbPb2760GeV_2050      = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldEtaPCMPbPb2760GeVSysErr_2050");
+    graphPCMEtaInvYieldStatPbPb2760GeVwithYshift_2050 = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldEtaPCMPbPb2760GeVStatErr_yShifted_2050");
+    graphPCMEtaInvYieldSysWOMat2760GeV_2050     = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldEtaPCMPbPb2760GeVSysErr_forRAA_2050");
+    histoPCMEtaRAAStatPbPb2760GeV_2050          = (TH1D*)directoryNeutralMesonPbPb->Get("histoRAAEtaPCMPbPb2760GeVStatErr_2050");
+    graphPCMEtaRAAStatPbPb2760GeV_2050          = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphRAAEtaPCMPbPb2760GeVStatErr_2050");
+    graphPCMEtaRAASysPbPb2760GeV_2050           = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphRAAEtaPCMPbPb2760GeVSysErr_2050");
+    histoPCMEtatoPi0Stat2760GeV_2050            = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("histoEtaToPi0RatioPCMPbPb2760GeVStatErr_2050");
+    graphPCMEtatoPi0Stat2760GeV_2050            = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphEtaToPi0RatioPCMPbPb2760GeVStatErr_2050");
+    graphPCMEtatoPi0Sys2760GeV_2050             = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphEtaToPi0RatioPCMPbPb2760GeVSysErr_2050");
+
+    histoEMCalPi0InvYieldStatPbPb2760GeV_0010   = (TH1D*)directoryNeutralMesonPbPb->Get("histoInvYieldPi0EMCalPbPb2760GeVStatErr_0010");
+    graphEMCalPi0InvYieldStatPbPb2760GeV_0010   = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0EMCalPbPb2760GeVStatErr_0010");
+    graphEMCalPi0InvYieldSysPbPb2760GeV_0010    = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0EMCalPbPb2760GeVSysErr_0010");
+    graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010 = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0EMCalPbPb2760GeVSysErr_forRAA_0010");
+    histoEMCalPi0RAAStatPbPb2760GeV_0010        = (TH1D*)directoryNeutralMesonPbPb->Get("histoRAAPi0EMCalPbPb2760GeVStatErr_0010");
+    graphEMCalPi0RAAStatPbPb2760GeV_0010        = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphRAAPi0EMCalPbPb2760GeVStatErr_0010");
+    graphEMCalPi0RAASysPbPb2760GeV_0010         = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphRAAPi0EMCalPbPb2760GeVSysErr_0010");
+
+    histoEMCalPi0InvYieldStatPbPb2760GeV_2050   = (TH1D*)directoryNeutralMesonPbPb->Get("histoInvYieldPi0EMCalPbPb2760GeVStatErr_2050");
+    graphEMCalPi0InvYieldStatPbPb2760GeV_2050   = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0EMCalPbPb2760GeVStatErr_2050");
+    graphEMCalPi0InvYieldSysPbPb2760GeV_2050    = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0EMCalPbPb2760GeVSysErr_2050");
+    graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050 = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldPi0EMCalPbPb2760GeVSysErr_forRAA_2050");
+    histoEMCalPi0RAAStatPbPb2760GeV_2050        = (TH1D*)directoryNeutralMesonPbPb->Get("histoRAAPi0EMCalPbPb2760GeVStatErr_2050");
+    graphEMCalPi0RAAStatPbPb2760GeV_2050        = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphRAAPi0EMCalPbPb2760GeVStatErr_2050");
+    graphEMCalPi0RAASysPbPb2760GeV_2050         = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphRAAPi0EMCalPbPb2760GeVSysErr_2050");
+
+    histoEMCalEtaInvYieldStatPbPb2760GeV_0010   = (TH1D*)directoryNeutralMesonPbPb->Get("histoInvYieldEtaEMCalPbPb2760GeVStatErr_0010");
+    graphEMCalEtaInvYieldStatPbPb2760GeV_0010   = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldEtaEMCalPbPb2760GeVStatErr_0010");
+    graphEMCalEtaInvYieldSysPbPb2760GeV_0010    = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldEtaEMCalPbPb2760GeVSysErr_0010");
+    graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010 = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldEtaEMCalPbPb2760GeVSysErr_forRAA_0010");
+    histoEMCalEtaRAAStatPbPb2760GeV_0010        = (TH1D*)directoryNeutralMesonPbPb->Get("histoRAAEtaEMCalPbPb2760GeVStatErr_0010");
+    graphEMCalEtaRAAStatPbPb2760GeV_0010        = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphRAAEtaEMCalPbPb2760GeVStatErr_0010");
+    graphEMCalEtaRAASysPbPb2760GeV_0010         = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphRAAEtaEMCalPbPb2760GeVSysErr_0010");
+    histoEMCalEtatoPi0Stat2760GeV_0010          = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("histoEtaToPi0RatioEMCalPbPb2760GeVStatErr_0010");
+    graphEMCalEtatoPi0Stat2760GeV_0010          = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphEtaToPi0RatioEMCalPbPb2760GeVStatErr_0010");
+    graphEMCalEtatoPi0Sys2760GeV_0010           = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphEtaToPi0RatioEMCalPbPb2760GeVSysErr_0010");
+
+    histoEMCalEtaInvYieldStatPbPb2760GeV_2050   = (TH1D*)directoryNeutralMesonPbPb->Get("histoInvYieldEtaEMCalPbPb2760GeVStatErr_20500");
+    graphEMCalEtaInvYieldStatPbPb2760GeV_2050   = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldEtaEMCalPbPb2760GeVStatErr_2050");
+    graphEMCalEtaInvYieldSysPbPb2760GeV_2050    = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldEtaEMCalPbPb2760GeVSysErr_2050");
+    graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050 = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphInvYieldEtaEMCalPbPb2760GeVSysErr_forRAA_2050");
+    histoEMCalEtaRAAStatPbPb2760GeV_2050        = (TH1D*)directoryNeutralMesonPbPb->Get("histoRAAEtaEMCalPbPb2760GeVStatErr_2050");
+    graphEMCalEtaRAAStatPbPb2760GeV_2050        = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphRAAEtaEMCalPbPb2760GeVStatErr_2050");
+    graphEMCalEtaRAASysPbPb2760GeV_2050         = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphRAAEtaEMCalPbPb2760GeVSysErr_2050");
+    histoEMCalEtatoPi0Stat2760GeV_2050          = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("histoEtaToPi0RatioEMCalPbPb2760GeVStatErr_2050");
+    graphEMCalEtatoPi0Stat2760GeV_2050          = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphEtaToPi0RatioEMCalPbPb2760GeVStatErr_2050");
+    graphEMCalEtatoPi0Sys2760GeV_2050           = (TGraphAsymmErrors*)directoryNeutralMesonPbPb->Get("graphEtaToPi0RatioEMCalPbPb2760GeVSysErr_2050");
 
 
     // *******************************************************************************************************
@@ -1457,9 +590,9 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
         statErrorCollectionLHC11h_0010[0] = (TH1D*)histoPCMPi0InvYieldPbPb2760GeV_0010->Clone("statErrPCMPi0_0010");
         statErrorCollectionLHC11h_0010[1] = (TH1D*)histoPi0PHOSPbPb0010->Clone("statErrPHOSPi0_0010");
-        statErrorCollectionLHC11h_0010[2] = (TH1D*)histoEMCalPi0InvYieldPbPb2760GeV_0010->Clone("statErrEMCalPi0_0010");
+        statErrorCollectionLHC11h_0010[2] = (TH1D*)histoEMCalPi0InvYieldStatPbPb2760GeV_0010->Clone("statErrEMCalPi0_0010");
         statErrorCollectionLHC11h_2050[0] = (TH1D*)histoPCMPi0InvYieldPbPb2760GeV_2050->Clone("statErrPCMPi0_2050");
-        statErrorCollectionLHC11h_2050[2] = (TH1D*)histoEMCalPi0InvYieldPbPb2760GeV_2050->Clone("statErrEMCalPi0_2050");
+        statErrorCollectionLHC11h_2050[2] = (TH1D*)histoEMCalPi0InvYieldStatPbPb2760GeV_2050->Clone("statErrEMCalPi0_2050");
 
         statErrorCollectionRaaLHC11h_0010[0] = (TH1D*)histoPCMPi0RAAStatPbPb2760GeV_0010->Clone("statErrPCMPi0RAA_0010");
         statErrorCollectionRaaLHC11h_0010[2] = (TH1D*)histoEMCalPi0RAAStatPbPb2760GeV_0010->Clone("statErrEMCalPi0RAA_0010");
@@ -1469,14 +602,14 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
     } else if(meson.CompareTo("Eta")==0) {
 
         statErrorCollectionLHC11h_0010[0] = (TH1D*)histoPCMEtaInvYieldPbPb2760GeV_0010->Clone("statErrPCMEta_0010");
-        statErrorCollectionLHC11h_0010[2] = (TH1D*)histoEMCalEtaInvYieldPbPb2760GeV_0010->Clone("statErrEMCalEta_0010");
+        statErrorCollectionLHC11h_0010[2] = (TH1D*)histoEMCalEtaInvYieldStatPbPb2760GeV_0010->Clone("statErrEMCalEta_0010");
         statErrorCollectionLHC11h_2050[0] = (TH1D*)histoPCMEtaInvYieldPbPb2760GeV_2050->Clone("statErrPCMEta_2050");
-        statErrorCollectionLHC11h_2050[2] = (TH1D*)histoEMCalEtaInvYieldPbPb2760GeV_2050->Clone("statErrEMCalEta_2050");
+        statErrorCollectionLHC11h_2050[2] = (TH1D*)histoEMCalEtaInvYieldStatPbPb2760GeV_2050->Clone("statErrEMCalEta_2050");
 
         statErrorCollectionEtatoPi0LHC11h_0010[0] = (TH1D*)histoPCMEtatoPi0Stat2760GeV_0010->Clone("statErrPCMEtatoPi0_0010");
-        statErrorCollectionEtatoPi0LHC11h_0010[2] = (TH1D*)histoEMCalEtatoPi0StatPbPb2760GeV_0010->Clone("statErrEMCalEtatoPi0_0010");
+        statErrorCollectionEtatoPi0LHC11h_0010[2] = (TH1D*)histoEMCalEtatoPi0Stat2760GeV_0010->Clone("statErrEMCalEtatoPi0_0010");
         statErrorCollectionEtatoPi0LHC11h_2050[0] = (TH1D*)histoPCMEtatoPi0Stat2760GeV_2050->Clone("statErrPCMEtatoPi0_2050");
-        statErrorCollectionEtatoPi0LHC11h_2050[2] = (TH1D*)histoEMCalEtatoPi0StatPbPb2760GeV_2050->Clone("statErrEMCalEtatoPi0_2050");
+        statErrorCollectionEtatoPi0LHC11h_2050[2] = (TH1D*)histoEMCalEtatoPi0Stat2760GeV_2050->Clone("statErrEMCalEtatoPi0_2050");
 
         statErrorCollectionRaaLHC11h_0010[0] = (TH1D*)histoPCMEtaRAAStatPbPb2760GeV_0010->Clone("statErrPCMEtaRAA_0010");
         statErrorCollectionRaaLHC11h_0010[2] = (TH1D*)histoEMCalEtaRAAStatPbPb2760GeV_0010->Clone("statErrEMCalEtaRAA_0010");
@@ -6697,10 +5830,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
           DrawGammaSetMarkerTGraphAsym(graphEtaToPi0JetQuenching_0010, 0, 0, colorNLO0010,colorNLO0010, widthLinesBoxes, kTRUE, colorNLO0010);
           graphEtaToPi0JetQuenching_0010->Draw("3,same");
 
-          DrawGammaSetMarker(histoEPOSEtaToPi0Ratio_0010,5,2,colorEPOS0010,colorEPOS0010);
-          histoEPOSEtaToPi0Ratio_0010->SetLineStyle(6);
-          histoEPOSEtaToPi0Ratio_0010->SetLineWidth(2);
-          histoEPOSEtaToPi0Ratio_2050->SetLineWidth(2);
           histoEPOSEtaToPi0Ratio_0010->GetXaxis()->SetRangeUser(0,13);
           histoEPOSEtaToPi0Ratio_0010->Draw("same,c,histo");
 
