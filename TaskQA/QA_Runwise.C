@@ -705,6 +705,7 @@ void QA_Runwise(
       DataSets[0]="LHC15o"; DataSets[1]="LHC16h4";
       plotDataSets[0]="LHC15o 0-100%"; plotDataSets[1]="LHC16h4 0-100%";
       doEquidistantXaxis=kTRUE;
+      markerSize = 1.0;
     }
     //**************************************************************************************************************
     else if(select.CompareTo("LHC15n")==0){

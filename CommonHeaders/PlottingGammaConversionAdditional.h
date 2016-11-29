@@ -3612,17 +3612,17 @@ Color_t GetColorDefaultColor( TString energy,
 	  return kOrange+7;
 	} else if (!centrality.CompareTo("50-90%")){
 	  return kGreen+2;
-	} else return kBlack;
+	} else return kGray+2;
       }
       else if (!generator.CompareTo("LHC15k1a1") || !generator.CompareTo("LHC15k1a2") || !generator.CompareTo("LHC15k1a3") || !generator.CompareTo("LHC16h4")){
 	if (!centrality.CompareTo("0-10%")){
-	  return kRed-7;
-	} else if (!centrality.CompareTo("10-20%")){
 	  return kBlue-4;
+	} else if (!centrality.CompareTo("10-20%")){
+	  return kRed-7;
 	} else if (!centrality.CompareTo("20-50%")){
-	  return kOrange+1;
-	} else if (!centrality.CompareTo("50-90%")){
 	  return kGreen+1;
+	} else if (!centrality.CompareTo("50-90%")){
+	  return kOrange+1;
 	} else return kBlue+1;
       }
     }
@@ -3808,14 +3808,14 @@ Style_t GetDefaultMarkerStyle( TString energy,
 	  } else return 25;
         } else if (!generator.CompareTo("LHC15k1a1") || !generator.CompareTo("LHC15k1a2") || !generator.CompareTo("LHC15k1a3") || !generator.CompareTo("LHC16h4")){
 	  if (!centrality.CompareTo("0-10%")){
-	    return 24;
+	    return 25;
 	  } else if (!centrality.CompareTo("10-20%")){
-	    return 30;
+	    return 24;
 	  } else if (!centrality.CompareTo("20-50%")){
-	    return 27;
+	    return 30;
 	  } else if (!centrality.CompareTo("50-90%")){
-	    return 28;
-	  } else return 25;
+	    return 27;
+	  } else return 28;
 	}
     }
 	cout << "GetDefaultMarkerStyle(): no valid input parameters given..." << endl;
