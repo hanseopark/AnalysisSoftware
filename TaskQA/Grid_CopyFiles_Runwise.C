@@ -431,21 +431,21 @@ void Grid_CopyFiles_Runwise(TString folder = "/home/daniel/data/work/pcgGit/Anal
 //                                           "/PWGGA/GA_pp_MC/1717_20160226-1751/"
 //                                          };
 
-//	//pp LHC13g
-//    const Int_t nFiles = 2;
-//    TString Tag = "20160302";
-//    TString DataSetsFile[nFiles] = {"GammaConvCalo_95.root","GammaConvCalo_96.root"};
+//	//pp LHC12h
+    const Int_t nFiles = 1;
+    TString Tag = "20161129";
+    TString DataSetsFile[nFiles] = {"AnalysisResults.root"};
 
-//    const Int_t nSets = 2;
-//    TString DataSets[nSets]={"LHC13g",
-//                             "LHC15g2"};
-//    TString DataSetsFolder[nSets]={"",
-//                             ""
-//                            };
-//    TString PrefixDataSets[nSets]={"/alice/data/2013/LHC13g/000",
-//                                  "/alice/sim/2015/LHC15g2/"};
-//    TString SuffixDataSets[nSets]={"/pass1/PWGGA/GA_pp/1308_20160302-1644/",
-//                                  "/PWGGA/GA_pp_MC/1752_20160302-1643/"};
+    const Int_t nSets = 1;
+    TString DataSets[nSets]={"LHC12h"
+                            };
+    TString DataSetsFolder[nSets]={""
+
+                            };
+    TString PrefixDataSets[nSets]={"/alice/data/2012/LHC12h/000"
+                                  };
+    TString SuffixDataSets[nSets]={"/pass2/PWGJE/Jets_EMC_pp/822_20161123-1006/"
+                                  };
 
     //pPb
 //   const Int_t nFiles           = 1;
@@ -535,44 +535,44 @@ void Grid_CopyFiles_Runwise(TString folder = "/home/daniel/data/work/pcgGit/Anal
 //    };
 
     //PbPb 11h
-    const Int_t nFiles = 10;
-    TString Tag = "20161027";
-    TString DataSetsFile[nFiles] = {"GammaCalo_7.root","GammaCalo_9.root","GammaCalo_11.root","GammaCalo_35.root",
-                                    "GammaConvCalo_7.root","GammaConvCalo_9.root","GammaConvCalo_11.root","GammaConvCalo_14.root","GammaConvCalo_33.root","GammaConvCalo_35.root"};
+//    const Int_t nFiles = 10;
+//    TString Tag = "20161027";
+//    TString DataSetsFile[nFiles] = {"GammaCalo_7.root","GammaCalo_9.root","GammaCalo_11.root","GammaCalo_35.root",
+//                                    "GammaConvCalo_7.root","GammaConvCalo_9.root","GammaConvCalo_11.root","GammaConvCalo_14.root","GammaConvCalo_33.root","GammaConvCalo_35.root"};
 
-    const Int_t nSets = 6;
-    TString DataSets[nSets]={
-      "LHC11h_EMCAL",
-      "LHC11h_EMCAL",
-      "LHC14a1a_EMCAL",
-      "LHC14a1b_EMCAL",
-      "LHC14a1c_EMCAL",
-      "LHC14a1b_EMCAL"
-    };
-    TString DataSetsFolder[nSets]={
-      "LHC11h",
-      "LHC11h",
-      "LHC14a1a",
-      "LHC14a1b",
-      "LHC14a1c",
-      "LHC14a1b"
-    };
-    TString PrefixDataSets[nSets]={
-      "/alice/data/2011/LHC11h_2/000",
-      "/alice/data/2011/LHC11h_2/000",
-      "/alice/sim/2014/LHC14a1a/",
-      "/alice/sim/2014/LHC14a1b/"
-      "/alice/sim/2014/LHC14a1c/"
-      "/alice/sim/2014/LHC14a1b/"
-    };
-    TString SuffixDataSets[nSets]={
-      "/ESDs/pass2/PWGGA/GA_PbPb/250_20161006-1813/",
-      "/ESDs/pass2/PWGGA/GA_PbPb/251_20161006-1816/",
-      "/PWGGA/GA_PbPb_MC/315_20161007-1250/"
-      "/PWGGA/GA_PbPb_MC/316_20161007-1303/"
-      "/PWGGA/GA_PbPb_MC/317_20161007-1238/"
-      "/PWGGA/GA_PbPb_MC/318_20161007-1311/"
-    };
+//    const Int_t nSets = 6;
+//    TString DataSets[nSets]={
+//      "LHC11h_EMCAL",
+//      "LHC11h_EMCAL",
+//      "LHC14a1a_EMCAL",
+//      "LHC14a1b_EMCAL",
+//      "LHC14a1c_EMCAL",
+//      "LHC14a1b_EMCAL"
+//    };
+//    TString DataSetsFolder[nSets]={
+//      "LHC11h",
+//      "LHC11h",
+//      "LHC14a1a",
+//      "LHC14a1b",
+//      "LHC14a1c",
+//      "LHC14a1b"
+//    };
+//    TString PrefixDataSets[nSets]={
+//      "/alice/data/2011/LHC11h_2/000",
+//      "/alice/data/2011/LHC11h_2/000",
+//      "/alice/sim/2014/LHC14a1a/",
+//      "/alice/sim/2014/LHC14a1b/"
+//      "/alice/sim/2014/LHC14a1c/"
+//      "/alice/sim/2014/LHC14a1b/"
+//    };
+//    TString SuffixDataSets[nSets]={
+//      "/ESDs/pass2/PWGGA/GA_PbPb/250_20161006-1813/",
+//      "/ESDs/pass2/PWGGA/GA_PbPb/251_20161006-1816/",
+//      "/PWGGA/GA_PbPb_MC/315_20161007-1250/"
+//      "/PWGGA/GA_PbPb_MC/316_20161007-1303/"
+//      "/PWGGA/GA_PbPb_MC/317_20161007-1238/"
+//      "/PWGGA/GA_PbPb_MC/318_20161007-1311/"
+//    };
 
     std::vector<TString> vecRuns;
     std::vector<TString> vecBins;
