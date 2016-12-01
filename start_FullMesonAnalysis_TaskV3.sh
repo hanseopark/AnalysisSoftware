@@ -1077,7 +1077,7 @@ function CreateGammaFinalResults()
 
 function CreateGammaFinalResultsV3()
 {
-    root -x -l -b -q TaskV1/CalculateGammaToPi0V3.C++\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\",\"$ESTIMATEPILEUP\"\,$mode\)
+    root -x -l -b -q TaskV1/CalculateGammaToPi0V3.C+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\",\"$ESTIMATEPILEUP\"\,$mode\)
 }
 
 
@@ -2619,12 +2619,15 @@ if [ $mode -lt 10 ]; then
                     fi
                     Pi0dataCorr=`ls $cutSelection/$energy/Pi0_data_GammaConvV1Correction_*.root`
                     GammaPi0dataCorr=`ls $cutSelection/$energy/Gamma_Pi0_data_GammaConvV1Correction_*.root`
+                    Pi0MCCorr=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1Correction_*.root`
+                    GammaPi0MCCorr=`ls $cutSelection/$energy/Gamma_Pi0_MC_GammaConvV1Correction_*.root`
                     if [ $useCocktail -eq 1 ] && [ -f $Pi0dataCorr ]; then
                         root -b -x -l -q TaskV1/PrepareCocktail.C\+\(\"$CocktailRootFile\"\,\"$Pi0dataCorr\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,$cocktailRapidity\,\"\"\,$BinsPtPi0\,$mode\)
                     fi
                     GammaCocktailFile=`ls $cutSelection/$energy/GammaCocktail_$cocktailRapidity*.root`
                     if [ $useCocktail  ]; then
                         CreateGammaFinalResultsV3 $GammaPi0dataCorr $Pi0dataCorr $GammaCocktailFile $cutSelection $Suffix Pi0 kFALSE;
+                        CreateGammaFinalResultsV3 $GammaPi0MCCorr $Pi0MCCorr $GammaCocktailFile $cutSelection $Suffix Pi0 kFALSE;
                     else
                         CreateGammaFinalResults $GammaPi0dataCorr $Pi0dataCorr $cutSelection $Suffix Pi0 kTRUE;
                     fi
