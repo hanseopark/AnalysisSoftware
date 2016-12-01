@@ -389,6 +389,49 @@ void SecondaryInterpolation(TString suffix ="eps"){
   graphProton8TeV = SetGraphErrors(graphProton8TeV,graphProton7TeVSys);
   graphProton8TeV->Write(Form("graphSysErr_Proton_%s",optionEnergy.Data()),TObject::kOverwrite);
 
+  //*************************************************************************************************
+  //*************************** histo output
+  //*************************************************************************************************
+
+  Double_t fBinsPi0Combine8TeVPt[47]              = { 0.0, 0.3, 0.4, 0.5, 0.6,
+                                                      0.8, 1.0, 1.2, 1.4, 1.6,
+                                                      1.8, 2.0, 2.2, 2.4, 2.6,
+                                                      2.8, 3.0, 3.2, 3.4, 3.6,
+                                                      3.8, 4.0, 4.5, 5.0, 5.5,
+                                                      6.0, 6.5, 7.0, 7.5, 8.0,
+                                                      8.5, 9.0, 10.0, 11.0, 12.0,
+                                                      13.0, 14.0, 15.0, 16.0, 17.0,
+                                                      18.0, 20.0, 22.0, 26.0, 30.0,
+                                                      35.0, 40.0};
+
+  TH1D* histoPion8 = new TH1D("histPion8","histPion8",46,fBinsPi0Combine8TeVPt);
+  for(Int_t i=1; i<47; i++){
+    histoPion8->SetBinContent(i,fitPion8->Eval(histoPion8->GetBinCenter(i)));
+    histoPion8->SetBinError(i,0.1*fitPion8->Eval(histoPion8->GetBinCenter(i)));
+  }
+  histoPion8->Write(Form("histPion8_%s",optionEnergy.Data()),TObject::kOverwrite);
+
+  TH1D* histoKaon8 = new TH1D("histKaon8","histKaon8",46,fBinsPi0Combine8TeVPt);
+  for(Int_t i=1; i<47; i++){
+    histoKaon8->SetBinContent(i,fitKaon8->Eval(histoKaon8->GetBinCenter(i)));
+    histoKaon8->SetBinError(i,0.1*fitKaon8->Eval(histoKaon8->GetBinCenter(i)));
+  }
+  histoKaon8->Write(Form("histKaon8_%s",optionEnergy.Data()),TObject::kOverwrite);
+
+  TH1D* histoLambda8 = new TH1D("histLambda8","histLambda8",46,fBinsPi0Combine8TeVPt);
+  for(Int_t i=1; i<47; i++){
+    histoLambda8->SetBinContent(i,fitLambda8->Eval(histoLambda8->GetBinCenter(i)));
+    histoLambda8->SetBinError(i,0.1*fitLambda8->Eval(histoLambda8->GetBinCenter(i)));
+  }
+  histoLambda8->Write(Form("histLambda8_%s",optionEnergy.Data()),TObject::kOverwrite);
+
+  TH1D* histoProton8 = new TH1D("histProton8","histProton8",46,fBinsPi0Combine8TeVPt);
+  for(Int_t i=1; i<47; i++){
+    histoProton8->SetBinContent(i,fitProton8->Eval(histoProton8->GetBinCenter(i)));
+    histoProton8->SetBinError(i,0.1*fitProton8->Eval(histoProton8->GetBinCenter(i)));
+  }
+  histoProton8->Write(Form("histProton8_%s",optionEnergy.Data()),TObject::kOverwrite);
+
   fOutput->Write();
   fOutput->Close();
 
