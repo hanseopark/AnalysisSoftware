@@ -597,6 +597,7 @@ TH1D*       fHistoYieldTrueMesonConvGammaConvGammaFixedWindow           = NULL;
 //*********************** dedicated cluster histograms ************************
 //*****************************************************************************
 TH1D*       fHistoClustersPt                                            = NULL;
+TH1D*       fHistoClustersE                                             = NULL;
 TH1D*       fHistoClustersOverlapHeadersPt                              = NULL;
 
 //*****************************************************************************

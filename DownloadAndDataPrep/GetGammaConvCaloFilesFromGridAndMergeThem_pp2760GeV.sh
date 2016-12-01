@@ -84,10 +84,6 @@ elif [ $1 = "amarinGSI" ]; then
    BASEDIR=/hera/alice/marin/Grid/OutputLegoTrains/pp 
 elif [ $1 = "amarinALICESERV1" ]; then     
    BASEDIR=/alidata50/alice_u/amarin/GridOutput/PbPb/   
-elif [ $1 = "mwilde" ]; then        
-   BASEDIR=~/work/GridOutput 
-elif [ $1 = "mwildeGSI" ]; then           
-   BASEDIR=/hera/alice/mwilde/Grid/OutputLegoTrains/pp 
 elif [ $1 = "pgonzales" ]; then     
    BASEDIR=~/work/GridOutput 
 elif [ $1 = "pgonzalesGSI" ]; then        
@@ -237,21 +233,48 @@ fi
 # # LHC15a3aplusMC="2605"; 
 # # LHC15g2MC="2594";
 
+# TRAINDIR=Legotrain-vAN20161111_TMEffi
+# # LHC11aData="1905";
+# LHC11aData="1894";
+# LHC15g1aMC="2652";
+# LHC12f1aMC="2592"; 
+# LHC12f1bMC="2593"; 
+# LHC12f1aMC="2665"; 
+# LHC12f1bMC="2666"; 
+# 
+# # LHC13gData="1907";
+# LHC13gData="1895";
+# # LHC15a3aMC="2646"; 
+# LHC15a3aMC="2647"; 
+# # LHC15a3aplusMC="2648"; 
+# LHC15a3aplusMC="2649"; 
+# LHC15g2MC="2594";
+
 TRAINDIR=Legotrain-vAN20161111_TMEffi
-# LHC11aData="1905";
-LHC11aData="1894";
-LHC15g1aMC="2652";
-LHC12f1aMC="2592"; 
-LHC12f1bMC="2593"; 
+# LHC15g1aMC="2669";
+LHC15g1aMC="2670";
+# LHC15a3aMC="2673"; 
+# LHC15a3aplusMC="2675";
+# LHC15a3aMC="2674"; 
+# LHC15a3aplusMC="2676"; 
+LHC15a3aMC="2682"; 
+LHC15a3aplusMC="2683"; 
 
-# LHC13gData="1907";
-LHC13gData="1895";
-# LHC15a3aMC="2646"; 
-LHC15a3aMC="2647"; 
-# LHC15a3aplusMC="2648"; 
-LHC15a3aplusMC="2649"; 
-LHC15g2MC="2594";
 
+# TRAINDIR=Legotrain-vAN20161023_M02Var
+# LHC11aData="1884";
+# LHC15g1aMC="2569";
+# LHC12f1aMC="2566"; 
+# LHC12f1bMC="2567"; 
+# 
+# LHC13gData="1885"; #(2 errors)
+# LHC15a3aMC="2574"; 
+# LHC15a3aplusMC="2575"; 
+# LHC15g2MC="2571";
+
+# TRAINDIR=Legotrain-vAN20161127_TRCell
+# LHC11aData="1923";
+# LHC13gData="1924";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 

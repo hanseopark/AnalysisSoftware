@@ -484,7 +484,7 @@ if [ $2 = "LHC11a" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC11a/GammaCaloMerged_$number.root $OUTPUTDIR/GammaCaloMerged_LHC11a-pass4_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_LHC11a-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC11a_$number.log\"\,10\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_LHC11a-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaMergedCalo_LHC11a_$number.log\"\,10\)
         done;
     fi
 
@@ -521,7 +521,7 @@ if [ $2 = "LHC11a" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC15g1a/GammaCaloMerged_$number.root $OUTPUTDIR/GammaCaloMerged_MC_LHC15g1a_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC15g1a_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC15g1a_$number.log\"\,10\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC15g1a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaMergedCalo_MC_LHC15g1a_$number.log\"\,10\)
         done;
         
         binNumbersJJ=`cat binNumbersJJToMerge.txt`
@@ -551,7 +551,7 @@ if [ $2 = "LHC11a" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC15g1b/GammaCaloMerged_$number.root $OUTPUTDIR/GammaCaloMerged_MC_LHC15g1b_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC15g1b_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC15g1b_$number.log\"\,10\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC15g1b_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaMergedCalo_MC_LHC15g1b_$number.log\"\,10\)
         done;
         if [ $MERGEONBINSSingle = 1 ]; then
             binNumbersJJGamma=`cat binNumbersJJGamma.txt`
@@ -732,7 +732,7 @@ elif [ $2 = "LHC13g" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC13g/GammaCaloMerged_$number.root $OUTPUTDIR/GammaCaloMerged_LHC13g-pass1_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_LHC13g-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC13g_$number.log\"\,10\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_LHC13g-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaMergedCalo_LHC13g_$number.log\"\,10\)
         done;
     fi
     
@@ -776,7 +776,7 @@ elif [ $2 = "LHC13g" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC15a3a/GammaCaloMerged_$number.root $OUTPUTDIR/GammaCaloMerged_MC_LHC15a3a_$number.root  $number
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC15a3a_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC15a3a_$number.log\"\,10\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC15a3a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaMergedCalo_MC_LHC15a3a_$number.log\"\,10\)
         done;
     fi
     
@@ -806,7 +806,7 @@ elif [ $2 = "LHC13g" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC15a3aplus/GammaCaloMerged_$number.root $OUTPUTDIR/GammaCaloMerged_MC_LHC15a3aplus_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC15a3aplus_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC15a3aplus_$number.log\"\,10\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC15a3aplus_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaMergedCalo_MC_LHC15a3aplus_$number.log\"\,10\)
         done;
     fi
     
@@ -818,7 +818,7 @@ elif [ $2 = "LHC13g" ]; then
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
             ChangeStructureIfNeeded $OUTPUTDIR_LHC15a3b/GammaCaloMerged_$number.root $OUTPUTDIR/GammaCaloMerged_MC_LHC15a3b_$number.root $number
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC15a3b_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC15a3b_$number.log\"\,10\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC15a3b_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaMergedCalo_MC_LHC15a3b_$number.log\"\,10\)
         done;
     fi
     

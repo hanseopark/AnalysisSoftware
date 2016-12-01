@@ -186,7 +186,9 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
                                 Int_t detMode                           = 0
                              ){
     
-    TString triggerStr = Form("%s triggered", ((TString)ReturnTriggerName(triggerSet)).Data());
+    TString triggerStr              = Form("%s triggered", ((TString)ReturnTriggerName(triggerSet)).Data());
+    TString triggerStr2             = ReturnTriggerName(triggerSet);
+    TString methodStr               = ReturnTextReconstructionProcess(detMode);
     
     TH1D* histoPi0InvMassSigPlusBG;
     TH1D* histoPi0InvMassSig;
@@ -277,6 +279,8 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     Style_t markerStyleInvMassMBG       = 24;
     Size_t markerSizeInvMassMBG         = 1.5;
     Color_t markerColorInvMassMBG       = kGray+2;
+    Color_t markerColorInvMassMBG1      = kGray+3;
+    Color_t markerColorInvMassMBG2      = kGray+1;
     Style_t markerStyleInvMassBG        = 20;
     Size_t markerSizeInvMassBG          = 2;
     Color_t markerColorInvMassBG        = kBlack;
@@ -331,9 +335,11 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     TH1D* histoFit  = (TH1D*)fitPi0InvMassSig->GetHistogram();
     histoFit->SetTitle("");
     histoFit->Scale(scaleFacSignal);
+    histoFit->SetLineWidth(4);
     TH1D* histoFitWBG  = (TH1D*)fitPi0InvMassSigRemBG->GetHistogram();
     histoFitWBG->SetTitle("");
     histoFitWBG->Scale(scaleFacSignal);
+    histoFitWBG->SetLineWidth(4);
 
     canvasInvMassSamplePlot->cd();
     histo1DInvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBGSub->GetMinimum(),1.15*histoPi0InvMassSigPlusBG->GetMaximum());
@@ -375,7 +381,7 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     labelTrigger->SetTextFont(43);
     labelTrigger->Draw();
     
-    TLatex *labelInvMassReco  = new TLatex(0.135,0.9-3*0.9*textsizeLabelsPP, ReturnTextReconstructionProcess(detMode));
+    TLatex *labelInvMassReco  = new TLatex(0.135,0.9-3*0.9*textsizeLabelsPP, methodStr);
     SetStyleTLatex( labelInvMassReco, 0.85*textSizeLabelsPixel,4);
     labelInvMassReco->SetTextFont(43);
     labelInvMassReco->Draw();
@@ -397,7 +403,7 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     legendInvMass->AddEntry(fitPi0InvMassSig, "Fit","l");
     legendInvMass->Draw();
 
-    canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBin.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), suffix.Data()));
+    canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBin%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStr.Data(), triggerStr2.Data(), suffix.Data()));
     
     canvasInvMassSamplePlot->cd();
     histo1DInvMassDummy->Draw();
@@ -407,9 +413,9 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     DrawGammaSetMarker(histoPi0InvMassSigPlusBG, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
     histoPi0InvMassSigPlusBG->SetLineWidth(1);
     histoPi0InvMassSigPlusBG->Draw("hist,e,same");
-    DrawGammaSetMarker(histoPi0InvMassBG, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
+    DrawGammaSetMarker(histoPi0InvMassBG, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
     histoPi0InvMassBG->Draw("same");
-    DrawGammaSetMarker(histoPi0InvMassRemBG, markerStyleInvMassMBG, markerSizeInvMassMBG, kGreen+2, kGreen+2);
+    DrawGammaSetMarker(histoPi0InvMassRemBG, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
     histoPi0InvMassRemBG->Draw("same");
 
     
@@ -439,7 +445,7 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     legendInvMass2->AddEntry(fitPi0InvMassSig, "Fit","l");
     legendInvMass2->Draw();
 
-    canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGFurtherSplit.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), suffix.Data()));
+    canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGFurtherSplit%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStr.Data(), triggerStr2.Data(),  suffix.Data()));
 
     // Plot Invariant mass sample bin with linear BG in Signal
     canvasInvMassSamplePlot->cd();
@@ -484,7 +490,7 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     legendInvMass3->AddEntry((TObject*)0,"linear BG fit","");
     legendInvMass3->Draw();
 
-    canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGInFit.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), suffix.Data()));
+    canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGInFit%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStr.Data(), triggerStr2.Data(),  suffix.Data()));
     
 }
 

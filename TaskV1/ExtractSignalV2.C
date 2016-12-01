@@ -280,6 +280,7 @@ void ExtractSignalV2(   TString meson                   = "",
         TList *ClusterContainer             = (TList*) HistosGammaConversion->FindObject(Form("%s Cluster Output",fCutSelectionRead.Data()));
         if (ClusterContainer){
             fHistoClustersPt                = (TH1D*)ClusterContainer->FindObject("ClusGamma_Pt");
+            fHistoClustersE                 = (TH1D*)ClusterContainer->FindObject("ClusGamma_E");
             fHistoClustersOverlapHeadersPt  = (TH1D*)ClusterContainer->FindObject("ClusGammaOverlapHeaders_Pt");
             TH2F* fHistoTrue2DGammaDCClusPt = (TH2F*)ClusterContainer->FindObject(ObjectNameDCGammaClusPt.Data());
             if (fHistoTrue2DGammaDCClusPt!=NULL) fEnableDCCluster= kTRUE;
@@ -294,10 +295,12 @@ void ExtractSignalV2(   TString meson                   = "",
     }
     if ( fMode == 4  || fMode == 5 ){
         fHistoClustersPt                = (TH1D*)ESDContainer->FindObject("ClusGamma_Pt");
+        fHistoClustersE                 = (TH1D*)ESDContainer->FindObject("ClusGamma_E");
         fHistoClustersOverlapHeadersPt  = (TH1D*)ESDContainer->FindObject("ClusGammaOverlapHeaders_Pt");
     }
     if ( fMode == 0 ){
         fHistoClustersPt                = (TH1D*)ESDContainer->FindObject("ClusGamma_Pt");
+        fHistoClustersE                 = (TH1D*)ESDContainer->FindObject("ClusGamma_E");
         if (fHistoClustersPt){
             cout << "INFO: found cluster output in PCM stream, adding it to the raw data file." << endl;
         }    
@@ -5462,6 +5465,13 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
         fHistoClustersPtPerEvent->Divide(fDeltaPtCluster);
         fHistoClustersPtPerEvent->Scale(1./fNEvents);
         fHistoClustersPtPerEvent->Write("ClusterPtPerEvent");
+    }
+    if (fHistoClustersE){
+        fHistoClustersE->Write("ClusterE");
+        TH1D*   fHistoClustersEPerEvent   = (TH1D*)fHistoClustersE->Rebin(fNBinsClusterPt,"fHistoClustersEPerEvent",fBinsClusterPt);
+        fHistoClustersEPerEvent->Divide(fDeltaPtCluster);
+        fHistoClustersEPerEvent->Scale(1./fNEvents);
+        fHistoClustersEPerEvent->Write("ClusterEPerEvent");
     }
     if (fEnableDCCluster){
         TH1D*   fHistoTrueGammaClusPtRebinned   = NULL;

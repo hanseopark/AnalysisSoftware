@@ -1481,21 +1481,29 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
     // fitting spectrum with intial parameters
     // Two component model fit from Bylinkin
-    TF1* fitTCMDecomposedL                 = new TF1("twoCompModel_DecLow",Form("[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1])",mesonMassExpectPi0,mesonMassExpectPi0,mesonMassExpectPi0),0.4,2);
-    fitTCMDecomposedL->SetParameters(graphCombPi0InvXSectionTotA->GetY()[2],0.3);
-    graphCombPi0InvXSectionStatA->Fit(fitTCMDecomposedL,"QNRMEX0+","",0.4,2.);
-    TF1 *fitTCMDecomposedH                 = new TF1("twoCompModel_DecH","[0]/(TMath::Power(1+x*x/([1]*[1]*[2]),[2]))",4,50);
-    graphCombPi0InvXSectionTotA->Fit(fitTCMDecomposedH,"QNRMEX0+","",4,50);
-    fitTCMDecomposedH->SetParameters(graphCombPi0InvXSectionTotA->GetY()[2],0.8, 2);    
-    Double_t paramTCMPi0New[5]  = { fitTCMDecomposedL->GetParameter(0),fitTCMDecomposedL->GetParameter(1),
-                                    fitTCMDecomposedH->GetParameter(0),fitTCMDecomposedH->GetParameter(1),fitTCMDecomposedH->GetParameter(2)};
+    TF1* fitTCMDecomposedLPi0   = FitObject("tcmlow","twoCompModelPi0_DecL", "Pi0", NULL, 0.4, 2.);
+    TF1* fitTCMDecomposedHPi0   = FitObject("tcmhigh","twoCompModelPi0_DecH", "Pi0", NULL, 4, 50.);
+    fitTCMDecomposedLPi0->SetParameters(graphCombPi0InvXSectionTotA->GetY()[2],0.3);
+    graphCombPi0InvXSectionStatA->Fit(fitTCMDecomposedLPi0,"QNRMEX0+","",0.4,2.);
+    graphCombPi0InvXSectionTotA->Fit(fitTCMDecomposedHPi0,"QNRMEX0+","",4,50);
+    fitTCMDecomposedHPi0->SetParameters(graphCombPi0InvXSectionTotA->GetY()[2],0.8, 2);    
+    Double_t paramTCMPi0New[5]  = { fitTCMDecomposedLPi0->GetParameter(0),fitTCMDecomposedLPi0->GetParameter(1),
+                                    fitTCMDecomposedHPi0->GetParameter(0),fitTCMDecomposedHPi0->GetParameter(1),fitTCMDecomposedHPi0->GetParameter(2)};
     TF1* fitTCMInvXSectionPi0   = FitObject("tcm","fitTCMInvCrossSectionPi02760GeV","Pi0",graphCombPi0InvXSectionStatA,0.4,50. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
-
+    
+    fitTCMDecomposedLPi0->SetParameter(0, fitTCMInvXSectionPi0->GetParameter(0));
+    fitTCMDecomposedLPi0->SetParameter(1, fitTCMInvXSectionPi0->GetParameter(1));
+    fitTCMDecomposedHPi0->SetParameter(0, fitTCMInvXSectionPi0->GetParameter(2));
+    fitTCMDecomposedHPi0->SetParameter(1, fitTCMInvXSectionPi0->GetParameter(3));
+    fitTCMDecomposedHPi0->SetParameter(2, fitTCMInvXSectionPi0->GetParameter(4));
+    
     // Tsallis fit 
     Double_t paramGraphPi0[3]                              = {1.0e12, 8., 0.13};
     TF1* fitInvXSectionPi0                       = FitObject("l","fitInvCrossSectionPi02760GeV","Pi0",histoEMCALPi0InvXSectionStat,0.4,50.,paramGraphPi0,"QNRMEX0+");
     TF1* fitInvXSectionPi0Graph                  = (TF1*)fitInvXSectionPi0->Clone("fitInvCrossSectionPi02760GeVGraph"); 
 
+//     return;
+    
     // *************************************************************************************************************
     // Shift graphs in X direction if desired
     // *************************************************************************************************************    
@@ -1667,7 +1675,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     cout << WriteParameterToFile(fitPCMTCMInvXSectionPi0)<< endl;
     fileFitsOutput <<  WriteParameterToFile(fitPCMTCMInvXSectionPi0)<< endl;    
 //     return;
-    
+            
     // *************************************************************************************************************
     // Shift graphs in Y direction as well if desired
     // *************************************************************************************************************
@@ -2462,13 +2470,21 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     fileFitsOutput <<  WriteParameterToFile(fitInvXSectionEta)<< endl;    
     
     // Two component model by Bylinkin
+    TF1* fitTCMDecomposedLEta   = FitObject("tcmlow","twoCompModelEta_DecL", "Eta", NULL, 0.5, 20.);
+    TF1* fitTCMDecomposedHEta   = FitObject("tcmhigh","twoCompModelEta_DecH", "Eta", NULL, 0.5, 20.);
+//     fitTCMDecomposedHEta->SetParameters(graphCombEtaInvXSectionTotA->GetY()[2],0.8, 2);    
+//     Double_t paramTCMEtaNew[5]  = { fitTCMDecomposedLEta->GetParameter(0),fitTCMDecomposedLEta->GetParameter(1),
+//                                     fitTCMDecomposedHEta->GetParameter(0),fitTCMDecomposedHEta->GetParameter(1),fitTCMDecomposedHEta->GetParameter(2)};
+    
     TF1* fitTCMInvXSectionEta= FitObject("tcm","fitTCMInvCrossSectionEta2760GeV","Eta",graphCombEtaInvXSectionTotA,0.5,20.,paramTCMEta,"QNRMEX0+","", kFALSE);
     fitTCMInvXSectionEta     = FitObject("tcm","fitTCMInvCrossSectionEta2760GeV","Eta",graphCombEtaInvXSectionTotA,0.5,20. ,paramTCMEta,"QNRMEX0+","", kFALSE);
-//  TF1* fitTCMDecomposedL                 = new TF1("twoCompModel_DecLow",Form("[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1])",mesonMassExpectEta,mesonMassExpectEta,mesonMassExpectEta));
-//  fitTCMDecomposedL->SetParameters(fitTCMInvXSectionEta->GetParameter(0),fitTCMInvXSectionEta->GetParameter(1));
-//  TF1 *fitTCMDecomposedH                 = new TF1("twoCompModel_DecH","[0]/(1 + x*x/TMath::Power(1+x*x/([1]*[1]*[2]),-[2]) )");
-// //      graphCombEtaInvXSectionTotA->Fit(fitTCMDecomposedH,"QNRMEX0+","",5,20);
-//  fitTCMDecomposedH->SetParameters(fitTCMInvXSectionEta->GetParameter(2),fitTCMInvXSectionEta->GetParameter(3), fitTCMInvXSectionEta->GetParameter(4));
+    fitTCMDecomposedLEta->SetParameter(0, fitTCMInvXSectionEta->GetParameter(0));
+    fitTCMDecomposedLEta->SetParameter(1, fitTCMInvXSectionEta->GetParameter(1));
+    fitTCMDecomposedHEta->SetParameter(0, fitTCMInvXSectionEta->GetParameter(2));
+    fitTCMDecomposedHEta->FixParameter(1, fitTCMInvXSectionEta->GetParameter(3));
+    fitTCMDecomposedHEta->FixParameter(2, fitTCMInvXSectionEta->GetParameter(4));
+    graphCombEtaInvXSectionTotA->Fit(fitTCMDecomposedHEta,"QNRMEX0+","",3,20);
+    
     cout << WriteParameterToFile(fitTCMInvXSectionEta)<< endl;
     fileFitsOutput <<  WriteParameterToFile(fitTCMInvXSectionEta)<< endl;    
     
@@ -3412,13 +3428,13 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     // **********************************************************************************************************************
     
     TCanvas* canvasXSectionPi0  = new TCanvas("canvasXSectionPi0","",200,10,1350,1350*1.15);  // gives the page size
-    DrawGammaCanvasSettings( canvasXSectionPi0, 0.14, 0.02, 0.02, 0.09);
+    DrawGammaCanvasSettings( canvasXSectionPi0, 0.14, 0.02, 0.02, 0.08);
     canvasXSectionPi0->SetLogx();
     canvasXSectionPi0->SetLogy();
     
     TH2F * histo2DXSectionPi0;
     histo2DXSectionPi0          = new TH2F("histo2DXSectionPi0","histo2DXSectionPi0",11000,0.23,70.,1000,2e-2,10e11);
-    SetStyleHistoTH2ForGraphs(histo2DXSectionPi0, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 1.,1.45);
+    SetStyleHistoTH2ForGraphs(histo2DXSectionPi0, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 0.9,1.45);
     histo2DXSectionPi0->GetXaxis()->SetMoreLogLabels();
     histo2DXSectionPi0->GetXaxis()->SetLabelOffset(-0.01);
     histo2DXSectionPi0->Draw("copy");
@@ -3453,15 +3469,15 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphEMCALMergedPi0InvXSectionStat->Draw("p,same,z");
 
         
-        TLatex *labelEnergyXSectionPi0      = new TLatex(0.64,0.92,collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelEnergyXSectionPi0, 0.035,4);
+        TLatex *labelEnergyXSectionPi0      = new TLatex(0.94,0.92,collisionSystem2760GeV.Data());
+        SetStyleTLatex( labelEnergyXSectionPi0, 0.035,4, 1, 42, kTRUE, 31);
         labelEnergyXSectionPi0->Draw();
-        TLatex *labelDetSysXSectionPi0      = new TLatex(0.64,0.88,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelDetSysXSectionPi0, 0.035,4);
+        TLatex *labelDetSysXSectionPi0      = new TLatex(0.94,0.88,"#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelDetSysXSectionPi0, 0.035,4, 1, 42, kTRUE, 31);
         labelDetSysXSectionPi0->Draw();
 
                                                 
-        TLegend* legendXSectionPi0          = GetAndSetLegend2(0.62, 0.62,0.9,0.86,0.035, 1, "", 42, 0);;
+        TLegend* legendXSectionPi0          = GetAndSetLegend2(0.18, 0.13,0.40,0.13+(0.035*6), 0.035, 1, "", 42, 0);
         legendXSectionPi0->AddEntry(graphPCMPi0InvXSectionSys,nameMeasGlobalLabel[0],"fp");
         legendXSectionPi0->AddEntry(graphPHOSPi0InvXSectionSys,nameMeasGlobalLabel[1],"fp");
         legendXSectionPi0->AddEntry(graphEMCALPi0InvXSectionSys,nameMeasGlobalLabel[2],"fp");
@@ -3499,16 +3515,16 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 //      DrawGammaSetMarkerTGraphAsym(graphChargedHadronsStatPP, markerStyleDet[1], markerSizeDet[1]*0.75, kBlack , kBlack, widthLinesBoxes);
 //      graphChargedHadronsStatPP->Draw("E2same");
         
-   canvasXSectionPi0->SaveAs(Form("%s/Pi0_InvXSectionCompAllSystems_Comb.%s",outputDir.Data(),suffix.Data()));
+    canvasXSectionPi0->SaveAs(Form("%s/Pi0_InvXSectionCompAllSystems_Comb.%s",outputDir.Data(),suffix.Data()));
   
     TCanvas* canvasXSectionEta      = new TCanvas("canvasXSectionEta","",200,10,1350,1350*1.15);  // gives the page size
-    DrawGammaCanvasSettings( canvasXSectionEta, 0.14, 0.02, 0.02, 0.09);
+    DrawGammaCanvasSettings( canvasXSectionEta, 0.14, 0.02, 0.02, 0.08);
     canvasXSectionEta->SetLogx();
     canvasXSectionEta->SetLogy();
     
     TH2F * histo2DXSectionEta;
     histo2DXSectionEta              = new TH2F("histo2DXSectionEta","histo2DXSectionEta",11000,0.33,25.,1000,2e1,10e10);
-    SetStyleHistoTH2ForGraphs(histo2DXSectionEta, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 1.,1.45);
+    SetStyleHistoTH2ForGraphs(histo2DXSectionEta, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 0.9,1.45);
     histo2DXSectionEta->GetXaxis()->SetMoreLogLabels();
     histo2DXSectionEta->GetXaxis()->SetLabelOffset(-0.01);
     histo2DXSectionEta->Draw("copy");
@@ -3535,14 +3551,14 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         histoEMCALEtaInvXSectionStat->Draw("p,same,e");
 
 
-        TLatex *labelEnergyXSectionEta      = new TLatex(0.64,0.92,collisionSystem2760GeV.Data());
-        SetStyleTLatex( labelEnergyXSectionEta, 0.035,4);
+        TLatex *labelEnergyXSectionEta      = new TLatex(0.94,0.92,collisionSystem2760GeV.Data());
+        SetStyleTLatex( labelEnergyXSectionEta, 0.035, 4, 1, 42, kTRUE, 31);
         labelEnergyXSectionEta->Draw();
-        TLatex *labelDetSysXSectionEta      = new TLatex(0.64,0.88,"#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelDetSysXSectionEta, 0.035,4);
+        TLatex *labelDetSysXSectionEta      = new TLatex(0.94,0.88,"#eta #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelDetSysXSectionEta, 0.035, 4, 1, 42, kTRUE, 31);
         labelDetSysXSectionEta->Draw();
 
-        TLegend* legendXSectionEta          = GetAndSetLegend2(0.62, 0.72,0.9,0.86, 0.035, 1, "", 42, 0);
+        TLegend* legendXSectionEta          = GetAndSetLegend2(0.18, 0.13,0.40,0.13+(0.035*4), 0.035, 1, "", 42, 0);
         legendXSectionEta->AddEntry(graphPCMEtaInvXSectionSys,nameMeasGlobalLabel[0],"fp");
 //      legendXSectionEta->AddEntry(graphPHOSPi0InvXSectionSys,nameMeasGlobalLabel[1],"fp");
         legendXSectionEta->AddEntry(graphEMCALEtaInvXSectionSys,nameMeasGlobalLabel[2],"fp");
@@ -4785,7 +4801,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     canvasXSectionPi0->cd();
     TH2F * histo2DXSectionWithEtaAndPi0;
     histo2DXSectionWithEtaAndPi0          = new TH2F("histo2DXSectionWithEtaAndPi0","histo2DXSectionWithEtaAndPi0",11000,0.23,70.,1000,2e-3,10e11);
-    SetStyleHistoTH2ForGraphs(histo2DXSectionWithEtaAndPi0, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 1.,1.45);
+    SetStyleHistoTH2ForGraphs(histo2DXSectionWithEtaAndPi0, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 0.9,1.45);
     histo2DXSectionWithEtaAndPi0->GetXaxis()->SetMoreLogLabels();
     histo2DXSectionWithEtaAndPi0->GetXaxis()->SetLabelOffset(-0.01);
     histo2DXSectionWithEtaAndPi0->Draw("copy");
@@ -4930,7 +4946,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     canvasXSectionPi0->cd();
     TH2F * histo2DXSectionWithHFE;
     histo2DXSectionWithHFE          = new TH2F("histo2DXSectionWithHFE","histo2DXSectionWithHFE",11000,0.23,70.,1000,2e-2,10e11);
-    SetStyleHistoTH2ForGraphs(histo2DXSectionWithHFE, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 1.,1.45);
+    SetStyleHistoTH2ForGraphs(histo2DXSectionWithHFE, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 0.9,1.45);
     histo2DXSectionWithHFE->GetXaxis()->SetMoreLogLabels();
     histo2DXSectionWithHFE->GetXaxis()->SetLabelOffset(-0.01);
     histo2DXSectionWithHFE->Draw("copy");
@@ -4978,6 +4994,81 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         legendXSectionWithHFE->Draw();
    
     canvasXSectionPi0->SaveAs(Form("%s/InvXSection_Pi0_Eta_HFE.%s",outputDir.Data(),suffix.Data()));
+
+
+    histo2DXSectionWithHFE->Draw("copy");
+
+        DrawGammaSetMarkerTGraphAsym(graphCombPi0InvXSectionSysA, markerStyleComb, markerSizeComb, kBlack , kBlack, widthLinesBoxes, kTRUE);
+        graphCombPi0InvXSectionSysA->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphCombPi0InvXSectionStatA, markerStyleComb, markerSizeComb, kBlack , kBlack);
+        graphCombPi0InvXSectionStatA->Draw("p,same,z");
+
+        
+        DrawGammaSetMarkerTF1( fitInvXSectionPi0, 9, 2, kGray+2); 
+        DrawGammaSetMarkerTF1( fitTCMInvXSectionPi0, 7, 2, kGray+1); 
+        DrawGammaSetMarkerTF1( fitPowInvXSectionPi0Tot, 1, 2, kAzure+2); 
+        DrawGammaSetMarkerTF1( fitTCMDecomposedLPi0, 4, 2, kRed-6); 
+        DrawGammaSetMarkerTF1( fitTCMDecomposedHPi0, 5, 2, kRed-8); 
+        fitPowInvXSectionPi0Tot->SetRange(6,50);
+        fitTCMInvXSectionPi0->SetRange(0.2,50);
+        fitInvXSectionPi0->SetRange(0.2,50);
+        fitTCMDecomposedLPi0->SetRange(0.2,10);
+        fitTCMDecomposedHPi0->SetRange(0.2,50);
+        fitPowInvXSectionPi0Tot->Draw("same");
+        fitInvXSectionPi0->Draw("same");
+        fitTCMInvXSectionPi0->Draw("same");
+        fitTCMDecomposedLPi0->Draw("same");
+        fitTCMDecomposedHPi0->Draw("same");
+        
+        labelEnergyXSectionPi0->Draw();
+        labelDetSysXSectionPi0->Draw();
+        
+        TLegend* legendXSectionPi0DiffFits          = GetAndSetLegend2(0.18, 0.13, 0.40 , 0.13+0.03*5, 32); 
+        legendXSectionPi0DiffFits->AddEntry(fitInvXSectionPi0,"Levy-Tsallis","l");
+        legendXSectionPi0DiffFits->AddEntry(fitPowInvXSectionPi0Tot,"pure powerlaw","l");
+        legendXSectionPi0DiffFits->AddEntry(fitTCMInvXSectionPi0,"full TCM","l");
+        legendXSectionPi0DiffFits->AddEntry(fitTCMDecomposedLPi0,"low p_{T} comp. TCM","l");
+        legendXSectionPi0DiffFits->AddEntry(fitTCMDecomposedHPi0,"high p_{T} comp. TCM","l");
+        legendXSectionPi0DiffFits->Draw();
+        
+    canvasXSectionPi0->SaveAs(Form("%s/InvXSection_Pi0_WithDiffFits.%s",outputDir.Data(),suffix.Data()));
+
+
+    histo2DXSectionWithHFE->Draw("copy");
+
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionSysA, markerStyleComb, markerSizeComb, kBlack , kBlack, widthLinesBoxes, kTRUE);
+        graphCombEtaInvXSectionSysA->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionStatA, markerStyleComb, markerSizeComb, kBlack , kBlack);
+        graphCombEtaInvXSectionStatA->Draw("p,same,z");
+
+        DrawGammaSetMarkerTF1( fitInvXSectionEta, 9, 2, kGray+2); 
+        DrawGammaSetMarkerTF1( fitTCMInvXSectionEta, 7, 2, kGray+1); 
+        DrawGammaSetMarkerTF1( fitPowInvXSectionEtaTot, 1, 2, kAzure+2); 
+        DrawGammaSetMarkerTF1( fitTCMDecomposedLEta, 4, 2, kRed-6); 
+        DrawGammaSetMarkerTF1( fitTCMDecomposedHEta, 5, 2, kRed-8); 
+        fitPowInvXSectionEtaTot->SetRange(6,50);
+        fitTCMInvXSectionEta->SetRange(0.2,50);
+        fitInvXSectionEta->SetRange(0.2,50);
+        fitTCMDecomposedLEta->SetRange(0.2,10);
+        fitTCMDecomposedHEta->SetRange(0.2,50);
+        fitPowInvXSectionEtaTot->Draw("same");
+        fitInvXSectionEta->Draw("same");
+        fitTCMInvXSectionEta->Draw("same");
+        fitTCMDecomposedLEta->Draw("same");
+        fitTCMDecomposedHEta->Draw("same");
+        
+        labelEnergyXSectionPi0->Draw();
+        labelDetSysXSectionEta->Draw();
+        
+        TLegend* legendXSectionEtaDiffFits          = GetAndSetLegend2(0.18, 0.13, 0.40 , 0.13+0.03*5, 32); 
+        legendXSectionEtaDiffFits->AddEntry(fitInvXSectionEta,"Levy-Tsallis","l");
+        legendXSectionEtaDiffFits->AddEntry(fitPowInvXSectionEtaTot,"pure powerlaw","l");
+        legendXSectionEtaDiffFits->AddEntry(fitTCMInvXSectionEta,"full TCM","l");
+        legendXSectionEtaDiffFits->AddEntry(fitTCMDecomposedLEta,"low p_{T} comp. TCM","l");
+        legendXSectionEtaDiffFits->AddEntry(fitTCMDecomposedHEta,"high p_{T} comp. TCM","l");
+        legendXSectionEtaDiffFits->Draw();
+        
+    canvasXSectionPi0->SaveAs(Form("%s/InvXSection_Eta_WithDiffFits.%s",outputDir.Data(),suffix.Data()));
     
     if (plotInvMassBins){
         textSizeLabelsPixel                 = 100*3/5;

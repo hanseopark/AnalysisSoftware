@@ -137,37 +137,37 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
     // EMC1 trigger
-    Bool_t bsmoothEMC1Pi0[19]       = { 0, 1, 1, 1, 1,
+    Bool_t bsmoothEMC1Pi0[19]       = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
-    Bool_t bsmoothEMC1Eta[19]       = { 0, 1, 1, 1, 1,
+    Bool_t bsmoothEMC1Eta[19]       = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
-    Bool_t bsmoothEMC1EtaToPi0[19]  = { 0, 1, 1, 1, 1,
+    Bool_t bsmoothEMC1EtaToPi0[19]  = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
     // EMC7 trigger
-    Bool_t bsmoothEMC7Pi0[19]       = { 0, 1, 1, 1, 1,
+    Bool_t bsmoothEMC7Pi0[19]       = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
-    Bool_t bsmoothEMC7Eta[19]       = { 0, 1, 1, 1, 1,
+    Bool_t bsmoothEMC7Eta[19]       = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
-    Bool_t bsmoothEMC7EtaToPi0[19]  = { 0, 1, 1, 1, 1,
+    Bool_t bsmoothEMC7EtaToPi0[19]  = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 0,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
     // EG2 trigger
-    Bool_t bsmoothEG2Pi0[19]        = { 0, 1, 1, 1, 1,
+    Bool_t bsmoothEG2Pi0[19]        = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
-    Bool_t bsmoothEG2Eta[19]        = { 0, 1, 1, 1, 1,
+    Bool_t bsmoothEG2Eta[19]        = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
@@ -176,15 +176,15 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
     // EG1 trigger
-    Bool_t bsmoothEG1Pi0[19]        = { 0, 1, 1, 1, 1,
+    Bool_t bsmoothEG1Pi0[19]        = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
-    Bool_t bsmoothEG1Eta[19]        = { 0, 1, 1, 1, 1,
+    Bool_t bsmoothEG1Eta[19]        = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
-    Bool_t bsmoothEG1EtaToPi0[19]   = { 0, 1, 1, 1, 1,
+    Bool_t bsmoothEG1EtaToPi0[19]   = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
@@ -364,26 +364,49 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
             // manual smoothing for Yield extraction errors - variation 0
             if  (nameCutVariationSC[i].CompareTo("YieldExtraction") == 0){
                 if ( meson.CompareTo("Pi0") == 0){
-                    for (Int_t k = 0; k < nPtBins; k++){
-                        if (ptBins[k] < 1) continue;
-                        Double_t error          = 2.;
-                        errorsMean[i][k]        = error;
-                        errorsMeanErr[i][k]     = error*0.01;
-                        errorsMeanCorr[i][k]    = error;
-                        errorsMeanErrCorr[i][k] = error*0.01;
-                    }
+                    //catch real outliers
+                    if ( additionalNameOutput.CompareTo("EG1")==0 || additionalNameOutput.CompareTo("EG2")==0 || additionalNameOutput.CompareTo("EMC1")==0 || additionalNameOutput.CompareTo("EMC7")==0){
+                        for (Int_t k = 0; k < nPtBins; k++){
+                            if (errorsMean[i][k] > 10){
+                                Double_t error          = 5.;
+                                errorsMean[i][k]        = error;
+                                errorsMeanErr[i][k]     = error*0.01;
+                                errorsMeanCorr[i][k]    = error;
+                                errorsMeanErrCorr[i][k] = error*0.01;
+                            }
+                        }    
+                    } else {    
+                        for (Int_t k = 0; k < nPtBins; k++){
+                            if (ptBins[k] < 1) continue;
+                            Double_t error          = 2.;
+                            errorsMean[i][k]        = error;
+                            errorsMeanErr[i][k]     = error*0.01;
+                            errorsMeanCorr[i][k]    = error;
+                            errorsMeanErrCorr[i][k] = error*0.01;
+                        }
+                    }    
                 } else {
                     for (Int_t k = 0; k < nPtBins; k++){
-                        if (ptBins[k] < 2) continue;
-                        Double_t error          = 8;
-                        if (additionalNameOutput.CompareTo("")==0 || additionalNameOutput.CompareTo("INT7")==0){
-                            error               = 10;
-                        }  
-                        
-                        errorsMean[i][k]        = error;
-                        errorsMeanErr[i][k]     = error*0.01;
-                        errorsMeanCorr[i][k]    = error;
-                        errorsMeanErrCorr[i][k] = error*0.01;
+                        if ( additionalNameOutput.CompareTo("EG1")==0 || additionalNameOutput.CompareTo("EG2")==0 || additionalNameOutput.CompareTo("EMC1")==0 || additionalNameOutput.CompareTo("EMC7")==0){
+                            if (errorsMean[i][k] > 20){
+                                Double_t error          = 14.;
+                                errorsMean[i][k]        = error;
+                                errorsMeanErr[i][k]     = error*0.01;
+                                errorsMeanCorr[i][k]    = error;
+                                errorsMeanErrCorr[i][k] = error*0.01;
+                            }
+                        } else {
+                            if (ptBins[k] < 2) continue;
+                            Double_t error          = 8;
+                            if (additionalNameOutput.CompareTo("")==0 || additionalNameOutput.CompareTo("INT7")==0){
+                                error               = 10;
+                            }  
+                                
+                            errorsMean[i][k]        = error;
+                            errorsMeanErr[i][k]     = error*0.01;
+                            errorsMeanCorr[i][k]    = error;
+                            errorsMeanErrCorr[i][k] = error*0.01;
+                        }    
                     }
                 }
             }
@@ -1084,9 +1107,9 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         // create dummy histo
         TH2D *histo2DSysErrMean ;
         if ( meson.CompareTo("Pi0") == 0 ){
-            histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,0.,30.);
+            histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,0.,30.);
         } else {
-            histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,0.,65.);
+            histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,0.,65.);
         }
         SetStyleHistoTH2ForGraphs( histo2DSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);
@@ -1176,9 +1199,9 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         // create dummy histo
         TH2D *histo2DNewSysErrMean ;
         if ( meson.CompareTo("Pi0") == 0 ){
-            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,-0.5,30.);
+            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,30.);
         } else { 
-            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,-0.5,65.);
+            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,65.);
         }
         SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);
@@ -1376,9 +1399,9 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         // create dummy histo
         TH2D *histo2DSummedErrMean ;
         if ( meson.CompareTo("Pi0") == 0 ){	
-            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,-0.5,30.);
+            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,30.);
         } else {
-            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+1,1000.,-0.5,65.);
+            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,65.);
         }
         SetStyleHistoTH2ForGraphs( histo2DSummedErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);

@@ -168,6 +168,28 @@ TF1* FitObject( TString type,
             ModPowerLaw_Dummy->SetParNames("a","b","c","d","e");
             ModPowerLaw_Dummy->SetName(FunctionName);
             return ModPowerLaw_Dummy;
+        } else if(type.BeginsWith("tcmlow") || type.BeginsWith("TCMLOW")){ // Two component model fit [A. Bylinkin and A. Rostovtsev, Phys. Atom. Nucl 75 (2012) 999-1005]
+            cout <<Form("fitting %s with low Pt two component model by Bylinkin",FunctionName.Data()) << endl;
+            TF1 *TwoCompModel_Dummy = new TF1("twoCompModelLow_Dummy",Form("[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1])",mass,mass,mass));
+            if (mesonType.CompareTo("Pi0")==0){
+                TwoCompModel_Dummy->SetParameters(450.,0.3); // standard parameter optimize if necessary
+            } else if (mesonType.CompareTo("Eta")==0){    
+                TwoCompModel_Dummy->SetParameters(450.,0.3); // standard parameter optimize if necessary
+            }
+            TwoCompModel_Dummy->SetParNames("Ae","Te");
+            TwoCompModel_Dummy->SetName(FunctionName);
+            return TwoCompModel_Dummy;
+        } else if(type.BeginsWith("tcmhigh") || type.BeginsWith("TCMHIGH")){ // Two component model fit [A. Bylinkin and A. Rostovtsev, Phys. Atom. Nucl 75 (2012) 999-1005]
+            cout <<Form("fitting %s with high pt two component model by Bylinkin",FunctionName.Data()) << endl;
+            TF1 *TwoCompModel_Dummy = new TF1("twoCompModelHigh_Dummy","[0]/(TMath::Power(1+x*x/([1]*[1]*[2]),[2]) )");
+            if (mesonType.CompareTo("Pi0")==0){
+                TwoCompModel_Dummy->SetParameters(1,0.3,8.); // standard parameter optimize if necessary
+            } else if (mesonType.CompareTo("Eta")==0){    
+                TwoCompModel_Dummy->SetParameters(1,0.3,8.); // standard parameter optimize if necessary
+            }
+            TwoCompModel_Dummy->SetParNames("A","T","n");
+            TwoCompModel_Dummy->SetName(FunctionName);
+            return TwoCompModel_Dummy;
         } else if(type.BeginsWith("tcm") || type.BeginsWith("TCM")){ // Two component model fit [A. Bylinkin and A. Rostovtsev, Phys. Atom. Nucl 75 (2012) 999-1005]
             cout <<Form("fitting %s with two component model by Bylinkin",FunctionName.Data()) << endl;
             TF1 *TwoCompModel_Dummy = new TF1("twoCompModel_Dummy",Form("[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1]) + [2]/(TMath::Power(1+x*x/([3]*[3]*[4]),[4]) )",mass,mass,mass));
