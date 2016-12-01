@@ -525,6 +525,8 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     //***************************** Initialization of histo arrays ******************************
     //*******************************************************************************************
     TString nameCurrentCorrectedFile            = "";
+    TString folderName[50];
+    TString specialString[50];
     TH1D **histoIncGamma                        = new TH1D*[number];
     TH1D **histoIncGammaRatio                   = new TH1D*[number];
     TH1D **histoPi0Spectrum                     = new TH1D*[number];
@@ -557,7 +559,12 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     
     TFile **fileCurrentFinal                    = new TFile*[number];
     TFile **fileCurrentCorrection               = new TFile*[number];
-
+    
+    if(!cutVariationName.CompareTo("Cocktail")){
+        specialString[0]="finalGamma_v1";
+        specialString[1]="0.8CT_linA";
+        specialString[2]="0.8CT_linB";
+    }
     //*******************************************************************************************
     //*****************************Initialization of Canvases ***********************************
     //*******************************************************************************************    
@@ -716,9 +723,12 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         } else {
             cutStringsName[i] = cutSelection[i].Data();
         }
-
-        
-        nameCurrentCorrectedFile = Form("%s/%s/Gamma_Pi0_data_GammaConvV1_InclusiveRatio_pp.root",cutSelection[i].Data(),energy.Data());
+        if(!cutVariationName.CompareTo("Cocktail")){
+            folderName[i]=Form("%s_%s",specialString[i].Data(),cutSelection[i].Data());
+        }else{
+            folderName[i]=cutSelection[i].Data();
+        }
+        nameCurrentCorrectedFile = Form("%s/%s/Gamma_Pi0_data_GammaConvV1_InclusiveRatio_pp.root",folderName[i].Data(),energy.Data());
         fileCurrentFinal[i] = new TFile(nameCurrentCorrectedFile);
         if (fileCurrentFinal[i]->IsZombie()) haveOutputGammaToPi0=0;
         
@@ -823,7 +833,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             cout << "WARNING: I had to shrink the output to basics, the output of CalculateGammaToPi0 was missing" << endl;
         }   
         
-        nameCurrentCorrectedFile = Form("%s/%s/Gamma_Pi0_data_GammaConvV1Correction_%s.root",cutSelection[i].Data(),energy.Data(),cutSelection[i].Data());
+        nameCurrentCorrectedFile = Form("%s/%s/Gamma_Pi0_data_GammaConvV1Correction_%s.root",folderName[i].Data(),energy.Data(),cutSelection[i].Data());
         fileCurrentCorrection[i] = new TFile(nameCurrentCorrectedFile);
         if (fileCurrentCorrection[i]->IsZombie()){
             cout << "ERROR: you are missing even the basic files" << endl;
