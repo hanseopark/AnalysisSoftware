@@ -371,19 +371,21 @@ void ComputeCorrelationFactors(
                 // get pt values at beginning
                 pTA     = ((TString)ptSys[iMeasA][iPtA].at(0)).Atof();
                 pTB     = ((TString)ptSys[iMeasB][iPtB].at(0)).Atof();
-                
+
                 // find overlapping bin
                 if( iPtA < vecNBinsPt.at(iMeasA) && iPtB < vecNBinsPt.at(iMeasB) ){
                     do {
                         // increase bin for measurement A if pT meas A < pT meas B
                         if(pTA < pTB){
+                            if( iPtA == vecNBinsPt.at(iMeasA) ) break;
                             pTA = ((TString)ptSys[iMeasA][++iPtA].at(0)).Atof();
                         // increase bin for measurement B if pT meas B < pT meas C
                         }else if(pTB < pTA){
+                            if( iPtB == vecNBinsPt.at(iMeasB) ) break;
                             pTB = ((TString)ptSys[iMeasB][++iPtB].at(0)).Atof();
                         }
                     // continue doing this until no bins are left    
-                    } while (pTA!=pTB && iPtA < vecNBinsPt.at(iMeasA) && iPtB < vecNBinsPt.at(iMeasB));
+                    } while (pTA!=pTB && iPtA <= vecNBinsPt.at(iMeasA) && iPtB <= vecNBinsPt.at(iMeasB));
                 }
                 
                 if( pTA!=pTB ) break;
