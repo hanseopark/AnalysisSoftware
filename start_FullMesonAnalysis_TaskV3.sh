@@ -748,7 +748,7 @@ function GiveBinning2760GeVMerged()
     elif [ $answer = 31 ]; then
         echo "30 Bins --> Max p_T = 40 GeV ...";
         correctPi0=1
-        BinsPtPi0=30
+        BinsPtPi0=31
     elif [ $answer = 32 ]; then
         echo "32 Bins --> Max p_T = 50 GeV ...";
         correctPi0=1
@@ -1072,12 +1072,12 @@ function ProduceFinalResultspPb()
 
 function CreateGammaFinalResults() 
 {
-    root -x -l -b -q TaskV1/CalculateGammaToPi0V2.C++\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\",$mode\,\"$ESTIMATEPILEUP\"\)
+    root -x -l -b -q TaskV1/CalculateGammaToPi0V2.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\",$mode\,\"$ESTIMATEPILEUP\"\)
 }
 
 function CreateGammaFinalResultsV3()
 {
-    root -x -l -b -q TaskV1/CalculateGammaToPi0V3.C+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\",\"$ESTIMATEPILEUP\"\,$mode\)
+    root -x -l -b -q TaskV1/CalculateGammaToPi0V3.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\",\"$ESTIMATEPILEUP\"\,$mode\)
 }
 
 
@@ -2810,12 +2810,12 @@ else
         done
         
         if [ $DoPi0 -eq 1 ]; then
-            root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kFALSE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
-            root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kTRUE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
+            root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kFALSE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
+            root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kTRUE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
         fi
         if [ $DoEta -eq 1 ]; then
-            root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kFALSE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
-            root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kTRUE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
+            root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kFALSE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
+            root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kTRUE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
         fi
     fi        
 fi

@@ -3598,7 +3598,7 @@ TString AutoDetectMainTList(Int_t mode , TFile* fFile){
     TIter next(fFile->GetListOfKeys());
     TString mainDir = "";
     while ((key=(TKey*)next())){
-        cout << Form(" - found TopDir: %s",key->GetName());
+        cout << Form("-> found TopDir: %s",key->GetName());
         mainDir = key->GetName();
     }
     cout << endl;

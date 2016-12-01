@@ -2765,23 +2765,23 @@ TString AnalyseTrackMatchingCut(Int_t trackmatching, Int_t clusterType ){
             case 0:
                 return "TM disabled";
             case 1:
-                return "TM #Delta#eta < 0.008, -0.03 < #Delta#varphi_{+,-} < 0.03 for V0s";
+                return "TM #scale[0.5]{#Delta#eta < 0.008, -0.03 < #Delta#varphi_{+,-} < 0.03} for V0s";
             case 2:
-                return "TM #Delta#eta < 0.012, -0.05(-0.04) < #Delta#varphi_{+(-)} < 0.04(0.05) for V0s";
+                return "TM #scale[0.5]{#Delta#eta < 0.012, -0.05(-0.04) < #Delta#varphi_{+(-)} < 0.04(0.05)} for V0s";
             case 3:
-                return "TM #Delta#eta < 0.016, -0.09(-0.06) < #Delta#varphi_{+(-)} < 0.06(0.09) for V0s";
+                return "TM #scale[0.5]{#Delta#eta < 0.016, -0.09(-0.06) < #Delta#varphi_{+(-)} < 0.06(0.09)} for V0s";
             case 4:
-                return "TM #Delta#eta < 0.018, -0.11(-0.07) < #Delta#varphi_{+(-)} < 0.07(0.11) for V0s";
+                return "TM #scale[0.5]{#Delta#eta < 0.018, -0.11(-0.07) < #Delta#varphi_{+(-)} < 0.07(0.11)} for V0s";
             case 5:
-                return "TM #Delta#eta < 0.020, -0.13(-0.08) < #Delta#varphi_{+(-)} < 0.08(0.13) for V0s";
+                return "TM #scale[0.5]{#Delta#eta < 0.020, -0.13(-0.08) < #Delta#varphi_{+(-)} < 0.08(0.13)} for V0s";
             case 6:
-                return "TM #Delta#eta #leq 0.010 + #left(#frac{1}{#it{p}_{T} + (1/(0.03-0.010))^{1/2.5}}#right^{2.5}, #Delta#phi #leq 0.015 + #left(#frac{1}{#it{p}_{T} + (1/(0.08-0.015))^{1/2}}#right^{2} for V0s";
+                return "TM #scale[0.5]{#Delta#eta #leq 0.010 + (#frac{1}{#it{p}_{T} + (1/(0.03-0.010))^{1/2.5}})^{2.5}, #Delta#phi #leq 0.015 + (#frac{1}{#it{p}_{T} + (1/(0.08-0.015))^{1/2}})^{2}} for V0s";
             case 7:
-                return "TM #Delta#eta #leq 0.010 + #left(#frac{1}{#it{p}_{T} + (1/(0.04-0.010))^{1/2.5}}#right^{2.5}, #Delta#phi #leq 0.015 + #left(#frac{1}{#it{p}_{T} + (1/(0.09-0.015))^{1/2}}#right^{2} for V0s";
+                return "TM #scale[0.5]{#Delta#eta #leq 0.010 + (#frac{1}{#it{p}_{T} + (1/(0.04-0.010))^{1/2.5}})^{2.5}, #Delta#phi #leq 0.015 + (#frac{1}{#it{p}_{T} + (1/(0.09-0.015))^{1/2}})^{2}} for V0s";
             case 8:
-                return "TM #Delta#eta #leq 0.010 + #left(#frac{1}{#it{p}_{T} + (1/(0.05-0.010))^{1/2.5}}#right^{2.5}, #Delta#phi #leq 0.015 + #left(#frac{1}{#it{p}_{T} + (1/(0.10-0.015))^{1/1.75}}#right^{1.75} for V0s";
+                return "TM #scale[0.5]{#Delta#eta #leq 0.010 + (#frac{1}{#it{p}_{T} + (1/(0.05-0.010))^{1/2.5}})^{2.5}, #Delta#phi #leq 0.015 + (#frac{1}{#it{p}_{T} + (1/(0.10-0.015))^{1/1.75}})^{1.75}}   for V0s";
             case 9:
-                return "TM #Delta#eta #leq 0.015 + #left(#frac{1}{#it{p}_{T} + (1/(0.06-0.015))^{1/2.5}}#right^{2.5}, #Delta#phi #leq 0.020 + #left(#frac{1}{#it{p}_{T} + (1/(0.12-0.020))^{1/1.75}}#right^{1.75} for V0s";
+                return "TM #scale[0.5]{#Delta#eta #leq 0.015 + (#frac{1}{#it{p}_{T} + (1/(0.06-0.015))^{1/2.5}})^{2.5}, #Delta#phi #leq 0.020 + (#frac{1}{#it{p}_{T} + (1/(0.12-0.020))^{1/1.75}})^{1.75}} for V0s";
             default:
                 return "track missmatch not defined ";
         }
@@ -2810,23 +2810,23 @@ TString AnalyseTrackMatchingCaloCut(Int_t trackmatching, Int_t clusterType ){
             case 0:
                 return "TM disabled";
             case 1:
-                return "TM #Delta#eta < 0.008, -0.03 < #Delta#varphi_{+,-} < 0.03";
+                return "TM #scale[0.5]{#Delta#eta < 0.008, -0.03 < #Delta#varphi_{+,-} < 0.03}";
             case 2:
-                return "TM #Delta#eta < 0.012, -0.05(-0.04) < #Delta#varphi_{+(-)} < 0.04(0.05)";
+                return "TM #scale[0.5]{#Delta#eta < 0.012, -0.05(-0.04) < #Delta#varphi_{+(-)} < 0.04(0.05)}";
             case 3:
-                return "TM #Delta#eta < 0.016, -0.09(-0.06) < #Delta#varphi_{+(-)} < 0.06(0.09)";
+                return "TM #scale[0.5]{#Delta#eta < 0.016, -0.09(-0.06) < #Delta#varphi_{+(-)} < 0.06(0.09)}";
             case 4:
-                return "TM #Delta#eta < 0.018, -0.11(-0.07) < #Delta#varphi_{+(-)} < 0.07(0.11)";
+                return "TM #scale[0.5]{#Delta#eta < 0.018, -0.11(-0.07) < #Delta#varphi_{+(-)} < 0.07(0.11)}";
             case 5:
-                return "TM #Delta#eta < 0.020, -0.13(-0.08) < #Delta#varphi_{+(-)} < 0.08(0.13)";
+                return "TM #scale[0.5]{#Delta#eta < 0.020, -0.13(-0.08) < #Delta#varphi_{+(-)} < 0.08(0.13)}";
             case 6:
-                return "TM #Delta#eta #leq 0.010 + #left(#frac{1}{#it{p}_{T} + (1/(0.03-0.010))^{1/2.5}}#right^{2.5}, #Delta#phi #leq 0.015 + #left(#frac{1}{#it{p}_{T} + (1/(0.08-0.015))^{1/2}}#right^{2}";
+                return "TM #scale[0.5]{#Delta#eta #leq 0.010 + (#frac{1}{#it{p}_{T} + (1/(0.03-0.010))^{1/2.5}})^{2.5}, #Delta#phi #leq 0.015 + (#frac{1}{#it{p}_{T} + (1/(0.08-0.015)})^{1/2})^{2}}";
             case 7:
-                return "TM #Delta#eta #leq 0.010 + #left(#frac{1}{#it{p}_{T} + (1/(0.04-0.010))^{1/2.5}}#right^{2.5}, #Delta#phi #leq 0.015 + #left(#frac{1}{#it{p}_{T} + (1/(0.09-0.015))^{1/2}}#right^{2}";
+                return "TM #scale[0.5]{#Delta#eta #leq 0.010 + (#frac{1}{#it{p}_{T} + (1/(0.04-0.010))^{1/2.5}})^{2.5}, #Delta#phi #leq 0.015 + (#frac{1}{#it{p}_{T} + (1/(0.09-0.015)})^{1/2})^{2}}";
             case 8:
-                return "TM #Delta#eta #leq 0.010 + #left(#frac{1}{#it{p}_{T} + (1/(0.05-0.010))^{1/2.5}}#right^{2.5}, #Delta#phi #leq 0.015 + #left(#frac{1}{#it{p}_{T} + (1/(0.10-0.015))^{1/1.75}}#right^{1.75}";
+                return "TM #scale[0.5]{#Delta#eta #leq 0.010 + (#frac{1}{#it{p}_{T} + (1/(0.05-0.010))^{1/2.5}})^{2.5}, #Delta#phi #leq 0.015 + (#frac{1}{#it{p}_{T} + (1/(0.10-0.015)})^{1/1.75})^{1.75}}";
             case 9:
-                return "TM #Delta#eta #leq 0.015 + #left(#frac{1}{#it{p}_{T} + (1/(0.06-0.015))^{1/2.5}}#right^{2.5}, #Delta#phi #leq 0.020 + #left(#frac{1}{#it{p}_{T} + (1/(0.12-0.020))^{1/1.75}}#right^{1.75}";
+                return "TM #scale[0.5]{#Delta#eta #leq 0.015 + (#frac{1}{#it{p}_{T} + (1/(0.06-0.015))^{1/2.5}})^{2.5}, #Delta#phi #leq 0.020 + (#frac{1}{#it{p}_{T} + (1/(0.12-0.020)})^{1/1.75})^{1.75}}";
             default:
                 return "track missmatch not defined ";
         }
@@ -2962,11 +2962,17 @@ TString AnalyseM02Cut(Int_t minM02, Int_t maxM02){
         case 4: 
             fMaxM02=0.4; 
             break;
+        case 5: 
+            fMaxM02=0.3; 
+            break;
+        case 6: 
+            fMaxM02=0.27; 
+            break;
         default:
             fMaxM02 = -10;
             break;
     }
-    return Form("%1.3f < M_{02} < %3.3f", fMinM02, fMaxM02);
+    return Form("%1.1f < M_{02} < %3.2f", fMinM02, fMaxM02);
   
     
 }	

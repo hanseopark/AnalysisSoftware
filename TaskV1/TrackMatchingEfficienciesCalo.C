@@ -281,292 +281,365 @@ void TrackMatchingEfficienciesCalo(   TString fileMonteCarloInput          = "",
     }
     //***************************** Histo Loading ********************************************************************
     TList* HistosMainCut                = (TList*)TopDir->FindObject(Form("Cut Number %s",optionCutSelection.Data()));
-    TList* CaloCutContainer             = (TList*)HistosMainCut->FindObject(Form("CaloCuts_%s",fClusterCutNumber.Data()));
-    TH2F* histoTMEffiInput              = (TH2F*)CaloCutContainer->FindObject(Form("TMEffiInputHisto %s", fClusterCutNumber.Data()));
-    TH2F* histoClE_TrE_ChCl             = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_TrackE_ChargedCluster %s", fClusterCutNumber.Data()));
-    TH2F* histoClE_TrE_ChClLeadMatch    = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_TrackE_ChargedCluster_LeadMatched %s", fClusterCutNumber.Data()));
-    TH2F* histoClE_TrE_NeCl             = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_TrackE_NeutralCluster %s", fClusterCutNumber.Data()));
-    TH2F* histoClE_TrE_NeClSubCh        = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_TrackE_NeutralClusterSubCharged %s", fClusterCutNumber.Data()));
-    TH2F* histoClE_TrE_GaCl             = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_TrackE_GammaCluster %s", fClusterCutNumber.Data()));
-    TH2F* histoClE_TrE_GaClSubCh        = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_TrackE_GammaClusterSubCharged %s", fClusterCutNumber.Data()));
-    TH2F* histoClE_TrE_ConvCl           = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_TrackE_ConvCluster %s", fClusterCutNumber.Data()));
-    TH2F* histoClE_NMatch_NeCl          = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_NMatches_NeutralCluster %s", fClusterCutNumber.Data()));
-    TH2F* histoClE_NMatch_ChCl          = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_NMatches_ChargedCluster %s", fClusterCutNumber.Data()));
     
-    // ********************************************************************************************************************
-    // ****************************** Plotting 2D distributions ***********************************************************
-    // ********************************************************************************************************************
-    PlotStandard2D( histoClE_TrE_ChCl, Form("%s/ClusterE_TrackE_ChargedClusters.%s",outputDirectory.Data(),suffix.Data()), "", 
-                    "#it{E}_{cl} (GeV)", "#it{E}_{tr} (GeV)", 
-                    0, 0, 0,
-                    0, -10, 10, 
-                    0, 0, 50, FindSmallestEntryIn2D(histoClE_TrE_ChCl),
-                    1, 1, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: charged ", 1000, 800);
-     PlotStandard2D( histoClE_TrE_ChClLeadMatch, Form("%s/ClusterE_TrackE_ChargedClusters_MatchedLeadParticle.%s",outputDirectory.Data(),suffix.Data()), "", 
-                    "#it{E}_{cl} (GeV)", "#it{E}_{tr} (GeV)", 
-                    0, 0, 0,
-                    0, -10, 10, 
-                    0, 0, 50, FindSmallestEntryIn2D(histoClE_TrE_ChClLeadMatch),
-                    1, 1, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: charged, matched", 1000, 800);
-     PlotStandard2D( histoClE_TrE_NeCl, Form("%s/ClusterE_TrackE_NeutralClusters.%s",outputDirectory.Data(),suffix.Data()), "", 
-                    "#it{E}_{cl} (GeV)", "#it{E}_{tr} (GeV)", 
-                    0, 0, 0,
-                    0, -10, 10, 
-                    0, 0, 50, FindSmallestEntryIn2D(histoClE_TrE_NeCl),
-                    1, 1, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: neutral", 1000, 800);
-     PlotStandard2D( histoClE_TrE_NeClSubCh, Form("%s/ClusterE_TrackE_NeutralClustersSubCharged.%s",outputDirectory.Data(),suffix.Data()), "", 
-                    "#it{E}_{cl} (GeV)", "#it{E}_{tr} (GeV)", 
-                    0, 0, 0,
-                    0, -10, 10, 
-                    0, 0, 50, FindSmallestEntryIn2D(histoClE_TrE_NeClSubCh),
-                    1, 1, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: neutral, sub charged", 1000, 800);
-     PlotStandard2D( histoClE_TrE_GaCl, Form("%s/ClusterE_TrackE_GammaClusters.%s",outputDirectory.Data(),suffix.Data()), "", 
-                    "#it{E}_{cl} (GeV)", "#it{E}_{tr} (GeV)", 
-                    0, 0, 0,
-                    0, -10, 10, 
-                    0, 0, 50, FindSmallestEntryIn2D(histoClE_TrE_GaCl),
-                    1, 1, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: #gamma", 1000, 800);
-     PlotStandard2D( histoClE_TrE_GaClSubCh, Form("%s/ClusterE_TrackE_GammaClustersSubCharged.%s",outputDirectory.Data(),suffix.Data()), "", 
-                    "#it{E}_{cl} (GeV)", "#it{E}_{tr} (GeV)", 
-                    0, 0, 0,
-                    0, -10, 10, 
-                    0, 0, 50, FindSmallestEntryIn2D(histoClE_TrE_GaClSubCh),
-                    1, 1, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: #gamma, sub charged", 1000, 800);
-     PlotStandard2D( histoClE_TrE_ConvCl, Form("%s/ClusterE_TrackE_ConvClusters.%s",outputDirectory.Data(),suffix.Data()), "", 
-                    "#it{E}_{cl} (GeV)", "#it{E}_{tr} (GeV)", 
-                    0, 0, 0,
-                    0, -10, 10, 
-                    0, 0, 50, FindSmallestEntryIn2D(histoClE_TrE_ConvCl),
-                    1, 1, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: #gamma_{conv}", 1000, 800);
-     PlotStandard2D( histoClE_NMatch_ChCl, Form("%s/ClusterE_NMatches_ChargedClusters.%s",outputDirectory.Data(),suffix.Data()), "", 
-                    "#it{E}_{cl} (GeV)", "#it{N}_{matches}", 
-                    0, 0, 0,
-                    0, -10, 10, 
-                    0, 0, 50, FindSmallestEntryIn2D(histoClE_NMatch_ChCl),
-                    1, 0, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: charged", 1000, 800);
-     PlotStandard2D( histoClE_NMatch_NeCl, Form("%s/ClusterE_NMatches_NeutralClusters.%s",outputDirectory.Data(),suffix.Data()), "", 
-                    "#it{E}_{cl} (GeV)", "#it{N}_{matches}", 
-                    0, 0, 0,
-                    0, -10, 10, 
-                    0, 0, 50, FindSmallestEntryIn2D(histoClE_NMatch_NeCl),
-                    1, 0, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: neutral", 1000, 800);
+    TString clusterCuts[2]              = {fClusterCutNumber, fClusterMergedCutNumber};
     
-    // ********************************************************************************************************************
-    // ********************************* projections for efficiency calculations ******************************************
-    // ********************************************************************************************************************
-    histoTMEffiInput->Sumw2();
-
-    TH1D*   fDeltaPtCluster       = new TH1D("fDeltaPtCluster","",fNBinsClusterPt,fBinsClusterPt);
-    for(Int_t iPt=1;iPt<fNBinsClusterPt+1;iPt++){
-        fDeltaPtCluster->SetBinContent(iPt,fBinsClusterPt[iPt]-fBinsClusterPt[iPt-1]);
-        fDeltaPtCluster->SetBinError(iPt,0);
-    }
-    
-    // *********** all inputs split in classes
-    TH1D* histoClE_AllCl            = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_AllCl",1,1,"e");
-    TH1D* histoClE_AllClReb         = (TH1D*)histoClE_AllCl->Rebin(fNBinsClusterPt,"histoClE_AllClReb",fBinsClusterPt);
-    histoClE_AllClReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_ChCl             = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ChCl",2,2,"e");
-    TH1D* histoClE_ChClReb          = (TH1D*)histoClE_ChCl->Rebin(fNBinsClusterPt,"histoClE_ChClReb",fBinsClusterPt);
-    histoClE_ChClReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_NeCl             = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_NeCl",3,3,"e");
-    TH1D* histoClE_NeClReb          = (TH1D*)histoClE_NeCl->Rebin(fNBinsClusterPt,"histoClE_NeClReb",fBinsClusterPt);
-    histoClE_NeClReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_NeClSubCh        = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_NeClSubCh",4,4,"e");
-    TH1D* histoClE_NeClSubChReb     = (TH1D*)histoClE_NeClSubCh->Rebin(fNBinsClusterPt,"histoClE_NeClSubChReb",fBinsClusterPt);
-    histoClE_NeClSubChReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_GaCl             = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_GaCl",5,5,"e");
-    TH1D* histoClE_GaClReb          = (TH1D*)histoClE_GaCl->Rebin(fNBinsClusterPt,"histoClE_GaClReb",fBinsClusterPt);
-    histoClE_GaClReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_GaClSubCh        = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_GaClSubCh",6,6,"e");
-    TH1D* histoClE_GaClSubChReb     = (TH1D*)histoClE_GaClSubCh->Rebin(fNBinsClusterPt,"histoClE_GaClSubChReb",fBinsClusterPt);
-    histoClE_GaClSubChReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_ConvCl           = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ConvCl",7,7,"e");
-    TH1D* histoClE_ConvClReb        = (TH1D*)histoClE_ConvCl->Rebin(fNBinsClusterPt,"histoClE_ConvClReb",fBinsClusterPt);
-    histoClE_ConvClReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_ChPrimCl         = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ChPrimCl",8,8,"e");
-    TH1D* histoClE_ChPrimClReb      = (TH1D*)histoClE_ChPrimCl->Rebin(fNBinsClusterPt,"histoClE_ChPrimClReb",fBinsClusterPt);
-    histoClE_ChPrimClReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_ElCl             = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ElCl",9,9,"e");
-    TH1D* histoClE_ElClReb          = (TH1D*)histoClE_ElCl->Rebin(fNBinsClusterPt,"histoClE_ElClReb",fBinsClusterPt);
-    histoClE_ElClReb->Divide(fDeltaPtCluster);
-    
-    // *********** all inputs split in classes with matches
-    TH1D* histoClE_AllCl_mat        = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_AllCl_mat",10,10,"e");
-    TH1D* histoClE_AllCl_matReb     = (TH1D*)histoClE_AllCl_mat->Rebin(fNBinsClusterPt,"histoClE_AllCl_matReb",fBinsClusterPt);
-    histoClE_AllCl_matReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_ChCl_mat         = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ChCl_mat",11,11,"e");
-    TH1D* histoClE_ChCl_matReb      = (TH1D*)histoClE_ChCl_mat->Rebin(fNBinsClusterPt,"histoClE_ChCl_matReb",fBinsClusterPt);
-    histoClE_ChCl_matReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_ChCl_leadmat     = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ChCl_leadmat",12,12,"e");
-    TH1D* histoClE_ChCl_leadmatReb  = (TH1D*)histoClE_ChCl_leadmat->Rebin(fNBinsClusterPt,"histoClE_ChCl_leadmatReb",fBinsClusterPt);
-    histoClE_ChCl_leadmatReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_NeCl_mat         = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_NeCl_mat",13,13,"e");
-    TH1D* histoClE_NeCl_matReb      = (TH1D*)histoClE_NeCl_mat->Rebin(fNBinsClusterPt,"histoClE_NeCl_matReb",fBinsClusterPt);
-    histoClE_NeCl_matReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_NeClSubCh_mat    = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_NeClSubCh_mat",14,14,"e");
-    TH1D* histoClE_NeClSubCh_matReb = (TH1D*)histoClE_NeClSubCh_mat->Rebin(fNBinsClusterPt,"histoClE_NeClSubCh_matReb",fBinsClusterPt);
-    histoClE_NeClSubCh_matReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_GaCl_mat         = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_GaCl_mat",15,15,"e");
-    TH1D* histoClE_GaCl_matReb      = (TH1D*)histoClE_GaCl_mat->Rebin(fNBinsClusterPt,"histoClE_GaCl_matReb",fBinsClusterPt);
-    histoClE_GaCl_matReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_GaClSubCh_mat    = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_GaClSubCh_mat",16,16,"e");
-    TH1D* histoClE_GaClSubCh_matReb = (TH1D*)histoClE_GaClSubCh_mat->Rebin(fNBinsClusterPt,"histoClE_GaClSubCh_matReb",fBinsClusterPt);
-    histoClE_GaClSubCh_matReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_ConvCl_mat       = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ConvCl_mat",17,17,"e");
-    TH1D* histoClE_ConvCl_matReb    = (TH1D*)histoClE_ConvCl_mat->Rebin(fNBinsClusterPt,"histoClE_ConvCl_matReb",fBinsClusterPt);
-    histoClE_ConvCl_matReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_ConvCl_leadmat   = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ConvCl_leadmat",18,18,"e");
-    TH1D* histoClE_ConvCl_leadmatReb= (TH1D*)histoClE_ConvCl_leadmat->Rebin(fNBinsClusterPt,"histoClE_ConvCl_leadmatReb",fBinsClusterPt);
-    histoClE_ConvCl_leadmatReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_ChPrimCl_mat     = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ChPrimCl_mat",19,19,"e");
-    TH1D* histoClE_ChPrimCl_matReb  = (TH1D*)histoClE_ChPrimCl_mat->Rebin(fNBinsClusterPt,"histoClE_ChPrimCl_matReb",fBinsClusterPt);
-    histoClE_ChPrimCl_matReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_ChPrimCl_leadmat = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ChPrimCl_leadmat",20,20,"e");
-    TH1D* histoClE_ChPrimCl_leadmatReb  = (TH1D*)histoClE_ChPrimCl_leadmat->Rebin(fNBinsClusterPt,"histoClE_ChPrimCl_leadmatReb",fBinsClusterPt);
-    histoClE_ChPrimCl_leadmatReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_ElCl_mat         = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ElCl_mat",21,21,"e");
-    TH1D* histoClE_ElCl_matReb      = (TH1D*)histoClE_ElCl_mat->Rebin(fNBinsClusterPt,"histoClE_ElCl_matReb",fBinsClusterPt);
-    histoClE_ElCl_matReb->Divide(fDeltaPtCluster);
-    TH1D* histoClE_ElCl_leadmat     = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ElCl_leadmat",22,22,"e");
-    TH1D* histoClE_ElCl_leadmatReb  = (TH1D*)histoClE_ElCl_leadmat->Rebin(fNBinsClusterPt,"histoClE_ElCl_leadmatReb",fBinsClusterPt);
-    histoClE_ElCl_leadmatReb->Divide(fDeltaPtCluster);
-    
-    TH1D* histoEffi_AllCl           = (TH1D*)histoClE_AllCl_mat->Clone("histoEffi_AllCl");
-    histoEffi_AllCl->Divide(histoEffi_AllCl, histoClE_AllCl, 1, 1, "B");
-    TH1D* histoEffi_ChCl            = (TH1D*)histoClE_ChCl_mat->Clone("histoEffi_ChCl");
-    histoEffi_ChCl->Divide(histoEffi_ChCl, histoClE_ChCl, 1, 1, "B");
-    TH1D* histoEffi_ChPrimCl        = (TH1D*)histoClE_ChPrimCl_mat->Clone("histoEffi_ChPrimCl");
-    histoEffi_ChPrimCl->Divide(histoEffi_ChPrimCl, histoClE_ChPrimCl, 1, 1, "B");
-    TH1D* histoEffi_NeCl            = (TH1D*)histoClE_NeCl_mat->Clone("histoEffi_NeCl");
-    histoEffi_NeCl->Divide(histoEffi_NeCl, histoClE_NeCl, 1, 1, "B");
-    TH1D* histoEffi_NeSubChCl       = (TH1D*)histoClE_NeClSubCh_mat->Clone("histoEffi_NeSubChCl");
-    histoEffi_NeSubChCl->Divide(histoEffi_NeSubChCl, histoClE_NeClSubCh, 1, 1, "B");
-    TH1D* histoEffi_GaCl            = (TH1D*)histoClE_GaCl_mat->Clone("histoEffi_GaCl");
-    histoEffi_GaCl->Divide(histoEffi_GaCl, histoClE_GaCl, 1, 1, "B");
-    TH1D* histoEffi_GaSubChCl       = (TH1D*)histoClE_GaClSubCh_mat->Clone("histoEffi_GaSubChCl");
-    histoEffi_GaSubChCl->Divide(histoEffi_GaSubChCl, histoClE_GaClSubCh, 1, 1, "B");
-    TH1D* histoEffi_ConvCl          = (TH1D*)histoClE_ConvCl_mat->Clone("histoEffi_ConvCl");
-    histoEffi_ConvCl->Divide(histoEffi_ConvCl, histoClE_ConvCl, 1, 1, "B");
-    TH1D* histoEffi_ElCl            = (TH1D*)histoClE_ElCl_mat->Clone("histoEffi_ConvCl");
-    histoEffi_ElCl->Divide(histoEffi_ElCl, histoClE_ElCl, 1, 1, "B");
-    
-    TH1D* histoEffi_AllClReb        = (TH1D*)histoClE_AllCl_matReb->Clone("histoEffi_AllClReb");
-    histoEffi_AllClReb->Divide(histoEffi_AllClReb, histoClE_AllClReb, 1, 1, "B");
-    TH1D* histoEffi_ChClReb         = (TH1D*)histoClE_ChCl_matReb->Clone("histoEffi_ChClReb");
-    histoEffi_ChClReb->Divide(histoEffi_ChClReb, histoClE_ChClReb, 1, 1, "B");
-    TH1D* histoEffi_ChPrimClReb     = (TH1D*)histoClE_ChPrimCl_matReb->Clone("histoEffi_ChPrimClReb");
-    histoEffi_ChPrimClReb->Divide(histoEffi_ChPrimClReb, histoClE_ChPrimClReb, 1, 1, "B");
-    TH1D* histoEffi_ChCl_leadReb    = (TH1D*)histoClE_ChCl_leadmatReb->Clone("histoEffi_ChClLeadReb");
-    histoEffi_ChCl_leadReb->Divide(histoEffi_ChCl_leadReb, histoClE_ChClReb, 1, 1, "B");
-    TH1D* histoEffi_ChPrimCl_leadReb= (TH1D*)histoClE_ChPrimCl_leadmatReb->Clone("histoEffi_ChPrimClLeadReb");
-    histoEffi_ChPrimCl_leadReb->Divide(histoEffi_ChPrimCl_leadReb, histoClE_ChPrimClReb, 1, 1, "B");
-
-    TH1D* histoEffi_NeClReb         = (TH1D*)histoClE_NeCl_matReb->Clone("histoEffi_NeClReb");
-    histoEffi_NeClReb->Divide(histoEffi_NeClReb, histoClE_NeClReb, 1, 1, "B");
-    TH1D* histoEffi_NeSubChClReb    = (TH1D*)histoClE_NeClSubCh_matReb->Clone("histoEffi_NeSubChClReb");
-    histoEffi_NeSubChClReb->Divide(histoEffi_NeSubChClReb, histoClE_NeClSubChReb, 1, 1, "B");
-    TH1D* histoEffi_GaClReb         = (TH1D*)histoClE_GaCl_matReb->Clone("histoEffi_GaClReb");
-    histoEffi_GaClReb->Divide(histoEffi_GaClReb, histoClE_GaClReb, 1, 1, "B");
-    TH1D* histoEffi_GaSubChClReb    = (TH1D*)histoClE_GaClSubCh_matReb->Clone("histoEffi_GaSubChClReb");
-    histoEffi_GaSubChClReb->Divide(histoEffi_GaSubChClReb, histoClE_GaClSubChReb, 1, 1, "B");
-    TH1D* histoEffi_ConvClReb       = (TH1D*)histoClE_ConvCl_matReb->Clone("histoEffi_ConvCl_leadReb");
-    histoEffi_ConvClReb->Divide(histoEffi_ConvClReb, histoClE_ConvClReb, 1, 1, "B");
-    TH1D* histoEffi_ConvCl_leadReb  = (TH1D*)histoClE_ConvCl_leadmatReb->Clone("histoEffi_ConvClReb");
-    histoEffi_ConvCl_leadReb->Divide(histoEffi_ConvCl_leadReb, histoClE_ConvClReb, 1, 1, "B");
-    TH1D* histoEffi_ElClReb         = (TH1D*)histoClE_ElCl_matReb->Clone("histoEffi_ConvClReb");
-    histoEffi_ElClReb->Divide(histoEffi_ElClReb, histoClE_ElClReb, 1, 1, "B");
-    TH1D* histoEffi_ElCl_leadReb    = (TH1D*)histoClE_ElCl_leadmatReb->Clone("histoEffi_ElCl_leadReb");
-    histoEffi_ElCl_leadReb->Divide(histoEffi_ElCl_leadReb, histoClE_ElClReb, 1, 1, "B");
-    
-    // Plot TM efficiency for different cluster type
-    TCanvas* canvasTMEffi = new TCanvas("canvasTMEffi","",200,10,1100,900);  // gives the page size
-    DrawGammaCanvasSettings( canvasTMEffi, 0.075, 0.02, 0.02, 0.09);
-
-        Double_t rangeTMEffi[2]     = {0., 1.3};
-
-        Double_t maxPt              = fBinsClusterPt[fNBinsClusterPt];
-        if (nameTrigger.Contains("INT") || nameTrigger.Contains("MB")){
-            maxPt                   = 15;
-//             rangeTMEffi[1]          = 1.3;
+    for (Int_t i = 0; i< 2; i++){
+        cout << "Processing cluster cut: " << clusterCuts[i].Data() << endl;
+        if (clusterCuts[i].CompareTo("") == 0 ){
+            cout << "INFO: cluster cut not defined" << endl;
+            continue;
         }    
-        TH2F * histo2DTMEff         = new TH2F("histo2DTMEff", "histo2DTMEff",1000, 0., maxPt , 1000, rangeTMEffi[0], rangeTMEffi[1] );
-        SetStyleHistoTH2ForGraphs(  histo2DTMEff, "#it{p}_{T} (GeV/#it{c})", "#varepsilon_{TM}", 
-                                    0.85*0.04, 0.04, 0.85*0.04, 0.04, 0.95, 0.94);
-        histo2DTMEff->GetYaxis()->SetLabelOffset(0.001);
-        histo2DTMEff->DrawCopy(); 
+        TList* CaloCutContainer             = (TList*)HistosMainCut->FindObject(Form("CaloCuts_%s",clusterCuts[i].Data()));
+        TH2F* histoTMEffiInput              = (TH2F*)CaloCutContainer->FindObject(Form("TMEffiInputHisto %s", clusterCuts[i].Data()));
+        if (!histoTMEffiInput){
+            cout << "INFO: current contained: " << clusterCuts[i].Data() << " does not contain necessary inputs, jumping to next." << endl;
+            continue;
+        }    
+        TH2F* histoClE_TrE_ChCl             = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_TrackE_ChargedCluster %s", clusterCuts[i].Data()));
+        TH2F* histoClE_TrE_ChClLeadMatch    = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_TrackE_ChargedCluster_LeadMatched %s", clusterCuts[i].Data()));
+        TH2F* histoClE_TrE_NeCl             = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_TrackE_NeutralCluster %s", clusterCuts[i].Data()));
+        TH2F* histoClE_TrE_NeClSubCh        = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_TrackE_NeutralClusterSubCharged %s", clusterCuts[i].Data()));
+        TH2F* histoClE_TrE_GaCl             = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_TrackE_GammaCluster %s", clusterCuts[i].Data()));
+        TH2F* histoClE_TrE_GaClSubCh        = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_TrackE_GammaClusterSubCharged %s", clusterCuts[i].Data()));
+        TH2F* histoClE_TrE_ConvCl           = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_TrackE_ConvCluster %s", clusterCuts[i].Data()));
+        TH2F* histoClE_NMatch_NeCl          = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_NMatches_NeutralCluster %s", clusterCuts[i].Data()));
+        TH2F* histoClE_NMatch_ChCl          = (TH2F*)CaloCutContainer->FindObject(Form("ClusterE_NMatches_ChargedCluster %s", clusterCuts[i].Data()));
         
-        DrawGammaSetMarker(histoEffi_ChClReb, 24, 1.5, kAzure+2, kAzure+2);
-        histoEffi_ChClReb->DrawCopy("same,e1"); 
-        DrawGammaSetMarker(histoEffi_ElClReb, 21, 1.5, kGreen-2, kGreen-2);
-        histoEffi_ElClReb->DrawCopy("same,e1"); 
-        DrawGammaSetMarker(histoEffi_ConvClReb, 25, 1.5, kGreen+2, kGreen+2);
-        histoEffi_ConvClReb->DrawCopy("same,e1"); 
-        DrawGammaSetMarker(histoEffi_ChPrimClReb, 24, 1.5, kBlue+1, kBlue+1);
-        histoEffi_ChPrimClReb->DrawCopy("same,e1"); 
-
-        TLegend* legendTMEffiCh           = GetAndSetLegend2(0.42, 0.95, 0.7, 0.95-(4*0.04),32);
-        legendTMEffiCh->AddEntry(histoEffi_ConvClReb,"conv #gamma cl","p");
-        legendTMEffiCh->AddEntry(histoEffi_ElClReb,"e^{#pm} cl","p");
-        legendTMEffiCh->AddEntry(histoEffi_ChPrimClReb,"other charged cl., prod. vtx R #leq 5 cm","p");
-        legendTMEffiCh->AddEntry(histoEffi_ChClReb,"other charged cl., prod. vtx R > 5 cm","p");
-        legendTMEffiCh->Draw();
-
-        PutProcessLabelAndEnergyOnPlot(0.65, 0.20, 32, collisionSystem.Data(), detectionProcess.Data(),"",  63, 0.029);
-
-    canvasTMEffi->Update();
-    canvasTMEffi->SaveAs(Form("%s/TMEffiDifferentChargedClusters_%s.%s",outputDirectory.Data(),optionCutSelection.Data(),suffix.Data()));
-
-        histo2DTMEff->DrawCopy(); 
+        // ********************************************************************************************************************
+        // ****************************** Plotting 2D distributions ***********************************************************
+        // ********************************************************************************************************************
+        PlotStandard2D( histoClE_TrE_ChCl, Form("%s/ClusterE_TrackE_ChargedClusters_%s.%s",outputDirectory.Data(),clusterCuts[i].Data(), suffix.Data()), "", 
+                        "#it{E}_{cl} (GeV)", "#it{E}_{tr} (GeV)", 
+                        0, 0, 0,
+                        0, -10, 10, 
+                        0, 0, 50, FindSmallestEntryIn2D(histoClE_TrE_ChCl),
+                        1, 1, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: charged ", 1000, 800);
+        PlotStandard2D( histoClE_TrE_ChClLeadMatch, Form("%s/ClusterE_TrackE_ChargedClusters_MatchedLeadParticle_%s.%s",outputDirectory.Data(),clusterCuts[i].Data(), suffix.Data()), "", 
+                        "#it{E}_{cl} (GeV)", "#it{E}_{tr} (GeV)", 
+                        0, 0, 0,
+                        0, -10, 10, 
+                        0, 0, 50, FindSmallestEntryIn2D(histoClE_TrE_ChClLeadMatch),
+                        1, 1, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: charged, matched", 1000, 800);
+        PlotStandard2D( histoClE_TrE_NeCl, Form("%s/ClusterE_TrackE_NeutralClusters_%s.%s",outputDirectory.Data(),clusterCuts[i].Data(), suffix.Data()), "", 
+                        "#it{E}_{cl} (GeV)", "#it{E}_{tr} (GeV)", 
+                        0, 0, 0,
+                        0, -10, 10, 
+                        0, 0, 50, FindSmallestEntryIn2D(histoClE_TrE_NeCl),
+                        1, 1, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: neutral", 1000, 800);
+        PlotStandard2D( histoClE_TrE_NeClSubCh, Form("%s/ClusterE_TrackE_NeutralClustersSubCharged_%s.%s",outputDirectory.Data(),clusterCuts[i].Data(), suffix.Data()), "", 
+                        "#it{E}_{cl} (GeV)", "#it{E}_{tr} (GeV)", 
+                        0, 0, 0,
+                        0, -10, 10, 
+                        0, 0, 50, FindSmallestEntryIn2D(histoClE_TrE_NeClSubCh),
+                        1, 1, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: neutral, sub charged", 1000, 800);
+        PlotStandard2D( histoClE_TrE_GaCl, Form("%s/ClusterE_TrackE_GammaClusters_%s.%s",outputDirectory.Data(),clusterCuts[i].Data(), suffix.Data()), "", 
+                        "#it{E}_{cl} (GeV)", "#it{E}_{tr} (GeV)", 
+                        0, 0, 0,
+                        0, -10, 10, 
+                        0, 0, 50, FindSmallestEntryIn2D(histoClE_TrE_GaCl),
+                        1, 1, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: #gamma", 1000, 800);
+        PlotStandard2D( histoClE_TrE_GaClSubCh, Form("%s/ClusterE_TrackE_GammaClustersSubCharged_%s.%s",outputDirectory.Data(),clusterCuts[i].Data(), suffix.Data()), "", 
+                        "#it{E}_{cl} (GeV)", "#it{E}_{tr} (GeV)", 
+                        0, 0, 0,
+                        0, -10, 10, 
+                        0, 0, 50, FindSmallestEntryIn2D(histoClE_TrE_GaClSubCh),
+                        1, 1, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: #gamma, sub charged", 1000, 800);
+        PlotStandard2D( histoClE_TrE_ConvCl, Form("%s/ClusterE_TrackE_ConvClusters_%s.%s",outputDirectory.Data(),clusterCuts[i].Data(), suffix.Data()), "", 
+                        "#it{E}_{cl} (GeV)", "#it{E}_{tr} (GeV)", 
+                        0, 0, 0,
+                        0, -10, 10, 
+                        0, 0, 50, FindSmallestEntryIn2D(histoClE_TrE_ConvCl),
+                        1, 1, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: #gamma_{conv}", 1000, 800);
+        PlotStandard2D( histoClE_NMatch_ChCl, Form("%s/ClusterE_NMatches_ChargedClusters_%s.%s",outputDirectory.Data(),clusterCuts[i].Data(), suffix.Data()), "", 
+                        "#it{E}_{cl} (GeV)", "#it{N}_{matches}", 
+                        0, 0, 0,
+                        0, -10, 10, 
+                        0, 0, 50, FindSmallestEntryIn2D(histoClE_NMatch_ChCl),
+                        1, 0, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: charged", 1000, 800);
+        PlotStandard2D( histoClE_NMatch_NeCl, Form("%s/ClusterE_NMatches_NeutralClusters_%s.%s",outputDirectory.Data(),clusterCuts[i].Data(), suffix.Data()), "", 
+                        "#it{E}_{cl} (GeV)", "#it{N}_{matches}", 
+                        0, 0, 0,
+                        0, -10, 10, 
+                        0, 0, 50, FindSmallestEntryIn2D(histoClE_NMatch_NeCl),
+                        1, 0, 1, floatLocationUpDown2D, 1, 1., "lead. part. in cl.: neutral", 1000, 800);
         
-        DrawGammaSetMarker(histoEffi_ChCl_leadReb, 24, 1.5, kAzure+2, kAzure+2);
-        histoEffi_ChCl_leadReb->DrawCopy("same,e1"); 
-        DrawGammaSetMarker(histoEffi_ElCl_leadReb, 21, 1.5, kGreen-2, kGreen-2);
-        histoEffi_ElCl_leadReb->DrawCopy("same,e1"); 
-        DrawGammaSetMarker(histoEffi_ConvCl_leadReb, 25, 1.5, kGreen+2, kGreen+2);
-        histoEffi_ConvCl_leadReb->DrawCopy("same,e1"); 
-        DrawGammaSetMarker(histoEffi_ChPrimCl_leadReb, 24, 1.5, kBlue+1, kBlue+1);
-        histoEffi_ChPrimCl_leadReb->DrawCopy("same,e1"); 
+        // ********************************************************************************************************************
+        // ********************************* projections for efficiency calculations ******************************************
+        // ********************************************************************************************************************
+        histoTMEffiInput->Sumw2();
 
-        TLegend* legendTMEffiChlead           = GetAndSetLegend2(0.42, 0.95, 0.7, 0.95-(4*0.04),32);
-        legendTMEffiChlead->AddEntry(histoEffi_ConvCl_leadReb,"conv #gamma cl","p");
-        legendTMEffiChlead->AddEntry(histoEffi_ElCl_leadReb,"e^{#pm} cl","p");
-        legendTMEffiChlead->AddEntry(histoEffi_ChPrimCl_leadReb,"other charged cl., prod. vtx R #leq 5 cm","p");
-        legendTMEffiChlead->AddEntry(histoEffi_ChCl_leadReb,"other charged cl., prod. vtx R > 5 cm","p");
-        legendTMEffiChlead->Draw();
+        TH1D*   fDeltaPtCluster       = new TH1D("fDeltaPtCluster","",fNBinsClusterPt,fBinsClusterPt);
+        for(Int_t iPt=1;iPt<fNBinsClusterPt+1;iPt++){
+            fDeltaPtCluster->SetBinContent(iPt,fBinsClusterPt[iPt]-fBinsClusterPt[iPt-1]);
+            fDeltaPtCluster->SetBinError(iPt,0);
+        }
+        histoTMEffiInput->Sumw2();
+        // *********** all inputs split in classes
+        TH1D* histoClE_AllCl            = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_AllCl",1,1,"e");
+        TH1D* histoClE_AllClReb         = (TH1D*)histoClE_AllCl->Rebin(fNBinsClusterPt,"histoClE_AllClReb",fBinsClusterPt);
+        histoClE_AllClReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_ChCl             = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ChCl",2,2,"e");
+        TH1D* histoClE_ChClReb          = (TH1D*)histoClE_ChCl->Rebin(fNBinsClusterPt,"histoClE_ChClReb",fBinsClusterPt);
+        histoClE_ChClReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_NeCl             = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_NeCl",3,3,"e");
+        TH1D* histoClE_NeClReb          = (TH1D*)histoClE_NeCl->Rebin(fNBinsClusterPt,"histoClE_NeClReb",fBinsClusterPt);
+        histoClE_NeClReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_NeClSubCh        = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_NeClSubCh",4,4,"e");
+        TH1D* histoClE_NeClSubChReb     = (TH1D*)histoClE_NeClSubCh->Rebin(fNBinsClusterPt,"histoClE_NeClSubChReb",fBinsClusterPt);
+        histoClE_NeClSubChReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_GaCl             = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_GaCl",5,5,"e");
+        TH1D* histoClE_GaClReb          = (TH1D*)histoClE_GaCl->Rebin(fNBinsClusterPt,"histoClE_GaClReb",fBinsClusterPt);
+        histoClE_GaClReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_GaClSubCh        = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_GaClSubCh",6,6,"e");
+        TH1D* histoClE_GaClSubChReb     = (TH1D*)histoClE_GaClSubCh->Rebin(fNBinsClusterPt,"histoClE_GaClSubChReb",fBinsClusterPt);
+        histoClE_GaClSubChReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_ConvCl           = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ConvCl",7,7,"e");
+        TH1D* histoClE_ConvClReb        = (TH1D*)histoClE_ConvCl->Rebin(fNBinsClusterPt,"histoClE_ConvClReb",fBinsClusterPt);
+        histoClE_ConvClReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_ChPrimCl         = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ChPrimCl",8,8,"e");
+        TH1D* histoClE_ChPrimClReb      = (TH1D*)histoClE_ChPrimCl->Rebin(fNBinsClusterPt,"histoClE_ChPrimClReb",fBinsClusterPt);
+        histoClE_ChPrimClReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_ElCl             = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ElCl",9,9,"e");
+        TH1D* histoClE_ElClReb          = (TH1D*)histoClE_ElCl->Rebin(fNBinsClusterPt,"histoClE_ElClReb",fBinsClusterPt);
+        histoClE_ElClReb->Divide(fDeltaPtCluster);
+        
+        TH1D* histoRatioClE_ChtoAllReb          = (TH1D*)histoClE_ChClReb->Clone("histoRatioClE_ChtoAllReb");
+        histoRatioClE_ChtoAllReb->Divide(histoRatioClE_ChtoAllReb, histoClE_AllClReb, 1, 1, "B");
+        TH1D* histoRatioClE_NetoAllReb          = (TH1D*)histoClE_NeClReb->Clone("histoRatioClE_NetoAllReb");
+        histoRatioClE_NetoAllReb->Divide(histoRatioClE_NetoAllReb, histoClE_AllClReb, 1, 1, "B");
+        TH1D* histoRatioClE_NeSubChtoAllReb     = (TH1D*)histoClE_NeClSubChReb->Clone("histoRatioClE_NeSubChtoAllReb");
+        histoRatioClE_NeSubChtoAllReb->Divide(histoRatioClE_NeSubChtoAllReb, histoClE_AllClReb, 1, 1, "B");
+        TH1D* histoRatioClE_GatoAllReb          = (TH1D*)histoClE_GaClReb->Clone("histoRatioClE_GatoAllReb");
+        histoRatioClE_GatoAllReb->Divide(histoRatioClE_GatoAllReb, histoClE_AllClReb, 1, 1, "B");
+        TH1D* histoRatioClE_GaSubChtoAllReb     = (TH1D*)histoClE_GaClSubChReb->Clone("histoRatioClE_GaSubChtoAllReb");
+        histoRatioClE_GaSubChtoAllReb->Divide(histoRatioClE_GaSubChtoAllReb, histoClE_AllClReb, 1, 1, "B");
+        TH1D* histoRatioClE_ChPrimtoAllReb      = (TH1D*)histoClE_ChPrimClReb->Clone("histoRatioClE_ChPrimtoAllReb");
+        histoRatioClE_ChPrimtoAllReb->Divide(histoRatioClE_ChPrimtoAllReb, histoClE_AllClReb, 1, 1, "B");
+        TH1D* histoRatioClE_EltoAllReb          = (TH1D*)histoClE_ElClReb->Clone("histoRatioClE_EltoAllReb");
+        histoRatioClE_EltoAllReb->Divide(histoRatioClE_EltoAllReb, histoClE_AllClReb, 1, 1, "B");
+        TH1D* histoRatioClE_ConvtoAllReb        = (TH1D*)histoClE_ConvClReb->Clone("histoRatioClE_ConvtoAllReb");
+        histoRatioClE_ConvtoAllReb->Divide(histoRatioClE_ConvtoAllReb, histoClE_AllClReb, 1, 1, "B");
+        
+        // *********** all inputs split in classes with matches
+        TH1D* histoClE_AllCl_mat        = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_AllCl_mat",10,10,"e");
+        TH1D* histoClE_AllCl_matReb     = (TH1D*)histoClE_AllCl_mat->Rebin(fNBinsClusterPt,"histoClE_AllCl_matReb",fBinsClusterPt);
+        histoClE_AllCl_matReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_ChCl_mat         = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ChCl_mat",11,11,"e");
+        TH1D* histoClE_ChCl_matReb      = (TH1D*)histoClE_ChCl_mat->Rebin(fNBinsClusterPt,"histoClE_ChCl_matReb",fBinsClusterPt);
+        histoClE_ChCl_matReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_ChCl_leadmat     = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ChCl_leadmat",12,12,"e");
+        TH1D* histoClE_ChCl_leadmatReb  = (TH1D*)histoClE_ChCl_leadmat->Rebin(fNBinsClusterPt,"histoClE_ChCl_leadmatReb",fBinsClusterPt);
+        histoClE_ChCl_leadmatReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_NeCl_mat         = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_NeCl_mat",13,13,"e");
+        TH1D* histoClE_NeCl_matReb      = (TH1D*)histoClE_NeCl_mat->Rebin(fNBinsClusterPt,"histoClE_NeCl_matReb",fBinsClusterPt);
+        histoClE_NeCl_matReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_NeClSubCh_mat    = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_NeClSubCh_mat",14,14,"e");
+        TH1D* histoClE_NeClSubCh_matReb = (TH1D*)histoClE_NeClSubCh_mat->Rebin(fNBinsClusterPt,"histoClE_NeClSubCh_matReb",fBinsClusterPt);
+        histoClE_NeClSubCh_matReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_GaCl_mat         = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_GaCl_mat",15,15,"e");
+        TH1D* histoClE_GaCl_matReb      = (TH1D*)histoClE_GaCl_mat->Rebin(fNBinsClusterPt,"histoClE_GaCl_matReb",fBinsClusterPt);
+        histoClE_GaCl_matReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_GaClSubCh_mat    = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_GaClSubCh_mat",16,16,"e");
+        TH1D* histoClE_GaClSubCh_matReb = (TH1D*)histoClE_GaClSubCh_mat->Rebin(fNBinsClusterPt,"histoClE_GaClSubCh_matReb",fBinsClusterPt);
+        histoClE_GaClSubCh_matReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_ConvCl_mat       = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ConvCl_mat",17,17,"e");
+        TH1D* histoClE_ConvCl_matReb    = (TH1D*)histoClE_ConvCl_mat->Rebin(fNBinsClusterPt,"histoClE_ConvCl_matReb",fBinsClusterPt);
+        histoClE_ConvCl_matReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_ConvCl_leadmat   = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ConvCl_leadmat",18,18,"e");
+        TH1D* histoClE_ConvCl_leadmatReb= (TH1D*)histoClE_ConvCl_leadmat->Rebin(fNBinsClusterPt,"histoClE_ConvCl_leadmatReb",fBinsClusterPt);
+        histoClE_ConvCl_leadmatReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_ChPrimCl_mat     = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ChPrimCl_mat",19,19,"e");
+        TH1D* histoClE_ChPrimCl_matReb  = (TH1D*)histoClE_ChPrimCl_mat->Rebin(fNBinsClusterPt,"histoClE_ChPrimCl_matReb",fBinsClusterPt);
+        histoClE_ChPrimCl_matReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_ChPrimCl_leadmat = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ChPrimCl_leadmat",20,20,"e");
+        TH1D* histoClE_ChPrimCl_leadmatReb  = (TH1D*)histoClE_ChPrimCl_leadmat->Rebin(fNBinsClusterPt,"histoClE_ChPrimCl_leadmatReb",fBinsClusterPt);
+        histoClE_ChPrimCl_leadmatReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_ElCl_mat         = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ElCl_mat",21,21,"e");
+        TH1D* histoClE_ElCl_matReb      = (TH1D*)histoClE_ElCl_mat->Rebin(fNBinsClusterPt,"histoClE_ElCl_matReb",fBinsClusterPt);
+        histoClE_ElCl_matReb->Divide(fDeltaPtCluster);
+        TH1D* histoClE_ElCl_leadmat     = (TH1D*) histoTMEffiInput->ProjectionX("histoClE_ElCl_leadmat",22,22,"e");
+        TH1D* histoClE_ElCl_leadmatReb  = (TH1D*)histoClE_ElCl_leadmat->Rebin(fNBinsClusterPt,"histoClE_ElCl_leadmatReb",fBinsClusterPt);
+        histoClE_ElCl_leadmatReb->Divide(fDeltaPtCluster);
+        
+        TH1D* histoEffi_AllCl           = (TH1D*)histoClE_AllCl_mat->Clone("histoEffi_AllCl");
+        histoEffi_AllCl->Divide(histoEffi_AllCl, histoClE_AllCl, 1, 1, "B");
+        TH1D* histoEffi_ChCl            = (TH1D*)histoClE_ChCl_mat->Clone("histoEffi_ChCl");
+        histoEffi_ChCl->Divide(histoEffi_ChCl, histoClE_ChCl, 1, 1, "B");
+        TH1D* histoEffi_ChPrimCl        = (TH1D*)histoClE_ChPrimCl_mat->Clone("histoEffi_ChPrimCl");
+        histoEffi_ChPrimCl->Divide(histoEffi_ChPrimCl, histoClE_ChPrimCl, 1, 1, "B");
+        TH1D* histoEffi_NeCl            = (TH1D*)histoClE_NeCl_mat->Clone("histoEffi_NeCl");
+        histoEffi_NeCl->Divide(histoEffi_NeCl, histoClE_NeCl, 1, 1, "B");
+        TH1D* histoEffi_NeSubChCl       = (TH1D*)histoClE_NeClSubCh_mat->Clone("histoEffi_NeSubChCl");
+        histoEffi_NeSubChCl->Divide(histoEffi_NeSubChCl, histoClE_NeClSubCh, 1, 1, "B");
+        TH1D* histoEffi_GaCl            = (TH1D*)histoClE_GaCl_mat->Clone("histoEffi_GaCl");
+        histoEffi_GaCl->Divide(histoEffi_GaCl, histoClE_GaCl, 1, 1, "B");
+        TH1D* histoEffi_GaSubChCl       = (TH1D*)histoClE_GaClSubCh_mat->Clone("histoEffi_GaSubChCl");
+        histoEffi_GaSubChCl->Divide(histoEffi_GaSubChCl, histoClE_GaClSubCh, 1, 1, "B");
+        TH1D* histoEffi_ConvCl          = (TH1D*)histoClE_ConvCl_mat->Clone("histoEffi_ConvCl");
+        histoEffi_ConvCl->Divide(histoEffi_ConvCl, histoClE_ConvCl, 1, 1, "B");
+        TH1D* histoEffi_ElCl            = (TH1D*)histoClE_ElCl_mat->Clone("histoEffi_ConvCl");
+        histoEffi_ElCl->Divide(histoEffi_ElCl, histoClE_ElCl, 1, 1, "B");
+        
+        TH1D* histoEffi_AllClReb        = (TH1D*)histoClE_AllCl_matReb->Clone("histoEffi_AllClReb");
+        histoEffi_AllClReb->Divide(histoEffi_AllClReb, histoClE_AllClReb, 1, 1, "B");
+        TH1D* histoEffi_ChClReb         = (TH1D*)histoClE_ChCl_matReb->Clone("histoEffi_ChClReb");
+        histoEffi_ChClReb->Divide(histoEffi_ChClReb, histoClE_ChClReb, 1, 1, "B");
+        TH1D* histoEffi_ChPrimClReb     = (TH1D*)histoClE_ChPrimCl_matReb->Clone("histoEffi_ChPrimClReb");
+        histoEffi_ChPrimClReb->Divide(histoEffi_ChPrimClReb, histoClE_ChPrimClReb, 1, 1, "B");
+        TH1D* histoEffi_ChCl_leadReb    = (TH1D*)histoClE_ChCl_leadmatReb->Clone("histoEffi_ChClLeadReb");
+        histoEffi_ChCl_leadReb->Divide(histoEffi_ChCl_leadReb, histoClE_ChClReb, 1, 1, "B");
+        TH1D* histoEffi_ChPrimCl_leadReb= (TH1D*)histoClE_ChPrimCl_leadmatReb->Clone("histoEffi_ChPrimClLeadReb");
+        histoEffi_ChPrimCl_leadReb->Divide(histoEffi_ChPrimCl_leadReb, histoClE_ChPrimClReb, 1, 1, "B");
 
-        PutProcessLabelAndEnergyOnPlot(0.105, 0.95, 32, collisionSystem.Data(), detectionProcess.Data(),"matched w/ lead h^{#pm} of cl.",  63, 0.029);
+        TH1D* histoEffi_NeClReb         = (TH1D*)histoClE_NeCl_matReb->Clone("histoEffi_NeClReb");
+        histoEffi_NeClReb->Divide(histoEffi_NeClReb, histoClE_NeClReb, 1, 1, "B");
+        TH1D* histoEffi_NeSubChClReb    = (TH1D*)histoClE_NeClSubCh_matReb->Clone("histoEffi_NeSubChClReb");
+        histoEffi_NeSubChClReb->Divide(histoEffi_NeSubChClReb, histoClE_NeClSubChReb, 1, 1, "B");
+        TH1D* histoEffi_GaClReb         = (TH1D*)histoClE_GaCl_matReb->Clone("histoEffi_GaClReb");
+        histoEffi_GaClReb->Divide(histoEffi_GaClReb, histoClE_GaClReb, 1, 1, "B");
+        TH1D* histoEffi_GaSubChClReb    = (TH1D*)histoClE_GaClSubCh_matReb->Clone("histoEffi_GaSubChClReb");
+        histoEffi_GaSubChClReb->Divide(histoEffi_GaSubChClReb, histoClE_GaClSubChReb, 1, 1, "B");
+        TH1D* histoEffi_ConvClReb       = (TH1D*)histoClE_ConvCl_matReb->Clone("histoEffi_ConvCl_leadReb");
+        histoEffi_ConvClReb->Divide(histoEffi_ConvClReb, histoClE_ConvClReb, 1, 1, "B");
+        TH1D* histoEffi_ConvCl_leadReb  = (TH1D*)histoClE_ConvCl_leadmatReb->Clone("histoEffi_ConvClReb");
+        histoEffi_ConvCl_leadReb->Divide(histoEffi_ConvCl_leadReb, histoClE_ConvClReb, 1, 1, "B");
+        TH1D* histoEffi_ElClReb         = (TH1D*)histoClE_ElCl_matReb->Clone("histoEffi_ConvClReb");
+        histoEffi_ElClReb->Divide(histoEffi_ElClReb, histoClE_ElClReb, 1, 1, "B");
+        TH1D* histoEffi_ElCl_leadReb    = (TH1D*)histoClE_ElCl_leadmatReb->Clone("histoEffi_ElCl_leadReb");
+        histoEffi_ElCl_leadReb->Divide(histoEffi_ElCl_leadReb, histoClE_ElClReb, 1, 1, "B");
+        
+        // Plot TM efficiency for different cluster type
+        TCanvas* canvasTMEffi = new TCanvas("canvasTMEffi","",200,10,1100,900);  // gives the page size
+        DrawGammaCanvasSettings( canvasTMEffi, 0.075, 0.02, 0.02, 0.09);
 
-    canvasTMEffi->Update();
-    canvasTMEffi->SaveAs(Form("%s/TMEffiDifferentChargedClustersMatchedWithLead_%s.%s",outputDirectory.Data(),optionCutSelection.Data(),suffix.Data()));
-    
-    
-        TH2F * histo2DTMEffNe        = new TH2F("histo2DTMEffNe", "histo2DTMEffNe",1000, 0., maxPt , 1000, rangeTMEffi[0], rangeTMEffi[1] );
-        SetStyleHistoTH2ForGraphs(  histo2DTMEffNe, "#it{p}_{T} (GeV/#it{c})", "#varepsilon_{miss,TM}", 
-                                    0.85*0.04, 0.04, 0.85*0.04, 0.04, 0.95, 0.94);
-        histo2DTMEffNe->GetYaxis()->SetLabelOffset(0.001);
-        histo2DTMEffNe->DrawCopy(); 
-//         DrawGammaSetMarker(histoEffi_NeSubChClReb, 20, 1.5, kRed-6, kRed-6);
-//         histoEffi_NeSubChClReb->DrawCopy("same,e1"); 
-        DrawGammaSetMarker(histoEffi_NeClReb, 24, 1.5, kRed+2, kRed+2);
-        histoEffi_NeClReb->DrawCopy("same,e1"); 
-        DrawGammaSetMarker(histoEffi_GaClReb, 25, 1.5, kOrange, kOrange);
-        histoEffi_GaClReb->DrawCopy("same,e1"); 
-        DrawGammaSetMarker(histoEffi_GaSubChClReb, 21, 1.5, 807, 807);
-        histoEffi_GaSubChClReb->DrawCopy("same,e1"); 
+            Double_t rangeTMEffi[2]     = {0., 1.3};
 
-        TLegend* legendTMEffiNe           = GetAndSetLegend2(0.42, 0.95, 0.7, 0.95-(3*0.04),32);
-        legendTMEffiNe->AddEntry(histoEffi_GaClReb,"#gamma cl.","p");
-        legendTMEffiNe->AddEntry(histoEffi_GaSubChClReb,"#gamma cl. w/ ch. cont","p");
-        legendTMEffiNe->AddEntry(histoEffi_NeClReb,"other neutral cl.","p");
-//         legendTMEffiNe->AddEntry(histoEffi_NeSubChClReb,"other neutral cl. w/ ch. cont.","p");
-        legendTMEffiNe->Draw();
+            Double_t maxPt              = fBinsClusterPt[fNBinsClusterPt];
+            if (nameTrigger.Contains("INT") || nameTrigger.Contains("MB")){
+                maxPt                   = 15;
+    //             rangeTMEffi[1]          = 1.3;
+            }    
+            TH2F * histo2DTMEff         = new TH2F("histo2DTMEff", "histo2DTMEff",1000, 0., maxPt , 1000, rangeTMEffi[0], rangeTMEffi[1] );
+            SetStyleHistoTH2ForGraphs(  histo2DTMEff, "#it{E}_{clus} (GeV)", "#varepsilon_{TM}", 
+                                        0.85*0.04, 0.04, 0.85*0.04, 0.04, 0.95, 0.94);
+            histo2DTMEff->GetYaxis()->SetLabelOffset(0.001);
+            histo2DTMEff->DrawCopy(); 
+            
+            DrawGammaSetMarker(histoEffi_ChClReb, 24, 1.5, kAzure+2, kAzure+2);
+            histoEffi_ChClReb->DrawCopy("same,e1"); 
+            DrawGammaSetMarker(histoEffi_ElClReb, 21, 1.5, kGreen-2, kGreen-2);
+            histoEffi_ElClReb->DrawCopy("same,e1"); 
+            DrawGammaSetMarker(histoEffi_ConvClReb, 25, 1.5, kGreen+2, kGreen+2);
+            histoEffi_ConvClReb->DrawCopy("same,e1"); 
+            DrawGammaSetMarker(histoEffi_ChPrimClReb, 24, 1.5, kBlue+1, kBlue+1);
+            histoEffi_ChPrimClReb->DrawCopy("same,e1"); 
 
-        PutProcessLabelAndEnergyOnPlot(0.105, 0.95, 32, collisionSystem.Data(), detectionProcess.Data(),"",  63, 0.029);
+            TLegend* legendTMEffiCh           = GetAndSetLegend2(0.42, 0.95, 0.7, 0.95-(4*0.04),32);
+            legendTMEffiCh->AddEntry(histoEffi_ConvClReb,"conv #gamma cl","p");
+            legendTMEffiCh->AddEntry(histoEffi_ElClReb,"e^{#pm} cl","p");
+            legendTMEffiCh->AddEntry(histoEffi_ChPrimClReb,"other charged cl., prod. vtx R #leq 5 cm","p");
+            legendTMEffiCh->AddEntry(histoEffi_ChClReb,"other charged cl., prod. vtx R > 5 cm","p");
+            legendTMEffiCh->Draw();
 
-    canvasTMEffi->Update();
-    canvasTMEffi->SaveAs(Form("%s/TMEffiDifferentNeutralClusters_%s.%s",outputDirectory.Data(),optionCutSelection.Data(),suffix.Data()));
-    
+            PutProcessLabelAndEnergyOnPlot(0.65, 0.20, 32, collisionSystem.Data(), detectionProcess.Data(),"",  63, 0.029);
+
+        canvasTMEffi->Update();
+        canvasTMEffi->SaveAs(Form("%s/TMEffiDifferentChargedClusters_%s.%s",outputDirectory.Data(),clusterCuts[i].Data(),suffix.Data()));
+
+            histo2DTMEff->DrawCopy(); 
+            
+            DrawGammaSetMarker(histoEffi_ChCl_leadReb, 24, 1.5, kAzure+2, kAzure+2);
+            histoEffi_ChCl_leadReb->DrawCopy("same,e1"); 
+            DrawGammaSetMarker(histoEffi_ElCl_leadReb, 21, 1.5, kGreen-2, kGreen-2);
+            histoEffi_ElCl_leadReb->DrawCopy("same,e1"); 
+            DrawGammaSetMarker(histoEffi_ConvCl_leadReb, 25, 1.5, kGreen+2, kGreen+2);
+            histoEffi_ConvCl_leadReb->DrawCopy("same,e1"); 
+            DrawGammaSetMarker(histoEffi_ChPrimCl_leadReb, 24, 1.5, kBlue+1, kBlue+1);
+            histoEffi_ChPrimCl_leadReb->DrawCopy("same,e1"); 
+
+            TLegend* legendTMEffiChlead           = GetAndSetLegend2(0.42, 0.95, 0.7, 0.95-(4*0.04),32);
+            legendTMEffiChlead->AddEntry(histoEffi_ConvCl_leadReb,"conv #gamma cl","p");
+            legendTMEffiChlead->AddEntry(histoEffi_ElCl_leadReb,"e^{#pm} cl","p");
+            legendTMEffiChlead->AddEntry(histoEffi_ChPrimCl_leadReb,"other charged cl., prod. vtx R #leq 5 cm","p");
+            legendTMEffiChlead->AddEntry(histoEffi_ChCl_leadReb,"other charged cl., prod. vtx R > 5 cm","p");
+            legendTMEffiChlead->Draw();
+
+            PutProcessLabelAndEnergyOnPlot(0.105, 0.95, 32, collisionSystem.Data(), detectionProcess.Data(),"matched w/ lead h^{#pm} of cl.",  63, 0.029);
+
+        canvasTMEffi->Update();
+        canvasTMEffi->SaveAs(Form("%s/TMEffiDifferentChargedClustersMatchedWithLead_%s.%s",outputDirectory.Data(),clusterCuts[i].Data(),suffix.Data()));
+        
+        
+            TH2F * histo2DTMEffNe        = new TH2F("histo2DTMEffNe", "histo2DTMEffNe",1000, 0., maxPt , 1000, rangeTMEffi[0], rangeTMEffi[1] );
+            SetStyleHistoTH2ForGraphs(  histo2DTMEffNe, "#it{E}_{clus} (GeV)", "#varepsilon_{miss,TM}", 
+                                        0.85*0.04, 0.04, 0.85*0.04, 0.04, 0.95, 0.94);
+            histo2DTMEffNe->GetYaxis()->SetLabelOffset(0.001);
+            histo2DTMEffNe->DrawCopy(); 
+            DrawGammaSetMarker(histoEffi_NeSubChClReb, 20, 1.5, kRed-6, kRed-6);
+            histoEffi_NeSubChClReb->DrawCopy("same,e1"); 
+            DrawGammaSetMarker(histoEffi_NeClReb, 24, 1.5, kRed+2, kRed+2);
+            histoEffi_NeClReb->DrawCopy("same,e1"); 
+            DrawGammaSetMarker(histoEffi_GaClReb, 25, 1.5, kOrange, kOrange);
+            histoEffi_GaClReb->DrawCopy("same,e1"); 
+            DrawGammaSetMarker(histoEffi_GaSubChClReb, 21, 1.5, 807, 807);
+            histoEffi_GaSubChClReb->DrawCopy("same,e1"); 
+
+            TLegend* legendTMEffiNe           = GetAndSetLegend2(0.42, 0.95, 0.7, 0.95-(4*0.04),32);
+            legendTMEffiNe->AddEntry(histoEffi_GaClReb,"#gamma cl.","p");
+            legendTMEffiNe->AddEntry(histoEffi_GaSubChClReb,"#gamma cl. w/ ch. cont","p");
+            legendTMEffiNe->AddEntry(histoEffi_NeClReb,"other neutral cl.","p");
+            legendTMEffiNe->AddEntry(histoEffi_NeSubChClReb,"other neutral cl. w/ ch. cont.","p");
+            legendTMEffiNe->Draw();
+
+            PutProcessLabelAndEnergyOnPlot(0.105, 0.95, 32, collisionSystem.Data(), detectionProcess.Data(),"",  63, 0.029);
+
+        canvasTMEffi->Update();
+        canvasTMEffi->SaveAs(Form("%s/TMEffiDifferentNeutralClusters_%s.%s",outputDirectory.Data(),clusterCuts[i].Data(),suffix.Data()));
+
+            TH2F * histFrac             = new TH2F("histFrac", "histFrac",1000, 0., maxPt , 1000, 0, rangeTMEffi[1] );
+            SetStyleHistoTH2ForGraphs(  histFrac, "#it{E}_{clus} (GeV)", "N_{id}/N_{all}", 
+                                        0.85*0.04, 0.04, 0.85*0.04, 0.04, 0.95, 0.94);
+            histFrac->GetYaxis()->SetLabelOffset(0.001);
+            histFrac->DrawCopy(); 
+            
+            DrawGammaSetMarker(histoRatioClE_ChtoAllReb, 24, 1.5, kAzure+2, kAzure+2);
+            histoRatioClE_ChtoAllReb->DrawCopy("same,e1"); 
+            DrawGammaSetMarker(histoRatioClE_EltoAllReb, 21, 1.5, kGreen-2, kGreen-2);
+            histoRatioClE_EltoAllReb->DrawCopy("same,e1"); 
+            DrawGammaSetMarker(histoRatioClE_ConvtoAllReb, 25, 1.5, kGreen+2, kGreen+2);
+            histoRatioClE_ConvtoAllReb->DrawCopy("same,e1"); 
+            DrawGammaSetMarker(histoRatioClE_ChPrimtoAllReb, 24, 1.5, kBlue+1, kBlue+1);
+            histoRatioClE_ChPrimtoAllReb->DrawCopy("same,e1"); 
+
+            DrawGammaSetMarker(histoRatioClE_NeSubChtoAllReb, 20, 1.5, kRed-6, kRed-6);
+            histoRatioClE_NeSubChtoAllReb->DrawCopy("same,e1"); 
+            DrawGammaSetMarker(histoRatioClE_NetoAllReb, 24, 1.5, kRed+2, kRed+2);
+            histoRatioClE_NetoAllReb->DrawCopy("same,e1"); 
+            DrawGammaSetMarker(histoRatioClE_GatoAllReb, 25, 1.5, kOrange, kOrange);
+            histoRatioClE_GatoAllReb->DrawCopy("same,e1"); 
+            DrawGammaSetMarker(histoRatioClE_GaSubChtoAllReb, 21, 1.5, 807, 807);
+            histoRatioClE_GaSubChtoAllReb->DrawCopy("same,e1"); 
+
+            TLegend* legendRatio           = GetAndSetLegend2(0.42, 0.95, 0.7, 0.95-(8*0.04),32);
+            legendRatio->AddEntry(histoEffi_ConvClReb,"conv #gamma cl","p");
+            legendRatio->AddEntry(histoEffi_ElClReb,"e^{#pm} cl","p");
+            legendRatio->AddEntry(histoEffi_ChPrimClReb,"other charged cl., prod. vtx R #leq 5 cm","p");
+            legendRatio->AddEntry(histoEffi_ChClReb,"other charged cl., prod. vtx R > 5 cm","p");
+            legendRatio->AddEntry(histoEffi_GaClReb,"#gamma cl.","p");
+            legendRatio->AddEntry(histoEffi_GaSubChClReb,"#gamma cl. w/ ch. cont","p");
+            legendRatio->AddEntry(histoEffi_NeClReb,"other neutral cl.","p");
+            legendRatio->AddEntry(histoEffi_NeSubChClReb,"other neutral cl. w/ ch. cont.","p");
+            legendRatio->Draw();
+
+            PutProcessLabelAndEnergyOnPlot(0.105, 0.95, 32, collisionSystem.Data(), detectionProcess.Data(),"",  63, 0.029);
+
+        canvasTMEffi->Update();
+        canvasTMEffi->SaveAs(Form("%s/TMFractioOfClusters_%s.%s",outputDirectory.Data(),clusterCuts[i].Data(),suffix.Data()));
+        
+        
+        
+    }    
     return;
 
 }

@@ -1098,26 +1098,38 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             legendBGRatio->SetMargin(0.2);
             legendBGRatio->SetNColumns(3);
             legendBGRatio->AddEntry(histoRatioTrueYieldGammaM02,"#gamma","p");
-
+            Double_t sampleBinPur = 0;
+            
+            cout << "gamma:" <<  histoRatioTrueYieldGammaM02->GetBinContent(histoRatioTrueYieldGammaM02->GetXaxis()->FindBin(20.)) << "\t";
+            sampleBinPur = sampleBinPur+histoRatioTrueYieldGammaM02->GetBinContent(histoRatioTrueYieldGammaM02->GetXaxis()->FindBin(20.));
             if (kIsEta){
                 DrawGammaSetMarker(histoRatioTrueYieldPi0M02, 20, 1, kMagenta+2, kMagenta+2);  
                 histoRatioTrueYieldPi0M02->DrawCopy("e1,same");
+                cout << "pi0:" <<  histoRatioTrueYieldPi0M02->GetBinContent(histoRatioTrueYieldPi0M02->GetXaxis()->FindBin(20.)) << "\t";
+                sampleBinPur =sampleBinPur+ histoRatioTrueYieldPi0M02->GetBinContent(histoRatioTrueYieldPi0M02->GetXaxis()->FindBin(20.));
                 legendBGRatio->AddEntry(histoRatioTrueYieldPi0M02,"#pi^{0}","p");
             } else {
                 DrawGammaSetMarker(histoRatioTrueYieldEtaM02, 20, 1, kMagenta+2, kMagenta+2);  
                 histoRatioTrueYieldEtaM02->DrawCopy("e1,same");            
+                cout << "eta:" <<  histoRatioTrueYieldEtaM02->GetBinContent(histoRatioTrueYieldEtaM02->GetXaxis()->FindBin(20.)) << "\t";
+                sampleBinPur =sampleBinPur+ histoRatioTrueYieldEtaM02->GetBinContent(histoRatioTrueYieldEtaM02->GetXaxis()->FindBin(20.));
                 legendBGRatio->AddEntry(histoRatioTrueYieldEtaM02,"#eta","p");
             }
             DrawGammaSetMarker(histoRatioTrueYieldElectronM02, 21, 1, kGreen+3, kGreen+3);  
+            cout << "e+-:" <<  histoRatioTrueYieldElectronM02->GetBinContent(histoRatioTrueYieldElectronM02->GetXaxis()->FindBin(20.)) << "\t";
+            sampleBinPur =sampleBinPur+ histoRatioTrueYieldElectronM02->GetBinContent(histoRatioTrueYieldElectronM02->GetXaxis()->FindBin(20.));
             histoRatioTrueYieldElectronM02->DrawCopy("e1,same");            
             legendBGRatio->AddEntry(histoRatioTrueYieldElectronM02,"e^{#pm}","p");
             
             for (Int_t i = 0; i < 9; i++){
                 DrawGammaSetMarker(histoRatioTrueClustersBGPt[i], markerStyleBGPlot[i], 1, colorBGPlot[i], colorBGPlot[i]);  
+                cout << labelsBGPlot[i].Data() <<":" <<  histoRatioTrueClustersBGPt[i]->GetBinContent(histoRatioTrueClustersBGPt[i]->GetXaxis()->FindBin(20.)) << "\t";
+                sampleBinPur = sampleBinPur+histoRatioTrueClustersBGPt[i]->GetBinContent(histoRatioTrueClustersBGPt[i]->GetXaxis()->FindBin(20.));
                 histoRatioTrueClustersBGPt[i]->DrawCopy("e1,same");
                 legendBGRatio->AddEntry(histoRatioTrueClustersBGPt[i],labelsBGPlot[i], "p");
             }    
             legendBGRatio->Draw();   
+            cout << "total impurities:"<< sampleBinPur << "\t from purity:" <<  1-histoMesonPurityPt->GetBinContent(histoMesonPurityPt->GetXaxis()->FindBin(20.)) <<endl;
             
             PutProcessLabelAndEnergyOnPlot(0.14, 0.25, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 63, 0.03);
         canvasBGRatio->Update();
