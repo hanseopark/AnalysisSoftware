@@ -119,6 +119,51 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
    histoMCIncRatio                              = (TH1D*) histoGammaSpecMCAll->Clone("MC_IncRatio");
    histoMCIncRatio                              ->Divide(histoGammaSpecMCAll,histoMCYieldMeson,1,1,"");
 
+// Opening systematics file
+   TString fileNameSysErrGamma                  ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_11_19.dat"; // default
+   TString fileNameSysErrInclRatio              ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_11_19.dat"; // default
+   TString fileNameSysErrDoubleRatio            ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_11_19.dat"; // default
+   if(option.CompareTo("7TeV") == 0){
+        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_11_19.dat";
+        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_11_19.dat";
+        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_11_19.dat";
+   }
+   fileSysErrGamma.open(fileNameSysErrGamma,ios_base::in);
+   cout << fileNameSysErrGamma << endl;
+
+   while(!fileSysErrGamma.eof() && nPointsGamma < 100){
+       fileSysErrGamma >> relSystErrorGammaDown[nPointsGamma] >> relSystErrorGammaUp[nPointsGamma]>>    relSystErrorWOMaterialGammaDown[nPointsGamma] >> relSystErrorWOMaterialGammaUp[nPointsGamma];
+        cout << nPointsGamma << "\t"  << relSystErrorGammaDown[nPointsGamma] << "\t"  <<relSystErrorGammaUp[nPointsGamma] << "\t" << relSystErrorWOMaterialGammaDown[nPointsGamma] << "\t"  <<relSystErrorWOMaterialGammaUp[nPointsGamma] << endl;;
+        nPointsGamma++;
+   }
+   fileSysErrGamma.close();
+   nPointsGamma = nPointsGamma-1;
+
+   fileSysErrInclRatio.open(fileNameSysErrInclRatio,ios_base::in);
+   cout << fileNameSysErrInclRatio << endl;
+
+   while(!fileSysErrInclRatio.eof() && nPointsInclRatio < 100){
+       fileSysErrInclRatio >> relSystErrorInclRatioDown[nPointsInclRatio] >> relSystErrorInclRatioUp[nPointsInclRatio]>>    relSystErrorWOMaterialInclRatioDown[nPointsInclRatio] >> relSystErrorWOMaterialInclRatioUp[nPointsInclRatio];
+        cout << nPointsInclRatio << "\t"  << relSystErrorInclRatioDown[nPointsInclRatio] << "\t"  <<relSystErrorInclRatioUp[nPointsInclRatio] << "\t" << relSystErrorWOMaterialInclRatioDown[nPointsInclRatio] << "\t"  <<relSystErrorWOMaterialInclRatioUp[nPointsInclRatio] << endl;;
+        nPointsInclRatio++;
+   }
+   fileSysErrInclRatio.close();
+   nPointsInclRatio = nPointsInclRatio-1;
+
+   fileSysErrDoubleRatio.open(fileNameSysErrDoubleRatio,ios_base::in);
+   cout << fileNameSysErrDoubleRatio << endl;
+
+   while(!fileSysErrDoubleRatio.eof() && nPointsDoubleRatio < 100){
+       fileSysErrDoubleRatio >> relSystErrorDoubleRatioDown[nPointsDoubleRatio] >> relSystErrorDoubleRatioUp[nPointsDoubleRatio]>>    relSystErrorWOMaterialDoubleRatioDown[nPointsDoubleRatio] >> relSystErrorWOMaterialDoubleRatioUp[nPointsDoubleRatio];
+        cout << nPointsDoubleRatio << "\t"  << relSystErrorDoubleRatioDown[nPointsDoubleRatio] << "\t"  <<relSystErrorDoubleRatioUp[nPointsDoubleRatio] << "\t" << relSystErrorWOMaterialDoubleRatioDown[nPointsDoubleRatio] << "\t"  <<relSystErrorWOMaterialDoubleRatioUp[nPointsDoubleRatio] << endl;;
+        nPointsDoubleRatio++;
+   }
+   fileSysErrDoubleRatio.close();
+   nPointsDoubleRatio = nPointsDoubleRatio-1;
+   
+   graphGammaYieldSysErr= CalculateSysErrFromRelSysHisto( histoGammaSpecCorrPurity, "Pi0SystError",relSystErrorGammaDown , relSystErrorGammaUp, 2, nPointsGamma);
+   graphInclRatioSysErr = CalculateSysErrFromRelSysHisto( histoIncRatioPurityTrueEff, "Pi0SystErrorA",relSystErrorInclRatioDown , relSystErrorInclRatioUp, 2, nPointsInclRatio);
+   
 //**********************************************************************************
 //***                      NLO Calculatins Ratio                                 ***
 //**********************************************************************************
@@ -258,6 +303,8 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
       SetHistogramm(histoIncRatioPurityTrueEff, "#it{p}_{T} (GeV/#it{c})", "Ratio Inclusive #gamma/#pi^{0}",0,2);
       DrawGammaSetMarker(histoIncRatioPurityTrueEff, 20, 2.0, 4, 4);
       histoIncRatioPurityTrueEff                ->Draw();
+      DrawGammaSetMarkerTGraphAsym(graphInclRatioSysErr,26,0,kBlue-8,kBlue-8,2,kTRUE);
+      graphInclRatioSysErr->Draw("p,2,same");
       PlotLatexLegend(0.66, 0.75, 0.045,collisionSystem,detectionProcess);
       canvasIncRatioPurityTrueEff               ->Print(Form("%s/%s_IncRatioPurity_trueEff_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
    // Create ratio for MC
@@ -525,7 +572,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
 
    // Set datapoints in histoIncRatioFitPurity to the fit values from fitPi0YieldB (Tsallis fit)
    for(Int_t bin = 1; bin<histoIncRatioFitPurity->GetNbinsX()+1; bin++){
-      histoIncRatioFitPurity->SetBinContent(bin,fitPi0YieldB->Eval(histoIncRatioPurityTrueEff->GetBinCenter(bin)));
+      histoIncRatioFitPurity->SetBinContent(bin,fitPi0YieldB->Eval(histoIncRatioPurityTrueEff->GetBinCenter(bin))); //nschmidt2016 changed to hagedorn
       histoIncRatioFitPurity->SetBinError(bin,histoCorrectedPi0Yield->GetBinError(bin));
    }
    DrawGammaSetMarker(histoIncRatioPurityTrueEff, 20, 2.0, 1, 1); 
@@ -654,9 +701,11 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
 
       histoDoubleRatioConversionTrueEffPurity         = (TH1D*) histoIncRatioPurityTrueEff->Clone("DoubleRatioConversionTrueEffPurity");
       histoDoubleRatioConversionTrueEffPurity->Divide(cocktailAllGammaPi0);
+      graphDoubleRatioSysErr= CalculateSysErrFromRelSysHisto( histoDoubleRatioConversionTrueEffPurity, "DoubleRatioSystError",relSystErrorDoubleRatioDown , relSystErrorDoubleRatioUp, 2, nPointsDoubleRatio);
 
       histoDoubleRatioFitPi0YieldPurity                       = (TH1D*) histoIncRatioFitPurity->Clone("DoubleRatioConversionFitPurity");
       histoDoubleRatioFitPi0YieldPurity->Divide(cocktailAllGammaPi0);
+      graphDoubleRatioFitSysErr= CalculateSysErrFromRelSysHisto( histoDoubleRatioFitPi0YieldPurity, "DoubleRatioFitError",relSystErrorDoubleRatioDown , relSystErrorDoubleRatioUp, 2, nPointsDoubleRatio);
 
       TCanvas *canvasConversionFitDoubleRatioSum              = new TCanvas("canvasConversionFitDoubleRatioSum","",0.095,0.09,1000,815);
       DrawGammaCanvasSettings( canvasConversionFitDoubleRatioSum, 0.09, 0.02, 0.02, 0.09);
@@ -672,10 +721,14 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
 
       DrawGammaSetMarker(histoDoubleRatioConversionTrueEffPurity, 20, 2.0, kBlack, kBlack);   
       DrawGammaSetMarker(histoDoubleRatioFitPi0YieldPurity, 20, 2.0, kBlue+2, kBlue+2);   
+      DrawGammaSetMarkerTGraphAsym(graphDoubleRatioSysErr,26,0,kGray+2,kGray+2,2,kTRUE);
+      DrawGammaSetMarkerTGraphAsym(graphDoubleRatioFitSysErr,26,0,kBlue-8,kBlue-8,2,kTRUE);
 
       histoDoubleRatioFitPi0YieldPurity->DrawCopy("same,E1");
       DrawGammaLines(0., 16 , 1.0, 1.0,0.1, kGray+2 ,7);
       histoDoubleRatioConversionTrueEffPurity->DrawCopy("same,E1");
+      graphDoubleRatioSysErr->Draw("p,2,same");
+      graphDoubleRatioFitSysErr->Draw("p,2,same");
 
       TLegend* legendDoubleConversionFit                  = GetAndSetLegend(0.14,0.7,4,1,"Direct Photon Signal via Conversions");
       legendDoubleConversionFit->AddEntry(histoDoubleRatioConversionTrueEffPurity,"Measured Direct Photon Signal","p");
@@ -712,7 +765,9 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
          DrawGammaSetMarker(histoDoubleRatioFitPi0YieldPurity, 20, 2.0, kBlue+2, kBlue+2);   
          histoDoubleRatioConversionTrueEffPurity->DrawCopy("same");
          histoDoubleRatioFitPi0YieldPurity->DrawCopy("same");
-
+         graphDoubleRatioSysErr->Draw("p,2,same");
+         graphDoubleRatioFitSysErr->Draw("p,2,same");
+        
          TLegend* legendDoubleConversionFit2             = GetAndSetLegend(0.14,0.7,4,1,"Direct Photon Signal via Conversions");
          legendDoubleConversionFit2->AddEntry(histoDoubleRatioConversionTrueEffPurity,"Measured Direct Photon Signal","p");
          legendDoubleConversionFit2->AddEntry(histoDoubleRatioFitPi0YieldPurity,"Measured Direct Photon Signal, fitted #pi^{0}","p");

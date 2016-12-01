@@ -309,6 +309,38 @@ Double_t fitMaxPt                           = 0;
 TString forOutput                           = "";
 TH2F * histo2DSpectraPi0                    = NULL;
 
+ifstream fileSysErrGamma;
+Int_t nPointsGamma                              = 0;
+Double_t relSystErrorGammaUp[50];
+Double_t relSystErrorGammaDown[50];
+Double_t relSystErrorWOMaterialGammaUp[50];
+Double_t relSystErrorWOMaterialGammaDown[50];
+Double_t systErrorGammaUp[50];
+Double_t systErrorGammaDown[50];
+
+ifstream fileSysErrInclRatio;
+Int_t nPointsInclRatio                          = 0;
+Double_t relSystErrorInclRatioUp[50];
+Double_t relSystErrorInclRatioDown[50];
+Double_t relSystErrorWOMaterialInclRatioUp[50];
+Double_t relSystErrorWOMaterialInclRatioDown[50];
+Double_t systErrorInclRatioUp[50];
+Double_t systErrorInclRatioDown[50];
+
+ifstream fileSysErrDoubleRatio;
+Int_t nPointsDoubleRatio                        = 0;
+Double_t relSystErrorDoubleRatioUp[50];
+Double_t relSystErrorDoubleRatioDown[50];
+Double_t relSystErrorWOMaterialDoubleRatioUp[50];
+Double_t relSystErrorWOMaterialDoubleRatioDown[50];
+Double_t systErrorDoubleRatioUp[50];
+Double_t systErrorDoubleRatioDown[50];
+
+TGraphAsymmErrors*  graphGammaYieldSysErr       = NULL;
+TGraphAsymmErrors*  graphInclRatioSysErr        = NULL;
+TGraphAsymmErrors*  graphDoubleRatioSysErr      = NULL;
+TGraphAsymmErrors*  graphDoubleRatioFitSysErr   = NULL;
+
 void SeparateCutnumberString(TString cutSelStr, Int_t mode)
 {
    TString fCutSelection                       = cutSelStr;
