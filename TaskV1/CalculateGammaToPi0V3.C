@@ -120,13 +120,13 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
    histoMCIncRatio                              ->Divide(histoGammaSpecMCAll,histoMCYieldMeson,1,1,"");
 
 // Opening systematics file
-   TString fileNameSysErrGamma                  ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_11_19.dat"; // default
-   TString fileNameSysErrInclRatio              ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_11_19.dat"; // default
-   TString fileNameSysErrDoubleRatio            ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_11_19.dat"; // default
+   TString fileNameSysErrGamma                  ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_11_30.dat"; // default
+   TString fileNameSysErrInclRatio              ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_11_30.dat"; // default
+   TString fileNameSysErrDoubleRatio            ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_11_30.dat"; // default
    if(option.CompareTo("7TeV") == 0){
-        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_11_19.dat";
-        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_11_19.dat";
-        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_11_19.dat";
+        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_11_30.dat";
+        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_11_30.dat";
+        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_11_30.dat";
    }
    fileSysErrGamma.open(fileNameSysErrGamma,ios_base::in);
    cout << fileNameSysErrGamma << endl;
@@ -572,7 +572,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
 
    // Set datapoints in histoIncRatioFitPurity to the fit values from fitPi0YieldB (Tsallis fit)
    for(Int_t bin = 1; bin<histoIncRatioFitPurity->GetNbinsX()+1; bin++){
-      histoIncRatioFitPurity->SetBinContent(bin,fitPi0YieldB->Eval(histoIncRatioPurityTrueEff->GetBinCenter(bin))); //nschmidt2016 changed to hagedorn
+      histoIncRatioFitPurity->SetBinContent(bin,fitPi0YieldC->Eval(histoIncRatioPurityTrueEff->GetBinCenter(bin))); //nschmidt2016 changed to hagedorn
       histoIncRatioFitPurity->SetBinError(bin,histoCorrectedPi0Yield->GetBinError(bin));
    }
    DrawGammaSetMarker(histoIncRatioPurityTrueEff, 20, 2.0, 1, 1); 

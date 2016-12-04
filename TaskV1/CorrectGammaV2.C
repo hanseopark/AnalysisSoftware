@@ -1171,8 +1171,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     canvasSecFrac->SetTopMargin(0.035);
     
         TLegend* legendSecFrac                                                          = NULL;
-        if (histoFracAllGammaToSecFromXFromK0l_Pt && !hasCocktailInput) legendSecFrac   = GetAndSetLegend(0.45,0.8,3,1);
-        else                                                            legendSecFrac   = GetAndSetLegend(0.45,0.8,4,1);
+        if (histoFracAllGammaToSecFromXFromK0l_Pt && !hasCocktailInput) legendSecFrac   = GetAndSetLegend(0.45,0.75,3,1);
+        else                                                            legendSecFrac   = GetAndSetLegend(0.45,0.75,4,1);
     
         if (!hasCocktailInput) {
             if (isPCM && !isCalo) {
