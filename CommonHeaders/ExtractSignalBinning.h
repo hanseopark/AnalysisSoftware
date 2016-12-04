@@ -1784,7 +1784,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
             if (directPhoton.CompareTo("directPhoton") == 0){
                 fStartPtBin     = 1;
                 if (modi == 4) 
-                    fStartPtBin = 10;
+                    fStartPtBin = 9;
                 else if(modi == 2) 
                     fStartPtBin = 6;
                 fColumn         = 5;
