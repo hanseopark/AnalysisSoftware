@@ -2627,7 +2627,7 @@ if [ $mode -lt 10 ]; then
                     GammaCocktailFile=`ls $cutSelection/$energy/GammaCocktail_$cocktailRapidity*.root`
                     if [ $useCocktail  ]; then
                         CreateGammaFinalResultsV3 $GammaPi0dataCorr $Pi0dataCorr $GammaCocktailFile $cutSelection $Suffix Pi0 kFALSE;
-                        CreateGammaFinalResultsV3 $GammaPi0MCCorr $Pi0MCCorr $GammaCocktailFile $cutSelection $Suffix Pi0 kFALSE;
+                        CreateGammaFinalResultsV3 $GammaPi0MCCorr $Pi0MCCorr $GammaCocktailFile $cutSelection $Suffix Pi0 kTRUE;
                     else
                         CreateGammaFinalResults $GammaPi0dataCorr $Pi0dataCorr $cutSelection $Suffix Pi0 kTRUE;
                     fi
