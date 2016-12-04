@@ -994,6 +994,23 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         
         canvasPileUpCorrFactor->SaveAs(Form("%s/%s_PileUpCorrFactor_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
         delete canvasPileUpCorrFactor;
+        
+        Bool_t doPileUpCorrSimplePlot       = kTRUE;
+        
+        if (doPileUpCorrSimplePlot && !textPrefix2.CompareTo("data")) {
+            TCanvas *canvasPileUpCorrFactor2= GetAndSetCanvas("canvasPileUpCorrFactor2");
+            
+            SetHistogramm(histoPileUpCorrectionFactor,"#it{p}_{T} (GeV/#it{c})","Correction Factor (%)",0.90,1.02);
+            DrawGammaSetMarker(histoPileUpCorrectionFactor, 24, 1.5, kBlack, kBlack);
+            histoPileUpCorrectionFactor->DrawCopy("");
+            DrawGammaLines(0., maxPtGamma,1.0, 1.0, 1, kGray+2, 2);
+            histoPileUpCorrectionFactor->DrawCopy("same");
+
+            PutProcessLabelAndEnergyOnPlot( 0.15, 0.3, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
+            
+            canvasPileUpCorrFactor2->SaveAs(Form("%s/%s_PileUpCorrFactorDataOnly_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
+            delete canvasPileUpCorrFactor2;
+        }
     }
     
     //**********************************************************************************
@@ -1230,7 +1247,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         }
         legendSecFrac->Draw();
         
-        PutProcessLabelAndEnergyOnPlot( 0.6, 0.75, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
+        PutProcessLabelAndEnergyOnPlot( 0.75, 0.65, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
         
     canvasSecFrac->SaveAs(Form("%s/%s_SecondaryGammaFraction_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasSecFrac;
@@ -1283,13 +1300,32 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         }
     
     delete canvasPurity;
+    
+    TCanvas*    canvasPurity2                   = GetAndSetCanvas("canvasPurity");
+    TLegend*    legendPurity2                   = NULL;
+    Bool_t      doPurityPlotSimple              = kTRUE;
+    if (doPurityPlotSimple && ((isPCM && !isCalo) || (isCalo && !isPCM))) {
+        
+        if (isPCM && !isCalo) SetHistogramm(histoGammaTruePurity_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{pur,#gamma} in |#eta| < %g",eta),0.8, 1.1);
+        if (isCalo && !isPCM) SetHistogramm(histoGammaTruePurity_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{pur,#gamma} in |#eta| < %g",etaCalo),0.8, 1.1);
+        
+        histoGammaTruePurity_Pt->Draw();
+        DrawGammaSetMarker(histoGammaTruePurity_Pt, 24, 1.5, 1, 1);
+        DrawGammaLines(0., maxPtGamma,1.0, 1.0, 1, kGray+2, 2);
+        histoGammaTruePurity_Pt->Draw("same");
+        
+        PutProcessLabelAndEnergyOnPlot( 0.18, 0.3, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
+        
+        canvasPurity->SaveAs(Form("%s/%s_TruePurity_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
+    }
+    delete canvasPurity2;
 
     //**********************************************************************************
     //******************** Conversion Prob Plot ****************************************
     //**********************************************************************************
     if ( isPCM ){
         TCanvas *canvasConvProb         = GetAndSetCanvas("canvasConvProb");
-            DrawGammaSetMarker(histoGammaConvProb_MCPt, 20, 1.0, 1, 1);
+            DrawGammaSetMarker(histoGammaConvProb_MCPt, 24, 2.0, 1, 1);
             SetHistogramm(histoGammaConvProb_MCPt, "#it{p}_{T} (GeV/#it{c})",Form("#it{P}_{conv} in |#eta| < %g",eta), 0.04, 0.10);
             histoGammaConvProb_MCPt->Draw();
 
@@ -1298,7 +1334,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             Double_t parameterProb[1];
             fConv->GetParameters(parameterProb);
 
-            DrawGammaLines(0., maxPtGamma,parameterProb[0], parameterProb[0],1);
+            DrawGammaLines(0., maxPtGamma,parameterProb[0], parameterProb[0], 1, kGray+2, 2);
+            histoGammaConvProb_MCPt->Draw("same");
 
             PutProcessLabelAndEnergyOnPlot( 0.75, 0.3, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
 
@@ -1308,6 +1345,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         // secondary reco eff plot (only used for cocktail sec corr)
         if (hasCocktailInput) {
             TCanvas *canvasConvProbSec  = GetAndSetCanvas("canvasConvProbSec");
+            canvasConvProbSec->SetTopMargin(0.035);
             
             DrawGammaSetMarker(histoGammaSecondaryFromXFromK0sConvProb_MCPt, 20, 1.0, 1, 1);
             DrawGammaSetMarker(histoGammaSecondaryFromXFromK0lConvProb_MCPt, 24, 1.0, kBlue-4, kBlue-4);
@@ -1330,9 +1368,11 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             fConvK0s->GetParameters(parameterProbK0s);
             fConvK0l->GetParameters(parameterProbK0l);
             fConvLambda->GetParameters(parameterProbLambda);
-            DrawGammaLines(0., maxPtGamma,parameterProbK0s[0], parameterProbK0s[0],1,1,2);
-            DrawGammaLines(0., maxPtGamma,parameterProbK0l[0], parameterProbK0l[0],1,kBlue-4,2);
-            DrawGammaLines(0., maxPtGamma,parameterProbLambda[0], parameterProbLambda[0],1,kCyan+2,2);
+            
+            // not flat (K0s) or not enough stat (K0l + Lambda)
+            //DrawGammaLines(0., maxPtGamma,parameterProbK0s[0], parameterProbK0s[0],1,1,2);
+            //DrawGammaLines(0., maxPtGamma,parameterProbK0l[0], parameterProbK0l[0],1,kBlue-4,2);
+            //DrawGammaLines(0., maxPtGamma,parameterProbLambda[0], parameterProbLambda[0],1,kCyan+2,2);
             
             PutProcessLabelAndEnergyOnPlot( 0.75, 0.3, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
             TLegend* legendSecConvProb = GetAndSetLegend(0.55,0.75,4);
