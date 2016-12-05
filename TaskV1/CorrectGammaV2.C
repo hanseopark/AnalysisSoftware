@@ -806,6 +806,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TH1D*   histoFracAllGammaToSecFromXFromK0l_Cocktail_PtOrBin         = NULL;
     TH1D*   histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt           = NULL;
     TH1D*   histoFracAllGammaToSecFromXFromLambda_Cocktail_PtOrBin      = NULL;
+    TH1D*   histoFracAllGammaToSecRest_Cocktail_Pt                      = NULL;
+    //TH1D*   histoFracAllGammaToSecRest_Cocktail_PtOrBin                 = NULL;
     if ( hasCocktailInput && isPCM && !isCalo ) {
         cout << "calculating secondary fractions from cocktail" << endl;
         
@@ -823,6 +825,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt->Divide(histoGammaSecGammaFromXFromLambda_Cocktail_Raw_Pt,histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt,1,1,"B");
         histoFracAllGammaToSecFromXFromLambda_Cocktail_PtOrBin          = (TH1D*)histoESDConvGammaPt_OriginalBin->Clone("FracAllGammaToSecFromXFromLambdaOriginalBinning");
         histoFracAllGammaToSecFromXFromLambda_Cocktail_PtOrBin->Divide(histoGammaSecGammaFromXFromLambda_Cocktail_Raw_PtOrBin,histoFracAllGammaToSecFromXFromLambda_Cocktail_PtOrBin,1,1,"B");
+        
+        histoFracAllGammaToSecRest_Cocktail_Pt                          = (TH1D*)histoESDConvGammaPt->Clone("FracAllGammaToSecRest");
+        histoFracAllGammaToSecRest_Cocktail_Pt->Divide(histoGammaTrueSecCocktailGammaRest_Pt,histoFracAllGammaToSecRest_Cocktail_Pt,1,1,"B");
     }
     if ( hasCocktailInput && isCalo && !isPCM ) {
         cout << "calculating secondary fractions from cocktail" << endl;
@@ -841,6 +846,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt->Divide(histoGammaSecGammaFromXFromLambda_Cocktail_Raw_Pt,histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt,1,1,"B");
         histoFracAllGammaToSecFromXFromLambda_Cocktail_PtOrBin          = (TH1D*)histoESDCaloGammaPt_OriginalBin->Clone("FracAllGammaToSecFromXFromLambdaOriginalBinning");
         histoFracAllGammaToSecFromXFromLambda_Cocktail_PtOrBin->Divide(histoGammaSecGammaFromXFromLambda_Cocktail_Raw_PtOrBin,histoFracAllGammaToSecFromXFromLambda_Cocktail_PtOrBin,1,1,"B");
+        
+        histoFracAllGammaToSecRest_Cocktail_Pt                          = (TH1D*)histoESDCaloGammaPt->Clone("FracAllGammaToSecRest");
+        histoFracAllGammaToSecRest_Cocktail_Pt->Divide(histoGammaTrueSecCocktailGammaRest_Pt,histoFracAllGammaToSecRest_Cocktail_Pt,1,1,"B");
     }
 
     //******************* Pileup correction factors ********************************************
@@ -1187,10 +1195,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TCanvas *canvasSecFrac                  = GetAndSetCanvas("canvasSecFrac");
     canvasSecFrac->SetTopMargin(0.035);
     
-        TLegend* legendSecFrac                                                          = NULL;
-        if (histoFracAllGammaToSecFromXFromK0l_Pt && !hasCocktailInput) legendSecFrac   = GetAndSetLegend(0.45,0.75,3,1);
-        else                                                            legendSecFrac   = GetAndSetLegend(0.45,0.75,4,1);
-    
+        TLegend* legendSecFrac              = GetAndSetLegend(0.6,0.70,5,1);
+
         if (!hasCocktailInput) {
             if (isPCM && !isCalo) {
                 SetHistogramm(histoFracAllGammaToSec_Pt,"#it{p}_{T} (GeV/#it{c})","Fraction of Secondary Converted #gamma");
@@ -1225,25 +1231,30 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                 SetHistogramm(histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt,"#it{p}_{T} (GeV/#it{c})","Fraction of Secondary Converted #gamma");
                 SetHistogramm(histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt,"#it{p}_{T} (GeV/#it{c})","Fraction of Secondary Converted #gamma");
                 SetHistogramm(histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt,"#it{p}_{T} (GeV/#it{c})","Fraction of Secondary Converted #gamma");
+                SetHistogramm(histoFracAllGammaToSecRest_Cocktail_Pt,"#it{p}_{T} (GeV/#it{c})","Fraction of Secondary Converted #gamma");
             }
             
             if (isCalo && !isPCM) {
                 SetHistogramm(histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt,"#it{p}_{T} (GeV/#it{c})","Fraction of Secondary #gamma");
                 SetHistogramm(histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt,"#it{p}_{T} (GeV/#it{c})","Fraction of Secondary #gamma");
                 SetHistogramm(histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt,"#it{p}_{T} (GeV/#it{c})","Fraction of Secondary #gamma");
+                SetHistogramm(histoFracAllGammaToSecRest_Cocktail_Pt,"#it{p}_{T} (GeV/#it{c})","Fraction of Secondary #gamma");
             }
             
-            DrawGammaSetMarker(histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt, 20, 1.0, kBlue-6, kBlue-6);
-            DrawGammaSetMarker(histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt, 24, 1.0, kBlue-4, kBlue-4);
-            DrawGammaSetMarker(histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt, 34, 1.0, kBlue+2, kBlue+2);
+            DrawGammaSetMarker(histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt,      20, 1.0, kBlue-6, kBlue-6);
+            DrawGammaSetMarker(histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt,      21, 1.0, kRed-4, kRed-4);
+            DrawGammaSetMarker(histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt,   20, 1.0, kGreen-1, kGreen-1);
+            DrawGammaSetMarker(histoFracAllGammaToSecRest_Cocktail_Pt,              21, 1.0, kCyan+3, kCyan+3);
 
             histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt->Draw("same");
             histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt->Draw("same");
             histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt->Draw("same");
+            histoFracAllGammaToSecRest_Cocktail_Pt->Draw("same");
 
-            legendSecFrac->AddEntry(histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt,Form("Cocktail fraction Sec #gamma from X from K^{0}_{s}"),"pl");
-            legendSecFrac->AddEntry(histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt,Form("Cocktail fraction Sec #gamma from X from K^{0}_{l}"),"pl");
-            legendSecFrac->AddEntry(histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt,Form("Cocktail fraction Sec #gamma from X from #Lambda"),"pl");
+            legendSecFrac->AddEntry(histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt,     Form("sec. #gamma from X from K^{0}_{s}"),"pl");
+            legendSecFrac->AddEntry(histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt,     Form("sec. #gamma from X from K^{0}_{l}"),"pl");
+            legendSecFrac->AddEntry(histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt,  Form("sec. #gamma from X from #Lambda"),"pl");
+            legendSecFrac->AddEntry(histoFracAllGammaToSecRest_Cocktail_Pt,             Form("sec. #gamma rest"),"pl");
         }
         legendSecFrac->Draw();
         
