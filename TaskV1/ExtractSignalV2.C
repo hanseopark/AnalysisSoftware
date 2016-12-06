@@ -3251,7 +3251,7 @@ Bool_t LoadSecondaryPionsFromExternalFile(){
 Bool_t LoadSecondaryPionsFromCocktailFile(TString cutSelection, TString optionEnergy){
    TString nameCocktailFile                    =Form("%s/%s/SecondaryPi0%s_%.2f_%s.root",cutSelection.Data(),optionEnergy.Data(),fPeriodFlag.Data(),fYMaxMeson/2,cutSelection.Data());
    fFileCocktailInput                  = new TFile(nameCocktailFile.Data());
-   if (fFileCocktailInput){
+   if (!fFileCocktailInput->IsZombie()){
       for (Int_t j = 0; j < 3; j++){
          cout << "found correct input: " << nameCocktailFile.Data() << endl;
          cout << "trying to find " << Form("Pi0_From_%s_Pt_OrBin", nameSecondariesCocktail[j].Data()) << endl;
@@ -3272,6 +3272,7 @@ Bool_t LoadSecondaryPionsFromCocktailFile(TString cutSelection, TString optionEn
       }
       return kTRUE;
    }
+   return kFALSE;
 }
 
 

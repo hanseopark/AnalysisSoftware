@@ -93,7 +93,7 @@ void SecondaryInterpolation(TString suffix ="eps"){
 
   Color_t colorTrigg      [10]                = {kBlack, kGray+1, kRed+2, kBlue+2, kGreen+3, kCyan+2, kViolet, kMagenta+2,  kRed-2, kBlue-2};
 
-  Double_t xSection8TeVV0AND      = 55.17*1e-3;   // from https://indico.cern.ch/event/572410/contributions/2316455/attachments/1344575/2027859/0928_vdMscan_v2.pdf
+  Double_t xSection8TeVV0AND      = 55.8*1e-3;   // from https://indico.cern.ch/event/572410/contributions/2316455/attachments/1344575/2027859/0928_vdMscan_v2.pdf
   Double_t xSection7TeVINEL       = 73.2*1e-3;
   Double_t xSection7TeV           = 62.22*1e-3;
   Double_t xSection7TeVV0AND      = 54.31*1e-3;
@@ -161,6 +161,32 @@ void SecondaryInterpolation(TString suffix ="eps"){
         hProton7TeVSys->Scale(xSection7TeVINEL/xSection7TeVV0AND);
   CalculateStatPlusSysErrors(hProton2760GeV,hProton2760GeVSys);
   CalculateStatPlusSysErrors(hProton7TeV,hProton7TeVSys);
+
+  TFile* input8TeV      = new TFile("/home/daniel/Desktop/spectra8TeV.root");
+  TList *list = (TList*)input8TeV->Get("output");
+  TH1D* hNegPionResult8TeV   = (TH1D*)list->FindObject("SpectraFinalPionMinus");
+  TH1D* hPosPionResult8TeV   = (TH1D*)list->FindObject("SpectraFinalPionPlus");
+  hPosPionResult8TeV->Scale(0.5);
+  hPosPionResult8TeV->Add(hNegPionResult8TeV,0.5);
+  ConvertYieldHisto(hPosPionResult8TeV,kTRUE,kTRUE,kFALSE,kFALSE);
+  TGraphErrors* graphChargedPion8TeVStat    = new TGraphErrors(hPosPionResult8TeV);
+  RemoveZerosAndPrint(graphChargedPion8TeVStat,"graphChargedPion8TeVStat");
+
+  TH1D* hNegKaonResult8TeV   = (TH1D*)list->FindObject("SpectraFinalKaonMinus");
+  TH1D* hPosKaonResult8TeV   = (TH1D*)list->FindObject("SpectraFinalKaonPlus");
+  hPosKaonResult8TeV->Scale(0.5);
+  hPosKaonResult8TeV->Add(hNegKaonResult8TeV,0.5);
+  ConvertYieldHisto(hPosKaonResult8TeV,kTRUE,kTRUE,kFALSE,kFALSE);
+  TGraphErrors* graphChargedKaon8TeVStat    = new TGraphErrors(hPosKaonResult8TeV);
+  RemoveZerosAndPrint(graphChargedKaon8TeVStat,"graphChargedKaon8TeVStat");
+
+  TH1D* hNegProtonResult8TeV   = (TH1D*)list->FindObject("SpectraFinalProtonMinus");
+  TH1D* hPosProtonResult8TeV   = (TH1D*)list->FindObject("SpectraFinalProtonPlus");
+  hPosProtonResult8TeV->Scale(0.5);
+  hPosProtonResult8TeV->Add(hNegProtonResult8TeV,0.5);
+  ConvertYieldHisto(hPosProtonResult8TeV,kTRUE,kTRUE,kFALSE,kFALSE);
+  TGraphErrors* graphChargedProton8TeVStat    = new TGraphErrors(hPosProtonResult8TeV);
+  RemoveZerosAndPrint(graphChargedProton8TeVStat,"graphChargedProton8TeVStat");
 
   //*************************************************************************************************
 
@@ -349,10 +375,10 @@ void SecondaryInterpolation(TString suffix ="eps"){
   PlotWithFit(canvasDummy2, *histo2DDummy2, graphLambda7TeV, 0x0, fitLambda7, "input_Lambda7_withFit", outputDir, suffix, colorTrigg);
   PlotWithFit(canvasDummy2, *histo2DDummy2, graphProton7TeV, 0x0, fitProton7, "input_Proton7_withFit", outputDir, suffix, colorTrigg);
 
-  PlotWithFit(canvasDummy2, *histo2DDummy, graphPion8TeV, 0x0, fitPion8, "input_Pion8_withFit", outputDir, suffix, colorTrigg);
-  PlotWithFit(canvasDummy2, *histo2DDummy2, graphKaon8TeV, 0x0, fitKaon8, "input_Kaon8_withFit", outputDir, suffix, colorTrigg);
-  PlotWithFit(canvasDummy2, *histo2DDummy2, graphLambda8TeV, 0x0, fitLambda8, "input_Lambda8_withFit", outputDir, suffix, colorTrigg);
-  PlotWithFit(canvasDummy2, *histo2DDummy2, graphProton8TeV, 0x0, fitProton8, "input_Proton8_withFit", outputDir, suffix, colorTrigg);
+  PlotWithFit(canvasDummy2, *histo2DDummy, graphPion8TeV, graphChargedPion8TeVStat, fitPion8, "compare_Pion8_withFit", outputDir, suffix, colorTrigg);
+  PlotWithFit(canvasDummy2, *histo2DDummy2, graphKaon8TeV, graphChargedKaon8TeVStat, fitKaon8, "compare_Kaon8_withFit", outputDir, suffix, colorTrigg);
+  PlotWithFit(canvasDummy2, *histo2DDummy2, graphLambda8TeV, 0x0, fitLambda8, "compare_Lambda8_withFit", outputDir, suffix, colorTrigg);
+  PlotWithFit(canvasDummy2, *histo2DDummy2, graphProton8TeV, graphChargedProton8TeVStat, fitProton8, "compare_Proton8_withFit", outputDir, suffix, colorTrigg);
 
   //**************************************************************************************************
   //**************************************************************************************************
@@ -688,7 +714,7 @@ void PlotWithFit(TCanvas* canvas, TH2F hist, TGraphErrors* graph, TGraphErrors* 
     graphRebin->Draw("pEsame");
   }
 
-  fit->SetLineColor(colorTrigg[1]);
+  fit->SetLineColor(colorTrigg[3]);
   fit->Draw("same");
 
   canvas->Update();

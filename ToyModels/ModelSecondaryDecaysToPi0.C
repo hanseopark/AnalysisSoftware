@@ -389,6 +389,16 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
               nParam                  = 3;
               maxOrSpec               = 12;
               fitPtPartInput          = FitObject("l","fitPtPartInput","K",NULL,fitRange[0],fitRange[1]);
+            } else if (energy.CompareTo("8TeV") == 0){
+              histoPartInputPt        = (TH1D*)inputFile->Get("histKaon8_8TeV");
+              fitRange[0]             = 2;
+              fitRange[1]             = 35;
+              paramGraph[0]           = histoPartInputPt->GetBinContent(1);
+              paramGraph[1]           = 6.5;
+              paramGraph[2]           = 0.5;
+              nParam                  = 3;
+              maxOrSpec               = 12;
+              fitPtPartInput          = FitObject("l","fitPtPartInput","K",NULL,fitRange[0],fitRange[1]);
             }
         } else {
             if (particle == 0){
@@ -516,6 +526,17 @@ void ModelSecondaryDecaysToPi0(     Int_t nEvts             = 1000000,
               fitRange[1]             = 20;
               paramGraph[0]           = histoPartInputPt->GetBinContent(1);
               paramGraph[1]           = 6.;
+              paramGraph[2]           = 0.5;
+              nParam                  = 3;
+              maxOrSpec               = 10;
+              fitPtPartInput          = FitObject("l","fitPtPartInput","Lambda",NULL,fitRange[0],fitRange[1]);
+              fitPtPartInputlow       = FitObject("l","fitPtPartInputLow","Lambda",NULL,fitRangeLow[0],fitRangeLow[1]);
+            } else if (energy.CompareTo("8TeV") == 0){
+              histoPartInputPt        = (TH1D*)inputFile->Get("histLambda8_8TeV");
+              fitRange[0]             = 2;
+              fitRange[1]             = 35;
+              paramGraph[0]           = histoPartInputPt->GetBinContent(1);
+              paramGraph[1]           = 6.5;
               paramGraph[2]           = 0.5;
               nParam                  = 3;
               maxOrSpec               = 10;

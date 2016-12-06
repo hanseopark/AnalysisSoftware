@@ -630,10 +630,15 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
       TH1D* fHistoChargedPionData   = NULL;
       TH1D* fHistoChargedKaonData   = NULL;
       if (optionEnergy.CompareTo("2.76TeV") == 0 || optionEnergy.CompareTo("7TeV") == 0 || optionEnergy.CompareTo("8TeV") == 0){
+        TString opt = "QNRMEI";
         fHistoChargedPionData       = (TH1D*)fileDataInput->Get("histoChargedPionSpecPubStat2760GeV");
         if( optionEnergy.CompareTo("7TeV") == 0 ) fHistoChargedPionData       = (TH1D*)fileDataInput->Get("histoChargedPionSpecPubStat7TeV");
-        if( optionEnergy.CompareTo("8TeV") == 0 ) fHistoChargedPionData       = (TH1D*)fileDataInput->Get(Form("histPion8_%s",optionEnergy.Data()));
-        TF1* fitChargedPions        = FitObject("l","fitChargedPions","Pi0",fHistoChargedPionData,0.1,20.,NULL,"QNRMEI");
+        if( optionEnergy.CompareTo("8TeV") == 0 ){
+          opt = "QNRME";
+          fHistoChargedPionData       = (TH1D*)fileDataInput->Get(Form("histPion8_%s",optionEnergy.Data()));
+        }
+
+        TF1* fitChargedPions        = FitObject("l","fitChargedPions","Pi0",fHistoChargedPionData,0.1,20.,NULL,opt);
         TSpline5* paramPions        = new TSpline5(fHistoChargedPionData);
         fHistoRatioDataPiDivDataFit = CalculateHistoRatioToSpline (fHistoChargedPionData, paramPions); 
         fHistoRatioMCPiDivDataFit   = CalculateHistoRatioToSpline (fHistoMCPiPtRebinned, paramPions); 
@@ -642,7 +647,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         fHistoChargedKaonData       = (TH1D*)fileDataInput->Get("histoChargedKaonSpecPubStat2760GeV");
         if( optionEnergy.CompareTo("7TeV") == 0 ) fHistoChargedKaonData       = (TH1D*)fileDataInput->Get("histoChargedKaonSpecPubStat7TeV");
         if( optionEnergy.CompareTo("8TeV") == 0 ) fHistoChargedKaonData       = (TH1D*)fileDataInput->Get(Form("histKaon8_%s",optionEnergy.Data()));
-        TF1* fitChargedKaons        =  FitObject("l","ptDistribution","K",fHistoChargedKaonData,0.1,20.,NULL,"QNRMEI");
+        TF1* fitChargedKaons        =  FitObject("l","ptDistribution","K",fHistoChargedKaonData,0.1,20.,NULL,opt);
         TSpline5* paramKaons        = new TSpline5(fHistoChargedKaonData);
         
         fHistoRatioDataKDivDataFit  = CalculateHistoRatioToSpline (fHistoChargedKaonData, paramKaons); 

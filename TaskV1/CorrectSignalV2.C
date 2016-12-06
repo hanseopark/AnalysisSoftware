@@ -531,7 +531,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 histoRatioSecEffDivTrueEff[k][j]    = (TH1D*)histoSecTrueEffi[k][j]->Clone(Form("ratioSecEffDivTrueEff%s%s",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                 histoRatioSecEffDivTrueEff[k][j]->Divide(histoRatioSecEffDivTrueEff[k][j],histoTrueEffiPt[k]);
                 // fit the K0s efficieny ratio with an exponential if cocktail or toyMC input is used
-                if(j==0 && (foundCocktailInput || foundToyMCInput))
+                if((j==0) && (foundCocktailInput || foundToyMCInput))
                    fithistoRatioSecEffDivTrueEff[k][j] = FitObject("h",Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"Pi0",histoRatioSecEffDivTrueEff[k][0],minPtMesonSec,maxPtMeson,NULL,"QNRME+");
 
                 TF1*  fitConst                      = new TF1("fitConst","[0]");
@@ -606,24 +606,59 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                                 histoSecTrueEffi[k][j]->Scale(0.1);
                         }    
                     }
-                    if ( mode == 0 || mode == 2 || mode == 4)
-                        modifiedSecTrueEffi[k][j]   = kTRUE;    
-                }
+                    if ( mode == 0 || mode == 2 || mode == 4){
+                        modifiedSecTrueEffi[k][j]   = kTRUE;
+                        cout << "adjusted sec effi, due to to little stat" << endl;
+                    }
+                } else if (optionEnergy.CompareTo("8TeV") == 0){
+                  if (mode == 4 ){
+                    modifiedSecTrueEffi[k][j]   = kTRUE;
+                    if (j == 0 ){
+                      histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                      cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
+                      histoSecTrueEffi[k][j] ->Multiply(fithistoRatioSecEffDivTrueEff[k][j]);
+                    } else if ( j == 1 ){
+                      histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                      cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
+                      histoSecTrueEffi[k][j]->Scale(0.5);
+                    } else if ( j == 2 ){
+                      histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                      cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
+                      histoSecTrueEffi[k][j]->Scale(1.0);
+                    } else if ( j == 3 ){
+                      histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                      cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
+                      histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                    }
+                  } else if (mode == 2 ) {
+                    modifiedSecTrueEffi[k][j]   = kTRUE;
+                    if (j == 0 ){
+                      histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                      cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
+                      histoSecTrueEffi[k][j] ->Multiply(fithistoRatioSecEffDivTrueEff[k][j]);
+                    } else if ( (j == 1 || j == 2) ){
+                      histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                      cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
+                      histoSecTrueEffi[k][j]->Scale(0.1);
+                    } else if ( j == 3 ){
+                      histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                      cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
+                      histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                    }
+                  }
+              }
 
-                // use the fits from the MC efficiency ratio to get the secondary efficiencies for the raw yield calculation
-                if (foundCocktailInput||foundToyMCInput){
-                   histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
-                   // for the K0s (j==0) use the exponential fit and for the other particles use the constant fit
-                   if(j==0){
-                     histoSecTrueEffi[k][j] ->Multiply(fithistoRatioSecEffDivTrueEff[k][j]);
-                   } else {
-                     histoSecTrueEffi[k][j] ->Scale(fitConst->GetParameter(0));
-                   }
-                   cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
-                }
-
-                if (modifiedSecTrueEffi[k][j])
-                    cout << "adjusted sec effi, due to to little stat" << endl;
+              // use the fits from the MC efficiency ratio to get the secondary efficiencies for the raw yield calculation
+              if (!modifiedSecTrueEffi[k][j] && (foundCocktailInput||foundToyMCInput)){
+                 histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                 // for the K0s (j==0) use the exponential fit and for the other particles use the constant fit
+                 if(j==0){
+                   histoSecTrueEffi[k][j] ->Multiply(fithistoRatioSecEffDivTrueEff[k][j]);
+                 } else {
+                   histoSecTrueEffi[k][j] ->Scale(fitConst->GetParameter(0));
+                 }
+                 cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
+              }
             }
         }
 
@@ -2861,7 +2896,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             } else if (mode == 2){
                 rangeSecRatio[1]        = 0.05;
             } else if (mode == 4){
-                rangeSecRatio[1]        = 0.05;
+                rangeSecRatio[1]        = 0.075;
             }    
             
             TH2F* histo2DDummySecHad2;
