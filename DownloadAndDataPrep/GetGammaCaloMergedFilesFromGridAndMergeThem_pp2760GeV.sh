@@ -62,10 +62,6 @@ if [ $1 = "fbock" ]; then
     BASEDIR=/mnt/additionalStorage/OutputLegoTrains/pp
     NSlashes=8
     NSlashes2=7
-elif [ $1 = "fbockGSI" ]; then 
-   BASEDIR=/hera/alice/fbock/Grid/OutputLegoTrains/pp
-elif [ $1 = "leardini" ]; then 
-   BASEDIR=/Users/lucy/
 elif [ $1 = "dmuhlheim" ]; then 
    BASEDIR=/home/daniel/Desktop/Grid
    NSlashes=9
@@ -349,13 +345,30 @@ fi
 
 TRAINDIR=Legotrain-vAN20161111_TMEffi
 # LHC11aData="1905";
-LHC11aData="1894";
-LHC15g1aMC="2653";
+# LHC11aData="1945";
+LHC11aData="1949";
+# LHC11aData="1894";
+# LHC15g1aMC="2653";
+# LHC15g1aMC="2669";
+# LHC15g1aMC="2670";
+# LHC15g1aMC="2689";
+LHC15g1aMC="2697";
 
 # LHC13gData="1907";
-LHC13gData="1895";
-LHC15a3aMC="2650"; 
-LHC15a3aplusMC="2651"; 
+# LHC13gData="1946";
+LHC13gData="1951";
+# LHC13gData="1895";
+# LHC15a3aMC="2650"; 
+# LHC15a3aplusMC="2651"; 
+# LHC15a3aMC="2673"; 
+# LHC15a3aplusMC="2675"; 
+# LHC15a3aMC="2674"; 
+# LHC15a3aplusMC="2676"; 
+# LHC15a3aMC="2687"; 
+# LHC15a3aplusMC="2690"; 
+LHC15a3aMC="2698"; 
+LHC15a3aplusMC="2699"; 
+
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR

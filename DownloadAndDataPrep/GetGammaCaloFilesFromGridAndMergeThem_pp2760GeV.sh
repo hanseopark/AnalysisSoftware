@@ -393,26 +393,40 @@ fi
 # LHC15g2MC="2594";
 
 TRAINDIR=Legotrain-vAN20161111_TMEffi
-# # LHC11aData="1905";
+# LHC11aData="1905";
+# LHC11aData="1945";
+LHC11aData="1949";
+# LHC11aData="1919";
 # LHC11aData="1894";
 # LHC15g1aMC="2652";
 # LHC15g1aMC="2669";
 # LHC15g1aMC="2670";
-LHC15g1aMC="2689";
+# LHC15g1aMC="2689";
+LHC15g1aMC="2697";
 # LHC12f1aMC="2592"; 
 # LHC12f1bMC="2593"; 
+# LHC12f1aMC="2665"; 
+# LHC12f1bMC="2666"; 
 # 
+# LHC13gData="1946";
+LHC13gData="1951";
+# LHC13gData="1922";
 # # LHC13gData="1907";
 # LHC13gData="1895";
 # LHC15a3aMC="2644"; 
 # LHC15a3aplusMC="2645"; 
 # LHC15g2MC="2594";
+# LHC15g2MC="2671";
 # LHC15a3aMC="2673"; 
 # LHC15a3aplusMC="2675"; 
 # LHC15a3aMC="2674"; 
 # LHC15a3aplusMC="2676"; 
-LHC15a3aMC="2687"; 
-LHC15a3aplusMC="2690"; 
+# LHC15a3aMC="2687"; 
+# LHC15a3aplusMC="2690"; 
+# LHC15a3aMC="2695"; 
+# LHC15a3aplusMC="2696"; 
+LHC15a3aMC="2698"; 
+LHC15a3aplusMC="2699"; 
 
 # TRAINDIR=Legotrain-vAN20161023_M02Var
 # LHC11aData="1884";
@@ -881,7 +895,6 @@ elif [ $2 = "LHC13g" ]; then
     fi
 
     rm $OUTPUTDIR/GammaCalo_MC_LHC15a3a_LHC15a3aplus_*.root
-    rm $OUTPUTDIR/GammaCalo_MC_LHC15a3aFinerPtHardBins_LHC15a3aplusFinerPtHardBins_*.root    
     ls $OUTPUTDIR/GammaCalo_MC_LHC15a3a_*.root > filesForMerging.txt
     filesForMerging=`cat filesForMerging.txt`    
     if [ $MERGEON == 1 ]; then    
@@ -896,6 +909,7 @@ elif [ $2 = "LHC13g" ]; then
     fi
     
     if [ $MERGEONBINS == 1 ]; then    
+        rm $OUTPUTDIR/GammaCalo_MC_LHC15a3aFinerPtHardBins_LHC15a3aplusFinerPtHardBins_*.root    
         filesForMerging=`cat filesForMerging.txt`
         for fileName in $filesForMerging; do
             binsForMerging=`cat binNumbersJJToMerge.txt`
