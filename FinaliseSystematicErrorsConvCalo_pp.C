@@ -137,7 +137,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
     // EMC1 trigger
-    Bool_t bsmoothEMC1Pi0[19]       = { 1, 1, 1, 1, 1,
+    Bool_t bsmoothEMC1Pi0[19]       = { 0, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
@@ -148,9 +148,9 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
     Bool_t bsmoothEMC1EtaToPi0[19]  = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
-                                        1, 1, 1, 0 };
+                                        1, 1, 1, 1 };
     // EMC7 trigger
-    Bool_t bsmoothEMC7Pi0[19]       = { 1, 1, 1, 1, 1,
+    Bool_t bsmoothEMC7Pi0[19]       = { 0, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
@@ -161,9 +161,9 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
     Bool_t bsmoothEMC7EtaToPi0[19]  = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 0,
                                         1, 1, 1, 1, 1,
-                                        1, 1, 1, 0 };
+                                        1, 1, 1, 1 };
     // EG2 trigger
-    Bool_t bsmoothEG2Pi0[19]        = { 1, 1, 1, 1, 1,
+    Bool_t bsmoothEG2Pi0[19]        = { 0, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
@@ -174,20 +174,20 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
     Bool_t bsmoothEG2EtaToPi0[19]   = { 0, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
-                                        1, 1, 1, 0 };
+                                        1, 1, 1, 1 };
     // EG1 trigger
-    Bool_t bsmoothEG1Pi0[19]        = { 1, 1, 1, 1, 1,
+    Bool_t bsmoothEG1Pi0[19]        = { 0, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
     Bool_t bsmoothEG1Eta[19]        = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
-                                        1, 1, 1, 0 };
+                                        1, 1, 1, 1 };
     Bool_t bsmoothEG1EtaToPi0[19]   = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
-                                        1, 1, 1, 0 };
+                                        1, 1, 1, 1 };
                           
     for (Int_t i = 0; i < numberCutStudies; i++){
         if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Pi0")==0){ 
@@ -362,8 +362,8 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         // ATTTENTION! you have to do this manually for each data set/trigger never trust the values mentioned here
         if (bsmooth[i]){
             // manual smoothing for Yield extraction errors - variation 0
-            if  (nameCutVariationSC[i].CompareTo("YieldExtraction") == 0){
-                if ( meson.CompareTo("Pi0") == 0){
+            if  (nameCutVariationSC[i].Contains("YieldExtraction") ){
+                if ( meson.CompareTo("Pi0") == 0 || ( i == 18 &&  meson.CompareTo("EtaToPi0") == 0) ){
                     //catch real outliers
                     if ( additionalNameOutput.CompareTo("EG1")==0 || additionalNameOutput.CompareTo("EG2")==0 || additionalNameOutput.CompareTo("EMC1")==0 || additionalNameOutput.CompareTo("EMC7")==0){
                         for (Int_t k = 0; k < nPtBins; k++){
