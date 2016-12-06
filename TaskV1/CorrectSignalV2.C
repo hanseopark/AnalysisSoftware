@@ -2765,8 +2765,6 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     canvasCorrectedYield->Update();
     canvasCorrectedYield->SaveAs(Form("%s/%s_%s_CorrectedYieldNormalEff_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
     
-    return;
-    
     // **************************************************************************************
     // ************** Plot corrected yield with differnt efficiencies & MC yield ************
     // **************************** Sanity check for MC *************************************
@@ -3073,93 +3071,6 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     //***************************  correction for yield in mt bins **********************************
     //***********************************************************************************************    
     Int_t nBinsPt                       = histoCorrectedYieldTrue[0]->GetNbinsX();
-    TH1D *histoCorrectedYieldTrueMt[6]  = {NULL, NULL, NULL, NULL, NULL, NULL};
-    TH1D *histoRatioTrueMt[6]           = {NULL, NULL, NULL, NULL, NULL, NULL};    
-
-    if (!kDalitz){
-        Double_t * binsMt = NULL;
-        binsMt=        new Double_t[nBinsPt+1];
-        binsMt[0] =       mesonMassExpect;
-
-
-        for(Int_t iPt=1;iPt<nBinsPt+1;iPt++){
-            binsMt[iPt]=pow((histoCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(iPt)*histoCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(iPt)+mesonMassExpect*mesonMassExpect),0.5);
-            cout << "recalculation pt to mt:    " << iPt<<"     pt      "<< histoCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(iPt)<< "      mt    " << binsMt[iPt]<< endl;
-        }
-
-        TH1F *deltaMt                   = new TH1F("deltaMt","",nBinsPt,binsMt);
-        for(Int_t iPt=1;iPt<nBinsPt+1;iPt++){
-            deltaMt->SetBinContent(iPt,binsMt[iPt]-binsMt[iPt-1]);
-            deltaMt->SetBinError(iPt,0);
-        }
-
-        for (Int_t k = 0; k < 6; k++){
-            histoCorrectedYieldTrueMt[k]    = new TH1D(Form("CorrectedYieldTrueEff%s_Mt",nameIntRange[k].Data()),"",nBinsPt,binsMt);
-            for(Int_t iPt=1;iPt<nBinsPt+1;iPt++){
-                histoCorrectedYieldTrueMt[k]->SetBinContent(iPt,histoCorrectedYieldTrue[k]->GetBinContent(iPt));
-                histoCorrectedYieldTrueMt[k]->SetBinError(iPt,histoCorrectedYieldTrue[k]->GetBinError(iPt));
-            }
-            histoRatioTrueMt[k] = (TH1D*) histoCorrectedYieldTrueMt[k]->Clone(); 
-            histoRatioTrueMt[k]->Divide(histoRatioTrueMt[k],histoCorrectedYieldTrueMt[0],1.,1.,"");
-        }    
-        
-        //*************************************************************************************************
-        //*********************** Plotting Corrected Yield in mt - bins normal eff ************************
-        //*************************************************************************************************
-        TCanvas* canvasCorrectedYieldMt = new TCanvas("canvasCorrectedYieldMt","",1350,1500);  // gives the page size
-        DrawGammaCanvasSettings( canvasCorrectedYieldMt, 0.13, 0.02, 0.02, 0.09); 
-        canvasCorrectedYieldMt->SetLogy(); 
-
-        TPad* padCorrectedYieldHistosMt = new TPad("padCorrectedYieldHistosMt", "", 0., 0.3, 1., 1.,-1, -1, -2);
-        DrawGammaPadSettings( padCorrectedYieldHistosMt, 0.12, 0.02, 0.02, 0.);
-        padCorrectedYieldHistosMt->Draw();
-
-        TPad* padCorrectedYieldRatiosMt = new TPad("padCorrectedYieldRatiosMt", "", 0., 0., 1., 0.3,-1, -1, -2);
-        DrawGammaPadSettings( padCorrectedYieldRatiosMt, 0.12, 0.02, 0., 0.18);
-        padCorrectedYieldRatiosMt->Draw();
-
-        padCorrectedYieldHistosMt->cd();
-        padCorrectedYieldHistosMt->SetLogy();  
-
-            TH2F* histo2DDummyMt;
-            histo2DDummyMt               = new TH2F("histo2DDummyMt","histo2DDummyMt",1000,0, histoCorrectedYieldTrueMt[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrueMt[0]->GetNbinsX()),
-                                                                                    1000, 0.01*FindSmallestBin1DHist(histoCorrectedYieldTrueMt[0],1e6 ), 3*histoCorrectedYieldTrueMt[0]->GetMaximum());
-            SetStyleHistoTH2ForGraphs(histo2DDummyMt, "#it{m}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{m}_{T}d#it{m}_{T}d#it{y}} (#it{c}/GeV)^{2}", 0.033,0.04, 0.033,0.04, 1,1.35);
-            histo2DDummyMt->DrawCopy();         
-            TLegend* legendYield_Mt = GetAndSetLegend2(0.15,0.03,0.66,0.03+6*0.03, 32,1); 
-            for (Int_t k = 0; k < 6; k++){
-                DrawGammaSetMarker(histoCorrectedYieldTrueMt[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
-                histoCorrectedYieldTrueMt[k]->DrawCopy("e1,same"); 
-                legendYield_Mt->AddEntry(histoCorrectedYieldTrueMt[k],nameIntRangePlot[k].Data());
-            }    
-            legendYield_Mt->Draw();    
-
-            PutProcessLabelAndEnergyOnPlot(0.62, 0.95, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
-        
-        padCorrectedYieldRatiosMt->cd();
-            Double_t rangeRatioMt[2]    = {0.8, 1.23};
-            if (kIsEta){
-                rangeRatioMt[0]         = 0.4;
-                rangeRatioMt[1]         = 1.63;
-            }    
-            TH2F* histo2DDummyRatioMt;
-            histo2DDummyRatioMt         = new TH2F("histo2DDummyRatioMt","histo2DDummyRatioMt",1000,0, histoCorrectedYieldTrueMt[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrueMt[0]->GetNbinsX()),
-                                                                                    1000, rangeRatioMt[0], rangeRatioMt[1]);
-            SetStyleHistoTH2ForGraphs(histo2DDummyRatioMt, "#it{m}_{T} (GeV/#it{c})", "#frac{standard}{modified}", 0.07,0.1, 0.07,0.1, 0.8,0.55, 510, 505);
-            histo2DDummyRatioMt->DrawCopy();         
-
-            for (Int_t k = 0; k < 6; k++){
-                DrawGammaSetMarker(histoRatioTrueMt[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
-                histoRatioTrueMt[k]->DrawCopy("e1,same"); 
-            }
-            DrawGammaLines(0., histoCorrectedYieldTrueMt[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrueMt[0]->GetNbinsX()),1., 1.,0.1);
-
-        canvasCorrectedYieldMt->Update();
-        canvasCorrectedYieldMt->SaveAs(Form("%s/%s_%s_CorrectedYield_Mtspectra_TrueEff_%s.%s", outputDir.Data(), nameMeson.Data() ,prefix2.Data() , fCutSelection.Data(), suffix.Data()));
-        delete canvasCorrectedYieldMt;
-        delete legendYield_Mt;
-            
-    }
     
     //*************************************************************************************************
     //******************** Output of the systematic Error due to Signal extraction ********************
@@ -3292,6 +3203,32 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TGraphAsymmErrors* SystErrGraphNeg = new TGraphAsymmErrors(nBinsPt+1, binsXCenter, relLargestDifferenceNeg, binsXWidth, binsXWidth, relLargestDifferenceNegError, relLargestDifferenceNegError);
     TGraphAsymmErrors* SystErrGraphPos = new TGraphAsymmErrors(nBinsPt+1, binsXCenter, relLargestDifferencePos, binsXWidth, binsXWidth, relLargestDifferencePosError, relLargestDifferencePosError);
 
+    // ************************************** Plot sys error as calculated ********************************************************************
+    TCanvas* canvasSysYieldExtraction = new TCanvas("canvasSysYieldExtraction","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasSysYieldExtraction, 0.065, 0.012, 0.035, 0.09);
+
+    TH2F* histo2DDummySys;
+    histo2DDummySys         = new TH2F("histo2DDummySys","histo2DDummySys",1000,0, histoTrueEffiPtUnmod[0]->GetXaxis()->GetBinUpEdge(histoTrueEffiPtUnmod[0]->GetNbinsX()),
+                                                                            1000, -20, 20);
+    SetStyleHistoTH2ForGraphs(histo2DDummySys, "#it{p}_{T} (GeV/#it{c})", "max Sys err %", 0.035,0.04, 0.035,0.04, 0.9,0.8, 510, 505);
+    histo2DDummySys->DrawCopy();         
+
+        DrawGammaSetMarkerTGraphAsym(SystErrGraphPos, 20, 1.,kBlue+1,kBlue+1);
+        SystErrGraphPos->Draw("pX0,csame");
+        DrawGammaSetMarkerTGraphAsym(SystErrGraphNeg, 21, 1.,kCyan+1,kCyan+1);
+        SystErrGraphNeg->Draw("pX0,csame");
+
+        TLegend* legendSys = GetAndSetLegend2(0.5,0.13,0.95,0.24, 0.035, 1, "", 42, 0.1);
+        legendSys->AddEntry(SystErrGraphPos,"pos max","p"); 
+        legendSys->AddEntry(SystErrGraphNeg,"neg max","p");            
+        legendSys->Draw();
+
+    canvasSysYieldExtraction->Update();
+    PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+
+    canvasSysYieldExtraction->SaveAs(Form("%s/%s_%s_SysYieldExtraction_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data())); 
+
+    
     Double_t relBGEstimate[100];
     Double_t relBGEstimateError[100];
     for (Int_t i = 1; i < nBinsPt +1; i++){
@@ -3334,9 +3271,6 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         for (Int_t k = 0; k < 6; k++){
             if (histoCorrectedYieldTrue[k])     histoCorrectedYieldTrue[k]->Write();
             if (histoCorrectedYieldNorm[k])     histoCorrectedYieldNorm[k]->Write();
-            if (!kDalitz){
-                if (histoCorrectedYieldTrueMt[k])   histoCorrectedYieldTrueMt[k]->Write();
-            }    
         }
         for (Int_t k = 0; k < 3; k++){
             if (histoTrueEffiPt[k])             histoTrueEffiPt[k]->Write(Form("TrueMesonEffi%sPt",nameIntRange[k].Data()));
