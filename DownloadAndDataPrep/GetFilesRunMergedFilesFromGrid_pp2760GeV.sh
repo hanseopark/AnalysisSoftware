@@ -2,7 +2,7 @@
 
 # variable: $1 = username, $2 = AOD/ESD, $3 = filename
 
-# usernames: fbock, leardini, passfeld, amarin, mwilde, pgonzales
+# usernames: fbock, leardini, passfeld, amarin, mwilde, pgonzales, hmurakam
 # specific location is added the same username will have a different output directory
 # i.e fbockGSI or leardiniALICESERV1, passfeldMAF
 
@@ -36,6 +36,8 @@ elif [ $1 = "pgonzales" ]; then
    BASEDIR=~/work/GridOutput 
 elif [ $1 = "pgonzalesGSI" ]; then        
    BASEDIR=/hera/alice/pgonzales/Grid/OutputLegoTrains/pp
+elif [ $1 = "hmurakam" ]; then        
+   BASEDIR=~/Hikari/Photon/Grid/OutputLegoTrains/pp
 fi
 
 mkdir -p $BASEDIR
