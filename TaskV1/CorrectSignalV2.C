@@ -906,10 +906,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }   
         }    
         for (Int_t k = 0; k < 6; k++){
+                histoYieldSecMeson[k][j]->Sumw2();
             // create secondary yield from MC fractions and reconstructed yield
             for (Int_t j = 0; j < 4; j++){
                 histoYieldSecMeson[k][j]            = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("SecYieldFrom%sMeson%s", nameSecMeson[j].Data(), nameIntRange[k].Data()));
-                histoYieldSecMeson[k][j]->Sumw2();
                 histoYieldSecMeson[k][j]->Multiply(histoYieldTrueSecFracMeson[k%3][j]);
                 histoYieldSecMeson[k][j]->Scale(scalingFacSec[j]);
 
@@ -2654,11 +2654,6 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         if (!optDalitz){
             cout << "correcting spectra in " << nameIntRange[k].Data() << endl;
             cout << k << "\t" << k << "\t" << m << endl;
-            if (k == 0 || k == 3){
-                for (Int_t iPt = 1; iPt < histoYieldSecMesonFromExternalInput[k][0]->GetNbinsX()+1; iPt++ ){
-                    cout << "pt \t" <<  histoYieldSecMesonFromExternalInput[k][0]->GetBinCenter(iPt) << "\t" << histoYieldSecMesonFromExternalInput[k][0]->GetBinContent(iPt) << endl;
-                }
-            }    
             CorrectYield(histoCorrectedYieldNorm[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k] ,histoEffiPt[m], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
             CorrectYield(histoCorrectedYieldTrue[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k], histoTrueEffiPt[m], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
             if (k < 3){
