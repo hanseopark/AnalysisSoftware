@@ -572,6 +572,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                                 histoSecTrueEffi[k][j]->Scale(0.75);   
                         }    
                     } else if (mode == 2 ) {
+                        cout << "entered here" << endl;
                         if (j == 0){
                             if ( fitConst->GetParameter(0) > 0.2 && fitConst->GetParameter(0) < 0.3)
                                 histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
@@ -919,11 +920,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             // create secondary yield from external input (Cocktail or Toy) and sec effi and acc
 
             for (Int_t j = 0; j < 3; j++){
-                if (histoSecAcceptance[j] && histoSecTrueEffi[k][j] && histoExternalInputSecPi0[j]){
+                if (histoSecAcceptance[j] && histoSecTrueEffi[k%3][j] && histoExternalInputSecPi0[j]){
                     histoYieldSecMesonFromExternalInput[k][j] = (TH1D*)histoExternalInputSecPi0[j]->Clone(Form("SecYieldFrom%sMeson%sFrom%s", nameSecMeson[j].Data(), nameIntRange[k].Data(),strExternalInputName.Data()));
                     histoYieldSecMesonFromExternalInput[k][j]->Sumw2();
                     histoYieldSecMesonFromExternalInput[k][j]->Multiply(histoSecAcceptance[j]);
-                    histoYieldSecMesonFromExternalInput[k][j]->Multiply(histoSecTrueEffi[k][j]);
+                    histoYieldSecMesonFromExternalInput[k][j]->Multiply(histoSecTrueEffi[k%3][j]);
 
                     histoRatioYieldSecMesonFromExtInput[k][j]    = (TH1D*)histoYieldSecMesonFromExternalInput[k][j]->Clone(Form("RatioSecYieldFrom%sMeson%sFrom%sToRaw", nameSecMeson[j].Data(), nameIntRange[k].Data(),strExternalInputName.Data()));
                     histoRatioYieldSecMesonFromExtInput[k][j]->Sumw2();
@@ -954,7 +955,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         if (haveSecUsed[j]) nSecCompUsed++;
     }    
             
-
+//     return;
 
     //*******************************************************************************************************
     //******************************* Read pileup correction file data **************************************
@@ -2653,6 +2654,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         if (!optDalitz){
             cout << "correcting spectra in " << nameIntRange[k].Data() << endl;
             cout << k << "\t" << k << "\t" << m << endl;
+            if (k == 0 || k == 3){
+                for (Int_t iPt = 1; iPt < histoYieldSecMesonFromExternalInput[k][0]->GetNbinsX()+1; iPt++ ){
+                    cout << "pt \t" <<  histoYieldSecMesonFromExternalInput[k][0]->GetBinCenter(iPt) << "\t" << histoYieldSecMesonFromExternalInput[k][0]->GetBinContent(iPt) << endl;
+                }
+            }    
             CorrectYield(histoCorrectedYieldNorm[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k] ,histoEffiPt[m], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
             CorrectYield(histoCorrectedYieldTrue[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k], histoTrueEffiPt[m], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
             if (k < 3){
@@ -2681,7 +2687,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         CompileFullCorrectionFactor( histoCompleteCorr, histoAcceptance, deltaRapid);    
     }
     
-    
+//     return;
     // **************************************************************************************
     // ************** Plot corrected yield with differnt yield extraction methods ***********
     // **************************************************************************************
@@ -2763,6 +2769,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         
     canvasCorrectedYield->Update();
     canvasCorrectedYield->SaveAs(Form("%s/%s_%s_CorrectedYieldNormalEff_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
+    
+    return;
     
     // **************************************************************************************
     // ************** Plot corrected yield with differnt efficiencies & MC yield ************
