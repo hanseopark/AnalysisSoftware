@@ -2779,8 +2779,9 @@ void FillHistosArrayMCSecAndCalcAcceptance( TH2D* mcSecInputInAccSourcePt, TH2D 
 //****************************************************************************
 void CreateRatioHistos(){
     for (Int_t i = 0; i < 10; i++){
+        fHistoTrueClustersBGPt[i]->Sumw2();
         fHistoRatioTrueClustersBGPt[i]           = (TH1D*)fHistoTrueClustersBGPt[i]->Clone(Form("RatioTrueClusBG_%s_Pt",labelsBG[i].Data()));
-        fHistoRatioTrueClustersBGPt[i]->Divide(fHistoRatioTrueClustersBGPt[i],fHistoYieldMesonM02,1.,1.,"");
+        fHistoRatioTrueClustersBGPt[i]->Divide(fHistoRatioTrueClustersBGPt[i],fHistoYieldMesonM02,1.,1.,"e");
     }
     
     fHistoRatioTrueYieldEtaM02                   = (TH1D*)fHistoTrueYieldEtaM02->Clone("RatioTrueYieldEtaM02");

@@ -831,8 +831,8 @@ Double_t ReturnRapidityStringAndDouble( TString cutSel,
     TString rapitdityCutNumberDummy     = cutSel(GetMesonRapidityCutPosition(),1);
     if (rapitdityCutNumberDummy.CompareTo("0") == 0){
         cout << "using rapidity of 0.9" << endl;
-        rapidityRangeDummy              = "0.9";
-        return 1.8;
+        rapidityRangeDummy              = "1.35";
+        return 1.35*2;
     } else if (rapitdityCutNumberDummy.CompareTo("1") == 0){
         cout << "using rapidity of 0.8" << endl;
         rapidityRangeDummy              = "0.8";
@@ -863,8 +863,8 @@ Double_t ReturnRapidityStringAndDouble( TString cutSel,
         return 0.6;
     } else if (rapitdityCutNumberDummy.CompareTo("8") == 0){
         cout << "using rapidity of 0.35" << endl;
-        rapidityRangeDummy              = "0.35";
-        return 0.7;
+        rapidityRangeDummy              = "0.25";
+        return 0.5;
     } else if (rapitdityCutNumberDummy.CompareTo("9") == 0){
         cout << "using rapidity of 0.4" << endl;
         rapidityRangeDummy              = "0.4";
@@ -891,8 +891,8 @@ Double_t ReturnDeltaEta(TString gammaCutNumber){
         cout << "using eta for gammas of 1.4" << endl;
         return  2.8;
     } else if (etaCutNumber.CompareTo("3")==0){
-        cout << "using eta for gammas of 0.8" << endl;
-        return 1.6;
+        cout << "using eta for gammas of 0.65" << endl;
+        return 0.65*2;
     } else if (etaCutNumber.CompareTo("4")==0){
         cout << "using eta for gammas of 0.75" << endl;
         return  1.5;
@@ -908,10 +908,14 @@ Double_t ReturnDeltaEta(TString gammaCutNumber){
     } else if (etaCutNumber.CompareTo("8")==0){
         cout << "using eta for gammas of 0.4" << endl;
         return 0.8;
+    } else if (etaCutNumber.CompareTo("9")==0){
+        cout << "using eta for gammas of 10" << endl;
+        return 20.;
     }	
     cout << "Eta Value NOT found!!! using eta for gammas of 0.9" << endl;
     return 1.8;
 }
+
 
 //************************************************************************************
 //******************* Analyse minimum eta cut for clusters ***************************
@@ -928,6 +932,12 @@ Double_t AnalyseClusterMinEtaCut (Int_t etaMin){
             return -2;
         case 4:
             return -0.13;
+        case 5:
+            return -0.7;
+        case 6:
+            return -0.3;
+        case 7:
+            return -0.4;
         default:
             return 0;   
     }        
@@ -941,13 +951,19 @@ Double_t AnalyseClusterMaxEtaCut (Int_t etaMin){
         case 0: 
             return 10.;
         case 1:
-            return 0.6687;
+            return 0.66465;
         case 2:
             return 0.5;
         case 3:
             return 2;
         case 4:
             return 0.13;
+        case 5:
+            return 0.7;
+        case 6:
+            return 0.3;
+        case 7:
+            return 0.4;
         default:
             return 0;   
     }        
@@ -992,6 +1008,22 @@ Double_t AnalyseClusterMaxPhiCut (Int_t etaMin){
             return 0;   
     }        
 }
+
+//************************************************************************************
+//****** Analyzes photon (cluster) eta cut, returns double for normalization *********
+//************************************************************************************
+TString AnalyseEtaCalo(TString caloCutNumber){
+    
+    TString etaMinCutNumber(caloCutNumber(GetClusterEtaMinCutPosition(caloCutNumber),1));
+    TString etaMaxCutNumber(caloCutNumber(GetClusterEtaMaxCutPosition(caloCutNumber),1));
+   
+    Float_t minEtaCut   = AnalyseClusterMinEtaCut(etaMinCutNumber.Atoi()); 
+    Float_t maxEtaCut   = AnalyseClusterMaxEtaCut(etaMaxCutNumber.Atoi());
+    
+    
+    return Form("%.2f < #gamma_{calo} < %.2f", minEtaCut, maxEtaCut);
+}
+
 
 //************************************************************************************
 //****** Analyzes photon (cluster) eta cut, returns double for normalization *********
@@ -3403,7 +3435,7 @@ TString AnalyseRapidityMesonCut(Int_t RapidityMesonCut){
     // Set Cut
     switch(RapidityMesonCut){
         case 0:  //
-            return "|y_{meson}| < 0.9";
+            return "|y_{meson}| < 1.35";
         case 1:  //
             return "|y_{meson}| < 0.8";
         case 2:  //
@@ -3413,13 +3445,13 @@ TString AnalyseRapidityMesonCut(Int_t RapidityMesonCut){
         case 4:  //
             return "|y_{meson}| < 0.5";
         case 5:  //
-            return "|y_{meson}| < 0.65";
+            return "|y_{meson}| < 0.85";
         case 6:  //
             return "|y_{meson}| < 0.75";
         case 7:  //
             return "|y_{meson}| < 0.3";
         case 8:  //
-            return "|y_{meson}| < 0.35";
+            return "|y_{meson}| < 0.25";
         case 9:  //
             return "|y_{meson}| < 0.4";        
         default:
@@ -3434,7 +3466,7 @@ TString AnalyseRapidityMesonCutpPb(Int_t RapidityMesonCut){
     // Set Cut
     switch(RapidityMesonCut){
         case 0:  //
-            return "|y_{meson}| < 0.9";
+            return "|y_{meson}| < 1.35";
         case 1:  //
             return "|y_{meson}| < 0.8";
         case 2:  //
@@ -3444,13 +3476,13 @@ TString AnalyseRapidityMesonCutpPb(Int_t RapidityMesonCut){
         case 4:  //
             return "|y_{meson}| < 0.5";
         case 5:  //
-            return "|y_{meson}| < 0.65";
+            return "|y_{meson}| < 0.85";
         case 6:  //
             return "|y_{meson}| < 0.75";
         case 7:  //
-            return "0.165 < y_{c.m.s, meson} < 0.765";
+            return "|y_{meson}| < 0.3";
         case 8:  //
-            return "|y_{meson}| < 0.35";
+            return "|y_{meson}| < 0.25";
         case 9:  //
             return "|y_{meson}| < 0.4";        
         default:

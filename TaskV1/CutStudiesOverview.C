@@ -263,6 +263,11 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         } else if (cutVariationName.Contains("V0Reader")){
             TString fV0Reader                                   = fGammaCutSelection(GetPhotonV0FinderCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalyseV0ReaderCut(fV0Reader.Atoi());      
+        } else if (cutVariationName.Contains("RapidityAndEtaClus")){
+            TString fRapidityCut                                = fMesonCutSelection(GetMesonRapidityCutPosition(),1);
+            TString rapidString                                 = AnalyseRapidityMesonCut(fRapidityCut.Atoi());      
+            TString etaCaloString                               = AnalyseEtaCalo(fClusterCutSelection);
+            cutStringsName[i]                                   = Form("%s, %s", etaCaloString.Data(), rapidString.Data() );
         } else if (cutVariationName.Contains("Eta")){
             TString fEtaCut                                     = fGammaCutSelection(GetPhotonEtaCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalyseEtaCut(fEtaCut.Atoi());

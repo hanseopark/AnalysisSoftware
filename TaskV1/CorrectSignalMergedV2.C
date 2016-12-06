@@ -434,6 +434,8 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
                                                     NULL, NULL, NULL, NULL, NULL};                                        
     TH1D* histoRatioTrueClustersBGPt[10]        = { NULL, NULL, NULL, NULL, NULL,
                                                     NULL, NULL, NULL, NULL, NULL};                                        
+    TH1D* histoTrueClusterBGSummedPt            = NULL;
+    TH1D* histoRatioTrueClusterBGSummedPt       = NULL;
     TH1D* histoTrueYieldPi0M02                  = NULL;
     TH1D* histoTrueYieldEtaM02                  = NULL;
     
@@ -472,6 +474,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             histoTrueClustersBGPt[i]->Sumw2();            
             histoRatioTrueClustersBGPt[i]           = (TH1D*)fileCorrections->Get(Form("RatioTrueClusBG_%s_Pt",labelsBG[i].Data()));
         }
+        histoTrueClusterBGSummedPt                  = (TH1D*)fileCorrections->Get("histoTrueYieldBGM02");
         
         histoTrueYieldEtaM02                        = (TH1D*)fileCorrections->Get("histoTrueYieldEtaM02");
         histoRatioTrueYieldEtaM02                   = (TH1D*)fileCorrections->Get("RatioTrueYieldEtaM02");
@@ -484,6 +487,25 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         histoTrueYieldElectronM02                   = (TH1D*)fileCorrections->Get("histoTrueYieldElectronM02");
         histoRatioTrueYieldElectronM02              = (TH1D*)fileCorrections->Get("RatioTrueYieldElectronM02");
         
+        cout << "pt: \t total yield \t real pi0 \t real eta \t gamma \t elec \t other BG \t sum identfied \t purity" << endl;
+        for (Int_t iPt = 1; iPt < histoTrueClusterBGSummedPt->GetNbinsX()+1; iPt++){
+            Double_t sum = histoTrueYieldPi0M02->GetBinContent(iPt) + histoTrueYieldEtaM02->GetBinContent(iPt) + histoTrueYieldGammaM02->GetBinContent(iPt) + histoTrueYieldElectronM02->GetBinContent(iPt) + histoTrueClusterBGSummedPt->GetBinContent(iPt);
+            Double_t purity = 0;
+            if (histoUnCorrectedYield->GetBinContent(iPt) > 0)
+                purity = histoTrueYieldPi0M02->GetBinContent(iPt)/histoUnCorrectedYield->GetBinContent(iPt);
+            cout << histoUnCorrectedYield->GetBinCenter(iPt) << "\t" << histoUnCorrectedYield->GetBinContent(iPt) << "\t" << histoTrueYieldPi0M02->GetBinContent(iPt) << "\t" << histoTrueYieldEtaM02->GetBinContent(iPt) << "\t" << histoTrueYieldGammaM02->GetBinContent(iPt) << "\t" << histoTrueYieldElectronM02->GetBinContent(iPt) << "\t" << histoTrueClusterBGSummedPt->GetBinContent(iPt) << "\t" << sum << "\t" << histoMesonPurityPt->GetBinContent(iPt) << "\t" << purity <<  endl; 
+        }    
+        
+        
+        for (Int_t iPt = 1; iPt < histoTrueClusterBGSummedPt->GetNbinsX()+1; iPt++){
+            cout << histoTrueClusterBGSummedPt->GetBinContent(iPt) << "\t" ;
+            Double_t sumBG = 0;
+            for (Int_t i = 0; i < 9; i++){
+                cout << histoTrueClustersBGPt[i]->GetBinContent(iPt) << "\t" ;
+                sumBG = sumBG+histoTrueClustersBGPt[i]->GetBinContent(iPt);
+            }    
+            cout << sumBG << endl;
+        } 
         histoTrueYieldPi0DCM02                      = (TH1D*)fileCorrections->Get("histoTrueYieldPi0DCM02");
         histoRatioPi0DCFrac                         = (TH1D*)fileCorrections->Get("RatioPi0DCFrac");
 

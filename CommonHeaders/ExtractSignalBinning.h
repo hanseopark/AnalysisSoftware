@@ -591,11 +591,12 @@ Double_t fBinsPi02760GeVPtTrig11a[26]           = { 0.0, 0.4, 0.6, 0.8, 1.0,
                                                     4.0, 5.0, 6.0, 7.0, 8.0,
                                                     9.0, 10.0, 12.0, 16.0, 20.0,
                                                     25};
-Double_t fBinsPi02760GeVPtTrigFullPCMEMC[25]    = { 0.0, 0.4, 0.6, 0.8, 1.0,
+Double_t fBinsPi02760GeVPtTrigFullPCMEMC[26]    = { 0.0, 0.4, 0.6, 0.8, 1.0,
                                                     1.2, 1.4, 1.6, 1.8, 2.0, 
                                                     2.2, 2.4, 2.6, 3.0, 3.5, 
                                                     4.0, 5.0, 6.0, 7.0, 8.0,
-                                                    9.0, 10.0, 12.0, 14.0, 16.0 };
+                                                    9.0, 10.0, 12.0, 14.0, 16.0, 
+                                                    20.0 };
 Double_t fBinsPi02760GeVPtMerged[34]            = { 0.0, 0.4, 0.6, 0.8, 1.0,
                                                     1.2, 1.4, 1.6, 1.8, 2.0, 
                                                     2.2, 2.4, 2.6, 3.0, 3.5, 
@@ -2893,7 +2894,7 @@ Int_t GetBinning(   Double_t*  binning,
     if (meson.CompareTo("Pi0")==0){
         if (energy.CompareTo("2.76TeV") == 0){
             if ( mode == 2 ){
-                maxNBins = 24;
+                maxNBins = 25;
                 for(Int_t i = 0; i < maxNBins+1; i++){
                     binning[i] = fBinsPi02760GeVPtTrigFullPCMEMC[i];
                 } 
