@@ -136,6 +136,19 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_2.76TeV_5_Aug_2013.dat"; 
         cout << "You have choosen 13TeV. Note that you will use 2.76TeV systematic errors." << endl;
         
+    } else if( optionEnergy.CompareTo("5TeV") == 0) {
+        minPtForFits=0.4;
+        minPtForFitsEta=0.4;
+
+        if (useSameBinningPi0Eta.CompareTo("")==0){         
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_2.76TeV_5_Aug_2013.dat";
+        } else {
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_2.76TeV_5_Aug_2013.dat"; 
+            minPtForFits=0.4;
+        }    
+        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_2.76TeV_5_Aug_2013.dat"; 
+        cout << "You have choosen 5TeV. Note that you will use 2.76TeV systematic errors." << endl;
+        
     } else if( optionEnergy.CompareTo("2.76TeV") == 0) {
         minPtForFits=0.4;
         minPtForFitsEta=0.6;
@@ -345,7 +358,7 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     
     
     TFile* fileMCGenerated =     new TFile("ExternalInput/PCM/MCGeneratedSpectra.root");
-    if(!optionEnergy.CompareTo("8TeV")||!optionEnergy.CompareTo("13TeV")){
+    if(!optionEnergy.CompareTo("8TeV")||!optionEnergy.CompareTo("13TeV")||!optionEnergy.CompareTo("5TeV")){
 		cout << "Caution!!! using 7TeV MC generated EtaToPi0 spectra" << endl;
 		use7TeVPytPho = kTRUE;
         histoEtaToPi0Phojet = (TH1D*)fileMCGenerated->Get(Form("EtaToPi0_generatedSpectrum_%s_Phojet","7TeV"));
