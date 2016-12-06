@@ -906,10 +906,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }   
         }    
         for (Int_t k = 0; k < 6; k++){
-                histoYieldSecMeson[k][j]->Sumw2();
             // create secondary yield from MC fractions and reconstructed yield
             for (Int_t j = 0; j < 4; j++){
                 histoYieldSecMeson[k][j]            = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("SecYieldFrom%sMeson%s", nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                histoYieldSecMeson[k][j]->Sumw2();
                 histoYieldSecMeson[k][j]->Multiply(histoYieldTrueSecFracMeson[k%3][j]);
                 histoYieldSecMeson[k][j]->Scale(scalingFacSec[j]);
 
