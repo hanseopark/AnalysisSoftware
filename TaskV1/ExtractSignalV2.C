@@ -2472,9 +2472,9 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             if ( fEnergyFlag.CompareTo("8TeV") == 0 ){
               TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
               if( trigger.CompareTo("81") == 0 || triggerSet == 2){
-                fMesonFitRange[0] = 0.05;
-                fMesonFitRange[1] = 0.27;
-                fBGFitRange[0] = 0.25;
+                fMesonFitRange[0] = 0.03;
+                fMesonFitRange[1] = 0.25;
+                fMesonLambdaTailRange[0] = 0.010;
                 fMesonWidthExpect = 0.010;
                 fMesonWidthRange[0] = 0.001;
                 fMesonWidthRange[1] = 0.050;
@@ -2667,9 +2667,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fMesonWidthRange[0]             = 0.010; 
             fMesonWidthRange[1]             = 0.050;
             fMesonLambdaTailRange[0]        = 0.018;
-            //if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonLambdaTailRange[0] = 0.005;}
             fMesonLambdaTailRange[1]        = 0.020;
-            //if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonLambdaTailRange[1] = 0.030;}
             fMesonIntDeltaRange[0]          = -0.060;
             fMesonIntDeltaRange[1]          = 0.055;
             fMesonIntDeltaRangeWide[0]      = -0.080; 
@@ -2687,17 +2685,11 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
               if( trigger.CompareTo("52") == 0 || triggerSet == 1 ){
                 fMesonFitRange[1]               = 0.75;
                 fMesonWidthExpect               = 0.025;
-//                fMesonLambdaTailRange[0]        = 0.02;
-//                fMesonLambdaTailRange[1]        = 0.02;
               }
               if( trigger.CompareTo("81") == 0 || triggerSet == 2 ){
                 fMesonWidthExpect               = 0.025;
                 fMesonFitRange[0]               = 0.35;
                 fMesonFitRange[1]               = 0.77;
-//                fMesonLambdaTailRange[0]        = 0.02;
-//                fMesonLambdaTailRange[1]        = 0.02;
-//                fBGFitRange[0]                  = 0.75;
-//                fBGFitRange[1]                  = 0.8;
                 fMesonIntDeltaRange[0]          *= 1.2;
                 fMesonIntDeltaRange[1]          *= 1.2;
                 fMesonIntDeltaRangeWide[0]      *= 1.2;
