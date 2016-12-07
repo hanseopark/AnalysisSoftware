@@ -413,3 +413,99 @@ void drawLatex(TString textString, Double_t xCoord, Double_t yCoord, Color_t txt
    TextLatex->SetTextSize(txtsize);
    TextLatex->Draw();
 }
+
+Double_t GetUpperLimit(Double_t mean, Double_t statErr, Double_t sysErr, Double_t confidenceLevel, Double_t& confidenceLevelReached, Double_t accuracy = 1e-9, Int_t maxNIterations = 1e8) {
+
+    // function to return upper limit on photon excess, using a Bayesian approach
+    // with the heaviside function used as prior (excluding R_gamma < 1)
+
+    // set range in R_gamma
+    Double_t    minRGamma           = 0.;
+    Double_t    maxRGamma           = 4.;
+
+    // conditional probability to measure R_gamma above R_gamma_true = 1
+    TF1         condProb("condProb", Form("[0]*(TMath::Gaus(x, [1], [2])*((x>=1)*1 + (x<1)*0))"),minRGamma, maxRGamma);
+    condProb.SetParameter(0, 1.);
+    condProb.SetParameter(1, mean);
+    condProb.SetParameter(2, TMath::Sqrt(statErr*statErr + sysErr*sysErr));
+
+    // normalize conditional probability to one
+    Int_t       np                  = 10000;
+    Double_t*   x                   = new Double_t[np];
+    Double_t*   w                   = new Double_t[np];
+    condProb.CalcGaussLegendreSamplingPoints(np,x,w,1e-15);
+    Double_t    norm                = condProb.IntegralFast(np,x,w,minRGamma,maxRGamma);
+    condProb.SetParameter(0, 1/norm);
+
+    // iteratively find upper limit (interval bisection)
+    Double_t    upperLimit          = (maxRGamma-1)/2;
+    Double_t    upperLimitPrev      = upperLimit;
+    Double_t    step                = 0.;
+    Int_t       nIterations         = 0;
+    while (((condProb.IntegralFast(np,x,w,1,upperLimit) < (confidenceLevel-accuracy)) || (condProb.IntegralFast(np,x,w,1,upperLimit) > (confidenceLevel+accuracy))) && nIterations < maxNIterations) {
+        
+        if (condProb.IntegralFast(np,x,w,1,upperLimit) > confidenceLevel)
+            step                    = - TMath::Abs(upperLimit-1)/2;
+        else
+            step                    = TMath::Abs(upperLimitPrev-upperLimit)/2;
+        upperLimitPrev              = upperLimit;
+        upperLimit                  = upperLimit + step;
+
+        //if ( !(nIterations%10) ) cout << "   condProb.IntegralFast(1, " << upperLimit << ") = " << condProb.IntegralFast(np,x,w,1, upperLimit) << endl;
+
+        nIterations++;
+    }
+
+    confidenceLevelReached          = condProb.IntegralFast(np,x,w,1, upperLimit);
+    return upperLimit;
+}
+
+TH1D* GetUpperLimitsHisto(TH1D* histo, TGraphAsymmErrors* sysErrGraph, Double_t confidenceLevel = 0.95, Double_t accuracy = 0.004, Int_t maxNIterations = 1e3) {
+
+    cout << endl;
+    cout << "*************************************************************" << endl;
+    cout << "**                                                         **" << endl;
+    cout << "**      STARTING UPPER LIMIT CALCULATION                   **" << endl;
+    cout << "**                                                         **" << endl;
+    cout << "*************************************************************" << endl;
+    cout << endl;
+
+    // upper limits histo
+    TH1D*       upperLimits             = (TH1D*)histo->Clone("upperLimits");
+
+    // get graph quantities
+    Int_t       nBinsGraph              = sysErrGraph->GetN();
+    Double_t*   xValueGraph             = sysErrGraph->GetX();
+    Double_t*   xErrorLowGraph          = sysErrGraph->GetEXlow();
+    Double_t*   xErrorHighGraph         = sysErrGraph->GetEXhigh();
+
+    // fill upper limits histo
+    for (Int_t i=1; i<histo->GetNbinsX()+1; i++) {
+        if (!histo->GetBinContent(i)) {
+            upperLimits->SetBinContent( i, 0);
+            upperLimits->SetBinError(   i, 0);
+        } else {
+            for (Int_t j=0; j<sysErrGraph->GetN(); j++) {
+                if (xValueGraph[j] == histo->GetBinCenter(i)) {
+
+                    Double_t reached    = 0.;
+
+                    upperLimits->SetBinContent( i, GetUpperLimit(histo->GetBinContent(i),histo->GetBinError(i),(xErrorLowGraph[j]+xErrorHighGraph[j])/2,confidenceLevel,reached,accuracy,maxNIterations));
+                    upperLimits->SetBinError(   i, 0);
+
+                    cout << "p_T = " << histo->GetBinCenter(i) << ": " << histo->GetBinContent(i) << " -> " << upperLimits->GetBinContent(i) << " at CL = " << reached << endl;
+                }
+            }
+        }
+    }
+
+    cout << endl;
+    cout << "*************************************************************" << endl;
+    cout << "**                                                         **" << endl;
+    cout << "**      DONE WITH UPPER LIMIT CALCULATION                  **" << endl;
+    cout << "**                                                         **" << endl;
+    cout << "*************************************************************" << endl;
+    cout << endl;
+    
+    return upperLimits;
+}
