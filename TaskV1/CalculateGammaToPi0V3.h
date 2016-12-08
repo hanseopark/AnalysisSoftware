@@ -509,3 +509,71 @@ TH1D* GetUpperLimitsHisto(TH1D* histo, TGraphAsymmErrors* sysErrGraph, Double_t 
     
     return upperLimits;
 }
+
+// functions to calculate uncertainty from fit (variation with parameter errors)
+TF1* VaryFunctionWithParameterError(TF1* func, Bool_t up = kTRUE) {
+    
+    Double_t    sign            = 1.;
+    if (!up)    sign            = -1.;
+    
+    Int_t nPar                  = func->GetNpar();
+    std::vector<Double_t> parameter(nPar);
+    std::vector<Double_t> parameterError(nPar);
+    std::vector<Double_t> parameterModified(nPar);
+    for (Int_t i=0; i<nPar; i++) {
+        parameter[i]            = func->GetParameter(i);
+        parameterError[i]       = func->GetParError(i);
+        parameterModified[i]    = parameter[i] + sign*parameterError[i];
+    }
+    
+    TF1* returnFunc             = (TF1*)func->Clone(Form("%s_up", func->GetName()));
+    for (Int_t i=0; i<nPar; i++) returnFunc->SetParameter(i, parameterModified[i]);
+    
+    return returnFunc;
+}
+
+TGraphAsymmErrors* ProduceTotalSystematicUncertaintyWithFit(TH1D* doubleRatio, TGraphAsymmErrors* systUncert, TF1* pi0Fit) {
+    
+    // syst. uncert. graph
+    Int_t       nPoints             = systUncert->GetN();
+    Double_t*   xVal                = systUncert->GetX();
+    Double_t*   xErrUp              = systUncert->GetEXhigh();
+    Double_t*   xErrDown            = systUncert->GetEXlow();
+    Double_t*   yVal                = systUncert->GetY();
+    Double_t*   yErrUp              = systUncert->GetEYhigh();
+    Double_t*   yErrDown            = systUncert->GetEYlow();
+
+    // declare total syst. uncert.
+    Double_t*   yErrUpTot           = new Double_t[nPoints];
+    Double_t*   yErrDownTot         = new Double_t[nPoints];
+    
+    // vary fit using parameter errors
+    TF1*        pi0FitUp            = VaryFunctionWithParameterError(pi0Fit);
+    TF1*        pi0FitDown          = VaryFunctionWithParameterError(pi0Fit, kFALSE);
+    
+    // calculate total syst. uncert.
+    Double_t    totSystUncertUp     = 0.;
+    Double_t    totSystUncertDown   = 0.;
+    Double_t    systUncertFit       = 0.;
+    for (Int_t i=0; i<nPoints; i++) {
+        for (Int_t j=1; j<doubleRatio->GetNbinsX()+1; j++) {
+            
+            if (doubleRatio->GetBinCenter(j)!=xVal[i]) continue;
+            
+            systUncertFit           = TMath::Abs(pi0FitUp->Eval(xVal[i])-pi0FitDown->Eval(xVal[i])) / 2;
+            systUncertFit           = systUncertFit / pi0Fit->Eval(xVal[i]);
+            systUncertFit           = systUncertFit * doubleRatio->GetBinContent(j);
+            
+            totSystUncertUp         = TMath::Sqrt( yErrUp[j]*yErrUp[j] + systUncertFit*systUncertFit );
+            totSystUncertDown       = TMath::Sqrt( yErrDown[j]*yErrDown[j] + systUncertFit*systUncertFit );
+            
+            yErrUpTot[i]            = totSystUncertUp;
+            yErrDownTot[i]          = totSystUncertDown;
+        }
+    }
+    
+    TGraphAsymmErrors* systUncertTotal = new TGraphAsymmErrors(nPoints,xVal,yVal,xErrDown,xErrUp,yErrDownTot,yErrUpTot)
+    systUncertTotal->SetName(Form("%s_total", systUncert->GetName()));
+    return systUncertTotal;
+}
+
