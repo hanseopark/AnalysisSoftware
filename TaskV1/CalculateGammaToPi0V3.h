@@ -493,7 +493,7 @@ TH1D* GetUpperLimitsHisto(TH1D* histo, TGraphAsymmErrors* sysErrGraph, Double_t 
                     upperLimits->SetBinContent( i, GetUpperLimit(histo->GetBinContent(i),histo->GetBinError(i),(xErrorLowGraph[j]+xErrorHighGraph[j])/2,confidenceLevel,reached,accuracy,maxNIterations));
                     upperLimits->SetBinError(   i, 0);
 
-                    cout << "p_T = " << histo->GetBinCenter(i) << ": " << histo->GetBinContent(i) << " -> " << upperLimits->GetBinContent(i) << " at CL = " << reached << endl;
+                    cout << "p_T = " << histo->GetBinCenter(i) << ":\t" << histo->GetBinContent(i) << " ( +/- " << TMath::Sqrt(histo->GetBinError(i)*histo->GetBinError(i) + (xErrorLowGraph[j]+xErrorHighGraph[j])/2*(xErrorLowGraph[j]+xErrorHighGraph[j])/2) << " )\t->\t" << upperLimits->GetBinContent(i) << "\tat CL = " << reached << endl;
                 }
             }
         }
