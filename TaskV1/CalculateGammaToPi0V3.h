@@ -261,6 +261,8 @@ TH1D *histoDoubleRatioConversionHighFitPurity               = NULL;
 TH1D *histoDoubleRatioFitPi0YieldPurityWide                 = NULL;
 TH1D *histoDoubleRatioFitPi0YieldPurityNarrow               = NULL;
 
+TH1D *histoDoubleRatioUpperLimits                           = NULL;
+
 TH1D *histoDoubleRatioCombinedPurity                        = NULL;
 TH1D *histoMCDoubleRatioSum                                 = NULL;
 TH1D *histoMCesdDoubleRatioSum                              = NULL;
@@ -428,7 +430,7 @@ Double_t GetUpperLimit(Double_t mean, Double_t statErr, Double_t sysErr, Double_
     condProb.SetParameter(0, 1.);
     condProb.SetParameter(1, mean);
     condProb.SetParameter(2, TMath::Sqrt(statErr*statErr + sysErr*sysErr));
-
+    
     // normalize conditional probability to one
     Int_t       np                  = 10000;
     Double_t*   x                   = new Double_t[np];
@@ -476,8 +478,8 @@ TH1D* GetUpperLimitsHisto(TH1D* histo, TGraphAsymmErrors* sysErrGraph, Double_t 
     // get graph quantities
     Int_t       nBinsGraph              = sysErrGraph->GetN();
     Double_t*   xValueGraph             = sysErrGraph->GetX();
-    Double_t*   xErrorLowGraph          = sysErrGraph->GetEXlow();
-    Double_t*   xErrorHighGraph         = sysErrGraph->GetEXhigh();
+    Double_t*   yErrorLowGraph          = sysErrGraph->GetEYlow();
+    Double_t*   yErrorHighGraph         = sysErrGraph->GetEYhigh();
 
     // fill upper limits histo
     for (Int_t i=1; i<histo->GetNbinsX()+1; i++) {
@@ -490,10 +492,10 @@ TH1D* GetUpperLimitsHisto(TH1D* histo, TGraphAsymmErrors* sysErrGraph, Double_t 
 
                     Double_t reached    = 0.;
 
-                    upperLimits->SetBinContent( i, GetUpperLimit(histo->GetBinContent(i),histo->GetBinError(i),(xErrorLowGraph[j]+xErrorHighGraph[j])/2,confidenceLevel,reached,accuracy,maxNIterations));
+                    upperLimits->SetBinContent( i, GetUpperLimit(histo->GetBinContent(i),histo->GetBinError(i),(yErrorLowGraph[j]+yErrorHighGraph[j])/2,confidenceLevel,reached,accuracy,maxNIterations));
                     upperLimits->SetBinError(   i, 0);
 
-                    cout << "p_T = " << histo->GetBinCenter(i) << ":\t" << histo->GetBinContent(i) << " ( +/- " << TMath::Sqrt(histo->GetBinError(i)*histo->GetBinError(i) + (xErrorLowGraph[j]+xErrorHighGraph[j])/2*(xErrorLowGraph[j]+xErrorHighGraph[j])/2) << " )\t->\t" << upperLimits->GetBinContent(i) << "\tat CL = " << reached << endl;
+                    cout << "p_T = " << histo->GetBinCenter(i) << ":\t" << histo->GetBinContent(i) << " ( +/- " << TMath::Sqrt(histo->GetBinError(i)*histo->GetBinError(i) + (yErrorLowGraph[j]+yErrorHighGraph[j])/2*(yErrorLowGraph[j]+yErrorHighGraph[j])/2) << " )\t->\t" << upperLimits->GetBinContent(i) << "\tat CL = " << reached*100 << "%" << endl;
                 }
             }
         }
@@ -572,7 +574,7 @@ TGraphAsymmErrors* ProduceTotalSystematicUncertaintyWithFit(TH1D* doubleRatio, T
         }
     }
     
-    TGraphAsymmErrors* systUncertTotal = new TGraphAsymmErrors(nPoints,xVal,yVal,xErrDown,xErrUp,yErrDownTot,yErrUpTot)
+    TGraphAsymmErrors* systUncertTotal = new TGraphAsymmErrors(nPoints,xVal,yVal,xErrDown,xErrUp,yErrDownTot,yErrUpTot);
     systUncertTotal->SetName(Form("%s_total", systUncert->GetName()));
     return systUncertTotal;
 }

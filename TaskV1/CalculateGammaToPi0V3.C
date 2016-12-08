@@ -984,7 +984,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
            histoDirectPhotonSpectrum                = (TH1D*)histoGammaSpecCorrPurity->Clone("histoDirectPhotonSpectrum");
            histoThermalPhotonSpectrum               = (TH1D*)histoGammaSpecCorrPurity->Clone("histoThermalPhotonSpectrum");
            histoPromptPhotonSpectrum                = (TH1D*)histoGammaSpecCorrPurity->Clone("histoPromptPhotonSpectrum");
-
+           
            Bool_t doUpperLimits                     = kTRUE;
            if (!doUpperLimits) {
                for(Int_t i = 1; i < histoDirectPhotonSpectrum->GetNbinsX(); i++){
@@ -1022,10 +1022,17 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                    }
                }
            } else {
-               TH1D* upperLimitsDoubleRatio         = GetUpperLimitsHisto(histoDoubleRatioConversionTrueEffPurity,  graphDoubleRatioSysErr);
-               //TH1D* upperLimitsDoubleRatioFit      = GetUpperLimitsHisto(histoDoubleRatioFitPi0YieldPurity,        graphDoubleRatioFitSysErr);
-               histoDirectPhotonSpectrum->Multiply(upperLimitsDoubleRatio);
-           }
+               histoDoubleRatioUpperLimits          = GetUpperLimitsHisto(histoDoubleRatioConversionTrueEffPurity,  graphDoubleRatioSysErr, 0.95, 0.004, 1e2);
+               Double_t binContent                  = -1;
+               Double_t binError                    = -1;
+               for (Int_t i=1; i<histoDirectPhotonSpectrum->GetNbinsX()+1; i++) {
+                   if (!histoDirectPhotonSpectrum->GetBinContent(i)) continue;
+                   binContent                       = histoDirectPhotonSpectrum->GetBinContent(i) * (1 - 1/histoDoubleRatioUpperLimits->GetBinContent(i));
+                   binError                         = 0.;
+                   histoDirectPhotonSpectrum->SetBinContent(i, binContent);
+                   histoDirectPhotonSpectrum->SetBinError(  i, binError);
+               }
+            }
 
            
            // plot direct photon spectrum
@@ -1037,30 +1044,23 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
            Double_t        minPt                = 0.2;
            if (mode==4)    minPt                = 1.5;
            
-//           histoGammaSpecCorrPurity->GetXaxis()->SetLabelOffset(-1e-2);
-//           DrawAutoGammaMesonHistos( histoGammaSpecCorrPurity,
-//                                    "", "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c})",
-//                                    kTRUE, 20.,5e-10, kFALSE,
-//                                    kFALSE, -0.004, 0.020,
-//                                    kTRUE, minPt,(histoGammaSpecCorrPurity->GetXaxis())->GetBinUpEdge(histoGammaSpecCorrPurity->GetNbinsX()),62,0.04,62,0.03,0.7,1.7);
-//           DrawGammaSetMarker(histoGammaSpecCorrPurity, 20, 1.5,kBlue+2,kBlue+2);
-//           
-//           histoGammaSpecCorrPurity->DrawCopy("e1,same");
-//           if (graphGammaYieldSysErr) {
-//               DrawGammaSetMarkerTGraphAsym(graphGammaYieldSysErr,26,0,kBlue-8,kBlue-8,2,kTRUE);
-//               graphGammaYieldSysErr->Draw("p,2,same");
-//           }
-//           
-//           PlotLatexLegend(0.66, 0.78, 0.045,collisionSystem,detectionProcess,2);
-//           drawLatex("#gamma's from ALICE Data", 1.7, 0.000000001, kBlack,0.035);
-//           
-//           TLegend* leg_GammaSpectra;
-//           leg_GammaSpectra                            = GetAndSetLegend(0.2,0.2,2);
-//           leg_GammaSpectra->AddEntry(histoGammaSpecCorrPurity,"Inclusive photons");
-//           if(graphGammaYieldSysErr)
-//               leg_GammaSpectra->AddEntry(graphGammaYieldSysErr,"Systematic uncertainty");
-//           
-//           leg_GammaSpectra->Draw();
+           histoDirectPhotonSpectrum->GetXaxis()->SetLabelOffset(-1e-2);
+           DrawAutoGammaMesonHistos( histoDirectPhotonSpectrum,
+                                    "", "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c})",
+                                    kTRUE, 20.,5e-10, kFALSE,
+                                    kFALSE, -0.004, 0.020,
+                                    kTRUE, minPt,(histoDirectPhotonSpectrum->GetXaxis())->GetBinUpEdge(histoDirectPhotonSpectrum->GetNbinsX()),62,0.04,62,0.03,0.7,1.7);
+           DrawGammaSetMarker(histoDirectPhotonSpectrum, 20, 1.5,kBlue+2,kBlue+2);
+           
+           histoDirectPhotonSpectrum->DrawCopy("e1,same");
+           
+           PlotLatexLegend(0.66, 0.78, 0.045,collisionSystem,detectionProcess,2);
+           drawLatex("#gamma's from ALICE Data", 1.7, 0.000000001, kBlack,0.035);
+           
+           TLegend* leg_GammaSpectra;
+           leg_GammaSpectra                            = GetAndSetLegend(0.2,0.2,2);
+           leg_GammaSpectra->AddEntry(histoDirectPhotonSpectrum,"direct photon upper limits", "p");           
+           leg_GammaSpectra->Draw();
            
            CanvasDirGamma->Print(Form("%s/%s_DirectPhotonSPectrum_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
         }
@@ -1088,14 +1088,15 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         histoGammaSpecCorrPurity->Write(    "histoGammaSpecCorrPurity",             TObject::kOverwrite);
 
    // Double ratio
-        if(histoDoubleRatioFitPi0YieldPurity)           histoDoubleRatioFitPi0YieldPurity->Write(           histoDoubleRatioFitPi0YieldPurity->GetName(),           TObject::kOverwrite);
-        if(histoDoubleRatioConversionHighFitPurity)     histoDoubleRatioConversionHighFitPurity->Write(     histoDoubleRatioConversionHighFitPurity->GetName(),     TObject::kOverwrite);
-        if(histoDoubleRatioConversionLowFitPurity)      histoDoubleRatioConversionLowFitPurity->Write(      histoDoubleRatioConversionLowFitPurity->GetName(),      TObject::kOverwrite);
-        if(histoDoubleRatioFitPi0YieldPurityModA)       histoDoubleRatioFitPi0YieldPurityModA->Write(       histoDoubleRatioFitPi0YieldPurityModA->GetName(),       TObject::kOverwrite);
-        if(histoDoubleRatioFitPi0YieldPurityModB)       histoDoubleRatioFitPi0YieldPurityModB->Write(       histoDoubleRatioFitPi0YieldPurityModB->GetName(),       TObject::kOverwrite);
-        if(histoDoubleRatioConversionTrueEffPurity)     histoDoubleRatioConversionTrueEffPurity->Write(     histoDoubleRatioConversionTrueEffPurity->GetName(),     TObject::kOverwrite);
-        if(histoDoubleRatioConversionTrueEffPurityModA) histoDoubleRatioConversionTrueEffPurityModA->Write( histoDoubleRatioConversionTrueEffPurityModA->GetName(), TObject::kOverwrite);
-        if(histoDoubleRatioConversionTrueEffPurityModB) histoDoubleRatioConversionTrueEffPurityModB->Write( histoDoubleRatioConversionTrueEffPurityModB->GetName(), TObject::kOverwrite);
+        if(histoDoubleRatioFitPi0YieldPurity)           histoDoubleRatioFitPi0YieldPurity->Write(           histoDoubleRatioFitPi0YieldPurity->GetName(),               TObject::kOverwrite);
+        if(histoDoubleRatioConversionHighFitPurity)     histoDoubleRatioConversionHighFitPurity->Write(     histoDoubleRatioConversionHighFitPurity->GetName(),         TObject::kOverwrite);
+        if(histoDoubleRatioConversionLowFitPurity)      histoDoubleRatioConversionLowFitPurity->Write(      histoDoubleRatioConversionLowFitPurity->GetName(),          TObject::kOverwrite);
+        if(histoDoubleRatioFitPi0YieldPurityModA)       histoDoubleRatioFitPi0YieldPurityModA->Write(       histoDoubleRatioFitPi0YieldPurityModA->GetName(),           TObject::kOverwrite);
+        if(histoDoubleRatioFitPi0YieldPurityModB)       histoDoubleRatioFitPi0YieldPurityModB->Write(       histoDoubleRatioFitPi0YieldPurityModB->GetName(),           TObject::kOverwrite);
+        if(histoDoubleRatioConversionTrueEffPurity)     histoDoubleRatioConversionTrueEffPurity->Write(     histoDoubleRatioConversionTrueEffPurity->GetName(),         TObject::kOverwrite);
+        if(histoDoubleRatioConversionTrueEffPurityModA) histoDoubleRatioConversionTrueEffPurityModA->Write( histoDoubleRatioConversionTrueEffPurityModA->GetName(),     TObject::kOverwrite);
+        if(histoDoubleRatioConversionTrueEffPurityModB) histoDoubleRatioConversionTrueEffPurityModB->Write( histoDoubleRatioConversionTrueEffPurityModB->GetName(),     TObject::kOverwrite);
+        if(histoDoubleRatioUpperLimits)                 histoDoubleRatioUpperLimits->Write(Form("%s_UpperLimits", histoDoubleRatioConversionTrueEffPurity->GetName()),  TObject::kOverwrite);
 
    // systematics
         if (graphGammaYieldSysErr)      graphGammaYieldSysErr->Write(       Form("%s_SystErr", histoGammaSpecCorrPurity->GetName()),                TObject::kOverwrite);
