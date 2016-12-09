@@ -59,7 +59,8 @@ void ExtractGammaSignalV2(      TString meson               = "",
                                 Int_t numberOfBins          = 30,
                                 Bool_t addSig               = 0,
                                 Int_t mode                  = 0,
-                                Int_t nPileupMethod         = 0
+                                Int_t nPileupMethod         = 0,
+                                TString purityFileName      = ""
                             ) {
 
     //********************************* Catch modes which are not supported ****************************
@@ -78,7 +79,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
         fEnableCalo = 1;
     } else if ( mode == 0){
         fEnablePCM  = 1;
-    }    
+    }
     
     //************************************* Set general style settings *********************************
     StyleSettingsThesis();
@@ -99,7 +100,6 @@ void ExtractGammaSignalV2(      TString meson               = "",
     fMode                                                                       = mode;
     nPileupMethodUsed                                                           = nPileupMethod;
     cout << "Pictures are saved as " << suffix.Data() << endl;
-    
     
     //************************************ Separate cutstrings ***********************************
     fCutSelection                                                               = cutSelection;
@@ -124,6 +124,38 @@ void ExtractGammaSignalV2(      TString meson               = "",
     // set global variables for rap and BG number
     TString rapidityRange;
     fYMaxMeson                                                                  = ReturnRapidityStringAndDouble(fMesonCutSelectionRead, rapidityRange);
+
+    //***************************** Check for data driven purity ****************************************
+    TString namePurityHistogram                                                 = "";
+    TFile*  purityFile                                                          = NULL;
+    if (purityFileName.CompareTo("")) {
+        
+        // intercept dEdx cut
+        TString dEdxCut( fGammaCutNumber(9,1) );
+        if (dEdxCut.Atoi() != 0) {
+            cout << "Data driven purity with kappa cut requested but usual dEdx cut given, returning." << endl;
+            return;
+        }
+
+        // load purity file
+        cout << "loading data driven purity file: " << purityFileName << endl;
+        purityFile                                                              = new TFile(purityFileName.Data());
+        
+        // check for kappa cut and load corresponding purity histo
+        TString kappaCut( fGammaCutNumber(8,1) );
+        if (kappaCut.Atoi() == 3) {
+            namePurityHistogram                                                 = "hSignalPurity1";
+        } else if (kappaCut.Atoi() == 5) {
+            namePurityHistogram                                                 = "hSignalPurity2";
+        } else if (kappaCut.Atoi() == 6) {
+            namePurityHistogram                                                 = "hSignalPurity3";
+        } else {
+            cout << "Kappa cut not recognized, not implemented yet." << endl;
+            return;
+        }
+        fHistoPurityKappaTemplates                                              = (TH1D*)purityFile->Get(namePurityHistogram.Data());   // replaces "GammaTruePurity_Pt" in MC output, will be used
+        if (fHistoPurityKappaTemplates) fUseDataDrivenPurity                     = kTRUE;                                               // for bin-by-bin correction in CorrectGammaV2
+    }
     
     //***************************** Load binning for spectrum *******************************************
     Initialize(fMeson, fEnergyFlag, numberOfBins, fMode, addSig);
@@ -2376,7 +2408,11 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3,Bool_t PileUpCorrecti
         // write correction histograms
         // ---> Purity
         if (fHistoGammaMCPurity)                            fHistoGammaMCPurity->Write("GammaPurity_Pt",TObject::kOverwrite);
-        if (fHistoGammaMCTruePurity)                        fHistoGammaMCTruePurity->Write("GammaTruePurity_Pt",TObject::kOverwrite);
+        if (!fUseDataDrivenPurity) {
+            if (fHistoGammaMCTruePurity)                    fHistoGammaMCTruePurity->Write("GammaTruePurity_Pt",TObject::kOverwrite);
+        } else {
+            if (fHistoPurityKappaTemplates)                 fHistoPurityKappaTemplates->Write("GammaTruePurity_Pt",TObject::kOverwrite);
+        }
         if (fHistoGammaMCTruePurityOrBin)                   fHistoGammaMCTruePurityOrBin->Write("GammaTruePurity_OriginalBinning_Pt",TObject::kOverwrite);
         if (fHistoGammaCaloMCPurity)                        fHistoGammaCaloMCPurity->Write("GammaCaloPurity_Pt",TObject::kOverwrite);
         if (fHistoGammaCaloMCTruePurity)                    fHistoGammaCaloMCTruePurity->Write("GammaCaloTruePurity_Pt",TObject::kOverwrite);

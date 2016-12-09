@@ -7,6 +7,7 @@ Double_t    fNEvnt                                                  = 0;
 Bool_t      fEnablePCM                                              = 0;
 Bool_t      fEnableCalo                                             = 0;
 Bool_t      fUseCocktail                                            = 0;
+Bool_t      fUseDataDrivenPurity                                    = 0;
 
 TString     fDate                                                   = "";
 TString     fDirectPhoton                                           = "";
@@ -68,6 +69,8 @@ TH1D*       fDeltaPtDummy                                           = NULL;
 //*****************************************************************************************************
 //******************** Histograms for conversion analysis *********************************************
 //*****************************************************************************************************
+TH1D*       fHistoPurityKappaTemplates                                                          = NULL;
+
 TH1D*       fHistoGammaConvPt                                                                   = NULL;
 TH1D*       fHistoGammaConvPtOrBin                                                              = NULL;
 TH2D*       f2DHistoSecondaryGammaMCConvPt                                                      = NULL;
