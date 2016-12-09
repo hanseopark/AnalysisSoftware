@@ -49,6 +49,7 @@ Double_t constrainHigh = 1*1.3;
 
 TString SigmaStarForm = "#Kappa = #frac{|#kappa^{+}|+|#kappa^{-}|}{2}+2(#kappa^{+}+#kappa^{-})";
 
+TH1D*       fDeltaPt                                              = NULL;
 
 TH1D*       hValuesElEl                                           = NULL;
 TH1D*       hFractionElEl                                         = NULL;
@@ -165,7 +166,3 @@ void Initialize(TString setPi0,
                 Int_t   numberOfBins,
                 Int_t   mode,
                 Bool_t  addSig);
-
-void InitializeDummy(TString setPi0,
-                     TString     energy,
-                     Int_t       mode);
