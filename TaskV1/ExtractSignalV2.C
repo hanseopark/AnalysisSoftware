@@ -498,7 +498,7 @@ void ExtractSignalV2(   TString meson                   = "",
     // calculate meson mass from pdg code
     fMesonMassExpect                            = TDatabasePDG::Instance()->GetParticle(fMesonId)->Mass();
     // calculate number of events for normalization
-    if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0){
+    if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlag.CompareTo("PbPb_5.02TeV") == 0){
         fNEvents        = fEventQuality->GetBinContent(1);
     } else {
         fNEvents        =  GetNEvents(fEventQuality);
