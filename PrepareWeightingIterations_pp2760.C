@@ -1,5 +1,4 @@
 /****************************************************************************************************************************
-******      Friederike Bock, friederike.bock@cern.ch                                      *****
 ******      Hikari Murakami, Pedro Gonzalez
 ******      Efficiency study 
 ******      LHC12f1a,LHC12f1,bLHC12i3, LHC15g1a (ancLHC11a-WSDD)

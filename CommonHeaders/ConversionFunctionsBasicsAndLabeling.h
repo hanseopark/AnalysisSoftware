@@ -466,7 +466,7 @@ TString ReturnCollisionEnergyOutputString( TString fEnergyFlagOpt){
     if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
         return  "pp7TeV";
     } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0) {
-        return  "pp5.02TeV";
+        return  "pp5020GeV";
     } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
         return  "pp8TeV";
     } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0) {

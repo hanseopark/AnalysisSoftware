@@ -3417,9 +3417,9 @@ Color_t GetColorDefaultColor( TString energy,
                 return kMagenta+2;
             } else if (!generator.CompareTo("Pythia")||!generator.CompareTo("LHC12f1a")||!generator.CompareTo("LHC15g2")){
                 return kMagenta+4;
-            } else if (!generator.CompareTo("Pythia2")){
+            } else if (!generator.CompareTo("Pythia2") || !generator.CompareTo("LHC12i3")){
                 return kMagenta+3;
-            } else if (!generator.CompareTo("PythiaAddSig")||!generator.CompareTo("LHC12i3")){
+            } else if (!generator.CompareTo("PythiaAddSig")||!generator.CompareTo("LHC12i3_AddSig")){
                 return kMagenta-4;
             } else if (!generator.CompareTo("Phojet")||!generator.CompareTo("LHC12f1b")){
                 return kMagenta-2;

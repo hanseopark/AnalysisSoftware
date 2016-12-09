@@ -4530,11 +4530,18 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     //*************************************************************************************************************
     //***************************** Comparison to Charged pions ***************************************************
     //*************************************************************************************************************
-
+    TGraphAsymmErrors* graphCombPi0InvYieldTotA      = (TGraphAsymmErrors*) graphCombPi0InvXSectionTotA->Clone("graphCombPi0InvYieldTotA");
+    graphCombPi0InvYieldTotA                         = ScaleGraph(graphCombPi0InvYieldTotA,1./xSection2760GeVINEL);
     TGraphAsymmErrors* graphCombPi0InvYieldStatA     = (TGraphAsymmErrors*) graphCombPi0InvXSectionStatA->Clone("graphCombPi0InvYieldStatA");
     graphCombPi0InvYieldStatA                        = ScaleGraph(graphCombPi0InvYieldStatA,1./xSection2760GeVINEL);
     TGraphAsymmErrors* graphCombPi0InvYieldSysA      = (TGraphAsymmErrors*) graphCombPi0InvXSectionSysA->Clone("graphCombPi0InvYieldSysA");
     graphCombPi0InvYieldSysA                         = ScaleGraph(graphCombPi0InvYieldSysA,1./xSection2760GeVINEL);
+    TGraphAsymmErrors* graphCombEtaInvYieldTotA      = (TGraphAsymmErrors*) graphCombEtaInvXSectionTotA->Clone("graphCombEtaInvYieldTotA");
+    graphCombEtaInvYieldTotA                         = ScaleGraph(graphCombEtaInvYieldTotA,1./xSection2760GeVINEL);
+    TGraphAsymmErrors* graphCombEtaInvYieldStatA     = (TGraphAsymmErrors*) graphCombEtaInvXSectionStatA->Clone("graphCombEtaInvYieldStatA");
+    graphCombEtaInvYieldStatA                        = ScaleGraph(graphCombEtaInvYieldStatA,1./xSection2760GeVINEL);
+    TGraphAsymmErrors* graphCombEtaInvYieldSysA      = (TGraphAsymmErrors*) graphCombEtaInvXSectionSysA->Clone("graphCombEtaInvYieldSysA");
+    graphCombEtaInvYieldSysA                         = ScaleGraph(graphCombEtaInvYieldSysA,1./xSection2760GeVINEL);
 
        cout << "combined Spectrum - high Pt" << endl;
     TGraphErrors* graphChPiInvYieldHighPtStatPPHighPtCombUp         = NULL;
@@ -5359,11 +5366,22 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphCombPi0InvXSectionTotA->Write("graphInvCrossSectionPi0Comb2760GeVATotErr");
         graphCombPi0InvXSectionStatA->Write("graphInvCrossSectionPi0Comb2760GeVAStatErr");
         graphCombPi0InvXSectionSysA->Write("graphInvCrossSectionPi0Comb2760GeVASysErr");  
+        // Final inv yield INEL
+        graphCombPi0InvYieldTotA->Write("graphInvYieldINELPi0Comb2760GeVATotErr");
+        graphCombPi0InvYieldStatA->Write("graphInvYieldINELPi0Comb2760GeVAStatErr");
+        graphCombPi0InvYieldSysA->Write("graphInvYieldINELPi0Comb2760GeVASysErr");  
 
          // fits for eta
         fitInvXSectionPi0->Write("TsallisFitPi0");
         fitTCMInvXSectionPi0->Write("TwoComponentModelFitPi0");
        
+        TF1* fitTCMInvYieldSectionPi0 = (TF1*)fitTCMInvXSectionPi0->Clone("fitTCMInvYieldSectionPi0");
+        fitTCMInvYieldSectionPi0->SetParameter(0,fitTCMInvXSectionPi0->GetParameter(0)/xSection2760GeVINEL);
+        fitTCMInvYieldSectionPi0->SetParError(0,fitTCMInvXSectionPi0->GetParError(0)/xSection2760GeVINEL);
+        fitTCMInvYieldSectionPi0->SetParameter(2,fitTCMInvXSectionPi0->GetParameter(2)/xSection2760GeVINEL);
+        fitTCMInvYieldSectionPi0->SetParError(2,fitTCMInvXSectionPi0->GetParError(2)/xSection2760GeVINEL);
+        fitTCMInvYieldSectionPi0->Write("TwoComponentModelFitYieldPi0");
+               
         if (bWCorrection.Contains("Y")){
             if(graphPCMPi0InvXSectionStat_yShifted)graphPCMPi0InvXSectionStat_yShifted->Write("graphInvCrossSectionPi0PCM2760GeVStatErr_yShifted");
             if(graphPCMPi0InvXSectionSys_yShifted)graphPCMPi0InvXSectionSys_yShifted->Write("graphInvCrossSectionPi0PCM2760GeVSysErr_yShifted");
@@ -5428,10 +5446,22 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphCombEtaInvXSectionTotA->Write("graphInvCrossSectionEtaComb2760GeVATotErr");
         graphCombEtaInvXSectionStatA->Write("graphInvCrossSectionEtaComb2760GeVAStatErr");
         graphCombEtaInvXSectionSysA->Write("graphInvCrossSectionEtaComb2760GeVASysErr");  
-    
+
+        // Final yield for INEL
+        graphCombEtaInvYieldTotA->Write("graphInvYieldINELEtaComb2760GeVATotErr");
+        graphCombEtaInvYieldStatA->Write("graphInvYieldINELEtaComb2760GeVAStatErr");
+        graphCombEtaInvYieldSysA->Write("graphInvYieldINELEtaComb2760GeVASysErr");  
+        
         // fits for eta
         fitInvXSectionEta->Write("TsallisFitEta");
         fitTCMInvXSectionEta->Write("TwoComponentModelFitEta");
+        TF1* fitTCMInvYieldSectionEta = (TF1*)fitTCMInvXSectionEta->Clone("fitTCMInvYieldSectionEta");
+        fitTCMInvYieldSectionEta->SetParameter(0,fitTCMInvXSectionEta->GetParameter(0)/xSection2760GeVINEL);
+        fitTCMInvYieldSectionEta->SetParError(0,fitTCMInvXSectionEta->GetParError(0)/xSection2760GeVINEL);
+        fitTCMInvYieldSectionEta->SetParameter(2,fitTCMInvXSectionEta->GetParameter(2)/xSection2760GeVINEL);
+        fitTCMInvYieldSectionEta->SetParError(2,fitTCMInvXSectionEta->GetParError(2)/xSection2760GeVINEL);
+        fitTCMInvYieldSectionEta->Write("TwoComponentModelFitYieldEta");
+
         
         // writing Y shifted graphs in addition
         if (bWCorrection.Contains("Y")){

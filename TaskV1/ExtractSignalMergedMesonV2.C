@@ -3024,7 +3024,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3) {
         if (fHistoClustersPt)                           fHistoClustersPt->Write("ClusterPt");
         if (fHistoClustersPtPerEvent)                   fHistoClustersPtPerEvent->Write("ClusterPtPerEvent");
         if (fHistoClustersE)                            fHistoClustersE->Write("ClusterE");
-        if (fHistoClustersEPerEvent)                    fHistoClustersE->Write("ClusterEPerEvent");
+        if (fHistoClustersEPerEvent)                    fHistoClustersEPerEvent->Write("ClusterEPerEvent");
         if (fDeltaPtCluster)                            fDeltaPtCluster->Write();
         
         if (fHistoClustersOverlapHeadersPt)             fHistoClustersOverlapHeadersPt->Write("ClusterOverlapHeadersPt");

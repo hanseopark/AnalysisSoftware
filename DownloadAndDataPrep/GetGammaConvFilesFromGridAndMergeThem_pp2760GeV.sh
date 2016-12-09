@@ -2,9 +2,9 @@
 
 # switches to enable/disable certain procedures
 DOWNLOADON=1
-MERGEON=1
-MERGEONBINSSingle=1
-MERGEONBINS=1
+MERGEON=0
+MERGEONBINSSingle=0
+MERGEONBINS=0
 
 # check if train configuration has actually been given
 HAVELHC11a=1
@@ -114,10 +114,11 @@ fi
 # LHC12f1bMC="1372_20151218-2153"; 
 # LHC15g1aMC="1379_20151219-2111"; 
 
-TRAINDIR=Legotrain-mCalo-20160813_SecEffiAndTMStudiesRerun
+TRAINDIR=Legotrain-vAN20160826_ConvReweigting
 LHC11aData="1782_20160813-2128";
-LHC12f1aMC="2426_20160813-2128"; 
-LHC12f1bMC="2427_20160813-2129"; 
+# LHC12f1aMC="2467_20160826-1001"; 
+# LHC12f1bMC="2468_20160826-1001"; 
+# LHC12i3MC="2570_20161024-1234"
 
 DATAADD="WOSDD"
 
@@ -213,8 +214,8 @@ if [ $2 == "LHC11a" ]; then
             echo $fileName
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC11a/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC11a-pass4-$DATAADD\_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC11a-pass4-$DATAADD\_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC11a_$number.log\"\)
+            cp $OUTPUTDIR_LHC11a/GammaConvV1_$number.root $OUTPUTDIR/GammaConvV1_LHC11a-pass4-$DATAADD\_$number.root
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC11a-pass4-$DATAADD\_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC11a_$number.log\"\,0\)
         done;
     fi
     
@@ -225,8 +226,8 @@ if [ $2 == "LHC11a" ]; then
             echo $fileName
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC12f1a/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC12f1a_$number.log\"\)
+            cp $OUTPUTDIR_LHC12f1a/GammaConvV1_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_$number.root
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC12f1a_$number.log\"\,0\)
         done;
     fi
 
@@ -237,8 +238,8 @@ if [ $2 == "LHC11a" ]; then
             echo $fileName
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC12f1b/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC12f1b-$DATAADD\_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC12f1b-$DATAADD\_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC12f1b_$number.log\"\)
+            cp $OUTPUTDIR_LHC12f1b/GammaConvV1_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC12f1b-$DATAADD\_$number.root
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC12f1b-$DATAADD\_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC12f1b_$number.log\"\,0\)
         done;
     fi
     
@@ -249,8 +250,8 @@ if [ $2 == "LHC11a" ]; then
             echo $fileName
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC12i3/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC12i3-$DATAADD\_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC12i3-$DATAADD\_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC12i3_$number.log\"\)
+            cp $OUTPUTDIR_LHC12i3/GammaConvV1_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC12i3-$DATAADD\_$number.root
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC12i3-$DATAADD\_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC12i3_$number.log\"\,0\)
         done;
     fi
 
@@ -261,8 +262,8 @@ if [ $2 == "LHC11a" ]; then
             echo $fileName
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
             echo $number
-            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC15g1a/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC15g1a_$number.root\"\,\"GammaConvV1_$number\"\)
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC15g1a_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC15g1a_$number.log\"\)
+            cp $OUTPUTDIR_LHC15g1a/GammaConvV1_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC15g1a_$number.root
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC15g1a_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC15g1a_$number.log\"\,0\)
         done;
     fi
     
@@ -278,7 +279,7 @@ if [ $2 == "LHC11a" ]; then
                 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
                 echo $number            
                 hadd -f $OUTPUTDIR_LHC15g1a/$binNumber/GammaConvV1_$number.root $OUTPUTDIR_LHC15g1a/$binNumber/*/GammaConvV1_$number.root
-                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC15g1a/$binNumber/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC15g1a$binNumber\_$number.root\"\,\"GammaConvV1_$number\"\)
+                cp $OUTPUTDIR_LHC15g1a/$binNumber/GammaConvV1_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC15g1a$binNumber\_$number.root
             done;
         done;
     fi
