@@ -867,7 +867,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoPileUpCorrectionFactor                                     = (TH1D*)histoESDConvGammaPtPileUp->Clone("PileUpCorrectionFactor");
         histoPileUpCorrectionFactor->Divide(histoPileUpCorrectionFactor,histoESDConvGammaPt,1,1,"B");
     }
-    
+
     //******************* MC pileup histograms *************************************************
     TH1D*   histoGammaPurity_PileUp_Pt                                  = NULL;
     TH1D*   histoGammaTruePurity_PileUp_Pt                              = NULL;
@@ -901,7 +901,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     Double_t maxPtGamma                                                 = 0.;
     if (isPCM && !isCalo) maxPtGamma                                    = histoESDConvGammaPt->GetXaxis()->GetBinUpEdge(histoESDConvGammaPt->GetNbinsX());
     if (isCalo && !isPCM) maxPtGamma                                    = histoESDCaloGammaPt->GetXaxis()->GetBinUpEdge(histoESDCaloGammaPt->GetNbinsX());
-    
+
     //******************* Proper scaling of background *****************************************
     TH1D *ScalingGammaBackground_Pt                                     = NULL;
     if (isPCM && !isCalo) {
@@ -966,7 +966,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoGammaSecGammaFromXFromLambda_Cocktail_Raw_Pt->Scale(1./nEvt);
         histoGammaTrueSecCocktailGammaRest_Pt->Scale(1./nEvtMC);
     }
-    
+
     //******************* Calculate pileup corr. secondary spectra from data *******************
     TH1D *histoSecondaryGammaSpecPtPileUp                               = NULL;
     TH1D *histoSecondaryGammaFromXFromK0sSpecPtPileUp                   = NULL;
@@ -979,7 +979,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoSecondaryGammaFromXFromK0sSpecPtPileUp->Scale(1./nEvt);
         histoSecondaryGammaFromXFromK0sSpecPtPileUp->Scale(doubleAddFactorK0s);
     }
-    
+
     //**********************************************************************************
     //******************** PrimVtx DCA Plot ********************************************
     //**********************************************************************************
@@ -1020,7 +1020,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             delete canvasPileUpCorrFactor2;
         }
     }
-    
+
     //**********************************************************************************
     //******************** Background Plot *********************************************
     //**********************************************************************************
@@ -1069,7 +1069,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
     canvasBackground->SaveAs(Form("%s/%s_Background_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasBackground;
-    
+
     //**********************************************************************************
     //******************** Secondary Spectra Plot **************************************
     //**********************************************************************************
@@ -1102,7 +1102,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             if (histoGammaTrueSecConvGammaFromXFromK0l_Pt) legendSecSpec->AddEntry(histoGammaTrueSecConvGammaFromXFromK0l_Pt,"Raw MC Sec #gamma from X from K^{0}_{L}","pl");
             legendSecSpec->AddEntry(histoGammaTrueSecConvGammaFromXFromLambda_Pt,"Raw MC Sec #gamma from X from #Lambda","pl");
         }
-        
+
         if (isCalo && !isPCM) {
             SetHistogramm(histoGammaTrueSecCalo_Pt,"#it{p}_{T} (GeV/#it{c})","Secondary Converted #gamma",1e-10,1e-1);
             SetHistogramm(histoGammaTrueSecCaloGammaFromXFromK0s_Pt,"#it{p}_{T} (GeV/#it{c})","Secondary #gamma");
@@ -1124,7 +1124,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             if (histoGammaTrueSecCaloGammaFromXFromK0l_Pt) legendSecSpec->AddEntry(histoGammaTrueSecCaloGammaFromXFromK0l_Pt,"Raw MC Sec #gamma from X from K^{0}_{L}","pl");
             legendSecSpec->AddEntry(histoGammaTrueSecCaloGammaFromXFromLambda_Pt,"Raw MC Sec #gamma from X from #Lambda","pl");
         }
-        
+
         if (hasCocktailInput) {
             if (isPCM && !isCalo) {
                 SetHistogramm(histoGammaSecGammaFromXFromK0s_Cocktail_Raw_Pt,"#it{p}_{T} (GeV/#it{c})","Secondary Converted #gamma");
@@ -1311,9 +1311,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         }
     
     delete canvasPurity;
-    
-    TCanvas*    canvasPurity2                   = GetAndSetCanvas("canvasPurity");
-    TLegend*    legendPurity2                   = NULL;
+
+    TCanvas*    canvasPurity2                   = GetAndSetCanvas("canvasPurity2");
     Bool_t      doPurityPlotSimple              = kTRUE;
     if (doPurityPlotSimple && ((isPCM && !isCalo) || (isCalo && !isPCM))) {
         
@@ -1327,7 +1326,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         
         PutProcessLabelAndEnergyOnPlot( 0.18, 0.3, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
         
-        canvasPurity->SaveAs(Form("%s/%s_TruePurity_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
+        canvasPurity2->SaveAs(Form("%s/%s_TruePurity_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
     }
     delete canvasPurity2;
 
@@ -1352,7 +1351,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         canvasConvProb->SaveAs(Form("%s/%s_ConversionProb_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
         delete canvasConvProb;
-        
+
         // secondary reco eff plot (only used for cocktail sec corr)
         if (hasCocktailInput) {
             TCanvas *canvasConvProbSec  = GetAndSetCanvas("canvasConvProbSec");
@@ -1430,7 +1429,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         
         }    
     delete canvasRecoEff;
-    
+
     // secondary reco eff plot (only used for cocktail sec corr)
     if (hasCocktailInput) {
         TCanvas *canvasRecoEffSec       = GetAndSetCanvas("canvasRecoEffSec");
@@ -1606,7 +1605,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             
         }
     //     delete canvasResponseMatrix;
-    
+
     // response matrix for cocktail secondary corr
     if (hasCocktailInput) {
         TCanvas* canvasResponseMatrixSec = new TCanvas("canvasResponseMatrixSec","",480,440);  // gives the page size
@@ -1817,7 +1816,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         DrawGammaSetMarker(histoGammaCorrUnfoldReso_BinByBin_Pt, 24, 1.0, kBlue, kBlue);
         DrawGammaSetMarker(histoMCrecGammaCorr_Pt, 20, 1.0, kGreen-1, kGreen-1);
     }
-    
+
     TH1D* histoGammaCaloCorrUnfoldReso_Pt                           = NULL;
     TH1D* histoGammaCaloCorrUnfoldReso_BinByBin_Pt                  = NULL;
     TH1D* histoGammaCaloCorrUnfoldResoPileUp_Pt                     = NULL;
