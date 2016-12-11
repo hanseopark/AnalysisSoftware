@@ -980,89 +980,93 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
            
            // --------------------- Direct Photon Spectrum -------------------------
            
-           // calculate direct photon spectrum
-           histoDirectPhotonSpectrum                = (TH1D*)histoGammaSpecCorrPurity->Clone("histoDirectPhotonSpectrum");
-           histoThermalPhotonSpectrum               = (TH1D*)histoGammaSpecCorrPurity->Clone("histoThermalPhotonSpectrum");
-           histoPromptPhotonSpectrum                = (TH1D*)histoGammaSpecCorrPurity->Clone("histoPromptPhotonSpectrum");
-           
-           Bool_t doUpperLimits                     = kTRUE;
-           if (!doUpperLimits) {
-               for(Int_t i = 1; i < histoDirectPhotonSpectrum->GetNbinsX(); i++){
-                   histoDirectPhotonSpectrum->SetBinContent(    i+1,0);
-                   histoThermalPhotonSpectrum->SetBinContent(   i+1,0);
-               }
-               for(Int_t i = 1; i < histoDirectPhotonSpectrum->GetNbinsX(); i++){
-                   Double_t binContent              = -1;
-                   Double_t binError                = -1;
-                   binContent                       = 1-(1./( histoDoubleRatioConversionTrueEffPurity->GetBinContent(i+1)));
-                   binContent                       = binContent*histoGammaSpecCorrPurity->GetBinContent(i+1);
-                   binError                         = 1-(1./( histoDoubleRatioConversionTrueEffPurity->GetBinContent(i+1) + histoDoubleRatioConversionTrueEffPurity->GetBinError(i+1)));
-                   binError                         = binError*histoGammaSpecCorrPurity->GetBinContent(i+1);
-                   binError                         = binError-binContent;
-                   histoDirectPhotonSpectrum->SetBinContent(i+1,binContent);
-                   histoDirectPhotonSpectrum->SetBinError(  i+1,binError);
-                   
-                   if(histoDirectPhotonSpectrum->GetBinCenter(i+1) < 4.5){
-                       binContent                   = 1-(1./(1+ histoDoubleRatioConversionTrueEffPurity->GetBinContent(i+1) - NLOdoubleRatioFit->Eval(histoDoubleRatioConversionTrueEffPurity->GetBinCenter(i+1))));
-                       binContent                   = binContent*histoGammaSpecCorrPurity->GetBinContent(i+1);
-                       histoThermalPhotonSpectrum->SetBinContent(   i+1,binContent);
-                       histoThermalPhotonSpectrum->SetBinError(     i+1,binError);
-                   } else {
+           if (graphDoubleRatioSysErr) {
+               // calculate direct photon spectrum
+               histoDirectPhotonSpectrum                = (TH1D*)histoGammaSpecCorrPurity->Clone("histoDirectPhotonSpectrum");
+               histoThermalPhotonSpectrum               = (TH1D*)histoGammaSpecCorrPurity->Clone("histoThermalPhotonSpectrum");
+               histoPromptPhotonSpectrum                = (TH1D*)histoGammaSpecCorrPurity->Clone("histoPromptPhotonSpectrum");
+               
+               Bool_t doUpperLimits                     = kTRUE;
+               if (!doUpperLimits) {
+                   for(Int_t i = 1; i < histoDirectPhotonSpectrum->GetNbinsX(); i++){
+                       histoDirectPhotonSpectrum->SetBinContent(    i+1,0);
                        histoThermalPhotonSpectrum->SetBinContent(   i+1,0);
-                       histoThermalPhotonSpectrum->SetBinError(     i+1,0);
                    }
-                   if(histoDirectPhotonSpectrum->GetBinCenter(i+1) < 4.5){
-                       binContent                   = 1-(1./(NLOdoubleRatioFit->Eval(histoDoubleRatioConversionTrueEffPurity->GetBinCenter(i+1))));
-                       binContent                   = binContent*histoGammaSpecCorrPurity->GetBinContent(i+1);
-                       histoPromptPhotonSpectrum->SetBinContent(    i+1,binContent);
-                       histoPromptPhotonSpectrum->SetBinError(      i+1,0.0000001);
-                   } else {
-                       histoPromptPhotonSpectrum->SetBinContent(    i+1,0);
-                       histoPromptPhotonSpectrum->SetBinError(      i+1,0);
+                   for(Int_t i = 1; i < histoDirectPhotonSpectrum->GetNbinsX(); i++){
+                       Double_t binContent              = -1;
+                       Double_t binError                = -1;
+                       binContent                       = 1-(1./( histoDoubleRatioConversionTrueEffPurity->GetBinContent(i+1)));
+                       binContent                       = binContent*histoGammaSpecCorrPurity->GetBinContent(i+1);
+                       binError                         = 1-(1./( histoDoubleRatioConversionTrueEffPurity->GetBinContent(i+1) + histoDoubleRatioConversionTrueEffPurity->GetBinError(i+1)));
+                       binError                         = binError*histoGammaSpecCorrPurity->GetBinContent(i+1);
+                       binError                         = binError-binContent;
+                       histoDirectPhotonSpectrum->SetBinContent(i+1,binContent);
+                       histoDirectPhotonSpectrum->SetBinError(  i+1,binError);
+                       
+                       if(histoDirectPhotonSpectrum->GetBinCenter(i+1) < 4.5){
+                           binContent                   = 1-(1./(1+ histoDoubleRatioConversionTrueEffPurity->GetBinContent(i+1) - NLOdoubleRatioFit->Eval(histoDoubleRatioConversionTrueEffPurity->GetBinCenter(i+1))));
+                           binContent                   = binContent*histoGammaSpecCorrPurity->GetBinContent(i+1);
+                           histoThermalPhotonSpectrum->SetBinContent(   i+1,binContent);
+                           histoThermalPhotonSpectrum->SetBinError(     i+1,binError);
+                       } else {
+                           histoThermalPhotonSpectrum->SetBinContent(   i+1,0);
+                           histoThermalPhotonSpectrum->SetBinError(     i+1,0);
+                       }
+                       if(histoDirectPhotonSpectrum->GetBinCenter(i+1) < 4.5){
+                           binContent                   = 1-(1./(NLOdoubleRatioFit->Eval(histoDoubleRatioConversionTrueEffPurity->GetBinCenter(i+1))));
+                           binContent                   = binContent*histoGammaSpecCorrPurity->GetBinContent(i+1);
+                           histoPromptPhotonSpectrum->SetBinContent(    i+1,binContent);
+                           histoPromptPhotonSpectrum->SetBinError(      i+1,0.0000001);
+                       } else {
+                           histoPromptPhotonSpectrum->SetBinContent(    i+1,0);
+                           histoPromptPhotonSpectrum->SetBinError(      i+1,0);
+                       }
+                   }
+               } else {
+                   histoDoubleRatioUpperLimits          = GetUpperLimitsHisto(histoDoubleRatioConversionTrueEffPurity,  graphDoubleRatioSysErr, 0.95, 0.004, 1e2);
+                   Double_t binContent                  = -1;
+                   Double_t binError                    = -1;
+                   for (Int_t i=1; i<histoDirectPhotonSpectrum->GetNbinsX()+1; i++) {
+                       if (!histoDirectPhotonSpectrum->GetBinContent(i)) continue;
+                       binContent                       = histoDirectPhotonSpectrum->GetBinContent(i) * (1 - 1/histoDoubleRatioUpperLimits->GetBinContent(i));
+                       binError                         = 0.;
+                       histoDirectPhotonSpectrum->SetBinContent(i, binContent);
+                       histoDirectPhotonSpectrum->SetBinError(  i, binError);
                    }
                }
+               
+               
+               // plot direct photon spectrum
+               TCanvas* CanvasDirGamma              = GetAndSetCanvas("CanvasDirGamma", 0.12, 0.1, 1000 ,1350);
+               DrawGammaCanvasSettings( CanvasDirGamma, 0.16, 0.02, 0.015, 0.07);
+               CanvasDirGamma->SetLogy();
+               CanvasDirGamma->SetLogx();
+               
+               Double_t        minPt                = 0.2;
+               if (mode==4)    minPt                = 1.5;
+               
+               histoDirectPhotonSpectrum->GetXaxis()->SetLabelOffset(-1e-2);
+               DrawAutoGammaMesonHistos( histoDirectPhotonSpectrum,
+                                        "", "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c})",
+                                        kTRUE, 20.,5e-10, kFALSE,
+                                        kFALSE, -0.004, 0.020,
+                                        kTRUE, minPt,(histoDirectPhotonSpectrum->GetXaxis())->GetBinUpEdge(histoDirectPhotonSpectrum->GetNbinsX()),62,0.04,62,0.03,0.7,1.7);
+               DrawGammaSetMarker(histoDirectPhotonSpectrum, 20, 1.5,kBlue+2,kBlue+2);
+               
+               histoDirectPhotonSpectrum->DrawCopy("e1,same");
+               
+               PlotLatexLegend(0.66, 0.78, 0.045,collisionSystem,detectionProcess,2);
+               drawLatex("#gamma's from ALICE Data", 1.7, 0.000000001, kBlack,0.035);
+               
+               TLegend* leg_GammaSpectra;
+               leg_GammaSpectra                            = GetAndSetLegend(0.2,0.2,2);
+               leg_GammaSpectra->AddEntry(histoDirectPhotonSpectrum,"direct photon upper limits", "p");
+               leg_GammaSpectra->Draw();
+               
+               CanvasDirGamma->Print(Form("%s/%s_DirectPhotonSPectrum_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
            } else {
-               histoDoubleRatioUpperLimits          = GetUpperLimitsHisto(histoDoubleRatioConversionTrueEffPurity,  graphDoubleRatioSysErr, 0.95, 0.004, 1e2);
-               Double_t binContent                  = -1;
-               Double_t binError                    = -1;
-               for (Int_t i=1; i<histoDirectPhotonSpectrum->GetNbinsX()+1; i++) {
-                   if (!histoDirectPhotonSpectrum->GetBinContent(i)) continue;
-                   binContent                       = histoDirectPhotonSpectrum->GetBinContent(i) * (1 - 1/histoDoubleRatioUpperLimits->GetBinContent(i));
-                   binError                         = 0.;
-                   histoDirectPhotonSpectrum->SetBinContent(i, binContent);
-                   histoDirectPhotonSpectrum->SetBinError(  i, binError);
-               }
-            }
-
-           
-           // plot direct photon spectrum
-           TCanvas* CanvasDirGamma              = GetAndSetCanvas("CanvasDirGamma", 0.12, 0.1, 1000 ,1350);
-           DrawGammaCanvasSettings( CanvasDirGamma, 0.16, 0.02, 0.015, 0.07);
-           CanvasDirGamma->SetLogy();
-           CanvasDirGamma->SetLogx();
-           
-           Double_t        minPt                = 0.2;
-           if (mode==4)    minPt                = 1.5;
-           
-           histoDirectPhotonSpectrum->GetXaxis()->SetLabelOffset(-1e-2);
-           DrawAutoGammaMesonHistos( histoDirectPhotonSpectrum,
-                                    "", "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c})",
-                                    kTRUE, 20.,5e-10, kFALSE,
-                                    kFALSE, -0.004, 0.020,
-                                    kTRUE, minPt,(histoDirectPhotonSpectrum->GetXaxis())->GetBinUpEdge(histoDirectPhotonSpectrum->GetNbinsX()),62,0.04,62,0.03,0.7,1.7);
-           DrawGammaSetMarker(histoDirectPhotonSpectrum, 20, 1.5,kBlue+2,kBlue+2);
-           
-           histoDirectPhotonSpectrum->DrawCopy("e1,same");
-           
-           PlotLatexLegend(0.66, 0.78, 0.045,collisionSystem,detectionProcess,2);
-           drawLatex("#gamma's from ALICE Data", 1.7, 0.000000001, kBlack,0.035);
-           
-           TLegend* leg_GammaSpectra;
-           leg_GammaSpectra                            = GetAndSetLegend(0.2,0.2,2);
-           leg_GammaSpectra->AddEntry(histoDirectPhotonSpectrum,"direct photon upper limits", "p");           
-           leg_GammaSpectra->Draw();
-           
-           CanvasDirGamma->Print(Form("%s/%s_DirectPhotonSPectrum_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
+               cout << "No systematic uncertainties on double ratio given, skipping direct photon calculation." << endl;
+           }
         }
     }
 
@@ -1083,9 +1087,9 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         histoCorrectedPi0Yield->Write(  histoCorrectedPi0Yield->GetName(),  TObject::kOverwrite);
 
    // gamma quantities
-        ConversionGammaFitA->Write(         ConversionGammaFitA->GetName(),         TObject::kOverwrite);
-        histoDirectPhotonSpectrum->Write(   histoDirectPhotonSpectrum->GetName(),   TObject::kOverwrite);
-        histoGammaSpecCorrPurity->Write(    "histoGammaSpecCorrPurity",             TObject::kOverwrite);
+        if (ConversionGammaFitA)        ConversionGammaFitA->Write(         ConversionGammaFitA->GetName(),         TObject::kOverwrite);
+        if (histoDirectPhotonSpectrum)  histoDirectPhotonSpectrum->Write(   histoDirectPhotonSpectrum->GetName(),   TObject::kOverwrite);
+        if (histoGammaSpecCorrPurity)   histoGammaSpecCorrPurity->Write(    "histoGammaSpecCorrPurity",             TObject::kOverwrite);
 
    // Double ratio
         if(histoDoubleRatioFitPi0YieldPurity)           histoDoubleRatioFitPi0YieldPurity->Write(           histoDoubleRatioFitPi0YieldPurity->GetName(),               TObject::kOverwrite);
