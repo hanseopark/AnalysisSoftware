@@ -1397,7 +1397,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         iPoint++;
     }
     fEposPi0Txt.close();
-    TGraphErrors* graphEPOSPi0_0010 = new TGraphErrors(iPoint, Pi0pt, Pi0dndptpy, 0, Pi0dndptpy_staterr);
+    TGraphErrors* graphEPOS3Pi0_0010 = new TGraphErrors(iPoint, Pi0pt, Pi0dndptpy, 0, Pi0dndptpy_staterr);
 
 	
     TString filenameEta = "ExternalInputPbPb/Theory/EPOS/eta0-10.txt";
@@ -1414,7 +1414,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         iPoint++;
     }
     fEposEtaTxt.close();
-    TGraphErrors* graphEPOSEta_0010 = new TGraphErrors(iPoint, Etapt, Etadndptpy, 0, Etadndptpy_staterr);
+    TGraphErrors* graphEPOS3Eta_0010 = new TGraphErrors(iPoint, Etapt, Etadndptpy, 0, Etadndptpy_staterr);
     
 
 	//*********************************************************************************************************************************
@@ -1797,8 +1797,8 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         graphEPOSEtaToPi0Ratio_0010->Write("graphEPOS_EtaToPi0_0010");
         graphEPOSEtaToPi0Ratio_2050->Write("graphEPOS_EtaToPi0_2050");
         //EPOS3
-        graphEPOSPi0_0010->Write("graphEpos3_pi0_pt_cent0_10");
-        graphEPOSEta_0010->Write("graphEpos3_eta_pt_cent0_10");
+        graphEPOS3Pi0_0010->Write("graphEpos3_pi0_pt_cent0_10");
+        graphEPOS3Eta_0010->Write("graphEpos3_eta_pt_cent0_10");
 
         Kopeliovich_YieldHydro_0005->Write("graphKopeliovichHydroYield0005");
         Kopeliovich_YieldELoss_0005->Write("graphKopeliovichELossYield0005");

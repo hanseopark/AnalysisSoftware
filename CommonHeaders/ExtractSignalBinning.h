@@ -725,6 +725,11 @@ Double_t fBinsPi0HIPtLHC11h[27]                 = { 0.0, 0.4, 0.6, 0.8, 1.0, //s
                                                     4.0, 5.0, 6.0, 8.0, 10.0, 
                                                     12.0, 14.0, 16.0, 18.0, 20.0,
                                                     25.0, 30.0};
+Double_t fBinsPi0HIDirectPhotonPtLHC11h[23]     = { 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+                                                    2.2, 2.4, 2.6, 3.0, 3.5,
+                                                    4.0, 5.0, 6.0, 8.0, 10.0,
+                                                    12.0, 14.0, 16.0, 18.0, 20.0,
+                                                    25.0, 30.0};
 Double_t fBinsPi0HIPtNew[18]                    = { 0.0, 0.5, 0.8, 1.0, 1.2,
                                                     1.4, 1.6, 1.8, 2.0, 2.2, 
                                                     2.4, 2.6, 3.0, 4.0, 6.0, 
@@ -761,6 +766,12 @@ Int_t fBinsPi0HIPtLHC11hRebin[26]               = { 10, 4, 2, 2, 2,
                                                     2, 4, 4, 4, 4,
                                                     4, 8, 8, 8, 10,
                                                     10 };
+Int_t fBinsPi0HIDirectPhotonPtLHC11hRebin[22]   = { 2,
+                                                    2, 2, 2, 2, 2,
+                                                    2, 2, 2, 2, 2,
+                                                    2, 4, 4, 4, 4,
+                                                    4, 8, 8, 8, 10,
+                                                    10 };
 Int_t fBinsPi0HIPtLHC11hPCMEMCRebin[26]         = { 10, 4, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2,
@@ -779,7 +790,7 @@ Double_t fBinsEtaHIPtLHC11h[17]                 = { 0.0, 0.6, 1.0, 1.4, 1.8,
                                                     2.2, 2.6, 3.0 ,3.5, 4., 5.,
                                                     6.0, 8.0, 10, 12., 15.,
                                                     19.};
-Double_t fBinsEtaHIPtLHC11hLessBins[13]         = { 0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 
+Double_t fBinsEtaHIPtLHC11hLessBins[13]         = { 0.0, 0.5, 1.0, 1.5, 2.0, 3.0,
                                                     4., 6.0, 8.0, 10., 12., 
                                                     15., 19.};
 Double_t fBinsEtaHIPtLHC11hEMCBins[15]          = { 0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 
@@ -2196,17 +2207,17 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
         //*********************************************************************************************
         } else if( energy.CompareTo("PbPb_2.76TeV") == 0) { 
             if (directPhoton.CompareTo("directPhoton") == 0){
-                fStartPtBin     = 1;
-                fColumn         = 5;
+                fStartPtBin     = 0;
+                fColumn         = 4;
                 fRow            = 5;
                 
-                if (fNBinsPt > 24) {
+                if (fNBinsPt > 21) {
                     cout << "You have chosen Direct Photon Plots and more than 24 bins, this is not possible, it will be reduced to 24 bins." << endl;
-                    fNBinsPt    = 24;
+                    fNBinsPt    = 21;
                 }
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
-                    fBinsPt[i]  = fBinsPi0HIPtLHC11h[i];
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0HIPtLHC11hRebin[i];
+                    fBinsPt[i]  = fBinsPi0HIDirectPhotonPtLHC11h[i];
+                    if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0HIDirectPhotonPtLHC11hRebin[i];
                 }
 //                 if (fNBinsPt > 21) {
 //                     cout << "You have chosen Direct Photon Plots and more than 21 bins, this is not possible, it will be reduced to 21 bins." << endl;

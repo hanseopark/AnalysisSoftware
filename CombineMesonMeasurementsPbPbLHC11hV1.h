@@ -722,3 +722,26 @@ TGraphAsymmErrors* statErrorRel2010and2011_0010[2];
 TGraphAsymmErrors* statErrorRel2010and2011_2040[2];
 TGraphAsymmErrors* statErrorRelRAA2010and2011_0010[2];
 TGraphAsymmErrors* statErrorRelRAA2010and2011_2040[2];
+
+
+
+TGraphErrors *histoEPOSEtaToPi0Ratio_0010;
+TGraphErrors *histoEPOSEtaToPi0Ratio_2050;
+TH1D* histoPCMPi0InvYieldPbPb2760GeV_0010;
+TGraphAsymmErrors* graphPCMPi0InvYieldStatPbPb2760GeV_0010;
+TGraphAsymmErrors* graphPCMPi0InvYieldSysPbPb2760GeV_0010;
+TGraphAsymmErrors* graphPCMPi0InvYieldStatPbPb2760GeVwithYshift_0010;
+TGraphAsymmErrors* graphPCMPi0InvYieldSysWOMat2760GeV_0010;
+TH1D* histoPCMPi0RAAStatPbPb2760GeV_0010;
+TGraphAsymmErrors* graphPCMPi0RAAStatPbPb2760GeV_0010;
+TGraphAsymmErrors* graphPCMPi0RAAStatPbPb2760GeV_0010;
+TGraphAsymmErrors* graphPCMPi0RAASysPbPb2760GeV_0010;
+TH1D* histoPCMPi0InvYieldPbPb2760GeV_2050;
+TGraphAsymmErrors* graphPCMPi0InvYieldPbPb2760GeV_2050;
+TGraphAsymmErrors* graphPCMPi0InvYieldStatPbPb2760GeV_2050;
+TGraphAsymmErrors* graphPCMPi0InvYieldSysPbPb2760GeV_2050;
+TGraphAsymmErrors* graphPCMPi0InvYieldStatPbPb2760GeVwithYshift_2050;
+TGraphAsymmErrors* graphPCMPi0InvYieldSysWOMat2760GeV_2050;
+TH1D* histoPCMPi0RAAStatPbPb2760GeV_2050;
+
+
