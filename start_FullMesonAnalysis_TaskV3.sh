@@ -164,9 +164,9 @@ function GiveBinningDirectPhotonHI()
         correctPi0=1
         BinsPtPi0=18
     elif [ $answer = 21 ]; then
-        echo "20 Bins --> Max p_T = 14 GeV ...";
+        echo "17 Bins --> Max p_T = 14 GeV ...";
         correctPi0=1
-        BinsPtPi0=21
+        BinsPtPi0=17
     else
         echo "Pi0 Binning was not set correctly. Please try again.";
         correctPi0=0
