@@ -262,12 +262,12 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
       "/alice/sim/2016/LHC16c2/"
     };
 
-    TString train = "Legotrain-vAN-20161125-8TeV-mergedAndVariations";
-    Int_t trainRuns[nSets] = {289};
+    TString train = "Legotrain-vAN-20161129-8TeV-CaloTMEffi";
+    Int_t trainRuns[nSets] = {290};
     TString runlist[nSets] = {"merge"};
 
     const Int_t nFiles = 3;
-    TString Files[nFiles] = {"GammaCalo_123","GammaCaloMerged_107","GammaCaloMerged_171"};
+    TString Files[nFiles] = {"GammaCalo_101","GammaCalo_117","GammaCalo_143"};
 
 //    const Int_t nSets = 2;
 //    const Int_t nData = 0;

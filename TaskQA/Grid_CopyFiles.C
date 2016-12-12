@@ -782,11 +782,11 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
       //"LHC15h2a", "LHC15h2b", "LHC15h2c", "LHC15h2d", "LHC15h2f", "LHC15h2h", "LHC15h2i"
     };
 
-    TString train = "Legotrain-vAN-20161110-8TeV-std_new";
+    TString train = "Legotrain-vAN-20161129-8TeV-Trees_Merged_Variations";
     Int_t trainRuns[nSets] = {
-                              1911,1912,1913,1914,1915,1916,1917,
-                              1912,1913,1914,1915,1916,1917,
-                              1913,1914,1915,1916,1917
+                              1925,1926,1927,1928,1929,1930,1931,
+                              1926,1927,1928,1929,1930,1931,
+                              1927,1928,1929,1930,1931
                               //2623,2624,2625,2626,2627,2628,2629,
                               //2630,2631,2632,2633,2634,2635,2636
                              };
@@ -799,12 +799,11 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
                               //"merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2"
                              };
 
-    const Int_t nFiles = 17;
+    const Int_t nFiles = 12;
     TString Files[nFiles] = {
-                              "GammaCalo_101","GammaCalo_105","GammaCalo_107","GammaCalo_112","GammaCalo_124",
-                              "GammaCalo_126","GammaCalo_130","GammaCalo_144","GammaCalo_146","GammaCalo_150",
-                              "GammaConvCalo_101","GammaConvCalo_104","GammaConvCalo_107","GammaConvCalo_134",
-                              "GammaConvCalo_137","GammaConvCalo_164","GammaConvCalo_167"
+                              "GammaCalo_101","GammaCalo_117","GammaCalo_170","GammaCalo_171",
+                              "GammaCaloMerged_107","GammaCaloMerged_108","GammaCaloMerged_109","GammaCaloMerged_110",
+                              "GammaCaloMerged_171","GammaConvCalo_101","GammaConvCalo_195","GammaConvCalo_196"
                             };
 //    const Int_t nFiles = 5;
 //    TString Files[nFiles] = {

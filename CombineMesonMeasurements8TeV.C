@@ -4596,7 +4596,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendXsectionPaper->SetNColumns(1);
         legendXsectionPaper->SetMargin(0.2);
         legendXsectionPaper->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
-        legendXsectionPaper->AddEntry((TObject*)0,"norm. unc. 1.96%","");
+        legendXsectionPaper->AddEntry((TObject*)0,"norm. unc. 2.9%","");
 //        legendXsectionPaper->AddEntry(graphNLODSS14Calc,"NLO, DSS14 ","f");
 //        legendXsectionPaper->AddEntry(graphNLOCalcPi0MuHalf, "NLO, DSS07 #mu = 0.5 #it{p}_{T}", "l");
 //        legendXsectionPaper->AddEntry(graphNLOCalcPi0MuOne,  "NLO, DSS07 #mu = #it{p}_{T}", "l");
@@ -4633,7 +4633,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         ratio2DNLO->DrawCopy();
 
 //        TLegend* legendXsectionPaperPi02     = GetAndSetLegend2(0.17, 0.8, 0.4, 0.83+0.05*1, textSizeLabelsPixel*0.8);
-//        legendXsectionPaperPi02->AddEntry(boxErrorSigmaRatio,"norm. unc. 1.96%","f");
+//        legendXsectionPaperPi02->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.9%","f");
 //        legendXsectionPaperPi02->Draw();
 
 //        graphRatioPi0CombNLODSS14->RemovePoint(0);
@@ -4747,7 +4747,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendXsectionPaperEta->SetNColumns(1);
         legendXsectionPaperEta->SetMargin(0.2);
         legendXsectionPaperEta->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
-        legendXsectionPaperEta->AddEntry((TObject*)0, "norm. unc. 1.96%", "");
+        legendXsectionPaperEta->AddEntry((TObject*)0, "norm. unc. 2.9%", "");
         legendXsectionPaperEta->AddEntry(histoPythia8_4CInvXSection,"PYTHIA 8.2, Tune 4C","l");
         legendXsectionPaperEta->AddEntry(histoPythia8InvXSection,"PYTHIA 8.2, Monash 2013","l");
         legendXsectionPaperEta->AddEntry((TObject*)0, "", "");
@@ -4779,7 +4779,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         ratio2DNLOEta->DrawCopy();
 
 //        TLegend* legendXsectionPaperEta2     = GetAndSetLegend2(0.17, 0.8, 0.4, 0.83+0.05*1, textSizeLabelsPixel*0.8);
-//        legendXsectionPaperEta2->AddEntry(boxErrorSigmaRatio,"norm. unc. 1.96%","f");
+//        legendXsectionPaperEta2->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.9%","f");
 //        legendXsectionPaperEta2->Draw();
 
         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuHalf, widthCommonFit, styleLineNLOMuHalf, colorNLO);

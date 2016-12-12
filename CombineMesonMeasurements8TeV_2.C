@@ -2648,7 +2648,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         legendXsectionPaper->SetNColumns(1);
         legendXsectionPaper->SetMargin(0.2);
         legendXsectionPaper->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
-        legendXsectionPaper->AddEntry((TObject*)0,"norm. unc. 1.96%","");
+        legendXsectionPaper->AddEntry((TObject*)0,"norm. unc. 2.9%","");
 //        legendXsectionPaper->AddEntry(graphNLODSS14Calc,"NLO, DSS14 ","f");
 //        legendXsectionPaper->AddEntry(graphNLOCalcPi0MuHalf, "NLO, DSS07 #mu = 0.5 #it{p}_{T}", "l");
 //        legendXsectionPaper->AddEntry(graphNLOCalcPi0MuOne,  "NLO, DSS07 #mu = #it{p}_{T}", "l");
