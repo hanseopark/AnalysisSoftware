@@ -55,8 +55,8 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
                                      TString isMC               = "",
                                      TString option             = "",
                                      TString directphotonPlots  = "",
-                                     TString periodData         = "LHC11h",
-                                     TString periodMC           = "LHC14a1a",
+                                     TString periodData         = "",
+                                     TString periodMC           = "",
                                      Int_t   numberOfBins       = 30,
                                      Bool_t  addSig             = 0,
                                      Int_t   mode               = 12)
@@ -254,6 +254,7 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
         cout << "projecting for bin range " << startBin << " - " << endBin << endl;
         cout << "pt range " << fBinsPt[i] << " - " << fBinsPt[i+1] << endl;
         hKappaTPCAfterCut[i]                    = (TH1D*)hKappaTPCPtAfterCut->ProjectionX(Form("KappaTPC_AfterCut_Pt_%.2d",i),startBin,endBin,"e");
+
         hKappaTPCElEl[i]                        = (TH1D*)hKappaTPCPtElEl->ProjectionX(Form("KappaTPC_ElEl_Pt_%.2d",i),startBin,endBin,"e");
         hKappaTPCElPi[i]                        = (TH1D*)hKappaTPCPtElPi->ProjectionX(Form("KappaTPC_ElPi_Pt_%.2d",i),startBin,endBin,"e");
         hKappaTPCPiPi[i]                        = (TH1D*)hKappaTPCPtPiPi->ProjectionX(Form("KappaTPC_PiPi_Pt_%.2d",i),startBin,endBin,"e");
@@ -288,15 +289,15 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
         Double_t NEntriesAfterCut               = hKappaTPCAfterCut[i]->GetEntries();
 
         if(isMC){
-            fracElEl[i]                         = hKappaTPCElEl[i]->GetEntries()/NEntriesAfterCut;
-            fracRest[i]                         = hKappaTPCRest[i]->GetEntries()/NEntriesAfterCut;
-            fracPiPi[i]                         = hKappaTPCPiPi[i]->GetEntries()/NEntriesAfterCut;
-            fracElPi[i]                         = hKappaTPCElPi[i]->GetEntries()/NEntriesAfterCut;
-        } else {
             fracElEl[i]                         = hKappaTPCElEl[i]->GetEntries()/NTotal;
             fracRest[i]                         = hKappaTPCRest[i]->GetEntries()/NTotal;
             fracPiPi[i]                         = hKappaTPCPiPi[i]->GetEntries()/NTotal;
             fracElPi[i]                         = hKappaTPCElPi[i]->GetEntries()/NTotal;
+        } else {
+            fracElEl[i]                         = hKappaTPCElEl[i]->GetEntries()/NEntriesAfterCut;
+            fracRest[i]                         = hKappaTPCRest[i]->GetEntries()/NEntriesAfterCut;
+            fracPiPi[i]                         = hKappaTPCPiPi[i]->GetEntries()/NEntriesAfterCut;
+            fracElPi[i]                         = hKappaTPCElPi[i]->GetEntries()/NEntriesAfterCut;
         }
         
         //==================================================================================//
@@ -401,8 +402,8 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
         HistoPlotSettings(hKappaTPCAfterCut[i],"K","Counts",0.00001,hKappaTPCAfterCut[i]->GetMaximum()*1.2,-20,20,kBlue,kBlue,0);
         hKappaTPCAfterCut[i]->Draw("histo");
 
-        TLegend* leg2                           = new TLegend(0.7,0.7,0.9,0.9);
-        leg2->AddEntry(hKappaTPCAfterCut[i],"KappaTPC after cut","lp");
+        TLegend* leg2                           = new TLegend(0.7,0.8,0.9,0.9);
+        leg2->AddEntry(hKappaTPCAfterCut[i],"data","lp");
         
         if (status == 0) {
             TH1D *result                        = (TH1D*)fit->GetPlot();
