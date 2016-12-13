@@ -56,7 +56,7 @@ using namespace std;
 #include "AliOADBContainer.h"
 #include "AliEMCALGeometry.h"
 
-void PrepareEMCalAcceptanceMap(TString str = "mod_acc"){
+void PrepareEMCalAcceptanceMap(TString str = "ModAcc"){
 
   TH1::AddDirectory(kFALSE);
 
@@ -87,6 +87,9 @@ void PrepareEMCalAcceptanceMap(TString str = "mod_acc"){
   //********************
   // processing
   //********************
+  Int_t helpModAcc = 0;
+  if(str.CompareTo("ModAcc21") == 0) helpModAcc = 1;
+  Int_t helpModAcciTower = -1;
   for(Int_t i=0; i<nMaxCellsEMCAL; i++){
     rec->GetCellIndex(i,imod,iTower,iIphi,iIeta);
     rec->GetCellPhiEtaIndexInSModule(imod,iTower,iIphi,iIeta,irow,icol);
@@ -98,12 +101,31 @@ void PrepareEMCalAcceptanceMap(TString str = "mod_acc"){
     histModules[imod]->SetBinContent(histModules[imod]->FindBin(icol/2,irow/2),iTower);
 
     //output
-    if(str.CompareTo("mod_acc") == 0){
+    if(str.CompareTo("ModAcc") == 0){
       if(iTower%2 == 1) output->SetBinContent(i+1,1);
       else output->SetBinContent(i+1,0);
-    }else if(str.BeginsWith("SM-")){
+    }else if(str.CompareTo("ModAcc2") == 0){
+      if(iTower%2 == 0) output->SetBinContent(i+1,1);
+      else output->SetBinContent(i+1,0);
+    }else if(str.CompareTo("ModAcc12") == 0){
+      if(helpModAcciTower != iTower && iTower%12 != 0){
+        helpModAcciTower = iTower;
+        if(helpModAcc == 1) helpModAcc = 0;
+        else helpModAcc = 1;
+      }
+      output->SetBinContent(i+1,helpModAcc);
+      histModules[imod]->SetBinContent(histModules[imod]->FindBin(icol/2,irow/2),helpModAcc);
+    }else if(str.CompareTo("ModAcc21") == 0){
+      if(helpModAcciTower != iTower && iTower%12 != 0){
+        helpModAcciTower = iTower;
+        if(helpModAcc == 1) helpModAcc = 0;
+        else helpModAcc = 1;
+      }
+      output->SetBinContent(i+1,helpModAcc);
+      histModules[imod]->SetBinContent(histModules[imod]->FindBin(icol/2,irow/2),helpModAcc);
+    }else if(str.BeginsWith("SM")){
       TString temp = str;
-      temp.Replace(0,3,"");
+      temp.Replace(0,2,"");
       Int_t SMnumber = temp.Atoi();
       if(imod == SMnumber){
         output->SetBinContent(i+1,1);
@@ -112,7 +134,7 @@ void PrepareEMCalAcceptanceMap(TString str = "mod_acc"){
         output->SetBinContent(i+1,0);
         histModules[imod]->SetBinContent(histModules[imod]->FindBin(icol/2,irow/2),0);
       }
-    }else if(str.CompareTo("mod_acc-EMCAL") == 0){
+    }else if(str.CompareTo("ModAccEMCAL") == 0){
       const Int_t nAcc = 116;
       Int_t accept[nAcc] = {
         13,14,15,16,17,18,19,20,21,22,
