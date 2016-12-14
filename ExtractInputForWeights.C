@@ -173,17 +173,22 @@ void ExtractInputForWeights(    TString suffix                  = "pdf",
     TFile* filePi0MCInput[5]                        = {NULL, NULL, NULL, NULL, NULL};
     TFile* fileEtaMCInput[5]                        = {NULL, NULL, NULL, NULL, NULL};
     TH1D* histoPi0InputMCWOWeights[5]               = {NULL, NULL, NULL, NULL, NULL};
+    TH1D* histoPi0InputMCWWeights[5]                = {NULL, NULL, NULL, NULL, NULL};
     TH1D* histoPi0Efficiency[5]                     = {NULL, NULL, NULL, NULL, NULL};
     TH1D* histoEtaInputMCWOWeights[5]               = {NULL, NULL, NULL, NULL, NULL};
+    TH1D* histoEtaInputMCWWeights[5]                = {NULL, NULL, NULL, NULL, NULL};
     TH1D* histoEtaEfficiency[5]                     = {NULL, NULL, NULL, NULL, NULL};
     
     for (Int_t i = 0; i < nGenerators; i++){
         cout << fileNameMCPi0[i].Data() << "\t" << fileNameMCEta[i].Data() << endl;
         filePi0MCInput[i]                           = new TFile(fileNameMCPi0[i]);
         histoPi0InputMCWOWeights[i]                 = (TH1D*)filePi0MCInput[i]->Get("MCYield_Meson_oldBinWOWeights");
+        histoPi0InputMCWWeights[i]                 = (TH1D*)filePi0MCInput[i]->Get("MCYield_Meson_oldBin");
+        
         histoPi0Efficiency[i]                       = (TH1D*)filePi0MCInput[i]->Get("TrueMesonEffiPt");
         fileEtaMCInput[i]                           = new TFile(fileNameMCEta[i]);
         histoEtaInputMCWOWeights[i]                 = (TH1D*)fileEtaMCInput[i]->Get("MCYield_Meson_oldBinWOWeights");
+        histoEtaInputMCWWeights[i]                  = (TH1D*)fileEtaMCInput[i]->Get("MCYield_Meson_oldBin");
         histoEtaEfficiency[i]                       = (TH1D*)fileEtaMCInput[i]->Get("TrueMesonEffiPt");
     }    
     
@@ -224,6 +229,26 @@ void ExtractInputForWeights(    TString suffix                  = "pdf",
     
     canvasSpectra->Update();
     canvasSpectra->Print(Form("%s/Pi0_Spectra_%s.%s",outputDir.Data(),collisionSystemForWriting.Data(),suffix.Data()));
+    
+    if (histoPi0InputMCWWeights[0]){
+        histo1DSpectra->DrawCopy(); 
+
+            graphYieldPi0->Draw("p,same,e1");
+            
+            for (Int_t i = 0; i < nGenerators; i++){
+                if (histoPi0InputMCWWeights[i]){
+                    SetStyleHisto(histoPi0InputMCWWeights[i], 3., lineStyleMC[i], colorMC[i]);  
+                    histoPi0InputMCWWeights[i]->Draw("same,hist,c");
+                }    
+            }    
+            graphYieldPi0->Draw("p,same,e1");
+            labelSpectraPi0Label->Draw();
+            legendSpectraPi0->Draw();
+        
+        canvasSpectra->Update();
+        canvasSpectra->Print(Form("%s/Pi0_Spectra_MCWeighted_%s.%s",outputDir.Data(),collisionSystemForWriting.Data(),suffix.Data()));
+    
+    }
     
     // plot result with input
     canvasSpectra->cd();
@@ -320,6 +345,28 @@ void ExtractInputForWeights(    TString suffix                  = "pdf",
     
     canvasSpectra->Update();
     canvasSpectra->Print(Form("%s/Eta_Spectra_%s.%s",outputDir.Data(),collisionSystemForWriting.Data(),suffix.Data()));
+
+    if (histoEtaInputMCWWeights[0]){
+        histo1DSpectra->DrawCopy(); 
+
+            graphYieldEta->Draw("p,same,e1");
+            legendSpectraEta->AddEntry(graphYieldEta,collisionSystem.Data(),"pe");
+            
+            for (Int_t i = 0; i < nGenerators; i++){
+                if (histoEtaInputMCWWeights[i]){
+                    SetStyleHisto(histoEtaInputMCWWeights[i], 3., lineStyleMC[i], colorMC[i]);  
+                    histoEtaInputMCWWeights[i]->Draw("same,hist,c");
+                }
+            }    
+            graphYieldEta->Draw("p,same,e1");
+            labelSpectraEtaLabel->Draw();
+            
+            legendSpectraEta->Draw();
+    
+        canvasSpectra->Update();
+        canvasSpectra->Print(Form("%s/Eta_Spectra_MCWeighted_%s.%s",outputDir.Data(),collisionSystemForWriting.Data(),suffix.Data()));
+    
+    }
     
     // plot result with input
     canvasSpectra->cd();
