@@ -4406,11 +4406,26 @@ void DrawMergedClusterLambdaCuts (Int_t nlm = 1, Float_t maxPt = 50.05){
 //**********************************************************************************
 //**********************************************************************************
 Color_t GetColorSystematics(    TString variationName, 
-                                TString mode
+                                TString mode            = ""
                             ){    
 
-   
-    if ( variationName.CompareTo("YieldExtraction") == 0 )
+    if ( variationName.CompareTo("BGEstimate_pp") == 0 )
+        return kTeal-5;
+    if ( variationName.CompareTo("BG") == 0 )
+        return kOrange+5;
+    if ( variationName.Contains("Periods") )
+        return kBlue-7;
+    if ( variationName.CompareTo("SPD") == 0 )
+        return kCyan+4;
+    if ( variationName.CompareTo("CosPoint") == 0 )
+        return kYellow+2;
+    if ( variationName.CompareTo("Eta") == 0 )
+        return kTeal-7; 
+    if ( variationName.CompareTo("MCSmearing") == 0 )
+        return kCyan+6; 
+    if ( variationName.CompareTo("PsiPair") == 0 )
+        return kRed-2;    
+    if ( variationName.CompareTo("YieldExtraction") == 0 || variationName.CompareTo("YieldExtraction_pp") == 0  )
         return kBlue;
     if ( variationName.CompareTo("dEdxE") == 0 )
         return kRed+1;
@@ -4420,7 +4435,7 @@ Color_t GetColorSystematics(    TString variationName,
         return kPink+8;
     if ( variationName.CompareTo("SinglePt") == 0 )
         return kGreen+2;
-    if ( variationName.CompareTo("Chi2") == 0 )
+    if ( variationName.CompareTo("Chi2") == 0 || variationName.CompareTo("Chi2PsiPair") == 0 || variationName.CompareTo("PsiPairChi2") == 0 )
         return kYellow+2;
     if ( variationName.CompareTo("Qt") == 0 )
         return kOrange+2;
@@ -4475,10 +4490,26 @@ Color_t GetColorSystematics(    TString variationName,
 //************** Determine marker style for systematics ****************************
 //**********************************************************************************
 Style_t GetMarkerStyleSystematics(  TString variationName, 
-                                    TString mode
+                                    TString mode            = ""
                                   ){    
-    
-    if ( variationName.CompareTo("YieldExtraction") == 0 )
+
+    if ( variationName.CompareTo("BGEstimate_pp") == 0 )
+        return 24;
+    if ( variationName.CompareTo("BG") == 0 )
+        return 28;
+    if ( variationName.Contains("Periods") )
+        return 33;
+    if ( variationName.CompareTo("SPD") == 0 )
+        return 29;
+    if ( variationName.CompareTo("CosPoint") == 0 )
+        return 24;
+    if ( variationName.CompareTo("Eta") == 0 )
+        return 30; 
+    if ( variationName.CompareTo("MCSmearing") == 0 )
+        return 21; 
+    if ( variationName.CompareTo("PsiPair") == 0 )
+        return 23;    
+    if ( variationName.CompareTo("YieldExtraction") == 0 || variationName.CompareTo("YieldExtraction_pp") == 0  )
         return 24;
     if ( variationName.CompareTo("dEdxE") == 0 )
         return 21;
@@ -4488,7 +4519,7 @@ Style_t GetMarkerStyleSystematics(  TString variationName,
         return 23;
     if ( variationName.CompareTo("SinglePt") == 0 )
         return 20;
-    if ( variationName.CompareTo("Chi2") == 0 )
+    if ( variationName.CompareTo("Chi2") == 0 || variationName.CompareTo("Chi2PsiPair") == 0 || variationName.CompareTo("PsiPairChi2") == 0 )
         return 25;
     if ( variationName.CompareTo("Qt") == 0 )
         return 26;
@@ -4544,7 +4575,23 @@ Style_t GetMarkerStyleSystematics(  TString variationName,
 //**********************************************************************************
 TString GetSystematicsName  (  TString variationName = "" ){    
     
-    if ( variationName.CompareTo("YieldExtraction") == 0 )
+    if ( variationName.CompareTo("BGEstimate_pp") == 0 )
+        return "pile-up";
+    if ( variationName.CompareTo("BG") == 0 )
+        return "BG method";
+    if ( variationName.Contains("Periods"))
+        return "periods";
+    if ( variationName.CompareTo("SPD") == 0 )
+        return "SPD pileup";
+    if ( variationName.CompareTo("CosPoint") == 0 )
+        return "cos(#Theta_{point})";
+    if ( variationName.CompareTo("Eta") == 0 )
+        return "#eta_{#gamma, e^{#pm}}"; 
+    if ( variationName.CompareTo("MCSmearing") == 0 )
+        return "MC smearing"; 
+    if ( variationName.CompareTo("PsiPair") == 0 )
+        return "#psi_{pair} #gamma";
+    if ( variationName.CompareTo("YieldExtraction") == 0 || variationName.CompareTo("YieldExtraction_pp") == 0  )
         return "yield extraction";
     if ( variationName.CompareTo("dEdxE") == 0 )
         return "dE/dx e-line";
@@ -4554,7 +4601,7 @@ TString GetSystematicsName  (  TString variationName = "" ){
         return "TPC cluster";
     if ( variationName.CompareTo("SinglePt") == 0 )
         return "single e^{#pm} #it{p}_{T}";
-    if ( variationName.CompareTo("Chi2") == 0 || variationName.CompareTo("PsiPairChi2") == 0 )
+        if ( variationName.CompareTo("Chi2") == 0 || variationName.CompareTo("Chi2PsiPair") == 0 || variationName.CompareTo("PsiPairChi2") == 0 )
         return "2D #chi^{2} #gamma, #psi_{pair} #gamma";
     if ( variationName.CompareTo("Qt") == 0 )
         return "2D q_{T}";

@@ -1487,8 +1487,9 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     graphCombPi0InvXSectionStatA->Fit(fitTCMDecomposedLPi0,"QNRMEX0+","",0.4,2.);
     graphCombPi0InvXSectionTotA->Fit(fitTCMDecomposedHPi0,"QNRMEX0+","",4,50);
     fitTCMDecomposedHPi0->SetParameters(graphCombPi0InvXSectionTotA->GetY()[2],0.8, 2);    
-    Double_t paramTCMPi0New[5]  = { fitTCMDecomposedLPi0->GetParameter(0),fitTCMDecomposedLPi0->GetParameter(1),
-                                    fitTCMDecomposedHPi0->GetParameter(0),fitTCMDecomposedHPi0->GetParameter(1),fitTCMDecomposedHPi0->GetParameter(2)};
+    
+    Double_t paramTCMPi0New[5]  = { 703678218.2483119965,0.5727060723,
+                                    68561118949.5456314087,0.4481417931,3.0869940568};
     TF1* fitTCMInvXSectionPi0   = FitObject("tcm","fitTCMInvCrossSectionPi02760GeV","Pi0",graphCombPi0InvXSectionStatA,0.4,50. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
     
     fitTCMDecomposedLPi0->SetParameter(0, fitTCMInvXSectionPi0->GetParameter(0));
@@ -5326,6 +5327,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     
     // close fit log file
     fileFitsOutput.close();
+    
  // **********************************************************************************************************************
  // ************************* Saving of final results ********************************************************************
  // **********************************************************************************************************************

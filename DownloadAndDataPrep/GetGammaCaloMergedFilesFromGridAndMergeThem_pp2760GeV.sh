@@ -346,17 +346,20 @@ fi
 TRAINDIR=Legotrain-vAN20161111_TMEffi
 # LHC11aData="1905";
 # LHC11aData="1945";
-LHC11aData="1949";
+# LHC11aData="1949";
+LHC11aData="1965";
 # LHC11aData="1894";
 # LHC15g1aMC="2653";
 # LHC15g1aMC="2669";
 # LHC15g1aMC="2670";
 # LHC15g1aMC="2689";
-LHC15g1aMC="2697";
+# LHC15g1aMC="2697";
+LHC15g1aMC="2722";
 
 # LHC13gData="1907";
 # LHC13gData="1946";
-LHC13gData="1951";
+# LHC13gData="1951";
+LHC13gData="1961";
 # LHC13gData="1895";
 # LHC15a3aMC="2650"; 
 # LHC15a3aplusMC="2651"; 
@@ -366,8 +369,10 @@ LHC13gData="1951";
 # LHC15a3aplusMC="2676"; 
 # LHC15a3aMC="2687"; 
 # LHC15a3aplusMC="2690"; 
-LHC15a3aMC="2698"; 
-LHC15a3aplusMC="2699"; 
+# LHC15a3aMC="2698"; 
+# LHC15a3aplusMC="2699"; 
+LHC15a3aMC="2710"; 
+LHC15a3aplusMC="2711"; 
 
 
 

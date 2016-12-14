@@ -1203,14 +1203,13 @@ fi
 
 if [[ "$1" == *-h* ]] ; then
     Usage
-elif [[ "$1" == *-mAddSig2760GeVWOSDDA* ]] ; then
+elif [[ "$1" == *-mAddSig2760GeV* ]] ; then
     MERGINGMC=1
-    DIRECTORY=$2
-    Suffix=$3
-    DataRootFile=$DIRECTORY/mergedMinBias/GammaConv_Data-WOSDD_A.root
-    MCRootFile=$DIRECTORY/mergedMinBias/GammaConv_MC-WOSDD_A.root
-    MCRootFileAddSig=$DIRECTORY/mergedAddSignal/GammaConv_MC-WOSDD_A.root
-    MCRootFileAddSigEta=$DIRECTORY/mergedAddSignal/GammaConv_MC-WOSDD_A.root
+    DataRootFile=$2
+    MCRootFile=$3
+    MCRootFileAddSig=$3
+    MCRootFileAddSigEta=$3
+    Suffix=$4
     addedSig=1
     if [ -f $DataRootFile ]; then
         dataFileOK=1
@@ -1276,78 +1275,6 @@ elif [[ "$1" == *-mMerged13g* ]] ; then
     else 
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
         PARTLY=1    
-        MCFILE=0
-    fi
-
-    
-elif [[ "$1" == *-mAddSig2760GeVWOSDDB* ]] ; then
-    MERGINGMC=1
-    DIRECTORY=$2
-    Suffix=$3
-    DataRootFile=$DIRECTORY/mergedMinBias/GammaConv_Data-WOSDD_B.root
-    MCRootFile=$DIRECTORY/mergedMinBias/GammaConv_MC-WOSDD_B.root
-    MCRootFileAddSig=$DIRECTORY/mergedAddSignal/GammaConv_MC-WOSDD_B.root
-    MCRootFileAddSigEta=$DIRECTORY/mergedAddSignal/GammaConv_MC-WOSDD_B.root
-    addedSig=1
-    if [ -f $DataRootFile ]; then
-        echo "The data file specified is $DataRootFile"
-        dataFileOK=1
-    else 
-        echo "No data file specified, analysis can not be fullfiled."
-#    exit
-    fi
-    if [ -f $MCRootFile ]; then
-        echo "The MC file specified is $MCRootFile"
-    else 
-        echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1    
-        MCFILE=0
-    fi
-elif [[ "$1" == *-mAddSig2760GeVWSDDA* ]] ; then
-    MERGINGMC=1
-    DIRECTORY=$2
-    Suffix=$3
-    DataRootFile=$DIRECTORY/mergedMinBias/GammaConv_Data-WSDD_A.root
-    MCRootFile=$DIRECTORY/mergedMinBias/GammaConv_MC-WSDD_A.root
-    MCRootFileAddSig=$DIRECTORY/mergedAddSignal/GammaConv_MC-WSDD_A.root
-    MCRootFileAddSigEta=$DIRECTORY/mergedAddSignal/GammaConv_MC-WSDD_A.root
-    addedSig=1
-    if [ -f $DataRootFile ]; then
-        echo "The data file specified is $DataRootFile"
-        dataFileOK=1
-    else 
-        echo "No data file specified, analysis can not be fullfiled."
-#    exit
-    fi
-    if [ -f $MCRootFile ]; then
-        echo "The MC file specified is $MCRootFile"
-        dataFileOK=1
-    else 
-        echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1    
-        MCFILE=0
-    fi
-elif [[ "$1" == *-mAddSig2760GeVWSDDB* ]] ; then
-    MERGINGMC=1
-    DIRECTORY=$2
-    Suffix=$3
-    DataRootFile=$DIRECTORY/mergedMinBias/GammaConv_Data-WSDD_B.root
-    MCRootFile=$DIRECTORY/mergedMinBias/GammaConv_MC-WSDD_B.root
-    MCRootFileAddSig=$DIRECTORY/mergedAddSignal/GammaConv_MC-WSDD_B.root
-    MCRootFileAddSigEta=$DIRECTORY/mergedAddSignal/GammaConv_MC-WSDD_B.root
-    addedSig=1
-    if [ -f $DataRootFile ]; then
-        echo "The data file specified is $DataRootFile"
-        dataFileOK=1
-    else 
-        echo "No data file specified, analysis can not be fullfiled."
-    #    exit
-    fi
-    if [ -f $MCRootFile ]; then
-        echo "The MC file specified is $MCRootFile"
-    else 
-        echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1 
         MCFILE=0
     fi    
 elif [[ "$1" == *-mAddSig8TeVA* ]] ; then

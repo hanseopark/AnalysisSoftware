@@ -1,8 +1,19 @@
 #! /bin/bash
 
+function CopyFileIfNonExisitent()
+{
+    if [ -f $1/root_archive.zip ] && [ -s $1/root_archive.zip ]; then 
+        echo "$1/root_archive.zip exists";
+    else     
+        mkdir -p $1
+        alien_cp alien:$2/root_archive.zip file:$1/
+    fi    
+    unzip -u $1/root_archive.zip -d $1/
+}
+
 # switches to enable/disable certain procedures
 DOWNLOADON=1
-MERGEON=0
+MERGEON=1
 MERGEONBINSSingle=0
 MERGEONBINS=0
 
@@ -114,11 +125,26 @@ fi
 # LHC12f1bMC="1372_20151218-2153"; 
 # LHC15g1aMC="1379_20151219-2111"; 
 
-TRAINDIR=Legotrain-vAN20160826_ConvReweigting
-LHC11aData="1782_20160813-2128";
+# TRAINDIR=Legotrain-vAN20160826_ConvReweigting
+# LHC11aData="1782_20160813-2128";
 # LHC12f1aMC="2467_20160826-1001"; 
 # LHC12f1bMC="2468_20160826-1001"; 
 # LHC12i3MC="2570_20161024-1234"
+
+# TRAINDIR=Legotrain-vAN20161210_ConvReAna
+# LHC11aData="1964";
+# # LHC12f1aMC="2713"; 
+# # LHC12f1bMC="2716"; 
+# # LHC12i3MC="2719"
+# LHC12f1aMC="2714"; 
+# LHC12f1bMC="2717"; 
+# # LHC12i3MC="2720"
+# LHC12i3MC="2721"
+
+TRAINDIR=Legotrain-vAN20161210_ConvReAnaTrees
+LHC11aData="1963";
+LHC12f1aMC="2715"; 
+LHC12f1bMC="2718"; 
 
 DATAADD="WOSDD"
 
@@ -143,69 +169,64 @@ if [ $2 == "LHC11a" ]; then
     fi
     
     if [ $HAVELHC11a == 1 ]; then
+        LHC11aData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/ | grep $LHC11aData\_`
         OUTPUTDIR_LHC11a=$BASEDIR/$TRAINDIR/GA_pp-$LHC11aData
-        mkdir -p $OUTPUTDIR_LHC11a
     fi
+    
     if [ $HAVELHC12f1a == 1 ]; then
+        LHC12f1aMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC12f1aMC\_`
         OUTPUTDIR_LHC12f1a=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC12f1aMC
-        mkdir -p $OUTPUTDIR_LHC12f1a
     fi  
     
     if [ $HAVELHC12f1b == 1 ]; then
+        LHC12f1bMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC12f1bMC\_`
         OUTPUTDIR_LHC12f1b=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC12f1bMC
-        mkdir -p $OUTPUTDIR_LHC12f1b
     fi
     
     if [ $HAVELHC12i3 == 1 ]; then
-       OUTPUTDIR_LHC12i3=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC12i3MC
-       mkdir -p $OUTPUTDIR_LHC12i3
+        LHC12i3MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC12i3MC\_`
+        OUTPUTDIR_LHC12i3=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC12i3MC
     fi
     if [ $HAVELHC15g1a == 1 ]; then
-       OUTPUTDIR_LHC15g1a=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC15g1aMC
-       mkdir -p $OUTPUTDIR_LHC15g1a
+        LHC15g1aMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC15g1aMC\_`
+        OUTPUTDIR_LHC15g1a=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC15g1aMC
     fi
-       
+
     if [ $DOWNLOADON == 1 ]; then
         if [ $HAVELHC11a == 1 ]; then
             echo "downloading LHC11a"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC11aData/merge_runlist_1/root_archive.zip file:$OUTPUTDIR_LHC11a/
-            unzip -u $OUTPUTDIR_LHC11a/root_archive.zip -d $OUTPUTDIR_LHC11a/
-        fi  
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC11a "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC11aData/merge_runlist_1"
+        fi    
         if [ $HAVELHC12f1a == 1 ]; then
             echo "downloading LHC12f1a"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC12f1aMC/merge_runlist_1/root_archive.zip file:$OUTPUTDIR_LHC12f1a/
-            unzip -u $OUTPUTDIR_LHC12f1a/root_archive.zip -d $OUTPUTDIR_LHC12f1a/
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC12f1a "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC12f1aMC/merge_runlist_1"
         fi    
         if [ $HAVELHC12f1b == 1 ]; then
             echo "downloading LHC12f1b"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC12f1bMC/merge_runlist_1/root_archive.zip file:$OUTPUTDIR_LHC12f1b/
-            unzip -u $OUTPUTDIR_LHC12f1b/root_archive.zip -d $OUTPUTDIR_LHC12f1b/
-        fi
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC12f1b "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC12f1bMC/merge_runlist_1"
+        fi    
         if [ $HAVELHC12i3 == 1 ]; then
-            echo "downloading LHC12i3"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC12i3MC/merge_runlist_1/root_archive.zip file:$OUTPUTDIR_LHC12i3/
-            unzip -u $OUTPUTDIR_LHC12i3/root_archive.zip -d $OUTPUTDIR_LHC12i3/
+            echo "LHC12i3"
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC12i3 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC12i3MC/merge_runlist_1"
         fi
         if [ $HAVELHC15g1a == 1 ]; then
-            echo "downloading LHC15g1a"
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC15g1aMC/merge/root_archive.zip file:$OUTPUTDIR_LHC15g1a/
-            unzip -u $OUTPUTDIR_LHC15g1a/root_archive.zip -d $OUTPUTDIR_LHC15g1a/
+            echo "LHC15g1a"
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC15g1a "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC15g1aMC/merge"
             
-            echo "copying LHC15g1a in single bins" 
-            runNumbers=`cat runNumbersLHC11aJetJet.txt`
+            echo "copying LHC11aJetJet" 
+            runNumbers=`cat runlists/runNumbersLHC11aJetJet.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 echo $runNumber
-                binNumbersJJ=`cat binNumbersJJ.txt`
+                binNumbersJJ=`cat binNumbersJJToMerge.txt`
                 for binNumber in $binNumbersJJ; do
                     echo $binNumber
-                    mkdir -p $OUTPUTDIR_LHC15g1a/$binNumber/$runNumber
-                    alien_cp alien:/alice/sim/2015/LHC15g1a/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC15g1aMC/root_archive.zip file:$OUTPUTDIR_LHC15g1a/$binNumber/$runNumber/
-                    unzip -u $OUTPUTDIR_LHC15g1a/$binNumber/$runNumber/root_archive.zip -d $OUTPUTDIR_LHC15g1a/$binNumber/$runNumber/
+                    CopyFileIfNonExisitent $OUTPUTDIR_LHC15g1a/$binNumber/$runNumber "/alice/sim/2015/LHC15g1a/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC15g1aMC"
                 done;   
             done;
-        fi
-    fi 
+        fi    
+    fi
+
 
     if [ $HAVELHC11a == 1 ]; then
         ls $OUTPUTDIR_LHC11a/GammaConvV1_*.root > fileLHC11a.txt
@@ -285,19 +306,20 @@ if [ $2 == "LHC11a" ]; then
     fi
     
     if [ $MERGEON == 1 ]; then
-        rm $OUTPUTDIR/GammaConvV1_MC_LHC12f1a_LHC12f1b-$DATAADD\_*.root
-        ls $OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_*.root > filesForMerging.txt
-        filesForMerging=`cat filesForMerging.txt`
-        for fileName in $filesForMerging; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
-            echo $number
-            if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC12f1b-$DATAADD\_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC12f1a_LHC12f1b-$DATAADD\_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC12f1b-$DATAADD\_$number.root
-            fi
-        done
+#         rm $OUTPUTDIR/GammaConvV1_MC_LHC12f1a_LHC12f1b-$DATAADD\_*.root
+#         ls $OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_*.root > filesForMerging.txt
+#         filesForMerging=`cat filesForMerging.txt`
+#         for fileName in $filesForMerging; do
+#             echo $fileName
+#             number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
+#             echo $number
+#             if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC12f1b-$DATAADD\_$number.root ] ; then
+#                 hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC12f1a_LHC12f1b-$DATAADD\_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC12f1b-$DATAADD\_$number.root
+#             fi
+#         done
         
         ls $OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_*.root > filesForMerging.txt
+        rm $OUTPUTDIR/GammaConvV1_MC_LHC12f1a_LHC12i3-$DATAADD*.root
         filesForMerging=`cat filesForMerging.txt`
         for fileName in $filesForMerging; do
             echo $fileName
@@ -310,6 +332,7 @@ if [ $2 == "LHC11a" ]; then
         
         
         ls $OUTPUTDIR/GammaConvV1_MC_LHC12f1a_LHC12f1b-$DATAADD\_*.root > filesForMerging.txt
+        rm $OUTPUTDIR/GammaConvV1_MC_LHC12f1a_LHC12f1b_LHC12i3-$DATAADD*.root
         filesForMerging=`cat filesForMerging.txt`
         for fileName in $filesForMerging; do
             echo $fileName

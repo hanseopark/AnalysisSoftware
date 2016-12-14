@@ -642,9 +642,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 histoRatioRawClusterPt[i]                   = (TH1D*)histoRawClusterPt[i]->Clone(Form("RatioCluster_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()));
                 histoRatioRawClusterPt[i]->Divide(histoRatioRawClusterPt[i],histoRawClusterPt[trigSteps[i][0]],1.,1.,"");
 
-                histoRawClusterE[i]->SetName(Form("ClusterEPerEvent_%s",cutNumber[i].Data()));
-                histoRatioRawClusterE[i]                   = (TH1D*)histoRawClusterE[i]->Clone(Form("RatioCluster_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()));
-                histoRatioRawClusterE[i]->Divide(histoRatioRawClusterE[i],histoRawClusterE[trigSteps[i][0]],1.,1.,"");
+                if (histoRawClusterE[i]){
+                    histoRawClusterE[i]->SetName(Form("ClusterEPerEvent_%s",cutNumber[i].Data()));
+                    histoRatioRawClusterE[i]                   = (TH1D*)histoRawClusterE[i]->Clone(Form("RatioCluster_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()));
+                    histoRatioRawClusterE[i]->Divide(histoRatioRawClusterE[i],histoRawClusterE[trigSteps[i][0]],1.,1.,"");
+                }
                 
                 Int_t binMinTrigg                           = histoRatioRawClusterPt[i]->FindBin(minPt[i]);
                 minPt[i]                                    = histoRatioRawClusterPt[i]->GetBinCenter(binMinTrigg);
@@ -1162,25 +1164,27 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         canvasClusterYield->Update();
         canvasClusterYield->SaveAs(Form("%s/Cluster_%s_YieldUnscaledTrigg.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
 
-        TH2F * histo2DClusEUnscaled       = new TH2F("histo2DClusEUnscaled", "histo2DClusEUnscaled", 1000, 0., maxPtGlobalCluster, 10000, minClusYieldUnscaled, maxClusYieldUnscaled);
-        SetStyleHistoTH2ForGraphs(histo2DClusEUnscaled, "#it{E} (GeV)","#frac{d#it{N}_{#gamma, raw}}{#it{N}_{evt}d#it{E}}} (1/GeV)^{2}", 
-                                0.85*textSizeSpectra,0.04, 0.85*textSizeSpectra,textSizeSpectra, 0.8,1.7);
-        histo2DClusEUnscaled->GetXaxis()->SetLabelOffset(-0.005);
-        histo2DClusEUnscaled->DrawCopy(); 
-        
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            DrawGammaSetMarker(histoRawClusterE[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-            histoRawClusterE[i]->DrawCopy("e1,same"); 
-        }
-        legendClusUnscaled->Draw();
-        
-        
-        labelEnergyClusUnscaled->Draw();
-        labelClusterUnscaled->Draw();
-        labelDetProcClus->Draw();
+        if (histoRawClusterE[0]){
+            TH2F * histo2DClusEUnscaled       = new TH2F("histo2DClusEUnscaled", "histo2DClusEUnscaled", 1000, 0., maxPtGlobalCluster, 10000, minClusYieldUnscaled, maxClusYieldUnscaled);
+            SetStyleHistoTH2ForGraphs(histo2DClusEUnscaled, "#it{E} (GeV)","#frac{d#it{N}_{#gamma, raw}}{#it{N}_{evt}d#it{E}}} (1/GeV)^{2}", 
+                                    0.85*textSizeSpectra,0.04, 0.85*textSizeSpectra,textSizeSpectra, 0.8,1.7);
+            histo2DClusEUnscaled->GetXaxis()->SetLabelOffset(-0.005);
+            histo2DClusEUnscaled->DrawCopy(); 
+            
+            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+                DrawGammaSetMarker(histoRawClusterE[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                histoRawClusterE[i]->DrawCopy("e1,same"); 
+            }
+            legendClusUnscaled->Draw();
+            
+            
+            labelEnergyClusUnscaled->Draw();
+            labelClusterUnscaled->Draw();
+            labelDetProcClus->Draw();
 
-        canvasClusterYield->Update();
-        canvasClusterYield->SaveAs(Form("%s/Cluster_E_%s_YieldUnscaledTrigg.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+            canvasClusterYield->Update();
+            canvasClusterYield->SaveAs(Form("%s/Cluster_E_%s_YieldUnscaledTrigg.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+        }    
         if (!enableEta) delete canvasClusterYield;    
     }
     
@@ -2852,9 +2856,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         canvasNewSysErrMean->Update();
         canvasNewSysErrMean->SaveAs(Form("%s/Pi0_SysErrorsSeparatedSourcesReweighted_%s.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
 
-        
-        
-        
         for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
             for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
         }
@@ -4653,6 +4654,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2)) 
                 offSetsEtaSys[4]+=2;
         }
+
         
         TString nameWeightsLogFileEta =     Form("%s/weightsEta_%s.dat",outputDir.Data(),isMC.Data());
         TGraphAsymmErrors* graphCorrectedYieldWeightedAverageEtaTot     = NULL;
@@ -4667,7 +4669,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                                                                                     mode, optionEnergy, "Eta", v2ClusterizerMerged,
                                                                                                     fileInputCorrFactors
                                                                                                   );
-     //return;
+            
             // Prepare arrays for reading weighting numbers 
             Double_t xValuesReadEta[100];
             Double_t weightsReadEta[12][100];
@@ -4937,10 +4939,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     } else {
                         graphRelSysErrEtaSourceWeighted[k]->SetName(Form("RelSysErrEtaSourceWeighted%s", ((TString)ptSysDetail[0][0].at(k+1)).Data()));
                     }    
-                }    
-                
+                }       
             }
-
+            
             
             // create averaged supporting graphs
             graphMassEtaDataWeighted                        = CalculateWeightedQuantity(    graphOrderedMassEtaData, 

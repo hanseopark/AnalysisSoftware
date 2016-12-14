@@ -1172,6 +1172,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     // ************************************************************************************************
     // ********** Plot total contamination from  out of bunch pileup with different methods ***********
     // ************************************************************************************************
+    Double_t maxFracBG  = 8;
+    if (optionEnergy.CompareTo("2.76TeV") == 0) 
+        maxFracBG       = 20;
     if (kDCAFileDataExists){
         cout << "Plotting total contamination from  out of bunch pileup with different methods" << endl;
         TCanvas* canvasCorrFrac = new TCanvas("canvasCorrFrac","",200,10,1350,900);  // gives the page size
@@ -1182,13 +1185,13 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             DrawAutoGammaMesonHistos( histoCorrectionFactorsHistvsPt, 
                         "", "#it{p}_{T,#eta} (GeV/#it{c})", "Contamination from Pileup (%)", 
                         kFALSE, 2.,1e-8, kFALSE,
-                        kTRUE, 0, 8., 
+                        kTRUE, 0, maxFracBG, 
                         kFALSE, 0., 10.);
         } else {
             DrawAutoGammaMesonHistos( histoCorrectionFactorsHistvsPt, 
                                     "", "#it{p}_{T,#pi^{0}} (GeV/#it{c})", "Contamination from Pileup (%)", 
                                     kFALSE, 2.,1e-8, kFALSE,
-                                    kTRUE, 0, 8., 
+                                    kTRUE, 0, maxFracBG, 
                                     kFALSE, 0., 10.);
         }
         DrawGammaSetMarker(histoCorrectionFactorsHistvsPt, styleMethod[0], 1.2, colorMethod[0], colorMethod[0]);
@@ -1196,7 +1199,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         histoCorrectionFactorsHistvsPt->DrawCopy("p,e1"); 
         TF1* fitCorrectionFactorsHistvsPt = new TF1("fitCorrectionFactorsHistvsPt","[0]/pow(x,[1])+[2]");
         fitCorrectionFactorsHistvsPt->SetRange(0.4, maxPtMeson);
-        TFitResultPtr resultCorrectionFactorsHistvsPt = histoCorrectionFactorsHistvsPt->Fit(fitCorrectionFactorsHistvsPt,"SINRME+","",0.4, maxPtMeson);
+        TFitResultPtr resultCorrectionFactorsHistvsPt = histoCorrectionFactorsHistvsPt->Fit(fitCorrectionFactorsHistvsPt,"SNRME+","",0.4, maxPtMeson);
         TString bla= WriteParameterToFile(fitCorrectionFactorsHistvsPt);
         cout << bla.Data()<< endl;
         fitCorrectionFactorsHistvsPt->SetLineColor(colorMethod[0]);
@@ -1209,7 +1212,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             histoCorrectionFactorsFitvsPt->DrawCopy("same,p,e1"); 
             fitCorrectionFactorsFitvsPt = new TF1("fitCorrectionFactorsFitvsPt","[0]/pow(x,[1])+[2]");
             fitCorrectionFactorsFitvsPt->SetRange(0.4, maxPtMeson);
-            resultCorrectionFactorsFitvsPt = histoCorrectionFactorsFitvsPt->Fit(fitCorrectionFactorsFitvsPt,"SINRME+","",0.4, maxPtMeson);
+            resultCorrectionFactorsFitvsPt = histoCorrectionFactorsFitvsPt->Fit(fitCorrectionFactorsFitvsPt,"SNRME+","",0.4, maxPtMeson);
             fitCorrectionFactorsFitvsPt->SetLineColor(colorMethod[1]);
             fitCorrectionFactorsFitvsPt->Draw("same");
         }
@@ -1218,7 +1221,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         TF1* fitCorrectionFactorsHistvsPtCatA = new TF1("fitCorrectionFactorsHistvsPtCatA","[0]/pow(x,[1])+[2]");
         fitCorrectionFactorsHistvsPtCatA->SetRange(0.4, maxPtMeson);
         
-        TFitResultPtr resultCorrectionFactorsHistvsPtCatA = histoCorrectionFactorsHistvsPtCatA->Fit(fitCorrectionFactorsHistvsPtCatA,"SINRME+","",0.4, maxPtMeson);
+        TFitResultPtr resultCorrectionFactorsHistvsPtCatA = histoCorrectionFactorsHistvsPtCatA->Fit(fitCorrectionFactorsHistvsPtCatA,"SNRME+","",0.4, maxPtMeson);
         fitCorrectionFactorsHistvsPtCatA->SetLineColor(colorMethod[2]);
         fitCorrectionFactorsHistvsPtCatA->Draw("same");
 
@@ -1226,7 +1229,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         histoCorrectionFactorsHistvsPtCatC->DrawCopy("same,p,e1"); 
         TF1* fitCorrectionFactorsHistvsPtCatC = new TF1("fitCorrectionFactorsHistvsPtCatC","[0]/pow(x,[1])+[2]");
         fitCorrectionFactorsHistvsPtCatC->SetRange(0.4, maxPtMeson);
-        TFitResultPtr resultCorrectionFactorsHistvsPtCatC = histoCorrectionFactorsHistvsPtCatC->Fit(fitCorrectionFactorsHistvsPtCatC,"SINRME+","",0.4, maxPtMeson);
+        TFitResultPtr resultCorrectionFactorsHistvsPtCatC = histoCorrectionFactorsHistvsPtCatC->Fit(fitCorrectionFactorsHistvsPtCatC,"SNRME+","",0.4, maxPtMeson);
         fitCorrectionFactorsHistvsPtCatC->SetLineColor(colorMethod[3]);
         fitCorrectionFactorsHistvsPtCatC->Draw("same");
 
@@ -1234,7 +1237,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         histoCorrectionFactorsHistvsPtCatD->DrawCopy("same,p,e1"); 
         TF1* fitCorrectionFactorsHistvsPtCatD = new TF1("fitCorrectionFactorsHistvsPtCatD","[0]/pow(x,[1])+[2]");
         fitCorrectionFactorsHistvsPtCatD->SetRange(0.4, maxPtMeson);
-        TFitResultPtr resultCorrectionFactorsHistvsPtCatD = histoCorrectionFactorsHistvsPtCatD->Fit(fitCorrectionFactorsHistvsPtCatD,"SINRME+","",0.4, maxPtMeson);
+        TFitResultPtr resultCorrectionFactorsHistvsPtCatD = histoCorrectionFactorsHistvsPtCatD->Fit(fitCorrectionFactorsHistvsPtCatD,"SNRME+","",0.4, maxPtMeson);
         fitCorrectionFactorsHistvsPtCatD->SetLineColor(colorMethod[4]);
         fitCorrectionFactorsHistvsPtCatD->Draw("same");
                 
