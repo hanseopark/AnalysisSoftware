@@ -3624,3 +3624,21 @@ TString AutoDetectMainTList(Int_t mode , TFile* fFile){
     else 
         return "";
 }
+
+TString GetDefaultMainTListName(Int_t mode){
+    TString nominalMainDir     = "";
+    if (mode == 9 || mode == 0) 
+        nominalMainDir         = "GammaConvV1";
+    else if( mode == 1 )
+	     nominalMainDir        = "GammaConvDalitzV1";
+    else if (mode == 2 || mode == 3) 
+        nominalMainDir         = "GammaConvCalo";
+    else if (mode == 4 || mode == 5) 
+        nominalMainDir         = "GammaCalo";
+    else if( mode == 6 || mode == 7 )
+	    nominalMainDir         = "GammaConvDalitzCalo";
+    else if (mode == 10 || mode == 11 ) 
+        nominalMainDir         = "GammaCaloMerged";
+
+    return nominalMainDir;
+}
