@@ -219,6 +219,29 @@ void SecondaryInterpolation(TString suffix ="eps"){
   TGraphErrors* graphProton7TeVSys = new TGraphErrors(hProton7TeVSys);
   RemoveZerosAndPrint(graphProton7TeVSys,"graphProton7TeVSys");
 
+
+  //*************************************************************************************************
+  // read 8 TeV neutral pions
+
+  TFile* inputNeutralPions = new TFile("../8TeV_Final8/CombinedResultsPaperPP8TeV_2016_12_07.root");
+  TDirectory* directoryNeutralMesons = (TDirectory*)inputNeutralPions->Get("Pi08TeV");
+  TGraphAsymmErrors* input8TeVNeutralPions = (TGraphAsymmErrors*) directoryNeutralMesons->Get("graphInvCrossSectionPi0Comb8TeVAStatErr");
+  TF1* twoCompFitNeutralPion = (TF1*) directoryNeutralMesons->Get("TsallisFitPi0");//Get("TwoComponentModelFitPi0");
+  TF1* twoCompFitNeutralPion8TeV = new TF1("fit8TeV",Form("%s*1/(%f*%f)",twoCompFitNeutralPion->GetName(),xSection8TeVV0AND,1E12));
+  Double_t* xValue            = input8TeVNeutralPions->GetX();
+  Double_t* yValue            = input8TeVNeutralPions->GetY();
+  Double_t* xError            = input8TeVNeutralPions->GetEXhigh();
+  Double_t* yError            = input8TeVNeutralPions->GetEYhigh();
+  Int_t nPoints               = input8TeVNeutralPions->GetN();
+  TGraphErrors* input8TeVNeutralPionsGraph = new TGraphErrors(nPoints);
+
+  for (Int_t i = 0; i < nPoints; i++){
+    input8TeVNeutralPionsGraph->SetPoint(i,xValue[i],yValue[i]/(xSection8TeVV0AND*1E12));
+    input8TeVNeutralPionsGraph->SetPointError(i,xError[i],yError[i]/(xSection8TeVV0AND*1E12));
+  }
+  input8TeVNeutralPions->Print();
+  input8TeVNeutralPionsGraph->Print();
+
   //*************************************************************************************************
   //*************************** Fits
   //*************************************************************************************************
@@ -379,6 +402,8 @@ void SecondaryInterpolation(TString suffix ="eps"){
   PlotWithFit(canvasDummy2, *histo2DDummy2, graphKaon8TeV, graphChargedKaon8TeVStat, fitKaon8, "compare_Kaon8_withFit", outputDir, suffix, colorTrigg);
   PlotWithFit(canvasDummy2, *histo2DDummy2, graphLambda8TeV, 0x0, fitLambda8, "compare_Lambda8_withFit", outputDir, suffix, colorTrigg);
   PlotWithFit(canvasDummy2, *histo2DDummy2, graphProton8TeV, graphChargedProton8TeVStat, fitProton8, "compare_Proton8_withFit", outputDir, suffix, colorTrigg);
+
+  PlotWithFit(canvasDummy2, *histo2DDummy, input8TeVNeutralPionsGraph, graphChargedPion8TeVStat, twoCompFitNeutralPion8TeV, "compare_NeutralToChargedPion", outputDir, suffix, colorTrigg);
 
   //**************************************************************************************************
   //**************************************************************************************************
