@@ -51,7 +51,7 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
                                             TString suffix                  = "eps"
                                         ){
     
- // ***************************************************************************************************
+    // ***************************************************************************************************
     // ****************************** General style settings *********************************************
     // ***************************************************************************************************
     StyleSettingsThesis();
@@ -984,7 +984,8 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
     for (Int_t l=0;l< nPtBins;l++){
         SysErrDatAver << ptBins[l] << "\t" << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l] << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  << endl;
     }
-
+    SysErrDatAver.close();
+    
     const char *SysErrDatnameMeanSingleErr = Form("SystematicErrorsCalculatedCalo/SystematicErrorAveragedSingleEMCEMC_%s_%s%s_%s.dat",meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
     fstream SysErrDatAverSingle;
     cout << SysErrDatnameMeanSingleErr << endl;
@@ -1002,8 +1003,6 @@ void FinaliseSystematicErrorsCalo_ppV2(     const char* nameDataFileErrors  = ""
         
         SysErrDatAverSingle << errorsMeanCorrMatSummed[l] << endl;
     }
-    
-    
     SysErrDatAverSingle.close();
     
     // ***************************************************************************************************
