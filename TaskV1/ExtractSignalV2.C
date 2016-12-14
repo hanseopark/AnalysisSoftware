@@ -1428,7 +1428,7 @@ void ExtractSignalV2(   TString meson                   = "",
         TString triggerInt         = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPosition(),2);
         PlotExampleInvMassBinsV2(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin],
                             fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                            fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fExampleBinScaleFac, fMode);
+                            fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fExampleBinScaleFac, fMode, addSig );
         
     } else {
         nameMesonSub    = Form("%s_MesonSubtracted%s", plotPrefix.Data(), plotSuffix.Data());
@@ -1587,11 +1587,11 @@ void ExtractSignalV2(   TString meson                   = "",
                                                             fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins, fHistoMappingTrueMesonMixedCaloConvPhotonInvMassPtBins, nameMesonTrue,
                                                             nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement,
                                                             fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem, fMode);
-
+            TString triggerInt         = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPosition(),2);
             PlotExampleInvMassBinsMC(fHistoMappingTrueFullMesonInvMassPtBins[fExampleBin], fHistoMappingTrueMesonCaloPhotonInvMassPtBins[fExampleBin],  NULL,
                                     fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[fExampleBin], fHistoMappingTrueMesonMixedCaloConvPhotonInvMassPtBins[fExampleBin], fExampleBin,
                                     outputDir.Data(),Suffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                                    fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, fMode);
+                                    fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fMode, addSig);
 
             
         } else if (fAdvancedMesonQA && (fMode == 2 || fMode == 3)){
@@ -1601,10 +1601,11 @@ void ExtractSignalV2(   TString meson                   = "",
                                                             fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins, NULL, nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fdate,
                                                             fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem,
                                                             fMode);
+            TString triggerInt         = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPosition(),2);
             PlotExampleInvMassBinsMC(fHistoMappingTrueFullMesonInvMassPtBins[fExampleBin], fHistoMappingTrueMesonCaloPhotonInvMassPtBins[fExampleBin],  NULL,
                                     fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[fExampleBin], NULL, fExampleBin,
                                     outputDir.Data(),Suffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                                    fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, fMode);
+                                    fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fMode, addSig);
             
         }
         
