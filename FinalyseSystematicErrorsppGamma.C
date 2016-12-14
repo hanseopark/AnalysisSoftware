@@ -84,7 +84,7 @@ void FinalyseSystematicErrorsppGamma(const char* nameDataFileErrors ="", TString
     TString nameCutVariation[16]           = {"R_{min}","dE/dx e-line","TPC cluster","Single e^{#pm} p_{T}",  "#chi^{2} #gamma & #psi_{pair}","q_{T}","Double Count","BG method","Periods","SPD pileup","Out of bunch pileup","cos(#Theta_{point})","dE/dx #pi-line","#alpha meson","Cocktail"};
 
     // Set names of cut variations for file input
-    TString nameCutVariationSC[16]         = {"Rcut","dEdxE", "TPCCluster", "SinglePt", "Chi2" , "Qt" , "DoubleCount" ,"BG" ,"Periods" ,"SPD" ,"Pileup","CosPoint","dEdxPi", "Alpha" ,"Cocktail"};
+    TString nameCutVariationSC[16]         = {"Rcut","dEdxE", "TPCCluster", "SinglePt", "Chi2" , "Qt" , "DoubleCount" ,"BG" ,"7TeVPeriods" ,"SPD" ,"Pileup","CosPoint","dEdxPi", "Alpha" ,"Cocktail"};
 
     // Create output folder
     gSystem->Exec("mkdir -p GammaSystematicErrorsCalculated");
@@ -151,7 +151,16 @@ void FinalyseSystematicErrorsppGamma(const char* nameDataFileErrors ="", TString
         TGraphAsymmErrors* graphNegErrors       = NULL;
 
         // Set currently undetermined uncertainties
-        if ( nameCutVariationSC[i].CompareTo("Periods")==0  ){
+//         if ( nameCutVariationSC[i].CompareTo("Periods")==0  ){
+//             TString nameGraphPos;
+//             TString nameGraphNeg;
+//             nameGraphPos                        = Form("%s_SystErrorRelPos_%s_pp",spectrumName.Data(),nameCutVariationSC[i-1].Data()  );
+//             nameGraphNeg                        = Form("%s_SystErrorRelNeg_%s_pp",spectrumName.Data(),nameCutVariationSC[i-1].Data()  );
+//             cout << "Cutstudies " << i << "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
+//             graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
+//             graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
+//         } else 
+            if ( nameCutVariationSC[i].CompareTo("Pileup")==0  ){
             TString nameGraphPos;
             TString nameGraphNeg;
             nameGraphPos                        = Form("%s_SystErrorRelPos_%s_pp",spectrumName.Data(),nameCutVariationSC[i-1].Data()  );
@@ -159,22 +168,14 @@ void FinalyseSystematicErrorsppGamma(const char* nameDataFileErrors ="", TString
             cout << "Cutstudies " << i << "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
-        } else if ( nameCutVariationSC[i].CompareTo("Pileup")==0  ){
-            TString nameGraphPos;
-            TString nameGraphNeg;
-            nameGraphPos                        = Form("%s_SystErrorRelPos_%s_pp",spectrumName.Data(),nameCutVariationSC[i-1].Data()  );
-            nameGraphNeg                        = Form("%s_SystErrorRelNeg_%s_pp",spectrumName.Data(),nameCutVariationSC[i-1].Data()  );
-            cout << "Cutstudies " << i << "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
-            graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
-            graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
-        } else if ( nameCutVariationSC[i].CompareTo("Cocktail")==0  ){
-            TString nameGraphPos;
-            TString nameGraphNeg;
-            nameGraphPos                        = Form("%s_SystErrorRelPos_%s_pp",spectrumName.Data(),nameCutVariationSC[i-1].Data()  );
-            nameGraphNeg                        = Form("%s_SystErrorRelNeg_%s_pp",spectrumName.Data(),nameCutVariationSC[i-1].Data()  );
-            cout << "Cutstudies " << i << "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
-            graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
-            graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
+//         } else if ( nameCutVariationSC[i].CompareTo("Cocktail")==0  ){
+//             TString nameGraphPos;
+//             TString nameGraphNeg;
+//             nameGraphPos                        = Form("%s_SystErrorRelPos_%s_pp",spectrumName.Data(),nameCutVariationSC[i-1].Data()  );
+//             nameGraphNeg                        = Form("%s_SystErrorRelNeg_%s_pp",spectrumName.Data(),nameCutVariationSC[i-1].Data()  );
+//             cout << "Cutstudies " << i << "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
+//             graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
+//             graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
         } else {
             // Load input graphs from systematics file
             TString nameGraphPos                = Form("%s_SystErrorRelPos_%s_pp",spectrumName.Data(),nameCutVariationSC[i].Data() );
@@ -203,7 +204,94 @@ void FinalyseSystematicErrorsppGamma(const char* nameDataFileErrors ="", TString
         CorrectSystematicErrorsWithMean(errorsPos[i],   errorsPosErr[i],    errorsPosCorr[i],   errorsPosErrCorr[i],    nPtBins);
         CorrectSystematicErrorsWithMean(errorsNeg[i],   errorsNegErr[i],    errorsNegCorr[i],   errorsNegErrCorr[i],    nPtBins);
         CorrectSystematicErrorsWithMean(errorsMean[i],  errorsMeanErr[i],   errorsMeanCorr[i],  errorsMeanErrCorr[i],   nPtBins);
-
+        
+        if (nameCutVariationSC[i].CompareTo("7TeVPeriods")==0){
+            for (Int_t k = 0; k < nPtBins; k++){
+                if (ptBins[k] > 0.0){
+                    errorsMean[i][k]        = 1.5;
+                    errorsMeanErr[i][k]     = 0.02;
+                    errorsMeanCorr[i][k]    = 1.5;
+                    errorsMeanErrCorr[i][k] = 0.02;
+                }
+            }   
+        }
+        if (nameCutVariationSC[i].CompareTo("SinglePt")==0){
+            for (Int_t k = 0; k < nPtBins; k++){
+                if (ptBins[k] > 0.0){
+                    errorsMean[i][k]        = 0.3;
+                    errorsMeanErr[i][k]     = 0.02;
+                    errorsMeanCorr[i][k]    = 0.3;
+                    errorsMeanErrCorr[i][k] = 0.02;
+                }
+            }   
+        }
+        if (nameCutVariationSC[i].CompareTo("Cocktail")==0){
+            for (Int_t k = 0; k < nPtBins; k++){
+                if (ptBins[k] > 0.0){
+                    errorsMean[i][k]        = 1.0;
+                    errorsMeanErr[i][k]     = 0.02;
+                    errorsMeanCorr[i][k]    = 1.0;
+                    errorsMeanErrCorr[i][k] = 0.02;
+                }
+            }   
+        }
+        if (nameCutVariationSC[i].CompareTo("Chi2")==0){
+            for (Int_t k = 0; k < nPtBins; k++){
+                if (ptBins[k] > 0.0){
+                    errorsMean[i][k]        = 0.2+pow(ptBins[k],2)*0.025;
+                    errorsMeanErr[i][k]     = 0.02;
+                    errorsMeanCorr[i][k]    = 0.2+pow(ptBins[k],2)*0.025;
+                    errorsMeanErrCorr[i][k] = 0.02;
+                }
+            }   
+        }
+        if (nameCutVariationSC[i].CompareTo("Alpha")==0){
+            for (Int_t k = 0; k < nPtBins; k++){
+                if (ptBins[k] > 0.0){
+                    errorsMean[i][k]        = 0.01+pow(ptBins[k],2)*0.029;
+                    errorsMeanErr[i][k]     = 0.02;
+                    errorsMeanCorr[i][k]    = 0.01+pow(ptBins[k],2)*0.029;
+                    errorsMeanErrCorr[i][k] = 0.02;
+                }
+            }   
+        }
+        if (nameCutVariationSC[i].CompareTo("DoubleCount")==0){
+            for (Int_t k = 0; k < nPtBins; k++){
+                if (ptBins[k] > 0.0){
+                    errorsMean[i][k]        = 0.01+pow(ptBins[k]-0.5,2)*0.027;
+                    errorsMeanErr[i][k]     = 0.02;
+                    errorsMeanCorr[i][k]    = 0.01+pow(ptBins[k]-0.5,2)*0.027;
+                    errorsMeanErrCorr[i][k] = 0.02;
+                }
+            }   
+        }
+        if (nameCutVariationSC[i].CompareTo("Qt")==0){
+            for (Int_t k = 0; k < nPtBins; k++){
+                if (ptBins[k] > 0.0){
+                    errorsMean[i][k]        = 0.01+pow(ptBins[k]+1,2)*0.029;
+                    errorsMeanErr[i][k]     = 0.02;
+                    errorsMeanCorr[i][k]    = 0.01+pow(ptBins[k]+1,2)*0.029;
+                    errorsMeanErrCorr[i][k] = 0.02;
+                }
+            }   
+        }
+        if (nameCutVariationSC[i].CompareTo("dEdxE")==0){
+            for (Int_t k = 0; k < nPtBins; k++){
+                if (ptBins[k] < 2.2){
+                    errorsMean[i][k]        = 0.25+pow(ptBins[k]-2.0,2)*0.7;
+                    errorsMeanErr[i][k]     = 0.02;
+                    errorsMeanCorr[i][k]    = 0.25+pow(ptBins[k]-2.0,2)*0.7;
+                    errorsMeanErrCorr[i][k] = 0.02;
+                }
+                else{
+                    errorsMean[i][k]        = 0.25;
+                    errorsMeanErr[i][k]     = 0.02;
+                    errorsMeanCorr[i][k]    = 0.25;
+                    errorsMeanErrCorr[i][k] = 0.02;
+                }
+            }   
+        }
+        
         // Add systematic error contribution from current cutvariation to total summed error
         for (Int_t l = 0; l < nPtBins; l++){
             errorsPosSummed[l]                  = errorsPosSummed[l]+pow(errorsPos[i][l],2);

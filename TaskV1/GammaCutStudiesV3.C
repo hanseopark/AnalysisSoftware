@@ -561,9 +561,19 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     TFile **fileCurrentCorrection               = new TFile*[number];
     
     if(!cutVariationName.CompareTo("Cocktail")){
-        specialString[0]="finalGamma_v1";
-        specialString[1]="0.8CT_linA";
-        specialString[2]="0.8CT_linB";
+        specialString[0]="std";
+        specialString[1]="linA";
+        specialString[2]="linB";
+        specialString[3]="polA";
+        specialString[4]="polB";
+    }
+    if(!cutVariationName.CompareTo("7TeVPeriods")){
+        specialString[0]="std";
+        specialString[1]="LHC10b";
+        specialString[2]="LHC10c";
+        specialString[3]="LHC10d";
+        specialString[4]="LHC10e";
+        specialString[5]="LHC10f";
     }
     //*******************************************************************************************
     //*****************************Initialization of Canvases ***********************************
@@ -723,7 +733,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         } else {
             cutStringsName[i] = cutSelection[i].Data();
         }
-        if(!cutVariationName.CompareTo("Cocktail")){
+        if(!cutVariationName.CompareTo("Cocktail")||!cutVariationName.CompareTo("7TeVPeriods")){
             folderName[i]=Form("%s_%s",specialString[i].Data(),cutSelection[i].Data());
         }else{
             folderName[i]=cutSelection[i].Data();

@@ -129,9 +129,12 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
    TString fileNameSysErrInclRatio              ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_11_30.dat"; // default
    TString fileNameSysErrDoubleRatio            ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_11_30.dat"; // default
    if(option.CompareTo("7TeV") == 0){
-        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_11_30.dat";
-        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_11_30.dat";
-        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_11_30.dat";
+        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_12_13.dat";
+        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_12_13.dat";
+        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_12_13.dat";
+//         fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_11_30.dat";
+//         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_11_30.dat";
+//         fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_11_30.dat";
    }
    fileSysErrGamma.open(fileNameSysErrGamma,ios_base::in);
    cout << fileNameSysErrGamma << endl;
@@ -1057,7 +1060,15 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                
                PlotLatexLegend(0.66, 0.78, 0.045,collisionSystem,detectionProcess,2);
                drawLatex("#gamma's from ALICE Data", 1.7, 0.000000001, kBlack,0.035);
-               
+               TArrow *ar2[50];
+               for(Int_t i=1;i<histoDirectPhotonSpectrum->GetNbinsX()+1;i++)
+               {
+                   ar2[i] = new TArrow(histoDirectPhotonSpectrum->GetBinCenter(i),histoDirectPhotonSpectrum->GetBinContent(i),histoDirectPhotonSpectrum->GetBinCenter(i),histoDirectPhotonSpectrum->GetBinContent(i)*0.1,0.02);
+                   ar2[i]->SetAngle(40);
+                   ar2[i]->SetLineWidth(2);
+                   ar2[i]->Draw();
+                    
+               }
                TLegend* leg_GammaSpectra;
                leg_GammaSpectra                            = GetAndSetLegend(0.2,0.2,2);
                leg_GammaSpectra->AddEntry(histoDirectPhotonSpectrum,"direct photon upper limits", "p");
@@ -1071,6 +1082,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
     }
 
     fileFinalResults.close();
+
 
 //**********************************************************************************
 //***                      Save Histograms                                       ***
