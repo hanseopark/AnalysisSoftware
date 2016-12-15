@@ -1045,36 +1045,42 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                CanvasDirGamma->SetLogy();
                CanvasDirGamma->SetLogx();
                
-               Double_t        minPt                = 0.2;
-               if (mode==4)    minPt                = 1.5;
+               histoDirectPhotonSpectrum->SetLineColor(kBlack);
+               histoDirectPhotonSpectrum->SetLineWidth(2);
                
-               histoDirectPhotonSpectrum->GetXaxis()->SetLabelOffset(-1e-2);
-               DrawAutoGammaMesonHistos( histoDirectPhotonSpectrum,
-                                        "", "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c})",
-                                        kTRUE, 20.,5e-10, kFALSE,
-                                        kFALSE, -0.004, 0.020,
-                                        kTRUE, minPt,(histoDirectPhotonSpectrum->GetXaxis())->GetBinUpEdge(histoDirectPhotonSpectrum->GetNbinsX()),62,0.04,62,0.03,0.7,1.7);
-               DrawGammaSetMarker(histoDirectPhotonSpectrum, 20, 1.5,kBlue+2,kBlue+2);
-               
-               histoDirectPhotonSpectrum->DrawCopy("e1,same");
+               TH2F * dummyDir       = new TH2F("dummyDir","dummyDir",1000,0.2,20.0,1000,5e-10,2);
+               SetStyleHistoTH2ForGraphs(dummyDir, "#it{p}_{T} (GeV/#it{c})","(#gamma_{inc}/#pi^{0})/(#gamma_{decay}/#pi^{0})", 0.04,0.04, 0.04,0.04, 1.,1.);
+               dummyDir->GetXaxis()->SetRangeUser(0.,histoDoubleRatioConversionTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioConversionTrueEffPurity->GetNbinsX())*1.5);
+               dummyDir->GetXaxis()->SetTitleFont(62);
+               dummyDir->GetYaxis()->SetTitleFont(62);
+               dummyDir->GetXaxis()->SetLabelOffset(-2e-2);
+               dummyDir->GetXaxis()->SetTitleOffset(0.8);
+               dummyDir->GetYaxis()->SetTitleOffset(1.5);
+               dummyDir->DrawCopy();
                
                PlotLatexLegend(0.66, 0.78, 0.045,collisionSystem,detectionProcess,2);
                drawLatex("#gamma's from ALICE Data", 1.7, 0.000000001, kBlack,0.035);
                TArrow *ar2[50];
                for(Int_t i=1;i<histoDirectPhotonSpectrum->GetNbinsX()+1;i++)
                {
-                   ar2[i] = new TArrow(histoDirectPhotonSpectrum->GetBinCenter(i),histoDirectPhotonSpectrum->GetBinContent(i),histoDirectPhotonSpectrum->GetBinCenter(i),histoDirectPhotonSpectrum->GetBinContent(i)*0.1,0.02);
+                   if (!histoDirectPhotonSpectrum->GetBinContent(i)) continue;
+                   ar2[i] = new TArrow(histoDirectPhotonSpectrum->GetBinCenter(i),histoDirectPhotonSpectrum->GetBinContent(i),histoDirectPhotonSpectrum->GetBinCenter(i),histoDirectPhotonSpectrum->GetBinContent(i)*0.1,0.02,"|->");
                    ar2[i]->SetAngle(40);
                    ar2[i]->SetLineWidth(2);
                    ar2[i]->Draw();
-                    
                }
+              
+               NLO->GetXaxis()->SetRangeUser(NLO->GetXaxis()->GetXmin(), histoDirectPhotonSpectrum->GetXaxis()->GetXmax()); 
+               NLO->SetLineWidth(2);
+               NLO->Draw("lp3");
+               
                TLegend* leg_GammaSpectra;
                leg_GammaSpectra                            = GetAndSetLegend(0.2,0.2,2);
-               leg_GammaSpectra->AddEntry(histoDirectPhotonSpectrum,"direct photon upper limits", "p");
+               leg_GammaSpectra->AddEntry(histoDirectPhotonSpectrum,"direct photon upper limits",   "l");
+               leg_GammaSpectra->AddEntry(NLO,                      "pp NLO direct photon",         "l");
                leg_GammaSpectra->Draw();
                
-               CanvasDirGamma->Print(Form("%s/%s_DirectPhotonSPectrum_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
+               CanvasDirGamma->Print(Form("%s/%s_DirectPhotonSpectrum_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
            } else {
                cout << "No systematic uncertainties on double ratio given, skipping direct photon calculation." << endl;
            }
