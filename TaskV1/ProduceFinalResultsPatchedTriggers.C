@@ -2883,6 +2883,26 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         if (mode == 10){
             graphPurityPi0Weighted                      = graphPurityPi0[0];            
         }       
+
+        TGraphAsymmErrors* graphRelErrorPi0Stat       = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAveragePi0Stat, "relativeStatErrorPi0");
+        while (graphRelErrorPi0Stat->GetY()[0] < 0 ) graphRelErrorPi0Stat->RemovePoint(0);
+        
+        TGraphAsymmErrors* graphRelErrorPi0Sys        = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAveragePi0Sys, "relativeSysErrorPi0");
+        while (graphRelErrorPi0Sys->GetY()[0] < 0 ) graphRelErrorPi0Sys->RemovePoint(0);
+        
+        const char *SysErrDatnameMeanSingleErrCheck = Form("%s/SystematicErrorAveragedSingle%s_Pi0_%s_Check.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
+        fstream SysErrDatAverSingleCheck;
+        SysErrDatAverSingleCheck.precision(4);
+        cout << SysErrDatnameMeanSingleErrCheck << endl;
+        
+        SysErrDatAverSingleCheck.open(SysErrDatnameMeanSingleErrCheck, ios::out);
+        SysErrDatAverSingleCheck << "pt \t Stat err \t sys err \t tot err " << endl;
+        for (Int_t i = 0; i < graphRelErrorPi0Stat->GetN(); i++){
+            if (graphRelErrorPi0Stat->GetY()[i] > 0) SysErrDatAverSingleCheck << graphRelErrorPi0Stat->GetX()[i] << "\t" << graphRelErrorPi0Stat->GetY()[i] <<"\t" << graphRelErrorPi0Sys->GetY()[i] << endl;
+        }
+        SysErrDatAverSingleCheck << endl;
+        SysErrDatAverSingleCheck.close();
+    
     }    
     // print final graphs
     cout << "stat pi0" << endl; 
@@ -5139,6 +5159,25 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             graphEfficiencyEtaWeighted                      = graphEfficiencyEta[0];
             graphEffTimesAccEtaWeighted                     = graphEffTimesAccEta[0];
         
+            TGraphAsymmErrors* graphRelErrorEtaStat       = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAverageEtaStat, "relativeStatErrorEta");
+            while (graphRelErrorEtaStat->GetY()[0] < 0 ) graphRelErrorEtaStat->RemovePoint(0);
+            
+            TGraphAsymmErrors* graphRelErrorEtaSys        = CalculateRelErrUpAsymmGraph( graphCorrectedYieldWeightedAverageEtaSys, "relativeSysErrorEta");
+            while (graphRelErrorEtaSys->GetY()[0] < 0 ) graphRelErrorEtaSys->RemovePoint(0);
+            
+            const char *SysErrDatnameMeanSingleErrCheck = Form("%s/SystematicErrorAveragedSingle%s_Eta_%s_Check.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
+            fstream SysErrDatAverSingleCheck;
+            SysErrDatAverSingleCheck.precision(4);
+            cout << SysErrDatnameMeanSingleErrCheck << endl;
+            
+            SysErrDatAverSingleCheck.open(SysErrDatnameMeanSingleErrCheck, ios::out);
+            SysErrDatAverSingleCheck << "pt \t Stat err \t sys err \t tot err " << endl;
+            for (Int_t i = 0; i < graphRelErrorEtaStat->GetN(); i++){
+                if (graphRelErrorEtaStat->GetY()[i] > 0) SysErrDatAverSingleCheck << graphRelErrorEtaStat->GetX()[i] << "\t" << graphRelErrorEtaStat->GetY()[i] <<"\t" << graphRelErrorEtaSys->GetY()[i] << endl;
+            }
+            SysErrDatAverSingleCheck << endl;
+            SysErrDatAverSingleCheck.close();
+        
         }   
         // Printing final graphs
         cout << "stat eta" << endl; 
@@ -6421,6 +6460,24 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                                                                          xErrorLowFinalEtaToPi0, xErrorHighFinalEtaToPi0,yErrorLowFinalEtaToPi0, yErrorHighFinalEtaToPi0);
                 graphEtaToPi0WeightedAverageSys         = new TGraphAsymmErrors(nPointFinalEtaToPi0, xValueFinalEtaToPi0, yValueFinalEtaToPi0, 
                                                                                         xErrorLowFinalEtaToPi0, xErrorHighFinalEtaToPi0,yErrorSysLowFinalEtaToPi0, yErrorSysHighFinalEtaToPi0);
+                TGraphAsymmErrors* graphRelErrorEtaToPi0Stat       = CalculateRelErrUpAsymmGraph( graphEtaToPi0WeightedAverageStat, "relativeStatErrorEtaToPi0");
+                while (graphRelErrorEtaToPi0Stat->GetY()[0] < 0 ) graphRelErrorEtaToPi0Stat->RemovePoint(0);
+                
+                TGraphAsymmErrors* graphRelErrorEtaToPi0Sys        = CalculateRelErrUpAsymmGraph( graphEtaToPi0WeightedAverageSys, "relativeSysErrorEtaToPi0");
+                while (graphRelErrorEtaToPi0Sys->GetY()[0] < 0 ) graphRelErrorEtaToPi0Sys->RemovePoint(0);
+                
+                const char *SysErrDatnameMeanSingleErrCheck = Form("%s/SystematicErrorAveragedSingle%s_EtaToPi0_%s_Check.dat",outputDir.Data(),sysStringComb.Data(),optionEnergy.Data());
+                fstream SysErrDatAverSingleCheck;
+                SysErrDatAverSingleCheck.precision(4);
+                cout << SysErrDatnameMeanSingleErrCheck << endl;
+                
+                SysErrDatAverSingleCheck.open(SysErrDatnameMeanSingleErrCheck, ios::out);
+                SysErrDatAverSingleCheck << "pt \t Stat err \t sys err \t tot err " << endl;
+                for (Int_t i = 0; i < graphRelErrorEtaToPi0Stat->GetN(); i++){
+                    if (graphRelErrorEtaToPi0Stat->GetY()[i] > 0) SysErrDatAverSingleCheck << graphRelErrorEtaToPi0Stat->GetX()[i] << "\t" << graphRelErrorEtaToPi0Stat->GetY()[i] <<"\t" << graphRelErrorEtaToPi0Sys->GetY()[i]  << endl;
+                }
+                SysErrDatAverSingleCheck << endl;
+                SysErrDatAverSingleCheck.close();
             }    
             // printing final eta/pi0 ratios
             cout << "stat eta/pi0" << endl; 

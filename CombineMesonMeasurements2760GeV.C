@@ -1839,7 +1839,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     // *************************************************************************************************************
     TH1D* histoRatioPi0Pythia8ToFit                     = (TH1D*) histoPythia8InvXSectionPi0->Clone(); 
     histoRatioPi0Pythia8ToFit                           = CalculateHistoRatioToFit (histoRatioPi0Pythia8ToFit, fitTCMInvXSectionPi0); 
-
+    histoRatioPi0Pythia8ToFit->GetXaxis()->SetRangeUser(0.4,40);
+    
     TGraph* graphRatioPi0CombNLOMuHalf                  = (TGraph*)graphNLOCalcPi0MuHalf->Clone();
     TGraph* graphRatioPi0CombNLOMuOne                   = (TGraph*)graphNLOCalcPi0MuOne->Clone();
     TGraph* graphRatioPi0CombNLOMuTwo                   = (TGraph*)graphNLOCalcPi0MuTwo->Clone();
@@ -2665,7 +2666,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     // *************************************************************************************************************    
     TH1D* histoRatioEtaPythia8ToFit                     = (TH1D*) histoPythia8InvXSectionEta->Clone(); 
     histoRatioEtaPythia8ToFit                           = CalculateHistoRatioToFit (histoRatioEtaPythia8ToFit, fitTCMInvXSectionEta); 
-
+    histoRatioEtaPythia8ToFit->GetXaxis()->SetRangeUser(0.6,25);
 
     TGraph* graphRatioEtaCombNLOMuHalf                  = (TGraph*)graphNLOCalcEtaMuHalf->Clone();
     TGraph* graphRatioEtaCombNLOMuOne                   = (TGraph*)graphNLOCalcEtaMuOne->Clone();
