@@ -71,7 +71,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
                                         TString bWCorrection        = "X",
                                         Int_t  flagMerged           = 2,
                                         TString fileNameCorrFactors = "",
-                                        Bool_t plotInvMassBins      = kFALSE                                        
+                                        Bool_t plotInvMassBins      = kFALSE,
+                                        Bool_t flagPCMfile          = 0
                                     ){
 
     TString date = ReturnDateString();
@@ -215,60 +216,163 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     
 
     //************************** Read data for PCM **************************************************
-    TFile* filePCM                                          = new TFile(fileNamePCM.Data());
-    TH1D* histoPCMNumberOfEvents                            = (TH1D*)filePCM->Get("histoNumberOfEvents2.76TeV");
-    TDirectory* directoryPCMPi0                             = (TDirectory*)filePCM->Get("Pi02.76TeV"); 
-        TH1D* histoPCMPi0Mass                               = (TH1D*)directoryPCMPi0->Get("MassPi0");
-        TH1D* histoPCMPi0FWHMMeV                            = (TH1D*)directoryPCMPi0->Get("FWHMPi0MeV");
-        TH1D* histoPCMPi0TrueMass                           = (TH1D*)directoryPCMPi0->Get("TrueMassPi0");
-        TH1D* histoPCMPi0TrueFWHMMeV                        = (TH1D*)directoryPCMPi0->Get("TrueFWHMPi0MeV");
-        TH1D* histoPCMPi0Acc                                = (TH1D*)directoryPCMPi0->Get("AcceptancePi0");
-        TH1D* histoPCMPi0TrueEffPt                          = (TH1D*)directoryPCMPi0->Get("EfficiencyPi0");
-        TH1D* histoPCMPi0InvXSectionStat                    = (TH1D*)directoryPCMPi0->Get("InvCrossSectionPi0");
-        TGraphAsymmErrors* graphPCMPi0InvXSectionStat       = new TGraphAsymmErrors(histoPCMPi0InvXSectionStat);
-        graphPCMPi0InvXSectionStat->RemovePoint(graphPCMPi0InvXSectionStat->GetN()-1);
-        graphPCMPi0InvXSectionStat->RemovePoint(0);
-        TGraphAsymmErrors* graphPCMPi0InvXSectionSysA       = (TGraphAsymmErrors*)directoryPCMPi0->Get("InvCrossSectionPi0SysA");
-        TGraphAsymmErrors* graphPCMPi0InvXSectionSys        = (TGraphAsymmErrors*)directoryPCMPi0->Get("InvCrossSectionPi0Sys");
-        graphPCMPi0InvXSectionSys->RemovePoint(graphPCMPi0InvXSectionSys->GetN()-1);
-//      TGraphAsymmErrors* graphPCMPi0CorrYieldSysErr    = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0SystError");
-        
-        TH1D* histoPCMPi0AccTimesEff                        = (TH1D*)histoPCMPi0TrueEffPt->Clone("histoPCMPi0AccTimesEff");
-        histoPCMPi0AccTimesEff->Multiply(histoPCMPi0Acc);
-        // normalize to full acceptance (delta y and phi)
-        histoPCMPi0AccTimesEff->Scale(2*TMath::Pi()*1.6);
-        
-    TFile* filePCMEta                                       = new TFile(fileNamePCMEta.Data());
-    TDirectory* directoryPCMEta                             = (TDirectory*)filePCMEta->Get("Eta2.76TeV"); 
-        TH1D* histoPCMEtaMass                               = (TH1D*)directoryPCMEta->Get("MassEta");
-        TH1D* histoPCMEtaFWHMMeV                            = (TH1D*)directoryPCMEta->Get("FWHMEtaMeV");
-        TH1D* histoPCMEtaTrueMass                           = (TH1D*)directoryPCMEta->Get("TrueMassEta");
-        TH1D* histoPCMEtaTrueFWHMMeV                        = (TH1D*)directoryPCMEta->Get("TrueFWHMEtaMeV");
-        TH1D* histoPCMEtaAcc                                = (TH1D*)directoryPCMEta->Get("AcceptanceEta");
-        TH1D* histoPCMEtaTrueEffPt                          = (TH1D*)directoryPCMEta->Get("EfficiencyEta");
-        TH1D* histoPCMEtaInvXSectionStat                    = (TH1D*)directoryPCMEta->Get("InvCrossSectionEta");
-        TGraphAsymmErrors* graphPCMEtaInvXSectionStat       = new TGraphAsymmErrors(histoPCMEtaInvXSectionStat);
-        graphPCMEtaInvXSectionStat->RemovePoint(0);
+    TFile* filePCM                                  = NULL;
+    TDirectory* directoryPCMPi0                     = NULL;
+    TGraphAsymmErrors* graphPCMPi0Mass              = NULL;
+    TGraphAsymmErrors* graphPCMPi0FWHM              = NULL;
+    TGraphAsymmErrors* graphPCMPi0MassMC            = NULL;
+    TGraphAsymmErrors* graphPCMPi0FWHMMC            = NULL;
+    TGraphAsymmErrors* graphPCMPi0Acc               = NULL;
+    TGraphAsymmErrors* graphPCMPi0EffPt             = NULL;
+    TGraphAsymmErrors* graphPCMPi0InvXSectionStat   = NULL;
+    TH1D* histoPCMPi0InvXSectionStat                = NULL;
+    TGraphAsymmErrors* graphPCMPi0InvXSectionSys    = NULL;
+    TGraphAsymmErrors* graphPCMPi0AccTimesEff       = NULL;
+    TDirectory* directoryPCMEta                     = NULL;
+    TGraphAsymmErrors* graphPCMEtaMass              = NULL;
+    TGraphAsymmErrors* graphPCMEtaFWHM              = NULL;
+    TGraphAsymmErrors* graphPCMEtaMassMC            = NULL;
+    TGraphAsymmErrors* graphPCMEtaFWHMMC            = NULL;
+    TGraphAsymmErrors* graphPCMEtaAcc               = NULL;
+    TGraphAsymmErrors* graphPCMEtaEffPt             = NULL;
+    TGraphAsymmErrors* graphPCMEtaInvXSectionStat   = NULL;
+    TH1D* histoPCMEtaInvXSectionStat                = NULL;
+    TGraphAsymmErrors* graphPCMEtaInvXSectionSys    = NULL;
+    TGraphAsymmErrors* graphPCMEtaAccTimesEff       = NULL;
+    TH1D* histoPCMEtaToPi0Stat                      = NULL;
+    TGraphAsymmErrors* graphPCMEtaToPi0Sys          = NULL;
 
-        TH1D* histoPCMEtaAccTimesEff                        = (TH1D*)histoPCMEtaTrueEffPt->Clone("histoPCMEtaAccTimesEff");
-        histoPCMEtaAccTimesEff->Multiply(histoPCMEtaAcc);
-        // normalize to full acceptance (delta y and phi)
-        histoPCMEtaAccTimesEff->Scale(2*TMath::Pi()*1.6);
+    if (!flagPCMfile){  
+        filePCM                                     = new TFile(fileNamePCM.Data());
+        directoryPCMPi0                             = (TDirectory*)filePCM->Get("Pi02.76TeV"); 
+            TH1D* histoPCMPi0Mass                       = (TH1D*)directoryPCMPi0->Get("MassPi0");
+            TH1D* histoPCMPi0FWHMMeV                    = (TH1D*)directoryPCMPi0->Get("FWHMPi0MeV");
+            TH1D* histoPCMPi0TrueMass                   = (TH1D*)directoryPCMPi0->Get("TrueMassPi0");
+            TH1D* histoPCMPi0TrueFWHMMeV                = (TH1D*)directoryPCMPi0->Get("TrueFWHMPi0MeV");
+            TH1D* histoPCMPi0Acc                        = (TH1D*)directoryPCMPi0->Get("AcceptancePi0");
+            TH1D* histoPCMPi0TrueEffPt                  = (TH1D*)directoryPCMPi0->Get("EfficiencyPi0");
+            histoPCMPi0InvXSectionStat                  = (TH1D*)directoryPCMPi0->Get("InvCrossSectionPi0");
+            graphPCMPi0InvXSectionStat                  = new TGraphAsymmErrors(histoPCMPi0InvXSectionStat);
+            graphPCMPi0InvXSectionStat->RemovePoint(graphPCMPi0InvXSectionStat->GetN()-1);
+            graphPCMPi0InvXSectionStat->RemovePoint(0);
+            graphPCMPi0InvXSectionSys                   = (TGraphAsymmErrors*)directoryPCMPi0->Get("InvCrossSectionPi0Sys");
+            graphPCMPi0InvXSectionSys->RemovePoint(graphPCMPi0InvXSectionSys->GetN()-1);
+            TH1D* histoPCMPi0AccTimesEff                = (TH1D*)histoPCMPi0TrueEffPt->Clone("histoPCMPi0AccTimesEff");
+            histoPCMPi0AccTimesEff->Multiply(histoPCMPi0Acc);
+            // normalize to full acceptance (delta y and phi)
+            histoPCMPi0AccTimesEff->Scale(2*TMath::Pi()*1.6);
+            histoPCMPi0Mass->Scale(1000.);
+            histoPCMPi0TrueMass->Scale(1000.);
+
+            graphPCMPi0Mass                             = new TGraphAsymmErrors(histoPCMPi0Mass);
+            graphPCMPi0FWHM                             = new TGraphAsymmErrors(histoPCMPi0FWHMMeV);
+            graphPCMPi0MassMC                           = new TGraphAsymmErrors(histoPCMPi0TrueMass);
+            graphPCMPi0FWHMMC                           = new TGraphAsymmErrors(histoPCMPi0TrueFWHMMeV);
+            graphPCMPi0Acc                              = new TGraphAsymmErrors(histoPCMPi0Acc);
+            graphPCMPi0EffPt                            = new TGraphAsymmErrors(histoPCMPi0TrueEffPt);
+            graphPCMPi0AccTimesEff                      = new TGraphAsymmErrors(histoPCMPi0AccTimesEff);
+            
+            while(graphPCMPi0AccTimesEff->GetY()[0] == 0){
+                graphPCMPi0Mass->RemovePoint(0);
+                graphPCMPi0FWHM->RemovePoint(0);
+                graphPCMPi0MassMC->RemovePoint(0);
+                graphPCMPi0FWHMMC->RemovePoint(0);
+                graphPCMPi0Acc->RemovePoint(0);
+                graphPCMPi0EffPt->RemovePoint(0);
+                graphPCMPi0AccTimesEff->RemovePoint(0);
+            }
+                
+        TFile* filePCMEta                           = new TFile(fileNamePCMEta.Data());
+        directoryPCMEta                             = (TDirectory*)filePCMEta->Get("Eta2.76TeV"); 
+            TH1D* histoPCMEtaMass                       = (TH1D*)directoryPCMEta->Get("MassEta");
+            TH1D* histoPCMEtaFWHMMeV                    = (TH1D*)directoryPCMEta->Get("FWHMEtaMeV");
+            TH1D* histoPCMEtaTrueMass                   = (TH1D*)directoryPCMEta->Get("TrueMassEta");
+            TH1D* histoPCMEtaTrueFWHMMeV                = (TH1D*)directoryPCMEta->Get("TrueFWHMEtaMeV");
+            TH1D* histoPCMEtaAcc                        = (TH1D*)directoryPCMEta->Get("AcceptanceEta");
+            TH1D* histoPCMEtaTrueEffPt                  = (TH1D*)directoryPCMEta->Get("EfficiencyEta");
+            histoPCMEtaInvXSectionStat                  = (TH1D*)directoryPCMEta->Get("InvCrossSectionEta");
+            graphPCMEtaInvXSectionStat                  = new TGraphAsymmErrors(histoPCMEtaInvXSectionStat);
+            graphPCMEtaInvXSectionStat->RemovePoint(0);
+
+            TH1D* histoPCMEtaAccTimesEff                = (TH1D*)histoPCMEtaTrueEffPt->Clone("histoPCMEtaAccTimesEff");
+            histoPCMEtaAccTimesEff->Multiply(histoPCMEtaAcc);
+            // normalize to full acceptance (delta y and phi)
+            histoPCMEtaAccTimesEff->Scale(2*TMath::Pi()*1.6);
+            histoPCMEtaMass->Scale(1000.);
+            histoPCMEtaTrueMass->Scale(1000.);
         
-        //      TGraphAsymmErrors* graphPCMEtaInvXSectionSysA     = (TGraphAsymmErrors*)directoryPCMEta->Get("InvCrossSectionEtaSysA");
-        TGraphAsymmErrors* graphPCMEtaInvXSectionSys        = (TGraphAsymmErrors*)directoryPCMEta->Get("InvCrossSectionEtaSys");
-//      TGraphAsymmErrors* graphPCMEtaCorrYieldSysErr    = (TGraphAsymmErrors*)directoryPCMEta->Get("EtaSystError");
-        TH1D* histoPCMEtaToPi0Stat                          = (TH1D*)directoryPCMEta->Get("EtatoPi0RatioConversionBinShifted");
-        TGraphAsymmErrors* graphPCMEtaToPi0Sys              = (TGraphAsymmErrors*)directoryPCMEta->Get("EtatoPi0RatioConversionBinShiftedSys");
-        
-    cout << "here" << endl;
-    Int_t nEvtPCM                                           = histoPCMNumberOfEvents->GetBinContent(1);
-    cout << "here" << endl;
-    histoPCMPi0Mass->Scale(1000.);
-    histoPCMPi0TrueMass->Scale(1000.);
-    histoPCMEtaMass->Scale(1000.);
-    histoPCMEtaTrueMass->Scale(1000.);
-    cout << "here" << endl;
+            graphPCMEtaMass                             = new TGraphAsymmErrors(histoPCMEtaMass);
+            graphPCMEtaFWHM                             = new TGraphAsymmErrors(histoPCMEtaFWHMMeV);
+            graphPCMEtaMassMC                           = new TGraphAsymmErrors(histoPCMEtaTrueMass);
+            graphPCMEtaFWHMMC                           = new TGraphAsymmErrors(histoPCMEtaTrueFWHMMeV);
+            graphPCMEtaAcc                              = new TGraphAsymmErrors(histoPCMEtaAcc);
+            graphPCMEtaEffPt                            = new TGraphAsymmErrors(histoPCMEtaTrueEffPt);
+            graphPCMEtaAccTimesEff                      = new TGraphAsymmErrors(histoPCMEtaAccTimesEff);
+
+            while(graphPCMEtaAccTimesEff->GetY()[0] == 0){
+                graphPCMEtaMass->RemovePoint(0);
+                graphPCMEtaFWHM->RemovePoint(0);
+                graphPCMEtaMassMC->RemovePoint(0);
+                graphPCMEtaFWHMMC->RemovePoint(0);
+                graphPCMEtaAcc->RemovePoint(0);
+                graphPCMEtaEffPt->RemovePoint(0);
+                graphPCMEtaAccTimesEff->RemovePoint(0);
+            }
+            
+            
+            graphPCMEtaInvXSectionSys                   = (TGraphAsymmErrors*)directoryPCMEta->Get("InvCrossSectionEtaSys");
+            histoPCMEtaToPi0Stat                        = (TH1D*)directoryPCMEta->Get("EtatoPi0RatioConversionBinShifted");
+            graphPCMEtaToPi0Sys                         = (TGraphAsymmErrors*)directoryPCMEta->Get("EtatoPi0RatioConversionBinShiftedSys");
+    } else {
+        filePCM                                     = new TFile(fileNamePCM.Data());
+        directoryPCMPi0                             = (TDirectory*)filePCM->Get("Pi02.76TeV"); 
+            graphPCMPi0Mass                             = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0_Mass_data");
+            graphPCMPi0Mass                             = ScaleGraph(graphPCMPi0Mass, 1000.);
+            graphPCMPi0FWHM                             = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0_Width_data");
+            graphPCMPi0FWHM                             = ScaleGraph(graphPCMPi0FWHM, 1000.);
+            graphPCMPi0MassMC                           = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0_Mass_MC");
+            graphPCMPi0MassMC                           = ScaleGraph(graphPCMPi0MassMC, 1000.);
+            graphPCMPi0FWHMMC                           = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0_Width_MC");
+            graphPCMPi0FWHMMC                           = ScaleGraph(graphPCMPi0FWHMMC, 1000.);
+            graphPCMPi0Acc                              = (TGraphAsymmErrors*)directoryPCMPi0->Get("AcceptancePi0");
+            graphPCMPi0EffPt                            = (TGraphAsymmErrors*)directoryPCMPi0->Get("EfficiencyPi0");
+            graphPCMPi0InvXSectionStat                  = (TGraphAsymmErrors*)directoryPCMPi0->Get("graphInvCrossSectionPi0");
+            histoPCMPi0InvXSectionStat                  = (TH1D*)directoryPCMPi0->Get("InvCrossSectionPi0");
+            cout << "Pi0 stat PCM" << endl;
+            graphPCMPi0InvXSectionStat->Print();
+            graphPCMPi0InvXSectionSys                   = (TGraphAsymmErrors*)directoryPCMPi0->Get("InvCrossSectionPi0Sys");
+            cout << "Pi0 sys PCM" << endl;
+            graphPCMPi0InvXSectionSys->Print();
+            graphPCMPi0AccTimesEff                      = (TGraphAsymmErrors*)directoryPCMPi0->Get("EffTimesAccPi0");
+
+        directoryPCMEta                                 = (TDirectory*)filePCM->Get("Eta2.76TeV"); 
+            graphPCMEtaMass                             = (TGraphAsymmErrors*)directoryPCMEta->Get("Eta_Mass_data");
+            graphPCMEtaMass                             = ScaleGraph(graphPCMEtaMass, 1000.);
+            graphPCMEtaFWHM                             = (TGraphAsymmErrors*)directoryPCMEta->Get("Eta_Width_data");
+            graphPCMEtaFWHM                             = ScaleGraph(graphPCMEtaFWHM, 1000.);
+            graphPCMEtaMassMC                           = (TGraphAsymmErrors*)directoryPCMEta->Get("Eta_Mass_MC");
+            graphPCMEtaMassMC                           = ScaleGraph(graphPCMEtaMassMC, 1000.);
+            graphPCMEtaFWHMMC                           = (TGraphAsymmErrors*)directoryPCMEta->Get("Eta_Width_MC");
+            graphPCMEtaFWHMMC                           = ScaleGraph(graphPCMEtaFWHMMC, 1000.);
+            graphPCMEtaAcc                              = (TGraphAsymmErrors*)directoryPCMEta->Get("AcceptanceEta");
+            graphPCMEtaEffPt                            = (TGraphAsymmErrors*)directoryPCMEta->Get("EfficiencyEta");
+            graphPCMEtaAccTimesEff                      = (TGraphAsymmErrors*)directoryPCMEta->Get("EffTimesAccEta");
+            histoPCMEtaInvXSectionStat                  = (TH1D*)directoryPCMEta->Get("InvCrossSectionEta");
+            graphPCMEtaInvXSectionStat                  = (TGraphAsymmErrors*)directoryPCMEta->Get("graphInvCrossSectionEta");
+            cout << "Eta stat PCM-EMC" << endl;
+            graphPCMEtaInvXSectionStat->Print();
+            graphPCMEtaInvXSectionSys                   = (TGraphAsymmErrors*)directoryPCMEta->Get("InvCrossSectionEtaSys");
+            cout << "Eta sys PCM-EMC" << endl;
+            graphPCMEtaInvXSectionSys->Print();        
+            histoPCMEtaToPi0Stat                        = (TH1D*)directoryPCMEta->Get("EtaToPi0YShiftedStatError");
+            graphPCMEtaToPi0Sys                         = (TGraphAsymmErrors*)directoryPCMEta->Get("EtaToPi0YShiftedSystError");
+            
+//             histoPCMEtaToPi0Stat                        = (TH1D*)directoryPCMEta->Get("EtaToPi0StatError");
+//             graphPCMEtaToPi0Sys                         = (TGraphAsymmErrors*)directoryPCMEta->Get("EtaToPi0SystError");
+    }
+    
+    
+    
     //************************** Read data for PCMEMCAL **************************************************
     TFile* filePCMEMCAL                                     = new TFile(fileNamePCMEMCAL.Data());
     TH1D* histoPCMEMCALNumberOfEvents                       = (TH1D*)filePCMEMCAL->Get("histoNumberOfEvents2.76TeV");
@@ -449,6 +553,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
             }    
         }    
 
+    
+    
         
     //************************** Read data for EMCAL ****************************************************
     TFile* fileEMCALLow                                     = new TFile(fileNameEMCALLow.Data());
@@ -3051,10 +3157,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphPCMEMCALPi0FWHMMC, markerStyleDetMC[4], markerSizeDetMC[4]*0.55, colorDetMC[4] , colorDetMC[4]);
         graphPCMEMCALPi0FWHMMC->Draw("p,same,z");
 
-        DrawGammaSetMarker(histoPCMPi0FWHMMeV, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
-        histoPCMPi0FWHMMeV->Draw("p,same,e");
-        DrawGammaSetMarker(histoPCMPi0TrueFWHMMeV, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
-        histoPCMPi0TrueFWHMMeV->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphPCMPi0FWHM, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
+        graphPCMPi0FWHM->Draw("p,same,z");
+        DrawGammaSetMarkerTGraphAsym(graphPCMPi0FWHMMC, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
+        graphPCMPi0FWHMMC->Draw("p,same,z");
 
         TLatex *labelLegendAMass    = new TLatex(0.13,0.06,"a)");
         SetStyleTLatex( labelLegendAMass, textSizeLabelsPixel,4, 1, 43);
@@ -3104,10 +3210,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphPCMEMCALPi0MassMC, markerStyleDetMC[4], markerSizeDetMC[4]*0.55, colorDetMC[4] , colorDetMC[4]);
         graphPCMEMCALPi0MassMC->Draw("p,same,z");
         
-        DrawGammaSetMarker(histoPCMPi0Mass, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
-        histoPCMPi0Mass->Draw("p,same,e");
-        DrawGammaSetMarker(histoPCMPi0TrueMass, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
-        histoPCMPi0TrueMass->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphPCMPi0Mass, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
+        graphPCMPi0Mass->Draw("p,same,z");
+        DrawGammaSetMarkerTGraphAsym(graphPCMPi0MassMC, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
+        graphPCMPi0MassMC->Draw("p,same,z");
 
         DrawGammaLines(0.23, 25. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
 
@@ -3144,14 +3250,14 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         SetStyleTLatex( textMassMC, textSizeLabelsPixel,4, 1, 43);
         textMassMC->Draw();
         
-        TMarker* markerPCMPi0Mass        = CreateMarkerFromHisto(histoPCMPi0Mass,columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[1]+ offsetMarkerYMass2 ,scaleMarkerMass2);
+        TMarker* markerPCMPi0Mass        = CreateMarkerFromGraph(graphPCMPi0Mass,columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[1]+ offsetMarkerYMass2 ,scaleMarkerMass2);
         markerPCMPi0Mass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[1]+ offsetMarkerYMass2);
         TMarker* markerPCMEMCALPi0Mass   = CreateMarkerFromGraph(graphPCMEMCALPi0Mass,columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[2]+ offsetMarkerYMass2 ,scaleMarkerMass2);
         markerPCMEMCALPi0Mass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[2]+ offsetMarkerYMass2);
         TMarker* markerEMCALPi0Mass      = CreateMarkerFromGraph(graphEMCALPi0Mass,columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[3]+ offsetMarkerYMass2 ,scaleMarkerMass2);
         markerEMCALPi0Mass->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[3]+ offsetMarkerYMass2);
     
-        TMarker* markerPCMPi0MassMC      = CreateMarkerFromHisto(histoPCMPi0TrueMass,columnsLegendMass2[2]+ offsetMarkerXMass2 ,rowsLegendMass2[1]+ offsetMarkerYMass2 ,scaleMarkerMass2);
+        TMarker* markerPCMPi0MassMC      = CreateMarkerFromGraph(graphPCMPi0MassMC,columnsLegendMass2[2]+ offsetMarkerXMass2 ,rowsLegendMass2[1]+ offsetMarkerYMass2 ,scaleMarkerMass2);
         markerPCMPi0MassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass2[1]+ offsetMarkerYMass2);
         TMarker* markerPCMEMCALPi0MassMC = CreateMarkerFromGraph(graphPCMEMCALPi0MassMC,columnsLegendMass2[2]+ offsetMarkerXMass2 ,rowsLegendMass2[2]+ offsetMarkerYMass2 ,scaleMarkerMass2);
         markerPCMEMCALPi0MassMC->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass2[2]+ offsetMarkerYMass2);
@@ -3191,10 +3297,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphPCMEMCALPi0FWHM->Draw("p,same,z");
         graphPCMEMCALPi0FWHMMC->Draw("p,same,z");
 
-        DrawGammaSetMarker(histoPCMPi0FWHMMeV, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
-        histoPCMPi0FWHMMeV->Draw("p,same,e");
-        DrawGammaSetMarker(histoPCMPi0TrueFWHMMeV, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
-        histoPCMPi0TrueFWHMMeV->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphPCMPi0FWHM, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
+        graphPCMPi0FWHM->Draw("p,same,z");
+        DrawGammaSetMarkerTGraphAsym(graphPCMPi0FWHMMC, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
+        graphPCMPi0FWHMMC->Draw("p,same,z");
 
         labelMassPerf->Draw();
         labelMassEnergy->Draw();
@@ -3231,12 +3337,12 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 //         SetStyleTLatex( textFWHMMC2, textSizeLabelsPixel,4, 1, 43);
 //         textFWHMMC2->Draw();
 // 
-//         TMarker* markerPCMPi0FWHM        = CreateMarkerFromHisto(histoPCMPi0FWHMMeV,columnsLegendFWHMAbs[1] ,rowsLegendFWHMAbs3[1] ,scaleMarkerFWHM);
+//         TMarker* markerPCMPi0FWHM        = CreateMarkerFromGraph(graphPCMPi0FWHM,columnsLegendFWHMAbs[1] ,rowsLegendFWHMAbs3[1] ,scaleMarkerFWHM);
 //         TMarker* markerPCMEMCALPi0FWHM   = CreateMarkerFromGraph(graphPCMEMCALPi0FWHM,columnsLegendFWHMAbs[1],rowsLegendFWHMAbs3[2],scaleMarkerFWHM);
 //         TMarker* markerEMCALPi0FWHM      = CreateMarkerFromGraph(graphEMCALPi0FWHM,columnsLegendFWHMAbs[1],rowsLegendFWHMAbs3[3],scaleMarkerFWHM);
 //         TMarker* markerPHOSPi07TeVFWHM          = CreateMarkerFromHisto(histoPHOSPi0FWHMMeV,columnsLegendFWHMAbs[1],rowsLegendFWHMAbs3[3],scaleMarkerFWHM);
 //     
-//         TMarker* markerPCMPi0FWHMMC      = CreateMarkerFromHisto(histoPCMPi0TrueFWHMMeV,columnsLegendFWHMAbs[2],rowsLegendFWHMAbs3[1],scaleMarkerFWHM);
+//         TMarker* markerPCMPi0FWHMMC      = CreateMarkerFromGraph(graphPCMPi0FWHMMC,columnsLegendFWHMAbs[2],rowsLegendFWHMAbs3[1],scaleMarkerFWHM);
 //         TMarker* markerPCMEMCALPi0FWHMMC = CreateMarkerFromGraph(graphPCMEMCALPi0FWHMMC,columnsLegendFWHM[2],rowsLegendFWHMAbs3[2],scaleMarkerFWHM);
 //         TMarker* markerEMCALPi0FWHMMC    = CreateMarkerFromGraph(graphEMCALPi0FWHMMC,columnsLegendFWHM[2],rowsLegendFWHMAbs3[3] ,scaleMarkerFWHM);
 //         TMarker* markerPHOSPi07TeVFWHMMC        = CreateMarkerFromHisto(histoPHOSPi0TrueFWHMMeV,columnsLegendFWHMAbs[2],rowsLegendFWHMAbs3[3],scaleMarkerFWHM);
@@ -3267,8 +3373,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphPCMEMCALPi0Mass->Draw("p,same,z");
         graphPCMEMCALPi0MassMC->Draw("p,same,z");
         
-        histoPCMPi0Mass->Draw("p,same,e");
-        histoPCMPi0TrueMass->Draw("p,same,e");
+        graphPCMPi0Mass->Draw("p,same,z");
+        graphPCMPi0MassMC->Draw("p,same,z");
 
         DrawGammaLines(0.23, 25. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
 
@@ -3362,10 +3468,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphPCMEMCALEtaFWHMMC, markerStyleDetMC[4], markerSizeDetMC[4]*0.55, colorDetMC[4] , colorDetMC[4]);
         graphPCMEMCALEtaFWHMMC->Draw("p,same,z");
 
-        DrawGammaSetMarker(histoPCMEtaFWHMMeV, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
-        histoPCMEtaFWHMMeV->Draw("p,same,e");
-        DrawGammaSetMarker(histoPCMEtaTrueFWHMMeV, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
-        histoPCMEtaTrueFWHMMeV->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphPCMEtaFWHM, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
+        graphPCMEtaFWHM->Draw("p,same,z");
+        DrawGammaSetMarkerTGraphAsym(graphPCMEtaFWHMMC, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
+        graphPCMEtaFWHMMC->Draw("p,same,z");
         
         labelMassPerf->Draw();
         labelLegendAMass->Draw();
@@ -3412,10 +3518,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphPCMEMCALEtaMassMC, markerStyleDetMC[4], markerSizeDetMC[4]*0.55, colorDetMC[4] , colorDetMC[4]);
         graphPCMEMCALEtaMassMC->Draw("p,same,z");
         
-        DrawGammaSetMarker(histoPCMEtaMass, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
-        histoPCMEtaMass->Draw("p,same,e");
-        DrawGammaSetMarker(histoPCMEtaTrueMass, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
-        histoPCMEtaTrueMass->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphPCMEtaMass, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
+        graphPCMEtaMass->Draw("p,same,z");
+        DrawGammaSetMarkerTGraphAsym(graphPCMEtaMassMC, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
+        graphPCMEtaMassMC->Draw("p,same,z");
 
         DrawGammaLines(0.33, 25. , mesonMassExpectEta*1000., mesonMassExpectEta*1000.,0.3, kGray);
         
@@ -3615,8 +3721,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         histo2DAccEff->GetXaxis()->SetMoreLogLabels(kTRUE);
         histo2DAccEff->DrawCopy(); 
 
-        DrawGammaSetMarker(histoPCMPi0AccTimesEff, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
-        histoPCMPi0AccTimesEff->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphPCMPi0AccTimesEff, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
+        graphPCMPi0AccTimesEff->Draw("p,same,z");
         
         DrawGammaSetMarkerTGraphAsym(graphPCMEMCALPi0AccTimesEff, markerStyleDet[4], markerSizeDet[4]*0.55, colorDet[4] , colorDet[4]);
         graphPCMEMCALPi0AccTimesEff->Draw("p,same,z");
@@ -3628,7 +3734,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphEMCALMergedPi0AccTimesEffDivPur->Draw("p,same,e");
 
         TLegend* legendEffiAccPi0           = GetAndSetLegend2(0.55, 0.13, 0.83, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
-        legendEffiAccPi0->AddEntry(histoPCMPi0AccTimesEff,nameMeasGlobalLabel[0],"p");
+        legendEffiAccPi0->AddEntry(graphPCMPi0AccTimesEff,nameMeasGlobalLabel[0],"p");
         legendEffiAccPi0->AddEntry(graphPCMEMCALPi0AccTimesEff,nameMeasGlobalLabel[4],"p");
         legendEffiAccPi0->AddEntry(graphEMCALPi0AccTimesEff,nameMeasGlobalLabel[2],"p");
         legendEffiAccPi0->AddEntry(graphEMCALMergedPi0AccTimesEffDivPur,nameMeasGlobalLabel[9],"p");
@@ -3658,13 +3764,13 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphPHOSPi0AccTimesEff, markerStyleDet[1], markerSizeDet[1]*0.55, colorDet[1] , colorDet[1]);
         graphPHOSPi0AccTimesEff->Draw("p,same,z");
 
-        histoPCMPi0AccTimesEff->Draw("p,same,e");
+        graphPCMPi0AccTimesEff->Draw("p,same,z");
         graphPCMEMCALPi0AccTimesEff->Draw("p,same,z");
         graphEMCALPi0AccTimesEff->Draw("p,same,z");
         graphEMCALMergedPi0AccTimesEffDivPur->Draw("p,same,e");
 
         TLegend* legendEffiAccPi02          = GetAndSetLegend2(0.55, 0.13, 0.83, 0.13+(5*textSizeLabelsRel),textSizeLabelsPixel);
-        legendEffiAccPi02->AddEntry(histoPCMPi0AccTimesEff,nameMeasGlobalLabel[0],"p");
+        legendEffiAccPi02->AddEntry(graphPCMPi0AccTimesEff,nameMeasGlobalLabel[0],"p");
         legendEffiAccPi02->AddEntry(graphPCMEMCALPi0AccTimesEff,nameMeasGlobalLabel[4],"p");
         legendEffiAccPi02->AddEntry(graphEMCALPi0AccTimesEff,nameMeasGlobalLabel[2],"p");
         legendEffiAccPi02->AddEntry(graphEMCALMergedPi0AccTimesEffDivPur,nameMeasGlobalLabel[9],"p");
@@ -3692,8 +3798,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         histo2DAccEffEta->GetXaxis()->SetMoreLogLabels(kTRUE);
         histo2DAccEffEta->DrawCopy(); 
     
-        DrawGammaSetMarker(histoPCMEtaAccTimesEff, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
-        histoPCMEtaAccTimesEff->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphPCMEtaAccTimesEff, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
+        graphPCMEtaAccTimesEff->Draw("p,same,z");
         
         DrawGammaSetMarkerTGraphAsym(graphPCMEMCALEtaAccTimesEff, markerStyleDet[4], markerSizeDet[4]*0.55, colorDet[4] , colorDet[4]);
         graphPCMEMCALEtaAccTimesEff->Draw("p,same,z");
@@ -3702,7 +3808,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphEMCALEtaAccTimesEff->Draw("p,same,z");
         
         TLegend* legendEffiAccEta           = GetAndSetLegend2(0.62, 0.13, 0.9, 0.13+(3*textSizeLabelsRel),textSizeLabelsPixel);
-        legendEffiAccEta->AddEntry(histoPCMEtaAccTimesEff,nameMeasGlobalLabel[0],"p");
+        legendEffiAccEta->AddEntry(graphPCMEtaAccTimesEff,nameMeasGlobalLabel[0],"p");
         legendEffiAccEta->AddEntry(graphPCMEMCALEtaAccTimesEff,nameMeasGlobalLabel[4],"p");
         legendEffiAccEta->AddEntry(graphEMCALEtaAccTimesEff,nameMeasGlobalLabel[2],"p");
         legendEffiAccEta->Draw();
@@ -5408,14 +5514,14 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         directoryPi0->mkdir("Supporting");
         directoryPi0->cd("Supporting");
             // Writing full correction factors
-            histoPCMPi0AccTimesEff->Write("Pi0CorrectionFactorPCM");
+            graphPCMPi0AccTimesEff->Write("Pi0CorrectionFactorPCM");
             graphPHOSPi0AccTimesEff->Write("Pi0CorrectionFactorPHOS");
             graphEMCALPi0AccTimesEff->Write("Pi0CorrectionFactorEMCAL");
             graphPCMEMCALPi0AccTimesEff->Write("Pi0CorrectionFactorPCMEMCAL");
             graphEMCALMergedPi0AccTimesEffDivPur->Write("Pi0CorrectionFactorEMCALMerged");
         
-            histoPCMPi0Mass->Write("Pi0MassDataPCM");
-            histoPCMPi0TrueMass->Write("Pi0MassMCPCM");
+            graphPCMPi0Mass->Write("Pi0MassDataPCM");
+            graphPCMPi0MassMC->Write("Pi0MassMCPCM");
             histoPHOSPi0Mass->Write("Pi0MassDataPHOS");
             histoPHOSPi0TrueMass->Write("Pi0MassMCPHOS");
             graphEMCALPi0Mass->Write("Pi0MassDataEMCAL");
@@ -5423,8 +5529,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
             graphPCMEMCALPi0Mass->Write("Pi0MassDataPCMEMCAL");
             graphPCMEMCALPi0MassMC->Write("Pi0MassMCPCMEMCAL");
 
-            histoPCMPi0FWHMMeV->Write("Pi0WidthDataPCM");
-            histoPCMPi0TrueFWHMMeV->Write("Pi0WidthMCPCM");
+            graphPCMPi0FWHM->Write("Pi0WidthDataPCM");
+            graphPCMPi0FWHMMC->Write("Pi0WidthMCPCM");
             histoPHOSPi0FWHMMeV->Write("Pi0WidthDataPHOS");
             histoPHOSPi0TrueFWHMMeV->Write("Pi0WidthMCPHOS");
             graphEMCALPi0FWHM->Write("Pi0WidthDataEMCAL");
@@ -5495,19 +5601,19 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         directoryEta->mkdir("Supporting");
         directoryEta->cd("Supporting");
             // Writing full correction factors
-            histoPCMEtaAccTimesEff->Write("EtaCorrectionFactorPCM");
+            graphPCMEtaAccTimesEff->Write("EtaCorrectionFactorPCM");
             graphEMCALEtaAccTimesEff->Write("EtaCorrectionFactorEMCAL");
             graphPCMEMCALEtaAccTimesEff->Write("EtaCorrectionFactorPCMEMCAL");
         
-            histoPCMEtaMass->Write("EtaMassDataPCM");
-            histoPCMEtaTrueMass->Write("EtaMassMCPCM");
+            graphPCMEtaMass->Write("EtaMassDataPCM");
+            graphPCMEtaMassMC->Write("EtaMassMCPCM");
             graphEMCALEtaMass->Write("EtaMassDataEMCAL");
             graphEMCALEtaMassMC->Write("EtaMassMCEMCAL");
             graphPCMEMCALEtaMass->Write("EtaMassDataPCMEMCAL");
             graphPCMEMCALEtaMassMC->Write("EtaMassMCPCMEMCAL");
 
-            histoPCMEtaFWHMMeV->Write("EtaWidthDataPCM");
-            histoPCMEtaTrueFWHMMeV->Write("EtaWidthMCPCM");
+            graphPCMEtaFWHM->Write("EtaWidthDataPCM");
+            graphPCMEtaFWHMMC->Write("EtaWidthMCPCM");
             graphEMCALEtaFWHM->Write("EtaWidthDataEMCAL");
             graphEMCALEtaFWHMMC->Write("EtaWidthMCEMCAL");
             graphPCMEMCALEtaFWHM->Write("EtaWidthDataPCMEMCAL");

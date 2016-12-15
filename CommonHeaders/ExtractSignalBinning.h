@@ -2909,6 +2909,11 @@ Int_t GetBinning(   Double_t*  binning,
                 for(Int_t i = 0; i < maxNBins+1; i++){
                     binning[i] = fBinsPi02760GeVPtTrigFullPCMEMC[i];
                 } 
+            } else if ( mode == 0 ){
+                maxNBins = 19;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsPi02760GeVPt[i];
+                } 
             } else if ( mode == 4){
                 maxNBins = 26;
                 for(Int_t i = 0; i < maxNBins+1; i++){

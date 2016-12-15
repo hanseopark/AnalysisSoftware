@@ -263,6 +263,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         cout<< cutNumber[nrOfTrigToBeComb]<< "\t"<< triggerName[nrOfTrigToBeComb] << "\t transverse momentum range: " << minPt[nrOfTrigToBeComb]<< "\t to "<< maxPt[nrOfTrigToBeComb] <<endl;
         cout << trigSteps[nrOfTrigToBeComb][0] << "\t" << trigSteps[nrOfTrigToBeComb][1] << "\t"<< trigSteps[nrOfTrigToBeComb][2] << endl;
         nrOfTrigToBeComb++;
+        cout << cutNumberBaseEff[nrOfTrigToBeComb] << endl;
     }
 
     for (Int_t i = 0; i < nrOfTrigToBeComb; i++){
@@ -6560,6 +6561,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0%s_%s_Final.%s",outputDir.Data(), addNameBinshift.Data(), isMC.Data(), suffix.Data()));   
         }
     }
+
+    
+    fileFitsOutput << WriteParameterToFile(fitInvYieldPi0) << endl;
+    fileFitsOutput.close();
     
     //*********************************************************************************************************
     //********************** ComparisonFile Output ************************************************************
@@ -6653,7 +6658,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         }    
         
     }
-    
+
+    cout << "Writing output file" << endl;
     const char* fileNameOutputComp = Form("%s/%s_%sResultsFullCorrection_PP.root",outputDir.Data(),isMC.Data(),system.Data());
     TFile* fileOutputForComparisonFullyCorrected = new TFile(fileNameOutputComp,"UPDATE");
         for (Int_t i=0; i< nrOfTrigToBeComb; i++){
@@ -6799,7 +6805,4 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         
     fileOutputForComparisonFullyCorrected->Write();
     fileOutputForComparisonFullyCorrected->Close();
-    
-    fileFitsOutput << WriteParameterToFile(fitInvYieldPi0) << endl;
-    fileFitsOutput.close();
 }
