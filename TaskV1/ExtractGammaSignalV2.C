@@ -284,6 +284,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
             fHistoGammaMCConvPt                                                 = (TH1D*)MCContainer->FindObject("MC_ConvGamma_Pt");
             fHistoGammaMCConvPt->Sumw2();
             fHistoGammaMCConvPtOrBin                                            = (TH1D*)fHistoGammaMCConvPt->Clone("MC_ConvGamma_Pt_OriginalBinning");
+            fHistoGammaMCConvPtOrBin->Scale(1./fHistoGammaMCConvPtOrBin->GetBinWidth(5));
             RebinSpectrum(fHistoGammaMCConvPt);
             
             // secondary conv gammas
@@ -1603,7 +1604,9 @@ void CalculateGammaCorrection(){
         fHistoGammaMCPrimaryRecoEff->Sumw2();
         fHistoGammaMCPrimaryRecoEff->Divide(fHistoGammaTruePrimaryConvPt,fHistoGammaMCConvPt,1,1,"B");
 
-        fHistoGammaMCPrimaryRecoEffOrBin                            = (TH1D*)fHistoGammaTruePrimaryConvPtOrBin->Clone("GammaPrimaryRecoEff_Pt_OriginalBinning");
+        TH1D* fHistoGammaTruePrimaryConvPtOrBinTemp                 = (TH1D*)fHistoGammaTruePrimaryConvPtOrBin->Clone("fHistoGammaTruePrimaryConvPtOrBinTemp");
+        fHistoGammaTruePrimaryConvPtOrBinTemp->Scale(1./fHistoGammaTruePrimaryConvPtOrBinTemp->GetBinWidth(5));
+        fHistoGammaMCPrimaryRecoEffOrBin                            = (TH1D*)fHistoGammaTruePrimaryConvPtOrBinTemp->Clone("GammaPrimaryRecoEff_Pt_OriginalBinning");
         fHistoGammaMCPrimaryRecoEffOrBin->Sumw2();
         fHistoGammaMCPrimaryRecoEffOrBin->Divide(fHistoGammaMCPrimaryRecoEffOrBin,fHistoGammaMCConvPtOrBin,1,1,"B");
 
@@ -1611,7 +1614,9 @@ void CalculateGammaCorrection(){
         fHistoGammaMCPrimaryRecoEffMCPt->Sumw2();
         fHistoGammaMCPrimaryRecoEffMCPt->Divide(fHistoGammaTruePrimaryConvMCPt,fHistoGammaMCConvPt,1,1,"B");
 
-        fHistoGammaMCPrimaryRecoEffMCPtOrBin                        = (TH1D*)fHistoGammaTruePrimaryConvMCPtOrBin->Clone("GammaPrimaryRecoEff_Pt_OriginalBinning");
+        TH1D* fHistoGammaTruePrimaryConvMCPtOrBinTemp               = (TH1D*)fHistoGammaTruePrimaryConvMCPtOrBin->Clone("fHistoGammaTruePrimaryConvMCPtOrBinTemp");
+        fHistoGammaTruePrimaryConvMCPtOrBinTemp->Scale(1./fHistoGammaTruePrimaryConvMCPtOrBinTemp->GetBinWidth(5));
+        fHistoGammaMCPrimaryRecoEffMCPtOrBin                        = (TH1D*)fHistoGammaTruePrimaryConvMCPtOrBinTemp->Clone("GammaPrimaryRecoEff_Pt_OriginalBinning");
         fHistoGammaMCPrimaryRecoEffMCPtOrBin->Sumw2();
         fHistoGammaMCPrimaryRecoEffMCPtOrBin->Divide(fHistoGammaMCPrimaryRecoEffMCPtOrBin,fHistoGammaMCConvPtOrBin,1,1,"B");
 
@@ -1893,7 +1898,9 @@ void CalculateGammaCorrection(){
         fHistoGammaMCPrimaryRecoEff->Sumw2();
         fHistoGammaMCPrimaryRecoEff->Divide(fHistoGammaTruePrimaryCaloPt,fHistoGammaMCAllPt,1,1,"B");
 
-        fHistoGammaMCPrimaryRecoEffOrBin                            = (TH1D*)fHistoGammaTruePrimaryCaloPtOrBin->Clone("GammaPrimaryRecoEff_Pt_OriginalBinning");
+        TH1D* fHistoGammaTruePrimaryCaloPtOrBinTemp                 = (TH1D*)fHistoGammaTruePrimaryCaloPtOrBin->Clone("fHistoGammaTruePrimaryCaloPtOrBinTemp");
+        fHistoGammaTruePrimaryCaloPtOrBinTemp->Scale(1./fHistoGammaTruePrimaryCaloPtOrBinTemp->GetBinWidth(5));
+        fHistoGammaMCPrimaryRecoEffOrBin                            = (TH1D*)fHistoGammaTruePrimaryCaloPtOrBinTemp->Clone("GammaPrimaryRecoEff_Pt_OriginalBinning");
         fHistoGammaMCPrimaryRecoEffOrBin->Sumw2();
         fHistoGammaMCPrimaryRecoEffOrBin->Divide(fHistoGammaMCPrimaryRecoEffOrBin,fHistoGammaMCAllPtOrBin,1,1,"B");
 
@@ -1901,7 +1908,9 @@ void CalculateGammaCorrection(){
         fHistoGammaMCPrimaryRecoEffMCPt->Sumw2();
         fHistoGammaMCPrimaryRecoEffMCPt->Divide(fHistoGammaTruePrimaryCaloMCPt,fHistoGammaMCAllPt,1,1,"B");
 
-        fHistoGammaMCPrimaryRecoEffMCPtOrBin                        = (TH1D*)fHistoGammaTruePrimaryCaloMCPtOrBin->Clone("GammaPrimaryRecoEff_Pt_OriginalBinning");
+        TH1D* fHistoGammaTruePrimaryCaloMCPtOrBinTemp               = (TH1D*)fHistoGammaTruePrimaryCaloMCPtOrBin->Clone("fHistoGammaTruePrimaryCaloMCPtOrBinTemp");
+        fHistoGammaTruePrimaryCaloMCPtOrBinTemp->Scale(1./fHistoGammaTruePrimaryCaloMCPtOrBinTemp->GetBinWidth(5));
+        fHistoGammaMCPrimaryRecoEffMCPtOrBin                        = (TH1D*)fHistoGammaTruePrimaryCaloMCPtOrBinTemp->Clone("GammaPrimaryRecoEff_Pt_OriginalBinning");
         fHistoGammaMCPrimaryRecoEffMCPtOrBin->Sumw2();
         fHistoGammaMCPrimaryRecoEffMCPtOrBin->Divide(fHistoGammaMCPrimaryRecoEffMCPtOrBin,fHistoGammaMCAllPtOrBin,1,1,"B");
 
@@ -2216,6 +2225,7 @@ void SaveHistos(Int_t isMC, TString fCutID, TString fPrefix3,Bool_t PileUpCorrec
         // write basics MC quantities if possible (converted input spectrum & reconstructed validated (&primary) photons)
         if(isMC){
             if (fHistoGammaMCConvPt)                                    fHistoGammaMCConvPt->Write("MC_ConvGamma_MCPt",TObject::kOverwrite);
+            if (fHistoGammaMCConvPtOrBin)                               fHistoGammaMCConvPtOrBin->Write("MC_ConvGamma_MCPt_OriginalBinning",TObject::kOverwrite);
             if (fHistoGammaTrueConvPt)                                  fHistoGammaTrueConvPt->Write("TrueConvGamma_Pt",TObject::kOverwrite);
             if (fHistoGammaTruePrimaryConvPt)                           fHistoGammaTruePrimaryConvPt->Write("TruePrimaryConvGamma_Pt",TObject::kOverwrite);
             if (fHistoGammaTrueCaloPt)                                  fHistoGammaTrueCaloPt->Write("TrueCaloGamma_Pt",TObject::kOverwrite);
@@ -2293,6 +2303,7 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3,Bool_t PileUpCorrecti
 
         // write input converted photon distributions
         if (fHistoGammaMCConvPt)                                        fHistoGammaMCConvPt->Write("MC_ConvGamma_MCPt",TObject::kOverwrite);
+        if (fHistoGammaMCConvPtOrBin)                                   fHistoGammaMCConvPtOrBin->Write("MC_ConvGamma_MCPt_OriginalBinning",TObject::kOverwrite);
 
         // write photon candidates in MC
         if (fHistoGammaMCrecConvPt)                                     fHistoGammaMCrecConvPt->Write("MCrec_ConvGamma_Pt",TObject::kOverwrite);
