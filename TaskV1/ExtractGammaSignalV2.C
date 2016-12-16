@@ -1992,7 +1992,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
     } else if ((fEnergyFlag.CompareTo("7TeV") == 0) && (fMeson.CompareTo("Pi0") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
         nIterationsShowBackground[0]                    = 12;
         nIterationsShowBackground[1]                    = 12;
-        nIterationsShowBackground[2]                    = 18;
+        nIterationsShowBackground[2]                    = 19;
         nIterationsShowBackground[3]                    = 20;
         optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
         optionShowBackground[1]                         = "nosmoothing";
@@ -3170,7 +3170,7 @@ void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D*** ESDGammaPtDCAzB
             legendData->SetLineWidth(0);
             legendData->SetLineColor(0);
             legendData->SetMargin(0.15);
-            legendData->AddEntry(ESDGammaPtDCAzBins[iPt],ESDGammaPtDCAzBins[iPt]->GetName(),"l");
+            //legendData->AddEntry(ESDGammaPtDCAzBins[iPt],ESDGammaPtDCAzBins[iPt]->GetName(),"l");
             for (Int_t i = 0; i < 3; i++)
                 legendData->AddEntry(ESDGammaPtDCAzBinsBack[iPt][i],Form("background extraction %s", backgroundExtractionMethod[i].Data()),"l");
             if(ESDGammaPtDCAzBinsBackB)legendData->AddEntry(ESDGammaPtDCAzBinsBackB[iPt],ESDGammaPtDCAzBinsBackB[iPt]->GetName(),"l");
