@@ -95,7 +95,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
    fileGamma                                    = new TFile(nameFileGamma);
    if (!option.CompareTo("7TeV") || !option.CompareTo("13TeV")){
       if (kDoPileup)
-            histoGammaSpecCorrPurity            = (TH1D*)fileGamma->Get("GammaCorrUnfoldPileUp_Pt");
+            histoGammaSpecCorrPurity            = (TH1D*)fileGamma->Get("GammaCorrUnfold_Pt");
       else
             histoGammaSpecCorrPurity            = (TH1D*)fileGamma->Get("GammaCorrUnfold_Pt");
     } else {
@@ -417,7 +417,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
             }
         }
        
-        TString fitOptions                      = "IQNRME+";
+        TString fitOptions                      = "QNRME+";
         if (!option.CompareTo("7TeV") && mode == 4) {
             fitOptions                          = "QNRME+";
         }
@@ -544,7 +544,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
             fitPi0C                             = "oHag";
         }
        
-       TString fitOptions                       = "IQNRME+";
+       TString fitOptions                       = "QNRME+";
        if (!option.CompareTo("7TeV") && mode == 4) {
            fitOptions                           = "QNRME+";
        }
