@@ -129,12 +129,9 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
    TString fileNameSysErrInclRatio              ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_11_30.dat"; // default
    TString fileNameSysErrDoubleRatio            ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_11_30.dat"; // default
    if(option.CompareTo("7TeV") == 0){
-        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_12_13.dat";
-        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_12_13.dat";
-        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_12_13.dat";
-//         fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_11_30.dat";
-//         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_11_30.dat";
-//         fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_11_30.dat";
+        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_12_15.dat";
+        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_12_15.dat";
+        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_12_15.dat";
    }
    fileSysErrGamma.open(fileNameSysErrGamma,ios_base::in);
    cout << fileNameSysErrGamma << endl;
@@ -354,35 +351,36 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
     DrawGammaCanvasSettings( CanvasGammaSpecSingle, 0.16, 0.02, 0.015, 0.07);
     CanvasGammaSpecSingle->SetLogy();
     CanvasGammaSpecSingle->SetLogx();
-  
+    
     Double_t        minPt                       = 0.2;
-    if (mode==4)    minPt                       = 1.5;
-  
+    Double_t        maxPt                       = 20;
+    
     histoGammaSpecCorrPurity->GetXaxis()->SetLabelOffset(-1e-2);
     DrawAutoGammaMesonHistos( histoGammaSpecCorrPurity,
                              "", "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c})",
                              kTRUE, 20.,5e-10, kFALSE,
                              kFALSE, -0.004, 0.020,
-                             kTRUE, minPt,(histoGammaSpecCorrPurity->GetXaxis())->GetBinUpEdge(histoGammaSpecCorrPurity->GetNbinsX()),62,0.04,62,0.03,0.7,1.7);
+                             kTRUE, minPt,maxPt,62,0.04,62,0.03,0.7,1.7);
     DrawGammaSetMarker(histoGammaSpecCorrPurity, 20, 1.5,kBlue+2,kBlue+2);
-  
+    histoGammaSpecCorrPurity->GetYaxis()->SetRangeUser(3e-9, 10);
+    
     histoGammaSpecCorrPurity->DrawCopy("e1,same");
     if (graphGammaYieldSysErr) {
         DrawGammaSetMarkerTGraphAsym(graphGammaYieldSysErr,26,0,kBlue-8,kBlue-8,2,kTRUE);
         graphGammaYieldSysErr->Draw("p,2,same");
     }
-  
-    PlotLatexLegend(0.66, 0.78, 0.045,collisionSystem,detectionProcess,2);
+    
+    PlotLatexLegend(0.64, 0.78, 0.045,collisionSystem,detectionProcess,2);
     drawLatex("#gamma's from ALICE Data", 1.7, 0.000000001, kBlack,0.035);
-  
+    
     TLegend* leg_GammaSpectra;
     leg_GammaSpectra                            = GetAndSetLegend(0.2,0.2,2);
     leg_GammaSpectra->AddEntry(histoGammaSpecCorrPurity,"Inclusive photons");
     if(graphGammaYieldSysErr)
         leg_GammaSpectra->AddEntry(graphGammaYieldSysErr,"Systematic uncertainty");
-  
+    
     leg_GammaSpectra->Draw();
-  
+    
     CanvasGammaSpecSingle->Print(Form("%s/%s_GammaSpectrum_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
 
   
@@ -826,6 +824,10 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
            minPt                                = 1.5;
            minY                                 = 0.5;
        }
+
+       TString      method                      = "conversions";
+       if (mode==4) method                      = "EMCal";
+
        TH2F * histo2DDoubleRatioPlotting       = new TH2F("histo2DDoubleRatioPlotting","histo2DDoubleRatioPlotting",1000,minPt,maxPt,1000,minY,maxY);
        SetStyleHistoTH2ForGraphs(histo2DDoubleRatioPlotting, "#it{p}_{T} (GeV/#it{c})","(#gamma_{inc}/#pi^{0})/(#gamma_{decay}/#pi^{0})", 0.04,0.04, 0.04,0.04, 1.,1.);
        histo2DDoubleRatioPlotting->GetXaxis()->SetRangeUser(0.,histoDoubleRatioConversionTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioConversionTrueEffPurity->GetNbinsX())*1.5);
@@ -845,8 +847,8 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
        if (graphDoubleRatioSysErr)      graphDoubleRatioSysErr->Draw("p,2,same");
        if (graphDoubleRatioFitSysErr)   graphDoubleRatioFitSysErr->Draw("p,2,same");
 
-       TLegend* legendDoubleConversionFit       = GetAndSetLegend(0.14,0.76,3,1,"Direct Photon Signal via Conversions");
-       legendDoubleConversionFit->AddEntry(histoDoubleRatioConversionTrueEffPurity,"Measured Direct Photon Signal","p");
+       TLegend* legendDoubleConversionFit       = GetAndSetLegend(0.14,0.76,3,1,Form("direct photon signal via %s", method.Data()));
+       legendDoubleConversionFit->AddEntry(histoDoubleRatioConversionTrueEffPurity,"measured direct photon signal","p");
        legendDoubleConversionFit->AddEntry(histoDoubleRatioFitPi0YieldPurity,"Measured Direct Photon Signal fitted #pi^{0}","p");
        legendDoubleConversionFit->Draw();
 
@@ -858,13 +860,14 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
        canvasConversionFitDoubleRatioSum2->cd();
        canvasConversionFitDoubleRatioSum2->SetLogx();
        
+       histo2DDoubleRatioPlotting->GetXaxis()->SetRangeUser(0.2, 20);
        histo2DDoubleRatioPlotting->DrawCopy();
        
-       DrawGammaLines(0., histoDoubleRatioConversionTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioConversionTrueEffPurity->GetNbinsX())*1.5, 1.0, 1.0,2.0, kGray+2 ,7);
+       DrawGammaLines(0., 20. , 1.0, 1.0,2.0, kGray+2 ,7);
        histoDoubleRatioFitPi0YieldPurity->DrawCopy("same,E1");
        if (graphDoubleRatioFitSysErr)   graphDoubleRatioFitSysErr->Draw("p,2,same");
        
-       TLegend* legendDoubleConversionFit2       = GetAndSetLegend(0.14,0.8,2,1,"Direct Photon Signal via Conversions");
+       TLegend* legendDoubleConversionFit2       = GetAndSetLegend(0.14,0.8,2,1,Form("direct photon signal via %s", method.Data()));
        legendDoubleConversionFit2->AddEntry(histoDoubleRatioFitPi0YieldPurity,"Measured Direct Photon Signal fitted #pi^{0}","p");
        legendDoubleConversionFit2->Draw();
        
@@ -882,8 +885,8 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
        histoDoubleRatioConversionTrueEffPurity->DrawCopy("same,E1");
        if (graphDoubleRatioSysErr) graphDoubleRatioSysErr->Draw("p,2,same");
        
-       TLegend* legendDoubleConversionFit3       = GetAndSetLegend(0.14,0.8,2,1,"Direct Photon Signal via Conversions");
-       legendDoubleConversionFit3->AddEntry(histoDoubleRatioConversionTrueEffPurity,"Measured Direct Photon Signal","p");
+       TLegend* legendDoubleConversionFit3       = GetAndSetLegend(0.14,0.8,2,1,Form("direct photon signal via %s", method.Data()));
+       legendDoubleConversionFit3->AddEntry(histoDoubleRatioConversionTrueEffPurity,"measured direct photon signal","p");
        legendDoubleConversionFit3->Draw();
        
        canvasConversionFitDoubleRatioSum3->Print(Form("%s/%s_DoubleRatio_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
@@ -925,9 +928,9 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
            if (graphDoubleRatioSysErr)     graphDoubleRatioSysErr->Draw("p,2,same");
            if (graphDoubleRatioFitSysErr)  graphDoubleRatioFitSysErr->Draw("p,2,same");
         
-           TLegend* legendDoubleConversionFitNLO = GetAndSetLegend(0.14,0.72,4,1,"Direct Photon Signal via Conversions");
-           legendDoubleConversionFitNLO->AddEntry(histoDoubleRatioConversionTrueEffPurity,"Measured Direct Photon Signal","p");
-           legendDoubleConversionFitNLO->AddEntry(histoDoubleRatioFitPi0YieldPurity,"Measured Direct Photon Signal, fitted #pi^{0}","p");
+           TLegend* legendDoubleConversionFitNLO = GetAndSetLegend(0.14,0.72,4,1,Form("direct photon signal via %s", method.Data()));
+           legendDoubleConversionFitNLO->AddEntry(histoDoubleRatioConversionTrueEffPurity,"measured direct photon signal","p");
+           legendDoubleConversionFitNLO->AddEntry(histoDoubleRatioFitPi0YieldPurity,"measured direct photon signal, fitted #pi^{0}","p");
            if(option.CompareTo("PbPb_2.76TeV") == 0)       legendDoubleConversionFitNLO->AddEntry(NLODoubleRatio,"pp NLO Direct Photon  pp 2.76TeV scaled N_{coll}","l");
            else if(option.CompareTo("pPb_5.023TeV") == 0)  legendDoubleConversionFitNLO->AddEntry(NLODoubleRatio,"pp NLO Direct Photon  pp 5.023TeV scaled N_{coll}","l");
            else                                            legendDoubleConversionFitNLO->AddEntry(NLODoubleRatio,"pp NLO Direct Photon","l");
@@ -949,8 +952,8 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
            histoDoubleRatioFitPi0YieldPurity->DrawCopy("same");
            if (graphDoubleRatioFitSysErr) graphDoubleRatioFitSysErr->Draw("p,2,same");
            
-           TLegend* legendDoubleConversionFitNLO2 = GetAndSetLegend(0.14,0.76,3,1,"Direct Photon Signal via Conversions");
-           legendDoubleConversionFitNLO2->AddEntry(histoDoubleRatioFitPi0YieldPurity,"Measured Direct Photon Signal, fitted #pi^{0}","p");
+           TLegend* legendDoubleConversionFitNLO2 = GetAndSetLegend(0.14,0.76,3,1,Form("direct photon signal via %s", method.Data()));
+           legendDoubleConversionFitNLO2->AddEntry(histoDoubleRatioFitPi0YieldPurity,"measured direct photon signal, fitted #pi^{0}","p");
            if(option.CompareTo("PbPb_2.76TeV") == 0)       legendDoubleConversionFitNLO2->AddEntry(NLODoubleRatio,"pp NLO Direct Photon  pp 2.76TeV scaled N_{coll}","l");
            else if(option.CompareTo("pPb_5.023TeV") == 0)  legendDoubleConversionFitNLO2->AddEntry(NLODoubleRatio,"pp NLO Direct Photon  pp 5.023TeV scaled N_{coll}","l");
            else                                            legendDoubleConversionFitNLO2->AddEntry(NLODoubleRatio,"pp NLO Direct Photon","l");
@@ -972,8 +975,8 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
            histoDoubleRatioConversionTrueEffPurity->DrawCopy("same");
            if (graphDoubleRatioSysErr) graphDoubleRatioSysErr->Draw("p,2,same");
            
-           TLegend* legendDoubleConversionFitNLO3 = GetAndSetLegend(0.14,0.76,3,1,"Direct Photon Signal via Conversions");
-           legendDoubleConversionFitNLO3->AddEntry(histoDoubleRatioConversionTrueEffPurity,"Measured Direct Photon Signal","p");
+           TLegend* legendDoubleConversionFitNLO3 = GetAndSetLegend(0.14,0.76,3,1,Form("direct photon signal via %s", method.Data()));
+           legendDoubleConversionFitNLO3->AddEntry(histoDoubleRatioConversionTrueEffPurity,"measured direct photon signal","p");
            if(option.CompareTo("PbPb_2.76TeV") == 0)       legendDoubleConversionFitNLO3->AddEntry(NLODoubleRatio,"pp NLO Direct Photon  pp 2.76TeV scaled N_{coll}","l");
            else if(option.CompareTo("pPb_5.023TeV") == 0)  legendDoubleConversionFitNLO3->AddEntry(NLODoubleRatio,"pp NLO Direct Photon  pp 5.023TeV scaled N_{coll}","l");
            else                                            legendDoubleConversionFitNLO3->AddEntry(NLODoubleRatio,"pp NLO Direct Photon","l");
@@ -982,7 +985,6 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
            canvasConversionFitDoubleRatioNLO3->Print(Form("%s/%s_DoubleRatio_NLO_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
            
            // --------------------- Direct Photon Spectrum -------------------------
-           
            if (graphDoubleRatioSysErr) {
                // calculate direct photon spectrum
                histoDirectPhotonSpectrum                = (TH1D*)histoGammaSpecCorrPurity->Clone("histoDirectPhotonSpectrum");
@@ -1038,7 +1040,6 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                    }
                }
                
-               
                // plot direct photon spectrum
                TCanvas* CanvasDirGamma              = GetAndSetCanvas("CanvasDirGamma", 0.12, 0.1, 1000 ,1350);
                DrawGammaCanvasSettings( CanvasDirGamma, 0.16, 0.02, 0.015, 0.07);
@@ -1088,6 +1089,31 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
     }
 
     fileFinalResults.close();
+    
+//**********************************************************************************
+//***                 Inclusive and decay ratio                                  ***
+//**********************************************************************************
+    TCanvas* canvasIncRatioDecRatio         = GetAndSetCanvas("canvasIncRatioDecRatio",0.095,0.09,1000,815);
+    canvasIncRatioDecRatio->SetLogx();
+
+    SetHistogramm(cocktailAllGammaPi0,          "#it{p}_{T} (GeV/#it{c})", "#gamma/#pi^{0}",0,1.8);
+    SetHistogramm(histoIncRatioPurityTrueEff,   "#it{p}_{T} (GeV/#it{c})", "#gamma/#pi^{0}",0,1.8);
+
+    DrawGammaSetMarker(histoIncRatioPurityTrueEff,  20, 2.0, kBlack,  kBlack);
+    DrawGammaSetMarker(cocktailAllGammaPi0,         33, 2.0, kBlue-2,  kBlue-2);
+
+    histoIncRatioPurityTrueEff->GetXaxis()->SetRangeUser(0.2, 20);
+    histoIncRatioPurityTrueEff->Draw();
+    cocktailAllGammaPi0->Draw("same");
+
+    PlotLatexLegend(0.66, 0.75, 0.045,collisionSystem,detectionProcess);
+
+    TLegend* legendIncRatioDecRatio         = GetAndSetLegend(0.65,0.6,3);
+    legendIncRatioDecRatio->AddEntry(histoIncRatioPurityTrueEff,    "(#gamma_{incl.} / #pi^{0})_{meas.}", "lp");
+    legendIncRatioDecRatio->AddEntry(cocktailAllGammaPi0,           "(#gamma_{dec.} / #pi^{0})_{sim.}",  "lp");
+    legendIncRatioDecRatio->Draw();
+
+    canvasIncRatioDecRatio->Print(Form("%s/%s_IncRatio_DecRatio_trueEff_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
 
 
 //**********************************************************************************
