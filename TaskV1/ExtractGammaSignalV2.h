@@ -78,6 +78,7 @@ TH2D*       f2DHistoAllSecondaryGammaMCPt                                       
 TH1D*       fHistoGammaMCrecConvPt                                                              = NULL;
 TH1D*       fHistoGammaMCrecConvPtOrBin                                                         = NULL;
 TH1D*       fHistoGammaMCConvPt                                                                 = NULL;
+TH1D*       fHistoGammaMCConvPtOrBin                                                            = NULL;
 TH1D*       fHistoGammaMCConvRSPt                                                               = NULL;
 TH1D*       fHistoGammaMCAllPt                                                                  = NULL;
 TH1D*       fHistoGammaMCAllPtOrBin                                                             = NULL;
@@ -131,6 +132,7 @@ TH2D*       fHistoGammaTrueSecondaryFromXFromLambdaConv_MCPt_recPt_MC           
 
 TH1D**      fHistoGammaMCDecayPt                                                                = NULL;
 TH1D*       fHistoGammaTruePrimaryConvMCPt                                                      = NULL;
+TH1D*       fHistoGammaTruePrimaryConvMCPtOrBin                                                 = NULL;
 
 TH1D*       fHistoFracAllGammaToSecOrBin                                                        = NULL;
 TH1D*       fHistoFracAllGammaToSec                                                             = NULL;
@@ -143,6 +145,7 @@ TH1D*       fHistoFracAllGammaToSecFromXFromLambdaOrBin                         
 TH1D*       fHistoFracAllGammaToSecRest                                                         = NULL;
 TH1D*       fHistoFracAllGammaToSecRestOrBin                                                    = NULL;
 TH1D*       fHistoGammaMCConvProb                                                               = NULL;
+TH1D*       fHistoGammaMCConvProbOrBin                                                          = NULL;
 TH1D*       fHistoSecondaryGammaFromXFromK0sMCConvProb                                          = NULL;
 TH1D*       fHistoSecondaryGammaFromXFromK0lMCConvProb                                          = NULL;
 TH1D*       fHistoSecondaryGammaFromXFromLambdaMCConvProb                                       = NULL;
@@ -156,8 +159,9 @@ TH1D*       fHistoGammaMCTruePurity                                             
 TH1D*       fHistoGammaMCrecPrimaryConvPtOrBin                                                  = NULL;
 TH1D*       fHistoGammaMCRecoEff                                                                = NULL;
 TH1D*       fHistoGammaMCPrimaryRecoEff                                                         = NULL;
+TH1D*       fHistoGammaMCPrimaryRecoEffOrBin                                                    = NULL;
 TH1D*       fHistoGammaMCPrimaryRecoEffMCPt                                                     = NULL;
-TH1D*       fHistoGammaMCPrimaryRecoEffRSMCPt                                                   = NULL;
+TH1D*       fHistoGammaMCPrimaryRecoEffMCPtOrBin                                                = NULL;
 TH1D*       fHistoGammaMCBackground                                                             = NULL;
 
 TH1D*       fHistoSecondaryGammaFromXFromK0sMCRecoEffMCPt                                       = NULL;
@@ -342,6 +346,7 @@ TH2D*       fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC           
 TH2D*       fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC_Rebin                     = NULL;
 
 TH1D*       fHistoGammaTruePrimaryCaloMCPt                                                      = NULL;
+TH1D*       fHistoGammaTruePrimaryCaloMCPtOrBin                                                 = NULL;
 TH1D*       fHistoFracAllGammaCaloToSec                                                         = NULL;
 TH1D*       fHistoFracAllGammaCaloToSecOrBin                                                    = NULL;
 TH1D*       fHistoFracAllGammaCaloToSecFromXFromK0s                                             = NULL;
@@ -374,6 +379,7 @@ TH1D*       fHistoGammaTrueSecondaryCaloConvFromXFromLambdaPtOrBin              
 TH2D*       fHistoGammaTruePrimaryCaloConv_recPt_MCPt_MC                                        = NULL;
 TH2D*       fHistoGammaTruePrimaryCaloConv_recPt_MCPt_MC_Rebin                                  = NULL;
 TH1D*       fHistoGammaTruePrimaryCaloConvMCPt                                                  = NULL;
+TH1D*       fHistoGammaTruePrimaryCaloConvMCPtOrBin                                             = NULL;
 
 TH1D*       fHistoGammaTrueCaloUnConvPt                                                         = NULL;
 TH1D*       fHistoGammaTrueCaloUnConvPtOrBin                                                    = NULL;
@@ -388,6 +394,7 @@ TH1D*       fHistoGammaTrueSecondaryCaloUnConvFromXFromLambdaPtOrBin            
 TH2D*       fHistoGammaTruePrimaryCaloUnConv_recPt_MCPt_MC                                      = NULL;
 TH2D*       fHistoGammaTruePrimaryCaloUnConv_recPt_MCPt_MC_Rebin                                = NULL;
 TH1D*       fHistoGammaTruePrimaryCaloUnConvMCPt                                                = NULL;
+TH1D*       fHistoGammaTruePrimaryCaloUnConvMCPtOrBin                                           = NULL;
 
 TH2D*       f2DHistoGammaTrueSecondaryCaloUnConvPt                                              = NULL;
 TH2D*       f2DHistoGammaTrueSecondaryCaloUnConvMCPt                                            = NULL;
