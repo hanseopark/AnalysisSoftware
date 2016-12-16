@@ -715,8 +715,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         isV0AND             = 1;
     }    
     Double_t xSection       = ReturnCorrectXSection( optionEnergy, isV0AND);
-
-    
     //***************************************************************************************************************
     //*******************************Plotting trigger rejection factors = fits log scale all in one *****************
     //***************************************************************************************************************
@@ -6644,43 +6642,49 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TH1D* histoEtaToPi0WeightedAverageStat                      = 0;
     TH1D* histoEtaToPi0ExtendedUsingFit                         = 0;
     graphCorrectedYieldWeightedAveragePi0Stat->Print();
-    if (graphCorrectedYieldWeightedAveragePi0Stat){
-        graphInvXSectionWeightedAveragePi0Stat                  = ScaleGraph(graphCorrectedYieldWeightedAveragePi0Stat,xSection*recalcBarn);
-        histoInvXSectionWeightedAveragePi0Stat                  = new TH1D("histoInvXSectionWeightedAveragePi0Stat", "", maxNAllowedPi0, binningPi0);
-        Int_t firstBinPi0 = 1;
-        while (histoInvXSectionWeightedAveragePi0Stat->GetBinCenter(firstBinPi0) < graphInvXSectionWeightedAveragePi0Stat->GetX()[0]){
-            histoInvXSectionWeightedAveragePi0Stat->SetBinContent(firstBinPi0, 0);
-            histoInvXSectionWeightedAveragePi0Stat->SetBinError(firstBinPi0, 0);
-            firstBinPi0++;
-        }    
-        for (Int_t i = 0; i < graphInvXSectionWeightedAveragePi0Stat->GetN(); i++){
-            histoInvXSectionWeightedAveragePi0Stat->SetBinContent(i+firstBinPi0, graphInvXSectionWeightedAveragePi0Stat->GetY()[i]);
-            histoInvXSectionWeightedAveragePi0Stat->SetBinError(i+firstBinPi0, graphInvXSectionWeightedAveragePi0Stat->GetEYlow()[i]);
-        }
-    }    
-    graphInvXSectionWeightedAveragePi0Stat->Print();
-    if (graphCorrectedYieldWeightedAveragePi0Sys) 
-        graphInvXSectionWeightedAveragePi0Sys                   = ScaleGraph(graphCorrectedYieldWeightedAveragePi0Sys,xSection*recalcBarn);
-    graphInvXSectionWeightedAveragePi0Sys->Print();
-    if (enableEta && mode != 10){
-        if (graphCorrectedYieldWeightedAverageEtaStat) {
-            graphInvXSectionWeightedAverageEtaStat              = ScaleGraph(graphCorrectedYieldWeightedAverageEtaStat,xSection*recalcBarn);
-            histoInvXSectionWeightedAverageEtaStat              = new TH1D("histoInvXSectionWeightedAverageEtaStat", "", maxNAllowedEta, binningEta);
-            Int_t firstBinEta = 1;
-            while (histoInvXSectionWeightedAverageEtaStat->GetBinCenter(firstBinEta) < graphInvXSectionWeightedAverageEtaStat->GetX()[0]){
-                histoInvXSectionWeightedAverageEtaStat->SetBinContent(firstBinEta, 0);
-                histoInvXSectionWeightedAverageEtaStat->SetBinError(firstBinEta, 0);
-
-                firstBinEta++;
-            }
-            for (Int_t i = 0; i < graphInvXSectionWeightedAverageEtaStat->GetN(); i++){
-                histoInvXSectionWeightedAverageEtaStat->SetBinContent(i+firstBinEta, graphInvXSectionWeightedAverageEtaStat->GetY()[i]);
-                histoInvXSectionWeightedAverageEtaStat->SetBinError(i+firstBinEta, graphInvXSectionWeightedAverageEtaStat->GetEYlow()[i]);
+    
+    if (xSection != 0){
+        if (graphCorrectedYieldWeightedAveragePi0Stat){
+            graphInvXSectionWeightedAveragePi0Stat                  = ScaleGraph(graphCorrectedYieldWeightedAveragePi0Stat,xSection*recalcBarn);
+            histoInvXSectionWeightedAveragePi0Stat                  = new TH1D("histoInvXSectionWeightedAveragePi0Stat", "", maxNAllowedPi0, binningPi0);
+            Int_t firstBinPi0 = 1;
+            while (histoInvXSectionWeightedAveragePi0Stat->GetBinCenter(firstBinPi0) < graphInvXSectionWeightedAveragePi0Stat->GetX()[0]){
+                histoInvXSectionWeightedAveragePi0Stat->SetBinContent(firstBinPi0, 0);
+                histoInvXSectionWeightedAveragePi0Stat->SetBinError(firstBinPi0, 0);
+                firstBinPi0++;
             }    
-
+            for (Int_t i = 0; i < graphInvXSectionWeightedAveragePi0Stat->GetN(); i++){
+                histoInvXSectionWeightedAveragePi0Stat->SetBinContent(i+firstBinPi0, graphInvXSectionWeightedAveragePi0Stat->GetY()[i]);
+                histoInvXSectionWeightedAveragePi0Stat->SetBinError(i+firstBinPi0, graphInvXSectionWeightedAveragePi0Stat->GetEYlow()[i]);
+            }
         }    
-        if (graphCorrectedYieldWeightedAverageEtaSys){
-            graphInvXSectionWeightedAverageEtaSys               = ScaleGraph(graphCorrectedYieldWeightedAverageEtaSys,xSection*recalcBarn);
+        graphInvXSectionWeightedAveragePi0Stat->Print();
+        if (graphCorrectedYieldWeightedAveragePi0Sys) 
+            graphInvXSectionWeightedAveragePi0Sys                   = ScaleGraph(graphCorrectedYieldWeightedAveragePi0Sys,xSection*recalcBarn);
+        graphInvXSectionWeightedAveragePi0Sys->Print();
+    }
+    
+    if (enableEta && mode != 10){
+        if (xSection != 0){
+            if (graphCorrectedYieldWeightedAverageEtaStat) {
+                graphInvXSectionWeightedAverageEtaStat              = ScaleGraph(graphCorrectedYieldWeightedAverageEtaStat,xSection*recalcBarn);
+                histoInvXSectionWeightedAverageEtaStat              = new TH1D("histoInvXSectionWeightedAverageEtaStat", "", maxNAllowedEta, binningEta);
+                Int_t firstBinEta = 1;
+                while (histoInvXSectionWeightedAverageEtaStat->GetBinCenter(firstBinEta) < graphInvXSectionWeightedAverageEtaStat->GetX()[0]){
+                    histoInvXSectionWeightedAverageEtaStat->SetBinContent(firstBinEta, 0);
+                    histoInvXSectionWeightedAverageEtaStat->SetBinError(firstBinEta, 0);
+
+                    firstBinEta++;
+                }
+                for (Int_t i = 0; i < graphInvXSectionWeightedAverageEtaStat->GetN(); i++){
+                    histoInvXSectionWeightedAverageEtaStat->SetBinContent(i+firstBinEta, graphInvXSectionWeightedAverageEtaStat->GetY()[i]);
+                    histoInvXSectionWeightedAverageEtaStat->SetBinError(i+firstBinEta, graphInvXSectionWeightedAverageEtaStat->GetEYlow()[i]);
+                }    
+
+            }    
+            if (graphCorrectedYieldWeightedAverageEtaSys){
+                graphInvXSectionWeightedAverageEtaSys               = ScaleGraph(graphCorrectedYieldWeightedAverageEtaSys,xSection*recalcBarn);
+            }
         }
         
         if (doEtaToPi0 && graphEtaToPi0WeightedAverageStat){
@@ -6731,16 +6735,18 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         fileOutputForComparisonFullyCorrected->cd(Form("Pi0%s",optionEnergy.Data()));
         if (graphCorrectedYieldWeightedAveragePi0Stat)  graphCorrectedYieldWeightedAveragePi0Stat->Write("CorrectedYieldPi0",TObject::kOverwrite);
         if (graphCorrectedYieldWeightedAveragePi0Sys)   graphCorrectedYieldWeightedAveragePi0Sys->Write("Pi0SystError",TObject::kOverwrite);
-        if (graphInvXSectionWeightedAveragePi0Stat){
-            graphInvXSectionWeightedAveragePi0Stat->Write("graphInvCrossSectionPi0",TObject::kOverwrite);
-            cout << "graph InvSection pi0 stat" << endl;
-            graphInvXSectionWeightedAveragePi0Stat->Print();
-        }    
-        if (histoInvXSectionWeightedAveragePi0Stat)     histoInvXSectionWeightedAveragePi0Stat->Write("InvCrossSectionPi0",TObject::kOverwrite);
-        if (graphInvXSectionWeightedAveragePi0Sys){
-            graphInvXSectionWeightedAveragePi0Sys->Write("InvCrossSectionPi0Sys",TObject::kOverwrite);
-            cout << "graph InvSection pi0 sys" << endl;
-            graphInvXSectionWeightedAveragePi0Sys->Print();
+        if (xSection != 0){
+            if (graphInvXSectionWeightedAveragePi0Stat){
+                graphInvXSectionWeightedAveragePi0Stat->Write("graphInvCrossSectionPi0",TObject::kOverwrite);
+                cout << "graph InvSection pi0 stat" << endl;
+                graphInvXSectionWeightedAveragePi0Stat->Print();
+            }    
+            if (histoInvXSectionWeightedAveragePi0Stat)     histoInvXSectionWeightedAveragePi0Stat->Write("InvCrossSectionPi0",TObject::kOverwrite);
+            if (graphInvXSectionWeightedAveragePi0Sys){
+                graphInvXSectionWeightedAveragePi0Sys->Write("InvCrossSectionPi0Sys",TObject::kOverwrite);
+                cout << "graph InvSection pi0 sys" << endl;
+                graphInvXSectionWeightedAveragePi0Sys->Print();
+            }
         }    
         if (graphAcceptancePi0Weighted)                 graphAcceptancePi0Weighted->Write("AcceptancePi0", TObject::kOverwrite);
         if (graphEfficiencyPi0Weighted)                 graphEfficiencyPi0Weighted->Write("EfficiencyPi0", TObject::kOverwrite);
@@ -6802,16 +6808,19 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             fileOutputForComparisonFullyCorrected->cd(Form("Eta%s",optionEnergy.Data()));
             if (graphCorrectedYieldWeightedAverageEtaStat)  graphCorrectedYieldWeightedAverageEtaStat->Write("CorrectedYieldEta",TObject::kOverwrite);
             if (graphCorrectedYieldWeightedAverageEtaSys)   graphCorrectedYieldWeightedAverageEtaSys->Write("EtaSystError",TObject::kOverwrite);
-            if (graphInvXSectionWeightedAverageEtaStat){
-                graphInvXSectionWeightedAverageEtaStat->Write("graphInvCrossSectionEta",TObject::kOverwrite);
-                cout << "graph InvSection eta stat" << endl;
-                graphInvXSectionWeightedAverageEtaStat->Print();
-            }
-            if (histoInvXSectionWeightedAverageEtaStat)     histoInvXSectionWeightedAverageEtaStat->Write("InvCrossSectionEta",TObject::kOverwrite);
-            if (graphInvXSectionWeightedAverageEtaSys){
-                graphInvXSectionWeightedAverageEtaSys->Write("InvCrossSectionEtaSys",TObject::kOverwrite);
-                cout << "graph InvSection eta stat" << endl;
-                graphInvXSectionWeightedAverageEtaSys->Print();
+            
+            if (xSection != 0){
+                if (graphInvXSectionWeightedAverageEtaStat){
+                    graphInvXSectionWeightedAverageEtaStat->Write("graphInvCrossSectionEta",TObject::kOverwrite);
+                    cout << "graph InvSection eta stat" << endl;
+                    graphInvXSectionWeightedAverageEtaStat->Print();
+                }
+                if (histoInvXSectionWeightedAverageEtaStat)     histoInvXSectionWeightedAverageEtaStat->Write("InvCrossSectionEta",TObject::kOverwrite);
+                if (graphInvXSectionWeightedAverageEtaSys){
+                    graphInvXSectionWeightedAverageEtaSys->Write("InvCrossSectionEtaSys",TObject::kOverwrite);
+                    cout << "graph InvSection eta stat" << endl;
+                    graphInvXSectionWeightedAverageEtaSys->Print();
+                }
             }    
             if (graphAcceptanceEtaWeighted)                 graphAcceptanceEtaWeighted->Write("AcceptanceEta", TObject::kOverwrite);
             if (graphEfficiencyEtaWeighted)                 graphEfficiencyEtaWeighted->Write("EfficiencyEta", TObject::kOverwrite);

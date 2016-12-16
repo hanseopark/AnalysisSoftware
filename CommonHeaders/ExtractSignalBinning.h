@@ -2958,6 +2958,23 @@ Int_t GetBinning(   Double_t*  binning,
                   binning[i] = fBinsPi08TeVPtMergedComb[i];
               }
           }
+        } else if (energy.CompareTo("pPb_5.023TeV") == 0){
+            if (mode == 0){
+               maxNBins = 33; 
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsPi0pPbPt[i];
+                }
+            } else if (mode == 2 || mode == 4) {
+               maxNBins = 34;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsPi0pPbEMCALPt[i];
+                }                
+            } else if (mode == 2 || mode == 4) {
+               maxNBins = 34;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsPi0pPbEMCALPt[i];
+                }
+            }
         }
     } else if (meson.Contains("Eta")){
         if (energy.CompareTo("2.76TeV") == 0){
@@ -2977,8 +2994,24 @@ Int_t GetBinning(   Double_t*  binning,
                     binning[i] = fBinsEta8TeVConvTrigger1Pt[i];
                 }
             }    
+        } else if (energy.CompareTo("pPb_5.023TeV") == 0){
+            if (mode == 0){
+                maxNBins = 16;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsEtapPbPt[i];
+                }
+            } else if (mode == 2 || mode == 4){
+                maxNBins = 19;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsEtaEMCALpPbPt[i];
+                }
+            } else {
+                maxNBins = 19;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsEtaEMCALpPbPt[i];
+                }
+            }    
         }
-        
     }
     return maxNBins;
 }

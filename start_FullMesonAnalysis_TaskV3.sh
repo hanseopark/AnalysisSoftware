@@ -879,7 +879,7 @@ function GiveBinningpPb()
 {
     if [ $DoPi0 -eq 1 ] || [ $DoGamma -eq 1 ]; then
         echo "How many p_T bins do you want to use for Pi0/direct photon?  27 (7 GeV), 28 (8 GeV), 29 (10 GeV), 30 (12 GeV), 31 (14 GeV), for Calo measurements also 32 (16 GeV), 33 (18 GeV), 34 (20 GeV), 35 (22 GeV), 36 (26 GeV), 37 (30 GeV)";
-        echo "for calo triggers bins reach to 42."
+        echo "for calo triggers bins reach to 46."
         read answer
         if [ $answer = 27 ]; then
             echo "27 Bins --> Max p_T = 7 GeV ...";
@@ -945,6 +945,38 @@ function GiveBinningpPb()
             echo "42 Bins";
             correctPi0=1
             BinsPtPi0=42 
+        elif [ $answer = 43 ]; then
+            echo "43 Bins";
+            correctPi0=1
+            BinsPtPi0=43 
+        elif [ $answer = 44 ]; then
+            echo "44 Bins";
+            correctPi0=1
+            BinsPtPi0=44 
+        elif [ $answer = 45 ]; then
+            echo "45 Bins";
+            correctPi0=1
+            BinsPtPi0=45 
+        elif [ $answer = 46 ]; then
+            echo "46 Bins";
+            correctPi0=1
+            BinsPtPi0=46 
+        elif [ $answer = 47 ]; then
+            echo "47 Bins";
+            correctPi0=1
+            BinsPtPi0=47 
+        elif [ $answer = 48 ]; then
+            echo "48 Bins";
+            correctPi0=1
+            BinsPtPi0=48 
+        elif [ $answer = 49 ]; then
+            echo "49 Bins";
+            correctPi0=1
+            BinsPtPi0=49 
+        elif [ $answer = 50 ]; then
+            echo "50 Bins";
+            correctPi0=1
+            BinsPtPi0=50 
         else
             echo "Pi0 Binning was not set correctly. Please try again.";
             correctPi0=0
@@ -954,7 +986,7 @@ function GiveBinningpPb()
     fi    
     if [ $DoEta -eq 1 ] || [ $DoPi0InEtaBinning -eq 1 ]; then 
         echo "How many p_t bins do you want to use for the eta meson? 12 (4 GeV), 14 (6 GeV), 15 (8 GeV), 16 (10 GeV), for calorimeters 17 (12 GeV), 18 (14 GeV), 19 (16 GeV), 20 (20 GeV), 21 (25 GeV), 22 (30 GeV)";
-        echo "for calo triggers bins reach to 26."
+        echo "for calo triggers bins reach to 30."
         read answer
         if [ $answer = 12 ]; then
             echo "12 Bins --> Max p_T = 4. GeV ...";
@@ -1012,10 +1044,22 @@ function GiveBinningpPb()
             echo "26 Bins";
             correctEta=1
             BinsPtEta=26   
-#         elif [ $answer = 27 ]; then
-#             echo "27 Bins";
-#             correctEta=1
-#             BinsPtEta=27   
+        elif [ $answer = 27 ]; then
+            echo "27 Bins";
+            correctEta=1
+            BinsPtEta=27   
+        elif [ $answer = 28 ]; then
+            echo "28 Bins";
+            correctEta=1
+            BinsPtEta=28   
+        elif [ $answer = 29 ]; then
+            echo "29 Bins";
+            correctEta=1
+            BinsPtEta=29   
+        elif [ $answer = 30 ]; then
+            echo "30 Bins";
+            correctEta=1
+            BinsPtEta=30   
         else
             echo "Eta Binning was not set correctly. Please try again.";
         fi
