@@ -50,7 +50,7 @@
 #include "CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "CommonHeaders/ConversionFunctions.h"
 
-void FinalyseSystematicErrorsppGamma(const char* nameDataFileErrors ="", TString energy="", TString spectrumName = "", Int_t numberOfPtBins =1 ,Int_t numberCutStudies=1, Int_t offSetBeginning = 0, TString suffix = "pdf", Int_t mode = 0){
+void FinaliseSystematicErrorsConv_Gammas_ppV2(const char* nameDataFileErrors ="", TString energy="", TString spectrumName = "", Int_t numberOfPtBins =1 ,Int_t numberCutStudies=1, Int_t offSetBeginning = 0, TString suffix = "pdf", Int_t mode = 0){
 
     // Set plotting style and labels
     StyleSettingsThesis();
@@ -205,7 +205,7 @@ void FinalyseSystematicErrorsppGamma(const char* nameDataFileErrors ="", TString
         CorrectSystematicErrorsWithMean(errorsNeg[i],   errorsNegErr[i],    errorsNegCorr[i],   errorsNegErrCorr[i],    nPtBins);
         CorrectSystematicErrorsWithMean(errorsMean[i],  errorsMeanErr[i],   errorsMeanCorr[i],  errorsMeanErrCorr[i],   nPtBins);
         
-        if (nameCutVariationSC[i].CompareTo("7TeVPeriods")==0){
+        if (!nameCutVariationSC[i].CompareTo("7TeVPeriods")){
             for (Int_t k = 0; k < nPtBins; k++){
                 if (ptBins[k] > 0.0){
                     errorsMean[i][k]        = 1.5;
@@ -215,81 +215,93 @@ void FinalyseSystematicErrorsppGamma(const char* nameDataFileErrors ="", TString
                 }
             }   
         }
-        if (nameCutVariationSC[i].CompareTo("SinglePt")==0){
-            for (Int_t k = 0; k < nPtBins; k++){
-                if (ptBins[k] > 0.0){
-                    errorsMean[i][k]        = 0.3;
-                    errorsMeanErr[i][k]     = 0.02;
-                    errorsMeanCorr[i][k]    = 0.3;
-                    errorsMeanErrCorr[i][k] = 0.02;
-                }
-            }   
-        }
-        if (nameCutVariationSC[i].CompareTo("Cocktail")==0){
-            for (Int_t k = 0; k < nPtBins; k++){
-                if (ptBins[k] > 0.0){
-                    errorsMean[i][k]        = 1.0;
-                    errorsMeanErr[i][k]     = 0.02;
-                    errorsMeanCorr[i][k]    = 1.0;
-                    errorsMeanErrCorr[i][k] = 0.02;
-                }
-            }   
-        }
-        if (nameCutVariationSC[i].CompareTo("Chi2")==0){
-            for (Int_t k = 0; k < nPtBins; k++){
-                if (ptBins[k] > 0.0){
-                    errorsMean[i][k]        = 0.2+pow(ptBins[k],2)*0.025;
-                    errorsMeanErr[i][k]     = 0.02;
-                    errorsMeanCorr[i][k]    = 0.2+pow(ptBins[k],2)*0.025;
-                    errorsMeanErrCorr[i][k] = 0.02;
-                }
-            }   
-        }
-        if (nameCutVariationSC[i].CompareTo("Alpha")==0){
-            for (Int_t k = 0; k < nPtBins; k++){
-                if (ptBins[k] > 0.0){
-                    errorsMean[i][k]        = 0.01+pow(ptBins[k],2)*0.029;
-                    errorsMeanErr[i][k]     = 0.02;
-                    errorsMeanCorr[i][k]    = 0.01+pow(ptBins[k],2)*0.029;
-                    errorsMeanErrCorr[i][k] = 0.02;
-                }
-            }   
-        }
-        if (nameCutVariationSC[i].CompareTo("DoubleCount")==0){
-            for (Int_t k = 0; k < nPtBins; k++){
-                if (ptBins[k] > 0.0){
-                    errorsMean[i][k]        = 0.01+pow(ptBins[k]-0.5,2)*0.027;
-                    errorsMeanErr[i][k]     = 0.02;
-                    errorsMeanCorr[i][k]    = 0.01+pow(ptBins[k]-0.5,2)*0.027;
-                    errorsMeanErrCorr[i][k] = 0.02;
-                }
-            }   
-        }
-        if (nameCutVariationSC[i].CompareTo("Qt")==0){
-            for (Int_t k = 0; k < nPtBins; k++){
-                if (ptBins[k] > 0.0){
-                    errorsMean[i][k]        = 0.01+pow(ptBins[k]+1,2)*0.029;
-                    errorsMeanErr[i][k]     = 0.02;
-                    errorsMeanCorr[i][k]    = 0.01+pow(ptBins[k]+1,2)*0.029;
-                    errorsMeanErrCorr[i][k] = 0.02;
-                }
-            }   
-        }
-        if (nameCutVariationSC[i].CompareTo("dEdxE")==0){
-            for (Int_t k = 0; k < nPtBins; k++){
-                if (ptBins[k] < 2.2){
-                    errorsMean[i][k]        = 0.25+pow(ptBins[k]-2.0,2)*0.7;
-                    errorsMeanErr[i][k]     = 0.02;
-                    errorsMeanCorr[i][k]    = 0.25+pow(ptBins[k]-2.0,2)*0.7;
-                    errorsMeanErrCorr[i][k] = 0.02;
-                }
-                else{
-                    errorsMean[i][k]        = 0.25;
-                    errorsMeanErr[i][k]     = 0.02;
-                    errorsMeanCorr[i][k]    = 0.25;
-                    errorsMeanErrCorr[i][k] = 0.02;
-                }
-            }   
+        if (!spectrumName.CompareTo("DoubleRatio")){
+            if (!nameCutVariationSC[i].CompareTo("SinglePt")){
+                for (Int_t k = 0; k < nPtBins; k++){
+                    if (ptBins[k] > 0.0){
+                        errorsMean[i][k]        = 0.3;
+                        errorsMeanErr[i][k]     = 0.02;
+                        errorsMeanCorr[i][k]    = 0.3;
+                        errorsMeanErrCorr[i][k] = 0.02;
+                    }
+                }   
+            }
+            if (!nameCutVariationSC[i].CompareTo("Cocktail")){
+                for (Int_t k = 0; k < nPtBins; k++){
+                    if (ptBins[k] > 0.0){
+                        errorsMean[i][k]        = 1.0;
+                        errorsMeanErr[i][k]     = 0.02;
+                        errorsMeanCorr[i][k]    = 1.0;
+                        errorsMeanErrCorr[i][k] = 0.02;
+                    }
+                }   
+            }
+            if (!nameCutVariationSC[i].CompareTo("Chi2")){
+                for (Int_t k = 0; k < nPtBins; k++){
+                    if (ptBins[k] > 0.0){
+                        errorsMean[i][k]        = 0.2+pow(ptBins[k],2)*0.025;
+                        errorsMeanErr[i][k]     = 0.02;
+                        errorsMeanCorr[i][k]    = 0.2+pow(ptBins[k],2)*0.025;
+                        errorsMeanErrCorr[i][k] = 0.02;
+                    }
+                }   
+            }
+            if (!nameCutVariationSC[i].CompareTo("Alpha")){
+                for (Int_t k = 0; k < nPtBins; k++){
+                    if (ptBins[k] > 0.0){
+                        errorsMean[i][k]        = 0.01+pow(ptBins[k],2)*0.029;
+                        errorsMeanErr[i][k]     = 0.02;
+                        errorsMeanCorr[i][k]    = 0.01+pow(ptBins[k],2)*0.029;
+                        errorsMeanErrCorr[i][k] = 0.02;
+                    }
+                }   
+            }
+            if (!nameCutVariationSC[i].CompareTo("DoubleCount")){
+                for (Int_t k = 0; k < nPtBins; k++){
+                    if (ptBins[k] > 0.0){
+                        errorsMean[i][k]        = 0.01+pow(ptBins[k]-0.5,2)*0.027;
+                        errorsMeanErr[i][k]     = 0.02;
+                        errorsMeanCorr[i][k]    = 0.01+pow(ptBins[k]-0.5,2)*0.027;
+                        errorsMeanErrCorr[i][k] = 0.02;
+                    }
+                }   
+            }
+            if (!nameCutVariationSC[i].CompareTo("Rcut")){
+                for (Int_t k = 0; k < nPtBins; k++){
+                    if (ptBins[k] > 0.0){
+                        errorsMean[i][k]        = 1.6+pow(ptBins[k]-0.5,2)*0.029;
+                        errorsMeanErr[i][k]     = 0.02;
+                        errorsMeanCorr[i][k]    = 1.6+pow(ptBins[k]-0.5,2)*0.029;
+                        errorsMeanErrCorr[i][k] = 0.02;
+                    }
+                }   
+            }
+            if (!nameCutVariationSC[i].CompareTo("Qt")){
+                for (Int_t k = 0; k < nPtBins; k++){
+                    if (ptBins[k] > 0.0){
+                        errorsMean[i][k]        = 0.01+pow(ptBins[k]+1,2)*0.029;
+                        errorsMeanErr[i][k]     = 0.02;
+                        errorsMeanCorr[i][k]    = 0.01+pow(ptBins[k]+1,2)*0.029;
+                        errorsMeanErrCorr[i][k] = 0.02;
+                    }
+                }   
+            }
+            if (!nameCutVariationSC[i].CompareTo("dEdxE")){
+                for (Int_t k = 0; k < nPtBins; k++){
+                    if (ptBins[k] < 2.2){
+                        errorsMean[i][k]        = 0.25+pow(ptBins[k]-2.0,2)*0.7;
+                        errorsMeanErr[i][k]     = 0.02;
+                        errorsMeanCorr[i][k]    = 0.25+pow(ptBins[k]-2.0,2)*0.7;
+                        errorsMeanErrCorr[i][k] = 0.02;
+                    }
+                    else{
+                        errorsMean[i][k]        = 0.25;
+                        errorsMeanErr[i][k]     = 0.02;
+                        errorsMeanCorr[i][k]    = 0.25;
+                        errorsMeanErrCorr[i][k] = 0.02;
+                    }
+                }   
+            }
         }
         
         // Add systematic error contribution from current cutvariation to total summed error
@@ -423,7 +435,7 @@ void FinalyseSystematicErrorsppGamma(const char* nameDataFileErrors ="", TString
     fstream SysErrDat;
     cout << SysErrDatname << endl;
     SysErrDat.open(SysErrDatname, ios::out);
-    for (Int_t l=0; l< nPtBins; l++){
+    for (Int_t l=0; l< nPtBins-1; l++){
         SysErrDat <<errorsNegCorrMatSummed[l] << "\t" <<errorsPosCorrMatSummed[l] << "\t"  <<errorsNegCorrSummed[l] << "\t" <<errorsPosCorrSummed[l]  << endl;
     }
     SysErrDat.close();
@@ -434,7 +446,7 @@ void FinalyseSystematicErrorsppGamma(const char* nameDataFileErrors ="", TString
     fstream SysErrDatAver;
     cout << SysErrDatnameMean << endl;
     SysErrDatAver.open(SysErrDatnameMean, ios::out);
-    for (Int_t l=0; l< nPtBins; l++){
+    for (Int_t l=0; l< nPtBins-1; l++){
         SysErrDatAver  << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l] << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  << endl;
         // SysErrDatAver << ptBins[l] << "\t" << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l] << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  << endl;
     }
@@ -452,7 +464,7 @@ void FinalyseSystematicErrorsppGamma(const char* nameDataFileErrors ="", TString
     }
     SysErrDatAverSingle << "Material";
     SysErrDatAverSingle << endl; 
-    for (Int_t l=0;l< nPtBins;l++){
+    for (Int_t l=0;l< nPtBins-1;l++){
         SysErrDatAverSingle << ptBins[l] << "\t";
         for (Int_t i= 0; i< numberCutStudies; i++){
             SysErrDatAverSingle << errorsMeanCorr[i][l] << "\t";
@@ -505,10 +517,10 @@ void FinalyseSystematicErrorsppGamma(const char* nameDataFileErrors ="", TString
         errorsMeanCorrTrackReco[l]              =   TMath::Sqrt(pow(errorsMeanCorr[2][l],2)+    // TPCCluster
                                                                 pow(errorsMeanCorr[3][l],2));   // Single pT
     }
-    TGraphErrors* meanErrorsPID                 = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrPID ,ptBinsErr ,errorsMeanErrCorrSummed );
-    TGraphErrors* meanErrorsPhotonReco          = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrPhotonReco ,ptBinsErr ,errorsMeanErrCorrSummed );
-    TGraphErrors* meanErrorsSignalExtraction    = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrSignalExtraction ,ptBinsErr ,errorsMeanErrCorrSummed );
-    TGraphErrors* meanErrorsTrackReco           = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrTrackReco ,ptBinsErr ,errorsMeanErrCorrSummed );
+    TGraphErrors* meanErrorsPID                 = new TGraphErrors(nPtBins-1,ptBins ,errorsMeanCorrPID ,ptBinsErr ,errorsMeanErrCorrSummed );
+    TGraphErrors* meanErrorsPhotonReco          = new TGraphErrors(nPtBins-1,ptBins ,errorsMeanCorrPhotonReco ,ptBinsErr ,errorsMeanErrCorrSummed );
+    TGraphErrors* meanErrorsSignalExtraction    = new TGraphErrors(nPtBins-1,ptBins ,errorsMeanCorrSignalExtraction ,ptBinsErr ,errorsMeanErrCorrSummed );
+    TGraphErrors* meanErrorsTrackReco           = new TGraphErrors(nPtBins-1,ptBins ,errorsMeanCorrTrackReco ,ptBinsErr ,errorsMeanErrCorrSummed );
 
 //++++++++++++++++++++++++ PLOTTING OF SYSERRORSUMMEDVISU ++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -565,7 +577,7 @@ void FinalyseSystematicErrorsppGamma(const char* nameDataFileErrors ="", TString
     cout << SysErrDatnameMeanPaper << endl;
     SysErrDatAverPaper.open(SysErrDatnameMeanPaper, ios::out);
     SysErrDatAverPaper  << "p_{T}" << "\t Material \t Yield Extraction \t PID \t photon reco \t track recon \t summed" <<  endl;
-    for (Int_t l=0; l< nPtBins; l++){
+    for (Int_t l=0; l< nPtBins-1; l++){
         SysErrDatAverPaper << ptBins[l] <<"\t" << errorMaterial*2 << "\t" << errorsMeanCorrSignalExtraction[l] << "\t" << errorsMeanCorrPID[l]<< "\t" << errorsMeanCorrPhotonReco[l]<< "\t" <<errorsMeanCorrTrackReco[l] <<"\t" << errorsMeanCorrMatSummed[l]<< endl;
     }
     SysErrDatAverPaper.close();
