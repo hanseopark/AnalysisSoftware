@@ -82,7 +82,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
     TString nameCutVariation[19];
     TString nameCutVariationSC[19];
     
-    TString nameCutVariationSC2760GeV[19] = {"YieldExtraction", "dEdxE", "dEdxPi", "TPCCluster", "SinglePt",
+    TString nameCutVariationSCCurrent[19] = {"YieldExtraction", "dEdxE", "dEdxPi", "TPCCluster", "SinglePt",
                                             "Chi2", "Qt", "Alpha", "ConvPhi", "ClusterMinEnergy",
                                             "ClusterNCells", "ClusterNonLinearity", "ClusterTrackMatching", "ClusterM02", "CellTiming",
                                             "ClusterMaterialTRD", "Trigger", "Efficiency", "YieldExtractionPi0"};
@@ -110,13 +110,13 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
     Style_t markerStyle[20];
     
     for (Int_t k = 0; k < 19; k++){
-        color[k]        = GetColorSystematics( nameCutVariationSC2760GeV[k], 2); 
-        markerStyle[k]  = GetMarkerStyleSystematics( nameCutVariationSC2760GeV[k], 2); 
+        color[k]        = GetColorSystematics( nameCutVariationSCCurrent[k], 2); 
+        markerStyle[k]  = GetMarkerStyleSystematics( nameCutVariationSCCurrent[k], 2); 
     }
     
     for (Int_t i = 0; i < numberCutStudies; i++){
-        nameCutVariation[i]     = GetSystematicsName(nameCutVariationSC2760GeV[i]);
-        nameCutVariationSC[i]   = nameCutVariationSC2760GeV[i];
+        nameCutVariation[i]     = GetSystematicsName(nameCutVariationSCCurrent[i]);
+        nameCutVariationSC[i]   = nameCutVariationSCCurrent[i];
     }
     if (meson.CompareTo("EtaToPi0") == 0){
         nameCutVariation[0]     = "yield extraction #eta";

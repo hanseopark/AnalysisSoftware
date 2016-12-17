@@ -40,7 +40,7 @@
 #include "CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "CommonHeaders/ConversionFunctions.h"
 
-void FinalyseSystematicErrorsCalo_pPbV2(     const char* nameDataFileErrors  = "", 
+void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = "", 
                                             TString energy                  = "", 
                                             TString meson                   = "", 
                                             Int_t numberOfPtBins            = 1, 
@@ -69,6 +69,8 @@ void FinalyseSystematicErrorsCalo_pPbV2(     const char* nameDataFileErrors  = "
     TString date                            = ReturnDateString();
     TString dateForOutput                   = ReturnDateStringForOutput();
     TString collisionSystem                 = ReturnFullCollisionsSystem(energy);
+    TString energyForOutput                 = energy;
+    energyForOutput.ReplaceAll(".","_");
     
     Color_t color[20]                       = { kBlue, kRed+1, kOrange+7, kPink+8, kGreen+2, 
                                                 kYellow+2, kOrange+2, kBlue+2, kCyan-2, kViolet+1, 
@@ -91,21 +93,14 @@ void FinalyseSystematicErrorsCalo_pPbV2(     const char* nameDataFileErrors  = "
     TString nameCutVariation[12];
     TString nameCutVariationSC[12];
     
-    TString nameCutVariation2760GeV[12]     = { "Yield extraction", "#theta_{#gamma#gamma}", "min E_{cluster}", "min # cells", "clu. energy calibration", 
-                                                "tr. match. to cl.", "M_{02}", "Mat. infront of EMCal", "clu. energy scale", "Trigger normalization",
-                                                "Efficiency", "Yield extraction #pi^{0}" };
-    TString nameCutVariationSC2760GeV[12]   = { "YieldExtraction", "OpeningAngle", "ClusterMinEnergy", "ClusterNCells", "ClusterNonLinearity", 
-                                                "ClusterTrackMatchingCalo", "ClusterM02","ClusterMaterialTRD", "ClusterEnergyScale" ,"Trigger", 
-                                                "Efficiency", "YieldExtraction"};
     TString nameCutVariation5023GeV[12]     = { "Yield extraction", "#theta_{#gamma#gamma}", "min E_{cluster}", "min # cells", "clu. energy calibration", 
                                                 "tr. match. to cl.", "M_{02}", "Mat. infront of EMCal", "Rapidity", "clu. energy scale",
-						"Efficiency", "Yield extraction #pi^{0}"};
+                                                "Efficiency", "Yield extraction #pi^{0}"};
     TString nameCutVariationSC5023GeV[12]   = { "YieldExtraction", "OpeningAngle", "ClusterMinEnergy", "ClusterNCells", "ClusterNonLinearity", 
                                                 "ClusterTrackMatchingCalo", "ClusterM02","ClusterMaterialTRD", "Rapidity", "ClusterEnergyScale",
-						"Efficiency", "YieldExtraction"};
+                                                "Efficiency", "YieldExtraction"};
     if (meson.CompareTo("EtaToPi0") == 0){
-        nameCutVariation2760GeV[0]          = "Yield extraction #eta";
-	nameCutVariation5023GeV[0]          = "Yield extraction #eta";
+        nameCutVariation5023GeV[0]          = "Yield extraction #eta";
     }
     if (energy.CompareTo("pPb_5.023TeV") == 0) {
         for (Int_t i = 0;i < numberCutStudies;i++){
@@ -600,7 +595,7 @@ void FinalyseSystematicErrorsCalo_pPbV2(     const char* nameDataFileErrors  = "
         labelTrig->Draw();
         
     canvasSysErrMean->Update();
-    canvasSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMean_%s_%s%s_%s.%s",meson.Data(), energy.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
+    canvasSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMean_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
     
     delete canvasSysErrMean;
     
@@ -658,7 +653,7 @@ void FinalyseSystematicErrorsCalo_pPbV2(     const char* nameDataFileErrors  = "
         labelTrig->Draw();
 
     canvasNewSysErrMean->Update();
-    canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMeanNewWithMean_%s_%s%s_%s.%s",meson.Data(), energy.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
+    canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMeanNewWithMean_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
     
     // ***************************************************************************************************
     // ********************* Plot unsmoothed errors with fits ********************************************
@@ -708,13 +703,13 @@ void FinalyseSystematicErrorsCalo_pPbV2(     const char* nameDataFileErrors  = "
 	    leg->AddEntry("pol4","pol4","l");
 	    leg->Draw();
         
-        canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMeanNewWithMeanSingle_%s_%s%s_%s_Variation%d.%s",meson.Data(), energy.Data(),additionalNameOutput.Data(),dateForOutput.Data(),cut,suffix.Data()));
+        canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMeanNewWithMeanSingle_%s_%s%s_%s_Variation%d.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),cut,suffix.Data()));
     }   
         
     // ***************************************************************************************************
     // ********************* Create output files with errors *********************************************
     // ***************************************************************************************************    
-    const char *SysErrDatname = Form("SystematicErrorsCalculatedCalo/SystematicErrorEMCEMC_%s_%s%s_%s.dat",meson.Data(),energy.Data(),additionalNameOutput.Data(),dateForOutput.Data());
+    const char *SysErrDatname = Form("SystematicErrorsCalculatedCalo/SystematicErrorEMCEMC_%s_%s%s_%s.dat",meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
     fstream SysErrDat;
     cout << SysErrDatname << endl;
     SysErrDat.open(SysErrDatname, ios::out);
@@ -724,7 +719,7 @@ void FinalyseSystematicErrorsCalo_pPbV2(     const char* nameDataFileErrors  = "
 
     SysErrDat.close();
 
-    const char *SysErrDatnameMean = Form("SystematicErrorsCalculatedCalo/SystematicErrorAveragedEMCEMC_%s_%s%s_%s.dat",meson.Data(),energy.Data(),additionalNameOutput.Data(),dateForOutput.Data());
+    const char *SysErrDatnameMean = Form("SystematicErrorsCalculatedCalo/SystematicErrorAveragedEMCEMC_%s_%s%s_%s.dat",meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
     fstream SysErrDatAver;
     cout << SysErrDatnameMean << endl;
     SysErrDatAver.open(SysErrDatnameMean, ios::out);
@@ -733,6 +728,24 @@ void FinalyseSystematicErrorsCalo_pPbV2(     const char* nameDataFileErrors  = "
     }
 
     SysErrDatAver.close();
+
+    const char *SysErrDatnameMeanSingleErr = Form("SystematicErrorsCalculatedCalo/SystematicErrorAveragedSingleEMCEMC_%s_%s%s_%s.dat",meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
+    fstream SysErrDatAverSingle;
+    cout << SysErrDatnameMeanSingleErr << endl;
+    SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
+    SysErrDatAverSingle << "Pt bin\t" ; 
+    for (Int_t i= 0; i< numberCutStudies; i++){
+        SysErrDatAverSingle << nameCutVariationSC[i] << "\t";
+    }
+    SysErrDatAverSingle << endl; 
+    for (Int_t l=0;l< nPtBins;l++){
+        SysErrDatAverSingle << ptBins[l] << "\t";
+        for (Int_t i= 0; i< numberCutStudies; i++){
+            SysErrDatAverSingle << errorsMeanCorr[i][l] << "\t";
+        }  
+        SysErrDatAverSingle << errorsMeanCorrMatSummed[l] << endl;
+    }
+    SysErrDatAverSingle.close();
     
     // ***************************************************************************************************
     // ********************* Group errors according to topic *********************************************
@@ -830,7 +843,7 @@ void FinalyseSystematicErrorsCalo_pPbV2(     const char* nameDataFileErrors  = "
         labelTrig->Draw();
     
     canvasSummedErrMean->Update();
-    canvasSummedErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysErrorSummedVisu_%s_%s%s_%s.%s",meson.Data(), energy.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
+    canvasSummedErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysErrorSummedVisu_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
     
     delete canvasSummedErrMean;
 // 

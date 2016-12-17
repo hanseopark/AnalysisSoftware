@@ -169,11 +169,11 @@ LHC13dData="573";
 LHC13eData="574"; 
 LHC13fData="575"; 
 
-LHC13b2_efix_p1MC="796"; 
-LHC13b2_efix_p2MC="797"; 
-LHC13b2_efix_p3MC="798"; 
-LHC13b2_efix_p4MC="799";
-
+LHC13b2_efix_p1MC="807"; 
+LHC13b2_efix_p2MC="808"; 
+LHC13b2_efix_p3MC="809"; 
+LHC13b2_efix_p4MC="810";
+LHC13e7MC="806";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -284,7 +284,7 @@ if [ $HAVELHC13b2efixp4 == 1 ]; then
     fi
 fi
 if [ $HAVELHC13e7 == 1 ]; then
-    OUTPUTDIR_LHC13e7=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13e7MC\_`
+    LHC13e7MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13e7MC\_`
     if [ "$LHC13e7MC" == "" ]; then 
         HAVELHC13e7=0;
     else 

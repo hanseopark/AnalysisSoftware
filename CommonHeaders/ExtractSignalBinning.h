@@ -887,7 +887,7 @@ Double_t fBinsPi0pPbEMCALPt[35]                  = {0.0, 0.3, 0.4, 0.5, 0.6,
                                                     5.5, 6.0, 7.0, 8.0, 10.0,
                                                     12.0, 16.0, 20.0, 24.0,
                                                     30.0};
-
+                                                    
 Double_t fBinsPi0pPbPtDCA[13]                   = { 0.0, 0.4, 0.5, 0.6, 0.7,
                                                     0.8, 1.0, 1.4, 1.8, 2.4,
                                                     4.0, 6.0, 14.0};
@@ -972,6 +972,7 @@ Double_t fBinsEtaEMCALpPbPt[22]                 = { 0., 0.3, 0.5, 0.7, 0.9,
                                                     3.0, 3.5, 4.,  5.,  6.,
                                                     8.,  10,  12., 16., 
                                                     20., 25., 30.};
+
 Double_t fBinsEtapPbPtEMCTrig[27]               = { 0., 0.3, 0.5, 0.7, 0.9, 
                                                     1.1, 1.4, 1.8, 2.2, 2.6,
                                                     3.0, 3.5, 4.,  5.,  6.,
@@ -2974,6 +2975,11 @@ Int_t GetBinning(   Double_t*  binning,
                 for(Int_t i = 0; i < maxNBins+1; i++){
                     binning[i] = fBinsPi0pPbEMCALPt[i];
                 }
+            } else if (mode == 20){ //combined
+                maxNBins = 32;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsPi0pPbEMCALPt[i];
+                }
             }
         }
     } else if (meson.Contains("Eta")){
@@ -3005,7 +3011,7 @@ Int_t GetBinning(   Double_t*  binning,
                 for(Int_t i = 0; i < maxNBins+1; i++){
                     binning[i] = fBinsEtaEMCALpPbPt[i];
                 }
-            } else {
+            } else if (mode == 20 ){
                 maxNBins = 19;
                 for(Int_t i = 0; i < maxNBins+1; i++){
                     binning[i] = fBinsEtaEMCALpPbPt[i];
