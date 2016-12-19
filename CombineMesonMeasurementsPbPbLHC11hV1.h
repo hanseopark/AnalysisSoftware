@@ -734,7 +734,6 @@ TGraphAsymmErrors* graphPCMPi0InvYieldStatPbPb2760GeVwithYshift_0010;
 TGraphAsymmErrors* graphPCMPi0InvYieldSysWOMat2760GeV_0010;
 TH1D* histoPCMPi0RAAStatPbPb2760GeV_0010;
 TGraphAsymmErrors* graphPCMPi0RAAStatPbPb2760GeV_0010;
-TGraphAsymmErrors* graphPCMPi0RAAStatPbPb2760GeV_0010;
 TGraphAsymmErrors* graphPCMPi0RAASysPbPb2760GeV_0010;
 TH1D* histoPCMPi0InvYieldPbPb2760GeV_2050;
 TGraphAsymmErrors* graphPCMPi0InvYieldPbPb2760GeV_2050;

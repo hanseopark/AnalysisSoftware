@@ -99,7 +99,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
       else
             histoGammaSpecCorrPurity            = (TH1D*)fileGamma->Get("GammaCorrUnfold_Pt");
     } else {
-        histoGammaSpecCorrPurity                = (TH1D*)fileGamma->Get("GammaUnfold");
+        histoGammaSpecCorrPurity                = (TH1D*)fileGamma->Get("GammaCorrUnfold_Pt");
     }
     if (!histoGammaSpecCorrPurity) {
         cout << "ERROR: GammaCorrUnfold_Pt not in gamma file" << endl;
