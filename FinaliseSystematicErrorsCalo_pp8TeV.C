@@ -104,36 +104,36 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************
     // ***************************************************************************************************
-    Bool_t bsmooth[16]                      = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1,
+    Bool_t bsmooth[16]                      = { 0, 1, 1, 1, 1,
+                                                0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1, 0};
-    Bool_t bsmoothMBPi0[16]                 = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1,
+    Bool_t bsmoothMBPi0[16]                 = { 0, 1, 1, 1, 1,
+                                                0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1, 0};
-    Bool_t bsmoothMBEta[16]                 = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1,
+    Bool_t bsmoothMBEta[16]                 = { 0, 1, 1, 1, 1,
+                                                0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1, 0};
-    Bool_t bsmoothMBPi0EtaBinning[16]       = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1, 1};
-    Bool_t bsmoothEMC7Pi0[16]               = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1,
+    Bool_t bsmoothMBPi0EtaBinning[16]       = { 0, 1, 1, 1, 1,
+                                                0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1, 0};
-    Bool_t bsmoothEMC7Eta[16]               = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1,
+    Bool_t bsmoothEMC7Pi0[16]               = { 0, 1, 1, 1, 1,
+                                                0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1, 0};
-    Bool_t bsmoothEMC7Pi0EtaBinning[16]     = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1, 1};
-    Bool_t bsmoothEGAPi0[16]                = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1,
+    Bool_t bsmoothEMC7Eta[16]               = { 0, 1, 1, 1, 1,
+                                                0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1, 0};
-    Bool_t bsmoothEGAEta[16]                = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1,
+    Bool_t bsmoothEMC7Pi0EtaBinning[16]     = { 0, 1, 1, 1, 1,
+                                                0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1, 0};
-    Bool_t bsmoothEGAPi0EtaBinning[16]      = { 1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1,
-                                                1, 1, 1, 1, 1, 1};
+    Bool_t bsmoothEGAPi0[16]                = { 0, 1, 1, 1, 1,
+                                                0, 1, 1, 1, 1,
+                                                1, 1, 1, 1, 1, 0};
+    Bool_t bsmoothEGAEta[16]                = { 0, 1, 1, 1, 1,
+                                                0, 1, 1, 1, 1,
+                                                1, 1, 1, 1, 1, 0};
+    Bool_t bsmoothEGAPi0EtaBinning[16]      = { 0, 1, 1, 1, 1,
+                                                0, 1, 1, 1, 1,
+                                                1, 1, 1, 1, 1, 0};
                           
     for (Int_t i = 0; i < numberCutStudies; i++){
         if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Pi0")==0){

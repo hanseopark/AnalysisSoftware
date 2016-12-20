@@ -242,16 +242,32 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
 //      "/alice/sim/2016/LHC16c2/"
 //    };
 
-//    TString train = "Legotrain-vAN-20161127-8TeV-std_ConvCalo";
-//    Int_t trainRuns[nSets] = {2679};
+//    TString train = "Legotrain-vAN-20161219-8TeV-Variations_Tree_Calo";
+//    Int_t trainRuns[nSets] = {2725};
+//    TString runlist[nSets] = {"merge"};
+
+//    const Int_t nFiles = 3;
+//    TString Files[nFiles] = {"GammaConvCalo_134","GammaConvCalo_164","GammaConvCalo_196"};
+
+    //*********************************************************************************************************************************
+    //*********************************************************************************************************************************
+    //*********************************************************************************************************************************
+
+//    const Int_t nSets = 1;
+//    const Int_t nData = 0;
+//    TString DataSets[nSets]={
+//      "LHC16c2"
+//    };
+//    TString PrefixDataSets[nSets]={
+//      "/alice/sim/2016/LHC16c2/"
+//    };
+
+//    TString train = "Legotrain-vAN-20161219-8TeV-validJetJetDeltaAOD";
+//    Int_t trainRuns[nSets] = {312};
 //    TString runlist[nSets] = {"merge"};
 
 //    const Int_t nFiles = 2;
-//    TString Files[nFiles] = {"GammaConvCalo_100","GammaConvCalo_101"};
-
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
+//    TString Files[nFiles] = {"GammaCalo_101","GammaConvCalo_101"};
 
     const Int_t nSets = 1;
     const Int_t nData = 0;
@@ -262,30 +278,12 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
       "/alice/sim/2016/LHC16c2/"
     };
 
-    TString train = "Legotrain-vAN-20161129-8TeV-CaloTMEffi";
-    Int_t trainRuns[nSets] = {290};
+    TString train = "Legotrain-vAN-20161219-8TeV-Variations_Tree_Calo";
+    Int_t trainRuns[nSets] = {311};
     TString runlist[nSets] = {"merge"};
 
-    const Int_t nFiles = 3;
-    TString Files[nFiles] = {"GammaCalo_101","GammaCalo_117","GammaCalo_143"};
-
-//    const Int_t nSets = 2;
-//    const Int_t nData = 0;
-//    TString DataSets[nSets]={
-//      "LHC16c2",
-//      "LHC16c2"
-//    };
-//    TString PrefixDataSets[nSets]={
-//      "/alice/sim/2016/LHC16c2/",
-//      "/alice/sim/2016/LHC16c2/"
-//    };
-
-//    TString train = "Legotrain-vAN-20161108-8TeV-merged_new_AOD";
-//    Int_t trainRuns[nSets] = {260,261};
-//    TString runlist[nSets] = {"merge","merge"};
-
-//    const Int_t nFiles = 4;
-//    TString Files[nFiles] = {"GammaCaloMerged_109","GammaCaloMerged_110","GammaCaloMerged_116","GammaCaloMerged_117"};
+    const Int_t nFiles = 4;
+    TString Files[nFiles] = {"GammaCalo_123","GammaCalo_143","GammaCalo_124","GammaCalo_144"};
 
     //---------------------------------------------------------------------------------------------------
 

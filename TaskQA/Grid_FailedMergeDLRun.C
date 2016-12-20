@@ -85,17 +85,17 @@ void Grid_FailedMergeDLRun(TString folder = "/home/daniel/data/work/pcgGit/Analy
 //    Int_t first[nRuns] = {1};
 //    Int_t last[nRuns] = {24};
 
-    const Int_t nFiles = 2;
-    TString Tag = "20161127";
-    TString DataSetsFile[nFiles] = {"GammaConvCalo_100.root","GammaConvCalo_101.root"};
+//    const Int_t nFiles = 2;
+//    TString Tag = "20161127";
+//    TString DataSetsFile[nFiles] = {"GammaConvCalo_100.root","GammaConvCalo_101.root"};
 
-    TString prefix = "/alice/sim/2016/LHC16c2/";
-    TString suffix = "/PWGGA/GA_pp_MC/2679_20161124-1407/";
-    TString DataSet = "LHC16c2";
-    const Int_t nRuns = 1;
-    TString run[nRuns] = {/*"10/193051","20/192349","6/192349","15/192073","12/187488",*/"7/187488"/*,"1/187488","5/185687","10/184215","11/182692","19/182692","1/193051"*/};
-    Int_t first[nRuns] = {/*39,42,49,47,33,*/43/*,45,22,54,26,26,17*/};
-    Int_t last[nRuns] = {/*43,47,53,52,39,*/47/*,49,27,58,30,31,21*/};
+//    TString prefix = "/alice/sim/2016/LHC16c2/";
+//    TString suffix = "/PWGGA/GA_pp_MC/2679_20161124-1407/";
+//    TString DataSet = "LHC16c2";
+//    const Int_t nRuns = 1;
+//    TString run[nRuns] = {/*"10/193051","20/192349","6/192349","15/192073","12/187488",*/"7/187488"/*,"1/187488","5/185687","10/184215","11/182692","19/182692","1/193051"*/};
+//    Int_t first[nRuns] = {/*39,42,49,47,33,*/43/*,45,22,54,26,26,17*/};
+//    Int_t last[nRuns] = {/*43,47,53,52,39,*/47/*,49,27,58,30,31,21*/};
 //    const Int_t nFiles = 2;
 //    TString Tag = "20160518";
 //    TString DataSetsFile[nFiles] = {"GammaConvV1_70.root", "AnalysisResults.root"};
@@ -108,17 +108,24 @@ void Grid_FailedMergeDLRun(TString folder = "/home/daniel/data/work/pcgGit/Analy
 //    Int_t first[nRuns] = {3};
 //    Int_t last[nRuns] = {178};
 
-//    const Int_t nFiles = 2;
-//    TString Tag = "20160104";
-//    TString DataSetsFile[nFiles] = {"AnalysisResults.root","GammaConvV1_70.root"};
+    const Int_t nFiles = 28;
+    TString Tag = "20161201";
+    TString DataSetsFile[nFiles] = {
+      "GammaCalo_104.root","GammaCalo_123.root","GammaCalo_143.root","GammaCalo_99.root",
+      "GammaCalo_180.root","GammaCalo_181.root","GammaCalo_182.root","GammaCalo_183.root","GammaCalo_184.root","GammaCalo_185.root",
+      "GammaCalo_186.root","GammaCalo_187.root","GammaCalo_188.root","GammaCalo_189.root","GammaCalo_190.root","GammaCalo_191.root",
+      "GammaConvCalo_101.root","GammaConvCalo_193.root",
+      "GammaConvCalo_183.root","GammaConvCalo_184.root","GammaConvCalo_185.root","GammaConvCalo_186.root","GammaConvCalo_187.root",
+      "GammaConvCalo_188.root","GammaConvCalo_189.root","GammaConvCalo_190.root","GammaConvCalo_191.root","GammaConvCalo_192.root"
+    };
 
-//    TString prefix = "/alice/data/2012/LHC12h/000";
-//    TString suffix = "/pass2/PWGGA/GA_pp/1144_20160104-2355/";
-//    TString DataSet = "LHC12h";
-//    const Int_t nRuns = 3;
-//    Int_t run[nRuns] = {189616,190904,192140};
-//    Int_t first[nRuns] = {1,1,1};
-//    Int_t last[nRuns] = {48,29,27};
+    TString prefix = "/alice/data/2012/LHC12h/000";
+    TString suffix = "/pass2/PWGGA/GA_pp/1978_20161215-2317/";
+    TString DataSet = "LHC12h";
+    const Int_t nRuns = 1;
+    TString run[nRuns] = {"189623"};
+    Int_t first[nRuns] = {1};
+    Int_t last[nRuns] = {5};
 
 //    const Int_t nFiles = 2;
 //    TString Tag = "20160104";

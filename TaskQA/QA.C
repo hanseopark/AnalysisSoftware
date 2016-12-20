@@ -416,6 +416,22 @@ void QA(    TString select          = "LHC11a",         // set selected
         pathPhotonQA[3] = "";
     }
     //**************************************************************************************************************
+    else if(select.CompareTo("LHC12-JetJetCalo")==0){
+    //LHC12 MB calo
+        cutNr = 0;
+        nSets = 3;
+        mode = 4;
+        fEnergyFlag = "8TeV";
+        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20161219-8TeV-Variations_Tree_Calo/LHC12-kEMCEGA_GammaCalo_101.root";
+        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20161219-8TeV-validJetJetDeltaAOD/LHC16c2_GammaCalo_101.root";
+        pathDataSets[2] = "/home/daniel/data/work/Grid/Legotrain-vAN-20161110-8TeV-GammaCalo_AOD/LHC16c2_GammaCalo_116.root";
+        DataSets[0]="LHC12"; DataSets[1]="LHC16c2"; DataSets[2]="LHC16c2";
+        plotDataSets[0]="LHC12"; plotDataSets[1]="JetJet_AOD185"; plotDataSets[2]="JetJet";
+        pathPhotonQA[0] = "";
+        pathPhotonQA[1] = "";
+        pathPhotonQA[2] = "";
+    }
+    //**************************************************************************************************************
     else if(select.CompareTo("LHC12-Calo-kEMC7+")==0){
     //LHC12
         cutNr = 1;
