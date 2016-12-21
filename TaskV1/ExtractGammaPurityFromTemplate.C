@@ -58,7 +58,7 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
                                      TString periodData         = "",
                                      TString periodMC           = "",
                                      Int_t   numberOfBins       = 30,
-                                     Bool_t  moreBG             = kFALSE,
+                                     Int_t   moreBG             = 2,
                                      Bool_t  addSig             = 0,
                                      Int_t   mode               = 12)
 {
@@ -140,7 +140,7 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
     Bool_t      kAllKappaPlots                  = 0;
     if(fIsMC)   kAllKappaPlots                  = 1;
     Int_t       nTemplate;
-    if(moreBG)  nTemplate = 6;
+    if(moreBG==1)  nTemplate = 6;
     else        nTemplate = 4;
 
     Double_t value[nTemplate];
@@ -288,8 +288,8 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
 
         Int_t startBin                          = hKappaTPCPtAfterCut->GetYaxis()->FindBin(fBinsPt[i]);
         Int_t endBin                            = hKappaTPCPtAfterCut->GetYaxis()->FindBin(fBinsPt[i+1]);
-        cout << "projecting for bin range " << startBin << " - " << endBin << endl;
-        cout << "pt range " << fBinsPt[i] << " - " << fBinsPt[i+1] << endl;
+
+        cout << "Projecting histograms" << endl;
         hKappaTPCAfterCut[i]                    = (TH1D*)hKappaTPCPtAfterCut->ProjectionX(Form("KappaTPC_AfterCut_Pt_%.2d",i),startBin,endBin,"e");
 
         hKappaTPCElEl[i]                        = (TH1D*)hKappaTPCPtElEl->ProjectionX(Form("KappaTPC_ElEl_Pt_%.2d",i),startBin,endBin,"e");
@@ -306,9 +306,7 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
 
         hKappaTPCSum[i]                         = (TH1D*)hKappaTPCElEl[i]->Clone(Form("hKappaTPCSum%d",i));
         hKappaTPCSum[i]->Sumw2();
-        hKappaTPCSum[i]->Add(hKappaTPCPiPi[i]);
-        hKappaTPCSum[i]->Add(hKappaTPCElPi[i]);
-        if(moreBG){
+        if(moreBG==1){
 
           hKappaTPCElPK[i]               = (TH1D*)hKappaTPCElP[i]->Clone(Form("hKappaTPCElPK%d",i));
           hKappaTPCElPK[i]->Sumw2();
@@ -317,16 +315,46 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
           hKappaTPCPiPK[i]->Sumw2();
           hKappaTPCPiPK[i]->Add(hKappaTPCPiK[i]);
 
+          hKappaTPCPartialRest[i]               = (TH1D*)hKappaTPCKK[i]->Clone(Form("hKappaTPCPartialRest%d",i));
+          hKappaTPCPartialRest[i]->Sumw2();
+          hKappaTPCPartialRest[i]->Add(hKappaTPCHad[i]);
+          hKappaTPCPartialRest[i]->Add(hKappaTPCLeftoverRest[i]);
+
+          hKappaTPCSum[i]->Add(hKappaTPCPiPi[i]);
+          hKappaTPCSum[i]->Add(hKappaTPCElPi[i]);
           hKappaTPCSum[i]->Add(hKappaTPCElPK[i]);
           hKappaTPCSum[i]->Add(hKappaTPCPiPK[i]);
+          hKappaTPCSum[i]->Add(hKappaTPCPartialRest[i]);
+
+        } else if(moreBG==2){
+
+          hKappaTPCElPK[i]               = (TH1D*)hKappaTPCElPi[i]->Clone(Form("hKappaTPCElPK%d",i));
+          hKappaTPCElPK[i]->Sumw2();
+          hKappaTPCElPK[i]->Add(hKappaTPCElK[i]);
+          hKappaTPCElPK[i]->Add(hKappaTPCElP[i]);
+          hKappaTPCPiPK[i]               = (TH1D*)hKappaTPCPiPi[i]->Clone(Form("hKappaTPCPiPK%d",i));
+          hKappaTPCPiPK[i]->Sumw2();
+          hKappaTPCPiPK[i]->Add(hKappaTPCPiK[i]);
+          hKappaTPCPiPK[i]->Add(hKappaTPCPiP[i]);
 
           hKappaTPCPartialRest[i]               = (TH1D*)hKappaTPCKK[i]->Clone(Form("hKappaTPCPartialRest%d",i));
           hKappaTPCPartialRest[i]->Sumw2();
           hKappaTPCPartialRest[i]->Add(hKappaTPCHad[i]);
           hKappaTPCPartialRest[i]->Add(hKappaTPCLeftoverRest[i]);
 
+          hKappaTPCSum[i]                         = (TH1D*)hKappaTPCElEl[i]->Clone(Form("hKappaTPCSum%d",i));
+          hKappaTPCSum[i]->Sumw2();
+          hKappaTPCSum[i]->Add(hKappaTPCElPK[i]);
+          hKappaTPCSum[i]->Add(hKappaTPCPiPK[i]);
           hKappaTPCSum[i]->Add(hKappaTPCPartialRest[i]);
-        } else hKappaTPCSum[i]->Add(hKappaTPCRest[i]);
+
+        } else {
+          hKappaTPCSum[i]                         = (TH1D*)hKappaTPCElEl[i]->Clone(Form("hKappaTPCSum%d",i));
+          hKappaTPCSum[i]->Sumw2();
+          hKappaTPCSum[i]->Add(hKappaTPCPiPi[i]);
+          hKappaTPCSum[i]->Add(hKappaTPCElPi[i]);
+          hKappaTPCSum[i]->Add(hKappaTPCRest[i]);
+        }
 
         hKappaTPCTotalSum[i]                    = (TH1D*)hKappaTPCElEl[i]->Clone(Form("hKappaTPCTotalSum%d",i));
         hKappaTPCTotalSum[i]->Sumw2();
@@ -340,33 +368,50 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
         hKappaTPCTotalSum[i]->Add(hKappaTPCHad[i]);
         hKappaTPCTotalSum[i]->Add(hKappaTPCLeftoverRest[i]);
 
-        Double_t NTotal;
-        if(moreBG) NTotal = hKappaTPCElEl[i]->GetEntries() + hKappaTPCPiPi[i]->GetEntries() + hKappaTPCElPi[i]->GetEntries() + hKappaTPCElPK[i]->GetEntries() + hKappaTPCPiPK[i]->GetEntries() + hKappaTPCPartialRest[i]->GetEntries();
-        else NTotal = hKappaTPCElEl[i]->GetEntries() + hKappaTPCPiPi[i]->GetEntries() + hKappaTPCElPi[i]->GetEntries() + hKappaTPCRest[i]->GetEntries();
+        Double_t NTotalMC;
+        if(moreBG==1) NTotalMC = hKappaTPCElEl[i]->GetEntries() + hKappaTPCPiPi[i]->GetEntries() + hKappaTPCElPi[i]->GetEntries() + hKappaTPCElPK[i]->GetEntries() + hKappaTPCPiPK[i]->GetEntries() + hKappaTPCPartialRest[i]->GetEntries();
+        else if(moreBG==2) NTotalMC = hKappaTPCElEl[i]->GetEntries() + hKappaTPCElPK[i]->GetEntries() + hKappaTPCPiPK[i]->GetEntries() + hKappaTPCPartialRest[i]->GetEntries();
+        else NTotalMC = hKappaTPCElEl[i]->GetEntries() + hKappaTPCPiPi[i]->GetEntries() + hKappaTPCElPi[i]->GetEntries() + hKappaTPCRest[i]->GetEntries();
 
         Double_t NEntriesAfterCut               = hKappaTPCAfterCut[i]->GetEntries();
 
         if(isMC){
-            fracElEl[i]                         = hKappaTPCElEl[i]->GetEntries()/NTotal;
-            fracPiPi[i]                         = hKappaTPCPiPi[i]->GetEntries()/NTotal;
-            fracElPi[i]                         = hKappaTPCElPi[i]->GetEntries()/NTotal;
-            if(moreBG){
-              fracElPK[i]                       = hKappaTPCElPK[i]->GetEntries()/NTotal;
-              fracPiPK[i]                       = hKappaTPCPiPK[i]->GetEntries()/NTotal;
-              fracPartialRest[i]                = hKappaTPCPartialRest[i]->GetEntries()/NTotal;
-            } else {
-              fracRest[i]                         = hKappaTPCRest[i]->GetEntries()/NTotal;
-            }
-        } else {
-            fracElEl[i]                         = hKappaTPCElEl[i]->GetEntries()/NEntriesAfterCut;
-            fracPiPi[i]                         = hKappaTPCPiPi[i]->GetEntries()/NEntriesAfterCut;
-            fracElPi[i]                         = hKappaTPCElPi[i]->GetEntries()/NEntriesAfterCut;
-            if(moreBG){
+            if(moreBG==1){
+              fracElEl[i]                         = hKappaTPCElEl[i]->GetEntries()/NEntriesAfterCut;
+              fracPiPi[i]                         = hKappaTPCPiPi[i]->GetEntries()/NEntriesAfterCut;
+              fracElPi[i]                         = hKappaTPCElPi[i]->GetEntries()/NEntriesAfterCut;
+              fracElPK[i]                       = hKappaTPCElPK[i]->GetEntries()/NEntriesAfterCut;
+              fracPiPK[i]                       = hKappaTPCPiPK[i]->GetEntries()/NEntriesAfterCut;
+              fracPartialRest[i]                = hKappaTPCPartialRest[i]->GetEntries()/NEntriesAfterCut;
+            } else if(moreBG==2){
+              fracElEl[i]                         = hKappaTPCElEl[i]->GetEntries()/NEntriesAfterCut;
               fracElPK[i]                       = hKappaTPCElPK[i]->GetEntries()/NEntriesAfterCut;
               fracPiPK[i]                       = hKappaTPCPiPK[i]->GetEntries()/NEntriesAfterCut;
               fracPartialRest[i]                = hKappaTPCPartialRest[i]->GetEntries()/NEntriesAfterCut;
             } else {
+              fracElEl[i]                         = hKappaTPCElEl[i]->GetEntries()/NEntriesAfterCut;
+              fracPiPi[i]                         = hKappaTPCPiPi[i]->GetEntries()/NEntriesAfterCut;
+              fracElPi[i]                         = hKappaTPCElPi[i]->GetEntries()/NEntriesAfterCut;
               fracRest[i]                         = hKappaTPCRest[i]->GetEntries()/NEntriesAfterCut;
+            }
+        } else {
+            if(moreBG==1){
+              fracElEl[i]                         = hKappaTPCElEl[i]->GetEntries()/NTotalMC;
+              fracPiPi[i]                         = hKappaTPCPiPi[i]->GetEntries()/NTotalMC;
+              fracElPi[i]                         = hKappaTPCElPi[i]->GetEntries()/NTotalMC;
+              fracElPK[i]                       = hKappaTPCElPK[i]->GetEntries()/NTotalMC;
+              fracPiPK[i]                       = hKappaTPCPiPK[i]->GetEntries()/NTotalMC;
+              fracPartialRest[i]                = hKappaTPCPartialRest[i]->GetEntries()/NTotalMC;
+            } else if(moreBG==2){
+              fracElEl[i]                       = hKappaTPCElEl[i]->GetEntries()/NTotalMC;
+              fracElPK[i]                       = hKappaTPCElPK[i]->GetEntries()/NTotalMC;
+              fracPiPK[i]                       = hKappaTPCPiPK[i]->GetEntries()/NTotalMC;
+              fracPartialRest[i]                = hKappaTPCPartialRest[i]->GetEntries()/NTotalMC;
+            } else {
+              fracElEl[i]                         = hKappaTPCElEl[i]->GetEntries()/NTotalMC;
+              fracPiPi[i]                         = hKappaTPCPiPi[i]->GetEntries()/NTotalMC;
+              fracElPi[i]                         = hKappaTPCElPi[i]->GetEntries()/NTotalMC;
+              fracRest[i]                         = hKappaTPCRest[i]->GetEntries()/NTotalMC;
             }
         }
 
@@ -377,7 +422,8 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
 
         TObjArray *kappaArray                   = NULL;
         TFractionFitter* fit                    = NULL;
-        if(moreBG){
+        cout << "TFractionFitter initialization, then plotting" << endl;
+        if(moreBG==1){
             //array of all MC that build up the data
             kappaArray                   = new TObjArray(nTemplate);
             kappaArray->Add(hKappaTPCElEl[i]); //primary + secondary
@@ -397,15 +443,30 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
                 fit->Constrain(5,fracPiPK[i]*constrainLow,fracPiPK[i]*constrainHigh);
                 fit->Constrain(6,fracPartialRest[i]*constrainLow,fracPartialRest[i]*constrainHigh);
             }
+        } else if(moreBG==2){
+            //array of all MC that build up the data
+            kappaArray                   = new TObjArray(nTemplate);
+            kappaArray->Add(hKappaTPCElEl[i]); //primary + secondary
+            kappaArray->Add(hKappaTPCElPK[i]); //electron+kaon+proton
+            kappaArray->Add(hKappaTPCPiPK[i]); //pion+proton+kaon
+            kappaArray->Add(hKappaTPCPartialRest[i]); //remaining
+
+            //configure the TFractionFitter
+            fit                    = new TFractionFitter(hKappaTPCAfterCut[i], kappaArray);
+            if(kUseFitConstraints){
+                fit->Constrain(1,fracElEl[i]*constrainLow,fracElEl[i]*constrainHigh);
+                fit->Constrain(2,fracElPK[i]*constrainLow,fracElPK[i]*constrainHigh);
+                fit->Constrain(3,fracPiPK[i]*constrainLow,fracPiPK[i]*constrainHigh);
+                fit->Constrain(4,fracPartialRest[i]*constrainLow,fracPartialRest[i]*constrainHigh);
+            }
 
         } else {
             //array of all MC that build up the data
             kappaArray                   = new TObjArray(nTemplate);
             kappaArray->Add(hKappaTPCElEl[i]); //primary + secondary
-            kappaArray->Add(hKappaTPCRest[i]); //remaining
             kappaArray->Add(hKappaTPCPiPi[i]); //pion+pion
             kappaArray->Add(hKappaTPCElPi[i]); //pion+electron
-
+            kappaArray->Add(hKappaTPCRest[i]); //remaining
 
             //configure the TFractionFitter
             fit                    = new TFractionFitter(hKappaTPCAfterCut[i], kappaArray);
@@ -422,9 +483,10 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
         //cout << "fit status: " << status << endl;
 
         //plot 6 pad projection
-        TCanvas* canvas6PartKappaProj           = new TCanvas("canvas6PartKappaProj","",0,0,1200,800);
-        DrawGammaCanvasSettings( canvas6PartKappaProj,  0.15, 0.05, 0.2, 0.15);
-        canvas6PartKappaProj->Divide(3,2,0.001,0.001);
+        TCanvas* canvasPartKappaProj           = new TCanvas("canvasPartKappaProj","",0,0,1200,800);
+        DrawGammaCanvasSettings( canvasPartKappaProj,  0.15, 0.05, 0.2, 0.15);
+        if(moreBG==0 || moreBG==2) canvasPartKappaProj->Divide(3,2,0.001,0.001);
+        else if(moreBG==1) canvasPartKappaProj->Divide(4,2,0.001,0.001);
 
         TPaveText * pave                        = new TPaveText(0.15,0.7,0.45,0.93,"NDC");
         SetStylePave(pave,42,11,0.035);
@@ -434,218 +496,328 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
         pave->InsertText(SigmaStarForm.Data());
         pave->InsertText(Form("%2.1f < #it{p}_{T} < %2.1f (GeV/#it{c})",fBinsPt[i],fBinsPt[i+1]));
 
-        canvas6PartKappaProj->cd(1);
-        TPaveText * paveSignal                  = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
-        SetStylePave(paveSignal,62,11,0.04);
-        paveSignal->InsertText("Signal");
-        paveSignal->InsertText(Form("%f",hKappaTPCElEl[i]->GetEntries()/NTotal));
+        TPaveText * paveElPi                    = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
+        SetStylePave(paveElPi,62,11,0.04);
+        TPaveText * pavePiPi                    = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
+        SetStylePave(pavePiPi,62,11,0.04);
 
+        canvasPartKappaProj->cd(1);
+          TPaveText * paveSignal                  = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
+          SetStylePave(paveSignal,62,11,0.04);
+          paveSignal->InsertText("Signal");
+          paveSignal->InsertText(Form("%f",hKappaTPCElEl[i]->GetEntries()/NTotalMC));
           HistoPlotSettings(hKappaTPCElEl[i],"K","Counts",0.00001,hKappaTPCElEl[i]->GetMaximum()*1.2,-20,20,12,12,3004);
           hKappaTPCElEl[i]->Draw("histo");
           pave->Draw();
           paveSignal->Draw();
 
-        canvas6PartKappaProj->cd(2);
-        TPaveText * paveElPi                    = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
-        SetStylePave(paveElPi,62,11,0.04);
-        paveElPi->InsertText("#pi^{#pm} + e^{#mp}");
-        paveElPi->InsertText(Form("%f",hKappaTPCElPi[i]->GetEntries()/NTotal));
-
-          HistoPlotSettings(hKappaTPCElPi[i],"K","Counts",0.00001,hKappaTPCElPi[i]->GetMaximum()*1.4,-20,20,kMagenta-2,kMagenta-2,3004);
-          hKappaTPCElPi[i]->Draw("histo");
-          paveElPi->Draw();
-
-        canvas6PartKappaProj->cd(3);
-        TPaveText * pavePiPi                    = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
-        SetStylePave(pavePiPi,62,11,0.04);
-        pavePiPi->InsertText("#pi^{#pm} + #pi^{#mp}");
-        pavePiPi->InsertText(Form("%f",hKappaTPCPiPi[i]->GetEntries()/NTotal));
-
-          HistoPlotSettings(hKappaTPCPiPi[i],"K","Counts",0.00001,hKappaTPCPiPi[i]->GetMaximum()*1.2,-20,20,kBlue-7,kBlue-7,3005);
-          hKappaTPCPiPi[i]->Draw("histo");
-          pavePiPi->Draw();
-
-        canvas6PartKappaProj->cd(4);
-        TPaveText * paveRest                    = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
-        SetStylePave(paveRest,62,11,0.04);
-        paveRest->InsertText("Remaining");
-        paveRest->InsertText(Form("%f",hKappaTPCRest[i]->GetEntries()/NTotal));
-
-          HistoPlotSettings(hKappaTPCRest[i],"K","Counts",0.00001,hKappaTPCRest[i]->GetMaximum()*1.2,-20,20,kRed+1,kRed+1,3005);
-          hKappaTPCRest[i]->Draw("histo");
-          paveRest->Draw();
-
-        canvas6PartKappaProj->cd(5);
-        canvas6PartKappaProj->cd(5)->SetLogy();
-
-          TLegend* leg                            = new TLegend(0.7,0.7,0.9,0.93);
-          leg->SetTextSize(0.04);
-          leg->SetBorderSize(0);
-
-            HistoPlotSettings(hKappaTPCSum[i],"K","Counts",1,hKappaTPCSum[i]->GetMaximum()*10,-20,20,kBlack,kBlack,0);
-            hKappaTPCSum[i]->SetLineWidth(2.0);
-
-            hKappaTPCSum[i]->Draw("histo");
-            hKappaTPCElEl[i]->Draw("histo,same");
-            hKappaTPCPiPi[i]->Draw("histo,same");
-            hKappaTPCElPi[i]->Draw("histo,same");
-            hKappaTPCRest[i]->Draw("histo,same");
-
-            leg->AddEntry(hKappaTPCSum[i],"total","lp");
-            leg->AddEntry(hKappaTPCElEl[i],"real e^{+}e^{-}","f");
-            leg->AddEntry(hKappaTPCRest[i],"remaining","f");
-            leg->AddEntry(hKappaTPCPiPi[i],"#pi^{#pm} + #pi^{#mp}","f");
-            leg->AddEntry(hKappaTPCElPi[i],"#pi^{#pm} + e^{#mp}","f");
-
-          leg->Draw();
-
-        canvas6PartKappaProj->cd(6);
-        HistoPlotSettings(hKappaTPCAfterCut[i],"K","Counts",0.00001,hKappaTPCAfterCut[i]->GetMaximum()*1.2,-20,20,kBlue,kBlue,0);
-        hKappaTPCAfterCut[i]->Draw("histo");
-
-        TLegend* leg2                           = new TLegend(0.7,0.8,0.9,0.9);
-        leg2->AddEntry(hKappaTPCAfterCut[i],"data","lp");
-
-        if (status == 0) {
-            TH1D *result                        = (TH1D*)fit->GetPlot();
-            result->SetLineColor(kRed);
-            result->Draw("hist,same");
-            leg2->AddEntry(result,"fit","lp");
-        }
-
-        leg2->SetBorderSize(0);
-        leg2->SetTextSize(0.04);
-        leg2->Draw();
-
-        canvas6PartKappaProj->SaveAs(Form("%s/KappaProj_%.2d.%s",fMainPlots.Data(),i,suffix.Data()));
-
-        if(!moreBG){
-            TCanvas* canvasRatioFitDataProj = new TCanvas("canvasRatioFitDataProj","",800,800);
-            DrawGammaCanvasSettings( canvasRatioFitDataProj,  0.12, 0.03, 0.03, 0.1);
-
-              TH1D* hRatioDataToFitFinerBG = (TH1D*)hKappaTPCAfterCut[i]->Clone("hRatioDataToFitFinerBG");
-              if (status == 0) {
-                  TH1D *result                        = (TH1D*)fit->GetPlot();
-                  result->SetLineColor(kRed);
-                  hRatioDataToFitFinerBG->Divide(hKappaTPCAfterCut[i],result, 1., 1., "B");
-                  hRatioDataToFitFinerBG->Draw("hist");
-              }
-
-            pave->Draw();
-            canvasRatioFitDataProj->SaveAs(Form("%s/RatioFitToData_%.2d.%s",fMainPlots.Data(),i,suffix.Data()));
-        }
-
-        if(moreBG){
-            //plot 6 pad projection
-            TCanvas* canvas8PartKappaProj           = new TCanvas("canvas8PartKappaProj","",0,0,1200,800);
-            DrawGammaCanvasSettings( canvas8PartKappaProj,  0.15, 0.05, 0.2, 0.15);
-            canvas8PartKappaProj->Divide(4,2,0.001,0.001);
-
-            canvas8PartKappaProj->cd(1);
-
-              HistoPlotSettings(hKappaTPCElEl[i],"K","Counts",0.00001,hKappaTPCElEl[i]->GetMaximum()*1.2,-20,20,12,12,3004);
-              hKappaTPCElEl[i]->Draw("histo");
-              pave->Draw();
-              paveSignal->Draw();
-
-            canvas8PartKappaProj->cd(2);
-
+        canvasPartKappaProj->cd(2);
+          if(moreBG==0 || moreBG ==1){
+              paveElPi->InsertText("#pi^{#pm} + e^{#mp}");
+              paveElPi->InsertText(Form("%f",hKappaTPCElPi[i]->GetEntries()/NTotalMC));
               HistoPlotSettings(hKappaTPCElPi[i],"K","Counts",0.00001,hKappaTPCElPi[i]->GetMaximum()*1.4,-20,20,kMagenta-2,kMagenta-2,3004);
               hKappaTPCElPi[i]->Draw("histo");
               paveElPi->Draw();
+          } else {
+              TPaveText * paveElectrons                    = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
+              SetStylePave(paveElectrons,62,11,0.04);
+              paveElectrons->InsertText("e^{#pm} + #pi^{#mp}/K^{#mp}/p(#bar{p})");
+              paveElectrons->InsertText(Form("%f",hKappaTPCElPK[i]->GetEntries()/NTotalMC));
+              HistoPlotSettings(hKappaTPCElPK[i],"K","Counts",0.00001,hKappaTPCElPK[i]->GetMaximum()*1.4,-20,20,kMagenta-2,kMagenta-2,3004);
+              hKappaTPCElPK[i]->Draw("histo");
+              paveElectrons->Draw();
+          }
 
-            canvas8PartKappaProj->cd(3);
-
+        canvasPartKappaProj->cd(3);
+          if(moreBG==0 || moreBG==1){
+              pavePiPi->InsertText("#pi^{#pm} + #pi^{#mp}");
+              pavePiPi->InsertText(Form("%f",hKappaTPCPiPi[i]->GetEntries()/NTotalMC));
               HistoPlotSettings(hKappaTPCPiPi[i],"K","Counts",0.00001,hKappaTPCPiPi[i]->GetMaximum()*1.2,-20,20,kBlue-7,kBlue-7,3005);
               hKappaTPCPiPi[i]->Draw("histo");
               pavePiPi->Draw();
+          } else {
+              TPaveText * pavePions                    = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
+              SetStylePave(pavePions,62,11,0.04);
+              pavePions->InsertText("#pi^{#pm} + #pi^{#mp}/K^{#mp}/p(#bar{p})");
+              pavePions->InsertText(Form("%f",hKappaTPCPiPK[i]->GetEntries()/NTotalMC));
+              HistoPlotSettings(hKappaTPCPiPK[i],"K","Counts",0.00001,hKappaTPCPiPK[i]->GetMaximum()*1.2,-20,20,kBlue-7,kBlue-7,3005);
+              hKappaTPCPiPK[i]->Draw("histo");
+              pavePions->Draw();
+          }
 
-            canvas8PartKappaProj->cd(4);
-            TPaveText * paveElPK                    = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
-            SetStylePave(paveElPK,62,11,0.04);
-            paveElPK->InsertText("#pi^{#pm} + #pi^{#mp}");
-            paveElPK->InsertText(Form("%f",hKappaTPCElPK[i]->GetEntries()/NTotal));
-
+        canvasPartKappaProj->cd(4);
+          if(moreBG==0 || moreBG==2){
+              TPaveText * paveRest                    = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
+              SetStylePave(paveRest,62,11,0.04);
+              paveRest->InsertText("Remaining");
+              if(moreBG==0){
+                  paveRest->InsertText(Form("%f",hKappaTPCRest[i]->GetEntries()/NTotalMC));
+                  HistoPlotSettings(hKappaTPCRest[i],"K","Counts",0.00001,hKappaTPCRest[i]->GetMaximum()*1.2,-20,20,kRed+1,kRed+1,3005);
+                  hKappaTPCRest[i]->Draw("histo");
+              } else if(moreBG==2){
+                  paveRest->InsertText(Form("%f",hKappaTPCPartialRest[i]->GetEntries()/NTotalMC));
+                  HistoPlotSettings(hKappaTPCPartialRest[i],"K","Counts",0.00001,hKappaTPCPartialRest[i]->GetMaximum()*1.2,-20,20,kRed+1,kRed+1,3005);
+                  hKappaTPCPartialRest[i]->Draw("histo");
+              }
+              paveRest->Draw();
+          } else {
+              TPaveText * paveElPK                    = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
+              SetStylePave(paveElPK,62,11,0.04);
+              paveElPK->InsertText("e^{#pm} + K^{#mp} + p(#bar{p})");
+              paveElPK->InsertText(Form("%f",hKappaTPCElPK[i]->GetEntries()/NTotalMC));
               HistoPlotSettings(hKappaTPCElPK[i],"K","Counts",0.00001,hKappaTPCElPK[i]->GetMaximum()*1.4,-20,20,kGreen-5,kGreen-5,3305);
               hKappaTPCElPK[i]->Draw("histo");
               paveElPK->Draw();
+          }
 
-            canvas8PartKappaProj->cd(5);
-            TPaveText * pavePiPK                    = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
-            SetStylePave(pavePiPK,62,11,0.04);
-            pavePiPK->InsertText("#pi^{#pm} + #pi^{#mp}");
-            pavePiPK->InsertText(Form("%f",hKappaTPCPiPK[i]->GetEntries()/NTotal));
+        canvasPartKappaProj->cd(5);
+          if(moreBG==0 || moreBG==2){
+            canvasPartKappaProj->cd(5)->SetLogy();
 
+              TLegend* leg                            = new TLegend(0.7,0.7,0.9,0.93);
+              leg->SetTextSize(0.04);
+              leg->SetBorderSize(0);
+
+              HistoPlotSettings(hKappaTPCSum[i],"K","Counts",1,hKappaTPCSum[i]->GetMaximum()*10,-20,20,kBlack,kBlack,0);
+              hKappaTPCSum[i]->SetLineWidth(2.0);
+              hKappaTPCSum[i]->Draw("histo");
+              leg->AddEntry(hKappaTPCSum[i],"total","lp");
+              hKappaTPCElEl[i]->Draw("histo,same");
+              leg->AddEntry(hKappaTPCElEl[i],"real e^{+}e^{-}","f");
+              if(moreBG==0){
+                hKappaTPCPiPi[i]->Draw("histo,same");
+                leg->AddEntry(hKappaTPCPiPi[i],"#pi^{#pm} + #pi^{#mp}","f");
+                hKappaTPCElPi[i]->Draw("histo,same");
+                leg->AddEntry(hKappaTPCElPi[i],"#pi^{#pm} + e^{#mp}","f");
+                hKappaTPCRest[i]->Draw("histo,same");
+                leg->AddEntry(hKappaTPCRest[i],"remaining","f");
+              } else if(moreBG==2){
+                hKappaTPCElPK[i]->Draw("histo,same");
+                leg->AddEntry(hKappaTPCElPK[i],"e^{#pm} + #pi^{#mp}/K^{#mp}/p(#bar{p})","f");
+                hKappaTPCPiPK[i]->Draw("histo,same");
+                leg->AddEntry(hKappaTPCPiPK[i],"#pi^{#pm} + #pi^{#mp}/K^{#mp}/p(#bar{p})","f");
+                hKappaTPCPartialRest[i]->Draw("histo,same");
+                leg->AddEntry(hKappaTPCPartialRest[i],"remaining","f");
+              }
+              leg->Draw();
+
+          } else {
+
+              TPaveText * pavePiPK                    = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
+              SetStylePave(pavePiPK,62,11,0.04);
+              pavePiPK->InsertText("#pi^{#pm} + K^{#mp} + p(#bar{p})");
+              pavePiPK->InsertText(Form("%f",hKappaTPCPiPK[i]->GetEntries()/NTotalMC));
               HistoPlotSettings(hKappaTPCPiPK[i],"K","Counts",0.00001,hKappaTPCPiPK[i]->GetMaximum()*1.2,-20,20,kOrange+1,kOrange+1,3007);
               hKappaTPCPiPK[i]->Draw("histo");
               pavePiPK->Draw();
 
-            canvas8PartKappaProj->cd(6);
+          }
 
+        canvasPartKappaProj->cd(6);
+          if(moreBG==0 || moreBG==2){
+            canvasPartKappaProj->cd(6)->SetLogy();
+
+              HistoPlotSettings(hKappaTPCAfterCut[i],"K","Counts",/*0.0000*/1,hKappaTPCAfterCut[i]->GetMaximum()*10/*1.2*/,-20,20,kBlue,kBlue,0);
+              hKappaTPCAfterCut[i]->Draw("histo");
+
+              TLegend* leg2                           = new TLegend(0.7,0.8,0.9,0.9);
+              leg2->SetBorderSize(0);
+              leg2->SetTextSize(0.04);
+              leg2->AddEntry(hKappaTPCAfterCut[i],"data","lp");
+              if (status == 0) {
+                  TH1D *result                        = (TH1D*)fit->GetPlot();
+                  result->SetLineColor(kRed);
+                  result->Draw("hist,same");
+                  leg2->AddEntry(result,"fit","lp");
+              }
+              leg2->Draw();
+
+          } else {
+
+              TPaveText * paveRest                    = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
+              SetStylePave(paveRest,62,11,0.04);
+              paveRest->InsertText("Remaining");
               HistoPlotSettings(hKappaTPCPartialRest[i],"K","Counts",0.00001,hKappaTPCPartialRest[i]->GetMaximum()*1.2,-20,20,kRed+1,kRed+1,3005);
               hKappaTPCPartialRest[i]->Draw("histo");
               paveRest->Draw();
 
-            canvas8PartKappaProj->cd(7);
-            canvas8PartKappaProj->cd(7)->SetLogy();
+            canvasPartKappaProj->cd(7);
+            canvasPartKappaProj->cd(7)->SetLogy();
 
               TLegend* leg8                            = new TLegend(0.7,0.68,0.9,0.93);
               leg8->SetTextSize(0.04);
               leg8->SetBorderSize(0);
 
-                HistoPlotSettings(hKappaTPCSum[i],"K","Counts",1,hKappaTPCSum[i]->GetMaximum()*10,-20,20,kBlack,kBlack,0);
-                hKappaTPCSum[i]->SetLineWidth(2.0);
+              HistoPlotSettings(hKappaTPCSum[i],"K","Counts",1,hKappaTPCSum[i]->GetMaximum()*10,-20,20,kBlack,kBlack,0);
+              hKappaTPCSum[i]->SetLineWidth(2.0);
+              hKappaTPCSum[i]->Draw("histo");
+              hKappaTPCElEl[i]->Draw("histo,same");
+              hKappaTPCPiPi[i]->Draw("histo,same");
+              hKappaTPCElPi[i]->Draw("histo,same");
+              hKappaTPCElPK[i]->Draw("histo,same");
+              hKappaTPCPiPK[i]->Draw("histo,same");
+              hKappaTPCPartialRest[i]->Draw("histo,same");
 
-                hKappaTPCSum[i]->Draw("histo");
-                hKappaTPCElEl[i]->Draw("histo,same");
-                hKappaTPCPiPi[i]->Draw("histo,same");
-                hKappaTPCElPi[i]->Draw("histo,same");
-                hKappaTPCElPK[i]->Draw("histo,same");
-                hKappaTPCPiPK[i]->Draw("histo,same");
-                hKappaTPCPartialRest[i]->Draw("histo,same");
-
-                leg8->AddEntry(hKappaTPCSum[i],"total","lp");
-                leg8->AddEntry(hKappaTPCElEl[i],"real e^{+}e^{-}","f");
-                leg8->AddEntry(hKappaTPCPartialRest[i],"remaining","f");
-                leg8->AddEntry(hKappaTPCPiPi[i],"#pi^{#pm} + #pi^{#mp}","f");
-                leg8->AddEntry(hKappaTPCElPi[i],"#pi^{#pm} + e^{#mp}","f");
-                leg8->AddEntry(hKappaTPCElPK[i],"e^{#pm} + K^{#mp}(p(#bar{p}))","f");
-                leg8->AddEntry(hKappaTPCPiPK[i],"#pi^{#pm} + K^{#mp}(p(#bar{p}))","f");
-
+              leg8->AddEntry(hKappaTPCSum[i],"total","lp");
+              leg8->AddEntry(hKappaTPCElEl[i],"real e^{+}e^{-}","f");
+              leg8->AddEntry(hKappaTPCPartialRest[i],"remaining","f");
+              leg8->AddEntry(hKappaTPCPiPi[i],"#pi^{#pm} + #pi^{#mp}","f");
+              leg8->AddEntry(hKappaTPCElPi[i],"#pi^{#pm} + e^{#mp}","f");
+              leg8->AddEntry(hKappaTPCElPK[i],"e^{#pm} + K^{#mp}(p(#bar{p}))","f");
+              leg8->AddEntry(hKappaTPCPiPK[i],"#pi^{#pm} + K^{#mp}(p(#bar{p}))","f");
               leg8->Draw();
 
-            canvas8PartKappaProj->cd(8);
+            canvasPartKappaProj->cd(8);
+            canvasPartKappaProj->cd(8)->SetLogy();
 
-              HistoPlotSettings(hKappaTPCAfterCut[i],"K","Counts",0.00001,hKappaTPCAfterCut[i]->GetMaximum()*1.2,-20,20,kBlue,kBlue,0);
+              HistoPlotSettings(hKappaTPCAfterCut[i],"K","Counts",/*0.0000*/1,hKappaTPCAfterCut[i]->GetMaximum()*10/*1.2*/,-20,20,kBlue,kBlue,0);
               hKappaTPCAfterCut[i]->Draw("histo");
-
+              TLegend* leg2                           = new TLegend(0.7,0.8,0.9,0.9);
+              leg2->SetBorderSize(0);
+              leg2->SetTextSize(0.04);
+              leg2->AddEntry(hKappaTPCAfterCut[i],"data","lp");
               if (status == 0) {
                   TH1D *result                        = (TH1D*)fit->GetPlot();
                   result->SetLineColor(kRed);
                   result->Draw("hist,same");
+                  leg2->AddEntry(result,"fit","lp");
               }
               leg2->Draw();
+          }
 
-            canvas8PartKappaProj->SaveAs(Form("%s/KappaProj8Pads_%.2d.%s",fMainPlots.Data(),i,suffix.Data()));
+        canvasPartKappaProj->SaveAs(Form("%s/KappaProj_%.2d.%s",fMainPlots.Data(),i,suffix.Data()));
 
-            TCanvas* canvasRatioFitDataProj8Pads = new TCanvas("canvasRatioFitDataProj8Pads","",800,800);
-            DrawGammaCanvasSettings( canvasRatioFitDataProj8Pads,  0.12, 0.03, 0.03, 0.1);
-
-              TH1D* hRatioDataToFitFinerBG = (TH1D*)hKappaTPCAfterCut[i]->Clone("hRatioDataToFitFinerBG");
-              if (status == 0) {
-                  TH1D *result                        = (TH1D*)fit->GetPlot();
-                  result->SetLineColor(kRed);
-                  hRatioDataToFitFinerBG->Divide(hKappaTPCAfterCut[i],result, 1., 1., "B");
-                  hRatioDataToFitFinerBG->Draw("hist");
-              }
-
-            pave->Draw();
-            canvasRatioFitDataProj8Pads->SaveAs(Form("%s/RatioFitToDataFinerBG_%.2d.%s",fMainPlots.Data(),i,suffix.Data()));
-
-        }
+//         if(!moreBG){
+//             TCanvas* canvasRatioFitDataProj = new TCanvas("canvasRatioFitDataProj","",800,800);
+//             DrawGammaCanvasSettings( canvasRatioFitDataProj,  0.12, 0.03, 0.03, 0.1);
+//
+//               TH1D* hRatioDataToFitFinerBG = (TH1D*)hKappaTPCAfterCut[i]->Clone("hRatioDataToFitFinerBG");
+//               if (status == 0) {
+//                   TH1D *result                        = (TH1D*)fit->GetPlot();
+//                   result->SetLineColor(kRed);
+//                   hRatioDataToFitFinerBG->Divide(hKappaTPCAfterCut[i],result, 1., 1., "B");
+//                   hRatioDataToFitFinerBG->Draw("hist");
+//               }
+//
+//             pave->Draw();
+//             canvasRatioFitDataProj->SaveAs(Form("%s/RatioFitToData_%.2d.%s",fMainPlots.Data(),i,suffix.Data()));
+//         }
+//
+//         if(moreBG){
+//             //plot 6 pad projection
+//             TCanvas* canvas8PartKappaProj           = new TCanvas("canvas8PartKappaProj","",0,0,1200,800);
+//             DrawGammaCanvasSettings( canvas8PartKappaProj,  0.15, 0.05, 0.2, 0.15);
+//             canvas8PartKappaProj->Divide(4,2,0.001,0.001);
+//
+//             canvas8PartKappaProj->cd(1);
+//
+//               HistoPlotSettings(hKappaTPCElEl[i],"K","Counts",0.00001,hKappaTPCElEl[i]->GetMaximum()*1.2,-20,20,12,12,3004);
+//               hKappaTPCElEl[i]->Draw("histo");
+//               pave->Draw();
+//               paveSignal->Draw();
+//
+//             canvas8PartKappaProj->cd(2);
+//
+//               HistoPlotSettings(hKappaTPCElPi[i],"K","Counts",0.00001,hKappaTPCElPi[i]->GetMaximum()*1.4,-20,20,kMagenta-2,kMagenta-2,3004);
+//               hKappaTPCElPi[i]->Draw("histo");
+//               paveElPi->Draw();
+//
+//             canvas8PartKappaProj->cd(3);
+//
+//               HistoPlotSettings(hKappaTPCPiPi[i],"K","Counts",0.00001,hKappaTPCPiPi[i]->GetMaximum()*1.2,-20,20,kBlue-7,kBlue-7,3005);
+//               hKappaTPCPiPi[i]->Draw("histo");
+//               pavePiPi->Draw();
+//
+//             canvas8PartKappaProj->cd(4);
+//
+//               TPaveText * paveElPK                    = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
+//               SetStylePave(paveElPK,62,11,0.04);
+//               paveElPK->InsertText("#pi^{#pm} + #pi^{#mp}");
+//               paveElPK->InsertText(Form("%f",hKappaTPCElPK[i]->GetEntries()/NTotalMC));
+//
+//               HistoPlotSettings(hKappaTPCElPK[i],"K","Counts",0.00001,hKappaTPCElPK[i]->GetMaximum()*1.4,-20,20,kGreen-5,kGreen-5,3305);
+//               hKappaTPCElPK[i]->Draw("histo");
+//               paveElPK->Draw();
+//
+//             canvas8PartKappaProj->cd(5);
+//
+//               TPaveText * pavePiPK                    = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
+//               SetStylePave(pavePiPK,62,11,0.04);
+//               pavePiPK->InsertText("#pi^{#pm} + #pi^{#mp}");
+//               pavePiPK->InsertText(Form("%f",hKappaTPCPiPK[i]->GetEntries()/NTotalMC));
+//
+//               HistoPlotSettings(hKappaTPCPiPK[i],"K","Counts",0.00001,hKappaTPCPiPK[i]->GetMaximum()*1.2,-20,20,kOrange+1,kOrange+1,3007);
+//               hKappaTPCPiPK[i]->Draw("histo");
+//               pavePiPK->Draw();
+//
+//             canvas8PartKappaProj->cd(6);
+//
+//               HistoPlotSettings(hKappaTPCPartialRest[i],"K","Counts",0.00001,hKappaTPCPartialRest[i]->GetMaximum()*1.2,-20,20,kRed+1,kRed+1,3005);
+//               hKappaTPCPartialRest[i]->Draw("histo");
+//               paveRest->Draw();
+//
+//             canvas8PartKappaProj->cd(7);
+//             canvas8PartKappaProj->cd(7)->SetLogy();
+//
+//               TLegend* leg8                            = new TLegend(0.7,0.68,0.9,0.93);
+//               leg8->SetTextSize(0.04);
+//               leg8->SetBorderSize(0);
+//
+//                 HistoPlotSettings(hKappaTPCSum[i],"K","Counts",1,hKappaTPCSum[i]->GetMaximum()*10,-20,20,kBlack,kBlack,0);
+//                 hKappaTPCSum[i]->SetLineWidth(2.0);
+//
+//                 hKappaTPCSum[i]->Draw("histo");
+//                 hKappaTPCElEl[i]->Draw("histo,same");
+//                 hKappaTPCPiPi[i]->Draw("histo,same");
+//                 hKappaTPCElPi[i]->Draw("histo,same");
+//                 hKappaTPCElPK[i]->Draw("histo,same");
+//                 hKappaTPCPiPK[i]->Draw("histo,same");
+//                 hKappaTPCPartialRest[i]->Draw("histo,same");
+//
+//                 leg8->AddEntry(hKappaTPCSum[i],"total","lp");
+//                 leg8->AddEntry(hKappaTPCElEl[i],"real e^{+}e^{-}","f");
+//                 leg8->AddEntry(hKappaTPCPartialRest[i],"remaining","f");
+//                 leg8->AddEntry(hKappaTPCPiPi[i],"#pi^{#pm} + #pi^{#mp}","f");
+//                 leg8->AddEntry(hKappaTPCElPi[i],"#pi^{#pm} + e^{#mp}","f");
+//                 leg8->AddEntry(hKappaTPCElPK[i],"e^{#pm} + K^{#mp}(p(#bar{p}))","f");
+//                 leg8->AddEntry(hKappaTPCPiPK[i],"#pi^{#pm} + K^{#mp}(p(#bar{p}))","f");
+//
+//               leg8->Draw();
+//
+//             canvas8PartKappaProj->cd(8);
+//             canvas8PartKappaProj->cd(8)->SetLogy();
+//
+//               HistoPlotSettings(hKappaTPCAfterCut[i],"K","Counts",/*0.0000*/1,hKappaTPCAfterCut[i]->GetMaximum()*10/*1.2*/,-20,20,kBlue,kBlue,0);
+//               hKappaTPCAfterCut[i]->Draw("histo");
+//
+//               if (status == 0) {
+//                   TH1D *result                        = (TH1D*)fit->GetPlot();
+//                   result->SetLineColor(kRed);
+//                   result->Draw("hist,same");
+//               }
+//               leg2->Draw();
+//
+//             canvas8PartKappaProj->SaveAs(Form("%s/KappaProj8Pads_%.2d.%s",fMainPlots.Data(),i,suffix.Data()));
+//
+//             TCanvas* canvasRatioFitDataProj8Pads = new TCanvas("canvasRatioFitDataProj8Pads","",800,800);
+//             DrawGammaCanvasSettings( canvasRatioFitDataProj8Pads,  0.12, 0.03, 0.03, 0.1);
+//
+//               TH1D* hRatioDataToFitFinerBG = (TH1D*)hKappaTPCAfterCut[i]->Clone("hRatioDataToFitFinerBG");
+//               if (status == 0) {
+//                   TH1D *result                        = (TH1D*)fit->GetPlot();
+//                   result->SetLineColor(kRed);
+//                   hRatioDataToFitFinerBG->Divide(hKappaTPCAfterCut[i],result, 1., 1., "B");
+//                   hRatioDataToFitFinerBG->Draw("hist");
+//               }
+//
+//             pave->Draw();
+//             canvasRatioFitDataProj8Pads->SaveAs(Form("%s/RatioFitToDataFinerBG_%.2d.%s",fMainPlots.Data(),i,suffix.Data()));
+//
+//         }
 
         if(kAllKappaPlots){
 
+            cout << "Plotting all the background contributions" << endl;
             // ==================================================================================
             TCanvas* canvasAllKappaProj         = new TCanvas("canvasAllKappaProj","",0,0,1200,800);
             DrawGammaCanvasSettings( canvasAllKappaProj,  0.15, 0.05, 0.2, 0.15);
@@ -668,18 +840,22 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
             canvasAllKappaProj->cd(2);
             HistoPlotSettings(hKappaTPCElPi[i],"K","Counts",0.00001,hKappaTPCElPi[i]->GetMaximum()*1.4,-20,20,kMagenta-2,kMagenta-2,3004);
             hKappaTPCElPi[i]->Draw("histo");
+            paveElPi->InsertText("#pi^{#pm} + e^{#mp}");
+            paveElPi->InsertText(Form("%f",hKappaTPCElPi[i]->GetEntries()/NTotalMC));
             paveElPi->Draw();
 
             canvasAllKappaProj->cd(3);
             HistoPlotSettings(hKappaTPCPiPi[i],"K","Counts",0.00001,hKappaTPCPiPi[i]->GetMaximum()*1.2,-20,20,kBlue-7,kBlue-7,3005);
             hKappaTPCPiPi[i]->Draw("histo");
+            pavePiPi->InsertText("#pi^{#pm} + #pi^{#mp}");
+            pavePiPi->InsertText(Form("%f",hKappaTPCPiPi[i]->GetEntries()/NTotalMC));
             pavePiPi->Draw();
 
             canvasAllKappaProj->cd(4);
             TPaveText * pavePiK                 = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
             SetStylePave(pavePiK,62,11,0.04);
             pavePiK->InsertText("#pi^{#pm} + K^{#mp}");
-            pavePiK->InsertText(Form("%f",hKappaTPCPiK[i]->GetEntries()/NTotal));
+            pavePiK->InsertText(Form("%f",hKappaTPCPiK[i]->GetEntries()/NTotalMC));
 
             HistoPlotSettings(hKappaTPCPiK[i],"K","Counts",0.00001,hKappaTPCPiK[i]->GetMaximum()*1.2,-20,20,kBlue+2,kBlue+2,3006);
             hKappaTPCPiK[i]->Draw("histo");
@@ -689,7 +865,7 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
             TPaveText * pavePiP                 = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
             SetStylePave(pavePiP,62,11,0.04);
             pavePiP->InsertText("#pi^{#pm} + p(#bar{p})");
-            pavePiP->InsertText(Form("%f",hKappaTPCPiP[i]->GetEntries()/NTotal));
+            pavePiP->InsertText(Form("%f",hKappaTPCPiP[i]->GetEntries()/NTotalMC));
 
             HistoPlotSettings(hKappaTPCPiP[i],"K","Counts",0.00001,hKappaTPCPiP[i]->GetMaximum()*1.2,-20,20,kOrange+1,kOrange+1,3007);
             hKappaTPCPiP[i]->Draw("histo");
@@ -699,7 +875,7 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
             TPaveText * paveElK                 = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
             SetStylePave(paveElK,62,11,0.04);
             paveElK->InsertText("e^{#pm} + K^{#mp}");
-            paveElK->InsertText(Form("%f",hKappaTPCElK[i]->GetEntries()/NTotal));
+            paveElK->InsertText(Form("%f",hKappaTPCElK[i]->GetEntries()/NTotalMC));
 
             HistoPlotSettings(hKappaTPCElK[i],"K","Counts",0.00001,hKappaTPCElK[i]->GetMaximum()*1.4,-20,20,kGreen-5,kGreen-5,3305);
             hKappaTPCElK[i]->Draw("histo");
@@ -709,7 +885,7 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
             TPaveText * paveElP                 = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
             SetStylePave(paveElP,62,11,0.04);
             paveElP->InsertText("e^{#pm} + p(#bar{p})");
-            paveElP->InsertText(Form("%f",hKappaTPCElP[i]->GetEntries()/NTotal));
+            paveElP->InsertText(Form("%f",hKappaTPCElP[i]->GetEntries()/NTotalMC));
 
             HistoPlotSettings(hKappaTPCElP[i],"K","Counts",0.00001,hKappaTPCElP[i]->GetMaximum()*1.4,-20,20,kRed-4,kRed-4,3395);
             hKappaTPCElP[i]->Draw("histo");
@@ -719,7 +895,7 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
             TPaveText * paveKK                  = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
             SetStylePave(paveKK,62,11,0.04);
             paveKK->InsertText("K^{#pm} + K^{#mp}");
-            paveKK->InsertText(Form("%f",hKappaTPCKK[i]->GetEntries()/NTotal));
+            paveKK->InsertText(Form("%f",hKappaTPCKK[i]->GetEntries()/NTotalMC));
 
             HistoPlotSettings(hKappaTPCKK[i],"K","Counts",0.00001,hKappaTPCKK[i]->GetMaximum()*1.4,-20,20,kCyan-2,kCyan-2,0);
             hKappaTPCKK[i]->Draw("histo");
@@ -729,7 +905,7 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
             TPaveText * paveHad                 = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
             SetStylePave(paveHad,62,11,0.04);
             paveHad->InsertText("Hadronic");
-            paveHad->InsertText(Form("%f",hKappaTPCHad[i]->GetEntries()/NTotal));
+            paveHad->InsertText(Form("%f",hKappaTPCHad[i]->GetEntries()/NTotalMC));
 
             HistoPlotSettings(hKappaTPCHad[i],"K","Counts",0.00001,hKappaTPCHad[i]->GetMaximum()*1.2,-20,20,kGreen+2,kGreen+2,3005);
             hKappaTPCHad[i]->Draw("histo");
@@ -739,7 +915,7 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
             TPaveText * paveAllRest             = new TPaveText(0.7,0.8,0.89,0.93,"NDC");
             SetStylePave(paveAllRest,62,11,0.04);
             paveAllRest->InsertText("Remaining");
-            paveAllRest->InsertText(Form("%f",hKappaTPCLeftoverRest[i]->GetEntries()/NTotal));
+            paveAllRest->InsertText(Form("%f",hKappaTPCLeftoverRest[i]->GetEntries()/NTotalMC));
 
             HistoPlotSettings(hKappaTPCLeftoverRest[i],"K","Counts",0.00001,hKappaTPCLeftoverRest[i]->GetMaximum()*1.2,-20,20,kRed+1,kRed+1,0);
             hKappaTPCLeftoverRest[i]->Draw("histo");
@@ -825,254 +1001,390 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
         DrawGammaCanvasSettings( canvasProj,  0.12, 0.03, 0.03, 0.1);
         canvasProj->SetLogy();
 
+        TLegend* legSingleProj                            = new TLegend(0.7,0.7,0.9,0.93);
+        legSingleProj->SetTextSize(0.04);
+        legSingleProj->SetBorderSize(0);
         hKappaTPCSum[i]->Draw("histo");
+        legSingleProj->AddEntry(hKappaTPCSum[i],"total","lp");
         hKappaTPCElEl[i]->Draw("histo,same");
-        hKappaTPCPiPi[i]->Draw("histo,same");
-        hKappaTPCElPi[i]->Draw("histo,same");
-        if(moreBG){
-            hKappaTPCElPK[i]->Draw("histo,same");
-            hKappaTPCPiPK[i]->Draw("histo,same");
-            hKappaTPCPartialRest[i]->Draw("histo,same");
-
-          } else hKappaTPCRest[i]->Draw("histo,same");
-
-        leg->Draw();
+        legSingleProj->AddEntry(hKappaTPCElEl[i],"real e^{+}e^{-}","f");
+        if(moreBG==1){
+          hKappaTPCPiPi[i]->Draw("histo,same");
+          hKappaTPCElPi[i]->Draw("histo,same");
+          hKappaTPCElPK[i]->Draw("histo,same");
+          hKappaTPCPiPK[i]->Draw("histo,same");
+          hKappaTPCPartialRest[i]->Draw("histo,same");
+          legSingleProj->AddEntry(hKappaTPCPiPi[i],"#pi^{#pm} + #pi^{#mp}","f");
+          legSingleProj->AddEntry(hKappaTPCElPi[i],"#pi^{#pm} + e^{#mp}","f");
+          legSingleProj->AddEntry(hKappaTPCElPK[i],"e^{#pm} + #pi^{#mp}/K^{#mp}/p(#bar{p})","f");
+          legSingleProj->AddEntry(hKappaTPCPiPK[i],"#pi^{#pm} + #pi^{#mp}/K^{#mp}/p(#bar{p})","f");
+          legSingleProj->AddEntry(hKappaTPCPartialRest[i],"remaining","f");
+        } else if(moreBG==2){
+          hKappaTPCElPK[i]->Draw("histo,same");
+          hKappaTPCPiPK[i]->Draw("histo,same");
+          hKappaTPCPartialRest[i]->Draw("histo,same");
+          legSingleProj->AddEntry(hKappaTPCElPK[i],"e^{#pm} + #pi^{#mp}/K^{#mp}/p(#bar{p})","f");
+          legSingleProj->AddEntry(hKappaTPCPiPK[i],"#pi^{#pm} + #pi^{#mp}/K^{#mp}/p(#bar{p})","f");
+          legSingleProj->AddEntry(hKappaTPCPartialRest[i],"remaining","f");
+        } else{
+          hKappaTPCPiPi[i]->Draw("histo,same");
+          hKappaTPCElPi[i]->Draw("histo,same");
+          hKappaTPCRest[i]->Draw("histo,same");
+          legSingleProj->AddEntry(hKappaTPCPiPi[i],"#pi^{#pm} + #pi^{#mp}","f");
+          legSingleProj->AddEntry(hKappaTPCElPi[i],"#pi^{#pm} + e^{#mp}","f");
+          legSingleProj->AddEntry(hKappaTPCRest[i],"remaining","f");
+        }
+        legSingleProj->Draw();
         pave->Draw();
         canvasProj->SaveAs(Form("%s/KappaProjSinglePlot_%.2d.%s",fMainPlots.Data(),i,suffix.Data()));
 
         if (status == 0) {
+
+            cout << "Bin range " << startBin << " - " << endBin << endl;
+            cout << "pT range " << fBinsPt[i] << " - " << fBinsPt[i+1] << endl;
+
             for (int j=0; j<nTemplate; j++) fit->GetResult(j,value[j],error[j]);
 
             valuesElEl[i] = value[0];
             errorsElEl[i] = error[0];
-            cout << " value[0] = " << value[0] << endl;
-            cout << " fracElEl" << i << "] = " << fracElEl[i] << endl;
+            cout << " valuesElEl[" << i << "] = " << valuesElEl[i] << endl;
+            cout << "   fracElEl[" << i << "] = " << fracElEl[i] << endl;
             ratiofitfractionElEl[i] = valuesElEl[i]/fracElEl[i];
             hValuesElEl->SetBinContent(i+1, valuesElEl[i]);
             hValuesElEl->SetBinError(i+1, errorsElEl[i]);
             hFractionElEl->SetBinContent(i+1, ratiofitfractionElEl[i]);
             hFractionElEl->SetBinError(i+1, 0);
             hTemplateElEl[i] = (TH1D*)hKappaTPCElEl[i]->Clone();
-            hTemplateElEl[i]->Scale(value[0]/fracElEl[i]*(NEntriesAfterCut/NTotal));
+            hTemplateElEl[i]->Scale(valuesElEl[i]/fracElEl[i]*(NEntriesAfterCut/NTotalMC));
 
-            valuesPiPi[i] = value[1];
-            errorsPiPi[i] = error[1];
-            cout << " value[1] = " << value[1] << endl;
-            cout << " fracPiPi[" << i << "] = " << fracPiPi[i] << endl;
-            ratiofitfractionPiPi[i] = valuesPiPi[i]/fracPiPi[i];
-            hValuesPiPi->SetBinContent(i+1, valuesPiPi[i]);
-            hValuesPiPi->SetBinError(i+1, errorsPiPi[i]);
-            hFractionPiPi->SetBinContent(i+1, ratiofitfractionPiPi[i]);
-            hFractionPiPi->SetBinError(i+1, 0);
-            hTemplatePiPi[i] = (TH1D*)hKappaTPCPiPi[i]->Clone();
-            hTemplatePiPi[i]->Scale(value[1]/fracPiPi[i]*(NEntriesAfterCut/NTotal));
+            if(moreBG==0){
 
-            valuesElPi[i] = value[2];
-            errorsElPi[i] = error[2];
-            cout << " value[2] = " << value[2] << endl;
-            cout << " fracElPi[" << i << "] = " << fracElPi[i] << endl;
-            ratiofitfractionElPi[i] = valuesElPi[i]/fracElPi[i];
-            hValuesElPi->SetBinContent(i+1, valuesElPi[i]);
-            hValuesElPi->SetBinError(i+1, errorsElPi[i]);
-            hFractionElPi->SetBinContent(i+1, ratiofitfractionElPi[i]);
-            hFractionElPi->SetBinError(i+1, 0);
-            hTemplateElPi[i] = (TH1D*)hKappaTPCElPi[i]->Clone();
-            hTemplateElPi[i]->Scale(value[2]/fracElPi[i]*(NEntriesAfterCut/NTotal));
+              valuesPiPi[i] = value[1];
+              errorsPiPi[i] = error[1];
+              cout << " valuesPiPi[" << i << "] = " << valuesPiPi[i] << endl;
+              cout << "   fracPiPi[" << i << "] = " << fracPiPi[i] << endl;
+              ratiofitfractionPiPi[i] = valuesPiPi[i]/fracPiPi[i];
+              hValuesPiPi->SetBinContent(i+1, valuesPiPi[i]);
+              hValuesPiPi->SetBinError(i+1, errorsPiPi[i]);
+              hFractionPiPi->SetBinContent(i+1, ratiofitfractionPiPi[i]);
+              hFractionPiPi->SetBinError(i+1, 0);
+              hTemplatePiPi[i] = (TH1D*)hKappaTPCPiPi[i]->Clone();
+              hTemplatePiPi[i]->Scale(valuesPiPi[i]/fracPiPi[i]*(NEntriesAfterCut/NTotalMC));
 
-            if(moreBG){
-              valuesElPK[i] = value[3];
-              errorsElPK[i] = error[3];
-              cout << " value[3] = " << value[3] << endl;
-              cout << " fracElPK[" << i << "] = " << fracElPK[i] << endl;
-              ratiofitfractionElPK[i] = valuesElPK[i]/fracElPK[i];
-              hValuesElPK->SetBinContent(i+1, valuesElPK[i]);
-              hValuesElPK->SetBinError(i+1, errorsElPK[i]);
-              hFractionElPK->SetBinContent(i+1, ratiofitfractionElPK[i]);
-              hFractionElPK->SetBinError(i+1, 0);
-              hTemplateElPK[i] = (TH1D*)hKappaTPCElPK[i]->Clone();
-              hTemplateElPK[i]->Scale(value[3]/fracElPK[i]*(NEntriesAfterCut/NTotal));
+              valuesElPi[i] = value[2];
+              errorsElPi[i] = error[2];
+              cout << " valuesElPi[" << i << "] = " << valuesElPi[i] << endl;
+              cout << "   fracElPi[" << i << "] = " << fracElPi[i] << endl;
+              ratiofitfractionElPi[i] = valuesElPi[i]/fracElPi[i];
+              hValuesElPi->SetBinContent(i+1, valuesElPi[i]);
+              hValuesElPi->SetBinError(i+1, errorsElPi[i]);
+              hFractionElPi->SetBinContent(i+1, ratiofitfractionElPi[i]);
+              hFractionElPi->SetBinError(i+1, 0);
+              hTemplateElPi[i] = (TH1D*)hKappaTPCElPi[i]->Clone();
+              hTemplateElPi[i]->Scale(valuesElPi[i]/fracElPi[i]*(NEntriesAfterCut/NTotalMC));
 
-              valuesPiPK[i] = value[4];
-              errorsPiPK[i] = error[4];
-              cout << " value[4] = " << value[4] << endl;
-              cout << " fracPiPK[" << i << "] = " << fracPiPK[i] << endl;
-              ratiofitfractionPiPK[i] = valuesPiPK[i]/fracPiPK[i];
-              hValuesPiPK->SetBinContent(i+1, valuesPiPK[i]);
-              hValuesPiPK->SetBinError(i+1, errorsPiPK[i]);
-              hFractionPiPK->SetBinContent(i+1, ratiofitfractionPiPK[i]);
-              hFractionPiPK->SetBinError(i+1, 0);
-              hTemplatePiPK[i] = (TH1D*)hKappaTPCPiPK[i]->Clone();
-              hTemplatePiPK[i]->Scale(value[4]/fracPiPK[i]*(NEntriesAfterCut/NTotal));
-
-              valuesPartialRest[i] = value[5];
-              errorsPartialRest[i] = error[5];
-              cout << " value[5] = " << value[5] << endl;
-              cout << " fracRest[" << i << "] = " << fracPartialRest[i] << endl;
-              ratiofitfractionPartialRest[i] = valuesPartialRest[i]/fracPartialRest[i];
-              hValuesPartialRest->SetBinContent(i+1, valuesPartialRest[i]);
-              hValuesPartialRest->SetBinError(i+1, errorsPartialRest[i]);
-              hFractionPartialRest->SetBinContent(i+1, ratiofitfractionPartialRest[i]);
-              hFractionPartialRest->SetBinError(i+1, 0);
-              hTemplatePartialRest[i] = (TH1D*)hKappaTPCPartialRest[i]->Clone();
-              hTemplatePartialRest[i]->Scale(value[5]/fracPartialRest[i]*(NEntriesAfterCut/NTotal));
-            } else {
               valuesRest[i] = value[3];
               errorsRest[i] = error[3];
-              cout << " value[3] = " << value[3] << endl;
-              cout << " fracRest[" << i << "] = " << fracRest[i] << endl;
+              cout << " valuesRest[" << i << "] = " << valuesRest[i] << endl;
+              cout << "   fracRest[" << i << "] = " << fracRest[i] << endl;
               ratiofitfractionRest[i] = valuesRest[i]/fracRest[i];
               hValuesRest->SetBinContent(i+1, valuesRest[i]);
               hValuesRest->SetBinError(i+1, errorsRest[i]);
               hFractionRest->SetBinContent(i+1, ratiofitfractionRest[i]);
               hFractionRest->SetBinError(i+1, 0);
               hTemplateRest[i] = (TH1D*)hKappaTPCRest[i]->Clone();
-              hTemplateRest[i]->Scale(value[3]/fracRest[i]*(NEntriesAfterCut/NTotal));
+              hTemplateRest[i]->Scale(valuesRest[i]/fracRest[i]*(NEntriesAfterCut/NTotalMC));
+
+            } else if(moreBG==1){
+
+              valuesPiPi[i] = value[1];
+              errorsPiPi[i] = error[1];
+              cout << " valuesPiPi[" << i << "] = " << valuesPiPi[i] << endl;
+              cout << "   fracPiPi[" << i << "] = " << fracPiPi[i] << endl;
+              ratiofitfractionPiPi[i] = valuesPiPi[i]/fracPiPi[i];
+              hValuesPiPi->SetBinContent(i+1, valuesPiPi[i]);
+              hValuesPiPi->SetBinError(i+1, errorsPiPi[i]);
+              hFractionPiPi->SetBinContent(i+1, ratiofitfractionPiPi[i]);
+              hFractionPiPi->SetBinError(i+1, 0);
+              hTemplatePiPi[i] = (TH1D*)hKappaTPCPiPi[i]->Clone();
+              hTemplatePiPi[i]->Scale(valuesPiPi[i]/fracPiPi[i]*(NEntriesAfterCut/NTotalMC));
+
+              valuesElPi[i] = value[2];
+              errorsElPi[i] = error[2];
+              cout << " valuesElPi[" << i << "] = " << valuesElPi[i] << endl;
+              cout << "   fracElPi[" << i << "] = " << fracElPi[i] << endl;
+              ratiofitfractionElPi[i] = valuesElPi[i]/fracElPi[i];
+              hValuesElPi->SetBinContent(i+1, valuesElPi[i]);
+              hValuesElPi->SetBinError(i+1, errorsElPi[i]);
+              hFractionElPi->SetBinContent(i+1, ratiofitfractionElPi[i]);
+              hFractionElPi->SetBinError(i+1, 0);
+              hTemplateElPi[i] = (TH1D*)hKappaTPCElPi[i]->Clone();
+              hTemplateElPi[i]->Scale(valuesElPi[i]/fracElPi[i]*(NEntriesAfterCut/NTotalMC));
+
+              valuesElPK[i] = value[3];
+              errorsElPK[i] = error[3];
+              cout << " valuesElPK[" << i << "] = " << valuesElPK[i] << endl;
+              cout << "   fracElPK[" << i << "] = " << fracElPK[i] << endl;
+              ratiofitfractionElPK[i] = valuesElPK[i]/fracElPK[i];
+              hValuesElPK->SetBinContent(i+1, valuesElPK[i]);
+              hValuesElPK->SetBinError(i+1, errorsElPK[i]);
+              hFractionElPK->SetBinContent(i+1, ratiofitfractionElPK[i]);
+              hFractionElPK->SetBinError(i+1, 0);
+              hTemplateElPK[i] = (TH1D*)hKappaTPCElPK[i]->Clone();
+              hTemplateElPK[i]->Scale(valuesElPK[i]/fracElPK[i]*(NEntriesAfterCut/NTotalMC));
+
+              valuesPiPK[i] = value[4];
+              errorsPiPK[i] = error[4];
+              cout << " valuesPiPK[" << i << "] = " << valuesPiPK[i] << endl;
+              cout << "   fracPiPK[" << i << "] = " << fracPiPK[i] << endl;
+              ratiofitfractionPiPK[i] = valuesPiPK[i]/fracPiPK[i];
+              hValuesPiPK->SetBinContent(i+1, valuesPiPK[i]);
+              hValuesPiPK->SetBinError(i+1, errorsPiPK[i]);
+              hFractionPiPK->SetBinContent(i+1, ratiofitfractionPiPK[i]);
+              hFractionPiPK->SetBinError(i+1, 0);
+              hTemplatePiPK[i] = (TH1D*)hKappaTPCPiPK[i]->Clone();
+              hTemplatePiPK[i]->Scale(valuesPiPK[i]/fracPiPK[i]*(NEntriesAfterCut/NTotalMC));
+
+              valuesPartialRest[i] = value[5];
+              errorsPartialRest[i] = error[5];
+              cout << " valuesPartialRest[" << i << "] = " << valuesPartialRest[i] << endl;
+              cout << "   fracRest[" << i << "] = " << fracPartialRest[i] << endl;
+              ratiofitfractionPartialRest[i] = valuesPartialRest[i]/fracPartialRest[i];
+              hValuesPartialRest->SetBinContent(i+1, valuesPartialRest[i]);
+              hValuesPartialRest->SetBinError(i+1, errorsPartialRest[i]);
+              hFractionPartialRest->SetBinContent(i+1, ratiofitfractionPartialRest[i]);
+              hFractionPartialRest->SetBinError(i+1, 0);
+              hTemplatePartialRest[i] = (TH1D*)hKappaTPCPartialRest[i]->Clone();
+              hTemplatePartialRest[i]->Scale(valuesPartialRest[i]/fracPartialRest[i]*(NEntriesAfterCut/NTotalMC));
+
+            } else if(moreBG==2){
+
+              valuesElPK[i] = value[1];
+              errorsElPK[i] = error[1];
+              cout << " valuesElPK[" << i << "] = " << valuesElPK[i] << endl;
+              cout << "   fracElPK[" << i << "] = " << fracElPK[i] << endl;
+              ratiofitfractionElPK[i] = valuesElPK[i]/fracElPK[i];
+              hValuesElPK->SetBinContent(i+1, valuesElPK[i]);
+              hValuesElPK->SetBinError(i+1, errorsElPK[i]);
+              hFractionElPK->SetBinContent(i+1, ratiofitfractionElPK[i]);
+              hFractionElPK->SetBinError(i+1, 0);
+              hTemplateElPK[i] = (TH1D*)hKappaTPCElPK[i]->Clone();
+              hTemplateElPK[i]->Scale(valuesElPK[i]/fracElPK[i]*(NEntriesAfterCut/NTotalMC));
+
+              valuesPiPK[i] = value[2];
+              errorsPiPK[i] = error[2];
+              cout << " valuesPiPK[" << i << "] = " << valuesPiPK[i] << endl;
+              cout << "   fracPiPK[" << i << "] = " << fracPiPK[i] << endl;
+              ratiofitfractionPiPK[i] = valuesPiPK[i]/fracPiPK[i];
+              hValuesPiPK->SetBinContent(i+1, valuesPiPK[i]);
+              hValuesPiPK->SetBinError(i+1, errorsPiPK[i]);
+              hFractionPiPK->SetBinContent(i+1, ratiofitfractionPiPK[i]);
+              hFractionPiPK->SetBinError(i+1, 0);
+              hTemplatePiPK[i] = (TH1D*)hKappaTPCPiPK[i]->Clone();
+              hTemplatePiPK[i]->Scale(valuesPiPK[i]/fracPiPK[i]*(NEntriesAfterCut/NTotalMC));
+
+              valuesPartialRest[i] = value[3];
+              errorsPartialRest[i] = error[3];
+              cout << " valuesPartialRest[" << i << "] = " << valuesPartialRest[i] << endl;
+              cout << "   fracRest[" << i << "] = " << fracPartialRest[i] << endl;
+              ratiofitfractionPartialRest[i] = valuesPartialRest[i]/fracPartialRest[i];
+              hValuesPartialRest->SetBinContent(i+1, valuesPartialRest[i]);
+              hValuesPartialRest->SetBinError(i+1, errorsPartialRest[i]);
+              hFractionPartialRest->SetBinContent(i+1, ratiofitfractionPartialRest[i]);
+              hFractionPartialRest->SetBinError(i+1, 0);
+              hTemplatePartialRest[i] = (TH1D*)hKappaTPCPartialRest[i]->Clone();
+              hTemplatePartialRest[i]->Scale(valuesPartialRest[i]/fracPartialRest[i]*(NEntriesAfterCut/NTotalMC));
             }
 
-            cout << "NEntriesAfterCut = " << NEntriesAfterCut << endl;
-            cout << "NTotal = " << NTotal << endl;
+            if(isMC) cout << "NEntriesAfterCut from MC histo = " << NEntriesAfterCut << endl;
+            else  cout << "NEntriesAfterCut from data histo = " << NEntriesAfterCut << endl;
+            cout << "NTotalMC = " << NTotalMC << endl;
 
             hTemplateSum[i] = (TH1D*)hTemplateElEl[i]->Clone();
             hTemplateSum[i]->GetXaxis()->SetTitleOffset(0.8);
             hTemplateSum[i]->SetFillColor(0);
             hTemplateSum[i]->SetLineColor(kBlack);
             hTemplateSum[i]->SetLineWidth(2.0);
-            hTemplateSum[i]->Add(hTemplatePiPi[i]);
-            hTemplateSum[i]->Add(hTemplateElPi[i]);
-            if(moreBG){
+            if(moreBG==0){
+              hTemplateSum[i]->Add(hTemplatePiPi[i]);
+              hTemplateSum[i]->Add(hTemplateElPi[i]);
+              hTemplateSum[i]->Add(hTemplateRest[i]);
+            } else if(moreBG==1){
+              hTemplateSum[i]->Add(hTemplatePiPi[i]);
+              hTemplateSum[i]->Add(hTemplateElPi[i]);
               hTemplateSum[i]->Add(hTemplateElPK[i]);
               hTemplateSum[i]->Add(hTemplatePiPK[i]);
               hTemplateSum[i]->Add(hTemplatePartialRest[i]);
-            } else hTemplateSum[i]->Add(hTemplateRest[i]);
+            } else if(moreBG==2){
+              hTemplateSum[i]->Add(hTemplateElPK[i]);
+              hTemplateSum[i]->Add(hTemplatePiPK[i]);
+              hTemplateSum[i]->Add(hTemplatePartialRest[i]);
+            }
 
             TCanvas* canvasTemplates = new TCanvas("canvasTemplates","",800,800);
             DrawGammaCanvasSettings( canvasTemplates,  0.12, 0.03, 0.04, 0.1);
-            hTemplateSum[i]->Draw("histo");
+            canvasTemplates->SetLogy();
+
+            TLegend* legTemplate = new TLegend(0.7,0.66,0.9,0.93);
+            legTemplate->SetTextSize(0.04);
+            legTemplate->SetBorderSize(0);
+            hKappaTPCAfterCut[i]->Draw("histo");
+            legTemplate->AddEntry(hKappaTPCAfterCut[i],"data","lp");
+            if (status == 0) {
+                TH1D *result                        = (TH1D*)fit->GetPlot();
+                result->SetLineColor(kRed);
+                result->Draw("hist,same");
+                legTemplate->AddEntry(result,"fit","lp");
+            }
+            hTemplateSum[i]->Draw("histo,same");
+            legTemplate->AddEntry(hTemplateSum[i],"total","lp");
             hTemplateElEl[i]->Draw("histo,same");
-            hTemplatePiPi[i]->Draw("histo,same");
-            hTemplateElPi[i]->Draw("histo,same");
-            if(moreBG){
+            legTemplate->AddEntry(hTemplateElEl[i],"real e^{+}e^{-}","f");
+            if(moreBG==0){
+              hTemplatePiPi[i]->Draw("histo,same");
+              legTemplate->AddEntry(hTemplatePiPi[i],"#pi^{#pm} + #pi^{#mp}","f");
+              hTemplateElPi[i]->Draw("histo,same");
+              legTemplate->AddEntry(hTemplateElPi[i],"#pi^{#pm} + e^{#mp}","f");
+              hTemplateRest[i]->Draw("histo,same");
+              legTemplate->AddEntry(hTemplateRest[i],"remaining","f");
+            } else if(moreBG==1){
+              hTemplatePiPi[i]->Draw("histo,same");
+              legTemplate->AddEntry(hTemplatePiPi[i],"#pi^{#pm} + #pi^{#mp}","f");
+              hTemplateElPi[i]->Draw("histo,same");
+              legTemplate->AddEntry(hTemplateElPi[i],"#pi^{#pm} + e^{#mp}","f");
               hTemplateElPK[i]->Draw("histo,same");
+              legTemplate->AddEntry(hTemplateElPK[i],"e^{#pm} + K^{#mp} + p(#bar{p})","f");
               hTemplatePiPK[i]->Draw("histo,same");
+              legTemplate->AddEntry(hTemplatePiPK[i],"#pi^{#pm} + K^{#mp} + p(#bar{p})","f");
               hTemplatePartialRest[i]->Draw("histo,same");
-            } else hTemplateRest[i]->Draw("histo,same");
-            leg->Draw();
+              legTemplate->AddEntry(hTemplatePartialRest[i],"remaining","f");
+
+            } else if(moreBG==2){
+              hTemplateElPK[i]->Draw("histo,same");
+              legTemplate->AddEntry(hTemplateElPK[i],"e^{#pm} + #pi^{#mp}/K^{#mp}/p(#bar{p})","f");
+              hTemplatePiPK[i]->Draw("histo,same");
+              legTemplate->AddEntry(hTemplatePiPK[i],"#pi^{#pm} + #pi^{#mp}/K^{#mp}/p(#bar{p})","f");
+              hTemplatePartialRest[i]->Draw("histo,same");
+              legTemplate->AddEntry(hTemplatePartialRest[i],"remaining","f");
+            }
+
+            legTemplate->Draw();
             pave->Draw();
             canvasTemplates->SaveAs(Form("%s/Template_%.2d.%s",fMainPlots.Data(),i,suffix.Data()));
 
             // calculate signal purity
-            signalPurityNum1    = hTemplateElEl[i]->Integral(hTemplateElEl[i]->GetXaxis()->FindBin(kappaRangeElEl1[0]),hTemplateElEl[i]->GetXaxis()->FindBin(kappaRangeElEl1[1]));
-            backgroundPiPiNum1  = hTemplatePiPi[i]->Integral(hTemplatePiPi[i]->GetXaxis()->FindBin(kappaRangeElEl1[0]),hTemplatePiPi[i]->GetXaxis()->FindBin(kappaRangeElEl1[1]));
-            backgroundElPiNum1  = hTemplateElPi[i]->Integral(hTemplateElPi[i]->GetXaxis()->FindBin(kappaRangeElEl1[0]),hTemplateElPi[i]->GetXaxis()->FindBin(kappaRangeElEl1[1]));
-            if(moreBG){
-              backgroundElPKNum1  = hTemplateElPK[i]->Integral(hTemplateElPK[i]->GetXaxis()->FindBin(kappaRangeElEl1[0]),hTemplateElPK[i]->GetXaxis()->FindBin(kappaRangeElEl1[1]));
-              backgroundPiPKNum1  = hTemplatePiPK[i]->Integral(hTemplatePiPK[i]->GetXaxis()->FindBin(kappaRangeElEl1[0]),hTemplatePiPK[i]->GetXaxis()->FindBin(kappaRangeElEl1[1]));
-              backgroundRestNum1  = hTemplatePartialRest[i]->Integral(hTemplatePartialRest[i]->GetXaxis()->FindBin(kappaRangeElEl1[0]),hTemplatePartialRest[i]->GetXaxis()->FindBin(kappaRangeElEl1[1]));
-            } else backgroundRestNum1  = hTemplateRest[i]->Integral(hTemplateRest[i]->GetXaxis()->FindBin(kappaRangeElEl1[0]),hTemplateRest[i]->GetXaxis()->FindBin(kappaRangeElEl1[1]));
-
-            signalPurityNum2    = hTemplateElEl[i]->Integral(hTemplateElEl[i]->GetXaxis()->FindBin(kappaRangeElEl2[0]),hTemplateElEl[i]->GetXaxis()->FindBin(kappaRangeElEl2[1]));
-            backgroundPiPiNum2  = hTemplatePiPi[i]->Integral(hTemplatePiPi[i]->GetXaxis()->FindBin(kappaRangeElEl2[0]),hTemplatePiPi[i]->GetXaxis()->FindBin(kappaRangeElEl2[1]));
-            backgroundElPiNum2  = hTemplateElPi[i]->Integral(hTemplateElPi[i]->GetXaxis()->FindBin(kappaRangeElEl2[0]),hTemplateElPi[i]->GetXaxis()->FindBin(kappaRangeElEl2[1]));
-            if(moreBG){
-              backgroundElPKNum2  = hTemplateElPK[i]->Integral(hTemplateElPK[i]->GetXaxis()->FindBin(kappaRangeElEl2[0]),hTemplateElPK[i]->GetXaxis()->FindBin(kappaRangeElEl2[1]));
-              backgroundPiPKNum2  = hTemplatePiPK[i]->Integral(hTemplatePiPK[i]->GetXaxis()->FindBin(kappaRangeElEl2[0]),hTemplatePiPK[i]->GetXaxis()->FindBin(kappaRangeElEl2[1]));
-              backgroundRestNum2  = hTemplatePartialRest[i]->Integral(hTemplatePartialRest[i]->GetXaxis()->FindBin(kappaRangeElEl2[0]),hTemplatePartialRest[i]->GetXaxis()->FindBin(kappaRangeElEl2[1]));
-            } else backgroundRestNum2  = hTemplateRest[i]->Integral(hTemplateRest[i]->GetXaxis()->FindBin(kappaRangeElEl2[0]),hTemplateRest[i]->GetXaxis()->FindBin(kappaRangeElEl2[1]));
-
-            signalPurityNum3    = hTemplateElEl[i]->Integral(hTemplateElEl[i]->GetXaxis()->FindBin(kappaRangeElEl3[0]),hTemplateElEl[i]->GetXaxis()->FindBin(kappaRangeElEl3[1]));
-            backgroundPiPiNum3  = hTemplatePiPi[i]->Integral(hTemplatePiPi[i]->GetXaxis()->FindBin(kappaRangeElEl3[0]),hTemplatePiPi[i]->GetXaxis()->FindBin(kappaRangeElEl3[1]));
-            backgroundElPiNum3  = hTemplateElPi[i]->Integral(hTemplateElPi[i]->GetXaxis()->FindBin(kappaRangeElEl3[0]),hTemplateElPi[i]->GetXaxis()->FindBin(kappaRangeElEl3[1]));
-            if(moreBG){
-              backgroundElPKNum3  = hTemplateElPK[i]->Integral(hTemplateElPK[i]->GetXaxis()->FindBin(kappaRangeElEl3[0]),hTemplateElPK[i]->GetXaxis()->FindBin(kappaRangeElEl3[1]));
-              backgroundPiPKNum3  = hTemplatePiPK[i]->Integral(hTemplatePiPK[i]->GetXaxis()->FindBin(kappaRangeElEl3[0]),hTemplatePiPK[i]->GetXaxis()->FindBin(kappaRangeElEl3[1]));
-              backgroundRestNum3  = hTemplatePartialRest[i]->Integral(hTemplatePartialRest[i]->GetXaxis()->FindBin(kappaRangeElEl3[0]),hTemplatePartialRest[i]->GetXaxis()->FindBin(kappaRangeElEl3[1]));
-            } else backgroundRestNum3  = hTemplateRest[i]->Integral(hTemplateRest[i]->GetXaxis()->FindBin(kappaRangeElEl3[0]),hTemplateRest[i]->GetXaxis()->FindBin(kappaRangeElEl3[1]));
-
-            signalPurityDenom1 = hTemplateSum[i]->Integral(hTemplateSum[i]->GetXaxis()->FindBin(kappaRangeElEl1[0]),hTemplateSum[i]->GetXaxis()->FindBin(kappaRangeElEl1[1]));
-            signalPurityDenom2 = hTemplateSum[i]->Integral(hTemplateSum[i]->GetXaxis()->FindBin(kappaRangeElEl2[0]),hTemplateSum[i]->GetXaxis()->FindBin(kappaRangeElEl2[1]));
-            signalPurityDenom3 = hTemplateSum[i]->Integral(hTemplateSum[i]->GetXaxis()->FindBin(kappaRangeElEl3[0]),hTemplateSum[i]->GetXaxis()->FindBin(kappaRangeElEl3[1]));
-            signalPurity1                    = signalPurityNum1 / signalPurityDenom1;
-            backgroundPiPi1                  = backgroundPiPiNum1 / signalPurityDenom1;
-            backgroundElPi1                  = backgroundElPiNum1 / signalPurityDenom1;
-            if(moreBG){
-              backgroundElPK1                  = backgroundElPKNum1 / signalPurityDenom1;
-              backgroundPiPK1                  = backgroundPiPKNum1 / signalPurityDenom1;
-            }
-            backgroundRest1                  = backgroundRestNum1 / signalPurityDenom1;
-//             cout << "Purity for bin " << i << " in narrow range is " << signalPurity1 << endl;
-//             cout << "BG PiPi for bin " << i << " in narrow range is " << backgroundPiPi1 << endl;
-//             cout << "BG ElPi for bin " << i << " in narrow range is " << backgroundElPi1 << endl;
-//             cout << "BG rest for bin " << i << " in narrow range is " << backgroundRest1 << endl;
-
-            signalPurity2                    = signalPurityNum2 / signalPurityDenom2;
-            backgroundPiPi2                  = backgroundPiPiNum2 / signalPurityDenom2;
-            backgroundElPi2                  = backgroundElPiNum2 / signalPurityDenom2;
-            if(moreBG){
-              backgroundElPK2                  = backgroundElPKNum2 / signalPurityDenom2;
-              backgroundPiPK2                  = backgroundPiPKNum2 / signalPurityDenom2;
-            }
-            backgroundRest2                  = backgroundRestNum2 / signalPurityDenom2;
-//             cout << "Purity for bin " << i << " in wide range is " << signalPurity2 << endl;
-//             cout << "BG PiPi for bin " << i << " in wide range is " << backgroundPiPi2 << endl;
-//             cout << "BG ElPi for bin " << i << " in wide range is " << backgroundElPi2 << endl;
-//             cout << "BG rest for bin " << i << " in wide range is " << backgroundRest2 << endl;
-
-            signalPurity3                    = signalPurityNum3 / signalPurityDenom3;
-            backgroundPiPi3                  = backgroundPiPiNum3 / signalPurityDenom3;
-            backgroundElPi3                  = backgroundElPiNum3 / signalPurityDenom3;
-            if(moreBG){
-              backgroundElPK3                  = backgroundElPKNum3 / signalPurityDenom3;
-              backgroundPiPK3                  = backgroundPiPKNum3 / signalPurityDenom3;
-            }
-            backgroundRest3                  = backgroundRestNum3 / signalPurityDenom3;
-//             cout << "Purity for bin " << i << " in asymm range is " << signalPurity3 << endl;
-//             cout << "BG PiPi for bin " << i << " in asymm range is " << backgroundPiPi3 << endl;
-//             cout << "BG ElPi for bin " << i << " in asymm range is " << backgroundElPi3 << endl;
-//             cout << "BG rest for bin " << i << " in asymm range is " << backgroundRest3 << endl;
-
-            //signalPurityErr                 = TMath::Sqrt(signalPurityNumErr*signalPurityNumErr + signalPurityDenomErr*signalPurityDenomErr);
-
-            hSignalPurity1->SetBinContent(i+1, signalPurity1);
-            hSignalPurity1->SetBinError(i+1, 0);
-            hSignalPurity2->SetBinContent(i+1, signalPurity2);
-            hSignalPurity2->SetBinError(i+1, 0);
-            hSignalPurity3->SetBinContent(i+1, signalPurity3);
-            hSignalPurity3->SetBinError(i+1, 0);
-
-            hBackgroundPiPi1->SetBinContent(i+1, backgroundPiPi1);
-            hBackgroundPiPi1->SetBinError(i+1, 0);
-            hBackgroundPiPi2->SetBinContent(i+1, backgroundPiPi2);
-            hBackgroundPiPi2->SetBinError(i+1, 0);
-            hBackgroundPiPi3->SetBinContent(i+1, backgroundPiPi3);
-            hBackgroundPiPi3->SetBinError(i+1, 0);
-
-            hBackgroundElPi1->SetBinContent(i+1, backgroundElPi1);
-            hBackgroundElPi1->SetBinError(i+1, 0);
-            hBackgroundElPi2->SetBinContent(i+1, backgroundElPi2);
-            hBackgroundElPi2->SetBinError(i+1, 0);
-            hBackgroundElPi3->SetBinContent(i+1, backgroundElPi3);
-            hBackgroundElPi3->SetBinError(i+1, 0);
-
-            hBackgroundElPK1->SetBinContent(i+1, backgroundElPK1);
-            hBackgroundElPK1->SetBinError(i+1, 0);
-            hBackgroundElPK2->SetBinContent(i+1, backgroundElPK2);
-            hBackgroundElPK2->SetBinError(i+1, 0);
-            hBackgroundElPK3->SetBinContent(i+1, backgroundElPK3);
-            hBackgroundElPK3->SetBinError(i+1, 0);
-
-            hBackgroundPiPK1->SetBinContent(i+1, backgroundPiPK1);
-            hBackgroundPiPK1->SetBinError(i+1, 0);
-            hBackgroundPiPK2->SetBinContent(i+1, backgroundPiPK2);
-            hBackgroundPiPK2->SetBinError(i+1, 0);
-            hBackgroundPiPK3->SetBinContent(i+1, backgroundPiPK3);
-            hBackgroundPiPK3->SetBinError(i+1, 0);
-
-            hBackgroundRest1->SetBinContent(i+1, backgroundRest1);
-            hBackgroundRest1->SetBinError(i+1, 0);
-            hBackgroundRest2->SetBinContent(i+1, backgroundRest2);
-            hBackgroundRest2->SetBinError(i+1, 0);
-            hBackgroundRest3->SetBinContent(i+1, backgroundRest3);
-            hBackgroundRest3->SetBinError(i+1, 0);
+//             signalPurityNum1    = hTemplateElEl[i]->Integral(hTemplateElEl[i]->GetXaxis()->FindBin(kappaRangeElEl1[0]),hTemplateElEl[i]->GetXaxis()->FindBin(kappaRangeElEl1[1]));
+//             backgroundPiPiNum1  = hTemplatePiPi[i]->Integral(hTemplatePiPi[i]->GetXaxis()->FindBin(kappaRangeElEl1[0]),hTemplatePiPi[i]->GetXaxis()->FindBin(kappaRangeElEl1[1]));
+//             backgroundElPiNum1  = hTemplateElPi[i]->Integral(hTemplateElPi[i]->GetXaxis()->FindBin(kappaRangeElEl1[0]),hTemplateElPi[i]->GetXaxis()->FindBin(kappaRangeElEl1[1]));
+//             if(moreBG){
+//               backgroundElPKNum1  = hTemplateElPK[i]->Integral(hTemplateElPK[i]->GetXaxis()->FindBin(kappaRangeElEl1[0]),hTemplateElPK[i]->GetXaxis()->FindBin(kappaRangeElEl1[1]));
+//               backgroundPiPKNum1  = hTemplatePiPK[i]->Integral(hTemplatePiPK[i]->GetXaxis()->FindBin(kappaRangeElEl1[0]),hTemplatePiPK[i]->GetXaxis()->FindBin(kappaRangeElEl1[1]));
+//               backgroundRestNum1  = hTemplatePartialRest[i]->Integral(hTemplatePartialRest[i]->GetXaxis()->FindBin(kappaRangeElEl1[0]),hTemplatePartialRest[i]->GetXaxis()->FindBin(kappaRangeElEl1[1]));
+//             } else backgroundRestNum1  = hTemplateRest[i]->Integral(hTemplateRest[i]->GetXaxis()->FindBin(kappaRangeElEl1[0]),hTemplateRest[i]->GetXaxis()->FindBin(kappaRangeElEl1[1]));
+//
+//             signalPurityNum2    = hTemplateElEl[i]->Integral(hTemplateElEl[i]->GetXaxis()->FindBin(kappaRangeElEl2[0]),hTemplateElEl[i]->GetXaxis()->FindBin(kappaRangeElEl2[1]));
+//             backgroundPiPiNum2  = hTemplatePiPi[i]->Integral(hTemplatePiPi[i]->GetXaxis()->FindBin(kappaRangeElEl2[0]),hTemplatePiPi[i]->GetXaxis()->FindBin(kappaRangeElEl2[1]));
+//             backgroundElPiNum2  = hTemplateElPi[i]->Integral(hTemplateElPi[i]->GetXaxis()->FindBin(kappaRangeElEl2[0]),hTemplateElPi[i]->GetXaxis()->FindBin(kappaRangeElEl2[1]));
+//             if(moreBG){
+//               backgroundElPKNum2  = hTemplateElPK[i]->Integral(hTemplateElPK[i]->GetXaxis()->FindBin(kappaRangeElEl2[0]),hTemplateElPK[i]->GetXaxis()->FindBin(kappaRangeElEl2[1]));
+//               backgroundPiPKNum2  = hTemplatePiPK[i]->Integral(hTemplatePiPK[i]->GetXaxis()->FindBin(kappaRangeElEl2[0]),hTemplatePiPK[i]->GetXaxis()->FindBin(kappaRangeElEl2[1]));
+//               backgroundRestNum2  = hTemplatePartialRest[i]->Integral(hTemplatePartialRest[i]->GetXaxis()->FindBin(kappaRangeElEl2[0]),hTemplatePartialRest[i]->GetXaxis()->FindBin(kappaRangeElEl2[1]));
+//             } else backgroundRestNum2  = hTemplateRest[i]->Integral(hTemplateRest[i]->GetXaxis()->FindBin(kappaRangeElEl2[0]),hTemplateRest[i]->GetXaxis()->FindBin(kappaRangeElEl2[1]));
+//
+//             signalPurityNum3    = hTemplateElEl[i]->Integral(hTemplateElEl[i]->GetXaxis()->FindBin(kappaRangeElEl3[0]),hTemplateElEl[i]->GetXaxis()->FindBin(kappaRangeElEl3[1]));
+//             backgroundPiPiNum3  = hTemplatePiPi[i]->Integral(hTemplatePiPi[i]->GetXaxis()->FindBin(kappaRangeElEl3[0]),hTemplatePiPi[i]->GetXaxis()->FindBin(kappaRangeElEl3[1]));
+//             backgroundElPiNum3  = hTemplateElPi[i]->Integral(hTemplateElPi[i]->GetXaxis()->FindBin(kappaRangeElEl3[0]),hTemplateElPi[i]->GetXaxis()->FindBin(kappaRangeElEl3[1]));
+//             if(moreBG){
+//               backgroundElPKNum3  = hTemplateElPK[i]->Integral(hTemplateElPK[i]->GetXaxis()->FindBin(kappaRangeElEl3[0]),hTemplateElPK[i]->GetXaxis()->FindBin(kappaRangeElEl3[1]));
+//               backgroundPiPKNum3  = hTemplatePiPK[i]->Integral(hTemplatePiPK[i]->GetXaxis()->FindBin(kappaRangeElEl3[0]),hTemplatePiPK[i]->GetXaxis()->FindBin(kappaRangeElEl3[1]));
+//               backgroundRestNum3  = hTemplatePartialRest[i]->Integral(hTemplatePartialRest[i]->GetXaxis()->FindBin(kappaRangeElEl3[0]),hTemplatePartialRest[i]->GetXaxis()->FindBin(kappaRangeElEl3[1]));
+//             } else backgroundRestNum3  = hTemplateRest[i]->Integral(hTemplateRest[i]->GetXaxis()->FindBin(kappaRangeElEl3[0]),hTemplateRest[i]->GetXaxis()->FindBin(kappaRangeElEl3[1]));
+//
+//             signalPurityDenom1 = hTemplateSum[i]->Integral(hTemplateSum[i]->GetXaxis()->FindBin(kappaRangeElEl1[0]),hTemplateSum[i]->GetXaxis()->FindBin(kappaRangeElEl1[1]));
+//             signalPurityDenom2 = hTemplateSum[i]->Integral(hTemplateSum[i]->GetXaxis()->FindBin(kappaRangeElEl2[0]),hTemplateSum[i]->GetXaxis()->FindBin(kappaRangeElEl2[1]));
+//             signalPurityDenom3 = hTemplateSum[i]->Integral(hTemplateSum[i]->GetXaxis()->FindBin(kappaRangeElEl3[0]),hTemplateSum[i]->GetXaxis()->FindBin(kappaRangeElEl3[1]));
+//             signalPurity1                    = signalPurityNum1 / signalPurityDenom1;
+//             backgroundPiPi1                  = backgroundPiPiNum1 / signalPurityDenom1;
+//             backgroundElPi1                  = backgroundElPiNum1 / signalPurityDenom1;
+//             if(moreBG){
+//               backgroundElPK1                  = backgroundElPKNum1 / signalPurityDenom1;
+//               backgroundPiPK1                  = backgroundPiPKNum1 / signalPurityDenom1;
+//             }
+//             backgroundRest1                  = backgroundRestNum1 / signalPurityDenom1;
+// //             cout << "Purity for bin " << i << " in narrow range is " << signalPurity1 << endl;
+// //             cout << "BG PiPi for bin " << i << " in narrow range is " << backgroundPiPi1 << endl;
+// //             cout << "BG ElPi for bin " << i << " in narrow range is " << backgroundElPi1 << endl;
+// //             cout << "BG rest for bin " << i << " in narrow range is " << backgroundRest1 << endl;
+//
+//             signalPurity2                    = signalPurityNum2 / signalPurityDenom2;
+//             backgroundPiPi2                  = backgroundPiPiNum2 / signalPurityDenom2;
+//             backgroundElPi2                  = backgroundElPiNum2 / signalPurityDenom2;
+//             if(moreBG){
+//               backgroundElPK2                  = backgroundElPKNum2 / signalPurityDenom2;
+//               backgroundPiPK2                  = backgroundPiPKNum2 / signalPurityDenom2;
+//             }
+//             backgroundRest2                  = backgroundRestNum2 / signalPurityDenom2;
+// //             cout << "Purity for bin " << i << " in wide range is " << signalPurity2 << endl;
+// //             cout << "BG PiPi for bin " << i << " in wide range is " << backgroundPiPi2 << endl;
+// //             cout << "BG ElPi for bin " << i << " in wide range is " << backgroundElPi2 << endl;
+// //             cout << "BG rest for bin " << i << " in wide range is " << backgroundRest2 << endl;
+//
+//             signalPurity3                    = signalPurityNum3 / signalPurityDenom3;
+//             backgroundPiPi3                  = backgroundPiPiNum3 / signalPurityDenom3;
+//             backgroundElPi3                  = backgroundElPiNum3 / signalPurityDenom3;
+//             if(moreBG){
+//               backgroundElPK3                  = backgroundElPKNum3 / signalPurityDenom3;
+//               backgroundPiPK3                  = backgroundPiPKNum3 / signalPurityDenom3;
+//             }
+//             backgroundRest3                  = backgroundRestNum3 / signalPurityDenom3;
+// //             cout << "Purity for bin " << i << " in asymm range is " << signalPurity3 << endl;
+// //             cout << "BG PiPi for bin " << i << " in asymm range is " << backgroundPiPi3 << endl;
+// //             cout << "BG ElPi for bin " << i << " in asymm range is " << backgroundElPi3 << endl;
+// //             cout << "BG rest for bin " << i << " in asymm range is " << backgroundRest3 << endl;
+//
+//             //signalPurityErr                 = TMath::Sqrt(signalPurityNumErr*signalPurityNumErr + signalPurityDenomErr*signalPurityDenomErr);
+//
+//             hSignalPurity1->SetBinContent(i+1, signalPurity1);
+//             hSignalPurity1->SetBinError(i+1, 0);
+//             hSignalPurity2->SetBinContent(i+1, signalPurity2);
+//             hSignalPurity2->SetBinError(i+1, 0);
+//             hSignalPurity3->SetBinContent(i+1, signalPurity3);
+//             hSignalPurity3->SetBinError(i+1, 0);
+//
+//             hBackgroundPiPi1->SetBinContent(i+1, backgroundPiPi1);
+//             hBackgroundPiPi1->SetBinError(i+1, 0);
+//             hBackgroundPiPi2->SetBinContent(i+1, backgroundPiPi2);
+//             hBackgroundPiPi2->SetBinError(i+1, 0);
+//             hBackgroundPiPi3->SetBinContent(i+1, backgroundPiPi3);
+//             hBackgroundPiPi3->SetBinError(i+1, 0);
+//
+//             hBackgroundElPi1->SetBinContent(i+1, backgroundElPi1);
+//             hBackgroundElPi1->SetBinError(i+1, 0);
+//             hBackgroundElPi2->SetBinContent(i+1, backgroundElPi2);
+//             hBackgroundElPi2->SetBinError(i+1, 0);
+//             hBackgroundElPi3->SetBinContent(i+1, backgroundElPi3);
+//             hBackgroundElPi3->SetBinError(i+1, 0);
+//
+//             hBackgroundElPK1->SetBinContent(i+1, backgroundElPK1);
+//             hBackgroundElPK1->SetBinError(i+1, 0);
+//             hBackgroundElPK2->SetBinContent(i+1, backgroundElPK2);
+//             hBackgroundElPK2->SetBinError(i+1, 0);
+//             hBackgroundElPK3->SetBinContent(i+1, backgroundElPK3);
+//             hBackgroundElPK3->SetBinError(i+1, 0);
+//
+//             hBackgroundPiPK1->SetBinContent(i+1, backgroundPiPK1);
+//             hBackgroundPiPK1->SetBinError(i+1, 0);
+//             hBackgroundPiPK2->SetBinContent(i+1, backgroundPiPK2);
+//             hBackgroundPiPK2->SetBinError(i+1, 0);
+//             hBackgroundPiPK3->SetBinContent(i+1, backgroundPiPK3);
+//             hBackgroundPiPK3->SetBinError(i+1, 0);
+//
+//             hBackgroundRest1->SetBinContent(i+1, backgroundRest1);
+//             hBackgroundRest1->SetBinError(i+1, 0);
+//             hBackgroundRest2->SetBinContent(i+1, backgroundRest2);
+//             hBackgroundRest2->SetBinError(i+1, 0);
+//             hBackgroundRest3->SetBinContent(i+1, backgroundRest3);
+//             hBackgroundRest3->SetBinError(i+1, 0);
         } //end status == 0 if
         else {
             errorCounter++;
@@ -1084,137 +1396,137 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
         delete fit;
     } //end of pt loop
 
-    TCanvas* canvasPurity   = new TCanvas("canvasPurity","",0,0,1000,800);  // gives the page size
-    DrawGammaCanvasSettings( canvasPurity,  0.1, 0.02, 0.02, 0.09);
-    TH2D *histo2DPurity     = new TH2D("histo2DPurity", "histo2DPurity", 1000,0.,fDeltaPt->GetXaxis()->GetXmax(),1000,0.7,1.01);
-    SetStyleHistoTH2ForGraphs(histo2DPurity, "#it{p}_{T} (GeV/#it{c})","Purity", 0.035,0.04, 0.035,0.04, 1.,1.05);
-    histo2DPurity->DrawCopy();
-
-    DrawGammaSetMarker(hSignalPurity1,20,1.5,kBlack,kBlack);
-    hSignalPurity1->Draw("same,p");
-    DrawGammaSetMarker(hSignalPurity2,20,1.5,kGreen+2,kGreen+2);
-    hSignalPurity2->Draw("same,p");
-    DrawGammaSetMarker(hSignalPurity3,20,1.5,kBlue+1,kBlue+1);
-    hSignalPurity3->Draw("same,p");
-
-    TLegend* legPurity = new TLegend(0.2,0.2,0.5,0.4);
-    legPurity->SetTextSize(0.04);
-    legPurity->SetHeader("Purity");
-    legPurity->AddEntry(hSignalPurity1,Form("%.2f < K < %.2f",kappaRangeElEl1[0],kappaRangeElEl1[1]),"p");
-    legPurity->AddEntry(hSignalPurity2,Form("%.2f < K < %.2f",kappaRangeElEl2[0],kappaRangeElEl2[1]),"p");
-    legPurity->AddEntry(hSignalPurity3,Form("%.2f < K < %.2f",kappaRangeElEl3[0],kappaRangeElEl3[1]),"p");
-    legPurity->SetBorderSize(0);
-    legPurity->Draw("same");
-
-    canvasPurity->SaveAs(Form("%s/Purity.%s",fOutputDir.Data(),suffix.Data()));
-
-    TCanvas* canvasBackground       = new TCanvas("canvasBackground","",0,0,1500,600);  // gives the page size
-    DrawGammaCanvasSettings( canvasBackground,  0.07, 0.0, 0.02, 0.09);
-    canvasBackground->Divide(3,1,0.000001,0.00001);
-    TH2D *histo2DBackground         = new TH2D("histo2DBackground", "histo2DBackground", 1000,0.,fDeltaPt->GetXaxis()->GetXmax(),10,-.001,.1);
-    SetStyleHistoTH2ForGraphs(histo2DBackground, "#it{p}_{T} (GeV/#it{c})","Background", 0.035,0.04, 0.035,0.04, 1.,1.4);
-
-    DrawGammaSetMarker(hBackgroundElPi1,25,1.,kMagenta-2,kMagenta-2);
-    DrawGammaSetMarker(hBackgroundPiPi1,24,1.,kBlue-7,kBlue-7);
-    DrawGammaSetMarker(hBackgroundPiPi2,24,1.,kBlue-7,kBlue-7);
-    DrawGammaSetMarker(hBackgroundElPi2,25,1.,kMagenta-2,kMagenta-2);
-    DrawGammaSetMarker(hBackgroundElPi3,25,1.,kMagenta-2,kMagenta-2);
-    DrawGammaSetMarker(hBackgroundPiPi3,24,1.,kBlue-7,kBlue-7);
-    DrawGammaSetMarker(hBackgroundRest1,27,1.,kRed,kRed);
-    DrawGammaSetMarker(hBackgroundRest2,27,1.,kRed,kRed);
-    DrawGammaSetMarker(hBackgroundRest3,27,1.,kRed,kRed);
-
-    canvasBackground->cd(1);
-    histo2DBackground->DrawCopy();
-
-    hBackgroundPiPi1->Draw("same,p");
-    hBackgroundElPi1->Draw("same,p");
-    hBackgroundRest1->Draw("same,p");
-
-    TLegend* legBackground1 = new TLegend(0.2,0.7,0.5,0.9);
-    legBackground1->SetTextSize(0.04);
-    legBackground1->SetHeader(Form("Contamination in %.2f < K < %.2f",kappaRangeElEl1[0],kappaRangeElEl1[1]));
-    legBackground1->AddEntry(hBackgroundPiPi1,"#pi^{#pm}#pi^{#mp}","p");
-    legBackground1->AddEntry(hBackgroundElPi1,"e^{#pm}#pi^{#mp}","p");
-    legBackground1->AddEntry(hBackgroundRest1,"rest","p");
-    legBackground1->SetBorderSize(0);
-    legBackground1->Draw();
-
-    canvasBackground->cd(2);
-    histo2DBackground->DrawCopy();
-
-    hBackgroundElPi2->Draw("same,p");
-    hBackgroundPiPi2->Draw("same,p");
-    hBackgroundRest2->Draw("same,p");
-
-    TLegend* legBackground2 = new TLegend(0.2,0.7,0.5,0.9);
-    legBackground2->SetTextSize(0.04);
-    legBackground2->SetHeader(Form("Contamination in %.2f < K < %.2f",kappaRangeElEl2[0],kappaRangeElEl2[1]));
-    legBackground2->AddEntry(hBackgroundPiPi2,"#pi^{#pm}#pi^{#mp}","p");
-    legBackground2->AddEntry(hBackgroundElPi2,"e^{#pm}#pi^{#mp}","p");
-    legBackground2->AddEntry(hBackgroundRest2,"rest","p");
-    legBackground2->SetBorderSize(0);
-    legBackground2->Draw();
-
-    canvasBackground->cd(3);
-    histo2DBackground->DrawCopy();
-
-    hBackgroundPiPi3->Draw("same,p");
-    hBackgroundElPi3->Draw("same,p");
-    hBackgroundRest3->Draw("same,p");
-
-    TLegend* legBackground3 = new TLegend(0.2,0.7,0.5,0.9);
-    legBackground3->SetTextSize(0.04);
-    legBackground3->SetHeader(Form("Contamination in %.2f < K < %.2f",kappaRangeElEl3[0],kappaRangeElEl3[1]));
-    legBackground3->AddEntry(hBackgroundPiPi3,"#pi^{#pm}#pi^{#mp}","p");
-    legBackground3->AddEntry(hBackgroundElPi3,"e^{#pm}#pi^{#mp}","p");
-    legBackground3->AddEntry(hBackgroundRest3,"rest","p");
-    legBackground3->SetBorderSize(0);
-    legBackground3->Draw();
-
-    canvasBackground->SaveAs(Form("%s/Background.%s",fOutputDir.Data(),suffix.Data()));
-
-    TCanvas* canvasFractions     = new TCanvas("canvasFractions","",0,0,1000,500);  // gives the page size
-    DrawGammaCanvasSettings( canvasFractions,  0.07, 0.02, 0.02, 0.09);
-    canvasFractions->Divide(2,1,0.0001,0.0001);
-
-    canvasFractions->cd(1);
-    HistoMarkerPlotSettings(hValuesElEl,"#it{p}_{T} (GeV/#it{c})","Template fraction",0.,1.1,0.,14.,12,12,20);
-    HistoMarkerPlotSettings(hValuesElPi,"#it{p}_{T} (GeV/#it{c})","",0.,1.1,0.,14.,kMagenta-2,kMagenta-2,20);
-    HistoMarkerPlotSettings(hValuesPiPi,"#it{p}_{T} (GeV/#it{c})","",0.,1.1,0.,14.,kBlue-7,kBlue-7,20);
-    HistoMarkerPlotSettings(hValuesRest,"#it{p}_{T} (GeV/#it{c})","",0.,1.1,0.,14.,kRed+1,kRed+1,20);
-    hValuesElEl->Draw("p");
-    hValuesPiPi->Draw("p,same");
-    hValuesElPi->Draw("p,same");
-    hValuesRest->Draw("p,same");
-
-    TLegend* legFracTemplate = new TLegend(0.5,0.35,0.9,0.55);
-    legFracTemplate->SetTextSize(0.04);
-    legFracTemplate->AddEntry(hValuesElEl,"e^{#pm}e^{#mp}","p");
-    legFracTemplate->AddEntry(hValuesPiPi,"#pi^{#pm}#pi^{#mp}","p");
-    legFracTemplate->AddEntry(hValuesElPi,"e^{#pm}#pi^{#mp}","p");
-    legFracTemplate->AddEntry(hValuesRest,"rest","p");
-    legFracTemplate->SetBorderSize(0);
-    legFracTemplate->Draw();
-    TPaveText * pave1 = new TPaveText(0.5,0.56,0.9,0.7,"NDC");
-    SetStylePave(pave1,42,11,0.035);
-    pave1->InsertText(InfoSystem.Data());
-    if(isMC) pave1->InsertText(periodMC.Data());
-    else pave1->InsertText(periodData.Data());
-    pave1->Draw();
-
-    canvasFractions->cd(2);
-    HistoMarkerPlotSettings(hFractionElEl,"#it{p}_{T} (GeV/#it{c})","fit/histo",0.5,1.5,0.,14.,12,12,20);
-    HistoMarkerPlotSettings(hFractionElPi,"#it{p}_{T} (GeV/#it{c})","",0.5,1.5,0.,14.,kMagenta-2,kMagenta-2,20);
-    HistoMarkerPlotSettings(hFractionPiPi,"#it{p}_{T} (GeV/#it{c})","",0.5,1.5,0.,14.,kBlue-7,kBlue-7,20);
-    HistoMarkerPlotSettings(hFractionRest,"#it{p}_{T} (GeV/#it{c})","",0.5,1.5,0.,14.,kRed+1,kRed+1,20);
-    hFractionElEl->Draw("p");
-    hFractionElPi->Draw("p,same");
-    hFractionPiPi->Draw("p,same");
-    hFractionRest->Draw("p,same");
-
-    canvasFractions->SaveAs(Form("%s/Fractions.%s",fOutputDir.Data(),suffix.Data()));
-
+//     TCanvas* canvasPurity   = new TCanvas("canvasPurity","",0,0,1000,800);  // gives the page size
+//     DrawGammaCanvasSettings( canvasPurity,  0.1, 0.02, 0.02, 0.09);
+//     TH2D *histo2DPurity     = new TH2D("histo2DPurity", "histo2DPurity", 1000,0.,fDeltaPt->GetXaxis()->GetXmax(),1000,0.7,1.01);
+//     SetStyleHistoTH2ForGraphs(histo2DPurity, "#it{p}_{T} (GeV/#it{c})","Purity", 0.035,0.04, 0.035,0.04, 1.,1.05);
+//     histo2DPurity->DrawCopy();
+//
+//     DrawGammaSetMarker(hSignalPurity1,20,1.5,kBlack,kBlack);
+//     hSignalPurity1->Draw("same,p");
+//     DrawGammaSetMarker(hSignalPurity2,20,1.5,kGreen+2,kGreen+2);
+//     hSignalPurity2->Draw("same,p");
+//     DrawGammaSetMarker(hSignalPurity3,20,1.5,kBlue+1,kBlue+1);
+//     hSignalPurity3->Draw("same,p");
+//
+//     TLegend* legPurity = new TLegend(0.2,0.2,0.5,0.4);
+//     legPurity->SetTextSize(0.04);
+//     legPurity->SetHeader("Purity");
+//     legPurity->AddEntry(hSignalPurity1,Form("%.2f < K < %.2f",kappaRangeElEl1[0],kappaRangeElEl1[1]),"p");
+//     legPurity->AddEntry(hSignalPurity2,Form("%.2f < K < %.2f",kappaRangeElEl2[0],kappaRangeElEl2[1]),"p");
+//     legPurity->AddEntry(hSignalPurity3,Form("%.2f < K < %.2f",kappaRangeElEl3[0],kappaRangeElEl3[1]),"p");
+//     legPurity->SetBorderSize(0);
+//     legPurity->Draw("same");
+//
+//     canvasPurity->SaveAs(Form("%s/Purity.%s",fOutputDir.Data(),suffix.Data()));
+//
+//     TCanvas* canvasBackground       = new TCanvas("canvasBackground","",0,0,1500,600);  // gives the page size
+//     DrawGammaCanvasSettings( canvasBackground,  0.07, 0.0, 0.02, 0.09);
+//     canvasBackground->Divide(3,1,0.000001,0.00001);
+//     TH2D *histo2DBackground         = new TH2D("histo2DBackground", "histo2DBackground", 1000,0.,fDeltaPt->GetXaxis()->GetXmax(),10,-.001,.1);
+//     SetStyleHistoTH2ForGraphs(histo2DBackground, "#it{p}_{T} (GeV/#it{c})","Background", 0.035,0.04, 0.035,0.04, 1.,1.4);
+//
+//     DrawGammaSetMarker(hBackgroundElPi1,25,1.,kMagenta-2,kMagenta-2);
+//     DrawGammaSetMarker(hBackgroundPiPi1,24,1.,kBlue-7,kBlue-7);
+//     DrawGammaSetMarker(hBackgroundPiPi2,24,1.,kBlue-7,kBlue-7);
+//     DrawGammaSetMarker(hBackgroundElPi2,25,1.,kMagenta-2,kMagenta-2);
+//     DrawGammaSetMarker(hBackgroundElPi3,25,1.,kMagenta-2,kMagenta-2);
+//     DrawGammaSetMarker(hBackgroundPiPi3,24,1.,kBlue-7,kBlue-7);
+//     DrawGammaSetMarker(hBackgroundRest1,27,1.,kRed,kRed);
+//     DrawGammaSetMarker(hBackgroundRest2,27,1.,kRed,kRed);
+//     DrawGammaSetMarker(hBackgroundRest3,27,1.,kRed,kRed);
+//
+//     canvasBackground->cd(1);
+//     histo2DBackground->DrawCopy();
+//
+//     hBackgroundPiPi1->Draw("same,p");
+//     hBackgroundElPi1->Draw("same,p");
+//     hBackgroundRest1->Draw("same,p");
+//
+//     TLegend* legBackground1 = new TLegend(0.2,0.7,0.5,0.9);
+//     legBackground1->SetTextSize(0.04);
+//     legBackground1->SetHeader(Form("Contamination in %.2f < K < %.2f",kappaRangeElEl1[0],kappaRangeElEl1[1]));
+//     legBackground1->AddEntry(hBackgroundPiPi1,"#pi^{#pm}#pi^{#mp}","p");
+//     legBackground1->AddEntry(hBackgroundElPi1,"e^{#pm}#pi^{#mp}","p");
+//     legBackground1->AddEntry(hBackgroundRest1,"rest","p");
+//     legBackground1->SetBorderSize(0);
+//     legBackground1->Draw();
+//
+//     canvasBackground->cd(2);
+//     histo2DBackground->DrawCopy();
+//
+//     hBackgroundElPi2->Draw("same,p");
+//     hBackgroundPiPi2->Draw("same,p");
+//     hBackgroundRest2->Draw("same,p");
+//
+//     TLegend* legBackground2 = new TLegend(0.2,0.7,0.5,0.9);
+//     legBackground2->SetTextSize(0.04);
+//     legBackground2->SetHeader(Form("Contamination in %.2f < K < %.2f",kappaRangeElEl2[0],kappaRangeElEl2[1]));
+//     legBackground2->AddEntry(hBackgroundPiPi2,"#pi^{#pm}#pi^{#mp}","p");
+//     legBackground2->AddEntry(hBackgroundElPi2,"e^{#pm}#pi^{#mp}","p");
+//     legBackground2->AddEntry(hBackgroundRest2,"rest","p");
+//     legBackground2->SetBorderSize(0);
+//     legBackground2->Draw();
+//
+//     canvasBackground->cd(3);
+//     histo2DBackground->DrawCopy();
+//
+//     hBackgroundPiPi3->Draw("same,p");
+//     hBackgroundElPi3->Draw("same,p");
+//     hBackgroundRest3->Draw("same,p");
+//
+//     TLegend* legBackground3 = new TLegend(0.2,0.7,0.5,0.9);
+//     legBackground3->SetTextSize(0.04);
+//     legBackground3->SetHeader(Form("Contamination in %.2f < K < %.2f",kappaRangeElEl3[0],kappaRangeElEl3[1]));
+//     legBackground3->AddEntry(hBackgroundPiPi3,"#pi^{#pm}#pi^{#mp}","p");
+//     legBackground3->AddEntry(hBackgroundElPi3,"e^{#pm}#pi^{#mp}","p");
+//     legBackground3->AddEntry(hBackgroundRest3,"rest","p");
+//     legBackground3->SetBorderSize(0);
+//     legBackground3->Draw();
+//
+//     canvasBackground->SaveAs(Form("%s/Background.%s",fOutputDir.Data(),suffix.Data()));
+//
+//     TCanvas* canvasFractions     = new TCanvas("canvasFractions","",0,0,1000,500);  // gives the page size
+//     DrawGammaCanvasSettings( canvasFractions,  0.07, 0.02, 0.02, 0.09);
+//     canvasFractions->Divide(2,1,0.0001,0.0001);
+//
+//     canvasFractions->cd(1);
+//     HistoMarkerPlotSettings(hValuesElEl,"#it{p}_{T} (GeV/#it{c})","Template fraction",0.,1.1,0.,14.,12,12,20);
+//     HistoMarkerPlotSettings(hValuesElPi,"#it{p}_{T} (GeV/#it{c})","",0.,1.1,0.,14.,kMagenta-2,kMagenta-2,20);
+//     HistoMarkerPlotSettings(hValuesPiPi,"#it{p}_{T} (GeV/#it{c})","",0.,1.1,0.,14.,kBlue-7,kBlue-7,20);
+//     HistoMarkerPlotSettings(hValuesRest,"#it{p}_{T} (GeV/#it{c})","",0.,1.1,0.,14.,kRed+1,kRed+1,20);
+//     hValuesElEl->Draw("p");
+//     hValuesPiPi->Draw("p,same");
+//     hValuesElPi->Draw("p,same");
+//     hValuesRest->Draw("p,same");
+//
+//     TLegend* legFracTemplate = new TLegend(0.5,0.35,0.9,0.55);
+//     legFracTemplate->SetTextSize(0.04);
+//     legFracTemplate->AddEntry(hValuesElEl,"e^{#pm}e^{#mp}","p");
+//     legFracTemplate->AddEntry(hValuesPiPi,"#pi^{#pm}#pi^{#mp}","p");
+//     legFracTemplate->AddEntry(hValuesElPi,"e^{#pm}#pi^{#mp}","p");
+//     legFracTemplate->AddEntry(hValuesRest,"rest","p");
+//     legFracTemplate->SetBorderSize(0);
+//     legFracTemplate->Draw();
+//     TPaveText * pave1 = new TPaveText(0.5,0.56,0.9,0.7,"NDC");
+//     SetStylePave(pave1,42,11,0.035);
+//     pave1->InsertText(InfoSystem.Data());
+//     if(isMC) pave1->InsertText(periodMC.Data());
+//     else pave1->InsertText(periodData.Data());
+//     pave1->Draw();
+//
+//     canvasFractions->cd(2);
+//     HistoMarkerPlotSettings(hFractionElEl,"#it{p}_{T} (GeV/#it{c})","fit/histo",0.5,1.5,0.,14.,12,12,20);
+//     HistoMarkerPlotSettings(hFractionElPi,"#it{p}_{T} (GeV/#it{c})","",0.5,1.5,0.,14.,kMagenta-2,kMagenta-2,20);
+//     HistoMarkerPlotSettings(hFractionPiPi,"#it{p}_{T} (GeV/#it{c})","",0.5,1.5,0.,14.,kBlue-7,kBlue-7,20);
+//     HistoMarkerPlotSettings(hFractionRest,"#it{p}_{T} (GeV/#it{c})","",0.5,1.5,0.,14.,kRed+1,kRed+1,20);
+//     hFractionElEl->Draw("p");
+//     hFractionElPi->Draw("p,same");
+//     hFractionPiPi->Draw("p,same");
+//     hFractionRest->Draw("p,same");
+//
+//     canvasFractions->SaveAs(Form("%s/Fractions.%s",fOutputDir.Data(),suffix.Data()));
+//
     // status != 0
     cout << "=====================================================================================" << endl;
     cout << "fit failed " << errorCounter << " times!" << endl;
@@ -1226,7 +1538,7 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
     cout << "=====================================================================================" << endl;
 
     // save histograms
-    SaveHistos(cutSelection, moreBG);
+//     SaveHistos(cutSelection, moreBG);
 }
 
 

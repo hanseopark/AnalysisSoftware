@@ -45,18 +45,18 @@ Double_t signalPurityDenomErr;
 Double_t nSigmaLow  = -20.0;
 Double_t nSigmaHigh = 20.0;
 Double_t constrainLow  = 0.;
-Double_t constrainHigh = 1.;
+Double_t constrainHigh = 10.;
 
 TString SigmaStarForm = "#Kappa = #frac{|#kappa^{+}|+|#kappa^{-}|}{2}+2(#kappa^{+}+#kappa^{-})";
 
 TH1D*       fDeltaPt                                              = NULL;
-
+// 2D-plots
 TH2F*       hKappaTPCPt                                           = NULL;
 TH2F*       hKappaTPCPtElEl                                       = NULL;
 TH2F*       hKappaTPCPtElPi                                       = NULL;
 TH2F*       hKappaTPCPtPiPi                                       = NULL;
 TH2F*       hKappaTPCPtRest                                       = NULL;
-
+// projections
 TH1D*       hKappaTPC                                             = NULL;
 TH1D**      hKappaTPCAfterCut                                     = NULL;
 TH1D**      hKappaTPCElEl                                         = NULL;
@@ -74,9 +74,9 @@ TH1D**      hKappaTPCPartialRest                                  = NULL;
 TH1D**      hKappaTPCElPK                                         = NULL;
 TH1D**      hKappaTPCPiPK                                         = NULL;
 
-TH1D**      hKappaTPCTotalSum                                     = NULL;
 TH1D**      hKappaTPCSum                                          = NULL;
 TH1D**      hKappaTPCSumBkg                                       = NULL;
+TH1D**      hKappaTPCTotalSum                                     = NULL;
 
 TH1D*       hValuesElEl                                           = NULL;
 TH1D*       hFractionElEl                                         = NULL;
