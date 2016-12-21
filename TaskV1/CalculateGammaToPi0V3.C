@@ -696,7 +696,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
 
         cout<<"loading cocktail file: "<<nameFileCocktail<<endl;
 
-        if (!option.CompareTo("7TeV")==0 || !option.CompareTo("13TeV")==0){
+        if (!option.CompareTo("7TeV") || !option.CompareTo("13TeV")){
             cocktailPi0                         = (TH1D* )cocktailFile->Get("Pi0_Pt");
             cocktailAllGamma                    = (TH1D* )cocktailFile->Get("Gamma_Pt");
             cocktailAllGammaPi0                 = (TH1D* )cocktailFile->Get("Gamma_From_Pi0_Pt");
