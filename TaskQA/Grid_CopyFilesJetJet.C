@@ -278,12 +278,12 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
       "/alice/sim/2016/LHC16c2/"
     };
 
-    TString train = "Legotrain-vAN-20161219-8TeV-Variations_Tree_Calo";
-    Int_t trainRuns[nSets] = {311};
+    TString train = "Legotrain-vAN-20161221-8TeV-JetJet_AOD185";
+    Int_t trainRuns[nSets] = {313};
     TString runlist[nSets] = {"merge"};
 
-    const Int_t nFiles = 4;
-    TString Files[nFiles] = {"GammaCalo_123","GammaCalo_143","GammaCalo_124","GammaCalo_144"};
+    const Int_t nFiles = 3;
+    TString Files[nFiles] = {"GammaCalo_101","GammaConvCalo_100","GammaConvCalo_101"};
 
     //---------------------------------------------------------------------------------------------------
 
