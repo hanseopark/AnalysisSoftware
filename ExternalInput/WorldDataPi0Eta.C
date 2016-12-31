@@ -1,4 +1,4 @@
-void WorldDataPi0Eta(void){
+void WorldDataPi0Eta(TString name2760File = ""){
 
 // 	 	const int N_hh = 18*2;
 // 	TString files_hh[N_hh] = { 
@@ -376,6 +376,16 @@ void WorldDataPi0Eta(void){
     TGraphAsymmErrors* Alice7TeVGraph = new TGraphAsymmErrors(Alice7TeV_numpoints, Alice7TeV_xval, Alice7TeV_yval, Alice7TeV_xerrminus, Alice7TeV_xerrplus, Alice7TeV_yerrminus, Alice7TeV_yerrplus);
     Alice7TeVGraph->SetName("Alice7TeV");
     
+    // eta/pi0 2.76TeV ALICE
+    // Experiment: CERN-LHC-ALICE (ALICE)
+    // prelim
+    TGraphAsymmErrors* Alice2760GeVGraph    = NULL;
+    if (name2760File.CompareTo("") ){
+        TFile* file2760GeVAlice = new TFile(name2760File.Data());
+        Alice2760GeVGraph    = (TGraphAsymmErrors*)file2760GeVAlice->Get("Eta2.76TeV/graphRatioEtaToPi0Comb2760GeVTotErr");
+        Alice2760GeVGraph->SetName("Alice2760GeV");
+    }    
+    
     const char* OutputNameWorld ="WorldDataPi0Eta.root";
     WorldData = new TFile(OutputNameWorld,"RECREATE");		
 
@@ -398,7 +408,7 @@ void WorldDataPi0Eta(void){
         Phenix200GeVGraph->Write();
         Banner540GeVGraph->Write();
         Alice7TeVGraph->Write();
-        
+        if (Alice2760GeVGraph) Alice2760GeVGraph->Write();
     WorldData->Write();
     WorldData->Close();
     
