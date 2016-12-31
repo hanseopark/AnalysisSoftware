@@ -571,6 +571,8 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
         histo2DMean->GetXaxis()->SetRangeUser(0,6);
     } else if (mode == 2 || mode == 3){
         histo2DMean->GetYaxis()->SetRangeUser(-5.4,2.4);
+        if (optEnergy.CompareTo("pPb_5.023TeV") == 0)
+            histo2DMean->GetYaxis()->SetRangeUser(-10.4,5.4);
         histo2DMean->GetXaxis()->SetRangeUser(0,10);
     } else if (mode == 4 || mode == 5){
         histo2DMean->GetYaxis()->SetRangeUser(-8.5,6.5);
@@ -591,8 +593,8 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
         Resolution_Meson_Mean2->SetLineColor(kGreen-8);
         Resolution_Meson_Mean2->Draw("same,pe");
         
-        PutProcessLabelAndEnergyOnPlot(0.65, 0.95, 0.04, collisionSystem.Data(), fTextMeasurement.Data(), detectionProcess.Data());
-        TLegend* legendMean = GetAndSetLegend2(0.45, 0.92-(0.04*2), 0.65, 0.92, 0.04, 1, "", 42, 0.15);
+        PutProcessLabelAndEnergyOnPlot(0.95, 0.95, 0.04, collisionSystem.Data(), fTextMeasurement.Data(), detectionProcess.Data(),62, 0.03, "", 1, 1.25, 31);
+        TLegend* legendMean = GetAndSetLegend2(0.45, 0.92-(0.04*2), 0.55, 0.92, 0.04, 1, "", 42, 0.35);
         legendMean->AddEntry(Resolution_Meson_Mean,"#mu Gauss");
         legendMean->AddEntry(Resolution_Meson_Mean2,"#mu Histo");
         legendMean->Draw();
@@ -607,6 +609,8 @@ void Pi0ResolutionAdv( TString mesonName                    = "Pi0",
       histo2DSigma->GetXaxis()->SetRangeUser(0,6);
     } else if (mode == 2 || mode == 3){
       histo2DSigma->GetYaxis()->SetRangeUser(0,11.5);
+        if (optEnergy.CompareTo("pPb_5.023TeV") == 0)
+            histo2DSigma->GetYaxis()->SetRangeUser(0,20.4);
       histo2DSigma->GetXaxis()->SetRangeUser(0,10);		
     } else if (mode == 4 || mode == 5){
           histo2DSigma->GetYaxis()->SetRangeUser(0,17);

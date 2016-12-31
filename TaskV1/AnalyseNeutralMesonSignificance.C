@@ -228,7 +228,7 @@ void AnalyseNeutralMesonSignificance(   TString fileNameData    = "myOutput",
     if (mode == 10) maxNbins            = 21;
 
 
-    Double_t rangeMaxPt = 0;
+    Double_t rangeMaxPt = 20;
     if(optEnergy.CompareTo("8TeV")==0){
       maxNbins = 13;
       rangeMaxPt = 20;
