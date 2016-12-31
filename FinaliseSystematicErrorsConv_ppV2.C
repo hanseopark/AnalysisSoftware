@@ -930,6 +930,13 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                                                             pow(errorsMeanCorr[8][l],2)+    // Alpha
                                                             pow(errorsMeanCorr[9][l],2));   // BG
 
+        if (meson.CompareTo("EtaToPi0") == 0){
+            errorsMeanCorrSignalExtraction[l]   =   TMath::Sqrt(pow(errorsMeanCorr[0][l],2)+    // Yield extraction eta
+                                                                pow(errorsMeanCorr[8][l],2)+    // Alpha
+                                                                pow(errorsMeanCorr[9][l],2)+    // BG
+                                                                pow(errorsMeanCorr[1][l],2));   // Yield extraction pi0
+                
+        }    
         // PID: dEdxE, dEdxPi
         errorsMeanCorrPID[l]                =   TMath::Sqrt(pow(errorsMeanCorr[2][l],2)+    // dEdxE
                                                             pow(errorsMeanCorr[3][l],2));   // dEdxPi
@@ -997,15 +1004,22 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
         meanErrorsPhotonReco->Draw("p,csame");
         legendSummedMeanNew->AddEntry(meanErrorsPhotonReco,"Photon Reconstruction","p");
         cout << "here" << endl;
-        DrawGammaSetMarkerTGraphErr(meanErrorsCorr[1], 25, 1.,color[5],color[5]);
-        meanErrorsCorr[1]->Draw("p,csame");
-        legendSummedMeanNew->AddEntry(meanErrorsCorr[1],"Pileup Estimate","p");
-        cout << "here" << endl;
         if (meson.CompareTo("EtaToPi0")){
+            DrawGammaSetMarkerTGraphErr(meanErrorsCorr[1], 25, 1.,color[5],color[5]);
+            meanErrorsCorr[1]->Draw("p,csame");
+            legendSummedMeanNew->AddEntry(meanErrorsCorr[1],"Pileup Estimate","p");
+            cout << "here" << endl;
             DrawGammaSetMarkerTGraphErr(graphMaterialError, 24, 1.,color[4],color[4]);
             graphMaterialError->Draw("p,csame");
             legendSummedMeanNew->AddEntry(graphMaterialError,"Material","p");
-        }
+        } else {
+            if (meanErrorsCorr[11]){
+                DrawGammaSetMarkerTGraphErr(meanErrorsCorr[11], 25, 1.,color[5],color[5]);
+                meanErrorsCorr[11]->Draw("p,csame");
+                legendSummedMeanNew->AddEntry(meanErrorsCorr[11],"Pileup Estimate","p");
+                cout << "here" << endl;
+            }
+        }    
         
         DrawGammaSetMarkerTGraphErr(meanErrorsCorrSummedIncMat, 20, 1.,kBlack,kBlack);
         meanErrorsCorrSummedIncMat->Draw("p,csame");

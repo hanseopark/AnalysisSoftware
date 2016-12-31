@@ -98,7 +98,7 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
                                                 "Efficiency", "Yield extraction #pi^{0}"};
     TString nameCutVariationSC5023GeV[12]   = { "YieldExtraction", "OpeningAngle", "ClusterMinEnergy", "ClusterNCells", "ClusterNonLinearity", 
                                                 "ClusterTrackMatchingCalo", "ClusterM02","ClusterMaterialTRD", "Rapidity", "ClusterEnergyScale",
-                                                "Efficiency", "YieldExtraction"};
+                                                "Efficiency", "YieldExtractionPi0"};
     if (meson.CompareTo("EtaToPi0") == 0){
         nameCutVariation5023GeV[0]          = "Yield extraction #eta";
     }
@@ -759,6 +759,8 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         // grouping:
         // Signal extraction: Yield extraction 0, Open-Angle 1 
         errorsMeanCorrSignalExtraction[l] = TMath::Sqrt(errorsMeanCorr[0][l]*errorsMeanCorr[0][l]+errorsMeanCorr[1][l]*errorsMeanCorr[1][l]);
+        if (meson.CompareTo("EtaToPi0") == 0 ) // add pi0 yield extraction for plotting
+            errorsMeanCorrSignalExtraction[l] = TMath::Sqrt(errorsMeanCorr[0][l]*errorsMeanCorr[0][l]+errorsMeanCorr[1][l]*errorsMeanCorr[1][l]+errorsMeanCorr[11][l]*errorsMeanCorr[11][l]);
         // Signal extraction: NonLinearity 5 , Energy Scale 8 
         //errorsMeanCorrClusterEnergy[l]      = TMath::Sqrt(errorsMeanCorr[4][l]*errorsMeanCorr[4][l]+errorsMeanCorr[8][l]*errorsMeanCorr[8][l]);
         errorsMeanCorrClusterEnergy[l]      = TMath::Sqrt(errorsMeanCorr[4][l]*errorsMeanCorr[4][l]);//+errorsMeanCorr[8][l]*errorsMeanCorr[8][l]);
