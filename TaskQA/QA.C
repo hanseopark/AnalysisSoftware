@@ -144,6 +144,25 @@ void QA(    TString select          = "LHC11a",         // set selected
         pathPhotonQA[1] = "";
     }
     //**************************************************************************************************************
+    else if(select.CompareTo("LHC13bc")==0){
+    //LHC13g Trigger+MB+JetJet
+        cutNr=0;
+        nSets = 3;
+        fEnergyFlag = "pPb_5.023TeV";
+        pathDataSets[0] = "/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20161211-sys-PCMEMC/GammaConvCalo_LHC13b-pass2_LHC13c-pass2_50.root";
+        pathDataSets[1] = "/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20161211-sys-PCMEMC/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_50.root";
+        pathDataSets[2] = "/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20161211-sys-PCMEMC/GammaConvCalo_MC_LHC13e7_50.root";
+        DataSets[0]="LHC13bc";
+        DataSets[1]="LHC13b2_efix_[1-4]";
+        DataSets[2]="LHC13e7";
+        plotDataSets[0]="LHC13bc";
+        plotDataSets[1]="DPMJET";
+        plotDataSets[2]="HIJING";
+        pathPhotonQA[0] = "";
+        pathPhotonQA[1] = "";
+        pathPhotonQA[2] = "";
+    }
+    //**************************************************************************************************************
     else if(select.CompareTo("LHC11a-kEMC1")==0){
     //LHC11a Trigger
         cutNr = 1;
@@ -874,7 +893,7 @@ void QA(    TString select          = "LHC11a",         // set selected
     //**************************************************************************************************************
     //******************************  Starting individual QA macros ***********************************************
     //**************************************************************************************************************
-    if (doEventQA)      EventQA     (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
+    if ( doEventQA )    EventQA     (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
     if ( doPhotonQA )   PhotonQA    (nSets, fEnergyFlag, DataSets, plotDataSets, pathPhotonQA, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
     if ( doClusterQA )  ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
     if ( doMergedQA )   ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder, kTRUE);

@@ -1118,11 +1118,12 @@ void DrawPeriodQAHistoTH1(TCanvas* canvas,Double_t leftMargin,Double_t rightMarg
 
 void DrawPeriodQAHistoTH1(TCanvas* canvas,Double_t leftMargin,Double_t rightMargin,Double_t topMargin,Double_t bottomMargin,Bool_t logX, Bool_t logY, Bool_t logZ,
 					TH1* fHist, TString title,TString xTitle,TString yTitle, Double_t xOffset, Double_t yOffset,
-					Double_t p1,Double_t p2,Double_t p3, TString fCollisionSystem, TString plotDataSets, TString fClusters)
+					Double_t p1,Double_t p2,Double_t p3, TString fCollisionSystem, TString plotDataSets, TString fClusters, Int_t textAlign = 11)
 {
 	DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,logX,logY,logZ,
 						fHist,title,xTitle,yTitle,xOffset,yOffset);
-	PutProcessLabelAndEnergyOnPlot(p1,p2,p3, fCollisionSystem.Data(), plotDataSets.Data(), fClusters.Data());
+	PutProcessLabelAndEnergyOnPlot(p1,p2,p3, fCollisionSystem.Data(), plotDataSets.Data(), fClusters.Data(), 62, 0.03, "", 1, 1.25, textAlign);
+
 	return;
 }
 
@@ -1168,18 +1169,18 @@ void DrawPeriodQAHistoTH2(TCanvas* canvas,Double_t leftMargin,Double_t rightMarg
 
 void DrawPeriodQAHistoTH2(TCanvas* canvas,Double_t leftMargin,Double_t rightMargin,Double_t topMargin,Double_t bottomMargin,Bool_t logX, Bool_t logY, Bool_t logZ,
 					TH2* fHist, TString title,TString xTitle,TString yTitle, Double_t xOffset, Double_t yOffset,
-					Double_t p1,Double_t p2,Double_t p3, TString fCollisionSystem, TString plotDataSets, TString fClusters)
+					Double_t p1,Double_t p2,Double_t p3, TString fCollisionSystem, TString plotDataSets, TString fClusters, Int_t textAlign = 11)
 {
 	DrawPeriodQAHistoTH2(canvas,leftMargin,rightMargin,topMargin,bottomMargin,logX,logY,logZ,
 						fHist,title,xTitle,yTitle,xOffset,yOffset);
-	PutProcessLabelAndEnergyOnPlot(p1,p2,p3, fCollisionSystem.Data(), plotDataSets.Data(), fClusters.Data());
+	PutProcessLabelAndEnergyOnPlot(p1,p2,p3, fCollisionSystem.Data(), plotDataSets.Data(), fClusters.Data(), 62, 0.03, "", 1, 1.25, textAlign);
 	return;
 }
 
 void DrawPeriodQACompareHistoTH1(TCanvas* canvas,Double_t leftMargin,Double_t rightMargin,Double_t topMargin,Double_t bottomMargin,Bool_t logX, Bool_t logY, Bool_t logZ,
 					std::vector<TH1D*> vecHist, TString title,TString xTitle,TString yTitle, Double_t xOffset, Double_t yOffset,
 					TString labelData, Color_t *color, Bool_t adjustRange, Double_t rangeMin, Double_t rangeMax, Bool_t useErrors,
-					Double_t p1,Double_t p2,Double_t p3, TString fCollisionSystem, TString* plotDataSets, TString fClusters)
+					Double_t p1,Double_t p2,Double_t p3, TString fCollisionSystem, TString* plotDataSets, TString fClusters, Int_t textAlign = 11)
 {
     if((Int_t) vecHist.size()<1) {
         cout << "ERROR: DrawPeriodQACompareHistoTH1, vector size <1! Returning...";
@@ -1252,7 +1253,7 @@ void DrawPeriodQACompareHistoTH1(TCanvas* canvas,Double_t leftMargin,Double_t ri
 //	leg1->SetX1(leg1X1);
 	leg1->Draw();
 
-	PutProcessLabelAndEnergyOnPlot(p1,p2,p3, fCollisionSystem.Data(), fClusters.Data(), "");
+	PutProcessLabelAndEnergyOnPlot(p1,p2,p3, fCollisionSystem.Data(), fClusters.Data(), "", 62, 0.03, "", 1, 1.25, textAlign);
 	canvas->SetLogx(logX); canvas->SetLogy(logY); canvas->SetLogz(logZ);
 
 	return;
@@ -1261,7 +1262,7 @@ void DrawPeriodQACompareHistoTH1(TCanvas* canvas,Double_t leftMargin,Double_t ri
 void DrawPeriodQACompareHistoRatioTH1(TCanvas* canvas,Double_t leftMargin,Double_t rightMargin,Double_t topMargin,Double_t bottomMargin,Bool_t logX, Bool_t logY, Bool_t logZ,
 					std::vector<TH1D*> vecHist, TString title,TString xTitle,TString yTitle, Double_t xOffset, Double_t yOffset,
 					TString labelData, Color_t *color, Bool_t adjustRange, Double_t rangeMin, Double_t rangeMax, Bool_t useErrors,
-					Double_t p1,Double_t p2,Double_t p3, TString fCollisionSystem, TString* plotDataSets, TString fClusters)
+					Double_t p1,Double_t p2,Double_t p3, TString fCollisionSystem, TString* plotDataSets, TString fClusters, Int_t textAlign = 11)
 {
 	if((Int_t) vecHist.size()<2) {
         cout << "INFO: DrawPeriodQACompareHistoRatioTH1, vector size <2! Histogram name at(0): " << endl;
@@ -1367,7 +1368,7 @@ void DrawPeriodQACompareHistoRatioTH1(TCanvas* canvas,Double_t leftMargin,Double
 	leg1->Draw();
 	vecTemp.clear();
 
-	PutProcessLabelAndEnergyOnPlot(p1,p2,p3, fCollisionSystem.Data(), fClusters.Data(), "");
+	PutProcessLabelAndEnergyOnPlot(p1,p2,p3, fCollisionSystem.Data(), fClusters.Data(), "", 62, 0.03, "", 1, 1.25, textAlign);
 	canvas->SetLogx(kFALSE); canvas->SetLogy(kFALSE); canvas->SetLogz(kFALSE);
 
 	return;

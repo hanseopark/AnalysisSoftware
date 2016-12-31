@@ -161,12 +161,12 @@ void ClusterQA(
     cout << "Pictures are saved as " << suffix.Data() << "!" << endl;
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
-    TString TrackMatchingEtaMax[10] = {"0","0.008", "0.012", "0.016", "0.018", "0.02", "0.022", "0.005", "0.01", "0.015"};
-    TString TrackMatchingPhiMin[10] = {"0","-0.03", "-0.05", "-0.09", "-0.11", "-0.13", "-0.15", "-0.03", "-0.09", "-0.15"};
-    TString TrackMatchingPhiMax[10] = {"0","0.03", "0.04", "0.06", "0.07", "0.08", "0.1", "0.03", "0.07", "0.11"};
+    TString TrackMatchingEtaMax[10] = {"0","0.008", "0.012", "0.016", "0.018", "0.02", "0.022", "p_{T} dependent", "p_{T} dependent", "p_{T} dependent"};
+    TString TrackMatchingPhiMin[10] = {"0","-0.03", "-0.05", "-0.09", "-0.11", "-0.13", "-0.15", "p_{T} dependent", "p_{T} dependent", "p_{T} dependent"};
+    TString TrackMatchingPhiMax[10] = {"0","0.03", "0.04", "0.06", "0.07", "0.08", "0.1", "p_{T} dependent", "p_{T} dependent", "p_{T} dependent"};
 
     Bool_t isTrackMatching          = kTRUE;
-
+    Int_t trackMatch                = 0;
     for(Int_t i=0; i<nSets; i++){
         fCutSelection[i]            = cuts.at(cutNr);
         fEventCutSelection[i]       = ""; 
@@ -185,7 +185,7 @@ void ClusterQA(
             fClusterCutSelection[i] = fMClusterCutSelection[i];
         }    
         TString trackMatchingCut(fClusterCutSelection[i](GetClusterTrackMatchingCutPosition(fClusterCutSelection[i]),1));
-        Int_t trackMatch = trackMatchingCut.Atoi();
+        trackMatch                  = trackMatchingCut.Atoi();
         if(trackMatch == 0 || runMergedClust ){
             cout << "INFO: TrackMatching cut found to be '0' for '" << DataSets[i] << "', deactivating generation of track matching histograms!" << endl;
             isTrackMatching         = kFALSE;
@@ -651,7 +651,7 @@ void ClusterQA(
         if(fHistNEvents){
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                 fHistNEvents,"","","# of Entries",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistNEvents, Form("%s/NEvents_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             vecNEvents.push_back(new TH1D(*fHistNEvents));
         } else cout << "INFO: Object |fHistNEvents| could not be found! Skipping Draw..." << endl;
@@ -708,7 +708,7 @@ void ClusterQA(
             SetZMinMaxTH2(fHistClusterTimevsEBeforeQA,minB,maxB,1,fHistClusterTimevsEBeforeQA->GetNbinsY());
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                 fHistClusterTimevsEBeforeQA,"","#it{t}_{Cluster} (s)","#it{E}_{Cluster} (GeV)",1,1,
-                                0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterTimevsEBeforeQA, Form("%s/ClusterTimeVsE_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |fHistClusterTimevsEBeforeQA| could not be found! Skipping Draw..." << endl;
 
@@ -716,7 +716,7 @@ void ClusterQA(
             SetXRange(fHistClusterTimeBeforeQA,minB,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistClusterTimeBeforeQA,"","#it{t}_{Cluster} (s)","#frac{d#it{N}}{d#it{t}_{Cluster}}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistClusterTimeBeforeQA,Form("%s/ClusterTime_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()) );
             vecClusterTimeBefore.push_back(fHistClusterTimeBeforeQA);
         } else cout << "INFO: Object |fHistClusterTimeBeforeQA| could not be found! Skipping Draw..." << endl;
@@ -731,7 +731,7 @@ void ClusterQA(
             SetZMinMaxTH2(fHistClusterTimevsEAfterQA,minB,maxB,1,fHistClusterTimevsEBeforeQA->GetNbinsY());
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                 fHistClusterTimevsEAfterQA,"","#it{t}_{Cluster} (s)","#it{E}_{Cluster} (GeV)",1,1,
-                                0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterTimevsEAfterQA, Form("%s/ClusterTimeVsE_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |fHistClusterTimevsEAfterQA| could not be found! Skipping Draw..." << endl;
 
@@ -739,7 +739,7 @@ void ClusterQA(
             SetXRange(fHistClusterTimeAfterQA,minB,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistClusterTimeAfterQA,"","#it{t}_{Cluster} (s)","#frac{d#it{N}}{d#it{t}_{Cluster}}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistClusterTimeAfterQA, Form("%s/ClusterTime_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             vecClusterTimeAfter.push_back(fHistClusterTimeAfterQA);
         } else cout << "INFO: Object |fHistClusterTimeAfterQA| could not be found! Skipping Draw..." << endl;
@@ -758,7 +758,7 @@ void ClusterQA(
                 DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                     fHistClusterTimingInCluster,"",
                                     "Cluster Energy (GeV)","Cell Time in Cluster (ns)",1,1,
-                                    0.75,0.92,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.85,0.92,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(canvas, fHistClusterTimingInCluster, Form("%s/ClusterIncludedCellsTiming_vs_E_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 //---------------------------------------------------------------------------------------------------------------
                 // show cell timing integrated in energy after QA cuts
@@ -768,7 +768,7 @@ void ClusterQA(
                     SetXRange(fHistClusterTimingInClusterY,1,fHistClusterTimingInCluster->GetNbinsY());
                     DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                         fHistClusterTimingInClusterY,"","Cell Time in Cluster (ns)","#frac{d#it{N}}{d#it{t_{cell}}}",1,1,
-                                        0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                        0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                     SaveCanvasAndWriteHistogram(canvas, fHistClusterTimingInClusterY, Form("%s/ClusterIncludedCellsTiming_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                     vecClusterTimingInCluster.push_back(fHistClusterTimingInClusterY);
                 }
@@ -801,7 +801,7 @@ void ClusterQA(
                     legendRuns->AddEntry(((TH1D*) vecCellTimingBins.at(h)),Form("%.01f - %.01f",range[h],rangeM[h]),"p");
                 }
                 legendRuns->Draw();
-                PutProcessLabelAndEnergyOnPlot(0.72, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data());
+                PutProcessLabelAndEnergyOnPlot(0.95, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(), 62, 0.03, "", 1, 1.25, 31);
                 SaveCanvas(canvas, Form("%s/ClusterIncludedCellsTiming_vs_E_projected_%s.%s", outputDir.Data(), DataSets[i].Data(),suffix.Data()),kFALSE,kTRUE);
 
                 DeleteVecTH1D(vecCellTimingBins);
@@ -816,7 +816,7 @@ void ClusterQA(
                 DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                     fHistClusterTimingEnergyInCluster,"",
                                     "Cell Energy in Cluster (GeV)","Cell Time in Cluster (ns)",1,1,
-                                    0.75,0.92,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.85,0.92,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(canvas, fHistClusterTimingEnergyInCluster, Form("%s/ClusterIncludedCellsTiming_vs_CellEnergy_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             } else cout << "INFO: Object |ClusterIncludedCellsTimingEnergy_afterClusterQA| could not be found! Skipping Draw..." << endl;
             
@@ -831,7 +831,7 @@ void ClusterQA(
                 DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistClusterDistanceTo_within,"",
                                     "#Delta row","#Delta column",1,1,
-                                    0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterDistanceTo_within, Form("%s/ClusterDistanceTo_withinTimingCut_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 //---------------------------------------------------------------------------------------------------------------
                 // distance of cluster to other clusters withing the same time window in the same event projection to the rows
@@ -841,7 +841,7 @@ void ClusterQA(
                 SetXRange(ClusterDistanceToRow,minB,maxB);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                     ClusterDistanceToRow,"","#Delta row","# of entries",1,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(canvas, ClusterDistanceToRow, Form("%s/ClusterDistanceTo_withinTimingCut_Row_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 vecClusterDistanceRowWithin.push_back(ClusterDistanceToRow);
                 }
@@ -853,7 +853,7 @@ void ClusterQA(
                 SetXRange(ClusterDistanceToColumn,minB,maxB);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                     ClusterDistanceToColumn,"","#Delta column","# of entries",1,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(canvas, ClusterDistanceToColumn, Form("%s/ClusterDistanceTo_withinTimingCut_Column_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 vecClusterDistanceColumnWithin.push_back(ClusterDistanceToColumn);
                 }
@@ -869,7 +869,7 @@ void ClusterQA(
                 DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistClusterDistanceTo_outside,"",
                                     "#Delta row","#Delta column",1,1,
-                                    0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterDistanceTo_outside, Form("%s/ClusterDistanceTo_outsideTimingCut_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             } else cout << "INFO: Object |ClusterDistanceTo_outsideTimingCut| could not be found! Skipping Draw..." << endl;
         }
@@ -888,7 +888,7 @@ void ClusterQA(
             SetXRange(fHistEnergyOfClusterBeforeQA,minB,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kTRUE,kFALSE,
                                 fHistEnergyOfClusterBeforeQA,"","#it{E}_{Cluster} (GeV)","#frac{d#it{N}}{d#it{E}_{Cluster}}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistEnergyOfClusterBeforeQA, Form("%s/EnergyOfCluster_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |fHistEnergyOfClusterBeforeQA| could not be found! Skipping Draw..." << endl;
         //---------------------------------------------------------------------------------------------------------------
@@ -902,7 +902,7 @@ void ClusterQA(
             SetXRange(fHistEnergyOfClusterAfterQA,minB,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kTRUE,kFALSE,
                                 fHistEnergyOfClusterAfterQA,"","#it{E}_{Cluster} (GeV)","#frac{d#it{N}}{d#it{E}_{Cluster}}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistEnergyOfClusterAfterQA, Form("%s/EnergyOfCluster_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             vecClusterEnergy.push_back(new TH1D(*fHistEnergyOfClusterAfterQA));
         } else cout << "INFO: Object |fHistEnergyOfClusterAfterQA| could not be found! Skipping Draw..." << endl;
@@ -918,7 +918,7 @@ void ClusterQA(
             SetXRange(fHistNCellsBeforeQA,minB,maxB+1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistNCellsBeforeQA,"","#it{E}_{Cluster} (GeV)","#frac{d#it{N}}{d#it{E}_{Cluster}}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistNCellsBeforeQA, Form("%s/NCellPerCluster_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |fHistNCellsBeforeQA| could not be found! Skipping Draw..." << endl;
         //---------------------------------------------------------------------------------------------------------------
@@ -929,7 +929,7 @@ void ClusterQA(
             SetXRange(fHistNCellsAfterQA,minB,maxB+1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistNCellsAfterQA,"","#it{E}_{Cluster} (GeV)","#frac{d#it{N}}{d#it{E}_{Cluster}}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistNCellsAfterQA, Form("%s/NCellPerCluster_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             vecClusterNCells.push_back(new TH1D(*fHistNCellsAfterQA));
         } else cout << "INFO: Object |fHistNCellsAfterQA| could not be found! Skipping Draw..." << endl;
@@ -947,7 +947,7 @@ void ClusterQA(
                 DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistClusterEnergyVsNCells,"",
                                     "Cluster Energy (GeV)","#it{N}_{Cells} per Cluster",1,1,
-                                    0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterEnergyVsNCells, Form("%s/ClusterEnergyVsNCells_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             } else cout << "INFO: Object |ClusterEnergyVsNCells_afterQA| could not be found! Skipping Draw..." << endl;
         }
@@ -962,7 +962,7 @@ void ClusterQA(
             SetXRange(fHistM02BeforeQA,minB-1,maxB+1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistM02BeforeQA,"","#lambda_{0}^{2}","#frac{d#it{N}}{d#lambda_{0}^{2}}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistM02BeforeQA, Form("%s/M02_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |fHistM02BeforeQA| could not be found! Skipping Draw..." << endl;
         //---------------------------------------------------------------------------------------------------------------
@@ -973,7 +973,7 @@ void ClusterQA(
             SetXRange(fHistM02AfterQA,minB-1,maxB+1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistM02AfterQA,"","#lambda_{0}^{2}","#frac{d#it{N}}{d#lambda_{0}^{2}}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistM02AfterQA, Form("%s/M02_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             vecClusterM02.push_back(new TH1D(*fHistM02AfterQA));
         } else cout << "INFO: Object |fHistM02AfterQA| could not be found! Skipping Draw..." << endl;
@@ -985,7 +985,7 @@ void ClusterQA(
             SetXRange(fHistM20BeforeQA,1,maxB+1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistM20BeforeQA,"","#lambda_{0}^{2}","#frac{d#it{N}}{d#lambda_{1}^{2}}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistM20BeforeQA, Form("%s/M20_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |fHistM20BeforeQA| could not be found! Skipping Draw..." << endl;
         //---------------------------------------------------------------------------------------------------------------
@@ -996,7 +996,7 @@ void ClusterQA(
             SetXRange(fHistM20AfterQA,1,maxB+1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistM20AfterQA,"","#lambda_{0}^{2}","#frac{d#it{N}}{d#lambda_{1}^{2}}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistM20AfterQA, Form("%s/M20_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             vecClusterM20.push_back(new TH1D(*fHistM20AfterQA));
         } else cout << "INFO: Object |fHistM20AfterQA| could not be found! Skipping Draw..." << endl;
@@ -1009,7 +1009,7 @@ void ClusterQA(
             SetXRange(fHistDispersionBeforeQA,minB-1,maxB+1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistDispersionBeforeQA,"","Cluster Dispersion","#frac{d#it{N}}{dDisp}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistDispersionBeforeQA, Form("%s/Dispersion_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |fHistDispersionBeforeQA| could not be found! Skipping Draw..." << endl;
         //---------------------------------------------------------------------------------------------------------------
@@ -1020,7 +1020,7 @@ void ClusterQA(
             SetXRange(fHistDispersionAfterQA,minB-1,maxB+1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistDispersionAfterQA,"","Cluster Dispersion","#frac{d#it{N}}{dDisp}",1,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistDispersionAfterQA, Form("%s/Dispersion_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             vecClusterDispersion.push_back(new TH1D(*fHistDispersionAfterQA));
         } else cout << "INFO: Object |fHistDispersionAfterQA| could not be found! Skipping Draw..." << endl;
@@ -1038,7 +1038,7 @@ void ClusterQA(
                 DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistClusterEM02BeforeQA,"",
                                     "E (GeV)","#lambda_{0}^{2}",1,1,
-                                    0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterEM02BeforeQA, Form("%s/EVsM02_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             } else cout << "INFO: Object |fHistClusterEM02BeforeQA| could not be found! Skipping Draw..." << endl;
             //---------------------------------------------------------------------------------------------------------------
@@ -1049,7 +1049,7 @@ void ClusterQA(
                 DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistClusterEM02AfterQA,"",
                                     "E (GeV)","#lambda_{0}^{2}",1,1,
-                                    0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterEM02AfterQA, Form("%s/EVsM02_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 vecClusterEM02.push_back(new TH2D(*fHistClusterEM02AfterQA));
             } else cout << "INFO: Object |fHistClusterEM02AfterQA| could not be found! Skipping Draw..." << endl;
@@ -1071,7 +1071,7 @@ void ClusterQA(
                     DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                         fHistClusterM20M02BeforeQA,"",
                                         "#lambda_{1}^{2}","#lambda_{0}^{2}",1,1.2,
-                                        0.65,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                        0.85,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                     SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterM20M02BeforeQA, Form("%s/M20VsM02_all_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 } else cout << "INFO: Object |fHistClusterM20M02BeforeQA| could not be found! Skipping Draw..." << endl;
                 //---------------------------------------------------------------------------------------------------------------
@@ -1090,7 +1090,7 @@ void ClusterQA(
                     DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                         fHistClusterM20M02AfterQA,"",
                                         "#lambda_{1}^{2}","#lambda_{0}^{2}",1,1.2,
-                                        0.65,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                        0.85,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                     SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterM20M02AfterQA, Form("%s/M20VsM02_accepted_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 } else cout << "INFO: Object |fHistClusterM20M02AfterQA| could not be found! Skipping Draw..." << endl;
                 //---------------------------------------------------------------------------------------------------------------
@@ -1100,7 +1100,7 @@ void ClusterQA(
                     DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                         fHistClusterM20M02MatchedAfterQA,"",
                                         "#lambda_{1}^{2}","#lambda_{0}^{2}",1,1.2,
-                                        0.65,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                        0.85,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                     SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterM20M02MatchedAfterQA, Form("%s/M20VsM02_rejected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                     delete fHistClusterM20M02MatchedAfterQA;
                 }
@@ -1315,7 +1315,7 @@ void ClusterQA(
             SetXRange(fHistNLMBeforeQA,minB-1,maxB+1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistNLMBeforeQA,"","Number of Local Maxima","#frac{1}{N} #frac{dN}{dNLM}",0.9,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistNLMBeforeQA, Form("%s/NLM_beforeQA_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << Form("INFO: Object |NLM_beforeClusterQA %s| could not be found! Skipping Draw...",fClusterCutSelection[i].Data()) << endl;
         //---------------------------------------------------------------------------------------------------------------
@@ -1326,7 +1326,7 @@ void ClusterQA(
             SetXRange(fHistNLMAfterQA,minB-1,maxB+1);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistNLMAfterQA,"","Number of Local Maxima","#frac{1}{N} #frac{dN}{dNLM}",0.9,1,
-                                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistNLMAfterQA, Form("%s/NLM_afterQA_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             vecClusterNLM.push_back(new TH1D(*fHistNLMAfterQA));
         } else cout << Form("INFO: Object |NLM_afterClusterQA %s| could not be found! Skipping Draw...",fClusterCutSelection[i].Data()) << endl;
@@ -1343,7 +1343,7 @@ void ClusterQA(
             DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                 fHistNLMNCells,"",
                                 "Number of Local Maxima","#it{N}_{Cells} per Cluster",1,1,
-                                0.75,0.92,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                0.85,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
             SaveCanvasAndWriteHistogram(canvas, fHistNLMNCells, Form("%s/NLM_NCells_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
         } else cout << Form("INFO: Object |NLM_NCells_afterClusterQA %s| could not be found! Skipping Draw...",fClusterCutSelection[i].Data()) << endl;
@@ -1360,7 +1360,7 @@ void ClusterQA(
         DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                             fHistNLME,"",
                             "Number of Local Maxima","Cluster Energy (GeV)",1,1,
-                            0.75,0.92,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                            0.85,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
         SaveCanvasAndWriteHistogram(canvas, fHistNLME, Form("%s/NLM_E_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << Form("INFO: Object |NLM_E_afterClusterQA %s| could not be found! Skipping Draw...",fClusterCutSelection[i].Data()) << endl;
 
@@ -1392,15 +1392,17 @@ void ClusterQA(
                 DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistClusterdEtadPhiBeforeQA,"",
                                     "#Delta#eta_{cluster - all tracks}","#Delta#phi_{cluster - all tracks}",1,1.2,
-                                    0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterdEtadPhiBeforeQA, Form("%s/dEtaVsdPhi_allTracks_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
                 DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistClusterdEtadPhiBeforeQA,"",
                                     "#Delta#eta_{cluster - all tracks}","#Delta#phi_{cluster - all tracks}",1,1.2,
-                                    0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-                cutPos->Draw();
-                cutNeg->Draw();
+                                    0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
+                if (trackMatch == 3){
+                    cutPos->Draw();
+                    cutNeg->Draw();
+                }    
                 SaveCanvasOnly(cvsQuadratic, Form("%s/dEtaVsdPhi_allTracks_WithCuts_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
                 // projection of dEta, dPhi before cluster QA cuts to dEta axis
@@ -1408,7 +1410,7 @@ void ClusterQA(
                 SetXRange(fHistClusterdEtaBeforeQA,1,300);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                     fHistClusterdEtaBeforeQA,"","#Delta#eta_{cluster - all tracks}","#frac{d#it{N}}{d#Delta#eta}",0.9,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), "and charged tracks", "");
                 SaveCanvasAndWriteHistogram(canvas, fHistClusterdEtaBeforeQA, Form("%s/dEta_allTracks_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 vecMatchingDeltaEtaPhi_allTracks[0].push_back(fHistClusterdEtaBeforeQA);
@@ -1418,7 +1420,7 @@ void ClusterQA(
                 SetXRange(fHistClusterdPhiBeforeQA,1,300);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                     fHistClusterdPhiBeforeQA,"","#Delta#phi_{cluster - all tracks}","#frac{d#it{N}}{d#Delta#phi}",0.9,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), "and charged tracks", "");
                 SaveCanvasAndWriteHistogram(canvas, fHistClusterdPhiBeforeQA, Form("%s/dPhi_allTracks_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 vecMatchingDeltaEtaPhi_allTracks[1].push_back(fHistClusterdPhiBeforeQA);
@@ -1429,16 +1431,18 @@ void ClusterQA(
                 DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistClusterdEtadPhiBeforeQA,"",
                                     "#Delta#eta","#Delta#phi",1,1.2,
-                                    0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), "and charged tracks", "");
                 SaveCanvasOnly(cvsQuadratic, Form("%s/dEtaVsdPhi_allTracks_zoom_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
                 DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistClusterdEtadPhiBeforeQA,"",
                                     "#Delta#eta","#Delta#phi",1,1.2,
-                                    0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-                cutPos->Draw();
-                cutNeg->Draw();
+                                    0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
+                if (trackMatch == 3){
+                    cutPos->Draw();
+                    cutNeg->Draw();
+                }
                 PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), "and charged tracks", "");
                 SaveCanvasOnly(cvsQuadratic, Form("%s/dEtaVsdPhi_allTracks_WithCuts_zoom_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             } else cout << "INFO: Object |fHistClusterdEtadPhiBeforeQA| could not be found! Skipping Draw..." << endl;
@@ -1453,7 +1457,7 @@ void ClusterQA(
                 DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistClusterdEtadPhiAfterQA,"",
                                     "#Delta#eta","#Delta#phi",1,1.2,
-                                    0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), "and unmatched tracks", "");
                 SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterdEtadPhiAfterQA, Form("%s/dEtaVsdPhi_unmatched_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
@@ -1462,7 +1466,7 @@ void ClusterQA(
                 SetXRange(fHistClusterdEtaAfterQA,1,300);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                     fHistClusterdEtaAfterQA,"","#Delta#eta_{cluster - unmatched tracks}","#frac{d#it{N}}{d#Delta#eta}",0.9,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(canvas, fHistClusterdEtaAfterQA, Form("%s/dEta_unmatched_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 delete fHistClusterdEtaAfterQA;
 
@@ -1471,7 +1475,7 @@ void ClusterQA(
                 SetXRange(fHistClusterdPhiAfterQA,1,300);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                     fHistClusterdPhiAfterQA,"","#Delta#phi_{cluster - unmatched tracks}","#frac{d#it{N}}{d#Delta#phi}",0.9,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(canvas, fHistClusterdPhiAfterQA, Form("%s/dPhi_unmatched_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 delete fHistClusterdPhiAfterQA;
 
@@ -1481,7 +1485,7 @@ void ClusterQA(
                 DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistClusterdEtadPhiAfterQA,"",
                                     "#Delta#eta","#Delta#phi",1,1.2,
-                                    0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), "and unmatched tracks", "");
                 SaveCanvasOnly(cvsQuadratic, Form("%s/dEtaVsdPhi_unmatched_zoom_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             } else cout << "INFO: Object |fHistClusterdEtadPhiAfterQA| could not be found! Skipping Draw..." << endl;
@@ -1495,7 +1499,7 @@ void ClusterQA(
                 DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistClusterdEtadPhiMatchedAfterQA,"",
                                     "#Delta#eta","#Delta#phi",1,1.2,
-                                    0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), "and matched tracks", "");
                 SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterdEtadPhiMatchedAfterQA, Form("%s/dEtaVsdPhi_matched_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
@@ -1506,7 +1510,7 @@ void ClusterQA(
                 SetXRange(fHistClusterdEtaMatchedAfterQA,minB-1,maxB+1);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                     fHistClusterdEtaMatchedAfterQA,"","#Delta#eta_{cluster - matched tracks}","#frac{d#it{N}}{d#Delta#eta}",0.9,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(canvas, fHistClusterdEtaMatchedAfterQA, Form("%s/dEta_matched_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 vecMatchingDeltaEtaPhi_matched[0].push_back(fHistClusterdEtaMatchedAfterQA);
 
@@ -1516,7 +1520,7 @@ void ClusterQA(
                 SetXRange(fHistClusterdPhiMatchedAfterQA,minB-1,maxB+1);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                     fHistClusterdPhiMatchedAfterQA,"","#Delta#phi_{cluster - matched tracks}","#frac{d#it{N}}{d#Delta#phi}",0.9,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(canvas, fHistClusterdPhiMatchedAfterQA, Form("%s/dPhi_matched_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 TGaxis::SetExponentOffset(0, 0, "x");
                 vecMatchingDeltaEtaPhi_matched[1].push_back(fHistClusterdPhiMatchedAfterQA);
@@ -1527,7 +1531,7 @@ void ClusterQA(
                 DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistClusterdEtadPhiMatchedAfterQA,"",
                                     "#Delta#eta","#Delta#phi",1,1.2,
-                                    0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), "and matched tracks", "");
                 SaveCanvasOnly(cvsQuadratic, Form("%s/dEtaVsdPhi_matched_zoom_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 delete fHistClusterdEtadPhiMatchedAfterQA;
@@ -1541,7 +1545,7 @@ void ClusterQA(
                 SetXRange(fHistClusterRBeforeQA,minB-5,maxB+5);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                     fHistClusterRBeforeQA,"","#it{R}_{Cluster} (cm)","#frac{d#it{N}}{d#it{R}}",1,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(canvas, fHistClusterRBeforeQA, Form("%s/R_Cluster_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             } else cout << "INFO: Object |fHistClusterRBeforeQA| could not be found! Skipping Draw..." << endl;
             //---------------------------------------------------------------------------------------------------------------
@@ -1552,7 +1556,7 @@ void ClusterQA(
                 SetXRange(fHistClusterRAfterQA,minB-5,maxB+5);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                     fHistClusterRAfterQA,"","#it{R}_{Cluster} (cm)","#frac{d#it{N}}{d#it{R}}",1,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(canvas, fHistClusterRAfterQA, Form("%s/R_Cluster_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 vecClusterR.push_back(new TH1D(*fHistClusterRAfterQA));
             } else cout << "INFO: Object |fHistClusterRAfterQA| could not be found! Skipping Draw..." << endl;
@@ -1565,7 +1569,7 @@ void ClusterQA(
                 AdjustHistRange(fHistDistanceTrackToClusterBeforeQA,5,5,kTRUE,1,1.);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,0.15,kFALSE,kTRUE,kFALSE,
                                     fHistDistanceTrackToClusterBeforeQA,"","r = #sqrt{#Delta#eta_{cluster - all tracks}^{2}+#Delta#phi_{cluster - all tracks}^{2}}","#frac{d#it{N}}{d#it{r}}",1.3,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(canvas, fHistDistanceTrackToClusterBeforeQA, Form("%s/DistanceToTrack_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             } else cout << "INFO: Object |fHistDistanceTrackToClusterBeforeQA| could not be found! Skipping Draw..." << endl;
             //---------------------------------------------------------------------------------------------------------------
@@ -1575,7 +1579,7 @@ void ClusterQA(
                 AdjustHistRange(fHistDistanceTrackToClusterAfterQA,5,5,kTRUE,1,1.);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,0.15,kFALSE,kTRUE,kFALSE,
                                     fHistDistanceTrackToClusterAfterQA,"","r = #sqrt{#Delta#eta_{cluster - unmatched tracks}^{2}+#Delta#phi_{cluster - unmatched tracks}^{2}}","#frac{d#it{N}}{d#it{r}}",1.3,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(canvas, fHistDistanceTrackToClusterAfterQA, Form("%s/DistanceToTrack_unmatched_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             } else cout << "INFO: Object |fHistDistanceTrackToClusterAfterQA| could not be found! Skipping Draw..." << endl;
             //---------------------------------------------------------------------------------------------------------------
@@ -1588,7 +1592,7 @@ void ClusterQA(
                 SetXRange(fHistDistanceTrackToClusterMatchedAfterQA,minB,maxB+5);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,0.15,kFALSE,kTRUE,kFALSE,
                                     fHistDistanceTrackToClusterMatchedAfterQA,"","r = #sqrt{#Delta#eta_{cluster - matched tracks}^{2}+#Delta#phi_{cluster - matched tracks}^{2}}","#frac{d#it{N}}{d#it{r}}",1.3,1,
-                                    0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                    0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                 SaveCanvasAndWriteHistogram(canvas, fHistDistanceTrackToClusterMatchedAfterQA, Form("%s/DistanceToTrack_matched_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 delete fHistDistanceTrackToClusterMatchedAfterQA;
             }
@@ -1609,7 +1613,7 @@ void ClusterQA(
                     DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                         fHistClusterdEtadPtBeforeQA,"",
                                         "#Delta#eta_{cluster - charged tracks}","#it{p}_{T} (GeV/#it{c})",1,1,
-                                        0.75,0.92,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                        0.85,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                     SaveCanvasAndWriteHistogram(canvas, fHistClusterdEtadPtBeforeQA, Form("%s/dEtaVsPt_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 } else cout << "INFO: Object |fHistClusterdEtadPtBeforeQA| could not be found! Skipping Draw..." << endl;
                 //---------------------------------------------------------------------------------------------------------------
@@ -1624,7 +1628,7 @@ void ClusterQA(
                     DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                         fHistClusterdPhidPtBeforeQA,"",
                                         "#Delta#phi_{cluster - charged tracks}","#it{p}_{T} (GeV/#it{c})",1,1,
-                                        0.75,0.92,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                        0.85,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                     SaveCanvasAndWriteHistogram(canvas, fHistClusterdPhidPtBeforeQA, Form("%s/dPhiVsPt_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 } else cout << "INFO: Object |fHistClusterdPhidPtBeforeQA| could not be found! Skipping Draw..." << endl;
             
@@ -1639,7 +1643,7 @@ void ClusterQA(
                         DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                             fHistClusterdEtadPhiTracksBeforeQA,"",
                                             "#Delta#eta","#Delta#phi",1,1.2,
-                                            0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), Form("and %s. tracks",charge[iCharge].Data()), "");
                         SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterdEtadPhiTracksBeforeQA, Form("%s/dEtaVsdPhi_all_%sTracks_%s.%s", outputDir.Data(), charge[iCharge].Data(), 
                                                     DataSets[i].Data(), suffix.Data()));
@@ -1649,7 +1653,7 @@ void ClusterQA(
                         SetXRange(fHistClusterdEtaBeforeQA,1,300);
                         DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                             fHistClusterdEtaBeforeQA,"",Form("#Delta#eta_{Cluster - %s. Tracks}", charge[iCharge].Data()),"#frac{d#it{N}}{d#Delta#eta}",0.9,1,
-                                            0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         SaveCanvasAndWriteHistogram(canvas, fHistClusterdEtaBeforeQA, Form("%s/dEta_all_%sTracks_%s.%s", outputDir.Data(), charge[iCharge].Data(), DataSets[i].Data(), 
                                                     suffix.Data()));
                         vecMatchingDeltaEtaPhiTracksAll[0][iCharge].push_back(fHistClusterdEtaBeforeQA);
@@ -1659,7 +1663,7 @@ void ClusterQA(
                         SetXRange(fHistClusterdPhiBeforeQA,1,300);
                         DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                             fHistClusterdPhiBeforeQA,"",Form("#Delta#phi_{Cluster - %s. Tracks}", charge[iCharge].Data()),"#frac{d#it{N}}{d#Delta#phi}",0.9,1,
-                                            0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         SaveCanvasAndWriteHistogram(canvas, fHistClusterdPhiBeforeQA, Form("%s/dPhi_all_%sTracks_%s.%s", outputDir.Data(), charge[iCharge].Data(), DataSets[i].Data(), suffix.Data()));
                         vecMatchingDeltaEtaPhiTracksAll[1][iCharge].push_back(fHistClusterdPhiBeforeQA);
 
@@ -1669,7 +1673,7 @@ void ClusterQA(
                         DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                             fHistClusterdEtadPhiTracksBeforeQA,"",
                                             "#Delta#eta","#Delta#phi",1,1.2,
-                                            0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), Form("and %s. tracks",charge[iCharge].Data()), "");
                         SaveCanvasOnly(cvsQuadratic, Form("%s/dEtaVsdPhi_all_%sTracks_zoom_%s.%s", outputDir.Data(), charge[iCharge].Data(), DataSets[i].Data(), suffix.Data()));
                     } else cout << "INFO: Object |fHistClusterdEtadPhiTracksBeforeQA| could not be found! Skipping Draw..." << endl;
@@ -1681,7 +1685,7 @@ void ClusterQA(
                         DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                             fHistClusterdEtadPhiTracksAfterQA,"",
                                             "#Delta#eta","#Delta#phi",1,1.2,
-                                            0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), Form("and unmatched %s. tracks",charge[iCharge].Data()), "");
                         SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterdEtadPhiTracksAfterQA, Form("%s/dEtaVsdPhi_unmatched_%sTracks_%s.%s", outputDir.Data(), charge[iCharge].Data(),
                                                     DataSets[i].Data(), suffix.Data()));
@@ -1691,7 +1695,7 @@ void ClusterQA(
                         SetXRange(fHistClusterdEtaAfterQA,1,300);
                         DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                             fHistClusterdEtaAfterQA,"",Form("#Delta#eta_{Cluster - unmatched %s. Tracks}", charge[iCharge].Data()),"#frac{d#it{N}}{d#Delta#eta}",0.9,1,
-                                            0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         SaveCanvasAndWriteHistogram(canvas, fHistClusterdEtaAfterQA, Form("%s/dEta_unmatched_%sTracks_%s.%s", outputDir.Data(), charge[iCharge].Data(), DataSets[i].Data(), suffix.Data()));
                         delete fHistClusterdEtaAfterQA;
 
@@ -1700,7 +1704,7 @@ void ClusterQA(
                         SetXRange(fHistClusterdPhiAfterQA,1,300);
                         DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                             fHistClusterdPhiAfterQA,"",Form("#Delta#phi_{Cluster - unmatched %s. Tracks}", charge[iCharge].Data()),"#frac{d#it{N}}{d#Delta#phi}",0.9,1,
-                                            0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         SaveCanvasAndWriteHistogram(canvas, fHistClusterdPhiAfterQA, Form("%s/dPhi_unmatched_%sTracks_%s.%s", outputDir.Data(), charge[iCharge].Data(), DataSets[i].Data(), suffix.Data()));
                         delete fHistClusterdPhiAfterQA;
 
@@ -1710,7 +1714,7 @@ void ClusterQA(
                         DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                             fHistClusterdEtadPhiTracksAfterQA,"",
                                             "#Delta#eta","#Delta#phi",1,1.2,
-                                            0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), Form("and unmatched %s. tracks",charge[iCharge].Data()), "");
                         SaveCanvasOnly(cvsQuadratic, Form("%s/dEtaVsdPhi_unmatched_%sTracks_zoom_%s.%s", outputDir.Data(), charge[iCharge].Data(), DataSets[i].Data(), suffix.Data()));
 
@@ -1723,7 +1727,7 @@ void ClusterQA(
                         DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                             fHistClusterdEtadPhiTracksMatchedAfterQA,"",
                                             "#Delta#eta","#Delta#phi",1,1.2,
-                                            0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), Form("and matched %s. tracks",charge[iCharge].Data()), "");
                         SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterdEtadPhiTracksMatchedAfterQA, Form("%s/dEtaVsdPhi_matched_%sTracks_%s.%s", outputDir.Data(), charge[iCharge].Data(),
                                                     DataSets[i].Data(), suffix.Data()));
@@ -1734,7 +1738,7 @@ void ClusterQA(
                         SetXRange(fHistClusterdEtaMatchedAfterQA,minB-1,maxB+1);
                         DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                             fHistClusterdEtaMatchedAfterQA,"",Form("#Delta#eta_{Cluster - matched %s. Tracks}", charge[iCharge].Data()),"#frac{d#it{N}}{d#Delta#eta}",0.9,1,
-                                            0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         SaveCanvasAndWriteHistogram(canvas, fHistClusterdEtaMatchedAfterQA, Form("%s/dEta_matched_%sTracks_%s.%s", outputDir.Data(), charge[iCharge].Data(), DataSets[i].Data(), suffix.Data()));
                         vecMatchingDeltaEtaPhiTracksMatched[0][iCharge].push_back(fHistClusterdEtaMatchedAfterQA);
 
@@ -1744,7 +1748,7 @@ void ClusterQA(
                         SetXRange(fHistClusterdPhiMatchedAfterQA,minB-1,maxB+1);
                         DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                             fHistClusterdPhiMatchedAfterQA,"",Form("#Delta#phi_{Cluster - matched %s. Tracks}", charge[iCharge].Data()),"#frac{d#it{N}}{d#Delta#phi}",0.9,1,
-                                            0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         SaveCanvasAndWriteHistogram(canvas, fHistClusterdPhiMatchedAfterQA, Form("%s/dPhi_matched_%sTracks_%s.%s", outputDir.Data(), charge[iCharge].Data(), DataSets[i].Data(), suffix.Data()));
                         vecMatchingDeltaEtaPhiTracksMatched[1][iCharge].push_back(fHistClusterdPhiMatchedAfterQA);
 
@@ -1754,7 +1758,7 @@ void ClusterQA(
                         DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                             fHistClusterdEtadPhiTracksMatchedAfterQA,"",
                                             "#Delta#eta","#Delta#phi",1,1.2,
-                                            0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), Form("and matched %s. tracks",charge[iCharge].Data()), "");
                         SaveCanvasOnly(cvsQuadratic, Form("%s/dEtaVsdPhi_matched_%sTracks_zoom_%s.%s", outputDir.Data(), charge[iCharge].Data(), DataSets[i].Data(), suffix.Data()));
 
@@ -1769,7 +1773,7 @@ void ClusterQA(
                         DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                             fHistClusterdEtadPhiTracksP_000_075BeforeQA,"",
                                             "#Delta#eta","#Delta#phi",1,1.2,
-                                            0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), Form("and %s. tracks",charge[iCharge].Data()), "with #it{p}_{T}<0.75 GeV/#it{c}");
                         SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterdEtadPhiTracksP_000_075BeforeQA, Form("%s/dEtaVsdPhi_%sTracks_000_075_%s.%s", outputDir.Data(), charge[iCharge].Data(),
                                                     DataSets[i].Data(), suffix.Data()));
@@ -1783,7 +1787,7 @@ void ClusterQA(
                         DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                             fHistClusterdEtadPhiTracksP_000_075BeforeQA,"",
                                             "#Delta#eta","#Delta#phi",1,1.2,
-                                            0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), Form("and %s. tracks",charge[iCharge].Data()), "with #it{p}_{T}<0.75 GeV/#it{c}");
                         SaveCanvasOnly(cvsQuadratic, Form("%s/dEtaVsdPhi_%sTracks_000_075_zoom_%s.%s", outputDir.Data(), charge[iCharge].Data(), DataSets[i].Data(), suffix.Data()));
                     } else cout << "INFO: Object |fHistClusterdEtadPhiTracksP_000_075BeforeQA| could not be found! Skipping Draw..." << endl;
@@ -1796,7 +1800,7 @@ void ClusterQA(
                         DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                             fHistClusterdEtadPhiTracksP_075_125BeforeQA,"",
                                             "#Delta#eta","#Delta#phi",1,1.2,
-                                            0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), Form("and %s. tracks",charge[iCharge].Data()), "with 0.75<#it{p}_{T}<1.25 GeV/#it{c}");
                         SaveCanvasAndWriteHistogram( cvsQuadratic, fHistClusterdEtadPhiTracksP_075_125BeforeQA, Form("%s/dEtaVsdPhi_%sTracks_075_125_%s.%s", outputDir.Data(), charge[iCharge].Data(),
                                                      DataSets[i].Data(), suffix.Data()));
@@ -1810,7 +1814,7 @@ void ClusterQA(
                         DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                             fHistClusterdEtadPhiTracksP_075_125BeforeQA,"",
                                             "#Delta#eta","#Delta#phi",1,1.2,
-                                            0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), Form("and %s. tracks",charge[iCharge].Data()), "with 0.75<#it{p}_{T}<1.25 GeV/#it{c}");
                         SaveCanvasOnly(cvsQuadratic, Form("%s/dEtaVsdPhi_%sTracks_075_125_zoom_%s.%s", outputDir.Data(), charge[iCharge].Data(), DataSets[i].Data(), suffix.Data()));
                     } else cout << "INFO: Object |fHistClusterdEtadPhiTracksP_075_125BeforeQA| could not be found! Skipping Draw..." << endl;
@@ -1823,7 +1827,7 @@ void ClusterQA(
                         DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                             fHistClusterdEtadPhiTracksP_125_999BeforeQA,"",
                                             "#Delta#eta","#Delta#phi",1,1.2,
-                                            0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), Form("and %s. tracks",charge[iCharge].Data()), "with #it{p}_{T}>1.25 GeV/#it{c}");
                         SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterdEtadPhiTracksP_125_999BeforeQA, Form("%s/dEtaVsdPhi_%sTracks_125_999_%s.%s", outputDir.Data(), charge[iCharge].Data(),
                                                     DataSets[i].Data(), suffix.Data()));
@@ -1837,7 +1841,7 @@ void ClusterQA(
                         DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,bottomMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                             fHistClusterdEtadPhiTracksP_125_999BeforeQA,"",
                                             "#Delta#eta","#Delta#phi",1,1.2,
-                                            0.65,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                            0.85,0.9,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                         PutProcessLabelAndEnergyOnPlot(0.15,0.9,0.03, fClusters.Data(), Form("and %s. tracks",charge[iCharge].Data()), "with #it{p}_{T}>1.25 GeV/#it{c}");
                         SaveCanvasOnly(cvsQuadratic, Form("%s/dEtaVsdPhi_%sTracks_125_999_zoom_%s.%s", outputDir.Data(), charge[iCharge].Data(), DataSets[i].Data(), suffix.Data()));
                     } else cout << "INFO: Object |fHistClusterdEtadPhiTracksP_125_999BeforeQA| could not be found! Skipping Draw..." << endl;
@@ -2175,7 +2179,7 @@ void ClusterQA(
                     SetXRange(MotherPi0Conv_Phi,minB-5,maxB+5);
                     DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                         MotherPi0Conv_Phi,"","#phi_{#gamma_{conv} under #pi^{0}-peak}","#frac{d#it{N}}{d#eta}",1,1,
-                                        0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                        0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                     SaveCanvasAndWriteHistogram(canvas, MotherPi0Conv_Phi, Form("%s/ConvPhotonPi0_Phi_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                     vecConvPhotonEtaPhi_Pi0[0].push_back(MotherPi0Conv_Phi);
                 }
@@ -2186,7 +2190,7 @@ void ClusterQA(
                     MotherPi0Conv_Eta->GetXaxis()->SetRangeUser(-1.,1.);
                     DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                         MotherPi0Conv_Eta,"","#eta_{#gamma_{conv} under #pi^{0}-peak}","#frac{d#it{N}}{d#phi}",1,1,
-                                        0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                        0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                     SaveCanvasAndWriteHistogram(canvas, MotherPi0Conv_Eta, Form("%s/ConvPhotonPi0_Eta_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                     vecConvPhotonEtaPhi_Pi0[1].push_back(MotherPi0Conv_Eta);
                 }
@@ -2212,7 +2216,7 @@ void ClusterQA(
                 if(MotherEtaConv_Phi){
                     DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                         MotherEtaConv_Phi,"","#phi_{#gamma_{conv} under #eta-peak}","#frac{d#it{N}}{d#phi}",1,1,
-                                        0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                        0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                     SaveCanvasAndWriteHistogram(canvas, MotherEtaConv_Phi, Form("%s/ConvPhotonEta_Phi_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                     vecConvPhotonEtaPhi_Eta[0].push_back(MotherEtaConv_Phi);
                 }
@@ -2223,7 +2227,7 @@ void ClusterQA(
                     MotherEtaConv_Eta->GetXaxis()->SetRangeUser(-1.,1.);
                     DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                         MotherEtaConv_Eta,"","#eta_{#gamma_{conv} under #eta-peak}","#frac{d#it{N}}{d#eta}",1,1,
-                                        0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                        0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
                     SaveCanvasAndWriteHistogram(canvas, MotherEtaConv_Eta, Form("%s/ConvPhotonEta_Eta_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                     vecConvPhotonEtaPhi_Eta[1].push_back(MotherEtaConv_Eta);
                 }
@@ -2337,13 +2341,13 @@ void ClusterQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                 vecNEvents,"","","N_{Events}",1,1.1,
                                 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/NEvents.%s", outputDir.Data(), suffix.Data()));
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                     vecNEvents,"","","N_{Events}",1,1.1,
                                     labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_NEvents.%s", outputDir.Data(), suffix.Data()));
     DeleteVecTH1D(vecNEvents);
 
@@ -2385,7 +2389,7 @@ void ClusterQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                 vecClusterTimeAfterCorrected,"","#it{t}_{Cluster} (s)","#frac{1}{N_{max}} #frac{dN}{dt}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/ClusterTimeAfter.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
     DeleteVecTH1D(vecClusterTimeAfterCorrected);
     DeleteVecTH1D(vecClusterTimeAfter);
@@ -2422,7 +2426,7 @@ void ClusterQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                 vecClusterTimeBeforeCorrected,"","#it{t}_{Cluster} (s)","#frac{1}{N_{max}} #frac{dN}{dt}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/ClusterTimeBefore.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
     DeleteVecTH1D(vecClusterTimeBeforeCorrected);
     DeleteVecTH1D(vecClusterTimeBefore);
@@ -2451,12 +2455,12 @@ void ClusterQA(
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecClusterTimingInCluster,"","Cell Time in Clusters (ns)","#frac{1}{N} #frac{dN}{d#it{t_{cell}}}",1,1.1,
                                     labelData, colorCompare, kTRUE, 2, 5, kFALSE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/ClusterIncludedCellTime.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecClusterTimingInCluster,"","Cell Time in Clusters (ns)","#frac{1}{N} #frac{dN}{d#it{t_{cell}}}",1,1.1,
                                     labelData, colorCompare, kTRUE, 2, 5, kFALSE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         line->DrawLine(-50, yStart, -50, yEnd);
         line->DrawLine(50, yStart, 50, yEnd);
         SaveCanvas(canvas, Form("%s/Comparison/ClusterIncludedCellTime_50ns.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
@@ -2464,7 +2468,7 @@ void ClusterQA(
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                         vecClusterTimingInCluster,"","Cell Time in Clusters (ns)","#frac{1}{N} #frac{dN}{d#it{t_{cell}}}",1,1.1,
                                         labelData, colorCompare, kTRUE, 2, 5, kFALSE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ClusterIncludedCellTime.%s", outputDir.Data(), suffix.Data()));
         DeleteVecTH1D(vecClusterTimingInCluster);
 
@@ -2479,13 +2483,13 @@ void ClusterQA(
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                     vecClusterDistanceRowWithin,"","#Delta row","#frac{1}{N} #frac{dN}{d#Delta row}",1,1.1,
                                     labelData, colorCompare, kTRUE, 2, 1.1, kFALSE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/ClusterDistanceRowWithin.%s", outputDir.Data(), suffix.Data()));
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                         vecClusterDistanceRowWithin,"","#Delta row","#frac{1}{N} #frac{dN}{d#Delta row}",1,1.1,
                                         labelData, colorCompare, kTRUE, 2, 1.1, kFALSE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ClusterDistanceRowWithin.%s", outputDir.Data(), suffix.Data()));
         DeleteVecTH1D(vecClusterDistanceRowWithin);
 
@@ -2498,13 +2502,13 @@ void ClusterQA(
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                     vecClusterDistanceColumnWithin,"","#Delta column","#frac{1}{N} #frac{dN}{d#Delta column}",1,1.1,
                                     labelData, colorCompare, kTRUE, 2, 1.1, kFALSE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/ClusterDistanceColumnWithin.%s", outputDir.Data(), suffix.Data()));
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                         vecClusterDistanceColumnWithin,"","#Delta column","#frac{1}{N} #frac{dN}{d#Delta column}",1,1.1,
                                         labelData, colorCompare, kTRUE, 2, 1.1, kFALSE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ClusterDistanceColumnWithin.%s", outputDir.Data(), suffix.Data()));
         DeleteVecTH1D(vecClusterDistanceColumnWithin);
 
@@ -2528,13 +2532,13 @@ void ClusterQA(
           DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                       vecClusterEM02_TH1D[iEM02],"",Form("#lambda_{0}^{2} for %.01f < E_{#mbox{cluster}} < %.01f GeV",EM02_bins[iEM02],EM02_bins[iEM02+1]),"#frac{1}{N} #frac{dN}{d#lambda_{0}^{2}}",1,1.1,
                                       labelData, colorCompare, kTRUE, 2, 5, kFALSE,
-                                      0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                      0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
           SaveCanvas(canvas, Form("%s/Comparison/ClusterEM02_bin%i.%s", outputDir.Data(), iEM02, suffix.Data()),kFALSE,kTRUE);
 
           DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                           vecClusterEM02_TH1D[iEM02],"","#lambda_{0}^{2}","#frac{1}{N} #frac{dN}{d#lambda_{0}^{2}}",1,1.1,
                                           labelData, colorCompare, kTRUE, 2, 5, kFALSE,
-                                          0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                          0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
           SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ClusterEM02_bin%i.%s", outputDir.Data(), iEM02, suffix.Data()));
         }
         DeleteVecTH2D(vecClusterEM02);
@@ -2553,19 +2557,19 @@ void ClusterQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kTRUE,kTRUE,kFALSE,
                                 vecClusterEnergy,"","Cluster Energy (GeV)","#frac{1}{N_{cl.}} #frac{dN}{dE}",1,1.1,
                                 labelData, colorCompare, kTRUE, 2, 5, kFALSE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Energy_Cluster_afterQA.%s", outputDir.Data(), suffix.Data()), kTRUE, kTRUE);
 
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                 vecClusterEnergy,"","Cluster Energy (GeV)","#frac{1}{N_{cl.}} #frac{dN}{dE}",1,1.1,
                                 labelData, colorCompare, kTRUE, 2, 5, kFALSE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Energy_Cluster_afterQA_lin.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecClusterEnergy,"","Cluster Energy (GeV)","#frac{1}{N_{cl.}} #frac{dN}{dE}",1,1.1,
                                     labelData, colorCompare, kTRUE, 2, 5, kFALSE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Energy_Cluster_afterQA.%s", outputDir.Data(), suffix.Data()));
     DeleteVecTH1D(vecClusterEnergy);
     
@@ -2585,13 +2589,13 @@ void ClusterQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                 vecClusterM02,"","#lambda_{0}^{2}","#frac{1}{N_{cl.}} #frac{dN}{d#lambda_{0}^{2}}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/M02_afterQA.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecClusterM02,"","#lambda_{0}^{2}","#frac{1}{N_{cl.}} #frac{dN}{d#lambda_{0}^{2}}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_M02_afterQA.%s", outputDir.Data(), suffix.Data()));
     DeleteVecTH1D(vecClusterM02);
     //---------------------------------------------------------------------------------------------------------------
@@ -2604,13 +2608,13 @@ void ClusterQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                 vecClusterM20,"","#lambda_{1}^{2}","#frac{1}{N_{cl.}} #frac{dN}{d#lambda_{1}^{2}}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/M20_afterQA.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecClusterM20,"","#lambda_{1}^{2}","#frac{1}{N_{cl.}} #frac{dN}{d#lambda_{1}^{2}}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_M20_afterQA.%s", outputDir.Data(), suffix.Data()));
     DeleteVecTH1D(vecClusterM20);
     //---------------------------------------------------------------------------------------------------------------
@@ -2623,13 +2627,13 @@ void ClusterQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                 vecClusterDispersion,"","Dispersion","#frac{1}{N_{cl}} #frac{dN}{dDisp}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Dispersion_afterQA.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecClusterDispersion,"","Dispersion","#frac{1}{N_{cl}} #frac{dN}{dDisp}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Dispersion_afterQA.%s", outputDir.Data(), suffix.Data()));
     DeleteVecTH1D(vecClusterDispersion);
 
@@ -2646,13 +2650,13 @@ void ClusterQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                 vecClusterNCells,"","N_{Cells} per Cluster","#frac{1}{N_{cl}} #frac{dN}{dN_{Cells}}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/NCells_afterQA.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecClusterNCells,"","N_{Cells} per Cluster","#frac{1}{N_{cl}} #frac{dN}{dN_{Cells}}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_NCells_afterQA.%s", outputDir.Data(), suffix.Data()));
     DeleteVecTH1D(vecClusterNCells);
 
@@ -2670,13 +2674,13 @@ void ClusterQA(
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                 vecClusterNLM,"","Number of Local Maxima","#frac{1}{N_{cl}} #frac{dN}{dNLM}",1,1.1,
                                 labelData, colorCompare, kTRUE, 2, 5, kFALSE,
-                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/NLM_Cluster_afterQA.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecClusterNLM,"","Number of Local Maxima","#frac{1}{N_{cl}} #frac{dN}{dNLM}",1,1.1,
                                     labelData, colorCompare, kTRUE, 2, 5, kFALSE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_NLM_Cluster_afterQA.%s", outputDir.Data(), suffix.Data()));
     DeleteVecTH1D(vecClusterNLM);
 
@@ -2699,13 +2703,13 @@ void ClusterQA(
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecClusterR,"","R_{Cluster} (cm)","#frac{1}{N} #frac{dN}{dR}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/R_Cluster_afterQA.%s", outputDir.Data(), suffix.Data()), kFALSE , kTRUE);
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                         vecClusterR,"","R_{Cluster} (cm)","#frac{1}{N} #frac{dN}{dR}",1,1.1,
                                         labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_R_Cluster_afterQA.%s", outputDir.Data(), suffix.Data()));
         DeleteVecTH1D(vecClusterR);
 
@@ -2725,23 +2729,23 @@ void ClusterQA(
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecMatchingDeltaEtaPhi_matched[0],"","#Delta#eta_{Cluster - matched Tracks}","#frac{1}{N} #frac{dN}{d#Delta#eta}",1,1.1,
                                     labelData, colorCompare, kTRUE, 2, 2, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/DeltaEta.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecMatchingDeltaEtaPhi_matched[1],"","#Delta#phi_{Cluster - matched Tracks}","#frac{1}{N} #frac{dN}{d#Delta#phi}",1,1.1,
                                     labelData, colorCompare, kTRUE, 2, 2, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/DeltaPhi.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                         vecMatchingDeltaEtaPhi_matched[0],"","#Delta#eta_{Cluster - matched Tracks}","#frac{1}{N} #frac{dN}{d#Delta#eta}",1,1.1,
                                         labelData, colorCompare, kTRUE, 2, 2, kTRUE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_DeltaEta.%s", outputDir.Data(), suffix.Data()));
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                         vecMatchingDeltaEtaPhi_matched[1],"","#Delta#phi_{Cluster - matched Tracks}","#frac{1}{N} #frac{dN}{d#Delta#phi}",1,1.1,
                                         labelData, colorCompare, kTRUE, 2, 2, kTRUE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_DeltaPhi.%s", outputDir.Data(), suffix.Data()));
         DeleteVecTH1D(vecMatchingDeltaEtaPhi_matched[0]);
         DeleteVecTH1D(vecMatchingDeltaEtaPhi_matched[1]);
@@ -2758,23 +2762,23 @@ void ClusterQA(
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecMatchingDeltaEtaPhi_allTracks[0],"","#Delta#eta_{Cluster - all Tracks}","#frac{1}{N} #frac{dN}{d#Delta#eta}",1,1.1,
                                     labelData, colorCompare, kTRUE, 2, 4, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/DeltaEta_allTracks.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecMatchingDeltaEtaPhi_allTracks[1],"","#Delta#phi_{Cluster - all Tracks}","#frac{1}{N} #frac{dN}{d#Delta#phi}",1,1.1,
                                     labelData, colorCompare, kTRUE, 2, 4, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/DeltaPhi_allTracks.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                         vecMatchingDeltaEtaPhi_allTracks[0],"","#Delta#eta_{Cluster - all Tracks}","#frac{1}{N} #frac{dN}{d#Delta#eta}",1,1.1,
                                         labelData, colorCompare, kTRUE, 2, 4, kTRUE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_DeltaEta_allTracks.%s", outputDir.Data(), suffix.Data()));
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                         vecMatchingDeltaEtaPhi_allTracks[1],"","#Delta#phi_{Cluster - all Tracks}","#frac{1}{N} #frac{dN}{d#Delta#phi}",1,1.1,
                                         labelData, colorCompare, kTRUE, 2, 4, kTRUE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_DeltaPhi_allTracks.%s", outputDir.Data(), suffix.Data()));
         DeleteVecTH1D(vecMatchingDeltaEtaPhi_allTracks[0]);
         DeleteVecTH1D(vecMatchingDeltaEtaPhi_allTracks[1]);
@@ -2795,12 +2799,12 @@ void ClusterQA(
                 DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                             vecMatchingDeltaEtaPhiTracksAll[0][iCharge],"",Form("#Delta#eta_{Cluster - %s. Tracks}", charge[iCharge].Data()),"#frac{1}{N} #frac{dN}{d#Delta#eta}",1,1.1,
                                             labelData, colorCompare, kTRUE, 2, 4, kTRUE,
-                                            0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                            0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
                 SaveCanvas(canvas, Form("%s/Comparison/DeltaEta_%s.%s", outputDir.Data(), charge[iCharge].Data(), suffix.Data()), kFALSE, kTRUE);
                 DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                             vecMatchingDeltaEtaPhiTracksAll[1][iCharge],"",Form("#Delta#phi_{Cluster - %s. Tracks}", charge[iCharge].Data()),"#frac{1}{N} #frac{dN}{d#Delta#phi}",1,1.1,
                                             labelData, colorCompare, kTRUE, 2, 4, kTRUE,
-                                            0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                            0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
                 SaveCanvas(canvas, Form("%s/Comparison/DeltaPhi_%s.%s", outputDir.Data(), charge[iCharge].Data(), suffix.Data()), kFALSE, kTRUE);
                 DeleteVecTH1D(vecMatchingDeltaEtaPhiTracksAll[0][iCharge]);
                 DeleteVecTH1D(vecMatchingDeltaEtaPhiTracksAll[1][iCharge]);
@@ -2818,13 +2822,13 @@ void ClusterQA(
                 DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                             vecMatchingDeltaEtaPhiTracksMatched[0][iCharge],"",Form("#Delta#eta_{Cluster - matched %s. Tracks}", charge[iCharge].Data()),"#frac{1}{N} #frac{dN}{d#Delta#eta}",1,1.1,
                                             labelData, colorCompare, kTRUE, 2, 4, kTRUE,
-                                            0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                            0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
                 SaveCanvas(canvas, Form("%s/Comparison/DeltaEta_%s_matched.%s", outputDir.Data(), charge[iCharge].Data(), suffix.Data()), kFALSE, kTRUE);
 
                 DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                             vecMatchingDeltaEtaPhiTracksMatched[1][iCharge],"",Form("#Delta#phi_{Cluster - matched %s. Tracks}", charge[iCharge].Data()),"#frac{1}{N} #frac{dN}{d#Delta#phi}",1,1.1,
                                             labelData, colorCompare, kTRUE, 2, 4, kTRUE,
-                                            0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                            0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
                 SaveCanvas(canvas, Form("%s/Comparison/DeltaPhi_%s_matched.%s", outputDir.Data(), charge[iCharge].Data(), suffix.Data()), kFALSE, kTRUE);
                 DeleteVecTH1D(vecMatchingDeltaEtaPhiTracksMatched[0][iCharge]);
                 DeleteVecTH1D(vecMatchingDeltaEtaPhiTracksMatched[1][iCharge]);
@@ -2858,12 +2862,12 @@ void ClusterQA(
                     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                                 tempProjections[0],"",Form("#Delta#eta%s",xTitle.Data()),"#frac{1}{N} #frac{dN}{d#Delta#eta}",1,1.1,
                                                 labelData, colorCompare, kTRUE, 2, 4, kTRUE,
-                                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
                     SaveCanvas(canvas, Form("%s/Comparison/DeltaEta_%s_%i.%s", outputDir.Data(), charge[iCharge].Data(), iPt, suffix.Data()), kFALSE, kTRUE);
                     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                                 tempProjections[1],"",Form("#Delta#phi%s",xTitle.Data()),"#frac{1}{N} #frac{dN}{d#Delta#phi}",1,1.1,
                                                 labelData, colorCompare, kTRUE, 2, 4, kTRUE,
-                                                0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
                     SaveCanvas(canvas, Form("%s/Comparison/DeltaPhi_%s_%i.%s", outputDir.Data(), charge[iCharge].Data(), iPt, suffix.Data()), kFALSE, kTRUE);
                     DeleteVecTH1D(tempProjections[0]);
                     DeleteVecTH1D(tempProjections[1]);
@@ -2951,23 +2955,23 @@ void ClusterQA(
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecConvPhotonEtaPhi_Pi0[1],"","#eta_{#gamma_{conv} under #pi^{0}-peak}","#frac{1}{N} #frac{dN}{d#eta}",1,1.1,
                                     labelData, colorCompare, kTRUE, 2, 8, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/ConvPhotonPi0_Eta.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecConvPhotonEtaPhi_Pi0[0],"","#phi_{#gamma_{conv} under #pi^{0}-peak}","#frac{1}{N} #frac{dN}{d#phi}",1,1.1,
                                     labelData, colorCompare, kTRUE, 2, 16, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/ConvPhotonPi0_Phi.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                         vecConvPhotonEtaPhi_Pi0[1],"","#eta_{#gamma_{conv} under #pi^{0}-peak}","#frac{1}{N} #frac{dN}{d#eta}",1,1.1,
                                         labelData, colorCompare, kTRUE, 2, 8, kTRUE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ConvPhotonPi0_Eta.%s", outputDir.Data(), suffix.Data()));
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                         vecConvPhotonEtaPhi_Pi0[0],"","#phi_{#gamma_{conv} under #pi^{0}-peak}","#frac{1}{N} #frac{dN}{d#phi}",1,1.1,
                                         labelData, colorCompare, kTRUE, 2, 16, kTRUE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ConvPhotonPi0_Phi.%s", outputDir.Data(), suffix.Data()));
         DeleteVecTH1D(vecConvPhotonEtaPhi_Pi0[0]);
         DeleteVecTH1D(vecConvPhotonEtaPhi_Pi0[1]);
@@ -2985,23 +2989,23 @@ void ClusterQA(
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecConvPhotonEtaPhi_Eta[1],"","#eta_{#gamma_{conv} under #eta-peak}","#frac{1}{N} #frac{dN}{d#eta}",1,1.1,
                                     labelData, colorCompare, kTRUE, 2, 4, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/ConvPhotonEta_Eta.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecConvPhotonEtaPhi_Eta[0],"","#phi_{#gamma_{conv} under #eta-peak}","#frac{1}{N} #frac{dN}{d#phi}",1,1.1,
                                     labelData, colorCompare, kTRUE, 2, 8, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/ConvPhotonEta_Phi.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                         vecConvPhotonEtaPhi_Eta[1],"","#eta_{#gamma_{conv} under #eta-peak}","#frac{1}{N} #frac{dN}{d#eta}",1,1.1,
                                         labelData, colorCompare, kTRUE, 2, 4, kTRUE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ConvPhotonEta_Eta.%s", outputDir.Data(), suffix.Data()));
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                         vecConvPhotonEtaPhi_Eta[0],"","#phi_{#gamma_{conv} under #eta-peak}","#frac{1}{N} #frac{dN}{d#phi}",1,1.1,
                                         labelData, colorCompare, kTRUE, 2, 8, kTRUE,
-                                        0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ConvPhotonEta_Phi.%s", outputDir.Data(), suffix.Data()));
         DeleteVecTH1D(vecConvPhotonEtaPhi_Eta[0]);
         DeleteVecTH1D(vecConvPhotonEtaPhi_Eta[1]);
