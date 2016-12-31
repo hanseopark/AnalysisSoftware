@@ -3739,13 +3739,18 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     TFile *fileFitsBinShift                     = new TFile(nameFileFitsShift);
                     TF1* fitBinShiftPi0                         = (TF1*)fileFitsBinShift->Get("TsallisFitPi0");
                     if(!fitBinShiftPi0 || optionEnergy.CompareTo("8TeV")==0){
-                      fitBinShiftPi0 = (TF1*)fileFitsBinShift->Get("Pi08TeV/TsallisFitPi0");
-                      fitBinShiftPi0TCM = (TF1*)fileFitsBinShift->Get("Pi08TeV/TwoComponentModelFitPi0");
+                      fitBinShiftPi0                            = (TF1*)fileFitsBinShift->Get("Pi08TeV/TsallisFitPi0");
+                      fitBinShiftPi0TCM                         = (TF1*)fileFitsBinShift->Get("Pi08TeV/TwoComponentModelFitPi0");
                     }
                     TF1* fitBinShiftEta                         = (TF1*)fileFitsBinShift->Get("TsallisFitEta");
                     if(!fitBinShiftEta || optionEnergy.CompareTo("8TeV")==0){
-                      fitBinShiftEta = (TF1*)fileFitsBinShift->Get("Eta8TeV/TsallisFitEta");
-                      fitBinShiftEtaTCM = (TF1*)fileFitsBinShift->Get("Eta8TeV/TwoComponentModelFitEta");
+                      fitBinShiftEta                            = (TF1*)fileFitsBinShift->Get("Eta8TeV/TsallisFitEta");
+                      fitBinShiftEtaTCM                         = (TF1*)fileFitsBinShift->Get("Eta8TeV/TwoComponentModelFitEta");
+                    }
+                    if( optionEnergy.CompareTo("pPb_5.023TeV")==0){
+                       fitBinShiftPi0                           = (TF1*)fileFitsBinShift->Get("TwoComponentModelFitPi0");
+                       fitBinShiftPi0TCM                        = (TF1*)fileFitsBinShift->Get("TwoComponentModelFitPi0");
+                       fitBinShiftEta                           = (TF1*)fileFitsBinShift->Get("TwoComponentModelFitEta");
                     }
                     cout << fitBinShiftPi0 << " - " << fitBinShiftEta << endl;
                     histoCorrectedYieldPi0EtaBin[i]             = (TH1D*)fileCorrectedPi0EtaBin[i]->Get(nameCorrectedYield.Data());
@@ -6715,7 +6720,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 histoEtaToPi0WeightedAverageStat->SetBinError(i+firstBinEtaToPi0, graphEtaToPi0WeightedAverageStat->GetEYlow()[i]);
             }
 
-            if(optionEnergy.CompareTo("8TeV") == 0){
+            if(optionEnergy.CompareTo("8TeV") == 0 ){
               histoEtaToPi0ExtendedUsingFit = new TH1D("EtaToPi0_extendedFit","EtaToPi0_extendedFit",maxNAllowedEta,binningEta);
               Int_t i = 0;
               for (; i < graphEtaToPi0WeightedAverageStat->GetN(); i++){

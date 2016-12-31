@@ -923,7 +923,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
             graphNLOCalcEtaMuTwo->RemovePoint(graphNLOCalcEtaMuTwo->GetN()-1);
             
     // *******************************************************************************************************
-    // ************************** Loading theory calculations ************************************************
+    // ************************** Loading eta/pi0 compilation ************************************************
     // *******************************************************************************************************        
     TFile* fileEtaToPi0Compilation                          = new TFile(fileNameEtaToPi0WorldData.Data());
         TGraphErrors* graphPHENIXEtaToPi0200GeV             = (TGraphErrors*)fileEtaToPi0Compilation->Get("Phenix200GeV");
@@ -3036,7 +3036,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         legendRelStatErrEtaToPi0->Draw();
 
         labelRelStatErrEnergy->Draw();
-        TLatex *labelRelStatErrEtaToPi0      = new TLatex(0.75,0.85,"#eta #rightarrow #gamma#gamma");
+        TLatex *labelRelStatErrEtaToPi0      = new TLatex(0.75,0.85,"#eta/#pi^{0}");
         SetStyleTLatex( labelRelStatErrEtaToPi0, 0.85*textSizeLabelsPixel,4, 1, 43);
         labelRelStatErrEtaToPi0->Draw();
         
