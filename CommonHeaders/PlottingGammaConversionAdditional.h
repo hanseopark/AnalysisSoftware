@@ -3259,11 +3259,12 @@ void PutProcessLabelAndEnergyOnPlot( Double_t startTextX,
                                     TString fEnergy, 
                                     TString fDecayChannel,
                                     TString fDetectionChannel, 
-                                    Style_t textFont = 62,
-                                    Size_t textHeightRel = 0.03,
-                                    TString fPeriodName = "",
-                                    Color_t textColor = 1,
-                                    Float_t textHeightFac = 1.25
+                                    Style_t textFont            = 62,
+                                    Size_t textHeightRel        = 0.03,
+                                    TString fPeriodName         = "",
+                                    Color_t textColor           = 1,
+                                    Float_t textHeightFac       = 1.25,
+                                    Int_t textAlign             = 11
                                 ){
     
     Double_t differenceText     = textHeight*textHeightFac;
@@ -3286,18 +3287,21 @@ void PutProcessLabelAndEnergyOnPlot( Double_t startTextX,
     energy->SetTextColor(textColor);
     energy->SetTextFont(textFont);
     energy->SetTextSize(textHeight);
+    energy->SetTextAlign(textAlign);
     energy->Draw();
 
     process->SetNDC(); 
     process->SetTextColor(textColor);
     process->SetTextFont(textFont);
     process->SetTextSize(textHeight);
+    process->SetTextAlign(textAlign);
     process->Draw();
 
     detprocess->SetNDC(); 
     detprocess->SetTextColor(textColor);
     detprocess->SetTextFont(textFont);
     detprocess->SetTextSize(textHeight);
+    detprocess->SetTextAlign(textAlign);
     detprocess->Draw();
     
     if (fPeriodName.CompareTo("") != 0 && fPeriodName.CompareTo("No") != 0 ){
@@ -3306,6 +3310,7 @@ void PutProcessLabelAndEnergyOnPlot( Double_t startTextX,
         period->SetTextColor(textColor);
         period->SetTextFont(textFont);
         period->SetTextSize(textHeight);
+        period->SetTextAlign(textAlign);
         period->Draw();    
     }
 }
@@ -3362,34 +3367,7 @@ Color_t GetColorDefaultColor( TString energy,
                             TString generator, 
                             TString centrality, 
                             Bool_t kBox = kFALSE){
-    if (!energy.CompareTo("5TeV")){
-      if (!generator.CompareTo("LHC15n")){
-            return kBlack;
-	  } else if (!generator.CompareTo("LHC16h8a")) {
-            return kBlue;
-	  } else if (!generator.CompareTo("LHC16h8b")) {
-            return kRed;
-	  } else {
-            return kOrange+1;
-        }
-    }
-    if (!energy.CompareTo("13TeV")||!energy.CompareTo("13TeVLowB")){
-        if (!generator.CompareTo("LHC15f") || !generator.CompareTo("LHC15f_ESD") || !generator.CompareTo("LHC15g") || !generator.CompareTo("LHC15h") || !generator.CompareTo("LHC15i") || !generator.CompareTo("LHC15j") || !generator.CompareTo("LHC15k") || !generator.CompareTo("LHC15l")){
-            return kBlack;
-        } else if (!generator.CompareTo("LHC15f_AOD")) {
-            return kOrange+7;
-        } else if (!generator.CompareTo("LHC15g3a3") || !generator.CompareTo("LHC15g3a3_ESD") ) {
-            return kBlue;
-        } else if (!generator.CompareTo("LHC15g3a3_AOD")) {
-            return kMagenta+2;
-        } else if (!generator.CompareTo("LHC15g3c3") || !generator.CompareTo("LHC15g3c3_ESD")) {
-            return kRed;
-        } else if (!generator.CompareTo("LHC15g3c3_AOD")) {
-            return kGreen+2;
-        } else {
-            return kRed;
-        }
-    }
+    
     if (!energy.CompareTo("900GeV")){
         if (!kBox){
             if (!generator.CompareTo("")){
@@ -3405,8 +3383,9 @@ Color_t GetColorDefaultColor( TString energy,
             }
         } else {
             return kRed -5;
-        }	
+        }
     }
+    
     if (!energy.CompareTo("2.76TeV")){
         if (!kBox){
             if (!generator.CompareTo("")||!generator.CompareTo("LHC13g")||!generator.CompareTo("LHC13g-kEMC7")||
@@ -3428,8 +3407,21 @@ Color_t GetColorDefaultColor( TString energy,
             }
         } else {
             return kMagenta-5;
-        }	
+        }
     }
+
+    if (!energy.CompareTo("5TeV") || !energy.CompareTo("5.023TeV") || !energy.CompareTo("5.02TeV")){
+        if (!generator.CompareTo("")){
+            return kOrange+1;   
+        } else if (!generator.CompareTo("LHC16h8a")) {
+            return kBlue;
+        } else if (!generator.CompareTo("LHC16h8b")) {
+            return kRed;
+        } else {
+            return kOrange-9;
+        }
+    }
+
     if (!energy.CompareTo("7TeV")){
         if (!kBox){
             if (!generator.CompareTo("")){
@@ -3469,7 +3461,7 @@ Color_t GetColorDefaultColor( TString energy,
             }
         } else {
             return kBlue-5;
-        }	
+        }
     }
     if (!energy.CompareTo("8TeV")){
         if (!kBox){
@@ -3512,9 +3504,27 @@ Color_t GetColorDefaultColor( TString energy,
             }
         } else {
             return kGreen-5;
-        }	
+        }
     }
 
+    if (!energy.CompareTo("13TeV")||!energy.CompareTo("13TeVLowB")){
+        if (!generator.CompareTo("LHC15f") || !generator.CompareTo("LHC15f_ESD") || !generator.CompareTo("LHC15g") || !generator.CompareTo("LHC15h") || !generator.CompareTo("LHC15i") || !generator.CompareTo("LHC15j") || !generator.CompareTo("LHC15k") || !generator.CompareTo("LHC15l")){
+            return kBlack;
+        } else if (!generator.CompareTo("LHC15f_AOD")) {
+            return kOrange+7;
+        } else if (!generator.CompareTo("LHC15g3a3") || !generator.CompareTo("LHC15g3a3_ESD") ) {
+            return kBlue;
+        } else if (!generator.CompareTo("LHC15g3a3_AOD")) {
+            return kMagenta+2;
+        } else if (!generator.CompareTo("LHC15g3c3") || !generator.CompareTo("LHC15g3c3_ESD")) {
+            return kRed;
+        } else if (!generator.CompareTo("LHC15g3c3_AOD")) {
+            return kGreen+2;
+        } else {
+            return kRed;
+        }
+    }
+    
     if (!energy.CompareTo("pPb_5.023TeV")){
         if (!kBox){
             if (!generator.CompareTo("")){
@@ -3546,9 +3556,8 @@ Color_t GetColorDefaultColor( TString energy,
             }
         } else {
             return kViolet+6;
-        }	
+        }
     }
-
     
     if (!energy.CompareTo("PbPb_2.76TeV")){
         if (!kBox){
@@ -3609,33 +3618,32 @@ Color_t GetColorDefaultColor( TString energy,
                     return kGreen-5;
                 } else if (!centrality.CompareTo("40-80%")){
                     return kCyan-5;	
-                }	
+                }
             }
-        }	
+        }
     }
     if (!energy.CompareTo("PbPb_5.02TeV")){
-      if (!generator.CompareTo("LHC15o")){
-	if (!centrality.CompareTo("0-10%")){
-	  return kRed+1;
-	} else if (!centrality.CompareTo("10-20%")){
-	  return kBlue+1;
-	} else if (!centrality.CompareTo("20-50%")){
-	  return kOrange+7;
-	} else if (!centrality.CompareTo("50-90%")){
-	  return kGreen+2;
-	} else return kGray+2;
-      }
-      else if (!generator.CompareTo("LHC15k1a1") || !generator.CompareTo("LHC15k1a2") || !generator.CompareTo("LHC15k1a3") || !generator.CompareTo("LHC16h4")){
-	if (!centrality.CompareTo("0-10%")){
-	  return kBlue-4;
-	} else if (!centrality.CompareTo("10-20%")){
-	  return kRed-7;
-	} else if (!centrality.CompareTo("20-50%")){
-	  return kGreen+1;
-	} else if (!centrality.CompareTo("50-90%")){
-	  return kOrange+1;
-	} else return kBlue+1;
-      }
+        if (!generator.CompareTo("LHC15o")){
+            if (!centrality.CompareTo("0-10%")){
+                return kRed+1;
+            } else if (!centrality.CompareTo("10-20%")){
+                return kBlue+1;
+            } else if (!centrality.CompareTo("20-50%")){
+                return kOrange+7;
+            } else if (!centrality.CompareTo("50-90%")){
+                return kGreen+2;
+            } else return kGray+2;
+        } else if (!generator.CompareTo("LHC15k1a1") || !generator.CompareTo("LHC15k1a2") || !generator.CompareTo("LHC15k1a3") || !generator.CompareTo("LHC16h4")){
+            if (!centrality.CompareTo("0-10%")){
+                return kBlue-4;
+            } else if (!centrality.CompareTo("10-20%")){
+                return kRed-7;
+            } else if (!centrality.CompareTo("20-50%")){
+                return kGreen+1;
+            } else if (!centrality.CompareTo("50-90%")){
+                return kOrange+1;
+            } else return kBlue+1;
+        }
     }
     cout << "GetColorDefaultColor(): no valid input parameters given..." << endl;
     return kBlack;
@@ -3657,38 +3665,31 @@ Style_t GetDefaultMarkerStyle( TString energy,
         } else if(!generator.CompareTo("LHC13g")||!generator.CompareTo("LHC13g-kEMC7")|
                 !generator.CompareTo("LHC13g-kEMCEG1")||!generator.CompareTo("LHC13g-kEMCEG2") || !generator.CompareTo("LHC13g_pass1")){
             return 29;
-        }else if(!generator.CompareTo("LHC12f1a")||!generator.CompareTo("LHC12f1b")||!generator.CompareTo("LHC12i3")){
+        } else if(!generator.CompareTo("LHC12f1a")||!generator.CompareTo("LHC12f1b")||!generator.CompareTo("LHC12i3")){
             return 30;
-        }
-        else {
+        } else {
             return 30;
         }
     }
-    if (!energy.CompareTo("5TeV")){
-        if (!generator.CompareTo("LHC15n")){
+    if (!energy.CompareTo("5TeV") || !energy.CompareTo("5.023TeV") || !energy.CompareTo("5.02TeV")){
+        if (!generator.CompareTo("")){
             return 20;
-        }
-        else if(generator.Contains("LHC16h8a")){
+        } else if(generator.Contains("LHC16h8a")){
             return 30;
-        }
-        else if(generator.Contains("LHC16h8b")){
+        } else if(generator.Contains("LHC16h8b")){
             return 30;
-        }
-        else {
+        } else {
             return 24;
         } 
     }
     if (!energy.CompareTo("7TeV")){
         if (!generator.CompareTo("")){
             return 20;
-        }
-        else if(generator.Contains("LHC10") && generator.Contains("_pass4")){
+        } else if(generator.Contains("LHC10") && generator.Contains("_pass4")){
             return 29;
-        }
-        else if(generator.Contains("LHC14j4")){
+        } else if(generator.Contains("LHC14j4")){
             return 30;
-        }
-        else {
+        } else {
             return 24;
         } 
     }
@@ -3702,19 +3703,35 @@ Style_t GetDefaultMarkerStyle( TString energy,
                   || (generator.BeginsWith("LHC12")&&generator.EndsWith("-kEMC8EGA"))
                   || (generator.BeginsWith("LHC12")&&generator.EndsWith("-kEMCEJE"))){
             return 29;
-        }
-        else if(!generator.CompareTo("LHC14e2a") || generator.Contains("LHC15h1")){
+        } else if(!generator.CompareTo("LHC14e2a") || generator.Contains("LHC15h1")){
             return 30;
-        }
-        else if(!generator.CompareTo("LHC14e2b")){
+        } else if(!generator.CompareTo("LHC14e2b")){
             return 27;
-        }
-        else if(!generator.CompareTo("LHC14e2c") || generator.Contains("LHC15h2")){
+        } else if(!generator.CompareTo("LHC14e2c") || generator.Contains("LHC15h2")){
             return 28;
-        }
-        else {
+        } else {
             return 27;
         } 
+    }
+
+    if (!energy.CompareTo("13TeV")){
+        if (!generator.CompareTo("")) {
+            return 7;
+        } else if (!generator.CompareTo("LHC15f") || !generator.CompareTo("LHC15f_ESD")) {
+            return 24;
+        } else if (!generator.CompareTo("LHC15f_AOD")) {
+            return 5;
+        } else if (!generator.CompareTo("LHC15g3a3") || !generator.CompareTo("LHC15g3a3_ESD")) {
+            return 28;
+        } else if (!generator.CompareTo("LHC15g3a3_AOD")) {
+            return 25;
+        } else if (!generator.CompareTo("LHC15g3c3") || !generator.CompareTo("LHC15g3c3_ESD")) {
+            return 31;
+        } else if (!generator.CompareTo("LHC15g3c3_AOD")) {
+            return 27;
+        } else {
+            return 2;
+        }
     }
 
     if (!energy.CompareTo("pPb_5.023TeV")){
@@ -3738,27 +3755,7 @@ Style_t GetDefaultMarkerStyle( TString energy,
             return 27;
         } 
     }
-    
-    if (!energy.CompareTo("13TeV")){
-        if (!generator.CompareTo("")) {
-            return 7;
-        } else if (!generator.CompareTo("LHC15f") || !generator.CompareTo("LHC15f_ESD")) {
-            return 24;
-        } else if (!generator.CompareTo("LHC15f_AOD")) {
-            return 5;
-        } else if (!generator.CompareTo("LHC15g3a3") || !generator.CompareTo("LHC15g3a3_ESD")) {
-            return 28;
-        } else if (!generator.CompareTo("LHC15g3a3_AOD")) {
-            return 25;
-        } else if (!generator.CompareTo("LHC15g3c3") || !generator.CompareTo("LHC15g3c3_ESD")) {
-            return 31;
-        } else if (!generator.CompareTo("LHC15g3c3_AOD")) {
-            return 27;
-        } else {
-            return 2;
-        }
-    }
-    
+        
     if (!energy.CompareTo("PbPb_2.76TeV")){
         if (!generator.CompareTo("")){
             if (!centrality.CompareTo("0-10%")){
@@ -3805,37 +3802,38 @@ Style_t GetDefaultMarkerStyle( TString energy,
                 return 28;  
             }
         }    
-	}
+    }
     if (!energy.CompareTo("PbPb_5.02TeV")){
         if (!generator.CompareTo("LHC15o")){
-	  if (!centrality.CompareTo("0-10%")){
-	    return 24;
-	  } else if (!centrality.CompareTo("10-20%")){
-	    return 30;
-	  } else if (!centrality.CompareTo("20-50%")){
-	    return 27;
-	  } else if (!centrality.CompareTo("50-90%")){
-	    return 28;
-	  } else return 25;
+            if (!centrality.CompareTo("0-10%")){
+                return 24;
+            } else if (!centrality.CompareTo("10-20%")){
+                return 30;
+            } else if (!centrality.CompareTo("20-50%")){
+                return 27;
+            } else if (!centrality.CompareTo("50-90%")){
+                return 28;
+            } else return 25;
         } else if (!generator.CompareTo("LHC15k1a1") || !generator.CompareTo("LHC15k1a2") || !generator.CompareTo("LHC15k1a3") || !generator.CompareTo("LHC16h4")){
-	  if (!centrality.CompareTo("0-10%")){
-	    return 25;
-	  } else if (!centrality.CompareTo("10-20%")){
-	    return 24;
-	  } else if (!centrality.CompareTo("20-50%")){
-	    return 30;
-	  } else if (!centrality.CompareTo("50-90%")){
-	    return 27;
-	  } else return 28;
-	}
+            if (!centrality.CompareTo("0-10%")){
+                return 25;
+            } else if (!centrality.CompareTo("10-20%")){
+                return 24;
+            } else if (!centrality.CompareTo("20-50%")){
+                return 30;
+            } else if (!centrality.CompareTo("50-90%")){
+                return 27;
+            } else return 28;
+        }
     }
-	cout << "GetDefaultMarkerStyle(): no valid input parameters given..." << endl;
+    cout << "GetDefaultMarkerStyle(): no valid input parameters given..." << endl;
     return 0;
 }
 
 Size_t GetDefaultMarkerSize( TString energy, 
                             TString generator, 
                             TString centrality){
+    
     if (!energy.CompareTo("900GeV")){
         if (!generator.CompareTo("")){
             return 1.8;
@@ -3843,6 +3841,7 @@ Size_t GetDefaultMarkerSize( TString energy,
             return 1.8;
         }
     }
+    
     if (!energy.CompareTo("2.76TeV")){
         if (!generator.CompareTo("")){
             return 2.2;
@@ -3850,13 +3849,15 @@ Size_t GetDefaultMarkerSize( TString energy,
             return 2.2;
         }
     }
-    if (!energy.CompareTo("5TeV")){
-        if (!generator.CompareTo("LHC15n")){
+    
+    if (!energy.CompareTo("5TeV") || !energy.CompareTo("5.023TeV") || !energy.CompareTo("5.02TeV")){
+        if (!generator.CompareTo("")){
             return 2;
         } else {
             return 2.2;
         }
     }
+    
     if (!energy.CompareTo("7TeV")){
         if (!generator.CompareTo("")){
             return 2.2;
@@ -3864,6 +3865,7 @@ Size_t GetDefaultMarkerSize( TString energy,
             return 2.2;
         } 
     }
+    
     if (!energy.CompareTo("8TeV")){
         if (!generator.CompareTo("")){
             return 2.2;
@@ -3871,9 +3873,11 @@ Size_t GetDefaultMarkerSize( TString energy,
             return 2.2;
         } 
     }
+    
     if (!energy.CompareTo("13TeV")){
             return 2.0;
     }
+    
     if (!energy.CompareTo("pPb_5.023TeV")){
         if (!generator.CompareTo("")){
             return 2.2;

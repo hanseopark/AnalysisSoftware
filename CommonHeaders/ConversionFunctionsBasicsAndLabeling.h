@@ -315,6 +315,8 @@ TString ReturnTextReconstructionProcess(Int_t mode){
             return "mEMC";
         case 11:
             return "mPHOS";
+        case 20:
+            return "Comb";
         default:
             return "not known";
     }

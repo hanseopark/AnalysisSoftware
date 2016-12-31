@@ -620,6 +620,19 @@ TF1* FitObject( TString type,
             else FitFunction->SetParameters(Parameter[0],Parameter[1],Parameter[2]);
             FitFunction->SetParNames("A","p_{0}","n");
             Obj->Fit(FitFunction,FitOptions,"",xmin,xmax);
+        } else if(type.CompareTo("tmpt") ==0|| type.CompareTo("TMPT")==0){
+            cout <<Form("fitting %s with Levy",FunctionName.Data()) << endl;
+            TF1 *Levy_Dummy = new TF1("Tsallis_Dummy",Form("[0] / ( 2 * TMath::Pi())*([1]-1.)*([1]-2.) / ([1]*[2]*([1]*[2]+%.10f*([1]-2.)))  * x* pow(1.+(sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1])",mass,mass,mass,mass));
+            FitFunction = (TF1*)Levy_Dummy->Clone(FunctionName);
+            FitFunction->SetRange(xmin, xmax);
+            if(Parameter == NULL)FitFunction->SetParameters(2.,5.,0.18); // standard parameter optimize if necessary
+            else FitFunction->SetParameters(Parameter[0],Parameter[1],Parameter[2]);
+            if (fixingPar.CompareTo("fixn") == 0){
+                cout << "entered fixing" << endl;
+                FitFunction->FixParameter(1, Parameter[1]);
+            }
+            FitFunction->SetParNames("dN/dy","n","T_{Levy} (GeV/c)");
+            Obj->Fit(FitFunction,FitOptions,"",xmin,xmax);
         } else if(type.BeginsWith("tcmmod") || type.BeginsWith("TCMMOD")){ // Two component model fit [A. Bylinkin and A. Rostovtsev, Phys. Atom. Nucl 75 (2012) 999-1005]
             cout <<Form("fitting %s with orginal two component model by Bylinkin",FunctionName.Data()) << endl;
             TF1 *TwoCompModel_Dummy = new TF1("twoCompModel_Dummy",Form("[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1]) + [2]/(TMath::Power(1+x*x/([3]*[3]*[4]),[4]) )",mass,mass,mass));

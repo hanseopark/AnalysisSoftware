@@ -2965,16 +2965,11 @@ Int_t GetBinning(   Double_t*  binning,
                 for(Int_t i = 0; i < maxNBins+1; i++){
                     binning[i] = fBinsPi0pPbPt[i];
                 }
-            } else if (mode == 2 || mode == 4) {
+            } else if (mode == 2 || mode == 4 || mode == 3 || mode == 5 ) {
                maxNBins = 34;
                 for(Int_t i = 0; i < maxNBins+1; i++){
                     binning[i] = fBinsPi0pPbEMCALPt[i];
                 }                
-            } else if (mode == 2 || mode == 4) {
-               maxNBins = 34;
-                for(Int_t i = 0; i < maxNBins+1; i++){
-                    binning[i] = fBinsPi0pPbEMCALPt[i];
-                }
             } else if (mode == 20){ //combined
                 maxNBins = 32;
                 for(Int_t i = 0; i < maxNBins+1; i++){

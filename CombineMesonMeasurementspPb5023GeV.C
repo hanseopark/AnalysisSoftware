@@ -456,13 +456,13 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
 											       pTLimits, Ntotal,
 											       offSets, offSetsSys,
 											       graphCombPi0InvCrossSectionStatpPb5023GeV, graphCombPi0InvCrossSectionSyspPb5023GeV,
-											       fileNameOutputWeightingPi0,"pPb_5.023GeV","Pi0",kFALSE,NULL,corrFactorsPCMDlitzFile.Data());
+											       fileNameOutputWeightingPi0,"pPb_5.023TeV","Pi0",kFALSE,NULL,corrFactorsPCMDlitzFile.Data());
 
   else graphCombPi0InvCrossSectionTotpPb5023GeV= CombinePtPointsSpectraFullCorrMat(    statErrorCollection,    sysErrorCollection,     
 										       pTLimitsLow, NtotalLow,
 										       offSetsLow, offSetsSysLow,
 										       graphCombPi0InvCrossSectionStatpPb5023GeV, graphCombPi0InvCrossSectionSyspPb5023GeV,
-										       fileNameOutputWeightingPi0,"pPb_5.023GeV","Pi0",kFALSE,NULL,corrFactorsPCMDlitzFile.Data());
+										       fileNameOutputWeightingPi0,"pPb_5.023TeV","Pi0",kFALSE,NULL,corrFactorsPCMDlitzFile.Data());
   cout<< "CombinedSpectrum:" << endl;
   graphCombPi0InvCrossSectionTotpPb5023GeV->Print();
   graphCombPi0InvCrossSectionStatpPb5023GeV->Print();
