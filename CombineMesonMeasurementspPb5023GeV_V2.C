@@ -1,6 +1,6 @@
 /****************************************************************************************************************************
-******        provided by Gamma Conversion Group, PWGGA,                                                     *****
-******        Friederike Bock, friederike.bock@cern.ch                                                    *****
+******        provided by Gamma Conversion Group, PWGGA,                                                                *****
+******        Friederike Bock, friederike.bock@cern.ch                                                                  *****
 *****************************************************************************************************************************/
 
 #include <Riostream.h>

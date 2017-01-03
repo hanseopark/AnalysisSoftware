@@ -1,8 +1,7 @@
-/****************************************************************************************************************************
- ******         provided by Gamma Conversion Group, PWG4,                                                     *****
- ******        Ana Marin, marin@physi.uni-heidelberg.de                                                    *****
- ******           Kathrin Koch, kkoch@physi.uni-heidelberg.de                                                     *****
- ******        Friederike Bock, friederike.bock@cern.ch                                                    *****
+/*****************************************************************************************************************************
+ ******         provided by Gamma Conversion Group, PWG4,                                                                *****
+ ******        Ana Marin, marin@physi.uni-heidelberg.de                                                                  *****
+ ******        Annika Passfeld, annikapassfeld@uni-muenster.de                                                           *****
  *****************************************************************************************************************************/
 
 #include <Riostream.h>
