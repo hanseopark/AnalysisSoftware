@@ -98,8 +98,10 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     fstream  fileFitsOutput;
     fileFitsOutput.open(nameFinalResDat.Data(), ios::out);  
 
+    TString fileNameTheory                      = "ExternalInputpPb/Theory/TheoryCompilationPPb.root";
     TString fileNameChargedPion                 = "ExternalInputpPb/IdentifiedCharged/ChargedIdentifiedSpectrapPb_2016_12_22.root";
-    TString fileNameEtaToPi0WorldData           = "ExternalInput/WorldDataPi0Eta.root";
+    TString fileNameEtaToPi0WorldDataPP         = "ExternalInput/WorldDataPi0Eta.root";
+    TString fileNameEtaToPi0WorldDataPPb        = "ExternalInputpPb/WorldDataPi0EtapPb.root";
     
     gSystem->Exec("mkdir -p "+outputDir);
     gSystem->Exec(Form("cp %s %s/InputPCM.root", fileNamePCM.Data(), outputDir.Data()));
@@ -158,7 +160,12 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     Size_t   markerSizeDetMC[11];
 
     Color_t  colorCGC                           = kCyan-8;
-    Color_t  colorNLO                           = kAzure-4;
+    Color_t  colorEPOS3                         = kGreen-2;
+    Color_t  colorDPMJet                        = kBlue+2;
+    Color_t  colorHIJING                        = kBlue-7;
+    Style_t  styleLineDPMJet                    = 7;
+    Style_t  styleLineHIJING                    = 8;
+    Style_t  styleLineEPOS3                     = 1;
     Style_t  styleMarkerNLOMuHalf               = 24;
     Style_t  styleMarkerNLOMuOne                = 27;
     Style_t  styleMarkerNLOMuTwo                = 30;
@@ -193,8 +200,26 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         markerSizeDet[i]                        = GetDefaultMarkerSizeDiffDetectors(nameMeasGlobal[i].Data(), kFALSE)*2;
         markerSizeDetMC[i]                      = GetDefaultMarkerSizeDiffDetectors(nameMeasGlobal[i].Data(), kTRUE)*2;
     }    
-    
 
+    //***********************************************************************************************
+    //************************** Definition of final pt binning (has to be set manually) ************
+    //***********************************************************************************************
+    cout << "Setting Pi0 binning" << endl;
+    Double_t xPtLimitsPi0[100];
+    Int_t maxNBinsPi0               = GetBinning( xPtLimitsPi0, "Pi0", "pPb_5.023TeV", 20 );
+    for (Int_t i = 0; i< maxNBinsPi0; i++){
+        cout << i << ": "<< xPtLimitsPi0[i] <<" - " << xPtLimitsPi0[i+1]<< ", " <<endl;
+    }
+    cout << "Setting Eta binning" << endl;
+    Double_t xPtLimitsEta[50];
+    Int_t maxNBinsEta       = GetBinning( xPtLimitsEta, "Eta", "pPb_5.023TeV", 20 );
+//     xPtLimitsEta[maxNBinsEta+1] = 30;   //extend binning by 1 large bin
+    for (Int_t i = 0; i< maxNBinsEta; i++){
+        cout << i << ": "<< xPtLimitsEta[i] <<" - " << xPtLimitsEta[i+1]<< ", " <<endl;
+    }
+    cout << endl;
+//     return;
+    
     //************************** Read data for PCM **************************************************
     TFile* filePCM                                  = NULL;
     TDirectory* directoryPCMPi0                     = NULL;
@@ -650,7 +675,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     TGraphAsymmErrors* graphDalitzPi0InvYieldStat   = NULL;
     TH1D* histoDalitzPi0InvYieldStat                = NULL;
     TGraphAsymmErrors* graphDalitzPi0InvYieldSys    = NULL;
-    TGraphAsymmErrors* graphDalitzPi0AccTimesEff     = NULL;
+    TGraphAsymmErrors* graphDalitzPi0AccTimesEff    = NULL;
 
     if (!flagDalitzfile){  
         fileDalitz                                  = new TFile(fileNameDalitz.Data());
@@ -738,12 +763,57 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     // *******************************************************************************************************
     // ************************** Loading eta/pi0 compilation ************************************************
     // *******************************************************************************************************        
-    TFile* fileEtaToPi0Compilation                          = new TFile(fileNameEtaToPi0WorldData.Data());
-        TGraphErrors* graphPHENIXEtaToPi0200GeV             = (TGraphErrors*)fileEtaToPi0Compilation->Get("Phenix200GeV");
-        TGraphAsymmErrors* graphALICEEtaToPi07TeV           = (TGraphAsymmErrors*)fileEtaToPi0Compilation->Get("Alice7TeV");
-        TGraphAsymmErrors* graphALICEEtaToPi02760GeV        = (TGraphAsymmErrors*)fileEtaToPi0Compilation->Get("Alice2760GeV");
+    TFile* fileEtaToPi0CompilationPP                        = new TFile(fileNameEtaToPi0WorldDataPP.Data());
+        TGraphErrors* graphPHENIXEtaToPi0200GeV             = (TGraphErrors*)fileEtaToPi0CompilationPP->Get("Phenix200GeV");
+        TGraphAsymmErrors* graphALICEEtaToPi07TeV           = (TGraphAsymmErrors*)fileEtaToPi0CompilationPP->Get("Alice7TeV");
+        TGraphAsymmErrors* graphALICEEtaToPi02760GeV        = (TGraphAsymmErrors*)fileEtaToPi0CompilationPP->Get("Alice2760GeV");
+    TFile* fileEtaToPi0CompilationPPb                       = new TFile(fileNameEtaToPi0WorldDataPPb.Data());
+        TGraphErrors* graphCERESEtaToPi0pAu29100MeV         = (TGraphErrors*)fileEtaToPi0CompilationPPb->Get("AgakishievpAu29100MeV");
+        TGraphErrors* graphCERESEtaToPi0pBe29100MeV         = (TGraphErrors*)fileEtaToPi0CompilationPPb->Get("AgakishievpBe29100MeV");
+        TGraphErrors* graphPHENIXEtaToPi0dAu200GeV          = (TGraphErrors*)fileEtaToPi0CompilationPPb->Get("PhenixdAu200GeV");
+      
+    // *******************************************************************************************************
+    // ************************** Load cocktail inputs *******************************************************
+    // *******************************************************************************************************
+    TFile* fileCocktail                                     = new TFile("CocktailInput/cocktail_PbPb_0020c_dmtsallis_MTEta.root");
+        TDirectory* directoryCocktailMtScaledEta            = (TDirectory*) fileCocktail->Get("cocktail_PbPb_0020c_dmtsallis_MTEta");
+        TH1D* cocktailPi0                                   = (TH1D* )directoryCocktailMtScaledEta->Get("ptPi0");
+        TH1D* cocktailEta_MtScaled                          = (TH1D* )directoryCocktailMtScaledEta->Get("ptEta");
+        cocktailPi0->Sumw2();
+        cocktailEta_MtScaled->Sumw2();
+
+        // rebin cocktail input
+        TH1D* cocktailPi0_Reb                               = (TH1D* )cocktailPi0->Rebin(maxNBinsEta,"ptPionReb",xPtLimitsEta);
+        TH1D* cocktailEta_MtScaledReb                       = (TH1D* )cocktailEta_MtScaled->Rebin(maxNBinsEta,"ptEtaMTScaledRebinned",xPtLimitsEta);
+
+        // calculate eta/pi0 ratio
+        TH1D* cocktailEtaToPi0_MtScaled                     = (TH1D* )cocktailEta_MtScaled->Clone("EtaToPi0_MtScaled");
+        cocktailEtaToPi0_MtScaled->Sumw2();
+        cocktailEtaToPi0_MtScaled->Divide(cocktailEtaToPi0_MtScaled,cocktailPi0);
+        TH1D* cocktailEtaToPi0_MtScaledReb                  = (TH1D* )cocktailEta_MtScaledReb->Clone("EtaToPi0_MtScaledRebinned");
+        cocktailEtaToPi0_MtScaledReb->Sumw2();
+        cocktailEtaToPi0_MtScaledReb->Divide(cocktailEtaToPi0_MtScaledReb,cocktailPi0_Reb);
         
-    
+    // *******************************************************************************************************
+    // ************************** Loading theory calculations ************************************************
+    // *******************************************************************************************************        
+    TFile* fileTheoryCompilation                            = new TFile(fileNameTheory.Data());
+        TH1F* histoDPMJetPi0                                = (TH1F*) fileTheoryCompilation->Get("histoPi0DPMJet5023TeV_Reb");
+        TH1F* histoDPMJetEta                                = (TH1F*) fileTheoryCompilation->Get("histoEtaDPMJet5023TeV_Reb");
+        TH1F* histoDPMJetEtaToPi0                           = (TH1F*) fileTheoryCompilation->Get("histoEtaToPi0DPMJet5023TeV");
+        TH1F* histoHIJINGPi0                                = (TH1F*) fileTheoryCompilation->Get("histoPi0HIJING5023TeV_Reb");
+        TH1F* histoHIJINGEta                                = (TH1F*) fileTheoryCompilation->Get("histoEtaHIJING5023TeV_Reb");
+        TH1F* histoHIJINGEtaToPi0                           = (TH1F*) fileTheoryCompilation->Get("histoEtaToPi0HIJING5023TeV");
+        TH1D* histoEPOS3Pi0                                 = (TH1D*) fileTheoryCompilation->Get("histoPi0EPOS35023TeV_Reb");
+        TGraphErrors* graphEPOS3Pi0                         = new TGraphErrors(histoEPOS3Pi0);
+        graphEPOS3Pi0->RemovePoint(0);
+        TH1D* histoEPOS3Eta                                 = (TH1D*) fileTheoryCompilation->Get("histoEtaEPOS35023TeV_Reb");
+        TGraphErrors* graphEPOS3Eta                         = new TGraphErrors(histoEPOS3Eta);
+        graphEPOS3Eta->RemovePoint(0);
+        TH1D* histoEPOS3EtaToPi0_Reb                        = (TH1D* )fileTheoryCompilation->Get("histoEtaToPi0EPOS35023TeV_Reb");
+        TGraphErrors* graphEPOS3EtaToPi0_Reb                = new TGraphErrors(histoEPOS3EtaToPi0_Reb);
+        graphEPOS3EtaToPi0_Reb->RemovePoint(0);
+        
     // *******************************************************************************************************
     // ************************** Combination of different pi0 measurements **********************************
     // *******************************************************************************************************
@@ -777,12 +847,6 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     sysErrorCollectionPi0[2]        = (TGraphAsymmErrors*)graphEMCALPi0InvYieldSys->Clone("sysErrEMCALPi0");
     sysErrorCollectionPi0[5]        = (TGraphAsymmErrors*)graphDalitzPi0InvYieldSys->Clone("sysErrDalitzPi0");
 
-    // Definition of final pt binning (has to be set manually)
-    Double_t xPtLimitsPi0[100];
-    Int_t maxNBinsPi0               = GetBinning( xPtLimitsPi0, "Pi0", "pPb_5.023TeV", 20 );
-    for (Int_t i = 0; i< maxNBinsPi0; i++){
-        cout << i << ": "<< xPtLimitsPi0[i] <<" - " << xPtLimitsPi0[i+1]<< ", " <<endl;
-    }
         
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for Pi0
     // {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMC", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "spare", "EMCAL merged","PCMOtherDataset"};
@@ -846,8 +910,6 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         cout << "Aborting: something went wrong during the combination of the new spectra" << endl;
         return;
     }
-    
-//     return;
     
     while (graphCombPi0InvYieldWOPEStat->GetX()[0] < 0.3){
         graphCombPi0InvYieldWOPEStat->RemovePoint(0);
@@ -1020,7 +1082,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     canvasWeights->SetLogx();
    
     TH2F * histo2DPi0Weights;
-    histo2DPi0Weights = new TH2F("histo2DPi0Weights","histo2DPi0Weights",11000,0.23,31.,1000,-0.7,1.3);
+    histo2DPi0Weights = new TH2F("histo2DPi0Weights","histo2DPi0Weights",11000,0.23, 25.,1000,-0.7,1.3);
     SetStyleHistoTH2ForGraphs(histo2DPi0Weights, "#it{p}_{T} (GeV/#it{c})","#omega_{a} for BLUE",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DPi0Weights->GetXaxis()->SetMoreLogLabels();
     histo2DPi0Weights->GetXaxis()->SetLabelOffset(-0.01);
@@ -1041,11 +1103,11 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         SetStyleTLatex( labelWeightsPi0, 0.85*textSizeLabelsPixel, 4, 1, 43 );
         labelWeightsPi0->Draw();
 
-//      DrawGammaLines(0.23, 70. , 0.8, 0.8,0.1, kGray, 3);
-        DrawGammaLines(0.23, 70. , 0.5, 0.5,0.1, kGray, 7);
-        DrawGammaLines(0.23, 70. , 0.4, 0.4,0.1, kGray, 1);
-        DrawGammaLines(0.23, 70. , 0.3, 0.3,0.1, kGray, 7);
-        DrawGammaLines(0.23, 70. , 0.2, 0.2,0.1, kGray, 3);
+//      DrawGammaLines(0.23, 25. , 0.8, 0.8,0.1, kGray, 3);
+        DrawGammaLines(0.23, 25. , 0.5, 0.5,0.1, kGray, 7);
+        DrawGammaLines(0.23, 25. , 0.4, 0.4,0.1, kGray, 1);
+        DrawGammaLines(0.23, 25. , 0.3, 0.3,0.1, kGray, 7);
+        DrawGammaLines(0.23, 25. , 0.2, 0.2,0.1, kGray, 3);
         
     canvasWeights->SaveAs(Form("%s/Pi0_Weights_WOPCMEMC.%s",outputDir.Data(),suffix.Data()));
     
@@ -1061,11 +1123,11 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         labelWeightsEnergy->Draw();
         labelWeightsPi0->Draw();
 
-//      DrawGammaLines(0.23, 70. , 0.8, 0.8,0.1, kGray, 3);
-        DrawGammaLines(0.23, 70. , 0.5, 0.5,0.1, kGray, 7);
-        DrawGammaLines(0.23, 70. , 0.4, 0.4,0.1, kGray, 1);
-        DrawGammaLines(0.23, 70. , 0.3, 0.3,0.1, kGray, 7);
-        DrawGammaLines(0.23, 70. , 0.2, 0.2,0.1, kGray, 3);
+//      DrawGammaLines(0.23, 25. , 0.8, 0.8,0.1, kGray, 3);
+        DrawGammaLines(0.23, 25. , 0.5, 0.5,0.1, kGray, 7);
+        DrawGammaLines(0.23, 25. , 0.4, 0.4,0.1, kGray, 1);
+        DrawGammaLines(0.23, 25. , 0.3, 0.3,0.1, kGray, 7);
+        DrawGammaLines(0.23, 25. , 0.2, 0.2,0.1, kGray, 3);
         
     canvasWeights->SaveAs(Form("%s/Pi0_Weights.%s",outputDir.Data(),suffix.Data()));
     
@@ -1078,7 +1140,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     canvasRelSysErr->SetLogx();
    
     TH2F * histo2DRelSysErr;
-    histo2DRelSysErr                    = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,0.23,31.,1000,0,45.5);
+    histo2DRelSysErr                    = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,0.23, 25.,1000,0,45.5);
     SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelSysErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErr->GetXaxis()->SetLabelOffset(-0.01);
@@ -1131,7 +1193,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     canvasRelStatErr->SetLogx();
    
     TH2F * histo2DRelStatErr;
-    histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,0.23,31.,1000,0,45.5);
+    histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,0.23, 25.,1000,0,45.5);
     SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErr->GetXaxis()->SetLabelOffset(-0.01);
@@ -1184,7 +1246,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     canvasRelTotErr->SetLogx();
    
     TH2F * histo2DRelTotErrPi0;
-    histo2DRelTotErrPi0                 = new TH2F("histo2DRelTotErrPi0","histo2DRelTotErrPi0",11000,0.23,31.,1000,0,45.5);
+    histo2DRelTotErrPi0                 = new TH2F("histo2DRelTotErrPi0","histo2DRelTotErrPi0",11000,0.23, 25.,1000,0,45.5);
     SetStyleHistoTH2ForGraphs(histo2DRelTotErrPi0, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelTotErrPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelTotErrPi0->GetXaxis()->SetLabelOffset(-0.01);
@@ -1458,7 +1520,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     fitTCMInvYieldPi0        = FitObject("tcm","fitTCMInvYieldPi0pPb5023GeV","Pi0",graphCombPi0InvYieldTot,0.3,20. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitTCMInvYieldPi0)<< endl;
     fileFitsOutput <<  WriteParameterToFile(fitTCMInvYieldPi0)<< endl;    
-//     TF1* fitTCMInvYieldPi02  = FitObject("tcm","fitTCMInvYieldPi0pPb5023GeV2","Pi0",graphCombPi0InvYieldTot,0.4,40.,paramTCMPi0New,"QNRMEX0+","", kFALSE);
+//     TF1* fitTCMInvYieldPi02  = FitObject("tcm","fitTCMInvYieldPi0pPb5023GeV2","Pi0",graphCombPi0InvYieldTot,0.2, 20.,paramTCMPi0New,"QNRMEX0+","", kFALSE);
 //     cout << WriteParameterToFile(fitTCMInvYieldPi02)<< endl;
 
     TF1* fitPowInvYieldPi0   = FitObject("m","fitPowInvYieldPi0pPb5023GeV","Pi0",graphCombPi0InvYieldTot,5,40. ,NULL,"QNRMEX0+","", kFALSE);
@@ -1518,9 +1580,21 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     // *************************************************************************************************************
     // Calculate ratios to combined fit
     // *************************************************************************************************************
-//     TH1D* histoRatioPi0Pythia8ToFit                     = (TH1D*) histoPythia8InvYieldPi0->Clone(); 
-//     histoRatioPi0Pythia8ToFit                           = CalculateHistoRatioToFit (histoRatioPi0Pythia8ToFit, fitTCMInvYieldPi0); 
-//     histoRatioPi0Pythia8ToFit->GetXaxis()->SetRangeUser(0.4,40);
+    TH1D* histoRatioPi0DPMJetToFit                      = (TH1D*) histoDPMJetPi0->Clone("histoRatioPi0DPMJetToFit"); 
+    histoRatioPi0DPMJetToFit                            = CalculateHistoRatioToFit (histoRatioPi0DPMJetToFit, fitTCMInvYieldPi0); 
+    histoRatioPi0DPMJetToFit->GetXaxis()->SetRangeUser(0.3, 20);
+    TH1D* histoRatioPi0HIJINGToFit                      = (TH1D*) histoHIJINGPi0->Clone("histoRatioPi0HIJINGToFit"); 
+    histoRatioPi0HIJINGToFit                            = CalculateHistoRatioToFit (histoRatioPi0HIJINGToFit, fitTCMInvYieldPi0); 
+    histoRatioPi0HIJINGToFit->GetXaxis()->SetRangeUser(0.3, 20);
+    TH1D* histoRatioPi0EPOS3ToFit                       = (TH1D*) histoEPOS3Pi0->Clone("histoRatioPi0EPOS3ToFit"); 
+    histoRatioPi0EPOS3ToFit                             = CalculateHistoRatioToFit (histoRatioPi0EPOS3ToFit, fitTCMInvYieldPi0); 
+    histoRatioPi0EPOS3ToFit->GetXaxis()->SetRangeUser(0.3, 20);
+    TGraphErrors* graphRatioPi0EPOS3ToFit               = new TGraphErrors(histoRatioPi0EPOS3ToFit);
+    while(graphRatioPi0EPOS3ToFit->GetX()[0] < 0.3)
+        graphRatioPi0EPOS3ToFit->RemovePoint(0);
+    while(graphRatioPi0EPOS3ToFit->GetX()[graphRatioPi0EPOS3ToFit->GetN()-1] > 20)
+        graphRatioPi0EPOS3ToFit->RemovePoint(graphRatioPi0EPOS3ToFit->GetN()-1);
+
 //     
 //     TGraph* graphRatioPi0CombNLOMuHalf                  = (TGraph*)graphNLOCalcPi0MuHalf->Clone();
 //     TGraph* graphRatioPi0CombNLOMuOne                   = (TGraph*)graphNLOCalcPi0MuOne->Clone();
@@ -1531,8 +1605,6 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
 //     graphRatioPi0CombNLOMuTwo                           = CalculateGraphRatioToFit (graphRatioPi0CombNLOMuTwo, fitTCMInvYieldPi0); 
 //     graphRatioPi0CombNLODSS14                           = CalculateGraphErrRatioToFit(graphRatioPi0CombNLODSS14, fitTCMInvYieldPi0); 
 // 
-//     TGraph* graphRatioPi0CombCGC                        = (TGraph*)graphCGCPi0->Clone();
-//     graphRatioPi0CombCGC                                = CalculateGraphRatioToFit (graphRatioPi0CombCGC, fitTCMInvYieldPi0); 
     
     TGraphAsymmErrors* graphRatioPi0CombCombFitTot      = (TGraphAsymmErrors*)graphCombPi0InvYieldTot->Clone();
     graphRatioPi0CombCombFitTot                         = CalculateGraphErrRatioToFit(graphRatioPi0CombCombFitTot, fitTCMInvYieldPi0); 
@@ -1581,7 +1653,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         cout << textsizeLabelsPP << endl;
     
     TH2F * histo2DPi0RatioToCombFit;
-    histo2DPi0RatioToCombFit               = new TH2F("histo2DPi0RatioToCombFit","histo2DPi0RatioToCombFit",1000,0.23,31.,1000,0.2,4.    );
+    histo2DPi0RatioToCombFit               = new TH2F("histo2DPi0RatioToCombFit","histo2DPi0RatioToCombFit",1000,0.23, 25.,1000,0.2,4.    );
     SetStyleHistoTH2ForGraphs(histo2DPi0RatioToCombFit, "#it{p}_{T} (GeV/#it{c})","Data/Fit", 0.85*textsizeLabelsPP, textsizeLabelsPP, 
                               0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.65, 510, 505);
     histo2DPi0RatioToCombFit->GetXaxis()->SetMoreLogLabels();
@@ -1597,9 +1669,9 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitStat, markerStyleComb, markerSizeComb, colorComb , colorComb);
         graphRatioPi0CombCombFitStat->Draw("p,same,z");
 
-        DrawGammaLines(0.23, 70. , 1., 1.,0.1, kGray+2);
-        DrawGammaLines(0.23, 70. , 1.1, 1.1,0.1, kGray, 7);
-        DrawGammaLines(0.23, 70. , 0.9, 0.9,0.1, kGray, 7);
+        DrawGammaLines(0.23, 25. , 1., 1.,0.1, kGray+2);
+        DrawGammaLines(0.23, 25. , 1.1, 1.1,0.1, kGray, 7);
+        DrawGammaLines(0.23, 25. , 0.9, 0.9,0.1, kGray, 7);
 
         TLatex *labelRatioToFitEnergy   = new TLatex(0.95, 0.92, collisionSystempPb.Data());
         SetStyleTLatex( labelRatioToFitEnergy, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
@@ -1648,9 +1720,9 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         graphRatioPi0EMCALCombFitStat->Draw("p,same,z");
         graphRatioPi0PCMEMCALCombFitStat->Draw("p,same,z");
 
-        DrawGammaLines(0.23, 70. , 1., 1.,0.5, kGray+2);
-        DrawGammaLines(0.23, 70. , 1.1, 1.1,0.5, kGray, 7);
-        DrawGammaLines(0.23, 70. , 0.9, 0.9,0.5, kGray, 7);
+        DrawGammaLines(0.23, 25. , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(0.23, 25. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.23, 25. , 0.9, 0.9,0.5, kGray, 7);
         
         labelRatioToFitEnergy->Draw();
         labelRatioToFitALICE->Draw();
@@ -1661,8 +1733,10 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         Double_t rowsLegendOnlyPi0Ratio[6]          = {0.92, 0.867, 0.807, 0.747, 0.687, 0.627};
         Double_t rowsLegendOnlyPi0RatioAbs[6]       = {0.92, 2.48, 2.32, 2.16, 2.00, 1.84 };
 //         Double_t rowsLegendOnlyPi0RatioAbs[6]       = {0.92, 2.18, 2.03, 1.87, 1.73, 1.56 };
-        Double_t columnsLegendOnlyPi0Ratio[3]       = {0.115, 0.325, 0.41};
-        Double_t columnsLegendOnlyPi0RatioAbs[3]    = {0.115, 1., 1.43};
+        Double_t columnsLegendOnlyPi0Ratio[3]       = {0.205, 0.39, 0.47};
+        Double_t columnsLegendOnlyPi0RatioAbs[3]    = {0.215, 1.35, 1.83};
+//         Double_t columnsLegendOnlyPi0Ratio[3]       = {0.115, 0.325, 0.41};
+//         Double_t columnsLegendOnlyPi0RatioAbs[3]    = {0.115, 1., 1.43};
         Double_t lengthBox                          = 0.1;
         Double_t heightBox                          = 0.08/2;
         //****************** first Column **************************************************
@@ -1770,16 +1844,6 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         if (sysErrorCollectionEta[i]) 
             sysErrorRelCollectionEta[i]     = CalculateRelErrUpAsymmGraph( sysErrorCollectionEta[i], Form("relativeSysErrorEta_%s", nameMeasGlobal[i].Data()));
     }
-
-    
-    // Definition of binning for eta meson, take care that it is the correct one
-    Double_t xPtLimitsEta[50];
-    Int_t maxNBinsEta       = GetBinning( xPtLimitsEta, "Eta", "pPb_5.023TeV", 20 );
-    for (Int_t i = 0; i< maxNBinsEta; i++){
-        cout << i << ": "<< xPtLimitsEta[i] <<" - " << xPtLimitsEta[i+1]<< ", " <<endl;
-    }
-    cout << endl;
-    cout << "Nbins: eta "<< maxNBinsEta << endl;
 
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for Eta                    
     Int_t offSetsEta[11]            = { 0,  0,  0,  0,  0,
@@ -1994,7 +2058,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     canvasWeights->cd();
    
     TH2F * histo2DEtaWeights;
-    histo2DEtaWeights = new TH2F("histo2DEtaWeights","histo2DEtaWeights",11000,0.33,25.,1000,-0.7,1.3);
+    histo2DEtaWeights = new TH2F("histo2DEtaWeights","histo2DEtaWeights",11000,0.43, 25.,1000,-0.7,1.3);
     SetStyleHistoTH2ForGraphs(histo2DEtaWeights, "#it{p}_{T} (GeV/#it{c})","#omega_{a} for BLUE",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DEtaWeights->GetXaxis()->SetMoreLogLabels();
     histo2DEtaWeights->GetXaxis()->SetLabelOffset(-0.01);
@@ -2014,11 +2078,11 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         SetStyleTLatex( labelWeightsEta, 0.85*textSizeLabelsPixel,4, 1, 43);
         labelWeightsEta->Draw();
 
-//      DrawGammaLines(0.33, 25. , 0.8, 0.8,0.1, kGray, 3);
-        DrawGammaLines(0.33, 25. , 0.5, 0.5,0.1, kGray, 7);
-        DrawGammaLines(0.33, 25. , 0.4, 0.4,0.1, kGray, 1);
-        DrawGammaLines(0.33, 25. , 0.3, 0.3,0.1, kGray, 7);
-        DrawGammaLines(0.33, 25. , 0.2, 0.2,0.1, kGray, 3);
+//      DrawGammaLines(0.43, 25. , 0.8, 0.8,0.1, kGray, 3);
+        DrawGammaLines(0.43, 25. , 0.5, 0.5,0.1, kGray, 7);
+        DrawGammaLines(0.43, 25. , 0.4, 0.4,0.1, kGray, 1);
+        DrawGammaLines(0.43, 25. , 0.3, 0.3,0.1, kGray, 7);
+        DrawGammaLines(0.43, 25. , 0.2, 0.2,0.1, kGray, 3);
         
     canvasWeights->SaveAs(Form("%s/Eta_Weights_WOPCMEMC.%s",outputDir.Data(),suffix.Data()));
     
@@ -2034,11 +2098,11 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         labelWeightsEnergy->Draw();
         labelWeightsEta->Draw();
 
-//      DrawGammaLines(0.33, 25. , 0.8, 0.8,0.1, kGray, 3);
-        DrawGammaLines(0.33, 25. , 0.5, 0.5,0.1, kGray, 7);
-        DrawGammaLines(0.33, 25. , 0.4, 0.4,0.1, kGray, 1);
-        DrawGammaLines(0.33, 25. , 0.3, 0.3,0.1, kGray, 7);
-        DrawGammaLines(0.33, 25. , 0.2, 0.2,0.1, kGray, 3);
+//      DrawGammaLines(0.43, 25. , 0.8, 0.8,0.1, kGray, 3);
+        DrawGammaLines(0.43, 25. , 0.5, 0.5,0.1, kGray, 7);
+        DrawGammaLines(0.43, 25. , 0.4, 0.4,0.1, kGray, 1);
+        DrawGammaLines(0.43, 25. , 0.3, 0.3,0.1, kGray, 7);
+        DrawGammaLines(0.43, 25. , 0.2, 0.2,0.1, kGray, 3);
         
     canvasWeights->SaveAs(Form("%s/Eta_Weights.%s",outputDir.Data(),suffix.Data()));
 
@@ -2051,7 +2115,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     canvasRelSysErr->cd();
    
     TH2F * histo2DRelSysErrEta;
-    histo2DRelSysErrEta                 = new TH2F("histo2DRelSysErrEta","histo2DRelSysErrEta",11000,0.33,25.,1000,0,60.5);
+    histo2DRelSysErrEta                 = new TH2F("histo2DRelSysErrEta","histo2DRelSysErrEta",11000,0.43, 25.,1000,0,60.5);
     SetStyleHistoTH2ForGraphs(histo2DRelSysErrEta, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelSysErrEta->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErrEta->GetXaxis()->SetLabelOffset(-0.01);
@@ -2096,7 +2160,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     canvasRelStatErr->cd();
    
     TH2F * histo2DRelStatErrEta;
-    histo2DRelStatErrEta                = new TH2F("histo2DRelStatErrEta","histo2DRelStatErrEta",11000,0.33,25.,1000,0,60.5);
+    histo2DRelStatErrEta                = new TH2F("histo2DRelStatErrEta","histo2DRelStatErrEta",11000,0.43, 25.,1000,0,60.5);
     SetStyleHistoTH2ForGraphs(histo2DRelStatErrEta, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErrEta->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErrEta->GetXaxis()->SetLabelOffset(-0.01);
@@ -2149,7 +2213,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     
     canvasRelTotErr->cd();
     TH2F * histo2DRelTotErrEta;
-    histo2DRelTotErrEta                 = new TH2F("histo2DRelTotErrEta","histo2DRelTotErrEta",11000,0.33,25.,1000,0,60.5);
+    histo2DRelTotErrEta                 = new TH2F("histo2DRelTotErrEta","histo2DRelTotErrEta",11000,0.43, 25.,1000,0,60.5);
     SetStyleHistoTH2ForGraphs(histo2DRelTotErrEta, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelTotErrEta->GetXaxis()->SetMoreLogLabels();
     histo2DRelTotErrEta->GetXaxis()->SetLabelOffset(-0.01);    
@@ -2446,10 +2510,21 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     // *************************************************************************************************************
     // Calculate ratios to combined fit
     // *************************************************************************************************************    
-//     TH1D* histoRatioEtaPythia8ToFit                     = (TH1D*) histoPythia8InvYieldEta->Clone(); 
-//     histoRatioEtaPythia8ToFit                           = CalculateHistoRatioToFit (histoRatioEtaPythia8ToFit, fitTCMInvYieldEta); 
-//     histoRatioEtaPythia8ToFit->GetXaxis()->SetRangeUser(0.6,25);
-// 
+    TH1D* histoRatioEtaDPMJetToFit                      = (TH1D*) histoDPMJetEta->Clone("histoRatioEtaDPMJetToFit"); 
+    histoRatioEtaDPMJetToFit                            = CalculateHistoRatioToFit (histoRatioEtaDPMJetToFit, fitTCMInvYieldEta); 
+    histoRatioEtaDPMJetToFit->GetXaxis()->SetRangeUser(0.6,20);
+    TH1D* histoRatioEtaHIJINGToFit                      = (TH1D*) histoHIJINGEta->Clone("histoRatioEtaHIJINGToFit"); 
+    histoRatioEtaHIJINGToFit                            = CalculateHistoRatioToFit (histoRatioEtaHIJINGToFit, fitTCMInvYieldEta); 
+    histoRatioEtaHIJINGToFit->GetXaxis()->SetRangeUser(0.6,20);
+    TH1D* histoRatioEtaEPOS3ToFit                       = (TH1D*) histoEPOS3Eta->Clone("histoRatioEtaEPOS3ToFit"); 
+    histoRatioEtaEPOS3ToFit                             = CalculateHistoRatioToFit (histoRatioEtaEPOS3ToFit, fitTCMInvYieldEta); 
+    histoRatioEtaEPOS3ToFit->GetXaxis()->SetRangeUser(0.6,20);
+    TGraphErrors* graphRatioEtaEPOS3ToFit               = new TGraphErrors(histoRatioEtaEPOS3ToFit);
+    while(graphRatioEtaEPOS3ToFit->GetX()[0] < 0.6)
+        graphRatioEtaEPOS3ToFit->RemovePoint(0);
+    while(graphRatioEtaEPOS3ToFit->GetX()[graphRatioEtaEPOS3ToFit->GetN()-1] > 20)
+        graphRatioEtaEPOS3ToFit->RemovePoint(graphRatioEtaEPOS3ToFit->GetN()-1);
+    
 //     TGraph* graphRatioEtaCombNLOMuHalf                  = (TGraph*)graphNLOCalcEtaMuHalf->Clone();
 //     TGraph* graphRatioEtaCombNLOMuOne                   = (TGraph*)graphNLOCalcEtaMuOne->Clone();
 //     TGraph* graphRatioEtaCombNLOMuTwo                   = (TGraph*)graphNLOCalcEtaMuTwo->Clone();
@@ -2457,13 +2532,13 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
 //     graphRatioEtaCombNLOMuOne                           = CalculateGraphRatioToFit (graphRatioEtaCombNLOMuOne, fitTCMInvYieldEta); 
 //     graphRatioEtaCombNLOMuTwo                           = CalculateGraphRatioToFit (graphRatioEtaCombNLOMuTwo, fitTCMInvYieldEta); 
     
-    TGraphAsymmErrors* graphRatioEtaCombCombFitTot     = (TGraphAsymmErrors*)graphCombEtaInvYieldTot->Clone();
-    graphRatioEtaCombCombFitTot                        = CalculateGraphErrRatioToFit(graphRatioEtaCombCombFitTot, fitTCMInvYieldEta); 
-    TGraphAsymmErrors* graphRatioEtaCombCombFitStat    = (TGraphAsymmErrors*)graphCombEtaInvYieldStat->Clone();
-    graphRatioEtaCombCombFitStat                       = CalculateGraphErrRatioToFit(graphRatioEtaCombCombFitStat, fitTCMInvYieldEta); 
-    TGraphAsymmErrors* graphRatioEtaCombCombFitSys     = (TGraphAsymmErrors*)graphCombEtaInvYieldSys->Clone();
+    TGraphAsymmErrors* graphRatioEtaCombCombFitTot      = (TGraphAsymmErrors*)graphCombEtaInvYieldTot->Clone();
+    graphRatioEtaCombCombFitTot                         = CalculateGraphErrRatioToFit(graphRatioEtaCombCombFitTot, fitTCMInvYieldEta); 
+    TGraphAsymmErrors* graphRatioEtaCombCombFitStat     = (TGraphAsymmErrors*)graphCombEtaInvYieldStat->Clone();
+    graphRatioEtaCombCombFitStat                        = CalculateGraphErrRatioToFit(graphRatioEtaCombCombFitStat, fitTCMInvYieldEta); 
+    TGraphAsymmErrors* graphRatioEtaCombCombFitSys      = (TGraphAsymmErrors*)graphCombEtaInvYieldSys->Clone();
 
-    graphRatioEtaCombCombFitSys                        = CalculateGraphErrRatioToFit(graphRatioEtaCombCombFitSys, fitTCMInvYieldEta); 
+    graphRatioEtaCombCombFitSys                         = CalculateGraphErrRatioToFit(graphRatioEtaCombCombFitSys, fitTCMInvYieldEta); 
     TGraphAsymmErrors* graphRatioEtaPCMCombFitStat      = (TGraphAsymmErrors*)graphPCMEtaInvYieldStat->Clone();
     graphRatioEtaPCMCombFitStat                         = CalculateGraphErrRatioToFit(graphRatioEtaPCMCombFitStat, fitTCMInvYieldEta); 
     TGraphAsymmErrors* graphRatioEtaPCMCombFitSys       = (TGraphAsymmErrors*)graphPCMEtaInvYieldSys->Clone();
@@ -2484,7 +2559,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     textSizeLabelsPixel                 = 48;
     canvasRatioToCombFit->cd();
     TH2F * histo2DEtaRatioToCombFit;
-    histo2DEtaRatioToCombFit               = new TH2F("histo2DEtaRatioToCombFit","histo2DEtaRatioToCombFit",1000,0.33,25.,1000,0.2,4.    );
+    histo2DEtaRatioToCombFit               = new TH2F("histo2DEtaRatioToCombFit","histo2DEtaRatioToCombFit",1000,0.43, 25.,1000,0.2,4.    );
     SetStyleHistoTH2ForGraphs(histo2DEtaRatioToCombFit, "#it{p}_{T} (GeV/#it{c})","Data/Fit", 0.85*textsizeLabelsPP, textsizeLabelsPP, 
                               0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.65, 510, 505);
     histo2DEtaRatioToCombFit->GetXaxis()->SetMoreLogLabels();
@@ -2499,14 +2574,14 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitStat, markerStyleComb, markerSizeComb, colorComb , colorComb);
         graphRatioEtaCombCombFitStat->Draw("p,same,z");
 
-        DrawGammaLines(0.33, 25. , 1., 1.,0.1, kGray+2);
-        DrawGammaLines(0.33, 25. , 1.1, 1.1,0.1, kGray, 7);
-        DrawGammaLines(0.33, 25. , 0.9, 0.9,0.1, kGray, 7);
+        DrawGammaLines(0.43, 25. , 1., 1.,0.1, kGray+2);
+        DrawGammaLines(0.43, 25. , 1.1, 1.1,0.1, kGray, 7);
+        DrawGammaLines(0.43, 25. , 0.9, 0.9,0.1, kGray, 7);
 
         labelRatioToFitEnergy->Draw();
         labelRatioToFitALICE->Draw();
-        TLatex *labelRatioToFitEta      = new TLatex(0.852,0.82,"#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRatioToFitEta, textSizeLabelsPixel,4, 1, 43);
+        TLatex *labelRatioToFitEta      = new TLatex(0.95, 0.82, "#eta #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelRatioToFitEta, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelRatioToFitEta->Draw();
 
     canvasRatioToCombFit->SaveAs(Form("%s/Eta_RatioOfCombToCombFit_PPb5023GeV.%s",outputDir.Data(),suffix.Data()));
@@ -2536,9 +2611,9 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         graphRatioEtaEMCALCombFitStat->Draw("p,same,z");
         graphRatioEtaPCMEMCALCombFitStat->Draw("p,same,z");
 
-        DrawGammaLines(0.33, 25. , 1., 1.,0.5, kGray+2);
-        DrawGammaLines(0.33, 25. , 1.1, 1.1,0.5, kGray, 7);
-        DrawGammaLines(0.33, 25. , 0.9, 0.9,0.5, kGray, 7);
+        DrawGammaLines(0.43, 25. , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(0.43, 25. , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.43, 25. , 0.9, 0.9,0.5, kGray, 7);
         
         labelRatioToFitEnergy->Draw();
         labelRatioToFitALICE->Draw();
@@ -2547,8 +2622,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         //****************************** Definition of the Legend ******************************************
         Double_t rowsLegendOnlyEtaRatio[4]          = {0.91, 0.86, 0.81, 0.76};
         Double_t rowsLegendOnlyEtaRatioAbs[4]       = {0.91, 2.245, 2.11, 1.975};
-        Double_t columnsLegendOnlyEtaRatio[3]       = {0.115, 0.325, 0.40};
-        Double_t columnsLegendOnlyEtaRatioAbs[3]    = {0.115, 1.2, 1.62};
+        Double_t columnsLegendOnlyEtaRatio[3]       = {0.115, 0.3, 0.375};
+        Double_t columnsLegendOnlyEtaRatioAbs[3]    = {0.115, 1.3, 1.68};
 
         //****************** first Column **************************************************
         TLatex *textPCMOnlyRatioEta                 = new TLatex(columnsLegendOnlyEtaRatio[0],rowsLegendOnlyEtaRatio[1],nameMeasGlobalLabel[0]);
@@ -2576,13 +2651,13 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         markerPCMEMCALEtaOnlyRatioEta->DrawMarker(columnsLegendOnlyEtaRatioAbs[1] ,rowsLegendOnlyEtaRatioAbs[3]);
 
         TBox* boxPCMEtaOnlyRatioEta                 = CreateBoxFromGraph(graphRatioEtaPCMCombFitSys, columnsLegendOnlyEtaRatioAbs[2]-0.5*lengthBox , rowsLegendOnlyEtaRatioAbs[1]- heightBox,
-                                                                         columnsLegendOnlyEtaRatioAbs[2]+ 2*lengthBox, rowsLegendOnlyEtaRatioAbs[1]+ heightBox);
+                                                                         columnsLegendOnlyEtaRatioAbs[2]+ 4*lengthBox, rowsLegendOnlyEtaRatioAbs[1]+ heightBox);
         boxPCMEtaOnlyRatioEta->Draw("l");
         TBox* boxEMCALEtaOnlyRatioEta               = CreateBoxFromGraph(graphRatioEtaEMCALCombFitSys, columnsLegendOnlyEtaRatioAbs[2]-0.5*lengthBox , rowsLegendOnlyEtaRatioAbs[2]- heightBox,
-                                                                         columnsLegendOnlyEtaRatioAbs[2]+ 2*lengthBox, rowsLegendOnlyEtaRatioAbs[2]+ heightBox);
+                                                                         columnsLegendOnlyEtaRatioAbs[2]+ 4*lengthBox, rowsLegendOnlyEtaRatioAbs[2]+ heightBox);
         boxEMCALEtaOnlyRatioEta->Draw("l");
         TBox* boxPCMEMCALEtaOnlyRatioEta            = CreateBoxFromGraph(graphRatioEtaPCMEMCALCombFitSys, columnsLegendOnlyEtaRatioAbs[2]-0.5*lengthBox , rowsLegendOnlyEtaRatioAbs[3]- heightBox,
-                                                                         columnsLegendOnlyEtaRatioAbs[2]+ 2*lengthBox, rowsLegendOnlyEtaRatioAbs[3]+ heightBox);
+                                                                         columnsLegendOnlyEtaRatioAbs[2]+ 4*lengthBox, rowsLegendOnlyEtaRatioAbs[3]+ heightBox);
         boxPCMEMCALEtaOnlyRatioEta->Draw("l");
         
     canvasRatioToCombFit->SaveAs(Form("%s/Eta_RatioOfIndividualMeasToCombFit_PP.%s",outputDir.Data(),suffix.Data()));
@@ -2830,7 +2905,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     canvasWeights->cd();
    
     TH2F * histo2DEtaToPi0Weights;
-    histo2DEtaToPi0Weights = new TH2F("histo2DEtaToPi0Weights","histo2DEtaToPi0Weights",11000,0.33,25.,1000,-0.7,1.3);
+    histo2DEtaToPi0Weights = new TH2F("histo2DEtaToPi0Weights","histo2DEtaToPi0Weights",11000,0.43, 25.,1000,-0.7,1.3);
     SetStyleHistoTH2ForGraphs(histo2DEtaToPi0Weights, "#it{p}_{T} (GeV/#it{c})","#omega_{a} for BLUE",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DEtaToPi0Weights->GetXaxis()->SetMoreLogLabels();
     histo2DEtaToPi0Weights->GetXaxis()->SetLabelOffset(-0.01);
@@ -2849,11 +2924,11 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         SetStyleTLatex( labelWeightsEtaToPi0, 0.85*textSizeLabelsPixel,4, 1, 43);
         labelWeightsEtaToPi0->Draw();
 
-//      DrawGammaLines(0.33, 25. , 0.8, 0.8,0.1, kGray, 3);
-        DrawGammaLines(0.33, 25. , 0.5, 0.5,0.1, kGray, 7);
-        DrawGammaLines(0.33, 25. , 0.4, 0.4,0.1, kGray, 1);
-        DrawGammaLines(0.33, 25. , 0.3, 0.3,0.1, kGray, 7);
-        DrawGammaLines(0.33, 25. , 0.2, 0.2,0.1, kGray, 3);
+//      DrawGammaLines(0.43, 25. , 0.8, 0.8,0.1, kGray, 3);
+        DrawGammaLines(0.43, 25. , 0.5, 0.5,0.1, kGray, 7);
+        DrawGammaLines(0.43, 25. , 0.4, 0.4,0.1, kGray, 1);
+        DrawGammaLines(0.43, 25. , 0.3, 0.3,0.1, kGray, 7);
+        DrawGammaLines(0.43, 25. , 0.2, 0.2,0.1, kGray, 3);
         
     canvasWeights->SaveAs(Form("%s/EtaToPi0_Weights_WOPCMEMC.%s",outputDir.Data(),suffix.Data()));
 
@@ -2868,10 +2943,10 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         labelWeightsEnergy->Draw();
         labelWeightsEtaToPi0->Draw();
 
-        DrawGammaLines(0.33, 25. , 0.5, 0.5,0.1, kGray, 7);
-        DrawGammaLines(0.33, 25. , 0.4, 0.4,0.1, kGray, 1);
-        DrawGammaLines(0.33, 25. , 0.3, 0.3,0.1, kGray, 7);
-        DrawGammaLines(0.33, 25. , 0.2, 0.2,0.1, kGray, 3);
+        DrawGammaLines(0.43, 25. , 0.5, 0.5,0.1, kGray, 7);
+        DrawGammaLines(0.43, 25. , 0.4, 0.4,0.1, kGray, 1);
+        DrawGammaLines(0.43, 25. , 0.3, 0.3,0.1, kGray, 7);
+        DrawGammaLines(0.43, 25. , 0.2, 0.2,0.1, kGray, 3);
         
     canvasWeights->SaveAs(Form("%s/EtaToPi0_Weights.%s",outputDir.Data(),suffix.Data()));
 
@@ -2883,7 +2958,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     canvasRelSysErr->cd();
    
     TH2F * histo2DRelSysErrEtaToPi0;
-    histo2DRelSysErrEtaToPi0                 = new TH2F("histo2DRelSysErrEtaToPi0","histo2DRelSysErrEtaToPi0",11000,0.33,25.,1000,0,60.5);
+    histo2DRelSysErrEtaToPi0                 = new TH2F("histo2DRelSysErrEtaToPi0","histo2DRelSysErrEtaToPi0",11000,0.43, 25.,1000,0,60.5);
     SetStyleHistoTH2ForGraphs(histo2DRelSysErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelSysErrEtaToPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErrEtaToPi0->GetXaxis()->SetLabelOffset(-0.01);
@@ -2913,7 +2988,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     canvasRelStatErr->cd();
    
     TH2F * histo2DRelStatErrEtaToPi0;
-    histo2DRelStatErrEtaToPi0                = new TH2F("histo2DRelStatErrEtaToPi0","histo2DRelStatErrEtaToPi0",11000,0.33,25.,1000,0,60.5);
+    histo2DRelStatErrEtaToPi0                = new TH2F("histo2DRelStatErrEtaToPi0","histo2DRelStatErrEtaToPi0",11000,0.43, 25.,1000,0,60.5);
     SetStyleHistoTH2ForGraphs(histo2DRelStatErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErrEtaToPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErrEtaToPi0->GetXaxis()->SetLabelOffset(-0.01);
@@ -2956,7 +3031,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
 
     canvasRelTotErr->cd();
     TH2F * histo2DRelTotErrEtaToPi0;
-    histo2DRelTotErrEtaToPi0                 = new TH2F("histo2DRelTotErrEtaToPi0","histo2DRelTotErrEtaToPi0",11000,0.33,25.,1000,0,60.5);
+    histo2DRelTotErrEtaToPi0                 = new TH2F("histo2DRelTotErrEtaToPi0","histo2DRelTotErrEtaToPi0",11000,0.43, 25.,1000,0,60.5);
     SetStyleHistoTH2ForGraphs(histo2DRelTotErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelTotErrEtaToPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelTotErrEtaToPi0->GetXaxis()->SetLabelOffset(-0.01);    
@@ -3325,7 +3400,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     padWidthEta->SetLogx(); 
 
         
-        TH2F * histo2DAllEtaFWHM    = new TH2F("histo2DAllEtaFWHM","histo2DAllEtaFWHM", 20, 0.33, 25. ,1000., -5, 92);
+        TH2F * histo2DAllEtaFWHM    = new TH2F("histo2DAllEtaFWHM","histo2DAllEtaFWHM", 20, 0.43, 25. ,1000., -5, 92);
         SetStyleHistoTH2ForGraphs(histo2DAllEtaFWHM, "#it{p}_{T} (GeV/#it{c})", "Peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth, textsizeLabelsWidth,
                                   0.85*textsizeLabelsWidth, textsizeLabelsWidth, 0.85,0.28/(textsizeFacWidth*margin), 512, 505);
 //      histo2DAllEtaFWHM->GetYaxis()->SetRangeUser(-1.,25.5);
@@ -3382,7 +3457,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     padMassEta->cd();
     padMassEta->SetLogx();
 
-        TH2F * histo2DAllEtaMass    = new TH2F("histo2DAllEtaMass","histo2DAllEtaMass",20, 0.33, 25., 1000., 500., 565);
+        TH2F * histo2DAllEtaMass    = new TH2F("histo2DAllEtaMass","histo2DAllEtaMass",20, 0.43, 25., 1000., 500., 565);
         SetStyleHistoTH2ForGraphs(histo2DAllEtaMass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass, textsizeLabelsMass, 0.85*textsizeLabelsMass, 
                                   textsizeLabelsMass, 0.9, 0.28/(textsizeFacMass*margin), 512, 505);
         histo2DAllEtaMass->GetXaxis()->SetMoreLogLabels(kTRUE);
@@ -3407,7 +3482,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         DrawGammaSetMarkerTGraphAsym(graphPCMEtaMassMC, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
         graphPCMEtaMassMC->Draw("p,same,z");
 
-        DrawGammaLines(0.33, 25. , mesonMassExpectEta*1000., mesonMassExpectEta*1000.,0.3, kGray);
+        DrawGammaLines(0.43, 25. , mesonMassExpectEta*1000., mesonMassExpectEta*1000.,0.3, kGray);
         
         labelLegendBMass->Draw();
         
@@ -3424,7 +3499,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     canvasXSectionPi0->SetLogy();
     
     TH2F * histo2DYieldPi0;
-    histo2DYieldPi0          = new TH2F("histo2DYieldPi0","histo2DYieldPi0",11000,0.23,31.,1000,1e-8,10e1);
+    histo2DYieldPi0          = new TH2F("histo2DYieldPi0","histo2DYieldPi0",11000,0.23, 25.,1000,2e-9,10e1);
     SetStyleHistoTH2ForGraphs(histo2DYieldPi0, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",0.035,0.04, 0.035,0.04, 0.9,1.65);
     histo2DYieldPi0->GetXaxis()->SetMoreLogLabels();
     histo2DYieldPi0->GetXaxis()->SetLabelOffset(-0.01);
@@ -3514,7 +3589,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     canvasXSectionEta->SetLogy();
     
     TH2F * histo2DInvYieldEta;
-    histo2DInvYieldEta              = new TH2F("histo2DInvYieldEta","histo2DInvYieldEta",11000,0.33,31.,1000,1e-9,1e-0);
+    histo2DInvYieldEta              = new TH2F("histo2DInvYieldEta","histo2DInvYieldEta",11000,0.43, 25.,1000,5e-10,1e-0);
     SetStyleHistoTH2ForGraphs(histo2DInvYieldEta, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",0.035,0.04, 0.035,0.04, 0.9,1.65);
     histo2DInvYieldEta->GetXaxis()->SetMoreLogLabels();
     histo2DInvYieldEta->GetXaxis()->SetLabelOffset(-0.01);
@@ -3700,284 +3775,241 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     canvasAcceptanceTimesEff->Update();
     canvasAcceptanceTimesEff->Print(Form("%s/Eta_AcceptanceTimesEff.%s",outputDir.Data(),suffix.Data()));
 
-// //     
-// //     // **********************************************************************************************************************
-// //     // ******************************************* Comparison to theory calculations Pi0 ************************************
-// //     // **********************************************************************************************************************    
-// //     textSizeLabelsPixel                     = 48;
-// //     
-// //     TCanvas* canvasRatioPP                  = new TCanvas("canvasRatioPP","",200,10,1350,900);  // gives the page size
-// //     DrawGammaCanvasSettings( canvasRatioPP,  0.12, 0.01, 0.01, 0.11);
-// //     canvasRatioPP->cd();
-// //     canvasRatioPP->SetLogx();
-// // 
-// //         textsizeLabelsPP                    = 0;
-// //         textsizeFacPP                       = 0;
-// //         if (canvasRatioPP->XtoPixel(canvasRatioPP->GetX2()) <canvasRatioPP->YtoPixel(canvasRatioPP->GetY1()) ){
-// //             textsizeLabelsPP                = (Double_t)textSizeLabelsPixel/canvasRatioPP->XtoPixel(canvasRatioPP->GetX2()) ;
-// //             textsizeFacPP                   = (Double_t)1./canvasRatioPP->XtoPixel(canvasRatioPP->GetX2()) ;
-// //         } else {
-// //         textsizeLabelsPP                    = (Double_t)textSizeLabelsPixel/canvasRatioPP->YtoPixel(canvasRatioPP->GetY1());
-// //         textsizeFacPP                       = (Double_t)1./canvasRatioPP->YtoPixel(canvasRatioPP->GetY1());
-// //         }
-// //         cout << textsizeLabelsPP << endl;
-// // 
-// //         TH2F * ratio2DTheoryPP       = new TH2F("ratio2DTheoryPP","ratio2DTheoryPP",1000,0.23,31.,1000,0.2,3.6);
-// //         SetStyleHistoTH2ForGraphs(ratio2DTheoryPP, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{fit}", 0.85*textsizeLabelsPP, textsizeLabelsPP, 
-// //                                   0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
-// //         ratio2DTheoryPP->GetYaxis()->SetMoreLogLabels(kTRUE);
-// //         ratio2DTheoryPP->GetYaxis()->SetNdivisions(505);
-// //         ratio2DTheoryPP->GetYaxis()->SetNoExponent(kTRUE);
-// //         ratio2DTheoryPP->GetXaxis()->SetMoreLogLabels(kTRUE);
-// //         ratio2DTheoryPP->GetXaxis()->SetNoExponent(kTRUE);
-// //         ratio2DTheoryPP->GetXaxis()->SetLabelFont(42);
-// //         ratio2DTheoryPP->GetYaxis()->SetLabelFont(42);
-// //         ratio2DTheoryPP->DrawCopy(); 
-// // 
-// //         graphRatioPi0CombNLODSS14->RemovePoint(0);
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombNLODSS14, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
-// //         graphRatioPi0CombNLODSS14->Draw("3,same");
-// // 
-// // //         DrawGammaNLOTGraph( graphRatioPi0CombCGC, widthCommonFit, styleLineCGC, colorCGC);
-// // //         graphRatioPi0CombCGC->Draw("same,c");
-// //         
-// //         DrawGammaSetMarker(histoRatioPi0Pythia8ToFit, 24, 1.5, kRed+2 , kRed+2);  
-// //         histoRatioPi0Pythia8ToFit->SetLineWidth(widthCommonFit);
-// // //      histoRatioPi0Pythia8ToFit->GetXaxis()->SetRangeUser(0.5,14);
-// //         histoRatioPi0Pythia8ToFit->Draw("same,hist,l");
-// //         DrawGammaNLOTGraph( graphRatioPi0CombNLOMuHalf, widthCommonFit, styleLineNLOMuHalf, kGray+1);
-// //         graphRatioPi0CombNLOMuHalf->Draw("same,c");
-// //         DrawGammaNLOTGraph( graphRatioPi0CombNLOMuOne, widthCommonFit, styleLineNLOMuOne, kGray+1);
-// //         graphRatioPi0CombNLOMuOne->Draw("same,c");
-// //         DrawGammaNLOTGraph( graphRatioPi0CombNLOMuTwo, widthCommonFit, styleLineNLOMuTwo, kGray+2);
-// //         graphRatioPi0CombNLOMuTwo->Draw("same,c");
-// // 
-// // 
-// //         TGraphAsymmErrors* graphRatioPi0CombCombFitStatWOXErr = (TGraphAsymmErrors*)graphRatioPi0CombCombFitStat->Clone("graphRatioPi0CombCombFitStatWOXErr");
-// //         ProduceGraphAsymmWithoutXErrors(graphRatioPi0CombCombFitStatWOXErr);
-// //         
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitStatWOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
-// //         graphRatioPi0CombCombFitStatWOXErr->SetLineWidth(widthLinesBoxes);
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitSys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
-// //         graphRatioPi0CombCombFitSys->SetLineWidth(0);
-// //         graphRatioPi0CombCombFitSys->Draw("2,same");
-// //         graphRatioPi0CombCombFitStatWOXErr->Draw("p,same");
-// // 
-// //         TBox* boxErrorSigma2760GeVRatioPi0 = CreateBoxConv(kGray+1, 0.28, 1.-(0.0544 ), 0.32, 1.+(0.0544));
-// //         boxErrorSigma2760GeVRatioPi0->Draw();
-// //         DrawGammaLines(0.23, 70.,1., 1.,0.1,kGray);
-// // 
-// //         // upper left corner
-// //         TLatex *labelRatioTheoryNLO   = new TLatex(0.155,0.93,"NLO, PDF: CTEQ6M5 FF: DSS07");
-// //         SetStyleTLatex( labelRatioTheoryNLO, 0.85*textsizeLabelsPP,4);
-// //         labelRatioTheoryNLO->Draw();
-// //         TLegend* legendRatioPi0OldTheo= GetAndSetLegend2(0.15,0.91-3*0.9*textsizeLabelsPP,0.4,0.91, 0.85* textSizeLabelsPixel, 1, "", 43, 0.2);
-// //         legendRatioPi0OldTheo->AddEntry(graphRatioPi0CombNLOMuHalf, "#mu = 0.5 #it{p}_{T}", "l");  
-// //         legendRatioPi0OldTheo->AddEntry(graphRatioPi0CombNLOMuOne,  "#mu = #it{p}_{T}", "l");  
-// //         legendRatioPi0OldTheo->AddEntry(graphRatioPi0CombNLOMuTwo,  "#mu = 2 #it{p}_{T}", "l");  
-// //         legendRatioPi0OldTheo->Draw();
-// //         
-// //         // lower left corner
-// //         TLegend* legendRatioPi0OldTheo3= GetAndSetLegend2(0.15,0.14,0.4,0.15+2*0.85*textsizeLabelsPP, 0.85* textSizeLabelsPixel, 1, "", 43, 0.2);
-// //         legendRatioPi0OldTheo3->AddEntry(graphRatioPi0CombNLODSS14,  "NLO, PDF: MSTW FF: DSS14", "f");  
-// //         legendRatioPi0OldTheo3->AddEntry(histoRatioPi0Pythia8ToFit,  "PYTHIA 8.2, Monash 2013", "l");
-// //         legendRatioPi0OldTheo3->Draw();
-// // 
-// //         // upper right corner
-// //         TLegend* legendRatioPi0OldTheo2= GetAndSetLegend2(0.72,0.91-1*0.85*textsizeLabelsPP,0.95,0.91, 0.85* textSizeLabelsPixel, 1, "", 43, 0.27);
-// //         legendRatioPi0OldTheo2->AddEntry(graphRatioPi0CombCombFitSys,"#pi^{0} ALICE","pf");
-// //         legendRatioPi0OldTheo2->Draw();
-// //         
-// //         TLatex *labelRatioTheory2   = new TLatex(0.73,0.93,collisionSystempPb.Data());
-// //         SetStyleTLatex( labelRatioTheory2, 0.85*textsizeLabelsPP,4);
-// //         labelRatioTheory2->Draw();
-// //     
-// //         
-// //     canvasRatioPP->Update();
-// //     canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP.%s",outputDir.Data(),suffix.Data()));
-// // 
-// //     canvasRatioPP->cd();
-// //         ratio2DTheoryPP->GetYaxis()->SetNdivisions(512);
-// //         ratio2DTheoryPP->GetYaxis()->SetRangeUser(0.5,1.9);
-// //         ratio2DTheoryPP->DrawCopy(); 
-// // 
-// //         
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombNLODSS14, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
-// //         graphRatioPi0CombNLODSS14->Draw("3,same");
-// //         
-// //         DrawGammaSetMarker(histoRatioPi0Pythia8ToFit, 24, 1.5, kRed+2 , kRed+2);  
-// //         histoRatioPi0Pythia8ToFit->SetLineWidth(widthCommonFit);
-// // //      histoRatioPi0Pythia8ToFit->GetXaxis()->SetRangeUser(0.5,14);
-// //         histoRatioPi0Pythia8ToFit->Draw("same,hist,l");
-// // 
-// // //         DrawGammaNLOTGraph( graphRatioPi0CombCGC, widthCommonFit, styleLineCGC, colorCGC);
-// // //         graphRatioPi0CombCGC->Draw("same,c");
-// //         
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitStatWOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
-// //         graphRatioPi0CombCombFitStatWOXErr->SetLineWidth(widthLinesBoxes);
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitSys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
-// //         graphRatioPi0CombCombFitSys->SetLineWidth(0);
-// //         graphRatioPi0CombCombFitSys->Draw("2,same");
-// //         graphRatioPi0CombCombFitStatWOXErr->Draw("p,same");
-// // 
-// //         boxErrorSigma2760GeVRatioPi0->Draw();
-// //         DrawGammaLines(0.23, 70.,1., 1.,0.1,kGray);
-// // 
-// //         TLegend* legendRatioTheoryPPNew= GetAndSetLegend2(0.15,0.92-0.85*textsizeLabelsPP*3,0.4,0.92, 0.85*textSizeLabelsPixel);
-// //         legendRatioTheoryPPNew->AddEntry(graphRatioPi0CombCombFitSys,"#pi^{0} ALICE","pf");
-// //         legendRatioTheoryPPNew->AddEntry(graphRatioPi0CombNLODSS14,"NLO, PDF: MSTW FF: DSS14","f");
-// // //         legendRatioTheoryPPNew->AddEntry((TObject*)0,"Phys.Rev. D91 no. 1, (2015) 014035","");
-// //         legendRatioTheoryPPNew->AddEntry(histoRatioPi0Pythia8ToFit,  "PYTHIA 8.2, Monash 2013", "l");  
-// //         legendRatioTheoryPPNew->Draw();
-// // 
-        TLatex *labelRatioTheory   = new TLatex(0.15,0.925,collisionSystempPb.Data());
-        SetStyleTLatex( labelRatioTheory, 0.85*textsizeLabelsPP,4);        
+    
+    // **********************************************************************************************************************
+    // ******************************************* Comparison to theory calculations Pi0 ************************************
+    // **********************************************************************************************************************    
+    textSizeLabelsPixel                     = 48;
+    
+    TCanvas* canvasRatioPP                  = new TCanvas("canvasRatioPP","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasRatioPP,  0.12, 0.01, 0.01, 0.11);
+    canvasRatioPP->cd();
+    canvasRatioPP->SetLogx();
+
+        textsizeLabelsPP                    = 0;
+        textsizeFacPP                       = 0;
+        if (canvasRatioPP->XtoPixel(canvasRatioPP->GetX2()) <canvasRatioPP->YtoPixel(canvasRatioPP->GetY1()) ){
+            textsizeLabelsPP                = (Double_t)textSizeLabelsPixel/canvasRatioPP->XtoPixel(canvasRatioPP->GetX2()) ;
+            textsizeFacPP                   = (Double_t)1./canvasRatioPP->XtoPixel(canvasRatioPP->GetX2()) ;
+        } else {
+        textsizeLabelsPP                    = (Double_t)textSizeLabelsPixel/canvasRatioPP->YtoPixel(canvasRatioPP->GetY1());
+        textsizeFacPP                       = (Double_t)1./canvasRatioPP->YtoPixel(canvasRatioPP->GetY1());
+        }
+        cout << textsizeLabelsPP << endl;
+
+        TH2F * ratio2DTheoryPP       = new TH2F("ratio2DTheoryPP","ratio2DTheoryPP",1000,0.23, 25.,1000,0.2,2.95);
+        SetStyleHistoTH2ForGraphs(ratio2DTheoryPP, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{fit}", 0.85*textsizeLabelsPP, textsizeLabelsPP, 
+                                  0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
+        ratio2DTheoryPP->GetYaxis()->SetMoreLogLabels(kTRUE);
+        ratio2DTheoryPP->GetYaxis()->SetNdivisions(510);
+        ratio2DTheoryPP->GetYaxis()->SetNoExponent(kTRUE);
+        ratio2DTheoryPP->GetXaxis()->SetMoreLogLabels(kTRUE);
+        ratio2DTheoryPP->GetXaxis()->SetNoExponent(kTRUE);
+        ratio2DTheoryPP->GetXaxis()->SetLabelFont(42);
+        ratio2DTheoryPP->GetYaxis()->SetLabelFont(42);
+        ratio2DTheoryPP->DrawCopy(); 
+
+        TGraphAsymmErrors* graphRatioPi0CombCombFitStatWOXErr = (TGraphAsymmErrors*)graphRatioPi0CombCombFitStat->Clone("graphRatioPi0CombCombFitStatWOXErr");
+        ProduceGraphAsymmWithoutXErrors(graphRatioPi0CombCombFitStatWOXErr);
+        
+        
+//         graphRatioPi0CombNLODSS14->RemovePoint(0);        
+//         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombNLODSS14, 0, 0, colorEPOS3, colorEPOS3, widthLinesBoxes, kTRUE, colorEPOS3);
+//         graphRatioPi0CombNLODSS14->Draw("3,same");
+        SetStyleHisto(histoRatioPi0DPMJetToFit, widthCommonFit*1.5, styleLineDPMJet, colorDPMJet );  
+        SetStyleHisto(histoRatioPi0HIJINGToFit, widthCommonFit*1.5, styleLineHIJING, colorHIJING );  
+        SetStyleHisto(histoRatioPi0EPOS3ToFit, widthCommonFit*1.5, styleLineEPOS3, colorEPOS3 );  
+        DrawGammaSetMarkerTGraphErr(graphRatioPi0EPOS3ToFit, 0, 0, colorEPOS3, colorEPOS3, widthLinesBoxes, kTRUE, colorEPOS3);
+
+        histoRatioPi0EPOS3ToFit->Draw("same,hist,l");
+        graphRatioPi0EPOS3ToFit->Draw("same,3");
+        histoRatioPi0DPMJetToFit->Draw("same,hist,l");
+        histoRatioPi0HIJINGToFit->Draw("same,hist,l");
+        
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitStatWOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
+        graphRatioPi0CombCombFitStatWOXErr->SetLineWidth(widthLinesBoxes);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitSys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
+        graphRatioPi0CombCombFitSys->SetLineWidth(0);
+        graphRatioPi0CombCombFitSys->Draw("2,same");
+        graphRatioPi0CombCombFitStatWOXErr->Draw("p,same");
+
+        TBox* boxErrorNormRatioPi0 = CreateBoxConv(kGray+1, 0.28, 1.-(0.031 ), 0.32, 1.+(0.031));
+        boxErrorNormRatioPi0->Draw();
+        DrawGammaLines(0.23, 25.,1., 1.,0.1,kGray);
+
+        TLegend* legendRatioTheoryPPNew= GetAndSetLegend2(0.69,0.91-0.85*textsizeLabelsPP*4,0.94,0.91, 0.85*textSizeLabelsPixel);
+        legendRatioTheoryPPNew->AddEntry(graphRatioPi0CombCombFitSys,"#pi^{0} ALICE","pf");
+//         legendRatioTheoryPPNew->AddEntry(graphRatioPi0CombNLODSS14,"NLO, PDF: MSTW FF: DSS14","f");
+//         legendRatioTheoryPPNew->AddEntry((TObject*)0,"Phys.Rev. D91 no. 1, (2015) 014035","");
+        legendRatioTheoryPPNew->AddEntry(histoRatioPi0DPMJetToFit,  "DPMJet", "l");  
+        legendRatioTheoryPPNew->AddEntry(histoRatioPi0HIJINGToFit,  "HIJING", "l");  
+        legendRatioTheoryPPNew->AddEntry(histoRatioPi0EPOS3ToFit,  "EPOS", "l");  
+        legendRatioTheoryPPNew->Draw();
+
+        TLatex *labelRatioTheory   = new TLatex(0.97,0.925,collisionSystempPb.Data());
+        SetStyleTLatex( labelRatioTheory, 0.85*textsizeLabelsPP,4, 1, 42, kTRUE, 31);
         labelRatioTheory->Draw();
-// //         
-// //     canvasRatioPP->Update();
-// //     canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP_NewTheory.%s",outputDir.Data(),suffix.Data()));
-// // 
-// //     // **********************************************************************************************************************
-// //     // ******************************************* Comparison to theory calculations Eta ************************************
-// //     // **********************************************************************************************************************    
-// //     canvasRatioPP->cd();
-// //     canvasRatioPP->SetLogx();
-// // 
-// //         TH2F * ratio2DTheoryPPEta       = new TH2F("ratio2DTheoryPPEta","ratio2DTheoryPPEta",1000,0.33,25.,1000,0.2,3.6);
-// //         SetStyleHistoTH2ForGraphs(ratio2DTheoryPPEta, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{fit}", 0.85*textsizeLabelsPP, textsizeLabelsPP, 
-// //                                   0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
-// //         ratio2DTheoryPPEta->GetYaxis()->SetMoreLogLabels(kTRUE);
-// //         ratio2DTheoryPPEta->GetYaxis()->SetNdivisions(505);
-// //         ratio2DTheoryPPEta->GetYaxis()->SetNoExponent(kTRUE);
-// //         ratio2DTheoryPPEta->GetXaxis()->SetMoreLogLabels(kTRUE);
-// //         ratio2DTheoryPPEta->GetXaxis()->SetNoExponent(kTRUE);
-// //         ratio2DTheoryPPEta->GetXaxis()->SetLabelFont(42);
-// //         ratio2DTheoryPPEta->GetYaxis()->SetLabelFont(42);
-// //         ratio2DTheoryPPEta->DrawCopy(); 
-// // 
-// //         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuHalf, widthCommonFit, styleLineNLOMuHalf, colorNLO);
-// //         graphRatioEtaCombNLOMuHalf->Draw("same,c");
-// //         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuOne, widthCommonFit, styleLineNLOMuOne, colorNLO);
-// //         graphRatioEtaCombNLOMuOne->Draw("same,c");
-// //         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuTwo, widthCommonFit, styleLineNLOMuTwo, colorNLO);
-// //         graphRatioEtaCombNLOMuTwo->Draw("same,c");
-// //         
-// //         DrawGammaSetMarker(histoRatioEtaPythia8ToFit, 24, 1.5, kRed+2 , kRed+2);  
-// //         histoRatioEtaPythia8ToFit->SetLineWidth(widthCommonFit);
-// // //      histoRatioEtaPythia8ToFit->GetXaxis()->SetRangeUser(0.5,14);
-// //         histoRatioEtaPythia8ToFit->Draw("same,hist,l");
-// // 
-// //         TGraphAsymmErrors* graphRatioEtaCombCombFitStatWOXErr = (TGraphAsymmErrors*)graphRatioEtaCombCombFitStat->Clone("graphRatioEtaCombCombFitStatWOXErr");
-// //         ProduceGraphAsymmWithoutXErrors(graphRatioEtaCombCombFitStatWOXErr);
-// //         
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitStatWOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
-// //         graphRatioEtaCombCombFitStatWOXErr->SetLineWidth(widthLinesBoxes);
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitSys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
-// //         graphRatioEtaCombCombFitSys->SetLineWidth(0);
-// //         graphRatioEtaCombCombFitSys->Draw("2,same");
-// //         graphRatioEtaCombCombFitStatWOXErr->Draw("p,same");
-// // 
-// //         TBox* boxErrorSigma2760GeVRatioEta = CreateBoxConv(kGray+1, 0.40, 1.-(0.0544), 0.44, 1.+(0.0544));        
-// //         boxErrorSigma2760GeVRatioEta->Draw();
-// //         DrawGammaLines(0.33, 25.,1., 1.,0.1,kGray);
-// // 
-// //         // upper left corner
-// //         TLatex *labelRatioTheoryNLOEta   = new TLatex(0.155,0.93,"NLO, PDF: CTEQ6M5 FF: AESSS");
-// //         SetStyleTLatex( labelRatioTheoryNLOEta, 0.85*textsizeLabelsPP,4);
-// //         labelRatioTheoryNLOEta->Draw();
-// //         legendRatioPi0OldTheo->Draw();
-// //         
-// //         // lower left corner
-// //         TLegend* legendRatioEtaOldTheo3= GetAndSetLegend2(0.15,0.14,0.4,0.15+1*0.85*textsizeLabelsPP, 0.85* textSizeLabelsPixel, 1, "", 43, 0.2);
-// //         legendRatioEtaOldTheo3->AddEntry(histoRatioPi0Pythia8ToFit,  "PYTHIA 8.2, Monash 2013", "l");  
-// //         legendRatioEtaOldTheo3->Draw();
-// // 
-// //         // upper right corner
-// //         TLegend* legendRatioEtaOldTheo2= GetAndSetLegend2(0.72,0.91-1*0.85*textsizeLabelsPP,0.95,0.91, 0.85* textSizeLabelsPixel, 1, "", 43, 0.27);
-// //         legendRatioEtaOldTheo2->AddEntry(graphRatioPi0CombCombFitSys,"#eta ALICE","pf");
-// //         legendRatioEtaOldTheo2->Draw();
-// //         labelRatioTheory2->Draw();
-// //             
-// //     canvasRatioPP->Update();
-// //     canvasRatioPP->Print(Form("%s/Eta_RatioTheoryToData_PP.%s",outputDir.Data(),suffix.Data()));
-// //     
-// //     //*************************************************************************************************************
-// //     //***************************** Paper plot X-section and ratios ***********************************************
-// //     //*************************************************************************************************************
-// //     
-// //     Double_t arrayBoundariesX1_XSec[2];
-// //     Double_t arrayBoundariesY1_XSec[6];
-// //     Double_t relativeMarginsXXSec[3];
-// //     Double_t relativeMarginsYXSec[3];
-// //     textSizeLabelsPixel = 48;
-// //     ReturnCorrectValuesForCanvasScaling(1250,2000, 1, 5,0.135, 0.005, 0.003,0.05,arrayBoundariesX1_XSec,arrayBoundariesY1_XSec,relativeMarginsXXSec,relativeMarginsYXSec);
-// //     
-// //     TCanvas* canvasInvSectionPaper      = new TCanvas("canvasInvSectionPaper","",0,0,1250,2000);  // gives the page size
-// //     DrawGammaCanvasSettings( canvasInvSectionPaper,  0.13, 0.02, 0.03, 0.06);
-// // 
-// //     TPad* padInvSectionSpec             = new TPad("padInvSectionSpec", "", arrayBoundariesX1_XSec[0], arrayBoundariesY1_XSec[3], arrayBoundariesX1_XSec[1], arrayBoundariesY1_XSec[0],-1, -1, -2);
-// //     DrawGammaPadSettings( padInvSectionSpec, relativeMarginsXXSec[0], relativeMarginsXXSec[2], relativeMarginsYXSec[0], relativeMarginsYXSec[1]);
-// //     padInvSectionSpec->Draw();
-// //     Double_t marginXSec                 = relativeMarginsXXSec[0]*1250;
-// //     Double_t textsizeLabelsXSecUp       = 0;
-// //     Double_t textsizeFacXSecUp          = 0;
-// //     if (padInvSectionSpec->XtoPixel(padInvSectionSpec->GetX2()) < padInvSectionSpec->YtoPixel(padInvSectionSpec->GetY1())){
-// //         textsizeLabelsXSecUp            = (Double_t)textSizeLabelsPixel/padInvSectionSpec->XtoPixel(padInvSectionSpec->GetX2()) ;
-// //         textsizeFacXSecUp               = (Double_t)1./padInvSectionSpec->XtoPixel(padInvSectionSpec->GetX2()) ;
-// //     } else {
-// //         textsizeLabelsXSecUp            = (Double_t)textSizeLabelsPixel/padInvSectionSpec->YtoPixel(padInvSectionSpec->GetY1());
-// //         textsizeFacXSecUp                   = (Double_t)1./padInvSectionSpec->YtoPixel(padInvSectionSpec->GetY1());
-// //     }
-// //     
-// //     TPad* padInvSectionNLORatio         = new TPad("padInvSectionNLORatio", "", arrayBoundariesX1_XSec[0], arrayBoundariesY1_XSec[4], arrayBoundariesX1_XSec[1], arrayBoundariesY1_XSec[3],-1, -1, -2);
-// //     DrawGammaPadSettings( padInvSectionNLORatio, relativeMarginsXXSec[0], relativeMarginsXXSec[2], relativeMarginsYXSec[1], relativeMarginsYXSec[1]);
-// //     padInvSectionNLORatio->Draw();
-// //     Double_t textsizeLabelsXSecMiddle   = 0;
-// //     Double_t textsizeFacXSecMiddle      = 0;
-// //     if (padInvSectionNLORatio->XtoPixel(padInvSectionNLORatio->GetX2()) < padInvSectionNLORatio->YtoPixel(padInvSectionNLORatio->GetY1())){
-// //         textsizeLabelsXSecMiddle        = (Double_t)textSizeLabelsPixel/padInvSectionNLORatio->XtoPixel(padInvSectionNLORatio->GetX2()) ;
-// //         textsizeFacXSecMiddle           = (Double_t)1./padInvSectionNLORatio->XtoPixel(padInvSectionNLORatio->GetX2()) ;
-// //     } else {
-// //         textsizeLabelsXSecMiddle        = (Double_t)textSizeLabelsPixel/padInvSectionNLORatio->YtoPixel(padInvSectionNLORatio->GetY1());
-// //         textsizeFacXSecMiddle           = (Double_t)1./padInvSectionNLORatio->YtoPixel(padInvSectionNLORatio->GetY1());
-// //     }
-// //     
-// //     TPad* padInvSectionPythiaRatio      = new TPad("padInvSectionPythiaRatio", "", arrayBoundariesX1_XSec[0], arrayBoundariesY1_XSec[5], arrayBoundariesX1_XSec[1], arrayBoundariesY1_XSec[4],-1, -1, -2);
-// //     DrawGammaPadSettings( padInvSectionPythiaRatio, relativeMarginsXXSec[0], relativeMarginsXXSec[2], relativeMarginsYXSec[1], relativeMarginsYXSec[2]);
-// //     padInvSectionPythiaRatio->Draw();
-// //     Double_t textsizeLabelsXSecDown     = 0;
-// //     Double_t textsizeFacXSecDown        = 0;
-// //     if (padInvSectionPythiaRatio->XtoPixel(padInvSectionPythiaRatio->GetX2()) < padInvSectionPythiaRatio->YtoPixel(padInvSectionPythiaRatio->GetY1())){
-// //         textsizeLabelsXSecDown          = (Double_t)textSizeLabelsPixel/padInvSectionPythiaRatio->XtoPixel(padInvSectionPythiaRatio->GetX2()) ;
-// //         textsizeFacXSecDown             = (Double_t)1./padInvSectionPythiaRatio->XtoPixel(padInvSectionPythiaRatio->GetX2()) ;
-// //     } else {
-// //         textsizeLabelsXSecDown          = (Double_t)textSizeLabelsPixel/padInvSectionPythiaRatio->YtoPixel(padInvSectionPythiaRatio->GetY1());
-// //         textsizeFacXSecDown             = (Double_t)1./padInvSectionPythiaRatio->YtoPixel(padInvSectionPythiaRatio->GetY1());
-// //     }
-// // 
-// //     
-// //     padInvSectionSpec->cd();
-// //     padInvSectionSpec->SetLogy(1);
-// //     padInvSectionSpec->SetLogx(1);
-// //         SetStyleHistoTH2ForGraphs(histo2DYieldPi0, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",
-// //                                 0.85*textsizeLabelsXSecUp,textsizeLabelsXSecUp, 0.85*textsizeLabelsXSecUp, textsizeLabelsXSecUp, 1,0.2/(textsizeFacXSecUp*marginXSec));
-// //         histo2DYieldPi0->GetXaxis()->SetMoreLogLabels();
-// //         histo2DYieldPi0->GetXaxis()->SetLabelOffset(+0.01);
-// //         histo2DYieldPi0->Draw();
-// // 
-// //         
-// //         DrawGammaSetMarker(histoPythia8InvYieldPi0, 24, 1.5, kRed+2 , kRed+2);  
-// //         histoPythia8InvYieldPi0->SetLineWidth(widthCommonFit);
-// //         histoPythia8InvYieldPi0->Draw("same,hist,l");
-// // 
-// //         graphNLODSS14Calc->RemovePoint(0);
-// //         DrawGammaSetMarkerTGraphAsym(graphNLODSS14Calc, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
-// //         graphNLODSS14Calc->Draw("3,same");
-// // 
-// // //         DrawGammaNLOTGraph( graphCGCPi0, widthCommonFit, styleLineCGC, colorCGC);
-// // //         graphCGCPi0->Draw("same,c");
-// // 
-// // 
+        
+    canvasRatioPP->Update();
+    canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP.%s",outputDir.Data(),suffix.Data()));
+
+    // **********************************************************************************************************************
+    // ******************************************* Comparison to theory calculations Eta ************************************
+    // **********************************************************************************************************************    
+    canvasRatioPP->cd();
+    canvasRatioPP->SetLogx();
+
+        TH2F * ratio2DTheoryPPEta       = new TH2F("ratio2DTheoryPPEta","ratio2DTheoryPPEta",1000,0.43, 25.,1000,0.3,3.2);
+        SetStyleHistoTH2ForGraphs(ratio2DTheoryPPEta, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{fit}", 0.85*textsizeLabelsPP, textsizeLabelsPP, 
+                                  0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
+        ratio2DTheoryPPEta->GetYaxis()->SetMoreLogLabels(kTRUE);
+        ratio2DTheoryPPEta->GetYaxis()->SetNdivisions(505);
+        ratio2DTheoryPPEta->GetYaxis()->SetNoExponent(kTRUE);
+        ratio2DTheoryPPEta->GetXaxis()->SetMoreLogLabels(kTRUE);
+        ratio2DTheoryPPEta->GetXaxis()->SetNoExponent(kTRUE);
+        ratio2DTheoryPPEta->GetXaxis()->SetLabelFont(42);
+        ratio2DTheoryPPEta->GetYaxis()->SetLabelFont(42);
+        ratio2DTheoryPPEta->DrawCopy(); 
+
+//         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuHalf, widthCommonFit, styleLineNLOMuHalf, colorEPOS3);
+//         graphRatioEtaCombNLOMuHalf->Draw("same,c");
+//         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuOne, widthCommonFit, styleLineNLOMuOne, colorEPOS3);
+//         graphRatioEtaCombNLOMuOne->Draw("same,c");
+//         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuTwo, widthCommonFit, styleLineNLOMuTwo, colorEPOS3);
+//         graphRatioEtaCombNLOMuTwo->Draw("same,c");
+        
+        SetStyleHisto(histoRatioEtaDPMJetToFit, widthCommonFit*1.5, styleLineDPMJet, colorDPMJet );  
+        SetStyleHisto(histoRatioEtaHIJINGToFit, widthCommonFit*1.5, styleLineHIJING, colorHIJING );  
+        SetStyleHisto(histoRatioEtaEPOS3ToFit, widthCommonFit*1.5, styleLineEPOS3, colorEPOS3 );  
+        DrawGammaSetMarkerTGraphErr(graphRatioEtaEPOS3ToFit, 0, 0, colorEPOS3, colorEPOS3, widthLinesBoxes, kTRUE, colorEPOS3);
+        histoRatioEtaEPOS3ToFit->Draw("same,hist,l");
+        graphRatioEtaEPOS3ToFit->Draw("same,3");
+        histoRatioEtaDPMJetToFit->Draw("same,hist,l");
+        histoRatioEtaHIJINGToFit->Draw("same,hist,l");
+        
+        TGraphAsymmErrors* graphRatioEtaCombCombFitStatWOXErr = (TGraphAsymmErrors*)graphRatioEtaCombCombFitStat->Clone("graphRatioEtaCombCombFitStatWOXErr");
+        ProduceGraphAsymmWithoutXErrors(graphRatioEtaCombCombFitStatWOXErr);
+        
+        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitStatWOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
+        graphRatioEtaCombCombFitStatWOXErr->SetLineWidth(widthLinesBoxes);
+        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitSys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
+        graphRatioEtaCombCombFitSys->SetLineWidth(0);
+        graphRatioEtaCombCombFitSys->Draw("2,same");
+        graphRatioEtaCombCombFitStatWOXErr->Draw("p,same");
+
+        TBox* boxErrorNormRatioEta = CreateBoxConv(kGray+1, 0.55, 1.-(0.031), 0.6, 1.+(0.031));        
+        boxErrorNormRatioEta->Draw();
+        DrawGammaLines(0.43, 25.,1., 1.,0.1,kGray);
+
+        // upper left corner
+//         TLatex *labelRatioTheoryNLOEta   = new TLatex(0.155,0.93,"NLO, PDF: CTEQ6M5 FF: AESSS");
+//         SetStyleTLatex( labelRatioTheoryNLOEta, 0.85*textsizeLabelsPP,4);
+//         labelRatioTheoryNLOEta->Draw();
+//         legendRatioPi0OldTheo->Draw();
+        
+        // lower left corner
+        TLegend* legendRatioEtaOldTheo3= GetAndSetLegend2(0.35,0.91-3*0.85*textsizeLabelsPP,0.6,0.91, 0.85* textSizeLabelsPixel, 1, "", 43, 0.27);
+        legendRatioEtaOldTheo3->AddEntry(histoRatioPi0DPMJetToFit,  "DPMJet", "l");  
+        legendRatioEtaOldTheo3->AddEntry(histoRatioPi0HIJINGToFit,  "HIJING", "l");  
+        legendRatioEtaOldTheo3->AddEntry(histoRatioPi0EPOS3ToFit,  "EPOS3", "l");  
+        legendRatioEtaOldTheo3->Draw();
+
+        // upper right corner
+        TLegend* legendRatioEtaOldTheo2= GetAndSetLegend2(0.15,0.91-1*0.85*textsizeLabelsPP,0.4,0.91, 0.85* textSizeLabelsPixel, 1, "", 43, 0.27);
+        legendRatioEtaOldTheo2->AddEntry(graphRatioPi0CombCombFitSys,"#eta ALICE","pf");
+        legendRatioEtaOldTheo2->Draw();
+        TLatex *labelRatioTheory2   = new TLatex(0.16,0.925,collisionSystempPb.Data());
+        SetStyleTLatex( labelRatioTheory2, 0.85*textsizeLabelsPP,4);
+        labelRatioTheory2->Draw();
+            
+    canvasRatioPP->Update();
+    canvasRatioPP->Print(Form("%s/Eta_RatioTheoryToData_PP.%s",outputDir.Data(),suffix.Data()));
+    
+    //*************************************************************************************************************
+    //***************************** Paper plot X-section and ratios ***********************************************
+    //*************************************************************************************************************
+    
+    Double_t arrayBoundariesX1_XSec[2];
+    Double_t arrayBoundariesY1_XSec[6];
+    Double_t relativeMarginsXXSec[3];
+    Double_t relativeMarginsYXSec[3];
+    textSizeLabelsPixel = 48;
+    ReturnCorrectValuesForCanvasScaling(1250,2000, 1, 5,0.15, 0.005, 0.003,0.05,arrayBoundariesX1_XSec,arrayBoundariesY1_XSec,relativeMarginsXXSec,relativeMarginsYXSec);
+    
+    TCanvas* canvasInvSectionPaper      = new TCanvas("canvasInvSectionPaper","",0,0,1250,2000);  // gives the page size
+    DrawGammaCanvasSettings( canvasInvSectionPaper,  0.13, 0.02, 0.03, 0.06);
+
+    TPad* padInvSectionSpec             = new TPad("padInvSectionSpec", "", arrayBoundariesX1_XSec[0], arrayBoundariesY1_XSec[3], arrayBoundariesX1_XSec[1], arrayBoundariesY1_XSec[0],-1, -1, -2);
+    DrawGammaPadSettings( padInvSectionSpec, relativeMarginsXXSec[0], relativeMarginsXXSec[2], relativeMarginsYXSec[0], relativeMarginsYXSec[1]);
+    padInvSectionSpec->Draw();
+    Double_t marginXSec                 = relativeMarginsXXSec[0]*1250;
+    Double_t textsizeLabelsXSecUp       = 0;
+    Double_t textsizeFacXSecUp          = 0;
+    if (padInvSectionSpec->XtoPixel(padInvSectionSpec->GetX2()) < padInvSectionSpec->YtoPixel(padInvSectionSpec->GetY1())){
+        textsizeLabelsXSecUp            = (Double_t)textSizeLabelsPixel/padInvSectionSpec->XtoPixel(padInvSectionSpec->GetX2()) ;
+        textsizeFacXSecUp               = (Double_t)1./padInvSectionSpec->XtoPixel(padInvSectionSpec->GetX2()) ;
+    } else {
+        textsizeLabelsXSecUp            = (Double_t)textSizeLabelsPixel/padInvSectionSpec->YtoPixel(padInvSectionSpec->GetY1());
+        textsizeFacXSecUp                   = (Double_t)1./padInvSectionSpec->YtoPixel(padInvSectionSpec->GetY1());
+    }
+    
+    TPad* padInvSectionNLORatio         = new TPad("padInvSectionNLORatio", "", arrayBoundariesX1_XSec[0], arrayBoundariesY1_XSec[4], arrayBoundariesX1_XSec[1], arrayBoundariesY1_XSec[3],-1, -1, -2);
+    DrawGammaPadSettings( padInvSectionNLORatio, relativeMarginsXXSec[0], relativeMarginsXXSec[2], relativeMarginsYXSec[1], relativeMarginsYXSec[1]);
+    padInvSectionNLORatio->Draw();
+    Double_t textsizeLabelsXSecMiddle   = 0;
+    Double_t textsizeFacXSecMiddle      = 0;
+    if (padInvSectionNLORatio->XtoPixel(padInvSectionNLORatio->GetX2()) < padInvSectionNLORatio->YtoPixel(padInvSectionNLORatio->GetY1())){
+        textsizeLabelsXSecMiddle        = (Double_t)textSizeLabelsPixel/padInvSectionNLORatio->XtoPixel(padInvSectionNLORatio->GetX2()) ;
+        textsizeFacXSecMiddle           = (Double_t)1./padInvSectionNLORatio->XtoPixel(padInvSectionNLORatio->GetX2()) ;
+    } else {
+        textsizeLabelsXSecMiddle        = (Double_t)textSizeLabelsPixel/padInvSectionNLORatio->YtoPixel(padInvSectionNLORatio->GetY1());
+        textsizeFacXSecMiddle           = (Double_t)1./padInvSectionNLORatio->YtoPixel(padInvSectionNLORatio->GetY1());
+    }
+    
+    TPad* padInvSectionPythiaRatio      = new TPad("padInvSectionPythiaRatio", "", arrayBoundariesX1_XSec[0], arrayBoundariesY1_XSec[5], arrayBoundariesX1_XSec[1], arrayBoundariesY1_XSec[4],-1, -1, -2);
+    DrawGammaPadSettings( padInvSectionPythiaRatio, relativeMarginsXXSec[0], relativeMarginsXXSec[2], relativeMarginsYXSec[1], relativeMarginsYXSec[2]);
+    padInvSectionPythiaRatio->Draw();
+    Double_t textsizeLabelsXSecDown     = 0;
+    Double_t textsizeFacXSecDown        = 0;
+    if (padInvSectionPythiaRatio->XtoPixel(padInvSectionPythiaRatio->GetX2()) < padInvSectionPythiaRatio->YtoPixel(padInvSectionPythiaRatio->GetY1())){
+        textsizeLabelsXSecDown          = (Double_t)textSizeLabelsPixel/padInvSectionPythiaRatio->XtoPixel(padInvSectionPythiaRatio->GetX2()) ;
+        textsizeFacXSecDown             = (Double_t)1./padInvSectionPythiaRatio->XtoPixel(padInvSectionPythiaRatio->GetX2()) ;
+    } else {
+        textsizeLabelsXSecDown          = (Double_t)textSizeLabelsPixel/padInvSectionPythiaRatio->YtoPixel(padInvSectionPythiaRatio->GetY1());
+        textsizeFacXSecDown             = (Double_t)1./padInvSectionPythiaRatio->YtoPixel(padInvSectionPythiaRatio->GetY1());
+    }
+
+    
+    padInvSectionSpec->cd();
+    padInvSectionSpec->SetLogy(1);
+    padInvSectionSpec->SetLogx(1);
+        SetStyleHistoTH2ForGraphs(histo2DYieldPi0, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",
+                                0.85*textsizeLabelsXSecUp,textsizeLabelsXSecUp, 0.85*textsizeLabelsXSecUp, textsizeLabelsXSecUp, 1,0.26/(textsizeFacXSecUp*marginXSec));
+        histo2DYieldPi0->GetXaxis()->SetMoreLogLabels();
+        histo2DYieldPi0->GetXaxis()->SetLabelOffset(+0.01);
+        histo2DYieldPi0->Draw();
+        
+        SetStyleHisto(histoEPOS3Pi0, widthCommonFit*1.5, styleLineEPOS3, colorEPOS3 );  
+        DrawGammaSetMarkerTGraphErr(graphEPOS3Pi0, 0, 0, colorEPOS3, colorEPOS3, widthLinesBoxes, kTRUE, colorEPOS3);
+        histoEPOS3Pi0->GetXaxis()->SetRangeUser(0.3,20);
+        histoEPOS3Pi0->Draw("same,hist,l");
+        while(graphEPOS3Pi0->GetX()[0] < 0.3)
+            graphEPOS3Pi0->RemovePoint(0);
+        while(graphEPOS3Pi0->GetX()[graphEPOS3Pi0->GetN()-1] > 20)
+            graphEPOS3Pi0->RemovePoint(graphEPOS3Pi0->GetN()-1);
+        graphEPOS3Pi0->Draw("same,3");
+        
+        SetStyleHisto(histoDPMJetPi0, widthCommonFit*1.5, styleLineDPMJet, colorDPMJet );  
+        histoDPMJetPi0->GetXaxis()->SetRangeUser(0.3,20);
+        histoDPMJetPi0->Draw("same,hist,l");
+        SetStyleHisto(histoHIJINGPi0, widthCommonFit*1.5, styleLineHIJING, colorHIJING );  
+        histoHIJINGPi0->GetXaxis()->SetRangeUser(0.3,20);
+        histoHIJINGPi0->Draw("same,hist,l");
+
+//         graphNLODSS14Calc->RemovePoint(0);
+//         DrawGammaSetMarkerTGraphAsym(graphNLODSS14Calc, 0, 0, colorEPOS3, colorEPOS3, widthLinesBoxes, kTRUE, colorEPOS3);
+//         graphNLODSS14Calc->Draw("3,same");
+
         TGraphAsymmErrors* graphCombPi0InvYieldStatWOXErr = (TGraphAsymmErrors*)graphCombPi0InvYieldStat->Clone("graphCombPi0InvYieldStatWOXErr");
         ProduceGraphAsymmWithoutXErrors(graphCombPi0InvYieldStatWOXErr);
         
@@ -3989,235 +4021,261 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         DrawGammaSetMarkerTF1( fitTCMInvYieldPi0, 7, 2, kGray+2); 
         fitTCMInvYieldPi0->Draw("same");        
 
-        DrawGammaSetMarkerTF1( fitPowInvYieldPi0, 7, 2, kBlue-7); 
-        fitPowInvYieldPi0->Draw("same");        
-// //         
-// //         
-// //         TLatex *labelEnergyXSectionPaper= new TLatex(0.95, 0.91, collisionSystempPb.Data());
-// //         SetStyleTLatex( labelEnergyXSectionPaper, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 31);
-// //         labelEnergyXSectionPaper->Draw();
-// //         TLatex *labelALICEXSectionPaper= new TLatex(0.95,0.87,"ALICE");
-// //         SetStyleTLatex( labelALICEXSectionPaper, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 31);
-// //         labelALICEXSectionPaper->Draw();
-// //         TLatex *labelDetSysXSectionPaper= new TLatex(0.95,0.83,"#pi^{0} #rightarrow #gamma#gamma");
-// //         SetStyleTLatex( labelDetSysXSectionPaper, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 31);
-// //         labelDetSysXSectionPaper->Draw();
-// //         
-// //         TLegend* legendXsectionPaper    = GetAndSetLegend2(0.17, 0.14, 0.5, 0.14+0.05*4, textSizeLabelsPixel, 1, "", 43, 0.2);
-// //         legendXsectionPaper->AddEntry(graphCombPi0InvYieldSys,"Data,","pf");
-// //         legendXsectionPaper->AddEntry((TObject*)0,"Norm. unc. 5.4%","");
-// //         legendXsectionPaper->AddEntry(graphNLODSS14Calc,"NLO, PDF: MSTW, FF: DSS14","f");
-// // //         legendXsectionPaper->AddEntry((TObject*)0,"Phys.Rev. D91 no. 1, (2015) 014035","");
-// //         legendXsectionPaper->AddEntry(histoPythia8InvYieldPi0,"PYTHIA 8.2, Monash 2013","l");
-// //         legendXsectionPaper->Draw();
-// // 
-// //         TLegend* legendXsectionPaper2     = GetAndSetLegend2(0.17, 0.05, 0.5, 0.11, textSizeLabelsPixel, 1, "", 43, 0.2);
-// //         legendXsectionPaper2->AddEntry(fitTCMInvYieldPi0,"#it{A}_{e} exp(-#it{E}_{T, kin}/#it{T}_{e}) + #it{A}/#(){1 + #frac{#it{p}_{T}^{2}}{#it{T}^{2}#upoint n}}^{n}","l");
-// //         legendXsectionPaper2->Draw();
-// //         
-// //         
-// //     padInvSectionNLORatio->cd();
-// //     padInvSectionNLORatio->SetLogx(1);
-// //         TH2F * ratio2DNLO               = new TH2F("ratio2DNLO","ratio2DNLO",1000,0.23,31.,1000,0.5,1.9);
-// //         SetStyleHistoTH2ForGraphs(ratio2DNLO, "#it{p}_{T} (GeV/#it{c})","#frac{NLO, Data}{fit}", 0.85*textsizeLabelsXSecMiddle, textsizeLabelsXSecMiddle, 
-// //                                   0.85*textsizeLabelsXSecMiddle,textsizeLabelsXSecMiddle, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 512);
-// // //         ratio2DNLO->GetYaxis()->SetNdivisions(512);
-// //         ratio2DNLO->GetYaxis()->SetNoExponent(kTRUE);
-// //         ratio2DNLO->GetXaxis()->SetMoreLogLabels(kTRUE);
-// //         ratio2DNLO->GetXaxis()->SetNoExponent(kTRUE);
-// //         ratio2DNLO->GetXaxis()->SetLabelFont(42);
-// //         ratio2DNLO->GetYaxis()->SetLabelFont(42);
-// //         ratio2DNLO->GetYaxis()->SetLabelOffset(+0.01);
-// //         ratio2DNLO->GetXaxis()->SetTickLength(0.07);
-// //         ratio2DNLO->DrawCopy();
-// // 
-// // //         DrawGammaNLOTGraph( graphRatioPi0CombCGC, widthCommonFit, styleLineCGC, colorCGC);
-// // //         graphRatioPi0CombCGC->Draw("same,c");
-// // 
-// //         boxErrorSigma2760GeVRatioPi0->Draw();
-// //         
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombNLODSS14, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
-// //         graphRatioPi0CombNLODSS14->Draw("3,same");
-// // 
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitStatWOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
-// //         graphRatioPi0CombCombFitStatWOXErr->SetLineWidth(widthLinesBoxes);
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitSys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
-// //         graphRatioPi0CombCombFitSys->SetLineWidth(0);
-// //         graphRatioPi0CombCombFitSys->Draw("2,same");
-// //         graphRatioPi0CombCombFitStatWOXErr->Draw("p,same");
-// //         
-// //         DrawGammaLines(0.23, 70.,1., 1.,0.1,kGray);
-// //         
-// //     padInvSectionPythiaRatio->cd();
-// //     padInvSectionPythiaRatio->SetLogx(1);
-// //         TH2F * ratio2DPythia            = new TH2F("ratio2DPythia","ratio2DPythia",1000,0.23,31.,1000,0.5,1.9);
-// //         SetStyleHistoTH2ForGraphs(ratio2DPythia, "#it{p}_{T} (GeV/#it{c})","#frac{PYTHIA, Data}{fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown, 
-// //                                   0.85*textsizeLabelsXSecDown,textsizeLabelsXSecDown, 0.9,0.2/(textsizeFacXSecDown*marginXSec), 510, 512);
-// // //         ratio2DPythia->GetYaxis()->SetNdivisions(512);
-// //         ratio2DPythia->GetYaxis()->SetNoExponent(kTRUE);
-// //         ratio2DPythia->GetXaxis()->SetMoreLogLabels(kTRUE);
-// //         ratio2DPythia->GetXaxis()->SetNoExponent(kTRUE);
-// //         ratio2DPythia->GetXaxis()->SetLabelFont(42);
-// //         ratio2DPythia->GetYaxis()->SetLabelFont(42);
-// //         ratio2DPythia->GetYaxis()->SetLabelOffset(+0.01);
-// //         ratio2DPythia->GetXaxis()->SetTickLength(0.06);
-// //         ratio2DPythia->GetYaxis()->SetTickLength(0.04);
-// //         ratio2DPythia->DrawCopy();
-// // 
-// //         DrawGammaSetMarker(histoRatioPi0Pythia8ToFit, 24, 1.5, kRed+2 , kRed+2);  
-// //         histoRatioPi0Pythia8ToFit->SetLineWidth(widthCommonFit);
-// // //      histoRatioPi0Pythia8ToFit->GetXaxis()->SetRangeUser(0.5,14);
-// //         histoRatioPi0Pythia8ToFit->Draw("same,hist,l");
-// //         
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitStatWOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
-// //         graphRatioPi0CombCombFitStatWOXErr->SetLineWidth(widthLinesBoxes);
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitSys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
-// //         graphRatioPi0CombCombFitSys->SetLineWidth(0);
-// //         graphRatioPi0CombCombFitSys->Draw("2,same");
-// //         graphRatioPi0CombCombFitStatWOXErr->Draw("p,same");
-// //         
-// //         boxErrorSigma2760GeVRatioPi0->Draw();
-// //         
-// //         DrawGammaLines(0.23, 70.,1., 1.,0.1,kGray);
-// //         
-// //     canvasInvSectionPaper->Print(Form("%s/Pi0_InvYieldWithRatios_Paper.%s",outputDir.Data(),suffix.Data()));
-// //     
-// //     padInvSectionSpec->cd();
-// //     padInvSectionSpec->SetLogy(1);
-// //     padInvSectionSpec->SetLogx(1);
-// //         SetStyleHistoTH2ForGraphs(histo2DInvYieldEta, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",
-// //                                 0.85*textsizeLabelsXSecUp,textsizeLabelsXSecUp, 0.85*textsizeLabelsXSecUp, textsizeLabelsXSecUp, 1,0.2/(textsizeFacXSecUp*marginXSec));
-// //         histo2DInvYieldEta->GetXaxis()->SetMoreLogLabels();
-// //         histo2DInvYieldEta->GetXaxis()->SetLabelOffset(+0.01);
-// //         histo2DInvYieldEta->Draw();
-// // 
-// //         DrawGammaSetMarker(histoPythia8InvYieldEta, 24, 1.5, kRed+2 , kRed+2);  
-// //         histoPythia8InvYieldEta->SetLineWidth(widthCommonFit);
-// //         histoPythia8InvYieldEta->Draw("same,hist,l");
-// // 
-// //         DrawGammaNLOTGraph( graphNLOCalcEtaMuHalf, widthCommonFit, styleLineNLOMuHalf, colorNLO);
-// //         graphNLOCalcEtaMuHalf->Draw("same,c");
-// //         DrawGammaNLOTGraph( graphNLOCalcEtaMuOne, widthCommonFit, styleLineNLOMuOne, colorNLO);
-// //         graphNLOCalcEtaMuOne->Draw("same,c");
-// //         DrawGammaNLOTGraph( graphNLOCalcEtaMuTwo, widthCommonFit, styleLineNLOMuTwo, colorNLO);
-// //         graphNLOCalcEtaMuTwo->Draw("same,c");
-// // 
+//         DrawGammaSetMarkerTF1( fitPowInvYieldPi0, 7, 2, kBlue-7); 
+//         fitPowInvYieldPi0->Draw("same");        
+        
+        
+        TLatex *labelEnergyXSectionPaper= new TLatex(0.95, 0.91, collisionSystempPb.Data());
+        SetStyleTLatex( labelEnergyXSectionPaper, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 31);
+        labelEnergyXSectionPaper->Draw();
+        TLatex *labelALICEXSectionPaper= new TLatex(0.95,0.87,"ALICE");
+        SetStyleTLatex( labelALICEXSectionPaper, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 31);
+        labelALICEXSectionPaper->Draw();
+        TLatex *labelDetSysXSectionPaper= new TLatex(0.95,0.83,"#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelDetSysXSectionPaper, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 31);
+        labelDetSysXSectionPaper->Draw();
+        
+        TLegend* legendXsectionPaper    = GetAndSetLegend2(0.19, 0.14, 0.5, 0.14+0.05*5, textSizeLabelsPixel, 1, "", 43, 0.2);
+        legendXsectionPaper->AddEntry(graphCombPi0InvYieldSys,"Data,","pf");
+        legendXsectionPaper->AddEntry((TObject*)0,"Norm. unc. 3.1%","");
+//         legendXsectionPaper->AddEntry(graphNLODSS14Calc,"NLO, PDF: MSTW, FF: DSS14","f");
+//         legendXsectionPaper->AddEntry((TObject*)0,"Phys.Rev. D91 no. 1, (2015) 014035","");
+        legendXsectionPaper->AddEntry(histoDPMJetPi0,"DPMJet","l");
+        legendXsectionPaper->AddEntry(histoHIJINGPi0,"HIJING","l");
+        legendXsectionPaper->AddEntry(histoEPOS3Pi0,"EPOS3","l");
+        legendXsectionPaper->Draw();
+
+        TLegend* legendXsectionPaper2     = GetAndSetLegend2(0.19, 0.05, 0.5, 0.11, textSizeLabelsPixel, 1, "", 43, 0.2);
+        legendXsectionPaper2->AddEntry(fitTCMInvYieldPi0,"#it{A}_{e} exp(-#it{E}_{T, kin}/#it{T}_{e}) + #it{A}/#(){1 + #frac{#it{p}_{T}^{2}}{#it{T}^{2}#upoint n}}^{n}","l");
+        legendXsectionPaper2->Draw();
+        
+        
+    padInvSectionNLORatio->cd();
+    padInvSectionNLORatio->SetLogx(1);
+        TH2F * ratio2DEPOS               = new TH2F("ratio2DEPOS","ratio2DEPOS",1000,0.23, 25.,1000,0.3,2.2);
+        SetStyleHistoTH2ForGraphs(ratio2DEPOS, "#it{p}_{T} (GeV/#it{c})","#frac{EPOS, Data}{fit}", 0.85*textsizeLabelsXSecMiddle, textsizeLabelsXSecMiddle, 
+                                  0.85*textsizeLabelsXSecMiddle,textsizeLabelsXSecMiddle, 1,0.26/(textsizeFacXSecMiddle*marginXSec), 510, 508);
+//         ratio2DEPOS->GetYaxis()->SetNdivisions(512);
+        ratio2DEPOS->GetYaxis()->SetNoExponent(kTRUE);
+        ratio2DEPOS->GetXaxis()->SetMoreLogLabels(kTRUE);
+        ratio2DEPOS->GetXaxis()->SetNoExponent(kTRUE);
+        ratio2DEPOS->GetXaxis()->SetLabelFont(42);
+        ratio2DEPOS->GetYaxis()->SetLabelFont(42);
+        ratio2DEPOS->GetYaxis()->SetLabelOffset(+0.01);
+        ratio2DEPOS->GetXaxis()->SetTickLength(0.07);
+        ratio2DEPOS->DrawCopy();
+
+        boxErrorNormRatioPi0->Draw();
+        
+//         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombNLODSS14, 0, 0, colorEPOS3, colorEPOS3, widthLinesBoxes, kTRUE, colorEPOS3);
+//         graphRatioPi0CombNLODSS14->Draw("3,same");
+        SetStyleHisto(histoRatioPi0EPOS3ToFit, widthCommonFit*1.5, styleLineEPOS3, colorEPOS3 );  
+        DrawGammaSetMarkerTGraphErr(graphRatioPi0EPOS3ToFit, 0, 0, colorEPOS3, colorEPOS3, widthLinesBoxes, kTRUE, colorEPOS3);
+        histoRatioPi0EPOS3ToFit->Draw("same,hist,l");
+        graphRatioPi0EPOS3ToFit->Draw("same,3");
+
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitStatWOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
+        graphRatioPi0CombCombFitStatWOXErr->SetLineWidth(widthLinesBoxes);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitSys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
+        graphRatioPi0CombCombFitSys->SetLineWidth(0);
+        graphRatioPi0CombCombFitSys->Draw("2,same");
+        graphRatioPi0CombCombFitStatWOXErr->Draw("p,same");
+        
+        DrawGammaLines(0.23, 25.,1., 1.,0.1,kGray);
+        
+    padInvSectionPythiaRatio->cd();
+    padInvSectionPythiaRatio->SetLogx(1);
+        TH2F * ratio2DGenerator            = new TH2F("ratio2DGenerator","ratio2DGenerator",1000,0.23, 25.,1000,0.3,2.2);
+        SetStyleHistoTH2ForGraphs(ratio2DGenerator, "#it{p}_{T} (GeV/#it{c})","#frac{Generator, Data}{fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown, 
+                                  0.85*textsizeLabelsXSecDown,textsizeLabelsXSecDown, 0.9,0.26/(textsizeFacXSecDown*marginXSec), 510, 508);
+//         ratio2DGenerator->GetYaxis()->SetNdivisions(512);
+        ratio2DGenerator->GetYaxis()->SetNoExponent(kTRUE);
+        ratio2DGenerator->GetXaxis()->SetMoreLogLabels(kTRUE);
+        ratio2DGenerator->GetXaxis()->SetNoExponent(kTRUE);
+        ratio2DGenerator->GetXaxis()->SetLabelFont(42);
+        ratio2DGenerator->GetYaxis()->SetLabelFont(42);
+        ratio2DGenerator->GetYaxis()->SetLabelOffset(+0.01);
+        ratio2DGenerator->GetXaxis()->SetTickLength(0.06);
+        ratio2DGenerator->GetYaxis()->SetTickLength(0.04);
+        ratio2DGenerator->DrawCopy();
+
+        SetStyleHisto(histoRatioPi0DPMJetToFit, widthCommonFit*1.5, styleLineDPMJet, colorDPMJet );  
+//         histoRatioPi0DPMJetToFit->GetXaxis()->SetRangeUser(0.5,14);
+        histoRatioPi0DPMJetToFit->Draw("same,hist,l");
+        SetStyleHisto(histoRatioPi0HIJINGToFit, widthCommonFit*1.5, styleLineHIJING, colorHIJING );  
+//         histoRatioPi0HIJINGToFit->GetXaxis()->SetRangeUser(0.5,14);
+        histoRatioPi0HIJINGToFit->Draw("same,hist,l");
+        
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitStatWOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
+        graphRatioPi0CombCombFitStatWOXErr->SetLineWidth(widthLinesBoxes);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitSys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
+        graphRatioPi0CombCombFitSys->SetLineWidth(0);
+        graphRatioPi0CombCombFitSys->Draw("2,same");
+        graphRatioPi0CombCombFitStatWOXErr->Draw("p,same");
+        
+        boxErrorNormRatioPi0->Draw();
+        
+        DrawGammaLines(0.23, 25.,1., 1.,0.1,kGray);
+        
+    canvasInvSectionPaper->Print(Form("%s/Pi0_InvYieldWithRatios_Paper.%s",outputDir.Data(),suffix.Data()));
+    
+    padInvSectionSpec->cd();
+    padInvSectionSpec->SetLogy(1);
+    padInvSectionSpec->SetLogx(1);
+        SetStyleHistoTH2ForGraphs(histo2DInvYieldEta, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",
+                                0.85*textsizeLabelsXSecUp,textsizeLabelsXSecUp, 0.85*textsizeLabelsXSecUp, textsizeLabelsXSecUp, 1,0.26/(textsizeFacXSecUp*marginXSec));
+        histo2DInvYieldEta->GetXaxis()->SetMoreLogLabels();
+        histo2DInvYieldEta->GetXaxis()->SetLabelOffset(+0.01);
+        histo2DInvYieldEta->Draw();
+
+        SetStyleHisto(histoEPOS3Eta, widthCommonFit*1.5, styleLineEPOS3, colorEPOS3 );  
+        DrawGammaSetMarkerTGraphErr(graphEPOS3Eta, 0, 0, colorEPOS3, colorEPOS3, widthLinesBoxes, kTRUE, colorEPOS3);
+        histoEPOS3Eta->GetXaxis()->SetRangeUser(0.6,20);
+        histoEPOS3Eta->Draw("same,hist,l");
+        while(graphEPOS3Eta->GetX()[0] < 0.6)
+            graphEPOS3Eta->RemovePoint(0);
+        while(graphEPOS3Eta->GetX()[graphEPOS3Eta->GetN()-1] > 20)
+            graphEPOS3Eta->RemovePoint(graphEPOS3Eta->GetN()-1);
+        graphEPOS3Eta->Draw("same,3");
+
+        SetStyleHisto(histoDPMJetEta, widthCommonFit, styleLineDPMJet, colorDPMJet);          
+        histoDPMJetEta->GetXaxis()->SetRangeUser(0.6,20);
+        histoDPMJetEta->Draw("same,hist,l");
+        SetStyleHisto(histoHIJINGEta, widthCommonFit, styleLineHIJING, colorHIJING);          
+        histoHIJINGEta->GetXaxis()->SetRangeUser(0.6,20);
+        histoHIJINGEta->Draw("same,hist,l");
+        SetStyleHisto(histoEPOS3Eta, widthCommonFit, styleLineEPOS3, colorEPOS3);          
+        histoEPOS3Eta->GetXaxis()->SetRangeUser(0.6,20);
+        histoEPOS3Eta->Draw("same,hist,l");
+
+//         DrawGammaNLOTGraph( graphNLOCalcEtaMuHalf, widthCommonFit, styleLineNLOMuHalf, colorEPOS3);
+//         graphNLOCalcEtaMuHalf->Draw("same,c");
+//         DrawGammaNLOTGraph( graphNLOCalcEtaMuOne, widthCommonFit, styleLineNLOMuOne, colorEPOS3);
+//         graphNLOCalcEtaMuOne->Draw("same,c");
+//         DrawGammaNLOTGraph( graphNLOCalcEtaMuTwo, widthCommonFit, styleLineNLOMuTwo, colorEPOS3);
+//         graphNLOCalcEtaMuTwo->Draw("same,c");
+
         TGraphAsymmErrors* graphCombEtaInvYieldStatWOXErr = (TGraphAsymmErrors*)graphCombEtaInvYieldStat->Clone("graphCombEtaInvYieldStatWOXErr");
         ProduceGraphAsymmWithoutXErrors(graphCombEtaInvYieldStatWOXErr);
-// // 
-// //         
-// //         DrawGammaSetMarkerTGraphAsym(graphCombEtaInvYieldSys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE);
-// //         graphCombEtaInvYieldSys->Draw("E2same");
-// //         DrawGammaSetMarkerTGraphAsym(graphCombEtaInvYieldStatWOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack);
-// //         graphCombEtaInvYieldStatWOXErr->Draw("p,same,z");
-// // 
-// //         DrawGammaSetMarkerTF1( fitTCMInvYieldEta, 7, 2, kGray+2); 
-// //         fitTCMInvYieldEta->Draw("same");
-// // 
-// //         // labels lower left corner
-// //         TLegend* legendXsectionPaperEta    = GetAndSetLegend2(0.17, 0.11, 0.5, 0.11+0.05*2, textSizeLabelsPixel, 1, "", 43, 0.2);
-// //         legendXsectionPaperEta->AddEntry(graphCombPi0InvYieldSys,"Data,","pf");
-// //         legendXsectionPaperEta->AddEntry((TObject*)0,"Norm. unc. 5.4%","");
-// //         legendXsectionPaperEta->Draw();
-// //         legendXsectionPaper2->Draw();
-// //         
-// //         TLatex *labelEnergyXSectionPaperEta= new TLatex(0.18, 0.13+0.05*4, collisionSystempPb.Data());
-// //         SetStyleTLatex( labelEnergyXSectionPaperEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
-// //         labelEnergyXSectionPaperEta->Draw();
-// //         TLatex *labelALICEXSectionPaperEta= new TLatex(0.18,0.13+0.05*3,"ALICE");
-// //         SetStyleTLatex( labelALICEXSectionPaperEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
-// //         labelALICEXSectionPaperEta->Draw();
-// //         TLatex *labelDetSysXSectionPaperEta = new TLatex(0.18,0.13+0.05*2,"#eta #rightarrow #gamma#gamma");
-// //         SetStyleTLatex( labelDetSysXSectionPaperEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
-// //         labelDetSysXSectionPaperEta->Draw();
-// //         
-// // 
-// //         // labels upper right corner
-// //         TLegend* legendXsectionPaperEtaTheo     = GetAndSetLegend2(0.59, 0.95-0.04*2, 0.59+0.33, 0.95, textSizeLabelsPixel, 1, "", 43, 0.2);
-// //         legendXsectionPaperEtaTheo->AddEntry(histoPythia8InvYieldEta,"PYTHIA 8.2,","l");
-// //         legendXsectionPaperEtaTheo->AddEntry((TObject*)0,"Monash 2013","");
-// //         legendXsectionPaperEtaTheo->Draw();
-// // 
-// //         TLatex *labelNLOHeaderEta= new TLatex(0.60, 0.805, "NLO, PDF: CTEQ6M5");
-// //         SetStyleTLatex( labelNLOHeaderEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
-// //         labelNLOHeaderEta->Draw();
-// //         TLatex *labelNLOHeaderEta2= new TLatex(0.695, 0.765, "FF: AESSS");
-// //         SetStyleTLatex( labelNLOHeaderEta2, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
-// //         labelNLOHeaderEta2->Draw();
-// //                 
-// //         TLegend* legendXsectionPaperEtaTheo2     = GetAndSetLegend2(0.73, 0.755-0.048*3, 0.95, 0.755, textSizeLabelsPixel, 1, "", 43, 0.27);
-// //         legendXsectionPaperEtaTheo2->AddEntry(graphNLOCalcEtaMuHalf,"#mu = 0.5 #it{p}_{T}","l");
-// //         legendXsectionPaperEtaTheo2->AddEntry(graphNLOCalcEtaMuOne,"#mu = #it{p}_{T}","l");
-// // //         legendXsectionPaperEtaTheo2->AddEntry((TObject*)0,"","");
-// //         legendXsectionPaperEtaTheo2->AddEntry(graphNLOCalcEtaMuTwo,"#mu = 2 #it{p}_{T}","l");
-// //         legendXsectionPaperEtaTheo2->Draw();
-// // 
-// //         
-// //     padInvSectionNLORatio->cd();
-// //     padInvSectionNLORatio->SetLogx(1);
-// //         TH2F * ratio2DNLOEta                = new TH2F("ratio2DNLOEta","ratio2DNLOEta",1000,0.33,25.,1000,0.2,3.45);
-// //         SetStyleHistoTH2ForGraphs(ratio2DNLOEta, "#it{p}_{T} (GeV/#it{c})","#frac{NLO, Data}{fit}", 0.85*textsizeLabelsXSecMiddle, textsizeLabelsXSecMiddle, 
-// //                                   0.85*textsizeLabelsXSecMiddle,textsizeLabelsXSecMiddle, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 505);
-// //         ratio2DNLOEta->GetYaxis()->SetMoreLogLabels(kTRUE);
-// //         ratio2DNLOEta->GetYaxis()->SetNdivisions(505);
-// //         ratio2DNLOEta->GetYaxis()->SetNoExponent(kTRUE);
-// //         ratio2DNLOEta->GetXaxis()->SetMoreLogLabels(kTRUE);
-// //         ratio2DNLOEta->GetXaxis()->SetNoExponent(kTRUE);
-// //         ratio2DNLOEta->GetXaxis()->SetLabelFont(42);
-// //         ratio2DNLOEta->GetYaxis()->SetLabelFont(42);
-// //         ratio2DNLOEta->GetYaxis()->SetLabelOffset(+0.01);
-// //         ratio2DNLOEta->GetXaxis()->SetTickLength(0.07);
-// //         ratio2DNLOEta->DrawCopy();
-// // 
-// //         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuHalf, widthCommonFit, styleLineNLOMuHalf, colorNLO);
-// //         graphRatioEtaCombNLOMuHalf->Draw("same,c");
-// //         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuOne, widthCommonFit, styleLineNLOMuOne, colorNLO);
-// //         graphRatioEtaCombNLOMuOne->Draw("same,c");
-// //         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuTwo, widthCommonFit, styleLineNLOMuTwo, colorNLO);
-// //         graphRatioEtaCombNLOMuTwo->Draw("same,c");
-// //         
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitStatWOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
-// //         graphRatioEtaCombCombFitStatWOXErr->SetLineWidth(widthLinesBoxes);
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitSys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
-// //         graphRatioEtaCombCombFitSys->SetLineWidth(0);
-// //         graphRatioEtaCombCombFitSys->Draw("2,same");
-// //         graphRatioEtaCombCombFitStatWOXErr->Draw("p,same");
-// //         
-// //         boxErrorSigma2760GeVRatioEta->Draw();
-// //         DrawGammaLines(0.33, 25.,1., 1.,0.1,kGray);
-// //         
-// //     padInvSectionPythiaRatio->cd();
-// //     padInvSectionPythiaRatio->SetLogx(1);
-// //         TH2F * ratio2DPythiaEta             = new TH2F("ratio2DPythiaEta","ratio2DPythiaEta",1000,0.33,25.,1000,0.5,1.9);
-// //         SetStyleHistoTH2ForGraphs(ratio2DPythiaEta, "#it{p}_{T} (GeV/#it{c})","#frac{PYTHIA, Data}{fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown, 
-// //                                   0.85*textsizeLabelsXSecDown,textsizeLabelsXSecDown, 0.9,0.2/(textsizeFacXSecDown*marginXSec), 510, 512);
-// //         ratio2DPythiaEta->GetYaxis()->SetNoExponent(kTRUE);
-// //         ratio2DPythiaEta->GetXaxis()->SetMoreLogLabels(kTRUE);
-// //         ratio2DPythiaEta->GetXaxis()->SetNoExponent(kTRUE);
-// //         ratio2DPythiaEta->GetXaxis()->SetLabelFont(42);
-// //         ratio2DPythiaEta->GetYaxis()->SetLabelFont(42);
-// //         ratio2DPythiaEta->GetYaxis()->SetLabelOffset(+0.01);
-// //         ratio2DPythiaEta->GetXaxis()->SetTickLength(0.06);
-// //         ratio2DPythiaEta->GetYaxis()->SetTickLength(0.04);
-// //         ratio2DPythiaEta->DrawCopy();
-// // 
-// //         DrawGammaSetMarker(histoRatioEtaPythia8ToFit, 24, 1.5, kRed+2 , kRed+2);  
-// //         histoRatioEtaPythia8ToFit->SetLineWidth(widthCommonFit);
-// //         histoRatioEtaPythia8ToFit->Draw("same,hist,l");
-// //         
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitStatWOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
-// //         graphRatioEtaCombCombFitStatWOXErr->SetLineWidth(widthLinesBoxes);
-// //         DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitSys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
-// //         graphRatioEtaCombCombFitSys->SetLineWidth(0);
-// //         graphRatioEtaCombCombFitSys->Draw("2,same");
-// //         graphRatioEtaCombCombFitStatWOXErr->Draw("p,same");
-// // 
-// //         boxErrorSigma2760GeVRatioEta->Draw();
-// //         DrawGammaLines(0.33, 25.,1., 1.,0.1,kGray);
-// //         
-// //     canvasInvSectionPaper->Print(Form("%s/Eta_InvYieldWithRatios_Paper.%s",outputDir.Data(),suffix.Data()));
-// // 
-// // 
+
+        
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaInvYieldSys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE);
+        graphCombEtaInvYieldSys->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaInvYieldStatWOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack);
+        graphCombEtaInvYieldStatWOXErr->Draw("p,same,z");
+
+        DrawGammaSetMarkerTF1( fitTCMInvYieldEta, 7, 2, kGray+2); 
+        fitTCMInvYieldEta->Draw("same");
+
+        // labels lower left corner
+        TLegend* legendXsectionPaperEta    = GetAndSetLegend2(0.19, 0.11, 0.5, 0.11+0.05*2, textSizeLabelsPixel, 1, "", 43, 0.2);
+        legendXsectionPaperEta->AddEntry(graphCombPi0InvYieldSys,"Data,","pf");
+        legendXsectionPaperEta->AddEntry((TObject*)0,"Norm. unc. 3.1%","");
+        legendXsectionPaperEta->Draw();
+        legendXsectionPaper2->Draw();
+        
+        TLatex *labelEnergyXSectionPaperEta= new TLatex(0.20, 0.13+0.05*4, collisionSystempPb.Data());
+        SetStyleTLatex( labelEnergyXSectionPaperEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
+        labelEnergyXSectionPaperEta->Draw();
+        TLatex *labelALICEXSectionPaperEta= new TLatex(0.20,0.13+0.05*3,"ALICE");
+        SetStyleTLatex( labelALICEXSectionPaperEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
+        labelALICEXSectionPaperEta->Draw();
+        TLatex *labelDetSysXSectionPaperEta = new TLatex(0.20,0.13+0.05*2,"#eta #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelDetSysXSectionPaperEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
+        labelDetSysXSectionPaperEta->Draw();
+        
+
+        // labels upper right corner
+        TLegend* legendXsectionPaperEtaTheo     = GetAndSetLegend2(0.75, 0.95-0.04*3, 0.75+0.33, 0.95, textSizeLabelsPixel, 1, "", 43, 0.2);
+        legendXsectionPaperEtaTheo->AddEntry(histoDPMJetEta,"DPMJet","l");
+        legendXsectionPaperEtaTheo->AddEntry(histoHIJINGEta,"HIJING","l");
+        legendXsectionPaperEtaTheo->AddEntry(histoEPOS3Eta,"EPOS3","l");
+        legendXsectionPaperEtaTheo->Draw();
+
+//         TLatex *labelNLOHeaderEta= new TLatex(0.60, 0.805, "NLO, PDF: CTEQ6M5");
+//         SetStyleTLatex( labelNLOHeaderEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
+//         labelNLOHeaderEta->Draw();
+//         TLatex *labelNLOHeaderEta2= new TLatex(0.695, 0.765, "FF: AESSS");
+//         SetStyleTLatex( labelNLOHeaderEta2, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
+//         labelNLOHeaderEta2->Draw();
+                
+//         TLegend* legendXsectionPaperEtaTheo2     = GetAndSetLegend2(0.73, 0.755-0.048*3, 0.95, 0.755, textSizeLabelsPixel, 1, "", 43, 0.27);
+//         legendXsectionPaperEtaTheo2->AddEntry(graphNLOCalcEtaMuHalf,"#mu = 0.5 #it{p}_{T}","l");
+//         legendXsectionPaperEtaTheo2->AddEntry(graphNLOCalcEtaMuOne,"#mu = #it{p}_{T}","l");
+// //         legendXsectionPaperEtaTheo2->AddEntry((TObject*)0,"","");
+//         legendXsectionPaperEtaTheo2->AddEntry(graphNLOCalcEtaMuTwo,"#mu = 2 #it{p}_{T}","l");
+//         legendXsectionPaperEtaTheo2->Draw();
+
+        
+    padInvSectionNLORatio->cd();
+    padInvSectionNLORatio->SetLogx(1);
+        TH2F * ratio2DEPOSEta                = new TH2F("ratio2DEPOSEta","ratio2DEPOSEta",1000,0.43, 25.,1000,0.3,3.25);
+        SetStyleHistoTH2ForGraphs(ratio2DEPOSEta, "#it{p}_{T} (GeV/#it{c})","#frac{EPOS, Data}{fit}", 0.85*textsizeLabelsXSecMiddle, textsizeLabelsXSecMiddle, 
+                                  0.85*textsizeLabelsXSecMiddle,textsizeLabelsXSecMiddle, 1,0.26/(textsizeFacXSecMiddle*marginXSec), 510, 510);
+        ratio2DEPOSEta->GetYaxis()->SetMoreLogLabels(kTRUE);
+        ratio2DEPOSEta->GetYaxis()->SetNoExponent(kTRUE);
+        ratio2DEPOSEta->GetXaxis()->SetMoreLogLabels(kTRUE);
+        ratio2DEPOSEta->GetXaxis()->SetNoExponent(kTRUE);
+        ratio2DEPOSEta->GetXaxis()->SetLabelFont(42);
+        ratio2DEPOSEta->GetYaxis()->SetLabelFont(42);
+        ratio2DEPOSEta->GetYaxis()->SetLabelOffset(+0.01);
+        ratio2DEPOSEta->GetXaxis()->SetTickLength(0.07);
+        ratio2DEPOSEta->DrawCopy();
+
+//         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuHalf, widthCommonFit, styleLineNLOMuHalf, colorEPOS3);
+//         graphRatioEtaCombNLOMuHalf->Draw("same,c");
+//         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuOne, widthCommonFit, styleLineNLOMuOne, colorEPOS3);
+//         graphRatioEtaCombNLOMuOne->Draw("same,c");
+//         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuTwo, widthCommonFit, styleLineNLOMuTwo, colorEPOS3);
+//         graphRatioEtaCombNLOMuTwo->Draw("same,c");
+        SetStyleHisto(histoRatioEtaEPOS3ToFit, widthCommonFit*1.5, styleLineEPOS3, colorEPOS3 );  
+        DrawGammaSetMarkerTGraphErr(graphRatioEtaEPOS3ToFit, 0, 0, colorEPOS3, colorEPOS3, widthLinesBoxes, kTRUE, colorEPOS3);
+        histoRatioEtaEPOS3ToFit->Draw("same,hist,l");
+        graphRatioEtaEPOS3ToFit->Draw("same,3");
+        
+        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitStatWOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
+        graphRatioEtaCombCombFitStatWOXErr->SetLineWidth(widthLinesBoxes);
+        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitSys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
+        graphRatioEtaCombCombFitSys->SetLineWidth(0);
+        graphRatioEtaCombCombFitSys->Draw("2,same");
+        graphRatioEtaCombCombFitStatWOXErr->Draw("p,same");
+        
+        boxErrorNormRatioEta->Draw();
+        DrawGammaLines(0.43, 25.,1., 1.,0.1,kGray);
+        
+    padInvSectionPythiaRatio->cd();
+    padInvSectionPythiaRatio->SetLogx(1);
+        TH2F * ratio2DGeneratorEta             = new TH2F("ratio2DGeneratorEta","ratio2DGeneratorEta",1000,0.43, 25.,1000,0.3,2.95);
+        SetStyleHistoTH2ForGraphs(ratio2DGeneratorEta, "#it{p}_{T} (GeV/#it{c})","#frac{Generator, Data}{fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown, 
+                                  0.85*textsizeLabelsXSecDown,textsizeLabelsXSecDown, 0.9,0.26/(textsizeFacXSecDown*marginXSec), 510, 510);
+        ratio2DGeneratorEta->GetYaxis()->SetNoExponent(kTRUE);
+        ratio2DGeneratorEta->GetXaxis()->SetMoreLogLabels(kTRUE);
+        ratio2DGeneratorEta->GetXaxis()->SetNoExponent(kTRUE);
+        ratio2DGeneratorEta->GetXaxis()->SetLabelFont(42);
+        ratio2DGeneratorEta->GetYaxis()->SetLabelFont(42);
+        ratio2DGeneratorEta->GetYaxis()->SetLabelOffset(+0.01);
+        ratio2DGeneratorEta->GetXaxis()->SetTickLength(0.06);
+        ratio2DGeneratorEta->GetYaxis()->SetTickLength(0.04);
+        ratio2DGeneratorEta->DrawCopy();
+
+        SetStyleHisto(histoRatioEtaDPMJetToFit, widthCommonFit*1.5, styleLineDPMJet, colorDPMJet );  
+        histoRatioEtaDPMJetToFit->Draw("same,hist,l");
+        SetStyleHisto(histoRatioEtaHIJINGToFit, widthCommonFit*1.5, styleLineHIJING, colorHIJING );  
+        histoRatioEtaHIJINGToFit->Draw("same,hist,l");
+        
+        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitStatWOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
+        graphRatioEtaCombCombFitStatWOXErr->SetLineWidth(widthLinesBoxes);
+        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombCombFitSys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
+        graphRatioEtaCombCombFitSys->SetLineWidth(0);
+        graphRatioEtaCombCombFitSys->Draw("2,same");
+        graphRatioEtaCombCombFitStatWOXErr->Draw("p,same");
+
+        boxErrorNormRatioEta->Draw();
+        DrawGammaLines(0.43, 25.,1., 1.,0.1,kGray);
+        
+    canvasInvSectionPaper->Print(Form("%s/Eta_InvYieldWithRatios_Paper.%s",outputDir.Data(),suffix.Data()));
+
+
     // ***************************************************************************************************************
     // ******************************* Plotting eta/pi0 ratio for single measurements ********************************
     // ***************************************************************************************************************
@@ -4238,14 +4296,13 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         cout << textsizeLabelsEtaToPi0 << endl;
     
     TH2F * histo2DEtatoPi0combo;
-    histo2DEtatoPi0combo               = new TH2F("histo2DEtatoPi0combo","histo2DEtatoPi0combo",1000,0.33,25.,1000,0.,1.05    );
+    histo2DEtatoPi0combo                = new TH2F("histo2DEtatoPi0combo","histo2DEtatoPi0combo",1000,0.43, 25.,1000,0.,1.05    );
     SetStyleHistoTH2ForGraphs(histo2DEtatoPi0combo, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0}", 0.85*textsizeLabelsEtaToPi0, textsizeLabelsEtaToPi0, 
                               0.85*textsizeLabelsEtaToPi0,1.1*textsizeLabelsEtaToPi0, 0.9, 0.65, 510, 510);
     histo2DEtatoPi0combo->GetXaxis()->SetMoreLogLabels();
     histo2DEtatoPi0combo->GetXaxis()->SetLabelOffset(-0.01);
     histo2DEtatoPi0combo->GetYaxis()->SetRangeUser(0.0,1.05);
     histo2DEtatoPi0combo->Draw("copy");
-
         // plotting systematics graphs
         DrawGammaSetMarkerTGraphAsym(graphPCMEtaToPi0Sys, markerStyleDet[0], markerSizeDet[0]*0.75, colorDet[0] , colorDet[0], widthLinesBoxes, kTRUE);
         graphPCMEtaToPi0Sys->Draw("E2same");
@@ -4297,7 +4354,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         graphCombEtaToPi0Stat->Print();
         DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0StatWOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
         graphCombEtaToPi0StatWOXErr->SetLineWidth(widthLinesBoxes);
-        DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Sys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Sys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes*2, kTRUE, 0);
         graphCombEtaToPi0Sys->SetLineWidth(0);
         graphCombEtaToPi0Sys->Draw("2,same");
         graphCombEtaToPi0StatWOXErr->Draw("p,same");
@@ -4313,67 +4370,91 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     canvasEtatoPi0combo->Update();
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Paper.%s",outputDir.Data(), suffix.Data()));
 
-// //     
-// // //     // ***************************************************************************************************************
-// // //     // ********************** Plotting eta/pi0 ratio for combined measurement + Theory *******************************
-// // //     // ***************************************************************************************************************    
-// // //     histo2DEtatoPi0combo->Draw("copy");
-// // //         DrawGammaSetMarkerTGraphAsym(graphNLOEtaToPi0, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
-// // //         graphNLOEtaToPi0->Draw("3,same");
-// // // 
-// // //         DrawGammaSetMarker(histoPythia8EtaToPi0, 24, 1.5, kRed+2 , kRed+2);  
-// // //         histoPythia8EtaToPi0->SetLineWidth(widthCommonFit);
-// // //         histoPythia8EtaToPi0->Draw("same,hist,l");
-// // // 
-// // //         graphCombEtaToPi0Sys->Draw("2,same");
-// // //         graphCombEtaToPi0StatWOXErr->Draw("p,same");
-// // //         
-// // //         // plotting labels
-// // //         labelEnergyEtaToPi0->Draw();
-// // //         labelALICEEtaToPi0->Draw();
-// // //         labelPi0EtaToPi0->Draw();
-// // // 
-// // //         TLegend* legendEtaToPi0Theory = GetAndSetLegend2(0.48, 0.95, 0.9, 0.95-(textsizeLabelsEtaToPi0*4*0.9), textSizeLabelsPixel*0.85, 1, "", 43, 0.16);
-// // //         legendEtaToPi0Theory->AddEntry(graphCombEtaToPi0Sys,"Data","pf");
-// // //         legendEtaToPi0Theory->AddEntry(graphNLOEtaToPi0,"NLO, PDF:CTEQ6M5 ","pf");
-// // //         legendEtaToPi0Theory->AddEntry((TObject*)0,"#pi^{0} FF: DSS07, #eta FF: AESSS","");
-// // //         legendEtaToPi0Theory->AddEntry(histoPythia8EtaToPi0,"PYTHIA 8.2, Monash 2013","l");
-// // //         legendEtaToPi0Theory->Draw();
-// // //         
-// // //     histo2DEtatoPi0combo->Draw("axis,same");
-// // // 
-// // //     canvasEtatoPi0combo->Update();
-// // //     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Theory_Paper.%s",outputDir.Data(), suffix.Data()));
-// // // 
+    
+    // ***************************************************************************************************************
+    // ********************** Plotting eta/pi0 ratio for combined measurement + Theory *******************************
+    // ***************************************************************************************************************    
+    histo2DEtatoPi0combo->Draw("copy");
+//         DrawGammaSetMarkerTGraphAsym(graphNLOEtaToPi0, 0, 0, colorEPOS3, colorEPOS3, widthLinesBoxes, kTRUE, colorEPOS3);
+//         graphNLOEtaToPi0->Draw("3,same");
+    
+        SetStyleHisto(histoEPOS3EtaToPi0_Reb, widthCommonFit*1.5, 1, colorEPOS3);          
+        DrawGammaSetMarkerTGraphErr(graphEPOS3EtaToPi0_Reb, 0, 0, colorEPOS3, colorEPOS3, widthLinesBoxes, kTRUE, colorEPOS3);
+        histoEPOS3EtaToPi0_Reb->Draw("same,hist,l");
+        graphEPOS3EtaToPi0_Reb->Draw("3,same");
+
+        SetStyleHisto(cocktailEtaToPi0_MtScaledReb, widthCommonFit*1.5, 1, kRed+2);  
+        cocktailEtaToPi0_MtScaledReb->Draw("same,hist,l");
+
+        SetStyleHisto(histoDPMJetEtaToPi0, widthCommonFit*1.5, styleLineDPMJet, colorDPMJet );  
+        histoDPMJetEtaToPi0->Draw("same,hist,l");
+
+        SetStyleHisto(histoHIJINGEtaToPi0, widthCommonFit*1.5, 8, colorHIJING);  
+        histoHIJINGEtaToPi0->Draw("same,hist,l");
+        
+        
+        graphCombEtaToPi0Sys->Draw("2,same");
+        graphCombEtaToPi0StatWOXErr->Draw("p,same");
+        
+        // plotting labels
+        labelEnergyEtaToPi0->Draw();
+        labelALICEEtaToPi0->Draw();
+        labelPi0EtaToPi0->Draw();
+        
+        TLegend* legendEtaToPi0Theory = GetAndSetLegend2(0.48, 0.15+(textsizeLabelsEtaToPi0*3*0.9), 0.9, 0.15, textSizeLabelsPixel*0.85, 2, "", 43, 0.25);
+//         legendEtaToPi0Theory->AddEntry(graphNLOEtaToPi0,"NLO, PDF:CTEQ6M5 ","pf");
+//         legendEtaToPi0Theory->AddEntry((TObject*)0,"#pi^{0} FF: DSS07, #eta FF: AESSS","");
+        legendEtaToPi0Theory->AddEntry(cocktailEtaToPi0_MtScaledReb,"#eta from #it{m}_{_{T}} scaled #pi^{0}","l");
+        legendEtaToPi0Theory->AddEntry((TObject*)0,"","");
+        legendEtaToPi0Theory->AddEntry(histoDPMJetEtaToPi0,"DPMJet","l");
+        legendEtaToPi0Theory->AddEntry(histoEPOS3EtaToPi0_Reb,"EPOS3","l");
+        legendEtaToPi0Theory->AddEntry(histoHIJINGEtaToPi0,"HIJING","l");
+        legendEtaToPi0Theory->Draw();
+    
+
+        
+    histo2DEtatoPi0combo->Draw("axis,same");
+
+    canvasEtatoPi0combo->Update();
+    canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Theory_Paper.%s",outputDir.Data(), suffix.Data()));
+
     // ***************************************************************************************************************
     // **************** Plotting eta/pi0 ratio for combined measurement + Theory + other energies ********************
     // ***************************************************************************************************************    
     canvasEtatoPi0combo->cd();
-    histo2DEtatoPi0combo->Draw("copy");
-//         graphNLOEtaToPi0->Draw("3,same");
-//         histoPythia8EtaToPi0->Draw("same,hist,l");
+    TH2F * histo2DEtatoPi0WD           = new TH2F("histo2DEtatoPi0WD","histo2DEtatoPi0WD",1000,0.04,25.,1000,-0.18,1.02    );
+    SetStyleHistoTH2ForGraphs(histo2DEtatoPi0WD, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0}", 0.85*textsizeLabelsEtaToPi0, textsizeLabelsEtaToPi0, 
+                              0.85*textsizeLabelsEtaToPi0,1.1*textsizeLabelsEtaToPi0, 0.9, 0.65, 510, 510);
+    histo2DEtatoPi0WD->GetXaxis()->SetMoreLogLabels();
+    histo2DEtatoPi0WD->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DEtatoPi0WD->Draw("copy");
 
         graphCombEtaToPi0Sys->Draw("2,same");
                
-        DrawGammaSetMarkerTGraphErr(graphPHENIXEtaToPi0200GeV, 25, 2., kGray+2, kGray+2, widthLinesBoxes, kFALSE);
+        DrawGammaSetMarkerTGraphErr(graphPHENIXEtaToPi0200GeV, 25, 2., kGray+1, kGray+1, widthLinesBoxes, kFALSE);
         graphPHENIXEtaToPi0200GeV->Draw("p,same");
         DrawGammaSetMarkerTGraphAsym(graphALICEEtaToPi07TeV, 24, 2.2, kBlue-6, kBlue-6, widthLinesBoxes, kFALSE);
         graphALICEEtaToPi07TeV->Draw("p,same");
         
         TGraphAsymmErrors* graphALICEEtaToPi02760GeVWOXErr = (TGraphAsymmErrors*)graphALICEEtaToPi02760GeV->Clone("graphALICEEtaToPi02760GeVWOXErr");
         ProduceGraphAsymmWithoutXErrors(graphALICEEtaToPi02760GeVWOXErr);
-    
         DrawGammaSetMarkerTGraphAsym(graphALICEEtaToPi02760GeVWOXErr, 25, 2.2, kBlue-6, kBlue-6, widthLinesBoxes, kFALSE);
         graphALICEEtaToPi02760GeVWOXErr->Draw("p,same");
         
+        DrawGammaSetMarkerTGraphErr(graphCERESEtaToPi0pAu29100MeV, 24, 2.5, kGreen-6, kGreen-6, widthLinesBoxes, kFALSE);
+        graphCERESEtaToPi0pAu29100MeV->Draw("p,same");
+        DrawGammaSetMarkerTGraphErr(graphCERESEtaToPi0pBe29100MeV, 25, 2., kGreen-6, kGreen-6, widthLinesBoxes, kFALSE);
+        graphCERESEtaToPi0pBe29100MeV->Draw("p,same");
+        DrawGammaSetMarkerTGraphErr(graphPHENIXEtaToPi0dAu200GeV, 24, 2., kGray+1, kGray+1, widthLinesBoxes, kFALSE);
+        graphPHENIXEtaToPi0dAu200GeV->Draw("p,same");
+        
         graphCombEtaToPi0StatWOXErr->Draw("p,same");
         
-//         TLegend* legendEtaToPi0Theory2 = GetAndSetLegend2(0.13, 0.95, 0.46, 0.95-(textsizeLabelsEtaToPi0*4*0.9), textSizeLabelsPixel*0.85, 1, "", 43, 0.16);
-        TLegend* legendEtaToPi0Theory2 = GetAndSetLegend2(0.13, 0.95, 0.46, 0.95-(textsizeLabelsEtaToPi0*1*0.9), textSizeLabelsPixel*0.85, 1, "", 43, 0.16);
+        TLegend* legendEtaToPi0Theory2 = GetAndSetLegend2(0.13, 0.95, 0.46, 0.95-(textsizeLabelsEtaToPi0*4*0.9), textSizeLabelsPixel*0.85, 1, "", 43, 0.16);
         legendEtaToPi0Theory2->AddEntry(graphCombEtaToPi0Sys,Form("ALICE, %s",collisionSystempPb.Data()),"pf");
-//         legendEtaToPi0Theory2->AddEntry(graphNLOEtaToPi0,"NLO, PDF:CTEQ6M5 ","pf");
-//         legendEtaToPi0Theory2->AddEntry((TObject*)0,"#pi^{0} FF: DSS07, #eta FF: AESSS","");
-//         legendEtaToPi0Theory2->AddEntry(histoPythia8EtaToPi0,"PYTHIA 8.2, Monash 2013","l");
+        legendEtaToPi0Theory2->AddEntry(graphPHENIXEtaToPi0dAu200GeV,"PHENIX, d-Au, #sqrt{#it{s}_{_{NN}}} = 0.2 TeV","p");
+        legendEtaToPi0Theory2->AddEntry(graphCERESEtaToPi0pAu29100MeV,"TAPS/CERES, p-Au, #sqrt{#it{s}_{_{NN}}} = 29.1 GeV","p");
+        legendEtaToPi0Theory2->AddEntry(graphCERESEtaToPi0pBe29100MeV,"TAPS/CERES, p-Be, #sqrt{#it{s}_{_{NN}}} = 29.1 GeV","p");
         legendEtaToPi0Theory2->Draw();
 
         TLegend* legendEtaToPi0WorldData = GetAndSetLegend2(0.53, 0.145+(textsizeLabelsEtaToPi0*3*0.9), 0.9, 0.145, textSizeLabelsPixel*0.85, 1, "", 43, 0.16);
@@ -4382,46 +4463,20 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         legendEtaToPi0WorldData->AddEntry(graphPHENIXEtaToPi0200GeV,"PHENIX, pp, #sqrt{#it{s}} = 0.2 TeV", "p");
         legendEtaToPi0WorldData->Draw();
         
-    histo2DEtatoPi0combo->Draw("axis,same");
+    histo2DEtatoPi0WD->Draw("axis,same");
 
     canvasEtatoPi0combo->Update();
-    canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Theory_WorldData_Paper.%s",outputDir.Data(), suffix.Data()));
-// // // 
-// // // 
-// // //     // ***************************************************************************************************************
-// // //     // **************** Plotting eta/pi0 ratio for combined measurement + other energies ********************
-// // //     // ***************************************************************************************************************        
-// // //     canvasEtatoPi0combo->cd();
-// // //     histo2DEtatoPi0combo->Draw("copy");
-// // //         
-// // //         graphCombEtaToPi0Sys->Draw("2,same");
-// // //                
-// // //         DrawGammaSetMarkerTGraphErr(graphPHENIXEtaToPi0200GeV, 25, 2., kGray+2, kGray+2, widthLinesBoxes, kFALSE);
-// // //         graphPHENIXEtaToPi0200GeV->Draw("p,same");
-// // //         DrawGammaSetMarkerTGraphAsym(graphALICEEtaToPi07TeV, 24, 2.2, kBlack, kBlack, widthLinesBoxes, kFALSE);
-// // //         graphALICEEtaToPi07TeV->Draw("p,same");
-// // //         
-// // //         graphCombEtaToPi0StatWOXErr->Draw("p,same");
-// // //         
-// // //         TLegend* legendEtaToPi0WorldData2 = GetAndSetLegend2(0.13, 0.95, 0.46, 0.95-(textsizeLabelsEtaToPi0*3*0.9), textSizeLabelsPixel*0.85, 1, "", 43, 0.16);
-// // //         legendEtaToPi0WorldData2->AddEntry(graphCombEtaToPi0Sys,Form("ALICE, %s",collisionSystempPb.Data()),"pf");
-// // //         legendEtaToPi0WorldData2->AddEntry(graphALICEEtaToPi07TeV,"ALICE, pp, #sqrt{#it{s}} = 7 TeV","p");
-// // //         legendEtaToPi0WorldData2->AddEntry(graphPHENIXEtaToPi0200GeV,"PHENIX, pp, #sqrt{#it{s}} = 0.2 TeV", "p");
-// // //         legendEtaToPi0WorldData2->Draw();
-// // //         
-// // //     histo2DEtatoPi0combo->Draw("axis,same");
-// // // 
-// // //     canvasEtatoPi0combo->Update();
-// // //     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_WorldData_Paper.%s",outputDir.Data(), suffix.Data()));
-// //     
-// //     
+    canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_WorldData_Paper.%s",outputDir.Data(), suffix.Data()));
+
     // ***************************************************************************************************************
     // ******************************** fitting eta/pi0 **************************************************************
     // ***************************************************************************************************************    
     TF1* etaToPi0ConstData  = new TF1("etaToPi0ConstData","[0]",6,20);
-//     TF1* etaToPi0ConstMC    = new TF1("etaToPi0ConstMC","[0]",8,20);
+    TF1* etaToPi0ConstMC    = new TF1("etaToPi0ConstMC","[0]",8,20);
+    TF1* etaToPi0ConstMC2   = new TF1("etaToPi0ConstMC","[0]",8,20);
     graphCombEtaToPi0StatWOXErr->Fit(etaToPi0ConstData,"QRME0","",6,20);
-//     histoPythia8EtaToPi0->Fit(etaToPi0ConstMC,"QRME0","",8,20);
+    histoDPMJetEtaToPi0->Fit(etaToPi0ConstMC,"QRME0","",8,20);
+    histoHIJINGEtaToPi0->Fit(etaToPi0ConstMC2,"QRME0","",8,20);
     
     cout << "***********************************************************************************************************" << endl;
     cout << "***********************************************************************************************************" << endl;
@@ -4429,15 +4484,28 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
     cout << "high pt eta/pi0 - data, stat: " << etaToPi0ConstData->GetParameter(0) << "+-"<< etaToPi0ConstData->GetParError(0) << endl;
     graphCombEtaToPi0Tot->Fit(etaToPi0ConstData,"QRME0","",6,20);
     cout << "high pt eta/pi0 - data, tot: " << etaToPi0ConstData->GetParameter(0) << "+-"<< etaToPi0ConstData->GetParError(0) << endl;
-//     cout << "high pt eta/pi0 - pythia 8: " << etaToPi0ConstMC->GetParameter(0) << "+-"<< etaToPi0ConstMC->GetParError(0) << endl;
+    cout << "high pt eta/pi0 - DPMJet: " << etaToPi0ConstMC->GetParameter(0) << "+-"<< etaToPi0ConstMC->GetParError(0) << endl;
+    cout << "high pt eta/pi0 - HIJING: " << etaToPi0ConstMC2->GetParameter(0) << "+-"<< etaToPi0ConstMC2->GetParError(0) << endl;
     cout << "***********************************************************************************************************" << endl;
     cout << "***********************************************************************************************************" << endl;
     cout << "***********************************************************************************************************" << endl;
 
+    fileFitsOutput << "***********************************************************************************************************" << endl;
+    fileFitsOutput << "***********************************************************************************************************" << endl;
+    fileFitsOutput << "***********************************************************************************************************" << endl;
+    graphCombEtaToPi0StatWOXErr->Fit(etaToPi0ConstData,"QRME0","",6,20);
+    fileFitsOutput << "high pt eta/pi0 - data, stat: " << etaToPi0ConstData->GetParameter(0) << "+-"<< etaToPi0ConstData->GetParError(0) << endl;
+    graphCombEtaToPi0Tot->Fit(etaToPi0ConstData,"QRME0","",6,20);
+    fileFitsOutput << "high pt eta/pi0 - data, tot: " << etaToPi0ConstData->GetParameter(0) << "+-"<< etaToPi0ConstData->GetParError(0) << endl;
+    fileFitsOutput << "high pt eta/pi0 - DPMJet: " << etaToPi0ConstMC->GetParameter(0) << "+-"<< etaToPi0ConstMC->GetParError(0) << endl;
+    fileFitsOutput << "high pt eta/pi0 - HIJING: " << etaToPi0ConstMC2->GetParameter(0) << "+-"<< etaToPi0ConstMC2->GetParError(0) << endl;
+    fileFitsOutput << "***********************************************************************************************************" << endl;
+    fileFitsOutput << "***********************************************************************************************************" << endl;
+    fileFitsOutput << "***********************************************************************************************************" << endl;
 
     canvasXSectionPi0->cd();
     TH2F * histo2DXSectionWithEtaAndPi0;
-    histo2DXSectionWithEtaAndPi0          = new TH2F("histo2DXSectionWithEtaAndPi0","histo2DXSectionWithEtaAndPi0",11000,0.23,31.,1000,2e-12,10e1);
+    histo2DXSectionWithEtaAndPi0          = new TH2F("histo2DXSectionWithEtaAndPi0","histo2DXSectionWithEtaAndPi0",11000,0.23, 25.,1000,2e-12,10e1);
     SetStyleHistoTH2ForGraphs(histo2DXSectionWithEtaAndPi0, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",0.035,0.04, 0.035,0.04, 0.9,1.65);
     histo2DXSectionWithEtaAndPi0->GetXaxis()->SetMoreLogLabels();
     histo2DXSectionWithEtaAndPi0->GetXaxis()->SetLabelOffset(-0.01);
@@ -4449,9 +4517,13 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         TGraphAsymmErrors* graphCombEtaInvYieldSysCopy          = (TGraphAsymmErrors*) graphCombEtaInvYieldSys->Clone("graphCombEtaInvYieldSysCopy");
         graphCombEtaInvYieldStatWOXErrCopy                      = ScaleGraph(graphCombEtaInvYieldStatWOXErrCopy,scaleFacEtaForCombPlot);
         graphCombEtaInvYieldSysCopy                             = ScaleGraph(graphCombEtaInvYieldSysCopy,scaleFacEtaForCombPlot);
-        TH1D* histFitTCMInvYieldEta                              = (TH1D*)fitTCMInvYieldEta->GetHistogram();
+        TH1D* histFitTCMInvYieldEta                             = (TH1D*)fitTCMInvYieldEta->GetHistogram();
         histFitTCMInvYieldEta->Scale(scaleFacEtaForCombPlot);
-//         histoPythia8InvYieldEta->Scale(scaleFacEtaForCombPlot);
+        histoDPMJetEta->Scale(scaleFacEtaForCombPlot);
+        histoHIJINGEta->Scale(scaleFacEtaForCombPlot);
+        histoEPOS3Eta->Scale(scaleFacEtaForCombPlot);
+        TGraphErrors* graphEPOS3EtaCopy                         = (TGraphErrors*) graphEPOS3Eta->Clone("graphEPOS3EtaCopy");
+        graphEPOS3EtaCopy                                       = ScaleGraph(graphEPOS3EtaCopy,scaleFacEtaForCombPlot);
 //         TGraphAsymmErrors* graphNLOEtaAESSCalcCopy                  = (TGraphAsymmErrors*)graphNLOEtaAESSCalc->Clone("graphNLOEtaAESSCalcCopy");
 //         TGraph* graphNLOCalcEtaMuHalfCopy                           = (TGraph*)graphNLOCalcEtaMuHalf->Clone("graphNLOCalcEtaMuHalfCopy");
 //         TGraph* graphNLOCalcEtaMuOneCopy                            = (TGraph*)graphNLOCalcEtaMuOne->Clone("graphNLOCalcEtaMuOneCopy");
@@ -4461,21 +4533,23 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
 //         graphNLOCalcEtaMuOneCopy                                    = ScaleGraph(graphNLOCalcEtaMuOneCopy,scaleFacEtaForCombPlot);
 //         graphNLOCalcEtaMuTwoCopy                                    = ScaleGraph(graphNLOCalcEtaMuTwoCopy,scaleFacEtaForCombPlot);
         
-        // plotting Pythia 8.2 Monash
-//         DrawGammaSetMarker(histoPythia8InvYieldPi0, 24, 1.5, kRed+2 , kRed+2);  
-//         histoPythia8InvYieldPi0->SetLineWidth(widthCommonFit);
-//         histoPythia8InvYieldPi0->Draw("same,hist,l");
-//         DrawGammaSetMarker(histoPythia8InvYieldEta, 24, 1.5, kRed+2 , kRed+2);  
-//         histoPythia8InvYieldEta->SetLineWidth(widthCommonFit);
-//         histoPythia8InvYieldEta->Draw("same,hist,l");
-
-//         // plotting NLO calcs pi0
-//         DrawGammaSetMarkerTGraphAsym(graphNLODSS14Calc, 0, 0, colorNLO, colorNLO, widthLinesBoxes, kTRUE, colorNLO);
-//         graphNLODSS14Calc->Draw("3,same");
-        
-//         // plotting NLO calcs eta
-//         DrawGammaSetMarkerTGraphAsym(graphNLOEtaAESSCalcCopy, 0, 0, colorCGC, colorCGC, widthLinesBoxes, kTRUE, colorCGC);
-//         graphNLOEtaAESSCalcCopy->Draw("3,same");       
+        // plotting Generators
+        histoEPOS3Pi0->Draw("same,hist,l");
+        graphEPOS3Pi0->Draw("same,3");
+        SetStyleHisto(histoEPOS3Eta, widthCommonFit*1.5, styleLineEPOS3, colorEPOS3 );  
+        DrawGammaSetMarkerTGraphErr(graphEPOS3EtaCopy, 0, 0, colorEPOS3, colorEPOS3, widthLinesBoxes, kTRUE, colorEPOS3);
+        histoEPOS3Eta->Draw("same,hist,l");
+        graphEPOS3EtaCopy->Draw("same,3");        
+        SetStyleHisto(histoDPMJetPi0, widthCommonFit, styleLineDPMJet, colorDPMJet);          
+        histoDPMJetPi0->Draw("same,hist,l");
+        SetStyleHisto(histoDPMJetEta, widthCommonFit, styleLineDPMJet, colorDPMJet);          
+        histoDPMJetEta->Draw("same,hist,l");
+        DrawGammaSetMarker(histoHIJINGPi0, 24, 1.5, colorHIJING , colorHIJING);  
+        histoHIJINGPi0->SetLineWidth(widthCommonFit);
+        histoHIJINGPi0->Draw("same,hist,l");
+        DrawGammaSetMarker(histoHIJINGEta, 24, 1.5, colorHIJING , colorHIJING);  
+        histoHIJINGEta->SetLineWidth(widthCommonFit);
+        histoHIJINGEta->Draw("same,hist,l");
 
         // plot data
         graphCombPi0InvYieldSys->Draw("E2same");
@@ -4506,20 +4580,17 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
         TLatex *labelALICEXSectionPaperAll  = new TLatex(0.20,0.20+0.04*2,"ALICE");
         SetStyleTLatex( labelALICEXSectionPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
         labelALICEXSectionPaperAll->Draw();
-        TLatex *labelALICENormUnPaperAll    = new TLatex(0.20,0.20+0.05*1,"Norm. unc. 5.4%");
+        TLatex *labelALICENormUnPaperAll    = new TLatex(0.20,0.20+0.05*1,"Norm. unc. 3.1%");
         SetStyleTLatex( labelALICENormUnPaperAll, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 11);
         labelALICENormUnPaperAll->Draw();
         
 
-//         // labels upper right corner
-//         TLegend* legendXsectionPaperPyBoth  = GetAndSetLegend2(0.54, 0.95-0.04*4-0.04*0.75*2, 0.59+0.33, 0.95, textSizeLabelsPixel, 1, "", 43, 0.18);
-//         legendXsectionPaperPyBoth->AddEntry(histoPythia8InvYieldEta,"PYTHIA 8.2","l");
-//         legendXsectionPaperPyBoth->AddEntry((TObject*)0,"Monash 2013","");
-//         legendXsectionPaperPyBoth->AddEntry(graphNLODSS14Calc,"#pi^{0} pQCD NLO ","f");
-//         legendXsectionPaperPyBoth->AddEntry((TObject*)0,"#scale[0.75]{PDF: MSTW, FF: DSS14}","");
-//         legendXsectionPaperPyBoth->AddEntry(graphNLOEtaAESSCalcCopy,"#eta pQCD NLO ","f");        
-//         legendXsectionPaperPyBoth->AddEntry((TObject*)0,"#scale[0.75]{PDF: CTEQ6M5, FF: AESSS}","");
-//         legendXsectionPaperPyBoth->Draw();
+        // labels upper right corner
+        TLegend* legendXsectionPaperPyBoth  = GetAndSetLegend2(0.74, 0.95-0.04*3, 0.74+0.33, 0.95, textSizeLabelsPixel, 1, "", 43, 0.18);
+        legendXsectionPaperPyBoth->AddEntry(histoDPMJetEta,"DPMJet","l");
+        legendXsectionPaperPyBoth->AddEntry(histoHIJINGEta,"HIJING","l");
+        legendXsectionPaperPyBoth->AddEntry(histoEPOS3Eta,"EPOS3","l");
+        legendXsectionPaperPyBoth->Draw();
 
     canvasXSectionPi0->SaveAs(Form("%s/InvYield_Pi0_Eta_Theory.%s",outputDir.Data(),suffix.Data()));
 

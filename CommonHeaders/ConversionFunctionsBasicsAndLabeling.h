@@ -3721,6 +3721,10 @@ TString ReturnGeneratorNameFromMCName(TString MCname){
         return "Pythia 8.2";
     } else if (MCname.CompareTo("LHC16c2") == 0 ){
         return "Pythia 8.2, p_{T,hard}";
+    } else if (MCname.CompareTo("LHC13b2_efix") == 0 ){
+        return "DPMJet";
+    } else if (MCname.CompareTo("LHC13e7") == 0 ){
+        return "HIJING";
     } else {
         return "undefined";
     }    

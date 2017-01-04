@@ -82,6 +82,8 @@ TF1** fPowerlawSystem               = 0x0;
 
 void CalculateStatPlusSysErrors(TH1D* histStat, TH1D* histSys);
 TGraphAsymmErrors* CalculateStatPlusSysErrors(TGraphAsymmErrors* graphStat, TGraphAsymmErrors* graphSys);
+
+//________________________________________________________________________________________________________________________
 void CalculateReference (   TString configFile      = "",
                             Int_t nDataSets         = 2,
                             TString meson           = "Pi0",
@@ -143,7 +145,6 @@ void CalculateReference (   TString configFile      = "",
             cout << i << "\t"<< finalBinningPt[i] << "-" << finalBinningPt[i] <<endl;
         }
     }
-
     
     //*************************************************************************************************
     //*************************** read input
@@ -272,7 +273,6 @@ void CalculateReference (   TString configFile      = "",
                     graphSystReb[i]->SetPointError(j,(finalBinningPt[j+1]-finalBinningPt[j])/2.,(finalBinningPt[j+1]-finalBinningPt[j])/2.,fitComb[i]->Eval(ptCurrent)*0.2,fitComb[i]->Eval(ptCurrent)*0.2);
                 }    
             }
-            
         } else {    
             if (i==0 ){
                 graphCombReb[i]             = (TGraphAsymmErrors*)graphComb[i]->Clone(Form("graphCombReb_%d",i));
@@ -296,8 +296,7 @@ void CalculateReference (   TString configFile      = "",
                         graphSystReb[i]->SetPointError(j,graphSystReb[i]->GetEXlow()[j],graphSystReb[i]->GetEXhigh()[j],fitComb[i]->Eval(graphSystReb[i]->GetX()[j])*0.2,fitComb[i]->Eval(graphSystReb[i]->GetX()[j])*0.2);
                     }    
                 }
-                
-            } 
+            }
         }    
     }
 
@@ -314,9 +313,8 @@ void CalculateReference (   TString configFile      = "",
 // 
 
     //*************************************************************************************************
-    //*************************** extrapolate spectra
+    //*************************** extrapolate spectra *************************************************
     //*************************************************************************************************
-
     TGraphAsymmErrors*  graphFinalEnergy    = GetInterpolSpectrum2D(    nDataSets,
                                                                         graphCombReb,
                                                                         energyInd,
