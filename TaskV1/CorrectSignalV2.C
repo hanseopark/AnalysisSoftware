@@ -1175,6 +1175,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     Double_t maxFracBG  = 8;
     if (optionEnergy.CompareTo("2.76TeV") == 0) 
         maxFracBG       = 20;
+    if (optionEnergy.CompareTo("8TeV") == 0) 
+        maxFracBG       = 25;
     if (kDCAFileDataExists){
         cout << "Plotting total contamination from  out of bunch pileup with different methods" << endl;
         TCanvas* canvasCorrFrac = new TCanvas("canvasCorrFrac","",200,10,1350,900);  // gives the page size
@@ -1317,7 +1319,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             DrawAutoGammaMesonHistos( histoBGEstimateA, 
                                 "", "#it{p}_{T,#pi^{0}} (GeV/#it{c})", "Correction factor", 
                                 kFALSE, 2.,1e-8, kFALSE,
-                                kTRUE, 0.8, 1,
+                                kTRUE, 0.7, 1,
                                 kFALSE, 0., 10.);
         }
         DrawGammaSetMarker(histoBGEstimateA, styleMethod[0], 1.2, colorMethod[0], colorMethod[0]);

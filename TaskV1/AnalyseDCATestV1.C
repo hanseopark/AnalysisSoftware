@@ -1430,7 +1430,7 @@ void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfB
                 fBinsPt[i] 				= fBinsPi07TeVPtDCA[i];
             }
             fExampleBin 				= 10;
-            nIterBGFit 					= 12;
+            nIterBGFit 					= 9;
             optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
             optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
             optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
