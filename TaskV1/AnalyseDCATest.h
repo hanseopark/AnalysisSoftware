@@ -3,7 +3,7 @@ Double_t fHoleRadius = 2.;
 
 Double_t AsymmGaus(Double_t *x, Double_t *par);
 Double_t GausWithHole(Double_t *x, Double_t *par);
-void Initialize(TString setPi0, TString cent, TString optPeriod, Int_t numberOfBins);
+void InitializeIntRange(TString setPi0);
 void PlotDCADistPtBinWithFitAndEstimateCat(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy, Int_t category);
 void PlotDCADistPtBinWithMCSplitCat(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy, Int_t category);
 void PlotDCADistPtBinWithFitAndEstimate(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy);
@@ -85,9 +85,3 @@ Double_t    fMesonLambdaTail=             0;
 Double_t    *fMesonWidthRange =           NULL;
 Double_t    *fMesonLambdaTailRange =         NULL;
 TString fMesonType = "";
-Int_t nIterBGFit = 13; 
-
-TString optionBGSmoothingStandard = "BackSmoothing9";
-TString optionBGSmoothingVar1 = "BackSmoothing7";
-TString optionBGSmoothingVar2 = "BackSmoothing11";
-Double_t fMaxYFracBGOverIntHist = 20;

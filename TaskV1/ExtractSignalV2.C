@@ -2378,7 +2378,7 @@ void ProduceBckProperWeighting(TList* fBackgroundContainer,TList* fMotherContain
 //****************************************************************************
 void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     
-    InitializeBinning(setPi0, numberOfBins, fEnergyFlag, fdirectphoton, fMode, fEventCutSelection, fClusterCutSelection, triggerSet);
+    InitializeBinning(setPi0, numberOfBins, fEnergyFlag, fdirectphoton, fMode, fEventCutSelection, fClusterCutSelection, triggerSet, kFALSE, "", "");
     
     if (setPi0.CompareTo("Pi0") == 0 || setPi0.CompareTo("Pi0EtaBinning") == 0){
         fPeakRange                  = new Double_t[2];
