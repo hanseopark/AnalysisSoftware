@@ -4820,7 +4820,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM         = ""
  // ************************* Saving of final results ********************************************************************
  // **********************************************************************************************************************
  
-    TString nameOutputCommonFile    = Form("CombinedResultsPaperPPb5023GeV_%s", dateForOutput.Data());
+    TString nameOutputCommonFile    = Form("CombinedResultsPaperPPb5023GeV_%s.root", dateForOutput.Data());
     
     TFile fCombResults(nameOutputCommonFile.Data(), "RECREATE");
 
