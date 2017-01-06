@@ -1448,7 +1448,7 @@ void PlotWithFitSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtB
                     fHistoMappingSignalInvMassPtBinPlot[iPt]->SetMarkerSize(3*markersize);
                     legendMC->AddEntry(fHistoMappingSignalInvMassPtBinPlot[iPt],fTextMGammaGamma.Data(),"ep");
                 }
-                if (fTextMCvalidated.CompareTo("") != 0){
+                if (fTextMCvalidated.CompareTo("") != 0 && fHistoMappingTrueMesonInvMassPtBinsPlot){
                     Size_t markersize2      = fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->GetMarkerSize();
                     if (labelData)fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->SetMarkerSize(3*markersize2);
                     legendMC->AddEntry(fHistoMappingTrueMesonInvMassPtBinsPlot[iPt],fTextMCvalidated.Data(),"ep");
@@ -1561,7 +1561,7 @@ void PlotWithFitSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtB
                                 Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
                                 Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],2);
-                if(fMonteCarloInfo){
+                if(fMonteCarloInfo && fHistoMappingTrueMesonInvMassPtBinsPlot){
                     fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->SetMarkerColor(kRed+2);
                     fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->SetLineColor(kRed+2);
                     fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->SetLineWidth(1);

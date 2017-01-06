@@ -2,8 +2,6 @@
 
 
 //!! -> what is commented here is defined in ExtractSignal.h
-
-Double_t    fNEvnt                                                  = 0;
 Bool_t      fEnablePCM                                              = 0;
 Bool_t      fEnableCalo                                             = 0;
 Bool_t      fUseCocktail                                            = 0;
@@ -15,12 +13,6 @@ TString     fDirectPhoton                                           = "";
 TString     fOutputDir                                              = "";
 TString     fSuffix                                                 = "";
 TString     fMeson                                                  = "";
-
-TString     fEventCutNumber                                         = "";
-TString     fGammaCutNumber                                         = "";
-TString     fClusterCutNumber                                       = "";
-TString     fElectronCutNumber                                      = "";
-TString     fMesonCutNumber                                         = "";
 
 TString     fCutSelectionRead                                       = ""; 
 TString     fEventCutSelectionRead                                  = "";
@@ -271,7 +263,12 @@ TH1D*       fHistoGammaMCPrimaryRecoEffPileUp                                   
 TH1D*       fHistoPhotonIsSelected                                                              = NULL;
 
 //******************* tagging outputHistograms ********************************************************
-TH1D**      fHistoGconvGInvMassPtGConvBin                                                       = NULL;
+TH1D**      fHistoGGInvMassPtGConvBin                                                           = NULL;
+TH1D**      fHistoSignalInvMassPtGConvBin                                                       = NULL;
+TH1D**      fHistoSignalInvMassLeftPtGConvBin                                                   = NULL;
+TH1D**      fHistoBackInvMassPtGconvBin                                                         = NULL;
+TH1D**      fHistoBackNormInvMassPtGconvBin                                                     = NULL;
+TH1D**      fHistoBackNormInvMassLeftPtGconvBin                                                 = NULL;
 
 //*****************************************************************************************************
 //******************** Check multiple counts of photons ***********************************************
@@ -493,6 +490,8 @@ void     DrawFractionPerCat                 (   TH1D**      frac,
                                                 TString     fCutSelection,
                                                 TString     fSuffix                             );
 void     FillMassHistosArray                (   TH2D*       fGammaGammaInvMassVSPtDummy         );
+void     ProduceBckProperWeighting          (   TH2D*       fHistoBckZM, 
+                                                TH2D*       fHistoMotherZM                      );
 Bool_t   CompareArrays                      (   Int_t       nEntriesA,
                                                 Double_t*   arrayA,
                                                 Int_t       nEntriesB,
@@ -516,3 +515,4 @@ Bool_t    CalculatePileUpCorrectionFactor   (   TH1D*       ratioWithWithoutPile
                                                 TH1D*       &pileupCorrectionFactor,
                                                 TF1*        &fitToRatio                         );
 Bool_t   LoadSecondariesFromCocktailFile(TString, TString);                                                // Loads secondary neutral pion input graphs from file
+void     Delete                             ();
