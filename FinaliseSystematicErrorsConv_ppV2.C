@@ -129,16 +129,10 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                                                 1, 1, 0, 0, 0,  0 };
     Bool_t bsmoothMBPi08TeV[16]             = { 1, 0, 1, 1, 1,  1, 1, 1, 1, 1,
                                                 1, 1, 0, 0, 0,  0 };
-    Bool_t bsmoothMBEta8TeV[16]             = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
-                                                0, 0, 0, 0, 0,  0 };
-    Bool_t bsmoothMBEtaToPi08TeV[16]        = { 1, 1, 0, 0, 0,  0, 0, 0, 0, 1,
+    Bool_t bsmoothMBEta8TeV[16]             = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1,
                                                 1, 1, 0, 0, 0,  0 };
-//     Bool_t bsmoothMBPi08TeV[16]             = { 1, 1, 1, 1, 0,  1, 1, 1, 1, 1,
-//                                                 1, 1, 0, 0, 0,  0 };
-//     Bool_t bsmoothMBEta8TeV[16]             = { 1, 1, 1, 1, 0,  1, 1, 1, 1, 1,
-//                                                 1, 1, 0, 0, 0,  0 };
-//     Bool_t bsmoothMBEtaToPi08TeV[16]        = { 1, 1, 0, 0, 0,  0, 0, 0, 0, 1,
-//                                                 1, 1, 0, 0, 0,  0 };
+    Bool_t bsmoothMBEtaToPi08TeV[16]        = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1,
+                                                1, 1, 0, 0, 0,  0 };
     Bool_t bsmoothMBPi02760GeV[16]          = { 1, 0, 1, 1, 1,  1, 1, 1, 1, 1,
                                                 0, 0, 0, 0, 0,  0 };
     Bool_t bsmoothMBEta2760GeV[16]          = { 1, 0, 1, 1, 1,  1, 1, 1, 1, 1,
@@ -465,7 +459,7 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                 } else if (meson.Contains("Eta")){
                     for (Int_t k = 0; k < nPtBins; k++){
                         if (!energy.CompareTo("8TeV"))
-                            errorReset          = 2+pow(ptBins[k],2)*0.13;
+                            errorReset          = 2+pow(ptBins[k],2)*0.09;
                         else if (!energy.CompareTo("7TeV"))
                             errorReset          = 0.5+pow(ptBins[k],2)*0.035;
                         else if (!energy.CompareTo("2.76TeV"))
@@ -499,7 +493,7 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                             if (ptBins[k] > 2.5)
                                 errorReset      = 2.5+pow(ptBins[k]-3,2)*0.275;
                             else 
-                                errorReset      = 2.5+pow(ptBins[k]-2.5,2)*0.9;
+                                errorReset      = 2.5+pow(ptBins[k]-2.5,2)*1.1;
                         } else if (!energy.CompareTo("7TeV")){
                             errorReset          = 1.2+pow(ptBins[k]-3,2)*0.15;
                         } else if (!energy.CompareTo("2.76TeV")){
@@ -538,7 +532,7 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                             if (ptBins[k] > 1.6)
                                 errorReset      = 1.5+pow(ptBins[k]-1.5,2)*0.03;
                             else 
-                                errorReset      = 1.5+pow(ptBins[k]-1.6,2)*7;
+                                errorReset      = 1.5+pow(ptBins[k]-1.6,2)*3;
                         } else if (!energy.CompareTo("7TeV")){
                             errorReset          = 1;
                         } else if (!energy.CompareTo("2.76TeV")){
@@ -576,7 +570,7 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                 } else if (meson.Contains("Eta")){
                     for (Int_t k = 0; k < nPtBins; k++){
                         if (!energy.CompareTo("8TeV"))
-                            errorReset          = 0.4+pow(ptBins[k],2)*0.02;
+                            errorReset          = 0.4+pow(ptBins[k],2)*0.045;
                         else if (!energy.CompareTo("7TeV"))
                             errorReset          = 0.1+pow(ptBins[k],2)*0.045;
                         else if (!energy.CompareTo("2.76TeV"))
