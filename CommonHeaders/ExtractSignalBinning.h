@@ -349,7 +349,7 @@ Double_t fBinsEta8TeVPCMTrigger1Pt[26]          = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.0
 Double_t fBinsEta8TeVPCMTrigger2Pt[24]          = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6,
                                                     4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0,
                                                     25.0, 30.0, 35.0, 40.};
-Int_t fBinsEta8TeVPtRebin[19]                   = { 5, 8, 4, 4, 4, 4, 4, 5, 5, 5,
+Int_t fBinsEta8TeVPtRebin[19]                   = { 5, 8, 5, 5, 5, 4, 4, 5, 5, 5,
                                                     5, 5, 7, 5, 5, 5, 5, 5, 5};
 Int_t fBinsEta8TeVEMCPtRebin[19]                = { 4, 4, 4, 16, 10, 16, 8, 8, 10, 8,
                                                     8, 8, 8, 16, 16, 16, 20, 4, 4};
@@ -1053,7 +1053,7 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                     case 0:
                     case 1:
                     case 10:
-                        return 3;       // INT triggers
+                        return 4;       // INT triggers
                     case 11:
                         return 6;       // INT triggers
                         break;
@@ -1721,10 +1721,10 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 }
             }
 
-            nIterBGFit                  = 12;
-            fMaxYFracBGOverIntHist      = 20;
-            optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
-            optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing3";
+            nIterBGFit                  = 11;
+            fMaxYFracBGOverIntHist      = 30;
+            optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+            optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
             optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
 
             Int_t nBinsPlot = fColumn*fRow -1;
@@ -2525,10 +2525,10 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVPtRebin[i];
                 }
             }
-            nIterBGFit                  = 12;
-            fMaxYFracBGOverIntHist      = 20;
-            optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
-            optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing3";
+            nIterBGFit                  = 11;
+            fMaxYFracBGOverIntHist      = 30;
+            optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+            optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing6";
             optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
 
         //*********************************************************************************************
@@ -2928,7 +2928,7 @@ Int_t GetBinning(   Double_t*  binning,
             } else if ( mode == 0 ){
                 maxNBins = 40;
                 for(Int_t i = 0; i < maxNBins+1; i++){
-                    binning[i] = fBinsPi08TeVTrigger1Pt[i];
+                    binning[i] = fBinsPi08TeVPt[i];
                 }
             } else if ( mode == 10 ){
                 maxNBins = 55;
@@ -2984,7 +2984,7 @@ Int_t GetBinning(   Double_t*  binning,
             } else if ( mode == 0 ){
                 maxNBins = 19;
                 for(Int_t i = 0; i < maxNBins+1; i++){
-                    binning[i] = fBinsEta8TeVPCMTrigger1Pt[i];
+                    binning[i] = fBinsEta8TeVPt[i];
                 }
             }
         } else if (energy.CompareTo("pPb_5.023TeV") == 0){
