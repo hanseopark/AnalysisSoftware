@@ -1,0 +1,45 @@
+0.22   0.0658597   0.00961073 
+0.39   0.0697478   0.0158972 
+0.50   0.062667   0.0282999 
+0.59   0.12029   0.0343508 
+0.67   0.18931   0.043403 
+0.74   0.199852   0.04855 
+0.81   0.217991   0.06536 
+0.87   0.28081   0.0848261 
+0.97   0.215634   0.0646471 
+1.12   0.399672   0.0878583 
+1.26   0.494085   0.110019 
+1.43   0.609714   0.170821 
+
+
+1.63   0.241523   0.218696 
+
+
+computed via:
+e.setFit(0)
+TGraphErrors*pi0=(TGraphErrors*)e.plot_spectrum_from_ascii("aguilar91_pp_pi0_plab400GeV_na27.txt",eband)
+TGraphErrors*eta=(TGraphErrors*)e.plot_spectrum_from_ascii("aguilar91_pp_eta_plab400GeV_na27.txt",eband)
+pi0->Fit("expo")
+TF1*f=(TF1*)0x91e8420
+TGraphErrors*r=(TGraphErrors*)emcAnalyzerUtils::ratio(eta,f)
+r.Draw("AP")
+emcAnalyzerUtils::dumpGraph(r,"x-y-ey")
+
+picked off plot:
+
+0.4015  0.0636  0.0118 
+0.4977  0.0576  0.0280 
+0.6926  0.1888  0.0287 
+0.7776  0.2301  0.0584 
+0.9173  0.3230  0.0819 
+0.9481  0.2206  0.0639 
+1.1001  0.4107  0.1041 
+1.2555  0.4598  0.1005 
+1.3863	0.5371	0.1267 
+
+
+\bibitem{Aguilar-Benitez:1991yy}
+  M.~Aguilar-Benitez {\it et al.},
+  %``Inclusive particle production in 400-GeV/c p p interactions,''
+  Z.\ Phys.\ C {\bf 50} (1991) 405.
+  %%CITATION = ZEPYA,C50,405;%%
