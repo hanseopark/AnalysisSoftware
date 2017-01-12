@@ -5073,15 +5073,6 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     histo2DEtatoPi0combo->Draw("copy");
         
-    // plotting data
-    graphCombEtaToPi0StatA_WOXErr->Print();
-    DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0StatA_WOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
-    graphCombEtaToPi0StatA_WOXErr->SetLineWidth(widthLinesBoxes);
-    DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0SysA, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
-    graphCombEtaToPi0SysA->SetLineWidth(0);
-    graphCombEtaToPi0SysA->Draw("2,same");
-    graphCombEtaToPi0StatA_WOXErr->Draw("p,same");
-
     TLegend* legendXsectionPaperEtaToPi0     = GetAndSetLegend2(0.12, 0.8, 0.45, 0.96, 0.85*textSizeLabelsPixel);
     legendXsectionPaperEtaToPi0->SetNColumns(1);
     legendXsectionPaperEtaToPi0->SetMargin(0.2);
@@ -5104,12 +5095,14 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     SetStyleTLatex( labelALICEEtaToPi02, 0.85*textsizeLabelsEtaToPi0,4);
     labelALICEEtaToPi02->Draw();
 
-//        TLatex *labelPi0EtaToPi02 = new TLatex(0.75, 0.92-(2*textsizeLabelsEtaToPi0*0.85),"#eta/#pi^{0}");
-//        SetStyleTLatex( labelPi0EtaToPi02, 0.85*textsizeLabelsEtaToPi0,4);
-//        labelPi0EtaToPi02->Draw();
-//        labelEnergyEtaToPi0->Draw();
-//        labelALICEEtaToPi0->Draw();
-//        labelPi0EtaToPi0->Draw();
+    // plotting data
+    graphCombEtaToPi0StatA_WOXErr->Print();
+    DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0StatA_WOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
+    graphCombEtaToPi0StatA_WOXErr->SetLineWidth(widthLinesBoxes);
+    DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0SysA, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
+    graphCombEtaToPi0SysA->SetLineWidth(0);
+    graphCombEtaToPi0SysA->Draw("2,same");
+    graphCombEtaToPi0StatA_WOXErr->Draw("p,same");
 
     histo2DEtatoPi0combo->Draw("axis,same");
 
@@ -5168,6 +5161,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //    DrawGammaSetMarkerTGraph(graphEtaToPi02760GeV, markerStyleDet[4], markerSizeDet[4]*0.75, colorDet[4] , colorDet[4], widthLinesBoxes, kTRUE);
 //    graphEtaToPi02760GeV->Draw("same,p");
 
+    eta2pi0MtScaled->Draw("][ c same");
+
     // plotting data
     DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0StatA_WOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
     graphCombEtaToPi0StatA_WOXErr->SetLineWidth(widthLinesBoxes);
@@ -5176,12 +5171,45 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     graphCombEtaToPi0SysA->Draw("2,same");
     graphCombEtaToPi0StatA_WOXErr->Draw("p,same");
 
-    eta2pi0MtScaled->Draw("][ c same");
-
     histo2DEtatoPi0combo->Draw("axis,same");
 
     canvasEtatoPi0combo->Update();
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_mT.%s",outputDir.Data(), suffix.Data()));
+
+    //*************************************************************************************************************
+    //*************************************************************************************************************
+
+    histo2DEtatoPi0combo->Draw("copy");
+
+    textSizeLabelsPixel = 48;
+    TLegend* legendXsectionPaperEtaToPi03n     = GetAndSetLegend2(0.11, 0.81, 0.5, 0.96, 0.85*textSizeLabelsPixel);
+    legendXsectionPaperEtaToPi03n->SetNColumns(1);
+    legendXsectionPaperEtaToPi03n->SetMargin(0.2);
+    legendXsectionPaperEtaToPi03n->AddEntry(graphCombPi0InvXSectionSysA,"ALICE, #sqrt{#it{s}} = 8 TeV","pf");
+    legendXsectionPaperEtaToPi03n->AddEntry(graphEtaToPi07000GeV,"ALICE, #sqrt{#it{s}} = 7 TeV","p");
+    legendXsectionPaperEtaToPi03n->AddEntry(graphEtaToPi02760GeV,"ALICE, #sqrt{#it{s}} = 2.76 TeV","p");
+    legendXsectionPaperEtaToPi03n->Draw();
+
+    TLegend* legendXsectionPaperEtaToPi04n     = GetAndSetLegend2(0.58, 0.14, 0.96, 0.24, 0.85*textSizeLabelsPixel);
+    legendXsectionPaperEtaToPi04n->SetNColumns(1);
+    legendXsectionPaperEtaToPi04n->SetMargin(0.2);
+    legendXsectionPaperEtaToPi04n->AddEntry(eta2pi0_RHIC200GeV,"PHENIX, #sqrt{#it{s}} = 200 GeV","p");
+    legendXsectionPaperEtaToPi04n->AddEntry(eta2pi0_NA27_275GeV,"NA27, #sqrt{#it{s}} = 27.5 GeV","p");
+    legendXsectionPaperEtaToPi04n->Draw();
+
+    eta2pi0_RHIC200GeV->Draw("same,p");
+    eta2pi0_NA27_275GeV->Draw("p,same");
+    graphEtaToPi07000GeV->Draw("same,p");
+    graphEtaToPi02760GeV->Draw("same,p");
+
+    // plotting data
+    graphCombEtaToPi0SysA->Draw("2,same");
+    graphCombEtaToPi0StatA_WOXErr->Draw("p,same");
+
+    histo2DEtatoPi0combo->Draw("axis,same");
+
+    canvasEtatoPi0combo->Update();
+    canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Comparison_no_mT.%s",outputDir.Data(), suffix.Data()));
 
     //*************************************************************************************************************
     //*************************************************************************************************************
@@ -5248,7 +5276,17 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     histoPythia8EtaToPi0->Draw("same,hist,c");
     histoPythia8T4CEtaToPi0->Draw("same,hist,c");
 
-    legendXsectionPaperEtaToPi02->Draw();
+    TLegend* legendXsectionPaperEtaToPi05     = GetAndSetLegend2(0.12, 0.645, 0.45, 0.645+0.045*7, 0.85*textSizeLabelsPixel);
+    legendXsectionPaperEtaToPi05->SetNColumns(1);
+    legendXsectionPaperEtaToPi05->SetMargin(0.2);
+    legendXsectionPaperEtaToPi05->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
+    legendXsectionPaperEtaToPi05->AddEntry(eta2pi0MtScaled,"ALICE, #sqrt{#it{s}} = 8 TeV from m_{T} scaling","l");
+    legendXsectionPaperEtaToPi05->AddEntry(histoPythia8T4CEtaToPi0,"PYTHIA 8.2, Tune 4C","l");
+    legendXsectionPaperEtaToPi05->AddEntry(histoPythia8EtaToPi0,"PYTHIA 8.2, Monash 2013","l");
+    legendXsectionPaperEtaToPi05->AddEntry(graphNLOEtaToPi0,"NLO, PDF:CTEQ6M5","f");
+    legendXsectionPaperEtaToPi05->AddEntry((TObject*)0,"#pi^{0} FF:DSS07, #eta FF:AESSS","");
+    legendXsectionPaperEtaToPi05->AddEntry((TObject*)0,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}","");
+    legendXsectionPaperEtaToPi05->Draw();
 
     // plotting NLO
     graphNLOEtaToPi0->Draw("same,e4");
@@ -5260,6 +5298,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // plotting labels
     labelEnergyEtaToPi02->Draw();
     labelALICEEtaToPi02->Draw();
+
+    eta2pi0MtScaled->SetLineColor(kBlue+2);
+    eta2pi0MtScaled->Draw("][ c same");
+
+    // plotting data
+    graphCombEtaToPi0SysA->Draw("2,same");
+    graphCombEtaToPi0StatA_WOXErr->Draw("p,same");
 
     histo2DEtatoPi0combo->Draw("axis,same");
 
