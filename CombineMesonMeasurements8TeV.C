@@ -1390,7 +1390,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     //histo2DRelStatErr->GetXaxis()->SetLabelOffset(-0.01);
 //  histo2DRelStatErr->GetYaxis()->SetRangeUser(-10,10);
     histo2DRelStatErr->Draw("copy");
-        TLegend* legendRelStatErr       = GetAndSetLegend2(0.14, 0.92-(0.035*nMeasSetPi0A), 0.45, 0.92, 32);
+        TLegend* legendRelStatErr       = GetAndSetLegend2(0.24, 0.92-(0.035*nMeasSetPi0A), 0.55, 0.92, 32);
         for (Int_t i = 0; i < nMeasSetPi0A; i++){
             DrawGammaSetMarkerTGraph(statErrorRelCollectionPi0[availablePi0MeasA[i]], markerStyleDet[availablePi0MeasA[i]], markerSizeDet[availablePi0MeasA[i]]*0.5, colorDet[availablePi0MeasA[i]],
                                      colorDet[availablePi0MeasA[i]]);
@@ -1473,7 +1473,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         
     canvasRelTotErr->SaveAs(Form("%s/Pi0_RelTotErrZoomed.%s",outputDir.Data(),suffix.Data()));
 
-    histo2DRelTotErrPi0->GetYaxis()->SetRangeUser(0,40.5);
+    histo2DRelTotErrPi0->GetYaxis()->SetRangeUser(0,35.5);
     histo2DRelTotErrPi0->GetYaxis()->SetTitle("Err (%)");
     histo2DRelTotErrPi0->Draw("copy");
 
@@ -1485,7 +1485,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphCombPi0InvXSectionRelSysA->SetLineStyle(7);
         graphCombPi0InvXSectionRelSysA->Draw("l,x0,same,e1");
 
-        TLegend* legendRelTotErr3       = GetAndSetLegend2(0.14, 0.92-(0.035*3), 0.45, 0.92, 32);
+        TLegend* legendRelTotErr3       = GetAndSetLegend2(0.27, 0.92-(0.035*3), 0.58, 0.92, 32);
         legendRelTotErr3->AddEntry(graphCombPi0InvXSectionRelTotA,"tot","p");
         legendRelTotErr3->AddEntry(graphCombPi0InvXSectionRelStatA,"stat","l");
         legendRelTotErr3->AddEntry(graphCombPi0InvXSectionRelSysA,"sys","l");
@@ -2444,7 +2444,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         
     canvasRelSysErr->SaveAs(Form("%s/Eta_RelSysErr.%s",outputDir.Data(),suffix.Data()));
     
-    histo2DRelSysErrEta->GetYaxis()->SetRangeUser(0,40.5);
+    histo2DRelSysErrEta->GetYaxis()->SetRangeUser(5.,30.5);
     histo2DRelSysErrEta->Draw("copy");
 
         for (Int_t i = 0; i < nMeasSetEtaA; i++){
@@ -2469,10 +2469,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     histo2DRelStatErrEta->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErrEta->GetXaxis()->SetNoExponent(kTRUE);
 //    histo2DRelStatErrEta->GetXaxis()->SetLabelOffset(-0.01);
-//  histo2DRelStatErrEta->GetYaxis()->SetRangeUser(-10,10);
+    histo2DRelStatErrEta->GetYaxis()->SetRangeUser(0,60.5);
     histo2DRelStatErrEta->Draw("copy");
         
-        TLegend* legendRelStatErrEta       = GetAndSetLegend2(0.14, 0.92-(0.035*nMeasSetEtaA), 0.45, 0.92, 32);
+        TLegend* legendRelStatErrEta       = GetAndSetLegend2(0.24, 0.92-(0.035*nMeasSetEtaA), 0.55, 0.92, 32);
         for (Int_t i = 0; i < nMeasSetEtaA; i++){
             DrawGammaSetMarker(statErrorRelCollectionEta[availableEtaMeasA[i]], markerStyleDet[availableEtaMeasA[i]], markerSizeDet[availableEtaMeasA[i]]*0.5, colorDet[availableEtaMeasA[i]] , 
                                colorDet[availableEtaMeasA[i]]);
@@ -2521,7 +2521,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionRelTotA, markerStyleComb+4, markerSizeComb, kBlue+2 , kBlue+2);
         graphCombEtaInvXSectionRelTotA->Draw("p,same,z");
 
-        TLegend* legendRelTotErrEta     = GetAndSetLegend2(0.14, 0.92-(0.035*1), 0.45, 0.92, 32);
+        TLegend* legendRelTotErrEta     = GetAndSetLegend2(0.24, 0.92-(0.035*1), 0.55, 0.92, 32);
         legendRelTotErrEta->AddEntry(graphCombEtaInvXSectionRelTotA,"All","p");
         legendRelTotErrEta->Draw();
 
@@ -2533,7 +2533,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         
     canvasRelTotErr->SaveAs(Form("%s/Eta_RelTotErr.%s",outputDir.Data(),suffix.Data()));
         
-    histo2DRelTotErrEta->GetYaxis()->SetRangeUser(0,60.5);
+    histo2DRelTotErrEta->GetYaxis()->SetRangeUser(0,65.5);
     histo2DRelTotErrEta->Draw("copy");
         graphCombEtaInvXSectionRelTotA->Draw("p,same,z");
     
@@ -3299,7 +3299,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasWeights->cd();
    
     TH2F * histo2DEtaToPi0Weights;
-    histo2DEtaToPi0Weights = new TH2F("histo2DEtaToPi0Weights","histo2DEtaToPi0Weights",11000,0.33,50.,1000,-0.7,1.3);
+    histo2DEtaToPi0Weights = new TH2F("histo2DEtaToPi0Weights","histo2DEtaToPi0Weights",11000,0.33,30.,1000,-0.7,1.3);
     SetStyleHistoTH2ForGraphs(histo2DEtaToPi0Weights, "#it{p}_{T} (GeV/#it{c})","#omega_{a} for BLUE",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DEtaToPi0Weights->GetXaxis()->SetMoreLogLabels();
     histo2DEtaToPi0Weights->GetXaxis()->SetNoExponent(kTRUE);
@@ -3322,10 +3322,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         labelWeightsEtaToPi0->Draw();
 
 //      DrawGammaLines(0.33, 25. , 0.8, 0.8,0.1, kGray, 3);
-        DrawGammaLines(0.33, 50. , 0.5, 0.5,0.1, kGray, 7);
-        DrawGammaLines(0.33, 50. , 0.4, 0.4,0.1, kGray, 1);
-        DrawGammaLines(0.33, 50. , 0.3, 0.3,0.1, kGray, 7);
-        DrawGammaLines(0.33, 50. , 0.2, 0.2,0.1, kGray, 3);
+        DrawGammaLines(0.33, 30. , 0.5, 0.5,0.1, kGray, 7);
+        DrawGammaLines(0.33, 30. , 0.4, 0.4,0.1, kGray, 1);
+        DrawGammaLines(0.33, 30. , 0.3, 0.3,0.1, kGray, 7);
+        DrawGammaLines(0.33, 30. , 0.2, 0.2,0.1, kGray, 3);
         
     canvasWeights->SaveAs(Form("%s/EtaToPi0_WeightsA.%s",outputDir.Data(),suffix.Data()));
 
@@ -3350,7 +3350,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasRelSysErr->cd();
    
     TH2F * histo2DRelSysErrEtaToPi0;
-    histo2DRelSysErrEtaToPi0                 = new TH2F("histo2DRelSysErrEtaToPi0","histo2DRelSysErrEtaToPi0",11000,0.33,50.,1000,0,60.5);
+    histo2DRelSysErrEtaToPi0                 = new TH2F("histo2DRelSysErrEtaToPi0","histo2DRelSysErrEtaToPi0",11000,0.33,30.,1000,0,40.5);
     SetStyleHistoTH2ForGraphs(histo2DRelSysErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelSysErrEtaToPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErrEtaToPi0->GetXaxis()->SetNoExponent(kTRUE);
@@ -3382,7 +3382,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasRelStatErr->cd();
    
     TH2F * histo2DRelStatErrEtaToPi0;
-    histo2DRelStatErrEtaToPi0                = new TH2F("histo2DRelStatErrEtaToPi0","histo2DRelStatErrEtaToPi0",11000,0.33,50.,1000,0,60.5);
+    histo2DRelStatErrEtaToPi0                = new TH2F("histo2DRelStatErrEtaToPi0","histo2DRelStatErrEtaToPi0",11000,0.33,30.,1000,0,65.5);
     SetStyleHistoTH2ForGraphs(histo2DRelStatErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErrEtaToPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErrEtaToPi0->GetXaxis()->SetNoExponent(kTRUE);
@@ -3390,7 +3390,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //  histo2DRelStatErrEtaToPi0->GetYaxis()->SetRangeUser(-10,10);
     histo2DRelStatErrEtaToPi0->Draw("copy");
         
-        TLegend* legendRelStatErrEtaToPi0       = GetAndSetLegend2(0.14, 0.92-(0.035*nMeasSetEtaToPi0A), 0.45, 0.92, 32);
+        TLegend* legendRelStatErrEtaToPi0       = GetAndSetLegend2(0.24, 0.92-(0.035*nMeasSetEtaToPi0A), 0.55, 0.92, 32);
         for (Int_t i = 0; i < nMeasSetEtaToPi0A; i++){
             DrawGammaSetMarker(statErrorRelCollectionEtaToPi0[availableEtaToPi0MeasA[i]], markerStyleDet[availableEtaToPi0MeasA[i]], markerSizeDet[availableEtaToPi0MeasA[i]]*0.5,
                                colorDet[availableEtaToPi0MeasA[i]] , colorDet[availableEtaToPi0MeasA[i]]);
@@ -3418,8 +3418,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     
     canvasRelTotErr->cd();
     TH2F * histo2DRelTotErrEtaToPi0;
-    histo2DRelTotErrEtaToPi0                 = new TH2F("histo2DRelTotErrEtaToPi0","histo2DRelTotErrEtaToPi0",11000,0.33,50.,1000,0,70.5);
-    histo2DRelTotErrEtaToPi0->GetYaxis()->SetRangeUser(0,60.5);
+    histo2DRelTotErrEtaToPi0                 = new TH2F("histo2DRelTotErrEtaToPi0","histo2DRelTotErrEtaToPi0",11000,0.33,30.,1000,0,65.5);
     SetStyleHistoTH2ForGraphs(histo2DRelTotErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelTotErrEtaToPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelTotErrEtaToPi0->GetXaxis()->SetNoExponent(kTRUE);
@@ -3428,7 +3427,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0RelTotA, markerStyleComb+4, markerSizeComb, kBlue+2 , kBlue+2);
         graphCombEtaToPi0RelTotA->Draw("p,same,z");
 
-        TLegend* legendRelTotErrEtaToPi0     = GetAndSetLegend2(0.14, 0.92-(0.035*1), 0.45, 0.92, 32);
+        TLegend* legendRelTotErrEtaToPi0     = GetAndSetLegend2(0.24, 0.92-(0.035*1), 0.55, 0.92, 32);
         legendRelTotErrEtaToPi0->AddEntry(graphCombEtaToPi0RelTotA,"All","p");
         legendRelTotErrEtaToPi0->Draw();
 
@@ -4046,15 +4045,15 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphEMCALEtaInvXSectionSys, markerStyleDet[2], markerSizeDet[4]*0.75, colorDet[2] , colorDet[2], widthLinesBoxes, kTRUE);
         graphEMCALEtaInvXSectionSys->Draw("E2same");
     
-        DrawGammaSetMarker(histoPCMEtaInvXSectionStat, markerStyleDet[0], markerSizeDet[0]*0.75, colorDet[0] , colorDet[0]);
-        histoPCMEtaInvXSectionStat->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphPCMEtaInvXSectionStat_WOXErr, markerStyleDet[0], markerSizeDet[0]*0.75, colorDet[0] , colorDet[0]);
+        graphPCMEtaInvXSectionStat_WOXErr->Draw("p,same,e");
 //      DrawGammaSetMarkerTGraphAsym(graphPCMPi0InvXSectionStat,markerStyleDet[0], markerSizeDet[0]*0.75, colorDet[0] , colorDet[0]);
 //      graphPCMPi0InvXSectionStat->Draw("p,same,z");
-        DrawGammaSetMarker(histoPCMEMCALEtaInvXSectionStat, markerStyleDet[4], markerSizeDet[4]*0.75, colorDet[4] , colorDet[4]);
-        histoPCMEMCALEtaInvXSectionStat->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphPCMEMCALEtaInvXSectionStat_WOXErr, markerStyleDet[4], markerSizeDet[4]*0.75, colorDet[4] , colorDet[4]);
+        graphPCMEMCALEtaInvXSectionStat_WOXErr->Draw("p,same,e");
 
-        DrawGammaSetMarker(histoEMCALEtaInvXSectionStat, markerStyleDet[2], markerSizeDet[2]*0.75, colorDet[2] , colorDet[2]);
-        histoEMCALEtaInvXSectionStat->Draw("p,same,e");
+        DrawGammaSetMarkerTGraphAsym(graphEMCALEtaInvXSectionStat_WOXErr, markerStyleDet[2], markerSizeDet[2]*0.75, colorDet[2] , colorDet[2]);
+        graphEMCALEtaInvXSectionStat_WOXErr->Draw("p,same,e");
 
 
         TLatex *labelEnergyXSectionEta      = new TLatex(0.64,0.92,collisionSystem8TeV.Data());
@@ -4084,9 +4083,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionSysA, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
         graphCombEtaInvXSectionSysA->Draw("E2same");
     
-        histoPCMEtaInvXSectionStat->Draw("p,same,e");
-        histoEMCALEtaInvXSectionStat->Draw("p,same,e");
-        histoPCMEMCALEtaInvXSectionStat->Draw("p,same,e");
+        graphPCMEtaInvXSectionStat_WOXErr->Draw("p,same,e");
+        graphEMCALEtaInvXSectionStat_WOXErr->Draw("p,same,e");
+        graphPCMEMCALEtaInvXSectionStat_WOXErr->Draw("p,same,e");
         DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionStatA_WOXErr, markerStyleComb, markerSizeComb, colorComb , colorComb);
         graphCombEtaInvXSectionStatA_WOXErr->Draw("p,same,z");
 
@@ -4382,14 +4381,14 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphRatioPi0CombCombFitSysA->Draw("2,same");
         graphRatioPi0CombCombFitStatA_WOXErr->Draw("p,same");
 
-        TBox* boxErrorSigmaRatio = CreateBoxConv(kGray+3, 0.3, 1.-(0.0196 ), 0.35, 1.+(0.0196));
-        boxErrorSigmaRatio->SetLineWidth(4);
+        TBox* boxErrorSigmaRatio = CreateBoxConv(kGray+2, 0.3, 1.-(0.0196 ), 0.35, 1.+(0.0196));
+        boxErrorSigmaRatio->SetLineWidth(8);
         boxErrorSigmaRatio->Draw();
         DrawGammaLines(0.23, 50.,1., 1.,0.5,kGray+2);
 
-        TLegend* legendRatioTheorypp_3Parted= GetAndSetLegend2(0.2,0.77,0.45,0.97, 0.85* textSizeLabelsPixel);
+        TLegend* legendRatioTheorypp_3Parted = GetAndSetLegend2(0.2,0.77,0.45,0.97, 0.85* textSizeLabelsPixel);
     //    legendRatioTheorypp_3Parted->SetNColumns(2);
-        legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0CombCombFitSysA,"ALICE #pi^{0}","pf");
+        legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0CombCombFitSysA,"Data","pf");
 //        legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0CombNLOMuHalf, "NLO, DSS07 #mu = 0.5 #it{p}_{T}", "l");
 //        legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0CombNLOMuOne,  "NLO, DSS07 #mu = #it{p}_{T}", "l");
 //        legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0CombNLOMuTwo,  "NLO, DSS07 #mu = 2 #it{p}_{T}", "l");
@@ -4398,6 +4397,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0DSS14,  "NLO, PDF:MSTW08 - FF:DSS14", "f");
         legendRatioTheorypp_3Parted->Draw();
 
+        TLegend* legendRatioTheoryNormUnc = GetAndSetLegend2(0.34,0.92,0.59,0.97, 0.85* textSizeLabelsPixel);
+        legendRatioTheoryNormUnc->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.9%","l");
+        legendRatioTheoryNormUnc->Draw();
+
         TLatex *labelRatioTheoryPPP   = new TLatex(0.268,0.74,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
         SetStyleTLatex( labelRatioTheoryPPP, 0.85*textsizeLabelsPP,4);
         labelRatioTheoryPPP->Draw();
@@ -4405,6 +4408,12 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TLatex *labelRatioTheoryPP   = new TLatex(0.78,0.925,collisionSystem8TeV.Data());
         SetStyleTLatex( labelRatioTheoryPP, 0.85*textsizeLabelsPP,4);
         labelRatioTheoryPP->Draw();
+        TLatex *labelRatioTheoryPP1P = new TLatex(0.883,0.875,"ALICE");
+        SetStyleTLatex( labelRatioTheoryPP1P, 0.85*textsizeLabelsPP,4);
+        labelRatioTheoryPP1P->Draw();
+        TLatex *labelRatioTheoryPP2P= new TLatex(0.863,0.83,"#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelRatioTheoryPP2P, 0.85*textsizeLabelsPP,4);
+        labelRatioTheoryPP2P->Draw();
     
         
     canvasRatioPP->Update();
@@ -4451,13 +4460,17 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     DrawGammaLines(0.23, 50.,1., 1.,0.5,kGray+2);
 
     TLegend* legendRatioTheorypp_3Parted2= GetAndSetLegend2(0.15,0.65,0.4,0.96, 0.85* textSizeLabelsPixel);
-    legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombCombFitSysA,"ALICE #pi^{0}","pf");
+    legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombCombFitSysA,"Data","pf");
     legendRatioTheorypp_3Parted2->AddEntry((TObject*)0,"NLO, PDF:CTEQ6M5 - FF:DSS07", "");
     legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombNLOMuHalf, "#mu = 0.5 #it{p}_{T}", "l");
     legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombNLOMuOne,  "#mu = #it{p}_{T}", "l");
     legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0CombNLOMuTwo,  "#mu = 2 #it{p}_{T}", "l");
     //legendRatioTheorypp_3Parted2->AddEntry(graphRatioPi0DSS14,  "NLO, PDF:MSTW08 - FF:DSS14", "f");
     legendRatioTheorypp_3Parted2->Draw();
+
+    TLegend* legendRatioTheoryNormUnc2 = GetAndSetLegend2(0.34,0.902,0.59,0.952, 0.85* textSizeLabelsPixel);
+    legendRatioTheoryNormUnc2->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.9%","l");
+    legendRatioTheoryNormUnc2->Draw();
 
     TLegend* legendRatioTheorypp_3Parted22= GetAndSetLegend2(0.15,0.14,0.4,0.18, 0.85* textSizeLabelsPixel);
     legendRatioTheorypp_3Parted22->AddEntry(graphRatioPi0DSS14,  "NLO, PDF:MSTW08 - FF:DSS14, 0.5#it{p}_{T} < #mu < 2#it{p}_{T}", "f");
@@ -4467,9 +4480,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //    SetStyleTLatex( labelRatioTheoryPPP2, 0.85*textsizeLabelsPP,4);
 //    labelRatioTheoryPPP2->Draw();
 
-    TLatex *labelRatioTheoryPP22   = new TLatex(0.78,0.925,collisionSystem8TeV.Data());
-    SetStyleTLatex( labelRatioTheoryPP22, 0.85*textsizeLabelsPP,4);
-    labelRatioTheoryPP22->Draw();
+    labelRatioTheoryPP->Draw();
+    labelRatioTheoryPP1P->Draw();
+    labelRatioTheoryPP2P->Draw();
 
     canvasRatioPP->Update();
     canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP2.%s",outputDir.Data(),suffix.Data()));
@@ -4510,15 +4523,22 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     DrawGammaLines(0.23, 50.,1., 1.,0.5,kGray+2);
 
     TLegend* legendRatioTheorypp_3Parted3= GetAndSetLegend2(0.15,0.7,0.4,0.96, 0.85* textSizeLabelsPixel);
-    legendRatioTheorypp_3Parted3->AddEntry(graphRatioPi0CombCombFitSysA,"ALICE #pi^{0}","pf");
+    legendRatioTheorypp_3Parted3->AddEntry(graphRatioPi0CombCombFitSysA,"Data","pf");
     legendRatioTheorypp_3Parted3->AddEntry(histoRatioPythia8ToFit,  "PYTHIA 8.2, Monash 2013", "l");
     legendRatioTheorypp_3Parted3->AddEntry(graphRatioPOWHEG8TeV,  "POWHEG + PYTHIA 8", "f");
     legendRatioTheorypp_3Parted3->Draw();
 
+    TLegend* legendRatioTheoryNormUnc3 = GetAndSetLegend2(0.34,0.885,0.59,0.935, 0.85* textSizeLabelsPixel);
+    legendRatioTheoryNormUnc3->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.9%","l");
+    legendRatioTheoryNormUnc3->Draw();
+
     TLatex *labelRatioTheoryPPP22   = new TLatex(0.218,0.67,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
     SetStyleTLatex( labelRatioTheoryPPP22, 0.85*textsizeLabelsPP,4);
     labelRatioTheoryPPP22->Draw();
-    labelRatioTheoryPP22->Draw();
+
+    labelRatioTheoryPP->Draw();
+    labelRatioTheoryPP1P->Draw();
+    labelRatioTheoryPP2P->Draw();
 
     canvasRatioPP->Update();
     canvasRatioPP->Print(Form("%s/Pi0_RatioTheoryToData_PP3.%s",outputDir.Data(),suffix.Data()));
@@ -4568,8 +4588,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         boxErrorSigmaRatio->Draw();
         DrawGammaLines(0.23, 50. , 1., 1.,0.5, kGray+2);
 
-        TLegend* legendRatioTheoryppEta_3Parted= GetAndSetLegend2(0.15,0.86-(0.85*textsizeLabelsPP*5),0.40,0.96, 0.85* textSizeLabelsPixel);
-        legendRatioTheoryppEta_3Parted->AddEntry(graphRatioEtaCombCombFitSysA,"ALICE #eta","pf");
+        TLegend* legendRatioTheoryppEta_3Parted= GetAndSetLegend2(0.15,0.84-(0.85*textsizeLabelsPP*5),0.40,0.96, 0.85* textSizeLabelsPixel);
+        legendRatioTheoryppEta_3Parted->AddEntry(graphRatioEtaCombCombFitSysA,"Data","pf");
         legendRatioTheoryppEta_3Parted->AddEntry(histoRatioPythia8ToFitEta,  "PYTHIA 8.2, Monash 2013", "l");
         legendRatioTheoryppEta_3Parted->AddEntry(histoRatioPythia8_4CToFitEta,  "PYTHIA 8.2, Tune 4C", "l");
         legendRatioTheoryppEta_3Parted->AddEntry((TObject*)0, "NLO, PDF:CTEQ6M5 - FF:AESSS", "");
@@ -4580,9 +4600,19 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //         legendRatioTheoryppEta_3Parted->AddEntry(graphRatioEtaCombNLODSS14,  "NLO, DSS14 #it{p}_{T} < #mu < 2 #it{p}_{T}", "f");
         legendRatioTheoryppEta_3Parted->Draw();
 
+        TLegend* legendRatioTheoryNormUncEta = GetAndSetLegend2(0.31,0.91,0.56,0.96, 0.85* textSizeLabelsPixel);
+        legendRatioTheoryNormUncEta->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.9%","l");
+        legendRatioTheoryNormUncEta->Draw();
+
         TLatex *labelRatioTheoryPP2   = new TLatex(0.78,0.925,collisionSystem8TeV.Data());
         SetStyleTLatex( labelRatioTheoryPP2, 0.85*textsizeLabelsPP,4);
         labelRatioTheoryPP2->Draw();
+        TLatex *labelRatioTheoryPP221 = new TLatex(0.883,0.875,"ALICE");
+        SetStyleTLatex( labelRatioTheoryPP221, 0.85*textsizeLabelsPP,4);
+        labelRatioTheoryPP221->Draw();
+        TLatex *labelRatioTheoryPP222= new TLatex(0.873,0.83,"#eta #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelRatioTheoryPP222, 0.85*textsizeLabelsPP,4);
+        labelRatioTheoryPP222->Draw();
             
     canvasRatioPP->Update();
     canvasRatioPP->Print(Form("%s/Eta_RatioTheoryToData_PP.%s",outputDir.Data(),suffix.Data()));
