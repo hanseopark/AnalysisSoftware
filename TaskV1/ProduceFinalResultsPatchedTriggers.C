@@ -3845,8 +3845,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           canvasEffi->SaveAs(Form("%s/Eta_%s_BinShiftCorrection.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
 
           histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalEta,maxPtGlobalEta);
-          if(optionEnergy.CompareTo("8TeV")==0 && mode==4) histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalEta,20.);
+          if(optionEnergy.CompareTo("8TeV")==0 && mode==4)
+              histoBinShift->GetXaxis()->SetRangeUser(minPtGlobalEta,20.);
           histoBinShift->GetYaxis()->SetRangeUser(0.95,1.05);
+          if(!optionEnergy.CompareTo("8TeV") && mode==0)
+              histoBinShift->GetYaxis()->SetRangeUser(0.8,1.2);
           histoBinShift->DrawCopy();
 
           TLegend* legendBinShift3 = GetAndSetLegend2(0.62, 0.13, 0.95, 0.13+(1.05*nrOfTrigToBeComb/2*0.85*textSizeSpectra),28);

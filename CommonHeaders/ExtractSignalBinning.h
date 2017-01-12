@@ -1061,7 +1061,7 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                     case 0:
                     case 1:
                     case 10:
-                        return 4;       // INT triggers
+                        return 3;       // INT triggers
                     case 11:
                         return 6;       // INT triggers
                         break;
