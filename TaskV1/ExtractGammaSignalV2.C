@@ -87,7 +87,10 @@ void ExtractGammaSignalV2(      TString meson               = "",
 
     //************************************ Define Output directory *************************************
     fOutputDir = Form("%s/%s/%s/ExtractGammaSignal",cutSelection.Data(),option.Data(),suffix.Data());
+    TString outputDirMon= Form("%s/%s/%s/ExtractGammaSignal/Monitoring/",cutSelection.Data(),option.Data(),suffix.Data());
     gSystem->Exec("mkdir -p "+fOutputDir);
+    gSystem->Exec("mkdir -p "+outputDirMon);
+    
 
     //************************************ Set global variables ****************************************
     fDate                                                                       = ReturnDateString();
@@ -127,6 +130,32 @@ void ExtractGammaSignalV2(      TString meson               = "",
     TString rapidityRange;
     fYMaxMeson                                                                  = ReturnRapidityStringAndDouble(fMesonCutSelectionRead, rapidityRange);
     fBackgroundMultNumber                                                       = ReturnBackgroundMult(fMesonCutSelection);
+
+    //****************************** Specification of collision system **********************************
+    TString textProcess = ReturnMesonString (fPrefix);
+    if(textProcess.CompareTo("") == 0 ){
+        cout << "Meson unknown" << endl;
+        return ;
+    }
+    
+    fTextMeasurement                                                            = Form("%s #rightarrow #gamma#gamma", textProcess.Data());
+    fCollisionSystem                                                            = ReturnFullCollisionsSystem(fEnergyFlag);
+    if (fCollisionSystem.CompareTo("") == 0){
+        cout << "No correct collision system specification, has been given" << endl;
+        return;
+    }
+    fDetectionProcess                                                           = ReturnFullTextReconstructionProcess(fMode);
+    TString fDecayChannel                                                       = "#gamma#gamma";
+    
+    //***************************** Specification Data/MC ***********************************************
+    if(isMC.CompareTo("kTRUE") == 0){
+        fIsMC                                                                   = 1;
+        fPrefix2                                                                = "MC";
+    } else {
+        fIsMC                                                                   = 0;
+        fPrefix2                                                                = "data";
+    }
+    
     //***************************** Check for data driven purity ****************************************
     TString namePurityHistogram                                                 = "";
     TFile*  purityFile                                                          = NULL;
@@ -166,29 +195,6 @@ void ExtractGammaSignalV2(      TString meson               = "",
     ObjectNameDCGammaConvRPt                                                    = "ESD_TrueDoubleCountConvGamma_R_Pt";
     ObjectNameGammaConvMultipleCount                                            = "ESD_TrueMultipleCountConvGamma";
 
-    //****************************** Specification of collision system **********************************
-    TString textProcess = ReturnMesonString (fPrefix);
-    if(textProcess.CompareTo("") == 0 ){
-        cout << "Meson unknown" << endl;
-        return ;
-    }
-    
-    fTextMeasurement                                                            = Form("%s #rightarrow #gamma#gamma", textProcess.Data());
-    fCollisionSystem                                                            = ReturnFullCollisionsSystem(fEnergyFlag);
-    if (fCollisionSystem.CompareTo("") == 0){
-        cout << "No correct collision system specification, has been given" << endl;
-        return;
-    }
-    fDetectionProcess                                                           = ReturnFullTextReconstructionProcess(fMode);
-    TString fDecayChannel                                                       = "#gamma#gamma";
-    //***************************** Specification Data/MC ***********************************************
-    if(isMC.CompareTo("kTRUE") == 0){
-        fIsMC                                                                   = 1;
-        fPrefix2                                                                = "MC";
-    } else {
-        fIsMC                                                                   = 0;
-        fPrefix2                                                                = "data";
-    }
     const char* FileDataLogname         = Form("%s/%s/%s_%s_GammaExtractionEffiCheck_RAWDATA%s_%s.dat", cutSelection.Data(), fEnergyFlag.Data(), fPrefix.Data(), fPrefix2.Data(), fPeriodFlag.Data(),
                                         fCutSelectionRead.Data());
     fFileDataLog.open(FileDataLogname, ios::out);
@@ -286,9 +292,51 @@ void ExtractGammaSignalV2(      TString meson               = "",
         fGammaGammaInvMassVSPt->Sumw2();
         fBckInvMassVSPt                                                         = (TH2D*)ESDContainer->FindObject(ObjectNameBck.Data());
         fBckInvMassVSPt->Sumw2();
-
+   
         FillMassHistosArray(fGammaGammaInvMassVSPt);
         ProduceBckProperWeighting(fGammaGammaInvMassVSPt, fBckInvMassVSPt);
+        
+        if (fIsMC){
+            TString ObjectNameTruePrim                                          = "ESD_TruePrimaryPi0_InvMass_PtConv";
+            TString ObjectNameTruePrimDC                                        = "ESD_TruePrimaryPi0DC_PtConv";
+            TString ObjectNameTruePrimMissing                                   = "ESD_TruePrimaryPi0Missing_PtConv";
+            if (meson.CompareTo("Eta") == 0){
+                ObjectNameTruePrim                                              = "ESD_TruePrimaryEta_InvMass_PtConv";
+                ObjectNameTruePrimDC                                            = "ESD_TruePrimaryEtaDC_PtConv";
+                ObjectNameTruePrimMissing                                       = "ESD_TruePrimaryEtaMissing_PtConv";
+            }    
+            TString ObjectNameTrueSec[4]                                        = {"ESD_TrueSecondaryPi0_InvMass_PtConv","","",""};
+            TString ObjectNameTrueSecDC[4]                                      = {"ESD_TrueSecondaryPi0DC_PtConv","","",""};
+            TString ObjectNameTrueSecMissing[4]                                 = {"ESD_TrueSecondaryPi0Missing_PtConv","","",""};
+            nameSecondaries[0]                                                  = "All";
+            maxNSec                                                             = 1;
+
+            // container with histos for validated reconstructed photons
+            TList *TrueConversionContainer                                      = (TList*)HistosGammaConversion->FindObject(Form("%s True histograms",fCutSelectionRead.Data()));
+            
+            fHistoTruePrimMesonInvMassVSPt                                      = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTruePrim.Data());
+            fHistoTruePrimMesonInvMassVSPt->Sumw2();
+            
+            if (meson.CompareTo("Eta") != 0){
+                for (Int_t j = 0; j < maxNSec; j++){
+                    if (ObjectNameTrueSec[j].CompareTo("")!=0 ){
+                        fHistoTrueSecMesonInvMassVSPt[j]                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSec[j].Data());
+                        fHistoTrueSecMesonInvMassVSPt[j]->Sumw2();
+                    }
+                }    
+            }
+            fHistoTrueMesonDCPt                                                 = (TH1F*)TrueConversionContainer->FindObject(ObjectNameTruePrimDC.Data());
+//             fHistoTrueMesonDCInvMassVSPt                                = (TH2D*)TrueConversionContainer->FindObject(ObjectNameDCMesonInvMassPt.Data());
+//             if (fHistoTrueMesonDCInvMassVSPt!= NULL) fEnableDCMeson = kTRUE;
+//             cout << "line " << __LINE__ << endl;
+//             if (fEnableDCMeson){
+//                 FillMassMCTrueMesonDCHistosArray(fHistoTrueMesonDCInvMassVSPt);
+//                 fHistoTrueMesonMultipleCount = (TH1F*) TrueConversionContainer->FindObject(ObjectNameMesonMultipleCount.Data());
+//             }        
+
+            FillMassMCTrueMesonHistosArrays(fHistoTruePrimMesonInvMassVSPt, fHistoTrueSecMesonInvMassVSPt);
+
+        }    
     }
     
     // *******************************************************************************************************
@@ -857,265 +905,574 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 }
             }    
         }
-        
-        if (mode == 2 || mode == 3){
-            for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){ // BEGIN ANALYSIS for each Pt bin
-                cout << "---------------------------------------------------------------------------------" << endl;
-                cout << "Begin Analysis Pt Bin " << iPt <<endl;
-                cout << "---------------------------------------------------------------------------------" << endl;
-                // Function to subtract GG minus Bck
-                fFileDataLog << "---------------------------------------------------------------------------------" << endl;
-                fFileDataLog << "----------------------------------new pT bin ------------------------------------" << endl;
-                fFileDataLog << "---------------------------------------------------------------------------------" << endl;
-                
-                ProcessEM( fHistoGGInvMassPtGConvBin[iPt], fHistoBackInvMassPtGconvBin[iPt], fBGFitRange);
-                fHistoSignalInvMassPtGConvBin[iPt]          = fSignal;
-                fHistoBackNormInvMassPtGconvBin[iPt]        = fBckNorm;
-
-                fHistoSignalInvMassPtGConvBin[iPt]->SetName(Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d",iPt));
-                
-                // Fitting the subtracted spectra
-                fFileDataLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << "normal range/right normalization" << endl;
-                fFitSignalInvMassPtBin[iPt]                 = 0x00;
-                fFileDataLog << "Using exp fit"<<endl;
-                fFileDataLog << "Subtracted mixed event" << endl;
-                FitSubtractedInvMassInPtBins(fHistoSignalInvMassPtGConvBin[iPt], fMesonIntDeltaRange,iPt,kFALSE);
-                fFitSignalInvMassPtBin[iPt]                 = fFitReco;
-                fFitBckInvMassPtBin[iPt]                    = fFitLinearBck;
-                fMesonYieldsResidualBckFunc[0][iPt]         = fIntLinearBck;
-                fMesonYieldsResidualBckFuncError[0][iPt]    = fIntLinearBckError;
-                if (fFitReco)
-                    fMesonChi2[0][iPt]                      = fFitReco->GetChisquare()/fFitReco->GetNDF();
-                else 
-                    fMesonChi2[0][iPt]                      = -1;                
-                
-                //Get FWHM
-                CalculateFWHM( fFitSignalInvMassPtBin[iPt]);
-                fMesonFWHM[iPt]                     = fFWHMFunc;
-                fMesonFWHMError[iPt]                = fFWHMFuncError;
-
-                if (fFitSignalInvMassPtBin[iPt] !=0x00){
-                    fMesonMass[iPt]                 = fFitSignalInvMassPtBin[iPt]->GetParameter(1);
-                    fMesonMassError[iPt]            = fFitSignalInvMassPtBin[iPt]->GetParError(1);
-                    
-                    fMesonLambdaTailpar[iPt]        = fFitSignalInvMassPtBin[iPt]->GetParameter(3);
-                    fMesonLambdaTailparError[iPt]   = fFitSignalInvMassPtBin[iPt]->GetParError(3);
-
-                    fMesonCurIntRange[0][0]         = fMesonMass[iPt] + fMesonIntDeltaRange[0];
-                    fMesonCurIntRange[1][0]         = fMesonMass[iPt] + fMesonIntDeltaRangeWide[0];
-                    fMesonCurIntRange[2][0]         = fMesonMass[iPt] + fMesonIntDeltaRangeNarrow[0];
-                    fMesonCurIntRange[0][1]         = fMesonMass[iPt] + fMesonIntDeltaRange[1];
-                    fMesonCurIntRange[1][1]         = fMesonMass[iPt] + fMesonIntDeltaRangeWide[1];
-                    fMesonCurIntRange[2][1]         = fMesonMass[iPt] + fMesonIntDeltaRangeNarrow[1];
-                    
-                } else {
-                    fMesonMass[iPt]                 = fMesonMassExpect;
-                    fMesonMassError[iPt]            = 0.;
-                    fMesonCurIntRange[0][0]         = fMesonMassExpect + fMesonIntDeltaRange[0];
-                    fMesonCurIntRange[1][0]         = fMesonMassExpect + fMesonIntDeltaRangeWide[0];
-                    fMesonCurIntRange[2][0]         = fMesonMassExpect + fMesonIntDeltaRangeNarrow[0];
-                    fMesonCurIntRange[0][1]         = fMesonMassExpect + fMesonIntDeltaRange[1];
-                    fMesonCurIntRange[1][1]         = fMesonMassExpect + fMesonIntDeltaRangeWide[1];
-                    fMesonCurIntRange[2][1]         = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
-                }
-
-                for (Int_t k = 0; k < 3; k++){
-                    fMassWindowHigh[k][iPt]        = fMesonCurIntRange[k][1];
-                    fMassWindowLow[k][iPt]         = fMesonCurIntRange[k][0];        
-                }    
-                
-                for (Int_t k = 0; k < 3; k++){
-                    IntegrateHistoInvMass( fHistoGGInvMassPtGConvBin[iPt], fMesonCurIntRange[k]);
-                    fGGYields[k][iPt]               = fYields;
-                    fGGYieldsError[k][iPt]          = fYieldsError;
-                    
-                    // Integrate the bck histo
-                    IntegrateHistoInvMass( fHistoBackNormInvMassPtGconvBin[iPt], fMesonCurIntRange[k]);
-                    fBckYields[k][iPt]              = fYields;
-                    fBckYieldsError[k][iPt]         = fYieldsError;
-                    
-                    // Integrate the signal histo
-                    fFileDataLog<< endl <<"Signal histo "<< nameIntRange[k].Data() << ":\t" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << endl;
-                    IntegrateHistoInvMassStream( fHistoSignalInvMassPtGConvBin[iPt], fMesonCurIntRange[k]);
-                    fMesonYields[k][iPt]            = fYields;
-                    fMesonYieldsError[k][iPt]       = fYieldsError;
-                    fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
-                }    
+    }
+    
+    if (mode == 2 || mode == 3){
+        cout << "total number of bins:" << fNBinsPt<< endl;
+        for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){ // BEGIN ANALYSIS for each Pt bin
+            cout << "---------------------------------------------------------------------------------" << endl;
+            cout << "Begin Analysis Pt Bin " << iPt <<endl;
+            cout << "---------------------------------------------------------------------------------" << endl;
+            // Function to subtract GG minus Bck
+            fFileDataLog << "---------------------------------------------------------------------------------" << endl;
+            fFileDataLog << "----------------------------------new pT bin ------------------------------------" << endl;
+            fFileDataLog << "---------------------------------------------------------------------------------" << endl;
             
-                for (Int_t k = 0; k < 3; k++){
-                    if (k > 0){
-                        fFileDataLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << nameIntRange[k].Data()<<  endl;
-                        Double_t intRange[2]    = {0,0};
-                        if (k == 1){
-                            intRange[0]         = fMesonIntDeltaRangeWide[0];
-                            intRange[1]         = fMesonIntDeltaRangeWide[1];
-                        } else if ( k == 2){
-                            intRange[0]         = fMesonIntDeltaRangeNarrow[0];
-                            intRange[1]         = fMesonIntDeltaRangeNarrow[1];                    
-                        }    
-                        fFileDataLog << "Using exp fit"<<endl;
-                        FitSubtractedInvMassInPtBins(fHistoSignalInvMassPtGConvBin[iPt], intRange, iPt, kFALSE);
-                        fMesonYieldsResidualBckFunc[k][iPt]         = fIntLinearBck;
-                        fMesonYieldsResidualBckFuncError[k][iPt]    = fIntLinearBckError;
-                    }
-                    
-                    fFileDataLog << "Residual Background leftover " << nameIntRange[k].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
-                                << fMesonYieldsResidualBckFunc[k][iPt] << "\t +- \t" << fMesonYieldsResidualBckFuncError[k][iPt] << endl<< endl;
-                    
-                    /////////////////////// added to check yields //////////////////////////////////////////////////////////   
-                    fTotalBckYields[k][iPt]                         = fBckYields[k][iPt] + fMesonYieldsResidualBckFunc[k][iPt];
-                    fTotalBckYieldsError[k][iPt]                    = pow(fBckYieldsError[k][iPt]*fBckYieldsError[k][iPt] + fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt],0.5);
-                    fFileDataLog << "Total Background " << nameIntRange[k].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
-                                << fTotalBckYields[k][iPt] << "\t +- \t" << fTotalBckYieldsError[k][iPt] << endl<< endl;
-                    fFileDataLog << "Background " << nameIntRange[k].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
-                                << fBckYields[k][iPt] << "\t +- \t" << fBckYieldsError[k][iPt] << endl<< endl;
-                    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-                            
-                    fMesonYieldsCorResidualBckFunc[k][iPt]          = fMesonYields[k][iPt]- fMesonYieldsResidualBckFunc[k][iPt];
-                    fMesonYieldsCorResidualBckFuncError[k][iPt]     = pow(( fMesonYieldsError[k][iPt]*fMesonYieldsError[k][iPt] +
-                                                                        fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt]),0.5);
-                    fMesonYieldsPerEvent[k][iPt]                    = fMesonYieldsCorResidualBckFunc[k][iPt]/fNEvents;
-                    fMesonYieldsPerEventError[k][iPt]               = fMesonYieldsCorResidualBckFuncError[k][iPt]/fNEvents;
-                    
-                }    
+            ProcessEM( fHistoGGInvMassPtGConvBin[iPt], fHistoBackInvMassPtGconvBin[iPt], fBGFitRange);
+            fHistoSignalInvMassPtGConvBin[iPt]          = fSignal;
+            fHistoBackNormInvMassPtGconvBin[iPt]        = fBckNorm;
 
-
-                //////////////////////////////// Start Analysis with  Normalization at the left of the Meson Peak
-                // Function to subtract GG minus Bck
-                fFileDataLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << endl;
-                ProcessEM( fHistoGGInvMassPtGConvBin[iPt], fHistoBackInvMassPtGconvBin[iPt], fBGFitRangeLeft);
-                fHistoSignalInvMassLeftPtGConvBin[iPt]          = fSignal;
-                fHistoBackNormInvMassLeftPtGconvBin[iPt]        = fBckNorm;
-
-
-                fHistoSignalInvMassLeftPtGConvBin[iPt]->SetName(Form("fHistoMappingSignalLeftInvMass_in_Pt_Bin%02d",iPt));
-                //       fFileDataLog<< "iPt"<< iPt<< " "<< "standard range"<<endl;
-                // Fitting the subtracted spectra
-                fFileDataLog  << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << "normal range/left normalization" << endl;
-
-                fFitInvMassLeftPtBin[iPt] =0x00;
-                fFileDataLog << "Using exp fit"<<endl;
-                FitSubtractedInvMassInPtBins(fHistoSignalInvMassLeftPtGConvBin[iPt], fMesonIntDeltaRange,iPt,kFALSE);
-                fFitInvMassLeftPtBin[iPt]                               = fFitReco;
-                fFitBckInvMassLeftPtBin[iPt]                            = fFitLinearBck;
-                fMesonYieldsResidualBckFunc[3][iPt]                     = fIntLinearBck;
-                fMesonYieldsResidualBckFuncError[3][iPt]                = fIntLinearBckError;
-                CalculateFWHM(fFitInvMassLeftPtBin[iPt]);
-                fMesonFWHMLeft[iPt]         = fFWHMFunc;
-                fMesonFWHMLeftError[iPt]    = fFWHMFuncError;
-                
-                if (fFitInvMassLeftPtBin[iPt] !=0x00){
-                    fMesonMassLeft[iPt]             = fFitInvMassLeftPtBin[iPt]->GetParameter(1);
-                    fMesonMassLeftError[iPt]        = fFitInvMassLeftPtBin[iPt]->GetParError(1);
-                    fMesonCurIntRange[3][0]         = fMesonMassLeft[iPt] + fMesonIntDeltaRange[0];
-                    fMesonCurIntRange[4][0]         = fMesonMassLeft[iPt] + fMesonIntDeltaRangeWide[0];
-                    fMesonCurIntRange[5][0]         = fMesonMassLeft[iPt] + fMesonIntDeltaRangeNarrow[0];
-                    fMesonCurIntRange[3][1]         = fMesonMassLeft[iPt] + fMesonIntDeltaRange[1];
-                    fMesonCurIntRange[4][1]         = fMesonMassLeft[iPt] + fMesonIntDeltaRangeWide[1];
-                    fMesonCurIntRange[5][1]         = fMesonMassLeft[iPt] + fMesonIntDeltaRangeNarrow[1];
-                } else {
-                    fMesonMassLeft[iPt]             = 0.;
-                    fMesonMassLeftError[iPt]        = 0.;
-                    fMesonCurIntRange[3][0]         = fMesonMassExpect + fMesonIntDeltaRange[0];
-                    fMesonCurIntRange[4][0]         = fMesonMassExpect + fMesonIntDeltaRangeWide[0];
-                    fMesonCurIntRange[5][0]         = fMesonMassExpect + fMesonIntDeltaRangeNarrow[0];
-                    fMesonCurIntRange[3][1]         = fMesonMassExpect + fMesonIntDeltaRange[1];
-                    fMesonCurIntRange[4][1]         = fMesonMassExpect + fMesonIntDeltaRangeWide[1];
-                    fMesonCurIntRange[5][1]         = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
-                }
-
-                // Integrate the bck histo
-                for (Int_t k = 0; k < 3; k++){
-                    IntegrateHistoInvMass( fHistoBackNormInvMassLeftPtGconvBin[iPt], fMesonCurIntRange[k+3]);
-                    fBckYields[k+3][iPt]              = fYields;
-                    fBckYieldsError[k+3][iPt]         = fYieldsError;
-
-                    fFileDataLog<< endl <<"Signal histo " << nameIntRange[k+3].Data() << ":\t" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-                    IntegrateHistoInvMassStream( fHistoSignalInvMassLeftPtGConvBin[iPt], fMesonCurIntRange[k+3]);
-                    fMesonYields[k+3][iPt]            = fYields;
-                    fMesonYieldsError[k+3][iPt]       = fYieldsError;
-                    fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
-                    
-                }
+            fHistoSignalInvMassPtGConvBin[iPt]->SetName(Form("fHistoSignalInvMass_in_PtConv_Bin%02d",iPt));
             
+            // Fitting the subtracted spectra
+            fFileDataLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << "normal range/right normalization" << endl;
+            fFitSignalInvMassPtBin[iPt]                 = 0x00;
+            fFileDataLog << "Using exp fit"<<endl;
+            fFileDataLog << "Subtracted mixed event" << endl;
+            FitSubtractedInvMassInPtBins(fHistoSignalInvMassPtGConvBin[iPt], fMesonIntDeltaRange,iPt,kFALSE);
+            fFitSignalInvMassPtBin[iPt]                 = fFitReco;
+            fFitBckInvMassPtBin[iPt]                    = fFitLinearBck;
+            fMesonYieldsResidualBckFunc[0][iPt]         = fIntLinearBck;
+            fMesonYieldsResidualBckFuncError[0][iPt]    = fIntLinearBckError;
+            if (fFitReco)
+                fMesonChi2[0][iPt]                      = fFitReco->GetChisquare()/fFitReco->GetNDF();
+            else 
+                fMesonChi2[0][iPt]                      = -1;                
+            
+            //Get FWHM
+            CalculateFWHM( fFitSignalInvMassPtBin[iPt]);
+            fMesonFWHM[iPt]                     = fFWHMFunc;
+            fMesonFWHMError[iPt]                = fFWHMFuncError;
 
-                for (Int_t k = 0; k < 3; k++){
-                    if (k > 0){
-                        fFileDataLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << nameIntRange[k+3].Data()<<  endl;
-                        Double_t intRange[2]    = {0,0};
-                        if (k == 1){
-                            intRange[0]         = fMesonIntDeltaRangeWide[0];
-                            intRange[1]         = fMesonIntDeltaRangeWide[1];
-                        } else if ( k == 2){
-                            intRange[0]         = fMesonIntDeltaRangeNarrow[0];
-                            intRange[1]         = fMesonIntDeltaRangeNarrow[1];                    
-                        }    
-                        fFileDataLog << "Using exp fit"<<endl;
-                        FitSubtractedInvMassInPtBins(fHistoSignalInvMassLeftPtGConvBin[iPt], intRange, iPt, kFALSE);
-                        fMesonYieldsResidualBckFunc[k+3][iPt]         = fIntLinearBck;
-                        fMesonYieldsResidualBckFuncError[k+3][iPt]    = fIntLinearBckError;
-                    }
-                    
-                    fFileDataLog << "Residual Background leftover " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
-                                << fMesonYieldsResidualBckFunc[k+3][iPt] << "\t +- \t" << fMesonYieldsResidualBckFuncError[k+3][iPt] << endl<< endl;
-                    
-                    fTotalBckYields[k+3][iPt]                       = fBckYields[k+3][iPt] + fMesonYieldsResidualBckFunc[k+3][iPt];
-                    fTotalBckYieldsError[k+3][iPt]                  = pow(fBckYieldsError[k+3][iPt]*fBckYieldsError[k+3][iPt] + fMesonYieldsResidualBckFuncError[k+3][iPt]*fMesonYieldsResidualBckFuncError[k+3][iPt],0.5);
-                    fFileDataLog << "Total Background " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
-                                << fTotalBckYields[k+3][iPt] << "\t +- \t" << fTotalBckYieldsError[k+3][iPt] << endl<< endl;
-                    fFileDataLog << "Background " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
-                                << fBckYields[k+3][iPt] << "\t +- \t" << fBckYieldsError[k+3][iPt] << endl<< endl;
-                            
-                    fMesonYieldsCorResidualBckFunc[k+3][iPt]        = fMesonYields[k+3][iPt]- fMesonYieldsResidualBckFunc[k+3][iPt];
-                    fMesonYieldsCorResidualBckFuncError[k+3][iPt]   = pow(( fMesonYieldsError[k+3][iPt]*fMesonYieldsError[k+3][iPt] +
-                                                                            fMesonYieldsResidualBckFuncError[k+3][iPt]*fMesonYieldsResidualBckFuncError[k+3][iPt]),0.5);
-                    fMesonYieldsPerEvent[k+3][iPt]                  = fMesonYieldsCorResidualBckFunc[k+3][iPt]/fNEvents;
-                    fMesonYieldsPerEventError[k+3][iPt]             = fMesonYieldsCorResidualBckFuncError[k+3][iPt]/fNEvents;
-                    
-                }    
+            if (fFitSignalInvMassPtBin[iPt] !=0x00){
+                fMesonMass[iPt]                 = fFitSignalInvMassPtBin[iPt]->GetParameter(1);
+                fMesonMassError[iPt]            = fFitSignalInvMassPtBin[iPt]->GetParError(1);
+                
+                fMesonLambdaTailpar[iPt]        = fFitSignalInvMassPtBin[iPt]->GetParameter(3);
+                fMesonLambdaTailparError[iPt]   = fFitSignalInvMassPtBin[iPt]->GetParError(3);
+
+                fMesonCurIntRange[0][0]         = fMesonMass[iPt] + fMesonIntDeltaRange[0];
+                fMesonCurIntRange[1][0]         = fMesonMass[iPt] + fMesonIntDeltaRangeWide[0];
+                fMesonCurIntRange[2][0]         = fMesonMass[iPt] + fMesonIntDeltaRangeNarrow[0];
+                fMesonCurIntRange[0][1]         = fMesonMass[iPt] + fMesonIntDeltaRange[1];
+                fMesonCurIntRange[1][1]         = fMesonMass[iPt] + fMesonIntDeltaRangeWide[1];
+                fMesonCurIntRange[2][1]         = fMesonMass[iPt] + fMesonIntDeltaRangeNarrow[1];
+                
+            } else {
+                fMesonMass[iPt]                 = fMesonMassExpect;
+                fMesonMassError[iPt]            = 0.;
+                fMesonCurIntRange[0][0]         = fMesonMassExpect + fMesonIntDeltaRange[0];
+                fMesonCurIntRange[1][0]         = fMesonMassExpect + fMesonIntDeltaRangeWide[0];
+                fMesonCurIntRange[2][0]         = fMesonMassExpect + fMesonIntDeltaRangeNarrow[0];
+                fMesonCurIntRange[0][1]         = fMesonMassExpect + fMesonIntDeltaRange[1];
+                fMesonCurIntRange[1][1]         = fMesonMassExpect + fMesonIntDeltaRangeWide[1];
+                fMesonCurIntRange[2][1]         = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
             }
-            TString plotPrefix  = Form("%s/%s_%s",fOutputDir.Data(),fPrefix.Data(),fPrefix2.Data());
-            TString plotSuffix  = Form("%s_%s.%s",fPeriodFlag.Data(),fCutSelection.Data(),fSuffix.Data());
+
+            for (Int_t k = 0; k < 3; k++){
+                fMassWindowHigh[k][iPt]        = fMesonCurIntRange[k][1];
+                fMassWindowLow[k][iPt]         = fMesonCurIntRange[k][0];        
+            }    
             
-            TString nameMeson   = Form("%s_GammaConvPt_MesonWithBck%s", plotPrefix.Data(), plotSuffix.Data());
-            TString nameCanvas  = "MesonWithBckCanvas";
-            TString namePad     = "MesonWithBckPad";
-            cout << nameMeson.Data() << endl;
-            PlotInvMassInPtBins( fHistoGGInvMassPtGConvBin, fHistoBackNormInvMassPtGconvBin, nameMeson, nameCanvas, namePad, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, 
-                                fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcess, fCollisionSystem);
-
-            nameMeson       = Form("%s_GammaConvPt_MesonWithBckLeft%s", plotPrefix.Data(), plotSuffix.Data());
-            nameCanvas      = "MesonWithBckCanvasLeft";
-            namePad         = "MesonWithBckPadLeft";
-            cout << nameMeson.Data() << endl;
-            PlotInvMassInPtBins( fHistoGGInvMassPtGConvBin, fHistoBackNormInvMassLeftPtGconvBin, nameMeson, nameCanvas, namePad,  fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin,
-                                fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem);
-
-            TString nameMesonSub    = Form("%s_GammaConvPt_MesonSubtracted%s", plotPrefix.Data(), plotSuffix.Data());
-            TString nameCanvasSub   = "MesonCanvasSubtracted";
-            TString namePadSub      = "MesonPadSubtracted";
-            cout << nameMesonSub.Data() << endl;
-            PlotWithFitSubtractedInvMassInPtBins(   fHistoSignalInvMassPtGConvBin, NULL, fFitSignalInvMassPtBin, nameMesonSub, nameCanvasSub, namePadSub,
-                                                    fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
-                                                    fCollisionSystem, "MC validated");
+            for (Int_t k = 0; k < 3; k++){
+                IntegrateHistoInvMass( fHistoGGInvMassPtGConvBin[iPt], fMesonCurIntRange[k]);
+                fGGYields[k][iPt]               = fYields;
+                fGGYieldsError[k][iPt]          = fYieldsError;
+                
+                // Integrate the bck histo
+                IntegrateHistoInvMass( fHistoBackNormInvMassPtGconvBin[iPt], fMesonCurIntRange[k]);
+                fBckYields[k][iPt]              = fYields;
+                fBckYieldsError[k][iPt]         = fYieldsError;
+                
+                // Integrate the signal histo
+                fFileDataLog<< endl <<"Signal histo "<< nameIntRange[k].Data() << ":\t" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << endl;
+                IntegrateHistoInvMassStream( fHistoSignalInvMassPtGConvBin[iPt], fMesonCurIntRange[k]);
+                fMesonYields[k][iPt]            = fYields;
+                fMesonYieldsError[k][iPt]       = fYieldsError;
+                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
+            }    
+        
+            for (Int_t k = 0; k < 3; k++){
+                if (k > 0){
+                    fFileDataLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << nameIntRange[k].Data()<<  endl;
+                    Double_t intRange[2]    = {0,0};
+                    if (k == 1){
+                        intRange[0]         = fMesonIntDeltaRangeWide[0];
+                        intRange[1]         = fMesonIntDeltaRangeWide[1];
+                    } else if ( k == 2){
+                        intRange[0]         = fMesonIntDeltaRangeNarrow[0];
+                        intRange[1]         = fMesonIntDeltaRangeNarrow[1];                    
+                    }    
+                    fFileDataLog << "Using exp fit"<<endl;
+                    FitSubtractedInvMassInPtBins(fHistoSignalInvMassPtGConvBin[iPt], intRange, iPt, kFALSE);
+                    fMesonYieldsResidualBckFunc[k][iPt]         = fIntLinearBck;
+                    fMesonYieldsResidualBckFuncError[k][iPt]    = fIntLinearBckError;
+                }
+                
+                fFileDataLog << "Residual Background leftover " << nameIntRange[k].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
+                            << fMesonYieldsResidualBckFunc[k][iPt] << "\t +- \t" << fMesonYieldsResidualBckFuncError[k][iPt] << endl<< endl;
+                
+                /////////////////////// added to check yields //////////////////////////////////////////////////////////   
+                fTotalBckYields[k][iPt]                         = fBckYields[k][iPt] + fMesonYieldsResidualBckFunc[k][iPt];
+                fTotalBckYieldsError[k][iPt]                    = pow(fBckYieldsError[k][iPt]*fBckYieldsError[k][iPt] + fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt],0.5);
+                fFileDataLog << "Total Background " << nameIntRange[k].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
+                            << fTotalBckYields[k][iPt] << "\t +- \t" << fTotalBckYieldsError[k][iPt] << endl<< endl;
+                fFileDataLog << "Background " << nameIntRange[k].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
+                            << fBckYields[k][iPt] << "\t +- \t" << fBckYieldsError[k][iPt] << endl<< endl;
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////
                         
-            nameMesonSub    = Form("%s_GammaConvPt_MesonSubtractedLeft%s", plotPrefix.Data(), plotSuffix.Data());
-            nameCanvasSub   = "MesonCanvasSubtractedLeft";
-            namePadSub      = "MesonPadSubtractedLeft";
-            cout << nameMesonSub.Data() << endl;
-            PlotWithFitSubtractedInvMassInPtBins(   fHistoSignalInvMassLeftPtGConvBin, NULL, fFitInvMassLeftPtBin, nameMesonSub, nameCanvasSub, namePadSub,
-                                                    fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
-                                                    fCollisionSystem, "MC validated");
+                fMesonYieldsCorResidualBckFunc[k][iPt]          = fMesonYields[k][iPt]- fMesonYieldsResidualBckFunc[k][iPt];
+                fMesonYieldsCorResidualBckFuncError[k][iPt]     = pow(( fMesonYieldsError[k][iPt]*fMesonYieldsError[k][iPt] +
+                                                                    fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt]),0.5);
+                fMesonYieldsPerEvent[k][iPt]                    = fMesonYieldsCorResidualBckFunc[k][iPt]/fNEvents;
+                fMesonYieldsPerEventError[k][iPt]               = fMesonYieldsCorResidualBckFuncError[k][iPt]/fNEvents;
+                
+            }    
 
-            cout << "Example bin: "<< fExampleBin << endl;
-            TString triggerInt         = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPosition(),2);
-            PlotExampleInvMassBinsV2(   fHistoGGInvMassPtGConvBin[fExampleBin], fHistoSignalInvMassPtGConvBin[fExampleBin], fHistoBackNormInvMassPtGconvBin[fExampleBin],
-                                        fFitSignalInvMassPtBin[fExampleBin], fExampleBin, fOutputDir.Data(),fSuffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fExampleBinScaleFac, fMode, addSig );
 
+            if(fIsMC){
+                fFileDataLog<< endl <<"True histo normal range" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
+                fFitTrueSignalInvMassPtBin[iPt]=0x00;
+                fFileErrLog << "Using exp fit"<<endl;
+                FitTrueInvMassInPtBins(fHistoTruePrimMesonInvMassPtBins[iPt], fMesonIntDeltaRange,iPt,kFALSE);
+
+                if (fHistoTruePrimMesonInvMassPtBins[iPt]->GetEntries() !=0){
+                    fFitTrueSignalInvMassPtBin[iPt]     = fFitReco;
+                    if (fFitTrueSignalInvMassPtBin[iPt] != 0x00){
+                        fMesonTrueMass[iPt]             = fFitTrueSignalInvMassPtBin[iPt]->GetParameter(1);
+                        fMesonTrueMassError[iPt]        = fFitTrueSignalInvMassPtBin[iPt]->GetParError(1);
+                        
+                        fMesonLambdaTailMCpar[iPt]      = fFitTrueSignalInvMassPtBin[iPt]->GetParameter(3);
+                        fMesonLambdaTailMCparError[iPt] = fFitTrueSignalInvMassPtBin[iPt]->GetParError(3);
+
+                        CalculateFWHM(fFitTrueSignalInvMassPtBin[iPt]);
+                        fMesonTrueFWHM[iPt]             = fFWHMFunc;
+                        fMesonTrueFWHMError[iPt]        = fFWHMFuncError;
+                        fFileDataLog << "TrueFWHM \t" << fMesonTrueFWHM[iPt] << "\t +-" << fMesonTrueFWHMError[iPt] << endl;
+                        fMesonTrueIntRange[0][0]        = fMesonTrueMass[iPt] + fMesonIntDeltaRange[0];
+                        fMesonTrueIntRange[1][0]        = fMesonTrueMass[iPt] + fMesonIntDeltaRangeWide[0];
+                        fMesonTrueIntRange[2][0]        = fMesonTrueMass[iPt] + fMesonIntDeltaRangeNarrow[0];
+                        fMesonTrueIntRange[0][1]        = fMesonTrueMass[iPt] + fMesonIntDeltaRange[1] ;
+                        fMesonTrueIntRange[1][1]        = fMesonTrueMass[iPt] + fMesonIntDeltaRangeWide[1];
+                        fMesonTrueIntRange[2][1]        = fMesonTrueMass[iPt] + fMesonIntDeltaRangeNarrow[1];
+                    } else {
+                        fMesonTrueMass[iPt]             = 0.;
+                        fMesonTrueMassError[iPt]        = 1.;
+                        fMesonTrueFWHM[iPt]             = 0.;
+                        fMesonTrueFWHMError[iPt]        = 0.;
+                        fMesonTrueIntRange[0][0]        = fMesonMassExpect + fMesonIntDeltaRange[0];
+                        fMesonTrueIntRange[1][0]        = fMesonMassExpect + fMesonIntDeltaRangeWide[0];
+                        fMesonTrueIntRange[2][0]        = fMesonMassExpect + fMesonIntDeltaRangeNarrow[0];
+                        fMesonTrueIntRange[0][1]        = fMesonMassExpect + fMesonIntDeltaRange[1];
+                        fMesonTrueIntRange[1][1]        = fMesonMassExpect + fMesonIntDeltaRangeWide[1];
+                        fMesonTrueIntRange[2][1]        = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
+                    }
+                }
+
+                IntegrateHistoInvMassStream( fHistoTruePrimMesonInvMassPtBins[iPt], fIntFixedRange);
+                fMesonTrueYieldFixedWindow[iPt]         = fYields;
+                fMesonTrueYieldErrorFixedWindow[iPt]    = fYieldsError;
+
+                // fill pt array with integrated validated MC yield for different integration windows: normal, wide, narrow
+                for (Int_t k = 0; k< 3;k++){
+                    if (k > 0 )
+                        fFileDataLog<< endl <<"True histo " << nameIntRange[k].Data() << " range" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
+                    IntegrateHistoInvMassStream( fHistoTruePrimMesonInvMassPtBins[iPt], fMesonTrueIntRange[k]);
+                    fMesonTrueYields[k][iPt]                        = fYields;
+                    fMesonTrueYieldsError[k][iPt]                   = fYieldsError;
+                    fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
+                    
+                }    
+                
+                fFitTrueFullSignalInvMassPtBin[iPt]=0x00;
+                fFileErrLog << "Using exp fit"<<endl;
+                FitTrueInvMassInPtBins(fHistoTrueFullMesonInvMassPtBins[iPt], fMesonIntDeltaRange,iPt,kFALSE);
+                if (fHistoTrueFullMesonInvMassPtBins[iPt]->GetEntries() !=0){
+                    fFitTrueFullSignalInvMassPtBin[iPt] = fFitReco;
+                }
+                
+                // fill secondary yield pt-arrays for neutral pion for different sources and integration windows
+                if (meson.Contains("Pi0")){
+                    for (Int_t j = 0; j < maxNSec; j++){
+                        if (fHistoTrueSecMesonInvMassPtBins[j][iPt]){
+                            for (Int_t k = 0; k < 3; k++){
+                                fFileDataLog<< endl <<"TrueSec " << nameSecondaries[j].Data() << " histo " << nameIntRange[k].Data() << ":\t" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
+                                IntegrateHistoInvMassStream( fHistoTrueSecMesonInvMassPtBins[j][iPt], fMesonTrueIntRange[k]);
+                                fMesonTrueSecYields[k][j][iPt]              = fYields;
+                                fMesonTrueSecYieldsError[k][j][iPt]         = fYieldsError;
+                                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
+                            }    
+                        } else {
+                            for (Int_t k= 0; k< 3; k++){
+                                fMesonTrueSecYields[k][j][iPt]          = 0;
+                                fMesonTrueSecYieldsError[k][j][iPt]     = 0;
+                            }
+                        }    
+                    }
+                } else {
+                    for (Int_t j = 0; j < maxNSec; j++){
+                        for (Int_t k= 0; k< 3; k++){
+                            fMesonTrueSecYields[k][j][iPt]              = 0;
+                            fMesonTrueSecYieldsError[k][j][iPt]         = 0;
+                        }
+                    }    
+                }
+            }
+            
+            
+            
+            //////////////////////////////// Start Analysis with  Normalization at the left of the Meson Peak
+            // Function to subtract GG minus Bck
+            fFileDataLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << endl;
+            ProcessEM( fHistoGGInvMassPtGConvBin[iPt], fHistoBackInvMassPtGconvBin[iPt], fBGFitRangeLeft);
+            fHistoSignalInvMassLeftPtGConvBin[iPt]          = fSignal;
+            fHistoBackNormInvMassLeftPtGconvBin[iPt]        = fBckNorm;
+
+
+            fHistoSignalInvMassLeftPtGConvBin[iPt]->SetName(Form("fHistoSignalLeftInvMass_in_PtConv_Bin%02d",iPt));
+            //       fFileDataLog<< "iPt"<< iPt<< " "<< "standard range"<<endl;
+            // Fitting the subtracted spectra
+            fFileDataLog  << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << "normal range/left normalization" << endl;
+
+            fFitInvMassLeftPtBin[iPt] =0x00;
+            fFileDataLog << "Using exp fit"<<endl;
+            FitSubtractedInvMassInPtBins(fHistoSignalInvMassLeftPtGConvBin[iPt], fMesonIntDeltaRange,iPt,kFALSE);
+            fFitInvMassLeftPtBin[iPt]                               = fFitReco;
+            fFitBckInvMassLeftPtBin[iPt]                            = fFitLinearBck;
+            fMesonYieldsResidualBckFunc[3][iPt]                     = fIntLinearBck;
+            fMesonYieldsResidualBckFuncError[3][iPt]                = fIntLinearBckError;
+            CalculateFWHM(fFitInvMassLeftPtBin[iPt]);
+            fMesonFWHMLeft[iPt]         = fFWHMFunc;
+            fMesonFWHMLeftError[iPt]    = fFWHMFuncError;
+            
+            if (fFitInvMassLeftPtBin[iPt] !=0x00){
+                fMesonMassLeft[iPt]             = fFitInvMassLeftPtBin[iPt]->GetParameter(1);
+                fMesonMassLeftError[iPt]        = fFitInvMassLeftPtBin[iPt]->GetParError(1);
+                fMesonCurIntRange[3][0]         = fMesonMassLeft[iPt] + fMesonIntDeltaRange[0];
+                fMesonCurIntRange[4][0]         = fMesonMassLeft[iPt] + fMesonIntDeltaRangeWide[0];
+                fMesonCurIntRange[5][0]         = fMesonMassLeft[iPt] + fMesonIntDeltaRangeNarrow[0];
+                fMesonCurIntRange[3][1]         = fMesonMassLeft[iPt] + fMesonIntDeltaRange[1];
+                fMesonCurIntRange[4][1]         = fMesonMassLeft[iPt] + fMesonIntDeltaRangeWide[1];
+                fMesonCurIntRange[5][1]         = fMesonMassLeft[iPt] + fMesonIntDeltaRangeNarrow[1];
+            } else {
+                fMesonMassLeft[iPt]             = 0.;
+                fMesonMassLeftError[iPt]        = 0.;
+                fMesonCurIntRange[3][0]         = fMesonMassExpect + fMesonIntDeltaRange[0];
+                fMesonCurIntRange[4][0]         = fMesonMassExpect + fMesonIntDeltaRangeWide[0];
+                fMesonCurIntRange[5][0]         = fMesonMassExpect + fMesonIntDeltaRangeNarrow[0];
+                fMesonCurIntRange[3][1]         = fMesonMassExpect + fMesonIntDeltaRange[1];
+                fMesonCurIntRange[4][1]         = fMesonMassExpect + fMesonIntDeltaRangeWide[1];
+                fMesonCurIntRange[5][1]         = fMesonMassExpect + fMesonIntDeltaRangeNarrow[1];
+            }
+
+            // Integrate the bck histo
+            for (Int_t k = 0; k < 3; k++){
+                IntegrateHistoInvMass( fHistoBackNormInvMassLeftPtGconvBin[iPt], fMesonCurIntRange[k+3]);
+                fBckYields[k+3][iPt]              = fYields;
+                fBckYieldsError[k+3][iPt]         = fYieldsError;
+
+                fFileDataLog<< endl <<"Signal histo " << nameIntRange[k+3].Data() << ":\t" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
+                IntegrateHistoInvMassStream( fHistoSignalInvMassLeftPtGConvBin[iPt], fMesonCurIntRange[k+3]);
+                fMesonYields[k+3][iPt]            = fYields;
+                fMesonYieldsError[k+3][iPt]       = fYieldsError;
+                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError <<endl;
+                
+            }
+        
+
+            for (Int_t k = 0; k < 3; k++){
+                if (k > 0){
+                    fFileDataLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << nameIntRange[k+3].Data()<<  endl;
+                    Double_t intRange[2]    = {0,0};
+                    if (k == 1){
+                        intRange[0]         = fMesonIntDeltaRangeWide[0];
+                        intRange[1]         = fMesonIntDeltaRangeWide[1];
+                    } else if ( k == 2){
+                        intRange[0]         = fMesonIntDeltaRangeNarrow[0];
+                        intRange[1]         = fMesonIntDeltaRangeNarrow[1];                    
+                    }    
+                    fFileDataLog << "Using exp fit"<<endl;
+                    FitSubtractedInvMassInPtBins(fHistoSignalInvMassLeftPtGConvBin[iPt], intRange, iPt, kFALSE);
+                    fMesonYieldsResidualBckFunc[k+3][iPt]         = fIntLinearBck;
+                    fMesonYieldsResidualBckFuncError[k+3][iPt]    = fIntLinearBckError;
+                }
+                
+                fFileDataLog << "Residual Background leftover " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
+                            << fMesonYieldsResidualBckFunc[k+3][iPt] << "\t +- \t" << fMesonYieldsResidualBckFuncError[k+3][iPt] << endl<< endl;
+                
+                fTotalBckYields[k+3][iPt]                       = fBckYields[k+3][iPt] + fMesonYieldsResidualBckFunc[k+3][iPt];
+                fTotalBckYieldsError[k+3][iPt]                  = pow(fBckYieldsError[k+3][iPt]*fBckYieldsError[k+3][iPt] + fMesonYieldsResidualBckFuncError[k+3][iPt]*fMesonYieldsResidualBckFuncError[k+3][iPt],0.5);
+                fFileDataLog << "Total Background " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
+                            << fTotalBckYields[k+3][iPt] << "\t +- \t" << fTotalBckYieldsError[k+3][iPt] << endl<< endl;
+                fFileDataLog << "Background " << nameIntRange[k+3].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t" 
+                            << fBckYields[k+3][iPt] << "\t +- \t" << fBckYieldsError[k+3][iPt] << endl<< endl;
+                        
+                fMesonYieldsCorResidualBckFunc[k+3][iPt]        = fMesonYields[k+3][iPt]- fMesonYieldsResidualBckFunc[k+3][iPt];
+                fMesonYieldsCorResidualBckFuncError[k+3][iPt]   = pow(( fMesonYieldsError[k+3][iPt]*fMesonYieldsError[k+3][iPt] +
+                                                                        fMesonYieldsResidualBckFuncError[k+3][iPt]*fMesonYieldsResidualBckFuncError[k+3][iPt]),0.5);
+                fMesonYieldsPerEvent[k+3][iPt]                  = fMesonYieldsCorResidualBckFunc[k+3][iPt]/fNEvents;
+                fMesonYieldsPerEventError[k+3][iPt]             = fMesonYieldsCorResidualBckFuncError[k+3][iPt]/fNEvents;
+                
+            }    
             
         }
+        TString plotPrefix  = Form("%s/%s_%s",fOutputDir.Data(),fPrefix.Data(),fPrefix2.Data());
+        TString plotSuffix  = Form("%s_%s.%s",fPeriodFlag.Data(),fCutSelection.Data(),fSuffix.Data());
         
+        TString nameMeson   = Form("%s_GammaConvPt_MesonWithBck%s", plotPrefix.Data(), plotSuffix.Data());
+        TString nameCanvas  = "MesonWithBckCanvas";
+        TString namePad     = "MesonWithBckPad";
+        cout << nameMeson.Data() << endl;
+        PlotInvMassInPtBins( fHistoGGInvMassPtGConvBin, fHistoBackNormInvMassPtGconvBin, nameMeson, nameCanvas, namePad, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, 
+                            fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcess, fCollisionSystem, kTRUE);
+
+        nameMeson       = Form("%s_GammaConvPt_MesonWithBckLeft%s", plotPrefix.Data(), plotSuffix.Data());
+        nameCanvas      = "MesonWithBckCanvasLeft";
+        namePad         = "MesonWithBckPadLeft";
+        cout << nameMeson.Data() << endl;
+        PlotInvMassInPtBins( fHistoGGInvMassPtGConvBin, fHistoBackNormInvMassLeftPtGconvBin, nameMeson, nameCanvas, namePad,  fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin,
+                            fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem, kTRUE);
+
+        TString nameMesonSub    = Form("%s_GammaConvPt_MesonSubtracted%s", plotPrefix.Data(), plotSuffix.Data());
+        TString nameCanvasSub   = "MesonCanvasSubtracted";
+        TString namePadSub      = "MesonPadSubtracted";
+        cout << nameMesonSub.Data() << endl;
+        PlotWithFitSubtractedInvMassInPtBins(   fHistoSignalInvMassPtGConvBin, fHistoTrueFullMesonInvMassPtBins, fFitSignalInvMassPtBin, nameMesonSub, nameCanvasSub, namePadSub,
+                                                fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
+                                                fCollisionSystem, "MC validated", kTRUE, "Fit", "mixed evt. subtr. #it{M}_{#gamma#gamma}", kTRUE);
+                                           
+        
+        nameMesonSub    = Form("%s_GammaConvPt_MesonSubtractedLeft%s", plotPrefix.Data(), plotSuffix.Data());
+        nameCanvasSub   = "MesonCanvasSubtractedLeft";
+        namePadSub      = "MesonPadSubtractedLeft";
+        cout << nameMesonSub.Data() << endl;
+        PlotWithFitSubtractedInvMassInPtBins(   fHistoSignalInvMassLeftPtGConvBin, fHistoTrueFullMesonInvMassPtBins, fFitInvMassLeftPtBin, nameMesonSub, nameCanvasSub, namePadSub,
+                                                fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
+                                                fCollisionSystem, "MC validated", kTRUE, "Fit", "mixed evt. subtr. #it{M}_{#gamma#gamma}", kTRUE);
+
+        cout << "Example bin: "<< fExampleBin << endl;
+        TString triggerInt         = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPosition(),2);
+        PlotExampleInvMassBinsV2(   fHistoGGInvMassPtGConvBin[fExampleBin], fHistoSignalInvMassPtGConvBin[fExampleBin], fHistoBackNormInvMassPtGconvBin[fExampleBin],
+                                    fFitSignalInvMassPtBin[fExampleBin], fExampleBin, fOutputDir.Data(),fSuffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
+                                    fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fExampleBinScaleFac, fMode, addSig, kTRUE );
+
+        TString labelsOtherFits[3]  = {"pol2 BG", "a exp(bx) BG", "a + b exp(cx) BG"};
+
+
+        if(fIsMC){
+            TString nameMesonTrue   = Form("%s_GammaConvPt_TrueMesonFitted%s", plotPrefix.Data(), plotSuffix.Data());
+            TString nameCanvasTrue  = "TrueMesonCanvasFitted";
+            TString namePadTrue     = "TrueMesonPadFitted";
+            cout << nameMesonTrue.Data() << endl;
+            PlotWithFitSubtractedInvMassInPtBins(fHistoTrueFullMesonInvMassPtBins, fHistoTruePrimMesonInvMassPtBins, fFitTrueFullSignalInvMassPtBin, nameMesonTrue, nameCanvasTrue, namePadTrue,
+                                                fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
+                                                fCollisionSystem, "MC validated",kFALSE);
+
+            if (meson.Contains("Pi0")){
+                nameMesonTrue       = Form("%s_GammaConvPt_TrueMesonPrimAndSecondary%s", plotPrefix.Data(), plotSuffix.Data());
+                nameCanvasTrue      = "TrueMesonCanvasSec";
+                namePadTrue         = "TrueMesonPadSec";
+                cout << nameMesonTrue.Data() << endl;
+                PlotInvMassSecondaryInPtBins( fHistoTrueFullMesonInvMassPtBins, fHistoTruePrimMesonInvMassPtBins, fHistoTrueSecMesonInvMassPtBins[0], nameMesonTrue, nameCanvasTrue,
+                                            namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
+                                            fCollisionSystem);
+            }
+        }
+        
+        CreatePtHistos();
+        FillPtHistos();
+        
+        // *********************************************************************************************************************
+        // ******************************** Plotting control histograms ********************************************************
+        // *********************************************************************************************************************
+        ///*********************** Lambda tail
+        TCanvas* canvasLambdaTail = new TCanvas("canvasLambdaTail","",1550,1200);  // gives the page size
+        canvasLambdaTail->SetTickx();
+        canvasLambdaTail->SetTicky();
+
+        DrawGammaSetMarker(fHistoLambdaTail, 20, 1., kBlack, kBlack);
+        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
+            DrawAutoGammaMesonHistos( fHistoLambdaTail, 
+                                    "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})", "#lambda", 
+                                    kFALSE, 3.,0.,  kFALSE,
+                                    kTRUE, 0.,fMesonLambdaTailRange[1]*1.2, 
+                                    kFALSE, 0., 10.);
+        } else {
+            DrawAutoGammaMesonHistos( fHistoLambdaTail, 
+                                    "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})", "#lambda", 
+                                    kFALSE, 3.,0.,  kFALSE,
+                                    kTRUE, 5e-3,fMesonLambdaTailRange[1]*1.2, 
+                                    kFALSE, 0., 10.);
+        }
+        canvasLambdaTail->Update();
+        
+        TLegend* legendLambdaTail = new TLegend(0.15,0.8,0.4,0.95);
+        legendLambdaTail->SetFillColor(0);
+        legendLambdaTail->SetLineColor(0);
+        legendLambdaTail->SetTextSize(0.04);
+        legendLambdaTail->AddEntry(fHistoLambdaTail,Form("Lambda tail parameter for %s",fPrefix.Data()),"p");
+        legendLambdaTail->Draw();
+
+        if (fIsMC) canvasLambdaTail->SaveAs(Form("%s/%s_MC_LambdaTail_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),fSuffix.Data()));
+        else canvasLambdaTail->SaveAs(Form("%s/%s_data_LambdaTail_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),fSuffix.Data()));
+
+
+        ///*********************** Mass   
+        TCanvas* canvasMesonMass = new TCanvas("canvasMesonMass","",1550,1200);  // gives the page size
+        canvasMesonMass->SetTickx();
+        canvasMesonMass->SetTicky();
+
+        DrawGammaSetMarker(fHistoMassMeson, 20, 1., kBlack, kBlack);
+        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
+            DrawAutoGammaMesonHistos( fHistoMassMeson, 
+                                    "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})", Form("Mass (GeV/c^{2})"), 
+                                    kFALSE, 3.,0.,  kFALSE,
+                                    kTRUE, 0.132,0.140, 
+                                    kFALSE, 0., 10.);
+        } else {
+            DrawAutoGammaMesonHistos( fHistoMassMeson, 
+                                    "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})", Form("Mass (GeV/c^{2})"), 
+                                    kFALSE, 3.,0.,  kFALSE,
+                                    kTRUE, 0.52,0.58, 
+                                    kFALSE, 0., 10.);
+        }
+        canvasMesonMass->Update();
+        
+        TLegend* legendMesonMass = new TLegend(0.15,0.8,0.4,0.95);
+        legendMesonMass->SetFillColor(0);
+        legendMesonMass->SetLineColor(0);
+        legendMesonMass->SetTextSize(0.04);
+        legendMesonMass->AddEntry(fHistoMassMeson,Form("%s mass",fPrefix.Data()),"p");
+        legendMesonMass->Draw();
+
+        if (fIsMC) canvasMesonMass->SaveAs(Form("%s/%s_MC_MesonMass_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),fSuffix.Data()));
+        else canvasMesonMass->SaveAs(Form("%s/%s_data_MesonMass_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),fSuffix.Data()));
+
+        
+        ///*********************** Width
+        TCanvas* canvasMesonFWHM = new TCanvas("canvasMesonFWHM","",1550,1200);  // gives the page size
+        canvasMesonFWHM->SetTickx();
+        canvasMesonFWHM->SetTicky();
+
+        DrawGammaSetMarker(fHistoFWHMMeson, 20, 1., kBlack, kBlack);
+        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
+            DrawAutoGammaMesonHistos( fHistoFWHMMeson, 
+                                        "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})","FWHM (GeV/c^{2})", 
+                                        kFALSE, 3.,0., kFALSE,
+                                        kTRUE, -0.004, fMesonWidthRange[1]*1.5, 
+                                        kFALSE, 0., 10.);
+        } else {
+            DrawAutoGammaMesonHistos( fHistoFWHMMeson, 
+                                        "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})","FWHM (GeV/c^{2})", 
+                                        kFALSE, 3.,0., kFALSE,
+                                        kTRUE, 0., fMesonWidthRange[1]*1.5, 
+                                        kFALSE, 0., 10.);
+        }
+        canvasMesonFWHM->Update();
+        
+        TLegend* legendMesonFWHM = new TLegend(0.2,0.12,0.45,0.26);
+        legendMesonFWHM->SetFillColor(0);
+        legendMesonFWHM->SetLineColor(0);
+        legendMesonFWHM->SetTextSize(0.04);
+        legendMesonFWHM->AddEntry(fHistoFWHMMeson,Form("%s FWHM",fPrefix.Data()),"p");
+        legendMesonFWHM->Draw();
+
+        if (fIsMC) canvasMesonFWHM->SaveAs(Form("%s/%s_MC_MesonFWHM_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),fSuffix.Data()));
+        else canvasMesonFWHM->SaveAs(Form("%s/%s_data_MesonFWHM_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),fSuffix.Data()));
+
+        // **************************************************************************************************************
+        // ************************ Chi2/ndf compared MC vs Data ********************************************************
+        // **************************************************************************************************************
+        TCanvas* canvasChi2 = new TCanvas("canvasChi2","",200,10,1350,900);  // gives the page size
+        DrawGammaCanvasSettings( canvasChi2, 0.092, 0.01, 0.02, 0.082);
+            
+        Double_t maxChi2    = fHistoChi2[0]->GetMaximum();
+        for (Int_t m = 1; m < 4; m++){
+            if (maxChi2 < fHistoChi2[m]->GetMaximum())
+                maxChi2     = fHistoChi2[m]->GetMaximum();
+        }
+        maxChi2             = maxChi2*1.2; 
+
+        TLegend* legendChi2 = GetAndSetLegend2(0.75, 0.95-(0.035*4), 0.95, 0.95, 0.035, 1, "", 42, 0.25);
+        
+        fHistoChi2[0]->GetYaxis()->SetRangeUser(0, maxChi2);
+        DrawAutoGammaMesonHistos( fHistoChi2[0], 
+                                    "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})", "#it{#chi}^{2}/ndf", 
+                                    kFALSE, 0., 0.7, kFALSE,
+                                    kFALSE, 0., 0.7, 
+                                    kFALSE, 0., 10.);
+        DrawGammaSetMarker(fHistoChi2[0], 20, 2, kCyan+2, kCyan+2); 
+        fHistoChi2[0]->DrawCopy("same,e1,p");
+        legendChi2->AddEntry(fHistoChi2[0],"pol1 BG","p");
+        
+        Color_t colorFit[3] = {kRed+1, kAzure+2, 807};
+        Style_t styleFit[3] = {34, 21, 33};
+
+        for (Int_t m = 1; m < 4; m++){
+            DrawGammaSetMarker(fHistoChi2[m], styleFit[m-1], 2, colorFit[m-1], colorFit[m-1]);
+            fHistoChi2[m]->DrawCopy("same,e1,p"); 
+            legendChi2->AddEntry(fHistoChi2[m],labelsOtherFits[m-1],"p");
+        }
+        fHistoChi2[0]->DrawCopy("same,e1,p");
+        legendChi2->Draw();
+
+        
+        PutProcessLabelAndEnergyOnPlot(0.15, 0.25, 0.035, fCollisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        canvasChi2->Update();
+        if (fIsMC) canvasChi2->SaveAs(Form("%s/%s_MC_Chi2FitComp_%s.%s",fOutputDir.Data(),fPrefix.Data(),fCutSelection.Data(),fSuffix.Data()));
+        else canvasChi2->SaveAs(Form("%s/%s_data_Chi2FitComp_%s.%s",fOutputDir.Data(),fPrefix.Data(),fCutSelection.Data(),fSuffix.Data()));
+
+        // **************************************************************************************************************
+        // ************************ ResBG compared MC vs Data ********************************************************
+        // **************************************************************************************************************
+        TCanvas* canvasResBG = new TCanvas("canvasResBG","",200,10,1350,900);  // gives the page size
+        DrawGammaCanvasSettings( canvasResBG, 0.092, 0.01, 0.03, 0.092);
+            
+        Double_t maxResBG    = fHistoResBGYield[0]->GetMaximum();
+        for (Int_t m = 1; m < 4; m++){
+            if (maxResBG < fHistoResBGYield[m]->GetMaximum())
+                maxResBG     = fHistoResBGYield[m]->GetMaximum();
+        }
+        maxResBG             = maxResBG*1.2; 
+
+        Double_t minResBG    = fHistoResBGYield[0]->GetMinimum();
+        for (Int_t m = 1; m < 4; m++){
+            if (minResBG > fHistoResBGYield[m]->GetMinimum())
+                minResBG     = fHistoResBGYield[m]->GetMinimum();
+        }
+        if (minResBG < 0)
+            minResBG             = minResBG*1.4; 
+        else 
+            minResBG             = minResBG*0.8;
+        
+        TLegend* legendResBG = GetAndSetLegend2(0.75, 0.80-(0.035*4), 0.95, 0.80, 0.035, 1, "", 42, 0.25);
+        
+        fHistoResBGYield[0]->GetYaxis()->SetRangeUser(minResBG, maxResBG);
+        DrawAutoGammaMesonHistos( fHistoResBGYield[0], 
+                                    "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})", "Res BG yield", 
+                                    kFALSE, 0., 0.7, kFALSE,
+                                    kFALSE, 0., 0.7, 
+                                    kFALSE, 0., 10.);
+        DrawGammaSetMarker(fHistoResBGYield[0], 20, 2, kCyan+2, kCyan+2); 
+        fHistoResBGYield[0]->DrawCopy("same,e1,p");
+        legendResBG->AddEntry(fHistoResBGYield[0],"pol1 BG","p");
+        
+        for (Int_t m = 1; m < 4; m++){
+            DrawGammaSetMarker(fHistoResBGYield[m], styleFit[m-1], 2, colorFit[m-1], colorFit[m-1]);
+            fHistoResBGYield[m]->DrawCopy("same,e1,p"); 
+            legendResBG->AddEntry(fHistoResBGYield[m],labelsOtherFits[m-1],"p");
+        }
+        fHistoResBGYield[0]->DrawCopy("same,e1,p");
+        legendResBG->Draw();
+
+        PutProcessLabelAndEnergyOnPlot(0.70, 0.95, 0.035, fCollisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        canvasResBG->Update();
+        if (fIsMC) canvasResBG->SaveAs(Form("%s/%s_MC_ResBGYieldFitComp_%s.%s",fOutputDir.Data(),fPrefix.Data(),fCutSelection.Data(),fSuffix.Data()));
+        else canvasResBG->SaveAs(Form("%s/%s_data_ResBGYieldFitComp_%s.%s",fOutputDir.Data(),fPrefix.Data(),fCutSelection.Data(),fSuffix.Data()));
+    }
+    
+
+    if (fIsMC){
         //************************************** Calculate correction factors **************************************
         CalculateGammaCorrection();
         
@@ -1127,8 +1484,8 @@ void ExtractGammaSignalV2(      TString meson               = "",
         }
         //**************************** Save correction histograms for gammas ***************************************
         SaveCorrectionHistos(cutSelection,fPrefix2,pileUpCorrection);
-
     }
+    
     //******************************** Save raw histograms for gammas ***************************************
     SaveHistos(fIsMC,cutSelection,fPrefix2,pileUpCorrection);
 
@@ -1465,10 +1822,10 @@ void CalculatePileUpBackground(Bool_t doMC){
         // plotting ratios + fits
         TCanvas *RatioWithWithoutPileUpCanvasMC                                     = GetAndSetCanvas("canvasRatioWithWithoutPileUpMC");
         
-        SetHistogramm(fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
-        SetHistogramm(fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
-        SetHistogramm(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
-        SetHistogramm(fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
+        SetHistogramm(fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning,"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
+        SetHistogramm(fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
+        SetHistogramm(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
+        SetHistogramm(fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning,"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
         
         DrawGammaSetMarker(fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning, 20, 1.0, kBlack, kBlack);
         DrawGammaSetMarker(fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning, 24, 1.0, kRed, kRed);
@@ -1662,10 +2019,10 @@ void CalculatePileUpBackground(Bool_t doMC){
         // plotting ratio + fit
         TCanvas *RatioWithWithoutPileUpCanvas                               = GetAndSetCanvas("canvasRatioWithWithoutPileUp");
 
-        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0],"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
-        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[0],"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
-        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[1],"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
-        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[2],"p_{T} (GeV/c)","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
+        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0],"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
+        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[0],"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
+        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[1],"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
+        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[2],"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
 
         DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0], 28, 1.0, kGray+2, kGray+2);
         DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[0], 20, 1.0, kBlack, kBlack);
@@ -1794,7 +2151,7 @@ void CalculateGammaCorrection(){
             }
         }
         // ==========================================
-        
+        cout << "secondary fractions" << endl;
         // ======== Secondary fractions =============
         fHistoFracAllGammaToSecOrBin                                = (TH1D*)fHistoGammaConvPtOrBin->Clone("FracAllGammaToSecOriginalBinning");
         fHistoFracAllGammaToSecOrBin->Divide(fHistoGammaTrueSecondaryConvPtOrBin,fHistoFracAllGammaToSecOrBin,1,1,"B");
@@ -1810,16 +2167,16 @@ void CalculateGammaCorrection(){
         if(nHistogramDimension==2){
             fHistoFracAllGammaToSecFromXFromK0l                     = (TH1D*)fHistoGammaConvPt->Clone("FracAllGammaToSecFromXFromK0l");
             fHistoFracAllGammaToSecFromXFromK0l->Divide(fHistoGammaTrueSecondaryConvGammaFromXFromK0lPt,fHistoFracAllGammaToSecFromXFromK0l,1,1,"B");
-
             fHistoFracAllGammaToSecFromXFromK0lOrBin                = (TH1D*)fHistoGammaConvPtOrBin->Clone("FracAllGammaToSecFromXFromK0lOriginalBinning");
             fHistoFracAllGammaToSecFromXFromK0lOrBin->Divide(fHistoGammaTrueSecondaryConvGammaFromXFromK0lPtOrBin,fHistoFracAllGammaToSecFromXFromK0lOrBin,1,1,"B");
         }
         
         fHistoFracAllGammaToSecFromXFromLambda                      = (TH1D*)fHistoGammaConvPt->Clone("FracAllGammaToSecFromXFromLambda");
         fHistoFracAllGammaToSecFromXFromLambda->Divide(fHistoGammaTrueSecondaryConvGammaFromXFromLambdaPt,fHistoFracAllGammaToSecFromXFromLambda,1,1,"B");
-
+        
         fHistoFracAllGammaToSecFromXFromLambdaOrBin                 = (TH1D*)fHistoGammaConvPtOrBin->Clone("FracAllGammaToSecFromXFromLambdaOriginalBinning");
         fHistoFracAllGammaToSecFromXFromLambdaOrBin->Divide(fHistoGammaTrueSecondaryConvGammaFromXFromLambdaPtOrBin,fHistoFracAllGammaToSecFromXFromLambdaOrBin,1,1,"B");
+        
         
         if(fUseCocktail){
             fHistoFracAllGammaToSecRest                             = (TH1D*)fHistoGammaConvPt->Clone("FracAllGammaToSecRest");
@@ -1831,6 +2188,7 @@ void CalculateGammaCorrection(){
         // ==========================================
         
         // =============== Conv Prob ================
+        cout << "conversion probability" << endl;
         fHistoGammaMCConvProb                                       = new TH1D("MCGammaConvProb_MCPt","",fNBinsPt,fBinsPt);
         fHistoGammaMCConvProb->Sumw2();
         fHistoGammaMCConvProb->Divide(fHistoGammaMCConvPt,fHistoGammaMCAllPt,1,1,"B");
@@ -2378,8 +2736,6 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         fMesonFWHMLeftError                                             = new Double_t[fNBinsPt];
         fMesonLambdaTailpar                                             = new Double_t[fNBinsPt];
         fMesonLambdaTailparError                                        = new Double_t[fNBinsPt];
-        fMesonLambdaTailMCpar                                           = new Double_t[fNBinsPt];
-        fMesonLambdaTailMCparError                                      = new Double_t[fNBinsPt];
 
         // chi2 test for different function 
         for (Int_t m = 0; m < 4; m++){
@@ -2415,7 +2771,54 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         for (Int_t k = 0; k < 3; k++){
             fMassWindowHigh[k]                                          = new Double_t[fNBinsPt];
             fMassWindowLow[k]                                           = new Double_t[fNBinsPt];
+            
+            if (fIsMC){
+                // initialize integration
+                fMesonTrueIntRange[k]                                   = new Double_t[2];
+        
+                // initialize pt arrays for reconstructed validated yields
+                fMesonTrueYields[k]                                     = new Double_t[fNBinsPt];
+                fMesonTrueYieldsError[k]                                = new Double_t[fNBinsPt];
+                
+                // initialize pt arrays for reconstructed validated yields from secondaries
+                for (Int_t j = 0; j < 4; j++){
+                    fMesonTrueSecYields[k][j]                           = new Double_t[fNBinsPt];
+                    fMesonTrueSecYieldsError[k][j]                      = new Double_t[fNBinsPt];
+                }
+
+            }
         }
+        
+        if (fIsMC){
+            cout << "initializing MC hists" << endl;
+            fFitTrueSignalInvMassPtBin                                  = new TF1*[fNBinsPt];
+            fFitTrueFullSignalInvMassPtBin                              = new TF1*[fNBinsPt];
+            fHistoTruePrimMesonInvMassPtBins                            = new TH1D*[fNBinsPt];
+            fHistoTrueFullMesonInvMassPtBins                            = new TH1D*[fNBinsPt];
+            for (Int_t j = 0; j < maxNSec; j++){
+                fHistoTrueSecMesonInvMassPtBins[j]                      = new TH1D*[fNBinsPt];
+            }
+            
+            for(Int_t i = 0;i<fNBinsPt; i++){
+                fFitTrueSignalInvMassPtBin[i]                           = NULL;
+                fFitTrueFullSignalInvMassPtBin[i]                       = NULL;
+                fHistoTruePrimMesonInvMassPtBins[i]                     = NULL;
+                fHistoTrueFullMesonInvMassPtBins[i]                     = NULL;
+                for (Int_t j = 0; j < maxNSec; j++){
+                    fHistoTrueSecMesonInvMassPtBins[j][i]               = NULL;
+                }
+            }
+            fMesonTrueMass                                              = new Double_t[fNBinsPt];
+            fMesonTrueFWHM                                              = new Double_t[fNBinsPt];
+            fMesonTrueMassError                                         = new Double_t[fNBinsPt];
+            fMesonTrueFWHMError                                         = new Double_t[fNBinsPt];
+            fMesonLambdaTailMCpar                                       = new Double_t[fNBinsPt];
+            fMesonLambdaTailMCparError                                  = new Double_t[fNBinsPt];
+
+            fMesonTrueYieldFixedWindow                                  = new Double_t[fNBinsPt];
+            fMesonTrueYieldErrorFixedWindow                             = new Double_t[fNBinsPt];
+
+        }    
     }
 }
 
@@ -2556,7 +2959,7 @@ void SaveHistos(Int_t isMC, TString fCutID, TString fPrefix3,Bool_t PileUpCorrec
         // write event histogram for data
         fEventQuality->Write("NEvents",TObject::kOverwrite);
         // write binning histogram
-        fDeltaPt->Write("deltaPt",TObject::kOverwrite);
+        fDeltaPt->Write("deltaPtGamma",TObject::kOverwrite);
         if (fDeltaPtDummy) fDeltaPtDummy->Write("deltaPtDCAzDistBinning",TObject::kOverwrite);
 
         // write histo with reasons for photon rejection
@@ -2645,7 +3048,50 @@ void SaveHistos(Int_t isMC, TString fCutID, TString fPrefix3,Bool_t PileUpCorrec
         // write raw photons distribution
         if (fHistoGammaCaloPt)          fHistoGammaCaloPt->Write("ESD_CaloGamma_Pt",TObject::kOverwrite);
         if (fHistoGammaCaloPtOrBin)     fHistoGammaCaloPtOrBin->Write("ESD_CaloGamma_Pt_OriginalBinning",TObject::kOverwrite);
+
+        if (fMode == 2 || fMode == 3 ){
+          // write histograms for all integration windows: normal, wide, narrow, left, left wide, left narrow
+            for (Int_t k = 0; k < 6; k++){
+                if (fHistoYieldMeson[k])            fHistoYieldMeson[k]->Write(Form("histoYieldMeson%s_GammaConvPt_Binning",nameIntRange[k].Data()),TObject::kOverwrite);
+                if (fHistoYieldMesonPerEvent[k])    fHistoYieldMesonPerEvent[k]->Write(Form("histoYieldMeson%sPerEvent_GammaConvPt_Binning",nameIntRange[k].Data()),TObject::kOverwrite);
+            
+            }    
+            
+            // write histograms for integration windows: normal, wide, narrow
+            for (Int_t k = 0; k < 3; k++){
+                if (fHistoMassWindowHigh[k])        fHistoMassWindowHigh[k]->Write(Form("histoMassWindow%sHigh_GammaConvPt_Binning",nameIntRange[k].Data()),TObject::kOverwrite);
+                if (fHistoMassWindowLow[k])         fHistoMassWindowLow[k]->Write(Form("histoMassWindow%sLow_GammaConvPt_Binning",nameIntRange[k].Data()),TObject::kOverwrite);
+            }    
+
+
+            if (fHistoMassMeson)        fHistoMassMeson->Write("MesonMass_GammaConvPt_Binning",TObject::kOverwrite);
+            if (fHistoFWHMMeson)        fHistoFWHMMeson->Write("MesonFWHM_GammaConvPt_Binning",TObject::kOverwrite);
+            if (fHistoLambdaTail)       fHistoLambdaTail->Write("MesonTail_GammaConvPt_Binning",TObject::kOverwrite);
+            if (fHistoRatioResBGYield)  fHistoRatioResBGYield->Write("RatioResBGYieldToTot_GammaConvPt_Binning",TObject::kOverwrite);
+            if (fHistoRatioResBGYieldToSPlusResBG)  fHistoRatioResBGYieldToSPlusResBG->Write("RatioResBGYieldToSPlusBG_GammaConvPt_Binning",TObject::kOverwrite);
     
+            for (Int_t m = 0; m < 4; m++){
+                if (fHistoChi2[m])          fHistoChi2[m]->Write(Form("Chi2_GammaConvPt_Binning_%d",m),TObject::kOverwrite);
+                if (fHistoResBGYield[m])    fHistoResBGYield[m]->Write(Form("ResBGYield_GammaConvPt_Binning_%d",m),TObject::kOverwrite);
+            }    
+            if (fHistoMassMesonLeft)    fHistoMassMesonLeft->Write("MesonMassLeft_GammaConvPt_Binning",TObject::kOverwrite);
+            if (fHistoFWHMMesonLeft)    fHistoFWHMMesonLeft->Write("MesonFWHMLeft_GammaConvPt_Binning",TObject::kOverwrite);
+            
+            if (fIsMC){
+                if (fHistoYieldTrueMesonFixedWindow)    fHistoYieldTrueMesonFixedWindow->Write("histoYieldTrueMesonFixedWindow_GammaConvPt_Binning",TObject::kOverwrite);
+                if (fHistoTrueMassMeson)    fHistoTrueMassMeson->Write("TrueMesonMass_GammaConvPt_Binning",TObject::kOverwrite);
+                if (fHistoTrueFWHMMeson)    fHistoTrueFWHMMeson->Write("TrueMesonFWHM_GammaConvPt_Binning",TObject::kOverwrite);
+                for (Int_t k = 0; k < 3; k++){ // different integration windows: normal, wide, narrow
+                    if (fHistoYieldTrueMeson[k])            fHistoYieldTrueMeson[k]->Write(Form("histoYieldTrueMeson%s_GammaConvPt_Binning",nameIntRange[k].Data()),TObject::kOverwrite);
+                    for (Int_t j = 0; j < maxNSec; j++){ // different secondary types: K0s, Lambda, K0L, rest
+                        if(fHistoYieldTrueSecMeson[k][j])    fHistoYieldTrueSecMeson[k][j]->Write(  Form("histoYieldTrueFrom%sSecMeson%s_GammaConvPt_Binning",nameSecondaries[j].Data(),nameIntRange[k].Data()),
+                                                                                                    TObject::kOverwrite);
+                    }   
+                }
+            }    
+        }
+
+        
     Output1->Write();
     Output1->Close();
 }
@@ -3327,444 +3773,6 @@ void PlotAdditionalDCAz(Int_t isMC, TString fCutID){
     gStyle->SetOptTitle(1);
 }
 
-//**************************************************************************************************
-//************* Routine to produce DCAz plots in pt bins *******************************************
-//**************************************************************************************************
-void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBinsBack,TH1D** ESDGammaPtDCAzBinsBackB, TString namePlot, TString nameCanvas, TString namePad, TString dateDummy, TString fMesonType,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, TString fDecayChannel, Bool_t fMonteCarloInfo, TString textCent){
-    
-    cout << textCent.Data() << endl;
-    TGaxis::SetMaxDigits(3);
-    
-    TCanvas * canvasDataSpectra                 = new TCanvas(nameCanvas.Data(),"",2800,1800);  // gives the page size
-    canvasDataSpectra->SetTopMargin(0.02);
-    canvasDataSpectra->SetBottomMargin(0.02);
-    canvasDataSpectra->SetRightMargin(0.02);
-    canvasDataSpectra->SetLeftMargin(0.02);
-    
-    TPad * padDataSpectra                       = new TPad(namePad.Data(),"",0.0,0.0,1.,1.,0);   // gives the size of the histo areas
-    padDataSpectra->SetFillColor(0);
-    padDataSpectra->GetFrame()->SetFillColor(0);
-    padDataSpectra->SetBorderMode(0);
-    padDataSpectra->SetLogy(1);
-    padDataSpectra->Divide(fColumnPlot,fRowPlot);
-    padDataSpectra->Draw();
-    
-    Double_t relWidthLogo;
-    if (fMesonType.CompareTo("Pi0") == 0){
-        relWidthLogo                            = 0.3;
-    } else {
-        relWidthLogo                            = 0.3;
-    }
-    Double_t padXWidth                          = 2800/fColumnPlot;
-    Double_t padYWidth                          = 1800/fRowPlot;
-    
-    cout<<"fColumnPlot: "<<fColumnPlot<<" fRowPlot: "<<fRowPlot<<endl;
-    
-    Int_t place                                 = 0;
-    for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++){
-        cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
-        Double_t startPt                        = fRangeBinsPt[iPt];
-        Double_t endPt                          = fRangeBinsPt[iPt+1];
-        
-        place                                   = place + 1;                                    //give the right place in the page
-        if (place == fColumnPlot){
-            iPt--;
-            padDataSpectra->cd(place);
-            
-            TString textAlice                   = "ALICE performance";
-            TString textEvents;
-            if(fMonteCarloInfo) {
-                textEvents                      = "MC";
-            } else {
-                textEvents                      = "Data";
-            }
-            
-            Double_t nPixels                    = 13;
-            Double_t textHeight                 = 0.08;
-            if (padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) < padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1())){
-                textHeight                      = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
-            } else {
-                textHeight                      = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
-            }
-            
-            Double_t startTextX                 = 0.1;
-            Double_t startTextY                 = 0.9;
-            Double_t differenceText             = textHeight*1.25;
-            
-            TLatex *alice                       = new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
-            TLatex *latexDate                   = new TLatex(startTextX, (startTextY-1.25*differenceText), dateDummy.Data());
-            TLatex *energy                      = new TLatex(startTextX, (startTextY-2.25*differenceText), fCollisionSystem);
-            TLatex *process                     = new TLatex(startTextX, (startTextY-3.25*differenceText), fDecayChannel);
-            TLatex *detprocess                  = new TLatex(startTextX, (startTextY-4.25*differenceText), fDetectionProcess);
-            TLatex *events                      = new TLatex(startTextX, (startTextY-5.25*differenceText), Form("%s: %2.1e events",textEvents.Data(), fNEvents));
-            
-            alice->SetNDC();
-            alice->SetTextColor(1);
-            alice->SetTextSize(textHeight*1.3);
-            alice->Draw();
-            
-            latexDate->SetNDC();
-            latexDate->SetTextColor(1);
-            latexDate->SetTextSize(textHeight);
-            latexDate->Draw();
-            
-            energy->SetNDC();
-            energy->SetTextColor(1);
-            energy->SetTextSize(textHeight);
-            energy->Draw();
-            
-            process->SetNDC();
-            process->SetTextColor(1);
-            process->SetTextSize(textHeight);
-            process->Draw();
-            
-            detprocess->SetNDC();
-            detprocess->SetTextColor(1);
-            detprocess->SetTextSize(textHeight);
-            detprocess->Draw();
-            
-            events->SetNDC();
-            events->SetTextColor(1);
-            events->SetTextSize(textHeight);
-            events->Draw();
-            
-            TLegend* legendData                 = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+2.)*differenceText);
-            legendData->SetTextSize(textHeight);
-            legendData->SetTextFont(62);
-            legendData->SetFillColor(0);
-            legendData->SetFillStyle(0);
-            legendData->SetLineWidth(0);
-            legendData->SetLineColor(0);
-            legendData->SetMargin(0.15);
-            legendData->AddEntry(ESDGammaPtDCAzBins[iPt],textEvents,"l");
-            legendData->AddEntry(ESDGammaPtDCAzBinsBack[iPt],ESDGammaPtDCAzBinsBack[iPt]->GetName(),"l");
-            if(ESDGammaPtDCAzBinsBackB)legendData->AddEntry(ESDGammaPtDCAzBinsBackB[iPt],ESDGammaPtDCAzBinsBackB[iPt]->GetName(),"l");
-            legendData->Draw();
-        } else {
-            padDataSpectra->cd(place);
-            padDataSpectra->cd(place)->SetLogy();
-            padDataSpectra->cd(place)->SetTopMargin(0.12);
-            padDataSpectra->cd(place)->SetBottomMargin(0.15);
-            padDataSpectra->cd(place)->SetRightMargin(0.02);
-            int remaining                       = (place-1)%fColumnPlot;
-            if (remaining > 0)  padDataSpectra->cd(place)->SetLeftMargin(0.15);
-            else                padDataSpectra->cd(place)->SetLeftMargin(0.25);
-            
-            DrawDCAzHisto(  ESDGammaPtDCAzBins[iPt],
-                          Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
-                          "DCA z (cm)", "dN/dDCA z",
-                          -10,10,0);
-            
-            DrawDCAzHisto(  ESDGammaPtDCAzBinsBack[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
-                            "DCA z (cm)", "dN/dDCA z",
-                            -10,10,1);
-            
-            if (ESDGammaPtDCAzBinsBackB) {
-                DrawDCAzHisto(  ESDGammaPtDCAzBinsBackB[iPt],
-                              Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
-                              "DCA z (cm)", "dN/dDCA z",
-                              -10,10,2);
-            }
-        }
-    }
-    canvasDataSpectra->Print(namePlot.Data());
-    delete padDataSpectra;
-    delete canvasDataSpectra;
-}
-
-void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D*** ESDGammaPtDCAzBinsBack, TH1D** ESDGammaPtDCAzBinsBackB, TString namePlot, TString nameCanvas, TString namePad, TString dateDummy, TString fMesonType, Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, TString fDecayChannel, Bool_t fMonteCarloInfo, TString textCent){
-    
-    cout << textCent.Data() << endl;
-    TGaxis::SetMaxDigits(3);
-    
-    TCanvas * canvasDataSpectra                 = new TCanvas(nameCanvas.Data(),"",2800,1800);  // gives the page size
-    canvasDataSpectra->SetTopMargin(0.02);
-    canvasDataSpectra->SetBottomMargin(0.02);
-    canvasDataSpectra->SetRightMargin(0.02);
-    canvasDataSpectra->SetLeftMargin(0.02);
-    
-    TPad * padDataSpectra                       = new TPad(namePad.Data(),"",0.0,0.0,1.,1.,0);   // gives the size of the histo areas
-    padDataSpectra->SetFillColor(0);
-    padDataSpectra->GetFrame()->SetFillColor(0);
-    padDataSpectra->SetBorderMode(0);
-    padDataSpectra->SetLogy(1);
-    padDataSpectra->Divide(fColumnPlot,fRowPlot);
-    padDataSpectra->Draw();
-    
-    Double_t relWidthLogo;
-    if (fMesonType.CompareTo("Pi0") == 0){
-        relWidthLogo                            = 0.3;
-    } else {
-        relWidthLogo                            = 0.3;
-    }
-    Double_t padXWidth                          = 2800/fColumnPlot;
-    Double_t padYWidth                          = 1800/fRowPlot;
-    
-    cout<<"fColumnPlot: "<<fColumnPlot<<" fRowPlot: "<<fRowPlot<<endl;
-    
-    Int_t place                                 = 0;
-    for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++){
-        cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
-        Double_t startPt                        = fRangeBinsPt[iPt];
-        Double_t endPt                          = fRangeBinsPt[iPt+1];
-        
-        place                                   = place + 1;                                    //give the right place in the page
-        if (place == fColumnPlot){
-            iPt--;
-            padDataSpectra->cd(place);
-            
-            TString textAlice                   = "ALICE performance";
-            TString textEvents;
-            if(fMonteCarloInfo) {
-                textEvents                      = "MC";
-            } else {
-                textEvents                      = "Data";
-            }
-            
-            Double_t nPixels                    = 13;
-            Double_t textHeight                 = 0.08;
-            if (padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) < padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1())){
-                textHeight                      = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
-            } else {
-                textHeight                      = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
-            }
-            
-            Double_t startTextX                 = 0.1;
-            Double_t startTextY                 = 0.9;
-            Double_t differenceText             = textHeight*1.25;
-            
-            TLatex *alice                       = new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
-            TLatex *latexDate                   = new TLatex(startTextX, (startTextY-1.25*differenceText), dateDummy.Data());
-            TLatex *energy                      = new TLatex(startTextX, (startTextY-2.25*differenceText), fCollisionSystem);
-            TLatex *process                     = new TLatex(startTextX, (startTextY-3.25*differenceText), fDecayChannel);
-            TLatex *detprocess                  = new TLatex(startTextX, (startTextY-4.25*differenceText), fDetectionProcess);
-            TLatex *events                      = new TLatex(startTextX, (startTextY-5.25*differenceText), Form("%s: %2.1e events",textEvents.Data(), fNEvents));
-            
-            alice->SetNDC();
-            alice->SetTextColor(1);
-            alice->SetTextSize(textHeight*1.3);
-            alice->Draw();
-            
-            latexDate->SetNDC();
-            latexDate->SetTextColor(1);
-            latexDate->SetTextSize(textHeight);
-            latexDate->Draw();
-            
-            energy->SetNDC();
-            energy->SetTextColor(1);
-            energy->SetTextSize(textHeight);
-            energy->Draw();
-            
-            process->SetNDC();
-            process->SetTextColor(1);
-            process->SetTextSize(textHeight);
-            process->Draw();
-            
-            detprocess->SetNDC();
-            detprocess->SetTextColor(1);
-            detprocess->SetTextSize(textHeight);
-            detprocess->Draw();
-            
-            events->SetNDC();
-            events->SetTextColor(1);
-            events->SetTextSize(textHeight);
-            events->Draw();
-            
-            TLegend* legendData                 = GetAndSetLegend(startTextX, startTextY-12*differenceText, 4);
-            legendData->SetTextSize(textHeight);
-            legendData->SetTextFont(62);
-            legendData->SetFillColor(0);
-            legendData->SetFillStyle(0);
-            legendData->SetLineWidth(0);
-            legendData->SetLineColor(0);
-            legendData->SetMargin(0.15);
-            //legendData->AddEntry(ESDGammaPtDCAzBins[iPt],ESDGammaPtDCAzBins[iPt]->GetName(),"l");
-            for (Int_t i = 0; i < 3; i++)
-                legendData->AddEntry(ESDGammaPtDCAzBinsBack[iPt][i],Form("background extraction %s", backgroundExtractionMethod[i].Data()),"l");
-            if(ESDGammaPtDCAzBinsBackB)legendData->AddEntry(ESDGammaPtDCAzBinsBackB[iPt],ESDGammaPtDCAzBinsBackB[iPt]->GetName(),"l");
-            legendData->Draw();
-        } else {
-            padDataSpectra->cd(place);
-            padDataSpectra->cd(place)->SetLogy();
-            padDataSpectra->cd(place)->SetTopMargin(0.12);
-            padDataSpectra->cd(place)->SetBottomMargin(0.15);
-            padDataSpectra->cd(place)->SetRightMargin(0.02);
-            int remaining                       = (place-1)%fColumnPlot;
-            if (remaining > 0) padDataSpectra->cd(place)->SetLeftMargin(0.15);
-            else padDataSpectra->cd(place)->SetLeftMargin(0.25);
-            
-            DrawDCAzHisto(  ESDGammaPtDCAzBins[iPt],
-                          Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
-                          "DCA z (cm)", "dN/dDCA z",
-                          -10,10,0);
-            
-            for (Int_t i = 0; i < 3; i++) {
-                DrawDCAzHisto(  ESDGammaPtDCAzBinsBack[iPt][i],
-                              Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
-                              "DCA z (cm)", "dN/dDCA z",
-                              -10,10,1,backgroundColor[i]);
-            }
-            
-            if (ESDGammaPtDCAzBinsBackB) {
-                DrawDCAzHisto(  ESDGammaPtDCAzBinsBackB[iPt],
-                              Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
-                              "DCA z (cm)", "dN/dDCA z",
-                              -10,10,2);
-            }
-        }
-    }
-    canvasDataSpectra->Print(namePlot.Data());
-    delete padDataSpectra;
-    delete canvasDataSpectra;
-}
-
-// overloading PlotDCAzInPtBinsWithBack()
-void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBinsBack,TH1D** ESDGammaPtDCAzBinsBackB, TString namePlot, TString nameCanvas, TString namePad, TString dateDummy, TString fMesonType, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, TString fDecayChannel, Bool_t fMonteCarloInfo, TString textCent) {
-    
-    Int_t nPads = fNumberPtBins + 2;
-    
-    Int_t nColumns  = 2;
-    
-    for (Int_t i = 0; i < nPads; i++) {
-        if (((nColumns+1) * CalculateNumberOfRowsForDCAzPlots(nPads, nColumns+1) - nPads <= (nColumns) * CalculateNumberOfRowsForDCAzPlots(nPads, nColumns) - nPads) || (TMath::Abs(nColumns+1 - CalculateNumberOfRowsForDCAzPlots(nPads, nColumns+1)) < TMath::Abs(nColumns - CalculateNumberOfRowsForDCAzPlots(nPads, nColumns)))) {
-            nColumns++;
-        } else {
-            break;
-        }
-    }
-    
-    Int_t nRows = CalculateNumberOfRowsForDCAzPlots(nPads, nColumns);
-    
-    PlotDCAzInPtBinsWithBack(ESDGammaPtDCAzBins, ESDGammaPtDCAzBinsBack,ESDGammaPtDCAzBinsBackB, namePlot, nameCanvas, namePad, dateDummy, fMesonType, nRows, nColumns, fStartBinPtRange, fNumberPtBins, fRangeBinsPt, fDecayChannel, fMonteCarloInfo, textCent);
-}
-
-void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D*** ESDGammaPtDCAzBinsBack,TH1D** ESDGammaPtDCAzBinsBackB, TString namePlot, TString nameCanvas, TString namePad, TString dateDummy, TString fMesonType, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, TString fDecayChannel, Bool_t fMonteCarloInfo, TString textCent) {
-    
-    Int_t nPads = fNumberPtBins + 2;
-    
-    Int_t nColumns  = 2;
-    
-    for (Int_t i = 0; i < nPads; i++) {
-        if (((nColumns+1) * CalculateNumberOfRowsForDCAzPlots(nPads, nColumns+1) - nPads <= (nColumns) * CalculateNumberOfRowsForDCAzPlots(nPads, nColumns) - nPads) || (TMath::Abs(nColumns+1 - CalculateNumberOfRowsForDCAzPlots(nPads, nColumns+1)) < TMath::Abs(nColumns - CalculateNumberOfRowsForDCAzPlots(nPads, nColumns)))) {
-            nColumns++;
-        } else {
-            break;
-        }
-    }
-    
-    Int_t nRows = CalculateNumberOfRowsForDCAzPlots(nPads, nColumns);
-    
-    PlotDCAzInPtBinsWithBack(ESDGammaPtDCAzBins, ESDGammaPtDCAzBinsBack,ESDGammaPtDCAzBinsBackB, namePlot, nameCanvas, namePad, dateDummy, fMesonType, nRows, nColumns, fStartBinPtRange, fNumberPtBins, fRangeBinsPt, fDecayChannel, fMonteCarloInfo, textCent);
-}
-
-
-//**************************************************************************************************
-//******* Function to calculate number of rows for given number of bins and columns ****************
-//**************************************************************************************************
-Int_t CalculateNumberOfRowsForDCAzPlots(Int_t numberOfPads, Int_t numberOfColumns) {
-    // this function returns the number of rows
-    // for a given number of pads and columns,
-    
-    Int_t over = 0;
-    Int_t rows = 0;
-    
-    for (Int_t i = 0; i < numberOfPads; i++) {
-        if ((numberOfPads + over)%numberOfColumns != 0) {
-            over++;
-        } else if ((numberOfPads + over)%numberOfColumns == 0) {
-            break;
-        }
-    }
-    
-    return rows = (numberOfPads + over)/numberOfColumns;
-}
-
-
-//****************************************************************************
-//******* Function to draw DCAz histograms in pT-bins ************************
-//****************************************************************************
-void DrawDCAzHisto( TH1* histo1,
-                    TString Title,
-                    TString XTitle,
-                    TString YTitle,
-                    Float_t xMin,
-                    Float_t xMax,
-                    Int_t bck,
-                    Color_t color) {
-    
-    histo1->GetXaxis()->SetRangeUser(xMin, xMax);
-    
-    if(XTitle.Length() > 0){
-        histo1->SetXTitle(XTitle.Data());
-    }
-    if(YTitle.Length() > 0){
-        histo1->SetYTitle(YTitle.Data());
-    }
-    histo1->GetYaxis()->SetLabelSize(0.02);
-    histo1->GetYaxis()->SetTitleSize(0.025);
-    histo1->GetYaxis()->SetDecimals();
-    histo1->GetYaxis()->SetTitleOffset(0.5);
-    histo1->GetXaxis()->SetTitleSize(0.025);
-    histo1->GetXaxis()->SetLabelSize(0.02);
-    histo1->SetMarkerStyle(20);
-    histo1->SetMarkerColor(1);
-    histo1->SetLineColor(1);
-    histo1->SetLineWidth(0.5);
-    histo1->SetMarkerSize(0.5);
-    histo1->SetTitleOffset(1.2,"xy");
-    histo1->SetTitleSize(0.05,"xy");
-    histo1->GetYaxis()->SetLabelSize(0.05);
-    histo1->GetXaxis()->SetLabelSize(0.05);
-    histo1->GetXaxis()->SetNdivisions(507,kTRUE);
-    if( bck == 1 ){
-        histo1->SetLineStyle(1);
-        histo1->SetLineColor(color);
-        histo1->SetMarkerColor(color);
-        histo1->SetMarkerStyle(24);
-        histo1->SetLineWidth(0.9);
-        histo1->DrawCopy("hist,same");
-    } else {
-        if( bck == 2 ){
-            histo1->DrawCopy("same");
-        } else {
-            if(Title.Length() > 0){
-                histo1->SetTitle("");
-            }
-            histo1->DrawCopy("e1,p");
-            if(Title.Length() > 0){
-                TLatex *alice = new TLatex(0.1,0.95,Form("%s",Title.Data())); // Bo: this was
-                alice->SetNDC();
-                alice->SetTextColor(1);
-                alice->SetTextSize(0.062);
-                alice->Draw();
-            }
-        }
-    }
-}
-
-//**************************************************************************************************
-//************* Routine to produce fraction per category vs pt plots  ******************************
-//**************************************************************************************************
-void DrawFractionPerCat(TH1D** frac, TString fOutputDir, TString fPrefix, TString fPrefix2, TString fCutSelection, TString fSuffix) {
-    
-    TCanvas *canvas             = GetAndSetCanvas("canvas");
-    Color_t markerColor[3]      = {kBlack, kRed, kBlue};
-    
-    TLegend* legend             = GetAndSetLegend(0.7,0.75,3,1);
-    for (Int_t i=0; i<3; i++) {
-        SetHistogramm(frac[i],"p_{T} (GeV/c)","#gamma_{cat i} / #gamma_{all cat}",0.0,1.0);
-        DrawGammaSetMarker(frac[i], 20, 1.0, markerColor[i], markerColor[i]);
-        frac[i]->Draw("same");
-        legend->AddEntry(frac[i],Form("#gamma_{cat %i} / #gamma_{all cat}", i+1),"lp");
-    }
-    DrawGammaLines(0., frac[0]->GetXaxis()->GetBinUpEdge(frac[0]->GetNbinsX()), 1., 1., 0.5, kBlack);
-    legend->Draw("same");
-    
-    canvas->Print(Form("%s/%s_%s_ESD_FractionPerCategory_%s.%s",fOutputDir.Data(),fPrefix.Data(),fPrefix2.Data(),fCutSelection.Data(),fSuffix.Data()));
-    delete legend;
-    delete canvas;
-}
 
 //****************************************************************************
 //******* Fill array of invariant mass histograms in pT slices ***************
@@ -3772,7 +3780,7 @@ void DrawFractionPerCat(TH1D** frac, TString fOutputDir, TString fPrefix, TStrin
 void FillMassHistosArray(TH2D* fGammaGammaInvMassVSPtDummy) {
     TString fNameHistoGG                                        = "";
     for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
-        fNameHistoGG                                            = Form("Mapping_GconvG_InvMass_in_Pt_Bin%02d", iPt);
+        fNameHistoGG                                            = Form("GconvG_InvMass_in_PtConv_Bin%02d", iPt);
 
         if(fHistoGGInvMassPtGConvBin[iPt]!= NULL){
             delete fHistoGGInvMassPtGConvBin[iPt];
@@ -3813,7 +3821,7 @@ void ProduceBckProperWeighting(TH2D* fHistoMotherZM, TH2D* fHistoBckZM){
             delete fHistoBackInvMassPtGconvBin[iPt];
             fHistoBackInvMassPtGconvBin[iPt]                    = NULL;
         }
-        fNameHistoBack = Form("Mapping_Back_InvMass_in_Pt_Bin%02d", iPt);
+        fNameHistoBack = Form("Back_InvMass_in_PtConv_Bin%02d", iPt);
         fHistoBackInvMassPtGconvBin[iPt]= (TH1D*)fHistoBckZMProj->Clone(fNameHistoBack);
         fHistoBackInvMassPtGconvBin[iPt]->Sumw2();
         
@@ -4196,6 +4204,7 @@ Bool_t LoadSecondariesFromCocktailFile(TString cutSelection, TString optionEnerg
         // all spectra found
         return kTRUE;
     }
+    return kFALSE;
 }
 
 //****************************************************************************
@@ -4216,7 +4225,18 @@ void Delete(){
         if (fFitInvMassLeftPtBin[i])                            delete fFitInvMassLeftPtBin[i];
         if (fFitBckInvMassPtBin[i])                             delete fFitBckInvMassPtBin[i];
         if (fFitBckInvMassLeftPtBin[i])                         delete fFitBckInvMassLeftPtBin[i];
+        if (fIsMC){
+            if (fFitTrueSignalInvMassPtBin[i])                  delete fFitTrueSignalInvMassPtBin[i];
+            if (fFitTrueFullSignalInvMassPtBin[i])              delete fFitTrueFullSignalInvMassPtBin[i];
+            if (fHistoTruePrimMesonInvMassPtBins[i])            delete fHistoTruePrimMesonInvMassPtBins[i];
+            if (fHistoTrueFullMesonInvMassPtBins[i])            delete fHistoTrueFullMesonInvMassPtBins[i];
+            for (Int_t j = 0; j < maxNSec; j++){
+                if (fHistoTrueSecMesonInvMassPtBins[j][i])      delete fHistoTrueSecMesonInvMassPtBins[j][i];
+            }
+        }    
+
     } 
+    
     if (fHistoGGInvMassPtGConvBin)                              delete fHistoGGInvMassPtGConvBin;
     if (fHistoSignalInvMassPtGConvBin)                          delete fHistoSignalInvMassPtGConvBin;
     if (fHistoSignalInvMassLeftPtGConvBin)                      delete fHistoSignalInvMassLeftPtGConvBin;
@@ -4239,6 +4259,23 @@ void Delete(){
     if (fMesonLambdaTailparError)                               delete fMesonLambdaTailparError;
     if (fMesonLambdaTailMCpar)                                  delete fMesonLambdaTailMCpar;
     if (fMesonLambdaTailMCparError)                             delete fMesonLambdaTailMCparError;
+    
+    if (fIsMC){
+        if (fFitTrueSignalInvMassPtBin)                         delete fFitTrueSignalInvMassPtBin;
+        if (fFitTrueFullSignalInvMassPtBin)                     delete fFitTrueFullSignalInvMassPtBin;
+        if (fHistoTruePrimMesonInvMassPtBins)                   delete fHistoTruePrimMesonInvMassPtBins;
+        if (fHistoTrueFullMesonInvMassPtBins)                   delete fHistoTrueFullMesonInvMassPtBins;
+        for (Int_t j = 0; j < maxNSec; j++){
+            if (fHistoTrueSecMesonInvMassPtBins[j])             delete fHistoTrueSecMesonInvMassPtBins[j];
+        }
+        if (fMesonTrueMass)                                     delete fMesonTrueMass;
+        if (fMesonTrueMassError)                                delete fMesonTrueMassError;
+        if (fMesonTrueFWHM)                                     delete fMesonTrueFWHM;
+        if (fMesonTrueFWHMError)                                delete fMesonTrueFWHMError;
+        if (fMesonTrueYieldFixedWindow)                         delete fMesonTrueYieldFixedWindow;
+        if (fMesonTrueYieldErrorFixedWindow)                    delete fMesonTrueYieldErrorFixedWindow;
+    }    
+
     
     for (Int_t k = 0; k < 6; k++){   
         // delete arrays for yields
@@ -4266,6 +4303,17 @@ void Delete(){
         // delete mass window arrays
         if (fMassWindowHigh[k])                                 delete fMassWindowHigh[k];
         if (fMassWindowLow[k])                                  delete fMassWindowLow[k];
+        if (fIsMC){
+            if (fMesonTrueIntRange[k])                          delete fMesonTrueIntRange[k];
+            
+            // delete true meson yield arrays
+            if (fMesonTrueYields[k])                            delete fMesonTrueYields[k];
+            if (fMesonTrueYieldsError[k])                       delete fMesonTrueYieldsError[k];
+            for (Int_t j = 0; j < 4; j++){
+                if (fMesonTrueSecYields[k][j])                  delete fMesonTrueSecYields[k][j];
+                if (fMesonTrueSecYieldsError[k][j])             delete fMesonTrueSecYieldsError[k][j];
+            }
+        }    
     }    
 
     for (Int_t m = 0; m < 4; m++){
@@ -4375,10 +4423,6 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoSignalInvMassPtGConvBinSingle, Dou
     fFitLinearBck = NULL;
     fFitLinearBck = new TF1("Linear","[0]+[1]*x",fMesonFitRange[0],fMesonFitRange[1]);
 
-
-    cout << mesonAmplitude << "\t" << mesonAmplitudeMin << "-"<< mesonAmplitudeMax << endl; 
-    cout << fMesonMassExpect << "\t" << mesonAmplitudeMin << "-"<< mesonAmplitudeMax << endl; 
-    
     fFitReco->SetParameter(0,mesonAmplitude);
     fFitReco->SetParameter(1,fMesonMassExpect);
     fFitReco->SetParameter(2,fMesonWidthExpect);
@@ -4473,6 +4517,116 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoSignalInvMassPtGConvBinSingle, Dou
     }
     fFitReco->DrawCopy("same");
 }
+
+//****************************************************************************
+//*** Fit of Pure MC Signal with Gaussian + Exponential **********************
+//****************************************************************************
+void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_t* fMesonIntDeltaRangeFit, Int_t ptBin, Bool_t vary)
+{
+    //    cout<<"Start Fitting spectra"<<endl;
+    fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
+    Double_t mesonAmplitude =fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
+    Double_t mesonAmplitudeMin;
+    Double_t mesonAmplitudeMax;
+    if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0){
+        mesonAmplitudeMin = mesonAmplitude*99./100.;
+        mesonAmplitudeMax = mesonAmplitude*110./100.;
+        if (fMode == 2 || fMode == 3){
+            mesonAmplitudeMin = mesonAmplitude*20./100.;
+            mesonAmplitudeMax = mesonAmplitude*1000./100.;
+        }
+        if (fMode == 4 || fMode == 5) {
+            mesonAmplitudeMin = mesonAmplitude*10./100.;
+            mesonAmplitudeMax = mesonAmplitude*400./100.;
+        }
+    } else {
+        mesonAmplitudeMin = mesonAmplitude*95./100.;
+        mesonAmplitudeMax = mesonAmplitude*130./100.;
+        if (fMode == 2 || fMode == 3){
+            mesonAmplitudeMin = mesonAmplitude*95./100.;
+            mesonAmplitudeMax = mesonAmplitude*1000./100.;
+        }
+        if (fMode == 4 || fMode == 5) {
+            mesonAmplitudeMin = mesonAmplitude*10./100.;
+            mesonAmplitudeMax = mesonAmplitude*400./100.;
+            if( fEnergyFlag.CompareTo("8TeV") == 0  ){
+              mesonAmplitudeMin = mesonAmplitude*90./100.;
+              mesonAmplitudeMax = mesonAmplitude*400./100.;
+            }
+        }
+    }
+    
+    fFitReco = NULL;
+    TF1* fFitRecoPre = new TF1("fGauss","([0]*exp(-0.5*((x-[1])/[2])^2))", fMesonFitRange[0], fMesonFitRange[1]);
+    if (fMode == 2 || fMode == 4){
+        fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",
+                        fMesonFitRange[0], fMesonFitRange[1]);
+    } else {
+        fFitReco = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))", fMesonFitRange[0],
+                        fMesonFitRange[1]);
+    }
+
+    fFitRecoPre->SetParameter(0,mesonAmplitude);
+    fFitRecoPre->SetParameter(1,fMesonMassExpect);
+    fFitRecoPre->SetParameter(2,fMesonWidthExpect);
+    fFitRecoPre->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
+    fFitRecoPre->SetParLimits(1,fMesonMassRange[0],fMesonMassRange[1]);
+    if (fMode == 2 || fMode == 4) fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
+    if( fEnergyFlag.CompareTo("8TeV") == 0 && fMode == 4 ){
+      fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
+    }
+    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitRecoPre,"QRME0");
+    
+    if (fMesonLambdaTail == fMesonLambdaTailRange[0] && fMesonLambdaTail == fMesonLambdaTailRange[1] ){
+        fFitReco->FixParameter(3,fMesonLambdaTailMC);
+    } else {
+        fFitReco->SetParameter(3,fMesonLambdaTailMC);
+        fFitReco->SetParLimits(3,fMesonLambdaTailRange[0],fMesonLambdaTailRange[1]);
+    }
+    
+    Double_t mass = fMesonMassExpect;
+    if (fMode == 4){
+        mass = fFitRecoPre->GetParameter(1);
+        fFitReco->SetParameter(0,fFitRecoPre->GetParameter(0));
+        fFitReco->SetParameter(1,mass);
+        fFitReco->SetParameter(2,fFitRecoPre->GetParameter(2));
+    } else {
+        fFitReco->SetParameter(0,mesonAmplitude);
+        fFitReco->SetParameter(1,fMesonMassExpect);
+        fFitReco->SetParameter(2,fMesonWidthExpect);
+    }
+    
+    if (fMode == 2){
+        if (ptBin > fStartPtBin) fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
+    } else fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
+    
+    if ( !(fMode == 2 || fMode == 4)) fFitReco->SetParLimits(1,fMesonMassRange[0],fMesonMassRange[1]);
+    if (fMode == 2 ) fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
+    if (fMode == 4 ) fFitReco->SetParLimits(1,mass*0.95,mass*1.08);
+//    if (fMode == 4) fFitReco->SetParLimits(1,fMesonMassExpect*0.97,fMesonMassExpect*1.05);
+    fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
+
+    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
+
+    //    cout << TString(gMinuit->fCstatu.Data()).Data() << endl;
+
+    if (vary && (fMode==9 || fMode ==0)){
+        fMesonLambdaTailMC = fFitReco->GetParameter(3);
+    }
+    fFitReco->SetLineColor(3);
+    fFitReco->SetLineWidth(1);
+    fFitReco->SetLineStyle(1);
+
+    if(TString(gMinuit->fCstatu.Data()).CompareTo("CONVERGED") == 0 || TString(gMinuit->fCstatu.Data()).CompareTo("SUCCESSFUL") == 0 ){
+        fFileDataLog << "Parameter for bin " << ptBin << endl;
+        fFileDataLog << "Gausexp: \t" << fFitReco->GetParameter(0) <<"+-" << fFitReco->GetParError(0) << "\t " << fFitReco->GetParameter(1)<<"+-" << fFitReco->GetParError(1) << "\t "<< fFitReco->GetParameter(2) <<"+-" << fFitReco->GetParError(2)<< "\t "<< fFitReco->GetParameter(3) <<"+-" << fFitReco->GetParError(3)<<endl;
+    } else {
+        fFileErrLog << "Fitting failed in " << ptBin << " with status " << gMinuit->fCstatu.Data() <<endl << endl;
+    }
+    fFitReco->DrawCopy("same");
+    if (fMesonIntDeltaRangeFit){}
+}
+
 
 //****************************************************************************
 //************** Remove BG from Signal ***************************************
@@ -4579,3 +4733,237 @@ void IntegrateHistoInvMassStream(TH1D * fHistoSignalInvMassPtGConvBinSingle, Dou
         fFileDataLog << M << "\t" << fHistoSignalInvMassPtGConvBinSingle->GetBinCenter(M) <<"\t" <<fHistoSignalInvMassPtGConvBinSingle->GetBinContent(M)<< "+-"<< fHistoSignalInvMassPtGConvBinSingle->GetBinError(M)<< endl;
     }
 }
+
+//****************************************************************************
+//*** Create momentum dependent histograms with variable momentum binning ****
+//****************************************************************************
+void CreatePtHistos(){
+
+    fDeltaPt                            = new TH1D("deltaPt","",fNBinsPt,fBinsPt);
+    fDeltaPt->Sumw2();
+
+    // create histos for different integration windows: normal, wide, narrow, left, left wide, left narrow
+    for (Int_t k = 0; k < 6; k++){
+        // reconstructed yields in different integration windows
+        fHistoYieldMeson[k]                    = new TH1D(Form("histoYieldMeson%s_GammaConvPt_Binning",nameIntRange[k].Data()),"",fNBinsPt,fBinsPt);
+        fHistoYieldMeson[k]->Sumw2();
+        fHistoYieldMesonPerEvent[k]            = new TH1D(Form("histoYieldMeson%sPerEvent_GammaConvPt_Binning",nameIntRange[k].Data()),"",fNBinsPt,fBinsPt);
+        fHistoYieldMesonPerEvent[k]->Sumw2();
+
+    }   
+    
+    // create histos for different integration windows: normal, wide, narrow
+    for (Int_t k = 0; k < 3; k++){        
+        // mass window monitoring histos
+        fHistoMassWindowHigh[k]                = new TH1D(Form("histoMassWindow%sHigh_GammaConvPt_Binning",nameIntRange[k].Data()),"",fNBinsPt,fBinsPt);
+        fHistoMassWindowHigh[k]->Sumw2();
+        fHistoMassWindowLow[k]                 = new TH1D(Form("histoMassWindow%sLow_GammaConvPt_Binning",nameIntRange[k].Data()),"",fNBinsPt,fBinsPt);
+        fHistoMassWindowLow[k]->Sumw2();
+        if (fIsMC){
+            fHistoYieldTrueMeson[k]            = new TH1D(Form("histoYieldTrueMeson%s_GammaConvPt_Binning",nameIntRange[k].Data()),"",fNBinsPt,fBinsPt);
+            fHistoYieldTrueMeson[k]->Sumw2();
+            for (Int_t j = 0; j < maxNSec; j++){
+                cout << "creating sec yield hist: " << k << "\t"<< j << endl; 
+                fHistoYieldTrueSecMeson[k][j]  = new TH1D(Form("histoYieldTrueFrom%sSecMeson%s_GammaConvPt_Binning",nameSecondaries[j].Data(),nameIntRange[k].Data()),"",fNBinsPt,fBinsPt);
+                fHistoYieldTrueSecMeson[k][j]->Sumw2();
+            }
+        }    
+    }
+        
+    // Mass & Width histos for normalization at right side
+    fHistoMassMeson                     = new TH1D("histoMassMeson_GammaConvPt_Binning","",fNBinsPt,fBinsPt);
+    fHistoMassMeson->Sumw2();
+    fHistoFWHMMeson                     = new TH1D("histoFWHMMeson_GammaConvPt_Binning","",fNBinsPt,fBinsPt);
+    fHistoFWHMMeson->Sumw2();
+    // Mass & Width histos for normalization at left side
+    fHistoMassMesonLeft                     = new TH1D("histoMassMesonLeft_GammaConvPt_Binning","",fNBinsPt,fBinsPt);
+    fHistoMassMesonLeft->Sumw2();
+    fHistoFWHMMesonLeft                     = new TH1D("histoFWHMMesonLeft_GammaConvPt_Binning","",fNBinsPt,fBinsPt);
+    fHistoFWHMMesonLeft->Sumw2();
+
+    // lambda tail monitoring histo
+    fHistoLambdaTail                    = new TH1D("histoLambdaTail","",fNBinsPt,fBinsPt);
+    fHistoLambdaTail->Sumw2();
+
+    fHistoRatioResBGYield               = new TH1D("histoRatioResBGYield","",fNBinsPt,fBinsPt);
+    fHistoRatioResBGYield->Sumw2();
+    fHistoRatioResBGYieldToSPlusResBG   = new TH1D("histoRatioResBGYieldToSPlusResBG","",fNBinsPt,fBinsPt);
+    fHistoRatioResBGYieldToSPlusResBG->Sumw2();
+    for (Int_t m = 0; m < 4; m++){
+        fHistoChi2[m]                   = new TH1D(Form("histoChi2_%d",m),"",fNBinsPt,fBinsPt);
+        fHistoChi2[m]->Sumw2();
+        fHistoResBGYield[m]             = new TH1D(Form("histoResBGYield_%d",m),"",fNBinsPt,fBinsPt);
+        fHistoResBGYield[m]->Sumw2();
+    }
+    
+    if (fIsMC){
+        fHistoYieldTrueMesonFixedWindow     = new TH1D("histoYieldTrueMesonFixedWindow_GammaConvPt_Binning","",fNBinsPt,fBinsPt);
+        fHistoYieldTrueMesonFixedWindow->Sumw2();
+        fHistoTrueMassMeson                 = new TH1D("histoTrueMassMeson_GammaConvPt_Binning","",fNBinsPt,fBinsPt);
+        fHistoTrueMassMeson->Sumw2();
+        fHistoTrueFWHMMeson                 = new TH1D("histoTrueFWHMMeson_GammaConvPt_Binning","",fNBinsPt,fBinsPt);
+        fHistoTrueFWHMMeson->Sumw2();
+    }    
+}
+
+
+//****************************************************************************
+//*************** Fill momentum dependent histograms from arrays *************
+//****************************************************************************
+void FillPtHistos(){
+    
+    for(Int_t iPt=fStartPtBin+1;iPt<fNBinsPt+1;iPt++){
+
+        fDeltaPt->SetBinContent(iPt,fBinsPt[iPt]-fBinsPt[iPt-1]);
+        fDeltaPt->SetBinError(iPt,0);
+
+        fHistoMassMeson->SetBinContent(iPt,fMesonMass[iPt-1]);
+        fHistoMassMeson->SetBinError(iPt,fMesonMassError[iPt-1]);
+        fHistoFWHMMeson->SetBinContent(iPt,fMesonFWHM[iPt-1]);
+        fHistoFWHMMeson->SetBinError(iPt,fMesonFWHMError[iPt-1]);
+
+        fHistoLambdaTail->SetBinContent(iPt,fMesonLambdaTailpar[iPt-1]);
+        fHistoLambdaTail->SetBinError(iPt,fMesonLambdaTailparError[iPt-1]);
+        if (fTotalBckYields[0][iPt-1] != 0){
+            Double_t ratio      = fMesonYieldsResidualBckFunc[0][iPt-1]/fTotalBckYields[0][iPt-1];
+            fHistoRatioResBGYield->SetBinContent(iPt,ratio);
+            
+            Double_t relErrorA  = fMesonYieldsResidualBckFuncError[0][iPt-1]/fMesonYieldsResidualBckFunc[0][iPt-1];
+            Double_t relErrorB  = fTotalBckYieldsError[0][iPt-1]/fTotalBckYields[0][iPt-1];
+            Double_t error      = ratio * TMath::Sqrt(relErrorA*relErrorA+relErrorB*relErrorB);
+            fHistoRatioResBGYield->SetBinError(iPt,error);  
+        } 
+        if ((fMesonYieldsResidualBckFunc[0][iPt-1] + fMesonYieldsCorResidualBckFunc[0][iPt-1]) > 0){
+            Double_t ratio      = fMesonYieldsResidualBckFunc[0][iPt-1]/(fMesonYieldsResidualBckFunc[0][iPt-1] + fMesonYieldsCorResidualBckFunc[0][iPt-1]);
+            fHistoRatioResBGYieldToSPlusResBG->SetBinContent(iPt,ratio);
+            
+            Double_t relErrorA  = fMesonYieldsResidualBckFuncError[0][iPt-1]/fMesonYieldsResidualBckFunc[0][iPt-1];
+            Double_t relErrorB  = TMath::Sqrt(fMesonYieldsCorResidualBckFuncError[0][iPt-1]*fMesonYieldsCorResidualBckFuncError[0][iPt-1] 
+                                               + fMesonYieldsResidualBckFuncError[0][iPt-1]*fMesonYieldsResidualBckFuncError[0][iPt-1]) /
+                                  (fMesonYieldsResidualBckFunc[0][iPt-1]+fMesonYieldsCorResidualBckFunc[0][iPt-1]);
+            Double_t error      = ratio * TMath::Sqrt(relErrorA*relErrorA+relErrorB*relErrorB);
+            fHistoRatioResBGYieldToSPlusResBG->SetBinError(iPt,error);  
+        }
+        for (Int_t m = 0; m < 4; m++){
+            fHistoChi2[m]->SetBinContent(iPt,fMesonChi2[m][iPt-1]);
+            fHistoChi2[m]->SetBinError(iPt,0);
+        }
+       
+        fHistoResBGYield[0]->SetBinContent(iPt,fMesonYieldsResidualBckFunc[0][iPt-1]);
+        fHistoResBGYield[0]->SetBinError(iPt,fMesonYieldsResidualBckFuncError[0][iPt-1]);
+        
+        
+        // filling histogram arrays for normal, wide, narrow
+        for (Int_t k = 0; k < 3; k++){
+            fHistoMassWindowHigh[k]->SetBinContent(iPt,fMassWindowHigh[k][iPt-1]);
+            fHistoMassWindowLow[k]->SetBinContent(iPt,fMassWindowLow[k][iPt-1]);
+        }
+
+        // filling histogram arrays for normal, wide, narrow, left, left wide, left narrow
+        for (Int_t k = 0; k < 6; k++){
+            fHistoYieldMeson[k]->SetBinContent(iPt,fMesonYieldsCorResidualBckFunc[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+            fHistoYieldMeson[k]->SetBinError(iPt,fMesonYieldsCorResidualBckFuncError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+            fHistoYieldMesonPerEvent[k]->SetBinContent(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFunc[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+            fHistoYieldMesonPerEvent[k]->SetBinError(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFuncError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+            
+        }    
+                
+        // Histos for integration at the left of the peak
+        fHistoMassMesonLeft->SetBinContent(iPt,fMesonMassLeft[iPt-1]);
+        fHistoMassMesonLeft->SetBinError(iPt,fMesonMassLeftError[iPt-1]);
+        fHistoFWHMMesonLeft->SetBinContent(iPt,fMesonFWHMLeft[iPt-1]);
+        fHistoFWHMMesonLeft->SetBinError(iPt,fMesonFWHMLeftError[iPt-1]);
+        
+        // MC loop
+        if (fIsMC) {
+            fHistoTrueMassMeson->SetBinContent(iPt,fMesonTrueMass[iPt-1]);
+            fHistoTrueMassMeson->SetBinError(iPt,fMesonTrueMassError[iPt-1]);
+            fHistoTrueFWHMMeson->SetBinContent(iPt,fMesonTrueFWHM[iPt-1]);
+            fHistoTrueFWHMMeson->SetBinError(iPt,fMesonTrueFWHMError[iPt-1]);
+            fHistoYieldTrueMesonFixedWindow->SetBinContent(iPt,fMesonTrueYieldFixedWindow[iPt-1]);
+            fHistoYieldTrueMesonFixedWindow->SetBinError(iPt,fMesonTrueYieldErrorFixedWindow[iPt-1]);
+
+            
+            // fill primary yield
+            for (Int_t k = 0; k < 3; k++){
+                fHistoYieldTrueMeson[k]->SetBinContent(iPt,fMesonTrueYields[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                fHistoYieldTrueMeson[k]->SetBinError(iPt,fMesonTrueYieldsError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+            }    
+            // fill secondary histograms
+            for (Int_t k = 0; k< 3; k++){
+                for (Int_t j = 0; j < maxNSec; j++){
+                    fHistoYieldTrueSecMeson[k][j]->SetBinContent(iPt,fMesonTrueSecYields[k][j][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                    fHistoYieldTrueSecMeson[k][j]->SetBinError(iPt,fMesonTrueSecYieldsError[k][j][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                }
+            }
+        }
+    }
+}
+
+//****************************************************************************
+//*************** Check if histo already exists if not clear *****************
+//****************************************************************************
+void CheckForNULLForPointer(TH1D* fDummy1){
+    if(fDummy1!= NULL){
+        delete fDummy1;
+        fDummy1           = NULL;
+    }
+}
+
+//****************************************************************************
+//******************** Projection out of 2D in X *****************************
+//****************************************************************************
+TH1D* FillProjectionX (TH2* fDummy2D, TString name, Double_t minY, Double_t maxY, Int_t rebin){
+    TH1D* dummy1D           = new TH1D(name.Data(), name.Data(), fDummy2D->GetNbinsX(), 0., fDummy2D->GetXaxis()->GetBinUpEdge(fDummy2D->GetNbinsX()));
+    dummy1D->Sumw2();
+    Int_t startBin          = fDummy2D->GetYaxis()->FindBin(minY+0.001);
+    Int_t endBin            = fDummy2D->GetYaxis()->FindBin(maxY-0.001);
+    fDummy2D->ProjectionX(name.Data(),startBin,endBin,"e");
+    dummy1D                 = (TH1D*)gDirectory->Get(name.Data());
+    if(rebin>1){
+        dummy1D->Rebin(rebin);
+    }
+    return dummy1D; 
+}
+
+//****************************************************************************
+//******* Fill array of invariant mass histograms in pT slices ***************
+//******* validated true mesons **********************************************
+//****************************************************************************
+void FillMassMCTrueMesonHistosArrays(TH2D* fHistoTrueMesonPrimInvMassVSPtFill, TH2D** fHistoTrueMesonSecInvMassVSPtFill) {
+    
+    // fill primary histo
+    fHistoTrueMesonPrimInvMassVSPtFill->Sumw2();
+    for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
+        fNameHistoTrue                          = Form("TruePrimMeson_InvMass_in_PtConv_Bin%02d", iPt);
+        CheckForNULLForPointer(fHistoTruePrimMesonInvMassPtBins[iPt]);
+        fHistoTruePrimMesonInvMassPtBins[iPt]   =  FillProjectionX(fHistoTrueMesonPrimInvMassVSPtFill, fNameHistoTrue, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
+        cout << "bin: " << iPt << "\t Entries in projection: " << fHistoTruePrimMesonInvMassPtBins[iPt]->GetEntries() << endl;
+        fHistoTruePrimMesonInvMassPtBins[iPt]->SetLineWidth(1);
+        fHistoTruePrimMesonInvMassPtBins[iPt]->SetLineColor(2);
+
+        // fill full hist with prim
+        CheckForNULLForPointer(fHistoTrueFullMesonInvMassPtBins[iPt]);
+        fHistoTrueFullMesonInvMassPtBins[iPt]       = fHistoTruePrimMesonInvMassPtBins[iPt];
+        fHistoTrueFullMesonInvMassPtBins[iPt]->SetLineWidth(1);
+        fHistoTrueFullMesonInvMassPtBins[iPt]->SetLineColor(2);    
+    }
+    
+    // fill secondary histos
+    for (Int_t j = 0; j < maxNSec; j++){
+        if (fHistoTrueMesonSecInvMassVSPtFill[j]){
+            fHistoTrueMesonSecInvMassVSPtFill[j]->Sumw2();
+            for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
+                fNameHistoTrue                          = Form("TrueSecPi0From%s_InvMass_in_Pt_Bin%02d",nameSecondaries[j].Data(), iPt);
+                CheckForNULLForPointer(fHistoTrueSecMesonInvMassPtBins[j][iPt]);
+                fHistoTrueSecMesonInvMassPtBins[j][iPt] =  FillProjectionX(fHistoTrueMesonSecInvMassVSPtFill[j], fNameHistoTrue, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
+                cout << "bin: " << iPt << "\t Entries in projection: " << fHistoTrueSecMesonInvMassPtBins[j][iPt]->GetEntries() << endl;
+                fHistoTrueSecMesonInvMassPtBins[j][iPt]->SetLineWidth(1);
+                fHistoTrueSecMesonInvMassPtBins[j][iPt]->SetLineColor(3+j);
+                // add sec hist to prim for full if necessary
+                fHistoTrueFullMesonInvMassPtBins[iPt]->Add(fHistoTrueSecMesonInvMassPtBins[j][iPt]);
+            }            
+        }
+    }
+}
+

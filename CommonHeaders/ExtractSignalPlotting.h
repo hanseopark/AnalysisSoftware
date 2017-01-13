@@ -1,5 +1,73 @@
 // provided by Gamma Conversion Group, $ALICE_ROOT/PWGGA/GammaConv ;https://twiki.cern.ch/twiki/bin/view/ALICE/PWG4GammaConversion
 
+// photon categories for plotting DCA
+TString     categoryName[4]                                         = {"all", "cat1", "cat2", "cat3"};
+TString     backgroundExtractionMethod[3]                           = {"std", "var1", "var2"};
+Color_t     backgroundColor[3]                                      = {kBlue+2, kGreen+3, kGray+2};
+
+
+void     PlotDCAzInPtBinsWithBack           (   TH1D**      ESDGammaPtDCAzBins, 
+                                                TH1D**      ESDGammaPtDCAzBinsBack,
+                                                TH1D**      ESDGammaPtDCAzBinsBackB, 
+                                                TString     namePlot, 
+                                                TString     nameCanvas, 
+                                                TString     namePad, 
+                                                TString     dateDummy, 
+                                                TString     fMesonType,  
+                                                Int_t       fRowPlot, 
+                                                Int_t       fColumnPlot, 
+                                                Int_t       fStartBinPtRange, 
+                                                Int_t       fNumberPtBins, 
+                                                Double_t*   fRangeBinsPt, 
+                                                TString     fDecayChannel, 
+                                                Bool_t      fMonteCarloInfo, 
+                                                TString     textCent = "MinBias"                );
+void    PlotDCAzInPtBinsWithBack            (   TH1D**      ESDGammaPtDCAzBins,
+                                                TH1D**      ESDGammaPtDCAzBinsBack,
+                                                TH1D**      ESDGammaPtDCAzBinsBackB,
+                                                TString     namePlot,
+                                                TString     nameCanvas,
+                                                TString     namePad,
+                                                TString     dateDummy,
+                                                TString     fMesonType,
+                                                Int_t       fStartBinPtRange,
+                                                Int_t       fNumberPtBins,
+                                                Double_t*   fRangeBinsPt,
+                                                TString     fDecayChannel,
+                                                Bool_t      fMonteCarloInfo,
+                                                TString     textCent = "MinBias"                );
+void    PlotDCAzInPtBinsWithBack            (   TH1D**      ESDGammaPtDCAzBins,
+                                                TH1D***     ESDGammaPtDCAzBinsBack,
+                                                TH1D**      ESDGammaPtDCAzBinsBackB,
+                                                TString     namePlot,
+                                                TString     nameCanvas,
+                                                TString     namePad,
+                                                TString     dateDummy,
+                                                TString     fMesonType,
+                                                Int_t       fStartBinPtRange,
+                                                Int_t       fNumberPtBins,
+                                                Double_t*   fRangeBinsPt,
+                                                TString     fDecayChannel,
+                                                Bool_t      fMonteCarloInfo,
+                                                TString     textCent = "MinBias"                );
+Int_t   CalculateNumberOfRowsForDCAzPlots   (   Int_t       numberOfPads,
+                                                Int_t       numberOfColumns                     );
+void    DrawDCAzHisto                       (   TH1*        histo1,
+                                                TString     Title,
+                                                TString     XTitle,
+                                                TString     YTitle,
+                                                Float_t     xMin,
+                                                Float_t     xMax,
+                                                Int_t       bck,
+                                                Color_t     color = kBlue                       );
+void     DrawFractionPerCat                 (   TH1D**      frac,
+                                                TString     fOutputDir,
+                                                TString     fPrefix,
+                                                TString     fPrefix2,
+                                                TString     fCutSelection,
+                                                TString     fSuffix                             );
+
+
 /*
 //************************************************************************************
 //************ Return correct trigger name based on trigger cutnumber ****************
@@ -184,7 +252,8 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
                                 Int_t triggerSet                        = 0,
                                 Double_t scaleFacSignal                 = 1.0,
                                 Int_t detMode                           = 0,
-                                Bool_t addSig                           = kFALSE
+                                Bool_t addSig                           = kFALSE,
+                                Bool_t isVsPtConv                       = kFALSE
                              ){
     
     cout << "Trigger set: " << triggerSet << endl;
@@ -316,15 +385,17 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
                                 0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
     }
 
-
+    TString ptLabel         =  "#it{p}_{T} ";
+    if (isVsPtConv)
+        ptLabel             =  "#it{p}_{T,#gamma_{conv}}";
     // Set range for fits and labels
     TLatex *labelInvMassPtRange;
     if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
-        labelInvMassPtRange = new TLatex(0.95,0.9, Form("#pi^{0}: %3.1f GeV/#it{c} < #it{p}_{T} < %3.1f GeV/#it{c}",startPt,endPt));
+        labelInvMassPtRange = new TLatex(0.95,0.9, Form("#pi^{0}: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
         fitPi0InvMassSig->SetRange(0,0.255);
         fitPi0InvMassSigRemBG->SetRange(0,0.255);
     } else {
-        labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < #it{p}_{T} < %3.1f GeV/#it{c}",startPt,endPt));
+        labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
         fitPi0InvMassSig->SetRange(0.35,0.695);
         fitPi0InvMassSigRemBG->SetRange(0.35,0.695);
     }
@@ -521,7 +592,8 @@ void PlotExampleInvMassBinsMC(  TH1D* fHistoTrueSignal,
                                 TString detectionChannel                = "",
                                 Int_t triggerSet                        = -1,
                                 Int_t mode                              = 0,
-                                Bool_t addSig                           = kFALSE
+                                Bool_t addSig                           = kFALSE,
+                                Bool_t isVsPtConv                       = kFALSE
                              ){
 
     cout << "Trigger set: " << triggerSet << endl;
@@ -597,13 +669,15 @@ void PlotExampleInvMassBinsMC(  TH1D* fHistoTrueSignal,
     histo1DInvMassDummy->GetYaxis()->SetRangeUser(-5, 1.15*fHistoTrueSignal->GetMaximum());
     histo1DInvMassDummy->Draw();
     histo1DInvMassDummy->Draw("AXIS");
+        TString ptLabel         =  "#it{p}_{T} ";
+        if (isVsPtConv)
+            ptLabel             =  "#it{p}_{T,#gamma_{conv}}";
 
-    
         TLatex *labelInvMassPtRange;
         if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
-            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#pi^{0}: %3.1f GeV/#it{c} < #it{p}_{T} < %3.1f GeV/#it{c}",startPt,endPt));
+            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#pi^{0}: %3.1f GeV/#it{c} < %s <%3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
         } else {
-            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < #it{p}_{T} < %3.1f GeV/#it{c}",startPt,endPt));
+            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < %s <%3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
         }
     
 
@@ -700,7 +774,9 @@ void PlotInvMassInPtBins(   TH1D** fHistoMappingGGInvMassPtBinPlot,
                             Bool_t fMonteCarloInfo, 
                             TString decayChannel,  
                             TString fDetectionChannel, 
-                            TString fEnergy){
+                            TString fEnergy, 
+                            Bool_t isVsPtConv               = kFALSE
+                        ){
     TGaxis::SetMaxDigits(3);
 
     TCanvas * canvasDataSpectra     = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
@@ -813,13 +889,16 @@ void PlotInvMassInPtBins(   TH1D** fHistoMappingGGInvMassPtBinPlot,
             if (remaining > 0) padDataSpectra->cd(place)->SetLeftMargin(0.15);
             else padDataSpectra->cd(place)->SetLeftMargin(0.25);
             cout << "here" << endl;
+            TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+            if (isVsPtConv)
+                titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
             DrawGammaHisto( fHistoMappingGGInvMassPtBinPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
             cout << "here" << endl;
             DrawGammaHisto( fHistoMappingBackNormInvMassPtBinPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],1);
             cout << "here" << endl;
@@ -859,7 +938,9 @@ void PlotInvMassSecondaryInPtBins(  TH1D** fHistoMappingGGInvMassPtBinPlot,
                                     Bool_t fMonteCarloInfo, 
                                     TString decayChannel,  
                                     TString fDetectionChannel, 
-                                    TString fEnergy){
+                                    TString fEnergy,
+                                    Bool_t isVsPtConv                                       = kFALSE
+                                 ){
     TGaxis::SetMaxDigits(3);
 
     TCanvas * canvasDataSpectra         = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
@@ -951,14 +1032,17 @@ void PlotInvMassSecondaryInPtBins(  TH1D** fHistoMappingGGInvMassPtBinPlot,
             int remaining = (place-1)%fColumnPlot;
             if (remaining > 0) padDataSpectra->cd(place)->SetLeftMargin(0.15);
             else padDataSpectra->cd(place)->SetLeftMargin(0.25);
+            TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+            if (isVsPtConv)
+                titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
 
             DrawGammaHisto( fHistoMappingGGInvMassPtBinPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
 
             DrawGammaHisto( fHistoMappingSecondaryTotalInvMassPtBinPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],1);
             
@@ -966,7 +1050,7 @@ void PlotInvMassSecondaryInPtBins(  TH1D** fHistoMappingGGInvMassPtBinPlot,
             if (fHistoMappingSecondaryK0sInvMassPtBinPlot!=NULL){
                 if (fHistoMappingSecondaryK0sInvMassPtBinPlot[iPt]!=NULL){
                     DrawGammaHistoColored( fHistoMappingSecondaryK0sInvMassPtBinPlot[iPt],
-                                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                                            titlePt,
                                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],0,2);
                 }
@@ -997,7 +1081,9 @@ void PlotInvMassBckGGInPtBins(  TH1D** fHistoMappingGGInvMassPtBinPlot,
                                 Bool_t fMonteCarloInfo, 
                                 TString decayChannel, 
                                 TString fDetectionChannel, 
-                                TString fEnergy){
+                                TString fEnergy,
+                                Bool_t isVsPtConv                                       = kFALSE
+                             ){
     TGaxis::SetMaxDigits(3);
 
     TCanvas * canvasDataSpectra     = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
@@ -1092,14 +1178,17 @@ void PlotInvMassBckGGInPtBins(  TH1D** fHistoMappingGGInvMassPtBinPlot,
             int remaining           = (place-1)%fColumnPlot;
             if (remaining > 0) padDataSpectra->cd(place)->SetLeftMargin(0.15);
             else padDataSpectra->cd(place)->SetLeftMargin(0.25);
+            TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+            if (isVsPtConv)
+                titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
 
             DrawGammaHisto( fHistoMappingGGInvMassPtBinPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
 
             DrawGammaHisto( fHistoMappingSecondaryTotalInvMassPtBinPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],1);
             }
@@ -1128,7 +1217,9 @@ void PlotInvMassRatioInPtBins(  TH1D** fHistoMappingGGInvMassPtBinPlot,
                                 Bool_t fMonteCarloInfo,
                                 TString decayChannel,
                                 TString fDetectionChannel, 
-                                TString fEnergy){
+                                TString fEnergy,
+                                Bool_t isVsPtConv                               = kFALSE
+                             ){
     TCanvas * canvasDataSpectra     = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
     canvasDataSpectra->SetTopMargin(0.00);
     canvasDataSpectra->SetBottomMargin(0.00);
@@ -1220,14 +1311,17 @@ void PlotInvMassRatioInPtBins(  TH1D** fHistoMappingGGInvMassPtBinPlot,
             int remaining           = (place-1)%fColumnPlot;
             if (remaining > 0) padDataSpectra->cd(place)->SetLeftMargin(0.15);
             else padDataSpectra->cd(place)->SetLeftMargin(0.25);
+            TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+            if (isVsPtConv)
+                titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
 
             DrawGammaHisto( fHistoMappingGGInvMassPtBinPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
 
             DrawGammaHisto( fHistoMappingGGInvMassPtBinPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],2);
         }
@@ -1291,6 +1385,7 @@ void PlotWithFitSubtractedInvMassSinglePtBin2(  TH1D * fHistoMappingSignalInvMas
     canvasDataFit->SetLeftMargin(0.15);
     fHistoMappingSignalInvMassPtBinPlot->SetAxisRange(fPlottingRangeMeson[0],fPlottingRangeMeson[1]);
 //     cout<<"Maximum::"<<fHistoMappingSignalInvMassPtBinPlot->GetMaximum()<<endl;
+
     DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot,
                     "2.4 GeV/#it{c} < #it{p}_{T} < 2.6 GeV/#it{c}",
                     Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
@@ -1343,10 +1438,12 @@ void PlotWithFitSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtB
                                            TString decayChannel, 
                                            TString fDetectionChannel, 
                                            TString fEnergy, 
-                                           TString fTextMCvalidated ="",
-                                           Bool_t labelData = kTRUE, 
-                                           TString fTextFit = "Fit", 
-                                           TString fTextMGammaGamma ="mixed evt. subtr. #it{M}_{#gamma#gamma}"){
+                                           TString fTextMCvalidated     ="",
+                                           Bool_t labelData             = kTRUE, 
+                                           TString fTextFit             = "Fit", 
+                                           TString fTextMGammaGamma     ="mixed evt. subtr. #it{M}_{#gamma#gamma}",
+                                           Bool_t isVsPtConv            = kFALSE
+                                         ){
     TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
     canvasDataFit->SetTopMargin(0.00);
     canvasDataFit->SetBottomMargin(0.00);
@@ -1492,12 +1589,15 @@ void PlotWithFitSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtB
             cout << startPt << "-" << endPt <<endl;
 
             if (labelData) {
+                TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+                if (isVsPtConv)
+                    titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
                 DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],
-                                Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                                titlePt,
                                 Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
                 DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],
-                                Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                                titlePt,
                                 Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],2);
                 if (fHistoMappingSignalInvMassPtBinPlot[iPt]!=0x00){
@@ -1558,7 +1658,7 @@ void PlotWithFitSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtB
                         l3b->Draw("same");
                 } 
                 DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],
-                                Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                                titlePt,
                                 Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],2);
                 if(fMonteCarloInfo && fHistoMappingTrueMesonInvMassPtBinsPlot){
@@ -1568,12 +1668,16 @@ void PlotWithFitSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtB
                     fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->DrawCopy("same");
                 }
             } else {
+                TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+                if (isVsPtConv)
+                    titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
+
                 DrawGammaHisto( fHistoMappingTrueMesonInvMassPtBinsPlot[iPt],
-                                Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                                titlePt,
                                 Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
                 DrawGammaHisto( fHistoMappingTrueMesonInvMassPtBinsPlot[iPt],
-                                Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                                titlePt,
                                 Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],2);
                 if (fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]!=0x00){
@@ -1681,7 +1785,9 @@ void PlotWithManyFitSubtractedInvMassInPtBins(  TH1D ** fHistoMappingSignalInvMa
                                                 TString fTextMCvalidated    = "",
                                                 Bool_t labelData            = kTRUE, 
                                                 TString fTextFit            = "Fit", 
-                                                TString fTextMGammaGamma    = "mixed evt. subtr. #it{M}_{#gamma#gamma}" ){
+                                                TString fTextMGammaGamma    = "mixed evt. subtr. #it{M}_{#gamma#gamma}", 
+                                                Bool_t isVsPtConv           = kFALSE
+                                             ){
     
     TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
     canvasDataFit->SetTopMargin(0.00);
@@ -1835,8 +1941,11 @@ void PlotWithManyFitSubtractedInvMassInPtBins(  TH1D ** fHistoMappingSignalInvMa
             else padDataFit->cd(place)->SetLeftMargin(0.25);
 
             cout << startPt << "-" << endPt <<endl;
+            TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+            if (isVsPtConv)
+            titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
             DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
 
@@ -1886,10 +1995,12 @@ void PlotWith2FitsSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassP
                                            TString decayChannel, 
                                            TString fDetectionChannel, 
                                            TString fEnergy, 
-                                           TString fTextMCvalidated ="",
-                                           Bool_t labelData = kTRUE, 
-                                           TString fTextFit = "Fit", 
-                                           TString fTextMGammaGamma ="mixed evt. subtr. #it{M}_{#gamma#gamma}"){
+                                           TString fTextMCvalidated     ="",
+                                           Bool_t labelData             = kTRUE, 
+                                           TString fTextFit             = "Fit", 
+                                           TString fTextMGammaGamma     ="mixed evt. subtr. #it{M}_{#gamma#gamma}",
+                                           Bool_t isVsPtConv            = kFALSE
+                                        ){
     TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
     canvasDataFit->SetTopMargin(0.00);
     canvasDataFit->SetBottomMargin(0.00);
@@ -2043,12 +2154,16 @@ void PlotWith2FitsSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassP
             cout << startPt << "-" << endPt <<endl;
 
             if (labelData) {
+                TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+                if (isVsPtConv)
+                titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
+
                 DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],
-                                Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                                titlePt,
                                 Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
                 DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],
-                                Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                                titlePt,
                                 Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],2);
                 if (fHistoMappingSignalInvMassPtBinPlot[iPt]!=0x00){
@@ -2109,7 +2224,7 @@ void PlotWith2FitsSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassP
                         l3b->Draw("same");
                 } 
                 DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],
-                                Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                                titlePt,
                                 Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],2);
                 if(fMonteCarloInfo){
@@ -2119,12 +2234,16 @@ void PlotWith2FitsSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassP
                     fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->DrawCopy("same");
                 }
             } else {
+                TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+                if (isVsPtConv)
+                titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
+
                 DrawGammaHisto( fHistoMappingTrueMesonInvMassPtBinsPlot[iPt],
-                                Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                                titlePt,
                                 Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
                 DrawGammaHisto( fHistoMappingTrueMesonInvMassPtBinsPlot[iPt],
-                                Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                                titlePt,
                                 Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],2);
                 if (fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]!=0x00){
@@ -2233,7 +2352,9 @@ void PlotWithBGFitSubtractedInvMassInPtBins(    TH1D ** fHistoMappingSignalPlusB
                                                 Bool_t fMonteCarloInfo, 
                                                 TString decayChannel, 
                                                 TString fDetectionChannel, 
-                                                TString fEnergy){
+                                                TString fEnergy,
+                                                Bool_t isVsPtConv                                       = kFALSE
+                                           ){
     TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
     canvasDataFit->SetTopMargin(0.00);
     canvasDataFit->SetBottomMargin(0.00);
@@ -2350,13 +2471,16 @@ void PlotWithBGFitSubtractedInvMassInPtBins(    TH1D ** fHistoMappingSignalPlusB
             else padDataFit->cd(place)->SetLeftMargin(0.25);
 
             cout << startPt << "-" << endPt <<endl;
+            TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+            if (isVsPtConv)
+                titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
 
             DrawGammaHisto( fHistoMappingSignalPlusBGInvMassPtBinPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
             DrawGammaHisto( fHistoMappingSignalPlusBGInvMassPtBinPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],2);
 
@@ -2409,7 +2533,9 @@ void PlotWithFitPeakPosInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtBinP
                                         Bool_t fMonteCarloInfo, 
                                         TString decayChannel,
                                         TString fDetectionChannel,
-                                        TString fEnergy){
+                                        TString fEnergy,
+                                        Bool_t isVsPtConv                                   = kFALSE
+                                      ){
     TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
     canvasDataFit->SetTopMargin(0.02);
     canvasDataFit->SetBottomMargin(0.02);
@@ -2500,13 +2626,16 @@ void PlotWithFitPeakPosInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtBinP
             else padDataFit->cd(place)->SetLeftMargin(0.25);
 
             cout << startPt << "-" << endPt <<endl;
+            TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+            if (isVsPtConv)
+                titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
 
             DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < E < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
             DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < E < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],2);
 
@@ -2555,7 +2684,9 @@ void PlotTrueInvMassSplittedInPhotonAndElectronInPtBins(    TH1D ** fHistoTrueSi
                                                             TString decayChannel, 
                                                             TString fDetectionChannel, 
                                                             TString fEnergy, 
-                                                            Int_t mode){
+                                                            Int_t mode,
+                                                            Bool_t isVsPtConv                       = kFALSE
+                                                       ){
     TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
     canvasDataFit->SetTopMargin(0.00);
     canvasDataFit->SetBottomMargin(0.00);
@@ -2679,13 +2810,16 @@ void PlotTrueInvMassSplittedInPhotonAndElectronInPtBins(    TH1D ** fHistoTrueSi
             else padDataFit->cd(place)->SetLeftMargin(0.25);
 
             cout << startPt << "-" << endPt <<endl;
+            TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+            if (isVsPtConv)
+                titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
 
             DrawGammaHisto( fHistoTrueSignal[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
             DrawGammaHisto( fHistoTrueSignal[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],2);
 
@@ -2744,7 +2878,9 @@ void PlotTrueInvMassSplittedInMergedInPtBins(   TH1D ** fHistoTrueSignal,
                                                 TString decayChannel,
                                                 TString fDetectionChannel,
                                                 TString fEnergy, 
-                                                Int_t mode){
+                                                Int_t mode,
+                                                Bool_t isVsPtConv                       = kFALSE
+                                            ){
     TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
     canvasDataFit->SetTopMargin(0.00);
     canvasDataFit->SetBottomMargin(0.00);
@@ -2861,13 +2997,16 @@ void PlotTrueInvMassSplittedInMergedInPtBins(   TH1D ** fHistoTrueSignal,
             else padDataFit->cd(place)->SetLeftMargin(0.25);
 
             cout << startPt << "-" << endPt <<endl;
+            TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+            if (isVsPtConv)
+                titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
 
             DrawGammaHisto( fHistoTrueSignal[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
             DrawGammaHisto( fHistoTrueSignal[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],2);
 
@@ -2906,7 +3045,9 @@ void PlotSignalInvMassW0TrueMesonInPtBins(  TH1D** fHistoMappingSignalInvMassW0T
                                             Bool_t fMonteCarloInfo,
                                             TString decayChannel,
                                             TString fDetectionChannel,
-                                            TString fEnergy){
+                                            TString fEnergy,
+                                            Bool_t isVsPtConv                                       = kFALSE
+                                         ){
     TGaxis::SetMaxDigits(3);
 
     TCanvas * canvasDataSpectra     = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
@@ -2998,9 +3139,12 @@ void PlotSignalInvMassW0TrueMesonInPtBins(  TH1D** fHistoMappingSignalInvMassW0T
             padDataSpectra->cd(place)->SetBottomMargin(0.15);
             padDataSpectra->cd(place)->SetRightMargin(0.05);
             padDataSpectra->cd(place)->SetLeftMargin(0.15);
+            TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+            if (isVsPtConv)
+                titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
 
             DrawGammaHisto( fHistoMappingSignalInvMassW0TruePi0PtBinsPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
 
@@ -3030,7 +3174,9 @@ void PlotInvMassW0TrueMesonInPtBins(    TH1D** fHistoMappingGGInvMassW0TruePi0Pt
                                         Bool_t fMonteCarloInfo, 
                                         TString decayChannel, 
                                         TString fDetectionChannel,
-                                        TString fEnergy){
+                                        TString fEnergy,
+                                        Bool_t isVsPtConv                                   = kFALSE
+                                   ){
     TGaxis::SetMaxDigits(3);
 
     TCanvas * canvasDataSpectra     = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
@@ -3139,14 +3285,17 @@ void PlotInvMassW0TrueMesonInPtBins(    TH1D** fHistoMappingGGInvMassW0TruePi0Pt
             padDataSpectra->cd(place)->SetBottomMargin(0.15);
             padDataSpectra->cd(place)->SetRightMargin(0.02);
             padDataSpectra->cd(place)->SetLeftMargin(0.15);
+            TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+            if (isVsPtConv)
+                titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
 
             DrawGammaHisto( fHistoMappingGGInvMassW0TruePi0PtBinsPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
 
             DrawGammaHisto( fHistoMappingBackNormInvMassPtBinPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],1);
         }
@@ -3175,7 +3324,9 @@ void PlotInvMassDoubleCountingInPtBins( TH1D** fHistoMappingGGInvMassPtBinPlot,
                                         Bool_t fMonteCarloInfo, 
                                         TString decayChannel,
                                         TString fDetectionChannel, 
-                                        TString fEnergy){
+                                        TString fEnergy,
+                                        Bool_t isVsPtConv                                = kFALSE
+                                      ){
     TGaxis::SetMaxDigits(3);
 
     TCanvas* canvasDataSpectra      = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
@@ -3267,14 +3418,17 @@ void PlotInvMassDoubleCountingInPtBins( TH1D** fHistoMappingGGInvMassPtBinPlot,
             int remaining           = (place-1)%fColumnPlot;
             if (remaining > 0) padDataSpectra->cd(place)->SetLeftMargin(0.15);
             else padDataSpectra->cd(place)->SetLeftMargin(0.25);
+            TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+            if (isVsPtConv)
+                titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
 
             DrawGammaHisto( fHistoMappingGGInvMassPtBinPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
             cout << fHistoMappingGGInvMassPtBinPlot[iPt]->GetNbinsX() << "\t" << fHistoMappingDCInvMassPtBinPlot[iPt]->GetNbinsX() << endl;
             DrawGammaHisto( fHistoMappingDCInvMassPtBinPlot[iPt],
-                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            titlePt,
                             Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                             fPlottingRangeMeson[0],fPlottingRangeMeson[1],1);
             cout << fHistoMappingDCInvMassPtBinPlot[iPt]->GetNbinsX() << endl;
@@ -4834,3 +4988,439 @@ void PlotM02MergedTruePrimSecInPtBins(      TH1D**      fHistoPi0ValPtBinPlot,
     delete canvasDataSpectra;
 }
 
+//****************************************************************************
+//******* Function to draw DCAz histograms in pT-bins ************************
+//****************************************************************************
+void DrawDCAzHisto( TH1* histo1,
+                    TString Title,
+                    TString XTitle,
+                    TString YTitle,
+                    Float_t xMin,
+                    Float_t xMax,
+                    Int_t bck,
+                    Color_t color) {
+    
+    histo1->GetXaxis()->SetRangeUser(xMin, xMax);
+    
+    if(XTitle.Length() > 0){
+        histo1->SetXTitle(XTitle.Data());
+    }
+    if(YTitle.Length() > 0){
+        histo1->SetYTitle(YTitle.Data());
+    }
+    histo1->GetYaxis()->SetLabelSize(0.02);
+    histo1->GetYaxis()->SetTitleSize(0.025);
+    histo1->GetYaxis()->SetDecimals();
+    histo1->GetYaxis()->SetTitleOffset(0.5);
+    histo1->GetXaxis()->SetTitleSize(0.025);
+    histo1->GetXaxis()->SetLabelSize(0.02);
+    histo1->SetMarkerStyle(20);
+    histo1->SetMarkerColor(1);
+    histo1->SetLineColor(1);
+    histo1->SetLineWidth(0.5);
+    histo1->SetMarkerSize(0.5);
+    histo1->SetTitleOffset(1.2,"xy");
+    histo1->SetTitleSize(0.05,"xy");
+    histo1->GetYaxis()->SetLabelSize(0.05);
+    histo1->GetXaxis()->SetLabelSize(0.05);
+    histo1->GetXaxis()->SetNdivisions(507,kTRUE);
+    if( bck == 1 ){
+        histo1->SetLineStyle(1);
+        histo1->SetLineColor(color);
+        histo1->SetMarkerColor(color);
+        histo1->SetMarkerStyle(24);
+        histo1->SetLineWidth(0.9);
+        histo1->DrawCopy("hist,same");
+    } else {
+        if( bck == 2 ){
+            histo1->DrawCopy("same");
+        } else {
+            if(Title.Length() > 0){
+                histo1->SetTitle("");
+            }
+            histo1->DrawCopy("e1,p");
+            if(Title.Length() > 0){
+                TLatex *alice = new TLatex(0.1,0.95,Form("%s",Title.Data())); // Bo: this was
+                alice->SetNDC();
+                alice->SetTextColor(1);
+                alice->SetTextSize(0.062);
+                alice->Draw();
+            }
+        }
+    }
+}
+
+//**************************************************************************************************
+//************* Routine to produce fraction per category vs pt plots  ******************************
+//**************************************************************************************************
+void DrawFractionPerCat(TH1D** frac, TString fOutputDir, TString fPrefix, TString fPrefix2, TString fCutSelection, TString fSuffix) {
+    
+    TCanvas *canvas             = GetAndSetCanvas("canvas");
+    Color_t markerColor[3]      = {kBlack, kRed, kBlue};
+    
+    TLegend* legend             = GetAndSetLegend(0.7,0.75,3,1);
+    for (Int_t i=0; i<3; i++) {
+        SetHistogramm(frac[i],"#it{p}_{T} (GeV/#it{c})","#gamma_{cat i} / #gamma_{all cat}",0.0,1.0);
+        DrawGammaSetMarker(frac[i], 20, 1.0, markerColor[i], markerColor[i]);
+        frac[i]->Draw("same");
+        legend->AddEntry(frac[i],Form("#gamma_{cat %i} / #gamma_{all cat}", i+1),"lp");
+    }
+    DrawGammaLines(0., frac[0]->GetXaxis()->GetBinUpEdge(frac[0]->GetNbinsX()), 1., 1., 0.5, kBlack);
+    legend->Draw("same");
+    
+    canvas->Print(Form("%s/%s_%s_ESD_FractionPerCategory_%s.%s",fOutputDir.Data(),fPrefix.Data(),fPrefix2.Data(),fCutSelection.Data(),fSuffix.Data()));
+    delete legend;
+    delete canvas;
+}
+
+//**************************************************************************************************
+//************* Routine to produce DCAz plots in pt bins *******************************************
+//**************************************************************************************************
+void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBinsBack,TH1D** ESDGammaPtDCAzBinsBackB, TString namePlot, TString nameCanvas, TString namePad, TString dateDummy, TString fMesonType,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, TString fDecayChannel, Bool_t fMonteCarloInfo, TString textCent){
+    
+    cout << textCent.Data() << endl;
+    TGaxis::SetMaxDigits(3);
+    
+    TCanvas * canvasDataSpectra                 = new TCanvas(nameCanvas.Data(),"",2800,1800);  // gives the page size
+    canvasDataSpectra->SetTopMargin(0.02);
+    canvasDataSpectra->SetBottomMargin(0.02);
+    canvasDataSpectra->SetRightMargin(0.02);
+    canvasDataSpectra->SetLeftMargin(0.02);
+    
+    TPad * padDataSpectra                       = new TPad(namePad.Data(),"",0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+    padDataSpectra->SetFillColor(0);
+    padDataSpectra->GetFrame()->SetFillColor(0);
+    padDataSpectra->SetBorderMode(0);
+    padDataSpectra->SetLogy(1);
+    padDataSpectra->Divide(fColumnPlot,fRowPlot);
+    padDataSpectra->Draw();
+    
+    Double_t relWidthLogo;
+    if (fMesonType.CompareTo("Pi0") == 0){
+        relWidthLogo                            = 0.3;
+    } else {
+        relWidthLogo                            = 0.3;
+    }
+    Double_t padXWidth                          = 2800/fColumnPlot;
+    Double_t padYWidth                          = 1800/fRowPlot;
+    
+    cout<<"fColumnPlot: "<<fColumnPlot<<" fRowPlot: "<<fRowPlot<<endl;
+    
+    Int_t place                                 = 0;
+    for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++){
+        cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
+        Double_t startPt                        = fRangeBinsPt[iPt];
+        Double_t endPt                          = fRangeBinsPt[iPt+1];
+        
+        place                                   = place + 1;                                    //give the right place in the page
+        if (place == fColumnPlot){
+            iPt--;
+            padDataSpectra->cd(place);
+            
+            TString textAlice                   = "ALICE performance";
+            TString textEvents;
+            if(fMonteCarloInfo) {
+                textEvents                      = "MC";
+            } else {
+                textEvents                      = "Data";
+            }
+            
+            Double_t nPixels                    = 13;
+            Double_t textHeight                 = 0.08;
+            if (padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) < padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1())){
+                textHeight                      = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
+            } else {
+                textHeight                      = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
+            }
+            
+            Double_t startTextX                 = 0.1;
+            Double_t startTextY                 = 0.9;
+            Double_t differenceText             = textHeight*1.25;
+            
+            TLatex *alice                       = new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
+            TLatex *latexDate                   = new TLatex(startTextX, (startTextY-1.25*differenceText), dateDummy.Data());
+            TLatex *energy                      = new TLatex(startTextX, (startTextY-2.25*differenceText), fCollisionSystem);
+            TLatex *process                     = new TLatex(startTextX, (startTextY-3.25*differenceText), fDecayChannel);
+            TLatex *detprocess                  = new TLatex(startTextX, (startTextY-4.25*differenceText), fDetectionProcess);
+            TLatex *events                      = new TLatex(startTextX, (startTextY-5.25*differenceText), Form("%s: %2.1e events",textEvents.Data(), fNEvents));
+            
+            alice->SetNDC();
+            alice->SetTextColor(1);
+            alice->SetTextSize(textHeight*1.3);
+            alice->Draw();
+            
+            latexDate->SetNDC();
+            latexDate->SetTextColor(1);
+            latexDate->SetTextSize(textHeight);
+            latexDate->Draw();
+            
+            energy->SetNDC();
+            energy->SetTextColor(1);
+            energy->SetTextSize(textHeight);
+            energy->Draw();
+            
+            process->SetNDC();
+            process->SetTextColor(1);
+            process->SetTextSize(textHeight);
+            process->Draw();
+            
+            detprocess->SetNDC();
+            detprocess->SetTextColor(1);
+            detprocess->SetTextSize(textHeight);
+            detprocess->Draw();
+            
+            events->SetNDC();
+            events->SetTextColor(1);
+            events->SetTextSize(textHeight);
+            events->Draw();
+            
+            TLegend* legendData                 = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+2.)*differenceText);
+            legendData->SetTextSize(textHeight);
+            legendData->SetTextFont(62);
+            legendData->SetFillColor(0);
+            legendData->SetFillStyle(0);
+            legendData->SetLineWidth(0);
+            legendData->SetLineColor(0);
+            legendData->SetMargin(0.15);
+            legendData->AddEntry(ESDGammaPtDCAzBins[iPt],textEvents,"l");
+            legendData->AddEntry(ESDGammaPtDCAzBinsBack[iPt],ESDGammaPtDCAzBinsBack[iPt]->GetName(),"l");
+            if(ESDGammaPtDCAzBinsBackB)legendData->AddEntry(ESDGammaPtDCAzBinsBackB[iPt],ESDGammaPtDCAzBinsBackB[iPt]->GetName(),"l");
+            legendData->Draw();
+        } else {
+            padDataSpectra->cd(place);
+            padDataSpectra->cd(place)->SetLogy();
+            padDataSpectra->cd(place)->SetTopMargin(0.12);
+            padDataSpectra->cd(place)->SetBottomMargin(0.15);
+            padDataSpectra->cd(place)->SetRightMargin(0.02);
+            int remaining                       = (place-1)%fColumnPlot;
+            if (remaining > 0)  padDataSpectra->cd(place)->SetLeftMargin(0.15);
+            else                padDataSpectra->cd(place)->SetLeftMargin(0.25);
+            
+            DrawDCAzHisto(  ESDGammaPtDCAzBins[iPt],
+                          Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                          "DCA z (cm)", "dN/dDCA z",
+                          -10,10,0);
+            
+            DrawDCAzHisto(  ESDGammaPtDCAzBinsBack[iPt],
+                            Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                            "DCA z (cm)", "dN/dDCA z",
+                            -10,10,1);
+            
+            if (ESDGammaPtDCAzBinsBackB) {
+                DrawDCAzHisto(  ESDGammaPtDCAzBinsBackB[iPt],
+                              Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                              "DCA z (cm)", "dN/dDCA z",
+                              -10,10,2);
+            }
+        }
+    }
+    canvasDataSpectra->Print(namePlot.Data());
+    delete padDataSpectra;
+    delete canvasDataSpectra;
+}
+
+void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D*** ESDGammaPtDCAzBinsBack, TH1D** ESDGammaPtDCAzBinsBackB, TString namePlot, TString nameCanvas, TString namePad, TString dateDummy, TString fMesonType, Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, TString fDecayChannel, Bool_t fMonteCarloInfo, TString textCent){
+    
+    cout << textCent.Data() << endl;
+    TGaxis::SetMaxDigits(3);
+    
+    TCanvas * canvasDataSpectra                 = new TCanvas(nameCanvas.Data(),"",2800,1800);  // gives the page size
+    canvasDataSpectra->SetTopMargin(0.02);
+    canvasDataSpectra->SetBottomMargin(0.02);
+    canvasDataSpectra->SetRightMargin(0.02);
+    canvasDataSpectra->SetLeftMargin(0.02);
+    
+    TPad * padDataSpectra                       = new TPad(namePad.Data(),"",0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+    padDataSpectra->SetFillColor(0);
+    padDataSpectra->GetFrame()->SetFillColor(0);
+    padDataSpectra->SetBorderMode(0);
+    padDataSpectra->SetLogy(1);
+    padDataSpectra->Divide(fColumnPlot,fRowPlot);
+    padDataSpectra->Draw();
+    
+    Double_t relWidthLogo;
+    if (fMesonType.CompareTo("Pi0") == 0){
+        relWidthLogo                            = 0.3;
+    } else {
+        relWidthLogo                            = 0.3;
+    }
+    Double_t padXWidth                          = 2800/fColumnPlot;
+    Double_t padYWidth                          = 1800/fRowPlot;
+    
+    cout<<"fColumnPlot: "<<fColumnPlot<<" fRowPlot: "<<fRowPlot<<endl;
+    
+    Int_t place                                 = 0;
+    for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++){
+        cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
+        Double_t startPt                        = fRangeBinsPt[iPt];
+        Double_t endPt                          = fRangeBinsPt[iPt+1];
+        
+        place                                   = place + 1;                                    //give the right place in the page
+        if (place == fColumnPlot){
+            iPt--;
+            padDataSpectra->cd(place);
+            
+            TString textAlice                   = "ALICE performance";
+            TString textEvents;
+            if(fMonteCarloInfo) {
+                textEvents                      = "MC";
+            } else {
+                textEvents                      = "Data";
+            }
+            
+            Double_t nPixels                    = 13;
+            Double_t textHeight                 = 0.08;
+            if (padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) < padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1())){
+                textHeight                      = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
+            } else {
+                textHeight                      = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
+            }
+            
+            Double_t startTextX                 = 0.1;
+            Double_t startTextY                 = 0.9;
+            Double_t differenceText             = textHeight*1.25;
+            
+            TLatex *alice                       = new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
+            TLatex *latexDate                   = new TLatex(startTextX, (startTextY-1.25*differenceText), dateDummy.Data());
+            TLatex *energy                      = new TLatex(startTextX, (startTextY-2.25*differenceText), fCollisionSystem);
+            TLatex *process                     = new TLatex(startTextX, (startTextY-3.25*differenceText), fDecayChannel);
+            TLatex *detprocess                  = new TLatex(startTextX, (startTextY-4.25*differenceText), fDetectionProcess);
+            TLatex *events                      = new TLatex(startTextX, (startTextY-5.25*differenceText), Form("%s: %2.1e events",textEvents.Data(), fNEvents));
+            
+            alice->SetNDC();
+            alice->SetTextColor(1);
+            alice->SetTextSize(textHeight*1.3);
+            alice->Draw();
+            
+            latexDate->SetNDC();
+            latexDate->SetTextColor(1);
+            latexDate->SetTextSize(textHeight);
+            latexDate->Draw();
+            
+            energy->SetNDC();
+            energy->SetTextColor(1);
+            energy->SetTextSize(textHeight);
+            energy->Draw();
+            
+            process->SetNDC();
+            process->SetTextColor(1);
+            process->SetTextSize(textHeight);
+            process->Draw();
+            
+            detprocess->SetNDC();
+            detprocess->SetTextColor(1);
+            detprocess->SetTextSize(textHeight);
+            detprocess->Draw();
+            
+            events->SetNDC();
+            events->SetTextColor(1);
+            events->SetTextSize(textHeight);
+            events->Draw();
+            
+            TLegend* legendData                 = GetAndSetLegend(startTextX, startTextY-12*differenceText, 4);
+            legendData->SetTextSize(textHeight);
+            legendData->SetTextFont(62);
+            legendData->SetFillColor(0);
+            legendData->SetFillStyle(0);
+            legendData->SetLineWidth(0);
+            legendData->SetLineColor(0);
+            legendData->SetMargin(0.15);
+            //legendData->AddEntry(ESDGammaPtDCAzBins[iPt],ESDGammaPtDCAzBins[iPt]->GetName(),"l");
+            for (Int_t i = 0; i < 3; i++)
+                legendData->AddEntry(ESDGammaPtDCAzBinsBack[iPt][i],Form("background extraction %s", backgroundExtractionMethod[i].Data()),"l");
+            if(ESDGammaPtDCAzBinsBackB)legendData->AddEntry(ESDGammaPtDCAzBinsBackB[iPt],ESDGammaPtDCAzBinsBackB[iPt]->GetName(),"l");
+            legendData->Draw();
+        } else {
+            padDataSpectra->cd(place);
+            padDataSpectra->cd(place)->SetLogy();
+            padDataSpectra->cd(place)->SetTopMargin(0.12);
+            padDataSpectra->cd(place)->SetBottomMargin(0.15);
+            padDataSpectra->cd(place)->SetRightMargin(0.02);
+            int remaining                       = (place-1)%fColumnPlot;
+            if (remaining > 0) padDataSpectra->cd(place)->SetLeftMargin(0.15);
+            else padDataSpectra->cd(place)->SetLeftMargin(0.25);
+            
+            DrawDCAzHisto(  ESDGammaPtDCAzBins[iPt],
+                          Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                          "DCA z (cm)", "dN/dDCA z",
+                          -10,10,0);
+            
+            for (Int_t i = 0; i < 3; i++) {
+                DrawDCAzHisto(  ESDGammaPtDCAzBinsBack[iPt][i],
+                              Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                              "DCA z (cm)", "dN/dDCA z",
+                              -10,10,1,backgroundColor[i]);
+            }
+            
+            if (ESDGammaPtDCAzBinsBackB) {
+                DrawDCAzHisto(  ESDGammaPtDCAzBinsBackB[iPt],
+                              Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
+                              "DCA z (cm)", "dN/dDCA z",
+                              -10,10,2);
+            }
+        }
+    }
+    canvasDataSpectra->Print(namePlot.Data());
+    delete padDataSpectra;
+    delete canvasDataSpectra;
+}
+
+// overloading PlotDCAzInPtBinsWithBack()
+void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBinsBack,TH1D** ESDGammaPtDCAzBinsBackB, TString namePlot, TString nameCanvas, TString namePad, TString dateDummy, TString fMesonType, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, TString fDecayChannel, Bool_t fMonteCarloInfo, TString textCent) {
+    
+    Int_t nPads = fNumberPtBins + 2;
+    
+    Int_t nColumns  = 2;
+    
+    for (Int_t i = 0; i < nPads; i++) {
+        if (((nColumns+1) * CalculateNumberOfRowsForDCAzPlots(nPads, nColumns+1) - nPads <= (nColumns) * CalculateNumberOfRowsForDCAzPlots(nPads, nColumns) - nPads) || (TMath::Abs(nColumns+1 - CalculateNumberOfRowsForDCAzPlots(nPads, nColumns+1)) < TMath::Abs(nColumns - CalculateNumberOfRowsForDCAzPlots(nPads, nColumns)))) {
+            nColumns++;
+        } else {
+            break;
+        }
+    }
+    
+    Int_t nRows = CalculateNumberOfRowsForDCAzPlots(nPads, nColumns);
+    
+    PlotDCAzInPtBinsWithBack(ESDGammaPtDCAzBins, ESDGammaPtDCAzBinsBack,ESDGammaPtDCAzBinsBackB, namePlot, nameCanvas, namePad, dateDummy, fMesonType, nRows, nColumns, fStartBinPtRange, fNumberPtBins, fRangeBinsPt, fDecayChannel, fMonteCarloInfo, textCent);
+}
+
+void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D*** ESDGammaPtDCAzBinsBack,TH1D** ESDGammaPtDCAzBinsBackB, TString namePlot, TString nameCanvas, TString namePad, TString dateDummy, TString fMesonType, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, TString fDecayChannel, Bool_t fMonteCarloInfo, TString textCent) {
+    
+    Int_t nPads = fNumberPtBins + 2;
+    
+    Int_t nColumns  = 2;
+    
+    for (Int_t i = 0; i < nPads; i++) {
+        if (((nColumns+1) * CalculateNumberOfRowsForDCAzPlots(nPads, nColumns+1) - nPads <= (nColumns) * CalculateNumberOfRowsForDCAzPlots(nPads, nColumns) - nPads) || (TMath::Abs(nColumns+1 - CalculateNumberOfRowsForDCAzPlots(nPads, nColumns+1)) < TMath::Abs(nColumns - CalculateNumberOfRowsForDCAzPlots(nPads, nColumns)))) {
+            nColumns++;
+        } else {
+            break;
+        }
+    }
+    
+    Int_t nRows = CalculateNumberOfRowsForDCAzPlots(nPads, nColumns);
+    
+    PlotDCAzInPtBinsWithBack(ESDGammaPtDCAzBins, ESDGammaPtDCAzBinsBack,ESDGammaPtDCAzBinsBackB, namePlot, nameCanvas, namePad, dateDummy, fMesonType, nRows, nColumns, fStartBinPtRange, fNumberPtBins, fRangeBinsPt, fDecayChannel, fMonteCarloInfo, textCent);
+}
+
+//**************************************************************************************************
+//******* Function to calculate number of rows for given number of bins and columns ****************
+//**************************************************************************************************
+Int_t CalculateNumberOfRowsForDCAzPlots(Int_t numberOfPads, Int_t numberOfColumns) {
+    // this function returns the number of rows
+    // for a given number of pads and columns,
+    
+    Int_t over = 0;
+    Int_t rows = 0;
+    
+    for (Int_t i = 0; i < numberOfPads; i++) {
+        if ((numberOfPads + over)%numberOfColumns != 0) {
+            over++;
+        } else if ((numberOfPads + over)%numberOfColumns == 0) {
+            break;
+        }
+    }
+    
+    return rows = (numberOfPads + over)/numberOfColumns;
+}

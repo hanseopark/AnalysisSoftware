@@ -46,11 +46,6 @@ TString     fContamination[11]                                      = { "Electro
 Int_t       exemplaryLowPtBin                                       = 1;
 Int_t       exemplaryHighPtBin                                      = 15;
 
-// photon categories
-TString     categoryName[4]                                         = {"all", "cat1", "cat2", "cat3"};
-TString     backgroundExtractionMethod[3]                           = {"std", "var1", "var2"};
-Color_t     backgroundColor[3]                                      = {kBlue+2, kGreen+3, kGray+2};
-
 // ShowBackground arguments
 Int_t nIterationsShowBackground[4]                                  = {0};
 TString optionShowBackground[3]                                     = {""};
@@ -269,6 +264,11 @@ TH1D**      fHistoSignalInvMassLeftPtGConvBin                                   
 TH1D**      fHistoBackInvMassPtGconvBin                                                         = NULL;
 TH1D**      fHistoBackNormInvMassPtGconvBin                                                     = NULL;
 TH1D**      fHistoBackNormInvMassLeftPtGconvBin                                                 = NULL;
+TH1D**      fHistoTruePrimMesonInvMassPtBins                                                    = NULL;  
+TH1D**      fHistoTrueFullMesonInvMassPtBins                                                    = NULL;  
+TH1D**      fHistoTrueSecMesonInvMassPtBins[4]                                                  = {NULL, NULL, NULL, NULL};    
+TH2D*       fHistoTruePrimMesonInvMassVSPt                                                      = NULL;
+TF1**       fFitTrueFullSignalInvMassPtBin                                                      = NULL;
 
 //*****************************************************************************************************
 //******************** Check multiple counts of photons ***********************************************
@@ -427,68 +427,6 @@ void     SaveDCAHistos                      (   Int_t       isMC,
                                                 TString     fPrefix3                            );
 void     FillDCAHistogramsFromTree          (   TTree*      dcaTree,
                                                 Bool_t      isMC                                );
-void     PlotAdditionalDCAz                 (   Int_t       isMC, 
-                                                TString     fCutID                              );
-void     PlotDCAzInPtBinsWithBack           (   TH1D**      ESDGammaPtDCAzBins, 
-                                                TH1D**      ESDGammaPtDCAzBinsBack,
-                                                TH1D**      ESDGammaPtDCAzBinsBackB, 
-                                                TString     namePlot, 
-                                                TString     nameCanvas, 
-                                                TString     namePad, 
-                                                TString     dateDummy, 
-                                                TString     fMesonType,  
-                                                Int_t       fRowPlot, 
-                                                Int_t       fColumnPlot, 
-                                                Int_t       fStartBinPtRange, 
-                                                Int_t       fNumberPtBins, 
-                                                Double_t*   fRangeBinsPt, 
-                                                TString     fDecayChannel, 
-                                                Bool_t      fMonteCarloInfo, 
-                                                TString     textCent = "MinBias"                );
-void    PlotDCAzInPtBinsWithBack            (   TH1D**      ESDGammaPtDCAzBins,
-                                                TH1D**      ESDGammaPtDCAzBinsBack,
-                                                TH1D**      ESDGammaPtDCAzBinsBackB,
-                                                TString     namePlot,
-                                                TString     nameCanvas,
-                                                TString     namePad,
-                                                TString     dateDummy,
-                                                TString     fMesonType,
-                                                Int_t       fStartBinPtRange,
-                                                Int_t       fNumberPtBins,
-                                                Double_t*   fRangeBinsPt,
-                                                TString     fDecayChannel,
-                                                Bool_t      fMonteCarloInfo,
-                                                TString     textCent = "MinBias"                );
-void    PlotDCAzInPtBinsWithBack            (   TH1D**      ESDGammaPtDCAzBins,
-                                                TH1D***     ESDGammaPtDCAzBinsBack,
-                                                TH1D**      ESDGammaPtDCAzBinsBackB,
-                                                TString     namePlot,
-                                                TString     nameCanvas,
-                                                TString     namePad,
-                                                TString     dateDummy,
-                                                TString     fMesonType,
-                                                Int_t       fStartBinPtRange,
-                                                Int_t       fNumberPtBins,
-                                                Double_t*   fRangeBinsPt,
-                                                TString     fDecayChannel,
-                                                Bool_t      fMonteCarloInfo,
-                                                TString     textCent = "MinBias"                );
-Int_t   CalculateNumberOfRowsForDCAzPlots   (   Int_t       numberOfPads,
-                                                Int_t       numberOfColumns                     );
-void    DrawDCAzHisto                       (   TH1*        histo1,
-                                                TString     Title,
-                                                TString     XTitle,
-                                                TString     YTitle,
-                                                Float_t     xMin,
-                                                Float_t     xMax,
-                                                Int_t       bck,
-                                                Color_t     color = kBlue                       );
-void     DrawFractionPerCat                 (   TH1D**      frac,
-                                                TString     fOutputDir,
-                                                TString     fPrefix,
-                                                TString     fPrefix2,
-                                                TString     fCutSelection,
-                                                TString     fSuffix                             );
 void     FillMassHistosArray                (   TH2D*       fGammaGammaInvMassVSPtDummy         );
 void     ProduceBckProperWeighting          (   TH2D*       fHistoBckZM, 
                                                 TH2D*       fHistoMotherZM                      );
@@ -514,5 +452,11 @@ Bool_t   CalculateDCAzDistributionRatio     (   TH1D***     numerator,
 Bool_t    CalculatePileUpCorrectionFactor   (   TH1D*       ratioWithWithoutPileUp,
                                                 TH1D*       &pileupCorrectionFactor,
                                                 TF1*        &fitToRatio                         );
-Bool_t   LoadSecondariesFromCocktailFile(TString, TString);                                                // Loads secondary neutral pion input graphs from file
+Bool_t   LoadSecondariesFromCocktailFile    (   TString, 
+                                                TString                                         );     // Loads secondary neutral pion input graphs from file
 void     Delete                             ();
+void     FillMassMCTrueMesonHistosArrays    (   TH2D* fHistoTrueMesonPrimInvMassVSPtFill, 
+                                                TH2D** fHistoTrueMesonSecInvMassVSPtFill        );
+void     CheckForNULLForPointer             (   TH1D* fDummy1                                   );
+void     PlotAdditionalDCAz                 (   Int_t       isMC, 
+                                                TString     fCutID                              );
