@@ -126,7 +126,7 @@ void EventQA_Runwise(
     Bool_t drawVerticalLines = kFALSE;
     Int_t nLines;        // number of vertical lines
     Int_t runRanges[10]; // array of bin numbers where to draw vertical lines
-    TLine* verticalLines[10];
+    TLine* verticalLines[10] = {NULL};
     if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0)
         xPosLabel = 0.75;
     if(fEnergyFlag.Contains("PbPb")){
@@ -1184,7 +1184,7 @@ void EventQA_Runwise(
     DrawGammaCanvasSettings(canvas, leftMar, rightMar, topMargin, bottomMargin);
     Double_t yMax;  // min of y range for vertical lines
     Double_t yMin;  // max of y range for vertical lines
-    Bool_t adjustedRange;
+    Bool_t adjustedRange = kFALSE;
 
     // Plot single periods as well
     if(doHistsForEverySet) {
@@ -1454,6 +1454,17 @@ void EventQA_Runwise(
                         ratio[j]->Draw(draw.Data());
                         legend->AddEntry(ratio[j],ratioSets[j]->Data(),"p");
                     }
+		    if (drawVerticalLines){
+		      canvas->Update();
+		      yMax = canvas->GetUymax();
+		      yMin = canvas->GetUymin();
+		      for(Int_t lineBin=0; lineBin<nLines; lineBin++){
+			verticalLines[lineBin] = new TLine(runRanges[lineBin],yMin,runRanges[lineBin],yMax);
+			verticalLines[lineBin]->SetLineWidth(1);
+			verticalLines[lineBin]->SetLineStyle(2);
+			verticalLines[lineBin]->Draw("same");
+		      }
+		    }
 		    legend->Draw();
                     outputDirDataSet = Form("%s/%s",outputDir.Data(), DataSets[i].Data());
                     gSystem->Exec("mkdir -p "+outputDirDataSet+"/TrendingRatios");
@@ -1475,6 +1486,11 @@ void EventQA_Runwise(
                     if(canvas->GetTopMargin()!=0.06) canvas->SetTopMargin(0.06);
                     SaveCanvas(canvas, Form("%s/TrendingRatios/%s.%s", outputDirDataSet.Data(),Form("%s",((TH1D*) vecHistos[i].at(h))->GetName()),suffix.Data()));
                     legend->Clear();
+		    if(drawVerticalLines){
+		      for(Int_t lineBin=0; lineBin<nLines; lineBin++){
+			delete verticalLines[lineBin];
+		      }
+		    }
                     for(Int_t j=0; j<nSets-nData; j++) {
                         delete ratio[j];
                         delete ratioSets[j];
