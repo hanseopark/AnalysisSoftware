@@ -166,6 +166,11 @@ Double_t fBinsPi07TeVPt[44]                     = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7
                                                     2.2, 2.3, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
                                                     4.0, 4.3, 4.6, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0, 10.0,
                                                     12.0, 16.0, 20.0, 25.0};
+Double_t fBinsPi07TeVPCMPHOSPt[44]              = { 0.0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
+                                                    1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1,
+                                                    2.2, 2.3, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
+                                                    4.0, 4.3, 4.6, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0, 10.0,
+                                                    12.0, 16.0, 20.0, 25.0};
 Double_t fBinsPi07TeVPtDCA[28]                  = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
                                                     1.2, 1.3, 1.4, 1.6, 1.8, 2.0, 2.4, 2.8, 3.2, 3.6,
                                                     4.0, 5.0, 6.0, 8.0, 12.0, 16.0, 20.0, 25.0};
@@ -181,6 +186,11 @@ Int_t fBinsPi07TeVPtRebin[43]                   = { 3, 2, 1, 1, 1, 1, 1, 1, 1, 1
                                                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                     1, 2, 2, 3, 3, 4, 4, 4, 5, 5,
                                                     5, 5, 1};
+Int_t fBinsPi07TeVPCMPHOSPtRebin[43]            = { 3, 2, 2, 2, 2, 2, 2, 2,
+                                                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                    1, 2, 2, 3, 3, 4, 4, 4, 5, 5,
+                                                    5, 5, 1};
 Int_t fBinsPi07TeVPCMEMCPtRebin[42]             = { 2, 2, 2, 2, 2, 2, 8, 5, 4, 4,
                                                     2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -192,12 +202,17 @@ Int_t fBinsPi07TeVEMCPtRebin[42]                = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
                                                     2, 2, 2, 2, 2, 2, 2, 2, 4, 8,
                                                     16, 16};
 
+
 Double_t fBinsEta7TeVPt[18]                     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0,
+                                                    3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0};
+Double_t fBinsEta7TeVPCMPHOSPt[18]              = { 0.0, 0.8, 1.0, 1.5, 2.0, 2.5, 3.0,
                                                     3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0};
 Double_t fBinsEta7TeVPCMEMCPt[19]               = { 0.0, 0.4, 0.6, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0, 3.5,
                                                     4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20, 25.0};
 Int_t fBinsEta7TeVPtRebin[17]                   = { 8, 7, 7, 4, 4, 4, 4, 4, 5, 5,
                                                     5, 5, 5, 5, 6, 8, 8};
+Int_t fBinsEta7TeVPCMPHOSPtRebin[17]            = { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+                                                    8, 8, 8, 8, 8, 8, 8};
 
 Int_t fBinsEta7TeVPCMEMCPtRebin[18]             = { 2, 2, 2, 16, 10, 8, 8, 8, 8, 8,
                                                     8, 10, 10, 16, 16, 16, 16, 20};
@@ -1556,6 +1571,10 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                             fBinsPt[i]      = fBinsPi07TeVPt[i];
                             if (i < fNBinsPt)
                                 fNRebin[i]  = fBinsPi07TeVPCMEMCPtRebin[i];
+                        } else if (modi == 3){
+                            fBinsPt[i]      = fBinsPi07TeVPCMPHOSPt[i];
+                            if (i < fNBinsPt)
+                            fNRebin[i]   = fBinsPi07TeVPCMPHOSPtRebin[i];
                         } else if (modi == 4){
                             fBinsPt[i]      = fBinsPi07TeVPt[i];
                             if (i < fNBinsPt)
@@ -2391,6 +2410,10 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     fBinsPt[i]      = fBinsEta7TeVPCMEMCPt[i];
                     if (i < fNBinsPt+1)
                         fNRebin[i]  = fBinsEta7TeVPCMEMCPtRebin[i];
+                } else if (modi == 3){
+                    fBinsPt[i]      = fBinsEta7TeVPCMPHOSPt[i];
+                    if (i < fNBinsPt+1)
+                        fNRebin[i]  = fBinsEta7TeVPCMPHOSPtRebin[i];
                 } else if(modi == 4){
                     fBinsPt[i]      = fBinsEta7TeVPCMEMCPt[i];
                     if (i < fNBinsPt+1)
