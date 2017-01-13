@@ -681,6 +681,16 @@ void ProduceTheoryGraphsPP(){
                                                                                 muOneErrDSS14Pi07000GeV, muOneErrDSS14Pi07000GeV);
     TGraphAsymmErrors* graphNLOCalcDSS14InvYieldPi07000GeV = ScaleGraphAsym(graphNLOCalcDSS14InvSecPi07000GeV, 1/(xSection7000GeV*recalcBarn));
     
+    //**************************************************************************************************
+    //********************** Pythia 6 Perugia2011 MC spectra and ratio *********************************
+    //**************************************************************************************************
+    // file generated with TaskV1/ExtractMCInputSpectraFromFile.C++ based on PCM only inputs
+    TFile* file7TeVPyth6Perugia                 = new TFile("ExternalInput/Theory/MCInputCompilationLHC14j4[b-f]_pp7TeV_0.root");
+    TH1D* histoPi07TeVPythia6                   = (TH1D*)file7TeVPyth6Perugia->Get("MC_Pi0_Pt");
+    TH1D* histoPi07TeVPythia6Reb                = (TH1D*)file7TeVPyth6Perugia->Get("MC_Pi0_Pt_Rebinned");
+    TH1D* histoEta7TeVPythia6                   = (TH1D*)file7TeVPyth6Perugia->Get("MC_Eta_Pt");
+    TH1D* histoEta7TeVPythia6Reb                = (TH1D*)file7TeVPyth6Perugia->Get("MC_Eta_Pt_Rebinned");
+    TH1D* histoEtaToPi07TeVPythia6              = (TH1D*)file7TeVPyth6Perugia->Get("MCEtaToPi0");
     
     //**********************************************************************************************************************
     //******************************** 8 TeV Pi0 and Eta calc***************************************************************
@@ -786,6 +796,29 @@ void ProduceTheoryGraphsPP(){
     TGraph* graphEtaToPi0NLOMuTwo8TeV       = new TGraph(xNBins8000GeV,xValueNLO8000GeV,valueNLOEtaToPi0NLOMuTwo8000GeV);   
 //     graphEtaToPi0NLOMuTwo8TeV->Print();
     
+    //**************************************************************************************************
+    //********************** 8TeV Pythia 8 MC spectra and ratio ****************************************
+    //**************************************************************************************************
+    // file generated with TaskV1/ExtractMCInputSpectraFromFile.C++ based on PCM only inputs
+    TFile* file8TeVPyth8                        = new TFile("ExternalInput/Theory/MCInputCompilationLHC15h1_pp8TeV_0.root");
+    TH1D* histoPi08TeVPythia8                   = (TH1D*)file8TeVPyth8->Get("MC_Pi0_Pt");
+    TH1D* histoPi08TeVPythia8Reb                = (TH1D*)file8TeVPyth8->Get("MC_Pi0_Pt_Rebinned");
+    TH1D* histoEta8TeVPythia8                   = (TH1D*)file8TeVPyth8->Get("MC_Eta_Pt");
+    TH1D* histoEta8TeVPythia8Reb                = (TH1D*)file8TeVPyth8->Get("MC_Eta_Pt_Rebinned");
+    TH1D* histoEtaToPi08TeVPythia8              = (TH1D*)file8TeVPyth8->Get("MCEtaToPi0");
+    
+    //**************************************************************************************************
+    //********************** 8TeV Phojet MC spectra and ratio ******************************************
+    //**************************************************************************************************
+    // file generated with TaskV1/ExtractMCInputSpectraFromFile.C++ based on PCM only inputs
+    TFile* file8TeVPhojet                       = new TFile("ExternalInput/Theory/MCInputCompilationLHC15h2_pp8TeV_0.root");
+    TH1D* histoPi08TeVPhojet                    = (TH1D*)file8TeVPhojet->Get("MC_Pi0_Pt");
+    TH1D* histoPi08TeVPhojetReb                 = (TH1D*)file8TeVPhojet->Get("MC_Pi0_Pt_Rebinned");
+    TH1D* histoEta8TeVPhojet                    = (TH1D*)file8TeVPhojet->Get("MC_Eta_Pt");
+    TH1D* histoEta8TeVPhojetReb                 = (TH1D*)file8TeVPhojet->Get("MC_Eta_Pt_Rebinned");
+    TH1D* histoEtaToPi08TeVPhojet               = (TH1D*)file8TeVPhojet->Get("MCEtaToPi0");
+    
+    
 
     //**********************************************************************************************************************
     //***************************** Pythia calculations 2.76TeV ************************************************************
@@ -861,7 +894,19 @@ void ProduceTheoryGraphsPP(){
         graphNLOCalcInvYieldPi0MuHalf8000GeV->Write("graphNLOCalcInvYieldPi0MuHalf8000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuOne8000GeV->Write("graphNLOCalcInvYieldPi0MuOne8000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuTwo8000GeV->Write("graphNLOCalcInvYieldPi0MuTwo8000GeV", TObject::kOverwrite);
-
+        
+        histoPi08TeVPythia8->Write("histoPi0Pythia8_8000TeV", TObject::kOverwrite);
+        histoEta8TeVPythia8->Write("histoEtaPythia8_8000TeV", TObject::kOverwrite);
+        histoPi08TeVPythia8Reb->Write("histoPi0Pythia8_8000TeV_Reb", TObject::kOverwrite);
+        histoEta8TeVPythia8Reb->Write("histoEtaPythia8_8000TeV_Reb", TObject::kOverwrite);
+        histoEtaToPi08TeVPythia8->Write("histoEtaToPi0Pythia8_8000TeV", TObject::kOverwrite);
+        
+        histoPi08TeVPhojet->Write("histoPi0Phojet_8000TeV", TObject::kOverwrite);
+        histoEta8TeVPhojet->Write("histoEtaPhojet_8000TeV", TObject::kOverwrite);
+        histoPi08TeVPhojetReb->Write("histoPi0Phojet_8000TeV_Reb", TObject::kOverwrite);
+        histoEta8TeVPhojetReb->Write("histoEtaPhojet_8000TeV_Reb", TObject::kOverwrite);
+        histoEtaToPi08TeVPhojet->Write("histoEtaToPi0Phojet_8000TeV", TObject::kOverwrite);
+        
         graphNLOCalcInvYieldPi0MuHalf7000GeV->Write("graphNLOCalcInvYieldPi0MuHalf7000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuOne7000GeV->Write("graphNLOCalcInvYieldPi0MuOne7000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuTwo7000GeV->Write("graphNLOCalcInvYieldPi0MuTwo7000GeV", TObject::kOverwrite);
@@ -871,6 +916,11 @@ void ProduceTheoryGraphsPP(){
         graphNLOCalcInvYieldPi0MuTwo2760GeV->Write("graphNLOCalcInvYieldPi0MuTwo2760GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi02760GeV->Write("graphNLOCalcDSS07InvYieldPi02760GeV", TObject::kOverwrite);
         
+        histoPi07TeVPythia6->Write("histoPi0Pythia6_Perugia2011_7000TeV", TObject::kOverwrite);
+        histoEta7TeVPythia6->Write("histoEtaPythia6_Perugia2011_7000TeV", TObject::kOverwrite);
+        histoPi07TeVPythia6Reb->Write("histoPi0Pythia6_Perugia2011_7000TeV_Reb", TObject::kOverwrite);
+        histoEta7TeVPythia6Reb->Write("histoEtaPythia6_Perugia2011_7000TeV_Reb", TObject::kOverwrite);
+        histoEtaToPi07TeVPythia6->Write("histoEtaToPi0Pythia6_Perugia2011_7000TeV", TObject::kOverwrite);
 
         graphNLOCalcInvYieldPi0MuHalf900GeV->Write("graphNLOCalcInvYieldPi0MuHalf900GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuOne900GeV->Write("graphNLOCalcInvYieldPi0MuOne900GeV", TObject::kOverwrite);
