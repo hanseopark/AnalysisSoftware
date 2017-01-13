@@ -277,7 +277,7 @@ void QA_Runwise(
         TString temp        = select;
         temp                = temp.Remove(0,temp.Length()-1);
         plotDataSets[0]     = select;
-        plotDataSets[1]     = "Pythia8";
+        plotDataSets[1]     = "Pythia6";
         select              += "_pass4";
         DataSets[0]         =select;
         DataSets[1]         =Form("LHC14j4%s",temp.Data());
@@ -293,7 +293,41 @@ void QA_Runwise(
         nSets                   = 6;
         nData                   = 5;
         TString dummyData1[6]   = {"LHC10b_pass4", "LHC10c_pass4", "LHC10d_pass4", "LHC10e_pass4", "LHC10f_pass4", "LHC14j4"};
-        TString dummyData2[6]   = {"LHC10b", "LHC10c", "LHC10d", "LHC10e", "LHC10f", "Pythia8"};
+        TString dummyData2[6]   = {"LHC10b", "LHC10c", "LHC10d", "LHC10e", "LHC10f", "Pythia6"};
+        for (Int_t j = 0; j< nSets; j++){
+            DataSets[j]     = dummyData1[j];
+            plotDataSets[j] = dummyData2[j];
+        }
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC10PCMPHOS")==0){
+        //LHC10
+        cutNr                   = 0;
+        doHistsForEverySet      = kFALSE;
+        fEnergyFlag             = "7TeV";
+        filePath                = "/media/nschmidt/Daten/SVN/photonconv/AnalysisSoftware/DataQA/20170110-1";
+        fileName                = "GammaConvCalo_351.root";
+        nSets                   = 6;
+        nData                   = 5;
+        TString dummyData1[6]   = {"LHC10b_pass4", "LHC10c_pass4", "LHC10d_pass4", "LHC10e_pass4", "LHC10f_pass4", "LHC14j4"};
+        TString dummyData2[6]   = {"LHC10b", "LHC10c", "LHC10d", "LHC10e", "LHC10f", "Pythia6"};
+        for (Int_t j = 0; j< nSets; j++){
+            DataSets[j]     = dummyData1[j];
+            plotDataSets[j] = dummyData2[j];
+        }
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC10PHOS")==0){
+        //LHC10
+        cutNr                   = 0;
+        doHistsForEverySet      = kFALSE;
+        fEnergyFlag             = "7TeV";
+        filePath                = "/media/nschmidt/Daten/SVN/photonconv/AnalysisSoftware/DataQA/20170110-1";
+        fileName                = "GammaCalo_351.root";
+        nSets                   = 6;
+        nData                   = 5;
+        TString dummyData1[6]   = {"LHC10b_pass4", "LHC10c_pass4", "LHC10d_pass4", "LHC10e_pass4", "LHC10f_pass4", "LHC14j4"};
+        TString dummyData2[6]   = {"LHC10b", "LHC10c", "LHC10d", "LHC10e", "LHC10f", "Pythia6"};
         for (Int_t j = 0; j< nSets; j++){
             DataSets[j]     = dummyData1[j];
             plotDataSets[j] = dummyData2[j];

@@ -304,6 +304,32 @@ void QA(    TString select          = "LHC11a",         // set selected
         pathPhotonQA[1] = Form("/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20150922/%s/PhotonQA_%s.root",DataSets[1].Data(),DataSets[1].Data());
     }
     //**************************************************************************************************************
+    else if(select.CompareTo("LHC10PCMPHOS")==0){
+    //LHC10
+        cutNr = 0;
+        nSets = 2;
+        fEnergyFlag = "7TeV";
+        pathDataSets[0] = "/media/nschmidt/Daten/SVN/photonconv/AnalysisSoftware/DataQA/20170110-1/LHC10_GammaConvCalo_351.root";
+        pathDataSets[1] = "/media/nschmidt/Daten/SVN/photonconv/AnalysisSoftware/DataQA/20170110-1/LHC14j4_GammaConvCalo_351.root";
+        DataSets[0]="LHC10_pass4"; DataSets[1]="LHC14j4";
+        plotDataSets[0]="LHC10[b-f]"; plotDataSets[1]="Pythia8";
+        pathPhotonQA[0] = Form("/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20150922/%s/PhotonQA_%s.root",DataSets[0].Data(),DataSets[0].Data());
+        pathPhotonQA[1] = Form("/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20150922/%s/PhotonQA_%s.root",DataSets[1].Data(),DataSets[1].Data());
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC10PHOS")==0){
+    //LHC10
+        cutNr = 0;
+        nSets = 2;
+        fEnergyFlag = "7TeV";
+        pathDataSets[0] = "/media/nschmidt/Daten/SVN/photonconv/AnalysisSoftware/DataQA/20170110-1/LHC10_GammaCalo_351.root";
+        pathDataSets[1] = "/media/nschmidt/Daten/SVN/photonconv/AnalysisSoftware/DataQA/20170110-1/LHC14j4_GammaCalo_351.root";
+        DataSets[0]="LHC10_pass4"; DataSets[1]="LHC14j4";
+        plotDataSets[0]="LHC10[b-f]"; plotDataSets[1]="Pythia8";
+        pathPhotonQA[0] = Form("/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20150922/%s/PhotonQA_%s.root",DataSets[0].Data(),DataSets[0].Data());
+        pathPhotonQA[1] = Form("/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20150922/%s/PhotonQA_%s.root",DataSets[1].Data(),DataSets[1].Data());
+    }
+    //**************************************************************************************************************
     else if(select.CompareTo("LHC10test")==0){
     //LHC10
         nSets = 2;
