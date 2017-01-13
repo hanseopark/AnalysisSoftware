@@ -52,7 +52,7 @@
 #include "CommonHeaders/CombinationFunctions.h"
 #include "TFitResultPtr.h"
 
-TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** graphs, Double_t* energies, Double_t dSqrts, Int_t nIterations, Bool_t isStat );
+TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** graphs, Double_t* energies, Double_t dSqrts, Int_t nIterations, Int_t modus );
 TH1D* ConvertYieldHisto(TH1D* input, Bool_t DivideBy2pi, Bool_t DivideByPt, Bool_t MultiplyBy2pi, Bool_t MultiplyByPt);
 TF1* DoFitWithTsallis(TGraph* graph, TString name, TString particle, Double_t p0, Double_t p1, Double_t p2);
 TF1* DoFitWithTCM(TGraph* graph, TString name, TString particle, Double_t p0, Double_t p1, Double_t p2, Double_t p3, Double_t p4 );
@@ -76,6 +76,11 @@ void RemoveZerosAndPrint(TGraphAsymmErrors* graph, TString d){
   while (graph->GetY()[0] == 0. ) graph->RemovePoint(0);
   graph->Print();
 }
+
+TGraphErrors* graphAlpha                = 0x0;
+TGraphErrors** graphPtvsSqrts           = 0x0;
+TGraphErrors** gPtvsEnergiesSystem      = 0x0;
+TF1** fPowerlawSystem                   = 0x0;
 
 TGraphErrors* graphAlphaStat            = 0x0;
 TGraphErrors** graphPtvsSqrtsStat       = 0x0;
@@ -590,14 +595,47 @@ void CalculateReference (   TString configFile                  = "",
 // 
 
     //*************************************************************************************************
-    //*************************** extrapolate spectra *************************************************
+    //********************* extrapolate spectra combined errors without common*************************
+    //*************************************************************************************************
+    TGraphAsymmErrors*  graphFinalEnergyComb1    = GetInterpolSpectrum2D(   nDataSets,
+                                                                            graphCombReb,
+                                                                            energyInd,
+                                                                            energy,
+                                                                            1000,
+                                                                            0
+                                                                        );
+
+    if( graphPtvsSqrts && gPtvsEnergiesSystem && fPowerlawSystem ){
+        Int_t columns   = 2;
+        Int_t rows      = 2;
+        Int_t counter   = 0;
+        while (columns*rows < graphCombReb[0]->GetN()){
+            if (counter%2 != 0) rows++;
+            else columns++;
+            counter++;
+        }    
+        PlotInterpolationPtBins(graphPtvsSqrts,gPtvsEnergiesSystem,fPowerlawSystem,graphFinalEnergyComb1,columns, rows,Form("%s/%s_%s_CombUnCorr_Pt_vs_Sqrts.%s",outputDir.Data(),meson.Data(),modeName.Data(), suffix.Data()));
+    
+    }else{
+        cout << "ERROR: NULL pointer - returning..." << endl;
+        cout << graphAlpha << endl;
+        cout << graphPtvsSqrts << endl;
+        cout << gPtvsEnergiesSystem << endl;
+        cout << fPowerlawSystem << endl;
+        return;
+    }
+    graphFinalEnergyComb1->Print();
+
+
+    //*************************************************************************************************
+    //*************************** extrapolate spectra stat errors only ********************************
     //*************************************************************************************************
     TGraphAsymmErrors*  graphFinalEnergyStat    = GetInterpolSpectrum2D(    nDataSets,
                                                                             graphStatReb,
                                                                             energyInd,
                                                                             energy,
                                                                             1000,
-                                                                            kTRUE
+                                                                            1
                                                                         );
 
     if( graphPtvsSqrtsStat && gPtvsEnergiesSystemStat && fPowerlawSystemStat ){
@@ -619,17 +657,23 @@ void CalculateReference (   TString configFile                  = "",
         cout << fPowerlawSystemStat << endl;
         return;
     }
+    for (Int_t iPt = 0; iPt < graphFinalEnergyStat->GetN(); iPt++ ){
+        Double_t relSysError    = graphFinalEnergyStat->GetEYhigh()[iPt]/graphFinalEnergyStat->GetY()[iPt];
+        Double_t newError       = graphFinalEnergyComb1->GetY()[iPt] * relSysError;
+        graphFinalEnergyStat->SetPoint(iPt, graphFinalEnergyStat->GetX()[iPt], graphFinalEnergyComb1->GetY()[iPt]);
+        graphFinalEnergyStat->SetPointError(iPt, graphFinalEnergyStat->GetEXlow()[iPt], graphFinalEnergyStat->GetEXhigh()[iPt], newError, newError);
+    }    
     graphFinalEnergyStat->Print();
 
     //*************************************************************************************************
-    //*************************** extrapolate spectra *************************************************
+    //*************************** extrapolate spectra uncorr syst errors only *************************
     //*************************************************************************************************
     TGraphAsymmErrors*  graphFinalEnergySyst    = GetInterpolSpectrum2D(    nDataSets,
                                                                             graphSystReb,
                                                                             energyInd,
                                                                             energy,
                                                                             1000,
-                                                                            kFALSE
+                                                                            2
                                                                         );
 
     if( graphPtvsSqrtsSyst && gPtvsEnergiesSystemSyst && fPowerlawSystemSyst ){
@@ -650,11 +694,10 @@ void CalculateReference (   TString configFile                  = "",
         cout << fPowerlawSystemSyst << endl;
         return;
     }
-    graphFinalEnergySyst->Print();
     for (Int_t iPt = 0; iPt < graphFinalEnergySyst->GetN(); iPt++ ){
         Double_t relSysError    = graphFinalEnergySyst->GetEYhigh()[iPt]/graphFinalEnergySyst->GetY()[iPt];
-        Double_t newError       = graphFinalEnergyStat->GetY()[iPt] * relSysError;
-        graphFinalEnergySyst->SetPoint(iPt, graphFinalEnergySyst->GetX()[iPt], graphFinalEnergyStat->GetY()[iPt]);
+        Double_t newError       = graphFinalEnergyComb1->GetY()[iPt] * relSysError;
+        graphFinalEnergySyst->SetPoint(iPt, graphFinalEnergySyst->GetX()[iPt], graphFinalEnergyComb1->GetY()[iPt]);
         graphFinalEnergySyst->SetPointError(iPt, graphFinalEnergySyst->GetEXlow()[iPt], graphFinalEnergySyst->GetEXhigh()[iPt], newError, newError);
     }    
     graphFinalEnergySyst->Print();
@@ -753,7 +796,7 @@ void CalculateReference (   TString configFile                  = "",
 
 
 //________________________________________________________________________________________________________________________
-TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** graphs, Double_t* energies, Double_t dSqrts, Int_t nIterations, Bool_t isStat )
+TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** graphs, Double_t* energies, Double_t dSqrts, Int_t nIterations, Int_t modus )
 {
     if (!graphs){   
         cout << "failed to load array" << endl;
@@ -866,7 +909,7 @@ TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** 
         
     }
 
-    if (isStat){
+    if (modus == 1){
         graphAlphaStat          = gAlpha;
         graphPtvsSqrtsStat      = new TGraphErrors*[graphs[0]->GetN()];
         fPowerlawSystemStat	    = new TF1*[graphs[0]->GetN()];
@@ -876,7 +919,7 @@ TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** 
             fPowerlawSystemStat[i]      = fPowerlawFits[i];
             gPtvsEnergiesSystemStat[i]  = gPtvsEnergies[i];
         }
-    } else {
+    } else if (modus == 2){ 
         graphAlphaSyst          = gAlpha;
         graphPtvsSqrtsSyst      = new TGraphErrors*[graphs[0]->GetN()];
         fPowerlawSystemSyst	    = new TF1*[graphs[0]->GetN()];
@@ -885,6 +928,16 @@ TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** 
             graphPtvsSqrtsSyst[i]       = gPtvsSqrts[i];
             fPowerlawSystemSyst[i]      = fPowerlawFits[i];
             gPtvsEnergiesSystemSyst[i]  = gPtvsEnergies[i];
+        }
+    } else { 
+        graphAlpha              = gAlpha;
+        graphPtvsSqrts          = new TGraphErrors*[graphs[0]->GetN()];
+        fPowerlawSystem	        = new TF1*[graphs[0]->GetN()];
+        gPtvsEnergiesSystem     = new TGraphErrors*[graphs[0]->GetN()];
+        for ( Int_t i = 0; i < graphs[0]->GetN(); i++ ){
+            graphPtvsSqrts[i]           = gPtvsSqrts[i];
+            fPowerlawSystem[i]          = fPowerlawFits[i];
+            gPtvsEnergiesSystem[i]      = gPtvsEnergies[i];
         }
     }    
     return gInterpol;
