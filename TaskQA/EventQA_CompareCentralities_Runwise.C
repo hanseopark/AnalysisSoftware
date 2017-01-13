@@ -80,6 +80,7 @@ void EventQA_CompareCentralities_Runwise( TString suffix  = "eps",
 
     std::vector<TH1D*> vecHistosRunwise[nSets];
     std::vector<TString> vecHistosRunwiseName[nSets];
+    std::vector<TString> vecHistosRunwiseNameSave[nSets];
 
     TH1D* hNEvents[nSets];
     TH1D* hNEventsMinBias[nSets];
@@ -107,78 +108,97 @@ void EventQA_CompareCentralities_Runwise( TString suffix  = "eps",
         
         vecHistosRunwise[i].push_back(hNEvents[i]);
         vecHistosRunwiseName[i].push_back("hNEvents");
+        vecHistosRunwiseNameSave[i].push_back("NEvents");
         if(i==0)nRangeRunwise++;
 
         vecHistosRunwise[i].push_back(hNEventsMinBias[i]);
         vecHistosRunwiseName[i].push_back("hNEventsMinBias");
+        vecHistosRunwiseNameSave[i].push_back("NEventsMinBias");
         if(i==0)nRangeRunwise++;
 
         vecHistosRunwise[i].push_back(hNEventsAll[i]);
         vecHistosRunwiseName[i].push_back("hNEventsAll");
+        vecHistosRunwiseNameSave[i].push_back("NEventsAll");
         if(i==0)nRangeRunwise++;
 
         vecHistosRunwise[i].push_back(hNEventsFracGood[i]);
         vecHistosRunwiseName[i].push_back("hNEventsFracGoodEvents");
+        vecHistosRunwiseNameSave[i].push_back("NEventsFracGoodEvents");
         if(i==0)nRangeRunwise++;
                                           
         vecHistosRunwise[i].push_back(hNEventsFracGood[i]);
         vecHistosRunwiseName[i].push_back("hNEventsFracGoodEvents");
+        vecHistosRunwiseNameSave[i].push_back("NEventsFracGoodEvents");
         if(i==0)nRangeRunwise++;
 
         vecHistosRunwise[i].push_back(hNEventsFracNorm[i]);
         vecHistosRunwiseName[i].push_back("hNEventsFracNormAll");
+        vecHistosRunwiseNameSave[i].push_back("NEventsFracNormAll");
         if(i==0)nRangeRunwise++;
                                           
         vecHistosRunwise[i].push_back(hNEventsFracMinBias[i]);
         vecHistosRunwiseName[i].push_back("hNEventsFracMinBias");
+        vecHistosRunwiseNameSave[i].push_back("NEventsFracMinBias");
         if(i==0)nRangeRunwise++;
                                           
         vecHistosRunwise[i].push_back(hTracksMeanGood[i]);
         vecHistosRunwiseName[i].push_back("hTracksGood-Mean");
+        vecHistosRunwiseNameSave[i].push_back("TracksGood-Mean");
         if(i==0)nRangeRunwise++;
 
         vecHistosRunwise[i].push_back(hTracksRMSGood[i]);
         vecHistosRunwiseName[i].push_back("hTracksGood-RMS");
+        vecHistosRunwiseNameSave[i].push_back("TracksGood-RMS");
         if(i==0)nRangeRunwise++;
 
         vecHistosRunwise[i].push_back(hVertexZMean[i]);
         vecHistosRunwiseName[i].push_back("hVertexZ-Mean");
+        vecHistosRunwiseNameSave[i].push_back("VertexZ-Mean");
         if(i==0)nRangeRunwise++;
 
         vecHistosRunwise[i].push_back(hVertexZRMS[i]);
         vecHistosRunwiseName[i].push_back("hVertexZ-RMS");
+        vecHistosRunwiseNameSave[i].push_back("VertexZ-RMS");
         if(i==0)nRangeRunwise++;
 
         vecHistosRunwise[i].push_back(hFracWtxOut[i]);
         vecHistosRunwiseName[i].push_back("hFracWVtxOutside10cm");
+        vecHistosRunwiseNameSave[i].push_back("FracWVtxOutside10cm");
         if(i==0)nRangeRunwise++;
 
         vecHistosRunwise[i].push_back(hFracSPDClusTrack[i]);
         vecHistosRunwiseName[i].push_back("hFracSPDClusTrack");
+        vecHistosRunwiseNameSave[i].push_back("FracSPDClusTrack");
         if(i==0)nRangeRunwise++;
   
         vecHistosRunwise[i].push_back(hFracPileUp[i]);
         vecHistosRunwiseName[i].push_back("hFracPileUp");
+        vecHistosRunwiseNameSave[i].push_back("FracPileUp");
         if(i==0)nRangeRunwise++;
 
         vecHistosRunwise[i].push_back(hFracWOVtx[i]);
         vecHistosRunwiseName[i].push_back("hFracWOVtx");
+        vecHistosRunwiseNameSave[i].push_back("FracWOVtx");
         if(i==0)nRangeRunwise++;
         
 	vecHistosRunwise[i].push_back(hConvNCandidates[i]);
 	vecHistosRunwiseName[i].push_back("hConvNCandidates");
+	vecHistosRunwiseNameSave[i].push_back("ConvNCandidates");
 	if(i==0)nRangeRunwise++;
 
 	vecHistosRunwise[i].push_back(hConvNCandidatesQA[i]);
 	vecHistosRunwiseName[i].push_back("hConvNCandidatesQA");
+	vecHistosRunwiseNameSave[i].push_back("ConvNCandidatesQA");
 	if(i==0)nRangeRunwise++;
 
 	vecHistosRunwise[i].push_back(hCentrality[i]);
 	vecHistosRunwiseName[i].push_back("hCentrality-Mean");
+	vecHistosRunwiseNameSave[i].push_back("Centrality-Mean");
 	if(i==0)nRangeRunwise++;
 
 	vecHistosRunwise[i].push_back(hEventPlaneAngle[i]);
 	vecHistosRunwiseName[i].push_back("hEventPlaneAngle-Mean");
+	vecHistosRunwiseNameSave[i].push_back("EventPlaneAngle-Mean");
 	if(i==0)nRangeRunwise++;
         
     }
@@ -264,8 +284,8 @@ void EventQA_CompareCentralities_Runwise( TString suffix  = "eps",
 	    PutProcessLabelAndEnergyOnPlot(0.75, 0.97-nTopRows*0.06, 0.03, fCollisionSystem.Data(), "", "");
             if ( h==0 ||  vecHistosRunwiseName[0].at(h).Contains("hConvNCandidates") || vecHistosRunwiseName[0].at(h).Contains("hTracksGood-Mean")
                ) 
-               SaveWriteCanvas(canvas, Form("EventQA_CompareCentralities/%s/Runwise/%s.%s", dataSet.Data(), vecHistosRunwiseName[0].at(h).Data(),suffix.Data()), kFALSE, kTRUE);
-            else SaveWriteCanvas(canvas, Form("EventQA_CompareCentralities/%s/Runwise/%s.%s", dataSet.Data(), vecHistosRunwiseName[0].at(h).Data(),suffix.Data()));
+               SaveWriteCanvas(canvas, Form("EventQA_CompareCentralities/%s/Runwise/%s.%s", dataSet.Data(), vecHistosRunwiseNameSave[0].at(h).Data(),suffix.Data()), kFALSE, kTRUE);
+            else SaveWriteCanvas(canvas, Form("EventQA_CompareCentralities/%s/Runwise/%s.%s", dataSet.Data(), vecHistosRunwiseNameSave[0].at(h).Data(),suffix.Data()));
             legend->Clear();
 	    if(drawVerticalLines){
 	      for(Int_t lineBin=0; lineBin<nLines; lineBin++){

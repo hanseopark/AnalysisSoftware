@@ -25,7 +25,7 @@ void EventQA_CompareCentralities( TString suffix  = "eps",
     Size_t constMarkerSize      = 1;
     TString fEnergyFlag         = "PbPb_5.02TeV";
     TString period              = "LHC15o";                                 // for GetDefaultMarkerStyle and legend
-    TString dataSet             = "LHC15o_HighIR_pass1_AOD";                // used for filename 
+    TString dataSet             = "LHC15o";                                 // used for filename
     TString centralities[nSets] = {"0-10%","10-20%","20-50%","50-90%"};     // used for plot and marker style and color
     TString cutsDataSets[nSets] = {
       "10110013_00200009247602008250404000_0652501500000000",
@@ -84,28 +84,28 @@ void EventQA_CompareCentralities( TString suffix  = "eps",
         
         vecHistos[i].push_back(hcVertexZ[i]);
         vecHistosName[i].push_back("VertexZ");
-        vecHistosNameForSaving[i].push_back("VertexZ");
+        vecHistosNameForSaving[i].push_back("hVertex_Z");
         if(i==0)nRange++;
 
         vecHistos[i].push_back(hcGoodESDTracks[i]);
         vecHistosName[i].push_back("GoodESDTracks");
-        vecHistosNameForSaving[i].push_back("GoodESDTracks");
+        vecHistosNameForSaving[i].push_back("hNGoodTracks");
         if(i==0)nRange++;
 
         
         vecHistos[i].push_back(hcV0Mult[i]);
         vecHistosName[i].push_back("V0 Multiplicity");
-        vecHistosNameForSaving[i].push_back("V0Mult");
+        vecHistosNameForSaving[i].push_back("hV0Mult");
         if(i==0)nRange++;
     
         vecHistos[i].push_back(hcGammaCandidates[i]);
         vecHistosName[i].push_back("GammaCandidates");
-        vecHistosNameForSaving[i].push_back("GammaCandidates");
+        vecHistosNameForSaving[i].push_back("hGammaCandidates");
         if(i==0)nRange++;
 
         vecHistos[i].push_back(hcEventPlaneAngle[i]);
         vecHistosName[i].push_back(Form("EventPlaneAngle %s",fEventCutSelection[i].Data()));
-        vecHistosNameForSaving[i].push_back("EventPlaneAngle");
+        vecHistosNameForSaving[i].push_back("hEventPlaneAngle");
         if(i==0)nRange++;
        
     }
