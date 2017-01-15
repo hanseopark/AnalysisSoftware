@@ -70,9 +70,8 @@ void EventQA_CompareCentralities_Runwise( TString suffix  = "eps",
     TLine* verticalLines[10];
     if (fEnergyFlag.CompareTo("PbPb_5.02TeV") == 0){
       drawVerticalLines = kTRUE;
-      nLines = 6;
-      runRanges[0] = 10; runRanges[1] = 16; runRanges[2] = 21;
-      runRanges[3] = 24; runRanges[4] = 60; runRanges[5] = 63;
+      nLines = 4;
+      runRanges[0] = 5; runRanges[1] = 37; runRanges[2] = 70; runRanges[3] = 72;
     }
     if (nLines > 10) cout << "ERROR: nLines cannot be larger than 10. Increase size of runRanges[10] and verticalLines[10]" << endl;
 
