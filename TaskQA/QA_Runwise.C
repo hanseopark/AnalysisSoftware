@@ -732,7 +732,7 @@ void QA_Runwise(
       fEnergyFlag = "PbPb_5.02TeV";
       nSets = 2;
       nData = 1;
-      cutNr = 4;  // 0-100%
+      cutNr = 4;
       filePath= "/home/meike/analysis/data/GridOutput/GammaConv/PbPb/";
       filePathPhoton = "";
       fileName = "GammaConvV1_246.root";

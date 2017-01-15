@@ -897,17 +897,16 @@ void QA(    TString select          = "LHC11a",         // set selected
     //**************************************************************************************************************
     else if(select.CompareTo("LHC15o")==0){
 	        mode = 0;
-		nSets = 4;
-		cutNr = 4;  // 0-100%
+		nSets = 2;
+		cutNr = 4;
 		fEnergyFlag = "PbPb_5.02TeV";
-		DataSets[0]="LHC15o_HighIR_pass1_AOD"; DataSets[1]="LHC16h4"; DataSets[2]="LHC15o_HighIR_pass1pidfix_AOD"; DataSets[3]="LHC15o_LowIR_pass2_ESD";  
-		plotDataSets[0]="HighIR p1"; plotDataSets[1]="MC"; plotDataSets[2]="HighIR p1pidfix"; plotDataSets[3]="LowIR";
+		DataSets[0]="LHC15o"; DataSets[1]="LHC16h4";
+		plotDataSets[0]="LHC15o High IR"; plotDataSets[1]="LHC16h4";
 		labelData="LHC15o 0-100%";
-		pathDataSets[0]="/home/meike/analysis/data/GridOutput/GammaConv/PbPb/LHC15o_HighIR_pass1_AOD/GammaConvV1_246.root";
+		pathDataSets[0]="/home/meike/analysis/data/GridOutput/GammaConv/PbPb/LHC15o/GammaConvV1_246_all_noMissingTracks_noZDCFix.root";
 		pathDataSets[1]="/home/meike/analysis/data/GridOutput/GammaConv/PbPb/LHC16h4/GammaConvV1_246.root";
-		pathDataSets[2]="/home/meike/analysis/data/GridOutput/GammaConv/PbPb/LHC15o_HighIR_pass1pidfix_AOD/GammaConvV1_246.root";
-		pathDataSets[3]="/home/meike/analysis/data/GridOutput/GammaConv/PbPb/LHC15o_LowIR_pass2_ESD/GammaConvV1_246_10runs.root";
-		pathPhotonQA[0]=""; pathPhotonQA[1]=""; pathPhotonQA[2]=""; pathPhotonQA[3]="";
+		pathPhotonQA[0]="";
+		pathPhotonQA[1]="";
     }
     //**************************************************************************************************************
     else{
