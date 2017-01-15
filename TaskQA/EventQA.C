@@ -377,8 +377,9 @@ void EventQA(
         }    
         //if(plotDataSets[i].Contains("JetJet") || plotDataSets[i].Contains("jetjet")) fHistNEvents = (TH1D*)ESDContainer->FindObject("NEventsWOWeight");
         if(fHistNEvents){
-            nEvents[i]      = (Double_t) GetNEvents(fHistNEvents,kFALSE);
-            nEventsAll[i]   = fHistNEvents->GetEntries() - fHistNEvents->GetBinContent(4);
+	    if(fIsPbPb) nEvents[i]      = (Double_t) fHistNEvents->GetBinContent(1);
+	    else        nEvents[i]      = (Double_t) GetNEvents(fHistNEvents,kFALSE);
+	    nEventsAll[i]   = fHistNEvents->GetEntries() - fHistNEvents->GetBinContent(4);
         }
         else{
             cout << "ERROR: Object |fHistNEvents| could not be found in File '" << pathDataSets[i].Data() << "'! Returning..." << endl;
