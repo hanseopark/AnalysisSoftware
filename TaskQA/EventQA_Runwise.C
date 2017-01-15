@@ -778,7 +778,9 @@ void EventQA_Runwise(
                 cout << "ERROR: Object |NEvents| could not be found! Returning!" << endl;
                 return;
             }
-            Double_t nEvents            = GetNEvents((TH1*)EVENTS,kFALSE);
+            Double_t nEvents;
+	    if(fEnergyFlag.Contains("PbPb")) nEvents = EVENTS->GetBinContent(1);
+	    else                             nEvents = GetNEvents((TH1*)EVENTS,kFALSE);
             Double_t nEventsAll         = EVENTS->GetEntries() - EVENTS->GetBinContent(4);
             sumEventsAll[i]             += nEventsAll;
             sumEvents[i]                += nEvents;
