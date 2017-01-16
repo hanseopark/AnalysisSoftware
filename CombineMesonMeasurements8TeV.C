@@ -3329,6 +3329,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         
     canvasWeights->SaveAs(Form("%s/EtaToPi0_WeightsA.%s",outputDir.Data(),suffix.Data()));
 
+    // ***************************************************************************************************************
+    // ******************************** fitting eta/pi0 **************************************************************
+    // ***************************************************************************************************************
 
     TF1 *fitEtaToPi0 = new TF1("fitEtaToPi0","[0]",3.5,25.);
     fitEtaToPi0->SetParameter(0,0.48);
@@ -3342,6 +3345,17 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     fLog << "Eta/Pi0 - Fit pol0: 3.5 < pT < 25.0" << endl;
     fLog << fitEtaToPi0->GetParameter(0) << ", +- " << fitEtaToPi0->GetParError(0) << endl;
+
+    TGraphAsymmErrors* comEtaPi0Tot = (TGraphAsymmErrors*) graphCombEtaToPi0TotA->Clone();
+    comEtaPi0Tot->Fit(fitEtaToPi0,"QNRMEX0+","",3.5,25.);
+    cout << "\n\n\n\n\n++++++++++++++++++++++++++++++++" << endl;
+    cout << fitEtaToPi0->GetParameter(0) << ", +- " << fitEtaToPi0->GetParError(0) << endl;
+    cout << "++++++++++++++++++++++++++++++++\n\n\n\n\n" << endl;
+
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fLog << "Eta/Pi0 - Fit pol0: 3.5 < pT < 25.0" << endl;
+    fLog << fitEtaToPi0->GetParameter(0) << ", +- " << fitEtaToPi0->GetParError(0) << endl;
+
 
     // *********************************************************************************************************************
     // ************************************ Visualize relative errors EtaToPi0 ******************************************************
