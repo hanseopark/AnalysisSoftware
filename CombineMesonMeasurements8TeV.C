@@ -4157,7 +4157,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //        legendEffiAccPi0->AddEntry(graphEMCALMergedPi0AccTimesEffDivPur,"EMCal, merged","p");
         legendEffiAccPi0->Draw();
 
-        TLatex *labelPerfEffi               = new TLatex(0.15,0.92,"ALICE performance");
+        TLatex *labelPerfEffi               = new TLatex(0.15,0.92,"ALICE simulation");
         SetStyleTLatex( labelPerfEffi, textSizeLabelsRel,4);
         labelPerfEffi->Draw();
         TLatex *labelEnergyEffi             = new TLatex(0.15,0.87,collisionSystem8TeV.Data());
