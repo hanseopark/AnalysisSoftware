@@ -489,7 +489,7 @@ void DrawAutoGammaHistoPaper( TH1* histo1,
 					TString Title, TString XTitle, TString YTitle,
 					Bool_t YRangeMax, Double_t YMaxFactor, Double_t YMinimum,
 					Bool_t YRange, Double_t YMin ,Double_t YMax,
-					Bool_t XRange, Double_t XMin, Double_t XMax, Double_t yOffset=1.);
+                    Bool_t XRange, Double_t XMin, Double_t XMax, Double_t yOffset=1., Double_t yTitleSize = 0.06);
 void DrawAutoGammaHistoPaper2D( TH2* histo1,
 					TString Title, TString XTitle, TString YTitle,
 					Bool_t YRangeMax, Double_t YMaxFactor, Double_t YMinimum,
@@ -1874,7 +1874,7 @@ void DrawAutoGammaHistoPaper( TH1* histo1,
 					TString Title, TString XTitle, TString YTitle,
 					Bool_t YRangeMax, Double_t YMaxFactor, Double_t YMinimum,
 					Bool_t YRange, Double_t YMin ,Double_t YMax,
-					Bool_t XRange, Double_t XMin, Double_t XMax, Double_t yOffset) {
+                    Bool_t XRange, Double_t XMin, Double_t XMax, Double_t yOffset, Double_t yTitleSize) {
 	if (YRangeMax && !XRange){
 		YRange = kFALSE;
 		Double_t maxRangeR = histo1->GetMaximum();
@@ -1917,7 +1917,7 @@ void DrawAutoGammaHistoPaper( TH1* histo1,
 	histo1->GetYaxis()->SetTitleFont(62);
 	histo1->GetXaxis()->SetTitleFont(62);
 	histo1->GetYaxis()->SetLabelSize(0.051);
-	histo1->GetYaxis()->SetTitleSize(0.06);
+    histo1->GetYaxis()->SetTitleSize(yTitleSize);
 	histo1->GetYaxis()->SetDecimals();
 	histo1->GetXaxis()->SetTitleOffset(1);
 	histo1->GetYaxis()->SetTitleOffset(yOffset);

@@ -3405,12 +3405,12 @@ void ClusterQA(
                 //
                 if( mcPi0 && mcEta && mcPi0Matched_True && mcEtaMatched_True && mcPi0Matched_MC && mcEtaMatched_MC) {
                     TCanvas* cvs2pads   = new TCanvas("cvs2pads","",1350,1500);  // gives the page size
-                    TPad* pad1          = new TPad("pad1", "", 0., 0.53, 1., 1.,-1, -1, -2);
+                    TPad* pad1          = new TPad("pad1", "", 0., 0.54, 1., 1.,-1, -1, -2);
                     DrawGammaPadSettings( pad1, 0.08, 0.02, 0.02, 0);
                     pad1->SetLogy(1);
                     pad1->Draw();
-                    TPad* pad2          = new TPad("pad2", "", 0., 0., 1., 0.53,-1, -1, -2);
-                    DrawGammaPadSettings( pad1, 0.08, 0.02, 0.00, 0.14);
+                    TPad* pad2          = new TPad("pad2", "", 0., 0., 1., 0.54,-1, -1, -2);
+                    DrawGammaPadSettings( pad2, 0.08, 0.02, 0.00, 0.14);
                     pad2->SetLogy(1);
                     pad2->Draw();
 
@@ -3435,7 +3435,7 @@ void ClusterQA(
                         }
 
                         TH1D* projectTrue = (TH1D*) mcCompare->ProjectionX(Form("projecttruePi0Eta_Bins%i-%i",lowBin[iB],upBin[iB]),lowBin[iB],upBin[iB]);
-                        legend->AddEntry(projectTrue,"True MC");
+                        legend->AddEntry(projectTrue,"true validated Monte Carlo");
                         projectTrue->Rebin(10);
                         projectTrue->SetLineColor(1);
                         canvas->cd();
@@ -3451,7 +3451,7 @@ void ClusterQA(
                         TH1D* projectCompare = (TH1D*) mcPi0Matched_True->ProjectionX(Form("projectcomparePi0_Bins%i-%i",lowBin[iB],upBin[iB]),lowBin[iB],upBin[iB]);
                         TH1D* projectCompareEta = (TH1D*) mcEtaMatched_True->ProjectionX(Form("projectcompareEta_Bins%i-%i",lowBin[iB],upBin[iB]),lowBin[iB],upBin[iB]);
                         projectCompare->Add(projectCompareEta,1);
-                        legend->AddEntry(projectCompare,"Cluster - V^{0}-Track Matching");
+                        legend->AddEntry(projectCompare,"cluster - V^{0}-track matching");
                         projectCompare->Rebin(10);
                         projectCompare->SetLineColor(2);
                         projectCompare->SetFillColor(2);
@@ -3469,14 +3469,16 @@ void ClusterQA(
                         if(iB == nBin-1){
                             pad1->cd();
                             AdjustHistRange(projectTrue,1,10,kTRUE,1,0.7);
+                            if(mode == 2 && fCollisionSystem.Contains("8 TeV")) projectTrue->GetYaxis()->SetRangeUser(0.7,7E4);
                             //projectTrue->GetYaxis()->SetRangeUser(0.7,9.5E3);
+                            //projectTrue->GetYaxis()->SetTitleSize(0.09);
                             DrawAutoGammaHistoPaper(projectTrue,
                                                     "",
                                                     "#it{M}_{#gamma#gamma} (GeV/#it{c}^{2})",
                                                     "d#it{N}/d#it{M}_{#gamma#gamma}",
                                                     0,0,0,
                                                     0,0,0,
-                                                    1,0,0.8,0.6);
+                                                    1,0,0.8,0.5,0.07);
                             projectCompare->DrawCopy("same,e,hist");
                             PutProcessLabelAndEnergyOnPlot(0.6, 0.98, 0.063, "ALICE simulation", "","",42);
                             PutProcessLabelAndEnergyOnPlot(0.6, 0.9, 0.063, fCollisionSystem.Data(), plotDataSets[i].Data(), Form("%s & %s",fTextMeasurement.Data(),fTextMeasurementEta.Data()),42);
@@ -3486,6 +3488,7 @@ void ClusterQA(
                         } else if(iB == nBin-2){
                             pad2->cd();
                             AdjustHistRange(projectTrue,1,10,kTRUE,1,0.7);
+                            if(mode == 2 && fCollisionSystem.Contains("8 TeV")) projectTrue->GetYaxis()->SetRangeUser(0.7,7E4);
                             //projectTrue->GetYaxis()->SetRangeUser(0.7,9.5E3);
                             DrawAutoGammaHistoPaper(projectTrue,
                                                     "",
@@ -3500,9 +3503,9 @@ void ClusterQA(
                             leg2->SetX2(0.86);
                             leg2->SetY1(0.847);
                             leg2->SetY2(0.967);
-                            leg2->SetTextSize(0.06);
+                            leg2->SetTextSize(0.054);
                             leg2->Draw("same");
-                            PutProcessLabelAndEnergyOnPlot(0.1, 1, 0.06, Form("%.1f < #it{p}_{T, #gamma#gamma} < %.1f GeV/#it{c}",mcCompare->GetYaxis()->GetBinUpEdge(lowBin[iB]), 
+                            PutProcessLabelAndEnergyOnPlot(0.1, 1, 0.054, Form("%.1f < #it{p}_{T, #gamma#gamma} < %.1f GeV/#it{c}",mcCompare->GetYaxis()->GetBinUpEdge(lowBin[iB]),
                                                            mcCompare->GetYaxis()->GetBinUpEdge(upBin[iB])),"","",42);
                         }
 

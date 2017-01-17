@@ -397,7 +397,7 @@ void QA(    TString select          = "LHC11a",         // set selected
         pathDataSets[2] = "/home/daniel/data/work/Grid/Legotrain-vAN-20161110-8TeV-std_new/LHC15h2_GammaConvCalo_130.root";
         pathDataSets[3] = "/home/daniel/data/work/Grid/Legotrain-vAN-20161111-8TeV-std_new/LHC16c2_GammaConvCalo_101.root";
         DataSets[0]="LHC12"; DataSets[1]="LHC15h1"; DataSets[2]="LHC15h2"; DataSets[3]="LHC16c2";
-        plotDataSets[0]="LHC12a-i"; plotDataSets[1]="Pythia8"; plotDataSets[2]="Phojet"; plotDataSets[3]="JetJet";
+        plotDataSets[0]="LHC12a-i"; plotDataSets[1]="PYTHIA8"; plotDataSets[2]="PHOJET"; plotDataSets[3]="JetJet";
         pathPhotonQA[0] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12/PhotonQA_LHC12.root";
         pathPhotonQA[1] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC15h1/PhotonQA_LHC15h1.root";
         pathPhotonQA[2] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC15h2/PhotonQA_LHC15h2.root";
