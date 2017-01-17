@@ -41,6 +41,7 @@
 #include "TGraphAsymmErrors.h" 
 #include "TGaxis.h"
 #include "TMarker.h"
+#include "TSpline.h"
 #include "Math/WrappedTF1.h"
 #include "Math/BrentRootFinder.h"
 #include "CommonHeaders/PlottingGammaConversionHistos.h"
@@ -56,8 +57,8 @@ TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** 
 TH1D* ConvertYieldHisto(TH1D* input, Bool_t DivideBy2pi, Bool_t DivideByPt, Bool_t MultiplyBy2pi, Bool_t MultiplyByPt);
 TF1* DoFitWithTsallis(TGraph* graph, TString name, TString particle, Double_t p0, Double_t p1, Double_t p2);
 TF1* DoFitWithTCM(TGraph* graph, TString name, TString particle, Double_t p0, Double_t p1, Double_t p2, Double_t p3, Double_t p4 );
-void PlotInterpolationPtBins(TGraphErrors** gPtvSqrts,TGraphErrors** gPtvsEnergies, TF1** fPowerlaw, TGraphAsymmErrors* gRpPb,Int_t fColumnPlot, Int_t fRowPlot,TString namePlot);
-void PlotAlphavsPt(TGraphErrors* gAlpha, TGraphErrors* gAlphaSyst, TString method, TString thesisPlotLabel, TString namePlot);
+void PlotInterpolationPtBins(TGraphErrors** gPtvSqrts,TGraphErrors** gPtvsEnergies, TF1** fPowerlaw, TF1** fPowerlawMC, TGraphAsymmErrors* gRpPb,Int_t fColumnPlot, Int_t fRowPlot,TString namePlot);
+void PlotAlphavsPt(TGraphErrors* gAlpha, TGraphErrors* gAlphaSyst, TGraphErrors* gAlphaMC, TString method, TString thesisPlotLabel, TString namePlot);
 void PlotWithFit(TCanvas* canvas, TH2F* hist, TH2F* hist2, TGraphAsymmErrors* graph, TGraphAsymmErrors* graphRebin, TF1* fit, TString name, TString outputDir, TString suffix, TString energyCur);
 void PlotWithFit(TCanvas *canvas, TH2F* hist, TH2F* hist2, TGraphErrors* graph, TGraphErrors* graphRebin, TF1* fit, TString name, TString outputDir, TString suffix, TString energyCur);
 void PlotGraphsOfAllEnergies( TCanvas* canvas, TH2F* hist, Int_t nDataSets, TGraphAsymmErrors** graphs, TF1** fits, TString* energies, TString name, TString outputDir, TString suffix );
@@ -82,15 +83,24 @@ TGraphErrors** graphPtvsSqrts           = 0x0;
 TGraphErrors** gPtvsEnergiesSystem      = 0x0;
 TF1** fPowerlawSystem                   = 0x0;
 
+TGraphErrors* graphAlphaMC              = 0x0;
+TGraphErrors** graphPtvsSqrtsMC         = 0x0;
+TGraphErrors** gPtvsEnergiesSystemMC    = 0x0;
+TF1** fPowerlawSystemMC                 = 0x0;
+TSpline5* splineAlphaMC                 = 0x0;
+TGraphErrors* graphDiffMCIntAndReal     = 0x0;
+
 TGraphErrors* graphAlphaStat            = 0x0;
 TGraphErrors** graphPtvsSqrtsStat       = 0x0;
 TGraphErrors** gPtvsEnergiesSystemStat  = 0x0;
 TF1** fPowerlawSystemStat               = 0x0;
 
 TGraphErrors* graphAlphaSyst            = 0x0;
+TGraphAsymmErrors* graphInterpolSyst    = 0x0;
 TGraphErrors** graphPtvsSqrtsSyst       = 0x0;
 TGraphErrors** gPtvsEnergiesSystemSyst  = 0x0;
 TF1** fPowerlawSystemSyst               = 0x0;
+TF1** fPowerlawSystemSystMC             = 0x0;
 
 
 void CalculateStatPlusSysErrors(TH1D* histStat, TH1D* histSys);
@@ -106,7 +116,10 @@ void CalculateReference (   TString configFile                  = "",
                             Int_t mode                          = 20,
                             Bool_t doSpecialBinning             = kFALSE,
                             TString binningEnergy               = "",
-                            TString configfileExclusionErrors   = ""
+                            TString configfileExclusionErrors   = "",
+                            TString nameFileMCRef               = "",
+                            TString nameHistMCRef               = "",
+                            Int_t nTrials                       = 1000
                         ){
 
     //*************************************************************************************************
@@ -123,13 +136,18 @@ void CalculateReference (   TString configFile                  = "",
     TString outputDir       = Form("%s/%s/CalculateReference",suffix.Data(),dateForOutput.Data());
     gSystem->Exec("mkdir -p "+outputDir);
     TString modeName        = ReturnTextReconstructionProcess(mode);
-    
+    TString mesonString     = ReturnMesonString (meson);
+    TString collisionSystem = ReturnFullCollisionsSystem(finalEnergy);
+    TString detProcess      = ReturnFullTextReconstructionProcess(mode);
+
     //*************************************************************************************************
     //***************************** read configurarion file *******************************************
     //*************************************************************************************************
     TString nameFile[5]             = {"", "", "", "", ""};
     TString nameHist[4][5]          = {{"", "", "", "", ""},{"", "", "", "", ""},{"", "", "", "", ""},{"", "", "", "", ""}};
     TString nameFileSys[5]          = {"", "", "", "", ""};
+    TString nameFileMC[5]           = {"", "", "", "", ""};
+    TString nameHistMC[5]           = {"", "", "", "", ""};
     Int_t isHist[2][5]              = {{0, 0, 0, 0, 0},{0, 0, 0, 0, 0}};
     TString energyIndName[6]        = {"", "", "", "", "", ""};
     Double_t energyInd[6]           = {0, 0, 0, 0, 0, 0};
@@ -141,7 +159,7 @@ void CalculateReference (   TString configFile                  = "",
     while(!in.eof() && nEnergyRead<nDataSets ){
         cout << "read line:" <<  nEnergyRead+1 << endl;
         in >> nameFile[nEnergyRead] >> isHist[0][nEnergyRead] >> nameHist[0][nEnergyRead] >> isHist[1][nEnergyRead] >> nameHist[1][nEnergyRead]
-        >> energyIndName[nEnergyRead]  >> energyInd[nEnergyRead]  >> scaleFactor[nEnergyRead] >> nameHist[2][nEnergyRead] >> nameHist[3][nEnergyRead] >> nameFileSys[nEnergyRead];
+        >> energyIndName[nEnergyRead]  >> energyInd[nEnergyRead]  >> scaleFactor[nEnergyRead] >> nameHist[2][nEnergyRead] >> nameHist[3][nEnergyRead] >> nameFileSys[nEnergyRead] >> nameFileMC[nEnergyRead] >> nameHistMC[nEnergyRead];
         cout << nameFile[nEnergyRead] << "\t" << isHist[0][nEnergyRead] << "\t" << nameHist[0][nEnergyRead].Data() << "\t" << isHist[1][nEnergyRead] << "\t" << nameHist[1][nEnergyRead].Data()
         << "\t" << energyIndName[nEnergyRead].Data()  << "\t" << energyInd[nEnergyRead]  << "\t" << scaleFactor[nEnergyRead] << endl;
         nEnergyRead++;
@@ -199,16 +217,16 @@ void CalculateReference (   TString configFile                  = "",
     //*************************************************************************************************
     //*************************** read input
     //*************************************************************************************************
-    TFile* inputFile[5]                 = {NULL, NULL, NULL, NULL, NULL};     
-    TH1D* histStat[5]                   = {NULL, NULL, NULL, NULL, NULL};     
+    TFile* inputFile[5]                 = {NULL, NULL, NULL, NULL, NULL};
+    TH1D* histStat[5]                   = {NULL, NULL, NULL, NULL, NULL};
     TH1D* histSyst[5]                   = {NULL, NULL, NULL, NULL, NULL};
-    TH1D* histComb[5]                   = {NULL, NULL, NULL, NULL, NULL}; 
-    TH1D* histRelStat[5]                = {NULL, NULL, NULL, NULL, NULL};     
+    TH1D* histComb[5]                   = {NULL, NULL, NULL, NULL, NULL};
+    TH1D* histRelStat[5]                = {NULL, NULL, NULL, NULL, NULL};
     TH1D* histRelSyst[5]                = {NULL, NULL, NULL, NULL, NULL};
-    TH1D* histRelComb[5]                = {NULL, NULL, NULL, NULL, NULL}; 
+    TH1D* histRelComb[5]                = {NULL, NULL, NULL, NULL, NULL};
     TH1D* histRelSystUncorr[5]          = {NULL, NULL, NULL, NULL, NULL};
     TH1D* histRelSystCorr[5]            = {NULL, NULL, NULL, NULL, NULL};
-    TH1D* histRelCombUncorr[5]          = {NULL, NULL, NULL, NULL, NULL}; 
+    TH1D* histRelCombUncorr[5]          = {NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphStat[5]     = {NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphSyst[5]     = {NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphComb[5]     = {NULL, NULL, NULL, NULL, NULL};
@@ -216,12 +234,17 @@ void CalculateReference (   TString configFile                  = "",
     TGraphAsymmErrors* graphCombReb[6]  = {NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphSystReb[6]  = {NULL, NULL, NULL, NULL, NULL, NULL};
     TF1* fitComb[6]                     = {NULL, NULL, NULL, NULL, NULL, NULL};
-    Bool_t haveDetailedSys[5]           = {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE};     
+    Bool_t haveDetailedSys[5]           = {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE};
     Int_t nPtBinsSysAvailSingle[5]      = {-1, -1, -1, -1, -1};
     Int_t numberDetSysAvailSingle[5]    = {-1, -1, -1, -1, -1};
     vector<TString>** ptSysDetail       = new vector<TString>*[5];
     vector<Double_t>** ptSysSplit       = new vector<Double_t>*[5];
-
+    TFile* inputFileMC[5]               = {NULL, NULL, NULL, NULL, NULL};
+    Bool_t haveMC[5]                    = {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE};     
+    TH1D* histMC[6]                     = {NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphMC[6]       = {NULL, NULL, NULL, NULL, NULL, NULL};
+    TF1* fitCombMC[6]                   = {NULL, NULL, NULL, NULL, NULL, NULL};
+    
     vector<Bool_t>* isTaken             = new vector<Bool_t>[5];
     for(Int_t iR=0; iR<5; iR++) {
         ptSysDetail[iR] = new vector<TString>[50];
@@ -337,8 +360,21 @@ void CalculateReference (   TString configFile                  = "",
             }    
         }
         
-        inputFile[i]                    = new TFile(nameFile[i].Data());
+        // MC file reading if exisiting
+        if (nameFileMC[i].CompareTo("bla") != 0){
+            inputFileMC[i]              = new TFile(nameFileMC[i]);
+            if (!inputFileMC[i]->IsZombie() && nameHistMC[i].CompareTo("bla") != 0){
+                histMC[i]               = (TH1D*)inputFileMC[i]->Get(nameHistMC[i].Data());
+                if (histMC[i]){
+                    haveMC[i]           = kTRUE;
+                    graphMC[i]          = new TGraphAsymmErrors(histMC[i]);
+                    fitCombMC[i]        = DoFitWithTsallis(graphMC[i],Form("fitCombMC_%d",i),meson.Data(), graphMC[i]->GetY()[0],7.,0.2);
+                }
+            }
+        }
         
+        // Data file reading
+        inputFile[i]                    = new TFile(nameFile[i].Data());
         if (isHist[0][i] && isHist[1][i]){
             histStat[i]                 = (TH1D*)inputFile[i]->Get(nameHist[0][i].Data());
             histStat[i]->Scale(scaleFactor[i]);
@@ -510,25 +546,30 @@ void CalculateReference (   TString configFile                  = "",
                 
                 graphCombReb[i]->SetPoint(j-startBin,ptCurrent,fitComb[i]->Eval(ptCurrent));
                 if (relCombErr != 0){
-                    graphCombReb[i]->SetPointError(j-startBin,(finalBinningPt[j+1]-finalBinningPt[j])/2.,(finalBinningPt[j+1]-finalBinningPt[j])/2.,relCombErr*fitComb[i]->Eval(ptCurrent),relCombErr*fitComb[i]->Eval(ptCurrent));
+                    graphCombReb[i]->SetPointError(j-startBin,(finalBinningPt[j+1]-finalBinningPt[j])/2.,(finalBinningPt[j+1]-finalBinningPt[j])/2.,
+                                                   relCombErr*fitComb[i]->Eval(ptCurrent),relCombErr*fitComb[i]->Eval(ptCurrent));
                 } else {
-                    graphCombReb[i]->SetPointError(j-startBin,(finalBinningPt[j+1]-finalBinningPt[j])/2.,(finalBinningPt[j+1]-finalBinningPt[j])/2.,fitComb[i]->Eval(ptCurrent)*0.2,fitComb[i]->Eval(ptCurrent)*0.2);
+                    graphCombReb[i]->SetPointError(j-startBin,(finalBinningPt[j+1]-finalBinningPt[j])/2.,(finalBinningPt[j+1]-finalBinningPt[j])/2.,
+                                                   fitComb[i]->Eval(ptCurrent)*0.2,fitComb[i]->Eval(ptCurrent)*0.2);
                 }    
                 graphSystReb[i]->SetPoint(j-startBin,ptCurrent,fitComb[i]->Eval(ptCurrent));
                 if (relSystErr != 0){
-                    graphSystReb[i]->SetPointError(j-startBin,(finalBinningPt[j+1]-finalBinningPt[j])/2.,(finalBinningPt[j+1]-finalBinningPt[j])/2.,relSystErr*fitComb[i]->Eval(ptCurrent),relSystErr*fitComb[i]->Eval(ptCurrent));
+                    graphSystReb[i]->SetPointError(j-startBin,(finalBinningPt[j+1]-finalBinningPt[j])/2.,(finalBinningPt[j+1]-finalBinningPt[j])/2.,
+                                                   relSystErr*fitComb[i]->Eval(ptCurrent),relSystErr*fitComb[i]->Eval(ptCurrent));
                 } else {
-                    graphSystReb[i]->SetPointError(j-startBin,(finalBinningPt[j+1]-finalBinningPt[j])/2.,(finalBinningPt[j+1]-finalBinningPt[j])/2.,fitComb[i]->Eval(ptCurrent)*0.2,fitComb[i]->Eval(ptCurrent)*0.2);
+                    graphSystReb[i]->SetPointError(j-startBin,(finalBinningPt[j+1]-finalBinningPt[j])/2.,(finalBinningPt[j+1]-finalBinningPt[j])/2.,
+                                                   fitComb[i]->Eval(ptCurrent)*0.2,fitComb[i]->Eval(ptCurrent)*0.2);
                 }
                 graphStatReb[i]->SetPoint(j-startBin,ptCurrent,fitComb[i]->Eval(ptCurrent));
                 if (relStatErr != 0){
-                    graphStatReb[i]->SetPointError(j-startBin,(finalBinningPt[j+1]-finalBinningPt[j])/2.,(finalBinningPt[j+1]-finalBinningPt[j])/2.,relStatErr*fitComb[i]->Eval(ptCurrent),relStatErr*fitComb[i]->Eval(ptCurrent));
+                    graphStatReb[i]->SetPointError(j-startBin,(finalBinningPt[j+1]-finalBinningPt[j])/2.,(finalBinningPt[j+1]-finalBinningPt[j])/2.,
+                                                   relStatErr*fitComb[i]->Eval(ptCurrent),relStatErr*fitComb[i]->Eval(ptCurrent));
                 } else {
-                    graphStatReb[i]->SetPointError(j-startBin,(finalBinningPt[j+1]-finalBinningPt[j])/2.,(finalBinningPt[j+1]-finalBinningPt[j])/2.,fitComb[i]->Eval(ptCurrent)*0.2,fitComb[i]->Eval(ptCurrent)*0.2);
+                    graphStatReb[i]->SetPointError(j-startBin,(finalBinningPt[j+1]-finalBinningPt[j])/2.,(finalBinningPt[j+1]-finalBinningPt[j])/2.,
+                                                   fitComb[i]->Eval(ptCurrent)*0.2,fitComb[i]->Eval(ptCurrent)*0.2);
                 }
             }
             graphCombReb[i]->Print();
-            
         } else {    
             if (i==0 ){
                 graphCombReb[i]             = (TGraphAsymmErrors*)graphComb[i]->Clone(Form("graphCombReb_%d",i));
@@ -539,14 +580,18 @@ void CalculateReference (   TString configFile                  = "",
                     Double_t relCombErr     =  histRelCombUncorr[i]->GetBinContent(histRelCombUncorr[i]->FindBin(graphCombReb[i]->GetX()[j]));
                     Double_t relSystErr     =  histRelSystUncorr[i]->GetBinContent(histRelSystUncorr[i]->FindBin(graphCombReb[i]->GetX()[j]));
                     if (relCombErr != 0){
-                        graphCombReb[i]->SetPointError(j,graphCombReb[i]->GetEXlow()[j],graphCombReb[i]->GetEXhigh()[j],relCombErr*graphCombReb[i]->GetY()[j],relCombErr*graphCombReb[i]->GetY()[j]);
+                        graphCombReb[i]->SetPointError(j,graphCombReb[i]->GetEXlow()[j],graphCombReb[i]->GetEXhigh()[j],
+                                                       relCombErr*graphCombReb[i]->GetY()[j],relCombErr*graphCombReb[i]->GetY()[j]);
                     } else {
-                        graphCombReb[i]->SetPointError(j,graphCombReb[i]->GetEXlow()[j],graphCombReb[i]->GetEXhigh()[j],graphCombReb[i]->GetY()[j]*0.2,graphCombReb[i]->GetY()[j]*0.2);
+                        graphCombReb[i]->SetPointError(j,graphCombReb[i]->GetEXlow()[j],graphCombReb[i]->GetEXhigh()[j],
+                                                       graphCombReb[i]->GetY()[j]*0.2,graphCombReb[i]->GetY()[j]*0.2);
                     }    
                     if (relSystErr != 0){
-                        graphSystReb[i]->SetPointError(j,graphSystReb[i]->GetEXlow()[j],graphSystReb[i]->GetEXhigh()[j],relSystErr*graphSystReb[i]->GetY()[j],relSystErr*graphSystReb[i]->GetY()[j]);
+                        graphSystReb[i]->SetPointError(j,graphSystReb[i]->GetEXlow()[j],graphSystReb[i]->GetEXhigh()[j],
+                                                       relSystErr*graphSystReb[i]->GetY()[j],relSystErr*graphSystReb[i]->GetY()[j]);
                     } else {
-                        graphSystReb[i]->SetPointError(j,graphSystReb[i]->GetEXlow()[j],graphSystReb[i]->GetEXhigh()[j],graphSystReb[i]->GetY()[j]*0.2,graphSystReb[i]->GetY()[j]*0.2);
+                        graphSystReb[i]->SetPointError(j,graphSystReb[i]->GetEXlow()[j],graphSystReb[i]->GetEXhigh()[j],
+                                                       graphSystReb[i]->GetY()[j]*0.2,graphSystReb[i]->GetY()[j]*0.2);
                     }    
                 }
             } else {
@@ -560,40 +605,85 @@ void CalculateReference (   TString configFile                  = "",
                     Double_t relSystErr     =  histRelSystUncorr[i]->Interpolate(graphCombReb[i]->GetX()[j]);
                     graphCombReb[i]->SetPoint(j,graphCombReb[i]->GetX()[j],fitComb[i]->Eval(graphCombReb[i]->GetX()[j]));
                     if (relCombErr != 0){
-                        graphCombReb[i]->SetPointError(j,graphCombReb[i]->GetEXlow()[j],graphCombReb[i]->GetEXhigh()[j],relCombErr*fitComb[i]->Eval(graphCombReb[i]->GetX()[j]),relCombErr*fitComb[i]->Eval(graphCombReb[i]->GetX()[j]));
+                        graphCombReb[i]->SetPointError(j,graphCombReb[i]->GetEXlow()[j],graphCombReb[i]->GetEXhigh()[j],
+                                                       relCombErr*fitComb[i]->Eval(graphCombReb[i]->GetX()[j]),relCombErr*fitComb[i]->Eval(graphCombReb[i]->GetX()[j]));
                     } else {
-                        graphCombReb[i]->SetPointError(j,graphCombReb[i]->GetEXlow()[j],graphCombReb[i]->GetEXhigh()[j],fitComb[i]->Eval(graphCombReb[i]->GetX()[j])*0.2,fitComb[i]->Eval(graphCombReb[i]->GetX()[j])*0.2);
+                        graphCombReb[i]->SetPointError(j,graphCombReb[i]->GetEXlow()[j],graphCombReb[i]->GetEXhigh()[j],
+                                                       fitComb[i]->Eval(graphCombReb[i]->GetX()[j])*0.2,fitComb[i]->Eval(graphCombReb[i]->GetX()[j])*0.2);
                     }    
                     graphSystReb[i]->SetPoint(j,graphSystReb[i]->GetX()[j],fitComb[i]->Eval(graphSystReb[i]->GetX()[j]));
                     if (relSystErr != 0){
-                        graphSystReb[i]->SetPointError(j,graphSystReb[i]->GetEXlow()[j],graphSystReb[i]->GetEXhigh()[j],relSystErr*fitComb[i]->Eval(graphCombReb[i]->GetX()[j]),relSystErr*fitComb[i]->Eval(graphCombReb[i]->GetX()[j]));
+                        graphSystReb[i]->SetPointError(j,graphSystReb[i]->GetEXlow()[j],graphSystReb[i]->GetEXhigh()[j],
+                                                       relSystErr*fitComb[i]->Eval(graphCombReb[i]->GetX()[j]),relSystErr*fitComb[i]->Eval(graphCombReb[i]->GetX()[j]));
                     } else {
-                        graphSystReb[i]->SetPointError(j,graphSystReb[i]->GetEXlow()[j],graphSystReb[i]->GetEXhigh()[j],fitComb[i]->Eval(graphSystReb[i]->GetX()[j])*0.2,fitComb[i]->Eval(graphSystReb[i]->GetX()[j])*0.2);
+                        graphSystReb[i]->SetPointError(j,graphSystReb[i]->GetEXlow()[j],graphSystReb[i]->GetEXhigh()[j],
+                                                       fitComb[i]->Eval(graphSystReb[i]->GetX()[j])*0.2,fitComb[i]->Eval(graphSystReb[i]->GetX()[j])*0.2);
                     }    
                     graphStatReb[i]->SetPoint(j,graphStatReb[i]->GetX()[j],fitComb[i]->Eval(graphStatReb[i]->GetX()[j]));
                     if (relStatErr != 0){
-                        graphStatReb[i]->SetPointError(j,graphStatReb[i]->GetEXlow()[j],graphStatReb[i]->GetEXhigh()[j],relStatErr*fitComb[i]->Eval(graphStatReb[i]->GetX()[j]),relStatErr*fitComb[i]->Eval(graphStatReb[i]->GetX()[j]));
+                        graphStatReb[i]->SetPointError(j,graphStatReb[i]->GetEXlow()[j],graphStatReb[i]->GetEXhigh()[j],
+                                                       relStatErr*fitComb[i]->Eval(graphStatReb[i]->GetX()[j]),relStatErr*fitComb[i]->Eval(graphStatReb[i]->GetX()[j]));
                     } else {
-                        graphStatReb[i]->SetPointError(j,graphStatReb[i]->GetEXlow()[j],graphStatReb[i]->GetEXhigh()[j],fitComb[i]->Eval(graphStatReb[i]->GetX()[j])*0.2,fitComb[i]->Eval(graphStatReb[i]->GetX()[j])*0.2);
+                        graphStatReb[i]->SetPointError(j,graphStatReb[i]->GetEXlow()[j],graphStatReb[i]->GetEXhigh()[j],
+                                                       fitComb[i]->Eval(graphStatReb[i]->GetX()[j])*0.2,fitComb[i]->Eval(graphStatReb[i]->GetX()[j])*0.2);
                     }    
 
                 }
             }
-        }    
+        }
     }
 
-// 
-//     TFile* input8TeV              = new TFile("ExternalInput/IdentifiedCharged/spectra8TeV_MarekFirstShot20161129.root");
-//     TList *list                   = (TList*)input8TeV->Get("output");
-//     TH1D* hNegPionResult8TeV      = (TH1D*)list->FindObject("SpectraFinalPionMinus");
-//     TH1D* hPosPionResult8TeV      = (TH1D*)list->FindObject("SpectraFinalPionPlus");
-//     hPosPionResult8TeV->Scale(0.5);
-//     hPosPionResult8TeV->Add(hNegPionResult8TeV,0.5);
-//     ConvertYieldHisto(hPosPionResult8TeV,kTRUE,kTRUE,kFALSE,kFALSE);
-//     TGraphErrors* graphChargedPion8TeVStat    = new TGraphErrors(hPosPionResult8TeV);
-//     RemoveZerosAndPrint(graphChargedPion8TeVStat,"graphChargedPion8TeVStat");
-// 
+    Int_t nDataSetsMC = nDataSets;
+    if (haveMC[0]){
+        if (nameFileMCRef.CompareTo("") != 0){
+            inputFileMC[nDataSets]              = new TFile(nameFileMCRef);
+            if (!inputFileMC[nDataSets]->IsZombie() && nameHistMCRef.CompareTo("") != 0){
+                histMC[nDataSets]               = (TH1D*)inputFileMC[nDataSets]->Get(nameHistMCRef.Data());
+                if (histMC[nDataSets]){
+                    nDataSetsMC++;
+                    haveMC[nDataSets]           = kTRUE;
+                    graphMC[nDataSets]          = new TGraphAsymmErrors(histMC[nDataSets]);
+                    fitCombMC[nDataSets]        = DoFitWithTsallis(graphMC[nDataSets],Form("fitCombMC_%d",nDataSets),meson.Data(), graphMC[nDataSets]->GetY()[0],7.,0.2);
+                    energyIndName[nDataSets]    = finalEnergy;
+                    energyInd[nDataSets]        = energy;
+                }
+            }
+        }
+    }    
 
+    //*************************************************************************************************
+    //*************************** extrapolate spectra stat errors only ********************************
+    //*************************************************************************************************
+    if (haveMC[0]){
+        TGraphAsymmErrors*  graphFinalEnergyMC    = GetInterpolSpectrum2D(      nDataSetsMC,
+                                                                                graphMC,
+                                                                                energyInd,
+                                                                                energy,
+                                                                                100,
+                                                                                3
+                                                                            );
+
+        if( graphPtvsSqrtsMC && gPtvsEnergiesSystemMC && fPowerlawSystemMC ){
+            Int_t columns   = 2;
+            Int_t rows      = 2;
+            Int_t counter   = 0;
+            while (columns*rows < graphMC[0]->GetN()){
+                if (counter%2 != 0) rows++;
+                else columns++;
+                counter++;
+            }    
+            PlotInterpolationPtBins(graphPtvsSqrtsMC,gPtvsEnergiesSystemMC,fPowerlawSystemMC,0x0, graphFinalEnergyMC,columns, rows,Form("%s/%s_%s_MC_Pt_vs_Sqrts.%s",outputDir.Data(),meson.Data(),modeName.Data(), suffix.Data()));
+            splineAlphaMC                       = new TSpline5("alphaMCSpline",graphAlphaMC); 
+        } else {
+            cout << "ERROR: NULL pointer - returning..." << endl;
+            cout << graphAlphaMC << endl;
+            cout << graphPtvsSqrtsMC << endl;
+            cout << gPtvsEnergiesSystemMC << endl;
+            cout << fPowerlawSystemMC << endl;
+            return;
+        }
+        
+    }
     //*************************************************************************************************
     //********************* extrapolate spectra combined errors without common*************************
     //*************************************************************************************************
@@ -601,7 +691,7 @@ void CalculateReference (   TString configFile                  = "",
                                                                             graphCombReb,
                                                                             energyInd,
                                                                             energy,
-                                                                            1000,
+                                                                            nTrials,
                                                                             0
                                                                         );
 
@@ -614,7 +704,7 @@ void CalculateReference (   TString configFile                  = "",
             else columns++;
             counter++;
         }    
-        PlotInterpolationPtBins(graphPtvsSqrts,gPtvsEnergiesSystem,fPowerlawSystem,graphFinalEnergyComb1,columns, rows,Form("%s/%s_%s_CombUnCorr_Pt_vs_Sqrts.%s",outputDir.Data(),meson.Data(),modeName.Data(), suffix.Data()));
+        PlotInterpolationPtBins(graphPtvsSqrts,gPtvsEnergiesSystem,fPowerlawSystem,0x0,graphFinalEnergyComb1,columns, rows,Form("%s/%s_%s_CombUnCorr_Pt_vs_Sqrts.%s",outputDir.Data(),meson.Data(),modeName.Data(), suffix.Data()));
     
     }else{
         cout << "ERROR: NULL pointer - returning..." << endl;
@@ -626,7 +716,6 @@ void CalculateReference (   TString configFile                  = "",
     }
     graphFinalEnergyComb1->Print();
 
-
     //*************************************************************************************************
     //*************************** extrapolate spectra stat errors only ********************************
     //*************************************************************************************************
@@ -634,7 +723,7 @@ void CalculateReference (   TString configFile                  = "",
                                                                             graphStatReb,
                                                                             energyInd,
                                                                             energy,
-                                                                            1000,
+                                                                            nTrials,
                                                                             1
                                                                         );
 
@@ -647,7 +736,7 @@ void CalculateReference (   TString configFile                  = "",
             else columns++;
             counter++;
         }    
-        PlotInterpolationPtBins(graphPtvsSqrtsStat,gPtvsEnergiesSystemStat,fPowerlawSystemStat,graphFinalEnergyStat,columns, rows,Form("%s/%s_%s_Stat_Pt_vs_Sqrts.%s",outputDir.Data(),meson.Data(),modeName.Data(), suffix.Data()));
+        PlotInterpolationPtBins(graphPtvsSqrtsStat,gPtvsEnergiesSystemStat,fPowerlawSystemStat,0x0, graphFinalEnergyStat,columns, rows,Form("%s/%s_%s_Stat_Pt_vs_Sqrts.%s",outputDir.Data(),meson.Data(),modeName.Data(), suffix.Data()));
     
     }else{
         cout << "ERROR: NULL pointer - returning..." << endl;
@@ -672,10 +761,11 @@ void CalculateReference (   TString configFile                  = "",
                                                                             graphSystReb,
                                                                             energyInd,
                                                                             energy,
-                                                                            1000,
+                                                                            nTrials,
                                                                             2
                                                                         );
-
+    TGraphAsymmErrors* graphFinalEnergyIntSyst  = 0x0;
+    
     if( graphPtvsSqrtsSyst && gPtvsEnergiesSystemSyst && fPowerlawSystemSyst ){
         Int_t columns   = 2;
         Int_t rows      = 2;
@@ -685,7 +775,8 @@ void CalculateReference (   TString configFile                  = "",
             else columns++;
             counter++;
         }    
-        PlotInterpolationPtBins(graphPtvsSqrtsSyst,gPtvsEnergiesSystemSyst,fPowerlawSystemSyst,graphFinalEnergySyst,columns, rows,Form("%s/%s_%s_Syst_Pt_vs_Sqrts.%s",outputDir.Data(),meson.Data(),modeName.Data(), suffix.Data()));
+        PlotInterpolationPtBins(graphPtvsSqrtsSyst,gPtvsEnergiesSystemSyst,fPowerlawSystemSyst,fPowerlawSystemSystMC, graphFinalEnergySyst,columns, rows,Form("%s/%s_%s_Syst_Pt_vs_Sqrts.%s",outputDir.Data(),meson.Data(),modeName.Data(), suffix.Data()));
+        
     }else{
         cout << "ERROR: NULL pointer - returning..." << endl;
         cout << graphAlphaSyst << endl;
@@ -702,12 +793,31 @@ void CalculateReference (   TString configFile                  = "",
     }    
     graphFinalEnergySyst->Print();
     
+    cout << "calculating relative interpolation error" << endl;
+    if(graphInterpolSyst){
+        while (graphDiffMCIntAndReal->GetX()[graphDiffMCIntAndReal->GetN()-1] > graphFinalEnergySyst->GetX()[graphFinalEnergySyst->GetN()-1])
+            graphDiffMCIntAndReal->RemovePoint(graphDiffMCIntAndReal->GetN()-1);
+        
+        graphDiffMCIntAndReal->Print();
+        TSpline5* splineRelDiffMC   = new TSpline5("relDiffSpline",graphDiffMCIntAndReal);
+        graphFinalEnergyIntSyst     = (TGraphAsymmErrors*)graphFinalEnergySyst->Clone("graphFinalEnergyInterpolationSyst");    
+        for (Int_t iPt = 0; iPt < graphFinalEnergyIntSyst->GetN(); iPt++ ){
+            Double_t relSysError1   = TMath::Abs(graphInterpolSyst->GetY()[iPt]-graphFinalEnergyComb1->GetY()[iPt])/graphFinalEnergyComb1->GetY()[iPt];
+            Double_t relSysError2   = splineRelDiffMC->Eval(graphFinalEnergyIntSyst->GetX()[iPt]);
+            cout << graphFinalEnergyIntSyst->GetX()[iPt] << "\t"<< relSysError1 << "\t"<< relSysError2 << endl;
+            Double_t relSysError    = TMath::Sqrt(relSysError1*relSysError1+relSysError2*relSysError2);    
+            Double_t newError       = graphFinalEnergyComb1->GetY()[iPt] * relSysError;
+            graphFinalEnergyIntSyst->SetPoint(iPt, graphFinalEnergyIntSyst->GetX()[iPt], graphFinalEnergyComb1->GetY()[iPt]);
+            graphFinalEnergyIntSyst->SetPointError(iPt, graphFinalEnergyIntSyst->GetEXlow()[iPt], graphFinalEnergyIntSyst->GetEXhigh()[iPt], newError, newError);
+        }    
+        graphFinalEnergyIntSyst->Print();
+    }    
+        
     TGraphAsymmErrors* graphFinalEnergyCombWOCorr   = CalculateStatPlusSysErrors(graphFinalEnergyStat,graphFinalEnergySyst);
-    
     
     // plot alpha with proper errors
     if (graphAlphaStat && graphAlphaSyst){
-        PlotAlphavsPt(graphAlphaStat, graphAlphaSyst, "pp", meson.Data(), Form("%s/%s_%s_Alpha_vs_Pt.%s", outputDir.Data(),meson.Data(),modeName.Data(), suffix.Data()));
+        PlotAlphavsPt(graphAlphaStat, graphAlphaSyst, graphAlphaMC, "pp", Form("%s, %s",mesonString.Data(), detProcess.Data()), Form("%s/%s_%s_Alpha_vs_Pt.%s", outputDir.Data(),meson.Data(),modeName.Data(), suffix.Data()));
     }    
 
     TF1* fitFinal                       = DoFitWithTsallis(graphFinalEnergyCombWOCorr,Form("fitComb_%s",finalEnergy.Data()),meson.Data(), graphFinalEnergyCombWOCorr->GetY()[0],7,0.2); 
@@ -725,10 +835,12 @@ void CalculateReference (   TString configFile                  = "",
     //*************************************************************************************************
     //*************************** plotting
     //*************************************************************************************************
-    TString axisLabel   = "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (c/GeV)^{2}";
-    if (maxY > 1000)
+    TString axisLabel       = "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (c/GeV)^{2}";
+    TString labelWriting    = "InvYield";
+    if (maxY > 1000){
         axisLabel       = "#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )";
-    
+        labelWriting    = "InvXSection";
+    }    
     TCanvas* canvasDummy2 = new TCanvas("canvasDummy2","",200,10,1200,1100);  // gives the page size
     DrawGammaCanvasSettings( canvasDummy2,  0.15, 0.01, 0.015, 0.08);
     canvasDummy2->SetLogy();
@@ -747,8 +859,6 @@ void CalculateReference (   TString configFile                  = "",
     }    
     PlotWithFit(canvasDummy2, histo2DDummy, histo2DDummy2, graphFinalEnergyCombWOCorr, 0x0, fitFinal, Form("compare_%s%s%s_withFit", meson.Data(), modeName.Data(), finalEnergy.Data()), outputDir, suffix, energyIndName[nDataSets]);
     PlotGraphsOfAllEnergies(canvasDummy2, histo2DDummy, nDataSets+1, graphCombReb, fitComb, energyIndName, Form("output%s%s_withFit",meson.Data(), modeName.Data()),  outputDir, suffix);
-    
-
     
     // **************************************************************************************************
     // ************************ prepare histos and graphs for writing ***********************************
@@ -776,18 +886,143 @@ void CalculateReference (   TString configFile                  = "",
     }
     TGraphAsymmErrors* graphFinalEnergyComb     = CalculateStatPlusSysErrors(graphFinalEnergyStat,graphFinalEnergySystFull);
     
+    // **************************************************************************************************
+    // ************************* Plot relative errors ***************************************************
+    // **************************************************************************************************
+    Int_t nErrors                           = 3;
+    TGraphAsymmErrors* graphStatRel         = CalculateRelErrUpAsymmGraph( graphFinalEnergyStat, Form("relativeStatError_%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()));
+    TGraphAsymmErrors* graphSystUncorrRel   = CalculateRelErrUpAsymmGraph( graphFinalEnergySyst, Form("relativeUncorrSystError_%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()));
+    TGraphAsymmErrors* graphSystFullRel     = CalculateRelErrUpAsymmGraph( graphFinalEnergySystFull, Form("relativeSystFullError_%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()));
+    TGraphAsymmErrors* graphSystInterRel    = 0x0;
+    if (graphFinalEnergyIntSyst){    
+        graphSystInterRel                   = CalculateRelErrUpAsymmGraph( graphFinalEnergyIntSyst, Form("relativeSystInterError_%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()));
+        nErrors++;
+    }
+    
+    TCanvas* canvasRelErr                   = new TCanvas("canvasRelErr","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasRelErr, 0.08, 0.015, 0.02, 0.09);
+//     canvasRelErr->SetLogx();
+   
+    TH2F * histo2DRelErr;
+    histo2DRelErr                   = new TH2F("histo2DRelErr","histo2DRelErr", 11000, 0., 
+                                               graphFinalEnergyStat->GetX()[graphFinalEnergyStat->GetN()-1]+ graphFinalEnergyStat->GetEXhigh()[graphFinalEnergyStat->GetN()-1], 1000, 0, 40.5);
+    SetStyleHistoTH2ForGraphs(histo2DRelErr, "#it{p}_{T} (GeV/#it{c})","Error (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    histo2DRelErr->Draw("copy");
+
+        TLegend* legendRelErr       = GetAndSetLegend2(0.1, 0.94-(0.035*nErrors), 0.3, 0.94, 32);
+
+        DrawGammaSetMarkerTGraph(graphStatRel, 20, 1.4, kRed+2, kRed+2);
+        graphStatRel->Draw("p,same,z");
+        legendRelErr->AddEntry(graphStatRel,"stat Err","p");
+        DrawGammaSetMarkerTGraph(graphSystUncorrRel, 21, 1.4, kBlue+2, kBlue+2);
+        graphSystUncorrRel->Draw("p,same,z");
+        legendRelErr->AddEntry(graphSystUncorrRel,"uncorr syst Err","p");
+        DrawGammaSetMarkerTGraph(graphSystFullRel, 24, 1.4, kGreen+2, kGreen+2);
+        graphSystFullRel->Draw("p,same,z");
+        legendRelErr->AddEntry(graphSystFullRel,"full syst Err","p");
+        
+        if (graphSystInterRel){
+            DrawGammaSetMarkerTGraph(graphSystInterRel, 25, 1.4, 807, 807);
+            graphSystInterRel->Draw("p,same,z,c");                
+            legendRelErr->AddEntry(graphSystInterRel,"interpolation syst Err","p");
+        }                
+        legendRelErr->Draw();
+
+        TLatex *labelRelErrEnergy       = new TLatex(0.95,0.92,collisionSystem.Data());
+        SetStyleTLatex( labelRelErrEnergy, 0.035, 4, 1, 42, kTRUE, 31);
+        labelRelErrEnergy->Draw();
+        TLatex *labelRelErrProcess      = new TLatex(0.95,0.88,Form("%s, %s",mesonString.Data(), detProcess.Data()));
+        SetStyleTLatex( labelRelErrProcess, 0.035, 4, 1, 42, kTRUE, 31);
+        labelRelErrProcess->Draw();
+        
+    canvasRelErr->SaveAs(Form("%s/%s%s_RelErr_%s.%s",outputDir.Data(),meson.Data(), modeName.Data(), finalEnergy.Data(), suffix.Data()));
+
+    histo2DRelErr->Draw("copy");
+
+        TLegend* legendRelStatErr       = GetAndSetLegend2(0.1, 0.94-(0.035*(nDataSets+1)), 0.3, 0.94, 32);
+        for (Int_t j = 0; j< nDataSets; j++){
+            histRelStat[j]->Scale(100);
+            DrawGammaSetMarker(histRelStat[j], GetDefaultMarkerStyle(energyIndName[j].Data(),"", ""), GetDefaultMarkerSize(energyIndName[j].Data(),"", ""), GetColorDefaultColor( energyIndName[j].Data(),"", ""), GetColorDefaultColor( energyIndName[j].Data(),"", ""));
+            histRelStat[j]->Draw("p,same,z");
+            legendRelStatErr->AddEntry(histRelStat[j],Form("stat Err, %s", energyIndName[j].Data()),"p");
+        }    
+            
+        DrawGammaSetMarkerTGraph(graphStatRel, GetDefaultMarkerStyle(finalEnergy.Data(),"", ""), GetDefaultMarkerSize(finalEnergy.Data(),"", ""), GetColorDefaultColor( finalEnergy.Data(),"", ""), GetColorDefaultColor( finalEnergy.Data(),"", ""));
+        graphStatRel->Draw("p,same,z");
+        legendRelStatErr->AddEntry(graphStatRel,Form("stat Err, %s", finalEnergy.Data()),"p");
+        legendRelStatErr->Draw();
+
+        labelRelErrEnergy->Draw();
+        labelRelErrProcess->Draw();
+        
+    canvasRelErr->SaveAs(Form("%s/%s%s_RelStatErrDiffEnergies.%s",outputDir.Data(),meson.Data(), modeName.Data(), suffix.Data()));
+    histo2DRelErr->Draw("copy");
+
+        TLegend* legendRelSystErr       = GetAndSetLegend2(0.1, 0.94-(0.035*(nDataSets+1)), 0.3, 0.94, 32);
+        for (Int_t j = 0; j< nDataSets; j++){
+            histRelSystUncorr[j]->Scale(100);
+            DrawGammaSetMarker(histRelSystUncorr[j], GetDefaultMarkerStyle(energyIndName[j].Data(),"", ""), GetDefaultMarkerSize(energyIndName[j].Data(),"", ""), GetColorDefaultColor( energyIndName[j].Data(),"", ""), GetColorDefaultColor( energyIndName[j].Data(),"", ""));
+            histRelSystUncorr[j]->Draw("p,same,z");
+            legendRelSystErr->AddEntry(histRelSystUncorr[j],Form("uncorr. syst Err, %s", energyIndName[j].Data()),"p");
+        }    
+            
+        DrawGammaSetMarkerTGraph(graphSystUncorrRel, GetDefaultMarkerStyle(finalEnergy.Data(),"", ""), GetDefaultMarkerSize(finalEnergy.Data(),"", ""), GetColorDefaultColor( finalEnergy.Data(),"", ""), GetColorDefaultColor( finalEnergy.Data(),"", ""));
+        graphSystUncorrRel->Draw("p,same,z");
+        legendRelSystErr->AddEntry(graphSystUncorrRel,Form("uncorr. syst Err, %s", finalEnergy.Data()),"p");
+        legendRelSystErr->Draw();
+
+        labelRelErrEnergy->Draw();
+        labelRelErrProcess->Draw();
+        
+    canvasRelErr->SaveAs(Form("%s/%s%s_RelUncorrSystErrDiffEnergies.%s",outputDir.Data(),meson.Data(), modeName.Data(), suffix.Data()));
+    
+    //*************************************************************************************************
+    //*************************** write systematics dat-file ***************************************************
+    //*************************************************************************************************
+    
+    const char *SysErrDatnameMean = Form("%s/SystematicErrorAveragedSinglePP_%s%s_%s.dat",outputDir.Data(), meson.Data(),modeName.Data(), ((TString)ReturnCollisionEnergyOutputString(finalEnergy.Data())).Data());
+    fstream SysErrDatAver;
+    cout << SysErrDatnameMean << endl;
+    SysErrDatAver.open(SysErrDatnameMean, ios::out);
+    
+    SysErrDatAver << "Pt" << "\t" << "UncorrPP" << "\t";
+    if (graphSystInterRel) SysErrDatAver << "Interpolation"  << "\t";
+    SysErrDatAver << "TotalErrorUncorrPP" << endl;
+    
+    for (Int_t l=0;l< graphSystUncorrRel->GetN();l++){
+        Double_t totErrWOCorr   = graphSystUncorrRel->GetY()[l];
+        SysErrDatAver << graphSystUncorrRel->GetX()[l] << "\t" << graphSystUncorrRel->GetY()[l] << "\t";
+        if (graphSystInterRel){
+            totErrWOCorr        = TMath::Sqrt(totErrWOCorr*totErrWOCorr+graphSystInterRel->GetY()[l]*graphSystInterRel->GetY()[l]);
+            SysErrDatAver << graphSystInterRel->GetY()[l] << "\t";
+        }
+        SysErrDatAver << totErrWOCorr << endl;
+    }
+    SysErrDatAver.close();
+
+    
     //*************************************************************************************************
     //*************************** write output file ***************************************************
     //*************************************************************************************************
     TFile *fOutput = new TFile(Form("%s/Interpolation.root",outputDir.Data()),"UPDATE");
 
-        graphFinalEnergyStat->Write(Form("graphStatErr%s_%s_%s", modeName.Data(),meson.Data(), finalEnergy.Data()),TObject::kOverwrite);
-        graphFinalEnergySyst->Write(Form("graphUnCorrSystErr%s_%s_%s",modeName.Data(),meson.Data(),finalEnergy.Data()),TObject::kOverwrite);
-        graphFinalEnergySystFull->Write(Form("graphSystErr%s_%s_%s",modeName.Data(),meson.Data(),finalEnergy.Data()),TObject::kOverwrite);
-        graphFinalEnergyCombWOCorr->Write(Form("graphUnCorrCombErr%s_%s_%s",modeName.Data(),meson.Data(),finalEnergy.Data()),TObject::kOverwrite);
-        graphFinalEnergyComb->Write(Form("graphCombErr%s_%s_%s",modeName.Data(),meson.Data(),finalEnergy.Data()),TObject::kOverwrite);
-        if (histoFinalStat) histoFinalStat->Write(Form("histStatErr%s_%s_%s",modeName.Data(),meson.Data(),finalEnergy.Data()),TObject::kOverwrite);
+        graphFinalEnergyStat->Write(Form("graph%sStatErr%s_%s_%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
+        graphFinalEnergySyst->Write(Form("graph%sUnCorrSystErr%s_%s_%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
+        graphFinalEnergySystFull->Write(Form("graph%sSystErr%s_%s_%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
+        if (graphFinalEnergyIntSyst) graphFinalEnergyIntSyst->Write(Form("graph%sInterpolSystErr%s_%s_%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
+        graphFinalEnergyCombWOCorr->Write(Form("graph%sUnCorrCombErr%s_%s_%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
+        graphFinalEnergyComb->Write(Form("graph%sCombErr%s_%s_%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
+        if (histoFinalStat) histoFinalStat->Write(Form("hist%sStatErr%s_%s_%s", labelWriting.Data(), modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
 
+        if(graphAlphaStat) graphAlphaStat->Write(Form("graphAlphaStat%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
+        if(graphAlphaSyst) graphAlphaSyst->Write(Form("graphAlphaSyst%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
+        if(graphAlphaMC) graphAlphaMC->Write(Form("graphAlphaMC%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
+        
+        graphStatRel->Write(Form("graphRelStatErr%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()),TObject::kOverwrite);
+        graphSystUncorrRel->Write(Form("graphRelUnCorrSystErr%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
+        graphSystFullRel->Write(Form("graphRelSystErr%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
+        if (graphSystInterRel) graphSystInterRel->Write(Form("graphRelInterpolSystErr%s_%s_%s", modeName.Data(), meson.Data(), finalEnergy.Data()), TObject::kOverwrite);
+        
     fOutput->Write();
     fOutput->Close();
 
@@ -808,11 +1043,14 @@ TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** 
         }    
     }
     // initialize graphs properly
-    TGraphAsymmErrors  *gInterpol   = new TGraphAsymmErrors(graphs[0]->GetN());
+    TGraphAsymmErrors *gInterpol    = new TGraphAsymmErrors(graphs[0]->GetN());
+    TGraphAsymmErrors *gInterpolSys = new TGraphAsymmErrors(graphs[0]->GetN());
     TGraphErrors  *gAlpha           = new TGraphErrors(graphs[0]->GetN());
     TGraphErrors** gPtvsSqrts       = new TGraphErrors*[graphs[0]->GetN()];
     TGraphErrors** gPtvsEnergies    = new TGraphErrors*[graphs[0]->GetN()];
-    TF1**          fPowerlawFits    = new TF1*[graphs[0]->GetN()];
+    TGraphErrors* gDiff             = new TGraphErrors(graphs[0]->GetN());
+    TF1** fPowerlawFits             = new TF1*[graphs[0]->GetN()];
+    TF1** fPowerlawFitsMC           = new TF1*[graphs[0]->GetN()];
 
     for(Int_t i = 0; i < graphs[0]->GetN(); i++){
         // check if graph are in same binning?
@@ -835,6 +1073,7 @@ TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** 
             pseudoExp[j]            = new TProfile(Form("resultsInt_%d",j), Form("resultsInt_%d",j), 1, 0, 1, "S");
         }
         TProfile* pseudoExpFinal    = new TProfile("resultsFinal", "resultsFinal", 1, 0, 1, "S");
+        TProfile* pseudoExpAlpha    = new TProfile("resultsAlpha", "resultsAlpha", 1, 0, 1, "S");
         
         for (Int_t k = 0; k< nIterations; k++){
             TGraphErrors *gToFitCurrent = new TGraphErrors(nDataPoints);
@@ -847,14 +1086,15 @@ TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** 
             
             TF1 *fPowerlawCurrent = new TF1("fPowerlawCurrent","[0]*x^([1])", 0,20000);
             if(i==0){
-                fPowerlawCurrent->SetParameters(0, 0.005);
-                fPowerlawCurrent->SetParameters(1, 0.13);
+                fPowerlawCurrent->SetParameter(0, 0.005);
+                fPowerlawCurrent->SetParameter(1, 0.13);
             }else{
-                fPowerlawCurrent->SetParameters(0, 0.1);
-                fPowerlawCurrent->SetParameters(1, 2.0);
+                fPowerlawCurrent->SetParameter(0, 0.1);
+                fPowerlawCurrent->SetParameter(1, 2.0);
             }
             for(Int_t l = 0; l < 10; l++) gToFitCurrent->Fit(fPowerlawCurrent,"Q");
-            pseudoExpFinal->Fill(0.5,gToFitCurrent->Eval(dSqrts));
+            pseudoExpFinal->Fill(0.5,fPowerlawCurrent->Eval(dSqrts));
+            pseudoExpAlpha->Fill(0.5,fPowerlawCurrent->GetParameter(1));
             delete fPowerlawCurrent;
         }
         
@@ -864,9 +1104,31 @@ TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** 
             gToFit->SetPoint(j, energies[j], graphs[j]->GetY()[i]);
             gToFit->SetPointError(j, 0, graphs[j]->GetEYhigh()[i]);
         }
-        gToFit->SetPoint(nDataPoints, dSqrts, pseudoExpFinal->GetBinContent(1));
-        gToFit->SetPointError(nDataPoints, 0, pseudoExpFinal->GetBinError(1));
 
+        if (splineAlphaMC && modus == 2){
+            Double_t alphaMC    = splineAlphaMC->Eval(graphs[0]->GetX()[i]);
+            cout << "Alpha MC: " << alphaMC << endl;
+            TF1* fPowerlawMC    = new TF1("fPowerlawMC","[0]*x^([1])", 0,20000);
+            fPowerlawMC->FixParameter(1,alphaMC);
+            for(Int_t l = 0; l < 10; l++) gToFit->Fit(fPowerlawMC,"Q");
+            
+            gInterpolSys->SetPoint(i, graphs[0]->GetX()[i],fPowerlawMC->Eval(dSqrts));
+            gInterpolSys->SetPointError(i, graphs[0]->GetEXlow()[i], graphs[0]->GetEXhigh()[i], 0., 0.);
+            
+            fPowerlawFitsMC[i]  = fPowerlawMC;
+        }
+
+        if (modus != 3){
+            gToFit->SetPoint(nDataPoints, dSqrts, pseudoExpFinal->GetBinContent(1));
+            gToFit->SetPointError(nDataPoints, 0, pseudoExpFinal->GetBinError(1));
+        } else {
+            Double_t relDiff    = TMath::Abs(graphs[nDataPoints-1]->GetY()[i] -pseudoExpFinal->GetBinContent(1))/graphs[nDataPoints-1]->GetY()[i];
+            if (!(isfinite(relDiff))) relDiff = 0;
+            cout << "Diff MC: "  <<relDiff << endl;
+            gDiff->SetPoint(i, graphs[nDataPoints-1]->GetX()[i], relDiff);
+            gDiff->SetPointError(i, 0, 0);
+        }
+            
         gInterpol->SetPoint(i, graphs[0]->GetX()[i],pseudoExpFinal->GetBinContent(1));
         gInterpol->SetPointError(i, graphs[0]->GetEXlow()[i], graphs[0]->GetEXhigh()[i], pseudoExpFinal->GetBinError(1), pseudoExpFinal->GetBinError(1));
         
@@ -878,16 +1140,19 @@ TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** 
                 
         TF1 *fPowerlaw = new TF1("fPowerlaw","[0]*x^([1])", 0,20000);
         if(i==0){
-            fPowerlaw->SetParameters(0, 0.005);
-            fPowerlaw->SetParameters(1, 0.13);
+            fPowerlaw->SetParameter(0, 0.005);
+            fPowerlaw->SetParameter(1, 0.13);
         }else{
-            fPowerlaw->SetParameters(0, 0.1);
-            fPowerlaw->SetParameters(1, 2.0);
+            fPowerlaw->SetParameter(0, 0.1);
+            fPowerlaw->SetParameter(1, 2.0);
         }
 
         for(Int_t l = 0; l < 10; l++) gToFit->Fit(fPowerlaw,"Q");
-        Double_t alpha  = fPowerlaw->GetParameter(1);
-        Double_t alphaE  = fPowerlaw->GetParError(1);
+        fPowerlaw->FixParameter(1,pseudoExpAlpha->GetBinContent(1));
+        Double_t alpha      = fPowerlaw->GetParameter(1);
+        Double_t alphaE     = TMath::Sqrt(fPowerlaw->GetParError(1)*fPowerlaw->GetParError(1)+pseudoExpAlpha->GetBinError(1)*pseudoExpAlpha->GetBinError(1));
+        gToFit->Fit(fPowerlaw,"Q");
+        
         cout << "pT: ";
         for (Int_t j = 0; j< nDataPoints; j++){
              cout << graphs[j]->GetX()[i] << " % " ;
@@ -905,6 +1170,7 @@ TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** 
         gPtvsEnergies[i] = gToFit;
 
         cout << dSqrts << "\t" << pseudoExpFinal->GetBinContent(1) << "\t" << pseudoExpFinal->GetBinError(1) << endl;
+        
         delete pseudoExpFinal;
         
     }
@@ -912,7 +1178,7 @@ TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** 
     if (modus == 1){
         graphAlphaStat          = gAlpha;
         graphPtvsSqrtsStat      = new TGraphErrors*[graphs[0]->GetN()];
-        fPowerlawSystemStat	    = new TF1*[graphs[0]->GetN()];
+        fPowerlawSystemStat     = new TF1*[graphs[0]->GetN()];
         gPtvsEnergiesSystemStat = new TGraphErrors*[graphs[0]->GetN()];
         for ( Int_t i = 0; i < graphs[0]->GetN(); i++ ){
             graphPtvsSqrtsStat[i]       = gPtvsSqrts[i];
@@ -921,18 +1187,34 @@ TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** 
         }
     } else if (modus == 2){ 
         graphAlphaSyst          = gAlpha;
+        graphInterpolSyst       = gInterpolSys;
         graphPtvsSqrtsSyst      = new TGraphErrors*[graphs[0]->GetN()];
-        fPowerlawSystemSyst	    = new TF1*[graphs[0]->GetN()];
+        fPowerlawSystemSyst     = new TF1*[graphs[0]->GetN()];
         gPtvsEnergiesSystemSyst = new TGraphErrors*[graphs[0]->GetN()];
+        if (splineAlphaMC)
+            fPowerlawSystemSystMC   = new TF1*[graphs[0]->GetN()];
         for ( Int_t i = 0; i < graphs[0]->GetN(); i++ ){
             graphPtvsSqrtsSyst[i]       = gPtvsSqrts[i];
             fPowerlawSystemSyst[i]      = fPowerlawFits[i];
             gPtvsEnergiesSystemSyst[i]  = gPtvsEnergies[i];
+            if (splineAlphaMC)
+                fPowerlawSystemSystMC[i]    = fPowerlawFitsMC[i];
+        }
+    } else if (modus == 3){ 
+        graphDiffMCIntAndReal   = gDiff;
+        graphAlphaMC            = gAlpha;
+        graphPtvsSqrtsMC        = new TGraphErrors*[graphs[0]->GetN()];
+        fPowerlawSystemMC       = new TF1*[graphs[0]->GetN()];
+        gPtvsEnergiesSystemMC   = new TGraphErrors*[graphs[0]->GetN()];
+        for ( Int_t i = 0; i < graphs[0]->GetN(); i++ ){
+            graphPtvsSqrtsMC[i]         = gPtvsSqrts[i];
+            fPowerlawSystemMC[i]        = fPowerlawFits[i];
+            gPtvsEnergiesSystemMC[i]    = gPtvsEnergies[i];
         }
     } else { 
         graphAlpha              = gAlpha;
         graphPtvsSqrts          = new TGraphErrors*[graphs[0]->GetN()];
-        fPowerlawSystem	        = new TF1*[graphs[0]->GetN()];
+        fPowerlawSystem         = new TF1*[graphs[0]->GetN()];
         gPtvsEnergiesSystem     = new TGraphErrors*[graphs[0]->GetN()];
         for ( Int_t i = 0; i < graphs[0]->GetN(); i++ ){
             graphPtvsSqrts[i]           = gPtvsSqrts[i];
@@ -975,7 +1257,7 @@ TH1D* ConvertYieldHisto(TH1D* input, Bool_t DivideBy2pi, Bool_t DivideByPt, Bool
 }
 
 //________________________________________________________________________________________________________________________
-void PlotInterpolationPtBins(TGraphErrors** gPtvSqrts,TGraphErrors** gPtvsEnergies, TF1** fPowerlaw, TGraphAsymmErrors* gRpPb,Int_t fColumnPlot, Int_t fRowPlot,TString namePlot){
+void PlotInterpolationPtBins(TGraphErrors** gPtvSqrts,TGraphErrors** gPtvsEnergies, TF1** fPowerlaw, TF1** fPowerlawMC, TGraphAsymmErrors* gRpPb,Int_t fColumnPlot, Int_t fRowPlot,TString namePlot){
 
     TGaxis::SetMaxDigits(3);
     TString nameCanvas = "";
@@ -1031,6 +1313,14 @@ void PlotInterpolationPtBins(TGraphErrors** gPtvSqrts,TGraphErrors** gPtvsEnergi
         fPowerlaw[iPt]->SetLineWidth(2);
         fPowerlaw[iPt]->Draw("same");
 
+        if (fPowerlawMC){
+            if (fPowerlawMC[iPt]){
+                fPowerlawMC[iPt]->SetLineColor(kRed+2);
+                fPowerlawMC[iPt]->SetLineWidth(2);
+                fPowerlawMC[iPt]->SetLineStyle(7);
+                fPowerlawMC[iPt]->Draw("same");
+            }    
+        }
         TString Title = Form("#it{p}_{T} = %3.2f GeV/#it{c} ",gRpPb->GetX()[iPt]);
 
         if(Title.Length() > 0){
@@ -1055,23 +1345,36 @@ void PlotInterpolationPtBins(TGraphErrors** gPtvSqrts,TGraphErrors** gPtvsEnergi
 }
 
 //________________________________________________________________________________________________________________________
-void PlotAlphavsPt(TGraphErrors* gAlpha, TGraphErrors* gAlphaSyst, TString method, TString thesisPlotLabel, TString namePlot){
+void PlotAlphavsPt(TGraphErrors* gAlpha, TGraphErrors* gAlphaSyst, TGraphErrors* gAlphaMC, TString method, TString thesisPlotLabel, TString namePlot){
 
     TCanvas * canvasAlphavsPt     = new TCanvas("AlphavsPt","",1400,900);  // gives the page size
     DrawGammaCanvasSettings( canvasAlphavsPt,  0.08, 0.02, 0.03, 0.09);
 
-    SetStyleTGraphErrorsForGraphs(gAlpha,"#it{p}_{T} GeV/#it{c}","#alpha", 0.04,0.04, 0.04,0.04, 1.,1., 512, 512);
+    Int_t nlabels = 2;
+    SetStyleTGraphErrorsForGraphs(gAlpha,"#it{p}_{T} (GeV/#it{c})","#alpha", 0.04,0.04, 0.04,0.04, 1.,1., 512, 512);
     DrawGammaSetMarkerTGraphErr(gAlpha,21,1.5, kBlue+2 , kBlue+2);
-    gAlpha->GetYaxis()->CenterTitle();
     gAlpha->Draw("ap");
     DrawGammaSetMarkerTGraphErr(gAlphaSyst, 25, 1.5, kBlue+2 , kBlue+2, 1.4, kTRUE, kBlue-9);        
     gAlphaSyst->Draw("same,3");
+    
+    if (gAlphaMC){
+        nlabels++;
+        DrawGammaSetMarkerTGraphErr(gAlphaMC,21,1.5, kRed+2 , kRed+2,1.4, kTRUE, kRed-2);
+//         gAlphaMC->SetFillStyle(3144);
+        gAlphaMC->Draw("same,3");
+    }
     gAlpha->Draw("same,p");
     
-    TLatex *labelThesis = new TLatex(0.15,0.90,thesisPlotLabel.Data());
+    TLatex *labelThesis = new TLatex(0.13,0.90,thesisPlotLabel.Data());
     SetStyleTLatex( labelThesis, 0.04,4);
     labelThesis->Draw();
 
+    TLegend* legendAlpha     = GetAndSetLegend2(0.12, 0.88-(0.035*nlabels), 0.35, 0.88, 32, 1, "", 43, 0.2);
+    legendAlpha->AddEntry(gAlpha,"stat only","p");
+    legendAlpha->AddEntry(gAlphaSyst,"uncorr syst only","f");
+    if (gAlphaMC)legendAlpha->AddEntry(gAlphaMC,"MC based","f");
+    legendAlpha->Draw();
+    
     canvasAlphavsPt->Print(namePlot.Data());
     delete canvasAlphavsPt;
 }

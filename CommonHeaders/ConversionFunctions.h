@@ -7,7 +7,9 @@
 #include "TSpline.h"
 #include "TKey.h"
 
-//*********************** declaration of functions defined in this header ***********************************
+// ****************************************************************************************************************
+// *********************** declaration of functions defined in this header ****************************************
+// ****************************************************************************************************************
 Float_t             CalculateMeanPt(const TF1* );
 void                CalculateMeanPtWithError(const TF1* , Float_t& , Float_t& );
 // TH1D*            CalculateHistoRatioToFit (TH1D*, TF1*);
@@ -59,7 +61,9 @@ Double_t            bin_shift_x(TF1 *, Double_t , Double_t , Double_t );
 Int_t               GetBinning(TObject *, Double_t* );
 TString             AutoDetectMainTList(Int_t);
 
-//*********************** definition of functions defined in this header ***********************************
+// ****************************************************************************************************************
+// ********************** definition of functions defined in this header ******************************************
+// ****************************************************************************************************************
 Float_t CalculateMeanPt(const TF1* fit){
 
     // fit is the invariant cross section (or proportinal to it):
@@ -736,6 +740,9 @@ void ScaleWithPtGraph(TGraphAsymmErrors* graph){
     return;
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 TGraph* ScaleGraph (TGraph* graph, Double_t scaleFac){
     TGraph* dummyGraph      = (TGraph*)graph->Clone(Form("%s_Scaled",graph->GetName()));
     Double_t * xValue       = dummyGraph->GetX();
@@ -748,6 +755,9 @@ TGraph* ScaleGraph (TGraph* graph, Double_t scaleFac){
     return returnGraph;
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 TGraphAsymmErrors* ScaleGraph (TGraphAsymmErrors* graph, Double_t scaleFac){
    TGraphAsymmErrors* dummyGraph    = (TGraphAsymmErrors*)graph->Clone(Form("%s_Scaled",graph->GetName()));
    
@@ -767,6 +777,9 @@ TGraphAsymmErrors* ScaleGraph (TGraphAsymmErrors* graph, Double_t scaleFac){
     return returnGraph;
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 TGraphErrors* ScaleGraph (TGraphErrors* graph, Double_t scaleFac){
     TGraphErrors* dummyGraph    = (TGraphErrors*)graph->Clone(Form("%s_Scaled",graph->GetName()));
     Double_t* xValue            = dummyGraph->GetX(); 
@@ -783,6 +796,9 @@ TGraphErrors* ScaleGraph (TGraphErrors* graph, Double_t scaleFac){
     return returnGraph;
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 Double_t* ExtractRelErrDownAsymmGraph(TGraphAsymmErrors* graph){
     Double_t* yValue        = graph->GetY();
     Double_t* yErrorLow     = graph->GetEYlow();
@@ -794,6 +810,9 @@ Double_t* ExtractRelErrDownAsymmGraph(TGraphAsymmErrors* graph){
     return yErrorLow2;
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 Double_t* ExtractRelErrUpAsymmGraph(TGraphAsymmErrors* graph){
     Double_t* yValue        = graph->GetY();
     Double_t* yErrorHigh    = graph->GetEYhigh();
@@ -806,7 +825,12 @@ Double_t* ExtractRelErrUpAsymmGraph(TGraphAsymmErrors* graph){
     return yErrorHigh2;
 }
 
-TGraphAsymmErrors* CalculateRelErrUpAsymmGraph(TGraphAsymmErrors* graph, TString nameNewGraph = "relativeError"){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+TGraphAsymmErrors* CalculateRelErrUpAsymmGraph( TGraphAsymmErrors* graph, 
+                                                TString nameNewGraph            = "relativeError"
+                                              ){
     TGraphAsymmErrors* returnGraph  = (TGraphAsymmErrors*)graph->Clone(nameNewGraph.Data());
     Double_t* yValue                = returnGraph->GetY();
     Double_t* yErrorHigh            = returnGraph->GetEYhigh();
@@ -821,7 +845,12 @@ TGraphAsymmErrors* CalculateRelErrUpAsymmGraph(TGraphAsymmErrors* graph, TString
     return returnGraph;
 }
 
-TGraphAsymmErrors* CalculateRelErrAsymmGraphAround1(TGraphAsymmErrors* graph, TString nameNewGraph = "relativeError"){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+TGraphAsymmErrors* CalculateRelErrAsymmGraphAround1(    TGraphAsymmErrors* graph, 
+                                                        TString nameNewGraph        = "relativeError"
+                                                   ){
     TGraphAsymmErrors* returnGraph  = (TGraphAsymmErrors*)graph->Clone(nameNewGraph.Data());
     Double_t* yValue                = returnGraph->GetY();
     Double_t* yErrorHigh            = returnGraph->GetEYhigh();
@@ -836,7 +865,12 @@ TGraphAsymmErrors* CalculateRelErrAsymmGraphAround1(TGraphAsymmErrors* graph, TS
     return returnGraph;
 }
 
-TGraphErrors* CalculateRelErrGraphAround1(TGraphErrors* graph, TString nameNewGraph = "relativeError"){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+TGraphErrors* CalculateRelErrGraphAround1(  TGraphErrors* graph, 
+                                            TString nameNewGraph    = "relativeError"
+                                         ){
     TGraphErrors* returnGraph       = (TGraphErrors*)graph->Clone(nameNewGraph.Data());
     Double_t* yValue                = returnGraph->GetY();
     Double_t* yError                = returnGraph->GetEY();
@@ -849,7 +883,12 @@ TGraphErrors* CalculateRelErrGraphAround1(TGraphErrors* graph, TString nameNewGr
     return returnGraph;
 }
 
-TH1D* CalculateRelErrUpTH1D(TH1D* histo, TString nameNewGraph = "relativeError"){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+TH1D* CalculateRelErrUpTH1D(    TH1D* histo, 
+                                TString nameNewGraph    = "relativeError"
+                           ){
     TH1D* returnHisto               = (TH1D*)histo->Clone(nameNewGraph.Data());
     cout << nameNewGraph.Data() << endl;
     for (Int_t i = 1; i < returnHisto->GetNbinsX()+1; i++){
@@ -865,7 +904,17 @@ TH1D* CalculateRelErrUpTH1D(TH1D* histo, TString nameNewGraph = "relativeError")
     return returnHisto;
 }
 
-TGraphAsymmErrors* CalculateGraphAsymErrRatioToGraphErr (TGraphAsymmErrors* graphAsymA_v1, TGraphAsymmErrors* graphAsymB_v1,Bool_t binomial = kFALSE, Double_t commonPercentageADown = 0., Double_t commonPercentageAUp = 0., Double_t commonPercentageBDown = 0., Double_t commonPercentageBUp = 0.){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+TGraphAsymmErrors* CalculateGraphAsymErrRatioToGraphErr (   TGraphAsymmErrors* graphAsymA_v1, 
+                                                            TGraphAsymmErrors* graphAsymB_v1,
+                                                            Bool_t binomial                     = kFALSE, 
+                                                            Double_t commonPercentageADown      = 0., 
+                                                            Double_t commonPercentageAUp        = 0., 
+                                                            Double_t commonPercentageBDown      = 0., 
+                                                            Double_t commonPercentageBUp        = 0.
+                                                        ){
     TGraphAsymmErrors *graphAsymA       = (TGraphAsymmErrors*) graphAsymA_v1->Clone("graphAsymA");
 
     Double_t* xValueAsymA               = graphAsymA->GetX(); 
@@ -912,7 +961,12 @@ TGraphAsymmErrors* CalculateGraphAsymErrRatioToGraphErr (TGraphAsymmErrors* grap
     return returnGraph;
 }
 
-TGraphAsymmErrors* RebinCombPi0Graph(TGraphAsymmErrors* graphAsymV1, TH1D* histoGraph){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+TGraphAsymmErrors* RebinCombPi0Graph(   TGraphAsymmErrors* graphAsymV1, 
+                                        TH1D* histoGraph
+                                    ){
     TGraphAsymmErrors *graphAsym    = (TGraphAsymmErrors*) graphAsymV1->Clone("graphAsym");
 
     Double_t * xValueAsym           = graphAsym->GetX(); 
@@ -1002,6 +1056,9 @@ TGraphAsymmErrors* RebinCombPi0Graph(TGraphAsymmErrors* graphAsymV1, TH1D* histo
     return returnGraph;
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 TGraphErrors* RebinNLOGraph(TGraphErrors* graphV1){
     TGraphErrors *graph         = (TGraphErrors*) graphV1->Clone("graph");
 
@@ -1053,10 +1110,13 @@ TGraphErrors* RebinNLOGraph(TGraphErrors* graphV1){
     return returnGraph;
 }
 
-//_______________________________________________________________________________________
-// ********************* Converts TGraphErrors to TH1D* *********************************
-//_______________________________________________________________________________________
-TH1D *GraphToHist(TGraphErrors *graph, Int_t maxPt = 50, TString name = ""){
+// ****************************************************************************************************************
+// ********************* Converts TGraphErrors to TH1D* ***********************************************************
+// ****************************************************************************************************************
+TH1D *GraphToHist(  TGraphErrors *graph, 
+                    Int_t maxPt         = 50, 
+                    TString name        = ""
+                 ){
 
     //     graph->Print();
     Double_t* xValue        = graph->GetX(); 
@@ -1082,7 +1142,13 @@ TH1D *GraphToHist(TGraphErrors *graph, Int_t maxPt = 50, TString name = ""){
     return hist;
 }
 
-TH1D *GraphAsymErrorsToHist(TGraphAsymmErrors *graph,Int_t maxPt = 50, TString name = ""){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+TH1D *GraphAsymErrorsToHist(    TGraphAsymmErrors *graph,
+                                Int_t maxPt                 = 50, 
+                                TString name                = ""
+                           ){
     Double_t* xValue        =  graph->GetX(); 
     Double_t* yValue        = graph->GetY();
     Double_t* Exhigh        = graph->GetEXhigh();
@@ -1105,7 +1171,12 @@ TH1D *GraphAsymErrorsToHist(TGraphAsymmErrors *graph,Int_t maxPt = 50, TString n
     return hist;
 }
 
-TH1D *GraphAsymErrorsToHist_withErrors(TGraphAsymmErrors *graph, TString name = ""){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+TH1D *GraphAsymErrorsToHist_withErrors( TGraphAsymmErrors *graph, 
+                                        TString name                = ""
+                                      ){
     Double_t* xValue        =  graph->GetX(); 
     Double_t* yValue        = graph->GetY();
     Double_t* Exhigh        = graph->GetEXhigh();
@@ -1129,7 +1200,13 @@ TH1D *GraphAsymErrorsToHist_withErrors(TGraphAsymmErrors *graph, TString name = 
     return hist;
 }
 
-TH1D* RebinTH1D(TH1D* histoV2, TH1D* histoBinningV2, Bool_t deltaPt = kFALSE){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+TH1D* RebinTH1D(    TH1D* histoV2, 
+                    TH1D* histoBinningV2, 
+                    Bool_t deltaPt          = kFALSE
+               ){
 
     Double_t binArray[60];
 
@@ -1182,7 +1259,12 @@ TH1D* RebinTH1D(TH1D* histoV2, TH1D* histoBinningV2, Bool_t deltaPt = kFALSE){
     return histo;
 }
 
-TH1D* CalculateFitToFitRatio(TF1 *funcA, TF1 *funcB){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+TH1D* CalculateFitToFitRatio(   TF1 *funcA, 
+                                TF1 *funcB
+                            ){
 
     Double_t maxA           = funcA->GetXmax();
     Double_t maxB           = funcB->GetXmax();
@@ -1202,8 +1284,12 @@ TH1D* CalculateFitToFitRatio(TF1 *funcA, TF1 *funcB){
     return returnHist;
 }
 
-
-TH1D* CalculateWeightedAveragePCM( TH1D* histoConvOnfly,    TH1D* histoConvOffline){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+TH1D* CalculateWeightedAveragePCM( TH1D* histoConvOnfly,    
+                                   TH1D* histoConvOffline
+                                 ){
    
     TH1D* returnHisto                   = (TH1D*)histoConvOnfly->Clone("returnHisto");
     TGraphErrors* graphStatErrOffline   = new TGraphErrors(histoConvOffline);  
@@ -1272,9 +1358,15 @@ TH1D* CalculateWeightedAveragePCM( TH1D* histoConvOnfly,    TH1D* histoConvOffli
     return returnHisto;
 }
 
-
-
-void CalculateFitResults(TF1* fitstat, TF1* fitsys, Double_t* fitresults ,TString fitName = "", Double_t sigma = 1 ){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+void CalculateFitResults(   TF1* fitstat, 
+                            TF1* fitsys, 
+                            Double_t* fitresults,
+                            TString fitName         = "", 
+                            Double_t sigma          = 1 
+                        ){
     Int_t nPar                  = fitstat->GetNpar();
     cout << nPar << endl;
     for (Int_t i =0; i < nPar; i++){
@@ -1292,7 +1384,18 @@ void CalculateFitResults(TF1* fitstat, TF1* fitsys, Double_t* fitresults ,TStrin
     return;
 }
 
-void ReadOutFromSysErrVector(Double_t* readoutVector, Double_t* fillInVector, Double_t* fillInVectorError, Int_t cutNr, Int_t nrCutStudies,Int_t offsetAtEnd, Int_t numberOfLines,Double_t decisionBoundary){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+void ReadOutFromSysErrVector(   Double_t* readoutVector, 
+                                Double_t* fillInVector, 
+                                Double_t* fillInVectorError, 
+                                Int_t cutNr, 
+                                Int_t nrCutStudies,
+                                Int_t offsetAtEnd, 
+                                Int_t numberOfLines,
+                                Double_t decisionBoundary
+                            ){
     Double_t dummyValue;
     Double_t dummyError;
     Int_t l                         = cutNr*3-2;
@@ -1313,7 +1416,15 @@ void ReadOutFromSysErrVector(Double_t* readoutVector, Double_t* fillInVector, Do
     return;
 }
 
-void CalculateMeanSysErr(Double_t* fillInVector, Double_t* fillInVectorError, Double_t* posError, Double_t* negError, Int_t numberOfLines){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+void CalculateMeanSysErr(   Double_t* fillInVector, 
+                            Double_t* fillInVectorError, 
+                            Double_t* posError, 
+                            Double_t* negError, 
+                            Int_t numberOfLines
+                        ){
     Double_t dummyValue;
     Double_t dummyError;
     for (Int_t i = 0; i < numberOfLines; i++){
@@ -1326,7 +1437,15 @@ void CalculateMeanSysErr(Double_t* fillInVector, Double_t* fillInVectorError, Do
     return;
 }
 
-void CorrectSystematicErrorsWithMean(Double_t* oldErrorVector,Double_t* oldErrorVectorsErrors, Double_t* newErrorVector, Double_t* newErrorVectorError, Int_t numberOfPtBins){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+void CorrectSystematicErrorsWithMean(   Double_t* oldErrorVector,
+                                        Double_t* oldErrorVectorsErrors, 
+                                        Double_t* newErrorVector, 
+                                        Double_t* newErrorVectorError, 
+                                        Int_t numberOfPtBins
+                                    ){
     if (numberOfPtBins > 2) {    
         for (Int_t i = 0; i < numberOfPtBins; i++){
             if (i == 0){ // bin 1
@@ -1439,6 +1558,9 @@ void CorrectSystematicErrorsWithMean(Double_t* oldErrorVector,Double_t* oldError
     }
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 void ProduceGraphAsymmWithoutXErrors(TGraphAsymmErrors* inputgraph){
     Int_t n                 = inputgraph->GetN();
     Double_t* xValue        = inputgraph->GetX();
@@ -1455,6 +1577,9 @@ void ProduceGraphAsymmWithoutXErrors(TGraphAsymmErrors* inputgraph){
 //     inputgraph->Print();
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 void ProduceGraphPartialXErrors(TGraphErrors* inputgraph, Double_t part){  // kk
     Int_t n             = inputgraph->GetN();
     Double_t* xValue    = inputgraph->GetX();
@@ -1469,6 +1594,9 @@ void ProduceGraphPartialXErrors(TGraphErrors* inputgraph, Double_t part){  // kk
 //     inputgraph->Print();
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 void ProduceGraphAsymmPartialXErrors(TGraphAsymmErrors* inputgraph, Double_t part){  // kk
     Int_t n                 = inputgraph->GetN();
     Double_t* xValue        = inputgraph->GetX();
@@ -1480,13 +1608,14 @@ void ProduceGraphAsymmPartialXErrors(TGraphAsymmErrors* inputgraph, Double_t par
     for (Int_t i= 0; i < n; i++){
         xErrorHigh[i]       = part*xErrorHigh[i];
         xErrorLow[i]        = part*xErrorLow[i];
-
-
     }
     inputgraph              = new TGraphAsymmErrors(n,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh);
 //     inputgraph->Print();
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 void ProduceGraphFixedXErrors(TGraphErrors* inputgraph, Double_t widthXError){ 
     Int_t n             = inputgraph->GetN();
     Double_t* xValue    = inputgraph->GetX();
@@ -1501,6 +1630,9 @@ void ProduceGraphFixedXErrors(TGraphErrors* inputgraph, Double_t widthXError){
 //     inputgraph->Print();
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 void ProduceGraphAsymmFixedXErrors(TGraphAsymmErrors* inputgraph, Double_t widthXError){ 
     Int_t n                 = inputgraph->GetN();
     Double_t* xValue        = inputgraph->GetX();
@@ -1517,6 +1649,9 @@ void ProduceGraphAsymmFixedXErrors(TGraphAsymmErrors* inputgraph, Double_t width
 //     inputgraph->Print();
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 void ProduceGraphAsymmWithoutXYErrors(TGraphAsymmErrors* inputgraph){  // kk
     Int_t n                 = inputgraph->GetN();
     Double_t* xValue        = inputgraph->GetX();
@@ -1535,6 +1670,9 @@ void ProduceGraphAsymmWithoutXYErrors(TGraphAsymmErrors* inputgraph){  // kk
 //     inputgraph->Print();
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 void ProduceGraphErrWithoutXErrors(TGraphErrors* inputgraph){
     Int_t n                 = inputgraph->GetN();
     Double_t* xValue        = inputgraph->GetX();
@@ -1548,6 +1686,9 @@ void ProduceGraphErrWithoutXErrors(TGraphErrors* inputgraph){
 //     inputgraph->Print();
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 void ProduceGraphErrDisplacedX(TGraphErrors* inputgraph,Double_t displaceX){
     Int_t n                 = inputgraph->GetN();
     Double_t* xValue        = inputgraph->GetX();
@@ -1562,6 +1703,9 @@ void ProduceGraphErrDisplacedX(TGraphErrors* inputgraph,Double_t displaceX){
 //     inputgraph->Print();
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 TGraphAsymmErrors* Add2TGraphAsymmErrorsSameBinning(TGraphAsymmErrors* inputgraph1,TGraphAsymmErrors* inputgraph2){
     Double_t* xValue1       = inputgraph1->GetX(); 
     Double_t* yValue1       = inputgraph1->GetY();
@@ -1588,6 +1732,9 @@ TGraphAsymmErrors* Add2TGraphAsymmErrorsSameBinning(TGraphAsymmErrors* inputgrap
     return returnGraph;
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 TGraphAsymmErrors* CorrectTGraphAsymmErrorsToBinCenter(TGraphAsymmErrors* inputgraph1){
     Double_t* xValue1           = inputgraph1->GetX(); 
     Double_t* yValue1           = inputgraph1->GetY();
@@ -1610,6 +1757,9 @@ TGraphAsymmErrors* CorrectTGraphAsymmErrorsToBinCenter(TGraphAsymmErrors* inputg
     return returnGraph;
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 TH1D* ShortChargedHadronHisto(TH1D* histIn) {
     const Int_t nPtBins         = 57;
     Double_t xBins[nPtBins+1]   = { 0. ,  0.05, 0.1,  0.15, 0.2,  0.25, 0.3,  0.35, 0.4,  0.45,
@@ -1655,7 +1805,12 @@ TH1D* ShortChargedHadronHisto(TH1D* histIn) {
     return hist;
 }
 
-TH1D* ConvertChargedHadronHisto(TH1D* histIn, TH1D* fraction ) {
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+TH1D* ConvertChargedHadronHisto(    TH1D* histIn, 
+                                    TH1D* fraction 
+                               ) {
     const Int_t nPtBins         = 57;
     Double_t xBins[nPtBins+1]   = { 0. ,  0.05, 0.1,  0.15, 0.2,  0.25, 0.3,  0.35, 0.4,  0.45,
                                     0.5,  0.55, 0.6,  0.65, 0.7,  0.75, 0.8,  0.85, 0.9,  0.95,
@@ -1720,7 +1875,17 @@ TH1D* ConvertChargedHadronHisto(TH1D* histIn, TH1D* fraction ) {
     return hist;
 }
 
-TF1 *BinShiftTH1D(TH1D *UnshiftedYield, TH1D **ShiftedYield, TString mesonType =  "Pi0" ,TString BinShiftType="L", TString NameBinShiftHist = "DummyFit",Double_t minPtForFitsDummy = 0.6, Double_t* parameters = 0x00){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+TF1 *BinShiftTH1D(  TH1D *UnshiftedYield, 
+                    TH1D **ShiftedYield, 
+                    TString mesonType           = "Pi0",
+                    TString BinShiftType        = "L", 
+                    TString NameBinShiftHist    = "DummyFit",
+                    Double_t minPtForFitsDummy  = 0.6, 
+                    Double_t* parameters        = 0x00
+                 ){
     TF1 *CurrentFit             = new TF1();
     TH1D *CurrentHist           = (TH1D*)UnshiftedYield->Clone(""); 
     (*ShiftedYield)             = (TH1D*)CurrentHist->Clone(NameBinShiftHist);
@@ -1802,7 +1967,19 @@ TF1 *BinShiftTH1D(TH1D *UnshiftedYield, TH1D **ShiftedYield, TString mesonType =
     
 }
 
-TF1 *ApplyYShift(TGraphAsymmErrors *UnshiftedYield, TGraphAsymmErrors **ShiftedYield, TString BinShiftType, TString NameBinShiftHist,Double_t minPtForFitsDummy = 0.6, Double_t* parameters = 0x00, Double_t accuracy = 0.0001, Bool_t incParlimits = kFALSE,TString mesonType =  "Pi0"){
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+TF1 *ApplyYShift(   TGraphAsymmErrors *UnshiftedYield, 
+                    TGraphAsymmErrors **ShiftedYield, 
+                    TString BinShiftType, 
+                    TString NameBinShiftHist,
+                    Double_t minPtForFitsDummy          = 0.6, 
+                    Double_t* parameters                = 0x00, 
+                    Double_t accuracy                   = 0.0001, 
+                    Bool_t incParlimits                 = kFALSE,
+                    TString mesonType                   =  "Pi0"
+                ){
 //     cout << "entered Y shift" << endl;
     TF1 *CurrentFit                     = new TF1();
     TGraphAsymmErrors *CurrentGraph     = (TGraphAsymmErrors*)UnshiftedYield->Clone(""); 
@@ -1909,7 +2086,9 @@ TF1 *ApplyYShift(TGraphAsymmErrors *UnshiftedYield, TGraphAsymmErrors **ShiftedY
     
 }
 
-//_________________________________________________________________________________________________
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 TGraphAsymmErrors* ApplyYshiftIndividualSpectra(TGraphAsymmErrors *IndividualSpectum , TF1 *commonFit) {
 //     cout << "entered bin shifting individual spectra y  "<<IndividualSpectum->GetName()  << endl;
     TGraphAsymmErrors* indSpecShifted           = (TGraphAsymmErrors*)IndividualSpectum->Clone();
@@ -1945,7 +2124,9 @@ TGraphAsymmErrors* ApplyYshiftIndividualSpectra(TGraphAsymmErrors *IndividualSpe
      return indSpecShifted;
 }
 
-//_________________________________________________________________________________________________
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 TH1D* ApplyYshiftIndividualSpectra(TH1D *IndividualSpectum , TF1 *commonFit) {
 //     cout << "entered bin shifting individual spectra y  "<<IndividualSpectum->GetName()  << endl;
     TH1D* indSpecShifted            = (TH1D*)IndividualSpectum->Clone(IndividualSpectum->GetName());
@@ -1975,7 +2156,9 @@ TH1D* ApplyYshiftIndividualSpectra(TH1D *IndividualSpectum , TF1 *commonFit) {
 }
 
 
-//_______________________________________________________________________________________
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 Double_t bin_shift_x(TF1 *fYield, Double_t ptMin, Double_t ptMax, Double_t yValue){
 
     //
@@ -2017,7 +2200,9 @@ Double_t bin_shift_x(TF1 *fYield, Double_t ptMin, Double_t ptMax, Double_t yValu
    if(yValue == 0) {}
 }
 
-//__________________________ApplyXshift___________________________________________________
+// ****************************************************************************************************************
+// *********************************** ApplyXshift ****************************************************************
+// ****************************************************************************************************************
 TGraphAsymmErrors *ApplyXshift(TGraphAsymmErrors *spectrum, TF1 *tsallis, TString mesonType = "Pi0" ){
     //----------------------------------------------------------------------
     // This function takes a spectrum, fits it by a function tsallis
@@ -2086,7 +2271,9 @@ TGraphAsymmErrors *ApplyXshift(TGraphAsymmErrors *spectrum, TF1 *tsallis, TStrin
     return spectrumShift;
 }
 
-//_________________________________________________________________________________________________
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 TGraphAsymmErrors* ApplyXshiftIndividualSpectra( TGraphAsymmErrors *CombinedSpectrum, 
                                                  TGraphAsymmErrors *IndividualSpectum,
                                                  TF1 *shiftFunction,
@@ -2158,35 +2345,51 @@ TGraphAsymmErrors* ApplyXshiftIndividualSpectra( TGraphAsymmErrors *CombinedSpec
      return indSpecShifted;
 }
 
-
-
-void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSpectrumSystNoMat, TGraphAsymmErrors* graphPPCombinedSpectrum, TF1* fitPP,
-                TGraphAsymmErrors* graphPbPbSpectrum, TGraphAsymmErrors* graphPbPbSpectrumSysNoMat,  //PbPb Yields
-                TGraphAsymmErrors** graphRAA, TGraphAsymmErrors** graphRAASys,
-                Double_t fNcoll, Double_t fNcollError, TString meson = "Pi0", Double_t maxPtPP = 0., Int_t nSubEnd = 0, TString functionInterpolation = "powPure", Bool_t quiet = kTRUE){
+// ****************************************************************************************************************
+// ***************** Calculation of RAA with data *****************************************************************
+// ****************************************************************************************************************
+void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, 
+                TGraphAsymmErrors* graphPPSpectrumSystNoMat, 
+                TGraphAsymmErrors* graphPPCombinedSpectrum, 
+                TF1* fitPP,
+                TGraphAsymmErrors* graphPbPbSpectrum, 
+                TGraphAsymmErrors* graphPbPbSpectrumSysNoMat,  //PbPb Yields
+                TGraphAsymmErrors** graphRAA, 
+                TGraphAsymmErrors** graphRAASys,
+                Double_t fNcoll, 
+                Double_t fNcollError, 
+                TString meson                                   = "Pi0",
+                Double_t maxPtPP                                = 0.,
+                Int_t nSubEnd                                   = 0, 
+                TString functionInterpolation                   = "powPure", 
+                Bool_t quiet                                    = kTRUE
+            ){
     //--------------------------------------- extrapolating the pp CONV yield in pT --------------------------------------------------
 
     TString nameSystem = graphPbPbSpectrum->GetName();
     cout<< nameSystem.Data() << endl;
     TString labelSystem;
-    if(nameSystem.Contains("PCM")) labelSystem = "PCM";
-    else if(nameSystem.Contains("PHOS")) labelSystem = "PHOS";
-    else if(nameSystem.Contains("EMCal")) labelSystem = "EMCal";
+    if(nameSystem.Contains("PCM")) 
+        labelSystem     = "PCM";
+    else if(nameSystem.Contains("PHOS")) 
+        labelSystem     = "PHOS";
+    else if(nameSystem.Contains("EMCal")) 
+        labelSystem     = "EMCal";
 
     if(!quiet){
-      cout << Form("PbPb %s spectrum: ",labelSystem.Data()) << endl;
-      graphPbPbSpectrum->Print();
-      cout << "\n";
-      graphPbPbSpectrumSysNoMat->Print();
+        cout << Form("PbPb %s spectrum: ",labelSystem.Data()) << endl;
+        graphPbPbSpectrum->Print();
+        cout << "\n";
+        graphPbPbSpectrumSysNoMat->Print();
 
-      cout << Form("\n PP %s spectrum: ",labelSystem.Data()) << endl;
-      graphPPSpectrum->Print();
-      cout << "\n";
-      graphPPSpectrumSystNoMat->Print();
+        cout << Form("\n PP %s spectrum: ",labelSystem.Data()) << endl;
+        graphPPSpectrum->Print();
+        cout << "\n";
+        graphPPSpectrumSystNoMat->Print();
 
-      cout << "\n combined PP spectrum (for extrapolation): " << endl;
-      graphPPCombinedSpectrum->Print();
-      cout << "\n";
+        cout << "\n combined PP spectrum (for extrapolation): " << endl;
+        graphPPCombinedSpectrum->Print();
+        cout << "\n";
     }
     TGraphAsymmErrors* dummyPPSpectrum  = (TGraphAsymmErrors*)graphPPCombinedSpectrum->Clone("dummyPPSpectrum");
     Double_t* xBinsPPFit                = dummyPPSpectrum->GetX();
@@ -2194,20 +2397,17 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
     Double_t* xBinsPPErrFitHigh         = dummyPPSpectrum->GetEXhigh();
     Int_t nBinsPPFit                    = dummyPPSpectrum->GetN();
     if(!quiet){
-      cout << "PP pt bins and errors: " << endl;
-      for (Int_t i = 0; i < nBinsPPFit; i++){
-  //         xBinsPPErrFitLow[i] = 0.5*2*(xBinsPPErrFitLow[i]);
-  //         xBinsPPErrFitHigh[i] = 0.5*2*(xBinsPPErrFitHigh[i]);
-  //         xBinsPPErrFitLow[i] = 0.001*(xBinsPPFit[i]);
-  //         xBinsPPErrFitHigh[i] = 0.001*(xBinsPPFit[i]);
-
-          cout << xBinsPPFit[i] << "\t" << xBinsPPErrFitLow[i] << "\t" <<  xBinsPPErrFitHigh[i] << endl;
-      }
+        cout << "PP pt bins and errors: " << endl;
+        for (Int_t i = 0; i < nBinsPPFit; i++){
+            // xBinsPPErrFitLow[i] = 0.5*2*(xBinsPPErrFitLow[i]);
+            // xBinsPPErrFitHigh[i] = 0.5*2*(xBinsPPErrFitHigh[i]);
+            // xBinsPPErrFitLow[i] = 0.001*(xBinsPPFit[i]);
+            // xBinsPPErrFitHigh[i] = 0.001*(xBinsPPFit[i]);
+            cout << xBinsPPFit[i] << "\t" << xBinsPPErrFitLow[i] << "\t" <<  xBinsPPErrFitHigh[i] << endl;
+        }
     }
 
-//     TString fittingOptions ="QSEM0";
     TString fittingOptions              = "QNSMEX0+";
-
     Double_t* xBinsPP                   = graphPPSpectrum->GetX();
     Double_t* xBinsErrPP                = graphPPSpectrum->GetEXlow();
     Int_t nBinsPP                       = graphPPSpectrum->GetN();
@@ -2237,63 +2437,44 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
         firstBinPbPb++;
     }
     
-//     cout << "Fitting stuff for the Raa: \n" << endl;
-//     Double_t fitBeginpp = xBinsPPComb[0];
-//     Double_t fitEndpp = xBinsPPComb[nBinsPPComb-1];
-
-// 	fitPP                               = FitObject(functionInterpolation.Data(),"fitRAARef",meson.Data(), dummyPPSpectrum, 0.4, 40.);
-
-
     TF1* fitPPPowerlaw;
     TF1* fitPPPowerlaw2;
     TFitResultPtr resultPP;
     TFitResultPtr resultPPPowerlaw;
     TFitResultPtr resultPPPowerlaw2;
 
-    if(functionInterpolation.Contains("h")){
-
-//         fitPPPowerlaw = FitObject("h","fitRAARefLevy",meson.Data(),dummyPPSpectrum,0.4, 14.);
-//         fitPPPowerlaw2 = FitObject("h","fitRAARefLevy2",meson.Data(),dummyPPSpectrum, 0.4, 14.);
-        
+    if(functionInterpolation.Contains("h")){        
         if(meson.Contains("Eta")){
+            fitPPPowerlaw               = FitObject("h","fitRAARefLevy",meson.Data(),dummyPPSpectrum,0.8, 20.);
+            fitPPPowerlaw2              = FitObject("h","fitRAARefLevy2",meson.Data(),dummyPPSpectrum, 0.8, 20.);
 
-			fitPPPowerlaw = FitObject("h","fitRAARefLevy",meson.Data(),dummyPPSpectrum,0.8, 20.);
-// 			fitPPPowerlaw2 = FitObject("powPure","fitRAARefPowerlaw2",meson.Data(),dummyPPSpectrum, 0.8, 20.);
-            fitPPPowerlaw2 = FitObject("h","fitRAARefLevy2",meson.Data(),dummyPPSpectrum, 0.8, 20.);
+            //fit fixed as Pi0:        
+            //     fitRAARef
+            // C_{H}  2360.8849828565      1320.2816544575
+            // n      6.3976643035      0.1485156261
+            // p_{0} (GeV/c)      0.2725372973      0.0406270874
+            // Chi2      3.6183191741      ndf      6.0000000000 
+            // Chi2/ndf      0.6030531957 
 
-			//fit fixed as Pi0:        
-			//     fitRAARef
-			// C_{H}  2360.8849828565      1320.2816544575
-			// n      6.3976643035      0.1485156261
-			// p_{0} (GeV/c)      0.2725372973      0.0406270874
-			// Chi2      3.6183191741      ndf      6.0000000000 
-			// Chi2/ndf      0.6030531957 
-
-			//             fitPP->FixParameter(0,2360.8849828565);
-			//           fitPP->FixParameter(1,6.3976643035);
-			//             fitPP->FixParameter(2,0.2725372973);
-
-			resultPP                    = dummyPPSpectrum->Fit(fitPP,fittingOptions.Data() , "", 1., maxPtPPForSpec);
-			resultPPPowerlaw            = dummyPPSpectrum->Fit(fitPPPowerlaw,fittingOptions.Data() , "", 1., maxPtPPForSpec);
-			resultPPPowerlaw2           = dummyPPSpectrum->Fit(fitPPPowerlaw2,fittingOptions.Data() , "", 0.5, maxPtPPForSpec);
-
+            // fitPP->FixParameter(0,2360.8849828565);
+            // fitPP->FixParameter(1,6.3976643035);
+            // fitPP->FixParameter(2,0.2725372973);
+            resultPP                    = dummyPPSpectrum->Fit(fitPP,fittingOptions.Data() , "", 1., maxPtPPForSpec);
+            resultPPPowerlaw            = dummyPPSpectrum->Fit(fitPPPowerlaw,fittingOptions.Data() , "", 1., maxPtPPForSpec);
+            resultPPPowerlaw2           = dummyPPSpectrum->Fit(fitPPPowerlaw2,fittingOptions.Data() , "", 0.5, maxPtPPForSpec);
         } else {
-			fitPPPowerlaw = FitObject("h","fitRAARefLevy",meson.Data(),dummyPPSpectrum,0.4, 40.);
-			fitPPPowerlaw2 = FitObject("h","fitRAARefLevy2",meson.Data(),dummyPPSpectrum, 0.4, 40.);
-
-			resultPP                    = dummyPPSpectrum->Fit(fitPP,fittingOptions.Data() , "", 2., maxPtPPForSpec);
-			resultPPPowerlaw            = dummyPPSpectrum->Fit(fitPPPowerlaw,fittingOptions.Data() , "", 1., maxPtPPForSpec);
-			resultPPPowerlaw2           = dummyPPSpectrum->Fit(fitPPPowerlaw2,fittingOptions.Data() , "", 2.5, maxPtPPForSpec);
+            fitPPPowerlaw               = FitObject("h","fitRAARefLevy",meson.Data(),dummyPPSpectrum,0.4, 40.);
+            fitPPPowerlaw2              = FitObject("h","fitRAARefLevy2",meson.Data(),dummyPPSpectrum, 0.4, 40.);
+            resultPP                    = dummyPPSpectrum->Fit(fitPP,fittingOptions.Data() , "", 2., maxPtPPForSpec);
+            resultPPPowerlaw            = dummyPPSpectrum->Fit(fitPPPowerlaw,fittingOptions.Data() , "", 1., maxPtPPForSpec);
+            resultPPPowerlaw2           = dummyPPSpectrum->Fit(fitPPPowerlaw2,fittingOptions.Data() , "", 2.5, maxPtPPForSpec);
         }
-        
     } else {
-
-		fitPPPowerlaw               = FitObject(functionInterpolation.Data(),"fitRAARefPowerlaw2",meson.Data(),dummyPPSpectrum);
-		fitPPPowerlaw2              = FitObject(functionInterpolation.Data(),"fitRAARefPowerlaw4",meson.Data(),dummyPPSpectrum);
-		resultPP                    = dummyPPSpectrum->Fit(fitPP,fittingOptions.Data() , "", 3., maxPtPPForSpec);
-		resultPPPowerlaw            = dummyPPSpectrum->Fit(fitPPPowerlaw,fittingOptions.Data() , "", 2., maxPtPPForSpec);
-		resultPPPowerlaw2           = dummyPPSpectrum->Fit(fitPPPowerlaw2,fittingOptions.Data() , "", 4., maxPtPPForSpec);
-
+        fitPPPowerlaw               = FitObject(functionInterpolation.Data(),"fitRAARefPowerlaw2",meson.Data(),dummyPPSpectrum);
+        fitPPPowerlaw2              = FitObject(functionInterpolation.Data(),"fitRAARefPowerlaw4",meson.Data(),dummyPPSpectrum);
+        resultPP                    = dummyPPSpectrum->Fit(fitPP,fittingOptions.Data() , "", 3., maxPtPPForSpec);
+        resultPPPowerlaw            = dummyPPSpectrum->Fit(fitPPPowerlaw,fittingOptions.Data() , "", 2., maxPtPPForSpec);
+        resultPPPowerlaw2           = dummyPPSpectrum->Fit(fitPPPowerlaw2,fittingOptions.Data() , "", 4., maxPtPPForSpec);
     }
     
     cout << WriteParameterToFile(fitPP)<< endl;
@@ -2302,7 +2483,6 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
     
     TGraphAsymmErrors* graphPPSpectrumExtended      = (TGraphAsymmErrors*) graphPbPbSpectrum->Clone("graphPPSpectrumExtended");
     TGraphAsymmErrors* graphPPSpectrumExtendedSys   = (TGraphAsymmErrors*) graphPbPbSpectrumSysNoMat->Clone("graphPPSpectrumExtendedSys"); 
-    
     TGraphAsymmErrors *relSysErrorFuncPP            = new TGraphAsymmErrors(graphPbPbSpectrum->GetN()-nSubEnd);
     TGraphAsymmErrors *relSysErrorPowerLaw1         = new TGraphAsymmErrors(graphPbPbSpectrum->GetN()-nSubEnd);
     TGraphAsymmErrors *relSysErrorPowerLaw2         = new TGraphAsymmErrors(graphPbPbSpectrum->GetN()-nSubEnd);
@@ -2317,7 +2497,7 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
         if (TMath::Abs(xBinsPP[i+firstBinPbPb] - xBinsPbPb[i]) < decisionBoundary && TMath::Abs(xBinsErrPP[i+firstBinPbPb] - xBinsErrPbPb[i]) < decisionBoundary && xBinsPP[i] < maxPtPPForSpec ){
             cout << "loop with pp points" << endl;
 //          cout<< "xPP: "<< xBinsPP[i+firstBinPbPb]<< " xPPErr: " << xBinsErrPP[i+firstBinPbPb] << " yPP: " << yPP[i+firstBinPbPb]<< endl;
-// 			cout << "xPbPb: "<<xBinsPbPb[i]<< " xPbPbErr: " <<xBinsErrPbPb[i] <<"  yPbPb/Ncoll: " << yPbPb[i]/fNcoll<< " Raa: " << yPbPb[i] /(fNcoll*yPP[i+firstBinPbPb])<< endl;
+//          cout << "xPbPb: "<<xBinsPbPb[i]<< " xPbPbErr: " <<xBinsErrPbPb[i] <<"  yPbPb/Ncoll: " << yPbPb[i]/fNcoll<< " Raa: " << yPbPb[i] /(fNcoll*yPP[i+firstBinPbPb])<< endl;
             graphPPSpectrumExtended->SetPoint(i,xBinsPbPb[i],yPP[i+firstBinPbPb]);
             graphPPSpectrumExtendedSys->SetPoint(i,xBinsPbPb[i],yPP[i+firstBinPbPb]);
             graphPPSpectrumExtended->SetPointError(i, xBinsErrPbPb[i], xBinsErrPbPb[i], yErrLowPP[i+firstBinPbPb], yErrHighPP[i+firstBinPbPb]);
@@ -2338,9 +2518,6 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
             Double_t yieldPP                = fitPP->Integral(ptStart, ptEnd, resultPP->GetParams())/binWidth;   
             Double_t errorYieldPP           = fitPP->IntegralError(ptStart, ptEnd, resultPP->GetParams(), resultPP->GetCovarianceMatrix().GetMatrixArray())/binWidth;
             Double_t relErrPP               = abs(errorYieldPP)/yieldPP *100;
-			
-// 			cout<< "xPP: "<< ptStart << "-" << ptEnd << " yPP: " << yieldPP << " yPPErr: " << errorYieldPP << endl;
-// 			cout << "xPbPb: "<< xBinsPbPb[i]<< " xPbPbErr: " << xBinsErrPbPb[i] <<"  yPbPb/Ncoll: " << yieldPP/fNcoll<< " Raa: " << yPbPb[i] /(fNcoll*yieldPP)<< endl;
 
             cout << "yieldPP: " << yieldPP << " relErrPP: " << relErrPP << endl;
             Double_t yieldPPPowerlaw        = fitPPPowerlaw->Integral(ptStart, ptEnd, resultPPPowerlaw->GetParams())/binWidth;
@@ -2364,14 +2541,14 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
             relSysErrorPowerLaw2->SetPoint(i,xBinsPbPb[i],relErrPow2);
 
             Double_t syst                   = 0;
-				if(!quiet) cout << "lastSystematicRel: " << lastSystematicRel << endl;
-			if (abs(relErrPow1) > abs(relErrPow2)){
-				syst                    = TMath::Sqrt(relErrPow1*relErrPow1 + lastSystematicRel*lastSystematicRel)*yieldPP/100;
-				if(!quiet) cout << "total syst for PP: " << TMath::Sqrt(relErrPow1*relErrPow1 + lastSystematicRel*lastSystematicRel) << endl;
-			} else {
-				syst                    = TMath::Sqrt(relErrPow2*relErrPow2 + lastSystematicRel*lastSystematicRel)*yieldPP/100;
-				if(!quiet) cout << "total syst for PP: " << TMath::Sqrt(relErrPow2*relErrPow2 + lastSystematicRel*lastSystematicRel) << endl;
-			}
+            if(!quiet) cout << "lastSystematicRel: " << lastSystematicRel << endl;
+            if (abs(relErrPow1) > abs(relErrPow2)){
+                syst                    = TMath::Sqrt(relErrPow1*relErrPow1 + lastSystematicRel*lastSystematicRel)*yieldPP/100;
+                if(!quiet) cout << "total syst for PP: " << TMath::Sqrt(relErrPow1*relErrPow1 + lastSystematicRel*lastSystematicRel) << endl;
+            } else {
+                syst                    = TMath::Sqrt(relErrPow2*relErrPow2 + lastSystematicRel*lastSystematicRel)*yieldPP/100;
+                if(!quiet) cout << "total syst for PP: " << TMath::Sqrt(relErrPow2*relErrPow2 + lastSystematicRel*lastSystematicRel) << endl;
+            }
             graphPPSpectrumExtendedSys->SetPointError(i, xBinsErrPbPb[i], xBinsErrPbPb[i],syst, syst); //-syst, +syst);
                         
         }
@@ -2390,25 +2567,25 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
     DrawGammaSetMarkerTGraphAsym(graphPPCombinedSpectrum, 24,2.5, kRed, kRed);
     graphPPCombinedSpectrum->Draw("pEsame");
     DrawGammaSetMarkerTGraphAsym(graphPPSpectrumExtendedSys, 20,2, kGray+1, kGray+1,1,kTRUE,kGray+1);
-	graphPPSpectrumExtendedSys->Draw("2same");
+    graphPPSpectrumExtendedSys->Draw("2same");
     DrawGammaSetMarkerTGraphAsym(graphPPSpectrumExtended, 20,2, kBlack, kBlack);
     graphPPSpectrumExtended->Draw("pEsame");
-	
+
     fitPPPowerlaw->SetLineColor(kOrange+2);
     fitPPPowerlaw2->SetLineColor(kGreen+2);
     fitPP->SetLineColor(kBlue+2);
     fitPPPowerlaw->Draw("same");
     fitPPPowerlaw2->Draw("same");
     fitPP->Draw("same");
-	
-	TLegend* legend = new TLegend(0.15,0.15,0.5,0.25);
-	legend->SetFillColor(0);
-	legend->SetLineColor(0);
-	legend->SetTextSize(0.03);
-	legend->AddEntry(graphPPSpectrum,labelSystem.Data(),"p");
-	legend->AddEntry(graphPPCombinedSpectrum,"comb","p");
-	legend->AddEntry(graphPPSpectrumExtended,"extrapolated","p");
-	legend->Draw();
+    
+    TLegend* legend = new TLegend(0.15,0.15,0.5,0.25);
+    legend->SetFillColor(0);
+    legend->SetLineColor(0);
+    legend->SetTextSize(0.03);
+    legend->AddEntry(graphPPSpectrum,labelSystem.Data(),"p");
+    legend->AddEntry(graphPPCombinedSpectrum,"comb","p");
+    legend->AddEntry(graphPPSpectrumExtended,"extrapolated","p");
+    legend->Draw();
     
     canvasDummy6->Update();
     canvasDummy6->Print(Form("debugWithInterpolation_%s%s.eps",labelSystem.Data(), meson.Data()));
@@ -2417,22 +2594,20 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
       graphPPSpectrumExtendedSys->Print();
       graphPPSpectrumExtended->Print();
     }
-	
+
     Double_t* yPPExtended                   =  graphPPSpectrumExtended->GetY();
     Double_t errYlow;
     Double_t errYhigh;
 
     for(Int_t i=0; i<(*graphRAA)->GetN(); i++){
-		
         (*graphRAA)->SetPoint(i,xBinsPbPb[i],yPbPb[i]/(fNcoll* yPPExtended[i]));
         Double_t errYStat                   = pow( pow(graphPbPbSpectrum->GetErrorYlow(i)/yPbPb[i],2.) + 
-                                                   pow(graphPPSpectrumExtended->GetErrorYlow(i)/yPPExtended[i],2.), 
-												   0.5)*yPbPb[i]/(fNcoll*yPPExtended[i]);
-		(*graphRAA)->SetPointError(i, xBinsErrPbPb[i], xBinsErrPbPb[i], errYStat, errYStat);
+                                                    pow(graphPPSpectrumExtended->GetErrorYlow(i)/yPPExtended[i],2.), 
+                                                    0.5)*yPbPb[i]/(fNcoll*yPPExtended[i]);
+        (*graphRAA)->SetPointError(i, xBinsErrPbPb[i], xBinsErrPbPb[i], errYStat, errYStat);
         
         (*graphRAASys)->SetPoint(i,xBinsPbPb[i],yPbPb[i] /(fNcoll* yPPExtended[i]));
         if (TMath::Abs(xBinsPP[i+firstBinPbPb]-xBinsPbPb[i]) < decisionBoundary && TMath::Abs(xBinsErrPP[i+firstBinPbPb]-xBinsErrPbPb[i]) < decisionBoundary && xBinsPP[i]<maxPtPPForSpec ){
-			
           if(!quiet) {
               cout << "loop raa with pp points" << endl;
               cout << "rel syst err PbPb: " << graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i] << endl;
@@ -2444,8 +2619,8 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
             errYhigh                        = pow(  pow(graphPbPbSpectrumSysNoMat->GetErrorYhigh(i)/yPbPb[i],2.) + 
                                                     pow(graphPPSpectrumExtendedSys->GetErrorYhigh(i)/yPPExtended[i],2.) 
                                                     , 0.5)*yPbPb[i] /(fNcoll* yPPExtended[i]); //+ pow(fNcollError/fNcoll,2.) fNcollError not taking into account
-       		if(!quiet) cout << "rel syst err Raa: " << errYlow/(yPbPb[i]/(fNcoll* yPPExtended[i])) << endl;
-       		if(!quiet) cout << "---------------" << endl;
+            if(!quiet) cout << "rel syst err Raa: " << errYlow/(yPbPb[i]/(fNcoll* yPPExtended[i])) << endl;
+            if(!quiet) cout << "---------------" << endl;
 
         } else {
           if(!quiet) {
@@ -2459,8 +2634,8 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
             errYhigh                        = pow(  pow(graphPbPbSpectrumSysNoMat->GetErrorYhigh(i)/yPbPb[i],2.) + 
                                                     pow(graphPPSpectrumExtendedSys->GetErrorYhigh(i)/yPPExtended[i],2.) 
                                                     , 0.5)*yPbPb[i] /(fNcoll* yPPExtended[i]); //+ pow(fNcollError/fNcoll,2.) fNcollError not taking into account 
-       		if(!quiet) cout << "rel syst err Raa: " << errYlow/(yPbPb[i]/(fNcoll* yPPExtended[i])) << endl;
-       		if(!quiet) cout << "---------------" << endl;
+            if(!quiet) cout << "rel syst err Raa: " << errYlow/(yPbPb[i]/(fNcoll* yPPExtended[i])) << endl;
+            if(!quiet) cout << "---------------" << endl;
         }
         (*graphRAASys)->SetPointError(i, xBinsErrPbPb[i], xBinsErrPbPb[i], errYlow, errYhigh);
     }
@@ -2471,16 +2646,13 @@ void CalcRaa(   TGraphAsymmErrors* graphPPSpectrum, TGraphAsymmErrors* graphPPSp
         (*graphRAASys)->RemovePoint(0);
         b++;
     }
-    
     delete dummyPPSpectrum;
-    
     if(fNcollError){}
-
 }
 
-//_________________________________________________________________________________________________________________
+// ****************************************************************************************************************
 // ********************** Calculation of RAA to a theory graph as replacement for pp reference ********************
-//_________________________________________________________________________________________________________________
+// ****************************************************************************************************************
 void CalcRaaWithTheoryGraph(    TGraphErrors* graphTheory,                 // Theory graph
                                 TGraphAsymmErrors* graphPbPbSpectrum,   // PbPb Yields
                                 TGraphAsymmErrors** graphRAA             // RAA return graphs
@@ -2529,9 +2701,9 @@ void CalcRaaWithTheoryGraph(    TGraphErrors* graphTheory,                 // Th
     delete dummyPPSpectrum;
 }
 
-//_________________________________________________________________________________________________________________
-// ********************** Calculation of RAA to a theory function as replacement for pp reference ********************
-//_________________________________________________________________________________________________________________
+// ****************************************************************************************************************
+// ********************** Calculation of RAA to a theory function as replacement for pp reference *****************
+// ****************************************************************************************************************
 void CalcRaaWithTheoryFit(  TF1* fitTheory,                                                 // Theory graph
                             TGraphAsymmErrors* graphPbPbSpectrum,                           // PbPb Yields
                             TGraphAsymmErrors** graphRAA,                                   // RAA return graphs
@@ -2578,9 +2750,270 @@ void CalcRaaWithTheoryFit(  TF1* fitTheory,                                     
 }
 
 
-//___________________________________________________________________________________________________________________
+// ****************************************************************************************************************
+// ********************** Calculation of RpA with Graphs in same binning ******************************************
+// ****************************************************************************************************************
+TGraphAsymmErrors* CalcRpPbV2(  TGraphAsymmErrors* PPSpectrumStatErr, 
+                                TGraphAsymmErrors* PPSpectrumSystErr, 
+                                TGraphAsymmErrors* pPbSpectrumStatErr,
+                                TGraphAsymmErrors* pPbSpectrumSystErr, 
+                                TGraphAsymmErrors** graphRpPbStatErr, 
+                                TGraphAsymmErrors** graphRpPbSystErr, 
+                                Double_t tAA,
+                                Double_t tAAErr,
+                                vector<TString>nameSysTakeOut,
+                                TString fileNameSysPPb                  = "",
+                                TString fileNameSysPP                   = "",
+                                TString fileNameSysOut                  = ""
+                              ){
+            
+    Int_t nPoints                           = pPbSpectrumStatErr->GetN();
+
+    (*graphRpPbStatErr)                     = new TGraphAsymmErrors( nPoints);
+    (*graphRpPbSystErr)                     = new TGraphAsymmErrors( nPoints);
+    TGraphAsymmErrors* graphRpPbCombErr     = new TGraphAsymmErrors( nPoints);
+    
+    Double_t *xBins                         = pPbSpectrumStatErr->GetX();
+    Double_t *xErrlow                       = pPbSpectrumStatErr->GetEXlow();
+    Double_t *xErrhigh                      = pPbSpectrumStatErr->GetEXhigh();
+    Double_t *ypPbBins                      = pPbSpectrumStatErr->GetY();
+    Double_t *yPPBins                       = PPSpectrumStatErr->GetY();
+    Double_t *ypPbStatErrlow                = pPbSpectrumStatErr->GetEYlow();
+    //Double_t *ypPbStatErrhigh             = pPbSpectrumStatErr->GetEYlow();
+    Double_t *ypPbSystErrlow                = pPbSpectrumSystErr->GetEYlow();
+    Double_t *ypPbSystErrhigh               = pPbSpectrumSystErr->GetEYlow();
+    Double_t *yPPStatErrlow                 = PPSpectrumStatErr->GetEYlow();
+    //Double_t *yPPStatErrhigh = PPSpectrumStatErr->GetEYlow();
+    Double_t *yPPSystErrlow                 = PPSpectrumSystErr->GetEYlow();
+    Double_t *yPPSystErrhigh                = PPSpectrumSystErr->GetEYlow();
+    Double_t *RpPb                          = new Double_t[nPoints];
+
+    Int_t nBinsSysPtPPb                     = 0;
+    Int_t nSysAvailSinglePPb                = 0;
+    Int_t nBinsSysPtPP                      = 0;
+    Int_t nSysAvailSinglePP                 = 0;
+    Bool_t haveDetailedSyspPb               = kFALSE;
+    Bool_t haveDetailedSysPP                = kFALSE;
+    vector<Double_t>unCorrSys;    
+    vector<Double_t>ptSysExternal;
+    
+    if (fileNameSysPPb.CompareTo("") != 0 && fileNameSysPP.CompareTo("") != 0){
+        cout << "fileNames correctly set" << endl;
+        
+        ifstream fileSysErrDetailedPPb;
+        fileSysErrDetailedPPb.open(fileNameSysPPb,ios_base::in);
+        
+        // check if the file exists
+        if(fileSysErrDetailedPPb.is_open()) {
+            haveDetailedSyspPb      = kTRUE;
+        } 
+        vector<TString>nameSysPPb; 
+        // possibly 100 pt bins
+        vector<Double_t>* ptSysSplitPPb     = new vector<Double_t>[100];  
+        vector<Bool_t>enablePPbSys;    
+        // read detailed file pPb
+        if (haveDetailedSyspPb){
+            cout << fileNameSysPPb.Data() << endl;
+            Int_t iPtBin                = 0;
+            Bool_t isFirstLine          = kTRUE;
+            string line;
+            Int_t nDiffErrContribPPb    = 0;
+
+            while (getline(fileSysErrDetailedPPb, line) && iPtBin < 100) {
+                istringstream ss(line);
+                TString temp        ="";
+                if (isFirstLine){
+                    while(ss && nDiffErrContribPPb < 100){
+                        ss >> temp;
+                        if( !(iPtBin==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                            nameSysPPb.push_back(temp);
+                            nDiffErrContribPPb++;
+                        }
+                    }
+                    nameSysPPb.push_back("TotalError");
+                    nDiffErrContribPPb++;
+                    isFirstLine             = kFALSE;
+                } else {    
+                    Int_t nRunning          = 0;
+                    while(ss && nRunning < nDiffErrContribPPb){
+                        ss >> temp;
+                        ptSysSplitPPb[iPtBin].push_back(temp.Atof());
+                        nRunning++;
+                    }   
+                    iPtBin++;
+                }
+            }
+            fileSysErrDetailedPPb.close();
+            
+            nBinsSysPtPPb             = iPtBin;
+            nSysAvailSinglePPb        = (Int_t)nameSysPPb.size()-1;
+            cout <<  nSysAvailSinglePPb << " individual errors:"<< endl;
+            for (Int_t k = 0; k < nSysAvailSinglePPb+1; k++ ){
+                cout << ((TString)nameSysPPb.at(k)).Data() << "\t";
+                Bool_t enabled      = kTRUE;
+                for (Int_t m = 0; m < (Int_t)nameSysTakeOut.size() ; m++){
+                    if (((TString)nameSysPPb.at(k)).CompareTo((TString)nameSysTakeOut.at(m)) == 0)
+                        enabled     = kFALSE;
+                }
+                if (((TString)nameSysPPb.at(k)).CompareTo("TotalError") == 0 || ((TString)nameSysPPb.at(k)).CompareTo("Pt") == 0 || ((TString)nameSysPPb.at(k)).CompareTo("pt") == 0 || ((TString)nameSysPPb.at(k)).CompareTo("bin") == 0 )
+                    enabled     = kFALSE;
+                
+                enablePPbSys.push_back(enabled);
+            }
+            cout << endl;
+            for (Int_t k = 0; k < nSysAvailSinglePPb+1; k++ ){
+                cout << enablePPbSys.at(k) << "\t" ;
+            }
+            cout << endl;
+        }
+        
+        // check if the file exists
+        ifstream fileSysErrDetailedPP;
+        fileSysErrDetailedPP.open(fileNameSysPP,ios_base::in);
+        
+        if(fileSysErrDetailedPP.is_open()) {
+            haveDetailedSysPP       = kTRUE;
+        } 
+        vector<TString>nameSysPP; 
+        // possibly 100 pt bins
+        vector<Double_t>* ptSysSplitPP     = new vector<Double_t>[100];  
+        vector<Bool_t>enablePPSys;    
+        // read detailed file pPb
+        if (haveDetailedSysPP){
+            cout << fileNameSysPP.Data() << endl;
+            Int_t iPtBin                = 0;
+            Bool_t isFirstLine          = kTRUE;
+            string line;
+            Int_t nDiffErrContribPP     = 0;
+
+            while (getline(fileSysErrDetailedPP, line) && iPtBin < 100) {
+                istringstream ss(line);
+                TString temp        ="";
+                if (isFirstLine){
+                    while(ss && nDiffErrContribPP < 100){
+                        ss >> temp;
+                        if( !(iPtBin==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                            nameSysPP.push_back(temp);
+                            nDiffErrContribPP++;
+                        }
+                    }
+                    isFirstLine             = kFALSE;
+                } else {    
+                    Int_t nRunning          = 0;
+                    while(ss && nRunning < nDiffErrContribPP){
+                        ss >> temp;
+                        ptSysSplitPP[iPtBin].push_back(temp.Atof());
+                        nRunning++;
+                    }   
+                    iPtBin++;
+                }
+            }
+            fileSysErrDetailedPP.close();
+            
+            nBinsSysPtPP             = iPtBin;
+            nSysAvailSinglePP        = (Int_t)nameSysPP.size()-1;
+            cout <<  nSysAvailSinglePP << " individual errors pp:"<< endl;
+            for (Int_t k = 0; k < nSysAvailSinglePP+1; k++ ){
+                cout << ((TString)nameSysPP.at(k)).Data() << "\t";
+                Bool_t enabled      = kTRUE;
+                for (Int_t m = 0; m < (Int_t)nameSysTakeOut.size() ; m++){
+                    if (((TString)nameSysPP.at(k)).CompareTo((TString)nameSysTakeOut.at(m)) == 0)
+                        enabled     = kFALSE;
+                }
+                if (((TString)nameSysPP.at(k)).CompareTo("TotalErrorUncorrPP") == 0 || ((TString)nameSysPP.at(k)).CompareTo("Pt") == 0 || ((TString)nameSysPP.at(k)).CompareTo("pt") == 0 || ((TString)nameSysPP.at(k)).CompareTo("bin") == 0 || ((TString)nameSysPP.at(k)).CompareTo("TotalErrorUncorrPP") == 0 )
+                    enabled     = kFALSE;
+                
+                enablePPSys.push_back(enabled);
+            }
+            cout << endl;
+            for (Int_t k = 0; k < nSysAvailSinglePP+1; k++ ){
+                cout << enablePPSys.at(k) << "\t" ;
+            }
+            cout << endl;
+        }
+        
+        fstream SysErrDatAverOut;
+        cout << fileNameSysOut << endl;
+        SysErrDatAverOut.open(fileNameSysOut, ios::out);
+        
+        SysErrDatAverOut << nameSysPPb.at(0) << "\t" ;
+        for (Int_t k = 1; k < nSysAvailSinglePPb; k++){
+            if (enablePPbSys.at(k)) {
+                SysErrDatAverOut << nameSysPPb.at(k) << "\t" ;
+            }
+        }    
+        for (Int_t k = 1; k < nSysAvailSinglePP; k++){
+            if (enablePPSys.at(k)) {
+                SysErrDatAverOut << nameSysPP.at(k) << "\t" ;
+            }    
+        }
+        SysErrDatAverOut << endl;
+            
+        for (Int_t iPt = 0; iPt < nBinsSysPtPPb; iPt++){
+            Double_t uncorr     = 0;
+            if ((Double_t)ptSysSplitPPb[iPt].at(0) != (Double_t)ptSysSplitPP[iPt].at(0))
+                cout << "BINNING external sources out of sync" << "\t" << (Double_t)ptSysSplitPPb[iPt].at(0) << "\t"<< (Double_t)ptSysSplitPP[iPt].at(0) << endl;
+            
+            ptSysExternal.push_back((Double_t)ptSysSplitPPb[iPt].at(0));
+            SysErrDatAverOut << (Double_t)ptSysSplitPPb[iPt].at(0) << "\t";
+            for (Int_t k = 1; k < nSysAvailSinglePPb; k++){
+                if (enablePPbSys.at(k)) {
+                    uncorr          = uncorr + (Double_t)ptSysSplitPPb[iPt].at(k)*(Double_t)ptSysSplitPPb[iPt].at(k);
+                    SysErrDatAverOut << ptSysSplitPPb[iPt].at(k) << "\t" ;
+                }    
+            }   
+            for (Int_t k = 1; k < nSysAvailSinglePP; k++){
+                if (enablePPSys.at(k)) {
+                    uncorr          = uncorr + (Double_t)ptSysSplitPP[iPt].at(k)*(Double_t)ptSysSplitPP[iPt].at(k);
+                    SysErrDatAverOut << ptSysSplitPP[iPt].at(k) << "\t" ;
+                }    
+            }   
+            uncorr              = TMath::Sqrt(uncorr);
+            unCorrSys.push_back(uncorr);
+            SysErrDatAverOut << uncorr << endl;
+        }
+        SysErrDatAverOut.close();
+    }    
+        
+    for(Int_t iPoint = 0; iPoint < nPoints; iPoint++){
+        RpPb[iPoint]            = ypPbBins[iPoint] / (tAA* yPPBins[iPoint]);
+        
+        (*graphRpPbSystErr)->SetPoint( iPoint, xBins[iPoint], RpPb[iPoint]);
+        (*graphRpPbStatErr)->SetPoint( iPoint, xBins[iPoint], RpPb[iPoint] );
+        graphRpPbCombErr->SetPoint( iPoint, xBins[iPoint], RpPb[iPoint] );
+        
+        Double_t errYStat       = pow( pow( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( yPPStatErrlow[iPoint]/yPPBins[iPoint],  2.), 0.5)* RpPb[iPoint];
+        Double_t errYSystlow    = pow( pow( ypPbSystErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( yPPSystErrlow[iPoint]/yPPBins[iPoint]  ,2. ) ,   0.5) * RpPb[iPoint];
+        Double_t errYSysthigh   = pow( pow( ypPbSystErrhigh[iPoint]/ypPbBins[iPoint],2. ) + pow( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) ,   0.5) * RpPb[iPoint];     
+        Double_t errYComblow    = pow( pow( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( ypPbSystErrlow[iPoint]/ypPbBins[iPoint],2. ) 
+                                       + pow( yPPSystErrlow[iPoint]/yPPBins[iPoint], 2. ) ,   0.5) * RpPb[iPoint];     
+        Double_t errYCombhigh   = pow( pow( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2. ) + pow( ypPbSystErrhigh[iPoint]/ypPbBins[iPoint],2. ) 
+                                        + pow( yPPSystErrhigh[iPoint]/yPPBins[iPoint], 2. ) ,   0.5) * RpPb[iPoint];     
+    
+        if (haveDetailedSyspPb && haveDetailedSyspPb){
+            if (TMath::Abs((Double_t)ptSysExternal.at(iPoint) - xBins[iPoint]) < 0.0001){
+                errYSystlow     = (Double_t)unCorrSys.at(iPoint)/100.*RpPb[iPoint];
+                errYSysthigh    = (Double_t)unCorrSys.at(iPoint)/100.*RpPb[iPoint];
+                errYComblow     = pow( pow( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2.) + pow( (Double_t)unCorrSys.at(iPoint)/100.,2.),   0.5) * RpPb[iPoint];     
+                errYCombhigh    = pow( pow( ypPbStatErrlow[iPoint]/ypPbBins[iPoint], 2.) + pow( (Double_t)unCorrSys.at(iPoint)/100.,2.) ,   0.5) * RpPb[iPoint];     
+                
+            } else {
+                cout << "BINNING of detailed syst incorrect!!" << endl<< endl<< endl;
+            }
+        }        
+        (*graphRpPbStatErr)->SetPointError(iPoint, xErrlow[iPoint],xErrhigh[iPoint],errYStat,errYStat);
+        (*graphRpPbSystErr)->SetPointError(iPoint, xErrlow[iPoint],xErrhigh[iPoint],errYSystlow,errYSysthigh);
+        graphRpPbCombErr->SetPointError(iPoint, xErrlow[iPoint],xErrhigh[iPoint],errYComblow,errYCombhigh);
+    }
+    
+    return graphRpPbCombErr;
+    
+}
+
+
+// ******************************************************************************************************************
 //****************************************** Integrate spectrum above a certain pt **********************************
-//___________________________________________________________________________________________________________________
+// ******************************************************************************************************************
 TGraphAsymmErrors* SubtractPromptPhotonsViaFit(     TF1* fitTheory,                                             // Theory graph
                                                     TGraphAsymmErrors* graphPbPbSpectrum,                       // PbPb Yields
                                                     Double_t* binningX                      = NULL,             // binning
@@ -2628,7 +3061,9 @@ TGraphAsymmErrors* SubtractPromptPhotonsViaFit(     TF1* fitTheory,             
 
 
 
-//___________________________________________________________________________________________________________________
+// ****************************************************************************************************************
+// ****************************** Calculate RCP between different centralities ************************************
+// ****************************************************************************************************************
 void CalcRcp(   TGraphAsymmErrors* graphCentralSpectrum, TGraphAsymmErrors* graphPeripheralSpectrum, TGraphAsymmErrors* graphPbPbCentralSpectrumSysNoMat, 
                 TGraphAsymmErrors* graphPbPbPeripheralSpectrumSysNoMat, TGraphAsymmErrors** graphRCP, TGraphAsymmErrors** graphRCPSys, 
                 Double_t fNcollCentral, Double_t fNcollPeripheral,  TString meson = "Pi0"){//, Double_t fNcollCentralError, Double_t fNcollPeripheralError){
@@ -2682,7 +3117,9 @@ void CalcRcp(   TGraphAsymmErrors* graphCentralSpectrum, TGraphAsymmErrors* grap
     }
 }
 
-
+// ****************************************************************************************************************
+// ******************************* Blastwave fit for pi0 **********************************************************
+// ****************************************************************************************************************
 Double_t BWdndptPi0(Double_t *x, Double_t *par) {
     
     Double_t pt         = x[0]*1000.; //GeV->MeV
@@ -2696,6 +3133,9 @@ Double_t BWdndptPi0(Double_t *x, Double_t *par) {
     return f;
 }
 
+// ****************************************************************************************************************
+// ******************************* Blastwave fit for eta **********************************************************
+// ****************************************************************************************************************
 Double_t BWdndptEta(Double_t *x, Double_t *par) {
 
     Double_t pt         = x[0]*1000.; //GeV->MeV
@@ -2709,6 +3149,9 @@ Double_t BWdndptEta(Double_t *x, Double_t *par) {
     return f;
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 void CorrectGammaDataUnfold(TH1D* histoGammaSpecCorr,TH1D* histoConvProb, TH1D* histoRecoEff, Double_t deltaEtaDummy, Double_t scalingDummy, Double_t nEvtDummy){
     histoGammaSpecCorr->Divide(histoGammaSpecCorr,histoConvProb,1.,1.,"");
     histoGammaSpecCorr->Divide(histoGammaSpecCorr,histoRecoEff,1.,1.,"");
@@ -2723,6 +3166,9 @@ void CorrectGammaDataUnfold(TH1D* histoGammaSpecCorr,TH1D* histoConvProb, TH1D* 
     }
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 TH1D *FixEfficiency(TH1D *FixedEff, TH1D* Eff, TString option, TString centString){
     if(option.CompareTo("2.76TeV") == 0){
         FixedEff->SetBinContent(8,(Eff->GetBinContent(7)+Eff->GetBinContent(9))/2);
@@ -2790,7 +3236,9 @@ TH1D *FixEfficiency(TH1D *FixedEff, TH1D* Eff, TString option, TString centStrin
     return FixedEff;
 }
 
-
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 Int_t CalcDeltaPtOverPt(    const TGraphAsymmErrors* gScaledPPStatErr, const TGraphAsymmErrors* gScaledPPSysErr, 
                             const TGraphAsymmErrors* gPbPbStatErr, const TGraphAsymmErrors* gPbPbSysErr, 
                             TGraphAsymmErrors* gResultStatErr, TGraphAsymmErrors* gResultSysErr, 
@@ -3125,8 +3573,7 @@ void ProduceHEPDataFileWithUpperLimitsErrorsSplit(  TGraphAsymmErrors* statError
         Bool_t sysPresent               = kFALSE;
         Bool_t upperPresent             = kFALSE;
 //         cout << "entered loop" << endl;
-//         
-//         
+
         Int_t precision                 = 0;
         Int_t precisionSysA             = 0;
         Int_t precisionSysB             = 0;
@@ -3228,7 +3675,6 @@ void ProduceHEPDataFileWithUpperLimitsErrorsSplit(  TGraphAsymmErrors* statError
                 } else {
                     line                = Form("%sDSYS= %2.2e:C);", line.Data(), currentYErrSystCDown[binSyst] );
                 }
-
                 binSyst++;
             } else if (upperPresent){
                 line                    = Form("%s(SYS = %2.2e %s);",line.Data(), currentYUpperLimits[binUpper], clearanceLevel.Data());
@@ -3238,12 +3684,10 @@ void ProduceHEPDataFileWithUpperLimitsErrorsSplit(  TGraphAsymmErrors* statError
             line                        = Form("%s %2.2e %s;", line.Data(), currentYUpperLimits[binUpper], clearanceLevel.Data());
             binUpper++;
         }
-        
         cout << line.Data() << endl;
     }
     cout << "*dataend:" << endl;
 }
-
 
 // *********************************************************************************************************
 // Create HEP data file for NPart graphs
@@ -3262,10 +3706,7 @@ void ProduceHEPDataFileNPart(TGraphErrors* statErrors, TGraphErrors* sysErrors, 
              << "\t (DSYS=" <<currentYErrSyst[i] << ");" << endl;
     }
     cout << "*dataend:" << endl;
-    
 }
-
-
 
 // *********************************************************************************************************
 // this function calculates the direct photon points and decides, whether
@@ -3294,7 +3735,6 @@ TGraphAsymmErrors *CalculateDirectPhotonPointsAndUpperLimits(TH1* error, TH1* sp
         //float lowbound                = val - 1.28*abs(err); // 90% CL
         float lowbound                  = val - confi*abs(err); // 95% CL
         
-
         if(iFlag==0){ // points and errors > 0 syst
             if(val>0&&errt>0){
                 x[nPoints]              = pt;
@@ -3305,8 +3745,7 @@ TGraphAsymmErrors *CalculateDirectPhotonPointsAndUpperLimits(TH1* error, TH1* sp
                 yeh[nPoints]            = abs(err);
                 nPoints++;
             }
-        }
-        else if(iFlag==1){ // points and errors > 0 stat
+        } else if(iFlag==1){ // points and errors > 0 stat
             if(val>0&&errt>0){
                 x[nPoints]              = pt;
                 xel[nPoints]            = 0;
@@ -3316,8 +3755,7 @@ TGraphAsymmErrors *CalculateDirectPhotonPointsAndUpperLimits(TH1* error, TH1* sp
                 yeh[nPoints]            = abs(err);
                 nPoints++;
             }
-        }
-        else if(iFlag==2){ // points and errors and confi > 0 syst
+        } else if(iFlag==2){ // points and errors and confi > 0 syst
             if(val>0&&errt>0&&lowbound>=0){
                 x[nPoints]              = pt;
                 xel[nPoints]            = errX/2;
@@ -3327,8 +3765,7 @@ TGraphAsymmErrors *CalculateDirectPhotonPointsAndUpperLimits(TH1* error, TH1* sp
                 yeh[nPoints]            = abs(err);
                 nPoints++;
             }
-        }
-        else if(iFlag==3){ // points and errors and confi > 0 stat
+        } else if(iFlag==3){ // points and errors and confi > 0 stat
             if(val>0&&errt>0&&lowbound>=0){
                 x[nPoints]              = pt;
                 xel[nPoints]            = 0;
@@ -3338,8 +3775,8 @@ TGraphAsymmErrors *CalculateDirectPhotonPointsAndUpperLimits(TH1* error, TH1* sp
                 yeh[nPoints]            = abs(err);
                 nPoints++;
             }
-        }// ALL Points Processed
-        else if(iFlag==4){ // upperlimit for points but errors consistent with zero
+        } else if(iFlag==4){ // ALL Points Processed
+            // upperlimit for points but errors consistent with zero
             if(errt<=0){
                 x[nPoints]              = pt;
                 xel[nPoints]            = 0;
@@ -3349,8 +3786,7 @@ TGraphAsymmErrors *CalculateDirectPhotonPointsAndUpperLimits(TH1* error, TH1* sp
                 yeh[nPoints]            = confi*abs(err);
                 nPoints++;
             }
-        }
-        else if(iFlag==5){ // arrow for points with zero
+        } else if(iFlag==5){ // arrow for points with zero
             if(errt<=0){
                 x[nPoints]              = pt;
                 xel[nPoints]            = 0;
@@ -3363,8 +3799,7 @@ TGraphAsymmErrors *CalculateDirectPhotonPointsAndUpperLimits(TH1* error, TH1* sp
                 yeh[nPoints]            = 0;
                 nPoints++;
             }
-        }
-        else if(iFlag==6){ // upperlimit for conf
+        } else if(iFlag==6){ // upperlimit for conf
             if(lowbound<=0){
                 x[nPoints]              = pt;
                 xel[nPoints]            = 0;
@@ -3374,8 +3809,7 @@ TGraphAsymmErrors *CalculateDirectPhotonPointsAndUpperLimits(TH1* error, TH1* sp
                 yeh[nPoints]            = confi*abs(err);
                 nPoints++;
             }
-        }
-        else if(iFlag==7){ // arrow for confi
+        } else if(iFlag==7){ // arrow for confi
             if(lowbound<=0){
                 x[nPoints]              = pt;
                 xel[nPoints]            = 0;
@@ -3398,6 +3832,9 @@ TGraphAsymmErrors *CalculateDirectPhotonPointsAndUpperLimits(TH1* error, TH1* sp
     return 0;
 }
 
+// ****************************************************************************************************************
+// ************************** Blast wave fit generalized **********************************************************
+// ****************************************************************************************************************
 Double_t BWdndpt(Double_t *x, Double_t *par) {
 
     Double_t pt     = x[0]*1000.; //GeV->MeV
@@ -3410,7 +3847,10 @@ Double_t BWdndpt(Double_t *x, Double_t *par) {
 
     return f;
 }
-//-----------------------------------------------------------------------------
+
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 Double_t FitSpectrum(Double_t *x, Double_t *p)
 {
     // Double_t hagd = p[0]*(p[2]-1)*(p[2]-2)/p[1]/p[2]/TMath::TwoPi()/TMath::Power((1.+x[0]/p[1]/p[2]),p[2]);
@@ -3418,19 +3858,24 @@ Double_t FitSpectrum(Double_t *x, Double_t *p)
     Double_t expo   = p[3]*TMath::Exp(-x[0]/p[4]);
     return hagd+expo;
 }
-//-----------------------------------------------------------------------------
+
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 Double_t Hagedorn(Double_t *x, Double_t *p)
 {
     Double_t hagd   = p[0]/TMath::TwoPi()/TMath::Power((1.+x[0]/p[1]/p[2]),p[2]);
     return hagd;
 }
-//-----------------------------------------------------------------------------
+
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 Double_t Exponent(Double_t *x, Double_t *p)
 {
     Double_t expo   = p[0]*TMath::Exp(-x[0]/p[1]);
     return expo;
 }
-
 
 // *********************************************************************************************************
 // Calculates the summed error of two graphs (errors added quadratically)
@@ -3537,9 +3982,7 @@ void FillChi2HistForNullHypo    (  Int_t    n_pseudo_exp,
         
         // create pseudo data set
         for (Int_t ip=0; ip<g_rel_type_b_error->GetN(); ip++) {
-        
             Double_t rel_type_b_error   = g_rel_type_b_error->GetY()[ip];
-
             Double_t R_mod;
             if(anti_corr_type_b) {
                 Double_t pt             = g_rel_stat_plus_type_a_error->GetX()[ip];
@@ -3570,7 +4013,9 @@ void ExtractSystematicFromTotal(Int_t nPoints, Double_t* totals, Double_t* stat,
     return ;
 }    
 
-
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 TF1* CalculateRatioOfTwoFunctions (TF1* fit1, TF1* fit2, TString name){
     Int_t nParFunc1  = fit1->GetNpar();
     Int_t nParFunc2  = fit2->GetNpar();
@@ -3587,12 +4032,12 @@ TF1* CalculateRatioOfTwoFunctions (TF1* fit1, TF1* fit2, TString name){
     for (Int_t j = 0; j < nParFunc2; j++ ){
         newFunction->SetParameter(nParFunc1+j, fit2->GetParameter(j));
     }    
-    
-    
     return newFunction;
 }    
 
-
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 TString AutoDetectMainTList(Int_t mode , TFile* fFile){
     TKey *key;
     TIter next(fFile->GetListOfKeys());
@@ -3625,6 +4070,9 @@ TString AutoDetectMainTList(Int_t mode , TFile* fFile){
         return "";
 }
 
+// ****************************************************************************************************************
+// ****************************************************************************************************************
+// ****************************************************************************************************************
 TString GetDefaultMainTListName(Int_t mode){
     TString nominalMainDir     = "";
     if (mode == 9 || mode == 0) 
@@ -3641,4 +4089,51 @@ TString GetDefaultMainTListName(Int_t mode){
         nominalMainDir         = "GammaCaloMerged";
 
     return nominalMainDir;
+}
+
+// ****************************************************************************************************************
+// ******************** Add errors in quadrature for TGraphsAsymmErrors *******************************************
+// ****************************************************************************************************************
+TGraphAsymmErrors* AddErrorsQuadraticallyTGraph(TGraphAsymmErrors* graphA, TGraphAsymmErrors* graphB){
+    Double_t* xValue            = graphA->GetX();
+    Double_t* yValue            = graphA->GetY();
+    Double_t* xErrorHigh        = graphA->GetEXhigh();
+    Double_t* yErrorHigh        = graphA->GetEYhigh();
+    Double_t* xErrorLow         = graphA->GetEXlow();
+    Double_t* yErrorLow         = graphA->GetEYlow();
+    Int_t nPoints               = graphA->GetN();
+
+    TGraphAsymmErrors* graphR   = new TGraphAsymmErrors(nPoints,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow, yErrorHigh);
+
+    Double_t* yErrorRHigh       = graphR->GetEYhigh();
+    Double_t* yErrorRLow        = graphR->GetEYlow();
+    Double_t* yErrorSysHigh     = graphB->GetEYhigh();
+    Double_t* yErrorSysLow      = graphB->GetEYlow();
+
+    for(Int_t i=0; i<nPoints; i++){
+        yErrorRHigh[i]          = TMath::Sqrt(TMath::Power(yErrorHigh[i],2)+TMath::Power(yErrorSysHigh[i],2)); 
+        yErrorRLow[i]           = TMath::Sqrt(TMath::Power(yErrorLow[i],2)+TMath::Power(yErrorSysLow[i],2)); 
+    }
+    return graphR;
+}
+
+// ****************************************************************************************************************
+// ******************** Add errors in quadrature for TGraphErrors *************************************************
+// ****************************************************************************************************************
+TGraphErrors* AddErrorsQuadraticallyTGraph(TGraphErrors* graphA, TGraphErrors* graphB){
+    Double_t* xValue            = graphA->GetX();
+    Double_t* yValue            = graphA->GetY();
+    Double_t* xError            = graphA->GetEX();
+    Double_t* yError            = graphA->GetEY();
+    Int_t nPoints               = graphA->GetN();
+
+    TGraphErrors* graphR        = new TGraphErrors(nPoints,xValue,yValue,xError,yError);
+
+    Double_t* yErrorR           = graphR->GetEY();
+    Double_t* yErrorB           = graphB->GetEY();
+
+    for(Int_t i=0; i<nPoints; i++){
+        yErrorR[i]              = TMath::Sqrt(TMath::Power(yError[i],2)+TMath::Power(yErrorB[i],2)); 
+    }
+    return graphR;
 }

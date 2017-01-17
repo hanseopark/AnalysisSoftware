@@ -70,9 +70,9 @@ void ComputeCorrelationFactors(
     SetPlotStyle();
 
     TString mesonPlot       = "";
-    if(meson.CompareTo("Pi0") == 0) 
+    if(meson.CompareTo("Pi0") == 0 || meson.CompareTo("Pi0RpPb") == 0) 
         mesonPlot           = "#pi^{0}";
-    else if(meson.CompareTo("Eta") == 0) 
+    else if(meson.CompareTo("Eta") == 0 || meson.CompareTo("EtaRpPb") == 0) 
         mesonPlot           = "#eta";
     else if(meson.CompareTo("Pi0EtaBinning") == 0 || meson.CompareTo("EtaToPi0") == 0) 
         mesonPlot           = "#eta/#pi^{0}";
