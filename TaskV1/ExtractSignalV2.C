@@ -1656,6 +1656,10 @@ void ExtractSignalV2(   TString meson                   = "",
     legendLambdaTail->AddEntry(fHistoLambdaTail,Form("Lambda tail parameter for %s",fPrefix.Data()),"p");
     legendLambdaTail->Draw();
 
+    DrawGammaLines(0., fBinsPt[fNBinsPt], fMesonLambdaTailRange[0], fMesonLambdaTailRange[0], 1, kRed+1, 2);
+    DrawGammaLines(0., fBinsPt[fNBinsPt], fMesonLambdaTail, fMesonLambdaTail, 1, kGray+2, 2);
+    DrawGammaLines(0., fBinsPt[fNBinsPt], fMesonLambdaTailRange[1], fMesonLambdaTailRange[1], 1, kRed+1, 2);
+
     if (fIsMC) canvasLambdaTail->SaveAs(Form("%s/%s_MC_LambdaTail_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasLambdaTail->SaveAs(Form("%s/%s_data_LambdaTail_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
 
