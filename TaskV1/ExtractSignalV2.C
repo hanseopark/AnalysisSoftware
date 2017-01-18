@@ -652,6 +652,11 @@ void ExtractSignalV2(   TString meson                   = "",
             fMesonLambdaTailpar[iPt]        = fFitSignalInvMassPtBin[iPt]->GetParameter(3);
             fMesonLambdaTailparError[iPt]   = fFitSignalInvMassPtBin[iPt]->GetParError(3);
 
+            fMesonAmplitudepar[iPt]         = fFitSignalInvMassPtBin[iPt]->GetParameter(0);
+            fMesonAmplitudeparError[iPt]    = fFitSignalInvMassPtBin[iPt]->GetParError(0);
+            fMesonSigmapar[iPt]             = fFitSignalInvMassPtBin[iPt]->GetParameter(2);
+            fMesonSigmaparError[iPt]        = fFitSignalInvMassPtBin[iPt]->GetParError(2);
+
             fMesonCurIntRange[0][0]         = fMesonMass[iPt] + fMesonIntDeltaRange[0];
             fMesonCurIntRange[1][0]         = fMesonMass[iPt] + fMesonIntDeltaRangeWide[0];
             fMesonCurIntRange[2][0]         = fMesonMass[iPt] + fMesonIntDeltaRangeNarrow[0];
@@ -1730,6 +1735,67 @@ void ExtractSignalV2(   TString meson                   = "",
 
     if (fIsMC) canvasMesonFWHM->SaveAs(Form("%s/%s_MC_MesonFWHM_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasMesonFWHM->SaveAs(Form("%s/%s_data_MesonFWHM_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+
+     ///*********************** Amplitude fit parameter monitoring
+     TCanvas* canvasAmplitude = new TCanvas("canvasAmplitude","",1550,1200);  // gives the page size
+     canvasAmplitude->SetTickx();
+     canvasAmplitude->SetTicky();
+     canvasAmplitude->SetLogy();
+     DrawGammaSetMarker(fHistoAmplitude, 20, 1., kBlack, kBlack);
+     DrawAutoGammaMesonHistos( fHistoAmplitude,
+                              "", "p_{T} (GeV/c)", "A",
+                              kFALSE, 3.,0.,  kTRUE,
+                              kFALSE, 0., 0.,
+                              kFALSE, 0., 10.);
+
+     canvasAmplitude->Update();
+
+     TLegend* legendAmplitude = new TLegend(0.45,0.8,0.7,0.95);
+     legendAmplitude->SetFillColor(0);
+     legendAmplitude->SetLineColor(0);
+     legendAmplitude->SetTextSize(0.04);
+     legendAmplitude->AddEntry(fHistoAmplitude,Form("Amplitude parameter for %s",fPrefix.Data()),"p");
+     legendAmplitude->Draw();
+
+     if (fIsMC) canvasAmplitude->SaveAs(Form("%s/%s_MC_Amplitude_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+     else canvasAmplitude->SaveAs(Form("%s/%s_data_Amplitude_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+
+     ///*********************** sigma fit parameter monitoring
+     TCanvas* canvasSigma = new TCanvas("canvasSigma","",1550,1200);  // gives the page size
+     canvasSigma->SetTickx();
+     canvasSigma->SetTicky();
+
+     DrawGammaSetMarker(fHistoSigma, 20, 1., kBlack, kBlack);
+    if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
+         DrawAutoGammaMesonHistos( fHistoSigma,
+                                     "", "p_{T} (GeV/c)","#sigma (GeV/c^{2})",
+                                     kFALSE, 3.,0., kFALSE,
+                                     kTRUE, -0.004, fMesonWidthRange[1]*1.7,
+                                     kFALSE, 0., 10.);
+     } else {
+         DrawAutoGammaMesonHistos( fHistoSigma,
+                                     "", "p_{T} (GeV/c)","sigma (GeV/c^{2})",
+                                     kFALSE, 3.,0., kFALSE,
+                                     kTRUE, 0., fMesonWidthRange[1]*1.7,
+                                     kFALSE, 0., 10.);
+     }
+
+     canvasSigma->Update();
+
+     TLegend* legendSigma = new TLegend(0.15,0.8,0.4,0.95);
+     legendSigma->SetFillColor(0);
+     legendSigma->SetLineColor(0);
+     legendSigma->SetTextSize(0.04);
+     legendSigma->AddEntry(fHistoSigma,Form("Sigma parameter for %s",fPrefix.Data()),"p");
+     legendSigma->Draw();
+
+     DrawGammaLines(0., fBinsPt[fNBinsPt], fMesonWidthRange[0], fMesonWidthRange[0], 1, kRed+1, 2);
+     DrawGammaLines(0., fBinsPt[fNBinsPt], fMesonWidthExpect, fMesonWidthExpect, 1, kGray+2, 2);
+     DrawGammaLines(0., fBinsPt[fNBinsPt], fMesonWidthRange[1], fMesonWidthRange[1], 1, kRed+1, 2);
+
+     if (fIsMC) canvasSigma->SaveAs(Form("%s/%s_MC_Sigma_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+     else canvasSigma->SaveAs(Form("%s/%s_data_Sigma_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+
 
     ///*********************** Mid Pt fit (for monitoring)
      TCanvas* canvasMesonMidPt = new TCanvas("canvasMesonMidPt","",1550,1200);  // gives the page size
@@ -2940,6 +3006,10 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fMesonLambdaTailparError                                        = new Double_t[fNBinsPt];
     fMesonLambdaTailMCpar                                           = new Double_t[fNBinsPt];
     fMesonLambdaTailMCparError                                      = new Double_t[fNBinsPt];
+    fMesonAmplitudepar                                              = new Double_t[fNBinsPt];
+    fMesonAmplitudeparError                                         = new Double_t[fNBinsPt];
+    fMesonSigmapar                                                  = new Double_t[fNBinsPt];
+    fMesonSigmaparError                                             = new Double_t[fNBinsPt];
     fMesonResidualBGlin                                             = new Double_t[fNBinsPt];
     fMesonResidualBGlinError                                        = new Double_t[fNBinsPt];
     fMesonResidualBGcon                                             = new Double_t[fNBinsPt];
@@ -3824,9 +3894,13 @@ void CreatePtHistos(){
         fHistoTrueFWHMMesonMixedCaloConvPhoton->Sumw2();
     }
 
-    // lambda tail monitoring histo
+    // monitoring histos
     fHistoLambdaTail                    = new TH1D("histoLambdaTail","",fNBinsPt,fBinsPt);
     fHistoLambdaTail->Sumw2();
+    fHistoAmplitude                     = new TH1D("histoAmplitude","",fNBinsPt,fBinsPt);
+    fHistoAmplitude->Sumw2();
+    fHistoSigma                         = new TH1D("histoSigma","",fNBinsPt,fBinsPt);
+    fHistoSigma->Sumw2();
 
     fHistoResidualBGlin                 = new TH1D("histoResidualBGlin","",fNBinsPt,fBinsPt);
     fHistoResidualBGlin->Sumw2();
@@ -3942,6 +4016,10 @@ void FillPtHistos(){
         }
         fHistoLambdaTail->SetBinContent(iPt,fMesonLambdaTailpar[iPt-1]);
         fHistoLambdaTail->SetBinError(iPt,fMesonLambdaTailparError[iPt-1]);
+        fHistoAmplitude->SetBinContent(iPt,fMesonAmplitudepar[iPt-1]);
+        fHistoAmplitude->SetBinError(iPt,fMesonAmplitudeparError[iPt-1]);
+        fHistoSigma->SetBinContent(iPt,fMesonSigmapar[iPt-1]);
+        fHistoSigma->SetBinError(iPt,fMesonSigmaparError[iPt-1]);
         fHistoResidualBGlin->SetBinContent(iPt,fMesonResidualBGlin[iPt-1]);
         fHistoResidualBGlin->SetBinError(iPt,fMesonResidualBGlinError[iPt-1]);
         fHistoResidualBGcon->SetBinContent(iPt,fMesonResidualBGcon[iPt-1]);
@@ -5581,6 +5659,8 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
     }    
 
     fHistoLambdaTail->Write();
+    fHistoAmplitude->Write();
+    fHistoSigma->Write();
     fHistoResidualBGcon->Write();
     fHistoResidualBGlin->Write();
     fHistoRatioResBGYield->Write();
@@ -6116,6 +6196,10 @@ void Delete(){
     if (fMesonLambdaTailparError)                               delete fMesonLambdaTailparError;
     if (fMesonLambdaTailMCpar)                                  delete fMesonLambdaTailMCpar;
     if (fMesonLambdaTailMCparError)                             delete fMesonLambdaTailMCparError;
+    if (fMesonSigmapar)                                         delete fMesonSigmapar;
+    if (fMesonSigmaparError)                                    delete fMesonSigmaparError;
+    if (fMesonAmplitudepar)                                     delete fMesonAmplitudepar;
+    if (fMesonAmplitudeparError)                                delete fMesonAmplitudeparError;
     if (fMesonResidualBGlin)                                    delete fMesonResidualBGlin;
     if (fMesonResidualBGlinError)                               delete fMesonResidualBGlinError;
     if (fMesonResidualBGcon)                                    delete fMesonResidualBGcon;
