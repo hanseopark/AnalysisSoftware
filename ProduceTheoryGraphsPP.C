@@ -818,12 +818,10 @@ void ProduceTheoryGraphsPP(){
     TH1D* histoEta8TeVPhojetReb                 = (TH1D*)file8TeVPhojet->Get("MC_Eta_Pt_Rebinned");
     TH1D* histoEtaToPi08TeVPhojet               = (TH1D*)file8TeVPhojet->Get("MCEtaToPi0");
     
-    
 
     //**********************************************************************************************************************
     //***************************** Pythia calculations 2.76TeV ************************************************************
     //**********************************************************************************************************************
-    
     // Klaus: 8.1 Tune 4C
     TFile* file2760GeV_Pythia8_fixedBinning     = TFile::Open("ExternalInput/Theory/Pythia/pp_pi0_2760GeV_pythia8_tune4C_comp_fixed_binning_2014-02-04-1330.root");
     TH1F* histoPythia8Spec2760GeV               = (TH1F*)file2760GeV_Pythia8_fixedBinning->Get("hPythiaComb");
@@ -950,7 +948,7 @@ void ProduceTheoryGraphsPP(){
         
         graphNLOCalcInvYieldPi0MuHalf7000GeV->Write("graphNLOCalcInvYieldPi0MuHalf7000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuOne7000GeV->Write("graphNLOCalcInvYieldPi0MuOne7000GeV", TObject::kOverwrite);
-        graphNLOCalcInvYieldPi0MuTwo7000GeV->Write("graphNLOCalcInvYieldPi0MuTwo7000GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi0MuTwo7000GeV->Write("graphNLOCalcInvYieldPi0MuTwo7000GeV", TObject::kOverwrite); 
 
         graphNLOCalcInvYieldPi0MuHalf2760GeV->Write("graphNLOCalcInvYieldPi0MuHalf2760GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuOne2760GeV->Write("graphNLOCalcInvYieldPi0MuOne2760GeV", TObject::kOverwrite);
