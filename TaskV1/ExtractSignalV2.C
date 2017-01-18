@@ -1723,6 +1723,29 @@ void ExtractSignalV2(   TString meson                   = "",
     if (fIsMC) canvasMesonFWHM->SaveAs(Form("%s/%s_MC_MesonFWHM_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
     else canvasMesonFWHM->SaveAs(Form("%s/%s_data_MesonFWHM_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
 
+    ///*********************** Mid Pt fit (for monitoring)
+     TCanvas* canvasMesonMidPt = new TCanvas("canvasMesonMidPt","",1550,1200);  // gives the page size
+     canvasMesonMidPt->SetTickx();
+     canvasMesonMidPt->SetTicky();
+
+     SetStyleHisto(fFittingHistMidPtSignalSub,1,1,kBlack);
+     fFitSignalInvMassMidPt->SetLineColor(kRed+1);
+     fFittingHistMidPtSignalSub->Draw("same");
+     fFitSignalInvMassMidPt->Draw("same");
+     canvasMesonMidPt->Update();
+
+     TLegend* legendMesonMidPt = new TLegend(0.15,0.62,0.45,0.76);
+     legendMesonMidPt->SetFillColor(0);
+     legendMesonMidPt->SetLineColor(0);
+     legendMesonMidPt->SetTextSize(0.04);
+     legendMesonMidPt->AddEntry(fFittingHistMidPtSignalSub,Form("%s Raw Mid-Pt",fPrefix.Data()),"l");
+     legendMesonMidPt->AddEntry(fFitSignalInvMassMidPt,Form("%s Fit Mid-Pt",fPrefix.Data()),"l");
+     legendMesonMidPt->Draw();
+
+     if (fIsMC) canvasMesonMidPt->SaveAs(Form("%s/%s_MC_MesonSubtractedFittingMidPt_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+     else canvasMesonMidPt->SaveAs(Form("%s/%s_data_MesonSubtractedFittingMidPt_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+
+
     // **************************************************************************************************************
     // ************************ Chi2/ndf compared MC vs Data ********************************************************
     // **************************************************************************************************************
