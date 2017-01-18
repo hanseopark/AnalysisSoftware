@@ -1702,13 +1702,13 @@ void ExtractSignalV2(   TString meson                   = "",
         DrawAutoGammaMesonHistos( fHistoFWHMMeson, 
                                     "", "p_{T} (GeV/c)","FWHM (GeV/c^{2})", 
                                     kFALSE, 3.,0., kFALSE,
-                                    kTRUE, -0.004, fMesonWidthRange[1]*1.5, 
+				    kTRUE, -0.004, fMesonWidthRange[1]*4, // *4 because fMesonWidthRange[1] corresponds to fit parameter sigma, but histogram is FWHM
                                     kFALSE, 0., 10.);
     } else {
         DrawAutoGammaMesonHistos( fHistoFWHMMeson, 
                                     "", "p_{T} (GeV/c)","FWHM (GeV/c^{2})", 
                                     kFALSE, 3.,0., kFALSE,
-                                    kTRUE, 0., fMesonWidthRange[1]*1.5, 
+                                    kTRUE, 0., fMesonWidthRange[1]*4,
                                     kFALSE, 0., 10.);
     }
     canvasMesonFWHM->Update();
