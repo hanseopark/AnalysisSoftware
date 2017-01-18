@@ -2440,6 +2440,10 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fMidPt                      = new Double_t[2]; 
         fMidPt[0]                   = 0.8;
         fMidPt[1]                   = 2.5;
+        if(fMode == 0 && fEnergyFlag.CompareTo("PbPb_5.02TeV") == 0){  // just temporary (18.1.2017)
+          fMidPt[0]                   = 4.0;                           // due to strange BG shape and wrong fits at lower pT
+          fMidPt[1]                   = 6.0;
+        }
         if (fMode == 2){
             fPeakRange[0]                   = 0.05;
             fPeakRange[1]                   = 0.145; 
