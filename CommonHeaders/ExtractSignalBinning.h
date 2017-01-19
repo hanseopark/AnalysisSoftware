@@ -191,24 +191,33 @@ Int_t fBinsPi07TeVPCMPHOSPtRebin[43]            = { 3, 2, 2, 2, 2, 2, 2, 2,
                                                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                     1, 2, 2, 3, 3, 4, 4, 4, 5, 5,
                                                     5, 5, 1};
-Int_t fBinsPi07TeVPCMEMCPtRebin[42]             = { 2, 2, 2, 2, 2, 2, 8, 5, 4, 4,
+Double_t fBinsPi07TeVPCMEMCPt[44]               = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
+                                                    1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1,
+                                                    2.2, 2.3, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
+                                                    4.0, 4.3, 4.6, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0, 9.0,
+                                                    10.0, 12.0, 16.0, 20.0};
+Int_t fBinsPi07TeVPCMEMCPtRebin[43]             = { 2, 2, 2, 2, 2, 2, 8, 5, 4, 4,
                                                     2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                    2, 2, 2, 2, 4, 4, 4, 4, 5, 8,
-                                                    1, 1};
-Int_t fBinsPi07TeVEMCPtRebin[42]                = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                                                    8, 4, 4, 2, 2, 2, 2, 2, 2, 2,
+                                                    2, 2, 2, 2, 2, 4, 4, 4, 4, 5,
+                                                    5, 5, 1};
+Double_t fBinsPi07TeVEMCPt[46]                  = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
+                                                    1.2, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1,
+                                                    2.2, 2.3, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
+                                                    4.0, 4.3, 4.6, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0, 9.0,
+                                                    10.0, 11.0, 12.0, 14.0, 16.0, 20.0, 25.0};
+Int_t fBinsPi07TeVEMCPtRebin[45]                = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                    4, 4, 4, 2, 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                    2, 2, 2, 2, 2, 2, 2, 2, 4, 8,
-                                                    16, 16};
-
+                                                    2, 2, 2, 2, 2, 2, 2, 2, 2, 4,
+                                                    5, 8, 8, 10, 16, 16};
 
 Double_t fBinsEta7TeVPt[18]                     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0,
                                                     3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0};
 Double_t fBinsEta7TeVPCMPHOSPt[18]              = { 0.0, 0.8, 1.0, 1.5, 2.0, 2.5, 3.0,
                                                     3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0};
 Double_t fBinsEta7TeVPCMEMCPt[19]               = { 0.0, 0.4, 0.6, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0, 3.5,
-                                                    4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20, 25.0};
+                                                    4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 14.0, 20, 25.0};
 Int_t fBinsEta7TeVPtRebin[17]                   = { 8, 7, 7, 4, 4, 4, 4, 4, 5, 5,
                                                     5, 5, 5, 5, 6, 8, 8};
 Int_t fBinsEta7TeVPCMPHOSPtRebin[17]            = { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
@@ -1549,7 +1558,8 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     fStartPtBin = 6;
                 fColumn         = 7;
                 fRow            = 6;
-                if (modi == 2) fColumn = 6;
+                if (modi == 2) fColumn = 7;
+                else if (modi == 4) fColumn = 6;
                 if (isDCA) {
                     fColumn     = 5;
                     fRow        = 4;
@@ -1559,16 +1569,16 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 if (fNBinsPt > 27 && isDCA) {
                     cout << "You have chosen to have more than 27 bins, this is not possible, it will be reduced to 27" << endl;
                     fNBinsPt    = 27;
-                } else if (fNBinsPt > 42) {
-                    cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
-                    fNBinsPt    = 42;
+                } else if (fNBinsPt > 45) {
+                    cout << "You have chosen to have more than 45 bins, this is not possible, it will be reduced to 45" << endl;
+                    fNBinsPt    = 45;
                 }
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
                     if (isDCA){
                         fBinsPt[i]          = fBinsPi07TeVPtDCA[i];
                     } else {
                         if (modi == 2){
-                            fBinsPt[i]      = fBinsPi07TeVPt[i];
+                            fBinsPt[i]      = fBinsPi07TeVPCMEMCPt[i];
                             if (i < fNBinsPt)
                                 fNRebin[i]  = fBinsPi07TeVPCMEMCPtRebin[i];
                         } else if (modi == 3){
@@ -1576,7 +1586,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                             if (i < fNBinsPt)
                             fNRebin[i]   = fBinsPi07TeVPCMPHOSPtRebin[i];
                         } else if (modi == 4){
-                            fBinsPt[i]      = fBinsPi07TeVPt[i];
+                            fBinsPt[i]      = fBinsPi07TeVEMCPt[i];
                             if (i < fNBinsPt)
                             fNRebin[i]   = fBinsPi07TeVEMCPtRebin[i];
                         } else if (modi == 1){
@@ -2968,6 +2978,18 @@ Int_t GetBinning(   Double_t*  binning,
                     binning[i] = fBinsPi02760GeVFullHaitaomEMC[i];
                 }
             }
+        } else if (energy.CompareTo("7TeV") == 0){
+            if ( mode == 2 ){
+                maxNBins = 43;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsPi07TeVPCMEMCPt[i];
+                }
+            } else if ( mode == 4){
+                 maxNBins = 45;
+                 for(Int_t i = 0; i < maxNBins+1; i++){
+                     binning[i] = fBinsPi07TeVEMCPt[i];
+                 }
+            }
         } else if (energy.CompareTo("8TeV") == 0){
             if ( mode == 2 ){
                 maxNBins = 46;
@@ -2994,7 +3016,7 @@ Int_t GetBinning(   Double_t*  binning,
               for(Int_t i = 0; i < maxNBins+1; i++){
                   binning[i] = fBinsPi08TeVPtmEMCComb[i];
               }
-          }
+            }
         } else if (energy.CompareTo("pPb_5.023TeV") == 0){
             if (mode == 0 ){ // PCM
                maxNBins = 33;
@@ -3033,6 +3055,13 @@ Int_t GetBinning(   Double_t*  binning,
             maxNBins = 12;
             for(Int_t i = 0; i < maxNBins+1; i++){
                 binning[i] = fBinsEta2760GeVPtTrig11a[i];
+            }
+        } else if (energy.CompareTo("7TeV") == 0){
+            if ( mode == 2 || mode == 4 ){
+                maxNBins = 18;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsEta7TeVPCMEMCPt[i];
+                }
             }
         } else if (energy.CompareTo("8TeV") == 0){
             if ( mode == 2 || mode == 4 ){

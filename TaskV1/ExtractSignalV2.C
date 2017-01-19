@@ -2632,6 +2632,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
                 fBGFitRangeLeft[0]              = 0.05; //0.04;
                 fBGFitRangeLeft[1]              = 0.08;  
                 fMesonFitRange[0]               = 0.06;
+                if( fEnergyFlag.CompareTo("7TeV") == 0 ){ fMesonFitRange[0] = 0.05;}
                 fMesonFitRange[1]               = 0.25; 
                 fMesonWidthExpect               = 0.01; //0.005;
                 fMesonLambdaTail                = 0.02;
@@ -2639,6 +2640,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
                 fMesonWidthRange[1]             = 0.028;
                 fMesonLambdaTailRange[0]        = 0.01; // 0.005; //0.001;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonLambdaTailRange[0] = 0.005;}
+                if( fEnergyFlag.CompareTo("7TeV") == 0 ){ fMesonLambdaTailRange[0] = 0.01;}
                 fMesonLambdaTailRange[1]        = 0.03;
                 fMesonMassRange[0]              = 0.;
                 fMesonMassRange[1]              = 0.3;
@@ -2783,7 +2785,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fMesonIntDeltaRangeWide[1]      = 0.065;
             fMesonIntDeltaRangeNarrow[0]    = -0.040;
             fMesonIntDeltaRangeNarrow[1]    = 0.045;
-            if (fEnergyFlag.CompareTo("8TeV") == 0){
+            if (fEnergyFlag.CompareTo("7TeV") == 0 || fEnergyFlag.CompareTo("8TeV") == 0){
                 fMesonLambdaTail            = 0.025;
                 fMesonLambdaTailRange[0]    = 0.025;
                 fMesonLambdaTailRange[1]    = 0.025;
@@ -2855,7 +2857,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fMesonWidthRange[1]             = 0.070;
             fMesonLambdaTailRange[0]        = 0.001;
             fMesonLambdaTailRange[1]        = 0.025;
-            if (fEnergyFlag.CompareTo("2.76TeV") == 0 || fEnergyFlag.CompareTo("8TeV") == 0){
+            if (fEnergyFlag.CompareTo("2.76TeV") == 0 || fEnergyFlag.CompareTo("7TeV") == 0 || fEnergyFlag.CompareTo("8TeV") == 0){
                 fMesonLambdaTail            = 0.025;
                 fMesonLambdaTailRange[0]    = 0.025;
                 fMesonLambdaTailRange[1]    = 0.025;
