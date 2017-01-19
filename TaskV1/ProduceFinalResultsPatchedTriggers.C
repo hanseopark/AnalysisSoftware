@@ -351,7 +351,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     
     // defining output directory
     TString outputDir =    Form("%s/%s/%s/FinalResultsTriggersPatched%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data());
-    if(optionEnergy.CompareTo("8TeV") == 0){
+    if(optionEnergy.CompareTo("7TeV") == 0 || optionEnergy.CompareTo("8TeV") == 0){
       if(mode == 4) outputDir = Form("%s/%s/%s/FinalResultsTriggersPatched_EMCAL%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data());
       if(mode == 2) outputDir = Form("%s/%s/%s/FinalResultsTriggersPatched_PCMEMCAL%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data());
     }
@@ -1975,43 +1975,44 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             string sysFilePi0Det = sysFilePi0[i].Data();
 
             if(!replace(sysFilePi0Det, "Averaged", "AveragedSingle")){
-                cout << "WARNING: could not find detailed systematics file " << sysFilePi0Det << ", skipping... " << endl; sysAvailSinglePi0[i] = kFALSE; 
-                continue;
-            }
-            ifstream fileSysErrDetailedPi0;
-            fileSysErrDetailedPi0.open(sysFilePi0Det,ios_base::in);
-            if(fileSysErrDetailedPi0.is_open()) {
-                sysAvailSinglePi0[i] = kTRUE;
-                gSystem->Exec(Form("cp %s %s/SystematicErrorAveragedSingle_Pi0_%s.txt", ((TString)sysFilePi0Det).Data(), outputDir.Data(),triggerName[i].Data()));
-            } else{
-                sysAvailSinglePi0[i] = kFALSE; 
-                cout << "No single errors were found" << endl;
-            }
-            
-            if (sysAvailSinglePi0[i]){
-                cout << sysFilePi0Det << endl;
-                iPtBin = 0;
-                string line;
-                Int_t iPtBinColumn = 0;
-                while (getline(fileSysErrDetailedPi0, line) && iPtBin < 100) {
-                    istringstream ss(line);
-                    TString temp="";
-                    iPtBinColumn = 0;
-                    while(ss && iPtBinColumn < 100){
-                        ss >> temp;
-                        if( !(iPtBin==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
-                            ptSysDetail[i][iPtBin].push_back(temp);
-                            iPtBinColumn++;
-                        }
-                    }
-                    if(iPtBin == 0){
-                        ptSysDetail[i][iPtBin++].push_back("TotalError");
-                        iPtBinColumn++;
-                    }else iPtBin++;
+                cout << "WARNING: could not find detailed systematics file " << sysFilePi0Det << ", skipping... " << endl;
+                sysAvailSinglePi0[i] = kFALSE;
+            }else{
+                ifstream fileSysErrDetailedPi0;
+                fileSysErrDetailedPi0.open(sysFilePi0Det,ios_base::in);
+                if(fileSysErrDetailedPi0.is_open()) {
+                    sysAvailSinglePi0[i] = kTRUE;
+                    gSystem->Exec(Form("cp %s %s/SystematicErrorAveragedSingle_Pi0_%s.txt", ((TString)sysFilePi0Det).Data(), outputDir.Data(),triggerName[i].Data()));
+                } else{
+                    sysAvailSinglePi0[i] = kFALSE;
+                    cout << "No single errors were found" << endl;
                 }
-                numberBinsSysAvailSinglePi0[i] = iPtBin;
-                fileSysErrDetailedPi0.close();
-            }   
+
+                if (sysAvailSinglePi0[i]){
+                    cout << sysFilePi0Det << endl;
+                    iPtBin = 0;
+                    string line;
+                    Int_t iPtBinColumn = 0;
+                    while (getline(fileSysErrDetailedPi0, line) && iPtBin < 100) {
+                        istringstream ss(line);
+                        TString temp="";
+                        iPtBinColumn = 0;
+                        while(ss && iPtBinColumn < 100){
+                            ss >> temp;
+                            if( !(iPtBin==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                                ptSysDetail[i][iPtBin].push_back(temp);
+                                iPtBinColumn++;
+                            }
+                        }
+                        if(iPtBin == 0){
+                            ptSysDetail[i][iPtBin++].push_back("TotalError");
+                            iPtBinColumn++;
+                        }else iPtBin++;
+                    }
+                    numberBinsSysAvailSinglePi0[i] = iPtBin;
+                    fileSysErrDetailedPi0.close();
+                 }
+             }
         } else {
             sysAvailPi0[i]             = kFALSE;
             sysAvailSinglePi0[i]       = kFALSE;
@@ -2799,61 +2800,63 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         // ***************************************************************************************************
         // ********************* Plot all mean erros separately after smoothing ******************************
         // ***************************************************************************************************    
-        TCanvas* canvasNewSysErrMean = new TCanvas("canvasNewSysErrMean","",200,10,1350,900);// gives the page size
-        DrawGammaCanvasSettings( canvasNewSysErrMean, 0.08, 0.01, 0.015, 0.09);
-        
-            // create dummy histo
-            TH2D *histo2DNewSysErrMean ;
-            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 100,0.,maxPtGlobalPi0,1000.,-0.5,30.);
-            SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
-                                    1,0.9, 510, 510);
-            histo2DNewSysErrMean->Draw();
+        if(sysAvailSinglePi0[0] && graphRelSysErrPi0SourceWeighted[0]){
+            TCanvas* canvasNewSysErrMean = new TCanvas("canvasNewSysErrMean","",200,10,1350,900);// gives the page size
+            DrawGammaCanvasSettings( canvasNewSysErrMean, 0.08, 0.01, 0.015, 0.09);
 
-            // Give legend position for plotting
-            Double_t minXLegend     = 0.12;
-            Double_t maxYLegend     = 0.95;
-            Double_t widthLegend    = 0.25;
-            if (nRelSysErrPi0Sources> 7)  
-                widthLegend         = 0.5;
-            Double_t heightLegend   = 1.05* 0.035 * (nRelSysErrPi0Sources+3);
-            if (nRelSysErrPi0Sources> 7)  
-                heightLegend        = 1.05* 0.035 * (nRelSysErrPi0Sources/2+1);
+                // create dummy histo
+                TH2D *histo2DNewSysErrMean ;
+                histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 100,0.,maxPtGlobalPi0,1000.,-0.5,30.);
+                SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
+                                        1,0.9, 510, 510);
+                histo2DNewSysErrMean->Draw();
 
-            // create legend
-            TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
-            legendMeanNew->SetMargin(0.1);
-            if (nRelSysErrPi0Sources> 7) legendMeanNew->SetNColumns(2);
+                // Give legend position for plotting
+                Double_t minXLegend     = 0.12;
+                Double_t maxYLegend     = 0.95;
+                Double_t widthLegend    = 0.25;
+                if (nRelSysErrPi0Sources> 7)
+                    widthLegend         = 0.5;
+                Double_t heightLegend   = 1.05* 0.035 * (nRelSysErrPi0Sources+3);
+                if (nRelSysErrPi0Sources> 7)
+                    heightLegend        = 1.05* 0.035 * (nRelSysErrPi0Sources/2+1);
 
-            for(Int_t i = 0;i< nRelSysErrPi0Sources-1 ;i++){    
-                DrawGammaSetMarkerTGraphAsym(graphRelSysErrPi0SourceWeighted[i], GetMarkerStyleSystematics(  ptSysDetail[0][0].at(i+1), mode), 1.,
-                                            GetColorSystematics( ptSysDetail[0][0].at(i+1), mode),GetColorSystematics( ptSysDetail[0][0].at(i+1), mode));
-                graphRelSysErrPi0SourceWeighted[i]->Draw("pX0,csame");
-                legendMeanNew->AddEntry(graphRelSysErrPi0SourceWeighted[i],GetSystematicsName(ptSysDetail[0][0].at(i+1)),"p");
-            }
-            
-            DrawGammaSetMarkerTGraphAsym(graphRelSysErrPi0SourceWeighted[nRelSysErrPi0Sources-1], 20, 1.,kBlack,kBlack);
-            graphRelSysErrPi0SourceWeighted[nRelSysErrPi0Sources-1]->Draw("p,csame");
-            legendMeanNew->AddEntry(graphRelSysErrPi0SourceWeighted[nRelSysErrPi0Sources-1],"quad. sum.","p");
-            legendMeanNew->Draw();
+                // create legend
+                TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
+                legendMeanNew->SetMargin(0.1);
+                if (nRelSysErrPi0Sources> 7) legendMeanNew->SetNColumns(2);
 
-            // labeling
-            TLatex *labelEnergySysDetailed = new TLatex(0.7, 0.93,collisionSystem.Data());
-            labelEnergySysDetailed->SetTextAlign(31);
-            SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
-            labelEnergySysDetailed->Draw();
+                for(Int_t i = 0;i< nRelSysErrPi0Sources-1 ;i++){
+                    DrawGammaSetMarkerTGraphAsym(graphRelSysErrPi0SourceWeighted[i], GetMarkerStyleSystematics(  ptSysDetail[0][0].at(i+1), mode), 1.,
+                                                GetColorSystematics( ptSysDetail[0][0].at(i+1), mode),GetColorSystematics( ptSysDetail[0][0].at(i+1), mode));
+                    graphRelSysErrPi0SourceWeighted[i]->Draw("pX0,csame");
+                    legendMeanNew->AddEntry(graphRelSysErrPi0SourceWeighted[i],GetSystematicsName(ptSysDetail[0][0].at(i+1)),"p");
+                }
 
-            TLatex *labelPi0SysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
-            labelPi0SysDetailed->SetTextAlign(31);
-            SetStyleTLatex( labelPi0SysDetailed, 0.85*textSizeSpectra,4);
-            labelPi0SysDetailed->Draw();
+                DrawGammaSetMarkerTGraphAsym(graphRelSysErrPi0SourceWeighted[nRelSysErrPi0Sources-1], 20, 1.,kBlack,kBlack);
+                graphRelSysErrPi0SourceWeighted[nRelSysErrPi0Sources-1]->Draw("p,csame");
+                legendMeanNew->AddEntry(graphRelSysErrPi0SourceWeighted[nRelSysErrPi0Sources-1],"quad. sum.","p");
+                legendMeanNew->Draw();
 
-            TLatex *labelDetProcSysDetailed = new TLatex(0.7, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
-            labelDetProcSysDetailed->SetTextAlign(31);
-            SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4);
-            labelDetProcSysDetailed->Draw();
+                // labeling
+                TLatex *labelEnergySysDetailed = new TLatex(0.7, 0.93,collisionSystem.Data());
+                labelEnergySysDetailed->SetTextAlign(31);
+                SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
+                labelEnergySysDetailed->Draw();
 
-        canvasNewSysErrMean->Update();
-        canvasNewSysErrMean->SaveAs(Form("%s/Pi0_SysErrorsSeparatedSourcesReweighted_%s.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+                TLatex *labelPi0SysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
+                labelPi0SysDetailed->SetTextAlign(31);
+                SetStyleTLatex( labelPi0SysDetailed, 0.85*textSizeSpectra,4);
+                labelPi0SysDetailed->Draw();
+
+                TLatex *labelDetProcSysDetailed = new TLatex(0.7, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
+                labelDetProcSysDetailed->SetTextAlign(31);
+                SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4);
+                labelDetProcSysDetailed->Draw();
+
+            canvasNewSysErrMean->Update();
+            canvasNewSysErrMean->SaveAs(Form("%s/Pi0_SysErrorsSeparatedSourcesReweighted_%s.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+        }
 
         for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
             for(Int_t iB=0; iB<50; iB++) ptSysDetail[iR][iB].clear();
@@ -4404,40 +4407,44 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 hasSysEta                   = kTRUE;
              // read in detailed systematics
                 string sysFileEtaDet = sysFileEta[i].Data();
-                if(!replace(sysFileEtaDet, "Averaged", "AveragedSingle")){cout << "WARNING: could not find detailed systematics file " << sysFileEtaDet << ", skipping... " << endl; sysAvailSingleEta[i] = kFALSE; continue;}
-                ifstream fileSysErrDetailedEta;
-                fileSysErrDetailedEta.open(sysFileEtaDet,ios_base::in);
-                if(fileSysErrDetailedEta.is_open()) 
-                    sysAvailSingleEta[i] = kTRUE;
-                else{ 
-                    sysAvailSingleEta[i] = kFALSE; 
-                    cout << "couldn't find single errors for eta, jumping" << endl;
+                if(!replace(sysFileEtaDet, "Averaged", "AveragedSingle")){
+                  cout << "WARNING: could not find detailed systematics file " << sysFileEtaDet << ", skipping... " << endl;
+                  sysAvailSingleEta[i] = kFALSE;
+                }else{
+                  ifstream fileSysErrDetailedEta;
+                  fileSysErrDetailedEta.open(sysFileEtaDet,ios_base::in);
+                  if(fileSysErrDetailedEta.is_open())
+                      sysAvailSingleEta[i] = kTRUE;
+                  else{
+                      sysAvailSingleEta[i] = kFALSE;
+                      cout << "couldn't find single errors for eta, jumping" << endl;
+                  }
+
+                  if (sysAvailSingleEta[i]){
+                      cout << sysFileEtaDet << endl;
+                      counter = 0;
+                      string line;
+                      Int_t counterColumn = 0;
+                      while (getline(fileSysErrDetailedEta, line) && counter < 100) {
+                          istringstream ss(line);
+                          TString temp="";
+                          counterColumn = 0;
+                          while(ss && counterColumn < 100){
+                              ss >> temp;
+                              if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                              ptSysDetail[i][counter].push_back(temp);
+                              counterColumn++;
+                              }
+                          }
+                          if(counter == 0){
+                              ptSysDetail[i][counter++].push_back("TotalError");
+                              counterColumn++;
+                          }else counter++;
+                      }
+                      numberBinsSysAvailSingleEta[i] = counter;
+                      fileSysErrDetailedEta.close();
+                  }
                 }
-                
-                if (sysAvailSingleEta[i]){
-                    cout << sysFileEtaDet << endl;
-                    counter = 0;
-                    string line;
-                    Int_t counterColumn = 0;
-                    while (getline(fileSysErrDetailedEta, line) && counter < 100) {
-                        istringstream ss(line);
-                        TString temp="";
-                        counterColumn = 0;
-                        while(ss && counterColumn < 100){
-                            ss >> temp;
-                            if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
-                            ptSysDetail[i][counter].push_back(temp);
-                            counterColumn++;
-                            }
-                        }
-                        if(counter == 0){
-                            ptSysDetail[i][counter++].push_back("TotalError");
-                            counterColumn++;
-                        }else counter++;
-                    }
-                    numberBinsSysAvailSingleEta[i] = counter;
-                    fileSysErrDetailedEta.close();
-                }    
             } else {
                 sysAvailEta[i]              = kFALSE;
                 sysAvailSingleEta[i]        = kTRUE;
@@ -5089,61 +5096,63 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             // ***************************************************************************************************
             // ********************* Plot all mean erros separately after smoothing ******************************
             // ***************************************************************************************************    
-            TCanvas* canvasNewSysErrMean = new TCanvas("canvasNewSysErrMean","",200,10,1350,900);// gives the page size
-            DrawGammaCanvasSettings( canvasNewSysErrMean, 0.08, 0.01, 0.015, 0.09);
-            
-                // create dummy histo
-                TH2D *histo2DNewSysErrMean ;
-                histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 100,0.,maxPtGlobalEta,1000.,-0.5,50.);
-                SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
-                                        1,0.9, 510, 510);
-                histo2DNewSysErrMean->Draw();
+            if(sysAvailSingleEta[0] && graphRelSysErrEtaSourceWeighted[0]){
+                TCanvas* canvasNewSysErrMean = new TCanvas("canvasNewSysErrMean","",200,10,1350,900);// gives the page size
+                DrawGammaCanvasSettings( canvasNewSysErrMean, 0.08, 0.01, 0.015, 0.09);
 
-                // Give legend position for plotting
-                Double_t minXLegend     = 0.12;
-                Double_t maxYLegend     = 0.95;
-                Double_t widthLegend    = 0.25;
-                if (nRelSysErrEtaSources> 7)  
-                    widthLegend         = 0.5;
-                Double_t heightLegend   = 1.05* 0.035 * (nRelSysErrEtaSources+3);
-                if (nRelSysErrEtaSources> 7)  
-                    heightLegend        = 1.05* 0.035 * (nRelSysErrEtaSources/2+1);
+                    // create dummy histo
+                    TH2D *histo2DNewSysErrMean ;
+                    histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 100,0.,maxPtGlobalEta,1000.,-0.5,50.);
+                    SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
+                                            1,0.9, 510, 510);
+                    histo2DNewSysErrMean->Draw();
 
-                // create legend
-                TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
-                legendMeanNew->SetMargin(0.1);
-                if (nRelSysErrEtaSources> 7) legendMeanNew->SetNColumns(2);
+                    // Give legend position for plotting
+                    Double_t minXLegend     = 0.12;
+                    Double_t maxYLegend     = 0.95;
+                    Double_t widthLegend    = 0.25;
+                    if (nRelSysErrEtaSources> 7)
+                        widthLegend         = 0.5;
+                    Double_t heightLegend   = 1.05* 0.035 * (nRelSysErrEtaSources+3);
+                    if (nRelSysErrEtaSources> 7)
+                        heightLegend        = 1.05* 0.035 * (nRelSysErrEtaSources/2+1);
 
-                for(Int_t i = 0;i< nRelSysErrEtaSources-1 ;i++){    
-                    DrawGammaSetMarkerTGraphAsym(graphRelSysErrEtaSourceWeighted[i], GetMarkerStyleSystematics(  ptSysDetail[0][0].at(i+1), mode), 1.,
-                                                GetColorSystematics( ptSysDetail[0][0].at(i+1), mode),GetColorSystematics( ptSysDetail[0][0].at(i+1), mode));
-                    graphRelSysErrEtaSourceWeighted[i]->Draw("pX0,csame");
-                    legendMeanNew->AddEntry(graphRelSysErrEtaSourceWeighted[i],GetSystematicsName(ptSysDetail[0][0].at(i+1)),"p");
-                }
-                
-                DrawGammaSetMarkerTGraphAsym(graphRelSysErrEtaSourceWeighted[nRelSysErrEtaSources-1], 20, 1.,kBlack,kBlack);
-                graphRelSysErrEtaSourceWeighted[nRelSysErrEtaSources-1]->Draw("p,csame");
-                legendMeanNew->AddEntry(graphRelSysErrEtaSourceWeighted[nRelSysErrEtaSources-1],"quad. sum.","p");
-                legendMeanNew->Draw();
+                    // create legend
+                    TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
+                    legendMeanNew->SetMargin(0.1);
+                    if (nRelSysErrEtaSources> 7) legendMeanNew->SetNColumns(2);
 
-                // labeling
-                TLatex *labelEnergySysDetailed = new TLatex(0.7, 0.93,collisionSystem.Data());
-                labelEnergySysDetailed->SetTextAlign(31);
-                SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
-                labelEnergySysDetailed->Draw();
+                    for(Int_t i = 0;i< nRelSysErrEtaSources-1 ;i++){
+                        DrawGammaSetMarkerTGraphAsym(graphRelSysErrEtaSourceWeighted[i], GetMarkerStyleSystematics(  ptSysDetail[0][0].at(i+1), mode), 1.,
+                                                    GetColorSystematics( ptSysDetail[0][0].at(i+1), mode),GetColorSystematics( ptSysDetail[0][0].at(i+1), mode));
+                        graphRelSysErrEtaSourceWeighted[i]->Draw("pX0,csame");
+                        legendMeanNew->AddEntry(graphRelSysErrEtaSourceWeighted[i],GetSystematicsName(ptSysDetail[0][0].at(i+1)),"p");
+                    }
 
-                TLatex *labelEtaSysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
-                labelEtaSysDetailed->SetTextAlign(31);
-                SetStyleTLatex( labelEtaSysDetailed, 0.85*textSizeSpectra,4);
-                labelEtaSysDetailed->Draw();
+                    DrawGammaSetMarkerTGraphAsym(graphRelSysErrEtaSourceWeighted[nRelSysErrEtaSources-1], 20, 1.,kBlack,kBlack);
+                    graphRelSysErrEtaSourceWeighted[nRelSysErrEtaSources-1]->Draw("p,csame");
+                    legendMeanNew->AddEntry(graphRelSysErrEtaSourceWeighted[nRelSysErrEtaSources-1],"quad. sum.","p");
+                    legendMeanNew->Draw();
 
-                TLatex *labelDetProcSysDetailed = new TLatex(0.7, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
-                labelDetProcSysDetailed->SetTextAlign(31);
-                SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4);
-                labelDetProcSysDetailed->Draw();
+                    // labeling
+                    TLatex *labelEnergySysDetailed = new TLatex(0.7, 0.93,collisionSystem.Data());
+                    labelEnergySysDetailed->SetTextAlign(31);
+                    SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
+                    labelEnergySysDetailed->Draw();
 
-            canvasNewSysErrMean->Update();
-            canvasNewSysErrMean->SaveAs(Form("%s/Eta_SysErrorsSeparatedSourcesReweighted_%s.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+                    TLatex *labelEtaSysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+                    labelEtaSysDetailed->SetTextAlign(31);
+                    SetStyleTLatex( labelEtaSysDetailed, 0.85*textSizeSpectra,4);
+                    labelEtaSysDetailed->Draw();
+
+                    TLatex *labelDetProcSysDetailed = new TLatex(0.7, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
+                    labelDetProcSysDetailed->SetTextAlign(31);
+                    SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4);
+                    labelDetProcSysDetailed->Draw();
+
+                canvasNewSysErrMean->Update();
+                canvasNewSysErrMean->SaveAs(Form("%s/Eta_SysErrorsSeparatedSourcesReweighted_%s.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+            }
 
             // delete detailed sys array
             for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
@@ -5773,39 +5782,43 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     hasSysEtaToPi0              = kTRUE;
                  // read in detailed systematics
                     string sysFileEtaToPi0Det = sysFileEtaToPi0[i].Data();
-                    if(!replace(sysFileEtaToPi0Det, "Averaged", "AveragedSingle")){cout << "WARNING: could not find detailed systematics file " << sysFileEtaToPi0Det << ", skipping... " << endl; sysAvailSingleEtaToPi0[i] = kFALSE; continue;}
-                    ifstream fileSysErrDetailedEtaToPi0;
-                    fileSysErrDetailedEtaToPi0.open(sysFileEtaToPi0Det,ios_base::in);
-                    if(fileSysErrDetailedEtaToPi0.is_open()) 
-                        sysAvailSingleEtaToPi0[i] = kTRUE;
-                    else{ 
-                        sysAvailSingleEtaToPi0[i] = kFALSE; 
-                        cout << "couldn't find single errors for eta/pi0, jumping" << endl;    
-                    }
-                    
-                    if (sysAvailSingleEtaToPi0[i]){
-                        cout << sysFileEtaToPi0Det << endl;
-                        counter = 0;
-                        string line;
-                        Int_t counterColumn = 0;
-                        while (getline(fileSysErrDetailedEtaToPi0, line) && counter < 100) {
-                            istringstream ss(line);
-                            TString temp="";
-                            counterColumn = 0;
-                            while(ss && counterColumn < 100){
-                                ss >> temp;
-                                if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
-                                ptSysDetail[i][counter].push_back(temp);
-                                counterColumn++;
-                                }
-                            }
-                            if(counter == 0){
-                                ptSysDetail[i][counter++].push_back("TotalError");
-                                counterColumn++;
-                            }else counter++;
-                        }
-                        numberBinsSysAvailSingleEtaToPi0[i] = counter;
-                        fileSysErrDetailedEtaToPi0.close();
+                    if(!replace(sysFileEtaToPi0Det, "Averaged", "AveragedSingle")){
+                      cout << "WARNING: could not find detailed systematics file " << sysFileEtaToPi0Det << ", skipping... " << endl;
+                      sysAvailSingleEtaToPi0[i] = kFALSE;
+                    }else{
+                      ifstream fileSysErrDetailedEtaToPi0;
+                      fileSysErrDetailedEtaToPi0.open(sysFileEtaToPi0Det,ios_base::in);
+                      if(fileSysErrDetailedEtaToPi0.is_open())
+                          sysAvailSingleEtaToPi0[i] = kTRUE;
+                      else{
+                          sysAvailSingleEtaToPi0[i] = kFALSE;
+                          cout << "couldn't find single errors for eta/pi0, jumping" << endl;
+                      }
+
+                      if (sysAvailSingleEtaToPi0[i]){
+                          cout << sysFileEtaToPi0Det << endl;
+                          counter = 0;
+                          string line;
+                          Int_t counterColumn = 0;
+                          while (getline(fileSysErrDetailedEtaToPi0, line) && counter < 100) {
+                              istringstream ss(line);
+                              TString temp="";
+                              counterColumn = 0;
+                              while(ss && counterColumn < 100){
+                                  ss >> temp;
+                                  if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
+                                  ptSysDetail[i][counter].push_back(temp);
+                                  counterColumn++;
+                                  }
+                              }
+                              if(counter == 0){
+                                  ptSysDetail[i][counter++].push_back("TotalError");
+                                  counterColumn++;
+                              }else counter++;
+                          }
+                          numberBinsSysAvailSingleEtaToPi0[i] = counter;
+                          fileSysErrDetailedEtaToPi0.close();
+                      }
                     }
                 } else {
                     sysAvailEtaToPi0[i]         = kFALSE;
@@ -6399,61 +6412,63 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 // ***************************************************************************************************
                 // ********************* Plot all mean erros separately after smoothing ******************************
                 // ***************************************************************************************************    
-                TCanvas* canvasNewSysErrMean = new TCanvas("canvasNewSysErrMean","",200,10,1350,900);// gives the page size
-                DrawGammaCanvasSettings( canvasNewSysErrMean, 0.08, 0.01, 0.015, 0.09);
-                
-                    // create dummy histo
-                    TH2D *histo2DNewSysErrMean ;
-                    histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 100,0.,maxPtGlobalEta,1000.,-0.5,50.);
-                    SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
-                                            1,0.9, 510, 510);
-                    histo2DNewSysErrMean->Draw();
+                if(sysAvailSingleEtaToPi0[0] && graphRelSysErrEtaToPi0SourceWeighted[0]){
+                  TCanvas* canvasNewSysErrMean = new TCanvas("canvasNewSysErrMean","",200,10,1350,900);// gives the page size
+                  DrawGammaCanvasSettings( canvasNewSysErrMean, 0.08, 0.01, 0.015, 0.09);
 
-                    // Give legend position for plotting
-                    Double_t minXLegend     = 0.12;
-                    Double_t maxYLegend     = 0.95;
-                    Double_t widthLegend    = 0.25;
-                    if (nRelSysErrEtaToPi0Sources> 7)  
-                        widthLegend         = 0.5;
-                    Double_t heightLegend   = 1.05* 0.035 * (nRelSysErrEtaToPi0Sources+3);
-                    if (nRelSysErrEtaToPi0Sources> 7)  
-                        heightLegend        = 1.05* 0.035 * (nRelSysErrEtaToPi0Sources/2+1);
+                      // create dummy histo
+                      TH2D *histo2DNewSysErrMean ;
+                      histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 100,0.,maxPtGlobalEta,1000.,-0.5,50.);
+                      SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
+                                              1,0.9, 510, 510);
+                      histo2DNewSysErrMean->Draw();
 
-                    // create legend
-                    TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
-                    legendMeanNew->SetMargin(0.1);
-                    if (nRelSysErrEtaToPi0Sources> 7) legendMeanNew->SetNColumns(2);
+                      // Give legend position for plotting
+                      Double_t minXLegend     = 0.12;
+                      Double_t maxYLegend     = 0.95;
+                      Double_t widthLegend    = 0.25;
+                      if (nRelSysErrEtaToPi0Sources> 7)
+                          widthLegend         = 0.5;
+                      Double_t heightLegend   = 1.05* 0.035 * (nRelSysErrEtaToPi0Sources+3);
+                      if (nRelSysErrEtaToPi0Sources> 7)
+                          heightLegend        = 1.05* 0.035 * (nRelSysErrEtaToPi0Sources/2+1);
 
-                    for(Int_t i = 0;i< nRelSysErrEtaToPi0Sources-1 ;i++){    
-                        DrawGammaSetMarkerTGraphAsym(graphRelSysErrEtaToPi0SourceWeighted[i], GetMarkerStyleSystematics(  ptSysDetail[0][0].at(i+1), mode), 1.,
-                                                    GetColorSystematics( ptSysDetail[0][0].at(i+1), mode),GetColorSystematics( ptSysDetail[0][0].at(i+1), mode));
-                        graphRelSysErrEtaToPi0SourceWeighted[i]->Draw("pX0,csame");
-                        legendMeanNew->AddEntry(graphRelSysErrEtaToPi0SourceWeighted[i],GetSystematicsName(ptSysDetail[0][0].at(i+1)),"p");
-                    }
-                    
-                    DrawGammaSetMarkerTGraphAsym(graphRelSysErrEtaToPi0SourceWeighted[nRelSysErrEtaToPi0Sources-1], 20, 1.,kBlack,kBlack);
-                    graphRelSysErrEtaToPi0SourceWeighted[nRelSysErrEtaToPi0Sources-1]->Draw("p,csame");
-                    legendMeanNew->AddEntry(graphRelSysErrEtaToPi0SourceWeighted[nRelSysErrEtaToPi0Sources-1],"quad. sum.","p");
-                    legendMeanNew->Draw();
+                      // create legend
+                      TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
+                      legendMeanNew->SetMargin(0.1);
+                      if (nRelSysErrEtaToPi0Sources> 7) legendMeanNew->SetNColumns(2);
 
-                    // labeling
-                    TLatex *labelEnergySysDetailed = new TLatex(0.7, 0.93,collisionSystem.Data());
-                    labelEnergySysDetailed->SetTextAlign(31);
-                    SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
-                    labelEnergySysDetailed->Draw();
+                      for(Int_t i = 0;i< nRelSysErrEtaToPi0Sources-1 ;i++){
+                          DrawGammaSetMarkerTGraphAsym(graphRelSysErrEtaToPi0SourceWeighted[i], GetMarkerStyleSystematics(  ptSysDetail[0][0].at(i+1), mode), 1.,
+                                                      GetColorSystematics( ptSysDetail[0][0].at(i+1), mode),GetColorSystematics( ptSysDetail[0][0].at(i+1), mode));
+                          graphRelSysErrEtaToPi0SourceWeighted[i]->Draw("pX0,csame");
+                          legendMeanNew->AddEntry(graphRelSysErrEtaToPi0SourceWeighted[i],GetSystematicsName(ptSysDetail[0][0].at(i+1)),"p");
+                      }
 
-                    TLatex *labelEtaToPi0SysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#eta/#pi^{0}");
-                    labelEtaToPi0SysDetailed->SetTextAlign(31);
-                    SetStyleTLatex( labelEtaToPi0SysDetailed, 0.85*textSizeSpectra,4);
-                    labelEtaToPi0SysDetailed->Draw();
+                      DrawGammaSetMarkerTGraphAsym(graphRelSysErrEtaToPi0SourceWeighted[nRelSysErrEtaToPi0Sources-1], 20, 1.,kBlack,kBlack);
+                      graphRelSysErrEtaToPi0SourceWeighted[nRelSysErrEtaToPi0Sources-1]->Draw("p,csame");
+                      legendMeanNew->AddEntry(graphRelSysErrEtaToPi0SourceWeighted[nRelSysErrEtaToPi0Sources-1],"quad. sum.","p");
+                      legendMeanNew->Draw();
 
-                    TLatex *labelDetProcSysDetailed = new TLatex(0.7, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
-                    labelDetProcSysDetailed->SetTextAlign(31);
-                    SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4);
-                    labelDetProcSysDetailed->Draw();
+                      // labeling
+                      TLatex *labelEnergySysDetailed = new TLatex(0.7, 0.93,collisionSystem.Data());
+                      labelEnergySysDetailed->SetTextAlign(31);
+                      SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
+                      labelEnergySysDetailed->Draw();
 
-                canvasNewSysErrMean->Update();
-                canvasNewSysErrMean->SaveAs(Form("%s/EtaToPi0_SysErrorsSeparatedSourcesReweighted_%s.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+                      TLatex *labelEtaToPi0SysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#eta/#pi^{0}");
+                      labelEtaToPi0SysDetailed->SetTextAlign(31);
+                      SetStyleTLatex( labelEtaToPi0SysDetailed, 0.85*textSizeSpectra,4);
+                      labelEtaToPi0SysDetailed->Draw();
+
+                      TLatex *labelDetProcSysDetailed = new TLatex(0.7, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
+                      labelDetProcSysDetailed->SetTextAlign(31);
+                      SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4);
+                      labelDetProcSysDetailed->Draw();
+
+                  canvasNewSysErrMean->Update();
+                  canvasNewSysErrMean->SaveAs(Form("%s/EtaToPi0_SysErrorsSeparatedSourcesReweighted_%s.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+                }
 
                 // delete detailed sys array
                 for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++){
