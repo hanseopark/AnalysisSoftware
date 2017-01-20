@@ -14,10 +14,13 @@ Float_t             CalculateMeanPt(const TF1* );
 void                CalculateMeanPtWithError(const TF1* , Float_t& , Float_t& );
 // TH1D*            CalculateHistoRatioToFit (TH1D*, TF1*);
 // TH1F*            CalculateHistoRatioToFit (TH1F*, TF1*);
+TF1*                MultiplyTF1(TF1* f1, TF1* f2, TString name);
+TF1*                DivideTF1(TF1* f1, TF1* f2, TString name);
+TH1D*               DivideTF1IntoHisto(TF1* f1, TF1* f2, TString name, TH1D *dummy);
 TH1D*               CorrectHistoToBinCenter (TH1D*);
 TGraphErrors* 	    CalculateGraphRatioToGraph(TGraphErrors*, TGraphErrors*);
 TGraphAsymmErrors*  CalculateAsymGraphRatioToGraph(TGraphAsymmErrors* graphA, TGraphAsymmErrors* graphB);
-TGraphErrors*       CalculateGraphErrRatioToFit (TGraphErrors* , TF1* );
+  TGraphErrors*       CalculateGraphErrRatioToFit (TGraphErrors* , TF1* );
 TGraphAsymmErrors*  CalculateGraphErrRatioToFit (TGraphAsymmErrors* , TF1* );
 TGraph*             CalculateGraphRatioToFit (TGraph* , TF1* );
 TH1D*               CalculateHistoRatioToFitNLO (TH1D* , TF1* , Double_t );
@@ -172,6 +175,126 @@ TH1F* CalculateHistoRatioToSpline (TH1F* histo, TSpline* fit){
         }
     }
     return histo2;
+}
+
+
+//================================================================================================================
+//Multiply two TF1s
+//================================================================================================================
+TF1* MultiplyTF1(TF1* f1, TF1* f2, TString name) {
+
+    if (!f1 || !f2) return NULL;
+
+    Double_t xmin, xmax;
+    f1->GetRange(xmin, xmax);
+    Int_t nPar1                         = f1->GetNpar();
+    Int_t nPar2                         = f2->GetNpar();
+    TString formula1                    = f1->GetExpFormula();
+    TString formula2                    = f2->GetExpFormula();
+
+    for (Int_t i = 0; i< nPar2; i++){
+        formula2.ReplaceAll(Form("[%d]",i), Form("[%d]",i+nPar1));
+    }
+
+    TF1* result = new TF1(name.Data(),Form("(%s)*(%s)",formula1.Data(), formula2.Data()), xmin, xmax);
+    for (Int_t i = 0; i < nPar1; i++ ){
+        result->SetParameter(i, f1->GetParameter(i));
+    }
+    for (Int_t j = 0; j < nPar2; j++ ){
+        result->SetParameter(nPar1+j, f2->GetParameter(j));
+    }
+
+    return result;
+}
+
+//================================================================================================================
+//Divide two TF1s
+//================================================================================================================
+TF1* DivideTF1(TF1* f1, TF1* f2, TString name) {
+
+    if (!f1 || !f2) return NULL;
+
+    Double_t xmin, xmax;
+    f1->GetRange(xmin, xmax);
+    Int_t nPar1                         = f1->GetNpar();
+    Int_t nPar2                         = f2->GetNpar();
+    TString formula1                    = f1->GetExpFormula();
+    TString formula2                    = f2->GetExpFormula();
+
+    for (Int_t i = 0; i< nPar2; i++){
+        formula2.ReplaceAll(Form("[%d]",i), Form("[%d]",i+nPar1));
+    }
+
+    TF1* result = new TF1(name.Data(),Form("(%s)/(%s)",formula1.Data(), formula2.Data()), xmin, xmax);
+    for (Int_t i = 0; i < nPar1; i++ ){
+        result->SetParameter(i, f1->GetParameter(i));
+    }
+    for (Int_t j = 0; j < nPar2; j++ ){
+        result->SetParameter(nPar1+j, f2->GetParameter(j));
+    }
+
+    return result;
+}
+
+//================================================================================================================
+//Divide two TF1s
+//================================================================================================================
+TH1D* DivideTF1IntoHisto(TF1* f1, TF1* f2, TString name, TH1D *dummy) {
+
+    if (!f1 || !f2) return NULL;
+
+    TH1D *result = (TH1D*)dummy->Clone(name.Data());
+    for(Int_t i=1; i<dummy->GetNbinsX()+1; i++){
+
+      Double_t x = dummy->GetBinCenter(i);
+
+      Double_t ratio = f1->Integral(dummy->GetXaxis()->GetBinLowEdge(i), dummy->GetXaxis()->GetBinUpEdge(i))/f2->Integral(dummy->GetXaxis()->GetBinLowEdge(i), dummy->GetXaxis()->GetBinUpEdge(i));
+
+      result->SetBinContent(i, ratio);
+
+    }
+
+
+    return result;
+}
+
+//************************** Routine to calculate mt scaled params **************************************************
+TF1* MtScaledParam(TF1* param, Int_t particlePDG, Double_t scaleFactor) {
+
+    if (!param || particlePDG==0 || !scaleFactor)
+        return NULL;
+
+    Double_t mass                               = TDatabasePDG::Instance()->GetParticle(particlePDG)->Mass();
+    Double_t massPi0                            = TDatabasePDG::Instance()->GetParticle(111)->Mass();
+
+    if (!mass || !massPi0)
+        return NULL;
+
+    Double_t xMin, xMax;
+    param->GetRange(xMin, xMax);
+    TString paramPi0Formula = param->GetExpFormula();
+    cout << "input parametrization : " << paramPi0Formula.Data() << endl;
+
+    TString mT = Form("TMath::Sqrt(x*x + %f * %f - %f * %f)",mass,mass,massPi0,massPi0);
+    TString pTovermT = Form("x/TMath::Sqrt(x*x + %f * %f - %f * %f)",mass,mass,massPi0,massPi0);
+    TString mTScaledFormula = paramPi0Formula.ReplaceAll("exp", "placeholder");
+    TString dummyFormula = mTScaledFormula.ReplaceAll("x",mT.Data() );
+    mTScaledFormula = dummyFormula.ReplaceAll("placeholder","exp");
+    cout << "output parametrization in mT: " << mTScaledFormula.Data() << endl;
+
+    Double_t paramEvaluated = param->Eval(5.)/param->Eval(TMath::Sqrt(25. + mass*mass - massPi0*massPi0));
+
+    TString outputFormula = Form("%f * (%s)",scaleFactor,mTScaledFormula.Data());
+//     TString outputFormula = Form("%f * %f * %s * (%s)",scaleFactor,paramEvaluated,pTovermT.Data(),mTScaledFormula.Data());
+    cout << "output formula : " << outputFormula.Data() << endl;
+
+    TF1* scaledParam                                 = new TF1("scaledParam",outputFormula.Data(),xMin, xMax);
+    Int_t nPar = param->GetNpar();
+    for (Int_t i = 0; i< nPar; i++){
+        scaledParam->SetParameter(i,param->GetParameter(i));
+    }
+
+    return scaledParam;
 }
 
 
