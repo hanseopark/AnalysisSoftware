@@ -2326,7 +2326,7 @@ Double_t bin_shift_x(TF1 *fYield, Double_t ptMin, Double_t ptMax, Double_t yValu
 // ****************************************************************************************************************
 // *********************************** ApplyXshift ****************************************************************
 // ****************************************************************************************************************
-TGraphAsymmErrors *ApplyXshift(TGraphAsymmErrors *spectrum, TF1 *tsallis, TString mesonType = "Pi0" ){
+TGraphAsymmErrors *ApplyXshift(TGraphAsymmErrors *spectrum, TF1 *tsallis, TString mesonType = "Pi0", Bool_t doFit = kTRUE ){
     //----------------------------------------------------------------------
     // This function takes a spectrum, fits it by a function tsallis
     // and calculates pt-shift iteratively.
@@ -2365,7 +2365,7 @@ TGraphAsymmErrors *ApplyXshift(TGraphAsymmErrors *spectrum, TF1 *tsallis, TStrin
         Double_t *errorYlow  = spectrumShift->GetEYlow();
         Double_t *errorYhigh = spectrumShift->GetEYhigh();
 
-        spectrumShift->Fit(tsallis, "NRMEXQ0","", xPoint[0]-errorXlow[0],xPoint[numberPoints-1]+errorXhigh[numberPoints-1]);
+        if(doFit) spectrumShift->Fit(tsallis, "NRMEXQ0","", xPoint[0]-errorXlow[0],xPoint[numberPoints-1]+errorXhigh[numberPoints-1]);
         for(Int_t p=0; p<nPar; p++){
             fYield->SetParameter(p,tsallis->GetParameter(p));
         }
