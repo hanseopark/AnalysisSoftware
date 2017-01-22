@@ -3412,7 +3412,7 @@ Color_t GetColorDefaultColor( TString energy,
 
     if (!energy.CompareTo("5TeV") || !energy.CompareTo("5.023TeV") || !energy.CompareTo("5.02TeV")){
         if (!generator.CompareTo("")){
-            return kBlack;   
+            return kOrange+1;   
         } else if (!generator.CompareTo("LHC16h8a")) {
             return kBlue;
         } else if (!generator.CompareTo("LHC16h8b")) {
@@ -3422,7 +3422,7 @@ Color_t GetColorDefaultColor( TString energy,
         } else if (!generator.CompareTo("LHC16k5b")) {
             return kRed;
         } else {
-            return kBlack;
+            return kOrange-9;
         }
     }
 
@@ -3677,7 +3677,7 @@ Style_t GetDefaultMarkerStyle( TString energy,
     }
     if (!energy.CompareTo("5TeV") || !energy.CompareTo("5.023TeV") || !energy.CompareTo("5.02TeV")){
         if (!generator.CompareTo("")){
-            return 24;
+            return 20;
         } else if(generator.Contains("LHC16h8a")){
             return 30;
         } else if(generator.Contains("LHC16h8b")){
@@ -3687,7 +3687,7 @@ Style_t GetDefaultMarkerStyle( TString energy,
         } else if(generator.Contains("LHC16k5b")){
             return 28;
         } else {
-            return 20;
+            return 24;
         } 
     }
     if (!energy.CompareTo("7TeV")){
