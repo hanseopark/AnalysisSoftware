@@ -271,6 +271,23 @@ void PrepareChargedPionDataALICE_pPb(){
         histoChargedProtonsSystCent[i]->Sumw2();
         histoChargedProtonsSystCent[i]->Scale(0.5);
     }
+    
+    // **************************************************************************************
+    // ******************************** Reading Charged Pions *******************************
+    // publication: 
+    // twiki: https://twiki.cern.ch/twiki/bin/view/ALICE/PWGLFPAGSPECTRALowToHighPtpA
+    // **************************************************************************************  
+    TFile* fileIdentfiedPubRpPb                     = new TFile("ExternalInputpPb/IdentifiedCharged/RpPb_502_PiKp__20151204.root");
+    TH1D* histoChargedPionsRpPbStatErr              = (TH1D*)fileIdentfiedPubRpPb->Get("hstat_RpPb_pion");
+    TH1D* histoChargedPionsRpPbSystErr              = (TH1D*)fileIdentfiedPubRpPb->Get("hsys_RpPb_pion"); 
+    TH1D* histoChargedKaonsRpPbStatErr              = (TH1D*)fileIdentfiedPubRpPb->Get("hstat_RpPb_kaon");
+    TH1D* histoChargedKaonsRpPbSystErr              = (TH1D*)fileIdentfiedPubRpPb->Get("hsys_RpPb_kaon"); 
+    TH1D* histoProtonRpPbStatErr                    = (TH1D*)fileIdentfiedPubRpPb->Get("hstat_RpPb_proton");
+    TH1D* histoProtonRpPbSystErr                    = (TH1D*)fileIdentfiedPubRpPb->Get("hsys_RpPb_proton"); 
+    TH1D* histoChargedHadronRpPbStatErr             = (TH1D*)fileIdentfiedPubRpPb->Get("hstat_RpPb_charged"); // /HepData/8550/d4x1y1
+    TH1D* histoChargedHadronRpPbSystErr             = (TH1D*)fileIdentfiedPubRpPb->Get("hsys_RpPb_charged"); // /HepData/8550/d4x1y1
+    TGraphAsymmErrors* graphChargedPionsRpPbStatErr = new TGraphAsymmErrors(histoChargedPionsRpPbStatErr);
+    
     // *********************************************************************************************************************
     // ********************************** Write Output files ***************************************************************
     // *********************************************************************************************************************    
@@ -310,7 +327,17 @@ void PrepareChargedPionDataALICE_pPb(){
             if (histoChargedProtonsSystCent[i]) histoChargedProtonsStatCent[i]->Write(Form("histoProtonPubSyspPb%s",centStringCharged[i].Data()), TObject::kOverwrite);
         }
         
+        if (histoChargedPionsRpPbStatErr) histoChargedPionsRpPbStatErr->Write("histoChargedPionPubStatpPb_RpPb");
+        if (histoChargedPionsRpPbSystErr) histoChargedPionsRpPbSystErr->Write("histoChargedPionPubSyspPb_RpPb");
+        if (histoChargedKaonsRpPbStatErr) histoChargedKaonsRpPbStatErr->Write("histoChargedKaonPubStatpPb_RpPb");
+        if (histoChargedKaonsRpPbSystErr) histoChargedKaonsRpPbSystErr->Write("histoChargedKaonPubSyspPb_RpPb");
+        if (histoProtonRpPbStatErr) histoProtonRpPbStatErr->Write("histoProtonPubStatpPb_RpPb");
+        if (histoProtonRpPbSystErr) histoProtonRpPbSystErr->Write("histoProtonPubSyspPb_RpPb");
+        if (histoChargedHadronRpPbStatErr) histoChargedHadronRpPbStatErr->Write("histoChargedHadronPubStatpPb_RpPb");
+        if (histoChargedHadronRpPbSystErr) histoChargedHadronRpPbSystErr->Write("histoChargedHadronPubSyspPb_RpPb");
+        
     fileChargedPionspPb.Close();
     
 }
 
+I

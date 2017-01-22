@@ -5146,18 +5146,22 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         canvasRpPb->Update();
         canvasRpPb->Print(Form("%s/Pi0_RpPb_IndividualMeasurements.%s",outputDir.Data(),suffix.Data()));
 
-        histo2DRpPb->DrawCopy();    
-            graphRpPbIndSystPi0[4]->Draw("E2same");
-            graphRpPbIndStatPi0WOXErr[4]->Draw("p,same,z");
+        for (Int_t i = 0; i < 11; i++){
+            if (graphRpPbIndSystPi0[i]){
+                histo2DRpPb->DrawCopy();
+                    graphRpPbIndSystPi0[4]->Draw("E2same");
+                    graphRpPbIndStatPi0WOXErr[4]->Draw("p,same,z");
+                    
+                    DrawGammaLines(0.23, 25 , 1, 1 ,1, kGray, 7);   
 
-            DrawGammaLines(0.23, 25 , 1, 1 ,1, kGray, 7);   
-
-            labelEnergyRpPb->Draw();
-            labelALICERpPb->Draw();
-            labelPi0RpPb->Draw();
-
-        canvasRpPb->Update();
-        canvasRpPb->Print(Form("%s/Pi0_RpPb_PCMEMC.%s",outputDir.Data(),suffix.Data()));
+                    labelEnergyRpPb->Draw();
+                    labelALICERpPb->Draw();
+                    labelPi0RpPb->Draw();
+                    
+                canvasRpPb->Update();
+                canvasRpPb->Print(Form("%s/Pi0_RpPb_%s.%s",outputDir.Data(), nameMeasGlobalLabel[i].Data(), suffix.Data()));
+            }
+        }    
         
         histo2DRpPb->DrawCopy(); 
         
@@ -5199,18 +5203,22 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         canvasRpPb->Update();
         canvasRpPb->Print(Form("%s/Eta_RpPb_IndividualMeasurements.%s",outputDir.Data(),suffix.Data()));
 
-        histo2DRpPb->DrawCopy();
-            graphRpPbIndSystEta[4]->Draw("E2same");
-            graphRpPbIndStatEtaWOXErr[4]->Draw("p,same,z");
-            
-            DrawGammaLines(0.23, 25 , 1, 1 ,1, kGray, 7);   
+        for (Int_t i = 0; i < 11; i++){
+            if (graphRpPbIndSystEta[i]){
+                histo2DRpPb->DrawCopy();
+                    graphRpPbIndSystEta[4]->Draw("E2same");
+                    graphRpPbIndStatEtaWOXErr[4]->Draw("p,same,z");
+                    
+                    DrawGammaLines(0.23, 25 , 1, 1 ,1, kGray, 7);   
 
-            labelEnergyRpPb->Draw();
-            labelALICERpPb->Draw();
-            labelEtaRpPb->Draw();
-            
-        canvasRpPb->Update();
-        canvasRpPb->Print(Form("%s/Eta_RpPb_PCMEMC.%s",outputDir.Data(),suffix.Data()));
+                    labelEnergyRpPb->Draw();
+                    labelALICERpPb->Draw();
+                    labelEtaRpPb->Draw();
+                    
+                canvasRpPb->Update();
+                canvasRpPb->Print(Form("%s/Eta_RpPb_%s.%s",outputDir.Data(), nameMeasGlobalLabel[i].Data(), suffix.Data()));
+            }
+        }    
     }
     
     //*************************************************************************************************************
