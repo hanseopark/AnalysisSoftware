@@ -137,6 +137,7 @@ void CalculateReference (   TString configFile                  = "",
     TString modeName        = ReturnTextReconstructionProcess(mode);
     TString mesonString     = ReturnMesonString (meson);
     TString collisionSystem = ReturnFullCollisionsSystem(finalEnergy);
+    TString collSystOut      = ReturnCollisionEnergyOutputString(finalEnergy);
     TString detProcess      = ReturnFullTextReconstructionProcess(mode);
     TString outputDir       = Form("%s/%s/CalculateReference",suffix.Data(),dateForOutput.Data());
     TString outputDirPlots  = Form("%s/%s/CalculateReference/%s",suffix.Data(), dateForOutput.Data(), modeName.Data());
@@ -373,6 +374,7 @@ void CalculateReference (   TString configFile                  = "",
                 if (histMC[i]){
                     haveMC[i]           = kTRUE;
                     graphMC[i]          = new TGraphAsymmErrors(histMC[i]);
+                    while (graphMC[i]->GetX()[graphMC[i]->GetN()-1] > 30) graphMC[i]->RemovePoint(graphMC[i]->GetN()-1);
                     fitCombMC[i]        = DoFitWithTsallis(graphMC[i],Form("fitCombMC_%d",i),meson.Data(), graphMC[i]->GetY()[0],7.,0.2);
                 }
             }
@@ -648,6 +650,7 @@ void CalculateReference (   TString configFile                  = "",
                     nDataSetsMC++;
                     haveMC[nDataSets]           = kTRUE;
                     graphMC[nDataSets]          = new TGraphAsymmErrors(histMC[nDataSets]);
+                    while (graphMC[nDataSets]->GetX()[graphMC[nDataSets]->GetN()-1] > 30) graphMC[nDataSets]->RemovePoint(graphMC[nDataSets]->GetN()-1);
                     fitCombMC[nDataSets]        = DoFitWithTsallis(graphMC[nDataSets],Form("fitCombMC_%d",nDataSets),meson.Data(), graphMC[nDataSets]->GetY()[0],7.,0.2);
                     energyIndName[nDataSets]    = finalEnergy;
                     energyInd[nDataSets]        = energy;
@@ -867,7 +870,7 @@ void CalculateReference (   TString configFile                  = "",
     for (Int_t i = 0; i < nDataSets; i++){
         PlotWithFit(canvasDummy2, histo2DDummy, histo2DDummy2, graphComb[i], graphCombReb[i], fitComb[i], Form("input_%s%s%s_withFit",meson.Data(), modeName.Data(), energyIndName[i].Data()), outputDirPlots, suffix, energyIndName[i]);    
     }    
-    PlotWithFit(canvasDummy2, histo2DDummy, histo2DDummy2, graphFinalEnergyCombWOCorr, 0x0, fitFinal, Form("compare_%s%s%s_withFit", meson.Data(), modeName.Data(), finalEnergy.Data()), outputDirPlots, suffix, energyIndName[nDataSets]);
+    PlotWithFit(canvasDummy2, histo2DDummy, histo2DDummy2, graphFinalEnergyCombWOCorr, 0x0, fitFinal, Form("compare_%s%s%s_withFit", meson.Data(), modeName.Data(), collSystOut.Data()), outputDirPlots, suffix, energyIndName[nDataSets]);
     PlotGraphsOfAllEnergies(canvasDummy2, histo2DDummy, nDataSets+1, graphCombReb, fitComb, energyIndName, Form("output%s%s_withFit",meson.Data(), modeName.Data()),  outputDirPlots, suffix);
     
     // **************************************************************************************************
@@ -945,7 +948,7 @@ void CalculateReference (   TString configFile                  = "",
         SetStyleTLatex( labelRelErrProcess, 0.035, 4, 1, 42, kTRUE, 31);
         labelRelErrProcess->Draw();
         
-    canvasRelErr->SaveAs(Form("%s/%s%s_RelErr_%s.%s",outputDirPlots.Data(),meson.Data(), modeName.Data(), finalEnergy.Data(), suffix.Data()));
+    canvasRelErr->SaveAs(Form("%s/%s%s_RelErr_%s.%s",outputDirPlots.Data(),meson.Data(), modeName.Data(), collSystOut.Data(), suffix.Data()));
 
     histo2DRelErr->Draw("copy");
 
