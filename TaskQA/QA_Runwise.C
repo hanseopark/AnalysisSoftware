@@ -751,11 +751,18 @@ void QA_Runwise(
       cutNr = 0;  // 
       // filePath= "/afs/cern.ch/user/h/hmurakam/Hikari/Photon/Grid/OutputLegoTrains/pp/";
       // filePathPhoton = "/afs/cern.ch/user/h/hmurakam/Hikari/Photon/Grid/OutputLegoTrains/pp/";//pp/$select/$runnumber/AnalysisResults
-      filePath= "~/Hikari/Photon/Grid/OutputLegoTrains/pp/Legotrain-vAN-20161204-ConvTesting";
-      filePathPhoton = "~/Hikari/Photon/Grid/OutputLegoTrains/pp/Legotrain-vAN-20161204-ConvTesting";//pp/$select/$runnumber/AnalysisResults
-      fileName = "GammaConvV1_28.root";
-      DataSets[0]="LHC15n"; DataSets[1]="LHC16h8a"; DataSets[2]="LHC16h8b";
-      plotDataSets[0]="LHC15n"; plotDataSets[1]="LHC16h8a PYT8"; plotDataSets[2]="LHC16h8b PYT6";
+
+      // filePath= "~/Hikari/Photon/Grid/OutputLegoTrains/pp/Legotrain-vAN-20161204-ConvTesting";
+      // filePathPhoton = "~/Hikari/Photon/Grid/OutputLegoTrains/pp/Legotrain-vAN-20161204-ConvTesting";//pp/$select/$runnumber/AnalysisResults
+      // fileName = "GammaConvV1_28.root";
+      // DataSets[0]="LHC15n"; DataSets[1]="LHC16h8a"; DataSets[2]="LHC16h8b";
+      // plotDataSets[0]="LHC15n"; plotDataSets[1]="LHC16h8a PYT8"; plotDataSets[2]="LHC16h8b PYT6";
+
+      filePath= "~/Hikari/Photon/Grid/OutputLegoTrains/pp/Legotrain-vAN-20170112-SystStudy";
+      filePathPhoton = "~/Hikari/Photon/Grid/OutputLegoTrains/pp/Legotrain-vAN-20170112-SystStudy";//pp/$select/$runnumber/AnalysisResults
+      fileName = "GammaConvV1_51.root";
+      DataSets[0]="LHC15n"; DataSets[1]="LHC16k5a"; DataSets[2]="LHC16k5b";
+      plotDataSets[0]="LHC15n pass3"; plotDataSets[1]="LHC16k5a PYT8"; plotDataSets[2]="LHC16k5b PYT6";
       markerSize=1.5;
       doEquidistantXaxis=kTRUE;
     }
