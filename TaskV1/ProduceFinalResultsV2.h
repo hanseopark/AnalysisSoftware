@@ -164,7 +164,7 @@ Int_t fExampleBinEta     = 6;
 void SelectExampleBin(TString optionEnergy, TString useSameBinningPi0Eta){
 	
     if(optionEnergy.CompareTo("7TeV") == 0){
-        fExampleBinPi0     = 7;
+        fExampleBinPi0     = 4;
         fExampleBinEta     = 6;
         if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("8TeV") == 0) {

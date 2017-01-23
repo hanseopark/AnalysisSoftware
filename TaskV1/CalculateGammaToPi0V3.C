@@ -125,9 +125,9 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
     histoMCIncRatio->Divide(histoGammaSpecMCAll,histoMCYieldMeson,1,1,"");
 
 // Opening systematics file
-   TString fileNameSysErrGamma                  ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_11_30.dat"; // default
-   TString fileNameSysErrInclRatio              ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_11_30.dat"; // default
-   TString fileNameSysErrDoubleRatio            ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_11_30.dat"; // default
+   TString fileNameSysErrGamma                  ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_12_15.dat"; // default
+   TString fileNameSysErrInclRatio              ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_12_15.dat"; // default
+   TString fileNameSysErrDoubleRatio            ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_12_15.dat"; // default
    if(option.CompareTo("7TeV") == 0){
         fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_12_15.dat";
         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_12_15.dat";
@@ -696,7 +696,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
 
         cout<<"loading cocktail file: "<<nameFileCocktail<<endl;
 
-        if (!option.CompareTo("7TeV") || !option.CompareTo("13TeV")){
+        if (!option.CompareTo("7TeV") || !option.CompareTo("8TeV") || !option.CompareTo("13TeV")){
             cocktailPi0                         = (TH1D* )cocktailFile->Get("Pi0_Pt");
             cocktailAllGamma                    = (TH1D* )cocktailFile->Get("Gamma_Pt");
             cocktailAllGammaPi0                 = (TH1D* )cocktailFile->Get("Gamma_From_Pi0_Pt");
@@ -991,7 +991,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                histoThermalPhotonSpectrum               = (TH1D*)histoGammaSpecCorrPurity->Clone("histoThermalPhotonSpectrum");
                histoPromptPhotonSpectrum                = (TH1D*)histoGammaSpecCorrPurity->Clone("histoPromptPhotonSpectrum");
                
-               Bool_t doUpperLimits                     = kTRUE;
+               Bool_t doUpperLimits                     = kFALSE;
                if (!doUpperLimits) {
                    for(Int_t i = 1; i < histoDirectPhotonSpectrum->GetNbinsX(); i++){
                        histoDirectPhotonSpectrum->SetBinContent(    i+1,0);

@@ -1963,7 +1963,7 @@ do
         useCocktail=0
     fi
 
-    if [ $energy = "7TeV" ]; then
+    if [ $energy = "7TeV" ] || [ $energy = "8TeV" ]; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
@@ -2010,26 +2010,6 @@ do
             fi
         else
             echo "Command not found. Please try again.";
-        fi
-    elif [ $energy = "8TeV" ]; then
-        Conference="No"
-        Con=0
-        if [ $ONLYCORRECTION -eq 0 ]; then
-            GiveBinning8TeV
-            correctPi0=1
-            correctEta=1
-        fi
-        if [ $correctPi0 -eq 0 ]; then
-            correct=0    
-        elif [ $correctEta -eq 0 ]; then
-            correct=0
-        else 
-            correct=1
-        fi
-
-        if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
-            useTHnSparse=0
-            AdvMesonQA="AdvancedMesonQA"
         fi
     elif [ $energy = "13TeV" ] || [ $energy = "13TeVLowB" ]; then
         if [ $mode -ne 0 ]; then
