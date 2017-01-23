@@ -169,9 +169,7 @@ Bool_t ConvertCocktailSecondaryToRaw(TH1D* histoGammaSec, TH1D* histoConvProb, T
     if (!histoConvProb || !histoRecoEff) return kFALSE;
     histoGammaSec->Multiply(histoConvProb);
     histoGammaSec->Multiply(histoRecoEff);
-//     histoGammaSec->Multiply(1/(2*TMath::Pi()));
-//     histoGammaSec->Scale(0.3);
-    
+
     if (useResponseMatrix) {
         if (!responseMatrix) return kFALSE;
         cout << "will use unfolding for " << histoGammaSec->GetName() << endl;
