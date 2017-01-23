@@ -32,7 +32,7 @@ Double_t fBinsPeakPtHalf[13]                    = { 0.0, 0.2, 0.3, 0.4, 0.5, 0.6
 //****************************************************************************************************
 Double_t fBinsPi0900GeVPt[12]                   = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 2.0, 2.5,
                                                     3.5, 4.5};
-Int_t fBinsPi0900GeVPtRebin[11]                 = { 4, 2, 2, 2, 2, 2, 2, 2, 2, 4,
+Int_t fBinsPi0900GeVPtRebin[11]                 = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 4,
                                                     4};
 Double_t fBinsEta900GeVPt[4]                    =  {0., 0.9, 1.8, 3.0};
 Int_t fBinsEta900GeVPtRebin[4]                  =  {8, 5, 5};
@@ -161,11 +161,11 @@ Int_t fBinsEtaPrim5TeVPtRebin[7]                = { 8, 2, 2, 2, 2, 2, 2};
 //****************************************************************************************************
 //******************** Pt binning for pp, 7 TeV ******************************************************
 //****************************************************************************************************
-Double_t fBinsPi07TeVPt[44]                     = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
-                                                    1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1,
-                                                    2.2, 2.3, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
-                                                    4.0, 4.3, 4.6, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0, 10.0,
-                                                    12.0, 16.0, 20.0, 25.0};
+Double_t fBinsPi07TeVPt[46]                     = {    0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
+                                                       1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1,
+                                                       2.2, 2.3, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
+                                                       4.0, 4.3, 4.6, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0, 9.0,
+                                                      10.0,11.0,12.0,16.0,20.0,25.0};
 Double_t fBinsPi07TeVPCMPHOSPt[44]              = { 0.0, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
                                                     1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1,
                                                     2.2, 2.3, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
@@ -180,12 +180,11 @@ Double_t fBinsPi07TeVDalitzPt[23]               =  {0, 0.6, 0.7, 0.8, 1.0, 1.2, 
 Int_t fBinsPi07TeVDalitzPtRebin[22]             =  {5, 5, 5, 5, 4, 4, 4, 4, 4, 4,
                                                     4, 5, 5, 5, 5,  5, 5, 5, 8, 8,
                                                     8, 10};
-
-Int_t fBinsPi07TeVPtRebin[43]                   = { 3, 2, 1, 1, 1, 1, 1, 1, 1, 1,
+Int_t fBinsPi07TeVPtRebin[45]                   = { 3, 2, 1, 1, 1, 1, 1, 1, 1, 1,
                                                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                     1, 2, 2, 3, 3, 4, 4, 4, 5, 5,
-                                                    5, 5, 1};
+                                                    5, 5, 5, 5, 5};
 Int_t fBinsPi07TeVPCMPHOSPtRebin[43]            = { 3, 2, 2, 2, 2, 2, 2, 2,
                                                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -214,14 +213,14 @@ Int_t fBinsPi07TeVEMCPtRebin[45]                = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 
 Double_t fBinsEta7TeVPt[18]                     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0,
                                                     3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0};
-Double_t fBinsEta7TeVPCMPHOSPt[18]              = { 0.0, 0.8, 1.0, 1.5, 2.0, 2.5, 3.0,
+Double_t fBinsEta7TeVPCMPHOSPt[18]              = { 0.0, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0,
                                                     3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0};
 Double_t fBinsEta7TeVPCMEMCPt[19]               = { 0.0, 0.4, 0.6, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0, 3.5,
                                                     4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 14.0, 20, 25.0};
 Int_t fBinsEta7TeVPtRebin[17]                   = { 8, 7, 7, 4, 4, 4, 4, 4, 5, 5,
                                                     5, 5, 5, 5, 6, 8, 8};
-Int_t fBinsEta7TeVPCMPHOSPtRebin[17]            = { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-                                                    8, 8, 8, 8, 8, 8, 8};
+Int_t fBinsEta7TeVPCMPHOSPtRebin[17]            = { 8, 8, 8, 5, 5, 5, 5, 5, 5,
+                                                    10, 10, 8, 8, 8, 8, 8};
 
 Int_t fBinsEta7TeVPCMEMCPtRebin[18]             = { 2, 2, 2, 16, 10, 8, 8, 8, 8, 8,
                                                     8, 10, 10, 16, 16, 16, 16, 20};
@@ -422,7 +421,12 @@ Double_t fBinsCluster8TeVmEMCPt[84]             = { 0.0,  0.1,  0.2,  0.3,  0.4,
                                                     16.,  17.,  18.,  19.,  20.,  22.,  24.,  26.,  28.,  30.,
                                                     35,   40,   45,   50,   55,   60,   65,   70,   75,   80,
                                                     85,   90,   95,   100 };
-
+Double_t fBinsDirGamma8TeVPt[24]                = { 0.0, 0.3, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
+                                                    1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 3.5, 4.0,
+                                                    4.5, 5.0, 6.0, 7.0, 9.0, 12., 16., 20.};
+Int_t fBinsDirGamma8TeVPtRebin[23]              = { 3, 2, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                    2, 2, 2, 3, 3, 4, 4, 4, 5, 5,
+                                                    5, 5, 5};
 //****************************************************************************************************
 //******************** Pt binning for pp, 13 TeV *****************************************************
 //****************************************************************************************************
@@ -854,6 +858,8 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                 return 4;
             else if ( mode == 1 )
                 return 5;
+            else if ( mode == 3 )
+                return 4;
             else
                 return 14;
         } else if (energy.CompareTo("8TeV") == 0) {
@@ -1011,7 +1017,7 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
 	}
     } else if (meson.Contains("Eta")) {
         if (energy.CompareTo("900GeV") == 0) {
-            return 2;
+            return 1;
         } else if (energy.CompareTo("2.76TeV") == 0) {
             if (mode == 0){             // PCM-PCM
                 return 4;
@@ -1077,6 +1083,8 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
         } else if (energy.CompareTo("7TeV") == 0) {
             if (mode == 1 )
                 return 4;
+            else if (mode == 3 )
+                return 2;
             else
                 return 6;
         } else if (energy.CompareTo("8TeV") == 0) {
@@ -1323,7 +1331,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     if (i < fNBinsPt+1)
                         fNRebin[i] = fBinsPi0900GeVPtRebin[i];
                 }
-                nIterBGFit      = 13;
+                nIterBGFit      = 11;
             }
         //*********************************************************************************************
         //********************************** Pi0 for pp 2.76TeV****************************************
@@ -1556,10 +1564,18 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     fStartPtBin = 10;
                 else if(modi == 2)
                     fStartPtBin = 6;
+                if(modi == 5)
+                    fStartPtBin = 4;
                 fColumn         = 7;
                 fRow            = 6;
-                if (modi == 2) fColumn = 7;
+                if (modi == 0) fRow = 7;
+                else if (modi == 2) fColumn = 7;
                 else if (modi == 4) fColumn = 6;
+                else if (modi == 5){
+                    fColumn = 6;
+                    fRow    = 5;
+                }
+
                 if (isDCA) {
                     fColumn     = 5;
                     fRow        = 4;
@@ -1607,167 +1623,181 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
         //********************************** Pi0 for pp 8TeV*******************************************
         //*********************************************************************************************
         } else if (energy.CompareTo("8TeV") == 0) {
-            if (triggerSet == -1){
-                if (trigger.CompareTo("52") == 0){
-                    specialTrigg = 1; // L0 EMC7
-                } else if ( trigger.CompareTo("81") == 0 ){
-                    specialTrigg = 2; //L1 INT7 EGA
-                } else if ( trigger.CompareTo("53") == 0 ){
-                    specialTrigg = 3; // L0 EMC8
-                } else if ( trigger.CompareTo("82") == 0 ) {
-                    specialTrigg = 4; // L1 INT8 EGA
+            if (directPhoton.CompareTo("directPhoton") == 0){
+                fStartPtBin     = 1;
+                fColumn         = 5;
+                fRow            = 5;
+                if (fNBinsPt > 23) {
+                    cout << "You have chosen Direct Photon Plots and more than 23 bins, this is not possible, it will be reduced to 23 bins." << endl;
+                    fNBinsPt    = 23;
+                }
+                for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                    fBinsPt[i]         = fBinsDirGamma8TeVPt[i];
+                    if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma8TeVPtRebin[i];
                 }
             } else {
-                specialTrigg        = triggerSet;
-            }
-
-            fStartPtBin = 1;
-            if (modi == 4 ) fStartPtBin = 7;
-            if (modi == 2 ) fStartPtBin = 2;
-
-
-            if (modi == 0 && specialTrigg == 1) fStartPtBin = 21;
-            if (modi == 0 && specialTrigg == 2) fStartPtBin = 27;
-            if (modi == 2 && specialTrigg == 1) fStartPtBin = 21;
-            if (modi == 2 && specialTrigg == 2) fStartPtBin = 28;
-            if (modi == 4 && specialTrigg == 1) fStartPtBin = 22;
-            if (modi == 4 && specialTrigg == 2) fStartPtBin = 33;
-            if (modi == 10 && specialTrigg == 0) fStartPtBin = 28;
-            if (modi == 10 && specialTrigg == 1) fStartPtBin = 28;
-            if (modi == 10 && specialTrigg == 2) fStartPtBin = 28;
-
-            fColumn             = 4;
-            fRow                = 2;
-            if ((fNBinsPt - fStartPtBin) > 28){
-                fColumn     = 6;
-                fRow        = 6;
-            } else if ((fNBinsPt - fStartPtBin) < 8){
-                fColumn     = 4;
-                fRow        = 2;
-            } else if ((fNBinsPt - fStartPtBin) < 12){
-                fColumn     = 4;
-                fRow        = 3;
-            } else if ((fNBinsPt - fStartPtBin) < 16){
-                fColumn     = 4;
-                fRow        = 4;
-            } else if ((fNBinsPt - fStartPtBin) < 20){
-                fColumn     = 5;
-                fRow        = 4;
-            } else if ((fNBinsPt - fStartPtBin) < 25){
-                fColumn     = 5;
-                fRow        = 5;
-            } else if ((fNBinsPt - fStartPtBin) < 29){
-                fColumn     = 6;
-                fRow        = 5;
-            }
-            if (fNBinsPt > 21 && isDCA) {
-                cout << "You have chosen to have more than 21 bins, this is not possible, it will be reduced to 21" << endl;
-                fNBinsPt                        = 21;
-            } else if (fNBinsPt > 33 && modi != 2 && modi != 3 && modi != 4 && modi != 10) {
-                if ( specialTrigg == 1 && fNBinsPt > 42){
-                    cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
-                    fNBinsPt                    = 42;
-                } else if ( specialTrigg == 2 && fNBinsPt > 41){
-                    cout << "You have chosen to have more than 41 bins, this is not possible, it will be reduced to 41" << endl;
-                    fNBinsPt                    = 41;
-                } else if (specialTrigg!=1 && specialTrigg!=2){
-                    cout << "You have chosen to have more than 33 bins, this is not possible, it will be reduced to 32" << endl;
-                    fNBinsPt                    = 33;
-                }
-            } else if (fNBinsPt > 32 && (modi ==4)){
-                if( specialTrigg == 2 && fNBinsPt > 42){
-                    cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
-                    fNBinsPt                        = 42;
-                } else if ( specialTrigg == 1 && fNBinsPt > 42){
-                    cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
-                    fNBinsPt                        = 42;
-                } else if (specialTrigg!=1 && specialTrigg!=2){
-                    cout << "You have chosen to have more than 32 bins, this is not possible, it will be reduced to 32" << endl;
-                    fNBinsPt                        = 32;
-                }
-            } else if (fNBinsPt > 28 && (modi == 2 || modi == 3)){
-                if( specialTrigg == 2 && fNBinsPt > 42){
-                  cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
-                  fNBinsPt        = 42;
-                } else if ( specialTrigg == 1 && fNBinsPt > 42){
-                  cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
-                  fNBinsPt = 42;
-                } else if(specialTrigg!=1 && specialTrigg!=2) {
-                  cout << "You have chosen to have more than 28 bins, this is not possible, it will be reduced to 28" << endl;
-                  fNBinsPt        = 28;
-                }
-            } else if (fNBinsPt > 55 && (modi == 10)){
-                cout << "You have chosen to have more than 55 bins, this is not possible, it will be reduced to 55" << endl;
-                fNBinsPt        = 55;
-            }
-
-            for (Int_t i = 0; i < fNBinsPt+1; i++) {
-                if (modi == 4 ){
-                    if( specialTrigg == 1 ){
-                        fBinsPt[i]                 = fBinsPi08TeVEMCalTrigger1Pt[i];
-                    } else if ( specialTrigg == 2 ){
-                        fBinsPt[i]                 = fBinsPi08TeVEMCalTrigger2Pt[i];
-                    } else
-                        fBinsPt[i]                 = fBinsPi08TeVPtEMC[i];
-                } else if (modi == 2){
-                    if( specialTrigg == 1 ){
-                        fBinsPt[i]                 = fBinsPi08TeVPCMEMCalTrigger1Pt[i];
-                    } else if ( specialTrigg == 2 ){
-                        fBinsPt[i]                 = fBinsPi08TeVTrigger2Pt[i];
-                    } else
-                        fBinsPt[i]                 = fBinsPi08TeVPtPCMEMC[i];
-                } else if (modi == 10){
-                    fBinsPt[i]                     = fBinsPi08TeVPtmEMC[i];
+                if (triggerSet == -1){
+                    if (trigger.CompareTo("52") == 0){
+                        specialTrigg = 1; // L0 EMC7
+                    } else if ( trigger.CompareTo("81") == 0 ){
+                        specialTrigg = 2; //L1 INT7 EGA
+                    } else if ( trigger.CompareTo("53") == 0 ){
+                        specialTrigg = 3; // L0 EMC8
+                    } else if ( trigger.CompareTo("82") == 0 ) {
+                        specialTrigg = 4; // L1 INT8 EGA
+                    }
                 } else {
-                    if( specialTrigg == 1 ){
-                        fBinsPt[i]                 = fBinsPi08TeVTrigger1Pt[i];
-                    } else if ( specialTrigg == 2 ){
-                        fBinsPt[i]                 = fBinsPi08TeVPCMTrigger2Pt[i];
-                    } else if ( isDCA ) {
-                        fBinsPt[i]                 = fBinsPi08TeVPtDCA[i];
-                    } else
-                        fBinsPt[i]                 = fBinsPi08TeVPt[i];
+                    specialTrigg        = triggerSet;
                 }
 
-                if (modi == 2){
-                    if( specialTrigg == 1 ){
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPCMEMCTrigger1PtRebin[i];
-                    } else if( specialTrigg == 2 ){
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPCMEMCTrigger2PtRebin[i];
-                    } else{
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPCMEMCPtRebin[i];
+                fStartPtBin = 1;
+                if (modi == 4 ) fStartPtBin = 7;
+                if (modi == 2 ) fStartPtBin = 2;
+
+
+                if (modi == 0 && specialTrigg == 1) fStartPtBin = 21;
+                if (modi == 0 && specialTrigg == 2) fStartPtBin = 27;
+                if (modi == 2 && specialTrigg == 1) fStartPtBin = 21;
+                if (modi == 2 && specialTrigg == 2) fStartPtBin = 28;
+                if (modi == 4 && specialTrigg == 1) fStartPtBin = 22;
+                if (modi == 4 && specialTrigg == 2) fStartPtBin = 33;
+                if (modi == 10 && specialTrigg == 0) fStartPtBin = 28;
+                if (modi == 10 && specialTrigg == 1) fStartPtBin = 28;
+                if (modi == 10 && specialTrigg == 2) fStartPtBin = 28;
+
+                fColumn             = 4;
+                fRow                = 2;
+                if ((fNBinsPt - fStartPtBin) > 28){
+                    fColumn     = 6;
+                    fRow        = 6;
+                } else if ((fNBinsPt - fStartPtBin) < 8){
+                    fColumn     = 4;
+                    fRow        = 2;
+                } else if ((fNBinsPt - fStartPtBin) < 12){
+                    fColumn     = 4;
+                    fRow        = 3;
+                } else if ((fNBinsPt - fStartPtBin) < 16){
+                    fColumn     = 4;
+                    fRow        = 4;
+                } else if ((fNBinsPt - fStartPtBin) < 20){
+                    fColumn     = 5;
+                    fRow        = 4;
+                } else if ((fNBinsPt - fStartPtBin) < 25){
+                    fColumn     = 5;
+                    fRow        = 5;
+                } else if ((fNBinsPt - fStartPtBin) < 29){
+                    fColumn     = 6;
+                    fRow        = 5;
+                }
+                if (fNBinsPt > 21 && isDCA) {
+                    cout << "You have chosen to have more than 21 bins, this is not possible, it will be reduced to 21" << endl;
+                    fNBinsPt                        = 21;
+                } else if (fNBinsPt > 33 && modi != 2 && modi != 3 && modi != 4 && modi != 10) {
+                    if ( specialTrigg == 1 && fNBinsPt > 42){
+                        cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
+                        fNBinsPt                    = 42;
+                    } else if ( specialTrigg == 2 && fNBinsPt > 41){
+                        cout << "You have chosen to have more than 41 bins, this is not possible, it will be reduced to 41" << endl;
+                        fNBinsPt                    = 41;
+                    } else if (specialTrigg!=1 && specialTrigg!=2){
+                        cout << "You have chosen to have more than 33 bins, this is not possible, it will be reduced to 32" << endl;
+                        fNBinsPt                    = 33;
                     }
-                } else if(modi == 4) {
-                    if( specialTrigg == 1 ){
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCTrigger1PtRebin[i];
-                    } else if( specialTrigg == 2 ){
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCTrigger2PtRebin[i];
-                    } else{
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCPtRebin[i];
+                } else if (fNBinsPt > 32 && (modi ==4)){
+                    if( specialTrigg == 2 && fNBinsPt > 42){
+                        cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
+                        fNBinsPt                        = 42;
+                    } else if ( specialTrigg == 1 && fNBinsPt > 42){
+                        cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
+                        fNBinsPt                        = 42;
+                    } else if (specialTrigg!=1 && specialTrigg!=2){
+                        cout << "You have chosen to have more than 32 bins, this is not possible, it will be reduced to 32" << endl;
+                        fNBinsPt                        = 32;
                     }
-                } else if(modi == 10) {
-                    if (i < fNBinsPt+1) fNRebin[i]     = fBinsPi08TeVPtmEMCRebin[i];
-                } else {
-                    if( specialTrigg == 1 ){
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPCMTrigger1PtRebin[i];
-                    } else if( specialTrigg == 2 ){
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPCMTrigger2PtRebin[i];
-                    } else{
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPtRebin[i];
+                } else if (fNBinsPt > 28 && (modi == 2 || modi == 3)){
+                    if( specialTrigg == 2 && fNBinsPt > 42){
+                    cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
+                    fNBinsPt        = 42;
+                    } else if ( specialTrigg == 1 && fNBinsPt > 42){
+                    cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
+                    fNBinsPt = 42;
+                    } else if(specialTrigg!=1 && specialTrigg!=2) {
+                    cout << "You have chosen to have more than 28 bins, this is not possible, it will be reduced to 28" << endl;
+                    fNBinsPt        = 28;
+                    }
+                } else if (fNBinsPt > 55 && (modi == 10)){
+                    cout << "You have chosen to have more than 55 bins, this is not possible, it will be reduced to 55" << endl;
+                    fNBinsPt        = 55;
+                }
+
+                for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                    if (modi == 4 ){
+                        if( specialTrigg == 1 ){
+                            fBinsPt[i]                 = fBinsPi08TeVEMCalTrigger1Pt[i];
+                        } else if ( specialTrigg == 2 ){
+                            fBinsPt[i]                 = fBinsPi08TeVEMCalTrigger2Pt[i];
+                        } else
+                            fBinsPt[i]                 = fBinsPi08TeVPtEMC[i];
+                    } else if (modi == 2){
+                        if( specialTrigg == 1 ){
+                            fBinsPt[i]                 = fBinsPi08TeVPCMEMCalTrigger1Pt[i];
+                        } else if ( specialTrigg == 2 ){
+                            fBinsPt[i]                 = fBinsPi08TeVTrigger2Pt[i];
+                        } else
+                            fBinsPt[i]                 = fBinsPi08TeVPtPCMEMC[i];
+                    } else if (modi == 10){
+                        fBinsPt[i]                     = fBinsPi08TeVPtmEMC[i];
+                    } else {
+                        if( specialTrigg == 1 ){
+                            fBinsPt[i]                 = fBinsPi08TeVTrigger1Pt[i];
+                        } else if ( specialTrigg == 2 ){
+                            fBinsPt[i]                 = fBinsPi08TeVPCMTrigger2Pt[i];
+                        } else if ( isDCA ) {
+                            fBinsPt[i]                 = fBinsPi08TeVPtDCA[i];
+                        } else
+                            fBinsPt[i]                 = fBinsPi08TeVPt[i];
+                    }
+
+                    if (modi == 2){
+                        if( specialTrigg == 1 ){
+                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPCMEMCTrigger1PtRebin[i];
+                        } else if( specialTrigg == 2 ){
+                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPCMEMCTrigger2PtRebin[i];
+                        } else{
+                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPCMEMCPtRebin[i];
+                        }
+                    } else if(modi == 4) {
+                        if( specialTrigg == 1 ){
+                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCTrigger1PtRebin[i];
+                        } else if( specialTrigg == 2 ){
+                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCTrigger2PtRebin[i];
+                        } else{
+                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCPtRebin[i];
+                        }
+                    } else if(modi == 10) {
+                        if (i < fNBinsPt+1) fNRebin[i]     = fBinsPi08TeVPtmEMCRebin[i];
+                    } else {
+                        if( specialTrigg == 1 ){
+                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPCMTrigger1PtRebin[i];
+                        } else if( specialTrigg == 2 ){
+                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPCMTrigger2PtRebin[i];
+                        } else{
+                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVPtRebin[i];
+                        }
                     }
                 }
+
+                nIterBGFit                  = 11;
+                fMaxYFracBGOverIntHist      = 30;
+                optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+
+                Int_t nBinsPlot = fColumn*fRow -1;
+                if ((fNBinsPt-fStartPtBin) > nBinsPlot) fColumn++;
+                nBinsPlot           = fColumn*fRow -1;
+                if ((fNBinsPt-fStartPtBin) > nBinsPlot) fRow++;
             }
-
-            nIterBGFit                  = 11;
-            fMaxYFracBGOverIntHist      = 30;
-            optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
-            optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
-            optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
-
-            Int_t nBinsPlot = fColumn*fRow -1;
-            if ((fNBinsPt-fStartPtBin) > nBinsPlot) fColumn++;
-            nBinsPlot           = fColumn*fRow -1;
-            if ((fNBinsPt-fStartPtBin) > nBinsPlot) fRow++;
         //*********************************************************************************************
         //********************************** Pi0 for pp 13TeV******************************************
         //*********************************************************************************************
@@ -2989,6 +3019,11 @@ Int_t GetBinning(   Double_t*  binning,
                  for(Int_t i = 0; i < maxNBins+1; i++){
                      binning[i] = fBinsPi07TeVEMCPt[i];
                  }
+            } else if ( mode == 0 ){
+                maxNBins = 45;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsPi07TeVPt[i];
+                }
             }
         } else if (energy.CompareTo("8TeV") == 0){
             if ( mode == 2 ){
@@ -3061,6 +3096,11 @@ Int_t GetBinning(   Double_t*  binning,
                 maxNBins = 18;
                 for(Int_t i = 0; i < maxNBins+1; i++){
                     binning[i] = fBinsEta7TeVPCMEMCPt[i];
+                }
+            } else if ( mode == 0 ){
+                maxNBins = 16;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsEta7TeVPt[i];
                 }
             }
         } else if (energy.CompareTo("8TeV") == 0){

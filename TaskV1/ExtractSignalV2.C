@@ -2499,10 +2499,6 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fMesonIntDeltaRange         = new Double_t[2];
         fMesonIntDeltaRange[0]      = -0.035;
         fMesonIntDeltaRange[1]      = 0.010;
-		  if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV")){
-			  fMesonIntDeltaRange[0]      = -0.035;
-			  fMesonIntDeltaRange[1]      =  0.012;
-		  }
         fMesonIntDeltaRangeWide     = new Double_t[2];
         fMesonIntDeltaRangeWide[0]  = -0.055; 
         fMesonIntDeltaRangeWide[1]  = 0.025;
@@ -2540,6 +2536,18 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         if(fMode == 0 && fEnergyFlag.CompareTo("PbPb_5.02TeV") == 0){  // just temporary (18.1.2017)
           fMidPt[0]                   = 4.0;                           // due to strange BG shape and wrong fits at lower pT
           fMidPt[1]                   = 6.0;
+        }
+        if (!fEnergyFlag.CompareTo("8TeV") && fMode == 0){
+            fMesonIntDeltaRange[0]      = -0.035;
+            fMesonIntDeltaRange[1]      =  0.012;
+        }
+        if (fMode == 3) {
+            fMesonIntDeltaRange[0]      = -0.038;
+            fMesonIntDeltaRange[1]      =  0.018;
+            fMesonIntDeltaRangeWide[0]  = -0.055; 
+            fMesonIntDeltaRangeWide[1]  =  0.028;
+            fMesonIntDeltaRangeNarrow[0]= -0.015; 
+            fMesonIntDeltaRangeNarrow[1]=  0.008;
         }
         if (fMode == 2){
             fPeakRange[0]                   = 0.05;
@@ -2724,10 +2732,6 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fMesonIntDeltaRange         = new Double_t[2]; 
         fMesonIntDeltaRange[0]      = -0.048;
         fMesonIntDeltaRange[1]      = 0.022;
-        if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV")){
-            fMesonIntDeltaRange[0]      = -0.036;
-            fMesonIntDeltaRange[1]      =  0.018;
-        }
         fMesonIntDeltaRangeWide     = new Double_t[2]; 
         fMesonIntDeltaRangeWide[0]  = -0.068;
         fMesonIntDeltaRangeWide[1]  = 0.032;
@@ -2759,6 +2763,25 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fMidPt                      = new Double_t[2]; 
         fMidPt[0]                   = 1.5; 
         fMidPt[1]                   = 2.5;
+        if (!fEnergyFlag.CompareTo("8TeV") && fMode == 0){
+            fMesonIntDeltaRange[0]      = -0.036;
+            fMesonIntDeltaRange[1]      =  0.018;
+        }
+        if (fMode == 3) {
+            fMesonLambdaTail            =  0.007;
+            fMesonLambdaTailRange[0]    =  0.0065;
+            fMesonLambdaTailRange[1]    =  0.0075;
+//             fMesonLambdaTail            =  0.012;
+//             fMesonLambdaTailRange[0]    =  0.001;
+//             fMesonLambdaTailRange[1]    =   0.02;
+
+            fMesonIntDeltaRange[0]      = -0.080;
+            fMesonIntDeltaRange[1]      =  0.040;
+            fMesonIntDeltaRangeWide[0]  = -0.100;
+            fMesonIntDeltaRangeWide[1]  =  0.060;
+            fMesonIntDeltaRangeNarrow[0]= -0.033;
+            fMesonIntDeltaRangeNarrow[1]=  0.012;
+        }
         if (fMode == 2){
             fPeakRange[0]                   = 0.48; 
             fPeakRange[1]                   = 0.58;
@@ -4174,6 +4197,8 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
             if (fMode == 2 || fMode == 3) {
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*600./100.;
+                if (fMode == 3 && !fEnergyFlag.CompareTo("8TeV"))
+                    mesonAmplitudeMax = mesonAmplitude*150./100.;
             }
             if (fMode == 4 || fMode == 5) {
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
