@@ -325,7 +325,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
                     }
                 }    
             }
-            fHistoTrueMesonDCPt                                                 = (TH1F*)TrueConversionContainer->FindObject(ObjectNameTruePrimDC.Data());
+//             fHistoTrueMesonDCPt                                                 = (TH1F*)TrueConversionContainer->FindObject(ObjectNameTruePrimDC.Data());
 //             fHistoTrueMesonDCInvMassVSPt                                = (TH2D*)TrueConversionContainer->FindObject(ObjectNameDCMesonInvMassPt.Data());
 //             if (fHistoTrueMesonDCInvMassVSPt!= NULL) fEnableDCMeson = kTRUE;
 //             cout << "line " << __LINE__ << endl;
@@ -2681,6 +2681,14 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
     } else if ((fEnergyFlag.CompareTo("7TeV") == 0) && (fMeson.CompareTo("Pi0") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
+        nIterationsShowBackground[0]                    = 12;
+        nIterationsShowBackground[1]                    = 12;
+        nIterationsShowBackground[2]                    = 19;
+        nIterationsShowBackground[3]                    = 20;
+        optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
+        optionShowBackground[1]                         = "nosmoothing";
+        optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
+    } else if ((fEnergyFlag.CompareTo("8TeV") == 0) && (fMeson.CompareTo("Pi0") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
         nIterationsShowBackground[0]                    = 12;
         nIterationsShowBackground[1]                    = 12;
         nIterationsShowBackground[2]                    = 19;
