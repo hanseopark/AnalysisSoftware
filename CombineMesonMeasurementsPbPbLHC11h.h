@@ -205,28 +205,28 @@ Int_t offSetsPi0RAA[11]    =   { 4, 4, 15, 0, 0,
 Int_t offSetsPi0RAASys[11]=    { 4, 4, 15, 0, 0,
                               0, 0, 0, 0, 0, 1};
 
-// Int_t offSetsEta[11]    =   { 0, 0, 6, 0, 0,
-//                               0, 0, 0, 0, 0, 0};//qui
-// Int_t offSetsEtaSys[11]=    { 2, 0, 6, 0, 0,
-//                               0, 0, 0, 0, 0, 0};
-// Int_t offSetsEtaPi0Ratio[11]    =   { 0, 0, 6, 0, 0,
-//                               0, 0, 0, 0, 0, 0};//qui
-// Int_t offSetsEtaPi0RatioSys[11]=    { 2, 0, 6, 0, 0,
-//                               0, 0, 0, 0, 0, 0};
+Int_t offSetsEta[11]    =   { 0, 0, 6, 0, 0,
+                              0, 0, 0, 0, 0, 0};//qui
+Int_t offSetsEtaSys[11]=    { 2, 0, 6, 0, 0,
+                              0, 0, 0, 0, 0, 0};
+Int_t offSetsEtaPi0Ratio[11]    =   { 0, 0, 6, 0, 0,
+                              0, 0, 0, 0, 0, 0};//qui
+Int_t offSetsEtaPi0RatioSys[11]=    { 2, 0, 6, 0, 0,
+                              0, 0, 0, 0, 0, 0};
 Int_t offSetsEtaRAA[11]    =   { 2, 0, 6, 0, 0,
                               0, 0, 0, 0, 0, 0};//qui
 Int_t offSetsEtaRAASys[11]=    { 2, 0, 6, 0, 0,
                               0, 0, 0, 0, 0, 0};
 
 //for preliminary data:
-Int_t offSetsEta[11]    =   { 0, 0, 6, 0, 0,
-                              0, 0, 0, 0, 0, 0};//qui
-Int_t offSetsEtaSys[11]=    { 1, 0, 6, 0, 0,
-                              0, 0, 0, 0, 0, 0};
-Int_t offSetsEtaPi0Ratio[11]    =   { 0, 0, 6, 0, 0,
-                              0, 0, 0, 0, 0, 0};//qui
-Int_t offSetsEtaPi0RatioSys[11]=    { 2, 0, 6, 0, 0,
-                              0, 0, 0, 0, 0, 0};
+// Int_t offSetsEta[11]    =   { 0, 0, 6, 0, 0,
+//                               0, 0, 0, 0, 0, 0};//qui
+// Int_t offSetsEtaSys[11]=    { 1, 0, 6, 0, 0,
+//                               0, 0, 0, 0, 0, 0};
+// Int_t offSetsEtaPi0Ratio[11]    =   { 0, 0, 6, 0, 0,
+//                               0, 0, 0, 0, 0, 0};//qui
+// Int_t offSetsEtaPi0RatioSys[11]=    { 2, 0, 6, 0, 0,
+//                               0, 0, 0, 0, 0, 0};
 
 
 // weight of histos WITHOUT material budget

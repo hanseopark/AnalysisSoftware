@@ -5959,6 +5959,13 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
       TF1 *mTScaledEtaFromPi07TeV = (TF1*)MtScaledParam(pi0LevyFit7TeV, 221, 0.48);
       TF1* etapi0Ratio7TeV  = DivideTF1(mTScaledEtaFromPi07TeV, pi0LevyFit7TeV, "etapi0Ratio7TeV");
 
+      TFile *ppOldInput7TeV = new TFile("/home/admin1/leardini/newSoftware/cocktail_input/pp/pp7TeV_data_PCMResultsFullCorrection_PP_NoBinShifting_current20161117.root");
+      TDirectoryFile *Pi0Old7TeV = (TDirectoryFile*)ppOldInput7TeV->Get("Pi07TeV");
+      TDirectoryFile *Pi0OldFits = (TDirectoryFile*)Pi0Old7TeV->Get("Fits");
+      TF1 *pi0OldLevyFit7TeV = (TF1*)Pi0OldFits->Get("fitPtLevyPi0");
+      TF1 *mTScaledEtaFromOldPi07TeV = (TF1*)MtScaledParam(pi0OldLevyFit7TeV, 221, 0.48);
+      TF1* etapi0RatioOld7TeV  = DivideTF1(mTScaledEtaFromOldPi07TeV, pi0OldLevyFit7TeV, "etapi0RatioOld7TeV");
+
       cout << "PCM Eta for pPb" << endl;
       TString nameFilepPb = "LHC11hExternalInputs/data_PCMResults_pPb_20150624_standard_dc4.root";
       TFile* filePCMpPb                   = new TFile(nameFilepPb.Data());
@@ -5990,11 +5997,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
             graphCombEtatoPi0SysPbPb2760GeV_0010->Draw("E2same");
             if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombEtatoPi0StatPbPb2760GeV_0010);
             graphCombEtatoPi0StatPbPb2760GeV_0010->Draw("p,same");
-
-            etapi0RatioFromParamPbPb2760GeV->SetLineColor(colorCombo0010);
-            etapi0RatioFromParamPbPb2760GeV->SetLineStyle(5);
-            etapi0RatioFromParamPbPb2760GeV->SetLineWidth(4);
-            etapi0RatioFromParamPbPb2760GeV->Draw("c,histo,same");
 
             etapi0RatioPbPb2760GeV->SetLineColor(colorCombo0010+2);
             etapi0RatioPbPb2760GeV->SetLineStyle(2);
@@ -6042,10 +6044,15 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
             graphCombEtaToPi0RatioSysErrpp7TeV->Draw("same,pE2");
             graphCombEtaToPi0Ratiopp7TeVNoXErrors->Draw("same,pe");
 
-            etapi0Ratio7TeV->SetLineColor(kBlack);
-            etapi0Ratio7TeV->SetLineStyle(3);
-            etapi0Ratio7TeV->SetLineWidth(2);
-            etapi0Ratio7TeV->Draw("c,histo,same");
+            etapi0RatioOld7TeV->SetLineColor(kBlack);
+            etapi0RatioOld7TeV->SetLineStyle(3);
+            etapi0RatioOld7TeV->SetLineWidth(2);
+            etapi0RatioOld7TeV->Draw("c,histo,same");
+
+//             etapi0Ratio7TeV->SetLineColor(kBlack);
+//             etapi0Ratio7TeV->SetLineStyle(3);
+//             etapi0Ratio7TeV->SetLineWidth(2);
+//             etapi0Ratio7TeV->Draw("c,histo,same");
 
             DrawGammaSetMarker(cocktailEtaToPi0Ratio_MtScaledRebinned, 2, 0, kBlack, kBlack);
             cocktailEtaToPi0Ratio7TeVRebined->GetXaxis()->SetRangeUser(0.4,20);
@@ -6053,7 +6060,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
             cocktailEtaToPi0Ratio_MtScaledRebinned->GetXaxis()->SetRangeUser(0.4,20);
 //             cocktailEtaToPi0Ratio7TeVRebined->Draw("same,hist,c");
 //             cocktailEtaToPi0Ratio_K0ScaledRebinned->Draw("same,hist,c");
-            cocktailEtaToPi0Ratio_MtScaledRebinned->Draw("same,hist,c");
+//             cocktailEtaToPi0Ratio_MtScaledRebinned->Draw("same,hist,c");
 
   //          TLegend* legendEtatoPi0combo_onlyPbPbwithPP = new TLegend(0.12,0.73,0.53,0.92);
   //          legendEtatoPi0combo_onlyPbPbwithPP->SetFillColor(0);
@@ -6069,16 +6076,17 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
 
             labelPreliminary->Draw();
 
-            TLegend* legendEtatoPi0combo_withPP = new TLegend(0.5/*5*/,0.15,0.95,0.3/*26*/);
+            TLegend* legendEtatoPi0combo_withPP = new TLegend(0.55,0.15,0.95,0.3/*26*/);
             legendEtatoPi0combo_withPP->SetFillColor(0);
             legendEtatoPi0combo_withPP->SetLineColor(0);
             legendEtatoPi0combo_withPP->SetTextFont(42);
             legendEtatoPi0combo_withPP->SetTextSize(0.037);
             legendEtatoPi0combo_withPP->SetMargin(0.17);
-            legendEtatoPi0combo_withPP->SetHeader(Form("#eta/#pi^{0} %s",collisionSystemPP7TeV.Data()));
+            legendEtatoPi0combo_withPP->SetHeader(collisionSystemPP7TeV.Data());
             legendEtatoPi0combo_withPP->AddEntry(graphCombEtaToPi0RatioSysErrpp7TeV,"PLB 717 (2012) 162","fp");//"Phys. Lett. B 717 (2012) 162-172","fp");
-            legendEtatoPi0combo_withPP->AddEntry(etapi0Ratio7TeV,"#eta from #it{m}_{T} scaled #pi^{0} (pass4) ","l");
-            legendEtatoPi0combo_withPP->AddEntry(cocktailEtaToPi0Ratio_MtScaledRebinned,"#eta from #it{m}_{T} scaled #pi^{0} (Martin)","l");
+//             legendEtatoPi0combo_withPP->AddEntry(etapi0Ratio7TeV,"#eta from #it{m}_{T} scaled #pi^{0}","l");
+            legendEtatoPi0combo_withPP->AddEntry(etapi0RatioOld7TeV,"#eta from #it{m}_{T} scaled #pi^{0}","l");
+//             legendEtatoPi0combo_withPP->AddEntry(cocktailEtaToPi0Ratio_MtScaledRebinned,"#eta from #it{m}_{T} scaled #pi^{0} (Martin)","l");
             legendEtatoPi0combo_withPP->Draw();
 
 
@@ -6120,7 +6128,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Eta",
           legendEtatoPi0combo_withPP->SetTextFont(42);
           legendEtatoPi0combo_withPP->SetTextSize(0.037);
           legendEtatoPi0combo_withPP->SetMargin(0.17);
-          legendEtatoPi0combo_withPP->SetHeader(Form("#eta/#pi^{0} %s",collisionSystemPP7TeV.Data()));
+          legendEtatoPi0combo_withPP->SetHeader(collisionSystemPP7TeV.Data());
           legendEtatoPi0combo_withPP->AddEntry(graphCombEtaToPi0RatioSysErrpp7TeV,"PLB 717 (2012) 162","fp");//"Phys. Lett. B 717 (2012) 162-172","fp");
           legendEtatoPi0combo_withPP->Draw();
 
