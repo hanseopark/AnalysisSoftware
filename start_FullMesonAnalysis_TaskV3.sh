@@ -1963,7 +1963,7 @@ do
         useCocktail=0
     fi
 
-    if [ $energy = "7TeV" ] || [ $energy = "8TeV" ]; then
+    if [ $energy = "7TeV" ] ; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
@@ -1993,6 +1993,54 @@ do
             Con=0
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinning7TeV
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0    
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else 
+                correct=1
+            fi
+
+            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
+                useTHnSparse=0
+                AdvMesonQA="AdvancedMesonQA"
+            fi
+        else
+            echo "Command not found. Please try again.";
+        fi
+    elif [ $energy = "8TeV" ]; then
+        echo "Do you want to produce Direct Photon plots? Yes/No?";
+        read answer
+        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+            echo "Will produce Direct Photon plots ...";
+            directphoton="directPhoton"
+            Con=1
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinningDirectPhoton7TeV
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else 
+                correct=1
+            fi
+
+            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
+                useTHnSparse=0
+                AdvMesonQA="AdvancedMesonQA"
+            fi
+        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+            echo "No Direct Photon plots will be produced ...";
+            Conference="No"
+            Con=0
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinning8TeV
                 correctPi0=1
                 correctEta=1
             fi
