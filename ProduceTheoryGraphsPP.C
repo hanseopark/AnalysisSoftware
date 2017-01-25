@@ -841,7 +841,7 @@ void ProduceTheoryGraphsPP(){
     histoEtaToPi0RatioPythia8Monash2760GeV->Sumw2();
     histoEtaToPi0RatioPythia8Monash2760GeV->Divide(histoEtaToPi0RatioPythia8Monash2760GeV,histoPi0Pythia8MonashInvSec2760GeV);
 
-    TFile* filePythia8Monash2013_2760GeVLego        = TFile::Open("ExternalInput/Theory/Pythia/Pythia8_Monash2013_2760GeV_2204Mio.root");
+    TFile* filePythia8Monash2013_2760GeVLego        = TFile::Open("ExternalInput/Theory/Pythia/Pythia8_Monash2013_2760GeV_5169Mio.root");
     TH1F* histoPi0Pythia8MonashInvSec2760GeVLego    = (TH1F*)filePythia8Monash2013_2760GeVLego->Get("hPt_Pi0_MB_XSec");
     TH1F* histoEtaPythia8MonashInvSec2760GeVLego    = (TH1F*)filePythia8Monash2013_2760GeVLego->Get("hPt_Eta_MB_XSec");
     TH1F* histoEtaToPi0RatioPythia8Monash2760GeVLego= (TH1F*)histoEtaPythia8MonashInvSec2760GeVLego->Clone("histoEtaToPi0RatioPythia8Monash2760GeVLego");

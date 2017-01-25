@@ -65,6 +65,7 @@ Int_t       maxNSec                                                     = 4;
 TString     nameSecondaries[4]                                          = {"K0S", "Lambda", "K0L", "Rest"};
 TString     nameSecondariesCocktail[4]                                  = {"K0s", "Lambda", "K0l", "Rest"};
 TString     nameIntRange[6]                                             = {"", "Wide", "Narrow", "Left", "LeftWide", "LeftNarrow"};
+TString     nameIntBck[5]                                               = {"Minpol2","Pluspol2","RatioMinpol2","RatioPluspol2","AbsDiff"};
 
 //****************************************************************************
 //******************************** Output files ******************************
@@ -347,6 +348,7 @@ Double_t*   fBckYieldsError[6]                                          = {NULL,
 Double_t*   fTotalBckYieldsError[6]                                     = {NULL, NULL, NULL, NULL, NULL, NULL};
 Double_t*   fMesonYieldsError[6]                                        = {NULL, NULL, NULL, NULL, NULL, NULL};
 TH1D*       fHistoYieldMeson[6]                                         = {NULL, NULL, NULL, NULL, NULL, NULL};
+TH1D*       fHistoYieldDiffBck[5]                                       = {NULL, NULL, NULL, NULL, NULL};
 TH1D*       fHistoYieldMesonPerEvent[6]                                 = {NULL, NULL, NULL, NULL, NULL, NULL};
 TH1D*       fHistoYieldTrueMeson[6]                                     = {NULL, NULL, NULL, NULL, NULL, NULL};
 Double_t*   fMesonYieldsFunc[6]                                         = {NULL, NULL, NULL, NULL, NULL, NULL};
@@ -667,7 +669,11 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         // set medium pt range
         fMidPt[0]                   = 0.8;
         fMidPt[1]                   = 2.5;
-
+        if(mode == 0 && fEnergyFlag.CompareTo("PbPb_5.02TeV") == 0){  // just temporary (18.1.2017)
+           fMidPt[0]                   = 4.0;                           // due to strange BG shape and wrong fits at lower pT
+           fMidPt[1]                   = 6.0;
+         }
+        
         // Initialize peak range
         if (mode == 2){
             fPeakRange[0]               = 0.05;
@@ -772,6 +778,13 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                 fMesonIntDeltaRangeNarrow[0]= -0.016; 
                 fMesonIntDeltaRangeNarrow[1]= 0.016;
             }
+        } else if (mode == 3){
+            fMesonIntDeltaRange[0]      = -0.038;
+            fMesonIntDeltaRange[1]      =  0.018;
+            fMesonIntDeltaRangeWide[0]  = -0.055; 
+            fMesonIntDeltaRangeWide[1]  =  0.028;
+            fMesonIntDeltaRangeNarrow[0]= -0.015; 
+            fMesonIntDeltaRangeNarrow[1]=  0.008;
         } else if (mode == 4 ) {            
             fMesonIntDeltaRange[0]      = -0.05; 
             fMesonIntDeltaRange[1]      = 0.04; 
@@ -1005,6 +1018,13 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fMesonIntDeltaRangeWide[1]      = 0.032;
             fMesonIntDeltaRangeNarrow[0]    = -0.033;
             fMesonIntDeltaRangeNarrow[1]    = 0.012;
+        } else if (mode == 3) {
+            fMesonIntDeltaRange[0]          = -0.080;
+            fMesonIntDeltaRange[1]          =  0.040;
+            fMesonIntDeltaRangeWide[0]      = -0.100;
+            fMesonIntDeltaRangeWide[1]      =  0.060;
+            fMesonIntDeltaRangeNarrow[0]    = -0.033;
+            fMesonIntDeltaRangeNarrow[1]    =  0.012;
         } else if (mode == 2){
             fMesonIntDeltaRange[0]          = -0.060;
             fMesonIntDeltaRange[1]          = 0.055;
@@ -1107,6 +1127,13 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                     fMesonWidthExpect           = 0.025;
                 }
             } 
+        } else if (mode == 3) {
+            fMesonWidthExpect               = 0.005;
+            fMesonWidthRange[0]             = 0.002;   
+            fMesonWidthRange[1]             = 0.020;
+            fMesonLambdaTail                =  0.007;
+            fMesonLambdaTailRange[0]        =  0.0065;
+            fMesonLambdaTailRange[1]        =  0.0075;
         } else if (mode == 4 ) {            
             fMesonWidthExpect               = 0.025;
             fMesonLambdaTail                = 0.012;
