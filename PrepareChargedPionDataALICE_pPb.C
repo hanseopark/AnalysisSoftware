@@ -51,6 +51,12 @@ extern TBenchmark* gBenchmark;
 extern TSystem* gSystem;
 extern TMinuit* gMinuit;
 
+void RemoveZerosAndPrint(TGraphAsymmErrors* graph){
+  while (graph->GetY()[0] == 0. ) graph->RemovePoint(0);
+  while (graph->GetY()[graph->GetN()-1] == 0. ) graph->RemovePoint(graph->GetN()-1);
+  graph->Print();
+}
+
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 // --------------------------------------------------------------------- Main function -----------------------------------------------------------------------------
 // ----------------------- This macro is used to compile the pPb external input file for data, i.e. charged hadron, pions, kaons ... --------------------------------
@@ -287,6 +293,22 @@ void PrepareChargedPionDataALICE_pPb(){
     TH1D* histoChargedHadronRpPbStatErr             = (TH1D*)fileIdentfiedPubRpPb->Get("hstat_RpPb_charged"); // /HepData/8550/d4x1y1
     TH1D* histoChargedHadronRpPbSystErr             = (TH1D*)fileIdentfiedPubRpPb->Get("hsys_RpPb_charged"); // /HepData/8550/d4x1y1
     TGraphAsymmErrors* graphChargedPionsRpPbStatErr = new TGraphAsymmErrors(histoChargedPionsRpPbStatErr);
+    TGraphAsymmErrors* graphChargedPionsRpPbSystErr = new TGraphAsymmErrors(histoChargedPionsRpPbSystErr);
+    TGraphAsymmErrors* graphChargedKaonsRpPbStatErr = new TGraphAsymmErrors(histoChargedKaonsRpPbStatErr);
+    TGraphAsymmErrors* graphChargedKaonsRpPbSystErr = new TGraphAsymmErrors(histoChargedKaonsRpPbSystErr);
+    TGraphAsymmErrors* graphProtonRpPbStatErr       = new TGraphAsymmErrors(histoProtonRpPbStatErr);
+    TGraphAsymmErrors* graphProtonRpPbSystErr       = new TGraphAsymmErrors(histoProtonRpPbSystErr);
+    TGraphAsymmErrors* graphChargedHadronRpPbStatErr= new TGraphAsymmErrors(histoChargedHadronRpPbStatErr);
+    TGraphAsymmErrors* graphChargedHadronRpPbSystErr= new TGraphAsymmErrors(histoChargedHadronRpPbSystErr);
+    
+    RemoveZerosAndPrint(graphChargedPionsRpPbStatErr);
+    RemoveZerosAndPrint(graphChargedPionsRpPbSystErr);
+    RemoveZerosAndPrint(graphChargedKaonsRpPbStatErr);
+    RemoveZerosAndPrint(graphChargedKaonsRpPbSystErr);
+    RemoveZerosAndPrint(graphProtonRpPbStatErr);
+    RemoveZerosAndPrint(graphProtonRpPbSystErr);
+    RemoveZerosAndPrint(graphChargedHadronRpPbStatErr);
+    RemoveZerosAndPrint(graphChargedHadronRpPbSystErr);
     
     // *********************************************************************************************************************
     // ********************************** Write Output files ***************************************************************
@@ -335,9 +357,15 @@ void PrepareChargedPionDataALICE_pPb(){
         if (histoProtonRpPbSystErr) histoProtonRpPbSystErr->Write("histoProtonPubSyspPb_RpPb");
         if (histoChargedHadronRpPbStatErr) histoChargedHadronRpPbStatErr->Write("histoChargedHadronPubStatpPb_RpPb");
         if (histoChargedHadronRpPbSystErr) histoChargedHadronRpPbSystErr->Write("histoChargedHadronPubSyspPb_RpPb");
+        if (graphChargedPionsRpPbStatErr) graphChargedPionsRpPbStatErr->Write("graphChargedPionPubStatpPb_RpPb");
+        if (graphChargedPionsRpPbSystErr) graphChargedPionsRpPbSystErr->Write("graphChargedPionPubSyspPb_RpPb");
+        if (graphChargedKaonsRpPbStatErr) graphChargedKaonsRpPbStatErr->Write("graphChargedKaonPubStatpPb_RpPb");
+        if (graphChargedKaonsRpPbSystErr) graphChargedKaonsRpPbSystErr->Write("graphChargedKaonPubSyspPb_RpPb");
+        if (graphProtonRpPbStatErr) graphProtonRpPbStatErr->Write("graphProtonPubStatpPb_RpPb");
+        if (graphProtonRpPbSystErr) graphProtonRpPbSystErr->Write("graphProtonPubSyspPb_RpPb");
+        if (graphChargedHadronRpPbStatErr) graphChargedHadronRpPbStatErr->Write("graphChargedHadronPubStatpPb_RpPb");
+        if (graphChargedHadronRpPbSystErr) graphChargedHadronRpPbSystErr->Write("graphChargedHadronPubSyspPb_RpPb");
         
     fileChargedPionspPb.Close();
     
 }
-
-I

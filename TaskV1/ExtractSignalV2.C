@@ -4067,7 +4067,7 @@ void FillPtHistos(){
                                                + fMesonYieldsResidualBckFuncError[0][iPt-1]*fMesonYieldsResidualBckFuncError[0][iPt-1]) /
                                   (fMesonYieldsResidualBckFunc[0][iPt-1]+fMesonYieldsCorResidualBckFunc[0][iPt-1]);
             Double_t error      = ratio * TMath::Sqrt(relErrorA*relErrorA+relErrorB*relErrorB);
-            fHistoRatioResBGYieldToSPlusResBG->SetBinError(iPt,error);  
+            fHistoRatioResBGYieldToSPlusResBG->SetBinError(iPt,error);
         }
         for (Int_t m = 0; m < 4; m++){
             fHistoChi2[m]->SetBinContent(iPt,fMesonChi2[m][iPt-1]);
