@@ -133,9 +133,9 @@ void NeutralMesonDecay( Int_t nEvts                 = 1000000,
     
     StyleSettingsThesis(suffix);  
     SetPlotStyle();
-    TString fCollisionSystem             = ReturnFullCollisionsSystem(energy);
+    TString fCollisionSystem            = ReturnFullCollisionsSystem(energy);
     TString fCollisionSystenWrite       = ReturnCollisionEnergyOutputString(energy);
-    TString fOutputDir                  = Form("%s/%s/",fCollisionSystenWrite.Data(),suffix.Data());
+    TString fOutputDir                  = Form("%s/%s/FractionsCheck/",fCollisionSystenWrite.Data(),suffix.Data());
     gSystem->Exec("mkdir -p "+fOutputDir);
     
     //*************************************************************************************************

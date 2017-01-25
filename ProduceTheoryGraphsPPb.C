@@ -109,6 +109,30 @@ TGraphAsymmErrors* CombineMuScales( Int_t nPoints,
     return graphReturn;
 }
 
+
+//**********************************************************************************************************
+// Calculates the ratio of two error graphs 
+//**********************************************************************************************************
+TGraphErrors* CalculateGraphRatioToGraph(TGraphErrors* graphA, TGraphErrors* graphB){
+  
+    TGraphErrors* graphACopy        = (TGraphErrors*)graphA->Clone("GraphCopy");
+    Double_t* xValue                = graphACopy->GetX(); 
+    Double_t* yValue                = graphACopy->GetY();
+    Double_t* xError                = graphACopy->GetEX();
+    Double_t* yError                = graphACopy->GetEY();
+    Int_t nPoints                   = graphACopy->GetN();
+    
+    for (Int_t i = 0; i < nPoints; i++){
+        yValue[i]                   = yValue[i]/graphB->GetY()[i];
+        cout<<i<<" A EY "<< graphA->GetEY()[i]<<" A Y "<<graphA->GetY()[i]<<" B EY "<<graphB->GetEY()[i]<<" B Y"<<graphB->GetY()[i]<<endl;
+        Double_t yErrorRatio        = yValue[i]*TMath::Sqrt( TMath::Power(graphA->GetEY()[i]/graphA->GetY()[i],2) + TMath::Power(graphB->GetEY()[i]/graphB->GetY()[i],2));
+        yError[i] = TMath::Abs(yErrorRatio); 
+    }     
+    TGraphErrors* returnGraph       = new TGraphErrors(nPoints,xValue,yValue,xError,yError); 
+    return returnGraph;    
+}
+
+
 void ProduceTheoryGraphsPPb(){    
     
     StyleSettingsThesis();    
@@ -161,8 +185,8 @@ void ProduceTheoryGraphsPPb(){
     }
     inDSS.close();
     
-    TGraph* graphPi0RpAEPS09sDSS                        = new TGraph(nlinesEPSsPi0fDSS,xEPSsPi0fDSS,yEPSsPi0fDSS);
-    TGraphAsymmErrors* graphPi0RpAAsymmErrEPS09sDSS     = new TGraphAsymmErrors(nlinesEPSsPi0fDSS,xEPSsPi0fDSS,yEPSsPi0fDSS,xDownErrorEPSsPi0DSS,xUpErrorEPSsPi0DSS,yDownErrorEPSsPi0DSS,yUpErrorEPSsPi0DSS);
+    TGraph* graphPi0RpAEPS09sDSS                        = new TGraph(nlinesEPSsPi0fDSS-1,xEPSsPi0fDSS,yEPSsPi0fDSS);
+    TGraphAsymmErrors* graphPi0RpAAsymmErrEPS09sDSS     = new TGraphAsymmErrors(nlinesEPSsPi0fDSS-1,xEPSsPi0fDSS,yEPSsPi0fDSS,xDownErrorEPSsPi0DSS,xUpErrorEPSsPi0DSS,yDownErrorEPSsPi0DSS,yUpErrorEPSsPi0DSS);
 //     graphPi0RpAEPS09sDSS->RemovePoint(0);
 //     graphPi0RpAAsymmErrEPS09sDSS->RemovePoint(0);
     
@@ -226,8 +250,8 @@ void ProduceTheoryGraphsPPb(){
         nlinesPi0CGC++;
     }
     inCGC.close();
-    TGraph* graphPi0RpACGC = new TGraph(nlinesPi0CGC+1,xESPsPi0CGC,yESPsPi0CGC);	    
-
+    TGraph* graphPi0RpACGC = new TGraph(nlinesPi0CGC,xESPsPi0CGC,yESPsPi0CGC);	    
+    
     //**************************************************************************************************
     //********************** extract EPOS3 spectra *****************************************************
     //**************************************************************************************************
@@ -324,6 +348,74 @@ void ProduceTheoryGraphsPPb(){
     TH1D* histoEtaHIJINGReb         = (TH1D*)fileHIJING->Get("MC_Eta_Pt_Rebinned");
     TH1D* histoEtaToPi0HIJING       = (TH1D*)fileHIJING->Get("MCEtaToPi0");
     
+    //**************************************************************************************************
+    //****************************** extracting McGill predictions*****************************************
+    //**************************************************************************************************
+//     @article{Shen:2016zpp,
+//         author         = "Shen, Chun and Paquet, Jean-François and Denicol,
+//                             Gabriel S. and Jeon, Sangyong and Gale, Charles",
+//         title          = "{Collectivity and electromagnetic radiation in small
+//                             systems}",
+//         journal        = "Phys. Rev.",
+//         volume         = "C95",
+//         year           = "2017",
+//         pages          = "014906",
+//         doi            = "10.1103/PhysRevC.95.014906",
+//         eprint         = "1609.02590",
+//         archivePrefix  = "arXiv",
+//         primaryClass   = "nucl-th",
+//         SLACcitation   = "%%CITATION = ARXIV:1609.02590;%%"
+//     }
+
+    ifstream inMCGillEta;	
+    Int_t nlinesEtaMCGill = 0;	
+    inMCGillEta.open("ExternalInputpPb/Theory/McGill/spectra_eta_hydro.dat",ios_base::in);    
+    Double_t xPtEtaMCGill[100], xPtErrEtaMCGill[0], yYieldEtaMCGill[100], yYieldErrEtaMCGill[100];
+
+    while(!inMCGillEta.eof()){
+        inMCGillEta >> xPtEtaMCGill[nlinesEtaMCGill]  >> yYieldEtaMCGill[nlinesEtaMCGill] >> yYieldErrEtaMCGill[nlinesEtaMCGill];
+        cout << nlinesEtaMCGill << "         "  << xPtEtaMCGill[nlinesEtaMCGill] << "         "  <<yYieldEtaMCGill[nlinesEtaMCGill]<<endl;
+        xPtErrEtaMCGill[nlinesEtaMCGill] = 0.1;
+        nlinesEtaMCGill++;
+        
+    }
+    inMCGillEta.close();
+    TGraphErrors* graphEtaSpecMcGill = new TGraphErrors(nlinesEtaMCGill-1,xPtEtaMCGill,yYieldEtaMCGill, xPtErrEtaMCGill, yYieldErrEtaMCGill );	    
+    
+    ifstream inMCGillPi0;	
+    Int_t nlinesPi0MCGill = 0;	
+    inMCGillPi0.open("ExternalInputpPb/Theory/McGill/spectra_pion_p_hydro.dat",ios_base::in);    
+    Double_t xPtPi0MCGill[100], xPtErrPi0MCGill[0], yYieldPi0MCGill[100], yYieldErrPi0MCGill[100];
+
+    while(!inMCGillPi0.eof()){
+        inMCGillPi0 >> xPtPi0MCGill[nlinesPi0MCGill]  >> yYieldPi0MCGill[nlinesPi0MCGill] >> yYieldErrPi0MCGill[nlinesPi0MCGill];
+        cout << nlinesPi0MCGill << "         "  << xPtPi0MCGill[nlinesPi0MCGill] << "         "  <<yYieldPi0MCGill[nlinesPi0MCGill]<<endl;
+        xPtErrPi0MCGill[nlinesPi0MCGill] = 0.1;
+        nlinesPi0MCGill++;
+        
+    }
+    inMCGillPi0.close();
+    TGraphErrors* graphPi0SpecMcGill = new TGraphErrors(nlinesPi0MCGill-1,xPtPi0MCGill,yYieldPi0MCGill, xPtErrPi0MCGill, yYieldErrPi0MCGill );	    
+
+    TGraphErrors* graphEtaToPi0McGill = CalculateGraphRatioToGraph(graphEtaSpecMcGill, graphPi0SpecMcGill);
+    
+    ifstream inMCGillGamma;	
+    Int_t nlinesGammaMCGill = 0;	
+    inMCGillGamma.open("ExternalInputpPb/Theory/McGill/spectra_pion_p_hydro.dat",ios_base::in);    
+    Double_t xPtGammaMCGill[100], xPtErrGammaMCGill[0], yYieldGammaMCGill[100], yYieldErrGammaMCGill[100];
+
+    
+    
+    while(!inMCGillGamma.eof()){
+        inMCGillGamma >> xPtGammaMCGill[nlinesGammaMCGill]  >> yYieldGammaMCGill[nlinesGammaMCGill] >> yYieldErrGammaMCGill[nlinesGammaMCGill];
+        cout << nlinesGammaMCGill << "         "  << xPtGammaMCGill[nlinesGammaMCGill] << "         "  <<yYieldGammaMCGill[nlinesGammaMCGill]<<endl;
+        xPtErrGammaMCGill[nlinesGammaMCGill] = 0;
+        nlinesGammaMCGill++;
+        
+    }
+    inMCGillGamma.close();
+    TGraphErrors* graphGammaSpecMcGill = new TGraphErrors(nlinesGammaMCGill-1,xPtGammaMCGill,yYieldGammaMCGill, xPtErrGammaMCGill, yYieldErrGammaMCGill );	    
+
     
     //**********************************************************************************************************************
     //********************************* Write graphs and histos to compilation file for pPb ********************************
@@ -351,7 +443,10 @@ void ProduceTheoryGraphsPPb(){
         histoPi0HIJINGReb->Write("histoPi0HIJING5023TeV_Reb", TObject::kOverwrite);
         histoEtaHIJINGReb->Write("histoEtaHIJING5023TeV_Reb", TObject::kOverwrite);
         histoEtaToPi0HIJING->Write("histoEtaToPi0HIJING5023TeV", TObject::kOverwrite);
-        
+        graphEtaSpecMcGill->Write("graphEtaSpecMcGill5023TeV", TObject::kOverwrite);
+        graphPi0SpecMcGill->Write("graphPi0SpecMcGill5023TeV", TObject::kOverwrite);
+        graphEtaToPi0McGill->Write("graphEtaToPi0McGill5023TeV", TObject::kOverwrite);
+        graphGammaSpecMcGill->Write("graphGammaSpecMcGill5023TeV", TObject::kOverwrite);
     fileTheoryGraphsPPb.Close();
 
 }

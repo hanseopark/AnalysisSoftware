@@ -841,6 +841,12 @@ void ProduceTheoryGraphsPP(){
     histoEtaToPi0RatioPythia8Monash2760GeV->Sumw2();
     histoEtaToPi0RatioPythia8Monash2760GeV->Divide(histoEtaToPi0RatioPythia8Monash2760GeV,histoPi0Pythia8MonashInvSec2760GeV);
 
+    TFile* filePythia8Monash2013_2760GeVLego        = TFile::Open("ExternalInput/Theory/Pythia/Pythia8_Monash2013_2760GeV_5169Mio.root");
+    TH1F* histoPi0Pythia8MonashInvSec2760GeVLego    = (TH1F*)filePythia8Monash2013_2760GeVLego->Get("hPt_Pi0_MB_XSec");
+    TH1F* histoEtaPythia8MonashInvSec2760GeVLego    = (TH1F*)filePythia8Monash2013_2760GeVLego->Get("hPt_Eta_MB_XSec");
+    TH1F* histoEtaToPi0RatioPythia8Monash2760GeVLego= (TH1F*)histoEtaPythia8MonashInvSec2760GeVLego->Clone("histoEtaToPi0RatioPythia8Monash2760GeVLego");
+    histoEtaToPi0RatioPythia8Monash2760GeVLego->Sumw2();
+    histoEtaToPi0RatioPythia8Monash2760GeVLego->Divide(histoEtaToPi0RatioPythia8Monash2760GeVLego,histoPi0Pythia8MonashInvSec2760GeVLego);
     
     //**********************************************************************************************************************
     //***************************** Pythia calculations 0.9TeV ************************************************************
@@ -1020,7 +1026,11 @@ void ProduceTheoryGraphsPP(){
         graphInvCrossSecCGC7000GeV_mvgamma->Write("graphNLOCalcCGCInvCrossSec7000GeV_mvgamma", TObject::kOverwrite);
         histoPi0Pythia8MonashInvSec2760GeV->Write("histoInvSecPythia8Monash2013Pi02760GeV", TObject::kOverwrite);
         histoEtaPythia8MonashInvSec2760GeV->Write("histoInvSecPythia8Monash2013Eta2760GeV", TObject::kOverwrite);
-        histoEtaToPi0RatioPythia8Monash2760GeV->Write("histoEtaToPi0RatioPythia8Monash2760GeV", TObject::kOverwrite);
+        histoEtaToPi0RatioPythia8Monash2760GeV->Write("histoEtaToPi0RatioPythia8Monash20132760GeV", TObject::kOverwrite);
+
+        histoPi0Pythia8MonashInvSec2760GeVLego->Write("histoInvSecPythia8Monash2013LegoPi02760GeV", TObject::kOverwrite);
+        histoEtaPythia8MonashInvSec2760GeVLego->Write("histoInvSecPythia8Monash2013LegoEta2760GeV", TObject::kOverwrite);
+        histoEtaToPi0RatioPythia8Monash2760GeVLego->Write("histoEtaToPi0RatioPythia8Monash2013Lego2760GeV", TObject::kOverwrite);
         
         graphNLOCalcDSS14InvSecPi02760GeV->Write("graphNLOCalcDSS14InvCrossSec2760GeV", TObject::kOverwrite);
         graphNLOCalcDSS14InvSecPi07000GeV->Write("graphNLOCalcDSS14InvCrossSec7000GeV", TObject::kOverwrite);

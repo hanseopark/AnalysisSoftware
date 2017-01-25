@@ -892,10 +892,9 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     // ************************** Loading theory calculations ************************************************
     // *******************************************************************************************************        
     TFile* fileTheoryCompilation                            = new TFile(fileNameTheory.Data());
-        TH1F* histoPythia8InvXSectionPi0                    = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013Pi02760GeV");
-        TH1F* histoPythia8InvXSectionEta                    = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013Eta2760GeV");
-        TH1F* histoPythia8EtaToPi0                          = (TH1F*) fileTheoryCompilation->Get("histoEtaToPi0RatioPythia8Monash2760GeV");
-        TH1F* histoPythia8InvXSectionPi0_VarBinning         = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Spec2760GeVVarBinning");
+        TH1F* histoPythia8InvXSectionPi0                    = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi02760GeV");
+        TH1F* histoPythia8InvXSectionEta                    = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta2760GeV");
+        TH1F* histoPythia8EtaToPi0                          = (TH1F*) fileTheoryCompilation->Get("histoEtaToPi0RatioPythia8Monash2013Lego2760GeV");
         TGraph* graphNLOCalcPi0MuHalf                       = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecPi0MuHalf2760GeV");
         TGraph* graphNLOCalcPi0MuOne                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecPi0MuOne2760GeV");
         TGraph* graphNLOCalcPi0MuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecPi0MuTwo2760GeV");
@@ -3971,7 +3970,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphRatioPi0CombCombFitSysA->Draw("2,same");
         graphRatioPi0CombCombFitStatAWOXErr->Draw("p,same");
 
-        TBox* boxErrorSigma2760GeVRatioPi0 = CreateBoxConv(kGray+1, 0.28, 1.-(0.0544 ), 0.32, 1.+(0.0544));
+        TBox* boxErrorSigma2760GeVRatioPi0 = CreateBoxConv(kGray+1, 0.28, 1.-(0.0568 ), 0.32, 1.+(0.0568));
         boxErrorSigma2760GeVRatioPi0->Draw();
         DrawGammaLines(0.23, 70.,1., 1.,0.1,kGray);
 
@@ -4085,7 +4084,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         graphRatioEtaCombCombFitSysA->Draw("2,same");
         graphRatioEtaCombCombFitStatAWOXErr->Draw("p,same");
 
-        TBox* boxErrorSigma2760GeVRatioEta = CreateBoxConv(kGray+1, 0.40, 1.-(0.0544), 0.44, 1.+(0.0544));        
+        TBox* boxErrorSigma2760GeVRatioEta = CreateBoxConv(kGray+1, 0.40, 1.-(0.0568), 0.44, 1.+(0.0568));        
         boxErrorSigma2760GeVRatioEta->Draw();
         DrawGammaLines(0.33, 25.,1., 1.,0.1,kGray);
 
@@ -4213,7 +4212,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         
         TLegend* legendXsectionPaper    = GetAndSetLegend2(0.17, 0.14, 0.5, 0.14+0.05*4, textSizeLabelsPixel, 1, "", 43, 0.2);
         legendXsectionPaper->AddEntry(graphCombPi0InvXSectionSysA,"Data,","pf");
-        legendXsectionPaper->AddEntry((TObject*)0,"Norm. unc. 5.4%","");
+        legendXsectionPaper->AddEntry((TObject*)0,"Norm. unc. 5.7%","");
         legendXsectionPaper->AddEntry(graphNLODSS14Calc,"NLO, PDF: MSTW, FF: DSS14","f");
 //         legendXsectionPaper->AddEntry((TObject*)0,"Phys.Rev. D91 no. 1, (2015) 014035","");
         legendXsectionPaper->AddEntry(histoPythia8InvXSectionPi0,"PYTHIA 8.2, Monash 2013","l");
@@ -4325,7 +4324,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         // labels lower left corner
         TLegend* legendXsectionPaperEta    = GetAndSetLegend2(0.17, 0.11, 0.5, 0.11+0.05*2, textSizeLabelsPixel, 1, "", 43, 0.2);
         legendXsectionPaperEta->AddEntry(graphCombPi0InvXSectionSysA,"Data,","pf");
-        legendXsectionPaperEta->AddEntry((TObject*)0,"Norm. unc. 5.4%","");
+        legendXsectionPaperEta->AddEntry((TObject*)0,"Norm. unc. 5.7%","");
         legendXsectionPaperEta->Draw();
         legendXsectionPaper2->Draw();
         
@@ -4984,7 +4983,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         TLatex *labelALICEXSectionPaperAll  = new TLatex(0.18,0.20+0.04*2,"ALICE");
         SetStyleTLatex( labelALICEXSectionPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
         labelALICEXSectionPaperAll->Draw();
-        TLatex *labelALICENormUnPaperAll    = new TLatex(0.18,0.20+0.05*1,"Norm. unc. 5.4%");
+        TLatex *labelALICENormUnPaperAll    = new TLatex(0.18,0.20+0.05*1,"Norm. unc. 5.7%");
         SetStyleTLatex( labelALICENormUnPaperAll, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 11);
         labelALICENormUnPaperAll->Draw();
         

@@ -109,74 +109,38 @@ Double_t FindLargestEntryIn1D(TH1D* histo){
 }
 
 //**********************************************************************************
-//******************* Standardized plotting of 2D plots ****************************
-//**********************************************************************************
-void PlotStandard2D( TH2* histo2D, TString nameOutput, TString title, TString xTitle, TString yTitle, Bool_t kRangeY, Double_t startY, Double_t endY, Bool_t kRangeX, Double_t startX, Double_t endX, Int_t logX, Int_t logY, Int_t logZ, Float_t* floatLogo, Int_t canvasSizeX = 500, Int_t canvasSizeY = 500, TString generator ="" , TString period ="",Bool_t bPlotPtHard = 1){
-  TCanvas * canvasStandard = new TCanvas("canvasStandard","",10,10,canvasSizeX,canvasSizeY);  // gives the page size
-  canvasStandard->SetLogx(logX);
-  canvasStandard->SetLogy(logY);
-  canvasStandard->SetLogz(logZ);
-  canvasStandard->SetRightMargin(0.12);
-  canvasStandard->SetLeftMargin(0.12);
-  canvasStandard->SetBottomMargin(0.1);
-  canvasStandard->SetTopMargin(0.04);
-  canvasStandard->cd();
-  histo2D->SetTitle("");
-  DrawAutoGammaHisto2D(   histo2D,
-                       title.Data(), xTitle.Data(), yTitle.Data(),"",kRangeY, startY, endY, kRangeX, startX, endX);
-  histo2D->GetXaxis()->SetTitleOffset(1.05);
-  //    cout << histo2D->GetYaxis()->GetTitleOffset() << endl;
-  histo2D->GetYaxis()->SetTitleOffset(1.35);
-  if (logX==1){
-    //       cout << histo2D->GetXaxis()->GetLabelOffset() << endl;
-    histo2D->GetXaxis()->SetLabelOffset(0.);
-  }
-  Float_t maximumZ = FindLargestEntryIn2D(histo2D)*5;
-  Float_t minimumZ = FindSmallestEntryIn2D(histo2D);
-  histo2D->SetAxisRange(minimumZ,maximumZ,"Z");
-  
-  histo2D->Draw("colz");
-  DrawLabelsEvents(floatLogo[0],floatLogo[1],floatLogo[2], 0.00, "pp", "Pythia", period);
-  TLatex *detprocess = 	new TLatex(floatLogo[0], floatLogo[1] - 3.2*floatLogo[2], fDetectionProcess);
-  detprocess->SetNDC();
-  detprocess->SetTextColor(1);
-  detprocess->SetTextSize(floatLogo[2]);
-  detprocess->Draw();
-  TLatex *ptHardBin = 	new TLatex(floatLogo[0], floatLogo[1] - 4.25*floatLogo[2], ptHardRange);
-  ptHardBin->SetNDC();
-  ptHardBin->SetTextColor(1);
-  ptHardBin->SetTextSize(floatLogo[2]);
-  if(bPlotPtHard){
-    ptHardBin->Draw();
-  }
-  
-  canvasStandard->Update();
-  canvasStandard->SaveAs(nameOutput.Data());
-  delete canvasStandard;
-}
-
-
-//**********************************************************************************
 //******************* Main function ************************************************
 //**********************************************************************************
 
-void AnalysePythiaMB(TString filemask="Legotrain_vAN-20150825-Pythia8/PythiaAnalysisResults",  // should read something like "$PATHTODIRECTORY/PythiaAnalysisResultsBin" // use MC_gen output here!
+void AnalysePythiaMB(TString fileName="Legotrain_vAN-20150825-Pythia8/PythiaAnalysisResults",  // should read something like "$PATHTODIRECTORY/PythiaAnalysisResultsBin" // use MC_gen output here!
                          TString generator="Pythia",  // e.g. Pythia
                          TString tune="Monash",    // e.g. Monash
-                         TString particle="Pi0",
                          TString energy="2760GeV"){
   
   TH1::AddDirectory(kFALSE);
   
-  const Int_t nbinsfinal = 33;
-  Double_t fBinsPi02760GeVPtMerged[nbinsfinal+1]            = { 0.0, 0.4, 0.6, 0.8, 1.0,
-    1.2, 1.4, 1.6, 1.8, 2.0,
-    2.2, 2.4, 2.6, 3.0, 3.5,
-    4.0, 5.0, 6.0, 7.0, 8.0,
-    9.0, 10.0, 11.0, 12.0, 14.0,
-    16.0, 18., 22., 26., 30.,
-    35.0, 40., 50., 60.};
-  
+//   const Int_t nbinsfinal                    = 93;
+//   Double_t fBinsFine[nbinsfinal+1]          = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 
+//                                                 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
+//                                                 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9,
+//                                                 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8, 
+//                                                 5.0, 5.2, 5.4, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8,
+//                                                 7.0, 7.4, 7.8, 8.2, 8.6, 9.0, 9.4, 9.8, 10.2, 10.6,
+//                                                 11.0, 11.5, 12.0, 12.5, 13.0, 13.5, 14.0, 14.5, 15.0, 15.5,
+//                                                 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0, 
+//                                                 26.0, 27.0, 28.0, 30.0, 32.0, 34.0, 36.0, 38.0, 40.0, 42.0,
+//                                                 44.0, 46.0, 48.0, 50.0};
+  const Int_t nbinsfinal                    = 84;
+  Double_t fBinsFine[nbinsfinal+1]          = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 
+                                                1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
+                                                2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9,
+                                                3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8, 
+                                                5.0, 5.2, 5.4, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8,
+                                                7.0, 7.4, 7.8, 8.2, 8.6, 9.0, 9.4, 9.8, 10.2, 10.6,
+                                                11.0, 11.5, 12.0, 12.5, 13.0, 13.5, 14.0, 14.5, 15.0, 15.5,
+                                                16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 24.0, 26.0, 28.0, 
+                                                32.0, 36.0, 40.0, 45.0, 50.0};
+
   //***************************************************************************************************************
   //************************************ Layouting preparations & general setup ***********************************
   //***************************************************************************************************************
@@ -186,76 +150,39 @@ void AnalysePythiaMB(TString filemask="Legotrain_vAN-20150825-Pythia8/PythiaAnal
   StyleSettingsThesis();
   SetPlotStyle();
   
-  const Int_t nreb = 4;
-  
-  const Int_t MaxNumberOfFiles = 12;
-  
   Color_t colorBins[12]		= {kBlack, kRed+2, kBlue+2, kGreen+2, kCyan+2, kViolet, kMagenta+2, kGray+1, kRed-2, kBlue-2, kViolet+2, kCyan-2};
   Color_t colorBinsShade[12]	= {kGray+1, kRed-6, kBlue-6, kGreen-8, kCyan-6, kViolet-8, kMagenta-8, kGray, kRed-8, kBlue-8, kViolet-6, kCyan-8};
   Marker_t markerBins[12]		= {20, 21, 33, 34, 29, 24, 25, 27, 28, 30, 20, 21};
   
   
-  Float_t floatLocationRightUp2D[4] = {0.45,0.95,0.035, 0.02};
-  Float_t floatLocationLeftDown2D[4] = {0.15,0.25,0.035, 0.02};
-  Float_t floatLocationRightDown2D[4] = {0.45,0.25,0.035, 0.02};
-  
-  TString outputDir ="./plots/";
-  TString suffix = "eps";
+  TString outputDir             ="./plots/";
+  TString suffix                = "eps";
   
   gSystem->Exec("mkdir -p "+outputDir);
   
   //fDetectionProcess 			= ReturnFullTextReconstructionProcess(mode);
-  
-  TString particlelegend = "";
+  TString particle[6]           = {"Pi0", "Eta", "EtaPrim", "Omega", "PiPl", "PiMi"};  
+  TString particlelegend[6]     = {"#pi^{0}", "#eta", "#eta^{l}", "#omega", "#pi^{+}", "#pi^{-}"}; 
   // translate particle string to plotting string
-  if(particle.CompareTo("Pi0") == 0){
-    particlelegend = "#pi^{0}";
-  }
-  else if(particle.CompareTo("Eta") == 0){
-    particlelegend = "#eta";
-  }
-  else if(particle.CompareTo("PiPl") == 0){
-    particlelegend = "#pi^{+}";
-  }
-  else if(particle.CompareTo("PiMi") == 0){
-    particlelegend = "#pi^{-}";
-  }
-  else if(particle.CompareTo("EtaPrim") == 0){
-    particlelegend = "#eta^{l}";
-  }
-  else if(particle.CompareTo("Omega") == 0){
-    particlelegend = "#omega";
-  }
-  else{
-    cout << particle.Data() << " unknown! Aborting";
-    return;
-  }
   
-  TString ptcut="";
-  TString pthard_legend="";
-  TString mbias="";
+  TString ptcut                 ="";
+  TString pthard_legend         ="";
+  TString mbias                 ="";
   
-  
-  TString detector="PCM";
   TString binning="";
   // histograms for MB
-  TH2F* fHPt_Y_ParticleMB;
-//  TH2F* fHPt_Y_ParticleAccMB;
-//  TH2F* fHPt_Alpha_ParticleAccMB;
-  
-  TH1D* fHPt_ParticleMB;
-  TH1D* fHPt_ParticleMBUB;
-  TH1D* fHPt_ParticleMB_XSec;
-//  TH1D* fHPt_ParticleAccMB;
-//  TH1D* fHPtFrac_ParticleMB;
+  TH2F* fHPt_Y_ParticleMB[6];  
+  TH1D* fHPt_ParticleMB[6];
+  TH1D* fHPt_ParticleMBUB[6];
+  TH1D* fHPt_ParticleMB_XSec[6];
 
   TH1D* fHNEventsMB;
   TH1D* fHXSectionMB;
   
-  TString nameMainDir = "GammaPureMC";
+  TString nameMainDir           = "GammaPureMC";
   
    // open MB stuff
-   sprintf(name,"%sMB%s.root",filemask.Data(),tune.Data());
+   sprintf(name,"%s",fileName.Data());
    TFile f(name);
    // get tdirectoryfile
    TDirectoryFile* directoryAll = (TDirectoryFile*)f.Get(nameMainDir.Data());
@@ -266,73 +193,60 @@ void AnalysePythiaMB(TString filemask="Legotrain_vAN-20150825-Pythia8/PythiaAnal
         cout<<"ERROR: List not found"<<endl;
         return;
       }
-    fHNEventsMB = (TH1D*) HistosAll->FindObject("NEvents")->Clone("fHNEventsMB");
-    fHXSectionMB = (TH1D*) HistosAll->FindObject("XSection")->Clone("fHXSectionMB");
-  
-    // get particle histograms
-    fHPt_Y_ParticleMB = (TH2F*) HistosAll->FindObject(Form("Pt_Y_%s",particle.Data()))->Clone(Form("Pt_Y_%s_MB",particle.Data()));
-//    fHPt_Y_ParticleAccMB = (TH2F*) HistosAll->FindObject(Form("Pt_Y_%sGG%sAcc",particle.Data(),"PCM"))->Clone(Form("Pt_Y_%sGG%sAcc_MB",particle.Data(),detector.Data()));
-//    fHPt_Alpha_ParticleAccMB = (TH2F*) HistosAll->FindObject(Form("Pt_Alpha_%sGG%sAcc",particle.Data(),detector.Data()))->Clone(Form("Pt_Alpha_%sGG%sAcc_MB",particle.Data(),detector.Data()));
-  
-    //scale
-    fHPt_Y_ParticleMB->Sumw2();
-//    fHPt_Y_ParticleAccMB->Sumw2();
-//    fHPt_Alpha_ParticleAccMB->Sumw2();
-  
-  
+    fHNEventsMB         = (TH1D*) HistosAll->FindObject("NEvents")->Clone("fHNEventsMB");
+    fHXSectionMB        = (TH1D*) HistosAll->FindObject("XSection")->Clone("fHXSectionMB");
     cout << "these are " << fHNEventsMB->GetBinContent(1) << " events with a cross section of " << fHXSectionMB->GetMean() << " mb" << endl;
-  
-  
-    fHPt_Y_ParticleMB->Scale(1./fHNEventsMB->GetBinContent(1));
-//    fHPt_Y_ParticleAccMB->Scale(1./fHNEventsMB->GetBinContent(1));
-//    fHPt_Alpha_ParticleAccMB->Scale(1./fHNEventsMB->GetBinContent(1));
-  
-    // now projections on pT axis
-    fHPt_ParticleMBUB = (TH1D*)fHPt_Y_ParticleMB->ProjectionX(Form("hPt_%s_MB",particle.Data()),1,160)->Clone(Form("hPt_%s_MB",particle.Data()));
-    fHPt_ParticleMB  = (TH1D*) fHPt_ParticleMBUB->Rebin(nbinsfinal,"hPt_ParticleMB",fBinsPi02760GeVPtMerged);
-//    fHPt_ParticleAccMB = (TH1D*)fHPt_Y_ParticleAccMB->ProjectionX(Form("hPt_%sAcc_MB",particle.Data()),1,160)->Clone(Form("hPt_%sAcc_MB",particle.Data()));
-  
-    fHPt_ParticleMB->SetName(Form("hPt%s%s%s",particle.Data(),generator.Data(),tune.Data()));
-    fHPt_ParticleMB->SetTitle(Form("pp, %s, %s, %s %s",energy.Data(),particle.Data(),generator.Data(),tune.Data()));
-    fHPt_ParticleMB->Sumw2();
-//    fHPt_ParticleAccMB->Sumw2();
-    //fHPt_ParticleMB->Rebin(nreb);
-//    fHPt_ParticleAccMB->Rebin(nreb);
-  
-  // divide MB by bin width
-  for(int ibin=1;ibin<fHPt_ParticleMB->GetNbinsX();ibin++){
-    double dpt = fHPt_ParticleMB->GetBinWidth(ibin);
-    if(dpt == 0){
-      continue;
-    }
-    fHPt_ParticleMB->SetBinContent(ibin,fHPt_ParticleMB->GetBinContent(ibin)/dpt);
-    fHPt_ParticleMB->SetBinError(ibin,fHPt_ParticleMB->GetBinError(ibin)/dpt);
-  }
-  
-  // divide MB by pT
-  for(int ibin=1;ibin<fHPt_ParticleMB->GetNbinsX();ibin++){
-    double binpt = fHPt_ParticleMB->GetBinCenter(ibin);
-    if(binpt == 0){
-      continue;
-    }
-    fHPt_ParticleMB->SetBinContent(ibin,fHPt_ParticleMB->GetBinContent(ibin)/binpt);
-    fHPt_ParticleMB->SetBinError(ibin,fHPt_ParticleMB->GetBinError(ibin)/binpt);
-  }
+    cout << "total inel. cross section #sigma_{inel} = " << fHXSectionMB->GetMean() * 1e9 << " pb" << endl;
+    Int_t eventInMio    = (Int_t)(fHNEventsMB->GetBinContent(1)/1e6);
+    
+    for (Int_t i = 0; i < 6; i++){
+        // get particle histograms
+        fHPt_Y_ParticleMB[i]    = (TH2F*) HistosAll->FindObject(Form("Pt_Y_%s",particle[i].Data()))->Clone(Form("Pt_Y_%s_MB",particle[i].Data()));
+    
+        //scale
+        fHPt_Y_ParticleMB[i]->Sumw2();
+        fHPt_Y_ParticleMB[i]->Scale(1./fHNEventsMB->GetBinContent(1));
+    
+        // now projections on pT axis
+        fHPt_ParticleMBUB[i]    = (TH1D*)fHPt_Y_ParticleMB[i]->ProjectionX(Form("hPt_%s_MB",particle[i].Data()),1,160)->Clone(Form("hPt_%s_MB",particle[i].Data()));
+        fHPt_ParticleMB[i]      = (TH1D*)fHPt_ParticleMBUB[i]->Rebin(nbinsfinal,Form("hPt_%s_MB", particle[i].Data()),fBinsFine);
+    
+        fHPt_ParticleMB[i]->SetName(Form("hPt%s%s%s",particle[i].Data(),generator.Data(),tune.Data()));
+        fHPt_ParticleMB[i]->SetTitle(Form("pp, %s, %s, %s %s",energy.Data(),particle[i].Data(),generator.Data(),tune.Data()));
+        fHPt_ParticleMB[i]->Sumw2();
+    
+        // divide MB by bin width
+        for(int ibin=1;ibin<fHPt_ParticleMB[i]->GetNbinsX()+1;ibin++){
+            double dpt = fHPt_ParticleMB[i]->GetBinWidth(ibin);
+            if(dpt == 0){
+                continue;
+            }
+            fHPt_ParticleMB[i]->SetBinContent(ibin,fHPt_ParticleMB[i]->GetBinContent(ibin)/dpt);
+            fHPt_ParticleMB[i]->SetBinError(ibin,fHPt_ParticleMB[i]->GetBinError(ibin)/dpt);
+        }
+        
+        // divide MB by pT
+        for(int ibin=1;ibin<fHPt_ParticleMB[i]->GetNbinsX()+1;ibin++){
+            double binpt = fHPt_ParticleMB[i]->GetBinCenter(ibin);
+            if(binpt == 0){
+            continue;
+            }
+            fHPt_ParticleMB[i]->SetBinContent(ibin,fHPt_ParticleMB[i]->GetBinContent(ibin)/binpt);
+            fHPt_ParticleMB[i]->SetBinError(ibin,fHPt_ParticleMB[i]->GetBinError(ibin)/binpt);
+        }
 
-  // scale with 1/2pi y
-  fHPt_ParticleMB->Scale(1./(2.*3.14159265*1.6));
-  
-  // print total cross section
-  
-  cout << "total inel. cross section #sigma_{inel} = " << fHXSectionMB->GetMean() * 1e9 << " pb" << endl;
-  
-  // make histogram for x section
-  fHPt_ParticleMB_XSec = (TH1D*) fHPt_ParticleMB->Clone("hPt_ParticleMB_XSec");
-  fHPt_ParticleMB_XSec->Scale(fHXSectionMB->GetMean()); // get xsec in mb from pythia
-  fHPt_ParticleMB_XSec->Scale(1e9);                     // pb!
-  
-  fHPt_ParticleMB_XSec->Print("all");
-    // now make plots like no other
+        // scale with 1/2pi y
+        fHPt_ParticleMB[i]->Scale(1./(2.*TMath::Pi()*1.6));
+        
+        // print total cross section
+        
+        // make histogram for x section
+        fHPt_ParticleMB_XSec[i] = (TH1D*) fHPt_ParticleMB[i]->Clone(Form("hPt_%s_MB_XSec",particle[i].Data()));
+        fHPt_ParticleMB_XSec[i]->Scale(fHXSectionMB->GetMean()); // get xsec in mb from pythia
+        fHPt_ParticleMB_XSec[i]->Scale(1e9);                     // pb!
+    }  
+    
+//   fHPt_ParticleMB_XSec->Print("all");
   
     //***************************************************************************************************************
     //*************************************Plotting *****************************************************************
@@ -343,8 +257,8 @@ void AnalysePythiaMB(TString filemask="Legotrain_vAN-20150825-Pythia8/PythiaAnal
     DrawGammaCanvasSettings( canvasInputScaled, 0.13, 0.015, 0.015, 0.07);
     canvasInputScaled->SetLogy();
   
-    Float_t maximumPi0Scaled = FindLargestEntryIn1D(fHPt_ParticleMB)*10;
-    Float_t minimumPi0Scaled = FindSmallestEntryIn1D(fHPt_ParticleMB)*0.1;
+    Float_t maximumPi0Scaled = FindLargestEntryIn1D(fHPt_ParticleMB[0])*10;
+    Float_t minimumPi0Scaled = FindSmallestEntryIn1D(fHPt_ParticleMB[2])*0.1;
   
     TH2F * histo2DInputScaledPi0;
     histo2DInputScaledPi0 = new TH2F("histo2DInputScaledPi0","histo2DInputScaledPi0",1000,0., 50,10000,minimumPi0Scaled,maximumPi0Scaled);
@@ -353,31 +267,35 @@ void AnalysePythiaMB(TString filemask="Legotrain_vAN-20150825-Pythia8/PythiaAnal
   
     histo2DInputScaledPi0->DrawCopy();
   
-    //    TLegend* legendScaled = GetAndSetLegend2(0.25, 0.99-(1.15*2/2*0.040), 0.95, 0.99,25);
-    //    legendScaled->SetMargin(0.12);
+    TLegend* legendScaled = GetAndSetLegend2(0.85, 0.95-(1.15*6/1.5*0.040), 0.95, 0.95,35);
+    legendScaled->SetMargin(0.12);
     //    legendScaled->SetNColumns(2);
   
-    DrawGammaSetMarker(fHPt_ParticleMB, markerBins[0], 1., colorBins[0], colorBins[0]);
-    fHPt_ParticleMB->DrawCopy("e1,same");
-  
-    //legendScaled->AddEntry(fHPt_ParticleMB,"MB","p");
-  
-    //legendScaled->Draw();
-    //    labelMCName->Draw();
-    TLatex *labelSimulation = new TLatex(0.38,0.99-(1.15*(1/2+2)*0.04),Form("%s, %s, %s",particlelegend.Data(),generator.Data(),tune.Data()));
+    for (Int_t i = 0; i< 6; i++){
+        DrawGammaSetMarker(fHPt_ParticleMB[i], markerBins[i], 1., colorBins[i], colorBins[i]);
+        DrawGammaSetMarker(fHPt_ParticleMB_XSec[i], markerBins[i], 1., colorBins[i], colorBins[i]);
+        fHPt_ParticleMB[i]->DrawCopy("e1,same");
+        legendScaled->AddEntry(fHPt_ParticleMB[i],particlelegend[i],"p");
+    }
+    legendScaled->Draw();
+    
+    TLatex *labelSimulation = new TLatex(0.38,0.99-(1.15*(1/2+2)*0.04),Form("%s, %s",generator.Data(),tune.Data()));
     SetStyleTLatex( labelSimulation, 32,4);
     labelSimulation->SetTextFont(43);
     labelSimulation->Draw();
-  
+
     canvasInputScaled->Update();
-    canvasInputScaled->SaveAs(Form("%s/%s_MC_InputUnscaled_%s%s_%s_%s%s.%s",outputDir.Data(),particle.Data(),generator.Data(),tune.Data(),binning.Data(),mbias.Data(),ptcut.Data(),suffix.Data()));
+    canvasInputScaled->SaveAs(Form("%s/%s_MC_InputUnscaled_%s_%dMio.%s",outputDir.Data(),generator.Data(),tune.Data(),eventInMio,suffix.Data()));
   
     // write out
-    gSystem->Exec("mkdir -p ../ExternalInput/Theory/Pythia/");
-    TFile* fout = new TFile(Form("../ExternalInput/Theory/Pythia/hist_%s_%s_%s_%s.root",generator.Data(),tune.Data(),energy.Data(),particle.Data()),"RECREATE");
-    fHPt_ParticleMB->Write();
-    fHPt_ParticleMB_XSec->Write();
+//     gSystem->Exec("mkdir -p ../ExternalInput/Theory/Pythia/");
+    TFile* fout = new TFile(Form("%s_%s_%s_%dMio.root",generator.Data(),tune.Data(),energy.Data(),eventInMio),"RECREATE");
+    fHNEventsMB->Write();
+    fHXSectionMB->Write();
+    for (Int_t i = 0; i< 6; i++){
+        fHPt_ParticleMB[i]->Write();
+        fHPt_ParticleMB_XSec[i]->Write();
+    }    
     fout->Close();
-  
   
 }
