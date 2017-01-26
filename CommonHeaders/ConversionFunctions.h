@@ -2326,7 +2326,7 @@ Double_t bin_shift_x(TF1 *fYield, Double_t ptMin, Double_t ptMax, Double_t yValu
 // ****************************************************************************************************************
 // *********************************** ApplyXshift ****************************************************************
 // ****************************************************************************************************************
-TGraphAsymmErrors *ApplyXshift(TGraphAsymmErrors *spectrum, TF1 *tsallis, TString mesonType = "Pi0", Bool_t doFit = kTRUE ){
+TGraphAsymmErrors *ApplyXshift(TGraphAsymmErrors *spectrum, TF1 *tsallis, TString mesonType = "Pi0", Bool_t useRangesFromTF1 = kFALSE){
     //----------------------------------------------------------------------
     // This function takes a spectrum, fits it by a function tsallis
     // and calculates pt-shift iteratively.
@@ -2354,7 +2354,9 @@ TGraphAsymmErrors *ApplyXshift(TGraphAsymmErrors *spectrum, TF1 *tsallis, TStrin
     Int_t nPar                          = tsallis->GetNpar();
     TString formula                     = Form("%s - [%d]",(tsallis->GetExpFormula()).Data(),nPar);
 //     cout << "Formula used for bin shift: " << formula << endl;
-    TF1 * fYield                        = new TF1(formulaName.Data(), formula, 0.2,25.);
+    TF1 * fYield;
+    if(useRangesFromTF1) fYield        = new TF1(formulaName.Data(), formula, tsallis->GetMinimumX(),tsallis->GetMaximumX());
+    else fYield                        = new TF1(formulaName.Data(), formula, 0.2,25.0);
 
     for (Int_t iter=0; iter<nIter; iter++) {
         Double_t *xPoint     = spectrumShift->GetX();
@@ -2365,7 +2367,7 @@ TGraphAsymmErrors *ApplyXshift(TGraphAsymmErrors *spectrum, TF1 *tsallis, TStrin
         Double_t *errorYlow  = spectrumShift->GetEYlow();
         Double_t *errorYhigh = spectrumShift->GetEYhigh();
 
-        if(doFit) spectrumShift->Fit(tsallis, "NRMEXQ0","", xPoint[0]-errorXlow[0],xPoint[numberPoints-1]+errorXhigh[numberPoints-1]);
+        spectrumShift->Fit(tsallis, "NRMEXQ0","", xPoint[0]-errorXlow[0],xPoint[numberPoints-1]+errorXhigh[numberPoints-1]);
         for(Int_t p=0; p<nPar; p++){
             fYield->SetParameter(p,tsallis->GetParameter(p));
         }
