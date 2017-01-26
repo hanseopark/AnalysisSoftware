@@ -1634,6 +1634,28 @@ void ExtractSignalV2(   TString meson                   = "",
       }
     }
     
+    TCanvas* canvasDiffBck = new TCanvas("canvasDiffBck","",1550,1200);
+    canvasDiffBck->SetTickx();
+    canvasDiffBck->SetTicky();
+    
+    DrawGammaSetMarker(fHistoYieldDiffBck[4], 20, 1., kBlack, kBlack);
+    DrawAutoGammaMesonHistos( fHistoYieldDiffBck[4], 
+                                "", "p_{T} (GeV/c)", "dev. raw yield (%)", 
+                                kFALSE, 3.,0.,  kFALSE,
+                                kTRUE, -0.2,0.5, 
+                                kFALSE, 0., 16.);
+    
+    canvasDiffBck->Update();
+    
+    TLegend* legendDiffBck = new TLegend(0.15,0.8,0.4,0.95);
+    legendDiffBck->SetFillColor(0);
+    legendDiffBck->SetLineColor(0);
+    legendDiffBck->SetTextSize(0.04);
+    legendDiffBck->AddEntry(fHistoYieldDiffBck[4],Form("dev. raw yield wrt pol2 Bck fit for %s",fPrefix.Data()),"p");
+    legendDiffBck->Draw();
+    
+    canvasDiffBck->SaveAs(Form("%s/%s_data_DiffBck_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    
     if (!fIsMC && meson.Contains("Pi0") ){
        fHaveCocktailInputForSec= LoadSecondaryPionsFromCocktailFile(cutSelection,optionEnergy);
        if(!fHaveCocktailInputForSec) 
