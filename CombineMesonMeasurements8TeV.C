@@ -1552,67 +1552,77 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //        fitTsallisPi0PtMult->SetRange(0.3,35.);
 //        fitTsallisPi0PtMult->SetParameters(fitInvXSectionPi0->GetParameter(0),fitInvXSectionPi0->GetParameter(1), fitInvXSectionPi0->GetParameter(2));
         
+        TF1* fitTsallisPi0PtMult                 = FitObject("tmpt","TsallisMultWithPtPi08TeV","Pi0");
+        fitTsallisPi0PtMult->SetRange(0.3,35.);
+        fitTsallisPi0PtMult->SetParameters(fitInvXSectionPi0->GetParameter(0),fitInvXSectionPi0->GetParameter(1), fitInvXSectionPi0->GetParameter(2));
+
         TGraphAsymmErrors* graphCombPi0InvXSectionTotANoShift = (TGraphAsymmErrors*) graphCombPi0InvXSectionTotA->Clone("Pi0_NoShift");
 
-        graphCombPi0InvXSectionTotA              = ApplyXshift(graphCombPi0InvXSectionTotA, fitInvXSectionPi0,"Pi0",kFALSE);
+        graphCombPi0InvXSectionTotA              = ApplyXshift(graphCombPi0InvXSectionTotA, fitTsallisPi0PtMult, "Pi0", kTRUE);
 
         cout << "comb" << endl;
         graphCombPi0InvXSectionStatA->Print();
         graphCombPi0InvXSectionStatA             = ApplyXshiftIndividualSpectra (   graphCombPi0InvXSectionTotA, 
                                                                                     graphCombPi0InvXSectionStatA, 
-                                                                                    fitInvXSectionPi0,
+                                                                                    fitTsallisPi0PtMult,
                                                                                     0, graphCombPi0InvXSectionStatA->GetN());
         graphCombPi0InvXSectionSysA              = ApplyXshiftIndividualSpectra (   graphCombPi0InvXSectionTotA, 
                                                                                     graphCombPi0InvXSectionSysA, 
-                                                                                    fitInvXSectionPi0,
+                                                                                    fitTsallisPi0PtMult,
                                                                                     0, graphCombPi0InvXSectionSysA->GetN());
         cout << "PCM" << endl;        
         graphPCMPi0InvXSectionStat               = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA,
                                                                                     graphPCMPi0InvXSectionStat,
-                                                                                    fitInvXSectionPi0,
+                                                                                    fitTsallisPi0PtMult,
                                                                                     offSetPi0Shifting[0], nComBinsPi0Shifting[0]);
         graphPCMPi0InvXSectionSys                = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA, 
                                                                                     graphPCMPi0InvXSectionSys, 
-                                                                                    fitInvXSectionPi0,
+                                                                                    fitTsallisPi0PtMult,
                                                                                     offSetPi0Shifting[0], nComBinsPi0Shifting[0]);
         cout << "PHOS" << endl;        
         graphPHOSPi0InvXSectionStat              = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA, 
                                                                                     graphPHOSPi0InvXSectionStat, 
-                                                                                    fitInvXSectionPi0,
+                                                                                    fitTsallisPi0PtMult,
                                                                                     offSetPi0Shifting[1], nComBinsPi0Shifting[1]);
         graphPHOSPi0InvXSectionSys               = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA, 
                                                                                     graphPHOSPi0InvXSectionSys, 
-                                                                                    fitInvXSectionPi0,
+                                                                                    fitTsallisPi0PtMult,
                                                                                     offSetPi0Shifting[1], nComBinsPi0Shifting[1]);
         cout << "EMC-EMC" << endl;        
         graphEMCALPi0InvXSectionStat             = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA, 
                                                                                     graphEMCALPi0InvXSectionStat, 
-                                                                                    fitInvXSectionPi0,
+                                                                                    fitTsallisPi0PtMult,
                                                                                     offSetPi0Shifting[2], nComBinsPi0Shifting[2]);
         graphEMCALPi0InvXSectionSys              = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA, 
                                                                                     graphEMCALPi0InvXSectionSys, 
-                                                                                    fitInvXSectionPi0,
+                                                                                    fitTsallisPi0PtMult,
                                                                                     offSetPi0Shifting[2], nComBinsPi0Shifting[2]);
         cout << "PCM-EMC" << endl;        
         graphPCMEMCALPi0InvXSectionStat          = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA,
                                                                                     graphPCMEMCALPi0InvXSectionStat,
-                                                                                    fitInvXSectionPi0,
+                                                                                    fitTsallisPi0PtMult,
                                                                                     offSetPi0Shifting[4], nComBinsPi0Shifting[4]);
         graphPCMEMCALPi0InvXSectionSys           = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA, 
                                                                                     graphPCMEMCALPi0InvXSectionSys, 
-                                                                                    fitInvXSectionPi0,
+                                                                                    fitTsallisPi0PtMult,
                                                                                     offSetPi0Shifting[4], nComBinsPi0Shifting[4]);
         
         cout << "EMC merged" << endl;
         graphEMCALMergedPi0InvXSectionStat       = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA,
                                                                                     graphEMCALMergedPi0InvXSectionStat,
-                                                                                    fitInvXSectionPi0,
+                                                                                    fitTsallisPi0PtMult,
                                                                                     offSetPi0Shifting[9], nComBinsPi0Shifting[9]);
         graphEMCALMergedPi0InvXSectionSys        = ApplyXshiftIndividualSpectra(    graphCombPi0InvXSectionTotA,
                                                                                     graphEMCALMergedPi0InvXSectionSys,
-                                                                                    fitInvXSectionPi0,
+                                                                                    fitTsallisPi0PtMult,
                                                                                     offSetPi0Shifting[9], nComBinsPi0Shifting[9]);
             
+        TF1* fitTsallisPi0PtMultFromShift                 = FitObject("tmpt","TsallisMultWithPtPi08TeVFromShift","Pi0");
+        fitTsallisPi0PtMultFromShift->SetRange(0.3,35.);
+        fitTsallisPi0PtMultFromShift->SetParameters(fitTsallisPi0PtMult->GetParameter(0),fitTsallisPi0PtMult->GetParameter(1), fitTsallisPi0PtMult->GetParameter(2));
+
+        TF1* fitTsallisPi0PtMultFromShiftScaled = new TF1("TsallisMultWithPtPi08TeVFromShiftScaled","(1/x)*TsallisMultWithPtPi08TeVFromShift",0.3,35.);
+
         //***************************************************************************************************************
         //************************************Plotting binshift corrections *********************************************
         //***************************************************************************************************************
@@ -1691,6 +1701,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         fitInvXSectionPi0->SetLineColor(kBlue+2);
         fitInvXSectionPi0->Draw("same");
+
+        fitTsallisPi0PtMultFromShiftScaled->SetLineColor(kRed+2);
+        fitTsallisPi0PtMultFromShiftScaled->Draw("same");
         
         canvasDummy2->Update();
         canvasDummy2->SaveAs(Form("%s/ComparisonShiftedPi0_8TeV.%s",outputDir.Data(),suffix.Data()));
@@ -1961,7 +1974,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         //**************** Row def ************************
         Double_t rowsLegendOnlyPi0Ratio[6]          = {0.91, 0.855, 0.805, 0.755, 0.705, 0.655};
         Double_t rowsLegendOnlyPi0RatioAbs[6]       = {0.91, 2.165, 2.035, 1.905, 1.765, 1.635};
-        Double_t columnsLegendOnlyPi0Ratio[3]       = {0.175, 0.385, 0.47};
+        Double_t columnsLegendOnlyPi0Ratio[3]       = {0.185, 0.385, 0.47};
         Double_t columnsLegendOnlyPi0RatioAbs[3]    = {0.115, 1.8, 2.7};
         Double_t lengthBox                          = 0.2;
         Double_t heightBox                          = 0.08/2;
@@ -2711,7 +2724,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     
     // fitting spectrum with intial parameters
     Double_t paramGraphEta[3]                    = {1.5e9, 6.6, 0.22};
-    TF1* fitInvXSectionEta                       = FitObject("l","fitInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotAUnshi,0.5,35.,paramGraphEta,"QNRMEX0+");
+    TF1* fitInvXSectionEta                       = FitObject("l","fitInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotAUnshi,0.4,35.,paramGraphEta,"QNRMEX0+");
     
     // *************************************************************************************************************
     // Shift graphs in X direction if desired
@@ -2721,42 +2734,52 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //        fitTsallisEtaPtMult->SetParameters(paramGraphEta[0],paramGraphEta[1], paramGraphEta[2]) ; // standard parameter optimize if necessary
 //         fitTsallisEtaPtMult->SetParameters(paramTCMEta[0],paramTCMEta[1], paramTCMEta[2], paramTCMEta[3], paramTCMEta[4]) ; // standard parameter optimize if necessary
 
+        TF1* fitTsallisEtaPtMult                 = FitObject("tmpt","TsallisMultWithPtEta8TeV","Eta");
+        fitTsallisEtaPtMult->SetRange(0.3,35.);
+        fitTsallisEtaPtMult->SetParameters(fitInvXSectionEta->GetParameter(0),fitInvXSectionEta->GetParameter(1), fitInvXSectionEta->GetParameter(2));
+
         TGraphAsymmErrors* graphCombEtaInvXSectionTotANoShift = (TGraphAsymmErrors*) graphCombEtaInvXSectionTotA->Clone("Eta_NoShift");
 
-        graphCombEtaInvXSectionTotA              = ApplyXshift(graphCombEtaInvXSectionTotA, fitInvXSectionEta,"Eta",kFALSE);
+        graphCombEtaInvXSectionTotA              = ApplyXshift(graphCombEtaInvXSectionTotA, fitTsallisEtaPtMult, "Eta", kTRUE);
         
         graphCombEtaInvXSectionStatA             = ApplyXshiftIndividualSpectra (   graphCombEtaInvXSectionTotA, 
                                                                                     graphCombEtaInvXSectionStatA, 
-                                                                                    fitInvXSectionEta,
+                                                                                    fitTsallisEtaPtMult,
                                                                                     0, graphCombEtaInvXSectionStatA->GetN(),"Eta");
         graphCombEtaInvXSectionSysA              = ApplyXshiftIndividualSpectra (   graphCombEtaInvXSectionTotA, 
                                                                                     graphCombEtaInvXSectionSysA, 
-                                                                                    fitInvXSectionEta,
+                                                                                    fitTsallisEtaPtMult,
                                                                                     0, graphCombEtaInvXSectionSysA->GetN(), "Eta");
         graphPCMEtaInvXSectionStat               = ApplyXshiftIndividualSpectra(    graphCombEtaInvXSectionTotA,
                                                                                     graphPCMEtaInvXSectionStat,
-                                                                                    fitInvXSectionEta,
+                                                                                    fitTsallisEtaPtMult,
                                                                                     offSetEtaShifting[0], nComBinsEtaShifting[0], "Eta");
         graphPCMEtaInvXSectionSys                = ApplyXshiftIndividualSpectra(    graphCombEtaInvXSectionTotA, 
                                                                                     graphPCMEtaInvXSectionSys, 
-                                                                                    fitInvXSectionEta,
+                                                                                    fitTsallisEtaPtMult,
                                                                                     offSetEtaShifting[0], nComBinsEtaShifting[0], "Eta");
         graphEMCALEtaInvXSectionStat             = ApplyXshiftIndividualSpectra(    graphCombEtaInvXSectionTotA, 
                                                                                     graphEMCALEtaInvXSectionStat, 
-                                                                                    fitInvXSectionEta,
+                                                                                    fitTsallisEtaPtMult,
                                                                                     offSetEtaShifting[2], nComBinsEtaShifting[2], "Eta");
         graphEMCALEtaInvXSectionSys              = ApplyXshiftIndividualSpectra(    graphCombEtaInvXSectionTotA, 
                                                                                     graphEMCALEtaInvXSectionSys, 
-                                                                                    fitInvXSectionEta,
+                                                                                    fitTsallisEtaPtMult,
                                                                                     offSetEtaShifting[2], nComBinsEtaShifting[2], "Eta");
         graphPCMEMCALEtaInvXSectionStat          = ApplyXshiftIndividualSpectra(    graphCombEtaInvXSectionTotA,
                                                                                     graphPCMEMCALEtaInvXSectionStat,
-                                                                                    fitInvXSectionEta,
+                                                                                    fitTsallisEtaPtMult,
                                                                                     offSetEtaShifting[4], nComBinsEtaShifting[4], "Eta");
         graphPCMEMCALEtaInvXSectionSys           = ApplyXshiftIndividualSpectra(    graphCombEtaInvXSectionTotA, 
                                                                                     graphPCMEMCALEtaInvXSectionSys, 
-                                                                                    fitInvXSectionEta,
+                                                                                    fitTsallisEtaPtMult,
                                                                                     offSetEtaShifting[4], nComBinsEtaShifting[4], "Eta");
+
+        TF1* fitTsallisEtaPtMultFromShift                 = FitObject("tmpt","TsallisMultWithPtEta8TeVFromShift","Eta");
+        fitTsallisEtaPtMultFromShift->SetRange(0.4,35.);
+        fitTsallisEtaPtMultFromShift->SetParameters(fitTsallisEtaPtMult->GetParameter(0),fitTsallisEtaPtMult->GetParameter(1), fitTsallisEtaPtMult->GetParameter(2));
+
+        TF1* fitTsallisEtaPtMultFromShiftScaled = new TF1("TsallisMultWithPtEta8TeVFromShiftScaled","(1/x)*TsallisMultWithPtEta8TeVFromShift",0.4,35.);
 
         //***************************************************************************************************************
         //************************************Plotting binshift corrections *********************************************
@@ -2830,6 +2853,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         fitInvXSectionEta->SetLineColor(kBlue+2);
         fitInvXSectionEta->Draw("same");
+
+        fitTsallisEtaPtMultFromShiftScaled->SetLineColor(kRed+2);
+        fitTsallisEtaPtMultFromShiftScaled->Draw("same");
         
         canvasDummy2->Update();
         canvasDummy2->Print(Form("%s/ComparisonShiftedEta_8TeV.%s",outputDir.Data(),suffix.Data()));
@@ -3225,8 +3251,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         //****************************** Definition of the Legend ******************************************
         Double_t rowsLegendOnlyEtaRatio[4]          = {0.91, 0.86, 0.81, 0.76};
         Double_t rowsLegendOnlyEtaRatioAbs[4]       = {0.91, 2.245, 2.11, 1.975};
-        Double_t columnsLegendOnlyEtaRatio[3]       = {0.115, 0.325, 0.40};
-        Double_t columnsLegendOnlyEtaRatioAbs[3]    = {0.115, 1.2, 1.62};
+        Double_t columnsLegendOnlyEtaRatio[3]       = {0.115, 0.355, 0.43};
+        Double_t columnsLegendOnlyEtaRatioAbs[3]    = {0.115, 1.38, 1.92};
 
         //****************** first Column **************************************************
         TLatex *textPCMOnlyRatioEta                 = new TLatex(columnsLegendOnlyEtaRatio[0],rowsLegendOnlyEtaRatio[1],"PCM");
@@ -3364,6 +3390,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         //****************** second Column *************************************************
         textStatOnlyRatioEta->Draw();
         textSysOnlyRatioEta->Draw();
+
+        markerPCMEtaOnlyRatioEta->DrawMarker(columnsLegendOnlyEtaRatioAbs[1] ,rowsLegendOnlyEtaRatioAbs[1]);
+        markerEMCALEtaOnlyRatioEta->DrawMarker(columnsLegendOnlyEtaRatioAbs[1] ,rowsLegendOnlyEtaRatioAbs[2]);
+        markerPCMEMCALEtaOnlyRatioEta->DrawMarker(columnsLegendOnlyEtaRatioAbs[1] ,rowsLegendOnlyEtaRatioAbs[3]);
+
         boxPCMEtaOnlyRatioEta->Draw("l");
         boxEMCALEtaOnlyRatioEta->Draw("l");
         boxPCMEMCALEtaOnlyRatioEta->Draw("l");
@@ -6395,7 +6426,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
       labelALICE->Draw();
       labelInvMassEnergy->Draw();
 
-      TLatex *labelInvMassTriggerPHOSh      = new TLatex(0.135,0.9-0.9*2*0.8*textsizeLabelsPP,"PHOS trigger");
+      TLatex *labelInvMassTriggerPHOSh      = new TLatex(0.135,0.9-0.9*2*0.8*textsizeLabelsPP,"PHOS-L0 trigger");
       SetStyleTLatex( labelInvMassTriggerPHOSh, 0.85*textSizeLabelsPixel,4);
       labelInvMassTriggerPHOSh->SetTextFont(43);
       labelInvMassTriggerPHOSh->Draw();
