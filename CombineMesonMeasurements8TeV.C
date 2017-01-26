@@ -167,7 +167,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                                                     "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "EMCal high pT", "EMCal merged",
                                                     "PCMOtherDataset"};
     TString  nameTrigger[3]                     = {"INT7", "EMC7", "EGA"};
-    TString  nameTriggerAlternative[3]          = {"MB trigger", "EMC-L0, MB", "EMC-L1, MB"};
+    TString  nameTriggerAlternative[3]          = {"MB trigger", "EMC-L0 trigger", "EMC-L1 trigger"};
     
     Color_t  colorDet[11];
     Color_t  colorDetMC[11];
@@ -885,7 +885,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TFile* filePHOSPHOS                                     = new TFile(fileNamePHOSPHOS.Data());
         TDirectory* directoryPHOSPHOSRejection                  = (TDirectory*)filePHOSPHOS->Get("RejectionFactor");
 
-        TString triggerNameLabel[3] = {"EMC7/INT7","EGA/EMC7","PHOS/INT7"};
+        TString triggerNameLabel[3] = {"EMC-L0/MB","EMC-L1/EMC-L0","PHOS/MB"};
         TH1F* histoTriggerReject[3];
         histoTriggerReject[0] = (TH1F*)fileEMCALLow->Get("TriggRejectvsPt_EMC7_INT7");
         histoTriggerReject[1] = (TH1F*)fileEMCALLow->Get("TriggRejectvsPt_EGA_EMC7");
@@ -910,7 +910,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                                 0.85*textSizeSpectra2,textSizeSpectra2, 0.85*textSizeSpectra2,textSizeSpectra2, 0.85,0.85);
         histo2DTriggReject->DrawCopy();
 
-        TLegend* legendTriggReject = GetAndSetLegend2(0.33, 0.12, 0.92, 0.12+(0.9*3*textSizeSpectra2),textPixelPP);
+        TLegend* legendTriggReject = GetAndSetLegend2(0.2, 0.12, 0.9, 0.12+(0.9*3*textSizeSpectra2),textPixelPP);
         legendTriggReject->SetMargin(0.02);
         legendTriggReject->SetNColumns(3);
         for (Int_t i = 0; i< 3; i++){
@@ -973,11 +973,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         SetStyleTLatex( labelWeightsTR, textSizeSpectra2,4);
         labelWeightsTR->Draw();
 
-        TLatex *labelPerfTriggFitRange = new TLatex(0.523, 0.12+(0.9*3*textSizeSpectra2)+0.01, "Fit range (GeV/#it{c})");
+        TLatex *labelPerfTriggFitRange = new TLatex(0.463, 0.12+(0.9*3*textSizeSpectra2)+0.01, "Fit range (GeV/#it{c})");
         SetStyleTLatex( labelPerfTriggFitRange, textSizeSpectra2,4);
         labelPerfTriggFitRange->Draw();
 
-        TLatex *labelPerfTriggRejecFac = new TLatex(0.753, 0.12+(0.9*3*textSizeSpectra2)+0.01, "Trigger rejection");
+        TLatex *labelPerfTriggRejecFac = new TLatex(0.723, 0.12+(0.9*3*textSizeSpectra2)+0.01, "Trigger rejection");
         SetStyleTLatex( labelPerfTriggRejecFac, textSizeSpectra2,4);
         labelPerfTriggRejecFac->Draw();
 
