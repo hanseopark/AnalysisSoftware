@@ -51,11 +51,11 @@ TString SigmaStarForm = "#Kappa = #frac{|#kappa^{+}|+|#kappa^{-}|}{2}+2(#kappa^{
 
 TH1D*       fDeltaPt                                              = NULL;
 // 2D-plots
-TH2F*       hKappaTPCPt                                           = NULL;
-TH2F*       hKappaTPCPtElEl                                       = NULL;
-TH2F*       hKappaTPCPtElPi                                       = NULL;
-TH2F*       hKappaTPCPtPiPi                                       = NULL;
-TH2F*       hKappaTPCPtRest                                       = NULL;
+TH2D*       hKappaTPCPt                                           = NULL;
+TH2D*       hKappaTPCPtElEl                                       = NULL;
+TH2D*       hKappaTPCPtElPi                                       = NULL;
+TH2D*       hKappaTPCPtPiPi                                       = NULL;
+TH2D*       hKappaTPCPtRest                                       = NULL;
 // projections
 TH1D*       hKappaTPC                                             = NULL;
 TH1D**      hKappaTPCAfterCut                                     = NULL;

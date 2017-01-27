@@ -18,17 +18,25 @@ TGraphAsymmErrors*  gWHDG_Pi0_Raa_6080;
 TGraphAsymmErrors*  gWHDG_Eta_Raa_0010;
 TGraphAsymmErrors*  gWHDG_Eta_Raa_2050;
 
-//Chaarged particles graphs
+//Charged particles graphs
+TH1D*  histoChargedPionSpectraStat0010;
+TH1D*  histoChargedPionSpectraSyst0010;
+TH1D*  histoChargedKaonSpectraStat0010;
+TH1D*  histoChargedKaonSpectraSyst0010;
+TH1D*  histoChargedPionSpectraStat2040;
+TH1D*  histoChargedPionSpectraSyst2040;
+TH1D*  histoChargedKaonSpectraStat2040;
+TH1D*  histoChargedKaonSpectraSyst2040;
 TGraphAsymmErrors*  graphChargedRatioKaonToPion0010;
 TGraphAsymmErrors*  graphChargedRatioKaonToPionSys0010;
 TGraphAsymmErrors*  graphChargedRatioKaonToPion2040;
 TGraphAsymmErrors*  graphChargedRatioKaonToPionSys2040;
 TGraphAsymmErrors*  graphChargedPionRAA0010;
 TGraphAsymmErrors*  graphChargedPionRAASys0010;
-TGraphAsymmErrors*  graphChargedPionRAA2040;
-TGraphAsymmErrors*  graphChargedPionRAASys2040;
 TGraphAsymmErrors*  graphChargedKaonRAA0010;
 TGraphAsymmErrors*  graphChargedKaonRAASys0010;
+TGraphAsymmErrors*  graphChargedPionRAA2040;
+TGraphAsymmErrors*  graphChargedPionRAASys2040;
 TGraphAsymmErrors*  graphChargedKaonRAA2040;
 TGraphAsymmErrors*  graphChargedKaonRAASys2040;
 
@@ -76,6 +84,10 @@ TGraphAsymmErrors* graphInvSectionPCMStatEta2760GeV;
 TGraphAsymmErrors* graphInvSectionPCMSysEta2760GeV;
 TGraphAsymmErrors* graphInvSectionEMCalStatEta2760GeV;
 TGraphAsymmErrors* graphInvSectionEMCalSysEta2760GeV;
+
+TGraphAsymmErrors* graphRatioEtaToPi0Comb2760GeVStatErr;
+TGraphAsymmErrors* graphRatioEtaToPi0Comb2760GeVSysErr;
+
 // PP combined yields (y-shifted)
 TGraphAsymmErrors*  graphInvSectionCombStatPi02760GeVforRAA;
 TGraphAsymmErrors*  graphInvSectionCombSysPi02760GeVforRAA;
@@ -120,6 +132,10 @@ TGraphAsymmErrors* graphPCMPi0InvYieldSysWOMat2760GeV_2050;
 TH1D* histoPCMPi0RAAStatPbPb2760GeV_2050;
 TGraphAsymmErrors* graphPCMPi0RAAStatPbPb2760GeV_2050;
 TGraphAsymmErrors* graphPCMPi0RAASysPbPb2760GeV_2050;
+TH1D* histoPCMPi0InvYieldPbPb2760GeV_2040;
+TGraphAsymmErrors* graphPCMPi0InvYieldStatPbPb2760GeV_2040;
+TGraphAsymmErrors* graphPCMPi0InvYieldSysPbPb2760GeV_2040;
+
 //PCM ---- Eta
 TH1D* histoPCMEtaInvYieldPbPb2760GeV_0010;
 TGraphAsymmErrors* graphPCMEtaInvYieldStatPbPb2760GeV_0010;
@@ -143,6 +159,10 @@ TGraphAsymmErrors* graphPCMEtaRAASysPbPb2760GeV_2050;
 TH1D *histoPCMEtatoPi0Stat2760GeV_2050;
 TGraphAsymmErrors *graphPCMEtatoPi0Stat2760GeV_2050;
 TGraphAsymmErrors *graphPCMEtatoPi0Sys2760GeV_2050;
+TH1D* histoPCMEtaInvYieldPbPb2760GeV_2040;
+TGraphAsymmErrors* graphPCMEtaInvYieldStatPbPb2760GeV_2040;
+TGraphAsymmErrors* graphPCMEtaInvYieldSysPbPb2760GeV_2040;
+
 //EMCal ---- Pi0
 TH1D*histoEMCalPi0InvYieldStatPbPb2760GeV_0010;
 TGraphAsymmErrors *graphEMCalPi0InvYieldStatPbPb2760GeV_0010;
@@ -200,9 +220,10 @@ Int_t offSetsPi0[11]    =   { 0, 2, 15, 0, 0,
                               0, 0, 0, 0, 0, 0};
 Int_t offSetsPi0Sys[11]=    { 1, 4, 15, 0, 0,
                               0, 0, 0, 0, 0, 1};
-Int_t offSetsPi0RAA[11]    =   { 4, 4, 15, 0, 0,
+
+Int_t offSetsPi0RAA[11]    =   { 1, 4, 15, 0, 0,
                               0, 0, 0, 0, 0, 0};
-Int_t offSetsPi0RAASys[11]=    { 4, 4, 15, 0, 0,
+Int_t offSetsPi0RAASys[11]=    { 1, 4, 15, 0, 0,
                               0, 0, 0, 0, 0, 1};
 
 Int_t offSetsEta[11]    =   { 0, 0, 6, 0, 0,
@@ -213,12 +234,8 @@ Int_t offSetsEtaPi0Ratio[11]    =   { 0, 0, 6, 0, 0,
                               0, 0, 0, 0, 0, 0};//qui
 Int_t offSetsEtaPi0RatioSys[11]=    { 2, 0, 6, 0, 0,
                               0, 0, 0, 0, 0, 0};
-Int_t offSetsEtaRAA[11]    =   { 2, 0, 6, 0, 0,
-                              0, 0, 0, 0, 0, 0};//qui
-Int_t offSetsEtaRAASys[11]=    { 2, 0, 6, 0, 0,
-                              0, 0, 0, 0, 0, 0};
 
-//for preliminary data:
+//for preliminary data: ////////////////////////////////
 // Int_t offSetsEta[11]    =   { 0, 0, 6, 0, 0,
 //                               0, 0, 0, 0, 0, 0};//qui
 // Int_t offSetsEtaSys[11]=    { 1, 0, 6, 0, 0,
@@ -227,6 +244,12 @@ Int_t offSetsEtaRAASys[11]=    { 2, 0, 6, 0, 0,
 //                               0, 0, 0, 0, 0, 0};//qui
 // Int_t offSetsEtaPi0RatioSys[11]=    { 2, 0, 6, 0, 0,
 //                               0, 0, 0, 0, 0, 0};
+////////////////////////////////////////////////////////
+Int_t offSetsEtaRAA[11]    =   { 2, 0, 6, 0, 0,
+                              0, 0, 0, 0, 0, 0};//qui
+Int_t offSetsEtaRAASys[11]=    { 2, 0, 6, 0, 0,
+                              0, 0, 0, 0, 0, 0};
+
 
 
 // weight of histos WITHOUT material budget
@@ -533,8 +556,6 @@ Double_t xSection2760GeVErrpp =     3.9;
 Double_t xSection2760GeVppINEL = 62.8*1e9;
 
 
-
-
 //WITHOUT material budget
 TGraphAsymmErrors* graphCombInvYieldStatPbPb2760GeVA_0010   = NULL;
 TGraphAsymmErrors* graphCombInvYieldSysPbPb2760GeVA_0010    = NULL;
@@ -682,6 +703,68 @@ TGraphAsymmErrors* graphCombEtatoPi0TotPbPb2760GeV_0010 = NULL;
 TGraphAsymmErrors* graphCombEtatoPi0StatPbPb2760GeV_2050 = NULL;
 TGraphAsymmErrors* graphCombEtatoPi0SysPbPb2760GeV_2050 = NULL;
 TGraphAsymmErrors* graphCombEtatoPi0TotPbPb2760GeV_2050 = NULL;
+
+TGraphErrors* graphYieldPi0CombDummyStatForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldPi0CombDummySystForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldEtaCombDummyStatForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldEtaCombDummySystForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldPi0PCMDummyStatForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldPi0PCMDummySystForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldEtaPCMDummyStatForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldEtaPCMDummySystForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldPi0PHOSDummyStatForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldPi0PHOSDummySystForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldPi0EMCalDummyStatForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldPi0EMCalDummySystForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldEtaEMCalDummyStatForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldEtaEMCalDummySystForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldPionDummyStatForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldPionDummySystForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldKaonDummyStatForRatioToCharged_0010 = NULL;
+TGraphErrors* graphYieldKaonDummySystForRatioToCharged_0010 = NULL;
+
+TGraphErrors* graphRatioNeutralToChargedComb_0010 = NULL;
+TGraphErrors* graphRatioPi0PCMToChargedPion_0010 = NULL;
+TGraphErrors* graphRatioPi0PHOSToChargedPion_0010 = NULL;
+TGraphErrors* graphRatioPi0EMCalToChargedPion_0010 = NULL;
+TGraphErrors* graphRatioEtaPCMToChargedKaon_0010 = NULL;
+TGraphErrors* graphRatioEtaEMCalToChargedKaon_0010 = NULL;
+
+TGraphAsymmErrors* graphPCMInvYieldStatPbPb2760GeVUnShiftedCopy_0010 = NULL;
+TGraphAsymmErrors* graphPCMInvYieldSysPbPb2760GeVUnShiftedCopy_0010 = NULL;
+TGraphAsymmErrors* graphPHOSInvYieldStatPbPb2760GeVUnShiftedCopy_0010 = NULL;
+TGraphAsymmErrors* graphPHOSInvYieldSysPbPb2760GeVUnShiftedCopy_0010 = NULL;
+TGraphAsymmErrors* graphEMCalInvYieldStatPbPb2760GeVUnShiftedCopy_0010 = NULL;
+TGraphAsymmErrors* graphEMCalInvYieldSysPbPb2760GeVUnShiftedCopy_0010 = NULL;
+TGraphAsymmErrors* graphPCMInvYieldStatPbPb2760GeVUnShiftedCopy_2050 = NULL;
+TGraphAsymmErrors* graphPCMInvYieldSysPbPb2760GeVUnShiftedCopy_2050 = NULL;
+TGraphAsymmErrors* graphPHOSInvYieldStatPbPb2760GeVUnShiftedCopy_2050 = NULL;
+TGraphAsymmErrors* graphPHOSInvYieldSysPbPb2760GeVUnShiftedCopy_2050 = NULL;
+TGraphAsymmErrors* graphEMCalInvYieldStatPbPb2760GeVUnShiftedCopy_2050 = NULL;
+TGraphAsymmErrors* graphEMCalInvYieldSysPbPb2760GeVUnShiftedCopy_2050 = NULL;
+
+TGraphErrors* graphYieldPi0CombDummyStatForRatioToCharged_2050 = NULL;
+TGraphErrors* graphYieldPi0CombDummySystForRatioToCharged_2050 = NULL;
+TGraphErrors* graphYieldEtaCombDummyStatForRatioToCharged_2050 = NULL;
+TGraphErrors* graphYieldEtaCombDummySystForRatioToCharged_2050 = NULL;
+TGraphErrors* graphYieldPi0PCMDummyStatForRatioToCharged_2050 = NULL;
+TGraphErrors* graphYieldPi0PCMDummySystForRatioToCharged_2050 = NULL;
+TGraphErrors* graphYieldEtaPCMDummyStatForRatioToCharged_2050 = NULL;
+TGraphErrors* graphYieldEtaPCMDummySystForRatioToCharged_2050 = NULL;
+TGraphErrors* graphYieldPi0EMCalDummyStatForRatioToCharged_2050 = NULL;
+TGraphErrors* graphYieldPi0EMCalDummySystForRatioToCharged_2050 = NULL;
+TGraphErrors* graphYieldEtaEMCalDummyStatForRatioToCharged_2050 = NULL;
+TGraphErrors* graphYieldEtaEMCalDummySystForRatioToCharged_2050 = NULL;
+TGraphErrors* graphYieldPionDummyStatForRatioToCharged_2040 = NULL;
+TGraphErrors* graphYieldPionDummySystForRatioToCharged_2040 = NULL;
+TGraphErrors* graphYieldKaonDummyStatForRatioToCharged_2040 = NULL;
+TGraphErrors* graphYieldKaonDummySystForRatioToCharged_2040 = NULL;
+
+TGraphErrors* graphRatioNeutralToChargedComb_2050 = NULL;
+TGraphErrors* graphRatioPi0PCMToChargedPion_2050 = NULL;
+TGraphErrors* graphRatioPi0EMCalToChargedPion_2050 = NULL;
+TGraphErrors* graphRatioEtaPCMToChargedKaon_2050 = NULL;
+TGraphErrors* graphRatioEtaEMCalToChargedKaon_2050 = NULL;
 
 
 TH2F * histo2DInvYieldSectionPi0LHC11h;
