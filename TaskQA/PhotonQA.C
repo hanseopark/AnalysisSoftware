@@ -194,6 +194,12 @@ void PhotonQA(
     TCanvas* cvsQuadratic = new TCanvas("cvsQuadratic","",10,10,500,500);  // gives the page size
     Double_t leftMargin = 0.09; Double_t rightMargin = 0.02; Double_t topMargin = 0.04; Double_t bottomMargin = 0.09;
 	DrawGammaCanvasSettings(canvas,leftMargin,rightMargin,topMargin,bottomMargin);
+    Double_t xPosLabel1D = 0.82;
+    Double_t xPosLabel2D = 0.65;
+    if(fEnergyFlag.Contains("PbPb")){
+      xPosLabel1D = 0.76;
+      xPosLabel2D = 0.58;
+    }
 
 	for(Int_t i=0; i<nSets; i++)
 	{
@@ -261,7 +267,7 @@ void PhotonQA(
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                 fHistGammaAlphaQt,"",
                                  "#alpha = (#it{p}^{+}_{L}-#it{p}^{-}_{L})/(#it{p}^{+}_{L}+#it{p}^{-}_{L})","#it{q}_{T} (GeV/#it{c})",1,1.4,
-                                 0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                 xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
 			DrawArmenterosLines();
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistGammaAlphaQt, Form("%s/Armenteros_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
@@ -270,7 +276,7 @@ void PhotonQA(
             SetXRange(fHistGammaAlpha,minB,maxB);
 			DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                  fHistGammaAlpha,"","Photon #alpha","# of Entries",1,1,
-                                 0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                                 xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
             SaveCanvasAndWriteHistogram(canvas, fHistGammaAlpha, Form("%s/Photon_Alpha_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 			vecGammaAlpha.push_back(fHistGammaAlpha);
         }else cout << "INFO: Object |histoGammaAlphaQt| could not be found! Skipping Draw..." << endl;
@@ -290,7 +296,7 @@ void PhotonQA(
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                 fHistGammaAlphaQt,"",
                                  "#alpha = (#it{p}^{+}_{L}-#it{p}^{-}_{L})/(#it{p}^{+}_{L}+#it{p}^{-}_{L})", "#it{q}_{T} (GeV/#it{c})",1,1.4,
-                                 0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                 xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
 			DrawArmenterosLines();
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTruePrimGammaAlphaQt, Form("%s/Armenteros_TruePrimGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTruePrimGammaAlphaQt| could not be found! Skipping Draw..." << endl;
@@ -304,7 +310,7 @@ void PhotonQA(
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                 fHistTrueSecGammaAlphaQt,"",
                                  "#alpha = (#it{p}^{+}_{L}-#it{p}^{-}_{L})/(#it{p}^{+}_{L}+#it{p}^{-}_{L})", "#it{q}_{T} (GeV/#it{c})",1,1.4,
-                                 0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                 xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
 			DrawArmenterosLines();
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueSecGammaAlphaQt, Form("%s/Armenteros_TrueSecGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueSecGammaAlphaQt| could not be found! Skipping Draw..." << endl;
@@ -318,7 +324,7 @@ void PhotonQA(
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                 fHistTrueDalitzGammaAlphaQt,"",
                                  "#alpha = (#it{p}^{+}_{L}-#it{p}^{-}_{L})/(#it{p}^{+}_{L}+#it{p}^{-}_{L})", "#it{q}_{T} (GeV/#it{c})",1,1.4,
-                                 0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                 xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
 			DrawArmenterosLines();
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueDalitzGammaAlphaQt, Form("%s/Armenteros_TrueDalitzGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueDalitzGammaAlphaQt| could not be found! Skipping Draw..." << endl;
@@ -335,7 +341,7 @@ void PhotonQA(
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                 fHistTrueBGAlphaQt,"",
                                  "#alpha = (#it{p}^{+}_{L}-#it{p}^{-}_{L})/(#it{p}^{+}_{L}+#it{p}^{-}_{L})", "#it{q}_{T} (GeV/#it{c})",1,1.4,
-                                 0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                 xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
 			DrawArmenterosLines();
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueBGAlphaQt, Form("%s/Armenteros_BG_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 			delete fHistTrueBGAlphaQt;
@@ -350,7 +356,7 @@ void PhotonQA(
             SetXRange(fHistGammaPt,fHistGammaPt->GetXaxis()->FindBin(0.1),maxB+5);
 			DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kTRUE,kFALSE,
                                  fHistGammaPt,"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{#gamma}} #frac{dN}{d#it{p}_{T}}",1,1,
-                                 0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                                 xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
             SaveCanvasAndWriteHistogram(canvas, fHistGammaPt, Form("%s/Photon_Pt_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 			vecGammaPt.push_back(fHistGammaPt);
 			//-----------------------------------
@@ -361,7 +367,7 @@ void PhotonQA(
             SetXRange(fHistGammaEta,minB-5,maxB+5);
 			DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                  fHistGammaEta,"","Photon #eta","#frac{1}{N_{#gamma}} #frac{dN}{d#eta}",1,1,
-                                 0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                                 xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
             SaveCanvasAndWriteHistogram(canvas, fHistGammaEta, Form("%s/Photon_Eta_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 			vecGammaEta.push_back(fHistGammaEta);
         }else cout << "INFO: Object |histoGammaEtaPt| could not be found! Skipping Draw..." << endl;
@@ -374,7 +380,7 @@ void PhotonQA(
             SetXRange(fHistGammaPhi,minB,maxB);
 			DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                  fHistGammaPhi,"","Photon #phi","#frac{1}{N_{#gamma}} #frac{dN}{d#phi}",1,1,
-                                 0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                                 xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
             SaveCanvasAndWriteHistogram(canvas, fHistGammaPhi, Form("%s/Photon_Phi_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 			vecGammaPhi.push_back(new TH1D(*fHistGammaPhi));
         }else cout << "INFO: Object |histoGammaPhi| could not be found! Skipping Draw..." << endl;
@@ -387,7 +393,7 @@ void PhotonQA(
             SetXRange(fHistGammaPhiEtaNeg,minB,maxB);
 			DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                  fHistGammaPhiEtaNeg,"","Photon #phi C side","#frac{1}{N_{#gamma}} #frac{dN}{d#phi}",1,1,
-                                 0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                                 xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
             SaveCanvasAndWriteHistogram(canvas, fHistGammaPhiEtaNeg, Form("%s/Photon_Phi_EtaNeg_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 			vecGammaPhiEtaNeg.push_back(new TH1D(*fHistGammaPhiEtaNeg));
         }else cout << "INFO: Object |histoGammaPhiEtaNeg| could not be found! Skipping Draw..." << endl;
@@ -400,7 +406,7 @@ void PhotonQA(
             SetXRange(fHistGammaPhiEtaPos,minB,maxB);
 			DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                  fHistGammaPhiEtaPos,"","Photon #phi A side","#frac{1}{N_{#gamma}} #frac{dN}{d#phi}",1,1,
-                                 0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                                 xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
             SaveCanvasAndWriteHistogram(canvas, fHistGammaPhiEtaPos, Form("%s/Photon_Phi_EtaPos_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 			vecGammaPhiEtaPos.push_back(new TH1D(*fHistGammaPhiEtaPos));
         }else cout << "INFO: Object |histoGammaPhiEtaPos| could not be found! Skipping Draw..." << endl;
@@ -417,7 +423,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,0.12,0.12,kFALSE,kFALSE,kTRUE,
                                fHistXY,"",
                                "X (cm)", "Y (cm)",0.9,1.3,
-                               0.65,0.85,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.85,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistXY, Form("%s/Photon_XY_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoGammaXY| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -433,7 +439,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistZR,"",
                                "Z (cm)", "R (cm)",0.9,1.3,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistZR, Form("%s/Photon_ZR_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoGammaZR| could not be found! Skipping Draw..." << endl;
 
@@ -459,7 +465,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistGammaChi2NDFPt,"",
                                "#chi^{2}_{#gamma}/ndf", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistGammaChi2NDFPt, Form("%s/Chi2NDF_Pt_Photon_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoGammaChi2NDFPt| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -479,7 +485,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistTruePrimGammaChi2NDFPt,"",
                                "#chi^{2}_{#gamma}/ndf", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTruePrimGammaChi2NDFPt, Form("%s/Chi2NDF_Pt_TruePrimGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTruePrimGammaChi2NDFPt| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -499,7 +505,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistTrueSecGammaChi2NDFPt,"",
                                "#chi^{2}_{#gamma}/ndf", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueSecGammaChi2NDFPt, Form("%s/Chi2NDF_Pt_TrueSecGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueSecGammaChi2NDFPt| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -519,7 +525,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistTrueDalitzGammaChi2NDFPt,"",
                                "#chi^{2}_{#gamma}/ndf", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueDalitzGammaChi2NDFPt, Form("%s/Chi2NDF_Pt_TrueDalitz_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueDalitzGammaChi2NDFPt| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -542,7 +548,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistBGChi2NDFPt,"",
                                "#chi^{2}_{#gamma}/ndf", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistBGChi2NDFPt, Form("%s/Chi2NDF_Pt_BG_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
           delete fHistBGChi2NDFPt;
@@ -569,7 +575,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistGammaPsiPairPt,"",
                                "#psi_{pair}", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistGammaPsiPairPt, Form("%s/PsiPair_Pt_Photon_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoGammaPsiPairPt| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -589,7 +595,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistTruePrimGammaPsiPairPt,"",
                                "#psi_{pair}", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTruePrimGammaPsiPairPt, Form("%s/PsiPair_Pt_TruePrimGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTruePrimGammaPsiPairPt| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -609,7 +615,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistTrueSecGammaPsiPairPt,"",
                                "#psi_{pair}", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueSecGammaPsiPairPt, Form("%s/PsiPair_Pt_TrueSecGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueSecGammaPsiPairPt| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -629,7 +635,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistTrueDalitzGammaPsiPairPt,"",
                                "#psi_{pair}", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueDalitzGammaPsiPairPt, Form("%s/PsiPair_Pt_TrueDalitz_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueDalitzGammaPsiPairPt| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -652,7 +658,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistBGPsiPairPt,"",
                                "#psi_{pair}", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistBGPsiPairPt, Form("%s/PsiPair_Pt_BG_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
           delete fHistBGPsiPairPt;
@@ -682,7 +688,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistGammaCosPointPt,"",
                                "cos(#theta_{point})", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistGammaCosPointPt, Form("%s/CosPoint_Pt_Photon_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoGammaCosPointPt| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -706,7 +712,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistTruePrimGammaCosPointPt,"",
                                "cos(#theta_{point})", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTruePrimGammaCosPointPt, Form("%s/CosPoint_Pt_TruePrimGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTruePrimGammaCosPointPt| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -730,7 +736,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistTrueSecGammaCosPointPt,"",
                                "cos(#theta_{point})", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueSecGammaCosPointPt, Form("%s/CosPoint_Pt_TrueSecGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueSecGammaCosPointPt| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -754,7 +760,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistTrueDalitzGammaCosPointPt,"",
                                "cos(#theta_{point})", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueDalitzGammaCosPointPt, Form("%s/CosPoint_Pt_TrueDalitz_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueDalitzGammaCosPointPt| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -781,7 +787,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistBGCosPointPt,"",
                                "cos(#theta_{point})", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistBGCosPointPt, Form("%s/CosPoint_Pt_BG_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
           delete fHistBGCosPointPt;
@@ -804,7 +810,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistGammaCosPointChi2,"",
                                "cos(#theta_{point})", "#chi^{2}_{#gamma}/ndf",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistGammaCosPointChi2, Form("%s/CosPoint_Chi2_Photon_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoGammaCosPointChi2| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -820,7 +826,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistTrueGammaCosPointChi2,"",
                                "cos(#theta_{point})", "#chi^{2}_{#gamma}/ndf",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueGammaCosPointChi2, Form("%s/CosPoint_Chi2_TrueGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueGammaCosPointChi2| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -836,7 +842,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistTrueDalitzGammaCosPointChi2,"",
                                "cos(#theta_{point})", "#chi^{2}_{#gamma}/ndf",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueDalitzGammaCosPointChi2, Form("%s/CosPoint_Chi2_TrueDalitz_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueDalitzGammaCosPointChi2| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -853,7 +859,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistBGCosPointChi2,"",
                                "cos(#theta_{point})", "#chi^{2}_{#gamma}/ndf",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistBGCosPointChi2, Form("%s/CosPoint_Chi2_BG_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
           delete fHistBGCosPointChi2;
@@ -876,7 +882,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistGammaChi2PsiPair,"",
                                "#chi^{2}_{#gamma}/ndf", "#psi_{pair}",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistGammaChi2PsiPair, Form("%s/Chi2_PsiPair_Photon_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoGammaChi2PsiPair| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -891,7 +897,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistTrueGammaChi2PsiPair,"",
                                "#chi^{2}_{#gamma}/ndf", "#psi_{pair}",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueGammaChi2PsiPair, Form("%s/Chi2_PsiPair_TrueGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueGammaChi2PsiPair| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -906,7 +912,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistTrueDalitzGammaChi2PsiPair,"",
                                "#chi^{2}_{#gamma}/ndf", "#psi_{pair}",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueDalitzGammaChi2PsiPair, Form("%s/Chi2_PsiPair_TrueDalitz_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueDalitzGammaChi2PsiPair| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -923,7 +929,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistBGChi2PsiPair,"",
                                "#chi^{2}_{#gamma}/ndf", "#psi_{pair}",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistBGChi2PsiPair, Form("%s/Chi2_PsiPair_BG_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
           delete fHistBGChi2PsiPair;
@@ -946,7 +952,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistGammaCosPointPsiPair,"",
                                "cos(#theta_{point})", "#psi_{pair}",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistGammaCosPointPsiPair, Form("%s/CosPoint_PsiPair_Photon_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoGammaCosPointPsiPair| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -962,7 +968,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistTrueGammaCosPointPsiPair,"",
                                "cos(#theta_{point})", "#psi_{pair}",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueGammaCosPointPsiPair, Form("%s/CosPoint_PsiPair_TrueGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueGammaCosPointPsiPair| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -978,7 +984,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistTrueDalitzGammaCosPointPsiPair,"",
                                "cos(#theta_{point})", "#psi_{pair}",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueDalitzGammaCosPointPsiPair, Form("%s/CosPoint_PsiPair_TrueDalitz_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueDalitzGammaCosPointPsiPair| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -995,7 +1001,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                fHistBGCosPointPsiPair,"",
                                "cos(#theta_{point})", "#psi_{pair}",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistBGCosPointPsiPair, Form("%s/CosPoint_PsiPair_BG_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
           delete fHistBGCosPointPsiPair;
@@ -1018,7 +1024,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistGammaAsymP,"",
                                "#alpha", "#it{p}_{#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistGammaAsymP, Form("%s/Asymmetry_P_Photon_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoGammaAsymP| could not be found! Skipping Draw..." << endl;
         //-----------------------------------
@@ -1034,7 +1040,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistTruePrimGammaAsymP,"",
                                "#alpha", "#it{p}_{#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTruePrimGammaAsymP, Form("%s/Asymmetry_P_TruePrimGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTruePrimGammaAsymP| could not be found! Skipping Draw..." << endl;
         //-----------------------------------
@@ -1050,7 +1056,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistTrueSecGammaAsymP,"",
                                "#alpha", "#it{p}_{#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueSecGammaAsymP, Form("%s/Asymmetry_P_TrueSecGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueSecGammaAsymP| could not be found! Skipping Draw..." << endl;
         //-----------------------------------
@@ -1066,7 +1072,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistTrueDalitzGammaAsymP,"",
                                "#alpha", "#it{p}_{#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueDalitzGammaAsymP, Form("%s/Asymmetry_P_TrueDalitz_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueDalitzGammaAsymP| could not be found! Skipping Draw..." << endl;
         //-----------------------------------
@@ -1084,7 +1090,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistBGAsymP,"",
                                "#alpha", "#it{p}_{#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistBGAsymP, Form("%s/Asymmetry_P_BG_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
           delete fHistBGAsymP;
@@ -1111,7 +1117,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistGammaInvMassPt,"",
                                "M_{e^{+}e^{-}} (GeV/#it{c}^{2})", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistGammaInvMassPt, Form("%s/InvMass_Pt_Photon_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoGammaInvMassPt| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -1131,7 +1137,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistTrueGammaInvMassPt,"",
                                "M_{e^{+}e^{-}} (GeV/#it{c}^{2})", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueGammaInvMassPt, Form("%s/InvMass_Pt_TrueGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueGammaInvMassPt| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -1151,7 +1157,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistTrueDalitzGammaInvMassPt,"",
                                "M_{e^{+}e^{-}} (GeV/#it{c}^{2})", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueDalitzGammaInvMassPt, Form("%s/InvMass_Pt_TrueDalitz_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueDalitzGammaInvMassPt| could not be found! Skipping Draw..." << endl;
     //-----------------------------------
@@ -1173,7 +1179,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistBGInvMassPt,"",
                                "M_{e^{+}e^{-}} (GeV/#it{c}^{2})", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistBGInvMassPt, Form("%s/InvMass_Pt_BG_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
           delete fHistBGInvMassPt;
@@ -1196,7 +1202,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistGammaQtPt,"",
                                "#it{q}_{T,#gamma}", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistGammaQtPt, Form("%s/Qt_Pt_Photon_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoGammaQtPt| could not be found! Skipping Draw..." << endl;
         //-----------------------------------
@@ -1212,7 +1218,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistTruePrimGammaQtPt,"",
                                "#it{q}_{T,#gamma}", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTruePrimGammaQtPt, Form("%s/Qt_Pt_TruePrimGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTruePrimGammaQtPt| could not be found! Skipping Draw..." << endl;
         //-----------------------------------
@@ -1228,7 +1234,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistTrueSecGammaQtPt,"",
                                "#it{q}_{T,#gamma}", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueSecGammaQtPt, Form("%s/Qt_Pt_TrueSecGamma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueSecGammaQtPt| could not be found! Skipping Draw..." << endl;
         //-----------------------------------
@@ -1244,7 +1250,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistTrueDalitzGammaQtPt,"",
                                "#it{q}_{T,#gamma}", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTrueDalitzGammaQtPt, Form("%s/Qt_Pt_TrueDalitz_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << "INFO: Object |histoTrueDalitzGammaQtPt| could not be found! Skipping Draw..." << endl;
         //-----------------------------------
@@ -1262,7 +1268,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                fHistBGQtPt,"",
                                "#it{q}_{T,#gamma}", "#it{p}_{T,#gamma} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, fHistBGQtPt, Form("%s/Qt_Pt_BG_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
           delete fHistBGQtPt;
@@ -1289,7 +1295,7 @@ void PhotonQA(
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                 histodEdxP,"",
                                  Form("#it{p}_{e^{%s}} (GeV/#it{c})",charge[iL].Data()),Form("d#it{E}_{e^{%s}-cand} /d#it{x} TPC",charge[iL].Data()),1,1.4,
-                                 0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                 xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, histodEdxP, Form("%s/dEdxTPC_%s_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
 			delete histodEdxP;
 			//-----------------------------------
@@ -1300,7 +1306,7 @@ void PhotonQA(
             SetXRange(NSigmadEdx,minB,maxB);
 			DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  NSigmadEdx,"",Form("n#sigma dEdx %s",lepton[iL].Data()),Form("%s #frac{dN}{dn#sigma dEdx}",labelNLeptons.Data()),1,1,
-                                 0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                                 xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
             SaveCanvasAndWriteHistogram(canvas, NSigmadEdx, Form("%s/nSigmadEdxTPC_%s_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
 			vecNSigmadEdx[iL].push_back(NSigmadEdx);
         }else cout << Form("INFO: Object |histo%sdEdxEtaP| could not be found! Skipping Draw...",lepton[iL].Data()) << endl;
@@ -1322,7 +1328,7 @@ void PhotonQA(
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                 histoSigmadEdxP,"",
                                  Form("#it{p}_{e^{%s}} (GeV/#it{c})",charge[iL].Data()),Form("#it{n} #sigma_{e^{%s}} d#it{E}/d#it{x} TPC",charge[iL].Data()),1,1.4,
-                                 0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                 xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, histoSigmadEdxP, Form("%s/nSigma_dEdxTPC_%s_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
 			delete histoSigmadEdxP;
         }else cout << Form("INFO: Object |histo%sNSigmadEdxEtaP| could not be found! Skipping Draw...",lepton[iL].Data()) << endl;
@@ -1337,7 +1343,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                TrueNSigmadEdxTPCP,"",
                                Form("#it{p}_{e^{%s}} (GeV/#it{c})",charge[iL].Data()),Form("#it{n} #sigma_{e^{%s}} d#it{E}/d#it{x} TPC",charge[iL].Data()),1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, TrueNSigmadEdxTPCP, Form("%s/nSigma_dEdxTPC_True%s_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << Form("INFO: Object |histoTrue%sNSigmadEdxTPCP| could not be found! Skipping Draw...",lepton[iL].Data()) << endl;
 	//-----------------------------------
@@ -1352,7 +1358,7 @@ void PhotonQA(
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  histoITSdEdxEtaP,"",
                                  Form("#it{p}_{e^{%s}} (GeV/#it{c})",charge[iL].Data()),Form("d#it{E}_{e^{%s}-cand} /d#it{x} ITS",charge[iL].Data()),1,1.4,
-                                 0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                 xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, histoITSdEdxEtaP, Form("%s/dEdxITS_%s_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
 			delete histoITSdEdxEtaP;
         }else cout << Form("INFO: Object |histo%sITSdEdxEtaP| could not be found! Skipping Draw...",lepton[iL].Data()) << endl;
@@ -1368,7 +1374,7 @@ void PhotonQA(
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  histoNSigmaITSEtaP,"",
                                  Form("#it{p}_{e^{%s}} (GeV/#it{c})",charge[iL].Data()),Form("#it{n} #sigma_{e^{%s}} d#it{E}/d#it{x} ITS",charge[iL].Data()),1,1.4,
-                                 0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                 xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, histoNSigmaITSEtaP, Form("%s/nSigma_dEdxITS_%s_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
 			delete histoNSigmaITSEtaP;
         }else cout << Form("INFO: Object |histo%sNSigmaITSEtaP| could not be found! Skipping Draw...",lepton[iL].Data()) << endl;
@@ -1383,7 +1389,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                TrueNSigmadEdxITSP,"",
                                Form("#it{p}_{e^{%s}} (GeV/#it{c})",charge[iL].Data()),Form("#it{n} #sigma_{e^{%s}} d#it{E}/d#it{x} ITS",charge[iL].Data()),1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, TrueNSigmadEdxITSP, Form("%s/nSigma_dEdxITS_True%s_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << Form("INFO: Object |histoTrue%sNSigmadEdxITSP| could not be found! Skipping Draw...",lepton[iL].Data()) << endl;
 	//-----------------------------------
@@ -1398,7 +1404,7 @@ void PhotonQA(
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                  histoSigmadEdxP,"",
                                  Form("#it{p}_{e^{%s}} (GeV/#it{c})",charge[iL].Data()),Form("#it{t}_{measured}-#it{t}_{expected} e^{%s}",charge[iL].Data()),1,1.4,
-                                 0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                 xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, histoSigmadEdxP, Form("%s/TOF_%s_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
 			delete histoSigmadEdxP;
         }else cout << Form("INFO: Object |histo%sTOFEtaP| could not be found! Skipping Draw...",lepton[iL].Data()) << endl;
@@ -1414,7 +1420,7 @@ void PhotonQA(
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                  histoSigmadEdxP,"",
                                  Form("#it{p}_{e^{%s}} (GeV/#it{c})",charge[iL].Data()),Form("#it{n} #sigma_{e^{%s}} TOF",charge[iL].Data()),1,1.4,
-                                 0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                 xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, histoSigmadEdxP, Form("%s/nSigma_TOF_%s_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
 			delete histoSigmadEdxP;
         }else cout << Form("INFO: Object |histo%sNSigmaTOFEtaP| could not be found! Skipping Draw...",lepton[iL].Data()) << endl;
@@ -1429,7 +1435,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                TrueNSigmadEdxTOFP,"",
                                Form("#it{p}_{e^{%s}} (GeV/#it{c})",charge[iL].Data()),Form("#it{n} #sigma_{e^{%s}} TOF",charge[iL].Data()),1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, TrueNSigmadEdxTOFP, Form("%s/nSigma_dEdxTOF_True%s_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << Form("INFO: Object |histoTrue%sNSigmadEdxTOFP| could not be found! Skipping Draw...",lepton[iL].Data()) << endl;
     //-----------------------------------
@@ -1444,7 +1450,7 @@ void PhotonQA(
           SetZMinMaxTH2(ITSclsPt,minB,maxB,ITSclsPt->GetYaxis()->FindBin(0.05),maxYB,kTRUE);
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                ITSclsPt,"","# ITS cl","#it{p}_{T,e^{-}} (GeV/#it{c})",1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],"");
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],"");
           SaveCanvasAndWriteHistogram(cvsQuadratic, ITSclsPt, Form("%s/nITSCl_%s_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
         }else cout << Form("INFO: Object |histo%sITSClPt| could not be found! Skipping Draw...",lepton[iL].Data()) << endl;
 	//-----------------------------------
@@ -1459,7 +1465,7 @@ void PhotonQA(
             SetXRange(AllRcls,minB,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                  AllRcls,"","# ITS cl ",Form("%s #frac{dN}{dITS Cl}",labelNLeptons.Data()),1,1,
-                                 0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                                 xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
             SaveCanvasAndWriteHistogram(canvas, AllRcls, Form("%s/%s_ITScl_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
             vecITSAllclsR[iL].push_back(AllRcls);
             //------------------------------------------
@@ -1472,7 +1478,7 @@ void PhotonQA(
                 SetXRange(Rcls,minB,maxB);
 				DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                      Rcls,"","R (cm)",Form("#frac{d#it{N}_{e^{%s}}}{#it{N}_{e^{%s}} d#it{R}}",charge[iL].Data(),charge[iL].Data()),1,1,
-                                     0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                                     xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
                 SaveCanvasAndWriteHistogram(canvas, Rcls, Form("%s/%s_%iITSClvsR_%s.%s", outputDir.Data(), lepton[iL].Data(), iB, DataSets[i].Data(), suffix.Data()));
                 vecITSclsR[iL][iB].push_back(Rcls);
 			}
@@ -1490,7 +1496,7 @@ void PhotonQA(
             SetXRange(TrueRcls,minB,maxB);
             DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                  TrueRcls,"","R (cm)",Form("#frac{d#it{N}_{e^{%s}}}{#it{N}_{e^{%s}} d#it{R}}",charge[iL].Data(),charge[iL].Data()),1,1,
-                                 0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                                 xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
             SaveCanvasAndWriteHistogram(canvas, TrueRcls, Form("%s/True%s_%iITSClvsR_%s.%s", outputDir.Data(), lepton[iL].Data(), iB, DataSets[i].Data(), suffix.Data()));
             vecTrueITSclsR[iL][iB].push_back(TrueRcls);
           }
@@ -1505,7 +1511,7 @@ void PhotonQA(
             SetXRange(Eta,minB-1,maxB+1);
 			DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                  Eta,"",Form("%s #eta",lepton[iL].Data()),Form("%s #frac{dN}{d#eta}",labelNLeptons.Data()),1,1,
-                                 0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                                 xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
 			SaveCanvasAndWriteHistogram(canvas, Eta, Form("%s/%sEta_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
 			vecEta[iL].push_back(Eta);
 			//-----------------------------------
@@ -1516,7 +1522,7 @@ void PhotonQA(
             SetXRange(Pt,Pt->GetXaxis()->FindBin(0.05),maxB);
 			DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kTRUE,kFALSE,
                                  Pt,"",Form("%s #it{p}_{T} (GeV/#it{c})" ,lepton[iL].Data()),Form("%s #frac{dN}{d#it{p}_{T}}",labelNLeptons.Data()),1,1,
-                                 0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                                 xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
 			SaveCanvasAndWriteHistogram(canvas, Pt, Form("%s/%sPt_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
 			vecPt[iL].push_back(Pt);
         }else cout << Form("INFO: Object |histo%sEtaPt| could not be found! Skipping Draw...",lepton[iL].Data()) << endl;
@@ -1533,7 +1539,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                FCLPt,"",
                                Form("TPC Clusters/Findable Clusters e^{%s}",charge[iL].Data()),Form("#it{p}_{T,e^{%s}} (GeV/#it{c})",charge[iL].Data()),1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, FCLPt, Form("%s/%sFindClusterTPC_Pt_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
           //-----------------------------------
           SetXRange(FCLPt,1,FCLPt->GetNbinsX());
@@ -1542,7 +1548,7 @@ void PhotonQA(
           SetXRange(FCL,minB,maxB);
           DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                FCL,"",Form("TPC Clusters/Findable Clusters e^{%s}",charge[iL].Data()),Form("%s #frac{dN}{dRatio Cl}",labelNLeptons.Data()),1,1,
-                               0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                               xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
           SaveCanvasAndWriteHistogram(canvas, FCL, Form("%s/%sFindTPCClusters_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
           vecFCL[iL].push_back(FCL);
         }else cout << Form("INFO: Object |histo%sFClPt| could not be found! Skipping Draw...",lepton[iL].Data()) << endl;
@@ -1559,7 +1565,7 @@ void PhotonQA(
           DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kTRUE,kTRUE,
                                TPCCLPt,"",
                                Form("TPC Clusters e^{%s}",charge[iL].Data()),Form("#it{p}_{T,e^{%s}} (GeV/#it{c})",charge[iL].Data()),1,1.4,
-                               0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                               xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
           SaveCanvasAndWriteHistogram(cvsQuadratic, TPCCLPt, Form("%s/%sClusterTPC_Pt_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
           //-----------------------------------
           SetXRange(TPCCLPt,1,TPCCLPt->GetNbinsX());
@@ -1568,7 +1574,7 @@ void PhotonQA(
           SetXRange(TPCCL,minB-5,maxB+5);
           DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                TPCCL,"",Form("TPC Clusters e^{%s}",charge[iL].Data()),Form("%s #frac{dN}{dTPC Cl}",labelNLeptons.Data()),1,1,
-                               0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                               xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
           SaveCanvasAndWriteHistogram(canvas, TPCCL, Form("%s/%sTPCClusters_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
           vecTPCCL[iL].push_back(TPCCL);
         }else cout << Form("INFO: Object |histo%sClPt| could not be found! Skipping Draw...",lepton[iL].Data()) << endl;
@@ -1599,7 +1605,7 @@ void PhotonQA(
 	DrawGammaSetMarker(vecGammaPhiEtaNeg.at(i),20,0.8, kBlack , kBlack);
     DrawPeriodQAHistoTH1(canvas,0.11, 0.02, 0.06, 0.11,kFALSE,kFALSE,kFALSE,
                            vecGammaPhiEtaNeg.at(i),"","Photon #phi","#frac{1}{N_{#gamma}} #frac{dN}{d#phi}",1,1,
-               0.82,0.92,0.03,fCollisionSystem,plotDataSets[i],"");
+               xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets[i],"");
 	DrawGammaSetMarker(vecGammaPhiEtaPos.at(i),20,0.8, kRed , kRed);
 	vecGammaPhiEtaPos.at(i)->Draw("e,hist,same");
 	TLegend *legPhotonPhiSpecial = new TLegend(0.3,0.95,0.95,0.99);
@@ -1631,7 +1637,7 @@ void PhotonQA(
           DrawGammaSetMarker(vecChi2[0].at(0),20,0.8, kBlack , kBlack);
           DrawPeriodQAHistoTH1(canvas,0.11, 0.02, 0.06, 0.11,kFALSE,kTRUE,kFALSE,
                                vecChi2[0].at(0),"","#chi^{2}_{#gamma}/ndf ","#frac{d#it{N}_{#gamma}}{#it{N}_{#gamma} d#chi^{2}}",1,1,
-                               0.82,0.92,0.03,fCollisionSystem,plotDataSets[i],"");
+                               xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets[i],"");
           DrawGammaSetMarker(vecChi2[0].at(i),20,0.8, kRed , kRed);
           vecChi2[0].at(i)->Draw("histsame");
           DrawGammaSetMarker(vecChi2[1].at(i-1),20,0.8, kBlue+2 , kBlue+2);
@@ -1683,7 +1689,7 @@ void PhotonQA(
           DrawGammaSetMarker(vecPsi[0].at(0),20,0.8, kBlack , kBlack);
           DrawPeriodQAHistoTH1(canvas,0.11, 0.02, 0.06, 0.11,kFALSE,kTRUE,kFALSE,
                                vecPsi[0].at(0),"","#psi_{pair} ","#frac{d#it{N}_{#gamma}}{#it{N}_{#gamma} d#psi_{pair}}",1,1,
-                               0.82,0.92,0.03,fCollisionSystem,plotDataSets[i],"");
+                               xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets[i],"");
           DrawGammaSetMarker(vecPsi[0].at(i),20,0.8, kRed , kRed);
           vecPsi[0].at(i)->Draw("histsame");
           DrawGammaSetMarker(vecPsi[1].at(i-1),20,0.8, kBlue+2 , kBlue+2);
@@ -1735,7 +1741,7 @@ void PhotonQA(
           DrawGammaSetMarker(vecCos[0].at(0),20,0.8, kBlack , kBlack);
           DrawPeriodQAHistoTH1(canvas,0.11, 0.02, 0.06, 0.11,kFALSE,kTRUE,kFALSE,
                                vecCos[0].at(0),"","cos(#theta_{point})","#frac{d#it{N}_{#gamma}}{#it{N}_{#gamma} dcos(#theta_{point})}",1,1,
-              0.82,0.92,0.03,fCollisionSystem,plotDataSets[i],"");
+              xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets[i],"");
           DrawGammaSetMarker(vecCos[0].at(i),20,0.8, kRed , kRed);
           vecCos[0].at(i)->Draw("histsame");
           DrawGammaSetMarker(vecCos[1].at(i-1),20,0.8, kBlue+2 , kBlue+2);
@@ -1781,7 +1787,7 @@ void PhotonQA(
           DrawGammaSetMarker(vecGamma[0].at(0),20,0.8, kBlack , kBlack);
           DrawPeriodQAHistoTH1(canvas,0.11, 0.02, 0.06, 0.11,kTRUE,kTRUE,kFALSE,
                                vecGamma[0].at(0),"","#it{p}_{T} (GeV/#it{c})","#frac{d#it{N}_{#gamma}}{#it{N}_{#gamma} d#it{p}_{T}} (GeV/#it{c})^{-1}",1,1,
-              0.82,0.92,0.03,fCollisionSystem,plotDataSets[i],"");
+              xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets[i],"");
           DrawGammaSetMarker(vecGamma[0].at(i),20,0.8, kRed , kRed);
           vecGamma[0].at(i)->Draw("histsame");
           DrawGammaSetMarker(vecGamma[1].at(i-1),20,0.8, kBlue+2 , kBlue+2);
@@ -1819,14 +1825,14 @@ void PhotonQA(
 
           DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                histoPurity,"","#it{p}_{T} (GeV/#it{c})","#epsilon_{pur}",1,1,
-                               0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                               xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
           SaveCanvas(canvas, Form("%s/Comparison/Photon_Purity_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE);
 
           histoPurity->GetXaxis()->SetRangeUser(0.05,60.);
           histoPurity->GetYaxis()->SetRangeUser(0.9,1.05);
           DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
                                histoPurity,"","#it{p}_{T} (GeV/#it{c})","#epsilon_{pur}",1,1,
-                               0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                               xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
           SaveCanvas(canvas, Form("%s/Comparison/Photon_Purity_FixRange_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE);
 
           delete histoTruePhotonPt;
@@ -1855,7 +1861,7 @@ void PhotonQA(
           DrawGammaSetMarker(vecInvMass[0].at(0),20,0.8, kBlack , kBlack);
           DrawPeriodQAHistoTH1(canvas,0.11, 0.02, 0.06, 0.11,kFALSE,kTRUE,kFALSE,
                                vecInvMass[0].at(0),"","M_{e^{+}e^{-}} (GeV/#it{c}^{2})","#frac{d#it{N}_{#gamma}}{#it{N}_{#gamma} d#it{M}_{e^{+}e^{-}}} (GeV/#it{c}^{2})^{-1}",1,1,
-              0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+              xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
           DrawGammaSetMarker(vecInvMass[0].at(i),20,0.8, kRed , kRed);
           vecInvMass[0].at(i)->Draw("histsame");
           DrawGammaSetMarker(vecInvMass[1].at(i-1),20,0.8, kBlue+2 , kBlue+2);
@@ -1899,7 +1905,7 @@ void PhotonQA(
             DrawGammaSetMarker(vecITSclsR[iC][0].at(i),20,0.8, kBlack , kBlack);
             DrawPeriodQAHistoTH1(canvas,0.11, 0.02, 0.06, 0.11,kFALSE,kTRUE,kFALSE,
                                  vecITSclsR[iC][0].at(i),"","R (cm)",Form("#frac{d#it{N}_{e^{%s}}}{#it{N}_{e^{%s}} d#it{R}}",charge[iC].Data(),charge[iC].Data()),1,1,
-                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
             DrawGammaSetMarker(vecITSclsR[iC][1].at(i),20,0.8, kRed , kRed);
             vecITSclsR[iC][1].at(i)->Draw("histsame");
             DrawGammaSetMarker(vecITSclsR[iC][2].at(i),20,0.8, kBlue+2 , kBlue+2);
@@ -1943,7 +1949,7 @@ void PhotonQA(
             DrawGammaSetMarker(vecTrueITSclsR[iC][0].at(iMC),20,0.8, kBlack , kBlack);
             DrawPeriodQAHistoTH1(canvas,0.11, 0.02, 0.06, 0.11,kFALSE,kTRUE,kFALSE,
                                  vecTrueITSclsR[iC][0].at(iMC),"","R (cm)",Form("#frac{d#it{N}_{e^{%s}}}{#it{N}_{e^{%s}} d#it{R}}",charge[iC].Data(),charge[iC].Data()),1,1,
-                0.82,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
+                xPosLabel1D,0.94,0.03,fCollisionSystem,plotDataSets[i],"");
             DrawGammaSetMarker(vecTrueITSclsR[iC][1].at(iMC),20,0.8, kRed , kRed);
             vecTrueITSclsR[iC][1].at(iMC)->Draw("histsame");
             DrawGammaSetMarker(vecTrueITSclsR[iC][2].at(iMC),20,0.8, kBlue+2 , kBlue+2);
@@ -1997,117 +2003,117 @@ void PhotonQA(
 		DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kTRUE,kTRUE,kFALSE,
                              vecGammaPt,"","Photon #it{p}_{T} (GeV/#it{c})","#frac{1}{N_{#gamma}} #frac{dN}{d#it{p}_{T}}",1,1.1,
 							 labelData, colorCompare, kTRUE, 2, 5, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Photon_Pt.%s", outputDir.Data(), suffix.Data()),kTRUE,kTRUE);
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kTRUE,kFALSE,kFALSE,
                              vecGammaPt,"","Photon #it{p}_{T} (GeV/#it{c})","#frac{1}{N_{#gamma}} #frac{dN}{d#it{p}_{T}}",1,1.1,
 							 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Photon_Pt.%s", outputDir.Data(), suffix.Data()),kTRUE);
 		DeleteVecTH1D(vecGammaPt);
 	//-----------------------------------
 		DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                              vecGammaEta,"","Photon #eta","#frac{1}{N_{#gamma}} #frac{dN}{d#eta}",1,1.1,
 							 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Photon_Eta.%s", outputDir.Data(), suffix.Data()));
 
 		DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                              vecGammaEta,"","Photon #eta","#frac{1}{N_{#gamma}} #frac{dN}{d#eta}",1,1.1,
 							 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Photon_Eta.%s", outputDir.Data(), suffix.Data()));
 		DeleteVecTH1D(vecGammaEta);
 	//-----------------------------------
 		DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                              vecGammaAlpha,"","Photon #alpha","#frac{1}{N_{#gamma}} #frac{dN}{d#alpha}",1,1.1,
 							 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Photon_Alpha.%s", outputDir.Data(), suffix.Data()));
 
 		DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                              vecGammaAlpha,"","Photon #alpha","#frac{1}{N_{#gamma}} #frac{dN}{d#alpha}",1,1.1,
 							 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Photon_Alpha.%s", outputDir.Data(), suffix.Data()));
 		DeleteVecTH1D(vecGammaAlpha);
 	//-----------------------------------
 		DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                              vecGammaPhi,"","Photon #phi","#frac{1}{N_{#gamma}} #frac{dN}{d#phi}",1,1.1,
 							 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Photon_Phi.%s", outputDir.Data(), suffix.Data()));
 
 		DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                              vecGammaPhi,"","Photon #phi","#frac{1}{N_{#gamma}} #frac{dN}{d#phi}",1,1.1,
 							 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Photon_Phi.%s", outputDir.Data(), suffix.Data()));
 		DeleteVecTH1D(vecGammaPhi);
 	//-----------------------------------
 		DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                              vecGammaPhiEtaNeg,"","Photon #phi C side","#frac{1}{N_{#gamma}} #frac{dN}{d#phi}",1,1.1,
 							 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Photon_Phi_EtaNeg.%s", outputDir.Data(), suffix.Data()));
 
 		DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                              vecGammaPhiEtaNeg,"","Photon #phi C side","#frac{1}{N_{#gamma}} #frac{dN}{d#phi}",1,1.1,
 							 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Photon_Phi_EtaNeg.%s", outputDir.Data(), suffix.Data()));
 		DeleteVecTH1D(vecGammaPhiEtaNeg);
 	//-----------------------------------
 		DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                              vecGammaPhiEtaPos,"","Photon #phi A side","#frac{1}{N_{#gamma}} #frac{dN}{d#phi}",1,1.1,
 							 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Photon_Phi_EtaPos.%s", outputDir.Data(), suffix.Data()));
 
 		DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                              vecGammaPhiEtaPos,"","Photon #phi A side","#frac{1}{N_{#gamma}} #frac{dN}{d#phi}",1,1.1,
 							 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Photon_Phi_EtaPos.%s", outputDir.Data(), suffix.Data()));
 		DeleteVecTH1D(vecGammaPhiEtaPos);
     //-----------------------------------
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecChi2[0],"","#chi^{2}_{#gamma}/ndf","#frac{1}{N_{#gamma}} #frac{dN}{d#chi^{2}}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Chi2NDF.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                          vecChi2[0],"","#chi^{2}_{#gamma}/ndf","#frac{1}{N_{#gamma}} #frac{dN}{d#chi^{2}}",1,1.1,
                                          labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                                         0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                         xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Chi2NDF.%s", outputDir.Data(), suffix.Data()));
         DeleteVecTH1D(vecChi2[0]);
     //-----------------------------------
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecPsi[0],"","#psi_{pair}","#frac{1}{N_{#gamma}} #frac{dN}{d#psi_{pair}}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/PsiPair.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                          vecPsi[0],"","#psi_{pair}","#frac{1}{N_{#gamma}} #frac{dN}{d#psi_{pair}}",1,1.1,
                                          labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                                         0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                         xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_PsiPair.%s", outputDir.Data(), suffix.Data()));
         DeleteVecTH1D(vecPsi[0]);
     //-----------------------------------
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecCos[0],"","cos(#theta_{point})","#frac{1}{N_{#gamma}} #frac{d#it{N}_{#gamma}}{dcos(#theta_{point})}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/CosPoint.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                          vecCos[0],"","cos(#theta_{point})","#frac{1}{N_{#gamma}} #frac{d#it{N}_{#gamma}}{dcos(#theta_{point})}",1,1.1,
                                          labelData, colorCompare, kTRUE, 1.1, 1.1, kFALSE,
-                                         0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                         xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_CosPoint.%s", outputDir.Data(), suffix.Data()));
         DeleteVecTH1D(vecCos[0]);
     //-----------------------------------
@@ -2116,13 +2122,13 @@ void PhotonQA(
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecInvMass[0],"","M_{e^{+}e^{-}} (GeV/#it{c}^{2})", "#frac{d#it{N}_{#gamma}}{#it{N}_{#gamma} d#it{M}_{e^{+}e^{-}}} (GeV/#it{c}^{2})^{-1}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                    0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                    xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/InvMass.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                          vecInvMass[0],"","M_{e^{+}e^{-}} (GeV/#it{c}^{2})", "#frac{d#it{N}_{#gamma}}{#it{N}_{#gamma} d#it{M}_{e^{+}e^{-}}} (GeV/#it{c}^{2})^{-1}",1,1.1,
                                          labelData, colorCompare, kTRUE, 1.1, 1.1, kFALSE,
-                                         0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                         xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_InvMass.%s", outputDir.Data(), suffix.Data()));
         DeleteVecTH1D(vecInvMass[0]);
 	//-----------------------------------
@@ -2136,52 +2142,52 @@ void PhotonQA(
 		DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                              vecEta[iL],"",Form("%s #eta",lepton[iL].Data()),Form("%s #frac{dN}{d#eta}",labelNLeptons.Data()),1,1.1,
 							 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/%s_Eta.%s", outputDir.Data(),lepton[iL].Data(), suffix.Data()));
 
 		DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                              vecEta[iL],"",Form("%s #eta",lepton[iL].Data()),Form("%s #frac{dN}{d#eta}",labelNLeptons.Data()),1,1.1,
 							 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_%s_Eta.%s", outputDir.Data(),lepton[iL].Data(), suffix.Data()));
 		DeleteVecTH1D(vecEta[iL]);
 	//-----------------------------------
 		DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kTRUE,kTRUE,kFALSE,
                              vecPt[iL],"",Form("%s #it{p}_{T} (GeV/#it{c})",lepton[iL].Data()),Form("%s #frac{dN}{d#it{p}_{T}}",labelNLeptons.Data()),1,1.1,
 							 labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/%s_Pt.%s", outputDir.Data(),lepton[iL].Data(), suffix.Data()),kTRUE,kTRUE);
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kTRUE,kFALSE,kFALSE,
                              vecPt[iL],"",Form("%s #it{p}_{T} (GeV/#it{c})",lepton[iL].Data()),Form("%s #frac{dN}{d#it{p}_{T}}",labelNLeptons.Data()),1,1.1,
 							 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_%s_Pt.%s", outputDir.Data(),lepton[iL].Data(), suffix.Data()),kTRUE);
 		DeleteVecTH1D(vecPt[iL]);
 	//-----------------------------------
 		DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                              vecNSigmadEdx[iL],"",Form("%s n#sigma dEdx",lepton[iL].Data()),Form("%s #frac{dN}{dn#sigma dEdx}",labelNLeptons.Data()),1,1.1,
 							 labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/%s_NSigdEdx.%s", outputDir.Data(),lepton[iL].Data(), suffix.Data()), kFALSE, kTRUE);
 
 		DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                              vecNSigmadEdx[iL],"",Form("%s n#sigma dEdx",lepton[iL].Data()),Form("%s #frac{dN}{dn#sigma dEdx}",labelNLeptons.Data()),1,1.1,
 							 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_%s_NSigdEdx.%s", outputDir.Data(),lepton[iL].Data(), suffix.Data()));
 		DeleteVecTH1D(vecNSigmadEdx[iL]);
     //-----------------------------------
         DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                              vecITSAllclsR[iL],"","# ITS cl ",Form("%s #frac{dN}{dITS Cl}",labelNLeptons.Data()),1,1.1,
                              labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/%s_ITSCl.%s", outputDir.Data(),lepton[iL].Data(), suffix.Data()), kFALSE, kTRUE);
 
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                              vecITSAllclsR[iL],"","# ITS cl ",Form("%s #frac{dN}{dITS Cl}",labelNLeptons.Data()),1,1.1,
                              labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_%s_ITSCl.%s", outputDir.Data(),lepton[iL].Data(), suffix.Data()));
         DeleteVecTH1D(vecITSAllclsR[iL]);
 	//-----------------------------------
@@ -2189,13 +2195,13 @@ void PhotonQA(
 			DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                  vecITSclsR[iL][iB],"","R (cm)",Form("%s #frac{d#it{N}_{e^{%s}}}{d#it{R}}",labelNLeptons.Data(),charge[iL].Data()),1,1.1,
 								 labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                 0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                 xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
             SaveCanvas(canvas, Form("%s/Comparison/%s_%iITSClvsR.%s", outputDir.Data(),lepton[iL].Data(), iB, suffix.Data()), kFALSE, kTRUE);
 
 			DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                  vecITSclsR[iL][iB],"","R (cm)",Form("%s #frac{d#it{N}_{e^{%s}}}{d#it{R}}",labelNLeptons.Data(),charge[iL].Data()),1,1.1,
 								 labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                                 0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                 xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
             SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_%s_%iITSClvsR.%s", outputDir.Data(),lepton[iL].Data(), iB, suffix.Data()));
             DeleteVecTH1D(vecITSclsR[iL][iB]);
 		}
@@ -2209,7 +2215,7 @@ void PhotonQA(
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                              vecFCL[iL],"",Form("TPC Clusters/Findable Clusters e^{%s}",charge[iL].Data()),Form("%s #frac{dN}{dRatio Cl}",labelNLeptons.Data()),1,1.1,
                              labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                             0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                             xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_%s_FindTPCClusters.%s", outputDir.Data(),lepton[iL].Data(), suffix.Data()));
         DeleteVecTH1D(vecFCL[iL]);
    //-----------------------------------
@@ -2222,7 +2228,7 @@ void PhotonQA(
         DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                          vecTPCCL[iL],"",Form("TPC Clusters e^{%s}",charge[iL].Data()),Form("%s #frac{dN}{dTPC Cl}",labelNLeptons.Data()),1,1.1,
                                          labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-                                         0.82,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
+                                         xPosLabel1D,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0]);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_%s_TPCClusters.%s", outputDir.Data(),lepton[iL].Data(), suffix.Data()));
         DeleteVecTH1D(vecTPCCL[iL]);
 	}

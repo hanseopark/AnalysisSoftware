@@ -954,6 +954,9 @@ void PhotonQA_Runwise(
     Double_t leftMar = 0.09; Double_t rightMar = 0.025; Double_t topMargin = 0.04; Double_t bottomMargin = 0.09;
 	DrawGammaCanvasSettings(canvas, leftMar, rightMar, topMargin, bottomMargin);
 
+	Float_t xPosLabel = 0.8;
+	if(fEnergyFlag.Contains("PbPb")) xPosLabel = 0.75;
+
 	if(doHistsForEverySet)
 	{
 		TBox *boxLabel = new TBox(1.37,0.7,1.78,0.83);
@@ -1016,8 +1019,8 @@ void PhotonQA_Runwise(
                 if(((TString)vecHistosName.at(h)).CompareTo("nGamma")==0) AdjustHistRange(((TH1D*) vecHistos[i].at(h)),10,10,kTRUE);
                 ((TH1D*) vecHistos[i].at(h))->Draw("px0e1");
 
-                if(doTrigger) PutProcessLabelAndEnergyOnPlot(0.8, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger.Data());
-                else PutProcessLabelAndEnergyOnPlot(0.8, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), "");
+                if(doTrigger) PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger.Data());
+                else PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), "");
 
                 if(((TString)vecHistosName.at(h)).CompareTo("nGamma")==0) SaveCanvas(canvas, Form("%s/%s.%s", outputDirDataSet.Data(), vecHistosName.at(h).Data(), suffix.Data()), kFALSE, kTRUE);
                 else SaveCanvas(canvas, Form("%s/%s.%s", outputDirDataSet.Data(), vecHistosName.at(h).Data(), suffix.Data()));
@@ -1074,35 +1077,35 @@ void PhotonQA_Runwise(
 
 		//---------
 
-            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaPt[i], vecRuns, 5, 5, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.8, 0.03,
+            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaPt[i], vecRuns, 5, 5, kTRUE, addRight, xPosLabel, 0.94, 0.03, xPosLabel, 0.8, 0.03,
                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "GammaPt", plotDataSets[i], kFALSE,
                                     fCollisionSystem, "", suffix, kTRUE, kTRUE, kFALSE);
 
-            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaAlpha[i], vecRuns, 2, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.8, 0.03,
+            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaAlpha[i], vecRuns, 2, 1.1, kTRUE, addRight, xPosLabel, 0.94, 0.03, xPosLabel, 0.8, 0.03,
                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "GammaAlpha", plotDataSets[i], kFALSE,
                                     fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE);
 
-            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaEta[i], vecRuns, 2, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.8, 0.03,
+            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaEta[i], vecRuns, 2, 1.1, kTRUE, addRight, xPosLabel, 0.94, 0.03, xPosLabel, 0.8, 0.03,
                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "GammaEta", plotDataSets[i], kFALSE,
                                     fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE);
 
-            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaPhi[i], vecRuns, 2, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.8, 0.03,
+            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaPhi[i], vecRuns, 2, 1.1, kTRUE, addRight, xPosLabel, 0.94, 0.03, xPosLabel, 0.8, 0.03,
                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "GammaPhi", plotDataSets[i], kFALSE,
                                     fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE);
 
-            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaChi2[i], vecRuns, 5, 5, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.8, 0.03,
+            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaChi2[i], vecRuns, 5, 5, kTRUE, addRight, xPosLabel, 0.94, 0.03, xPosLabel, 0.8, 0.03,
                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "GammaChi2", plotDataSets[i], kFALSE,
                                     fCollisionSystem, "", suffix, kFALSE, kTRUE, kFALSE);
 
-            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaPsiPair[i], vecRuns, 2, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.8, 0.03,
+            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaPsiPair[i], vecRuns, 2, 1.1, kTRUE, addRight, xPosLabel, 0.94, 0.03, xPosLabel, 0.8, 0.03,
                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "GammaPsiPair", plotDataSets[i], kFALSE,
                                     fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE);
 
-            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaCosPoint[i], vecRuns, 5, 5, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.8, 0.03,
+            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaCosPoint[i], vecRuns, 5, 5, kTRUE, addRight, xPosLabel, 0.94, 0.03, xPosLabel, 0.8, 0.03,
                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "GammaCosPoint", plotDataSets[i], kFALSE,
                                     fCollisionSystem, "", suffix, kTRUE, kTRUE, kFALSE);
 
-            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaInvMass[i], vecRuns, 5, 5, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.8, 0.03,
+            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecGammaInvMass[i], vecRuns, 5, 5, kTRUE, addRight, xPosLabel, 0.94, 0.03, xPosLabel, 0.8, 0.03,
                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "GammaInvMass", plotDataSets[i], kFALSE,
                                     fCollisionSystem, "", suffix, kFALSE, kTRUE, kFALSE);
 
@@ -1152,8 +1155,8 @@ void PhotonQA_Runwise(
 			}
 			legend->Draw();
 
-            if(doTrigger) PutProcessLabelAndEnergyOnPlot(0.8, 0.92, 0.03, fCollisionSystem.Data(), fTrigger.Data(), "");
-            else PutProcessLabelAndEnergyOnPlot(0.8, 0.92, 0.03, fCollisionSystem.Data(), "", "");
+            if(doTrigger) PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), fTrigger.Data(), "");
+            else PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), "", "");
 
             if(canvas->GetTopMargin()!=0.06) canvas->SetTopMargin(0.06);
 			if(useDataRunListForMC && !addSubFolder){
@@ -1228,8 +1231,8 @@ void PhotonQA_Runwise(
                       fTrigger = AnalyseSpecialTriggerCut(fTriggerCut.Atoi(), plotDataSets[i]);
                       if(fTrigger.Contains("not defined")) fTrigger = "";
 
-                      PutProcessLabelAndEnergyOnPlot(0.8, 0.92, 0.03, fCollisionSystem.Data(), fTrigger.Data(), "");
-                    }else PutProcessLabelAndEnergyOnPlot(0.8, 0.92, 0.03, fCollisionSystem.Data(), "", "");
+                      PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), fTrigger.Data(), "");
+                    }else PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), "", "");
 
 					SaveCanvas(canvas, Form("%s/%s.%s", outputDirDataSet.Data(),Form("%s",((TH1D*) vecHistos[i].at(h))->GetName()),suffix.Data()));
 					legend->Clear();
