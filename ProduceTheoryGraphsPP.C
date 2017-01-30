@@ -51,7 +51,7 @@ extern TMinuit*      gMinuit;
 Double_t xSection900GeV         = 47.78*1e-3;
 Double_t xSection2760GeV        = 55.416*1e-3;
 Double_t xSection7000GeV        = 62.22*1e-3;
-Double_t xSection8000GeV        = 55.74*1e-3;
+Double_t xSection8000GeV        = 55.8*1e-3;
 Double_t recalcBarn             = 1e12; //NLO in pbarn!!!!
 Double_t xSection2760GeVINEL    = 62.8*1e-3;
 Double_t xSection7000GeVINEL    = 73.2*1e-3;
@@ -887,7 +887,13 @@ void ProduceTheoryGraphsPP(){
     TH1F* histoEtaToPi0RatioPythia8Monash8TeV   = (TH1F*)histoEtaPythia8MonashInvSec8TeV->Clone("histoEtaToPi0RatioPythia8Monash8TeV");
     histoEtaToPi0RatioPythia8Monash8TeV->Sumw2();
     histoEtaToPi0RatioPythia8Monash8TeV->Divide(histoEtaToPi0RatioPythia8Monash8TeV,histoPi0Pythia8MonashInvSec8TeV);
-    
+
+    TFile* filePythia8Monash2013_8TeVLego        = TFile::Open("ExternalInput/Theory/Pythia/Pythia8_Monash2013_8TeV_3676Mio.root");
+    TH1F* histoPi0Pythia8MonashInvSec8TeVLego    = (TH1F*)filePythia8Monash2013_8TeVLego->Get("hPt_Pi0_MB_XSec");
+    TH1F* histoEtaPythia8MonashInvSec8TeVLego    = (TH1F*)filePythia8Monash2013_8TeVLego->Get("hPt_Eta_MB_XSec");
+    TH1F* histoEtaToPi0RatioPythia8Monash8TeVLego= (TH1F*)histoEtaPythia8MonashInvSec8TeVLego->Clone("histoEtaToPi0RatioPythia8Monash8TeVLego");
+    histoEtaToPi0RatioPythia8Monash8TeVLego->Sumw2();
+    histoEtaToPi0RatioPythia8Monash8TeVLego->Divide(histoEtaToPi0RatioPythia8Monash8TeVLego,histoPi0Pythia8MonashInvSec8TeVLego);
     
     //**********************************************************************************************************************
     //********************************* Write graphs and histos to compilation file for pp *********************************
@@ -1052,6 +1058,10 @@ void ProduceTheoryGraphsPP(){
         histoPi0Pythia8MonashInvSec8TeV->Write("histoInvSecPythia8Monash2013Pi08TeV", TObject::kOverwrite);
         histoEtaPythia8MonashInvSec8TeV->Write("histoInvSecPythia8Monash2013Eta8TeV", TObject::kOverwrite);
         histoEtaToPi0RatioPythia8Monash8TeV->Write("histoEtaToPi0RatioPythia8Monash8TeV", TObject::kOverwrite);
+
+        histoPi0Pythia8MonashInvSec8TeVLego->Write("histoInvSecPythia8Monash2013LegoPi08TeV", TObject::kOverwrite);
+        histoEtaPythia8MonashInvSec8TeVLego->Write("histoInvSecPythia8Monash2013LegoEta8TeV", TObject::kOverwrite);
+        histoEtaToPi0RatioPythia8Monash8TeVLego->Write("histoEtaToPi0RatioPythia8Monash2013Lego8TeV", TObject::kOverwrite);
         
     fileTheoryGraphsPP.Close();
 
