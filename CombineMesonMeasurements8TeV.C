@@ -175,6 +175,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     Size_t   markerSizeDet[11];
     Size_t   markerSizeDetMC[11];
 
+    Color_t  colorCGC                           = kCyan-8;
     Color_t  colorNLO                           = kAzure-4;
     Style_t  styleMarkerNLOMuHalf               = 24;
     Style_t  styleMarkerNLOMuOne                = 27;
@@ -1034,6 +1035,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TGraphAsymmErrors* graphPi0DSS14                    = (TGraphAsymmErrors*)fileTheorypp8TeVPi0DSS14->Get("fGraphInvXsec_Pi0");
         for (int i=0;i<graphPi0DSS14->GetN();i++) graphPi0DSS14->GetY()[i] /= 2.;
         for(Int_t i=0; i<10; i++) graphPi0DSS14->RemovePoint(graphPi0DSS14->GetN()-1);
+
+        TGraphAsymmErrors* graphEtaAESSS                    = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcAESSSInvSecEta8000GeV");
+
         TGraphAsymmErrors* graphEtaToPi07000GeV             = (TGraphAsymmErrors*) fileEtaToPi->Get("Alice7TeV");
         TGraphAsymmErrors* graphEtaToPi02760GeV             = (TGraphAsymmErrors*) fileEtaToPi->Get("Alice2760GeV");
         ProduceGraphAsymmWithoutXErrors(graphEtaToPi02760GeV);
@@ -3172,6 +3176,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     graphRatioEtaCombNLOMuHalf                          = CalculateGraphRatioToFit (graphRatioEtaCombNLOMuHalf, fitTCMInvXSectionEta); 
     graphRatioEtaCombNLOMuOne                           = CalculateGraphRatioToFit (graphRatioEtaCombNLOMuOne, fitTCMInvXSectionEta); 
     graphRatioEtaCombNLOMuTwo                           = CalculateGraphRatioToFit (graphRatioEtaCombNLOMuTwo, fitTCMInvXSectionEta); 
+
+    TGraphAsymmErrors* graphRatioEtaAESSS               = (TGraphAsymmErrors*) graphEtaAESSS->Clone();
+    graphRatioEtaAESSS                                  = CalculateGraphErrRatioToFit (graphRatioEtaAESSS, fitTCMInvXSectionEta);
     
     TGraphAsymmErrors* graphRatioEtaCombCombFitTotA     = (TGraphAsymmErrors*)graphCombEtaInvXSectionTotA->Clone();
     graphRatioEtaCombCombFitTotA                        = CalculateGraphErrRatioToFit(graphRatioEtaCombCombFitTotA, fitTCMInvXSectionEta); 
@@ -4712,13 +4719,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         SetStyleTLatex( labelRatioTheoryPPP, 0.85*textsizeLabelsPP,4);
         labelRatioTheoryPPP->Draw();
         
-        TLatex *labelRatioTheoryPP   = new TLatex(0.78,0.925,collisionSystem8TeV.Data());
+        TLatex *labelRatioTheoryPP   = new TLatex(0.76,0.925,collisionSystem8TeV.Data());
         SetStyleTLatex( labelRatioTheoryPP, 0.85*textsizeLabelsPP,4);
         labelRatioTheoryPP->Draw();
-        TLatex *labelRatioTheoryPP1P = new TLatex(0.883,0.875,"ALICE");
+        TLatex *labelRatioTheoryPP1P = new TLatex(0.863,0.875,"ALICE");
         SetStyleTLatex( labelRatioTheoryPP1P, 0.85*textsizeLabelsPP,4);
         labelRatioTheoryPP1P->Draw();
-        TLatex *labelRatioTheoryPP2P= new TLatex(0.863,0.83,"#pi^{0} #rightarrow #gamma#gamma");
+        TLatex *labelRatioTheoryPP2P= new TLatex(0.843,0.83,"#pi^{0} #rightarrow #gamma#gamma");
         SetStyleTLatex( labelRatioTheoryPP2P, 0.85*textsizeLabelsPP,4);
         labelRatioTheoryPP2P->Draw();
     
@@ -4909,13 +4916,16 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendRatioTheoryppEta_3Parted->AddEntry(graphRatioEtaCombNLOMuHalf, "#mu = 0.5 #it{p}_{T}", "l");
         legendRatioTheoryppEta_3Parted->AddEntry(graphRatioEtaCombNLOMuOne,  "#mu = #it{p}_{T}", "l");
         legendRatioTheoryppEta_3Parted->AddEntry(graphRatioEtaCombNLOMuTwo,  "#mu = 2 #it{p}_{T}", "l");
-
-//         legendRatioTheoryppEta_3Parted->AddEntry(graphRatioEtaCombNLODSS14,  "NLO, DSS14 #it{p}_{T} < #mu < 2 #it{p}_{T}", "f");
+        //legendRatioTheoryppEta_3Parted->AddEntry(graphRatioEtaAESSS, "NLO, PDF:CTEQ6M5 - FF:AESSS", "");
         legendRatioTheoryppEta_3Parted->Draw();
 
         TLegend* legendRatioTheoryNormUncEta = GetAndSetLegend2(0.31,0.91,0.56,0.96, 0.85* textSizeLabelsPixel);
         legendRatioTheoryNormUncEta->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.9%","l");
         legendRatioTheoryNormUncEta->Draw();
+
+//        TLatex *labelRatioTheoryPP_Paper2   = new TLatex(0.2,0.68,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
+//        SetStyleTLatex( labelRatioTheoryPP_Paper2, 0.8*textsizeLabelsPP,4);
+//        labelRatioTheoryPP_Paper2->Draw();
 
         TLatex *labelRatioTheoryPP2   = new TLatex(0.78,0.925,collisionSystem8TeV.Data());
         SetStyleTLatex( labelRatioTheoryPP2, 0.85*textsizeLabelsPP,4);
@@ -5205,13 +5215,15 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendXsectionPaperEta->AddEntry(graphNLOCalcEtaMuHalf,"#mu = 0.5 #it{p}_{T}","l");
         legendXsectionPaperEta->AddEntry(graphNLOCalcEtaMuOne,"#mu = #it{p}_{T}","l");
         legendXsectionPaperEta->AddEntry(graphNLOCalcEtaMuTwo,"#mu = 2 #it{p}_{T}","l");
+        //legendXsectionPaperEta->AddEntry(graphEtaAESSS,"NLO, PDF:CTEQ6M5 - FF:AESSS", "f");
         legendXsectionPaperEta->Draw();
 
         TLatex *labelEta = new TLatex(0.175, 0.192,"NLO, PDF:CTEQ6M5 - FF:AESSS");
         SetStyleTLatex( labelEta, 0.75*textsizeLabelsPP,4);
         labelEta->Draw();
 
-        //legendXsectionPaper2->Draw();
+        //labelRatioTheoryPP_Paper->Draw();
+
         
     padInvSectionNLORatio->cd();
     padInvSectionNLORatio->SetLogx(1);
@@ -5321,12 +5333,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TGraphErrors* graphPythia8InvXSectionEtaScaled              = ScaleGraph(graphPythia8InvXSectionEta,scaleFacEtaForCombPlot);
         TGraphErrors* graphPythia8T4CInvXSectionEtaScaled           = ScaleGraph(graphPythia8_4CInvXSectionEta,scaleFacEtaForCombPlot);
 
-        TGraph* graphNLOCalcEtaMuHalfCopy                           = (TGraph*)graphNLOCalcEtaMuHalf->Clone("graphNLOCalcEtaMuHalfCopy");
-        TGraph* graphNLOCalcEtaMuOneCopy                            = (TGraph*)graphNLOCalcEtaMuOne->Clone("graphNLOCalcEtaMuOneCopy");
-        TGraph* graphNLOCalcEtaMuTwoCopy                            = (TGraph*)graphNLOCalcEtaMuTwo->Clone("graphNLOCalcEtaMuTwoCopy");
-        graphNLOCalcEtaMuHalfCopy                                   = ScaleGraph(graphNLOCalcEtaMuHalfCopy,scaleFacEtaForCombPlot);
-        graphNLOCalcEtaMuOneCopy                                    = ScaleGraph(graphNLOCalcEtaMuOneCopy,scaleFacEtaForCombPlot);
-        graphNLOCalcEtaMuTwoCopy                                    = ScaleGraph(graphNLOCalcEtaMuTwoCopy,scaleFacEtaForCombPlot);
+        TGraphAsymmErrors* graphEtaAESSSCopy                        = (TGraphAsymmErrors*)graphEtaAESSS->Clone("graphEtaAESSSCopy");
+        graphEtaAESSSCopy                                           = ScaleGraph(graphEtaAESSSCopy,scaleFacEtaForCombPlot);
 
         // plotting NLO calcs pi0
         graphPi0DSS14->SetLineWidth(widthCommonFit);
@@ -5337,12 +5345,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphPi0DSS14->Draw("same,e3");
 
         // plotting NLO calcs eta
-        DrawGammaNLOTGraph( graphNLOCalcEtaMuHalfCopy, widthCommonFit, styleLineNLOMuHalf, colorNLO);
-        graphNLOCalcEtaMuHalfCopy->Draw("same,c");
-        DrawGammaNLOTGraph( graphNLOCalcEtaMuOneCopy, widthCommonFit, styleLineNLOMuOne, colorNLO);
-        graphNLOCalcEtaMuOneCopy->Draw("same,c");
-        DrawGammaNLOTGraph( graphNLOCalcEtaMuTwoCopy, widthCommonFit, styleLineNLOMuTwo, colorNLO);
-        graphNLOCalcEtaMuTwoCopy->Draw("same,c");
+        DrawGammaSetMarkerTGraphAsym(graphEtaAESSSCopy, 0, 0, colorCGC, colorCGC, widthLinesBoxes, kTRUE, colorCGC);
+        graphEtaAESSSCopy->Draw("3,same");
 
         // plotting Pythia 8.2 Monash
         DrawGammaSetMarkerTGraphErr(graphPythia8_4CInvXSection, 0, 0, 807 , 807, widthLinesBoxes, kTRUE, 807);
@@ -5412,7 +5416,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendXsectionPaperPyBoth->AddEntry(histoPythia8_4CInvXSectionEta,"PYTHIA 8.2, Tune 4C","l");
         legendXsectionPaperPyBoth->AddEntry(graphPi0DSS14,"#pi^{0} pQCD NLO ","f");
         legendXsectionPaperPyBoth->AddEntry((TObject*)0,"#scale[0.75]{PDF: MSTW, FF: DSS14}","");
-        legendXsectionPaperPyBoth->AddEntry(graphNLOCalcEtaMuOneCopy,"#eta pQCD NLO ","l");
+        legendXsectionPaperPyBoth->AddEntry(graphEtaAESSSCopy,"#eta pQCD NLO ","f");
         legendXsectionPaperPyBoth->AddEntry((TObject*)0,"#scale[0.75]{PDF: CTEQ6M5, FF: AESSS}","");
         legendXsectionPaperPyBoth->Draw();
 

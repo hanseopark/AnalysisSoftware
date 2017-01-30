@@ -707,7 +707,7 @@ void ProduceTheoryGraphsPP(){
     ifstream  fileNLOEta8000GeV;
     fileNLOEta8000GeV.open(fileNameNLOEta8000GeV,ios_base::in);
     cout << fileNameNLOEta8000GeV << endl;
-    
+
     while(!fileNLOEta8000GeV.eof() && nlinesNLOEta8000GeV < 100){
         nlinesNLOEta8000GeV++;
         fileNLOEta8000GeV >> ptNLOEta8000GeV[nlinesNLOEta8000GeV] >> muHalfEta8000GeV[nlinesNLOEta8000GeV] >> muOneEta8000GeV[nlinesNLOEta8000GeV] >> muTwoEta8000GeV[nlinesNLOEta8000GeV]; 
@@ -725,6 +725,9 @@ void ProduceTheoryGraphsPP(){
     TGraph* graphNLOCalcInvYieldEtaMuHalf8000GeV = ScaleGraph(graphNLOCalcInvSecEtaMuHalf8000GeV, 1/(xSection8000GeV*recalcBarn));
     TGraph* graphNLOCalcInvYieldEtaMuOne8000GeV =  ScaleGraph(graphNLOCalcInvSecEtaMuOne8000GeV, 1/(xSection8000GeV*recalcBarn));
     TGraph* graphNLOCalcInvYieldEtaMuTwo8000GeV =  ScaleGraph(graphNLOCalcInvSecEtaMuTwo8000GeV, 1/(xSection8000GeV*recalcBarn));
+
+    TGraphAsymmErrors* graphNLOCalcInvSecEta8000GeV     = CombineMuScales(nlinesNLOEta8000GeV, ptNLOEta8000GeV, muOneEta8000GeV, muHalfEta8000GeV, muTwoEta8000GeV);
+    graphNLOCalcInvSecEta8000GeV->RemovePoint(0);
     
     Double_t       ptNLOPi08000GeV[100];
     Double_t       muHalfPi08000GeV[100];
@@ -928,6 +931,7 @@ void ProduceTheoryGraphsPP(){
         graphNLOCalcInvSecEtaMuHalf8000GeV->Write("graphNLOCalcInvSecEtaMuHalf8000GeV", TObject::kOverwrite);
         graphNLOCalcInvSecEtaMuOne8000GeV->Write("graphNLOCalcInvSecEtaMuOne8000GeV", TObject::kOverwrite);
         graphNLOCalcInvSecEtaMuTwo8000GeV->Write("graphNLOCalcInvSecEtaMuTwo8000GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecEta8000GeV->Write("graphNLOCalcAESSSInvSecEta8000GeV", TObject::kOverwrite);
         
         graphNLOCalcInvSecEtaMuHalf7000GeV->Write("graphNLOCalcInvSecEtaMuHalf7000GeV", TObject::kOverwrite);
         graphNLOCalcInvSecEtaMuOne7000GeV->Write("graphNLOCalcInvSecEtaMuOne7000GeV", TObject::kOverwrite);
