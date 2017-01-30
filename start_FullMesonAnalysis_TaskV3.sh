@@ -1198,7 +1198,6 @@ echo $2
 echo $3
 echo $4
 
-
 if [[ "$1" == *-*gammaOff* ]]; then
     DoGamma=0
     echo "gamma calculation switched off"
@@ -1701,7 +1700,7 @@ elif [[ "$1" == *-c* ]] ; then
     ONLYCORRECTION=1
     DataRootFile=$2
     Suffix=$3;
-elif [[ "$1" == *-d* ]] ; then
+elif [[ "$1" == -d* ]] ; then
     ONLYCORRECTION=1
     ONLYCUTS=1
     DataRootFile=$2
@@ -1887,26 +1886,26 @@ do
     fi
 done
 
-if [ $ONLYCUTS -eq 0 ] && [ $mode -lt 2 ]; then 
-    echo "On the top you see all cuts being available, please tell me the standard cut for Meson analysis.";
-    read standardCutMeson
-    standardCutGamma=$standardCutMeson
-    correct=0
-    while [ $correct -eq 0 ]
-    do
-        echo "The standard cut was set to $standardCutMeson. Is this correct? Yes/No?";
-        read answer
-        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Continuing ...";
-            correct=1
-        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-            echo "Aborting ...";
-            exit
-        else
-            echo "Command not found. Please try again.";
-        fi
-    done
-fi
+# if [ $ONLYCUTS -eq 0 ] && [ $mode -lt 2 ]; then 
+#     echo "On the top you see all cuts being available, please tell me the standard cut for Meson analysis.";
+#     read standardCutMeson
+#     standardCutGamma=$standardCutMeson
+#     correct=0
+#     while [ $correct -eq 0 ]
+#     do
+#         echo "The standard cut was set to $standardCutMeson. Is this correct? Yes/No?";
+#         read answer
+#         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+#             echo "Continuing ...";
+#             correct=1
+#         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+#             echo "Aborting ...";
+#             exit
+#         else
+#             echo "Command not found. Please try again.";
+#         fi
+#     done
+# fi
 
 correct=0
 while [ $correct -eq 0 ]
@@ -2352,6 +2351,21 @@ do
                 echo "Command not found. Please try again.";
             fi
         done
+        if [ $ONLYRESULTS -eq 0 ]; then
+            if [ $ONLYCORRECTION -eq 0 ];  then
+                echo "Do you want to use THnSparse for the background? Yes/No?";
+                read answer
+                if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                    echo "Will use THnSparse for the background ...";
+                    useTHnSparse=1
+                elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                    echo "Will NOT use THnSparse for the background ...";
+                    useTHnSparse=0
+                else
+                    echo "Command not found. Please try again.";
+                fi
+            fi    
+        fi
     fi
 done
 
@@ -2831,62 +2845,62 @@ if [ $mode = 10 ] || [ $mode = 11 ]; then
     exit;
 fi
 
-if [ "$energy" != "PbPb_2.76TeV" ] && [ "$energy" != "PbPb_5.02TeV" ]; then
-    if [ "$energy" != "pPb_5.023TeV" ]; then
-        Pi0dataCorr=`ls $standardCutMeson/$energy/Pi0_data_GammaConvV1Correction_*.root`
-        Pi0MCCorr=`ls $standardCutMeson/$energy/Pi0_MC_GammaConvV1Correction_*.root`
-        GammaPi0dataCorr=`ls $standardCutGamma/$energy/Gamma_Pi0_data_GammaConvV1Correction_*.root`
-        GammaPi0MCCorr=`ls $standardCutGamma/$energy/Gamma_Pi0_MC_GammaConvV1Correction_*.root`
-
-        if [ $DoPi0InEtaBinning -eq 1 ]; then
-            Pi0EtadataCorr=`ls $standardCutMeson/$energy/Pi0EtaBinning_data_GammaConvV1Correction_*.root`
-            Pi0EtaMCCorr=`ls $standardCutMeson/$energy/Pi0EtaBinning_MC_GammaConvV1Correction_*.root`
-            GammaPi0EtadataCorr=`ls $standardCutGamma/$energy/Gamma_Pi0EtaBinning_data_GammaConvV1Correction_*.root`
-            GammaPi0EtaMCCorr=`ls $standardCutGamma/$energy/Gamma_Pi0EtaBinning_MC_GammaConvV1Correction_*.root`
-        fi
-        if [ $DoEta -eq 1 ]; then    
-            EtadataCorr=`ls $standardCutMeson/$energy/Eta_data_GammaConvV1Correction_*.root`
-            EtaMCCorr=`ls $standardCutMeson/$energy/Eta_MC_GammaConvV1Correction_*.root`
-            GammaEtadataCorr=`ls $standardCutGamma/$energy/Gamma_Eta_data_GammaConvV1Correction_*.root`
-            GammaEtaMCCorr=`ls $standardCutGamma/$energy/Gamma_Eta_MC_GammaConvV1Correction_*.root`
-        fi
-        
-        CallPi0Data=\"$Pi0dataCorr\"\,\"$EtadataCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kFALSE\"\,\"Levy\"\,\"\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
-        CallPi0MC=\"$Pi0MCCorr\"\,\"$EtaMCCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kTRUE\"\,\"Levy\"\,\"\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
-        CallPi0EtaData=\"$Pi0EtadataCorr\"\,\"$EtadataCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kFALSE\"\,\"Levy\"\,\"same\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
-        CallPi0EtaMC=\"$Pi0EtaMCCorr\"\,\"$EtaMCCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kTRUE\"\,\"Levy\"\,\"same\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
-
-        if [ $ONLYCUTS -eq 0 ]; then
-            if [ $DoPi0 -eq 1 ] && [ $DoEta -eq 1 ] && [ -f $EtadataCorr ] && [ -f $Pi0dataCorr ] && [ -f $SysErrFiledata ]; then
-                CreateFinalResults $CallPi0Data ;
-                if [ $DoGamma -eq 1 ]; then
-                    if [ $NEWGammaMacros == 0 ]; then 
-                        CreateGammaFinalResults $GammaPi0dataCorr $Pi0dataCorr $standardCutMeson $Suffix Pi0 kFALSE;
-                    fi    
-                fi 
-            else 
-                PARTLY=1
-            fi
-
-            echo "have done this" 
-
-            if [ $DoPi0 -eq 1 ] && [ $DoEta -eq 1 ] && [ -f $EtaMCCorr ] && [ -f $Pi0MCCorr ] && [ -f $SysErrFileMC ]; then
-                CreateFinalResults $CallPi0MC
-            else
-                PARTLY=1
-            fi
-            if [ $DoPi0InEtaBinning -eq 1 ] && [ $DoEta -eq 1 ]; then
-                if [ -f $EtadataCorr ] && [ -f $Pi0EtadataCorr ] && [ -f $SysErrFiledata ] ; then
-                    CreateFinalResults $CallPi0EtaData
-                else 
-                    PARTLY=1
-                fi    
-                if [ -f $EtaMCCorr ] && [ -f $Pi0EtaMCCorr ] && [ -f $SysErrFileMC ]; then
-                    CreateFinalResults $CallPi0EtaMC
-                else 
-                    PARTLY=1
-                fi
-            fi
-        fi    
-    fi
-fi
+# if [ "$energy" != "PbPb_2.76TeV" ] && [ "$energy" != "PbPb_5.02TeV" ]; then
+#     if [ "$energy" != "pPb_5.023TeV" ]; then
+#         Pi0dataCorr=`ls $standardCutMeson/$energy/Pi0_data_GammaConvV1Correction_*.root`
+#         Pi0MCCorr=`ls $standardCutMeson/$energy/Pi0_MC_GammaConvV1Correction_*.root`
+#         GammaPi0dataCorr=`ls $standardCutGamma/$energy/Gamma_Pi0_data_GammaConvV1Correction_*.root`
+#         GammaPi0MCCorr=`ls $standardCutGamma/$energy/Gamma_Pi0_MC_GammaConvV1Correction_*.root`
+# 
+#         if [ $DoPi0InEtaBinning -eq 1 ]; then
+#             Pi0EtadataCorr=`ls $standardCutMeson/$energy/Pi0EtaBinning_data_GammaConvV1Correction_*.root`
+#             Pi0EtaMCCorr=`ls $standardCutMeson/$energy/Pi0EtaBinning_MC_GammaConvV1Correction_*.root`
+#             GammaPi0EtadataCorr=`ls $standardCutGamma/$energy/Gamma_Pi0EtaBinning_data_GammaConvV1Correction_*.root`
+#             GammaPi0EtaMCCorr=`ls $standardCutGamma/$energy/Gamma_Pi0EtaBinning_MC_GammaConvV1Correction_*.root`
+#         fi
+#         if [ $DoEta -eq 1 ]; then    
+#             EtadataCorr=`ls $standardCutMeson/$energy/Eta_data_GammaConvV1Correction_*.root`
+#             EtaMCCorr=`ls $standardCutMeson/$energy/Eta_MC_GammaConvV1Correction_*.root`
+#             GammaEtadataCorr=`ls $standardCutGamma/$energy/Gamma_Eta_data_GammaConvV1Correction_*.root`
+#             GammaEtaMCCorr=`ls $standardCutGamma/$energy/Gamma_Eta_MC_GammaConvV1Correction_*.root`
+#         fi
+#         
+#         CallPi0Data=\"$Pi0dataCorr\"\,\"$EtadataCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kFALSE\"\,\"Levy\"\,\"\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
+#         CallPi0MC=\"$Pi0MCCorr\"\,\"$EtaMCCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kTRUE\"\,\"Levy\"\,\"\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
+#         CallPi0EtaData=\"$Pi0EtadataCorr\"\,\"$EtadataCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kFALSE\"\,\"Levy\"\,\"same\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
+#         CallPi0EtaMC=\"$Pi0EtaMCCorr\"\,\"$EtaMCCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kTRUE\"\,\"Levy\"\,\"same\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
+# 
+#         if [ $ONLYCUTS -eq 0 ]; then
+#             if [ $DoPi0 -eq 1 ] && [ $DoEta -eq 1 ] && [ -f $EtadataCorr ] && [ -f $Pi0dataCorr ] && [ -f $SysErrFiledata ]; then
+#                 CreateFinalResults $CallPi0Data ;
+#                 if [ $DoGamma -eq 1 ]; then
+#                     if [ $NEWGammaMacros == 0 ]; then 
+#                         CreateGammaFinalResults $GammaPi0dataCorr $Pi0dataCorr $standardCutMeson $Suffix Pi0 kFALSE;
+#                     fi    
+#                 fi 
+#             else 
+#                 PARTLY=1
+#             fi
+# 
+#             echo "have done this" 
+# 
+#             if [ $DoPi0 -eq 1 ] && [ $DoEta -eq 1 ] && [ -f $EtaMCCorr ] && [ -f $Pi0MCCorr ] && [ -f $SysErrFileMC ]; then
+#                 CreateFinalResults $CallPi0MC
+#             else
+#                 PARTLY=1
+#             fi
+#             if [ $DoPi0InEtaBinning -eq 1 ] && [ $DoEta -eq 1 ]; then
+#                 if [ -f $EtadataCorr ] && [ -f $Pi0EtadataCorr ] && [ -f $SysErrFiledata ] ; then
+#                     CreateFinalResults $CallPi0EtaData
+#                 else 
+#                     PARTLY=1
+#                 fi    
+#                 if [ -f $EtaMCCorr ] && [ -f $Pi0EtaMCCorr ] && [ -f $SysErrFileMC ]; then
+#                     CreateFinalResults $CallPi0EtaMC
+#                 else 
+#                     PARTLY=1
+#                 fi
+#             fi
+#         fi    
+#     fi
+# fi

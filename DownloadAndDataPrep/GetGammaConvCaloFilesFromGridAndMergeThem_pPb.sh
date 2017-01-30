@@ -457,6 +457,9 @@ if [ $HAVELHC13e7 == 1 ]; then
     done;
 fi
 
+mkdir -p CutSelections
+mv CutSelection_*.log CutSelections/
+
 if [ $MERGEON == 1 ]; then
     rm $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_LHC13c-pass$passNr\_*.root
     ls $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_*.root > filesForMerging.txt

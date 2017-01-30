@@ -1162,6 +1162,7 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
             return 2;
         } else if( energy.CompareTo("pPb_5.023TeV") == 0) {
             if (mode == 0){
+//                 scaleFac    = 2;
                 return 6;
             } else if (mode == 1){
                 return 4;

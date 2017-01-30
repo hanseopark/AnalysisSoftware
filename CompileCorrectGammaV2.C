@@ -35,7 +35,6 @@
 
 void CompileCorrectGammaV2(){
     
-     
      //*****************************************************************************************
     // Find out which user is running the code and set RooUnfold directory accordingly
     // RooUnfold is a separate piece of software which needs to be compiled on your system
@@ -50,8 +49,8 @@ void CompileCorrectGammaV2(){
         gSystem->AddIncludePath("-I/home/admin1/leardini/newSoftware/AnalysisSoftware/RooUnfold/src");
         gSystem->Load("/home/admin1/leardini/newSoftware/AnalysisSoftware/RooUnfold/libRooUnfold");
     } else if (homedirectory.CompareTo("/home/fbock") == 0){   
-        gSystem->AddIncludePath("-I/home/fbock/Photon/Software/PCGGIT/AnalysisSoftware/RooUnfold/src"); 
-		gSystem->Load("/home/fbock/Photon/Software/PCGGIT/AnalysisSoftware/RooUnfold/libRooUnfold");
+        gSystem->AddIncludePath("-I/home/fbock/Photon/Software/PCGGIT/RooUnfold/src"); 
+		gSystem->Load("/home/fbock/Photon/Software/PCGGIT/RooUnfold/libRooUnfold");
 	} else if (homedirectory.CompareTo("/home/daniel") == 0){
 		gSystem->AddIncludePath("-I/home/daniel/data/work/photonconv/AnalysisSoftware/RooUnfold/src");
 		gSystem->Load("/home/daniel/data/work/photonconv/AnalysisSoftware/RooUnfold/libRooUnfold");

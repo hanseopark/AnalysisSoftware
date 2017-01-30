@@ -2696,6 +2696,14 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
+    } else if ((fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) && (fMeson.CompareTo("Pi0") == 0)) {
+        nIterationsShowBackground[0]                    = 12;
+        nIterationsShowBackground[1]                    = 12;
+        nIterationsShowBackground[2]                    = 15;
+        nIterationsShowBackground[3]                    = 16;
+        optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
+        optionShowBackground[1]                         = "nosmoothing";
+        optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
     } else {
         cout << "WARNING: No ShowBackground-options defined, using the default ones." << endl;
         nIterationsShowBackground[0]                    = 12;

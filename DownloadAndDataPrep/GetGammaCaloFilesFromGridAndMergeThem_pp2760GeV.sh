@@ -751,7 +751,6 @@ elif [ $2 = "LHC13g" ]; then
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC13g/$runNumber "/alice/data/2013/LHC13g/000$runNumber/pass1/PWGGA/GA_pp/$LHC13gData"
             done;            
-
         fi
         
         if [ $HAVELHC15g2 == 1 ]; then
