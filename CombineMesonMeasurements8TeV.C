@@ -5294,6 +5294,185 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasInvSectionPaper->Print(Form("%s/Eta_InvXSectionWithRatios_Paper.%s",outputDir.Data(),suffix.Data()));
 
     // ***************************************************************************************************************
+    // ******************************* pi0+eta combined plot  ********************************************************
+    // ***************************************************************************************************************
+
+    canvasXSectionPi0->cd();
+
+    TH2F * histo2DXSectionWithEtaAndPi0;
+    histo2DXSectionWithEtaAndPi0          = new TH2F("histo2DXSectionWithEtaAndPi0","histo2DXSectionWithEtaAndPi0",11000,0.23,50.,1000,6e-2,9e11);
+    SetStyleHistoTH2ForGraphs(histo2DXSectionWithEtaAndPi0, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 0.9,1.45);
+    histo2DXSectionWithEtaAndPi0->GetXaxis()->SetMoreLogLabels();
+    histo2DXSectionWithEtaAndPi0->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DXSectionWithEtaAndPi0->Draw("copy");
+
+        // scale eta graphs
+        Double_t scaleFacEtaForCombPlot                              = 1e-2;
+        TGraphAsymmErrors* graphCombEtaInvXSectionStatA_WOXErrCopy   = (TGraphAsymmErrors*) graphCombEtaInvXSectionStatA_WOXErr->Clone("graphCombEtaInvXSectionStatAWOXErrCopy");
+        TGraphAsymmErrors* graphCombEtaInvXSectionSysA_Copy          = (TGraphAsymmErrors*) graphCombEtaInvXSectionSysA->Clone("graphCombEtaInvXSectionSysA_Copy");
+        graphCombEtaInvXSectionStatA_WOXErrCopy                      = ScaleGraph(graphCombEtaInvXSectionStatA_WOXErrCopy,scaleFacEtaForCombPlot);
+        graphCombEtaInvXSectionSysA_Copy                             = ScaleGraph(graphCombEtaInvXSectionSysA_Copy,scaleFacEtaForCombPlot);
+
+        TH1D* histFitTCMInvXSectionEta                               = (TH1D*)fitTCMInvXSectionEta->GetHistogram();
+        histFitTCMInvXSectionEta->Scale(scaleFacEtaForCombPlot);
+
+        TF1* tf1FitInvXSectionEta = new TF1("tf1FitInvXSectionEta","(1/100) * fitInvCrossSectionEta8TeV", 0.4, 35.);
+
+        histoPythia8InvXSectionEta->Scale(scaleFacEtaForCombPlot);
+        histoPythia8_4CInvXSectionEta->Scale(scaleFacEtaForCombPlot);
+        TGraphErrors* graphPythia8InvXSectionEtaScaled              = ScaleGraph(graphPythia8InvXSectionEta,scaleFacEtaForCombPlot);
+        TGraphErrors* graphPythia8T4CInvXSectionEtaScaled           = ScaleGraph(graphPythia8_4CInvXSectionEta,scaleFacEtaForCombPlot);
+
+        TGraph* graphNLOCalcEtaMuHalfCopy                           = (TGraph*)graphNLOCalcEtaMuHalf->Clone("graphNLOCalcEtaMuHalfCopy");
+        TGraph* graphNLOCalcEtaMuOneCopy                            = (TGraph*)graphNLOCalcEtaMuOne->Clone("graphNLOCalcEtaMuOneCopy");
+        TGraph* graphNLOCalcEtaMuTwoCopy                            = (TGraph*)graphNLOCalcEtaMuTwo->Clone("graphNLOCalcEtaMuTwoCopy");
+        graphNLOCalcEtaMuHalfCopy                                   = ScaleGraph(graphNLOCalcEtaMuHalfCopy,scaleFacEtaForCombPlot);
+        graphNLOCalcEtaMuOneCopy                                    = ScaleGraph(graphNLOCalcEtaMuOneCopy,scaleFacEtaForCombPlot);
+        graphNLOCalcEtaMuTwoCopy                                    = ScaleGraph(graphNLOCalcEtaMuTwoCopy,scaleFacEtaForCombPlot);
+
+        // plotting NLO calcs pi0
+        graphPi0DSS14->SetLineWidth(widthCommonFit);
+        graphPi0DSS14->SetLineColor(colorNLO);
+        graphPi0DSS14->SetLineStyle(1);
+        graphPi0DSS14->SetFillStyle(1001);
+        graphPi0DSS14->SetFillColor(colorNLO);
+        graphPi0DSS14->Draw("same,e3");
+
+        // plotting NLO calcs eta
+        DrawGammaNLOTGraph( graphNLOCalcEtaMuHalfCopy, widthCommonFit, styleLineNLOMuHalf, colorNLO);
+        graphNLOCalcEtaMuHalfCopy->Draw("same,c");
+        DrawGammaNLOTGraph( graphNLOCalcEtaMuOneCopy, widthCommonFit, styleLineNLOMuOne, colorNLO);
+        graphNLOCalcEtaMuOneCopy->Draw("same,c");
+        DrawGammaNLOTGraph( graphNLOCalcEtaMuTwoCopy, widthCommonFit, styleLineNLOMuTwo, colorNLO);
+        graphNLOCalcEtaMuTwoCopy->Draw("same,c");
+
+        // plotting Pythia 8.2 Monash
+        DrawGammaSetMarkerTGraphErr(graphPythia8_4CInvXSection, 0, 0, 807 , 807, widthLinesBoxes, kTRUE, 807);
+        graphPythia8_4CInvXSection->Draw("3,same");
+        DrawGammaSetMarker(histoPythia8_4CInvXSection, 24, 1.5, 807 , 807);
+        histoPythia8_4CInvXSection->SetLineWidth(widthCommonFit);
+        histoPythia8_4CInvXSection->Draw("same,hist,l");
+
+        DrawGammaSetMarkerTGraphErr(graphPythia8InvXSection, 0, 0, kRed+2 , kRed+2, widthLinesBoxes, kTRUE, kRed+2);
+        graphPythia8InvXSection->Draw("3,same");
+        DrawGammaSetMarker(histoPythia8InvXSection, 24, 1.5, kRed+2 , kRed+2);
+        histoPythia8InvXSection->SetLineWidth(widthCommonFit);
+        histoPythia8InvXSection->Draw("same,hist,l");
+
+        // plotting Pythia 8.2 Tune4C
+        DrawGammaSetMarkerTGraphErr(graphPythia8T4CInvXSectionEtaScaled, 0, 0, 807 , 807, widthLinesBoxes, kTRUE, 807);
+        graphPythia8T4CInvXSectionEtaScaled->Draw("3,same");
+        DrawGammaSetMarker(histoPythia8_4CInvXSectionEta, 24, 1.5, 807 , 807);
+        histoPythia8_4CInvXSectionEta->SetLineWidth(widthCommonFit);
+        histoPythia8_4CInvXSectionEta->Draw("same,hist,l");
+
+        DrawGammaSetMarkerTGraphErr(graphPythia8InvXSectionEtaScaled, 0, 0, kRed+2 , kRed+2, widthLinesBoxes, kTRUE, kRed+2);
+        graphPythia8InvXSectionEtaScaled->Draw("3,same");
+        DrawGammaSetMarker(histoPythia8InvXSectionEta, 24, 1.5, kRed+2 , kRed+2);
+        histoPythia8InvXSectionEta->SetLineWidth(widthCommonFit);
+        histoPythia8InvXSectionEta->Draw("same,hist,l");
+
+        // plots fits
+        fitTCMInvXSectionPi0Plot->Draw("same");
+        fitInvXSectionPi0->Draw("same");
+
+        SetStyleHisto(histFitTCMInvXSectionEta, 2, 7, kGray+2);
+        histFitTCMInvXSectionEta->Draw("same,c");
+        DrawGammaSetMarkerTF1( tf1FitInvXSectionEta, 3, 2, kGray+1);
+        tf1FitInvXSectionEta->Draw("same");
+
+        // plot data
+        graphCombPi0InvXSectionSysA->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionSysA_Copy, markerStyleComb+4, markerSizeComb, kBlack , kBlack, widthLinesBoxes, kTRUE);
+        graphCombEtaInvXSectionSysA_Copy->Draw("E2same");
+
+        graphCombPi0InvXSectionStatA_WOXErr->Draw("p,same,z");
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionStatA_WOXErrCopy, markerStyleComb+4, markerSizeComb, kBlack , kBlack);
+        graphCombEtaInvXSectionStatA_WOXErrCopy->Draw("p,same,z");
+
+        // labels lower left corner
+        TLegend* legendXsectionPaperAll    = GetAndSetLegend2(0.17, 0.12, 0.5, 0.11+0.04*4, textSizeLabelsPixel, 1, "", 43, 0.2);
+        legendXsectionPaperAll->AddEntry(graphCombPi0InvXSectionSysA,"#pi^{0}","pf");
+        legendXsectionPaperAll->AddEntry(graphCombEtaInvXSectionSysA_Copy,"#eta (x 10^{-2})","pf");
+        legendXsectionPaperAll->AddEntry(fitTCMInvXSectionPi0Plot,"TCM fit","l");
+        legendXsectionPaperAll->AddEntry(fitInvXSectionPi0,"Tsallis fit","l");
+        legendXsectionPaperAll->Draw();
+
+        TLatex *labelEnergyXSectionPaperAll = new TLatex(0.18, 0.12+0.04*6, collisionSystem8TeV.Data());
+        SetStyleTLatex( labelEnergyXSectionPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+        labelEnergyXSectionPaperAll->Draw();
+        TLatex *labelALICEXSectionPaperAll  = new TLatex(0.18,0.12+0.04*5,"ALICE");
+        SetStyleTLatex( labelALICEXSectionPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+        labelALICEXSectionPaperAll->Draw();
+        TLatex *labelALICENormUnPaperAll    = new TLatex(0.18,0.12+0.04*4+0.003,"norm. unc. 2.9%");
+        SetStyleTLatex( labelALICENormUnPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+        labelALICENormUnPaperAll->Draw();
+
+        // labels upper right corner
+        TLegend* legendXsectionPaperPyBoth  = GetAndSetLegend2(0.5, 0.95-0.04*5, 0.54+0.33, 0.95, textSizeLabelsPixel, 1, "", 43, 0.18);
+        legendXsectionPaperPyBoth->AddEntry(histoPythia8InvXSectionEta,"PYTHIA 8.2, Monash 2013","l");
+        legendXsectionPaperPyBoth->AddEntry(histoPythia8_4CInvXSectionEta,"PYTHIA 8.2, Tune 4C","l");
+        legendXsectionPaperPyBoth->AddEntry(graphPi0DSS14,"#pi^{0} pQCD NLO ","f");
+        legendXsectionPaperPyBoth->AddEntry((TObject*)0,"#scale[0.75]{PDF: MSTW, FF: DSS14}","");
+        legendXsectionPaperPyBoth->AddEntry(graphNLOCalcEtaMuOneCopy,"#eta pQCD NLO ","l");
+        legendXsectionPaperPyBoth->AddEntry((TObject*)0,"#scale[0.75]{PDF: CTEQ6M5, FF: AESSS}","");
+        legendXsectionPaperPyBoth->Draw();
+
+    canvasXSectionPi0->SaveAs(Form("%s/InvXSection_Pi0_Eta_Theory.%s",outputDir.Data(),suffix.Data()));
+
+    histo2DXSectionWithEtaAndPi0->Draw("copy");
+
+        // plots fits
+        fitTCMInvXSectionPi0Plot->Draw("same");
+        fitInvXSectionPi0->Draw("same");
+
+        SetStyleHisto(histFitTCMInvXSectionEta, 2, 7, kGray+2);
+        histFitTCMInvXSectionEta->Draw("same,c");
+        DrawGammaSetMarkerTF1( tf1FitInvXSectionEta, 3, 2, kGray+1);
+        tf1FitInvXSectionEta->Draw("same");
+
+        // plot data
+        graphCombPi0InvXSectionSysA->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionSysA_Copy, markerStyleComb+4, markerSizeComb, kBlack , kBlack, widthLinesBoxes, kTRUE);
+        graphCombEtaInvXSectionSysA_Copy->Draw("E2same");
+
+        graphCombPi0InvXSectionStatA_WOXErr->Draw("p,same,z");
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionStatA_WOXErrCopy, markerStyleComb+4, markerSizeComb, kBlack , kBlack);
+        graphCombEtaInvXSectionStatA_WOXErrCopy->Draw("p,same,z");
+
+        // labels lower left corner
+        legendXsectionPaperAll->Draw();
+
+        labelEnergyXSectionPaperAll->Draw();
+        labelALICEXSectionPaperAll->Draw();
+        labelALICENormUnPaperAll->Draw();
+
+    canvasXSectionPi0->SaveAs(Form("%s/InvXSection_Pi0_Eta_Fits.%s",outputDir.Data(),suffix.Data()));
+
+    histo2DXSectionWithEtaAndPi0->Draw("copy");
+
+        // plot data
+        graphCombPi0InvXSectionSysA->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionSysA_Copy, markerStyleComb+4, markerSizeComb, kBlack , kBlack, widthLinesBoxes, kTRUE);
+        graphCombEtaInvXSectionSysA_Copy->Draw("E2same");
+
+        graphCombPi0InvXSectionStatA_WOXErr->Draw("p,same,z");
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaInvXSectionStatA_WOXErrCopy, markerStyleComb+4, markerSizeComb, kBlack , kBlack);
+        graphCombEtaInvXSectionStatA_WOXErrCopy->Draw("p,same,z");
+
+        // labels lower left corner
+        TLegend* legendXsectionPaperAll2    = GetAndSetLegend2(0.17, 0.20, 0.5, 0.19+0.04*2, textSizeLabelsPixel, 1, "", 43, 0.2);
+        legendXsectionPaperAll2->AddEntry(graphCombPi0InvXSectionSysA,"#pi^{0}","pf");
+        legendXsectionPaperAll2->AddEntry(graphCombEtaInvXSectionSysA_Copy,"#eta (x 10^{-2})","pf");
+        legendXsectionPaperAll2->Draw();
+
+        labelEnergyXSectionPaperAll->Draw();
+        labelALICEXSectionPaperAll->Draw();
+        labelALICENormUnPaperAll->Draw();
+
+    canvasXSectionPi0->SaveAs(Form("%s/InvXSection_Pi0_Eta.%s",outputDir.Data(),suffix.Data()));
+
+    // ***************************************************************************************************************
     // ******************************* eta/pi0 graphs without x-error  ***********************************************
     // ***************************************************************************************************************
 
@@ -5632,6 +5811,24 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     //*************************************************************************************************************
     //*************************************************************************************************************
 
+    histo2DEtatoPi0combo->Draw("copy");
+
+    // plotting data
+    graphCombEtaToPi0SysA->Draw("2,same");
+    graphCombEtaToPi0StatA_WOXErr->Draw("p,same");
+
+    // plotting labels
+    labelEnergyEtaToPi02->Draw();
+    labelALICEEtaToPi02->Draw();
+    //labelPi0EtaToPi02->Draw();
+
+    histo2DEtatoPi0combo->Draw("axis,same");
+
+    canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Combined.%s",outputDir.Data(), suffix.Data()));
+
+    //*************************************************************************************************************
+    //*************************************************************************************************************
+
     canvasEtatoPi0combo->SetRightMargin(0.02);
     histo2DEtatoPi0combo->GetXaxis()->SetLabelOffset(0.);
     histo2DEtatoPi0combo->GetXaxis()->SetRangeUser(0.,25.0);
@@ -5668,6 +5865,25 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasEtatoPi0combo->SetLogx(kFALSE);
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Theory_Paper_LIN.%s",outputDir.Data(), suffix.Data()));
     
+    //*************************************************************************************************************
+    //*************************************************************************************************************
+
+    histo2DEtatoPi0combo->Draw("copy");
+
+    // plotting data
+    graphCombEtaToPi0SysA->Draw("2,same");
+    graphCombEtaToPi0StatA_WOXErr->Draw("p,same");
+
+    // plotting labels
+    labelEnergyEtaToPi02->Draw();
+    labelALICEEtaToPi02->Draw();
+    //labelPi0EtaToPi02->Draw();
+
+    histo2DEtatoPi0combo->Draw("axis,same");
+
+    canvasEtatoPi0combo->SetLogx(kFALSE);
+    canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_Combined_LIN.%s",outputDir.Data(), suffix.Data()));
+
     // ***************************************************************************************************************
     // ************************** Comparison pi0/pi+-, pi0 pp 8TeV ***************************************************
     // ***************************************************************************************************************
