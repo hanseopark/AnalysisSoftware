@@ -312,6 +312,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TString nameSecMesonPlot[4]                     = {"K_{s}^{0}", "#Lambda", "K_{l}^{0}", "Rest"};
     TString nameIntRange[6]                         = {"", "Wide", "Narrow", "Left", "LeftWide", "LeftNarrow"};
     TString nameIntRangePlot[6]                     = {"right/ normal int", "right/wide int", "right/narrow int", "left/ normal int", "left/wide int", "left/narrow int"};
+    TString nameIntBckResult[3]                     = {"pol2_normal","exp_normal","exp2_normal"};
 
     Int_t pdgSecMeson[3]                            = {310, 3122, 130};
     Double_t decayLength[3]                         = {0.026844, 0.0789, 15.34};
@@ -353,10 +354,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TH1D *histoEventQuality                         = (TH1D*)fileUncorrected.Get("NEvents");
     TH1D *histoUnCorrectedYield[6]                  = {NULL, NULL, NULL, NULL, NULL, NULL};
     TH1D *RatioRaw[6]                               = {NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D *fHistoYieldDiffBckResult[3]               = {NULL, NULL, NULL};
     for (Int_t k= 0; k < 6; k++){
         histoUnCorrectedYield[k]                    = (TH1D*)fileUncorrected.Get(Form("histoYieldMeson%s", nameIntRange[k].Data()));
         RatioRaw[k]                                 = (TH1D*) histoUnCorrectedYield[k]->Clone(Form("RatioRaw%s_%s",nameIntRange[k].Data(),nameIntRange[0].Data())); 
         RatioRaw[k]->Divide(RatioRaw[k],histoUnCorrectedYield[0],1.,1.,"B");
+    }
+    for (Int_t k= 0; k < 3; k++){
+        fHistoYieldDiffBckResult[k]                 = (TH1D*)fileUncorrected.Get(Form("histoYieldMesonDiffBckResult%s", nameIntBckResult[k].Data()));
+        fHistoYieldDiffBckResult[k]->Scale(100.);
     }
     TH1D *histoFWHMMeson                            = (TH1D*)fileUncorrected.Get("histoFWHMMeson"); 
     TH1D *histoMassMeson                            = (TH1D*)fileUncorrected.Get("histoMassMeson");
@@ -3222,10 +3228,20 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         SystErrGraphPos->Draw("pX0,csame");
         DrawGammaSetMarkerTGraphAsym(SystErrGraphNeg, 21, 1.,kCyan+1,kCyan+1);
         SystErrGraphNeg->Draw("pX0,csame");
+        
+        DrawGammaSetMarker(fHistoYieldDiffBckResult[0], 31, 1.,kBlack,kBlack);
+        fHistoYieldDiffBckResult[0]->DrawCopy("e1,p,SAME");
+        DrawGammaSetMarker(fHistoYieldDiffBckResult[1], 33, 1.,kRed+2,kRed+2);
+        fHistoYieldDiffBckResult[1]->DrawCopy("e1,p,SAME");
+        DrawGammaSetMarker(fHistoYieldDiffBckResult[2], 34, 1.,kGreen+2,kGreen+2);
+        fHistoYieldDiffBckResult[2]->DrawCopy("e1,p,SAME");
 
-        TLegend* legendSys = GetAndSetLegend2(0.5,0.13,0.95,0.24, 0.035, 1, "", 42, 0.1);
+        TLegend* legendSys = GetAndSetLegend2(0.5,0.13,0.95,0.33, 0.035, 1, "", 42, 0.1);
         legendSys->AddEntry(SystErrGraphPos,"pos max","p"); 
-        legendSys->AddEntry(SystErrGraphNeg,"neg max","p");            
+        legendSys->AddEntry(SystErrGraphNeg,"neg max","p");
+        legendSys->AddEntry(fHistoYieldDiffBckResult[0],"var pol2","p");
+        legendSys->AddEntry(fHistoYieldDiffBckResult[1],"var exp","p");
+        legendSys->AddEntry(fHistoYieldDiffBckResult[2],"var exp2","p");
         legendSys->Draw();
 
     canvasSysYieldExtraction->Update();

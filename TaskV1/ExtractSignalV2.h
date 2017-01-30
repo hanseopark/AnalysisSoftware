@@ -65,9 +65,9 @@ Int_t       maxNSec                                                     = 4;
 TString     nameSecondaries[4]                                          = {"K0S", "Lambda", "K0L", "Rest"};
 TString     nameSecondariesCocktail[4]                                  = {"K0s", "Lambda", "K0l", "Rest"};
 TString     nameIntRange[6]                                             = {"", "Wide", "Narrow", "Left", "LeftWide", "LeftNarrow"};
-TString     nameIntBck[10]                                               = {"Minpol2_normal","Pluspol2_normal","Minpol2_wide","Pluspol2_wide","Minpol2_narrow","Pluspol2_narrow","Minexp_normal","Plusexp_normal","Minexp2_normal","Plusexp2_normal"};
-TString     nameIntBckRatios[10]                                         = {"RatioMinpol2_normal","RatioPluspol2_normal","RatioMinpol2_wide","RatioPluspol2_wide","RatioMinpol2_narrow","RatioPluspol2_narrow","RatioMinexp_normal","RatioPlusexp_normal","RatioMinexp2_normal","RatioPlusexp2_normal"};
-TString     nameIntBckResult[5]                                         = {"pol2_normal","pol2_wide","pol2_narrow","exp_normal","exp2_normal"};
+TString     nameIntBck[6]                                               = {"Minpol2","Pluspol2","Minexp","Plusexp","Minexp2","Plusexp2"};
+TString     nameIntBckRatios[6]                                         = {"RatioMinpol2","RatioPluspol2","RatioMinexp","RatioPlusexp","RatioMinexp2","RatioPlusexp2"};
+TString     nameIntBckResult[3]                                         = {"pol2_normal","exp_normal","exp2_normal"};
 
 //****************************************************************************
 //******************************** Output files ******************************
@@ -350,9 +350,9 @@ Double_t*   fBckYieldsError[6]                                          = {NULL,
 Double_t*   fTotalBckYieldsError[6]                                     = {NULL, NULL, NULL, NULL, NULL, NULL};
 Double_t*   fMesonYieldsError[6]                                        = {NULL, NULL, NULL, NULL, NULL, NULL};
 TH1D*       fHistoYieldMeson[6]                                         = {NULL, NULL, NULL, NULL, NULL, NULL};
-TH1D*       fHistoYieldDiffBck[10]                                       = {NULL, NULL, NULL, NULL, NULL, NULL};
-TH1D*       fHistoYieldDiffBckRatios[10]                                 = {NULL, NULL, NULL, NULL, NULL, NULL};
-TH1D*       fHistoYieldDiffBckResult[5]                                 = {NULL, NULL, NULL};
+TH1D*       fHistoYieldDiffBck[6]                                       = {NULL, NULL, NULL, NULL, NULL, NULL};
+TH1D*       fHistoYieldDiffBckRatios[6]                                 = {NULL, NULL, NULL, NULL, NULL, NULL};
+TH1D*       fHistoYieldDiffBckResult[3]                                 = {NULL, NULL, NULL};
 TH1D*       fHistoYieldMesonPerEvent[6]                                 = {NULL, NULL, NULL, NULL, NULL, NULL};
 TH1D*       fHistoYieldTrueMeson[6]                                     = {NULL, NULL, NULL, NULL, NULL, NULL};
 Double_t*   fMesonYieldsFunc[6]                                         = {NULL, NULL, NULL, NULL, NULL, NULL};
