@@ -164,11 +164,12 @@ void AnalysePythiaMB(TString fileName="Legotrain_vAN-20150825-Pythia8/PythiaAnal
   Color_t colorBinsShade[12]	= {kGray+1, kRed-6, kBlue-6, kGreen-8, kCyan-6, kViolet-8, kMagenta-8, kGray, kRed-8, kBlue-8, kViolet-6, kCyan-8};
   Marker_t markerBins[12]		= {20, 21, 33, 34, 29, 24, 25, 27, 28, 30, 20, 21};
   
-  
+
   TString outputDir             ="./plots/";
   TString suffix                = "eps";
   
   gSystem->Exec("mkdir -p "+outputDir);
+
   
   //fDetectionProcess 			= ReturnFullTextReconstructionProcess(mode);
   TString particle[6]           = {"Pi0", "Eta", "EtaPrim", "Omega", "PiPl", "PiMi"};  
@@ -190,13 +191,15 @@ void AnalysePythiaMB(TString fileName="Legotrain_vAN-20150825-Pythia8/PythiaAnal
   TH1D* fHXSectionMB;
   
   TString nameMainDir           = "GammaPureMC";
-  
+
    // open MB stuff
-   sprintf(name,"%s",fileName.Data());
-   TFile f(name);
+  cout << fileName.Data() << endl;
+
+   TFile f(fileName.Data());
    // get tdirectoryfile
+
    TDirectoryFile* directoryAll = (TDirectoryFile*)f.Get(nameMainDir.Data());
-  
+
   // get top list
     TList* HistosAll =(TList*)directoryAll->Get(nameMainDir.Data())->Clone();
     if(HistosAll == NULL){
