@@ -92,7 +92,6 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TString collisionSystem8TeV              = "pp, #sqrt{#it{s}} = 8 TeV";
     
     TString fileNameTheory                      = "ExternalInput/Theory/TheoryCompilationPP.root";
-    TString fileNameTheoryPythia8               = "ExternalInput/Theory/Pythia/PYTHIA8_Monash2013Tune_8TeV_Pi0_Eta.root";
     TString fileNameTheoryPythia8_4C            = "ExternalInput/Theory/Pythia/PYTHIA8_4CTune_8TeV_Pi0_Eta.root";
     TString fileNameTheoryPi0DSS14              = "ExternalInput/Theory/pp8TeV_DSS14.root";
     TString fileNameEtaToPi0                    = "ExternalInput/WorldDataPi0Eta.root";
@@ -994,19 +993,18 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TGraphErrors *eta2pi0_RHIC200GeV      = (TGraphErrors*)fileEtaToPi->Get("Phenix200GeV");
 
     TFile* fileTheoryCompilation                            = new TFile(fileNameTheory.Data());
-    TFile* fileTheoryPythia8                                = new TFile(fileNameTheoryPythia8.Data());
     TFile* fileTheoryPythia8_4C                             = new TFile(fileNameTheoryPythia8_4C.Data());
     TFile* fileTheorypp8TeVPi0DSS14                         = new TFile(fileNameTheoryPi0DSS14.Data());
     TFile* filePOWHEG8TeV                                   = new TFile(fileNamePOWHEG8TeV.Data());
 
-        TH1F* histoPythia8InvXSection                       = (TH1F*) fileTheoryPythia8->Get("fHistInvXsec_Pi0");
+        TH1F* histoPythia8InvXSection                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi08TeV");
         histoPythia8InvXSection->GetXaxis()->SetRangeUser(0.3,35);
-        TH1F* histoPythia8InvXSectionEta                    = (TH1F*) fileTheoryPythia8->Get("fHistInvXsec_Eta");
+        TH1F* histoPythia8InvXSectionEta                    = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta8TeV");
         histoPythia8InvXSectionEta->GetXaxis()->SetRangeUser(0.8,35);
-        TGraphErrors* graphPythia8InvXSection               = new TGraphErrors((TH1F*) fileTheoryPythia8->Get("fHistInvXsec_Pi0"));
+        TGraphErrors* graphPythia8InvXSection               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi08TeV"));
         while(graphPythia8InvXSection->GetX()[0] < 0.3) graphPythia8InvXSection->RemovePoint(0);
         while(graphPythia8InvXSection->GetX()[graphPythia8InvXSection->GetN()-1] > 35.) graphPythia8InvXSection->RemovePoint(graphPythia8InvXSection->GetN()-1);
-        TGraphErrors* graphPythia8InvXSectionEta            = new TGraphErrors((TH1F*) fileTheoryPythia8->Get("fHistInvXsec_Eta"));
+        TGraphErrors* graphPythia8InvXSectionEta            = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta8TeV"));
         while(graphPythia8InvXSectionEta->GetX()[0] < 0.8) graphPythia8InvXSectionEta->RemovePoint(0);
         while(graphPythia8InvXSectionEta->GetX()[graphPythia8InvXSectionEta->GetN()-1] > 35.) graphPythia8InvXSectionEta->RemovePoint(graphPythia8InvXSectionEta->GetN()-1);
         TH1F* histoPythia8EtaToPi0                          = (TH1F*) histoPythia8InvXSectionEta->Clone("Pythia8EtaToPi0");
@@ -4695,7 +4693,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         boxErrorSigmaRatio->Draw();
         DrawGammaLines(0.23, 50.,1., 1.,0.5,kGray+2);
 
-        TLegend* legendRatioTheorypp_3Parted = GetAndSetLegend2(0.2,0.77,0.45,0.97, 0.85* textSizeLabelsPixel);
+        TLegend* legendRatioTheorypp_3Parted = GetAndSetLegend2(0.2,0.76,0.45,0.96, 0.85* textSizeLabelsPixel);
     //    legendRatioTheorypp_3Parted->SetNColumns(2);
         legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0CombCombFitSysA,"Data","pf");
 //        legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0CombNLOMuHalf, "NLO, DSS07 #mu = 0.5 #it{p}_{T}", "l");
@@ -4706,11 +4704,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0DSS14,  "NLO, PDF:MSTW08 - FF:DSS14", "f");
         legendRatioTheorypp_3Parted->Draw();
 
-        TLegend* legendRatioTheoryNormUnc = GetAndSetLegend2(0.34,0.92,0.59,0.97, 0.85* textSizeLabelsPixel);
+        TLegend* legendRatioTheoryNormUnc = GetAndSetLegend2(0.34,0.91,0.59,0.96, 0.85* textSizeLabelsPixel);
         legendRatioTheoryNormUnc->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.9%","l");
         legendRatioTheoryNormUnc->Draw();
 
-        TLatex *labelRatioTheoryPPP   = new TLatex(0.268,0.74,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
+        TLatex *labelRatioTheoryPPP   = new TLatex(0.268,0.73,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
         SetStyleTLatex( labelRatioTheoryPPP, 0.85*textsizeLabelsPP,4);
         labelRatioTheoryPPP->Draw();
         
