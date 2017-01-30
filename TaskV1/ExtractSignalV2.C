@@ -1621,40 +1621,174 @@ void ExtractSignalV2(   TString meson                   = "",
 
 
     //Calculate the raw yield assuming different background fit functions and taking the ratio to the default pol1
-    if(fHistoYieldDiffBck[2] && fHistoYieldDiffBck[3]){
-      fHistoYieldDiffBck[2]->Add(fHistoYieldMeson[0]);
-      fHistoYieldDiffBck[2]->Divide(fHistoYieldDiffBck[2],fHistoYieldDiffBck[0],1,1,"B");
-      fHistoYieldDiffBck[3]->Add(fHistoYieldMeson[0]);
-      fHistoYieldDiffBck[3]->Divide(fHistoYieldDiffBck[3],fHistoYieldDiffBck[1],1,1,"B");
-      
-      for(Int_t m=1;m<fHistoYieldMeson[0]->GetNbinsX()+1;m++){
-        fHistoYieldDiffBck[4]->SetBinContent(m,TMath::Sqrt(pow(1-fHistoYieldDiffBck[2]->GetBinContent(m),2)+pow(1-fHistoYieldDiffBck[3]->GetBinContent(m),2))/TMath::Sqrt(2));
-        fHistoYieldDiffBck[4]->SetBinError(m,fHistoYieldDiffBck[2]->GetBinError(m));
-        if(fHistoYieldDiffBck[4]->GetBinContent(m)==1){ fHistoYieldDiffBck[4]->SetBinContent(m,0); fHistoYieldDiffBck[4]->SetBinError(m,0); }
-      }
+    //normal
+    fHistoYieldDiffBckRatios[0]->Add(fHistoYieldMeson[0]);
+    fHistoYieldDiffBckRatios[0]->Divide(fHistoYieldDiffBckRatios[0],fHistoYieldDiffBck[0],1,1,"B");
+    fHistoYieldDiffBckRatios[1]->Add(fHistoYieldMeson[0]);
+    fHistoYieldDiffBckRatios[1]->Divide(fHistoYieldDiffBckRatios[1],fHistoYieldDiffBck[1],1,1,"B");
+    //wide
+    fHistoYieldDiffBckRatios[2]->Add(fHistoYieldMeson[1]);
+    fHistoYieldDiffBckRatios[2]->Divide(fHistoYieldDiffBckRatios[2],fHistoYieldDiffBck[2],1,1,"B");
+    fHistoYieldDiffBckRatios[3]->Add(fHistoYieldMeson[1]);
+    fHistoYieldDiffBckRatios[3]->Divide(fHistoYieldDiffBckRatios[3],fHistoYieldDiffBck[3],1,1,"B");
+    //narrow
+    fHistoYieldDiffBckRatios[4]->Add(fHistoYieldMeson[2]);
+    fHistoYieldDiffBckRatios[4]->Divide(fHistoYieldDiffBckRatios[4],fHistoYieldDiffBck[4],1,1,"B");
+    fHistoYieldDiffBckRatios[5]->Add(fHistoYieldMeson[2]);
+    fHistoYieldDiffBckRatios[5]->Divide(fHistoYieldDiffBckRatios[5],fHistoYieldDiffBck[5],1,1,"B");
+    //normal exp
+    fHistoYieldDiffBckRatios[6]->Add(fHistoYieldMeson[0]);
+    fHistoYieldDiffBckRatios[6]->Divide(fHistoYieldDiffBckRatios[6],fHistoYieldDiffBck[6],1,1,"B");
+    fHistoYieldDiffBckRatios[7]->Add(fHistoYieldMeson[0]);
+    fHistoYieldDiffBckRatios[7]->Divide(fHistoYieldDiffBckRatios[7],fHistoYieldDiffBck[7],1,1,"B");
+    //normal exp2
+    fHistoYieldDiffBckRatios[8]->Add(fHistoYieldMeson[0]);
+    fHistoYieldDiffBckRatios[8]->Divide(fHistoYieldDiffBckRatios[8],fHistoYieldDiffBck[8],1,1,"B");
+    fHistoYieldDiffBckRatios[9]->Add(fHistoYieldMeson[0]);
+    fHistoYieldDiffBckRatios[9]->Divide(fHistoYieldDiffBckRatios[9],fHistoYieldDiffBck[9],1,1,"B");
+    
+    //normal
+    for(Int_t m=1;m<fHistoYieldMeson[0]->GetNbinsX()+1;m++){
+      fHistoYieldDiffBckResult[0]->SetBinContent(m,TMath::Sqrt(pow(1-fHistoYieldDiffBckRatios[0]->GetBinContent(m),2)+pow(1-fHistoYieldDiffBckRatios[1]->GetBinContent(m),2))/TMath::Sqrt(2));
+      fHistoYieldDiffBckResult[0]->SetBinError(m,fHistoYieldDiffBckRatios[0]->GetBinError(m));
+      if(fHistoYieldDiffBckResult[0]->GetBinContent(m)==1){ fHistoYieldDiffBckResult[0]->SetBinContent(m,0); fHistoYieldDiffBckResult[0]->SetBinError(m,0); }
+    }
+    //wide
+    for(Int_t m=1;m<fHistoYieldMeson[1]->GetNbinsX()+1;m++){
+      fHistoYieldDiffBckResult[1]->SetBinContent(m,TMath::Sqrt(pow(1-fHistoYieldDiffBckRatios[2]->GetBinContent(m),2)+pow(1-fHistoYieldDiffBckRatios[3]->GetBinContent(m),2))/TMath::Sqrt(2));
+      fHistoYieldDiffBckResult[1]->SetBinError(m,fHistoYieldDiffBckRatios[2]->GetBinError(m));
+      if(fHistoYieldDiffBckResult[1]->GetBinContent(m)==1){ fHistoYieldDiffBckResult[1]->SetBinContent(m,0); fHistoYieldDiffBckResult[1]->SetBinError(m,0); }
+    }
+    //narrow
+    for(Int_t m=1;m<fHistoYieldMeson[2]->GetNbinsX()+1;m++){
+      fHistoYieldDiffBckResult[2]->SetBinContent(m,TMath::Sqrt(pow(1-fHistoYieldDiffBckRatios[4]->GetBinContent(m),2)+pow(1-fHistoYieldDiffBckRatios[5]->GetBinContent(m),2))/TMath::Sqrt(2));
+      fHistoYieldDiffBckResult[2]->SetBinError(m,fHistoYieldDiffBckRatios[4]->GetBinError(m));
+      if(fHistoYieldDiffBckResult[2]->GetBinContent(m)==1){ fHistoYieldDiffBckResult[2]->SetBinContent(m,0); fHistoYieldDiffBckResult[2]->SetBinError(m,0); }
+    }
+    //normal exp
+    for(Int_t m=1;m<fHistoYieldMeson[0]->GetNbinsX()+1;m++){
+      fHistoYieldDiffBckResult[3]->SetBinContent(m,TMath::Sqrt(pow(1-fHistoYieldDiffBckRatios[6]->GetBinContent(m),2)+pow(1-fHistoYieldDiffBckRatios[7]->GetBinContent(m),2))/TMath::Sqrt(2));
+      fHistoYieldDiffBckResult[3]->SetBinError(m,fHistoYieldDiffBckRatios[6]->GetBinError(m));
+      if(fHistoYieldDiffBckResult[3]->GetBinContent(m)==1){ fHistoYieldDiffBckResult[3]->SetBinContent(m,0); fHistoYieldDiffBckResult[3]->SetBinError(m,0); }
+    }
+    //normal exp2
+    for(Int_t m=1;m<fHistoYieldMeson[0]->GetNbinsX()+1;m++){
+      fHistoYieldDiffBckResult[4]->SetBinContent(m,TMath::Sqrt(pow(1-fHistoYieldDiffBckRatios[8]->GetBinContent(m),2)+pow(1-fHistoYieldDiffBckRatios[9]->GetBinContent(m),2))/TMath::Sqrt(2));
+      fHistoYieldDiffBckResult[4]->SetBinError(m,fHistoYieldDiffBckRatios[8]->GetBinError(m));
+      if(fHistoYieldDiffBckResult[4]->GetBinContent(m)==1){ fHistoYieldDiffBckResult[4]->SetBinContent(m,0); fHistoYieldDiffBckResult[4]->SetBinError(m,0); }
     }
     
-    TCanvas* canvasDiffBck = new TCanvas("canvasDiffBck","",1550,1200);
-    canvasDiffBck->SetTickx();
-    canvasDiffBck->SetTicky();
+    //normal
+    TCanvas* canvasDiffBck_normal = new TCanvas("canvasDiffBck_normal","",1550,1200);
+    canvasDiffBck_normal->SetTickx();
+    canvasDiffBck_normal->SetTicky();
     
-    DrawGammaSetMarker(fHistoYieldDiffBck[4], 20, 1., kBlack, kBlack);
-    DrawAutoGammaMesonHistos( fHistoYieldDiffBck[4], 
+    DrawGammaSetMarker(fHistoYieldDiffBckResult[0], 20, 1., kBlack, kBlack);
+    DrawAutoGammaMesonHistos( fHistoYieldDiffBckResult[0], 
                                 "", "p_{T} (GeV/c)", "dev. raw yield (%)", 
                                 kFALSE, 3.,0.,  kFALSE,
                                 kTRUE, -0.2,0.5, 
                                 kFALSE, 0., 16.);
+    canvasDiffBck_normal->Update();
     
-    canvasDiffBck->Update();
+    TLegend* legendDiffBck_normal = new TLegend(0.15,0.8,0.4,0.95);
+    legendDiffBck_normal->SetFillColor(0);
+    legendDiffBck_normal->SetLineColor(0);
+    legendDiffBck_normal->SetTextSize(0.04);
+    legendDiffBck_normal->AddEntry(fHistoYieldDiffBckResult[0],Form("dev. raw yield(normal) wrt pol2 Bck fit for %s",fPrefix.Data()),"p");
+    legendDiffBck_normal->Draw();
     
-    TLegend* legendDiffBck = new TLegend(0.15,0.8,0.4,0.95);
-    legendDiffBck->SetFillColor(0);
-    legendDiffBck->SetLineColor(0);
-    legendDiffBck->SetTextSize(0.04);
-    legendDiffBck->AddEntry(fHistoYieldDiffBck[4],Form("dev. raw yield wrt pol2 Bck fit for %s",fPrefix.Data()),"p");
-    legendDiffBck->Draw();
+    canvasDiffBck_normal->SaveAs(Form("%s/%s_data_DiffBck_pol2_normal_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
     
-    canvasDiffBck->SaveAs(Form("%s/%s_data_DiffBck_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    //wide
+    TCanvas* canvasDiffBck_wide = new TCanvas("canvasDiffBck_wide","",1550,1200);
+    canvasDiffBck_wide->SetTickx();
+    canvasDiffBck_wide->SetTicky();
+    
+    DrawGammaSetMarker(fHistoYieldDiffBckResult[1], 20, 1., kBlack, kBlack);
+    DrawAutoGammaMesonHistos( fHistoYieldDiffBckResult[1], 
+                                "", "p_{T} (GeV/c)", "dev. raw yield (%)", 
+                                kFALSE, 3.,0.,  kFALSE,
+                                kTRUE, -0.2,0.5, 
+                                kFALSE, 0., 16.);
+    canvasDiffBck_wide->Update();
+    
+    TLegend* legendDiffBck_wide = new TLegend(0.15,0.8,0.4,0.95);
+    legendDiffBck_wide->SetFillColor(0);
+    legendDiffBck_wide->SetLineColor(0);
+    legendDiffBck_wide->SetTextSize(0.04);
+    legendDiffBck_wide->AddEntry(fHistoYieldDiffBckResult[1],Form("dev. raw yield(wide) wrt pol2 Bck fit for %s",fPrefix.Data()),"p");
+    legendDiffBck_wide->Draw();
+    
+    canvasDiffBck_wide->SaveAs(Form("%s/%s_data_DiffBck_pol2_wide_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    
+    //narrow
+    TCanvas* canvasDiffBck_narrow = new TCanvas("canvasDiffBck_narrow","",1550,1200);
+    canvasDiffBck_narrow->SetTickx();
+    canvasDiffBck_narrow->SetTicky();
+    
+    DrawGammaSetMarker(fHistoYieldDiffBckResult[2], 20, 1., kBlack, kBlack);
+    DrawAutoGammaMesonHistos( fHistoYieldDiffBckResult[2], 
+                                "", "p_{T} (GeV/c)", "dev. raw yield (%)", 
+                                kFALSE, 3.,0.,  kFALSE,
+                                kTRUE, -0.2,0.5, 
+                                kFALSE, 0., 16.);
+    canvasDiffBck_narrow->Update();
+    
+    TLegend* legendDiffBck_narrow = new TLegend(0.15,0.8,0.4,0.95);
+    legendDiffBck_narrow->SetFillColor(0);
+    legendDiffBck_narrow->SetLineColor(0);
+    legendDiffBck_narrow->SetTextSize(0.04);
+    legendDiffBck_narrow->AddEntry(fHistoYieldDiffBckResult[2],Form("dev. raw yield(narrow) wrt pol2 Bck fit for %s",fPrefix.Data()),"p");
+    legendDiffBck_narrow->Draw();
+    
+    canvasDiffBck_narrow->SaveAs(Form("%s/%s_data_DiffBck_pol2_narrow_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    
+    //normal exp
+    TCanvas* canvasDiffBck_exp_normal = new TCanvas("canvasDiffBck_exp_normal","",1550,1200);
+    canvasDiffBck_exp_normal->SetTickx();
+    canvasDiffBck_exp_normal->SetTicky();
+    
+    DrawGammaSetMarker(fHistoYieldDiffBckResult[3], 20, 1., kBlack, kBlack);
+    DrawAutoGammaMesonHistos( fHistoYieldDiffBckResult[3], 
+                                "", "p_{T} (GeV/c)", "dev. raw yield (%)", 
+                                kFALSE, 3.,0.,  kFALSE,
+                                kTRUE, -0.2,0.5, 
+                                kFALSE, 0., 16.);
+    canvasDiffBck_exp_normal->Update();
+    
+    TLegend* legendDiffBck_exp_normal = new TLegend(0.15,0.8,0.4,0.95);
+    legendDiffBck_exp_normal->SetFillColor(0);
+    legendDiffBck_exp_normal->SetLineColor(0);
+    legendDiffBck_exp_normal->SetTextSize(0.04);
+    legendDiffBck_exp_normal->AddEntry(fHistoYieldDiffBckResult[3],Form("dev. raw yield(normal) wrt exp Bck fit for %s",fPrefix.Data()),"p");
+    legendDiffBck_exp_normal->Draw();
+    
+    canvasDiffBck_exp_normal->SaveAs(Form("%s/%s_data_DiffBck_exp_normal_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    
+    //normal exp2
+    TCanvas* canvasDiffBck_exp2_normal = new TCanvas("canvasDiffBck_exp2_normal","",1550,1200);
+    canvasDiffBck_exp2_normal->SetTickx();
+    canvasDiffBck_exp2_normal->SetTicky();
+    
+    DrawGammaSetMarker(fHistoYieldDiffBckResult[4], 20, 1., kBlack, kBlack);
+    DrawAutoGammaMesonHistos( fHistoYieldDiffBckResult[4], 
+                                "", "p_{T} (GeV/c)", "dev. raw yield (%)", 
+                                kFALSE, 3.,0.,  kFALSE,
+                                kTRUE, -0.2,0.5, 
+                                kFALSE, 0., 16.);
+    canvasDiffBck_exp2_normal->Update();
+    
+    TLegend* legendDiffBck_exp2_normal = new TLegend(0.15,0.8,0.4,0.95);
+    legendDiffBck_exp2_normal->SetFillColor(0);
+    legendDiffBck_exp2_normal->SetLineColor(0);
+    legendDiffBck_exp2_normal->SetTextSize(0.04);
+    legendDiffBck_exp2_normal->AddEntry(fHistoYieldDiffBckResult[4],Form("dev. raw yield(normal) wrt exp2 Bck fit for %s",fPrefix.Data()),"p");
+    legendDiffBck_exp2_normal->Draw();
+    
+    canvasDiffBck_exp2_normal->SaveAs(Form("%s/%s_data_DiffBck_exp2_normal_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    
+    
     
     if (!fIsMC && meson.Contains("Pi0") ){
        fHaveCocktailInputForSec= LoadSecondaryPionsFromCocktailFile(cutSelection,optionEnergy);
@@ -3378,9 +3512,15 @@ void CreatePtHistos(){
     }   
     
     // yield assumptions with different backgrounds  
-    for (Int_t k = 0; k < 5; k++){
+    for (Int_t k = 0; k < 10; k++){
       fHistoYieldDiffBck[k]                    = new TH1D(Form("histoYieldMesonDiffBck%s",nameIntBck[k].Data()),"",fNBinsPt,fBinsPt);
       fHistoYieldDiffBck[k]->Sumw2();
+      fHistoYieldDiffBckRatios[k]                    = new TH1D(Form("histoYieldMesonDiffBckRatios%s",nameIntBckRatios[k].Data()),"",fNBinsPt,fBinsPt);
+      fHistoYieldDiffBckRatios[k]->Sumw2();
+    }
+    for (Int_t k = 0; k < 5; k++){
+      fHistoYieldDiffBckResult[k]                    = new TH1D(Form("histoYieldMesonDiffBckResult%s",nameIntBckResult[k].Data()),"",fNBinsPt,fBinsPt);
+      fHistoYieldDiffBckResult[k]->Sumw2();
     }
     
     
@@ -3669,9 +3809,22 @@ void FillPtHistos(){
             fHistoYieldMesonPerEvent[k]->SetBinError(iPt,(1./fNEvents)*fMesonYieldsCorResidualBckFuncError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));            
         }    
         
+        //normal
         fHistoYieldDiffBck[0]->SetBinContent(iPt,(fMesonYieldsCorResidualBckFunc[0][iPt-1]-(fMesonYieldsResidualBckFunc[0][iPt-1]-fMesonYieldsResBckOtherFunc[0][iPt-1]))/(fBinsPt[iPt]-fBinsPt[iPt-1]));
         fHistoYieldDiffBck[1]->SetBinContent(iPt,(fMesonYieldsCorResidualBckFunc[0][iPt-1]+(fMesonYieldsResidualBckFunc[0][iPt-1]-fMesonYieldsResBckOtherFunc[0][iPt-1]))/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-      
+        //wide
+        fHistoYieldDiffBck[2]->SetBinContent(iPt,(fMesonYieldsCorResidualBckFunc[1][iPt-1]-(fMesonYieldsResidualBckFunc[0][iPt-1]-fMesonYieldsResBckOtherFunc[0][iPt-1]))/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+        fHistoYieldDiffBck[3]->SetBinContent(iPt,(fMesonYieldsCorResidualBckFunc[1][iPt-1]+(fMesonYieldsResidualBckFunc[0][iPt-1]-fMesonYieldsResBckOtherFunc[0][iPt-1]))/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+        //narrow
+        fHistoYieldDiffBck[4]->SetBinContent(iPt,(fMesonYieldsCorResidualBckFunc[2][iPt-1]-(fMesonYieldsResidualBckFunc[0][iPt-1]-fMesonYieldsResBckOtherFunc[0][iPt-1]))/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+        fHistoYieldDiffBck[5]->SetBinContent(iPt,(fMesonYieldsCorResidualBckFunc[2][iPt-1]+(fMesonYieldsResidualBckFunc[0][iPt-1]-fMesonYieldsResBckOtherFunc[0][iPt-1]))/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+        //normal exp
+        fHistoYieldDiffBck[6]->SetBinContent(iPt,(fMesonYieldsCorResidualBckFunc[0][iPt-1]-(fMesonYieldsResidualBckFunc[0][iPt-1]-fMesonYieldsResBckOtherFunc[1][iPt-1]))/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+        fHistoYieldDiffBck[7]->SetBinContent(iPt,(fMesonYieldsCorResidualBckFunc[0][iPt-1]+(fMesonYieldsResidualBckFunc[0][iPt-1]-fMesonYieldsResBckOtherFunc[1][iPt-1]))/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+        //normal exp2
+        fHistoYieldDiffBck[8]->SetBinContent(iPt,(fMesonYieldsCorResidualBckFunc[0][iPt-1]-(fMesonYieldsResidualBckFunc[0][iPt-1]-fMesonYieldsResBckOtherFunc[2][iPt-1]))/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+        fHistoYieldDiffBck[9]->SetBinContent(iPt,(fMesonYieldsCorResidualBckFunc[0][iPt-1]+(fMesonYieldsResidualBckFunc[0][iPt-1]-fMesonYieldsResBckOtherFunc[2][iPt-1]))/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+        
         
         if (fIsMC) {
             for (Int_t k = 0; k < 3; k++){
@@ -5249,8 +5402,12 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
     }    
     
     // write histograms for assumption of different backgrounds
-    for (Int_t k = 0; k < 5; k++){
+    for (Int_t k = 0; k < 10; k++){
         if (fHistoYieldDiffBck[k]) fHistoYieldDiffBck[k]->Write();
+        if (fHistoYieldDiffBckRatios[k]) fHistoYieldDiffBckRatios[k]->Write();
+    }
+    for (Int_t k = 0; k < 5; k++){
+        if (fHistoYieldDiffBckResult[k]) fHistoYieldDiffBckResult[k]->Write();
     }
       
     
