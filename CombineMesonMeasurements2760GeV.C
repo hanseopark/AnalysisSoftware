@@ -4186,7 +4186,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphErr(dummyNorm, 0, 0, kGray+1, kGray+1, widthLinesBoxes, kTRUE, kGray+1);
         
         TLegend* legendXsectionPaper    = GetAndSetLegend2(0.17, 0.03, 0.5, 0.03+0.05*5, textSizeLabelsPixel, 1, "", 43, 0.2);
-        legendXsectionPaper->AddEntry(graphCombPi0InvXSectionSysA,"Data,","pf");
+        legendXsectionPaper->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
         legendXsectionPaper->AddEntry(dummyNorm,"Norm. unc. 2.5%","f");
         legendXsectionPaper->AddEntry(fitTCMInvXSectionPi0,"TCM fit","l");
         legendXsectionPaper->AddEntry(graphNLODSS14Calc,"NLO, PDF: MSTW, FF: DSS14","f");
@@ -4298,7 +4298,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
         // labels lower left corner
         TLegend* legendXsectionPaperEta    = GetAndSetLegend2(0.17, 0.03, 0.5, 0.03+0.05*3, textSizeLabelsPixel, 1, "", 43, 0.2);
-        legendXsectionPaperEta->AddEntry(graphCombPi0InvXSectionSysA,"Data,","pf");
+        legendXsectionPaperEta->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
         legendXsectionPaperEta->AddEntry(dummyNorm,"Norm. unc. 2.5%","f");
         legendXsectionPaperEta->AddEntry(fitTCMInvXSectionPi0,"TCM fit","l");
         legendXsectionPaperEta->Draw();

@@ -116,12 +116,12 @@ TRAINDIR=Legotrain-vAN20170123-sys-PCM-dirGamma
 # LHC13b2_efix_p2MC="821"; 
 # LHC13b2_efix_p3MC="822"; 
 # LHC13b2_efix_p4MC="824";
-LHC13e7MC="825";
-# LHC13b2_efix_p1MC="826"; 
-# LHC13b2_efix_p2MC="827"; 
-# LHC13b2_efix_p3MC="828"; 
-# LHC13b2_efix_p4MC="829";
-# LHC13e7MC="830";
+# LHC13e7MC="825";
+LHC13b2_efix_p1MC="826"; 
+LHC13b2_efix_p2MC="827"; 
+LHC13b2_efix_p3MC="828"; 
+LHC13b2_efix_p4MC="829";
+LHC13e7MC="830";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -336,17 +336,17 @@ if [ $DOWNLOADON == 1 ]; then
         if [ $SINGLERUN == 1 ]; then
             runNumbers=`cat runlists/runNumbersLHC13b2_efix1.txt`
             echo $runNumbers
-            for runNumber in $runNumbers; do
+#             for runNumber in $runNumbers; do
 #                 CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p1/$runNumber "/alice/sim/2013/LHC13b2_efix_p1/$runNumber/PWGGA/GA_pPb_MC/$LHC13b2_efix_p1MC"
-                if [ $SEPARATEON == 1 ]; then
-                    GetFileNumberList $OUTPUTDIR_LHC13b2_efix_p1/$runNumber $NSlashes3 fileNumbers2.txt                    
-                    fileNumbers=`cat fileNumbers2.txt`
-                    for fileNumber in $fileNumbers; do
-                        echo $fileNumber
-                        root -b -x -q -l SeparateDifferentCutnumbers.C\+\(\"$OUTPUTDIR_LHC13b2_efix_p1/$runNumber/GammaConvV1_$fileNumber.root\"\,\"$OUTPUTDIR_LHC13b2_efix_p1/$runNumber/GammaConvV1_$fileNumber\"\,0\)
-                    done;
-                fi    
-            done;
+#                 if [ $SEPARATEON == 1 ]; then
+#                     GetFileNumberList $OUTPUTDIR_LHC13b2_efix_p1/$runNumber $NSlashes3 fileNumbers2.txt                    
+#                     fileNumbers=`cat fileNumbers2.txt`
+#                     for fileNumber in $fileNumbers; do
+#                         echo $fileNumber
+#                         root -b -x -q -l SeparateDifferentCutnumbers.C\+\(\"$OUTPUTDIR_LHC13b2_efix_p1/$runNumber/GammaConvV1_$fileNumber.root\"\,\"$OUTPUTDIR_LHC13b2_efix_p1/$runNumber/GammaConvV1_$fileNumber\"\,0\)
+#                     done;
+#                 fi    
+#             done;
             if [ $MERGEONSINGLEMC == 1 ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC13b2_efix1.txt`
                 ls $OUTPUTDIR_LHC13b2_efix_p1/$firstrunNumber/GammaConvV1_*.root > fileLHC13b2efixp1.txt
@@ -376,17 +376,17 @@ if [ $DOWNLOADON == 1 ]; then
         if [ $SINGLERUN == 1 ]; then
             runNumbers=`cat runlists/runNumbersLHC13b2_efix2.txt`
             echo $runNumbers
-            for runNumber in $runNumbers; do
+#             for runNumber in $runNumbers; do
 #                 CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p2/$runNumber "/alice/sim/2013/LHC13b2_efix_p2/$runNumber/PWGGA/GA_pPb_MC/$LHC13b2_efix_p2MC"
-                if [ $SEPARATEON == 1 ]; then
-                    GetFileNumberList $OUTPUTDIR_LHC13b2_efix_p2/$runNumber $NSlashes3 fileNumbers2.txt                    
-                    fileNumbers=`cat fileNumbers2.txt`
-                    for fileNumber in $fileNumbers; do
-                        echo $fileNumber
-                        root -b -x -q -l SeparateDifferentCutnumbers.C\+\(\"$OUTPUTDIR_LHC13b2_efix_p2/$runNumber/GammaConvV1_$fileNumber.root\"\,\"$OUTPUTDIR_LHC13b2_efix_p2/$runNumber/GammaConvV1_$fileNumber\"\,0\)
-                    done;
-                fi    
-            done;
+#                 if [ $SEPARATEON == 1 ]; then
+#                     GetFileNumberList $OUTPUTDIR_LHC13b2_efix_p2/$runNumber $NSlashes3 fileNumbers2.txt                    
+#                     fileNumbers=`cat fileNumbers2.txt`
+#                     for fileNumber in $fileNumbers; do
+#                         echo $fileNumber
+#                         root -b -x -q -l SeparateDifferentCutnumbers.C\+\(\"$OUTPUTDIR_LHC13b2_efix_p2/$runNumber/GammaConvV1_$fileNumber.root\"\,\"$OUTPUTDIR_LHC13b2_efix_p2/$runNumber/GammaConvV1_$fileNumber\"\,0\)
+#                     done;
+#                 fi    
+#             done;
             if [ $MERGEONSINGLEMC == 1 ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC13b2_efix2.txt`
                 ls $OUTPUTDIR_LHC13b2_efix_p2/$firstrunNumber/GammaConvV1_*.root > fileLHC13b2efixp2.txt
@@ -416,17 +416,17 @@ if [ $DOWNLOADON == 1 ]; then
         if [ $SINGLERUN == 1 ]; then
             runNumbers=`cat runlists/runNumbersLHC13b2_efix3.txt`
             echo $runNumbers
-            for runNumber in $runNumbers; do
-#                 CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p3/$runNumber "/alice/sim/2013/LHC13b2_efix_p3/$runNumber/PWGGA/GA_pPb_MC/$LHC13b2_efix_p3MC"
-                if [ $SEPARATEON == 1 ]; then
-                    GetFileNumberList $OUTPUTDIR_LHC13b2_efix_p3/$runNumber $NSlashes3 fileNumbers2.txt                    
-                    fileNumbers=`cat fileNumbers2.txt`
-                    for fileNumber in $fileNumbers; do
-                        echo $fileNumber
-                        root -b -x -q -l SeparateDifferentCutnumbers.C\+\(\"$OUTPUTDIR_LHC13b2_efix_p3/$runNumber/GammaConvV1_$fileNumber.root\"\,\"$OUTPUTDIR_LHC13b2_efix_p3/$runNumber/GammaConvV1_$fileNumber\"\,0\)
-                    done;
-                fi    
-            done;
+#             for runNumber in $runNumbers; do
+# #                 CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p3/$runNumber "/alice/sim/2013/LHC13b2_efix_p3/$runNumber/PWGGA/GA_pPb_MC/$LHC13b2_efix_p3MC"
+#                 if [ $SEPARATEON == 1 ]; then
+#                     GetFileNumberList $OUTPUTDIR_LHC13b2_efix_p3/$runNumber $NSlashes3 fileNumbers2.txt                    
+#                     fileNumbers=`cat fileNumbers2.txt`
+#                     for fileNumber in $fileNumbers; do
+#                         echo $fileNumber
+#                         root -b -x -q -l SeparateDifferentCutnumbers.C\+\(\"$OUTPUTDIR_LHC13b2_efix_p3/$runNumber/GammaConvV1_$fileNumber.root\"\,\"$OUTPUTDIR_LHC13b2_efix_p3/$runNumber/GammaConvV1_$fileNumber\"\,0\)
+#                     done;
+#                 fi    
+#             done;
             if [ $MERGEONSINGLEMC == 1 ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC13b2_efix3.txt`
                 ls $OUTPUTDIR_LHC13b2_efix_p3/$firstrunNumber/GammaConvV1_*.root > fileLHC13b2efixp3.txt
@@ -456,17 +456,17 @@ if [ $DOWNLOADON == 1 ]; then
         if [ $SINGLERUN == 1 ]; then
             runNumbers=`cat runlists/runNumbersLHC13b2_efix4.txt`
             echo $runNumbers
-            for runNumber in $runNumbers; do
-#                 CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p4/$runNumber "/alice/sim/2013/LHC13b2_efix_p4/$runNumber/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC"
-                if [ $SEPARATEON == 1 ]; then
-                    GetFileNumberList $OUTPUTDIR_LHC13b2_efix_p4/$runNumber $NSlashes3 fileNumbers2.txt                    
-                    fileNumbers=`cat fileNumbers2.txt`
-                    for fileNumber in $fileNumbers; do
-                        echo $fileNumber
-                        root -b -x -q -l SeparateDifferentCutnumbers.C\+\(\"$OUTPUTDIR_LHC13b2_efix_p4/$runNumber/GammaConvV1_$fileNumber.root\"\,\"$OUTPUTDIR_LHC13b2_efix_p4/$runNumber/GammaConvV1_$fileNumber\"\,0\)
-                    done;
-                fi    
-            done;
+#             for runNumber in $runNumbers; do
+# #                 CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p4/$runNumber "/alice/sim/2013/LHC13b2_efix_p4/$runNumber/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC"
+#                 if [ $SEPARATEON == 1 ]; then
+#                     GetFileNumberList $OUTPUTDIR_LHC13b2_efix_p4/$runNumber $NSlashes3 fileNumbers2.txt                    
+#                     fileNumbers=`cat fileNumbers2.txt`
+#                     for fileNumber in $fileNumbers; do
+#                         echo $fileNumber
+#                         root -b -x -q -l SeparateDifferentCutnumbers.C\+\(\"$OUTPUTDIR_LHC13b2_efix_p4/$runNumber/GammaConvV1_$fileNumber.root\"\,\"$OUTPUTDIR_LHC13b2_efix_p4/$runNumber/GammaConvV1_$fileNumber\"\,0\)
+#                     done;
+#                 fi    
+#             done;
             if [ $MERGEONSINGLEMC == 1 ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC13b2_efix4.txt`
                 ls $OUTPUTDIR_LHC13b2_efix_p4/$firstrunNumber/GammaConvV1_*.root > fileLHC13b2efixp4.txt
@@ -497,7 +497,7 @@ if [ $DOWNLOADON == 1 ]; then
             runNumbers=`cat runlists/runNumbersLHC13e7.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
-#                 CopyFileIfNonExisitent $OUTPUTDIR_LHC13e7/$runNumber "/alice/sim/2013/LHC13e7/$runNumber/PWGGA/GA_pPb_MC/$LHC13e7MC"
+                CopyFileIfNonExisitent $OUTPUTDIR_LHC13e7/$runNumber "/alice/sim/2013/LHC13e7/$runNumber/PWGGA/GA_pPb_MC/$LHC13e7MC"
                 if [ $SEPARATEON == 1 ]; then
                     GetFileNumberList $OUTPUTDIR_LHC13e7/$runNumber $NSlashes3 fileNumbers2.txt                    
                     fileNumbers=`cat fileNumbers2.txt`
@@ -656,24 +656,24 @@ if [ $HAVELHC13e7 == 1 ]; then
     done;
 fi
 
-mkdir -p CutSelections
-mv CutSelection_*.log CutSelections/
+mkdir -p $OUTPUTDIR/CutSelections
+mv $OUTPUTDIR/CutSelection_*.log $OUTPUTDIR/CutSelections/
 
 if [ $MERGEON == 1 ]; then
 #     rm $OUTPUTDIR/GammaConvV1_LHC13b-pass$passNr\_LHC13c-pass$passNr\_*.root
 #     ls $OUTPUTDIR/GammaConvV1_LHC13b-pass$passNr\_*.root > filesForMerging.txt
-    filesForMerging=`cat filesForMerging.txt`
-    for fileName in $filesForMerging; do
-        echo $fileName
-        number=$fileName
-#         number=`echo $fileName  | cut -d "/" -f $((NSlashes-1)) | cut -d "_" -f 3 | cut -d "." -f1`
-        echo $number
-        ls $OUTPUTDIR/GammaConvV1_LHC13b-pass$passNr\_$number.root
-        ls $OUTPUTDIR/GammaConvV1_LHC13c-pass$passNr\_$number.root
-        if [ -f $OUTPUTDIR/GammaConvV1_LHC13b-pass$passNr\_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_LHC13c-pass$passNr\_$number.root ] ; then
-            hadd -f $OUTPUTDIR/GammaConvV1_LHC13b-pass$passNr\_LHC13c-pass$passNr\_$number.root $OUTPUTDIR/GammaConvV1_LHC13b-pass$passNr\_$number.root $OUTPUTDIR/GammaConvV1_LHC13c-pass$passNr\_$number.root
-        fi
-    done
+#     filesForMerging=`cat filesForMerging.txt`
+#     for fileName in $filesForMerging; do
+#         echo $fileName
+#         number=$fileName
+# #         number=`echo $fileName  | cut -d "/" -f $((NSlashes-1)) | cut -d "_" -f 3 | cut -d "." -f1`
+#         echo $number
+#         ls $OUTPUTDIR/GammaConvV1_LHC13b-pass$passNr\_$number.root
+#         ls $OUTPUTDIR/GammaConvV1_LHC13c-pass$passNr\_$number.root
+#         if [ -f $OUTPUTDIR/GammaConvV1_LHC13b-pass$passNr\_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_LHC13c-pass$passNr\_$number.root ] ; then
+#             hadd -f $OUTPUTDIR/GammaConvV1_LHC13b-pass$passNr\_LHC13c-pass$passNr\_$number.root $OUTPUTDIR/GammaConvV1_LHC13b-pass$passNr\_$number.root $OUTPUTDIR/GammaConvV1_LHC13c-pass$passNr\_$number.root
+#         fi
+#     done
 #     
 #     ls $OUTPUTDIR/GammaConvV1_LHC13b-pass$passNr\_LHC13c-pass$passNr\_*.root > filesForMerging.txt
 #     filesForMerging=`cat filesForMerging.txt`
@@ -721,17 +721,34 @@ if [ $MERGEON == 1 ]; then
 #         fi
 #     done
 #     #    
+
+    
 #     ls $OUTPUTDIR/GammaConvV1_MC_LHC13b2_efix_p1_p2_*.root > filesForMerging.txt
+    filesForMerging=`cat filesForMergingMC.txt`
 #     filesForMerging=`cat filesForMerging.txt`
-#     for fileName in $filesForMerging; do
-#         echo $fileName
+    for fileName in $filesForMerging; do
+        echo $fileName
+          number=$fileName
 #         number=`echo $fileName  | cut -d "/" -f $((NSlashes-1)) | cut -d "_" -f 7 | cut -d "." -f1`
-#         echo $number
+        echo $number
 #         if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC13b2_efix_p1_p2_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC13b2_efix_p3_$number.root ] ; then
 #             hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC13b2_efix_p1_p2_p3_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC13b2_efix_p1_p2_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC13b2_efix_p3_$number.root
 #         fi
-#     done
-#     
+        if [ -f $OUTPUTDIR_LHC13b2_efix_p1/GammaConvV1_$number\_mergedByHand.root ] ; then
+            hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC13b2_efix_p1_p2_p3_p4_$number.root $OUTPUTDIR_LHC13b2_efix_p1/GammaConvV1_$number\_mergedByHand.root $OUTPUTDIR_LHC13b2_efix_p2/GammaConvV1_$number\_mergedByHand.root $OUTPUTDIR_LHC13b2_efix_p3/GammaConvV1_$number\_mergedByHand.root $OUTPUTDIR_LHC13b2_efix_p4/GammaConvV1_$number\_mergedByHand.root
+        fi    
+    done
+
+    for fileName in $filesForMerging; do
+        echo $fileName
+          number=$fileName
+        echo $number
+        if [ -f $OUTPUTDIR_LHC13e7/GammaConvV1_$number\_mergedByHand.root ] ; then
+            hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC13b2_efix_p1_p2_p3_p4_LHC13e7_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC13b2_efix_p1_p2_p3_p4_$number.root $OUTPUTDIR_LHC13e7/GammaConvV1_$number\_mergedByHand.root 
+        fi
+    done
+    
+    #     
 #     ls $OUTPUTDIR/GammaConvV1_MC_LHC13b2_efix_p1_p2_p3_*.root > filesForMerging.txt
 #     filesForMerging=`cat filesForMerging.txt`
 #     for fileName in $filesForMerging; do
