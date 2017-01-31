@@ -93,7 +93,6 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     
     TString fileNameTheory                      = "ExternalInput/Theory/TheoryCompilationPP.root";
     TString fileNameTheoryPythia8_4C            = "ExternalInput/Theory/Pythia/PYTHIA8_4CTune_8TeV_Pi0_Eta.root";
-    TString fileNameTheoryPi0DSS14              = "ExternalInput/Theory/pp8TeV_DSS14.root";
     TString fileNameEtaToPi0                    = "ExternalInput/WorldDataPi0Eta.root";
     TString fileNamePOWHEG8TeV                  = "ExternalInput/Theory/POWHEG_Pythia/powhegDijetShoweredWithPythia_pi0_eta_invariantXsec_NNPDF23LOas0130.root";
 
@@ -990,14 +989,14 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // *******************************************************************************************************        
 
     TFile* fileEtaToPi                              = new TFile(fileNameEtaToPi0.Data());
-    TGraphErrors *eta2pi0_NA27_275GeV     = (TGraphErrors*)fileEtaToPi->Get("Aguilar400GeV");
-    TGraphErrors *eta2pi0_RHIC200GeV      = (TGraphErrors*)fileEtaToPi->Get("Phenix200GeV");
+    TGraphErrors *eta2pi0_NA27_275GeV               = (TGraphErrors*)fileEtaToPi->Get("Aguilar400GeV");
+    TGraphErrors *eta2pi0_RHIC200GeV                = (TGraphErrors*)fileEtaToPi->Get("Phenix200GeV");
 
     TFile* fileTheoryCompilation                            = new TFile(fileNameTheory.Data());
     TFile* fileTheoryPythia8_4C                             = new TFile(fileNameTheoryPythia8_4C.Data());
-    TFile* fileTheorypp8TeVPi0DSS14                         = new TFile(fileNameTheoryPi0DSS14.Data());
     TFile* filePOWHEG8TeV                                   = new TFile(fileNamePOWHEG8TeV.Data());
 
+        // Pythia8 Monash2013:
         TH1F* histoPythia8InvXSection                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi08TeV");
         histoPythia8InvXSection->GetXaxis()->SetRangeUser(0.3,35);
         TH1F* histoPythia8InvXSectionEta                    = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta8TeV");
@@ -1014,7 +1013,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TGraphErrors* graphPythia8EtaToPi0                  = new TGraphErrors(histoPythia8EtaToPi0);
         while(graphPythia8EtaToPi0->GetX()[0] < 0.4) graphPythia8EtaToPi0->RemovePoint(0);
         while(graphPythia8EtaToPi0->GetX()[graphPythia8EtaToPi0->GetN()-1] > 25.) graphPythia8EtaToPi0->RemovePoint(graphPythia8EtaToPi0->GetN()-1);
-
+        // *******************************************************************************************************
+        // Pythia8 Tune4C:
         TH1F* histoPythia8_4CInvXSection                    = (TH1F*) fileTheoryPythia8_4C->Get("fHistInvXsec_Pi0");
         histoPythia8_4CInvXSection->GetXaxis()->SetRangeUser(0.3,35);
         TH1F* histoPythia8_4CInvXSectionEta                 = (TH1F*) fileTheoryPythia8_4C->Get("fHistInvXsec_Eta");
@@ -1032,84 +1032,37 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         while(graphPythia8T4CEtaToPi0->GetX()[0] < 0.4) graphPythia8T4CEtaToPi0->RemovePoint(0);
         while(graphPythia8T4CEtaToPi0->GetX()[graphPythia8T4CEtaToPi0->GetN()-1] > 25.) graphPythia8T4CEtaToPi0->RemovePoint(graphPythia8T4CEtaToPi0->GetN()-1);
 
-        TGraphAsymmErrors* graphPi0DSS14                    = (TGraphAsymmErrors*)fileTheorypp8TeVPi0DSS14->Get("fGraphInvXsec_Pi0");
-        for (int i=0;i<graphPi0DSS14->GetN();i++) graphPi0DSS14->GetY()[i] /= 2.;
-        for(Int_t i=0; i<10; i++) graphPi0DSS14->RemovePoint(graphPi0DSS14->GetN()-1);
+        // *******************************************************************************************************
+        // NLO calc
+        TGraphAsymmErrors* graphPi0DSS14                    = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcDSS14InvSecPi08000GeV");
+        while (graphPi0DSS14->GetX()[graphPi0DSS14->GetN()-1] > 42. ) graphPi0DSS14->RemovePoint(graphPi0DSS14->GetN()-1);
 
         TGraphAsymmErrors* graphEtaAESSS                    = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcAESSSInvSecEta8000GeV");
 
         TGraphAsymmErrors* graphEtaToPi07000GeV             = (TGraphAsymmErrors*) fileEtaToPi->Get("Alice7TeV");
         TGraphAsymmErrors* graphEtaToPi02760GeV             = (TGraphAsymmErrors*) fileEtaToPi->Get("Alice2760GeV");
         ProduceGraphAsymmWithoutXErrors(graphEtaToPi02760GeV);
+
+        // *******************************************************************************************************
         TGraphAsymmErrors* graphPOWHEGPi08TeV               = (TGraphAsymmErrors*) filePOWHEG8TeV->Get("pi0");
-        while (graphPOWHEGPi08TeV->GetX()[graphPOWHEGPi08TeV->GetN()-1] > 35. )
-            graphPOWHEGPi08TeV->RemovePoint(graphPOWHEGPi08TeV->GetN()-1);
-        while (graphPOWHEGPi08TeV->GetX()[0] < 5. )
-            graphPOWHEGPi08TeV->RemovePoint(0);
-//        TH1F* histoPythia8InvXSection_VarBinning            = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Spec8000GeVVarBinning");
-        TGraph* graphNLOCalcPi0MuHalf                       = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecPi0MuHalf8000GeV");
-        TGraph* graphNLOCalcPi0MuOne                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecPi0MuOne8000GeV");
-        TGraph* graphNLOCalcPi0MuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecPi0MuTwo8000GeV");
+        while (graphPOWHEGPi08TeV->GetX()[graphPOWHEGPi08TeV->GetN()-1] > 35. ) graphPOWHEGPi08TeV->RemovePoint(graphPOWHEGPi08TeV->GetN()-1);
+        while (graphPOWHEGPi08TeV->GetX()[0] < 5. ) graphPOWHEGPi08TeV->RemovePoint(0);
+        // *******************************************************************************************************
+
         TGraph* graphNLOCalcEtaMuHalf                       = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecEtaMuHalf8000GeV");
         TGraph* graphNLOCalcEtaMuOne                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecEtaMuOne8000GeV");
         TGraph* graphNLOCalcEtaMuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecEtaMuTwo8000GeV");
-        TGraph* graphNLOEtaToPi0MuHalf                      = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcEtaOverPi0MuHalf8000GeV");
-        TGraph* graphNLOEtaToPi0MuOne                       = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcEtaOverPi0MuOne8000GeV");
-        TGraph* graphNLOEtaToPi0MuTwo                       = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcEtaOverPi0MuTwo8000GeV");
-        //TGraph* graphNLODSSCalcMuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcDSSInvSecPi0MuTwo8000GeV");
-        //TGraph* graphNLOCGCCalcMuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcCGCInvCrossSec8000GeV");
-        //TGraphAsymmErrors* graphNLODSS14Calc                = (TGraphAsymmErrors*)fileTheoryCompilation->Get("graphNLOCalcDSS14InvCrossSec8000GeV");
-    
+
         while (graphNLOCalcEtaMuHalf->GetX()[graphNLOCalcEtaMuHalf->GetN()-1] > 37. )
             graphNLOCalcEtaMuHalf->RemovePoint(graphNLOCalcEtaMuHalf->GetN()-1);
         while (graphNLOCalcEtaMuOne->GetX()[graphNLOCalcEtaMuOne->GetN()-1] > 37. )
             graphNLOCalcEtaMuOne->RemovePoint(graphNLOCalcEtaMuOne->GetN()-1);
         while (graphNLOCalcEtaMuTwo->GetX()[graphNLOCalcEtaMuTwo->GetN()-1] > 37. )
             graphNLOCalcEtaMuTwo->RemovePoint(graphNLOCalcEtaMuTwo->GetN()-1);
-            
-        cout << "mu half" << endl;
-        graphNLOEtaToPi0MuHalf->Print();
-        cout << "mu one" << endl;
-        graphNLOEtaToPi0MuOne->Print();
-        cout << "mu two" << endl;
-        graphNLOEtaToPi0MuTwo->Print();
 
-        TGraphAsymmErrors* graphNLOEtaToPi0                = new TGraphAsymmErrors();
-        for(Int_t iB=0; iB<graphNLOEtaToPi0MuOne->GetN(); iB++){
-          Double_t deltaHigh = graphNLOEtaToPi0MuTwo->GetY()[iB]-graphNLOEtaToPi0MuOne->GetY()[iB];
-          Double_t value = graphNLOEtaToPi0MuOne->GetY()[iB];
-          Double_t deltaLow = graphNLOEtaToPi0MuOne->GetY()[iB]-graphNLOEtaToPi0MuOne->GetY()[iB];
-          if(iB>0) deltaLow = graphNLOEtaToPi0MuOne->GetY()[iB]-graphNLOEtaToPi0MuHalf->GetY()[iB-1];
-          cout << iB << ", " << deltaLow << ", " << value << ", " << deltaHigh << endl;
-          graphNLOEtaToPi0->SetPoint(iB,graphNLOEtaToPi0MuOne->GetX()[iB],value);
-          graphNLOEtaToPi0->SetPointError(iB,0,0,deltaLow,deltaHigh);
-        }
-        while (graphNLOEtaToPi0->GetX()[graphNLOEtaToPi0->GetN()-1] > 27. )
-            graphNLOEtaToPi0->RemovePoint(graphNLOEtaToPi0->GetN()-1);
-        
-    // *******************************************************************************************************
-    // ************************** Loading charged pion results ***********************************************
-    // *******************************************************************************************************        
-//    TFile* fileChargedPionInputpp                           = new TFile(fileNameChargedPionPP.Data());
-//        TH1D* histoChPiInvYieldPubStatPP                    = (TH1D*)fileChargedPionInputpp->Get("histoChargedPionSpecPubStat7TeV");
-//        TH1D* histoChPiInvYieldPubSystPP                    = (TH1D*)fileChargedPionInputpp->Get("histoChargedPionSpecPubSyst7TeV");
+        TGraphAsymmErrors* graphNLOEtaToPi0                = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcEtaOverPi08000GeV_AESSS_DSS07");
+        while (graphNLOEtaToPi0->GetX()[graphNLOEtaToPi0->GetN()-1] > 27. ) graphNLOEtaToPi0->RemovePoint(graphNLOEtaToPi0->GetN()-1);
 
-//        TH1D* histoChPiInvYieldHighPtStatPP                 = (TH1D*)fileChargedPionInputpp->Get("histoChargedPionSpecHighPtStat7TeV");
-//        TH1D* histoChPiInvYieldHighPtSystPP                 = (TH1D*)fileChargedPionInputpp->Get("histoChargedPionSpecHighPtSyst7TeV");
-//        TH1D* histoChPiInvYieldLowPtStatCMS                 = (TH1D*)fileChargedPionInputpp->Get("histoChargedPionSpecLowPtStat7TeVCMS");
-//        TH1D* histoChPiInvYieldLowPtSysCMS                  = (TH1D*)fileChargedPionInputpp->Get("histoChargedPionSpecLowPtSys7TeVCMS");
-//        TH1D* histoChPiInvYieldLowPtStatPP                  = (TH1D*)fileChargedPionInputpp->Get("histoChargedPionSpecLowPtStatPP7TeV");
-//        TH1D* histoChPiInvYieldLowPtSysPP                   = (TH1D*)fileChargedPionInputpp->Get("histoChargedPionSpecLowPtSysPP7TeV");
-
-    // *******************************************************************************************************
-    // ************************** Loading charged hadron results ***********************************************
-    // *******************************************************************************************************        
-//    TFile* fileChargedHadronsInputpp                        = new TFile(fileNameChargedHadronPP.Data());
-//        TGraphAsymmErrors* graphChargedHadronsStatPP        = (TGraphAsymmErrors*)fileChargedHadronsInputpp->Get("graphChargedHadronsStatPP8TeV");
-//        graphChargedHadronsStatPP                           = ScaleGraph(graphChargedHadronsStatPP,0.5*1e9/xSection8TeVINEL);
-//        TGraphAsymmErrors* graphChargedHadronsSysPP         = (TGraphAsymmErrors*)fileChargedHadronsInputpp->Get("graphChargedHadronsSysPP8TeV");
-//        graphChargedHadronsSysPP                            = ScaleGraph(graphChargedHadronsSysPP,0.5*1e9/xSection8TeVINEL);
-        
     // *******************************************************************************************************
     // ************************** Combination of different pi0 measurements **********************************
     // *******************************************************************************************************
