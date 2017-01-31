@@ -776,7 +776,7 @@ Int_t GetMesonOpeningAngleCutPosition ()                {return 14;}
 //************************************************************************************
 //*********************** date generation for plot labeling **************************
 //************************************************************************************
-TString ReturnDateString(){
+TString ReturnDateString(Bool_t reversed = kFALSE){
     TDatime today;
     int iDate           = today.GetDate();
     int iYear           = iDate/10000;
@@ -800,7 +800,8 @@ TString ReturnDateString(){
     } else {
         textDayth       = "th";
     }
-    return Form("%i^{%s} %s %i",iDay, textDayth.Data(),cMonth[iMonth-1].Data(), iYear);
+    if(reversed) return Form("%s. %i%s, %i", cMonth[iMonth-1].Data(),iDay,textDayth.Data(), iYear);
+    else return Form("%i^{%s} %s %i",iDay, textDayth.Data(),cMonth[iMonth-1].Data(), iYear);
 }
 
 //************************************************************************************

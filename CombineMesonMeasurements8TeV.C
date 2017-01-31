@@ -73,10 +73,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                                         TString thesisPlots         = "", 
                                         TString bWCorrection        = "X",
                                         TString fileInputCorrFactors= "",
-                                        Bool_t plotInvMassBins = kTRUE
+                                        Bool_t plotInvMassBins = kTRUE,
+                                        Bool_t plotDate = kFALSE
                                     ){
 
-    TString date = ReturnDateString();
+    TString date = ReturnDateString(kTRUE);
+
+    TString ALICEperfor = "ALICE performance";
     
     gROOT->Reset();
     gROOT->SetStyle("Plain");
@@ -102,19 +105,18 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TString fileNameChargedPionPP               = "ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_20_May_2015.root";
     TString fileNameChargedHadronPP             = "ExternalInput/UnidentifiedCharged/ChargedHadrinSpectraPP_20_May_2015.root";
     TString outputDir                           = Form("%s/%s/CombineMesonMeasurements8TeV%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
-    
+    if(plotDate) outputDir.Append(dateForOutput);
+
     fstream fLog;
     fLog.open(Form("%s/CombineMeson8TeV.log",outputDir.Data()), ios::out);
     fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     fLog << dateForOutput.Data() << endl;
 
-    TString nameFinalResDat                     = Form("%s/CombinedResults%s_FitResults.dat",outputDir.Data(),bWCorrection.Data());
     cout << outputDir.Data() << endl;
     cout << fileNamePCM.Data() << endl;
 
     gSystem->Exec("mkdir -p "+outputDir);
     gSystem->Exec(Form("cp %s %s/InputPCM.root", fileNamePCM.Data(), outputDir.Data()));
-//    gSystem->Exec(Form("cp %s %s/InputPCMEta.root", fileNamePCMEta.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/InputPCMEMCAL.root", fileNamePCMEMCAL.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/InputPHOS.root", fileNamePHOS.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/InputEMCALLow.root", fileNameEMCALLow.Data(), outputDir.Data()));
@@ -963,13 +965,19 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         legendTriggReject->Draw();
         histo2DTriggReject->Draw("same,axis");
-        TLatex *labelPerfTriggRejec = new TLatex(0.7, 0.92,"ALICE performance");
+        TLatex *labelPerfTriggRejec = new TLatex(0.7, 0.92,ALICEperfor.Data());
         SetStyleTLatex( labelPerfTriggRejec, textSizeSpectra2,4);
         labelPerfTriggRejec->Draw();
 
         TLatex *labelWeightsTR      = new TLatex(0.7,0.87,collisionSystem8TeV.Data());
         SetStyleTLatex( labelWeightsTR, textSizeSpectra2,4);
         labelWeightsTR->Draw();
+
+        if(plotDate){
+          TLatex *labelDate = new TLatex(0.7, 0.82,date.Data());
+          SetStyleTLatex( labelDate, textSizeSpectra2,4);
+          labelDate->Draw();
+        }
 
         TLatex *labelPerfTriggFitRange = new TLatex(0.463, 0.12+(0.9*3*textSizeSpectra2)+0.01, "Fit range (GeV/#it{c})");
         SetStyleTLatex( labelPerfTriggFitRange, textSizeSpectra2,4);
@@ -3798,7 +3806,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         labelLegendAMass->SetTextFont(43);
         labelLegendAMass->Draw();
 
-        TLatex *labelMassPerf       = new TLatex(0.13,0.87,"ALICE performance");
+        TLatex *labelMassPerf       = new TLatex(0.13,0.87,ALICEperfor.Data());
         SetStyleTLatex( labelMassPerf, textSizeLabelsPixel,4);
         labelMassPerf->SetTextFont(43);
         labelMassPerf->Draw();        
@@ -3810,6 +3818,12 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         SetStyleTLatex( labelMassPi0, textSizeLabelsPixel,4);
         labelMassPi0->SetTextFont(43);
         labelMassPi0->Draw();        
+        if(plotDate){
+          TLatex *labelDate = new TLatex(0.13, 0.6, date.Data());
+          SetStyleTLatex( labelDate, textSizeLabelsPixel,4);
+          labelDate->SetTextFont(43);
+          labelDate->Draw();
+        }
                 
     padMassPi0->cd();
     padMassPi0->SetLogx();
@@ -3949,6 +3963,12 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         labelMassEnergy->Draw();
         labelMassPi0->Draw();        
         labelLegendAMass->Draw();
+        if(plotDate){
+          TLatex *labelDate = new TLatex(0.13, 0.6, date.Data());
+          SetStyleTLatex( labelDate, textSizeLabelsPixel,4);
+          labelDate->SetTextFont(43);
+          labelDate->Draw();
+        }
         
 //     //********************************** Defintion of the Legend **************************************************    
 //         Double_t columnsLegendFWHM[4]       = {0.12, 0.44, 0.525, 0.39};
@@ -4137,6 +4157,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         SetStyleTLatex( labelMassEta, textSizeLabelsPixel,4);
         labelMassEta->SetTextFont(43);
         labelMassEta->Draw();
+
+        if(plotDate){
+          TLatex *labelDate = new TLatex(0.13, 0.6, date.Data());
+          SetStyleTLatex( labelDate, textSizeLabelsPixel,4);
+          labelDate->SetTextFont(43);
+          labelDate->Draw();
+        }
 
         padMassLegend3->cd();
         //****************** first Column **************************************************
@@ -6155,7 +6182,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 fitPi0InvMassSigPCM[i]->SetLineColor(fitColorInvMassSG);
                 fitPi0InvMassSigPCM[i]->Draw("same");
 
-                TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+                TLatex *labelALICE      = new TLatex(0.135,0.9,ALICEperfor.Data());
                 SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
                 labelALICE->SetTextFont(43);
                 labelALICE->Draw();
@@ -6174,6 +6201,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 SetStyleTLatex( labelInvMassRecoPCM, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoPCM->SetTextFont(43);
                 labelInvMassRecoPCM->Draw();
+
+                if(plotDate){
+                  TLatex *labelDate = new TLatex(0.135, 0.9-0.9*4*0.8*textsizeLabelsPP,date.Data());
+                  SetStyleTLatex( labelDate, 0.85*textSizeLabelsPixel,4);
+                  labelDate->SetTextFont(43);
+                  labelDate->Draw();
+                }
 
                 SetStyleTLatex( labelInvMassPtRangePCM, 0.85*textSizeLabelsPixel,4);
                 labelInvMassPtRangePCM->SetTextAlign(31);
@@ -6215,7 +6249,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 fitEtaInvMassSigPCM[i]->SetLineColor(fitColorInvMassSG);
                 fitEtaInvMassSigPCM[i]->Draw("same");
 
-                TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+                TLatex *labelALICE      = new TLatex(0.135,0.9,ALICEperfor.Data());
                 SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
                 labelALICE->SetTextFont(43);
                 labelALICE->Draw();
@@ -6234,6 +6268,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 SetStyleTLatex( labelInvMassRecoPCM, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoPCM->SetTextFont(43);
                 labelInvMassRecoPCM->Draw();
+
+                if(plotDate){
+                  TLatex *labelDate = new TLatex(0.135, 0.9-0.9*4*0.8*textsizeLabelsPP,date.Data());
+                  SetStyleTLatex( labelDate, 0.85*textSizeLabelsPixel,4);
+                  labelDate->SetTextFont(43);
+                  labelDate->Draw();
+                }
 
                 SetStyleTLatex( labelInvMassPtRangePCM, 0.85*textSizeLabelsPixel,4);
                 labelInvMassPtRangePCM->SetTextAlign(31);
@@ -6274,7 +6315,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 fitPi0InvMassSigPCMEMCAL[i]->SetLineColor(fitColorInvMassSG);
                 fitPi0InvMassSigPCMEMCAL[i]->Draw("same");
 
-                TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+                TLatex *labelALICE      = new TLatex(0.135,0.9,ALICEperfor.Data());
                 SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
                 labelALICE->SetTextFont(43);
                 labelALICE->Draw();
@@ -6293,6 +6334,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 SetStyleTLatex( labelInvMassRecoPCMEMC, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoPCMEMC->SetTextFont(43);
                 labelInvMassRecoPCMEMC->Draw();
+
+                if(plotDate){
+                  TLatex *labelDate = new TLatex(0.135, 0.9-0.9*4*0.8*textsizeLabelsPP,date.Data());
+                  SetStyleTLatex( labelDate, 0.85*textSizeLabelsPixel,4);
+                  labelDate->SetTextFont(43);
+                  labelDate->Draw();
+                }
 
                 SetStyleTLatex( labelInvMassPtRangePCMEMCAL, 0.85*textSizeLabelsPixel,4);
                 labelInvMassPtRangePCMEMCAL->SetTextAlign(31);
@@ -6333,7 +6381,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 fitEtaInvMassSigPCMEMCAL[i]->SetLineColor(fitColorInvMassSG);
                 fitEtaInvMassSigPCMEMCAL[i]->Draw("same");
 
-                TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+                TLatex *labelALICE      = new TLatex(0.135,0.9,ALICEperfor.Data());
                 SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
                 labelALICE->SetTextFont(43);
                 labelALICE->Draw();
@@ -6352,6 +6400,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 SetStyleTLatex( labelInvMassRecoPCMEMC, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoPCMEMC->SetTextFont(43);
                 labelInvMassRecoPCMEMC->Draw();
+
+                if(plotDate){
+                  TLatex *labelDate = new TLatex(0.135, 0.9-0.9*4*0.8*textsizeLabelsPP,date.Data());
+                  SetStyleTLatex( labelDate, 0.85*textSizeLabelsPixel,4);
+                  labelDate->SetTextFont(43);
+                  labelDate->Draw();
+                }
 
                 SetStyleTLatex( labelInvMassPtRangePCMEMCAL, 0.85*textSizeLabelsPixel,4);
                 labelInvMassPtRangePCMEMCAL->SetTextAlign(31);
@@ -6395,7 +6450,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 fitPi0InvMassSigEMCAL[i]->SetLineColor(fitColorInvMassSG);
                 fitPi0InvMassSigEMCAL[i]->Draw("same");
 
-                TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+                TLatex *labelALICE      = new TLatex(0.135,0.9,ALICEperfor.Data());
                 SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
                 labelALICE->SetTextFont(43);
                 labelALICE->Draw();
@@ -6414,6 +6469,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 SetStyleTLatex( labelInvMassRecoEMC, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoEMC->SetTextFont(43);
                 labelInvMassRecoEMC->Draw();
+
+                if(plotDate){
+                  TLatex *labelDate = new TLatex(0.135, 0.9-0.9*4*0.8*textsizeLabelsPP,date.Data());
+                  SetStyleTLatex( labelDate, 0.85*textSizeLabelsPixel,4);
+                  labelDate->SetTextFont(43);
+                  labelDate->Draw();
+                }
 
                 SetStyleTLatex( labelInvMassPtRangeEMCAL, 0.85*textSizeLabelsPixel,4);
                 labelInvMassPtRangeEMCAL->SetTextAlign(31);
@@ -6453,7 +6515,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 fitEtaInvMassSigEMCAL[i]->SetLineColor(fitColorInvMassSG);
                 fitEtaInvMassSigEMCAL[i]->Draw("same");
 
-                TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+                TLatex *labelALICE      = new TLatex(0.135,0.9,ALICEperfor.Data());
                 SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
                 labelALICE->SetTextFont(43);
                 labelALICE->Draw();
@@ -6472,6 +6534,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 SetStyleTLatex( labelInvMassRecoEMC, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoEMC->SetTextFont(43);
                 labelInvMassRecoEMC->Draw();
+
+                if(plotDate){
+                  TLatex *labelDate = new TLatex(0.135, 0.9-0.9*4*0.8*textsizeLabelsPP,date.Data());
+                  SetStyleTLatex( labelDate, 0.85*textSizeLabelsPixel,4);
+                  labelDate->SetTextFont(43);
+                  labelDate->Draw();
+                }
 
                 SetStyleTLatex( labelInvMassPtRangeEMCAL, 0.85*textSizeLabelsPixel,4);
                 labelInvMassPtRangeEMCAL->SetTextAlign(31);
@@ -6524,7 +6593,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
       fitPHOSlow->SetLineColor(fitColorInvMassSG);
       fitPHOSlow->Draw("same");
 
-      TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+      TLatex *labelALICE      = new TLatex(0.135,0.9,ALICEperfor.Data());
       SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
       labelALICE->SetTextFont(43);
       labelALICE->Draw();
@@ -6543,6 +6612,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
       SetStyleTLatex( labelInvMassRecoPHOS, 0.85*textSizeLabelsPixel,4);
       labelInvMassRecoPHOS->SetTextFont(43);
       labelInvMassRecoPHOS->Draw();
+
+      if(plotDate){
+        TLatex *labelDate = new TLatex(0.135, 0.9-0.9*4*0.8*textsizeLabelsPP,date.Data());
+        SetStyleTLatex( labelDate, 0.85*textSizeLabelsPixel,4);
+        labelDate->SetTextFont(43);
+        labelDate->Draw();
+      }
 
       SetStyleTLatex( labelInvMassPtRangePHOSl, 0.85*textSizeLabelsPixel,4);
       labelInvMassPtRangePHOSl->SetTextAlign(31);
@@ -6598,6 +6674,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
       labelInvMassTriggerPHOSh->Draw();
 
       labelInvMassRecoPHOS->Draw();
+
+      if(plotDate){
+        TLatex *labelDate = new TLatex(0.135, 0.9-0.9*4*0.8*textsizeLabelsPP,date.Data());
+        SetStyleTLatex( labelDate, 0.85*textSizeLabelsPixel,4);
+        labelDate->SetTextFont(43);
+        labelDate->Draw();
+      }
 
       SetStyleTLatex( labelInvMassPtRangePHOSh, 0.85*textSizeLabelsPixel,4);
       labelInvMassPtRangePHOSh->SetTextAlign(31);
