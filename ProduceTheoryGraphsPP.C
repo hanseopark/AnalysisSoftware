@@ -798,7 +798,19 @@ void ProduceTheoryGraphsPP(){
 //     graphEtaToPi0NLOMuOne8TeV->Print();
     TGraph* graphEtaToPi0NLOMuTwo8TeV       = new TGraph(xNBins8000GeV,xValueNLO8000GeV,valueNLOEtaToPi0NLOMuTwo8000GeV);   
 //     graphEtaToPi0NLOMuTwo8TeV->Print();
+
+    //**********************************************************************************************************************
+    //******************************** 8TeV Pi0 NLO DSS14 calc *************************************************************
+    //**********************************************************************************************************************
     
+    TString fileNameTheoryPi0DSS14                    = "ExternalInput/Theory/pp8TeV_NLO_Pi0_DSS14.root";
+    TFile* fileTheorypp8TeVPi0DSS14                   = new TFile(fileNameTheoryPi0DSS14.Data());
+    TGraphAsymmErrors* graphNLOCalcInvSecPi08000GeV   = (TGraphAsymmErrors*)fileTheorypp8TeVPi0DSS14->Get("fGraphInvXsec_Pi0");
+    //scale errors 1/2 mu to 2 mu are given by errors of TGraphAsymmErrors
+
+    //fix normalization problem since factor 2 was missing:
+    for (int i=0;i<graphNLOCalcInvSecPi08000GeV->GetN();i++) graphNLOCalcInvSecPi08000GeV->GetY()[i] /= 2.;
+
     //**************************************************************************************************
     //********************** 8TeV Pythia 8 MC spectra and ratio ****************************************
     //**************************************************************************************************
@@ -949,6 +961,8 @@ void ProduceTheoryGraphsPP(){
         graphNLOCalcInvYieldPi0MuHalf8000GeV->Write("graphNLOCalcInvYieldPi0MuHalf8000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuOne8000GeV->Write("graphNLOCalcInvYieldPi0MuOne8000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuTwo8000GeV->Write("graphNLOCalcInvYieldPi0MuTwo8000GeV", TObject::kOverwrite);
+
+        graphNLOCalcInvSecPi08000GeV->Write("graphNLOCalcDSS14InvSecPi08000GeV", TObject::kOverwrite);
         
         histoPi08TeVPythia8->Write("histoPi0Pythia8_8000TeV", TObject::kOverwrite);
         histoEta8TeVPythia8->Write("histoEtaPythia8_8000TeV", TObject::kOverwrite);
