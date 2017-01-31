@@ -911,6 +911,13 @@ void ProduceTheoryGraphsPP(){
     TH1F* histoEtaToPi0RatioPythia8Monash8TeVLego= (TH1F*)histoEtaPythia8MonashInvSec8TeVLego->Clone("histoEtaToPi0RatioPythia8Monash8TeVLego");
     histoEtaToPi0RatioPythia8Monash8TeVLego->Sumw2();
     histoEtaToPi0RatioPythia8Monash8TeVLego->Divide(histoEtaToPi0RatioPythia8Monash8TeVLego,histoPi0Pythia8MonashInvSec8TeVLego);
+
+    TFile* filePythia8Tune4C_8TeVLego            = TFile::Open("ExternalInput/Theory/Pythia/Pythia8_Tune4C_8TeV_3798Mio.root");
+    TH1F* histoPi0Pythia8Tune4CInvSec8TeVLego    = (TH1F*)filePythia8Tune4C_8TeVLego->Get("hPt_Pi0_MB_XSec");
+    TH1F* histoEtaPythia8Tune4CInvSec8TeVLego    = (TH1F*)filePythia8Tune4C_8TeVLego->Get("hPt_Eta_MB_XSec");
+    TH1F* histoEtaToPi0RatioPythia8Tune4C8TeVLego= (TH1F*)histoEtaPythia8Tune4CInvSec8TeVLego->Clone("histoEtaToPi0RatioPythia8Tune4C8TeVLego");
+    histoEtaToPi0RatioPythia8Tune4C8TeVLego->Sumw2();
+    histoEtaToPi0RatioPythia8Tune4C8TeVLego->Divide(histoEtaToPi0RatioPythia8Tune4C8TeVLego,histoPi0Pythia8Tune4CInvSec8TeVLego);
     
     //**********************************************************************************************************************
     //********************************* Write graphs and histos to compilation file for pp *********************************
@@ -1083,6 +1090,10 @@ void ProduceTheoryGraphsPP(){
         histoPi0Pythia8MonashInvSec8TeVLego->Write("histoInvSecPythia8Monash2013LegoPi08TeV", TObject::kOverwrite);
         histoEtaPythia8MonashInvSec8TeVLego->Write("histoInvSecPythia8Monash2013LegoEta8TeV", TObject::kOverwrite);
         histoEtaToPi0RatioPythia8Monash8TeVLego->Write("histoEtaToPi0RatioPythia8Monash2013Lego8TeV", TObject::kOverwrite);
+
+        histoPi0Pythia8Tune4CInvSec8TeVLego->Write("histoInvSecPythia8Tune4CLegoPi08TeV", TObject::kOverwrite);
+        histoEtaPythia8Tune4CInvSec8TeVLego->Write("histoInvSecPythia8Tune4CLegoEta8TeV", TObject::kOverwrite);
+        histoEtaToPi0RatioPythia8Tune4C8TeVLego->Write("histoEtaToPi0RatioPythia8Tune4CLego8TeV", TObject::kOverwrite);
         
     fileTheoryGraphsPP.Close();
 
