@@ -799,6 +799,8 @@ void ProduceTheoryGraphsPP(){
     TGraph* graphEtaToPi0NLOMuTwo8TeV       = new TGraph(xNBins8000GeV,xValueNLO8000GeV,valueNLOEtaToPi0NLOMuTwo8000GeV);   
 //     graphEtaToPi0NLOMuTwo8TeV->Print();
 
+    TGraphAsymmErrors* graphNLOCalcEtaToPi08000GeV  = CombineMuScales(xNBins8000GeV, xValueNLO8000GeV, graphEtaToPi0NLOMuOne8TeV->GetY(), graphEtaToPi0NLOMuHalf8TeV->GetY(), graphEtaToPi0NLOMuTwo8TeV->GetY());
+
     //**********************************************************************************************************************
     //******************************** 8TeV Pi0 NLO DSS14 calc *************************************************************
     //**********************************************************************************************************************
@@ -1022,6 +1024,7 @@ void ProduceTheoryGraphsPP(){
         graphEtaToPi0NLOMuHalf8TeV->Write("graphNLOCalcEtaOverPi0MuHalf8000GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuOne8TeV->Write("graphNLOCalcEtaOverPi0MuOne8000GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuTwo8TeV->Write("graphNLOCalcEtaOverPi0MuTwo8000GeV", TObject::kOverwrite);
+        graphNLOCalcEtaToPi08000GeV->Write("graphNLOCalcEtaOverPi08000GeV_AESSS_DSS07",TObject::kOverwrite);
         
         graphEtaToPi0NLOMuHalf7TeV->Write("graphNLOCalcEtaOverPi0MuHalf7000GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuOne7TeV->Write("graphNLOCalcEtaOverPi0MuOne7000GeV", TObject::kOverwrite);
