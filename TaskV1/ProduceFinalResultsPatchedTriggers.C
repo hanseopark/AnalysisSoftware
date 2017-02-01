@@ -727,9 +727,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         
         Double_t minTriggReject = 0.1;
         Double_t maxTriggReject = 4200;
-        if (mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0)
+        if (optionEnergy.CompareTo("2.76TeV") == 0)
+            maxTriggReject = 8200;
+        else if (mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0)
             maxTriggReject = 200;
-        if (mode == 10)
+        else if (mode == 10)
             maxTriggReject = 5200;
         
         TH2F * histo2DTriggReject;
@@ -800,13 +802,17 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         histo2DTriggReject->Draw("same,axis");
         TLatex *labelPerfTriggRejec  = NULL;
         if (isMC.CompareTo("MC") == 0)
-            labelPerfTriggRejec  = new TLatex(0.11, 0.93,"ALICE simulation");
+            labelPerfTriggRejec  = new TLatex(0.11, 0.925,"ALICE simulation");
         else 
-            labelPerfTriggRejec  = new TLatex(0.11, 0.93,"ALICE performance");
+            labelPerfTriggRejec  = new TLatex(0.11, 0.925,"ALICE performance");
         
         SetStyleTLatex( labelPerfTriggRejec, textSizeSpectra2,4);
         labelPerfTriggRejec->Draw();
 
+        TLatex *labelEnergyTriggRejec  = new TLatex(0.95, 0.925,collisionSystem.Data());        
+        SetStyleTLatex( labelEnergyTriggRejec, textSizeSpectra2,4, 1, 42, kTRUE, 31);
+        labelEnergyTriggRejec->Draw();
+        
         TLatex *labelPerfTriggFitRange = new TLatex(0.523, 0.12+(0.9*(nrOfTrigToBeComb-2+1)*textSizeSpectra2)+0.01, "Fit range (GeV/#it{c})");
         SetStyleTLatex( labelPerfTriggFitRange, textSizeSpectra2,4);
         labelPerfTriggFitRange->Draw();
@@ -881,6 +887,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             legendTriggRejectE->Draw();
             histo2DTriggReject->Draw("same,axis");
             labelPerfTriggRejec->Draw();
+            labelEnergyTriggRejec->Draw();
+
             TLatex *labelPerfTriggFitRangeE = new TLatex(0.523, 0.12+(0.9*(nrOfTrigToBeComb-2+1)*textSizeSpectra2)+0.01, "Fit range (GeV)");
             SetStyleTLatex( labelPerfTriggFitRangeE, textSizeSpectra2,4);
             labelPerfTriggFitRangeE->Draw();

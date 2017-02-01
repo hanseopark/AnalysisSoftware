@@ -190,7 +190,8 @@ void CheckCrossTalkEffects( Int_t nEvts                 = 1000000,
                                            10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 18.0, 20.0, 25.0,
                                            30.0, 50.0};
     Int_t nBinsX                        = 31;    
-    Double_t energyFracLeadCell[3]      = {0.8, 0.6, 1};
+//     Double_t energyFracLeadCell[3]      = {0.8, 0.6, 1};
+    Double_t energyFracLeadCell[3]      = {1, 1.1, 0.9};
     //*************************************************************************************************    
     //************************** Loading the resolutions **********************************************
     //*************************************************************************************************
@@ -265,8 +266,10 @@ void CheckCrossTalkEffects( Int_t nEvts                 = 1000000,
     histoLeftRightRescaled[1]           = new TH2F("histoLeftRightRescaled_1","", nBinsX, ptBinning, 100, -1, 1);  
     if (fileNameXTalk.CompareTo("") != 0){    
         TFile* xTalkFile                = new TFile(fileNameXTalk.Data());
-        histoLeftRight[0]               = (TH2F*)xTalkFile->Get("hLeftMinusRightVsEcell_0");
-        histoLeftRight[1]               = (TH2F*)xTalkFile->Get("hLeftMinusRightVsEcell_1");
+//         histoLeftRight[0]               = (TH2F*)xTalkFile->Get("hLeftMinusRightVsEcell_0");
+//         histoLeftRight[1]               = (TH2F*)xTalkFile->Get("hLeftMinusRightVsEcell_1");
+        histoLeftRight[0]               = (TH2F*)xTalkFile->Get("hLeftMinusRightVsEcluster_0");
+        histoLeftRight[1]               = (TH2F*)xTalkFile->Get("hLeftMinusRightVsEcluster_1");
         histoXTalkSmear                 = (TH2F*)histoLeftRight[0]->Clone("histoXTalkSmear");
         histoXTalkSmear->Sumw2();
         histoXTalkSmear->Add(histoLeftRight[1]);
@@ -382,12 +385,13 @@ void CheckCrossTalkEffects( Int_t nEvts                 = 1000000,
             for (Int_t i = 0; i < 3; i++){
                 Double_t ReldeltaE      = 0;
                 Int_t currBin           = 0;
-                if (ptcurrent > 3. && ptcurrent < 50.){
+                if (ptcurrent*0.9 > 3. && ptcurrent*1.1 < 50.){
     //                 cout << histoXTalkSmear->GetXaxis()->FindBin(particle.E()) << "\t" << particle.E() << endl;
                     currBin             = h2_deltaRel->GetXaxis()->FindBin(ptcurrent*energyFracLeadCell[i])-1;
                     ReldeltaE           = TMath::Abs(h1XTalkProjection[h2_deltaRel->GetXaxis()->FindBin(ptcurrent*energyFracLeadCell[i])-1]->GetRandom());
                 }    
-                h2_deltaRel->Fill(0.8*ptcurrent,ReldeltaE);
+//                 h2_deltaRel->Fill(0.8*ptcurrent,ReldeltaE);
+                h2_deltaRel->Fill(ptcurrent,ReldeltaE);
                 Double_t amountLeft     =  h1XTalkLeftProjection[currBin]->GetBinContent(h1XTalkLeftProjection[currBin]->GetXaxis()->FindBin(ReldeltaE));
                 Double_t amountRight    =  h1XTalkRightProjection[currBin]->GetBinContent(h1XTalkRightProjection[currBin]->GetXaxis()->FindBin(ReldeltaE));
     //             if (ReldeltaE > 0.7){
@@ -395,9 +399,9 @@ void CheckCrossTalkEffects( Int_t nEvts                 = 1000000,
     //             }    
                 Double_t deltaEbef      = ReldeltaE;
                 if (!((amountLeft+amountRight) > 0))
-                    ReldeltaE           = 0.8*ReldeltaE;
+                    ReldeltaE           = 0.16*ReldeltaE;
                 else 
-                    ReldeltaE               = TMath::Abs(amountLeft-amountRight)/((amountLeft+amountRight)*2) * ReldeltaE;
+                    ReldeltaE           = TMath::Abs(amountLeft-amountRight)/((amountLeft+amountRight)*2) * ReldeltaE;
                 
     //             if (deltaEbef > 0.7){
     //                 cout << amountLeft << "\t" << amountRight << "\t" <<  "\t" << ReldeltaE<< "\t"<< deltaEbef<< endl;

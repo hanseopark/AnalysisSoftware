@@ -822,9 +822,12 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             
         // Set Meson fit range
         if (mode == 0){
-            if( fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0){    
+            if( fEnergyFlag.Contains("PbPb")){    
                 fMesonFitRange[0]       = 0.07;
                 fMesonFitRange[1]       = 0.22;
+            } else if( fEnergyFlag.Contains("pPb")){    
+                fMesonFitRange[0]       = 0.03;
+                fMesonFitRange[1]       = 0.25;
             } else {
                 fMesonFitRange[0]       = 0.05; 
                 fMesonFitRange[1]       = 0.25; 

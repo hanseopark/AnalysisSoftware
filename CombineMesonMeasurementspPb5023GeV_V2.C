@@ -3569,10 +3569,10 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         SetStyleTLatex( labelLegendAMass, textSizeLabelsPixel,4, 1, 43);
         labelLegendAMass->Draw();
 
-        TLatex *labelMassPerf       = new TLatex(0.13,0.87,"ALICE performance");
+        TLatex *labelMassPerf       = new TLatex(0.13,0.875,"ALICE performance");
         SetStyleTLatex( labelMassPerf, textSizeLabelsPixel,4, 1, 43);
         labelMassPerf->Draw();        
-        TLatex *labelMassEnergy     = new TLatex(0.13,0.78,collisionSystempPb.Data());
+        TLatex *labelMassEnergy     = new TLatex(0.13,0.775,collisionSystempPb.Data());
         SetStyleTLatex( labelMassEnergy, textSizeLabelsPixel,4, 1, 43);
         labelMassEnergy->Draw();
         TLatex *labelMassPi0        = new TLatex(0.13,0.69,"#pi^{0} #rightarrow #gamma#gamma");
@@ -3595,7 +3595,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         TH2F * histo2DAllPi0Mass            = new TH2F("histo2DAllPi0Mass","histo2DAllPi0Mass",20, 0.23, 25., 1000., 120., 170);
         SetStyleHistoTH2ForGraphs(histo2DAllPi0Mass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass, textsizeLabelsMass, 0.85*textsizeLabelsMass, 
                                   textsizeLabelsMass, 0.9, 0.28/(textsizeFacMass*margin), 512, 505);
-        histo2DAllPi0Mass->GetYaxis()->SetRangeUser(126.5,150.5);
+        histo2DAllPi0Mass->GetYaxis()->SetRangeUser(126.5,150.8);
         histo2DAllPi0Mass->GetXaxis()->SetMoreLogLabels(kTRUE);
         histo2DAllPi0Mass->GetYaxis()->SetNdivisions(505);
         histo2DAllPi0Mass->GetYaxis()->SetNoExponent(kTRUE);
@@ -3881,7 +3881,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     padMassEta->cd();
     padMassEta->SetLogx();
 
-        TH2F * histo2DAllEtaMass    = new TH2F("histo2DAllEtaMass","histo2DAllEtaMass",20, 0.43, 25., 1000., 500., 565);
+        TH2F * histo2DAllEtaMass    = new TH2F("histo2DAllEtaMass","histo2DAllEtaMass",20, 0.43, 25., 1000., 505., 570);
         SetStyleHistoTH2ForGraphs(histo2DAllEtaMass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass, textsizeLabelsMass, 0.85*textsizeLabelsMass, 
                                   textsizeLabelsMass, 0.9, 0.28/(textsizeFacMass*margin), 512, 505);
         histo2DAllEtaMass->GetXaxis()->SetMoreLogLabels(kTRUE);

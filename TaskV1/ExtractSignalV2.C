@@ -1663,7 +1663,7 @@ void ExtractSignalV2(   TString meson                   = "",
     
     DrawGammaSetMarker(fHistoYieldDiffBckResult[0], 20, 1.3, kBlack, kBlack);
     DrawAutoGammaMesonHistos( fHistoYieldDiffBckResult[0], 
-                                "", "p_{T} (GeV/c)", "dev. raw yield (%)", 
+                                "", "p_{T} (GeV/c)", "dev. raw yield", 
                                 kFALSE, 3.,0.,  kFALSE,
                                 kTRUE, -0.2,0.5, 
                                 kFALSE, 0., 16.);
@@ -1685,7 +1685,8 @@ void ExtractSignalV2(   TString meson                   = "",
     legendDiffBck->AddEntry(fHistoYieldDiffBckResult[2],Form("dev. raw yield wrt exp2 Bck fit for %s",fPrefix.Data()),"p");
     legendDiffBck->Draw();
     
-    canvasDiffBck->SaveAs(Form("%s/%s_data_DiffBck_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    if (fIsMC) canvasDiffBck->SaveAs(Form("%s/%s_MC_DiffBck_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
+    else canvasDiffBck->SaveAs(Form("%s/%s_data_DiffBck_%s.%s",outputDir.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
     
     
     

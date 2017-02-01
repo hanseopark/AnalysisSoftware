@@ -578,59 +578,60 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     //*******************************************************************************************
     //*****************************Initialization of Canvases ***********************************
     //*******************************************************************************************    
-    TCanvas *canvasGammaSpectrum                = GetAndSetCanvas("GammaSpectra");
-    TCanvas *canvasPi0Spectrum                  = GetAndSetCanvas("Pi0Spectra");canvasPi0Spectrum->SetLogy();
-    TCanvas *canvasPi0SpectrumFit               = GetAndSetCanvas("Pi0FitSpectra");canvasPi0SpectrumFit->SetLogy();
+    TCanvas *canvasGammaSpectrum                = GetAndSetCanvas("GammaSpectra", 0.09, 0.08);canvasGammaSpectrum->SetLogy();
+    TCanvas *canvasPi0Spectrum                  = GetAndSetCanvas("Pi0Spectra", 0.09, 0.08);canvasPi0Spectrum->SetLogy();
+    TCanvas *canvasPi0SpectrumFit               = GetAndSetCanvas("Pi0FitSpectra", 0.09, 0.08);canvasPi0SpectrumFit->SetLogy();
     TCanvas *canvasIncGammaToPi0Ratio           = GetAndSetCanvas("InclusiveRatios");
     TCanvas *canvasIncGammaToPi0RatioFit        = GetAndSetCanvas("InclusiveRatiosFit");
     TCanvas *canvasDR                           = GetAndSetCanvas("DoubleRatios");
     TCanvas *canvasDRFit                        = GetAndSetCanvas("DoubleRatiosFit");
 
-    TCanvas *canvasGammaSpectrumRatio           = GetAndSetCanvas("GammaSpectraRatio");
-    TCanvas *canvasPi0SpectrumRatio             = GetAndSetCanvas("Pi0SpectraRatio");
-    TCanvas *canvasPi0SpectrumFitRatio          = GetAndSetCanvas("Pi0FitSpectraRatio");
+    TCanvas *canvasGammaSpectrumRatio           = GetAndSetCanvas("GammaSpectraRatio", 0.09, 0.09);
+    TCanvas *canvasPi0SpectrumRatio             = GetAndSetCanvas("Pi0SpectraRatio", 0.09, 0.09);
+    TCanvas *canvasPi0SpectrumFitRatio          = GetAndSetCanvas("Pi0FitSpectraRatio", 0.09, 0.09);
     TCanvas *canvasIncGammaToPi0RatioRatio      = GetAndSetCanvas("InclusiveRatiosRatio");
     TCanvas *canvasIncGammaToPi0RatioFitRatio   = GetAndSetCanvas("InclusiveRatiosFitRatio");
     TCanvas *canvasDRRatio                      = GetAndSetCanvas("DoubleRatiosRatio");
     TCanvas *canvasDRFitRatio                   = GetAndSetCanvas("DoubleRatiosFitRatio");
     
-    TCanvas *canvasRawGamma                     = GetAndSetCanvas("RawGamma");canvasRawGamma->SetLogy();
-    TCanvas *canvasRawGammaRatio                = GetAndSetCanvas("RawGammaRatio");
-    TCanvas *canvasPurity                       = GetAndSetCanvas("Purity");
-    TCanvas *canvasPurityRatio                  = GetAndSetCanvas("PurityRatio");
-    TCanvas *canvasGammaEff                     = GetAndSetCanvas("GammaEff");
-    TCanvas *canvasGammaEffRatio                = GetAndSetCanvas("GammaEffRatio");
-    TCanvas *canvasGammaEffRecPt                = GetAndSetCanvas("GammaEffRecPt");
-    TCanvas *canvasGammaEffRecPtRatio           = GetAndSetCanvas("GammaEffRecPtRatio");
-    TCanvas *canvasGammaConvProb                = GetAndSetCanvas("GammaConvProb");
-    TCanvas *canvasGammaConvProbRatio           = GetAndSetCanvas("GammaConvProbRatio");
-    TCanvas *canvasGammaResolCorr               = GetAndSetCanvas("GammaResolCorr");
-    TCanvas *canvasGammaResolCorrRatio          = GetAndSetCanvas("GammaResolCorrRatio");
-    TCanvas *canvasGammaCorrFac                 = GetAndSetCanvas("GammaCorrFac");
-    TCanvas *canvasGammaCorrFacRatio            = GetAndSetCanvas("GammaCorrFacRatio");
+    TCanvas *canvasRawGamma                     = GetAndSetCanvas("RawGamma", 0.08, 0.08);canvasRawGamma->SetLogy();
+    TCanvas *canvasRawGammaRatio                = GetAndSetCanvas("RawGammaRatio", 0.09, 0.09);
+    TCanvas *canvasPurity                       = GetAndSetCanvas("Purity", 0.09, 0.08);
+    TCanvas *canvasPurityRatio                  = GetAndSetCanvas("PurityRatio", 0.09, 0.09);
+    TCanvas *canvasGammaEff                     = GetAndSetCanvas("GammaEff", 0.09, 0.08);
+    TCanvas *canvasGammaEffRatio                = GetAndSetCanvas("GammaEffRatio", 0.09, 0.09);
+    TCanvas *canvasGammaEffRecPt                = GetAndSetCanvas("GammaEffRecPt", 0.08, 0.08);
+    TCanvas *canvasGammaEffRecPtRatio           = GetAndSetCanvas("GammaEffRecPtRatio", 0.09, 0.09);
+    TCanvas *canvasGammaConvProb                = GetAndSetCanvas("GammaConvProb", 0.08, 0.08);
+    TCanvas *canvasGammaConvProbRatio           = GetAndSetCanvas("GammaConvProbRatio", 0.09, 0.09);
+    TCanvas *canvasGammaResolCorr               = GetAndSetCanvas("GammaResolCorr", 0.09, 0.08);
+    TCanvas *canvasGammaResolCorrRatio          = GetAndSetCanvas("GammaResolCorrRatio", 0.09, 0.09);
+    TCanvas *canvasGammaCorrFac                 = GetAndSetCanvas("GammaCorrFac", 0.08, 0.08);
+    TCanvas *canvasGammaCorrFacRatio            = GetAndSetCanvas("GammaCorrFacRatio", 0.09, 0.09);
     
     //*******************************************************************************************
     //*****************************Initialization of Canvases ***********************************
     //*******************************************************************************************        
-    TLegend *legendGammaSpectrum                = GetAndSetLegend(0.3,0.7,number);
-    TLegend *legendGammaSpectrumRatio           = GetAndSetLegend(0.15,0.75,number);
+    Double_t textSizeLegend = 0.04;
+    if (number > 5) textSizeLegend = 0.03;
+    TLegend *legendGammaSpectrum                = GetAndSetLegend2(0.45, 0.93-textSizeLegend*(number/1), 0.6, 0.93, textSizeLegend, 1, "", 42);
+    TLegend *legendGammaSpectrumRatio           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/2), 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
     TLegend *legendPi0Spectrum                  = GetAndSetLegend(0.3,0.7,number);
     TLegend *legendPi0SpectrumRatio             = GetAndSetLegend(0.15,0.75,number);
     TLegend *legendPi0SpectrumFit               = GetAndSetLegend(0.3,0.7,number);
     TLegend *legendPi0SpectrumFitRatio          = GetAndSetLegend(0.15,0.75,number);
-    TLegend *legendPurity                       = GetAndSetLegend(0.2,0.3,number);
-    TLegend *legendPurityRatio                  = GetAndSetLegend(0.15,0.15,number);
-    TLegend *legendGammaEff                     = GetAndSetLegend(0.3,0.15,number);
-    TLegend *legendGammaEffRatio                = GetAndSetLegend(0.15,0.75,number);
-    TLegend *legendGammaEffRecPt                = GetAndSetLegend(0.3,0.15,number);
-    TLegend *legendGammaEffRecPtRatio           = GetAndSetLegend(0.15,0.75,number);
-    TLegend *legendGammaConvProb                = GetAndSetLegend(0.3,0.15,number);
-    TLegend *legendGammaConvProbRatio           = GetAndSetLegend(0.15,0.75,number);
-    TLegend *legendGammaResolCorr               = GetAndSetLegend(0.15,0.75,number);
-    TLegend *legendGammaResolCorrRatio          = GetAndSetLegend(0.15,0.75,number);
-    TLegend *legendGammaCorrFac                 = GetAndSetLegend(0.15,0.75,number);
-    TLegend *legendGammaCorrFacRatio            = GetAndSetLegend(0.15,0.75,number);
-    
+    TLegend *legendPurity                       = GetAndSetLegend2(0.2, 0.15, 0.93, 0.15+textSizeLegend*(number/2), textSizeLegend, 2, "", 42,0.1);
+    TLegend *legendPurityRatio                  = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/2), 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
+    TLegend *legendGammaEff                     = GetAndSetLegend2(0.45, 0.93-textSizeLegend*(number/1), 0.6, 0.93, textSizeLegend, 1, "", 42);
+    TLegend *legendGammaEffRatio                = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/2), 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
+    TLegend *legendGammaEffRecPt                = GetAndSetLegend2(0.45, 0.93-textSizeLegend*(number/1), 0.6, 0.93, textSizeLegend, 1, "", 42);
+    TLegend *legendGammaEffRecPtRatio           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/2), 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
+    TLegend *legendGammaConvProb                = GetAndSetLegend2(0.3, 0.15, 0.45, 0.15+textSizeLegend*number, textSizeLegend, 1, "", 42);
+    TLegend *legendGammaConvProbRatio           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/2), 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
+    TLegend *legendGammaResolCorr               = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/1), 0.33, 0.93, textSizeLegend, 1, "", 42); 
+    TLegend *legendGammaResolCorrRatio          = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/2), 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
+    TLegend *legendGammaCorrFac                 = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/2), 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
+    TLegend *legendGammaCorrFacRatio            = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/2), 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
     TLegend *legendIncGammaToPi0Ratio           = GetAndSetLegend(0.3,0.7,number);
     TLegend *legendIncGammaToPi0RatioRatio      = GetAndSetLegend(0.15,0.75,number);
     TLegend *legendIncGammaToPi0RatioFit        = GetAndSetLegend(0.3,0.7,number);
@@ -639,8 +640,8 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     TLegend *legendDRRatio                      = GetAndSetLegend(0.15,0.75,number);
     TLegend *legendDRFit                        = GetAndSetLegend(0.3,0.7,number);
     TLegend *legendDRFitRatio                   = GetAndSetLegend(0.15,0.75,number);
-    TLegend *legendRawGamma                     = GetAndSetLegend(0.45,0.75,number);
-    TLegend *legendRawGammaRatio                = GetAndSetLegend(0.15,0.15,number);
+    TLegend *legendRawGamma                     = GetAndSetLegend2(0.45, 0.93-textSizeLegend*(number/1), 0.6, 0.93, textSizeLegend, 1, "", 42);
+    TLegend *legendRawGammaRatio                = GetAndSetLegend2(0.13, 0.15, 0.93, 0.15+textSizeLegend*(number/2), textSizeLegend, 2, "", 42,0.1);
 
     //********************************************************************************************
     //***************************** Reading histos from file *************************************
@@ -684,7 +685,8 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             cutStringsName[i] = AnalyseTPCdEdxCutElectronLine(fdEdxCut.Atoi());
         } else if (cutVariationName.Contains("dEdxPi")){    
             TString fdEdxCut = fGammaCutSelection(GetPhotonPiDedxSigmaCutPosition(fGammaCutSelection),3);
-            cutStringsName[i] = AnalyseTPCdEdxCutPionLine(fdEdxCut.Data());      
+            cutStringsName[i] = fdEdxCut;
+//             cutStringsName[i] = AnalyseTPCdEdxCutPionLine(fdEdxCut.Data());      
         } else if (cutVariationName.Contains("Qt")){
             TString fQtCut = fGammaCutSelection(GetPhotonQtMaxCutPosition(fGammaCutSelection),1);
             cutStringsName[i] = AnalyseQtMaxCut(fQtCut.Atoi());
@@ -869,7 +871,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         DrawGammaSetMarker(histoGammaConvProb[i], markerType, 2.0, color[i], color[i]);
         histoGammaConvProbRatio[i] = (TH1D*) histoGammaConvProb[i]->Clone(Form("histoConvProbRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
         histoGammaConvProbRatio[i]->Divide(histoGammaConvProbRatio[i],histoGammaConvProb[0],1,1,"b");
-        SetHistogramm(histoGammaConvProbRatio[i],"#it{p}_{T} (GeV/c)","Ratios of Purities",0.8,1.2);
+        SetHistogramm(histoGammaConvProbRatio[i],"#it{p}_{T} (GeV/c)","Ratios of P_{conv}",0.8,1.2);
         
         histoGammaEff[i] = (TH1D*) fileCurrentCorrection[i]->Get("GammaRecoEff_MCPt");
         histoGammaEff[i]->SetTitle("");
@@ -894,10 +896,11 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         histoGammaResolCorr[i]->SetTitle("");
         histoGammaResolCorr[i]->GetXaxis()->SetRangeUser(0,histoGammaEff[0]->GetXaxis()->GetBinUpEdge(histoGammaEff[0]->GetNbinsX()));
         histoGammaResolCorr[i]->GetYaxis()->SetRangeUser(0,2);
+        SetHistogramm(histoGammaResolCorr[i],"#it{p}_{T} (GeV/c)","resol corr",0.,2.);
         DrawGammaSetMarker(histoGammaResolCorr[i], markerType, 2.0, color[i], color[i]);
         histoGammaResolCorrRatio[i] = (TH1D*) histoGammaResolCorr[i]->Clone(Form("histoGammaResolCorrRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
         histoGammaResolCorrRatio[i]->Divide(histoGammaResolCorrRatio[i],histoGammaResolCorr[0],1,1,"b");
-        SetHistogramm(histoGammaResolCorrRatio[i],"#it{p}_{T} (GeV/c)","Ratios of resolution corrections",0,2);
+        SetHistogramm(histoGammaResolCorrRatio[i],"#it{p}_{T} (GeV/c)","Ratios of resolution corrections",0.5,1.5);
 
         histoGammaCorrFac[i] = (TH1D*) fileCurrentCorrection[i]->Get("GammaCorrFac_Pt");
         histoGammaCorrFac[i]->SetTitle("");
@@ -925,7 +928,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             DrawGammaSetMarker(histoIncGamma[i], markerType, 2.0, color[i], color[i]);
             histoIncGammaRatio[i] = (TH1D*) histoIncGamma[i]->Clone(Form("histoIncGammaRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoIncGammaRatio[i]->Divide(histoIncGammaRatio[i],histoIncGamma[0],1,1,"b");
-            SetHistogramm(histoIncGammaRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma Spectra",0.0,2);
+            SetHistogramm(histoIncGammaRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma Spectra",0.8,1.2);
             
             PlotCanvas(i,number,canvasGammaSpectrum,histoIncGamma[i],legendGammaSpectrum,canvasGammaSpectrumRatio,histoIncGammaRatio[i],legendGammaSpectrumRatio,cutStringsName[i],One);
         }    
@@ -933,36 +936,36 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     }
 
     if (haveOutputGammaToPi0){
-        canvasPi0Spectrum->SaveAs(Form("%s/Pi0Spectra_%s.eps",outputDir.Data(), (GetCentralityString(cutSelection[0])).Data()));
-        canvasPi0SpectrumRatio->SaveAs(Form("%s/Pi0SpectraRatios_%s.eps",outputDir.Data(), (GetCentralityString(cutSelection[0])).Data()));
-        canvasPi0SpectrumFit->SaveAs(Form("%s/Pi0SpectraFit_%s.eps",outputDir.Data(), (GetCentralityString(cutSelection[0])).Data()));
-        canvasPi0SpectrumFitRatio->SaveAs(Form("%s/Pi0SpectraFitRatios_%s.eps",outputDir.Data(), (GetCentralityString(cutSelection[0])).Data()));
-        canvasIncGammaToPi0Ratio->SaveAs(Form("%s/InclusiveRatios_%s.eps",outputDir.Data(), (GetCentralityString(cutSelection[0])).Data()));
-        canvasIncGammaToPi0RatioRatio->SaveAs(Form("%s/InclusiveRatiosRatios_%s.eps",outputDir.Data(), (GetCentralityString(cutSelection[0])).Data()));
-        canvasIncGammaToPi0RatioFit->SaveAs(Form("%s/InclusiveRatiosFit_%s.eps",outputDir.Data(), (GetCentralityString(cutSelection[0])).Data()));
-        canvasIncGammaToPi0RatioFitRatio->SaveAs(Form("%s/InclusiveRatiosFitRatios_%s.eps",outputDir.Data(), (GetCentralityString(cutSelection[0])).Data()));
-        canvasDR->SaveAs(Form("%s/DoubleRatios_%s.eps",outputDir.Data(), (GetCentralityString(cutSelection[0])).Data()));
-        canvasDRRatio->SaveAs(Form("%s/DoubleRatiosRatios_%s.eps",outputDir.Data(), (GetCentralityString(cutSelection[0])).Data()));
-        canvasDRFit->SaveAs(Form("%s/DoubleRatiosFit_%s.eps",outputDir.Data(), (GetCentralityString(cutSelection[0])).Data()));
-        canvasDRFitRatio->SaveAs(Form("%s/DoubleRatiosFitRatios_%s.eps",outputDir.Data(), (GetCentralityString(cutSelection[0])).Data()));
+        canvasPi0Spectrum->SaveAs(Form("%s/Pi0Spectra_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
+        canvasPi0SpectrumRatio->SaveAs(Form("%s/Pi0SpectraRatios_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
+        canvasPi0SpectrumFit->SaveAs(Form("%s/Pi0SpectraFit_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
+        canvasPi0SpectrumFitRatio->SaveAs(Form("%s/Pi0SpectraFitRatios_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
+        canvasIncGammaToPi0Ratio->SaveAs(Form("%s/InclusiveRatios_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
+        canvasIncGammaToPi0RatioRatio->SaveAs(Form("%s/InclusiveRatiosRatios_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
+        canvasIncGammaToPi0RatioFit->SaveAs(Form("%s/InclusiveRatiosFit_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
+        canvasIncGammaToPi0RatioFitRatio->SaveAs(Form("%s/InclusiveRatiosFitRatios_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
+        canvasDR->SaveAs(Form("%s/DoubleRatios_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
+        canvasDRRatio->SaveAs(Form("%s/DoubleRatiosRatios_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
+        canvasDRFit->SaveAs(Form("%s/DoubleRatiosFit_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
+        canvasDRFitRatio->SaveAs(Form("%s/DoubleRatiosFitRatios_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
     }
     
-    canvasGammaSpectrum->SaveAs(Form("%s/GammaSpectra_%s.eps",outputDir.Data(),(GetCentralityString(cutSelection[0])).Data()));
-    canvasGammaSpectrumRatio->SaveAs(Form("%s/GammaSpectraRatios_%s.eps",outputDir.Data(),(GetCentralityString(cutSelection[0])).Data()));
-    canvasRawGamma->SaveAs(Form("%s/GammaRaw_%s.eps",outputDir.Data(),(GetCentralityString(cutSelection[0])).Data()));
-    canvasRawGammaRatio->SaveAs(Form("%s/GammaRawRatios_%s.eps",outputDir.Data(),(GetCentralityString(cutSelection[0])).Data()));    
-    canvasPurity->SaveAs(Form("%s/GammaPurity_%s.eps",outputDir.Data(),(GetCentralityString(cutSelection[0])).Data()));
-    canvasPurityRatio->SaveAs(Form("%s/GammaPurityRatios_%s.eps",outputDir.Data(),(GetCentralityString(cutSelection[0])).Data()));
-    canvasGammaEff->SaveAs(Form("%s/GammaEff_%s.eps",outputDir.Data(),(GetCentralityString(cutSelection[0])).Data()));
-    canvasGammaEffRatio->SaveAs(Form("%s/GammaEffRatios_%s.eps",outputDir.Data(),(GetCentralityString(cutSelection[0])).Data()));
-    canvasGammaEffRecPt->SaveAs(Form("%s/GammaEffRecPt_%s.eps",outputDir.Data(),(GetCentralityString(cutSelection[0])).Data()));
-    canvasGammaEffRecPtRatio->SaveAs(Form("%s/GammaEffRatiosRecPt_%s.eps",outputDir.Data(),(GetCentralityString(cutSelection[0])).Data()));
-    canvasGammaResolCorr->SaveAs(Form("%s/GammaResolCorr_%s.eps",outputDir.Data(),(GetCentralityString(cutSelection[0])).Data()));
-    canvasGammaResolCorrRatio->SaveAs(Form("%s/GammaResolCorrRatios_%s.eps",outputDir.Data(),(GetCentralityString(cutSelection[0])).Data()));
-    canvasGammaConvProb->SaveAs(Form("%s/GammaConvProb_%s.eps",outputDir.Data(),(GetCentralityString(cutSelection[0])).Data()));
-    canvasGammaConvProbRatio->SaveAs(Form("%s/GammaConvProbRatios_%s.eps",outputDir.Data(),(GetCentralityString(cutSelection[0])).Data()));
-    canvasGammaCorrFac->SaveAs(Form("%s/GammaCorrFac_%s.eps",outputDir.Data(),(GetCentralityString(cutSelection[0])).Data()));
-    canvasGammaCorrFacRatio->SaveAs(Form("%s/GammaCorrFacRatios_%s.eps",outputDir.Data(),(GetCentralityString(cutSelection[0])).Data()));
+    canvasGammaSpectrum->SaveAs(Form("%s/GammaSpectra_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
+    canvasGammaSpectrumRatio->SaveAs(Form("%s/GammaSpectraRatios_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
+    canvasRawGamma->SaveAs(Form("%s/GammaRaw_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
+    canvasRawGammaRatio->SaveAs(Form("%s/GammaRawRatios_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));    
+    canvasPurity->SaveAs(Form("%s/GammaPurity_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
+    canvasPurityRatio->SaveAs(Form("%s/GammaPurityRatios_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
+    canvasGammaEff->SaveAs(Form("%s/GammaEff_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
+    canvasGammaEffRatio->SaveAs(Form("%s/GammaEffRatios_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
+    canvasGammaEffRecPt->SaveAs(Form("%s/GammaEffRecPt_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
+    canvasGammaEffRecPtRatio->SaveAs(Form("%s/GammaEffRatiosRecPt_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
+    canvasGammaResolCorr->SaveAs(Form("%s/GammaResolCorr_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
+    canvasGammaResolCorrRatio->SaveAs(Form("%s/GammaResolCorrRatios_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
+    canvasGammaConvProb->SaveAs(Form("%s/GammaConvProb_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
+    canvasGammaConvProbRatio->SaveAs(Form("%s/GammaConvProbRatios_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
+    canvasGammaCorrFac->SaveAs(Form("%s/GammaCorrFac_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
+    canvasGammaCorrFacRatio->SaveAs(Form("%s/GammaCorrFacRatios_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
     
     CalculateSystematicsGraphs( histoIncGamma, histoRawGamma, cutSelection, number, "Gamma", "Gamma", outputDir, outputFileDir, cutVariationName);
 

@@ -653,6 +653,67 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                       histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
                     }
                   }
+                } else if (optionEnergy.CompareTo("pPb_5.023TeV") == 0){
+                    histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                    // crude assumptions // need to be validated for other energies
+//                     if (mode == 4 ){
+//                         if (j == 0 ){
+//                             if ( fitConst->GetParameter(0) > 0.3 && fitConst->GetParameter(0) < 0.7)
+//                                 histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+//                             else 
+//                                 histoSecTrueEffi[k][j]->Scale(0.5);     
+//                         } else if ( (j == 1 || j == 2) ){
+//                             if ( (fitConst->GetParameter(0) > 0.7 && fitConst->GetParameter(0) < 1.3) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
+//                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+//                             else     
+//                                 histoSecTrueEffi[k][j]->Scale(1.);
+//                         } else if (j == 3) {
+//                             if ( (fitConst->GetParameter(0) > 0.6 && fitConst->GetParameter(0) < 1.2) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
+//                                 histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+//                             else     
+//                                 histoSecTrueEffi[k][j]->Scale(0.75);   
+//                         }    
+//                     } else 
+                    if (mode == 2 ) {
+                        cout << "entered here" << endl;
+                        if (j == 0){
+                            if ( fitConst->GetParameter(0) > 0.2 && fitConst->GetParameter(0) < 0.3)
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else 
+                                histoSecTrueEffi[k][j]->Scale(0.25);     
+                        } else if (j == 1 || j == 2){
+                            if ( (fitConst->GetParameter(0) > 0. && fitConst->GetParameter(0) < 0.15) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else 
+                                histoSecTrueEffi[k][j]->Scale(0.05);
+                        } else if (j == 3){
+                            if ( (fitConst->GetParameter(0) > 0.1 && fitConst->GetParameter(0) < 0.3) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else 
+                                histoSecTrueEffi[k][j]->Scale(0.15);   
+                        }    
+                    } else if  ( mode == 0) {
+                        if (j == 0){
+                            if ( fitConst->GetParameter(0) > 0.2 && fitConst->GetParameter(0) < 0.35)
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else 
+                                histoSecTrueEffi[k][j]->Scale(0.25);     
+                        } else if (j == 1 || j == 2){
+                            if ( (fitConst->GetParameter(0) > 0.1 && fitConst->GetParameter(0) < 0.3) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else 
+                                histoSecTrueEffi[k][j]->Scale(0.0);
+                        } else if (j == 3){
+                            if ( (fitConst->GetParameter(0) > 0.0 && fitConst->GetParameter(0) < 0.15) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else 
+                                histoSecTrueEffi[k][j]->Scale(0.1);
+                        }    
+                    }
+                    if ( mode == 0 || mode == 2 || mode == 4){
+                        modifiedSecTrueEffi[k][j]   = kTRUE;
+                        cout << "adjusted sec effi, due to to little stat" << endl;
+                    }
               }
 
               // use the fits from the MC efficiency ratio to get the secondary efficiencies for the raw yield calculation
@@ -830,13 +891,22 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if (histoYieldTrueSecFracMeson[k][j]){
                     histoYieldTrueSecFracMeson_orig[k][j]   = (TH1D*)histoYieldTrueSecFracMeson[k][j]->Clone(Form("TrueSecFrom%sFrac%s_orig",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                     // set fractions to 0 if none of the pt bins is above 1e-3 => 0.1%
-                    if (FindLargestBin1DHist(histoYieldTrueSecFracMeson[k][j]) < 1e-3){
+                    if (FindLargestBin1DHist(histoYieldTrueSecFracMeson[k][j]) < 1e-3 ){
                         haveSecUsed[j]                      = kFALSE;
                         for (Int_t i = 1; i < histoYieldTrueSecFracMeson[k][j]->GetNbinsX()+1; i++){
                             histoYieldTrueSecFracMeson[k][j]->SetBinContent(i, 0);
                             histoYieldTrueSecFracMeson[k][j]->SetBinError(i, 0);                            
                         }
                     }
+                    // exception for PCM mode set K0L to 0
+                    if ( mode == 0 && j == 2){
+                        haveSecUsed[j]                      = kFALSE;
+                        for (Int_t i = 1; i < histoYieldTrueSecFracMeson[k][j]->GetNbinsX()+1; i++){
+                            histoYieldTrueSecFracMeson[k][j]->SetBinContent(i, 0);
+                            histoYieldTrueSecFracMeson[k][j]->SetBinError(i, 0);                            
+                        }
+                        histoYieldTrueSecFracMeson_orig[k][j]   = (TH1D*)histoYieldTrueSecFracMeson_orig[0][0]->Clone(Form("TrueSecFrom%sFrac%s_orig",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                    }    
                 } else {
                     haveSec[j]                              = kFALSE;
                     haveSecUsed[j]                          = kFALSE;
@@ -871,7 +941,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             // fit current histo with pure powerlaw fit (goes to 0 at high pt)    
             } else if ( doK0SecCorrectionWithDefaultHisto == 2 ){
                 for (Int_t j = 0; j < 4; j++){
-                    if (haveSec[j] && haveSecUsed[j]){
+                    // exception for PCM mode set K0L to 0
+                    if (haveSec[j] && haveSecUsed[j] && j != 2){
                         cout << "fitting current hist for "<< nameIntRange[k].Data() << " " << nameSecMeson[j].Data() << endl;
                         fitSecFracPurePowerlaw[k][j]->SetRange(minPtMesonSec, maxPtMeson);
                         TFitResultPtr resultCurr    = histoYieldTrueSecFracMeson[k][j]->Fit(fitSecFracPurePowerlaw[k][j],"SNRME+","",minPtMesonSec, maxPtMeson);
