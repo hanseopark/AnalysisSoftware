@@ -479,6 +479,21 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     legendInvMass->Draw();
 
     canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBin%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStr.Data(), triggerStr2.Data(), suffix.Data()));
+
+    canvasInvMassSamplePlot->cd();
+
+    Double_t mass = fMesonMass[exampleBin];
+    Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
+    Double_t intRangeHigh           = mass + fMesonIntDeltaRange[1];
+
+    TLine* IntRangeLineLeft   = new TLine(intRangeLow,0,intRangeLow,0.2*histoPi0InvMassSigPlusBG->GetMaximum());
+    TLine* IntRangeLineRight  = new TLine(intRangeHigh,0,intRangeHigh,0.2*histoPi0InvMassSigPlusBG->GetMaximum());
+    IntRangeLineLeft->SetLineWidth(3);
+    IntRangeLineRight->SetLineWidth(3);
+    IntRangeLineLeft->Draw();
+    IntRangeLineRight->Draw();
+
+    canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinSigIntRange%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStr.Data(), triggerStr2.Data(), suffix.Data()));
     
     canvasInvMassSamplePlot->cd();
     histo1DInvMassDummy->Draw();
