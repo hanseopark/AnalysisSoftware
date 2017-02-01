@@ -70,7 +70,8 @@ void drawLatexAdd(TString latextext, Double_t textcolumn, Double_t textrow, Doub
 
 // void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationInput7TeV/data_PCMResultsFullCorrection_PP_NoBinShifting_newComb.root",
 void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationInput7TeV/data_PCMResultsFullCorrection_PP.root",
-                                        TString fileNameEMCAL   = "CombinationInput7TeV/data_EMCAL-EMCALResultsFullCorrection_PP.3.root",
+//                                         TString fileNameEMCAL   = "CombinationInput7TeV/data_EMCAL-EMCALResultsFullCorrection_PP.3.root",
+                                        TString fileNameEMCAL   = "CombinationInput7TeV/pi0Specrtum7TeV_2011EMCAL_26Jan2017NewBin.root",
                                         TString fileNamePHOS    = "CombinationInput7TeV/pp7TeV_pass4_ppareek_PHOSResultsFullCorrection_19012017.root",
                                         TString fileNamePCMPHOS = "CombinationInput7TeV/data_PCM-PHOSResultsFullCorrection_PP_NoBinShifting_v2.root",
                                         TString fileNamePCMEMCAL = "CombinationInput7TeV/data_PCM-EMCALResultsFullCorrection_PP.2.root",
@@ -214,7 +215,8 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
     TF1* fitPi0InvMassSig[10];
     TF1* fitPi0InvMassBG[10];
     Bool_t haveAllPi0InvMass[10]                    = {kFALSE, kFALSE, kFALSE,kFALSE,kFALSE};
-    TString strInvMassBin[10]                       = {"04", "22", "12", "04",""};
+    TString strInvMassBin[10]                       = {"04", "22", "3To3_2", "04",""};
+//     TString strInvMassBin[10]                       = {"04", "22", "12", "04",""}; //DanielEMCAL
 
     TH1D* histoEtaToPi0Stat[10];
     TGraphAsymmErrors* graphEtaToPi0Stat[10]        = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
@@ -224,7 +226,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
 
     for (Int_t i = 0; i < numbersofmeas; i++){
         // LOAD PCM AND PHOS INPUT
-        if(i!=0 && i!=2 && i!=4){
+        if(i!=0 && i!=4){
             histoNumberOfEvents[i]              = (TH1D*)inputFile[i]->Get("histoNumberOfEvents7TeV");
             // load invariant mass peak positions and widths
             histoPi0Mass[i]                     = (TH1D*)directoryPi0[i]->Get("MassPi0");
@@ -450,8 +452,10 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
 //                                                     };
 
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match
-    Int_t offSets[11]                           =  {0,   8,     1,      2,        0,           0,   0,     0,      0,        0, 0};
-    Int_t offSetsSys[11]                        =  {1,   8,    11,      3,        6,           0,   0,     0,      2,        0, 0};
+//     Int_t offSets[11]                           =  {0,   8,     1,      2,        0,           0,   0,     0,      0,        0, 0};
+//     Int_t offSetsSys[11]                        =  {1,   8,    11,      3,        6,           0,   0,     0,      2,        0, 0};
+    Int_t offSets[11]                           =  {0,   8,     6,      2,        0,           0,   0,     0,      0,        0, 0};
+    Int_t offSetsSys[11]                        =  {1,   8,    6,      3,        6,           0,   0,     0,      2,        0, 0};
                                                 // pcm, phos, emcal, pcmphos, pcmemcal
                                                 //  0    1      2       3         4
 
@@ -979,6 +983,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
             graphRatioCombFitSys[i]->Draw("E2same");
     }
     for (Int_t i = 0; i < numbersofmeas; i++){
+        if(i!=3)
         graphRatioCombFitStat[i]->Draw("p,same,e");
     }
 
@@ -991,8 +996,10 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
 
         //****************************** Definition of the Legend ******************************************
         //**************** Row def ************************
-        Double_t rowsLegendOnlyPi0Ratio[6]      = {0.92,0.88,0.84,0.80,0.76,0.72};
-        Double_t rowsLegendOnlyPi0RatioAbs[6]   = {0.91,2.2,2.1,2.0,1.9,1.8};
+//         Double_t rowsLegendOnlyPi0Ratio[6]      = {0.92,0.88,0.84,0.80,0.76,0.72};
+        Double_t rowsLegendOnlyPi0Ratio[6]      = {0.92,0.88,0.84,0.80,0.79,0.76};
+//         Double_t rowsLegendOnlyPi0RatioAbs[6]   = {0.91,2.2,2.1,2.0,1.9,1.8};
+        Double_t rowsLegendOnlyPi0RatioAbs[6]   = {0.91,2.2,2.1,2.0,1.95,1.9};
         Double_t columnsLegendOnlyPi0Ratio[3]   = {0.15,0.32, 0.38};
         Double_t columnsLegendOnlyPi0RatioAbs[3]= {0.15,1.04, 1.37};
         Double_t lengthBox                      = 0.2/2;
@@ -1003,6 +1010,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
             textSingleMeasRatioPi0[i]           = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[i+1],nameMeasGlobal[i].Data());
             SetStyleTLatex( textSingleMeasRatioPi0[i], 0.85*textSizeLabelsPixel,4);
             textSingleMeasRatioPi0[i]->SetTextFont(43);
+            if(i!=3)
             textSingleMeasRatioPi0[i]->Draw();
         }
 
@@ -1019,6 +1027,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         TMarker* markerPi0OnlyRatio[10];
         for (Int_t i = 0; i < numbersofmeas; i++){
             markerPi0OnlyRatio[i]               = CreateMarkerFromGraph(graphRatioCombFitSys[i],columnsLegendOnlyPi0Ratio[1] ,rowsLegendOnlyPi0Ratio[i+1],1);
+            if(i!=3)
             markerPi0OnlyRatio[i]->DrawMarker(columnsLegendOnlyPi0RatioAbs[1] ,rowsLegendOnlyPi0RatioAbs[i+1]);
         }
 
@@ -1026,6 +1035,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         for (Int_t i = 0; i < numbersofmeas; i++){
             boxPi0OnlyRatio[i]                  = CreateBoxFromGraph(graphRatioCombFitSys[i], columnsLegendOnlyPi0RatioAbs[2]-0.5*lengthBox , rowsLegendOnlyPi0RatioAbs[i+1]- heightBox,
                                                         columnsLegendOnlyPi0RatioAbs[2]+ 3*lengthBox, rowsLegendOnlyPi0RatioAbs[i+1]+ heightBox);
+            if(i!=3)
             boxPi0OnlyRatio[i]->Draw("l");
         }
 
