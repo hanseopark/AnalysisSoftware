@@ -1535,7 +1535,7 @@ void SetStyleTLatex( TLatex* text,
     text->SetTextAlign(align);
 }
 
-void SetStyleHisto( TH1* histo, 
+void SetStyleHisto( TH1* histo,
                     Width_t lineWidth, 
                     Style_t lineStyle, 
                     Color_t lineColor) { 

@@ -387,21 +387,27 @@ void CreateNamingStrings(TString nameMeson, TString isMC)
    }
 }
 
-void PlotLatexLegend(Double_t xPosition=0.5,Double_t yPosition=0.5,Double_t textSizeSpectra=0.04,TString collisionSystem ="",TString detectionProcess ="", Int_t labelNums = 3)
+void PlotLatexLegend( Double_t xPosition        = 0.5,
+                      Double_t yPosition        = 0.5,
+                      Double_t textSizeSpectra  = 0.04,
+                      TString collisionSystem   = "",
+                      TString detectionProcess  = "", 
+                      Int_t labelNums           = 3,
+                      Int_t align               = 11
+                    )
 {
    TLatex* labelPi0Plot; TLatex* labelEnergyPlot;TLatex* labelDetProcPlot; 
    labelEnergyPlot = new TLatex(xPosition, yPosition+3*0.85*textSizeSpectra,collisionSystem.Data());
-   if(labelNums<3)
-   {
+   if(labelNums<3){
       labelPi0Plot    = new TLatex(xPosition, yPosition+200*0.85*textSizeSpectra,"#pi^{0} #rightarrow #gamma#gamma");
       labelDetProcPlot= new TLatex(xPosition, yPosition+2*0.85*textSizeSpectra,detectionProcess.Data());
    }else{
       labelPi0Plot    = new TLatex(xPosition, yPosition+2*0.85*textSizeSpectra,"#pi^{0} #rightarrow #gamma#gamma");
       labelDetProcPlot= new TLatex(xPosition, yPosition+0.85*textSizeSpectra,detectionProcess.Data());
    }
-   SetStyleTLatex( labelEnergyPlot, 0.85*textSizeSpectra,4);
-   SetStyleTLatex( labelPi0Plot, 0.85*textSizeSpectra,4);
-   SetStyleTLatex( labelDetProcPlot, 0.85*textSizeSpectra,4);
+   SetStyleTLatex( labelEnergyPlot, 0.85*textSizeSpectra,4, 1, 42, kTRUE, align);
+   SetStyleTLatex( labelPi0Plot, 0.85*textSizeSpectra,4, 1, 42, kTRUE, align);
+   SetStyleTLatex( labelDetProcPlot, 0.85*textSizeSpectra,4, 1, 42, kTRUE, align);
 
    labelEnergyPlot->Draw();
    if(labelNums==3)
