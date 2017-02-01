@@ -394,7 +394,7 @@ Int_t fBinsEta8TeVPCMEMCTrigger1PtRebin[23]     = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                                                     16, 16, 16, 10, 16, 16, 16, 20, 20, 25,
                                                     5, 5, 5};
 Int_t fBinsEta8TeVPCMEMCTrigger2PtRebin[23]     = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                                                    5, 5, 5, 5, 25, 20, 20, 20, 20, 25,
+                                                    5, 5, 5, 5, 25, 20, 20, 20, 13, 25, //13-> fix for fit to converge
                                                     20, 20, 2};
 
 Int_t fBinsPi0EtaBinning8TeVPtRebin[19]         = { 8, 1, 1, 1, 1, 1, 1, 2, 2, 2,
