@@ -529,18 +529,17 @@ void PrepareSecondaries(    TString     meson                       = "",
     }
     
     //***************************** Scale spectra *******************************************************************
-    Double_t totalScalingFactor                                 = 1./nEvents;
-    totalScalingFactor                                          = totalScalingFactor*scalingEta*scalingPhi;
+    Double_t factorNEvents                                 = 1./nEvents;
     for (Int_t i=0; i<nMotherParticles; i++) {
-        if (histoMesonDaughterPtOrBin[i])           histoMesonDaughterPtOrBin[i]->Scale(        totalScalingFactor);
-        if (histoMesonDaughterYOrBin[i])            histoMesonDaughterYOrBin[i]->Scale(         totalScalingFactor);
-        if (histoMesonDaughterPhiOrBin[i])          histoMesonDaughterPhiOrBin[i]->Scale(       totalScalingFactor);
-        if (histoMesonMotherPtOrBin[i])             histoMesonMotherPtOrBin[i]->Scale(          totalScalingFactor);
-        if (histoMesonMotherYOrBin[i])              histoMesonMotherYOrBin[i]->Scale(           totalScalingFactor);
-        if (histoMesonMotherPhiOrBin[i])            histoMesonMotherPhiOrBin[i]->Scale(         totalScalingFactor);
-        if (histoGammaFromXFromMotherPtOrBin[i])    histoGammaFromXFromMotherPtOrBin[i]->Scale( totalScalingFactor);
-        if (histoGammaFromXFromMotherYOrBin[i])     histoGammaFromXFromMotherYOrBin[i]->Scale(  totalScalingFactor);
-        if (histoGammaFromXFromMotherPhiOrBin[i])   histoGammaFromXFromMotherPhiOrBin[i]->Scale(totalScalingFactor);
+        if (histoMesonDaughterPtOrBin[i])           histoMesonDaughterPtOrBin[i]->Scale(        factorNEvents);
+        if (histoMesonDaughterYOrBin[i])            histoMesonDaughterYOrBin[i]->Scale(         factorNEvents);
+        if (histoMesonDaughterPhiOrBin[i])          histoMesonDaughterPhiOrBin[i]->Scale(       factorNEvents);
+        if (histoMesonMotherPtOrBin[i])             histoMesonMotherPtOrBin[i]->Scale(          factorNEvents);
+        if (histoMesonMotherYOrBin[i])              histoMesonMotherYOrBin[i]->Scale(           factorNEvents);
+        if (histoMesonMotherPhiOrBin[i])            histoMesonMotherPhiOrBin[i]->Scale(         factorNEvents);
+        if (histoGammaFromXFromMotherPtOrBin[i])    histoGammaFromXFromMotherPtOrBin[i]->Scale( factorNEvents*scalingEta*scalingPhi);
+        if (histoGammaFromXFromMotherYOrBin[i])     histoGammaFromXFromMotherYOrBin[i]->Scale(  factorNEvents*scalingEta*scalingPhi);
+        if (histoGammaFromXFromMotherPhiOrBin[i])   histoGammaFromXFromMotherPhiOrBin[i]->Scale(factorNEvents*scalingEta*scalingPhi);
     }
 
     //***************************** calculate (pi0 from X)/pi0_param ************************************************
