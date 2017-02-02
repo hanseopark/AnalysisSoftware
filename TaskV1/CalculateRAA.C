@@ -651,12 +651,16 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 		}
 
 		Double_t parametersBinShiftForQCDfit[5];
-		GetFitParameter("qcd",GetCentralityString(cutSel),parametersBinShiftForQCDfit);
-		cout << "GetCentralityString(cutSel): " << GetCentralityString(cutSel) << endl; 
-		for( Int_t i = 0; i < 5; i++){
-			cout << "parameter " << i << "\t" << parametersBinShiftForQCDfit[i] << endl;
-		}
-		fitBinShifting = BinShiftTH1D(histoRecBinShift, &histoCorrYieldBinShifted, "Eta","qcd", "fitBinShifting",minPtForFitsEta,parametersBinShiftForQCDfit);
+        if((GetCentralityString(cutSel)).CompareTo("20-40%")==0){
+            fitBinShifting = BinShiftTH1D(histoRecBinShift, &histoCorrYieldBinShifted, "Eta","p", "fitBinShifting",minPtForFitsEta,NULL);
+        } else {
+            GetFitParameter("qcd",GetCentralityString(cutSel),parametersBinShiftForQCDfit);
+            cout << "GetCentralityString(cutSel): " << GetCentralityString(cutSel) << endl;
+            for( Int_t i = 0; i < 5; i++){
+                cout << "parameter " << i << "\t" << parametersBinShiftForQCDfit[i] << endl;
+            }
+            fitBinShifting = BinShiftTH1D(histoRecBinShift, &histoCorrYieldBinShifted, "Eta","qcd", "fitBinShifting",minPtForFitsEta,parametersBinShiftForQCDfit);
+        }
 
 		DrawGammaSetMarker(histoCorrYieldBinShifted, 24, 0.9, kBlack, kBlack);
 		DrawAutoGammaMesonHistos( histoCorrYieldBinShifted, 
@@ -762,6 +766,9 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 		fitPtQCD->SetLineStyle(2);
 		forOutput= WriteParameterToFile(fitPtQCD);
 		fileFinalResults<< forOutput.Data()<< endl;
+
+//         cout << WriteParameterToFile(fitPtQCD)<< endl << endl;
+//         return;
 		
 		//**************************** Fit histCorr with Bylinkin  *********************************
 		TF1* fitPtBylinkin = FitObject("tcm","fitPtBylinkinEta","Eta",histoFitting,minPtForFitsEta,maxPt,NULL,"QNRME+");
@@ -1307,13 +1314,16 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 		}
 
 		Double_t parametersBinShiftForQCDfit[5];
-		GetFitParameter("qcd",GetCentralityString(cutSel),parametersBinShiftForQCDfit);
-		cout << "GetCentralityString(cutSel): " << GetCentralityString(cutSel) << endl; 
-		for( Int_t i = 0; i < 5; i++){
-			cout << "parameter " << i << "\t" << parametersBinShiftForQCDfit[i] << endl;
-		}
-		fitBinShifting = BinShiftTH1D(histoRecBinShiftPi0EtaBinning, &histoCorrYieldPi0EtaBinningBinShifted, "Pi0","qcd", "fitBinShifting",minPtForFitsEta,parametersBinShiftForQCDfit);
-
+        if((GetCentralityString(cutSel)).CompareTo("20-40%")==0){
+            fitBinShifting = BinShiftTH1D(histoRecBinShiftPi0EtaBinning, &histoCorrYieldPi0EtaBinningBinShifted, "Pi0","qcd", "fitBinShifting",minPtForFitsEta,NULL);
+        } else {
+          GetFitParameter("qcd",GetCentralityString(cutSel),parametersBinShiftForQCDfit);
+          cout << "GetCentralityString(cutSel): " << GetCentralityString(cutSel) << endl;
+          for( Int_t i = 0; i < 5; i++){
+              cout << "parameter " << i << "\t" << parametersBinShiftForQCDfit[i] << endl;
+          }
+          fitBinShifting = BinShiftTH1D(histoRecBinShiftPi0EtaBinning, &histoCorrYieldPi0EtaBinningBinShifted, "Pi0","qcd", "fitBinShifting",minPtForFitsEta,parametersBinShiftForQCDfit);
+        }
 		DrawGammaSetMarker(histoCorrYieldPi0EtaBinningBinShifted, 24, 0.9, kBlack, kBlack);
 		DrawAutoGammaMesonHistos( histoCorrYieldPi0EtaBinningBinShifted, 
 						"", "p_{T} (GeV/c)", "#frac{1}{2#pi N_{ev}} #frac{d^{2}N}{p_{T}dp_{T}dy} (c/GeV)^{2}", 
