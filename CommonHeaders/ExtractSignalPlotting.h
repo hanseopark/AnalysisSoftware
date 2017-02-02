@@ -379,10 +379,14 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
         histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.02,0.255);
         SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                 0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+        histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
+        histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
     } else {
         histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35,0.695);
         SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                 0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+        histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
+        histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
     }
 
     TString ptLabel         =  "#it{p}_{T} ";
@@ -416,8 +420,12 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     histoFitWBG->Scale(scaleFacSignal);
     histoFitWBG->SetLineWidth(4);
 
+    Double_t minimum = histoPi0InvMassSigRemBGSub->GetMinimum();
+    if (minimum < 0) minimum = 1.1*minimum;
+    else minimum = 0.9*minimum;
+        
     canvasInvMassSamplePlot->cd();
-    histo1DInvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBGSub->GetMinimum(),1.15*histoPi0InvMassSigPlusBG->GetMaximum());
+    histo1DInvMassDummy->GetYaxis()->SetRangeUser(minimum,1.15*histoPi0InvMassSigPlusBG->GetMaximum());
     histo1DInvMassDummy->Draw("AXIS");
     
     DrawGammaSetMarker(histoPi0InvMassSigPlusBG, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
@@ -477,27 +485,57 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     }    
     legendInvMass->AddEntry(fitPi0InvMassSig, "Fit","l");
     legendInvMass->Draw();
+    histo1DInvMassDummy->Draw("AXIS,same");
 
     canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBin%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStr.Data(), triggerStr2.Data(), suffix.Data()));
 
     canvasInvMassSamplePlot->cd();
 
+    if (fMesonType.Contains("Pi0") && fCollisionSystemDummy.Contains("p-Pb") ){
+        histo1DInvMassDummy->GetXaxis()->SetRangeUser(0.05,0.249);
+        histo1DInvMassDummy->GetXaxis()->SetNdivisions(508);
+    }    
+    histo1DInvMassDummy->Draw("AXIS");
+    
+    histoPi0InvMassSigPlusBG->Draw("hist,e,same");
+    histoPi0InvMassBGTot->Draw("same");
+
+    if (scaleFacSignal == 1.0){
+        histoPi0InvMassSigRemBGSub->Draw("same");    
+        fitPi0InvMassSig->Draw("same");
+    } else {
+        histoPi0InvMassSigRemBGSub->Draw("same");
+    }
+
+    labelALICE->Draw();    
+    labelInvMassEnergy->Draw();
+    labelTrigger->Draw();    
+    labelInvMassReco->Draw();
+    labelInvMassPtRange->Draw();
+    legendInvMass->Draw();
+
+    
     Double_t mass = fMesonMass[exampleBin];
     Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
     Double_t intRangeHigh           = mass + fMesonIntDeltaRange[1];
+    Double_t normalLow              = intRangeLow-(intRangeLow-histoPi0InvMassSigPlusBG->GetXaxis()->GetBinLowEdge(histoPi0InvMassSigPlusBG->GetXaxis()->FindBin(intRangeLow)));
+    Double_t normalUp               = intRangeHigh+(histoPi0InvMassSigPlusBG->GetXaxis()->GetBinUpEdge(histoPi0InvMassSigPlusBG->GetXaxis()->FindBin(intRangeHigh))-intRangeHigh);
 
-    TLine* IntRangeLineLeft   = new TLine(intRangeLow,0,intRangeLow,0.2*histoPi0InvMassSigPlusBG->GetMaximum());
-    TLine* IntRangeLineRight  = new TLine(intRangeHigh,0,intRangeHigh,0.2*histoPi0InvMassSigPlusBG->GetMaximum());
-    IntRangeLineLeft->SetLineWidth(3);
-    IntRangeLineRight->SetLineWidth(3);
-    IntRangeLineLeft->Draw();
-    IntRangeLineRight->Draw();
-
+    cout << "minimum sample bin: " << minimum << endl;
+    DrawGammaLines(normalLow, normalLow, minimum, 0.2*histoPi0InvMassSigPlusBG->GetMaximum(), 5, kGray+2,7);
+    DrawGammaLines(normalUp, normalUp, minimum, 0.2*histoPi0InvMassSigPlusBG->GetMaximum(), 5, kGray+2,7);
+    histo1DInvMassDummy->Draw("AXIS,same");
+    
     canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinSigIntRange%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStr.Data(), triggerStr2.Data(), suffix.Data()));
     
     canvasInvMassSamplePlot->cd();
     histo1DInvMassDummy->Draw();
-    histo1DInvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBGSub->GetMinimum(),1.15*histoPi0InvMassSigPlusBG->GetMaximum());
+    histo1DInvMassDummy->GetYaxis()->SetRangeUser(minimum,1.15*histoPi0InvMassSigPlusBG->GetMaximum());
+    if (fMesonType.Contains("Pi0") && fCollisionSystemDummy.Contains("p-Pb")){
+        histo1DInvMassDummy->GetXaxis()->SetRangeUser(0.02,0.255);
+        histo1DInvMassDummy->GetXaxis()->SetNdivisions(510);
+    }
+
     histo1DInvMassDummy->Draw("AXIS");
     
     DrawGammaSetMarker(histoPi0InvMassSigPlusBG, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
@@ -534,6 +572,7 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     }    
     legendInvMass2->AddEntry(fitPi0InvMassSig, "Fit","l");
     legendInvMass2->Draw();
+    histo1DInvMassDummy->Draw("AXIS,same");
 
     canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGFurtherSplit%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStr.Data(), triggerStr2.Data(),  suffix.Data()));
 
@@ -579,7 +618,8 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
     legendInvMass3->AddEntry(fitPi0InvMassSigRemBG, "Signal fit +","l");
     legendInvMass3->AddEntry((TObject*)0,"linear BG fit","");
     legendInvMass3->Draw();
-
+    histo1DInvMassDummy->Draw("AXIS,same");
+    
     canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGInFit%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStr.Data(), triggerStr2.Data(),  suffix.Data()));
     
 }

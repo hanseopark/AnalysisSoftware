@@ -399,9 +399,9 @@ void CheckCrossTalkEffects( Int_t nEvts                 = 1000000,
     //             }    
                 Double_t deltaEbef      = ReldeltaE;
                 if (!((amountLeft+amountRight) > 0))
-                    ReldeltaE           = 0.16*ReldeltaE;
+                    ReldeltaE           = 2*0.16*ReldeltaE; //0.16*ReldeltaE;
                 else 
-                    ReldeltaE           = TMath::Abs(amountLeft-amountRight)/((amountLeft+amountRight)*2) * ReldeltaE;
+                    ReldeltaE           = TMath::Abs(amountLeft-amountRight)/((amountLeft+amountRight)) * ReldeltaE; //TMath::Abs(amountLeft-amountRight)/((amountLeft+amountRight)*2) * ReldeltaE;
                 
     //             if (deltaEbef > 0.7){
     //                 cout << amountLeft << "\t" << amountRight << "\t" <<  "\t" << ReldeltaE<< "\t"<< deltaEbef<< endl;

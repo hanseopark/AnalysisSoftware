@@ -741,7 +741,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         DrawGammaSetMarker(histoCorrectedPi0Yield, 4, 2.0, 1, 1);
         histoCorrectedPi0Yield->Draw("e1,same");
 
-        PlotLatexLegend(0.93, 0.93-0.045*2, 0.045,collisionSystem,detectionProcess,3,31);
+        PlotLatexLegend(0.93, 0.93-0.045*2.5, 0.045,collisionSystem,detectionProcess,3,31);
         
         TLegend* leg_MesonSpectra;
         leg_MesonSpectra                        = GetAndSetLegend2(0.65, 0.93-0.045*5, 0.9, 0.93-0.045*2, 0.045,1,"",42,0.2); 

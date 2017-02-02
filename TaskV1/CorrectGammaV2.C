@@ -1388,7 +1388,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TCanvas *canvasSecFrac                  = GetAndSetCanvas("canvasSecFrac");
     canvasSecFrac->SetTopMargin(0.035);
     
-        TLegend* legendSecFrac              = GetAndSetLegend(0.6,0.70,5,1);
+        TLegend* legendSecFrac              = GetAndSetLegend(0.45,0.70,5,1);
 
         if (!hasCocktailInput) {
             if (isPCM && !isCalo) {
@@ -1451,7 +1451,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         }
         legendSecFrac->Draw();
         
-        PutProcessLabelAndEnergyOnPlot( 0.75, 0.65, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
+        PutProcessLabelAndEnergyOnPlot( 0.95, 0.65, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03,"",1,1.25,31);
         
     canvasSecFrac->SaveAs(Form("%s/%s_SecondaryGammaFraction_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasSecFrac;
@@ -1598,7 +1598,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             SetHistogramm(histoGammaPrimaryRecoEff_MCPt,"#it{p}_{T,MC} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
             histoGammaPrimaryRecoEff_MCPt->Draw();
         
-            PutProcessLabelAndEnergyOnPlot( 0.75, 0.95, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
+            PutProcessLabelAndEnergyOnPlot( 0.95, 0.95, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03, "", 1, 1.25,31);
         
             canvasRecoEff->SaveAs(Form("%s/%s_ReconstructionEff_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
         }
@@ -1607,7 +1607,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             SetHistogramm(histoGammaPrimaryRecoEff_MCPt,"#it{p}_{T,MC} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.0);
             histoGammaPrimaryRecoEff_MCPt->Draw();
         
-            PutProcessLabelAndEnergyOnPlot( 0.75, 0.95, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
+            PutProcessLabelAndEnergyOnPlot( 0.95, 0.95, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03, "", 1, 1.25,31);
         
             canvasRecoEff->SaveAs(Form("%s/%s_ReconstructionEff_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
         }
@@ -1616,8 +1616,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             SetHistogramm(histoGammaCaloPrimaryRecoEff_MCPt,"#it{p}_{T,MC} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.0);
             histoGammaCaloPrimaryRecoEff_MCPt->Draw();
         
-            PutProcessLabelAndEnergyOnPlot( 0.75, 0.95, 0.035, cent, textMeasurement, detectionProcess2, 42, 0.03);
-        
+            PutProcessLabelAndEnergyOnPlot( 0.95, 0.95, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03, "", 1, 1.25,31);
+    
             canvasRecoEff->SaveAs(Form("%s/%s_ReconstructionEffCalo_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
         
         }    
