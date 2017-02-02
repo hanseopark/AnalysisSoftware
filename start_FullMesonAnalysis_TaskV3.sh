@@ -2267,10 +2267,6 @@ do
             fi
         fi
     elif [ $energy = "5TeV" ] ; then
-        if [ $mode -ne 0 ]; then
-            echo "Mode is set to PCM-PCM";
-            mode=0
-        fi
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
