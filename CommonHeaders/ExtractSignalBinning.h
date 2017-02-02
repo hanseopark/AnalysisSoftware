@@ -1961,7 +1961,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     fStartPtBin     = 6;
                     fColumn         = 6;
                 } else if (modi == 4) {
-                    fStartPtBin     = 5;
+                    fStartPtBin     = 8;
                 } else if (modi == 5) {
                     fStartPtBin     = 8;
                 } else if (modi == 1) {
