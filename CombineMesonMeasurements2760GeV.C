@@ -4561,7 +4561,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         legendEtaToPi0Theory2->AddEntry(histoPythia8EtaToPi0,"PYTHIA 8.2, Monash 2013","l");
         legendEtaToPi0Theory2->Draw();
 
-        TLegend* legendEtaToPi0WorldData = GetAndSetLegend2(0.53, 0.145+(textsizeLabelsEtaToPi0*2*0.9), 0.9, 0.145, textSizeLabelsPixel*0.85, 1, "", 43, 0.16);
+        TLegend* legendEtaToPi0WorldData = GetAndSetLegend2(0.51, 0.155+(textsizeLabelsEtaToPi0*2*0.9), 0.9, 0.155, textSizeLabelsPixel*0.85, 1, "", 43, 0.16);
         legendEtaToPi0WorldData->AddEntry(graphALICEEtaToPi07TeV,"ALICE, pp, #sqrt{#it{s}} = 7 TeV","p");
         legendEtaToPi0WorldData->AddEntry(graphPHENIXEtaToPi0200GeV,"PHENIX, pp, #sqrt{#it{s}} = 0.2 TeV", "p");
         legendEtaToPi0WorldData->Draw();
