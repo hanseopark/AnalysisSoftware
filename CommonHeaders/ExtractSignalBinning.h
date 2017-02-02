@@ -136,27 +136,29 @@ Double_t fBinsCluster2760GeVPt[65]              = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5
 //****************************************************************************************************
 //******************** Pt binning for pp, 5 TeV ******************************************************
 //****************************************************************************************************
-Double_t fBinsPi05TeVPt[30]                     = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
-                                                    2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0,
-                                                    5.5, 6.0, 7.0, 8.0, 10.0, 12.0};
+Double_t fBinsPi05TeVPt[25]                     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+                                                    2.2, 2.4, 2.6, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0, 10.0,
+                                                    12.0, 15.0, 20., 25., 30.};
 Double_t fBinsPi05TeVPtDCA[16]                  = { 0.0, 0.3, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8,
                                                     2.0, 2.4, 3.0, 5.0, 10., 12.0};
-Int_t fBinsPi05TeVPtRebin[29]                   = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                    2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                    2, 2, 2, 2, 2, 4, 4, 4, 4};
+Int_t fBinsPi05TeVPtRebin[24]                   = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                    2, 2, 2, 2, 2, 2, 4, 4, 4, 8,
+                                                    8, 8, 8, 8};
 Double_t fBinsDirGamma5TeVPt[24]                = { 0.0, 0.3, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
                                                     2.4, 2.8, 3.2, 3.6, 4.2, 4.8, 5.8, 7.0, 8.5, 10.0,
                                                     12.0, 16.0, 20.0, 25.0};
 Int_t fBinsDirGamma5TeVPtRebin[23]              = { 2, 2, 1, 1, 1, 1, 1, 1, 1, 1,
                                                     1, 1, 1, 2, 2, 2, 2, 4, 4, 4,
                                                     5, 5, 5};
-Double_t fBinsEta5TeVPt[14]                     = { 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0,
-                                                    6.0, 7.0, 9.0, 12.0};
+Double_t fBinsEta5TeVPt[14]                     = { 0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0, 12.0,
+                                                    13.0, 14.0, 20.0, 30.0};
 Int_t fBinsEta5TeVPtRebin[13]                   = { 8, 8, 5, 5, 5, 8, 8, 8, 8, 8,
                                                     10, 10, 10};
 Double_t fBinsEta5TeVPtDCA[9]                   = { 0.0, 0.4, 1.0, 1.5, 2.0, 3.0, 5.0, 7.0, 12.0};
-Double_t fBinsEtaPrim5TeVPt[8]                  = {0.0, 0.5, 1.0, 2.0, 3.0, 4.0, 6.0, 10.0};
+Double_t fBinsEtaPrim5TeVPt[8]                  = { 0.0, 0.5, 1.0, 2.0, 3.0, 4.0, 6.0, 10.0};
 Int_t fBinsEtaPrim5TeVPtRebin[7]                = { 8, 2, 2, 2, 2, 2, 2};
+Int_t fBinsPi0EtaBinning5TeVPtRebin[13]         = { 8, 2, 2, 2, 2, 2, 2, 4, 4, 4,
+                                                    4, 4, 4 };
 
 //****************************************************************************************************
 //******************** Pt binning for pp, 7 TeV ******************************************************
@@ -2398,7 +2400,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
         //*********************************************************************************************
         } else if (energy.CompareTo("5TeV") == 0) {
             fStartPtBin         = 1;
-            fColumn             = 5;
+            fColumn             = 4;
             fRow                = 3;
             if (isDCA){
                 fColumn         = 3;
@@ -2414,12 +2416,16 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 fNBinsPt        = 18;
             }
             for (Int_t i = 0; i < fNBinsPt+2; i++) {
-                if (isDCA)
-                    fBinsPt[i]  = fBinsEta5TeVPtDCA[i];
-                else
-                    fBinsPt[i]  = fBinsEta5TeVPt[i];
-                if (i < fNBinsPt+1)
-                    fNRebin[i]  = fBinsEta5TeVPtRebin[i];
+	      if (isDCA){
+		fBinsPt[i]  = fBinsEta5TeVPtDCA[i];
+	      } else {
+		fBinsPt[i]  = fBinsEta5TeVPt[i];
+              }
+	      if (setPi0.CompareTo("Eta") == 0){
+		if (i < fNBinsPt+1) fNRebin[i]  = fBinsEta5TeVPtRebin[i];
+	      } else {
+		if (i < fNBinsPt+1) fNRebin[i]  = fBinsPi0EtaBinning5TeVPtRebin[i];
+	      }
             }
         //*********************************************************************************************
         //********************************** Eta for pp 7TeV*******************************************
