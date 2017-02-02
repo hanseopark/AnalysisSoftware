@@ -110,6 +110,12 @@ TGraphAsymmErrors*  graphInvSectionEMCalSysEta2760GeV_yShifted;
 TGraphAsymmErrors*  graphInvSectionEMCalSysEta2760GeVforRAA;
 
 //PbPb graphs
+//PCM Pub
+TGraphAsymmErrors *graphPCMPubPi0InvYieldStatPbPb2760GeV_0010;
+TGraphAsymmErrors *graphPCMPubPi0InvYieldSysPbPb2760GeV_0010;
+TGraphAsymmErrors *graphPCMPubPi0InvYieldStatPbPb2760GeV_2040;
+TGraphAsymmErrors *graphPCMPubPi0InvYieldSysPbPb2760GeV_2040;
+
 //PHOS
 TH1D * histoPi0PHOSPbPb0010;
 TGraphAsymmErrors *graphPHOSPi0InvYieldStatPbPb2760GeV_0010;
@@ -299,8 +305,8 @@ Size_t      markerSize2050      = 2;
 Size_t      markerSizepp      = 3;
 
 //plot range for yields
-Double_t minYaxisYields = 1e-9;
-Double_t maxYaxisYields = 1e3;
+Double_t minYaxisYields = 2e-8; //1e-9
+Double_t maxYaxisYields = 1e4; //1e3
 Double_t minPtYields = 0.25;
 Double_t maxPtYields = 70.;
 Double_t FontSize = 0.035;

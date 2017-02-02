@@ -56,8 +56,8 @@ extern TMinuit*  	gMinuit;
 
 void CompareChargedAndNeutralPionDataALICE_LHC11h(  
 											TString nameFilePbPbLHC11h = "",
-											TString nameFilePP = "LHC11hInputFiles/CombinedResultsPaperX.root",
-											TString nameFilePbPb = "LHC11hInputFiles/CombinedResultsPbPb_18_Feb_2014.root",
+											TString nameFilePP = "LHC11hExternalInputs/CombinedResultsPaperX.root",
+											TString nameFilePbPb = "LHC11hExternalInputs/CombinedResultsPbPb_18_Feb_2014.root",
 											TString suffix = "pdf"
   										){
 
@@ -75,7 +75,7 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 
     TString fileNameEMCalPion7TeVPP 	= "ExternalInput/EMCAL/7TeV/pi0Spectrum2011EMCALAddedSignalsEffic_7TeV_150323_evi_11cd.root";
 	TString fileNameEMCalPion2760GeVPP 	= "ExternalInput/EMCAL/2.76TeV/FinalCombinedXsec_pi0276TeV_25Apr2015_11a13g.root";
-	TString fileNameComb2760GeVPP		= "LHC11hInputFiles/CombinedResultsPaperPP2760GeV_2015_07_01.root";
+	TString fileNameComb2760GeVPP		= "LHC11hExternalInputs/CombinedResultsPaperPP2760GeV_2015_07_01.root";
 	
 	gSystem->Exec("mkdir -p "+outputDir);
 // 	gSystem->Exec(Form("cp %s %s/InputFileNeutralPionPP.root ",nameFilePP.Data(),outputDir.Data() ));
@@ -732,7 +732,7 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 																									      kTRUE,  kTRUE, 
 																									      &graphYieldCombStatPi02760GeVRebinnedCMSCombUp, &graphYieldCombSysPi02760GeVRebinnedCMSCombUp,
 																									      &graphChargedPionSpecCMSStatPPCMSCombUp, &graphChargedPionSpecCMSSystPPCMSCombUp ) ;
-	
+
 	cout << "*************************************************************************"<< endl;	
 	cout << "******************************  PP 7TeV *********************************"<< endl;
 	cout << "*************************************************************************"<< endl;
@@ -2499,22 +2499,33 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 		labelPi0CompChargedPionsPbPbLHC11h0010->Draw(); 
 		DrawGammaLines(0., 15 , 1, 1 ,1,kGray,2);
 
-		TLegend* legendPi0CompChargedOnlyPCMPionsPbPb0010 = new TLegend(0.09,0.65,0.75,0.88);
+		TLegend* legendPi0CompChargedOnlyPCMPionsPbPb0010 = new TLegend(0.15,0.68,0.75,0.9);
 		legendPi0CompChargedOnlyPCMPionsPbPb0010->SetFillColor(0);
 		legendPi0CompChargedOnlyPCMPionsPbPb0010->SetLineColor(0);
-// 		legendPi0CompChargedOnlyPCMPionsPbPb0010->SetNColumns(2);
+		legendPi0CompChargedOnlyPCMPionsPbPb0010->SetNColumns(2);
 		legendPi0CompChargedOnlyPCMPionsPbPb0010->SetTextSize(0.85*textsizeLabels1);
-        legendPi0CompChargedOnlyPCMPionsPbPb0010->SetHeader("PCM only");
-		legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioLowPtChargedPionsPCM0005,"#pi^{0}/#pi^{#pm} low #it{p}_{T} (2010)","p");
-		legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioHighPtChargedPionsPCM0005,"#pi^{0}/#pi^{#pm} high #it{p}_{T} (2010)","p");
-		legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioLowPtChargedPionsPCM0010LHC11h,"#pi^{0}/#pi^{#pm} low #it{p}_{T} (2011)","p");
-		legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioHighPtChargedPionsPCM0010LHC11h,"#pi^{0}/#pi^{#pm} high #it{p}_{T} (2011)","p");
+//         legendPi0CompChargedOnlyPCMPionsPbPb0010->SetHeader("PCM only");
+     legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry((TObject*)0,"#pi^{0}/#pi^{#pm} 2010","");
+     legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry((TObject*)0,"#pi^{0}/#pi^{#pm} 2011","");
+        legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioLowPtChargedPionsPCM0005,"low #it{p}_{T}","p");
+        legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioLowPtChargedPionsPCM0010LHC11h,"low #it{p}_{T}","p");
+        legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioHighPtChargedPionsPCM0005,"high #it{p}_{T}","p");
+        legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioHighPtChargedPionsPCM0010LHC11h,"high #it{p}_{T}","p");
+// 		legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioLowPtChargedPionsPCM0005,"#pi^{0}/#pi^{#pm} low #it{p}_{T} (2010)","p");
+// 		legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioHighPtChargedPionsPCM0005,"#pi^{0}/#pi^{#pm} high #it{p}_{T} (2010)","p");
+// 		legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioLowPtChargedPionsPCM0010LHC11h,"#pi^{0}/#pi^{#pm} low #it{p}_{T} (2011)","p");
+// 		legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioHighPtChargedPionsPCM0010LHC11h,"#pi^{0}/#pi^{#pm} high #it{p}_{T} (2011)","p");
 // 		legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry((TObject*)0,"charged ref: PWGLF-258","");
 // 		legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioOtherRefChargedPionsPCM0010,"#pi^{0}/#pi^{#pm} (PCM 2010)","p");
 // 		legendPi0CompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioOtherRefChargedPionsPCM0010LHC11h,"#pi^{0}/#pi^{#pm} (PCM 2011)","p");
 
 		legendPi0CompChargedOnlyPCMPionsPbPb0010->Draw();
 		DrawGammaLines(0., 15 , 1, 1 ,1,kGray, 2);
+
+        TLatex *thesisLabel = new TLatex(0.8,0.15,"This thesis");
+        SetStyleTLatex( thesisLabel,0.9*textsizeLabels2,4);
+        thesisLabel->Draw();
+
 	
 	histo2DCompCombinedRatioLHC11h2->Draw("axis,same");
 	pad6PartCompChargedIndPionsLHC11h1->Update();
@@ -2540,7 +2551,10 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 
 		labelPi0CompChargedPionsPbPbLHC11h2040->Draw();
 		DrawGammaLines(0., 15 , 1, 1 ,1,kGray,2); 
-	
+        TLatex *thesisLabel2 = new TLatex(0.78,0.15,"This thesis");
+        SetStyleTLatex( thesisLabel2,0.9*textsizeLabels2,4);
+        thesisLabel2->Draw();
+
 	histo2DCompCombinedRatioLHC11h->Draw("axis,same");
 	pad6PartCompChargedIndPionsLHC11h3->Update();
 	canvas6PartCompChargedIndPionsLHC11h->Update(); 
