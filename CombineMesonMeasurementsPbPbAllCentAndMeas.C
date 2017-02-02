@@ -131,20 +131,38 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     }
 
     //___________________________________ Declaration of files _____________________________________________
-    TString fileNamePHOS                    = "ExternalInputPbPb/PHOS/LHC10h_PHOS_pi0_PbPb_06022014.root";
-    TString fileNameEMCal                   = "ExternalInputPbPb/EMCAL/LHC11h_EMCal_pi0eta_PbPb_10092015.root";
-    TString fileNamePCMPub                  = "ExternalInputPbPb/data_PCMResults_PbPb_2.76TeV_LHC10h.root";
+    TString fileNameTheory                  = "ExternalInputPbPb/Theory/TheoryCompilationPbPbforLHC11h.root";
+    TString fileNameALICEData               = Form("%s/%s/CombineMesonMeasurementsPbPb2760GeVX/InputALICEResultsPbPb2760GeV_%s.root",suffix.Data(),dateForOutput.Data(),dateForOutput.Data());
+    TString fileNameDataOtherEnergyInput    = "ExternalInputPbPb/OtherExperiments/DataCompilationFromOtherEnergiesPbPbWithEta.root";
 
-    TString outputDir                       = Form("%s/%s/NeutralMesonMeasurementsPbPb2760GeVAllCent%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
+    TString outputDir                       = Form("%s/%s/CombineMesonMeasurementsPbPb2760GeV%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
+    TString paperPlots                      = Form("%s/PaperPlots_%s",outputDir.Data(),dateForOutput.Data());
+    TString PubNotePlots                    = Form("%s/PubNotePlots_%s",outputDir.Data(),dateForOutput.Data());
     TString rootFiles                       = Form("%s/rootFiles",outputDir.Data());
     TString nameFinalResDat                 = Form("%s/CombinedResults%s_FitResults.dat",outputDir.Data(),bWCorrection.Data());
 
     gSystem->Exec("mkdir -p "+outputDir);
+    gSystem->Exec("mkdir -p "+paperPlots);
+    gSystem->Exec("mkdir -p "+PubNotePlots);
     gSystem->Exec("mkdir -p "+rootFiles);
-    gSystem->Exec(Form("cp %s %s/InputPCM.root",        fileNamePCM.Data(), rootFiles.Data()));
-    gSystem->Exec(Form("cp %s %s/InputPHOS.root",       fileNamePHOS.Data(), rootFiles.Data()));
-    gSystem->Exec(Form("cp %s %s/InputEMCal.root",      fileNameEMCal.Data(), rootFiles.Data()));
-    gSystem->Exec(Form("cp %s %s/InputPCMPub.root",     fileNamePCMPub.Data(), rootFiles.Data()));
+    gSystem->Exec(Form("cp %s %s/Theory.root",                fileNameTheory.Data(), rootFiles.Data()));
+    gSystem->Exec(Form("cp %s %s/InputALICEData.root",        fileNameALICEData.Data(), rootFiles.Data()));
+    gSystem->Exec(Form("cp %s %s/OtherExperimentsInput.root", fileNameDataOtherEnergyInput.Data(), rootFiles.Data()));
+
+//     TString fileNamePHOS                    = "ExternalInputPbPb/PHOS/LHC10h_PHOS_pi0_PbPb_06022014.root";
+//     TString fileNameEMCal                   = "ExternalInputPbPb/EMCAL/LHC11h_EMCal_pi0eta_PbPb_10092015.root";
+//     TString fileNamePCMPub                  = "ExternalInputPbPb/data_PCMResults_PbPb_2.76TeV_LHC10h.root";
+//
+//     TString outputDir                       = Form("%s/%s/NeutralMesonMeasurementsPbPb2760GeVAllCent%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
+//     TString rootFiles                       = Form("%s/rootFiles",outputDir.Data());
+//     TString nameFinalResDat                 = Form("%s/CombinedResults%s_FitResults.dat",outputDir.Data(),bWCorrection.Data());
+//
+//     gSystem->Exec("mkdir -p "+outputDir);
+//     gSystem->Exec("mkdir -p "+rootFiles);
+//     gSystem->Exec(Form("cp %s %s/InputPCM.root",        fileNamePCM.Data(), rootFiles.Data()));
+//     gSystem->Exec(Form("cp %s %s/InputPHOS.root",       fileNamePHOS.Data(), rootFiles.Data()));
+//     gSystem->Exec(Form("cp %s %s/InputEMCal.root",      fileNameEMCal.Data(), rootFiles.Data()));
+//     gSystem->Exec(Form("cp %s %s/InputPCMPub.root",     fileNamePCMPub.Data(), rootFiles.Data()));
 
     TH1D *histoarrayPi0InvYieldPbPb2760GeV[nCent][method];
     TH1D* histoarrayPi0InvYieldPbPb2760GeVYshifted[nCent][method];
