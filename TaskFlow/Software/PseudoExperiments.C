@@ -1,15 +1,16 @@
 #include "DirectPhotonFlowFunctions.h"
 
 void  PseudoExperiments(
-                                      TString CentralityLow = "40",
-                                      TString CentralityHigh = "80"
+                                      TString CentralityLow = "20",
+                                      TString CentralityHigh = "40",
+                                      Bool_t IncludeTheory = kTRUE
                                  ){
   
   //========================================================
   //Opening files and creating histograms
   //========================================================
   
-  TFile* fileInclusive  = new TFile(Form("/home/mike/0_directphoton/0_analysis/160714_PbPb_systematics/Systematics/PCM_InclusivePhotonFlow_Syst_%s%s.root",CentralityLow.Data(),CentralityHigh.Data()));
+  TFile* fileInclusive  = new TFile(Form("/home/mike/git_afterburner/AnalysisSoftware/TaskFlow/Results/PCM_InclusivePhotonFlow_Syst_%s%s.root",CentralityLow.Data(),CentralityHigh.Data()));
   TH1F*  histoInclusive = (TH1F*)fileInclusive->Get(Form("histoInclusive_%s%s",CentralityLow.Data(),CentralityHigh.Data()));
   if(!histoInclusive) cout << "histoInclusive not found in fileInclusive!!" << endl;
   
@@ -20,7 +21,7 @@ void  PseudoExperiments(
   graphInclusive->SetLineColor(kBlack);
   graphInclusive->SetLineWidth(3);
 
-  TFile* fileRGamma = new TFile("/home/mike/0_directphoton/0_analysis/160203_PbPb_v2_10h/Gamma_CombResults_PbPb_2.76TeV.root");
+  TFile* fileRGamma = new TFile("/home/mike/git_afterburner/AnalysisSoftware/TaskFlow/Results/Gamma_CombResults_PbPb_2.76TeV.root");
   TDirectory* dir1 = new TDirectory();
   dir1 = (TDirectory*)fileRGamma->Get(Form("Gamma_PbPb_2.76TeV_%s-%s%%",CentralityLow.Data(),CentralityHigh.Data()));
   TGraphAsymmErrors*  graphRGamma = (TGraphAsymmErrors*)dir1->Get("DR_comb_totErr");
@@ -30,7 +31,7 @@ void  PseudoExperiments(
   graphRGamma->SetLineColor(kBlack);
   graphRGamma->SetLineWidth(3);
   
-  TFile* fileCocktail = new TFile("/home/mike/0_directphoton/13_DirectPhotonAnalysisCode/CocktailV2.root");
+  TFile* fileCocktail = new TFile("/home/mike/git_afterburner/AnalysisSoftware/TaskFlow/Results/CocktailV2.root");
   //cen3 = 2040
   //cen6 = 020
   //cen8 = 4080
@@ -302,6 +303,50 @@ void  PseudoExperiments(
   graphDirect1->SetLineColor(kRed+2);
   graphDirect1->SetFillColor(kGray);
   graphDirect1->SetFillStyle(0);
+  
+  
+  //========================================================
+  //Opening files for theory comparison
+  //========================================================
+  if(IncludeTheory && (CentralityLow.CompareTo("0")==0 || CentralityLow.CompareTo("20")==0) ){
+
+    ifstream inputfile;
+//     inputfile.open("/home/mike/3_PbPb_dirg/0_analysis/161025_v2_theory/direct_photons_cent0020_Paquet2016.dat");
+    inputfile.open("/home/mike/3_PbPb_dirg/0_analysis/161025_v2_theory/direct_photons_cent2040_Paquet2016.dat");
+//     if(CentralityLow.CompareTo("0")==0) inputfile.open("/home/mike/git_afterburner/AnalysisSoftware/TaskFlow/Theory/direct_photons_cent0020_Paquet2016.dat");
+//     if(CentralityLow.CompareTo("20")==0) inputfile.open("/home/mike/git_afterburner/AnalysisSoftware/TaskFlow/Theory/direct_photons_cent2040_Paquet2016.dat");
+    
+    if(inputfile.is_open()) cout << "file is open..." << endl;
+    
+    Float_t tpt[11], tyield[11], tyieldstat[11], tv2[11], tv2stat[11], tv3[11], tv3stat[11], tv2stathigh[11], tv2statlow[11];
+    Int_t nlinesfile = 0;
+    Int_t tn = 11;
+    
+    while(1){
+      cout << nlinesfile << endl;
+      inputfile >> tpt[nlinesfile] >> tyield[nlinesfile] >> tyieldstat[nlinesfile] >> tv2[nlinesfile] >> tv2stat[nlinesfile] >> tv3[nlinesfile] >> tv3stat[nlinesfile];
+//       tv2stathigh[nlinesfile] = tv2[nlinesfile] + tv2stat[nlinesfile];
+//       tv2statlow[nlinesfile] = tv2[nlinesfile] - tv2stat[nlinesfile];
+      cout << tpt[nlinesfile] << " " << tyield[nlinesfile] << " " << tyieldstat[nlinesfile] << " " << tv2[nlinesfile] << " " << tv2stat[nlinesfile] << " " << tv3[nlinesfile] << " " << tv3stat[nlinesfile];
+      if(!inputfile.good()) break;
+      nlinesfile++;
+    }
+    
+    TGraphAsymmErrors* graphDirectTheory = new TGraphAsymmErrors(tn,tpt,tv2,0,0,tv2stat,tv2stat);
+    
+    TCanvas* cTheory = new TCanvas("cTheory","",800,800);
+    SetProperMargins();
+    histoDirectEmpty->Draw();
+    graphDirectTheory->SetFillColor(kBlue+2);
+    graphDirectTheory->SetFillStyle(3001);
+    graphDirectTheory->Draw("SAME 3");
+    graphDirect1->Draw("SAME e1 p");
+    
+    cTheory->SaveAs(Form("PseudoExperiments_%s%s/v2_DirectGamma_Theory_%s%s.eps", CentralityLow.Data(), CentralityHigh.Data(), CentralityLow.Data(), CentralityHigh.Data()));
+    
+    inputfile.close();
+  
+  }
   
   
     

@@ -36,14 +36,14 @@
 #include "TMarker.h"
 #include "TGraphAsymmErrors.h" 
 #include "TEllipse.h"
-#include "/home/mike/afterburner_always_up_to_date/AnalysisSoftware/CommonHeaders/PlottingGammaConversionHistos.h"
-#include "/home/mike/afterburner_always_up_to_date/AnalysisSoftware/CommonHeaders/PlottingGammaConversionAdditional.h"
+#include "DirectPhotonFlowFunctions.h"
+
 
 void  projectionPt_v9(  Int_t Trainconfig = 55,
                         TString CentralityLow = "20",
                         TString CentralityHigh = "40",
                         TString Cutnumber = "52400013_00200009007000008250400000",
-                        Bool_t kMC = 1
+                        Bool_t kMC = 0
                      ){
   
   
@@ -71,7 +71,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
     //TString SigmaStarForm = "#Kappa = #sqrt{#frac{#kappa^{+}^{2}+#kappa^{+}^{2}}{2}}";
     
 //     TFile* fileData = new TFile("PhotonQA_0705415160_redefinedkappalarge_MC.root");
-    TFile* fileMC = new TFile(Form("/home/mike/0_directphoton/0_analysis/160715_PbPb_MC_systematics/GammaConvFlow_%i.root",Trainconfig));
+    TFile* fileMC = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/161214_PbPb_v2_MC/GammaConvFlow_%i.root",Trainconfig));
     TList* listMC_1   = new TList();
     listMC_1     = (TList*)fileMC->Get(Form("GammaConvV1_%i_v2",Trainconfig));
     cout << listMC_1 << endl;
@@ -82,7 +82,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
     listMC_3     = (TList*)listMC_2->FindObject(Form("%s ESD histograms",Cutnumber.Data()));
     cout << listMC_3 << endl;
     
-    TFile* fileData  = new TFile(Form("/home/mike/0_directphoton/0_analysis/160714_PbPb_systematics/GammaConvFlow_%i.root",Trainconfig));
+    TFile* fileData  = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/161206_PbPb_v2_data/GammaConvFlow_%i.root",Trainconfig));
     TList* listData_1   = new TList();
     listData_1     = (TList*)fileData->Get(Form("GammaConvV1_%i_v2",Trainconfig));
     
@@ -113,7 +113,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
     c10->SetTopMargin(0.05);
     c10->SetBottomMargin(0.08);
     
-    Double_t newBinsComb[19] = {0.0, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1, 2.3, 2.5, 2.7, 3.0, 3.3, 3.7, 4.1, 4.6, 5.4, 6.0, 7.0};
+    Double_t newBinsComb[19] = {0.0, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1, 2.3, 2.5, 2.7, 3.0, 3.3, 3.7, 4.1, 4.6, 5.4, 6.2, 7.0};
     TString newBinsName[19] = {"00", "09", "11", "13", "15", "17", "19", "21", "23", "25", "27", "30", "33", "37", "41", "46", "54", "62", "70"};
     Double_t centralbinvalues[19];
     Double_t binwidths[19];
@@ -146,6 +146,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
     Double_t PuritySignal3[18];
     Double_t PuritySignal4[18];
     Double_t Signalpurity[18];
+    Double_t SignalpurityMC[18];
     Double_t SignalNA[18];
     Double_t SignalNB[18];
     Double_t SignalNC[18];
@@ -368,8 +369,8 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
 	T1.SetTextSize(0.03);
 	T1.DrawLatex(0.15, 0.97, InfoSystem.Data());
 	T1.DrawLatex(0.65, 0.97, InfoMC.Data());
-	T1.DrawLatex(0.65, 0.5, Form("%2.1f < P_{t}(GeV/c) < %2.1f",newBinsComb[i],newBinsComb[i+1]));
-	T1.DrawLatex(0.65, 0.45,  SigmaStarForm.Data());
+	T1.DrawLatex(0.18, 0.75, Form("%2.1f < P_{t}(GeV/c) < %2.1f",newBinsComb[i],newBinsComb[i+1]));
+	T1.DrawLatex(0.18, 0.65,  SigmaStarForm.Data());
 //   T1.DrawLatex(0.65, 0.4,  Form("p(-5.0<K<10.0)= %2.3f",Signalpurity[i]));
   
   c8->cd();
@@ -416,7 +417,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
 	  frac01[i] = h1d01->GetEntries()/NEntriesData;
 	  frac11[i] = h1d11->GetEntries()/NEntriesData;
 	  frac13[i] = h1d13->GetEntries()/NEntriesData;
-	  fracwidth = 1.3;
+	  fracwidth = 1.2; //0-20: 1.3, 20-40:1.2, 40-80:2.0
 	  constraint_low  = 1/fracwidth;
 	  constraint_high = 1*fracwidth;
 	}else{
@@ -425,7 +426,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
 	  frac01[i] = h1d01->GetEntries()/NTotalMC;
 	  frac11[i] = h1d11->GetEntries()/NTotalMC;
 	  frac13[i] = h1d13->GetEntries()/NTotalMC;
-	  fracwidth = 1.3;
+	  fracwidth = 1.2;
 	  constraint_low  = 1/fracwidth;
 	  constraint_high = 1*fracwidth;
 	}
@@ -451,6 +452,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
 	TH1D* template3 = NULL;
 	TH1D* template4 = NULL;
   TH1D* templatesum = NULL;
+  TH1D* hsumMC = NULL;
 	//Fit the templates
 	Int_t status = fit->Fit();
 	//cout << "fit status: " << status << endl;
@@ -538,6 +540,11 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
     templatesum->Add(template3);
     templatesum->Add(template4);
     
+    hsumMC=(TH1D*)h1d00->Clone();
+    hsumMC->Add(h1d01);
+    hsumMC->Add(h1d11);
+    hsumMC->Add(h1d13);
+    
     Int_t IntLowerBound1 = -20.0;
     Int_t IntLowerBound2 = -11.0;
     Int_t IntLowerBound3 = -3.0;
@@ -548,6 +555,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
     Int_t IntUpperBound4 = 20.0;
     
     Signalpurity[i] = template1->Integral(template1->GetXaxis()->FindBin(IntLowerBound3),template1->GetXaxis()->FindBin(IntUpperBound3)) / templatesum->Integral(templatesum->GetXaxis()->FindBin(IntLowerBound3),templatesum->GetXaxis()->FindBin(IntUpperBound3));
+    SignalpurityMC[i] = h1d00->Integral(h1d00->GetXaxis()->FindBin(IntLowerBound3),h1d00->GetXaxis()->FindBin(IntUpperBound3)) / hsumMC->Integral(hsumMC->GetXaxis()->FindBin(IntLowerBound3),hsumMC->GetXaxis()->FindBin(IntUpperBound3));
     SignalNA[i] = template3->Integral(template3->GetXaxis()->FindBin(IntLowerBound3),template3->GetXaxis()->FindBin(IntUpperBound3)) / (template2->Integral(template2->GetXaxis()->FindBin(IntLowerBound3),template2->GetXaxis()->FindBin(IntUpperBound3))+template3->Integral(template3->GetXaxis()->FindBin(IntLowerBound3),template3->GetXaxis()->FindBin(IntUpperBound3))+template4->Integral(template4->GetXaxis()->FindBin(IntLowerBound3),template4->GetXaxis()->FindBin(IntUpperBound3)));
     SignalNB[i] = template4->Integral(template4->GetXaxis()->FindBin(IntLowerBound3),template4->GetXaxis()->FindBin(IntUpperBound3)) / (template2->Integral(template2->GetXaxis()->FindBin(IntLowerBound3),template2->GetXaxis()->FindBin(IntUpperBound3))+template3->Integral(template3->GetXaxis()->FindBin(IntLowerBound3),template3->GetXaxis()->FindBin(IntUpperBound3))+template4->Integral(template4->GetXaxis()->FindBin(IntLowerBound3),template4->GetXaxis()->FindBin(IntUpperBound3)));
     SignalNC[i] = template2->Integral(template2->GetXaxis()->FindBin(IntLowerBound3),template2->GetXaxis()->FindBin(IntUpperBound3)) / (template2->Integral(template2->GetXaxis()->FindBin(IntLowerBound3),template2->GetXaxis()->FindBin(IntUpperBound3))+template3->Integral(template3->GetXaxis()->FindBin(IntLowerBound3),template3->GetXaxis()->FindBin(IntUpperBound3))+template4->Integral(template4->GetXaxis()->FindBin(IntLowerBound3),template4->GetXaxis()->FindBin(IntUpperBound3)));
@@ -592,8 +600,8 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
   }else{
     T1.DrawLatex(0.65, 0.97, InfoData.Data());
   }
-  T1.DrawLatex(0.65, 0.5, Form("%2.1f < P_{t}(GeV/c) < %2.1f",newBinsComb[i],newBinsComb[i+1]));
-  T1.DrawLatex(0.65, 0.45,  SigmaStarForm.Data());
+  T1.DrawLatex(0.18, 0.75, Form("%2.1f < P_{t}(GeV/c) < %2.1f",newBinsComb[i],newBinsComb[i+1]));
+	T1.DrawLatex(0.18, 0.65,  SigmaStarForm.Data());
 //   T1.DrawLatex(0.65, 0.4,  Form("p(-5.0<K<10.0)= %2.3f",Signalpurity[i]));
   
 	gSystem->mkdir(Form("purity_studies_%s",Cutnumber.Data()));
@@ -748,12 +756,20 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
     graphPurity->GetXaxis()->SetRangeUser(0.0,7);
     graphPurity->GetXaxis()->SetTitleOffset(1.1);
     graphPurity->GetYaxis()->SetTitle("Purity");
-    graphPurity->GetYaxis()->SetRangeUser(0.8,1.0);
+    graphPurity->GetYaxis()->SetRangeUser(0.5,1.0);
+    graphPurity->GetYaxis()->SetTitleOffset(1.15);
     graphPurity->SetTitle("");
     graphPurity->SetMarkerColor(12);
     graphPurity->SetMarkerStyle(20);
     graphPurity->SetLineColor(12);
     graphPurity->Draw("AP");
+    
+    TGraphErrors* graphPurityMC = new TGraphErrors(18,centralbinvalues,SignalpurityMC,0,0);
+    graphPurityMC->RemovePoint(0);
+    graphPurityMC->SetMarkerColor(9);
+    graphPurityMC->SetMarkerStyle(21);
+    graphPurityMC->SetLineColor(9);
+    graphPurityMC->Draw("AP");
     
     TGraphErrors* graphSignalNA = new TGraphErrors(18,centralbinvalues,SignalNA,0,0);
     graphSignalNA->RemovePoint(0);
@@ -883,7 +899,8 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
 
     
     TLegend* leg4 = new TLegend(0.65,0.3,0.85,0.5);
-    leg4->AddEntry(graphPurity,"purity","lp");
+    leg4->AddEntry(graphPurity,"Data driven","lp");
+    leg4->AddEntry(graphPurityMC,"MC driven","lp");
     leg4->SetBorderSize(0);
     leg4->SetTextSize(0.04);
 //     leg4->Draw();
@@ -910,6 +927,14 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
     c11->SetBottomMargin(0.08);
     
     graphPurity->Draw("AP");
+    graphPurityMC->Draw("SAME P");
+    
+    T1.DrawLatex(0.15, 0.97, InfoSystem.Data());
+    if(kMC){
+      T1.DrawLatex(0.65, 0.97, InfoMC.Data());
+    }else{
+      T1.DrawLatex(0.65, 0.97, InfoData.Data());
+    }
     
     leg4->Draw();
     
@@ -1330,7 +1355,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
         T4.SetTextSize(0.03);
         T4.DrawLatex(0.15, 0.97, InfoSystem.Data());
         T4.DrawLatex(0.65, 0.97, InfoMC.Data());
-        T4.DrawLatex(0.65, 0.45, Form("%2.1f < P_{t}(GeV/c) < %2.1f",newBinsComb[i],newBinsComb[i+1]));
+        T1.DrawLatex(0.12, 0.88, Form("%2.1f < P_{t}(GeV/c) < %2.1f",newBinsComb[i],newBinsComb[i+1]));
     // 	  T4.DrawLatex(0.65, 0.3,  SigmaStarForm.Data());
         
 //         c9->cd();

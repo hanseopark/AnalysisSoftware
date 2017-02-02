@@ -38,10 +38,11 @@
 #include "TEllipse.h"
 #include "TPaveText.h"
 #include "TRandom3.h"
-#include "/home/mike/alicesw/aliphysics/master/src/PWG/FLOW/Base/AliFlowCommonHistResults.h"
-#include "/home/mike/alicesw/aliphysics/master/src/PWG/FLOW/Base/AliFlowCommonHist.h"
-#include "/home/mike/afterburner_v3/AnalysisSoftware/CommonHeaders/PlottingGammaConversionAdditional.h"
-#include "/home/mike/afterburner_v3/AnalysisSoftware/CommonHeaders/PlottingGammaConversionHistos.h"
+#include "Riostream.h"
+#include "/home/mike/alice/ali-master/AliPhysics/PWG/FLOW/Base/AliFlowCommonHistResults.h"
+#include "/home/mike/alice/ali-master/AliPhysics/PWG/FLOW/Base/AliFlowCommonHist.h"
+#include "/home/mike/git_afterburner/AnalysisSoftware/CommonHeaders/PlottingGammaConversionAdditional.h"
+#include "/home/mike/git_afterburner/AnalysisSoftware/CommonHeaders/PlottingGammaConversionHistos.h"
 
 void SetStyle(Bool_t graypalette=kTRUE);
 void myPadSetUp(TPad *currentPad, float currentLeft=0.11, float currentTop=0.04, float currentRight=0.04, float currentBottom=0.15);
