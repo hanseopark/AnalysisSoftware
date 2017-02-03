@@ -71,7 +71,7 @@ void drawLatexAdd(TString latextext, Double_t textcolumn, Double_t textrow, Doub
 // void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationInput7TeV/data_PCMResultsFullCorrection_PP_NoBinShifting_newComb.root",
 void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationInput7TeV/data_PCMResultsFullCorrection_PP.root",
 //                                         TString fileNameEMCAL   = "CombinationInput7TeV/data_EMCAL-EMCALResultsFullCorrection_PP.3.root",
-                                        TString fileNameEMCAL   = "CombinationInput7TeV/pi0Specrtum7TeV_2011EMCAL_26Jan2017NewBin.root",
+                                        TString fileNameEMCAL   = "CombinationInput7TeV/pi0Specrtum7TeV_2011EMCAL_31Jan2017.root",
                                         TString fileNamePHOS    = "CombinationInput7TeV/pp7TeV_pass4_ppareek_PHOSResultsFullCorrection_19012017.root",
                                         TString fileNamePCMPHOS = "CombinationInput7TeV/data_PCM-PHOSResultsFullCorrection_PP_NoBinShifting_v2.root",
                                         TString fileNamePCMEMCAL = "CombinationInput7TeV/data_PCM-EMCALResultsFullCorrection_PP.2.root",
@@ -430,7 +430,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
 
 
     // Definition of final pt binning (has to be set manually)
-    Double_t xPtLimits[50]                      =  { 0.0, 0.3, 0.4, 0.5, 0.6,
+    Double_t xPtLimits[51]                      =  { 0.0, 0.3, 0.4, 0.5, 0.6,
                                                      0.7, 0.8, 0.9, 1.0, 1.1,
                                                      1.2, 1.3, 1.4, 1.5, 1.6,
                                                      1.7, 1.8, 1.9, 2.0, 2.1,
@@ -438,7 +438,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
                                                      3.0, 3.2, 3.4, 3.6, 3.8,
                                                      4.0, 4.3, 4.6, 5.0, 5.5,
                                                      6.0, 6.5, 7.0, 8.0, 9.0,
-                                                    10.0,11.0,12.0,14.0,16.0,18,
+                                                    10.0,11.0,12.0,13.0,14.0,16.0,18,
                                                     20.0,25.0
                                                     };
 //     Double_t xPtLimits[40]                      =  {0.0, 0.3, 0.4, 0.5, 0.6,
@@ -490,7 +490,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
     TGraphAsymmErrors* graphCombPi0InvCrossSectionStatPCMEMCPHOS= NULL;
     TGraphAsymmErrors* graphCombPi0InvCrossSectionSysPCMEMCPHOS = NULL;
     TGraphAsymmErrors* graphCombPi0InvCrossSectionTot = CombinePtPointsSpectraFullCorrMat( statErrorCollection, sysErrorCollection,
-                                                                                                   xPtLimits, 47,
+                                                                                                   xPtLimits, 48,
                                                                                                    offSets, offSetsSys,
                                                                                                    graphCombPi0InvCrossSectionStatPCMEMCPHOS, graphCombPi0InvCrossSectionSysPCMEMCPHOS,
                                                                                                    fileNameOutputWeighting,1
@@ -1095,7 +1095,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         histo2DAllPi0FWHM->DrawCopy();
 
         for (Int_t i = 0; i < numbersofmeas; i++){
-            if(histoPi0FWHMMeV[i] && histoPi0TrueFWHMMeV[i]){
+            if(histoPi0FWHMMeV[i] && histoPi0TrueFWHMMeV[i]&&i!=3){
                 DrawGammaSetMarker(histoPi0FWHMMeV[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
                 histoPi0FWHMMeV[i]->Draw("p,same,e");
                 DrawGammaSetMarker(histoPi0TrueFWHMMeV[i], markerStyleDetMC[i], markerSizeDetMC[i]*0.55, colorDetMC[i] , colorDetMC[i]);
@@ -1145,7 +1145,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         histo2DAllPi0Mass->DrawCopy();
 
         for (Int_t i = 0; i < numbersofmeas; i++){
-            if(histoPi0Mass[i] && histoPi0TrueMass[i]){
+            if(histoPi0Mass[i] && histoPi0TrueMass[i]&&i!=3){
                 DrawGammaSetMarker(histoPi0Mass[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
                 histoPi0Mass[i]->Draw("p,same,e");
                 DrawGammaSetMarker(histoPi0TrueMass[i], markerStyleDetMC[i], markerSizeDetMC[i]*0.55, colorDetMC[i] , colorDetMC[i]);
@@ -1163,8 +1163,8 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         //********************************** Defintion of the Legend **************************************************
         Double_t columnsLegendMass2[3]      = {0.,0.57,0.84};
 //         Double_t rowsLegendMass2[5] = {0.8,0.6,0.4,0.2,0.01};
-        Double_t rowsLegendMass2[6] = {0.84,0.66,0.50,0.33,0.16,0.01};
-//             rowsLegendMass2[]= {0.84,0.66,0.50,0.33,0.16,0.01};
+//         Double_t rowsLegendMass2[6] = {0.84,0.66,0.50,0.33,0.16,0.01};
+          Double_t  rowsLegendMass2[7]= {0.84,0.66,0.50,0.33,0.01,0.16};
         //******************* Offsets ***********************
         Double_t offsetMarkerXMass2         = 0.1;
         Double_t offsetMarkerYMass2         = 0.1;
@@ -1175,7 +1175,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         //****************** first Column **************************************************
         TLatex *textMassPCM[10];
         for (Int_t i = 0; i < numbersofmeas; i++){
-            if(histoPi0Mass[i] && histoPi0TrueMass[i] && histoPi0FWHMMeV[i] && histoPi0TrueFWHMMeV[i]){
+            if(histoPi0Mass[i] && histoPi0TrueMass[i] && histoPi0FWHMMeV[i] && histoPi0TrueFWHMMeV[i]&&i!=3){
                 textMassPCM[i]                  = new TLatex(columnsLegendMass2[0],rowsLegendMass2[i+1],nameMeasGlobal[i].Data());
                 SetStyleTLatex( textMassPCM[i], textSizeLabelsPixel,4);
                 textMassPCM[i]->SetTextFont(43);
@@ -1195,7 +1195,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         TMarker* markerPCMPi0Mass[10];
         TMarker* markerPCMPi0MassMC[10];
         for (Int_t i = 0; i < numbersofmeas; i++){
-            if(histoPi0Mass[i] && histoPi0TrueMass[i]){
+            if(histoPi0Mass[i] && histoPi0TrueMass[i]&&i!=3){
                 markerPCMPi0Mass[i]             = CreateMarkerFromHisto(histoPi0Mass[i],columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[i+1]+ offsetMarkerYMass2 ,scaleMarkerMass2);
                 markerPCMPi0Mass[i]->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[i+1]+ offsetMarkerYMass2);
                 markerPCMPi0MassMC[i]           = CreateMarkerFromHisto(histoPi0TrueMass[i],columnsLegendMass2[2]+ offsetMarkerXMass2 ,rowsLegendMass2[i+1]+ offsetMarkerYMass2 ,scaleMarkerMass2);
@@ -1256,7 +1256,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         histo2DAllEtaFWHM->DrawCopy();
 
         for (Int_t i = 0; i <numbersofmeas; i++){
-            if(histoEtaFWHMMeV[i] && histoEtaTrueFWHMMeV[i]){
+            if(histoEtaFWHMMeV[i] && histoEtaTrueFWHMMeV[i]&&i!=3){
                 DrawGammaSetMarker(histoEtaFWHMMeV[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
                 histoEtaFWHMMeV[i]->Draw("p,same,e");
                 DrawGammaSetMarker(histoEtaTrueFWHMMeV[i], markerStyleDetMC[i], markerSizeDetMC[i]*0.55, colorDetMC[i] , colorDetMC[i]);
@@ -1293,7 +1293,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         histo2DAllEtaMass->DrawCopy();
 
         for (Int_t i = 0; i < numbersofmeas; i++){
-            if(histoEtaMass[i] && histoEtaTrueMass[i]){
+            if(histoEtaMass[i] && histoEtaTrueMass[i]&&i!=3){
                 DrawGammaSetMarker(histoEtaMass[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
                 histoEtaMass[i]->Draw("p,same,e");
                 DrawGammaSetMarker(histoEtaTrueMass[i], markerStyleDetMC[i], markerSizeDetMC[i]*0.55, colorDetMC[i] , colorDetMC[i]);
@@ -1320,7 +1320,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         TLatex *textMassPCMEta[10];
         Int_t counterEta = 1;
         for (Int_t i = 0; i < numbersofmeas; i++){
-            if(histoEtaMass[i] && histoEtaTrueMass[i] && histoEtaFWHMMeV[i] && histoEtaTrueFWHMMeV[i]){
+            if(histoEtaMass[i] && histoEtaTrueMass[i] && histoEtaFWHMMeV[i] && histoEtaTrueFWHMMeV[i]&&i!=3){
                 textMassPCMEta[i]                  = new TLatex(columnsLegendMass2Eta[0],rowsLegendMass2Eta[counterEta],nameMeasGlobal[i].Data());
                 SetStyleTLatex( textMassPCMEta[i], textSizeLabelsPixel,4);
                 textMassPCMEta[i]->SetTextFont(43);
@@ -1342,7 +1342,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         TMarker* markerPCMEtaMassMC[10];
         counterEta = 1;
         for (Int_t i = 0; i < numbersofmeas; i++){
-            if(histoEtaMass[i] && histoEtaTrueMass[i]){
+            if(histoEtaMass[i] && histoEtaTrueMass[i]&&i!=3){
                 markerPCMEtaMass[i]             = CreateMarkerFromHisto(histoEtaMass[i],columnsLegendMass2Eta[1]+ offsetMarkerXMass2Eta ,rowsLegendMass2Eta[counterEta]+ offsetMarkerYMass2Eta ,scaleMarkerMass2Eta);
                 markerPCMEtaMass[i]->DrawMarker(columnsLegendMass2Eta[1]+ offsetMarkerXMass2Eta ,rowsLegendMass2Eta[counterEta]+ offsetMarkerYMass2Eta);
                 markerPCMEtaMassMC[i]           = CreateMarkerFromHisto(histoEtaTrueMass[i],columnsLegendMass2Eta[2]+ offsetMarkerXMass2Eta ,rowsLegendMass2Eta[counterEta]+ offsetMarkerYMass2Eta ,scaleMarkerMass2Eta);
@@ -1509,7 +1509,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
                             0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
 
     for (Int_t i =0 ; i < numbersofmeas; i++){
-        if (haveAllPi0InvMass[i]){
+        if (haveAllPi0InvMass[i]&&0){
             canvasInvMassSamplePlot->cd();
             histo2DPi0InvMassDummy->GetXaxis()->SetRangeUser(0.02,0.255);
             histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBGSub[i]->GetMinimum(),1.15*histoPi0InvMassSigPlusBG[i]->GetMaximum());
