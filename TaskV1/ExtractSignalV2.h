@@ -830,7 +830,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                 fMesonFitRange[1]       = 0.25;
             } else {
                 fMesonFitRange[0]       = 0.03;
-                fMesonFitRange[1]       = 0.25; 
+                fMesonFitRange[1]       = 0.25;
             }    
         } else if (mode == 2){
             if( fEnergyFlag.CompareTo("8TeV") == 0 && ( trigger.CompareTo("81") == 0 || triggerSet == 2)){
