@@ -107,11 +107,6 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TString outputDir                           = Form("%s/%s/CombineMesonMeasurements8TeV%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
     if(plotDate) outputDir.Append(dateForOutput);
 
-    fstream fLog;
-    fLog.open(Form("%s/CombineMeson8TeV.log",outputDir.Data()), ios::out);
-    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-    fLog << dateForOutput.Data() << endl;
-
     cout << outputDir.Data() << endl;
     cout << fileNamePCM.Data() << endl;
 
@@ -124,7 +119,12 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     gSystem->Exec(Form("cp %s %s/Theory.root", fileNameTheory.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/ChargedPionsPP.root", fileNameChargedPionPP.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/ChargedHadronsPP.root", fileNameChargedHadronPP.Data(), outputDir.Data()));
-    
+
+    fstream fLog;
+    fLog.open(Form("%s/CombineMeson8TeV.log",outputDir.Data()), ios::out);
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fLog << dateForOutput.Data() << endl;
+
     Bool_t thesis                               = kFALSE;
     if(thesisPlots.CompareTo("thesis") == 0){
         thesis                                  = kTRUE;
@@ -3340,6 +3340,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // **********************************************************************************************************************
     canvasRatioToCombFit->cd();
     histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(0.3,1.8);
+    histo2DEtaRatioToCombFit->SetYTitle("Data/Tsallis fit");
     histo2DEtaRatioToCombFit->Draw("copy");
 
         DrawGammaSetMarkerTGraphAsym(graphRatioEtaTsallisCombCombFitSysA, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
@@ -3405,7 +3406,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         boxEMCALEtaOnlyRatioEta->Draw("l");
         boxPCMEMCALEtaOnlyRatioEta->Draw("l");
 
-    canvasRatioToCombFit->SaveAs(Form("%s/Eta_RatioOfIndividualMeasToComTsallisbFit_PP.%s",outputDir.Data(),suffix.Data()));
+    canvasRatioToCombFit->SaveAs(Form("%s/Eta_RatioOfIndividualMeasToCombTsallisFit_PP.%s",outputDir.Data(),suffix.Data()));
 
     // *******************************************************************************************************
     // ************************** Combination of different eta/pi0 measurements **********************************
@@ -5530,9 +5531,6 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         SetStyleTLatex( labelALICEEtaToPi0, 0.85*textsizeLabelsEtaToPi0,4);
         labelALICEEtaToPi0->Draw();
         
-        TLatex *labelPi0EtaToPi0 = new TLatex(0.13, 0.92-(2*textsizeLabelsEtaToPi0*0.85),"#eta/#pi^{0}");
-        SetStyleTLatex( labelPi0EtaToPi0, 0.85*textsizeLabelsEtaToPi0,4);
-        labelPi0EtaToPi0->Draw();
 
     histo2DEtatoPi0combo->Draw("axis,same");
 
@@ -5548,8 +5546,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     legendXsectionPaperEtaToPi0->SetNColumns(1);
     legendXsectionPaperEtaToPi0->SetMargin(0.2);
     legendXsectionPaperEtaToPi0->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
-    legendXsectionPaperEtaToPi0->AddEntry(graphEtaToPi07000GeV,"ALICE #eta/#pi^{0} @ 7 TeV","p");
-    legendXsectionPaperEtaToPi0->AddEntry(graphEtaToPi02760GeV,"ALICE #eta/#pi^{0} @ 2.76 TeV","p");
+    legendXsectionPaperEtaToPi0->AddEntry(graphEtaToPi07000GeV,"ALICE pp, #sqrt{#it{s}} = 7 TeV","p");
+    legendXsectionPaperEtaToPi0->AddEntry(graphEtaToPi02760GeV,"ALICE pp, #sqrt{#it{s}} = 2.76 TeV","p");
     legendXsectionPaperEtaToPi0->Draw();
 
     DrawGammaSetMarkerTGraphAsym(graphEtaToPi07000GeV, markerStyleDet[4], markerSizeDet[4]*0.75, colorDet[1] , colorDet[1], widthLinesBoxes, kTRUE);
@@ -5590,7 +5588,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     eta2pi0MtScaled->SetLineColor(kBlue+2);
     eta2pi0MtScaled->SetLineWidth(2.);
 
-    Double_t eta2Pi0Const = 0.452;
+    Double_t eta2Pi0Const = 0.456;
     Double_t mPi0 = 0.134977;
     Double_t mEta = 0.547853;
     for (Int_t i=1; i<=eta2pi0MtScaled->GetNbinsX(); i++) {
@@ -5605,18 +5603,18 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     textSizeLabelsPixel = 48;
     TLegend* legendXsectionPaperEtaToPi03     = GetAndSetLegend2(0.11, 0.86, 0.96, 0.96, 0.85*textSizeLabelsPixel);
     legendXsectionPaperEtaToPi03->SetNColumns(2);
-    legendXsectionPaperEtaToPi03->SetMargin(0.2);
-    legendXsectionPaperEtaToPi03->AddEntry(graphCombPi0InvXSectionSysA,"ALICE, #sqrt{#it{s}} = 8 TeV","pf");
-    legendXsectionPaperEtaToPi03->AddEntry(eta2pi0MtScaled,"ALICE, #sqrt{#it{s}} = 8 TeV from m_{T} scaling","l");
-    legendXsectionPaperEtaToPi03->AddEntry(graphEtaToPi07000GeV,"ALICE, #sqrt{#it{s}} = 7 TeV","p");
-    legendXsectionPaperEtaToPi03->AddEntry(graphEtaToPi02760GeV,"ALICE, #sqrt{#it{s}} = 2.76 TeV","p");
+    legendXsectionPaperEtaToPi03->SetMargin(0.15);
+    legendXsectionPaperEtaToPi03->AddEntry(graphCombPi0InvXSectionSysA,"ALICE pp, #sqrt{#it{s}} = 8 TeV","pf");
+    legendXsectionPaperEtaToPi03->AddEntry(graphEtaToPi07000GeV,"ALICE pp, #sqrt{#it{s}} = 7 TeV","p");
+    legendXsectionPaperEtaToPi03->AddEntry(graphEtaToPi02760GeV,"ALICE pp, #sqrt{#it{s}} = 2.76 TeV","p");
+    legendXsectionPaperEtaToPi03->AddEntry(eta2pi0MtScaled,"ALICE pp m_{T}-scaled, #sqrt{#it{s}} = 8 TeV","l");
     legendXsectionPaperEtaToPi03->Draw();
 
-    TLegend* legendXsectionPaperEtaToPi04     = GetAndSetLegend2(0.58, 0.14, 0.96, 0.24, 0.85*textSizeLabelsPixel);
+    TLegend* legendXsectionPaperEtaToPi04     = GetAndSetLegend2(0.55, 0.15, 0.93, 0.25, 0.85*textSizeLabelsPixel);
     legendXsectionPaperEtaToPi04->SetNColumns(1);
-    legendXsectionPaperEtaToPi04->SetMargin(0.2);
-    legendXsectionPaperEtaToPi04->AddEntry(eta2pi0_RHIC200GeV,"PHENIX, #sqrt{#it{s}} = 200 GeV","p");
-    legendXsectionPaperEtaToPi04->AddEntry(eta2pi0_NA27_275GeV,"NA27, #sqrt{#it{s}} = 27.5 GeV","p");
+    legendXsectionPaperEtaToPi04->SetMargin(0.15);
+    legendXsectionPaperEtaToPi04->AddEntry(eta2pi0_RHIC200GeV,"PHENIX pp, #sqrt{#it{s}} = 200 GeV","p");
+    legendXsectionPaperEtaToPi04->AddEntry(eta2pi0_NA27_275GeV,"NA27 pp, #sqrt{#it{s}} = 27.5 GeV","p");
     legendXsectionPaperEtaToPi04->Draw();
 
     DrawGammaSetMarkerTGraphErr(eta2pi0_RHIC200GeV, 27, 3., kGray+1 , kGray+1, 2., kFALSE);
@@ -5655,17 +5653,17 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     textSizeLabelsPixel = 48;
     TLegend* legendXsectionPaperEtaToPi03n     = GetAndSetLegend2(0.11, 0.81, 0.5, 0.96, 0.85*textSizeLabelsPixel);
     legendXsectionPaperEtaToPi03n->SetNColumns(1);
-    legendXsectionPaperEtaToPi03n->SetMargin(0.2);
-    legendXsectionPaperEtaToPi03n->AddEntry(graphCombPi0InvXSectionSysA,"ALICE, #sqrt{#it{s}} = 8 TeV","pf");
-    legendXsectionPaperEtaToPi03n->AddEntry(graphEtaToPi07000GeV,"ALICE, #sqrt{#it{s}} = 7 TeV","p");
-    legendXsectionPaperEtaToPi03n->AddEntry(graphEtaToPi02760GeV,"ALICE, #sqrt{#it{s}} = 2.76 TeV","p");
+    legendXsectionPaperEtaToPi03n->SetMargin(0.15);
+    legendXsectionPaperEtaToPi03n->AddEntry(graphCombPi0InvXSectionSysA,"ALICE pp, #sqrt{#it{s}} = 8 TeV","pf");
+    legendXsectionPaperEtaToPi03n->AddEntry(graphEtaToPi07000GeV,"ALICE pp, #sqrt{#it{s}} = 7 TeV","p");
+    legendXsectionPaperEtaToPi03n->AddEntry(graphEtaToPi02760GeV,"ALICE pp, #sqrt{#it{s}} = 2.76 TeV","p");
     legendXsectionPaperEtaToPi03n->Draw();
 
-    TLegend* legendXsectionPaperEtaToPi04n     = GetAndSetLegend2(0.58, 0.14, 0.96, 0.24, 0.85*textSizeLabelsPixel);
+    TLegend* legendXsectionPaperEtaToPi04n     = GetAndSetLegend2(0.53, 0.15, 0.93, 0.25, 0.85*textSizeLabelsPixel);
     legendXsectionPaperEtaToPi04n->SetNColumns(1);
-    legendXsectionPaperEtaToPi04n->SetMargin(0.2);
-    legendXsectionPaperEtaToPi04n->AddEntry(eta2pi0_RHIC200GeV,"PHENIX, #sqrt{#it{s}} = 200 GeV","p");
-    legendXsectionPaperEtaToPi04n->AddEntry(eta2pi0_NA27_275GeV,"NA27, #sqrt{#it{s}} = 27.5 GeV","p");
+    legendXsectionPaperEtaToPi04n->SetMargin(0.15);
+    legendXsectionPaperEtaToPi04n->AddEntry(eta2pi0_RHIC200GeV,"PHENIX pp, #sqrt{#it{s}} = 200 GeV","p");
+    legendXsectionPaperEtaToPi04n->AddEntry(eta2pi0_NA27_275GeV,"NA27 pp, #sqrt{#it{s}} = 27.5 GeV","p");
     legendXsectionPaperEtaToPi04n->Draw();
 
     eta2pi0_RHIC200GeV->Draw("same,p");
@@ -5761,7 +5759,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     legendXsectionPaperEtaToPi05->SetNColumns(1);
     legendXsectionPaperEtaToPi05->SetMargin(0.2);
     legendXsectionPaperEtaToPi05->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
-    legendXsectionPaperEtaToPi05->AddEntry(eta2pi0MtScaled,"ALICE, #sqrt{#it{s}} = 8 TeV from m_{T} scaling","l");
+    legendXsectionPaperEtaToPi05->AddEntry(eta2pi0MtScaled,"ALICE pp, #sqrt{#it{s}} = 8 TeV from m_{T} scaling","l");
     legendXsectionPaperEtaToPi05->AddEntry(histoPythia8EtaToPi0,"PYTHIA 8.2, Monash 2013","l");
     legendXsectionPaperEtaToPi05->AddEntry(histoPythia8T4CEtaToPi0,"PYTHIA 8.2, Tune 4C","l");
     legendXsectionPaperEtaToPi05->AddEntry(graphNLOEtaToPi0,"NLO, PDF:CTEQ6M5","f");
