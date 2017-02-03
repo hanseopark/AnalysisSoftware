@@ -823,15 +823,15 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         // Set Meson fit range
         if (mode == 0){
             if( fEnergyFlag.Contains("PbPb")){    
-                fMesonFitRange[0]       = 0.07;
-                fMesonFitRange[1]       = 0.22;
+                fMesonFitRange[0]       = 0.03;
+                fMesonFitRange[1]       = 0.25;
             } else if( fEnergyFlag.Contains("pPb")){    
                 fMesonFitRange[0]       = 0.03;
                 fMesonFitRange[1]       = 0.25;
             } else {
                 fMesonFitRange[0]       = 0.03;
                 fMesonFitRange[1]       = 0.25;
-            }    
+            }
         } else if (mode == 2){
             if( fEnergyFlag.CompareTo("8TeV") == 0 && ( trigger.CompareTo("81") == 0 || triggerSet == 2)){
                 fMesonFitRange[0]       = 0.03;
