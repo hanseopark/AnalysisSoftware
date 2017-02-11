@@ -3589,7 +3589,7 @@ void ClusterQA(
         Int_t nESDRebin = 5;
         Int_t iMinPt[5]={0,6,10,20,50};
         std::vector<TH1D*> vecRange;
-
+        std::vector<TH1D*> vecESD_InvMass_Matched_Sum;
         for(Int_t i=0; i<nSets; i++){
             for(Int_t iMin=0; iMin<5; iMin++){
                 //---------------------------------------------------------------------------------------------------------------
@@ -3627,11 +3627,32 @@ void ClusterQA(
                 delete ESD_InvMass_Pt;
                 delete ESD_Matched_InvMass_Pt;
                 delete ESD_InvMass;
+                if(iMin == 0) vecESD_InvMass_Matched_Sum.push_back(new TH1D(*ESD_Matched_InvMass));
                 delete ESD_Matched_InvMass;
                 delete ESD_InvMass_Matched_Sum;
+
                 vecRange.clear();
             }
         }
+
+        for(Int_t iVec=0; iVec<(Int_t)vecESD_InvMass_Matched_Sum.size(); iVec++){
+            TH1D* temp = vecESD_InvMass_Matched_Sum.at(iVec);
+            temp->Sumw2();
+            Double_t nEntries = temp->Integral(); //temp->FindBin(0.05),temp->FindBin(0.1)); // normalization on left side of peak
+            temp->Scale(1./nEntries);
+        }
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecESD_InvMass_Matched_Sum,"","#it{M}_{inv, Mother} (GeV/#it{c}^{2})","#frac{1}{N} d#it{N}/d#it{M}_{inv}",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/InvMass_matched_afterQA.%s", outputDir.Data(), suffix.Data()), kFALSE , kTRUE);
+
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                        vecESD_InvMass_Matched_Sum,"","#it{M}_{inv, Mother} (GeV/#it{c}^{2})","#frac{1}{N} d#it{N}/d#it{M}_{inv}",1,1.1,
+                                        labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_InvMass_matched_afterQA.%s", outputDir.Data(), suffix.Data()));
+        DeleteVecTH1D(vecESD_InvMass_Matched_Sum);
         
         //---------------------------------------------------------------------------------------------------------------
         //
