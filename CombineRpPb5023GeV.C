@@ -158,21 +158,24 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
 
     
  
-  TString fileNameRpPb                        = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2016_10_13.root";
-  TString fileNameRpPbCombined                = "ExternalInputpPb/InputRpPb/Pi0RpPb_Comb_2016_06_13.root";
-  TString fileNameRpPbPCM                     = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2016_10_13.root";
-  TString fileNameRpPbDalitz                  = "ExternalInputpPb/InputRpPb/Pi0RpPb_Dalitz_2016_10_13.root";
-  TString fileNameRpPbPHOS                    = "ExternalInputpPb/InputRpPb/Pi0RpPb_PHOS_2016_10_13.root";
-  TString fileNameRpPbEMCal                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_EMCal_2016_10_13.root";
+  TString fileNameRpPb                        = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2017_02_09.root";
+  TString fileNameRpPbCombined                = "ExternalInputpPb/InputRpPb/Pi0RpPb_Comb_2017_02_09.root";
+  TString fileNameRpPbPCM                     = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2017_02_09.root";
+  TString fileNameRpPbDalitz                  = "ExternalInputpPb/InputRpPb/Pi0RpPb_Dalitz_2017_02_09.root";
+  TString fileNameRpPbPHOS                    = "ExternalInputpPb/InputRpPb/Pi0RpPb_PHOS_2017_02_09.root";
+  TString fileNameRpPbEMCal                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_EMCal_2017_02_09.root";
+  TString fileNameRpPbPCMEMCal                = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM-EMCal_2017_02_09.root";
   //File to load the correlation factors
-  TString corrFactorsFileName 		      = "ExternalInputpPb/InputRpPb/CorrelationFactors/RpPb_5.023TeV_2016_09_27.root";
+  //TString corrFactorsFileName 		      = "ExternalInputpPb/InputRpPb/CorrelationFactors/RpPb_5.023TeV_2016_09_27.root";
+  TString corrFactorsFileName                 = "eps/2017_02_09/ComputeCorrelationFactors_pPb5TeV/pPb5TeV.root";
   
-  TFile* fileNeutralPionRpPb                           = new TFile(fileNameRpPb.Data());
-  TFile* fileNeutralPionRpPbComb                           = new TFile(fileNameRpPbCombined.Data());
-  TFile* fileNeutralPionRpPbPCM                           = new TFile(fileNameRpPbPCM.Data());
-  TFile* fileNeutralPionRpPbDalitz                           = new TFile(fileNameRpPbDalitz.Data());
-  TFile* fileNeutralPionRpPbPHOS                           = new TFile(fileNameRpPbPHOS.Data());
-  TFile* fileNeutralPionRpPbEMCal                           = new TFile(fileNameRpPbEMCal.Data());
+  TFile* fileNeutralPionRpPb                           	= new TFile(fileNameRpPb.Data());
+  TFile* fileNeutralPionRpPbComb                        = new TFile(fileNameRpPbCombined.Data());
+  TFile* fileNeutralPionRpPbPCM                         = new TFile(fileNameRpPbPCM.Data());
+  TFile* fileNeutralPionRpPbDalitz                      = new TFile(fileNameRpPbDalitz.Data());
+  TFile* fileNeutralPionRpPbPHOS                        = new TFile(fileNameRpPbPHOS.Data());
+  TFile* fileNeutralPionRpPbEMCal                       = new TFile(fileNameRpPbEMCal.Data());
+  TFile* fileNeutralPionRpPbPCMEMCal		        = new TFile(fileNameRpPbPCMEMCal.Data());
     
   TString nameHistoPCM                               = "Pi0_RpPb_PCM_StatErr";
   TString nameHistoPCMSysErrors                      = "Pi0_RpPb_PCM_SystErr";
@@ -182,6 +185,8 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   TString nameHistoPHOSSysErrors                     = "Pi0_RpPb_PHOS_SystErr";
   TString nameHistoEMCal                             = "Pi0_RpPb_EMCal_StatErr";
   TString nameHistoEMCalSysErrors                    = "Pi0_RpPb_EMCal_SystErr";
+  TString nameHistoPCMEMCal			     = "Pi0_RpPb_PCM-EMCal_StatErr";
+  TString nameHistoPCMEMCalSysErrors		     = "Pi0_RpPb_PCM-EMCal_SystErr";
   TString nameHistoCombSysErrors                     = "Pi0_RpPb_Comb_SystErr";
   TString nameHistoComb                              = "Pi0_RpPb_Comb_StatErr";
   TString nameHistoPCMppReferenceStat                = "Pi0_pp_reference_PCMBinning_StatErr";
@@ -192,13 +197,16 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   TString nameHistoPHOSppReferenceSyst               = "Pi0_pp_reference_PHOSBinning_SystErr";
   TString nameHistoEMCalppReferenceStat              = "Pi0_pp_reference_EMCalBinning_StatErr";
   TString nameHistoEMCalppReferenceSyst              = "Pi0_pp_reference_EMCalBinning_SystErr";
-  TString nameHistoCombppReferenceStat              = "Pi0_pp_reference_CombBinning_StatErr";
-  TString nameHistoCombppReferenceSyst              = "Pi0_pp_reference_CombBinning_SystErr";
+  TString nameHistoPCMEMCalppReferenceStat           = "Pi0_pp_reference_PCM-EMCalBinning_StatErr";
+  TString nameHistoPCMEMCalppReferenceSyst	     = "Pi0_pp_reference_PCM-EMCalBinning_SystErr";
+  TString nameHistoCombppReferenceStat               = "Pi0_pp_reference_CombBinning_StatErr";
+  TString nameHistoCombppReferenceSyst               = "Pi0_pp_reference_CombBinning_SystErr";
   TString nameHistoPCMAlpha                          = "Pi0_RpPb_PCM_Alpha";
   TString nameHistoDalitzAlpha                       = "Pi0_RpPb_Dalitz_Alpha";
   TString nameHistoPHOSAlpha                         = "Pi0_RpPb_PHOS_Alpha";
   TString nameHistoEMCalAlpha                        = "Pi0_RpPb_EMCal_Alpha";
-  TString nameHistoCombAlpha                        = "Pi0_RpPb_Comb_Alpha";
+  TString nameHistoPCMEMCalAlpha		     = "Pi0_RpPb_PCM-EMCal_Alpha";
+  TString nameHistoCombAlpha                         = "Pi0_RpPb_Comb_Alpha";
   
  
    
@@ -216,10 +224,10 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
 							  16.0, 20.0};
                                 
     
-  //    Int_t offSets[11]                                   =  { 0, 6, 8, 0, 0,  3, 0, 0, 0,  0, 0};
-  // Int_t offSetsSys[11]                                =  {  0, 6,  8, 0, 0, 3, 0, 0, 0, 0, 0};
-  Int_t offSets[11]                                   =  { -6, 0, 2, 0, 0,  -3, 0, 0, 0,  0, 0};
-  Int_t offSetsSys[11]                                =  {  -6,0,  2, 0, 0, -3, 0, 0, 0, 0, 0};
+  //    Int_t offSets[11]                             =  { 0, 6, 8, 0, 0,  3, 0, 0, 0,  0, 0};
+  // Int_t offSetsSys[11]                             =  {  0, 6,  8, 0, 0, 3, 0, 0, 0, 0, 0};
+  Int_t offSets[11]                                   =  { -6, 0, 2, 0, -1,  -3, 0, 0, 0,  0, 0};
+  Int_t offSetsSys[11]                                =  { -6, 0, 2, 0, -1, -3, 0, 0, 0, 0, 0};
     
     
   TH1D* statErrorCollection[11];
@@ -284,6 +292,19 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   graphEMCalYieldPi0pPb->Print();
   cout <<"sys"<< endl;
   graphEMCalYieldPi0pPbSystErr->Print();
+  // ******************************** Reading PCM-EMCal ***************************************
+  // **************************************************************************************
+  TGraphAsymmErrors* graphPCMEMCalYieldPi0pPb       	= (TGraphAsymmErrors*)fileNeutralPionRpPbPCMEMCal->Get(nameHistoPCMEMCal.Data());
+  TH1D* histoPCMEMCalYieldPi0pPb          		= GraphAsymErrorsToHist_withErrors(graphPCMEMCalYieldPi0pPb,nameHistoPCMEMCal.Data());
+  TGraphAsymmErrors* graphPCMEMCalYieldPi0pPbSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbPCMEMCal->Get(nameHistoPCMEMCalSysErrors.Data());  
+  TGraphAsymmErrors* graphPCMEMCalppreferenceStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbPCMEMCal->Get(nameHistoPCMEMCalppReferenceStat.Data());
+  TGraphAsymmErrors* graphPCMEMCalppreferenceSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbPCMEMCal->Get(nameHistoPCMEMCalppReferenceSyst.Data()); 
+  TGraphAsymmErrors* graphPCMEMCalAlpha                 = (TGraphAsymmErrors*)fileNeutralPionRpPbPCMEMCal->Get(nameHistoPCMEMCalAlpha.Data());
+  cout <<"stat"<< endl;
+  graphPCMEMCalYieldPi0pPb->Print();
+  cout <<"sys"<< endl;
+  graphPCMEMCalYieldPi0pPbSystErr->Print();
+  
   // **************************************************************************************
   // ******************************** Reading RpPb from Combined pPb spectrum *************
   // **************************************************************************************
@@ -313,33 +334,38 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   // **************************************************************************************
   // ******************************** Reading Charged Particles and Pions **************************
   // **************************************************************************************
-  TGraphAsymmErrors*  graphRpPbChargedParticlesStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("RpPb_ChargedParticles_StatErr"); 
-  TGraphAsymmErrors*  graphRpPbChargedParticlesSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("RpPb_ChargedParticles_SystErr"); 
-  TGraphAsymmErrors*  graphRpPbChargedPionsStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("RpPb_ChargedPions_StatErr"); 
-  TGraphAsymmErrors*  graphRpPbChargedPionsSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("RpPb_ChargedPions_SystErr"); 
+  TGraphAsymmErrors*  graphRpPbChargedParticlesStatErr  = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("RpPb_ChargedParticles_StatErr"); 
+  TGraphAsymmErrors*  graphRpPbChargedParticlesSystErr  = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("RpPb_ChargedParticles_SystErr"); 
+  TGraphAsymmErrors*  graphRpPbChargedPionsStatErr    	= (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("RpPb_ChargedPions_StatErr"); 
+  TGraphAsymmErrors*  graphRpPbChargedPionsSystErr      = (TGraphAsymmErrors*)fileNeutralPionRpPb->Get("RpPb_ChargedPions_SystErr"); 
   // **************************************************************************************
   // ********************************* Combine spectra ************************************
   // **************************************************************************************
     
-  TString fileNameOutputWeightingOld                  = Form("%s/WeightingOld.dat",outputDir.Data());
+  TString fileNameOutputWeightingOld                = Form("%s/WeightingOld.dat",outputDir.Data());
 
   statErrorCollection[0]          = (TH1D*)histoPCMYieldPi0pPb->Clone("statErrPCMPi0");
   statErrorCollection[1]          = (TH1D*)histoPHOSYieldPi0pPb->Clone("statErrPHOSPi0");
   statErrorCollection[2]          = (TH1D*)histoEMCalYieldPi0pPb->Clone("statErrEMCalPi0");
+  statErrorCollection[4]	  = (TH1D*)histoPCMEMCalYieldPi0pPb->Clone("statErrPCM-EMCalPi0");
   statErrorCollection[5]          = (TH1D*)histoDalitzYieldPi0pPb->Clone("statErrDalitzPi0");
     
   sysErrorCollection[0]           = (TGraphAsymmErrors*)graphPCMYieldPi0pPbSystErr->Clone("sysErrPCMPi0");
   sysErrorCollection[1]           = (TGraphAsymmErrors*)graphPHOSYieldPi0pPbSystErr->Clone("sysErrPHOSPi0");
   sysErrorCollection[2]           = (TGraphAsymmErrors*)graphEMCalYieldPi0pPbSystErr->Clone("sysErrEMCalPi0");
+  sysErrorCollection[4]		  = (TGraphAsymmErrors*)graphPCMEMCalYieldPi0pPbSystErr->Clone("sysErrPCM-EMCalPi0");
   sysErrorCollection[5]           = (TGraphAsymmErrors*)graphDalitzYieldPi0pPbSystErr->Clone("sysErrDalitzPi0");
   cout << "Sys Error PCM:" <<endl;
-  graphPCMYieldPi0pPbSystErr->Print();    cout << "Sys Error PHOS:" <<endl;
-  graphPHOSYieldPi0pPbSystErr->Print();  cout << "Sys Error Dalitz:" <<endl;
+  graphPCMYieldPi0pPbSystErr->Print();    
+  cout << "Sys Error PHOS:" <<endl;
+  graphPHOSYieldPi0pPbSystErr->Print();  
+  cout << "Sys Error Dalitz:" <<endl;
   graphDalitzYieldPi0pPbSystErr->Print();
 
   sysErrorPPReference[0]  = (TGraphAsymmErrors*)graphPCMppreferenceSystErr->Clone("sysErrPPRefPCMPi0");
   sysErrorPPReference[1]  = (TGraphAsymmErrors*)graphPHOSppreferenceSystErr->Clone("sysErrPPRefPHOSPi0");
-  sysErrorPPReference[2]  = (TGraphAsymmErrors*)graphEMCalppreferenceStatErr->Clone("sysErrPPRefEMCalPi0");
+  sysErrorPPReference[2]  = (TGraphAsymmErrors*)graphEMCalppreferenceSystErr->Clone("sysErrPPRefEMCalPi0");
+  sysErrorPPReference[4]  = (TGraphAsymmErrors*)graphPCMEMCalppreferenceSystErr->Clone("sysErrPPRefPCM-EMCalPi0");
   sysErrorPPReference[5]  = (TGraphAsymmErrors*)graphDalitzppreferenceSystErr->Clone("sysErrPPRefDalitzPi0");
     
   TGraphAsymmErrors* graphCombPi0InvCrossSectionStatpPb5023GeV= NULL;
@@ -360,22 +386,13 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
     graphCombPi0InvCrossSectionStatpPb5023GeV=ScaleGraph(graphCombPi0InvCrossSectionStatpPb5023GeV,Scaling);
     graphCombPi0InvCrossSectionSyspPb5023GeV=ScaleGraph(graphCombPi0InvCrossSectionSyspPb5023GeV,Scaling);
 
-    // graphCombPi0InvCrossSectionSyspPb5023GeV=ApplyNSDSysError(graphCombPi0InvCrossSectionSyspPb5023GeV,ScalingErr,ScalingErrTpPb);//Normalization Uncertainties come as error box
-
-      graphCombPi0InvCrossSectionTotpPb5023GeV  =  CalculateCombinedSysAndStatError( graphCombPi0InvCrossSectionStatpPb5023GeV ,graphCombPi0InvCrossSectionSyspPb5023GeV );
+    graphCombPi0InvCrossSectionTotpPb5023GeV  =  CalculateCombinedSysAndStatError( graphCombPi0InvCrossSectionStatpPb5023GeV ,graphCombPi0InvCrossSectionSyspPb5023GeV );
     
     cout<< "Combined RpPb NSD scaled:" << endl;
     graphCombPi0InvCrossSectionTotpPb5023GeV->Print();
     graphCombPi0InvCrossSectionStatpPb5023GeV->Print();
     graphCombPi0InvCrossSectionSyspPb5023GeV->Print();
-  }//  else {
-
-  //  graphCombPi0InvCrossSectionSyspPb5023GeV=ApplyTpPbSysError(graphCombPi0InvCrossSectionSyspPb5023GeV,ScalingErrTpPb);
-
-  //   graphCombPi0InvCrossSectionTotpPb5023GeV  =  CalculateCombinedSysAndStatError( graphCombPi0InvCrossSectionStatpPb5023GeV ,graphCombPi0InvCrossSectionSyspPb5023GeV );
-
-  // }  //Normalization Uncertainties come as error box
-
+  }
 
     
   TGraphAsymmErrors* graphInvYieldPi0CombpPb5023GeVStaClone   = (TGraphAsymmErrors*) graphCombPi0InvCrossSectionStatpPb5023GeV->Clone();
@@ -489,6 +506,11 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   graphEMCalYieldPi0pPbSystErr->Draw("E2,same");
   DrawGammaSetMarkerTGraphAsym(graphEMCalYieldPi0pPb,20,1.5, kGreen+2, kGreen+2); 
   graphEMCalYieldPi0pPb->Draw("p,same");
+  
+  DrawGammaSetMarkerTGraphAsym(graphPCMEMCalYieldPi0pPbSystErr,20,1.5, kOrange+1, kOrange+1, 1, kTRUE);
+  graphPCMEMCalYieldPi0pPbSystErr->Draw("E2,same");
+  DrawGammaSetMarkerTGraphAsym(graphPCMEMCalYieldPi0pPb,20,1.5, kOrange+1, kOrange+1); 
+  graphPCMEMCalYieldPi0pPb->Draw("p,same");
     
 
   graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
@@ -504,6 +526,7 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   legendRpPbAllGA->AddEntry(graphDalitzYieldPi0pPbSystErr,"Dalitz","pef");
   legendRpPbAllGA->AddEntry(graphPHOSYieldPi0pPbSystErr,"PHOS","pef");
   legendRpPbAllGA->AddEntry(graphEMCalYieldPi0pPbSystErr,"EMCal","pef");
+  legendRpPbAllGA->AddEntry(graphPCMEMCalYieldPi0pPbSystErr,"PCM-EMCal","pef");
 
     
   legendRpPbAllGA->Draw();
@@ -664,6 +687,41 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
  
     
   canvasAllGA4RpPb->Print(Form("%s/CombinedAndEMCal_RpPb.%s",outputDir.Data(),suffix.Data())); 
+    // **************************************************************************************
+  // ************************* PlottingCombined R_pPb and PCM-EMCal************************
+  // **************************************************************************************
+  TCanvas* canvasAllGA5RpPb = new TCanvas("canvasAllGA5RpPb","",200,10,1200,700);  // gives the page size
+  DrawGammaCanvasSettings( canvasAllGA5RpPb, 0.08, 0.02, 0.02, 0.13);
+  TH2F * histo2DAllGA5;
+  histo2DAllGA5 = new TH2F("histo2DAllGA5","histo2DAllGA5",1000,0.,20.,1000,0.3,1.7);
+  SetStyleHistoTH2ForGraphs(histo2DAllGA5, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}", 0.05,0.06, 0.05,0.05, 0.9,0.7, 512, 505);
+  histo2DAllGA5->DrawCopy();
+
+  graphInvYieldPi0CombpPb5023GeVSysClone->Draw("E2,same");
+  graphInvYieldPi0CombpPb5023GeVStaClone->Draw("p,same");   
+
+  DrawGammaSetMarkerTGraphAsym(graphPCMEMCalYieldPi0pPbSystErr,24,1.5, kGreen+2, kGreen+2, 1, kTRUE);
+  graphPCMEMCalYieldPi0pPb->SetMarkerStyle(24);
+  graphPCMEMCalYieldPi0pPbSystErr->Draw("E2,same");  
+  graphPCMEMCalYieldPi0pPb->Draw("p,same");  
+
+
+
+  TLegend* legendRpPbAllGA5 = new TLegend(0.17,0.2,0.4,0.35);
+  legendRpPbAllGA5->SetFillColor(0);
+  legendRpPbAllGA5->SetLineColor(0);
+  legendRpPbAllGA5->SetTextSize(0.03);
+  legendRpPbAllGA5->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"Combined","pef");
+  legendRpPbAllGA5->AddEntry(graphPCMEMCalYieldPi0pPbSystErr,"PCM-EMCal","pef");
+        
+  legendRpPbAllGA5->Draw();
+  
+
+  line->Draw("same");
+ 
+    
+  canvasAllGA5RpPb->Print(Form("%s/CombinedAndPCM-EMCal_RpPb.%s",outputDir.Data(),suffix.Data())); 
+  
   // **************************************************************************************
   // ************************* Plotting Combined R_pPb with models ************************
   // **************************************************************************************
@@ -910,41 +968,41 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   // **************************************************************************************
   // ************************* Plotting all Alpha ************************
   // **************************************************************************************
-  TCanvas* canvasAllAlpha = new TCanvas("canvasAllAlpha","",200,10,1200,700);  // gives the page size
-  DrawGammaCanvasSettings(canvasAllAlpha , 0.07, 0.02, 0.02, 0.1);
-    
-  //     canvasAllAlpha->SetLogx();
-  // canvasAllAlpha->SetLogy();
-  TH2F * histo2DAllAlpha;
-  histo2DAllAlpha = new TH2F("histo2DAllAlpha","histo2DAllAlpha",1000,0.,20.,1000,0.2,1.7);
-  SetStyleHistoTH2ForGraphs(histo2DAllAlpha, "#it{p}_{T} (GeV/#it{c})","#alpha", 0.04,0.04, 0.04,0.04, 1.,.6, 512, 505);
-  histo2DAllAlpha->DrawCopy();
-    
-  DrawGammaSetMarkerTGraphAsym(graphPCMAlpha,20,1.5, 1, 1);
-  DrawGammaSetMarkerTGraphAsym(graphDalitzAlpha,20,1.5,  kCyan+2,  kCyan+2);
-  DrawGammaSetMarkerTGraphAsym(graphPHOSAlpha,20,1.5, kRed+1, kRed+1);
-  DrawGammaSetMarkerTGraphAsym(graphEMCalAlpha,20,1.5, kGreen+2, kGreen+2);
-
-
-  graphPCMAlpha->Draw("p,same");
-  graphDalitzAlpha->Draw("p,same");  
-  graphPHOSAlpha->Draw("p,same");  
-  graphEMCalAlpha->Draw("p,same");  
-
-  
-  TLegend* legendAllAlpha = new TLegend(0.65,0.15,0.95,0.35);
-  legendAllAlpha->SetFillColor(0);
-  legendAllAlpha->SetLineColor(0);
-  legendAllAlpha->SetTextSize(0.03);
-  legendAllAlpha->AddEntry(graphPCMAlpha,"PCM","pe");
-  legendAllAlpha->AddEntry(graphDalitzAlpha,"Dalitz","pe");
-  legendAllAlpha->AddEntry(graphPHOSAlpha,"PHOS","pe");
-  legendAllAlpha->AddEntry(graphEMCalAlpha,"EMCal","pe");
-   
-  legendAllAlpha->Draw();
- 
-    
-  canvasAllAlpha->Print(Form("%s/AllAlpha.%s",outputDir.Data(),suffix.Data()));
+//   TCanvas* canvasAllAlpha = new TCanvas("canvasAllAlpha","",200,10,1200,700);  // gives the page size
+//   DrawGammaCanvasSettings(canvasAllAlpha , 0.07, 0.02, 0.02, 0.1);
+//     
+//   //     canvasAllAlpha->SetLogx();
+//   // canvasAllAlpha->SetLogy();
+//   TH2F * histo2DAllAlpha;
+//   histo2DAllAlpha = new TH2F("histo2DAllAlpha","histo2DAllAlpha",1000,0.,20.,1000,0.2,1.7);
+//   SetStyleHistoTH2ForGraphs(histo2DAllAlpha, "#it{p}_{T} (GeV/#it{c})","#alpha", 0.04,0.04, 0.04,0.04, 1.,.6, 512, 505);
+//   histo2DAllAlpha->DrawCopy();
+//     
+//   DrawGammaSetMarkerTGraphAsym(graphPCMAlpha,20,1.5, 1, 1);
+//   DrawGammaSetMarkerTGraphAsym(graphDalitzAlpha,20,1.5,  kCyan+2,  kCyan+2);
+//   DrawGammaSetMarkerTGraphAsym(graphPHOSAlpha,20,1.5, kRed+1, kRed+1);
+//   DrawGammaSetMarkerTGraphAsym(graphEMCalAlpha,20,1.5, kGreen+2, kGreen+2);
+// 
+// 
+//   graphPCMAlpha->Draw("p,same");
+//   graphDalitzAlpha->Draw("p,same");  
+//   graphPHOSAlpha->Draw("p,same");  
+//   graphEMCalAlpha->Draw("p,same");  
+// 
+//   
+//   TLegend* legendAllAlpha = new TLegend(0.65,0.15,0.95,0.35);
+//   legendAllAlpha->SetFillColor(0);
+//   legendAllAlpha->SetLineColor(0);
+//   legendAllAlpha->SetTextSize(0.03);
+//   legendAllAlpha->AddEntry(graphPCMAlpha,"PCM","pe");
+//   legendAllAlpha->AddEntry(graphDalitzAlpha,"Dalitz","pe");
+//   legendAllAlpha->AddEntry(graphPHOSAlpha,"PHOS","pe");
+//   legendAllAlpha->AddEntry(graphEMCalAlpha,"EMCal","pe");
+//    
+//   legendAllAlpha->Draw();
+//  
+//     
+//   canvasAllAlpha->Print(Form("%s/AllAlpha.%s",outputDir.Data(),suffix.Data()));
 
   // **************************************************************************************
   // ************************* Plotting  R_pPb from Combined pPb spectrum *****************
@@ -1022,8 +1080,7 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   graphPi0ESP09sPi0KKP->Write("EPS09s_KKP_NLO");
   graphPi0ESP09sPi0AKK->Write("EPS09s_AKK_NLO");
   graphPi0DSS5000->Write("EPS09s_fDSS_NLO");
-  graphAsymmErrorsPi0DSS5000->Write("EPS09s_fDSS_errors");
-         
+  graphAsymmErrorsPi0DSS5000->Write("EPS09s_fDSS_errors");  
   graphPi0CGC->Write("CGC");
   graphCombppreferenceStatErr->Write("ppRefStat");
   graphCombppreferenceSystErr->Write("ppRefSyst");

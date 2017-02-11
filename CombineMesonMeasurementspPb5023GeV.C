@@ -164,13 +164,17 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   //___________________________________ Declaration of files _____________________________________________
   TString fileNameNeutralPionDalitz                   = "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20160929.root";
   TString fileNameNeutralPionPCM                      = "ExternalInputpPb/PCM/data_PCMResults_pPb_20151111_standard_CatErrors.root";
-  TString fileNameNeutralPionEMCal                    = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_160602_newhighptbinningPi0_pPb.root";
+  //TString fileNameNeutralPionEMCal                    = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_160602_newhighptbinningPi0_pPb.root";
+  TString fileNameNeutralPionEMCal 		      = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_161118_pPb.root";
   TString fileNamePCMEMCal			      = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2016_12_22.root";
-  TString fileNameNeutralPionEMCalEta                 = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_160503_pPb.root"; 
+ // TString fileNameNeutralPionEMCalEta                 = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_160503_pPb.root"; 
+  TString fileNameNeutralPionEMCalEta                 = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_161118_pPb.root";
   TString fileNameNeutralPionPHOS                     = "ExternalInputpPb/PHOS/20160601_Pi0InvariantSpectrum_pPb_PHOS.root";//data_PHOSResults_pPb_20160208.root";
   TString fileNameChargedPions                        = "ExternalInputpPb/InputRpPb/pPb502.fullpT.INEL.20151204_mb_wo_V0Acorr.root";//Charged pion pPb spectrum 
-  TString fileNamemTScalingpPb                        = "ExternalInputpPb/mTScaling/mTScaling_pPb5023GeV.root"; 
-  TString fileNamemTScalingpp7TeV                     = "ExternalInputpPb/mTScaling/mTScaling_pp7TeV.root";
+  TString fileNamemTScalingpPb                        = "CombinepPbSpectra/mT-Scaling/2017_02_09/mTScaling.root"; 
+  TString fileNamemTScalingpp7TeV                     = "CombinepPbSpectra/mT-Scaling/2017_02_09/mTScaling_pp7TeV.root";
+  
+  
 
   TString nameHistoPHOS                               = "hCor_stat";
   TString nameHistoPHOSSysErrors                      = "hCor_syst";
@@ -2121,11 +2125,11 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   SetStyleHistoTH2ForGraphs(histo2DCompCombinedYShiftEtaPi0RatioALICEPrelim, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0} ", 0.05,0.05, 0.05,0.06, 1.0,.8, 512, 508);
   histo2DCompCombinedYShiftEtaPi0RatioALICEPrelim->DrawCopy(); 
       
-  /*EtaPi0Ratio_mTScaled_pPb->Draw("same"); NOTE all
+  EtaPi0Ratio_mTScaled_pPb->Draw("same"); //NOTE all
   graphEtaPi0Ratio_mTScaled_pPb->SetMarkerColor(kRed+2);
   graphEtaPi0Ratio_mTScaled_pPb->SetLineColor(1);
   graphEtaPi0Ratio_mTScaled_pPb->SetFillColor(kRed+2);
-  */
+  
   
   DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Ratiopp7TeV, 21, 1, kGray+3, kGray+3);
   graphCombEtaToPi0Ratiopp7TeV->Draw("same,e1p");
@@ -2144,7 +2148,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   legendRpPbCombineYShiftEtaPi0RatioALICEPrelim->SetTextSize(0.04);
   legendRpPbCombineYShiftEtaPi0RatioALICEPrelim->AddEntry(graphCombEtaPi0RatioSyspPb5023GeV,"#eta/#pi^{0}, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
   legendRpPbCombineYShiftEtaPi0RatioALICEPrelim->AddEntry(graphCombEtaToPi0RatioSysErrpp7TeV,"#eta/#pi^{0}, pp #sqrt{#it{s}} = 7 TeV (PLB717 (2012) 162-172)","pef");
-  //legendRpPbCombineYShiftEtaPi0RatioALICEPrelim->AddEntry(EtaPi0Ratio_mTScaled_pPb,"#eta/#pi^{0}, eta from #it{m}_{T} scaled #pi^{0}","pl"); NOTE
+  legendRpPbCombineYShiftEtaPi0RatioALICEPrelim->AddEntry(EtaPi0Ratio_mTScaled_pPb,"#eta/#pi^{0}, eta from #it{m}_{T} scaled #pi^{0}","pl"); //NOTE
    
   legendRpPbCombineYShiftEtaPi0RatioALICEPrelim->Draw("same");
 
@@ -2365,18 +2369,18 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   graphRatioCombEtaPCMEMCalSys->Write("RatioEtaTsallisPCMEMCalSyst");
   histoRatioCombEtaPCMEMCalStat->Write("RatioEtaTsallisPCMEMCalStat");
   
-  //EtaPi0Ratio_mTScaled_pPb->Write("mTScaling"); NOTE
-  graphCombEtaToPi0Ratiopp7TeV->Write("EtaPi07TeVStat");
+  EtaPi0Ratio_mTScaled_pPb->Write("mTScaling"); 
   graphCombEtaToPi0RatioSysErrpp7TeV->Write("EtaPi07TeVSyst");
+  graphCombEtaToPi0Ratiopp7TeV->Write("EtaPi07TeVStat");
   graphCombEtaPi0RatioStatpPb5023GeV->Write("EtaPi0pPbStat");
   graphCombEtaPi0RatioSyspPb5023GeV->Write("EtaPi0pPbSyst");
   
   
-  graphEtaPi0Ratio_vsmT_Sys_pp7TeV->Write("EtaPi0Ratio_vsmT_Sys_pp7TeV");
-  graphEtaPi0Ratio_vsmT_Stat_pp7TeV->Write("EtaPi0Ratio_vsmT_Stat_pp7TeV");
+  //graphEtaPi0Ratio_vsmT_Sys_pp7TeV->Write("EtaPi0Ratio_vsmT_Sys_pp7TeV");
+  //graphEtaPi0Ratio_vsmT_Stat_pp7TeV->Write("EtaPi0Ratio_vsmT_Stat_pp7TeV");
   //graphEtaPi0Ratio_vsmT_Sys->Write("EtaPi0Ratio_vsmT_Sys"); NOTE
   //graphEtaPi0Ratio_vsmT_Stat->Write("EtaPi0Ratio_vsmT_Stat"); NOTE
-  //EtaSpectrum_mTScaled_pPb->Write("EtaSpectrum_mT_pPb"); NOTE
+  EtaSpectrum_mTScaled_pPb->Write("EtaSpectrum_mT_pPb"); 
   
   
   

@@ -12,6 +12,7 @@ void GetTGraphErrorsUpDown(TGraphAsymmErrors* graphYieldError, TGraphErrors** gr
 Double_t* ExtractRelErrUpAsymmGraphClone(TGraphAsymmErrors* graph);
 Double_t* ExtractRelErrDownAsymmGraphClone(TGraphAsymmErrors* graph);
 TGraphAsymmErrors* CalculateSystErrors(TGraphErrors* spectrum,TGraphAsymmErrors* g1,TGraphAsymmErrors* g2);
+TGraphAsymmErrors* CalculateSystErrors(TGraphAsymmErrors* spectrum,TGraphErrors* g1,TGraphErrors* g2);
 //TF1* RebinWithFitToTGraph(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins, TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters,Double_t probability);
 TF1* RebinWithFitToTGraph(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TF1* CurrentFit, TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters,Int_t fixParNumber);
 TF1* FillTGraphEYWithFitErr(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters);
@@ -19,6 +20,11 @@ TF1* RebinWithFitToTGraphWithMeanErr(TGraphAsymmErrors *spectrum, TGraphAsymmErr
 TGraphErrors *GetInterpolSpectrum2D(TGraphErrors *g1, TGraphErrors *g2,Double_t d1, Double_t d2,Double_t dSqrts);
 TGraphAsymmErrors* GetChargeParticlesRpPb2013(TString typeErr);
 TGraphAsymmErrors* GetChargeParticlesRpPb2012(TString typeErr);
+TGraphAsymmErrors* BinYShiftwithErrhigh(TGraphAsymmErrors* spectrum,TGraphAsymmErrors* spectrumErrhigh);
+TGraphAsymmErrors* BinYShiftwithErrlow(TGraphAsymmErrors* spectrum,TGraphAsymmErrors* spectrumErrlow);
+TF1* RebinWithFitToTGraphWithUpDownYShifted(TGraphAsymmErrors *spectrumStatErr, TGraphAsymmErrors *spectrumSystErr,TGraphAsymmErrors *newBins,TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters,  TGraphAsymmErrors** newSpectrumStatErr,
+					     TGraphAsymmErrors** newSpectrumSystErr,TGraphAsymmErrors** spectrumYShiftedDownStatErr,TGraphAsymmErrors** spectrumYShiftedUpStatErr,
+					     TF1** FitToSpectrumYShiftedDown, TF1** FitToSpectrumYShiftedUp);
 TGraphErrors *ConvertTGraphAsymmErrorstoTGraphErrors(TGraphAsymmErrors* g1);
 TGraphAsymmErrors* ConvertTGraphErrorstoTGraphAsymmErrors(TGraphErrors* g1);
 TH1F* GetPPReferenceFromPythia(TString fileName);
@@ -42,10 +48,11 @@ TGraphAsymmErrors* graphRpPbStatErr;
 TGraphAsymmErrors* graphRpPbSystErr;
 TGraphAsymmErrors* graphRpPbPHOSStatErr;
 TGraphAsymmErrors* graphRpPbPHOSSystErr;
-TGraphErrors* graphAlpha;
-TGraphErrors** graphPtvsSqrts; 
-TGraphErrors** gPtvsEnergiesSystem;
-TF1** fPowerlawSystem;
+
+TGraphErrors* graphAlpha[3];
+TGraphErrors** graphPtvsSqrts[3]; 
+TGraphErrors** gPtvsEnergiesSystem[3];
+TF1** fPowerlawSystem[3];
 
 TGraphAsymmErrors* graphAsymmChargedParticlesRpPbSystErr;
 TGraphAsymmErrors* graphAsymmChargedParticlesRpPbStatErr;
@@ -66,10 +73,11 @@ TString energyLabel         = "p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV";
 TString DalitzLabel         = "#pi^{0} #rightarrow e^{+}e^{-}#gamma";
 TString PCMLabel            = "#pi^{0} #rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}";
 TString CaloLabel           = "#pi^{0} #rightarrow #gamma #gamma";
+TString PCMEMCalLabel       = "#pi^{0} #rightarrow #gamma_{conv}#gamma_{calo}";
 TString ChargedPionsLabel   = "#pi^{+} + #pi^{-}";
 TString thesisPlotLabel     = "";
 
-enum{kDalitz,kPCM,kPHOS,kEMCal,kPion,kKaon,kProton,kNAna};
+enum{kDalitz,kPCM,kPHOS,kEMCal,kPCMEMCal,kPion,kKaon,kProton,kNAna};
 Int_t colorsArray[kNAna];
 
 TGraphAsymmErrors* GetChargeParticlesRpPb2012(TString typeErr){
@@ -243,12 +251,18 @@ TF1* RebinWithFitToTGraph(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSp
     Double_t *yOldValueErrlow   = spectrum->GetEYlow();
     Double_t *yOldValueErrhigh  = spectrum->GetEYhigh();
     Double_t *yOldValue         = spectrum->GetY();
+    
+    
     ///////////////////////////////////////////////////////////
     Int_t nNewPoints            = newBins->GetN();
     Double_t *xNewValue         = newBins->GetX();
     Double_t *xNewValueErrlow   = newBins->GetEXlow();
     Double_t *xNewValueErrhigh  = newBins->GetEXhigh();
     //////////////////////////////////////////////////////////////    
+    
+ 
+    
+    
     Double_t  yNewValueRelErrlow[nNewPoints];
     Double_t  yNewValueRelErrhigh[nNewPoints];
     (*newSpectrum)              = new TGraphAsymmErrors (nNewPoints);
@@ -307,10 +321,120 @@ TF1* RebinWithFitToTGraph(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSp
 }
 
 
+TF1* RebinWithFitToTGraphWithUpDownYShifted(TGraphAsymmErrors *spectrumStatErr, TGraphAsymmErrors *spectrumSystErr,TGraphAsymmErrors *newBins,TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters,  TGraphAsymmErrors** newSpectrumStatErr,
+					     TGraphAsymmErrors** newSpectrumSystErr,TGraphAsymmErrors** spectrumYShiftedDownStatErr,TGraphAsymmErrors** spectrumYShiftedUpStatErr,
+					     TF1** FitToSpectrumYShiftedDown, TF1** FitToSpectrumYShiftedUp){
+
+ //Shift the spectra up and down acording to the systematic errors
+   
+    (*spectrumYShiftedUpStatErr)    = BinYShiftwithErrhigh( spectrumStatErr,spectrumSystErr);
+    (*spectrumYShiftedDownStatErr)  = BinYShiftwithErrlow(  spectrumStatErr,spectrumSystErr);
+    
+    const Int_t nNewPoints        = newBins->GetN();
+    Double_t *xNewValue           = newBins->GetX();
+    Double_t *xNewValueErrlow     = newBins->GetEXlow();
+    Double_t *xNewValueErrhigh    = newBins->GetEXhigh();
+  
+   
+    //Preparing fit functions
+   TF1* FitToSpectrum 		  = 0;
+   
+   TGraphErrors *grint   = new TGraphErrors(nNewPoints);
+       
+   for (Int_t i=0; i<nNewPoints; i++)
+        grint->SetPoint(i, xNewValue[i], 0);
+   
+   
+       
+   if( FitType.BeginsWith("l") || FitType.BeginsWith("L") ) {
+     
+            FitToSpectrum = FitObject("l","fitInvCrossSectionPi0","Pi0");
+            FitToSpectrum->SetRange(minPt,maxPt);
+            FitToSpectrum->SetParameters(parameters[0],parameters[1],parameters[2]); // standard
+	    spectrumStatErr->Fit(FitToSpectrum,"SQNRME+","",minPt,maxPt);  //One time
+            (TVirtualFitter::GetFitter())->GetConfidenceIntervals(grint, 0.68);
+  
+	    
+	    //To compute systematic errors
+	    (*FitToSpectrumYShiftedUp) = FitObject("l","fitInvCrossSectionPi0YShiftedUp","Pi0");
+            (*FitToSpectrumYShiftedUp)->SetRange(minPt,maxPt);
+            (*FitToSpectrumYShiftedUp)->SetParameters(parameters[0],parameters[1],parameters[2]); // standard
+	    (*spectrumYShiftedUpStatErr)->Fit((*FitToSpectrumYShiftedUp),"SQNRME+","",minPt,maxPt);  //One time
+	    
+	    //To compute systematic errors
+	    
+	    (*FitToSpectrumYShiftedDown) = FitObject("l","fitInvCrossSectionPi0YShiftedDown","Pi0");
+            (*FitToSpectrumYShiftedDown)->SetRange(minPt,maxPt);
+            (*FitToSpectrumYShiftedDown)->SetParameters(parameters[0],parameters[1],parameters[2]); // standard 
+	    (*spectrumYShiftedDownStatErr)->Fit((*FitToSpectrumYShiftedDown),"SQNRME+","",minPt,maxPt);  //One time
+	   
+   }
+   
+    (*newSpectrumStatErr) = new TGraphAsymmErrors(nNewPoints);
+    (*newSpectrumSystErr) = new TGraphAsymmErrors(nNewPoints);
+    
+    for( Int_t iPoint = 0; iPoint < nNewPoints; iPoint++){
+        
+        Double_t yEval      = FitToSpectrum->Eval(xNewValue[iPoint]);
+	
+	Double_t yNewValueStatErrlow    = grint->GetEY()[iPoint]; //Getting the confidencial error from the fit
+	Double_t yNewValueStatErrhigh   = grint->GetEY()[iPoint]; //Getting the confidencial error from the fit
+  
+        (*newSpectrumStatErr)->SetPoint(iPoint,xNewValue[iPoint],yEval);
+        (*newSpectrumStatErr)->SetPointError(iPoint,xNewValueErrlow[iPoint],xNewValueErrhigh[iPoint],yNewValueStatErrlow,yNewValueStatErrhigh);
+        cout<<"Stat "<<iPoint<<"\t"<<xNewValue[iPoint]<<"\t"<<yEval<<"\t"<<xNewValueErrlow[iPoint]<<"\t"<<xNewValueErrhigh[iPoint]<<"\t"<<yNewValueStatErrlow<<"\t"<<yNewValueStatErrhigh<<endl;
+	
+	
+	Double_t yEvalUp    = (*FitToSpectrumYShiftedUp)->Eval(xNewValue[iPoint]);
+	Double_t yEvalDown  = (*FitToSpectrumYShiftedDown)->Eval(xNewValue[iPoint]);
+	
+	Double_t yNewValueSystErrlow	= 0;
+	Double_t yNewValueSystErrhigh   = 0;
+	
+	Double_t yErrUp   = 0;
+	Double_t yErrDown = 0;
+	
+	if( yEval != 0 ){
+	
+	yErrUp   = TMath::Abs( (yEval-yEvalUp)/yEval );
+	yErrDown = TMath::Abs( (yEval-yEvalDown)/yEval);
+	
+	}
+	
+	cout<<"Syst "<<iPoint<<"  ErrUp "<<yErrUp<<"  ErrDown "<<yErrDown<<endl;
+	
+	
+	if( yErrUp >= yErrDown){
+	  
+	yNewValueSystErrlow  = yErrUp*yEval;
+	yNewValueSystErrhigh = yErrUp*yEval;
+	  
+	} else {
+	  
+	yNewValueSystErrlow  = yErrDown*yEval;
+	yNewValueSystErrhigh = yErrDown*yEval;
+	  
+	}
+	
+	(*newSpectrumSystErr)->SetPoint(iPoint,xNewValue[iPoint],yEval);
+        (*newSpectrumSystErr)->SetPointError(iPoint,xNewValueErrlow[iPoint],xNewValueErrhigh[iPoint],yNewValueSystErrlow,yNewValueSystErrhigh);
+        cout<<"Syst "<<iPoint<<"\t"<<xNewValue[iPoint]<<"\t"<<yEval<<"\t"<<xNewValueErrlow[iPoint]<<"\t"<<xNewValueErrhigh[iPoint]<<"\t"<<yNewValueSystErrlow<<"\t"<<yNewValueSystErrhigh<<endl;
+	
+	
+    }
+    
+    return FitToSpectrum;
+}
+
+
+
+
+
+
 TF1* RebinWithFitToTGraphWithMeanErr(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TF1* CurrentFit, TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters,Int_t fixParNumber){
     
     Int_t     nOldPoints       = spectrum->GetN();
-    Double_t *xOldValue 	   = spectrum->GetX();
+    Double_t *xOldValue        = spectrum->GetX();
     Double_t *yOldValueErrlow  = spectrum->GetEYlow();
     Double_t *yOldValueErrhigh = spectrum->GetEYhigh();
     Double_t *yOldValue        = spectrum->GetY();    
@@ -429,6 +553,84 @@ TF1* FillTGraphEYWithFitErr(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** new
     
 }
 
+TGraphAsymmErrors* BinYShiftwithErrhigh(TGraphAsymmErrors* spectrum,TGraphAsymmErrors* spectrumErrhigh){
+  
+    TGraphAsymmErrors* spectrumClone = (TGraphAsymmErrors*)spectrum->Clone();
+     
+    const Int_t nNewPoints         = spectrumClone->GetN();
+    Double_t *xValue         = spectrumClone->GetX();
+    Double_t *yValue	     = spectrumClone->GetY();
+    Double_t *xValueErrlow   = spectrumClone->GetEXlow();
+    Double_t *xValueErrhigh  = spectrumClone->GetEXhigh();
+    Double_t *yValueErrlow   = spectrumClone->GetEYlow();
+    Double_t *yValueErrhigh  = spectrumClone->GetEYhigh();
+    Double_t yNewValue[nNewPoints];
+    
+    //Get errors Y high to shift the spectrum
+    Double_t *yValueErrShift = spectrumErrhigh->GetEYhigh();
+    Double_t *yValueShift    = spectrumErrhigh->GetY();
+    
+    for(Int_t iPoint = 0; iPoint < nNewPoints; iPoint++){
+        
+      yNewValue[iPoint] = yValue[iPoint] + TMath::Abs((yValueErrShift[iPoint]/yValueShift[iPoint])*yValue[iPoint]);
+     
+      yValueErrlow[iPoint]  = (yValueErrlow[iPoint]/yValue[iPoint])*yNewValue[iPoint];
+      yValueErrhigh[iPoint] = (yValueErrhigh[iPoint]/yValue[iPoint])*yNewValue[iPoint];
+  
+    
+    }
+    
+    TGraphAsymmErrors* newSpectrumYShifted = new TGraphAsymmErrors(nNewPoints,xValue,yNewValue,xValueErrlow,xValueErrhigh,yValueErrlow,yValueErrhigh);
+    
+    return newSpectrumYShifted;
+  
+    
+}
+
+
+TGraphAsymmErrors* BinYShiftwithErrlow(TGraphAsymmErrors* spectrum,TGraphAsymmErrors* spectrumErrlow){
+  
+    cout<<"Cross checking Bin Shift"<<endl;
+    
+    spectrumErrlow->Print();
+    
+    
+  
+  
+    TGraphAsymmErrors* spectrumClone = (TGraphAsymmErrors*)spectrum->Clone();
+     
+    const Int_t nNewPoints         = spectrumClone->GetN();
+    Double_t *xValue         = spectrumClone->GetX();
+    Double_t *yValue	     = spectrumClone->GetY();
+    Double_t *xValueErrlow   = spectrumClone->GetEXlow();
+    Double_t *xValueErrhigh  = spectrumClone->GetEXhigh();
+    Double_t *yValueErrlow   = spectrumClone->GetEYlow();
+    Double_t *yValueErrhigh  = spectrumClone->GetEYhigh();
+    Double_t *yValueErrShift = spectrumErrlow->GetEYlow();
+    Double_t *yValueShift    = spectrumErrlow->GetY();
+    
+    //Get errors Y high to shift the spectrum
+    Double_t yNewValue[nNewPoints];
+    
+    for(Int_t iPoint = 0; iPoint < nNewPoints; iPoint++){
+        
+      yNewValue[iPoint] = yValue[iPoint] - TMath::Abs((yValueErrShift[iPoint]/yValueShift[iPoint])*yValue[iPoint]);
+      yValueErrlow[iPoint]  = (yValueErrlow[iPoint]/yValue[iPoint])*yNewValue[iPoint];
+      yValueErrhigh[iPoint] = (yValueErrhigh[iPoint]/yValue[iPoint])*yNewValue[iPoint];
+  
+    
+    }
+    
+    TGraphAsymmErrors* newSpectrumYShifted = new TGraphAsymmErrors(nNewPoints,xValue,yNewValue,xValueErrlow,xValueErrhigh,yValueErrlow,yValueErrhigh);
+    
+    cout<<"///"<<endl;
+    newSpectrumYShifted->Print();
+    
+    return newSpectrumYShifted;
+  
+    
+}
+
 TGraphAsymmErrors* CalculateSystErrors(TGraphErrors* spectrum,TGraphAsymmErrors* g1,TGraphAsymmErrors* g2){
 
     Int_t nPoints               = spectrum->GetN();
@@ -460,6 +662,44 @@ TGraphAsymmErrors* CalculateSystErrors(TGraphErrors* spectrum,TGraphAsymmErrors*
     return graphErr;
 }
 
+TGraphAsymmErrors* CalculateSystErrors(TGraphAsymmErrors* spectrum,TGraphErrors* g1,TGraphErrors* g2){
+
+    Int_t nPoints               = spectrum->GetN();
+    Double_t* xBins             = spectrum->GetX();
+    Double_t* yBins             = spectrum->GetY();
+    Double_t *g1xErrlow         = spectrum->GetEXlow();
+    Double_t *g1xErrhigh        = spectrum->GetEXhigh();
+    
+    
+  //  Double_t *g1yErr         = g1->GetEY();
+    Double_t *g1yVal         = g1->GetY();
+    //Double_t *g2yErr         = g2->GetEY();
+    Double_t *g2yVal         = g2->GetY();
+    
+    TGraphAsymmErrors* graphErr = new TGraphAsymmErrors(nPoints);
+    cout<<"iPoin\tx\ty\tXerrLow\tXerrHigh\tYerrLow\tYerrHigh"<<endl;;
+    
+    for(Int_t iPoint = 0; iPoint < nPoints; iPoint++){
+        
+        Double_t g1yrelErr  = 0;
+	Double_t g2yrelErr  = 0;
+        
+	g1yrelErr  = TMath::Abs( (yBins[iPoint]-g1yVal[iPoint])/yBins[iPoint] );
+	g2yrelErr  = TMath::Abs( (yBins[iPoint]-g2yVal[iPoint])/yBins[iPoint] );
+	
+        Double_t ySysErr    = 0.0;
+        
+        if(  g1yrelErr >= g2yrelErr ){
+             ySysErr         = yBins[iPoint]*g1yrelErr;
+        } else {
+             ySysErr         = yBins[iPoint]*g2yrelErr;
+        }
+        graphErr->SetPoint(iPoint,xBins[iPoint],yBins[iPoint]);
+        graphErr->SetPointError(iPoint,g1xErrlow[iPoint],g1xErrhigh[iPoint],ySysErr,ySysErr);
+        cout<<iPoint<<"\t"<<xBins[iPoint]<<"\t"<<yBins[iPoint]<<"\t"<<g1xErrlow[iPoint]<<"\t"<<g1xErrhigh[iPoint]<<"\t"<<ySysErr<<"\t"<<ySysErr<<endl;
+    }
+    return graphErr;
+}
 
 
 
@@ -648,15 +888,22 @@ TGraphErrors *GetInterpolSpectrum2D(TGraphErrors *g1, TGraphErrors *g2, Double_t
         //delete fPowerlaw;
     }
     
-    if( opc.EqualTo("SystStat") ) {   
-        graphAlpha          = gAlpha;
-        graphPtvsSqrts      = new TGraphErrors*[g1->GetN()];
-        fPowerlawSystem     = new TF1*[g1->GetN()];
-        gPtvsEnergiesSystem = new TGraphErrors*[g1->GetN()];
+    if( opc.EqualTo("SystUp") || opc.EqualTo("SystDown") || opc.EqualTo("Stat") ) {
+      
+        Int_t index = 0;
+        
+        if( opc.EqualTo("Stat") ) index = 0;
+	else if (opc.EqualTo("SystDown") ) index = 1;
+	else if (opc.EqualTo("SystUp") ) index = 2;
+       
+        graphAlpha[index]    = gAlpha;
+        graphPtvsSqrts[index]      = new TGraphErrors*[g1->GetN()];
+        fPowerlawSystem[index]     = new TF1*[g1->GetN()];
+        gPtvsEnergiesSystem[index] = new TGraphErrors*[g1->GetN()];
         for ( Int_t i = 0; i < g1->GetN(); i++ ){
-            graphPtvsSqrts[i]       = gPtvsSqrts[i];
-            fPowerlawSystem[i]      = fPowerlawFits[i];
-            gPtvsEnergiesSystem[i]  = gPtvsEnergies[i];
+            graphPtvsSqrts[index][i]       = gPtvsSqrts[i];
+            fPowerlawSystem[index][i]      = fPowerlawFits[i];
+            gPtvsEnergiesSystem[index][i]  = gPtvsEnergies[i];
         }
     }
     return gInterpol;
@@ -754,7 +1001,27 @@ TGraphAsymmErrors* CancelOutMaterialError(TGraphAsymmErrors* graphYieldPi0, TStr
             cout<<valueX[i]<<" "<<"errorLow:  "<< errorYlow[i]/ valueY[i]*100<<endl;
             cout<<valueX[i]<<" "<<"errorHigh: "<< errorYhigh[i]/ valueY[i]*100<<endl;
         }
-    }     
+    } else if ( method.CompareTo("Comb") == 0 ) {
+      cout<<"Entro Comb"<<endl;
+      Double_t  errorMaterial = 4.5;
+        for(Int_t i = 0; i < nPoints; i++){
+            Double_t materialE      = (  errorMaterial   * valueY[i] ) / 100.0;
+            Double_t materialTwoE   = (  2*errorMaterial * valueY[i] ) / 100.0;
+            errorYlow[i]            = TMath::Sqrt(   ( errorYlow[i] * errorYlow[i]  )  - ( materialTwoE * materialTwoE ) + ( materialE*materialE ) );
+            errorYhigh[i]           = TMath::Sqrt(   ( errorYhigh[i]* errorYhigh[i] )  - ( materialTwoE * materialTwoE ) + ( materialE*materialE ) );
+        }
+      
+    } else if ( method.CompareTo("PCM-EMCal") == 0 || method.CompareTo("PCM-EMCAL") == 0){
+      
+        Double_t  errorMaterial = 4.5;
+      
+        for(Int_t i = 0; i < nPoints; i++){
+            Double_t materialE 	=  ( errorMaterial   * valueY[i] ) / 100.0;
+            errorYlow[i]  = TMath::Sqrt(   ( errorYlow[i] * errorYlow[i]  )  - ( materialE*materialE ) );
+            errorYhigh[i] = TMath::Sqrt(   ( errorYhigh[i]* errorYhigh[i] )  - ( materialE*materialE ) );
+        }
+      
+    }
     TGraphAsymmErrors* graphInvYieldPi0CancelOutMaterial = new TGraphAsymmErrors(nPoints,valueX,valueY,errorXlow,errorXhigh,errorYlow,errorYhigh);
     return graphInvYieldPi0CancelOutMaterial;
 }
