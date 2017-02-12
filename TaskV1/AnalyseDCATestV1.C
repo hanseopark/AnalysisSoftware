@@ -1838,7 +1838,7 @@ void PlotDCADistPtBinWithMCSplitCat(TString namePlot, TString nameCanvas, TStrin
 void PlotDCADistPtBinWithFitAndEstimate(TString namePlot, TString nameCanvas, TString namePad,
                                         Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins,
                                         Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy){
-    TCanvas *canvasDataFit 			= new TCanvas(nameCanvas.Data(),"",2800,1800);  // gives the page size
+    TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",2800,1800);  // gives the page size
     canvasDataFit->SetTopMargin(0.0);
     canvasDataFit->SetBottomMargin(0.0);
     canvasDataFit->SetRightMargin(0.0);
