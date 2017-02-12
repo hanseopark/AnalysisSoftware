@@ -672,12 +672,24 @@ function GiveBinningDirectPhoton900GeV()
         echo "7 Bins --> Max p_T = 3 GeV ...";
         correctPi0=1
         BinsPtPi0=7
+    elif [ $answer = 8 ]; then
+        echo "8 Bins --> Max p_T = 2.0 GeV ...";
+        correctPi0=1
+        BinsPtPi0=8
+    elif [ $answer = 9 ]; then
+        echo "9 Bins --> Max p_T = 2.5 GeV ...";
+        correctPi0=1
+        BinsPtPi0=9
+    elif [ $answer = 10 ]; then
+        echo "10 Bins --> Max p_T = 3.5 GeV ...";
+        correctPi0=1
+        BinsPtPi0=10
     elif [ $answer = 11 ]; then
-        echo "12 Bins --> Max p_T = 4 GeV ...";
+        echo "11 Bins --> Max p_T = 4 GeV ...";
         correctPi0=1
         BinsPtPi0=11
     elif [ $answer = 12 ]; then
-        echo "13 Bins --> Max p_T = 6 GeV ...";
+        echo "12 Bins --> Max p_T = 6 GeV ...";
         correctPi0=1
         BinsPtPi0=12
     else

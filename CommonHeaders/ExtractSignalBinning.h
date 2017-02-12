@@ -38,9 +38,10 @@ Double_t fBinsEta900GeVPt[4]                    =  {0., 0.9, 1.8, 3.0};
 Int_t fBinsEta900GeVPtRebin[4]                  =  {8, 5, 5};
 Int_t fBinsPi0EtaBinning900GeVPtRebin[4]        =  {8, 4, 4};
 
-Double_t fBinsDirGamma900GeVPt[8]               = { 0.0, 0.6, 0.8, 1.0, 1.3, 2.0, 3.0, 4.5};
-Int_t fBinsDirGamma900GeVPtRebin[7]             = { 4, 2, 2, 2, 2, 2, 4};
-
+Double_t fBinsDirGamma900GeVPt[11]              = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 2.0, 2.5,
+                                                    3.5, 4.5};
+Int_t fBinsDirGamma900GeVPtRebin[10]            = { 4, 4, 2, 2, 2, 2, 2, 2, 4,
+                                                    4};
 //****************************************************************************************************
 //******************** Pt binning for pp, 2.76 TeV ***************************************************
 //****************************************************************************************************
@@ -1308,12 +1309,12 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
         if (energy.CompareTo("900GeV") == 0) {
             if (directPhoton.CompareTo("directPhoton") == 0){
                 fStartPtBin     = 1;
-                fColumn         = 5;
-                fRow            = 5;
+                fColumn         = 4;
+                fRow            = 3;
 
-                if (fNBinsPt > 21) {
-                    cout << "You have chosen Direct Photon Plots and more than 21 bins, this is not possible, it will be reduced to 21 bins." << endl;
-                    fNBinsPt    = 21;
+                if (fNBinsPt > 12) {
+                    cout << "You have chosen Direct Photon Plots and more than 12 bins, this is not possible, it will be reduced to 12 bins." << endl;
+                    fNBinsPt    = 12;
                 }
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
                     fBinsPt[i]  = fBinsDirGamma900GeVPt[i];
@@ -1324,7 +1325,10 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 fStartPtBin     = 1;
                 fColumn         = 4;
                 fRow            = 3;
-
+                if (isDCA) {
+                    fColumn     = 3;
+                    fRow        = 2;
+                }
                 if (fNBinsPt > 11) {
                     cout << "You have chosen to have more than 11 bins, this is not possible, it will be reduced to 11" << endl;
                     fNBinsPt    = 11;

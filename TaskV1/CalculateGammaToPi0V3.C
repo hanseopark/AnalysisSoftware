@@ -183,8 +183,11 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         directoryGamma                          = (TDirectoryFile*)fileTheoryCompilation->Get("DirectPhoton");
    // Load NLO input from TheoryCompilationPP.root
         if (!option.CompareTo("900GeV")) {
-            cout << "ERROR: No calculations in theory compilation file yet!" << endl;
-            return;
+            cout << "ERROR: No calculations in theory compilation file yet for 900GeV!" << endl;
+            cout << "WARNING: USING 7TEV NLO CALCULATIONS FOR 900GeV!" << endl;
+            graphDirectPhotonNLO                = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYieldINT7_7TeV");
+            graphPromptPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYieldINT7_7TeV");
+            graphFragmentationPhotonNLO     = (TGraphAsymmErrors*)directoryGamma->Get("graphFragmentationPhotonNLOVogelsangInvYieldINT7_7TeV");
         } else if (!option.CompareTo("2.76TeV") || !option.CompareTo("PbPb_2.76TeV")) {
             if (!triggerCutNumber.CompareTo("1") && !subTriggerCutNumber.CompareTo("0")) {   // kINT7
                 graphDirectPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYieldINT7_2760GeV");
@@ -697,7 +700,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
 
         cout<<"loading cocktail file: "<<nameFileCocktail<<endl;
 
-        if (!option.CompareTo("7TeV") || !option.CompareTo("8TeV") || !option.CompareTo("13TeV") || !option.CompareTo("pPb_5.023TeV")){
+        if (!option.CompareTo("900GeV") ||!option.CompareTo("7TeV") || !option.CompareTo("8TeV") || !option.CompareTo("13TeV") || !option.CompareTo("pPb_5.023TeV")){
             cocktailPi0                         = (TH1D* )cocktailFile->Get("Pi0_Pt");
             cocktailAllGamma                    = (TH1D* )cocktailFile->Get("Gamma_Pt");
             cocktailAllGammaPi0                 = (TH1D* )cocktailFile->Get("Gamma_From_Pi0_Pt");
@@ -710,7 +713,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         if (cocktailAllGammaPi0)   cout << "found cocktailGammaPi0" << endl;
         if (cocktailPi0)           cout << "found cocktailPi0"      << endl;
     }
-    
+
     //**********************************************************************************
     //***                      Meson spectra data - cocktail                         ***
     //**********************************************************************************
@@ -889,7 +892,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
        legendDoubleConversionFit3->Draw();
        
        canvasConversionFitDoubleRatioSum3->Print(Form("%s/%s_DoubleRatio_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
-       
+    
        // do theory comparisons
        if (doNLOComparison){
            NLODoubleRatio->SetLineColor(kAzure);
