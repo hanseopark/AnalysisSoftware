@@ -1141,7 +1141,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }
             for (Int_t l = 0; l < 7; l++){
                 if (histoMCDCAZUnderMesonAllCatDecomp_AllPt[l] && histoMCDCAZUnderMesonAllCatDecomp_AllPt[l]->GetEntries() > 0){
-                    DrawGammaSetMarker(histoMCDCAZUnderMesonAllCatDecomp_AllPt[l], markerStyleCatDecomp[l], markerStyleCatDecomp[l], colorDiffCatDecomp[l], colorDiffCatDecomp[l]);
+                    DrawGammaSetMarker(histoMCDCAZUnderMesonAllCatDecomp_AllPt[l], markerStyleCatDecomp[l], markerSizeCatDecomp[l], colorDiffCatDecomp[l], colorDiffCatDecomp[l]);
                     histoMCDCAZUnderMesonAllCatDecomp_AllPt[l]->DrawCopy("same,p,e1"); 
                     legendDCAMCComponents0->AddEntry(histoMCDCAZUnderMesonAllCatDecomp_AllPt[l],nameDiffCatDecompPlot[l].Data(),"p");
                 }   

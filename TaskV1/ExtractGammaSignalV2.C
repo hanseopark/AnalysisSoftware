@@ -4169,7 +4169,6 @@ Bool_t LoadSecondariesFromCocktailFile(TString cutSelection, TString optionEnerg
             return kFALSE;
         }
         fHistoSecondaryGammaCocktailFromXFromK0sPt->Sumw2();
-        fHistoSecondaryGammaCocktailFromXFromK0sPt->Scale(fHistoSecondaryGammaCocktailFromXFromK0sPt->GetBinWidth(1));
         fHistoSecondaryGammaCocktailFromXFromK0sPtOrBin         = (TH1D*)fHistoSecondaryGammaCocktailFromXFromK0sPt->Clone("CocktailSecondaryGammaFromXFromK0s_PtOrBin");
         RebinSpectrum(fHistoSecondaryGammaCocktailFromXFromK0sPt);
         
@@ -4180,7 +4179,6 @@ Bool_t LoadSecondariesFromCocktailFile(TString cutSelection, TString optionEnerg
             return kFALSE;
         }
         fHistoSecondaryGammaCocktailFromXFromK0lPt->Sumw2();
-        fHistoSecondaryGammaCocktailFromXFromK0lPt->Scale(fHistoSecondaryGammaCocktailFromXFromK0lPt->GetBinWidth(1));
         fHistoSecondaryGammaCocktailFromXFromK0lPtOrBin         = (TH1D*)fHistoSecondaryGammaCocktailFromXFromK0lPt->Clone("CocktailSecondaryGammaFromXFromK0l_PtOrBin");
         RebinSpectrum(fHistoSecondaryGammaCocktailFromXFromK0lPt);
         
@@ -4191,7 +4189,6 @@ Bool_t LoadSecondariesFromCocktailFile(TString cutSelection, TString optionEnerg
             return kFALSE;
         }
         fHistoSecondaryGammaCocktailFromXFromLambdaPt->Sumw2();
-        fHistoSecondaryGammaCocktailFromXFromLambdaPt->Scale(fHistoSecondaryGammaCocktailFromXFromLambdaPt->GetBinWidth(1));
         fHistoSecondaryGammaCocktailFromXFromLambdaPtOrBin      = (TH1D*)fHistoSecondaryGammaCocktailFromXFromLambdaPt->Clone("CocktailSecondaryGammaFromXFromLambda_PtOrBin");
         RebinSpectrum(fHistoSecondaryGammaCocktailFromXFromLambdaPt);
         
