@@ -86,11 +86,7 @@ void PrepareSecondaries(    TString     meson                       = "",
     cout << "Pictures are saved as " << suffix.Data() << endl;
     
     //************************** direct photon ana ******************************************************************
-    Bool_t doSecondaryGamma                                     = kFALSE;
-    if (directphotonPlots.CompareTo("directPhoton")==0) {
-        cout << "secondary photon histos will be produced" << endl;
-        doSecondaryGamma                                        = kTRUE;
-    }
+    Bool_t doSecondaryGamma                                     = kTRUE;
     
     //***************************** Separate cutstrings *************************************************************
     if(cutSelection.Length() == 0){

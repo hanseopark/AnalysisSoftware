@@ -686,7 +686,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     legendGammas->SetBorderSize(0);
     legendGammas->SetHeader("#gamma from");
     dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
-    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-7, 6e2, 1.0, 1.5);
+    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-9, histoGammaSumPtOrBin->GetMaximum()*100, 1.0, 1.5);
     dummyHist->SetLabelOffset(-0.015, "X");
     dummyHist->SetTitleOffset(0.8, "X");
     dummyHist->Draw();
@@ -708,7 +708,8 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
     if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.17, 0.032, 0.03, 1.25, 42);
     else PutALICESimulationLabel(                   0.22, 0.17, 0.032, 0.03, 1.25, 42);
-
+    dummyHist->Draw("same,axis");
+    
     canvasGammas->SaveAs(Form("%s/CocktailGammas_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete legendGammas;
     delete canvasGammas;
@@ -752,7 +753,8 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     PutProcessLabelAndEnergyOnPlot(                 0.18, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
     if (producePlotsForThesis) PutThisThesisLabel(  0.18, 0.17, 0.032, 0.03, 1.25, 42);
     else PutALICESimulationLabel(                   0.18, 0.17, 0.032, 0.03, 1.25, 42);
-
+    dummyHist->Draw("same,axis");
+    
     canvasGammasRatio->SaveAs(Form("%s/CocktailGammasRatioToPi0_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete tempRatioGammas;
     delete legendGammasRatio;
@@ -791,7 +793,8 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     PutProcessLabelAndEnergyOnPlot(                 0.18, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
     if (producePlotsForThesis) PutThisThesisLabel(  0.18, 0.17, 0.032, 0.03, 1.25, 42);
     else PutALICESimulationLabel(                   0.18, 0.17, 0.032, 0.03, 1.25, 42);
-
+    dummyHist->Draw("same,axis");
+    
     canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAll_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete tempRatioGammas2;
     delete legendGammasRatio2;
@@ -869,7 +872,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
             canvasMtCrossCheck                                  = new TCanvas("canvasMtCrossCheck","",1100,1200);
             padMtCrossCheck                                     = new TPad("padMtCrossCheck", "", 0., 0.25, 1., 1.,-1, -1, -2);
             padMtCrossCheckRatio                                = new TPad("padMtCrossCheckRatio", "", 0., 0., 1., 0.25,-1, -1, -2);
-            legendMtCrossCheck                                  = GetAndSetLegend2(0.55, 0.87-(0.045*3), 0.9, 0.87, 40);
+            legendMtCrossCheck                                  = GetAndSetLegend2(0.55, 0.87-(0.048*3), 0.9, 0.87, 40);
             legendMtCrossCheck->SetBorderSize(0);
             
             DrawGammaCanvasSettings(canvasMtCrossCheck, 0.165, 0.015, 0.025, 0.25);
