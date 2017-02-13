@@ -48,7 +48,35 @@ extern TRandom    *gRandom;
 extern TBenchmark *gBenchmark;
 extern TSystem    *gSystem;
 
+//*****************************************************************************************************
+//*****************************************************************************************************
+//*****************************************************************************************************
+Double_t FindLargestBin1DHist(TH1* hist ){
+    Double_t largestContent     = 0;
+    for (Int_t i= 0; i < hist->GetNbinsX(); i++){
+        if (largestContent < hist->GetBinContent(i)){
+            largestContent = hist->GetBinContent(i);
+        }    
+    }    
+    return largestContent;
+}
 
+//*****************************************************************************************************
+//*****************************************************************************************************
+//*****************************************************************************************************
+Double_t FindSmallestBin1DHist(TH1* hist, Double_t maxStart = 1e6 ){
+    Double_t smallesContent     = maxStart;
+    for (Int_t i= 0; i < hist->GetNbinsX(); i++){
+        if (hist->GetBinContent(i) != 0 && smallesContent > hist->GetBinContent(i)){
+            smallesContent = hist->GetBinContent(i);
+        }    
+    }    
+    return smallesContent;
+}
+
+//*****************************************************************************************************
+//*****************************************************************************************************
+//*****************************************************************************************************
 void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                                 TString nameFilePi0     = "",
                                 TString nameFileCocktail= "",
@@ -56,67 +84,68 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                                 TString suffix          = "pdf",
                                 TString nameMeson       = "",
                                 TString isMC            = "",
-                                TString option          = "",
+                                TString fEnergy          = "",
                                 TString fEstimatePileup = "",
                                 Int_t mode              = 0
                             ){
     // switch systematics on/off
-    Bool_t doSysErr                             = kTRUE;
-    if (!option.CompareTo("7TeV") && mode == 4)
-        doSysErr                                = kFALSE;
+    Bool_t doSysErr                             = kFALSE;
+    if (!fEnergy.CompareTo("7TeV") && mode == 0)
+        doSysErr                                = kTRUE;
     
     // Setting the general style
-   gROOT->Reset();
-   StyleSettingsThesis();
-   SetPlotStyle();
+    gROOT->Reset();
+    StyleSettingsThesis();
+    SetPlotStyle();
 
     // Separating cutnumber and retrieving centrality and number of events
-   SeparateCutnumberString(cutSel,mode);
+    SeparateCutnumberString(cutSel,mode);
 
     // Create strings for naming
-   CreateNamingStrings(nameMeson,isMC);
-   TString collisionSystem                      = ReturnFullCollisionsSystem(option);
-   TString detectionProcess                     = ReturnFullTextReconstructionProcess(mode);
-   
+    CreateNamingStrings(nameMeson,isMC);
+    TString collisionSystem                      = ReturnFullCollisionsSystem(fEnergy);
+    TString detectionProcess                     = ReturnFullTextReconstructionProcess(mode);
+    if(fEnergy.Contains("PbPb")){
+        collisionSystem                          = Form("%s %s", centrality.Data(), collisionSystem.Data());
+    } else if(fEnergy.Contains("pPb") && !centrality.Contains("0-100")){
+        collisionSystem                          = Form("%s %s", centrality.Data(), collisionSystem.Data());
+    }
+
     // Creating output directory and output file
-   cout << "Output directory with plots:" << endl;
-   cout << Form("%s/%s/%s/GammaToPi0",cutSel.Data(),option.Data(),suffix.Data()) << endl;
-   TString outputDir                            = Form("%s/%s/%s/GammaToPi0",cutSel.Data(),option.Data(),suffix.Data());
-   gSystem->Exec("mkdir "+outputDir);
+    cout << "Output directory with plots:" << endl;
+    cout << Form("%s/%s/%s/GammaToPi0",cutSel.Data(),fEnergy.Data(),suffix.Data()) << endl;
+    TString outputDir                            = Form("%s/%s/%s/GammaToPi0",cutSel.Data(),fEnergy.Data(),suffix.Data());
+    gSystem->Exec("mkdir "+outputDir);
 
-   TString nameFinalResDat                      = Form("%s/%s/Gamma_%s_FinalExtraction_%s.dat",cutSel.Data(),option.Data(), textPrefix2.Data(), cutSel.Data());
-   fstream fileFinalResults;
-   fileFinalResults.open(nameFinalResDat.Data(), ios::out);
-
-   if (!fEstimatePileup.CompareTo("EstimateTrainPileUp"))
-      kDoPileup                                 = kTRUE;
+    TString nameFinalResDat                      = Form("%s/%s/Gamma_%s_FinalExtraction_%s.dat",cutSel.Data(),fEnergy.Data(), nameRec.Data(), cutSel.Data());
+    fstream fileFinalResults;
+    fileFinalResults.open(nameFinalResDat.Data(), ios::out);
 
     // Opening gamma file and loading data gamma spectrum
-   fileGamma                                    = new TFile(nameFileGamma);
-   if (!option.CompareTo("7TeV") || !option.CompareTo("13TeV")){
-      if (kDoPileup)
-            histoGammaSpecCorrPurity            = (TH1D*)fileGamma->Get("GammaCorrUnfold_Pt");
-      else
-            histoGammaSpecCorrPurity            = (TH1D*)fileGamma->Get("GammaCorrUnfold_Pt");
-    } else {
-        histoGammaSpecCorrPurity                = (TH1D*)fileGamma->Get("GammaCorrUnfold_Pt");
-    }
+    fileGamma                                   = new TFile(nameFileGamma);
+    histoGammaSpecCorrPurity                    = (TH1D*)fileGamma->Get("GammaCorrUnfold_Pt");
     if (!histoGammaSpecCorrPurity) {
         cout << "ERROR: GammaCorrUnfold_Pt not in gamma file" << endl;
         return;
-    }
+    }    
     histoMCDecaySumGammaPt                      = (TH1D*)fileGamma->Get("MC_DecayGammaAll_Pt");
     histoGammaSpecMCAll                         = (TH1D*)fileGamma->Get("GammaSpecMC");
 
     // Opening pion file and loading spectra
     filePi0                                     = new TFile(nameFilePi0);
-    histoCorrectedPi0YieldNormalEff             = (TH1D*)filePi0->Get("CorrectedYieldNormEff");
     histoCorrectedPi0Yield                      = (TH1D*)filePi0->Get("CorrectedYieldTrueEff");
-    histoCorrectedPi0YieldWide                  = (TH1D*)filePi0->Get("CorrectedYieldTrueEffWide");
-    histoCorrectedPi0YieldNarrow                = (TH1D*)filePi0->Get("CorrectedYieldTrueEffNarrow");
     histoMCYieldMeson                           = (TH1D*)filePi0->Get("MCYield_Meson");
     histoMCYieldMesonOldBin                     = (TH1D*)filePi0->Get("MCYield_Meson_oldBin");
 
+    Bool_t haveEta                              = kFALSE;
+    TString nameFileEta                         = nameFilePi0.ReplaceAll("Pi0","Eta");
+    fileEta                                     = new TFile(nameFileEta);
+    if (!fileEta->IsZombie()){
+        histoCorrectedEtaYield                  = (TH1D*)fileEta->Get("CorrectedYieldTrueEff");
+        if (histoCorrectedEtaYield)
+            haveEta                             = kTRUE;
+    }
+    
     // Creating inclusive gamma ratio
     histoIncRatioPurityTrueEff                  = (TH1D*) histoGammaSpecCorrPurity->Clone("IncRatioPurity_trueEff");
     histoIncRatioPurityTrueEff->Divide(histoIncRatioPurityTrueEff,histoCorrectedPi0Yield,1,1,"");
@@ -125,48 +154,49 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
     histoMCIncRatio->Divide(histoGammaSpecMCAll,histoMCYieldMeson,1,1,"");
 
     // Opening systematics file
-   TString fileNameSysErrGamma                  ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_12_15.dat"; // default
-   TString fileNameSysErrInclRatio              ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_12_15.dat"; // default
-   TString fileNameSysErrDoubleRatio            ="GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_12_15.dat"; // default
-   if(option.CompareTo("7TeV") == 0){
+    TString fileNameSysErrGamma                  =""; // default
+    TString fileNameSysErrInclRatio              =""; // default
+    TString fileNameSysErrDoubleRatio            =""; // default
+    if(fEnergy.CompareTo("7TeV") == 0){
         fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_12_15.dat";
         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_12_15.dat";
         fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_12_15.dat";
-   }
-   fileSysErrGamma.open(fileNameSysErrGamma,ios_base::in);
-   cout << fileNameSysErrGamma << endl;
+    }
 
-   while(!fileSysErrGamma.eof() && nPointsGamma < 100){
-       fileSysErrGamma >> relSystErrorGammaDown[nPointsGamma] >> relSystErrorGammaUp[nPointsGamma]>>    relSystErrorWOMaterialGammaDown[nPointsGamma] >> relSystErrorWOMaterialGammaUp[nPointsGamma];
-        cout << nPointsGamma << "\t"  << relSystErrorGammaDown[nPointsGamma] << "\t"  <<relSystErrorGammaUp[nPointsGamma] << "\t" << relSystErrorWOMaterialGammaDown[nPointsGamma] << "\t"  <<relSystErrorWOMaterialGammaUp[nPointsGamma] << endl;;
-        nPointsGamma++;
-   }
-   fileSysErrGamma.close();
-   nPointsGamma = nPointsGamma-1;
+    if (doSysErr){
+        fileSysErrGamma.open(fileNameSysErrGamma,ios_base::in);
+        cout << fileNameSysErrGamma << endl;
 
-   fileSysErrInclRatio.open(fileNameSysErrInclRatio,ios_base::in);
-   cout << fileNameSysErrInclRatio << endl;
+        while(!fileSysErrGamma.eof() && nPointsGamma < 100){
+            fileSysErrGamma >> relSystErrorGammaDown[nPointsGamma] >> relSystErrorGammaUp[nPointsGamma]>>    relSystErrorWOMaterialGammaDown[nPointsGamma] >> relSystErrorWOMaterialGammaUp[nPointsGamma];
+                cout << nPointsGamma << "\t"  << relSystErrorGammaDown[nPointsGamma] << "\t"  <<relSystErrorGammaUp[nPointsGamma] << "\t" << relSystErrorWOMaterialGammaDown[nPointsGamma] << "\t"  <<relSystErrorWOMaterialGammaUp[nPointsGamma] << endl;;
+                nPointsGamma++;
+        }
+        fileSysErrGamma.close();
+        nPointsGamma = nPointsGamma-1;
 
-   while(!fileSysErrInclRatio.eof() && nPointsInclRatio < 100){
-       fileSysErrInclRatio >> relSystErrorInclRatioDown[nPointsInclRatio] >> relSystErrorInclRatioUp[nPointsInclRatio]>>    relSystErrorWOMaterialInclRatioDown[nPointsInclRatio] >> relSystErrorWOMaterialInclRatioUp[nPointsInclRatio];
-        cout << nPointsInclRatio << "\t"  << relSystErrorInclRatioDown[nPointsInclRatio] << "\t"  <<relSystErrorInclRatioUp[nPointsInclRatio] << "\t" << relSystErrorWOMaterialInclRatioDown[nPointsInclRatio] << "\t"  <<relSystErrorWOMaterialInclRatioUp[nPointsInclRatio] << endl;;
-        nPointsInclRatio++;
-   }
-   fileSysErrInclRatio.close();
-   nPointsInclRatio = nPointsInclRatio-1;
+        fileSysErrInclRatio.open(fileNameSysErrInclRatio,ios_base::in);
+        cout << fileNameSysErrInclRatio << endl;
 
-   fileSysErrDoubleRatio.open(fileNameSysErrDoubleRatio,ios_base::in);
-   cout << fileNameSysErrDoubleRatio << endl;
+        while(!fileSysErrInclRatio.eof() && nPointsInclRatio < 100){
+            fileSysErrInclRatio >> relSystErrorInclRatioDown[nPointsInclRatio] >> relSystErrorInclRatioUp[nPointsInclRatio]>>    relSystErrorWOMaterialInclRatioDown[nPointsInclRatio] >> relSystErrorWOMaterialInclRatioUp[nPointsInclRatio];
+                cout << nPointsInclRatio << "\t"  << relSystErrorInclRatioDown[nPointsInclRatio] << "\t"  <<relSystErrorInclRatioUp[nPointsInclRatio] << "\t" << relSystErrorWOMaterialInclRatioDown[nPointsInclRatio] << "\t"  <<relSystErrorWOMaterialInclRatioUp[nPointsInclRatio] << endl;;
+                nPointsInclRatio++;
+        }
+        fileSysErrInclRatio.close();
+        nPointsInclRatio = nPointsInclRatio-1;
 
-   while(!fileSysErrDoubleRatio.eof() && nPointsDoubleRatio < 100){
-       fileSysErrDoubleRatio >> relSystErrorDoubleRatioDown[nPointsDoubleRatio] >> relSystErrorDoubleRatioUp[nPointsDoubleRatio]>>    relSystErrorWOMaterialDoubleRatioDown[nPointsDoubleRatio] >> relSystErrorWOMaterialDoubleRatioUp[nPointsDoubleRatio];
-        cout << nPointsDoubleRatio << "\t"  << relSystErrorDoubleRatioDown[nPointsDoubleRatio] << "\t"  <<relSystErrorDoubleRatioUp[nPointsDoubleRatio] << "\t" << relSystErrorWOMaterialDoubleRatioDown[nPointsDoubleRatio] << "\t"  <<relSystErrorWOMaterialDoubleRatioUp[nPointsDoubleRatio] << endl;;
-        nPointsDoubleRatio++;
-   }
-   fileSysErrDoubleRatio.close();
-   nPointsDoubleRatio = nPointsDoubleRatio-1;
-   
-    if (doSysErr) {
+        fileSysErrDoubleRatio.open(fileNameSysErrDoubleRatio,ios_base::in);
+        cout << fileNameSysErrDoubleRatio << endl;
+
+        while(!fileSysErrDoubleRatio.eof() && nPointsDoubleRatio < 100){
+            fileSysErrDoubleRatio >> relSystErrorDoubleRatioDown[nPointsDoubleRatio] >> relSystErrorDoubleRatioUp[nPointsDoubleRatio]>>    relSystErrorWOMaterialDoubleRatioDown[nPointsDoubleRatio] >> relSystErrorWOMaterialDoubleRatioUp[nPointsDoubleRatio];
+                cout << nPointsDoubleRatio << "\t"  << relSystErrorDoubleRatioDown[nPointsDoubleRatio] << "\t"  <<relSystErrorDoubleRatioUp[nPointsDoubleRatio] << "\t" << relSystErrorWOMaterialDoubleRatioDown[nPointsDoubleRatio] << "\t"  <<relSystErrorWOMaterialDoubleRatioUp[nPointsDoubleRatio] << endl;;
+                nPointsDoubleRatio++;
+        }
+        fileSysErrDoubleRatio.close();
+        nPointsDoubleRatio = nPointsDoubleRatio-1;
+        
         graphGammaYieldSysErr   = CalculateSysErrFromRelSysHisto( histoGammaSpecCorrPurity, "Pi0SystError",relSystErrorGammaDown , relSystErrorGammaUp, 2, nPointsGamma);
         graphInclRatioSysErr    = CalculateSysErrFromRelSysHisto( histoIncRatioPurityTrueEff, "Pi0SystErrorA",relSystErrorInclRatioDown , relSystErrorInclRatioUp, 2, nPointsInclRatio);
     } else {
@@ -175,20 +205,19 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
     }
    
     //**********************************************************************************
-    //***                      NLO Calculatins Ratio                                 ***
+    //***                  Load NLO Calculatins Ratio                                 ***
     //**********************************************************************************
     Bool_t doNLOComparison                      = kTRUE;
     if (doNLOComparison){
         fileTheoryCompilation                   = new TFile("ExternalInput/Theory/TheoryCompilationPP.root");
         directoryGamma                          = (TDirectoryFile*)fileTheoryCompilation->Get("DirectPhoton");
-   // Load NLO input from TheoryCompilationPP.root
+        // Load NLO input from TheoryCompilationPP.root
         if (!option.CompareTo("900GeV")) {
-            cout << "ERROR: No calculations in theory compilation file yet for 900GeV!" << endl;
             cout << "WARNING: USING 7TEV NLO CALCULATIONS FOR 900GeV!" << endl;
             graphDirectPhotonNLO                = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYieldINT7_7TeV");
-            graphPromptPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYieldINT7_7TeV");
-            graphFragmentationPhotonNLO     = (TGraphAsymmErrors*)directoryGamma->Get("graphFragmentationPhotonNLOVogelsangInvYieldINT7_7TeV");
-        } else if (!option.CompareTo("2.76TeV") || !option.CompareTo("PbPb_2.76TeV")) {
+            graphPromptPhotonNLO                = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYieldINT7_7TeV");
+            graphFragmentationPhotonNLO         = (TGraphAsymmErrors*)directoryGamma->Get("graphFragmentationPhotonNLOVogelsangInvYieldINT7_7TeV");
+        } else if (!fEnergy.CompareTo("2.76TeV") || !fEnergy.CompareTo("PbPb_2.76TeV")) {
             if (!triggerCutNumber.CompareTo("1") && !subTriggerCutNumber.CompareTo("0")) {   // kINT7
                 graphDirectPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYieldINT7_2760GeV");
                 graphPromptPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYieldINT7_2760GeV");
@@ -198,13 +227,12 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                 graphPromptPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYieldINT1_2760GeV");
                 graphFragmentationPhotonNLO     = (TGraphAsymmErrors*)directoryGamma->Get("graphFragmentationPhotonNLOVogelsangInvYieldINT1_2760GeV");
             }
-        } else if (!option.CompareTo("5TeV") || !option.CompareTo("pPb_5.023TeV")) {
+        } else if (!fEnergy.CompareTo("5TeV") || !fEnergy.CompareTo("pPb_5.023TeV")) {
             cout << "WARNING: No inv. yield calculations in compilation file yet!" << endl;
             graphDirectPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYieldINT7_7TeV");
             graphPromptPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYieldINT7_7TeV");
             graphFragmentationPhotonNLO     = (TGraphAsymmErrors*)directoryGamma->Get("graphFragmentationPhotonNLOVogelsangInvYieldINT7_7TeV");
-//             return;
-        } else if (!option.CompareTo("7TeV")) {
+        } else if (!fEnergy.CompareTo("7TeV")) {
             if (!triggerCutNumber.CompareTo("1") && !subTriggerCutNumber.CompareTo("0")) {   // kINT7
                 graphDirectPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYieldINT7_7TeV");
                 graphPromptPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYieldINT7_7TeV");
@@ -214,27 +242,32 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                 graphPromptPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYieldINT1_7TeV");
                 graphFragmentationPhotonNLO     = (TGraphAsymmErrors*)directoryGamma->Get("graphFragmentationPhotonNLOVogelsangInvYieldINT1_7TeV");
             }
-        } else if (!option.CompareTo("8TeV")) {
+        } else if (!fEnergy.CompareTo("8TeV")) {
             graphDirectPhotonNLO                = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYield_8TeV");
             graphPromptPhotonNLO                = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYield_8TeV");
             graphFragmentationPhotonNLO         = (TGraphAsymmErrors*)directoryGamma->Get("graphFragmentationPhotonNLOVogelsangInvYield_8TeV");
-        } else if (!option.CompareTo("13TeV")) {
+        } else if (!fEnergy.CompareTo("13TeV")) {
             graphDirectPhotonNLO                = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYieldINT7_7TeV");
             graphPromptPhotonNLO                = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYieldINT7_7TeV");
             graphFragmentationPhotonNLO         = (TGraphAsymmErrors*)directoryGamma->Get("graphFragmentationPhotonNLOVogelsangInvYieldINT7_7TeV");
             cout << "WARNING: No 13TeV inv. yield calculations in compilation file yet! (using 7TeV calculations)" << endl;
         } else {
             cout << "ERROR: Energy or collision system not known!" << endl;
-            return;
+            doNLOComparison                     = kFALSE;
         }
-
+    }
+    
+    //****************************************************************************************
+    //***                  Ony proceed with NLO calculations if available ********************
+    //****************************************************************************************
+    if (doNLOComparison){
         // scale with Ncoll (for pPb and PbPb)
         graphDirectPhotonNLO                    = (TGraphAsymmErrors*)ScaleGraph(graphDirectPhotonNLO, fNcoll);
         graphPromptPhotonNLO                    = (TGraphAsymmErrors*)ScaleGraph(graphPromptPhotonNLO, fNcoll);
         graphFragmentationPhotonNLO             = (TGraphAsymmErrors*)ScaleGraph(graphFragmentationPhotonNLO, fNcoll);
 
         // Create canvas and pads
-        TCanvas *NLOCalculationcanvas           = GetAndSetCanvas("NLOCalculationcanvas",0.,0.,1000,1350);
+        TCanvas *canvasNLOCalculations          = GetAndSetCanvas("canvasNLOCalculations",0.,0.,1000,1350);
         TPad* padNLOHistos                      = new TPad("padNLOHistos", "", 0., 0.25, 1., 1.,-1, -1, -2);
         DrawGammaPadSettings( padNLOHistos, 0.14, 0.017, 0.01, 0.);
         padNLOHistos->Draw();
@@ -280,33 +313,37 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         graphFragmentationPhotonNLO->Draw("p,same");
         
         // Create legend
-        TLegend* leg_NLOCalculationcanvas       = GetAndSetLegend(0.3,0.6,8);
-        leg_NLOCalculationcanvas->AddEntry(graphDirectPhotonNLO,       "Direct Photon NLO Calc", "lep");
-        leg_NLOCalculationcanvas->AddEntry(fitNLODirectPhoton,         "Fit to Direct Photon NLO Calc");
-        leg_NLOCalculationcanvas->AddEntry(graphPromptPhotonNLO,       "Prompt Photon NLO Calc", "lep");
-        leg_NLOCalculationcanvas->AddEntry(fitNLOPromptPhoton,         "Fit to Prompt Photon NLO Calc");
-        leg_NLOCalculationcanvas->AddEntry(graphFragmentationPhotonNLO,"Fragmentation Photon NLO Calc", "lep");
-        leg_NLOCalculationcanvas->AddEntry(fitNLOFragmentationPhoton,  "Fit to Fragmentation Photon NLO Calc");
-        leg_NLOCalculationcanvas->AddEntry(histoMCDecaySumGammaPt,     "Decay Photons from MC");
-        leg_NLOCalculationcanvas->AddEntry(histoGammaSpecCorrPurity,   "Inclusive Photons from data");
-        leg_NLOCalculationcanvas->SetTextSize(0.035);
-        leg_NLOCalculationcanvas->Draw();
+        TLegend* legendNLOCalculations          = GetAndSetLegend(0.3,0.6,8);
+        legendNLOCalculations->AddEntry(graphDirectPhotonNLO,       "Direct Photon NLO Calc", "lep");
+        legendNLOCalculations->AddEntry(fitNLODirectPhoton,         "Fit to Direct Photon NLO Calc");
+        legendNLOCalculations->AddEntry(graphPromptPhotonNLO,       "Prompt Photon NLO Calc", "lep");
+        legendNLOCalculations->AddEntry(fitNLOPromptPhoton,         "Fit to Prompt Photon NLO Calc");
+        legendNLOCalculations->AddEntry(graphFragmentationPhotonNLO,"Fragmentation Photon NLO Calc", "lep");
+        legendNLOCalculations->AddEntry(fitNLOFragmentationPhoton,  "Fit to Fragmentation Photon NLO Calc");
+        legendNLOCalculations->AddEntry(histoMCDecaySumGammaPt,     "Decay Photons from MC");
+        legendNLOCalculations->AddEntry(histoGammaSpecCorrPurity,   "Inclusive Photons from data");
+        legendNLOCalculations->SetTextSize(0.035);
+        legendNLOCalculations->Draw();
 
         // Calculating ratio
         padNLORatios->cd();
         padNLORatios->SetLogy();
 
-        histRatioNLODirectPhoton                = (TH1D*) histoMCDecaySumGammaPt->Clone("histRatioNLODirectPhoton");
-        histRatioNLODirectPhoton                = CalculateHistoRatioToFitNLO(histRatioNLODirectPhoton,fitNLODirectPhoton,2.);
+        histoRatioNLODirectPhoton               = (TH1D*) histoMCDecaySumGammaPt->Clone("histoRatioNLODirectPhoton");
+        histoRatioNLODirectPhoton               = CalculateHistoRatioToFitNLO(histoRatioNLODirectPhoton,fitNLODirectPhoton,2.);
         textSizeSpectra                         = 0.1;
-        SetStyleHistoTH1ForGraphs(histRatioNLODirectPhoton, "#it{p}_{T} (GeV/#it{c})","#frac{Decay #gamma}{NLO Direct #gamma}",textSizeSpectra,textSizeSpectra, textSizeSpectra,textSizeSpectra, 0.95,0.6);
+        SetStyleHistoTH1ForGraphs(histoRatioNLODirectPhoton, "#it{p}_{T} (GeV/#it{c})","#frac{Decay #gamma}{NLO Direct #gamma}",textSizeSpectra,textSizeSpectra, textSizeSpectra,textSizeSpectra, 0.95,0.6);
 
-        histRatioNLODirectPhoton->GetYaxis()->CenterTitle(kTRUE);
-        DrawGammaSetMarker(histRatioNLODirectPhoton, 24, 0.5, kRed+2, kRed+2);
+        histoRatioNLODirectPhoton->GetYaxis()->CenterTitle(kTRUE);
+        DrawGammaSetMarker(histoRatioNLODirectPhoton, 24, 0.5, kRed+2, kRed+2);
 
-        histRatioNLODirectPhoton->Draw();
-        NLOCalculationcanvas->Print(Form("%s/%s_NLOCalculations_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
+        histoRatioNLODirectPhoton->Draw();
+        canvasNLOCalculations->Print(Form("%s/%s_%s_NLOCalculations.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
         cout << "NLO calculations done" << endl;
+        delete histoDummy;
+        delete padNLOHistos;
+        delete padNLORatios;
+        delete canvasNLOCalculations;
     }
 
 
@@ -316,7 +353,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
     Bool_t doInclusiveRatios                    = kTRUE;
     if (doInclusiveRatios){
         // Create ratio with true efficiency
-        TCanvas* canvasIncRatioPurityTrueEff    = GetAndSetCanvas("canvasIncRatioPurityTrueEff",0.095,0.09,1000,815);
+        TCanvas* canvasIncRatio    = GetAndSetCanvas("canvasIncRatio",0.095,0.09,1000,815);
         SetHistogramm(histoIncRatioPurityTrueEff, "#it{p}_{T} (GeV/#it{c})", "Ratio Inclusive #gamma/#pi^{0}",0,2);
         DrawGammaSetMarker(histoIncRatioPurityTrueEff, 20, 2.0, 4, 4);
         histoIncRatioPurityTrueEff->Draw();
@@ -324,40 +361,38 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
             DrawGammaSetMarkerTGraphAsym(graphInclRatioSysErr,26,0,kBlue-8,kBlue-8,2,kTRUE);
             graphInclRatioSysErr->Draw("p,2,same");
         }
-        PlotLatexLegend(0.95, 0.93-3*0.045, 0.045,collisionSystem,detectionProcess,2,31);
-        canvasIncRatioPurityTrueEff->Print(Form("%s/%s_IncRatioPurity_trueEff_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
+        PlotLatexLegend(0.95, 0.93-2*0.045, 0.045,collisionSystem,detectionProcess,2,31);
+        canvasIncRatio->Print(Form("%s/%s_%s_IncRatioPurity_trueEff.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
 
         // Create ratio for MC
-        TCanvas* canvasMCIncRatio               = GetAndSetCanvas("canvasMCIncRatio",0.095,0.09,1000,815);
+        canvasIncRatio->cd();
         SetHistogramm(histoMCIncRatio, "#it{p}_{T} (GeV/#it{c})", "Ratio Inclusive #gamma/#pi^{0}",0,2);
         DrawGammaSetMarker(histoMCIncRatio, 24, 2.0, 2, 2);
-        histoMCIncRatio->Draw("same");
-        PlotLatexLegend(0.95, 0.93-3*0.045, 0.045,collisionSystem,detectionProcess,2,31);
-        if(option.CompareTo("PbPb_2.76TeV") == 0) DrawCentrality(0.8,0.9,centrality);
-        canvasMCIncRatio->Print(Form("%s/%s_MC_IncRatio_%s.%s",outputDir.Data(),textPi0New.Data(),centralityAdd.Data(),suffix.Data()));
+        histoMCIncRatio->Draw();
+        PlotLatexLegend(0.95, 0.93-2*0.045, 0.045,collisionSystem,detectionProcess,2,31);
+        canvasIncRatio->Print(Form("%s/%s_MC_IncRatio.%s",outputDir.Data(),nameOutputLabel.Data(),suffix.Data()));
         
         // Create plot with both ratios
-        TCanvas* canvasIncRatioAll              = GetAndSetCanvas("canvasIncRatioAll",0.095,0.09,1000,815);
+        canvasIncRatio->cd();
         histoIncRatioPurityTrueEff->Draw("e1");
         histoMCIncRatio->Draw("e1,same");
-        TLegend* leg_canvasIncRatioAll          = GetAndSetLegend2(0.18,0.93-2*0.045,0.5,0.93,0.045,1,"",42,0.15);
-        leg_canvasIncRatioAll->AddEntry(histoIncRatioPurityTrueEff,"Ratio with true Eff Purity");
-        leg_canvasIncRatioAll->AddEntry(histoMCIncRatio,"MC Ratio");
-        leg_canvasIncRatioAll->Draw();
-        PlotLatexLegend(0.95, 0.93-3*0.045, 0.045,collisionSystem,detectionProcess,2,31);
-        if(option.CompareTo("PbPb_2.76TeV") == 0) DrawCentrality(0.8,0.9,centrality);
-        canvasIncRatioAll->Print(Form("%s/%s_IncRatio_all_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
-        
+        TLegend* legendIncRatioAll              = GetAndSetLegend2(0.18,0.93-2*0.045,0.5,0.93,0.045,1,"",42,0.15);
+        legendIncRatioAll->AddEntry(histoIncRatioPurityTrueEff,"Ratio with true Eff Purity");
+        legendIncRatioAll->AddEntry(histoMCIncRatio,"MC Ratio");
+        legendIncRatioAll->Draw();
+        PlotLatexLegend(0.95, 0.93-2*0.045, 0.045,collisionSystem,detectionProcess,2,31);
+        canvasIncRatio->Print(Form("%s/%s_%s_IncRatio_all.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
+        delete canvasIncRatio;
         cout << "Inclusive ratios plotted" << endl;
     }
   
     //**********************************************************************************
     //***                      Photon spectra data                                   ***
     //**********************************************************************************
-    TCanvas* CanvasGammaSpecSingle              = GetAndSetCanvas("CanvasGammaSpecSingle", 0.12, 0.1, 1000 ,1350);
-    DrawGammaCanvasSettings( CanvasGammaSpecSingle, 0.16, 0.02, 0.015, 0.07);
-    CanvasGammaSpecSingle->SetLogy();
-    CanvasGammaSpecSingle->SetLogx();
+    TCanvas* canvasGammaSpectraSingle              = GetAndSetCanvas("canvasGammaSpectraSingle", 0.12, 0.1, 1000 ,1350);
+    DrawGammaCanvasSettings( canvasGammaSpectraSingle, 0.16, 0.02, 0.015, 0.07);
+    canvasGammaSpectraSingle->SetLogy();
+    canvasGammaSpectraSingle->SetLogx();
     
     textSizeSpectra=0.035;
     Double_t        minPt                       = 0.2;
@@ -368,40 +403,36 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                                 0.85*textSizeSpectra,textSizeSpectra, textSizeSpectra,textSizeSpectra, 0.77,1.7);
     histoDummy2->GetXaxis()->SetLabelOffset(-0.01);
     histoDummy2->Draw();
-    DrawGammaSetMarker(histoGammaSpecCorrPurity, 20, 1.5,kBlue+2,kBlue+2);
-    histoGammaSpecCorrPurity->GetYaxis()->SetRangeUser(3e-9, 10);
-    
-    histoGammaSpecCorrPurity->DrawCopy("e1,same");
-    if (graphGammaYieldSysErr) {
-        DrawGammaSetMarkerTGraphAsym(graphGammaYieldSysErr,26,0,kBlue-8,kBlue-8,2,kTRUE);
-        graphGammaYieldSysErr->Draw("p,2,same");
-    }
-    
-    
-//     drawLatex("#gamma's from ALICE Data", 1.7, 0.000000001, kBlack,0.035);
-    
-    TLegend* leg_GammaSpectra;
-    Int_t nEntriesGammaSpec     = 1;
-    if(graphGammaYieldSysErr)
-        nEntriesGammaSpec++;
-    leg_GammaSpectra                            = GetAndSetLegend2(0.2,0.13,0.5,0.13+0.045*nEntriesGammaSpec,0.045,1,"",42,0.15);
-    leg_GammaSpectra->AddEntry(histoGammaSpecCorrPurity,"Inclusive photons");
-    if(graphGammaYieldSysErr)
-        leg_GammaSpectra->AddEntry(graphGammaYieldSysErr,"Systematic uncertainty");
-    
-    PlotLatexLegend(0.93, 0.93-3*0.045, 0.045,collisionSystem,detectionProcess,2,31);
-    
-    leg_GammaSpectra->Draw();
-    CanvasGammaSpecSingle->Print(Form("%s/%s_GammaSpectrum_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
+        DrawGammaSetMarker(histoGammaSpecCorrPurity, 20, 1.5,kBlue+2,kBlue+2);
+        histoGammaSpecCorrPurity->GetYaxis()->SetRangeUser(3e-9, 10);
+        
+        histoGammaSpecCorrPurity->DrawCopy("e1,same");
+        if (graphGammaYieldSysErr) {
+            DrawGammaSetMarkerTGraphAsym(graphGammaYieldSysErr,26,0,kBlue-8,kBlue-8,2,kTRUE);
+            graphGammaYieldSysErr->Draw("p,2,same");
+        }
 
+        Int_t nEntriesGammaSpec     = 1;
+        if(graphGammaYieldSysErr)
+            nEntriesGammaSpec++;
+        TLegend* legendGammaDirSpectra              = GetAndSetLegend2(0.2,0.13,0.5,0.13+0.045*nEntriesGammaSpec,0.045,1,"",42,0.15);
+        legendGammaDirSpectra->AddEntry(histoGammaSpecCorrPurity,"Inclusive photons");
+        if(graphGammaYieldSysErr)
+            legendGammaDirSpectra->AddEntry(graphGammaYieldSysErr,"Systematic uncertainty");
+        legendGammaDirSpectra->Draw();
+        
+        PlotLatexLegend(0.93, 0.93-2*0.045, 0.045,collisionSystem,detectionProcess,2,31);
+        
+    canvasGammaSpectraSingle->Print(Form("%s/%s_%s_GammaSpectrum.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
+    delete canvasGammaSpectraSingle;
   
     //**********************************************************************************
     //***                      Fitting photon spectrum                               ***
     //**********************************************************************************
     Bool_t doPhotonSpectra                      = kTRUE;
     if (doInclusiveRatios){
-       TString fitGammaA                        = "h";
-       TString fitGammaB                        = "l";
+       TString fitNameGammaA                        = "h";
+       TString fitNameGammaB                        = "l";
         
         // Get minimum and maximum pT for fits from histogram
         fitMinPt                                = 0.4;
@@ -416,98 +447,103 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         fitMaxPt                                = histoGammaSpecCorrPurity->GetXaxis()->GetBinUpEdge(histoGammaSpecCorrPurity->GetNbinsX());
 
         // Special PbPb setting for fits
-        if(option.CompareTo("PbPb_2.76TeV") == 0){
+        if(fEnergy.CompareTo("PbPb_2.76TeV") == 0){
             if(centCutNumberI<4){
-                fitGammaA                       = "QCD";
-                fitGammaB                       = "oHag";
+                fitNameGammaA                   = "QCD";
+                fitNameGammaB                   = "oHag";
                 fitMaxPt                        = 14;
             } else{
-                fitGammaA                       = "QCD";
-                fitGammaB                       = "oHag";
+                fitNameGammaA                   = "QCD";
+                fitNameGammaB                   = "oHag";
                 fitMaxPt                        = 14;
             }
         }
        
         TString fitOptions                      = "QNRME+";
-        if (!option.CompareTo("7TeV") && mode == 4) {
+        if (!fEnergy.CompareTo("7TeV") && mode == 4) {
             fitOptions                          = "QNRME+";
         }
 
         // Start fitting hagedorn and tsallis
-        ConversionGammaFitA                     = FitObject(fitGammaA,"ConversionGammaFitA","Pi0",histoGammaSpecCorrPurity,fitMinPt,fitMaxPt,NULL,fitOptions);
-        DrawGammaSetMarkerTF1(ConversionGammaFitA, 1, 2.0, kBlue-2);
-        fileFinalResults << "CorrectedYieldTrueEff " << fitGammaA << endl;
-        forOutput                               = WriteParameterToFile(ConversionGammaFitA);
+        fitGammaA                               = FitObject(fitNameGammaA,"fitGammaA","Pi0",histoGammaSpecCorrPurity,fitMinPt,fitMaxPt,NULL,fitOptions);
+        DrawGammaSetMarkerTF1(fitGammaA, 1, 2.0, kBlue-2);
+        fileFinalResults << "CorrectedYieldTrueEff " << fitNameGammaA << endl;
+        forOutput                               = WriteParameterToFile(fitGammaA);
         fileFinalResults << forOutput.Data() << endl;
 
-        ConversionGammaFitB                     = FitObject(fitGammaB,"ConversionGammaFitB","Pi0",histoGammaSpecCorrPurity,fitMinPt,fitMaxPt,NULL,fitOptions);
-        DrawGammaSetMarkerTF1(ConversionGammaFitB, 2, 2.0, kRed-3);
-        fileFinalResults << "CorrectedYieldTrueEff " << fitGammaB << endl;
-        forOutput                               = WriteParameterToFile(ConversionGammaFitB);
+        fitGammaB                               = FitObject(fitNameGammaB,"fitGammaB","Pi0",histoGammaSpecCorrPurity,fitMinPt,fitMaxPt,NULL,fitOptions);
+        DrawGammaSetMarkerTF1(fitGammaB, 2, 2.0, kRed-3);
+        fileFinalResults << "CorrectedYieldTrueEff " << fitNameGammaB << endl;
+        forOutput                               = WriteParameterToFile(fitGammaB);
         fileFinalResults << forOutput.Data() << endl;
 
-        ConversionGammaFitB->SetLineColor(2);
-        ConversionGammaFitB->SetLineStyle(2);
+        fitGammaB->SetLineColor(2);
+        fitGammaB->SetLineStyle(2);
         
         // Create canvas and pads with 3:1 ratio
-        TCanvas* ConversionGammaCanvas          = GetAndSetCanvas("ConversionGammaSpeccanvas", 0., 0., 1000 ,1350);
-        DrawGammaCanvasSettings( ConversionGammaCanvas, 0.12, 0.015, 0.01, 0.09);
-        TPad* padConversionGamma                = new TPad("padConversionGammaHistos", "", 0., 0.25, 1., 1.,-1, -1, -2);
-        DrawGammaPadSettings( padConversionGamma, 0.14, 0.017, 0.01, 0.);
-        padConversionGamma->Draw();
-        TPad* padConversionGammaRatio           = new TPad("padConversionGammaRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
-        DrawGammaPadSettings( padConversionGammaRatio, 0.14, 0.017, 0.0, 0.22);
-        padConversionGammaRatio->Draw();
-        padConversionGamma->cd();
-        padConversionGamma->SetLogy();
-        padConversionGamma->SetLogx();
+        TCanvas* canvasGammaFits          = GetAndSetCanvas("ConversionGammaSpeccanvas", 0., 0., 1000 ,1350);
+        DrawGammaCanvasSettings( canvasGammaFits, 0.12, 0.015, 0.01, 0.09);
+        TPad* padGammaFits                = new TPad("padGammaFitsHistos", "", 0., 0.25, 1., 1.,-1, -1, -2);
+        DrawGammaPadSettings( padGammaFits, 0.14, 0.017, 0.01, 0.);
+        padGammaFits->Draw();
+        TPad* padGammaFitsRatio           = new TPad("padGammaFitsRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
+        DrawGammaPadSettings( padGammaFitsRatio, 0.14, 0.017, 0.0, 0.22);
+        padGammaFitsRatio->Draw();
+        padGammaFits->cd();
+        padGammaFits->SetLogy();
+        padGammaFits->SetLogx();
         
         // Upper part of plot with histograms
         Double_t        ptMin                   = 0.3;
         if (mode==4)    ptMin                   = 1.5;
         Double_t        ptMax                   = 40.;
         histoDummy2->Draw();
-        DrawGammaSetMarker(histoGammaSpecCorrPurity, 24, 2.0, kBlack, kBlack);
-        ConversionGammaFitA->SetLineColor(kBlue-2);
-        ConversionGammaFitB->SetLineColor(kRed-3);
+            DrawGammaSetMarker(histoGammaSpecCorrPurity, 24, 2.0, kBlack, kBlack);
+            fitGammaA->SetLineColor(kBlue-2);
+            fitGammaB->SetLineColor(kRed-3);
 
-        histoGammaSpecCorrPurity->Draw("same,e1");
-        ConversionGammaFitA->Draw("same");
-        ConversionGammaFitB->Draw("Csame");
- 
-        PlotLatexLegend(0.93, 0.93-0.045*3, 0.045,collisionSystem,detectionProcess,2,31);
-        TLegend* leg_ConversionGammaSpeccanvas  = GetAndSetLegend2(0.7, 0.93-0.045*5, 0.9, 0.93-0.045*2, 0.045,1,"",42,0.2);
-        leg_ConversionGammaSpeccanvas->AddEntry(histoGammaSpecCorrPurity,"#gamma data", "lp");
-        leg_ConversionGammaSpeccanvas->AddEntry(ConversionGammaFitA,"Hagedorn", "l");
-        leg_ConversionGammaSpeccanvas->AddEntry(ConversionGammaFitB,"Levy", "l");
-        leg_ConversionGammaSpeccanvas->Draw();
-        
+            histoGammaSpecCorrPurity->Draw("same,e1");
+            fitGammaA->Draw("same");
+            fitGammaB->Draw("Csame");
+    
+            PlotLatexLegend(0.93, 0.95-0.045*2, 0.045,collisionSystem,detectionProcess,2,31);
+            TLegend* legendGammaSpectraFits  = GetAndSetLegend2(0.7, 0.93-0.045*4, 0.9, 0.93-0.045*2, 0.045,1,"",42,0.2);
+            legendGammaSpectraFits->AddEntry(histoGammaSpecCorrPurity,"#gamma data", "lp");
+            legendGammaSpectraFits->AddEntry(fitGammaA,"Hagedorn", "l");
+            legendGammaSpectraFits->AddEntry(fitGammaB,"Levy", "l");
+            legendGammaSpectraFits->Draw();
+            
         // Lower part of plot with ratio
-        padConversionGammaRatio->cd();
-        padConversionGammaRatio->SetLogx();
+        padGammaFitsRatio->cd();
+        padGammaFitsRatio->SetLogx();
 
-        histRatioConversionGammaA               = (TH1D*) histoGammaSpecCorrPurity->Clone("histRatioConversionGammaA");
-        histRatioConversionGammaA               = CalculateHistoRatioToFit(histRatioConversionGammaA,ConversionGammaFitA);
-        histRatioConversionGammaB               = (TH1D*) histoGammaSpecCorrPurity->Clone("histRatioConversionGammaB");
-        histRatioConversionGammaB               = CalculateHistoRatioToFit(histRatioConversionGammaB,ConversionGammaFitB);
-        textSizeSpectra                         = 0.1;
+            histoRatioFitGammaA                     = (TH1D*) histoGammaSpecCorrPurity->Clone("histoRatioFitGammaA");
+            histoRatioFitGammaA                     = CalculateHistoRatioToFit(histoRatioFitGammaA,fitGammaA);
+            histoRatioFitGammaB                     = (TH1D*) histoGammaSpecCorrPurity->Clone("histoRatioFitGammaB");
+            histoRatioFitGammaB                     = CalculateHistoRatioToFit(histoRatioFitGammaB,fitGammaB);
+            textSizeSpectra                         = 0.1;
 
-        TH1D* dummy                             = new TH1D("dummy", "dummy",1000, 0.12, 20);
-        SetStyleHistoTH1ForGraphs(dummy, "#it{p}_{T} (GeV/#it{c})", "data/fit", textSizeSpectra,textSizeSpectra, textSizeSpectra,textSizeSpectra, 0.95,0.6);
-        dummy->GetYaxis()->SetRangeUser(0.5, 1.55);
-        dummy->GetXaxis()->SetLabelOffset(-0.02);
+            TH1D* dummy                             = new TH1D("dummy", "dummy",1000, 0.12, 20);
+            SetStyleHistoTH1ForGraphs(dummy, "#it{p}_{T} (GeV/#it{c})", "data/fit", textSizeSpectra,textSizeSpectra, textSizeSpectra,textSizeSpectra, 0.95,0.6);
+            dummy->GetYaxis()->SetRangeUser(0.5, 1.55);
+            dummy->GetXaxis()->SetLabelOffset(-0.02);
 
-        DrawGammaSetMarker(histRatioConversionGammaA, 20, 1.5, kBlue-2, kBlue-2);
-        DrawGammaSetMarker(histRatioConversionGammaB, 20, 1.5, kRed-3, kRed-3);
+            DrawGammaSetMarker(histoRatioFitGammaA, 20, 1.5, kBlue-2, kBlue-2);
+            DrawGammaSetMarker(histoRatioFitGammaB, 20, 1.5, kRed-3, kRed-3);
 
-        dummy->Draw();
-        histRatioConversionGammaA->Draw("e1,same");
-        DrawGammaLines(0.12, 20, 1.0, 1.0,1.0, kGray+2 ,7);
-        histRatioConversionGammaB->Draw("e1,same");
+            dummy->Draw();
+            histoRatioFitGammaA->Draw("e1,same");
+            DrawGammaLines(0.12, 20, 1.0, 1.0,1.0, kGray+2 ,7);
+            histoRatioFitGammaB->Draw("e1,same");
         
         // Save plot
-        ConversionGammaCanvas->Print(Form("%s/%s_Spectra_Gamma_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
+        canvasGammaFits->Print(Form("%s/%s_%s_Spectra_Gamma.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
         cout << "Photon spectra plotted" << endl;
+        
+        delete dummy;
+        delete padGammaFits;
+        delete padGammaFitsRatio;
+        delete canvasGammaFits;
     }
 
 
@@ -532,8 +568,8 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         }
         fitMaxPt                                = histoCorrectedPi0Yield->GetXaxis()->GetBinUpEdge(histoCorrectedPi0Yield->GetNbinsX());
         
-        // Special fitting options for PbPb
-        if(option.CompareTo("PbPb_2.76TeV") == 0){
+        // Special fitting fEnergys for PbPb
+        if(fEnergy.CompareTo("PbPb_2.76TeV") == 0){
             if(centCutNumberI<4){
                 fitPi0A                         = "oHag";
                 fitPi0B                         = "qcd";
@@ -550,7 +586,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         }
        
        TString fitOptions                       = "QNRME+";
-       if (!option.CompareTo("7TeV") && mode == 4) {
+       if (!fEnergy.CompareTo("7TeV") && mode == 4) {
            fitOptions                           = "QNRME+";
        }
 
@@ -586,18 +622,18 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         cout<<"----------------------- End Fitting Pi0 --------------------------"<<endl;
         cout<<"------------------------------------------------------------------"<<endl;
 
-        TCanvas *ConversionSpeccanvas           = GetAndSetCanvas("ConversionSpeccanvas",0., 0., 1000 ,1350);
-        DrawGammaCanvasSettings( ConversionSpeccanvas, 0.12, 0.015, 0.01, 0.09);
-        TPad* padConversionHistos               = new TPad("padConversionHistos", "", 0., 0.25, 1., 1.,-1, -1, -2);
-        DrawGammaPadSettings( padConversionHistos, 0.14, 0.017, 0.01, 0.);
-        padConversionHistos->Draw();
-        TPad* padConversionRatios               = new TPad("padConversionRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
-        DrawGammaPadSettings( padConversionRatios, 0.14, 0.017, 0.0, 0.22);
-        padConversionRatios->Draw();
+        TCanvas *canvasGammaSpectra             = GetAndSetCanvas("canvasGammaSpectra",0., 0., 1000 ,1350);
+        DrawGammaCanvasSettings( canvasGammaSpectra, 0.12, 0.015, 0.01, 0.09);
+        TPad* padGammaHistos                    = new TPad("padGammaHistos", "", 0., 0.25, 1., 1.,-1, -1, -2);
+        DrawGammaPadSettings( padGammaHistos, 0.14, 0.017, 0.01, 0.);
+        padGammaHistos->Draw();
+        TPad* padGammaRatios                    = new TPad("padGammaRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
+        DrawGammaPadSettings( padGammaRatios, 0.14, 0.017, 0.0, 0.22);
+        padGammaRatios->Draw();
 
-        padConversionHistos->cd();
-        padConversionHistos->SetLogy();
-        padConversionHistos->SetLogx();
+        padGammaHistos->cd();
+        padGammaHistos->SetLogy();
+        padGammaHistos->SetLogx();
 
         // Plotting spectrum and fits in upper pad
         textSizeSpectra                         = 0.035;
@@ -609,54 +645,59 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                                   0.85*textSizeSpectra,textSizeSpectra, textSizeSpectra,textSizeSpectra, 0.77,1.7);
         histoDummy3->DrawCopy();
 
-        DrawGammaSetMarker(histoCorrectedPi0Yield, 20, 1.5, kBlack, kBlack);
-        fitPi0YieldA->SetLineColor(kBlue-3);
-        fitPi0YieldB->SetLineColor(kRed-3);
-        fitPi0YieldC->SetLineColor(kGreen-2);
+            DrawGammaSetMarker(histoCorrectedPi0Yield, 20, 1.5, kBlack, kBlack);
+            fitPi0YieldA->SetLineColor(kBlue-3);
+            fitPi0YieldB->SetLineColor(kRed-3);
+            fitPi0YieldC->SetLineColor(kGreen-2);
+            
+            histoCorrectedPi0Yield->Draw("e1,same");
+            fitPi0YieldA->Draw("Csame");
+            fitPi0YieldB->Draw("Csame");
+            fitPi0YieldC->Draw("same");
         
-        histoCorrectedPi0Yield->Draw("e1,same");
-        fitPi0YieldA->Draw("Csame");
-        fitPi0YieldB->Draw("Csame");
-        fitPi0YieldC->Draw("same");
-    
-        PlotLatexLegend(0.93, 0.93-0.045*3, 0.045,collisionSystem,detectionProcess,2,31);
+            PlotLatexLegend(0.93, 0.95-0.045*2, 0.045,collisionSystem,detectionProcess,2,31);
 
-        TLegend* leg_ConversionSpeccanvas       = GetAndSetLegend2(0.18, 0.05, 0.5, 0.05+0.045*4, 0.04,1,"",42,0.15);
-        leg_ConversionSpeccanvas->AddEntry(histoCorrectedPi0Yield,"#pi^{0} corr. yield","pl");
-        leg_ConversionSpeccanvas->AddEntry(fitPi0YieldA,Form("Hagedorn: %s #chi^{2}/ndf %.2f",fitPi0B.Data(),fitPi0YieldB->GetChisquare()/fitPi0YieldB->GetNDF()),"l");
-        leg_ConversionSpeccanvas->AddEntry(fitPi0YieldB,Form("Levy-Tsallis: %s #chi^{2}/ndf %.2f",fitPi0B.Data(),fitPi0YieldB->GetChisquare()/fitPi0YieldB->GetNDF()),"l");
-        leg_ConversionSpeccanvas->AddEntry(fitPi0YieldC,Form("Mod. Hagedorn: %s #chi^{2}/ndf %.2f",fitPi0C.Data(),fitPi0YieldC->GetChisquare()/fitPi0YieldC->GetNDF()),"l");
-        leg_ConversionSpeccanvas->Draw();
+            TLegend* legendGammaSpectra       = GetAndSetLegend2(0.18, 0.05, 0.5, 0.05+0.045*4, 0.04,1,"",42,0.15);
+            legendGammaSpectra->AddEntry(histoCorrectedPi0Yield,"#pi^{0} corr. yield","pl");
+            legendGammaSpectra->AddEntry(fitPi0YieldA,Form("Hagedorn: %s #chi^{2}/ndf %.2f",fitPi0B.Data(),fitPi0YieldB->GetChisquare()/fitPi0YieldB->GetNDF()),"l");
+            legendGammaSpectra->AddEntry(fitPi0YieldB,Form("Levy-Tsallis: %s #chi^{2}/ndf %.2f",fitPi0B.Data(),fitPi0YieldB->GetChisquare()/fitPi0YieldB->GetNDF()),"l");
+            legendGammaSpectra->AddEntry(fitPi0YieldC,Form("Mod. Hagedorn: %s #chi^{2}/ndf %.2f",fitPi0C.Data(),fitPi0YieldC->GetChisquare()/fitPi0YieldC->GetNDF()),"l");
+            legendGammaSpectra->Draw();
 
         // Plotting ratios of data and fits in lower pad
-        padConversionRatios->cd();
-        padConversionRatios->SetLogx();
+        padGammaRatios->cd();
+        padGammaRatios->SetLogx();
 
-        histRatioConversionPi0A                 = (TH1D*) histoCorrectedPi0Yield->Clone("histRatioConversionPi0A");
-        histRatioConversionPi0A                 = CalculateHistoRatioToFit(histRatioConversionPi0A,fitPi0YieldA);
-        histRatioConversionPi0B                 = (TH1D*) histoCorrectedPi0Yield->Clone("histRatioConversionPi0B");
-        histRatioConversionPi0B                 = CalculateHistoRatioToFit(histRatioConversionPi0B,fitPi0YieldB);
-        histRatioConversionPi0C                 = (TH1D*) histoCorrectedPi0Yield->Clone("histRatioConversionPi0C");
-        histRatioConversionPi0C                 = CalculateHistoRatioToFit(histRatioConversionPi0C,fitPi0YieldC);
+            histoRatioFitPi0A                       = (TH1D*) histoCorrectedPi0Yield->Clone("histoRatioFitPi0A");
+            histoRatioFitPi0A                       = CalculateHistoRatioToFit(histoRatioFitPi0A,fitPi0YieldA);
+            histoRatioFitPi0B                       = (TH1D*) histoCorrectedPi0Yield->Clone("histoRatioFitPi0B");
+            histoRatioFitPi0B                       = CalculateHistoRatioToFit(histoRatioFitPi0B,fitPi0YieldB);
+            histoRatioFitPi0C                       = (TH1D*) histoCorrectedPi0Yield->Clone("histoRatioFitPi0C");
+            histoRatioFitPi0C                       = CalculateHistoRatioToFit(histoRatioFitPi0C,fitPi0YieldC);
 
-        textSizeSpectra                         = 0.1;
-        TH2F * histoDummy31                     = new TH2F("histoDummy31","histoDummy31",1000,ptMin,1.5*histoGammaSpecCorrPurity->GetXaxis()->GetBinUpEdge(histoGammaSpecCorrPurity->GetNbinsX()),1000,0.41, 1.59);
-        SetStyleHistoTH2ForGraphs(histoDummy31, "#it{p}_{T} (GeV/#it{c})", "data/fit",textSizeSpectra,textSizeSpectra, textSizeSpectra,textSizeSpectra, 0.95,0.6);
-        histoDummy31->GetYaxis()->SetLabelOffset(0.01);
-        histoDummy31->GetXaxis()->SetLabelOffset(-1e-2);
-        histoDummy31->DrawCopy();
+            textSizeSpectra                         = 0.1;
+            TH2F * histoDummy31                     = new TH2F("histoDummy31","histoDummy31",1000,ptMin,1.5*histoGammaSpecCorrPurity->GetXaxis()->GetBinUpEdge(histoGammaSpecCorrPurity->GetNbinsX()),1000,0.41, 1.59);
+            SetStyleHistoTH2ForGraphs(histoDummy31, "#it{p}_{T} (GeV/#it{c})", "data/fit",textSizeSpectra,textSizeSpectra, textSizeSpectra,textSizeSpectra, 0.95,0.6);
+            histoDummy31->GetYaxis()->SetLabelOffset(0.01);
+            histoDummy31->GetXaxis()->SetLabelOffset(-1e-2);
+            histoDummy31->DrawCopy();
 
-        DrawGammaSetMarker(histRatioConversionPi0A, 20, 1.4,kBlue-3,kBlue-3);
-        DrawGammaSetMarker(histRatioConversionPi0B, 24, 1.4,kRed-3,kRed-3);
-        DrawGammaSetMarker(histRatioConversionPi0C, 25, 1.4,kGreen-2,kGreen-2);
+            DrawGammaSetMarker(histoRatioFitPi0A, 20, 1.4,kBlue-3,kBlue-3);
+            DrawGammaSetMarker(histoRatioFitPi0B, 24, 1.4,kRed-3,kRed-3);
+            DrawGammaSetMarker(histoRatioFitPi0C, 25, 1.4,kGreen-2,kGreen-2);
 
-        DrawGammaLines(ptMin,1.5*histoGammaSpecCorrPurity->GetXaxis()->GetBinUpEdge(histoGammaSpecCorrPurity->GetNbinsX()), 1.0, 1.0,1.0, kGray+2 ,7);
-        histRatioConversionPi0A->Draw("e1,same");
-        histRatioConversionPi0B->Draw("e1,same");
-        histRatioConversionPi0C->Draw("e1,same");
-        
+            DrawGammaLines(ptMin,1.5*histoGammaSpecCorrPurity->GetXaxis()->GetBinUpEdge(histoGammaSpecCorrPurity->GetNbinsX()), 1.0, 1.0,1.0, kGray+2 ,7);
+            histoRatioFitPi0A->Draw("e1,same");
+            histoRatioFitPi0B->Draw("e1,same");
+            histoRatioFitPi0C->Draw("e1,same");
+            
         // Save plot
-        ConversionSpeccanvas->Print(Form("%s/%s_Spectra_Pi0_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
+        canvasGammaSpectra->Print(Form("%s/%s_%s_Spectra_Pi0.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
+        delete histoDummy3;
+        delete histoDummy31;
+        delete padGammaHistos;
+        delete padGammaRatios;
+        delete canvasGammaSpectra;
     }
 
     //**********************************************************************************
@@ -666,30 +707,29 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
     if (doInclusiveFitRatio){
         histoIncRatioFitPurity                  = (TH1D*) histoIncRatioPurityTrueEff->Clone("histoIncRatioFitPurity");
         
-   // Set datapoints in histoIncRatioFitPurity to the fit values from fitPi0YieldB (Tsallis fit)
-   for(Int_t bin = 1; bin<histoIncRatioFitPurity->GetNbinsX()+1; bin++){
-      histoIncRatioFitPurity->SetBinContent(bin,fitPi0YieldC->Eval(histoIncRatioPurityTrueEff->GetBinCenter(bin))); //nschmidt2016 changed to hagedorn
-      histoIncRatioFitPurity->SetBinError(bin,histoCorrectedPi0Yield->GetBinError(bin));
-   }
-   DrawGammaSetMarker(histoIncRatioPurityTrueEff, 20, 2.0, 1, 1); 
-   histoIncRatioFitPurity->Divide(histoGammaSpecCorrPurity,histoIncRatioFitPurity);
+        // Set datapoints in histoIncRatioFitPurity to the fit values from fitPi0YieldB (Tsallis fit)
+        for(Int_t bin = 1; bin<histoIncRatioFitPurity->GetNbinsX()+1; bin++){
+            histoIncRatioFitPurity->SetBinContent(bin,fitPi0YieldC->Eval(histoIncRatioPurityTrueEff->GetBinCenter(bin))); //nschmidt2016 changed to hagedorn
+            histoIncRatioFitPurity->SetBinError(bin,histoCorrectedPi0Yield->GetBinError(bin));
+        }
+        DrawGammaSetMarker(histoIncRatioPurityTrueEff, 20, 2.0, 1, 1); 
+        histoIncRatioFitPurity->Divide(histoGammaSpecCorrPurity,histoIncRatioFitPurity);
 
         TCanvas* canvasIncRatioFit              = GetAndSetCanvas("canvasIncRatioFit",0.095,0.09,1000,815);
         SetHistogramm(histoIncRatioFitPurity, "#it{p}_{T} (GeV/#it{c})", "Ratio Inclusive #gamma/#pi^{0}",0,2);
         DrawGammaSetMarker(histoIncRatioFitPurity, 20, 2.0, kBlue-3, kBlue-3);
 
-        histoIncRatioPurityTrueEff->DrawCopy("e1");
-        histoIncRatioFitPurity->DrawCopy("same,e1");
-        
-        PlotLatexLegend(0.95, 0.93-3*0.045, 0.045,collisionSystem,detectionProcess,2,31);
-        TLegend* leg_canvasIncRatioFit          = GetAndSetLegend2(0.7,0.93-4*0.045,0.93,0.93-2*0.045,0.045,1,"",42,0.15);
-        leg_canvasIncRatioFit->AddEntry(histoIncRatioPurityTrueEff,"Inclusive Ratio");
-        leg_canvasIncRatioFit->AddEntry(histoIncRatioFitPurity,"Ratio #pi^{0} Fit");
-        leg_canvasIncRatioFit->Draw();
-
-        if(option.CompareTo("PbPb_2.76TeV") == 0) DrawCentrality(0.8,0.9,centrality);
-        canvasIncRatioFit->Print(Form("%s/%s_IncRatio_Fit_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
-   }
+            histoIncRatioPurityTrueEff->DrawCopy("e1");
+            histoIncRatioFitPurity->DrawCopy("same,e1");
+            
+            PlotLatexLegend(0.95, 0.95-2*0.045, 0.045,collisionSystem,detectionProcess,2,31);
+            TLegend* legendIncRatioFit          = GetAndSetLegend2(0.7,0.93-4*0.045,0.93,0.93-2*0.045,0.045,1,"",42,0.15);
+            legendIncRatioFit->AddEntry(histoIncRatioPurityTrueEff,"Inclusive Ratio");
+            legendIncRatioFit->AddEntry(histoIncRatioFitPurity,"Ratio #pi^{0} Fit");
+            legendIncRatioFit->Draw();
+        canvasIncRatioFit->Print(Form("%s/%s_%s_IncRatio_Fit.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
+        delete canvasIncRatioFit;
+    }
 
     //**********************************************************************************
     //***                      Cocktail                                              ***
@@ -700,69 +740,85 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
 
         cout<<"loading cocktail file: "<<nameFileCocktail<<endl;
 
-        if (!option.CompareTo("900GeV") ||!option.CompareTo("7TeV") || !option.CompareTo("8TeV") || !option.CompareTo("13TeV") || !option.CompareTo("pPb_5.023TeV")){
+        if (!option.CompareTo("900GeV") || !fEnergy.CompareTo("7TeV") || !fEnergy.CompareTo("8TeV") || !fEnergy.CompareTo("13TeV") || !fEnergy.CompareTo("pPb_5.023TeV")){
             cocktailPi0                         = (TH1D* )cocktailFile->Get("Pi0_Pt");
+            cocktailEta                         = (TH1D* )cocktailFile->Get("Eta_Pt");
             cocktailAllGamma                    = (TH1D* )cocktailFile->Get("Gamma_Pt");
             cocktailAllGammaPi0                 = (TH1D* )cocktailFile->Get("Gamma_From_Pi0_Pt");
         } else {
             cocktailPi0                         = (TH1D* )cocktailDir->Get("ptPion");
+            cocktailEta                         = (TH1D* )cocktailDir->Get("ptEta");
             cocktailAllGamma                    = (TH1D* )cocktailDir->Get("sumgammapi0");
             cocktailAllGammaPi0                 = (TH1D* )cocktailDir->Get("sumgammapi0");
         }
         if (cocktailAllGamma)      cout << "found cocktailGamma"    << endl;
         if (cocktailAllGammaPi0)   cout << "found cocktailGammaPi0" << endl;
         if (cocktailPi0)           cout << "found cocktailPi0"      << endl;
+        if (cocktailEta)           cout << "found cocktailEta"      << endl;
     }
-
+    
     //**********************************************************************************
     //***                      Meson spectra data - cocktail                         ***
     //**********************************************************************************
     Bool_t doMesonSpectra                       = kTRUE;
     if (doMesonSpectra){
-        TCanvas* cocktailCanvasMesonSpec        = GetAndSetCanvas("cocktailCanvasMesonSpec", 0.12, 0.1, 1000 ,1350);
-        DrawGammaCanvasSettings( cocktailCanvasMesonSpec, 0.16, 0.02, 0.015, 0.07);
-        cocktailCanvasMesonSpec->SetLogy();
-        cocktailCanvasMesonSpec->SetLogx();
+        TCanvas* canvasMesonSpectra             = GetAndSetCanvas("canvasMesonSpectra", 0.12, 0.1, 1000 ,1350);
+        DrawGammaCanvasSettings( canvasMesonSpectra, 0.16, 0.02, 0.015, 0.07);
+        canvasMesonSpectra->SetLogy();
+        canvasMesonSpectra->SetLogx();
 
         Double_t        minPt                   = 0.2;
         if (mode==4)    minPt                   = 1.5;
-        
-        cocktailPi0->GetXaxis()->SetLabelOffset(-1e-2);
-        DrawAutoGammaMesonHistos( cocktailPi0,
-                                 "", "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c})",
-                                 kTRUE, 20.,5e-10, kFALSE,
-                                 kFALSE, -0.004, 0.020,
-                                 kTRUE, minPt,(histoCorrectedPi0Yield->GetXaxis())->GetBinUpEdge(histoCorrectedPi0Yield->GetNbinsX()),62,0.04,62,0.03,0.7,1.7);
-        DrawGammaSetMarker(cocktailPi0, 20, 2.0,colorCocktailPi0,colorCocktailPi0);
-        
-        //cocktailPi0->Draw("chist");
-        cocktailPi0->DrawCopy("e1,same");
-        
-        fitPi0YieldB->SetLineColor(1);
-        fitPi0YieldB->DrawCopy("same");
+        textSizeSpectra                         = 0.04;
 
-        DrawGammaSetMarker(histoCorrectedPi0Yield, 4, 2.0, 1, 1);
-        histoCorrectedPi0Yield->Draw("e1,same");
-
-        PlotLatexLegend(0.93, 0.93-0.045*2.5, 0.045,collisionSystem,detectionProcess,3,31);
+        TH1F * histoDummy4                      = new TH1F("histoDummy4","histoDummy4",1000,minPt,1.2*histoGammaSpecCorrPurity->GetXaxis()->GetBinUpEdge(histoGammaSpecCorrPurity->GetNbinsX()));
+        SetStyleHistoTH1ForGraphs(histoDummy4, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c})",
+                                  0.85*textSizeSpectra, textSizeSpectra, 0.85*textSizeSpectra, textSizeSpectra, 0.77,1.7);
+        histoDummy4->GetXaxis()->SetLabelOffset(-0.02);
+        histoDummy4->GetYaxis()->SetRangeUser(FindSmallestBin1DHist(histoCorrectedPi0Yield)/100.,FindLargestBin1DHist(histoCorrectedPi0Yield)*50.);
+        histoDummy4->DrawCopy();
         
-        TLegend* leg_MesonSpectra;
-        leg_MesonSpectra                        = GetAndSetLegend2(0.65, 0.93-0.045*5, 0.9, 0.93-0.045*2, 0.045,1,"",42,0.2); 
-        leg_MesonSpectra->AddEntry(cocktailPi0,"Cocktail #pi^{0}");
-        leg_MesonSpectra->AddEntry(histoCorrectedPi0Yield,"#pi^{0} data");
-        leg_MesonSpectra->AddEntry(fitPi0YieldB,"fit to #pi^{0} data","l");
-        leg_MesonSpectra->Draw();
+            DrawGammaSetMarker(cocktailPi0, 20, 2.0,kRed+2,kRed+2);
+            cocktailPi0->DrawCopy("e1,same");
+            
+            fitPi0YieldB->SetLineColor(1);
+            fitPi0YieldB->DrawCopy("same");
 
-        cocktailCanvasMesonSpec->Print(Form("%s/%s_Cocktail_MesonSpectra_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
+            DrawGammaSetMarker(histoCorrectedPi0Yield, 4, 2.0, 1, 1);
+            histoCorrectedPi0Yield->Draw("e1,same");
+            
+            Int_t nCocktails                        = 0;
+            if (haveEta){
+                if(cocktailEta ){
+                    DrawGammaSetMarker(cocktailEta, 20, 2.0,kBlue+1,kBlue+1);
+                    cocktailEta->DrawCopy("e1,same");
+                    nCocktails++;
+                }    
+                DrawGammaSetMarker(histoCorrectedEtaYield, 4, 2.0, kGray+2, kGray+2);
+                histoCorrectedEtaYield->Draw("e1,same");
+                nCocktails++;
+            }
+
+            PlotLatexLegend(0.93, 0.93-0.045*2, 0.045,collisionSystem,detectionProcess,3,31);
+            
+            TLegend* legendMesonSpectra                 = GetAndSetLegend2(0.19, 0.11, 0.45, 0.11+0.045*(3+nCocktails), 0.045,1,"",42,0.22); 
+            legendMesonSpectra->AddEntry(cocktailPi0,"Cocktail #pi^{0}");
+            legendMesonSpectra->AddEntry(histoCorrectedPi0Yield,"#pi^{0} data");
+            legendMesonSpectra->AddEntry(fitPi0YieldB,"fit to #pi^{0} data","l");
+            if (haveEta){
+                if(cocktailEta)legendMesonSpectra->AddEntry(cocktailEta,"Cocktail #eta");
+                legendMesonSpectra->AddEntry(histoCorrectedEtaYield,"#eta data");
+            }    
+            legendMesonSpectra->Draw();
+
+        canvasMesonSpectra->Print(Form("%s/%s_%s_Cocktail_MesonSpectra.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
+        delete canvasMesonSpectra;
     }
 
     //**********************************************************************************
     //***                      NLO Direct Photon Ratio                               ***
     //**********************************************************************************
     if (doNLOComparison){
-        TF1* QGPin7Tev                          = new TF1("QGPin7Tev","1+[0]*exp(-x/[1])+[2]*exp(-x/[3])",0,100);
-        QGPin7Tev->SetParameters(4.24707e+01, 2.85766e+00, 1.63353e+02, 4.53670e-01);
-
         cocktailAllGammaNLO                     = (TH1D*) cocktailAllGamma->Clone("cocktailAllGammaNLO");
         graphDirectPhotonNLOCopy                = (TGraphAsymmErrors*)graphDirectPhotonNLO->Clone("graphNLOCalcCopy");
 
@@ -774,322 +830,322 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
 
         TString cocktailFit                     = "xqcd";
         TString fitOptions                      = "QNRME+";//"IQNRME+";
-        if (!option.CompareTo("7TeV") && mode == 4) {
+        if (!fEnergy.CompareTo("7TeV") && mode == 4) {
             fitOptions                          = "QNRME+";
         }
 
-        cocktailFitAllGammaForNLO               = (TF1*)FitObject(cocktailFit,"cocktailFit","Pi0",cocktailAllGammaNLO,2.0,16,NULL,fitOptions);
+        fitCocktailAllGammaForNLO               = (TF1*)FitObject(cocktailFit,"cocktailFit","Pi0",cocktailAllGammaNLO,2.0,16,NULL,fitOptions);
 
         for (Int_t bin=0; bin<graphDirectPhotonNLOCopy->GetN(); bin++) {
-            yVal[bin]                           = (1 + ( yVal[bin] / (cocktailFitAllGammaForNLO->Eval(xVal[bin]))));
+            yVal[bin]                           = (1 + ( yVal[bin] / (fitCocktailAllGammaForNLO->Eval(xVal[bin]))));
         }
         
         // ------------------------------ NLO Calculations -----------------------------
-        NLODoubleRatio                          = new TGraphAsymmErrors(graphDirectPhotonNLOCopy->GetN(), xVal, yVal, xErr, xErr, yErrDown, yErrUp);
-        NLODoubleRatio->SetName("NLODoubleRatio");
-        NLO                                     = (TGraphAsymmErrors*)graphDirectPhotonNLO->Clone("NLO");
+        graphNLODoubleRatio                     = new TGraphAsymmErrors(graphDirectPhotonNLOCopy->GetN(), xVal, yVal, xErr, xErr, yErrDown, yErrUp);
+        graphNLODoubleRatio->SetName("graphNLODoubleRatio");
+        graphNLODirGammaSpectra                 = (TGraphAsymmErrors*)graphDirectPhotonNLO->Clone("graphNLODirGammaSpectra");
     }
 
 
     //**********************************************************************************
     //***                      Double Ratios                                         ***
     //**********************************************************************************
-   Bool_t doDoubleRatios                        = kTRUE;
-   if (doDoubleRatios){
-       cocktailAllGammaPi0                      = RebinTH1D(cocktailAllGammaPi0,histoIncRatioPurityTrueEff);
-       cocktailAllGammaRebinned                 = RebinTH1D(cocktailAllGamma,histoIncRatioPurityTrueEff);
-       cocktailPi0Rebinned                      = RebinTH1D(cocktailPi0,histoIncRatioPurityTrueEff);
-       cocktailAllGammaPi0->Divide(cocktailAllGammaRebinned,cocktailPi0Rebinned);
+    Bool_t doDoubleRatios                        = kTRUE;
+    if (doDoubleRatios){
+        cocktailAllGammaPi0                      = RebinTH1D(cocktailAllGammaPi0,histoIncRatioPurityTrueEff);
+        cocktailAllGammaRebinned                 = RebinTH1D(cocktailAllGamma,histoIncRatioPurityTrueEff);
+        cocktailPi0Rebinned                      = RebinTH1D(cocktailPi0,histoIncRatioPurityTrueEff);
+        cocktailAllGammaPi0->Divide(cocktailAllGammaRebinned,cocktailPi0Rebinned);
 
-       histoDoubleRatioConversionTrueEffPurity  = (TH1D*) histoIncRatioPurityTrueEff->Clone("DoubleRatioConversionTrueEffPurity");
-       histoDoubleRatioConversionTrueEffPurity->Divide(cocktailAllGammaPi0);
-       if (doSysErr)    graphDoubleRatioSysErr  = CalculateSysErrFromRelSysHisto( histoDoubleRatioConversionTrueEffPurity, "DoubleRatioSystError",relSystErrorDoubleRatioDown , relSystErrorDoubleRatioUp, 2, nPointsDoubleRatio);
-       else             graphDoubleRatioSysErr  = NULL;
-           
-       
-       histoDoubleRatioFitPi0YieldPurity        = (TH1D*) histoIncRatioFitPurity->Clone("DoubleRatioConversionFitPurity");
-       histoDoubleRatioFitPi0YieldPurity->Divide(cocktailAllGammaPi0);
-       if (doSysErr)graphDoubleRatioFitSysErr   = CalculateSysErrFromRelSysHisto( histoDoubleRatioFitPi0YieldPurity, "DoubleRatioFitError",relSystErrorDoubleRatioDown , relSystErrorDoubleRatioUp, 2, nPointsDoubleRatio);
-       else         graphDoubleRatioFitSysErr   = NULL;
-
-       // double ratio combined
-       TCanvas *canvasConversionFitDoubleRatioSum = new TCanvas("canvasConversionFitDoubleRatioSum","",0.095,0.09,1000,815);
-       DrawGammaCanvasSettings( canvasConversionFitDoubleRatioSum, 0.09, 0.02, 0.02, 0.09);
-       canvasConversionFitDoubleRatioSum->cd();
-       canvasConversionFitDoubleRatioSum->SetLogx();
-
-       Double_t minPt                           = 0.3;
-       Double_t maxPt                           = 40.;
-       Double_t minY                            = 0.85;
-       Double_t maxY                            = 1.65;
-       if (mode==4) {
-           minPt                                = 1.5;
-           minY                                 = 0.5;
-       }
-
-       TString      method                      = "conversions";
-       if (mode==4) method                      = "EMCal";
-
-       TH2F * histo2DDoubleRatioPlotting       = new TH2F("histo2DDoubleRatioPlotting","histo2DDoubleRatioPlotting",1000,minPt,maxPt,1000,minY,maxY);
-       SetStyleHistoTH2ForGraphs(histo2DDoubleRatioPlotting, "#it{p}_{T} (GeV/#it{c})","(#gamma_{inc}/#pi^{0})/(#gamma_{decay}/#pi^{0})", 0.04,0.04, 0.04,0.04, 1.,1.);
-       histo2DDoubleRatioPlotting->GetXaxis()->SetRangeUser(0.,histoDoubleRatioConversionTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioConversionTrueEffPurity->GetNbinsX())*1.5);
-       histo2DDoubleRatioPlotting->GetXaxis()->SetTitleFont(62);
-       histo2DDoubleRatioPlotting->GetYaxis()->SetTitleFont(62);
-       histo2DDoubleRatioPlotting->GetXaxis()->SetLabelOffset(-1e-2);
-       histo2DDoubleRatioPlotting->DrawCopy();
-
-       DrawGammaSetMarker(histoDoubleRatioConversionTrueEffPurity, 20, 2.0, kBlack, kBlack);
-       DrawGammaSetMarker(histoDoubleRatioFitPi0YieldPurity, 20, 2.0, kBlue+2, kBlue+2);
-       if (graphDoubleRatioSysErr)      DrawGammaSetMarkerTGraphAsym(graphDoubleRatioSysErr,26,0,kGray+2,kGray+2,2,kTRUE);
-       if (graphDoubleRatioFitSysErr)   DrawGammaSetMarkerTGraphAsym(graphDoubleRatioFitSysErr,26,0,kBlue-8,kBlue-8,2,kTRUE);
-
-       histoDoubleRatioFitPi0YieldPurity->DrawCopy("same,E1");
-       DrawGammaLines(0., histoDoubleRatioConversionTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioConversionTrueEffPurity->GetNbinsX())*1.5, 1.0, 1.0,2.0, kGray+2 ,7);
-       histoDoubleRatioConversionTrueEffPurity->DrawCopy("same,E1");
-       if (graphDoubleRatioSysErr)      graphDoubleRatioSysErr->Draw("p,2,same");
-       if (graphDoubleRatioFitSysErr)   graphDoubleRatioFitSysErr->Draw("p,2,same");
-
-       TLegend* legendDoubleConversionFit       = GetAndSetLegend(0.14,0.76,3,1,Form("direct photon signal via %s", method.Data()));
-       legendDoubleConversionFit->AddEntry(histoDoubleRatioConversionTrueEffPurity,"measured direct photon signal","p");
-       legendDoubleConversionFit->AddEntry(histoDoubleRatioFitPi0YieldPurity,"Measured Direct Photon Signal fitted #pi^{0}","p");
-       legendDoubleConversionFit->Draw();
-
-       canvasConversionFitDoubleRatioSum->Print(Form("%s/%s_DoubleRatioComparison_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
-       
-       // double ratio fit
-       TCanvas *canvasConversionFitDoubleRatioSum2 = new TCanvas("canvasConversionFitDoubleRatioSum2","",0.095,0.09,1000,815);
-       DrawGammaCanvasSettings( canvasConversionFitDoubleRatioSum2, 0.09, 0.02, 0.02, 0.09);
-       canvasConversionFitDoubleRatioSum2->cd();
-       canvasConversionFitDoubleRatioSum2->SetLogx();
-       
-       histo2DDoubleRatioPlotting->GetXaxis()->SetRangeUser(0.2, 20);
-       histo2DDoubleRatioPlotting->DrawCopy();
-       
-       DrawGammaLines(0., 20. , 1.0, 1.0,2.0, kGray+2 ,7);
-       histoDoubleRatioFitPi0YieldPurity->DrawCopy("same,E1");
-       if (graphDoubleRatioFitSysErr)   graphDoubleRatioFitSysErr->Draw("p,2,same");
-       
-       TLegend* legendDoubleConversionFit2       = GetAndSetLegend(0.14,0.8,2,1,Form("direct photon signal via %s", method.Data()));
-       legendDoubleConversionFit2->AddEntry(histoDoubleRatioFitPi0YieldPurity,"Measured Direct Photon Signal fitted #pi^{0}","p");
-       legendDoubleConversionFit2->Draw();
-       
-       canvasConversionFitDoubleRatioSum2->Print(Form("%s/%s_DoubleRatioFit_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
-
-       // double ratio no fit
-       TCanvas *canvasConversionFitDoubleRatioSum3 = new TCanvas("canvasConversionFitDoubleRatioSum","",0.095,0.09,1000,815);
-       DrawGammaCanvasSettings( canvasConversionFitDoubleRatioSum3, 0.09, 0.02, 0.02, 0.09);
-       canvasConversionFitDoubleRatioSum3->cd();
-       canvasConversionFitDoubleRatioSum3->SetLogx();
-
-       histo2DDoubleRatioPlotting->DrawCopy();
-       
-       DrawGammaLines(0., histoDoubleRatioConversionTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioConversionTrueEffPurity->GetNbinsX())*1.5, 1.0, 1.0,2.0, kGray+2 ,7);
-       histoDoubleRatioConversionTrueEffPurity->DrawCopy("same,E1");
-       if (graphDoubleRatioSysErr) graphDoubleRatioSysErr->Draw("p,2,same");
-       
-       TLegend* legendDoubleConversionFit3       = GetAndSetLegend(0.14,0.8,2,1,Form("direct photon signal via %s", method.Data()));
-       legendDoubleConversionFit3->AddEntry(histoDoubleRatioConversionTrueEffPurity,"measured direct photon signal","p");
-       legendDoubleConversionFit3->Draw();
-       
-       canvasConversionFitDoubleRatioSum3->Print(Form("%s/%s_DoubleRatio_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
-    
-       // do theory comparisons
-       if (doNLOComparison){
-           NLODoubleRatio->SetLineColor(kAzure);
-           NLODoubleRatio->SetFillColor(kAzure);
-           NLODoubleRatio->SetLineWidth(3.0);
-           NLODoubleRatio->SetMarkerSize(0);
-         
-           NLODoubleRatio->Print();
-           NLO->SetLineColor(kAzure);
-           NLO->SetFillColor(kAzure);
-           NLO->SetLineWidth(3.0);
-           NLO->SetMarkerSize(0);
-           NLO->RemovePoint(0);
-         
-           NLOdoubleRatioFit                   = new TF1("NLOdoubleRatioFit","(x<=2)*(1.0+[0]*x)+(x>2)*([1]+[2]*x+[3]*x*x)",0.,4.0);
-           NLODoubleRatio->Fit(NLOdoubleRatioFit,"NRME+","",0,4.0);
-           NLOdoubleRatioFit->SetLineColor(2);
-           
-           // ------------------------------ NLO Calculations -----------------------------
-           // combined
-           TCanvas *canvasConversionFitDoubleRatioNLO = new TCanvas("canvasConversionFitDoubleRatioNLO","",0.095,0.09,1000,815);
-           DrawGammaCanvasSettings( canvasConversionFitDoubleRatioNLO, 0.09, 0.02, 0.02, 0.09);
-           canvasConversionFitDoubleRatioNLO->cd();
-           canvasConversionFitDoubleRatioNLO->SetLogx();
-
-           histo2DDoubleRatioPlotting->DrawCopy();
-           NLODoubleRatio->RemovePoint(0);
-           DrawGammaLines(0., histoDoubleRatioConversionTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioConversionTrueEffPurity->GetNbinsX())*1.5, 1.0, 1.0,2.0, kGray+2 ,7);
-           NLODoubleRatio->Draw("lp3");
-
-           DrawGammaSetMarker(histoDoubleRatioConversionTrueEffPurity, 20, 2.0, kBlack, kBlack);
-           DrawGammaSetMarker(histoDoubleRatioFitPi0YieldPurity, 20, 2.0, kBlue+2, kBlue+2);
-           histoDoubleRatioConversionTrueEffPurity->DrawCopy("same");
-           histoDoubleRatioFitPi0YieldPurity->DrawCopy("same");
-           if (graphDoubleRatioSysErr)     graphDoubleRatioSysErr->Draw("p,2,same");
-           if (graphDoubleRatioFitSysErr)  graphDoubleRatioFitSysErr->Draw("p,2,same");
+        histoDoubleRatioTrueEffPurity  = (TH1D*) histoIncRatioPurityTrueEff->Clone("DoubleRatioConversionTrueEffPurity");
+        histoDoubleRatioTrueEffPurity->Divide(cocktailAllGammaPi0);
+        if (doSysErr)    graphDoubleRatioSysErr  = CalculateSysErrFromRelSysHisto( histoDoubleRatioTrueEffPurity, "DoubleRatioSystError",relSystErrorDoubleRatioDown , relSystErrorDoubleRatioUp, 2, nPointsDoubleRatio);
+        else             graphDoubleRatioSysErr  = NULL;
+            
         
-           TLegend* legendDoubleConversionFitNLO = GetAndSetLegend(0.14,0.72,4,1,Form("direct photon signal via %s", method.Data()));
-           legendDoubleConversionFitNLO->AddEntry(histoDoubleRatioConversionTrueEffPurity,"measured direct photon signal","p");
-           legendDoubleConversionFitNLO->AddEntry(histoDoubleRatioFitPi0YieldPurity,"measured direct photon signal, fitted #pi^{0}","p");
-           if(option.CompareTo("PbPb_2.76TeV") == 0)       legendDoubleConversionFitNLO->AddEntry(NLODoubleRatio,"pp NLO Direct Photon  pp 2.76TeV scaled N_{coll}","l");
-           else if(option.CompareTo("pPb_5.023TeV") == 0)  legendDoubleConversionFitNLO->AddEntry(NLODoubleRatio,"pp NLO Direct Photon  pp 5.023TeV scaled N_{coll}","l");
-           else                                            legendDoubleConversionFitNLO->AddEntry(NLODoubleRatio,"pp NLO Direct Photon","l");
-           legendDoubleConversionFitNLO->Draw();
+        histoDoubleRatioFitPi0YieldPurity        = (TH1D*) histoIncRatioFitPurity->Clone("DoubleRatioConversionFitPurity");
+        histoDoubleRatioFitPi0YieldPurity->Divide(cocktailAllGammaPi0);
+        if (doSysErr)graphDoubleRatioFitSysErr   = CalculateSysErrFromRelSysHisto( histoDoubleRatioFitPi0YieldPurity, "DoubleRatioFitError",relSystErrorDoubleRatioDown , relSystErrorDoubleRatioUp, 2, nPointsDoubleRatio);
+        else         graphDoubleRatioFitSysErr   = NULL;
 
-           canvasConversionFitDoubleRatioNLO->Print(Form("%s/%s_DoubleRatioComparison_NLO_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
+        // double ratio combined
+        TCanvas *canvasDoubleRatio = new TCanvas("canvasDoubleRatio","",0.095,0.09,1000,815);
+        DrawGammaCanvasSettings( canvasDoubleRatio, 0.09, 0.02, 0.02, 0.09);
+        canvasDoubleRatio->cd();
+        canvasDoubleRatio->SetLogx();
 
-           // fit
-           TCanvas *canvasConversionFitDoubleRatioNLO2 = new TCanvas("canvasConversionFitDoubleRatioNLO2","",0.095,0.09,1000,815);
-           DrawGammaCanvasSettings( canvasConversionFitDoubleRatioNLO2, 0.09, 0.02, 0.02, 0.09);
-           canvasConversionFitDoubleRatioNLO2->cd();
-           canvasConversionFitDoubleRatioNLO2->SetLogx();
-           
-           histo2DDoubleRatioPlotting->DrawCopy();
-           NLODoubleRatio->RemovePoint(0);
-           DrawGammaLines(0., histoDoubleRatioConversionTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioConversionTrueEffPurity->GetNbinsX())*1.5, 1.0, 1.0,2.0, kGray+2 ,7);
-           NLODoubleRatio->Draw("lp3");
-           
-           histoDoubleRatioFitPi0YieldPurity->DrawCopy("same");
-           if (graphDoubleRatioFitSysErr) graphDoubleRatioFitSysErr->Draw("p,2,same");
-           
-           TLegend* legendDoubleConversionFitNLO2 = GetAndSetLegend(0.14,0.76,3,1,Form("direct photon signal via %s", method.Data()));
-           legendDoubleConversionFitNLO2->AddEntry(histoDoubleRatioFitPi0YieldPurity,"measured direct photon signal, fitted #pi^{0}","p");
-           if(option.CompareTo("PbPb_2.76TeV") == 0)       legendDoubleConversionFitNLO2->AddEntry(NLODoubleRatio,"pp NLO Direct Photon  pp 2.76TeV scaled N_{coll}","l");
-           else if(option.CompareTo("pPb_5.023TeV") == 0)  legendDoubleConversionFitNLO2->AddEntry(NLODoubleRatio,"pp NLO Direct Photon  pp 5.023TeV scaled N_{coll}","l");
-           else                                            legendDoubleConversionFitNLO2->AddEntry(NLODoubleRatio,"pp NLO Direct Photon","l");
-           legendDoubleConversionFitNLO2->Draw();
-           
-           canvasConversionFitDoubleRatioNLO2->Print(Form("%s/%s_DoubleRatioFit_NLO_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
-           
-           // measured
-           TCanvas *canvasConversionFitDoubleRatioNLO3 = new TCanvas("canvasConversionFitDoubleRatioNLO","",0.095,0.09,1000,815);
-           DrawGammaCanvasSettings( canvasConversionFitDoubleRatioNLO3, 0.09, 0.02, 0.02, 0.09);
-           canvasConversionFitDoubleRatioNLO3->cd();
-           canvasConversionFitDoubleRatioNLO3->SetLogx();
-           
-           histo2DDoubleRatioPlotting->DrawCopy();
-           NLODoubleRatio->RemovePoint(0);
-           DrawGammaLines(0., histoDoubleRatioConversionTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioConversionTrueEffPurity->GetNbinsX())*1.5, 1.0, 1.0,2.0, kGray+2 ,7);
-           NLODoubleRatio->Draw("lp3");
-           
-           histoDoubleRatioConversionTrueEffPurity->DrawCopy("same");
-           if (graphDoubleRatioSysErr) graphDoubleRatioSysErr->Draw("p,2,same");
-           
-           TLegend* legendDoubleConversionFitNLO3 = GetAndSetLegend(0.14,0.76,3,1,Form("direct photon signal via %s", method.Data()));
-           legendDoubleConversionFitNLO3->AddEntry(histoDoubleRatioConversionTrueEffPurity,"measured direct photon signal","p");
-           if(option.CompareTo("PbPb_2.76TeV") == 0)       legendDoubleConversionFitNLO3->AddEntry(NLODoubleRatio,"pp NLO Direct Photon  pp 2.76TeV scaled N_{coll}","l");
-           else if(option.CompareTo("pPb_5.023TeV") == 0)  legendDoubleConversionFitNLO3->AddEntry(NLODoubleRatio,"pp NLO Direct Photon  pp 5.023TeV scaled N_{coll}","l");
-           else                                            legendDoubleConversionFitNLO3->AddEntry(NLODoubleRatio,"pp NLO Direct Photon","l");
-           legendDoubleConversionFitNLO3->Draw();
-           
-           canvasConversionFitDoubleRatioNLO3->Print(Form("%s/%s_DoubleRatio_NLO_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
-           
-           // --------------------- Direct Photon Spectrum -------------------------
-           if (graphDoubleRatioSysErr) {
-               // calculate direct photon spectrum
-               histoDirectPhotonSpectrum                = (TH1D*)histoGammaSpecCorrPurity->Clone("histoDirectPhotonSpectrum");
-               histoThermalPhotonSpectrum               = (TH1D*)histoGammaSpecCorrPurity->Clone("histoThermalPhotonSpectrum");
-               histoPromptPhotonSpectrum                = (TH1D*)histoGammaSpecCorrPurity->Clone("histoPromptPhotonSpectrum");
-               
-               Bool_t doUpperLimits                     = kFALSE;
-               if (!doUpperLimits) {
-                   for(Int_t i = 1; i < histoDirectPhotonSpectrum->GetNbinsX(); i++){
-                       histoDirectPhotonSpectrum->SetBinContent(    i+1,0);
-                       histoThermalPhotonSpectrum->SetBinContent(   i+1,0);
-                   }
-                   for(Int_t i = 1; i < histoDirectPhotonSpectrum->GetNbinsX(); i++){
-                       Double_t binContent              = -1;
-                       Double_t binError                = -1;
-                       binContent                       = 1-(1./( histoDoubleRatioConversionTrueEffPurity->GetBinContent(i+1)));
-                       binContent                       = binContent*histoGammaSpecCorrPurity->GetBinContent(i+1);
-                       binError                         = 1-(1./( histoDoubleRatioConversionTrueEffPurity->GetBinContent(i+1) + histoDoubleRatioConversionTrueEffPurity->GetBinError(i+1)));
-                       binError                         = binError*histoGammaSpecCorrPurity->GetBinContent(i+1);
-                       binError                         = binError-binContent;
-                       histoDirectPhotonSpectrum->SetBinContent(i+1,binContent);
-                       histoDirectPhotonSpectrum->SetBinError(  i+1,binError);
-                       
-                       if(histoDirectPhotonSpectrum->GetBinCenter(i+1) < 4.5){
-                           binContent                   = 1-(1./(1+ histoDoubleRatioConversionTrueEffPurity->GetBinContent(i+1) - NLOdoubleRatioFit->Eval(histoDoubleRatioConversionTrueEffPurity->GetBinCenter(i+1))));
-                           binContent                   = binContent*histoGammaSpecCorrPurity->GetBinContent(i+1);
-                           histoThermalPhotonSpectrum->SetBinContent(   i+1,binContent);
-                           histoThermalPhotonSpectrum->SetBinError(     i+1,binError);
-                       } else {
-                           histoThermalPhotonSpectrum->SetBinContent(   i+1,0);
-                           histoThermalPhotonSpectrum->SetBinError(     i+1,0);
-                       }
-                       if(histoDirectPhotonSpectrum->GetBinCenter(i+1) < 4.5){
-                           binContent                   = 1-(1./(NLOdoubleRatioFit->Eval(histoDoubleRatioConversionTrueEffPurity->GetBinCenter(i+1))));
-                           binContent                   = binContent*histoGammaSpecCorrPurity->GetBinContent(i+1);
-                           histoPromptPhotonSpectrum->SetBinContent(    i+1,binContent);
-                           histoPromptPhotonSpectrum->SetBinError(      i+1,0.0000001);
-                       } else {
-                           histoPromptPhotonSpectrum->SetBinContent(    i+1,0);
-                           histoPromptPhotonSpectrum->SetBinError(      i+1,0);
-                       }
-                   }
-               } else {
-                   histoDoubleRatioUpperLimits          = GetUpperLimitsHisto(histoDoubleRatioConversionTrueEffPurity,  graphDoubleRatioSysErr, 0.95, 0.004, 1e2);
-                   Double_t binContent                  = -1;
-                   Double_t binError                    = -1;
-                   for (Int_t i=1; i<histoDirectPhotonSpectrum->GetNbinsX()+1; i++) {
-                       if (!histoDirectPhotonSpectrum->GetBinContent(i)) continue;
-                       binContent                       = histoDirectPhotonSpectrum->GetBinContent(i) * (1 - 1/histoDoubleRatioUpperLimits->GetBinContent(i));
-                       binError                         = 0.;
-                       histoDirectPhotonSpectrum->SetBinContent(i, binContent);
-                       histoDirectPhotonSpectrum->SetBinError(  i, binError);
-                   }
-               }
-               
-               // plot direct photon spectrum
-               TCanvas* CanvasDirGamma              = GetAndSetCanvas("CanvasDirGamma", 0.12, 0.1, 1000 ,1350);
-               DrawGammaCanvasSettings( CanvasDirGamma, 0.16, 0.02, 0.015, 0.07);
-               CanvasDirGamma->SetLogy();
-               CanvasDirGamma->SetLogx();
-               
-               histoDirectPhotonSpectrum->SetLineColor(kBlack);
-               histoDirectPhotonSpectrum->SetLineWidth(2);
-               
-               TH2F * dummyDir       = new TH2F("dummyDir","dummyDir",1000,0.2,20.0,1000,5e-10,2);
-               SetStyleHistoTH2ForGraphs(dummyDir, "#it{p}_{T} (GeV/#it{c})","(#gamma_{inc}/#pi^{0})/(#gamma_{decay}/#pi^{0})", 0.04,0.04, 0.04,0.04, 1.,1.);
-               dummyDir->GetXaxis()->SetRangeUser(0.,histoDoubleRatioConversionTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioConversionTrueEffPurity->GetNbinsX())*1.5);
-               dummyDir->GetXaxis()->SetTitleFont(62);
-               dummyDir->GetYaxis()->SetTitleFont(62);
-               dummyDir->GetXaxis()->SetLabelOffset(-2e-2);
-               dummyDir->GetXaxis()->SetTitleOffset(0.8);
-               dummyDir->GetYaxis()->SetTitleOffset(1.5);
-               dummyDir->DrawCopy();
-               
-               PlotLatexLegend(0.66, 0.78, 0.045,collisionSystem,detectionProcess,2);
-               drawLatex("#gamma's from ALICE Data", 1.7, 0.000000001, kBlack,0.035);
-               TArrow *ar2[50];
-               for(Int_t i=1;i<histoDirectPhotonSpectrum->GetNbinsX()+1;i++)
-               {
-                   if (!histoDirectPhotonSpectrum->GetBinContent(i)) continue;
-                   ar2[i] = new TArrow(histoDirectPhotonSpectrum->GetBinCenter(i),histoDirectPhotonSpectrum->GetBinContent(i),histoDirectPhotonSpectrum->GetBinCenter(i),histoDirectPhotonSpectrum->GetBinContent(i)*0.1,0.02,"|->");
-                   ar2[i]->SetAngle(40);
-                   ar2[i]->SetLineWidth(2);
-                   ar2[i]->Draw();
-               }
-              
-               NLO->GetXaxis()->SetRangeUser(NLO->GetXaxis()->GetXmin(), histoDirectPhotonSpectrum->GetXaxis()->GetXmax()); 
-               NLO->SetLineWidth(2);
-               NLO->Draw("lp3");
-               
-               TLegend* leg_GammaSpectra;
-               leg_GammaSpectra                            = GetAndSetLegend(0.2,0.2,2);
-               leg_GammaSpectra->AddEntry(histoDirectPhotonSpectrum,"direct photon upper limits",   "l");
-               leg_GammaSpectra->AddEntry(NLO,                      "pp NLO direct photon",         "l");
-               leg_GammaSpectra->Draw();
-               
-               CanvasDirGamma->Print(Form("%s/%s_DirectPhotonSpectrum_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
-           } else {
-               cout << "No systematic uncertainties on double ratio given, skipping direct photon calculation." << endl;
-           }
+        Double_t minPt                           = 0.3;
+        Double_t maxPt                           = 40.;
+        Double_t minY                            = 0.85;
+        Double_t maxY                            = 1.65;
+        if (mode==4) {
+            minPt                                = 1.5;
+            minY                                 = 0.5;
+        }
+
+        TString      method                      = "PCM";
+        if (mode==4) method                      = "EMCal";
+
+        TH2F * histo2DDoubleRatioPlotting       = new TH2F("histo2DDoubleRatioPlotting","histo2DDoubleRatioPlotting",1000,minPt,maxPt,1000,minY,maxY);
+        SetStyleHistoTH2ForGraphs(histo2DDoubleRatioPlotting, "#it{p}_{T} (GeV/#it{c})","(#gamma_{inc}/#pi^{0})/(#gamma_{decay}/#pi^{0})", 0.04,0.04, 0.04,0.04, 1.,1.);
+        histo2DDoubleRatioPlotting->GetXaxis()->SetRangeUser(0.,histoDoubleRatioTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioTrueEffPurity->GetNbinsX())*1.5);
+        histo2DDoubleRatioPlotting->GetXaxis()->SetTitleFont(62);
+        histo2DDoubleRatioPlotting->GetYaxis()->SetTitleFont(62);
+        histo2DDoubleRatioPlotting->GetXaxis()->SetLabelOffset(-1e-2);
+        histo2DDoubleRatioPlotting->DrawCopy();
+
+            DrawGammaSetMarker(histoDoubleRatioTrueEffPurity, 20, 2.0, kBlack, kBlack);
+            DrawGammaSetMarker(histoDoubleRatioFitPi0YieldPurity, 20, 2.0, kBlue+2, kBlue+2);
+            if (graphDoubleRatioSysErr)      DrawGammaSetMarkerTGraphAsym(graphDoubleRatioSysErr,26,0,kGray+2,kGray+2,2,kTRUE);
+            if (graphDoubleRatioFitSysErr)   DrawGammaSetMarkerTGraphAsym(graphDoubleRatioFitSysErr,26,0,kBlue-8,kBlue-8,2,kTRUE);
+
+            histoDoubleRatioFitPi0YieldPurity->DrawCopy("same,E1");
+            DrawGammaLines(0., histoDoubleRatioTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioTrueEffPurity->GetNbinsX())*1.5, 1.0, 1.0,2.0, kGray+2 ,7);
+            histoDoubleRatioTrueEffPurity->DrawCopy("same,E1");
+            if (graphDoubleRatioSysErr)      graphDoubleRatioSysErr->Draw("p,2,same");
+            if (graphDoubleRatioFitSysErr)   graphDoubleRatioFitSysErr->Draw("p,2,same");
+
+            TLegend* legendDoubleConversionFit       = GetAndSetLegend2(0.14,0.93-2*0.045,0.5,0.93,0.045,1,"",42,0.2); 
+            legendDoubleConversionFit->AddEntry(histoDoubleRatioTrueEffPurity,"Data","p");
+            legendDoubleConversionFit->AddEntry(histoDoubleRatioFitPi0YieldPurity,"Data, fitted #pi^{0}","p");
+            legendDoubleConversionFit->Draw();
+
+            PlotLatexLegend(0.93, 0.96-3*0.045, 0.045,collisionSystem,detectionProcess,3,31);
+            
+        canvasDoubleRatio->Print(Form("%s/%s_%s_DoubleRatioComparison.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
+        
+        // double ratio fit
+        canvasDoubleRatio->cd();        
+        histo2DDoubleRatioPlotting->DrawCopy();
+        
+            DrawGammaLines(0., 20. , 1.0, 1.0,2.0, kGray+2 ,7);
+            histoDoubleRatioFitPi0YieldPurity->DrawCopy("same,E1");
+            if (graphDoubleRatioFitSysErr)   graphDoubleRatioFitSysErr->Draw("p,2,same");
+            
+            TLegend* legendDoubleConversionFit2       = GetAndSetLegend2(0.14,0.93-1*0.045,0.5,0.93,0.045,1,"",42,0.2); 
+            legendDoubleConversionFit2->AddEntry(histoDoubleRatioFitPi0YieldPurity,"Data, fitted #pi^{0}","p");
+            legendDoubleConversionFit2->Draw();
+            PlotLatexLegend(0.93, 0.96-3*0.045, 0.045,collisionSystem,detectionProcess,3,31);
+        
+        canvasDoubleRatio->Print(Form("%s/%s_%s_DoubleRatioFit.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
+
+        // double ratio no fit
+        canvasDoubleRatio->cd();
+        histo2DDoubleRatioPlotting->DrawCopy();
+        
+            DrawGammaLines(0., histoDoubleRatioTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioTrueEffPurity->GetNbinsX())*1.5, 1.0, 1.0,2.0, kGray+2 ,7);
+            histoDoubleRatioTrueEffPurity->DrawCopy("same,E1");
+            if (graphDoubleRatioSysErr) graphDoubleRatioSysErr->Draw("p,2,same");
+            PlotLatexLegend(0.93, 0.96-3*0.045, 0.045,collisionSystem,detectionProcess,3,31);
+            
+            TLegend* legendDoubleConversionFit3       = GetAndSetLegend2(0.14,0.93-1*0.045,0.5,0.93,0.045,1,"",42,0.2); 
+            legendDoubleConversionFit3->AddEntry(histoDoubleRatioTrueEffPurity,"Data","p");
+            legendDoubleConversionFit3->Draw();
+        
+        canvasDoubleRatio->Print(Form("%s/%s_%s_DoubleRatio.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
+        delete canvasDoubleRatio;
+        
+        // do theory comparisons
+        if (doNLOComparison){
+            graphNLODoubleRatio->SetLineColor(kAzure);
+            graphNLODoubleRatio->SetFillColor(kAzure);
+            graphNLODoubleRatio->SetLineWidth(3.0);
+            graphNLODoubleRatio->SetMarkerSize(0);
+            
+            graphNLODoubleRatio->Print();
+            graphNLODirGammaSpectra->SetLineColor(kAzure);
+            graphNLODirGammaSpectra->SetFillColor(kAzure);
+            graphNLODirGammaSpectra->SetLineWidth(3.0);
+            graphNLODirGammaSpectra->SetMarkerSize(0);
+            graphNLODirGammaSpectra->RemovePoint(0);
+            
+            fitNLODoublRatio                   = new TF1("fitNLODoublRatio","(x<=2)*(1.0+[0]*x)+(x>2)*([1]+[2]*x+[3]*x*x)",0.,4.0);
+            graphNLODoubleRatio->Fit(fitNLODoublRatio,"NRME+","",0,4.0);
+            fitNLODoublRatio->SetLineColor(2);
+            
+            Int_t nLinesNLOLegends  = 2;
+            if (fEnergy.CompareTo("PbPb_2.76TeV") == 0 || fEnergy.CompareTo("pPb_5.023TeV") == 0) 
+                nLinesNLOLegends    = 3;
+            // ------------------------------ NLO Calculations -----------------------------
+            // combined
+            TCanvas *canvasDoublRatioNLO = new TCanvas("canvasDoublRatioNLO","",0.095,0.09,1000,815);
+            DrawGammaCanvasSettings( canvasDoublRatioNLO, 0.09, 0.02, 0.02, 0.09);
+            canvasDoublRatioNLO->cd();
+            canvasDoublRatioNLO->SetLogx();
+            
+            histo2DDoubleRatioPlotting->DrawCopy();
+                graphNLODoubleRatio->RemovePoint(0);
+                DrawGammaLines(0., histoDoubleRatioTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioTrueEffPurity->GetNbinsX())*1.5, 1.0, 1.0,2.0, kGray+2 ,7);
+                graphNLODoubleRatio->Draw("lp3");
+
+                DrawGammaSetMarker(histoDoubleRatioTrueEffPurity, 20, 2.0, kBlack, kBlack);
+                DrawGammaSetMarker(histoDoubleRatioFitPi0YieldPurity, 20, 2.0, kBlue+2, kBlue+2);
+                histoDoubleRatioTrueEffPurity->DrawCopy("same");
+                histoDoubleRatioFitPi0YieldPurity->DrawCopy("same");
+                if (graphDoubleRatioSysErr)     graphDoubleRatioSysErr->Draw("p,2,same");
+                if (graphDoubleRatioFitSysErr)  graphDoubleRatioFitSysErr->Draw("p,2,same");
+                
+                TLegend* legendDoubleConversionFitNLO = GetAndSetLegend2(0.14,0.93-(nLinesNLOLegends+1+0.5)*0.045,0.5,0.93,0.045,1,"",42,0.2); 
+                legendDoubleConversionFitNLO->AddEntry(histoDoubleRatioTrueEffPurity,"Data","p");
+                legendDoubleConversionFitNLO->AddEntry(histoDoubleRatioFitPi0YieldPurity,"Data, fitted #pi^{0}","p");
+                if(fEnergy.CompareTo("PbPb_2.76TeV") == 0)       legendDoubleConversionFitNLO->AddEntry(graphNLODoubleRatio,"pp #gamma_{dir} NLO #sqrt{s} = 2.76 TeV","l");
+                else if(fEnergy.CompareTo("pPb_5.023TeV") == 0)  legendDoubleConversionFitNLO->AddEntry(graphNLODoubleRatio,"pp #gamma_{dir} NLO #sqrt{s} = 5.02 TeV ","l");
+                else                                             legendDoubleConversionFitNLO->AddEntry(graphNLODoubleRatio,"pp NLO Direct Photon","l");
+                if (fEnergy.CompareTo("PbPb_2.76TeV") == 0 || fEnergy.CompareTo("pPb_5.023TeV") == 0) legendDoubleConversionFitNLO->AddEntry((TObject*)0,"scaled by N_{coll}","");
+
+                legendDoubleConversionFitNLO->Draw();
+
+                PlotLatexLegend(0.93, 0.96-3*0.045, 0.045,collisionSystem,detectionProcess,3,31);
+            
+            canvasDoublRatioNLO->Print(Form("%s/%s_%s_DoubleRatioComparison_NLO.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
+
+            // fit
+            canvasDoublRatioNLO->cd();           
+            histo2DDoubleRatioPlotting->DrawCopy();
+                DrawGammaLines(0., histoDoubleRatioTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioTrueEffPurity->GetNbinsX())*1.5, 1.0, 1.0,2.0, kGray+2 ,7);
+                graphNLODoubleRatio->Draw("lp3");
+                
+                histoDoubleRatioFitPi0YieldPurity->DrawCopy("same");
+                if (graphDoubleRatioFitSysErr) graphDoubleRatioFitSysErr->Draw("p,2,same");
+                
+                TLegend* legendDoubleConversionFitNLO2 = GetAndSetLegend2(0.14,0.93-(nLinesNLOLegends+0.5)*0.045,0.5,0.93,0.045,1,"",42,0.2); 
+                legendDoubleConversionFitNLO2->AddEntry(histoDoubleRatioFitPi0YieldPurity,"Data, fitted #pi^{0}","p");
+                if(fEnergy.CompareTo("PbPb_2.76TeV") == 0)       legendDoubleConversionFitNLO2->AddEntry(graphNLODoubleRatio,"pp #gamma_{dir} NLO #sqrt{s} = 2.76 TeV","l");
+                else if(fEnergy.CompareTo("pPb_5.023TeV") == 0)  legendDoubleConversionFitNLO2->AddEntry(graphNLODoubleRatio,"pp #gamma_{dir} NLO #sqrt{s} = 5.02 TeV ","l");
+                else                                             legendDoubleConversionFitNLO2->AddEntry(graphNLODoubleRatio,"pp NLO Direct Photon","l");
+                if (fEnergy.CompareTo("PbPb_2.76TeV") == 0 || fEnergy.CompareTo("pPb_5.023TeV") == 0) legendDoubleConversionFitNLO2->AddEntry((TObject*)0,"scaled by N_{coll}","");
+                legendDoubleConversionFitNLO2->Draw();
+                PlotLatexLegend(0.93, 0.96-3*0.045, 0.045,collisionSystem,detectionProcess,3,31);
+                
+            canvasDoublRatioNLO->Print(Form("%s/%s_%s_DoubleRatioFit_NLO.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
+            
+            // measured
+            canvasDoublRatioNLO->cd();                       
+            histo2DDoubleRatioPlotting->DrawCopy();
+                DrawGammaLines(0., histoDoubleRatioTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioTrueEffPurity->GetNbinsX())*1.5, 1.0, 1.0,2.0, kGray+2 ,7);
+                graphNLODoubleRatio->Draw("lp3");
+                
+                histoDoubleRatioTrueEffPurity->DrawCopy("same");
+                if (graphDoubleRatioSysErr) graphDoubleRatioSysErr->Draw("p,2,same");
+                
+                TLegend* legendDoubleConversionFitNLO3 = GetAndSetLegend2(0.14,0.93-(nLinesNLOLegends+0.5)*0.045,0.5,0.93,0.045,1,"",42,0.2); 
+                legendDoubleConversionFitNLO3->AddEntry(histoDoubleRatioTrueEffPurity,"Data","p");
+                if(fEnergy.CompareTo("PbPb_2.76TeV") == 0)       legendDoubleConversionFitNLO3->AddEntry(graphNLODoubleRatio,"pp #gamma_{dir} NLO #sqrt{s} = 2.76 TeV","l");
+                else if(fEnergy.CompareTo("pPb_5.023TeV") == 0)  legendDoubleConversionFitNLO3->AddEntry(graphNLODoubleRatio,"pp #gamma_{dir} NLO #sqrt{s} = 5.02 TeV ","l");
+                else                                             legendDoubleConversionFitNLO3->AddEntry(graphNLODoubleRatio,"pp NLO Direct Photon","l");
+                if (fEnergy.CompareTo("PbPb_2.76TeV") == 0 || fEnergy.CompareTo("pPb_5.023TeV") == 0) legendDoubleConversionFitNLO3->AddEntry((TObject*)0,"scaled by N_{coll}","");
+                legendDoubleConversionFitNLO3->Draw();
+                PlotLatexLegend(0.93, 0.96-3*0.045, 0.045,collisionSystem,detectionProcess,3,31);
+                
+            canvasDoublRatioNLO->Print(Form("%s/%s_%s_DoubleRatio_NLO.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
+            delete canvasDoublRatioNLO;
+        }
+       
+        // --------------------- Direct Photon Spectrum -------------------------
+        if (graphDoubleRatioSysErr) {
+            // calculate direct photon spectrum
+            histoDirectPhotonSpectrum                = (TH1D*)histoGammaSpecCorrPurity->Clone("histoDirectPhotonSpectrum");
+            histoThermalPhotonSpectrum               = (TH1D*)histoGammaSpecCorrPurity->Clone("histoThermalPhotonSpectrum");
+            histoPromptPhotonSpectrum                = (TH1D*)histoGammaSpecCorrPurity->Clone("histoPromptPhotonSpectrum");
+            
+            Bool_t doUpperLimits                     = kFALSE;
+            if (!doUpperLimits) {
+                for(Int_t i = 1; i < histoDirectPhotonSpectrum->GetNbinsX(); i++){
+                    histoDirectPhotonSpectrum->SetBinContent(    i+1,0);
+                    histoThermalPhotonSpectrum->SetBinContent(   i+1,0);
+                }
+                for(Int_t i = 1; i < histoDirectPhotonSpectrum->GetNbinsX(); i++){
+                    Double_t binContent              = -1;
+                    Double_t binError                = -1;
+                    binContent                       = 1-(1./( histoDoubleRatioTrueEffPurity->GetBinContent(i+1)));
+                    binContent                       = binContent*histoGammaSpecCorrPurity->GetBinContent(i+1);
+                    binError                         = 1-(1./( histoDoubleRatioTrueEffPurity->GetBinContent(i+1) + histoDoubleRatioTrueEffPurity->GetBinError(i+1)));
+                    binError                         = binError*histoGammaSpecCorrPurity->GetBinContent(i+1);
+                    binError                         = binError-binContent;
+                    histoDirectPhotonSpectrum->SetBinContent(i+1,binContent);
+                    histoDirectPhotonSpectrum->SetBinError(  i+1,binError);
+                    
+                    if (doNLOComparison){
+                        if(histoDirectPhotonSpectrum->GetBinCenter(i+1) < 4.5){
+                            binContent                   = 1-(1./(1+ histoDoubleRatioTrueEffPurity->GetBinContent(i+1) - fitNLODoublRatio->Eval(histoDoubleRatioTrueEffPurity->GetBinCenter(i+1))));
+                            binContent                   = binContent*histoGammaSpecCorrPurity->GetBinContent(i+1);
+                            histoThermalPhotonSpectrum->SetBinContent(   i+1,binContent);
+                            histoThermalPhotonSpectrum->SetBinError(     i+1,binError);
+                        } else {
+                            histoThermalPhotonSpectrum->SetBinContent(   i+1,0);
+                            histoThermalPhotonSpectrum->SetBinError(     i+1,0);
+                        }
+                        if(histoDirectPhotonSpectrum->GetBinCenter(i+1) < 4.5){
+                            binContent                   = 1-(1./(fitNLODoublRatio->Eval(histoDoubleRatioTrueEffPurity->GetBinCenter(i+1))));
+                            binContent                   = binContent*histoGammaSpecCorrPurity->GetBinContent(i+1);
+                            histoPromptPhotonSpectrum->SetBinContent(    i+1,binContent);
+                            histoPromptPhotonSpectrum->SetBinError(      i+1,0.0000001);
+                        } else {
+                            histoPromptPhotonSpectrum->SetBinContent(    i+1,0);
+                            histoPromptPhotonSpectrum->SetBinError(      i+1,0);
+                        }
+                    }    
+                }
+            } else {
+                histoDoubleRatioUpperLimits          = GetUpperLimitsHisto(histoDoubleRatioTrueEffPurity,  graphDoubleRatioSysErr, 0.95, 0.004, 1e2);
+                Double_t binContent                  = -1;
+                Double_t binError                    = -1;
+                for (Int_t i=1; i<histoDirectPhotonSpectrum->GetNbinsX()+1; i++) {
+                    if (!histoDirectPhotonSpectrum->GetBinContent(i)) continue;
+                    binContent                       = histoDirectPhotonSpectrum->GetBinContent(i) * (1 - 1/histoDoubleRatioUpperLimits->GetBinContent(i));
+                    binError                         = 0.;
+                    histoDirectPhotonSpectrum->SetBinContent(i, binContent);
+                    histoDirectPhotonSpectrum->SetBinError(  i, binError);
+                }
+            }
+            
+            // plot direct photon spectrum
+            TCanvas* CanvasDirGamma              = GetAndSetCanvas("CanvasDirGamma", 0.12, 0.1, 1000 ,1350);
+            DrawGammaCanvasSettings( CanvasDirGamma, 0.16, 0.02, 0.015, 0.07);
+            CanvasDirGamma->SetLogy();
+            CanvasDirGamma->SetLogx();
+            
+            histoDirectPhotonSpectrum->SetLineColor(kBlack);
+            histoDirectPhotonSpectrum->SetLineWidth(2);
+            
+            TH2F * dummyDir       = new TH2F("dummyDir","dummyDir",1000,0.2,20.0,1000,5e-10,2);
+            SetStyleHistoTH2ForGraphs(dummyDir, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c})", 0.04,0.04, 0.04,0.04, 1.,1.1);
+            dummyDir->GetXaxis()->SetRangeUser(0.,histoDoubleRatioTrueEffPurity->GetXaxis()->GetBinUpEdge(histoDoubleRatioTrueEffPurity->GetNbinsX())*1.5);
+            dummyDir->GetXaxis()->SetTitleFont(62);
+            dummyDir->GetYaxis()->SetTitleFont(62);
+            dummyDir->GetXaxis()->SetLabelOffset(-2e-2);
+            dummyDir->GetXaxis()->SetTitleOffset(0.8);
+            dummyDir->GetYaxis()->SetTitleOffset(1.5);
+            dummyDir->DrawCopy();
+            
+            PlotLatexLegend(0.93, 0.95-0.045*2, 0.045,collisionSystem,detectionProcess,2,31);
+            TArrow *ar2[50];
+            for(Int_t i=1;i<histoDirectPhotonSpectrum->GetNbinsX()+1;i++)
+            {
+                if (!histoDirectPhotonSpectrum->GetBinContent(i) > 5e-10) continue;
+                ar2[i] = new TArrow(histoDirectPhotonSpectrum->GetBinCenter(i),histoDirectPhotonSpectrum->GetBinContent(i),histoDirectPhotonSpectrum->GetBinCenter(i),histoDirectPhotonSpectrum->GetBinContent(i)*0.1,0.02,"|->");
+                ar2[i]->SetAngle(40);
+                ar2[i]->SetLineWidth(2);
+                ar2[i]->Draw();
+            }
+            
+            if (doNLOComparison){
+                graphNLODirGammaSpectra->GetXaxis()->SetRangeUser(graphNLODirGammaSpectra->GetXaxis()->GetXmin(), histoDirectPhotonSpectrum->GetXaxis()->GetXmax()); 
+                graphNLODirGammaSpectra->SetLineWidth(2);
+                graphNLODirGammaSpectra->Draw("lp3");
+            }
+            
+            TLegend* legendGammaDirSpectra               = GetAndSetLegend(0.2,0.2,2);
+            legendGammaDirSpectra->AddEntry(histoDirectPhotonSpectrum,"direct photon upper limits",   "l");
+            if (doNLOComparison) legendGammaDirSpectra->AddEntry(graphNLODirGammaSpectra,  "pp NLO direct photon",         "l");
+            legendGammaDirSpectra->Draw();
+            
+            CanvasDirGamma->Print(Form("%s/%s_%s_DirectPhotonSpectrum.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
+        } else {
+            cout << "No systematic uncertainties on double ratio given, skipping direct photon calculation." << endl;
         }
     }
-
+    
     fileFinalResults.close();
     
     //**********************************************************************************
@@ -1108,21 +1164,21 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
     histoIncRatioPurityTrueEff->Draw();
     cocktailAllGammaPi0->Draw("same");
 
-    PlotLatexLegend(0.95, 0.93-4*0.045, 0.045,collisionSystem,detectionProcess,3,31);
+    PlotLatexLegend(0.95, 0.93-3*0.045, 0.045,collisionSystem,detectionProcess,3,31);
     TLegend* legendIncRatioDecRatio          = GetAndSetLegend2(0.7,0.93-6*0.045,0.93,0.93-3*0.045,0.045,1,"",42,0.15);
     legendIncRatioDecRatio->AddEntry(histoIncRatioPurityTrueEff,    "(#gamma_{incl.} / #pi^{0})_{meas.}", "lp");
     legendIncRatioDecRatio->AddEntry(cocktailAllGammaPi0,           "(#gamma_{dec.} / #pi^{0})_{sim.}",  "lp");
     legendIncRatioDecRatio->Draw();
 
-    canvasIncRatioDecRatio->Print(Form("%s/%s_IncRatio_DecRatio_trueEff_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data(),suffix.Data()));
-
+    canvasIncRatioDecRatio->Print(Form("%s/%s_%s_IncRatio_DecRatio_trueEff.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
+    delete canvasIncRatioDecRatio;
 
     //**********************************************************************************
     //***                      Save Histograms                                       ***
     //**********************************************************************************   
     Bool_t doSaving                             = kTRUE;
     if (doSaving){
-        TString nameOutputFile                  = Form("%s/%s/%s_%s_GammaConvV1_InclusiveRatio_%s.root",cutSel.Data(),option.Data(),textPi0New.Data(),textPrefix2.Data(),centralityAdd.Data());
+        TString nameOutputFile                  = Form("%s/%s/%s_%s_GammaConvV1_InclusiveRatio.root",cutSel.Data(),fEnergy.Data(),nameOutputLabel.Data(),nameRec.Data());
         fileCorrectedOutput                     = new TFile(nameOutputFile,"RECREATE");
 
         // pi0 quantities
@@ -1132,25 +1188,19 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         histoCorrectedPi0Yield->Write(  histoCorrectedPi0Yield->GetName(),  TObject::kOverwrite);
 
         // gamma quantities
-        if (ConversionGammaFitA)        ConversionGammaFitA->Write(         ConversionGammaFitA->GetName(),         TObject::kOverwrite);
+        if (fitGammaA)        fitGammaA->Write(         fitGammaA->GetName(),         TObject::kOverwrite);
         if (histoDirectPhotonSpectrum)  histoDirectPhotonSpectrum->Write(   histoDirectPhotonSpectrum->GetName(),   TObject::kOverwrite);
         if (histoGammaSpecCorrPurity)   histoGammaSpecCorrPurity->Write(    "histoGammaSpecCorrPurity",             TObject::kOverwrite);
 
         // Double ratio
         if(histoDoubleRatioFitPi0YieldPurity)           histoDoubleRatioFitPi0YieldPurity->Write(           histoDoubleRatioFitPi0YieldPurity->GetName(),               TObject::kOverwrite);
-        if(histoDoubleRatioConversionHighFitPurity)     histoDoubleRatioConversionHighFitPurity->Write(     histoDoubleRatioConversionHighFitPurity->GetName(),         TObject::kOverwrite);
-        if(histoDoubleRatioConversionLowFitPurity)      histoDoubleRatioConversionLowFitPurity->Write(      histoDoubleRatioConversionLowFitPurity->GetName(),          TObject::kOverwrite);
-        if(histoDoubleRatioFitPi0YieldPurityModA)       histoDoubleRatioFitPi0YieldPurityModA->Write(       histoDoubleRatioFitPi0YieldPurityModA->GetName(),           TObject::kOverwrite);
-        if(histoDoubleRatioFitPi0YieldPurityModB)       histoDoubleRatioFitPi0YieldPurityModB->Write(       histoDoubleRatioFitPi0YieldPurityModB->GetName(),           TObject::kOverwrite);
-        if(histoDoubleRatioConversionTrueEffPurity)     histoDoubleRatioConversionTrueEffPurity->Write(     histoDoubleRatioConversionTrueEffPurity->GetName(),         TObject::kOverwrite);
-        if(histoDoubleRatioConversionTrueEffPurityModA) histoDoubleRatioConversionTrueEffPurityModA->Write( histoDoubleRatioConversionTrueEffPurityModA->GetName(),     TObject::kOverwrite);
-        if(histoDoubleRatioConversionTrueEffPurityModB) histoDoubleRatioConversionTrueEffPurityModB->Write( histoDoubleRatioConversionTrueEffPurityModB->GetName(),     TObject::kOverwrite);
-        if(histoDoubleRatioUpperLimits)                 histoDoubleRatioUpperLimits->Write(Form("%s_UpperLimits", histoDoubleRatioConversionTrueEffPurity->GetName()),  TObject::kOverwrite);
+        if(histoDoubleRatioTrueEffPurity)               histoDoubleRatioTrueEffPurity->Write(     histoDoubleRatioTrueEffPurity->GetName(),         TObject::kOverwrite);
+        if(histoDoubleRatioUpperLimits)                 histoDoubleRatioUpperLimits->Write(Form("%s_UpperLimits", histoDoubleRatioTrueEffPurity->GetName()),  TObject::kOverwrite);
 
         // systematics
         if (graphGammaYieldSysErr)      graphGammaYieldSysErr->Write(       Form("%s_SystErr", histoGammaSpecCorrPurity->GetName()),                TObject::kOverwrite);
         if (graphInclRatioSysErr)       graphInclRatioSysErr->Write(        Form("%s_SystErr", histoIncRatioPurityTrueEff->GetName()),              TObject::kOverwrite);
-        if (graphDoubleRatioSysErr)     graphDoubleRatioSysErr->Write(      Form("%s_SystErr", histoDoubleRatioConversionTrueEffPurity->GetName()), TObject::kOverwrite);
+        if (graphDoubleRatioSysErr)     graphDoubleRatioSysErr->Write(      Form("%s_SystErr", histoDoubleRatioTrueEffPurity->GetName()), TObject::kOverwrite);
         if (graphDoubleRatioFitSysErr)  graphDoubleRatioFitSysErr->Write(   Form("%s_SystErr", histoDoubleRatioFitPi0YieldPurity->GetName()),       TObject::kOverwrite);
         
         // inclusive ratio
@@ -1163,16 +1213,19 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         cocktailPi0->Write(     cocktailPi0->GetName(),         TObject::kOverwrite);
         
         //NLO
-        fitNLODirectPhoton->Write(          "fitNLODirectPhoton",           TObject::kOverwrite);
-        graphPromptPhotonNLO->Write(        "graphPromptPhotonNLO",         TObject::kOverwrite);
-        fitNLOPromptPhoton->Write(          "fitNLOPromptPhoton",           TObject::kOverwrite);
-        graphFragmentationPhotonNLO->Write( "graphFragmentationPhotonNLO",  TObject::kOverwrite);
-        fitNLOFragmentationPhoton->Write(   "fitNLOFragmentationPhoton",    TObject::kOverwrite);
+        if (doNLOComparison){
+            fitNLODirectPhoton->Write(          "fitNLODirectPhoton",           TObject::kOverwrite);
+            graphPromptPhotonNLO->Write(        "graphPromptPhotonNLO",         TObject::kOverwrite);
+            fitNLOPromptPhoton->Write(          "fitNLOPromptPhoton",           TObject::kOverwrite);
+            graphFragmentationPhotonNLO->Write( "graphFragmentationPhotonNLO",  TObject::kOverwrite);
+            fitNLOFragmentationPhoton->Write(   "fitNLOFragmentationPhoton",    TObject::kOverwrite);
 
-        histRatioNLODirectPhoton->Write(    "histRatioNLODirectPhoton",     TObject::kOverwrite);
-        NLODoubleRatio->Write(              "graphNLODoubleRatio",          TObject::kOverwrite);
-        NLO->Write(                         "graphNLODirGamma",             TObject::kOverwrite);
+            histoRatioNLODirectPhoton->Write(    "histoRatioNLODirectPhoton",     TObject::kOverwrite);
+            graphNLODoubleRatio->Write(         "graphgraphNLODoubleRatio",     TObject::kOverwrite);
+            graphNLODirGammaSpectra->Write(     "graphNLODirGamma",             TObject::kOverwrite);
+        }
         
         fileCorrectedOutput->Close();
+        delete fileCorrectedOutput;
     }
 }
