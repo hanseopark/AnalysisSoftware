@@ -216,7 +216,7 @@ void CorrectGammaMC(TH1D* histoMCGammaSpec_MCPtCorr,  Double_t deltaEta, Double_
 //*********************************************************************************************************
 void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput", 
                         const char *nameCorrectionFile      = "", 
-                        TString cutSelection                ="", 
+                        TString cutSelection                = "", 
                         TString suffix                      = "eps", 
                         TString nameMeson                   = "Pi0", 
                         TString isMC                        = "kFALSE",
@@ -248,11 +248,20 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     StyleSettingsThesis();  
     SetPlotStyle();
 
+    TString nameRec;
+    Bool_t isRunMC                  = kFALSE;
+    if (isMC.CompareTo("kTRUE")==0){
+        nameRec                     = "MC";
+        isRunMC                     = kTRUE;
+    } else {
+        nameRec                     = "data";
+    }
+
     //*****************************************************************************************
     //*************************** Determine K0s scaling factor ********************************
     //*****************************************************************************************
     Double_t doubleAddFactorK0s     = ReturnCorrectK0ScalingFactor( option,  cutSelection);
-    if(isMC.CompareTo("kTRUE") == 0){
+    if(isRunMC){
         doubleAddFactorK0s = 0.;
         cout<<" MC --> doubleAddFactorK0s = 0"<<endl;
     } else {
@@ -297,7 +306,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         cent                        = Form("%s %s", centrality.Data(), collisionSystem.Data());
     } else {
         cent                        = collisionSystem;
-    }    
+    }
     
     //******************************************************************************************
     //***************************** Set output directory ***************************************
@@ -309,13 +318,6 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //************************ Define additional global variables ******************************
     //******************************************************************************************
     TString textPi0New              = Form("Gamma_%s",nameMeson.Data());
-    
-    TString textPrefix2;
-    if (isMC.CompareTo("kTRUE")==0){
-        textPrefix2                 = "MC";
-    } else {
-        textPrefix2                 = "data";
-    }
     
     Double_t deltaEta               = ReturnDeltaEta(fGammaCutSelection);
     Double_t eta                    = deltaEta*0.5;
@@ -973,7 +975,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //******************* Pileup correction factors ********************************************
     TFile*  doPileUpCorr                                                = NULL;
     if (kDoPileup){
-        doPileUpCorr                                                    = new  TFile(Form("%s/%s/%s_%s_GammaConvV1DCAHistogramms%s_%s.root", cutSelection.Data(), option.Data(), nameMeson.Data(),textPrefix2.Data(), optionPeriod.Data(), cutSelection.Data()));
+        doPileUpCorr                                                    = new  TFile(Form("%s/%s/%s_%s_GammaConvV1DCAHistogramms%s_%s.root", cutSelection.Data(), option.Data(), nameMeson.Data(),nameRec.Data(), optionPeriod.Data(), cutSelection.Data()));
         if (doPileUpCorr->IsZombie())   doPileUpCorr                    = 0;
     } else                              doPileUpCorr                    = 0;
     
@@ -1171,11 +1173,11 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             if (histoMCrecGamma_PileUp_Pt)legendPileUpCorrFactor->AddEntry(histoPileUpCorrectionFactorMC,"Correction Factor MC","lp");
             legendPileUpCorrFactor->Draw();
         
-        canvasPileUpCorrFactor->SaveAs(Form("%s/%s_PileUpCorrFactor_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
+        canvasPileUpCorrFactor->SaveAs(Form("%s/%s_PileUpCorrFactor_%s_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
         delete canvasPileUpCorrFactor;
         
         Bool_t doPileUpCorrSimplePlot       = kTRUE;
-        if (doPileUpCorrSimplePlot && !textPrefix2.CompareTo("data")) {
+        if (doPileUpCorrSimplePlot && !nameRec.CompareTo("data")) {
             TCanvas *canvasPileUpCorrFactor2= GetAndSetCanvas("canvasPileUpCorrFactor2");
             
             SetHistogramm(histoPileUpCorrectionFactor,"#it{p}_{T} (GeV/#it{c})","Correction Factor (%)",0.90,1.02);
@@ -1186,7 +1188,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
             PutProcessLabelAndEnergyOnPlot( 0.15, 0.3, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
             
-            canvasPileUpCorrFactor2->SaveAs(Form("%s/%s_PileUpCorrFactorDataOnly_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
+            canvasPileUpCorrFactor2->SaveAs(Form("%s/%s_PileUpCorrFactorDataOnly_%s_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
             delete canvasPileUpCorrFactor2;
         }
         
@@ -1209,7 +1211,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             
             PutProcessLabelAndEnergyOnPlot( 0.15, 0.3, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
             
-            canvasPileUpCorrFactor3->SaveAs(Form("%s/%s_PileUpCorrFactorDataOnlyRebinned_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
+            canvasPileUpCorrFactor3->SaveAs(Form("%s/%s_PileUpCorrFactorDataOnlyRebinned_%s_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
             delete canvasPileUpCorrFactor3;
         }
     }
@@ -1260,7 +1262,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     
         PutProcessLabelAndEnergyOnPlot( 0.6, 0.95, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
 
-    canvasBackground->SaveAs(Form("%s/%s_Background_%s_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
+    canvasBackground->SaveAs(Form("%s/%s_Background_%s_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasBackground;
 
     //**********************************************************************************
@@ -2106,7 +2108,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         PutProcessLabelAndEnergyOnPlot( 0.68, 0.78, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
         
-    canvasCorrGammaSpecUnfold->SaveAs(Form("%s/%s_%s_CorrGammaUnfoldSpectrumPurityMinusSec_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
+    canvasCorrGammaSpecUnfold->SaveAs(Form("%s/%s_%s_CorrGammaUnfoldSpectrumPurityMinusSec_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasCorrGammaSpecUnfold;
 
     //**********************************************************************************
@@ -2142,7 +2144,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         PutProcessLabelAndEnergyOnPlot( 0.18, 0.3, 0.035, cent, textMeasurement, detectionProcess, 42, 0.03);
  
-    canvasResolutionCorr->SaveAs(Form("%s/%s_%s_ResolutionCorrection_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
+    canvasResolutionCorr->SaveAs(Form("%s/%s_%s_ResolutionCorrection_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasResolutionCorr;
     
     //******************************************************************************************
@@ -2589,7 +2591,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         
         DrawGammaLines(0., maxPtGamma,1, 1,0.5);
     
-    canvasPurBackGammaSpec->SaveAs(Form("%s/%s_%s_GammaSpectraComparison_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
+    canvasPurBackGammaSpec->SaveAs(Form("%s/%s_%s_GammaSpectraComparison_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasPurBackGammaSpec;
     
     if (isPCM && !isCalo) {
@@ -2634,12 +2636,15 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     
         SetStyleHistoTH1ForGraphs(tempRatioDataMC, "#it{p}_{T} (GeV/#it{c})", "#frac{data}{MC}", 0.14, 0.15, 0.12, 0.10, 0.85, 0.4, 510, 505);
         DrawGammaSetMarker(tempRatioDataMC, 24, 1.0, kBlack, kBlack);
-        tempRatioDataMC->GetYaxis()->SetRangeUser(0.5, 1.5);
-    
+        if (isRunMC){
+            tempRatioDataMC->GetYaxis()->SetRangeUser(0.85, 1.15);
+        } else {
+            tempRatioDataMC->GetYaxis()->SetRangeUser(0.5, 1.5);
+        }
         tempRatioDataMC->DrawCopy("e1");
         DrawGammaLines(0., tempRatioDataMC->GetXaxis()->GetBinUpEdge(tempRatioDataMC->GetNbinsX()), 1., 1., 0.5, kBlue+1);
     
-    canvasGammaPurityConvBin->SaveAs(Form("%s/%s_%s_GammaSpec_%s.%s",outputDir.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data(),suffix.Data()));
+    canvasGammaPurityConvBin->SaveAs(Form("%s/%s_%s_GammaSpec_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasGammaPurityConvBin;
 
     TH1D* histoGammaCorrFac_Pt           = (TH1D*) histoGammaPrimaryRecoEff_Pt->Clone("GammaCorrFac_Pt");
@@ -2648,7 +2653,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //***********************************************************************************************************
     //******************************* Write output file for photons *********************************************
     //***********************************************************************************************************
-    TString nameOutput = Form("%s/%s/%s_%s_GammaConvV1Correction_%s.root",cutSelection.Data(),option.Data(),textPi0New.Data(),textPrefix2.Data(),cutSelection.Data());
+    TString nameOutput = Form("%s/%s/%s_%s_GammaConvV1Correction_%s.root",cutSelection.Data(),option.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data());
     TFile* fileCorrectedOutput = new TFile(nameOutput,"RECREATE");
 
         //________________________ writing MC quantities to file _____________________________
