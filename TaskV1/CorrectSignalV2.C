@@ -2087,7 +2087,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TCanvas* canvasCompEffSimple = new TCanvas("canvasCompEffSimple","",200,10,1350,900);  // gives the page size
     DrawGammaCanvasSettings( canvasCompEffSimple, 0.10, 0.01, 0.035, 0.09);
 
-    if (containsWOWeights && (mode!=0 || mode!=9) && nameMeson.Contains("Pi0")){
+    if (containsWOWeights &&  nameMeson.Contains("Pi0")){ //(mode!=0 || mode!=9) &&
 
         TH1D* histoRatioEffWOWeightingEff[3]        = {NULL, NULL, NULL};
         TH1D* histoRatioEffWOWeightingEffCFPol0[3]  = {NULL, NULL, NULL};
@@ -2439,7 +2439,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 histoTrueEffiPtWOWeights[0]->DrawCopy("same,e1,p");
                 DrawGammaSetMarker(histoTrueEffiPt[0], 21, 1., kBlue+1, kBlue+1);
                 histoTrueEffiPt[0]->DrawCopy("same,e1,p");
-            } else if (mode == 4){
+            } else if (mode == 4 || mode == 2 || mode == 0){
                 DrawGammaSetMarker(histoEffiPt[0], 25, 1., kGreen+2, kGreen+2);
                 histoEffiPt[0]->DrawCopy("same,e1,p");            
             }    
@@ -2449,7 +2449,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 legendEff->AddEntry(histoTrueEffiPtWOWeights[0],"validated efficiency, w/o weights"); 
                 legendEff->AddEntry(histoEffiPt[0],"reconstructed efficiency, as in Data"); 
                 legendEff->AddEntry(histoTrueEffiPt[0],"corr validated efficiency"); 
-            } else if (mode == 4) {
+            } else if (mode == 4 || mode == 2 || mode == 0 ) {
                 legendEff->AddEntry(histoEffiPt[0],"reconstructed efficiency, as in Data"); 
                 legendEff->AddEntry(histoTrueEffiPtUnmod[0],"validated efficiency");            
             } else {
@@ -2760,7 +2760,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         
         if (k == 0){
             RatioTrueMCInput            = (TH1D*) histoMCYieldMeson->Clone();
-            RatioTrueMCInput->Divide(RatioTrueMCInput,histoCorrectedYieldTrue[k],1.,1.,"");
+            RatioTrueMCInput->Divide(RatioTrueMCInput,histoCorrectedYieldTrue[k],1.,1.,"B");
             RatioNormalToTrue           = (TH1D*) histoCorrectedYieldNorm[k]->Clone();  
             RatioNormalToTrue->Divide(RatioNormalToTrue,histoCorrectedYieldTrue[k],1.,1.,"B");
         }    
