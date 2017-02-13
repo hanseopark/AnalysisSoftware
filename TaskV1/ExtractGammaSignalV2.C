@@ -231,6 +231,9 @@ void ExtractGammaSignalV2(      TString meson               = "",
     if (option.CompareTo("PbPb_2.76TeV") == 0)  fNEvents                        = fEventQuality->GetBinContent(1);
     else                                        fNEvents                        = GetNEvents(fEventQuality);
     
+    //****************************************************************************************************
+    if (meson.CompareTo("Pi0") == 0 || meson.CompareTo("Pi0EtaBinning") == 0) fMesonId = 111;
+    else fMesonId = 221;
     fMesonMassExpect                            = TDatabasePDG::Instance()->GetParticle(fMesonId)->Mass();
     // calculate number of events for normalization
     if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0){
@@ -261,7 +264,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
             }         
         }
     }
-    
+
     // *******************************************************************************************************
     // ******************************* Read histograms from data for Calo ************************************
     // *******************************************************************************************************
@@ -1521,7 +1524,6 @@ void RebinSpectrumToDCAzDistBinning(TH1D *Spectrum, TString NewName){
 //******** including distribution for MC (which doesn't contain pileup) to estimate fake pileup ****
 //**************************************************************************************************
 void CalculatePileUpBackground(Bool_t doMC){
-    
     if(fIsMC && doMC){
 
         fMCrecGammaPtDCAzBins                                                               = new TH1D**[4];
@@ -1727,19 +1729,19 @@ void CalculatePileUpBackground(Bool_t doMC){
             //plotting DCAz distributions for MC rec and identified particle in pt slices
             TString nameFile    = Form("%s/%s_%s_MCrec_DCAz_vs_Pt_%s_%s.%s", fOutputDir.Data(), fPrefix.Data(), fPrefix2.Data(), categoryName[catIter].Data(), fCutSelection.Data(), fSuffix.Data());
             PlotDCAzInPtBinsWithBack( fMCrecGammaPtDCAzBins[catIter], fMCrecGammaPtDCAzBinsBack[catIter], NULL, nameFile, "CanvasESDDCAz", "PadESDDCAz",
-            fDate, fMeson, 1, fNBinsPtDummy, fBinsPtDummy, "#gamma --> e^{+}e^{-}", fIsMC, "MinBias");
+            fDate, fMeson, fStartPtBin, fNBinsPtDummy, fBinsPtDummy, "#gamma --> e^{+}e^{-}", fIsMC, "MinBias");
             
             nameFile            = Form("%s/%s_%s_SignalAfterSubtraction_DCAz_vs_Pt_%s_%s.%s", fOutputDir.Data(), fPrefix.Data(), fPrefix2.Data(), categoryName[catIter].Data(), fCutSelection.Data(), fSuffix.Data());
             PlotDCAzInPtBinsWithBack( fMCrecSubGammaPtDCAzBins[catIter], fTrueSubGammaPtDCAzBins[catIter], NULL, nameFile, "CanvasESDDCAz", "PadESDDCAz",
-            fDate, fMeson, 1, fNBinsPtDummy, fBinsPtDummy, "#gamma --> e^{+}e^{-}", fIsMC, "MinBias");
+            fDate, fMeson, fStartPtBin, fNBinsPtDummy, fBinsPtDummy, "#gamma --> e^{+}e^{-}", fIsMC, "MinBias");
             
             nameFile            = Form("%s/%s_%s_TrueBackDCAz_vs_Pt_%s_%s.%s", fOutputDir.Data(), fPrefix.Data(), fPrefix2.Data(), categoryName[catIter].Data(), fCutSelection.Data(), fSuffix.Data());
             PlotDCAzInPtBinsWithBack( fTrueBackgroundPtDCAzBins[catIter], fMCrecGammaPtDCAzBinsBack[catIter], NULL, nameFile, "CanvasESDDCAz", "PadESDDCAz",
-            fDate, fMeson, 1, fNBinsPtDummy, fBinsPtDummy, "#gamma --> e^{+}e^{-}", fIsMC, "MinBias");
+            fDate, fMeson, fStartPtBin, fNBinsPtDummy, fBinsPtDummy, "#gamma --> e^{+}e^{-}", fIsMC, "MinBias");
              
             nameFile            = Form("%s/%s_%s_TrueSignalDCAz_vs_Pt_%s_%s.%s", fOutputDir.Data(), fPrefix.Data(), fPrefix2.Data(), categoryName[catIter].Data(), fCutSelection.Data(), fSuffix.Data());
             PlotDCAzInPtBinsWithBack( fMCrecGammaPtDCAzBins[catIter], fTrueGammaPtDCAzBins[catIter], NULL, nameFile, "CanvasESDDCAz", "PadESDDCAz",
-            fDate, fMeson, 1, fNBinsPtDummy, fBinsPtDummy, "#gamma --> e^{+}e^{-}", fIsMC,  "MinBias");
+            fDate, fMeson, fStartPtBin, fNBinsPtDummy, fBinsPtDummy, "#gamma --> e^{+}e^{-}", fIsMC,  "MinBias");
         }
         
         // building ratios with / without fake pileup
@@ -2636,11 +2638,10 @@ void CalculateGammaCorrection(){
 void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode, Bool_t addSig){
 
     InitializeBinning(setPi0, numberOfBins, energy, fDirectPhoton, fMode, fEventCutSelection, fClusterCutSelection);
-
     
     fDeltaPt                                            = new TH1D("deltaPt","",fNBinsPt,fBinsPt);
-    for(Int_t iPt=fStartPtBin+1;iPt<fNBinsPt+1;iPt++){
-        fDeltaPt->SetBinContent(iPt,fBinsPt[iPt]-fBinsPt[iPt-1]);
+    for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
+        fDeltaPt->SetBinContent(iPt,fBinsPt[iPt+1]-fBinsPt[iPt]);
         fDeltaPt->SetBinError(iPt,0);
     }
 
@@ -2702,6 +2703,14 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         nIterationsShowBackground[2]                    = 15;
         nIterationsShowBackground[3]                    = 16;
         optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
+        optionShowBackground[1]                         = "nosmoothing";
+        optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
+    } else if ((fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0) && (fMeson.CompareTo("Pi0") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
+        nIterationsShowBackground[0]                    = 13;
+        nIterationsShowBackground[1]                    = 13;
+        nIterationsShowBackground[2]                    = 15;
+        nIterationsShowBackground[3]                    = 16;
+        optionShowBackground[0]                         = "BackDecreasingWindow";                   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
     } else {

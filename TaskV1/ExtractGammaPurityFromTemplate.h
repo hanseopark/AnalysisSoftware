@@ -45,7 +45,7 @@ Double_t signalPurityDenomErr;
 Double_t nSigmaLow  = -20.0;
 Double_t nSigmaHigh = 20.0;
 Double_t constrainLow  = 0.;
-Double_t constrainHigh = 10.;
+Double_t constrainHigh = 1.;
 
 TString SigmaStarForm = "#Kappa = #frac{|#kappa^{+}|+|#kappa^{-}|}{2}+2(#kappa^{+}+#kappa^{-})";
 

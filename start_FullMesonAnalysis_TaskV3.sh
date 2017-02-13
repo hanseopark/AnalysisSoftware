@@ -215,7 +215,7 @@ function GiveBinningDirectPhotonHI()
     DoEta=0;
     DoPi0InEtaBinning=0;
 
-    echo "How many p_T bins do you want to use for the Pi0? 17(8GeV), 18(11GeV) 19 (20GeV), 21(14GeV)";
+    echo "How many p_T bins do you want to use for the Pi0? 14(6GeV), 17(8GeV), 18(11GeV) 19 (20GeV), 21(14GeV)";
     read answer
     if [ $answer = 17 ]; then
         echo "17 Bins --> Max p_T = 8 GeV ...";
@@ -230,9 +230,13 @@ function GiveBinningDirectPhotonHI()
         correctPi0=1
         BinsPtPi0=18
     elif [ $answer = 21 ]; then
-        echo "17 Bins --> Max p_T = 14 GeV ...";
+        echo "18 Bins --> Max p_T = 14 GeV ...";
         correctPi0=1
-        BinsPtPi0=17
+        BinsPtPi0=18
+    elif [ $answer = 14 ]; then
+        echo "14 Bins --> Max p_T = 6 GeV ...";
+        correctPi0=1
+        BinsPtPi0=14
     else
         echo "Pi0 Binning was not set correctly. Please try again.";
         correctPi0=0

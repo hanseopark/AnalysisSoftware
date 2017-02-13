@@ -109,7 +109,7 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
     cout << "Pictures are saved as " << suffix.Data() << endl;
 
     //************************************ Detect correct folder name **********************************
-    TString nameMainDir                         = "GammaConvV1_70_v2";
+    TString nameMainDir                         = "GammaConvV1_69_v2";
 
     //************************************ Separate cutstrings *****************************************
     fCutSelection                               = cutSelection;
@@ -463,10 +463,10 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
             //configure the TFractionFitter
             fit                    = new TFractionFitter(hKappaTPCAfterCut[i], kappaArray);
             if(kUseFitConstraints){
-                fit->Constrain(1,fracElEl[i]*constrainLow,fracElEl[i]*ptconstraintHigh0[i]);
-                fit->Constrain(2,fracElPK[i]*constrainLow,fracElPK[i]*ptconstraintHigh1[i]);
-                fit->Constrain(3,fracPiPK[i]*constrainLow,fracPiPK[i]*ptconstraintHigh2[i]);
-                fit->Constrain(4,fracPartialRest[i]*constrainLow,fracPartialRest[i]*ptconstraintHigh3[i]);
+                fit->Constrain(1,fracElEl[i]*constrainLow,fracElEl[i]*constrainHigh); //ptconstraintHigh0[i]);
+                fit->Constrain(2,fracElPK[i]*constrainLow,fracElPK[i]*constrainHigh); //ptconstraintHigh1[i]);
+                fit->Constrain(3,fracPiPK[i]*constrainLow,fracPiPK[i]*constrainHigh); //ptconstraintHigh2[i]);
+                fit->Constrain(4,fracPartialRest[i]*constrainLow,fracPartialRest[i]*constrainHigh); //ptconstraintHigh3[i]);
             }
 
         } else {
@@ -1505,7 +1505,9 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
 
     TCanvas* canvasPurity   = new TCanvas("canvasPurity","",0,0,1000,800);  // gives the page size
     DrawGammaCanvasSettings( canvasPurity,  0.1, 0.02, 0.02, 0.09);
-    TH2D *histo2DPurity     = new TH2D("histo2DPurity", "histo2DPurity", 1000,0.,fDeltaPt->GetXaxis()->GetXmax(),1000,0.7,1.01);
+    canvasPurity->SetGridx();
+    canvasPurity->SetGridy();
+    TH2D *histo2DPurity     = new TH2D("histo2DPurity", "histo2DPurity", 1000,0.,/*fDeltaPt->GetXaxis()->GetXmax()*/7.,1000,0.7,1.01);
     SetStyleHistoTH2ForGraphs(histo2DPurity, "#it{p}_{T} (GeV/#it{c})","Purity", 0.035,0.04, 0.035,0.04, 1.,1.05);
     histo2DPurity->DrawCopy();
 
@@ -1516,7 +1518,7 @@ void ExtractGammaPurityFromTemplate( TString meson              = "",
     DrawGammaSetMarker(hSignalPurity3,20,1.5,kBlue+1,kBlue+1);
     hSignalPurity3->Draw("same,p");
 
-    TLegend* legPurity = new TLegend(0.2,0.2,0.5,0.4);
+    TLegend* legPurity = new TLegend(0.5,0.2,0.7,0.4);
     legPurity->SetTextSize(0.04);
     legPurity->SetHeader("Purity");
     legPurity->AddEntry(hSignalPurity1,Form("%.2f < K < %.2f",kappaRangeElEl1[0],kappaRangeElEl1[1]),"p");
