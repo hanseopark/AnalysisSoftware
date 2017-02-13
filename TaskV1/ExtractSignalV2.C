@@ -342,10 +342,10 @@ void ExtractSignalV2(   TString meson                   = "",
 
             // histos with gamma's in acceptance
             fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0Acc.Data());
-            if ( fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 ){
+//             if ( fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 ){
                 fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0AccWOWeights.Data());
                 fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0AccWOEvtWeights.Data());
-            }
+//             }
         
             // secondary neutral pions histograms
             fHistoMCSecPi0SourcePt              = (TH2D*)MCContainer->FindObject(ObjectNameMCSecPi0.Data());
@@ -5151,6 +5151,7 @@ void FillMCSecondaryHistAndCalculateAcceptance(TH2D* mcSecInputSourcePt, TH2D* m
 //***************** Calculation of Meson Acceptance **************************
 //****************************************************************************
 void CalculateMesonAcceptance() {
+    cout << "calculating acceptance" << endl;
     fHistoMCMesonAcceptPt = new TH1D("fMCMesonAccepPt","",fNBinsPt,fBinsPt);
     fHistoMCMesonAcceptPt->Sumw2();
 
@@ -5166,6 +5167,7 @@ void CalculateMesonAcceptance() {
 //***************** Calculation of Meson Acceptance **************************
 //****************************************************************************
 void CalculateMesonAcceptanceWOWeights() {
+    cout << "calculating acceptance w/o weights" << endl;
     fHistoMCMesonAcceptPtWOWeights = new TH1D("fMCMesonAccepPtWOWeights","",fNBinsPt,fBinsPt);
     fHistoMCMesonAcceptPtWOWeights->Sumw2();
 
@@ -5181,6 +5183,7 @@ void CalculateMesonAcceptanceWOWeights() {
 //***************** Calculation of Meson Acceptance **************************
 //****************************************************************************
 void CalculateMesonAcceptanceWOEvtWeights() {
+    cout << "calculating acceptance w/o event weights" << endl;
     fHistoMCMesonAcceptPtWOEvtWeights = new TH1D("fMCMesonAccepPtWOEvtWeights","",fNBinsPt,fBinsPt);
     fHistoMCMesonAcceptPtWOEvtWeights->Sumw2();
 

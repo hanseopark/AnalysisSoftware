@@ -568,7 +568,8 @@ Double_t fBinsEtapPb5023GeVPtEMCTrig[27]        = { 0., 0.3, 0.5, 0.7, 0.9, 1.1,
 
 Double_t fBinsEtapPb5023GeVCentPt[15]           = { 0.,  0.4,  0.6,  0.8,  1.0, 1.2, 1.4,  1.6,  2.0,  2.5,
                                                     3.0, 4.,   6.,   8.,   10};
-Double_t fBinsEtapPb5023GeVPtDCA[6]             = { 0., 0.5, 1.0, 2.0, 4., 8.};
+Double_t fBinsEtapPb5023GeVPtDCA[13]            = { 0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.4, 1.8, 2.4,
+                                                    4.0, 6.0, 14.0};
 Int_t fBinsEtapPb5023GeVPtRebin[22]             = { 10, 8,  8,  8,  5, 5,  5,  5,  4,  4,
                                                     4,   5,  8,  8,  8, 8,   10, 10, 10, 10,
                                                     10,  10};
@@ -620,10 +621,12 @@ Double_t fBinsEtapPb5023GeVPt3Body[15]          = { 0., 0.4, 0.6, 0.8, 1.0, 1.2,
 Int_t fBinsEtapPb5023GeVPt3BodyRebin[14]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                                                     5, 5, 5, 5};
 
-Double_t fBinsDirGammapPbPt[20]                 = { 0.0, 0.4, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.3,
-                                                    2.7, 3.1, 3.5, 4.0, 4.5, 5.5, 6.5, 8.0, 11.0, 14.0};
-Int_t fBinsDirGammapPbPtRebin[19]               = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                    2, 2, 2, 2, 2, 2, 4, 4, 4};
+Double_t fBinsDirGammapPbPt[24]                 = { 0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 
+                                                    1.8, 2.0, 2.4, 2.8, 3.2, 3.6, 4.0, 4.8, 5.6, 6.4, 
+                                                    7.2, 8.0, 10.0, 14.0};
+Int_t fBinsDirGammapPbPtRebin[23]               = { 4, 2, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                    1, 1, 1, 1, 1, 1, 2, 2, 2, 2,
+                                                    4, 4, 4};
 Double_t fBinsDirGammaPCMEMCpPbPt[40]           = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 
                                                     1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 
                                                     3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 
@@ -1912,7 +1915,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
             if (directPhoton.CompareTo("directPhoton") == 0 ){
                 fStartPtBin     = 1;
                 fColumn         = 5;
-                fRow            = 5;
+                fRow            = 4;
                 if (modi == 2){
                     fStartPtBin     = 1;
                     fColumn         = 6;
@@ -1925,9 +1928,9 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 if (specialTrigg == 0 && ( modi == 2 || modi == 4 ) && fNBinsPt > 39 ){
                     cout << "You have chosen to have more than 43 bins, this is not possible, it will be reduced to 39 for calo analysis" << endl;
                     fNBinsPt    = 39;
-                } else if ( !( modi == 2 || modi == 4 ) && fNBinsPt > 21) {
-                    cout << "You have chosen Direct Photon Plots and more than 21 bins, this is not possible, it will be reduced to 21 bins." << endl;
-                    fNBinsPt    = 21;
+                } else if ( !( modi == 2 || modi == 4 ) && fNBinsPt > 23) {
+                    cout << "You have chosen Direct Photon Plots and more than 23 bins, this is not possible, it will be reduced to 23 bins." << endl;
+                    fNBinsPt    = 23;
                 }
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
                     if (modi == 0){
@@ -1944,6 +1947,11 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                             fNRebin[i]  = fBinsDirGammapPbPtRebin[i];
                     }    
                 }
+                optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                optionBGSmoothingVar2       = "noSmoothing";
+                nIterBGFit                  = 13;
+                fMaxYFracBGOverIntHist      = 20;
             } else {
                 fStartPtBin     = 1;
                 fColumn         = 7;
@@ -1978,8 +1986,8 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     fRow            = 5;
                 }
                 if (isDCA) {
-                    fColumn         = 3;
-                    fRow            = 4;
+                    fColumn         = 4;
+                    fRow            = 3;
                 }
 
                 TString MinBias = eventCutSelection(GetEventCentralityMinCutPosition(),2);
@@ -2039,9 +2047,9 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                         }
                     }
                 }
-                optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
-                optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing3";
-                optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+                optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                optionBGSmoothingVar2       = "noSmoothing";
                 nIterBGFit                  = 13;
                 fMaxYFracBGOverIntHist      = 20;
             }
@@ -2732,8 +2740,8 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 fStartPtBin     = 8;
             }
             if (isDCA){
-                fColumn         = 3;
-                fRow            = 4;
+                fColumn         = 4;
+                fRow            = 3;
             }
 
             if (fNBinsPt > 12 && isDCA) {
@@ -2804,14 +2812,14 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
 	    }
 
         if (!setPi0.CompareTo("Pi0EtaBinning")){
-            optionBGSmoothingStandard   = "BackSmoothing9";
-            optionBGSmoothingVar1       = "BackSmoothing7";
-            optionBGSmoothingVar2       = "BackSmoothing11";
-            nIterBGFit                  = 15;
+            optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+            optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+            optionBGSmoothingVar2       = "noSmoothing";
+            nIterBGFit                  = 13;
         } else {
-            optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
-            optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing3";
-            optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+            optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+            optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+            optionBGSmoothingVar2       = "noSmoothing";
             nIterBGFit                  = 13;
         }
         fMaxYFracBGOverIntHist          = 20;
