@@ -131,38 +131,20 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     }
 
     //___________________________________ Declaration of files _____________________________________________
-    TString fileNameTheory                  = "ExternalInputPbPb/Theory/TheoryCompilationPbPbforLHC11h.root";
-    TString fileNameALICEData               = Form("%s/%s/CombineMesonMeasurementsPbPb2760GeVX/InputALICEResultsPbPb2760GeV_%s.root",suffix.Data(),dateForOutput.Data(),dateForOutput.Data());
-    TString fileNameDataOtherEnergyInput    = "ExternalInputPbPb/OtherExperiments/DataCompilationFromOtherEnergiesPbPbWithEta.root";
+    TString fileNamePHOS                    = "ExternalInputPbPb/PHOS/LHC10h_PHOS_pi0_PbPb_06022014.root";
+    TString fileNameEMCal                   = "ExternalInputPbPb/EMCAL/LHC11h_EMCal_pi0eta_PbPb_10092015.root";
+    TString fileNamePCMPub                  = "ExternalInputPbPb/data_PCMResults_PbPb_2.76TeV_LHC10h.root";
 
-    TString outputDir                       = Form("%s/%s/CombineMesonMeasurementsPbPb2760GeV%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
-    TString paperPlots                      = Form("%s/PaperPlots_%s",outputDir.Data(),dateForOutput.Data());
-    TString PubNotePlots                    = Form("%s/PubNotePlots_%s",outputDir.Data(),dateForOutput.Data());
+    TString outputDir                       = Form("%s/%s/NeutralMesonMeasurementsPbPb2760GeVAllCent%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
     TString rootFiles                       = Form("%s/rootFiles",outputDir.Data());
     TString nameFinalResDat                 = Form("%s/CombinedResults%s_FitResults.dat",outputDir.Data(),bWCorrection.Data());
 
     gSystem->Exec("mkdir -p "+outputDir);
-    gSystem->Exec("mkdir -p "+paperPlots);
-    gSystem->Exec("mkdir -p "+PubNotePlots);
     gSystem->Exec("mkdir -p "+rootFiles);
-    gSystem->Exec(Form("cp %s %s/Theory.root",                fileNameTheory.Data(), rootFiles.Data()));
-    gSystem->Exec(Form("cp %s %s/InputALICEData.root",        fileNameALICEData.Data(), rootFiles.Data()));
-    gSystem->Exec(Form("cp %s %s/OtherExperimentsInput.root", fileNameDataOtherEnergyInput.Data(), rootFiles.Data()));
-
-//     TString fileNamePHOS                    = "ExternalInputPbPb/PHOS/LHC10h_PHOS_pi0_PbPb_06022014.root";
-//     TString fileNameEMCal                   = "ExternalInputPbPb/EMCAL/LHC11h_EMCal_pi0eta_PbPb_10092015.root";
-//     TString fileNamePCMPub                  = "ExternalInputPbPb/data_PCMResults_PbPb_2.76TeV_LHC10h.root";
-//
-//     TString outputDir                       = Form("%s/%s/NeutralMesonMeasurementsPbPb2760GeVAllCent%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
-//     TString rootFiles                       = Form("%s/rootFiles",outputDir.Data());
-//     TString nameFinalResDat                 = Form("%s/CombinedResults%s_FitResults.dat",outputDir.Data(),bWCorrection.Data());
-//
-//     gSystem->Exec("mkdir -p "+outputDir);
-//     gSystem->Exec("mkdir -p "+rootFiles);
-//     gSystem->Exec(Form("cp %s %s/InputPCM.root",        fileNamePCM.Data(), rootFiles.Data()));
-//     gSystem->Exec(Form("cp %s %s/InputPHOS.root",       fileNamePHOS.Data(), rootFiles.Data()));
-//     gSystem->Exec(Form("cp %s %s/InputEMCal.root",      fileNameEMCal.Data(), rootFiles.Data()));
-//     gSystem->Exec(Form("cp %s %s/InputPCMPub.root",     fileNamePCMPub.Data(), rootFiles.Data()));
+    gSystem->Exec(Form("cp %s %s/InputPCM.root",        fileNamePCM.Data(), rootFiles.Data()));
+    gSystem->Exec(Form("cp %s %s/InputPHOS.root",       fileNamePHOS.Data(), rootFiles.Data()));
+    gSystem->Exec(Form("cp %s %s/InputEMCal.root",      fileNameEMCal.Data(), rootFiles.Data()));
+    gSystem->Exec(Form("cp %s %s/InputPCMPub.root",     fileNamePCMPub.Data(), rootFiles.Data()));
 
     TH1D *histoarrayPi0InvYieldPbPb2760GeV[nCent][method];
     TH1D* histoarrayPi0InvYieldPbPb2760GeVYshifted[nCent][method];
@@ -220,7 +202,10 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     histoarrayPi0InvYieldPbPb2760GeV[0][1] = (TH1D*)histoPi0PHOSPbPb0005->Clone("histoPHOSPi0InvYieldPbPb2760GeV_0005");
     grapharrayPi0InvYieldStatPbPb2760GeV[0][1] = new TGraphAsymmErrors(histoarrayPi0InvYieldPbPb2760GeV[0][1]);
     grapharrayPi0InvYieldSysPbPb2760GeV[0][1] = (TGraphAsymmErrors*)graphPHOSYieldPi0SysErrPbPb0005->Clone("graphPHOSPi0InvYieldSysPbPb2760GeV_0005");
-
+    while(grapharrayPi0InvYieldStatPbPb2760GeV[0][1]->GetX()[grapharrayPi0InvYieldStatPbPb2760GeV[0][1]->GetN()-1] > 11.)
+      grapharrayPi0InvYieldStatPbPb2760GeV[0][1]->RemovePoint(grapharrayPi0InvYieldStatPbPb2760GeV[0][1]->GetN()-1);
+    while(grapharrayPi0InvYieldSysPbPb2760GeV[0][1]->GetX()[grapharrayPi0InvYieldSysPbPb2760GeV[0][1]->GetN()-1] > 11.)
+      grapharrayPi0InvYieldSysPbPb2760GeV[0][1]->RemovePoint(grapharrayPi0InvYieldSysPbPb2760GeV[0][1]->GetN()-1);
 
     cout << "For the Pi0 in 5-10% " << endl;
     cout << "PCM" << endl;
@@ -240,6 +225,10 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     histoarrayPi0InvYieldPbPb2760GeV[1][1] = (TH1D*)histoPi0PHOSPbPb0510->Clone("histoPHOSPi0InvYieldPbPb2760GeV_0510");
     grapharrayPi0InvYieldStatPbPb2760GeV[1][1] = new TGraphAsymmErrors(histoarrayPi0InvYieldPbPb2760GeV[1][1]);
     grapharrayPi0InvYieldSysPbPb2760GeV[1][1] = (TGraphAsymmErrors*)graphPHOSYieldPi0SysErrPbPb0510->Clone("graphPHOSPi0InvYieldSysPbPb2760GeV_0510");
+    while(grapharrayPi0InvYieldStatPbPb2760GeV[1][1]->GetX()[grapharrayPi0InvYieldStatPbPb2760GeV[1][1]->GetN()-1] > 11.)
+      grapharrayPi0InvYieldStatPbPb2760GeV[1][1]->RemovePoint(grapharrayPi0InvYieldStatPbPb2760GeV[1][1]->GetN()-1);
+    while(grapharrayPi0InvYieldSysPbPb2760GeV[1][1]->GetX()[grapharrayPi0InvYieldSysPbPb2760GeV[1][1]->GetN()-1] > 11.)
+      grapharrayPi0InvYieldSysPbPb2760GeV[1][1]->RemovePoint(grapharrayPi0InvYieldSysPbPb2760GeV[1][1]->GetN()-1);
 
 
     cout << "For the Pi0 in 0-10% " << endl;
@@ -271,6 +260,10 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     histoarrayPi0InvYieldPbPb2760GeV[2][1] = (TH1D*)histoPi0PHOSPbPb0010->Clone("histoPHOSPi0InvYieldPbPb2760GeV_0010");
     grapharrayPi0InvYieldStatPbPb2760GeV[2][1] = new TGraphAsymmErrors(histoarrayPi0InvYieldPbPb2760GeV[2][1]);
     grapharrayPi0InvYieldSysPbPb2760GeV[2][1] = (TGraphAsymmErrors*)graphPHOSYieldPi0SysErrPbPb0010->Clone("graphPHOSPi0InvYieldSysPbPb2760GeV_0010");
+    while(grapharrayPi0InvYieldStatPbPb2760GeV[2][1]->GetX()[grapharrayPi0InvYieldStatPbPb2760GeV[2][1]->GetN()-1] > 11.)
+      grapharrayPi0InvYieldStatPbPb2760GeV[2][1]->RemovePoint(grapharrayPi0InvYieldStatPbPb2760GeV[2][1]->GetN()-1);
+    while(grapharrayPi0InvYieldSysPbPb2760GeV[2][1]->GetX()[grapharrayPi0InvYieldSysPbPb2760GeV[2][1]->GetN()-1] > 11.)
+      grapharrayPi0InvYieldSysPbPb2760GeV[2][1]->RemovePoint(grapharrayPi0InvYieldSysPbPb2760GeV[2][1]->GetN()-1);
 
     histoarrayPi0InvYieldPbPb2760GeV[2][2] = (TH1D*)histoEMCalPi0InvYieldPbPb2760GeV_0010->Clone("histoEMCalPi0InvYieldPbPb2760GeV_0010");
     grapharrayPi0InvYieldStatPbPb2760GeV[2][2] = new TGraphAsymmErrors(histoarrayPi0InvYieldPbPb2760GeV[2][2]);
@@ -298,6 +291,10 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     histoarrayPi0InvYieldPbPb2760GeV[3][1] = (TH1D*)histoPi0PHOSPbPb1020->Clone("histoPHOSPi0InvYieldPbPb2760GeV_1020");
     grapharrayPi0InvYieldStatPbPb2760GeV[3][1] = new TGraphAsymmErrors(histoarrayPi0InvYieldPbPb2760GeV[3][1]);
     grapharrayPi0InvYieldSysPbPb2760GeV[3][1] = (TGraphAsymmErrors*)graphPHOSYieldPi0SysErrPbPb1020->Clone("graphPHOSPi0InvYieldSysPbPb2760GeV_1020");
+    while(grapharrayPi0InvYieldStatPbPb2760GeV[3][1]->GetX()[grapharrayPi0InvYieldStatPbPb2760GeV[3][1]->GetN()-1] > 11.)
+      grapharrayPi0InvYieldStatPbPb2760GeV[3][1]->RemovePoint(grapharrayPi0InvYieldStatPbPb2760GeV[3][1]->GetN()-1);
+    while(grapharrayPi0InvYieldSysPbPb2760GeV[3][1]->GetX()[grapharrayPi0InvYieldSysPbPb2760GeV[3][1]->GetN()-1] > 11.)
+      grapharrayPi0InvYieldSysPbPb2760GeV[3][1]->RemovePoint(grapharrayPi0InvYieldSysPbPb2760GeV[3][1]->GetN()-1);
 
 
     cout << "For the Pi0 in 20-40% " << endl;
@@ -319,6 +316,10 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     histoarrayPi0InvYieldPbPb2760GeV[4][1] = (TH1D*)histoPi0PHOSPbPb2040->Clone("histoPHOSPi0InvYieldPbPb2760GeV_2040");
     grapharrayPi0InvYieldStatPbPb2760GeV[4][1] = new TGraphAsymmErrors(histoarrayPi0InvYieldPbPb2760GeV[4][1]);
     grapharrayPi0InvYieldSysPbPb2760GeV[4][1] = (TGraphAsymmErrors*)graphPHOSYieldPi0SysErrPbPb2040->Clone("graphPHOSPi0InvYieldSysPbPb2760GeV_2040");
+    while(grapharrayPi0InvYieldStatPbPb2760GeV[4][1]->GetX()[grapharrayPi0InvYieldStatPbPb2760GeV[4][1]->GetN()-1] > 11.)
+      grapharrayPi0InvYieldStatPbPb2760GeV[4][1]->RemovePoint(grapharrayPi0InvYieldStatPbPb2760GeV[4][1]->GetN()-1);
+    while(grapharrayPi0InvYieldSysPbPb2760GeV[4][1]->GetX()[grapharrayPi0InvYieldSysPbPb2760GeV[4][1]->GetN()-1] > 11.)
+      grapharrayPi0InvYieldSysPbPb2760GeV[4][1]->RemovePoint(grapharrayPi0InvYieldSysPbPb2760GeV[4][1]->GetN()-1);
 
 
     cout << "For the Pi0 in 20-50% " << endl;
@@ -371,6 +372,10 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     histoarrayPi0InvYieldPbPb2760GeV[6][1] = (TH1D*)histoPi0PHOSPbPb4060->Clone("histoPHOSPi0InvYieldPbPb2760GeV_4060");
     grapharrayPi0InvYieldStatPbPb2760GeV[6][1] = new TGraphAsymmErrors(histoarrayPi0InvYieldPbPb2760GeV[6][1]);
     grapharrayPi0InvYieldSysPbPb2760GeV[6][1] = (TGraphAsymmErrors*)graphPHOSYieldPi0SysErrPbPb4060->Clone("graphPHOSPi0InvYieldSysPbPb2760GeV_4060");
+    while(grapharrayPi0InvYieldStatPbPb2760GeV[6][1]->GetX()[grapharrayPi0InvYieldStatPbPb2760GeV[6][1]->GetN()-1] > 11.)
+      grapharrayPi0InvYieldStatPbPb2760GeV[6][1]->RemovePoint(grapharrayPi0InvYieldStatPbPb2760GeV[6][1]->GetN()-1);
+    while(grapharrayPi0InvYieldSysPbPb2760GeV[6][1]->GetX()[grapharrayPi0InvYieldSysPbPb2760GeV[6][1]->GetN()-1] > 11.)
+      grapharrayPi0InvYieldSysPbPb2760GeV[6][1]->RemovePoint(grapharrayPi0InvYieldSysPbPb2760GeV[6][1]->GetN()-1);
 
 
     cout << "For the Pi0 in 60-80% " << endl;
@@ -392,6 +397,10 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     histoarrayPi0InvYieldPbPb2760GeV[7][1] = (TH1D*)histoPi0PHOSPbPb6080->Clone("histoPHOSPi0InvYieldPbPb2760GeV_6080");
     grapharrayPi0InvYieldStatPbPb2760GeV[7][1] = new TGraphAsymmErrors(histoarrayPi0InvYieldPbPb2760GeV[7][1]);
     grapharrayPi0InvYieldSysPbPb2760GeV[7][1] = (TGraphAsymmErrors*)graphPHOSYieldPi0SysErrPbPb6080->Clone("graphPHOSPi0InvYieldSysPbPb2760GeV_6080");
+    while(grapharrayPi0InvYieldStatPbPb2760GeV[7][1]->GetX()[grapharrayPi0InvYieldStatPbPb2760GeV[7][1]->GetN()-1] > 11.)
+      grapharrayPi0InvYieldStatPbPb2760GeV[7][1]->RemovePoint(grapharrayPi0InvYieldStatPbPb2760GeV[7][1]->GetN()-1);
+    while(grapharrayPi0InvYieldSysPbPb2760GeV[7][1]->GetX()[grapharrayPi0InvYieldSysPbPb2760GeV[7][1]->GetN()-1] > 11.)
+      grapharrayPi0InvYieldSysPbPb2760GeV[7][1]->RemovePoint(grapharrayPi0InvYieldSysPbPb2760GeV[7][1]->GetN()-1);
 
 
     for(Int_t c=0; c<nCent; c++){
@@ -743,16 +752,30 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     TGraphAsymmErrors* grapharrayInvYieldTotPbPb2760GeVUnshifted[nCent][method];
     TGraphAsymmErrors* grapharrayInvYieldStatPbPb2760GeVUnshifted[nCent][method];
     TGraphAsymmErrors* grapharrayInvYieldSysPbPb2760GeVUnshifted[nCent][method];
+    TGraphAsymmErrors* grapharrayInvYieldCombTotPbPb2760GeV_yShifted[nCent];
+    TGraphAsymmErrors* grapharrayInvYieldCombStatPbPb2760GeV_yShifted[nCent];
+    TGraphAsymmErrors* grapharrayInvYieldCombSysPbPb2760GeV_yShifted[nCent];
+    TGraphAsymmErrors* grapharrayInvYieldTotPbPb2760GeV_yShifted[nCent][method];
+    TGraphAsymmErrors* grapharrayInvYieldStatPbPb2760GeV_yShifted[nCent][method];
+    TGraphAsymmErrors* grapharrayInvYieldSysPbPb2760GeV_yShifted[nCent][method];
+
     TGraphAsymmErrors* grapharrayRatioToFitStatPbPb2760GeV[nCent][method];
     TGraphAsymmErrors* grapharrayRatioToFitSysPbPb2760GeV[nCent][method];
     for(Int_t c=0; c<nCent; c++){
       grapharrayInvYieldCombTotPbPb2760GeVUnshifted[c] = NULL;
       grapharrayInvYieldCombStatPbPb2760GeVUnshifted[c] = NULL;
       grapharrayInvYieldCombSysPbPb2760GeVUnshifted[c] = NULL;
+      grapharrayInvYieldCombTotPbPb2760GeV_yShifted[c] = NULL;
+      grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c] = NULL;
+      grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c] = NULL;
       for(Int_t m=0; m<3; m++){
         grapharrayInvYieldTotPbPb2760GeVUnshifted[c][m] = NULL;
         grapharrayInvYieldStatPbPb2760GeVUnshifted[c][m] = NULL;
         grapharrayInvYieldSysPbPb2760GeVUnshifted[c][m] = NULL;
+        grapharrayInvYieldTotPbPb2760GeV_yShifted[c][m] = NULL;
+        grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m] = NULL;
+        grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m] = NULL;
+
         grapharrayRatioToFitStatPbPb2760GeV[c][m] = NULL;
         grapharrayRatioToFitSysPbPb2760GeV[c][m] = NULL;
       }
@@ -761,9 +784,12 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
       grapharrayInvYieldCombTotPbPb2760GeVUnshifted[c] = (TGraphAsymmErrors*)grapharrayInvYieldCombTotPbPb2760GeV[c]->Clone(Form("UnshiftedSpectrumCombTot_%d",c));
       grapharrayInvYieldCombStatPbPb2760GeVUnshifted[c] = (TGraphAsymmErrors*)grapharrayInvYieldCombStatPbPb2760GeV[c]->Clone(Form("UnshiftedSpectrumCombStat_%d",c));
       grapharrayInvYieldCombSysPbPb2760GeVUnshifted[c] = (TGraphAsymmErrors*)grapharrayInvYieldCombSysPbPb2760GeV[c]->Clone(Form("UnshiftedSpectrumCombSys_%d",c));
+      grapharrayInvYieldCombTotPbPb2760GeV_yShifted[c] = (TGraphAsymmErrors*)grapharrayInvYieldCombTotPbPb2760GeV[c]->Clone(Form("yShiftedSpectrumCombTot_%d",c));
+      grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c] = (TGraphAsymmErrors*)grapharrayInvYieldCombStatPbPb2760GeV[c]->Clone(Form("yShiftedSpectrumCombStat_%d",c));
+      grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c] = (TGraphAsymmErrors*)grapharrayInvYieldCombSysPbPb2760GeV[c]->Clone(Form("yShiftedSpectrumCombSys_%d",c));
 
       for(Int_t m=0; m<3; m++){
-        cout << "cent " << c << " method " << m << endl;
+//         cout << "cent " << c << " method " << m << endl;
         if(meson.CompareTo("Pi0")==0){
           grapharrayInvYieldStatPbPb2760GeV[c][m] = (TGraphAsymmErrors*)grapharrayPi0InvYieldStatPbPb2760GeV[c][m]->Clone("grapharrayInvYieldStatPbPb2760GeV");
           grapharrayInvYieldSysPbPb2760GeV[c][m] = (TGraphAsymmErrors*)grapharrayPi0InvYieldSysPbPb2760GeV[c][m]->Clone("grapharrayInvYieldSysPbPb2760GeV");
@@ -773,78 +799,91 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
         }
         grapharrayInvYieldStatPbPb2760GeVUnshifted[c][m] = (TGraphAsymmErrors*)grapharrayInvYieldStatPbPb2760GeV[c][m]->Clone(Form("UnshiftedSpectrumStat_%d_%d",c,m));
         grapharrayInvYieldSysPbPb2760GeVUnshifted[c][m] = (TGraphAsymmErrors*)grapharrayInvYieldSysPbPb2760GeV[c][m]->Clone(Form("UnshiftedSpectrumSys_%d_%d",c,m));
+        grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m] = (TGraphAsymmErrors*)grapharrayInvYieldStatPbPb2760GeV[c][m]->Clone(Form("yShiftedSpectrumStat_%d_%d",c,m));
+        grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m] = (TGraphAsymmErrors*)grapharrayInvYieldSysPbPb2760GeV[c][m]->Clone(Form("yShiftedSpectrumSys_%d_%d",c,m));
       }
     }
 
+    cout << __LINE__ << endl;
     if(meson.CompareTo("Pi0")==0){
         for(Int_t c=0; c<nCent; c++){
 //           cout << "cent " << c << " combined" << endl;
-          if(!(c==2 || c==5)){
-            if(c==3 || c==6 || c==7){
-              grapharrayInvYieldCombTotPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombTotPbPb2760GeV[c]->GetN()-1);
-              grapharrayInvYieldCombStatPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetN()-1);
-              grapharrayInvYieldCombSysPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetN()-1);
-            }
+          while(grapharrayInvYieldCombTotPbPb2760GeV[c]->GetY()[0] < 1e-14)
+            grapharrayInvYieldCombTotPbPb2760GeV[c]->RemovePoint(0);
+          while(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetY()[0] < 1e-14)
+            grapharrayInvYieldCombSysPbPb2760GeV[c]->RemovePoint(0);
+          while(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetY()[0] < 1e-14)
+            grapharrayInvYieldCombStatPbPb2760GeV[c]->RemovePoint(0);
+
+          while(grapharrayInvYieldCombTotPbPb2760GeV[c]->GetY()[grapharrayInvYieldCombTotPbPb2760GeV[c]->GetN()-1] < 1e-14)
             grapharrayInvYieldCombTotPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombTotPbPb2760GeV[c]->GetN()-1);
-            grapharrayInvYieldCombTotPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombTotPbPb2760GeV[c]->GetN()-1);
+          while(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetY()[grapharrayInvYieldCombStatPbPb2760GeV[c]->GetN()-1] < 1e-14)
             grapharrayInvYieldCombStatPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetN()-1);
+          while(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetY()[grapharrayInvYieldCombSysPbPb2760GeV[c]->GetN()-1] < 1e-14)
             grapharrayInvYieldCombSysPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetN()-1);
-            grapharrayInvYieldCombStatPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetN()-1);
-            grapharrayInvYieldCombSysPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetN()-1);
-          }
-//           grapharrayInvYieldCombStatPbPb2760GeV[c]->Print();
-//           grapharrayInvYieldCombSysPbPb2760GeV[c]->Print();
-          for(Int_t m=0; m<3; m++){
-//             cout << "cent " << c << " method " << m << endl;
-            if(m==0){
-              grapharrayInvYieldStatPbPb2760GeV[c][m]->RemovePoint(0);
-            } else if(m==1){
-              grapharrayInvYieldStatPbPb2760GeV[c][m]->RemovePoint(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetN()-1);
-              grapharrayInvYieldStatPbPb2760GeV[c][m]->RemovePoint(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetN()-1);
-              grapharrayInvYieldSysPbPb2760GeV[c][m]->RemovePoint(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetN()-1);
-              grapharrayInvYieldSysPbPb2760GeV[c][m]->RemovePoint(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetN()-1);
-              grapharrayInvYieldStatPbPb2760GeV[c][m]->RemovePoint(0);
-              grapharrayInvYieldStatPbPb2760GeV[c][m]->RemovePoint(0);
-              grapharrayInvYieldSysPbPb2760GeV[c][m]->RemovePoint(0);
-              grapharrayInvYieldSysPbPb2760GeV[c][m]->RemovePoint(0);
-            }
-//             grapharrayInvYieldStatPbPb2760GeV[c][m]->Print();
-//             grapharrayInvYieldSysPbPb2760GeV[c][m]->Print();
+
+          grapharrayInvYieldCombStatPbPb2760GeV[c]->Print();
+          grapharrayInvYieldCombSysPbPb2760GeV[c]->Print();
+          for(Int_t m=0; m<2; m++){
+//               cout << "cent " << c << " method " << m << endl;
+              if(c==5 && m==1) cout << "skip" << endl;
+              else {
+                while(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetY()[0] < 1e-14)
+                  grapharrayInvYieldStatPbPb2760GeV[c][m]->RemovePoint(0);
+                while(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetY()[0] < 1e-14)
+                  grapharrayInvYieldSysPbPb2760GeV[c][m]->RemovePoint(0);
+
+                while(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetY()[grapharrayInvYieldStatPbPb2760GeV[c][m]->GetN()-1] < 1e-14)
+                  grapharrayInvYieldStatPbPb2760GeV[c][m]->RemovePoint(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetN()-1);
+                while(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetY()[grapharrayInvYieldSysPbPb2760GeV[c][m]->GetN()-1] < 1e-14)
+                  grapharrayInvYieldSysPbPb2760GeV[c][m]->RemovePoint(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetN()-1);
+
+                grapharrayInvYieldStatPbPb2760GeV[c][m]->Print();
+                grapharrayInvYieldSysPbPb2760GeV[c][m]->Print();
+              }
           }
         }
     } else if(meson.CompareTo("Eta")==0){
         for(Int_t c=0; c<nCent; c++){
-//           cout << "cent " << c << " combined" << endl;
-          if(c==3 || c==6 || c==7){
-            grapharrayInvYieldCombTotPbPb2760GeV[c]->Set(0);
-            grapharrayInvYieldCombStatPbPb2760GeV[c]->Set(0);
-            grapharrayInvYieldCombSysPbPb2760GeV[c]->Set(0);
-          }
-          if(!(c==2 || c==5)){
-            grapharrayInvYieldCombTotPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombTotPbPb2760GeV[c]->GetN()-1);
-            grapharrayInvYieldCombTotPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombTotPbPb2760GeV[c]->GetN()-1);
-            grapharrayInvYieldCombTotPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombTotPbPb2760GeV[c]->GetN()-1);
-            grapharrayInvYieldCombTotPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombTotPbPb2760GeV[c]->GetN()-1);
-            grapharrayInvYieldCombStatPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetN()-1);
-            grapharrayInvYieldCombStatPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetN()-1);
-            grapharrayInvYieldCombStatPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetN()-1);
-            grapharrayInvYieldCombStatPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetN()-1);
-            grapharrayInvYieldCombSysPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetN()-1);
-            grapharrayInvYieldCombSysPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetN()-1);
-            grapharrayInvYieldCombSysPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetN()-1);
-            grapharrayInvYieldCombSysPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetN()-1);
-          }
-//           grapharrayInvYieldCombStatPbPb2760GeV[c]->Print();
-//           grapharrayInvYieldCombSysPbPb2760GeV[c]->Print();
-          for(Int_t m=0; m<3; m++){
-//             cout << "cent " << c << " method " << m << endl;
-            if(m==0){
-              grapharrayInvYieldStatPbPb2760GeV[c][m]->RemovePoint(0);
-              grapharrayInvYieldStatPbPb2760GeV[c][m]->RemovePoint(0);
+            if(!(c==3 || c==6 || c==7)){
+//               cout << "cent " << c << " combined" << endl;
+              while(grapharrayInvYieldCombTotPbPb2760GeV[c]->GetY()[0] < 1e-14)
+                grapharrayInvYieldCombTotPbPb2760GeV[c]->RemovePoint(0);
+              while(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetY()[0] < 1e-14)
+                grapharrayInvYieldCombSysPbPb2760GeV[c]->RemovePoint(0);
+              while(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetY()[0] < 1e-14)
+                grapharrayInvYieldCombStatPbPb2760GeV[c]->RemovePoint(0);
+
+              while(grapharrayInvYieldCombTotPbPb2760GeV[c]->GetY()[grapharrayInvYieldCombTotPbPb2760GeV[c]->GetN()-1] < 1e-14)
+                grapharrayInvYieldCombTotPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombTotPbPb2760GeV[c]->GetN()-1);
+              while(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetY()[grapharrayInvYieldCombStatPbPb2760GeV[c]->GetN()-1] < 1e-14)
+                grapharrayInvYieldCombStatPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetN()-1);
+              while(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetY()[grapharrayInvYieldCombSysPbPb2760GeV[c]->GetN()-1] < 1e-14)
+                grapharrayInvYieldCombSysPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetN()-1);
+
+              grapharrayInvYieldCombStatPbPb2760GeV[c]->Print();
+              grapharrayInvYieldCombSysPbPb2760GeV[c]->Print();
+
+              for(Int_t m=0; m<3; m++){
+//                 cout << "cent " << c << " method " << m << endl;
+                if( m==1 || (m==2 && (c==0 || c==1 || c==3 || c==4 || c==6 || c==7)) ) cout << "skip" << endl;
+                else {
+                  while(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetY()[0] < 1e-14)
+                    grapharrayInvYieldStatPbPb2760GeV[c][m]->RemovePoint(0);
+                  while(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetY()[0] < 1e-14)
+                    grapharrayInvYieldSysPbPb2760GeV[c][m]->RemovePoint(0);
+
+                  while(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetY()[grapharrayInvYieldStatPbPb2760GeV[c][m]->GetN()-1] < 1e-14)
+                    grapharrayInvYieldStatPbPb2760GeV[c][m]->RemovePoint(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetN()-1);
+                  while(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetY()[grapharrayInvYieldSysPbPb2760GeV[c][m]->GetN()-1] < 1e-14)
+                    grapharrayInvYieldSysPbPb2760GeV[c][m]->RemovePoint(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetN()-1);
+
+                  grapharrayInvYieldStatPbPb2760GeV[c][m]->Print();
+                  grapharrayInvYieldSysPbPb2760GeV[c][m]->Print();
+
+                }
+              }
             }
-//             grapharrayInvYieldStatPbPb2760GeV[c][m]->Print();
-//             grapharrayInvYieldSysPbPb2760GeV[c][m]->Print();
-          }
         }
     }
 
@@ -873,6 +912,8 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
 
           TF1* fitFunctionShiftingX = FitObject("tcmpt","tcmptPi0","Pi0",grapharrayInvYieldCombTotPbPb2760GeV[c]);
           //combined
+          cout << "cent " << c << " combined" << endl;
+          cout << "shift in x" << endl;
           grapharrayInvYieldCombTotPbPb2760GeV[c]         = ApplyXshift(grapharrayInvYieldCombTotPbPb2760GeV[c], fitFunctionShiftingX,"Pi0");
           grapharrayInvYieldCombStatPbPb2760GeV[c]        = ApplyXshiftIndividualSpectra (grapharrayInvYieldCombTotPbPb2760GeV[c],
                                                                                           grapharrayInvYieldCombStatPbPb2760GeV[c],
@@ -884,28 +925,85 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
                                                                                           fitFunctionShiftingX,
                                                                                           0, grapharrayInvYieldCombTotPbPb2760GeV[c]->GetN(),"Pi0");
 
-          for(Int_t m=0; m<3; m++){
-              cout << "cent " << c << " method " << m << endl;
-//               if(m==0 && (c==3 || c==6 ||c==7) ) rangePi0HighComb[m] = 18;
-              if(m==1 && c==5) cout << "not for this" << endl;
-              else if(m==2 && !(c==2 || c==5)) cout << "not for this" << endl;
-              else {
-                grapharrayInvYieldStatPbPb2760GeV[c][m]         = ApplyXshiftIndividualSpectra( grapharrayInvYieldCombTotPbPb2760GeV[c],
-                                                                                                grapharrayInvYieldStatPbPb2760GeV[c][m],
-                                                                                                fitFunctionShiftingX,
-                                                                                                rangePi0LowComb[m], rangePi0HighComb[m],"Pi0");
+          cout << "shift in y" << endl;
+          grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c] = ApplyYshiftIndividualSpectra( grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c], fitFunctionShiftingX);
+          grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c] = ApplyYshiftIndividualSpectra( grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c], fitFunctionShiftingX);
 
-                grapharrayInvYieldSysPbPb2760GeV[c][m]          = ApplyXshiftIndividualSpectra( grapharrayInvYieldCombTotPbPb2760GeV[c],
-                                                                                                grapharrayInvYieldSysPbPb2760GeV[c][m],
-                                                                                                fitFunctionShiftingX,
-                                                                                                rangePi0LowComb[m], rangePi0HighComb[m],"Pi0");
-              }
+          while(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetY()[0] < 1e-14)
+            grapharrayInvYieldCombStatPbPb2760GeV[c]->RemovePoint(0);
+          while(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetY()[0] < 1e-14)
+            grapharrayInvYieldCombSysPbPb2760GeV[c]->RemovePoint(0);
+          while(grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->GetY()[0] < 1e-14)
+            grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->RemovePoint(0);
+          while(grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->GetY()[0] < 1e-14)
+            grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->RemovePoint(0);
+
+          while(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetY()[grapharrayInvYieldCombStatPbPb2760GeV[c]->GetN()-1] < 1e-14)
+            grapharrayInvYieldCombStatPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetN()-1);
+          while(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetY()[grapharrayInvYieldCombSysPbPb2760GeV[c]->GetN()-1] < 1e-14)
+            grapharrayInvYieldCombSysPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetN()-1);
+          while(grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->GetY()[grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->GetN()-1] < 1e-14)
+            grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->RemovePoint(grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->GetN()-1);
+          while(grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->GetY()[grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->GetN()-1] < 1e-14)
+            grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->RemovePoint(grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->GetN()-1);
+
+          grapharrayInvYieldCombStatPbPb2760GeV[c]->Print();
+          grapharrayInvYieldCombSysPbPb2760GeV[c]->Print();
+          grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->Print();
+          grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->Print();
+
+          for(Int_t m=0; m<3; m++){
+            cout << "cent " << c << " method " << m << endl;
+            if(m==1 && c==5) cout << "not for this" << endl;
+            else if(m==2 && !(c==2 || c==5)) cout << "not for this" << endl;
+            else {
+              cout << "shift in x" << endl;
+              grapharrayInvYieldStatPbPb2760GeV[c][m]         = ApplyXshiftIndividualSpectra( grapharrayInvYieldCombTotPbPb2760GeV[c],
+                                                                                              grapharrayInvYieldStatPbPb2760GeV[c][m],
+                                                                                              fitFunctionShiftingX,
+                                                                                              rangePi0LowComb[m], rangePi0HighComb[m],"Pi0");
+
+              grapharrayInvYieldSysPbPb2760GeV[c][m]          = ApplyXshiftIndividualSpectra( grapharrayInvYieldCombTotPbPb2760GeV[c],
+                                                                                              grapharrayInvYieldSysPbPb2760GeV[c][m],
+                                                                                              fitFunctionShiftingX,
+                                                                                              rangePi0LowComb[m], rangePi0HighComb[m],"Pi0");
+
+              cout << "shift in y" << endl;
+              grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m] = ApplyYshiftIndividualSpectra( grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m], fitFunctionShiftingX);
+              grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m] = ApplyYshiftIndividualSpectra( grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m], fitFunctionShiftingX);
+
+              while(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetY()[0] < 1e-14)
+                grapharrayInvYieldStatPbPb2760GeV[c][m]->RemovePoint(0);
+              while(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetY()[0] < 1e-14)
+                grapharrayInvYieldSysPbPb2760GeV[c][m]->RemovePoint(0);
+              while(grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->GetY()[0] < 1e-14)
+                grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->RemovePoint(0);
+              while(grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->GetY()[0] < 1e-14)
+                grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->RemovePoint(0);
+
+              while(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetY()[grapharrayInvYieldStatPbPb2760GeV[c][m]->GetN()-1] < 1e-14)
+                grapharrayInvYieldStatPbPb2760GeV[c][m]->RemovePoint(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetN()-1);
+              while(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetY()[grapharrayInvYieldSysPbPb2760GeV[c][m]->GetN()-1] < 1e-14)
+                grapharrayInvYieldSysPbPb2760GeV[c][m]->RemovePoint(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetN()-1);
+              while(grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->GetY()[grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->GetN()-1] < 1e-14)
+                grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->RemovePoint(grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->GetN()-1);
+              while(grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->GetY()[grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->GetN()-1] < 1e-14)
+                grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->RemovePoint(grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->GetN()-1);
+
+              grapharrayInvYieldStatPbPb2760GeV[c][m]->Print();
+              grapharrayInvYieldSysPbPb2760GeV[c][m]->Print();
+              grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->Print();
+              grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->Print();
+
+            }
           }
+
         } else if(meson.CompareTo("Eta")==0){
 
           if(!(c==3 || c==6 || c==7)){
             TF1* fitFunctionShiftingX = FitObject("tcmpt","tcmptEta","Eta",grapharrayInvYieldCombTotPbPb2760GeV[c]);
             //combined
+            cout << "shift in x" << endl;
             grapharrayInvYieldCombTotPbPb2760GeV[c]         = ApplyXshift(grapharrayInvYieldCombTotPbPb2760GeV[c], fitFunctionShiftingX,"Eta");
             grapharrayInvYieldCombStatPbPb2760GeV[c]        = ApplyXshiftIndividualSpectra (grapharrayInvYieldCombTotPbPb2760GeV[c],
                                                                                             grapharrayInvYieldCombStatPbPb2760GeV[c],
@@ -916,29 +1014,85 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
                                                                                             grapharrayInvYieldCombSysPbPb2760GeV[c],
                                                                                             fitFunctionShiftingX,
                                                                                             0, grapharrayInvYieldCombTotPbPb2760GeV[c]->GetN(),"Eta");
+            cout << "shift in y" << endl;
+            grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c] = ApplyYshiftIndividualSpectra( grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c], fitFunctionShiftingX);
+            grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c] = ApplyYshiftIndividualSpectra( grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c], fitFunctionShiftingX);
+
+            while(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetY()[0] < 1e-14)
+              grapharrayInvYieldCombStatPbPb2760GeV[c]->RemovePoint(0);
+            while(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetY()[0] < 1e-14)
+              grapharrayInvYieldCombSysPbPb2760GeV[c]->RemovePoint(0);
+            while(grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->GetY()[0] < 1e-14)
+              grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->RemovePoint(0);
+            while(grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->GetY()[0] < 1e-14)
+              grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->RemovePoint(0);
+
+            while(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetY()[grapharrayInvYieldCombStatPbPb2760GeV[c]->GetN()-1] < 1e-14)
+              grapharrayInvYieldCombStatPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetN()-1);
+            while(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetY()[grapharrayInvYieldCombSysPbPb2760GeV[c]->GetN()-1] < 1e-14)
+              grapharrayInvYieldCombSysPbPb2760GeV[c]->RemovePoint(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetN()-1);
+            while(grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->GetY()[grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->GetN()-1] < 1e-14)
+              grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->RemovePoint(grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->GetN()-1);
+            while(grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->GetY()[grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->GetN()-1] < 1e-14)
+              grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->RemovePoint(grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->GetN()-1);
+
+            grapharrayInvYieldCombStatPbPb2760GeV[c]->Print();
+            grapharrayInvYieldCombSysPbPb2760GeV[c]->Print();
+            grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->Print();
+            grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->Print();
 
             for(Int_t m=0; m<3; m++){
               if(!m==1){
-                  cout << "cent " << c << " method " << m << endl;
-    //               if(m==0 && (c==3 || c==6 ||c==7) ) rangeEtaHighComb[m] = 18;
-                  if(m==1 && c==5) cout << "not for this" << endl;
-                  else if(m==2 && !(c==2 || c==5)) cout << "not for this" << endl;
-                  else {
-                    grapharrayInvYieldStatPbPb2760GeV[c][m]         = ApplyXshiftIndividualSpectra( grapharrayInvYieldCombTotPbPb2760GeV[c],
-                                                                                                    grapharrayInvYieldStatPbPb2760GeV[c][m],
-                                                                                                    fitFunctionShiftingX,
-                                                                                                    rangeEtaLowComb[m], rangeEtaHighComb[m],"Eta");
+                cout << "cent " << c << " method " << m << endl;
+  //               if(m==0 && (c==3 || c==6 ||c==7) ) rangeEtaHighComb[m] = 18;
+                if(m==1 && c==5) cout << "not for this" << endl;
+                else if(m==2 && !(c==2 || c==5)) cout << "not for this" << endl;
+                else {
+                  cout << "shift in x" << endl;
+                  grapharrayInvYieldStatPbPb2760GeV[c][m]         = ApplyXshiftIndividualSpectra( grapharrayInvYieldCombTotPbPb2760GeV[c],
+                                                                                                  grapharrayInvYieldStatPbPb2760GeV[c][m],
+                                                                                                  fitFunctionShiftingX,
+                                                                                                  rangeEtaLowComb[m], rangeEtaHighComb[m],"Eta");
 
-                    grapharrayInvYieldSysPbPb2760GeV[c][m]          = ApplyXshiftIndividualSpectra( grapharrayInvYieldCombTotPbPb2760GeV[c],
-                                                                                                    grapharrayInvYieldSysPbPb2760GeV[c][m],
-                                                                                                    fitFunctionShiftingX,
-                                                                                                    rangeEtaLowComb[m], rangeEtaHighComb[m],"Eta");
-                  }
+                  grapharrayInvYieldSysPbPb2760GeV[c][m]          = ApplyXshiftIndividualSpectra( grapharrayInvYieldCombTotPbPb2760GeV[c],
+                                                                                                  grapharrayInvYieldSysPbPb2760GeV[c][m],
+                                                                                                  fitFunctionShiftingX,
+                                                                                                  rangeEtaLowComb[m], rangeEtaHighComb[m],"Eta");
+
+                  cout << "shift in y" << endl;
+                  grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m] = ApplyYshiftIndividualSpectra( grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m], fitFunctionShiftingX);
+                  grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m] = ApplyYshiftIndividualSpectra( grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m], fitFunctionShiftingX);
+
+                  while(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetY()[0] < 1e-14)
+                    grapharrayInvYieldStatPbPb2760GeV[c][m]->RemovePoint(0);
+                  while(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetY()[0] < 1e-14)
+                    grapharrayInvYieldSysPbPb2760GeV[c][m]->RemovePoint(0);
+                  while(grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->GetY()[0] < 1e-14)
+                    grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->RemovePoint(0);
+                  while(grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->GetY()[0] < 1e-14)
+                    grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->RemovePoint(0);
+
+                  while(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetY()[grapharrayInvYieldStatPbPb2760GeV[c][m]->GetN()-1] < 1e-14)
+                    grapharrayInvYieldStatPbPb2760GeV[c][m]->RemovePoint(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetN()-1);
+                  while(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetY()[grapharrayInvYieldSysPbPb2760GeV[c][m]->GetN()-1] < 1e-14)
+                    grapharrayInvYieldSysPbPb2760GeV[c][m]->RemovePoint(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetN()-1);
+                  while(grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->GetY()[grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->GetN()-1] < 1e-14)
+                    grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->RemovePoint(grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->GetN()-1);
+                  while(grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->GetY()[grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->GetN()-1] < 1e-14)
+                    grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->RemovePoint(grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->GetN()-1);
+
+                  grapharrayInvYieldStatPbPb2760GeV[c][m]->Print();
+                  grapharrayInvYieldSysPbPb2760GeV[c][m]->Print();
+                  grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->Print();
+                  grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->Print();
+
+                }
               }
             }
           }
         }
       }
+
 
       TCanvas* canvasDummy3 = new TCanvas("canvasDummy3","",200,10,1350,1350*1.15);  // gives the page size
       DrawGammaCanvasSettings( canvasDummy3, 0.16, 0.02, 0.02, 0.09);
@@ -956,6 +1110,8 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
           grapharrayInvYieldCombStatPbPb2760GeVUnshifted[c]->Draw("pEsame");
           DrawGammaSetMarkerTGraphAsym(grapharrayInvYieldCombStatPbPb2760GeV[c], 24, 1.5, kBlack, kBlack, widthLinesBoxes, kTRUE);
           grapharrayInvYieldCombStatPbPb2760GeV[c]->Draw("pEsame");
+          DrawGammaSetMarkerTGraphAsym(grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c], 24, 1.5, kBlue, kBlue, widthLinesBoxes, kTRUE);
+          grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->Draw("pEsame");
         }
 
         TLegend* legendYdummy = new TLegend(0.55,0.8,0.85,0.95);
@@ -964,7 +1120,8 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
         legendYdummy->SetTextFont(42);
         legendYdummy->SetTextSize(FontSize);
         legendYdummy->AddEntry(grapharrayInvYieldCombStatPbPb2760GeVUnshifted[c],"combined unshifted","p");
-        legendYdummy->AddEntry(grapharrayInvYieldCombStatPbPb2760GeV[c],"combined shifted","p");
+        legendYdummy->AddEntry(grapharrayInvYieldCombStatPbPb2760GeV[c],"combined shifted x","p");
+        legendYdummy->AddEntry(grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c],"combined shifted y","p");
         legendYdummy->Draw();
 
       canvasDummy3->Update();
@@ -993,13 +1150,16 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
           DrawGammaSetMarkerTGraphAsym(grapharrayInvYieldStatPbPb2760GeVUnshifted[c][m], 20, 1.5, kRed, kRed, widthLinesBoxes, kTRUE);
           grapharrayInvYieldStatPbPb2760GeVUnshifted[c][m]->Draw("pEsame");
           DrawGammaSetMarkerTGraphAsym(grapharrayInvYieldStatPbPb2760GeV[c][m], 24, 1.5, kBlack, kBlack, widthLinesBoxes, kTRUE);
+          DrawGammaSetMarkerTGraphAsym(grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m], 24, 1.5, kBlue, kBlue, widthLinesBoxes, kTRUE);
           grapharrayInvYieldStatPbPb2760GeV[c][m]->Draw("pEsame");
+          grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->Draw("pEsame");
           legendXdummy->AddEntry(grapharrayInvYieldStatPbPb2760GeVUnshifted[c][m],"combined unshifted","lp");
-          legendXdummy->AddEntry(grapharrayInvYieldStatPbPb2760GeV[c][m],"combined shifted","lp");
+          legendXdummy->AddEntry(grapharrayInvYieldStatPbPb2760GeV[c][m],"combined shifted in x","lp");
+          legendXdummy->AddEntry(grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m],"combined shifted in y","lp");
         }
         legendXdummy->Draw();
         canvasDummy2->Update();
-        canvasDummy2->Print(Form("%s/%s_ComparisonXShifted_%d_%d.%s",outputDir.Data(),meson.Data(),c,m,suffix.Data()));
+        canvasDummy2->Print(Form("%s/%s_ComparisonSingleShifted_%d_%d.%s",outputDir.Data(),meson.Data(),c,m,suffix.Data()));
       }
     }
 
@@ -1050,29 +1210,52 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
     fCombResults->cd();
 
     for(Int_t c = 0; c<nCent; c++){
-      cout << "writing for centrality " << cent[c].Data() << endl;
-      if(!(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetY()==0x0))grapharrayInvYieldCombStatPbPb2760GeV[c]->Write(Form("graphInvYield%sCombPbPb2760GeVStatErr_%s",meson.Data(),cent[c].Data()));
-      if(!(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetY()==0x0))grapharrayInvYieldCombSysPbPb2760GeV[c]->Write(Form("graphInvYield%sCombPbPb2760GeVSysErr_%s",meson.Data(),cent[c].Data()));
 
-      for(Int_t m = 0; m<3; m++){
-          if(!(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetY()==0x0))grapharrayInvYieldStatPbPb2760GeV[c][m]->Write(Form("graphInvYield%s%sPbPb2760GeVStatErr_%s",meson.Data(),meth[m].Data(),cent[c].Data()));
-          if(!(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetY()==0x0))grapharrayInvYieldSysPbPb2760GeV[c][m]->Write(Form("graphInvYield%s%sPbPb2760GeVSysErr_%s",meson.Data(),meth[m].Data(),cent[c].Data()));
-      }
+      cout << "writing for centrality " << cent[c].Data() << endl;
 
       if(meson.CompareTo("Eta")==0){
         if(!(c==3 || c==6 || c==7)){
+          if(!(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetY()==0x0))grapharrayInvYieldCombStatPbPb2760GeV[c]->Write(Form("graphInvYield%sCombPbPb2760GeVStatErr_%s",meson.Data(),cent[c].Data()));
+          if(!(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetY()==0x0))grapharrayInvYieldCombSysPbPb2760GeV[c]->Write(Form("graphInvYield%sCombPbPb2760GeVSysErr_%s",meson.Data(),cent[c].Data()));
+
+          if(!(grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->GetY()==0x0))grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->Write(Form("graphInvYield%sCombPbPb2760GeVStatErr_yShifted_%s",meson.Data(),cent[c].Data()));
+          if(!(grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->GetY()==0x0))grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->Write(Form("graphInvYield%sCombPbPb2760GeVSysErr_yShifted_%s",meson.Data(),cent[c].Data()));
+
           if(!(grapharrayEtaToPi0CombStatPbPb2760GeV[c]->GetY()==0x0))grapharrayEtaToPi0CombStatPbPb2760GeV[c]->Write(Form("graphEtaToPi0CombPbPb2760GeVStatErr_%s",cent[c].Data()));
           if(!(grapharrayEtaToPi0CombSysPbPb2760GeV[c]->GetY()==0x0))grapharrayEtaToPi0CombSysPbPb2760GeV[c]->Write(Form("graphEtaToPi0CombPbPb2760GeVSysErr_%s",cent[c].Data()));
           for(Int_t m = 0; m<3; m++){
             if(!(m==1)){
               cout << "writing for method " << meth[m].Data() << endl;
+              if(!(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetY()==0x0))grapharrayInvYieldStatPbPb2760GeV[c][m]->Write(Form("graphInvYield%s%sPbPb2760GeVStatErr_%s",meson.Data(),meth[m].Data(),cent[c].Data()));
+              if(!(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetY()==0x0))grapharrayInvYieldSysPbPb2760GeV[c][m]->Write(Form("graphInvYield%s%sPbPb2760GeVSysErr_%s",meson.Data(),meth[m].Data(),cent[c].Data()));
+
+              if(!(grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->GetY()==0x0))grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->Write(Form("graphInvYield%s%sPbPb2760GeVStatErr_yShifted_%s",meson.Data(),meth[m].Data(),cent[c].Data()));
+              if(!(grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->GetY()==0x0))grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->Write(Form("graphInvYield%s%sPbPb2760GeVSysErr_yShifted_%s",meson.Data(),meth[m].Data(),cent[c].Data()));
+
               if(!(grapharrayEtaToPi0Stat2760GeV[c][m]->GetY()==0x0))grapharrayEtaToPi0Stat2760GeV[c][m]->Write(Form("graphEtaToPi0%sPbPb2760GeVStatErr_%s",meth[m].Data(),cent[c].Data()));
               if(!(grapharrayEtaToPi0Sys2760GeV[c][m]->GetY()==0x0))grapharrayEtaToPi0Sys2760GeV[c][m]->Write(Form("graphEtaToPi0%sPbPb2760GeVSysErr_%s",meth[m].Data(),cent[c].Data()));
             }
           }
         }
+      } else {
+
+        if(!(grapharrayInvYieldCombStatPbPb2760GeV[c]->GetY()==0x0))grapharrayInvYieldCombStatPbPb2760GeV[c]->Write(Form("graphInvYield%sCombPbPb2760GeVStatErr_%s",meson.Data(),cent[c].Data()));
+        if(!(grapharrayInvYieldCombSysPbPb2760GeV[c]->GetY()==0x0))grapharrayInvYieldCombSysPbPb2760GeV[c]->Write(Form("graphInvYield%sCombPbPb2760GeVSysErr_%s",meson.Data(),cent[c].Data()));
+
+        if(!(grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->GetY()==0x0))grapharrayInvYieldCombStatPbPb2760GeV_yShifted[c]->Write(Form("graphInvYield%sCombPbPb2760GeVStatErr_yShifted_%s",meson.Data(),cent[c].Data()));
+        if(!(grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->GetY()==0x0))grapharrayInvYieldCombSysPbPb2760GeV_yShifted[c]->Write(Form("graphInvYield%sCombPbPb2760GeVSysErr_yShifted_%s",meson.Data(),cent[c].Data()));
+
+        for(Int_t m = 0; m<3; m++){
+            if(!(grapharrayInvYieldStatPbPb2760GeV[c][m]->GetY()==0x0))grapharrayInvYieldStatPbPb2760GeV[c][m]->Write(Form("graphInvYield%s%sPbPb2760GeVStatErr_%s",meson.Data(),meth[m].Data(),cent[c].Data()));
+            if(!(grapharrayInvYieldSysPbPb2760GeV[c][m]->GetY()==0x0))grapharrayInvYieldSysPbPb2760GeV[c][m]->Write(Form("graphInvYield%s%sPbPb2760GeVSysErr_%s",meson.Data(),meth[m].Data(),cent[c].Data()));
+
+            if(!(grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->GetY()==0x0))grapharrayInvYieldStatPbPb2760GeV_yShifted[c][m]->Write(Form("graphInvYield%s%sPbPb2760GeVStatErr_yShifted_%s",meson.Data(),meth[m].Data(),cent[c].Data()));
+            if(!(grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->GetY()==0x0))grapharrayInvYieldSysPbPb2760GeV_yShifted[c][m]->Write(Form("graphInvYield%s%sPbPb2760GeVSysErr_yShifted_%s",meson.Data(),meth[m].Data(),cent[c].Data()));
+
+        }
       }
     }
+
     fCombResults->Close();
 
 }
