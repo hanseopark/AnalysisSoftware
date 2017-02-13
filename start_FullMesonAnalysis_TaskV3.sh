@@ -1153,6 +1153,80 @@ function GiveBinningpPb()
     fi
 }
 
+function GiveBinningpPbDirGamma()
+{
+    if [ $DoPi0 -eq 1 ] || [ $DoGamma -eq 1 ]; then
+        echo "How many p_T bins do you want to use for Pi0/direct photon?  21 (8 GeV), 22 (10 GeV), 23 (14 GeV)";
+        read answer
+        if [ $answer = 21 ]; then
+            echo "21 Bins --> Max p_T = 8 GeV ...";
+            correctPi0=1
+            BinsPtPi0=21
+        elif [ $answer = 22 ]; then
+            echo "22 Bins --> Max p_T = 10 GeV ...";
+            correctPi0=1
+            BinsPtPi0=22
+        elif [ $answer = 23 ]; then
+            echo "23 Bins --> Max p_T = 14 GeV ...";
+            correctPi0=1
+            BinsPtPi0=23 
+        else
+            echo "Pi0 Binning was not set correctly. Please try again.";
+            correctPi0=0
+        fi
+    else
+        correctPi0=1
+    fi    
+    if [ $DoEta -eq 1 ] || [ $DoPi0InEtaBinning -eq 1 ]; then 
+        echo "How many p_t bins do you want to use for the eta meson? 12 (4 GeV), 14 (6 GeV), 15 (8 GeV), 16 (10 GeV), for calorimeters 17 (12 GeV), 18 (14 GeV), 19 (16 GeV), 20 (20 GeV), 21 (25 GeV), 22 (30 GeV)";
+        read answer
+        if [ $answer = 12 ]; then
+            echo "12 Bins --> Max p_T = 4. GeV ...";
+            correctEta=1
+            BinsPtEta=12
+        elif [ $answer = 14 ]; then
+            echo "14 Bins --> Max p_T = 6 GeV ...";
+            correctEta=1
+            BinsPtEta=14
+        elif [ $answer = 15 ]; then
+            echo "15 Bins --> Max p_T = 8 GeV ...";
+            correctEta=1
+            BinsPtEta=15
+        elif [ $answer = 16 ]; then
+            echo "16 Bins --> Max p_T = 10 GeV ...";
+            correctEta=1
+            BinsPtEta=16   
+        elif [ $answer = 17 ]; then
+            echo "17 Bins --> Max p_T = 12 GeV ...";
+            correctEta=1
+            BinsPtEta=17   
+        elif [ $answer = 18 ]; then
+            echo "18 Bins --> Max p_T = 14 GeV ...";
+            correctEta=1
+            BinsPtEta=18   
+        elif [ $answer = 19 ]; then
+            echo "19 Bins --> Max p_T = 16 GeV ...";
+            correctEta=1
+            BinsPtEta=19   
+        elif [ $answer = 20 ]; then
+            echo "20 Bins --> Max p_T = 20 GeV ...";
+            correctEta=1
+            BinsPtEta=20   
+        elif [ $answer = 21 ]; then
+            echo "21 Bins --> Max p_T = 25 GeV ...";
+            correctEta=1
+            BinsPtEta=21   
+        elif [ $answer = 22 ]; then
+            echo "22 Bins --> Max p_T = 30 GeV ...";
+            correctEta=1
+            BinsPtEta=22   
+        else
+            echo "Eta Binning was not set correctly. Please try again.";
+        fi
+        correctEta=0
+    fi
+}
+
 
 function ExtractSignal()
 {
@@ -2435,24 +2509,45 @@ do
         fi
 
     elif [ $energy = "pPb_5.023TeV" ]; then
-        directphoton="No"
-        Con=0
-        if [ $ONLYCORRECTION -eq 0 ]; then
-            GiveBinningpPb
-            correctPi0=1
-            correctEta=1
-        fi
-        if [ $correctPi0 -eq 0 ]; then
-            correct=0
-        elif [ $correctEta -eq 0 ]; then
-            correct=0
-        else 
-            correct=1
-        fi
+        echo "Do you want to produce Direct Photon plots? Yes/No?";
+        read answer
+        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+            echo "Will produce Direct Photon plots ...";
+            directphoton="directPhoton"
+            Con=1
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinningpPbDirGamma
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else 
+                correct=1
+            fi
+        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+            echo "No Direct Photon plots will be produced ...";
+            directphoton="No"
+            Con=0
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinningpPb
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else 
+                correct=1
+            fi
 
-        if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then 
-            useTHnSparse=0
-        fi 
+            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then 
+                useTHnSparse=0
+            fi 
+        fi
         
         correct=0
         while [ $correct -eq 0 ]
