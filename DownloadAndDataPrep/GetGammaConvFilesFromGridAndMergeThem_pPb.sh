@@ -51,7 +51,7 @@ MERGEON=1
 SINGLERUN=1
 SEPARATEON=1
 MERGEONSINGLEData=0
-MERGEONSINGLEMC=0
+MERGEONSINGLEMC=1
 
 # check if train configuration has actually been given
 HAVELHC13b=1

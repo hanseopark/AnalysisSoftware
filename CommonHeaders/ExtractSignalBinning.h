@@ -1179,7 +1179,7 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                     case 10:
                     case 11:
                         if (meson.CompareTo("Eta") == 0) scaleFac = 4.0;
-                        return 7;      // INT triggers
+                        return 8;      // INT triggers
                         break;
                     case 51:
                     case 52:
