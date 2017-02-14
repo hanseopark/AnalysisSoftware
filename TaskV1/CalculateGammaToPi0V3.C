@@ -212,7 +212,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         fileTheoryCompilation                   = new TFile("ExternalInput/Theory/TheoryCompilationPP.root");
         directoryGamma                          = (TDirectoryFile*)fileTheoryCompilation->Get("DirectPhoton");
         // Load NLO input from TheoryCompilationPP.root
-        if (!option.CompareTo("900GeV")) {
+        if (!fEnergy.CompareTo("900GeV")) {
             cout << "WARNING: USING 7TEV NLO CALCULATIONS FOR 900GeV!" << endl;
             graphDirectPhotonNLO                = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYieldINT7_7TeV");
             graphPromptPhotonNLO                = (TGraphAsymmErrors*)directoryGamma->Get("graphPromptPhotonNLOVogelsangInvYieldINT7_7TeV");
@@ -740,7 +740,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
 
         cout<<"loading cocktail file: "<<nameFileCocktail<<endl;
 
-        if (!option.CompareTo("900GeV") || !fEnergy.CompareTo("7TeV") || !fEnergy.CompareTo("8TeV") || !fEnergy.CompareTo("13TeV") || !fEnergy.CompareTo("pPb_5.023TeV")){
+        if (!fEnergy.CompareTo("900GeV") || !fEnergy.CompareTo("7TeV") || !fEnergy.CompareTo("8TeV") || !fEnergy.CompareTo("13TeV") || !fEnergy.CompareTo("pPb_5.023TeV") || !fEnergy.CompareTo("PbPb_2.76TeV")){
             cocktailPi0                         = (TH1D* )cocktailFile->Get("Pi0_Pt");
             cocktailEta                         = (TH1D* )cocktailFile->Get("Eta_Pt");
             cocktailAllGamma                    = (TH1D* )cocktailFile->Get("Gamma_Pt");
