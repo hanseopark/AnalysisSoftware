@@ -2640,8 +2640,8 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
     InitializeBinning(setPi0, numberOfBins, energy, fDirectPhoton, fMode, fEventCutSelection, fClusterCutSelection);
     
     fDeltaPt                                            = new TH1D("deltaPt","",fNBinsPt,fBinsPt);
-    for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
-        fDeltaPt->SetBinContent(iPt,fBinsPt[iPt+1]-fBinsPt[iPt]);
+    for(Int_t iPt=fStartPtBin+1;iPt<fNBinsPt+1;iPt++){
+        fDeltaPt->SetBinContent(iPt,fBinsPt[iPt]-fBinsPt[iPt-1]);
         fDeltaPt->SetBinError(iPt,0);
     }
 
@@ -4180,6 +4180,7 @@ Bool_t LoadSecondariesFromCocktailFile(TString cutSelection, TString optionEnerg
         fHistoSecondaryGammaCocktailFromXFromK0sPt->Sumw2();
         fHistoSecondaryGammaCocktailFromXFromK0sPtOrBin         = (TH1D*)fHistoSecondaryGammaCocktailFromXFromK0sPt->Clone("CocktailSecondaryGammaFromXFromK0s_PtOrBin");
         RebinSpectrum(fHistoSecondaryGammaCocktailFromXFromK0sPt);
+        fHistoSecondaryGammaCocktailFromXFromK0sPt->Scale(1./fHistoSecondaryGammaCocktailFromXFromK0sPt->GetBinWidth(1));
         
         // K0l
         fHistoSecondaryGammaCocktailFromXFromK0lPt              = (TH1D*)fFileCocktailInput->Get("Gamma_From_X_From_K0l_Pt_OrBin");
@@ -4190,7 +4191,7 @@ Bool_t LoadSecondariesFromCocktailFile(TString cutSelection, TString optionEnerg
         fHistoSecondaryGammaCocktailFromXFromK0lPt->Sumw2();
         fHistoSecondaryGammaCocktailFromXFromK0lPtOrBin         = (TH1D*)fHistoSecondaryGammaCocktailFromXFromK0lPt->Clone("CocktailSecondaryGammaFromXFromK0l_PtOrBin");
         RebinSpectrum(fHistoSecondaryGammaCocktailFromXFromK0lPt);
-        
+        fHistoSecondaryGammaCocktailFromXFromK0lPt->Scale(1./fHistoSecondaryGammaCocktailFromXFromK0lPt->GetBinWidth(1));
         // Lambda
         fHistoSecondaryGammaCocktailFromXFromLambdaPt           = (TH1D*)fFileCocktailInput->Get("Gamma_From_X_From_Lambda_Pt_OrBin");
         if(!fHistoSecondaryGammaCocktailFromXFromLambdaPt){
@@ -4200,7 +4201,7 @@ Bool_t LoadSecondariesFromCocktailFile(TString cutSelection, TString optionEnerg
         fHistoSecondaryGammaCocktailFromXFromLambdaPt->Sumw2();
         fHistoSecondaryGammaCocktailFromXFromLambdaPtOrBin      = (TH1D*)fHistoSecondaryGammaCocktailFromXFromLambdaPt->Clone("CocktailSecondaryGammaFromXFromLambda_PtOrBin");
         RebinSpectrum(fHistoSecondaryGammaCocktailFromXFromLambdaPt);
-        
+        fHistoSecondaryGammaCocktailFromXFromLambdaPt->Scale(1./fHistoSecondaryGammaCocktailFromXFromLambdaPt->GetBinWidth(1));
         // set bins
         Int_t       nBins   = 0;
         Double_t    xMin    = 0.;
