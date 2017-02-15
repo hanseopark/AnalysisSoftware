@@ -7,209 +7,87 @@
 
 BASEDIR=/home/admin1/leardini/GridOutput/PbPb
 mkdir -p $BASEDIR
-TRAINDIR=Legotrain-vAN-20160623-1;
+TRAINDIR=Legotrain-vAN-20170211-1;
 
 
 #photon cut studies
-LHC11hData=332_20160706-1144; #---> list 7
-LHC11hDataWithPhi=332_20160706-1144; #---> list 8
+LHC11hData=400_20170212-1233;
+LHC14a1a=835_20170212-1224;
+LHC14a1b=836_20170212-1230;
 
-LHC14a1a=800_20160706-1427;
-LHC14a1b=801_20160706-1541;
+LHC11hDataWithPhi=332_20160706-1144;
 LHC14a1aWithPhi=800_20160706-1427;
 LHC14a1bWithPhi=801_20160706-1541;
 
-
-# #std on ESD with tag of 22nd may
-# LHC11hData=238_20160628-1326; #---> list 7
-# LHC11hDataWithPhi=238_20160628-1326; #---> list 8
-#
-# LHC14a1a=290_20160624-1346;
-# LHC14a1b=289_20160624-1035;
-# LHC14a1aWithPhi=290_20160624-1346;
-# LHC14a1bWithPhi=289_20160624-1035;
-
-
-############################################
-# # #std on ESD with tag of 22nd may
-# LHC11hData=228_20160522-1730; #---> list 7
-# LHC11hDataWithPhi=228_20160522-1730; #---> list 8
-# #
-# LHC14a1a=278_20160522-1813;
-# LHC14a1b=280_20160522-1731;
-# LHC14a1aWithPhi=279_20160522-1801;
-# LHC14a1bWithPhi=281_20160522-1730;
-############################################
-
-#Multiplicity ESDs################
-# LHC11hData=223_20160519-0949;
-# LHC11hData=227_20160520-1403;
-# LHC11hData=229_20160523-1112;
-##################################
-
-# LHC11hData=301_20160425-1621; # 74 (spT 0.075), 78 (spT 0.1), 82 (TPCcls 0.7)
-# LHC11hDataWithPhi=302_20160425-1622; # 76 (spT 0.075), 80 (spT 0.1), 84 (TPCcls 0.7)
-
-# # 74, 75, 76, 77 (spT 0.075)
-# LHC14a1a=707_20160425-1625;
-# LHC14a1b=709_20160425-1626;
-# LHC14a1aWithPhi=708_20160425-1625;
-# LHC14a1bWithPhi=710_20160425-1626;
-
-# # 78, 79, 80, 81 (spT 0.1)
-# LHC14a1a=711_20160425-1911;
-# LHC14a1b=719_20160429-1049;
-# LHC14a1aWithPhi=712_20160425-1911;
-# LHC14a1bWithPhi=714_20160425-1913;
-
-# # 82, 83, 84, 85 (TPCcls 0.7)
-# LHC14a1a=715_20160426-0942;
-# LHC14a1b=717_20160426-0943;
-# LHC14a1aWithPhi=716_20160426-0943;
-# LHC14a1bWithPhi=718_20160426-0943;
-
-
-# LHC11hData=303_20160429-1052; # 86 (TPCcls 0.35), 90 (edEdx-4,5), 94 (edEdx-2.5,4)
-# LHC11hDataWithPhi=304_20160429-1052; # 88 (TPCcls 0.35), 92 (edEdx-4,5), 96 (edEdx-2.5,4)
-
-# # 86, 87, 88, 89 (TPCcls 0.35)
-# LHC14a1a=720_20160429-1104;
-# LHC14a1b=722_20160429-1105;
-# LHC14a1aWithPhi=721_20160429-1105;
-# LHC14a1bWithPhi=737_20160503-1142;
-
-# # 90, 91, 92, 93 (edEdx-4,5)
-# LHC14a1a=723_20160429-1106;
-# LHC14a1b=725_20160429-1107;
-# LHC14a1aWithPhi=724_20160429-1106;
-# LHC14a1bWithPhi=726_20160429-1107;
-
-# # 94, 95, 96, 97 (edEdx-2.5,4)
-# LHC14a1a=727_20160429-1108;
-# LHC14a1b=729_20160429-1108;
-# LHC14a1aWithPhi=728_20160429-1108;
-# LHC14a1bWithPhi=730_20160429-1109;
-
-
-# LHC11hData=310_20160502-1751; # 98 (pdEdx2s1s), 102 (pdEdx3s), 106 (pdEdx3s1sp)
-# LHC11hDataWithPhi=311_20160502-1752; # 100 (pdEdx2s1s), 104 (pdEdx3s), 108 (pdEdx3s1sp)
-
-# # 98, 99, 100, 101 (pdEdx2s1s) --> 98 is in 784
-# LHC14a1a=738_20160511-1233;
-# LHC14a1b=740_20160511-1234;
-# LHC14a1aWithPhi=739_20160511-1234;
-# LHC14a1bWithPhi=741_20160511-1235;
-
-# # 102, 103, 104, 105 (pdEdx3s)
-# LHC14a1a=742_20160511-1240;
-# LHC14a1b=744_20160511-1242;
-# LHC14a1aWithPhi=743_20160511-1241;
-# LHC14a1bWithPhi=745_20160511-1242;
-
-# # 106, 107, 108, 109 (pdEdx3s1sp)
-# LHC14a1a=746_20160511-1244;
-# LHC14a1b=748_20160511-1246;
-# LHC14a1aWithPhi=747_20160511-1245;
-# LHC14a1bWithPhi=749_20160511-1247;
-
-
-# LHC11hData=312_20160502-1819; # 118 (qt0.03), 122 (qt0.06), 126 (chi50psi0.1)
-# LHC11hDataWithPhi=313_20160502-1854; # 120 (qt0.03), 124 (qt0.06), 128 (chi50psi0.1)
-
-# # 118, 119, 120, 121 (qt0.03)
-# LHC14a1a=750_20160517-1015;
-# LHC14a1b=752_20160517-1015;
-# LHC14a1aWithPhi=751_20160511-1250;
-# LHC14a1bWithPhi=753_20160511-1251;
-
-# # 122, 123, 124, 125 (qt0.06)
-# LHC14a1a=754_20160511-1253;
-# LHC14a1b=756_20160511-1254;
-# LHC14a1aWithPhi=755_20160511-1253;
-# LHC14a1bWithPhi=757_20160511-1254;
-
-# # 126, 127, 128, 129 (chi50psi0.1)
-# LHC14a1a=758_20160511-1255;
-# LHC14a1b=760_20160511-1258;
-# LHC14a1aWithPhi=759_20160511-1256;
-# LHC14a1bWithPhi=761_20160511-1258;
-
-
-
-# LHC11hData=314_20160502-1819; # 130 (chi20psi0.1), 134 (chi30psi0.05), 138 (chi30psi0.2)
-# LHC11hDataWithPhi=315_20160502-1820; # 132 (chi20psi0.1), 136 (chi30psi0.05), 140 (chi30psi0.2)
-
-# # 130, 131, 132, 133 (chi20psi0.1)
-# LHC14a1a=762_20160511-1411;
-# LHC14a1b=764_20160511-1412;
-# LHC14a1aWithPhi=763_20160511-1412;
-# LHC14a1bWithPhi=786_20160523-1541;
-
-# # 134, 135, 136, 137 (chi30psi0.05)
-# LHC14a1a=766_20160516-1841;
-# LHC14a1b=768_20160516-1843;
-# LHC14a1aWithPhi=767_20160516-1842;
-# LHC14a1bWithPhi=769_20160516-1843;
-
-# # 138, 139, 140, 141 (chi30psi0.2)
-# LHC14a1a=770_20160516-1844;
-# LHC14a1b=772_20160516-1846;
-# LHC14a1aWithPhi=771_20160516-1845;
-# LHC14a1bWithPhi=773_20160516-1846;
-
-
-# LHC11hData=316_20160503-1050; # 146 (alpha0.75), 150 (alpha0.1)
-# LHC11hDataWithPhi=317_20160503-1050; # 148 (alpha0.75), 152 (alpha0.1)
-
-# # 146, 147, 148, 149 (alpha0.75)
-# LHC14a1a=774_20160516-1847;
-# LHC14a1b=776_20160516-1848;
-# LHC14a1aWithPhi=775_20160516-1848;
-# LHC14a1bWithPhi=777_20160516-1849;
-
-# # 150, 151, 152, 153 (alpha0.1)
-# LHC14a1a=778_20160516-1850;
-# LHC14a1b=780_20160516-1851;
-# LHC14a1aWithPhi=779_20160516-1850;
-# LHC14a1bWithPhi=781_20160516-1851;
-
-
-# LHC11hDataWithPhi=318_20160502-1821; # 154 (phi2-4), 156 (phi2.4-3.6)
-
-# # 154, 155 (phi2-4) and 156, 157 (phi2.4-3.6)
-# LHC14a1a=782_20160516-1852;
-# LHC14a1b=784_20160527-1402;
-# LHC14a1aWithPhi=785_20160528-1443;
-# LHC14a1bWithPhi=783_20160516-1853;
-
-
-############################################
-#std RP after TOF fix (+ AOD check)
-# LHC11hData=306_20160429-1406;
-# LHC11hDataWithPhi=307_20160429-1328;
-#ESD check
-# LHC11hData=213_20160429-1124;
-
-#std
-# LHC14a1a=731_20160429-1109;
-# LHC14a1b=733_20160429-1110;
-# LHC14a1aWithPhi=732_20160429-1518;
-# LHC14a1bWithPhi=734_20160429-1518;
-#AOD check
-# LHC14a1a=735_20160429-1517;
-# LHC14a1b=736_20160429-1517;
-#ESD check
-# LHC14a1a=269_20160429-1802;
-# LHC14a1b=270_20160429-1122;
-
-#DCA analysis
-# LHC11hData=210_20160422-1702;
-# LHC14a1b=268_20160429-1041;
-
+fileNameData=AnalysisResults_0010.root;
+fileName14a1a=AnalysisResults_0010.root;
+fileName14a1b=AnalysisResults_2040.root;
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 if [ $1 = "AODdata" ]; then
    TRAINPATHData=GA_PbPb_AOD
+   if [ $3 = "runwise" ]; then
+#     rm runNumbersLHC11hNotMerged.txt
+    OUTPUTDIR_LHC11h=$BASEDIR/$TRAINDIR/$TRAINPATHData-$LHC11hData;
+    echo $OUTPUTDIR_LHC11h
+#     runs=`cat runlists/runNumbersLHC11h.txt`
+#     for run in $runs; do
+#       echo $run
+#       mkdir -p $OUTPUTDIR_LHC11h/$run
+#       if [ -f $OUTPUTDIR_LHC11h/$run/$fileName ]; then
+#            echo "file has already been copied for run " $runNumber
+#       else
+#         alien_cp alien:/alice/data/2011/LHC11h_2/000$run/ESDs/pass2/AOD145/PWGGA/$TRAINPATHData/$LHC11hData/AnalysisResults* file:$OUTPUTDIR_LHC11h/$run/
+#       fi
+#       if [ -f $OUTPUTDIR_LHC11h/$run/$fileName ]; then
+#            echo "file has already been copied for sucessfully for run " $runNumber
+#       else
+#          echo $run >> runNumbersLHC11hNotMerged.txt
+#       fi
+#     done;
+
+    NotMergedruns=`cat runNumbersLHC11hNotMerged.txt`
+    for run in $NotMergedruns; do
+        echo "copying stage_1 output for " $run
+        mkdir -p $run
+        stageOutputs=`alien_ls /alice/data/2011/LHC11h_2/000$run/ESDs/pass2/AOD145/PWGGA/$TRAINPATHData/$LHC11hData/Stage_1/`
+        for stageOutput in $stageOutputs; do
+          mkdir -p $OUTPUTDIR_LHC11h/$run/Stage_1/$stageOutput
+          if [ -f $OUTPUTDIR_LHC11h/$run/Stage_1/$stageOutput/$fileNameData ]; then
+            echo "file has already been copied for run " $runNumber"/"$stageOutput
+          else
+            alien_cp alien:/alice/data/2011/LHC11h_2/000$run/ESDs/pass2/AOD145/PWGGA/$TRAINPATHData/$LHC11hData/Stage_1/$stageOutput/AnalysisResults* file:$OUTPUTDIR_LHC11h/$run/Stage_1/$stageOutput/
+          fi
+        done;
+        counter=0;
+        if [ -f $OUTPUTDIR_LHC11h/$run/$fileNameData ]; then
+          echo "file is already there for run " $run
+        else
+          for stageOutput in $stageOutputs; do
+            if [ -f $OUTPUTDIR_LHC11h/$run/Stage_1/$stageOutput/$fileNameData ]; then
+              if [ $counter = 0 ]; then
+                cp $OUTPUTDIR_LHC11h/$run/Stage_1/$stageOutput/$fileNameData $OUTPUTDIR_LHC11h/$run/intermediate_$run.root
+                counter=$(($counter+1));
+                echo $counter;
+              else
+                hadd -f $OUTPUTDIR_LHC11h/$run/AnalysisResults_temp.root $OUTPUTDIR_LHC11h/$run/intermediate_$run.root $OUTPUTDIR_LHC11h/$run/Stage_1/$stageOutput/$fileNameData
+                mv $OUTPUTDIR_LHC11h/$run/AnalysisResults_temp.root $OUTPUTDIR_LHC11h/$run/intermediate_$run.root
+              fi
+            fi
+          done;
+          mv $OUTPUTDIR_LHC11h/$run/intermediate_$run.root $OUTPUTDIR_LHC11h/$run/$fileNameData
+        fi
+    done;
+
+   else
+    OUTPUTDIR_LHC11h=$BASEDIR/$TRAINDIR/$TRAINPATHData-$LHC11hData/merge_runlist_7
+    mkdir -p $OUTPUTDIR_LHC11h
+    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC11hData/merge_runlist_7/Gamm* file:$OUTPUTDIR_LHC11h/
+
+    OUTPUTDIR_LHC11hWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHData-$LHC11hDataWithPhi/merge_runlist_8
+    mkdir -p $OUTPUTDIR_LHC11hWithPhi
+    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC11hDataWithPhi/merge_runlist_8/Gamm* file:$OUTPUTDIR_LHC11hWithPhi/
+   fi
 #     OUTPUTDIR_LHC11h=$BASEDIR/$TRAINDIR/$TRAINPATHData-$LHC11hData/merge_runlist_7
 #     mkdir -p $OUTPUTDIR_LHC11h
 #     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC11hData/merge_runlist_7/Gam* file:$OUTPUTDIR_LHC11h/
@@ -220,13 +98,13 @@ if [ $1 = "AODdata" ]; then
 
 else
    TRAINPATHData=GA_PbPb
-    OUTPUTDIR_LHC11h=$BASEDIR/$TRAINDIR/$TRAINPATHData-$LHC11hData/merge_runlist_7/Stage_1/
+    OUTPUTDIR_LHC11h=$BASEDIR/$TRAINDIR/$TRAINPATHData-$LHC11hData/merge_runlist_7
     mkdir -p $OUTPUTDIR_LHC11h
-    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC11hData/merge_runlist_7/Stage_1/* file:$OUTPUTDIR_LHC11h/
+    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC11hData/merge_runlist_7/Gamm* file:$OUTPUTDIR_LHC11h/
 
-    OUTPUTDIR_LHC11hWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHData-$LHC11hDataWithPhi/merge_runlist_8/Stage_1/
+    OUTPUTDIR_LHC11hWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHData-$LHC11hDataWithPhi/merge_runlist_8
     mkdir -p $OUTPUTDIR_LHC11hWithPhi
-    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC11hDataWithPhi/merge_runlist_8/Stage_1/* file:$OUTPUTDIR_LHC11hWithPhi/
+    alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC11hDataWithPhi/merge_runlist_8/Gamm* file:$OUTPUTDIR_LHC11hWithPhi/
 
 fi
 
@@ -253,6 +131,111 @@ fi
 
 if [ $2 = "AODmc" ]; then
    TRAINPATHMC=GA_PbPb_MC_AOD
+#    if [ $3 = "runwise" ]; then
+#     rm runNumbersLHC14a1aNotMerged.txt
+#     OUTPUTDIR_LHC14a1a=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1a;
+#     echo $OUTPUTDIR_LHC14a1a
+#     runs=`cat runlists/runNumbersLHC14a1a.txt`
+#     for run in $runs; do
+#       echo $run
+#       mkdir -p $OUTPUTDIR_LHC14a1a/$run
+#       if [ -f $OUTPUTDIR_LHC14a1a/$run/$fileName14a1a ]; then
+#            echo "file has already been copied for run " $runNumber
+#       else
+#         alien_cp alien:/alice/sim/2014/LHC14a1a/$run/AOD149/PWGGA/$TRAINPATHMC/$LHC14a1a/AnalysisResults_0010.root file:$OUTPUTDIR_LHC14a1a/$run/
+#       fi
+#       if [ -f $OUTPUTDIR_LHC14a1a/$run/$fileName14a1a ]; then
+#            echo "file has already been copied for sucessfully for run " $runNumber
+#       else
+#          echo $run >> runNumbersLHC14a1aNotMerged.txt
+#       fi
+#     done;
+#
+#     NotMergedruns=`cat runNumbersLHC14a1aNotMerged.txt`
+#     for run in $NotMergedruns; do
+#         echo "copying stage_1 output for " $run
+#         mkdir -p $run
+#         stageOutputs=`alien_ls /alice/sim/2014/LHC14a1a/$run/AOD149/PWGGA/$TRAINPATHMC/$LHC14a1a/Stage_1/`
+#         for stageOutput in $stageOutputs; do
+#           mkdir -p $OUTPUTDIR_LHC14a1a/$run/Stage_1/$stageOutput
+#           if [ -f $OUTPUTDIR_LHC14a1a/$run/Stage_1/$stageOutput/$fileName14a1a ]; then
+#             echo "file has already been copied for run " $runNumber"/"$stageOutput
+#           else
+#             alien_cp alien:/alice/sim/2014/LHC14a1a/$run/AOD149/PWGGA/$TRAINPATHMC/$LHC14a1a/Stage_1/$stageOutput/AnalysisResults_0010.root file:$OUTPUTDIR_LHC14a1a/$run/Stage_1/$stageOutput/
+#           fi
+#         done;
+#         counter=0;
+#         if [ -f $OUTPUTDIR_LHC14a1a/$run/$fileName14a1a ]; then
+#           echo "file is already there for run " $run
+#         else
+#           for stageOutput in $stageOutputs; do
+#             if [ -f $OUTPUTDIR_LHC14a1a/$run/Stage_1/$stageOutput/$fileName14a1a ]; then
+#               if [ $counter = 0 ]; then
+#                 cp $OUTPUTDIR_LHC14a1a/$run/Stage_1/$stageOutput/$fileName14a1a $OUTPUTDIR_LHC14a1a/$run/intermediate_$run.root
+#                 counter=$(($counter+1));
+#                 echo $counter;
+#               else
+#                 hadd -f $OUTPUTDIR_LHC14a1a/$run/AnalysisResults_temp.root $OUTPUTDIR_LHC14a1a/$run/intermediate_$run.root $OUTPUTDIR_LHC14a1a/$run/Stage_1/$stageOutput/$fileName14a1a
+#                 mv $OUTPUTDIR_LHC14a1a/$run/AnalysisResults_temp.root $OUTPUTDIR_LHC14a1a/$run/intermediate_$run.root
+#               fi
+#             fi
+#           done;
+#           mv $OUTPUTDIR_LHC14a1a/$run/intermediate_$run.root $OUTPUTDIR_LHC14a1a/$run/$fileName14a1a
+#         fi
+#     done;
+#
+#     rm runNumbersLHC14a1bNotMerged.txt
+#     OUTPUTDIR_LHC14a1b=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1b;
+#     echo $OUTPUTDIR_LHC14a1b
+#     runs=`cat runlists/runNumbersLHC14a1atxt`
+#     for run in $runs; do
+#       echo $run
+#       mkdir -p $OUTPUTDIR_LHC14a1b/$run
+#       if [ -f $OUTPUTDIR_LHC14a1b/$run/$fileName14a1b ]; then
+#            echo "file has already been copied for run " $runNumber
+#       else
+#         alien_cp alien:/alice/sim/2014/LHC14a1b/$run/AOD149/PWGGA/$TRAINPATHMC/$LHC14a1b/AnalysisResults_2040.root file:$OUTPUTDIR_LHC14a1b/$run/
+#       fi
+#       if [ -f $OUTPUTDIR_LHC14a1b/$run/$fileName14a1b ]; then
+#            echo "file has already been copied for sucessfully for run " $runNumber
+#       else
+#          echo $run >> runNumbersLHC14a1bNotMerged.txt
+#       fi
+#     done;
+#
+#     NotMergedruns=`cat runNumbersLHC14a1bNotMerged.txt`
+#     for run in $NotMergedruns; do
+#         echo "copying stage_1 output for " $run
+#         mkdir -p $run
+#         stageOutputs=`alien_ls /alice/sim/2014/LHC14a1b/$run/AOD149/PWGGA/$TRAINPATHMC/$LHC14a1b/Stage_1/`
+#         for stageOutput in $stageOutputs; do
+#           mkdir -p $OUTPUTDIR_LHC14a1b/$run/Stage_1/$stageOutput
+#           if [ -f $OUTPUTDIR_LHC14a1b/$run/Stage_1/$stageOutput/$fileName14a1b ]; then
+#             echo "file has already been copied for run " $runNumber"/"$stageOutput
+#           else
+#             alien_cp alien:/alice/sim/2014/LHC14a1b/$run/AOD149/PWGGA/$TRAINPATHMC/$LHC14a1b/Stage_1/$stageOutput/AnalysisResults_2040.root file:$OUTPUTDIR_LHC14a1b/$run/Stage_1/$stageOutput/
+#           fi
+#         done;
+#         counter=0;
+#         if [ -f $OUTPUTDIR_LHC14a1b/$run/$fileName14a1b ]; then
+#           echo "file is already there for run " $run
+#         else
+#           for stageOutput in $stageOutputs; do
+#             if [ -f $OUTPUTDIR_LHC14a1b/$run/Stage_1/$stageOutput/$fileName14a1b ]; then
+#               if [ $counter = 0 ]; then
+#                 cp $OUTPUTDIR_LHC14a1b/$run/Stage_1/$stageOutput/$fileName14a1b $OUTPUTDIR_LHC14a1b/$run/intermediate_$run.root
+#                 counter=$(($counter+1));
+#                 echo $counter;
+#               else
+#                 hadd -f $OUTPUTDIR_LHC14a1b/$run/AnalysisResults_temp.root $OUTPUTDIR_LHC14a1b/$run/intermediate_$run.root $OUTPUTDIR_LHC14a1b/$run/Stage_1/$stageOutput/$fileName14a1b
+#                 mv $OUTPUTDIR_LHC14a1b/$run/AnalysisResults_temp.root $OUTPUTDIR_LHC14a1b/$run/intermediate_$run.root
+#               fi
+#             fi
+#           done;
+#           mv $OUTPUTDIR_LHC14a1b/$run/intermediate_$run.root $OUTPUTDIR_LHC14a1b/$run/$fileName14a1b
+#         fi
+#     done;
+#    else
 
 #     OUTPUTDIR_LHC14a1a=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1a/merge_runlist_6
 #     OUTPUTDIR_LHC14a1b=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1b/merge_runlist_6
