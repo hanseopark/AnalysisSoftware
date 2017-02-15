@@ -3824,9 +3824,11 @@ Double_t ReturnTriggerRejectionFactor(TString energy, Int_t trigger){
 //************************************************************************************
 //************ Return correct trigger name based on trigger cutnumber ****************
 //************************************************************************************
-TString ReturnTriggerName(Int_t trigger){
+TString ReturnTriggerName(Int_t trigger, TString energy = ""){
     cout << trigger << endl;
     if (trigger == 1 || trigger == 3 || trigger == 0){  // INT1
+        cout << "energy: " << energy << endl;
+        if(energy.Contains("p-Pb")) return "MB";
         return "INT1";
     } else if (trigger == 10 ){                         // INT7
         return "INT7";

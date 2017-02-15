@@ -257,7 +257,8 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
                              ){
     
     cout << "Trigger set: " << triggerSet << endl;
-    TString triggerStr2             = ReturnTriggerName(triggerSet);
+    cout << "fCollisionSystemDummy: " << fCollisionSystemDummy << endl;
+    TString triggerStr2             = ReturnTriggerName(triggerSet,fCollisionSystemDummy);
     TString triggerStr              = Form("%s triggered", triggerStr2.Data());
     TString methodStr               = ReturnTextReconstructionProcess(detMode);
     if (addSig)
@@ -449,7 +450,7 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
         nLegendLines++;
     }
 
-    TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+    TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE");
     SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
     labelALICE->SetTextFont(43);
     labelALICE->Draw();
