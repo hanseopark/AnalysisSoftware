@@ -42,8 +42,8 @@ void Photonv2Spectra_v2(
   TString InputFileName = Form("AnalysisResults%i.root",Trainconfig);
   TString fileSPv0Redo = InputFileName.Data();
   cout << Form("SPVZEROQa_in_%s%scc_tC%i_v2%sSPv2Qa_%s",CentralityLow.Data(),CentralityHigh.Data(),Trainconfig,AdditionalDirName.Data(),CutNumber.Data()) << endl;
-  TString directoryQaRedo = Form("SPVZEROQa_in_%s%scc_tC%i_v2%sSPv2Qa_%s",CentralityLow.Data(),CentralityHigh.Data(),Trainconfig,AdditionalDirName.Data(),CutNumber.Data());
-  TString directoryQbRedo = Form("SPVZEROQb_in_%s%scc_tC%i_v2%sSPv2Qb_%s",CentralityLow.Data(),CentralityHigh.Data(),Trainconfig,AdditionalDirName.Data(),CutNumber.Data());
+  TString directoryQaRedo = Form("SPVZEROQa_in_0080cc_tC%i_v2%sSPv2Qa_%s",Trainconfig,AdditionalDirName.Data(),CutNumber.Data());
+  TString directoryQbRedo = Form("SPVZEROQb_in_0080cc_tC%i_v2%sSPv2Qb_%s",Trainconfig,AdditionalDirName.Data(),CutNumber.Data());
 
   TH1D *v2InclGamma        = (TH1D*)IncluSPv0(fileSPv0Redo,directoryQaRedo,directoryQbRedo,dirdetectSP,reb);
   TH1D *v2InclGammaSpectra = (TH1D*)Spectra(fileSPv0Redo,directoryQaRedo,directoryQbRedo,dirdetectSP,reb);

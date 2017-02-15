@@ -1,5 +1,5 @@
 if [ $1 = "msas" ]; then 
-   PHOTONFLOWDIR=/home/mike/0_directphoton/13_DirectPhotonAnalysisCode
+   PHOTONFLOWDIR=/home/mike/git_afterburner/AnalysisSoftware/TaskFlow
 fi
 
 echo $PHOTONFLOWDIR

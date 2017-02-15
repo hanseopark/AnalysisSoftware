@@ -71,7 +71,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
     //TString SigmaStarForm = "#Kappa = #sqrt{#frac{#kappa^{+}^{2}+#kappa^{+}^{2}}{2}}";
     
 //     TFile* fileData = new TFile("PhotonQA_0705415160_redefinedkappalarge_MC.root");
-    TFile* fileMC = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/161214_PbPb_v2_MC/GammaConvFlow_%i.root",Trainconfig));
+    TFile* fileMC = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/170213_PbPb_v2_final/mc/GammaConvFlow_%i.root",Trainconfig));
     TList* listMC_1   = new TList();
     listMC_1     = (TList*)fileMC->Get(Form("GammaConvV1_%i_v2",Trainconfig));
     cout << listMC_1 << endl;
@@ -82,7 +82,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
     listMC_3     = (TList*)listMC_2->FindObject(Form("%s ESD histograms",Cutnumber.Data()));
     cout << listMC_3 << endl;
     
-    TFile* fileData  = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/161206_PbPb_v2_data/GammaConvFlow_%i.root",Trainconfig));
+    TFile* fileData  = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/170213_PbPb_v2_final/data/GammaConvFlow_%i.root",Trainconfig));
     TList* listData_1   = new TList();
     listData_1     = (TList*)fileData->Get(Form("GammaConvV1_%i_v2",Trainconfig));
     
