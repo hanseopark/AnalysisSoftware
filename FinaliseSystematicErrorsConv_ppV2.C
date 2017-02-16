@@ -86,7 +86,8 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                                                 "SinglePt", "Chi2" , "Qt" , "Alpha" , "BG" , 
                                                 "Periods" , "SPD" , "CosPoint", "PsiPair" ,"Eta" ,
                                                 "MCSmearing" };
-    
+    if(energy.CompareTo("2.76TeV"))
+        nameCutVariationSCCurrent[10] = "SPD";
     Color_t color[20];
     Color_t markerStyle[20];
     for (Int_t k =0; k<16; k++ ){
@@ -139,9 +140,23 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                                                 0, 0, 0, 0, 0,  0 };
     Bool_t bsmoothMBEtaToPi02760GeV[16]     = { 1, 0, 1, 1, 1,  1, 1, 1, 1, 1,
                                                 0, 0, 0, 0, 0,  0 };
+    Bool_t bsmoothMBPi0900GeV[16]           = { 1, 1, 1, 0, 0,  1, 1, 1, 1, 0, 
+                                                0, 0, 0, 0, 0,  0 };
+    Bool_t bsmoothMBEta900GeV[16]           = { 1, 1, 0, 0, 0,  1, 0, 0, 0, 0, 
+                                                0, 0, 0, 0, 0,  0 };
+    Bool_t bsmoothMBEtaToPi0900GeV[16]      = { 0, 0, 0, 0, 0,  1, 0, 0, 0, 0, 
+                                                0, 0, 0, 0, 0,  0 };
 
     for (Int_t i = 0; i < numberCutStudies; i++){
-        if (energy.CompareTo("2.76TeV") == 0){
+        if (energy.CompareTo("900GeV") == 0){
+            if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Pi0")==0){
+                bsmooth[i]                      = bsmoothMBPi0900GeV[i];
+            } else if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Eta")==0){
+                bsmooth[i]                      = bsmoothMBEta900GeV[i];
+            } else if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("EtaToPi0")==0){
+                bsmooth[i]                      = bsmoothMBEtaToPi0900GeV[i];
+            }            
+        } else if (energy.CompareTo("2.76TeV") == 0){
             if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Pi0")==0){
                 bsmooth[i]                      = bsmoothMBPi02760GeV[i];
             } else if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Eta")==0){
@@ -336,6 +351,8 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                     errorReset  = 0.7;
                 else if (!energy.CompareTo("7TeV"))
                     errorReset  = 0.3;
+                else if (!energy.CompareTo("900GeV"))
+                    errorReset  = 0.1;
             }
 
             // SPD pileup
@@ -384,6 +401,8 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                                 errorReset      = 0.5;
                         } else if (!energy.CompareTo("2.76TeV")){
                             errorReset          = 0.9+pow(ptBins[k],2)*0.005;
+                        } else if (!energy.CompareTo("900GeV")){
+                            errorReset          = 2.-1.9*ptBins[k]+0.45*pow(ptBins[k],2);
                         }
                         errorsMean[i][k]        = errorReset; 
                         errorsMeanErr[i][k]     = errorReset*0.01;
@@ -451,6 +470,8 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                             errorReset          = 0.2+pow(ptBins[k],2)*0.028;
                         else if (!energy.CompareTo("2.76TeV"))
                             errorReset          = 0.8+pow(ptBins[k],2)*0.03;
+                        else if (!energy.CompareTo("900GeV"))
+                            errorReset          = 1.72-2.28*ptBins[k]+.859*pow(ptBins[k],2);
                         errorsMean[i][k]        = errorReset;
                         errorsMeanErr[i][k]     = errorReset*0.01;
                         errorsMeanCorr[i][k]    = errorReset;
@@ -482,6 +503,8 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                             errorReset          = 0.75+pow(ptBins[k],2)*0.015;
                         else if (!energy.CompareTo("2.76TeV"))
                             errorReset          = 1.25+pow(ptBins[k],2)*0.075;
+                        else if (!energy.CompareTo("900GeV"))
+                            errorReset          = 6.-5.4*ptBins[k]+1.85*pow(ptBins[k],2);
                         errorsMean[i][k]        = errorReset;
                         errorsMeanErr[i][k]     = errorReset*0.01;
                         errorsMeanCorr[i][k]    = errorReset;
@@ -520,6 +543,8 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                                 errorReset      = 0.75;
                             else 
                                 errorReset      = 0.75+pow(ptBins[k]-3,2)*0.35;
+                        } else if (!energy.CompareTo("900GeV")){
+                            errorReset          = 1.8-1.4*ptBins[k]+0.46*pow(ptBins[k],2);
                         }
                         errorsMean[i][k]        = errorReset;
                         errorsMeanErr[i][k]     = errorReset*0.01;
@@ -540,6 +565,8 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                                 errorReset      = 2*0.75;
                             else 
                                 errorReset      = 2*(0.75+pow(ptBins[k]-3,2)*0.35);
+                        } else if (!energy.CompareTo("900GeV")){
+                            errorReset          = 3.;
                         }
                         errorsMean[i][k]        = errorReset;
                         errorsMeanErr[i][k]     = errorReset*0.01;
@@ -562,6 +589,12 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                             errorReset          = 0.1+pow(ptBins[k],2)*0.035;
                         else if (!energy.CompareTo("2.76TeV"))
                             errorReset          = 0.4+pow(ptBins[k],2)*0.015;
+                        else if (!energy.CompareTo("900GeV")){
+                            if (ptBins[k] > 1.5)
+                                errorReset      = 0.1+pow(ptBins[k]-1.5,2)*0.7;
+                            else
+                                errorReset      = 0.1;
+                        }
                         errorsMean[i][k]        = errorReset;
                         errorsMeanErr[i][k]     = errorReset*0.01;
                         errorsMeanCorr[i][k]    = errorReset;
@@ -595,6 +628,8 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                                 errorReset      = 4.+pow(ptBins[k]-2,2)*5;
                         } else if (!energy.CompareTo("2.76TeV")){
                             errorReset          = 6.0;
+                        } else if (!energy.CompareTo("900GeV")){
+                            errorReset          = 14.;
                         }
                         errorsMean[i][k]        = errorReset;
                         errorsMeanErr[i][k]     = errorReset*0.01;
@@ -637,6 +672,12 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                                 errorsMeanCorr[i][k]    = errorReset;
                                 errorsMeanErrCorr[i][k] = errorReset*0.01;
                             }
+                        } else if (!energy.CompareTo("900GeV")){
+                            errorReset              = 18.-18.2*ptBins[k]+4.74*pow(ptBins[k],2);
+                            errorsMean[i][k]        = errorReset;
+                            errorsMeanErr[i][k]     = errorReset*0.01;
+                            errorsMeanCorr[i][k]    = errorReset;
+                            errorsMeanErrCorr[i][k] = errorReset*0.01;
                         }
                     }
                 }
@@ -858,7 +899,7 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
             bla->SetParameter(1,50);
             bla->SetParameter(2,5);
             pol4->SetParLimits(3,0,10);
-                
+
             meanErrorsCorr[cut]->Fit(pol4,"NRMEX0+","",minPt,maxPt);
             meanErrorsCorr[cut]->Fit(pol2,"NRMEX0+","",minPt,maxPt);
             meanErrorsCorr[cut]->Fit(pol1,"NRMEX0+","",minPt,maxPt);
@@ -869,7 +910,7 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
             pol1->SetLineColor(kCyan+2);
             pol0->SetLineColor(kBlack);
             bla->SetLineColor(kMagenta+2);
-            
+
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[cut], 20+cut, 1.,color[cut],color[cut]);
             meanErrorsCorr[cut]->Draw("p,csame");
             pol4->Draw("same");
@@ -1039,7 +1080,12 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
             graphMaterialError->Draw("p,csame");
             legendSummedMeanNew->AddEntry(graphMaterialError,"Material","p");
         } else {
-            if (meanErrorsCorr[11]){
+            if (meanErrorsCorr[10]&&!energy.CompareTo("900GeV")){
+                DrawGammaSetMarkerTGraphErr(meanErrorsCorr[10], 25, 1.,color[5],color[5]);
+                meanErrorsCorr[10]->Draw("p,csame");
+                legendSummedMeanNew->AddEntry(meanErrorsCorr[10],"Pileup Estimate","p");
+                cout << "here900" << endl;
+            } else if (meanErrorsCorr[11]){
                 DrawGammaSetMarkerTGraphErr(meanErrorsCorr[11], 25, 1.,color[5],color[5]);
                 meanErrorsCorr[11]->Draw("p,csame");
                 legendSummedMeanNew->AddEntry(meanErrorsCorr[11],"Pileup Estimate","p");
