@@ -69,7 +69,7 @@ void SeparateDifferentCutnumbers(   TString nameInputFile1,
                                       "F", "G", "H", "I", "J",
                                       "K", "L", "M", "N", "O",
                                       "P", "Q", "R", "S", "T" };
-        
+    
     Int_t n = 0; 
     for(Int_t i = 0; i<listInput1->GetSize(); i++){
         TList *listToSave       = (TList*)listInput1->At(i);

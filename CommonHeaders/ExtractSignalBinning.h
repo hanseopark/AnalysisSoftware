@@ -495,7 +495,7 @@ Double_t fBinsDirGamma13TeVLowBPtDCAzDist[16]   = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2
 Double_t fBinsPi0pPb5023GeVPt[38]               = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,
                                                     1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4,
                                                     3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0,
-                                                    12.0, 14.0, 16.0, 18.0, 20.0, 22.0, 26.0, 30.0};
+                                                    12.0, 16.0, 18.0, 20.0, 22.0, 24.0, 26.0, 30.0};
 Double_t fBinsPi0pPb5023GeVPtEMCTrig[43]        = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,
                                                     1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4,
                                                     3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 9.0,
@@ -1179,7 +1179,7 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
                     case 10:
                     case 11:
                         if (meson.CompareTo("Eta") == 0) scaleFac = 4.0;
-                        return 8;      // INT triggers
+                        return 7;      // INT triggers
                         break;
                     case 51:
                     case 52:
