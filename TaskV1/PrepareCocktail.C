@@ -48,6 +48,7 @@
 #include "../CommonHeaders/ConversionFunctions.h"
 #include "../CommonHeaders/ExtractSignalBinning.h"
 
+
 void PrepareCocktail(   TString nameFileCocktail        = "",
                         TString nameFilePi0             = "",
                         TString suffix                  = "eps",
@@ -562,7 +563,78 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     canvasMothersParam->SaveAs(Form("%s/CocktailMothersInclParam_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete legendMothersParam;
     delete canvasMothersParam;
-  
+
+    //***************************** Plot integrated mother ratios to pi0 ********************************************
+
+    cout << "PLOTTING: Integrated particle ratios" << endl;
+    Double_t textSizeLabelsPixel                 = 54;
+    TCanvas* canvasIntPartRatios       = new TCanvas("canvasIntPartRatios","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasIntPartRatios, 0.1, 0.01, 0.01, 0.125);
+
+        Double_t textsizeLabels = 0;
+        Double_t textsizeFac    = 0;
+        if (canvasIntPartRatios->XtoPixel(canvasIntPartRatios->GetX2()) <canvasIntPartRatios->YtoPixel(canvasIntPartRatios->GetY1()) ){
+            textsizeLabels      = (Double_t)textSizeLabelsPixel/canvasIntPartRatios->XtoPixel(canvasIntPartRatios->GetX2()) ;
+            textsizeFac         = (Double_t)1./canvasIntPartRatios->XtoPixel(canvasIntPartRatios->GetX2()) ;
+        } else {
+            textsizeLabels      = (Double_t)textSizeLabelsPixel/canvasIntPartRatios->YtoPixel(canvasIntPartRatios->GetY1());
+            textsizeFac         = (Double_t)1./canvasIntPartRatios->YtoPixel(canvasIntPartRatios->GetY1());
+        }
+
+    TH2F * histomTscalingPoints = (TH2F*) histMtScalingFactors->Clone("MtScalingClone1");
+    DrawGammaSetMarker(histomTscalingPoints, 23, 1.5, kBlue+2 , kBlue+2);
+    
+    TH2F * histoIntPartRatios = (TH2F*) histMtScalingFactors->Clone("MtScalingClone2");
+    TH2F * histoTheoPartRatios = (TH2F*) histMtScalingFactors->Clone("MtScalingClone3");
+    Double_t theoRatios[nMotherParticles] = {1,0.2131528511,0.0293771568,0.2121738246,0.2488197353,
+                                               0.2488197353,0.2488197353,0.0641642177,4.69567604091221e-7,
+                                               0.028698447,0.0286394262,0.028698447,0.0285501625,0.2267748773,0.2659074433,0.,0.};
+    Double_t intpi0 = 0;
+    Double_t intpi0err = 0;
+    Double_t intratio = 0;
+    Double_t intratioerr = 0;
+    Double_t intpart[nMotherParticles];
+    Double_t intparterr[nMotherParticles];
+    intpi0 = histoGammaMotherPtOrBin[0]->IntegralAndError(histoGammaMotherPtOrBin[0]->FindBin( 0.1), histoGammaMotherPtOrBin[0]->FindBin(16), intpi0err, "width");
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        if (histoGammaMotherPtOrBin[i]) {
+            intpart[i] = histoGammaMotherPtOrBin[i]->IntegralAndError(histoGammaMotherPtOrBin[i]->FindBin( ptGenMin), histoGammaMotherPtOrBin[i]->FindBin(ptGenMax), intparterr[i], "width");
+            intratio = intpart[i]/intpi0;
+            intratioerr = intratio*pow(pow(intparterr[i]/intpart[i],2)+pow(intpi0err/intpi0,2),0.5);
+            histoIntPartRatios->SetBinContent(i+1,intratio);
+            histomTscalingPoints->GetXaxis()->SetBinLabel(i+1,Form("%s/#pi^{0}",motherParticlesLatex[i].Data()));
+            histomTscalingPoints->SetBinContent(i+1,mtScaleFactor[i]);
+            histomTscalingPoints->SetBinError(i+1,0);
+            histoIntPartRatios->SetBinError(i+1,intratioerr);
+            histoTheoPartRatios->SetBinContent(i+1,theoRatios[i]);
+            histoTheoPartRatios->SetBinError(i+1,0.001);
+        }else {
+            histomTscalingPoints->SetBinContent(i+1,-1);
+            histomTscalingPoints->SetBinError(i+1,0);
+            histoIntPartRatios->SetBinContent(i+1,-1);
+            histoIntPartRatios->SetBinError(i+1,0);
+            histoTheoPartRatios->SetBinContent(i+1,-1);
+            histoTheoPartRatios->SetBinError(i+1,0);
+        }
+    }
+    DrawGammaSetMarker(histoIntPartRatios, 21, 1.5, kRed+2 , kRed+2);
+    DrawGammaSetMarker(histoTheoPartRatios, 24, 1.5, kGreen+2 , kGreen+2);
+    histomTscalingPoints->GetXaxis()->SetLabelSize(0.8*textsizeLabels);
+    histomTscalingPoints->GetYaxis()->SetRangeUser(0.,1.05);
+    histomTscalingPoints->GetXaxis()->SetRangeUser(1.,17);
+    histomTscalingPoints->Draw("p");
+    histoIntPartRatios->Draw("pesame");
+    histoTheoPartRatios->Draw("psame");
+
+    TLegend* legendIntRatio = GetAndSetLegend2(0.67, 0.65, 0.9, 0.65+(textsizeLabels*4*0.9), textSizeLabelsPixel);
+    legendIntRatio->AddEntry(histomTscalingPoints,"mT scaling","p");
+    legendIntRatio->AddEntry(histoIntPartRatios,"int. ratios","p");
+    legendIntRatio->AddEntry(histoTheoPartRatios,"theory ratios","p");
+        legendIntRatio->Draw();
+
+    canvasIntPartRatios->Update();
+    canvasIntPartRatios->SaveAs(Form("%s/IntegratedRatios.%s",outputDir.Data(),suffix.Data()));
+
     //***************************** Plot ratio cocktail mothers to pi0 (pt) *****************************************
     TCanvas *canvasMothersRatio                                 = new TCanvas("canvasMothersRatio","",1100,1200);
     DrawGammaCanvasSettings(canvasMothersRatio, 0.08, 0.01, 0.01, 0.075);

@@ -2682,7 +2682,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
     } else if ((fEnergyFlag.CompareTo("7TeV") == 0) && (fMeson.CompareTo("Pi0") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
-        nIterationsShowBackground[0]                    = 12;
+        nIterationsShowBackground[0]                    = 13;
         nIterationsShowBackground[1]                    = 12;
         nIterationsShowBackground[2]                    = 19;
         nIterationsShowBackground[3]                    = 20;
@@ -3358,6 +3358,8 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3,Bool_t PileUpCorrecti
 void SaveDCAHistos(Int_t isMC, TString fCutID, TString fPrefix3){
     const char* nameOutput                              = Form("%s/%s/%s_%s_GammaConvV1DCAHistogramms%s_%s.root",fCutSelection.Data(), fEnergyFlag.Data(), fPrefix.Data(), fPrefix3.Data(),
                                                        fPeriodFlag.Data(), fCutID.Data());
+    if(fMode == 0 && !fEnergyFlag.CompareTo("900GeV"))
+        exemplaryHighPtBin                                      = 8;
     cout << "INFO: writing into: " << nameOutput << endl;
     TFile *Output1                                      = new TFile(nameOutput,"RECREATE");
 
