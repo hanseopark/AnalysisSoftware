@@ -86,7 +86,7 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                                                 "SinglePt", "Chi2" , "Qt" , "Alpha" , "BG" , 
                                                 "Periods" , "SPD" , "CosPoint", "PsiPair" ,"Eta" ,
                                                 "MCSmearing" };
-    if(energy.CompareTo("2.76TeV"))
+    if(!energy.CompareTo("900GeV"))
         nameCutVariationSCCurrent[10] = "SPD";
     Color_t color[20];
     Color_t markerStyle[20];
