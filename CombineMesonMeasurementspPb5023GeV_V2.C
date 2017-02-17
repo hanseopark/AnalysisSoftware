@@ -1512,17 +1512,20 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     TF1* fitTCMDecomposedLPi0           = FitObject("tcmlow","twoCompModelPi0_DecL", "Pi0", NULL, 0.3, 2.);
     TF1* fitTCMDecomposedHPi0           = FitObject("tcmhigh","twoCompModelPi0_DecH", "Pi0", NULL, 4, 50.);
     fitTCMDecomposedLPi0->SetParameters(graphCombPi0InvYieldTot->GetY()[2],0.3);
-    graphCombPi0InvYieldStat->Fit(fitTCMDecomposedLPi0,"QNRMEX0+","",0.4,2.);
-    graphCombPi0InvYieldTot->Fit(fitTCMDecomposedHPi0,"QNRMEX0+","",4,50);
-    fitTCMDecomposedHPi0->SetParameters(graphCombPi0InvYieldTot->GetY()[2],0.8, 2);    
+    graphCombPi0InvYieldStat->Fit(fitTCMDecomposedLPi0,"QNRMEX0+","",0.3,0.8);
+    graphCombPi0InvYieldStat->Fit(fitTCMDecomposedHPi0,"QNRMEX0+","",3,20);
+//     fitTCMDecomposedHPi0->SetParameters(graphCombPi0InvYieldTot->GetY()[2],0.8, 2);    
     
     cout << WriteParameterToFile(fitTCMDecomposedLPi0)<< endl;    
     fileFitsOutput <<  WriteParameterToFile(fitTCMDecomposedLPi0)<< endl;    
     cout << WriteParameterToFile(fitTCMDecomposedHPi0)<< endl;    
     fileFitsOutput <<  WriteParameterToFile(fitTCMDecomposedHPi0)<< endl;    
+
+    Double_t paramTCMPi0New[5]          = { fitTCMDecomposedLPi0->GetParameter(0),fitTCMDecomposedLPi0->GetParameter(1),
+                                            fitTCMDecomposedHPi0->GetParameter(0),fitTCMDecomposedHPi0->GetParameter(1),fitTCMDecomposedHPi0->GetParameter(2)};
     
-    Double_t paramTCMPi0New[5]          = { 5.265,0.33,
-                                            1.9,0.46,3.1};
+//     Double_t paramTCMPi0New[5]          = { 5.265,0.33,
+//                                             1.9,0.46,3.1};
     TF1* fitTCMInvYieldPi0              = FitObject("tcm","fitTCMInvYieldPi02760GeV","Pi0",graphCombPi0InvYieldStat,0.3,20. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
     
     fitTCMDecomposedLPi0->SetParameter(0, fitTCMInvYieldPi0->GetParameter(0));
@@ -1540,10 +1543,10 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     // Shift graphs in X direction if desired
     // *************************************************************************************************************    
     if(bWCorrection.Contains("X")){
-//         TF1* fitShiftingPi0            = FitObject("tmpt","ShiftingPi0","Pi0");
-//         fitShiftingPi0->SetParameters(fitInvYieldPi0->GetParameter(0),fitInvYieldPi0->GetParameter(1), fitInvYieldPi0->GetParameter(2));
-        TF1* fitShiftingPi0                 = FitObject("tcmpt","ShiftingPi0","Pi0");
-        fitShiftingPi0->SetParameters(fitTCMInvYieldPi0->GetParameter(0),fitTCMInvYieldPi0->GetParameter(1), fitTCMInvYieldPi0->GetParameter(2), fitTCMInvYieldPi0->GetParameter(3),fitTCMInvYieldPi0->GetParameter(4));
+        TF1* fitShiftingPi0            = FitObject("tmpt","ShiftingPi0","Pi0");
+        fitShiftingPi0->SetParameters(fitInvYieldPi0->GetParameter(0),fitInvYieldPi0->GetParameter(1), fitInvYieldPi0->GetParameter(2));
+//         TF1* fitShiftingPi0                 = FitObject("tcmpt","ShiftingPi0","Pi0");
+//         fitShiftingPi0->SetParameters(fitTCMInvYieldPi0->GetParameter(0),fitTCMInvYieldPi0->GetParameter(1), fitTCMInvYieldPi0->GetParameter(2), fitTCMInvYieldPi0->GetParameter(3),fitTCMInvYieldPi0->GetParameter(4));
         
         TGraphAsymmErrors* graphCombPi0InvYieldTotNoShift = (TGraphAsymmErrors*) graphCombPi0InvYieldTot->Clone("Pi0_NoShift");
 
