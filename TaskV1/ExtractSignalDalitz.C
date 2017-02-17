@@ -60,7 +60,8 @@ void ExtractSignalDalitz(   TString meson               = "",
                             TString thesis              = "",
                             Int_t numberOfBins          = 30,
                             Bool_t addSig               = kFALSE,
-                            Int_t mode                  = 1
+                            Int_t mode                  = 1,
+			    Int_t triggerSet            = -1
                         ) {
   
     gROOT->Reset();
@@ -193,6 +194,7 @@ void ExtractSignalDalitz(   TString meson               = "",
 
     //***************************** Initialization of variables according to meson type ******************************
     if(meson.CompareTo("Pi0") == 0){
+        cout<<"Va a inicializar"<<endl;
         Initialize("Pi0",numberOfBins);
     } else if (meson.CompareTo("Eta") == 0) {
         Initialize("Eta",numberOfBins);
@@ -257,7 +259,8 @@ void ExtractSignalDalitz(   TString meson               = "",
     
     TString rapidityRange;
     fYMaxMeson                      = ReturnRapidityStringAndDouble(fMesonCutSelection, rapidityRange);
-    fBackgroundMultCutNumber        = fElectronCutSelection(14,1);
+    //fBackgroundMultCutNumber        = fElectronCutSelection(14,1);
+    fBackgroundMultNumber               = ReturnBackgroundMult(fMesonCutSelection);
     
     if (fBackgroundMultCutNumber.CompareTo("0") == 0){
         fBackgroundMultNumber=5;
@@ -327,6 +330,13 @@ void ExtractSignalDalitz(   TString meson               = "",
     fFileDataLog.open(fFileDataLogname, ios::out);
 
     cout<<"LLego "<<endl; 
+    
+    if( ! fBackgroundContainer  )  {cout<<"ERROR BKG "<<endl; return;}
+    if( ! fMotherContainer  ) 	{cout<<"ERROR MOTHER "<<endl; return;}
+    if( ! fESDContainer  ) 	{cout<<"ERROR ESD "<<endl; return;}
+    
+    
+    
     ProduceBckProperWeighting(fBackgroundContainer,fMotherContainer,fESDContainer);    
     cout<<"Salio "<<endl; 
     
@@ -1085,6 +1095,12 @@ void ExtractSignalDalitz(   TString meson               = "",
 
     PlotExampleInvMassBins(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin] , fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),fSuffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, date, fPrefix, fPrefix2, fThesis, fCollisionSystem, fBinsPt, fDecayChannel);
     
+    TString triggerInt         = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPosition(),2);
+    PlotExampleInvMassBinsV2(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin],fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),fSuffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, date, fPrefix, fPrefix2, fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fExampleBinScaleFac, fMode, addSig );
+    
+    //PlotExampleInvMassBinsV2(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin],fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2, fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fExampleBinScaleFac, fMode, addSig );
+    
+    
     if(fIsMC){    
         TString nameMesonTrue= Form("%s/%sDalitz_%s_TrueMesonFitted%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(),fPeriodFlag.Data(),fCutSelection.Data(),fSuffix.Data());
         TString nameCanvasTrue= "TrueMesonCanvasFitted";
@@ -1330,6 +1346,9 @@ void ProduceBckProperWeighting(TList* fBackgroundContainer,TList* fMotherContain
                         fHistoMappingBackInvMassPtBin[iPt]->SetBinError(ii,0.);
                     }
                     }
+                    //cout<<"Antes"<<endl;
+                    //if( fBGFitRange[0] )
+		    //cout<<"Despues"<<endl;  
                     Int_t startBinIntegral = fHistoMotherZMProj->GetXaxis()->FindBin(fBGFitRange[0]);
                     Int_t endBinIntegral = fHistoMotherZMProj->GetXaxis()->FindBin(fBGFitRange[1]);
                     if (fHistoBckZMProj->Integral(startBinIntegral,endBinIntegral) != 0) {
@@ -2446,9 +2465,17 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
 
 void Initialize( TString setPi0, Int_t numberOfBins){
     
+    //cout<<"setPi0 "<<setPi0.Data()<<endl;
+  
     InitializeBinning(setPi0, numberOfBins, fEnergyFlag, "", fMode, fEventCutSelection, fClusterCutSelection, -1);
     
-    if (setPi0.Contains("Pi0") == 0){
+    //TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+    //InitializeWindows(setPi0, fMode, trigger, triggerSet);
+    
+    
+    if (setPi0.CompareTo("Pi0") == 0 ){
+      
+        //cout<<"Initialize hhhhh"<<endl;
         fBGFitRange         = new Double_t[2];  fBGFitRange[0]      = 0.17;     fBGFitRange[1]      = 0.3; //eta 0.9
         fBGFitRangeLeft     = new Double_t[2];  fBGFitRangeLeft[0]  = 0.05;     fBGFitRangeLeft[1]  = 0.08;  // eta 09
         fMesonPlotRange     = new Double_t[2];  fMesonPlotRange[0]  = 0.13;     fMesonPlotRange[1]  = 0.138;

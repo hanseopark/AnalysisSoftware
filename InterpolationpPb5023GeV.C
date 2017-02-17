@@ -135,17 +135,19 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     TString fileNameNeutralPionEMCalResultsPP7TeV   = "ExternalInputpPb/EMCAL/pi0Specrtum2011EMCAL_24June2015_7_Evi.root"; 
     TString fileNameNeutralPionPHOSResultsPP        = "ExternalInputpPb/PHOS/CombinedResultsPP_ShiftedX_PaperRAA_ConsiderPileup7TeVPHOSData.root";
     //TString fileNameNeutralPionCombResultspPb       = "ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2016_10_07.root"; //low pT Cut
-    TString fileNameNeutralPionCombResultspPb       = "ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_02_09.root";
+    TString fileNameNeutralPionCombResultspPb       = "ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_02_14.root";
     TString fileNameNeutralPionPCMResultspPb        = "ExternalInputpPb/PCM/data_PCMResults_pPb_20151111_standard_CatErrors.root";
     TString fileNameNeutralPionDalitzResultspPb     = "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20160929.root";//data_PCMResults_Dalitz_pPb_20150806.root";data_PCMResults_Dalitz_pPb_20160601.root
     //TString fileNameNeutralPionEMCalResultspPb      = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_160602_newhighptbinningPi0_pPb.root";//data_EMCalEMCalResults_160215_pPb_5023_Mike.root";
-    TString fileNameNeutralPionEMCalResultspPb      = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_161118_pPb.root";
+    //TString fileNameNeutralPionEMCalResultspPb      = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_161118_pPb.root";
+    TString fileNameNeutralPionEMCalResultspPb      = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_161124_pPb.root";
+    
     TString fileNameNeutralPionPHOSResultspPb       = "ExternalInputpPb/PHOS/20160601_Pi0InvariantSpectrum_pPb_PHOS.root";//InvariantYield_Pi0_pPb_Graph_PHOS_20160415.root";
     TString fileNameRpPbPHOS                        = "ExternalInputpPb/PHOS/data_PHOSResults_RpPb_20160405.root";
     TString fileNamePHOSSystErrCancellation         = "ExternalInputpPb/PHOS/ComponentCancelSys.root";
     TString fileNameNeutralPionPCMEMCalResultspPb   = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2016_12_22.root";
     
-    TFile* CommonFile	    = new TFile("ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_02_09.root");
+    TFile* CommonFile	    = new TFile("ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_02_14.root");
     
     //TFile* CommonFile       = new TFile("ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2016_10_07.root");// Common Fit for YShift
     
