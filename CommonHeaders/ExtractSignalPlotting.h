@@ -506,6 +506,7 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
         fitPi0InvMassSig->Draw("same");
     } else {
         histoPi0InvMassSigRemBGSub->Draw("same");
+        histoFit->Draw("c,same");
     }
 
     labelALICE->Draw();    
