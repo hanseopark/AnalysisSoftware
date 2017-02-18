@@ -707,15 +707,15 @@ void QA_Runwise(
     //**************************************************************************************************************
     else if(select.CompareTo("LHC11hCentral")==0){
       // PbPb 2.76TeV
-      filePath= "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20160801-1";
-      filePathPhoton = "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20160801-1";
+      filePath= "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170211-1";
+      filePathPhoton = "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170211-1/";
       fileName = "GammaConvV1_226.root";
       mode=0;
       cutNr=2;
       fEnergyFlag = "PbPb_2.76TeV";
       nSets               = 2;
       nData               = 1;
-      TString dummyDataSets[2]   = {"LHC11h", "LHC14a1a"};
+      TString dummyDataSets[2]   = {"LHC11hCentral", "LHC14a1a"};
       TString dummyPlotSets[2]   = {"0-10% LHC11h", "0-10% LHC14a1a"};
       for (Int_t j = 0; j< nSets; j++){
           DataSets[j]     = dummyDataSets[j];
@@ -728,14 +728,14 @@ void QA_Runwise(
     else if(select.CompareTo("LHC11hSemicentral")==0){
       // PbPb 2.76TeV
       filePath= "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20160801-1";
-      filePathPhoton = "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20160801-1";
+      filePathPhoton = "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170211-1";
       fileName = "GammaConvV1_226.root";
       mode=0;
       cutNr=2;
       fEnergyFlag = "PbPb_2.76TeV";
       nSets               = 2;
       nData               = 1;
-      TString dummyDataSets[2]   = {"LHC11h", "LHC14a1b"};
+      TString dummyDataSets[2]   = {"LHC11hSemicentral", "LHC14a1b"};
       TString dummyPlotSets[2]   = {"0-10% LHC11h", "20-50% LHC14a1b"};
       for (Int_t j = 0; j< nSets; j++){
           DataSets[j]     = dummyDataSets[j];
