@@ -111,7 +111,7 @@ TH1F* GetSystHistStyle(){
   histoEmpty->GetXaxis()->SetTitleOffset(0.8);
   histoEmpty->GetYaxis()->SetTitleOffset(0.85);
   histoEmpty->GetXaxis()->SetRangeUser(0.0,6.2);
-  histoEmpty->GetYaxis()->SetRangeUser(0,59.9);
+  histoEmpty->GetYaxis()->SetRangeUser(0,29.9);
   
   return histoEmpty;
 }

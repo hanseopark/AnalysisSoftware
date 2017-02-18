@@ -10,9 +10,9 @@ void  InclusivePhotonFlowCorrection(  Int_t Trainconfig = 55,
   //Opening files and creating histograms
   //========================================================
   
-  TString InputFileNameUncorrected  = Form("/home/mike/3_PbPb_dirg/0_analysis/170214_v2_final_standardcuts/Results_%s/InclusivePhotonv2_uncorrected_%s.root",Cutnumber.Data(),Cutnumber.Data());
-  TString InputFileNameBackground   = Form("/home/mike/3_PbPb_dirg/0_analysis/170214_v2_final_standardcuts/Results_%s/v2_background_%s%s_%s.root",Cutnumber.Data(),CentralityLow.Data(),CentralityHigh.Data(),Cutnumber.Data());
-  TString InputFileNamePurity       = Form("/home/mike/3_PbPb_dirg/0_analysis/170214_v2_final_standardcuts/purity_studies_%s/Purity_InclusivePhotonSample_%s%s_%s_Data LHC10h.root",Cutnumber.Data(),CentralityLow.Data(),CentralityHigh.Data(),Cutnumber.Data());
+  TString InputFileNameUncorrected  = Form("/home/mike/3_PbPb_dirg/0_analysis/170216_v2_final_systematics/Results_%s/InclusivePhotonv2_uncorrected_%s.root",Cutnumber.Data(),Cutnumber.Data());
+  TString InputFileNameBackground   = Form("/home/mike/3_PbPb_dirg/0_analysis/170216_v2_final_systematics/Results_%s/v2_background_%s%s_%s.root",Cutnumber.Data(),CentralityLow.Data(),CentralityHigh.Data(),Cutnumber.Data());
+  TString InputFileNamePurity       = Form("/home/mike/3_PbPb_dirg/0_analysis/170216_v2_final_systematics/purity_studies_%s/Purity_InclusivePhotonSample_%s%s_%s_Data LHC10h.root",Cutnumber.Data(),CentralityLow.Data(),CentralityHigh.Data(),Cutnumber.Data());
   
   //open datafile with v2 gamma inclusive uncorrected
   TFile* fileInclusive  = new TFile(InputFileNameUncorrected.Data());

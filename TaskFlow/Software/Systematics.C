@@ -4,11 +4,13 @@ TGraphAsymmErrors* CalculateSymmetricSystematics(TH1F* histDefault, TH1F* histva
 TGraphAsymmErrors* CalculateSymmetricSystematics(TH1F* histDefault, TH1F* histvar1, TH1F* histvar2);
 TGraphAsymmErrors* CalculateTotalSystematics(TGraphAsymmErrors* g1, TGraphAsymmErrors* g2, TGraphAsymmErrors* g3, TGraphAsymmErrors* g4, TGraphAsymmErrors* g5, TGraphAsymmErrors* g6, TGraphAsymmErrors* g7);
 TGraphAsymmErrors* CalculateTotalError(TH1F* h1, TGraphAsymmErrors* g1);
+void SmoothSystematicError(TGraphAsymmErrors* g1,TString NameSyst);
 
 void  Systematics(
                                       Int_t Trainconfig = 55,
-                                      TString CentralityLow = "40",
-                                      TString CentralityHigh = "80"
+                                      TString CentralityLow = "0",
+                                      TString CentralityHigh = "20",
+                                      Bool_t SetSystSmoothing = kTRUE
                                  ){
   
   //========================================================
@@ -21,6 +23,8 @@ void  Systematics(
   if(CentralityLow.CompareTo("20")==0) {DefaultCut = "52400013_00200009007000008250400000"; SystTrainConfig = 63;}
   if(CentralityLow.CompareTo("40")==0) {DefaultCut = "54800013_00200009007000008250400000"; SystTrainConfig = 66;}
   
+  TString SystNames[7] = {"eta","R","minPt","qt","chi2","psipair","cosp"};
+  
   TString SystVariations[12];
   if(CentralityLow.CompareTo("0")==0){
     SystVariations[ 0] = "50200013_04200009007000008250400000"; //eta cut: |eta| <0.75
@@ -28,7 +32,7 @@ void  Systematics(
     SystVariations[ 2] = "50200013_00200049007000008250400000"; //singleptcut = 75MeV
     SystVariations[ 3] = "50200013_00200019007000008250400000"; //singleptcut = 100MeV
     SystVariations[ 4] = "50200013_00200009007000009250400000"; // Qtmax = 0.03
-    SystVariations[ 5] = "50200013_00200009007000001250400000"; // Qtmax = 0.1
+    SystVariations[ 5] = "50200013_00200009007000002250400000"; // Qtmax = 0.06
     SystVariations[ 6] = "50200013_00200009007000008750400000"; //chi2cut = 10
     SystVariations[ 7] = "50200013_00200009007000008150400000"; //chi2cut = 50
     SystVariations[ 8] = "50200013_00200009007000008260400000"; //psipaircut = 0.05
@@ -41,7 +45,7 @@ void  Systematics(
     SystVariations[ 2] = "52400013_00200049007000008250400000"; //singleptcut = 75MeV
     SystVariations[ 3] = "52400013_00200019007000008250400000"; //singleptcut = 100MeV
     SystVariations[ 4] = "52400013_00200009007000009250400000"; // Qtmax = 0.03
-    SystVariations[ 5] = "52400013_00200009007000001250400000"; // Qtmax = 0.1
+    SystVariations[ 5] = "52400013_00200009007000002250400000"; // Qtmax = 0.06
     SystVariations[ 6] = "52400013_00200009007000008750400000"; //chi2cut = 10
     SystVariations[ 7] = "52400013_00200009007000008150400000"; //chi2cut = 50
     SystVariations[ 8] = "52400013_00200009007000008260400000"; //psipaircut = 0.05
@@ -54,7 +58,7 @@ void  Systematics(
     SystVariations[ 2] = "54800013_00200049007000008250400000"; //singleptcut = 75MeV
     SystVariations[ 3] = "54800013_00200019007000008250400000"; //singleptcut = 100MeV
     SystVariations[ 4] = "54800013_00200009007000009250400000"; // Qtmax = 0.03
-    SystVariations[ 5] = "54800013_00200009007000001250400000"; // Qtmax = 0.1
+    SystVariations[ 5] = "54800013_00200009007000002250400000"; // Qtmax = 0.06
     SystVariations[ 6] = "54800013_00200009007000008750400000"; //chi2cut = 10
     SystVariations[ 7] = "54800013_00200009007000008150400000"; //chi2cut = 50
     SystVariations[ 8] = "54800013_00200009007000008260400000"; //psipaircut = 0.05
@@ -63,7 +67,7 @@ void  Systematics(
     SystVariations[11] = "54800013_00200009007000008250300000"; //cos p angle cut = 0.75
   }
   
-  TFile* fileDefaultInclusive  = new TFile(Form("/home/mike/0_directphoton/0_analysis/160714_PbPb_systematics/Results_%s/InclusivePhotonv2_Corrected_%i_%s.root",DefaultCut.Data(),Trainconfig,DefaultCut.Data()));
+  TFile* fileDefaultInclusive  = new TFile(Form("/home/mike/3_PbPb_dirg/0_analysis/170216_v2_final_systematics/Results_%s/InclusivePhotonv2_Corrected_%i_%s.root",DefaultCut.Data(),Trainconfig,DefaultCut.Data()));
   TH1F*  histoDefaultInclusive = (TH1F*)fileDefaultInclusive->Get(Form("v2GammaIncl_corrected_%s%s_tC%i",CentralityLow.Data(),CentralityHigh.Data(),Trainconfig));
   if(!histoDefaultInclusive) cout << "histoDefaultInclusive not found in fileInclusive!!" << endl;
   histoDefaultInclusive->SetLineColor(kBlack);
@@ -75,7 +79,8 @@ void  Systematics(
   for(Int_t i=0;i<12;i++){
     if(i==4) SystTrainConfig++;
     if(i==8) SystTrainConfig++;
-    TFile* fileInclusive  = new TFile(Form("/home/mike/0_directphoton/0_analysis/160714_PbPb_systematics/Results_%s/InclusivePhotonv2_Corrected_%i_%s.root",SystVariations[ i].Data(),SystTrainConfig,SystVariations[ i].Data()));
+    TFile* fileInclusive  = new TFile(Form("/home/mike/3_PbPb_dirg/0_analysis/170216_v2_final_systematics/Results_%s/InclusivePhotonv2_Corrected_%i_%s.root",SystVariations[ i].Data(),SystTrainConfig,SystVariations[ i].Data()));
+    cout << " fileInclusive " << fileInclusive << endl;
     histoInclusive[i] = (TH1F*)fileInclusive->Get(Form("v2GammaIncl_corrected_%s%s_tC%i",CentralityLow.Data(),CentralityHigh.Data(),SystTrainConfig));
     if(!histoInclusive[i]) cout << i << " histoInclusive not found in fileInclusive!!" << endl;
     if(i==0 || i==1 || i==2 || i==4 || i==6 || i==8 || i==10){
@@ -339,6 +344,10 @@ void  Systematics(
   histoInclusiveRatio[11]->Draw("SAME");
 //   legVar7Ratio->Draw();
   
+  //========================================================
+  //total
+  //========================================================
+  
   TGraphAsymmErrors* graphSystErrors1 = (TGraphAsymmErrors*)CalculateSymmetricSystematics(histoDefaultInclusive, histoInclusive[0]);
   TGraphAsymmErrors* graphSystErrors2 = (TGraphAsymmErrors*)CalculateSymmetricSystematics(histoDefaultInclusive, histoInclusive[1]);
   TGraphAsymmErrors* graphSystErrors3 = (TGraphAsymmErrors*)CalculateSymmetricSystematics(histoDefaultInclusive, histoInclusive[2], histoInclusive[3]);
@@ -370,24 +379,48 @@ void  Systematics(
   graphSystErrors6_rel->SetLineColor(kGreen-7);     graphSystErrors6_rel->SetMarkerStyle(25); graphSystErrors6_rel->SetMarkerColor(kGreen-7); graphSystErrors6_rel->SetLineWidth(2);
   graphSystErrors7_rel->SetLineColor(kYellow-3);    graphSystErrors7_rel->SetMarkerStyle(26); graphSystErrors7_rel->SetMarkerColor(kYellow-3); graphSystErrors7_rel->SetLineWidth(2);
   
-  TGraphAsymmErrors* graphTotalErrors_rel = (TGraphAsymmErrors*)graphTotalErrors->Clone();
-  graphTotalErrors_rel->SetMarkerStyle(28); graphTotalErrors_rel->SetMarkerColor(kRed); graphTotalErrors_rel->SetLineWidth(2);
+  TGraphAsymmErrors* graphTotalErrors_rel = (TGraphAsymmErrors*)graphTotalSystErrors->Clone();
+  graphTotalErrors_rel->SetMarkerStyle(28); graphTotalErrors_rel->SetLineColor(kRed); graphTotalErrors_rel->SetMarkerColor(kRed); graphTotalErrors_rel->SetLineWidth(2);
   
   Int_t NPoints = graphSystErrors1_rel->GetN();
   Double_t* g1_rel_x = graphSystErrors1_rel->GetX();
   Double_t yVAL;
+  Double_t g1_rel_y[8];
+  
   for(int ibin=0;ibin<NPoints;ibin++){
     if(g1_rel_x[ibin]>0.9){
       yVAL = histoDefaultInclusive->GetBinContent(histoDefaultInclusive->FindBin(g1_rel_x[ibin]));
-      graphSystErrors1_rel->SetPoint(ibin,g1_rel_x[ibin],TMath::Abs(100*graphSystErrors1->GetErrorYhigh(ibin)/yVAL));
-      graphSystErrors2_rel->SetPoint(ibin,g1_rel_x[ibin],TMath::Abs(100*graphSystErrors2->GetErrorYhigh(ibin)/yVAL));
-      graphSystErrors3_rel->SetPoint(ibin,g1_rel_x[ibin],TMath::Abs(100*graphSystErrors3->GetErrorYhigh(ibin)/yVAL));
-      graphSystErrors4_rel->SetPoint(ibin,g1_rel_x[ibin],TMath::Abs(100*graphSystErrors4->GetErrorYhigh(ibin)/yVAL));
-      graphSystErrors5_rel->SetPoint(ibin,g1_rel_x[ibin],TMath::Abs(100*graphSystErrors5->GetErrorYhigh(ibin)/yVAL));
-      graphSystErrors6_rel->SetPoint(ibin,g1_rel_x[ibin],TMath::Abs(100*graphSystErrors6->GetErrorYhigh(ibin)/yVAL));
-      graphSystErrors7_rel->SetPoint(ibin,g1_rel_x[ibin],TMath::Abs(100*graphSystErrors7->GetErrorYhigh(ibin)/yVAL));
-      graphTotalErrors_rel->SetPoint(ibin,g1_rel_x[ibin],TMath::Abs(100*graphTotalErrors->GetErrorYhigh(ibin)/yVAL));
+      
+      g1_rel_y[0] = TMath::Abs(100*graphSystErrors1->GetErrorYhigh(ibin)/yVAL); if(g1_rel_y[0]>40.0 || g1_rel_y[0] < 0.0) g1_rel_y[0] = 0.;
+      g1_rel_y[1] = TMath::Abs(100*graphSystErrors2->GetErrorYhigh(ibin)/yVAL); if(g1_rel_y[1]>40.0 || g1_rel_y[1] < 0.0) g1_rel_y[1] = 0.;
+      g1_rel_y[2] = TMath::Abs(100*graphSystErrors3->GetErrorYhigh(ibin)/yVAL); if(g1_rel_y[2]>40.0 || g1_rel_y[2] < 0.0) g1_rel_y[2] = 0.;
+      g1_rel_y[3] = TMath::Abs(100*graphSystErrors4->GetErrorYhigh(ibin)/yVAL); if(g1_rel_y[3]>40.0 || g1_rel_y[3] < 0.0) g1_rel_y[3] = 0.;
+      g1_rel_y[4] = TMath::Abs(100*graphSystErrors5->GetErrorYhigh(ibin)/yVAL); if(g1_rel_y[4]>40.0 || g1_rel_y[4] < 0.0) g1_rel_y[4] = 0.;
+      g1_rel_y[5] = TMath::Abs(100*graphSystErrors6->GetErrorYhigh(ibin)/yVAL); if(g1_rel_y[5]>40.0 || g1_rel_y[5] < 0.0) g1_rel_y[5] = 0.;
+      g1_rel_y[6] = TMath::Abs(100*graphSystErrors7->GetErrorYhigh(ibin)/yVAL); if(g1_rel_y[6]>40.0 || g1_rel_y[6] < 0.0) g1_rel_y[6] = 0.;
+      g1_rel_y[7] = TMath::Abs(100*graphTotalSystErrors->GetErrorYhigh(ibin)/yVAL); if(g1_rel_y[7]>40.0 || g1_rel_y[7] < 0.0) g1_rel_y[7] = 0.;
+      
+      
+      graphSystErrors1_rel->SetPoint(ibin,g1_rel_x[ibin],g1_rel_y[0]); graphSystErrors1_rel->SetPointEYlow(ibin,0.0); graphSystErrors1_rel->SetPointEYhigh(ibin,0.0);
+      graphSystErrors2_rel->SetPoint(ibin,g1_rel_x[ibin],g1_rel_y[1]); graphSystErrors2_rel->SetPointEYlow(ibin,0.0); graphSystErrors2_rel->SetPointEYhigh(ibin,0.0);
+      graphSystErrors3_rel->SetPoint(ibin,g1_rel_x[ibin],g1_rel_y[2]); graphSystErrors3_rel->SetPointEYlow(ibin,0.0); graphSystErrors3_rel->SetPointEYhigh(ibin,0.0);
+      graphSystErrors4_rel->SetPoint(ibin,g1_rel_x[ibin],g1_rel_y[3]); graphSystErrors4_rel->SetPointEYlow(ibin,0.0); graphSystErrors4_rel->SetPointEYhigh(ibin,0.0);
+      graphSystErrors5_rel->SetPoint(ibin,g1_rel_x[ibin],g1_rel_y[4]); graphSystErrors5_rel->SetPointEYlow(ibin,0.0); graphSystErrors5_rel->SetPointEYhigh(ibin,0.0);
+      graphSystErrors6_rel->SetPoint(ibin,g1_rel_x[ibin],g1_rel_y[5]); graphSystErrors6_rel->SetPointEYlow(ibin,0.0); graphSystErrors6_rel->SetPointEYhigh(ibin,0.0);
+      graphSystErrors7_rel->SetPoint(ibin,g1_rel_x[ibin],g1_rel_y[6]); graphSystErrors7_rel->SetPointEYlow(ibin,0.0); graphSystErrors7_rel->SetPointEYhigh(ibin,0.0);
+      graphTotalErrors_rel->SetPoint(ibin,g1_rel_x[ibin],g1_rel_y[7]); graphTotalErrors_rel->SetPointEYlow(ibin,0.0); graphTotalErrors_rel->SetPointEYhigh(ibin,0.0);
     }
+  }
+  
+  if(SetSystSmoothing){
+    //SmoothSystematicError(graphTotalErrors_rel,"");
+    SmoothSystematicError(graphSystErrors1_rel,SystNames[0].Data());
+    SmoothSystematicError(graphSystErrors2_rel,SystNames[1].Data());
+    SmoothSystematicError(graphSystErrors3_rel,SystNames[2].Data());
+    SmoothSystematicError(graphSystErrors4_rel,SystNames[3].Data());
+    SmoothSystematicError(graphSystErrors5_rel,SystNames[4].Data());
+    SmoothSystematicError(graphSystErrors6_rel,SystNames[5].Data());
+    SmoothSystematicError(graphSystErrors7_rel,SystNames[6].Data());
   }
   
   
@@ -550,5 +583,38 @@ TGraphAsymmErrors* CalculateTotalError(TH1F* h1, TGraphAsymmErrors* g1){
   }
   
   return gCombined;
+  
+}
+void SmoothSystematicError(TGraphAsymmErrors* g1,TString NameSyst){
+  
+  //TString SystNames[7] = {"eta","R","minPt","qt","chi2","psipair","cosp"};
+  
+  Int_t NPoints = g1->GetN();
+  Double_t* g1_x = g1->GetX();
+  
+  TF1* fitSystematicPol0;
+  TF1* fitSystematicPol1;
+  
+  fitSystematicPol0 = new TF1("fitSystematicPol0","pol0",0.9,3.0);
+  fitSystematicPol0->SetLineColor(g1->GetLineColor());
+  
+  fitSystematicPol1 = new TF1("fitSystematicPol1","pol1",0.9,5.8);
+  fitSystematicPol1->SetLineColor(g1->GetLineColor());
+  
+  
+  cout << "=============" << endl;
+  cout << "fitting: " << NameSyst.Data() << endl;
+  cout << "=============" << endl;
+  g1->Fit("fitSystematicPol0","WR");
+  g1->Fit("fitSystematicPol1","WR");
+  
+  Double_t valPol0 = fitSystematicPol0->GetParameter(0);
+  Double_t valPol1;
+  
+  for(int ibin=0;ibin<NPoints;ibin++){
+    valPol1 = 
+    g1->SetPoint(ibin,g1_x[ibin],);
+  }
+
   
 }

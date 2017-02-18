@@ -11,8 +11,8 @@ void  BackgroundPhotonFlowCalculation(
   //Opening files and creating histograms
   //========================================================
   
-  TString InputFileNameBkg = Form("/home/mike/3_PbPb_dirg/0_analysis/170214_v2_final_standardcuts/Results_%s/InclusivePhotonv2_uncorrected_%s.root",Cutnumber.Data(),Cutnumber.Data());
-  TString InputFileNamePurity   = Form("/home/mike/3_PbPb_dirg/0_analysis/170214_v2_final_standardcuts/purity_studies_%s/Purity_InclusivePhotonSample_%s%s_%s_Data LHC10h.root",Cutnumber.Data(),CentralityLow.Data(),CentralityHigh.Data(),Cutnumber.Data());
+  TString InputFileNameBkg = Form("/home/mike/3_PbPb_dirg/0_analysis/170216_v2_final_systematics/Results_%s/InclusivePhotonv2_uncorrected_%s.root",Cutnumber.Data(),Cutnumber.Data());
+  TString InputFileNamePurity   = Form("/home/mike/3_PbPb_dirg/0_analysis/170216_v2_final_systematics/purity_studies_%s/Purity_InclusivePhotonSample_%s%s_%s_Data LHC10h.root",Cutnumber.Data(),CentralityLow.Data(),CentralityHigh.Data(),Cutnumber.Data());
   
   //open datafile with v2 background 1
   TFile* fileBkg  = new TFile(InputFileNameBkg.Data());

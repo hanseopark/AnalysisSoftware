@@ -39,10 +39,10 @@
 #include "DirectPhotonFlowFunctions.h"
 
 
-void  projectionPt_v9(  Int_t Trainconfig = 55,
-                        TString CentralityLow = "20",
-                        TString CentralityHigh = "40",
-                        TString Cutnumber = "52400013_00200009007000008250400000",
+void  projectionPt_v9(  Int_t Trainconfig = 60,
+                        TString CentralityLow = "0",
+                        TString CentralityHigh = "20",
+                        TString Cutnumber = "50200013_04200009007000008250400000",
                         Bool_t kMC = 0
                      ){
   
@@ -71,7 +71,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
     //TString SigmaStarForm = "#Kappa = #sqrt{#frac{#kappa^{+}^{2}+#kappa^{+}^{2}}{2}}";
     
 //     TFile* fileData = new TFile("PhotonQA_0705415160_redefinedkappalarge_MC.root");
-    TFile* fileMC = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/170213_PbPb_v2_final/mc/GammaConvFlow_%i.root",Trainconfig));
+    TFile* fileMC = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/170215_PbPb_v2_full_systematics/mc/GammaConvFlow_%i.root",Trainconfig));
     TList* listMC_1   = new TList();
     listMC_1     = (TList*)fileMC->Get(Form("GammaConvV1_%i_v2",Trainconfig));
     cout << listMC_1 << endl;
@@ -82,7 +82,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
     listMC_3     = (TList*)listMC_2->FindObject(Form("%s ESD histograms",Cutnumber.Data()));
     cout << listMC_3 << endl;
     
-    TFile* fileData  = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/170213_PbPb_v2_final/data/GammaConvFlow_%i.root",Trainconfig));
+    TFile* fileData  = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/170215_PbPb_v2_full_systematics/data/GammaConvFlow_%i.root",Trainconfig));
     TList* listData_1   = new TList();
     listData_1     = (TList*)fileData->Get(Form("GammaConvV1_%i_v2",Trainconfig));
     
@@ -409,7 +409,11 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
 	Double_t NTotalMC = h1d00->GetEntries()+h1d01->GetEntries()+h1d11->GetEntries()+h1d13->GetEntries();
 	Double_t constraint_low;
 	Double_t constraint_high;
-	Double_t fracwidth;
+	Double_t fracwidth = 2.0;
+  
+  if(CentralityLow.CompareTo("0")==0) fracwidth = 1.3;
+  if(CentralityLow.CompareTo("20")==0) fracwidth = 1.2;
+  if(CentralityLow.CompareTo("40")==0) fracwidth = 2.0;
 	
 	if(kMC){
 	  NEntriesData = data->GetEntries();
@@ -417,7 +421,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
 	  frac01[i] = h1d01->GetEntries()/NEntriesData;
 	  frac11[i] = h1d11->GetEntries()/NEntriesData;
 	  frac13[i] = h1d13->GetEntries()/NEntriesData;
-	  fracwidth = 1.2; //0-20: 1.3, 20-40:1.2, 40-80:2.0
+	  //fracwidth = 1.2; //0-20: 1.3, 20-40:1.2, 40-80:2.0
 	  constraint_low  = 1/fracwidth;
 	  constraint_high = 1*fracwidth;
 	}else{
@@ -426,7 +430,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 55,
 	  frac01[i] = h1d01->GetEntries()/NTotalMC;
 	  frac11[i] = h1d11->GetEntries()/NTotalMC;
 	  frac13[i] = h1d13->GetEntries()/NTotalMC;
-	  fracwidth = 1.2;
+	  //fracwidth = 1.2;
 	  constraint_low  = 1/fracwidth;
 	  constraint_high = 1*fracwidth;
 	}
