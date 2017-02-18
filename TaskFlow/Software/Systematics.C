@@ -424,7 +424,7 @@ void  Systematics(
   }
   
   TGraphAsymmErrors* graphTotalSyst_smoothed = (TGraphAsymmErrors*)CalculateTotalSystematics(graphSystErrors1_rel,graphSystErrors2_rel,graphSystErrors3_rel,graphSystErrors4_rel,graphSystErrors5_rel,graphSystErrors6_rel,graphSystErrors7_rel);
-  
+
   
   //========================================================
   //Plotting and Saving
