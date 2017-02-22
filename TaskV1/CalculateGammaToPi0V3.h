@@ -203,6 +203,7 @@ void drawLatex(TString textString, Double_t xCoord, Double_t yCoord, Color_t txt
    TextLatex->Draw();
 }
 
+/*
 Double_t GetUpperLimit(Double_t mean, Double_t statErr, Double_t sysErr, Double_t confidenceLevel, Double_t& confidenceLevelReached, Double_t accuracy = 1e-9, Int_t maxNIterations = 1e8) {
 
     // function to return upper limit on photon excess, using a Bayesian approach
@@ -247,9 +248,9 @@ Double_t GetUpperLimit(Double_t mean, Double_t statErr, Double_t sysErr, Double_
 
     confidenceLevelReached          = condProb.IntegralFast(np,x,w,1, upperLimit);
     return upperLimit;
-}
+}*/
 
-/*TH1D* GetUpperLimitsHisto(TH1D* histo, TGraphAsymmErrors* sysErrGraph, Double_t confidenceLevel = 0.95, Double_t accuracy = 0.004, Int_t maxNIterations = 1e3) {
+TH1D* GetUpperLimitsHisto(TH1D* histo, TGraphAsymmErrors* sysErrGraph, Double_t confidenceLevel = 0.95, Double_t accuracy = 0.004, Int_t maxNIterations = 1e3) {
 
     cout << endl;
     cout << "*************************************************************" << endl;
@@ -297,7 +298,7 @@ Double_t GetUpperLimit(Double_t mean, Double_t statErr, Double_t sysErr, Double_
     cout << endl;
     
     return upperLimits;
-}*/
+}
 
 Double_t GetUpperLimit(Double_t mean, Double_t statErr, Double_t sysErr, Double_t confidenceLevel, Double_t& confidenceLevelReached, Double_t accuracy = 1e-9, Int_t maxNIterations = 1e8) {
     
@@ -334,7 +335,7 @@ Double_t GetUpperLimit(Double_t mean, Double_t statErr, Double_t sysErr, Double_
         upperLimitPrev              = upperLimit;
         upperLimit                  = upperLimit + step;
         
-        if ( !(nIterations%10) ) cout << "   condProb.Eval( " << upperLimit << ") = " << condProb.Eval(upperLimit) << endl;
+        //if ( !(nIterations%10) ) cout << "   condProb.Eval( " << upperLimit << ") = " << condProb.Eval(upperLimit) << endl;
         
         nIterations++;
     }
