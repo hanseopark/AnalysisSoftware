@@ -1087,7 +1087,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                     }    
                 }
             } else {
-                histoDoubleRatioUpperLimits          = GetUpperLimitsHisto(histoDoubleRatioTrueEffPurity,  graphDoubleRatioSysErr, 0.95, 0.004, 1e2);
+                histoDoubleRatioUpperLimits          = GetUpperLimitsHisto(histoDoubleRatioTrueEffPurity,  graphDoubleRatioSysErr, 0.95, 1e-6, 1e4);
                 Double_t binContent                  = -1;
                 Double_t binError                    = -1;
                 for (Int_t i=1; i<histoDirectPhotonSpectrum->GetNbinsX()+1; i++) {

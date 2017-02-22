@@ -249,7 +249,7 @@ Double_t GetUpperLimit(Double_t mean, Double_t statErr, Double_t sysErr, Double_
     return upperLimit;
 }
 
-TH1D* GetUpperLimitsHisto(TH1D* histo, TGraphAsymmErrors* sysErrGraph, Double_t confidenceLevel = 0.95, Double_t accuracy = 0.004, Int_t maxNIterations = 1e3) {
+/*TH1D* GetUpperLimitsHisto(TH1D* histo, TGraphAsymmErrors* sysErrGraph, Double_t confidenceLevel = 0.95, Double_t accuracy = 0.004, Int_t maxNIterations = 1e3) {
 
     cout << endl;
     cout << "*************************************************************" << endl;
@@ -297,6 +297,50 @@ TH1D* GetUpperLimitsHisto(TH1D* histo, TGraphAsymmErrors* sysErrGraph, Double_t 
     cout << endl;
     
     return upperLimits;
+}*/
+
+Double_t GetUpperLimit(Double_t mean, Double_t statErr, Double_t sysErr, Double_t confidenceLevel, Double_t& confidenceLevelReached, Double_t accuracy = 1e-9, Int_t maxNIterations = 1e8) {
+    
+    // function to return upper limit on photon excess, using a Bayesian approach
+    // with the heaviside function used as prior (excluding R_gamma < 1)
+    
+    // R_gamma limits
+    Double_t    minRGamma           = 1.;
+    Double_t    maxRGamma           = 10.;
+    
+    // total uncertainty
+    Double_t    sigmaTot            = TMath::Sqrt(statErr*statErr + sysErr*sysErr);
+    
+    // cond. prob norm
+    Double_t    condProbNorm        = TMath::Erf( (mean - 1)/(TMath::Sqrt(2)*sigmaTot) ) + 1;   // - 1 term from limit erf(-inf)
+    
+    // cond. prob
+    TF1         condProb("condProb", Form("[0] * ( TMath::Erf( ([1] - 1)/(TMath::Sqrt(2)*[2]) ) - TMath::Erf( ([1] - x)/(TMath::Sqrt(2)*[2]) ) )"), minRGamma, maxRGamma);
+    condProb.SetParameter(0, 1./condProbNorm);
+    condProb.SetParameter(1, mean);
+    condProb.SetParameter(2, sigmaTot);
+
+    // iteratively find upper limit (interval bisection)
+    Double_t    upperLimit          = (maxRGamma-1)/2;
+    Double_t    upperLimitPrev      = upperLimit;
+    Double_t    step                = 0.;
+    Int_t       nIterations         = 0;
+    while (((condProb.Eval(upperLimit) < (confidenceLevel-accuracy)) || condProb.Eval(upperLimit) > (confidenceLevel+accuracy)) && nIterations < maxNIterations) {
+        
+        if (condProb.Eval(upperLimit) > confidenceLevel)
+            step                    = - TMath::Abs(upperLimit-1)/2;
+        else
+            step                    = TMath::Abs(upperLimitPrev-upperLimit)/2;
+        upperLimitPrev              = upperLimit;
+        upperLimit                  = upperLimit + step;
+        
+        if ( !(nIterations%10) ) cout << "   condProb.Eval( " << upperLimit << ") = " << condProb.Eval(upperLimit) << endl;
+        
+        nIterations++;
+    }
+    
+    confidenceLevelReached          = condProb.Eval(upperLimit);
+    return upperLimit;
 }
 
 // functions to calculate uncertainty from fit (variation with parameter errors)
