@@ -584,6 +584,18 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 histoEffBasePi0[i]->SetName(Form("EfficiencyBase_%s",  cutNumber[i].Data()));
                 histoTriggerEffPi0[i]                       = (TH1D*)histoEffiPi0Temp->Clone(Form("TriggerEfficiency_%s", cutNumber[i].Data()));
                 histoTriggerEffPi0[i]->Divide(histoTriggerEffPi0[i],histoEffiBasePi0Temp,1.,1.,"B");
+
+//                //limit trigger efficiency to 1
+//                if(optionEnergy.CompareTo("8TeV") == 0){
+//                  for(Int_t j = 1; j<histoTriggerEffPi0[i]->GetNbinsX()+1; j++){
+//                    Double_t binC = histoTriggerEffPi0[i]->GetBinContent(j);
+//                    if(binC > 1.){
+//                      histoEffBasePi0[i]->SetBinContent(j, histoEffBasePi0[i]->GetBinContent(j)*binC);
+//                      histoTriggerEffPi0[i]->SetBinContent(j, 1.);
+//                    }
+//                  }
+//                }
+
                 histoEffTimesAccPi0[i]                      = (TH1D*)histoEffBasePi0[i]->Clone(Form("EffTimeAcc_%s",  cutNumber[i].Data()));
                 if(histoAcceptancePi0WOEvtWeights[i]){
                   histoAcceptancePi0WOEvtWeights[i]->Sumw2();
@@ -3688,6 +3700,18 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     histoEffBaseEta[i]->SetName(Form("EfficiencyBase_%s",  cutNumber[i].Data()));
                     histoTriggerEffEta[i]                       = (TH1D*)histoEffiEtaTemp->Clone(Form("TriggerEfficiency_%s", cutNumber[i].Data()));
                     histoTriggerEffEta[i]->Divide(histoTriggerEffEta[i],histoEffiBaseEtaTemp,1.,1.,"B");
+
+//                    //limit trigger efficiency to 1
+//                    if(optionEnergy.CompareTo("8TeV") == 0){
+//                      for(Int_t j = 1; j<histoTriggerEffEta[i]->GetNbinsX()+1; j++){
+//                        Double_t binC = histoTriggerEffEta[i]->GetBinContent(j);
+//                        if(binC > 1.){
+//                          histoEffBaseEta[i]->SetBinContent(j, histoEffBaseEta[i]->GetBinContent(j)*binC);
+//                          histoTriggerEffEta[i]->SetBinContent(j, 1.);
+//                        }
+//                      }
+//                    }
+
                     histoEffTimesAccEta[i]                      = (TH1D*)histoEffBaseEta[i]->Clone(Form("EffTimeAcc_%s",  cutNumber[i].Data()));
                     if(histoAcceptanceEtaWOEvtWeights[i]){
                       histoAcceptanceEtaWOEvtWeights[i]->Sumw2();
