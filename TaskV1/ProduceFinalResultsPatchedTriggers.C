@@ -6802,6 +6802,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             if (mode == 2 || mode == 3 || mode == 4 || mode == 5 || mode == 10 || mode == 11 ){
                 if (histoTriggerRejection[i])           histoTriggerRejection[i]->Write(Form("TriggRejectMean_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()),TObject::kOverwrite);
                 if (histoRatioRawClusterPt[i])          histoRatioRawClusterPt[i]->Write(Form("TriggRejectvsPt_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()),TObject::kOverwrite);
+                if (histoRatioRawClusterE[i])           histoRatioRawClusterE[i]->Write(Form("TriggRejectvsE_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()),TObject::kOverwrite);
             }
         }
         fileOutputForComparisonFullyCorrected->mkdir(Form("Pi0%s",optionEnergy.Data()));
