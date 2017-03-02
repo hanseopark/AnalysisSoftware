@@ -834,35 +834,44 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TDirectory* directoryPHOSPi0                           = (TDirectory*)filePHOS->Get("Pi08TeV");
             TH1D* histoPHOSPi0Mass                = (TH1D*)directoryPHOSPi0->Get("MassPi0");
             histoPHOSPi0Mass->Scale(1000.);
+              //histoPHOSPi0Mass->SetBinContent(histoPHOSPi0Mass->FindBin(32.5),-200.);
             //for(Int_t k=0; k<6; k++) histoPHOSPi0Mass->SetBinContent(k,0.);
             //for(Int_t k=histoPHOSPi0Mass->GetNbinsX(), j=k-6; k>=j; k--) histoPHOSPi0Mass->SetBinContent(k,0.);
 
             TH1D* histoPHOSPi0FWHMMeV                = (TH1D*)directoryPHOSPi0->Get("FWHMPi0MeV");
+              //histoPHOSPi0FWHMMeV->SetBinContent(histoPHOSPi0FWHMMeV->FindBin(32.5),-200.);
             //for(Int_t k=0; k<6; k++) histoPHOSPi0FWHMMeV->SetBinContent(k,-1000.);
            // for(Int_t k=histoPHOSPi0FWHMMeV->GetNbinsX(), j=k-6; k>=j; k--) histoPHOSPi0FWHMMeV->SetBinContent(k,-1000.);
 
             TH1D* histoPHOSPi0TrueMass              = (TH1D*)directoryPHOSPi0->Get("TrueMassPi0");
             histoPHOSPi0TrueMass->Scale(1000.);
+              //histoPHOSPi0TrueMass->SetBinContent(histoPHOSPi0TrueMass->FindBin(32.5),-200.);
            // for(Int_t k=0; k<1; k++) histoPHOSPi0TrueMass->SetBinContent(k,0.);
            // for(Int_t k=histoPHOSPi0TrueMass->GetNbinsX(), j=k-5; k>=j; k--) histoPHOSPi0TrueMass->SetBinContent(k,0.);
 
             TH1D* histoPHOSPi0TrueFWHMMeV              = (TH1D*)directoryPHOSPi0->Get("TrueFWHMPi0MeV");
+             //histoPHOSPi0TrueFWHMMeV->SetBinContent(histoPHOSPi0TrueFWHMMeV->FindBin(32.5),-200.);
            // for(Int_t k=0; k<1; k++) histoPHOSPi0TrueFWHMMeV->SetBinContent(k,-1000.);
            // for(Int_t k=histoPHOSPi0TrueFWHMMeV->GetNbinsX(), j=k-5; k>=j; k--) histoPHOSPi0TrueFWHMMeV->SetBinContent(k,-1000.);
 
             TH1D* histoPHOSPi0Acc                 = (TH1D*)directoryPHOSPi0->Get("AcceptancePi0");
+              //histoPHOSPi0Acc->SetBinContent(histoPHOSPi0Acc->FindBin(32.5),-1.);
             //for(Int_t k=histoPHOSPi0Acc->GetNbinsX(), j=k-5; k>=j; k--) histoPHOSPi0Acc->SetBinContent(k,0.);
 
             TH1D* histoPHOSPi0TrueEffPt               = (TH1D*)directoryPHOSPi0->Get("EfficiencyPi0");
+              //histoPHOSPi0TrueEffPt->SetBinContent(histoPHOSPi0TrueEffPt->FindBin(32.5),-1.);
            // for(Int_t k=histoPHOSPi0TrueEffPt->GetNbinsX(), j=k-5; k>=j; k--) histoPHOSPi0TrueEffPt->SetBinContent(k,0.);
 
             TH1D* histoPHOSPi0AccTimesEff      = (TH1D*)histoPHOSPi0TrueEffPt->Clone("histoPHOSPi0AccTimesEff");
+              //histoPHOSPi0AccTimesEff->SetBinContent(histoPHOSPi0AccTimesEff->FindBin(32.5),-1.);
             histoPHOSPi0AccTimesEff->Multiply(histoPHOSPi0Acc);
             histoPHOSPi0AccTimesEff->Scale(2*TMath::Pi());
             //TH1D* graphPHOSPi0AccTimesEff         = (TH1D*)directoryPHOSPi0->Get("EffTimesAccPi0_MB");
 
             TH1D* histoPHOSPi0InvXSectionStat                   = (TH1D*)directoryPHOSPi0->Get("InvCrossSectionPi0");
+              //histoPHOSPi0InvXSectionStat->SetBinContent(histoPHOSPi0InvXSectionStat->FindBin(32.5),0.);
             TGraphAsymmErrors* graphPHOSPi0InvXSectionStat      = new TGraphAsymmErrors(histoPHOSPi0InvXSectionStat);
+              //graphPHOSPi0InvXSectionStat->RemovePoint(graphPHOSPi0InvXSectionStat->GetN()-1);
             cout << "Pi0 stat PHOS" << endl;
             graphPHOSPi0InvXSectionStat->Print();
 
@@ -874,7 +883,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
             
             TGraphAsymmErrors* graphPHOSPi0InvXSectionSys       = new TGraphAsymmErrors(dummySysGraphPHOS->GetN(), xValuePHOS, yValuePHOS, xErrPHOS, xErrPHOS, yErrPHOS, yErrPHOS);
             cout << "Pi0 sys PHOS" << endl;
+              //graphPHOSPi0InvXSectionSys->RemovePoint(graphPHOSPi0InvXSectionSys->GetN()-1);
             graphPHOSPi0InvXSectionSys->Print();
+
 
         TFile* filePHOSprelim                                     = new TFile(fileNamePHOSprelim.Data());
 
@@ -894,8 +905,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         Double_t minPt[3] = {4.1,12.5,6.};
         Double_t maxPt[3] = {30.,50.,24.};
-        Double_t triggRejecFac[3] = {67.0,222.51,12393};
-        Double_t triggRejecFacErr[3] = {1.1,4.02,1532.1};
+        Double_t triggRejecFac[3] = {67.0,222.51,12.4E3};
+        Double_t triggRejecFacErr[3] = {1.1,4.02,1.5E3};
 
         Size_t textSizeSpectra2         = 0.0415;
         Int_t textPixelPP               = textSizeSpectra2*1100;
@@ -939,7 +950,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
             histoTriggerReject[i]->DrawCopy("e,same");
             legendTriggReject->AddEntry(histoTriggerReject[i],Form("   %s",triggerNameLabel[i].Data()),"p");
             legendTriggReject->AddEntry((TObject*)0,Form("       %3.1f < E < %3.1f",minPt[i],maxPt[i]),"");
-            legendTriggReject->AddEntry((TObject*)0,Form("         %3.1f #pm %3.1f",triggRejecFac[i], triggRejecFacErr[i]),"");
+            legendTriggReject->AddEntry((TObject*)0,Form("              (%3.1f #pm %3.1f)#times10^{3}",triggRejecFac[i]/1E3, triggRejecFacErr[i]/1E3),"");
           }
           TF1* pol0 = new TF1("pol0","[0]",minPt[i],maxPt[i]); //
           histoTriggerReject[i]->Fit(pol0,"NRME+","",minPt[i],maxPt[i]);
@@ -1741,10 +1752,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //     cout << WriteParameterToFile(fitTCMInvXSectionPi02)<< endl;
 
     Double_t paramPi0Power[3] = {1E11,0.5,6.5};
-    TF1* fitPowInvXSectionPi0   = FitObject("m","fitPowInvXSectionPi08TeV","Pi0",graphCombPi0InvXSectionTotA,3.5,35. ,paramPi0Power,"QNRMEX0+","", kFALSE);
+    TF1* fitPowInvXSectionPi0   = FitObject("powPure","fitPowInvXSectionPi08TeV","Pi0",graphCombPi0InvXSectionTotA,3.5,35. ,paramPi0Power,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvXSectionPi0)<< endl;
 
-    TF1* fitPowInvXSectionPi0Stat   = FitObject("m","fitPowInvXSectionPi08TeVStat","Pi0",graphCombPi0InvXSectionStatA,3.5,35. ,paramPi0Power,"QNRMEX0+","", kFALSE);
+    TF1* fitPowInvXSectionPi0Stat   = FitObject("powPure","fitPowInvXSectionPi08TeVStat","Pi0",graphCombPi0InvXSectionStatA,3.5,35. ,paramPi0Power,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvXSectionPi0Stat)<< endl;
 
     TF1* fitPCMTCMInvXSectionPi0    = FitObject("tcm","fitPCMTCMInvCrossSectionPi08TeV","Pi0",graphPCMPi0InvXSectionStat,0.3,8. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
@@ -2957,10 +2968,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     cout << WriteParameterToFile(fitTCMInvXSectionEta)<< endl;
 
     Double_t paramEtaPower[3] = {1E11,0.5,6.5};
-    TF1* fitPowInvXSectionEta   = FitObject("m","fitPowInvXSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,3.5,35. ,paramEtaPower,"QNRMEX0+","", kFALSE);
+    TF1* fitPowInvXSectionEta   = FitObject("powPure","fitPowInvXSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,3.5,35. ,paramEtaPower,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvXSectionEta)<< endl;
 
-    TF1* fitPowInvXSectionEtaStat   = FitObject("m","fitPowInvXSectionEta8TeVStat","Eta",graphCombEtaInvXSectionStatA,3.5,35. ,paramEtaPower,"QNRMEX0+","", kFALSE);
+    TF1* fitPowInvXSectionEtaStat   = FitObject("powPure","fitPowInvXSectionEta8TeVStat","Eta",graphCombEtaInvXSectionStatA,3.5,35. ,paramEtaPower,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvXSectionEtaStat)<< endl;
 
     fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -6692,72 +6703,79 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
       TFile* filePHOSMB                                     = new TFile(fileNamePHOSMB.Data());
       TDirectory* directoryPHOSPi0L                         = (TDirectory*)filePHOSMB->Get("Pi08TeV");
-      TH1D* histoPHOSSignalPlusBGPi0                        = (TH1D*)directoryPHOSPi0L->Get("InvMassSigPlusBG_PtBin07");
-      TH1D* histoPHOSTotalBGPi0                             = (TH1D*)directoryPHOSPi0L->Get("InvMassBG_PtBin07");
-      TH1D* histoPHOSSignalPi0                              = (TH1D*)directoryPHOSPi0L->Get("InvMassSig_PtBin07");
-      TF1* fitPHOSlow                                       = (TF1*)directoryPHOSPi0L->Get("InvMassFinalFit");
 
-      canvasInvMassSamplePlot->cd();
-      histo2DPi0InvMassDummy->GetXaxis()->SetRangeUser(0.02,0.3);
-      histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(0.9*histoPHOSSignalPi0->GetMinimum(),0.9*histoPHOSSignalPi0->GetMaximum());
-      histo2DPi0InvMassDummy->DrawCopy();
+      const Int_t nBins = 28;
+      Double_t binLow[nBins]={1.0,1.2,1.4,1.6,1.8,2.0,2.2,2.4,2.6,2.8,3.0,3.2,3.4,3.6,3.8,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,10.0,11.0};
+      Double_t binHigh[nBins]={1.2,1.4,1.6,1.8,2.0,2.2,2.4,2.6,2.8,3.0,3.2,3.4,3.6,3.8,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,10.0,11.0,12.0};
 
-      TLatex *labelInvMassPtRangePHOSl = new TLatex(0.945,0.9,"#pi^{0}: 1.40 GeV/c < p_{T} < 1.60 GeV/c");
+      for(Int_t iBin=0; iBin<nBins; iBin++){
+        TH1D* histoPHOSSignalPlusBGPi0                        = (TH1D*)directoryPHOSPi0L->Get(Form("InvMassSigPlusBG_PtBin_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
+        TH1D* histoPHOSTotalBGPi0                             = (TH1D*)directoryPHOSPi0L->Get(Form("InvMassBG_PtBin_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
+        TH1D* histoPHOSSignalPi0                              = (TH1D*)directoryPHOSPi0L->Get(Form("InvMassSig_PtBin_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
+        TF1* fitPHOSlow                                       = (TF1*)directoryPHOSPi0L->Get(Form("InvMassFinalFit_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
 
-      DrawGammaSetMarker(histoPHOSSignalPlusBGPi0, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
-      histoPHOSSignalPlusBGPi0->SetLineWidth(1);
-      histoPHOSSignalPlusBGPi0->Draw("hist,e,same");
-      DrawGammaSetMarker(histoPHOSTotalBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
-      histoPHOSTotalBGPi0->Draw("same");
+        canvasInvMassSamplePlot->cd();
+        histo2DPi0InvMassDummy->GetXaxis()->SetRangeUser(0.02,0.3);
+        histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(1.2*histoPHOSSignalPi0->GetMinimum(),1.2*histoPHOSSignalPlusBGPi0->GetMaximum());
+        histo2DPi0InvMassDummy->DrawCopy();
 
-      DrawGammaSetMarker(histoPHOSSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
-      histoPHOSSignalPi0->Draw("same");
-      fitPHOSlow->SetLineWidth(1);
-      fitPHOSlow->SetRange(0,0.255);
-      fitPHOSlow->SetLineColor(fitColorInvMassSG);
-      fitPHOSlow->Draw("same");
+        TLatex *labelInvMassPtRangePHOSl = new TLatex(0.945,0.9,Form("#pi^{0}: %.1f GeV/c < p_{T} < %.1f GeV/c",binLow[iBin],binHigh[iBin]));
 
-      TLatex *labelALICE      = new TLatex(0.135,0.9,ALICEperfor.Data());
-      SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
-      labelALICE->SetTextFont(43);
-      labelALICE->Draw();
+        DrawGammaSetMarker(histoPHOSSignalPlusBGPi0, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
+        histoPHOSSignalPlusBGPi0->SetLineWidth(1);
+        histoPHOSSignalPlusBGPi0->Draw("hist,e,same");
+        DrawGammaSetMarker(histoPHOSTotalBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
+        histoPHOSTotalBGPi0->Draw("same");
 
-      TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-0.9*0.8*textsizeLabelsPP,collisionSystem8TeV.Data());
-      SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
-      labelInvMassEnergy->SetTextFont(43);
-      labelInvMassEnergy->Draw();
+        DrawGammaSetMarker(histoPHOSSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
+        histoPHOSSignalPi0->Draw("same");
+        fitPHOSlow->SetLineWidth(1);
+        fitPHOSlow->SetRange(0,0.255);
+        fitPHOSlow->SetLineColor(fitColorInvMassSG);
+        fitPHOSlow->Draw("same");
 
-      TLatex *labelInvMassTriggerPHOSl      = new TLatex(0.135,0.9-0.9*2*0.8*textsizeLabelsPP,"MB trigger");
-      SetStyleTLatex( labelInvMassTriggerPHOSl, 0.85*textSizeLabelsPixel,4);
-      labelInvMassTriggerPHOSl->SetTextFont(43);
-      labelInvMassTriggerPHOSl->Draw();
+        TLatex *labelALICE      = new TLatex(0.135,0.9,ALICEperfor.Data());
+        SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
+        labelALICE->SetTextFont(43);
+        labelALICE->Draw();
 
-      TLatex *labelInvMassRecoPHOS  = new TLatex(0.135,0.9-0.9*3*0.8*textsizeLabelsPP,"PHOS");
-      SetStyleTLatex( labelInvMassRecoPHOS, 0.85*textSizeLabelsPixel,4);
-      labelInvMassRecoPHOS->SetTextFont(43);
-      labelInvMassRecoPHOS->Draw();
+        TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-0.9*0.8*textsizeLabelsPP,collisionSystem8TeV.Data());
+        SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
+        labelInvMassEnergy->SetTextFont(43);
+        labelInvMassEnergy->Draw();
 
-      if(plotDate){
-        TLatex *labelDate = new TLatex(0.135, 0.9-0.9*4*0.8*textsizeLabelsPP,date.Data());
-        SetStyleTLatex( labelDate, 0.85*textSizeLabelsPixel,4);
-        labelDate->SetTextFont(43);
-        labelDate->Draw();
+        TLatex *labelInvMassTriggerPHOSl      = new TLatex(0.135,0.9-0.9*2*0.8*textsizeLabelsPP,"MB trigger");
+        SetStyleTLatex( labelInvMassTriggerPHOSl, 0.85*textSizeLabelsPixel,4);
+        labelInvMassTriggerPHOSl->SetTextFont(43);
+        labelInvMassTriggerPHOSl->Draw();
+
+        TLatex *labelInvMassRecoPHOS  = new TLatex(0.135,0.9-0.9*3*0.8*textsizeLabelsPP,"PHOS");
+        SetStyleTLatex( labelInvMassRecoPHOS, 0.85*textSizeLabelsPixel,4);
+        labelInvMassRecoPHOS->SetTextFont(43);
+        labelInvMassRecoPHOS->Draw();
+
+        if(plotDate){
+          TLatex *labelDate = new TLatex(0.135, 0.9-0.9*4*0.8*textsizeLabelsPP,date.Data());
+          SetStyleTLatex( labelDate, 0.85*textSizeLabelsPixel,4);
+          labelDate->SetTextFont(43);
+          labelDate->Draw();
+        }
+
+        SetStyleTLatex( labelInvMassPtRangePHOSl, 0.85*textSizeLabelsPixel,4);
+        labelInvMassPtRangePHOSl->SetTextAlign(31);
+        labelInvMassPtRangePHOSl->SetTextFont(43);
+        labelInvMassPtRangePHOSl->Draw();
+
+        TLegend* legendInvMassPHOSl  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
+        legendInvMassPHOSl->SetMargin(0.25);
+        legendInvMassPHOSl->AddEntry(histoPHOSSignalPlusBGPi0,"Raw real events","l");
+        legendInvMassPHOSl->AddEntry(histoPHOSTotalBGPi0,"Mixed event +","p");
+        legendInvMassPHOSl->AddEntry((TObject*)0,"remain. BG","");
+        legendInvMassPHOSl->AddEntry(histoPHOSSignalPi0,"BG subtracted","p");
+        legendInvMassPHOSl->AddEntry(fitPHOSlow, "Fit","l");
+        legendInvMassPHOSl->Draw();
+        canvasInvMassSamplePlot->SaveAs(Form("%s/Pi0_InvMassBinPHOS_low_%i.%s",outputDir.Data(), iBin, suffix.Data()));
       }
-
-      SetStyleTLatex( labelInvMassPtRangePHOSl, 0.85*textSizeLabelsPixel,4);
-      labelInvMassPtRangePHOSl->SetTextAlign(31);
-      labelInvMassPtRangePHOSl->SetTextFont(43);
-      labelInvMassPtRangePHOSl->Draw();
-
-      TLegend* legendInvMassPHOSl  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
-      legendInvMassPHOSl->SetMargin(0.25);
-      legendInvMassPHOSl->AddEntry(histoPHOSSignalPlusBGPi0,"Raw real events","l");
-      legendInvMassPHOSl->AddEntry(histoPHOSTotalBGPi0,"Mixed event +","p");
-      legendInvMassPHOSl->AddEntry((TObject*)0,"remain. BG","");
-      legendInvMassPHOSl->AddEntry(histoPHOSSignalPi0,"BG subtracted","p");
-      legendInvMassPHOSl->AddEntry(fitPHOSlow, "Fit","l");
-      legendInvMassPHOSl->Draw();
-      canvasInvMassSamplePlot->SaveAs(Form("%s/Pi0_InvMassBinPHOSlow.%s",outputDir.Data(), suffix.Data()));
 
       // **********************************************************************************************************************
       // **************************Plot example invariant mass bin PHOS high pt ***********************************************
@@ -6765,61 +6783,78 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
       //TFile* filePHOSPHOS                                     = new TFile(fileNamePHOSPHOS.Data());
       TDirectory* directoryPHOSPi0H                           = (TDirectory*)filePHOSPHOS->Get("Pi08TeV");
-      TH1D* histoPHOSHighSignalPlusBGPi0                      = (TH1D*)directoryPHOSPi0H->Get("InvMassSigPlusBG_PtBin07");
-      TH1D* histoPHOSHighTotalBGPi0                           = (TH1D*)directoryPHOSPi0H->Get("InvMassBG_PtBin07");
-      TH1D* histoPHOSHighSignalPi0                            = (TH1D*)directoryPHOSPi0H->Get("InvMassSig_PtBin07");
-      TF1* fitPHOShigh                                        = (TF1*)directoryPHOSPi0H->Get("InvMassFinalFit");
 
-      canvasInvMassSamplePlot->cd();
-      histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(0.9*histoPHOSHighSignalPi0->GetMinimum(),1.6*histoPHOSHighSignalPi0->GetMaximum());
-      histo2DPi0InvMassDummy->DrawCopy();
+      const Int_t nBinsTr = 21;
+      Double_t binTrLow[nBinsTr]={5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,10.0,11.0,12.0,13.0,14.0,15.0,16.0,17.0,18.0,20.0,22.0,26.0,30.0};
+      Double_t binTrHigh[nBinsTr]={6.0,6.5,7.0,7.5,8.0,8.5,9.0,10.0,11.0,12.0,13.0,14.0,15.0,16.0,17.0,18.0,20.0,22.0,26.0,30.0,35.0};
 
-      TLatex *labelInvMassPtRangePHOSh = new TLatex(0.945,0.9,"#pi^{0}: 22.00 GeV/c < p_{T} < 26.00 GeV/c");
+      for(Int_t iBin=0; iBin<nBinsTr; iBin++){
+        TH1D* histoPHOSHighSignalPlusBGPi0                      = (TH1D*)directoryPHOSPi0H->Get(Form("InvMassSigPlusBG_PtBin_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
+        TH1D* histoPHOSHighTotalBGPi0                           = (TH1D*)directoryPHOSPi0H->Get(Form("InvMassBG_PtBin_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
+        TH1D* histoPHOSHighSignalPi0                            = (TH1D*)directoryPHOSPi0H->Get(Form("InvMassSig_PtBin_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
+        TF1* fitPHOShigh                                        = (TF1*)directoryPHOSPi0H->Get(Form("InvMassFinalFit_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
 
-      DrawGammaSetMarker(histoPHOSHighSignalPlusBGPi0, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
-      histoPHOSHighSignalPlusBGPi0->SetLineWidth(1);
-      histoPHOSHighSignalPlusBGPi0->Draw("hist,e,same");
-      DrawGammaSetMarker(histoPHOSHighTotalBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
-      histoPHOSHighTotalBGPi0->Draw("same");
+        canvasInvMassSamplePlot->cd();
+        histo2DPi0InvMassDummy->GetYaxis()->SetRangeUser(1.2*histoPHOSHighSignalPi0->GetMinimum(),1.2*histoPHOSHighSignalPlusBGPi0->GetMaximum());
+        histo2DPi0InvMassDummy->DrawCopy();
 
-      DrawGammaSetMarker(histoPHOSHighSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
-      histoPHOSHighSignalPi0->Draw("same");
-      fitPHOShigh->SetLineWidth(1);
-      fitPHOShigh->SetRange(0,0.255);
-      fitPHOShigh->SetLineColor(fitColorInvMassSG);
-      fitPHOShigh->Draw("same");
+        TLatex *labelInvMassPtRangePHOSh = new TLatex(0.945,0.9,Form("#pi^{0}: %.1f GeV/c < p_{T} < %.1f GeV/c",binTrLow[iBin],binTrHigh[iBin]));
 
-      labelALICE->Draw();
-      labelInvMassEnergy->Draw();
+        DrawGammaSetMarker(histoPHOSHighSignalPlusBGPi0, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
+        histoPHOSHighSignalPlusBGPi0->SetLineWidth(1);
+        histoPHOSHighSignalPlusBGPi0->Draw("hist,e,same");
+        DrawGammaSetMarker(histoPHOSHighTotalBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
+        histoPHOSHighTotalBGPi0->Draw("same");
 
-      TLatex *labelInvMassTriggerPHOSh      = new TLatex(0.135,0.9-0.9*2*0.8*textsizeLabelsPP,"PHOS-L0 trigger");
-      SetStyleTLatex( labelInvMassTriggerPHOSh, 0.85*textSizeLabelsPixel,4);
-      labelInvMassTriggerPHOSh->SetTextFont(43);
-      labelInvMassTriggerPHOSh->Draw();
+        DrawGammaSetMarker(histoPHOSHighSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
+        histoPHOSHighSignalPi0->Draw("same");
+        fitPHOShigh->SetLineWidth(1);
+        fitPHOShigh->SetRange(0,0.255);
+        fitPHOShigh->SetLineColor(fitColorInvMassSG);
+        fitPHOShigh->Draw("same");
 
-      labelInvMassRecoPHOS->Draw();
+        TLatex *labelALICE      = new TLatex(0.135,0.9,ALICEperfor.Data());
+        SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
+        labelALICE->SetTextFont(43);
+        labelALICE->Draw();
 
-      if(plotDate){
-        TLatex *labelDate = new TLatex(0.135, 0.9-0.9*4*0.8*textsizeLabelsPP,date.Data());
-        SetStyleTLatex( labelDate, 0.85*textSizeLabelsPixel,4);
-        labelDate->SetTextFont(43);
-        labelDate->Draw();
+        TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-0.9*0.8*textsizeLabelsPP,collisionSystem8TeV.Data());
+        SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
+        labelInvMassEnergy->SetTextFont(43);
+        labelInvMassEnergy->Draw();
+
+        TLatex *labelInvMassTriggerPHOSh      = new TLatex(0.135,0.9-0.9*2*0.8*textsizeLabelsPP,"PHOS-L0 trigger");
+        SetStyleTLatex( labelInvMassTriggerPHOSh, 0.85*textSizeLabelsPixel,4);
+        labelInvMassTriggerPHOSh->SetTextFont(43);
+        labelInvMassTriggerPHOSh->Draw();
+
+        TLatex *labelInvMassRecoPHOS  = new TLatex(0.135,0.9-0.9*3*0.8*textsizeLabelsPP,"PHOS");
+        SetStyleTLatex( labelInvMassRecoPHOS, 0.85*textSizeLabelsPixel,4);
+        labelInvMassRecoPHOS->SetTextFont(43);
+        labelInvMassRecoPHOS->Draw();
+
+        if(plotDate){
+          TLatex *labelDate = new TLatex(0.135, 0.9-0.9*4*0.8*textsizeLabelsPP,date.Data());
+          SetStyleTLatex( labelDate, 0.85*textSizeLabelsPixel,4);
+          labelDate->SetTextFont(43);
+          labelDate->Draw();
+        }
+
+        SetStyleTLatex( labelInvMassPtRangePHOSh, 0.85*textSizeLabelsPixel,4);
+        labelInvMassPtRangePHOSh->SetTextAlign(31);
+        labelInvMassPtRangePHOSh->SetTextFont(43);
+        labelInvMassPtRangePHOSh->Draw();
+
+        TLegend* legendInvMassPHOSh  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
+        legendInvMassPHOSh->SetMargin(0.25);
+        legendInvMassPHOSh->AddEntry(histoPHOSHighSignalPlusBGPi0,"Raw real events","l");
+        legendInvMassPHOSh->AddEntry(histoPHOSHighTotalBGPi0,"Mixed event +","p");
+        legendInvMassPHOSh->AddEntry((TObject*)0,"remain. BG","");
+        legendInvMassPHOSh->AddEntry(histoPHOSHighSignalPi0,"BG subtracted","p");
+        legendInvMassPHOSh->AddEntry(fitPHOShigh, "Fit","l");
+        legendInvMassPHOSh->Draw();
+        canvasInvMassSamplePlot->SaveAs(Form("%s/Pi0_InvMassBinPHOS_high_%i.%s",outputDir.Data(), iBin, suffix.Data()));
       }
-
-      SetStyleTLatex( labelInvMassPtRangePHOSh, 0.85*textSizeLabelsPixel,4);
-      labelInvMassPtRangePHOSh->SetTextAlign(31);
-      labelInvMassPtRangePHOSh->SetTextFont(43);
-      labelInvMassPtRangePHOSh->Draw();
-
-      TLegend* legendInvMassPHOSh  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
-      legendInvMassPHOSh->SetMargin(0.25);
-      legendInvMassPHOSh->AddEntry(histoPHOSHighSignalPlusBGPi0,"Raw real events","l");
-      legendInvMassPHOSh->AddEntry(histoPHOSHighTotalBGPi0,"Mixed event +","p");
-      legendInvMassPHOSh->AddEntry((TObject*)0,"remain. BG","");
-      legendInvMassPHOSh->AddEntry(histoPHOSHighSignalPi0,"BG subtracted","p");
-      legendInvMassPHOSh->AddEntry(fitPHOShigh, "Fit","l");
-      legendInvMassPHOSh->Draw();
-      canvasInvMassSamplePlot->SaveAs(Form("%s/Pi0_InvMassBinPHOShigh.%s",outputDir.Data(), suffix.Data()));
 
  // **********************************************************************************************************************
  // ************************* Saving of final results ********************************************************************
