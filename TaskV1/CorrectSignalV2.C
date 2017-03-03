@@ -1495,6 +1495,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         if ( !kIsEta ){
             histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.140);
             if (mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.140);
+            if (mode == 4 && optionEnergy.CompareTo("8TeV")==0 && trigger.CompareTo("81")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.13,0.180);
             if (mode == 2 ) histoMassMeson->GetYaxis()->SetRangeUser(0.128,0.140);
             if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
         } else {
@@ -1822,6 +1823,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
           maxFWHM               = 0.060;
         if (kIsEta && mode == 2)
           maxFWHM               = 0.060;
+
+        if (mode == 4 && optionEnergy.CompareTo("8TeV") == 0) maxFWHM = 0.05;
 
         Double_t minFWHM        = -0.004;
         if (kIsEta) minFWHM     = 0.00;

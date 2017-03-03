@@ -623,6 +623,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             histoEffTimesAccPi0[i]->Scale(deltaRapid[i]*2*TMath::Pi());
         }
         
+        // temporary fix for error
+        if(mode == 4 && triggerName[i].Contains("EGA") && optionEnergy.CompareTo("8TeV")==0){
+          histoMassPi0MC[i]->SetBinError(histoMassPi0MC[i]->FindBin(19.),histoMassPi0MC[i]->GetBinError(histoMassPi0MC[i]->FindBin(17.5))*(histoMassPi0MC[i]->GetBinContent(histoMassPi0MC[i]->FindBin(19.)) / histoMassPi0MC[i]->GetBinContent(histoMassPi0MC[i]->FindBin(17.5))));
+        }
+
         //Scale spectrum to MBOR
         if (optionEnergy.CompareTo("2.76TeV")==0 && 
             (triggerName[i].Contains("INT7")|| triggerName[i].Contains("EMC7") || triggerName[i].Contains("EG1") || triggerName[i].Contains("EG2")) && 
