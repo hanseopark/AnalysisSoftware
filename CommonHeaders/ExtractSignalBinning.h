@@ -3046,7 +3046,7 @@ Int_t GetBinning(   Double_t*  binning,
                      binning[i] = fBinsPi07TeVEMCPt[i];
                  }
             } else if ( mode == 0 ){
-                maxNBins = 45;
+                maxNBins = 43;
                 for(Int_t i = 0; i < maxNBins+1; i++){
                     binning[i] = fBinsPi07TeVPt[i];
                 }
