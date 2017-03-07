@@ -733,15 +733,23 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoGammaSecondaryFromXFromLambdaRecoEff_MCPtOrBin->Sumw2();
         histoGammaSecondaryFromXFromLambdaRecoEff_MCPtOrBin->Scale(constVal2/constVal1);
         
-        //-------------
+        
+        //------------- K0L SEC. EFF FITTING
+        TH1D* histoGammaSecondaryFromXFromK0lRecoEff_PtCOPY         = (TH1D*) histoGammaSecondaryFromXFromK0lRecoEff_Pt->Clone("histoGammaSecondaryFromXFromK0lRecoEff_PtCOPY");
+        TH1D* histoGammaSecondaryFromXFromK0lRecoEff_PtOrBinCOPY    = (TH1D*) histoGammaSecondaryFromXFromK0lRecoEff_PtOrBin->Clone("histoGammaSecondaryFromXFromK0lRecoEff_PtOrBinCOPY");
+        TH1D* histoGammaSecondaryFromXFromLambdaRecoEff_PtCOPY      = (TH1D*) histoGammaSecondaryFromXFromLambdaRecoEff_Pt->Clone("histoGammaSecondaryFromXFromLambdaRecoEff_PtCOPY");
+        TH1D* histoGammaSecondaryFromXFromLambdaRecoEff_PtOrBinCOPY = (TH1D*) histoGammaSecondaryFromXFromLambdaRecoEff_PtOrBin->Clone("histoGammaSecondaryFromXFromLambdaRecoEff_PtOrBinCOPY");
+        TH1D* histoGammaPrimaryRecoEff_PtCOPY         = (TH1D*) histoGammaPrimaryRecoEff_Pt->Clone("histoGammaPrimaryRecoEff_PtCOPY");
+
+        // fit primary reco efficiency
         constant->SetParameter(0,1);
         histoGammaPrimaryRecoEff_Pt->Fit(constant,"SMNRE+");
         constVal1                                                       = constant->GetParameter(0);
-
+        // fit rebinned K0L reco eff
         constant->SetParameter(0,1);
         histoGammaSecondaryFromXFromK0lRecoEff_Pt->Fit(constant,"SMNRE+");
         constVal2                                                       = constant->GetParameter(0);
-        
+        // set reco eff to scaled primary reco eff
         histoGammaSecondaryFromXFromK0lRecoEff_Pt                       = (TH1D*)histoGammaPrimaryRecoEff_Pt->Clone("SecondaryGammaFromXFromK0lRecoEff_Pt");
         histoGammaSecondaryFromXFromK0lRecoEff_Pt->Sumw2();
         histoGammaSecondaryFromXFromK0lRecoEff_Pt->Scale(constVal2/constVal1);
@@ -749,12 +757,42 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoGammaSecondaryFromXFromK0lRecoEff_PtOrBin                  = (TH1D*)histoGammaPrimaryRecoEff_Pt_OrBin->Clone("SecondaryGammaFromXFromK0lRecoEff_PtOrBin");
         histoGammaSecondaryFromXFromK0lRecoEff_PtOrBin->Sumw2();
         histoGammaSecondaryFromXFromK0lRecoEff_PtOrBin->Scale(constVal2/constVal1);
+        
+        // plot reco effs and fits
+        TCanvas *canvasK0LSecEffiFit     = GetAndSetCanvas("canvasK0LSecEffiFit");
+        DrawGammaSetMarker(histoGammaPrimaryRecoEff_PtCOPY, 20, 3, 1, 1);
+        SetHistogramm(histoGammaPrimaryRecoEff_PtCOPY,"#it{p}_{T} (GeV/#it{c})","#epsilon_{eff,#gamma} in |#eta| < 0.9",0.0,1.02);
+        histoGammaPrimaryRecoEff_PtCOPY->Draw();
+        
+        DrawGammaLines(0, 20. , constVal1, constVal1,0.1, kBlack);        
+        DrawGammaLines(0, 20. , constVal2, constVal2,0.1, kBlue);
+        
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromK0lRecoEff_PtCOPY, 20, 1, kBlue-8, kBlue-8);
+        histoGammaSecondaryFromXFromK0lRecoEff_PtCOPY->Draw("same");
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromK0lRecoEff_PtOrBinCOPY, 20, 1, kBlue, kBlue);
+        histoGammaSecondaryFromXFromK0lRecoEff_PtOrBinCOPY->Draw("same");
+        
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromK0lRecoEff_Pt, 20, 1, kRed-8, kRed-8);
+        histoGammaSecondaryFromXFromK0lRecoEff_Pt->Draw("same");
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromK0lRecoEff_PtOrBin, 20, 1, kRed, kRed);
+        histoGammaSecondaryFromXFromK0lRecoEff_PtOrBin->Draw("same");
+        
+        TLegend* legendK0lSecEffFits = GetAndSetLegend(0.15,0.67,4.7,1,cent);
+        legendK0lSecEffFits->AddEntry(histoGammaPrimaryRecoEff_PtCOPY,"primary reco. eff.","lp");
+        legendK0lSecEffFits->AddEntry(histoGammaSecondaryFromXFromK0lRecoEff_PtCOPY,"rebin K0L reco. eff","lp");
+        legendK0lSecEffFits->AddEntry(histoGammaSecondaryFromXFromK0lRecoEff_PtOrBinCOPY,"org.bin. K0L reco. eff","lp");
+        legendK0lSecEffFits->AddEntry(histoGammaSecondaryFromXFromK0lRecoEff_Pt,"new K0L reco. eff","lp");
+        legendK0lSecEffFits->AddEntry(histoGammaSecondaryFromXFromK0lRecoEff_PtOrBin,"new org.bin. K0L reco. eff","lp");
+        legendK0lSecEffFits->Draw();
+        
+        canvasK0LSecEffiFit->SaveAs(Form("%s/%s_SecEffiFitsK0LPt_%s_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));        
 
-        //-------------
+        
+        //------------- LAMBDA SEC. EFF FITTING
         constant->SetParameter(0,1);
         histoGammaSecondaryFromXFromLambdaRecoEff_Pt->Fit(constant,"SMNRE+");
         constVal2                                                       = constant->GetParameter(0);
-
+        
         histoGammaSecondaryFromXFromLambdaRecoEff_Pt                    = (TH1D*)histoGammaPrimaryRecoEff_Pt->Clone("SecondaryGammaFromXFromLambdaRecoEff_Pt");
         histoGammaSecondaryFromXFromLambdaRecoEff_Pt->Sumw2();
         histoGammaSecondaryFromXFromLambdaRecoEff_Pt->Scale(constVal2/constVal1);
@@ -762,7 +800,35 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoGammaSecondaryFromXFromLambdaRecoEff_PtOrBin               = (TH1D*)histoGammaPrimaryRecoEff_Pt_OrBin->Clone("SecondaryGammaFromXFromLambdaRecoEff_PtOrBin");
         histoGammaSecondaryFromXFromLambdaRecoEff_PtOrBin->Sumw2();
         histoGammaSecondaryFromXFromLambdaRecoEff_PtOrBin->Scale(constVal2/constVal1);
+
+        //------------ Lambda plotting
+        TCanvas *canvasLambdaSecEffiFit     = GetAndSetCanvas("canvasLambdaSecEffiFit");
+        histoGammaPrimaryRecoEff_PtCOPY->Draw();
         
+        DrawGammaLines(0, 20. , constVal1, constVal1,0.1, kBlack);
+        DrawGammaLines(0, 20. , constVal2, constVal2,0.1, kCyan);
+        
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromLambdaRecoEff_PtCOPY, 20, 1, kCyan-8, kCyan-8);
+        histoGammaSecondaryFromXFromLambdaRecoEff_PtCOPY->Draw("same");
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromLambdaRecoEff_PtOrBinCOPY, 20, 1, kCyan, kCyan);
+        histoGammaSecondaryFromXFromLambdaRecoEff_PtOrBinCOPY->Draw("same");
+        
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromLambdaRecoEff_Pt, 20, 1, kRed-8, kRed-8);
+        histoGammaSecondaryFromXFromLambdaRecoEff_Pt->Draw("same");
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromLambdaRecoEff_PtOrBin, 20, 1, kRed, kRed);
+        histoGammaSecondaryFromXFromLambdaRecoEff_PtOrBin->Draw("same");
+        
+        TLegend* legendLambdaSecEffFits = GetAndSetLegend(0.15,0.67,4.7,1,cent);
+        legendLambdaSecEffFits->AddEntry(histoGammaPrimaryRecoEff_PtCOPY,"primary reco. eff.","lp");
+        legendLambdaSecEffFits->AddEntry(histoGammaSecondaryFromXFromLambdaRecoEff_PtCOPY,"rebin #Lambda reco. eff","lp");
+        legendLambdaSecEffFits->AddEntry(histoGammaSecondaryFromXFromLambdaRecoEff_PtOrBinCOPY,"org.bin. #Lambda reco. eff","lp");
+        legendLambdaSecEffFits->AddEntry(histoGammaSecondaryFromXFromLambdaRecoEff_Pt,"new #Lambda reco. eff","lp");
+        legendLambdaSecEffFits->AddEntry(histoGammaSecondaryFromXFromLambdaRecoEff_PtOrBin,"new org.bin. #Lambda reco. eff","lp");
+        legendLambdaSecEffFits->Draw();
+        
+        canvasLambdaSecEffiFit->SaveAs(Form("%s/%s_SecEffiFitsLambdaPt_%s_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));        
+                
+
         delete constant;
     }
     
@@ -783,11 +849,17 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoGammaSecondaryFromXFromK0lConvProb_MCPtOrBin               = (TH1D*)fileCorrections->Get("SecondaryGammaFromXFromK0lConvProb_MCPtOrBin");
         histoGammaSecondaryFromXFromLambdaConvProb_MCPt                 = (TH1D*)fileCorrections->Get("SecondaryGammaFromXFromLambdaConvProb_MCPt");
         histoGammaSecondaryFromXFromLambdaConvProb_MCPtOrBin            = (TH1D*)fileCorrections->Get("SecondaryGammaFromXFromLambdaConvProb_MCPtOrBin");
+        
+        TH1D* histoGammaSecondaryFromXFromK0lConvProb_MCPtCOPY         = (TH1D*) histoGammaSecondaryFromXFromK0lConvProb_MCPt->Clone("histoGammaSecondaryFromXFromK0lConvProb_MCPtCOPY");
+        TH1D* histoGammaSecondaryFromXFromK0lConvProb_MCPtOrBinCOPY    = (TH1D*) histoGammaSecondaryFromXFromK0lConvProb_MCPtOrBin->Clone("histoGammaSecondaryFromXFromK0lConvProb_MCPtOrBinCOPY");
+        TH1D* histoGammaSecondaryFromXFromLambdaConvProb_MCPtCOPY      = (TH1D*) histoGammaSecondaryFromXFromLambdaConvProb_MCPt->Clone("histoGammaSecondaryFromXFromLambdaConvProb_MCPtCOPY");
+        TH1D* histoGammaSecondaryFromXFromLambdaConvProb_MCPtOrBinCOPY = (TH1D*) histoGammaSecondaryFromXFromLambdaConvProb_MCPtOrBin->Clone("histoGammaSecondaryFromXFromLambdaConvProb_MCPtOrBinCOPY");
+        TH1D* histoGammaConvProb_MCPtCOPY = (TH1D*) histoGammaConvProb_MCPt->Clone("histoGammaConvProb_MCPtCOPY");
 
         Double_t constVal1, constVal2;
         TF1* constant                                                   = new TF1("constant", "[0]", 0, 50);
         
-        //-------------
+        //------------- K0L
         constant->SetParameter(0,1);
         histoGammaSecondaryFromXFromK0lConvProb_MCPt->Fit(constant,"SMNRE+","",2,histoGammaSecondaryFromXFromK0lConvProb_MCPt->GetXaxis()->GetXmax());
         constVal2                                                       = constant->GetParameter(0);
@@ -808,7 +880,36 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             }
         }
         
-        //-------------
+        // plot reco effs and fits
+        TCanvas *canvasK0LRecoEffFit     = GetAndSetCanvas("canvasK0LRecoEffFit");
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromK0lConvProb_MCPtCOPY, 20, 3, 1, 1);
+        SetHistogramm(histoGammaSecondaryFromXFromK0lConvProb_MCPtCOPY,"#it{p}_{T} (GeV/#it{c})","P_{conv} in |#eta| < 0.9",0.0,9.9e-2);
+        if(constVal2 > 9.9e-2)
+            histoGammaSecondaryFromXFromK0lConvProb_MCPtCOPY->GetYaxis()->SetRangeUser(0.0, 1.1*constVal2);
+        histoGammaSecondaryFromXFromK0lConvProb_MCPtCOPY->Draw();
+        
+        DrawGammaLines(0, histoGammaSecondaryFromXFromK0lConvProb_MCPtCOPY->GetXaxis()->GetXmax() , constVal2, constVal2,0.1, kBlue);
+        
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromK0lConvProb_MCPtCOPY, 20, 1, kBlue-8, kBlue-8);
+        histoGammaSecondaryFromXFromK0lConvProb_MCPtCOPY->Draw("same");
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromK0lConvProb_MCPtOrBinCOPY, 20, 1, kBlue, kBlue);
+        histoGammaSecondaryFromXFromK0lConvProb_MCPtOrBinCOPY->Draw("same");
+        
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromK0lConvProb_MCPt, 20, 1, kRed-8, kRed-8);
+        histoGammaSecondaryFromXFromK0lConvProb_MCPt->Draw("same");
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromK0lConvProb_MCPtOrBin, 20, 1, kRed, kRed);
+        histoGammaSecondaryFromXFromK0lConvProb_MCPtOrBin->Draw("same");
+        
+        TLegend* legendK0lSecEffFits = GetAndSetLegend(0.15,0.67,4.7,1,cent);
+        legendK0lSecEffFits->AddEntry(histoGammaSecondaryFromXFromK0lConvProb_MCPtCOPY,"rebin K0L conv. prob.","lp");
+        legendK0lSecEffFits->AddEntry(histoGammaSecondaryFromXFromK0lConvProb_MCPtOrBinCOPY,"org.bin. K0L conv. prob.","lp");
+        legendK0lSecEffFits->AddEntry(histoGammaSecondaryFromXFromK0lConvProb_MCPt,"new K0L conv. prob.","lp");
+        legendK0lSecEffFits->AddEntry(histoGammaSecondaryFromXFromK0lConvProb_MCPtOrBin,"new org.bin. K0L conv. prob.","lp");
+        legendK0lSecEffFits->Draw();
+        
+        canvasK0LRecoEffFit->SaveAs(Form("%s/%s_ConversionProbFitsK0LMCPt_%s_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));        
+        
+        //------------- LAMBDA
         constant->SetParameter(0,1);
         histoGammaConvProb_MCPt->Fit(constant,"SMNRE+", "", 2, histoGammaConvProb_MCPt->GetXaxis()->GetXmax());
         constVal1                                                       = constant->GetParameter(0);
@@ -822,6 +923,39 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         histoGammaSecondaryFromXFromLambdaConvProb_MCPtOrBin            = (TH1D*)histoGammaConvProb_MCPt_OrBin->Clone("SecondaryGammaFromXFromLambdaConvProb_MCPtOrBin");
         histoGammaSecondaryFromXFromLambdaConvProb_MCPtOrBin->Scale(constVal2/constVal1);
+        
+        
+        // plot reco effs and fits
+        TCanvas *canvasLambdaRecoEffFit     = GetAndSetCanvas("canvasLambdaRecoEffFit");
+        DrawGammaSetMarker(histoGammaConvProb_MCPtCOPY, 20, 3, 1, 1);
+        SetHistogramm(histoGammaConvProb_MCPtCOPY,"#it{p}_{T} (GeV/#it{c})","P_{conv} in |#eta| < 0.9",0.0,1.7e-1);
+        if(constVal2 > 9.9e-2)
+            histoGammaConvProb_MCPtCOPY->GetYaxis()->SetRangeUser(0.0, 1.1*constVal2);
+        histoGammaConvProb_MCPtCOPY->Draw();
+        
+        DrawGammaLines(0, histoGammaSecondaryFromXFromLambdaConvProb_MCPtCOPY->GetXaxis()->GetXmax() , constVal1, constVal1,0.1, kBlack);
+        DrawGammaLines(0, histoGammaSecondaryFromXFromLambdaConvProb_MCPtCOPY->GetXaxis()->GetXmax() , constVal2, constVal2,0.1, kBlue);
+        
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromLambdaConvProb_MCPtCOPY, 20, 1, kBlue-8, kBlue-8);
+        histoGammaSecondaryFromXFromLambdaConvProb_MCPtCOPY->Draw("same");
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromLambdaConvProb_MCPtOrBinCOPY, 20, 1, kBlue, kBlue);
+        histoGammaSecondaryFromXFromLambdaConvProb_MCPtOrBinCOPY->Draw("same");
+        
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromLambdaConvProb_MCPt, 20, 1, kRed-8, kRed-8);
+        histoGammaSecondaryFromXFromLambdaConvProb_MCPt->Draw("same");
+        DrawGammaSetMarker(histoGammaSecondaryFromXFromLambdaConvProb_MCPtOrBin, 20, 1, kRed, kRed);
+        histoGammaSecondaryFromXFromLambdaConvProb_MCPtOrBin->Draw("same");
+        
+        TLegend* legendLambdaSecEffFits = GetAndSetLegend(0.15,0.67,4.7,1,cent);
+        legendLambdaSecEffFits->AddEntry(histoGammaConvProb_MCPt,"primary conv. prob.","lp");
+        legendLambdaSecEffFits->AddEntry(histoGammaSecondaryFromXFromLambdaConvProb_MCPtCOPY,"rebin Lambda conv. prob.","lp");
+        legendLambdaSecEffFits->AddEntry(histoGammaSecondaryFromXFromLambdaConvProb_MCPtOrBinCOPY,"org.bin. Lambda conv. prob.","lp");
+        legendLambdaSecEffFits->AddEntry(histoGammaSecondaryFromXFromLambdaConvProb_MCPt,"new Lambda conv. prob.","lp");
+        legendLambdaSecEffFits->AddEntry(histoGammaSecondaryFromXFromLambdaConvProb_MCPtOrBin,"new org.bin. Lambda conv. prob.","lp");
+        legendLambdaSecEffFits->Draw();
+        
+        canvasLambdaRecoEffFit->SaveAs(Form("%s/%s_ConversionProbFitsLambdaMCPt_%s_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));        
+        
         
         delete constant;
     }
