@@ -186,8 +186,8 @@ Int_t fBinsPi07TeVDalitzPtRebin[22]             =  {5, 5, 5, 5, 4, 4, 4, 4, 4, 4
 Int_t fBinsPi07TeVPtRebin[43]                   = { 3, 2, 1, 1, 1, 1, 1, 1, 1, 1,
                                                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                                                    1, 2, 2, 3, 3, 4, 4, 4, 5,
-                                                    5, 5, 5, 5};
+                                                    1, 2, 2, 3, 3, 4, 4, 4, 4,
+                                                    4, 4, 4, 5};
 Int_t fBinsPi07TeVPCMPHOSPtRebin[43]            = { 3, 2, 2, 2, 2, 2, 2, 2,
                                                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -2999,7 +2999,14 @@ Int_t GetBinning(   Double_t*  binning,
 
     Int_t maxNBins = 0;
     if (meson.CompareTo("Pi0")==0){
-        if (energy.CompareTo("2.76TeV") == 0){
+        if (energy.CompareTo("900GeV") == 0){
+            if ( mode == 0 ){
+                maxNBins = 11;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsPi0900GeVPt[i];
+                }
+            }
+        } else if (energy.CompareTo("2.76TeV") == 0){
             if ( mode == 2 ){
                 maxNBins = 25;
                 for(Int_t i = 0; i < maxNBins+1; i++){
