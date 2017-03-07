@@ -1068,7 +1068,7 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
         dummyHistRatio->Draw();
         DrawGammaLines(ptPlotMin,ptPlotMax,1,1,0.1, kGray+1, 1);
 
-        TH1D *ratioPi0DataCocktail = (TH1D*)histoPi0YieldData->Clone("ratioPi0DataCocktail");
+        ratioPi0DataCocktail = (TH1D*)histoPi0YieldData->Clone("ratioPi0DataCocktail");
         ratioPi0DataCocktail->Divide(histoPi0YieldData,histoGammaMotherPt[0],1.,1.,"");
         ratioPi0DataCocktail->SetLineColor(cocktailColor[0]);
         ratioPi0DataCocktail->SetLineColor(kBlack);
@@ -1345,6 +1345,9 @@ void SaveHistos() {
         if (cocktailInputParametrizations[i])           cocktailInputParametrizations[i]->Write(cocktailInputParametrizations[i]->GetName(), TObject::kOverwrite);
         if (cocktailInputParametrizationsMtScaled[i])   cocktailInputParametrizationsMtScaled[i]->Write(cocktailInputParametrizationsMtScaled[i]->GetName(), TObject::kOverwrite);
     }
+    
+    if (ratioPi0DataCocktail)          ratioPi0DataCocktail->Write(ratioPi0DataCocktail->GetName(), TObject::kOverwrite);
+    if (histoPi0YieldData)          histoPi0YieldData->Write(histoPi0YieldData->GetName(), TObject::kOverwrite);
 }
 
 //************************** Create tex file containing BR table ****************************************************

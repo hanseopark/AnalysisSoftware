@@ -49,6 +49,7 @@ TH1F*       fDeltaPt                                        = NULL;
 TH1F*       histoNEvents                                    = NULL;
 TH1F*       histMtScalingFactors                            = NULL;
 TH1D*       histoPi0YieldData                               = NULL;
+TH1D*       ratioPi0DataCocktail                            = NULL;
 TH1F**      histoDecayChannels                              = NULL;
 TH1F**      histoDecayChannelsBR                            = NULL;
 TH2F*       histoGammaSumPtY                                = NULL;
