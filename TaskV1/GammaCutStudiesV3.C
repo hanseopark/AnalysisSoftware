@@ -575,6 +575,16 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         specialString[4]="LHC10e";
         specialString[5]="LHC10f";
     }
+    if(!cutVariationName.CompareTo("8TeVPeriods")){
+        specialString[0]="std";
+        specialString[1]="LHC12a";
+        specialString[2]="LHC12b";
+        specialString[3]="LHC12c";
+        specialString[4]="LHC12d";
+        specialString[5]="LHC12f";
+        specialString[5]="LHC12h";
+        specialString[5]="LHC12i";
+    }
     //*******************************************************************************************
     //*****************************Initialization of Canvases ***********************************
     //*******************************************************************************************    
@@ -735,12 +745,12 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         } else {
             cutStringsName[i] = cutSelection[i].Data();
         }
-        if(!cutVariationName.CompareTo("Cocktail")||!cutVariationName.CompareTo("7TeVPeriods")){
+        if(!cutVariationName.CompareTo("Cocktail")||!cutVariationName.CompareTo("7TeVPeriods")||!cutVariationName.CompareTo("8TeVPeriods")){
             folderName[i]=Form("%s_%s",specialString[i].Data(),cutSelection[i].Data());
         }else{
             folderName[i]=cutSelection[i].Data();
         }
-        nameCurrentCorrectedFile = Form("%s/%s/Gamma_Pi0_data_GammaConvV1_InclusiveRatio_pp.root",folderName[i].Data(),energy.Data());
+        nameCurrentCorrectedFile = Form("%s/%s/Gamma_Pi0_data_GammaConvV1_InclusiveRatio.root",folderName[i].Data(),energy.Data());
         fileCurrentFinal[i] = new TFile(nameCurrentCorrectedFile);
         if (fileCurrentFinal[i]->IsZombie()) haveOutputGammaToPi0=0;
         

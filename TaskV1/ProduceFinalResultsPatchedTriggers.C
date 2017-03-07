@@ -3773,11 +3773,19 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 } else {
                     TFile *fileFitsBinShift                     = new TFile(nameFileFitsShift);
                     TF1* fitBinShiftPi0                         = (TF1*)fileFitsBinShift->Get("TsallisFitPi0");
+                    if(!fitBinShiftPi0 || optionEnergy.CompareTo("7TeV")==0){ 
+                      fitBinShiftPi0                            = (TF1*)fileFitsBinShift->Get("Pi07TeV/Fits/fitBinShiftingPi0"); 
+                      fitBinShiftPi0TCM                         = (TF1*)fileFitsBinShift->Get("Pi07TeV/Fits/fitBinShiftingPi0"); 
+                    } 
+                    TF1* fitBinShiftEta                         = (TF1*)fileFitsBinShift->Get("TsallisFitEta"); 
+                    if(!fitBinShiftEta || optionEnergy.CompareTo("7TeV")==0){ 
+                      fitBinShiftEta                            = (TF1*)fileFitsBinShift->Get("Eta7TeV/Fits/fitBinShiftingEta"); 
+                      fitBinShiftEtaTCM                         = (TF1*)fileFitsBinShift->Get("Eta7TeV/Fits/fitBinShiftingEta"); 
+                    }
                     if(!fitBinShiftPi0 || optionEnergy.CompareTo("8TeV")==0){
                       fitBinShiftPi0                            = (TF1*)fileFitsBinShift->Get("Pi08TeV/TsallisFitPi0");
                       fitBinShiftPi0TCM                         = (TF1*)fileFitsBinShift->Get("Pi08TeV/TwoComponentModelFitPi0");
                     }
-                    TF1* fitBinShiftEta                         = (TF1*)fileFitsBinShift->Get("TsallisFitEta");
                     if(!fitBinShiftEta || optionEnergy.CompareTo("8TeV")==0){
                       fitBinShiftEta                            = (TF1*)fileFitsBinShift->Get("Eta8TeV/TsallisFitEta");
                       fitBinShiftEtaTCM                         = (TF1*)fileFitsBinShift->Get("Eta8TeV/TwoComponentModelFitEta");
@@ -6851,6 +6859,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 if (histoMassPi0MC[i])                      histoMassPi0MC[i]->Write(Form("Pi0_Mass_MC_%s",triggerName[i].Data()),TObject::kOverwrite);
                 if (histoWidthPi0Data[i])                   histoWidthPi0Data[i]->Write(Form("Pi0_Width_data_%s",triggerName[i].Data()),TObject::kOverwrite);
                 if (histoWidthPi0MC[i])                     histoWidthPi0MC[i]->Write(Form("Pi0_Width_MC_%s",triggerName[i].Data()),TObject::kOverwrite);
+                
                 if (histoInvMassSig[i])                     histoInvMassSig[i]->Write(Form("Pi0_InvMassSig_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
                 if (histoInvMassSigPlusBG[i])               histoInvMassSigPlusBG[i]->Write(Form("Pi0_InvMassSigPlusBG_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
                 if (histoInvMassBG[i])                      histoInvMassBG[i]->Write(Form("Pi0_InvMassBG_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
@@ -6925,7 +6934,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 if (histoEtaInvMassSig[i])                  histoEtaInvMassSig[i]->Write(Form("Eta_InvMassSig_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
                 if (histoEtaInvMassSigPlusBG[i])            histoEtaInvMassSigPlusBG[i]->Write(Form("Eta_InvMassSigPlusBG_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
                 if (histoEtaInvMassBG[i])                   histoEtaInvMassBG[i]->Write(Form("Eta_InvMassBG_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
-                if (fitEtaInvMassSig[i])                    fitEtaInvMassSig[i]->Write(Form("Eta_InvMassSigFit_Example_%s",triggerName[i].Data()),TObject::kOverwrite);                
+                if (fitEtaInvMassSig[i])                    fitEtaInvMassSig[i]->Write(Form("Eta_InvMassSigFit_Example_%s",triggerName[i].Data()),TObject::kOverwrite);
 
                 if (graphsCorrectedYieldRemoved0Eta[i])     graphsCorrectedYieldRemoved0Eta[i]->Write(Form("CorrectedYieldEta_%s",triggerName[i].Data()),TObject::kOverwrite);
                 if (graphsCorrectedYieldSysRemoved0Eta[i])  graphsCorrectedYieldSysRemoved0Eta[i]->Write(Form("EtaSystError_%s",triggerName[i].Data()),TObject::kOverwrite);
