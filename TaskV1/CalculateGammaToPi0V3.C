@@ -90,7 +90,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                             ){
     // switch systematics on/off
     Bool_t doSysErr                             = kFALSE;
-    if (!fEnergy.CompareTo("7TeV") && mode == 0)
+    if (!fEnergy.CompareTo("900GeV")||!fEnergy.CompareTo("7TeV")||!fEnergy.CompareTo("8TeV") && mode == 0)
         doSysErr                                = kTRUE;
     
     // Setting the general style
@@ -161,8 +161,20 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_12_15.dat";
         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_12_15.dat";
         fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_12_15.dat";
+    } else if(fEnergy.CompareTo("8TeV") == 0){
+        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_8TeV_2017_02_20.dat";
+        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_8TeV_2017_02_20.dat";
+        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_8TeV_2017_02_20.dat";
+    } else if(fEnergy.CompareTo("900GeV") == 0){
+        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_900GeV_2017_02_24.dat";
+        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_900GeV_2017_02_24.dat";
+        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_900GeV_2017_02_24.dat";
+    } else {
+        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_12_15.dat";
+        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_12_15.dat";
+        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_12_15.dat";
     }
-
+    
     if (doSysErr){
         fileSysErrGamma.open(fileNameSysErrGamma,ios_base::in);
         cout << fileNameSysErrGamma << endl;
@@ -1048,7 +1060,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
             histoThermalPhotonSpectrum               = (TH1D*)histoGammaSpecCorrPurity->Clone("histoThermalPhotonSpectrum");
             histoPromptPhotonSpectrum                = (TH1D*)histoGammaSpecCorrPurity->Clone("histoPromptPhotonSpectrum");
             
-            Bool_t doUpperLimits                     = kFALSE;
+            Bool_t doUpperLimits                     = kTRUE;
             if (!doUpperLimits) {
                 for(Int_t i = 1; i < histoDirectPhotonSpectrum->GetNbinsX(); i++){
                     histoDirectPhotonSpectrum->SetBinContent(    i+1,0);

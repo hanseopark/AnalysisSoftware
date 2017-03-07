@@ -209,44 +209,42 @@ Double_t GetUpperLimit(Double_t mean, Double_t statErr, Double_t sysErr, Double_
     // function to return upper limit on photon excess, using a Bayesian approach
     // with the heaviside function used as prior (excluding R_gamma < 1)
 
-    // set range in R_gamma
-    Double_t    minRGamma           = 0.;
-    Double_t    maxRGamma           = 4.;
-
-    // conditional probability to measure R_gamma above R_gamma_true = 1
-    TF1         condProb("condProb", Form("[0]*(TMath::Gaus(x, [1], [2])*((x>=1)*1 + (x<1)*0))"),minRGamma, maxRGamma);
-    condProb.SetParameter(0, 1.);
-    condProb.SetParameter(1, mean);
-    condProb.SetParameter(2, TMath::Sqrt(statErr*statErr + sysErr*sysErr));
+    // R_gamma limits
+    Double_t    minRGamma           = 1.;
+    Double_t    maxRGamma           = 10.;
     
-    // normalize conditional probability to one
-    Int_t       np                  = 10000;
-    Double_t*   x                   = new Double_t[np];
-    Double_t*   w                   = new Double_t[np];
-    condProb.CalcGaussLegendreSamplingPoints(np,x,w,1e-15);
-    Double_t    norm                = condProb.IntegralFast(np,x,w,minRGamma,maxRGamma);
-    condProb.SetParameter(0, 1/norm);
-
+    // total uncertainty
+    Double_t    sigmaTot            = TMath::Sqrt(statErr*statErr + sysErr*sysErr);
+    
+    // cond. prob norm
+    Double_t    condProbNorm        = TMath::Erf( (mean - 1)/(TMath::Sqrt(2)*sigmaTot) ) + 1;   // - 1 term from limit erf(-inf)
+    
+    // cond. prob
+    TF1         condProb("condProb", Form("[0] * ( TMath::Erf( ([1] - 1)/(TMath::Sqrt(2)*[2]) ) - TMath::Erf( ([1] - x)/(TMath::Sqrt(2)*[2]) ) )"), minRGamma, maxRGamma);
+    condProb.SetParameter(0, 1./condProbNorm);
+    condProb.SetParameter(1, mean);
+    condProb.SetParameter(2, sigmaTot);
+    cout << "wurst " << condProb.Eval(mean) <<"\t"<<condProb.Eval(mean+0.5) <<"\t" << condProbNorm << endl;
     // iteratively find upper limit (interval bisection)
     Double_t    upperLimit          = (maxRGamma-1)/2;
     Double_t    upperLimitPrev      = upperLimit;
     Double_t    step                = 0.;
     Int_t       nIterations         = 0;
-    while (((condProb.IntegralFast(np,x,w,1,upperLimit) < (confidenceLevel-accuracy)) || (condProb.IntegralFast(np,x,w,1,upperLimit) > (confidenceLevel+accuracy))) && nIterations < maxNIterations) {
-        
-        if (condProb.IntegralFast(np,x,w,1,upperLimit) > confidenceLevel)
+    while (((condProb.Eval(upperLimit) < (confidenceLevel-accuracy)) || condProb.Eval(upperLimit) > (confidenceLevel+accuracy)) && nIterations < maxNIterations) {
+    
+        if (condProb.Eval(upperLimit) > confidenceLevel)
             step                    = - TMath::Abs(upperLimit-1)/2;
         else
             step                    = TMath::Abs(upperLimitPrev-upperLimit)/2;
         upperLimitPrev              = upperLimit;
         upperLimit                  = upperLimit + step;
 
-        //if ( !(nIterations%10) ) cout << "   condProb.IntegralFast(1, " << upperLimit << ") = " << condProb.IntegralFast(np,x,w,1, upperLimit) << endl;
-
+        if ( !(nIterations%10) ) cout << "   condProb.Eval( " << upperLimit << ") = " << condProb.Eval(upperLimit) << endl;
+    
         nIterations++;
     }
-
-    confidenceLevelReached          = condProb.IntegralFast(np,x,w,1, upperLimit);
+    
+    confidenceLevelReached          = condProb.Eval(upperLimit);
     return upperLimit;
 }*/
 

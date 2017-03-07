@@ -291,6 +291,19 @@ void QA(    TString select          = "LHC11a",         // set selected
         plotDataSets[0]="LHC15a3a,b"; plotDataSets[1]="LHC15a3a+b";
     }
     //**************************************************************************************************************
+    else if(select.CompareTo("LHC10900")==0){
+    //LHC10
+        cutNr = 0;
+        nSets = 2;
+        fEnergyFlag = "900GeV";
+        pathDataSets[0] = "/media/nschmidt/Daten/SVN/photonconv/AnalysisSoftware/DataQA/Legotrain-vAN-20161102-1/LHC10c_900GeV_GammaConvV1_29.root";
+        pathDataSets[1] = "/media/nschmidt/Daten/SVN/photonconv/AnalysisSoftware/DataQA/Legotrain-vAN-20161102-1/LHC14j4c_900GeV_GammaConvV1_29.root";
+        DataSets[0]="LHC10c_900"; DataSets[1]="LHC14j4c_900";
+        plotDataSets[0]="LHC10c_900"; plotDataSets[1]="LHC10c_900";
+        pathPhotonQA[0] = "";
+        pathPhotonQA[1] = "";
+    }
+    //**************************************************************************************************************
     else if(select.CompareTo("LHC10")==0){
     //LHC10
         cutNr = 0;
