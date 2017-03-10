@@ -3107,10 +3107,14 @@ void ClusterQA(
                 TLatex* label[4];
                 label[0] = new TLatex(0.5, 0.86, Form("%s: #frac{Accepted Mother-Candidates}{All Mother-Candidates}",plotDataSets[i].Data()));
                 label[1] = new TLatex(0.5, 0.81, Form( "PCM, %s TrackMatchingCuts:",calo.Data()));
-                label[2] = new TLatex(0.5, 0.77, Form( "- |#Delta#eta|<%s", TrackMatchingEtaMax[whichTrMatch.Atoi()].Data()));
-                label[3] = new TLatex(0.5, 0.73, Form( "- e^{+}: %s<#Delta#phi<%s; e^{-}: %.2f<#Delta#phi<%.2f", TrackMatchingPhiMin[whichTrMatch.Atoi()].Data(), TrackMatchingPhiMax[whichTrMatch.Atoi()].Data(),
-                                                       (-1* TrackMatchingPhiMax[whichTrMatch.Atoi()].Atof()) , (-1* TrackMatchingPhiMin[whichTrMatch.Atoi()].Atof()) ));
-
+                if(whichTrMatch.Atoi() < 7){
+                  label[2] = new TLatex(0.5, 0.77, Form( "- |#Delta#eta|<%s", TrackMatchingEtaMax[whichTrMatch.Atoi()].Data()));
+                  label[3] = new TLatex(0.5, 0.73, Form( "- e^{+}: %s<#Delta#phi<%s; e^{-}: %.2f<#Delta#phi<%.2f", TrackMatchingPhiMin[whichTrMatch.Atoi()].Data(), TrackMatchingPhiMax[whichTrMatch.Atoi()].Data(),
+                                                         (-1* TrackMatchingPhiMax[whichTrMatch.Atoi()].Atof()) , (-1* TrackMatchingPhiMin[whichTrMatch.Atoi()].Atof()) ));
+                }else{
+                  label[2] = new TLatex(0.5, 0.77, Form( "- #Delta#eta: %s", TrackMatchingEtaMax[whichTrMatch.Atoi()].Data()));
+                  label[3] = new TLatex(0.5, 0.73, Form( "- #Delta#phi: %s", TrackMatchingPhiMin[whichTrMatch.Atoi()].Data()));
+                }
                 for(Int_t iL=0; iL<4; iL++){
                     SetStyleTLatex( label[iL], 0.03,4);
                     label[iL]->Draw();
