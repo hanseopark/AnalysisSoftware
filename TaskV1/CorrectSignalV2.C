@@ -1829,7 +1829,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         Double_t minFWHM        = -0.004;
         if (kIsEta) minFWHM     = 0.00;
         if (mode == 4) minFWHM  = 0.00; 
-        if (mode == 2 && optionEnergy.CompareTo("8TeV") == 0) minFWHM = 0.003;
+        //if (mode == 2 && optionEnergy.CompareTo("8TeV") == 0) minFWHM = 0.003;
 
         
         histoFWHMMeson->Sumw2();

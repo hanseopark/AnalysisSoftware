@@ -482,7 +482,8 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
             fHistoRatioMCK0lDivK->Divide(fHistoRatioMCK0lDivK,fHistoMCKPtRebinned);
         }
 
-        TLegend* legendRatioK0ToK = GetAndSetLegend2(0.15, 0.8, 0.42, 0.95, 32,1); 
+        TLegend* legendRatioK0ToK = GetAndSetLegend2(0.15, 0.8, 0.42, 0.95, 32,1);
+        if(optionPeriod.CompareTo("LHC15h") == 0) fHistoRatioMCK0sDivK->GetXaxis()->SetRangeUser(0.,20.);
         DrawAutoGammaMesonHistos(   fHistoRatioMCK0sDivK, 
                             "", "#it{p}_{T} (GeV/#it{c})", "K^{0} / #frac{K^{+}+K^{-}}{2}", 
                             kFALSE, 10, 1e-10, kFALSE,
@@ -490,6 +491,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
                             kTRUE, minPt, maxPt);
         fHistoRatioMCK0sDivK->GetYaxis()->SetTitleOffset(1.2);
         DrawGammaSetMarker(fHistoRatioMCK0sDivK, 20, 1.5, kAzure-6, kAzure-6);
+        if(optionPeriod.CompareTo("LHC15h") == 0) fHistoRatioMCK0sDivK->GetXaxis()->SetRangeUser(0.,20.);
         fHistoRatioMCK0sDivK->DrawClone("pe");
         legendRatioK0ToK->AddEntry(fHistoRatioMCK0sDivK,"K^{0}_{S}","p");
         
