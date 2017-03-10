@@ -1082,6 +1082,110 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 
             }   
         }   
+
+        //***************************************************************************************************************
+        //********************Plotting trigger rejection factors (ENERGY!) = fits, linear scale 1 trigger at a time ***************
+        //***************************************************************************************************************
+
+        histo2DTriggRejectLinear->SetXTitle("#it{E} (GeV)");
+        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+            if (i != trigSteps[i][0] ){
+                histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,histoRatioRawClusterE[i]->GetMaximum()*1.5);
+                if (triggerName[i].Contains("EMC7"))
+                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,250);
+                if (triggerName[i].Contains("EG2"))
+                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
+                if (triggerName[i].Contains("EG1"))
+                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,8);
+                if (optionEnergy.CompareTo("8TeV")==0){
+                if (triggerName[i].Contains("EMC7"))
+                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,150);
+                if (triggerName[i].Contains("EGA"))
+                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,300);
+                }
+
+                histo2DTriggRejectLinear->DrawCopy();
+
+                DrawGammaSetMarker(histoRatioRawClusterE[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                histoRatioRawClusterE[i]->DrawCopy("e1,same");
+                TF1* pol0 = new TF1("pol0","[0]",minPt[i],maxPt[i]); //
+
+                histoRatioRawClusterE[i]->Fit(pol0,"NRME+","",minPt[i],maxPt[i]);
+                TH1D* triggRejecCLPol0 = (TH1D*)histoRatioRawClusterE[i]->Clone(Form("CL_%i",i));
+                for (Int_t j = 1; j < triggRejecCLPol0->GetNbinsX()+1; j++){
+                    triggRejecCLPol0->SetBinContent(j,triggRejecFac[i][trigSteps[i][0]]);
+                    triggRejecCLPol0->SetBinError(j,triggRejecFacErr[i][trigSteps[i][0]]);
+                }
+
+                triggRejecCLPol0->SetStats(kFALSE);
+                triggRejecCLPol0->SetFillColor(colorTriggShade[i]);
+                triggRejecCLPol0->SetMarkerSize(0);
+                triggRejecCLPol0->Draw("e3,same");
+
+                pol0->SetParameter(0,triggRejecFac[i][trigSteps[i][0]]);
+                pol0->SetParError(0,triggRejecFacErr[i][trigSteps[i][0]]);
+                pol0->SetLineColor(colorTrigg[i]-1);
+                pol0->SetLineStyle(7);
+                pol0->SetRange(minPt[i],maxPt[i]);
+                pol0->Draw("same");
+                histoRatioRawClusterE[i]->DrawCopy("e1,same");
+
+                TF1* pol1 = new TF1("pol1","[0]+[1]*x",minPt[i],maxPt[i]); //
+                histoRatioRawClusterE[i]->Fit(pol1,"NRME0+","",minPt[i],maxPt[i]);
+                pol1->SetLineColor(colorTrigg[i]-2);
+                pol1->SetLineStyle(9);
+                pol1->SetRange(minPt[i],maxPt[i]);
+                pol1->Draw("same");
+
+                TLegend* legendTriggRejectSingle = GetAndSetLegend2(0.33, 0.12, 0.92, 0.12+(1.05*(2)*textSizeSpectra2),textPixelPP);
+                legendTriggRejectSingle->SetMargin(0.02);
+                legendTriggRejectSingle->SetNColumns(3);
+                legendTriggRejectSingle->AddEntry(histoRatioRawClusterE[i],Form("   %s/%s",triggerNameLabel[i].Data(),triggerNameLabel[trigSteps[i][0]].Data() ),"p");
+
+                legendTriggRejectSingle->AddEntry((TObject*)0,Form("%3.1f< #it{p}_{T} < %3.1f",minPt[i],maxPt[i]),"");
+                if (triggerName[i].Contains("EMC1"))
+                    legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.0f #pm %3.0f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+                else if (triggerName[i].Contains("EMC7"))
+                    legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.1f #pm %3.1f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+                else if (triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA"))
+                    legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.2f #pm %3.2f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+                else if (triggerName[i].Contains("EG1") )
+                    legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.3f #pm %3.3f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+                else
+                    legendTriggRejectSingle->AddEntry((TObject*)0,Form("     %3.2f #pm %3.2f",triggRejecFac[i][trigSteps[i][0]], triggRejecFacErr[i][trigSteps[i][0]]),"");
+
+                legendTriggRejectSingle->Draw();
+
+                histo2DTriggRejectLinear->Draw("same,axis");
+
+                canvasTriggerRejectLinear->Update();
+                canvasTriggerRejectLinear->SaveAs(Form("%s/%s_TriggerRejectionFactorsLinY_E_Single_%s_%s.%s",outputDir.Data(), isMC.Data(), triggerName[i].Data(),
+                                                    triggerName[trigSteps[i][0]].Data(), suffix.Data()));
+
+                if (enableTriggerRejecCompMC) {
+                    histo2DTriggRejectLinear->DrawCopy();
+
+                    triggRejecCLPol0->Draw("e3,same");
+                    pol0->Draw("same");
+
+                    DrawGammaSetMarker(histoRatioRawClusterPt[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                    histoRatioRawClusterPt[i]->DrawCopy("e1,same");
+                    DrawGammaSetMarker(histoMCRatioRawClusterPt[i], markerTriggMC[i], sizeTrigg[i], colorTriggShade[i]+2, colorTriggShade[i]+2);
+                    histoMCRatioRawClusterPt[i]->DrawCopy("e1,same");
+
+                    legendTriggRejectSingle->AddEntry(histoMCRatioRawClusterPt[i],"   scaled MC","p");
+                    legendTriggRejectSingle->Draw();
+
+                    histo2DTriggRejectLinear->Draw("same,axis");
+
+                    canvasTriggerRejectLinear->Update();
+                    canvasTriggerRejectLinear->SaveAs(Form("%s/%s_TriggerRejectionFactorsLinY_E_SingleWithMC_%s_%s.%s",outputDir.Data(), isMC.Data(), triggerName[i].Data(),
+                                                        triggerName[trigSteps[i][0]].Data(), suffix.Data()));
+
+                }
+
+            }
+        }
         delete canvasTriggerRejectLinear;
 
         //***************************************************************************************************************
