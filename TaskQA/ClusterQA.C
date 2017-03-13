@@ -700,50 +700,53 @@ void ClusterQA(
         //---------------------------------------------------------------------------------------------------------------
         // timing distribution before cuts
         TH2D* fHistClusterTimevsEBeforeQA   = (TH2D*)CaloCutsContainer->FindObject(Form("ClusterTimeVsE_beforeClusterQA %s", fClusterCutSelection[i].Data()));
-        TH1D* fHistClusterTimeBeforeQA      = (TH1D*)fHistClusterTimevsEBeforeQA->ProjectionX("fHistClusterTimeBeforeQA",1,fHistClusterTimevsEBeforeQA->GetNbinsY());
-        GetMinMaxBin(fHistClusterTimeBeforeQA,minB,maxB); minB-=10; maxB+=10;
-
         if(fHistClusterTimevsEBeforeQA){
-            SetXRange(fHistClusterTimevsEBeforeQA,minB,maxB);
-            SetZMinMaxTH2(fHistClusterTimevsEBeforeQA,minB,maxB,1,fHistClusterTimevsEBeforeQA->GetNbinsY());
-            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
-                                fHistClusterTimevsEBeforeQA,"","#it{t}_{Cluster} (s)","#it{E}_{Cluster} (GeV)",1,1,
-                                0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
-            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterTimevsEBeforeQA, Form("%s/ClusterTimeVsE_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
-        } else cout << "INFO: Object |fHistClusterTimevsEBeforeQA| could not be found! Skipping Draw..." << endl;
+          TH1D* fHistClusterTimeBeforeQA      = (TH1D*)fHistClusterTimevsEBeforeQA->ProjectionX("fHistClusterTimeBeforeQA",1,fHistClusterTimevsEBeforeQA->GetNbinsY());
+          GetMinMaxBin(fHistClusterTimeBeforeQA,minB,maxB); minB-=10; maxB+=10;
 
-        if(fHistClusterTimeBeforeQA){
-            SetXRange(fHistClusterTimeBeforeQA,minB,maxB);
-            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
-                                fHistClusterTimeBeforeQA,"","#it{t}_{Cluster} (s)","#frac{d#it{N}}{d#it{t}_{Cluster}}",1,1,
-                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
-            SaveCanvasAndWriteHistogram(canvas, fHistClusterTimeBeforeQA,Form("%s/ClusterTime_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()) );
-            vecClusterTimeBefore.push_back(fHistClusterTimeBeforeQA);
-        } else cout << "INFO: Object |fHistClusterTimeBeforeQA| could not be found! Skipping Draw..." << endl;
+          if(fHistClusterTimevsEBeforeQA){
+              SetXRange(fHistClusterTimevsEBeforeQA,minB,maxB);
+              SetZMinMaxTH2(fHistClusterTimevsEBeforeQA,minB,maxB,1,fHistClusterTimevsEBeforeQA->GetNbinsY());
+              DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                  fHistClusterTimevsEBeforeQA,"","#it{t}_{Cluster} (s)","#it{E}_{Cluster} (GeV)",1,1,
+                                  0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
+              SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterTimevsEBeforeQA, Form("%s/ClusterTimeVsE_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+          } else cout << "INFO: Object |fHistClusterTimevsEBeforeQA| could not be found! Skipping Draw..." << endl;
+
+          if(fHistClusterTimeBeforeQA){
+              SetXRange(fHistClusterTimeBeforeQA,minB,maxB);
+              DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                  fHistClusterTimeBeforeQA,"","#it{t}_{Cluster} (s)","#frac{d#it{N}}{d#it{t}_{Cluster}}",1,1,
+                                  0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
+              SaveCanvasAndWriteHistogram(canvas, fHistClusterTimeBeforeQA,Form("%s/ClusterTime_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()) );
+              vecClusterTimeBefore.push_back(fHistClusterTimeBeforeQA);
+          } else cout << "INFO: Object |fHistClusterTimeBeforeQA| could not be found! Skipping Draw..." << endl;
+        }
         //---------------------------------------------------------------------------------------------------------------
         // timing distribution after cuts
         TH2D* fHistClusterTimevsEAfterQA    = (TH2D*)CaloCutsContainer->FindObject(Form("ClusterTimeVsE_afterClusterQA %s", fClusterCutSelection[i].Data()));
-        TH1D* fHistClusterTimeAfterQA       = (TH1D*)fHistClusterTimevsEAfterQA->ProjectionX("fHistClusterTimeAfterQA",1,fHistClusterTimevsEAfterQA->GetNbinsY());
-        GetMinMaxBin(fHistClusterTimeAfterQA,minB,maxB); minB-=10; maxB+=10;
-
         if(fHistClusterTimevsEAfterQA){
-            SetXRange(fHistClusterTimevsEAfterQA,minB,maxB);
-            SetZMinMaxTH2(fHistClusterTimevsEAfterQA,minB,maxB,1,fHistClusterTimevsEBeforeQA->GetNbinsY());
-            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
-                                fHistClusterTimevsEAfterQA,"","#it{t}_{Cluster} (s)","#it{E}_{Cluster} (GeV)",1,1,
-                                0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
-            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterTimevsEAfterQA, Form("%s/ClusterTimeVsE_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
-        } else cout << "INFO: Object |fHistClusterTimevsEAfterQA| could not be found! Skipping Draw..." << endl;
+          TH1D* fHistClusterTimeAfterQA       = (TH1D*)fHistClusterTimevsEAfterQA->ProjectionX("fHistClusterTimeAfterQA",1,fHistClusterTimevsEAfterQA->GetNbinsY());
+          GetMinMaxBin(fHistClusterTimeAfterQA,minB,maxB); minB-=10; maxB+=10;
 
-        if(fHistClusterTimeAfterQA){
-            SetXRange(fHistClusterTimeAfterQA,minB,maxB);
-            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
-                                fHistClusterTimeAfterQA,"","#it{t}_{Cluster} (s)","#frac{d#it{N}}{d#it{t}_{Cluster}}",1,1,
-                                0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
-            SaveCanvasAndWriteHistogram(canvas, fHistClusterTimeAfterQA, Form("%s/ClusterTime_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
-            vecClusterTimeAfter.push_back(fHistClusterTimeAfterQA);
-        } else cout << "INFO: Object |fHistClusterTimeAfterQA| could not be found! Skipping Draw..." << endl;
+          if(fHistClusterTimevsEAfterQA){
+              SetXRange(fHistClusterTimevsEAfterQA,minB,maxB);
+              SetZMinMaxTH2(fHistClusterTimevsEAfterQA,minB,maxB,1,fHistClusterTimevsEAfterQA->GetNbinsY());
+              DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                  fHistClusterTimevsEAfterQA,"","#it{t}_{Cluster} (s)","#it{E}_{Cluster} (GeV)",1,1,
+                                  0.65,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
+              SaveCanvasAndWriteHistogram(cvsQuadratic, fHistClusterTimevsEAfterQA, Form("%s/ClusterTimeVsE_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+          } else cout << "INFO: Object |fHistClusterTimevsEAfterQA| could not be found! Skipping Draw..." << endl;
 
+          if(fHistClusterTimeAfterQA){
+              SetXRange(fHistClusterTimeAfterQA,minB,maxB);
+              DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                  fHistClusterTimeAfterQA,"","#it{t}_{Cluster} (s)","#frac{d#it{N}}{d#it{t}_{Cluster}}",1,1,
+                                  0.95,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
+              SaveCanvasAndWriteHistogram(canvas, fHistClusterTimeAfterQA, Form("%s/ClusterTime_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+              vecClusterTimeAfter.push_back(fHistClusterTimeAfterQA);
+          } else cout << "INFO: Object |fHistClusterTimeAfterQA| could not be found! Skipping Draw..." << endl;
+        }
         //---------------------------------------------------------------------------------------------------------------
         //-------------------------- Detailed look at cell timing distributions in clusters------------------------------
         //---------------------------------------------------------------------------------------------------------------
