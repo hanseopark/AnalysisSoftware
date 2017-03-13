@@ -153,6 +153,7 @@ void CompareDifferentDirectories( 	TString FolderList = "",
     TH1D *histoMassCut[ConstNumberOfCuts];
     TH1D *histoWidthCut[ConstNumberOfCuts];
     TH1D *histoSBCut[ConstNumberOfCuts];
+    TH1D *histoClusterE[ConstNumberOfCuts];
 
     TH1D *histoRatioCorrectedYieldCut[ConstNumberOfCuts];
     TH1D *histoRatioTrueEffiCut[ConstNumberOfCuts];
@@ -161,6 +162,7 @@ void CompareDifferentDirectories( 	TString FolderList = "",
     TH1D *histoRatioMassCut[ConstNumberOfCuts];
     TH1D *histoRatioWidthCut[ConstNumberOfCuts];
     TH1D *histoRatioSBCut[ConstNumberOfCuts];
+    TH1D *histoRatioClusterE[ConstNumberOfCuts];
     
     Double_t maxPt	= 0;
     for (Int_t i=0; i< NumberOfCuts; i++){
@@ -210,6 +212,8 @@ void CompareDifferentDirectories( 	TString FolderList = "",
         histoWidthCut[i]->SetName(Form("histoWidthGaussianMeson_%s",cutStringsName[i].Data()));
         histoSBCut[i]               = (TH1D*)Cutuncorrfile[i]->Get("histoSBdefaultMeson");
         histoSBCut[i]->SetName(Form("histoSBdefaultMeson_%s",cutNumber[i].Data()));
+        histoClusterE[i]       =(TH1D*)Cutuncorrfile[i]->Get("ClusterEPerEvent");
+        histoClusterE[i]->SetName(Form("ClusterEPerEvent_%s", cutStringsName[i].Data()));
         
         // Calculate ratios for comparisons
         histoRatioCorrectedYieldCut[i] = (TH1D*) histoCorrectedYieldCut[i]->Clone(Form("histoRatioCorrectedYieldCut_%s",cutStringsName[i].Data()));
@@ -231,6 +235,9 @@ void CompareDifferentDirectories( 	TString FolderList = "",
 
         histoRatioSBCut[i]          = (TH1D*) histoSBCut[i]->Clone(Form("histoRatioSBCut_%s", cutStringsName[i].Data()));
         histoRatioSBCut[i]->Divide(histoRatioSBCut[i],histoSBCut[0],1.,1.,"B");
+
+        histoRatioClusterE[i]       =(TH1D*)histoClusterE[i]->Clone(Form("histoRatioClusterEPerEvent_%s", cutStringsName[i].Data()));
+        histoRatioClusterE[i]->Divide(histoRatioClusterE[i],histoClusterE[0],1.,1.,"B");
         
     }
     cout<<"=========================="<<endl;
@@ -870,6 +877,78 @@ void CompareDifferentDirectories( 	TString FolderList = "",
         canvasSBMeson->Update();
         canvasSBMeson->SaveAs(Form("%s/%s_%s_SB.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
         delete canvasSBMeson;
+
+
+        //**************************************************************************************
+        //************************ Plotting ClusterE *******************************************
+        //**************************************************************************************
+
+        TCanvas* canvasClusEMeson = new TCanvas("canvasClusEMeson","",1350,1500);
+        DrawGammaCanvasSettings( canvasClusEMeson,  0.13, 0.02, 0.02, 0.09);
+        // Upper pad definition
+        TPad* padClusE = new TPad("padClusE", "", 0., 0.33, 1., 1.,-1, -1, -2);
+        DrawGammaPadSettings( padClusE, 0.12, 0.02, 0.02, 0.);
+        padClusE->SetLogy();
+        padClusE->Draw();
+        // lower pad definition
+        TPad* padClusERatios = new TPad("padClusERatios", "", 0., 0., 1., 0.33,-1, -1, -2);
+        DrawGammaPadSettings( padClusERatios, 0.12, 0.02, 0.0, 0.2);
+        padClusERatios->Draw();
+
+        padClusE->cd();
+        padClusE->SetTickx();
+        padClusE->SetTicky();
+
+        // Plot ClusE in uppper panel
+        padClusE->cd();
+
+        TLegend* legendClusE = GetAndSetLegend2(0.35,0.93-0.03*NumberOfCuts,0.5,0.93, 1500*0.75*0.032);
+        for(Int_t i = 0; i< NumberOfCuts; i++){
+          if(i == 0){
+            DrawGammaSetMarker(histoClusterE[i], 20, 1., color[0], color[0]);
+            DrawAutoGammaMesonHistos( histoClusterE[i],
+                                      "", "#it{p}_{T} (GeV/#it{c})", "cluster E (GeV)",
+                                      kTRUE, 10., 1e-10, kTRUE,
+                                      kFALSE, 0.0, 0.030,
+                                      kFALSE, 0., 10.);
+            legendClusE->AddEntry(histoClusterE[i],Form("standard: %s",cutStringsName[i].Data()));
+          }
+          else {
+            if(i<20){
+              DrawGammaSetMarker(histoClusterE[i], 20+i, 1.,color[i],color[i]);
+            } else {
+              DrawGammaSetMarker(histoClusterE[i], 20+i, 1.,color[i-20],color[i-20]);
+            }
+            histoClusterE[i]->DrawCopy("same,e1,p");
+            legendClusE->AddEntry(histoClusterE[i],cutStringsName[i].Data());
+          }
+
+        }
+        legendClusE->Draw();
+        padClusERatios->cd();
+        for(Int_t i = 0; i< NumberOfCuts; i++){
+          if(i==0){
+            // Set ratio min and max
+            Double_t minYRatio = 0.45;
+            Double_t maxYRatio = 1.55; //qui
+            SetStyleHistoTH1ForGraphs(histoRatioClusterE[i], "#it{p}_{T} (GeV/#it{c})", "cluster E (GeV)", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
+            DrawGammaSetMarker(histoRatioClusterE[i], 20, 1.,color[0],color[0]);
+            histoRatioClusterE[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
+            histoRatioClusterE[i]->DrawCopy("p,e1");
+          } else{
+            if(i<20){
+              DrawGammaSetMarker(histoRatioClusterE[i], 20+i, 1.,color[i],color[i]);
+            } else {
+              DrawGammaSetMarker(histoRatioClusterE[i], 20+i, 1.,color[i-20],color[i-20]);
+            }
+            histoRatioClusterE[i]->DrawCopy("same,e1,p");
+          }
+          DrawGammaLines(0., maxPt,1., 1.,0.1);
+        }
+
+        canvasClusEMeson->Update();
+        canvasClusEMeson->SaveAs(Form("%s/%s_%s_ClusE.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
+        delete canvasClusEMeson;
 
   //*************************************************************************************************
   //******************** Output of the systematic Error due to Signal extraction for Pi0 ************
