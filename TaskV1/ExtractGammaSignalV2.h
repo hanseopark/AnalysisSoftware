@@ -52,7 +52,9 @@ TString optionShowBackground[3]                                     = {""};
 
 // binning
 TH1D*       fDeltaPtDummy                                           = NULL;
-                                                                      
+
+TString     fSecondaries[4]                                         = {"K0s", "Lambda", "K0l", "Rest"};
+
 //*****************************************************************************************************
 //******************** Histograms for conversion analysis *********************************************
 //*****************************************************************************************************
@@ -70,26 +72,14 @@ TH1D*       fHistoGammaMCConvRSPt                                               
 TH1D*       fHistoGammaMCAllPt                                                                  = NULL;
 TH1D*       fHistoGammaMCAllPtOrBin                                                             = NULL;
 
-TH1D*       fHistoSecondaryGammaConvFromXFromK0sPt                                              = NULL;
-TH1D*       fHistoSecondaryGammaConvFromXFromK0lPt                                              = NULL;
-TH1D*       fHistoSecondaryGammaConvFromXFromLambdaPt                                           = NULL;
-TH1D*       fHistoSecondaryGammaConvFromXFromK0sPtOrBin                                         = NULL;
-TH1D*       fHistoSecondaryGammaConvFromXFromK0lPtOrBin                                         = NULL;
-TH1D*       fHistoSecondaryGammaConvFromXFromLambdaPtOrBin                                      = NULL;
+TH1D*       fHistoSecondaryGammaConvFromXPt[4]                                                  = { NULL, NULL, NULL, NULL };
+TH1D*       fHistoSecondaryGammaConvFromXPtOrBin[4]                                             = { NULL, NULL, NULL, NULL };
 
-TH1D*       fHistoSecondaryGammaCocktailFromXFromK0sPt                                          = NULL;
-TH1D*       fHistoSecondaryGammaCocktailFromXFromK0lPt                                          = NULL;
-TH1D*       fHistoSecondaryGammaCocktailFromXFromLambdaPt                                       = NULL;
-TH1D*       fHistoSecondaryGammaCocktailFromXFromK0sPtOrBin                                     = NULL;
-TH1D*       fHistoSecondaryGammaCocktailFromXFromK0lPtOrBin                                     = NULL;
-TH1D*       fHistoSecondaryGammaCocktailFromXFromLambdaPtOrBin                                  = NULL;
+TH1D*       fHistoSecondaryGammaCocktailFromXPt[4]                                              = { NULL, NULL, NULL, NULL };
+TH1D*       fHistoSecondaryGammaCocktailFromXPtOrBin[4]                                         = { NULL, NULL, NULL, NULL };
 
-TH1D*       fHistoAllSecondaryGammaFromXFromK0sPt                                               = NULL;
-TH1D*       fHistoAllSecondaryGammaFromXFromK0lPt                                               = NULL;
-TH1D*       fHistoAllSecondaryGammaFromXFromLambdaPt                                            = NULL;
-TH1D*       fHistoAllSecondaryGammaFromXFromK0sPtOrBin                                          = NULL;
-TH1D*       fHistoAllSecondaryGammaFromXFromK0lPtOrBin                                          = NULL;
-TH1D*       fHistoAllSecondaryGammaFromXFromLambdaPtOrBin                                       = NULL;
+TH1D*       fHistoAllSecondaryGammaFromXPt[4]                                                   = { NULL, NULL, NULL, NULL };
+TH1D*       fHistoAllSecondaryGammaFromXPtOrBin[4]                                              = { NULL, NULL, NULL, NULL };
 
 TH1D*       fHistoGammaTrueConvPt                                                               = NULL;
 TH1D*       fHistoGammaTrueConvPtOrBin                                                          = NULL;
@@ -99,23 +89,11 @@ TH1D*       fHistoGammaTrueSecondaryConvPt                                      
 TH2D*       f2DHistoGammaTrueSecondaryConvPt                                                    = NULL;
 TH2D*       f2DHistoGammaTrueSecondaryConvMCPt                                                  = NULL;
 TH1D*       fHistoGammaTrueSecondaryConvPtOrBin                                                 = NULL;
-TH1D*       fHistoGammaTrueSecondaryConvGammaFromXFromK0sMCPt                                   = NULL;
-TH1D*       fHistoGammaTrueSecondaryConvGammaFromXFromK0lMCPt                                   = NULL;
-TH1D*       fHistoGammaTrueSecondaryConvGammaFromXFromLambdaMCPt                                = NULL;
-TH1D*       fHistoGammaTrueSecondaryConvGammaFromXFromK0sMCPtOrBin                              = NULL;
-TH1D*       fHistoGammaTrueSecondaryConvGammaFromXFromK0lMCPtOrBin                              = NULL;
-TH1D*       fHistoGammaTrueSecondaryConvGammaFromXFromLambdaMCPtOrBin                           = NULL;
-TH1D*       fHistoGammaTrueSecondaryConvGammaFromXFromK0sPt                                     = NULL;
-TH1D*       fHistoGammaTrueSecondaryConvGammaFromXFromK0sPtOrBin                                = NULL;
-TH1D*       fHistoGammaTrueSecondaryConvGammaFromXFromK0lPt                                     = NULL;
-TH1D*       fHistoGammaTrueSecondaryConvGammaFromXFromK0lPtOrBin                                = NULL;
-TH1D*       fHistoGammaTrueSecondaryConvGammaFromXFromLambdaPt                                  = NULL;
-TH1D*       fHistoGammaTrueSecondaryConvGammaFromXFromLambdaPtOrBin                             = NULL;
-TH1D*       fHistoGammaTrueSecondaryConvGammaRestPt                                             = NULL;
-TH1D*       fHistoGammaTrueSecondaryConvGammaRestPtOrBin                                        = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromK0sConv_MCPt_recPt_MC                              = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromK0lConv_MCPt_recPt_MC                              = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromLambdaConv_MCPt_recPt_MC                           = NULL;
+TH1D*       fHistoGammaTrueSecondaryConvGammaFromXMCPt[4]                                       = { NULL, NULL, NULL, NULL };
+TH1D*       fHistoGammaTrueSecondaryConvGammaFromXMCPtOrBin[4]                                  = { NULL, NULL, NULL, NULL };
+TH1D*       fHistoGammaTrueSecondaryConvGammaFromXPt[4]                                         = { NULL, NULL, NULL, NULL };
+TH1D*       fHistoGammaTrueSecondaryConvGammaFromXPtOrBin[4]                                    = { NULL, NULL, NULL, NULL };
+TH2D*       fHistoGammaTrueSecondaryFromXConv_MCPt_recPt_MC[3]                                  = { NULL, NULL, NULL };
 
 TH1D**      fHistoGammaMCDecayPt                                                                = NULL;
 TH1D*       fHistoGammaTruePrimaryConvMCPt                                                      = NULL;
@@ -123,22 +101,12 @@ TH1D*       fHistoGammaTruePrimaryConvMCPtOrBin                                 
 
 TH1D*       fHistoFracAllGammaToSecOrBin                                                        = NULL;
 TH1D*       fHistoFracAllGammaToSec                                                             = NULL;
-TH1D*       fHistoFracAllGammaToSecFromXFromK0s                                                 = NULL;
-TH1D*       fHistoFracAllGammaToSecFromXFromK0sOrBin                                            = NULL;
-TH1D*       fHistoFracAllGammaToSecFromXFromK0l                                                 = NULL;
-TH1D*       fHistoFracAllGammaToSecFromXFromK0lOrBin                                            = NULL;
-TH1D*       fHistoFracAllGammaToSecFromXFromLambda                                              = NULL;
-TH1D*       fHistoFracAllGammaToSecFromXFromLambdaOrBin                                         = NULL;
-TH1D*       fHistoFracAllGammaToSecRest                                                         = NULL;
-TH1D*       fHistoFracAllGammaToSecRestOrBin                                                    = NULL;
+TH1D*       fHistoFracAllGammaToSecFromX[4]                                                     = { NULL, NULL, NULL, NULL };
+TH1D*       fHistoFracAllGammaToSecFromXOrBin[4]                                                = { NULL, NULL, NULL, NULL };
 TH1D*       fHistoGammaMCConvProb                                                               = NULL;
 TH1D*       fHistoGammaMCConvProbOrBin                                                          = NULL;
-TH1D*       fHistoSecondaryGammaFromXFromK0sMCConvProb                                          = NULL;
-TH1D*       fHistoSecondaryGammaFromXFromK0lMCConvProb                                          = NULL;
-TH1D*       fHistoSecondaryGammaFromXFromLambdaMCConvProb                                       = NULL;
-TH1D*       fHistoSecondaryGammaFromXFromK0sMCConvProbOrBin                                     = NULL;
-TH1D*       fHistoSecondaryGammaFromXFromK0lMCConvProbOrBin                                     = NULL;
-TH1D*       fHistoSecondaryGammaFromXFromLambdaMCConvProbOrBin                                  = NULL;
+TH1D*       fHistoSecondaryGammaFromXMCConvProb[3]                                              = { NULL, NULL, NULL };
+TH1D*       fHistoSecondaryGammaFromXMCConvProbOrBin[3]                                         = { NULL, NULL, NULL };
 TH1D*       fHistoGammaMCPurity                                                                 = NULL;
 TH1D*       fHistoGammaMCTruePurityOrBin                                                        = NULL;
 TH1D*       fHistoGammaMCrecPrimaryConvPt                                                       = NULL;
@@ -151,23 +119,13 @@ TH1D*       fHistoGammaMCPrimaryRecoEffMCPt                                     
 TH1D*       fHistoGammaMCPrimaryRecoEffMCPtOrBin                                                = NULL;
 TH1D*       fHistoGammaMCBackground                                                             = NULL;
 
-TH1D*       fHistoSecondaryGammaFromXFromK0sMCRecoEffMCPt                                       = NULL;
-TH1D*       fHistoSecondaryGammaFromXFromK0lMCRecoEffMCPt                                       = NULL;
-TH1D*       fHistoSecondaryGammaFromXFromLambdaMCRecoEffMCPt                                    = NULL;
-TH1D*       fHistoSecondaryGammaFromXFromK0sMCRecoEffMCPtOrBin                                  = NULL;
-TH1D*       fHistoSecondaryGammaFromXFromK0lMCRecoEffMCPtOrBin                                  = NULL;
-TH1D*       fHistoSecondaryGammaFromXFromLambdaMCRecoEffMCPtOrBin                               = NULL;
+TH1D*       fHistoSecondaryGammaFromXMCRecoEffMCPt[3]                                           = { NULL, NULL, NULL };
+TH1D*       fHistoSecondaryGammaFromXMCRecoEffMCPtOrBin[3]                                      = { NULL, NULL, NULL };
 
-TH1D*       fHistoSecondaryGammaFromXFromK0sMCRecoEffPt                                         = NULL;
-TH1D*       fHistoSecondaryGammaFromXFromK0lMCRecoEffPt                                         = NULL;
-TH1D*       fHistoSecondaryGammaFromXFromLambdaMCRecoEffPt                                      = NULL;
-TH1D*       fHistoSecondaryGammaFromXFromK0sMCRecoEffPtOrBin                                    = NULL;
-TH1D*       fHistoSecondaryGammaFromXFromK0lMCRecoEffPtOrBin                                    = NULL;
-TH1D*       fHistoSecondaryGammaFromXFromLambdaMCRecoEffPtOrBin                                 = NULL;
+TH1D*       fHistoSecondaryGammaFromXMCRecoEffPt[3]                                             = { NULL, NULL, NULL };
+TH1D*       fHistoSecondaryGammaFromXMCRecoEffPtOrBin[3]                                        = { NULL, NULL, NULL };
 
-TH2D*       fHistoGammaTrueSecondaryFromXFromK0sConv_MCPt_recPt_MC_Rebin                        = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromK0lConv_MCPt_recPt_MC_Rebin                        = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromLambdaConv_MCPt_recPt_MC_Rebin                     = NULL;
+TH2D*       fHistoGammaTrueSecondaryFromXConv_MCPt_recPt_MC_Rebin[3]                            = { NULL, NULL, NULL };
 
 TH2D*       fHistoCombinatorialBackground                                                       = NULL;
 TH2D*       fHistoGammaTruePrimaryConv_recPt_MCPt_MC                                            = NULL;
@@ -302,26 +260,14 @@ TH1D*       fHistoGammaTrueSecondaryCaloPt                                      
 TH1D*       fHistoGammaTrueSecondaryCaloMCPt                                                    = NULL;
 TH1D*       fHistoGammaTrueSecondaryCaloPtOrBin                                                 = NULL;
 TH1D*       fHistoGammaTrueSecondaryCaloMCPtOrBin                                               = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloFromXFromK0sPt                                          = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloFromXFromK0sMCPt                                        = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloFromXFromK0sPtOrBin                                     = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloFromXFromK0sMCPtOrBin                                   = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloFromXFromK0lPt                                          = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloFromXFromK0lMCPt                                        = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloFromXFromK0lPtOrBin                                     = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloFromXFromK0lMCPtOrBin                                   = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloFromXFromLambdaPt                                       = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloFromXFromLambdaMCPt                                     = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloFromXFromLambdaPtOrBin                                  = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloFromXFromLambdaMCPtOrBin                                = NULL;
+TH1D*       fHistoGammaTrueSecondaryCaloFromXPt[4]                                              = { NULL, NULL, NULL, NULL };
+TH1D*       fHistoGammaTrueSecondaryCaloFromXMCPt[4]                                            = { NULL, NULL, NULL, NULL };
+TH1D*       fHistoGammaTrueSecondaryCaloFromXPtOrBin[4]                                         = { NULL, NULL, NULL, NULL };
+TH1D*       fHistoGammaTrueSecondaryCaloFromXMCPtOrBin[4]                                       = { NULL, NULL, NULL, NULL };
 TH1D*       fHistoGammaTrueSecondaryCaloFromXFromEtaPt                                          = NULL;
 TH1D*       fHistoGammaTrueSecondaryCaloFromXFromEtaMCPt                                        = NULL;
 TH1D*       fHistoGammaTrueSecondaryCaloFromXFromEtaPtOrBin                                     = NULL;
 TH1D*       fHistoGammaTrueSecondaryCaloFromXFromEtaMCPtOrBin                                   = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloRestPt                                                  = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloRestMCPt                                                = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloRestPtOrBin                                             = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloRestMCPtOrBin                                           = NULL;
 TH1D*       fHistoGammaTrueSecondaryCaloRestNoEtaPt                                             = NULL;
 TH1D*       fHistoGammaTrueSecondaryCaloRestNoEtaMCPt                                           = NULL;
 TH1D*       fHistoGammaTrueSecondaryCaloRestNoEtaPtOrBin                                        = NULL;
@@ -329,29 +275,17 @@ TH1D*       fHistoGammaTrueSecondaryCaloRestNoEtaMCPtOrBin                      
 
 TH2D*       fHistoGammaTruePrimaryCalo_recPt_MCPt_MC                                            = NULL;
 TH2D*       fHistoGammaTruePrimaryCalo_recPt_MCPt_MC_Rebin                                      = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromK0sCaloUnConv_MCPt_recPt_MC                        = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromK0sCaloConv_MCPt_recPt_MC                          = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC                              = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromK0sCalo_MCPt_recPt_MC_Rebin                        = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromK0lCaloUnConv_MCPt_recPt_MC                        = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromK0lCaloConv_MCPt_recPt_MC                          = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC                              = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromK0lCalo_MCPt_recPt_MC_Rebin                        = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromLambdaCaloUnConv_MCPt_recPt_MC                     = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromLambdaCaloConv_MCPt_recPt_MC                       = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC                           = NULL;
-TH2D*       fHistoGammaTrueSecondaryFromXFromLambdaCalo_MCPt_recPt_MC_Rebin                     = NULL;
+TH2D*       fHistoGammaTrueSecondaryFromXCaloUnConv_MCPt_recPt_MC[4]                            = { NULL, NULL, NULL, NULL };
+TH2D*       fHistoGammaTrueSecondaryFromXCaloConv_MCPt_recPt_MC[4]                              = { NULL, NULL, NULL, NULL };
+TH2D*       fHistoGammaTrueSecondaryFromXCalo_MCPt_recPt_MC[4]                                  = { NULL, NULL, NULL, NULL };
+TH2D*       fHistoGammaTrueSecondaryFromXCalo_MCPt_recPt_MC_Rebin[4]                            = { NULL, NULL, NULL, NULL };
 
 TH1D*       fHistoGammaTruePrimaryCaloMCPt                                                      = NULL;
 TH1D*       fHistoGammaTruePrimaryCaloMCPtOrBin                                                 = NULL;
 TH1D*       fHistoFracAllGammaCaloToSec                                                         = NULL;
 TH1D*       fHistoFracAllGammaCaloToSecOrBin                                                    = NULL;
-TH1D*       fHistoFracAllGammaCaloToSecFromXFromK0s                                             = NULL;
-TH1D*       fHistoFracAllGammaCaloToSecFromXFromK0sOrBin                                        = NULL;
-TH1D*       fHistoFracAllGammaCaloToSecFromXFromK0l                                             = NULL;
-TH1D*       fHistoFracAllGammaCaloToSecFromXFromK0lOrBin                                        = NULL;
-TH1D*       fHistoFracAllGammaCaloToSecFromXFromLambda                                          = NULL;
-TH1D*       fHistoFracAllGammaCaloToSecFromXFromLambdaOrBin                                     = NULL;
+TH1D*       fHistoFracAllGammaCaloToSecFromX[4]                                                 = { NULL, NULL, NULL, NULL };
+TH1D*       fHistoFracAllGammaCaloToSecFromXOrBin[4]                                            = { NULL, NULL, NULL, NULL };
 
 TH1D*       fHistoGammaCaloMCPurity                                                             = NULL;
 TH1D*       fHistoGammaMCrecPrimaryCaloPt                                                       = NULL;
@@ -369,10 +303,8 @@ TH1D*       fHistoGammaTruePrimaryCaloConvPt                                    
 TH1D*       fHistoGammaTruePrimaryCaloConvPtOrBin                                               = NULL;
 TH1D*       fHistoGammaTrueSecondaryCaloConvPt                                                  = NULL;
 TH1D*       fHistoGammaTrueSecondaryCaloConvPtOrBin                                             = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloConvFromXFromK0sPt                                      = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloConvFromXFromK0sPtOrBin                                 = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloConvFromXFromLambdaPt                                   = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloConvFromXFromLambdaPtOrBin                              = NULL;
+TH1D*       fHistoGammaTrueSecondaryCaloConvFromXPt[4]                                          = { NULL, NULL, NULL, NULL };
+TH1D*       fHistoGammaTrueSecondaryCaloConvFromXPtOrBin[4]                                     = { NULL, NULL, NULL, NULL };
 TH2D*       fHistoGammaTruePrimaryCaloConv_recPt_MCPt_MC                                        = NULL;
 TH2D*       fHistoGammaTruePrimaryCaloConv_recPt_MCPt_MC_Rebin                                  = NULL;
 TH1D*       fHistoGammaTruePrimaryCaloConvMCPt                                                  = NULL;
@@ -384,10 +316,8 @@ TH1D*       fHistoGammaTruePrimaryCaloUnConvPt                                  
 TH1D*       fHistoGammaTruePrimaryCaloUnConvPtOrBin                                             = NULL;
 TH1D*       fHistoGammaTrueSecondaryCaloUnConvPt                                                = NULL;
 TH1D*       fHistoGammaTrueSecondaryCaloUnConvPtOrBin                                           = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloUnConvFromXFromK0sPt                                    = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloUnConvFromXFromK0sPtOrBin                               = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloUnConvFromXFromLambdaPt                                 = NULL;
-TH1D*       fHistoGammaTrueSecondaryCaloUnConvFromXFromLambdaPtOrBin                            = NULL;
+TH1D*       fHistoGammaTrueSecondaryCaloUnConvFromXPt[4]                                        = { NULL, NULL, NULL, NULL };
+TH1D*       fHistoGammaTrueSecondaryCaloUnConvFromXPtOrBin[4]                                   = { NULL, NULL, NULL, NULL };
 TH2D*       fHistoGammaTruePrimaryCaloUnConv_recPt_MCPt_MC                                      = NULL;
 TH2D*       fHistoGammaTruePrimaryCaloUnConv_recPt_MCPt_MC_Rebin                                = NULL;
 TH1D*       fHistoGammaTruePrimaryCaloUnConvMCPt                                                = NULL;

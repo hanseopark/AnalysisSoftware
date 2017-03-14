@@ -2122,7 +2122,141 @@ do
         useCocktail=0
     fi
 
-    if [ $energy = "7TeV" ] ; then
+    if [ $energy = "900GeV" ]; then
+        echo "Do you want to produce Direct Photon plots? Yes/No?";
+        read answer
+        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+            echo "Will produce Direct Photon plots ...";
+            directphoton="directPhoton"
+            Con=1
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinningDirectPhoton900GeV
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else 
+                correct=1
+            fi
+
+            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
+                useTHnSparse=0
+                AdvMesonQA="AdvancedMesonQA"
+            fi
+        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+            echo "No Direct Photon plots will be produced ...";
+            directphoton="No"
+            Con=0
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinning900GeV
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else 
+                correct=1
+            fi
+
+            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
+                useTHnSparse=0
+                AdvMesonQA="AdvancedMesonQA"
+            fi
+        else
+            echo "Command not found. Please try again.";
+        fi
+    elif [ $energy = "2.76TeV" ]; then
+        if [ $mode -eq 10 ] || [ $mode -eq 11 ]; then 
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinning2760GeVMerged
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else 
+                correct=1
+            fi
+        else 
+            echo "No Direct Photon plots will be produced ...";
+            directphoton="No"
+            Con=0
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinning2760GeV
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else 
+                correct=1
+            fi
+
+            if [ $ONLYRESULTS -eq 0 ]; then
+                if [ $ONLYCORRECTION -eq 0 ];  then
+                    echo "Do you want to use THnSparse for the background? Yes/No?";
+                    read answer
+                    if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                        echo "Will use THnSparse for the background ...";
+                        useTHnSparse=1
+                    elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                        echo "Will NOT use THnSparse for the background ...";
+                        useTHnSparse=0
+                    else
+                        echo "Command not found. Please try again.";
+                    fi
+                fi
+            fi
+        fi    
+    elif [ $energy = "5TeV" ] ; then
+        echo "Do you want to produce Direct Photon plots? Yes/No?";
+        read answer
+        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+            echo "Will produce Direct Photon plots ...";
+            directphoton="directPhoton"
+            Con=1
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinningDirectPhoton5TeV
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else
+                correct=1
+            fi
+        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+            echo "No Direct Photon plots will be produced ...";
+            Conference="No"
+            Con=0
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinning5TeV
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else
+                correct=1
+            fi
+        else
+            echo "Command not found. Please try again.";
+        fi
+    
+    elif [ $energy = "7TeV" ] ; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
@@ -2261,257 +2395,6 @@ do
         else
             echo "Command not found. Please try again.";
         fi
-    elif [ $energy = "900GeV" ]; then
-        echo "Do you want to produce Direct Photon plots? Yes/No?";
-        read answer
-        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Will produce Direct Photon plots ...";
-            directphoton="directPhoton"
-            Con=1
-            if [ $ONLYCORRECTION -eq 0 ]; then
-                GiveBinningDirectPhoton900GeV
-                correctPi0=1
-                correctEta=1
-            fi
-            if [ $correctPi0 -eq 0 ]; then
-                correct=0
-            elif [ $correctEta -eq 0 ]; then
-                correct=0
-            else 
-                correct=1
-            fi
-
-            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
-                useTHnSparse=0
-                AdvMesonQA="AdvancedMesonQA"
-            fi
-        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-            echo "No Direct Photon plots will be produced ...";
-            directphoton="No"
-            Con=0
-            if [ $ONLYCORRECTION -eq 0 ]; then
-                GiveBinning900GeV
-                correctPi0=1
-                correctEta=1
-            fi
-            if [ $correctPi0 -eq 0 ]; then
-                correct=0
-            elif [ $correctEta -eq 0 ]; then
-                correct=0
-            else 
-                correct=1
-            fi
-
-            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
-                useTHnSparse=0
-                AdvMesonQA="AdvancedMesonQA"
-            fi
-        else
-            echo "Command not found. Please try again.";
-        fi
-    elif [ $energy = "2.76TeV" ]; then
-        if [ $mode -eq 10 ] || [ $mode -eq 11 ]; then 
-            if [ $ONLYCORRECTION -eq 0 ]; then
-                GiveBinning2760GeVMerged
-                correctPi0=1
-                correctEta=1
-            fi
-            if [ $correctPi0 -eq 0 ]; then
-                correct=0
-            elif [ $correctEta -eq 0 ]; then
-                correct=0
-            else 
-                correct=1
-            fi
-        else 
-            echo "No Direct Photon plots will be produced ...";
-            directphoton="No"
-            Con=0
-            if [ $ONLYCORRECTION -eq 0 ]; then
-                GiveBinning2760GeV
-                correctPi0=1
-                correctEta=1
-            fi
-            if [ $correctPi0 -eq 0 ]; then
-                correct=0
-            elif [ $correctEta -eq 0 ]; then
-                correct=0
-            else 
-                correct=1
-            fi
-
-            if [ $ONLYRESULTS -eq 0 ]; then
-                if [ $ONLYCORRECTION -eq 0 ];  then
-                    echo "Do you want to use THnSparse for the background? Yes/No?";
-                    read answer
-                    if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                        echo "Will use THnSparse for the background ...";
-                        useTHnSparse=1
-                    elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                        echo "Will NOT use THnSparse for the background ...";
-                        useTHnSparse=0
-                    else
-                        echo "Command not found. Please try again.";
-                    fi
-                fi
-            fi
-        fi
-    elif [ $energy = "5TeV" ] ; then
-        echo "Do you want to produce Direct Photon plots? Yes/No?";
-        read answer
-        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Will produce Direct Photon plots ...";
-            directphoton="directPhoton"
-            Con=1
-            if [ $ONLYCORRECTION -eq 0 ]; then
-                GiveBinningDirectPhoton5TeV
-                correctPi0=1
-                correctEta=1
-            fi
-            if [ $correctPi0 -eq 0 ]; then
-                correct=0
-            elif [ $correctEta -eq 0 ]; then
-                correct=0
-	    else
-		correct=1
-            fi
-        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-            echo "No Direct Photon plots will be produced ...";
-            Conference="No"
-            Con=0
-            if [ $ONLYCORRECTION -eq 0 ]; then
-                GiveBinning5TeV
-                correctPi0=1
-                correctEta=1
-            fi
-            if [ $correctPi0 -eq 0 ]; then
-                correct=0
-            elif [ $correctEta -eq 0 ]; then
-                correct=0
-            else
-                correct=1
-	    fi
-	else
-            echo "Command not found. Please try again.";
-	fi
-   elif [ $energy = "PbPb_5.02TeV" ]; then
-        echo "Do you want to produce Direct Photon plots? Yes/No?";
-        read answer
-        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Will produce Direct Photon plots ...";
-            directphoton="directPhoton"
-            Con=1
-            if [ $ONLYCORRECTION -eq 0 ]; then
-                GiveBinningDirectPhotonHI
-                correctPi0=1
-                correctEta=1
-            fi
-            if [ $correctPi0 -eq 0 ]; then
-                correct=0
-            elif [ $correctEta -eq 0 ]; then
-                correct=0
-            else
-                correct=1
-            fi
-        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-            echo "No Direct Photon plots will be produced ...";
-            directphoton="No"
-            Con=0
-            if [ $ONLYCORRECTION -eq 0 ]; then
-                GiveBinningHI5020GeV
-                correctPi0=1
-                correctEta=1
-            else
-                correctPi0=1
-                correctEta=1
-            fi
-
-            if [ $correctPi0 -eq 0 ]; then
-                correct=0
-            elif [ $correctEta -eq 0 ]; then
-                correct=0
-            else
-                correct=1
-            fi
-        else
-            echo "Command not found. Please try again.";
-        fi
-
-        if [ $ONLYRESULTS -eq 0 ]; then
-            if [ $ONLYCORRECTION -eq 0 ];  then
-                echo "Do you want to use THnSparse for the background? Yes/No?";
-                read answer
-                if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                    echo "Will use THnSparse for the background ...";
-                    useTHnSparse=1
-                elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                    echo "Will NOT use THnSparse for the background ...";
-                    useTHnSparse=0
-                else
-                    echo "Command not found. Please try again.";
-                fi
-            fi
-        fi
-
-    elif [ $energy = "PbPb_2.76TeV" ]; then
-        echo "Do you want to produce Direct Photon plots? Yes/No?";
-        read answer
-        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Will produce Direct Photon plots ...";
-            directphoton="directPhoton"
-            Con=1
-            if [ $ONLYCORRECTION -eq 0 ]; then
-                GiveBinningDirectPhotonHI
-                correctPi0=1
-                correctEta=1
-            fi
-            if [ $correctPi0 -eq 0 ]; then
-                correct=0
-            elif [ $correctEta -eq 0 ]; then
-                correct=0
-            else 
-                correct=1
-            fi
-        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-            echo "No Direct Photon plots will be produced ...";
-            directphoton="No"
-            Con=0
-            if [ $ONLYCORRECTION -eq 0 ]; then
-                GiveBinningHI
-                correctPi0=1
-                correctEta=1
-            else 
-                correctPi0=1
-                correctEta=1
-            fi
-            
-            if [ $correctPi0 -eq 0 ]; then
-                correct=0
-            elif [ $correctEta -eq 0 ]; then
-                correct=0
-            else 
-                correct=1
-            fi
-        else
-            echo "Command not found. Please try again.";
-        fi
-
-        if [ $ONLYRESULTS -eq 0 ]; then
-            if [ $ONLYCORRECTION -eq 0 ];  then
-                echo "Do you want to use THnSparse for the background? Yes/No?";
-                read answer
-                if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                    echo "Will use THnSparse for the background ...";
-                    useTHnSparse=1
-                elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                    echo "Will NOT use THnSparse for the background ...";
-                    useTHnSparse=0
-                else
-                    echo "Command not found. Please try again.";
-                fi
-            fi    
-        fi
-
     elif [ $energy = "pPb_5.023TeV" ]; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
@@ -2519,7 +2402,7 @@ do
             echo "Will produce Direct Photon plots ...";
             directphoton="directPhoton"
             Con=1
-            if [ $ONLYCORRECTION -eq 0 ]; then
+            if [ $ONLYRESULTS -eq 0 ]; then
                 GiveBinningpPbDirGamma
                 correctPi0=1
                 correctEta=1
@@ -2585,6 +2468,123 @@ do
                 fi
             fi    
         fi
+    elif [ $energy = "PbPb_2.76TeV" ]; then
+        echo "Do you want to produce Direct Photon plots? Yes/No?";
+        read answer
+        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+            echo "Will produce Direct Photon plots ...";
+            directphoton="directPhoton"
+            Con=1
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinningDirectPhotonHI
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else 
+                correct=1
+            fi
+        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+            echo "No Direct Photon plots will be produced ...";
+            directphoton="No"
+            Con=0
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinningHI
+                correctPi0=1
+                correctEta=1
+            else 
+                correctPi0=1
+                correctEta=1
+            fi
+            
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else 
+                correct=1
+            fi
+        else
+            echo "Command not found. Please try again.";
+        fi
+
+        if [ $ONLYRESULTS -eq 0 ]; then
+            if [ $ONLYCORRECTION -eq 0 ];  then
+                echo "Do you want to use THnSparse for the background? Yes/No?";
+                read answer
+                if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                    echo "Will use THnSparse for the background ...";
+                    useTHnSparse=1
+                elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                    echo "Will NOT use THnSparse for the background ...";
+                    useTHnSparse=0
+                else
+                    echo "Command not found. Please try again.";
+                fi
+            fi    
+        fi
+   elif [ $energy = "PbPb_5.02TeV" ]; then
+        echo "Do you want to produce Direct Photon plots? Yes/No?";
+        read answer
+        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+            echo "Will produce Direct Photon plots ...";
+            directphoton="directPhoton"
+            Con=1
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinningDirectPhotonHI
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else
+                correct=1
+            fi
+        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+            echo "No Direct Photon plots will be produced ...";
+            directphoton="No"
+            Con=0
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinningHI5020GeV
+                correctPi0=1
+                correctEta=1
+            else
+                correctPi0=1
+                correctEta=1
+            fi
+
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else
+                correct=1
+            fi
+        else
+            echo "Command not found. Please try again.";
+        fi
+
+        if [ $ONLYRESULTS -eq 0 ]; then
+            if [ $ONLYCORRECTION -eq 0 ];  then
+                echo "Do you want to use THnSparse for the background? Yes/No?";
+                read answer
+                if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                    echo "Will use THnSparse for the background ...";
+                    useTHnSparse=1
+                elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                    echo "Will NOT use THnSparse for the background ...";
+                    useTHnSparse=0
+                else
+                    echo "Command not found. Please try again.";
+                fi
+            fi
+        fi
+
     fi
 done
 
