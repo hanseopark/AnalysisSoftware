@@ -141,11 +141,16 @@ fi
 # # LHC12i3MC="2720"
 # LHC12i3MC="2721"
 
-TRAINDIR=Legotrain-vAN20161210_ConvReAnaTrees
-LHC11aData="1963";
-LHC12f1aMC="2715"; 
-LHC12f1bMC="2718"; 
+# TRAINDIR=Legotrain-vAN20161210_ConvReAnaTrees
+# LHC11aData="1963";
+# LHC12f1aMC="2715"; 
+# LHC12f1bMC="2718"; 
+# DATAADD="WOSDD"
 
+TRAINDIR=Legotrain-vAN20170216_ConvDirGamma
+LHC11aData="2020";
+LHC12f1aMC="2788"; 
+LHC12f1bMC="2789"; 
 DATAADD="WOSDD"
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
@@ -306,17 +311,17 @@ if [ $2 == "LHC11a" ]; then
     fi
     
     if [ $MERGEON == 1 ]; then
-#         rm $OUTPUTDIR/GammaConvV1_MC_LHC12f1a_LHC12f1b-$DATAADD\_*.root
-#         ls $OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_*.root > filesForMerging.txt
-#         filesForMerging=`cat filesForMerging.txt`
-#         for fileName in $filesForMerging; do
-#             echo $fileName
-#             number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
-#             echo $number
-#             if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC12f1b-$DATAADD\_$number.root ] ; then
-#                 hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC12f1a_LHC12f1b-$DATAADD\_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC12f1b-$DATAADD\_$number.root
-#             fi
-#         done
+        rm $OUTPUTDIR/GammaConvV1_MC_LHC12f1a_LHC12f1b-$DATAADD\_*.root
+        ls $OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_*.root > filesForMerging.txt
+        filesForMerging=`cat filesForMerging.txt`
+        for fileName in $filesForMerging; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
+            echo $number
+            if [ -f $OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_$number.root ] && [ -f $OUTPUTDIR/GammaConvV1_MC_LHC12f1b-$DATAADD\_$number.root ] ; then
+                hadd -f $OUTPUTDIR/GammaConvV1_MC_LHC12f1a_LHC12f1b-$DATAADD\_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_$number.root $OUTPUTDIR/GammaConvV1_MC_LHC12f1b-$DATAADD\_$number.root
+            fi
+        done
         
         ls $OUTPUTDIR/GammaConvV1_MC_LHC12f1a-$DATAADD\_*.root > filesForMerging.txt
         rm $OUTPUTDIR/GammaConvV1_MC_LHC12f1a_LHC12i3-$DATAADD*.root
