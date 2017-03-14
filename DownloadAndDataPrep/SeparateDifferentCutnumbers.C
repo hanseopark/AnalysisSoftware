@@ -65,6 +65,19 @@ void SeparateDifferentCutnumbers(   TString nameInputFile1,
         return;
     }
     
+    Int_t nDiffCutNumbers = 0;
+    for(Int_t i = 0; i<listInput1->GetSize(); i++){
+        TList *listToSave       = (TList*)listInput1->At(i);
+        TString dirname         = listToSave->GetName();
+        if (dirname.Contains("Cut Number ") && listToSave){
+            nDiffCutNumbers++;
+        }
+    }
+    if (nDiffCutNumbers < 2){
+        cout << "only one cut present + additional folders for basis cuts available, no need to split" << endl;
+        return;
+    }
+    
     TString additionOutputName[20] = {"A", "B", "C", "D", "E",
                                       "F", "G", "H", "I", "J",
                                       "K", "L", "M", "N", "O",

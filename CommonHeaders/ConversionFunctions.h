@@ -4185,6 +4185,8 @@ TString AutoDetectMainTList(Int_t mode , TFile* fFile){
 	    nominalMainDir         = "GammaConvDalitzCalo";
     else if (mode == 10 || mode == 11 ) 
         nominalMainDir         = "GammaCaloMerged";
+    else if (mode == 30 ) 
+        nominalMainDir         = "GammaConvV1";
 
     TObjArray *arr;
     arr             = mainDir.Tokenize("_");
@@ -4212,6 +4214,8 @@ TString GetDefaultMainTListName(Int_t mode){
 	    nominalMainDir         = "GammaConvDalitzCalo";
     else if (mode == 10 || mode == 11 ) 
         nominalMainDir         = "GammaCaloMerged";
+    else if (mode == 30 ) 
+        nominalMainDir         = "GammaConvV1";
 
     return nominalMainDir;
 }
