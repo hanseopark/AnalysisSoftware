@@ -224,6 +224,9 @@ void FillMCSecondaryHistAndCalculateAcceptance(TH2D*, TH2D*);                   
 Bool_t LoadSecondaryPionsFromExternalFile();                                                                // Loads secondary neutral pion input graphs from file
 Bool_t LoadSecondaryPionsFromCocktailFile(TString, TString);                                                // Loads secondary neutral pion input graphs from file
 
+Double_t fitGaussianPileUp(Double_t *x, Double_t *par);
+Double_t fitGaussianPileUp2(Double_t *x, Double_t *par);
+
 //****************************************************************************
 //************************** input histograms ********************************
 //****************************************************************************
@@ -636,6 +639,12 @@ TFile*      fFileCocktailInput                                          = NULL;
 TH1D*       fHistoYieldExternSecInput[3]                                = {NULL, NULL, NULL};
 TH1D*       fHistoYieldExternSecInputReb[3]                             = {NULL, NULL, NULL};
 
+//*****************************************************************************
+//******** monitoring of SPD pileup histograms ********************************
+//*****************************************************************************
+TH1F*       fHistoPileUpVertexDistance                                  = NULL;
+TH1F*       fHistoPileUpVertexDistance_SPDPileup                        = NULL;
+TH1F*       fHistoPileUpVertexDistance_TrackletHits                     = NULL;
 
 //****************************************************************************************************
 //*************** Function to initalize different fitting, plotting and integration windows***********

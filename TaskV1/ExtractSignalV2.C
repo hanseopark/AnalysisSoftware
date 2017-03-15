@@ -305,6 +305,13 @@ void ExtractSignalV2(   TString meson                   = "",
             cout << "INFO: found cluster output in PCM stream, adding it to the raw data file." << endl;
         }    
     }    
+
+    TList* EventCuts                    = (TList*)HistosGammaConversion->FindObject(Form("ConvEventCuts_%s",fEventCutSelectionRead.Data()));
+    if (EventCuts){
+      fHistoPileUpVertexDistance               = (TH1F*) EventCuts->FindObject(Form("PileupVertexDistance %s",fEventCutSelectionRead.Data()));
+      fHistoPileUpVertexDistance_SPDPileup     = (TH1F*) EventCuts->FindObject(Form("PileupVertexDistance_SPDPileup %s",fEventCutSelectionRead.Data()));
+      fHistoPileUpVertexDistance_TrackletHits  = (TH1F*) EventCuts->FindObject(Form("PileupVertexDistance_TrackletvsHits %s",fEventCutSelectionRead.Data()));
+    }
     
     cout << fMesonCutSelectionRead.Data() << endl;
     cout << fGammaCutSelectionRead.Data() << endl;   
@@ -1891,6 +1898,99 @@ void ExtractSignalV2(   TString meson                   = "",
      else canvasMesonMidPt->SaveAs(Form("%s/%s_data_MesonSubtractedFittingMidPt_%s.%s",outputDirMon.Data(),fPrefix.Data(),fCutSelection.Data(),Suffix.Data()));
 
 
+     ///*********************** SPD pileup monitoring
+     if(fHistoPileUpVertexDistance && fHistoPileUpVertexDistance_SPDPileup && fHistoPileUpVertexDistance_TrackletHits){
+       TCanvas* canvasSPDPileUp = new TCanvas("canvasSPDPileUp","",1550,1200);  // gives the page size
+       canvasSPDPileUp->SetTickx();
+       canvasSPDPileUp->SetTicky();
+       canvasSPDPileUp->SetLogy();
+
+       DrawGammaSetMarker(fHistoPileUpVertexDistance, 20, 1., kBlack, kBlack);
+       DrawGammaSetMarker(fHistoPileUpVertexDistance_SPDPileup, 20, 1, kBlue, kBlue);
+       DrawGammaSetMarker(fHistoPileUpVertexDistance_TrackletHits, 20, 1, kRed, kRed);
+       DrawAutoGammaMesonHistos( fHistoPileUpVertexDistance,
+                                   "", "distance between vertices", "numer of entries / bin",
+                                   kFALSE, 3.,0., kTRUE,
+                                   kFALSE, -0.004, 1.,
+                                   kFALSE, 0., 10.);
+       fHistoPileUpVertexDistance_SPDPileup->Draw("same");
+       fHistoPileUpVertexDistance_TrackletHits->Draw("same");
+       canvasSPDPileUp->Update();
+
+       TLegend* legendSPDPileUp = new TLegend(0.15,0.8,0.4,0.95);
+       legendSPDPileUp->SetFillColor(0);
+       legendSPDPileUp->SetLineColor(0);
+       legendSPDPileUp->SetTextSize(0.04);
+       legendSPDPileUp->AddEntry(fHistoPileUpVertexDistance,"PileUpVertexDistance","p");
+       legendSPDPileUp->AddEntry(fHistoPileUpVertexDistance_SPDPileup,"removed by SPDPileUp");
+       legendSPDPileUp->AddEntry(fHistoPileUpVertexDistance_TrackletHits,"removed by SPDTrackletHits");
+       legendSPDPileUp->Draw();
+
+       if (fIsMC) canvasSPDPileUp->SaveAs(Form("%s/MC_SPDPileUpTotal_%s.%s",outputDirMon.Data(),fCutSelection.Data(),Suffix.Data()));
+       else canvasSPDPileUp->SaveAs(Form("%s/data_SPDPileUpTOtal_%s.%s",outputDirMon.Data(),fCutSelection.Data(),Suffix.Data()));
+
+       TF1* fFitGausPileUp = new TF1("gausFitPileUp",fitGaussianPileUp,-15,15,3);
+       fFitGausPileUp->SetParameters(1,0,30);
+       fHistoPileUpVertexDistance_SPDPileup->Fit("gausFitPileUp","QRMNE0");
+
+       TF1* fFitGausTrackletHits = new TF1("gausFitPileUp2",fitGaussianPileUp2,-0.8,0.8,3);
+       fFitGausTrackletHits->SetParameters(1,0,1000);
+       fHistoPileUpVertexDistance_TrackletHits->Fit("gausFitPileUp2","QRMNE0");
+
+       DrawGammaSetMarker(fHistoPileUpVertexDistance_SPDPileup, 20, 1, kBlue, kBlue);
+       DrawGammaSetMarker(fHistoPileUpVertexDistance_TrackletHits, 20, 1, kGreen+3, kGreen+3);
+       DrawAutoGammaMesonHistos( fHistoPileUpVertexDistance_TrackletHits,
+                                   "", "distance between vertices", "numer of entries / bin",
+                                   kFALSE, 3.,0., kTRUE,
+                                   kFALSE, -0.004, 1.,
+                                   kFALSE, 0., 10.);
+       fHistoPileUpVertexDistance_SPDPileup->SetLineWidth(2);
+       fHistoPileUpVertexDistance_SPDPileup->Draw("same");
+//       fFitGausPileUp->SetLineColor(kGreen+2);
+//       fFitGausPileUp->Draw("same");
+       canvasSPDPileUp->Update();
+
+       TF1* fFitGausPileUpFull = new TF1("gausFitPileUpFull","gaus",-15,15);
+       fFitGausPileUpFull->SetParameters(fFitGausPileUp->GetParameters());
+       fFitGausPileUpFull->SetLineColor(kBlack);
+       fFitGausPileUpFull->SetLineStyle(2);
+       fFitGausPileUpFull->SetLineWidth(5);
+       fFitGausPileUpFull->Draw("same");
+
+       TF1* fFitGausTrackletHitsFull = new TF1("gausFitPileUpFull2","gaus",-0.8,0.8);
+       fFitGausTrackletHitsFull->SetParameters(fFitGausTrackletHits->GetParameters());
+       fFitGausTrackletHitsFull->SetLineColor(kRed);
+       fFitGausTrackletHitsFull->SetLineStyle(2);
+       fFitGausTrackletHitsFull->SetLineWidth(5);
+       fFitGausTrackletHitsFull->Draw("same");
+
+       Double_t pileUpIntegralTotal = fFitGausPileUpFull->Integral(-15,15);
+       Double_t pileUpIntegral = fFitGausPileUpFull->Integral(-15,-0.9);
+       pileUpIntegral += fFitGausPileUpFull->Integral(0.9,15);
+       pileUpIntegral += fFitGausTrackletHitsFull->Integral(-0.8,0.8);
+
+       Double_t ratioPileUpIntegrals = pileUpIntegral / pileUpIntegralTotal;
+
+       //Double_t integralPileUpVertexDistance_TrackletHits = fHistoPileUpVertexDistance_TrackletHits->Integral(1,fHistoPileUpVertexDistance_TrackletHits->GetNbinsX());
+       //Double_t ratioIntegralPileUpIntegrals = (integralPileUpVertexDistance_TrackletHits+pileUpIntegral) / pileUpIntegralTotal;
+
+       TLegend* legendSPDPileUp2 = new TLegend(0.15,0.7,0.5,0.95);
+       legendSPDPileUp2->SetFillColor(0);
+       legendSPDPileUp2->SetLineColor(0);
+       legendSPDPileUp2->SetTextSize(0.04);
+       legendSPDPileUp2->AddEntry(fHistoPileUpVertexDistance_SPDPileup,"removed by SPDPileUp");
+       legendSPDPileUp2->AddEntry(fHistoPileUpVertexDistance_TrackletHits,"removed by SPDTrackletHits");
+       legendSPDPileUp2->AddEntry(fFitGausPileUpFull,"fit of SPDPileUp");
+       legendSPDPileUp2->AddEntry(fFitGausTrackletHitsFull,"fit of SPDTrackletHits");
+       legendSPDPileUp2->AddEntry((TObject*)0,"","");
+       legendSPDPileUp2->AddEntry((TObject*)0,"SPD pile-up cuts","");
+       legendSPDPileUp2->AddEntry((TObject*)0,Form("efficiency: %.2f",ratioPileUpIntegrals),"");
+       //legendSPDPileUp2->AddEntry((TObject*)0,Form("%.2f",ratioIntegralPileUpIntegrals),"");
+       legendSPDPileUp2->Draw();
+
+       if (fIsMC) canvasSPDPileUp->SaveAs(Form("%s/MC_SPDPileUp_%s.%s",outputDirMon.Data(),fCutSelection.Data(),Suffix.Data()));
+       else canvasSPDPileUp->SaveAs(Form("%s/data_SPDPileUp_%s.%s",outputDirMon.Data(),fCutSelection.Data(),Suffix.Data()));
+     }
     // **************************************************************************************************************
     // ************************ Chi2/ndf compared MC vs Data ********************************************************
     // **************************************************************************************************************
@@ -5723,6 +5823,31 @@ Double_t LinearBGExclusionnew(Double_t *x, Double_t *par) {
     return par[0] + par[1]*x[0];
 }
 
+
+//****************************************************************************
+//******** definition of Gaussian to fit SPD pileup distribution  ************
+//****************************************************************************
+Double_t fitGaussianPileUp(Double_t *x, Double_t *par)
+{
+   if (x[0] > -0.9 && x[0] < 0.9) {
+     TF1::RejectPoint();
+     return 0;
+   }
+   return par[0]*(exp(-0.5*pow(((x[0]-par[1])/par[2]),2)));
+}
+
+Double_t fitGaussianPileUp2(Double_t *x, Double_t *par)
+{
+   if (x[0] > -0.2 && x[0] < 0.2) {
+     TF1::RejectPoint();
+     return 0;
+   }
+   if (x[0] < -0.8 || x[0] > 0.8) {
+     TF1::RejectPoint();
+     return 0;
+   }
+   return par[0]*(exp(-0.5*pow(((x[0]-par[1])/par[2]),2)));
+}
 
 //****************************************************************************
 //******** Calculation of FWHM for Gaussian + left side exponential  *********
