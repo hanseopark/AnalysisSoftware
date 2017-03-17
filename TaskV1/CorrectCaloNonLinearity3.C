@@ -545,17 +545,17 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
         fPlot[1]            = "#frac{LHC15g1a}{LHC11a - EMC1}";
     // Default configuration for LHC10 (7TeV) 
     } else if(select.CompareTo("LHC10-Calo")==0){
-        strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20160803-7TeV_NL/LHC10_GammaCalo_211.root";
-        strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20160803-7TeV_NL/LHC14j4_GammaCalo_211.root";
-        dataCut[0]          = "00000113_1111100013032220000_0163103100000050";
-        mcCut[0]            = "00000113_1111100013032220000_0163103100000050";
+        strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20161219-7TeV-std_sys_omega/LHC10_GammaCalo_210.root";
+        strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20161219-7TeV-std_sys_omega/LHC14j4_GammaCalo_210.root";
+        dataCut[0]          = "00000113_1111100067032220000_0163103100000050";
+        mcCut[0]            = "00000113_1111100067032220000_0163103100000050";
 
         fPlot[0]            = "#frac{LHC14j4b-f}{LHC10b-f}";
     } else if(select.CompareTo("LHC10-ConvCalo")==0){
-        strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20160803-7TeV_NL/LHC10_GammaConvCalo_211.root";
-        strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20160803-7TeV_NL/LHC14j4_GammaConvCalo_211.root";
-        dataCut[0]          = "00000113_00200009327000008250400000_1111100013032230000_0163103100000010";
-        mcCut[0]            = "00000113_00200009327000008250400000_1111100013032230000_0163103100000010";
+        strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20161219-7TeV-std_sys_omega/LHC10_GammaConvCalo_210.root";
+        strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20161219-7TeV-std_sys_omega/LHC14j4_GammaConvCalo_210.root";
+        dataCut[0]          = "00000113_00200009327000008250400000_1111100067032230000_0163103100000010";
+        mcCut[0]            = "00000113_00200009327000008250400000_1111100067032230000_0163103100000010";
 
         fPlot[0]            = "#frac{LHC14j4b-f}{LHC10b-f}";
     } else if(select.CompareTo("LHC13bc-Calo")==0){
