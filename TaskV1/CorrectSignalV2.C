@@ -141,6 +141,60 @@ void CorrectYield(TH1D* histoCorrectedYield, TH1D** histoRawSecYield, TH1D** his
     }
 }
 
+void CorrectYieldInclResonanceFeedDown(TH1D* histoCorrectedYield, TH1D** histoRawSecYield, TH1D** histoRawSecYieldFromToy, TH1D** histoResonanceFeedDownPi0, TH1D* histoEffiPt, TH1D* histoAcceptance, Double_t deltaRapid, Double_t scaling, Double_t nEvt, TString nameMeson){
+    histoCorrectedYield->Sumw2();
+    
+    // subtract standard secondary yield before event scaling
+    for (Int_t j = 0; j < 4; j++){
+        if (kIsMC){
+            if (histoRawSecYield[j]) histoCorrectedYield->Add(histoRawSecYield[j],-1.);
+        } else {
+            if (histoRawSecYieldFromToy[j] && j < 3){
+                cout << "will take secondary yield from toy approach for component: " << j << endl;
+            } else {
+                if (histoRawSecYield[j]) histoCorrectedYield->Add(histoRawSecYield[j],-1.);
+            }
+        }
+    }
+    // scale with number of events
+    histoCorrectedYield->Scale(1./nEvt);
+    // subtract secondary yield from toy approach after scaling with nuber of events
+    if (!kIsMC){
+        for (Int_t j = 0; j < 3; j++){
+            if (histoRawSecYieldFromToy[j]) histoCorrectedYield->Add(histoRawSecYieldFromToy[j],-1.);
+        }
+    }
+    // correct with acceptance and efficiency
+    histoCorrectedYield->Divide(histoCorrectedYield,histoAcceptance,1.,1.,"");
+    histoCorrectedYield->Divide(histoCorrectedYield,histoEffiPt,1.,1.,"");
+    
+    // subtract contribution from resonance feed down
+    if (!kIsMC) {
+        for (Int_t j = 0; j < 8; j++) {
+            if (histoResonanceFeedDownPi0[j]) histoCorrectedYield->Add(histoResonanceFeedDownPi0[j],-1.);
+        }
+    }
+    
+    // scale with 1/ (Delta rapidiy)
+    histoCorrectedYield->Scale(1./deltaRapid);
+    
+    // scale with 1/(2 pi)
+    histoCorrectedYield->Scale(scaling);
+    // scale with 1/pT
+    for (Int_t i = 1; i < histoCorrectedYield->GetNbinsX()+1 ; i++){
+        Double_t newBinContent = histoCorrectedYield->GetBinContent(i)/histoCorrectedYield->GetBinCenter(i);
+        Double_t newBinError = histoCorrectedYield->GetBinError(i)/histoCorrectedYield->GetBinCenter(i);
+        histoCorrectedYield->SetBinContent(i,newBinContent);
+        histoCorrectedYield->SetBinError(i,newBinError);
+    }
+    // scale with 1/ BR
+    if (nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
+        histoCorrectedYield->Scale(1./0.98798);
+    } else {
+        histoCorrectedYield->Scale(1./0.3931);
+    }
+}
+
 void CompileFullCorrectionFactor(TH1D* histoEffiPt, TH1D* histoAcceptance, Double_t deltaRapid){
     histoEffiPt->Sumw2();
     histoEffiPt->Multiply(histoEffiPt,histoAcceptance,1.,1.,"");
@@ -310,6 +364,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     // Naming conventions
     TString nameSecMeson[4]                         = {"K0S", "Lambda", "K0L", "Rest"};
     TString nameSecMesonPlot[4]                     = {"K_{s}^{0}", "#Lambda", "K_{l}^{0}", "Rest"};
+    TString nameResMeson[8]                         = {"Eta", "Rho0", "EtaPrime", "Omega", "Phi", "Delta0", "Delta+", "JPsi"};
+    TString nameResMesonPlot[8]                     = {"#eta", "#rho^{0}", "#eta'", "#omega", "#phi", "#Delta^{0}", "#Delta^{+}", "J/#psi"};
     TString nameIntRange[6]                         = {"", "Wide", "Narrow", "Left", "LeftWide", "LeftNarrow"};
     TString nameIntRangePlot[6]                     = {"right/ normal int", "right/wide int", "right/narrow int", "left/ normal int", "left/wide int", "left/narrow int"};
     TString nameIntBckResult[3]                     = {"pol2_normal","exp_normal","exp2_normal"};
@@ -334,6 +390,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     Color_t colorSecFromToy[3]                      = {kRed-2, kOrange+1, kCyan-2};
     Style_t markerStyleSecFromToy[3]                = {20, 33, 29};
     Size_t markerSizeSecFromToy[3]                  = {1.7, 2, 2.2};
+    Style_t markerStyleFeedDown[8]                  = {20, 25, 34, 27, 24, 21, 28, 33};
+    Size_t  markerSizeFeedDown[8]                   = {1.7, 1.7, 2.2, 2.2, 1.7, 1.7, 2.2, 2.2};
+    Color_t colorFeedDown[8]                        = {kRed-2, kOrange+1, kCyan-2, kBlue-2, kRed-2, kOrange+1, kCyan-2, kBlue-2};
     
 
     // set correct meson mass
@@ -416,18 +475,25 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         cout << "The secondary correction from the cocktail or toy has to be scaled with " << scaleFactorMeasXSecForExternalInput << endl;
 
     // read cocktail input if available
-    TString strExternalInputName                       = "";
-    TH1D* histoExternalInputSecPi0[3]                  = {NULL, NULL, NULL};
-    Bool_t foundCocktailInput                          = kFALSE;
+    TString strExternalInputName                            = "";
+    TH1D* histoExternalInputSecPi0[3]                       = {NULL, NULL, NULL};
+    TH1D* histoExternalInputFeedDownPi0[8]                  = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    Bool_t foundCocktailInput                               = kFALSE;
     if (!kIsMC){
         for (Int_t j = 0; j < 3; j++){
-            histoExternalInputSecPi0[j]                    = (TH1D*)fileUncorrected.Get(Form("histoSecPi0YieldFrom%s_FromCocktail",nameSecMeson[j].Data()));
+            histoExternalInputSecPi0[j]                     = (TH1D*)fileUncorrected.Get(Form("histoSecPi0YieldFrom%s_FromCocktail",nameSecMeson[j].Data()));
             if (histoExternalInputSecPi0[j]){
                 histoExternalInputSecPi0[j]->Scale(scaleFactorMeasXSecForExternalInput);
-                foundCocktailInput                         = kTRUE;
+                foundCocktailInput                          = kTRUE;
                 cout << "Using the cocktail input for secondary correction" << endl;
-                if (j==0) strExternalInputName = "Cocktail";
+                if (j==0) strExternalInputName              = "Cocktail";
             }
+        }
+        
+        // contribution from resonance feed down
+        for (Int_t j = 0; j < 8; j++) {
+            histoExternalInputFeedDownPi0[j]                = (TH1D*)fileUncorrected.Get(Form("histoResonanceFeedDownPi0YieldFrom%s_FromCocktail",nameResMeson[j].Data()));
+            if (histoExternalInputFeedDownPi0[j]) histoExternalInputFeedDownPi0[j]->Scale(scaleFactorMeasXSecForExternalInput);
         }
     }
     // read toy MC input if available
@@ -867,6 +933,18 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                                                         { NULL, NULL, NULL}, { NULL, NULL, NULL}, { NULL, NULL, NULL} };
     TH1D* histoRatioYieldSecMesonFromExtInput[6][3] = { { NULL, NULL, NULL}, { NULL, NULL, NULL}, { NULL, NULL, NULL},
                                                         { NULL, NULL, NULL}, { NULL, NULL, NULL}, { NULL, NULL, NULL} };
+    TH1D* histoYieldResonanceFeedDownPi0FromExternalInput[6][8] = { {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}  };
+    TH1D* histoRatioYieldResonanceFeedDownPi0FromExternalInput[6][8] = {    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                            {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                            {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                            {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                            {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                            {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}  };
     TH1D* histoYieldTrueGGFracMeson[3]              = { NULL, NULL, NULL };
     TH1D* histoYieldGGMeson[6]                      = { NULL, NULL, NULL, NULL, NULL, NULL };
     Bool_t haveSec[4]                               = { kTRUE, kTRUE, kTRUE, kTRUE };
@@ -1000,8 +1078,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 histoRatioYieldSecMeson[k][j]->Sumw2();
                 histoRatioYieldSecMeson[k][j]->Divide(histoRatioYieldSecMeson[k][j],histoUnCorrectedYield[k]);
             }
+            
             // create secondary yield from external input (Cocktail or Toy) and sec effi and acc
-
             for (Int_t j = 0; j < 3; j++){
                 if (histoSecAcceptance[j] && histoSecTrueEffi[k%3][j] && histoExternalInputSecPi0[j]){
                     histoYieldSecMesonFromExternalInput[k][j] = (TH1D*)histoExternalInputSecPi0[j]->Clone(Form("SecYieldFrom%sMeson%sFrom%s", nameSecMeson[j].Data(), nameIntRange[k].Data(),strExternalInputName.Data()));
@@ -1014,6 +1092,21 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     histoRatioYieldSecMesonFromExtInput[k][j]->Scale(nEvt);
                     histoRatioYieldSecMesonFromExtInput[k][j]->Divide(histoRatioYieldSecMesonFromExtInput[k][j],histoUnCorrectedYield[k]);
 
+                }
+            }
+            
+            // resonance feed down contributions
+            for (Int_t j = 0; j < 8; j++) {
+                if (histoExternalInputFeedDownPi0[j]) {
+                    histoYieldResonanceFeedDownPi0FromExternalInput[k][j] = (TH1D*)histoExternalInputFeedDownPi0[j]->Clone(Form("ResonanceFeedDownYieldFrom%sMeson%sFrom%s", nameSecMeson[j].Data(), nameIntRange[k].Data(),strExternalInputName.Data()));
+                    histoYieldResonanceFeedDownPi0FromExternalInput[k][j]->Sumw2();
+                    
+                    histoRatioYieldResonanceFeedDownPi0FromExternalInput[k][j]    = (TH1D*)histoYieldResonanceFeedDownPi0FromExternalInput[k][j]->Clone(Form("RatioResonanceFeedDownYieldFrom%sMeson%sFrom%sToRaw", nameSecMeson[j].Data(), nameIntRange[k].Data(),strExternalInputName.Data()));
+                    histoRatioYieldResonanceFeedDownPi0FromExternalInput[k][j]->Sumw2();
+                    histoRatioYieldResonanceFeedDownPi0FromExternalInput[k][j]->Multiply(histoAcceptance);
+                    histoRatioYieldResonanceFeedDownPi0FromExternalInput[k][j]->Multiply(histoTrueEffiPt[k%3]);
+                    histoRatioYieldResonanceFeedDownPi0FromExternalInput[k][j]->Scale(nEvt);
+                    histoRatioYieldResonanceFeedDownPi0FromExternalInput[k][j]->Divide(histoYieldResonanceFeedDownPi0FromExternalInput[k][j],histoUnCorrectedYield[k]);
                 }
             }
         }
@@ -1466,7 +1559,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     cout << "recalculating sec yield for "<< nameSecMeson[j].Data() << " in int range: " << nameIntRange[k].Data() << endl;
                     histoYieldSecMeson[k][j]            = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("SecYieldFrom%sMeson%s", nameSecMeson[j].Data(), nameIntRange[k].Data()));
                     histoYieldSecMeson[k][j]->Sumw2();
-                    histoYieldSecMeson[k][j]->Multiply(histoYieldTrueSecFracMeson[k][j]);
+                    histoYieldSecMeson[k][j]->Multiply(histoYieldTrueSecFracMeson[k%3][j]); // was [k]
                     histoYieldSecMeson[k][j]->Scale(scalingFacSec[j]);  
                     
                     histoRatioYieldSecMeson[k][j]       = (TH1D*)histoYieldSecMeson[k][j]->Clone(Form("RatioSecYieldFrom%sMeson%sToRaw", nameSecMeson[j].Data(), nameIntRange[k].Data()));
@@ -2730,26 +2823,52 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TH1D *RatioNormal[6]                    = {NULL, NULL, NULL, NULL, NULL, NULL};
     TH1D *RatioNormalToTrue                 = NULL;
     TH1D *RatioTrueMCInput                  = NULL;
-
+    
+    // corrected for resonance feed down
+    TH1D* histoFeedDownCorrectedYieldNorm[6]        = {NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D* histoFeedDownCorrectedYieldTrue[6]        = {NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D* histoFeedDownCorrectedYieldTrueFixed[3]   = {NULL, NULL, NULL};
+    TH1D* histoFeedDownCorrectedYieldFixed[3]       = {NULL, NULL, NULL};
+    TH1D* FeedDownCorrectedRatioTrue[6]             = {NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D* FeedDownCorrectedRatioNormal[6]           = {NULL, NULL, NULL, NULL, NULL, NULL};
 
     for (Int_t k = 0; k < 6; k++){
         Int_t m = k;
         histoCorrectedYieldNorm[k]      = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("CorrectedYieldNormEff%s",nameIntRange[k].Data()));
         histoCorrectedYieldTrue[k]      = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("CorrectedYieldTrueEff%s",nameIntRange[k].Data()));
+        
+        // resonance feed down correction
+        histoFeedDownCorrectedYieldNorm[k]      = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("FeedDownCorrectedYieldNormEff%s",nameIntRange[k].Data()));
+        histoFeedDownCorrectedYieldTrue[k]      = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("FeedDownCorrectedYieldTrueEff%s",nameIntRange[k].Data()));
+        
         if (k < 3){
             histoCorrectedYieldFixed[k]     = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("CorrectedYieldEff%sFixed",nameIntRange[k].Data()));
             histoCorrectedYieldTrueFixed[k] = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("CorrectedYieldTrueEff%sFixed",nameIntRange[k].Data()));
+            
+            // resonance feed down correction
+            histoFeedDownCorrectedYieldFixed[k]     = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("FeedDownCorrectedYieldEff%sFixed",nameIntRange[k].Data()));
+            histoFeedDownCorrectedYieldTrueFixed[k] = (TH1D*)histoUnCorrectedYield[k]->Clone(Form("FeedDownCorrectedYieldTrueEff%sFixed",nameIntRange[k].Data()));
         } else {    
             m = k-3;
         }
+        
         if (!optDalitz){
             cout << "correcting spectra in " << nameIntRange[k].Data() << endl;
             cout << k << "\t" << k << "\t" << m << endl;
             CorrectYield(histoCorrectedYieldNorm[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k] ,histoEffiPt[m], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
             CorrectYield(histoCorrectedYieldTrue[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k], histoTrueEffiPt[m], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
+            
+            // resonance feed down correction
+            CorrectYieldInclResonanceFeedDown(histoFeedDownCorrectedYieldNorm[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k], histoYieldResonanceFeedDownPi0FromExternalInput[k], histoEffiPt[m], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
+            CorrectYieldInclResonanceFeedDown(histoFeedDownCorrectedYieldTrue[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k], histoYieldResonanceFeedDownPi0FromExternalInput[k], histoTrueEffiPt[m], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
+            
             if (k < 3){
                 CorrectYield(histoCorrectedYieldTrueFixed[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k], histoTrueEffiPtFixed[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
                 CorrectYield(histoCorrectedYieldFixed[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k], histoEffiPtFixed[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
+                
+                // resonance feed down correction
+                CorrectYieldInclResonanceFeedDown(histoFeedDownCorrectedYieldTrueFixed[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k], histoYieldResonanceFeedDownPi0FromExternalInput[k], histoTrueEffiPtFixed[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
+                CorrectYieldInclResonanceFeedDown(histoFeedDownCorrectedYieldFixed[k], histoYieldSecMeson[k], histoYieldSecMesonFromExternalInput[k], histoYieldResonanceFeedDownPi0FromExternalInput[k], histoEffiPtFixed[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
             }    
         } else {
             CorrectYieldDalitz(histoCorrectedYieldNorm[k], histoYieldGGMeson[k], histoEffiPt[k], histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
@@ -2760,6 +2879,12 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         RatioTrue[k]->Divide(RatioTrue[k],histoCorrectedYieldTrue[0],1.,1.,"B");
         RatioNormal[k]                  = (TH1D*) histoCorrectedYieldNorm[k]->Clone(); 
         RatioNormal[k]->Divide(RatioNormal[k],histoCorrectedYieldNorm[0],1.,1.,"B");
+        
+        // resonance feed down corrected
+        FeedDownCorrectedRatioTrue[k]   = (TH1D*) histoFeedDownCorrectedYieldTrue[k]->Clone();
+        FeedDownCorrectedRatioTrue[k]->Divide(FeedDownCorrectedRatioTrue[k],histoFeedDownCorrectedYieldTrue[0],1.,1.,"B");
+        FeedDownCorrectedRatioNormal[k] = (TH1D*) histoFeedDownCorrectedYieldNorm[k]->Clone();
+        FeedDownCorrectedRatioNormal[k]->Divide(FeedDownCorrectedRatioNormal[k],histoFeedDownCorrectedYieldNorm[0],1.,1.,"B");
         
         if (k == 0){
             RatioTrueMCInput            = (TH1D*) histoMCYieldMeson->Clone();
@@ -2855,6 +2980,55 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         
     canvasCorrectedYield->Update();
     canvasCorrectedYield->SaveAs(Form("%s/%s_%s_CorrectedYieldNormalEff_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
+    
+    // resonance feed down corrected
+    padCorrectedYieldHistos->cd();
+    
+    histo2DDummyPt->DrawCopy();
+    
+    for (Int_t k = 0; k < 6; k++){
+        DrawGammaSetMarker(histoFeedDownCorrectedYieldTrue[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
+        histoFeedDownCorrectedYieldTrue[k]->DrawCopy("e1,same");
+    }
+    legendYield3->Draw();
+    PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+    
+    padCorrectedYieldRatios->cd();
+    
+    histo2DDummyRatioPt->DrawCopy();
+    
+    for (Int_t k = 0; k < 6; k++){
+        DrawGammaSetMarker(FeedDownCorrectedRatioTrue[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
+        FeedDownCorrectedRatioTrue[k]->DrawCopy("e1,same");
+    }
+    DrawGammaLines(0., histoFeedDownCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(histoFeedDownCorrectedYieldTrue[0]->GetNbinsX()),1., 1.,0.1);
+    
+    canvasCorrectedYield->Update();
+    canvasCorrectedYield->SaveAs(Form("%s/%s_%s_ResonanceFeedDownCorrectedYieldTrueEff_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
+    
+    padCorrectedYieldHistos->cd();
+    
+    histo2DDummyPt->DrawCopy();
+    
+    for (Int_t k = 0; k < 6; k++){
+        DrawGammaSetMarker(histoFeedDownCorrectedYieldNorm[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
+        histoFeedDownCorrectedYieldNorm[k]->DrawCopy("e1,same");
+    }
+    legendYield3->Draw();
+    PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+    
+    padCorrectedYieldRatios->cd();
+    
+    histo2DDummyRatioPt->DrawCopy();
+    
+    for (Int_t k = 0; k < 6; k++){
+        DrawGammaSetMarker(FeedDownCorrectedRatioNormal[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
+        FeedDownCorrectedRatioNormal[k]->DrawCopy("e1,same");
+    }
+    DrawGammaLines(0., histoFeedDownCorrectedYieldNorm[0]->GetXaxis()->GetBinUpEdge(histoFeedDownCorrectedYieldNorm[0]->GetNbinsX()),1., 1.,0.1);
+    
+    canvasCorrectedYield->Update();
+    canvasCorrectedYield->SaveAs(Form("%s/%s_%s_ResonanceFeedDownCorrectedYieldNormalEff_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
     
     // **************************************************************************************
     // ************** Plot corrected yield with differnt efficiencies & MC yield ************
@@ -3031,6 +3205,47 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
 
         delete canvasRAWYieldSec;
+        
+        // resonance feed down yield plot
+        TCanvas* canvasFeedDownYield  = new TCanvas("canvasFeedDownYield","",200,10,1350,900);
+        DrawGammaCanvasSettings( canvasFeedDownYield, 0.10, 0.01, 0.02, 0.08);
+        canvasFeedDownYield->SetLogy(1);
+        
+        nColumnsSec                 = 2;
+        nSecPlot                    = 4;
+        
+        TLegend* legendFeedDownYield  = GetAndSetLegend2(0.65,0.93-(nSecPlot+1)*0.035,0.93,0.93, 0.035, nColumnsSec, "", 42, 0.12);
+        
+        minRawYieldDrawing          = 1e6;
+        for (Int_t iPt = 1; iPt < histoUnCorrectedYieldDrawing->GetNbinsX()+1; iPt++){
+            if ( histoUnCorrectedYieldDrawing->GetBinContent(iPt) > 0 && minRawYieldDrawing > histoUnCorrectedYieldDrawing->GetBinContent(iPt)){
+                minRawYieldDrawing  = histoUnCorrectedYieldDrawing->GetBinContent(iPt);
+            }
+        }
+        minRawYieldDrawing          = minRawYieldDrawing*1e-4;
+        
+        histoUnCorrectedYieldDrawing->GetYaxis()->SetRangeUser(minRawYieldDrawing, histoUnCorrectedYieldDrawing->GetMaximum());
+        DrawGammaSetMarker(histoUnCorrectedYieldDrawing, 20, 1.7, kBlack, kBlack);
+        histoUnCorrectedYieldDrawing->Draw("e1");
+        legendFeedDownYield->AddEntry(histoUnCorrectedYieldDrawing,"RAW yield");
+        legendFeedDownYield->AddEntry((TObject*)0,"","");
+        
+        for (Int_t j = 0; j < 8; j++){
+            if (histoYieldResonanceFeedDownPi0FromExternalInput[0][j] && histoYieldResonanceFeedDownPi0FromExternalInput[0][j]->GetEntries()) {
+                histoYieldResonanceFeedDownPi0FromExternalInput[0][j]->Multiply(histoAcceptance);
+                histoYieldResonanceFeedDownPi0FromExternalInput[0][j]->Multiply(histoTrueEffiPt[0]);
+                DrawGammaSetMarker(histoYieldResonanceFeedDownPi0FromExternalInput[0][j],  markerStyleFeedDown[j] , markerSizeFeedDown[j], colorFeedDown[j], colorFeedDown[j]);
+                histoYieldResonanceFeedDownPi0FromExternalInput[0][j]->DrawCopy("same,e1");
+                legendFeedDownYield->AddEntry(histoYieldResonanceFeedDownPi0FromExternalInput[0][j],Form("#pi^{0} from %s",nameResMesonPlot[j].Data()),"p");
+            }
+        }
+        legendFeedDownYield->Draw();
+        
+        PutProcessLabelAndEnergyOnPlot(0.15, 0.23, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        
+        canvasFeedDownYield->Update();
+        canvasFeedDownYield->SaveAs(Form("%s/%s_%s_ResonanceFeedDownYieldPt_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
+        
     } else if (optDalitz){
         TCanvas* canvasRAWYieldSec  = new TCanvas("canvasRAWYieldSec","",200,10,1350,900);  // gives the page size
         DrawGammaCanvasSettings( canvasRAWYieldSec, 0.10, 0.01, 0.02, 0.08); 
@@ -3372,12 +3587,25 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         for (Int_t k = 0; k < 6; k++){
             if (histoCorrectedYieldTrue[k])     histoCorrectedYieldTrue[k]->Write();
             if (histoCorrectedYieldNorm[k])     histoCorrectedYieldNorm[k]->Write();
+            
+            // resonance feed down corrected
+            if (!kIsEta) {
+                if (histoFeedDownCorrectedYieldTrue[k])     histoFeedDownCorrectedYieldTrue[k]->Write();
+                if (histoFeedDownCorrectedYieldNorm[k])     histoFeedDownCorrectedYieldNorm[k]->Write();
+            }
         }
         for (Int_t k = 0; k < 3; k++){
             if (histoTrueEffiPt[k])             histoTrueEffiPt[k]->Write(Form("TrueMesonEffi%sPt",nameIntRange[k].Data()));
             if (histoEffiPt[k])                 histoEffiPt[k]->Write(Form("MesonEffi%sPt",nameIntRange[k].Data()));
             if (histoCorrectedYieldFixed[k])    histoCorrectedYieldFixed[k]->Write();
             if (histoCorrectedYieldTrueFixed[k])histoCorrectedYieldTrueFixed[k]->Write();
+            
+            // resonance feed down corrected
+            if (!kIsEta) {
+                if (histoFeedDownCorrectedYieldFixed[k])    histoFeedDownCorrectedYieldFixed[k]->Write();
+                if (histoFeedDownCorrectedYieldTrueFixed[k])histoFeedDownCorrectedYieldTrueFixed[k]->Write();
+            }
+            
             for (Int_t j = 0; j < 4; j++){
                 if (histoYieldSecMeson[k][j])           histoYieldSecMeson[k][j]->Write();
                 if (histoRatioYieldSecMeson[k][j])      histoRatioYieldSecMeson[k][j]->Write();
