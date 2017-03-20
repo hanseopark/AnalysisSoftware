@@ -64,6 +64,8 @@ Int_t       fNRebinGlobal                                               = 2;
 Int_t       maxNSec                                                     = 4;
 TString     nameSecondaries[4]                                          = {"K0S", "Lambda", "K0L", "Rest"};
 TString     nameSecondariesCocktail[4]                                  = {"K0s", "Lambda", "K0l", "Rest"};
+TString     nameResonanceFeedDownContributions[8]                       = {"Eta", "Rho0", "EtaPrime", "Omega", "Phi", "Delta0", "Delta+", "JPsi"};
+TString     nameResonanceFeedDownContributionsCocktail[8]               = {"Eta", "rho0", "EtaPrim", "omega", "phi", "Delta0", "Delta+", "J/psi"};
 TString     nameIntRange[6]                                             = {"", "Wide", "Narrow", "Left", "LeftWide", "LeftNarrow"};
 TString     nameIntBck[6]                                               = {"Minpol2","Pluspol2","Minexp","Plusexp","Minexp2","Plusexp2"};
 TString     nameIntBckRatios[6]                                         = {"RatioMinpol2","RatioPluspol2","RatioMinexp","RatioPlusexp","RatioMinexp2","RatioPlusexp2"};
@@ -638,6 +640,8 @@ TFile*      fFileToyMCInput[3]                                          = {NULL,
 TFile*      fFileCocktailInput                                          = NULL;
 TH1D*       fHistoYieldExternSecInput[3]                                = {NULL, NULL, NULL};
 TH1D*       fHistoYieldExternSecInputReb[3]                             = {NULL, NULL, NULL};
+TH1D*       fHistoYieldExternResonanceFeedDownInput[8]                  = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+TH1D*       fHistoYieldExternResonanceFeedDownInputReb[8]               = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 
 //*****************************************************************************
 //******** monitoring of SPD pileup histograms ********************************

@@ -1698,9 +1698,9 @@ void ExtractSignalV2(   TString meson                   = "",
     
     
     if (!fIsMC && meson.Contains("Pi0") ){
-       fHaveCocktailInputForSec= LoadSecondaryPionsFromCocktailFile(cutSelection,optionEnergy);
+       fHaveCocktailInputForSec     = LoadSecondaryPionsFromCocktailFile(cutSelection,optionEnergy);
        if(!fHaveCocktailInputForSec) 
-          fHaveToyMCInputForSec   = LoadSecondaryPionsFromExternalFile();
+          fHaveToyMCInputForSec     = LoadSecondaryPionsFromExternalFile();
 
       if (fHaveCocktailInputForSec){
                cout << "SECONDARIES: I am gonna add the cocktail output to the uncorrected file" << endl;
@@ -3100,30 +3100,52 @@ Bool_t LoadSecondaryPionsFromExternalFile(){
 // - rebin them according to current pi0 binning
 //******************************************************************************
 Bool_t LoadSecondaryPionsFromCocktailFile(TString cutSelection, TString optionEnergy){
-   TString nameCocktailFile                    =Form("%s/%s/SecondaryPi0%s_%.2f_%s.root",cutSelection.Data(),optionEnergy.Data(),fPeriodFlag.Data(),fYMaxMeson/2,cutSelection.Data());
-   fFileCocktailInput                  = new TFile(nameCocktailFile.Data());
+   TString nameCocktailFile                     = Form("%s/%s/SecondaryPi0%s_%.2f_%s.root",cutSelection.Data(),optionEnergy.Data(),fPeriodFlag.Data(),fYMaxMeson/2,cutSelection.Data());
+   fFileCocktailInput                           = new TFile(nameCocktailFile.Data());
    if (!fFileCocktailInput->IsZombie()){
-      for (Int_t j = 0; j < 3; j++){
-         cout << "found correct input: " << nameCocktailFile.Data() << endl;
-         cout << "trying to find " << Form("Pi0_From_%s_Pt_OrBin", nameSecondariesCocktail[j].Data()) << endl;
+       cout << "found correct input: " << nameCocktailFile.Data() << endl;
+       
+       // secondary neutral pions
+       for (Int_t j = 0; j < 3; j++){
+           cout << "trying to find " << Form("Pi0_From_%s_Pt_OrBin", nameSecondariesCocktail[j].Data()) << endl;
          
-         fHistoYieldExternSecInput[j]         = (TH1D*)fFileCocktailInput->Get(Form("Pi0_From_%s_Pt_OrBin", nameSecondariesCocktail[j].Data()));
-         if (fHistoYieldExternSecInput[j]){
-            fHistoYieldExternSecInput[j]->Sumw2();
-            fHistoYieldExternSecInput[j]->SetName(Form("histoSecPi0YieldFrom%s_FromCocktail_orgBinning",nameSecondaries[j].Data())); // Proper bins in Pt
+           fHistoYieldExternSecInput[j]           = (TH1D*)fFileCocktailInput->Get(Form("Pi0_From_%s_Pt_OrBin", nameSecondariesCocktail[j].Data()));
+           if (fHistoYieldExternSecInput[j]){
+               fHistoYieldExternSecInput[j]->Sumw2();
+               fHistoYieldExternSecInput[j]->SetName(Form("histoSecPi0YieldFrom%s_FromCocktail_orgBinning",nameSecondaries[j].Data())); // Proper bins in Pt
             
-            fHistoYieldExternSecInputReb[j]  =  (TH1D*)fHistoYieldExternSecInput[j]->Rebin(fNBinsPt,Form("histoSecPi0YieldFrom%s_FromCocktail",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
-            if (fHistoYieldExternSecInputReb[j]){
-               fHistoYieldExternSecInputReb[j]->Divide(fDeltaPt);
-               fHistoYieldExternSecInput[j]->Scale(1./fHistoYieldExternSecInput[j]->GetBinWidth(1));
-            }
-         } else {
-            cout << "file didn't contain proper histo" << endl;
-         }
-      }
-      return kTRUE;
-   }
-   return kFALSE;
+               fHistoYieldExternSecInputReb[j]     = (TH1D*)fHistoYieldExternSecInput[j]->Rebin(fNBinsPt,Form("histoSecPi0YieldFrom%s_FromCocktail",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
+               if (fHistoYieldExternSecInputReb[j]){
+                   fHistoYieldExternSecInputReb[j]->Divide(fDeltaPt);
+                   fHistoYieldExternSecInput[j]->Scale(1./fHistoYieldExternSecInput[j]->GetBinWidth(1));
+               }
+           } else {
+               cout << "file didn't contain " << Form("Pi0_From_%s_Pt_OrBin", nameSecondariesCocktail[j].Data()) << endl;
+           }
+       }
+       
+       // neutral pions from resonance decays
+       for (Int_t j = 0; j < 8; j++) {
+           cout << "trying to find " << Form("Pi0_From_%s_Pt_OrBin", nameResonanceFeedDownContributionsCocktail[j].Data()) << endl;
+           
+           fHistoYieldExternResonanceFeedDownInput[j]           = (TH1D*)fFileCocktailInput->Get(Form("Pi0_From_%s_Pt_OrBin", nameResonanceFeedDownContributionsCocktail[j].Data()));
+           if (fHistoYieldExternResonanceFeedDownInput[j]) {
+               fHistoYieldExternResonanceFeedDownInput[j]->Sumw2();
+               fHistoYieldExternResonanceFeedDownInput[j]->SetName(Form("histoResonanceFeedDownPi0YieldFrom%s_FromCocktail_orgBinning",nameResonanceFeedDownContributions[j].Data()));
+               
+               fHistoYieldExternResonanceFeedDownInputReb[j]    = (TH1D*)fHistoYieldExternResonanceFeedDownInput[j]->Rebin(fNBinsPt,Form("histoResonanceFeedDownPi0YieldFrom%s_FromCocktail",nameResonanceFeedDownContributions[j].Data()),fBinsPt);
+               if (fHistoYieldExternResonanceFeedDownInputReb[j]) {
+                   fHistoYieldExternResonanceFeedDownInputReb[j]->Divide(fDeltaPt);
+                   fHistoYieldExternResonanceFeedDownInput[j]->Scale(1./fHistoYieldExternResonanceFeedDownInput[j]->GetBinWidth(1));
+               }
+           } else {
+               cout << "file didn't contain " << Form("Pi0_From_%s_Pt_OrBin", nameResonanceFeedDownContributionsCocktail[j].Data()) << endl;
+           }
+       }
+
+       return kTRUE;
+    }
+    return kFALSE;
 }
 
 
