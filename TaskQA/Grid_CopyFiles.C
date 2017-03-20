@@ -589,42 +589,80 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
     //*********************************************************************************************************************************
     //*********************************************************************************************************************************
 
-    const Int_t nSets = 12;
-    const Int_t nData = 12;
+//    const Int_t nSets = 12;
+//    const Int_t nData = 6;
+//    TString DataSets[nSets]={
+//      "LHC10b", "LHC10c", "LHC10d", "LHC10e", "LHC10f", "LHC10c_900GeV",
+//      "LHC14j4b", "LHC14j4c", "LHC14j4d", "LHC14j4e", "LHC14j4f", "LHC14j4c_900GeV"
+//    };
+
+//    TString train = "Legotrain-vAN-20170317-7TeV-NL";
+
+//    TString runlist[nSets] = {
+//      "merge_runlist_3","merge_runlist_3","merge_runlist_3","merge_runlist_3","merge_runlist_3","merge_runlist_4",
+//      "merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_4"
+//    };
+
+//    Int_t trainRuns[nSets] = {
+//      2032,2033,2034,2035,2036,2033,
+//      2803,2804,2805,2806,2807,2804
+//    };
+//    const Int_t nFiles = 7;
+//    TString Files[nFiles] = {
+//      "GammaCalo_201","GammaCalo_211",
+//      "GammaConvCalo_201","GammaConvCalo_211",
+//      "GammaConvNeutralMesonPiPlPiMiPiZero_0_9",
+//      "GammaConvNeutralMesonPiPlPiMiPiZero_1_9",
+//      "GammaConvNeutralMesonPiPlPiMiPiZero_2_9"
+//    };
+
+//    const Int_t nMerge = 4;
+//    TString strMerge[nMerge]={"LHC10","LHC10_900GeV","LHC14j4","LHC14j4_900GeV"};
+//    std::vector<Int_t> mergeVec[nMerge];
+//    std::vector<Int_t>::iterator it;
+//    for(Int_t i=0; i<nSets; i++){
+//      if(0<=i && i<=4) mergeVec[0].push_back(i);
+//      if(i==5) mergeVec[1].push_back(i);
+//      if(6<=i && i<=10) mergeVec[2].push_back(i);
+//      if(i==11) mergeVec[3].push_back(i);
+//    }
+
+    //*********************************************************************************************************************************
+    //*********************************************************************************************************************************
+    //*********************************************************************************************************************************
+
+    const Int_t nSets = 4;
+    const Int_t nData = 4;
     TString DataSets[nSets]={
-      "LHC10b", "LHC10c", "LHC10d", "LHC10e", "LHC10f", "LHC10c_900GeV",
-      "LHC14j4b", "LHC14j4c", "LHC14j4d", "LHC14j4e", "LHC14j4f", "LHC14j4c_900GeV"
+      "LHC10c_100", "LHC10c_900GeV_100",
+      "LHC10c_200", "LHC10c_900GeV_200"
     };
 
-    TString train = "Legotrain-vAN-20170317-7TeV-NL";
+    TString train = "Legotrain-vAN-20170317-7TeV-sys-time";
 
     TString runlist[nSets] = {
-      "merge_runlist_3","merge_runlist_3","merge_runlist_3","merge_runlist_3","merge_runlist_3","merge_runlist_4",
-      "merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_2","merge_runlist_4"
+      "merge_runlist_3","merge_runlist_4",
+      "merge_runlist_3","merge_runlist_4"
     };
 
     Int_t trainRuns[nSets] = {
-      2032,2033,2034,2035,2036,2033,
-      2803,2804,2805,2806,2807,2804
+      2037,2038,2037,2038
     };
-    const Int_t nFiles = 7;
+    const Int_t nFiles = 2;
     TString Files[nFiles] = {
-      "GammaCalo_201","GammaCalo_211",
-      "GammaConvCalo_201","GammaConvCalo_211",
-      "GammaConvNeutralMesonPiPlPiMiPiZero_0_9",
-      "GammaConvNeutralMesonPiPlPiMiPiZero_1_9",
-      "GammaConvNeutralMesonPiPlPiMiPiZero_2_9"
+      "GammaCalo_201",
+      "GammaConvCalo_201"
     };
 
     const Int_t nMerge = 4;
-    TString strMerge[nMerge]={"LHC10","LHC10_900GeV","LHC14j4","LHC14j4_900GeV"};
+    TString strMerge[nMerge]={"LHC10_100","LHC10_900GeV_100","LHC10_200","LHC10_900GeV_200"};
     std::vector<Int_t> mergeVec[nMerge];
     std::vector<Int_t>::iterator it;
     for(Int_t i=0; i<nSets; i++){
-      if(0<=i && i<=4) mergeVec[0].push_back(i);
-      if(i==5) mergeVec[1].push_back(i);
-      if(6<=i && i<=10) mergeVec[2].push_back(i);
-      if(i==11) mergeVec[3].push_back(i);
+      if(i==0) mergeVec[0].push_back(i);
+      if(i==1) mergeVec[1].push_back(i);
+      if(i==2) mergeVec[2].push_back(i);
+      if(i==3) mergeVec[3].push_back(i);
     }
 
 //*********************************************************************************************************************************

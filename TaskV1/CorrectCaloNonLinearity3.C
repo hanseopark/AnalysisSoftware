@@ -141,7 +141,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
         exampleBin2         = 16;
     } else if (select.Contains("ConvCalo") && select.Contains("LHC10") ){
         startPtBin          = 3;
-        endPtBin            = 21;
+        endPtBin            = 20;
         exampleBin1         = 4;
         exampleBin2         = 19;
     } else if (select.Contains("Calo") && select.Contains("LHC10") ){
@@ -545,15 +545,15 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
         fPlot[1]            = "#frac{LHC15g1a}{LHC11a - EMC1}";
     // Default configuration for LHC10 (7TeV) 
     } else if(select.CompareTo("LHC10-Calo")==0){
-        strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20161219-7TeV-std_sys_omega/LHC10_GammaCalo_210.root";
-        strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20161219-7TeV-std_sys_omega/LHC14j4_GammaCalo_210.root";
+        strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20170317-7TeV-NL/LHC10_GammaCalo_211.root";
+        strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20170317-7TeV-NL/LHC14j4_GammaCalo_211.root";
         dataCut[0]          = "00000113_1111100067032220000_0163103100000050";
         mcCut[0]            = "00000113_1111100067032220000_0163103100000050";
 
         fPlot[0]            = "#frac{LHC14j4b-f}{LHC10b-f}";
     } else if(select.CompareTo("LHC10-ConvCalo")==0){
-        strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20161219-7TeV-std_sys_omega/LHC10_GammaConvCalo_210.root";
-        strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20161219-7TeV-std_sys_omega/LHC14j4_GammaConvCalo_210.root";
+        strDataFile[0]      = "/home/daniel/data/work/Grid/Legotrain-vAN-20170317-7TeV-NL/LHC10_GammaConvCalo_211.root";
+        strMCFile[0]        = "/home/daniel/data/work/Grid/Legotrain-vAN-20170317-7TeV-NL/LHC14j4_GammaConvCalo_211.root";
         dataCut[0]          = "00000113_00200009327000008250400000_1111100067032230000_0163103100000010";
         mcCut[0]            = "00000113_00200009327000008250400000_1111100067032230000_0163103100000010";
 
@@ -919,7 +919,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
                if(fBins[iClusterPt]>=5){
                    sliceHist->Rebin(8);
                    sliceBGHist->Rebin(8);
-               } else if(fBins[iClusterPt]>=3.2){
+               } else if(fBins[iClusterPt]>=3.6){
                    sliceHist->Rebin(4);
                    sliceBGHist->Rebin(4);
                } else {
@@ -927,9 +927,12 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
                   sliceBGHist->Rebin(2);
                }
             } else if(select.Contains("LHC10-ConvCalo") ) {
-               if(fBins[iClusterPt]>=8){
-                   sliceHist->Rebin(4);
-                   sliceBGHist->Rebin(4);
+               if(fBins[iClusterPt]>=10){
+                   sliceHist->Rebin(10);
+                   sliceBGHist->Rebin(10);
+               } else if(fBins[iClusterPt]>=8){
+                   sliceHist->Rebin(5);
+                   sliceBGHist->Rebin(5);
                } else if(fBins[iClusterPt]>=5) {
                    sliceHist->Rebin(4);
                    sliceBGHist->Rebin(4);
@@ -1232,7 +1235,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
     if(select.Contains("LHC10-ConvCalo")) 
         startFit                    = 5;
     if(select.Contains("-Calo")) 
-        startFit                    = 3.2;
+        startFit                    = 2.8;
     if(select.Contains("LHC13bc-Calo")) 
         startFit                    = 2.4;
     if(select.Contains("LHC13bc-ConvCalo")) 
