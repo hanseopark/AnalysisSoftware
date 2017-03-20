@@ -76,7 +76,6 @@ void PrepareSecondaries(    TString     meson                       = "",
     gSystem->Exec("mkdir -p "+outputDir);
 
     //************************** Set global variables ***************************************************************
-    //fDate                                                     = ReturnDateString();
     fEnergyFlag                                                 = option;
     fPeriodFlag                                                 = period;
     fdirectphoton                                               = directphotonPlots;
@@ -283,8 +282,8 @@ void PrepareSecondaries(    TString     meson                       = "",
     cout << "deltaPhi         = "     << deltaPhi       << endl;
     if (isCalo)
         cout << "deltaPhiCalo     = " << deltaPhiCalo   << endl;
-    cout << "add. scaling eta = "     << scalingEta     << endl;
-    cout << "add. scaling phi = "     << scalingPhi     << endl;
+    cout << "add. scaling eta = "     << scalingEta     << " (for photons only)" << endl;
+    cout << "add. scaling phi = "     << scalingPhi     << " (for photons only)" << endl;
     cout << "========================================"  << endl;
 
     //***************************** Get number of spectra ***********************************************************

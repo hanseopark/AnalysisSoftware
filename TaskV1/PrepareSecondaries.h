@@ -1,7 +1,6 @@
 // provided by Gamma Conversion Group, $ALICE_PHYSICS/PWGGA/GammaConv ;https://twiki.cern.ch/twiki/bin/view/ALICE/PWG4GammaConversion
 
 //************************** Some general definitions *************************************
-//TString     fDate                                     = "";
 TString     fAnalyzedMeson                              = "";
 TString     fEnergyFlag                                 = "";
 TString     fPeriodFlag                                 = "";
