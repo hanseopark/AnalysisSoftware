@@ -231,13 +231,6 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
         maxPhiCalo                                              = AnalyseClusterMaxPhiCut(phiMaxCut.Atoi());
     }
     
-    Double_t scalingEta                                         = 1.;
-    Double_t scalingPhi                                         = 1.;
-    if (isCalo) {
-        scalingEta                                              = deltaEtaCalo/deltaEta;
-        scalingPhi                                              = deltaPhiCalo/deltaPhi;
-    }
-    
     cout << "========================================"  << endl;
     cout << "deltaRap         = "     << deltaRap       << endl;
     cout << "deltaPtGen       = "     << deltaPtGen     << endl;
@@ -248,8 +241,6 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
     cout << "deltaPhi         = "     << deltaPhi       << endl;
     if (isCalo)
         cout << "deltaPhiCalo     = " << deltaPhiCalo   << endl;
-    cout << "add. scaling eta = "     << scalingEta     << endl;
-    cout << "add. scaling phi = "     << scalingPhi     << endl;
     cout << "========================================"  << endl;
 
     //***************************** Get number of spectra ***********************************************************
