@@ -3679,42 +3679,6 @@ Double_t ReturnCorrectXSection ( TString energy,
 }
 
 //************************************************************************************
-//************ Return cocktail normalization factor **********************************
-//************************************************************************************
-Double_t ReturnCocktailNormalization(TString energy, TString eventCutString) {
-
-    // cocktail is normalized per INEL event, except for: PbPb, pPb 5TeV and pp 8TeV
-
-    Int_t       selTrig         = 0;    // 0 = V0OR, 1 = V0AND, 2 = T0OR, 3 = INEL
-    TString     trigger         = eventCutString(GetEventSelectSpecialTriggerCutPosition(),2);
-    if (trigger.Atoi() == 10 || trigger.Atoi() == 52 || trigger.Atoi() == 83  || trigger.Atoi() == 85 || trigger.Atoi() == 81 ) {
-        selTrig                 = 1;
-    }
-
-    Double_t    xSec            = ReturnCorrectXSection(energy, selTrig);
-    Double_t    xSecINEL        = ReturnCorrectXSection(energy, 3);
-    Double_t    scaleFactor     = 1.;
-    if (energy.BeginsWith("PbPb")) {
-        scaleFactor             = 1.;
-    } else if (energy.BeginsWith("pPb")) {
-        scaleFactor             = 1.;
-    } else {
-        if (energy.CompareTo("8TeV") == 0) {
-            scaleFactor         = 1.;
-        } else {
-            if (xSec && xSecINEL)
-                scaleFactor     = xSecINEL/xSec;
-            else
-                cout << "ERROR: xSec not found for " << energy.Data() << ", " << selTrig << endl;
-        }
-    }
-
-    cout << "Additional normlization factor for spectra from cocktail simulation: " << scaleFactor << endl;
-
-    return scaleFactor;
-}
-
-//************************************************************************************
 //* Decodes from the mode the respective reco process and return correct label + details 
 //************************************************************************************
 TString ReturnFullTextReconstructionProcess( Int_t mode, Int_t separate = 0, TString meson = "", TString clusterCutNumber = "" ){ 
@@ -3854,6 +3818,48 @@ Double_t ReturnTriggerRejectionFactor(TString energy, Int_t trigger){
       }
   }
     return triggerRejec;
+}
+
+//************************************************************************************
+//************ Return cocktail normalization factor **********************************
+//************************************************************************************
+Double_t ReturnCocktailNormalization(TString energy, TString eventCutString) {
+
+    // cocktail is normalized per INEL event, except for: PbPb, pPb 5TeV and pp 8TeV
+
+    Int_t       selTrig             = 0;    // 0 = V0OR, 1 = V0AND, 2 = T0OR, 3 = INEL
+    TString     trigger             = eventCutString(GetEventSelectSpecialTriggerCutPosition(),2);
+    if (trigger.Atoi() == 10 || trigger.Atoi() == 52 || trigger.Atoi() == 83  || trigger.Atoi() == 85 || trigger.Atoi() == 81 ) {
+        selTrig                     = 1;
+    }
+
+    Double_t    xSec                = ReturnCorrectXSection(energy, selTrig);
+    Double_t    xSecINEL            = ReturnCorrectXSection(energy, 3);
+    Double_t    triggerRejection    = ReturnTriggerRejectionFactor(energy, trigger.Atoi());
+    Double_t    scaleFactor         = 1.;
+    if (energy.BeginsWith("PbPb")) {
+        scaleFactor                 = 1.;
+    } else if (energy.BeginsWith("pPb")) {
+        scaleFactor                 = 1.;
+    } else {
+        if (energy.CompareTo("8TeV") == 0) {
+            scaleFactor             = 1.;
+        } else {
+            if (xSec && xSecINEL)
+                scaleFactor         = xSecINEL/xSec;
+            else
+                cout << "ERROR: xSec not found for " << energy.Data() << ", " << selTrig << endl;
+        }
+    }
+
+    if (triggerRejection != 1.) {
+        cout << "Trigger rejection factor is " << triggerRejection << endl;
+        scaleFactor                 = scaleFactor * triggerRejection;
+    }
+
+    cout << "Additional normlization factor for spectra from cocktail simulation: " << scaleFactor << endl;
+
+    return scaleFactor;
 }
 
 //************************************************************************************
