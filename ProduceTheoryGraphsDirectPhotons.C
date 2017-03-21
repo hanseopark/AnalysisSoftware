@@ -547,10 +547,10 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         }
         inThermalAndPrompt7TeV.close();
 
-        TGraph *graphPromptDirGam7TeV           = new TGraphAsymmErrors(nlinesPrompt7TeV,ptPromptPhoton7TeV,promptGammaValue7TeVLiuWerner);
+        TGraph *graphPromptDirGam7TeV           = new TGraph(nlinesPrompt7TeV,ptPromptPhoton7TeV,promptGammaValue7TeVLiuWerner);
         graphPromptDirGam7TeV->RemovePoint(0);
 
-        TGraph *graphThermalAndPromptDirGam7TeV = new TGraphAsymmErrors(nlinesThermalAndPrompt7TeV,ptThermalAndPromptPhoton7TeV,thermalAndPromptGammaValue7TeVLiuWerner);
+        TGraph *graphThermalAndPromptDirGam7TeV = new TGraph(nlinesThermalAndPrompt7TeV,ptThermalAndPromptPhoton7TeV,thermalAndPromptGammaValue7TeVLiuWerner);
         graphThermalAndPromptDirGam7TeV->RemovePoint(0);
 
         // **********************************************************************************************************************
@@ -685,6 +685,51 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             
         canvasRatioDirGammaCalc->SaveAs(Form("%s/GammaNLOCalc_Separation_PP8TeV.%s",outputDir.Data(),suffix.Data()));
         
+        // **********************************************************************************************************************
+        // *********************************** direct photon calculations for 13TeV *********************************************
+        // **********************************************************************************************************************
+        // Chun Shen and Charles Gale, mail correspondence with Ana Marin
+        TString fileNameNLOPhoton13TeV      = "ExternalInput/Theory/ALICEThermalAndPromptDirectPhotonShenGale13TeV.dat";
+        Int_t nlinesNLOPhoton13TeV          = 0;
+        Double_t ptNLOPhoton13TeV[100];
+        Double_t promptPhotonValue13TeV[100];
+        Double_t thermalAndPromptPhotonValue13TeVTop5Percent[100];
+        Double_t thermalAndPromptPhotonValue13TeVTop20Percent[100];
+        Double_t thermalAndPromptPhotonValue13TeVAll[100];
+
+        Double_t thermalAndPromptPhotonValue13TeV[100];
+        Double_t thermalAndPromptPhotonValue13TeVErrUp[100];
+        Double_t thermalAndPromptPhotonValue13TeVErrDown[100];
+
+        ifstream in13TeV;
+        in13TeV.open(fileNameNLOPhoton13TeV,ios_base::in);
+        cout << fileNameNLOPhoton13TeV << endl;
+
+        while(!in13TeV.eof()){
+            nlinesNLOPhoton13TeV++;
+            //               Pt                                     prompt                                          thermal+prompt in top 5% of collisions                            thermal+prompt in top 20% of collisions                                 thermal+prompt in all collisions
+            in13TeV >> ptNLOPhoton13TeV[nlinesNLOPhoton13TeV] >> promptPhotonValue13TeV[nlinesNLOPhoton13TeV] >> thermalAndPromptPhotonValue13TeVTop5Percent[nlinesNLOPhoton13TeV] >> thermalAndPromptPhotonValue13TeVTop20Percent[nlinesNLOPhoton13TeV] >> thermalAndPromptPhotonValue13TeVAll[nlinesNLOPhoton13TeV];
+        }
+        in13TeV.close();
+
+        for (Int_t i=0; i<nlinesNLOPhoton13TeV; i++) {
+            thermalAndPromptPhotonValue13TeV[i]         = thermalAndPromptPhotonValue13TeVTop20Percent[i];
+            thermalAndPromptPhotonValue13TeVErrUp[i]    = TMath::Abs(thermalAndPromptPhotonValue13TeVAll[i] - thermalAndPromptPhotonValue13TeV[i]);
+            thermalAndPromptPhotonValue13TeVErrDown[i]  = TMath::Abs(thermalAndPromptPhotonValue13TeV[i] - thermalAndPromptPhotonValue13TeVTop5Percent[i]);
+        }
+
+        TGraph *graphNLOCalcInvYieldPromptDirGam13TeV                       = new TGraph(nlinesNLOPhoton13TeV,ptNLOPhoton13TeV,promptPhotonValue13TeV);
+        graphNLOCalcInvYieldPromptDirGam13TeV->RemovePoint(0);
+
+        TGraphAsymmErrors *graphNLOCalcInvYieldThermalAndPromptDirGam13TeV  = new TGraphAsymmErrors(nlinesNLOPhoton13TeV,ptNLOPhoton13TeV,thermalAndPromptPhotonValue13TeV,NULL,NULL,thermalAndPromptPhotonValue13TeVErrDown,thermalAndPromptPhotonValue13TeVErrUp);
+        graphNLOCalcInvYieldThermalAndPromptDirGam13TeV->RemovePoint(0);
+
+        // calculations given as inv. yield, calculate cross section (INT7)
+        TGraph* graphNLOCalcPromptDirGam13TeV                       = (TGraph*)graphNLOCalcInvYieldPromptDirGam13TeV->Clone("graphNLOCalcPromptDirGam13TeV");
+        graphNLOCalcPromptDirGam13TeV                               = (TGraph*)ScaleGraph(graphNLOCalcPromptDirGam13TeV, recalcBarn*ReturnCorrectXSection("13TeV", 1));
+        TGraphAsymmErrors* graphNLOCalcThermalAndPromptDirGam13TeV  = (TGraphAsymmErrors*)graphNLOCalcInvYieldThermalAndPromptDirGam13TeV->Clone("graphNLOCalcThermalAndPromptDirGam13TeV");
+        graphNLOCalcThermalAndPromptDirGam13TeV                     = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcThermalAndPromptDirGam13TeV, recalcBarn*ReturnCorrectXSection("13TeV", 1));
+
         //******************************************************************************************************************
         //********************** Prompt photon parametrisation Paquett (private communication)******************************
         //******************************************************************************************************************
@@ -753,7 +798,6 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphAsymmErrors* graphNLOCalcInvYieldFragGam8TeV          = (TGraphAsymmErrors*)graphNLOCalcFragGam8TeV->Clone("graphNLOCalcInvYieldFragGam8TeV");
         graphNLOCalcInvYieldFragGam8TeV                             = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldFragGam8TeV, 1/recalcBarn/ReturnCorrectXSection("8TeV", 1));
 
-        
         //******************************************************************************************************************
         //************************************** Writing output for pp ***************************************************
         //******************************************************************************************************************
@@ -856,22 +900,22 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             fitPromptDivFragGamma7TeV->Write("ratioFitNLOPromptDivFragGamma7TeV", TObject::kOverwrite);
             graphPromptDirGam7TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphPromptDirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-            graphPromptDirGam7TeV->Write("graphPrompDirectPhotonLiuWerner_7TeV",TObject::kOverwrite);
+            graphPromptDirGam7TeV->Write("graphPromptDirectPhotonLiuWerner_7TeV",TObject::kOverwrite);
             graphPromptInvYieldINT1DirGam7TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
             graphPromptInvYieldINT1DirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-            graphPromptInvYieldINT1DirGam7TeV->Write("graphPrompDirectPhotonLiuWernerInvYieldINT1_7TeV",TObject::kOverwrite);
+            graphPromptInvYieldINT1DirGam7TeV->Write("graphPromptDirectPhotonLiuWernerInvYieldINT1_7TeV",TObject::kOverwrite);
             graphPromptInvYieldINT7DirGam7TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
             graphPromptInvYieldINT7DirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-            graphPromptInvYieldINT7DirGam7TeV->Write("graphPrompDirectPhotonLiuWernerInvYieldINT7_7TeV",TObject::kOverwrite);
+            graphPromptInvYieldINT7DirGam7TeV->Write("graphPromptDirectPhotonLiuWernerInvYieldINT7_7TeV",TObject::kOverwrite);
             graphThermalAndPromptDirGam7TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphThermalAndPromptDirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-            graphThermalAndPromptDirGam7TeV->Write("graphThermalAndPrompDirectPhotonLiuWerner_7TeV",TObject::kOverwrite);
+            graphThermalAndPromptDirGam7TeV->Write("graphThermalAndPromptDirectPhotonLiuWerner_7TeV",TObject::kOverwrite);
             graphThermalAndPromptInvYieldINT1DirGam7TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
             graphThermalAndPromptInvYieldINT1DirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-            graphThermalAndPromptInvYieldINT1DirGam7TeV->Write("graphThermalAndPrompDirectPhotonLiuWernerInvYieldINT1_7TeV",TObject::kOverwrite);
+            graphThermalAndPromptInvYieldINT1DirGam7TeV->Write("graphThermalAndPromptDirectPhotonLiuWernerInvYieldINT1_7TeV",TObject::kOverwrite);
             graphThermalAndPromptInvYieldINT7DirGam7TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
             graphThermalAndPromptInvYieldINT7DirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-            graphThermalAndPromptInvYieldINT7DirGam7TeV->Write("graphThermalAndPrompDirectPhotonLiuWernerInvYieldINT7_7TeV",TObject::kOverwrite);
+            graphThermalAndPromptInvYieldINT7DirGam7TeV->Write("graphThermalAndPromptDirectPhotonLiuWernerInvYieldINT7_7TeV",TObject::kOverwrite);
 
             // writing 8TeV Gammas
             graphNLOCalcDirGam8TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
@@ -896,7 +940,20 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphRatioNLOPromptGammaDivTot8TeV->Write("graphPromptPhotonDivDirectNLOVogelsang_8TeV",TObject::kOverwrite);
             graphRatioNLOPromptGammaDivFrag8TeV->Write("graphPromptPhotonDivFragementationNLOVogelsang_8TeV",TObject::kOverwrite);
             fitPromptDivFragGamma8TeV->Write("ratioFitNLOPromptDivFragGamma8TeV", TObject::kOverwrite);
-            
+
+            graphNLOCalcPromptDirGam13TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
+            graphNLOCalcPromptDirGam13TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcPromptDirGam13TeV->Write("graphPromptDirectPhotonNLOShenGale_13TeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldPromptDirGam13TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldPromptDirGam13TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldPromptDirGam13TeV->Write("graphPromptDirectPhotonNLOShenGaleInvYield_13TeV",TObject::kOverwrite);
+            graphNLOCalcThermalAndPromptDirGam13TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
+            graphNLOCalcThermalAndPromptDirGam13TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcThermalAndPromptDirGam13TeV->Write("graphThermalAndPromptDirectPhotonNLOShenGale_13TeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldThermalAndPromptDirGam13TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldThermalAndPromptDirGam13TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldThermalAndPromptDirGam13TeV->Write("graphThermalAndPromptDirectPhotonNLOShenGaleInvYield_13TeV",TObject::kOverwrite);
+
         fileTheoryGraphsPP->Close();
         delete fileTheoryGraphsPP;
     }
