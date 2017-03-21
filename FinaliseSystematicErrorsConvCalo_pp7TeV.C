@@ -214,7 +214,7 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
         TGraphAsymmErrors* graphPosErrors;
         TGraphAsymmErrors* graphNegErrors;
         // YieldExtraction - 0, Trigger - 16, Efficiency - 17
-        if (i == 0 || i == 14 || i == 15 || i == 16 || i == 17 || i == 18 || i == 20 || i == 22 || ((i == 14 || i == 20 || i == 21 ) && (meson.CompareTo("Pi0EtaBinning") == 0)) ){ // special treatment for Yield extraction error and calculated erros
+        if (i == 0 || i == 15 || i == 16 || i == 17 || i == 18 || i == 20 || i == 22 || ((i == 14 || i == 20 || i == 21 ) && (meson.CompareTo("Pi0EtaBinning") == 0)) ){ // special treatment for Yield extraction error and calculated erros
             TString nameGraphPos    = "";
             TString nameGraphNeg    = "";
             if ( meson.CompareTo("Pi0EtaBinning") != 0 ){
