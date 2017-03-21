@@ -384,7 +384,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         
         
         // **********************************************************************************************************************
-        // *********************************** direct photon calculations for 7TeV *******************************************
+        // *********************************** direct photon calculations for 7TeV **********************************************
         // **********************************************************************************************************************
         
         TString fileNameNLOPhotonHalf7TeV    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton7TeVmuhalf.dat";
@@ -515,8 +515,46 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             
         canvasRatioDirGammaCalc->SaveAs(Form("%s/GammaNLOCalc_Separation_PP7TeV.%s",outputDir.Data(),suffix.Data()));
 
+        // Liu, Werner (Phys. Rev. Lett. 106(2011) 242301, see figure 1)
+        TString     fileNamePromptPhoton7TeV                = "ExternalInput/Theory/ALICEPromptDirectPhotonLiuWerner7TeV.dat";
+        TString     fileNameThermalAndPromptPhotonOne7TeV   = "ExternalInput/Theory/ALICEThermalAndPromptDirectPhotonLiuWerner7TeV.dat";
+        Int_t       nlinesPrompt7TeV                        = 0;
+        Int_t       nlinesThermalAndPrompt7TeV              = 0;
+        Double_t    ptPromptPhoton7TeV[100];
+        Double_t    ptThermalAndPromptPhoton7TeV[100];
+        Double_t    promptGammaValue7TeVLiuWerner[100];
+        Double_t    thermalAndPromptGammaValue7TeVLiuWerner[100];
+
+        ifstream inPrompt7TeV;
+        inPrompt7TeV.open(fileNamePromptPhoton7TeV,ios_base::in);
+        cout << fileNamePromptPhoton7TeV << endl;
+
+        while(!inPrompt7TeV.eof()){
+            nlinesPrompt7TeV++;
+            //              Pt                                     prompt
+            inPrompt7TeV >> ptPromptPhoton7TeV[nlinesPrompt7TeV] >> promptGammaValue7TeVLiuWerner[nlinesPrompt7TeV];
+        }
+        inPrompt7TeV.close();
+
+        ifstream inThermalAndPrompt7TeV;
+        inThermalAndPrompt7TeV.open(fileNameThermalAndPromptPhotonOne7TeV,ios_base::in);
+        cout << fileNameThermalAndPromptPhotonOne7TeV << endl;
+
+        while(!inThermalAndPrompt7TeV.eof()){
+            nlinesThermalAndPrompt7TeV++;
+            //                          Pt                                                          thermal + prompt
+            inThermalAndPrompt7TeV >> ptThermalAndPromptPhoton7TeV[nlinesThermalAndPrompt7TeV] >> thermalAndPromptGammaValue7TeVLiuWerner[nlinesThermalAndPrompt7TeV];
+        }
+        inThermalAndPrompt7TeV.close();
+
+        TGraph *graphPromptDirGam7TeV           = new TGraphAsymmErrors(nlinesPrompt7TeV,ptPromptPhoton7TeV,promptGammaValue7TeVLiuWerner);
+        graphPromptDirGam7TeV->RemovePoint(0);
+
+        TGraph *graphThermalAndPromptDirGam7TeV = new TGraphAsymmErrors(nlinesThermalAndPrompt7TeV,ptThermalAndPromptPhoton7TeV,thermalAndPromptGammaValue7TeVLiuWerner);
+        graphThermalAndPromptDirGam7TeV->RemovePoint(0);
+
         // **********************************************************************************************************************
-        // *********************************** direct photon calculations for 8TeV *******************************************
+        // *********************************** direct photon calculations for 8TeV **********************************************
         // **********************************************************************************************************************
         
         TString fileNameNLOPhotonHalf8TeV    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton8TeVmuhalf.dat";
@@ -690,12 +728,22 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphAsymmErrors* graphNLOCalcInvYieldINT1FragGam7TeV      = (TGraphAsymmErrors*)graphNLOCalcFragGam7TeV->Clone("graphNLOCalcInvYieldINT1FragGam7TeV");
         graphNLOCalcInvYieldINT1FragGam7TeV                         = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT1FragGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 0));
 
+        TGraph* graphPromptInvYieldINT1DirGam7TeV                   = (TGraph*)graphPromptDirGam7TeV->Clone("graphPromptInvYieldINT1DirGam7TeV");
+        graphPromptInvYieldINT1DirGam7TeV                           = (TGraph*)ScaleGraph(graphPromptInvYieldINT1DirGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 0));
+        TGraph* graphThermalAndPromptInvYieldINT1DirGam7TeV         = (TGraph*)graphThermalAndPromptDirGam7TeV->Clone("graphThermalAndPromptInvYieldINT1DirGam7TeV");
+        graphThermalAndPromptInvYieldINT1DirGam7TeV                 = (TGraph*)ScaleGraph(graphThermalAndPromptInvYieldINT1DirGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 0));
+
         TGraphAsymmErrors* graphNLOCalcInvYieldINT7DirGam7TeV       = (TGraphAsymmErrors*)graphNLOCalcDirGam7TeV->Clone("graphNLOCalcInvYieldINT7DirGam7TeV");
         graphNLOCalcInvYieldINT7DirGam7TeV                          = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7DirGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 1));
         TGraphAsymmErrors* graphNLOCalcInvYieldINT7PromGam7TeV      = (TGraphAsymmErrors*)graphNLOCalcPromGam7TeV->Clone("graphNLOCalcInvYieldINT7PromGam7TeV");
         graphNLOCalcInvYieldINT7PromGam7TeV                         = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7PromGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 1));
         TGraphAsymmErrors* graphNLOCalcInvYieldINT7FragGam7TeV      = (TGraphAsymmErrors*)graphNLOCalcFragGam7TeV->Clone("graphNLOCalcInvYieldINT7FragGam7TeV");
         graphNLOCalcInvYieldINT7FragGam7TeV                         = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7FragGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 1));
+
+        TGraph* graphPromptInvYieldINT7DirGam7TeV                   = (TGraph*)graphPromptDirGam7TeV->Clone("graphPromptInvYieldINT7DirGam7TeV");
+        graphPromptInvYieldINT7DirGam7TeV                           = (TGraph*)ScaleGraph(graphPromptInvYieldINT7DirGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 1));
+        TGraph* graphThermalAndPromptInvYieldINT7DirGam7TeV         = (TGraph*)graphThermalAndPromptDirGam7TeV->Clone("graphThermalAndPromptInvYieldINT7DirGam7TeV");
+        graphThermalAndPromptInvYieldINT7DirGam7TeV                 = (TGraph*)ScaleGraph(graphThermalAndPromptInvYieldINT7DirGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 1));
 
         cout << "calculating 8TeV inv yields" << endl;
         TGraphAsymmErrors* graphNLOCalcInvYieldDirGam8TeV           = (TGraphAsymmErrors*)graphNLOCalcDirGam8TeV->Clone("graphNLOCalcInvYieldDirGam8TeV");
@@ -806,7 +854,25 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphRatioNLOPromptGammaDivTot7TeV->Write("graphPromptPhotonDivDirectNLOVogelsang_7TeV",TObject::kOverwrite);
             graphRatioNLOPromptGammaDivFrag7TeV->Write("graphPromptPhotonDivFragementationNLOVogelsang_7TeV",TObject::kOverwrite);
             fitPromptDivFragGamma7TeV->Write("ratioFitNLOPromptDivFragGamma7TeV", TObject::kOverwrite);
-            
+            graphPromptDirGam7TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
+            graphPromptDirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphPromptDirGam7TeV->Write("graphPrompDirectPhotonLiuWerner_7TeV",TObject::kOverwrite);
+            graphPromptInvYieldINT1DirGam7TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphPromptInvYieldINT1DirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphPromptInvYieldINT1DirGam7TeV->Write("graphPrompDirectPhotonLiuWernerInvYieldINT1_7TeV",TObject::kOverwrite);
+            graphPromptInvYieldINT7DirGam7TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphPromptInvYieldINT7DirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphPromptInvYieldINT7DirGam7TeV->Write("graphPrompDirectPhotonLiuWernerInvYieldINT7_7TeV",TObject::kOverwrite);
+            graphThermalAndPromptDirGam7TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
+            graphThermalAndPromptDirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphThermalAndPromptDirGam7TeV->Write("graphThermalAndPrompDirectPhotonLiuWerner_7TeV",TObject::kOverwrite);
+            graphThermalAndPromptInvYieldINT1DirGam7TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphThermalAndPromptInvYieldINT1DirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphThermalAndPromptInvYieldINT1DirGam7TeV->Write("graphThermalAndPrompDirectPhotonLiuWernerInvYieldINT1_7TeV",TObject::kOverwrite);
+            graphThermalAndPromptInvYieldINT7DirGam7TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphThermalAndPromptInvYieldINT7DirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphThermalAndPromptInvYieldINT7DirGam7TeV->Write("graphThermalAndPrompDirectPhotonLiuWernerInvYieldINT7_7TeV",TObject::kOverwrite);
+
             // writing 8TeV Gammas
             graphNLOCalcDirGam8TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcDirGam8TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");            
@@ -1755,8 +1821,8 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
                 graphRatioNLOPromptGammaDivTotpPb5TeV->Write("graphPromptPhotonDivDirectNLOVogelsang_pPb5TeV_CT10",TObject::kOverwrite);
                 graphRatioNLOPromptGammaDivFragpPb5TeV->Write("graphPromptPhotonDivFragementationNLOVogelsang_pPb5TeV_CT10",TObject::kOverwrite);
                 fitPromptDivFragGammapPb5TeV->Write("ratioFitNLOPromptDivFragGammapPb5TeV_CT10", TObject::kOverwrite);
-    
-                // writing McGill calcs 
+
+                // writing McGill calcs
                 graphGammaSpecMcGill5023GeV->Write("graphDirectPhotonSpecMcGill5023GeV", TObject::kOverwrite);
                 graphGammaV2McGill5023GeV->Write("graphDirectPhotonV2McGill5023GeV", TObject::kOverwrite);
                 for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
