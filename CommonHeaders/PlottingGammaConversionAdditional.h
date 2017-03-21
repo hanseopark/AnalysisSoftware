@@ -4471,7 +4471,7 @@ Color_t GetColorSystematics(    TString variationName,
         return kTeal-5;
     if ( variationName.CompareTo("ClusterMaterialTRD") == 0 )
         return kOrange+5;
-    if ( variationName.CompareTo("Trigger") == 0 )
+    if ( variationName.CompareTo("Trigger") == 0 || variationName.CompareTo("PileUp") == 0 )
         return 404;
     if ( variationName.CompareTo("Efficiency") == 0 )
         return kPink-6;
@@ -4555,7 +4555,7 @@ Style_t GetMarkerStyleSystematics(  TString variationName,
         return 24;
     if ( variationName.CompareTo("ClusterMaterialTRD") == 0 )
         return 21;
-    if ( variationName.CompareTo("Trigger") == 0 )
+    if ( variationName.CompareTo("Trigger") == 0  || variationName.CompareTo("PileUp") == 0)
         return 22;
     if ( variationName.CompareTo("Efficiency") == 0 )
         return 23;
@@ -4641,6 +4641,8 @@ TString GetSystematicsName  (  TString variationName = "" ){
         return "mat. infront of EMCal";
     if ( variationName.CompareTo("Trigger") == 0 )
         return "trigger normalization";
+    if ( variationName.CompareTo("PileUp") == 0 )
+        return "SPD pile-up";
     if ( variationName.CompareTo("Efficiency") == 0 )
         return "efficiency";
     if ( variationName.CompareTo("YieldExtractionPi0") == 0 )

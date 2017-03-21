@@ -3618,6 +3618,12 @@ TString AnalyseChi2MesonCut(Int_t chi2GammaCut){   // Set Cut
        return "#theta_{meson} > 0.0202";
      case 6:
        return "#theta_{meson} > 0.0404";
+     case 7:
+       return "#theta_{meson} > 0.0303";
+     case 8:
+       return "#theta_{meson} > 0.02525";
+     case 9:
+       return "#theta_{meson} > 0.03535";
      default:
        return "#theta_{meson} cut unknown";
    }
