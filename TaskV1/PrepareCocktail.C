@@ -49,18 +49,18 @@
 #include "../CommonHeaders/ExtractSignalBinning.h"
 
 
-void PrepareCocktail(   TString nameFileCocktail        = "",
-                        TString nameFilePi0             = "",
-                        TString suffix                  = "eps",
-                        TString cutSelection            = "",
-                        TString option                  = "",
-                        TString directphotonPlots       = "",
-                        Double_t rapidity               = 0.85,
-                        TString period                  = "",
-                        Int_t numberOfBins              = 30,
-                        Int_t mode                      = 0,
-                        Bool_t producePlotsInOrPtRange  = kFALSE,
-                        Bool_t producePlotsForThesis    = kFALSE
+void PrepareCocktail(   TString     nameFileCocktail            = "",
+                        TString     nameFilePi0                 = "",
+                        TString     suffix                      = "eps",
+                        TString     cutSelection                = "",
+                        TString     option                      = "",
+                        TString     directphotonPlots           = "",
+                        Double_t    rapidity                    = 0.85,
+                        TString     period                      = "",
+                        Int_t       numberOfBins                = 30,
+                        Int_t       mode                        = 0,
+                        Bool_t      producePlotsInOrPtRange     = kFALSE,
+                        Bool_t      producePlotsForThesis       = kFALSE
                      ) {
     
     gROOT->Reset();
@@ -97,6 +97,9 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
         isPCM                                                   = 1;
     if ( mode == 2 || mode == 3 || mode == 4 || mode == 5)
         isCalo                                                  = 1;
+
+    //***************************** Calculate scaling factor ********************************************************
+    additionalScalingFactor                                     = ReturnCocktailNormalization(fEnergyFlag, fEventCutSelection);
     
     //**************************** Determine Centrality *************************************************************
     TString centrality                                          = GetCentralityString(fEventCutSelection);
@@ -289,18 +292,22 @@ void PrepareCocktail(   TString nameFileCocktail        = "",
             histoGammaPtY[i]                                    = (TH2F*)histoListCocktail->FindObject(Form("Pt_Y_Gamma_From_%s", motherParticles[i].Data()));
             histoGammaPtY[i]->SetName(Form("Gamma_From_%s_Pt_Y_OrBin", motherParticles[i].Data()));
             histoGammaPtY[i]->Sumw2();
+            histoGammaPtY[i]->Scale(additionalScalingFactor);
             
             histoGammaPtPhi[i]                                  = (TH2F*)histoListCocktail->FindObject(Form("Pt_Phi_Gamma_From_%s", motherParticles[i].Data()));
             histoGammaPtPhi[i]->SetName(Form("Gamma_From_%s_Pt_Phi_OrBin", motherParticles[i].Data()));
             histoGammaPtPhi[i]->Sumw2();
+            histoGammaPtPhi[i]->Scale(additionalScalingFactor);
             
             histoGammaMotherPtY[i]                              = (TH2F*)histoListCocktail->FindObject(Form("Pt_Y_%s", motherParticles[i].Data()));
             histoGammaMotherPtY[i]->SetName(Form("%s_Pt_Y_OrBin", motherParticles[i].Data()));
             histoGammaMotherPtY[i]->Sumw2();
+            histoGammaMotherPtY[i]->Scale(additionalScalingFactor);
             
             histoGammaMotherPtPhi[i]                            = (TH2F*)histoListCocktail->FindObject(Form("Pt_Phi_%s", motherParticles[i].Data()));
             histoGammaMotherPtPhi[i]->SetName(Form("%s_Pt_Phi_OrBin", motherParticles[i].Data()));
             histoGammaMotherPtPhi[i]->Sumw2();
+            histoGammaMotherPtPhi[i]->Scale(additionalScalingFactor);
         } else {
             histoDecayChannels[i]                               = NULL;
             histoGammaPtY[i]                                    = NULL;

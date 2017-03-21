@@ -29,6 +29,9 @@ Style_t     cocktailMarker[nMotherParticles]            = {20,21,24,25,20,21,24,
 TString     decayChannelsLatex[nMotherParticles][18];
 Double_t    decayChannelsBR[nMotherParticles][18];
 
+// additional scaling factor (param per inel. event vs. MB event)
+Double_t    additionalScalingFactor                     = 1.;
+
 //************************** cocktail settings ********************************************
 Double_t ptGenMin                                       = 0;
 Double_t ptGenMax                                       = 20;

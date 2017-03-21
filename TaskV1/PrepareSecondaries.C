@@ -102,6 +102,9 @@ void PrepareSecondaries(    TString     meson                       = "",
     if ( mode == 2 || mode == 3 || mode == 4 || mode == 5)
         isCalo                                                  = 1;
 
+    //***************************** Calculate scaling factor ********************************************************
+    additionalScalingFactor                                     = ReturnCocktailNormalization(fEnergyFlag, fEventCutSelection);
+    
     //**************************** Determine Centrality *************************************************************
     TString centrality                                          = GetCentralityString(fEventCutSelection);
     TString collisionSystem                                     = ReturnFullCollisionsSystem(option);
@@ -313,18 +316,22 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoMesonDaughterPtY[i]                            = (TH2F*)histoListCocktail->FindObject(Form("Pt_Y_%s_From_%s",fAnalyzedMeson.Data(),motherParticles[i].Data()));
             histoMesonDaughterPtY[i]->SetName(Form("%s_From_%s_Pt_Y_OrBin",fAnalyzedMeson.Data(),motherParticles[i].Data()));
             histoMesonDaughterPtY[i]->Sumw2();
+            histoMesonDaughterPtY[i]->Scale(additionalScalingFactor);
             
             histoMesonDaughterPtPhi[i]                          = (TH2F*)histoListCocktail->FindObject(Form("Pt_Phi_%s_From_%s",fAnalyzedMeson.Data(),motherParticles[i].Data()));
             histoMesonDaughterPtPhi[i]->SetName(Form("%s_From_%s_Pt_Phi_OrBin",fAnalyzedMeson.Data(),motherParticles[i].Data()));
             histoMesonDaughterPtPhi[i]->Sumw2();
+            histoMesonDaughterPtPhi[i]->Scale(additionalScalingFactor);
             
             histoMesonMotherPtY[i]                              = (TH2F*)histoListCocktail->FindObject(Form("Pt_Y_%s",motherParticles[i].Data()));
             histoMesonMotherPtY[i]->SetName(Form("%s_Pt_Y_OrBin", motherParticles[i].Data()));
             histoMesonMotherPtY[i]->Sumw2();
+            histoMesonMotherPtY[i]->Scale(additionalScalingFactor);
             
             histoMesonMotherPtPhi[i]                            = (TH2F*)histoListCocktail->FindObject(Form("Pt_Phi_%s",motherParticles[i].Data()));
             histoMesonMotherPtPhi[i]->SetName(Form("%s_Pt_Phi_OrBin", motherParticles[i].Data()));
             histoMesonMotherPtPhi[i]->Sumw2();
+            histoMesonMotherPtPhi[i]->Scale(additionalScalingFactor);
         } else {
             histoDecayChannels[i]                               = NULL;
             histoMesonDaughterPtY[i]                            = NULL;
@@ -344,12 +351,14 @@ void PrepareSecondaries(    TString     meson                       = "",
                 if (histoGammaFromXFromMotherPtY[i]) {
                     histoGammaFromXFromMotherPtY[i]->SetName(Form("Gamma_From_X_From_%s_Pt_Y_OrBin", motherParticles[i].Data()));
                     histoGammaFromXFromMotherPtY[i]->Sumw2();
+                    histoGammaFromXFromMotherPtY[i]->Scale(additionalScalingFactor);
                 }
                 
                 histoGammaFromXFromMotherPtPhi[i]               = (TH2F*)histoListCocktail->FindObject(Form("Pt_Phi_Gamma_From_X_From_%s",motherParticles[i].Data()));
                 if (histoGammaFromXFromMotherPtPhi[i]) {
                     histoGammaFromXFromMotherPtPhi[i]->SetName(Form("Gamma_From_X_From_%s_Pt_Phi_OrBin", motherParticles[i].Data()));
                     histoGammaFromXFromMotherPtPhi[i]->Sumw2();
+                    histoGammaFromXFromMotherPtPhi[i]->Scale(additionalScalingFactor);
                 }
             } else {
                 histoGammaFromXFromMotherPtY[i]                 = NULL;
