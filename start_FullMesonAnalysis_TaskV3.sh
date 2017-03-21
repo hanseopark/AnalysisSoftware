@@ -2128,7 +2128,6 @@ do
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
             echo "Will produce Direct Photon plots ...";
             directphoton="directPhoton"
-            Con=1
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningDirectPhoton900GeV
                 correctPi0=1
@@ -2149,7 +2148,6 @@ do
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
             echo "No Direct Photon plots will be produced ...";
             directphoton="No"
-            Con=0
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinning900GeV
                 correctPi0=1
@@ -2185,10 +2183,11 @@ do
                 correct=1
             fi
         else 
-            echo "No Direct Photon plots will be produced ...";
-            directphoton="No"
-            Con=0
-            if [ $ONLYCORRECTION -eq 0 ]; then
+#             echo "No Direct Photon plots will be produced ...";
+#             directphoton="No"
+            directphoton="Gamma"
+#             directphoton="directPhoton"
+            if [ $ONLYRESULTS -eq 0 ]; then
                 GiveBinning2760GeV
                 correctPi0=1
                 correctEta=1
@@ -2223,7 +2222,6 @@ do
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
             echo "Will produce Direct Photon plots ...";
             directphoton="directPhoton"
-            Con=1
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningDirectPhoton5TeV
                 correctPi0=1
@@ -2238,8 +2236,7 @@ do
             fi
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
             echo "No Direct Photon plots will be produced ...";
-            Conference="No"
-            Con=0
+            directphoton="No"
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinning5TeV
                 correctPi0=1
@@ -2262,7 +2259,6 @@ do
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
             echo "Will produce Direct Photon plots ...";
             directphoton="directPhoton"
-            Con=1
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningDirectPhoton7TeV
                 correctPi0=1
@@ -2282,8 +2278,7 @@ do
             fi
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
             echo "No Direct Photon plots will be produced ...";
-            Conference="No"
-            Con=0
+            directphoton="No"
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinning7TeV
                 correctPi0=1
@@ -2310,7 +2305,6 @@ do
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
             echo "Will produce Direct Photon plots ...";
             directphoton="directPhoton"
-            Con=1
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningDirectPhoton7TeV
                 correctPi0=1
@@ -2330,8 +2324,7 @@ do
             fi
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
             echo "No Direct Photon plots will be produced ...";
-            Conference="No"
-            Con=0
+            directphoton="No"
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinning8TeV
                 correctPi0=1
@@ -2362,7 +2355,6 @@ do
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
             echo "Will produce Direct Photon plots ...";
             directphoton="directPhoton"
-            Con=1
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningDirectPhoton13TeV
                 correctPi0=1
@@ -2377,8 +2369,7 @@ do
             fi
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
             echo "No Direct Photon plots will be produced ...";
-            Conference="No"
-            Con=0
+            directphoton="No"
             DoGamma=0
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinning13TeV
@@ -2401,7 +2392,6 @@ do
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
             echo "Will produce Direct Photon plots ...";
             directphoton="directPhoton"
-            Con=1
             if [ $ONLYRESULTS -eq 0 ]; then
                 GiveBinningpPbDirGamma
                 correctPi0=1
@@ -2417,7 +2407,6 @@ do
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
             echo "No Direct Photon plots will be produced ...";
             directphoton="No"
-            Con=0
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningpPb
                 correctPi0=1
@@ -2474,7 +2463,6 @@ do
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
             echo "Will produce Direct Photon plots ...";
             directphoton="directPhoton"
-            Con=1
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningDirectPhotonHI
                 correctPi0=1
@@ -2490,7 +2478,6 @@ do
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
             echo "No Direct Photon plots will be produced ...";
             directphoton="No"
-            Con=0
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningHI
                 correctPi0=1
@@ -2532,7 +2519,6 @@ do
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
             echo "Will produce Direct Photon plots ...";
             directphoton="directPhoton"
-            Con=1
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningDirectPhotonHI
                 correctPi0=1
@@ -2548,7 +2534,6 @@ do
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
             echo "No Direct Photon plots will be produced ...";
             directphoton="No"
-            Con=0
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningHI5020GeV
                 correctPi0=1

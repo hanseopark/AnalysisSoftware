@@ -752,7 +752,8 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
 
         cout<<"loading cocktail file: "<<nameFileCocktail<<endl;
 
-        if (!fEnergy.CompareTo("900GeV") || !fEnergy.CompareTo("7TeV") || !fEnergy.CompareTo("8TeV") || !fEnergy.CompareTo("13TeV") || !fEnergy.CompareTo("pPb_5.023TeV") || 
+        if (!fEnergy.CompareTo("900GeV") || !fEnergy.CompareTo("2.76TeV")|| !fEnergy.CompareTo("7TeV") || !fEnergy.CompareTo("8TeV") || !fEnergy.CompareTo("13TeV") || 
+            !fEnergy.CompareTo("pPb_5.023TeV") || 
             !fEnergy.CompareTo("PbPb_2.76TeV")){
             cocktailPi0                         = (TH1D* )cocktailFile->Get("Pi0_Pt");
             cocktailEta                         = (TH1D* )cocktailFile->Get("Eta_Pt");

@@ -1062,10 +1062,13 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         TH1D*   dummyHistRatio                                      = new TH1D("dummyHistRatio", "", 1000, ptPlotMin, ptPlotMax);
         SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{spec}{param}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
         dummyHistRatio->GetXaxis()->SetLabelOffset(-0.025);
-        dummyHistRatio->GetYaxis()->SetRangeUser(0,2.3);
+        dummyHistRatio->GetYaxis()->SetRangeUser(0.65,1.55);
         dummyHistRatio->Draw();
         DrawGammaLines(ptPlotMin,ptPlotMax,1,1,0.1, kGray+1, 1);
-
+        DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,0.1, kGray+1, 7);
+        DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,0.1, kGray+1, 7);
+        DrawGammaLines(ptPlotMin,ptPlotMax,1.2,1.2,0.1, kGray+1, 8);
+        
         ratioPi0DataCocktail = (TH1D*)histoPi0YieldData->Clone("ratioPi0DataCocktail");
         ratioPi0DataCocktail->Divide(histoPi0YieldData,histoGammaMotherPt[0],1.,1.,"");
         ratioPi0DataCocktail->SetLineColor(cocktailColor[0]);

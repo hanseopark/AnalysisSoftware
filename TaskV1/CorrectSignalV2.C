@@ -2183,78 +2183,80 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
     if (containsWOWeights &&  nameMeson.Contains("Pi0")){ //(mode!=0 || mode!=9) &&
 
-        TH1D* histoRatioEffWOWeightingEff[3]        = {NULL, NULL, NULL};
-        TH1D* histoRatioEffWOWeightingEffCFPol0[3]  = {NULL, NULL, NULL};
-        TH1D* histoRatioEffWOWeightingEffCFPol1[3]  = {NULL, NULL, NULL};
-        for (Int_t k = 0; k < 3; k++){
-            histoRatioEffWOWeightingEff[k]          = (TH1D*) histoEffiPt[k]->Clone();
-            histoRatioEffWOWeightingEff[k]->Divide(histoRatioEffWOWeightingEff[k], histoTrueEffiPtWOWeights[k], 1., 1., "B");
+//         if ( !(mode == 0 && optionEnergy.CompareTo("2.76TeV") == 0 )){
+            TH1D* histoRatioEffWOWeightingEff[3]        = {NULL, NULL, NULL};
+            TH1D* histoRatioEffWOWeightingEffCFPol0[3]  = {NULL, NULL, NULL};
+            TH1D* histoRatioEffWOWeightingEffCFPol1[3]  = {NULL, NULL, NULL};
+            for (Int_t k = 0; k < 3; k++){
+                histoRatioEffWOWeightingEff[k]          = (TH1D*) histoEffiPt[k]->Clone();
+                histoRatioEffWOWeightingEff[k]->Divide(histoRatioEffWOWeightingEff[k], histoTrueEffiPtWOWeights[k], 1., 1., "B");
 
-            histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",0.4,maxPtMeson);
-            cout << WriteParameterToFile(fitEffiBiasWOWeightsPol0[k]) << endl;
-            fitEffiBiasWOWeightsPol0[k]->SetLineColor(colorEffiShadePol0[k]);
-            fitEffiBiasWOWeightsPol0[k]->SetLineStyle(1);
+                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",0.4,maxPtMeson);
+                cout << WriteParameterToFile(fitEffiBiasWOWeightsPol0[k]) << endl;
+                fitEffiBiasWOWeightsPol0[k]->SetLineColor(colorEffiShadePol0[k]);
+                fitEffiBiasWOWeightsPol0[k]->SetLineStyle(1);
 
-            histoRatioEffWOWeightingEffCFPol0[k]    = (TH1D*)histoRatioEffWOWeightingEff[k]->Clone(Form("histoRatioEffWOWeighting%sEffCFPol0",nameIntRange[k].Data()));
-            (TVirtualFitter::GetFitter())->GetConfidenceIntervals(histoRatioEffWOWeightingEffCFPol0[k]);
-            histoRatioEffWOWeightingEffCFPol0[k]->SetStats(kFALSE);
-            histoRatioEffWOWeightingEffCFPol0[k]->SetFillColor(colorEffiShadePol0[k]);
-            histoRatioEffWOWeightingEffCFPol0[k]->SetMarkerSize(0);
+                histoRatioEffWOWeightingEffCFPol0[k]    = (TH1D*)histoRatioEffWOWeightingEff[k]->Clone(Form("histoRatioEffWOWeighting%sEffCFPol0",nameIntRange[k].Data()));
+                (TVirtualFitter::GetFitter())->GetConfidenceIntervals(histoRatioEffWOWeightingEffCFPol0[k]);
+                histoRatioEffWOWeightingEffCFPol0[k]->SetStats(kFALSE);
+                histoRatioEffWOWeightingEffCFPol0[k]->SetFillColor(colorEffiShadePol0[k]);
+                histoRatioEffWOWeightingEffCFPol0[k]->SetMarkerSize(0);
 
-            if( !(optionEnergy.CompareTo("8TeV")==0 && mode == 2 && k == 0) ) fitEffiBiasWOWeightsPol1[k]->SetParLimits(2,0.5,1.5);
-            histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.4,maxPtMeson    );
-            cout << WriteParameterToFile(fitEffiBiasWOWeightsPol1[k]) << endl;
-            fitEffiBiasWOWeightsPol1[k]->SetLineColor(colorEffiShadePol1[k]);
-            fitEffiBiasWOWeightsPol1[k]->SetLineStyle(7);
+                if( !(optionEnergy.CompareTo("8TeV")==0 && mode == 2 && k == 0) ) fitEffiBiasWOWeightsPol1[k]->SetParLimits(2,0.5,1.5);
+                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.4,maxPtMeson    );
+                cout << WriteParameterToFile(fitEffiBiasWOWeightsPol1[k]) << endl;
+                fitEffiBiasWOWeightsPol1[k]->SetLineColor(colorEffiShadePol1[k]);
+                fitEffiBiasWOWeightsPol1[k]->SetLineStyle(7);
 
-            histoRatioEffWOWeightingEffCFPol1[k]    = (TH1D*)histoRatioEffWOWeightingEff[k]->Clone("histoRatioEffWOWeightingNormalEffCFPol1");
-            (TVirtualFitter::GetFitter())->GetConfidenceIntervals(histoRatioEffWOWeightingEffCFPol1[k]);
-            histoRatioEffWOWeightingEffCFPol1[k]->SetStats(kFALSE);
-            histoRatioEffWOWeightingEffCFPol1[k]->SetFillColor(colorEffiShadePol1[k]);
-            histoRatioEffWOWeightingEffCFPol1[k]->SetFillStyle(3003);
-            histoRatioEffWOWeightingEffCFPol1[k]->SetMarkerSize(0);
-            for (Int_t i=1; i< histoTrueEffiPt[k]->GetNbinsX(); i++){
-                if (histoTrueEffiPt[k]->GetBinContent(i) == 0){
-                    histoRatioEffWOWeightingEffCFPol1[k]->SetBinContent(i,1);
-                    histoRatioEffWOWeightingEffCFPol1[k]->SetBinContent(i,0);
-                    histoRatioEffWOWeightingEffCFPol0[k]->SetBinContent(i,1);
-                    histoRatioEffWOWeightingEffCFPol0[k]->SetBinContent(i,0);
+                histoRatioEffWOWeightingEffCFPol1[k]    = (TH1D*)histoRatioEffWOWeightingEff[k]->Clone("histoRatioEffWOWeightingNormalEffCFPol1");
+                (TVirtualFitter::GetFitter())->GetConfidenceIntervals(histoRatioEffWOWeightingEffCFPol1[k]);
+                histoRatioEffWOWeightingEffCFPol1[k]->SetStats(kFALSE);
+                histoRatioEffWOWeightingEffCFPol1[k]->SetFillColor(colorEffiShadePol1[k]);
+                histoRatioEffWOWeightingEffCFPol1[k]->SetFillStyle(3003);
+                histoRatioEffWOWeightingEffCFPol1[k]->SetMarkerSize(0);
+                for (Int_t i=1; i< histoTrueEffiPt[k]->GetNbinsX(); i++){
+                    if (histoTrueEffiPt[k]->GetBinContent(i) == 0){
+                        histoRatioEffWOWeightingEffCFPol1[k]->SetBinContent(i,1);
+                        histoRatioEffWOWeightingEffCFPol1[k]->SetBinContent(i,0);
+                        histoRatioEffWOWeightingEffCFPol0[k]->SetBinContent(i,1);
+                        histoRatioEffWOWeightingEffCFPol0[k]->SetBinContent(i,0);
+                    }
                 }
+
+
+                    DrawAutoGammaMesonHistos( histoRatioEffWOWeightingEff[k],
+                                            "", "#it{p}_{T} (GeV/#it{c})", Form("#epsilon_{eff,%s, rec}/#epsilon_{eff,%s, true wo weights} ", textMeson.Data(), textMeson.Data()),
+                                            kFALSE, 1.3, 3e-6, kFALSE,
+                                            kTRUE, 0.8, 1.5,
+                                            kFALSE, 0., 10.);
+                    DrawGammaSetMarker(histoRatioEffWOWeightingEff[k], 24, 1., colorEffiRatio[k], colorEffiRatio[k]);
+                    histoRatioEffWOWeightingEff[k]->Draw("e1");
+                    histoRatioEffWOWeightingEffCFPol0[k]->Draw("e3,same");
+                    histoRatioEffWOWeightingEffCFPol1[k]->Draw("e3,same");
+                    fitEffiBiasWOWeightsPol0[k]->Draw("same");
+                    fitEffiBiasWOWeightsPol1[k]->Draw("same");
+                    histoRatioEffWOWeightingEff[k]->Draw("e1,same");
+
+                    PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 63, 0.03);
+
+                canvasCompEffSimple->Update();
+                canvasCompEffSimple->SaveAs(Form("%s/%s_EffiCompW0Weighting%sRatio_%s.%s",outputDir.Data(),nameMeson.Data(),nameIntRange[k].Data(),fCutSelection.Data(),suffix.Data()));
+
+                // correct true effi to normal effi
+                histoTrueEffiPt[k]->Multiply(histoTrueEffiPt[k],histoRatioEffWOWeightingEffCFPol1[k]);
             }
 
+            // plotting of final comparison
+            TH1D* histoRatioEffWOWeightingTrueEffCorr        = (TH1D*) histoEffiPt[0]->Clone();
+            histoRatioEffWOWeightingTrueEffCorr->Divide(histoRatioEffWOWeightingTrueEffCorr, histoTrueEffiPt[0], 1., 1., "B");
 
-                DrawAutoGammaMesonHistos( histoRatioEffWOWeightingEff[k],
-                                        "", "#it{p}_{T} (GeV/#it{c})", Form("#epsilon_{eff,%s, rec}/#epsilon_{eff,%s, true wo weights} ", textMeson.Data(), textMeson.Data()),
-                                        kFALSE, 1.3, 3e-6, kFALSE,
-                                        kTRUE, 0.8, 1.5,
-                                        kFALSE, 0., 10.);
-                DrawGammaSetMarker(histoRatioEffWOWeightingEff[k], 24, 1., colorEffiRatio[k], colorEffiRatio[k]);
-                histoRatioEffWOWeightingEff[k]->Draw("e1");
-                histoRatioEffWOWeightingEffCFPol0[k]->Draw("e3,same");
-                histoRatioEffWOWeightingEffCFPol1[k]->Draw("e3,same");
-                fitEffiBiasWOWeightsPol0[k]->Draw("same");
-                fitEffiBiasWOWeightsPol1[k]->Draw("same");
-                histoRatioEffWOWeightingEff[k]->Draw("e1,same");
-
-                PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 63, 0.03);
+            histoRatioEffWOWeightingEff[0]->Draw("e1");
+            DrawGammaSetMarker(histoRatioEffWOWeightingTrueEffCorr, 20, 1.5, kAzure-6, kAzure-6);
+            histoRatioEffWOWeightingTrueEffCorr->Draw("same,e1");
 
             canvasCompEffSimple->Update();
-            canvasCompEffSimple->SaveAs(Form("%s/%s_EffiCompW0Weighting%sRatio_%s.%s",outputDir.Data(),nameMeson.Data(),nameIntRange[k].Data(),fCutSelection.Data(),suffix.Data()));
-
-            // correct true effi to normal effi
-            histoTrueEffiPt[k]->Multiply(histoTrueEffiPt[k],histoRatioEffWOWeightingEffCFPol1[k]);
-        }
-
-        // plotting of final comparison
-        TH1D* histoRatioEffWOWeightingTrueEffCorr        = (TH1D*) histoEffiPt[0]->Clone();
-        histoRatioEffWOWeightingTrueEffCorr->Divide(histoRatioEffWOWeightingTrueEffCorr, histoTrueEffiPt[0], 1., 1., "B");
-
-        histoRatioEffWOWeightingEff[0]->Draw("e1");
-        DrawGammaSetMarker(histoRatioEffWOWeightingTrueEffCorr, 20, 1.5, kAzure-6, kAzure-6);
-        histoRatioEffWOWeightingTrueEffCorr->Draw("same,e1");
-
-        canvasCompEffSimple->Update();
-        canvasCompEffSimple->SaveAs(Form("%s/%s_EffiCompW0WeightingNormalRatioAfterFix_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
+            canvasCompEffSimple->SaveAs(Form("%s/%s_EffiCompW0WeightingNormalRatioAfterFix_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
+//         }   
     }
 
     //**********************************************************************************
