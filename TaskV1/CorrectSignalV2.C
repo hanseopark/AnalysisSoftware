@@ -463,7 +463,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         Double_t xSectionEff    = ReturnCorrectXSection( optionEnergy, isV0AND);
         Double_t xSectionINEL   = ReturnCorrectXSection( optionEnergy, 3);
         if (xSectionINEL != 0){
-            scaleFactorMeasXSecForExternalInput               = xSectionEff/xSectionINEL;
+            scaleFactorMeasXSecForExternalInput               = xSectionINEL/xSectionEff; // was: xSectionEff/xSectionINEL;
         }
     }
     // The trigger rejection factor has to be given externally 
@@ -472,7 +472,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     if (triggerRejection != 1.)
         scaleFactorMeasXSecForExternalInput                   = scaleFactorMeasXSecForExternalInput*triggerRejection;
     if (scaleFactorMeasXSecForExternalInput != 1)
-        cout << "The secondary correction from the cocktail or toy has to be scaled with " << scaleFactorMeasXSecForExternalInput << endl;
+        cout << "The secondary correction from the toy has to be scaled with " << scaleFactorMeasXSecForExternalInput << endl;
 
     // read cocktail input if available
     TString strExternalInputName                            = "";
@@ -483,7 +483,6 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         for (Int_t j = 0; j < 3; j++){
             histoExternalInputSecPi0[j]                     = (TH1D*)fileUncorrected.Get(Form("histoSecPi0YieldFrom%s_FromCocktail",nameSecMeson[j].Data()));
             if (histoExternalInputSecPi0[j]){
-                histoExternalInputSecPi0[j]->Scale(scaleFactorMeasXSecForExternalInput);
                 foundCocktailInput                          = kTRUE;
                 cout << "Using the cocktail input for secondary correction" << endl;
                 if (j==0) strExternalInputName              = "Cocktail";
@@ -493,7 +492,6 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         // contribution from resonance feed down
         for (Int_t j = 0; j < 8; j++) {
             histoExternalInputFeedDownPi0[j]                = (TH1D*)fileUncorrected.Get(Form("histoResonanceFeedDownPi0YieldFrom%s_FromCocktail",nameResMeson[j].Data()));
-            if (histoExternalInputFeedDownPi0[j]) histoExternalInputFeedDownPi0[j]->Scale(scaleFactorMeasXSecForExternalInput);
         }
     }
     // read toy MC input if available
