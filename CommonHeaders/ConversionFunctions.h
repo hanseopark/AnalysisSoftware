@@ -259,36 +259,39 @@ TH1D* DivideTF1IntoHisto(TF1* f1, TF1* f2, TString name, TH1D *dummy) {
 }
 
 //************************** Routine to calculate mt scaled params **************************************************
-TF1* MtScaledParam(TF1* param, Int_t particlePDG, Double_t scaleFactor) {
+TF1* MtScaledParam(TF1* param, Int_t particlePDG, Int_t particleBasePDG, Double_t scaleFactor, Bool_t isInvYield = kTRUE, Bool_t doAdditionalScaling = kFALSE) {
 
-    if (!param || particlePDG==0 || !scaleFactor)
+    if (!param || particlePDG==0 || particleBasePDG==0 || !scaleFactor)
         return NULL;
 
-    Double_t mass                               = TDatabasePDG::Instance()->GetParticle(particlePDG)->Mass();
-    Double_t massPi0                            = TDatabasePDG::Instance()->GetParticle(111)->Mass();
+    Double_t mass                   = TDatabasePDG::Instance()->GetParticle(particlePDG)->Mass();
+    Double_t massBase               = TDatabasePDG::Instance()->GetParticle(particleBasePDG)->Mass();
 
-    if (!mass || !massPi0)
+    if (!mass || !massBase)
         return NULL;
 
     Double_t xMin, xMax;
     param->GetRange(xMin, xMax);
-    TString paramPi0Formula = param->GetExpFormula();
-    cout << "input parametrization : " << paramPi0Formula.Data() << endl;
+    TString paramPi0Formula         = param->GetExpFormula();
+    //cout << "input parametrization : " << paramPi0Formula.Data() << endl;
 
-    TString mT = Form("TMath::Sqrt(x*x + %f * %f - %f * %f)",mass,mass,massPi0,massPi0);
-    TString pTovermT = Form("x/TMath::Sqrt(x*x + %f * %f - %f * %f)",mass,mass,massPi0,massPi0);
-    TString mTScaledFormula = paramPi0Formula.ReplaceAll("exp", "placeholder");
-    TString dummyFormula = mTScaledFormula.ReplaceAll("x",mT.Data() );
-    mTScaledFormula = dummyFormula.ReplaceAll("placeholder","exp");
-    cout << "output parametrization in mT: " << mTScaledFormula.Data() << endl;
+    TString mT                      = Form("TMath::Sqrt(x*x + %f * %f - %f * %f)",mass,mass,massBase,massBase);
+    TString pTovermT                = Form("x/TMath::Sqrt(x*x + %f * %f - %f * %f)",mass,mass,massBase,massBase);
+    TString mTScaledFormula         = paramPi0Formula.ReplaceAll("exp", "placeholder");
+    TString dummyFormula            = mTScaledFormula.ReplaceAll("x",mT.Data() );
+    mTScaledFormula                 = dummyFormula.ReplaceAll("placeholder","exp");
+    //cout << "output parametrization in mT: " << mTScaledFormula.Data() << endl;
 
-    Double_t paramEvaluated = param->Eval(5.)/param->Eval(TMath::Sqrt(25. + mass*mass - massPi0*massPi0));
+    Double_t paramEvaluated         = param->Eval(5.)/param->Eval(TMath::Sqrt(25. + mass*mass - massBase*massBase));
+    if (doAdditionalScaling)
+        scaleFactor                 = scaleFactor * paramEvaluated;
 
-    TString outputFormula = Form("%f * (%s)",scaleFactor,mTScaledFormula.Data());
-//     TString outputFormula = Form("%f * %f * %s * (%s)",scaleFactor,paramEvaluated,pTovermT.Data(),mTScaledFormula.Data());
-    cout << "output formula : " << outputFormula.Data() << endl;
+    TString         outputFormula   = "";
+    if (isInvYield) outputFormula   = Form("%f * (%s)",scaleFactor,mTScaledFormula.Data());
+    else            outputFormula   = Form("%f * (%s) * (%s)",scaleFactor,pTovermT.Data(),mTScaledFormula.Data());
+    //cout << "output formula : " << outputFormula.Data() << endl;
 
-    TF1* scaledParam                                 = new TF1("scaledParam",outputFormula.Data(),xMin, xMax);
+    TF1* scaledParam                = new TF1("scaledParam",outputFormula.Data(),xMin, xMax);
     Int_t nPar = param->GetNpar();
     for (Int_t i = 0; i< nPar; i++){
         scaledParam->SetParameter(i,param->GetParameter(i));
