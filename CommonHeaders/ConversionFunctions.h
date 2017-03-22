@@ -258,6 +258,8 @@ TH1D* DivideTF1IntoHisto(TF1* f1, TF1* f2, TString name, TH1D *dummy) {
     return result;
 }
 
+
+
 //************************** Routine to calculate mt scaled params **************************************************
 TF1* MtScaledParam(TF1* param, Int_t particlePDG, Int_t particleBasePDG, Double_t scaleFactor, Bool_t isInvYield = kTRUE, Bool_t doAdditionalScaling = kFALSE) {
 
@@ -274,6 +276,9 @@ TF1* MtScaledParam(TF1* param, Int_t particlePDG, Int_t particleBasePDG, Double_
     param->GetRange(xMin, xMax);
     TString paramPi0Formula         = param->GetExpFormula();
     //cout << "input parametrization : " << paramPi0Formula.Data() << endl;
+
+    // check for cut off when m(particleBasePDG) > m(particlePDG)
+    if ( (xMin*xMin + mass*mass - massBase*massBase) < 0 ) xMin = TMath::Sqrt(massBase*massBase - mass*mass);
 
     TString mT                      = Form("TMath::Sqrt(x*x + %f * %f - %f * %f)",mass,mass,massBase,massBase);
     TString pTovermT                = Form("x/TMath::Sqrt(x*x + %f * %f - %f * %f)",mass,mass,massBase,massBase);
@@ -298,6 +303,13 @@ TF1* MtScaledParam(TF1* param, Int_t particlePDG, Int_t particleBasePDG, Double_
     }
 
     return scaledParam;
+}
+
+TF1* MtScaledParam(TF1* param, Int_t particlePDG, Double_t scaleFactor, Bool_t isInvYield = kTRUE, Bool_t doAdditionalScaling = kFALSE) {
+
+    // wrapper for direct use with pi0 as a basis for the scaling (implemented to prevent break due to use of old function status before 22.03.2017)
+
+    return MtScaledParam(param, particlePDG, 111, scaleFactor, isInvYield, doAdditionalScaling);
 }
 
 
