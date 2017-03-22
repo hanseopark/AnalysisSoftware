@@ -534,17 +534,31 @@ void PrepareSecondaries(    TString     meson                       = "",
     
     //***************************** Scale spectra *******************************************************************
     Double_t factorNEvents                                 = 1./nEvents;
+    Double_t factorDecay                                   = 1.;
+    TF1* corrFactorFromDecayLength = new TF1("decayLaw","1-exp(-x/[0])",0,500);
+    cout << "========================================"  << endl;
+    cout << "correction factors from decay length (fraction of particles decayed up to R = '" << ReturnMeanR(fMode) << "cm'): " << endl;
     for (Int_t i=0; i<nMotherParticles; i++) {
-        if (histoMesonDaughterPtOrBin[i])           histoMesonDaughterPtOrBin[i]->Scale(        factorNEvents);
-        if (histoMesonDaughterYOrBin[i])            histoMesonDaughterYOrBin[i]->Scale(         factorNEvents);
-        if (histoMesonDaughterPhiOrBin[i])          histoMesonDaughterPhiOrBin[i]->Scale(       factorNEvents);
-        if (histoMesonMotherPtOrBin[i])             histoMesonMotherPtOrBin[i]->Scale(          factorNEvents);
-        if (histoMesonMotherYOrBin[i])              histoMesonMotherYOrBin[i]->Scale(           factorNEvents);
-        if (histoMesonMotherPhiOrBin[i])            histoMesonMotherPhiOrBin[i]->Scale(         factorNEvents);
-        if (histoGammaFromXFromMotherPtOrBin[i])    histoGammaFromXFromMotherPtOrBin[i]->Scale( factorNEvents*scalingEta*scalingPhi);
-        if (histoGammaFromXFromMotherYOrBin[i])     histoGammaFromXFromMotherYOrBin[i]->Scale(  factorNEvents*scalingEta*scalingPhi);
-        if (histoGammaFromXFromMotherPhiOrBin[i])   histoGammaFromXFromMotherPhiOrBin[i]->Scale(factorNEvents*scalingEta*scalingPhi);
+        // calculate fraction of given particles which are decayed up to mean R of reconstruction
+        if(motherParticles_ctau[i]<0.01) factorDecay = 1.;
+        else{
+          corrFactorFromDecayLength->SetParameter(0,motherParticles_ctau[i]);
+          factorDecay = corrFactorFromDecayLength->Eval(ReturnMeanR(fMode));
+        }
+        cout << motherParticles[i] << "\t--> " << factorDecay << endl;
+
+        if (histoMesonDaughterPtOrBin[i])           histoMesonDaughterPtOrBin[i]->Scale(        factorNEvents*factorDecay);
+        if (histoMesonDaughterYOrBin[i])            histoMesonDaughterYOrBin[i]->Scale(         factorNEvents*factorDecay);
+        if (histoMesonDaughterPhiOrBin[i])          histoMesonDaughterPhiOrBin[i]->Scale(       factorNEvents*factorDecay);
+        if (histoMesonMotherPtOrBin[i])             histoMesonMotherPtOrBin[i]->Scale(          factorNEvents*factorDecay);
+        if (histoMesonMotherYOrBin[i])              histoMesonMotherYOrBin[i]->Scale(           factorNEvents*factorDecay);
+        if (histoMesonMotherPhiOrBin[i])            histoMesonMotherPhiOrBin[i]->Scale(         factorNEvents*factorDecay);
+        if (histoGammaFromXFromMotherPtOrBin[i])    histoGammaFromXFromMotherPtOrBin[i]->Scale( factorNEvents*scalingEta*scalingPhi*factorDecay);
+        if (histoGammaFromXFromMotherYOrBin[i])     histoGammaFromXFromMotherYOrBin[i]->Scale(  factorNEvents*scalingEta*scalingPhi*factorDecay);
+        if (histoGammaFromXFromMotherPhiOrBin[i])   histoGammaFromXFromMotherPhiOrBin[i]->Scale(factorNEvents*scalingEta*scalingPhi*factorDecay);
     }
+    cout << "========================================"  << endl;
+    delete corrFactorFromDecayLength;
 
     //***************************** calculate (pi0 from X)/pi0_param ************************************************
     histoRatioPi0FromXToPi0Param                                = new TH1F*[nMotherParticles];

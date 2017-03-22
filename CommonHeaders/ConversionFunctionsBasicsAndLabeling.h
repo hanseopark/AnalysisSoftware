@@ -3841,6 +3841,22 @@ Double_t ReturnTriggerRejectionFactor(TString energy, Int_t trigger){
 }
 
 //************************************************************************************
+//** Return mean reconstructed R of meson reconstruction for given mode **************
+//************************************************************************************
+Double_t ReturnMeanR(Int_t mode){
+    Double_t meanR   = 1.;
+    if(mode == 0 || mode == 2 || mode == 3){
+      meanR = 60.;
+    }else if(mode == 4 || mode == 10){
+      meanR = 428.;
+    }else if(mode == 5 || mode == 11){
+      meanR = 460.;
+    } else meanR = 60.;
+
+    return meanR;
+}
+
+//************************************************************************************
 //************ Return cocktail normalization factor **********************************
 //************************************************************************************
 Double_t ReturnCocktailNormalization(TString energy, TString eventCutString) {

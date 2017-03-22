@@ -23,6 +23,8 @@ TString     motherParticles[nMotherParticles]           = {"Eta","K0s","K0l","La
 TString     motherParticlesPDG[nMotherParticles]        = {"221","310","130","3122","113","331","223","213","-213","333","443","1114","2114","2214","2224","3212"};
 TString     motherParticlesLatex[nMotherParticles]      = { "#eta","K^{0}_{S}","K^{0}_{L}","#Lambda","#rho^{0}","#eta'","#omega","#rho^{+}","#rho^{-}","#phi",
                                                             "J/#psi","#Delta^{-}","#Delta^{0}","#Delta^{+}","#Delta^{++}","#Sigma^{0}"};
+//ctau given in (cm) below! - zero means: ctau < 0.01cm
+Double_t    motherParticles_ctau[nMotherParticles]      = {0,2.68,1533.74,7.89,0,0,0,0,0,0,0,0,0,0,0,0};
 Int_t       motherParticleDec[nMotherParticles]         = {2,256,65536,131072,4,16,8,8192,16384,32,64,2048,4096,1024,512,128};
 Color_t     cocktailColor[nMotherParticles]             = {kRed+2,kBlue+1,kOrange+1,kYellow+2,kAzure-2,kGreen+2,kRed-2,kViolet,kMagenta,kViolet+2,kBlue-3,kTeal+9,kCyan+2,kMagenta+2,kCyan+4,kViolet+4};
 Style_t     cocktailMarker[nMotherParticles]            = {20,21,24,25,20,21,24,25,20,21,24,25,20,21,24,25};
