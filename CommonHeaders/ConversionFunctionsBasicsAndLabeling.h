@@ -63,38 +63,44 @@ Double_t tAAErr4060     = 0.097804;
 Double_t tAAErr6080     = 0.026296;
 
 // ******************************************************************************************
-// ************************ Set correct xSection for pp *************************************
+// ************************ Set correct xSection for pp & pPb *******************************
 // ******************************************************************************************
+// general scale factors
+Double_t recalcBarn             = 1e12;         // NLO in pbarn!!!!
+Double_t factorToInel           = 1/1.12;       // this factor is multiplied with Raa and comes from trigger inelastic effiency for pp
+// pp 0.9 TeV
+Double_t xSection900GeVINEL     = 52.5*1e-3;
+Double_t xSection900GeV         = 47.78*1e-3;
+Double_t xSection900GeVV0AND    = 40.06*1e-3;
+Double_t xSection900GeVErrUp    = 2.39;
+Double_t xSection900GeVErrDown  = 1.86;
+// pp 2.76 TeV
+Double_t xSection2760GeV        = 55.416*1e-3;
+Double_t xSection2760GeVV0AND   = 47.73*1e-3;
+Double_t xSection2760GeVINEL    = 62.8*1e9;
+Double_t xSection2760GeVErr     = 3.9;
+// pp 5.023TeV
+Double_t xSection5023GeVV0AND   = 51.2*1e-3;    // from https://aliceinfo.cern.ch/ArtSubmission/sites/aliceinfo.cern.ch.ArtSubmission/files/draft/mgagliar/2016-Aug-22-paper_draft-vdmNote_5TeV.pdf
+Double_t xSection5023GeVV0ANDErr= 1.2;          // from https://aliceinfo.cern.ch/ArtSubmission/sites/aliceinfo.cern.ch.ArtSubmission/files/draft/mgagliar/2016-Aug-22-paper_draft-vdmNote_5TeV.pdf
+// pp 7 TeV
+Double_t xSection7TeVINEL       = 73.2*1e-3;
+Double_t xSection7TeV           = 62.22*1e-3;
+Double_t xSection7TeVV0AND      = 54.31*1e-3;
+Double_t xSection7TeVErrUp      = 2.18;
+Double_t xSection7TeVErrDown    = 2.18;
+// pp 8 TeV
 Double_t xSection8TeVV0AND      = 55.8*1e-3;   // from https://aliceinfo.cern.ch/Notes/node/531
 Double_t xSection8TeVErrUp      = 1.6;         // from https://aliceinfo.cern.ch/Notes/node/531
 Double_t xSection8TeVErrDown    = 1.6;         // from https://aliceinfo.cern.ch/Notes/node/531
 Double_t xSection8TeVT0AND      = 25.5*1e-3;   // from https://aliceinfo.cern.ch/Notes/node/531
 Double_t xSection8TeVT0ErrUp    = 0.6;         // from https://aliceinfo.cern.ch/Notes/node/531
 Double_t xSection8TeVT0ErrDown  = 0.6;         // from https://aliceinfo.cern.ch/Notes/node/531
-Double_t xSection7TeVINEL       = 73.2*1e-3;
-Double_t xSection7TeV           = 62.22*1e-3;
-Double_t xSection7TeVV0AND      = 54.31*1e-3;
-Double_t xSection7TeVErrUp      = 2.18;
-Double_t xSection7TeVErrDown    = 2.18;
+// pPb  5TeV
 Double_t xSection5023GeVINELpPb = 70*1e-3;
-Double_t xSection2760GeV        = 55.416*1e-3;
-Double_t xSection2760GeVV0AND   = 47.73*1e-3;
-Double_t xSection2760GeVINEL    = 62.8*1e9;
-Double_t xSection2760GeVErr     = 3.9;
-Double_t xSection900GeVINEL     = 52.5*1e-3;
-Double_t xSection900GeV         = 47.78*1e-3;
-Double_t xSection900GeVV0AND    = 40.06*1e-3;
-Double_t xSection900GeVErrUp    = 2.39;
-Double_t xSection900GeVErrDown  = 1.86;
-Double_t recalcBarn             = 1e12;         // NLO in pbarn!!!!
-Double_t factorToInel           = 1/1.12;       // this factor is multiplied with Raa and comes from trigger inelastic effiency for pp
-
 Double_t ncollpPb5023GeV       = 6.9;
 Double_t ncollErrpPb5023GeV    = 0.7;
 Double_t tpPb5023GeV           = 0.0983e3*(1/recalcBarn);
 Double_t tpPbErr5023GeV        = 0.0035e3*(1/recalcBarn);
-
-
 
 //************************************************************************************
 //********************* Separate cut numbers, old version ****************************
@@ -1287,7 +1293,7 @@ Double_t GetNCollFromName ( TString name,
         } else if (name.CompareTo("7590") == 0){ //60-80%
             return ncoll7590;            
         }
-    } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0){    
+    } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){    
         return ncollpPb5023GeV;
     } else {
         return 1.;
@@ -1335,7 +1341,7 @@ Double_t GetNCollErrFromName (  TString name,
         } else if (name.CompareTo("7590") == 0){ //75-90%
             return nCollErr7590;      
         }
-    } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0){ 
+    } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){    
         return ncollErrpPb5023GeV;      
     } else {
         return 1.;
@@ -3624,16 +3630,24 @@ Double_t ReturnCorrectXSection ( TString energy,
                                  Int_t selTrig){
     
     Double_t xSectionInt = 0;    
-    if(energy.CompareTo("7TeV") == 0){
+    if(energy.CompareTo("900GeV") == 0){
         if (selTrig == 1){
-            xSectionInt = xSection7TeVV0AND;
+            xSectionInt = xSection900GeVV0AND;
             cout << "V0AND xSection taken: \t" << xSectionInt << endl;
         } else if (selTrig == 3){
-            xSectionInt = xSection7TeVINEL;
+            xSectionInt = xSection900GeVINEL;
             cout << "INEL xSection taken: \t" << xSectionInt << endl;
         } else {
-            xSectionInt = xSection7TeV;
+            xSectionInt = xSection900GeV;
             cout << "V0OR xSection taken: \t" << xSectionInt << endl;
+        }    
+    } else if( energy.CompareTo("5TeV") == 0 || energy.CompareTo("5.02TeV") == 0 || energy.CompareTo("5.023TeV") == 0 || energy.CompareTo("5023GeV") == 0 ){
+        if (selTrig == 1){
+            xSectionInt = xSection5023GeVV0AND;
+            cout << "V0AND xSection taken: \t" << xSectionInt << endl;
+        } else if (selTrig == 3){
+            xSectionInt = xSection5023GeVINELpPb;
+            cout << "INEL xSection taken: \t" << xSectionInt << endl;
         }    
     } else if(energy.CompareTo("2.76TeV") == 0){
         if (selTrig == 1){
@@ -3646,15 +3660,15 @@ Double_t ReturnCorrectXSection ( TString energy,
             xSectionInt = xSection2760GeV;
             cout << "V0OR xSection taken: \t" << xSectionInt << endl;  
         }
-    } else if(energy.CompareTo("900GeV") == 0){
+    } else if(energy.CompareTo("7TeV") == 0){
         if (selTrig == 1){
-            xSectionInt = xSection900GeVV0AND;
+            xSectionInt = xSection7TeVV0AND;
             cout << "V0AND xSection taken: \t" << xSectionInt << endl;
         } else if (selTrig == 3){
-            xSectionInt = xSection900GeVINEL;
-            cout << "V0AND xSection taken: \t" << xSectionInt << endl;
+            xSectionInt = xSection7TeVINEL;
+            cout << "INEL xSection taken: \t" << xSectionInt << endl;
         } else {
-            xSectionInt = xSection900GeV;
+            xSectionInt = xSection7TeV;
             cout << "V0OR xSection taken: \t" << xSectionInt << endl;
         }    
     } else if(energy.CompareTo("8TeV") == 0){
@@ -3667,7 +3681,7 @@ Double_t ReturnCorrectXSection ( TString energy,
         } else {
             cout << "ERROR: V0OR xSection not deterimined, set to \t" << xSectionInt << endl;
         }
-    } else if( energy.CompareTo("5TeV") == 0 || energy.CompareTo("5.02TeV") == 0 || energy.CompareTo("5.023TeV") == 0 || energy.CompareTo("5023GeV") == 0 ){
+    } else if( energy.CompareTo("pPb_5TeV") == 0  || energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0){
         if (selTrig == 3){
             xSectionInt = xSection5023GeVINELpPb;
             cout << "INEL xSection taken: \t" << xSectionInt << endl;

@@ -48,6 +48,10 @@ extern TBenchmark*    gBenchmark;
 extern TSystem*    gSystem;
 extern TMinuit*      gMinuit;
 
+Double_t xSection5023GeVINELpPb     = 70*1e-3;
+Double_t ncollpPb5023GeV            = 6.9;
+Double_t recalcBarn                 = 1e12; //NLO in pbarn!!!!
+
 TGraph* ScaleGraph (TGraph* graph, Double_t scaleFac){
     TGraph* dummyGraph = (TGraph*)graph->Clone(Form("%s_Scaled",graph->GetName()));
     Double_t * xValue = dummyGraph->GetX();
@@ -132,7 +136,9 @@ TGraphErrors* CalculateGraphRatioToGraph(TGraphErrors* graphA, TGraphErrors* gra
     return returnGraph;    
 }
 
-
+//**************************************************************************************************
+//**************************** Main function *******************************************************
+//**************************************************************************************************
 void ProduceTheoryGraphsPPb(){    
     
     StyleSettingsThesis();    
@@ -349,7 +355,7 @@ void ProduceTheoryGraphsPPb(){
     TH1D* histoEtaToPi0HIJING       = (TH1D*)fileHIJING->Get("MCEtaToPi0");
     
     //**************************************************************************************************
-    //****************************** extracting McGill predictions*****************************************
+    //****************************** extracting McGill predictions**************************************
     //**************************************************************************************************
 //     @article{Shen:2016zpp,
 //         author         = "Shen, Chun and Paquet, Jean-François and Denicol,
@@ -367,6 +373,8 @@ void ProduceTheoryGraphsPPb(){
 //         SLACcitation   = "%%CITATION = ARXIV:1609.02590;%%"
 //     }
 
+    // *************************************
+    // read eta spectra
     ifstream inMCGillEta;	
     Int_t nlinesEtaMCGill = 0;	
     inMCGillEta.open("ExternalInputpPb/Theory/McGill/spectra_eta_hydro.dat",ios_base::in);    
@@ -381,7 +389,26 @@ void ProduceTheoryGraphsPPb(){
     }
     inMCGillEta.close();
     TGraphErrors* graphEtaSpecMcGill = new TGraphErrors(nlinesEtaMCGill-1,xPtEtaMCGill,yYieldEtaMCGill, xPtErrEtaMCGill, yYieldErrEtaMCGill );	    
+
+    // *************************************
+    // read eta v2
+    ifstream inMCGillEtaV2;	
+    nlinesEtaMCGill = 0;	
+    inMCGillEtaV2.open("ExternalInputpPb/Theory/McGill/v2_eta_hydro.dat",ios_base::in);    
+    Double_t yV2EtaMCGill[100], yV2ErrEtaMCGill[100];
+
+    while(!inMCGillEtaV2.eof()){
+        inMCGillEtaV2 >> xPtEtaMCGill[nlinesEtaMCGill]  >> yV2EtaMCGill[nlinesEtaMCGill] >> yV2ErrEtaMCGill[nlinesEtaMCGill];
+        cout << nlinesEtaMCGill << "         "  << xPtEtaMCGill[nlinesEtaMCGill] << "         "  <<yV2EtaMCGill[nlinesEtaMCGill]<<endl;
+        xPtErrEtaMCGill[nlinesEtaMCGill] = 0.1;
+        nlinesEtaMCGill++;
+        
+    }
+    inMCGillEtaV2.close();
+    TGraphErrors* graphEtaV2McGill = new TGraphErrors(nlinesEtaMCGill-1,xPtEtaMCGill,yV2EtaMCGill, xPtErrEtaMCGill, yV2ErrEtaMCGill );	    
     
+    // *************************************
+    // read pi0 spectra
     ifstream inMCGillPi0;	
     Int_t nlinesPi0MCGill = 0;	
     inMCGillPi0.open("ExternalInputpPb/Theory/McGill/spectra_pion_p_hydro.dat",ios_base::in);    
@@ -396,57 +423,448 @@ void ProduceTheoryGraphsPPb(){
     }
     inMCGillPi0.close();
     TGraphErrors* graphPi0SpecMcGill = new TGraphErrors(nlinesPi0MCGill-1,xPtPi0MCGill,yYieldPi0MCGill, xPtErrPi0MCGill, yYieldErrPi0MCGill );	    
+    // *************************************
+    // read pi0 v2
+    ifstream inMCGillPi0V2;	
+    nlinesPi0MCGill = 0;	
+    inMCGillPi0V2.open("ExternalInputpPb/Theory/McGill/v2_pion_p_hydro.dat",ios_base::in);    
+    Double_t yV2Pi0MCGill[100], yV2ErrPi0MCGill[100];
 
-    TGraphErrors* graphEtaToPi0McGill = CalculateGraphRatioToGraph(graphEtaSpecMcGill, graphPi0SpecMcGill);
-    
-    ifstream inMCGillGamma;	
-    Int_t nlinesGammaMCGill = 0;	
-    inMCGillGamma.open("ExternalInputpPb/Theory/McGill/spectra_pion_p_hydro.dat",ios_base::in);    
-    Double_t xPtGammaMCGill[100], xPtErrGammaMCGill[0], yYieldGammaMCGill[100], yYieldErrGammaMCGill[100];
-
-    
-    
-    while(!inMCGillGamma.eof()){
-        inMCGillGamma >> xPtGammaMCGill[nlinesGammaMCGill]  >> yYieldGammaMCGill[nlinesGammaMCGill] >> yYieldErrGammaMCGill[nlinesGammaMCGill];
-        cout << nlinesGammaMCGill << "         "  << xPtGammaMCGill[nlinesGammaMCGill] << "         "  <<yYieldGammaMCGill[nlinesGammaMCGill]<<endl;
-        xPtErrGammaMCGill[nlinesGammaMCGill] = 0;
-        nlinesGammaMCGill++;
+    while(!inMCGillPi0V2.eof()){
+        inMCGillPi0V2 >> xPtPi0MCGill[nlinesPi0MCGill]  >> yV2Pi0MCGill[nlinesPi0MCGill] >> yV2ErrPi0MCGill[nlinesPi0MCGill];
+        cout << nlinesPi0MCGill << "         "  << xPtPi0MCGill[nlinesPi0MCGill] << "         "  <<yV2Pi0MCGill[nlinesPi0MCGill]<<endl;
+        xPtErrPi0MCGill[nlinesPi0MCGill] = 0.1;
+        nlinesPi0MCGill++;
         
     }
-    inMCGillGamma.close();
-    TGraphErrors* graphGammaSpecMcGill = new TGraphErrors(nlinesGammaMCGill-1,xPtGammaMCGill,yYieldGammaMCGill, xPtErrGammaMCGill, yYieldErrGammaMCGill );	    
+    inMCGillPi0V2.close();
+    TGraphErrors* graphPi0V2McGill = new TGraphErrors(nlinesPi0MCGill-1,xPtPi0MCGill,yV2Pi0MCGill, xPtErrPi0MCGill, yV2ErrPi0MCGill );	    
+    
+    // *************************************
+    // calculate eta/pi0
+    TGraphErrors* graphEtaToPi0McGill = CalculateGraphRatioToGraph(graphEtaSpecMcGill, graphPi0SpecMcGill);
+    
+    //**************************************************************************************************
+    //********************* extracting McGill predictions including other observables ******************
+    //**************************************************************************************************
+    Int_t nParticles                    = 14;
+    Int_t nMeasurements                 = 15;
+    Int_t nCent                         = 3;
+    TString centNames[nCent]            = {"0-100", "0-5", "5-10"};
+    TString centNamesOut[nCent]         = {"", "0-5_", "5-10_"};
+    TString particleNames[nParticles]   = {"pion_p", "pion_m", "kaon_p", "kaon_m", "proton", 
+                                           "anti_proton", "charged_hadron", "Lambda", "anti_Lambda", "Omega", 
+                                           "anti_Omega", "Xi_m", "anti_Xi_p", "phi"};
+    TString particleNamesOut[nParticles]= {"PiPlus", "PiMinus", "KaonPlus", "KaonMinus", "Proton", 
+                                           "AntiProton", "ChargedHadron", "Lambda", "AntiLambda", "Omega", 
+                                           "AntiOmega", "Xi", "AntiXi", "Phi"};
+    vector<Double_t> ***valuesMcGill    = new vector<Double_t>**[nCent];     // iCent x iParticle x nMeasurements matrix with theory curves
+    for (Int_t iCent = 0; iCent < nCent; iCent++){
+        valuesMcGill[iCent]             = new vector<Double_t>*[nMeasurements];
+        for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
+            valuesMcGill[iCent][iParticle]  = new vector<Double_t>[nMeasurements];
+        }
+    }    
+    Int_t nPtPoint[nCent][nParticles];
+    
+    
+    //  read from file
+    for (Int_t iCent = 0; iCent < nCent; iCent++){
+        cout << "reading cent: " << centNames[iCent].Data() << endl; 
+        for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
+            nPtPoint[iCent][iParticle]      = 0;
+            ifstream fileMcGillInput;
+            TString fileName                = Form("ExternalInputpPb/Theory/McGill/MCGlbpPb5020_C%s_vis010_Ttr155_new/%s_differential_observables_ALICE.dat", centNames[iCent].Data(), particleNames[iParticle].Data());
+            fileMcGillInput.open(fileName.Data(),ios_base::in);
+            cout << "opening: " << fileName.Data() << endl;
+            Int_t iPtCurrent    = 0;
+            Int_t nCurrMeas     = 0;
+            string line;
+            while (getline(fileMcGillInput, line) && iPtCurrent < 100) {
+                TString temp        = "";
+                TString tempBin     = "";
+                istringstream cs(line); // controll stream
+                cs >> temp;
+                
+                if (!temp.Contains("#")){
+                    istringstream ss(line);                
+                    Int_t iMeasurement  = 0;
+                    while(ss && iMeasurement < nMeasurements){
+                        ss >> temp;
+                        if(!temp.IsNull() && temp.CompareTo("nan") != 0){
+                            valuesMcGill[iCent][iParticle][iMeasurement].push_back(temp.Atof());
+                            cout << temp.Data() << "\t ";
+                            iMeasurement++;
+                        } else {
+                            valuesMcGill[iCent][iParticle][iMeasurement].push_back(-1.0e-6);
+                            cout << -1.0e-6 << "\t ";
+                            iMeasurement++;
+                        }
+                    }
+                    nCurrMeas = iMeasurement;
+                    cout << endl;
+                    iPtCurrent++;
+                } else {
+                    cout << "first line contains comments" << endl;
+                }    
+            }
+            cout << "Number of pT bins: "<< iPtCurrent << "\t number of measurement points: "<< nCurrMeas <<  endl;
+            nPtPoint[iCent][iParticle]         = iPtCurrent;
+            fileMcGillInput.close();
+        }
+    }
+    
+    TGraphErrors* graphSpectraMcGill[nCent][nParticles];
+    TGraphErrors* graphVnMcGill[nCent][nParticles][6];
+    for (Int_t iCent = 0; iCent < nCent; iCent++){
+        for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
+            graphSpectraMcGill[iCent][iParticle]       = NULL;
+            for (Int_t iVn = 0; iVn < 6; iVn++){
+                graphVnMcGill[iCent][iParticle][iVn]   = NULL;
+            }
+        }    
+    }
+    for (Int_t iCent = 0; iCent < nCent; iCent++){
+        for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
+            graphSpectraMcGill[iCent][iParticle]       = new TGraphErrors(nPtPoint[iCent][iParticle]);
+            for (Int_t iPt = 0; iPt < nPtPoint[iCent][iParticle]; iPt++){
+                graphSpectraMcGill[iCent][iParticle]->SetPoint(iPt, valuesMcGill[iCent][iParticle][0].at(iPt), valuesMcGill[iCent][iParticle][1].at(iPt));
+                graphSpectraMcGill[iCent][iParticle]->SetPointError(iPt, 0.01, valuesMcGill[iCent][iParticle][2].at(iPt) );
+            }    
+            graphSpectraMcGill[iCent][iParticle]->SetName(Form("graph%sSpecMcGill5023GeV", particleNamesOut[iParticle].Data()));
+            for (Int_t iVn = 0; iVn < 6; iVn++){
+                graphVnMcGill[iCent][iParticle][iVn]   = new TGraphErrors(nPtPoint[iCent][iParticle]);
+                for (Int_t iPt = 0; iPt < nPtPoint[iCent][iParticle]; iPt++){
+                    graphVnMcGill[iCent][iParticle][iVn]->SetPoint(iPt, valuesMcGill[iCent][iParticle][0].at(iPt), valuesMcGill[iCent][iParticle][3+2*iVn].at(iPt));
+                    graphVnMcGill[iCent][iParticle][iVn]->SetPointError(iPt, 0.01, valuesMcGill[iCent][iParticle][4+2*iVn].at(iPt) );
+                }    
+                graphVnMcGill[iCent][iParticle][iVn]->SetName(Form("graph%sV%iMcGill5023GeV", particleNamesOut[iParticle].Data(),iVn+1));
+            }
+        }    
+    }
 
+    //**********************************************************************************************************************
+    //********************************pp 5.023 TeV Pi0 and Eta calc*********************************************************
+    //**********************************************************************************************************************
+
+    //*********************************************************
+    // eta Vogelsang - FF: AESSS, PDF: CT10
+    Double_t ptNLOEta5023GeV[200];
+    Double_t muHalfEta5023GeV[200];
+    Double_t muOneEta5023GeV[200];
+    Double_t muTwoEta5023GeV[200];
+    Int_t nlinesNLOEta5023GeV                       = 0;
+    Bool_t fillAllMuScalesEta5023GeV                = kFALSE;
+    
+    TString fileNameNLOEta5023GeV                   = "ExternalInput/Theory/ALICENLOcalcEtaVogelsang5023GeV_AESSS_CT10.dat"; // currently only mu = 1pt
+    ifstream  fileNLOEta5023GeV;
+    fileNLOEta5023GeV.open(fileNameNLOEta5023GeV,ios_base::in);
+    cout << fileNameNLOEta5023GeV << endl;
+    
+    // read eta input theory file for 5.023TeV
+    while(!fileNLOEta5023GeV.eof() && nlinesNLOEta5023GeV < 200){
+        if (fillAllMuScalesEta5023GeV){
+            fileNLOEta5023GeV >> ptNLOEta5023GeV[nlinesNLOEta5023GeV] >> muHalfEta5023GeV[nlinesNLOEta5023GeV] >> muOneEta5023GeV[nlinesNLOEta5023GeV] >> muTwoEta5023GeV[nlinesNLOEta5023GeV]; 
+        } else {    
+            fileNLOEta5023GeV >> ptNLOEta5023GeV[nlinesNLOEta5023GeV] >> muOneEta5023GeV[nlinesNLOEta5023GeV] ; 
+            muHalfEta5023GeV[nlinesNLOEta5023GeV]   = muOneEta5023GeV[nlinesNLOEta5023GeV] ; 
+            muTwoEta5023GeV[nlinesNLOEta5023GeV]    = muOneEta5023GeV[nlinesNLOEta5023GeV] ; 
+        }    
+        nlinesNLOEta5023GeV++;
+    }
+    fileNLOEta5023GeV.close();
+    // reduce number of lines by 1
+    nlinesNLOEta5023GeV--;
+    
+    // generate graphs
+    TGraph* graphNLOCalcInvSecEtaMuHalf5023GeV      = NULL;
+    TGraph* graphNLOCalcInvSecEtaMuOne5023GeV       = NULL;
+    TGraph* graphNLOCalcInvSecEtaMuTwo5023GeV       = NULL;
+    TGraph* graphNLOCalcInvYieldEtaMuHalfpPb5023GeV = NULL;
+    TGraph* graphNLOCalcInvYieldEtaMuOnepPb5023GeV  = NULL;
+    TGraph* graphNLOCalcInvYieldEtaMuTwopPb5023GeV  = NULL;
+
+    // fill x-section graph for default mu
+    graphNLOCalcInvSecEtaMuOne5023GeV               = new TGraph(nlinesNLOEta5023GeV,ptNLOEta5023GeV,muOneEta5023GeV); 
+    graphNLOCalcInvSecEtaMuOne5023GeV->Print();
+    // fill yield graph for default mu
+    graphNLOCalcInvYieldEtaMuOnepPb5023GeV          = ScaleGraph(graphNLOCalcInvSecEtaMuOne5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+    
+    if (fillAllMuScalesEta5023GeV){
+        // fill x-section graphs for mu variations
+        graphNLOCalcInvSecEtaMuHalf5023GeV          = new TGraph(nlinesNLOEta5023GeV,ptNLOEta5023GeV,muHalfEta5023GeV); 
+        graphNLOCalcInvSecEtaMuHalf5023GeV->RemovePoint(0);
+        graphNLOCalcInvSecEtaMuTwo5023GeV           = new TGraph(nlinesNLOEta5023GeV,ptNLOEta5023GeV,muTwoEta5023GeV); 
+        // fill yield graphs for mu variations
+        graphNLOCalcInvYieldEtaMuHalfpPb5023GeV     = ScaleGraph(graphNLOCalcInvSecEtaMuHalf5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+        graphNLOCalcInvYieldEtaMuTwopPb5023GeV      = ScaleGraph(graphNLOCalcInvSecEtaMuTwo5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+    }
+    // combine all mu scales into 1 graph for eventual plotting
+    TGraphAsymmErrors* graphNLOCalcInvSecEta5023GeV     = CombineMuScales(nlinesNLOEta5023GeV, ptNLOEta5023GeV, muOneEta5023GeV, muHalfEta5023GeV, muTwoEta5023GeV);
+    TGraphAsymmErrors* graphNLOCalcInvYieldEtapPb5023GeV= ScaleGraphAsym(graphNLOCalcInvSecEta5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+
+    //*********************************************************
+    // pi0 Vogelsang - FF: DSS14, PDF: CT10
+    Double_t ptNLOPi05023GeV[200];
+    Double_t muHalfPi05023GeV[200];
+    Double_t muOnePi05023GeV[200];
+    Double_t muTwoPi05023GeV[200];
+    Int_t nlinesNLOPi05023GeV                       = 0;
+    
+    TString fileNameNLOPi05023GeV                   = "ExternalInput/Theory/ALICENLOCalcPi0Vogelsang5023GeV_DSS14_CT10.dat";
+    ifstream  fileNLOPi05023GeV;
+    fileNLOPi05023GeV.open(fileNameNLOPi05023GeV,ios_base::in);
+    cout << fileNameNLOPi05023GeV << endl;
+    
+    while(!fileNLOPi05023GeV.eof() && nlinesNLOPi05023GeV < 200){
+        fileNLOPi05023GeV >> ptNLOPi05023GeV[nlinesNLOPi05023GeV] >> muHalfPi05023GeV[nlinesNLOPi05023GeV] >> muOnePi05023GeV[nlinesNLOPi05023GeV] >> muTwoPi05023GeV[nlinesNLOPi05023GeV]; 
+        cout << nlinesNLOPi05023GeV << "         "  << ptNLOPi05023GeV[nlinesNLOPi05023GeV] << "         "  << muHalfPi05023GeV[nlinesNLOPi05023GeV] << "         "  << muOnePi05023GeV[nlinesNLOPi05023GeV] << "         "  << muTwoPi05023GeV[nlinesNLOPi05023GeV] << endl;
+        nlinesNLOPi05023GeV++;
+    }
+    fileNLOPi05023GeV.close();
+    // reduce number of lines by 1
+    nlinesNLOPi05023GeV--;
+    
+    // fill x-section graphs
+    TGraph* graphNLOCalcInvSecPi0MuHalf5023GeV      = new TGraph(nlinesNLOPi05023GeV,ptNLOPi05023GeV,muHalfPi05023GeV); 
+    graphNLOCalcInvSecPi0MuHalf5023GeV->RemovePoint(0);
+    TGraph* graphNLOCalcInvSecPi0MuOne5023GeV       = new TGraph(nlinesNLOPi05023GeV,ptNLOPi05023GeV,muOnePi05023GeV); 
+    TGraph* graphNLOCalcInvSecPi0MuTwo5023GeV       = new TGraph(nlinesNLOPi05023GeV,ptNLOPi05023GeV,muTwoPi05023GeV); 
+    // fill yield graphs
+    TGraph* graphNLOCalcInvYieldPi0MuHalfpPb5023GeV    = ScaleGraph(graphNLOCalcInvSecPi0MuHalf5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+    TGraph* graphNLOCalcInvYieldPi0MuOnepPb5023GeV     = ScaleGraph(graphNLOCalcInvSecPi0MuOne5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+    TGraph* graphNLOCalcInvYieldPi0MuTwopPb5023GeV     = ScaleGraph(graphNLOCalcInvSecPi0MuTwo5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+    // combine all mu scales into 1 graph for eventual plotting
+    TGraphAsymmErrors* graphNLOCalcInvSecPi05023GeV     = CombineMuScales(nlinesNLOPi05023GeV, ptNLOPi05023GeV, muOnePi05023GeV, muHalfPi05023GeV, muTwoPi05023GeV);
+    TGraphAsymmErrors* graphNLOCalcInvYieldPi0pPb5023GeV   = ScaleGraphAsym(graphNLOCalcInvSecPi05023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+
+    //*********************************************************
+    // Eta/Pi0 Vogelsang FF pi0: DSS14, FF eta: AESSS, PDF: CT10
+    Double_t* valueNLOMuHalfEta5023GeV              = NULL;
+    Double_t* valueNLOMuOneEta5023GeV               = graphNLOCalcInvSecEtaMuOne5023GeV->GetY();
+    Double_t* valueNLOMuTwoEta5023GeV               = NULL;
+    if (fillAllMuScalesEta5023GeV){
+        valueNLOMuHalfEta5023GeV                    = graphNLOCalcInvSecEtaMuHalf5023GeV->GetY();
+        valueNLOMuTwoEta5023GeV                     = graphNLOCalcInvSecEtaMuTwo5023GeV->GetY();
+    }
+    Double_t* valueNLOMuHalfPi05023GeV              = graphNLOCalcInvSecPi0MuHalf5023GeV->GetY();
+    Double_t* valueNLOMuOnePi05023GeV               = graphNLOCalcInvSecPi0MuOne5023GeV->GetY();
+    Double_t* valueNLOMuTwoPi05023GeV               = graphNLOCalcInvSecPi0MuTwo5023GeV->GetY();
+    Double_t* xValueNLO5023GeV                      = graphNLOCalcInvSecPi0MuOne5023GeV->GetX();
+    Int_t xNBins5023GeV                             = graphNLOCalcInvSecPi0MuOne5023GeV->GetN();
+    Double_t valueNLOEtaToPi0NLOMuHalf5023GeV[200];
+    Double_t valueNLOEtaToPi0NLOMuOne5023GeV[200];
+    Double_t valueNLOEtaToPi0NLOMuTwo5023GeV[200];
+    
+    // calculate eta/pi0 ratios for different mu scales
+    for ( Int_t n = 0; n < xNBins5023GeV+1; n++){
+        if (valueNLOMuOnePi05023GeV[n] != 0){
+            valueNLOEtaToPi0NLOMuOne5023GeV[n] = valueNLOMuOneEta5023GeV[n]/valueNLOMuOnePi05023GeV[n];
+        } else {
+            valueNLOEtaToPi0NLOMuOne5023GeV[n] = 0.;
+        }
+
+        if (fillAllMuScalesEta5023GeV){
+            if (n == 0){
+                valueNLOEtaToPi0NLOMuHalf5023GeV[n] = 0.;
+            } else { 
+                if (valueNLOMuHalfPi05023GeV[n] != 0){
+                    valueNLOEtaToPi0NLOMuHalf5023GeV[n] = valueNLOMuHalfEta5023GeV[n]/valueNLOMuHalfPi05023GeV[n];
+                } else {
+                    valueNLOEtaToPi0NLOMuHalf5023GeV[n] = 0.;
+                }
+            }
+            if (valueNLOMuTwoPi05023GeV[n] != 0){
+                valueNLOEtaToPi0NLOMuTwo5023GeV[n] = valueNLOMuTwoEta5023GeV[n]/valueNLOMuTwoPi05023GeV[n];
+            } else {
+                valueNLOEtaToPi0NLOMuTwo5023GeV[n] = 0.;
+            }
+        } else {
+            valueNLOEtaToPi0NLOMuHalf5023GeV[n] = valueNLOEtaToPi0NLOMuOne5023GeV[n];
+            valueNLOEtaToPi0NLOMuTwo5023GeV[n] = valueNLOEtaToPi0NLOMuOne5023GeV[n];
+        }    
+    }  
+    // fill graphs
+    TGraph* graphEtaToPi0NLOMuHalf5023GeV           = NULL;
+    TGraph* graphEtaToPi0NLOMuTwo5023GeV            = NULL;
+    TGraph* graphEtaToPi0NLOMuOne5023GeV            = new TGraph(xNBins5023GeV,xValueNLO5023GeV,valueNLOEtaToPi0NLOMuOne5023GeV);   
+    if (fillAllMuScalesEta5023GeV){
+        graphEtaToPi0NLOMuHalf5023GeV               = new TGraph(xNBins5023GeV,xValueNLO5023GeV,valueNLOEtaToPi0NLOMuHalf5023GeV);  
+        graphEtaToPi0NLOMuHalf5023GeV->RemovePoint(0);
+        graphEtaToPi0NLOMuTwo5023GeV                = new TGraph(xNBins5023GeV,xValueNLO5023GeV,valueNLOEtaToPi0NLOMuTwo5023GeV);   
+    }    
+    // combine all mu scales into 1 graph for plotting
+    TGraphAsymmErrors* graphNLOCalcEtaToPi05023GeV  = CombineMuScales(xNBins5023GeV, xValueNLO5023GeV, valueNLOEtaToPi0NLOMuOne5023GeV, valueNLOEtaToPi0NLOMuHalf5023GeV, valueNLOEtaToPi0NLOMuTwo5023GeV);
+    
+
+    //*********************************************************
+    // eta Vogelsang - FF: AESSS, nPDF: nCTEQ
+    Double_t ptNLOEtanPdf5023GeV[200];
+    Double_t muOneEtanPdf5023GeV[200];
+    Int_t nlinesNLOEtanPdf5023GeV                       = 0;
+    
+    TString fileNameNLOEtanPdf5023GeV                   = "ExternalInputpPb/Theory/Vogelsang/ALICENLOcalcEtaVogelsang5023GeV_AESSS_nCTEQ.dat"; // currently only mu = 1pt
+    ifstream  fileNLOEtanPdf5023GeV;
+    fileNLOEtanPdf5023GeV.open(fileNameNLOEtanPdf5023GeV,ios_base::in);
+    cout << fileNameNLOEtanPdf5023GeV << endl;
+    
+    // read eta input theory file for 5.023TeV
+    while(!fileNLOEtanPdf5023GeV.eof() && nlinesNLOEtanPdf5023GeV < 200){
+        Double_t dummy                              = 0;
+        fileNLOEtanPdf5023GeV >> dummy >> dummy >> ptNLOEtanPdf5023GeV[nlinesNLOEtanPdf5023GeV] >> muOneEtanPdf5023GeV[nlinesNLOEtanPdf5023GeV] ; 
+        nlinesNLOEtanPdf5023GeV++;
+    }
+    fileNLOEtanPdf5023GeV.close();
+    // reduce number of lines by 1
+    nlinesNLOEtanPdf5023GeV--;
+    
+    // generate graphs
+    TGraph* graphNLOCalcInvSecEtaMuOnenPdf5023GeV       = NULL;
+    TGraph* graphNLOCalcInvYieldEtaMuOnepPbnPdf5023GeV  = NULL;
+
+    // fill x-section graph for default mu
+    graphNLOCalcInvSecEtaMuOnenPdf5023GeV               = new TGraph(nlinesNLOEtanPdf5023GeV,ptNLOEtanPdf5023GeV,muOneEtanPdf5023GeV); 
+    graphNLOCalcInvSecEtaMuOnenPdf5023GeV->Print();
+    // fill yield graph for default mu
+    graphNLOCalcInvYieldEtaMuOnepPbnPdf5023GeV          = ScaleGraph(graphNLOCalcInvSecEtaMuOnenPdf5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+    
+    //*********************************************************
+    // pi0 Vogelsang - FF: DSS14, PDF:  nPDF: nCTEQ
+    Double_t ptNLOPi0nPdf5023GeV[200];
+    Double_t muOnePi0nPdf5023GeV[200];
+    Int_t nlinesNLOPi0nPdf5023GeV                       = 0;
+    
+    TString fileNameNLOPi0nPdf5023GeV                   = "ExternalInputpPb/Theory/Vogelsang/ALICENLOcalcPi0Vogelsang5023GeV_DSS14_nCTEQ.dat"; // currently only mu = 1pt
+    ifstream  fileNLOPi0nPdf5023GeV;
+    fileNLOPi0nPdf5023GeV.open(fileNameNLOPi0nPdf5023GeV,ios_base::in);
+    cout << fileNameNLOPi0nPdf5023GeV << endl;
+    
+    while(!fileNLOPi0nPdf5023GeV.eof() && nlinesNLOPi0nPdf5023GeV < 200){
+        Double_t dummy                              = 0;
+        fileNLOPi0nPdf5023GeV >> dummy >> dummy >> ptNLOPi0nPdf5023GeV[nlinesNLOPi0nPdf5023GeV] >>  muOnePi0nPdf5023GeV[nlinesNLOPi0nPdf5023GeV] ; 
+        nlinesNLOPi0nPdf5023GeV++;
+    }
+    fileNLOPi0nPdf5023GeV.close();
+    // reduce number of lines by 1
+    nlinesNLOPi0nPdf5023GeV--;
+    
+    // fill x-section graphs
+    TGraph* graphNLOCalcInvSecPi0MuOnenPdf5023GeV       = new TGraph(nlinesNLOPi0nPdf5023GeV,ptNLOPi0nPdf5023GeV,muOnePi0nPdf5023GeV); 
+    // fill yield graphs
+    TGraph* graphNLOCalcInvYieldPi0MuOnepPbnPdf5023GeV  = ScaleGraph(graphNLOCalcInvSecPi0MuOnenPdf5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+
+    //*********************************************************
+    // Eta/Pi0 Vogelsang FF pi0: DSS14, FF eta: AESSS,  nPDF: nCTEQ
+    Double_t* valueNLOMuOneEtanPdf5023GeV               = graphNLOCalcInvSecEtaMuOnenPdf5023GeV->GetY();
+    Double_t* valueNLOMuOnePi0nPdf5023GeV               = graphNLOCalcInvSecPi0MuOnenPdf5023GeV->GetY();
+    Double_t* xValueNLOnPdf5023GeV                      = graphNLOCalcInvSecPi0MuOnenPdf5023GeV->GetX();
+    Int_t xNBinsnPdf5023GeV                             = graphNLOCalcInvSecPi0MuOnenPdf5023GeV->GetN();
+    Double_t valueNLOEtaToPi0NLOMuOnenPdf5023GeV[200];
+    
+    // calculate eta/pi0 ratios for different mu scales
+    for ( Int_t n = 0; n < xNBinsnPdf5023GeV+1; n++){
+        if (valueNLOMuOnePi0nPdf5023GeV[n] != 0){
+            valueNLOEtaToPi0NLOMuOnenPdf5023GeV[n] = valueNLOMuOneEtanPdf5023GeV[n]/valueNLOMuOnePi0nPdf5023GeV[n];
+        } else {
+            valueNLOEtaToPi0NLOMuOnenPdf5023GeV[n] = 0.;
+        }
+    }  
+    // fill graphs
+    TGraph* graphEtaToPi0NLOMuOnenPdf5023GeV            = new TGraph(xNBinsnPdf5023GeV,xValueNLOnPdf5023GeV,valueNLOEtaToPi0NLOMuOnenPdf5023GeV);   
     
     //**********************************************************************************************************************
     //********************************* Write graphs and histos to compilation file for pPb ********************************
     //**********************************************************************************************************************
     TFile fileTheoryGraphsPPb("ExternalInputpPb/Theory/TheoryCompilationPPb.root","UPDATE");
 
-        graphPi0RpACGC->Write("graphPi0RpACGC5023GeV", TObject::kOverwrite);
-        graphPi0RpAEPS09sKKP->Write("graphPi0RpAEPS09sKKP5023GeV", TObject::kOverwrite);
-        graphPi0RpAEPS09sAKK->Write("graphPi0RpAEPS09sAKK5023GeV", TObject::kOverwrite);
-        graphPi0RpAEPS09sDSS->Write("graphPi0RpAEPS09sDSS5023GeV", TObject::kOverwrite);
-        graphPi0RpAAsymmErrEPS09sDSS->Write("graphPi0RpAAsymmErrEPS09sDSS5023GeV", TObject::kOverwrite);
-        histoPi0EPOS3->Write("histoPi0EPOS35023TeV", TObject::kOverwrite);
-        histoEtaEPOS3->Write("histoEtaEPOS35023TeV", TObject::kOverwrite);
-        histoPi0EPOS3Reb->Write("histoPi0EPOS35023TeV_Reb", TObject::kOverwrite);
-        histoEtaEPOS3Reb->Write("histoEtaEPOS35023TeV_Reb", TObject::kOverwrite);
-        histoEtaToPi0EPOS3->Write("histoEtaToPi0EPOS35023TeV", TObject::kOverwrite);
-        histoEtaToPi0EPOS3Reb->Write("histoEtaToPi0EPOS35023TeV_Reb", TObject::kOverwrite);
-        histoPi0DPMJet->Write("histoPi0DPMJet5023TeV", TObject::kOverwrite);
-        histoEtaDPMJet->Write("histoEtaDPMJet5023TeV", TObject::kOverwrite);
-        histoPi0DPMJetReb->Write("histoPi0DPMJet5023TeV_Reb", TObject::kOverwrite);
-        histoEtaDPMJetReb->Write("histoEtaDPMJet5023TeV_Reb", TObject::kOverwrite);
-        histoEtaToPi0DPMJet->Write("histoEtaToPi0DPMJet5023TeV", TObject::kOverwrite);
-        histoPi0HIJING->Write("histoPi0HIJING5023TeV", TObject::kOverwrite);
-        histoEtaHIJING->Write("histoEtaHIJING5023TeV", TObject::kOverwrite);
-        histoPi0HIJINGReb->Write("histoPi0HIJING5023TeV_Reb", TObject::kOverwrite);
-        histoEtaHIJINGReb->Write("histoEtaHIJING5023TeV_Reb", TObject::kOverwrite);
-        histoEtaToPi0HIJING->Write("histoEtaToPi0HIJING5023TeV", TObject::kOverwrite);
-        graphEtaSpecMcGill->Write("graphEtaSpecMcGill5023TeV", TObject::kOverwrite);
-        graphPi0SpecMcGill->Write("graphPi0SpecMcGill5023TeV", TObject::kOverwrite);
-        graphEtaToPi0McGill->Write("graphEtaToPi0McGill5023TeV", TObject::kOverwrite);
-        graphGammaSpecMcGill->Write("graphGammaSpecMcGill5023TeV", TObject::kOverwrite);
+        // create subdirectories in file if needed
+        TDirectoryFile* directory5TeV = (TDirectoryFile*)fileTheoryGraphsPPb.Get("pPb_5.023TeV"); 
+        if (!directory5TeV){
+            fileTheoryGraphsPPb.mkdir("pPb_5.023TeV");
+        }    
+        TDirectoryFile* directory5TeV0005 = (TDirectoryFile*)fileTheoryGraphsPPb.Get("0-5_pPb_5.023TeV"); 
+        if (!directory5TeV0005){
+            fileTheoryGraphsPPb.mkdir("0-5_pPb_5.023TeV");
+        }    
+        TDirectoryFile* directory5TeV0510 = (TDirectoryFile*)fileTheoryGraphsPPb.Get("5-10_pPb_5.023TeV"); 
+        if (!directory5TeV0510){
+            fileTheoryGraphsPPb.mkdir("5-10_pPb_5.023TeV");
+        }    
+        
+        // write MB calcs
+        fileTheoryGraphsPPb.cd("pPb_5.023TeV");
+            // pi0 CGC RpPb
+            graphPi0RpACGC->Write("graphPi0RpACGC5023GeV", TObject::kOverwrite);
+            // pi0 EPS09 with old FFs RpPb
+            graphPi0RpAEPS09sKKP->Write("graphPi0RpAEPS09sKKP5023GeV", TObject::kOverwrite);
+            graphPi0RpAEPS09sAKK->Write("graphPi0RpAEPS09sAKK5023GeV", TObject::kOverwrite);
+            graphPi0RpAEPS09sDSS->Write("graphPi0RpAEPS09sDSS5023GeV", TObject::kOverwrite);
+            graphPi0RpAAsymmErrEPS09sDSS->Write("graphPi0RpAAsymmErrEPS09sDSS5023GeV", TObject::kOverwrite);
+            // pi0, eta, eta/pi0 EP03
+            histoPi0EPOS3->Write("histoPi0SpecEPOS35023GeV", TObject::kOverwrite);
+            histoEtaEPOS3->Write("histoEtaSpecEPOS35023GeV", TObject::kOverwrite);
+            histoPi0EPOS3Reb->Write("histoPi0SpecEPOS35023GeV_Reb", TObject::kOverwrite);
+            histoEtaEPOS3Reb->Write("histoEtaSpecEPOS35023GeV_Reb", TObject::kOverwrite);
+            histoEtaToPi0EPOS3->Write("histoEtaToPi0EPOS35023GeV", TObject::kOverwrite);
+            histoEtaToPi0EPOS3Reb->Write("histoEtaToPi0EPOS35023GeV_Reb", TObject::kOverwrite);
+            // pi0, eta, eta/pi0 DPMJet
+            histoPi0DPMJet->Write("histoPi0SpecDPMJet5023GeV", TObject::kOverwrite);
+            histoEtaDPMJet->Write("histoEtaSpecDPMJet5023GeV", TObject::kOverwrite);
+            histoPi0DPMJetReb->Write("histoPi0SpecDPMJet5023GeV_Reb", TObject::kOverwrite);
+            histoEtaDPMJetReb->Write("histoEtaSpecDPMJet5023GeV_Reb", TObject::kOverwrite);
+            histoEtaToPi0DPMJet->Write("histoEtaToPi0DPMJet5023GeV", TObject::kOverwrite);
+            // pi0, eta, eta/pi0 HIJING
+            histoPi0HIJING->Write("histoPi0SpecHIJING5023GeV", TObject::kOverwrite);
+            histoEtaHIJING->Write("histoEtaSpecHIJING5023GeV", TObject::kOverwrite);
+            histoPi0HIJINGReb->Write("histoPi0SpecHIJING5023GeV_Reb", TObject::kOverwrite);
+            histoEtaHIJINGReb->Write("histoEtaSpecHIJING5023GeV_Reb", TObject::kOverwrite);
+            histoEtaToPi0HIJING->Write("histoEtaToPi0HIJING5023GeV", TObject::kOverwrite);
+            // pi0, eta, eta/pi0 McGill Hydro
+            graphEtaSpecMcGill->Write("graphEtaSpecMcGill5023GeV", TObject::kOverwrite);
+            graphPi0SpecMcGill->Write("graphPi0SpecMcGill5023GeV", TObject::kOverwrite);
+            graphEtaV2McGill->Write("graphEtaV2McGill5023GeV", TObject::kOverwrite);
+            graphPi0V2McGill->Write("graphPi0V2McGill5023GeV", TObject::kOverwrite);
+            graphEtaToPi0McGill->Write("graphEtaToPi0McGill5023GeV", TObject::kOverwrite);
+        
+            // pi0 Vogelsang PDF: CT10, FF: DSS14 scaled to pPb
+            graphNLOCalcInvYieldPi0MuHalfpPb5023GeV->Write("graphNLOCalcDSS14InvYieldPi0MuHalf5023GeV", TObject::kOverwrite);
+            graphNLOCalcInvYieldPi0MuOnepPb5023GeV->Write("graphNLOCalcDSS14InvYieldPi0MuOne5023GeV", TObject::kOverwrite);
+            graphNLOCalcInvYieldPi0MuTwopPb5023GeV->Write("graphNLOCalcDSS14InvYieldPi0MuTwo5023GeV", TObject::kOverwrite);
+            graphNLOCalcInvYieldPi0pPb5023GeV->Write("graphNLOCalcDSS14InvYieldPi05023GeV", TObject::kOverwrite);
+            // eta Vogelsang PDF: CT10, FF AESSS
+            if (graphNLOCalcInvYieldEtaMuHalfpPb5023GeV) graphNLOCalcInvYieldEtaMuHalfpPb5023GeV->Write("graphNLOCalcAESSSInvYieldEtaMuHalf5023GeV", TObject::kOverwrite);
+            if (graphNLOCalcInvYieldEtaMuOnepPb5023GeV) graphNLOCalcInvYieldEtaMuOnepPb5023GeV->Write("graphNLOCalcAESSSInvYieldEtaMuOne5023GeV", TObject::kOverwrite);
+            if (graphNLOCalcInvYieldEtaMuTwopPb5023GeV) graphNLOCalcInvYieldEtaMuTwopPb5023GeV->Write("graphNLOCalcAESSSInvYieldEtaMuTwo5023GeV", TObject::kOverwrite);
+            graphNLOCalcInvYieldEtapPb5023GeV->Write("graphNLOCalcAESSSInvYieldEta5023GeV", TObject::kOverwrite);
+            // eta/pi0 Vogelsang PDF: CT10, FF eta- AESSS, FF pi0 - DSS14
+            if (graphEtaToPi0NLOMuHalf5023GeV) graphEtaToPi0NLOMuHalf5023GeV->Write("graphNLOCalcEtaOverPi0MuHalf5023GeV", TObject::kOverwrite);
+            if (graphEtaToPi0NLOMuOne5023GeV) graphEtaToPi0NLOMuOne5023GeV->Write("graphNLOCalcEtaOverPi0MuOne5023GeV", TObject::kOverwrite);
+            if (graphEtaToPi0NLOMuTwo5023GeV) graphEtaToPi0NLOMuTwo5023GeV->Write("graphNLOCalcEtaOverPi0MuTwo5023GeV", TObject::kOverwrite);
+            graphNLOCalcEtaToPi05023GeV->Write("graphNLOCalcEtaOverPi05023GeV_AESSS_DSS14", TObject::kOverwrite);
+
+            // pi0 Vogelsang nPDF: nCTEQ, FF: DSS14 scaled to pPb
+            graphNLOCalcInvYieldPi0MuOnepPbnPdf5023GeV->Write("graphNLOCalcDSS14InvYieldPi0MuOne5023GeV_nCTEQ", TObject::kOverwrite);
+            // eta Vogelsang nPDF: nCTEQ, FF AESSS
+            graphNLOCalcInvYieldEtaMuOnepPbnPdf5023GeV->Write("graphNLOCalcAESSSInvYieldEtaMuOne5023GeV_nCTEQ", TObject::kOverwrite);
+            // eta/pi0 Vogelsang nPDF: nCTEQ, FF eta- AESSS, FF pi0 - DSS14
+            graphEtaToPi0NLOMuOnenPdf5023GeV->Write("graphNLOCalcEtaOverPi0MuOne5023GeV_AESSS_DSS14_nCTEQ", TObject::kOverwrite);
+            
+        // write McGill calc for different cents and particles
+        for (Int_t iCent = 0; iCent < nCent; iCent++){
+            // go to correct directory
+            fileTheoryGraphsPPb.cd(Form("%spPb_5.023TeV",centNamesOut[iCent].Data()));
+            // particle loop
+            for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
+                // write spectra
+                if (graphSpectraMcGill[iCent][iParticle]) 
+                    graphSpectraMcGill[iCent][iParticle]->Write(Form("graph%sSpecMcGill5023GeV", particleNamesOut[iParticle].Data()), TObject::kOverwrite);
+                // write vN
+                for (Int_t iVn = 0; iVn < 6; iVn++){
+                    if (graphVnMcGill[iCent][iParticle][iVn]) 
+                        graphVnMcGill[iCent][iParticle][iVn]->Write(Form("graph%sV%iMcGill5023GeV", particleNamesOut[iParticle].Data(),iVn+1), TObject::kOverwrite);
+                }
+            }
+        }
     fileTheoryGraphsPPb.Close();
 
 }

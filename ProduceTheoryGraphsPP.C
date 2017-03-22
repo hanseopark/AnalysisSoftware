@@ -1,5 +1,5 @@
 /*****************************************************************************
-******         provided by Gamma Conversion Group, PWGGA,               ******
+******        provided by Gamma Conversion Group, PWGGA,                ******
 ******        Friederike Bock, friederike.bock@cern.ch                  ******
 *****************************************************************************/
 
@@ -48,13 +48,31 @@ extern TBenchmark*    gBenchmark;
 extern TSystem*    gSystem;
 extern TMinuit*      gMinuit;
 
-Double_t xSection900GeV         = 47.78*1e-3;
-Double_t xSection2760GeV        = 55.416*1e-3;
-Double_t xSection7000GeV        = 62.22*1e-3;
-Double_t xSection8000GeV        = 55.8*1e-3;
+Double_t xSection900GeV         = 47.78*1e-3;       // V0OR
+Double_t xSection2760GeV        = 55.416*1e-3;      // V0OR
+// reference for 5 TeV: https://aliceinfo.cern.ch/ArtSubmission/sites/aliceinfo.cern.ch.ArtSubmission/files/draft/mgagliar/2016-Aug-22-paper_draft-vdmNote_5TeV.pdf
+Double_t xSection5023GeV        = 51.2*1e-3;        // V0AND - 51.2±1.2 
+Double_t xSection7000GeV        = 62.22*1e-3;       // V0OR
+Double_t xSection8000GeV        = 55.8*1e-3;        // V0AND
 Double_t recalcBarn             = 1e12; //NLO in pbarn!!!!
 Double_t xSection2760GeVINEL    = 62.8*1e-3;
 Double_t xSection7000GeVINEL    = 73.2*1e-3;
+
+TGraphErrors* ScaleGraph (TGraphErrors* graph, Double_t scaleFac){
+    TGraphErrors* dummyGraph    = (TGraphErrors*)graph->Clone(Form("%s_Scaled",graph->GetName()));
+
+    Double_t * xValue           = dummyGraph->GetX(); 
+    Double_t * yValue           = dummyGraph->GetY();
+    Double_t* xError            = dummyGraph->GetEX();
+    Double_t* yError            = dummyGraph->GetEY();
+    Int_t nPoints               = dummyGraph->GetN();
+    for (Int_t i = 0; i < nPoints; i++){
+        yValue[i]               = yValue[i]*scaleFac;
+        yError[i]               = yError[i]*scaleFac;
+    }
+    TGraphErrors* returnGraph =  new TGraphErrors(nPoints,xValue,yValue,xError,yError); 
+    return returnGraph;
+}
 
 
 TGraph* ScaleGraph (TGraph* graph, Double_t scaleFac){
@@ -118,6 +136,9 @@ TGraphAsymmErrors* CombineMuScales( Int_t nPoints,
     return graphReturn;
 }
 
+//**********************************************************************************************************************
+//*********************************** Main function ********************************************************************
+//**********************************************************************************************************************
 void ProduceTheoryGraphsPP(){    
     
     StyleSettingsThesis();    
@@ -432,8 +453,6 @@ void ProduceTheoryGraphsPP(){
     // graphInvYieldCGC2760GeV->Print();
     TGraph * graphInvCrossSecCGC2760GeV = ScaleGraph(graphInvYieldCGC2760GeV,(xSection2760GeVINEL*recalcBarn));
     
-
-
     // DSS14
     Double_t       ptNLODSS14Pi02760GeV[100];
     Double_t       ptErrNLODSS14Pi02760GeV[100];
@@ -464,6 +483,159 @@ void ProduceTheoryGraphsPP(){
                                                                                 muOneErrDSS14Pi02760GeV, muOneErrDSS14Pi02760GeV);
     TGraphAsymmErrors* graphNLOCalcDSS14InvYieldPi02760GeV = ScaleGraphAsym(graphNLOCalcDSS14InvSecPi02760GeV, 1/(xSection2760GeV*recalcBarn));
 
+    //**********************************************************************************************************************
+    //******************************** 5.023 TeV Pi0 and Eta calc***************************************************************
+    //**********************************************************************************************************************
+
+    //*********************************************************
+    // eta Vogelsang - FF: AESSS, PDF: CT10
+    Double_t ptNLOEta5023GeV[200];
+    Double_t muHalfEta5023GeV[200];
+    Double_t muOneEta5023GeV[200];
+    Double_t muTwoEta5023GeV[200];
+    Int_t nlinesNLOEta5023GeV                       = 0;
+    Bool_t fillAllMuScalesEta5023GeV                = kFALSE;
+    
+    TString fileNameNLOEta5023GeV                   = "ExternalInput/Theory/ALICENLOcalcEtaVogelsang5023GeV_AESSS_CT10.dat"; // currently only mu = 1pt
+    ifstream  fileNLOEta5023GeV;
+    fileNLOEta5023GeV.open(fileNameNLOEta5023GeV,ios_base::in);
+    cout << fileNameNLOEta5023GeV << endl;
+    
+    // read eta input theory file for 5.023TeV
+    while(!fileNLOEta5023GeV.eof() && nlinesNLOEta5023GeV < 200){
+        if (fillAllMuScalesEta5023GeV){
+            fileNLOEta5023GeV >> ptNLOEta5023GeV[nlinesNLOEta5023GeV] >> muHalfEta5023GeV[nlinesNLOEta5023GeV] >> muOneEta5023GeV[nlinesNLOEta5023GeV] >> muTwoEta5023GeV[nlinesNLOEta5023GeV]; 
+        } else {    
+            fileNLOEta5023GeV >> ptNLOEta5023GeV[nlinesNLOEta5023GeV] >> muOneEta5023GeV[nlinesNLOEta5023GeV] ; 
+            muHalfEta5023GeV[nlinesNLOEta5023GeV]   = muOneEta5023GeV[nlinesNLOEta5023GeV] ; 
+            muTwoEta5023GeV[nlinesNLOEta5023GeV]    = muOneEta5023GeV[nlinesNLOEta5023GeV] ; 
+        }    
+        nlinesNLOEta5023GeV++;
+    }
+    fileNLOEta5023GeV.close();
+    // reduce number of lines by 1
+    nlinesNLOEta5023GeV--;
+    
+    // generate graphs
+    TGraph* graphNLOCalcInvSecEtaMuHalf5023GeV      = NULL;
+    TGraph* graphNLOCalcInvSecEtaMuOne5023GeV       = NULL;
+    TGraph* graphNLOCalcInvSecEtaMuTwo5023GeV       = NULL;
+    TGraph* graphNLOCalcInvYieldEtaMuHalf5023GeV    = NULL;
+    TGraph* graphNLOCalcInvYieldEtaMuOne5023GeV     = NULL;
+    TGraph* graphNLOCalcInvYieldEtaMuTwo5023GeV     = NULL;
+
+    // fill x-section graph for default mu
+    graphNLOCalcInvSecEtaMuOne5023GeV               = new TGraph(nlinesNLOEta5023GeV,ptNLOEta5023GeV,muOneEta5023GeV); 
+    graphNLOCalcInvSecEtaMuOne5023GeV->Print();
+    // fill yield graph for default mu
+    graphNLOCalcInvYieldEtaMuOne5023GeV             = ScaleGraph(graphNLOCalcInvSecEtaMuOne5023GeV, 1/(xSection5023GeV*recalcBarn));
+    
+    if (fillAllMuScalesEta5023GeV){
+        // fill x-section graphs for mu variations
+        graphNLOCalcInvSecEtaMuHalf5023GeV          = new TGraph(nlinesNLOEta5023GeV,ptNLOEta5023GeV,muHalfEta5023GeV); 
+        graphNLOCalcInvSecEtaMuHalf5023GeV->RemovePoint(0);
+        graphNLOCalcInvSecEtaMuTwo5023GeV           = new TGraph(nlinesNLOEta5023GeV,ptNLOEta5023GeV,muTwoEta5023GeV); 
+        // fill yield graphs for mu variations
+        graphNLOCalcInvYieldEtaMuHalf5023GeV        = ScaleGraph(graphNLOCalcInvSecEtaMuHalf5023GeV, 1/(xSection5023GeV*recalcBarn));
+        graphNLOCalcInvYieldEtaMuTwo5023GeV         = ScaleGraph(graphNLOCalcInvSecEtaMuTwo5023GeV, 1/(xSection5023GeV*recalcBarn));
+    }
+    // combine all mu scales into 1 graph for eventual plotting
+    TGraphAsymmErrors* graphNLOCalcInvSecEta5023GeV     = CombineMuScales(nlinesNLOEta5023GeV, ptNLOEta5023GeV, muOneEta5023GeV, muHalfEta5023GeV, muTwoEta5023GeV);
+    TGraphAsymmErrors* graphNLOCalcInvYieldEta5023GeV   = ScaleGraphAsym(graphNLOCalcInvSecEta5023GeV, 1/(xSection5023GeV*recalcBarn));
+
+    //*********************************************************
+    // pi0 Vogelsang - FF: DSS14, PDF: CT10
+    Double_t ptNLOPi05023GeV[200];
+    Double_t muHalfPi05023GeV[200];
+    Double_t muOnePi05023GeV[200];
+    Double_t muTwoPi05023GeV[200];
+    Int_t nlinesNLOPi05023GeV                       = 0;
+    
+    TString fileNameNLOPi05023GeV                   = "ExternalInput/Theory/ALICENLOCalcPi0Vogelsang5023GeV_DSS14_CT10.dat";
+    ifstream  fileNLOPi05023GeV;
+    fileNLOPi05023GeV.open(fileNameNLOPi05023GeV,ios_base::in);
+    cout << fileNameNLOPi05023GeV << endl;
+    
+    while(!fileNLOPi05023GeV.eof() && nlinesNLOPi05023GeV < 200){
+        fileNLOPi05023GeV >> ptNLOPi05023GeV[nlinesNLOPi05023GeV] >> muHalfPi05023GeV[nlinesNLOPi05023GeV] >> muOnePi05023GeV[nlinesNLOPi05023GeV] >> muTwoPi05023GeV[nlinesNLOPi05023GeV]; 
+        cout << nlinesNLOPi05023GeV << "         "  << ptNLOPi05023GeV[nlinesNLOPi05023GeV] << "         "  << muHalfPi05023GeV[nlinesNLOPi05023GeV] << "         "  << muOnePi05023GeV[nlinesNLOPi05023GeV] << "         "  << muTwoPi05023GeV[nlinesNLOPi05023GeV] << endl;
+        nlinesNLOPi05023GeV++;
+    }
+    fileNLOPi05023GeV.close();
+    // reduce number of lines by 1
+    nlinesNLOPi05023GeV--;
+    
+    // fill x-section graphs
+    TGraph* graphNLOCalcInvSecPi0MuHalf5023GeV      = new TGraph(nlinesNLOPi05023GeV,ptNLOPi05023GeV,muHalfPi05023GeV); 
+    graphNLOCalcInvSecPi0MuHalf5023GeV->RemovePoint(0);
+    TGraph* graphNLOCalcInvSecPi0MuOne5023GeV       = new TGraph(nlinesNLOPi05023GeV,ptNLOPi05023GeV,muOnePi05023GeV); 
+    TGraph* graphNLOCalcInvSecPi0MuTwo5023GeV       = new TGraph(nlinesNLOPi05023GeV,ptNLOPi05023GeV,muTwoPi05023GeV); 
+    // fill yield graphs
+    TGraph* graphNLOCalcInvYieldPi0MuHalf5023GeV    = ScaleGraph(graphNLOCalcInvSecPi0MuHalf5023GeV, 1/(xSection5023GeV*recalcBarn));
+    TGraph* graphNLOCalcInvYieldPi0MuOne5023GeV     = ScaleGraph(graphNLOCalcInvSecPi0MuOne5023GeV, 1/(xSection5023GeV*recalcBarn));
+    TGraph* graphNLOCalcInvYieldPi0MuTwo5023GeV     = ScaleGraph(graphNLOCalcInvSecPi0MuTwo5023GeV, 1/(xSection5023GeV*recalcBarn));
+    // combine all mu scales into 1 graph for eventual plotting
+    TGraphAsymmErrors* graphNLOCalcInvSecPi05023GeV     = CombineMuScales(nlinesNLOPi05023GeV, ptNLOPi05023GeV, muOnePi05023GeV, muHalfPi05023GeV, muTwoPi05023GeV);
+    TGraphAsymmErrors* graphNLOCalcInvYieldPi05023GeV   = ScaleGraphAsym(graphNLOCalcInvSecPi05023GeV, 1/(xSection5023GeV*recalcBarn));
+
+    //*********************************************************
+    // Eta/Pi0 Vogelsang FF pi0: DSS14, FF eta: AESSS, PDF: CT10
+    Double_t* valueNLOMuHalfEta5023GeV              = NULL;
+    Double_t* valueNLOMuOneEta5023GeV               = graphNLOCalcInvSecEtaMuOne5023GeV->GetY();
+    Double_t* valueNLOMuTwoEta5023GeV               = NULL;
+    if (fillAllMuScalesEta5023GeV){
+        valueNLOMuHalfEta5023GeV                    = graphNLOCalcInvSecEtaMuHalf5023GeV->GetY();
+        valueNLOMuTwoEta5023GeV                     = graphNLOCalcInvSecEtaMuTwo5023GeV->GetY();
+    }
+    Double_t* valueNLOMuHalfPi05023GeV              = graphNLOCalcInvSecPi0MuHalf5023GeV->GetY();
+    Double_t* valueNLOMuOnePi05023GeV               = graphNLOCalcInvSecPi0MuOne5023GeV->GetY();
+    Double_t* valueNLOMuTwoPi05023GeV               = graphNLOCalcInvSecPi0MuTwo5023GeV->GetY();
+    Double_t* xValueNLO5023GeV                      = graphNLOCalcInvSecPi0MuOne5023GeV->GetX();
+    Int_t xNBins5023GeV                             = graphNLOCalcInvSecPi0MuOne5023GeV->GetN();
+    Double_t valueNLOEtaToPi0NLOMuHalf5023GeV[200];
+    Double_t valueNLOEtaToPi0NLOMuOne5023GeV[200];
+    Double_t valueNLOEtaToPi0NLOMuTwo5023GeV[200];
+    
+    // calculate eta/pi0 ratios for different mu scales
+    for ( Int_t n = 0; n < xNBins5023GeV+1; n++){
+        if (valueNLOMuOnePi05023GeV[n] != 0){
+            valueNLOEtaToPi0NLOMuOne5023GeV[n] = valueNLOMuOneEta5023GeV[n]/valueNLOMuOnePi05023GeV[n];
+        } else {
+            valueNLOEtaToPi0NLOMuOne5023GeV[n] = 0.;
+        }
+
+        if (fillAllMuScalesEta5023GeV){
+            if (n == 0){
+                valueNLOEtaToPi0NLOMuHalf5023GeV[n] = 0.;
+            } else { 
+                if (valueNLOMuHalfPi05023GeV[n] != 0){
+                    valueNLOEtaToPi0NLOMuHalf5023GeV[n] = valueNLOMuHalfEta5023GeV[n]/valueNLOMuHalfPi05023GeV[n];
+                } else {
+                    valueNLOEtaToPi0NLOMuHalf5023GeV[n] = 0.;
+                }
+            }
+            if (valueNLOMuTwoPi05023GeV[n] != 0){
+                valueNLOEtaToPi0NLOMuTwo5023GeV[n] = valueNLOMuTwoEta5023GeV[n]/valueNLOMuTwoPi05023GeV[n];
+            } else {
+                valueNLOEtaToPi0NLOMuTwo5023GeV[n] = 0.;
+            }
+        } else {
+            valueNLOEtaToPi0NLOMuHalf5023GeV[n] = valueNLOEtaToPi0NLOMuOne5023GeV[n];
+            valueNLOEtaToPi0NLOMuTwo5023GeV[n] = valueNLOEtaToPi0NLOMuOne5023GeV[n];
+        }    
+    }  
+    // fill graphs
+    TGraph* graphEtaToPi0NLOMuHalf5023GeV           = NULL;
+    TGraph* graphEtaToPi0NLOMuTwo5023GeV            = NULL;
+    TGraph* graphEtaToPi0NLOMuOne5023GeV            = new TGraph(xNBins5023GeV,xValueNLO5023GeV,valueNLOEtaToPi0NLOMuOne5023GeV);   
+    if (fillAllMuScalesEta5023GeV){
+        graphEtaToPi0NLOMuHalf5023GeV               = new TGraph(xNBins5023GeV,xValueNLO5023GeV,valueNLOEtaToPi0NLOMuHalf5023GeV);  
+        graphEtaToPi0NLOMuHalf5023GeV->RemovePoint(0);
+        graphEtaToPi0NLOMuTwo5023GeV                = new TGraph(xNBins5023GeV,xValueNLO5023GeV,valueNLOEtaToPi0NLOMuTwo5023GeV);   
+    }    
+    // combine all mu scales into 1 graph for plotting
+    TGraphAsymmErrors* graphNLOCalcEtaToPi05023GeV  = CombineMuScales(xNBins5023GeV, xValueNLO5023GeV, valueNLOEtaToPi0NLOMuOne5023GeV, valueNLOEtaToPi0NLOMuHalf5023GeV, valueNLOEtaToPi0NLOMuTwo5023GeV);
+    
     //**********************************************************************************************************************
     //******************************** 7 TeV Pi0 and Eta calc***************************************************************
     //**********************************************************************************************************************
@@ -924,176 +1096,215 @@ void ProduceTheoryGraphsPP(){
     //**********************************************************************************************************************
     TFile fileTheoryGraphsPP("ExternalInput/Theory/TheoryCompilationPP.root","UPDATE");
 
-        graphNLOCalcInvSecPi0MuHalf8000GeV->Write("graphNLOCalcInvSecPi0MuHalf8000GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecPi0MuOne8000GeV->Write("graphNLOCalcInvSecPi0MuOne8000GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecPi0MuTwo8000GeV->Write("graphNLOCalcInvSecPi0MuTwo8000GeV", TObject::kOverwrite);
+        //***********************************************************************
+        // write  calculations for 900 GeV
+        //***********************************************************************
+        // pi0 Vogelsang PDF: CT10, FF DSS07
+        graphNLOCalcInvSecPi0MuHalf900GeV->Write("graphNLOCalcInvSecPi0MuHalf900GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecPi0MuOne900GeV->Write("graphNLOCalcInvSecPi0MuOne900GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecPi0MuTwo900GeV->Write("graphNLOCalcInvSecPi0MuTwo900GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi0MuHalf900GeV->Write("graphNLOCalcInvYieldPi0MuHalf900GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi0MuOne900GeV->Write("graphNLOCalcInvYieldPi0MuOne900GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi0MuTwo900GeV->Write("graphNLOCalcInvYieldPi0MuTwo900GeV", TObject::kOverwrite);
+        // pi0 INCNLO FF:BKK, DSS07
+        graphNLOCalcBKKInvSecPi0MuTwo900GeV->Write("graphNLOCalcBKKInvSecPi0MuTwo900GeV", TObject::kOverwrite);
+        graphNLOCalcBKKInvYieldPi0MuTwo900GeV->Write("graphNLOCalcBKKInvYieldPi0MuTwo900GeV", TObject::kOverwrite);
+        graphNLOCalcDSSInvSecPi0MuTwo900GeV->Write("graphNLOCalcDSSInvSecPi0MuTwo900GeV", TObject::kOverwrite);
+        graphNLOCalcDSSInvYieldPi0MuTwo900GeV->Write("graphNLOCalcDSSInvYieldPi0MuTwo900GeV", TObject::kOverwrite);
+        // eta Vogelsang PDF: CT10, FF AESSS
+        graphNLOCalcInvSecEtaMuHalf900GeV->Write("graphNLOCalcInvSecEtaMuHalf900GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecEtaMuOne900GeV->Write("graphNLOCalcInvSecEtaMuOne900GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecEtaMuTwo900GeV->Write("graphNLOCalcInvSecEtaMuTwo900GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldEtaMuHalf900GeV->Write("graphNLOCalcInvYieldEtaMuHalf900GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldEtaMuOne900GeV->Write("graphNLOCalcInvYieldEtaMuOne900GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldEtaMuTwo900GeV->Write("graphNLOCalcInvYieldEtaMuTwo900GeV", TObject::kOverwrite);
+        // eta/pi0 Vogelsang PDF: CT10, FF eta- AESSS, FF pi0 - DSS07
+        graphEtaToPi0NLOMuHalf900GeV->Write("graphNLOCalcEtaOverPi0MuHalf900GeV", TObject::kOverwrite);
+        graphEtaToPi0NLOMuOne900GeV->Write("graphNLOCalcEtaOverPi0MuOne900GeV", TObject::kOverwrite);
+        graphEtaToPi0NLOMuTwo900GeV->Write("graphNLOCalcEtaOverPi0MuTwo900GeV", TObject::kOverwrite);
+        // pi0, eta, eta/pi0 Pythia 8.1 Monash 2013
+        histoPi0Pythia8MonashInvSec900GeV->Write("histoInvSecPythia8Monash2013Pi0900GeV", TObject::kOverwrite);
+        histoEtaPythia8MonashInvSec900GeV->Write("histoInvSecPythia8Monash2013Eta900GeV", TObject::kOverwrite);
+        histoEtaToPi0RatioPythia8Monash900GeV->Write("histoEtaToPi0RatioPythia8Monash900GeV", TObject::kOverwrite);
 
-        graphNLOCalcInvSecPi0MuHalf7000GeV->Write("graphNLOCalcInvSecPi0MuHalf7000GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecPi0MuOne7000GeV->Write("graphNLOCalcInvSecPi0MuOne7000GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecPi0MuTwo7000GeV->Write("graphNLOCalcInvSecPi0MuTwo7000GeV", TObject::kOverwrite);
-
+        
+        //***********************************************************************
+        // write  calculations for 2.76TeV
+        //***********************************************************************
+        // pi0 Vogelsang PDF: CT10, FF DSS07
         graphNLOCalcInvSecPi0MuHalf2760GeV->Write("graphNLOCalcInvSecPi0MuHalf2760GeV", TObject::kOverwrite);
         graphNLOCalcInvSecPi0MuOne2760GeV->Write("graphNLOCalcInvSecPi0MuOne2760GeV", TObject::kOverwrite);
         graphNLOCalcInvSecPi0MuTwo2760GeV->Write("graphNLOCalcInvSecPi0MuTwo2760GeV", TObject::kOverwrite);
         graphNLOCalcInvSecPi02760GeV->Write("graphNLOCalcDSS07InvSecPi02760GeV", TObject::kOverwrite);
-        
-        
-        graphNLOCalcInvSecPi0MuHalf900GeV->Write("graphNLOCalcInvSecPi0MuHalf900GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecPi0MuOne900GeV->Write("graphNLOCalcInvSecPi0MuOne900GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecPi0MuTwo900GeV->Write("graphNLOCalcInvSecPi0MuTwo900GeV", TObject::kOverwrite);
-
-        graphNLOCalcBKKInvSecPi0MuTwo7000GeV->Write("graphNLOCalcBKKInvSecPi0MuTwo7000GeV", TObject::kOverwrite);
-        graphNLOCalcBKKInvSecPi0MuTwo900GeV->Write("graphNLOCalcBKKInvSecPi0MuTwo900GeV", TObject::kOverwrite);
-
-        graphNLOCalcDSSInvSecPi0MuTwo7000GeV->Write("graphNLOCalcDSSInvSecPi0MuTwo7000GeV", TObject::kOverwrite);
-        graphNLOCalcDSSInvSecPi0MuTwo2760GeV->Write("graphNLOCalcDSSInvSecPi0MuTwo2760GeV", TObject::kOverwrite);
-        graphNLOCalcDSSInvSecPi0MuTwo900GeV->Write("graphNLOCalcDSSInvSecPi0MuTwo900GeV", TObject::kOverwrite);
-
-        graphNLOCalcInvSecEtaMuHalf8000GeV->Write("graphNLOCalcInvSecEtaMuHalf8000GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecEtaMuOne8000GeV->Write("graphNLOCalcInvSecEtaMuOne8000GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecEtaMuTwo8000GeV->Write("graphNLOCalcInvSecEtaMuTwo8000GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecEta8000GeV->Write("graphNLOCalcAESSSInvSecEta8000GeV", TObject::kOverwrite);
-        
-        graphNLOCalcInvSecEtaMuHalf7000GeV->Write("graphNLOCalcInvSecEtaMuHalf7000GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecEtaMuOne7000GeV->Write("graphNLOCalcInvSecEtaMuOne7000GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecEtaMuTwo7000GeV->Write("graphNLOCalcInvSecEtaMuTwo7000GeV", TObject::kOverwrite);
-
-        graphNLOCalcInvSecEtaMuHalf2760GeV->Write("graphNLOCalcInvSecEtaMuHalf2760GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecEtaMuOne2760GeV->Write("graphNLOCalcInvSecEtaMuOne2760GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecEtaMuTwo2760GeV->Write("graphNLOCalcInvSecEtaMuTwo2760GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecEta2760GeV->Write("graphNLOCalcAESSSInvSecEta2760GeV", TObject::kOverwrite);
-        
-        graphNLOCalcInvSecEtaMuHalf900GeV->Write("graphNLOCalcInvSecEtaMuHalf900GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecEtaMuOne900GeV->Write("graphNLOCalcInvSecEtaMuOne900GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecEtaMuTwo900GeV->Write("graphNLOCalcInvSecEtaMuTwo900GeV", TObject::kOverwrite);
-
-        graphNLOCalcInvYieldPi0MuHalf8000GeV->Write("graphNLOCalcInvYieldPi0MuHalf8000GeV", TObject::kOverwrite);
-        graphNLOCalcInvYieldPi0MuOne8000GeV->Write("graphNLOCalcInvYieldPi0MuOne8000GeV", TObject::kOverwrite);
-        graphNLOCalcInvYieldPi0MuTwo8000GeV->Write("graphNLOCalcInvYieldPi0MuTwo8000GeV", TObject::kOverwrite);
-
-        graphNLOCalcInvSecPi08000GeV->Write("graphNLOCalcDSS14InvSecPi08000GeV", TObject::kOverwrite);
-        
-        histoPi08TeVPythia8->Write("histoPi0Pythia8_8000TeV", TObject::kOverwrite);
-        histoEta8TeVPythia8->Write("histoEtaPythia8_8000TeV", TObject::kOverwrite);
-        histoPi08TeVPythia8Reb->Write("histoPi0Pythia8_8000TeV_Reb", TObject::kOverwrite);
-        histoEta8TeVPythia8Reb->Write("histoEtaPythia8_8000TeV_Reb", TObject::kOverwrite);
-        histoEtaToPi08TeVPythia8->Write("histoEtaToPi0Pythia8_8000TeV", TObject::kOverwrite);
-        
-        histoPi08TeVPhojet->Write("histoPi0Phojet_8000TeV", TObject::kOverwrite);
-        histoEta8TeVPhojet->Write("histoEtaPhojet_8000TeV", TObject::kOverwrite);
-        histoPi08TeVPhojetReb->Write("histoPi0Phojet_8000TeV_Reb", TObject::kOverwrite);
-        histoEta8TeVPhojetReb->Write("histoEtaPhojet_8000TeV_Reb", TObject::kOverwrite);
-        histoEtaToPi08TeVPhojet->Write("histoEtaToPi0Phojet_8000TeV", TObject::kOverwrite);
-        
-        graphNLOCalcInvYieldPi0MuHalf7000GeV->Write("graphNLOCalcInvYieldPi0MuHalf7000GeV", TObject::kOverwrite);
-        graphNLOCalcInvYieldPi0MuOne7000GeV->Write("graphNLOCalcInvYieldPi0MuOne7000GeV", TObject::kOverwrite);
-        graphNLOCalcInvYieldPi0MuTwo7000GeV->Write("graphNLOCalcInvYieldPi0MuTwo7000GeV", TObject::kOverwrite); 
-
         graphNLOCalcInvYieldPi0MuHalf2760GeV->Write("graphNLOCalcInvYieldPi0MuHalf2760GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuOne2760GeV->Write("graphNLOCalcInvYieldPi0MuOne2760GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuTwo2760GeV->Write("graphNLOCalcInvYieldPi0MuTwo2760GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi02760GeV->Write("graphNLOCalcDSS07InvYieldPi02760GeV", TObject::kOverwrite);
+        // pi0 INCNLO FF:DSS07
+        graphNLOCalcDSSInvSecPi0MuTwo2760GeV->Write("graphNLOCalcDSSInvSecPi0MuTwo2760GeV", TObject::kOverwrite);
+        graphNLOCalcDSSInvYieldPi0MuTwo2760GeV->Write("graphNLOCalcDSSInvYieldPi0MuTwo2760GeV", TObject::kOverwrite);
+        // eta Vogelsang PDF: CT10, FF AESSS
+        graphNLOCalcInvSecEtaMuHalf2760GeV->Write("graphNLOCalcInvSecEtaMuHalf2760GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecEtaMuOne2760GeV->Write("graphNLOCalcInvSecEtaMuOne2760GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecEtaMuTwo2760GeV->Write("graphNLOCalcInvSecEtaMuTwo2760GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecEta2760GeV->Write("graphNLOCalcAESSSInvSecEta2760GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldEtaMuHalf2760GeV->Write("graphNLOCalcInvYieldEtaMuHalf2760GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldEtaMuOne2760GeV->Write("graphNLOCalcInvYieldEtaMuOne2760GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldEtaMuTwo2760GeV->Write("graphNLOCalcInvYieldEtaMuTwo2760GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldEta2760GeV->Write("graphNLOCalcAESSSInvYieldEta2760GeV", TObject::kOverwrite);
+        // eta/pi0 Vogelsang PDF: CT10, FF eta- AESSS, FF pi0 - DSS07
+        graphEtaToPi0NLOMuHalf2760GeV->Write("graphNLOCalcEtaOverPi0MuHalf2760GeV", TObject::kOverwrite);
+        graphEtaToPi0NLOMuOne2760GeV->Write("graphNLOCalcEtaOverPi0MuOne2760GeV", TObject::kOverwrite);
+        graphEtaToPi0NLOMuTwo2760GeV->Write("graphNLOCalcEtaOverPi0MuTwo2760GeV", TObject::kOverwrite);
+        graphNLOCalcEtaToPi02760GeV->Write("graphNLOCalcEtaOverPi02760GeV_AESSS_DSS07", TObject::kOverwrite);
+        graphNLOCalcEtaToPi02760GeV->Print();
+        // pi0 Stratmann PDF: CT10, FF: DSS14
+        graphNLOCalcDSS14InvSecPi02760GeV->Write("graphNLOCalcDSS14InvCrossSec2760GeV", TObject::kOverwrite);
+        graphNLOCalcDSS14InvSecPi07000GeV->Write("graphNLOCalcDSS14InvCrossSec7000GeV", TObject::kOverwrite);
+        graphNLOCalcDSS14InvYieldPi02760GeV->Write("graphNLOCalcDSS14InvYield2760GeV", TObject::kOverwrite);
+        graphNLOCalcDSS14InvYieldPi07000GeV->Write("graphNLOCalcDSS14InvYield7000GeV", TObject::kOverwrite);
+        // pi0 CGC calc
+        graphInvYieldCGC2760GeV->Write("graphNLOCalcCGCInvYield2760GeV", TObject::kOverwrite);
+        graphInvCrossSecCGC2760GeV->Write("graphNLOCalcCGCInvCrossSec2760GeV", TObject::kOverwrite);
+        // pi0, eta, eta/pi0 Pythia 8.1 Monash 2013 (Satoshi)
+        histoPi0Pythia8MonashInvSec2760GeV->Write("histoInvSecPythia8Monash2013Pi02760GeV", TObject::kOverwrite);
+        histoEtaPythia8MonashInvSec2760GeV->Write("histoInvSecPythia8Monash2013Eta2760GeV", TObject::kOverwrite);
+        histoEtaToPi0RatioPythia8Monash2760GeV->Write("histoEtaToPi0RatioPythia8Monash20132760GeV", TObject::kOverwrite);
+        // pi0, eta, eta/pi0 Pythia 8.1 Monash 2013 (central alice)
+        histoPi0Pythia8MonashInvSec2760GeVLego->Write("histoInvSecPythia8Monash2013LegoPi02760GeV", TObject::kOverwrite);
+        histoEtaPythia8MonashInvSec2760GeVLego->Write("histoInvSecPythia8Monash2013LegoEta2760GeV", TObject::kOverwrite);
+        histoEtaToPi0RatioPythia8Monash2760GeVLego->Write("histoEtaToPi0RatioPythia8Monash2013Lego2760GeV", TObject::kOverwrite);
+        // pi0, eta, eta/pi0 Pythia 8.0 Tune4C (Klaus Reygers)
+        histoPythia8Spec2760GeV->Write("histoInvSecPythia8Spec2760GeV", TObject::kOverwrite);
+        histoPythia8InvYield2760GeV->Write("histoInvYieldPythia8Spec2760GeV", TObject::kOverwrite);
+        histoPythia8Spec2760GeVVarBinning->Write("histoInvSecPythia8Spec2760GeVVarBinning", TObject::kOverwrite);
+        histoPythia8InvYield2760GeVVarBinning->Write("histoInvYieldPythia8Spec2760GeVVarBinning", TObject::kOverwrite);
         
+
+        //***********************************************************************
+        // write  calculations for 5.023TeV
+        //***********************************************************************
+        // pi0 Vogelsang PDF: CT10, FF: DSS14
+        graphNLOCalcInvSecPi0MuHalf5023GeV->Write("graphNLOCalcDSS14InvSecPi0MuHalf5023GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecPi0MuOne5023GeV->Write("graphNLOCalcDSS14InvSecPi0MuOne5023GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecPi0MuTwo5023GeV->Write("graphNLOCalcDSS14InvSecPi0MuTwo5023GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecPi05023GeV->Write("graphNLOCalcDSS14InvSecPi05023GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi0MuHalf5023GeV->Write("graphNLOCalcDSS14InvYieldPi0MuHalf5023GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi0MuOne5023GeV->Write("graphNLOCalcDSS14InvYieldPi0MuOne5023GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi0MuTwo5023GeV->Write("graphNLOCalcDSS14InvYieldPi0MuTwo5023GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi05023GeV->Write("graphNLOCalcDSS14InvYieldPi05023GeV", TObject::kOverwrite);
+        // eta Vogelsang PDF: CT10, FF AESSS
+        if (graphNLOCalcInvSecEtaMuHalf5023GeV) graphNLOCalcInvSecEtaMuHalf5023GeV->Write("graphNLOCalcAESSSInvSecEtaMuHalf5023GeV", TObject::kOverwrite);
+        if (graphNLOCalcInvSecEtaMuOne5023GeV) graphNLOCalcInvSecEtaMuOne5023GeV->Write("graphNLOCalcAESSSInvSecEtaMuOne5023GeV", TObject::kOverwrite);
+        if (graphNLOCalcInvSecEtaMuTwo5023GeV) graphNLOCalcInvSecEtaMuTwo5023GeV->Write("graphNLOCalcAESSSInvSecEtaMuTwo5023GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecEta5023GeV->Write("graphNLOCalcAESSSInvSecEta5023GeV", TObject::kOverwrite);
+        if (graphNLOCalcInvYieldEtaMuHalf5023GeV) graphNLOCalcInvYieldEtaMuHalf5023GeV->Write("graphNLOCalcAESSSInvYieldEtaMuHalf5023GeV", TObject::kOverwrite);
+        if (graphNLOCalcInvYieldEtaMuOne5023GeV) graphNLOCalcInvYieldEtaMuOne5023GeV->Write("graphNLOCalcAESSSInvYieldEtaMuOne5023GeV", TObject::kOverwrite);
+        if (graphNLOCalcInvYieldEtaMuTwo5023GeV) graphNLOCalcInvYieldEtaMuTwo5023GeV->Write("graphNLOCalcAESSSInvYieldEtaMuTwo5023GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldEta5023GeV->Write("graphNLOCalcAESSSInvYieldEta5023GeV", TObject::kOverwrite);
+        // eta/pi0 Vogelsang PDF: CT10, FF eta- AESSS, FF pi0 - DSS14
+        if (graphEtaToPi0NLOMuHalf5023GeV) graphEtaToPi0NLOMuHalf5023GeV->Write("graphNLOCalcEtaOverPi0MuHalf5023GeV", TObject::kOverwrite);
+        if (graphEtaToPi0NLOMuOne5023GeV) graphEtaToPi0NLOMuOne5023GeV->Write("graphNLOCalcEtaOverPi0MuOne5023GeV", TObject::kOverwrite);
+        if (graphEtaToPi0NLOMuTwo5023GeV) graphEtaToPi0NLOMuTwo5023GeV->Write("graphNLOCalcEtaOverPi0MuTwo5023GeV", TObject::kOverwrite);
+        graphNLOCalcEtaToPi05023GeV->Write("graphNLOCalcEtaOverPi05023GeV_AESSS_DSS14", TObject::kOverwrite);
+        // pi0, eta, eta/pi0 Pythia 8.1 Monash 2013 (Satoshi)
+        histoPi0Pythia8MonashInvSec5023GeV->Write("histoInvSecPythia8Monash2013Pi05023GeV", TObject::kOverwrite);
+        histoEtaPythia8MonashInvSec5023GeV->Write("histoInvSecPythia8Monash2013Eta5023GeV", TObject::kOverwrite);
+        histoEtaToPi0RatioPythia8Monash5023GeV->Write("histoEtaToPi0RatioPythia8Monash5023GeV", TObject::kOverwrite);
+
+
+        //***********************************************************************
+        // write  calculations for 7TeV
+        //***********************************************************************
+        // pi0 Vogelsang PDF: CT10, FF DSS07
+        graphNLOCalcInvSecPi0MuHalf7000GeV->Write("graphNLOCalcInvSecPi0MuHalf7000GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecPi0MuOne7000GeV->Write("graphNLOCalcInvSecPi0MuOne7000GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecPi0MuTwo7000GeV->Write("graphNLOCalcInvSecPi0MuTwo7000GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi0MuHalf7000GeV->Write("graphNLOCalcInvYieldPi0MuHalf7000GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi0MuOne7000GeV->Write("graphNLOCalcInvYieldPi0MuOne7000GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi0MuTwo7000GeV->Write("graphNLOCalcInvYieldPi0MuTwo7000GeV", TObject::kOverwrite); 
+        // pi0 INCNLO FF:BKK, DSS07
+        graphNLOCalcBKKInvSecPi0MuTwo7000GeV->Write("graphNLOCalcBKKInvSecPi0MuTwo7000GeV", TObject::kOverwrite);
+        graphNLOCalcDSSInvSecPi0MuTwo7000GeV->Write("graphNLOCalcDSSInvSecPi0MuTwo7000GeV", TObject::kOverwrite);
+        graphNLOCalcBKKInvYieldPi0MuTwo7000GeV->Write("graphNLOCalcBKKInvYieldPi0MuTwo7000GeV", TObject::kOverwrite);
+        graphNLOCalcDSSInvYieldPi0MuTwo7000GeV->Write("graphNLOCalcDSSInvYieldPi0MuTwo7000GeV", TObject::kOverwrite);
+        // eta Vogelsang PDF: CT10, FF AESSS
+        graphNLOCalcInvSecEtaMuHalf7000GeV->Write("graphNLOCalcInvSecEtaMuHalf7000GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecEtaMuOne7000GeV->Write("graphNLOCalcInvSecEtaMuOne7000GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecEtaMuTwo7000GeV->Write("graphNLOCalcInvSecEtaMuTwo7000GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldEtaMuHalf7000GeV->Write("graphNLOCalcInvYieldEtaMuHalf7000GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldEtaMuOne7000GeV->Write("graphNLOCalcInvYieldEtaMuOne7000GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldEtaMuTwo7000GeV->Write("graphNLOCalcInvYieldEtaMuTwo7000GeV", TObject::kOverwrite);
+        // eta/pi0 Vogelsang PDF: CT10, FF eta- AESSS, FF pi0 - DSS07
+        graphEtaToPi0NLOMuHalf7TeV->Write("graphNLOCalcEtaOverPi0MuHalf7000GeV", TObject::kOverwrite);
+        graphEtaToPi0NLOMuOne7TeV->Write("graphNLOCalcEtaOverPi0MuOne7000GeV", TObject::kOverwrite);
+        graphEtaToPi0NLOMuTwo7TeV->Write("graphNLOCalcEtaOverPi0MuTwo7000GeV", TObject::kOverwrite);
+        // pi0 CGC calc
+        graphInvYieldCGC7000GeV->Write("graphNLOCalcCGCInvYield7000GeV", TObject::kOverwrite);
+        graphInvCrossSecCGC7000GeV->Write("graphNLOCalcCGCInvCrossSec7000GeV", TObject::kOverwrite);
+        graphInvCrossSecCGC7000GeV_mvgamma->Write("graphNLOCalcCGCInvCrossSec7000GeV_mvgamma", TObject::kOverwrite);
+        // pi0, eta, eta/pi0 Pythia 8.1 Monash 2013 (Satoshi)
+        histoPi0Pythia8MonashInvSec7TeV->Write("histoInvSecPythia8Monash2013Pi07TeV", TObject::kOverwrite);
+        histoEtaPythia8MonashInvSec7TeV->Write("histoInvSecPythia8Monash2013Eta7TeV", TObject::kOverwrite);
+        histoEtaToPi0RatioPythia8Monash7TeV->Write("histoEtaToPi0RatioPythia8Monash7TeV", TObject::kOverwrite);
+        // pi0, eta, eta/pi0 Pythia 6.4 Perugia2011
         histoPi07TeVPythia6->Write("histoPi0Pythia6_Perugia2011_7000TeV", TObject::kOverwrite);
         histoEta7TeVPythia6->Write("histoEtaPythia6_Perugia2011_7000TeV", TObject::kOverwrite);
         histoPi07TeVPythia6Reb->Write("histoPi0Pythia6_Perugia2011_7000TeV_Reb", TObject::kOverwrite);
         histoEta7TeVPythia6Reb->Write("histoEtaPythia6_Perugia2011_7000TeV_Reb", TObject::kOverwrite);
         histoEtaToPi07TeVPythia6->Write("histoEtaToPi0Pythia6_Perugia2011_7000TeV", TObject::kOverwrite);
 
-        graphNLOCalcInvYieldPi0MuHalf900GeV->Write("graphNLOCalcInvYieldPi0MuHalf900GeV", TObject::kOverwrite);
-        graphNLOCalcInvYieldPi0MuOne900GeV->Write("graphNLOCalcInvYieldPi0MuOne900GeV", TObject::kOverwrite);
-        graphNLOCalcInvYieldPi0MuTwo900GeV->Write("graphNLOCalcInvYieldPi0MuTwo900GeV", TObject::kOverwrite);
-
-        graphNLOCalcBKKInvYieldPi0MuTwo7000GeV->Write("graphNLOCalcBKKInvYieldPi0MuTwo7000GeV", TObject::kOverwrite);
-        graphNLOCalcBKKInvYieldPi0MuTwo900GeV->Write("graphNLOCalcBKKInvYieldPi0MuTwo900GeV", TObject::kOverwrite);
-
-        graphNLOCalcDSSInvYieldPi0MuTwo7000GeV->Write("graphNLOCalcDSSInvYieldPi0MuTwo7000GeV", TObject::kOverwrite);
-        graphNLOCalcDSSInvYieldPi0MuTwo2760GeV->Write("graphNLOCalcDSSInvYieldPi0MuTwo2760GeV", TObject::kOverwrite);
-        graphNLOCalcDSSInvYieldPi0MuTwo900GeV->Write("graphNLOCalcDSSInvYieldPi0MuTwo900GeV", TObject::kOverwrite);
-
+        //***********************************************************************
+        // write  calculations for 8TeV
+        //***********************************************************************
+        // pi0 Vogelsang PDF: CT10, FF DSS07
+        graphNLOCalcInvSecPi0MuHalf8000GeV->Write("graphNLOCalcInvSecPi0MuHalf8000GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecPi0MuOne8000GeV->Write("graphNLOCalcInvSecPi0MuOne8000GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecPi0MuTwo8000GeV->Write("graphNLOCalcInvSecPi0MuTwo8000GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi0MuHalf8000GeV->Write("graphNLOCalcInvYieldPi0MuHalf8000GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi0MuOne8000GeV->Write("graphNLOCalcInvYieldPi0MuOne8000GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi0MuTwo8000GeV->Write("graphNLOCalcInvYieldPi0MuTwo8000GeV", TObject::kOverwrite);
+        // pi0 INCNLO FF:BKK, DSS07
+        // eta Vogelsang PDF: CT10, FF AESSS
+        graphNLOCalcInvSecEtaMuHalf8000GeV->Write("graphNLOCalcInvSecEtaMuHalf8000GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecEtaMuOne8000GeV->Write("graphNLOCalcInvSecEtaMuOne8000GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecEtaMuTwo8000GeV->Write("graphNLOCalcInvSecEtaMuTwo8000GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecEta8000GeV->Write("graphNLOCalcAESSSInvSecEta8000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuHalf8000GeV->Write("graphNLOCalcInvYieldEtaMuHalf8000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuOne8000GeV->Write("graphNLOCalcInvYieldEtaMuOne8000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuTwo8000GeV->Write("graphNLOCalcInvYieldEtaMuTwo8000GeV", TObject::kOverwrite);
-        
-        graphNLOCalcInvYieldEtaMuHalf7000GeV->Write("graphNLOCalcInvYieldEtaMuHalf7000GeV", TObject::kOverwrite);
-        graphNLOCalcInvYieldEtaMuOne7000GeV->Write("graphNLOCalcInvYieldEtaMuOne7000GeV", TObject::kOverwrite);
-        graphNLOCalcInvYieldEtaMuTwo7000GeV->Write("graphNLOCalcInvYieldEtaMuTwo7000GeV", TObject::kOverwrite);
-
-        graphNLOCalcInvYieldEtaMuHalf2760GeV->Write("graphNLOCalcInvYieldEtaMuHalf2760GeV", TObject::kOverwrite);
-        graphNLOCalcInvYieldEtaMuOne2760GeV->Write("graphNLOCalcInvYieldEtaMuOne2760GeV", TObject::kOverwrite);
-        graphNLOCalcInvYieldEtaMuTwo2760GeV->Write("graphNLOCalcInvYieldEtaMuTwo2760GeV", TObject::kOverwrite);
-        graphNLOCalcInvYieldEta2760GeV->Write("graphNLOCalcAESSSInvYieldEta2760GeV", TObject::kOverwrite);
-        
-        graphNLOCalcInvYieldEtaMuHalf900GeV->Write("graphNLOCalcInvYieldEtaMuHalf900GeV", TObject::kOverwrite);
-        graphNLOCalcInvYieldEtaMuOne900GeV->Write("graphNLOCalcInvYieldEtaMuOne900GeV", TObject::kOverwrite);
-        graphNLOCalcInvYieldEtaMuTwo900GeV->Write("graphNLOCalcInvYieldEtaMuTwo900GeV", TObject::kOverwrite);
-
+        // eta/pi0 Vogelsang PDF: CT10, FF eta- AESSS, FF pi0 - DSS07
         graphEtaToPi0NLOMuHalf8TeV->Write("graphNLOCalcEtaOverPi0MuHalf8000GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuOne8TeV->Write("graphNLOCalcEtaOverPi0MuOne8000GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuTwo8TeV->Write("graphNLOCalcEtaOverPi0MuTwo8000GeV", TObject::kOverwrite);
         graphNLOCalcEtaToPi08000GeV->Write("graphNLOCalcEtaOverPi08000GeV_AESSS_DSS07",TObject::kOverwrite);
-        
-        graphEtaToPi0NLOMuHalf7TeV->Write("graphNLOCalcEtaOverPi0MuHalf7000GeV", TObject::kOverwrite);
-        graphEtaToPi0NLOMuOne7TeV->Write("graphNLOCalcEtaOverPi0MuOne7000GeV", TObject::kOverwrite);
-        graphEtaToPi0NLOMuTwo7TeV->Write("graphNLOCalcEtaOverPi0MuTwo7000GeV", TObject::kOverwrite);
-
-        graphEtaToPi0NLOMuHalf2760GeV->Write("graphNLOCalcEtaOverPi0MuHalf2760GeV", TObject::kOverwrite);
-        graphEtaToPi0NLOMuOne2760GeV->Write("graphNLOCalcEtaOverPi0MuOne2760GeV", TObject::kOverwrite);
-        graphEtaToPi0NLOMuTwo2760GeV->Write("graphNLOCalcEtaOverPi0MuTwo2760GeV", TObject::kOverwrite);
-        graphNLOCalcEtaToPi02760GeV->Write("graphNLOCalcEtaOverPi02760GeV_AESSS_DSS07", TObject::kOverwrite);
-        graphNLOCalcEtaToPi02760GeV->Print();
-        
-        
-        graphEtaToPi0NLOMuHalf900GeV->Write("graphNLOCalcEtaOverPi0MuHalf900GeV", TObject::kOverwrite);
-        graphEtaToPi0NLOMuOne900GeV->Write("graphNLOCalcEtaOverPi0MuOne900GeV", TObject::kOverwrite);
-        graphEtaToPi0NLOMuTwo900GeV->Write("graphNLOCalcEtaOverPi0MuTwo900GeV", TObject::kOverwrite);
-
-        histoPythia8Spec2760GeV->Write("histoInvSecPythia8Spec2760GeV", TObject::kOverwrite);
-        histoPythia8InvYield2760GeV->Write("histoInvYieldPythia8Spec2760GeV", TObject::kOverwrite);
-        histoPythia8Spec2760GeVVarBinning->Write("histoInvSecPythia8Spec2760GeVVarBinning", TObject::kOverwrite);
-        histoPythia8InvYield2760GeVVarBinning->Write("histoInvYieldPythia8Spec2760GeVVarBinning", TObject::kOverwrite);
-        
-        graphInvYieldCGC2760GeV->Write("graphNLOCalcCGCInvYield2760GeV", TObject::kOverwrite);
-        graphInvYieldCGC7000GeV->Write("graphNLOCalcCGCInvYield7000GeV", TObject::kOverwrite);
-        graphInvCrossSecCGC2760GeV->Write("graphNLOCalcCGCInvCrossSec2760GeV", TObject::kOverwrite);
-        graphInvCrossSecCGC7000GeV->Write("graphNLOCalcCGCInvCrossSec7000GeV", TObject::kOverwrite);
-        graphInvCrossSecCGC7000GeV_mvgamma->Write("graphNLOCalcCGCInvCrossSec7000GeV_mvgamma", TObject::kOverwrite);
-        histoPi0Pythia8MonashInvSec2760GeV->Write("histoInvSecPythia8Monash2013Pi02760GeV", TObject::kOverwrite);
-        histoEtaPythia8MonashInvSec2760GeV->Write("histoInvSecPythia8Monash2013Eta2760GeV", TObject::kOverwrite);
-        histoEtaToPi0RatioPythia8Monash2760GeV->Write("histoEtaToPi0RatioPythia8Monash20132760GeV", TObject::kOverwrite);
-
-        histoPi0Pythia8MonashInvSec2760GeVLego->Write("histoInvSecPythia8Monash2013LegoPi02760GeV", TObject::kOverwrite);
-        histoEtaPythia8MonashInvSec2760GeVLego->Write("histoInvSecPythia8Monash2013LegoEta2760GeV", TObject::kOverwrite);
-        histoEtaToPi0RatioPythia8Monash2760GeVLego->Write("histoEtaToPi0RatioPythia8Monash2013Lego2760GeV", TObject::kOverwrite);
-        
-        graphNLOCalcDSS14InvSecPi02760GeV->Write("graphNLOCalcDSS14InvCrossSec2760GeV", TObject::kOverwrite);
-        graphNLOCalcDSS14InvSecPi07000GeV->Write("graphNLOCalcDSS14InvCrossSec7000GeV", TObject::kOverwrite);
-        graphNLOCalcDSS14InvYieldPi02760GeV->Write("graphNLOCalcDSS14InvYield2760GeV", TObject::kOverwrite);
-        graphNLOCalcDSS14InvYieldPi07000GeV->Write("graphNLOCalcDSS14InvYield7000GeV", TObject::kOverwrite);
-
-        histoPi0Pythia8MonashInvSec5023GeV->Write("histoInvSecPythia8Monash2013Pi05023GeV", TObject::kOverwrite);
-        histoEtaPythia8MonashInvSec5023GeV->Write("histoInvSecPythia8Monash2013Eta5023GeV", TObject::kOverwrite);
-        histoEtaToPi0RatioPythia8Monash5023GeV->Write("histoEtaToPi0RatioPythia8Monash5023GeV", TObject::kOverwrite);
-
-        histoPi0Pythia8MonashInvSec900GeV->Write("histoInvSecPythia8Monash2013Pi0900GeV", TObject::kOverwrite);
-        histoEtaPythia8MonashInvSec900GeV->Write("histoInvSecPythia8Monash2013Eta900GeV", TObject::kOverwrite);
-        histoEtaToPi0RatioPythia8Monash900GeV->Write("histoEtaToPi0RatioPythia8Monash900GeV", TObject::kOverwrite);
-
-        histoPi0Pythia8MonashInvSec7TeV->Write("histoInvSecPythia8Monash2013Pi07TeV", TObject::kOverwrite);
-        histoEtaPythia8MonashInvSec7TeV->Write("histoInvSecPythia8Monash2013Eta7TeV", TObject::kOverwrite);
-        histoEtaToPi0RatioPythia8Monash7TeV->Write("histoEtaToPi0RatioPythia8Monash7TeV", TObject::kOverwrite);
-
+        // pi0 Stratmann PDF: CT10, FF: DSS14, 
+        graphNLOCalcInvSecPi08000GeV->Write("graphNLOCalcDSS14InvSecPi08000GeV", TObject::kOverwrite);
+        // pi0, eta, eta/pi0 Pythia 8.1 Monash 2013 (Satoshi)
         histoPi0Pythia8MonashInvSec8TeV->Write("histoInvSecPythia8Monash2013Pi08TeV", TObject::kOverwrite);
         histoEtaPythia8MonashInvSec8TeV->Write("histoInvSecPythia8Monash2013Eta8TeV", TObject::kOverwrite);
         histoEtaToPi0RatioPythia8Monash8TeV->Write("histoEtaToPi0RatioPythia8Monash8TeV", TObject::kOverwrite);
-
+        // pi0, eta, eta/pi0 Pythia 8.1 Monash 2013 (central)
         histoPi0Pythia8MonashInvSec8TeVLego->Write("histoInvSecPythia8Monash2013LegoPi08TeV", TObject::kOverwrite);
         histoEtaPythia8MonashInvSec8TeVLego->Write("histoInvSecPythia8Monash2013LegoEta8TeV", TObject::kOverwrite);
         histoEtaToPi0RatioPythia8Monash8TeVLego->Write("histoEtaToPi0RatioPythia8Monash2013Lego8TeV", TObject::kOverwrite);
-
+        // pi0, eta, eta/pi0 Pythia 8.1 Tune4C (Satoshi)
+        histoPi08TeVPythia8->Write("histoPi0Pythia8_8000TeV", TObject::kOverwrite);
+        histoEta8TeVPythia8->Write("histoEtaPythia8_8000TeV", TObject::kOverwrite);
+        histoPi08TeVPythia8Reb->Write("histoPi0Pythia8_8000TeV_Reb", TObject::kOverwrite);
+        histoEta8TeVPythia8Reb->Write("histoEtaPythia8_8000TeV_Reb", TObject::kOverwrite);
+        histoEtaToPi08TeVPythia8->Write("histoEtaToPi0Pythia8_8000TeV", TObject::kOverwrite);
+        // pi0, eta, eta/pi0 Pythia 8.1 Tune4C  (central)
         histoPi0Pythia8Tune4CInvSec8TeVLego->Write("histoInvSecPythia8Tune4CLegoPi08TeV", TObject::kOverwrite);
         histoEtaPythia8Tune4CInvSec8TeVLego->Write("histoInvSecPythia8Tune4CLegoEta8TeV", TObject::kOverwrite);
         histoEtaToPi0RatioPythia8Tune4C8TeVLego->Write("histoEtaToPi0RatioPythia8Tune4CLego8TeV", TObject::kOverwrite);
+        // pi0, eta, eta/pi0 Phojet
+        histoPi08TeVPhojet->Write("histoPi0Phojet_8000TeV", TObject::kOverwrite);
+        histoEta8TeVPhojet->Write("histoEtaPhojet_8000TeV", TObject::kOverwrite);
+        histoPi08TeVPhojetReb->Write("histoPi0Phojet_8000TeV_Reb", TObject::kOverwrite);
+        histoEta8TeVPhojetReb->Write("histoEtaPhojet_8000TeV_Reb", TObject::kOverwrite);
+        histoEtaToPi08TeVPhojet->Write("histoEtaToPi0Phojet_8000TeV", TObject::kOverwrite);
+        
         
     fileTheoryGraphsPP.Close();
 

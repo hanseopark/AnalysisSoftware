@@ -949,30 +949,31 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     // ************************** Loading theory calculations ************************************************
     // *******************************************************************************************************        
     TFile* fileTheoryCompilation                            = new TFile(fileNameTheory.Data());
-        TH1F* histoDPMJetPi0                                = (TH1F*) fileTheoryCompilation->Get("histoPi0DPMJet5023TeV_Reb");
-        TH1F* histoDPMJetEta                                = (TH1F*) fileTheoryCompilation->Get("histoEtaDPMJet5023TeV_Reb");
-        TH1F* histoDPMJetEtaToPi0                           = (TH1F*) fileTheoryCompilation->Get("histoEtaToPi0DPMJet5023TeV");
-        TH1F* histoHIJINGPi0                                = (TH1F*) fileTheoryCompilation->Get("histoPi0HIJING5023TeV_Reb");
-        TH1F* histoHIJINGEta                                = (TH1F*) fileTheoryCompilation->Get("histoEtaHIJING5023TeV_Reb");
-        TH1F* histoHIJINGEtaToPi0                           = (TH1F*) fileTheoryCompilation->Get("histoEtaToPi0HIJING5023TeV");
-        TH1D* histoEPOS3Pi0                                 = (TH1D*) fileTheoryCompilation->Get("histoPi0EPOS35023TeV_Reb");
+        TDirectory* directoryMB                             = (TDirectory*) fileCocktail->Get("pPb_5.023TeV");
+        TH1F* histoDPMJetPi0                                = (TH1F*) directoryMB->Get("histoPi0SpecDPMJet5023GeV_Reb");
+        TH1F* histoDPMJetEta                                = (TH1F*) directoryMB->Get("histoEtaSpecDPMJet5023GeV_Reb");
+        TH1F* histoDPMJetEtaToPi0                           = (TH1F*) directoryMB->Get("histoEtaToPi0DPMJet5023GeV");
+        TH1F* histoHIJINGPi0                                = (TH1F*) directoryMB->Get("histoPi0SpecHIJING5023GeV_Reb");
+        TH1F* histoHIJINGEta                                = (TH1F*) directoryMB->Get("histoEtaSpecHIJING5023GeV_Reb");
+        TH1F* histoHIJINGEtaToPi0                           = (TH1F*) directoryMB->Get("histoEtaToPi0HIJING5023GeV");
+        TH1D* histoEPOS3Pi0                                 = (TH1D*) directoryMB->Get("histoPi0SpecEPOS35023GeV_Reb");
         TGraphErrors* graphEPOS3Pi0                         = new TGraphErrors(histoEPOS3Pi0);
         graphEPOS3Pi0->RemovePoint(0);
-        TH1D* histoEPOS3Eta                                 = (TH1D*) fileTheoryCompilation->Get("histoEtaEPOS35023TeV_Reb");
+        TH1D* histoEPOS3Eta                                 = (TH1D*) directoryMB->Get("histoEtaSpecEPOS35023GeV_Reb");
         TGraphErrors* graphEPOS3Eta                         = new TGraphErrors(histoEPOS3Eta);
         graphEPOS3Eta->RemovePoint(0);
-        TH1D* histoEPOS3EtaToPi0_Reb                        = (TH1D* )fileTheoryCompilation->Get("histoEtaToPi0EPOS35023TeV_Reb");
+        TH1D* histoEPOS3EtaToPi0_Reb                        = (TH1D* )directoryMB->Get("histoEtaToPi0EPOS35023GeV_Reb");
         TGraphErrors* graphEPOS3EtaToPi0_Reb                = new TGraphErrors(histoEPOS3EtaToPi0_Reb);
         graphEPOS3EtaToPi0_Reb->RemovePoint(0);
-        TGraphErrors* graphMcGillPi0                        = (TGraphErrors*) fileTheoryCompilation->Get("graphPi0SpecMcGill5023TeV");
-        TGraphErrors* graphMcGillEta                        = (TGraphErrors*) fileTheoryCompilation->Get("graphEtaSpecMcGill5023TeV");
-        TGraphErrors* graphMcGillEtaToPi0                   = (TGraphErrors*) fileTheoryCompilation->Get("graphEtaToPi0McGill5023TeV");
+        TGraphErrors* graphMcGillPi0                        = (TGraphErrors*) directoryMB->Get("graphPi0SpecMcGill5023GeV");
+        TGraphErrors* graphMcGillEta                        = (TGraphErrors*) directoryMB->Get("graphEtaSpecMcGill5023GeV");
+        TGraphErrors* graphMcGillEtaToPi0                   = (TGraphErrors*) directoryMB->Get("graphEtaToPi0McGill5023GeV");
         
-        TGraph* graphPi0RpACGC5023GeV                       = (TGraph*) fileTheoryCompilation->Get("graphPi0RpACGC5023GeV");  
-        TGraph* graphPi0RpAEPS09sKKP5023GeV                 = (TGraph*) fileTheoryCompilation->Get("graphPi0RpAEPS09sKKP5023GeV");  
-        TGraph* graphPi0RpAEPS09sAKK5023GeV                 = (TGraph*) fileTheoryCompilation->Get("graphPi0RpAEPS09sAKK5023GeV");  
-        TGraph* graphPi0RpAEPS09sDSS5023GeV                 = (TGraph*) fileTheoryCompilation->Get("graphPi0RpAEPS09sDSS5023GeV");
-        TGraphAsymmErrors* graphPi0RpAErrEPS09sDSS5023GeV   = (TGraphAsymmErrors*)fileTheoryCompilation->Get("graphPi0RpAAsymmErrEPS09sDSS5023GeV");
+        TGraph* graphPi0RpACGC5023GeV                       = (TGraph*) directoryMB->Get("graphPi0RpACGC5023GeV");  
+        TGraph* graphPi0RpAEPS09sKKP5023GeV                 = (TGraph*) directoryMB->Get("graphPi0RpAEPS09sKKP5023GeV");  
+        TGraph* graphPi0RpAEPS09sAKK5023GeV                 = (TGraph*) directoryMB->Get("graphPi0RpAEPS09sAKK5023GeV");  
+        TGraph* graphPi0RpAEPS09sDSS5023GeV                 = (TGraph*) directoryMB->Get("graphPi0RpAEPS09sDSS5023GeV");
+        TGraphAsymmErrors* graphPi0RpAErrEPS09sDSS5023GeV   = (TGraphAsymmErrors*)directoryMB->Get("graphPi0RpAAsymmErrEPS09sDSS5023GeV");
         
     // *******************************************************************************************************
     // ************************** Combination of different pi0 measurements **********************************

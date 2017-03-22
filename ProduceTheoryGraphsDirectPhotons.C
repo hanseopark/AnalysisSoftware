@@ -54,13 +54,6 @@ extern TBenchmark*    gBenchmark;
 extern TSystem*    gSystem;
 extern TMinuit*      gMinuit;
 
-// Double_t    xSection900GeV  = 47.78*1e-3;
-// Double_t    xSection2760GeV = 55.416*1e-3;
-Double_t    xSection7000GeV = 62.22*1e-3;
-Double_t    xSection8000GeV = 55.74*1e-3;
-// Double_t    recalcBarn      = 1e12; //NLO in pbarn!!!!
-
-
 TGraphAsymmErrors* ScaleGraphAsym (TGraphAsymmErrors* graph, Double_t scaleFac){
     TGraphAsymmErrors* dummyGraph   = (TGraphAsymmErrors*)graph->Clone(Form("%s_Scaled",graph->GetName()));
 
@@ -101,6 +94,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
     
     TString collisionSystem2760GeV      = "pp, #sqrt{#it{s}} = 2.76 TeV";
     TString collisionSystem5TeV         = "pp, #sqrt{#it{s}} = 5.023 TeV";
+    TString collisionSystempPb5TeV      = "pPb, #sqrt{#it{s}_{_{NN}}} = 5.023 TeV";
     TString collisionSystem7TeV         = "pp, #sqrt{#it{s}} = 7 TeV";
     TString collisionSystem8TeV         = "pp, #sqrt{#it{s}} = 8 TeV";
     
@@ -665,6 +659,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         //******************************************************************************************************************
         //************************************** Calculate inv. yield ******************************************************
         //******************************************************************************************************************
+        cout << "calculating 2.76TeV inv yields" << endl;
         TGraphAsymmErrors* graphNLOCalcInvYieldINT1DirGam2760GeV    = (TGraphAsymmErrors*)graphNLOCalcDirGam2760GeV->Clone("graphNLOCalcInvYieldINT1DirGam2760GeV");
         graphNLOCalcInvYieldINT1DirGam2760GeV                       = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT1DirGam2760GeV, 1/recalcBarn/ReturnCorrectXSection("2.76TeV", 0));
         TGraphAsymmErrors* graphNLOCalcInvYieldINT1PromGam2760GeV   = (TGraphAsymmErrors*)graphNLOCalcPromGam2760GeV->Clone("graphNLOCalcInvYieldINT1PromGam2760GeV");
@@ -679,14 +674,15 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphAsymmErrors* graphNLOCalcInvYieldINT7FragGam2760GeV   = (TGraphAsymmErrors*)graphNLOCalcFragGam2760GeV->Clone("graphNLOCalcInvYieldINT7FragGam2760GeV");
         graphNLOCalcInvYieldINT7FragGam2760GeV                      = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7FragGam2760GeV, 1/recalcBarn/ReturnCorrectXSection("2.76TeV", 1));
 
-        // xSection 5TeV?
-//        TGraphAsymmErrors* graphNLOCalcInvYieldDirGam5TeV       = (TGraphAsymmErrors*)graphNLOCalcDirGam5TeV->Clone("graphNLOCalcInvYieldDirGam5TeV");
-//        graphNLOCalcInvYieldDirGam5TeV                          = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldDirGam5TeV, 1/recalcBarn/ReturnCorrectXSection("5TeV", 0));
-//        TGraphAsymmErrors* graphNLOCalcInvYieldPromGam5TeV      = (TGraphAsymmErrors*)graphNLOCalcPromGam5TeV->Clone("graphNLOCalcInvYieldPromGam5TeV");
-//        graphNLOCalcInvYieldPromGam5TeV                         = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldPromGam5TeV, 1/recalcBarn/ReturnCorrectXSection("5TeV", 0));
-//        TGraphAsymmErrors* graphNLOCalcInvYieldFragGam5TeV      = (TGraphAsymmErrors*)graphNLOCalcFragGam5TeV->Clone("graphNLOCalcInvYieldFragGam5TeV");
-//        graphNLOCalcInvYieldFragGam5TeV                         = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldFragGam5TeV, 1/recalcBarn/ReturnCorrectXSection("5TeV", 0));
-        
+        cout << "calculating 5TeV inv yields" << endl;
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT7DirGam5TeV       = (TGraphAsymmErrors*)graphNLOCalcDirGam5TeV->Clone("graphNLOCalcInvYieldINT7DirGam5TeV");
+        graphNLOCalcInvYieldINT7DirGam5TeV                          = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7DirGam5TeV, 1/recalcBarn/ReturnCorrectXSection("5TeV", 1));
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT7PromGam5TeV      = (TGraphAsymmErrors*)graphNLOCalcPromGam5TeV->Clone("graphNLOCalcInvYieldINT7PromGam5TeV");
+        graphNLOCalcInvYieldINT7PromGam5TeV                         = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7PromGam5TeV, 1/recalcBarn/ReturnCorrectXSection("5TeV", 1));
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT7FragGam5TeV      = (TGraphAsymmErrors*)graphNLOCalcFragGam5TeV->Clone("graphNLOCalcInvYieldINT7FragGam5TeV");
+        graphNLOCalcInvYieldINT7FragGam5TeV                         = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7FragGam5TeV, 1/recalcBarn/ReturnCorrectXSection("5TeV", 1));
+            
+        cout << "calculating 7TeV inv yields" << endl;
         TGraphAsymmErrors* graphNLOCalcInvYieldINT1DirGam7TeV       = (TGraphAsymmErrors*)graphNLOCalcDirGam7TeV->Clone("graphNLOCalcInvYieldINT1DirGam7TeV");
         graphNLOCalcInvYieldINT1DirGam7TeV                          = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT1DirGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 0));
         TGraphAsymmErrors* graphNLOCalcInvYieldINT1PromGam7TeV      = (TGraphAsymmErrors*)graphNLOCalcPromGam7TeV->Clone("graphNLOCalcInvYieldINT1PromGam7TeV");
@@ -701,6 +697,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphAsymmErrors* graphNLOCalcInvYieldINT7FragGam7TeV      = (TGraphAsymmErrors*)graphNLOCalcFragGam7TeV->Clone("graphNLOCalcInvYieldINT7FragGam7TeV");
         graphNLOCalcInvYieldINT7FragGam7TeV                         = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7FragGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 1));
 
+        cout << "calculating 8TeV inv yields" << endl;
         TGraphAsymmErrors* graphNLOCalcInvYieldDirGam8TeV           = (TGraphAsymmErrors*)graphNLOCalcDirGam8TeV->Clone("graphNLOCalcInvYieldDirGam8TeV");
         graphNLOCalcInvYieldDirGam8TeV                              = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldDirGam8TeV, 1/recalcBarn/ReturnCorrectXSection("8TeV", 1));
         TGraphAsymmErrors* graphNLOCalcInvYieldPromGam8TeV          = (TGraphAsymmErrors*)graphNLOCalcPromGam8TeV->Clone("graphNLOCalcInvYieldPromGam8TeV");
@@ -719,6 +716,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             TDirectoryFile* directoryGamma = (TDirectoryFile*)fileTheoryGraphsPP->Get("DirectPhoton"); 
             fileTheoryGraphsPP->cd("DirectPhoton");
 
+            // writing 2.76TeV Gammas
             graphNLOCalcDirGam2760GeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcDirGam2760GeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
             graphNLOCalcDirGam2760GeV->Write("graphDirectPhotonNLOVogelsang_2760GeV",TObject::kOverwrite);
@@ -752,20 +750,31 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             fitPromptDivFragGamma2760GeV->Write("ratioFitNLOPromptDivFragGamma2760GeV", TObject::kOverwrite);
             fitTheoryDirectMcGill2760GeV->Write("fitYieldDirectPhotonNLOPaquett_2760GeV",TObject::kOverwrite);
 
+            // writing 5TeV Gammas
             graphNLOCalcDirGam5TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcDirGam5TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");            
             graphNLOCalcDirGam5TeV->Write("graphDirectPhotonNLOVogelsang_5TeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldINT7DirGam5TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldINT7DirGam5TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldINT7DirGam5TeV->Write("graphDirectPhotonNLOVogelsangInvYieldINT7_5TeV",TObject::kOverwrite);
             graphNLOCalcPromGam5TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcPromGam5TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
             graphNLOCalcPromGam5TeV->Write("graphPromptPhotonNLOVogelsang_5TeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldINT7PromGam5TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldINT7PromGam5TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldINT7PromGam5TeV->Write("graphPromptPhotonNLOVogelsangInvYieldINT7_5TeV",TObject::kOverwrite);
             graphNLOCalcFragGam5TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcFragGam5TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
             graphNLOCalcFragGam5TeV->Write("graphFragmentationPhotonNLOVogelsang_5TeV",TObject::kOverwrite);
+            graphNLOCalcInvYieldINT7FragGam5TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            graphNLOCalcInvYieldINT7FragGam5TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcInvYieldINT7FragGam5TeV->Write("graphFragmentationPhotonNLOVogelsangInvYieldINT7_5TeV",TObject::kOverwrite);
             graphRatioNLOFragGammaDivTot5TeV->Write("graphFragPhotonDivDirectNLOVogelsang_5TeV",TObject::kOverwrite);
             graphRatioNLOPromptGammaDivTot5TeV->Write("graphPromptPhotonDivDirectNLOVogelsang_5TeV",TObject::kOverwrite);
             graphRatioNLOPromptGammaDivFrag5TeV->Write("graphPromptPhotonDivFragementationNLOVogelsang_5TeV",TObject::kOverwrite);
             fitPromptDivFragGamma5TeV->Write("ratioFitNLOPromptDivFragGamma5TeV", TObject::kOverwrite);
             
+            // writing 7TeV Gammas
             graphNLOCalcDirGam7TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcDirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
             graphNLOCalcDirGam7TeV->Write("graphDirectPhotonNLOVogelsang_7TeV",TObject::kOverwrite);
@@ -798,6 +807,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphRatioNLOPromptGammaDivFrag7TeV->Write("graphPromptPhotonDivFragementationNLOVogelsang_7TeV",TObject::kOverwrite);
             fitPromptDivFragGamma7TeV->Write("ratioFitNLOPromptDivFragGamma7TeV", TObject::kOverwrite);
             
+            // writing 8TeV Gammas
             graphNLOCalcDirGam8TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcDirGam8TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");            
             graphNLOCalcDirGam8TeV->Write("graphDirectPhotonNLOVogelsang_8TeV",TObject::kOverwrite);
@@ -1421,6 +1431,340 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         fileTheoryGraphsPbPb->Close();
     }
         
+    if (runPPb){
+        
+        // **********************************************************************************************************************
+        // *********************************** direct photon calculations for 5TeV *******************************************
+        // **********************************************************************************************************************
+        // ***************** Werner Vogelsang pp calculations CT10, FF: DSS
+        TString fileNameNLOPhotonHalf5TeV    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton5023GeVHalfMu.dat";
+        TString fileNameNLOPhotonOne5TeV     = "ExternalInput/Theory/ALICENLOcalcDirectPhoton5023GeVMu.dat";
+        TString fileNameNLOPhotonTwo5TeV     = "ExternalInput/Theory/ALICENLOcalcDirectPhoton5023GeVTwoMu.dat";
+        Int_t nlinesNLOTwo5TeV              = 0;
+        Int_t nlinesNLOOne5TeV              = 0;
+        Int_t nlinesNLOHalf5TeV             = 0;
+        Double_t ptNLOPhotonTwo5TeV[100];
+        Double_t ptNLOPhotonTwo5TeVErr[100];
+        Double_t ptNLOPhotonOne5TeV[100];
+        Double_t ptNLOPhotonHalf5TeV[100];
+        
+        Double_t muHalfDF5TeV[100];
+        Double_t muHalfD5TeV[100];
+        Double_t muHalfF5TeV[100];
+        Double_t muOneDF5TeV[100];
+        Double_t muOneD5TeV[100];
+        Double_t muOneF5TeV[100];
+        Double_t muTwoDF5TeV[100];
+        Double_t muTwoD5TeV[100];
+        Double_t muTwoF5TeV[100];
+        Double_t gammaValue5TeV[100];
+        Double_t gammaErrUp5TeV[100];
+        Double_t gammaErrDown5TeV[100];
+        Double_t fragGammaValue5TeV[100];
+        Double_t fragGammaErrUp5TeV[100];
+        Double_t fragGammaErrDown5TeV[100];
+        Double_t promptGammaValue5TeV[100];
+        Double_t promptGammaErrUp5TeV[100];
+        Double_t promptGammaErrDown5TeV[100];
+        
+        ifstream inHalf5TeV;
+        inHalf5TeV.open(fileNameNLOPhotonHalf5TeV,ios_base::in);
+        cout << fileNameNLOPhotonHalf5TeV << endl;
+            
+        while(!inHalf5TeV.eof()){
+            nlinesNLOHalf5TeV++;
+            //               Pt                              DirectPhoton           FragmentationPhoton         SumPhoton
+            inHalf5TeV >> ptNLOPhotonHalf5TeV[nlinesNLOHalf5TeV] >> muHalfD5TeV[nlinesNLOHalf5TeV] >> muHalfF5TeV[nlinesNLOHalf5TeV] >> muHalfDF5TeV[nlinesNLOHalf5TeV];
+            
+        }
+        inHalf5TeV.close();
+
+        ifstream inOne5TeV;
+        inOne5TeV.open(fileNameNLOPhotonOne5TeV,ios_base::in);
+        cout << fileNameNLOPhotonOne5TeV << endl;
+
+        while(!inOne5TeV.eof()){
+            nlinesNLOOne5TeV++;
+            inOne5TeV >> ptNLOPhotonOne5TeV[nlinesNLOOne5TeV] >> muOneD5TeV[nlinesNLOOne5TeV] >> muOneF5TeV[nlinesNLOOne5TeV] >> muOneDF5TeV[nlinesNLOOne5TeV];
+        }
+        inOne5TeV.close();
+
+        ifstream inTwo5TeV;
+        inTwo5TeV.open(fileNameNLOPhotonTwo5TeV,ios_base::in);
+        cout << fileNameNLOPhotonTwo5TeV << endl;
+
+        while(!inTwo5TeV.eof()){
+            nlinesNLOTwo5TeV++;
+            inTwo5TeV >> ptNLOPhotonTwo5TeV[nlinesNLOTwo5TeV] >> muTwoD5TeV[nlinesNLOTwo5TeV] >> muTwoF5TeV[nlinesNLOTwo5TeV] >> muTwoDF5TeV[nlinesNLOTwo5TeV];
+            ptNLOPhotonTwo5TeVErr[nlinesNLOTwo5TeV] = 0.25;
+        }
+        inTwo5TeV.close();
+        
+        for (Int_t i = 0; i < nlinesNLOTwo5TeV; i++){
+            cout << ptNLOPhotonHalf5TeV[i] << "\t" << muHalfDF5TeV[i] << "\t"<< ptNLOPhotonOne5TeV[i] <<"\t" << muOneDF5TeV[i] << "\t"<< ptNLOPhotonTwo5TeV[i] << "\t" << muTwoDF5TeV[i] << endl;
+            gammaValue5TeV[i]           = muOneDF5TeV[i];
+            gammaErrUp5TeV[i]           = muHalfDF5TeV[i]-muOneDF5TeV[i];
+            gammaErrDown5TeV[i]         = muOneDF5TeV[i]-muTwoDF5TeV[i];
+            fragGammaValue5TeV[i]       = muOneF5TeV[i];
+            fragGammaErrUp5TeV[i]       = muHalfF5TeV[i]-muOneF5TeV[i];
+            fragGammaErrDown5TeV[i]     = muOneF5TeV[i]-muTwoF5TeV[i];
+            promptGammaValue5TeV[i]     = muOneD5TeV[i];
+            promptGammaErrUp5TeV[i]     = muHalfD5TeV[i]-muOneD5TeV[i];
+            promptGammaErrDown5TeV[i]   = muOneD5TeV[i]-muTwoD5TeV[i];
+        }    
+        
+        TGraphAsymmErrors *graphNLOCalcDirGampPb5TeV       = new TGraphAsymmErrors(nlinesNLOTwo5TeV,ptNLOPhotonTwo5TeV,gammaValue5TeV,ptNLOPhotonTwo5TeVErr,ptNLOPhotonTwo5TeVErr,gammaErrDown5TeV,gammaErrUp5TeV);
+        graphNLOCalcDirGampPb5TeV->RemovePoint(0);
+        TGraphAsymmErrors *graphNLOCalcFragGampPb5TeV      = new TGraphAsymmErrors(nlinesNLOTwo5TeV,ptNLOPhotonTwo5TeV,fragGammaValue5TeV,ptNLOPhotonTwo5TeVErr,ptNLOPhotonTwo5TeVErr,fragGammaErrDown5TeV,fragGammaErrUp5TeV);
+        graphNLOCalcFragGampPb5TeV->RemovePoint(0);
+        TGraphAsymmErrors *graphNLOCalcPromGampPb5TeV      = new TGraphAsymmErrors(nlinesNLOTwo5TeV,ptNLOPhotonTwo5TeV,promptGammaValue5TeV,ptNLOPhotonTwo5TeVErr,ptNLOPhotonTwo5TeVErr,promptGammaErrDown5TeV,promptGammaErrUp5TeV);
+        graphNLOCalcPromGampPb5TeV->RemovePoint(0);
+
+        //******************************************************************************************************************
+        //*********************************** Scale pp calcs to pPb ********************************************************
+        //******************************************************************************************************************
+        graphNLOCalcDirGampPb5TeV                                   = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcDirGampPb5TeV, GetNCollFromName("MB", "pPb_5TeV"));
+        graphNLOCalcPromGampPb5TeV                                  = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcPromGampPb5TeV, GetNCollFromName("MB", "pPb_5TeV"));
+        graphNLOCalcFragGampPb5TeV                                  = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcFragGampPb5TeV, GetNCollFromName("MB", "pPb_5TeV"));
+        
+
+        // calculate ratios
+        TGraphAsymmErrors* graphRatioNLOFragGammaDivTotpPb5TeV      = CalculateAsymGraphRatioToGraph(graphNLOCalcFragGampPb5TeV, graphNLOCalcDirGampPb5TeV);
+        TGraphAsymmErrors* graphRatioNLOPromptGammaDivTotpPb5TeV    = CalculateAsymGraphRatioToGraph(graphNLOCalcPromGampPb5TeV, graphNLOCalcDirGampPb5TeV);
+        TGraphAsymmErrors* graphRatioNLOPromptGammaDivFragpPb5TeV   = CalculateAsymGraphRatioToGraph(graphNLOCalcPromGampPb5TeV, graphNLOCalcFragGampPb5TeV);
+
+        TF1* fitGammaDirpPb5TeV                            = FitObject("powPure","fitNLOcalcDirGamma5TeV","Gamma",graphNLOCalcDirGampPb5TeV,7,30.,NULL,"QNRMEX0+");
+        TF1* fitGammaFragpPb5TeV                           = FitObject("powPure","fitNLOcalcFragGamma5TeV","Gamma",graphNLOCalcFragGampPb5TeV,7,30.,NULL,"QNRMEX0+");
+        TF1* fitGammaPromptpPb5TeV                         = FitObject("powPure","fitNLOcalcPromptGamma5TeV","Gamma",graphNLOCalcPromGampPb5TeV,7,30.,NULL,"QNRMEX0+");
+        TF1* fitFragDivGammaDirpPb5TeV                     = CalculateRatioOfTwoFunctions (fitGammaFragpPb5TeV, fitGammaDirpPb5TeV, "ratioFitNLOFragDivDirGammapPb5TeV");
+        fitFragDivGammaDirpPb5TeV->SetRange(2,50);
+        TF1* fitPromptDivGammaDirpPb5TeV                   = CalculateRatioOfTwoFunctions (fitGammaPromptpPb5TeV, fitGammaDirpPb5TeV, "ratioFitNLOPromptDivDirGammapPb5TeV");
+        fitPromptDivGammaDirpPb5TeV->SetRange(2,50);
+        TF1* fitPromptDivFragGammapPb5TeV                  = CalculateRatioOfTwoFunctions (fitGammaPromptpPb5TeV, fitGammaFragpPb5TeV, "ratioFitNLOPromptDivFragGammapPb5TeV");
+        fitPromptDivFragGammapPb5TeV->SetRange(10,50);
+
+        graphRatioNLOFragGammaDivTotpPb5TeV->Fit(fitFragDivGammaDirpPb5TeV,"QNRMEX0+");
+        graphRatioNLOPromptGammaDivTotpPb5TeV->Fit(fitPromptDivGammaDirpPb5TeV,"QNRMEX0+");
+        graphRatioNLOPromptGammaDivFragpPb5TeV->Fit(fitPromptDivFragGammapPb5TeV,"QNRMEX0+");
+        fitPromptDivFragGammapPb5TeV->SetRange(2,100);
+        
+        // -----------------------------------------------------------------------------------------------------------------------
+        // ----------------------------- plotting fragmentation and prompt to total direct ---------------------------------------
+        // -----------------------------------------------------------------------------------------------------------------------
+        TCanvas* canvasRatioDirGammaCalc   = new TCanvas("canvasRatioDirGammaCalc","",200,10,900,900);  // gives the page size
+        DrawGammaCanvasSettings( canvasRatioDirGammaCalc, 0.11, 0.01, 0.01, 0.09);
+        canvasRatioDirGammaCalc->SetLogx();
     
+        TH2F * histo2DRatioGammaCalc;
+        histo2DRatioGammaCalc           = new TH2F("histo2DRatioGammaCalc","histo2DRatioGammaCalc",11000,0.23,100.,1000,0.,1.25);
+        SetStyleHistoTH2ForGraphs(histo2DRatioGammaCalc, "#it{p}_{T} (GeV/#it{c})","#frac{#gamma_{source}}{#gamma_{dir}}",0.035,0.04, 0.035,0.04, 1.,1.,510,505);
+        histo2DRatioGammaCalc->GetXaxis()->SetMoreLogLabels();
+        histo2DRatioGammaCalc->GetXaxis()->SetLabelOffset(-0.01);
+        histo2DRatioGammaCalc->Draw("copy");
+
+
+            DrawGammaSetMarkerTGraphAsym(graphRatioNLOFragGammaDivTotpPb5TeV, 0, 0, colorFrag, colorFrag, 1, kTRUE, colorFrag);
+            graphRatioNLOFragGammaDivTotpPb5TeV->Draw("3,same");
+
+            DrawGammaSetMarkerTGraphAsym(graphRatioNLOPromptGammaDivTotpPb5TeV, 0, 0, colorPrompt, colorPrompt, 1, kTRUE, colorPrompt);
+            graphRatioNLOPromptGammaDivTotpPb5TeV->SetFillStyle(3245);
+            graphRatioNLOPromptGammaDivTotpPb5TeV->Draw("3,same");
+            
+            DrawGammaLines(0.23, 100. , 1., 1.,0.1, kGray+2);
+            
+            TLegend* legendRatioGammaCalc       = GetAndSetLegend2(0.15, 0.14, 0.3, 0.14+(0.035*2*1.25), 32);
+            legendRatioGammaCalc->AddEntry(graphRatioNLOFragGammaDivTotpPb5TeV,"#gamma_{frag}/#gamma_{dir}");
+            legendRatioGammaCalc->AddEntry(graphRatioNLOPromptGammaDivTotpPb5TeV,"#gamma_{prompt}/#gamma_{dir}");
+            legendRatioGammaCalc->Draw();
+
+            TLatex *labelRatioGammaCalcpPb5TeV   = new TLatex(0.15,0.93,collisionSystempPb5TeV.Data());
+            SetStyleTLatex( labelRatioGammaCalcpPb5TeV, 0.85*32,4);
+            labelRatioGammaCalcpPb5TeV->SetTextFont(43);
+            labelRatioGammaCalcpPb5TeV->Draw();
+            TLatex *labelRatioGamma      = new TLatex(0.15,0.89,"#gamma_{dir}");
+            SetStyleTLatex( labelRatioGamma, 0.85*32,4);
+            labelRatioGamma->SetTextFont(43);
+            labelRatioGamma->Draw();
+            
+        canvasRatioDirGammaCalc->SaveAs(Form("%s/GammaNLOCalc_Separation_PPB5TeV.%s",outputDir.Data(),suffix.Data()));
+
+        //******************************************************************************************************************
+        //************************************** Calculate inv. yield ******************************************************
+        //******************************************************************************************************************        
+        cout << "calculating 5TeV pPb inv yields" << endl;
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT7DirGampPb5TeV       = (TGraphAsymmErrors*)graphNLOCalcDirGampPb5TeV->Clone("graphNLOCalcInvYieldINT7DirGam5TeV");
+        graphNLOCalcInvYieldINT7DirGampPb5TeV                          = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7DirGampPb5TeV, 1/recalcBarn/ReturnCorrectXSection("pPb_5TeV", 3));
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT7PromGampPb5TeV      = (TGraphAsymmErrors*)graphNLOCalcPromGampPb5TeV->Clone("graphNLOCalcInvYieldINT7PromGam5TeV");
+        graphNLOCalcInvYieldINT7PromGampPb5TeV                         = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7PromGampPb5TeV, 1/recalcBarn/ReturnCorrectXSection("pPb_5TeV", 3));
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT7FragGampPb5TeV      = (TGraphAsymmErrors*)graphNLOCalcFragGampPb5TeV->Clone("graphNLOCalcInvYieldINT7FragGam5TeV");
+        graphNLOCalcInvYieldINT7FragGampPb5TeV                         = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7FragGampPb5TeV, 1/recalcBarn/ReturnCorrectXSection("pPb_5TeV", 3));
+        
+            
+        //**************************************************************************************************
+        //****************************** extracting McGill predictions**************************************
+        //**************************************************************************************************
+    //     @article{Shen:2016zpp,
+    //         author         = "Shen, Chun and Paquet, Jean-François and Denicol,
+    //                             Gabriel S. and Jeon, Sangyong and Gale, Charles",
+    //         title          = "{Collectivity and electromagnetic radiation in small
+    //                             systems}",
+    //         journal        = "Phys. Rev.",
+    //         volume         = "C95",
+    //         year           = "2017",
+    //         pages          = "014906",
+    //         doi            = "10.1103/PhysRevC.95.014906",
+    //         eprint         = "1609.02590",
+    //         archivePrefix  = "arXiv",
+    //         primaryClass   = "nucl-th",
+    //         SLACcitation   = "%%CITATION = ARXIV:1609.02590;%%"
+    //     }
+
+        //*****************************************************
+        // read direct photon spectra
+        ifstream inMCGillGamma;
+        Int_t nlinesGammaMCGill     = 0;
+        Double_t xPtGammaMCGill[100], xPtErrGammaMCGill[0], yYieldGammaMCGill[100], yYieldErrGammaMCGill[100];
+
+        inMCGillGamma.open("ExternalInputpPb/Theory/McGill/direct_photon_sp.dat",ios_base::in);    
+        while(!inMCGillGamma.eof()){
+            inMCGillGamma >> xPtGammaMCGill[nlinesGammaMCGill]  >> yYieldGammaMCGill[nlinesGammaMCGill] >> yYieldErrGammaMCGill[nlinesGammaMCGill];
+            cout << nlinesGammaMCGill << "         "  << xPtGammaMCGill[nlinesGammaMCGill] << "         "  <<yYieldGammaMCGill[nlinesGammaMCGill]<<endl;
+            xPtErrGammaMCGill[nlinesGammaMCGill] = 0;
+            nlinesGammaMCGill++;
+            
+        }
+        inMCGillGamma.close();
+        TGraphErrors* graphGammaSpecMcGill5023GeV = new TGraphErrors(nlinesGammaMCGill-1,xPtGammaMCGill,yYieldGammaMCGill, xPtErrGammaMCGill, yYieldErrGammaMCGill );	    
+        // read direct photon v2
+        ifstream inMCGillGammaV2;
+        nlinesGammaMCGill           = 0;
+        Double_t yV2GammaMCGill[100], yV2ErrGammaMCGill[100];
+        inMCGillGammaV2.open("ExternalInputpPb/Theory/McGill/direct_photon_sp.dat",ios_base::in);    
+        while(!inMCGillGammaV2.eof()){
+            inMCGillGammaV2 >> xPtGammaMCGill[nlinesGammaMCGill]  >> yV2GammaMCGill[nlinesGammaMCGill] >> yV2ErrGammaMCGill[nlinesGammaMCGill];
+            cout << nlinesGammaMCGill << "         "  << xPtGammaMCGill[nlinesGammaMCGill] << "         "  <<yV2GammaMCGill[nlinesGammaMCGill]<<endl;
+            xPtErrGammaMCGill[nlinesGammaMCGill] = 0;
+            nlinesGammaMCGill++;
+            
+        }
+        inMCGillGammaV2.close();
+        TGraphErrors* graphGammaV2McGill5023GeV = new TGraphErrors(nlinesGammaMCGill-1,xPtGammaMCGill,yV2GammaMCGill, xPtErrGammaMCGill, yV2ErrGammaMCGill );	    
+        
+        
+        //*****************************************************
+        // read decay photon spectra
+        Int_t nParticles                    = 7;
+        TString particleNames[nParticles]   = {"eta", "etap", "omega", "phi", "pi0", 
+                                            "rho0", "Sigma0"};
+        TString particleNamesOut[nParticles]= {"eta", "etap", "omega", "phi", "pi0", 
+                                            "rho0", "Sigma0"};
+        
+        vector<Double_t> **valuesMcGillDecay= new vector<Double_t>*[3];// iParticle x 3 matrix with theory curves
+        for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
+            valuesMcGillDecay[iParticle]    = new vector<Double_t>[3];
+        }
+        Int_t nPtPoint[nParticles];
+        
+        //  read from file
+        for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
+            nPtPoint[iParticle]      = 0;
+            ifstream fileMcGillInput;
+            TString fileName                = Form("ExternalInputpPb/Theory/McGill/decay_photon_sp_%s.dat", particleNames[iParticle].Data());
+            fileMcGillInput.open(fileName.Data(),ios_base::in);
+            cout << "opening: " << fileName.Data() << endl;
+            Int_t iPtCurrent    = 0;
+            Int_t nCurrMeas     = 0;
+            string line;
+            while (getline(fileMcGillInput, line) && iPtCurrent < 100) {
+                TString temp        = "";
+                TString tempBin     = "";
+                istringstream cs(line); // controll stream
+                cs >> temp;
+                
+                if (!temp.Contains("#")){
+                    istringstream ss(line);                
+                    Int_t iMeasurement  = 0;
+                    while(ss && iMeasurement < 3){
+                        ss >> temp;
+                        if(!temp.IsNull() && temp.CompareTo("nan") != 0){
+                            valuesMcGillDecay[iParticle][iMeasurement].push_back(temp.Atof());
+                            cout << temp.Data() << "\t ";
+                            iMeasurement++;
+                        } else {
+                            valuesMcGillDecay[iParticle][iMeasurement].push_back(-1.0e-6);
+                            cout << -1.0e-6 << "\t ";
+                            iMeasurement++;
+                        }
+                    }
+                    nCurrMeas = iMeasurement;
+                    cout << endl;
+                    iPtCurrent++;
+                } else {
+                    cout << "first line contains comments" << endl;
+                }    
+            }
+            cout << "Number of pT bins: "<< iPtCurrent << "\t number of measurement points: "<< nCurrMeas <<  endl;
+            nPtPoint[iParticle]         = iPtCurrent;
+            fileMcGillInput.close();
+        }
+        
+        TGraphErrors* graphDecayPhotonSpectraMcGill5023GeV[nParticles];
+        for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
+            graphDecayPhotonSpectraMcGill5023GeV[iParticle]       = NULL;
+        }    
+        for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
+            graphDecayPhotonSpectraMcGill5023GeV[iParticle]       = new TGraphErrors(nPtPoint[iParticle]);
+            for (Int_t iPt = 0; iPt < nPtPoint[iParticle]; iPt++){
+                graphDecayPhotonSpectraMcGill5023GeV[iParticle]->SetPoint(iPt, valuesMcGillDecay[iParticle][0].at(iPt), valuesMcGillDecay[iParticle][1].at(iPt));
+                graphDecayPhotonSpectraMcGill5023GeV[iParticle]->SetPointError(iPt, 0.01, valuesMcGillDecay[iParticle][2].at(iPt) );
+            }    
+            graphDecayPhotonSpectraMcGill5023GeV[iParticle]->SetName(Form("graphDecayPhotonFrom%sSpecMcGill5023GeV", particleNamesOut[iParticle].Data()));
+        }    
+
+        //******************************************************************************************************************
+        //************************************** Writing output for pp ***************************************************
+        //******************************************************************************************************************
+        TFile *fileTheoryGraphsPPb   = new TFile("ExternalInputpPb/Theory/TheoryCompilationPPb.root","UPDATE");
+
+            TDirectoryFile* directory5TeV = (TDirectoryFile*)fileTheoryGraphsPPb->Get("pPb_5.023TeV"); 
+            if (!directory5TeV){
+                fileTheoryGraphsPPb->mkdir("pPb_5.023TeV");
+            }    
+            fileTheoryGraphsPPb->cd("pPb_5.023TeV");
+
+                // writing 5TeV Gammas
+                graphNLOCalcDirGampPb5TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
+                graphNLOCalcDirGampPb5TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");            
+                graphNLOCalcDirGampPb5TeV->Write("graphDirectPhotonNLOVogelsang_pPb5TeV_CT10",TObject::kOverwrite);
+                graphNLOCalcInvYieldINT7DirGampPb5TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+                graphNLOCalcInvYieldINT7DirGampPb5TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                graphNLOCalcInvYieldINT7DirGampPb5TeV->Write("graphDirectPhotonNLOVogelsangInvYieldINT7_pPb5TeV_CT10",TObject::kOverwrite);
+                graphNLOCalcPromGampPb5TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
+                graphNLOCalcPromGampPb5TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                graphNLOCalcPromGampPb5TeV->Write("graphPromptPhotonNLOVogelsang_pPb5TeV_CT10",TObject::kOverwrite);
+                graphNLOCalcInvYieldINT7PromGampPb5TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+                graphNLOCalcInvYieldINT7PromGampPb5TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                graphNLOCalcInvYieldINT7PromGampPb5TeV->Write("graphPromptPhotonNLOVogelsangInvYieldINT7_pPb5TeV_CT10",TObject::kOverwrite);
+                graphNLOCalcFragGampPb5TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
+                graphNLOCalcFragGampPb5TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                graphNLOCalcFragGampPb5TeV->Write("graphFragmentationPhotonNLOVogelsang_pPb5TeV_CT10",TObject::kOverwrite);
+                graphNLOCalcInvYieldINT7FragGampPb5TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+                graphNLOCalcInvYieldINT7FragGampPb5TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                graphNLOCalcInvYieldINT7FragGampPb5TeV->Write("graphFragmentationPhotonNLOVogelsangInvYieldINT7_pPb5TeV_CT10",TObject::kOverwrite);
+                graphRatioNLOFragGammaDivTotpPb5TeV->Write("graphFragPhotonDivDirectNLOVogelsang_pPb5TeV_CT10",TObject::kOverwrite);
+                graphRatioNLOPromptGammaDivTotpPb5TeV->Write("graphPromptPhotonDivDirectNLOVogelsang_pPb5TeV_CT10",TObject::kOverwrite);
+                graphRatioNLOPromptGammaDivFragpPb5TeV->Write("graphPromptPhotonDivFragementationNLOVogelsang_pPb5TeV_CT10",TObject::kOverwrite);
+                fitPromptDivFragGammapPb5TeV->Write("ratioFitNLOPromptDivFragGammapPb5TeV_CT10", TObject::kOverwrite);
     
+                // writing McGill calcs 
+                graphGammaSpecMcGill5023GeV->Write("graphDirectPhotonSpecMcGill5023GeV", TObject::kOverwrite);
+                graphGammaV2McGill5023GeV->Write("graphDirectPhotonV2McGill5023GeV", TObject::kOverwrite);
+                for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
+                    if (graphDecayPhotonSpectraMcGill5023GeV[iParticle])
+                        graphDecayPhotonSpectraMcGill5023GeV[iParticle]->Write(Form("graphDecayPhotonFrom%sSpecMcGill5023GeV", particleNamesOut[iParticle].Data()), TObject::kOverwrite);
+                }    
+        fileTheoryGraphsPPb->Close();
+        delete fileTheoryGraphsPPb;
+        
+    }
 }
