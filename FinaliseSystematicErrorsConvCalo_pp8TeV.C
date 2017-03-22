@@ -870,11 +870,11 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
                 for (Int_t k = 0; k < nPtBins; k++){
                     Double_t error              = 0.;
                     if (additionalNameOutput.CompareTo("")==0){
-                        error   = 1.;                                     //1% error from pileUp: with pileUp+SPDtrackCluster cut and without
+                        error   = 0.1;                                     //0.1% error from pileUp: with pileUp+SPDtrackCluster cut and without
                     } else if (additionalNameOutput.CompareTo("EMC7")==0){
-                        error   = TMath::Sqrt(2.0*2.0+1.0*1.0);
+                        error   = TMath::Sqrt(2.0*2.0+0.1*0.1);
                     } else if (additionalNameOutput.CompareTo("EGA")==0){
-                        error   = TMath::Sqrt(2.2*2.2+2.0*2.0+1.0*1.0);
+                        error   = TMath::Sqrt(2.2*2.2+2.0*2.0+0.1*0.1);
                     }
                     if (meson.CompareTo("Pi0EtaBinning") == 0){
                         error   = 0.;

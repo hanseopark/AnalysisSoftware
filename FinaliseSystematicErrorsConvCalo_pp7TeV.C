@@ -641,7 +641,7 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
             // manual smoothing for PileUp uncertainties - variation 16
             if (nameCutVariationSC[i].CompareTo("PileUp") == 0){
                 for (Int_t k = 0; k < nPtBins; k++){
-                    Double_t error              = 1.;                //1% error from pileUp: with pileUp+SPDtrackCluster cut and without
+                    Double_t error              = 0.1;                //0.1% error from pileUp: with pileUp+SPDtrackCluster cut and without
                     if (meson.CompareTo("Pi0EtaBinning") == 0){
                         error   = 0.;
                     }
