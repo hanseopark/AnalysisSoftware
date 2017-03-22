@@ -824,6 +824,7 @@ void ProduceTheoryGraphsPP(){
     TGraph * graphInvCrossSecCGC7000GeV_mvgamma = ScaleGraph(graphInvYieldCGC7000GeV_mvgamma,(xSection7000GeVINEL*recalcBarn));
 
     // DSS14
+    // Stratmann
     Double_t       ptNLODSS14Pi07000GeV[100];
     Double_t       ptErrNLODSS14Pi07000GeV[100];
     Double_t       muHalfDSS14Pi07000GeV[100];
@@ -1160,9 +1161,7 @@ void ProduceTheoryGraphsPP(){
         graphNLOCalcEtaToPi02760GeV->Print();
         // pi0 Stratmann PDF: CT10, FF: DSS14
         graphNLOCalcDSS14InvSecPi02760GeV->Write("graphNLOCalcDSS14InvCrossSec2760GeV", TObject::kOverwrite);
-        graphNLOCalcDSS14InvSecPi07000GeV->Write("graphNLOCalcDSS14InvCrossSec7000GeV", TObject::kOverwrite);
         graphNLOCalcDSS14InvYieldPi02760GeV->Write("graphNLOCalcDSS14InvYield2760GeV", TObject::kOverwrite);
-        graphNLOCalcDSS14InvYieldPi07000GeV->Write("graphNLOCalcDSS14InvYield7000GeV", TObject::kOverwrite);
         // pi0 CGC calc
         graphInvYieldCGC2760GeV->Write("graphNLOCalcCGCInvYield2760GeV", TObject::kOverwrite);
         graphInvCrossSecCGC2760GeV->Write("graphNLOCalcCGCInvCrossSec2760GeV", TObject::kOverwrite);
@@ -1212,7 +1211,6 @@ void ProduceTheoryGraphsPP(){
         histoEtaPythia8MonashInvSec5023GeV->Write("histoInvSecPythia8Monash2013Eta5023GeV", TObject::kOverwrite);
         histoEtaToPi0RatioPythia8Monash5023GeV->Write("histoEtaToPi0RatioPythia8Monash5023GeV", TObject::kOverwrite);
 
-
         //***********************************************************************
         // write  calculations for 7TeV
         //***********************************************************************
@@ -1239,6 +1237,9 @@ void ProduceTheoryGraphsPP(){
         graphEtaToPi0NLOMuHalf7TeV->Write("graphNLOCalcEtaOverPi0MuHalf7000GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuOne7TeV->Write("graphNLOCalcEtaOverPi0MuOne7000GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuTwo7TeV->Write("graphNLOCalcEtaOverPi0MuTwo7000GeV", TObject::kOverwrite);
+        // pi0 Stratmann FF:DSS14
+        graphNLOCalcDSS14InvSecPi07000GeV->Write("graphNLOCalcDSS14InvCrossSec7000GeV", TObject::kOverwrite);
+        graphNLOCalcDSS14InvYieldPi07000GeV->Write("graphNLOCalcDSS14InvYield7000GeV", TObject::kOverwrite);
         // pi0 CGC calc
         graphInvYieldCGC7000GeV->Write("graphNLOCalcCGCInvYield7000GeV", TObject::kOverwrite);
         graphInvCrossSecCGC7000GeV->Write("graphNLOCalcCGCInvCrossSec7000GeV", TObject::kOverwrite);
