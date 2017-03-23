@@ -645,6 +645,14 @@ function GiveBinning900GeV()
         echo "11 Bins --> Max p_T = 4 GeV ...";
         correctPi0=1
         BinsPtPi0=11
+    elif [ $answer = 9 ]; then
+        echo "9 Bins --> Max p_T = 4 GeV ...";
+        correctPi0=1
+        BinsPtPi0=9
+    elif [ $answer = 8 ]; then
+        echo "8 Bins --> Max p_T = 4 GeV ...";
+        correctPi0=1
+        BinsPtPi0=8
     else
         echo "Pi0 Binniing was not set correctly. Please try again.";
     fi

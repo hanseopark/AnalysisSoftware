@@ -34,9 +34,26 @@ Double_t fBinsPi0900GeVPt[12]                   = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2
                                                     3.5, 4.5};
 Int_t fBinsPi0900GeVPtRebin[11]                 = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 4,
                                                     4};
+
+Double_t fBinsPi0900GeVPCMEMCPt[12]             = { 0.0, 0.8, 1.2, 1.4, 1.6, 2.0, 2.5, 3.0, 4.0, 6.0,
+                                                    8.0, 1.0};
+Int_t fBinsPi0900GeVPCMEMCPtRebin[11]           = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                    2};
+
+Double_t fBinsPi0900GeVEMCPt[12]                = { 0.0, 1.2, 1.6, 2.0, 2.5, 3.0, 4.0, 5.0, 7.0,
+                                                    10.0, 16.0};
+Int_t fBinsPi0900GeVEMCPtRebin[11]              = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                    2};
+
 Double_t fBinsEta900GeVPt[4]                    =  {0., 0.9, 1.8, 3.0};
-Int_t fBinsEta900GeVPtRebin[4]                  =  {8, 5, 5};
-Int_t fBinsPi0EtaBinning900GeVPtRebin[4]        =  {8, 4, 4};
+Int_t fBinsEta900GeVPtRebin[3]                  =  {8, 5, 5};
+Int_t fBinsPi0EtaBinning900GeVPtRebin[3]        =  {8, 4, 4};
+
+Double_t fBinsEta900GeVPCMEMCPt[4]              =  {0., 0.9, 1.8, 3.0};
+Int_t fBinsEta900GeVPCMEMCPtRebin[3]            =  {8, 5, 5};
+
+Double_t fBinsEta900GeVEMCPt[4]                 =  {0., 0.9, 1.8, 3.0};
+Int_t fBinsEta900GeVEMCPtRebin[3]               =  {8, 5, 5};
 
 Double_t fBinsDirGamma900GeVPt[11]              = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 2.0, 2.5,
                                                     3.5, 4.5};
@@ -767,6 +784,10 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
         if (energy.CompareTo("900GeV") == 0) {
             if (mode == 1)              // PCM-Dalitz
                 return 4;
+            else if (mode == 2)
+                return 5;
+            else if (mode == 4)
+                return 5;
             else
                 return 5;
         } else if (energy.CompareTo("2.76TeV") == 0) {
@@ -1240,7 +1261,7 @@ void InitializeClusterBinning (TString energy, Int_t modi ){
       for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
         fBinsClusterPt[iPt] = fBinsCluster2760GeVPt[iPt];
       }
-    } else if( energy.CompareTo("7TeV") == 0){
+    } else if( energy.CompareTo("7TeV") == 0 || energy.CompareTo("900GeV") == 0){
       fNBinsClusterPt       = fNBinsCluster8TeVPt;
       for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
         fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
@@ -1270,7 +1291,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
       for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
         fBinsClusterPt[iPt] = fBinsCluster2760GeVPt[iPt];
       }
-    } else if( energy.CompareTo("7TeV") == 0){
+    } else if( energy.CompareTo("7TeV") == 0 || energy.CompareTo("900GeV") == 0){
       fNBinsClusterPt       = fNBinsCluster8TeVPt;
       for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
         fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
@@ -1332,14 +1353,30 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                     fColumn     = 3;
                     fRow        = 2;
                 }
+                if (fNBinsPt - fStartPtBin < 9){
+                    fColumn     = 3;
+                    fRow        = 3;
+                }
+
+
                 if (fNBinsPt > 11) {
                     cout << "You have chosen to have more than 11 bins, this is not possible, it will be reduced to 11" << endl;
                     fNBinsPt    = 11;
                 }
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                  if(modi != 2 && modi !=4){
                     fBinsPt[i]  = fBinsPi0900GeVPt[i];
                     if (i < fNBinsPt+1)
                         fNRebin[i] = fBinsPi0900GeVPtRebin[i];
+                  } else if(modi == 2){
+                    fBinsPt[i]  = fBinsPi0900GeVPCMEMCPt[i];
+                    if (i < fNBinsPt+1)
+                        fNRebin[i] = fBinsPi0900GeVPCMEMCPtRebin[i];
+                  } else if(modi == 4){
+                    fBinsPt[i]  = fBinsPi0900GeVEMCPt[i];
+                    if (i < fNBinsPt+1)
+                        fNRebin[i] = fBinsPi0900GeVEMCPtRebin[i];
+                  }
                 }
                 nIterBGFit      = 11;
             }
