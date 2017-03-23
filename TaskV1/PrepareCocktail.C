@@ -496,6 +496,41 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     if (ptPlotMin == 0 || ptPlotMin < 3e-1)
         ptPlotMin = 3e-1;
 
+    //***************************** Sanity check ********************************************************************
+    TH1D*   histoGammaResummedPt                                = (TH1D*)histoGammaPt[0]->Clone("histoGammaResummedPt");
+    histoGammaResummedPt->Sumw2();
+    TH1D*   histoGammaResummedPtOrBin                           = (TH1D*)histoGammaPtOrBin[0]->Clone("histoGammaResummedPtOrBin");
+    histoGammaResummedPtOrBin->Sumw2();
+    for (Int_t i=1; i<nMotherParticles; i++) {
+        if (histoGammaPt[i])        histoGammaResummedPt->Add(      histoGammaPt[i]);
+        if (histoGammaPtOrBin[i])   histoGammaResummedPtOrBin->Add( histoGammaPtOrBin[i]);
+    }
+
+    TH1D*   differenceGammaSumPt                                = (TH1D*)histoGammaSumPt->Clone("differenceGammaSumPt");
+    differenceGammaSumPt->Sumw2();
+    differenceGammaSumPt->Add(histoGammaResummedPt, -1);
+    TH1D*   differenceGammaSumPtOrBin                           = (TH1D*)histoGammaSumPtOrBin->Clone("differenceGammaSumPtOrBin");
+    differenceGammaSumPtOrBin->Sumw2();
+    differenceGammaSumPtOrBin->Add(histoGammaResummedPtOrBin, -1);
+
+    Bool_t  isSane                                              = kTRUE;
+    for (Int_t i=1; i<differenceGammaSumPt->GetNbinsX()+1; i++) {
+        if ( !((0 <= (differenceGammaSumPt->GetBinContent(i) + differenceGammaSumPt->GetBinError(i))) && (0 >= (differenceGammaSumPt->GetBinContent(i) - differenceGammaSumPt->GetBinError(i)))) ) {
+            cout << "WARNING: " << differenceGammaSumPt->GetName() << " at p_T[" << i << "] = " << differenceGammaSumPt->GetBinCenter(i) << " GeV/c is " << differenceGammaSumPt->GetBinContent(i) << " +/- " << differenceGammaSumPt->GetBinError(i) << endl;
+            isSane                                              = kFALSE;
+        }
+    }
+    for (Int_t i=1; i<differenceGammaSumPtOrBin->GetNbinsX()+1; i++) {
+        if ( !((0 <= (differenceGammaSumPtOrBin->GetBinContent(i) + differenceGammaSumPtOrBin->GetBinError(i))) && (0 >= (differenceGammaSumPtOrBin->GetBinContent(i) - differenceGammaSumPtOrBin->GetBinError(i)))) ) {
+            cout << "WARNING: " << differenceGammaSumPtOrBin->GetName() << " at p_T[" << i << "] = " << differenceGammaSumPtOrBin->GetBinCenter(i) << " GeV/c is " << differenceGammaSumPtOrBin->GetBinContent(i) << " +/- " << differenceGammaSumPtOrBin->GetBinError(i) << endl;
+            isSane                                              = kFALSE;
+        }
+    }
+
+    if (!isSane) {
+        cout << "ERROR: summed contributions to cocktail are not equal to the cocktail, check the normalizations! Plots are produced but histograms are not written!" << endl;
+    }
+
     TH1D* dummyHist                                             = NULL;
     //***************************** Plot cocktail mothers (pt) ******************************************************
     TCanvas *canvasMothers                                      = new TCanvas("canvasMothers","",1100,1200);
@@ -1084,10 +1119,16 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         delete canvasPi0;
     }
     delete dummyHist;
-  
+
     //***************************** Save histograms *****************************************************************
-    SaveHistos();
-    CreateBRTableLatex();
+    if (isSane) {
+        SaveHistos();
+        CreateBRTableLatex();
+    } else {
+        TString nameOutput                                      = Form("%s/%s/GammaCocktail%s_%.2f_%s.root", fCutSelection.Data(), fEnergyFlag.Data(), fPeriodFlag.Data(), fRapidity, fCutSelection.Data());
+        cout << "ERROR: Possible problem with cocktail normalization, cocktail unequal to summed contributions. If " << nameOutput.Data() << " was already created it will be deleated!" << endl;
+        gSystem->Exec("rm "+nameOutput);
+    }
 
     //***************************** Delete objects ******************************************************************
     DeleteObjects();
