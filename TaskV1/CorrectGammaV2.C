@@ -2378,7 +2378,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     if(hasCocktailInput){
         TH1D* histoRatioSecondariesCocktailMC_Raw_Pt[3]     = {NULL, NULL, NULL};
         TCanvas *canvasSecondaryComparison                  = GetAndSetCanvas("canvasSecondaryComparison");
-        DrawGammaCanvasSettings( canvasDecayGammaSpecMC, 0.07, 0.02, 0.02, 0.085);
+        DrawGammaCanvasSettings( canvasSecondaryComparison, 0.07, 0.02, 0.02, 0.085);
         TLegend* legendCompareSecCocktailMC                 = GetAndSetLegend2(0.75, 0.935-0.035*1.1*3, 0.95, 0.935, 0.035, 1, "", 42, 0.15); 
         legendCompareSecCocktailMC->SetBorderSize(0);
         
