@@ -1005,7 +1005,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //****************************************************************************************** 
     TH1D* histoGammaSecGammaFromX_Cocktail_Raw_Pt[3]                = { NULL, NULL, NULL };
     TH1D* histoGammaSecGammaFromX_Cocktail_Raw_PtOrBin[3]           = { NULL, NULL, NULL };
-    Double_t scaleCocktailDecayLength[3]                            = {1.0, 1.0, 0.5/15.34};
+//     Double_t scaleCocktailDecayLength[3]                            = {1.0, 1.0, 0.5/15.34};
     if ( hasCocktailInput && (isPCM || isCalo) ) {
         cout << "calculating raw secondary spectra from cocktail" << endl;
         // K0s: clone cocktail spectra
@@ -1064,12 +1064,12 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                                                                                                         histoGammaTrueSecondaryFromX_MCPt_recPtOrBin[k], nEvt, kFALSE);
             }
         }
-        if (hasCocktailInput){
-            for (Int_t k = 0; k<3; k++){
-                histoGammaSecGammaFromX_Cocktail_Raw_Pt[k]->Scale(scaleCocktailDecayLength[k]);
-                histoGammaSecGammaFromX_Cocktail_Raw_PtOrBin[k]->Scale(scaleCocktailDecayLength[k]);
-            }    
-        }        
+//         if (hasCocktailInput){
+//             for (Int_t k = 0; k<3; k++){
+//                 histoGammaSecGammaFromX_Cocktail_Raw_Pt[k]->Scale(scaleCocktailDecayLength[k]);
+//                 histoGammaSecGammaFromX_Cocktail_Raw_PtOrBin[k]->Scale(scaleCocktailDecayLength[k]);
+//             }    
+//         }        
     }
 
     //****************************************************************************************** 
