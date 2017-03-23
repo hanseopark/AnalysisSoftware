@@ -881,9 +881,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                 DrawGammaSetMarker(histoGammaSecFromXRecoEff_RecPtOrBin[k], 20, 1, kRed+2, kRed+2);
                 histoGammaSecFromXRecoEff_RecPtOrBin[k]->Draw("same");
                 
-                TLegend* legendSecEffFits = GetAndSetLegend2(0.15,0.93-7*1.1*0.035, 0.4,0.93, 0.035, 1, cent, 42, 0.1);
-                legendSecEffFits->AddEntry(histoGammaPrimaryRecoEff_Pt,"primary reco. eff.","lp");
-                legendSecEffFits->AddEntry(histoGammaPrimaryRecoEff_Pt_OrBin,"rebin primary reco. eff.","lp");
+                TLegend* legendSecEffFits = GetAndSetLegend2(0.15,0.93-4*1.1*0.035, 0.7,0.93, 0.035, 2, cent, 42, 0.1);
+                legendSecEffFits->AddEntry(histoGammaPrimaryRecoEff_Pt_OrBin,"primary reco. eff.","lp");
+                legendSecEffFits->AddEntry(histoGammaPrimaryRecoEff_Pt,"rebin primary reco. eff.","lp");
                 legendSecEffFits->AddEntry(histoGammaSecFromXRecoEff_RecPtOrBin_Unscaled[k], Form("%s reco. eff",nameLabelSecondaries[k].Data()),"lp");
                 legendSecEffFits->AddEntry(histoGammaSecFromXRecoEff_RecPt_Unscaled[k], Form("rebin %s reco. eff",nameLabelSecondaries[k].Data()),"lp");
                 legendSecEffFits->AddEntry(histoGammaSecFromXRecoEff_RecPt[k], Form("new %s reco. eff",nameLabelSecondaries[k].Data()),"lp");
@@ -966,8 +966,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                 histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->Draw("same");
                 
                 TLegend* legendSecConvProbFits = GetAndSetLegend2(0.15,0.93-4*1.1*0.035, 0.7,0.93, 0.035, 2, cent, 42, 0.1);
-                legendSecConvProbFits->AddEntry(histoGammaConvProb_MCPt,"primary","lp");
-                legendSecConvProbFits->AddEntry(histoGammaConvProb_MCPt_OrBin,"rebin primary","lp");
+                legendSecConvProbFits->AddEntry(histoGammaConvProb_MCPt_OrBin,"primary","lp");
+                legendSecConvProbFits->AddEntry(histoGammaConvProb_MCPt,"rebin primary","lp");
                 legendSecConvProbFits->AddEntry(histoGammaSecondaryFromXConvProb_MCPtOrBin_Unscaled[k], Form("from %s ",nameLabelSecondaries[k].Data()),"lp");
                 legendSecConvProbFits->AddEntry(histoGammaSecondaryFromXConvProb_MCPt_Unscaled[k], Form("rebin from %s",nameLabelSecondaries[k].Data()),"lp");
                 legendSecConvProbFits->AddEntry(histoGammaSecondaryFromXConvProb_MCPtOrBin[k], Form("new from  %s reco. eff",nameLabelSecondaries[k].Data()),"lp");
@@ -1312,6 +1312,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             if (histoMCrecGamma_PileUp_Pt)legendPileUpCorrFactor->AddEntry(histoPileUpCorrectionFactorMC,"Correction Factor MC","lp");
             legendPileUpCorrFactor->Draw();
         
+            PutProcessLabelAndEnergyOnPlot( 0.935, 0.25, 0.035, cent, detectionProcess, "", 42, 0.03,"",1,1.25,31);
+            
         canvasPileUpCorrFactor->SaveAs(Form("%s/%s_PileUpCorrFactor_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
         delete canvasPileUpCorrFactor;
         
@@ -1325,7 +1327,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             DrawGammaLines(0., histoPileUpCorrectionFactorOrBin->GetXaxis()->GetBinUpEdge(histoPileUpCorrectionFactorOrBin->GetNbinsX()),1.0, 1.0, 1, kGray+2, 2);
             histoPileUpCorrectionFactorOrBin->DrawCopy("same");
 
-            PutProcessLabelAndEnergyOnPlot( 0.15, 0.25, 0.035, cent, detectionProcess, "", 42, 0.03);
+            PutProcessLabelAndEnergyOnPlot( 0.935, 0.25, 0.035, cent, detectionProcess, "", 42, 0.03,"",1,1.25,31);
             
             canvasPileUpCorrFactor2->SaveAs(Form("%s/%s_%s_PileUpCorrFactor_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
             delete canvasPileUpCorrFactor2;
@@ -1347,7 +1349,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             DrawGammaLines(0., maxPtGamma,1.0, 1.0, 1, kGray+2, 2);
             histoPileUpCorrectionFactorTemp->DrawCopy("same");
             
-            PutProcessLabelAndEnergyOnPlot( 0.15, 0.25, 0.035, cent, detectionProcess, "", 42, 0.03);
+            PutProcessLabelAndEnergyOnPlot( 0.935, 0.25, 0.035, cent, detectionProcess, "", 42, 0.03,"",1,1.25,31);
             
             canvasPileUpCorrFactor3->SaveAs(Form("%s/%s_%s_PileUpCorrFactorRebinned_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
             delete canvasPileUpCorrFactor3;

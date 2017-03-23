@@ -99,7 +99,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         isCalo                                                  = 1;
 
     //***************************** Calculate scaling factor ********************************************************
-    additionalScalingFactor                                     = ReturnCocktailNormalization(fEnergyFlag, fEventCutSelection);
+    eventNormScalingFactor                                      = ReturnCocktailNormalization(fEnergyFlag, fEventCutSelection);
     
     //**************************** Determine Centrality *************************************************************
     TString centrality                                          = GetCentralityString(fEventCutSelection);
@@ -275,11 +275,14 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     if (histoGammaSumPtY) {
         histoGammaSumPtY->SetName("Gamma_Pt_Y_OrBin");
         histoGammaSumPtY->Sumw2();
+        histoGammaSumPtY->Scale(eventNormScalingFactor);
+        histoGammaSumPtPhi->Sumw2();
+        histoGammaSumPtPhi->Scale(eventNormScalingFactor);
     } else {
         cout << "ERROR: Gamma histo not found!" << endl;
         return;
     }
-
+    
     histoDecayChannels                                          = new TH1F*[nMotherParticles];
     histoGammaPtY                                               = new TH2F*[nMotherParticles];
     histoGammaPtPhi                                             = new TH2F*[nMotherParticles];
@@ -292,22 +295,22 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
             histoGammaPtY[i]                                    = (TH2F*)histoListCocktail->FindObject(Form("Pt_Y_Gamma_From_%s", motherParticles[i].Data()));
             histoGammaPtY[i]->SetName(Form("Gamma_From_%s_Pt_Y_OrBin", motherParticles[i].Data()));
             histoGammaPtY[i]->Sumw2();
-            histoGammaPtY[i]->Scale(additionalScalingFactor);
+            histoGammaPtY[i]->Scale(eventNormScalingFactor);
             
             histoGammaPtPhi[i]                                  = (TH2F*)histoListCocktail->FindObject(Form("Pt_Phi_Gamma_From_%s", motherParticles[i].Data()));
             histoGammaPtPhi[i]->SetName(Form("Gamma_From_%s_Pt_Phi_OrBin", motherParticles[i].Data()));
             histoGammaPtPhi[i]->Sumw2();
-            histoGammaPtPhi[i]->Scale(additionalScalingFactor);
+            histoGammaPtPhi[i]->Scale(eventNormScalingFactor);
             
             histoGammaMotherPtY[i]                              = (TH2F*)histoListCocktail->FindObject(Form("Pt_Y_%s", motherParticles[i].Data()));
             histoGammaMotherPtY[i]->SetName(Form("%s_Pt_Y_OrBin", motherParticles[i].Data()));
             histoGammaMotherPtY[i]->Sumw2();
-            histoGammaMotherPtY[i]->Scale(additionalScalingFactor);
+            histoGammaMotherPtY[i]->Scale(eventNormScalingFactor);
             
             histoGammaMotherPtPhi[i]                            = (TH2F*)histoListCocktail->FindObject(Form("Pt_Phi_%s", motherParticles[i].Data()));
             histoGammaMotherPtPhi[i]->SetName(Form("%s_Pt_Phi_OrBin", motherParticles[i].Data()));
             histoGammaMotherPtPhi[i]->Sumw2();
-            histoGammaMotherPtPhi[i]->Scale(additionalScalingFactor);
+            histoGammaMotherPtPhi[i]->Scale(eventNormScalingFactor);
         } else {
             histoDecayChannels[i]                               = NULL;
             histoGammaPtY[i]                                    = NULL;

@@ -30,7 +30,7 @@ TString     decayChannelsLatex[nMotherParticles][18];
 Double_t    decayChannelsBR[nMotherParticles][18];
 
 // additional scaling factor (param per inel. event vs. MB event)
-Double_t    additionalScalingFactor                     = 1.;
+Double_t    eventNormScalingFactor                      = 1.;
 
 //************************** cocktail settings ********************************************
 Double_t ptGenMin                                       = 0;

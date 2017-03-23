@@ -34,7 +34,7 @@ TString     decayChannelsLatex[nMotherParticles][18];
 Double_t    decayChannelsBR[nMotherParticles][18];
 
 // additional scaling factor (param per inel. event vs. MB event)
-Double_t    additionalScalingFactor                         = 1.;
+Double_t    eventNormScalingFactor                          = 1.;
 
 // this switch is to check the scaling factors by producing the gamma pt spec also from the gamma pt vs phi dist
 Bool_t      doGammaPtOrBinFromPtPhi                         = kTRUE;
