@@ -1,1 +1,1 @@
-/home/fbock/Photon/Software/PCGGIT/AnalysisSoftware/DownloadAndDataPrep/runlists/runNumbersLHC14j4d.txt
+runNumbersLHC10d_pass4.txt
