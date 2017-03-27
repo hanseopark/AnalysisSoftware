@@ -278,7 +278,7 @@ TF1* MtScaledParam(TF1* param, Int_t particlePDG, Int_t particleBasePDG, Double_
     //cout << "input parametrization : " << paramPi0Formula.Data() << endl;
 
     // check for cut off when m(particleBasePDG) > m(particlePDG)
-    if ( (xMin*xMin + mass*mass - massBase*massBase) < 0 ) xMin = TMath::Sqrt(massBase*massBase - mass*mass);
+    if ( (xMin*xMin + mass*mass - massBase*massBase) < 0 ) xMin = TMath::Sqrt(xMin*xMin + massBase*massBase - mass*mass);
 
     TString mT                      = Form("TMath::Sqrt(x*x + %f * %f - %f * %f)",mass,mass,massBase,massBase);
     TString pTovermT                = Form("x/TMath::Sqrt(x*x + %f * %f - %f * %f)",mass,mass,massBase,massBase);
