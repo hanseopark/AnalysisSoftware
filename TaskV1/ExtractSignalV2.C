@@ -5586,7 +5586,13 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
             if (fHistoYieldExternSecInput[j])        fHistoYieldExternSecInput[j]->Write();
             if (fHistoYieldExternSecInputReb[j])     fHistoYieldExternSecInputReb[j]->Write();
         }
-    }    
+
+        cout << "Writing input for pi0 resonance feed down correction" << endl;
+        for (Int_t j = 0; j < 8; j++){
+            if (fHistoYieldExternResonanceFeedDownInput[j])        fHistoYieldExternResonanceFeedDownInput[j]->Write();
+            if (fHistoYieldExternResonanceFeedDownInputReb[j])     fHistoYieldExternResonanceFeedDownInputReb[j]->Write();
+        }
+    }
     cout << "End writing Uncorrected File" << endl;
     
     fOutput1->Write();
