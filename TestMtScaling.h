@@ -58,6 +58,8 @@ TString     particleNameLatex[nParticles]                                   = {"
 Int_t       particlePDGCode[nParticles]                                     = {111, 221, 331, 223, 211, 321, 333, 113, 213, 310, 443};
 Double_t    particleMtScalingFactor[nParticles]                             = {1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.};     // for scaling from pi0
 Double_t    particleMtScalingFactorErr[nParticles]                          = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};     // for scaling from pi0
+Double_t    particleMtScalingFactorResFeedDownCorr[nParticles]              = {1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.};     // for scaling from pi0 (res. feed down corrected)
+Double_t    particleMtScalingFactorErrResFeedDownCorr[nParticles]           = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};     // for scaling from pi0 (res. feed down corrected)
 Double_t    particleMtScalingFactorPhi[nParticles]                          = {1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.};     // for scaling from phi
 Double_t    particleMtScalingFactorErrPhi[nParticles]                       = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};     // for scaling from phi
 
@@ -76,15 +78,16 @@ TH1D*   etaToPi0Ratio                                                       = NU
 TH1D*   etaToPi0RatioWOResFeedDown                                          = NULL;
 
 TF1*    constantFitPhiToPi0Ratio                                            = NULL;
+TF1*    constantFitEtaToPi0WOResFeedDownRatio                               = NULL;
+TF1*    constantFitParticleRatio[nParticles*nParticles]                     = {NULL};
 
 TH1D*   particleYield[nParticles]                                           = {NULL};
 TH1D*   particleRatio[nParticles*nParticles]                                = {NULL};
 
 TH1D*   mtScalingFactorCocktail                                             = NULL;
 TH1D*   mtScalingFactorRecalc                                               = NULL;
+TH1D*   mtScalingFactorResFeedDownCorr                                      = NULL;
 TH1D*   mtScalingFactorPhi                                                  = NULL;
-
-TF1*    constantFitParticleRatio[nParticles*nParticles]                     = {NULL};
 
 TF1*    yieldParametrizations[nParticles]                                   = {NULL};
 TF1*    yieldParametrizationPi0WOResFeedDown                                = NULL;
@@ -324,39 +327,39 @@ void PlotYield( TH1D*   yield,
     pad->SetLogx();
 
     SetHistogramm(  yield, xTitle, yTitle, yMin, yMax);
-    DrawGammaSetMarker(yield, 24, 1.0, kBlack, kBlack);
+    DrawGammaSetMarker(yield, 24, 2.0, kBlack, kBlack);
     yield->Draw("e1");
     
     if (paramYield) {
         nParams++;
         paramYield->SetLineColor(kRed);
-        paramYield->SetLineWidth(1);
+        paramYield->SetLineWidth(4.0);
         paramYield->Draw("e1,same");
     }
     
     if (paramYieldMt) {
         nParams++;
         paramYieldMt->SetLineColor(kBlue);
-        paramYieldMt->SetLineWidth(1);
+        paramYieldMt->SetLineWidth(4.0);
         paramYieldMt->Draw("e1,same");
     }
     
     if (paramYieldMtFeedDownCorr) {
         nParams++;
         paramYieldMtFeedDownCorr->SetLineColor(kOrange-3);
-        paramYieldMtFeedDownCorr->SetLineWidth(1);
+        paramYieldMtFeedDownCorr->SetLineWidth(4.0);
         paramYieldMtFeedDownCorr->Draw("e1,same");
     }
     
     if (paramYieldMtPhi) {
         nParams++;
         paramYieldMtPhi->SetLineColor(kAzure+1);
-        paramYieldMtPhi->SetLineWidth(1);
+        paramYieldMtPhi->SetLineWidth(4.0);
         paramYieldMtPhi->Draw("e1,same");
     }
 
     // legend
-    TLegend* legend                         = GetAndSetLegend(0.6, 0.65, nParams+1, 1, Form("%s %s, %s", centralityString.Data(), collisionSystem.Data(), energyString.Data()));;
+    TLegend* legend                         = GetAndSetLegend(0.6, 0.65, nParams+1, 1, Form("%s %s", centralityString.Data(), collisionSystem.Data()));
     legend->AddEntry(yield, Form("%s yield", particleNameLatex[nParticle].Data()), "p");
     if (paramYield)                 legend->AddEntry(paramYield,                "yield param.", "l");
     if (paramYieldMt)               legend->AddEntry(paramYieldMt,              "m_{T} scaled #pi^{0}", "l");
@@ -370,33 +373,35 @@ void PlotYield( TH1D*   yield,
 
     if (ratioToParamYield) {
         SetStyleHistoTH1ForGraphs(ratioToParamYield, "#it{p}_{T} (GeV/#it{c})","#frac{data}{fit}", 0.14, 0.15, 0.12, 0.10,  0.85, 0.4, 510, 505);
-        DrawGammaSetMarker(ratioToParamYield, 20, 1.0, kRed, kRed);
-        ratioToParamYield->GetYaxis()->SetRangeUser(0.5,1.5);
+        DrawGammaSetMarker(ratioToParamYield, 20, 2.0, kRed, kRed);
+        ratioToParamYield->GetYaxis()->SetRangeUser(0.4,1.6);
         ratioToParamYield->Draw("e1,same");
     }
     
     if (ratioToParamYieldMt) {
         SetStyleHistoTH1ForGraphs(ratioToParamYieldMt, "#it{p}_{T} (GeV/#it{c})","#frac{data}{fit}", 0.14, 0.15, 0.12, 0.10,  0.85, 0.4, 510, 505);
-        DrawGammaSetMarker(ratioToParamYieldMt, 20, 1.0, kBlue, kBlue);
-        ratioToParamYieldMt->GetYaxis()->SetRangeUser(0.5,1.5);
+        DrawGammaSetMarker(ratioToParamYieldMt, 20, 2.0, kBlue, kBlue);
+        ratioToParamYieldMt->GetYaxis()->SetRangeUser(0.4,1.6);
         ratioToParamYieldMt->Draw("e1,same");
     }
     
     if (ratioToParamYieldMtFeedDownCorr) {
         SetStyleHistoTH1ForGraphs(ratioToParamYieldMtFeedDownCorr, "#it{p}_{T} (GeV/#it{c})","#frac{data}{fit}", 0.14, 0.15, 0.12, 0.10,  0.85, 0.4, 510, 505);
-        DrawGammaSetMarker(ratioToParamYieldMtFeedDownCorr, 20, 1.0, kOrange-3, kOrange-3);
-        ratioToParamYieldMtFeedDownCorr->GetYaxis()->SetRangeUser(0.5,1.5);
+        DrawGammaSetMarker(ratioToParamYieldMtFeedDownCorr, 20, 2.0, kOrange-3, kOrange-3);
+        ratioToParamYieldMtFeedDownCorr->GetYaxis()->SetRangeUser(0.4,1.6);
         ratioToParamYieldMtFeedDownCorr->Draw("e1,same");
     }
     
     if (ratioToParamYieldMtPhi) {
         SetStyleHistoTH1ForGraphs(ratioToParamYieldMtPhi, "#it{p}_{T} (GeV/#it{c})","#frac{data}{fit}", 0.14, 0.15, 0.12, 0.10,  0.85, 0.4, 510, 505);
-        DrawGammaSetMarker(ratioToParamYieldMtPhi, 20, 1.0, kAzure+1, kAzure+1);
-        ratioToParamYieldMtPhi->GetYaxis()->SetRangeUser(0.5,1.5);
+        DrawGammaSetMarker(ratioToParamYieldMtPhi, 20, 2.0, kAzure+1, kAzure+1);
+        ratioToParamYieldMtPhi->GetYaxis()->SetRangeUser(0.4,1.6);
         ratioToParamYieldMtPhi->Draw("e1,same");
     }
 
-    DrawGammaLines(xMin, xMax, 1, 1, 1, kGray+2, 2);
+    DrawGammaLines(xMin, xMax, 1.0, 1.0, 2.0, kGray+2, 2);
+    DrawGammaLines(xMin, xMax, 1.2, 1.2, 2.0, kGray+2, 8);
+    DrawGammaLines(xMin, xMax, 0.8, 0.8, 2.0, kGray+2, 8);
 
     canvas->SaveAs(Form("%s/%s.%s", outputDir.Data(), namePlot.Data(), suffix.Data()));
 }

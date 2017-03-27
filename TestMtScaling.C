@@ -360,7 +360,7 @@ void TestMtScaling(     TString     fileNamePi0                 = "",
     
 
     //  ******************************************************************************
-    //  ******     calculate mt scaling factors                                  *****
+    //  ******     calculate mt scaling factors from particle ratios             *****
     //  ******************************************************************************
     for (Int_t i = 0; i < nParticles*nParticles; i++) {
         constantFitParticleRatio[i]                                         = NULL;
@@ -415,6 +415,33 @@ void TestMtScaling(     TString     fileNamePi0                 = "",
     
     // fill calculated mt scaling factors in histo
     mtScalingFactorRecalc                                                   = FillMtScalingFactorsHisto("mtScalingFactors_Recalc", particleMtScalingFactor, particleMtScalingFactorErr);
+
+    //  ******************************************************************************
+    //  ******     calculate mt scaling factors (res. feed down corr. pi0)       *****
+    //  ******************************************************************************
+    if (etaToPi0RatioWOResFeedDown) {
+
+        Double_t constantEtaToPi0WOResFeedDown                              = 0.;
+        Double_t constantEtaToPi0WOResFeedDownErr                           = 0.;
+
+        constantFitEtaToPi0WOResFeedDownRatio                               = FitPlateau(etaToPi0RatioWOResFeedDown);
+        constantFitEtaToPi0WOResFeedDownRatio->SetName("221-111_ratio_resFeedDownCorr_constFit");
+        constantEtaToPi0WOResFeedDown                                       = constantFitEtaToPi0WOResFeedDownRatio->GetParameter(0);
+        constantEtaToPi0WOResFeedDownErr                                    = constantFitEtaToPi0WOResFeedDownRatio->GetParError(0);
+
+        particleMtScalingFactorResFeedDownCorr[1]                           = constantEtaToPi0WOResFeedDown;
+        particleMtScalingFactorErrResFeedDownCorr[1]                        = constantEtaToPi0WOResFeedDownErr;
+
+        for (Int_t i = 2; i < nParticles; i++) {
+            particleMtScalingFactorResFeedDownCorr[i]                       = particleMtScalingFactor[i] * constantEtaToPi0WOResFeedDown / particleMtScalingFactor[1];
+            particleMtScalingFactorErrResFeedDownCorr[i]                    = TMath::Sqrt( TMath::Power(particleMtScalingFactorErr[i]*constantEtaToPi0WOResFeedDown/particleMtScalingFactor[1],2)
+                                                                                          + TMath::Power(particleMtScalingFactor[i]*constantEtaToPi0WOResFeedDownErr/particleMtScalingFactor[1],2)
+                                                                                          + TMath::Power(particleMtScalingFactor[i]*constantEtaToPi0WOResFeedDown*particleMtScalingFactorErr[1]/particleMtScalingFactor[1]/particleMtScalingFactor[1],2));
+        }
+
+        // fill calculated mt scaling factors in histo
+        mtScalingFactorResFeedDownCorr                                      = FillMtScalingFactorsHisto("mtScalingFactors_resFeedDownCorr", particleMtScalingFactorResFeedDownCorr, particleMtScalingFactorErrResFeedDownCorr);
+    }
     
     //  ******************************************************************************
     //  ******     calculate scaling factors for scaling from phi                *****
@@ -479,7 +506,7 @@ void TestMtScaling(     TString     fileNamePi0                 = "",
     if (yieldParametrizations[6]) {
         for (Int_t i = 0; i < nParticles; i++) {
             if (i != 6) {
-                yieldParametrizationsMtScaledPhi[i]                         = MtScaledParam(yieldParametrizations[6], particlePDGCode[i], particlePDGCode[6], particleMtScalingFactorPhi[i], kFALSE, kTRUE);;
+                yieldParametrizationsMtScaledPhi[i]                         = MtScaledParam(yieldParametrizations[6], particlePDGCode[i], particlePDGCode[6], particleMtScalingFactorPhi[i], kFALSE, kTRUE);
                 yieldParametrizationsMtScaledPhi[i]->SetName(Form("%d_yieldParam_mtScaled_fromPhi", particlePDGCode[i]));
             } else
                 yieldParametrizationsMtScaledPhi[i]                         = NULL;
@@ -567,36 +594,39 @@ void TestMtScaling(     TString     fileNamePi0                 = "",
     TFile*  outputFile                                                      = new TFile(nameOutputFile.Data(),"UPDATE");
     cout << "INFO: writing into: " << nameOutputFile << endl;
 
-    if (pi0InvYield)                        pi0InvYield->Write(                         pi0InvYield->GetName(),                         TObject::kOverwrite);
-    if (pi0Yield)                           pi0Yield->Write(                            pi0Yield->GetName(),                            TObject::kOverwrite);
-    if (pi0InvYieldWOResFeedDown)           pi0InvYieldWOResFeedDown->Write(            pi0InvYieldWOResFeedDown->GetName(),            TObject::kOverwrite);
-    if (pi0YieldWOResFeedDown)              pi0YieldWOResFeedDown->Write(               pi0YieldWOResFeedDown->GetName(),               TObject::kOverwrite);
+    if (pi0InvYield)                        pi0InvYield->Write(                             pi0InvYield->GetName(),                             TObject::kOverwrite);
+    if (pi0Yield)                           pi0Yield->Write(                                pi0Yield->GetName(),                                TObject::kOverwrite);
+    if (pi0InvYieldWOResFeedDown)           pi0InvYieldWOResFeedDown->Write(                pi0InvYieldWOResFeedDown->GetName(),                TObject::kOverwrite);
+    if (pi0YieldWOResFeedDown)              pi0YieldWOResFeedDown->Write(                   pi0YieldWOResFeedDown->GetName(),                   TObject::kOverwrite);
     
-    if (pi0EtaBinningInvYield)              pi0EtaBinningInvYield->Write(               pi0EtaBinningInvYield->GetName(),               TObject::kOverwrite);
-    if (pi0EtaBinningYield)                 pi0EtaBinningYield->Write(                  pi0EtaBinningYield->GetName(),                  TObject::kOverwrite);
-    if (pi0EtaBinningInvYieldWOResFeedDown) pi0EtaBinningInvYieldWOResFeedDown->Write(  pi0EtaBinningInvYieldWOResFeedDown->GetName(),  TObject::kOverwrite);
-    if (pi0EtaBinningYieldWOResFeedDown)    pi0EtaBinningYieldWOResFeedDown->Write(     pi0EtaBinningYieldWOResFeedDown->GetName(),     TObject::kOverwrite);
+    if (pi0EtaBinningInvYield)              pi0EtaBinningInvYield->Write(                   pi0EtaBinningInvYield->GetName(),                   TObject::kOverwrite);
+    if (pi0EtaBinningYield)                 pi0EtaBinningYield->Write(                      pi0EtaBinningYield->GetName(),                      TObject::kOverwrite);
+    if (pi0EtaBinningInvYieldWOResFeedDown) pi0EtaBinningInvYieldWOResFeedDown->Write(      pi0EtaBinningInvYieldWOResFeedDown->GetName(),      TObject::kOverwrite);
+    if (pi0EtaBinningYieldWOResFeedDown)    pi0EtaBinningYieldWOResFeedDown->Write(         pi0EtaBinningYieldWOResFeedDown->GetName(),         TObject::kOverwrite);
     
-    if (etaInvYield)                        etaInvYield->Write(                         etaInvYield->GetName(),                         TObject::kOverwrite);
-    if (etaYield)                           etaYield->Write(                            etaYield->GetName(),                            TObject::kOverwrite);
+    if (etaInvYield)                        etaInvYield->Write(                             etaInvYield->GetName(),                             TObject::kOverwrite);
+    if (etaYield)                           etaYield->Write(                                etaYield->GetName(),                                TObject::kOverwrite);
     
-    if (etaToPi0Ratio)                      etaToPi0Ratio->Write(                       etaToPi0Ratio->GetName(),                       TObject::kOverwrite);
-    if (etaToPi0RatioWOResFeedDown)         etaToPi0RatioWOResFeedDown->Write(          etaToPi0RatioWOResFeedDown->GetName(),          TObject::kOverwrite);
+    if (etaToPi0Ratio)                      etaToPi0Ratio->Write(                           etaToPi0Ratio->GetName(),                           TObject::kOverwrite);
+    if (etaToPi0RatioWOResFeedDown)         etaToPi0RatioWOResFeedDown->Write(              etaToPi0RatioWOResFeedDown->GetName(),              TObject::kOverwrite);
 
-    if (constantFitPhiToPi0Ratio)           constantFitPhiToPi0Ratio->Write(            constantFitPhiToPi0Ratio->GetName(),            TObject::kOverwrite);
+    if (constantFitPhiToPi0Ratio)           constantFitPhiToPi0Ratio->Write(                constantFitPhiToPi0Ratio->GetName(),                TObject::kOverwrite);
+    if (constantFitEtaToPi0WOResFeedDownRatio)
+                                            constantFitEtaToPi0WOResFeedDownRatio->Write(   constantFitEtaToPi0WOResFeedDownRatio->GetName(),   TObject::kOverwrite);
     
     for (Int_t i = 0; i < nParticles; i++) {
-        if (particleYield[i])               particleYield[i]->Write(                    particleYield[i]->GetName(),                    TObject::kOverwrite);
+        if (particleYield[i])               particleYield[i]->Write(                        particleYield[i]->GetName(),                        TObject::kOverwrite);
     }
     
     for (Int_t i = 0; i < nParticles*nParticles; i++) {
-        if (particleRatio[i])               particleRatio[i]->Write(                    particleRatio[i]->GetName(),                    TObject::kOverwrite);
-        if (constantFitParticleRatio[i])    constantFitParticleRatio[i]->Write(         constantFitParticleRatio[i]->GetName(),         TObject::kOverwrite);
+        if (particleRatio[i])               particleRatio[i]->Write(                        particleRatio[i]->GetName(),                        TObject::kOverwrite);
+        if (constantFitParticleRatio[i])    constantFitParticleRatio[i]->Write(             constantFitParticleRatio[i]->GetName(),             TObject::kOverwrite);
     }
     
-    if (mtScalingFactorCocktail)            mtScalingFactorCocktail->Write(             mtScalingFactorCocktail->GetName(),             TObject::kOverwrite);
-    if (mtScalingFactorRecalc)              mtScalingFactorRecalc->Write(               mtScalingFactorRecalc->GetName(),               TObject::kOverwrite);
-    if (mtScalingFactorPhi)                 mtScalingFactorPhi->Write(                  mtScalingFactorPhi->GetName(),                  TObject::kOverwrite);
+    if (mtScalingFactorCocktail)            mtScalingFactorCocktail->Write(                 mtScalingFactorCocktail->GetName(),                 TObject::kOverwrite);
+    if (mtScalingFactorRecalc)              mtScalingFactorRecalc->Write(                   mtScalingFactorRecalc->GetName(),                   TObject::kOverwrite);
+    if (mtScalingFactorPhi)                 mtScalingFactorPhi->Write(                      mtScalingFactorPhi->GetName(),                      TObject::kOverwrite);
+    if (mtScalingFactorResFeedDownCorr)     mtScalingFactorResFeedDownCorr->Write(          mtScalingFactorResFeedDownCorr->GetName(),          TObject::kOverwrite);
 
     if (yieldParametrizationPi0WOResFeedDown)
         yieldParametrizationPi0WOResFeedDown->Write(            yieldParametrizationPi0WOResFeedDown->GetName(),                        TObject::kOverwrite);
