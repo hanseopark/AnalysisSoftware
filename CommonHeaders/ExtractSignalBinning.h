@@ -35,25 +35,22 @@ Double_t fBinsPi0900GeVPt[12]                   = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2
 Int_t fBinsPi0900GeVPtRebin[11]                 = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 4,
                                                     4};
 
-Double_t fBinsPi0900GeVPCMEMCPt[12]             = { 0.0, 0.8, 1.2, 1.4, 1.6, 2.0, 2.5, 3.0, 4.0, 6.0,
-                                                    8.0, 1.0};
-Int_t fBinsPi0900GeVPCMEMCPtRebin[11]           = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                    2};
+Double_t fBinsPi0900GeVPCMEMCPt[12]             = { 0.0, 0.8, 1.2, 1.4, 1.6, 2.0, 2.5, 3.0, 4.0, 5.0,
+                                                    7.0, 10.0};
+Int_t fBinsPi0900GeVPCMEMCPtRebin[11]           = { 2, 5, 5, 5, 4, 4, 4, 4, 8, 8,
+                                                    10};
 
 Double_t fBinsPi0900GeVEMCPt[12]                = { 0.0, 1.2, 1.6, 2.0, 2.5, 3.0, 4.0, 5.0, 7.0,
                                                     10.0, 16.0};
-Int_t fBinsPi0900GeVEMCPtRebin[11]              = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+Int_t fBinsPi0900GeVEMCPtRebin[11]              = { 2, 5, 5, 4, 4, 5, 5, 8, 16, 2,
                                                     2};
 
 Double_t fBinsEta900GeVPt[4]                    =  {0., 0.9, 1.8, 3.0};
 Int_t fBinsEta900GeVPtRebin[3]                  =  {8, 5, 5};
 Int_t fBinsPi0EtaBinning900GeVPtRebin[3]        =  {8, 4, 4};
 
-Double_t fBinsEta900GeVPCMEMCPt[4]              =  {0., 0.9, 1.8, 3.0};
-Int_t fBinsEta900GeVPCMEMCPtRebin[3]            =  {8, 5, 5};
-
-Double_t fBinsEta900GeVEMCPt[4]                 =  {0., 0.9, 1.8, 3.0};
-Int_t fBinsEta900GeVEMCPtRebin[3]               =  {8, 5, 5};
+Double_t fBinsEta900GeVPCMEMCPt[6]              =  {0., 0.9, 1.8, 3.0, 5.0, 7.0};
+Int_t fBinsEta900GeVPCMEMCPtRebin[5]            =  {5, 16, 10, 20, 5};
 
 Double_t fBinsDirGamma900GeVPt[11]              = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 2.0, 2.5,
                                                     3.5, 4.5};
@@ -785,9 +782,9 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
             if (mode == 1)              // PCM-Dalitz
                 return 4;
             else if (mode == 2)
-                return 5;
+                return 4;
             else if (mode == 4)
-                return 5;
+                return 4;
             else
                 return 5;
         } else if (energy.CompareTo("2.76TeV") == 0) {
@@ -1044,7 +1041,10 @@ Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t
 	}
     } else if (meson.Contains("Eta")) {
         if (energy.CompareTo("900GeV") == 0) {
-            return 1;
+            if (mode == 2)
+                return 2;
+            else
+                return 1;
         } else if (energy.CompareTo("2.76TeV") == 0) {
             if (mode == 0){             // PCM-PCM
                 return 4;
@@ -2287,14 +2287,37 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
             fColumn             = 2;
             fRow                = 2;
 
-            if (fNBinsPt > 3) {
-                cout << "You have chosen to have more than 3 bins for Eta, this is not possible, it will be reduced to 3" << endl;
-                fNBinsPt        = 3;
+            if(modi == 4) fStartPtBin         = 3;
+
+            if ((fNBinsPt - fStartPtBin) > 3){
+                fColumn     = 3;
+                fRow        = 2;
+            } else if ((fNBinsPt - fStartPtBin) > 5){
+                fColumn     = 3;
+                fRow        = 3;
+            }
+
+            if (modi == 2){
+              if (fNBinsPt > 4) {
+                  cout << "You have chosen to have more than 4 bins for Eta, this is not possible, it will be reduced to 4" << endl;
+                  fNBinsPt        = 4;
+              }
+            }else{
+              if (fNBinsPt > 3) {
+                  cout << "You have chosen to have more than 3 bins for Eta, this is not possible, it will be reduced to 3" << endl;
+                  fNBinsPt        = 3;
+              }
             }
             for (Int_t i = 0; i < fNBinsPt+1; i++) {
+              if( modi == 2){
+                fBinsPt[i]      = fBinsEta900GeVPCMEMCPt[i];
+              if (i < fNBinsPt+1)
+                    fNRebin[i]  = fBinsEta900GeVPCMEMCPtRebin[i];
+              }else{
                 fBinsPt[i]      = fBinsEta900GeVPt[i];
                 if (i < fNBinsPt+1)
                     fNRebin[i]  = fBinsEta900GeVPtRebin[i];
+              }
             }
             nIterBGFit          = 13;
             fMaxYFracBGOverIntHist = 20;

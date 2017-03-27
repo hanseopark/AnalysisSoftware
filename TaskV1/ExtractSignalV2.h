@@ -716,6 +716,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         } else if (mode == 4 ) {
             fFitRange[0]                = 0.07; 
             fFitRange[1]                = 0.25;  
+            if(fEnergyFlag.CompareTo("900GeV") == 0) fFitRange[0] = 0.05;
         } else if ( mode == 5) {
             fFitRange[0]                = 0.07; 
             fFitRange[1]                = 0.25; 

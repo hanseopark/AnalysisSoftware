@@ -657,16 +657,20 @@ function GiveBinning900GeV()
         echo "Pi0 Binniing was not set correctly. Please try again.";
     fi
     
-    echo "How many p_t bins do you want to use for the eta meson? 2 (1.8 GeV), 3 (4 GeV)"
+    echo "How many p_t bins do you want to use for the eta meson? 2 (1.8 GeV), 3 (3 GeV), only EMC related: 4 (5 GeV)"
     read answer
     if [ $answer = 2 ]; then
         echo "2 Bins --> Max p_T = 1.8 GeV ...";
         correctEta=1
         BinsPtEta=2
     elif [ $answer = 3 ]; then
-        echo "3 Bins --> Max p_T = 4 GeV ...";
+        echo "3 Bins --> Max p_T = 3 GeV ...";
         correctEta=1
         BinsPtEta=3
+    elif [ $answer = 4 ]; then
+        echo "4 Bins --> Max p_T = 5 GeV ...";
+        correctEta=1
+        BinsPtEta=4
     else
         echo "Eta Binning was not set correctly. Please try again.";
         correctEta=0
