@@ -2513,7 +2513,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
             } else if (modi == 2 ) {
                 fStartPtBin     = 3;
             } else if (modi == 4) {
-                fStartPtBin     = 6;
+                fStartPtBin     = 5;
             }
 
             if (fNBinsPt > 18) {

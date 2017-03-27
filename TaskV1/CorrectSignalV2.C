@@ -689,7 +689,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                         modifiedSecTrueEffi[k][j]   = kTRUE;
                         cout << "adjusted sec effi, due to to little stat" << endl;
                     }
-                } else if (optionEnergy.CompareTo("8TeV") == 0 || optionEnergy.CompareTo("7TeV") == 0){
+                } else if (optionEnergy.CompareTo("8TeV") == 0 || optionEnergy.CompareTo("7TeV") == 0 || optionEnergy.CompareTo("900GeV") == 0){
                     if (mode == 4 ){
                         modifiedSecTrueEffi[k][j]   = kTRUE;
                         if (j == 0 ){
