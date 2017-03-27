@@ -3065,7 +3065,17 @@ Int_t GetBinning(   Double_t*  binning,
                 for(Int_t i = 0; i < maxNBins+1; i++){
                     binning[i] = fBinsPi0900GeVPt[i];
                 }
-            }
+            }else if (mode == 2){
+                maxNBins = 11;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                    binning[i] = fBinsPi0900GeVPCMEMCPt[i];
+                }
+            }else if (mode == 4){
+              maxNBins = 11;
+              for(Int_t i = 0; i < maxNBins+1; i++){
+                  binning[i] = fBinsPi0900GeVEMCPt[i];
+              }
+          }
         } else if (energy.CompareTo("2.76TeV") == 0){
             if ( mode == 2 ){
                 maxNBins = 25;
