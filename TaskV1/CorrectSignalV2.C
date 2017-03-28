@@ -2981,55 +2981,74 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     canvasCorrectedYield->Update();
     canvasCorrectedYield->SaveAs(Form("%s/%s_%s_CorrectedYieldNormalEff_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
     
-    // resonance feed down corrected
-    padCorrectedYieldHistos->cd();
-    
-    histo2DDummyPt->DrawCopy();
-    
-    for (Int_t k = 0; k < 6; k++){
-        DrawGammaSetMarker(histoFeedDownCorrectedYieldTrue[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
-        histoFeedDownCorrectedYieldTrue[k]->DrawCopy("e1,same");
+    //***********************************************************************************************
+    //*************** Plot comparison to resonance feed down corrected yield ************************
+    //***********************************************************************************************
+    TH1D* ratioFeedDownCorrectedYieldTrueToStandard         = NULL;
+    if (histoFeedDownCorrectedYieldTrue[0]) {
+        ratioFeedDownCorrectedYieldTrueToStandard           = (TH1D*)histoFeedDownCorrectedYieldTrue[0]->Clone("RatioFeedDownCorrectedYieldTrueEffToCorrectedYieldTrueEff");
+        ratioFeedDownCorrectedYieldTrueToStandard->Sumw2();
+        ratioFeedDownCorrectedYieldTrueToStandard->Divide(ratioFeedDownCorrectedYieldTrueToStandard,histoCorrectedYieldTrue[0],1.,1.,"B");
+
+        TCanvas* canvasFeedDownComparison                   = new TCanvas("canvasFeedDownComparison","",1350,1500);
+        DrawGammaCanvasSettings( canvasFeedDownComparison, 0.13, 0.02, 0.02, 0.09);
+        canvasCorrectedYield->SetLogy();
+
+        TPad* padComparisonHistos = new TPad("padComparisonHistos", "", 0., 0.3, 1., 1.,-1, -1, -2);
+        DrawGammaPadSettings( padComparisonHistos, 0.12, 0.02, 0.02, 0.);
+        padComparisonHistos->Draw();
+
+        TPad* padComparisonRatio = new TPad("padComparisonRatio", "", 0., 0., 1., 0.3,-1, -1, -2);
+        DrawGammaPadSettings( padComparisonRatio, 0.12, 0.02, 0., 0.18);
+        padComparisonRatio->Draw();
+
+        padComparisonHistos->cd();
+        padComparisonHistos->SetLogy();
+
+        TH2F* histo2DComparisonDummy                        = new TH2F("histo2DComparisonDummy", "histo2DComparisonDummy", 1000, 0, histoCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrue[0]->GetNbinsX()), 10000, 0.01*FindSmallestBin1DHist(histoCorrectedYieldTrue[0],1e6), 3*histoCorrectedYieldTrue[0]->GetMaximum());
+        SetStyleHistoTH2ForGraphs(histo2DComparisonDummy, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", 0.033, 0.04, 0.033,0.04, 1, 1.35);
+        histo2DComparisonDummy->DrawCopy();
+
+        TLegend* legendComparison                           = GetAndSetLegend2(0.15,0.03,0.66,0.03+2*0.035, 0.035, 1, "", 42, 0.1);
+
+        DrawGammaSetMarker(histoCorrectedYieldTrue[0], 20, 2.0, kBlack, kBlack);
+        histoCorrectedYieldTrue[0]->DrawCopy("e1,same");
+        legendComparison->AddEntry(histoCorrectedYieldTrue[0],"corr. yield true eff");
+
+        DrawGammaSetMarker(histoFeedDownCorrectedYieldTrue[0], 34, 2.0, kBlue-3, kBlue-3);
+        histoFeedDownCorrectedYieldTrue[0]->DrawCopy("e1,same");
+        legendComparison->AddEntry(histoFeedDownCorrectedYieldTrue[0],"corr. yield true eff, res. feed down corr.");
+
+        legendComparison->Draw();
+        PutProcessLabelAndEnergyOnPlot(0.7, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+
+        padComparisonRatio->cd();
+        padComparisonRatio->SetTickx();
+        padComparisonRatio->SetTicky();
+        padComparisonRatio->SetLogy(0);
+
+        Double_t minYComparisonRatio                        = 0.65;
+        Double_t maxYComparisonRatio                        = 1.05;
+
+        TH2F* histo2DComparisonDummyRatio                   = new TH2F("histo2DComparisonDummyRatio","histo2DComparisonDummyRatio",1000,0, histoCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrue[0]->GetNbinsX()), 1000, minYComparisonRatio, maxYComparisonRatio);
+        SetStyleHistoTH2ForGraphs(histo2DComparisonDummyRatio, "#it{p}_{T} (GeV/#it{c})", "#frac{feed down. corr.}{standard}", 0.07,0.1, 0.07,0.1, 0.8,0.55, 510, 505);
+        histo2DComparisonDummyRatio->DrawCopy();
+
+        DrawGammaLines(0., histoCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrue[0]->GetNbinsX()), 1., 1., 2.0, kGray+2, 2);
+        DrawGammaLines(0., histoCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrue[0]->GetNbinsX()), 0.9, 0.9, 2.0, kGray+2, 8);
+        DrawGammaSetMarker(ratioFeedDownCorrectedYieldTrueToStandard, 34, 2.0, kBlue-3, kBlue-3);
+        ratioFeedDownCorrectedYieldTrueToStandard->DrawCopy("e1,same");
+
+        canvasFeedDownComparison->SaveAs(Form("%s/%s_%s_CorrectedYieldTrueEffComparisonToResonanceFeedDownCorrected_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
+
+        delete histo2DComparisonDummy;
+        delete histo2DComparisonDummyRatio;
+
+        delete padComparisonHistos;
+        delete padComparisonRatio;
+        delete canvasFeedDownComparison;
     }
-    legendYield3->Draw();
-    PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
-    
-    padCorrectedYieldRatios->cd();
-    
-    histo2DDummyRatioPt->DrawCopy();
-    
-    for (Int_t k = 0; k < 6; k++){
-        DrawGammaSetMarker(FeedDownCorrectedRatioTrue[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
-        FeedDownCorrectedRatioTrue[k]->DrawCopy("e1,same");
-    }
-    DrawGammaLines(0., histoFeedDownCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(histoFeedDownCorrectedYieldTrue[0]->GetNbinsX()),1., 1.,0.1);
-    
-    canvasCorrectedYield->Update();
-    canvasCorrectedYield->SaveAs(Form("%s/%s_%s_ResonanceFeedDownCorrectedYieldTrueEff_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
-    
-    padCorrectedYieldHistos->cd();
-    
-    histo2DDummyPt->DrawCopy();
-    
-    for (Int_t k = 0; k < 6; k++){
-        DrawGammaSetMarker(histoFeedDownCorrectedYieldNorm[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
-        histoFeedDownCorrectedYieldNorm[k]->DrawCopy("e1,same");
-    }
-    legendYield3->Draw();
-    PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
-    
-    padCorrectedYieldRatios->cd();
-    
-    histo2DDummyRatioPt->DrawCopy();
-    
-    for (Int_t k = 0; k < 6; k++){
-        DrawGammaSetMarker(FeedDownCorrectedRatioNormal[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
-        FeedDownCorrectedRatioNormal[k]->DrawCopy("e1,same");
-    }
-    DrawGammaLines(0., histoFeedDownCorrectedYieldNorm[0]->GetXaxis()->GetBinUpEdge(histoFeedDownCorrectedYieldNorm[0]->GetNbinsX()),1., 1.,0.1);
-    
-    canvasCorrectedYield->Update();
-    canvasCorrectedYield->SaveAs(Form("%s/%s_%s_ResonanceFeedDownCorrectedYieldNormalEff_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
-    
+
     // **************************************************************************************
     // ************** Plot corrected yield with differnt efficiencies & MC yield ************
     // **************************** Sanity check for MC *************************************
@@ -3593,6 +3612,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if (histoFeedDownCorrectedYieldTrue[k])     histoFeedDownCorrectedYieldTrue[k]->Write();
                 if (histoFeedDownCorrectedYieldNorm[k])     histoFeedDownCorrectedYieldNorm[k]->Write();
             }
+        }
+        if(!kIsEta){
+            if (ratioFeedDownCorrectedYieldTrueToStandard)  ratioFeedDownCorrectedYieldTrueToStandard->Write();
         }
         for (Int_t k = 0; k < 3; k++){
             if (histoTrueEffiPt[k])             histoTrueEffiPt[k]->Write(Form("TrueMesonEffi%sPt",nameIntRange[k].Data()));
