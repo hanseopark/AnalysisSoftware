@@ -357,7 +357,6 @@ void TestMtScaling(     TString     fileNamePi0                 = "",
     if (pi0YieldWOResFeedDown && yieldParametrizationPi0WOResFeedDown && yieldParametrizationPi0WOResFeedDownRatioToData) {
         PlotYield(pi0YieldWOResFeedDown, yieldParametrizationPi0WOResFeedDown, yieldParametrizationPi0WOResFeedDownRatioToData, NULL, NULL, NULL, NULL, NULL, NULL, 0, "Pi0ResFeedDownCorrect_Param", suffix);
     }
-    
 
     //  ******************************************************************************
     //  ******     calculate mt scaling factors from particle ratios             *****
@@ -446,29 +445,29 @@ void TestMtScaling(     TString     fileNamePi0                 = "",
     //  ******************************************************************************
     //  ******     calculate scaling factors for scaling from phi                *****
     //  ******************************************************************************
-    Double_t    constantPhiToPi0                                        = 0.11;
-    Double_t    constantPhiToPi0Err                                     = 0.;
-    TString     particleRatioName                                       = "";
+    Double_t    constantPhiToPi0                                            = 0.11;
+    Double_t    constantPhiToPi0Err                                         = 0.;
+    TString     particleRatioName                                           = "";
     for (Int_t i = 0; i < nParticles*nParticles; i++) {
         if (!particleRatio[i]) continue;
         
-        particleRatioName                                               = particleRatio[i]->GetName();
+        particleRatioName                                                   = particleRatio[i]->GetName();
         if (particleRatioName.CompareTo("333-111_ratio") == 0) {
-            constantFitPhiToPi0Ratio                                    = FitPlateau(particleRatio[i]);
+            constantFitPhiToPi0Ratio                                        = FitPlateau(particleRatio[i]);
             constantFitPhiToPi0Ratio->SetName("333-111_ratio_constFit");
-            constantPhiToPi0                                            = constantFitPhiToPi0Ratio->GetParameter(0);
-            constantPhiToPi0Err                                         = constantFitPhiToPi0Ratio->GetParError(0);
+            constantPhiToPi0                                                = constantFitPhiToPi0Ratio->GetParameter(0);
+            constantPhiToPi0Err                                             = constantFitPhiToPi0Ratio->GetParError(0);
             break;
         }
     }
     
     for (Int_t i = 0; i < nParticles; i++) {
-        particleMtScalingFactorPhi[i]                                   = particleMtScalingFactor[i] / constantPhiToPi0;
-        particleMtScalingFactorErrPhi[i]                                = TMath::Sqrt( TMath::Power( particleMtScalingFactorErr[i] / constantPhiToPi0, 2 ) + TMath::Power( (constantPhiToPi0Err * particleMtScalingFactor[i])/(constantPhiToPi0 * constantPhiToPi0), 2 ) );
+        particleMtScalingFactorPhi[i]                                       = particleMtScalingFactor[i] / constantPhiToPi0;
+        particleMtScalingFactorErrPhi[i]                                    = TMath::Sqrt( TMath::Power( particleMtScalingFactorErr[i] / constantPhiToPi0, 2 ) + TMath::Power( (constantPhiToPi0Err * particleMtScalingFactor[i])/(constantPhiToPi0 * constantPhiToPi0), 2 ) );
     }
     
     // fill calculated mt scaling factors in histo
-    mtScalingFactorPhi                                                   = FillMtScalingFactorsHisto("mtScalingFactors_phi", particleMtScalingFactorPhi, particleMtScalingFactorErrPhi);
+    mtScalingFactorPhi                                                      = FillMtScalingFactorsHisto("mtScalingFactors_phi", particleMtScalingFactorPhi, particleMtScalingFactorErrPhi);
     
     //  ******************************************************************************
     //  ******     calculate mt scaled parametrizations                          *****
@@ -583,10 +582,20 @@ void TestMtScaling(     TString     fileNamePi0                 = "",
     //  ******************************************************************************
     //  ******     comparisons...                                                *****
     //  ******************************************************************************
+    if (pi0Yield) {
+        PlotYield(pi0Yield, yieldParametrizations[0], yieldParametrizationsRatioToData[0], NULL, NULL, NULL, NULL, yieldParametrizationsMtScaledPhi[0], yieldParametrizationsMtScaledPhiRatioToData[0], 0, "Pi0Yield_MtScalingFromPhi", suffix);
+    }
+
     if (etaYield) {
         PlotYield(etaYield, yieldParametrizations[1], yieldParametrizationsRatioToData[1], yieldParametrizationsMtScaled[1], yieldParametrizationsMtScaledRatioToData[1], yieldParametrizationsMtScaledWOResFeedDown[1], yieldParametrizationsMtScaledWOResFeedDownRatioToData[1], yieldParametrizationsMtScaledPhi[1], yieldParametrizationsMtScaledPhiRatioToData[1], 1, "EtaYield_Comparisons", suffix);
     }
-    
+
+    for (Int_t i = 0; i < nParticles; i++) {
+        if (particleYield[i]) {
+            PlotYield(particleYield[i], yieldParametrizations[i], yieldParametrizationsRatioToData[i], yieldParametrizationsMtScaled[i], yieldParametrizationsMtScaledRatioToData[i], yieldParametrizationsMtScaledWOResFeedDown[i], yieldParametrizationsMtScaledWOResFeedDownRatioToData[i], yieldParametrizationsMtScaledPhi[i], yieldParametrizationsMtScaledPhiRatioToData[i], i, Form("%sYield_Comparisons",particleName[i].Data()), suffix);
+        }
+    }
+
     //  ******************************************************************************
     //  ******     write to file                                                 *****
     //  ******************************************************************************
