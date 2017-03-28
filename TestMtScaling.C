@@ -110,6 +110,9 @@ void TestMtScaling(     TString     fileNamePi0                 = "",
     
     TString trigger                                                     = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
     
+    // event normalization scaling factor for cocktail quantities (spectra + params)
+    eventNormScalingFactor                                              = ReturnCocktailNormalization(optionEnergy, fEventCutSelection);
+
     //  ******************************************************************************
     //  ******     read in from files                                            *****
     //  ******************************************************************************
@@ -211,9 +214,11 @@ void TestMtScaling(     TString     fileNamePi0                 = "",
             }
             tempSpectrum                                                = (TObject*)fileCocktailInputList->FindObject(nameSpectrum.Data());
             
-            if (tempSpectrum && i != 0 && i != 1)
+            if (tempSpectrum && i != 0 && i != 1) {
                 particleYield[i]                                        = (TH1D*)TransformToTH1D(tempSpectrum, Form("%d_yield", particlePDGCode[i]));
-            else
+                particleYield[i]->Sumw2();
+                particleYield[i]->Scale(eventNormScalingFactor);
+            } else
                 particleYield[i]                                        = NULL;
             
             for (Int_t j = 0; j < nParticles; j++) {
@@ -290,17 +295,21 @@ void TestMtScaling(     TString     fileNamePi0                 = "",
                 TF1* paramMtTemp                                        = NULL;
                 for (Int_t i=0; i<nParticles; i++) {
                     paramTemp                                           = (TF1*)cocktailSettingsList->FindObject(Form("%d_pt",          particlePDGCode[i]));
-                    paramMtTemp                                         = (TF1*)cocktailSettingsList->FindObject(Form("%d_pt_mtScaled", particlePDGCode[i]));
+                    //paramMtTemp                                         = (TF1*)cocktailSettingsList->FindObject(Form("%d_pt_mtScaled", particlePDGCode[i]));
                     
-                    if (paramTemp)
-                        yieldParametrizations[i]                        = (TF1*)paramTemp->Clone(Form("%d_yieldParam", particlePDGCode[i]));
-                    else
+                    if (paramTemp) {
+                        if (eventNormScalingFactor == 1.)
+                            yieldParametrizations[i]                    = (TF1*)paramTemp->Clone(Form("%d_yieldParam", particlePDGCode[i]));
+                        else
+                            yieldParametrizations[i]                    = (TF1*)ScaleTF1(paramTemp, eventNormScalingFactor, Form("%d_yieldParam", particlePDGCode[i]));
+                    } else
                         yieldParametrizations[i]                        = NULL;
                     
-                    if (paramMtTemp)
-                        yieldParametrizationsMtScaled[i]                = (TF1*)paramMtTemp->Clone(Form("%d_yieldParam_mtScaled", particlePDGCode[i]));
-                    else
-                        yieldParametrizationsMtScaled[i]                = NULL;
+                    // no need to load... will be (re-)calculated anyway
+                    //if (paramMtTemp)
+                    //    yieldParametrizationsMtScaled[i]                = (TF1*)paramMtTemp->Clone(Form("%d_yieldParam_mtScaled", particlePDGCode[i]));
+                    //else
+                    //    yieldParametrizationsMtScaled[i]                = NULL;
                 }
             }
         }
@@ -372,7 +381,7 @@ void TestMtScaling(     TString     fileNamePi0                 = "",
         
         // take mt scaling factor for eta from measured eta/pi0 ratio if available
         if (etaToPi0Ratio) {
-            cout << "using " << particleName[1] << " to " << particleName[0] << " ratio for recalculation of mt scaling factor" << endl;
+            cout << "using " << particleName[1] << " to " << particleName[0] << " ratio for recalculation of " << particleName[1].Data() << " mt scaling factor" << endl;
             tempIter                                                        = GetParticleRatioIter(particlePDGCode[1], particlePDGCode[0]);
             constantFitParticleRatio[tempIter]                              = FitPlateau(etaToPi0Ratio);
             constantFitParticleRatio[tempIter]->SetName("221-111_ratio_constFit");
@@ -388,7 +397,7 @@ void TestMtScaling(     TString     fileNamePi0                 = "",
             // X to pi0 ratio
             tempIter                                                        = GetParticleRatioIter(particlePDGCode[i], particlePDGCode[0]);
             if (particleRatio[tempIter]) {
-                cout << "using " << particleName[i] << " to " << particleName[0] << " ratio for recalculation of mt scaling factor" << endl;
+                cout << "using " << particleName[i] << " to " << particleName[0] << " ratio for recalculation of " << particleName[i] << " mt scaling factor" << endl;
                 constantFitParticleRatio[tempIter]                          = FitPlateau(particleRatio[tempIter]);
                 constantFitParticleRatio[tempIter]->SetName(Form("%d-%d_ratio_constFit",particlePDGCode[i],particlePDGCode[0]));
                 constantXToPi0                                              = constantFitParticleRatio[tempIter]->GetParameter(0);
@@ -401,7 +410,7 @@ void TestMtScaling(     TString     fileNamePi0                 = "",
             // X to pi+- ratio
             tempIter                                                        = GetParticleRatioIter(particlePDGCode[i], particlePDGCode[4]);
             if (particleRatio[tempIter]) {
-                cout << "using " << particleName[i] << " to " << particleName[4] << " ratio for recalculation of mt scaling factor, be careful with the overall normalization, check input!" << endl;
+                cout << "using " << particleName[i] << " to " << particleName[4] << " ratio for recalculation of " << particleName[i] << " mt scaling factor, be careful with the overall normalization, check input!" << endl;
                 constantFitParticleRatio[tempIter]                          = FitPlateau(particleRatio[tempIter]);
                 constantFitParticleRatio[tempIter]->SetName(Form("%d-%d_ratio_constFit",particlePDGCode[i],particlePDGCode[4]));
                 constantXToPi0                                              = constantFitParticleRatio[tempIter]->GetParameter(0);
@@ -490,7 +499,7 @@ void TestMtScaling(     TString     fileNamePi0                 = "",
     // scaling from pi0
     if (yieldParametrizations[0]) {
         for (Int_t i = 0; i < nParticles; i++) {
-            if (i > 0 && !yieldParametrizationsMtScaled[i]) {
+            if (i > 0 /*&& !yieldParametrizationsMtScaled[i]*/) {   // recalc all mt scaled params (scaling factors might have been updated!)
                 yieldParametrizationsMtScaled[i]                            = MtScaledParam(yieldParametrizations[0], particlePDGCode[i], particlePDGCode[0], particleMtScalingFactor[i], kFALSE, kTRUE);
                 yieldParametrizationsMtScaled[i]->SetName(Form("%d_yieldParam_mtScaled", particlePDGCode[i]));
             } else

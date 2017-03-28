@@ -51,6 +51,7 @@ TString     fDetectionProcess                                               = ""
 TString     energyString                                                    = "";
 TString     collisionSystem                                                 = "";
 TString     centralityString                                                = "";
+Double_t    eventNormScalingFactor                                          = 1.;
 const Int_t nParticles                                                      = 11;
 TString     particleName[nParticles]                                        = {"Pi0", "Eta", "EtaPrime", "Omega", "Pi+-", "K+-", "Phi", "Rho0", "Rho+-", "K0s", "JPsi"};
 TString     particleNameCocktailInput[nParticles]                           = {"NPion", "Eta", "EtaPrime", "Omega", "CPion", "CKaon", "Phi", "NRho", "CRho", "NKaonSubS", "JPsi"};
@@ -279,6 +280,31 @@ TH1D* CalculateRatioToFit(TH1D* histo, TF1* fit, TString name) {
     }
     
     return histoRatioToFit;
+}
+
+// fct. to scale TF1 object with constant ********************************************
+TF1* ScaleTF1(TF1* func, Double_t constant, TString name) {
+
+    if (!func) return NULL;
+
+    Double_t    xMin, xMax;
+    TString     formula         = func->GetExpFormula();
+    func->GetRange(xMin, xMax);
+
+    for (Int_t i=0; i<func->GetNpar(); i++) {
+        formula.ReplaceAll(Form("[%d]", i), Form("[placeholder%d]",i+1));
+    }
+    for (Int_t i=1; i<func->GetNpar()+1; i++) {
+        formula.ReplaceAll(Form("[placeholder%d]", i), Form("[%d]",i));
+    }
+
+    TF1* result                 = new TF1(name.Data(), Form("[0] * (%s)", formula.Data()), xMin, xMax);
+    for (Int_t i=0; i<func->GetNpar()+1; i++) {
+        if (i==0)   result->SetParameter(i, constant);
+        else        result->SetParameter(i, func->GetParameter(i-1));
+    }
+
+    return result;
 }
 
 // fct. to plot paricle yield ********************************************************
