@@ -678,6 +678,14 @@ TGraphAsymmErrors* graphRAAPCM2050;
 TGraphAsymmErrors* graphRAASysPCM2050;
 TGraphAsymmErrors* graphRAAEMCal2050;
 TGraphAsymmErrors* graphRAASysEMCal2050;
+
+TGraphAsymmErrors* graphRCSCEMCal;
+TGraphAsymmErrors* graphRCSCSysEMCal;
+TGraphAsymmErrors* graphPi0RCSCEMCal;
+TGraphAsymmErrors* graphPi0RCSCSysEMCal;
+TGraphAsymmErrors* graphEtaRCSCEMCal;
+TGraphAsymmErrors* graphEtaRCSCSysEMCal;
+
 //Raa stat error histos for meas Raa combination
 TH1D* histoRAAStatPCM0010;
 TH1D* histoRAAStatPCM2050;

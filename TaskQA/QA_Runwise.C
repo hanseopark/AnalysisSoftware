@@ -707,16 +707,56 @@ void QA_Runwise(
     //**************************************************************************************************************
     else if(select.CompareTo("LHC11hCentral")==0){
       // PbPb 2.76TeV
-      filePath= "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170211-1";
-      filePathPhoton = "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170211-1/";
-      fileName = "GammaConvV1_226.root";
+      filePath= "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170325-1";
+      filePathPhoton = "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170211-1";
+      fileName = "GammaConvV1_186.root";
       mode=0;
-      cutNr=2;
+      cutNr=0;
       fEnergyFlag = "PbPb_2.76TeV";
       nSets               = 2;
       nData               = 1;
-      TString dummyDataSets[2]   = {"LHC11hCentral", "LHC14a1a"};
-      TString dummyPlotSets[2]   = {"0-10% LHC11h", "0-10% LHC14a1a"};
+      TString dummyDataSets[2]   = {/*"LHC11hCentral"*/"LHC11h", "LHC14a1a"};
+      TString dummyPlotSets[2]   = {"dummydata", "0-10% LHC14a1a"}; //{"0-10% LHC11h", "0-10% LHC14a1a"};
+      for (Int_t j = 0; j< nSets; j++){
+          DataSets[j]     = dummyDataSets[j];
+          plotDataSets[j] = dummyPlotSets[j];
+      }
+      markerSize=1.5;
+      doEquidistantXaxis=kTRUE;
+      suffix="pdf";
+    }
+    else if(select.CompareTo("LHC11hCentralGood")==0){
+      // PbPb 2.76TeV
+      filePath= "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170325-1";
+      filePathPhoton = "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170211-1";
+      fileName = "GammaConvV1_186.root";
+      mode=0;
+      cutNr=0;
+      fEnergyFlag = "PbPb_2.76TeV";
+      nSets               = 2;
+      nData               = 1;
+      TString dummyDataSets[2]   = {"LHC11h", "LHC14a1a_good"};
+      TString dummyPlotSets[2]   = {"dummydata", "0-10% LHC14a1a"}; 
+      for (Int_t j = 0; j< nSets; j++){
+          DataSets[j]     = dummyDataSets[j];
+          plotDataSets[j] = dummyPlotSets[j];
+      }
+      markerSize=1.5;
+      doEquidistantXaxis=kTRUE;
+      suffix="pdf";
+    }
+    else if(select.CompareTo("LHC11hCentralSemigood")==0){
+      // PbPb 2.76TeV
+      filePath= "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170325-1";
+      filePathPhoton = "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170211-1";
+      fileName = "GammaConvV1_187.root";
+      mode=0;
+      cutNr=0;
+      fEnergyFlag = "PbPb_2.76TeV";
+      nSets               = 2;
+      nData               = 1;
+      TString dummyDataSets[2]   = {"LHC11h", "LHC14a1a_semigood"};
+      TString dummyPlotSets[2]   = {"dummydata", "0-10% LHC14a1a"}; 
       for (Int_t j = 0; j< nSets; j++){
           DataSets[j]     = dummyDataSets[j];
           plotDataSets[j] = dummyPlotSets[j];
@@ -727,16 +767,56 @@ void QA_Runwise(
     }
     else if(select.CompareTo("LHC11hSemicentral")==0){
       // PbPb 2.76TeV
-      filePath= "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20160801-1";
+      filePath= "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170325-1";
       filePathPhoton = "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170211-1";
-      fileName = "GammaConvV1_226.root";
+      fileName = "GammaConvV1_188.root";
       mode=0;
-      cutNr=2;
+      cutNr=0;
       fEnergyFlag = "PbPb_2.76TeV";
       nSets               = 2;
       nData               = 1;
-      TString dummyDataSets[2]   = {"LHC11hSemicentral", "LHC14a1b"};
-      TString dummyPlotSets[2]   = {"0-10% LHC11h", "20-50% LHC14a1b"};
+      TString dummyDataSets[2]   = {/*"LHC11hSemicentral"*/"LHC11h", "LHC14a1b"};
+      TString dummyPlotSets[2]   = {"dummydata","20-40% LHC14a1b"}; //{"20-40% LHC11h", "20-40% LHC14a1b"};
+      for (Int_t j = 0; j< nSets; j++){
+          DataSets[j]     = dummyDataSets[j];
+          plotDataSets[j] = dummyPlotSets[j];
+      }
+      markerSize=1.5;
+      doEquidistantXaxis=kTRUE;
+      suffix="pdf";
+    }
+    else if(select.CompareTo("LHC11hSemicentralGood")==0){
+      // PbPb 2.76TeV
+      filePath= "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170325-1";
+      filePathPhoton = "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170211-1";
+      fileName = "GammaConvV1_188.root";
+      mode=0;
+      cutNr=0;
+      fEnergyFlag = "PbPb_2.76TeV";
+      nSets               = 2;
+      nData               = 1;
+      TString dummyDataSets[2]   = {"LHC11h", "LHC14a1b_good"};
+      TString dummyPlotSets[2]   = {"dummydata","20-40% LHC14a1b"}; //{"20-40% LHC11h", "20-40% LHC14a1b"};
+      for (Int_t j = 0; j< nSets; j++){
+          DataSets[j]     = dummyDataSets[j];
+          plotDataSets[j] = dummyPlotSets[j];
+      }
+      markerSize=1.5;
+      doEquidistantXaxis=kTRUE;
+      suffix="pdf";
+    }
+    else if(select.CompareTo("LHC11hSemicentralSemigood")==0){
+      // PbPb 2.76TeV
+      filePath= "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170325-1";
+      filePathPhoton = "/home/admin1/leardini/GridOutput/PbPb/Legotrain-vAN-20170211-1";
+      fileName = "GammaConvV1_189.root";
+      mode=0;
+      cutNr=0;
+      fEnergyFlag = "PbPb_2.76TeV";
+      nSets               = 2;
+      nData               = 1;
+      TString dummyDataSets[2]   = {"LHC11h", "LHC14a1b_semigood"};
+      TString dummyPlotSets[2]   = {"dummydata","20-40% LHC14a1b"}; //{"20-40% LHC11h", "20-40% LHC14a1b"};
       for (Int_t j = 0; j< nSets; j++){
           DataSets[j]     = dummyDataSets[j];
           plotDataSets[j] = dummyPlotSets[j];

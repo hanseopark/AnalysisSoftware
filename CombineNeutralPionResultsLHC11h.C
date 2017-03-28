@@ -1775,105 +1775,105 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
       canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithPP276GeV.%s",outputDir.Data(),suffix.Data()));
 
 
-      TFile *fileChargedRatios = new TFile("pdf/2017_01_29/CombineMesonMeasurementsPbPb2760GeVX/InputALICEResultsPbPb2760GeV_2017_01_29.root");
-      if(fileChargedRatios){
-        TDirectoryFile* directoryChargedPbPb = (TDirectoryFile*)fileChargedRatios->Get("ChargedParticles_PbPb_2.76TeV");
-        TGraphAsymmErrors* graphChargedRatioKaonToPion0010      = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedRatioKaonToPion0010");
-        TGraphAsymmErrors* graphChargedRatioKaonToPionSys0010   = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedRatioKaonToPionSys0010");
-        TGraphAsymmErrors* graphChargedRatioKaonToPion2040      = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedRatioKaonToPion2040");
-        TGraphAsymmErrors* graphChargedRatioKaonToPionSys2040   = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedRatioKaonToPionSys2040");
-
-
-        canvasEtatoPi0combo->cd();
-            histo2DEtatoPi0combo->Draw("copy");
-            histo2DEtatoPi0combo->GetYaxis()->SetTitleOffset(1.1);
-            histo2DEtatoPi0combo->GetYaxis()->SetTitle("Particle ratio");
-
-            DrawGammaSetMarkerTGraphAsym(graphChargedRatioKaonToPion0010, 24,markerSizeComb, colorCharged, colorCharged);
-            DrawGammaSetMarkerTGraphAsym(graphChargedRatioKaonToPionSys0010,24,markerSizeComb, colorCharged, colorCharged, 1, kTRUE);
-            graphChargedRatioKaonToPionSys0010->Draw("2same");
-            graphChargedRatioKaonToPion0010->Draw("p,same");
-
-            TLegend* legendChargedRatio0010 = new TLegend(0.12,0.7,0.5,0.88);
-            legendChargedRatio0010->SetFillColor(0);
-            legendChargedRatio0010->SetLineColor(0);
-            legendChargedRatio0010->SetTextFont(42);
-            legendChargedRatio0010->SetTextSize(textSize);
-            legendChargedRatio0010->SetMargin(0.17);
-            legendChargedRatio0010->SetHeader(collisionSystemPbPb.Data());
-  //           legendChargedRatio0010->SetNColumns(2);
-            legendChargedRatio0010->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb0010,Form("#eta/#pi^{0},   %s",cent0010.Data()),"fp");
-            legendChargedRatio0010->AddEntry(graphChargedRatioKaonToPionSys0010,Form("K^{#pm}/#pi^{#pm}, %s",cent0010.Data()),"fp");
-            legendChargedRatio0010->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
-            legendChargedRatio0010->Draw();
-
-            if(ThesisPlotting) thesisLabel3->Draw();
-            graphPCMEtaToPi0RatioSysErrPbPb0010->Draw("E2same");
-            graphPCMEtaToPi0RatioPbPb0010->Draw("p,same");
-
-        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioCombined_withKaonsToPions_0010.%s",outputDir.Data(),suffix.Data()));
-
-        canvasEtatoPi0combo->cd();
-            histo2DEtatoPi0combo->Draw("copy");
-            histo2DEtatoPi0combo->GetYaxis()->SetTitleOffset(1.1);
-            histo2DEtatoPi0combo->GetYaxis()->SetTitle("Particle ratio");
-
-            DrawGammaSetMarkerTGraphAsym(graphChargedRatioKaonToPion2040, 25,markerSizeComb, colorCharged, colorCharged);
-            DrawGammaSetMarkerTGraphAsym(graphChargedRatioKaonToPionSys2040,25,markerSizeComb, colorCharged, colorCharged, 1, kTRUE);
-            graphChargedRatioKaonToPionSys2040->Draw("2same");
-            graphChargedRatioKaonToPion2040->Draw("p,same");
-
-            TLegend* legendChargedRatio2040 = new TLegend(0.12,0.7,0.5,0.88);
-            legendChargedRatio2040->SetFillColor(0);
-            legendChargedRatio2040->SetLineColor(0);
-            legendChargedRatio2040->SetTextFont(42);
-            legendChargedRatio2040->SetTextSize(textSize);
-            legendChargedRatio2040->SetMargin(0.17);
-            legendChargedRatio2040->SetHeader(collisionSystemPbPb.Data());
-  //           legendChargedRatio2040->SetNColumns(2);
+//       TFile *fileChargedRatios = new TFile("pdf/2017_01_29/CombineMesonMeasurementsPbPb2760GeVX/InputALICEResultsPbPb2760GeV_2017_01_29.root");
+//       if(fileChargedRatios){
+//         TDirectoryFile* directoryChargedPbPb = (TDirectoryFile*)fileChargedRatios->Get("ChargedParticles_PbPb_2.76TeV");
+//         TGraphAsymmErrors* graphChargedRatioKaonToPion0010      = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedRatioKaonToPion0010");
+//         TGraphAsymmErrors* graphChargedRatioKaonToPionSys0010   = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedRatioKaonToPionSys0010");
+//         TGraphAsymmErrors* graphChargedRatioKaonToPion2040      = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedRatioKaonToPion2040");
+//         TGraphAsymmErrors* graphChargedRatioKaonToPionSys2040   = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedRatioKaonToPionSys2040");
+//
+//
+//         canvasEtatoPi0combo->cd();
+//             histo2DEtatoPi0combo->Draw("copy");
+//             histo2DEtatoPi0combo->GetYaxis()->SetTitleOffset(1.1);
+//             histo2DEtatoPi0combo->GetYaxis()->SetTitle("Particle ratio");
+//
+//             DrawGammaSetMarkerTGraphAsym(graphChargedRatioKaonToPion0010, 24,markerSizeComb, colorCharged, colorCharged);
+//             DrawGammaSetMarkerTGraphAsym(graphChargedRatioKaonToPionSys0010,24,markerSizeComb, colorCharged, colorCharged, 1, kTRUE);
+//             graphChargedRatioKaonToPionSys0010->Draw("2same");
+//             graphChargedRatioKaonToPion0010->Draw("p,same");
+//
+//             TLegend* legendChargedRatio0010 = new TLegend(0.12,0.7,0.5,0.88);
+//             legendChargedRatio0010->SetFillColor(0);
+//             legendChargedRatio0010->SetLineColor(0);
+//             legendChargedRatio0010->SetTextFont(42);
+//             legendChargedRatio0010->SetTextSize(textSize);
+//             legendChargedRatio0010->SetMargin(0.17);
+//             legendChargedRatio0010->SetHeader(collisionSystemPbPb.Data());
+//   //           legendChargedRatio0010->SetNColumns(2);
+//             legendChargedRatio0010->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb0010,Form("#eta/#pi^{0},   %s",cent0010.Data()),"fp");
+//             legendChargedRatio0010->AddEntry(graphChargedRatioKaonToPionSys0010,Form("K^{#pm}/#pi^{#pm}, %s",cent0010.Data()),"fp");
+//             legendChargedRatio0010->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+//             legendChargedRatio0010->Draw();
+//
+//             if(ThesisPlotting) thesisLabel3->Draw();
+//             graphPCMEtaToPi0RatioSysErrPbPb0010->Draw("E2same");
+//             graphPCMEtaToPi0RatioPbPb0010->Draw("p,same");
+//
+//         canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioCombined_withKaonsToPions_0010.%s",outputDir.Data(),suffix.Data()));
+//
+//         canvasEtatoPi0combo->cd();
+//             histo2DEtatoPi0combo->Draw("copy");
+//             histo2DEtatoPi0combo->GetYaxis()->SetTitleOffset(1.1);
+//             histo2DEtatoPi0combo->GetYaxis()->SetTitle("Particle ratio");
+//
+//             DrawGammaSetMarkerTGraphAsym(graphChargedRatioKaonToPion2040, 25,markerSizeComb, colorCharged, colorCharged);
+//             DrawGammaSetMarkerTGraphAsym(graphChargedRatioKaonToPionSys2040,25,markerSizeComb, colorCharged, colorCharged, 1, kTRUE);
+//             graphChargedRatioKaonToPionSys2040->Draw("2same");
+//             graphChargedRatioKaonToPion2040->Draw("p,same");
+//
+//             TLegend* legendChargedRatio2040 = new TLegend(0.12,0.7,0.5,0.88);
+//             legendChargedRatio2040->SetFillColor(0);
+//             legendChargedRatio2040->SetLineColor(0);
+//             legendChargedRatio2040->SetTextFont(42);
+//             legendChargedRatio2040->SetTextSize(textSize);
+//             legendChargedRatio2040->SetMargin(0.17);
+//             legendChargedRatio2040->SetHeader(collisionSystemPbPb.Data());
+//   //           legendChargedRatio2040->SetNColumns(2);
+// //             legendChargedRatio2040->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb2040,Form("#eta/#pi^{0},   %s",cent2040.Data()),"fp");
 //             legendChargedRatio2040->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb2040,Form("#eta/#pi^{0},   %s",cent2040.Data()),"fp");
-            legendChargedRatio2040->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb2040,Form("#eta/#pi^{0},   %s",cent2040.Data()),"fp");
-            legendChargedRatio2040->AddEntry(graphChargedRatioKaonToPionSys2040,Form("K^{#pm}/#pi^{#pm}, %s",cent2040.Data()),"fp");
-            legendChargedRatio2040->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
-            legendChargedRatio2040->Draw();
-
-            if(ThesisPlotting) thesisLabel3->Draw();
-            graphPCMEtaToPi0RatioSysErrPbPb2040->Draw("E2same");
-            graphPCMEtaToPi0RatioPbPb2040->Draw("p,same");
-
-        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioCombined_withKaonsToPions_2040.%s",outputDir.Data(),suffix.Data()));
-
-        canvasEtatoPi0combo->cd();
-            histo2DEtatoPi0combo->Draw("copy");
-            histo2DEtatoPi0combo->GetYaxis()->SetTitleOffset(1.1);
-            histo2DEtatoPi0combo->GetYaxis()->SetTitle("Particle ratio");
-
-            graphChargedRatioKaonToPionSys2040->Draw("2same");
-            graphChargedRatioKaonToPion2040->Draw("p,same");
-
-            TLegend* legendChargedRatio2050 = new TLegend(0.12,0.7,0.5,0.88);
-            legendChargedRatio2050->SetFillColor(0);
-            legendChargedRatio2050->SetLineColor(0);
-            legendChargedRatio2050->SetTextFont(42);
-            legendChargedRatio2050->SetTextSize(textSize);
-            legendChargedRatio2050->SetMargin(0.17);
-            legendChargedRatio2050->SetHeader(collisionSystemPbPb.Data());
-  //           legendChargedRatio2050->SetNColumns(2);
+//             legendChargedRatio2040->AddEntry(graphChargedRatioKaonToPionSys2040,Form("K^{#pm}/#pi^{#pm}, %s",cent2040.Data()),"fp");
+//             legendChargedRatio2040->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+//             legendChargedRatio2040->Draw();
+//
+//             if(ThesisPlotting) thesisLabel3->Draw();
+//             graphPCMEtaToPi0RatioSysErrPbPb2040->Draw("E2same");
+//             graphPCMEtaToPi0RatioPbPb2040->Draw("p,same");
+//
+//         canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioCombined_withKaonsToPions_2040.%s",outputDir.Data(),suffix.Data()));
+//
+//         canvasEtatoPi0combo->cd();
+//             histo2DEtatoPi0combo->Draw("copy");
+//             histo2DEtatoPi0combo->GetYaxis()->SetTitleOffset(1.1);
+//             histo2DEtatoPi0combo->GetYaxis()->SetTitle("Particle ratio");
+//
+//             graphChargedRatioKaonToPionSys2040->Draw("2same");
+//             graphChargedRatioKaonToPion2040->Draw("p,same");
+//
+//             TLegend* legendChargedRatio2050 = new TLegend(0.12,0.7,0.5,0.88);
+//             legendChargedRatio2050->SetFillColor(0);
+//             legendChargedRatio2050->SetLineColor(0);
+//             legendChargedRatio2050->SetTextFont(42);
+//             legendChargedRatio2050->SetTextSize(textSize);
+//             legendChargedRatio2050->SetMargin(0.17);
+//             legendChargedRatio2050->SetHeader(collisionSystemPbPb.Data());
+//   //           legendChargedRatio2050->SetNColumns(2);
+// //             legendChargedRatio2050->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb2050,Form("#eta/#pi^{0},   %s",cent2050.Data()),"fp");
 //             legendChargedRatio2050->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb2050,Form("#eta/#pi^{0},   %s",cent2050.Data()),"fp");
-            legendChargedRatio2050->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb2050,Form("#eta/#pi^{0},   %s",cent2050.Data()),"fp");
-            legendChargedRatio2050->AddEntry(graphChargedRatioKaonToPionSys2040,Form("K^{#pm}/#pi^{#pm}, %s",cent2040.Data()),"fp");
-            legendChargedRatio2050->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
-            legendChargedRatio2050->Draw();
-
-            if(ThesisPlotting) thesisLabel3->Draw();
-            graphPCMEtaToPi0RatioSysErrPbPb2050->Draw("E2same");
-            graphPCMEtaToPi0RatioPbPb2050->Draw("p,same");
-
-        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioCombined_withKaonsToPions_2050.%s",outputDir.Data(),suffix.Data()));
-
-
-      }
-	
+//             legendChargedRatio2050->AddEntry(graphChargedRatioKaonToPionSys2040,Form("K^{#pm}/#pi^{#pm}, %s",cent2040.Data()),"fp");
+//             legendChargedRatio2050->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+//             legendChargedRatio2050->Draw();
+//
+//             if(ThesisPlotting) thesisLabel3->Draw();
+//             graphPCMEtaToPi0RatioSysErrPbPb2050->Draw("E2same");
+//             graphPCMEtaToPi0RatioPbPb2050->Draw("p,same");
+//
+//         canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioCombined_withKaonsToPions_2050.%s",outputDir.Data(),suffix.Data()));
+//
+//
+//       }
+//
 	// *******************************************************************************************************
 	// ************************** 			RCP			**************************************
 	// *******************************************************************************************************   
@@ -2808,10 +2808,10 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		canvasSpectraMC->Print(Form("%s/Pi0_MCInputSpectraFittedPbPbLHC11h0010.%s",outputDir.Data(),suffix.Data()));
 
 		
-		histoMCYieldPi0PtPbPbLHC11hAddedSig0010->SetMarkerStyle(markerStylePbPb4060MC);
+// 		histoMCYieldPi0PtPbPbLHC11hAddedSig0010->SetMarkerStyle(markerStylePbPb4060MC);
 		TH1D* histoRatioDatatoFitQCDPbPbLHC11h0010 = CalculateHistoRatioToFit (histoPCMPi0CorrectedSpecPbPbLHC11h0010, fitYieldDataQCDPi0PbPbLHC11h0010);
 		TH1D* histoRatioMCtoDataFitQCDPbPbLHC11h0010 = CalculateHistoRatioToFit (histoMCYieldPi0PtPbPbLHC11h0010, fitYieldDataQCDPi0PbPbLHC11h0010);
-		TH1D* histoRatioMCAddedSigtoDataFitQCDPbPbLHC11h0010 = CalculateHistoRatioToFit (histoMCYieldPi0PtPbPbLHC11hAddedSig0010, fitYieldDataQCDPi0PbPbLHC11h0010);
+// 		TH1D* histoRatioMCAddedSigtoDataFitQCDPbPbLHC11h0010 = CalculateHistoRatioToFit (histoMCYieldPi0PtPbPbLHC11hAddedSig0010, fitYieldDataQCDPi0PbPbLHC11h0010);
 		TH1D* histoRatioMCUnweightedtoDataFitQCDPbPbLHC11h0010 = NULL;
 		if (histoMCYieldPi0PtPbPbLHC11hWOWeights0010) histoRatioMCUnweightedtoDataFitQCDPbPbLHC11h0010 = CalculateHistoRatioToFit (histoMCYieldPi0PtPbPbLHC11hWOWeights0010, fitYieldDataQCDPi0PbPbLHC11h0010);
 		
@@ -2829,8 +2829,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		DrawGammaSetMarker(histoRatioMCtoDataFitQCDPbPbLHC11h0010, markerStylePbPb0005,markerSizePbPb0005, colorCombPbPb0005 , colorCombPbPb0005);
 		histoRatioMCtoDataFitQCDPbPbLHC11h0010->Draw("same,e,p");  
 		
-		DrawGammaSetMarker(histoRatioMCAddedSigtoDataFitQCDPbPbLHC11h0010, markerStylePbPb4060MC,markerSizePbPb4060, colorCombPbPb4060 , colorCombPbPb4060);
-		histoRatioMCAddedSigtoDataFitQCDPbPbLHC11h0010->Draw("same,e,p");  
+// 		DrawGammaSetMarker(histoRatioMCAddedSigtoDataFitQCDPbPbLHC11h0010, markerStylePbPb4060MC,markerSizePbPb4060, colorCombPbPb4060 , colorCombPbPb4060);
+// 		histoRatioMCAddedSigtoDataFitQCDPbPbLHC11h0010->Draw("same,e,p");
 		
 		if (histoRatioMCUnweightedtoDataFitQCDPbPbLHC11h0010) histoRatioMCUnweightedtoDataFitQCDPbPbLHC11h0010->Draw("same,e,p");  
 		
@@ -2841,7 +2841,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		legendFit0010->SetMargin(0.2);
 		legendFit0010->AddEntry(histoRatioDatatoFitQCDPbPbLHC11h0010,"Data/QCD fit to Data (0.4 < pT < 14)","p");
 		if (runDrawReweighted) legendFit0010->AddEntry(histoRatioMCtoDataFitQCDPbPbLHC11h0010,"MC weighted/QCD fit to Data (0.4 < pT < 14)","p");
-		if (runDrawReweighted) legendFit0010->AddEntry(histoRatioMCAddedSigtoDataFitQCDPbPbLHC11h0010,"MC added sig. weighted/QCD fit to Data (0.4 < pT < 14)","p");
+// 		if (runDrawReweighted) legendFit0010->AddEntry(histoRatioMCAddedSigtoDataFitQCDPbPbLHC11h0010,"MC added sig. weighted/QCD fit to Data (0.4 < pT < 14)","p");
 		if (histoRatioMCUnweightedtoDataFitQCDPbPbLHC11h0010) legendFit0010->AddEntry(histoRatioMCUnweightedtoDataFitQCDPbPbLHC11h0010,"MC/QCD fit to Data (0.4 < pT < 14)","p");
 		legendFit0010->Draw();
 		
