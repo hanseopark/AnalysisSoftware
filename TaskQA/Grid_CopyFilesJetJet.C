@@ -53,247 +53,47 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
     cout<<"==============================="<<endl;
 
 
-//*********************************************************************************************************************************
-//*********************************************************************************************************************************
-//*********************************************************************************************************************************
-
-//    const Int_t nSets = 2;
-//    const Int_t nData = 0;
-//    TString DataSets[nSets]={
-//      "LHC16c2",
-//      "LHC16c2"
-//    };
-//    TString PrefixDataSets[nSets]={
-//      "/alice/sim/2016/LHC16c2/",
-//      "/alice/sim/2016/LHC16c2/"
-//    };
-
-////    TString train = "Legotrain-vAN-20160608-8TeV-JetJet-ECalib";
-////    Int_t trainRuns[nSets] = {2161,2162};
-////    TString runlist[nSets] = {"runwise","merge"};
-
-//    TString train = "Legotrain-vAN-20160611-8TeV-JetJet-ECalib";
-//    Int_t trainRuns[nSets] = {2170};
-//    TString runlist[nSets] = {"runwise"};
-
-//    const Int_t nFiles = 4;
-//    TString Files[nFiles] = {"GammaCalo_129","GammaCalo_149","GammaConvCalo_140","GammaConvCalo_170"};
-
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-
-
-//    const Int_t nSets = 1;
-//    const Int_t nData = 0;
-//    TString DataSets[nSets]={
-//      "LHC16c2"
-//    };
-//    TString PrefixDataSets[nSets]={
-//      "/alice/sim/2016/LHC16c2/"
-//    };
-
-//    TString train = "Legotrain-vAN-20160615-8TeV-JetJet-ECalib_std";
-//    Int_t trainRuns[nSets] = {2171};
-//    TString runlist[nSets] = {"merge"};
-
-//    const Int_t nFiles = 6;
-//    TString Files[nFiles] = {"GammaCalo_101","GammaCalo_129","GammaCalo_149","GammaConvCalo_101","GammaConvCalo_140","GammaConvCalo_170"};
-
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-
-//        const Int_t nSets = 1;
-//        const Int_t nData = 0;
-//        TString DataSets[nSets]={
-//          "LHC16c2"
-//        };
-//        TString PrefixDataSets[nSets]={
-//          "/alice/sim/2016/LHC16c2/"
-//        };
-
-//        TString train = "Legotrain-vAN-20160617-8TeV-Systematics_Calo_EMC7";
-//        //Int_t trainRuns[nSets] = {2197};
-//        Int_t trainRuns[nSets] = {2198};
-//        TString runlist[nSets] = {"merge"};
-
-//        //const Int_t nFiles = 5;
-//        //TString Files[nFiles] = {"GammaCalo_121","GammaCalo_122","GammaCalo_123","GammaCalo_124","GammaCalo_126"};
-//        const Int_t nFiles = 2;
-//        TString Files[nFiles] = {"GammaCalo_128","GammaCalo_129"};
-
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-
-//        const Int_t nSets = 1;
-//        const Int_t nData = 0;
-//        TString DataSets[nSets]={
-//          "LHC16c2"
-//        };
-//        TString PrefixDataSets[nSets]={
-//          "/alice/sim/2016/LHC16c2/"
-//        };
-
-//        TString train = "Legotrain-vAN-20160617-8TeV-Systematics_Calo_EGA";
-//        //Int_t trainRuns[nSets] = {2198};
-//        //Int_t trainRuns[nSets] = {2199};
-//        Int_t trainRuns[nSets] = {2200};
-//        TString runlist[nSets] = {"merge"};
-
-//        //const Int_t nFiles = 2;
-//        //TString Files[nFiles] = {"GammaCalo_142","GammaCalo_143"};
-//        //const Int_t nFiles = 3;
-//        //TString Files[nFiles] = {"GammaCalo_141","GammaCalo_144","GammaCalo_146"};
-//        const Int_t nFiles = 3;
-//        TString Files[nFiles] = {"GammaCalo_147","GammaCalo_148","GammaCalo_149"};
-
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-
-//    const Int_t nSets = 1;
-//    const Int_t nData = 0;
-//    TString DataSets[nSets]={
-//      "LHC16c2"
-//    };
-//    TString PrefixDataSets[nSets]={
-//      "/alice/sim/2016/LHC16c2/"
-//    };
-
-//    TString train = "Legotrain-vAN-20160617-8TeV-Systematics_ConvCalo_EMC7";
-//    Int_t trainRuns[nSets] = {2205};
-//    //Int_t trainRuns[nSets] = {2274};
-//    //Int_t trainRuns[nSets] = {2273};
-//    //Int_t trainRuns[nSets] = {2272};
-//    TString runlist[nSets] = {"merge"};
-
-//    const Int_t nFiles = 3;
-//    TString Files[nFiles] = {"GammaConvCalo_148","GammaConvCalo_149","GammaConvCalo_150"};
-//    //const Int_t nFiles = 4;
-//    //TString Files[nFiles] = {"GammaConvCalo_144","GammaConvCalo_145","GammaConvCalo_146","GammaConvCalo_147"};
-//    //const Int_t nFiles = 4;
-//    //TString Files[nFiles] = {"GammaConvCalo_136","GammaConvCalo_139","GammaConvCalo_140","GammaConvCalo_143"};
-//    //const Int_t nFiles = 4;
-//    //TString Files[nFiles] = {"GammaConvCalo_132","GammaConvCalo_133","GammaConvCalo_134","GammaConvCalo_135"};
 
 
     //*********************************************************************************************************************************
     //*********************************************************************************************************************************
     //*********************************************************************************************************************************
 
-//    const Int_t nSets = 1;
-//    const Int_t nData = 0;
-//    TString DataSets[nSets]={
-//      "LHC16c2"
-//    };
-//    TString PrefixDataSets[nSets]={
-//      "/alice/sim/2016/LHC16c2/"
-//    };
-
-//    TString train = "Legotrain-vAN-20160617-8TeV-Systematics_ConvCalo_EGA";
-//    //Int_t trainRuns[nSets] = {2277};
-//    //Int_t trainRuns[nSets] = {2276};
-//    Int_t trainRuns[nSets] = {2275};
-//    //Int_t trainRuns[nSets] = {2206};
-//    TString runlist[nSets] = {"merge"};
-
-//    //const Int_t nFiles = 3;
-//    //TString Files[nFiles] = {"GammaConvCalo_178","GammaConvCalo_179","GammaConvCalo_180"};
-//    //const Int_t nFiles = 4;
-//    //TString Files[nFiles] = {"GammaConvCalo_174","GammaConvCalo_175","GammaConvCalo_176","GammaConvCalo_177"};
-//    const Int_t nFiles = 4;
-//    TString Files[nFiles] = {"GammaConvCalo_166","GammaConvCalo_169","GammaConvCalo_170","GammaConvCalo_173"};
-//    //const Int_t nFiles = 4;
-//    //TString Files[nFiles] = {"GammaConvCalo_162","GammaConvCalo_163","GammaConvCalo_164","GammaConvCalo_165"};
-
-
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-
-//    const Int_t nSets = 1;
-//    const Int_t nData = 0;
-//    TString DataSets[nSets]={
-//      "LHC16c2"
-//    };
-//    TString PrefixDataSets[nSets]={
-//      "/alice/sim/2016/LHC16c2/"
-//    };
-
-//    TString train = "Legotrain-vAN-20160615-8TeV-JetJet-AOD";
-//    Int_t trainRuns[nSets] = {122};
-//    TString runlist[nSets] = {"merge"};
-
-//    const Int_t nFiles = 4;
-//    TString Files[nFiles] = {"GammaCalo_101","GammaCalo_129","GammaConvCalo_101","GammaConvCalo_140"};
-
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-
-//    const Int_t nSets = 1;
-//    const Int_t nData = 0;
-//    TString DataSets[nSets]={
-//      "LHC16c2"
-//    };
-//    TString PrefixDataSets[nSets]={
-//      "/alice/sim/2016/LHC16c2/"
-//    };
-
-//    TString train = "Legotrain-vAN-20161219-8TeV-Variations_Tree_Calo";
-//    Int_t trainRuns[nSets] = {2725};
-//    TString runlist[nSets] = {"merge"};
-
-//    const Int_t nFiles = 3;
-//    TString Files[nFiles] = {"GammaConvCalo_134","GammaConvCalo_164","GammaConvCalo_196"};
-
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-    //*********************************************************************************************************************************
-
-//    const Int_t nSets = 1;
-//    const Int_t nData = 0;
-//    TString DataSets[nSets]={
-//      "LHC16c2"
-//    };
-//    TString PrefixDataSets[nSets]={
-//      "/alice/sim/2016/LHC16c2/"
-//    };
-
-//    TString train = "Legotrain-vAN-20161219-8TeV-validJetJetDeltaAOD";
-//    Int_t trainRuns[nSets] = {312};
-//    TString runlist[nSets] = {"merge"};
-
-//    const Int_t nFiles = 2;
-//    TString Files[nFiles] = {"GammaCalo_101","GammaConvCalo_101"};
-
-    const Int_t nSets = 1;
+    const Int_t nSets = 2;
     const Int_t nData = 0;
     TString DataSets[nSets]={
-      "LHC16c2"
+      "LHC16c2",
+      "LHC16c2_plus"
     };
     TString PrefixDataSets[nSets]={
-      "/alice/sim/2016/LHC16c2/"
+      "/alice/sim/2016/LHC16c2/",
+      "/alice/sim/2016/LHC16c2_plus/"
     };
 
-    TString train = "Legotrain-vAN-20161221-8TeV-JetJet_AOD185";
-    Int_t trainRuns[nSets] = {313};
-    TString runlist[nSets] = {"merge"};
+    TString AODfiltering[nSets]={
+      "/AOD185",
+      ""
+    };
 
-    const Int_t nFiles = 3;
-    TString Files[nFiles] = {"GammaCalo_101","GammaConvCalo_100","GammaConvCalo_101"};
+    TString train = "Legotrain-vAN-20170322-8TeV-JetJet_AODnew_merge";
+    Int_t trainRuns[nSets] = {376,377};
+    TString runlist[nSets] = {"merge","merge"};
+
+    const Int_t nFiles = 2;
+    TString Files[nFiles] = {"GammaCalo_101","GammaConvCalo_100"};
 
     //---------------------------------------------------------------------------------------------------
 
     TString alienFolder;
     TString alienFolder_MC;
+    TString sAOD;
 
     if(type.CompareTo("ESD")==0){
+      sAOD = "";
       alienFolder = Form("/alice/cern.ch/user/a/alitrain/PWGGA/GA_%s/",system.Data());
       alienFolder_MC = Form("/alice/cern.ch/user/a/alitrain/PWGGA/GA_%s_MC/",system.Data());
     }else{
+      sAOD = "_AOD";
       alienFolder = Form("/alice/cern.ch/user/a/alitrain/PWGGA/GA_%s_AOD/",system.Data());
       alienFolder_MC = Form("/alice/cern.ch/user/a/alitrain/PWGGA/GA_%s_MC_AOD/",system.Data());
     }
@@ -380,7 +180,7 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
               {
                 for(Int_t k=0; k<nFiles; k++)
                 {
-                    fPathGrid = Form("%s%s/%s/PWGGA/GA_pp_MC/%s/%s.root", PrefixDataSets[i].Data(), vecBins.at(b).Data(), vecRuns.at(j).Data(), strTrain[i].Data(), Files[k].Data());
+                    fPathGrid = Form("%s%s/%s%s/PWGGA/GA_pp_MC%s/%s/%s.root", PrefixDataSets[i].Data(), vecBins.at(b).Data(), vecRuns.at(j).Data(), AODfiltering[i].Data(), sAOD.Data(), strTrain[i].Data(), Files[k].Data());
                     TString fPathTemp = Form("%s/%s", fPathLocal.Data(), strTrain[i].Data());
                     gSystem->Exec(Form("mkdir -p %s",fPathTemp.Data()));
 

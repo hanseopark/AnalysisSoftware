@@ -920,7 +920,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         Double_t maxTriggReject = 60000;
 
         TH2F * histo2DTriggReject = new TH2F("histo2DTriggReject","histo2DTriggReject",1000,0., 50.,10000,minTriggReject, maxTriggReject);
-        SetStyleHistoTH2ForGraphs(histo2DTriggReject, "E (GeV)","#it{R}", //"#frac{N_{clus,trig A}/N_{Evt, trig A}}{N_{clus,trig B}/N_{Evt,trig B}}",
+        SetStyleHistoTH2ForGraphs(histo2DTriggReject, "E (GeV)","#it{RF}", //"#frac{N_{clus,trig A}/N_{Evt, trig A}}{N_{clus,trig B}/N_{Evt,trig B}}",
                                 0.85*textSizeSpectra2,textSizeSpectra2, 0.85*textSizeSpectra2,textSizeSpectra2, 0.85,0.85);
         histo2DTriggReject->DrawCopy();
 
@@ -5739,6 +5739,31 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
       eta2pi0MtScaled->SetBinContent(i,Reta2pi0);
     }
 
+    TGraphAsymmErrors* graphRatioForMt_stat     = (TGraphAsymmErrors*)graphCombEtaToPi0StatA_WOXErr->Clone();
+    TGraphAsymmErrors* graphRatioForMt_sys      = (TGraphAsymmErrors*)graphCombEtaToPi0SysA->Clone();
+
+    Int_t n_stat                = graphRatioForMt_stat->GetN();
+    Double_t* yValue_stat       = graphRatioForMt_stat->GetY();
+    Double_t* yErrorLow_stat    = graphRatioForMt_stat->GetEYlow();
+    Double_t* yErrorHigh_stat   = graphRatioForMt_stat->GetEYhigh();
+    Double_t* yValue_sys        = graphRatioForMt_sys->GetY();
+    Double_t* yErrorLow_sys     = graphRatioForMt_sys->GetEYlow();
+    Double_t* yErrorHigh_sys    = graphRatioForMt_sys->GetEYhigh();
+    for (Int_t i = 0; i < n_stat; i++){
+        Double_t ptPi0 = graphCombEtaToPi0StatA_WOXErr->GetX()[i];
+        Double_t mtEta = TMath::Sqrt(mEta*mEta + ptPi0*ptPi0);
+        Double_t ptEta = TMath::Sqrt(mtEta*mtEta - mPi0*mPi0);
+        Double_t Reta2pi0 = fitInvXSectionPi0->Eval(ptEta) / fitInvXSectionPi0->Eval(ptPi0) * eta2Pi0Const;
+
+        yValue_stat[i]       = yValue_stat[i] / Reta2pi0;
+        yErrorLow_stat[i]    = yErrorLow_stat[i] / Reta2pi0;
+        yErrorHigh_stat[i]   = yErrorHigh_stat[i] / Reta2pi0;
+
+        yValue_sys[i]        = yValue_sys[i] / Reta2pi0;
+        yErrorLow_sys[i]     = yErrorLow_sys[i] / Reta2pi0;
+        yErrorHigh_sys[i]    = yErrorHigh_sys[i]/ Reta2pi0;
+    }
+
     textSizeLabelsPixel = 48;
     TLegend* legendXsectionPaperEtaToPi03     = GetAndSetLegend2(0.11, 0.86, 0.96, 0.96, 0.85*textSizeLabelsPixel);
     legendXsectionPaperEtaToPi03->SetNColumns(2);
@@ -5783,6 +5808,41 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     canvasEtatoPi0combo->Update();
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_mT.%s",outputDir.Data(), suffix.Data()));
+
+    //*************************************************************************************************************
+    //*************************************************************************************************************
+
+    TH2F * histo2DEtatoPi0ratio;
+    histo2DEtatoPi0ratio               = new TH2F("histo2DEtatoPi0ratio","histo2DEtatoPi0ratio",1000,0.33,32.,1000,-0.05,1.55    );
+    SetStyleHistoTH2ForGraphs(histo2DEtatoPi0ratio, "#it{p}_{T} (GeV/#it{c})","ratio", 0.85*textsizeLabelsEtaToPi0, textsizeLabelsEtaToPi0,
+                              0.85*textsizeLabelsEtaToPi0,textsizeLabelsEtaToPi0, 0.9, 0.65, 510, 510);
+    histo2DEtatoPi0ratio->GetXaxis()->SetMoreLogLabels();
+    histo2DEtatoPi0ratio->GetXaxis()->SetNoExponent(kTRUE);
+//    histo2DEtatoPi0ratio->GetXaxis()->SetLabelOffset(-0.01);
+//  histo2DEtatoPi0ratio->GetYaxis()->SetRangeUser(-10,10);
+//    histo2DEtatoPi0ratio->GetYaxis()->SetRangeUser(-0.05,1.05);
+    histo2DEtatoPi0ratio->Draw("copy");
+
+    // plotting data
+    DrawGammaSetMarkerTGraphAsym(graphRatioForMt_stat, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
+    graphRatioForMt_stat->SetLineWidth(widthLinesBoxes);
+    DrawGammaSetMarkerTGraphAsym(graphRatioForMt_sys, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
+    graphRatioForMt_sys->SetLineWidth(0);
+    graphRatioForMt_sys->Draw("2,same");
+    graphRatioForMt_stat->Draw("p,same");
+
+    TLegend* legendXsectionPaperEtaToPiRatio     = GetAndSetLegend2(0.11, 0.86, 0.96, 0.96, 0.85*textSizeLabelsPixel);
+    legendXsectionPaperEtaToPiRatio->SetNColumns(2);
+    legendXsectionPaperEtaToPiRatio->SetMargin(0.15);
+    legendXsectionPaperEtaToPiRatio->AddEntry(graphRatioForMt_sys,"ALICE pp, #sqrt{#it{s}} = 8 TeV - (#eta/#pi^{0})_{m_{T}}/(#eta/#pi^{0})_{data}","pf");
+    legendXsectionPaperEtaToPiRatio->Draw();
+
+    DrawGammaLines(0.33, 32. , 1., 1.,0.5, kGray+2);
+
+    histo2DEtatoPi0ratio->Draw("axis,same");
+
+    canvasEtatoPi0combo->Update();
+    canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_mT_ratio.%s",outputDir.Data(), suffix.Data()));
 
     //*************************************************************************************************************
     //*************************************************************************************************************
