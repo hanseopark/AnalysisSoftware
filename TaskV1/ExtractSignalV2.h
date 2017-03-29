@@ -718,7 +718,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fFitRange[0]                = 0.07; 
             fFitRange[1]                = 0.25;  
             if(fEnergyFlag.CompareTo("900GeV") == 0){
-              fFitRange[0] = 0.05;
+              fFitRange[0] = 0.06;
               fFitRange[1] = 0.25;
             }
         } else if ( mode == 5) {
@@ -890,7 +890,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                     fMesonFitRange[0] = 0.04;
                     fMesonFitRange[1] = 0.28;
                 } else if( fEnergyFlag.CompareTo("900GeV") == 0){
-                    fMesonFitRange[0] = 0.05;
+                    fMesonFitRange[0] = 0.06;
                     fMesonFitRange[1] = 0.25;
                 }
             }

@@ -693,9 +693,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     if (mode == 4 ){
                         modifiedSecTrueEffi[k][j]   = kTRUE;
                         if (j == 0 ){
+                          if(optionEnergy.CompareTo("900GeV") == 0){
+                            histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                            cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
+                            histoSecTrueEffi[k][j]->Scale(0.5);
+                          }else{
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
                             histoSecTrueEffi[k][j] ->Multiply(fithistoRatioSecEffDivTrueEff[k][j]);
+                          }
                         } else if ( j == 1 ){
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
@@ -712,9 +718,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     } else if (mode == 2 ) {
                         modifiedSecTrueEffi[k][j]   = kTRUE;
                         if (j == 0 ){
+                          if(optionEnergy.CompareTo("900GeV") == 0){
+                            histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                            cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
+                            histoSecTrueEffi[k][j]->Scale(0.5);
+                          }else{
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
                             histoSecTrueEffi[k][j] ->Multiply(fithistoRatioSecEffDivTrueEff[k][j]);
+                          }
                         } else if ( (j == 1 || j == 2) ){
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;

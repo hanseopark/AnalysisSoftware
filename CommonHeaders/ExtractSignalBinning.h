@@ -42,7 +42,7 @@ Int_t fBinsPi0900GeVPCMEMCPtRebin[11]           = { 2, 5, 5, 5, 4, 4, 4, 4, 8, 8
 
 Double_t fBinsPi0900GeVEMCPt[12]                = { 0.0, 1.2, 1.6, 2.0, 2.5, 3.0, 4.0, 5.0, 7.0,
                                                     10.0, 16.0};
-Int_t fBinsPi0900GeVEMCPtRebin[11]              = { 2, 5, 5, 4, 4, 5, 5, 8, 16, 2,
+Int_t fBinsPi0900GeVEMCPtRebin[11]              = { 2, 8, 5, 4, 4, 5, 5, 8, 16, 2,
                                                     2};
 
 Double_t fBinsEta900GeVPt[4]                    =  {0., 0.9, 1.8, 3.0};
