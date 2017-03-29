@@ -110,18 +110,18 @@ void FinaliseSystematicErrorsCalo_pp7TeV(   const char* nameDataFileErrors  = ""
                                                 0, 0, 0, 0, 0,
                                                 0, 0, 0, 0, 0, 0,
                                                 0};
-    Bool_t bsmoothMBPi0[nMaxVar]            = { 0, 1, 1, 1, 0,
-                                                1, 1, 1, 0, 1,
-                                                0, 1, 1, 1, 1, 1,
+    Bool_t bsmoothMBPi0[nMaxVar]            = { 1, 1, 1, 1, 1,
+                                                1, 1, 1, 1, 1,
+                                                1, 1, 1, 1, 1, 1,
                                                 0};
-    Bool_t bsmoothMBEta[nMaxVar]            = { 0, 1, 1, 1, 0,
-                                                1, 1, 1, 0, 1,
-                                                0, 1, 1, 1, 1, 1,
+    Bool_t bsmoothMBEta[nMaxVar]            = { 1, 1, 1, 1, 1,
+                                                1, 1, 1, 1, 1,
+                                                1, 1, 1, 1, 1, 1,
                                                 0};
-    Bool_t bsmoothMBPi0EtaBinning[nMaxVar]  = { 0, 1, 1, 1, 0,
-                                                1, 1, 1, 0, 1,
-                                                0, 1, 1, 1, 1, 1,
-                                                0};
+    Bool_t bsmoothMBPi0EtaBinning[nMaxVar]  = { 1, 1, 1, 1, 1,
+                                                1, 1, 1, 1, 1,
+                                                1, 1, 1, 1, 1, 1,
+                                                1};
                           
     for (Int_t i = 0; i < numberCutStudies; i++){
         if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Pi0")==0){
@@ -208,7 +208,7 @@ void FinaliseSystematicErrorsCalo_pp7TeV(   const char* nameDataFileErrors  = ""
         // read data
         TGraphAsymmErrors* graphPosErrors;
         TGraphAsymmErrors* graphNegErrors;
-        if (i == 0 || i == 7 || i == 8 || i == 10 || i == 11 || i == 13 || i == 15 || (i == 9 && meson.CompareTo("Pi0EtaBinning") == 0)){// special treatment for Yield extraction error and calculated erros
+        if (i == 0 || i == 7 || i == 8 || i == 11 || i == 13 || i == 15 || (i == 9 && meson.CompareTo("Pi0EtaBinning") == 0)){// special treatment for Yield extraction error and calculated erros
             TString nameGraphPos    = "";
             TString nameGraphNeg    = "";
             if ( meson.CompareTo("Pi0EtaBinning") != 0 ){
@@ -278,9 +278,7 @@ void FinaliseSystematicErrorsCalo_pp7TeV(   const char* nameDataFileErrors  = ""
                 if ( (meson.CompareTo("Eta") == 0 || (meson.CompareTo("Pi0EtaBinning") == 0) && i == 0) ){
                     Double_t error = 7.5;
                     for (Int_t k = 0;k < nPtBins;k++){
-                        error   = 7.5;
-                        if(ptBins[k]<=4.) error = 7.35+40/pow(4.,ptBins[k]);
-                        if(ptBins[k]>=8.) error = 12.65 + (-1.2)*ptBins[k] + 0.07*ptBins[k]*ptBins[k];
+                        error   = 8.+100/pow(4.,ptBins[k]);
                         errorsMean[i][k]            = error;
                         errorsMeanErr[i][k]         = error*0.01;
                         errorsMeanCorr[i][k]        = error;
@@ -290,9 +288,11 @@ void FinaliseSystematicErrorsCalo_pp7TeV(   const char* nameDataFileErrors  = ""
                 } else if (meson.Contains("Pi0")){
                     Double_t error              = 5.;
                     for (Int_t k = 0;k < nPtBins;k++){
-                          error              = 0.7;
-                          if(ptBins[k]>=6.) error += 0.03*(ptBins[k]-6.)*(ptBins[k]-6.);
-                          if(ptBins[k]<=2.) error += -0.45+45/pow(10.,ptBins[k]);
+//                          error              = 0.7;
+//                          if(ptBins[k]>=6.) error += 0.03*(ptBins[k]-6.)*(ptBins[k]-6.);
+//                          if(ptBins[k]<=2.) error += -0.45+45/pow(10.,ptBins[k]);
+                      error          = 0.8+25/pow(8,ptBins[k]);
+                      if(ptBins[k]>=5.) error         += 0.3*(ptBins[k]-5) ;
 
                           errorsMean[i][k]            = error;
                           errorsMeanErr[i][k]         = error*0.01;
@@ -373,7 +373,7 @@ void FinaliseSystematicErrorsCalo_pp7TeV(   const char* nameDataFileErrors  = ""
             if (nameCutVariationSC[i].CompareTo("ClusterNonLinearity")==0 ){//&& meson.Contains("Pi0")
                 cout << "Cluster non linearity smoothing" << endl;
                 for (Int_t k = 0;k < nPtBins;k++){
-                    Double_t error              = 1.0;
+                    Double_t error              = 0.8;
                       
                     if (meson.CompareTo("Eta") == 0)
                         error   = error*2;
@@ -444,9 +444,9 @@ void FinaliseSystematicErrorsCalo_pp7TeV(   const char* nameDataFileErrors  = ""
             if (nameCutVariationSC[i].CompareTo("ClusterEnergyScale")==0 ){//&& meson.Contains("Pi0")
                 cout << "Cluster energy scale errors smoothing" << endl;
                 for (Int_t k = 0;k < nPtBins;k++){
-                    Double_t error              = 1.5+25./pow(10,ptBins[k]);
+                    Double_t error            = 2.0+15./pow(20,ptBins[k]);
                     if (meson.CompareTo("Eta") == 0 || meson.CompareTo("Pi0EtaBinning") == 0){
-                      error   = 2.5+60./pow(10,ptBins[k]);
+                      error   = 3.5+15./pow(20,ptBins[k]);
                     }
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
@@ -478,7 +478,7 @@ void FinaliseSystematicErrorsCalo_pp7TeV(   const char* nameDataFileErrors  = ""
             if (nameCutVariationSC[i].CompareTo("PileUp") == 0){
                 cout << "PileUp smoothing" << endl;
                 for (Int_t k = 0;k < nPtBins;k++){
-                    Double_t error              = 0.1; //0.1% error from pileUp: with pileUp+SPDtrackCluster cut and without
+                    Double_t error              = 0.2; //0.2% error from pileUp: with pileUp+SPDtrackCluster cut and without
                     if (meson.CompareTo("Pi0EtaBinning") == 0){
                         error   = 0.;
                     }    
@@ -581,9 +581,8 @@ void FinaliseSystematicErrorsCalo_pp7TeV(   const char* nameDataFileErrors  = ""
                 cout << "pi0etabinning smoothing" << endl;
                 Double_t error                  = 3.;
                 for (Int_t k = 0;k < nPtBins;k++){
-                    error              = 0.7;
-                    if(ptBins[k]>=6.) error += 0.03*(ptBins[k]-6.)*(ptBins[k]-6.);
-                    if(ptBins[k]<=2.) error += -0.45+45/pow(10.,ptBins[k]);
+                    error          = 0.8+25/pow(8,ptBins[k]);
+                    if(ptBins[k]>=5.) error         += 0.3*(ptBins[k]-5) ;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -684,10 +683,10 @@ void FinaliseSystematicErrorsCalo_pp7TeV(   const char* nameDataFileErrors  = ""
         // create dummy histo
         TH2D *histo2DSysErrMean ;
         if (meson.Contains("Eta") ){
-            Double_t max = 20;
+            Double_t max = 30;
             histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,0.,max);
         } else {
-            Double_t max = 17;
+            Double_t max = 20;
             histo2DSysErrMean = new TH2D("histo2DSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,0.,max);
         }
         SetStyleHistoTH2ForGraphs( histo2DSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean systematic Err %", 0.03, 0.04, 0.03, 0.04,
@@ -756,10 +755,10 @@ void FinaliseSystematicErrorsCalo_pp7TeV(   const char* nameDataFileErrors  = ""
         // create dummy histo
         TH2D *histo2DNewSysErrMean ;
         if (meson.Contains("Eta")){
-            Double_t max = 23;
+            Double_t max = 40;
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,max);
         } else {
-            Double_t max = 17;
+            Double_t max = 20;
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,max);
         }
         SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
@@ -948,7 +947,7 @@ void FinaliseSystematicErrorsCalo_pp7TeV(   const char* nameDataFileErrors  = ""
         // create dummy histo
         TH2D *histo2DSummedErrMean ;
         if (meson.Contains("Eta") ){
-            Double_t max = 20.;
+            Double_t max = 30.;
             histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,max);
 
         } else {

@@ -892,6 +892,9 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                 } else if( fEnergyFlag.CompareTo("900GeV") == 0){
                     fMesonFitRange[0] = 0.06;
                     fMesonFitRange[1] = 0.25;
+                } else if( fEnergyFlag.CompareTo("7TeV") == 0){
+                    fMesonFitRange[0] = 0.07;
+                    fMesonFitRange[1] = 0.25;
                 }
             }
         } else if (mode == 5){

@@ -330,16 +330,16 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
             if  (nameCutVariationSC[i].CompareTo("YieldExtraction") == 0){
                 if ( meson.CompareTo("Pi0") == 0){
                     for (Int_t k = 0; k < nPtBins; k++){
-                        Double_t error          = 0.75;
-                        if(ptBins[k]>=2.) error         += 0.25*(ptBins[k]-2) ;
+                        Double_t error          = 1.75;
+                        if(ptBins[k]>=2.) error         += 0.15*(ptBins[k]-2) ;
                         if(ptBins[k]==0.9) error = 3.;
-                        else if(ptBins[k]==1.1) error = 1.25;
+                        else if(ptBins[k]==1.1) error = 2.;
 
                         if (additionalNameOutput.CompareTo("EMC7")==0){
-                          error = 1.0;
-                          if(ptBins[k]>=9.) error += 0.025*pow(ptBins[k]-9.,2);
-                        } else if (additionalNameOutput.CompareTo("EGA")==0){
                           error = 2.0;
+                          if(ptBins[k]>=9.) error += 0.02*pow(ptBins[k]-9.,2);
+                        } else if (additionalNameOutput.CompareTo("EGA")==0){
+                          error = 2.5;
                           if(ptBins[k]>=15.) error += 0.01*pow(ptBins[k]-15.,2);
                         }
                         errorsMean[i][k]        = error;
@@ -645,7 +645,7 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
                         if (meson.CompareTo("Eta") == 0) error  = 2.0;
                         if (meson.CompareTo("Pi0EtaBinning") == 0) error  = 2.04;
 
-                        if(ptBins[k]>4.) error+=0.32*(ptBins[k]-4.);
+                        if(ptBins[k]>4.) error+=0.25*(ptBins[k]-4.);
                     } else if (additionalNameOutput.CompareTo("EMC7")==0){
                         error   = 1.5; // parametrisation
                         if (meson.CompareTo("Eta") == 0) error  = 2.0;
@@ -1295,12 +1295,12 @@ void FinaliseSystematicErrorsConvCalo_pp8TeV(TString nameDataFileErrors    = "",
 //                continue;
 //            }
             // Alpha - 7
-            if (!(additionalNameOutput.CompareTo("") == 0) ) {
-                if ( i == 7 ){
-                    cout << "not drawing: "<< nameCutVariation[i].Data() << endl;
-                    continue;    
-                }
-            }
+//            if (!(additionalNameOutput.CompareTo("") == 0) ) {
+//                if ( i == 7 ){
+//                    cout << "not drawing: "<< nameCutVariation[i].Data() << endl;
+//                    continue;
+//                }
+//            }
             // ClusterMaterialTRD - 15, Trigger - 16
             if ( meson.CompareTo("Pi0EtaBinning") == 0 && (i == 15 || i == 16 || i == 14) ){
                 cout << "not drawing: " << nameCutVariation[i].Data() << endl;

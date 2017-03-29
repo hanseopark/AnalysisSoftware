@@ -349,7 +349,7 @@ void FinaliseSystematicErrorsCalo_pp8TeV(   const char* nameDataFileErrors  = ""
                 } else if (meson.Contains("Pi0")){
                     Double_t error              = 5.;
                     for (Int_t k = 0;k < nPtBins;k++){
-                          error              = 0.7;
+                          error              = 1.0;
                           if(ptBins[k]>=6.) error += 0.03*(ptBins[k]-6.)*(ptBins[k]-6.);
                           if(ptBins[k]<=2.) error += -0.45+45/pow(10.,ptBins[k]);
 
