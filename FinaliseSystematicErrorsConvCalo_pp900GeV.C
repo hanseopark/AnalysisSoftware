@@ -1247,9 +1247,9 @@ void FinaliseSystematicErrorsConvCalo_pp900GeV(TString nameDataFileErrors    = "
                 meanErrorsCorr[16]->Draw("pX0,csame");
             }
 
-            //period error
-            DrawGammaSetMarkerTGraphErr(meanErrorsCorr[21], 26, 1.,color[6],color[6]);
-            meanErrorsCorr[21]->Draw("pX0,csame");
+//            //period error
+//            DrawGammaSetMarkerTGraphErr(meanErrorsCorr[21], 26, 1.,color[6],color[6]);
+//            meanErrorsCorr[21]->Draw("pX0,csame");
             
         }
         

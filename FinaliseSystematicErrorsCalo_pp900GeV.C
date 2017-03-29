@@ -996,10 +996,10 @@ void FinaliseSystematicErrorsCalo_pp900GeV(   const char* nameDataFileErrors  = 
         }
 
         //period error
-        if (meson.CompareTo("Pi0EtaBinning") != 0){
-            DrawGammaSetMarkerTGraphErr(meanErrorsCorr[14], 26, 1.,color[6],color[6]);
-            meanErrorsCorr[14]->Draw("pX0,csame");
-        }
+//        if (meson.CompareTo("Pi0EtaBinning") != 0){
+//            DrawGammaSetMarkerTGraphErr(meanErrorsCorr[14], 26, 1.,color[6],color[6]);
+//            meanErrorsCorr[14]->Draw("pX0,csame");
+//        }
 
         legendSummedMeanNew->AddEntry(meanErrorsSignalExtraction,"signal extraction","p");
         legendSummedMeanNew->AddEntry(meanErrorsClusterDescrip,"cluster description","p");
