@@ -62,7 +62,8 @@ void PrepareSecondaries(    TString     meson                       = "",
                             Int_t       numberOfBins                = 30,
                             Int_t       mode                        = 0,
                             Bool_t      producePlotsInOrPtRange     = kFALSE,
-                            Bool_t      doRapidityCorrection        = kFALSE
+                            Bool_t      doRapidityCorrection        = kFALSE,
+                            Bool_t      producePlotsForThesis       = kFALSE
                      ) {
     
     gROOT->Reset();
@@ -288,6 +289,16 @@ void PrepareSecondaries(    TString     meson                       = "",
     cout << "add. scaling eta = "     << scalingEta     << " (for photons only)" << endl;
     cout << "add. scaling phi = "     << scalingPhi     << " (for photons only)" << endl;
     cout << "========================================"  << endl;
+
+    //***************************** pt range for plots **************************************************************
+    if (!producePlotsInOrPtRange) {
+        ptPlotMin                                               = ptMin;
+        ptPlotMax                                               = ptMax;
+    } else {
+        ptPlotMin                                               = ptGenMin;
+        ptPlotMax                                               = ptGenMax;
+    }
+    if (ptPlotMin == 0 || ptPlotMin < 3e-1) ptPlotMin           = 3e-1;
 
     //***************************** Get number of spectra ***********************************************************
     Int_t nSpectra                                              = 0;
@@ -546,6 +557,7 @@ void PrepareSecondaries(    TString     meson                       = "",
           factorDecay = corrFactorFromDecayLength->Eval(ReturnMeanR(fMode));
         }
         cout << motherParticles[i] << "\t--> " << factorDecay << endl;
+        motherFactorDecayLength[i]                          = factorDecay;
 
         if (histoMesonDaughterPtOrBin[i])           histoMesonDaughterPtOrBin[i]->Scale(        factorNEvents*factorDecay);
         if (histoMesonDaughterYOrBin[i])            histoMesonDaughterYOrBin[i]->Scale(         factorNEvents*factorDecay);
@@ -600,17 +612,209 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoRatioPi0FromXToPi0Param[i]                     = NULL;
     }
     
-    //
-    // ******************************************
-    // * PPPPP   LL       OOOO   TTTTTT   SSSSS *
-    // * PP  PP  LL      OO  OO    TT    SS     *
-    // * PP  PP  LL      OO  OO    TT     SSSS  *
-    // * PPPPP   LL      OO  OO    TT        SS *
-    // * PP      LL      OO  OO    TT        SS *
-    // * PP      LLLLLL   OOOO     TT    SSSSS  *
-    // ******************************************
-    //
+    TH1D* dummyHist                                             = NULL;
+    //***************************** Plot cocktail mothers (pt) ******************************************************
+    TCanvas *canvasMothers                                      = new TCanvas("canvasMothers","",1100,1200);
+    DrawGammaCanvasSettings(canvasMothers, 0.15, 0.01, 0.01, 0.075);
+    canvasMothers->SetLogy();
+    canvasMothers->SetLogx();
+
+    TLegend* legendMothers                                      = GetAndSetLegend2(0.2, 0.98-(0.04*nRows), 0.95, 0.98, 40, 6);
+    legendMothers->SetBorderSize(0);
+    dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
+    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-7, 6e2, 1.0, 1.5);
+    dummyHist->SetLabelOffset(-0.015, "X");
+    dummyHist->SetTitleOffset(0.8, "X");
+    dummyHist->Draw();
+
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        if (histoMesonMotherPtOrBin[i]) {
+            DrawGammaSetMarker(         histoMesonMotherPtOrBin[i], cocktailMarker[i], 1, cocktailColor[i],  cocktailColor[i]);
+            legendMothers->AddEntry(    histoMesonMotherPtOrBin[i], Form("%s", motherParticlesLatex[i].Data()), "l");
+            histoMesonMotherPtOrBin[i]->SetLineWidth(2);
+            histoMesonMotherPtOrBin[i]->Draw("csamehist");
+        }
+    }
+    legendMothers->Draw("same");
+
+    PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
+    if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.17, 0.032, 0.03, 1.25, 42);
+    else PutALICESimulationLabel(                   0.22, 0.17, 0.032, 0.03, 1.25, 42);
+
+    canvasMothers->SaveAs(Form("%s/CocktailMothers_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
+    delete legendMothers;
+    delete canvasMothers;
+
+    //***************************** Plot cocktail mothers + input param (pt) ****************************************
+    TCanvas *canvasMothersParam                                 = new TCanvas("canvasMothersParam","",1100,1200);
+    DrawGammaCanvasSettings(canvasMothersParam, 0.15, 0.01, 0.01, 0.075);
+    canvasMothersParam->SetLogy();
+    canvasMothersParam->SetLogx();
+
+    TLegend* legendMothersParam                                 = GetAndSetLegend2(0.2, 0.98-(0.04*nRows), 0.95, 0.98, 40, 6);
+    legendMothersParam->SetBorderSize(0);
+    dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
+    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-7, 6e2, 1.0, 1.5);
+    dummyHist->SetLabelOffset(-0.015, "X");
+    dummyHist->SetTitleOffset(0.8, "X");
+    dummyHist->Draw();
+
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        if (histoMesonMotherPtOrBin[i]) {
+            if (cocktailInputParametrizations[i]) {
+                cocktailInputParametrizations[i]->SetLineColor(cocktailColor[i]);
+                cocktailInputParametrizations[i]->SetLineStyle(2);
+                cocktailInputParametrizations[i]->SetLineWidth(2);
+                cocktailInputParametrizations[i]->Draw("same");
+            }
+            legendMothersParam->AddEntry(histoMesonMotherPtOrBin[i], Form("%s", motherParticlesLatex[i].Data()), "l");
+            histoMesonMotherPtOrBin[i]->Draw("csamehist");
+        }
+    }
+    legendMothersParam->Draw("same");
+
+    PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
+    if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.17, 0.032, 0.03, 1.25, 42);
+    else PutALICESimulationLabel(                   0.22, 0.17, 0.032, 0.03, 1.25, 42);
+
+    canvasMothersParam->SaveAs(Form("%s/CocktailMothersInclParam_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
+    delete legendMothersParam;
+    delete canvasMothersParam;
+
+    //***************************** Plot cocktail mothers (y) *******************************************************
+    TCanvas *canvasMothersY                                     = new TCanvas("canvasMothersY","",1100,1200);
+    DrawGammaCanvasSettings(canvasMothersY, 0.12, 0.025, 0.01, 0.075);
+    canvasMothersY->SetLogy();
+
+    TLegend* legendMothersY                                     = GetAndSetLegend2(0.2, 0.98-(0.04*nRows), 0.95, 0.98, 40, 6);
+    legendMothersY->SetBorderSize(0);
+    dummyHist                                                   = new TH1D("dummyHist", "", 1000, -fRapidity, fRapidity);
+    SetHistogramm(dummyHist, "y", "#frac{1}{N_{ev}} #frac{d#it{N}}{dy}", 1e-5, 1, 0.9, 1.25);
+    dummyHist->Draw();
+
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        if (histoMesonMotherYOrBin[i]) {
+            DrawGammaSetMarker(         histoMesonMotherYOrBin[i], cocktailMarker[i], 1, cocktailColor[i],  cocktailColor[i]);
+            legendMothersY->AddEntry(   histoMesonMotherYOrBin[i], Form("%s", motherParticlesLatex[i].Data()), "p");
+            histoMesonMotherYOrBin[i]->Draw("same");
+        }
+    }
+    legendMothersY->Draw("same");
+
+    PutProcessLabelAndEnergyOnPlot(                 0.2, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
+    if (producePlotsForThesis) PutThisThesisLabel(  0.2, 0.17, 0.032, 0.03, 1.25, 42);
+    else PutALICESimulationLabel(                   0.2, 0.17, 0.032, 0.03, 1.25, 42);
+
+    canvasMothersY->SaveAs(Form("%s/CocktailMothersY_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
+    delete legendMothersY;
+    delete canvasMothersY;
+
+    //***************************** Plot cocktail mothers (phi) *****************************************************
+    TCanvas *canvasMothersPhi                                   = new TCanvas("canvasMothersPhi","",1100,1200);
+    DrawGammaCanvasSettings(canvasMothersPhi, 0.12, 0.025, 0.01, 0.075);
+    canvasMothersPhi->SetLogy();
+
+    TLegend* legendMothersPhi                                   = GetAndSetLegend2(0.2, 0.98-(0.04*nRows), 0.95, 0.98, 40, 6);
+    legendMothersPhi->SetBorderSize(0);
+    dummyHist                                                   = new TH1D("dummyHist", "", 1000, 0, 7.);
+    SetHistogramm(dummyHist, "#phi", "#frac{1}{N_{ev}} #frac{d#it{N}}{d#phi}", 1e-5, 1, 0.9, 1.25);
+    dummyHist->Draw();
+
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        if (histoMesonMotherPhiOrBin[i]) {
+            DrawGammaSetMarker(         histoMesonMotherPhiOrBin[i], cocktailMarker[i], 1, cocktailColor[i],  cocktailColor[i]);
+            legendMothersPhi->AddEntry( histoMesonMotherPhiOrBin[i], Form("%s", motherParticlesLatex[i].Data()), "p");
+            histoMesonMotherPhiOrBin[i]->Draw("same");
+        }
+    }
+    legendMothersPhi->Draw("same");
+
+    PutProcessLabelAndEnergyOnPlot(                 0.2, 0.22, 0.032, cent, textMeasurement, "", 42, 0.03);
+    if (producePlotsForThesis) PutThisThesisLabel(  0.2, 0.17, 0.032, 0.03, 1.25, 42);
+    else PutALICESimulationLabel(                   0.2, 0.17, 0.032, 0.03, 1.25, 42);
+
+    canvasMothersPhi->SaveAs(Form("%s/CocktailMothersPhi_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
+    delete legendMothersPhi;
+    delete canvasMothersPhi;
     
+    //***************************** Plot mT scaling cross check *****************************************************
+    TCanvas* canvasMtCrossCheck                                 = NULL;
+    TLegend* legendMtCrossCheck                                 = NULL;
+    TPad* padMtCrossCheck                                       = NULL;
+    TPad* padMtCrossCheckRatio                                  = NULL;
+    dummyHist                                                   = NULL;
+    TH1D* dummyHistRatio                                        = NULL;
+    TH1D* tempRatio1                                            = NULL;
+    TH1D* tempRatio2                                            = NULL;
+    for (Int_t particle=0; particle<nMotherParticles; particle++) {
+        if (histoMesonMotherPtOrBin[particle] && cocktailInputParametrizations[particle] && cocktailInputParametrizationsMtScaled[particle]) {
+            canvasMtCrossCheck                                  = new TCanvas("canvasMtCrossCheck","",1100,1200);
+            padMtCrossCheck                                     = new TPad("padMtCrossCheck", "", 0., 0.25, 1., 1.,-1, -1, -2);
+            padMtCrossCheckRatio                                = new TPad("padMtCrossCheckRatio", "", 0., 0., 1., 0.25,-1, -1, -2);
+            legendMtCrossCheck                                  = GetAndSetLegend2(0.55, 0.87-(0.048*4), 0.9, 0.87, 40);
+            legendMtCrossCheck->SetBorderSize(0);
+
+            DrawGammaCanvasSettings(canvasMtCrossCheck, 0.165, 0.015, 0.025, 0.25);
+            DrawGammaPadSettings(padMtCrossCheck,       0.165, 0.015, 0.025, 0.);
+            DrawGammaPadSettings(padMtCrossCheckRatio,  0.165, 0.015, 0.0, 0.25);
+
+            padMtCrossCheck->Draw();
+            padMtCrossCheck->SetLogy();
+            padMtCrossCheck->SetLogx();
+
+            padMtCrossCheckRatio->Draw();
+            padMtCrossCheckRatio->SetLogx();
+
+            // dummy hist
+            dummyHist                                           = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
+            dummyHistRatio                                      = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
+
+            // spectrum + parametrizations
+            padMtCrossCheck->cd();
+            SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 5e-8, 1e2, 1.0, 1.8);
+            dummyHist->Draw();
+
+            if (motherFactorDecayLength[particle]!=1.0)
+                legendMtCrossCheck->AddEntry(histoMesonMotherPtOrBin[particle], Form("%s #times %.3e", motherParticlesLatex[particle].Data(), motherFactorDecayLength[particle]), "l");
+            else
+                legendMtCrossCheck->AddEntry(histoMesonMotherPtOrBin[particle], Form("%s", motherParticlesLatex[particle].Data()), "l");
+            legendMtCrossCheck->AddEntry(cocktailInputParametrizations[particle], Form("%s param.", motherParticlesLatex[particle].Data()), "l");
+
+            cocktailInputParametrizationsMtScaled[particle]->SetLineColor(kBlack);
+            cocktailInputParametrizationsMtScaled[particle]->SetLineStyle(4);
+            cocktailInputParametrizationsMtScaled[particle]->SetLineWidth(2);
+            legendMtCrossCheck->AddEntry(cocktailInputParametrizationsMtScaled[particle], Form("%s m_{T} scaled param.", motherParticlesLatex[particle].Data()), "l");
+            cocktailInputParametrizationsMtScaled[particle]->Draw("same");
+
+            histoMesonMotherPtOrBin[particle]->Draw("e1same");
+            cocktailInputParametrizations[particle]->Draw("same");
+            legendMtCrossCheck->Draw("same");
+
+            PutProcessLabelAndEnergyOnPlot(                 0.22, 0.30, 0.032, cent, textMeasurement, "", 42, 0.03);
+            if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.25, 0.032, 0.03, 1.25, 42);
+            else PutALICESimulationLabel(                   0.22, 0.25, 0.032, 0.03, 1.25, 42);
+
+            // ratios of parametrizations to spectrum
+            padMtCrossCheckRatio->cd();
+            SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{spec}{param}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
+            dummyHistRatio->GetXaxis()->SetLabelOffset(-0.025);
+            dummyHistRatio->GetYaxis()->SetRangeUser(0,2.3);
+
+            tempRatio1                                          = (TH1D*)CalculateRatioToTF1((TH1D*)histoMesonMotherPtOrBin[particle], cocktailInputParametrizations[particle]);
+            tempRatio1->SetLineColor(cocktailColor[particle]);
+            if(particle!=0){
+                tempRatio2                                      = (TH1D*)CalculateRatioToTF1((TH1D*)histoMesonMotherPtOrBin[particle], cocktailInputParametrizationsMtScaled[particle]);
+                tempRatio2->SetLineColor(kBlack);
+                tempRatio2->SetMarkerColor(kBlack);
+            }
+            dummyHistRatio->Draw();
+            tempRatio1->Draw("e1same");
+            if(particle!=0)tempRatio2->Draw("e1same");
+
+            canvasMtCrossCheck->SaveAs(Form("%s/MtScaling%s_%.2f_%s.%s",outputDir.Data(), motherParticles[particle].Data(),fRapidity,cutSelection.Data(),suffix.Data()));
+        }
+    }
+
     //***************************** Save histograms *****************************************************************
     SaveMesonHistos();
     if (doSecondaryGamma) SavePhotonHistos();

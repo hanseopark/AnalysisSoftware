@@ -14,6 +14,8 @@ TString     fElectronCutSelection                       = "";
 TString     fMesonCutSelection                          = "";
 Double_t    ptMin                                       = 0;
 Double_t    ptMax                                       = 20;
+Double_t    ptPlotMin                                   = 0;
+Double_t    ptPlotMax                                   = 20;
 Double_t    fRapidity                                   = 0;
 Int_t       fMode                                       = 0;
 Float_t     nEvents                                     = 0;
@@ -25,6 +27,7 @@ TString     motherParticlesLatex[nMotherParticles]      = { "#eta","K^{0}_{S}","
                                                             "J/#psi","#Delta^{-}","#Delta^{0}","#Delta^{+}","#Delta^{++}","#Sigma^{0}"};
 //ctau given in (cm) below! - zero means: ctau < 0.01cm
 Double_t    motherParticles_ctau[nMotherParticles]      = {0,2.68,1533.74,7.89,0,0,0,0,0,0,0,0,0,0,0,0};
+Double_t    motherFactorDecayLength[nMotherParticles]   = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 Int_t       motherParticleDec[nMotherParticles]         = {2,256,65536,131072,4,16,8,8192,16384,32,64,2048,4096,1024,512,128};
 Color_t     cocktailColor[nMotherParticles]             = {kRed+2,kBlue+1,kOrange+1,kYellow+2,kAzure-2,kGreen+2,kRed-2,kViolet,kMagenta,kViolet+2,kBlue-3,kTeal+9,kCyan+2,kMagenta+2,kCyan+4,kViolet+4};
 Style_t     cocktailMarker[nMotherParticles]            = {20,21,24,25,20,21,24,25,20,21,24,25,20,21,24,25};
