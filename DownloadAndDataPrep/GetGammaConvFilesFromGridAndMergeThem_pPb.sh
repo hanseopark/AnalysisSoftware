@@ -10,13 +10,13 @@
 # This script has to be run with "bash"
 
 # switches to enable/disable certain procedures
-DOWNLOADON=0
+DOWNLOADON=1
 MERGEON=1
-SINGLERUN=0
+SINGLERUN=1
 SEPARATEON=1
 MERGEONSINGLEData=0
-MERGEONSINGLEMC=0
-SPECIALMERGE=0
+MERGEONSINGLEMC=1
+SPECIALMERGE=1
 
 function GetFileNumberList()
 {
@@ -222,7 +222,7 @@ fi
 # LHC13b2_efix_p3MC="837"; 
 # LHC13b2_efix_p4MC="838";
 
-TRAINDIR=Legotrain-vAN20170215-sys-PCM-dirGammaCentAndPurity
+# TRAINDIR=Legotrain-vAN20170215-sys-PCM-dirGammaCentAndPurity
 # LHC13bData="589"; #pass 3 
 # LHC13cData="590"; #pass 2
 # LHC13b2_efix_p1MC="839"; 
@@ -233,6 +233,10 @@ TRAINDIR=Legotrain-vAN20170215-sys-PCM-dirGammaCentAndPurity
 # LHC13b2_efix_p2MC="844"; 
 # LHC13b2_efix_p3MC="845"; 
 # LHC13b2_efix_p4MC="846";
+
+TRAINDIR=Legotrain-vAN20170318-testFixAddSig
+LHC13e7MC="847";
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 

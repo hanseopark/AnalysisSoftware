@@ -1,9 +1,30 @@
 #include "../CommonHeaders/ExtractSignalBinning.h"
 
+//***********************************************************************************************
+//**************************  variables for global configuration ********************************
+//***********************************************************************************************
 TString nameRec;
 TString nameOutputLabel;
 
-// NLO file reading
+Int_t centCutNumberI                                        = 0;
+TString centrality                                          = "";
+Double_t fNcoll                                             = 0;
+Double_t fNcollErr                                          = 0;
+TString triggerCutNumber                                    = "";
+TString subTriggerCutNumber                                 = "";
+
+Bool_t kDoPileup                                            = kFALSE;
+Double_t textSizeSpectra                                    = 0.035;
+
+Double_t fitMinPt                                           = 0.4;
+Double_t fitMaxPt                                           = 0;
+TString forOutput                                           = "";
+TString nameIntRanges[6]                                    = {"","Wide", "Narrow", "Left", "LeftWide", "LeftNarrow"};
+
+
+//***********************************************************************************************
+//**********************  NLO file reading  *****************************************************
+//***********************************************************************************************
 TFile* fileTheoryCompilation                                = NULL;
 TH1D *cocktailAllGammaNLO                                   = NULL;
 TGraphAsymmErrors *graphDirectPhotonNLO                     = NULL;
@@ -12,27 +33,26 @@ TGraphAsymmErrors *graphFragmentationPhotonNLO              = NULL;
 TGraphAsymmErrors* graphDirectPhotonNLOCopy                 = NULL;
 TGraphAsymmErrors* graphNLODoubleRatio                      = NULL;
 TGraphAsymmErrors* graphNLODirGammaSpectra                  = NULL;
-TF1 *fitNLODoublRatio                                       = NULL;
-Double_t* xVal                                              = NULL;
-Double_t* xErr                                              = NULL;
-Double_t* yVal                                              = NULL;
-Double_t* yErrUp                                            = NULL;
-Double_t* yErrDown                                          = NULL;
+TF1 *fitNLODoubleRatio                                      = NULL;
 TF1* fitNLODirectPhoton                                     = NULL;
 TF1* fitNLOPromptPhoton                                     = NULL;
 TF1* fitNLOFragmentationPhoton                              = NULL;
 TH1D *histoRatioNLODirectPhoton                             = NULL;
 TF1 *fitCocktailAllGammaForNLO                              = NULL;
 
-// Inputs for pi0 spectrum
+//***********************************************************************************************
+//********************************  Inputs for pi0 spectrum  ************************************
+//***********************************************************************************************
 TFile *filePi0                                              = NULL;
-TH1D *histoCorrectedPi0Yield                                = NULL;
+TH1D *histoCorrectedPi0Yield[6]                             = {NULL, NULL, NULL, NULL, NULL, NULL};
 TH1D *histoMCYieldMeson                                     = NULL;
 TH1D *histoMCYieldMesonOldBin                               = NULL;
 TFile *fileEta                                              = NULL;
 TH1D *histoCorrectedEtaYield                                = NULL;
 
-// Different fits for pi0 yield
+//***********************************************************************************************
+//*******************************  Different fits for pi0 yield *********************************
+//***********************************************************************************************
 TF1 *fitPi0YieldA                                           = NULL;
 TF1 *fitPi0YieldB                                           = NULL;
 TF1 *fitPi0YieldC                                           = NULL;
@@ -40,22 +60,28 @@ TH1D *histoRatioFitPi0A                                     = NULL;
 TH1D *histoRatioFitPi0B                                     = NULL;
 TH1D *histoRatioFitPi0C                                     = NULL;
 
-// input for gamma spectrum
+//***********************************************************************************************
+//***************************  input for gamma spectrum  ****************************************
+//***********************************************************************************************
 TFile *fileGamma                                            = NULL;
 TDirectoryFile* directoryGamma                              = NULL;
 TH1D *histoGammaSpecCorrPurity                              = NULL;
 TH1D *histoGammaSpecMCAll                                   = NULL;
-TH1D *histoIncRatioFitPurity                                = NULL;
-TH1D *histoIncRatioPurityTrueEff                            = NULL;
+TH1D *histoIncRatioFitPurity[6]                             = {NULL, NULL, NULL, NULL, NULL, NULL};
+TH1D *histoIncRatioPurityTrueEff[6]                         = {NULL, NULL, NULL, NULL, NULL, NULL};
 TH1D *histoMCIncRatio                                       = NULL;
 TH1D *histoMCDecaySumGammaPt                                = NULL;
-// Different fits to inclusive gamma
+//***********************************************************************************************
+//***************************  Different fits to inclusive gamma  *******************************
+//***********************************************************************************************
 TF1 *fitGammaA                                              = NULL;
 TF1 *fitGammaB                                              = NULL;
 TH1D *histoRatioFitGammaA                                   = NULL;
 TH1D *histoRatioFitGammaB                                   = NULL;
 
-// cocktail definition
+//***********************************************************************************************
+//***************************  cocktail definition **********************************************
+//***********************************************************************************************
 TFile *cocktailFile                                         = NULL;
 TDirectoryFile *cocktailDir                                 = NULL;
 TH1D *cocktailAllGamma                                      = NULL;
@@ -65,41 +91,31 @@ TH1D *cocktailAllGammaPi0                                   = NULL;
 TH1D *cocktailPi0Rebinned                                   = NULL;
 TH1D *cocktailAllGammaRebinned                              = NULL;
 
-// calculated double Ratios
-TH1D *histoDoubleRatioTrueEffPurity                         = NULL;
-TH1D *histoDoubleRatioFitPi0YieldPurity                     = NULL;
+//***********************************************************************************************
+//***************************  calculated double Ratios  ****************************************
+//***********************************************************************************************
+TH1D *histoDoubleRatioTrueEffPurity[6]                      = {NULL, NULL, NULL, NULL, NULL, NULL};
+TH1D *histoDoubleRatioFitPi0YieldPurity[6]                  = {NULL, NULL, NULL, NULL, NULL, NULL};
 TH1D *histoDoubleRatioUpperLimits                           = NULL;
 
-// calculated direct gamma spectra
+//***********************************************************************************************
+//**************************  calculated direct gamma spectra  **********************************
+//***********************************************************************************************
 TH1D *histoDirectPhotonSpectrum                             = NULL;
 TH1D *histoThermalPhotonSpectrum                            = NULL;
 TH1D *histoPromptPhotonSpectrum                             = NULL;
 
-// output file 
+//***********************************************************************************************
+//**************************  output file  ******************************************************
+//***********************************************************************************************
 TFile *fileCorrectedOutput                                  = NULL;
 
-TString fEventCutSelection                  = "";
-TString fGammaCutSelection                  = "";
-TString fClusterCutSelection                = "";
-TString fElectronCutSelection               = "";
-TString fMesonCutSelection                  = "";
-Int_t centCutNumberI                        = 0;
-TString centrality                          = "";
-Double_t fNcoll                             = 0;
-Double_t fNcollErr                          = 0;
-TString triggerCutNumber                    = "";
-TString subTriggerCutNumber                 = "";
 
-Bool_t kDoPileup                            = kFALSE;
-Double_t textSizeSpectra                    = 0.035;
-
-Double_t fitMinPt                           = 0.4;
-Double_t fitMaxPt                           = 0;
-TString forOutput                           = "";
-TH2F * histo2DSpectraPi0                    = NULL;
-
+//***********************************************************************************************
+//****************** variable setting for the different error graphs ****************************
+//***********************************************************************************************
 ifstream fileSysErrGamma;
-Int_t nPointsGamma                              = 0;
+Int_t nPointsGamma                                          = 0;
 Double_t relSystErrorGammaUp[50];
 Double_t relSystErrorGammaDown[50];
 Double_t relSystErrorWOMaterialGammaUp[50];
@@ -108,7 +124,7 @@ Double_t systErrorGammaUp[50];
 Double_t systErrorGammaDown[50];
 
 ifstream fileSysErrInclRatio;
-Int_t nPointsInclRatio                          = 0;
+Int_t nPointsInclRatio                                      = 0;
 Double_t relSystErrorInclRatioUp[50];
 Double_t relSystErrorInclRatioDown[50];
 Double_t relSystErrorWOMaterialInclRatioUp[50];
@@ -117,7 +133,7 @@ Double_t systErrorInclRatioUp[50];
 Double_t systErrorInclRatioDown[50];
 
 ifstream fileSysErrDoubleRatio;
-Int_t nPointsDoubleRatio                        = 0;
+Int_t nPointsDoubleRatio                                    = 0;
 Double_t relSystErrorDoubleRatioUp[50];
 Double_t relSystErrorDoubleRatioDown[50];
 Double_t relSystErrorWOMaterialDoubleRatioUp[50];
@@ -125,32 +141,45 @@ Double_t relSystErrorWOMaterialDoubleRatioDown[50];
 Double_t systErrorDoubleRatioUp[50];
 Double_t systErrorDoubleRatioDown[50];
 
-TGraphAsymmErrors*  graphGammaYieldSysErr       = NULL;
-TGraphAsymmErrors*  graphInclRatioSysErr        = NULL;
-TGraphAsymmErrors*  graphDoubleRatioSysErr      = NULL;
-TGraphAsymmErrors*  graphDoubleRatioFitSysErr   = NULL;
+TGraphAsymmErrors*  graphGammaYieldSysErr                   = NULL;
+TGraphAsymmErrors*  graphInclRatioSysErr                    = NULL;
+TGraphAsymmErrors*  graphDoubleRatioSysErr                  = NULL;
+TGraphAsymmErrors*  graphDoubleRatioFitSysErr               = NULL;
 
-void SeparateCutnumberString(TString cutSelStr, Int_t mode)
-{
-   TString fCutSelection                       = cutSelStr;
-   if (mode == 9){
-      ReturnSeparatedCutNumber(fCutSelection, fGammaCutSelection, fElectronCutSelection,fMesonCutSelection);
-      fEventCutSelection                      = fGammaCutSelection(0,7);
-      fGammaCutSelection                      = fGammaCutSelection(7,fGammaCutSelection.Length()-7);
-      cout << fEventCutSelection.Data() << "\t" << fGammaCutSelection.Data() << endl;
-   } else {
-      ReturnSeparatedCutNumberAdvanced(fCutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
-   }
-   centCutNumberI                     = ((TString)fEventCutSelection(GetEventCentralityMinCutPosition(),1)).Atoi();
-   centrality                         = GetCentralityString(fEventCutSelection);
-   triggerCutNumber                   = fEventCutSelection(3,1);
-   subTriggerCutNumber                = fEventCutSelection(4,1);
-   fNcoll                             = GetNCollFromCutNumber(fEventCutSelection);
-   fNcollErr                          = GetNCollErrFromCutNumber(fEventCutSelection);
+//***********************************************************************************************
+//************* Wrapper function for separated cut string and centrality settings****************
+//**    - sets global variables for the different cut strings                                  **
+//**    - sets trigger cutnumbers                                                              **
+//**    - sets centrality name and number                                                      **
+//**    - sets Ncoll values + errors                                                           **
+//***********************************************************************************************
+void SeparateCutnumberString(TString cutSelStr, Int_t mode){
+    TString fCutSelection                       = cutSelStr;
+    TString fEventCutSelection                  = "";
+    TString fGammaCutSelection                  = "";
+    TString fClusterCutSelection                = "";
+    TString fElectronCutSelection               = "";
+    TString fMesonCutSelection                  = "";
+    if (mode == 9){
+        ReturnSeparatedCutNumber(fCutSelection, fGammaCutSelection, fElectronCutSelection,fMesonCutSelection);
+        fEventCutSelection                      = fGammaCutSelection(0,7);
+        fGammaCutSelection                      = fGammaCutSelection(7,fGammaCutSelection.Length()-7);
+        cout << fEventCutSelection.Data() << "\t" << fGammaCutSelection.Data() << endl;
+    } else {
+        ReturnSeparatedCutNumberAdvanced(fCutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
+    }
+    centCutNumberI                     = ((TString)fEventCutSelection(GetEventCentralityMinCutPosition(),1)).Atoi();
+    centrality                         = GetCentralityString(fEventCutSelection);
+    triggerCutNumber                   = fEventCutSelection(3,1);
+    subTriggerCutNumber                = fEventCutSelection(4,1);
+    fNcoll                             = GetNCollFromCutNumber(fEventCutSelection);
+    fNcollErr                          = GetNCollErrFromCutNumber(fEventCutSelection);
 }
 
-void CreateNamingStrings(TString nameMeson, TString isMC)
-{
+//***********************************************************************************************
+//************* Wrapper function to create output names and proper mesonType ********************
+//***********************************************************************************************
+void CreateNamingStrings(TString nameMeson, TString isMC){
    nameOutputLabel                      = Form("Gamma_%s",nameMeson.Data());
    if (isMC.CompareTo("kTRUE") == 0){
       nameRec                           = "recMC";
@@ -166,6 +195,9 @@ void CreateNamingStrings(TString nameMeson, TString isMC)
    }
 }
 
+//***********************************************************************************************
+//******** Creates proper labeling with collision system, detection system and particle  ********
+//***********************************************************************************************
 void PlotLatexLegend( Double_t xPosition        = 0.5,
                       Double_t yPosition        = 0.5,
                       Double_t textSizeSpectra  = 0.04,
@@ -196,63 +228,14 @@ void PlotLatexLegend( Double_t xPosition        = 0.5,
     labelDetProcPlot->Draw();
 }
 
-void drawLatex(TString textString, Double_t xCoord, Double_t yCoord, Color_t txtclr = kBlack,Size_t txtsize = 0.1){
-   TLatex *TextLatex = new TLatex(xCoord,yCoord,Form("#font[62]{%s}",textString.Data()));
-   TextLatex->SetTextColor(txtclr);
-   TextLatex->SetTextSize(txtsize);
-   TextLatex->Draw();
-}
-
-/*
-Double_t GetUpperLimit(Double_t mean, Double_t statErr, Double_t sysErr, Double_t confidenceLevel, Double_t& confidenceLevelReached, Double_t accuracy = 1e-9, Int_t maxNIterations = 1e8) {
-
-    // function to return upper limit on photon excess, using a Bayesian approach
-    // with the heaviside function used as prior (excluding R_gamma < 1)
-
-    // R_gamma limits
-    Double_t    minRGamma           = 1.;
-    Double_t    maxRGamma           = 10.;
-    
-    // total uncertainty
-    Double_t    sigmaTot            = TMath::Sqrt(statErr*statErr + sysErr*sysErr);
-    
-    // cond. prob norm
-    Double_t    condProbNorm        = TMath::Erf( (mean - 1)/(TMath::Sqrt(2)*sigmaTot) ) + 1;   // - 1 term from limit erf(-inf)
-    
-    // cond. prob
-    TF1         condProb("condProb", Form("[0] * ( TMath::Erf( ([1] - 1)/(TMath::Sqrt(2)*[2]) ) - TMath::Erf( ([1] - x)/(TMath::Sqrt(2)*[2]) ) )"), minRGamma, maxRGamma);
-    condProb.SetParameter(0, 1./condProbNorm);
-    condProb.SetParameter(1, mean);
-    condProb.SetParameter(2, sigmaTot);
-    cout << "wurst " << condProb.Eval(mean) <<"\t"<<condProb.Eval(mean+0.5) <<"\t" << condProbNorm << endl;
-    // iteratively find upper limit (interval bisection)
-    Double_t    upperLimit          = (maxRGamma-1)/2;
-    Double_t    upperLimitPrev      = upperLimit;
-    Double_t    step                = 0.;
-    Int_t       nIterations         = 0;
-    while (((condProb.Eval(upperLimit) < (confidenceLevel-accuracy)) || condProb.Eval(upperLimit) > (confidenceLevel+accuracy)) && nIterations < maxNIterations) {
-    
-        if (condProb.Eval(upperLimit) > confidenceLevel)
-            step                    = - TMath::Abs(upperLimit-1)/2;
-        else
-            step                    = TMath::Abs(upperLimitPrev-upperLimit)/2;
-        upperLimitPrev              = upperLimit;
-        upperLimit                  = upperLimit + step;
-
-        if ( !(nIterations%10) ) cout << "   condProb.Eval( " << upperLimit << ") = " << condProb.Eval(upperLimit) << endl;
-    
-        nIterations++;
-    }
-    
-    confidenceLevelReached          = condProb.Eval(upperLimit);
-    return upperLimit;
-}*/
-
-
-Double_t GetUpperLimit(Double_t mean, Double_t statErr, Double_t sysErr, Double_t confidenceLevel, Double_t& confidenceLevelReached, Double_t accuracy = 1e-9, Int_t maxNIterations = 1e8) {
-    
-    // function to return upper limit on photon excess, using a Bayesian approach
-    // with the heaviside function used as prior (excluding R_gamma < 1)
+//***********************************************************************************************
+//**  function to return upper limit on photon excess, using a Bayesian approach               **
+//**  with the heaviside function used as prior (excluding R_gamma < 1)                        **
+//***********************************************************************************************
+Double_t GetUpperLimit( Double_t mean, Double_t statErr, Double_t sysErr,
+                        Double_t confidenceLevel, Double_t& confidenceLevelReached, 
+                        Double_t accuracy = 1e-9, Int_t maxNIterations = 1e8
+                      ) {
     
     // R_gamma limits
     Double_t    minRGamma           = 1.;
@@ -293,7 +276,18 @@ Double_t GetUpperLimit(Double_t mean, Double_t statErr, Double_t sysErr, Double_
     return upperLimit;
 }
 
-TH1D* GetUpperLimitsHisto(TH1D* histo, TGraphAsymmErrors* sysErrGraph, Double_t confidenceLevel = 0.95, Double_t accuracy = 0.004, Int_t maxNIterations = 1e3) {
+//***********************************************************************************************
+//************ Wrapper function to extract the direct photon spectrum upper limit ***************
+//**    - extracts the direct photon signal upper limits based on statistical error            **
+//**      given in a histogram and systematic errors in a graphs                               **
+//**    - confidence level can be varied as well as the accuracy and the number of iterations  **
+//***********************************************************************************************
+TH1D* GetUpperLimitsHisto(TH1D* histo, 
+                          TGraphAsymmErrors* sysErrGraph, 
+                          Double_t confidenceLevel          = 0.95, 
+                          Double_t accuracy                 = 0.004, 
+                          Int_t maxNIterations              = 1e3
+                         ) {
 
     cout << endl;
     cout << "*************************************************************" << endl;
@@ -343,7 +337,9 @@ TH1D* GetUpperLimitsHisto(TH1D* histo, TGraphAsymmErrors* sysErrGraph, Double_t 
     return upperLimits;
 }
 
-// functions to calculate uncertainty from fit (variation with parameter errors)
+//***********************************************************************************************
+//*******  functions to calculate uncertainty from fit (variation with parameter errors)  *******
+//***********************************************************************************************
 TF1* VaryFunctionWithParameterError(TF1* func, Bool_t up = kTRUE) {
     
     Double_t    sign            = 1.;
@@ -365,7 +361,13 @@ TF1* VaryFunctionWithParameterError(TF1* func, Bool_t up = kTRUE) {
     return returnFunc;
 }
 
-TGraphAsymmErrors* ProduceTotalSystematicUncertaintyWithFit(TH1D* doubleRatio, TGraphAsymmErrors* systUncert, TF1* pi0Fit) {
+//***********************************************************************************************
+//****************** Calculate systematic errors with the fitted pi0 ****************************
+//***********************************************************************************************
+TGraphAsymmErrors* ProduceTotalSystematicUncertaintyWithFit( TH1D* doubleRatio, 
+                                                             TGraphAsymmErrors* systUncert, 
+                                                             TF1* pi0Fit
+                                                           ) {
     
     // syst. uncert. graph
     Int_t       nPoints             = systUncert->GetN();
@@ -409,4 +411,3 @@ TGraphAsymmErrors* ProduceTotalSystematicUncertaintyWithFit(TH1D* doubleRatio, T
     systUncertTotal->SetName(Form("%s_total", systUncert->GetName()));
     return systUncertTotal;
 }
-

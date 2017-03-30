@@ -4455,6 +4455,8 @@ Color_t GetColorSystematics(    TString variationName,
         return kBlue+2;
     if ( variationName.CompareTo("ConvPhi") == 0 )
         return kCyan-2;
+    if ( variationName.CompareTo("DoubleCount") == 0)
+        return kGray+2;    
     if ( variationName.CompareTo("ClusterMinEnergy") == 0 )
         return kViolet+1;
     if ( variationName.CompareTo("ClusterNCells") == 0 )
@@ -4493,7 +4495,6 @@ Color_t GetColorSystematics(    TString variationName,
         return kViolet-3;
     if ( variationName.CompareTo("CellMinE") == 0 )
         return kSpring-6;
-
     cout << "GetColorSystematics(): no valid input parameters given for '" << variationName.Data() <<  "'..." << endl;
     return kBlack;
 }
@@ -4539,6 +4540,8 @@ Style_t GetMarkerStyleSystematics(  TString variationName,
         return 27;
     if ( variationName.CompareTo("ConvPhi") == 0 )
         return 28;
+    if ( variationName.CompareTo("DoubleCount") == 0)
+        return 29;    
     if ( variationName.CompareTo("ClusterMinEnergy") == 0 )
         return 29;
     if ( variationName.CompareTo("ClusterNCells") == 0 )
@@ -4613,7 +4616,7 @@ TString GetSystematicsName  (  TString variationName = "" ){
         return "TPC cluster";
     if ( variationName.CompareTo("SinglePt") == 0 )
         return "single e^{#pm} #it{p}_{T}";
-        if ( variationName.CompareTo("Chi2") == 0 || variationName.CompareTo("Chi2PsiPair") == 0 || variationName.CompareTo("PsiPairChi2") == 0 )
+    if ( variationName.CompareTo("Chi2") == 0 || variationName.CompareTo("Chi2PsiPair") == 0 || variationName.CompareTo("PsiPairChi2") == 0 )
         return "2D #chi^{2} #gamma, #psi_{pair} #gamma";
     if ( variationName.CompareTo("Qt") == 0 )
         return "2D q_{T}";
@@ -4621,6 +4624,8 @@ TString GetSystematicsName  (  TString variationName = "" ){
         return "#alpha meson";
     if ( variationName.CompareTo("ConvPhi") == 0 )
         return "#varphi_{conv}";
+    if ( variationName.CompareTo("DoubleCount") == 0)
+        return "double count";    
     if ( variationName.CompareTo("ClusterMinEnergy") == 0 )
         return "min E_{cluster}";
     if ( variationName.CompareTo("ClusterNCells") == 0 )

@@ -38,12 +38,17 @@
 #include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "../CommonHeaders/ConversionFunctions.h"
 
+//***********************************************************************************************************************************************
+//***********************************************************************************************************************************************
+//***********************************************************************************************************************************************
 struct SysErrorConversion {
    Double_t value;
    Double_t error;
 };
 
-
+//***********************************************************************************************************************************************
+//***********************************************************************************************************************************************
+//***********************************************************************************************************************************************
 void PlotCanvas( Int_t i, 
                  Int_t number, 
                  TCanvas *canvas, 
@@ -87,6 +92,9 @@ void PlotCanvas( Int_t i,
    
 }
 
+//***********************************************************************************************************************************************
+//***********************************************************************************************************************************************
+//***********************************************************************************************************************************************
 void CalculateSystematicsGraphs( TH1D** histoArray, 
                                  TH1D**histoArrayBound, 
                                  TString* cutSelectionOut,
@@ -94,8 +102,7 @@ void CalculateSystematicsGraphs( TH1D** histoArray,
                                  TString prefix, TString prefixCommonSysFile, 
                                  TString outputDir, TString outputFileDir,
                                  TString cutVariationName
-    
-){
+                               ){
     if (numberOfCuts<2) return;
     
     Int_t NBinsPt = histoArray[0]->GetNbinsX();
@@ -266,6 +273,9 @@ void CalculateSystematicsGraphs( TH1D** histoArray,
     return;
 }    
 
+//***********************************************************************************************************************************************
+//***********************************************************************************************************************************************
+//***********************************************************************************************************************************************
 void CalculateSystematicsGraphsWOBound( TH1D** histoArray, 
                                         TString* cutSelectionOut,
                                         Int_t numberOfCuts, 
@@ -442,14 +452,12 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     } else if ( mode == 4 || mode == 5){
         cout << "This macro can't yet deal with these modi" << endl;
         return;
-    }    
-
+    }
     
     //*****************************************************************************************
     //*************************** Flag for processing *****************************************
     //*****************************************************************************************
     Bool_t haveOutputGammaToPi0 = 1;
-    
     
     //*****************************************************************************************
     //************************** Set general style settings ***********************************
@@ -479,19 +487,14 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     Color_t color[20]           = { kBlack, kAzure, kGreen+2, kOrange+2, kRed, 
                                     kViolet, kBlue-9, kSpring+10, kCyan+3, kCyan-10, 
                                     kCyan, kGreen+4, kGreen-9, kGreen,  kYellow+4, 
-                                    kYellow+3, kMagenta+4, kMagenta-8, kGray, kGray+3
-        
+                                    kYellow+3, kMagenta+4, kMagenta-8, kGray, kGray+3    
                                   };
-    
-//                                     {kBlack, kRed+1, kBlue+1, kGreen+1, kMagenta+1, 
-//                                    809, kCyan+1, kGreen-2, kAzure+2, kGray};
     Int_t markerType            = 24;
     
-
     TF1 *One                    = new TF1("One","1",0,25);
     One->SetLineWidth(1.2);
     One->SetLineColor(1);
-
+    TString nameIntRanges[6]    = {"","Wide", "Narrow", "Left", "LeftWide", "LeftNarrow"};
     
     //*******************************************************************************************
     //************************** Initialization of variables ************************************
@@ -517,9 +520,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         cout<<"---> " << currentCutNumber << endl;
         number++;
     }
-
     cout<<"=========================="<<endl;
-
 
     //*******************************************************************************************
     //***************************** Initialization of histo arrays ******************************
@@ -742,6 +743,9 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             if (i==0) cutStringsName[i] = "standard #pi^{0} integration range";
             if (i==1) cutStringsName[i] = "wide #pi^{0} integration range";
             if (i==2) cutStringsName[i] = "narrow #pi^{0} integration range";
+            if (i==3) cutStringsName[i] = "standard #pi^{0} integration range, left norm";
+            if (i==4) cutStringsName[i] = "wide #pi^{0} integration range, left norm";
+            if (i==5) cutStringsName[i] = "narrow #pi^{0} integration range, left norm";
         } else {
             cutStringsName[i] = cutSelection[i].Data();
         }
@@ -763,8 +767,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             SetHistogramm(histoIncGammaRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma Spectra",0.0,2);
             
             histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get("IncRatioPurity_trueEff");
-            if(i == 1 && cutVariationName.Contains("IntRange")) histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get("IncRatioPurity_trueEffWide");
-            if(i == 2 && cutVariationName.Contains("IntRange")) histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get("IncRatioPurity_trueEffNarrow");
+            if(i > 0 && cutVariationName.Contains("IntRange")) histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("IncRatioPurity_trueEff%s",nameIntRanges[i].Data()));
             histoIncGammaToPi0Ratio[i]->SetTitle("");
             DrawGammaSetMarker(histoIncGammaToPi0Ratio[i], markerType, 2.0, color[i], color[i]);
             histoIncGammaToPi0RatioRatio[i] = (TH1D*) histoIncGammaToPi0Ratio[i]->Clone(Form("histoIncGammaToPi0RatioRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
@@ -772,8 +775,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             SetHistogramm(histoIncGammaToPi0RatioRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma/#pi^{0} Ratios",0,2);
             
             histoPi0Spectrum[i] = (TH1D*) fileCurrentFinal[i]->Get("CorrectedYieldTrueEff");
-            if(i == 1 && cutVariationName.Contains("IntRange")) histoPi0Spectrum[i] = (TH1D*) fileCurrentFinal[i]->Get("CorrectedYieldTrueEffWide");
-            if(i == 2 && cutVariationName.Contains("IntRange")) histoPi0Spectrum[i] = (TH1D*) fileCurrentFinal[i]->Get("CorrectedYieldTrueEffNarrow");
+            if(i > 0 && cutVariationName.Contains("IntRange")) histoPi0Spectrum[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("CorrectedYieldTrueEff%s",nameIntRanges[i].Data()));
             histoPi0Spectrum[i]->SetTitle("");
             DrawGammaSetMarker(histoPi0Spectrum[i], markerType, 2.0, color[i], color[i]);
             histoPi0SpectrumRatio[i] = (TH1D*) histoPi0Spectrum[i]->Clone(Form("histoPi0SpectrumRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
@@ -790,8 +792,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             SetHistogramm(histoPi0SpectrumFitRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #pi^{0} Spectra",0.0,2.0);
             */
             histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get("IncRatioPurity_trueEff");
-            if(i == 1 && cutVariationName.Contains("IntRange")) histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get("IncRatioPurity_trueEffWide");
-            if(i == 2 && cutVariationName.Contains("IntRange")) histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get("IncRatioPurity_trueEffNarrow");
+            if(i > 0 && cutVariationName.Contains("IntRange")) histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("IncRatioPurity_trueEff%s",nameIntRanges[i].Data()));
             histoIncGammaToPi0Ratio[i]->SetTitle("");
             DrawGammaSetMarker(histoIncGammaToPi0Ratio[i], markerType, 2.0, color[i], color[i]);
             histoIncGammaToPi0RatioRatio[i] = (TH1D*) histoIncGammaToPi0Ratio[i]->Clone(Form("histoIncGammaToPi0RatioRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
@@ -799,8 +800,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             SetHistogramm(histoIncGammaToPi0RatioRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma/#pi^{0} Ratios",0,2);
 
             histoIncGammaToPi0RatioFit[i] = (TH1D*) fileCurrentFinal[i]->Get("histoIncRatioFitPurity");
-            if(i == 1 && cutVariationName.Contains("IntRange")) histoIncGammaToPi0RatioFit[i] = (TH1D*) fileCurrentFinal[i]->Get("histoIncRatioFitPurityWide");
-            if(i == 2 && cutVariationName.Contains("IntRange")) histoIncGammaToPi0RatioFit[i] = (TH1D*) fileCurrentFinal[i]->Get("histoIncRatioFitPurityNarrow");
+            if(i > 0 && cutVariationName.Contains("IntRange"))  histoIncGammaToPi0RatioFit[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("histoIncRatioFitPurity%s",nameIntRanges[i].Data()));
             if(i == 1 && cutVariationName.Contains("Fit")) histoIncGammaToPi0RatioFit[i] = (TH1D*) fileCurrentFinal[i]->Get("histoIncRatioLowFitPurity");
             if(i == 2 && cutVariationName.Contains("Fit")) histoIncGammaToPi0RatioFit[i] = (TH1D*) fileCurrentFinal[i]->Get("histoIncRatioHighFitPurity");
 
@@ -811,8 +811,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             SetHistogramm(histoIncGammaToPi0RatioFitRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma/#pi^{0}_{Fit} Ratios",0,2);
 
             histoDR[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionTrueEffPurity");
-            if(i == 1 && cutVariationName.Contains("IntRange")) histoDR[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionTrueEffPurityWide");
-            if(i == 2 && cutVariationName.Contains("IntRange")) histoDR[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionTrueEffPurityNarrow");
+            if(i > 0 && cutVariationName.Contains("IntRange")) histoDR[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("DoubleRatioConversionTrueEffPurity%s",nameIntRanges[i].Data()));
             if(i == 1 && cutVariationName.CompareTo("CocktailEta") == 0) histoDR[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionTrueEffPurityHigh");
             if(i == 2 && cutVariationName.CompareTo("CocktailEta") == 0) histoDR[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionTrueEffPurityLow");
             if(i == 1 && cutVariationName.CompareTo("CocktailEtaNorm") == 0) histoDR[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionTrueEffPurityEtaHigh");
@@ -826,8 +825,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             SetHistogramm(histoDRRatio[i],"#it{p}_{T} (GeV/c)","Ratios of Double Ratios",0,2);
 
             histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionFitPurity");
-            if(i == 1 && cutVariationName.Contains("IntRange")) histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionFitPurityWide");
-            if(i == 2 && cutVariationName.Contains("IntRange")) histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionFitPurityNarrow");
+            if(i > 0 && cutVariationName.Contains("IntRange")) histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("DoubleRatioConversionFitPurity%s",nameIntRanges[i].Data()));
             if(i == 1 && cutVariationName.Contains("Fit")) histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionLowFitPurity");
             if(i == 2 && cutVariationName.Contains("Fit")) histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionHighFitPurity");
             if(i == 1 && cutVariationName.CompareTo("CocktailEta") == 0) histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionFitPurityHigh");
