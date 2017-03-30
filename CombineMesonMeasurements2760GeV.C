@@ -1945,7 +1945,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     histo2DPi0RatioToCombFit->GetXaxis()->SetMoreLogLabels();
     histo2DPi0RatioToCombFit->GetXaxis()->SetLabelOffset(-0.01);
 //  histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(-10,10);
-    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.05,2.45);
+    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.45,2.05);
     histo2DPi0RatioToCombFit->Draw("copy");
 
         ProduceGraphAsymmWithoutXErrors(graphRatioPi0CombCombFitStatA);
@@ -2011,18 +2011,26 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaLines(0.23, 70. , 1.1, 1.1,0.5, kGray, 7);
         DrawGammaLines(0.23, 70. , 0.9, 0.9,0.5, kGray, 7);
         
-        labelRatioToFitEnergy->Draw();
-        labelRatioToFitALICE->Draw();
-        labelRatioToFitPi0->Draw();
+        TLatex *labelRatioToFitEnergyInd   = new TLatex(0.115, 0.16, collisionSystem2760GeV.Data());
+        SetStyleTLatex( labelRatioToFitEnergyInd, textSizeLabelsPixel, 4, 1, 43, kTRUE, 11);
+        labelRatioToFitEnergyInd->Draw();
+        TLatex *labelRatioToFitALICEInd    = new TLatex(0.95, 0.92, "ALICE");
+        SetStyleTLatex( labelRatioToFitALICEInd, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
+        labelRatioToFitALICEInd->Draw();
+        TLatex *labelRatioToFitPi0Ind      = new TLatex(0.95, 0.87, "#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelRatioToFitPi0Ind, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
+        labelRatioToFitPi0Ind->Draw();
     
         //****************************** Definition of the Legend ******************************************
         //**************** Row def ************************
         Double_t rowsLegendOnlyPi0Ratio[6]          = {0.92, 0.867, 0.807, 0.747, 0.687, 0.627};
-        Double_t rowsLegendOnlyPi0RatioAbs[6]       = {0.92, 2.18, 2.03, 1.87, 1.73, 1.56 };
+//         Double_t rowsLegendOnlyPi0RatioAbs[6]       = {0.92, 2.18, 2.03, 1.87, 1.73, 1.56 };
+        Double_t rowsLegendOnlyPi0RatioAbs[6]       = {0.92, 1.855, 1.75, 1.635, 1.53, 1.415 };
+        
         Double_t columnsLegendOnlyPi0Ratio[3]       = {0.115, 0.325, 0.41};
         Double_t columnsLegendOnlyPi0RatioAbs[3]    = {0.115, 1.3, 1.95};
         Double_t lengthBox                          = 0.15;
-        Double_t heightBox                          = 0.08/2;
+        Double_t heightBox                          = 0.07/2;
         //****************** first Column **************************************************
         TLatex *textPCMOnlyRatioPi0                 = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[1],nameMeasGlobalLabel[0]);
         SetStyleTLatex( textPCMOnlyRatioPi0, textSizeLabelsPixel,4, 1, 43);
@@ -2743,7 +2751,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     // **********************************************************************************************************************
     // ******************************************* Ratio of Comb to Fit ****************************************
     // **********************************************************************************************************************
-    textSizeLabelsPixel                 = 48;
+    textSizeLabelsPixel                 = 54;
     canvasRatioToCombFit->cd();
     TH2F * histo2DEtaRatioToCombFit;
     histo2DEtaRatioToCombFit               = new TH2F("histo2DEtaRatioToCombFit","histo2DEtaRatioToCombFit",1000,0.33, 27.,1000,0.2,4.    );
@@ -2752,7 +2760,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     histo2DEtaRatioToCombFit->GetXaxis()->SetMoreLogLabels();
     histo2DEtaRatioToCombFit->GetXaxis()->SetLabelOffset(-0.01);
 //  histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(-10,10);
-    histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(0.05,2.55);
+    histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(0.45,2.05);
     histo2DEtaRatioToCombFit->Draw("copy");
 
         ProduceGraphAsymmWithoutXErrors(graphRatioEtaCombCombFitStatA);
@@ -2802,16 +2810,23 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         DrawGammaLines(0.33, 27. , 1.1, 1.1,0.5, kGray, 7);
         DrawGammaLines(0.33, 27. , 0.9, 0.9,0.5, kGray, 7);
         
-        labelRatioToFitEnergy->Draw();
-        labelRatioToFitALICE->Draw();
-        labelRatioToFitEta->Draw();
-    
-        //****************************** Definition of the Legend ******************************************
-        Double_t rowsLegendOnlyEtaRatio[4]          = {0.91, 0.86, 0.81, 0.76};
-        Double_t rowsLegendOnlyEtaRatioAbs[4]       = {0.91, 2.245, 2.11, 1.975};
-        Double_t columnsLegendOnlyEtaRatio[3]       = {0.115, 0.325, 0.40};
-        Double_t columnsLegendOnlyEtaRatioAbs[3]    = {0.115, 1.2, 1.62};
+        labelRatioToFitEnergyInd->Draw();
+        TLatex *labelRatioToFitALICEInd2   = new TLatex(0.95, 0.21, "ALICE");
+        SetStyleTLatex( labelRatioToFitALICEInd2, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
+        labelRatioToFitALICEInd2->Draw();
+        TLatex *labelRatioToFitEtaInd      = new TLatex(0.95,0.16,"#eta #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelRatioToFitEtaInd, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
+        labelRatioToFitEtaInd->Draw();
 
+        
+        //****************************** Definition of the Legend ******************************************
+        Double_t rowsLegendOnlyEtaRatio[4]          = {0.91, 0.85, 0.79, 0.76};
+//         Double_t rowsLegendOnlyEtaRatioAbs[4]       = {0.91, 2.245, 2.11, 1.975};
+        Double_t rowsLegendOnlyEtaRatioAbs[4]       = {0.91, 1.83, 1.71, 1.975};
+        Double_t columnsLegendOnlyEtaRatio[6]       = {0.115, 0.21, 0.285, 0.39, 0.58, 0.655};
+//         Double_t columnsLegendOnlyEtaRatioAbs[3]    = {0.115, 1.2, 1.62};
+        Double_t columnsLegendOnlyEtaRatioAbs[6]    = {0.115, 0.72, 0.98, 0.39, 4.3, 5.8};
+        
         //****************** first Column **************************************************
         TLatex *textPCMOnlyRatioEta                 = new TLatex(columnsLegendOnlyEtaRatio[0],rowsLegendOnlyEtaRatio[1],nameMeasGlobalLabel[0]);
         SetStyleTLatex( textPCMOnlyRatioEta, textSizeLabelsPixel,4, 1, 43);
@@ -2819,7 +2834,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         TLatex *textEMCALOnlyRatioEta               = new TLatex(columnsLegendOnlyEtaRatio[0],rowsLegendOnlyEtaRatio[2],nameMeasGlobalLabel[2]);
         SetStyleTLatex( textEMCALOnlyRatioEta, textSizeLabelsPixel,4, 1, 43);
         textEMCALOnlyRatioEta->Draw();
-        TLatex *textPCMEMCALOnlyRatioEta            = new TLatex(columnsLegendOnlyEtaRatio[0],rowsLegendOnlyEtaRatio[3],nameMeasGlobalLabel[4]);
+        TLatex *textPCMEMCALOnlyRatioEta            = new TLatex(columnsLegendOnlyEtaRatio[3],rowsLegendOnlyEtaRatio[1],nameMeasGlobalLabel[4]);
         SetStyleTLatex( textPCMEMCALOnlyRatioEta, textSizeLabelsPixel,4, 1, 43);
         textPCMEMCALOnlyRatioEta->Draw();
         
@@ -2830,21 +2845,27 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         TLatex *textSysOnlyRatioEta                 = new TLatex(columnsLegendOnlyEtaRatio[2] ,rowsLegendOnlyEtaRatio[0],"syst");
         SetStyleTLatex( textSysOnlyRatioEta, textSizeLabelsPixel,4, 1, 43);
         textSysOnlyRatioEta->Draw();
+        TLatex *textStatOnlyRatioEta2                = new TLatex(columnsLegendOnlyEtaRatio[4],rowsLegendOnlyEtaRatio[0] ,"stat");
+        SetStyleTLatex( textStatOnlyRatioEta2, textSizeLabelsPixel,4, 1, 43);
+        textStatOnlyRatioEta2->Draw();
+        TLatex *textSysOnlyRatioEta2                 = new TLatex(columnsLegendOnlyEtaRatio[5] ,rowsLegendOnlyEtaRatio[0],"syst");
+        SetStyleTLatex( textSysOnlyRatioEta2, textSizeLabelsPixel,4, 1, 43);
+        textSysOnlyRatioEta2->Draw();
         TMarker* markerPCMEtaOnlyRatioEta           = CreateMarkerFromGraph(graphRatioEtaPCMCombFitSys,columnsLegendOnlyEtaRatio[1] ,rowsLegendOnlyEtaRatio[1],1);
         markerPCMEtaOnlyRatioEta->DrawMarker(columnsLegendOnlyEtaRatioAbs[1] ,rowsLegendOnlyEtaRatioAbs[1]);
         TMarker* markerEMCALEtaOnlyRatioEta         = CreateMarkerFromGraph(graphRatioEtaEMCALCombFitSys, columnsLegendOnlyEtaRatio[1] ,rowsLegendOnlyEtaRatio[2],1);
         markerEMCALEtaOnlyRatioEta->DrawMarker(columnsLegendOnlyEtaRatioAbs[1] ,rowsLegendOnlyEtaRatioAbs[2]);
-        TMarker* markerPCMEMCALEtaOnlyRatioEta      = CreateMarkerFromGraph(graphRatioEtaPCMEMCALCombFitSys, columnsLegendOnlyEtaRatio[1] ,rowsLegendOnlyEtaRatio[3],1);
-        markerPCMEMCALEtaOnlyRatioEta->DrawMarker(columnsLegendOnlyEtaRatioAbs[1] ,rowsLegendOnlyEtaRatioAbs[3]);
+        TMarker* markerPCMEMCALEtaOnlyRatioEta      = CreateMarkerFromGraph(graphRatioEtaPCMEMCALCombFitSys, columnsLegendOnlyEtaRatio[4] ,rowsLegendOnlyEtaRatio[1],1);
+        markerPCMEMCALEtaOnlyRatioEta->DrawMarker(columnsLegendOnlyEtaRatioAbs[4] ,rowsLegendOnlyEtaRatioAbs[1]);
 
         TBox* boxPCMEtaOnlyRatioEta                 = CreateBoxFromGraph(graphRatioEtaPCMCombFitSys, columnsLegendOnlyEtaRatioAbs[2]-0.5*lengthBox , rowsLegendOnlyEtaRatioAbs[1]- heightBox,
-                                                                         columnsLegendOnlyEtaRatioAbs[2]+ 2*lengthBox, rowsLegendOnlyEtaRatioAbs[1]+ heightBox);
+                                                                         columnsLegendOnlyEtaRatioAbs[2]+ 1.5*lengthBox, rowsLegendOnlyEtaRatioAbs[1]+ heightBox);
         boxPCMEtaOnlyRatioEta->Draw("l");
         TBox* boxEMCALEtaOnlyRatioEta               = CreateBoxFromGraph(graphRatioEtaEMCALCombFitSys, columnsLegendOnlyEtaRatioAbs[2]-0.5*lengthBox , rowsLegendOnlyEtaRatioAbs[2]- heightBox,
-                                                                         columnsLegendOnlyEtaRatioAbs[2]+ 2*lengthBox, rowsLegendOnlyEtaRatioAbs[2]+ heightBox);
+                                                                         columnsLegendOnlyEtaRatioAbs[2]+ 1.5*lengthBox, rowsLegendOnlyEtaRatioAbs[2]+ heightBox);
         boxEMCALEtaOnlyRatioEta->Draw("l");
-        TBox* boxPCMEMCALEtaOnlyRatioEta            = CreateBoxFromGraph(graphRatioEtaPCMEMCALCombFitSys, columnsLegendOnlyEtaRatioAbs[2]-0.5*lengthBox , rowsLegendOnlyEtaRatioAbs[3]- heightBox,
-                                                                         columnsLegendOnlyEtaRatioAbs[2]+ 2*lengthBox, rowsLegendOnlyEtaRatioAbs[3]+ heightBox);
+        TBox* boxPCMEMCALEtaOnlyRatioEta            = CreateBoxFromGraph(graphRatioEtaPCMEMCALCombFitSys, columnsLegendOnlyEtaRatioAbs[5]-2.7*lengthBox , rowsLegendOnlyEtaRatioAbs[1]- heightBox,
+                                                                         columnsLegendOnlyEtaRatioAbs[5]+ 9.5*lengthBox, rowsLegendOnlyEtaRatioAbs[1]+ heightBox);
         boxPCMEMCALEtaOnlyRatioEta->Draw("l");
         
     canvasRatioToCombFit->SaveAs(Form("%s/Eta_RatioOfIndividualMeasToCombFit_PP.%s",outputDir.Data(),suffix.Data()));
