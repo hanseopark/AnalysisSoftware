@@ -380,7 +380,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoGammaFromXFromMotherPtPhi[i]                   = NULL;
         }
     }
-    
+
     //***************************** Get decay channels  *************************************************************
     for (Int_t i=0; i<nMotherParticles; i++) {
         for (Int_t j=0; j<18; j++) {
@@ -542,8 +542,8 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoGammaFromXFromMotherPhiOrBin[i]                = NULL;
         }
     }
-    
-    //***************************** Scale spectra *******************************************************************
+
+    //***************************** Scale spectra and params ********************************************************
     Double_t factorNEvents                                 = 1./nEvents;
     Double_t factorDecay                                   = 1.;
     TF1* corrFactorFromDecayLength = new TF1("decayLaw","1-exp(-x/[0])",0,500);
@@ -559,6 +559,7 @@ void PrepareSecondaries(    TString     meson                       = "",
         cout << motherParticles[i] << "\t--> " << factorDecay << endl;
         motherFactorDecayLength[i]                          = factorDecay;
 
+        // spectra
         if (histoMesonDaughterPtOrBin[i])           histoMesonDaughterPtOrBin[i]->Scale(        factorNEvents*factorDecay);
         if (histoMesonDaughterYOrBin[i])            histoMesonDaughterYOrBin[i]->Scale(         factorNEvents*factorDecay);
         if (histoMesonDaughterPhiOrBin[i])          histoMesonDaughterPhiOrBin[i]->Scale(       factorNEvents*factorDecay);
@@ -568,9 +569,36 @@ void PrepareSecondaries(    TString     meson                       = "",
         if (histoGammaFromXFromMotherPtOrBin[i])    histoGammaFromXFromMotherPtOrBin[i]->Scale( factorNEvents*scalingEta*scalingPhi*factorDecay);
         if (histoGammaFromXFromMotherYOrBin[i])     histoGammaFromXFromMotherYOrBin[i]->Scale(  factorNEvents*scalingEta*scalingPhi*factorDecay);
         if (histoGammaFromXFromMotherPhiOrBin[i])   histoGammaFromXFromMotherPhiOrBin[i]->Scale(factorNEvents*scalingEta*scalingPhi*factorDecay);
+
+        // parametrizations
+        if (cocktailInputParametrizations[i])
+            cocktailInputParametrizations[i]                    = (TF1*)ScaleTF1(cocktailInputParametrizations[i], eventNormScalingFactor*factorDecay, cocktailInputParametrizations[i]->GetName());
+        if (cocktailInputParametrizationsMtScaled[i])
+            cocktailInputParametrizationsMtScaled[i]            = (TF1*)ScaleTF1(cocktailInputParametrizationsMtScaled[i], eventNormScalingFactor*factorDecay, cocktailInputParametrizationsMtScaled[i]->GetName());
     }
     cout << "========================================"  << endl;
     delete corrFactorFromDecayLength;
+
+    //***************************** Read histograms from cocktail input file ****************************************
+    histoMesonMotherCocktailInputPtMeasBin                      = new TH1F*[nCocktailInputParticles];
+    histoMesonMotherPtMeasBin                                   = new TH1F*[nCocktailInputParticles];
+    for (Int_t i=0; i<nCocktailInputParticles; i++) {
+
+        histoMesonMotherCocktailInputPtMeasBin[i]               = (TH1F*)LoadCocktailInputSpectrum(fEnergyFlag, centrality, i);
+        if (histoMesonMotherCocktailInputPtMeasBin[i]) {
+            histoMesonMotherCocktailInputPtMeasBin[i]->SetName(Form("%s_CocktailInput_Pt_MeasBin",motherParticles[i+1].Data()));
+            histoMesonMotherCocktailInputPtMeasBin[i]->Sumw2();
+            histoMesonMotherCocktailInputPtMeasBin[i]->Scale(eventNormScalingFactor*motherFactorDecayLength[i+1]);
+
+            if (histoMesonMotherPtOrBin[i+1]) {
+                histoMesonMotherPtMeasBin[i]                    = (TH1F*)histoMesonMotherPtOrBin[i+1]->Clone(Form("%s_Pt_MeasBin",motherParticles[i+1].Data()));
+                histoMesonMotherPtMeasBin[i]->Sumw2();
+                RebinSpectrum(histoMesonMotherPtMeasBin[i], histoMesonMotherCocktailInputPtMeasBin[i], "");
+            } else {
+                histoMesonMotherPtMeasBin[i]                    = NULL;
+            }
+        }
+    }
 
     //***************************** calculate (pi0 from X)/pi0_param ************************************************
     histoRatioPi0FromXToPi0Param                                = new TH1F*[nMotherParticles];
@@ -737,15 +765,128 @@ void PrepareSecondaries(    TString     meson                       = "",
     delete legendMothersPhi;
     delete canvasMothersPhi;
     
+    //***************************** Plot K0s, K0l and Lambda cross check ********************************************
+    TCanvas* canvasInputCrossCheck                              = NULL;
+    TLegend* legendInputCrossCheck                              = NULL;
+    TPad* padInputCrossCheck                                    = NULL;
+    TPad* padInputCrossCheckRatio                               = NULL;
+    dummyHist                                                   = NULL;
+    TH1D* dummyHistRatio                                        = NULL;
+    TH1D* tempRatio1                                            = NULL;
+    TH1D* tempRatio2                                            = NULL;
+    TH1D* tempRatio3                                            = NULL;
+    TH1D* tempRatio4                                            = NULL;
+    for (Int_t i=0; i<nCocktailInputParticles; i++) {
+        if (histoMesonMotherCocktailInputPtMeasBin[i] && histoMesonMotherPtMeasBin[i] && (cocktailInputParametrizations[i+1] || cocktailInputParametrizationsMtScaled[i+1])) {
+
+            // calc. ratios
+            if (cocktailInputParametrizations[i+1]) {
+                tempRatio1                                      = (TH1D*)CalculateRatioToTF1((TH1D*)histoMesonMotherCocktailInputPtMeasBin[i],  cocktailInputParametrizations[i+1]);
+                tempRatio2                                      = (TH1D*)CalculateRatioToTF1((TH1D*)histoMesonMotherPtMeasBin[i],               cocktailInputParametrizations[i+1]);
+            }
+            if (cocktailInputParametrizationsMtScaled[i+1]) {
+                tempRatio3                                      = (TH1D*)CalculateRatioToTF1((TH1D*)histoMesonMotherCocktailInputPtMeasBin[i],  cocktailInputParametrizationsMtScaled[i+1]);
+                tempRatio4                                      = (TH1D*)CalculateRatioToTF1((TH1D*)histoMesonMotherPtMeasBin[i],               cocktailInputParametrizationsMtScaled[i+1]);
+            }
+
+            // start plotting
+            canvasInputCrossCheck                               = new TCanvas("canvasInputCrossCheck","",1100,1200);
+            padInputCrossCheck                                  = new TPad("padInputCrossCheck", "", 0., 0.25, 1., 1.,-1, -1, -2);
+            padInputCrossCheckRatio                             = new TPad("padInputCrossCheckRatio", "", 0., 0., 1., 0.25,-1, -1, -2);
+            legendInputCrossCheck                               = GetAndSetLegend2(0.4, 0.9-(0.048*5), 0.9, 0.9, 40);
+            legendInputCrossCheck->SetBorderSize(0);
+
+            DrawGammaCanvasSettings(canvasInputCrossCheck, 0.165, 0.015, 0.025, 0.25);
+            DrawGammaPadSettings(padInputCrossCheck,       0.165, 0.015, 0.025, 0.);
+            DrawGammaPadSettings(padInputCrossCheckRatio,  0.165, 0.015, 0.0, 0.25);
+
+            padInputCrossCheck->Draw();
+            padInputCrossCheck->SetLogy();
+            padInputCrossCheck->SetLogx();
+
+            padInputCrossCheckRatio->Draw();
+            padInputCrossCheckRatio->SetLogx();
+
+            dummyHist                                           = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
+            dummyHistRatio                                      = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
+
+            // spectra and params.
+            padInputCrossCheck->cd();
+
+            SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 5e-8, 1e2, 1.0, 1.8);
+            dummyHist->Draw();
+
+            DrawGammaSetMarker(histoMesonMotherCocktailInputPtMeasBin[i],   24, 2.0, kBlack,  kBlack);
+            DrawGammaSetMarker(histoMesonMotherPtMeasBin[i],                27, 2.0, kBlack,  kBlack);
+
+            histoMesonMotherCocktailInputPtMeasBin[i]->Draw("e1,same");
+            histoMesonMotherPtMeasBin[i]->Draw("e1,same");
+            
+            legendInputCrossCheck->AddEntry(histoMesonMotherCocktailInputPtMeasBin[i], Form("%s cocktail input (#times %.3e)", motherParticlesLatex[i+1].Data(), motherFactorDecayLength[i+1]), "p");
+            legendInputCrossCheck->AddEntry(histoMesonMotherPtMeasBin[i], Form("%s generated (#times %.3e)", motherParticlesLatex[i+1].Data(), motherFactorDecayLength[i+1]), "p");
+
+            if (cocktailInputParametrizations[i+1]) {
+                cocktailInputParametrizations[i+1]->SetLineColor(kBlue-2);
+                //cocktailInputParametrizations[i+1]->SetLineStyle(4);
+                cocktailInputParametrizations[i+1]->SetLineWidth(2);
+                cocktailInputParametrizations[i+1]->SetLineWidth(2);
+                cocktailInputParametrizations[i+1]->Draw("same");
+                legendInputCrossCheck->AddEntry(cocktailInputParametrizations[i+1], Form("%s param. (#times %.3e)", motherParticlesLatex[i+1].Data(), motherFactorDecayLength[i+1]), "l");
+            }
+
+            if (cocktailInputParametrizationsMtScaled[i+1]) {
+                cocktailInputParametrizationsMtScaled[i+1]->SetLineColor(kOrange+2);
+                //cocktailInputParametrizationsMtScaled[i+1]->SetLineStyle(4);
+                cocktailInputParametrizationsMtScaled[i+1]->SetLineWidth(2);
+                cocktailInputParametrizationsMtScaled[i+1]->SetLineWidth(2);
+                cocktailInputParametrizationsMtScaled[i+1]->Draw("same");
+                legendInputCrossCheck->AddEntry(cocktailInputParametrizationsMtScaled[i+1], Form("%s param. m_{T} scaled (#times %.3e)", motherParticlesLatex[i+1].Data(), motherFactorDecayLength[i+1]), "l");
+            }
+
+            legendInputCrossCheck->Draw("same");
+
+            PutProcessLabelAndEnergyOnPlot(                 0.22, 0.30, 0.032, cent, textMeasurement, "", 42, 0.03);
+            if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.25, 0.032, 0.03, 1.25, 42);
+            else PutALICESimulationLabel(                   0.22, 0.25, 0.032, 0.03, 1.25, 42);
+
+            // ratios of spectra to params.
+            padInputCrossCheckRatio->cd();
+            SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{spec.}{param.}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
+            dummyHistRatio->GetXaxis()->SetLabelOffset(-0.025);
+            dummyHistRatio->GetYaxis()->SetRangeUser(0.5,1.5);
+            dummyHistRatio->Draw();
+
+            DrawGammaLines(ptPlotMin, ptPlotMax, 1.0, 1.0, 2.0, kGray+2, 2);
+            DrawGammaLines(ptPlotMin, ptPlotMax, 1.2, 1.2, 2.0, kGray+2, 8);
+            DrawGammaLines(ptPlotMin, ptPlotMax, 0.8, 0.8, 2.0, kGray+2, 8);
+
+            if (cocktailInputParametrizations[i+1]) {
+                DrawGammaSetMarker(tempRatio1, 24, 2.0, kBlue-2,  kBlue-2);
+                DrawGammaSetMarker(tempRatio2, 27, 2.0, kBlue-2,  kBlue-2);
+                tempRatio1->Draw("e1,same");
+                tempRatio2->Draw("e1,same");
+            }
+
+            if (cocktailInputParametrizationsMtScaled[i+1]) {
+                DrawGammaSetMarker(tempRatio3, 24, 2.0, kOrange+2,  kOrange+2);
+                DrawGammaSetMarker(tempRatio4, 27, 2.0, kOrange+2,  kOrange+2);
+                tempRatio3->Draw("e1,same");
+                tempRatio4->Draw("e1,same");
+            }
+
+            canvasInputCrossCheck->SaveAs(Form("%s/InputCrossCheck%s_%.2f_%s.%s",outputDir.Data(), motherParticles[i+1].Data(),fRapidity,cutSelection.Data(),suffix.Data()));
+        }
+    }
+
     //***************************** Plot mT scaling cross check *****************************************************
     TCanvas* canvasMtCrossCheck                                 = NULL;
     TLegend* legendMtCrossCheck                                 = NULL;
     TPad* padMtCrossCheck                                       = NULL;
     TPad* padMtCrossCheckRatio                                  = NULL;
     dummyHist                                                   = NULL;
-    TH1D* dummyHistRatio                                        = NULL;
-    TH1D* tempRatio1                                            = NULL;
-    TH1D* tempRatio2                                            = NULL;
+    dummyHistRatio                                              = NULL;
+    tempRatio1                                                  = NULL;
+    tempRatio2                                                  = NULL;
     for (Int_t particle=0; particle<nMotherParticles; particle++) {
         if (histoMesonMotherPtOrBin[particle] && cocktailInputParametrizations[particle] && cocktailInputParametrizationsMtScaled[particle]) {
             canvasMtCrossCheck                                  = new TCanvas("canvasMtCrossCheck","",1100,1200);
@@ -838,19 +979,34 @@ void Initialize(TString meson, TString energy, Int_t numberOfBins){
 }
 
 //************************** Rebin spectrum *************************************************************************
-void RebinSpectrum(TH1F *Spectrum, TString NewName){
+void RebinSpectrum(TH1F* Spectrum, TH1F* SpectrumForBinning, TString NewName){
+
+    if (!SpectrumForBinning) return;
+
     if(NewName.CompareTo(""))
-        NewName             = Spectrum->GetName();
+        NewName                     = Spectrum->GetName();
     
-    Double_t newBinContent  = 0.;
+    Double_t newBinContent          = 0.;
     for (Int_t i=1; i<Spectrum->GetNbinsX()+1; i++) {
-        newBinContent       = Spectrum->GetBinContent(i) * Spectrum->GetBinWidth(i);
+        newBinContent               = Spectrum->GetBinContent(i) * Spectrum->GetBinWidth(i);
         Spectrum->SetBinContent(i, newBinContent);
     }
-    
-    *Spectrum = *((TH1F*)Spectrum->Rebin(fNBinsPt,NewName,fBinsPt));
-    Spectrum->Divide(fDeltaPt);
 
+    Int_t       nBins               = SpectrumForBinning->GetNbinsX();
+    Double_t*   binsPt              = new Double_t[nBins+1];
+    for (Int_t i=0; i<nBins+1; i++) {
+        if (i<nBins)    binsPt[i]   = SpectrumForBinning->GetXaxis()->GetBinLowEdge(i);
+        else            binsPt[i]   = SpectrumForBinning->GetXaxis()->GetBinUpEdge(i-1);
+    }
+    
+    TH1D* deltaPt                   = new TH1D("deltaPt","",nBins,binsPt);
+    for(Int_t iPt=1;iPt<nBins+1;iPt++){
+        deltaPt->SetBinContent(iPt, binsPt[iPt]-binsPt[iPt-1]);
+        deltaPt->SetBinError(iPt,   0);
+    }
+
+    *Spectrum                       = *((TH1F*)Spectrum->Rebin(nBins,NewName,binsPt));
+    Spectrum->Divide(deltaPt);
 }
 
 //************************** Routine to calculate mt scaled params **************************************************
@@ -1019,10 +1175,19 @@ void SaveMesonHistos() {
         if (cocktailInputParametrizationsMtScaled[i])   cocktailInputParametrizationsMtScaled[i]->Write(cocktailInputParametrizationsMtScaled[i]->GetName(),TObject::kOverwrite);
     }
 
+    // write input spectra and rebinned generate spectra
+    for (Int_t i=0; i<nCocktailInputParticles; i++) {
+        if (histoMesonMotherCocktailInputPtMeasBin[i])  histoMesonMotherCocktailInputPtMeasBin[i]->Write(   histoMesonMotherCocktailInputPtMeasBin[i]->GetName(),   TObject::kOverwrite);
+        if (histoMesonMotherPtMeasBin[i])               histoMesonMotherPtMeasBin[i]->Write(                histoMesonMotherPtMeasBin[i]->GetName(),                TObject::kOverwrite);
+    }
+
     // write ratio pi0 from X to pi0 param
     for (Int_t i=0; i<nMotherParticles; i++) {
         if (histoRatioPi0FromXToPi0Param[i]) histoRatioPi0FromXToPi0Param[i]->Write(histoRatioPi0FromXToPi0Param[i]->GetName(), TObject::kOverwrite);
     }
+
+    outputFile->Write();
+    outputFile->Close();
 }
 
 //************************** Routine for saving histograms **********************************************************
@@ -1047,6 +1212,15 @@ void SavePhotonHistos() {
         if (histoGammaFromXFromMotherYOrBin[i])     histoGammaFromXFromMotherYOrBin[i]->Write(  histoGammaFromXFromMotherYOrBin[i]->GetName(),  TObject::kOverwrite);
         if (histoGammaFromXFromMotherPhiOrBin[i])   histoGammaFromXFromMotherPhiOrBin[i]->Write(histoGammaFromXFromMotherPhiOrBin[i]->GetName(),TObject::kOverwrite);
     }
+    
+    // write input spectra and rebinned generate spectra
+    for (Int_t i=0; i<nCocktailInputParticles; i++) {
+        if (histoMesonMotherCocktailInputPtMeasBin[i])  histoMesonMotherCocktailInputPtMeasBin[i]->Write(   histoMesonMotherCocktailInputPtMeasBin[i]->GetName(),   TObject::kOverwrite);
+        if (histoMesonMotherPtMeasBin[i])               histoMesonMotherPtMeasBin[i]->Write(                histoMesonMotherPtMeasBin[i]->GetName(),                TObject::kOverwrite);
+    }
+
+    outputFile->Write();
+    outputFile->Close();
 }
 
 //************************** Create tex file containing BR table ****************************************************
@@ -1197,4 +1371,147 @@ Int_t GetMinimumBinAboveThreshold(TH1F* hist, Double_t thres) {
     return histTemp->GetMaximumBin();
 }
 
+//************************** Function to load cocktail input spectra from comp. file ********************************
+TH1F* LoadCocktailInputSpectrum(TString energy, TString centrality, Int_t particle) {
 
+    if (energy.CompareTo("") == 0) { cout << "no energy given!" << endl; return NULL; }
+
+    // get file of cocktail input objects
+    TString fCollSysFile                                        = "";
+    TString fCollSys                                            = "";
+    if (energy.Contains("PbPb")) {
+        fCollSysFile                                            = "PbPb";
+        fCollSys                                                = "PbPb";
+    } else if (energy.Contains("pPb")) {
+        fCollSysFile                                            = "PPb";
+        fCollSys                                                = "pPb";
+    } else  {
+        fCollSysFile                                            = "PP";
+        fCollSys                                                = "pp";
+    }
+
+    TString fileName                                            = Form("CocktailInput/CocktailInput%s.root", fCollSysFile.Data());
+    TFile file(fileName.Data());
+    if (file.IsZombie()) { cout << "file " << fileName.Data() << " not found!" << endl; return NULL; }
+
+    // get list of cocktail input objects in file
+    TString                         fEnergy                     = "";
+    if (energy.Contains("9"))       fEnergy                     = "0.9TeV";
+    else if (energy.Contains("2"))  fEnergy                     = "2.76TeV";
+    else if (energy.Contains("5"))  fEnergy                     = "5TeV";
+    else if (energy.Contains("7"))  fEnergy                     = "7TeV";
+    else if (energy.Contains("8"))  fEnergy                     = "8TeV";
+    else if (energy.Contains("13")) fEnergy                     = "13TeV";
+    else { cout << "energy " << energy.Data() << " not recognized, failed to load correct list of cocktail input objects!" << endl; return NULL; }
+
+    TString                                         fCentrality = "";
+    if (fCollSys.CompareTo("pp")) {
+        if (centrality.CompareTo("0-100%")==0)      fCentrality = "MB";
+        else if (centrality.CompareTo("0-5%")==0)   fCentrality = "0005";
+        else if (centrality.CompareTo("5-10%")==0)  fCentrality = "0510";
+        else if (centrality.CompareTo("0-10%")==0)  fCentrality = "0010";
+        else if (centrality.CompareTo("10-20%")==0) fCentrality = "1020";
+        else if (centrality.CompareTo("0-20%")==0)  fCentrality = "0020";
+        else if (centrality.CompareTo("20-40%")==0) fCentrality = "2040";
+        else if (centrality.CompareTo("20-50%")==0) fCentrality = "2050";
+        else if (centrality.CompareTo("40-60%")==0) fCentrality = "4060";
+        else if (centrality.CompareTo("60-80%")==0) fCentrality = "6080";
+        else if (centrality.CompareTo("80-90%")==0) fCentrality = "8090";
+        else if (centrality.CompareTo("80-100%")==0)fCentrality = "80100";
+        else if (centrality.CompareTo("20-30%")==0) fCentrality = "2030";
+        else if (centrality.CompareTo("30-40%")==0) fCentrality = "3040";
+        else { cout << "centrality " << centrality.Data() << " not recognized, failed to load correct list of cocktail input objects!" << endl; return NULL; }
+    }
+
+    TString                             listName                = "";
+    if (fCollSys.CompareTo("pp")==0)    listName                = Form("%s_%s",     fCollSys.Data(), fEnergy.Data());
+    else                                listName                = Form("%s_%s_%s",  fCollSys.Data(), fEnergy.Data(), fCentrality.Data());
+    TList* list                                                 = (TList*)file.Get(listName.Data());
+    if (!list) { cout << "list " << listName.Data() << " not contained in file " << fileName.Data() << "!" << endl; return NULL; }
+
+    // read cocktail input spectra
+    TH1F*       outputHisto                                     = NULL;
+    TObject*    tempObject                                      = NULL;
+    TString     tempObjectClassName                             = "";
+    if ( list->FindObject(Form("%sStat", cocktailInputParticles[particle].Data())) ) {
+        tempObject                                          = (TObject*)list->FindObject(Form("%sStat", cocktailInputParticles[particle].Data()));
+        tempObjectClassName                                 = (TString)tempObject->ClassName();
+
+        if (tempObjectClassName.Contains("TH1")) {
+            outputHisto                                     = (TH1F*)list->FindObject(Form("%sStat", cocktailInputParticles[particle].Data()));
+        } else if (tempObjectClassName.CompareTo("TGraphErrors") == 0) {
+            outputHisto                                     = (TH1F*)TransformGraphToTH1F((TGraphErrors*)(list->FindObject(Form("%sStat", cocktailInputParticles[particle].Data()))));
+        } else if (tempObjectClassName.CompareTo("TGraphAsymmErrors") == 0) {
+            outputHisto                                     = (TH1F*)TransformGraphToTH1F((TGraphAsymmErrors*)(list->FindObject(Form("%sStat", cocktailInputParticles[particle].Data()))));
+        } else {
+            cout << Form("%sStat", cocktailInputParticles[particle].Data()) << " object type not recognized!" << endl;
+            return NULL;
+        }
+    }
+
+    return outputHisto;
+}
+
+//************************** Function to transform graph to TH1D ****************************************************
+TH1F* TransformGraphToTH1F(TObject* inputObject) {
+
+    if (!inputObject) return NULL;
+
+    TString inputObjectClassName                                    = inputObject->ClassName();
+
+    TH1F*               outputHisto                                 = NULL;
+    TGraphErrors*       tempGraphErrors                             = NULL;
+    TGraphAsymmErrors*  tempGraphAsymmErrors                        = NULL;
+
+    if (inputObjectClassName.CompareTo("TGraphErrors") == 0) {
+        tempGraphErrors                                             = (TGraphErrors*)inputObject->Clone("tempGraphErrors");
+        Double_t*   xValue                                          = tempGraphErrors->GetX();
+        Double_t*   yValue                                          = tempGraphErrors->GetY();
+        Double_t*   xError                                          = tempGraphErrors->GetEX();
+        Double_t*   yError                                          = tempGraphErrors->GetEY();
+        Int_t       nPoints                                         = tempGraphErrors->GetN();
+
+        Double_t*   newBinningX                                     = new Double_t[nPoints+1];
+        for(Int_t i = 0; i < nPoints; i++) {
+            newBinningX[i]                                          = xValue[i] - xError[i];
+        }
+        newBinningX[nPoints]                                        = xValue[nPoints-1] + xError[nPoints-1];
+
+        outputHisto                                                 = new TH1F("outputHisto","",nPoints,newBinningX);
+        for(Int_t i = 1; i <= nPoints; i++){
+            outputHisto->SetBinContent(i,   yValue[i-1]);
+            outputHisto->SetBinError(i,     yError[i-1]);
+        }
+
+        delete[] newBinningX;
+
+    } else if (inputObjectClassName.CompareTo("TGraphAsymmErrors") == 0) {
+        tempGraphAsymmErrors                                        = (TGraphAsymmErrors*)inputObject->Clone("tempGraphAsymmErrors");
+        Double_t*   xValue                                          = tempGraphAsymmErrors->GetX();
+        Double_t*   yValue                                          = tempGraphAsymmErrors->GetY();
+        Double_t*   xErrorLow                                       = tempGraphAsymmErrors->GetEXlow();
+        Double_t*   xErrorHigh                                      = tempGraphAsymmErrors->GetEXhigh();
+        Double_t*   yErrorLow                                       = tempGraphAsymmErrors->GetEYlow();
+        Double_t*   yErrorHigh                                      = tempGraphAsymmErrors->GetEYhigh();
+        Int_t       nPoints                                         = tempGraphAsymmErrors->GetN();
+
+        Double_t*   newBinningX                                     = new Double_t[nPoints+1];
+        for(Int_t i = 0; i < nPoints; i++) {
+            newBinningX[i]                                          = xValue[i] - xErrorLow[i];
+        }
+        newBinningX[nPoints]                                        = xValue[nPoints-1] + xErrorHigh[nPoints-1];
+
+        outputHisto                                                 = new TH1F("outputHisto","",nPoints,newBinningX);
+        for(Int_t i = 1; i <= nPoints; i++){
+            outputHisto->SetBinContent(i,   yValue[i-1]);
+            outputHisto->SetBinError(i,     (yErrorLow[i-1] + yErrorHigh[i-1]) / 2);
+        }
+
+        delete[] newBinningX;
+    } else {
+        cout << inputObject->GetName() << " type not recognized or not supported" << endl;
+        return NULL;
+    }
+
+    return outputHisto;
+}

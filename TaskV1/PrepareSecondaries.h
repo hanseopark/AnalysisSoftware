@@ -25,6 +25,10 @@ TString     motherParticles[nMotherParticles]           = {"Eta","K0s","K0l","La
 TString     motherParticlesPDG[nMotherParticles]        = {"221","310","130","3122","113","331","223","213","-213","333","443","1114","2114","2214","2224","3212"};
 TString     motherParticlesLatex[nMotherParticles]      = { "#eta","K^{0}_{S}","K^{0}_{L}","#Lambda","#rho^{0}","#eta'","#omega","#rho^{+}","#rho^{-}","#phi",
                                                             "J/#psi","#Delta^{-}","#Delta^{0}","#Delta^{+}","#Delta^{++}","#Sigma^{0}"};
+
+const Int_t nCocktailInputParticles                     = 3;
+TString cocktailInputParticles[nCocktailInputParticles] = {"NKaonSubS", "NKaonSubS", "Lambda"};
+
 //ctau given in (cm) below! - zero means: ctau < 0.01cm
 Double_t    motherParticles_ctau[nMotherParticles]      = {0,2.68,1533.74,7.89,0,0,0,0,0,0,0,0,0,0,0,0};
 Double_t    motherFactorDecayLength[nMotherParticles]   = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -52,17 +56,23 @@ TH1F*  histMtScalingFactors                             = NULL;
 TH1F** histoRatioPi0FromXToPi0Param                     = NULL;
 TH1F** histoDecayChannels                               = NULL;
 TH1F** histoDecayChannelsBR                             = NULL;
+
 TH2F** histoMesonDaughterPtY                            = NULL;
 TH2F** histoMesonDaughterPtYCorr                        = NULL;
 TH2F** histoMesonDaughterPtPhi                          = NULL;
-TH2F** histoMesonMotherPtY                              = NULL;
-TH2F** histoMesonMotherPtPhi                            = NULL;
 TH1F** histoMesonDaughterPtOrBin                        = NULL;
 TH1F** histoMesonDaughterYOrBin                         = NULL;
 TH1F** histoMesonDaughterPhiOrBin                       = NULL;
+
+TH1F** histoMesonMotherCocktailInputPtMeasBin           = NULL;     // K0s, (K0l,) Lambda
+TH1F** histoMesonMotherPtMeasBin                        = NULL;
+
+TH2F** histoMesonMotherPtY                              = NULL;
+TH2F** histoMesonMotherPtPhi                            = NULL;
 TH1F** histoMesonMotherPtOrBin                          = NULL;
 TH1F** histoMesonMotherYOrBin                           = NULL;
 TH1F** histoMesonMotherPhiOrBin                         = NULL;
+
 TH2F** histoGammaFromXFromMotherPtY                     = NULL;
 TH2F** histoGammaFromXFromMotherPtYCorr                 = NULL;
 TH2F** histoGammaFromXFromMotherPtPhi                   = NULL;
@@ -83,26 +93,32 @@ TF1*   cocktailInputParametrizationPi0                  = NULL;
 TF1*   paramScaleBase                                   = NULL;
 
 //************************** Methods ******************************************************
-void        Initialize                              (   TString meson,
-                                                        TString energy,
-                                                        Int_t   numberOfBins    );
-void        RebinSpectrum                           (   TH1F*   Spectrum,
-                                                        TString NewName         );
-void        SaveMesonHistos                         (                           );
-void        SavePhotonHistos                        (                           );
-TF1*        MtScaledParam                           (   TF1*    param,
-                                                        Int_t   particleNumber  );
-Double_t    GetMass                                 (   TString particle        );
-void        SetHistogramTitles                      (   TH1F*   input,
-                                                        TString title,
-                                                        TString xTitle,
-                                                        TString yTitle          );
-TH1D*       CalculateRatioToTF1                     (   TH1D*   hist,
-                                                        TF1*    func            );
-void        CorrectForNonFlatRapidity               (   TH2F*   histCorr,
-                                                        TH2F*   histOr,
-                                                        TList*  list            );
-void        CreateBRTableLatex                      (                           );
+void        Initialize                              (   TString     meson,
+                                                        TString     energy,
+                                                        Int_t       numberOfBins        );
+void        RebinSpectrum                           (   TH1F*       Spectrum,
+                                                        TH1F*       SpectrumForBinning,
+                                                        TString     NewName             );
+void        SaveMesonHistos                         (                                   );
+void        SavePhotonHistos                        (                                   );
+TF1*        MtScaledParam                           (   TF1*        param,
+                                                        Int_t       particleNumber      );
+Double_t    GetMass                                 (   TString     particle            );
+void        SetHistogramTitles                      (   TH1F*       input,
+                                                        TString     title,
+                                                        TString     xTitle,
+                                                        TString     yTitle              );
+TH1D*       CalculateRatioToTF1                     (   TH1D*       hist,
+                                                        TF1*        func                );
+void        CorrectForNonFlatRapidity               (   TH2F*       histCorr,
+                                                        TH2F*       histOr,
+                                                        TList*      list                );
+void        CreateBRTableLatex                      (                                   );
 Int_t       GetMinimumBinAboveThreshold             (   TH1F*       hist,
-                                                        Double_t    thres       );
+                                                        Double_t    thres               );
+TH1F*       LoadCocktailInputSpectrum               (   TString     energy,
+                                                        TString     centrality,
+                                                        Int_t       particle            );
+TH1F*       TransformGraphToTH1F                    (   TObject*    inputObject         );
+
 
