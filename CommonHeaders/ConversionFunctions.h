@@ -14,6 +14,7 @@ Float_t             CalculateMeanPt(const TF1* );
 void                CalculateMeanPtWithError(const TF1* , Float_t& , Float_t& );
 // TH1D*            CalculateHistoRatioToFit (TH1D*, TF1*);
 // TH1F*            CalculateHistoRatioToFit (TH1F*, TF1*);
+TF1*                ScaleTF1(TF1* func, Double_t constant, TString name);
 TF1*                MultiplyTF1(TF1* f1, TF1* f2, TString name);
 TF1*                DivideTF1(TF1* f1, TF1* f2, TString name);
 TH1D*               DivideTF1IntoHisto(TF1* f1, TF1* f2, TString name, TH1D *dummy);
@@ -177,6 +178,32 @@ TH1F* CalculateHistoRatioToSpline (TH1F* histo, TSpline* fit){
     return histo2;
 }
 
+//================================================================================================================
+//Scale TF1 with constant
+//================================================================================================================
+TF1* ScaleTF1(TF1* func, Double_t constant, TString name) {
+
+    if (!func) return NULL;
+
+    Double_t    xMin, xMax;
+    TString     formula         = func->GetExpFormula();
+    func->GetRange(xMin, xMax);
+
+    for (Int_t i=0; i<func->GetNpar(); i++) {
+        formula.ReplaceAll(Form("[%d]", i), Form("[placeholder%d]",i+1));
+    }
+    for (Int_t i=1; i<func->GetNpar()+1; i++) {
+        formula.ReplaceAll(Form("[placeholder%d]", i), Form("[%d]",i));
+    }
+
+    TF1* result                 = new TF1(name.Data(), Form("[0] * (%s)", formula.Data()), xMin, xMax);
+    for (Int_t i=0; i<func->GetNpar()+1; i++) {
+        if (i==0)   result->SetParameter(i, constant);
+        else        result->SetParameter(i, func->GetParameter(i-1));
+    }
+
+    return result;
+}
 
 //================================================================================================================
 //Multiply two TF1s
