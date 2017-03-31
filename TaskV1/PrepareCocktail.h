@@ -76,6 +76,10 @@ TH1F**      histoGammaMotherYOrBin                          = NULL;
 TH2F**      histoGammaMotherPtPhi                           = NULL;
 TH1F**      histoGammaMotherPhiOrBin                        = NULL;
 
+TH2F**      histoGammaMotherPtGammaPt                       = NULL;
+TH1F**      histoGammaMotherPtGammaOrBin                    = NULL;
+TH1F**      histoGammaMotherPtGamma                         = NULL;
+
 //************************** Cocktail input ***********************************************
 TFile*      cocktailInputFile                               = NULL;
 TList*      cocktailInputList                               = NULL;
