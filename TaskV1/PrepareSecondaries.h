@@ -101,8 +101,6 @@ void        RebinSpectrum                           (   TH1F*       Spectrum,
                                                         TString     NewName             );
 void        SaveMesonHistos                         (                                   );
 void        SavePhotonHistos                        (                                   );
-TF1*        MtScaledParam                           (   TF1*        param,
-                                                        Int_t       particleNumber      );
 Double_t    GetMass                                 (   TString     particle            );
 void        SetHistogramTitles                      (   TH1F*       input,
                                                         TString     title,

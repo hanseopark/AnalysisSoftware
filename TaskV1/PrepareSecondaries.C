@@ -227,9 +227,9 @@ void PrepareSecondaries(    TString     meson                       = "",
             cocktailInputParametrizationsMtScaled[i]            = new TF1(*paramMtTemp);
         else {
             if (cocktailInputParametrizationPi0)
-                cocktailInputParametrizationsMtScaled[i]        = (TF1*)MtScaledParam(cocktailInputParametrizationPi0, i);
+                cocktailInputParametrizationsMtScaled[i]        = (TF1*)MtScaledParam(cocktailInputParametrizationPi0, motherParticlesPDG[i].Atoi(), 111, mtScaleFactor[i], kFALSE, kTRUE);
             else
-                cocktailInputParametrizationsMtScaled[i]        = (TF1*)MtScaledParam(cocktailInputParametrizations[0], i);
+                cocktailInputParametrizationsMtScaled[i]        = NULL;
         }
     }
     
@@ -1007,34 +1007,6 @@ void RebinSpectrum(TH1F* Spectrum, TH1F* SpectrumForBinning, TString NewName){
 
     *Spectrum                       = *((TH1F*)Spectrum->Rebin(nBins,NewName,binsPt));
     Spectrum->Divide(deltaPt);
-}
-
-//************************** Routine to calculate mt scaled params **************************************************
-TF1* MtScaledParam(TF1* param, Int_t particleNumber) {
-    
-    if (!param || particleNumber==0)
-        return NULL;
-    
-    Double_t scaleFactor                        = mtScaleFactor[particleNumber];
-    Double_t mass                               = GetMass(motherParticles[particleNumber]);
-    Double_t massPi0                            = GetMass("Pi0");
-    
-    if (!scaleFactor || !mass || !massPi0)
-        return NULL;
-    
-    Double_t xMin, xMax;
-    param->GetRange(xMin, xMax);
-    
-    paramScaleBase                              = param;
-    
-    TF1* scaledParam                            = new TF1("scaledParam",
-                                                          [&](double*x, double *p)
-                                                          {return p[2] * paramScaleBase->Eval(5.) / paramScaleBase->Eval(TMath::Sqrt(25. + p[0]*p[0] - p[1]*p[1])) * x[0]/TMath::Sqrt(x[0]*x[0] + p[0]*p[0] - p[1]*p[1])*paramScaleBase->Eval(TMath::Sqrt(x[0]*x[0] + p[0]*p[0] - p[1]*p[1]));},
-                                                          xMin, xMax, 3);
-    scaledParam->SetParameters(mass, massPi0, scaleFactor);
-    scaledParam->SetName(Form("%s_pt_mtScaled", motherParticlesPDG[particleNumber].Data()));
-    
-    return scaledParam;
 }
 
 //************************** Calculate ratio of TF1 to TH1D *********************************************************
