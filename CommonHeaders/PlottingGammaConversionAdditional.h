@@ -4421,7 +4421,7 @@ Color_t GetColorSystematics(    TString variationName,
                                 TString mode            = ""
                             ){    
 
-    if ( variationName.CompareTo("BGEstimate_pp") == 0 )
+    if ( variationName.CompareTo("BGEstimate_pp") == 0 || variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )
         return kTeal-5;
     if ( variationName.CompareTo("BG") == 0 )
         return kOrange+5;
@@ -4437,7 +4437,7 @@ Color_t GetColorSystematics(    TString variationName,
         return kCyan+6; 
     if ( variationName.CompareTo("PsiPair") == 0 )
         return kRed-2;    
-    if ( variationName.CompareTo("YieldExtraction") == 0 || variationName.CompareTo("YieldExtraction_pp") == 0  )
+    if ( variationName.CompareTo("YieldExtraction") == 0 || variationName.CompareTo("YieldExtraction_pp") == 0 || variationName.CompareTo("IntRange") == 0 )
         return kBlue;
     if ( variationName.CompareTo("dEdxE") == 0 )
         return kRed+1;
@@ -4477,7 +4477,7 @@ Color_t GetColorSystematics(    TString variationName,
         return 404;
     if ( variationName.CompareTo("Efficiency") == 0 )
         return kPink-6;
-    if ( variationName.CompareTo("YieldExtractionPi0") == 0 )
+    if ( variationName.CompareTo("YieldExtractionPi0") == 0 || variationName.CompareTo("IntRange") == 0 )
         return 860;
     if ( variationName.CompareTo("ClusterTime") == 0 )
         return kBlue-4;
@@ -4506,7 +4506,7 @@ Style_t GetMarkerStyleSystematics(  TString variationName,
                                     TString mode            = ""
                                   ){    
 
-    if ( variationName.CompareTo("BGEstimate_pp") == 0 )
+    if ( variationName.CompareTo("BGEstimate_pp") == 0 || variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )
         return 24;
     if ( variationName.CompareTo("BG") == 0 )
         return 28;
@@ -4522,7 +4522,7 @@ Style_t GetMarkerStyleSystematics(  TString variationName,
         return 21; 
     if ( variationName.CompareTo("PsiPair") == 0 )
         return 23;    
-    if ( variationName.CompareTo("YieldExtraction") == 0 || variationName.CompareTo("YieldExtraction_pp") == 0  )
+    if ( variationName.CompareTo("YieldExtraction") == 0 || variationName.CompareTo("YieldExtraction_pp") == 0 )
         return 24;
     if ( variationName.CompareTo("dEdxE") == 0 )
         return 21;
@@ -4562,7 +4562,7 @@ Style_t GetMarkerStyleSystematics(  TString variationName,
         return 22;
     if ( variationName.CompareTo("Efficiency") == 0 )
         return 23;
-    if ( variationName.CompareTo("YieldExtractionPi0") == 0 )
+    if ( variationName.CompareTo("YieldExtractionPi0") == 0 || variationName.CompareTo("IntRange") == 0 )
         return 20;
     if ( variationName.CompareTo("ClusterTime") == 0 )
         return 25;
@@ -4590,7 +4590,7 @@ Style_t GetMarkerStyleSystematics(  TString variationName,
 //**********************************************************************************
 TString GetSystematicsName  (  TString variationName = "" ){    
     
-    if ( variationName.CompareTo("BGEstimate_pp") == 0 )
+    if ( variationName.CompareTo("BGEstimate_pp") == 0 || variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )
         return "pile-up";
     if ( variationName.CompareTo("BG") == 0 )
         return "BG method";
@@ -4606,7 +4606,7 @@ TString GetSystematicsName  (  TString variationName = "" ){
         return "MC smearing"; 
     if ( variationName.CompareTo("PsiPair") == 0 )
         return "#psi_{pair} #gamma";
-    if ( variationName.CompareTo("YieldExtraction") == 0 || variationName.CompareTo("YieldExtraction_pp") == 0  )
+    if ( variationName.CompareTo("YieldExtraction") == 0 || variationName.CompareTo("YieldExtraction_pp") == 0 )
         return "yield extraction";
     if ( variationName.CompareTo("dEdxE") == 0 )
         return "dE/dx e-line";
@@ -4650,7 +4650,7 @@ TString GetSystematicsName  (  TString variationName = "" ){
         return "SPD pile-up";
     if ( variationName.CompareTo("Efficiency") == 0 )
         return "efficiency";
-    if ( variationName.CompareTo("YieldExtractionPi0") == 0 )
+    if ( variationName.CompareTo("YieldExtractionPi0") == 0 || variationName.CompareTo("IntRange") == 0 )
         return "yield extraction #pi^{0}";
     if ( variationName.CompareTo("YieldExtractionEta") == 0 )
         return "yield extraction #eta";

@@ -114,33 +114,28 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
         if (spectrumName.Contains("Gamma"))
             yRangesSysPlotting[1]               = 15.5;
         else 
-            yRangesSysPlotting[1]               = 28.5;
-        
+            yRangesSysPlotting[1]               = 28.5;    
     } 
     
-    // Set names of cut variations for legends
-    TString nameCutVariation[16]                = { "dE/dx e-line", "TPC cluster", "Single e^{#pm} p_{T}", "#chi^{2} #gamma & #psi_{pair}", "q_{T}",
-                                                    "Double Count", "BG method", "Periods", "SPD pileup", "Out of bunch pileup", 
-                                                    "cos(#Theta_{point})","dE/dx #pi-line","#alpha meson","Cocktail", "#it{R}_{conv}"
-                                                    "#pi^{0} yield extraction" };
-
     // Set names of cut variations for file input
     TString nameCutVariationSC[16]              = {"dEdxE", "TPCCluster", "SinglePt", "Chi2" , "Qt" ,
                                                     "DoubleCount" ,"BG" ,"Periods" ,"SPD" ,"Pileup",
-                                                    "CosPoint","dEdxPi", "Alpha" ,"Cocktail","RCut"
-                                                    "YieldExtraction" };
+                                                    "CosPoint","dEdxPi", "Alpha" ,"Cocktail","RCut",
+                                                    "IntRange" };
 
     // Set colors and markers
     Color_t color[20];
     Color_t markerStyle[20];
+    // Set names of cut variations for legends
+    TString nameCutVariation[16];
+    
     for (Int_t k =0; k<nCuts; k++ ){
         cout << "variation: " << nameCutVariationSC[k].Data() << endl;
         color[k]                                = GetColorSystematics( nameCutVariationSC[k] ); 
         markerStyle[k]                          = GetMarkerStyleSystematics( nameCutVariationSC[k] );     
         nameCutVariation[k]                     = GetSystematicsName(nameCutVariationSC[k]);
-        cout << "name for writing: " << nameCutVariation[k].Data() << endl;
+        cout << "name for writing: " << nameCutVariation[k].Data() << "\t"<< color[k]  << "\t" << markerStyle[k] << endl;
     }
-
 
                                                     
     // adapt some cut name for different energies
@@ -166,12 +161,12 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                                                     1, 1, 1, 0, 0,  0 };
     Bool_t benableDR900GeV[16]                  = { 1, 1, 1, 1, 1,  1, 1, 0, 1, 1, 
                                                     1, 1, 1, 1, 0,  0 };
-    Bool_t benableIncGamma2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 0, 0, 0, 0, 
+    Bool_t benableIncGamma2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 0, 0, 1, 1, 
                                                     0, 1, 0, 0, 0,  0 };
-    Bool_t benableIncRatio2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 1, 0, 0, 0, 
-                                                    0, 1, 1, 0, 0,  0 };
-    Bool_t benableDR2760GeV[16]                 = { 1, 1, 1, 1, 1,  0, 1, 0, 0, 0, 
-                                                    0, 1, 1, 0, 0,  0 };
+    Bool_t benableIncRatio2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 1, 0, 1, 1, 
+                                                    0, 1, 1, 0, 0,  1 };
+    Bool_t benableDR2760GeV[16]                 = { 1, 1, 1, 1, 1,  0, 1, 0, 1, 1, 
+                                                    0, 1, 1, 0, 0,  1 };
     Bool_t benableIncGamma7TeV[16]              = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1, 
                                                     1, 1, 1, 0, 0,  0 };
     Bool_t benableIncRatio7TeV[16]              = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1, 
@@ -196,12 +191,12 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                                                     0, 0, 0, 0, 0,  0 };
     Bool_t bsmoothDR900GeV[16]                  = { 0, 0, 0, 0, 1,  0, 0, 0, 1, 1, 
                                                     0, 0, 0, 0, 0,  0 };
-    Bool_t bsmoothIncGamma2760GeV[16]           = { 1, 1, 1, 0, 0,  0, 0, 0, 0, 0, 
-                                                    0, 0, 0, 0, 0,  0 };
-    Bool_t bsmoothIncRatio2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 1, 0, 0, 0, 
-                                                    0, 1, 1, 0, 0,  0 };
-    Bool_t bsmoothDR2760GeV[16]                 = { 1, 1, 1, 1, 1,  0, 1, 0, 0, 0, 
-                                                    0, 1, 1, 0, 0,  0 };
+    Bool_t bsmoothIncGamma2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 0, 0, 1, 1, 
+                                                    0, 1, 0, 0, 0,  0 };
+    Bool_t bsmoothIncRatio2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 1, 0, 1, 1, 
+                                                    0, 1, 1, 0, 0,  1 };
+    Bool_t bsmoothDR2760GeV[16]                 = { 1, 1, 1, 1, 1,  0, 1, 0, 1, 1, 
+                                                    0, 1, 1, 0, 0,  1 };
     Bool_t bsmoothIncGamma7TeV[16]              = { 0, 0, 0, 0, 1,  0, 0, 1, 1, 1, 
                                                     0, 0, 0, 0, 0,  0 };
     Bool_t bsmoothIncRatio7TeV[16]              = { 0, 0, 0, 0, 1,  0, 0, 1, 1, 1, 
@@ -343,11 +338,11 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
         TGraphAsymmErrors* graphNegErrors       = NULL;
 
         // Set currently undetermined uncertainties
-        if ( nameCutVariationSC[i].CompareTo("Pileup")==0  ){
+        if ( nameCutVariationSC[i].CompareTo("Pileup")==0 || (nameCutVariationSC[i].CompareTo("SPD")==0 && !energy.CompareTo("2.76TeV")) ){
             TString nameGraphPos;
             TString nameGraphNeg;
-            nameGraphPos                        = Form("%s_SystErrorRelPos_%s_pp",spectrumName.Data(),nameCutVariationSC[i-1].Data()  );
-            nameGraphNeg                        = Form("%s_SystErrorRelNeg_%s_pp",spectrumName.Data(),nameCutVariationSC[i-1].Data()  );
+            nameGraphPos                        = Form("%s_SystErrorRelPos_%s_pp",spectrumName.Data(),nameCutVariationSC[0].Data()  );
+            nameGraphNeg                        = Form("%s_SystErrorRelNeg_%s_pp",spectrumName.Data(),nameCutVariationSC[0].Data()  );
             cout << "Cutstudies " << i << "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
@@ -487,6 +482,19 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                             errorsMeanErrCorr[i][k] = errorFixed*0.01;
                         }    
                     }
+                } else {
+                    adjustPtDependent           = kTRUE;
+                    for (Int_t k = 0; k < nPtBinsActive; k++){
+                        if (!energy.CompareTo("2.76TeV"))
+                            errorFixed              = 0.3+pow(ptBins[k],1.9)*0.02+0.1*ptBins[k];
+                        
+                        if (errorFixed != -1){
+                            errorsMean[i][k]        = errorFixed;
+                            errorsMeanErr[i][k]     = errorFixed*0.01;
+                            errorsMeanCorr[i][k]    = errorFixed;
+                            errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                        }    
+                    }
                 }    
             }
             
@@ -498,6 +506,8 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                         if (spectrumName.Contains("Ratio")){
                             if (ptBins[k] > 0.6)
                                 errorFixed      = 0.5+pow(ptBins[k],2.5)*0.045+0.3*ptBins[k];
+                        } else {
+                            errorFixed      = 0.4+pow(ptBins[k],2.0)*0.015+0.15*ptBins[k];
                         }    
                     } else {    
                         if (ptBins[k] > 3.0)
@@ -553,21 +563,29 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
             
             // fix SPD pileup sys #8
             if (!nameCutVariationSC[i].CompareTo("SPD")){
-                adjustPtDependent               = kTRUE;
-                for (Int_t k = 0; k < nPtBinsActive; k++){
-                    if (ptBins[k] > 12.0)
-                        errorFixed              = 1.0;
-                    if (errorFixed != -1){
-                        errorsMean[i][k]        = errorFixed;
-                        errorsMeanErr[i][k]     = errorFixed*0.01;
-                        errorsMeanCorr[i][k]    = errorFixed;
-                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                if (!energy.CompareTo("2.76TeV")){
+                    errorFixed                  = 0.25;
+                } else {    
+                    adjustPtDependent               = kTRUE;
+                    for (Int_t k = 0; k < nPtBinsActive; k++){
+                        if (ptBins[k] > 12.0)
+                            errorFixed              = 1.0;
+                        if (errorFixed != -1){
+                            errorsMean[i][k]        = errorFixed;
+                            errorsMeanErr[i][k]     = errorFixed*0.01;
+                            errorsMeanCorr[i][k]    = errorFixed;
+                            errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                        }
                     }
-                }
+                }    
             }
             // fix out-of-bunch sys #9
             if (!nameCutVariationSC[i].CompareTo("Pileup")){
-                errorFixed                      = 1.0;
+                if (!energy.CompareTo("2.76TeV")){
+                    errorFixed                      = 2.0;
+                } else {
+                    errorFixed                      = 1.0;
+                }    
             }
 
             // fix cosPoint sys #10
@@ -589,6 +607,20 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                             }    
                         }                           
                     }   
+                } else {
+                    if (!energy.CompareTo("2.76TeV")){
+                        adjustPtDependent               = kTRUE;
+                        for (Int_t k = 0; k < nPtBinsActive; k++){
+                            errorFixed                  = 0.4+pow(ptBins[k],2.5)*0.01+0.05*ptBins[k];
+                            
+                            if (errorFixed != -1){
+                                errorsMean[i][k]        = errorFixed;
+                                errorsMeanErr[i][k]     = errorFixed*0.01;
+                                errorsMeanCorr[i][k]    = errorFixed;
+                                errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                            }    
+                        }                           
+                    }                       
                 }    
             }
                 
@@ -639,6 +671,26 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                 }    
             }    
 
+            // fix IntRange sys #15
+            if (!nameCutVariationSC[i].CompareTo("IntRange")){
+                if (spectrumName.Contains("Ratio")){
+                    adjustPtDependent           = kTRUE;
+                    for (Int_t k = 0; k < nPtBinsActive; k++){
+                        if (!energy.CompareTo("2.76TeV")){
+                            if (ptBins[k] > 8.0)
+                                errorFixed          = 3;
+                        }
+                        
+                        if (errorFixed != -1){
+                            errorsMean[i][k]        = errorFixed;
+                            errorsMeanErr[i][k]     = errorFixed*0.01;
+                            errorsMeanCorr[i][k]    = errorFixed;
+                            errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                        }    
+                    }
+                }    
+            }
+            
             // put fixed values for pt independent errors, which were adjusted
             if (!adjustPtDependent && errorFixed != -1){
                 for (Int_t k = 0; k < nPtBinsActive; k++){
@@ -708,8 +760,8 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
     meanErrorsCorrSummed                        = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrSummed ,ptBinsErr ,errorsMeanErrCorrSummed );
     meanErrorsCorrSummedIncMat                  = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrMatSummed ,ptBinsErr ,errorsMeanErrCorrMatSummed );
 
-//++++++++++++++++++++++++++++++ PLOTTING OF SYSMEAN +++++++++++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++ PLOTTING OF SYSMEAN +++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     TCanvas* canvasNewSysErrMean       = new TCanvas("canvasNewSysErrMean", "", 200, 10, 1200, 1100);  // gives the page size
     DrawGammaCanvasSettings( canvasNewSysErrMean,  0.075, 0.01, 0.015, 0.095);
     canvasNewSysErrMean->SetLogx(1);
@@ -718,14 +770,14 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
     Double_t maxYLegend     = 0.95;
 
     Double_t widthLegend    = 0.25;
-    if (nCutsActive> 7)
+    if ( nCutsActive+1 > 7)
         widthLegend         = 0.58;
-    Double_t heightLegend   = 1.09* 0.035 * (nCutsActive+1);
-    if (nCutsActive> 7)
+    Double_t heightLegend   = 1.12* 0.035 * (nCutsActive+1);
+    if ( nCutsActive+1 > 7)
         heightLegend        = 1.05* 0.035 * (nCutsActive/1.5+1);
 
-    Double_t textSizeLabelsPixelmean             = 55;
-    Double_t textSizeLabelsRelmean      = 55./1200;
+    Double_t textSizeLabelsPixelmean        = 55;
+    Double_t textSizeLabelsRelmean          = 55./1200;
 
         TH2D *histo2DSysErrMean                     = new TH2D("histo2DSysErrMean", "histo2DSysErrMean",1000, ptBins[0]-(ptBins[1]-ptBins[0])/2-0.07,1.2*(ptBins[nPtBinsActive-1]+ptBinsErr[nPtBinsActive-1]), 1000, 
                                                                yRangesSysPlotting[0], yRangesSysPlotting[1]);
@@ -735,10 +787,10 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
 
         TLegend* legendMean = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 40);
         legendMean->SetMargin(0.1);
-        if (nCutsActive> 7) legendMean->SetNColumns(2);
+        if ( nCutsActive+1 > 7) legendMean->SetNColumns(2);
         for(Int_t i = 0; i< numberCutStudies ; i++){
             if (benable[i]){
-                DrawGammaSetMarkerTGraphErr(meanErrors[i], 20+i, 1.,color[i],color[i]);
+                DrawGammaSetMarkerTGraphErr(meanErrors[i], markerStyle[i], 1.,color[i],color[i]);
                 meanErrors[i]->Draw("p,csame");
                 legendMean->AddEntry(meanErrors[i],nameCutVariation[i].Data(),"p");
             }    
@@ -746,7 +798,7 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
 
         DrawGammaSetMarkerTGraphErr(meanErrorsSummed, 20, 1.,1,1);
         meanErrorsSummed->Draw("p,csame");
-        legendMean->AddEntry(meanErrorsSummed,"quad. sum. w/o mat.","p");
+        legendMean->AddEntry(meanErrorsSummed,"qd. sum w/o mat.","p");
         legendMean->Draw();
         labelEnergy->Draw();
         labelGamma->Draw();
@@ -769,12 +821,12 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
         // create legend
         TLegend* legendMeanNew = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 40);
         legendMeanNew->SetMargin(0.1);
-        if (nCutsActive> 7) legendMeanNew->SetNColumns(2);
+        if ( nCutsActive+1 > 7) legendMeanNew->SetNColumns(2);
 
         for(Int_t i = 0;i< nCuts ;i++){
             if (benable[i]){
                 if(!spectrumName.CompareTo("Gamma")||i!=7){
-                    DrawGammaSetMarkerTGraphErr(meanErrorsCorr[i], 20+i, 1.,color[i],color[i]);
+                    DrawGammaSetMarkerTGraphErr(meanErrorsCorr[i], markerStyle[i], 1.,color[i],color[i]);
                     meanErrorsCorr[i]->Draw("pX0,csame");
                     legendMeanNew->AddEntry(meanErrorsCorr[i],nameCutVariation[i].Data(),"p");
                 }
@@ -787,7 +839,7 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
 
         DrawGammaSetMarkerTGraphErr(meanErrorsCorrSummedIncMat, 20, 1.,kBlack,kBlack);
         meanErrorsCorrSummedIncMat->Draw("p,csame");
-        legendMeanNew->AddEntry(meanErrorsCorrSummedIncMat,"quad. sum., inc. mat.","p");
+        legendMeanNew->AddEntry(meanErrorsCorrSummedIncMat,"qd. sum","p");
         legendMeanNew->Draw();
 
         // labeling
@@ -798,8 +850,8 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
     canvasNewSysErrMean->Update();
     canvasNewSysErrMean->SaveAs(Form("GammaSystematicErrorsCalculated/SysMeanNewWithMean_%s_%s_%s.%s",spectrumName.Data(), energy.Data(),dateForOutput.Data(),suffix.Data()));
 
-//+++++++++++++++++++++++++ SAVING SYSTEMATICS TO DAT FILE +++++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //+++++++++++++++++++++++++ SAVING SYSTEMATICS TO DAT FILE +++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     const char *SysErrDatname                   = Form("GammaSystematicErrorsCalculated/SystematicError_%s_%s_%s.dat",spectrumName.Data(),energy.Data(),dateForOutput.Data());
     fstream SysErrDat;
     cout << SysErrDatname << endl;
@@ -809,8 +861,8 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
     }
     SysErrDat.close();
 
-//+++++++++++++++++++++++++ SAVING AVERAGE SYSTEMATICS TO DAT ++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //+++++++++++++++++++++++++ SAVING AVERAGE SYSTEMATICS TO DAT ++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     const char *SysErrDatnameMean               = Form("GammaSystematicErrorsCalculated/SystematicErrorAveraged_%s_%s_%s.dat",spectrumName.Data(),energy.Data(),dateForOutput.Data());
     fstream SysErrDatAver;
     cout << SysErrDatnameMean << endl;
@@ -821,8 +873,8 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
     }
     SysErrDatAver.close();
 
-//+++++++++++++++++++++++++ SAVING DETAILED SYSTEMATICS ++++++++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //+++++++++++++++++++++++++ SAVING DETAILED SYSTEMATICS ++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     const char *SysErrDatnameMeanSingleErr      = Form("GammaSystematicErrorsCalculated/SystematicErrorAveragedSinglePCM_%s_%s_%s.dat",spectrumName.Data(),energyForOutput.Data(),dateForOutput.Data());
     fstream SysErrDatAverSingle;
     cout << SysErrDatnameMeanSingleErr << endl;
@@ -865,11 +917,12 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
         //"12 Alpha"
         //"13 Cocktail"
         //"14 Rcut"
+        //"15 IntRange"
 
         // Signal extraction: Pi0Yield extraction, Alpha ,BG
         errorsMeanCorrSignalExtraction[l]       =   TMath::Sqrt(pow(errorsMeanCorr[12][l],2)+   // Alpha
                                                                 pow(errorsMeanCorr[6][l],2)+    // BG
-                                                                pow(errorsMeanCorr[6][l],2));   // Pi0 Yield Extraction
+                                                                pow(errorsMeanCorr[15][l],2));  // Pi0 Yield Extraction
         
         // Pileup:  SPD, Out-of-bunch, Out-of-bunch pi0?
         errorsMeanCorrPileup[l]                 =   TMath::Sqrt(pow(errorsMeanCorr[8][l],2)+    // SPD
@@ -895,35 +948,36 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
     TGraphErrors* meanErrorsPileup              = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrPileup ,ptBinsErr ,errorsMeanErrCorrSummed );
     TGraphErrors* meanErrorsTrackReco           = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrTrackReco ,ptBinsErr ,errorsMeanErrCorrSummed );
 
-//++++++++++++++++++++++++ PLOTTING OF SYSERRORSUMMEDVISU ++++++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++ PLOTTING OF SYSERRORSUMMEDVISU ++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    Double_t textSizeLabelsPixel             = 55;
-    Double_t textSizeLabelsRel      = 55./1200;
+    Double_t textSizeLabelsPixel        = 55;
+    Double_t textSizeLabelsRel          = 55./1200;
 
-    TCanvas* canvasSummedErrMean       = new TCanvas("canvasSummedErrMean", "", 200, 10, 1200, 1100);  // gives the page size
+    TCanvas* canvasSummedErrMean        = new TCanvas("canvasSummedErrMean", "", 200, 10, 1200, 1100);  // gives the page size
     DrawGammaCanvasSettings( canvasSummedErrMean,  0.075, 0.01, 0.015, 0.095);
     canvasSummedErrMean->SetLogx(1);
 
         TH2F * histo2DSummedErrMean;
-        histo2DSummedErrMean                = new TH2F("histo2DSummedErrMean", "histo2DSummedErrMean",1000, ptBins[0]-(ptBins[1]-ptBins[0])/2-0.07, 1.2*(ptBins[nPtBinsActive-1]+ptBinsErr[nPtBinsActive-1]),1000.,yRangesSysPlotting[0],yRangesSysPlotting[1] );
-        SetStyleHistoTH2ForGraphs( histo2DSummedErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %",
-                                0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 0.75);//(#times #epsilon_{pur})
+        histo2DSummedErrMean            = new TH2F("histo2DSummedErrMean", "histo2DSummedErrMean",1000, ptBins[0]-(ptBins[1]-ptBins[0])/2-0.07, 1.2*(ptBins[nPtBinsActive-1]+ptBinsErr[nPtBinsActive-1]),
+                                                   1000.,yRangesSysPlotting[0],yRangesSysPlotting[1] );
+        SetStyleHistoTH2ForGraphs(  histo2DSummedErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %",
+                                    0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 0.75);//(#times #epsilon_{pur})
         histo2DSummedErrMean->GetYaxis()->SetLabelOffset(0.001);
         histo2DSummedErrMean->GetXaxis()->SetLabelOffset(-0.01);
         histo2DSummedErrMean->GetXaxis()->SetMoreLogLabels(kTRUE);
         histo2DSummedErrMean->DrawCopy();
 
-        Double_t minXLegend2 = 0.13;
-        Double_t maxYLegend2 = 0.95;
-        Double_t widthLegend2 = 0.55;
-        Double_t heightLegend2 = 0.15;
+        Double_t minXLegend2        = 0.13;
+        Double_t maxYLegend2        = 0.95;
+        Double_t widthLegend2       = 0.55;
+        Double_t heightLegend2      = 0.15;
 
         // create legend
         TLegend* legendSummedMeanNew = GetAndSetLegend2(minXLegend2,maxYLegend2-heightLegend2,minXLegend2+widthLegend2,maxYLegend2, 40);
         legendSummedMeanNew->SetNColumns(2);
         legendSummedMeanNew->SetMargin(0.1);
-        Size_t markersizeSummed = 1.3;
+        Size_t markersizeSummed     = 1.3;
         
         // Signal extraction error
         if (benable[12] || benable[6] || benable[15]){  
@@ -958,7 +1012,7 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
 
         DrawGammaSetMarkerTGraphErr(meanErrorsCorrSummedIncMat, 20, markersizeSummed,kBlack,kBlack);
         meanErrorsCorrSummedIncMat->Draw("p,csame");
-        legendSummedMeanNew->AddEntry(meanErrorsCorrSummedIncMat,"quad. sum.","p");
+        legendSummedMeanNew->AddEntry(meanErrorsCorrSummedIncMat,"qd. sum","p");
         legendSummedMeanNew->Draw();
 
         labelGamma->Draw();

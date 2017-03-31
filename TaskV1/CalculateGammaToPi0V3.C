@@ -1216,7 +1216,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         if (histoGammaSpecCorrPurity)   histoGammaSpecCorrPurity->Write(    "histoGammaSpecCorrPurity",             TObject::kOverwrite);
 
         // Double ratio
-        if(histoDoubleRatioUpperLimits)             histoDoubleRatioUpperLimits->Write(         Form("%s_UpperLimits", histoDoubleRatioTrueEffPurity[0]->GetName()),  TObject::kOverwrite);
+        if(histoDoubleRatioUpperLimits)             histoDoubleRatioUpperLimits->Write(             Form("%s_UpperLimits", histoDoubleRatioTrueEffPurity[0]->GetName()),  TObject::kOverwrite);
         for (Int_t k = 0; k< 6; k++){
             if(histoDoubleRatioTrueEffPurity[k])    histoDoubleRatioTrueEffPurity[k]->Write(        histoDoubleRatioTrueEffPurity[k]->GetName(),        TObject::kOverwrite);
             if(histoDoubleRatioFitPi0YieldPurity[k])histoDoubleRatioFitPi0YieldPurity[k]->Write(    histoDoubleRatioFitPi0YieldPurity[k]->GetName(),    TObject::kOverwrite);
@@ -1247,7 +1247,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
             fitNLOPromptPhoton->Write(          "fitNLOPromptPhoton",           TObject::kOverwrite);
             graphFragmentationPhotonNLO->Write( "graphFragmentationPhotonNLO",  TObject::kOverwrite);
             fitNLOFragmentationPhoton->Write(   "fitNLOFragmentationPhoton",    TObject::kOverwrite);
-            histoRatioNLODirectPhoton->Write(    "histoRatioNLODirectPhoton",     TObject::kOverwrite);
+            histoRatioNLODirectPhoton->Write(   "histoRatioNLODirectPhoton",    TObject::kOverwrite);
             graphNLODoubleRatio->Write(         "graphgraphNLODoubleRatio",     TObject::kOverwrite);
             graphNLODirGammaSpectra->Write(     "graphNLODirGamma",             TObject::kOverwrite);
         }
