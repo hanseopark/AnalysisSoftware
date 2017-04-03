@@ -84,6 +84,8 @@ TH2F**      histoGammaMotherPtGammaPt                       = NULL;
 TH1F**      histoGammaMotherPtGammaOrBin                    = NULL;
 TH1F**      histoGammaMotherPtGamma                         = NULL;
 
+TH1F*       histoGeneratedEtaPt                             = NULL;
+
 TH1D*       histoPi0YieldData                               = NULL;
 TH1D*       histoEtaYieldData                               = NULL;
 TH1D*       ratioPi0DataCocktail                            = NULL;

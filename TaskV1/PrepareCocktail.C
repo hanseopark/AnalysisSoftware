@@ -526,7 +526,6 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     }
     
     //***************************** generated eta yield in analyzed eta binning *************************************
-    TH1F* histoGeneratedEtaPt                                   = NULL;
     if (histoGammaMotherPtOrBin[1]) {
         histoGeneratedEtaPt                                     = (TH1F*)histoGammaMotherPtOrBin[1]->Clone(Form("%s_inEtaBinning",histoGammaMotherPtOrBin[1]->GetName()));
         histoGeneratedEtaPt->Sumw2();
@@ -1379,8 +1378,8 @@ void RebinSpectrum(TH1F* Spectrum, TH1F* SpectrumForBinning, TString NewName){
     Int_t       nBins               = SpectrumForBinning->GetNbinsX();
     Double_t*   binsPt              = new Double_t[nBins+1];
     for (Int_t i=0; i<nBins+1; i++) {
-        if (i<nBins)    binsPt[i]   = SpectrumForBinning->GetXaxis()->GetBinLowEdge(i);
-        else            binsPt[i]   = SpectrumForBinning->GetXaxis()->GetBinUpEdge(i-1);
+        if (i<nBins)    binsPt[i]   = SpectrumForBinning->GetXaxis()->GetBinLowEdge(i+1);
+        else            binsPt[i]   = SpectrumForBinning->GetXaxis()->GetBinUpEdge(i);
     }
 
     TH1D* deltaPt                   = new TH1D("deltaPt","",nBins,binsPt);
@@ -1599,6 +1598,7 @@ void SaveHistos() {
     if (ratioPi0DataCocktail)       ratioPi0DataCocktail->Write(ratioPi0DataCocktail->GetName(),    TObject::kOverwrite);
 
     if (histoEtaYieldData)          histoEtaYieldData->Write(   "Eta_invYield",                     TObject::kOverwrite);
+    if (histoGeneratedEtaPt)        histoGeneratedEtaPt->Write( histoGeneratedEtaPt->GetName(),     TObject::kOverwrite);
     if (ratioEtaDataCocktail)       ratioEtaDataCocktail->Write(ratioEtaDataCocktail->GetName(),    TObject::kOverwrite);
 }
 

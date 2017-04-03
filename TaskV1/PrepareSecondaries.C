@@ -997,8 +997,8 @@ void RebinSpectrum(TH1F* Spectrum, TH1F* SpectrumForBinning, TString NewName){
     Int_t       nBins               = SpectrumForBinning->GetNbinsX();
     Double_t*   binsPt              = new Double_t[nBins+1];
     for (Int_t i=0; i<nBins+1; i++) {
-        if (i<nBins)    binsPt[i]   = SpectrumForBinning->GetXaxis()->GetBinLowEdge(i);
-        else            binsPt[i]   = SpectrumForBinning->GetXaxis()->GetBinUpEdge(i-1);
+        if (i<nBins)    binsPt[i]   = SpectrumForBinning->GetXaxis()->GetBinLowEdge(i+1);
+        else            binsPt[i]   = SpectrumForBinning->GetXaxis()->GetBinUpEdge(i);
     }
     
     TH1D* deltaPt                   = new TH1D("deltaPt","",nBins,binsPt);
