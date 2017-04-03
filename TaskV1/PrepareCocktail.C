@@ -532,8 +532,30 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         RebinSpectrum(histoGeneratedEtaPt, (TH1F*)histoEtaYieldData, "");
         histoGeneratedEtaPt                                     = ConvertYieldHisto(histoGeneratedEtaPt);
     }
+    
+    //***************************** Read histograms from cocktail input file ****************************************
+    TList* cocktailInputList                                    = GetCocktailInputList(fEnergyFlag, centrality);
+    histoPi0CocktailInput                                       = new TH1F*[nCocktailInputMethods];
+    histoEtaCocktailInput                                       = new TH1F*[nCocktailInputMethods];
+    for (Int_t i=0; i<nCocktailInputMethods; i++) {
+        histoPi0CocktailInput[i]                                = GetCocktailInputSpectrum(cocktailInputList, 0, i);
+        if (histoPi0CocktailInput[i]) {
+            histoPi0CocktailInput[i]->SetName(Form("Pi0_%s_invYield_CocktailInput_Pt_MeasBin", cocktailInputMethods[i].Data()));
+            histoPi0CocktailInput[i]->Sumw2();
+            histoPi0CocktailInput[i]->Scale(eventNormScalingFactor);
+            ConvertYieldHisto(histoPi0CocktailInput[i]);
+        }
 
-    // adapt plotting range for original binned histograms
+        histoEtaCocktailInput[i]                                = GetCocktailInputSpectrum(cocktailInputList, 1, i);
+        if (histoEtaCocktailInput[i]) {
+            histoEtaCocktailInput[i]->SetName(Form("Eta_%s_invYield_CocktailInput_Pt_MeasBin", cocktailInputMethods[i].Data()));
+            histoPi0CocktailInput[i]->Sumw2();
+            histoPi0CocktailInput[i]->Scale(eventNormScalingFactor);
+            ConvertYieldHisto(histoPi0CocktailInput[i]);
+        }
+    }
+
+    //***************************** adapt plotting range for original binned histograms *****************************
     if (!producePlotsInOrPtRange) {
         ptPlotMin = ptMin;
         ptPlotMax = ptMax;
@@ -1594,12 +1616,19 @@ void SaveHistos() {
         if (cocktailInputParametrizationsMtScaled[i])   cocktailInputParametrizationsMtScaled[i]->Write(cocktailInputParametrizationsMtScaled[i]->GetName(),    TObject::kOverwrite);
     }
     
+    // write pi0 + eta data yield and ratio to generated
     if (histoPi0YieldData)          histoPi0YieldData->Write(   "Pi0_invYield",                     TObject::kOverwrite);
     if (ratioPi0DataCocktail)       ratioPi0DataCocktail->Write(ratioPi0DataCocktail->GetName(),    TObject::kOverwrite);
 
     if (histoEtaYieldData)          histoEtaYieldData->Write(   "Eta_invYield",                     TObject::kOverwrite);
     if (histoGeneratedEtaPt)        histoGeneratedEtaPt->Write( histoGeneratedEtaPt->GetName(),     TObject::kOverwrite);
     if (ratioEtaDataCocktail)       ratioEtaDataCocktail->Write(ratioEtaDataCocktail->GetName(),    TObject::kOverwrite);
+
+    // write cocktail input spectra (pi0 + eta)
+    for (Int_t i=0; i<nCocktailInputMethods; i++) {
+        if (histoPi0CocktailInput[i]) histoPi0CocktailInput[i]->Write(histoPi0CocktailInput[i]->GetName(), TObject::kOverwrite);
+        if (histoEtaCocktailInput[i]) histoEtaCocktailInput[i]->Write(histoEtaCocktailInput[i]->GetName(), TObject::kOverwrite);
+    }
 }
 
 //************************** Create tex file containing BR table ****************************************************
@@ -1671,3 +1700,173 @@ void CreateBRTableLatex() {
     texFile.close();
 }
 
+//************************** Function to load correct list cocktail input from comp. file ***************************
+TList* GetCocktailInputList(TString energy, TString centrality) {
+
+    if (energy.CompareTo("") == 0) {
+        cout << "no energy given!" << endl;
+        return NULL;
+    }
+
+    // get file of cocktail input objects
+    TString fCollSysFile                                        = "";
+    TString fCollSys                                            = "";
+    if (energy.Contains("PbPb")) {
+        fCollSysFile                                            = "PbPb";
+        fCollSys                                                = "PbPb";
+    } else if (energy.Contains("pPb")) {
+        fCollSysFile                                            = "PPb";
+        fCollSys                                                = "pPb";
+    } else  {
+        fCollSysFile                                            = "PP";
+        fCollSys                                                = "pp";
+    }
+
+    TString fileName                                            = Form("CocktailInput/CocktailInput%s.root", fCollSysFile.Data());
+    TFile file(fileName.Data());
+    if (file.IsZombie()) {
+        cout << "file " << fileName.Data() << " not found!" << endl;
+        return NULL;
+    }
+
+    // get list of cocktail input objects in file
+    TString                         fEnergy                     = "";
+    if (energy.Contains("9"))       fEnergy                     = "0.9TeV";
+    else if (energy.Contains("2"))  fEnergy                     = "2.76TeV";
+    else if (energy.Contains("5"))  fEnergy                     = "5TeV";
+    else if (energy.Contains("7"))  fEnergy                     = "7TeV";
+    else if (energy.Contains("8"))  fEnergy                     = "8TeV";
+    else if (energy.Contains("13")) fEnergy                     = "13TeV";
+    else {
+        cout << "energy " << energy.Data() << " not recognized, failed to load correct list of cocktail input objects!" << endl;
+        return NULL;
+    }
+
+    TString                                         fCentrality = "";
+    if (fCollSys.CompareTo("pp")) {
+        if (centrality.CompareTo("0-100%")==0)      fCentrality = "MB";
+        else if (centrality.CompareTo("0-5%")==0)   fCentrality = "0005";
+        else if (centrality.CompareTo("5-10%")==0)  fCentrality = "0510";
+        else if (centrality.CompareTo("0-10%")==0)  fCentrality = "0010";
+        else if (centrality.CompareTo("10-20%")==0) fCentrality = "1020";
+        else if (centrality.CompareTo("0-20%")==0)  fCentrality = "0020";
+        else if (centrality.CompareTo("20-40%")==0) fCentrality = "2040";
+        else if (centrality.CompareTo("20-50%")==0) fCentrality = "2050";
+        else if (centrality.CompareTo("40-60%")==0) fCentrality = "4060";
+        else if (centrality.CompareTo("60-80%")==0) fCentrality = "6080";
+        else if (centrality.CompareTo("80-90%")==0) fCentrality = "8090";
+        else if (centrality.CompareTo("80-100%")==0)fCentrality = "80100";
+        else if (centrality.CompareTo("20-30%")==0) fCentrality = "2030";
+        else if (centrality.CompareTo("30-40%")==0) fCentrality = "3040";
+        else {
+            cout << "centrality " << centrality.Data() << " not recognized, failed to load correct list of cocktail input objects!" << endl;
+            return NULL;
+        }
+    }
+
+    TString                             listName                = "";
+    if (fCollSys.CompareTo("pp")==0)    listName                = Form("%s_%s",     fCollSys.Data(), fEnergy.Data());
+    else                                listName                = Form("%s_%s_%s",  fCollSys.Data(), fEnergy.Data(), fCentrality.Data());
+    TList* list                                                 = (TList*)file.Get(listName.Data());
+    if (!list) {
+        cout << "list " << listName.Data() << " not contained in file " << fileName.Data() << "!" << endl;
+        return NULL;
+    }
+    list->SetOwner(kTRUE);
+
+    return list;
+}
+
+//************************** Function to get spectrum from cocktail input list **************************************
+TH1F* GetCocktailInputSpectrum(TList* list, Int_t particle, Int_t method) {
+
+    if (!list) {
+        cout << "no cocktail input list given!" << endl;
+        return NULL;
+    }
+
+    TString     cocktailInputParticles[2]                       = {"NPion", "Eta"};
+    if (particle > 1) {
+        cout << "particle not recognized" << endl;
+        return NULL;
+    }
+
+    // read cocktail input spectra
+    TH1F*               histo                                   = NULL;
+    TObject*            tempObject                              = NULL;
+    TGraphErrors*       tempGraphErrs                           = NULL;
+    TGraphAsymmErrors*  tempGraphAsymmErrs                      = NULL;
+    TString             tempObjectName                          = Form("%s%sStat", cocktailInputParticles[particle].Data(), cocktailInputMethods[method].Data());
+    TString             tempObjectClassName                     = "";
+    if ( list->FindObject(tempObjectName.Data()) ) {
+
+        tempObject                                              = (TObject*)list->FindObject(tempObjectName.Data());
+        tempObjectClassName                                     = (TString)tempObject->ClassName();
+
+        if (tempObjectClassName.Contains("TH1")) {
+            histo                                               = (TH1F*)list->FindObject(tempObjectName.Data());
+        } else if (tempObjectClassName.Contains("TGraphErrors")) {
+            tempGraphErrs                                       = (TGraphErrors*)list->FindObject(tempObjectName.Data());
+            histo                                               = TransformGraphToTH1F(tempGraphErrs);
+        } else if (tempObjectClassName.Contains("TGraphAsymmErrors")) {
+            tempGraphAsymmErrs                                  = (TGraphAsymmErrors*)list->FindObject(tempObjectName.Data());
+            histo                                               = TransformGraphToTH1F(tempGraphAsymmErrs);
+        } else {
+            cout << tempObjectName.Data() << " object type (" << tempObjectClassName.Data() << ") not recognized!" << endl;
+            histo                                               = NULL;
+        }
+    }
+
+    return histo;
+}
+
+//************************** Function to transform graph to TH1D ****************************************************
+TH1F* TransformGraphToTH1F(TGraphErrors* graph) {
+
+    if (!graph) return NULL;
+
+    Double_t*   xValue                                          = graph->GetX();
+    Double_t*   yValue                                          = graph->GetY();
+    Double_t*   xError                                          = graph->GetEX();
+    Double_t*   yError                                          = graph->GetEY();
+    Int_t       nPoints                                         = graph->GetN();
+
+    Double_t*   newBinningX                                     = new Double_t[nPoints+1];
+    for(Int_t i = 0; i < nPoints; i++)  newBinningX[i]          = xValue[i] - xError[i];
+    newBinningX[nPoints]                                        = xValue[nPoints-1] + xError[nPoints-1];
+
+    TH1F* histo                                                 = new TH1F("histo","",nPoints,newBinningX);
+    for(Int_t i = 1; i <= nPoints; i++){
+        histo->SetBinContent(i,   yValue[i-1]);
+        histo->SetBinError(i,     yError[i-1]);
+    }
+    return histo;
+
+    delete[] newBinningX;
+}
+
+TH1F* TransformGraphToTH1F(TGraphAsymmErrors* graph) {
+
+    if (!graph) return                                          NULL;
+
+    Double_t*   xValue                                          = graph->GetX();
+    Double_t*   yValue                                          = graph->GetY();
+    Double_t*   xErrorLow                                       = graph->GetEXlow();
+    Double_t*   xErrorHigh                                      = graph->GetEXhigh();
+    Double_t*   yErrorLow                                       = graph->GetEYlow();
+    Double_t*   yErrorHigh                                      = graph->GetEYhigh();
+    Int_t       nPoints                                         = graph->GetN();
+
+    Double_t*   newBinningX                                     = new Double_t[nPoints+1];
+    for(Int_t i = 0; i < nPoints; i++) newBinningX[i]           = xValue[i] - xErrorLow[i];
+    newBinningX[nPoints]                                        = xValue[nPoints-1] + xErrorHigh[nPoints-1];
+
+    TH1F* histo                                                 = new TH1F("histo","",nPoints,newBinningX);
+    for(Int_t i = 1; i <= nPoints; i++){
+        histo->SetBinContent(i,   yValue[i-1]);
+        histo->SetBinError(i,     (yErrorLow[i-1] + yErrorHigh[i-1]) / 2);
+    }
+
+    return histo;
+    delete[] newBinningX;
+}

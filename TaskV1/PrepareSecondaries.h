@@ -112,11 +112,13 @@ void        CorrectForNonFlatRapidity               (   TH2F*       histCorr,
                                                         TH2F*       histOr,
                                                         TList*      list                );
 void        CreateBRTableLatex                      (                                   );
-Int_t       GetMinimumBinAboveThreshold             (   TH1F*       hist,
-                                                        Double_t    thres               );
-TH1F*       LoadCocktailInputSpectrum               (   TString     energy,
-                                                        TString     centrality,
-                                                        Int_t       particle            );
-TH1F*       TransformGraphToTH1F                    (   TObject*    inputObject         );
+Int_t       GetMinimumBinAboveThreshold             (   TH1F*               hist,
+                                                        Double_t            thres       );
+TList*      GetCocktailInputList                    (   TString             energy,
+                                                        TString             centrality  );
+TH1F*       GetCocktailInputSpectrum                (   TList*              list,
+                                                        Int_t               particle    );
+TH1F*       TransformGraphToTH1F                    (   TGraphErrors*       graph       );
+TH1F*       TransformGraphToTH1F                    (   TGraphAsymmErrors*  graph       );
 
 

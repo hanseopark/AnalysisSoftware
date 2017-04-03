@@ -33,8 +33,8 @@ Style_t     cocktailMarker[nMotherParticles]                = {20,21,24,25,20,21
 TString     decayChannelsLatex[nMotherParticles][18];
 Double_t    decayChannelsBR[nMotherParticles][18];
 
-const Int_t nCocktialInputMethods                           = 7;
-TString     cocktialInputMethods[nCocktialInputMethods]     = {"Comb", "PCM", "EMCal", "PHOS", "PCMEMCal", "PCMPHOS", "EMCalMerged"};
+const Int_t nCocktailInputMethods                           = 7;
+TString     cocktailInputMethods[nCocktailInputMethods]     = {"Comb", "PCM", "EMCal", "PHOS", "PCMEMCal", "PCMPHOS", "EMCalMerged"};
 
 // additional scaling factor (param per inel. event vs. MB event)
 Double_t    eventNormScalingFactor                          = 1.;
@@ -104,27 +104,29 @@ TF1*        paramScaleBase                                  = NULL;
 
 //************************** Methods ******************************************************
 void        Initialize                                  (   TString     energy,
-                                                            Int_t       numberOfBins        );
+                                                            Int_t       numberOfBins            );
 void        RebinSpectrum                               (   TH1F*       Spectrum,
-                                                            TString     NewName             );
+                                                            TString     NewName                 );
 void        RebinSpectrum                               (   TH1F*       Spectrum,
                                                             TH1F*       SpectrumForBinning,
-                                                            TString     NewName             );
-TH1F*       ConvertYieldHisto                           (   TH1F*       input               );
-void        SaveHistos                                  (                                   );
-Double_t    GetMass                                     (   TString     particle            );
+                                                            TString     NewName                 );
+TH1F*       ConvertYieldHisto                           (   TH1F*       input                   );
+void        SaveHistos                                  (                                       );
+Double_t    GetMass                                     (   TString     particle                );
 void        SetHistogramTitles                          (   TH1F*       input,
                                                             TString     title,
                                                             TString     xTitle,
-                                                            TString     yTitle              );
-void        DeleteObjects                               (                                   );
+                                                            TString     yTitle                  );
+void        DeleteObjects                               (                                       );
 TH1D*       CalculateRatioToTF1                         (   TH1D*       hist,
-                                                            TF1*        func                );
-void        CreateBRTableLatex                          (                                   );
-//TH1F*       LoadCocktailInputSpectrum                   (   TString     energy,
-//                                                            TString     centrality,
-//                                                            Int_t       particle,
-//                                                            Int_t       method              );
-//TH1F*       TransformGraphToTH1F                        (   TObject*    inputObject         );
+                                                            TF1*        func                    );
+void        CreateBRTableLatex                          (                                       );
+TList*      GetCocktailInputList                        (   TString             energy,
+                                                            TString             centrality      );
+TH1F*       GetCocktailInputSpectrum                    (   TList*              list,
+                                                            Int_t               particle,
+                                                            Int_t               method          );
+TH1F*       TransformGraphToTH1F                        (   TGraphErrors*       graph           );
+TH1F*       TransformGraphToTH1F                        (   TGraphAsymmErrors*  graph           );
 
 
