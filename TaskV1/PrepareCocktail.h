@@ -33,6 +33,9 @@ Style_t     cocktailMarker[nMotherParticles]                = {20,21,24,25,20,21
 TString     decayChannelsLatex[nMotherParticles][18];
 Double_t    decayChannelsBR[nMotherParticles][18];
 
+const Int_t nCocktialInputMethods                           = 7;
+TString     cocktialInputMethods[nCocktialInputMethods]     = {"Comb", "PCM", "EMCal", "PHOS", "PCMEMCal", "PCMPHOS", "EMCalMerged"};
+
 // additional scaling factor (param per inel. event vs. MB event)
 Double_t    eventNormScalingFactor                          = 1.;
 
@@ -51,10 +54,9 @@ Double_t    mtScaleFactor[nMotherParticles]                 = {1.};
 TH1F*       fDeltaPt                                        = NULL;
 TH1F*       histoNEvents                                    = NULL;
 TH1F*       histMtScalingFactors                            = NULL;
-TH1D*       histoPi0YieldData                               = NULL;
-TH1D*       ratioPi0DataCocktail                            = NULL;
 TH1F**      histoDecayChannels                              = NULL;
 TH1F**      histoDecayChannelsBR                            = NULL;
+
 TH2F*       histoGammaSumPtY                                = NULL;
 TH2F*       histoGammaSumPtPhi                              = NULL;
 TH1F*       histoGammaSumPtOrBin                            = NULL;
@@ -62,6 +64,7 @@ TH1F*       histoGammaSumPtOrBin2                           = NULL;
 TH1F*       histoGammaSumPt                                 = NULL;
 TH1F*       histoGammaSumYOrBin                             = NULL;
 TH1F*       histoGammaSumPhiOrBin                           = NULL;
+
 TH2F**      histoGammaPtY                                   = NULL;
 TH2F**      histoGammaPtPhi                                 = NULL;
 TH1F**      histoGammaPtOrBin                               = NULL;
@@ -69,6 +72,7 @@ TH1F**      histoGammaPtOrBin2                              = NULL;
 TH1F**      histoGammaPt                                    = NULL;
 TH1F**      histoGammaYOrBin                                = NULL;
 TH1F**      histoGammaPhiOrBin                              = NULL;
+
 TH2F**      histoGammaMotherPtY                             = NULL;
 TH1F**      histoGammaMotherPtOrBin                         = NULL;
 TH1F**      histoGammaMotherPt                              = NULL;
@@ -80,6 +84,14 @@ TH2F**      histoGammaMotherPtGammaPt                       = NULL;
 TH1F**      histoGammaMotherPtGammaOrBin                    = NULL;
 TH1F**      histoGammaMotherPtGamma                         = NULL;
 
+TH1D*       histoPi0YieldData                               = NULL;
+TH1D*       histoEtaYieldData                               = NULL;
+TH1D*       ratioPi0DataCocktail                            = NULL;
+TH1D*       ratioEtaDataCocktail                            = NULL;
+
+TH1F**      histoPi0CocktailInput                           = NULL;
+TH1F**      histoEtaCocktailInput                           = NULL;
+
 //************************** Cocktail input ***********************************************
 TFile*      cocktailInputFile                               = NULL;
 TList*      cocktailInputList                               = NULL;
@@ -88,20 +100,29 @@ TF1**       cocktailInputParametrizations                   = NULL;
 TF1**       cocktailInputParametrizationsMtScaled           = NULL;
 TF1*        paramScaleBase                                  = NULL;
 
-
 //************************** Methods ******************************************************
-void        Initialize                                  (   TString energy,
-                                                            Int_t   numberOfBins        );
-void        RebinSpectrum                               (   TH1F*   Spectrum,
-                                                            TString NewName             );
-TH1F*       ConvertYieldHisto                           (   TH1F*   input               );
-void        SaveHistos                                  (                               );
-Double_t    GetMass                                     (   TString particle            );
-void        SetHistogramTitles                          (   TH1F*   input,
-                                                            TString title,
-                                                            TString xTitle,
-                                                            TString yTitle              );
-void        DeleteObjects                               (                               );
-TH1D*       CalculateRatioToTF1                         (   TH1D*   hist,
-                                                            TF1*    func                );
-void        CreateBRTableLatex                          (                               );
+void        Initialize                                  (   TString     energy,
+                                                            Int_t       numberOfBins        );
+void        RebinSpectrum                               (   TH1F*       Spectrum,
+                                                            TString     NewName             );
+void        RebinSpectrum                               (   TH1F*       Spectrum,
+                                                            TH1F*       SpectrumForBinning,
+                                                            TString     NewName             );
+TH1F*       ConvertYieldHisto                           (   TH1F*       input               );
+void        SaveHistos                                  (                                   );
+Double_t    GetMass                                     (   TString     particle            );
+void        SetHistogramTitles                          (   TH1F*       input,
+                                                            TString     title,
+                                                            TString     xTitle,
+                                                            TString     yTitle              );
+void        DeleteObjects                               (                                   );
+TH1D*       CalculateRatioToTF1                         (   TH1D*       hist,
+                                                            TF1*        func                );
+void        CreateBRTableLatex                          (                                   );
+//TH1F*       LoadCocktailInputSpectrum                   (   TString     energy,
+//                                                            TString     centrality,
+//                                                            Int_t       particle,
+//                                                            Int_t       method              );
+//TH1F*       TransformGraphToTH1F                        (   TObject*    inputObject         );
+
+

@@ -264,6 +264,17 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     }
     if (histoPi0YieldData) cout << "Found the corrected pi0 yield in " << nameFilePi0.Data() << ", will produce cocktail and data pi0 plot." << endl;
 
+    //***************************** Eta file ************************************************************************
+    TString nameFileEta                                         = nameFilePi0;
+    nameFileEta.ReplaceAll("Pi0_", "Eta_");
+    TFile* fileEta                                              = new TFile(nameFileEta);
+    if (fileEta && !fileEta->IsZombie()) {
+        histoEtaYieldData                                       = (TH1D*)fileEta->Get("CorrectedYieldTrueEff");
+    } else {
+        histoEtaYieldData                                       = NULL;
+    }
+    if (histoEtaYieldData) cout << "Found the corrected eta yield in " << nameFileEta.Data() << ", will produce cocktail and data eta plot." << endl;
+
     //***************************** Get number of events (cocktail) *************************************************
     histoNEvents                                                = (TH1F*)histoListCocktail->FindObject("NEvents");
     nEvents                                                     = histoNEvents->GetEntries();
@@ -514,6 +525,15 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
             histoGammaMotherPtGamma[i]                          = ConvertYieldHisto(histoGammaMotherPtGamma[i]);
     }
     
+    //***************************** generated eta yield in analyzed eta binning *************************************
+    TH1F* histoGeneratedEtaPt                                   = NULL;
+    if (histoGammaMotherPtOrBin[1]) {
+        histoGeneratedEtaPt                                     = (TH1F*)histoGammaMotherPtOrBin[1]->Clone(Form("%s_inEtaBinning",histoGammaMotherPtOrBin[1]->GetName()));
+        histoGeneratedEtaPt->Sumw2();
+        RebinSpectrum(histoGeneratedEtaPt, (TH1F*)histoEtaYieldData, "");
+        histoGeneratedEtaPt                                     = ConvertYieldHisto(histoGeneratedEtaPt);
+    }
+
     // adapt plotting range for original binned histograms
     if (!producePlotsInOrPtRange) {
         ptPlotMin = ptMin;
@@ -995,13 +1015,13 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     delete legendGammasPhi;
     delete canvasGammasPhi;
 
+    TH1D*   dummyHistRatio                                          = NULL;
     //***************************** Plot mT scaling cross check *****************************************************
     TCanvas* canvasMtCrossCheck                                 = NULL;
     TLegend* legendMtCrossCheck                                 = NULL;
     TPad* padMtCrossCheck                                       = NULL;
     TPad* padMtCrossCheckRatio                                  = NULL;
     dummyHist                                                   = NULL;
-    TH1D* dummyHistRatio                                        = NULL;
     TH1D* tempRatio1                                            = NULL;
     TH1D* tempRatio2                                            = NULL;
     for (Int_t particle=0; particle<nMotherParticles; particle++) {
@@ -1126,8 +1146,8 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         else PutALICESimulationLabel(                   0.22, 0.17, 0.032, 0.03, 1.25, 42);
 
         padRatio->cd();
-        TH1D*   dummyHistRatio                                      = new TH1D("dummyHistRatio", "", 1000, ptPlotMin, ptPlotMax);
-        SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{spec}{param}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
+        dummyHistRatio                                              = new TH1D("dummyHistRatio", "", 1000, ptPlotMin, ptPlotMax);
+        SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{data}{gen.}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
         dummyHistRatio->GetXaxis()->SetLabelOffset(-0.025);
         dummyHistRatio->GetYaxis()->SetRangeUser(0.65,1.55);
         dummyHistRatio->Draw();
@@ -1145,7 +1165,6 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
 
         canvasPi0->SaveAs(Form("%s/Pi0DataCocktail_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
         delete legendPi0;
-        delete dummyHistRatio;
         delete canvasPi0;
     }
 
@@ -1197,7 +1216,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
 
         padRatio2->cd();
         padRatio2->SetLogy();
-        TH1D* dummyHistRatio                                      = new TH1D("dummyHistRatio", "", 1000, ptPlotMin, ptPlotMax);
+        dummyHistRatio                                              = new TH1D("dummyHistRatio", "", 1000, ptPlotMin, ptPlotMax);
         SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#pi^{}(#it{p}_{T, #pi^{0}}) / #pi^{0}(#it{p}_{T, #gamma})", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
         dummyHistRatio->GetXaxis()->SetLabelOffset(-0.025);
         dummyHistRatio->GetYaxis()->SetRangeUser(.9,20);
@@ -1216,10 +1235,88 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
 
         canvasPi02->SaveAs(Form("%s/Pi0VersusGammaPt_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
         delete legendPi02;
-        delete dummyHistRatio;
         delete canvasPi02;
     }
+
+    //***************************** Plot eta from data vs. cocktail *************************************************
+    if (histoEtaYieldData && histoGeneratedEtaPt) {
+
+        // get proper pt range for plotting
+        for (Int_t i=1; i<histoEtaYieldData->GetNbinsX()+1; i++) {
+            if (histoEtaYieldData->GetBinContent(i)) {
+                ptPlotMin                                           = histoEtaYieldData->GetXaxis()->GetBinLowEdge(i);
+                break;
+            }
+        }
+        ptPlotMin                                                   = ptPlotMin/2;
+        if(ptPlotMin == 0 || ptPlotMin < 1e-3) ptPlotMin            = 1e-3;
+        ptPlotMax                                                   = ptMax*2;
+
+        TCanvas *canvasEta                                          = new TCanvas("canvasEta","",1100,1200);
+        DrawGammaCanvasSettings(canvasEta, 0.165, 0.015, 0.025, 0.25);
+        canvasEta->SetLogy();
+        canvasEta->SetLogx();
+
+        TPad *padSpectrumEta                                        = new TPad("padSpectrum", "", 0., 0.25, 1., 1.,-1, -1, -2);
+        DrawGammaPadSettings(padSpectrumEta,       0.165, 0.015, 0.025, 0.);
+        padSpectrumEta->SetBorderSize(0);
+        padSpectrumEta->Draw();
+        padSpectrumEta->SetLogy();
+        padSpectrumEta->SetLogx();
+
+        TPad *padRatioEta                                           = new TPad("padRatioEta","", 0., 0., 1., 0.25,-1, -1, -2);
+        DrawGammaPadSettings(padRatioEta,  0.165, 0.015, 0.0, 0.25);
+        padRatioEta->Draw();
+        padRatioEta->SetLogx();
+
+        padSpectrumEta->cd();
+
+        TLegend* legendEta                                          = GetAndSetLegend2(0.7, 0.95-(0.045*2), 0.85, 0.95, 40);
+        legendEta->SetBorderSize(0);
+        dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
+        SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", histoEtaYieldData->GetMinimum(0)*0.1, histoEtaYieldData->GetMaximum()*2, 1.0, 1.7);
+        dummyHist->SetLabelOffset(-0.015, "X");
+        dummyHist->SetTitleOffset(0.8, "X");
+        dummyHist->Draw();
+
+        DrawGammaSetMarker(histoEtaYieldData,   24, 1, kBlack,  kBlack);
+        DrawGammaSetMarker(histoGeneratedEtaPt, 20, 1, kBlue,  kBlue);
+
+        legendEta->AddEntry(histoEtaYieldData,  Form("%s data", motherParticlesLatex[1].Data()), "p");
+        legendEta->AddEntry(histoGeneratedEtaPt,Form("%s cocktail", motherParticlesLatex[1].Data()), "p");
+
+        histoEtaYieldData->Draw("same");
+        histoGeneratedEtaPt->Draw("same");
+        legendEta->Draw("same");
+
+        PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.03, cent, textMeasurement, "", 42, 0.03);
+        if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.17, 0.032, 0.03, 1.25, 42);
+        else PutALICESimulationLabel(                   0.22, 0.17, 0.032, 0.03, 1.25, 42);
+
+        padRatioEta->cd();
+        dummyHistRatio                                              = new TH1D("dummyHistRatio", "", 1000, ptPlotMin, ptPlotMax);
+        SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{data}{gen.}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
+        dummyHistRatio->GetXaxis()->SetLabelOffset(-0.025);
+        dummyHistRatio->GetYaxis()->SetRangeUser(0.65,1.55);
+        dummyHistRatio->Draw();
+        DrawGammaLines(ptPlotMin,ptPlotMax,1,1,0.1, kGray+1, 1);
+        DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,0.1, kGray+1, 7);
+        DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,0.1, kGray+1, 7);
+        DrawGammaLines(ptPlotMin,ptPlotMax,1.2,1.2,0.1, kGray+1, 8);
+
+        ratioEtaDataCocktail = (TH1D*)histoEtaYieldData->Clone("ratioEtaDataCocktail");
+        ratioEtaDataCocktail->Divide(histoEtaYieldData,histoGeneratedEtaPt,1.,1.,"");
+        ratioEtaDataCocktail->SetLineColor(cocktailColor[0]);
+        ratioEtaDataCocktail->SetLineColor(kBlack);
+        ratioEtaDataCocktail->SetMarkerColor(kBlack);
+        ratioEtaDataCocktail->Draw("same");
+
+        canvasEta->SaveAs(Form("%s/EtaDataCocktail_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
+        delete legendEta;
+        delete canvasEta;
+    }
     delete dummyHist;
+    delete dummyHistRatio;
 
     //***************************** Save histograms *****************************************************************
     if (isSane) {
@@ -1264,7 +1361,36 @@ void RebinSpectrum(TH1F *Spectrum, TString NewName){
     
     *Spectrum = *((TH1F*)Spectrum->Rebin(fNBinsPt,NewName,fBinsPt));
     Spectrum->Divide(fDeltaPt);
+}
 
+void RebinSpectrum(TH1F* Spectrum, TH1F* SpectrumForBinning, TString NewName){
+
+    if (!SpectrumForBinning) return;
+
+    if(NewName.CompareTo(""))
+        NewName                     = Spectrum->GetName();
+
+    Double_t newBinContent          = 0.;
+    for (Int_t i=1; i<Spectrum->GetNbinsX()+1; i++) {
+        newBinContent               = Spectrum->GetBinContent(i) * Spectrum->GetBinWidth(i);
+        Spectrum->SetBinContent(i, newBinContent);
+    }
+
+    Int_t       nBins               = SpectrumForBinning->GetNbinsX();
+    Double_t*   binsPt              = new Double_t[nBins+1];
+    for (Int_t i=0; i<nBins+1; i++) {
+        if (i<nBins)    binsPt[i]   = SpectrumForBinning->GetXaxis()->GetBinLowEdge(i);
+        else            binsPt[i]   = SpectrumForBinning->GetXaxis()->GetBinUpEdge(i-1);
+    }
+
+    TH1D* deltaPt                   = new TH1D("deltaPt","",nBins,binsPt);
+    for(Int_t iPt=1;iPt<nBins+1;iPt++){
+        deltaPt->SetBinContent(iPt, binsPt[iPt]-binsPt[iPt-1]);
+        deltaPt->SetBinError(iPt,   0);
+    }
+
+    *Spectrum                       = *((TH1F*)Spectrum->Rebin(nBins,NewName,binsPt));
+    Spectrum->Divide(deltaPt);
 }
 
 //************************** Convert yield histo ********************************************************************
@@ -1465,12 +1591,15 @@ void SaveHistos() {
     
     // write input parametrizations and mt scaled ones
     for (Int_t i=0; i<nMotherParticles; i++) {
-        if (cocktailInputParametrizations[i])           cocktailInputParametrizations[i]->Write(cocktailInputParametrizations[i]->GetName(), TObject::kOverwrite);
-        if (cocktailInputParametrizationsMtScaled[i])   cocktailInputParametrizationsMtScaled[i]->Write(cocktailInputParametrizationsMtScaled[i]->GetName(), TObject::kOverwrite);
+        if (cocktailInputParametrizations[i])           cocktailInputParametrizations[i]->Write(        cocktailInputParametrizations[i]->GetName(),            TObject::kOverwrite);
+        if (cocktailInputParametrizationsMtScaled[i])   cocktailInputParametrizationsMtScaled[i]->Write(cocktailInputParametrizationsMtScaled[i]->GetName(),    TObject::kOverwrite);
     }
     
-    if (ratioPi0DataCocktail)          ratioPi0DataCocktail->Write(ratioPi0DataCocktail->GetName(), TObject::kOverwrite);
-    if (histoPi0YieldData)          histoPi0YieldData->Write(histoPi0YieldData->GetName(), TObject::kOverwrite);
+    if (histoPi0YieldData)          histoPi0YieldData->Write(   "Pi0_invYield",                     TObject::kOverwrite);
+    if (ratioPi0DataCocktail)       ratioPi0DataCocktail->Write(ratioPi0DataCocktail->GetName(),    TObject::kOverwrite);
+
+    if (histoEtaYieldData)          histoEtaYieldData->Write(   "Eta_invYield",                     TObject::kOverwrite);
+    if (ratioEtaDataCocktail)       ratioEtaDataCocktail->Write(ratioEtaDataCocktail->GetName(),    TObject::kOverwrite);
 }
 
 //************************** Create tex file containing BR table ****************************************************
@@ -1541,3 +1670,4 @@ void CreateBRTableLatex() {
     texFile << "}";
     texFile.close();
 }
+
