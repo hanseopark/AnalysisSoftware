@@ -35,10 +35,9 @@ Double_t fBinsPi0900GeVPt[12]                   = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2
 Int_t fBinsPi0900GeVPtRebin[11]                 = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 4,
                                                     4};
 
-Double_t fBinsPi0900GeVPCMEMCPt[12]             = { 0.0, 0.8, 1.2, 1.4, 1.6, 2.0, 2.5, 3.0, 4.0, 5.0,
-                                                    7.0, 10.0};
-Int_t fBinsPi0900GeVPCMEMCPtRebin[11]           = { 2, 5, 5, 5, 4, 4, 4, 4, 8, 8,
-                                                    10};
+Double_t fBinsPi0900GeVPCMEMCPt[12]             = { 0.0, 0.8, 1.2, 1.4, 1.6, 1.8, 2.0, 2.5, 3.0, 4.0, 5.0,
+                                                    7.0};
+Int_t fBinsPi0900GeVPCMEMCPtRebin[11]           = { 2, 5, 5, 5, 5, 4, 4, 4, 4, 8, 8};
 
 Double_t fBinsPi0900GeVEMCPt[12]                = { 0.0, 1.2, 1.6, 2.0, 2.5, 3.0, 4.0, 5.0, 7.0,
                                                     10.0, 16.0};

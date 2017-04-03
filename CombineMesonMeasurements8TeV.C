@@ -898,7 +898,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TFile* filePHOSPHOS                                     = new TFile(fileNamePHOSPHOS.Data());
         TDirectory* directoryPHOSPHOSRejection                  = (TDirectory*)filePHOSPHOS->Get("RejectionFactor");
 
-        TString triggerNameLabel[3] = {"EMC-L0/MB","EMC-L1/EMC-L0","PHOS/MB"};
+        TString triggerNameLabel[3] = {"EMC-L0/MB","EMC-L1/EMC-L0","PHOS-L0/MB"};
         TH1F* histoTriggerReject[3];
 //        TH1D* triggRejec[3];
         histoTriggerReject[0] = (TH1F*)fileEMCALLow->Get("TriggRejectvsE_EMC7_INT7");
