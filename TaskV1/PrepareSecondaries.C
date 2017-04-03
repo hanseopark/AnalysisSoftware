@@ -597,6 +597,8 @@ void PrepareSecondaries(    TString     meson                       = "",
             } else {
                 histoMesonMotherPtMeasBin[i]                    = NULL;
             }
+        } else {
+            histoMesonMotherPtMeasBin[i]                        = NULL;
         }
     }
 
@@ -1167,24 +1169,24 @@ void SavePhotonHistos() {
     TString nameOutput                  = Form("%s/%s/SecondaryGamma%s_%.2f_%s.root",fCutSelection.Data(),fEnergyFlag.Data(),fPeriodFlag.Data(),fRapidity,fCutSelection.Data());
     cout << "INFO: writing into: " << nameOutput << endl;
     TFile *outputFile                   = new TFile(nameOutput,"RECREATE");
-    
+
     // write number of events
     histoNEvents->Write("NEvents", TObject::kOverwrite);
-    
+
     // write y vs pt histograms
     for (Int_t i=0; i<nMotherParticles; i++) {
         if (histoGammaFromXFromMotherPtYCorr[i])    histoGammaFromXFromMotherPtYCorr[i]->Write( histoGammaFromXFromMotherPtYCorr[i]->GetName(), TObject::kOverwrite);
         if (histoGammaFromXFromMotherPtY[i])        histoGammaFromXFromMotherPtY[i]->Write(     histoGammaFromXFromMotherPtY[i]->GetName(),     TObject::kOverwrite);
         if (listYSlicesGammaFromXFromMother[i])     listYSlicesGammaFromXFromMother[i]->Write(  listYSlicesGammaFromXFromMother[i]->GetName(),  TObject::kSingleKey);
     }
-    
+
     // write projections
     for (Int_t i=0; i<nMotherParticles; i++) {
         if (histoGammaFromXFromMotherPtOrBin[i])    histoGammaFromXFromMotherPtOrBin[i]->Write( histoGammaFromXFromMotherPtOrBin[i]->GetName(), TObject::kOverwrite);
         if (histoGammaFromXFromMotherYOrBin[i])     histoGammaFromXFromMotherYOrBin[i]->Write(  histoGammaFromXFromMotherYOrBin[i]->GetName(),  TObject::kOverwrite);
         if (histoGammaFromXFromMotherPhiOrBin[i])   histoGammaFromXFromMotherPhiOrBin[i]->Write(histoGammaFromXFromMotherPhiOrBin[i]->GetName(),TObject::kOverwrite);
     }
-    
+
     // write input spectra and rebinned generate spectra
     for (Int_t i=0; i<nCocktailInputParticles; i++) {
         if (histoMesonMotherCocktailInputPtMeasBin[i])  histoMesonMotherCocktailInputPtMeasBin[i]->Write(   histoMesonMotherCocktailInputPtMeasBin[i]->GetName(),   TObject::kOverwrite);
