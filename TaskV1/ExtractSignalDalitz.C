@@ -141,7 +141,7 @@ void ExtractSignalDalitz(   TString meson               = "",
     }
     
     
-    StyleSettingsThesis();
+    StyleSettingsThesis(fSuffix);
     SetPlotStyle();
 
     fEnergyFlag             = option;
@@ -167,7 +167,8 @@ void ExtractSignalDalitz(   TString meson               = "",
         cout << "No correct collision system specification, has been given" << endl;
         return;
     }
-    TString fDecayChannel   = "e^{+}e^{-}#gamma";
+    //TString fDecayChannel   = "e^{+}e^{-}#gamma";
+    TString fDecayChannel   = "#gamma*#gamma";
     
     //****************************** Choice of Fitting procedure ******************************************************
     if(crystal.CompareTo("CrystalBall") == 0){// means we want to plot values for the pi0
@@ -1080,7 +1081,7 @@ void ExtractSignalDalitz(   TString meson               = "",
     TString nameMesonSub= Form("%s/%sDalitz_%s_MesonSubtracted%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),fSuffix.Data());
     TString nameCanvasSub= "MesonCanvasSubtracted";
     TString namePadSub= "MesonPadSubtracted";
-    PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin, fHistoMappingTrueMesonInvMassPtBins, fFitSignalInvMassPtBin, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange, date, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem);
+    //PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin, fHistoMappingTrueMesonInvMassPtBins, fFitSignalInvMassPtBin, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange, date, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem);
 
     nameMeson= Form("%s/%sDalitz_%s_MesonWithBckLeft%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(),fPeriodFlag.Data(),fCutSelection.Data(),fSuffix.Data());
     nameCanvas = "MesonWithBckCanvasLeft";
@@ -1093,7 +1094,7 @@ void ExtractSignalDalitz(   TString meson               = "",
     
     PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassLeftPtBin, fHistoMappingTrueMesonInvMassPtBins, fFitInvMassLeftPtBin, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange, date, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem);
 
-    PlotExampleInvMassBins(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin] , fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),fSuffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, date, fPrefix, fPrefix2, fThesis, fCollisionSystem, fBinsPt, fDecayChannel);
+    //PlotExampleInvMassBins(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin] , fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),fSuffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, date, fPrefix, fPrefix2, fThesis, fCollisionSystem, fBinsPt, fDecayChannel);
     
     TString triggerInt         = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPosition(),2);
     PlotExampleInvMassBinsV2(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin],fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),fSuffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, date, fPrefix, fPrefix2, fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fExampleBinScaleFac, fMode, addSig );
