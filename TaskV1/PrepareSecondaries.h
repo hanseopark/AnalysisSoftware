@@ -117,7 +117,8 @@ Int_t       GetMinimumBinAboveThreshold             (   TH1F*               hist
 TList*      GetCocktailInputList                    (   TString             energy,
                                                         TString             centrality  );
 TH1F*       GetCocktailInputSpectrum                (   TList*              list,
-                                                        Int_t               particle    );
+                                                        Int_t               particle,
+                                                        TString name                    );
 TH1F*       TransformGraphToTH1F                    (   TGraphErrors*       graph       );
 TH1F*       TransformGraphToTH1F                    (   TGraphAsymmErrors*  graph       );
 

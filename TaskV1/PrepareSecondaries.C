@@ -226,9 +226,10 @@ void PrepareSecondaries(    TString     meson                       = "",
         if (paramMtTemp)
             cocktailInputParametrizationsMtScaled[i]            = new TF1(*paramMtTemp);
         else {
-            if (cocktailInputParametrizationPi0)
+            if (cocktailInputParametrizationPi0) {
                 cocktailInputParametrizationsMtScaled[i]        = (TF1*)MtScaledParam(cocktailInputParametrizationPi0, motherParticlesPDG[i].Atoi(), 111, mtScaleFactor[i], kFALSE, kTRUE);
-            else
+                cocktailInputParametrizationsMtScaled[i]->SetName(Form("%s_pt_mtScaled", motherParticlesPDG[i].Data()));
+            } else
                 cocktailInputParametrizationsMtScaled[i]        = NULL;
         }
     }
@@ -583,15 +584,23 @@ void PrepareSecondaries(    TString     meson                       = "",
     TList* cocktailInputList                                    = GetCocktailInputList(fEnergyFlag, centrality);
     histoMesonMotherCocktailInputPtMeasBin                      = new TH1F*[nCocktailInputParticles];
     histoMesonMotherPtMeasBin                                   = new TH1F*[nCocktailInputParticles];
+
+    // load cocktail input spectra
+    for (Int_t i=0; i<nCocktailInputParticles; i++) {
+        histoMesonMotherCocktailInputPtMeasBin[i]               = GetCocktailInputSpectrum(cocktailInputList, i, Form("%s_CocktailInput_Pt_MeasBin",motherParticles[i+1].Data()));
+
+        // K0l not included in cocktail input -> clone K0s
+        if (i>0 && !histoMesonMotherCocktailInputPtMeasBin[i]) {
+            if (cocktailInputParticles[i].CompareTo(cocktailInputParticles[i-1]) == 0) {
+                histoMesonMotherCocktailInputPtMeasBin[i]       = (TH1F*)histoMesonMotherCocktailInputPtMeasBin[i-1]->Clone(Form("%s_CocktailInput_Pt_MeasBin",motherParticles[i+1].Data()));
+            }
+        }
+    }
+
+    // scale cocktail input spectra and rebin generated spectra
     for (Int_t i=0; i<nCocktailInputParticles; i++) {
 
-        histoMesonMotherCocktailInputPtMeasBin[i]               = GetCocktailInputSpectrum(cocktailInputList, i);
-
-        if (i==1 && !histoMesonMotherCocktailInputPtMeasBin[i] && histoMesonMotherCocktailInputPtMeasBin[0])
-            histoMesonMotherCocktailInputPtMeasBin[i]           = (TH1F*)histoMesonMotherCocktailInputPtMeasBin[0]->Clone("k0l");
-
         if (histoMesonMotherCocktailInputPtMeasBin[i]) {
-            histoMesonMotherCocktailInputPtMeasBin[i]->SetName(Form("%s_CocktailInput_Pt_MeasBin",motherParticles[i+1].Data()));
             histoMesonMotherCocktailInputPtMeasBin[i]->Sumw2();
             histoMesonMotherCocktailInputPtMeasBin[i]->Scale(eventNormScalingFactor*motherFactorDecayLength[i+1]);
 
@@ -834,8 +843,7 @@ void PrepareSecondaries(    TString     meson                       = "",
 
             if (cocktailInputParametrizations[i+1]) {
                 cocktailInputParametrizations[i+1]->SetLineColor(kBlue-2);
-                //cocktailInputParametrizations[i+1]->SetLineStyle(4);
-                cocktailInputParametrizations[i+1]->SetLineWidth(2);
+                cocktailInputParametrizations[i+1]->SetLineStyle(1);
                 cocktailInputParametrizations[i+1]->SetLineWidth(2);
                 cocktailInputParametrizations[i+1]->Draw("same");
                 legendInputCrossCheck->AddEntry(cocktailInputParametrizations[i+1], Form("%s param. (#times %.3e)", motherParticlesLatex[i+1].Data(), motherFactorDecayLength[i+1]), "l");
@@ -843,8 +851,7 @@ void PrepareSecondaries(    TString     meson                       = "",
 
             if (cocktailInputParametrizationsMtScaled[i+1]) {
                 cocktailInputParametrizationsMtScaled[i+1]->SetLineColor(kOrange+2);
-                //cocktailInputParametrizationsMtScaled[i+1]->SetLineStyle(4);
-                cocktailInputParametrizationsMtScaled[i+1]->SetLineWidth(2);
+                cocktailInputParametrizationsMtScaled[i+1]->SetLineStyle(1);
                 cocktailInputParametrizationsMtScaled[i+1]->SetLineWidth(2);
                 cocktailInputParametrizationsMtScaled[i+1]->Draw("same");
                 legendInputCrossCheck->AddEntry(cocktailInputParametrizationsMtScaled[i+1], Form("%s param. m_{T} scaled (#times %.3e)", motherParticlesLatex[i+1].Data(), motherFactorDecayLength[i+1]), "l");
@@ -884,84 +891,8 @@ void PrepareSecondaries(    TString     meson                       = "",
             canvasInputCrossCheck->SaveAs(Form("%s/InputCrossCheck%s_%.2f_%s.%s",outputDir.Data(), motherParticles[i+1].Data(),fRapidity,cutSelection.Data(),suffix.Data()));
         }
     }
-
-    //***************************** Plot mT scaling cross check *****************************************************
-    TCanvas* canvasMtCrossCheck                                 = NULL;
-    TLegend* legendMtCrossCheck                                 = NULL;
-    TPad* padMtCrossCheck                                       = NULL;
-    TPad* padMtCrossCheckRatio                                  = NULL;
-    dummyHist                                                   = NULL;
-    dummyHistRatio                                              = NULL;
-    tempRatio1                                                  = NULL;
-    tempRatio2                                                  = NULL;
-    for (Int_t particle=0; particle<nMotherParticles; particle++) {
-        if (histoMesonMotherPtOrBin[particle] && cocktailInputParametrizations[particle] && cocktailInputParametrizationsMtScaled[particle]) {
-            canvasMtCrossCheck                                  = new TCanvas("canvasMtCrossCheck","",1100,1200);
-            padMtCrossCheck                                     = new TPad("padMtCrossCheck", "", 0., 0.25, 1., 1.,-1, -1, -2);
-            padMtCrossCheckRatio                                = new TPad("padMtCrossCheckRatio", "", 0., 0., 1., 0.25,-1, -1, -2);
-            legendMtCrossCheck                                  = GetAndSetLegend2(0.55, 0.87-(0.048*4), 0.9, 0.87, 40);
-            legendMtCrossCheck->SetBorderSize(0);
-
-            DrawGammaCanvasSettings(canvasMtCrossCheck, 0.165, 0.015, 0.025, 0.25);
-            DrawGammaPadSettings(padMtCrossCheck,       0.165, 0.015, 0.025, 0.);
-            DrawGammaPadSettings(padMtCrossCheckRatio,  0.165, 0.015, 0.0, 0.25);
-
-            padMtCrossCheck->Draw();
-            padMtCrossCheck->SetLogy();
-            padMtCrossCheck->SetLogx();
-
-            padMtCrossCheckRatio->Draw();
-            padMtCrossCheckRatio->SetLogx();
-
-            // dummy hist
-            dummyHist                                           = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
-            dummyHistRatio                                      = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
-
-            // spectrum + parametrizations
-            padMtCrossCheck->cd();
-            SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 5e-8, 1e2, 1.0, 1.8);
-            dummyHist->Draw();
-
-            if (motherFactorDecayLength[particle]!=1.0)
-                legendMtCrossCheck->AddEntry(histoMesonMotherPtOrBin[particle], Form("%s #times %.3e", motherParticlesLatex[particle].Data(), motherFactorDecayLength[particle]), "l");
-            else
-                legendMtCrossCheck->AddEntry(histoMesonMotherPtOrBin[particle], Form("%s", motherParticlesLatex[particle].Data()), "l");
-            legendMtCrossCheck->AddEntry(cocktailInputParametrizations[particle], Form("%s param.", motherParticlesLatex[particle].Data()), "l");
-
-            cocktailInputParametrizationsMtScaled[particle]->SetLineColor(kBlack);
-            cocktailInputParametrizationsMtScaled[particle]->SetLineStyle(4);
-            cocktailInputParametrizationsMtScaled[particle]->SetLineWidth(2);
-            legendMtCrossCheck->AddEntry(cocktailInputParametrizationsMtScaled[particle], Form("%s m_{T} scaled param.", motherParticlesLatex[particle].Data()), "l");
-            cocktailInputParametrizationsMtScaled[particle]->Draw("same");
-
-            histoMesonMotherPtOrBin[particle]->Draw("e1same");
-            cocktailInputParametrizations[particle]->Draw("same");
-            legendMtCrossCheck->Draw("same");
-
-            PutProcessLabelAndEnergyOnPlot(                 0.22, 0.30, 0.032, cent, textMeasurement, "", 42, 0.03);
-            if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.25, 0.032, 0.03, 1.25, 42);
-            else PutALICESimulationLabel(                   0.22, 0.25, 0.032, 0.03, 1.25, 42);
-
-            // ratios of parametrizations to spectrum
-            padMtCrossCheckRatio->cd();
-            SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{spec}{param}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
-            dummyHistRatio->GetXaxis()->SetLabelOffset(-0.025);
-            dummyHistRatio->GetYaxis()->SetRangeUser(0,2.3);
-
-            tempRatio1                                          = (TH1D*)CalculateRatioToTF1((TH1D*)histoMesonMotherPtOrBin[particle], cocktailInputParametrizations[particle]);
-            tempRatio1->SetLineColor(cocktailColor[particle]);
-            if(particle!=0){
-                tempRatio2                                      = (TH1D*)CalculateRatioToTF1((TH1D*)histoMesonMotherPtOrBin[particle], cocktailInputParametrizationsMtScaled[particle]);
-                tempRatio2->SetLineColor(kBlack);
-                tempRatio2->SetMarkerColor(kBlack);
-            }
-            dummyHistRatio->Draw();
-            tempRatio1->Draw("e1same");
-            if(particle!=0)tempRatio2->Draw("e1same");
-
-            canvasMtCrossCheck->SaveAs(Form("%s/MtScaling%s_%.2f_%s.%s",outputDir.Data(), motherParticles[particle].Data(),fRapidity,cutSelection.Data(),suffix.Data()));
-        }
-    }
+    delete dummyHist;
+    delete dummyHistRatio;
 
     //***************************** Save histograms *****************************************************************
     SaveMesonHistos();
@@ -1428,7 +1359,7 @@ TList* GetCocktailInputList(TString energy, TString centrality) {
 }
 
 //************************** Function to get spectrum from cocktail input list **************************************
-TH1F* GetCocktailInputSpectrum(TList* list, Int_t particle) {
+TH1F* GetCocktailInputSpectrum(TList* list, Int_t particle, TString name) {
 
     if (!list) {
         cout << "no cocktail input list given!" << endl;
@@ -1442,7 +1373,6 @@ TH1F* GetCocktailInputSpectrum(TList* list, Int_t particle) {
     TGraphAsymmErrors*  tempGraphAsymmErrs                      = NULL;
     TString             tempObjectName                          = Form("%sStat", cocktailInputParticles[particle].Data());
     TString             tempObjectClassName                     = "";
-
     if ( list->FindObject(tempObjectName.Data()) ) {
 
         tempObject                                              = (TObject*)list->FindObject(tempObjectName.Data());
@@ -1462,6 +1392,7 @@ TH1F* GetCocktailInputSpectrum(TList* list, Int_t particle) {
         }
     }
 
+    if (histo) histo->SetName(name);
     return histo;
 }
 
