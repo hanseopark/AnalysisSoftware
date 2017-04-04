@@ -4495,6 +4495,9 @@ Color_t GetColorSystematics(    TString variationName,
         return kViolet-3;
     if ( variationName.CompareTo("CellMinE") == 0 )
         return kSpring-6;
+    if ( variationName.CompareTo("Cocktail") == 0 )
+        return 404;
+    
     cout << "GetColorSystematics(): no valid input parameters given for '" << variationName.Data() <<  "'..." << endl;
     return kBlack;
 }
@@ -4580,6 +4583,8 @@ Style_t GetMarkerStyleSystematics(  TString variationName,
         return 30;
     if ( variationName.CompareTo("CellMinE") == 0 )
         return 33;
+    if ( variationName.CompareTo("Cocktail") == 0 )
+        return 21;
     
     cout << "GetMarkerStyleSystematics(): no valid input parameters given for '" << variationName.Data() <<  "'..." << endl;
     return 20;
@@ -4672,6 +4677,8 @@ TString GetSystematicsName  (  TString variationName = "" ){
         return "secondary corr.";
     if ( variationName.CompareTo("CellMinE") == 0 )
         return "cell E_{agg}";
+    if ( variationName.CompareTo("Cocktail") == 0 )
+        return "cocktail";
     
     cout << "GetSystematicsName(): no valid input parameters given..." << endl;
     return "";

@@ -567,6 +567,8 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         specialString[2]="linB";
         specialString[3]="polA";
         specialString[4]="polB";
+        specialString[5]="mtScaleUp";
+        specialString[6]="mtScaleDown";
     }
     if(!cutVariationName.CompareTo("7TeVPeriods")){
         specialString[0]="std";
@@ -592,18 +594,18 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     TCanvas *canvasGammaSpectrum                = GetAndSetCanvas("GammaSpectra", 0.09, 0.08);canvasGammaSpectrum->SetLogy();
     TCanvas *canvasPi0Spectrum                  = GetAndSetCanvas("Pi0Spectra", 0.09, 0.08);canvasPi0Spectrum->SetLogy();
     TCanvas *canvasPi0SpectrumFit               = GetAndSetCanvas("Pi0FitSpectra", 0.09, 0.08);canvasPi0SpectrumFit->SetLogy();
-    TCanvas *canvasIncGammaToPi0Ratio           = GetAndSetCanvas("InclusiveRatios");
-    TCanvas *canvasIncGammaToPi0RatioFit        = GetAndSetCanvas("InclusiveRatiosFit");
-    TCanvas *canvasDR                           = GetAndSetCanvas("DoubleRatios");
-    TCanvas *canvasDRFit                        = GetAndSetCanvas("DoubleRatiosFit");
+    TCanvas *canvasIncGammaToPi0Ratio           = GetAndSetCanvas("InclusiveRatios", 0.09, 0.09);
+    TCanvas *canvasIncGammaToPi0RatioFit        = GetAndSetCanvas("InclusiveRatiosFit", 0.09, 0.09);
+    TCanvas *canvasDR                           = GetAndSetCanvas("DoubleRatios", 0.09, 0.09);
+    TCanvas *canvasDRFit                        = GetAndSetCanvas("DoubleRatiosFit", 0.09, 0.09);
 
     TCanvas *canvasGammaSpectrumRatio           = GetAndSetCanvas("GammaSpectraRatio", 0.09, 0.09);
     TCanvas *canvasPi0SpectrumRatio             = GetAndSetCanvas("Pi0SpectraRatio", 0.09, 0.09);
     TCanvas *canvasPi0SpectrumFitRatio          = GetAndSetCanvas("Pi0FitSpectraRatio", 0.09, 0.09);
-    TCanvas *canvasIncGammaToPi0RatioRatio      = GetAndSetCanvas("InclusiveRatiosRatio");
-    TCanvas *canvasIncGammaToPi0RatioFitRatio   = GetAndSetCanvas("InclusiveRatiosFitRatio");
-    TCanvas *canvasDRRatio                      = GetAndSetCanvas("DoubleRatiosRatio");
-    TCanvas *canvasDRFitRatio                   = GetAndSetCanvas("DoubleRatiosFitRatio");
+    TCanvas *canvasIncGammaToPi0RatioRatio      = GetAndSetCanvas("InclusiveRatiosRatio", 0.09, 0.09);
+    TCanvas *canvasIncGammaToPi0RatioFitRatio   = GetAndSetCanvas("InclusiveRatiosFitRatio", 0.09, 0.09);
+    TCanvas *canvasDRRatio                      = GetAndSetCanvas("DoubleRatiosRatio", 0.09, 0.09);
+    TCanvas *canvasDRFitRatio                   = GetAndSetCanvas("DoubleRatiosFitRatio", 0.09, 0.09);
     
     TCanvas *canvasRawGamma                     = GetAndSetCanvas("RawGamma", 0.08, 0.08);canvasRawGamma->SetLogy();
     TCanvas *canvasRawGammaRatio                = GetAndSetCanvas("RawGammaRatio", 0.09, 0.09);
@@ -625,34 +627,37 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     //*******************************************************************************************        
     Double_t textSizeLegend = 0.04;
     if (number > 5) textSizeLegend = 0.03;
+    Int_t numberLegendShortened = (Int_t((number+1)/2 + 0.5));
+    cout << numberLegendShortened << endl;
+    
     TLegend *legendGammaSpectrum                = GetAndSetLegend2(0.45, 0.93-textSizeLegend*(number/1), 0.6, 0.93, textSizeLegend, 1, "", 42);
-    TLegend *legendGammaSpectrumRatio           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/2), 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
+    TLegend *legendGammaSpectrumRatio           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
     TLegend *legendPi0Spectrum                  = GetAndSetLegend(0.3,0.7,number);
     TLegend *legendPi0SpectrumRatio             = GetAndSetLegend(0.15,0.75,number);
     TLegend *legendPi0SpectrumFit               = GetAndSetLegend(0.3,0.7,number);
     TLegend *legendPi0SpectrumFitRatio          = GetAndSetLegend(0.15,0.75,number);
-    TLegend *legendPurity                       = GetAndSetLegend2(0.2, 0.15, 0.93, 0.15+textSizeLegend*(number/2), textSizeLegend, 2, "", 42,0.1);
-    TLegend *legendPurityRatio                  = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/2), 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
+    TLegend *legendPurity                       = GetAndSetLegend2(0.2, 0.15, 0.93, 0.15+textSizeLegend*numberLegendShortened, textSizeLegend, 2, "", 42,0.1);
+    TLegend *legendPurityRatio                  = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
     TLegend *legendGammaEff                     = GetAndSetLegend2(0.45, 0.93-textSizeLegend*(number/1), 0.6, 0.93, textSizeLegend, 1, "", 42);
-    TLegend *legendGammaEffRatio                = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/2), 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
+    TLegend *legendGammaEffRatio                = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
     TLegend *legendGammaEffRecPt                = GetAndSetLegend2(0.45, 0.93-textSizeLegend*(number/1), 0.6, 0.93, textSizeLegend, 1, "", 42);
-    TLegend *legendGammaEffRecPtRatio           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/2), 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
+    TLegend *legendGammaEffRecPtRatio           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
     TLegend *legendGammaConvProb                = GetAndSetLegend2(0.3, 0.15, 0.45, 0.15+textSizeLegend*number, textSizeLegend, 1, "", 42);
-    TLegend *legendGammaConvProbRatio           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/2), 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
+    TLegend *legendGammaConvProbRatio           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
     TLegend *legendGammaResolCorr               = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/1), 0.33, 0.93, textSizeLegend, 1, "", 42); 
-    TLegend *legendGammaResolCorrRatio          = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/2), 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
-    TLegend *legendGammaCorrFac                 = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/2), 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
-    TLegend *legendGammaCorrFacRatio            = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/2), 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
-    TLegend *legendIncGammaToPi0Ratio           = GetAndSetLegend(0.3,0.7,number);
-    TLegend *legendIncGammaToPi0RatioRatio      = GetAndSetLegend(0.15,0.75,number);
-    TLegend *legendIncGammaToPi0RatioFit        = GetAndSetLegend(0.3,0.7,number);
-    TLegend *legendIncGammaToPi0RatioFitRatio   = GetAndSetLegend(0.15,0.75,number);
-    TLegend *legendDR                           = GetAndSetLegend(0.3,0.7,number);
-    TLegend *legendDRRatio                      = GetAndSetLegend(0.15,0.75,number);
-    TLegend *legendDRFit                        = GetAndSetLegend(0.3,0.7,number);
-    TLegend *legendDRFitRatio                   = GetAndSetLegend(0.15,0.75,number);
+    TLegend *legendGammaResolCorrRatio          = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
+    TLegend *legendGammaCorrFac                 = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
+    TLegend *legendGammaCorrFacRatio            = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
+    TLegend *legendIncGammaToPi0Ratio           = GetAndSetLegend2(0.13+0.1, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
+    TLegend *legendIncGammaToPi0RatioRatio      = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
+    TLegend *legendIncGammaToPi0RatioFit        = GetAndSetLegend2(0.13+0.1, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
+    TLegend *legendIncGammaToPi0RatioFitRatio   = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
+    TLegend *legendDR                           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
+    TLegend *legendDRRatio                      = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
+    TLegend *legendDRFit                        = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
+    TLegend *legendDRFitRatio                   = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
     TLegend *legendRawGamma                     = GetAndSetLegend2(0.45, 0.93-textSizeLegend*(number/1), 0.6, 0.93, textSizeLegend, 1, "", 42);
-    TLegend *legendRawGammaRatio                = GetAndSetLegend2(0.13, 0.15, 0.93, 0.15+textSizeLegend*(number/2), textSizeLegend, 2, "", 42,0.1);
+    TLegend *legendRawGammaRatio                = GetAndSetLegend2(0.13, 0.15, 0.93, 0.15+textSizeLegend*numberLegendShortened, textSizeLegend, 2, "", 42,0.1);
 
     //********************************************************************************************
     //***************************** Reading histos from file *************************************
@@ -750,7 +755,8 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             cutStringsName[i] = cutSelection[i].Data();
         }
         if(!cutVariationName.CompareTo("Cocktail")||!cutVariationName.CompareTo("7TeVPeriods")||!cutVariationName.CompareTo("8TeVPeriods")){
-            folderName[i]=Form("%s_%s",specialString[i].Data(),cutSelection[i].Data());
+            cutStringsName[i]   = specialString[i].Data();
+            folderName[i]       = Form("%s_%s",specialString[i].Data(),cutSelection[i].Data());
         }else{
             folderName[i]=cutSelection[i].Data();
         }
@@ -764,7 +770,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             DrawGammaSetMarker(histoIncGamma[i], markerType, 2.0, color[i], color[i]);
             histoIncGammaRatio[i] = (TH1D*) histoIncGamma[i]->Clone(Form("histoIncGammaRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoIncGammaRatio[i]->Divide(histoIncGammaRatio[i],histoIncGamma[0],1,1,"b");
-            SetHistogramm(histoIncGammaRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma Spectra",0.0,2);
+            SetHistogramm(histoIncGammaRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma Spectra",0.45,1.55);
             
             histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get("IncRatioPurity_trueEff");
             if(i > 0 && cutVariationName.Contains("IntRange")) histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("IncRatioPurity_trueEff%s",nameIntRanges[i].Data()));
@@ -772,7 +778,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             DrawGammaSetMarker(histoIncGammaToPi0Ratio[i], markerType, 2.0, color[i], color[i]);
             histoIncGammaToPi0RatioRatio[i] = (TH1D*) histoIncGammaToPi0Ratio[i]->Clone(Form("histoIncGammaToPi0RatioRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoIncGammaToPi0RatioRatio[i]->Divide(histoIncGammaToPi0RatioRatio[i],histoIncGammaToPi0Ratio[0],1,1,"b");
-            SetHistogramm(histoIncGammaToPi0RatioRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma/#pi^{0} Ratios",0,2);
+            SetHistogramm(histoIncGammaToPi0RatioRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma/#pi^{0} Ratios",0.45,1.55);
             
             histoPi0Spectrum[i] = (TH1D*) fileCurrentFinal[i]->Get("CorrectedYieldTrueEff");
             if(i > 0 && cutVariationName.Contains("IntRange")) histoPi0Spectrum[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("CorrectedYieldTrueEff%s",nameIntRanges[i].Data()));
@@ -780,7 +786,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             DrawGammaSetMarker(histoPi0Spectrum[i], markerType, 2.0, color[i], color[i]);
             histoPi0SpectrumRatio[i] = (TH1D*) histoPi0Spectrum[i]->Clone(Form("histoPi0SpectrumRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoPi0SpectrumRatio[i]->Divide(histoPi0SpectrumRatio[i],histoPi0Spectrum[0],1,1,"b");
-            SetHistogramm(histoPi0SpectrumRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #pi^{0} Spectra",0.0,2.0);
+            SetHistogramm(histoPi0SpectrumRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #pi^{0} Spectra",0.45,1.55);
 //missing
            /* histoPi0SpectrumFit[i] = (TH1D*) fileCurrentFinal[i]->Get("CorrectedYieldTrueEffPi0Fit");
             if(i == 1 && cutVariationName.Contains("IntRange")) histoPi0SpectrumFit[i] = (TH1D*) fileCurrentFinal[i]->Get("CorrectedYieldTrueEffPi0FitWide");
@@ -797,7 +803,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             DrawGammaSetMarker(histoIncGammaToPi0Ratio[i], markerType, 2.0, color[i], color[i]);
             histoIncGammaToPi0RatioRatio[i] = (TH1D*) histoIncGammaToPi0Ratio[i]->Clone(Form("histoIncGammaToPi0RatioRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoIncGammaToPi0RatioRatio[i]->Divide(histoIncGammaToPi0RatioRatio[i],histoIncGammaToPi0Ratio[0],1,1,"b");
-            SetHistogramm(histoIncGammaToPi0RatioRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma/#pi^{0} Ratios",0,2);
+            SetHistogramm(histoIncGammaToPi0RatioRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma/#pi^{0} Ratios",0.45,1.55);
 
             histoIncGammaToPi0RatioFit[i] = (TH1D*) fileCurrentFinal[i]->Get("histoIncRatioFitPurity");
             if(i > 0 && cutVariationName.Contains("IntRange"))  histoIncGammaToPi0RatioFit[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("histoIncRatioFitPurity%s",nameIntRanges[i].Data()));
@@ -808,7 +814,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             DrawGammaSetMarker(histoIncGammaToPi0RatioFit[i], markerType, 2.0, color[i], color[i]);
             histoIncGammaToPi0RatioFitRatio[i] = (TH1D*) histoIncGammaToPi0RatioFit[i]->Clone(Form("histoIncGammaToPi0RatioFitRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoIncGammaToPi0RatioFitRatio[i]->Divide(histoIncGammaToPi0RatioFitRatio[i],histoIncGammaToPi0RatioFit[0],1,1,"b");
-            SetHistogramm(histoIncGammaToPi0RatioFitRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma/#pi^{0}_{Fit} Ratios",0,2);
+            SetHistogramm(histoIncGammaToPi0RatioFitRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma/#pi^{0}_{Fit} Ratios",0.45,1.55);
 
             histoDR[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionTrueEffPurity");
             if(i > 0 && cutVariationName.Contains("IntRange")) histoDR[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("DoubleRatioConversionTrueEffPurity%s",nameIntRanges[i].Data()));
@@ -819,10 +825,11 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             if(i == 1 && cutVariationName.Contains("CocktailParam")) histoDR[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionTrueEffPurityModA");
             if(i == 2 && cutVariationName.Contains("CocktailParam")) histoDR[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionTrueEffPurityModB");
             histoDR[i]->SetTitle("");
+            histoDR[i]->GetYaxis()->SetTitle("R_{#gamma}");
             DrawGammaSetMarker(histoDR[i], markerType, 2.0, color[i], color[i]);
             histoDRRatio[i] = (TH1D*) histoDR[i]->Clone(Form("histoDRRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoDRRatio[i]->Divide(histoDRRatio[i],histoDR[0],1,1,"b");
-            SetHistogramm(histoDRRatio[i],"#it{p}_{T} (GeV/c)","Ratios of Double Ratios",0,2);
+            SetHistogramm(histoDRRatio[i],"#it{p}_{T} (GeV/c)","Ratios of Double Ratios",0.45,1.55);
 
             histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionFitPurity");
             if(i > 0 && cutVariationName.Contains("IntRange")) histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("DoubleRatioConversionFitPurity%s",nameIntRanges[i].Data()));
@@ -835,10 +842,11 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             if(i == 1 && cutVariationName.Contains("CocktailParam")) histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionFitPurityModA");
             if(i == 2 && cutVariationName.Contains("CocktailParam")) histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioConversionFitPurityModB");
             histoDRFit[i]->SetTitle("");
+            histoDRFit[i]->GetYaxis()->SetTitle("R_{#gamma}");
             DrawGammaSetMarker(histoDRFit[i], markerType, 2.0, color[i], color[i]);
             histoDRFitRatio[i] = (TH1D*) histoDRFit[i]->Clone(Form("histoDRFitRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoDRFitRatio[i]->Divide(histoDRFitRatio[i],histoDRFit[0],1,1,"b");
-            SetHistogramm(histoDRFitRatio[i],"#it{p}_{T} (GeV/c)","Ratios of Double Ratios",0,2);
+            SetHistogramm(histoDRFitRatio[i],"#it{p}_{T} (GeV/c)","Ratios of Double Ratios",0.45,1.55);
 
             PlotCanvas(i,number,canvasGammaSpectrum,histoIncGamma[i],legendGammaSpectrum,canvasGammaSpectrumRatio,histoIncGammaRatio[i],legendGammaSpectrumRatio,cutStringsName[i],One);
             PlotCanvas(i,number,canvasPi0Spectrum,histoPi0Spectrum[i],legendPi0Spectrum,canvasPi0SpectrumRatio,histoPi0SpectrumRatio[i],legendPi0SpectrumRatio,cutStringsName[i],One);
