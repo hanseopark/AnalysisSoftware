@@ -81,6 +81,11 @@ void ExtractGammaSignalV2(      TString meson               = "",
         fEnablePCM  = 1;
     }
     
+    if ( meson.CompareTo("Pi0") ) {
+        cout << "ERROR: this macro should only be run for meson = \"Pi0\", you tried running it with: " << meson.Data() << ". ABORTING" << endl;
+        return;
+    }
+    
     //************************************* Set general style settings *********************************
     StyleSettingsThesis();
     SetPlotStyle();
@@ -232,8 +237,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
     else                                        fNEvents                        = GetNEvents(fEventQuality);
     
     //****************************************************************************************************
-    if (meson.CompareTo("Pi0") == 0 || meson.CompareTo("Pi0EtaBinning") == 0) fMesonId = 111;
-    else fMesonId = 221;
+    fMesonId                                    = 111;
     fMesonMassExpect                            = TDatabasePDG::Instance()->GetParticle(fMesonId)->Mass();
     // calculate number of events for normalization
     if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0){
@@ -303,11 +307,6 @@ void ExtractGammaSignalV2(      TString meson               = "",
             TString ObjectNameTruePrim                                          = "ESD_TruePrimaryPi0_InvMass_PtConv";
             TString ObjectNameTruePrimDC                                        = "ESD_TruePrimaryPi0DC_PtConv";
             TString ObjectNameTruePrimMissing                                   = "ESD_TruePrimaryPi0Missing_PtConv";
-            if (meson.CompareTo("Eta") == 0){
-                ObjectNameTruePrim                                              = "ESD_TruePrimaryEta_InvMass_PtConv";
-                ObjectNameTruePrimDC                                            = "ESD_TruePrimaryEtaDC_PtConv";
-                ObjectNameTruePrimMissing                                       = "ESD_TruePrimaryEtaMissing_PtConv";
-            }    
             TString ObjectNameTrueSec[4]                                        = {"ESD_TrueSecondaryPi0_InvMass_PtConv","","",""};
             TString ObjectNameTrueSecDC[4]                                      = {"ESD_TrueSecondaryPi0DC_PtConv","","",""};
             TString ObjectNameTrueSecMissing[4]                                 = {"ESD_TrueSecondaryPi0Missing_PtConv","","",""};
@@ -320,14 +319,12 @@ void ExtractGammaSignalV2(      TString meson               = "",
             fHistoTruePrimMesonInvMassVSPt                                      = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTruePrim.Data());
             fHistoTruePrimMesonInvMassVSPt->Sumw2();
             
-            if (meson.CompareTo("Eta") != 0){
-                for (Int_t j = 0; j < maxNSec; j++){
-                    if (ObjectNameTrueSec[j].CompareTo("")!=0 ){
-                        fHistoTrueSecMesonInvMassVSPt[j]                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSec[j].Data());
-                        fHistoTrueSecMesonInvMassVSPt[j]->Sumw2();
-                    }
-                }    
-            }
+            for (Int_t j = 0; j < maxNSec; j++){
+                if (ObjectNameTrueSec[j].CompareTo("")!=0 ){
+                    fHistoTrueSecMesonInvMassVSPt[j]                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSec[j].Data());
+                    fHistoTrueSecMesonInvMassVSPt[j]->Sumw2();
+                }
+            }    
             FillMassMCTrueMesonHistosArrays(fHistoTruePrimMesonInvMassVSPt, fHistoTrueSecMesonInvMassVSPt);
 
         }    
@@ -1011,28 +1008,20 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 }
                 
                 // fill secondary yield pt-arrays for neutral pion for different sources and integration windows
-                if (meson.Contains("Pi0")){
-                    for (Int_t j = 0; j < maxNSec; j++){
-                        if (fHistoTrueSecMesonInvMassPtBins[j][iPt]){
-                            for (Int_t k = 0; k < 3; k++){
-                                fFileDataLog<< endl <<"TrueSec " << fSecondaries[j].Data() << " histo " << nameIntRange[k].Data() << ":\t" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
-                                IntegrateHistoInvMassStream( fHistoTrueSecMesonInvMassPtBins[j][iPt], fMesonTrueIntRange[k]);
-                                fMesonTrueSecYields[k][j][iPt]              = fYields;
-                                fMesonTrueSecYieldsError[k][j][iPt]         = fYieldsError;
-                                fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
-                            }    
-                        } else {
-                            for (Int_t k= 0; k< 3; k++){
-                                fMesonTrueSecYields[k][j][iPt]          = 0;
-                                fMesonTrueSecYieldsError[k][j][iPt]     = 0;
-                            }
+                
+                for (Int_t j = 0; j < maxNSec; j++){
+                    if (fHistoTrueSecMesonInvMassPtBins[j][iPt]){
+                        for (Int_t k = 0; k < 3; k++){
+                            fFileDataLog<< endl <<"TrueSec " << fSecondaries[j].Data() << " histo " << nameIntRange[k].Data() << ":\t" << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1]<< endl;
+                            IntegrateHistoInvMassStream( fHistoTrueSecMesonInvMassPtBins[j][iPt], fMesonTrueIntRange[k]);
+                            fMesonTrueSecYields[k][j][iPt]              = fYields;
+                            fMesonTrueSecYieldsError[k][j][iPt]         = fYieldsError;
+                            fFileDataLog << "Integrated value: \t" << fYields <<"+-" <<fYieldsError<<endl;
                         }    
-                    }
-                } else {
-                    for (Int_t j = 0; j < maxNSec; j++){
+                    } else {
                         for (Int_t k= 0; k< 3; k++){
-                            fMesonTrueSecYields[k][j][iPt]              = 0;
-                            fMesonTrueSecYieldsError[k][j][iPt]         = 0;
+                            fMesonTrueSecYields[k][j][iPt]          = 0;
+                            fMesonTrueSecYieldsError[k][j][iPt]     = 0;
                         }
                     }    
                 }
@@ -1187,15 +1176,13 @@ void ExtractGammaSignalV2(      TString meson               = "",
                                                 fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess,
                                                 fCollisionSystem, "MC validated",kFALSE);
 
-            if (meson.Contains("Pi0")){
-                nameMesonTrue       = Form("%s_GammaConvPt_TrueMesonPrimAndSecondary%s", plotPrefix.Data(), plotSuffix.Data());
-                nameCanvasTrue      = "TrueMesonCanvasSec";
-                namePadTrue         = "TrueMesonPadSec";
-                cout << nameMesonTrue.Data() << endl;
-                PlotInvMassSecondaryInPtBins( fHistoTrueFullMesonInvMassPtBins, fHistoTruePrimMesonInvMassPtBins, fHistoTrueSecMesonInvMassPtBins[0], nameMesonTrue, nameCanvasTrue,
+            nameMesonTrue           = Form("%s_GammaConvPt_TrueMesonPrimAndSecondary%s", plotPrefix.Data(), plotSuffix.Data());
+            nameCanvasTrue          = "TrueMesonCanvasSec";
+            namePadTrue             = "TrueMesonPadSec";
+            cout << nameMesonTrue.Data() << endl;
+            PlotInvMassSecondaryInPtBins(   fHistoTrueFullMesonInvMassPtBins, fHistoTruePrimMesonInvMassPtBins, fHistoTrueSecMesonInvMassPtBins[0], nameMesonTrue, nameCanvasTrue,
                                             namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
                                             fCollisionSystem);
-            }
         }
         
         CreatePtHistos();
@@ -1210,19 +1197,12 @@ void ExtractGammaSignalV2(      TString meson               = "",
         canvasLambdaTail->SetTicky();
 
         DrawGammaSetMarker(fHistoLambdaTail, 20, 1., kBlack, kBlack);
-        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
-            DrawAutoGammaMesonHistos( fHistoLambdaTail, 
-                                    "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})", "#lambda", 
-                                    kFALSE, 3.,0.,  kFALSE,
-                                    kTRUE, 0.,fMesonLambdaTailRange[1]*1.2, 
-                                    kFALSE, 0., 10.);
-        } else {
-            DrawAutoGammaMesonHistos( fHistoLambdaTail, 
-                                    "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})", "#lambda", 
-                                    kFALSE, 3.,0.,  kFALSE,
-                                    kTRUE, 5e-3,fMesonLambdaTailRange[1]*1.2, 
-                                    kFALSE, 0., 10.);
-        }
+        DrawAutoGammaMesonHistos( fHistoLambdaTail, 
+                                "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})", "#lambda", 
+                                kFALSE, 3.,0.,  kFALSE,
+                                kTRUE, 0.,fMesonLambdaTailRange[1]*1.2, 
+                                kFALSE, 0., 10.);
+    
         canvasLambdaTail->Update();
         
         TLegend* legendLambdaTail = new TLegend(0.15,0.8,0.4,0.95);
@@ -1242,19 +1222,11 @@ void ExtractGammaSignalV2(      TString meson               = "",
         canvasMesonMass->SetTicky();
 
         DrawGammaSetMarker(fHistoMassMeson, 20, 1., kBlack, kBlack);
-        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
-            DrawAutoGammaMesonHistos( fHistoMassMeson, 
-                                    "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})", Form("Mass (GeV/c^{2})"), 
-                                    kFALSE, 3.,0.,  kFALSE,
-                                    kTRUE, 0.132,0.140, 
-                                    kFALSE, 0., 10.);
-        } else {
-            DrawAutoGammaMesonHistos( fHistoMassMeson, 
-                                    "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})", Form("Mass (GeV/c^{2})"), 
-                                    kFALSE, 3.,0.,  kFALSE,
-                                    kTRUE, 0.52,0.58, 
-                                    kFALSE, 0., 10.);
-        }
+        DrawAutoGammaMesonHistos( fHistoMassMeson, 
+                                "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})", Form("Mass (GeV/c^{2})"), 
+                                kFALSE, 3.,0.,  kFALSE,
+                                kTRUE, 0.132,0.140, 
+                                kFALSE, 0., 10.);
         canvasMesonMass->Update();
         
         TLegend* legendMesonMass = new TLegend(0.15,0.8,0.4,0.95);
@@ -1274,19 +1246,11 @@ void ExtractGammaSignalV2(      TString meson               = "",
         canvasMesonFWHM->SetTicky();
 
         DrawGammaSetMarker(fHistoFWHMMeson, 20, 1., kBlack, kBlack);
-        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
-            DrawAutoGammaMesonHistos( fHistoFWHMMeson, 
-                                        "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})","FWHM (GeV/c^{2})", 
-                                        kFALSE, 3.,0., kFALSE,
-                                        kTRUE, -0.004, fMesonWidthRange[1]*1.5, 
-                                        kFALSE, 0., 10.);
-        } else {
-            DrawAutoGammaMesonHistos( fHistoFWHMMeson, 
-                                        "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})","FWHM (GeV/c^{2})", 
-                                        kFALSE, 3.,0., kFALSE,
-                                        kTRUE, 0., fMesonWidthRange[1]*1.5, 
-                                        kFALSE, 0., 10.);
-        }
+        DrawAutoGammaMesonHistos( fHistoFWHMMeson, 
+                                    "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})","FWHM (GeV/c^{2})", 
+                                    kFALSE, 3.,0., kFALSE,
+                                    kTRUE, -0.004, fMesonWidthRange[1]*1.5, 
+                                    kFALSE, 0., 10.);
         canvasMesonFWHM->Update();
         
         TLegend* legendMesonFWHM = new TLegend(0.2,0.12,0.45,0.26);
@@ -2437,7 +2401,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
     }
     
     // initialize ShowBackground for DCAz distributions
-    if ((fEnergyFlag.CompareTo("13TeV") == 0) && (fMeson.CompareTo("Pi0") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
+    if ((fEnergyFlag.CompareTo("13TeV") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
         nIterationsShowBackground[0]                    = 13;
         nIterationsShowBackground[1]                    = 13;
         nIterationsShowBackground[2]                    = 18;
@@ -2445,7 +2409,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[0]                         = "BackDecreasingWindow";                   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
-    } else if ((fEnergyFlag.CompareTo("7TeV") == 0) && (fMeson.CompareTo("Pi0") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
+    } else if ((fEnergyFlag.CompareTo("7TeV") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
         nIterationsShowBackground[0]                    = 13;
         nIterationsShowBackground[1]                    = 12;
         nIterationsShowBackground[2]                    = 19;
@@ -2453,7 +2417,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
-    } else if ((fEnergyFlag.CompareTo("8TeV") == 0) && (fMeson.CompareTo("Pi0") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
+    } else if ((fEnergyFlag.CompareTo("8TeV") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
         nIterationsShowBackground[0]                    = 12;
         nIterationsShowBackground[1]                    = 12;
         nIterationsShowBackground[2]                    = 19;
@@ -2461,7 +2425,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
-    } else if ((fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) && (fMeson.CompareTo("Pi0") == 0)) {
+    } else if ((fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) ) {
         nIterationsShowBackground[0]                    = 12;
         nIterationsShowBackground[1]                    = 12;
         nIterationsShowBackground[2]                    = 15;
@@ -2469,7 +2433,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
-    } else if ((fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0) && (fMeson.CompareTo("Pi0") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
+    } else if ((fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
         nIterationsShowBackground[0]                    = 13;
         nIterationsShowBackground[1]                    = 13;
         nIterationsShowBackground[2]                    = 15;
@@ -4040,83 +4004,49 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoSignalInvMassPtGConvBinSingle, Dou
     Double_t mesonAmplitudeMax;
     
     if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0){
-        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
-            if(ptBin == 1) mesonAmplitudeMin = mesonAmplitude*70./100.;
-            else if(ptBin > 1 && ptBin < 4) mesonAmplitudeMin = mesonAmplitude*90./100.;
-            else if(ptBin > 17) mesonAmplitudeMin = mesonAmplitude*80./100.;
-            else mesonAmplitudeMin = mesonAmplitude*98./100.;
-            mesonAmplitudeMax = mesonAmplitude*115./100.;
-            if (fMode == 2 || fMode == 3) {
-                mesonAmplitudeMin = mesonAmplitude*98./100.;
-                mesonAmplitudeMax = mesonAmplitude*600./100.;
-            }
-            if (fMode == 4 || fMode == 5) {
-                mesonAmplitudeMin = mesonAmplitude*10./100.;
-                mesonAmplitudeMax = mesonAmplitude*400./100.;
-            }
-
-        } else {
-            mesonAmplitudeMin = mesonAmplitude*30./100.;
-            mesonAmplitudeMax = mesonAmplitude*115./100.;
-            if (fMode == 2 || fMode == 3){
-                mesonAmplitudeMin = mesonAmplitude*10./100.;
-            }
-            if (fMode == 4 || fMode == 5){
-                mesonAmplitudeMin = mesonAmplitude*5./100.;
-            }
+        if(ptBin == 1) mesonAmplitudeMin = mesonAmplitude*70./100.;
+        else if(ptBin > 1 && ptBin < 4) mesonAmplitudeMin = mesonAmplitude*90./100.;
+        else if(ptBin > 17) mesonAmplitudeMin = mesonAmplitude*80./100.;
+        else mesonAmplitudeMin = mesonAmplitude*98./100.;
+        mesonAmplitudeMax = mesonAmplitude*115./100.;
+        if (fMode == 2 || fMode == 3) {
+            mesonAmplitudeMin = mesonAmplitude*98./100.;
+            mesonAmplitudeMax = mesonAmplitude*600./100.;
+        }
+        if (fMode == 4 || fMode == 5) {
+            mesonAmplitudeMin = mesonAmplitude*10./100.;
+            mesonAmplitudeMax = mesonAmplitude*400./100.;
         }
     } else {
-        if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+        mesonAmplitudeMin = mesonAmplitude*98./100.;
+        mesonAmplitudeMax = mesonAmplitude*115./100.;
+        if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
+        if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV")){
+            if ((ptBin > 2)&&ptBin<100 ){
+                fMesonWidthRange[0]         = 0.001; 
+                fMesonWidthRange[1]         = 0.009;
+            }
             mesonAmplitudeMin = mesonAmplitude*98./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
-            if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
-            if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV")){
-                if ((ptBin > 2)&&ptBin<100 ){
-                    fMesonWidthRange[0]         = 0.001; 
-                    fMesonWidthRange[1]         = 0.009;
-                }
-                mesonAmplitudeMin = mesonAmplitude*98./100.;
-                mesonAmplitudeMax = mesonAmplitude*115./100.;
+        }
+        if (fMode == 0 && !fEnergyFlag.CompareTo("7TeV")){
+            if ((ptBin > 2)&&ptBin<100 ){
+                fMesonWidthRange[0]         = 0.001;
+                fMesonWidthRange[1]         = 0.009;
             }
-            if (fMode == 0 && !fEnergyFlag.CompareTo("7TeV")){
-                if ((ptBin > 2)&&ptBin<100 ){
-                    fMesonWidthRange[0]         = 0.001;
-                    fMesonWidthRange[1]         = 0.009;
-                }
-                mesonAmplitudeMin = mesonAmplitude*98./100.;
-                mesonAmplitudeMax = mesonAmplitude*115./100.;
-            }
-            if (fMode == 2 || fMode == 3) {
-                mesonAmplitudeMin = mesonAmplitude*98./100.;
-                mesonAmplitudeMax = mesonAmplitude*600./100.;
-            }
-            if (fMode == 4 || fMode == 5) {
-                mesonAmplitudeMin = mesonAmplitude*10./100.;
-                mesonAmplitudeMax = mesonAmplitude*400./100.;
-                if( fEnergyFlag.CompareTo("8TeV") == 0 ){
-                  mesonAmplitudeMin = mesonAmplitude*90./100.;
-                  mesonAmplitudeMax = mesonAmplitude*400./100.;
-                }
-            }
-            
-        } else {
-            mesonAmplitudeMin = mesonAmplitude*50./100.;
+            mesonAmplitudeMin = mesonAmplitude*98./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
-            if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV") ){
-                mesonAmplitudeMin = mesonAmplitude*65./100.;
-                if(ptBin > 2)  mesonAmplitudeMin = mesonAmplitude*85./100.;
-                mesonAmplitudeMax = mesonAmplitude*115./100.;
-                if(ptBin < 3) mesonAmplitudeMax = mesonAmplitude*100/100.;
-            }
-            if (fMode == 2 || fMode == 3){
-                mesonAmplitudeMin = mesonAmplitude*10./100.;
-                if( fEnergyFlag.CompareTo("8TeV") == 0 ){
-                  mesonAmplitudeMin = mesonAmplitude*20./100.;
-                  mesonAmplitudeMax = mesonAmplitude*115./100.;
-                }
-            }
-            if (fMode == 4 || fMode == 5){
-                mesonAmplitudeMin = mesonAmplitude*5./100.;
+        }
+        if (fMode == 2 || fMode == 3) {
+            mesonAmplitudeMin = mesonAmplitude*98./100.;
+            mesonAmplitudeMax = mesonAmplitude*600./100.;
+        }
+        if (fMode == 4 || fMode == 5) {
+            mesonAmplitudeMin = mesonAmplitude*10./100.;
+            mesonAmplitudeMax = mesonAmplitude*400./100.;
+            if( fEnergyFlag.CompareTo("8TeV") == 0 ){
+                mesonAmplitudeMin = mesonAmplitude*90./100.;
+                mesonAmplitudeMax = mesonAmplitude*400./100.;
             }
         }
     }
@@ -4157,7 +4087,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoSignalInvMassPtGConvBinSingle, Dou
     fFitReco->SetLineStyle(1);
 
     if (vary && !fIsMC && (fMode == 0 || fMode == 9)){
-        if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 && fPrefix.CompareTo("Pi0") ==0 && ptBin >=17){
+        if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 && ptBin >=17){
             cout << "Skipping the vary option for this case, pt: " << ptBin << endl;
         }
         else if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 && (ptBin >= 20) ){//

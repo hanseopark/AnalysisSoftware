@@ -12,7 +12,7 @@ function CopyFileIfNonExisitent()
 }
 
 # switches to enable/disable certain procedures
-DOWNLOADON=1
+DOWNLOADON=0
 MERGEON=1
 MERGEONBINSSingle=0
 MERGEONBINS=0
@@ -147,19 +147,29 @@ fi
 # LHC12f1bMC="2718"; 
 # DATAADD="WOSDD"
 
-TRAINDIR=Legotrain-vAN20170216_ConvDirGamma
+# TRAINDIR=Legotrain-vAN20170216_ConvDirGamma
 # LHC11aData="2020";
 # LHC12f1aMC="2788"; 
 # LHC12f1bMC="2789"; 
-LHC12f1aMC="2790"; 
-LHC12f1bMC="2791"; 
-DATAADD="WOSDD"
+# LHC12f1aMC="2790"; 
+# LHC12f1bMC="2791"; 
+# DATAADD="WOSDD"
 
 # TRAINDIR=Legotrain-vAN20170126_ConvDirGammaDefCut
 # LHC11aData="2031";
 # LHC12f1aMC="2801"; 
 # LHC12f1bMC="2802"; 
 # DATAADD="WOSDD"
+
+TRAINDIR=Legotrain-vAN20170329_ConvDirGammaFixed
+# LHC11aData="2031";
+# LHC12f1aMC="2825"; 
+# LHC12f1bMC="2827"; 
+# LHC12i3MC="2829"
+# LHC12f1aMC="2826"; 
+# LHC12f1bMC="2828"; 
+LHC12i3MC="2830"
+DATAADD="WOSDD"
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
