@@ -191,8 +191,10 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         else            cocktailInputParametrizations[i]        = NULL;
         if (paramMtTemp)
             cocktailInputParametrizationsMtScaled[i]            = new TF1(*paramMtTemp);
-        else
+        else {
             cocktailInputParametrizationsMtScaled[i]            = (TF1*)MtScaledParam(cocktailInputParametrizations[0], motherParticlesPDG[i].Atoi(), motherParticlesPDG[0].Atoi(), mtScaleFactor[i], kFALSE, kTRUE);
+            cocktailInputParametrizationsMtScaled[i]->SetName(Form("%s_pt_mtScaled", motherParticlesPDG[i].Data()));
+        }
     }
   
     if (cocktailSettingsList->FindObject("2212_pt"))
@@ -257,23 +259,37 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     //***************************** Pi0 file ************************************************************************
     TFile* filePi0                                              = new TFile(nameFilePi0);
     if (filePi0 && !filePi0->IsZombie()) {
-        histoPi0YieldData                                       = (TH1D*)filePi0->Get("CorrectedYieldTrueEff");
+        histoPi0InvYieldData                                    = (TH1D*)filePi0->Get("CorrectedYieldTrueEff");
     } else {
         cout << "WARNING: No pi0 file specified!" << endl;
-        histoPi0YieldData                                       = NULL;
+        histoPi0InvYieldData                                    = NULL;
     }
-    if (histoPi0YieldData) cout << "Found the corrected pi0 yield in " << nameFilePi0.Data() << ", will produce cocktail and data pi0 plot." << endl;
+    if (histoPi0InvYieldData) cout << "Found the corrected pi0 yield in " << nameFilePi0.Data() << ", will produce cocktail and data pi0 plot." << endl;
+
+    // convert inv. yield to yield
+    if (histoPi0InvYieldData) {
+        histoPi0YieldData                                       = (TH1D*)histoPi0InvYieldData->Clone("Pi0_yield");
+        histoPi0YieldData->Sumw2();
+        histoPi0YieldData                                       = ConvertInvYieldHisto(histoPi0YieldData);
+    }
 
     //***************************** Eta file ************************************************************************
     TString nameFileEta                                         = nameFilePi0;
     nameFileEta.ReplaceAll("Pi0_", "Eta_");
     TFile* fileEta                                              = new TFile(nameFileEta);
     if (fileEta && !fileEta->IsZombie()) {
-        histoEtaYieldData                                       = (TH1D*)fileEta->Get("CorrectedYieldTrueEff");
+        histoEtaInvYieldData                                    = (TH1D*)fileEta->Get("CorrectedYieldTrueEff");
     } else {
-        histoEtaYieldData                                       = NULL;
+        histoEtaInvYieldData                                    = NULL;
     }
-    if (histoEtaYieldData) cout << "Found the corrected eta yield in " << nameFileEta.Data() << ", will produce cocktail and data eta plot." << endl;
+    if (histoEtaInvYieldData) cout << "Found the corrected eta yield in " << nameFileEta.Data() << ", will produce cocktail and data eta plot." << endl;
+
+    // convert inv. yield to yield
+    if (histoEtaInvYieldData) {
+        histoEtaYieldData                                       = (TH1D*)histoEtaInvYieldData->Clone("Eta_yield");
+        histoEtaYieldData->Sumw2();
+        histoEtaYieldData                                       = ConvertInvYieldHisto(histoEtaYieldData);
+    }
 
     //***************************** Get number of events (cocktail) *************************************************
     histoNEvents                                                = (TH1F*)histoListCocktail->FindObject("NEvents");
@@ -529,29 +545,31 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     if (histoGammaMotherPtOrBin[1]) {
         histoGeneratedEtaPt                                     = (TH1F*)histoGammaMotherPtOrBin[1]->Clone(Form("%s_inEtaBinning",histoGammaMotherPtOrBin[1]->GetName()));
         histoGeneratedEtaPt->Sumw2();
-        RebinSpectrum(histoGeneratedEtaPt, (TH1F*)histoEtaYieldData, "");
+        RebinSpectrum(histoGeneratedEtaPt, (TH1F*)histoEtaInvYieldData, "");
         histoGeneratedEtaPt                                     = ConvertYieldHisto(histoGeneratedEtaPt);
     }
     
     //***************************** Read histograms from cocktail input file ****************************************
+    Bool_t hasPi0CocktailInput                                  = kFALSE;
+    Bool_t hasEtaCocktailInput                                  = kFALSE;
     TList* cocktailInputList                                    = GetCocktailInputList(fEnergyFlag, centrality);
     histoPi0CocktailInput                                       = new TH1F*[nCocktailInputMethods];
     histoEtaCocktailInput                                       = new TH1F*[nCocktailInputMethods];
     for (Int_t i=0; i<nCocktailInputMethods; i++) {
         histoPi0CocktailInput[i]                                = GetCocktailInputSpectrum(cocktailInputList, 0, i);
         if (histoPi0CocktailInput[i]) {
+            hasPi0CocktailInput                                 = kTRUE;
             histoPi0CocktailInput[i]->SetName(Form("Pi0_%s_invYield_CocktailInput_Pt_MeasBin", cocktailInputMethods[i].Data()));
             histoPi0CocktailInput[i]->Sumw2();
             histoPi0CocktailInput[i]->Scale(eventNormScalingFactor);
-            ConvertYieldHisto(histoPi0CocktailInput[i]);
         }
 
         histoEtaCocktailInput[i]                                = GetCocktailInputSpectrum(cocktailInputList, 1, i);
         if (histoEtaCocktailInput[i]) {
+            hasEtaCocktailInput                                 = kTRUE;
             histoEtaCocktailInput[i]->SetName(Form("Eta_%s_invYield_CocktailInput_Pt_MeasBin", cocktailInputMethods[i].Data()));
             histoPi0CocktailInput[i]->Sumw2();
             histoPi0CocktailInput[i]->Scale(eventNormScalingFactor);
-            ConvertYieldHisto(histoPi0CocktailInput[i]);
         }
     }
 
@@ -1111,84 +1129,6 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         }
     }
 
-    //***************************** Plot pi0 from data vs. cocktail *************************************************
-    if (histoPi0YieldData) {
-        // get proper pt range for plotting
-        for (Int_t i=1; i<histoPi0YieldData->GetNbinsX()+1; i++) {
-            if (histoPi0YieldData->GetBinContent(i)) {
-                ptPlotMin                                           = histoPi0YieldData->GetXaxis()->GetBinLowEdge(i);
-                break;
-            }
-        }
-        ptPlotMin                                                   = ptPlotMin/2;
-        if(ptPlotMin == 0 || ptPlotMin < 1e-3) ptPlotMin            = 1e-3;
-        ptPlotMax                                                   = ptMax*2;
-        
-        
-        TCanvas *canvasPi0                                          = new TCanvas("canvasPi0","",1100,1200);
-        DrawGammaCanvasSettings(canvasPi0, 0.165, 0.015, 0.025, 0.25);
-        canvasPi0->SetLogy();
-        canvasPi0->SetLogx();
-
-        TPad *padSpectrum = new TPad("padSpectrum", "", 0., 0.25, 1., 1.,-1, -1, -2);
-        DrawGammaPadSettings(padSpectrum,       0.165, 0.015, 0.025, 0.);
-        padSpectrum->SetBorderSize(0);
-        padSpectrum->Draw();
-        padSpectrum->SetLogy();
-        padSpectrum->SetLogx();
-
-        TPad *padRatio = new TPad("padRatio","", 0., 0., 1., 0.25,-1, -1, -2);
-        DrawGammaPadSettings(padRatio,  0.165, 0.015, 0.0, 0.25);
-        padRatio->Draw();
-        padRatio->SetLogx();
-
-        padSpectrum->cd();
-
-        TLegend* legendPi0                                          = GetAndSetLegend2(0.7, 0.95-(0.045*2), 0.85, 0.95, 40);
-        legendPi0->SetBorderSize(0);
-        dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
-        SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", histoPi0YieldData->GetMinimum(0)*0.1, histoPi0YieldData->GetMaximum()*2, 1.0, 1.7);
-        dummyHist->SetLabelOffset(-0.015, "X");
-        dummyHist->SetTitleOffset(0.8, "X");
-        dummyHist->Draw();
-        
-        DrawGammaSetMarker(histoPi0YieldData, 24, 1, kBlack,  kBlack);
-        DrawGammaSetMarker(histoGammaMotherPt[0], 20, 1, kBlue,  kBlue);
-
-        legendPi0->AddEntry(histoPi0YieldData,      Form("%s data", motherParticlesLatex[0].Data()), "p");
-        legendPi0->AddEntry(histoGammaMotherPt[0],  Form("%s cocktail", motherParticlesLatex[0].Data()), "p");
-
-        histoPi0YieldData->Draw("same");
-        histoGammaMotherPt[0]->Draw("same");
-        legendPi0->Draw("same");
-
-        PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.03, cent, textMeasurement, "", 42, 0.03);
-        if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.17, 0.032, 0.03, 1.25, 42);
-        else PutALICESimulationLabel(                   0.22, 0.17, 0.032, 0.03, 1.25, 42);
-
-        padRatio->cd();
-        dummyHistRatio                                              = new TH1D("dummyHistRatio", "", 1000, ptPlotMin, ptPlotMax);
-        SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{data}{gen.}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
-        dummyHistRatio->GetXaxis()->SetLabelOffset(-0.025);
-        dummyHistRatio->GetYaxis()->SetRangeUser(0.65,1.55);
-        dummyHistRatio->Draw();
-        DrawGammaLines(ptPlotMin,ptPlotMax,1,1,0.1, kGray+1, 1);
-        DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,0.1, kGray+1, 7);
-        DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,0.1, kGray+1, 7);
-        DrawGammaLines(ptPlotMin,ptPlotMax,1.2,1.2,0.1, kGray+1, 8);
-        
-        ratioPi0DataCocktail = (TH1D*)histoPi0YieldData->Clone("ratioPi0DataCocktail");
-        ratioPi0DataCocktail->Divide(histoPi0YieldData,histoGammaMotherPt[0],1.,1.,"");
-        ratioPi0DataCocktail->SetLineColor(cocktailColor[0]);
-        ratioPi0DataCocktail->SetLineColor(kBlack);
-        ratioPi0DataCocktail->SetMarkerColor(kBlack);
-        ratioPi0DataCocktail->Draw("same");
-
-        canvasPi0->SaveAs(Form("%s/Pi0DataCocktail_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
-        delete legendPi0;
-        delete canvasPi0;
-    }
-
     //***************************** Plot pi0 vs. gamma pt + vs. pi0 pt **********************************************
     if (histoGammaMotherPtGamma) {
         TCanvas *canvasPi02                                         = new TCanvas("canvasPi02","",1100,1200);
@@ -1259,13 +1199,90 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         delete canvasPi02;
     }
 
+    //***************************** Plot pi0 from data vs. cocktail *************************************************
+    if (histoPi0InvYieldData) {
+        // get proper pt range for plotting
+        for (Int_t i=1; i<histoPi0InvYieldData->GetNbinsX()+1; i++) {
+            if (histoPi0InvYieldData->GetBinContent(i)) {
+                ptPlotMin                                           = histoPi0InvYieldData->GetXaxis()->GetBinLowEdge(i);
+                break;
+            }
+        }
+        ptPlotMin                                                   = ptPlotMin/2;
+        if(ptPlotMin == 0 || ptPlotMin < 1e-3) ptPlotMin            = 1e-3;
+        ptPlotMax                                                   = ptMax*2;
+
+        TCanvas *canvasPi0                                          = new TCanvas("canvasPi0","",1100,1200);
+        DrawGammaCanvasSettings(canvasPi0, 0.165, 0.015, 0.025, 0.25);
+        canvasPi0->SetLogy();
+        canvasPi0->SetLogx();
+
+        TPad *padSpectrum = new TPad("padSpectrum", "", 0., 0.25, 1., 1.,-1, -1, -2);
+        DrawGammaPadSettings(padSpectrum,       0.165, 0.015, 0.025, 0.);
+        padSpectrum->SetBorderSize(0);
+        padSpectrum->Draw();
+        padSpectrum->SetLogy();
+        padSpectrum->SetLogx();
+
+        TPad *padRatio = new TPad("padRatio","", 0., 0., 1., 0.25,-1, -1, -2);
+        DrawGammaPadSettings(padRatio,  0.165, 0.015, 0.0, 0.25);
+        padRatio->Draw();
+        padRatio->SetLogx();
+
+        padSpectrum->cd();
+
+        TLegend* legendPi0                                          = GetAndSetLegend2(0.7, 0.95-(0.045*2), 0.85, 0.95, 40);
+        legendPi0->SetBorderSize(0);
+        dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
+        SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", histoPi0InvYieldData->GetMinimum(0)*0.1, histoPi0InvYieldData->GetMaximum()*2, 1.0, 1.7);
+        dummyHist->SetLabelOffset(-0.015, "X");
+        dummyHist->SetTitleOffset(0.8, "X");
+        dummyHist->Draw();
+
+        DrawGammaSetMarker(histoPi0InvYieldData, 24, 1, kBlack,  kBlack);
+        DrawGammaSetMarker(histoGammaMotherPt[0], 20, 1, kBlue,  kBlue);
+
+        legendPi0->AddEntry(histoPi0InvYieldData,      Form("%s data", motherParticlesLatex[0].Data()), "p");
+        legendPi0->AddEntry(histoGammaMotherPt[0],  Form("%s cocktail", motherParticlesLatex[0].Data()), "p");
+
+        histoPi0InvYieldData->Draw("same");
+        histoGammaMotherPt[0]->Draw("same");
+        legendPi0->Draw("same");
+
+        PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.03, cent, textMeasurement, "", 42, 0.03);
+        if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.17, 0.032, 0.03, 1.25, 42);
+        else PutALICESimulationLabel(                   0.22, 0.17, 0.032, 0.03, 1.25, 42);
+
+        padRatio->cd();
+        dummyHistRatio                                              = new TH1D("dummyHistRatio", "", 1000, ptPlotMin, ptPlotMax);
+        SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{data}{gen.}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
+        dummyHistRatio->GetXaxis()->SetLabelOffset(-0.025);
+        dummyHistRatio->GetYaxis()->SetRangeUser(0.65,1.55);
+        dummyHistRatio->Draw();
+        DrawGammaLines(ptPlotMin,ptPlotMax,1,1,0.1, kGray+1, 1);
+        DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,0.1, kGray+1, 7);
+        DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,0.1, kGray+1, 7);
+        DrawGammaLines(ptPlotMin,ptPlotMax,1.2,1.2,0.1, kGray+1, 8);
+
+        ratioPi0DataCocktail = (TH1D*)histoPi0InvYieldData->Clone("ratioPi0DataCocktail");
+        ratioPi0DataCocktail->Divide(histoPi0InvYieldData,histoGammaMotherPt[0],1.,1.,"");
+        ratioPi0DataCocktail->SetLineColor(cocktailColor[0]);
+        ratioPi0DataCocktail->SetLineColor(kBlack);
+        ratioPi0DataCocktail->SetMarkerColor(kBlack);
+        ratioPi0DataCocktail->Draw("same");
+
+        canvasPi0->SaveAs(Form("%s/Pi0DataCocktail_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
+        delete legendPi0;
+        delete canvasPi0;
+    }
+
     //***************************** Plot eta from data vs. cocktail *************************************************
-    if (histoEtaYieldData && histoGeneratedEtaPt) {
+    if (histoEtaInvYieldData && histoGeneratedEtaPt) {
 
         // get proper pt range for plotting
-        for (Int_t i=1; i<histoEtaYieldData->GetNbinsX()+1; i++) {
-            if (histoEtaYieldData->GetBinContent(i)) {
-                ptPlotMin                                           = histoEtaYieldData->GetXaxis()->GetBinLowEdge(i);
+        for (Int_t i=1; i<histoEtaInvYieldData->GetNbinsX()+1; i++) {
+            if (histoEtaInvYieldData->GetBinContent(i)) {
+                ptPlotMin                                           = histoEtaInvYieldData->GetXaxis()->GetBinLowEdge(i);
                 break;
             }
         }
@@ -1295,18 +1312,18 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         TLegend* legendEta                                          = GetAndSetLegend2(0.7, 0.95-(0.045*2), 0.85, 0.95, 40);
         legendEta->SetBorderSize(0);
         dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
-        SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", histoEtaYieldData->GetMinimum(0)*0.1, histoEtaYieldData->GetMaximum()*2, 1.0, 1.7);
+        SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", histoEtaInvYieldData->GetMinimum(0)*0.1, histoEtaInvYieldData->GetMaximum()*2, 1.0, 1.7);
         dummyHist->SetLabelOffset(-0.015, "X");
         dummyHist->SetTitleOffset(0.8, "X");
         dummyHist->Draw();
 
-        DrawGammaSetMarker(histoEtaYieldData,   24, 1, kBlack,  kBlack);
+        DrawGammaSetMarker(histoEtaInvYieldData,   24, 1, kBlack,  kBlack);
         DrawGammaSetMarker(histoGeneratedEtaPt, 20, 1, kBlue,  kBlue);
 
-        legendEta->AddEntry(histoEtaYieldData,  Form("%s data", motherParticlesLatex[1].Data()), "p");
+        legendEta->AddEntry(histoEtaInvYieldData,  Form("%s data", motherParticlesLatex[1].Data()), "p");
         legendEta->AddEntry(histoGeneratedEtaPt,Form("%s cocktail", motherParticlesLatex[1].Data()), "p");
 
-        histoEtaYieldData->Draw("same");
+        histoEtaInvYieldData->Draw("same");
         histoGeneratedEtaPt->Draw("same");
         legendEta->Draw("same");
 
@@ -1325,8 +1342,8 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,0.1, kGray+1, 7);
         DrawGammaLines(ptPlotMin,ptPlotMax,1.2,1.2,0.1, kGray+1, 8);
 
-        ratioEtaDataCocktail = (TH1D*)histoEtaYieldData->Clone("ratioEtaDataCocktail");
-        ratioEtaDataCocktail->Divide(histoEtaYieldData,histoGeneratedEtaPt,1.,1.,"");
+        ratioEtaDataCocktail = (TH1D*)histoEtaInvYieldData->Clone("ratioEtaDataCocktail");
+        ratioEtaDataCocktail->Divide(histoEtaInvYieldData,histoGeneratedEtaPt,1.,1.,"");
         ratioEtaDataCocktail->SetLineColor(cocktailColor[0]);
         ratioEtaDataCocktail->SetLineColor(kBlack);
         ratioEtaDataCocktail->SetMarkerColor(kBlack);
@@ -1335,6 +1352,216 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         canvasEta->SaveAs(Form("%s/EtaDataCocktail_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
         delete legendEta;
         delete canvasEta;
+    }
+
+    //***************************** Plot pi0 from data vs. cocktail inputs + param **********************************
+    if (histoPi0YieldData && cocktailInputParametrizations[0] && hasPi0CocktailInput) {
+
+        ptPlotMin                                                   = 0.2;
+        ptPlotMax                                                   = 30;
+
+        TCanvas *canvasPi0Comp                                      = new TCanvas("canvasPi0Comp","",1100,1200);
+        DrawGammaCanvasSettings(canvasPi0Comp, 0.165, 0.015, 0.025, 0.25);
+        canvasPi0Comp->SetLogy();
+        canvasPi0Comp->SetLogx();
+
+        TPad *padSpectrumPi0Comp                                    = new TPad("padSpectrumPi0Comp", "", 0., 0.25, 1., 1.,-1, -1, -2);
+        DrawGammaPadSettings(padSpectrumPi0Comp,       0.165, 0.015, 0.025, 0.);
+        padSpectrumPi0Comp->SetBorderSize(0);
+        padSpectrumPi0Comp->Draw();
+        padSpectrumPi0Comp->SetLogy();
+        padSpectrumPi0Comp->SetLogx();
+
+        TPad *padRatioPi0Comp                                       = new TPad("padRatioPi0Comp","", 0., 0., 1., 0.25,-1, -1, -2);
+        DrawGammaPadSettings(padRatioPi0Comp,  0.165, 0.015, 0.0, 0.25);
+        padRatioPi0Comp->Draw();
+        padRatioPi0Comp->SetLogx();
+
+        padSpectrumPi0Comp->cd();
+
+        Int_t nPi0CompLegendEntries                                 = 1;
+        for (Int_t i=0; i<nCocktailInputMethods; i++) {
+            if (histoPi0CocktailInput[i])     nPi0CompLegendEntries = nPi0CompLegendEntries+1;
+        }
+        if (cocktailInputParametrizations[0]) nPi0CompLegendEntries = nPi0CompLegendEntries+1;
+
+        TLegend* legendPi0Comp                                      = GetAndSetLegend2(0.7, 0.95-(0.045*nPi0CompLegendEntries), 0.85, 0.95, 40);
+        legendPi0Comp->SetBorderSize(0);
+        dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
+        SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", histoPi0YieldData->GetMinimum(0)*0.1, histoPi0YieldData->GetMaximum()*2, 1.0, 1.7);
+        dummyHist->SetLabelOffset(-0.015, "X");
+        dummyHist->SetTitleOffset(0.8, "X");
+        dummyHist->Draw();
+
+        DrawGammaSetMarker(     histoPi0YieldData, 20, 1, kBlack,  kBlack);
+        legendPi0Comp->AddEntry(histoPi0YieldData, Form("%s current ana.", motherParticlesLatex[0].Data()), "p");
+        histoPi0YieldData->Draw("e1,same");
+
+        cocktailInputParametrizations[0]->SetLineColor(kBlack);
+        cocktailInputParametrizations[0]->SetLineStyle(1);
+        cocktailInputParametrizations[0]->SetLineWidth(2);
+        legendPi0Comp->AddEntry(cocktailInputParametrizations[0], Form("%s param.", motherParticlesLatex[0].Data()), "l");
+        cocktailInputParametrizations[0]->Draw("same");
+
+        for (Int_t i=0; i<nCocktailInputMethods; i++) {
+            if (!histoPi0CocktailInput[i]) continue;
+            DrawGammaSetMarker(     histoPi0CocktailInput[i], cocktailInputMarker[i], cocktailInputMarkerSize[i], cocktailInputMarkerColor[i],  cocktailInputMarkerColor[i]);
+            legendPi0Comp->AddEntry(histoPi0CocktailInput[i], Form("%s %s", motherParticlesLatex[0].Data(), cocktailInputMethods[i].Data()), "p");
+            histoPi0CocktailInput[i]->Draw("e1,same");
+        }
+
+        legendPi0Comp->Draw("same");
+
+        PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.03, cent, textMeasurement, "", 42, 0.03);
+        if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.17, 0.032, 0.03, 1.25, 42);
+        else PutALICESimulationLabel(                   0.22, 0.17, 0.032, 0.03, 1.25, 42);
+
+        padRatioPi0Comp->cd();
+
+        dummyHistRatio                                              = new TH1D("dummyHistRatio", "", 1000, ptPlotMin, ptPlotMax);
+        SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{data}{param.}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
+        dummyHistRatio->GetXaxis()->SetLabelOffset(-0.025);
+        dummyHistRatio->GetYaxis()->SetRangeUser(0.4,1.6);
+        dummyHistRatio->Draw();
+        DrawGammaLines(ptPlotMin,ptPlotMax,1,1,0.1, kGray+1, 1);
+        DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,0.1, kGray+1, 7);
+        DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,0.1, kGray+1, 7);
+
+        TH1D* ratioPi0CurrToParam                                   = (TH1D*)histoPi0YieldData->Clone("ratioPi0CurrToParam");
+        ratioPi0CurrToParam->Sumw2();
+        ratioPi0CurrToParam->Divide(cocktailInputParametrizations[0]);
+
+        TH1F** ratioPi0ToParam                                      = new TH1F*[nCocktailInputMethods];
+        for (Int_t i=0; i<nCocktailInputMethods; i++) {
+
+            if (histoPi0CocktailInput[i]) {
+                ratioPi0ToParam[i]                                  = (TH1F*)histoPi0CocktailInput[i]->Clone(Form("ratioPi0ToParam%d", i));
+                ratioPi0ToParam[i]->Sumw2();
+                ratioPi0ToParam[i]->Divide(cocktailInputParametrizations[0]);
+            } else {
+                ratioPi0ToParam[i]                                  = NULL;
+            }
+        }
+
+        DrawGammaSetMarker(     ratioPi0CurrToParam, 20, 1, kBlack,  kBlack);
+        ratioPi0CurrToParam->Draw("e1,same");
+
+        for (Int_t i=0; i<nCocktailInputMethods; i++) {
+            if (!ratioPi0ToParam[i]) continue;
+            DrawGammaSetMarker(     ratioPi0ToParam[i], cocktailInputMarker[i], cocktailInputMarkerSize[i], cocktailInputMarkerColor[i],  cocktailInputMarkerColor[i]);
+            ratioPi0ToParam[i]->Draw("e1,same");
+        }
+
+        canvasPi0Comp->SaveAs(Form("%s/Pi0Comp_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
+        delete legendPi0Comp;
+        delete padSpectrumPi0Comp;
+        delete padRatioPi0Comp;
+        delete canvasPi0Comp;
+    }
+
+    //***************************** Plot eta from data vs. cocktail inputs + param **********************************
+    if (histoEtaYieldData && cocktailInputParametrizations[1] && hasEtaCocktailInput) {
+
+        ptPlotMin                                                   = 0.2;
+        ptPlotMax                                                   = 30;
+
+        TCanvas *canvasEtaComp                                      = new TCanvas("canvasEtaComp","",1100,1200);
+        DrawGammaCanvasSettings(canvasEtaComp, 0.165, 0.015, 0.025, 0.25);
+        canvasEtaComp->SetLogy();
+        canvasEtaComp->SetLogx();
+
+        TPad *padSpectrumEtaComp                                    = new TPad("padSpectrumEtaComp", "", 0., 0.25, 1., 1.,-1, -1, -2);
+        DrawGammaPadSettings(padSpectrumEtaComp,       0.165, 0.015, 0.025, 0.);
+        padSpectrumEtaComp->SetBorderSize(0);
+        padSpectrumEtaComp->Draw();
+        padSpectrumEtaComp->SetLogy();
+        padSpectrumEtaComp->SetLogx();
+
+        TPad *padRatioEtaComp                                       = new TPad("padRatioEtaComp","", 0., 0., 1., 0.25,-1, -1, -2);
+        DrawGammaPadSettings(padRatioEtaComp,  0.165, 0.015, 0.0, 0.25);
+        padRatioEtaComp->Draw();
+        padRatioEtaComp->SetLogx();
+
+        padSpectrumEtaComp->cd();
+
+        Int_t nEtaCompLegendEntries                                 = 1;
+        for (Int_t i=0; i<nCocktailInputMethods; i++) {
+            if (histoEtaCocktailInput[i])     nEtaCompLegendEntries = nEtaCompLegendEntries+1;
+        }
+        if (cocktailInputParametrizations[1]) nEtaCompLegendEntries = nEtaCompLegendEntries+1;
+
+        TLegend* legendEtaComp                                      = GetAndSetLegend2(0.7, 0.95-(0.045*nEtaCompLegendEntries), 0.85, 0.95, 40);
+        legendEtaComp->SetBorderSize(0);
+        dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
+        SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", histoPi0YieldData->GetMinimum(0)*0.1, histoPi0YieldData->GetMaximum()*2, 1.0, 1.7);
+        dummyHist->SetLabelOffset(-0.015, "X");
+        dummyHist->SetTitleOffset(0.8, "X");
+        dummyHist->Draw();
+
+        DrawGammaSetMarker(     histoEtaYieldData, 20, 1, kBlack,  kBlack);
+        legendEtaComp->AddEntry(histoEtaYieldData, Form("%s current ana.", motherParticlesLatex[1].Data()), "p");
+        histoEtaYieldData->Draw("e1,same");
+
+        cocktailInputParametrizations[1]->SetLineColor(kBlack);
+        cocktailInputParametrizations[1]->SetLineStyle(1);
+        cocktailInputParametrizations[1]->SetLineWidth(2);
+        legendEtaComp->AddEntry(cocktailInputParametrizations[1], Form("%s param.", motherParticlesLatex[1].Data()), "l");
+        cocktailInputParametrizations[1]->Draw("same");
+
+        for (Int_t i=0; i<nCocktailInputMethods; i++) {
+            if (!histoEtaCocktailInput[i]) continue;
+            DrawGammaSetMarker(     histoEtaCocktailInput[i], cocktailInputMarker[i], cocktailInputMarkerSize[i], cocktailInputMarkerColor[i],  cocktailInputMarkerColor[i]);
+            legendEtaComp->AddEntry(histoEtaCocktailInput[i], Form("%s %s", motherParticlesLatex[1].Data(), cocktailInputMethods[i].Data()), "p");
+            histoEtaCocktailInput[i]->Draw("e1,same");
+        }
+
+        legendEtaComp->Draw("same");
+
+        PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.03, cent, textMeasurement, "", 42, 0.03);
+        if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.17, 0.032, 0.03, 1.25, 42);
+        else PutALICESimulationLabel(                   0.22, 0.17, 0.032, 0.03, 1.25, 42);
+
+        padRatioEtaComp->cd();
+
+        dummyHistRatio                                              = new TH1D("dummyHistRatio", "", 1000, ptPlotMin, ptPlotMax);
+        SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{data}{param.}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
+        dummyHistRatio->GetXaxis()->SetLabelOffset(-0.025);
+        dummyHistRatio->GetYaxis()->SetRangeUser(0.4,1.6);
+        dummyHistRatio->Draw();
+        DrawGammaLines(ptPlotMin,ptPlotMax,1,1,0.1, kGray+1, 1);
+        DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,0.1, kGray+1, 7);
+        DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,0.1, kGray+1, 7);
+
+        TH1D* ratioEtaCurrToParam                                   = (TH1D*)histoEtaYieldData->Clone("ratioEtaCurrToParam");
+        ratioEtaCurrToParam->Sumw2();
+        ratioEtaCurrToParam->Divide(cocktailInputParametrizations[1]);
+
+        TH1F** ratioEtaToParam                                      = new TH1F*[nCocktailInputMethods];
+        for (Int_t i=0; i<nCocktailInputMethods; i++) {
+
+            if (histoEtaCocktailInput[i]) {
+                ratioEtaToParam[i]                                  = (TH1F*)histoEtaCocktailInput[i]->Clone(Form("ratioEtaToParam%d", i));
+                ratioEtaToParam[i]->Sumw2();
+                ratioEtaToParam[i]->Divide(cocktailInputParametrizations[1]);
+            } else {
+                ratioEtaToParam[i]                                  = NULL;
+            }
+        }
+
+        DrawGammaSetMarker(     ratioEtaCurrToParam, 20, 1, kBlack,  kBlack);
+        ratioEtaCurrToParam->Draw("e1,same");
+
+        for (Int_t i=0; i<nCocktailInputMethods; i++) {
+            if (!ratioEtaToParam[i]) continue;
+            DrawGammaSetMarker(     ratioEtaToParam[i], cocktailInputMarker[i], cocktailInputMarkerSize[i], cocktailInputMarkerColor[i],  cocktailInputMarkerColor[i]);
+            ratioEtaToParam[i]->Draw("e1,same");
+        }
+
+        canvasEtaComp->SaveAs(Form("%s/EtaComp_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
+        delete legendEtaComp;
+        delete padSpectrumEtaComp;
+        delete padRatioEtaComp;
+        delete canvasEtaComp;
     }
     delete dummyHist;
     delete dummyHistRatio;
@@ -1416,29 +1643,60 @@ void RebinSpectrum(TH1F* Spectrum, TH1F* SpectrumForBinning, TString NewName){
 
 //************************** Convert yield histo ********************************************************************
 TH1F* ConvertYieldHisto(TH1F* input){
-    
+
+    // converts yield -> inv. yield
+
     if (!input) {
         cout << "Error: Histogram is NULL" << endl;
         return NULL;
     }
-    
+
     Int_t nBins                     = input->GetNbinsX();
     Double_t newValue               = 0;
     Double_t newErrorValue          = 0;
     Double_t correctionValue        = 1;
-    
+
     // divide py 2*pi
     input->Scale(1/(2*TMath::Pi()));
-    
+
     // divide by pT
     for(Int_t i=0;i<nBins;i++){
         correctionValue             = 1/(input->GetBinCenter(i+1));
         input->SetBinContent(i+1,   input->GetBinContent(i+1)*correctionValue);
         input->SetBinError(i+1,     input->GetBinError(i+1)*correctionValue);
     }
-    
+
     SetHistogramTitles(input,"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
-    
+
+    return input;
+}
+
+TH1D* ConvertInvYieldHisto(TH1D* input) {
+
+    // converts inv. yield -> yield
+
+    if (!input) {
+        cout << "Error: Histogram is NULL" << endl;
+        return NULL;
+    }
+
+    Int_t nBins                     = input->GetNbinsX();
+    Double_t newValue               = 0;
+    Double_t newErrorValue          = 0;
+    Double_t correctionValue        = 1;
+
+    // divide py 2*pi
+    input->Scale(2*TMath::Pi());
+
+    // divide by pT
+    for(Int_t i=0;i<nBins;i++){
+        correctionValue             = input->GetBinCenter(i+1);
+        input->SetBinContent(i+1,   input->GetBinContent(i+1)*correctionValue);
+        input->SetBinError(i+1,     input->GetBinError(i+1)*correctionValue);
+    }
+
+    SetHistogramTitles(input,"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
+
     return input;
 }
 
@@ -1538,7 +1796,7 @@ Double_t GetMass(TString particleName) {
 }
 
 //************************** Routine to set histogram titles *********************************************************
-void SetHistogramTitles(TH1F* input, TString title, TString xTitle, TString yTitle) {
+void SetHistogramTitles(TH1* input, TString title, TString xTitle, TString yTitle) {
     
     if (!input) return;
     
@@ -1617,10 +1875,12 @@ void SaveHistos() {
     }
     
     // write pi0 + eta data yield and ratio to generated
-    if (histoPi0YieldData)          histoPi0YieldData->Write(   "Pi0_invYield",                     TObject::kOverwrite);
+    if (histoPi0YieldData)          histoPi0YieldData->Write(   "Pi0_yield",                        TObject::kOverwrite);
+    if (histoPi0InvYieldData)       histoPi0InvYieldData->Write("Pi0_invYield",                     TObject::kOverwrite);
     if (ratioPi0DataCocktail)       ratioPi0DataCocktail->Write(ratioPi0DataCocktail->GetName(),    TObject::kOverwrite);
 
-    if (histoEtaYieldData)          histoEtaYieldData->Write(   "Eta_invYield",                     TObject::kOverwrite);
+    if (histoEtaYieldData)          histoEtaYieldData->Write(   "Eta_yield",                        TObject::kOverwrite);
+    if (histoEtaInvYieldData)       histoEtaInvYieldData->Write("Eta_invYield",                     TObject::kOverwrite);
     if (histoGeneratedEtaPt)        histoGeneratedEtaPt->Write( histoGeneratedEtaPt->GetName(),     TObject::kOverwrite);
     if (ratioEtaDataCocktail)       ratioEtaDataCocktail->Write(ratioEtaDataCocktail->GetName(),    TObject::kOverwrite);
 

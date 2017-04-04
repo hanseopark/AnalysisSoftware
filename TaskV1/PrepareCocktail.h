@@ -35,6 +35,9 @@ Double_t    decayChannelsBR[nMotherParticles][18];
 
 const Int_t nCocktailInputMethods                           = 7;
 TString     cocktailInputMethods[nCocktailInputMethods]     = {"Comb", "PCM", "EMCal", "PHOS", "PCMEMCal", "PCMPHOS", "EMCalMerged"};
+Style_t     cocktailInputMarker[nCocktailInputMethods]      = {24,25,27,28,24,25,27};
+Size_t      cocktailInputMarkerSize[nCocktailInputMethods]  = {1.0,1.0,2.0,2.0,1.0,1.0,2.0};
+Color_t     cocktailInputMarkerColor[nCocktailInputMethods] = {kBlue-2,kGreen+3,kRed+1,kOrange+2,kBlue+2,kCyan+2,kMagenta+2};
 
 // additional scaling factor (param per inel. event vs. MB event)
 Double_t    eventNormScalingFactor                          = 1.;
@@ -87,7 +90,9 @@ TH1F**      histoGammaMotherPtGamma                         = NULL;
 TH1F*       histoGeneratedEtaPt                             = NULL;
 
 TH1D*       histoPi0YieldData                               = NULL;
+TH1D*       histoPi0InvYieldData                            = NULL;
 TH1D*       histoEtaYieldData                               = NULL;
+TH1D*       histoEtaInvYieldData                            = NULL;
 TH1D*       ratioPi0DataCocktail                            = NULL;
 TH1D*       ratioEtaDataCocktail                            = NULL;
 
@@ -111,9 +116,10 @@ void        RebinSpectrum                               (   TH1F*       Spectrum
                                                             TH1F*       SpectrumForBinning,
                                                             TString     NewName                 );
 TH1F*       ConvertYieldHisto                           (   TH1F*       input                   );
+TH1D*       ConvertInvYieldHisto                        (   TH1D*       input                   );
 void        SaveHistos                                  (                                       );
 Double_t    GetMass                                     (   TString     particle                );
-void        SetHistogramTitles                          (   TH1F*       input,
+void        SetHistogramTitles                          (   TH1*       input,
                                                             TString     title,
                                                             TString     xTitle,
                                                             TString     yTitle                  );
