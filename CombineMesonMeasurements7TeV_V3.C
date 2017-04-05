@@ -373,14 +373,15 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
                 histoEtaTrueMass[i]             ->Scale(1000);
                 histoEtaTrueFWHMMeV[i]          ->Scale(1000);
                 histoEtaToPi0Stat[i]             = (TH1D*)directoryEta[i]->Get("EtaToPi0StatError");
-                if(i==0)
-                    histoEtaToPi0Stat[i]             = (TH1D*)directoryEta[i]->Get("EtaToPi0YShiftedStatError");
                 graphEtaToPi0Stat[i]             = (TGraphAsymmErrors*)directoryEta[i]->Get("EtaToPi0StatError_INT1");
                 graphEtaToPi0Sys[i]             = (TGraphAsymmErrors*)directoryEta[i]->Get("EtaToPi0SystError_INT1");
-                if(i==0)
+                if(i==0){
+                    histoEtaToPi0Stat[i]             = (TH1D*)directoryEta[i]->Get("EtaToPi0YShiftedStatError");
+                    graphEtaToPi0Stat[i]             = (TGraphAsymmErrors*)directoryEta[i]->Get("graphEtaToPi0YShiftedStatError");
                     graphEtaToPi0Sys[i]             = (TGraphAsymmErrors*)directoryEta[i]->Get("EtaToPi0YShiftedSystError_INT1");
 //                     graphEtaToPi0Stat[i]            ->Print();
 //                     graphEtaToPi0Sys[i]             ->Print();
+                }
             }else{
                 histoEtaMass[i]                 = NULL;
                 histoEtaFWHMMeV[i]              = NULL;
@@ -1273,8 +1274,8 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
     TDirectoryFile* directoryPi02 = (TDirectoryFile*)fCombResults.Get("Pi07TeV");
     fCombResults.cd("Pi07TeV");
         // PCM component
-        graphCombPi0InvCrossSectionStatPCMEMCPHOS->Write("graphCombPi0InvCrossSectionStatPCMEMCPHOS");
-        graphCombPi0InvCrossSectionSysPCMEMCPHOS->Write("graphCombPi0InvCrossSectionSysPCMEMCPHOS");
+        graphCombPi0InvCrossSectionStatPCMEMCPHOS->Write("graphInvCrossSectionPi0CombStat");
+        graphCombPi0InvCrossSectionSysPCMEMCPHOS->Write("graphInvCrossSectionPi0CombSys");
         
     for (Int_t i = 0; i < numbersofmeas; i++){
         graphPi0InvCrossSectionStat[i]                ->Write(Form("graphInvCrossSectionPi0%sStat",nameMeasGlobal[i].Data()));
@@ -1286,8 +1287,8 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
     TDirectoryFile* directoryEta2 = (TDirectoryFile*)fCombResults.Get("Eta7TeV");
     fCombResults.cd("Eta7TeV");
         // PCM component
-        graphCombEtaInvCrossSectionStatPCMEMCPHOS->Write("graphCombEtaInvCrossSectionStatPCMEMCPHOS");
-        graphCombEtaInvCrossSectionSysPCMEMCPHOS->Write("graphCombEtaInvCrossSectionSysPCMEMCPHOS");
+        graphCombEtaInvCrossSectionStatPCMEMCPHOS->Write("graphInvCrossSectionEtaCombStat");
+        graphCombEtaInvCrossSectionSysPCMEMCPHOS->Write("graphInvCrossSectionEtaCombSys");
         
     for (Int_t i = 0; i < numbersofmeas; i++){
         if(i!=1&&i!=3){
@@ -1297,9 +1298,19 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
     //         graphRatioCombFitSys[i]                 ->Write("graphCombPi0InvCrossSectionStatPCMEMCPHOS");
         }
     }
+    
+     graphCombEtaToPi0StatPCMEMCPHOS->Write("graphEtaToPi0CombStat");
+    graphCombEtaToPi0SysPCMEMCPHOS->Write("graphEtaToPi0CombSys");
+    for (Int_t i = 0; i < numbersofmeas; i++){
+        if(i!=1&&i!=3){
+            graphEtaToPi0Stat[i]                ->Write(Form("graphEtaToPi0%sStat",nameMeasGlobal[i].Data()));
+            graphEtaToPi0Sys[i]                ->Write(Form("graphEtaToPi0%sSys",nameMeasGlobal[i].Data()));
+    //         graphRatioCombFitStat[i]                 ->Write(Form("graphInvCrossSectionPi0%sStat",nameMeasGlobal[i].Data()));
+    //         graphRatioCombFitSys[i]                 ->Write("graphCombPi0InvCrossSectionStatPCMEMCPHOS");
+        }
+    }
             
-         graphCombEtaToPi0StatPCMEMCPHOS->Write("graphCombEtaToPi0StatComb");
-         graphCombEtaToPi0SysPCMEMCPHOS->Write("graphCombEtaToPi0SysComb");
+        
          fCombResults.Close();
     
     
