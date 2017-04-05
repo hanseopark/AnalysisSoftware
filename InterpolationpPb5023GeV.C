@@ -130,31 +130,33 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     Bool_t thesis           = kFALSE;
 
     //Input Files GA	
-    TString fileNameNeutralPionCombResultsPP        = "FinalResults/CombinedResultsPP_ShiftedX_PaperRAA_16_May_2014.root";
-    TString fileNameNeutralPionEMCalResultsPP       = "ExternalInputpPb/EMCAL/data_EMCAL-EMCALResultsFullCorrection_PP_276_Friederike.root";
-    TString fileNameNeutralPionEMCalResultsPP7TeV   = "ExternalInputpPb/EMCAL/pi0Specrtum2011EMCAL_24June2015_7_Evi.root"; 
-    TString fileNameNeutralPionPHOSResultsPP        = "ExternalInputpPb/PHOS/CombinedResultsPP_ShiftedX_PaperRAA_ConsiderPileup7TeVPHOSData.root";
-    //TString fileNameNeutralPionCombResultspPb       = "ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2016_10_07.root"; //low pT Cut
-    TString fileNameNeutralPionCombResultspPb       = "ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_02_14.root";
-    TString fileNameNeutralPionPCMResultspPb        = "ExternalInputpPb/PCM/data_PCMResults_pPb_20151111_standard_CatErrors.root";
-    TString fileNameNeutralPionDalitzResultspPb     = "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20160929.root";//data_PCMResults_Dalitz_pPb_20150806.root";data_PCMResults_Dalitz_pPb_20160601.root
-    //TString fileNameNeutralPionEMCalResultspPb      = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_160602_newhighptbinningPi0_pPb.root";//data_EMCalEMCalResults_160215_pPb_5023_Mike.root";
-    //TString fileNameNeutralPionEMCalResultspPb      = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_161118_pPb.root";
-    TString fileNameNeutralPionEMCalResultspPb      = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_161124_pPb.root";
+    TString fileNameNeutralPionCombResultsPP7TeV     = "FinalResults/CombinedResultsPP_ShiftedX_PaperRAA_16_May_2014.root";
+    TString fileNameNeutralPionCombResultsPP2760GeV  = "FinalResults/CombinedResultsPaperPP2760GeV_2017_01_26_FrediV2Clusterizer.root";
+    
+    TString fileNameNeutralPionEMCalResultsPP        = "ExternalInputpPb/EMCAL/data_EMCAL-EMCALResultsFullCorrection_PP_276_Friederike.root";
+    TString fileNameNeutralPionEMCalResultsPP7TeV    = "ExternalInputpPb/EMCAL/pi0Specrtum2011EMCAL_24June2015_7_Evi.root"; 
+    
+    
+    TString fileNameNeutralPionPHOSResultsPP7TeV     = "ExternalInputpPb/PHOS/CombinedResultsPP_ShiftedX_PaperRAA_ConsiderPileup7TeVPHOSData.root";
+    TString fileNameNeutralPionPHOSResultsPP2760GeV  = "FinalResults/CombinedResultsPaperPP2760GeV_2017_01_26_FrediV2Clusterizer.root";
+    
+    TString fileNameNeutralPionCombResultspPb        = "ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_03_14.root";
+    TString fileNameNeutralPionPCMResultspPb         = "ExternalInputpPb/PCM/data_PCMResults_pPb_20170308.root";
+    TString fileNameNeutralPionDalitzResultspPb      = "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20160929.root";//data_PCMResults_Dalitz_pPb_20150806.root";data_PCMResults_Dalitz_pPb_20160601.root
+    TString fileNameNeutralPionEMCalResultspPb       = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_170314_pPb.root";
     
     TString fileNameNeutralPionPHOSResultspPb       = "ExternalInputpPb/PHOS/20160601_Pi0InvariantSpectrum_pPb_PHOS.root";//InvariantYield_Pi0_pPb_Graph_PHOS_20160415.root";
     TString fileNameRpPbPHOS                        = "ExternalInputpPb/PHOS/data_PHOSResults_RpPb_20160405.root";
     TString fileNamePHOSSystErrCancellation         = "ExternalInputpPb/PHOS/ComponentCancelSys.root";
     TString fileNameNeutralPionPCMEMCalResultspPb   = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2016_12_22.root";
     
-    TFile* CommonFile	    = new TFile("ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_02_14.root");
-    
-    //TFile* CommonFile       = new TFile("ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2016_10_07.root");// Common Fit for YShift
-    
+    TFile* CommonFile	    = new TFile("ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_03_14.root");
+        
     TString nameRebinSpectraFitsDat                 = Form("%s/RebinSpectraFitsParam.dat",outputDir.Data());
     fstream  fileRebinSpectraFits;
     fileRebinSpectraFits.open(nameRebinSpectraFitsDat.Data(), ios::out);  
 
+    
     //PHOS Input
 
     TString NamePHOSRpPbSystErr         = "graphRpPbPHOSSystErr";
@@ -407,9 +409,19 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     graphAsymmChargedParticlesRpPbStatErr = GetChargeParticlesRpPb2013("Stat");
     
     //GA pp Input	
-    TFile*  fileNeutralPionCombResultsPP   = new TFile(fileNameNeutralPionCombResultsPP.Data());
+    TFile*  fileNeutralPionCombResultsPP7TeV   	 = new TFile(fileNameNeutralPionCombResultsPP7TeV.Data());
+    TFile*  fileNeutralPionCombResultsPP2760GeV  = new TFile(fileNameNeutralPionCombResultsPP2760GeV.Data());
     
-    TFile*  fileNeutralPionPHOSResultsPP       = new TFile(fileNameNeutralPionPHOSResultsPP.Data());
+    TDirectory* fDirectoryPi0Comb2760GeV     = (TDirectory*) fileNeutralPionCombResultsPP2760GeV->GetDirectory("Pi02.76TeV");
+       
+    
+    TFile*  fileNeutralPionPHOSResultsPP7TeV    = new TFile(fileNameNeutralPionPHOSResultsPP7TeV.Data());
+    TFile*  fileNeutralPionPHOSResultsPP2760GeV = new TFile(fileNameNeutralPionPHOSResultsPP2760GeV.Data());
+    
+    TDirectory* fDirectoryPi0PHOS2760GeV     = (TDirectory*) fileNeutralPionPHOSResultsPP2760GeV->GetDirectory("Pi02.76TeV");
+       
+    
+      
     TFile*  fileNeutralPionEMCalResultsPP      = new TFile(fileNameNeutralPionEMCalResultsPP.Data());
     TFile*  fileNeutralPionEMCalResultsPP7TeV  = new TFile(fileNameNeutralPionEMCalResultsPP7TeV.Data());
 
@@ -446,22 +458,24 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
         graphNameInvCrossSectionPi07TeVSysErr           = Form("graphInvCrossSectionPi0%s7TeVSysErr",resultsType.Data());
         
         graphNameInvCrossSectionPi02760GeVStatSystErr   = Form("graphInvCrossSectionPi0%s2760GeV",resultsType.Data());
-        graphNameInvCrossSectionPi02760GeVStatErr       = Form("graphInvCrossSectionPi0%s2760GeVStatErr",resultsType.Data());
-        graphNameInvCrossSectionPi02760GeVSysErr        = Form("graphInvCrossSectionPi0%s2760GeVSysErr",resultsType.Data());
+        graphNameInvCrossSectionPi02760GeVStatErr       = Form("graphInvCrossSectionPi0%s2760GeVAStatErr",resultsType.Data());
+        graphNameInvCrossSectionPi02760GeVSysErr        = Form("graphInvCrossSectionPi0%s2760GeVASysErr",resultsType.Data());
         
-        graphInvCrossSectionPi07TeVStatSystErr          = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get(graphNameInvCrossSectionPi07TeVStatSystErr.Data());
-        graphInvCrossSectionPi07TeVStatErr              = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get(graphNameInvCrossSectionPi07TeVStatErr.Data());
-        graphInvCrossSectionPi07TeVSystErr              = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get(graphNameInvCrossSectionPi07TeVSysErr.Data());
+        graphInvCrossSectionPi07TeVStatSystErr          = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVStatSystErr.Data());
+        graphInvCrossSectionPi07TeVStatErr              = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVStatErr.Data());
+        graphInvCrossSectionPi07TeVSystErr              = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVSysErr.Data());
         
-        cout<<"************************************************Checking if they are shifted Combined**********************************************************"<<endl;
-        graphInvCrossSectionPi07TeVStatErr->Print();
+	
+        //cout<<"************************************************Checking if they are shifted Combined**********************************************************"<<endl;
+        //graphInvCrossSectionPi07TeVStatErr->Print();
+	//graphInvCrossSectionPi07TeVSystErr->Print();
+        //cout<<"**************************************************"<<endl;
         
-        cout<<"**************************************************"<<endl;
         
-        graphInvCrossSectionPi07TeVSystErr->Print();
-        graphInvCrossSectionPi02760GeVStatSystErr       = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get(graphNameInvCrossSectionPi02760GeVStatSystErr.Data());	
-        graphInvCrossSectionPi02760GeVStatErr           = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get(graphNameInvCrossSectionPi02760GeVStatErr.Data());	
-        graphInvCrossSectionPi02760GeVSystErr           = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get(graphNameInvCrossSectionPi02760GeVSysErr.Data());	
+        graphInvCrossSectionPi02760GeVStatErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get(graphNameInvCrossSectionPi02760GeVStatErr.Data());	
+        graphInvCrossSectionPi02760GeVSystErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get(graphNameInvCrossSectionPi02760GeVSysErr.Data());	
+	graphInvCrossSectionPi02760GeVStatSystErr       = CalculateCombinedSysAndStatError(graphInvCrossSectionPi02760GeVStatErr,graphInvCrossSectionPi02760GeVSystErr);
+	
     
         cout<<"Entro a Comb"<<endl;
     } else if ( resultsType.CompareTo("PHOS") == 0 ||   resultsType.CompareTo("PHOSPileUpCorrection") == 0){
@@ -475,17 +489,19 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
         graphNameInvCrossSectionPi02760GeVStatErr       = "graphInvCrossSectionPi0PHOS2760GeVStatErr";
         graphNameInvCrossSectionPi02760GeVSysErr        = "graphInvCrossSectionPi0PHOS2760GeVSysErr"; 
         
-        graphInvCrossSectionPi07TeVStatErr              = (TGraphAsymmErrors*)fileNeutralPionPHOSResultsPP->Get(graphNameInvCrossSectionPi07TeVStatErr.Data());
-        graphInvCrossSectionPi07TeVSystErr              = (TGraphAsymmErrors*)fileNeutralPionPHOSResultsPP->Get(graphNameInvCrossSectionPi07TeVSysErr.Data());
+        graphInvCrossSectionPi07TeVStatErr              = (TGraphAsymmErrors*)fileNeutralPionPHOSResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVStatErr.Data());
+        graphInvCrossSectionPi07TeVSystErr              = (TGraphAsymmErrors*)fileNeutralPionPHOSResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVSysErr.Data());
+	graphInvCrossSectionPi07TeVStatSystErr          =  CalculateCombinedSysAndStatError( graphInvCrossSectionPi07TeVStatErr , graphInvCrossSectionPi07TeVSystErr);
+       
         
-        cout<<"************************************************Checking if they are shifted Combined**********************************************************"<<endl;
-        graphInvCrossSectionPi07TeVStatErr->Print();
-        cout<<"**************************************************"<<endl;
+        //cout<<"************************************************Checking if they are shifted Combined**********************************************************"<<endl;
+        //graphInvCrossSectionPi07TeVStatErr->Print();
+	//graphInvCrossSectionPi07TeVSystErr->Print();
+        //cout<<"**************************************************"<<endl;
+	
         
-        graphInvCrossSectionPi07TeVSystErr->Print();
-        graphInvCrossSectionPi07TeVStatSystErr          =  CalculateCombinedSysAndStatError( graphInvCrossSectionPi07TeVStatErr , graphInvCrossSectionPi07TeVSystErr);
-        graphInvCrossSectionPi02760GeVStatErr           = (TGraphAsymmErrors*)fileNeutralPionPHOSResultsPP->Get(graphNameInvCrossSectionPi02760GeVStatErr.Data());	
-        graphInvCrossSectionPi02760GeVSystErr           = (TGraphAsymmErrors*)fileNeutralPionPHOSResultsPP->Get(graphNameInvCrossSectionPi02760GeVSysErr.Data());	
+        graphInvCrossSectionPi02760GeVStatErr           = (TGraphAsymmErrors*)fDirectoryPi0PHOS2760GeV->Get(graphNameInvCrossSectionPi02760GeVStatErr.Data());	
+        graphInvCrossSectionPi02760GeVSystErr           = (TGraphAsymmErrors*)fDirectoryPi0PHOS2760GeV->Get(graphNameInvCrossSectionPi02760GeVSysErr.Data());	
         graphInvCrossSectionPi02760GeVStatSystErr       =  CalculateCombinedSysAndStatError( graphInvCrossSectionPi02760GeVStatErr , graphInvCrossSectionPi02760GeVSystErr);
         
         cout<<"************************************************Checking if they are shifted Combined**********************************************************"<<endl;
@@ -528,8 +544,8 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
         graphNameInvCrossSectionPi02760GeVStatErr       = "graphInvCrossSectionPi0PCM2760GeVStatErr";
         graphNameInvCrossSectionPi02760GeVSysErr        = "graphInvCrossSectionPi0PCM2760GeVSysErr";
 
-        graphInvCrossSectionPi07TeVStatErr              = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get(graphNameInvCrossSectionPi07TeVStatErr.Data());
-        graphInvCrossSectionPi07TeVSystErr              = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get(graphNameInvCrossSectionPi07TeVSysErr.Data());
+        graphInvCrossSectionPi07TeVStatErr              = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVStatErr.Data());
+        graphInvCrossSectionPi07TeVSystErr              = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVSysErr.Data());
         
         cout<<"************************************************Checking if they are shifted **********************************************************"<<endl;
         graphInvCrossSectionPi07TeVStatErr->Print();        
@@ -623,9 +639,11 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
         
         
         graphInvCrossSectionPi07TeVStatSystErr    =  CalculateCombinedSysAndStatError( graphInvCrossSectionPi07TeVStatErr , graphInvCrossSectionPi07TeVSystErr);
+	
+	
         
-        graphInvCrossSectionPi02760GeVStatErr     = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get(graphNameInvCrossSectionPi02760GeVStatErr.Data());	
-        graphInvCrossSectionPi02760GeVSystErr     = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get(graphNameInvCrossSectionPi02760GeVSysErr.Data());	
+        graphInvCrossSectionPi02760GeVStatErr     = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get(graphNameInvCrossSectionPi02760GeVStatErr.Data());	
+        graphInvCrossSectionPi02760GeVSystErr     = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get(graphNameInvCrossSectionPi02760GeVSysErr.Data());	
         
         graphInvCrossSectionPi02760GeVStatSystErr =  CalculateCombinedSysAndStatError( graphInvCrossSectionPi02760GeVStatErr , graphInvCrossSectionPi02760GeVSystErr);
         
@@ -696,8 +714,8 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     Double_t *Parameters7TeV    = NULL;
     
     //This part obtain the "n" parameter from the fit of the combined spectrum///
-    graphInvCrossSectionPi0Comb7TeVStatSystErr    = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get("graphInvCrossSectionPi0Comb7TeV");
-    graphInvCrossSectionPi0Comb2760GeVStatSystErr = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP->Get("graphInvCrossSectionPi0Comb2760GeV");
+    graphInvCrossSectionPi0Comb7TeVStatSystErr    = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP7TeV->Get("graphInvCrossSectionPi0Comb7TeV");
+    graphInvCrossSectionPi0Comb2760GeVStatSystErr = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get("graphInvCrossSectionPi0Comb2760GeVATotErr");
     
     
         
