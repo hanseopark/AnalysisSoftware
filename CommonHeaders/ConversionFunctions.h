@@ -25,6 +25,7 @@ TGraphAsymmErrors*  CalculateAsymGraphRatioToGraph(TGraphAsymmErrors* graphA, TG
 TGraphAsymmErrors*  CalculateGraphErrRatioToFit (TGraphAsymmErrors* , TF1* );
 TGraph*             CalculateGraphRatioToFit (TGraph* , TF1* );
 TH1D*               CalculateHistoRatioToFitNLO (TH1D* , TF1* , Double_t );
+TGraphAsymmErrors*  CalculateSysErrFromRelSysHistoWithPtBins( TH1D* , TString , Double_t* , Double_t* , Double_t* , const Int_t  );
 TGraphAsymmErrors*  CalculateSysErrFromRelSysHisto( TH1D* , TString , Double_t* , Double_t* , Int_t , const Int_t  );
 TGraphAsymmErrors*  CalculateSysErrAFromRelSysHisto( TH1D* , TString , Double_t* , Double_t* , Int_t , const Int_t  );
 TGraphAsymmErrors*  CalculateSysErrFromRelSysHistoComplete( TH1D* , TString , Double_t* , Double_t* , Int_t , const Int_t  );
@@ -653,6 +654,54 @@ TGraphAsymmErrors* CalculateSysErrFromRelSysHisto( TH1D* histo, TString nameGrap
     TGraphAsymmErrors* graphSys = new TGraphAsymmErrors(nPoints,xValueCorr,yValueCorr,xErrorCorr,xErrorCorr,systErrorDown,systErrorUp);
     graphSys->SetName(nameGraph);
     cout << "graph could be generated" << endl;
+    return graphSys;
+}
+
+//**********************************************************************************************************
+// Calculates a graph with systematic errors based on an input histogram and two arrays of doubles 
+// containing the relative systematic errors
+//**********************************************************************************************************
+TGraphAsymmErrors* CalculateSysErrFromRelSysHistoWithPtBins( TH1D* histo, TString nameGraph, Double_t* relSystErrorDown, Double_t* relSystErrorUp, Double_t* ptCenter, Int_t nMaxPtSys ){
+    TGraphAsymmErrors* graphSysDummy  = new TGraphAsymmErrors(histo);
+    
+    Bool_t kGraphLower          = kFALSE;
+    while (graphSysDummy->GetX()[0] < ptCenter[0] && graphSysDummy->GetN() > 1){
+        graphSysDummy->RemovePoint(0);
+        kGraphLower             = kTRUE;
+    }    
+    if (graphSysDummy->GetN() == 0) {
+        cout << "ERROR: could not find a common bin" << endl; 
+        return NULL;
+    }
+    Int_t startBinPt            = 0;
+    Int_t counter               = nMaxPtSys-1;
+    if (!kGraphLower && (TMath::Abs(graphSysDummy->GetX()[0] - ptCenter[startBinPt])>0.001)){
+        while( TMath::Abs(graphSysDummy->GetX()[0] - ptCenter[startBinPt])>0.001 && counter > 0){
+            startBinPt++;
+            counter--;
+        }
+    }
+    if (counter == 0){
+        cout << "ERROR: could not find a common bin" << endl;
+        return NULL;
+    }
+    TGraphAsymmErrors* graphSys      = (TGraphAsymmErrors*)graphSysDummy->Clone(nameGraph.Data());
+    
+    for (Int_t i = 0; i < graphSys->GetN() && i < (nMaxPtSys-startBinPt); i++){
+        Double_t xErrorCorrUp   = graphSysDummy->GetEXhigh()[i];
+        Double_t xErrorCorrDown = graphSysDummy->GetEXlow()[i];
+        Double_t yvalue         = graphSysDummy->GetY()[i];
+        Double_t yErrorUp       = 0;
+        Double_t yErrorDown     = 0;
+        if ( TMath::Abs(graphSysDummy->GetX()[i] - ptCenter[startBinPt+i])<0.001) {
+            yErrorUp            = relSystErrorUp[startBinPt+i]*yvalue/100.;
+            yErrorDown          = relSystErrorDown[startBinPt+i]*yvalue/100.*(-1);
+        } else {
+           cout << "couldn't find matching bin: "    << graphSysDummy->GetX()[i] << "\t" << ptCenter[startBinPt+i] <<endl;
+        }    
+        graphSys->SetPointError(i,xErrorCorrDown, xErrorCorrUp, yErrorDown, yErrorUp);
+    }
+    cout << "return graph" << endl;
     return graphSys;
 }
 

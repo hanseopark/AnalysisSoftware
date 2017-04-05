@@ -90,7 +90,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                             ){
     // switch systematics on/off
     Bool_t doSysErr                             = kFALSE;
-    if (!fEnergy.CompareTo("900GeV")||!fEnergy.CompareTo("7TeV")||!fEnergy.CompareTo("8TeV") && mode == 0)
+    if ((!fEnergy.CompareTo("900GeV")||!fEnergy.CompareTo("7TeV")||!fEnergy.CompareTo("8TeV") )&& mode == 0) //!fEnergy.CompareTo("2.76TeV")||
         doSysErr                                = kTRUE;
     
     // Setting the general style
@@ -161,7 +161,15 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
     TString fileNameSysErrGamma                  =""; // default
     TString fileNameSysErrInclRatio              =""; // default
     TString fileNameSysErrDoubleRatio            =""; // default
-    if(fEnergy.CompareTo("7TeV") == 0){
+    if(fEnergy.CompareTo("900GeV") == 0){
+        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_900GeV_2017_02_24.dat";
+        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_900GeV_2017_02_24.dat";
+        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_900GeV_2017_02_24.dat";
+    } else if(fEnergy.CompareTo("2.76TeV") == 0){
+        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_2.76TeV_2017_04_04.dat";
+        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_2.76TeV_2017_04_04.dat";
+        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_2.76TeV_2017_04_04.dat";
+    } else if(fEnergy.CompareTo("7TeV") == 0){
         fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_12_15.dat";
         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_12_15.dat";
         fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_7TeV_2016_12_15.dat";
@@ -169,10 +177,6 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_8TeV_2017_02_20.dat";
         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_8TeV_2017_02_20.dat";
         fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_8TeV_2017_02_20.dat";
-    } else if(fEnergy.CompareTo("900GeV") == 0){
-        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_900GeV_2017_02_24.dat";
-        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_900GeV_2017_02_24.dat";
-        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_900GeV_2017_02_24.dat";
     } else {
         fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_12_15.dat";
         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_12_15.dat";
@@ -184,7 +188,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         cout << fileNameSysErrGamma << endl;
 
         while(!fileSysErrGamma.eof() && nPointsGamma < 100){
-            fileSysErrGamma >> relSystErrorGammaDown[nPointsGamma] >> relSystErrorGammaUp[nPointsGamma]>>    relSystErrorWOMaterialGammaDown[nPointsGamma] >> relSystErrorWOMaterialGammaUp[nPointsGamma];
+            fileSysErrGamma >> ptSysGamma[nPointsGamma] >> relSystErrorGammaDown[nPointsGamma] >> relSystErrorGammaUp[nPointsGamma]>>    relSystErrorWOMaterialGammaDown[nPointsGamma] >> relSystErrorWOMaterialGammaUp[nPointsGamma];
                 cout << nPointsGamma << "\t"  << relSystErrorGammaDown[nPointsGamma] << "\t"  <<relSystErrorGammaUp[nPointsGamma] << "\t" << relSystErrorWOMaterialGammaDown[nPointsGamma] << "\t"  <<relSystErrorWOMaterialGammaUp[nPointsGamma] << endl;;
                 nPointsGamma++;
         }
@@ -195,7 +199,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         cout << fileNameSysErrInclRatio << endl;
 
         while(!fileSysErrInclRatio.eof() && nPointsInclRatio < 100){
-            fileSysErrInclRatio >> relSystErrorInclRatioDown[nPointsInclRatio] >> relSystErrorInclRatioUp[nPointsInclRatio]>>    relSystErrorWOMaterialInclRatioDown[nPointsInclRatio] >> relSystErrorWOMaterialInclRatioUp[nPointsInclRatio];
+            fileSysErrInclRatio >> ptSysInclRatio[nPointsInclRatio] >> relSystErrorInclRatioDown[nPointsInclRatio] >> relSystErrorInclRatioUp[nPointsInclRatio]>>    relSystErrorWOMaterialInclRatioDown[nPointsInclRatio] >> relSystErrorWOMaterialInclRatioUp[nPointsInclRatio];
                 cout << nPointsInclRatio << "\t"  << relSystErrorInclRatioDown[nPointsInclRatio] << "\t"  <<relSystErrorInclRatioUp[nPointsInclRatio] << "\t" << relSystErrorWOMaterialInclRatioDown[nPointsInclRatio] << "\t"  <<relSystErrorWOMaterialInclRatioUp[nPointsInclRatio] << endl;;
                 nPointsInclRatio++;
         }
@@ -206,15 +210,21 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         cout << fileNameSysErrDoubleRatio << endl;
 
         while(!fileSysErrDoubleRatio.eof() && nPointsDoubleRatio < 100){
-            fileSysErrDoubleRatio >> relSystErrorDoubleRatioDown[nPointsDoubleRatio] >> relSystErrorDoubleRatioUp[nPointsDoubleRatio]>>    relSystErrorWOMaterialDoubleRatioDown[nPointsDoubleRatio] >> relSystErrorWOMaterialDoubleRatioUp[nPointsDoubleRatio];
+            fileSysErrDoubleRatio >> ptSysDoubleRatio[nPointsDoubleRatio] >> relSystErrorDoubleRatioDown[nPointsDoubleRatio] >> relSystErrorDoubleRatioUp[nPointsDoubleRatio]>>    relSystErrorWOMaterialDoubleRatioDown[nPointsDoubleRatio] >> relSystErrorWOMaterialDoubleRatioUp[nPointsDoubleRatio];
                 cout << nPointsDoubleRatio << "\t"  << relSystErrorDoubleRatioDown[nPointsDoubleRatio] << "\t"  <<relSystErrorDoubleRatioUp[nPointsDoubleRatio] << "\t" << relSystErrorWOMaterialDoubleRatioDown[nPointsDoubleRatio] << "\t"  <<relSystErrorWOMaterialDoubleRatioUp[nPointsDoubleRatio] << endl;;
                 nPointsDoubleRatio++;
         }
         fileSysErrDoubleRatio.close();
         nPointsDoubleRatio = nPointsDoubleRatio-1;
+
+        graphGammaYieldSysErr   = NULL;
+        graphInclRatioSysErr    = NULL;
         
-        graphGammaYieldSysErr   = CalculateSysErrFromRelSysHisto( histoGammaSpecCorrPurity, "Pi0SystError",relSystErrorGammaDown , relSystErrorGammaUp, 2, nPointsGamma);
-        graphInclRatioSysErr    = CalculateSysErrFromRelSysHisto( histoIncRatioPurityTrueEff[0], "Pi0SystErrorA",relSystErrorInclRatioDown , relSystErrorInclRatioUp, 2, nPointsInclRatio);
+        graphGammaYieldSysErr   = CalculateSysErrFromRelSysHistoWithPtBins( histoGammaSpecCorrPurity, "GammaSystError", 
+                                                                            relSystErrorGammaDown, relSystErrorGammaUp, ptSysGamma, nPointsGamma);
+        graphInclRatioSysErr    = CalculateSysErrFromRelSysHistoWithPtBins( histoIncRatioPurityTrueEff[0], "InclRatioSysError", 
+                                                                            relSystErrorInclRatioDown, relSystErrorInclRatioUp, ptSysInclRatio, nPointsInclRatio);
+        graphInclRatioSysErr->Print();
     } else {
         graphGammaYieldSysErr   = NULL;
         graphInclRatioSysErr    = NULL;
@@ -883,12 +893,19 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
             histoDoubleRatioFitPi0YieldPurity[k] = (TH1D*) histoIncRatioFitPurity[k]->Clone(Form("DoubleRatioConversionFitPurity%s", nameIntRanges[k].Data()));
             histoDoubleRatioFitPi0YieldPurity[k]->Divide(cocktailAllGammaPi0);
         }    
-        if (doSysErr)    graphDoubleRatioSysErr  = CalculateSysErrFromRelSysHisto( histoDoubleRatioTrueEffPurity[0], "DoubleRatioSystError",relSystErrorDoubleRatioDown , relSystErrorDoubleRatioUp, 2, nPointsDoubleRatio);
-        else             graphDoubleRatioSysErr  = NULL;
+        if (doSysErr){
+//             graphDoubleRatioSysErr              = NULL;
+            graphDoubleRatioSysErr              = CalculateSysErrFromRelSysHistoWithPtBins( histoDoubleRatioTrueEffPurity[0], "DoubleRatioSystError",
+                                                                                            relSystErrorDoubleRatioDown , relSystErrorDoubleRatioUp, ptSysDoubleRatio, nPointsDoubleRatio);
+        } else
+            graphDoubleRatioSysErr              = NULL;
             
-        
-        if (doSysErr)graphDoubleRatioFitSysErr   = CalculateSysErrFromRelSysHisto( histoDoubleRatioFitPi0YieldPurity[0], "DoubleRatioFitError",relSystErrorDoubleRatioDown , relSystErrorDoubleRatioUp, 2, nPointsDoubleRatio);
-        else         graphDoubleRatioFitSysErr   = NULL;
+        if (doSysErr){
+//             graphDoubleRatioFitSysErr           = NULL;
+            graphDoubleRatioFitSysErr           = CalculateSysErrFromRelSysHistoWithPtBins( histoDoubleRatioFitPi0YieldPurity[0], "DoubleRatioFitError", 
+                                                                                            relSystErrorDoubleRatioDown , relSystErrorDoubleRatioUp, ptSysDoubleRatio, nPointsDoubleRatio);
+        } else
+            graphDoubleRatioFitSysErr           = NULL;
 
         // double ratio combined
         TCanvas *canvasDoubleRatio = new TCanvas("canvasDoubleRatio","",0.095,0.09,1000,815);

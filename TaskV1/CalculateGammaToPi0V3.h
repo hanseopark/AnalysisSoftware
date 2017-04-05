@@ -116,6 +116,7 @@ TFile *fileCorrectedOutput                                  = NULL;
 //***********************************************************************************************
 ifstream fileSysErrGamma;
 Int_t nPointsGamma                                          = 0;
+Double_t ptSysGamma[50];
 Double_t relSystErrorGammaUp[50];
 Double_t relSystErrorGammaDown[50];
 Double_t relSystErrorWOMaterialGammaUp[50];
@@ -125,6 +126,7 @@ Double_t systErrorGammaDown[50];
 
 ifstream fileSysErrInclRatio;
 Int_t nPointsInclRatio                                      = 0;
+Double_t ptSysInclRatio[50];
 Double_t relSystErrorInclRatioUp[50];
 Double_t relSystErrorInclRatioDown[50];
 Double_t relSystErrorWOMaterialInclRatioUp[50];
@@ -134,6 +136,7 @@ Double_t systErrorInclRatioDown[50];
 
 ifstream fileSysErrDoubleRatio;
 Int_t nPointsDoubleRatio                                    = 0;
+Double_t ptSysDoubleRatio[50];
 Double_t relSystErrorDoubleRatioUp[50];
 Double_t relSystErrorDoubleRatioDown[50];
 Double_t relSystErrorWOMaterialDoubleRatioUp[50];

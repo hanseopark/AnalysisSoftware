@@ -3846,7 +3846,7 @@ TString ReturnGeneratorNameFromMCName(TString MCname){
 Double_t ReturnTriggerRejectionFactor(TString energy, Int_t trigger){
     Double_t triggerRejec   = 1;
     if (energy.CompareTo("2.76TeV") == 0){
-        cout << trigger << endl;
+        cout << "Trigger used: " << trigger << endl;
         if (trigger == 51){         // EMC1
             triggerRejec    = 1228;
         } else if (trigger == 52){  // EMC7
@@ -3857,7 +3857,7 @@ Double_t ReturnTriggerRejectionFactor(TString energy, Int_t trigger){
             triggerRejec    = 7217;
         }    
     }else  if (energy.CompareTo("8TeV") == 0){
-      cout << trigger << endl;
+      cout << "Trigger used: " << trigger << endl;
       if (trigger == 52){  // EMC7
           triggerRejec    = 67.3;
       } else if (trigger == 81){  // EGA
