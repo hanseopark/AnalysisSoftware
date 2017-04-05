@@ -568,8 +568,8 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         if (histoEtaCocktailInput[i]) {
             hasEtaCocktailInput                                 = kTRUE;
             histoEtaCocktailInput[i]->SetName(Form("Eta_%s_invYield_CocktailInput_Pt_MeasBin", cocktailInputMethods[i].Data()));
-            histoPi0CocktailInput[i]->Sumw2();
-            histoPi0CocktailInput[i]->Scale(eventNormScalingFactor);
+            histoEtaCocktailInput[i]->Sumw2();
+            histoEtaCocktailInput[i]->Scale(eventNormScalingFactor);
         }
     }
 

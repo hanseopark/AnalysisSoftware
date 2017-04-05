@@ -85,12 +85,11 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                                 TString nameMeson       = "",
                                 TString isMC            = "",
                                 TString fEnergy          = "",
-                                TString fEstimatePileup = "",
                                 Int_t mode              = 0
                             ){
     // switch systematics on/off
     Bool_t doSysErr                             = kFALSE;
-    if ((!fEnergy.CompareTo("900GeV")||!fEnergy.CompareTo("7TeV")||!fEnergy.CompareTo("8TeV") )&& mode == 0) //!fEnergy.CompareTo("2.76TeV")||
+    if ((!fEnergy.CompareTo("900GeV") || !fEnergy.CompareTo("2.76TeV") || !fEnergy.CompareTo("7TeV") || !fEnergy.CompareTo("8TeV") ) && mode == 0) //
         doSysErr                                = kTRUE;
     
     // Setting the general style

@@ -1297,7 +1297,7 @@ function CreateGammaFinalResults()
 
 function CreateGammaFinalResultsV3()
 {
-    root -x -l -b -q TaskV1/CalculateGammaToPi0V3.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\",\"$ESTIMATEPILEUP\"\,$mode\)
+    root -x -l -b -q TaskV1/CalculateGammaToPi0V3.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\)
 }
 
 
