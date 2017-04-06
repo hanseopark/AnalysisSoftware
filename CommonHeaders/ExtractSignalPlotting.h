@@ -446,7 +446,7 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
         
         histoFit->SetLineColor(fitColorInvMassSG);
         histoFit->SetLineWidth(4);
-        histoFit->Draw("c,same");
+        histoFit->Draw("same");
         nLegendLines++;
     }
 
@@ -506,7 +506,7 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
         fitPi0InvMassSig->Draw("same");
     } else {
         histoPi0InvMassSigRemBGSub->Draw("same");
-        histoFit->Draw("c,same");
+        histoFit->Draw("same");
     }
 
     labelALICE->Draw();    
@@ -554,7 +554,7 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
         fitPi0InvMassSig->Draw("same");
     } else {
         histoPi0InvMassSigRemBGSub->Draw("same");    
-        histoFit->Draw("c,same");
+        histoFit->Draw("same");
     }
 
     labelALICE->Draw();
@@ -600,7 +600,7 @@ void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
         
         histoFitWBG->SetLineColor(fitColorInvMassSG);
         histoFitWBG->SetLineWidth(4);
-        histoFitWBG->Draw("c,same");
+        histoFitWBG->Draw("same");
     }
 
     labelALICE->Draw();
