@@ -591,9 +591,11 @@ void PrepareSecondaries(    TString     meson                       = "",
 
         // K0l not included in cocktail input -> clone K0s
         if (i>0 && !histoMesonMotherCocktailInputPtMeasBin[i]) {
-            if (cocktailInputParticles[i].CompareTo(cocktailInputParticles[i-1]) == 0) {
+            if (cocktailInputParticles[i].CompareTo(cocktailInputParticles[i-1]) == 0 && histoMesonMotherCocktailInputPtMeasBin[i-1]) {
                 histoMesonMotherCocktailInputPtMeasBin[i]       = (TH1F*)histoMesonMotherCocktailInputPtMeasBin[i-1]->Clone(Form("%s_CocktailInput_Pt_MeasBin",motherParticles[i+1].Data()));
             }
+            else
+                histoMesonMotherCocktailInputPtMeasBin[i] = NULL;
         }
     }
 

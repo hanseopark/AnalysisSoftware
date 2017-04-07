@@ -1265,7 +1265,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
     canvasRatioToCombFit->SaveAs(Form("%s/Eta_RatioOfIndividualMeasToCombFit_PP7TeV.%s",outputDir.Data(),suffix.Data()));
 
 
-    
+    TString nameMeasGlobal22[11]                  = {"PCM", "PHOS", "EMCAL", "PCMPHOS", "PCMEMCAL", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "EMCal high pT", "EMCal merged", "PCMOtherDataset"};
     
      TString nameOutputCommonFile    = Form("%s/CombinedResultsPaperPP7TeV_%s.root", outputDir.Data(), dateForOutput.Data());    
     TFile fCombResults(nameOutputCommonFile.Data(), "RECREATE");
@@ -1276,10 +1276,14 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         // PCM component
         graphCombPi0InvCrossSectionStatPCMEMCPHOS->Write("graphInvCrossSectionPi0CombStat");
         graphCombPi0InvCrossSectionSysPCMEMCPHOS->Write("graphInvCrossSectionPi0CombSys");
+        graphCombPi0InvCrossSectionStatPCMEMCPHOS->Write("graphInvCrossSectionPi0Comb7TeVAStatErr");
+        graphCombPi0InvCrossSectionSysPCMEMCPHOS->Write("graphInvCrossSectionPi0Comb7TeVASysErr");
         
     for (Int_t i = 0; i < numbersofmeas; i++){
         graphPi0InvCrossSectionStat[i]                ->Write(Form("graphInvCrossSectionPi0%sStat",nameMeasGlobal[i].Data()));
         graphPi0InvCrossSectionSys[i]                ->Write(Form("graphInvCrossSectionPi0%sSys",nameMeasGlobal[i].Data()));
+        graphPi0InvCrossSectionStat[i]                ->Write(Form("graphInvCrossSectionPi0%s7TeVStatErr",nameMeasGlobal22[i].Data()));
+        graphPi0InvCrossSectionSys[i]                ->Write(Form("graphInvCrossSectionPi0%s7TeVSysErr",nameMeasGlobal22[i].Data()));
 //         graphRatioCombFitStat[i]                 ->Write(Form("graphInvCrossSectionPi0%sStat",nameMeasGlobal[i].Data()));
 //         graphRatioCombFitSys[i]                 ->Write("graphCombPi0InvCrossSectionStatPCMEMCPHOS");
     }
@@ -1289,11 +1293,15 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         // PCM component
         graphCombEtaInvCrossSectionStatPCMEMCPHOS->Write("graphInvCrossSectionEtaCombStat");
         graphCombEtaInvCrossSectionSysPCMEMCPHOS->Write("graphInvCrossSectionEtaCombSys");
+        graphCombEtaInvCrossSectionStatPCMEMCPHOS->Write("graphInvCrossSectionEtaComb7TeVAStatErr");
+        graphCombEtaInvCrossSectionSysPCMEMCPHOS->Write("graphInvCrossSectionEtaComb7TeVASysErr");
         
     for (Int_t i = 0; i < numbersofmeas; i++){
         if(i!=1&&i!=3){
             graphEtaInvCrossSectionStat[i]                ->Write(Form("graphInvCrossSectionEta%sStat",nameMeasGlobal[i].Data()));
             graphEtaInvCrossSectionSys[i]                ->Write(Form("graphInvCrossSectionEta%sSys",nameMeasGlobal[i].Data()));
+            graphEtaInvCrossSectionStat[i]                ->Write(Form("graphInvCrossSectionEta%s7TeVStatErr",nameMeasGlobal22[i].Data()));
+            graphEtaInvCrossSectionSys[i]                ->Write(Form("graphInvCrossSectionEta%s7TeVSysErr",nameMeasGlobal22[i].Data()));
     //         graphRatioCombFitStat[i]                 ->Write(Form("graphInvCrossSectionPi0%sStat",nameMeasGlobal[i].Data()));
     //         graphRatioCombFitSys[i]                 ->Write("graphCombPi0InvCrossSectionStatPCMEMCPHOS");
         }
@@ -1301,10 +1309,14 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
     
      graphCombEtaToPi0StatPCMEMCPHOS->Write("graphEtaToPi0CombStat");
     graphCombEtaToPi0SysPCMEMCPHOS->Write("graphEtaToPi0CombSys");
+     graphCombEtaToPi0StatPCMEMCPHOS->Write("graphRatioEtaToPi0Comb7TeVStatErr");
+    graphCombEtaToPi0SysPCMEMCPHOS->Write("graphRatioEtaToPi0Comb7TeVSysErr");
     for (Int_t i = 0; i < numbersofmeas; i++){
         if(i!=1&&i!=3){
             graphEtaToPi0Stat[i]                ->Write(Form("graphEtaToPi0%sStat",nameMeasGlobal[i].Data()));
             graphEtaToPi0Sys[i]                ->Write(Form("graphEtaToPi0%sSys",nameMeasGlobal[i].Data()));
+            graphEtaToPi0Stat[i]                ->Write(Form("graphRatioEtaToPi0%s7TeVStatErr",nameMeasGlobal22[i].Data()));
+            graphEtaToPi0Sys[i]                ->Write(Form("graphRatioEtaToPi0%s7TeVSysErr",nameMeasGlobal22[i].Data()));
     //         graphRatioCombFitStat[i]                 ->Write(Form("graphInvCrossSectionPi0%sStat",nameMeasGlobal[i].Data()));
     //         graphRatioCombFitSys[i]                 ->Write("graphCombPi0InvCrossSectionStatPCMEMCPHOS");
         }
