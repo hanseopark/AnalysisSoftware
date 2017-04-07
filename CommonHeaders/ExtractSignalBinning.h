@@ -677,7 +677,7 @@ Double_t fBinsEtaPbPb2760GeVPtDCALHC11h[14]     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2
 Int_t fBinsPi0PbPb2760GeVPtRebin[24]            = { 10, 8, 2, 2, 2, 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2, 2, 4, 4, 4, 4,
                                                     4, 8, 8, 8};
-Int_t fBinsPi0PbPb2760GeVPtLHC11hRebin[26]      = { 10, 4, 2, 2, 2, 2, 2, 2, 2, 2,
+Int_t fBinsPi0PbPb2760GeVPtLHC11hRebin[26]      = { 10, 5, 2, 2, 2, 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2, 2, 4, 4, 4, 4,
                                                     4, 8, 8, 8, 10, 10 };
 Int_t fBinsPi0PbPb2760GeVPtLHC11hPCMEMCRebin[26]= { 10, 4, 2, 2, 2, 2, 2, 2, 2, 2,

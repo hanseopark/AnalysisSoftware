@@ -3889,11 +3889,27 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     
     if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0){
         if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
-            if(ptBin == 1) mesonAmplitudeMin = mesonAmplitude*70./100.;
-            else if(ptBin > 1 && ptBin < 4) mesonAmplitudeMin = mesonAmplitude*90./100.;
-            else if(ptBin > 17) mesonAmplitudeMin = mesonAmplitude*80./100.;
-            else mesonAmplitudeMin = mesonAmplitude*98./100.;
-            mesonAmplitudeMax = mesonAmplitude*115./100.;
+            if((GetCentralityString(fEventCutSelection)).CompareTo("0-5%")==0){ 
+                if(ptBin == 1){
+                    mesonAmplitudeMin = mesonAmplitude*40./100.;
+                    mesonAmplitudeMax = mesonAmplitude*110./100.;                
+                } else {
+                    mesonAmplitudeMin = mesonAmplitude*98./100.;
+                    mesonAmplitudeMax = mesonAmplitude*115./100.;
+                }
+            } else if((GetCentralityString(fEventCutSelection)).CompareTo("5-10%")==0 || (GetCentralityString(fEventCutSelection)).CompareTo("0-10%")==0){
+                if(ptBin == 1){
+                    mesonAmplitudeMin = mesonAmplitude*95./100.;
+                    mesonAmplitudeMax = mesonAmplitude*110./100.;
+                } else {
+                    mesonAmplitudeMin = mesonAmplitude*98./100.;
+                    mesonAmplitudeMax = mesonAmplitude*115./100.;
+                }  
+            } else {
+                if(ptBin == 1) mesonAmplitudeMin = mesonAmplitude*80./100.;
+                else  mesonAmplitudeMin = mesonAmplitude*98./100.;
+                mesonAmplitudeMax = mesonAmplitude*115./100.;
+            }
             if (fMode == 2 || fMode == 3) {
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*600./100.;
@@ -3904,8 +3920,13 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
             }
 
         } else {
-          if((GetCentralityString(fEventCutSelection)).CompareTo("5-10%")==0) mesonAmplitudeMin = mesonAmplitude*30./100.;
-          else mesonAmplitudeMin = mesonAmplitude*40./100.;
+            if((GetCentralityString(fEventCutSelection)).CompareTo("0-5%")==0){ 
+                if(ptBin==2 || ptBin==3 || ptBin==5) mesonAmplitudeMin = mesonAmplitude*80./100.;
+            } else if((GetCentralityString(fEventCutSelection)).CompareTo("5-10%")==0){
+                    if(ptBin==5) mesonAmplitudeMin = mesonAmplitude*90./100.;   
+            } else if((GetCentralityString(fEventCutSelection)).CompareTo("0-10%")==0){
+                    if(ptBin==2) mesonAmplitudeMin = mesonAmplitude*80./100.;   
+            } else mesonAmplitudeMin = mesonAmplitude*40./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
             if (fMode == 2 || fMode == 3){
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
