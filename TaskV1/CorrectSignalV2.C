@@ -519,7 +519,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     }
 
     Double_t minPtMesonSec  = 0.3;
-    if (mode == 2)
+    if (mode == 0 && kCollisionSystem==1)
+        minPtMesonSec       = minPtMeson;
+    else if (mode == 2)
         minPtMesonSec       = minPtMeson;
     else if (mode == 4)
         minPtMesonSec       = minPtMeson;
@@ -608,7 +610,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
                 if((j==0) && (foundCocktailInput || foundToyMCInput)){
 //                    fithistoRatioSecEffDivTrueEff[k][j] = FitObject("h",Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"Pi0",histoRatioSecEffDivTrueEff[k][0],minPtMesonSec,maxPtMeson,NULL,"QNRME+");
-                    histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst,"QNRME+","",2.5,maxPtMeson);
+                    if(kCollisionSystem==1) histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst,"QNRME+","",4,maxPtMeson);
+                    else histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst,"QNRME+","",2.5,maxPtMeson);
                     
                     fithistoRatioSecEffDivTrueEff[k][j] = new TF1(Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"[0]/pow(x,[1])+[2]");
                     fithistoRatioSecEffDivTrueEff[k][j]->SetRange(minPtMesonSec,maxPtMeson);
