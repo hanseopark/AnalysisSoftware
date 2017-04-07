@@ -52,9 +52,6 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
     cout<<"Successfully connected to Alien"<<endl;
     cout<<"==============================="<<endl;
 
-
-
-
     //*********************************************************************************************************************************
     //*********************************************************************************************************************************
     //*********************************************************************************************************************************
@@ -75,8 +72,8 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
       ""
     };
 
-    TString train = "Legotrain-vAN-20170322-8TeV-JetJet_AODnew_merge";
-    Int_t trainRuns[nSets] = {376,377};
+    TString train = "Legotrain-vAN-20170402-8TeV-JetJet_AOD_MCfix";
+    Int_t trainRuns[nSets] = {384,386};
     TString runlist[nSets] = {"merge","merge"};
 
     const Int_t nFiles = 2;

@@ -4569,7 +4569,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //        DrawGammaSetMarkerTGraphAsym(graphEMCALMergedPi0AccTimesEffDivPur, markerStyleDet[9], markerSizeDet[9]*0.55, colorDet[9] , colorDet[9]);
 //        graphEMCALMergedPi0AccTimesEffDivPur->Draw("p,same,e");
 
-        TLegend* legendEffiAccPi0           = GetAndSetLegend2(0.55, 0.13, 0.83, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
+        TLegend* legendEffiAccPi0           = GetAndSetLegend2(0.62, 0.13, 0.9, 0.13+(3*textSizeLabelsRel),textSizeLabelsPixel);
         legendEffiAccPi0->AddEntry(histoPCMPi0AccTimesEff,"PCM","p");
         legendEffiAccPi0->AddEntry(graphPCMEMCALPi0AccTimesEff,"PCM-EMCal","p");
         legendEffiAccPi0->AddEntry(graphEMCALPi0AccTimesEff,"EMCal","p");
@@ -4605,7 +4605,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphEMCALPi0AccTimesEff->Draw("p,same,z");
 //        graphEMCALMergedPi0AccTimesEffDivPur->Draw("p,same,e");
 
-        TLegend* legendEffiAccPi02          = GetAndSetLegend2(0.55, 0.13, 0.83, 0.13+(5*textSizeLabelsRel),textSizeLabelsPixel);
+        TLegend* legendEffiAccPi02          = GetAndSetLegend2(0.62, 0.13, 0.9, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
         legendEffiAccPi02->AddEntry(histoPCMPi0AccTimesEff,"PCM","p");
         legendEffiAccPi02->AddEntry(graphPCMEMCALPi0AccTimesEff,"PCM-EMCal","p");
         legendEffiAccPi02->AddEntry(graphEMCALPi0AccTimesEff,"EMCal","p");
