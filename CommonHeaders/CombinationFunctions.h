@@ -1384,13 +1384,12 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
         Double_t corrFracPCMDal_PCMEMC_PCMDal   = 0;
         Double_t corrFracEMC_PCM_EMC            = 0;
         Double_t corrFracEMC_PCMDal_EMC         = 0;
-        Double_t corrFracEMC_PHOS_EMC           = 0;
+        Double_t corrFracEMC_EMC_PHOS           = 0;
         Double_t corrFracPCMDal_PCMDal_EMC      = 0;
         Double_t corrFracPCM_PCM_EMC            = 0;
-        Double_t corrFracPHOS_PHOS_EMC          = 0;
-	Double_t corrFracPHOS_PHOS_PCMEMC       = 0;
-	Double_t corrFracPCMEMC_PHOS_PCMEMC     = 0;
-	Double_t corrFracPCMEMC_EMC_PCMEMC      = 0;
+        Double_t corrFracPHOS_EMC_PHOS          = 0;
+	Double_t corrFracPHOS_PCMEMC_PHOS       = 0;
+	Double_t corrFracPCMEMC_PCMEMC_PHOS     = 0;
 	
         if (energy.CompareTo("2.76TeV") == 0 && mesonType.CompareTo("Pi0") == 0){ 
             if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCM_PCM-PCMEMC") != -10)
@@ -1457,8 +1456,8 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
         } else if ( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") ==0 ){
             corrFracEMC_PCM_EMC         = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","EMC_PCM-EMC");
             corrFracEMC_PCMDal_EMC      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","EMC_PCMDalitz-EMC");
-            corrFracEMC_PHOS_EMC        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","EMC_PHOS-EMC");
-	    corrFracEMC_PCMEMC_EMC      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","EMC_EMC-PCMEMC");
+            corrFracEMC_EMC_PHOS        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","EMC_EMC-PHOS");
+	    corrFracEMC_PCMEMC_EMC      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","EMC_PCMEMC-EMC");
 	    corrFracPCM_PCM_PCMDal      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCM_PCM-PCMDalitz");
 	    corrFracPCM_PCMEMC_PCM      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCM_PCM-PCMEMC");
 	    corrFracPCM_PCM_EMC         = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCM_PCM-EMC");
@@ -1466,10 +1465,10 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
             corrFracPCMDal_PCMDal_EMC   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMDalitz_PCMDalitz-EMC");
 	    corrFracPCMDal_PCM_PCMDal   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMDalitz_PCM-PCMDalitz");
 	    corrFracPCMDal_PCMEMC_PCMDal= GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMDalitz_PCMDalitz-PCMEMC");
-            corrFracPHOS_PHOS_EMC       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PHOS_PHOS-EMC");
-	    corrFracPHOS_PHOS_PCMEMC    = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PHOS_PHOS-PCMEMC");
-	    corrFracPCMEMC_PHOS_PCMEMC  = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMEMC_PHOS-PCMEMC");
-	    corrFracPCMEMC_EMC_PCMEMC   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMEMC_EMC-PCMEMC");
+            corrFracPHOS_EMC_PHOS       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PHOS_EMC-PHOS");
+	    corrFracPHOS_PCMEMC_PHOS    = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PHOS_PCMEMC-PHOS");
+	    corrFracPCMEMC_PCMEMC_PHOS  = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMEMC_PCMEMC-PHOS");
+	    corrFracEMC_PCMEMC_PCMEMC   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMEMC_PCMEMC-EMC");
 	    corrFracPCMEMC_PCMEMC_PCMDal= GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMEMC_PCMDalitz-PCMEMC");
 	    
         }
@@ -1487,18 +1486,13 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
             cvPCM_PCMDal =  (corrFracPCM_PCM_PCMDal*ySysErr[0]*corrFracPCMDal_PCM_PCMDal*ySysErr[5]) / (yTotErr[0]*yTotErr[5]);
             cout << nameMeas[0] <<  ":\t sys error : "  << ySysErr[0] << "\t, total err: " <<  yTotErr[0] << endl;
             cout << nameMeas[5] <<  ":\t sys error : "  << ySysErr[5] << "\t, total err: " <<  yTotErr[5] << endl;
-//             if( energy.CompareTo("pPb_5.023GeV") == 0 && mesonType.CompareTo("Pi0") == 0 ) {
-//                 cvPCM_PCMDal    = (corrFracPCM_PCM_PCMDal*(ySysErr[0]/yValue[0])*corrFracPCMDal_PCM_PCMDal*(ySysErr[5]/yValue[5])) /( (yTotErr[0]/yValue[0])*(yTotErr[5]/yValue[5]));   //0.225;       //Add correlation
-//                 cout << nameMeas[0] <<  ":\t sys error : "  << ySysErr[0] << "\t, total err: " <<  yTotErr[0] << endl;
-//                 cout << nameMeas[5] <<  ":\t sys error : "  << ySysErr[5] << "\t, total err: " <<  yTotErr[5] << endl;
-//             }
         }
         
         Double_t cvPHO_PCMPHO                   = 0.;
         Double_t cvPHO_PHODal                   = 0.;
         Double_t cvEMC_PCMEMC                   = 0.; // 0.775
         if (yValue[2]>0 && yValue[4]>0 ){
-            cvEMC_PCMEMC = (corrFracEMC_PCMEMC_EMC*ySysErr[2]*corrFracPCMEMC_EMC_PCMEMC*ySysErr[4])/(yTotErr[2]*yTotErr[4]);
+            cvEMC_PCMEMC = (corrFracEMC_PCMEMC_EMC*ySysErr[2]*corrFracEMC_PCMEMC_PCMEMC*ySysErr[4])/(yTotErr[2]*yTotErr[4]);
             cout << nameMeas[2] <<  " sys error : "  << ySysErr[2] << "\t, total err: " <<  yTotErr[2] << endl;
             cout << nameMeas[4] <<  " sys error : "  << ySysErr[4] << "\t, total err: " <<  yTotErr[4] << endl;
     
@@ -1564,7 +1558,7 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
         Double_t cvEMC_PHOS = 0.;
         if (yValue[1]>0 && yValue[2]>0 ){
             if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
-                cvEMC_PHOS = (corrFracPHOS_PHOS_EMC*ySysErr[1]*corrFracEMC_PHOS_EMC*ySysErr[2]) / (yTotErr[1]*yTotErr[2]);
+                cvEMC_PHOS = (corrFracPHOS_EMC_PHOS*ySysErr[1]*corrFracEMC_EMC_PHOS*ySysErr[2]) / (yTotErr[1]*yTotErr[2]);
                 cout << nameMeas[1] <<  " sys error : "  << ySysErr[1] << "\t, total err: " <<  yTotErr[1] << endl;
                 cout << nameMeas[2] <<  " sys error : "  << ySysErr[2] << "\t, total err: " <<  yTotErr[2] << endl;
             }
@@ -1580,7 +1574,7 @@ TGraphAsymmErrors* CombinePtPointsSpectraFullCorrMat( TH1D** histoStat,    TGrap
         Double_t cvPHO_PCMEMC = 0.;
 	if (yValue[1]>0 && yValue[4]>0 ){
             if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
-                cvPHO_PCMEMC = (corrFracPHOS_PHOS_PCMEMC*ySysErr[1]*corrFracPCMEMC_PHOS_PCMEMC*ySysErr[4]) / (yTotErr[1]*yTotErr[4]);
+                cvPHO_PCMEMC = (corrFracPHOS_PCMEMC_PHOS*ySysErr[1]*corrFracPCMEMC_PCMEMC_PHOS*ySysErr[4]) / (yTotErr[1]*yTotErr[4]);
                 cout << nameMeas[1] <<  " sys error : "  << ySysErr[1] << "\t, total err: " <<  yTotErr[1] << endl;
                 cout << nameMeas[4] <<  " sys error : "  << ySysErr[4] << "\t, total err: " <<  yTotErr[4] << endl;
             }
