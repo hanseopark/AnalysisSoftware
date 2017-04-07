@@ -29,10 +29,10 @@ NSlashes=10
 NSlashes2=9
 
 # switches to enable/disable certain procedures
-DOWNLOADON=1
+DOWNLOADON=0
 MERGEON=1
-MERGEONBINSSingle=1
-MERGEONBINS=1
+MERGEONBINSSingle=0
+MERGEONBINS=0
 
 # check if train configuration has actually been given
 HAVELHC11a=1
@@ -343,23 +343,23 @@ fi
 # LHC15a3aMC="2608"; 
 # LHC15a3aplusMC="2609"; 
 
-TRAINDIR=Legotrain-vAN20161111_TMEffi
+# TRAINDIR=Legotrain-vAN20161111_TMEffi
 # LHC11aData="1905";
 # LHC11aData="1945";
 # LHC11aData="1949";
-LHC11aData="1965";
+# LHC11aData="1965";
 # LHC11aData="1894";
 # LHC15g1aMC="2653";
 # LHC15g1aMC="2669";
 # LHC15g1aMC="2670";
 # LHC15g1aMC="2689";
 # LHC15g1aMC="2697";
-LHC15g1aMC="2722";
+# LHC15g1aMC="2722";
 
 # LHC13gData="1907";
 # LHC13gData="1946";
 # LHC13gData="1951";
-LHC13gData="1961";
+# LHC13gData="1961";
 # LHC13gData="1895";
 # LHC15a3aMC="2650"; 
 # LHC15a3aplusMC="2651"; 
@@ -371,9 +371,18 @@ LHC13gData="1961";
 # LHC15a3aplusMC="2690"; 
 # LHC15a3aMC="2698"; 
 # LHC15a3aplusMC="2699"; 
-LHC15a3aMC="2710"; 
-LHC15a3aplusMC="2711"; 
+# LHC15a3aMC="2710"; 
+# LHC15a3aplusMC="2711"; 
 
+TRAINDIR=Legotrain-vAN20170329_TMEffiMCfix
+LHC15g1aMC="2866";
+LHC12f1aMC="2870"; 
+LHC12f1bMC="2869"; 
+
+# LHC15g2MC="2841";
+LHC15g2MC="2842";
+LHC15a3aMC="2867"; 
+LHC15a3aplusMC="2868"; 
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR

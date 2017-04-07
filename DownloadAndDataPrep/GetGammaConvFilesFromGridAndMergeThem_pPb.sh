@@ -11,9 +11,9 @@
 
 # switches to enable/disable certain procedures
 DOWNLOADON=1
-MERGEON=1
+MERGEON=0
 SINGLERUN=1
-SINGLEJOB=1
+SINGLEJOB=0
 SEPARATEON=1
 MERGEONSINGLEData=0
 MERGEONSINGLEMC=0
@@ -242,11 +242,11 @@ fi
 # LHC13e7MC="847";
 
 TRAINDIR=Legotrain-vAN20170329-MCfix
-# LHC13b2_efix_p1MC="857"; 
-# LHC13b2_efix_p2MC="858"; 
-# LHC13b2_efix_p3MC="859"; 
-LHC13b2_efix_p4MC="860";
-# LHC13e7MC="870";
+LHC13b2_efix_p1MC="875"; 
+LHC13b2_efix_p2MC="876"; 
+LHC13b2_efix_p3MC="877"; 
+LHC13b2_efix_p4MC="878";
+LHC13e7MC="879";
 # LHC13b2_efix_p1MC="861"; 
 # LHC13b2_efix_p2MC="862"; 
 # LHC13b2_efix_p3MC="863"; 
