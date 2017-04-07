@@ -178,8 +178,8 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   TString fileNameNeutralPionEMCalEta                 = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_170314_pPb.root";
   TString fileNameNeutralPionPHOS                     = "ExternalInputpPb/PHOS/20160601_Pi0InvariantSpectrum_pPb_PHOS.root";//data_PHOSResults_pPb_20160208.root";
   TString fileNameChargedPions                        = "ExternalInputpPb/InputRpPb/pPb502.fullpT.INEL.20151204_mb_wo_V0Acorr.root";//Charged pion pPb spectrum 
-  TString fileNamemTScalingpPb                        = "CombinepPbSpectra/mT-Scaling/2017_03_17/mTScaling.root"; 
-  TString fileNamemTScalingpp7TeV                     = "CombinepPbSpectra/mT-Scaling/2017_03_17/mTScaling_pp7TeV.root";
+  TString fileNamemTScalingpPb                        = "CombinepPbSpectra/mT-Scaling/2017_04_06/mTScaling.root"; 
+  TString fileNamemTScalingpp7TeV                     = "CombinepPbSpectra/mT-Scaling/2017_04_06/mTScaling_pp7TeV.root";
   
   
 

@@ -140,7 +140,7 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     TString fileNameNeutralPionPHOSResultsPP7TeV     = "ExternalInputpPb/PHOS/CombinedResultsPP_ShiftedX_PaperRAA_ConsiderPileup7TeVPHOSData.root";
     TString fileNameNeutralPionPHOSResultsPP2760GeV  = "FinalResults/CombinedResultsPaperPP2760GeV_2017_01_26_FrediV2Clusterizer.root";
     
-    TString fileNameNeutralPionCombResultspPb        = "ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_03_14.root";
+    TString fileNameNeutralPionCombResultspPb        = "ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_04_06.root";
     TString fileNameNeutralPionPCMResultspPb         = "ExternalInputpPb/PCM/data_PCMResults_pPb_20170308.root";
     TString fileNameNeutralPionDalitzResultspPb      = "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20160929.root";//data_PCMResults_Dalitz_pPb_20150806.root";data_PCMResults_Dalitz_pPb_20160601.root
     TString fileNameNeutralPionEMCalResultspPb       = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_170314_pPb.root";
@@ -150,7 +150,7 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     TString fileNamePHOSSystErrCancellation         = "ExternalInputpPb/PHOS/ComponentCancelSys.root";
     TString fileNameNeutralPionPCMEMCalResultspPb   = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2016_12_22.root";
     
-    TFile* CommonFile	    = new TFile("ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_03_14.root");
+    TFile* CommonFile	    = new TFile("ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_04_06.root");
         
     TString nameRebinSpectraFitsDat                 = Form("%s/RebinSpectraFitsParam.dat",outputDir.Data());
     fstream  fileRebinSpectraFits;

@@ -167,7 +167,9 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   TString fileNameRpPbPCMEMCal                = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM-EMCal_2017_03_15.root";
   //File to load the correlation factors
   //TString corrFactorsFileName 		      = "ExternalInputpPb/InputRpPb/CorrelationFactors/RpPb_5.023TeV_2016_09_27.root";
-  TString corrFactorsFileName                 = "eps/2017_02_14/ComputeCorrelationFactors_pPb5TeV/pPb5TeV.root";
+  //TString corrFactorsFileName                 = "eps/2017_02_14/ComputeCorrelationFactors_pPb5TeV/pPb5TeV.root";
+  TString corrFactorsFileName                 = "eps/2017_04_05/ComputeCorrelationFactors_pPb5TeV/pPb5TeV.root";
+  
   
   TFile* fileNeutralPionRpPb                           	= new TFile(fileNameRpPb.Data());
   TFile* fileNeutralPionRpPbComb                        = new TFile(fileNameRpPbCombined.Data());
