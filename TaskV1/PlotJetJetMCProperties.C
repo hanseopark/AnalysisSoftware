@@ -297,6 +297,8 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         anchoredTo                      = "LHC13g";
     if (period.Contains("LHC16c2")) 
         anchoredTo                      = "LHC12[c-i]";
+    if (period.Contains("LHC16h3")) 
+        anchoredTo                      = "LHC15n";
 
     TString acceptanceOf = "";
     if (mode == 0) acceptanceOf     = "|#eta_{#gamma}| < 0.9 (PCM acc.)";
