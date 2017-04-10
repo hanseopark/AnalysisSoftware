@@ -35,9 +35,9 @@ Double_t fBinsPi0900GeVPt[12]                   = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2
 Int_t fBinsPi0900GeVPtRebin[11]                 = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 4,
                                                     4};
 
-Double_t fBinsPi0900GeVPCMEMCPt[12]             = { 0.0, 0.8, 1.2, 1.4, 1.6, 1.8, 2.0, 2.5, 3.0, 4.0, 5.0,
-                                                    7.0};
-Int_t fBinsPi0900GeVPCMEMCPtRebin[11]           = { 2, 5, 5, 5, 5, 4, 4, 4, 4, 8, 8};
+Double_t fBinsPi0900GeVPCMEMCPt[12]             = { 0.0, 0.8, 1.2, 1.4, 1.6, 2.0, 2.5, 3.0, 4.0, 5.0,
+                                                    7.0, 10.0};
+Int_t fBinsPi0900GeVPCMEMCPtRebin[11]           = { 2, 5, 5, 5, 4, 4, 4, 4, 8, 8, 8};
 
 Double_t fBinsPi0900GeVEMCPt[12]                = { 0.0, 1.2, 1.6, 2.0, 2.5, 3.0, 4.0, 5.0, 7.0,
                                                     10.0, 16.0};
@@ -224,8 +224,8 @@ Double_t fBinsPi07TeVEMCPt[46]                  = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7
 Int_t fBinsPi07TeVEMCPtRebin[45]                = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                     4, 4, 4, 2, 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                    2, 2, 2, 2, 2, 2, 2, 2, 2, 4,
-                                                    5, 8, 8, 10, 16, 16};
+                                                    2, 2, 2, 2, 2, 2, 2, 2, 2, 5,
+                                                    5, 10, 10, 10, 16, 16};
 
 Double_t fBinsEta7TeVPt[18]                     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0,
                                                     3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0};
@@ -240,7 +240,7 @@ Int_t fBinsEta7TeVPCMPHOSPtRebin[17]            = { 8, 8, 8, 5, 5, 5, 5, 5, 5,
 
 Int_t fBinsEta7TeVPCMEMCPtRebin[18]             = { 2, 2, 2, 16, 10, 8, 8, 8, 8, 8,
                                                     8, 10, 10, 16, 16, 16, 16, 20};
-Int_t fBinsEta7TeVEMCPtRebin[18]                = { 2, 2, 2, 2, 2, 16, 8, 8, 8, 8,
+Int_t fBinsEta7TeVEMCPtRebin[18]                = { 2, 2, 2, 2, 2, 16, 16, 8, 8, 8,
                                                     8, 10, 10, 16, 16, 16, 16, 20};
 Double_t fBinsEta7TeVDalitzPt[10]               = { 0., 0.6, 1.0, 1.4, 1.8, 2.2, 2.8, 4.4, 6., 10.};
 Int_t fBinsEta7TeVDalitzPtRebin[9]              = { 10, 10, 10, 10, 10, 10, 10, 10, 10};
@@ -2506,13 +2506,13 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
             fColumn             = 5;
             fRow                = 3;
             if (fNBinsPt > 15) fRow = 4;
-            if (modi == 1 ){
+            if (modi == 1){
                 fColumn         = 4;
                 fRow            = 3;
             } else if (modi == 2 ) {
                 fStartPtBin     = 3;
             } else if (modi == 4) {
-                fStartPtBin     = 5;
+                fStartPtBin     = 6;
             }
 
             if (fNBinsPt > 18) {

@@ -2214,7 +2214,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 histoRatioEffWOWeightingEffCFPol0[k]->SetFillColor(colorEffiShadePol0[k]);
                 histoRatioEffWOWeightingEffCFPol0[k]->SetMarkerSize(0);
 
-                if( !(optionEnergy.CompareTo("8TeV")==0 && mode == 2 && k == 0) ) fitEffiBiasWOWeightsPol1[k]->SetParLimits(2,0.5,1.5);
+                if( !((optionEnergy.CompareTo("8TeV")==0 || optionEnergy.CompareTo("900GeV") == 0) && mode == 2 && k == 0) ) fitEffiBiasWOWeightsPol1[k]->SetParLimits(2,0.5,1.5);
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.4,maxPtMeson    );
                 cout << WriteParameterToFile(fitEffiBiasWOWeightsPol1[k]) << endl;
                 fitEffiBiasWOWeightsPol1[k]->SetLineColor(colorEffiShadePol1[k]);
