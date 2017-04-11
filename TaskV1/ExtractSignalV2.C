@@ -3884,8 +3884,8 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     //    cout<<"Start Fitting spectra"<<endl;
     fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
     Double_t mesonAmplitude = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
-    Double_t mesonAmplitudeMin;
-    Double_t mesonAmplitudeMax;
+    Double_t mesonAmplitudeMin = mesonAmplitude*10./100.;
+    Double_t mesonAmplitudeMax = mesonAmplitude*400./100.;
     
     if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0){
         if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
