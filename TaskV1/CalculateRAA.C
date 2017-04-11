@@ -51,19 +51,39 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 	
 	StyleSettingsThesis();	
 	SetPlotStyle();
-	
+    TString outputDir = Form("%s/%s/%s/CalculateRAA",cutSel.Data(),option.Data(),suffix.Data());
+	gSystem->Exec("mkdir "+outputDir);
+	//declaration for printing logo 
+	prefix2 = "data";
+	pictDrawingOptions[1] = kFALSE;
 	date = ReturnDateString();
 
-	minPtForFits=0.4;
-	minPtForFitsEta=1.0;
-	collisionSystem ="PbPb @ #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
+	collisionSystem ="PbPb, #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
 	centralityString = GetCentralityString(cutSel.Data());
 	nColl = GetNCollFromCutNumber(cutSel.Data());
 	nCollErr = GetNCollErrFromCutNumber(cutSel.Data());
 	cout << "Ncoll = " << nColl << " +- " << nCollErr << endl;
 	
-	
-    //file from soon to be published paper, Fredi email from 4th Oct 2016
+	if (makeBinShiftWithFunction.CompareTo("Hagedorn")==0){ 
+		kHag = kTRUE;
+		kLevy = kFALSE;
+	} else { 
+		if(makeBinShiftWithFunction.CompareTo("Levy")==0){
+			kHag = kFALSE;
+			kLevy = kTRUE;
+		} else {
+			cout << "No known fit for Binshift defined, Levy will be taken!" <<endl;
+			kHag = kFALSE;
+			kLevy = kTRUE;
+		}
+	}
+	if (textMeson.CompareTo("Pi0") ==0){
+		mesonMassExpect = TDatabasePDG::Instance()->GetParticle(111)->Mass();
+	} else {
+		mesonMassExpect = TDatabasePDG::Instance()->GetParticle(221)->Mass();
+	}    
+		
+    
     //saved in ExternalInputPbPb/NeutralMesonpp2760GeVReference folder
     cout << "Pi0 in pp 2.76TeV" << endl;
     fileConversionsPP =      new TFile(fileNamepp);
@@ -78,25 +98,21 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
     graphInvSectionPCMSysPi02760GeV = ScaleGraph(graphInvSectionPCMSysPi02760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
     TGraphAsymmErrors *graphInvSectionPCMSysPi02760GeVforRAA = (TGraphAsymmErrors*)graphInvSectionPCMSysPi02760GeV->Clone("graphInvCrossSectionPi0PCM2760GeVSysErrforRAA_yShifted");
 
-      // subtraction of material budget error:
-      Int_t Pi0PCMbins = graphInvSectionPCMSysPi02760GeVforRAA->GetN();
-      Double_t yPi0relErrWM[Pi0PCMbins];
-      Double_t *yPi0WM = graphInvSectionPCMSysPi02760GeVforRAA->GetY();
-      Double_t yPi0ErrWM[Pi0PCMbins];
-      Double_t yPi0ErrorWOM[Pi0PCMbins];
-      Double_t yPi0relErrorWOM[Pi0PCMbins];
-
-      for(Int_t i = 0;i<graphInvSectionPCMSysPi02760GeVforRAA->GetN();i++){
-
+    // subtraction of material budget error:
+    Int_t Pi0PCMbins = graphInvSectionPCMSysPi02760GeVforRAA->GetN();
+    Double_t yPi0relErrWM[Pi0PCMbins];
+    Double_t *yPi0WM = graphInvSectionPCMSysPi02760GeVforRAA->GetY();
+    Double_t yPi0ErrWM[Pi0PCMbins];
+    Double_t yPi0ErrorWOM[Pi0PCMbins];
+    Double_t yPi0relErrorWOM[Pi0PCMbins];
+    for(Int_t i = 0;i<graphInvSectionPCMSysPi02760GeVforRAA->GetN();i++){
         yPi0relErrWM[i] = graphInvSectionPCMSysPi02760GeVforRAA->GetErrorYlow(i);
         yPi0ErrWM[i] = (yPi0relErrWM[i] * 100.)/yPi0WM[i];
-
         yPi0ErrorWOM[i] = TMath::Sqrt( (yPi0ErrWM[i]*yPi0ErrWM[i]) - (9.*9.) );
         yPi0relErrorWOM[i] = (yPi0WM[i]*yPi0ErrorWOM[i])/100.;
-
         graphInvSectionPCMSysPi02760GeVforRAA->SetPointError(i,graphInvSectionPCMSysPi02760GeVforRAA->GetErrorXlow(i),graphInvSectionPCMSysPi02760GeVforRAA->GetErrorXlow(i),
                                                                 yPi0relErrorWOM[i],yPi0relErrorWOM[i]);
-      }
+    }
 
     cout << "Eta in pp 2.76TeV" << endl;
     TDirectory *folderConversionsEtaPP = (TDirectory*)fileConversionsPP->Get("Eta2.76TeV");
@@ -110,86 +126,48 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
     graphInvSectionPCMSysEta2760GeV = ScaleGraph(graphInvSectionPCMSysEta2760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
     TGraphAsymmErrors *graphInvSectionPCMSysEta2760GeVforRAA = (TGraphAsymmErrors*)graphInvSectionPCMSysEta2760GeV->Clone("graphInvCrossSectionEtaPCM2760GeVSysErrforRAA_yShifted");
 
-      // subtraction of material budget error:
-      Int_t EtaPCMbins = graphInvSectionPCMSysEta2760GeVforRAA->GetN();
-      Double_t yEtarelErrWM[EtaPCMbins];
-      Double_t *yEtaWM = graphInvSectionPCMSysEta2760GeVforRAA->GetY();
-      Double_t yEtaErrWM[EtaPCMbins];
-      Double_t yEtaErrorWOM[EtaPCMbins];
-      Double_t yEtarelErrorWOM[EtaPCMbins];
-
-      for(Int_t i = 0;i<graphInvSectionPCMSysEta2760GeVforRAA->GetN();i++){
-
+    // subtraction of material budget error:
+    Int_t EtaPCMbins = graphInvSectionPCMSysEta2760GeVforRAA->GetN();
+    Double_t yEtarelErrWM[EtaPCMbins];
+    Double_t *yEtaWM = graphInvSectionPCMSysEta2760GeVforRAA->GetY();
+    Double_t yEtaErrWM[EtaPCMbins];
+    Double_t yEtaErrorWOM[EtaPCMbins];
+    Double_t yEtarelErrorWOM[EtaPCMbins];
+    for(Int_t i = 0;i<graphInvSectionPCMSysEta2760GeVforRAA->GetN();i++){
         yEtarelErrWM[i] = graphInvSectionPCMSysEta2760GeVforRAA->GetErrorYlow(i);
         yEtaErrWM[i] = (yEtarelErrWM[i] * 100.)/yEtaWM[i];
-
         yEtaErrorWOM[i] = TMath::Sqrt( (yEtaErrWM[i]*yEtaErrWM[i]) - (9.*9.) );
         yEtarelErrorWOM[i] = (yEtaWM[i]*yEtaErrorWOM[i])/100.;
-
         graphInvSectionPCMSysEta2760GeVforRAA->SetPointError(i,graphInvSectionPCMSysEta2760GeVforRAA->GetErrorXlow(i),graphInvSectionPCMSysEta2760GeVforRAA->GetErrorXlow(i),
-                                                                yEtarelErrorWOM[i],yEtarelErrorWOM[i]);
-      }
+                                                            yEtarelErrorWOM[i],yEtarelErrorWOM[i]);
+    }
 
-
-	if (textMeson.CompareTo("Pi0")==0){
-		if (centralityString.CompareTo("0-10%") == 0 ){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0010_2016_06_07.dat", textMeson.Data());
-		} else if (centralityString.CompareTo("0-5%") == 0){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0005_2016_06_07.dat", textMeson.Data());
-		} else if (centralityString.CompareTo("5-10%") == 0){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0510_2016_06_07.dat", textMeson.Data());
-		} else if (centralityString.CompareTo("20-40%") == 0){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV2040_2016_06_07.dat", textMeson.Data());
-        }else if (centralityString.CompareTo("20-50%") == 0){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV2050_2016_06_07.dat", textMeson.Data());
-		} else {
-			fileNameSysErr = Form("DummySystFile.dat"); 
-		}
-      cout << "Taking sytematics from " << fileNameSysErr << endl;
+    
+    if (centralityString.CompareTo("0-10%") == 0 ){
+        fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0010_2016_06_07.dat", textMeson.Data());
+    } else if (centralityString.CompareTo("0-5%") == 0){
+        fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0005_2016_06_07.dat", textMeson.Data());
+    } else if (centralityString.CompareTo("5-10%") == 0){
+        fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0510_2016_06_07.dat", textMeson.Data());
+    } else if (centralityString.CompareTo("20-40%") == 0){
+        fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV2040_2016_06_07.dat", textMeson.Data());
+    }else if (centralityString.CompareTo("20-50%") == 0){
+        fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV2050_2016_06_07.dat", textMeson.Data());
     } else {
-		if (centralityString.CompareTo("0-10%") == 0 ){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0010_2016_06_07.dat", textMeson.Data());
-		} else if (centralityString.CompareTo("0-5%") == 0){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0005_2016_06_07.dat", textMeson.Data());
-		} else if (centralityString.CompareTo("5-10%") == 0){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV0510_2016_06_07.dat", textMeson.Data());
-		} else if (centralityString.CompareTo("20-40%") == 0){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV2040_2016_06_07.dat", textMeson.Data());
-        }else if (centralityString.CompareTo("20-50%") == 0){
-			fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2016_06_07/SystematicErrorAveraged_%s_PbPb_2.76TeV2050_2016_06_07.dat", textMeson.Data());
-		} else {
-			fileNameSysErr = Form("DummySystFileEta.dat"); 
-		}
-		cout << "Taking sytematics from " << fileNameSysErr << endl;
-	}
+        fileNameSysErr = Form("DummySystFile.dat"); 
+    }
+    cout << "Taking sytematics from " << fileNameSysErr << endl;
+	fileSysErr.open(fileNameSysErr.Data(),ios_base::in);
+	cout << fileNameSysErr.Data() << endl;
 
-	
-	TString outputDir = Form("%s/%s/%s/CalculateRAA",cutSel.Data(),option.Data(),suffix.Data());
-	gSystem->Exec("mkdir "+outputDir);
-	
-	//declaration for printing logo 
-	prefix2 = "data";
-	pictDrawingOptions[1] = kFALSE;
-	
-	if (makeBinShiftWithFunction.CompareTo("Hagedorn")==0){ 
-		kHag = kTRUE;
-		kLevy = kFALSE;
-	}else { 
-		if(makeBinShiftWithFunction.CompareTo("Levy")==0){
-			kHag = kFALSE;
-			kLevy = kTRUE;
-		}else {
-			cout << "No known fit for Binshift defined, Levy will be taken!" <<endl;
-			kHag = kFALSE;
-			kLevy = kTRUE;
-		}
+	while(!fileSysErr.eof() && nPoints<30){
+		fileSysErr >> relSystErrorDown[nPoints] >> relSystErrorUp[nPoints]>>	relSystErrorWOMaterialDown[nPoints] >> relSystErrorWOMaterialUp[nPoints];
+		cout << nPoints << "\t"  << relSystErrorDown[nPoints] << "\t"  <<relSystErrorUp[nPoints] << "\t" << relSystErrorWOMaterialDown[nPoints] << "\t"  <<relSystErrorWOMaterialUp[nPoints] << endl;;		
+		nPoints++;
 	}
-	if (textMeson.CompareTo("Pi0") ==0){
-		mesonMassExpect = TDatabasePDG::Instance()->GetParticle(111)->Mass();
-	} else {
-		mesonMassExpect = TDatabasePDG::Instance()->GetParticle(221)->Mass();
-	}
-	
+	fileSysErr.close();
+	nPoints = nPoints-1;
+    
 	// File definitions Pb-Pb input
 	file 					= new TFile(fileName);
 	histoCorrectedYield 	= (TH1D*)file->Get("CorrectedYieldTrueEff"); 
@@ -227,18 +205,9 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 		nEvt = histoEventQualtity->GetBinContent(1);
 	}
 	pictDrawingCoordinates[8] = nEvt;
-		
-	fileSysErr.open(fileNameSysErr.Data(),ios_base::in);
-	cout << fileNameSysErr.Data() << endl;
 
-	while(!fileSysErr.eof() && nPoints<100){
-		fileSysErr >> relSystErrorDown[nPoints] >> relSystErrorUp[nPoints]>>	relSystErrorWOMaterialDown[nPoints] >> relSystErrorWOMaterialUp[nPoints];
-		cout << nPoints << "\t"  << relSystErrorDown[nPoints] << "\t"  <<relSystErrorUp[nPoints] << "\t" << relSystErrorWOMaterialDown[nPoints] << "\t"  <<relSystErrorWOMaterialUp[nPoints] << endl;;		
-		nPoints++;
-	}
-	fileSysErr.close();
-	nPoints = nPoints-1;
-	
+    if(textMeson.CompareTo("Pi0")==0)minPtForFits=0.4;
+    else minPtForFits=1.0;
 	maxPt = histoCorrectedYield->GetXaxis()->GetBinUpEdge(histoCorrectedYield->GetNbinsX());
    
 	//**********************************************************************************
@@ -338,556 +307,302 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 	nameFinalResDat = Form("%s/%s/%s_FinalExtraction_%s.dat",cutSel.Data(),option.Data(), prefix2.Data(), cutSel.Data());
 	fileFinalResults.open(nameFinalResDat.Data(), ios::out);
 	TString applyBinShift = "";
-	if (textMeson.CompareTo("Pi0")==0){
-		//*****************************************************************************************************
-		//**************************** Binshifted Spectra *****************************************************
-		//*****************************************************************************************************
-		TCanvas* canvasBinShifted = new TCanvas("canvasBinShifted","",1350,1500);  // gives the page size
-		DrawGammaCanvasSettings( canvasBinShifted, 0.13, 0.02, 0.02, 0.09);
-		canvasBinShifted->SetLogy();	
-		
-		TPad* padBinShiftedHistos = new TPad("padBinShiftedHistos", "", 0., 0.25, 1., 1.,-1, -1, -2);
-		DrawGammaPadSettings( padBinShiftedHistos, 0.12, 0.02, 0.02, 0.);
-		padBinShiftedHistos->Draw();
-		
-		TPad* padBinShiftedRatios = new TPad("padBinShiftedRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
-		DrawGammaPadSettings( padBinShiftedRatios, 0.12, 0.02, 0., 0.25);
-		padBinShiftedRatios->Draw();
-		
-		padBinShiftedHistos->cd();
-		padBinShiftedHistos->SetLogy();		
-		histoRecBinShift = (TH1D*) histoCorrectedYield->Clone("correctedYield");	
-		DrawGammaSetMarker(histoRecBinShift, 20, 0.9, kGray+1, kGray+1);
-		histoCorrYieldBinShifted= (TH1D*)histoRecBinShift->Clone();
+    //*****************************************************************************************************
+    //**************************** Binshifted Spectra *****************************************************
+    //*****************************************************************************************************
+    TCanvas* canvasBinShifted = new TCanvas("canvasBinShifted","",1350,1500);  // gives the page size
+    DrawGammaCanvasSettings( canvasBinShifted, 0.13, 0.02, 0.02, 0.09);
+    canvasBinShifted->SetLogy();	
+    
+    TPad* padBinShiftedHistos = new TPad("padBinShiftedHistos", "", 0., 0.25, 1., 1.,-1, -1, -2);
+    DrawGammaPadSettings( padBinShiftedHistos, 0.12, 0.02, 0.02, 0.);
+    padBinShiftedHistos->Draw();
+    
+    TPad* padBinShiftedRatios = new TPad("padBinShiftedRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
+    DrawGammaPadSettings( padBinShiftedRatios, 0.12, 0.02, 0., 0.25);
+    padBinShiftedRatios->Draw();
+    
+    padBinShiftedHistos->cd();
+    padBinShiftedHistos->SetLogy();		
+    histoRecBinShift = (TH1D*) histoCorrectedYield->Clone("correctedYield");	
+    DrawGammaSetMarker(histoRecBinShift, 20, 0.9, kGray+1, kGray+1);
+    histoCorrYieldBinShifted= (TH1D*)histoRecBinShift->Clone();
 
-		Double_t parametersBinShift[10];
-		ReturnParameterSetFittingPbPb(cutSel,parametersBinShift);
-		for( Int_t i = 0; i < 10; i++){
-			cout << "parameter " << i << "\t" << parametersBinShift[i] << endl;
-		}
+    Double_t parametersBinShift[10];
+    ReturnParameterSetFittingPbPb(cutSel,parametersBinShift);
+    cout << "Bin shifting fit for " << textMeson.Data() << endl;
+//     for( Int_t i = 0; i < 10; i++){
+//         cout << "parameter " << i << "\t" << parametersBinShift[i] << endl;
+//     }
+    Double_t parametersBinShiftForQCDfit[5];
+    GetFitParameter("qcd",GetCentralityString(cutSel),parametersBinShiftForQCDfit);
+    for( Int_t i = 0; i < 5; i++){
+        cout << "parameter " << i << "\t" << parametersBinShiftForQCDfit[i] << endl;
+    }
+    fitBinShifting = BinShiftTH1D(histoRecBinShift, &histoCorrYieldBinShifted, textMeson.Data(),"qcd", "fitBinShifting",minPtForFits,parametersBinShiftForQCDfit);
+    
 
-		Double_t parametersBinShiftForQCDfit[5];
-		GetFitParameter("qcd",GetCentralityString(cutSel),parametersBinShiftForQCDfit);
-		cout << "GetCentralityString(cutSel): " << GetCentralityString(cutSel) << endl; 
-		for( Int_t i = 0; i < 5; i++){
-			cout << "parameter " << i << "\t" << parametersBinShiftForQCDfit[i] << endl;
-		}
-		fitBinShifting = BinShiftTH1D(histoRecBinShift, &histoCorrYieldBinShifted, "Pi0","qcd", "fitBinShifting",minPtForFits,parametersBinShiftForQCDfit);
-
-		DrawGammaSetMarker(histoCorrYieldBinShifted, 24, 0.9, kBlack, kBlack);
-		DrawAutoGammaMesonHistos( histoCorrYieldBinShifted, 
-						"", "p_{T} (GeV/c)", "#frac{1}{2#pi N_{ev}} #frac{d^{2}N}{p_{T}dp_{T}dy} (c/GeV)^{2}", 
-						kFALSE, 3., 4e-10, kTRUE,
-						kFALSE, 3e-8,10, 
-						kFALSE, 0., 10.);
-		DrawGammaSetMarkerTF1( fitBinShifting, 1, 0.4, kBlue-4);
-		fitBinShifting->DrawCopy("same");
-		histoRecBinShift->DrawCopy("same,e1"); 
-			
-		forOutput= WriteParameterToFile(fitBinShifting);
-		fileFinalResults<< forOutput.Data()<< endl;	
-				
-		TLegend* legendYieldBinShifted = new TLegend(0.15,0.05,0.5,0.2);
-		legendYieldBinShifted->SetTextSize(0.03);
-		legendYieldBinShifted->SetFillColor(0);
-		legendYieldBinShifted->SetLineColor(0);
-		legendYieldBinShifted->AddEntry(histoRecBinShift,"Yield","p");
-		legendYieldBinShifted->AddEntry(histoCorrYieldBinShifted,"Yield Corr (iter)","p");
-		legendYieldBinShifted->AddEntry(fitBinShifting,legendEntryFunction,"l");
-		legendYieldBinShifted->Draw();
-		
-		DrawAliceLogoPi0WorkInProgress(pictDrawingCoordinates[0], pictDrawingCoordinates[1], pictDrawingCoordinates[2], pictDrawingCoordinates[3], pictDrawingCoordinates[4], pictDrawingCoordinates[5], pictDrawingCoordinates[6], pictDrawingCoordinates[7], pictDrawingCoordinates[8],collisionSystem, pictDrawingOptions[1], pictDrawingOptions[2], kTRUE,1350,1125,kFALSE,centralityString);
-		
-		padBinShiftedRatios->cd();
-		padBinShiftedRatios->SetLogy(0);
-		
-		histoRatioBinShifted = (TH1D*) histoRecBinShift->Clone();	
-		histoRatioBinShifted->Divide(histoRatioBinShifted,histoCorrYieldBinShifted,1.,1.,"");
-		for (Int_t i = 0; i < (histoRatioBinShifted->GetNbinsX()+1); i++){
-			histoRatioBinShifted->SetBinError(i,0.);
-		}
-		cout << "HERE" << endl;
-		DrawGammaHistoRatioLowerPanel( histoRatioBinShifted, "#frac{value}{shifted value}", 0.95, 1.42, 505, 0.08, 0.1, 0.42, 0.08, 0.11, 1.);
-		DrawGammaSetMarker(histoRatioBinShifted, 20, 1., kBlack, kBlack);
-		histoRatioBinShifted->DrawCopy("p"); 
-		
-		DrawGammaLines(0., maxPt,1., 1.,0.1);
-		
-		canvasBinShifted->Update();
-		
-		canvasBinShifted->SaveAs(Form("%s/%s_%s_CorrectedYieldBinShifted%s_%s.%s", outputDir.Data(), textMeson.Data(), prefix2.Data(), makeBinShiftWithFunction.Data(), cutSel.Data(), suffix.Data()));
-		
-		//***************************************************************************************************
-		//*************************** Fitting  Pi0 Spectrum *************************************************
-		//***************************************************************************************************
-		
-		fileFinalResults << "Final Results for Pi0" << endl << endl;
-		
-		//****************************************************************************************************
-		//************************** Fitting of corrected normal spectrum ************************************
-		//****************************************************************************************************
-		
-		TCanvas* canvasFitting = new TCanvas("canvasFitting","",200,10,1350,900);  // gives the page size
-		
-		histoFitting = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		
-		//****************************** Fit histCorr with Levy *****************************************
-		cout << "fitting with Levy" << endl;
-		fitPtLevy = FitObject("l","fitPtLevyPi0","Pi0",histoFitting,minPtForFits,maxPt,NULL,"QNRME+");
-		DrawGammaSetMarkerTF1(fitPtLevy, 1, 1.5, kBlue);
-		kLevySucc = kTRUE;	
-		forOutput= WriteParameterToFile(fitPtLevy);
-		fileFinalResults<< forOutput.Data()<< endl;
-		
-		//**************************** Fit histCorr with Hagedorn  **********************************
-		cout << "fitting with Hagedorn" << endl;
-		fitPtHagedorn = FitObject("h","fitPtHagedornPi0","Pi0",histoFitting,minPtForFits,maxPt,NULL,"QNRME+");
-		DrawGammaSetMarkerTF1( fitPtHagedorn, 1, 1.5, kGreen+2);
-		fitPtHagedorn->SetLineStyle(7);
-		kHagSucc = kTRUE;	
-		forOutput= WriteParameterToFile(fitPtHagedorn);
-		fileFinalResults<< forOutput.Data()<< endl;
-		
-		//**************************** Fit histCorr with Radu's fuction  ****************************
-		cout << "fitting with Raduslav" << endl;
-		fitPtRadu = FitObject("rad","fitPtRaduPi0","Pi0",histoFitting,minPtForFits,maxPt,parametersBinShift,"QNRME+");
-		DrawGammaSetMarkerTF1( fitPtRadu, 1, 1.5, kRed+2);
-		fitPtRadu->SetLineStyle(7);
-		kRaduSucc = kTRUE;	
-		forOutput= WriteParameterToFile(fitPtRadu);
-		fileFinalResults<< forOutput.Data()<< endl;
-		
-		//************************** Fit histCorr with Boltzmann  ***********************************
-
-		fitPtBoltzmann = FitObject("b","fitPtBoltzmannPi0","Pi0",histoFitting,minPtForFits,2.,NULL,"QNRME+");
-		DrawGammaSetMarkerTF1( fitPtBoltzmann, 1, 1.5, kMagenta+4);
-		kBoltzSucc = kTRUE;	
-		forOutput= WriteParameterToFile(fitPtBoltzmann);
-		fileFinalResults<< forOutput.Data()<< endl;
-		
-		//*************************** Fit histCorr with Exponential **********************************
-		fitPtExp = FitObject("e","fitPtExpPi0","Pi0",histoFitting,minPtForFits,2.,NULL,"QNRME+");
-		DrawGammaSetMarkerTF1( fitPtExp, 1, 1.5, kOrange+7);
-		kExpSucc = kTRUE;	
-		forOutput= WriteParameterToFile(fitPtExp);
-		fileFinalResults<< forOutput.Data()<< endl;
-		
-		//**************************** Fit histCorr with Powerlaw  *********************************
-		fitPtPowerlaw = FitObject("p","fitPtPowerlawPi0","Pi0",histoFitting,1.5,maxPt,NULL,"QNRME+");
-		DrawGammaSetMarkerTF1( fitPtPowerlaw, 1, 1.5, kTeal);
-		kPowSucc = kTRUE;	
-		forOutput= WriteParameterToFile(fitPtPowerlaw);
-		fileFinalResults<< forOutput.Data()<< endl;
-		
-		//**************************** Fit histCorr with ModPowerlaw  *********************************
-		fitPtModPowerlaw = FitObject("m","fitPtModPowerlawPi0","Pi0",histoFitting,minPtForFits,maxPt,NULL,"QNRME+");
-		DrawGammaSetMarkerTF1( fitPtModPowerlaw, 1, 1.5, kMagenta+2);
-		fitPtModPowerlaw->SetLineStyle(4);
-		kModPowSucc = kTRUE;	
-		forOutput= WriteParameterToFile(fitPtModPowerlaw);
-		fileFinalResults<< forOutput.Data()<< endl;
-		
-		//**************************** Fit histCorr with QCD fit  *********************************
-		TF1* fitPtQCD = FitObject("qcd","fitPtModPowerlawPi0","Pi0",histoFitting,minPtForFits,maxPt,NULL,"QNRME+");
-		DrawGammaSetMarkerTF1( fitPtQCD, 1, 1.5, kBlue-3);
-		fitPtQCD->SetLineStyle(2);
-		forOutput= WriteParameterToFile(fitPtQCD);
-		fileFinalResults<< forOutput.Data()<< endl;
-		
-		//**************************** Fit histCorr with ModPowerlaw  *********************************
-		TF1* fitPtBylinkin = FitObject("tcm","fitPtBylinkinPi0","Pi0",histoFitting,minPtForFits,maxPt,NULL,"QNRME+");
-		DrawGammaSetMarkerTF1( fitPtBylinkin, 1, 1.5, kPink+9);
-		fitPtBylinkin->SetLineStyle(1);
-		forOutput= WriteParameterToFile(fitPtBylinkin);
-		fileFinalResults<< forOutput.Data()<< endl;
-
-		
-		//*************************** Calculating Ratios *******************************************
-		histoRatioFitLevy = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		histoRatioFitHag = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		histoRatioFitRadu = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		histoRatioFitBoltz = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		histoRatioFitExp = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		histoRatioFitPow = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		histoRatioFitModPow = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		TH1D* histoRatioFitQCD = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		TH1D* histoRatioFitBylinkin = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		
-		if(kLevySucc) {
-			histoRatioFitLevy = CalculateHistoRatioToFit (histoRatioFitLevy, fitPtLevy); 
-		}
-		if(kHagSucc) {
-			histoRatioFitHag = CalculateHistoRatioToFit (histoRatioFitHag, fitPtHagedorn);
-		}
-		if(kRaduSucc) {
-			histoRatioFitRadu = CalculateHistoRatioToFit (histoRatioFitRadu, fitPtRadu);
-		}
-		if(kBoltzSucc) {
-			histoRatioFitBoltz = CalculateHistoRatioToFit (histoRatioFitBoltz, fitPtBoltzmann);
-		}
-		if(kExpSucc) {
-			histoRatioFitExp = CalculateHistoRatioToFit (histoRatioFitExp, fitPtExp);
-		}
-		if(kPowSucc) {
-			histoRatioFitPow = CalculateHistoRatioToFit (histoRatioFitPow, fitPtPowerlaw);
-		}	
-		if(kModPowSucc) {
-			histoRatioFitModPow = CalculateHistoRatioToFit (histoRatioFitModPow, fitPtModPowerlaw);
-		}
-		histoRatioFitQCD = CalculateHistoRatioToFit (histoRatioFitQCD, fitPtQCD);
-		histoRatioFitBylinkin = CalculateHistoRatioToFit (histoRatioFitBylinkin, fitPtBylinkin);
-		
-		delete canvasFitting;
-		
-		//**********************************************************************************************
-		//********************** Plotting of fitted spectrum *******************************************
-		//**********************************************************************************************	
-		TCanvas* canvasFittingSpectra = new TCanvas("canvasFittingSpectra","",1350,1500);  // gives the page size
-		DrawGammaCanvasSettings( canvasFittingSpectra, 0.13, 0.02, 0.02, 0.09);
-		canvasFittingSpectra->SetLogy();	
-		
-		TPad* padFittedSpectraHistos = new TPad("padFittedSpectraHistos", "", 0., 0.25, 1., 1.,-1, -1, -2);
-		DrawGammaPadSettings( padFittedSpectraHistos, 0.12, 0.02, 0.02, 0.);
-		padFittedSpectraHistos->Draw();
-		
-		TPad* padFittedSpectraRatios = new TPad("padFittedSpectraRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
-		DrawGammaPadSettings( padFittedSpectraRatios, 0.12, 0.02, 0., 0.25);
-		padFittedSpectraRatios->Draw();
-		
-		padFittedSpectraHistos->cd();
-		padFittedSpectraHistos->SetLogy();		
-
-		DrawGammaSetMarker(histoCorrYieldBinShifted, 22, 1., kBlack, kBlack);
-		DrawAutoGammaMesonHistos( histoCorrYieldBinShifted, 
-								"", "p_{T} (GeV/c)", "#frac{1}{2#pi N_{ev}} #frac{d^{2}N}{p_{T}dp_{T}dy} (c/GeV)^{2}", 
-								kTRUE, 3., 4e-10, kTRUE,
-								kFALSE, 3e-8,10, 
-								kFALSE, 0., 10.);		
-		histoCorrectedYield->Draw("e1,x0"); 
-		
-		fitPtLevy->Draw("same");
-		fitPtHagedorn->Draw("same");
-		fitPtRadu->Draw("same");
-		fitPtBoltzmann->Draw("same");
-		fitPtExp->Draw("same");
-		fitPtPowerlaw->Draw("same");
-		fitPtModPowerlaw->Draw("same");
-		fitPtQCD->Draw("same");
-		fitPtBylinkin->Draw("same");
-		
-		TLegend* legendFit = new TLegend(0.15,0.02,0.5,0.25);
-		legendFit->SetTextSize(0.03);			
-		legendFit->SetFillColor(0);
-		legendFit->SetLineColor(0);
-		legendFit->AddEntry(histoCorrYieldBinShifted,"#pi^{0}");
-		legendFit->AddEntry(fitPtLevy,"Levy fit");
-		legendFit->AddEntry(fitPtHagedorn,"Hagedorn fit");
-		legendFit->AddEntry(fitPtRadu,"Raduslav fit");
-		legendFit->AddEntry(fitPtBoltzmann,"Boltzman fit");
-		legendFit->AddEntry(fitPtExp,"Exponential fit");
-		legendFit->AddEntry(fitPtPowerlaw,"Powerlaw fit");
-		legendFit->AddEntry(fitPtModPowerlaw,"Mod Powerlaw fit");
-		legendFit->AddEntry(fitPtQCD,"QCD inspired fit");
-		legendFit->AddEntry(fitPtBylinkin,"Bylinkin fit");
-		legendFit->Draw();
-		
-		DrawAliceLogoPi0WorkInProgress(pictDrawingCoordinates[0], pictDrawingCoordinates[1], pictDrawingCoordinates[2], pictDrawingCoordinates[3], pictDrawingCoordinates[4], pictDrawingCoordinates[5], pictDrawingCoordinates[6], pictDrawingCoordinates[7], pictDrawingCoordinates[8],collisionSystem, pictDrawingOptions[1], pictDrawingOptions[2], kTRUE,1350,1125,kFALSE,centralityString);
-		canvasFittingSpectra->Update();
-		
-		padFittedSpectraRatios->cd();
-		DrawGammaHistoRatioLowerPanel( histoRatioFitLevy, "#frac{value}{fit}", 0.5, 1.55, 505, 0.08, 0.1, 0.4, 0.08, 0.11, 1.);
-		
-		DrawGammaSetMarker(histoRatioFitLevy, 21, 0.5, kBlue, kBlue);
-		histoRatioFitLevy->Draw("e1,x0");
-		DrawGammaSetMarker(histoRatioFitHag, 21, 0.5, kGreen+2, kGreen+2);
-		if(kHagSucc)histoRatioFitHag->Draw("e1,x0,same");
-		DrawGammaSetMarker(histoRatioFitRadu, 21, 0.5, kRed+2, kRed+2);
-		if(kRaduSucc)histoRatioFitRadu->Draw("e1,x0,same");
-		DrawGammaSetMarker(histoRatioFitBoltz, 21, 0.5, kMagenta+4, kMagenta+4);
-		if(kBoltzSucc)histoRatioFitBoltz->Draw("e1,x0,same");
-		DrawGammaSetMarker(histoRatioFitExp, 21, 0.5, kOrange+7, kOrange+7);
-		if(kExpSucc)histoRatioFitExp->Draw("e1,x0,same");
-		DrawGammaSetMarker(histoRatioFitPow, 21, 0.5, kTeal, kTeal);
-		if(kPowSucc)histoRatioFitPow->Draw("e1,x0,same");
-		DrawGammaSetMarker(histoRatioFitModPow, 21, 0.5, kMagenta+2, kMagenta+2);
-		if(kModPowSucc)histoRatioFitModPow->Draw("e1,same");
-		DrawGammaSetMarker(histoRatioFitQCD, 21, 0.5, kBlue-3, kBlue-3);
-		histoRatioFitQCD->Draw("e1,same");
-		DrawGammaSetMarker(histoRatioFitBylinkin, 21, 0.5, kPink+9, kPink+9);
-		histoRatioFitBylinkin->Draw("e1,same");
-		
-		DrawGammaLines(0., maxPt ,1., 1.,0.1);
-		
-		canvasFittingSpectra->SaveAs(Form("%s/%s_%s_CorrectedYieldFitted_%s.%s",outputDir.Data(),textMeson.Data(),prefix2.Data(),cutSel.Data(),suffix.Data()));
-		delete canvasFittingSpectra;
-		
-	} else if (textMeson.CompareTo("Eta")==0){
-		
-		//*****************************************************************************************************
-		//**************************** Binshifted Spectra *****************************************************
-		//*****************************************************************************************************
-		TCanvas* canvasBinShifted = new TCanvas("canvasBinShifted","",1350,1500);  // gives the page size
-		DrawGammaCanvasSettings( canvasBinShifted, 0.13, 0.02, 0.02, 0.09);
-		canvasBinShifted->SetLogy();	
-		
-		TPad* padBinShiftedHistos = new TPad("padBinShiftedHistos", "", 0., 0.25, 1., 1.,-1, -1, -2);
-		DrawGammaPadSettings( padBinShiftedHistos, 0.12, 0.02, 0.02, 0.);
-		padBinShiftedHistos->Draw();
-		
-		TPad* padBinShiftedRatios = new TPad("padBinShiftedRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
-		DrawGammaPadSettings( padBinShiftedRatios, 0.12, 0.02, 0., 0.25);
-		padBinShiftedRatios->Draw();
-		
-		padBinShiftedHistos->cd();
-		padBinShiftedHistos->SetLogy();		
-		histoRecBinShift = (TH1D*) histoCorrectedYield->Clone("correctedYield");	
-		DrawGammaSetMarker(histoRecBinShift, 20, 0.9, kGray+1, kGray+1);
-		histoCorrYieldBinShifted= (TH1D*)histoRecBinShift->Clone();
-
-		Double_t parametersBinShift[10];
-		ReturnParameterSetFittingPbPb(cutSel,parametersBinShift);
-		for( Int_t i = 0; i < 10; i++){
-			cout << "parameter " << i << "\t" << parametersBinShift[i] << endl;
-		}
-
-		Double_t parametersBinShiftForQCDfit[5];
+    if (textMeson.CompareTo("Eta")==0){
         if((GetCentralityString(cutSel)).CompareTo("20-40%")==0){
-            fitBinShifting = BinShiftTH1D(histoRecBinShift, &histoCorrYieldBinShifted, "Eta","p", "fitBinShifting",minPtForFitsEta,NULL);
-        } else {
-            GetFitParameter("qcd",GetCentralityString(cutSel),parametersBinShiftForQCDfit);
-            cout << "GetCentralityString(cutSel): " << GetCentralityString(cutSel) << endl;
-            for( Int_t i = 0; i < 5; i++){
-                cout << "parameter " << i << "\t" << parametersBinShiftForQCDfit[i] << endl;
-            }
-            fitBinShifting = BinShiftTH1D(histoRecBinShift, &histoCorrYieldBinShifted, "Eta","qcd", "fitBinShifting",minPtForFitsEta,parametersBinShiftForQCDfit);
-        }
-
-		DrawGammaSetMarker(histoCorrYieldBinShifted, 24, 0.9, kBlack, kBlack);
-		DrawAutoGammaMesonHistos( histoCorrYieldBinShifted, 
-						"", "p_{T} (GeV/c)", "#frac{1}{2#pi N_{ev}} #frac{d^{2}N}{p_{T}dp_{T}dy} (c/GeV)^{2}", 
-						kFALSE, 3., 4e-10, kTRUE,
-						kFALSE, 3e-8,10, 
-						kFALSE, 0., 10.);
-		DrawGammaSetMarkerTF1( fitBinShifting, 1, 0.4, kBlue-4);
-		fitBinShifting->DrawCopy("same");
-		histoRecBinShift->DrawCopy("same,e1"); 
+            fitBinShifting = BinShiftTH1D(histoRecBinShift, &histoCorrYieldBinShifted, "Eta","p", "fitBinShifting",minPtForFits,NULL);
+        } 
+    }        
+        
+    DrawGammaSetMarker(histoCorrYieldBinShifted, 24, 0.9, kBlack, kBlack);
+    DrawAutoGammaMesonHistos( histoCorrYieldBinShifted, 
+                    "", "p_{T} (GeV/c)", "#frac{1}{2#pi N_{ev}} #frac{d^{2}N}{p_{T}dp_{T}dy} (c/GeV)^{2}", 
+                    kFALSE, 3., 4e-10, kTRUE,
+                    kFALSE, 3e-8,10, 
+                    kFALSE, 0., 10.);
+    DrawGammaSetMarkerTF1( fitBinShifting, 1, 0.4, kBlue-4);
+    fitBinShifting->DrawCopy("same");
+    histoRecBinShift->DrawCopy("same,e1"); 
 			
-		forOutput= WriteParameterToFile(fitBinShifting);
-		fileFinalResults<< forOutput.Data()<< endl;	
+    forOutput= WriteParameterToFile(fitBinShifting);
+    fileFinalResults<< forOutput.Data()<< endl;	
 				
-		TLegend* legendYieldBinShifted = new TLegend(0.15,0.05,0.5,0.2);
-		legendYieldBinShifted->SetTextSize(0.03);
-		legendYieldBinShifted->SetFillColor(0);
-		legendYieldBinShifted->SetLineColor(0);
-		legendYieldBinShifted->AddEntry(histoRecBinShift,"Yield","p");
-		legendYieldBinShifted->AddEntry(histoCorrYieldBinShifted,"Yield Corr (iter)","p");
-		legendYieldBinShifted->AddEntry(fitBinShifting,legendEntryFunction,"l");
-		legendYieldBinShifted->Draw();
+    TLegend* legendYieldBinShifted = new TLegend(0.15,0.05,0.5,0.2);
+    legendYieldBinShifted->SetTextSize(0.03);
+    legendYieldBinShifted->SetFillColor(0);
+    legendYieldBinShifted->SetLineColor(0);
+    legendYieldBinShifted->AddEntry(histoRecBinShift,"Yield","p");
+    legendYieldBinShifted->AddEntry(histoCorrYieldBinShifted,"Yield Corr (iter)","p");
+    legendYieldBinShifted->AddEntry(fitBinShifting,legendEntryFunction,"l");
+    legendYieldBinShifted->Draw();
+    
+    if(textMeson.CompareTo("Pi0")==0){
+        DrawAliceLogoPi0WorkInProgress(pictDrawingCoordinates[0], pictDrawingCoordinates[1], pictDrawingCoordinates[2], pictDrawingCoordinates[3], pictDrawingCoordinates[4], pictDrawingCoordinates[5], pictDrawingCoordinates[6], pictDrawingCoordinates[7], pictDrawingCoordinates[8],collisionSystem, pictDrawingOptions[1], pictDrawingOptions[2], kTRUE,1350,1125,kFALSE,centralityString);
+    } else if(textMeson.CompareTo("Eta")==0){
+        DrawAliceLogoPi0WorkInProgress(pictDrawingCoordinates[0], pictDrawingCoordinates[1], pictDrawingCoordinates[2], pictDrawingCoordinates[3], pictDrawingCoordinates[4], pictDrawingCoordinates[5], pictDrawingCoordinates[6], pictDrawingCoordinates[7], pictDrawingCoordinates[8],collisionSystem, pictDrawingOptions[1], pictDrawingOptions[2], kFALSE,1350,1125,kFALSE,centralityString);
+    }
 		
-		DrawAliceLogoPi0WorkInProgress(pictDrawingCoordinates[0], pictDrawingCoordinates[1], pictDrawingCoordinates[2], pictDrawingCoordinates[3], pictDrawingCoordinates[4], pictDrawingCoordinates[5], pictDrawingCoordinates[6], pictDrawingCoordinates[7], pictDrawingCoordinates[8],collisionSystem, pictDrawingOptions[1], pictDrawingOptions[2], kFALSE,1350,1125,kFALSE,centralityString);
+    padBinShiftedRatios->cd();
+    padBinShiftedRatios->SetLogy(0);
 		
-		padBinShiftedRatios->cd();
-		padBinShiftedRatios->SetLogy(0);
+    histoRatioBinShifted = (TH1D*) histoRecBinShift->Clone();	
+    histoRatioBinShifted->Divide(histoRatioBinShifted,histoCorrYieldBinShifted,1.,1.,"");
+    for (Int_t i = 0; i < (histoRatioBinShifted->GetNbinsX()+1); i++){
+        histoRatioBinShifted->SetBinError(i,0.);
+    }
+    cout << "HERE" << endl;
+    DrawGammaHistoRatioLowerPanel( histoRatioBinShifted, "#frac{value}{shifted value}", 0.95, 1.42, 505, 0.08, 0.1, 0.42, 0.08, 0.11, 1.);
+    DrawGammaSetMarker(histoRatioBinShifted, 20, 1., kBlack, kBlack);
+    histoRatioBinShifted->DrawCopy("p"); 
+    
+    DrawGammaLines(0., maxPt,1., 1.,0.1);
+    
+    canvasBinShifted->Update();
+    
+    canvasBinShifted->SaveAs(Form("%s/%s_%s_CorrectedYieldBinShifted%s_%s.%s", outputDir.Data(), textMeson.Data(), prefix2.Data(), makeBinShiftWithFunction.Data(), cutSel.Data(), suffix.Data()));
+	
+    
+    
+    //***************************************************************************************************
+    //**************************** Fitting the Spectrum *************************************************
+    //***************************************************************************************************
 		
-		histoRatioBinShifted = (TH1D*) histoRecBinShift->Clone();	
-		histoRatioBinShifted->Divide(histoRatioBinShifted,histoCorrYieldBinShifted,1.,1.,"");
-		for (Int_t i = 0; i < (histoRatioBinShifted->GetNbinsX()+1); i++){
-			histoRatioBinShifted->SetBinError(i,0.);
-		}
-		cout << "HERE" << endl;
-		DrawGammaHistoRatioLowerPanel( histoRatioBinShifted, "#frac{value}{shifted value}", 0.95, 1.42, 505, 0.08, 0.1, 0.42, 0.08, 0.11, 1.);
-		DrawGammaSetMarker(histoRatioBinShifted, 20, 1., kBlack, kBlack);
-		histoRatioBinShifted->DrawCopy("p"); 
+    fileFinalResults << "Final Results for " << textMeson.Data() << endl << endl;
 		
-		DrawGammaLines(0., maxPt,1., 1.,0.1);
+    //****************************************************************************************************
+    //************************** Fitting of corrected normal spectrum ************************************
+    //****************************************************************************************************
 		
-		canvasBinShifted->Update();
-		
-		canvasBinShifted->SaveAs(Form("%s/%s_%s_CorrectedYieldBinShifted%s_%s.%s",outputDir.Data(),textMeson.Data(),prefix2.Data(),makeBinShiftWithFunction.Data(),cutSel.Data(),suffix.Data()));
-		
-		//***************************************************************************************************
-		//*************************** Fitting  Eta Spectrum *************************************************
-		//***************************************************************************************************
-		
-		fileFinalResults << "Final Results for Eta" << endl << endl;
-		
-		//****************************************************************************************************
-		//************************** Fitting of corrected normal spectrum ************************************
-		//****************************************************************************************************
-		
-		TCanvas* canvasFitting = new TCanvas("canvasFitting","",200,10,1350,900);  // gives the page size
-		
-		histoFitting = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		
-		//****************************** Fit histCorr with Levy *****************************************
-		cout << "fitting with Levy" << endl;
-		fitPtLevy = FitObject("l","fitPtLevyEta","Eta",histoFitting,minPtForFitsEta,maxPt,NULL,"QNRME+");
-		DrawGammaSetMarkerTF1(fitPtLevy, 1, 1.5, kBlue);
-		kLevySucc = kTRUE;	
-		forOutput= WriteParameterToFile(fitPtLevy);
-		fileFinalResults<< forOutput.Data()<< endl;
-		
-		//**************************** Fit histCorr with Hagedorn  **********************************
-		cout << "fitting with Hagedorn" << endl;
-		fitPtHagedorn = FitObject("h","fitPtHagedornEta","Eta",histoFitting,minPtForFitsEta,maxPt,NULL,"QNRME+");
-		DrawGammaSetMarkerTF1( fitPtHagedorn, 1, 1.5, kGreen+2);
-		fitPtHagedorn->SetLineStyle(7);
-		kHagSucc = kTRUE;	
-		forOutput= WriteParameterToFile(fitPtHagedorn);
-		fileFinalResults<< forOutput.Data()<< endl;
-		
-		//**************************** Fit histCorr with Radu's fuction  ****************************
-		cout << "fitting with Raduslav" << endl;
-		fitPtRadu = FitObject("rad","fitPtRaduEta","Eta",histoFitting,minPtForFitsEta,maxPt,parametersBinShift,"QNRME+");
-		DrawGammaSetMarkerTF1( fitPtRadu, 1, 1.5, kRed+2);
-		fitPtRadu->SetLineStyle(7);
-		kRaduSucc = kTRUE;	
-		forOutput= WriteParameterToFile(fitPtRadu);
-		fileFinalResults<< forOutput.Data()<< endl;
-				
-		//**************************** Fit histCorr with Powerlaw  *********************************
-		fitPtPowerlaw = FitObject("p","fitPtPowerlawEta","Eta",histoFitting,1.5,maxPt,NULL,"QNRME+");
-		DrawGammaSetMarkerTF1( fitPtPowerlaw, 1, 1.5, kTeal);
-		kPowSucc = kTRUE;	
-		forOutput= WriteParameterToFile(fitPtPowerlaw);
-		fileFinalResults<< forOutput.Data()<< endl;
-		
-		//**************************** Fit histCorr with ModPowerlaw  *********************************
-		fitPtModPowerlaw = FitObject("m","fitPtModPowerlawEta","Eta",histoFitting,minPtForFitsEta,maxPt,NULL,"QNRME+");
-		DrawGammaSetMarkerTF1( fitPtModPowerlaw, 1, 1.5, kMagenta+2);
-		fitPtModPowerlaw->SetLineStyle(4);
-		kModPowSucc = kTRUE;	
-		forOutput= WriteParameterToFile(fitPtModPowerlaw);
-		fileFinalResults<< forOutput.Data()<< endl;
-		
-		//**************************** Fit histCorr with ModPowerlaw  *********************************
-		TF1* fitPtQCD = FitObject("qcd","fitPtModPowerlawEta","Eta",histoFitting,minPtForFitsEta,maxPt,NULL,"QNRME+");
-		DrawGammaSetMarkerTF1( fitPtQCD, 1, 1.5, kBlue-3);
-		fitPtQCD->SetLineStyle(2);
-		forOutput= WriteParameterToFile(fitPtQCD);
-		fileFinalResults<< forOutput.Data()<< endl;
+    TCanvas* canvasFitting = new TCanvas("canvasFitting","",200,10,1350,900);  // gives the page size
+    histoFitting = (TH1D*) histoCorrYieldBinShifted->Clone();	
+    
+    //****************************** Fit histCorr with Levy *****************************************
+    cout << "fitting with Levy" << endl;
+    fitPtLevy = FitObject("l","fitPtLevy",textMeson.Data(),histoFitting,minPtForFits,maxPt,NULL,"QNRME+");
+    DrawGammaSetMarkerTF1(fitPtLevy, 1, 1.5, kBlue);
+    kLevySucc = kTRUE;	
+    forOutput= WriteParameterToFile(fitPtLevy);
+    fileFinalResults<< forOutput.Data()<< endl;
+    
+    //**************************** Fit histCorr with Hagedorn  **********************************
+    cout << "fitting with Hagedorn" << endl;
+    fitPtHagedorn = FitObject("h","fitPtHagedorn",textMeson.Data(),histoFitting,minPtForFits,maxPt,NULL,"QNRME+");
+    DrawGammaSetMarkerTF1( fitPtHagedorn, 1, 1.5, kGreen+2);
+    fitPtHagedorn->SetLineStyle(7);
+    kHagSucc = kTRUE;	
+    forOutput= WriteParameterToFile(fitPtHagedorn);
+    fileFinalResults<< forOutput.Data()<< endl;
+    
+    //**************************** Fit histCorr with Radu's fuction  ****************************
+    cout << "fitting with Raduslav" << endl;
+    fitPtRadu = FitObject("rad","fitPtRadu",textMeson.Data(),histoFitting,minPtForFits,maxPt,parametersBinShift,"QNRME+");
+    DrawGammaSetMarkerTF1( fitPtRadu, 1, 1.5, kRed+2);
+    fitPtRadu->SetLineStyle(7);
+    kRaduSucc = kTRUE;	
+    forOutput= WriteParameterToFile(fitPtRadu);
+    fileFinalResults<< forOutput.Data()<< endl;
+    
+    //************************** Fit histCorr with Boltzmann  ***********************************
+    fitPtBoltzmann = FitObject("b","fitPtBoltzmann",textMeson.Data(),histoFitting,minPtForFits,2.,NULL,"QNRME+");
+    DrawGammaSetMarkerTF1( fitPtBoltzmann, 1, 1.5, kMagenta+4);
+    kBoltzSucc = kTRUE;	
+    forOutput= WriteParameterToFile(fitPtBoltzmann);
+    fileFinalResults<< forOutput.Data()<< endl;
+    
+    //*************************** Fit histCorr with Exponential **********************************
+    fitPtExp = FitObject("e","fitPtExp",textMeson.Data(),histoFitting,minPtForFits,2.,NULL,"QNRME+");
+    DrawGammaSetMarkerTF1( fitPtExp, 1, 1.5, kOrange+7);
+    kExpSucc = kTRUE;	
+    forOutput= WriteParameterToFile(fitPtExp);
+    fileFinalResults<< forOutput.Data()<< endl;
+    
+    //**************************** Fit histCorr with Powerlaw  *********************************
+    fitPtPowerlaw = FitObject("p","fitPtPowerlaw",textMeson.Data(),histoFitting,1.5,maxPt,NULL,"QNRME+");
+    DrawGammaSetMarkerTF1( fitPtPowerlaw, 1, 1.5, kTeal);
+    kPowSucc = kTRUE;	
+    forOutput= WriteParameterToFile(fitPtPowerlaw);
+    fileFinalResults<< forOutput.Data()<< endl;
+    
+    //**************************** Fit histCorr with ModPowerlaw  *********************************
+    fitPtModPowerlaw = FitObject("m","fitPtModPowerlaw",textMeson.Data(),histoFitting,minPtForFits,maxPt,NULL,"QNRME+");
+    DrawGammaSetMarkerTF1( fitPtModPowerlaw, 1, 1.5, kMagenta+2);
+    fitPtModPowerlaw->SetLineStyle(4);
+    kModPowSucc = kTRUE;	
+    forOutput= WriteParameterToFile(fitPtModPowerlaw);
+    fileFinalResults<< forOutput.Data()<< endl;
+    
+    //**************************** Fit histCorr with QCD fit  *********************************
+    TF1* fitPtQCD = FitObject("qcd","fitPtModPowerlaw",textMeson.Data(),histoFitting,minPtForFits,maxPt,NULL,"QNRME+");
+    DrawGammaSetMarkerTF1( fitPtQCD, 1, 1.5, kBlue-3);
+    fitPtQCD->SetLineStyle(2);
+    forOutput= WriteParameterToFile(fitPtQCD);
+    fileFinalResults<< forOutput.Data()<< endl;
+    
+    //**************************** Fit histCorr with ModPowerlaw  *********************************
+    TF1* fitPtBylinkin = FitObject("tcm","fitPtBylinkin",textMeson.Data(),histoFitting,minPtForFits,maxPt,NULL,"QNRME+");
+    DrawGammaSetMarkerTF1( fitPtBylinkin, 1, 1.5, kPink+9);
+    fitPtBylinkin->SetLineStyle(1);
+    forOutput= WriteParameterToFile(fitPtBylinkin);
+    fileFinalResults<< forOutput.Data()<< endl;
 
-//         cout << WriteParameterToFile(fitPtQCD)<< endl << endl;
-//         return;
 		
-		//**************************** Fit histCorr with Bylinkin  *********************************
-		TF1* fitPtBylinkin = FitObject("tcm","fitPtBylinkinEta","Eta",histoFitting,minPtForFitsEta,maxPt,NULL,"QNRME+");
-		DrawGammaSetMarkerTF1( fitPtBylinkin, 1, 1.5, kPink+9);
-		fitPtBylinkin->SetLineStyle(1);
-		forOutput= WriteParameterToFile(fitPtBylinkin);
-		fileFinalResults<< forOutput.Data()<< endl;
+    //*************************** Calculating Ratios *******************************************
+    histoRatioFitLevy = (TH1D*) histoCorrYieldBinShifted->Clone();	
+    histoRatioFitHag = (TH1D*) histoCorrYieldBinShifted->Clone();	
+    histoRatioFitRadu = (TH1D*) histoCorrYieldBinShifted->Clone();	
+    histoRatioFitBoltz = (TH1D*) histoCorrYieldBinShifted->Clone();	
+    histoRatioFitExp = (TH1D*) histoCorrYieldBinShifted->Clone();	
+    histoRatioFitPow = (TH1D*) histoCorrYieldBinShifted->Clone();	
+    histoRatioFitModPow = (TH1D*) histoCorrYieldBinShifted->Clone();	
+    TH1D* histoRatioFitQCD = (TH1D*) histoCorrYieldBinShifted->Clone();	
+    TH1D* histoRatioFitBylinkin = (TH1D*) histoCorrYieldBinShifted->Clone();			
+    if(kLevySucc) {
+        histoRatioFitLevy = CalculateHistoRatioToFit (histoRatioFitLevy, fitPtLevy); 
+    }
+    if(kHagSucc) {
+        histoRatioFitHag = CalculateHistoRatioToFit (histoRatioFitHag, fitPtHagedorn);
+    }
+    if(kRaduSucc) {
+        histoRatioFitRadu = CalculateHistoRatioToFit (histoRatioFitRadu, fitPtRadu);
+    }
+    if(kBoltzSucc) {
+        histoRatioFitBoltz = CalculateHistoRatioToFit (histoRatioFitBoltz, fitPtBoltzmann);
+    }
+    if(kExpSucc) {
+        histoRatioFitExp = CalculateHistoRatioToFit (histoRatioFitExp, fitPtExp);
+    }
+    if(kPowSucc) {
+        histoRatioFitPow = CalculateHistoRatioToFit (histoRatioFitPow, fitPtPowerlaw);
+    }	
+    if(kModPowSucc) {
+        histoRatioFitModPow = CalculateHistoRatioToFit (histoRatioFitModPow, fitPtModPowerlaw);
+    }
+    histoRatioFitQCD = CalculateHistoRatioToFit (histoRatioFitQCD, fitPtQCD);
+    histoRatioFitBylinkin = CalculateHistoRatioToFit (histoRatioFitBylinkin, fitPtBylinkin);
+    
+    delete canvasFitting;
 		
-		
-		
-		//*************************** Calculating Ratios *******************************************
-		histoRatioFitLevy = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		histoRatioFitHag = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		histoRatioFitRadu = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		histoRatioFitPow = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		histoRatioFitModPow = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		TH1D* histoRatioFitQCD = (TH1D*) histoCorrYieldBinShifted->Clone();
-		TH1D* histoRatioFitBylinkin = (TH1D*) histoCorrYieldBinShifted->Clone();	
-		
-		if(kLevySucc) {
-			histoRatioFitLevy = CalculateHistoRatioToFit (histoRatioFitLevy, fitPtLevy); 
-		}
-		if(kHagSucc) {
-			histoRatioFitHag = CalculateHistoRatioToFit (histoRatioFitHag, fitPtHagedorn);
-		}
-		if(kRaduSucc) {
-			histoRatioFitRadu = CalculateHistoRatioToFit (histoRatioFitRadu, fitPtRadu);
-		}
-		if(kPowSucc) {
-			histoRatioFitPow = CalculateHistoRatioToFit (histoRatioFitPow, fitPtPowerlaw);
-		}	
-		if(kModPowSucc) {
-			histoRatioFitModPow = CalculateHistoRatioToFit (histoRatioFitModPow, fitPtModPowerlaw);
-		}
-		histoRatioFitQCD = CalculateHistoRatioToFit (histoRatioFitQCD, fitPtQCD);
-		histoRatioFitBylinkin = CalculateHistoRatioToFit (histoRatioFitBylinkin, fitPtBylinkin);
-		
-		delete canvasFitting;
-		//**********************************************************************************************
-		//********************** Plotting of fitted spectrum *******************************************
-		//**********************************************************************************************	
-		TCanvas* canvasFittingSpectra = new TCanvas("canvasFittingSpectra","",1350,1500);  // gives the page size
-		DrawGammaCanvasSettings( canvasFittingSpectra, 0.13, 0.02, 0.02, 0.09);
-		canvasFittingSpectra->SetLogy();	
-		
-		TPad* padFittedSpectraHistos = new TPad("padFittedSpectraHistos", "", 0., 0.25, 1., 1.,-1, -1, -2);
-		DrawGammaPadSettings( padFittedSpectraHistos, 0.12, 0.02, 0.02, 0.);
-		padFittedSpectraHistos->Draw();
-		
-		TPad* padFittedSpectraRatios = new TPad("padFittedSpectraRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
-		DrawGammaPadSettings( padFittedSpectraRatios, 0.12, 0.02, 0., 0.25);
-		padFittedSpectraRatios->Draw();
-		
-		padFittedSpectraHistos->cd();
-		padFittedSpectraHistos->SetLogy();		
+    //**********************************************************************************************
+    //********************** Plotting of fitted spectrum *******************************************
+    //**********************************************************************************************	
+    TCanvas* canvasFittingSpectra = new TCanvas("canvasFittingSpectra","",1350,1500);  // gives the page size
+    DrawGammaCanvasSettings( canvasFittingSpectra, 0.13, 0.02, 0.02, 0.09);
+    canvasFittingSpectra->SetLogy();	
+    
+    TPad* padFittedSpectraHistos = new TPad("padFittedSpectraHistos", "", 0., 0.25, 1., 1.,-1, -1, -2);
+    DrawGammaPadSettings( padFittedSpectraHistos, 0.12, 0.02, 0.02, 0.);
+    padFittedSpectraHistos->Draw();
+    
+    TPad* padFittedSpectraRatios = new TPad("padFittedSpectraRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
+    DrawGammaPadSettings( padFittedSpectraRatios, 0.12, 0.02, 0., 0.25);
+    padFittedSpectraRatios->Draw();
+    
+    padFittedSpectraHistos->cd();
+    padFittedSpectraHistos->SetLogy();		
 
-		DrawGammaSetMarker(histoCorrYieldBinShifted, 22, 1., kBlack, kBlack);
-		DrawAutoGammaMesonHistos( histoCorrYieldBinShifted, 
-								"", "p_{T} (GeV/c)", "#frac{1}{2#pi N_{ev}} #frac{d^{2}N}{p_{T}dp_{T}dy} (c/GeV)^{2}", 
-								kTRUE, 3., 4e-10, kTRUE,
-								kFALSE, 3e-8,10, 
-								kFALSE, 0., 10.);		
-		histoCorrectedYield->Draw("e1,x0"); 
+    DrawGammaSetMarker(histoCorrYieldBinShifted, 22, 1., kBlack, kBlack);
+    DrawAutoGammaMesonHistos( histoCorrYieldBinShifted, 
+                            "", "p_{T} (GeV/c)", "#frac{1}{2#pi N_{ev}} #frac{d^{2}N}{p_{T}dp_{T}dy} (c/GeV)^{2}", 
+                            kTRUE, 3., 4e-10, kTRUE,
+                            kFALSE, 3e-8,10, 
+                            kFALSE, 0., 10.);		
+    histoCorrectedYield->Draw("e1,x0"); 
+    
+    fitPtLevy->Draw("same");
+    fitPtHagedorn->Draw("same");
+    fitPtRadu->Draw("same");
+    fitPtBoltzmann->Draw("same");
+    fitPtExp->Draw("same");
+    fitPtPowerlaw->Draw("same");
+    fitPtModPowerlaw->Draw("same");
+    fitPtQCD->Draw("same");
+    fitPtBylinkin->Draw("same");
 		
-		fitPtLevy->Draw("same");
-		fitPtHagedorn->Draw("same");
-		fitPtRadu->Draw("same");
-		fitPtPowerlaw->Draw("same");
-		fitPtModPowerlaw->Draw("same");
-		fitPtQCD->Draw("same");
-		fitPtBylinkin->Draw("same");
+    TLegend* legendFit = new TLegend(0.15,0.02,0.5,0.25);
+    legendFit->SetTextSize(0.03);			
+    legendFit->SetFillColor(0);
+    legendFit->SetLineColor(0);
+    legendFit->AddEntry(histoCorrYieldBinShifted,"#pi^{0}");
+    legendFit->AddEntry(fitPtLevy,"Levy fit");
+    legendFit->AddEntry(fitPtHagedorn,"Hagedorn fit");
+    legendFit->AddEntry(fitPtRadu,"Raduslav fit");
+    legendFit->AddEntry(fitPtBoltzmann,"Boltzman fit");
+    legendFit->AddEntry(fitPtExp,"Exponential fit");
+    legendFit->AddEntry(fitPtPowerlaw,"Powerlaw fit");
+    legendFit->AddEntry(fitPtModPowerlaw,"Mod Powerlaw fit");
+    legendFit->AddEntry(fitPtQCD,"QCD inspired fit");
+    legendFit->AddEntry(fitPtBylinkin,"Bylinkin fit");
+    legendFit->Draw();
+    
+    if(textMeson.CompareTo("Pi0")==0){
+        DrawAliceLogoPi0WorkInProgress(pictDrawingCoordinates[0], pictDrawingCoordinates[1], pictDrawingCoordinates[2], pictDrawingCoordinates[3], pictDrawingCoordinates[4], pictDrawingCoordinates[5], pictDrawingCoordinates[6], pictDrawingCoordinates[7], pictDrawingCoordinates[8],collisionSystem, pictDrawingOptions[1], pictDrawingOptions[2], kTRUE,1350,1125,kFALSE,centralityString);
+    } else if(textMeson.CompareTo("Eta")==0){
+        DrawAliceLogoPi0WorkInProgress(pictDrawingCoordinates[0], pictDrawingCoordinates[1], pictDrawingCoordinates[2], pictDrawingCoordinates[3], pictDrawingCoordinates[4], pictDrawingCoordinates[5], pictDrawingCoordinates[6], pictDrawingCoordinates[7], pictDrawingCoordinates[8],collisionSystem, pictDrawingOptions[1], pictDrawingOptions[2], kFALSE,1350,1125,kFALSE,centralityString);
+    }
+    
+    canvasFittingSpectra->Update();
 		
-		TLegend* legendFit = new TLegend(0.15,0.02,0.55,0.25);
-		legendFit->SetTextSize(0.02);			
-		legendFit->SetFillColor(0);
-		legendFit->SetLineColor(0);
-		legendFit->AddEntry(histoCorrYieldBinShifted,"#eta");
-		legendFit->AddEntry(fitPtLevy,"Levy fit");
-		legendFit->AddEntry(fitPtHagedorn,"Hagedorn fit");
-		legendFit->AddEntry(fitPtRadu,"Raduslav fit");
-		legendFit->AddEntry(fitPtPowerlaw,"Powerlaw fit");
-		legendFit->AddEntry(fitPtModPowerlaw,"Mod Powerlaw fit");
-		legendFit->AddEntry(fitPtQCD,"QCD inspired fit");
-		legendFit->AddEntry(fitPtBylinkin,"Bylinkin fit");
-		legendFit->Draw();
+    padFittedSpectraRatios->cd();
+    DrawGammaHistoRatioLowerPanel( histoRatioFitLevy, "#frac{value}{fit}", 0.5, 1.55, 505, 0.08, 0.1, 0.4, 0.08, 0.11, 1.);
 		
-		DrawAliceLogoPi0WorkInProgress(pictDrawingCoordinates[0], pictDrawingCoordinates[1], pictDrawingCoordinates[2], pictDrawingCoordinates[3], pictDrawingCoordinates[4], pictDrawingCoordinates[5], pictDrawingCoordinates[6], pictDrawingCoordinates[7], pictDrawingCoordinates[8],collisionSystem, pictDrawingOptions[1], pictDrawingOptions[2], kFALSE,1350,1125,kFALSE,centralityString);
-		canvasFittingSpectra->Update();
+    DrawGammaSetMarker(histoRatioFitLevy, 21, 0.5, kBlue, kBlue);
+    histoRatioFitLevy->Draw("e1,x0");
+    DrawGammaSetMarker(histoRatioFitHag, 21, 0.5, kGreen+2, kGreen+2);
+    if(kHagSucc)histoRatioFitHag->Draw("e1,x0,same");
+    DrawGammaSetMarker(histoRatioFitRadu, 21, 0.5, kRed+2, kRed+2);
+    if(kRaduSucc)histoRatioFitRadu->Draw("e1,x0,same");
+    DrawGammaSetMarker(histoRatioFitBoltz, 21, 0.5, kMagenta+4, kMagenta+4);
+    if(kBoltzSucc)histoRatioFitBoltz->Draw("e1,x0,same");
+    DrawGammaSetMarker(histoRatioFitExp, 21, 0.5, kOrange+7, kOrange+7);
+    if(kExpSucc)histoRatioFitExp->Draw("e1,x0,same");
+    DrawGammaSetMarker(histoRatioFitPow, 21, 0.5, kTeal, kTeal);
+    if(kPowSucc)histoRatioFitPow->Draw("e1,x0,same");
+    DrawGammaSetMarker(histoRatioFitModPow, 21, 0.5, kMagenta+2, kMagenta+2);
+    if(kModPowSucc)histoRatioFitModPow->Draw("e1,same");
+    DrawGammaSetMarker(histoRatioFitQCD, 21, 0.5, kBlue-3, kBlue-3);
+    histoRatioFitQCD->Draw("e1,same");
+    DrawGammaSetMarker(histoRatioFitBylinkin, 21, 0.5, kPink+9, kPink+9);
+    histoRatioFitBylinkin->Draw("e1,same");
+    
+    DrawGammaLines(0., maxPt ,1., 1.,0.1);
+    
+    canvasFittingSpectra->SaveAs(Form("%s/%s_%s_CorrectedYieldFitted_%s.%s",outputDir.Data(),textMeson.Data(),prefix2.Data(),cutSel.Data(),suffix.Data()));
+    delete canvasFittingSpectra;
 		
-		padFittedSpectraRatios->cd();
-		DrawGammaHistoRatioLowerPanel( histoRatioFitLevy, "#frac{value}{fit}", 0.5, 1.55, 505, 0.08, 0.1, 0.4, 0.08, 0.11, 1.);
-		
-		DrawGammaSetMarker(histoRatioFitLevy, 21, 0.5, kBlue, kBlue);
-		histoRatioFitLevy->Draw("e1,x0");
-		
-		DrawGammaSetMarker(histoRatioFitHag, 21, 0.5, kGreen+2, kGreen+2);
-		if(kHagSucc)histoRatioFitHag->Draw("e1,x0,same");
-		
-		DrawGammaSetMarker(histoRatioFitRadu, 21, 0.5, kRed+2, kRed+2);
-		if(kRaduSucc)histoRatioFitRadu->Draw("e1,x0,same");
-		
-		DrawGammaSetMarker(histoRatioFitPow, 21, 0.5, kTeal, kTeal);
-		if(kPowSucc)histoRatioFitPow->Draw("e1,x0,same");
-		
-		DrawGammaSetMarker(histoRatioFitModPow, 21, 0.5, kMagenta+2, kMagenta+2);
-		if(kModPowSucc)histoRatioFitModPow->Draw("e1,same");
-		
-		DrawGammaSetMarker(histoRatioFitQCD, 21, 0.5, kBlue-3, kBlue-3);
-		histoRatioFitQCD->Draw("e1,same");
-		
-		DrawGammaSetMarker(histoRatioFitBylinkin, 21, 0.5, kPink+9, kPink+9);
-		histoRatioFitBylinkin->Draw("e1,same");
-		
-		DrawGammaLines(0., maxPt ,1., 1.,0.1);
-		
-		canvasFittingSpectra->SaveAs(Form("%s/%s_%s_CorrectedYieldFitted_%s.%s",outputDir.Data(),textMeson.Data(),prefix2.Data(),cutSel.Data(),suffix.Data()));
-		delete canvasFittingSpectra;		
-		
-	}	
 	
 	//***************************** Reading systematic error and plotting *******************
 	if (textMeson.CompareTo("Pi0")==0){
@@ -1315,14 +1030,14 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 
 		Double_t parametersBinShiftForQCDfit[5];
         if((GetCentralityString(cutSel)).CompareTo("20-40%")==0){
-            fitBinShifting = BinShiftTH1D(histoRecBinShiftPi0EtaBinning, &histoCorrYieldPi0EtaBinningBinShifted, "Pi0","qcd", "fitBinShifting",minPtForFitsEta,NULL);
+            fitBinShifting = BinShiftTH1D(histoRecBinShiftPi0EtaBinning, &histoCorrYieldPi0EtaBinningBinShifted, "Pi0","qcd", "fitBinShifting",minPtForFits,NULL);
         } else {
           GetFitParameter("qcd",GetCentralityString(cutSel),parametersBinShiftForQCDfit);
           cout << "GetCentralityString(cutSel): " << GetCentralityString(cutSel) << endl;
           for( Int_t i = 0; i < 5; i++){
               cout << "parameter " << i << "\t" << parametersBinShiftForQCDfit[i] << endl;
           }
-          fitBinShifting = BinShiftTH1D(histoRecBinShiftPi0EtaBinning, &histoCorrYieldPi0EtaBinningBinShifted, "Pi0","qcd", "fitBinShifting",minPtForFitsEta,parametersBinShiftForQCDfit);
+          fitBinShifting = BinShiftTH1D(histoRecBinShiftPi0EtaBinning, &histoCorrYieldPi0EtaBinningBinShifted, "Pi0","qcd", "fitBinShifting",minPtForFits,parametersBinShiftForQCDfit);
         }
 		DrawGammaSetMarker(histoCorrYieldPi0EtaBinningBinShifted, 24, 0.9, kBlack, kBlack);
 		DrawAutoGammaMesonHistos( histoCorrYieldPi0EtaBinningBinShifted, 

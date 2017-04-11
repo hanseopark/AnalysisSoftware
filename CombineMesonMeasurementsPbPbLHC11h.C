@@ -423,37 +423,31 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "",
     }
 
 
-    //===================== loading pp inputs =============================
-    TFile* fEtatoPi0input = new TFile("EtaToPi0InputsForCombination.root");
-    TH1D *histoPCMEtaToPi0RatioPbPb0010 = (TH1D*)fEtatoPi0input->Get("histoPCMEtaToPi0RatioPbPb0010");
-    TH1D *histoPCMEtaToPi0RatioPbPb2050 = (TH1D*)fEtatoPi0input->Get("histoPCMEtaToPi0RatioPbPb2050");
-    TH1D *histoPCMEtaToPi0RatiopPb = (TH1D*)fEtatoPi0input->Get("histoPCMEtaToPi0RatiopPb");
-    TGraphAsymmErrors *graphPCMEtaToPi0RatioSysErrpPb = (TGraphAsymmErrors*)fEtatoPi0input->Get("graphPCMEtaToPi0RatioSysErrpPb");
-
-    TGraphAsymmErrors *graphCombEtaToPi0RatioSysErrpp7TeV = (TGraphAsymmErrors*)fEtatoPi0input->Get("graphCombEtaToPi0RatioSysErrpp7TeV");
-    TGraphAsymmErrors *graphCombEtaToPi0Ratiopp7TeVNoXErrors = (TGraphAsymmErrors*)fEtatoPi0input->Get("graphCombEtaToPi0Ratiopp7TeVNoXErrors");
-    DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0RatioSysErrpp7TeV, markerStylepp, markerSizepp, kBlack, kBlack, 1, kTRUE);
-    DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Ratiopp7TeVNoXErrors, markerStylepp, markerSizepp, kBlack, kBlack, 1, kTRUE);
-
-    TH1D *cocktailEtaToPi0Ratio7TeVRebined = (TH1D*)fEtatoPi0input->Get("cocktailEtaToPi0Ratio7TeVRebined");
-    TH1D *cocktailEtaToPi0Ratio_MtScaledRebinned = (TH1D*)fEtatoPi0input->Get("cocktailEtaToPi0Ratio_MtScaledRebinned");
-    TH1D *cocktailEtaToPi0Ratio_K0ScaledRebinned = (TH1D*)fEtatoPi0input->Get("cocktailEtaToPi0Ratio_K0ScaledRebinned");
-
-    cocktailEtaToPi0Ratio7TeVRebined->GetXaxis()->SetRangeUser(0.1,16.);
-    cocktailEtaToPi0Ratio_K0ScaledRebinned->GetXaxis()->SetRangeUser(0.1,16.);
-    cocktailEtaToPi0Ratio_MtScaledRebinned->GetXaxis()->SetRangeUser(0.1,16.);
-    cocktailEtaToPi0Ratio7TeVRebined->SetLineStyle(5);
-    cocktailEtaToPi0Ratio7TeVRebined->SetLineWidth(2.5);
-    cocktailEtaToPi0Ratio_K0ScaledRebinned->SetLineStyle(6);
-    cocktailEtaToPi0Ratio_K0ScaledRebinned->SetLineWidth(2.5);
-    cocktailEtaToPi0Ratio_MtScaledRebinned->SetLineStyle(7);
-    cocktailEtaToPi0Ratio_MtScaledRebinned->SetLineWidth(2.5);
-    //======================================================================
+    //===================== loading old pp cocktail inputs =============================
+//     TH1D *cocktailEtaToPi0Ratio7TeVRebined = (TH1D*)fEtatoPi0input->Get("cocktailEtaToPi0Ratio7TeVRebined");
+//     TH1D *cocktailEtaToPi0Ratio_MtScaledRebinned = (TH1D*)fEtatoPi0input->Get("cocktailEtaToPi0Ratio_MtScaledRebinned");
+//     TH1D *cocktailEtaToPi0Ratio_K0ScaledRebinned = (TH1D*)fEtatoPi0input->Get("cocktailEtaToPi0Ratio_K0ScaledRebinned");
+// 
+//     cocktailEtaToPi0Ratio7TeVRebined->GetXaxis()->SetRangeUser(0.1,16.);
+//     cocktailEtaToPi0Ratio_K0ScaledRebinned->GetXaxis()->SetRangeUser(0.1,16.);
+//     cocktailEtaToPi0Ratio_MtScaledRebinned->GetXaxis()->SetRangeUser(0.1,16.);
+//     cocktailEtaToPi0Ratio7TeVRebined->SetLineStyle(5);
+//     cocktailEtaToPi0Ratio7TeVRebined->SetLineWidth(2.5);
+//     cocktailEtaToPi0Ratio_K0ScaledRebinned->SetLineStyle(6);
+//     cocktailEtaToPi0Ratio_K0ScaledRebinned->SetLineWidth(2.5);
+//     cocktailEtaToPi0Ratio_MtScaledRebinned->SetLineStyle(7);
+//     cocktailEtaToPi0Ratio_MtScaledRebinned->SetLineWidth(2.5);
+//     //======================================================================
 
 
     //*********************************************************************************************************//
     //*****************************************  Neutral mesons   *********************************************//
     //*********************************************************************************************************//
+
+    TDirectoryFile* directoryNeutralMesonPP7TeV = (TDirectoryFile*)fileDataALICE->Get("NeutralMesons_PP_7TeV");
+        graphCombEtaToPi0Ratiopp7TeVNoXErrors = (TGraphAsymmErrors*)directoryNeutralMesonPP7TeV->Get("graphCombEtaToPi0Ratiopp7TeVNoXErrors");
+        graphCombEtaToPi0RatioSysErrpp7TeV = (TGraphAsymmErrors*)directoryNeutralMesonPP7TeV->Get("graphCombEtaToPi0RatioSysErrpp7TeV");
+        
     TDirectoryFile* directoryNeutralMesonPP = (TDirectoryFile*)fileDataALICE->Get("NeutralMesons_PP_2.76TeV");
         //already scaled by 1./xSection2760GeVppINEL
         graphInvSectionCombStatPi02760GeV           = (TGraphAsymmErrors*)directoryNeutralMesonPP->Get("graphInvCrossSectionPi0Comb2760GeVAStatErr");
@@ -6682,14 +6676,14 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "",
       TF1 *mTScaledEtaFromPi02760GeV = (TF1*)MtScaledParam(fitInvCrossSectionTsallisPi0Comb2760GeV, 221, 0.476);
       TF1* etapi0Ratio2760GeV  = DivideTF1(mTScaledEtaFromPi02760GeV, fitInvCrossSectionTsallisPi0Comb2760GeV, "etapi0Ratio2760GeV");
 
-      cout << "PCM Eta for pPb" << endl;
-      TString nameFilepPb = "LHC11hExternalInputs/data_PCMResults_pPb_20150624_standard_dc4.root";
-      TFile* filePCMpPb                   = new TFile(nameFilepPb.Data());
-      TDirectory* fEtaToPi0pPbContainer   = (TDirectory*) filePCMpPb->GetDirectory("Eta_pPb_5.023TeV_0-100%");
-      TH1D* histoPCMEtaToPi0RatiopPb      = (TH1D*)fEtaToPi0pPbContainer->Get("EtatoPi0Ratio");
-      TGraphAsymmErrors* graphPCMEtaToPi0RatioSysErrpPb=    (TGraphAsymmErrors*)fEtaToPi0pPbContainer->Get("EtatoPi0RatioSys");
-      DrawGammaSetMarker(histoPCMEtaToPi0RatiopPb, 20, 1.5, kBlue+2, kBlue+2);
-      DrawGammaSetMarkerTGraphAsym(graphPCMEtaToPi0RatioSysErrpPb, 21, 1.5,  kBlue+2, kBlue+2, widthLinesBoxes, kTRUE);
+//       cout << "PCM Eta for pPb" << endl;
+//       TString nameFilepPb = "LHC11hExternalInputs/data_PCMResults_pPb_20150624_standard_dc4.root";
+//       TFile* filePCMpPb                   = new TFile(nameFilepPb.Data());
+//       TDirectory* fEtaToPi0pPbContainer   = (TDirectory*) filePCMpPb->GetDirectory("Eta_pPb_5.023TeV_0-100%");
+//       TH1D* histoPCMEtaToPi0RatiopPb      = (TH1D*)fEtaToPi0pPbContainer->Get("EtatoPi0Ratio");
+//       TGraphAsymmErrors* graphPCMEtaToPi0RatioSysErrpPb=    (TGraphAsymmErrors*)fEtaToPi0pPbContainer->Get("EtatoPi0RatioSys");
+//       DrawGammaSetMarker(histoPCMEtaToPi0RatiopPb, 20, 1.5, kBlue+2, kBlue+2);
+//       DrawGammaSetMarkerTGraphAsym(graphPCMEtaToPi0RatioSysErrpPb, 21, 1.5,  kBlue+2, kBlue+2, widthLinesBoxes, kTRUE);
 
       TFile *PbPbCoktailInput = new TFile("50100013_00200009247602008250404000_0652501500000000/PbPb_2.76TeV/GammaCocktail_0.85_50100013_00200009247602008250404000_0652501500000000.root");
       TF1* paramPi0PbPb2760GeV     = (TF1*)PbPbCoktailInput->Get("111_pt");
@@ -6786,10 +6780,10 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "",
 //             etapi0Ratio7TeV->SetLineWidth(2);
 //             etapi0Ratio7TeV->Draw("c,histo,same");
 
-            DrawGammaSetMarker(cocktailEtaToPi0Ratio_MtScaledRebinned, 2, 0, kBlack, kBlack);
-            cocktailEtaToPi0Ratio7TeVRebined->GetXaxis()->SetRangeUser(0.4,20);
-            cocktailEtaToPi0Ratio_K0ScaledRebinned->GetXaxis()->SetRangeUser(0.4,20);
-            cocktailEtaToPi0Ratio_MtScaledRebinned->GetXaxis()->SetRangeUser(0.4,20);
+//             DrawGammaSetMarker(cocktailEtaToPi0Ratio_MtScaledRebinned, 2, 0, kBlack, kBlack);
+//             cocktailEtaToPi0Ratio7TeVRebined->GetXaxis()->SetRangeUser(0.4,20);
+//             cocktailEtaToPi0Ratio_K0ScaledRebinned->GetXaxis()->SetRangeUser(0.4,20);
+//             cocktailEtaToPi0Ratio_MtScaledRebinned->GetXaxis()->SetRangeUser(0.4,20);
 //             cocktailEtaToPi0Ratio7TeVRebined->Draw("same,hist,c");
 //             cocktailEtaToPi0Ratio_K0ScaledRebinned->Draw("same,hist,c");
 //             cocktailEtaToPi0Ratio_MtScaledRebinned->Draw("same,hist,c");

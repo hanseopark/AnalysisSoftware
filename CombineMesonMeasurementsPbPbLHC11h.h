@@ -65,6 +65,10 @@ TGraphErrors*   graphPHENIX200GeVEtaRAA_2060;
 TGraphErrors*   graphWA98_17_3GeVPi0RAA_0013;
 
 
+// PP 7TeV
+TGraphAsymmErrors* graphCombEtaToPi0Ratiopp7TeVNoXErrors;
+TGraphAsymmErrors* graphCombEtaToPi0RatioSysErrpp7TeV;
+
 // PP combined yields (x-shifted)
 TGraphAsymmErrors* graphInvSectionCombStatPi02760GeV;
 TGraphAsymmErrors* graphInvSectionCombStatPi02760GeVPlot;

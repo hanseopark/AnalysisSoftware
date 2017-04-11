@@ -56,7 +56,7 @@ extern TMinuit*  	gMinuit;
 
 void CompareChargedAndNeutralPionDataALICE_LHC11h(  
 											TString nameFilePbPbLHC11h = "",
-											TString nameFilePP = "LHC11hExternalInputs/CombinedResultsPaperX.root",
+											TString nameFilePP = "FinalResults/CombinedResultsPaperX.root",
 											TString nameFilePbPb = "LHC11hExternalInputs/CombinedResultsPbPb_18_Feb_2014.root",
 											TString suffix = "pdf"
   										){
@@ -75,7 +75,7 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 
     TString fileNameEMCalPion7TeVPP 	= "ExternalInput/EMCAL/7TeV/pi0Spectrum2011EMCALAddedSignalsEffic_7TeV_150323_evi_11cd.root";
 	TString fileNameEMCalPion2760GeVPP 	= "ExternalInput/EMCAL/2.76TeV/FinalCombinedXsec_pi0276TeV_25Apr2015_11a13g.root";
-	TString fileNameComb2760GeVPP		= "LHC11hExternalInputs/CombinedResultsPaperPP2760GeV_2015_07_01.root";
+	TString fileNameComb2760GeVPP		= "ExternalInputPbPb/NeutralMesonspp276GeVReference/CombinedResultsPaperPP2760GeV_2017_01_26_FrediV2Clusterizer.root";
 	
 	gSystem->Exec("mkdir -p "+outputDir);
 // 	gSystem->Exec(Form("cp %s %s/InputFileNeutralPionPP.root ",nameFilePP.Data(),outputDir.Data() ));
@@ -189,11 +189,11 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 	TGraphAsymmErrors* graphInvYieldPi0PHOS900GeVSysErr		= (TGraphAsymmErrors*)fileNeutralPionCombDataPP->Get("graphInvCrossSectionPi0PHOSSys900GeV");
 	graphInvYieldPi0PHOS900GeVSysErr 						= ScaleGraph(graphInvYieldPi0PHOS900GeVSysErr,1./xSection900GeVppINEL);
 
-	TFile* fileNeutralPionCombDataPPUpdated 				= new TFile(fileNameComb2760GeVPP.Data());
-	TGraphAsymmErrors* graphInvYieldPi0CombUp2760GeVStatErr	= (TGraphAsymmErrors*)fileNeutralPionCombDataPPUpdated->Get("graphInvCrossSectionPi0Comb2760GeVOEMCStatErr");
-	graphInvYieldPi0CombUp2760GeVStatErr 					= ScaleGraph(graphInvYieldPi0CombUp2760GeVStatErr,1./xSection2760GeVppINEL);
-	TGraphAsymmErrors* graphInvYieldPi0CombUp2760GeVSysErr	= (TGraphAsymmErrors*)fileNeutralPionCombDataPPUpdated->Get("graphInvCrossSectionPi0Comb2760GeVOEMCSysErr");
-	graphInvYieldPi0CombUp2760GeVSysErr 					= ScaleGraph(graphInvYieldPi0CombUp2760GeVSysErr,1./xSection2760GeVppINEL);
+// 	TFile* fileNeutralPionCombDataPPUpdated 				= new TFile(fileNameComb2760GeVPP.Data());
+// 	TGraphAsymmErrors* graphInvYieldPi0CombUp2760GeVStatErr	= (TGraphAsymmErrors*)fileNeutralPionCombDataPPUpdated->Get("graphInvCrossSectionPi0Comb2760GeVOEMCStatErr");
+// 	graphInvYieldPi0CombUp2760GeVStatErr 					= ScaleGraph(graphInvYieldPi0CombUp2760GeVStatErr,1./xSection2760GeVppINEL);
+// 	TGraphAsymmErrors* graphInvYieldPi0CombUp2760GeVSysErr	= (TGraphAsymmErrors*)fileNeutralPionCombDataPPUpdated->Get("graphInvCrossSectionPi0Comb2760GeVOEMCSysErr");
+// 	graphInvYieldPi0CombUp2760GeVSysErr 					= ScaleGraph(graphInvYieldPi0CombUp2760GeVSysErr,1./xSection2760GeVppINEL);
 	
 	
 	cout << "*************************************************************************"<< endl;  
@@ -696,43 +696,43 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 	//*************************************************************************************************************
 	//***************************** updated combined spectrum *****************************************************
 	//*************************************************************************************************************
-	TGraphAsymmErrors* graphYieldCombUpStatPi02760GeVCopy 	= (TGraphAsymmErrors*) graphInvYieldPi0CombUp2760GeVStatErr->Clone("graphYieldCombUpStatPi02760GeVCopy");
-	TGraphAsymmErrors* graphYieldCombUpSysPi02760GeVCopy 	= (TGraphAsymmErrors*) graphInvYieldPi0CombUp2760GeVSysErr->Clone("graphYieldCombUpSysPi02760GeVCopy");
+// 	TGraphAsymmErrors* graphYieldCombUpStatPi02760GeVCopy 	= (TGraphAsymmErrors*) graphInvYieldPi0CombUp2760GeVStatErr->Clone("graphYieldCombUpStatPi02760GeVCopy");
+// 	TGraphAsymmErrors* graphYieldCombUpSysPi02760GeVCopy 	= (TGraphAsymmErrors*) graphInvYieldPi0CombUp2760GeVSysErr->Clone("graphYieldCombUpSysPi02760GeVCopy");
 
-   	cout << "combined Spectrum - high Pt" << endl;
-	TGraphErrors* graphChargedPionSpecHighPtStatPPHighPtCombUp 		= NULL;
-	TGraphErrors* graphChargedPionSpecHighPtSystPPHighPtCombUp 		= NULL;
-	TGraphErrors* graphYieldCombStatPi02760GeVRebinnedHighPtCombUp 	= NULL;
-	TGraphErrors* graphYieldCombSysPi02760GeVRebinnedHighPtCombUp 	= NULL;
-	TGraphErrors* graphRatioHighPtChargedPionsCombUpPP = CalculateRatioBetweenSpectraWithDifferentBinning(graphYieldCombUpStatPi02760GeVCopy, graphYieldCombUpSysPi02760GeVCopy, 
-																										histoChargedPionSpecHighPtStatPP, histoChargedPionSpecHighPtSystPP,  
-																									    kTRUE,  kTRUE, 
-																									    &graphYieldCombStatPi02760GeVRebinnedHighPtCombUp, &graphYieldCombSysPi02760GeVRebinnedHighPtCombUp, 
-																									    &graphChargedPionSpecHighPtStatPPHighPtCombUp, &graphChargedPionSpecHighPtSystPPHighPtCombUp )	;
-   
-	cout << "combined Spectrum - low Pt" << endl;
-	TGraphErrors* graphChargedPionSpecLowPtStatPPLowPtCombUp 		= NULL;
-	TGraphErrors* graphChargedPionSpecLowPtSystPPLowPtCombUp 		= NULL;
-	TGraphErrors* graphYieldCombStatPi02760GeVRebinnedLowPtCombUp 	= NULL;
-	TGraphErrors* graphYieldCombSysPi02760GeVRebinnedLowPtCombUp 	= NULL;
-	TGraphErrors* graphRatioLowPtChargedPionsCombUpPP = CalculateRatioBetweenSpectraWithDifferentBinning(graphYieldCombUpStatPi02760GeVCopy, graphYieldCombUpSysPi02760GeVCopy, 
-																									   histoChargedPionSpecLowPtStatPP2760GeV, histoChargedPionSpecLowPtSysPP2760GeV,  
-																									   kTRUE,  kTRUE, 
-																									   &graphYieldCombStatPi02760GeVRebinnedLowPtCombUp, &graphYieldCombSysPi02760GeVRebinnedLowPtCombUp,
-																									   &graphChargedPionSpecLowPtStatPPLowPtCombUp, &graphChargedPionSpecLowPtSystPPLowPtCombUp )	;
-	
-	cout << "combined Spectrum - low Pt CMS" << endl;
-   
-	TGraphErrors* graphChargedPionSpecCMSStatPPCMSCombUp 			= NULL;
-	TGraphErrors* graphChargedPionSpecCMSSystPPCMSCombUp 			= NULL;
-	TGraphErrors* graphYieldCombStatPi02760GeVRebinnedCMSCombUp 	= NULL;
-	TGraphErrors* graphYieldCombSysPi02760GeVRebinnedCMSCombUp 		= NULL;
-	TGraphErrors* graphRatioLowPtChargedPionsCombUpPPCMS = CalculateRatioBetweenSpectraWithDifferentBinning(graphYieldCombUpStatPi02760GeVCopy, graphYieldCombUpSysPi02760GeVCopy, 
-																										  histoChargedPionSpecLowPtStat2760GeVCMS, histoChargedPionSpecLowPtSys2760GeVCMS,  
-																									      kTRUE,  kTRUE, 
-																									      &graphYieldCombStatPi02760GeVRebinnedCMSCombUp, &graphYieldCombSysPi02760GeVRebinnedCMSCombUp,
-																									      &graphChargedPionSpecCMSStatPPCMSCombUp, &graphChargedPionSpecCMSSystPPCMSCombUp ) ;
-
+//    	cout << "combined Spectrum - high Pt" << endl;
+// 	TGraphErrors* graphChargedPionSpecHighPtStatPPHighPtCombUp 		= NULL;
+// 	TGraphErrors* graphChargedPionSpecHighPtSystPPHighPtCombUp 		= NULL;
+// 	TGraphErrors* graphYieldCombStatPi02760GeVRebinnedHighPtCombUp 	= NULL;
+// 	TGraphErrors* graphYieldCombSysPi02760GeVRebinnedHighPtCombUp 	= NULL;
+// 	TGraphErrors* graphRatioHighPtChargedPionsCombUpPP = CalculateRatioBetweenSpectraWithDifferentBinning(graphYieldCombUpStatPi02760GeVCopy, graphYieldCombUpSysPi02760GeVCopy, 
+// 																										histoChargedPionSpecHighPtStatPP, histoChargedPionSpecHighPtSystPP,  
+// 																									    kTRUE,  kTRUE, 
+// 																									    &graphYieldCombStatPi02760GeVRebinnedHighPtCombUp, &graphYieldCombSysPi02760GeVRebinnedHighPtCombUp, 
+// 																									    &graphChargedPionSpecHighPtStatPPHighPtCombUp, &graphChargedPionSpecHighPtSystPPHighPtCombUp )	;
+//    
+// 	cout << "combined Spectrum - low Pt" << endl;
+// 	TGraphErrors* graphChargedPionSpecLowPtStatPPLowPtCombUp 		= NULL;
+// 	TGraphErrors* graphChargedPionSpecLowPtSystPPLowPtCombUp 		= NULL;
+// 	TGraphErrors* graphYieldCombStatPi02760GeVRebinnedLowPtCombUp 	= NULL;
+// 	TGraphErrors* graphYieldCombSysPi02760GeVRebinnedLowPtCombUp 	= NULL;
+// 	TGraphErrors* graphRatioLowPtChargedPionsCombUpPP = CalculateRatioBetweenSpectraWithDifferentBinning(graphYieldCombUpStatPi02760GeVCopy, graphYieldCombUpSysPi02760GeVCopy, 
+// 																									   histoChargedPionSpecLowPtStatPP2760GeV, histoChargedPionSpecLowPtSysPP2760GeV,  
+// 																									   kTRUE,  kTRUE, 
+// 																									   &graphYieldCombStatPi02760GeVRebinnedLowPtCombUp, &graphYieldCombSysPi02760GeVRebinnedLowPtCombUp,
+// 																									   &graphChargedPionSpecLowPtStatPPLowPtCombUp, &graphChargedPionSpecLowPtSystPPLowPtCombUp )	;
+// 	
+// 	cout << "combined Spectrum - low Pt CMS" << endl;
+//    
+// 	TGraphErrors* graphChargedPionSpecCMSStatPPCMSCombUp 			= NULL;
+// 	TGraphErrors* graphChargedPionSpecCMSSystPPCMSCombUp 			= NULL;
+// 	TGraphErrors* graphYieldCombStatPi02760GeVRebinnedCMSCombUp 	= NULL;
+// 	TGraphErrors* graphYieldCombSysPi02760GeVRebinnedCMSCombUp 		= NULL;
+// 	TGraphErrors* graphRatioLowPtChargedPionsCombUpPPCMS = CalculateRatioBetweenSpectraWithDifferentBinning(graphYieldCombUpStatPi02760GeVCopy, graphYieldCombUpSysPi02760GeVCopy, 
+// 																										  histoChargedPionSpecLowPtStat2760GeVCMS, histoChargedPionSpecLowPtSys2760GeVCMS,  
+// 																									      kTRUE,  kTRUE, 
+// 																									      &graphYieldCombStatPi02760GeVRebinnedCMSCombUp, &graphYieldCombSysPi02760GeVRebinnedCMSCombUp,
+// 																									      &graphChargedPionSpecCMSStatPPCMSCombUp, &graphChargedPionSpecCMSSystPPCMSCombUp ) ;
+// 
 	cout << "*************************************************************************"<< endl;	
 	cout << "******************************  PP 7TeV *********************************"<< endl;
 	cout << "*************************************************************************"<< endl;
@@ -3041,12 +3041,12 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 	histo2DCompCombinedRatio2->DrawCopy();
 
 	
-		DrawGammaSetMarkerTGraphErr(graphRatioHighPtChargedPionsCombUpPP, markerStyleCombHighPt, markerSizeComparison, colorCombHighPt , colorCombHighPt);
-		graphRatioHighPtChargedPionsCombUpPP->Draw("E1psame");
-		DrawGammaSetMarkerTGraphErr(graphRatioLowPtChargedPionsCombUpPP, markerStyleCombLowPt, markerSizeComparison, colorCombLowPt , colorCombLowPt);
-		graphRatioLowPtChargedPionsCombUpPP->Draw("E1psame");
-		DrawGammaSetMarkerTGraphErr(graphRatioLowPtChargedPionsCombUpPPCMS,22,markerSizeComparison, kRed , kRed);
-		graphRatioLowPtChargedPionsCombUpPPCMS->Draw("E1psame");
+// 		DrawGammaSetMarkerTGraphErr(graphRatioHighPtChargedPionsCombUpPP, markerStyleCombHighPt, markerSizeComparison, colorCombHighPt , colorCombHighPt);
+// 		graphRatioHighPtChargedPionsCombUpPP->Draw("E1psame");
+// 		DrawGammaSetMarkerTGraphErr(graphRatioLowPtChargedPionsCombUpPP, markerStyleCombLowPt, markerSizeComparison, colorCombLowPt , colorCombLowPt);
+// 		graphRatioLowPtChargedPionsCombUpPP->Draw("E1psame");
+// 		DrawGammaSetMarkerTGraphErr(graphRatioLowPtChargedPionsCombUpPPCMS,22,markerSizeComparison, kRed , kRed);
+// 		graphRatioLowPtChargedPionsCombUpPPCMS->Draw("E1psame");
 		
 		labelRatioPi02760GeV->Draw();
 		legendPi0CompChargedPionsPP->Draw();
@@ -3066,27 +3066,27 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 	histo2DCompCombinedRatio2->DrawCopy();
 
 	
-		DrawGammaSetMarkerTGraphErr(graphRatioHighPtChargedPionsCombUpPP, markerStyleCombHighPt, markerSizeComparison, colorCombHighPt , colorCombHighPt);
-		graphRatioHighPtChargedPionsCombUpPP->Draw("E1psame");
-		DrawGammaSetMarkerTGraphErr(graphRatioLowPtChargedPionsCombUpPP, markerStyleCombLowPt, markerSizeComparison, colorCombLowPt , colorCombLowPt);
-		graphRatioLowPtChargedPionsCombUpPP->Draw("E1psame");
-		DrawGammaSetMarkerTGraphErr(graphRatioLowPtChargedPionsCombUpPPCMS,22,markerSizeComparison, kRed , kRed);
-		graphRatioLowPtChargedPionsCombUpPPCMS->Draw("E1psame");
-
-		DrawGammaSetMarkerTGraphErr(graphRatioHighPtChargedPionsCombPP, markerStyleCombHighPt+4, markerSizeComparison, colorCombHighPt , colorCombHighPt);
-		graphRatioHighPtChargedPionsCombPP->Draw("E1psame");
-		DrawGammaSetMarkerTGraphErr(graphRatioLowPtChargedPionsCombPP, markerStyleCombLowPt+4, markerSizeComparison, colorCombLowPt , colorCombLowPt);
-		graphRatioLowPtChargedPionsCombPP->Draw("E1psame");
-		DrawGammaSetMarkerTGraphErr(graphRatioLowPtChargedPionsCombPPCMS,22+4,markerSizeComparison, kRed , kRed);
-		graphRatioLowPtChargedPionsCombPPCMS->Draw("E1psame");
+// 		DrawGammaSetMarkerTGraphErr(graphRatioHighPtChargedPionsCombUpPP, markerStyleCombHighPt, markerSizeComparison, colorCombHighPt , colorCombHighPt);
+// 		graphRatioHighPtChargedPionsCombUpPP->Draw("E1psame");
+// 		DrawGammaSetMarkerTGraphErr(graphRatioLowPtChargedPionsCombUpPP, markerStyleCombLowPt, markerSizeComparison, colorCombLowPt , colorCombLowPt);
+// 		graphRatioLowPtChargedPionsCombUpPP->Draw("E1psame");
+// 		DrawGammaSetMarkerTGraphErr(graphRatioLowPtChargedPionsCombUpPPCMS,22,markerSizeComparison, kRed , kRed);
+// 		graphRatioLowPtChargedPionsCombUpPPCMS->Draw("E1psame");
+// 
+// 		DrawGammaSetMarkerTGraphErr(graphRatioHighPtChargedPionsCombPP, markerStyleCombHighPt+4, markerSizeComparison, colorCombHighPt , colorCombHighPt);
+// 		graphRatioHighPtChargedPionsCombPP->Draw("E1psame");
+// 		DrawGammaSetMarkerTGraphErr(graphRatioLowPtChargedPionsCombPP, markerStyleCombLowPt+4, markerSizeComparison, colorCombLowPt , colorCombLowPt);
+// 		graphRatioLowPtChargedPionsCombPP->Draw("E1psame");
+// 		DrawGammaSetMarkerTGraphErr(graphRatioLowPtChargedPionsCombPPCMS,22+4,markerSizeComparison, kRed , kRed);
+// 		graphRatioLowPtChargedPionsCombPPCMS->Draw("E1psame");
 		
 		
 		labelRatioPi02760GeV->Draw();
 		legendPi0CompChargedPionsPP->SetY1NDC(0.65);
 		legendPi0CompChargedPionsPP->AddEntry((TObject*)0,"","");
-		legendPi0CompChargedPionsPP->AddEntry(graphRatioLowPtChargedPionsCombUpPP,"#pi^{0} up. /#pi^{#pm} low #it{p}_{T} (ALICE)","p");
-		legendPi0CompChargedPionsPP->AddEntry(graphRatioHighPtChargedPionsCombUpPP,"#pi^{0} up./#pi^{#pm} high #it{p}_{T} (ALICE)","p");
-		legendPi0CompChargedPionsPP->AddEntry(graphRatioLowPtChargedPionsCombUpPPCMS,"#pi^{0} up. /#pi^{#pm} low #it{p}_{T} (#pi^{#pm} from CMS)","p");
+// 		legendPi0CompChargedPionsPP->AddEntry(graphRatioLowPtChargedPionsCombUpPP,"#pi^{0} up. /#pi^{#pm} low #it{p}_{T} (ALICE)","p");
+// 		legendPi0CompChargedPionsPP->AddEntry(graphRatioHighPtChargedPionsCombUpPP,"#pi^{0} up./#pi^{#pm} high #it{p}_{T} (ALICE)","p");
+// 		legendPi0CompChargedPionsPP->AddEntry(graphRatioLowPtChargedPionsCombUpPPCMS,"#pi^{0} up. /#pi^{#pm} low #it{p}_{T} (#pi^{#pm} from CMS)","p");
 		legendPi0CompChargedPionsPP->Draw();
 	
 		DrawGammaLines(0., 20 , 1, 1 ,1, kGray, 2);   
@@ -3365,19 +3365,19 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 	
 
 	TFile fCombResultsOutput(Form("ComparisonResults%s.root",dateForOutput.Data()),"UPDATE");
-		graphRatioHighPtChargedPionsCombPP->Write("graphRatioHighPtChargedPionsCombPP2760GeV",TObject::kOverwrite);
-		graphRatioLowPtChargedPionsCombPP->Write("graphRatioLowPtChargedPionsCombPP2760GeV",TObject::kOverwrite);
-		graphRatioLowPtChargedPionsCombPPCMS->Write("graphRatioLowPtChargedPionsCombPPCMS2760GeV",TObject::kOverwrite);
+// 		graphRatioHighPtChargedPionsCombPP->Write("graphRatioHighPtChargedPionsCombPP2760GeV",TObject::kOverwrite);
+// 		graphRatioLowPtChargedPionsCombPP->Write("graphRatioLowPtChargedPionsCombPP2760GeV",TObject::kOverwrite);
+// 		graphRatioLowPtChargedPionsCombPPCMS->Write("graphRatioLowPtChargedPionsCombPPCMS2760GeV",TObject::kOverwrite);
 		graphRatioHighPtChargedPionsPCMPP->Write("graphRatioHighPtChargedPionsPCMPP2760GeV",TObject::kOverwrite);
 		graphRatioLowPtChargedPionsPCMPP->Write("graphRatioLowPtChargedPionsPCMPP2760GeV",TObject::kOverwrite);
 		graphRatioLowPtChargedPionsPCMPPCMS->Write("graphRatioLowPtChargedPionsPCMPPCMS2760GeV",TObject::kOverwrite);   
 		graphRatioHighPtChargedPionsPHOSPP->Write("graphRatioHighPtChargedPionsPHOSPP2760GeV",TObject::kOverwrite);
 		graphRatioLowPtChargedPionsPHOSPP->Write("graphRatioLowPtChargedPionsPHOSPP2760GeV",TObject::kOverwrite);
 
-		graphRatioHighPtChargedPionsCombUpPP->Write("graphRatioHighPtChargedPionsCombUpPP2760GeV",TObject::kOverwrite);
-		graphRatioLowPtChargedPionsCombUpPP->Write("graphRatioLowPtChargedPionsCombUpPP2760GeV",TObject::kOverwrite);
-		graphRatioLowPtChargedPionsCombUpPPCMS->Write("graphRatioLowPtChargedPionsCombUpPPCMS2760GeV",TObject::kOverwrite);
-
+// 		graphRatioHighPtChargedPionsCombUpPP->Write("graphRatioHighPtChargedPionsCombUpPP2760GeV",TObject::kOverwrite);
+// 		graphRatioLowPtChargedPionsCombUpPP->Write("graphRatioLowPtChargedPionsCombUpPP2760GeV",TObject::kOverwrite);
+// 		graphRatioLowPtChargedPionsCombUpPPCMS->Write("graphRatioLowPtChargedPionsCombUpPPCMS2760GeV",TObject::kOverwrite);
+// 
 		
 		graphRatioHighPtChargedPionsCombPP7TeV->Write("graphRatioHighPtChargedPionsCombPP7TeV",TObject::kOverwrite);
 		graphRatioLowPtChargedPionsCombPP7TeV->Write("graphRatioLowPtChargedPionsCombPP7TeV",TObject::kOverwrite);
