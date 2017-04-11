@@ -52,8 +52,8 @@ void CompileCorrectGammaV2(){
         gSystem->AddIncludePath("-I/home/fbock/Photon/Software/PCGGIT/RooUnfold/src"); 
 		gSystem->Load("/home/fbock/Photon/Software/PCGGIT/RooUnfold/libRooUnfold");
 	} else if (homedirectory.CompareTo("/home/daniel") == 0){
-		gSystem->AddIncludePath("-I/home/daniel/data/work/photonconv/AnalysisSoftware/RooUnfold/src");
-		gSystem->Load("/home/daniel/data/work/photonconv/AnalysisSoftware/RooUnfold/libRooUnfold");
+        gSystem->AddIncludePath("-I/home/daniel/data/work/pcgGit/AnalysisSoftware/RooUnfold/src");
+        gSystem->Load("/home/daniel/data/work/pcgGit/AnalysisSoftware/RooUnfold/libRooUnfold");
     } else if (homedirectory.CompareTo("/Users/lucasaltenkaemper") == 0) {
         gSystem->AddIncludePath("-I/Volumes/Data/PWGGA/GammaConv/AnalysisSoftware/RooUnfold/src");
         gSystem->Load("/Volumes/Data/PWGGA/GammaConv/AnalysisSoftware/RooUnfold/libRooUnfold");
