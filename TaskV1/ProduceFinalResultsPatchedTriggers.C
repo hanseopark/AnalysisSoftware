@@ -586,15 +586,15 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 histoTriggerEffPi0[i]->Divide(histoTriggerEffPi0[i],histoEffiBasePi0Temp,1.,1.,"B");
 
 //                //limit trigger efficiency to 1
-//                if(optionEnergy.CompareTo("8TeV") == 0){
-//                  for(Int_t j = 1; j<histoTriggerEffPi0[i]->GetNbinsX()+1; j++){
-//                    Double_t binC = histoTriggerEffPi0[i]->GetBinContent(j);
-//                    if(binC > 1.){
-//                      histoEffBasePi0[i]->SetBinContent(j, histoEffBasePi0[i]->GetBinContent(j)*binC);
-//                      histoTriggerEffPi0[i]->SetBinContent(j, 1.);
-//                    }
-//                  }
-//                }
+                if(optionEnergy.CompareTo("8TeV") == 0){
+                  for(Int_t j = 1; j<histoTriggerEffPi0[i]->GetNbinsX()+1; j++){
+                    Double_t binC = histoTriggerEffPi0[i]->GetBinContent(j);
+                    if(binC > 1.){
+                      histoEffBasePi0[i]->SetBinContent(j, histoEffBasePi0[i]->GetBinContent(j)*binC);
+                      histoTriggerEffPi0[i]->SetBinContent(j, 1.);
+                    }
+                  }
+                }
 
                 histoEffTimesAccPi0[i]                      = (TH1D*)histoEffBasePi0[i]->Clone(Form("EffTimeAcc_%s",  cutNumber[i].Data()));
                 if(histoAcceptancePi0WOEvtWeights[i]){
@@ -624,9 +624,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         }
         
         // temporary fix for error
-        if(mode == 4 && triggerName[i].Contains("EGA") && optionEnergy.CompareTo("8TeV")==0){
-          histoMassPi0MC[i]->SetBinError(histoMassPi0MC[i]->FindBin(19.),histoMassPi0MC[i]->GetBinError(histoMassPi0MC[i]->FindBin(17.5))*(histoMassPi0MC[i]->GetBinContent(histoMassPi0MC[i]->FindBin(19.)) / histoMassPi0MC[i]->GetBinContent(histoMassPi0MC[i]->FindBin(17.5))));
-        }
+//        if(mode == 4 && triggerName[i].Contains("EGA") && optionEnergy.CompareTo("8TeV")==0){
+//          histoMassPi0MC[i]->SetBinError(histoMassPi0MC[i]->FindBin(19.),histoMassPi0MC[i]->GetBinError(histoMassPi0MC[i]->FindBin(17.5))*(histoMassPi0MC[i]->GetBinContent(histoMassPi0MC[i]->FindBin(19.)) / histoMassPi0MC[i]->GetBinContent(histoMassPi0MC[i]->FindBin(17.5))));
+//        }
 
         //Scale spectrum to MBOR
         if (optionEnergy.CompareTo("2.76TeV")==0 && 
@@ -1475,7 +1475,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
         Double_t minEffiTrigPi0         = 0;
         Double_t maxEffiTrigPi0         = 1.1;
-        if(optionEnergy.CompareTo("8TeV") == 0 && mode == 2) maxEffiTrigPi0 = 1.5;
+        //if(optionEnergy.CompareTo("8TeV") == 0 && mode == 2) maxEffiTrigPi0 = 1.5;
         
         TH2F * histo2DTriggerEffiPi0;
         histo2DTriggerEffiPi0 = new TH2F("histo2DTriggerEffiPi0","histo2DTriggerEffiPi0",1000,0., maxPtGlobalPi0,10000,minEffiTrigPi0, maxEffiTrigPi0);
@@ -3811,15 +3811,15 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     histoTriggerEffEta[i]->Divide(histoTriggerEffEta[i],histoEffiBaseEtaTemp,1.,1.,"B");
 
 //                    //limit trigger efficiency to 1
-//                    if(optionEnergy.CompareTo("8TeV") == 0){
-//                      for(Int_t j = 1; j<histoTriggerEffEta[i]->GetNbinsX()+1; j++){
-//                        Double_t binC = histoTriggerEffEta[i]->GetBinContent(j);
-//                        if(binC > 1.){
-//                          histoEffBaseEta[i]->SetBinContent(j, histoEffBaseEta[i]->GetBinContent(j)*binC);
-//                          histoTriggerEffEta[i]->SetBinContent(j, 1.);
-//                        }
-//                      }
-//                    }
+                    if(optionEnergy.CompareTo("8TeV") == 0){
+                      for(Int_t j = 1; j<histoTriggerEffEta[i]->GetNbinsX()+1; j++){
+                        Double_t binC = histoTriggerEffEta[i]->GetBinContent(j);
+                        if(binC > 1.){
+                          histoEffBaseEta[i]->SetBinContent(j, histoEffBaseEta[i]->GetBinContent(j)*binC);
+                          histoTriggerEffEta[i]->SetBinContent(j, 1.);
+                        }
+                      }
+                    }
 
                     histoEffTimesAccEta[i]                      = (TH1D*)histoEffBaseEta[i]->Clone(Form("EffTimeAcc_%s",  cutNumber[i].Data()));
                     if(histoAcceptanceEtaWOEvtWeights[i]){
@@ -4094,7 +4094,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
             Double_t minEffiTrigEta         = 0;
             Double_t maxEffiTrigEta         = 1.1;
-            if(optionEnergy.CompareTo("8TeV") == 0 && mode == 2) maxEffiTrigEta = 1.5;
+            //if(optionEnergy.CompareTo("8TeV") == 0 && mode == 2) maxEffiTrigEta = 1.5;
             
             TH2F * histo2DTriggerEffiEta;
             histo2DTriggerEffiEta = new TH2F("histo2DTriggerEffiEta","histo2DTriggerEffiEta",1000,0., maxPtGlobalEta,10000,minEffiTrigEta, maxEffiTrigEta);
