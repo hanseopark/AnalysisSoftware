@@ -836,44 +836,44 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TDirectory* directoryPHOSPi0                           = (TDirectory*)filePHOS->Get("Pi08TeV");
             TH1D* histoPHOSPi0Mass                = (TH1D*)directoryPHOSPi0->Get("MassPi0");
             histoPHOSPi0Mass->Scale(1000.);
-              //histoPHOSPi0Mass->SetBinContent(histoPHOSPi0Mass->FindBin(32.5),-200.);
+              histoPHOSPi0Mass->SetBinContent(histoPHOSPi0Mass->FindBin(32.5),-200.);
             //for(Int_t k=0; k<6; k++) histoPHOSPi0Mass->SetBinContent(k,0.);
             //for(Int_t k=histoPHOSPi0Mass->GetNbinsX(), j=k-6; k>=j; k--) histoPHOSPi0Mass->SetBinContent(k,0.);
 
             TH1D* histoPHOSPi0FWHMMeV                = (TH1D*)directoryPHOSPi0->Get("FWHMPi0MeV");
-              //histoPHOSPi0FWHMMeV->SetBinContent(histoPHOSPi0FWHMMeV->FindBin(32.5),-200.);
+              histoPHOSPi0FWHMMeV->SetBinContent(histoPHOSPi0FWHMMeV->FindBin(32.5),-200.);
             //for(Int_t k=0; k<6; k++) histoPHOSPi0FWHMMeV->SetBinContent(k,-1000.);
            // for(Int_t k=histoPHOSPi0FWHMMeV->GetNbinsX(), j=k-6; k>=j; k--) histoPHOSPi0FWHMMeV->SetBinContent(k,-1000.);
 
             TH1D* histoPHOSPi0TrueMass              = (TH1D*)directoryPHOSPi0->Get("TrueMassPi0");
             histoPHOSPi0TrueMass->Scale(1000.);
-              //histoPHOSPi0TrueMass->SetBinContent(histoPHOSPi0TrueMass->FindBin(32.5),-200.);
+              histoPHOSPi0TrueMass->SetBinContent(histoPHOSPi0TrueMass->FindBin(32.5),-200.);
            // for(Int_t k=0; k<1; k++) histoPHOSPi0TrueMass->SetBinContent(k,0.);
            // for(Int_t k=histoPHOSPi0TrueMass->GetNbinsX(), j=k-5; k>=j; k--) histoPHOSPi0TrueMass->SetBinContent(k,0.);
 
             TH1D* histoPHOSPi0TrueFWHMMeV              = (TH1D*)directoryPHOSPi0->Get("TrueFWHMPi0MeV");
-             //histoPHOSPi0TrueFWHMMeV->SetBinContent(histoPHOSPi0TrueFWHMMeV->FindBin(32.5),-200.);
+             histoPHOSPi0TrueFWHMMeV->SetBinContent(histoPHOSPi0TrueFWHMMeV->FindBin(32.5),-200.);
            // for(Int_t k=0; k<1; k++) histoPHOSPi0TrueFWHMMeV->SetBinContent(k,-1000.);
            // for(Int_t k=histoPHOSPi0TrueFWHMMeV->GetNbinsX(), j=k-5; k>=j; k--) histoPHOSPi0TrueFWHMMeV->SetBinContent(k,-1000.);
 
             TH1D* histoPHOSPi0Acc                 = (TH1D*)directoryPHOSPi0->Get("AcceptancePi0");
-              //histoPHOSPi0Acc->SetBinContent(histoPHOSPi0Acc->FindBin(32.5),-1.);
+              histoPHOSPi0Acc->SetBinContent(histoPHOSPi0Acc->FindBin(32.5),-1.);
             //for(Int_t k=histoPHOSPi0Acc->GetNbinsX(), j=k-5; k>=j; k--) histoPHOSPi0Acc->SetBinContent(k,0.);
 
             TH1D* histoPHOSPi0TrueEffPt               = (TH1D*)directoryPHOSPi0->Get("EfficiencyPi0");
-              //histoPHOSPi0TrueEffPt->SetBinContent(histoPHOSPi0TrueEffPt->FindBin(32.5),-1.);
+              histoPHOSPi0TrueEffPt->SetBinContent(histoPHOSPi0TrueEffPt->FindBin(32.5),-1.);
            // for(Int_t k=histoPHOSPi0TrueEffPt->GetNbinsX(), j=k-5; k>=j; k--) histoPHOSPi0TrueEffPt->SetBinContent(k,0.);
 
             TH1D* histoPHOSPi0AccTimesEff      = (TH1D*)histoPHOSPi0TrueEffPt->Clone("histoPHOSPi0AccTimesEff");
-              //histoPHOSPi0AccTimesEff->SetBinContent(histoPHOSPi0AccTimesEff->FindBin(32.5),-1.);
+              histoPHOSPi0AccTimesEff->SetBinContent(histoPHOSPi0AccTimesEff->FindBin(32.5),-1.);
             histoPHOSPi0AccTimesEff->Multiply(histoPHOSPi0Acc);
             histoPHOSPi0AccTimesEff->Scale(2*TMath::Pi());
             //TH1D* graphPHOSPi0AccTimesEff         = (TH1D*)directoryPHOSPi0->Get("EffTimesAccPi0_MB");
 
             TH1D* histoPHOSPi0InvXSectionStat                   = (TH1D*)directoryPHOSPi0->Get("InvCrossSectionPi0");
-              //histoPHOSPi0InvXSectionStat->SetBinContent(histoPHOSPi0InvXSectionStat->FindBin(32.5),0.);
+              histoPHOSPi0InvXSectionStat->SetBinContent(histoPHOSPi0InvXSectionStat->FindBin(32.5),0.);
             TGraphAsymmErrors* graphPHOSPi0InvXSectionStat      = new TGraphAsymmErrors(histoPHOSPi0InvXSectionStat);
-              //graphPHOSPi0InvXSectionStat->RemovePoint(graphPHOSPi0InvXSectionStat->GetN()-1);
+              graphPHOSPi0InvXSectionStat->RemovePoint(graphPHOSPi0InvXSectionStat->GetN()-1);
             cout << "Pi0 stat PHOS" << endl;
             graphPHOSPi0InvXSectionStat->Print();
 
@@ -885,7 +885,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
             
             TGraphAsymmErrors* graphPHOSPi0InvXSectionSys       = new TGraphAsymmErrors(dummySysGraphPHOS->GetN(), xValuePHOS, yValuePHOS, xErrPHOS, xErrPHOS, yErrPHOS, yErrPHOS);
             cout << "Pi0 sys PHOS" << endl;
-              //graphPHOSPi0InvXSectionSys->RemovePoint(graphPHOSPi0InvXSectionSys->GetN()-1);
+              graphPHOSPi0InvXSectionSys->RemovePoint(graphPHOSPi0InvXSectionSys->GetN()-1);
             graphPHOSPi0InvXSectionSys->Print();
 
 
@@ -3918,7 +3918,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TH2F * histo2DAllPi0FWHM    = new TH2F("histo2DAllPi0FWHM","histo2DAllPi0FWHM", 20, 0.23, 50. ,1000., -30, 60);
         SetStyleHistoTH2ForGraphs(histo2DAllPi0FWHM, "#it{p}_{T} (GeV/#it{c})", "Peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth, textsizeLabelsWidth,
                                   0.85*textsizeLabelsWidth, textsizeLabelsWidth, 0.8,0.28/(textsizeFacWidth*margin), 510, 505);
-        histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.5,39.5);
+        histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.5,44.5);
         histo2DAllPi0FWHM->GetYaxis()->SetMoreLogLabels(kTRUE);
         histo2DAllPi0FWHM->GetYaxis()->SetNdivisions(505);
         histo2DAllPi0FWHM->GetYaxis()->SetNoExponent(kTRUE);
@@ -4004,7 +4004,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphPCMEMCALPi0Mass->Draw("p,same,z");
         DrawGammaSetMarkerTGraphAsym(graphPCMEMCALPi0MassMC, markerStyleDetMC[4], markerSizeDetMC[4]*0.55, colorDetMC[4] , colorDetMC[4]);
         graphPCMEMCALPi0MassMC->Draw("p,same,z");
-        
+
 
         DrawGammaLines(0.23, 50. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
 
@@ -4080,7 +4080,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     padWidthPi0->cd();
     padWidthPi0->SetLogx(); 
 
-        histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.5,39.5);
+        histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.5,44.5);
         histo2DAllPi0FWHM->DrawCopy(); 
 
         DrawGammaSetMarker(histoPCMPi0FWHMMeV, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
@@ -4178,13 +4178,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         histoPHOSPi0Mass->Draw("p,same,e");
         DrawGammaSetMarker(histoPHOSPi0TrueMass, markerStyleDetMC[1], markerSizeDetMC[1]*0.55, colorDetMC[1] , colorDetMC[1]);
         histoPHOSPi0TrueMass->Draw("p,same,e");
-        
+
         graphEMCALPi0Mass->Draw("p,same,z");
         graphEMCALPi0MassMC->Draw("p,same,z");
         
         graphPCMEMCALPi0Mass->Draw("p,same,z");
         graphPCMEMCALPi0MassMC->Draw("p,same,z");
-        
+
 
         DrawGammaLines(0.23, 50. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
 
@@ -4278,7 +4278,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphEMCALEtaFWHM, markerStyleDet[2], markerSizeDet[2]*0.55, colorDet[2] , colorDet[2]);
         graphEMCALEtaFWHM->Draw("p,same,z");
         DrawGammaSetMarkerTGraphAsym(graphEMCALEtaFWHMMC, markerStyleDetMC[2], markerSizeDetMC[2]*0.55, colorDetMC[2] , colorDetMC[2]);
-        graphEMCALEtaFWHMMC->Draw("p,same,z");        
+        graphEMCALEtaFWHMMC->Draw("p,same,z");
         
         DrawGammaSetMarkerTGraphAsym(graphPCMEMCALEtaFWHM, markerStyleDet[4], markerSizeDet[4]*0.55, colorDet[4] , colorDet[4]);
         graphPCMEMCALEtaFWHM->Draw("p,same,z");
@@ -4338,7 +4338,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphEMCALEtaMass->Draw("p,same,z");
         DrawGammaSetMarkerTGraphAsym(graphEMCALEtaMassMC, markerStyleDetMC[2], markerSizeDetMC[2]*0.55, colorDetMC[2] , colorDetMC[2]);
         graphEMCALEtaMassMC->Draw("p,same,z");
-        
+
         DrawGammaSetMarkerTGraphAsym(graphPCMEMCALEtaMass, markerStyleDet[4], markerSizeDet[4]*0.55, colorDet[4] , colorDet[4]);
         graphPCMEMCALEtaMass->Draw("p,same,z");
         DrawGammaSetMarkerTGraphAsym(graphPCMEMCALEtaMassMC, markerStyleDetMC[4], markerSizeDetMC[4]*0.55, colorDetMC[4] , colorDetMC[4]);

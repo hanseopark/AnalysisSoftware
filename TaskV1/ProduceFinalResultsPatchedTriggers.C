@@ -623,11 +623,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             histoEffTimesAccPi0[i]->Scale(deltaRapid[i]*2*TMath::Pi());
         }
         
-        // temporary fix for error
-//        if(mode == 4 && triggerName[i].Contains("EGA") && optionEnergy.CompareTo("8TeV")==0){
-//          histoMassPi0MC[i]->SetBinError(histoMassPi0MC[i]->FindBin(19.),histoMassPi0MC[i]->GetBinError(histoMassPi0MC[i]->FindBin(17.5))*(histoMassPi0MC[i]->GetBinContent(histoMassPi0MC[i]->FindBin(19.)) / histoMassPi0MC[i]->GetBinContent(histoMassPi0MC[i]->FindBin(17.5))));
-//        }
-
         //Scale spectrum to MBOR
         if (optionEnergy.CompareTo("2.76TeV")==0 && 
             (triggerName[i].Contains("INT7")|| triggerName[i].Contains("EMC7") || triggerName[i].Contains("EG1") || triggerName[i].Contains("EG2")) && 
@@ -5982,7 +5977,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 graphsEtaToPi0SysRemoved0[i]    = new TGraphAsymmErrors(histoEtaToPi0[i]);
                 histoEtaToPi0Masked[i]          = (TH1D*)histoEtaToPi0[i]->Clone(Form("EtaToPi0%s_Masked_%s",addNameBinshift.Data(), triggerName[i].Data()));
                 
-                if(optionEnergy.CompareTo("8TeV")==0 && mode==4 && triggerName[i].Contains("EGA")) ptFromSpecEta[i][0] = 16;
+                if(optionEnergy.CompareTo("8TeV")==0 && mode==4 && triggerName[i].Contains("EGA")) ptFromSpecEta[i][0] = 16.0;
                 cout << ptFromSpecEta[i][0] << endl;
                 // remove 0 bins at beginning according to ptFromSpecEta[i][0]
                 Int_t binsToMask = 1;
