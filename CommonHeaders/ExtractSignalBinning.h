@@ -1477,7 +1477,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 } else if (fNBinsPt > 28 &&  modi == 2 && specialTrigg == 3){
                     cout << "You have chosen to have more than 28 bins, this is not possible, it will be reduced to 28" << endl;
                     fNBinsPt    = 28;
-                } else if (fNBinsPt > 25 && (modi == 2  && (specialTrigg == 4 || specialTrigg == 1 || specialTrigg == 2 )) || (modi == 3 && specialTrigg == 4)){
+                } else if (fNBinsPt > 25 && ( (modi == 2  && (specialTrigg == 4 || specialTrigg == 1 || specialTrigg == 2 )) || (modi == 3 && specialTrigg == 4) )){
                     cout << "You have chosen to have more than 25 bins, this is not possible, it will be reduced to 25" << endl;
                     fNBinsPt    = 25;
                 } else if (fNBinsPt > 32 && (modi == 10)){
@@ -2203,7 +2203,7 @@ void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TStri
                 } else if (!centDCA.CompareTo("20-50%")) {
                     nIterBGFit                  = 17;
                     fMaxYFracBGOverIntHist      = 12;
-                } else if (!centDCA.CompareTo("20-40%") == 0){
+                } else if (!centDCA.CompareTo("20-40%")){
                     if (!periodDCA.CompareTo("LHC11h")){
                         nIterBGFit              = 17;
                         fMaxYFracBGOverIntHist  = 8;

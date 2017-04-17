@@ -1426,7 +1426,7 @@ TH1D *GraphAsymErrorsToHist_withErrors( TGraphAsymmErrors *graph,
 
     for(Int_t i = 1;i<=nPoints;i++){
       hist->SetBinContent(i,yValue[i-1]);
-      if (Eyhigh[i-1]<Eylow[i-1])Eyhigh[i-1]==Eylow[i-1];
+      if (Eyhigh[i-1]<Eylow[i-1]) Eyhigh[i-1]=Eylow[i-1];
       hist->SetBinError(i,Eyhigh[i-1]);
     }
 

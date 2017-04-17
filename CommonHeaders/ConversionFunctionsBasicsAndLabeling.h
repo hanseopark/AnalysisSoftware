@@ -2944,8 +2944,11 @@ TString AnalyseTrackMatchingCut(Int_t trackmatching, Int_t clusterType ){
             default:
                 return "track missmatch not defined ";
         }
-    }    
-}  
+    } else {
+        cout << "AnalyseTrackMatchingCut: clusterType " << clusterType << " not recognized!" << endl;
+        return "track missmatch not defined ";
+    }
+}
 
 //************************************************************************************
 //**** Analyzes the cluster track matching cuts for calo, return correct cut label ***
@@ -2989,7 +2992,10 @@ TString AnalyseTrackMatchingCaloCut(Int_t trackmatching, Int_t clusterType ){
             default:
                 return "track missmatch not defined ";
         }
-    }    
+    } else {
+        cout << "AnalyseTrackMatchingCaloCut: clusterType " << clusterType << " not recognized!" << endl;
+        return "track missmatch not defined ";
+    }
 }  
 
 //************************************************************************************
@@ -3809,7 +3815,10 @@ TString ReturnFullTextReconstructionProcess( Int_t mode, Int_t separate = 0, TSt
             default:
                 return "not known";
         }    
-    }    
+    } else {
+        cout << "ReturnFullTextReconstructionProcess: separate" << separate << " not recognized!" << endl;
+        return "not known";
+    }
 }
 
 //************************************************************************************

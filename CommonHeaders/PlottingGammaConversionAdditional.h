@@ -3333,7 +3333,7 @@ void PutThisThesisLabel(Double_t    startTextX,
 
   if(!alignLeft) label->SetTextAlign(31);
   label->SetNDC();
-  label->SetTextColor(1);
+  label->SetTextColor(textColor);
   label->SetTextFont(textFont);
   label->SetTextSize(textHeight);
   label->Draw();
@@ -3357,7 +3357,7 @@ void PutALICESimulationLabel(Double_t   startTextX,
   
   if(!alignLeft) label->SetTextAlign(31);
   label->SetNDC();
-  label->SetTextColor(1);
+  label->SetTextColor(textColor);
   label->SetTextFont(textFont);
   label->SetTextSize(textHeight);
   label->Draw();
@@ -4324,16 +4324,16 @@ Marker_t GetDefaultTriggerMarkerStyleName (TString triggerName, Bool_t isShade )
 
 Marker_t GetDefaultTriggerMarkerSizeName (TString triggerName, Bool_t isShade ){
     if ((triggerName.Contains("MB_NLM1") || triggerName.Contains("INT1_NLM1") )&& !isShade)  return 2;
-    else if ((triggerName.Contains("MB") || triggerName.Contains("INT1") )&& !isShade)       return 1.5;
+    else if ((triggerName.Contains("MB") || triggerName.Contains("INT1") )&& !isShade)       return (Marker_t)1.5;
     else if ((triggerName.Contains("MB_NLM1") || triggerName.Contains("INT1_NLM1") )&& isShade) return 2;
-    else if ((triggerName.Contains("MB") || triggerName.Contains("INT1") )&& isShade)        return 1.5;
+    else if ((triggerName.Contains("MB") || triggerName.Contains("INT1") )&& isShade)        return (Marker_t)1.5;
     else if (triggerName.Contains("INT7_NLM1") && !isShade) return 2;
-    else if (triggerName.Contains("INT7") && !isShade)      return 1.5;
+    else if (triggerName.Contains("INT7") && !isShade)      return (Marker_t)1.5;
     else if (triggerName.Contains("INT7_NLM1") && isShade)  return 2;
-    else if (triggerName.Contains("INT7") && isShade)       return 1.5;
-    else if (triggerName.Contains("EMC1_NLM1") && !isShade) return 1.5;
-    else if (triggerName.Contains("EMC1") && !isShade) return 1.5;
-    else if (triggerName.Contains("EMC1") && isShade)  return 1.5;
+    else if (triggerName.Contains("INT7") && isShade)       return (Marker_t)1.5;
+    else if (triggerName.Contains("EMC1_NLM1") && !isShade) return (Marker_t)1.5;
+    else if (triggerName.Contains("EMC1") && !isShade) return (Marker_t)1.5;
+    else if (triggerName.Contains("EMC1") && isShade)  return (Marker_t)1.5;
     else if (triggerName.Contains("EMC7_NLM1") && !isShade) return 2.;
     else if (triggerName.Contains("EMC7") && !isShade) return 2.;
     else if (triggerName.Contains("EMC7") && isShade)  return 2.;
@@ -4343,9 +4343,9 @@ Marker_t GetDefaultTriggerMarkerSizeName (TString triggerName, Bool_t isShade ){
     else if (triggerName.Contains("EG1_NLM1") && !isShade)  return 2;
     else if (triggerName.Contains("EG1") && !isShade)  return 2;
     else if (triggerName.Contains("EG1") && isShade)   return 2;    
-    else return 1.5;
+    else return (Marker_t)1.5;
     
-    return 1.5;
+    return (Marker_t)1.5;
 }
 
 
