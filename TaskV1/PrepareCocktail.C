@@ -1357,6 +1357,9 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     //***************************** Plot pi0 from data vs. cocktail inputs + param **********************************
     if (histoPi0YieldData && cocktailInputParametrizations[0] && hasPi0CocktailInput) {
 
+        TF1* pi0Parametrization                                     = (TF1*)cocktailInputParametrizations[0]->Clone("pi0Parametrization");
+        pi0Parametrization                                          = ScaleTF1(pi0Parametrization, eventNormScalingFactor, "pi0Parametrization");
+
         ptPlotMin                                                   = 0.2;
         ptPlotMax                                                   = 30;
 
@@ -1379,11 +1382,10 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
 
         padSpectrumPi0Comp->cd();
 
-        Int_t nPi0CompLegendEntries                                 = 1;
+        Int_t nPi0CompLegendEntries                                 = 2;
         for (Int_t i=0; i<nCocktailInputMethods; i++) {
             if (histoPi0CocktailInput[i])     nPi0CompLegendEntries = nPi0CompLegendEntries+1;
         }
-        if (cocktailInputParametrizations[0]) nPi0CompLegendEntries = nPi0CompLegendEntries+1;
 
         TLegend* legendPi0Comp                                      = GetAndSetLegend2(0.7, 0.95-(0.045*nPi0CompLegendEntries), 0.85, 0.95, 40);
         legendPi0Comp->SetBorderSize(0);
@@ -1397,11 +1399,11 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         legendPi0Comp->AddEntry(histoPi0YieldData, Form("%s current ana.", motherParticlesLatex[0].Data()), "p");
         histoPi0YieldData->Draw("e1,same");
 
-        cocktailInputParametrizations[0]->SetLineColor(kBlack);
-        cocktailInputParametrizations[0]->SetLineStyle(1);
-        cocktailInputParametrizations[0]->SetLineWidth(2);
-        legendPi0Comp->AddEntry(cocktailInputParametrizations[0], Form("%s param.", motherParticlesLatex[0].Data()), "l");
-        cocktailInputParametrizations[0]->Draw("same");
+        pi0Parametrization->SetLineColor(kBlack);
+        pi0Parametrization->SetLineStyle(1);
+        pi0Parametrization->SetLineWidth(2);
+        legendPi0Comp->AddEntry(pi0Parametrization, Form("%s param.", motherParticlesLatex[0].Data()), "l");
+        pi0Parametrization->Draw("same");
 
         for (Int_t i=0; i<nCocktailInputMethods; i++) {
             if (!histoPi0CocktailInput[i]) continue;
@@ -1429,7 +1431,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
 
         TH1D* ratioPi0CurrToParam                                   = (TH1D*)histoPi0YieldData->Clone("ratioPi0CurrToParam");
         ratioPi0CurrToParam->Sumw2();
-        ratioPi0CurrToParam->Divide(cocktailInputParametrizations[0]);
+        ratioPi0CurrToParam->Divide(pi0Parametrization);
 
         TH1F** ratioPi0ToParam                                      = new TH1F*[nCocktailInputMethods];
         for (Int_t i=0; i<nCocktailInputMethods; i++) {
@@ -1437,7 +1439,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
             if (histoPi0CocktailInput[i]) {
                 ratioPi0ToParam[i]                                  = (TH1F*)histoPi0CocktailInput[i]->Clone(Form("ratioPi0ToParam%d", i));
                 ratioPi0ToParam[i]->Sumw2();
-                ratioPi0ToParam[i]->Divide(cocktailInputParametrizations[0]);
+                ratioPi0ToParam[i]->Divide(pi0Parametrization);
             } else {
                 ratioPi0ToParam[i]                                  = NULL;
             }
@@ -1462,6 +1464,9 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     //***************************** Plot eta from data vs. cocktail inputs + param **********************************
     if (histoEtaYieldData && cocktailInputParametrizations[1] && hasEtaCocktailInput) {
 
+        TF1* etaParametrization                                     = (TF1*)cocktailInputParametrizations[1]->Clone("etaParametrization");
+        etaParametrization                                          = ScaleTF1(etaParametrization, eventNormScalingFactor, "etaParametrization");
+
         ptPlotMin                                                   = 0.2;
         ptPlotMax                                                   = 30;
 
@@ -1484,11 +1489,10 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
 
         padSpectrumEtaComp->cd();
 
-        Int_t nEtaCompLegendEntries                                 = 1;
+        Int_t nEtaCompLegendEntries                                 = 2;
         for (Int_t i=0; i<nCocktailInputMethods; i++) {
             if (histoEtaCocktailInput[i])     nEtaCompLegendEntries = nEtaCompLegendEntries+1;
         }
-        if (cocktailInputParametrizations[1]) nEtaCompLegendEntries = nEtaCompLegendEntries+1;
 
         TLegend* legendEtaComp                                      = GetAndSetLegend2(0.7, 0.95-(0.045*nEtaCompLegendEntries), 0.85, 0.95, 40);
         legendEtaComp->SetBorderSize(0);
@@ -1502,11 +1506,11 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         legendEtaComp->AddEntry(histoEtaYieldData, Form("%s current ana.", motherParticlesLatex[1].Data()), "p");
         histoEtaYieldData->Draw("e1,same");
 
-        cocktailInputParametrizations[1]->SetLineColor(kBlack);
-        cocktailInputParametrizations[1]->SetLineStyle(1);
-        cocktailInputParametrizations[1]->SetLineWidth(2);
-        legendEtaComp->AddEntry(cocktailInputParametrizations[1], Form("%s param.", motherParticlesLatex[1].Data()), "l");
-        cocktailInputParametrizations[1]->Draw("same");
+        etaParametrization->SetLineColor(kBlack);
+        etaParametrization->SetLineStyle(1);
+        etaParametrization->SetLineWidth(2);
+        legendEtaComp->AddEntry(etaParametrization, Form("%s param.", motherParticlesLatex[1].Data()), "l");
+        etaParametrization->Draw("same");
 
         for (Int_t i=0; i<nCocktailInputMethods; i++) {
             if (!histoEtaCocktailInput[i]) continue;
@@ -1534,7 +1538,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
 
         TH1D* ratioEtaCurrToParam                                   = (TH1D*)histoEtaYieldData->Clone("ratioEtaCurrToParam");
         ratioEtaCurrToParam->Sumw2();
-        ratioEtaCurrToParam->Divide(cocktailInputParametrizations[1]);
+        ratioEtaCurrToParam->Divide(etaParametrization);
 
         TH1F** ratioEtaToParam                                      = new TH1F*[nCocktailInputMethods];
         for (Int_t i=0; i<nCocktailInputMethods; i++) {
@@ -1542,7 +1546,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
             if (histoEtaCocktailInput[i]) {
                 ratioEtaToParam[i]                                  = (TH1F*)histoEtaCocktailInput[i]->Clone(Form("ratioEtaToParam%d", i));
                 ratioEtaToParam[i]->Sumw2();
-                ratioEtaToParam[i]->Divide(cocktailInputParametrizations[1]);
+                ratioEtaToParam[i]->Divide(etaParametrization);
             } else {
                 ratioEtaToParam[i]                                  = NULL;
             }
