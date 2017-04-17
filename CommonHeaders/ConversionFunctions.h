@@ -406,28 +406,47 @@ TH1D* CorrectHistoToBinCenter (TH1D* histo){
 //**********************************************************************************************************
 // Calculates the ratio of a graph and a fit
 //**********************************************************************************************************
-TGraphAsymmErrors* MultiplyGraphAsymmErrs (TGraphAsymmErrors* graph_1, TGraphAsymmErrors* graph_2 ){
-    TGraphAsymmErrors* graph    = (TGraphAsymmErrors*)graph_1->Clone("dummy");
-//     Double_t* xValue            = graph->GetX(); 
-//     Double_t* yValue            = graph->GetY();
-//     Double_t* xErrorHigh        = graph->GetEXhigh();
-//     Double_t* xErrorLow         = graph->GetEXlow();
-//     Double_t* yErrorHigh        = graph->GetEYhigh();
-//     Double_t* yErrorLow         = graph->GetEYlow();
-//     Int_t nPoints               = graph->GetN();
-//     graph_1->Print();
-//     graph_2->Print();
-//     for (Int_t i = 0; i < nPoints; i++){
-//         cout << i << endl;
-//         yValue[i]               = yValue[i]*graph_2->GetY()[i];
-//         yErrorLow[i]            = TMath::Abs(yValue[i]) * TMath::Sqrt( pow(graph_1->GetEYlow()[i]/graph_1->GetY()[i],2) + pow(graph_2->GetEYlow()[i]/graph_2->GetY()[i],2));
-//         yErrorHigh[i]           = TMath::Abs(yValue[i]) * TMath::Sqrt( pow(graph_1->GetEYhigh()[i]/graph_1->GetY()[i],2) + pow(graph_2->GetEYhigh()[i]/graph_2->GetY()[i],2));
-//     }
-//     cout << "here" << endl;
-//     returnGraph  = new TGraphAsymmErrors(nPoints, xValue, yValue, xErrorLow, xErrorHigh, yErrorLow, yErrorHigh); 
-//     returnGraph->Print();
+TGraphAsymmErrors* MultiplyGraphAsymmErrs (TGraphAsymmErrors* graph_1, TGraphAsymmErrors* graph_2){
+
+    // check for same "binning" in x
+    Int_t nPoints1          = graph_1->GetN();
+    Int_t nPoints2          = graph_2->GetN();
+    if (nPoints1 != nPoints2) return NULL;
+    Double_t* xValue1       = graph_1->GetX();
+    Double_t* xValue2       = graph_2->GetX();
+    for (Int_t i=0; i<nPoints1; i++) {
+        if (xValue1[i] != xValue2[i]) return NULL;
+    }
+    Double_t* xErrorLow1    = graph_1->GetEXlow();
+    Double_t* xErrorHigh1   = graph_1->GetEXhigh();
+    Double_t* xErrorLow2    = graph_2->GetEXlow();
+    Double_t* xErrorHigh2   = graph_2->GetEXhigh();
+    for (Int_t i=0; i<nPoints1; i++) {
+        if (xErrorLow1[i] != xErrorLow2[i])     return NULL;
+        if (xErrorHigh1[i] != xErrorHigh2[i])   return NULL;
+    }
+
+    // get y values and errors
+    Double_t* yValue1       = graph_1->GetY();
+    Double_t* yValue2       = graph_2->GetY();
+    Double_t* yErrorLow1    = graph_1->GetEYlow();
+    Double_t* yErrorHigh1   = graph_1->GetEYhigh();
+    Double_t* yErrorLow2    = graph_2->GetEYlow();
+    Double_t* yErrorHigh2   = graph_2->GetEYhigh();
+
+    // calculate new yValues and errors
+    Double_t* yValueNew     = new Double_t[nPoints1];
+    Double_t* yErrorLowNew  = new Double_t[nPoints1];
+    Double_t* yErrorHighNew = new Double_t[nPoints1];
+    for (Int_t i=0; i<nPoints1; i++) {
+        yValueNew[i]        = yValue1[i] * yValue2[i];
+        yErrorLowNew[i]     = TMath::Sqrt( TMath::Power(yErrorLow1[i]*yValue2[i],2) + TMath::Power(yErrorLow2[i]*yValue1[i],2) );
+        yErrorHighNew[i]    = TMath::Sqrt( TMath::Power(yErrorHigh1[i]*yValue2[i],2) + TMath::Power(yErrorHigh2[i]*yValue1[i],2) );
+    }
+
+    TGraphAsymmErrors* graph = new TGraphAsymmErrors(nPoints1, xValue1, yValueNew, xErrorLow1, xErrorHigh1, yErrorLowNew, yErrorHighNew);
+    graph->SetName(Form("%sTimes%s", graph_1->GetName(), graph_2->GetName()));
     return graph;
-    cout << "here" << endl;
 }
 
 //**********************************************************************************************************
