@@ -6,6 +6,11 @@
 #ifndef GAMMACONV_CombinationFunctions
 #define GAMMACONV_CombinationFunctions
 
+    //**************************************************************************************************************************
+    //************************************************* Combination functions header *******************************************
+    //**************************************************************************************************************************
+    //***************** this header contains the functions needed to compare and combine different analysis ********************
+    //**************************************************************************************************************************
     #include "TMatrixD.h"
     #include "TArrayD.h"
 
@@ -49,7 +54,7 @@
                                                 TGraphAsymmErrors* &graphStatComb,     TGraphAsymmErrors* &graphSystComb,  
                                                 Double_t* xPtLimits,    Int_t nPtLimits,
                                                 Int_t offset,   Int_t bin0PCM,     Int_t bin0PHOS, Bool_t kRemoveLastPCMPoint=kFALSE, Int_t nBinsPCMRem = 1, Bool_t kRemoveFirstPHOSPoint =kFALSE){
-
+    
         TGraphErrors* graphStatErrPHOS              = new TGraphErrors(histoPHOS);  
         TGraphErrors* graphStatErrPCM               = new TGraphErrors(histoPCM);
         TGraphAsymmErrors* graphSystPCMClone        = (TGraphAsymmErrors*)graphSystPCM->Clone("DummyPCM");  
@@ -84,7 +89,7 @@
         graphStatErrPCM->Print();
             cout<<endl;
         graphSystPCMClone->Print();
-
+    
         Int_t nPHOS                                 = graphSystPHOSClone->GetN();
         Double_t* xPHOS                             = graphStatErrPHOS->GetX();
         Double_t* yPHOS                             = graphStatErrPHOS->GetY();
@@ -233,7 +238,7 @@
                                             TGraphAsymmErrors* &graphStatComb,     TGraphAsymmErrors* &graphSystComb,  
                                             Double_t* xPtLimits,    Int_t nPtLimits,
                                             Int_t offset,            Int_t bin0PCM,     Int_t bin0PHOS, Bool_t kRemoveLastPCMPoint=kFALSE, Int_t nBinsPCMRem = 1){
-
+    
         TString detName = "";
         TString histoName = graphStatErrPHOS->GetName();
         if(histoName.Contains("EMC")) detName = "EMCal";
@@ -687,7 +692,7 @@
         Double_t binningOldSyst[200] ;
         Int_t validBinsOldStat          = GetBinning(Obj_DummyStat, binningOldStat);
         Int_t validBinsOldSys           = GetBinning(Obj_DummySyst, binningOldSyst);  
-
+    
         Int_t firstBinStat              = FindFirstCommonBin(vectorNewBinning, binningOldStat);
         Int_t firstBinSyst              = FindFirstCommonBin(vectorNewBinning, binningOldSyst);
         
@@ -1025,7 +1030,7 @@
                                                         TGraphAsymmErrors* &graphSystAComb, TGraphAsymmErrors* &graphSystBComb, TGraphAsymmErrors* &graphSystCComb, 
                                                         Double_t* xPtLimits,    Int_t nPtLimits,
                                                         Int_t offset,            Int_t bin0PCM,     Int_t bin0PHOS, Bool_t kRemoveLastPCMPoint=kFALSE, Int_t nBinsPCMRem = 1){
-
+    
         TGraphErrors* graphStatErrPHOS              = new TGraphErrors(histoPHOS);  
         TGraphErrors* graphStatErrPCM               = new TGraphErrors(histoPCM);
         TGraphAsymmErrors* graphSystPCMClone        = (TGraphAsymmErrors*)graphSystPCM->Clone("DummyPCM");  
@@ -1059,7 +1064,7 @@
         cout << "************************** PCM ************************************************" << endl;
         cout << "********************************************************************************" << endl;
         graphStatErrPCM->Print();
-
+    
         Int_t nPHOS                                 = graphSystPHOSClone->GetN();
         Double_t* xPHOS                             = graphStatErrPHOS->GetX();
         Double_t* yPHOS                             = graphStatErrPHOS->GetY();
@@ -1387,508 +1392,12 @@
             Double_t corrFracPCMDal_PCMEMC_PCMDal   = 0;
             Double_t corrFracEMC_PCM_EMC            = 0;
             Double_t corrFracEMC_PCMDal_EMC         = 0;
-            Double_t corrFracEMC_PHOS_EMC           = 0;
-            Double_t corrFracPCMDal_PCMDal_EMC      = 0;
-            Double_t corrFracPCM_PCM_EMC            = 0;
-            Double_t corrFracPHOS_PHOS_EMC          = 0;
-        
-            if (energy.CompareTo("2.76TeV") == 0 && mesonType.CompareTo("Pi0") == 0){ 
-                if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCM_PCM-PCMEMC") != -10)
-                    corrFracPCM_PCMEMC_PCM          = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCM_PCM-PCMEMC");
-                else    
-                    corrFracPCM_PCMEMC_PCM          = 0.8953;
-                if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMEMC_PCM-PCMEMC") != -10)
-                    corrFracPCM_PCMEMC_PCMEMC       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMEMC_PCM-PCMEMC");
-                else    
-                    corrFracPCM_PCMEMC_PCMEMC       = 0.6631;
-                corrFracEMC_PCMEMC_PCMEMC           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMEMC_PCMEMC-EMC");
-                corrFracEMC_PCMEMC_EMC              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","EMC_PCMEMC-EMC");
-            } else if (energy.CompareTo("2.76TeV") == 0 && mesonType.CompareTo("Eta") == 0){ 
-                if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Eta","PCM_PCM-PCMEMC") != -10)
-                    corrFracPCM_PCMEMC_PCM          = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Eta","PCM_PCM-PCMEMC");
-                else    
-                    corrFracPCM_PCMEMC_PCM          = 0.8592;
-                if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Eta","PCMEMC_PCM-PCMEMC") != -10)
-                    corrFracPCM_PCMEMC_PCMEMC       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Eta","PCMEMC_PCM-PCMEMC");
-                else    
-                    corrFracPCM_PCMEMC_PCMEMC       = 0.6203;
-                corrFracEMC_PCMEMC_PCMEMC           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Eta","PCMEMC_PCMEMC-EMC");
-                corrFracEMC_PCMEMC_EMC              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Eta","EMC_PCMEMC-EMC");
-            } else if (energy.CompareTo("2.76TeV") == 0 && mesonType.CompareTo("EtaToPi0") == 0){ 
-                if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","EtaToPi0","PCM_PCM-PCMEMC") != -10)
-                    corrFracPCM_PCMEMC_PCM          = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","EtaToPi0","PCM_PCM-PCMEMC");
-                else    
-                    corrFracPCM_PCMEMC_PCM          = 0.8592;
-                if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","EtaToPi0","PCMEMC_PCM-PCMEMC") != -10)
-                    corrFracPCM_PCMEMC_PCMEMC       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","EtaToPi0","PCMEMC_PCM-PCMEMC");
-                else    
-                    corrFracPCM_PCMEMC_PCMEMC       = 0.5764;
-                corrFracEMC_PCMEMC_PCMEMC           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Eta","PCMEMC_PCMEMC-EMC");
-                corrFracEMC_PCMEMC_EMC              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Eta","EMC_PCMEMC-EMC");
-            } else if (energy.CompareTo("8TeV") == 0 && mesonType.CompareTo("Pi0") == 0){
-                corrFracPCM_PCMEMC_PCM      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCM_PCM-PCMEMC");
-                corrFracPCM_PCMEMC_PCMEMC   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMEMC_PCM-PCMEMC");
-                corrFracEMC_PCMEMC_PCMEMC   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMEMC_PCMEMC-EMC");
-                corrFracEMC_PCMEMC_EMC      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","EMC_PCMEMC-EMC");
-            } else if (energy.CompareTo("8TeV") == 0 && mesonType.CompareTo("Eta") == 0){
-                corrFracPCM_PCMEMC_PCM      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Eta","PCM_PCM-PCMEMC");
-                corrFracPCM_PCMEMC_PCMEMC   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Eta","PCMEMC_PCM-PCMEMC");
-                corrFracEMC_PCMEMC_EMC      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Eta","EMC_PCMEMC-EMC");
-                corrFracEMC_PCMEMC_PCMEMC   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Eta","PCMEMC_PCMEMC-EMC");
-            } else if (energy.CompareTo("8TeV") == 0 && mesonType.CompareTo("EtaToPi0") == 0){
-                corrFracPCM_PCMEMC_PCM      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0EtaBinning","PCM_PCM-PCMEMC");
-                corrFracPCM_PCMEMC_PCMEMC   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0EtaBinning","PCMEMC_PCM-PCMEMC");
-                corrFracEMC_PCMEMC_EMC      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0EtaBinning","EMC_PCMEMC-EMC");
-                corrFracEMC_PCMEMC_PCMEMC   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0EtaBinning","PCMEMC_PCMEMC-EMC");
-            } else if ( energy.CompareTo("pPb_5.023TeV") == 0 && ( mesonType.CompareTo("Pi0") == 0 || mesonType.CompareTo("Pi0RpPb") == 0)){
-                corrFracPCM_PCM_PCMDal      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems",mesonType,"PCM_PCM-PCMDalitz");
-                corrFracPCMDal_PCM_PCMDal   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems",mesonType,"PCMDalitz_PCM-PCMDalitz");
-                corrFracPCM_PCMEMC_PCM      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems",mesonType,"PCM_PCM-PCMEMC");
-                corrFracPCM_PCMEMC_PCMEMC   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems",mesonType,"PCMEMC_PCM-PCMEMC");
-                corrFracEMC_PCMEMC_PCMEMC   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems",mesonType,"PCMEMC_PCMEMC-EMC");
-                corrFracEMC_PCMEMC_EMC      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems",mesonType,"EMC_PCMEMC-EMC");
-                corrFracPCMEMC_PCMEMC_PCMDal= GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems",mesonType,"PCMEMC_PCMDalitz-PCMEMC");
-                corrFracPCMDal_PCMEMC_PCMDal= GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems",mesonType,"PCMDalitz_PCMDalitz-PCMEMC");
-            } else if ( energy.CompareTo("pPb_5.023TeV") == 0 && ( mesonType.CompareTo("Eta") == 0 || mesonType.CompareTo("EtaToPi0") == 0 || mesonType.CompareTo("EtaRpPb") == 0)){
-                corrFracPCM_PCMEMC_PCM      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems",mesonType,"PCM_PCM-PCMEMC");
-                corrFracPCM_PCMEMC_PCMEMC   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems",mesonType,"PCMEMC_PCM-PCMEMC");
-                corrFracEMC_PCMEMC_PCMEMC   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems",mesonType,"PCMEMC_PCMEMC-EMC");
-                corrFracEMC_PCMEMC_EMC      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems",mesonType,"EMC_PCMEMC-EMC");
-            } else if ( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") ==0 ){
-                corrFracPCM_PCM_PCMDal      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCM_PCM-PCMDalitz");
-                corrFracPCMDal_PCM_PCMDal   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMDalitz_PCM-PCMDalitz");
-                corrFracEMC_PCM_EMC         = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","EMC_PCM-EMC");
-                corrFracEMC_PCMDal_EMC      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","EMC_PCMDalitz-EMC");
-                corrFracEMC_PHOS_EMC        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","EMC_PHOS-EMC");
-                corrFracPCMDal_PCMDal_EMC   = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCMDalitz_PCMDalitz-EMC");
-                corrFracPCM_PCM_EMC         = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCM_PCM-EMC");
-                corrFracPHOS_PHOS_EMC       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PHOS_PHOS-EMC");
-            }
-            
-            Double_t cvPCM_PCMPHO                   = 0;
-            Double_t cvPCM_PCMEMC                   = 0.; //0.508;
-            if (yValue[0]>0 && yValue[4]>0 ){
-                cvPCM_PCMEMC = (corrFracPCM_PCMEMC_PCM*ySysErr[0]*corrFracPCM_PCMEMC_PCMEMC*ySysErr[4])/(yTotErr[0]*yTotErr[4]);
-                cout << nameMeas[0] <<  ":\t sys error : "  << ySysErr[0] << "\t, total err: " <<  yTotErr[0] << endl;
-                cout << nameMeas[4] <<  ":\t sys error : "  << ySysErr[4] << "\t, total err: " <<  yTotErr[4] << endl;
-            }    
-            
-            Double_t cvPCM_PCMDal                   = 0.0; 
-            if (yValue[0]>0 && yValue[5]>0 ){
-                cvPCM_PCMDal =  (corrFracPCM_PCM_PCMDal*ySysErr[0]*corrFracPCMDal_PCM_PCMDal*ySysErr[5]) / (yTotErr[0]*yTotErr[5]);
-                cout << nameMeas[0] <<  ":\t sys error : "  << ySysErr[0] << "\t, total err: " <<  yTotErr[0] << endl;
-                cout << nameMeas[5] <<  ":\t sys error : "  << ySysErr[5] << "\t, total err: " <<  yTotErr[5] << endl;
-    //             if( energy.CompareTo("pPb_5.023GeV") == 0 && mesonType.CompareTo("Pi0") == 0 ) {
-    //                 cvPCM_PCMDal    = (corrFracPCM_PCM_PCMDal*(ySysErr[0]/yValue[0])*corrFracPCMDal_PCM_PCMDal*(ySysErr[5]/yValue[5])) /( (yTotErr[0]/yValue[0])*(yTotErr[5]/yValue[5]));   //0.225;       //Add correlation
-    //                 cout << nameMeas[0] <<  ":\t sys error : "  << ySysErr[0] << "\t, total err: " <<  yTotErr[0] << endl;
-    //                 cout << nameMeas[5] <<  ":\t sys error : "  << ySysErr[5] << "\t, total err: " <<  yTotErr[5] << endl;
-    //             }
-            }
-            
-            Double_t cvPHO_PCMPHO                   = 0.;
-            Double_t cvPHO_PHODal                   = 0.;
-            Double_t cvEMC_PCMEMC                   = 0.; // 0.775
-            if (yValue[2]>0 && yValue[4]>0 ){
-                cvEMC_PCMEMC = (corrFracEMC_PCMEMC_EMC*ySysErr[2]*corrFracEMC_PCMEMC_PCMEMC*ySysErr[4])/(yTotErr[2]*yTotErr[4]);
-                cout << nameMeas[2] <<  " sys error : "  << ySysErr[2] << "\t, total err: " <<  yTotErr[2] << endl;
-                cout << nameMeas[4] <<  " sys error : "  << ySysErr[4] << "\t, total err: " <<  yTotErr[4] << endl;
-        
-            }    
-            Double_t cvEMC_EMCDal                   = 0.;
-            Double_t cvPCMPHO_PCMEMC                = 0.;
-            Double_t cvPCMPHO_PCMDal                = 0.;
-            Double_t cvPCMPHO_PHODal                = 0.;
-            Double_t cvPCMEMC_PCMDal                = 0.;
-            if (yValue[4]>0 && yValue[5]>0 ){
-                cvPCMEMC_PCMDal = (corrFracPCMEMC_PCMEMC_PCMDal*ySysErr[4]*corrFracPCMDal_PCMEMC_PCMDal*ySysErr[5])/(yTotErr[4]*yTotErr[5]);
-                cout << nameMeas[4] <<  " sys error : "  << ySysErr[4] << "\t, total err: " <<  yTotErr[4] << endl;
-                cout << nameMeas[5] <<  " sys error : "  << ySysErr[5] << "\t, total err: " <<  yTotErr[4] << endl;
-        
-            }    
-            Double_t cvPCMEMC_EMCDal                = 0.;
-            Double_t cvPCMDal_PHODal                = 0.;
-            Double_t cvPCMDal_EMCDal                = 0.;
-            Double_t cvPHODal_EMCDal                = 0.;
-            Double_t cvEMCDal_EMCm                  = 0.;
-
-            Double_t corrFracEMC_EMCm_EMC           = 0;
-            Double_t corrFracEMC_EMCm_EMCm          = 0;
-            Double_t corrFracPCMEMC_EMCm_PCMEMC     = 0;
-            Double_t corrFracPCMEMC_EMCm_EMCm       = 0;
-            
-            // currently arbitrary numbers
-            if (energy.CompareTo("2.76TeV") == 0 && mesonType.CompareTo("Pi0") == 0 && isV2ClusterMerged){ 
-                corrFracEMC_EMCm_EMC                    = 1.01007-0.0174*xValue[ptBin];
-                corrFracEMC_EMCm_EMCm                   = 0.296+0.0685*xValue[ptBin]-0.00167*xValue[ptBin]*xValue[ptBin];
-                corrFracPCMEMC_EMCm_PCMEMC              = 0.61;
-                corrFracPCMEMC_EMCm_EMCm                = 0.68;            
-            } else if ( mesonType.CompareTo("Pi0") == 0  ){     
-                corrFracEMC_EMCm_EMC                    = 1;
-                corrFracEMC_EMCm_EMCm                   = 0.9;
-                corrFracPCMEMC_EMCm_PCMEMC              = 0.6;
-                corrFracPCMEMC_EMCm_EMCm                = 0.7;
-            }
-            
-            Double_t cvEMC_EMCm                     = 0.;
-            if (yValue[2]>0 && yValue[9]>0 ){
-                cvEMC_EMCm = (corrFracEMC_EMCm_EMC*ySysErr[2]*corrFracEMC_EMCm_EMCm*ySysErr[9])/(yTotErr[2]*yTotErr[9]);
-                cout << nameMeas[2] <<  ":\t sys error : "  << ySysErr[2] << "\t, total err: " <<  yTotErr[2] << endl;
-                cout << nameMeas[9] <<  ":\t sys error : "  << ySysErr[9] << "\t, total err: " <<  yTotErr[9] << endl;
-            }    
-            Double_t cvPCMEMC_EMCm                  = 0.;
-            if (yValue[4]>0 && yValue[9]>0 ){
-                cvPCMEMC_EMCm = (corrFracPCMEMC_EMCm_PCMEMC*ySysErr[4]*corrFracPCMEMC_EMCm_EMCm*ySysErr[9])/(yTotErr[4]*yTotErr[9]);
-                cout << nameMeas[4] <<  " sys error : "  << ySysErr[4] << "\t, total err: " <<  yTotErr[4] << endl;
-                cout << nameMeas[9] <<  " sys error : "  << ySysErr[9] << "\t, total err: " <<  yTotErr[9] << endl;
-            }    
-        
-            //NOTE  
-            Double_t cvEMC_PCM  = 0.;
-            if (yValue[0]>0 && yValue[2]>0 ){
-            if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
-                    cvEMC_PCM = (corrFracPCM_PCM_EMC*ySysErr[0]*corrFracEMC_PCM_EMC*ySysErr[2]) / (yTotErr[0]*yTotErr[2]);
-                    cout << nameMeas[0] <<  " sys error : "  << ySysErr[0] << "\t, total err: " <<  yTotErr[0] << endl;
-                    cout << nameMeas[2] <<  " sys error : "  << ySysErr[2] << "\t, total err: " <<  yTotErr[2] << endl;
-                }
-            }
-            Double_t cvEMC_PHOS = 0.;
-            if (yValue[1]>0 && yValue[2]>0 ){
-                if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
-                    cvEMC_PHOS = (corrFracPHOS_PHOS_EMC*ySysErr[1]*corrFracEMC_PHOS_EMC*ySysErr[2]) / (yTotErr[1]*yTotErr[2]);
-                    cout << nameMeas[1] <<  " sys error : "  << ySysErr[1] << "\t, total err: " <<  yTotErr[1] << endl;
-                    cout << nameMeas[2] <<  " sys error : "  << ySysErr[2] << "\t, total err: " <<  yTotErr[2] << endl;
-                }
-            }
-            Double_t cvEMC_PCMDal = 0.;
-            if (yValue[2]>0 && yValue[5]>0 ){
-                if( energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0){
-                    cvEMC_PCMDal = (corrFracEMC_PCMDal_EMC*ySysErr[2]*corrFracPCMDal_PCMDal_EMC*ySysErr[5]) / (yTotErr[2]*yTotErr[5]);
-                    cout << nameMeas[2] <<  " sys error : "  << ySysErr[2] << "\t, total err: " <<  yTotErr[2] << endl;
-                    cout << nameMeas[5] <<  " sys error : "  << ySysErr[5] << "\t, total err: " <<  yTotErr[5] << endl;
-                }
-            }
-                
-                                            //PCM           PHOS            EMCal           PCM-PHOS            PCM-EMCal           PCM-Dalitz          PHOS-Dalitz         EMCal-Dalitz        spare   EMCAL merged    PCMOtherDataset
-            Double_t cvMatrix[11][11] = {   { 1,            0,              cvEMC_PCM,      cvPCM_PCMPHO,       cvPCM_PCMEMC,       cvPCM_PCMDal,       0,                  0,                  0,      0,              1,              },
-                                            { 0,            1,              cvEMC_PHOS,     cvPHO_PCMPHO,       0,                  0,                  cvPHO_PHODal,       0,                  0,      0,              0,              },
-                                            { cvEMC_PCM,    cvEMC_PHOS,     1,              0,                  cvEMC_PCMEMC,       cvEMC_PCMDal,        0,                  cvEMC_EMCDal,       0,      cvEMC_EMCm,     0,              },
-                                            { cvPCM_PCMPHO, cvPHO_PCMPHO,   0,              1,                  cvPCMPHO_PCMEMC,    cvPCMPHO_PCMDal,    cvPCMPHO_PHODal,    0,                  0,      0,              0,              },
-                                            { cvPCM_PCMEMC, 0,              cvEMC_PCMEMC,   cvPCMPHO_PCMEMC,    1,                  cvPCMEMC_PCMDal,    0,                  cvPCMEMC_EMCDal,    0,      cvPCMEMC_EMCm,  0,              },
-                                            { cvPCM_PCMDal, 0,              cvEMC_PCMDal,   cvPCMPHO_PCMDal,    cvPCMEMC_PCMDal,    1,                  cvPCMDal_PHODal,    cvPCMDal_EMCDal,    0,      0,              cvPCM_PCMDal,   },
-                                            { 0,            cvPHO_PHODal,   0,              cvPCMPHO_PHODal,    0,                  cvPCMDal_PHODal,    1,                  cvPHODal_EMCDal,    0,      0,              cvPCM_PCMEMC,   },
-                                            { 0,            0,              cvEMC_EMCDal,   0,                  cvPCMEMC_EMCDal,    cvPCMDal_EMCDal,    cvPHODal_EMCDal,    1,                  0,      cvEMCDal_EMCm,  cvPCM_PCMPHO,   },
-                                            { 0,            0,              0.,             0,                  0,                  0,                  0,                  0,                  1,      0,              0,              },
-                                            { 0,            0,              cvEMC_EMCm,     0,                  cvPCMEMC_EMCm,      0,                  0,                  cvEMCDal_EMCm,      0,      1,              0,              },
-                                            { 1,            0,              0,              0,                  0,                  cvPCM_PCMDal,       cvPCM_PCMEMC,       cvPCM_PCMPHO,       0,      0,              1,              } };
-            
-            Double_t cvMatrixCurrPtBin[11][11]      = { {     1,    0,    0,    0,    0,    0,    0,    0,    0,    0,    1},
-                                                        {     0,    1,    0,    0,    0,    0,    0,    0,    0,    0,    0},
-                                                        {     0,    0,    1,    0,    0,    0,    0,    0,    0,    0,    0},
-                                                        {     0,    0,    0,    1,    0,    0,    0,    0,    0,    0,    0},
-                                                        {     0,    0,    0,    0,    1,    0,    0,    0,    0,    0,    0},
-                                                        {     0,    0,    0,    0,    0,    1,    0,    0,    0,    0,    0},
-                                                        {     0,    0,    0,    0,    0,    0,    1,    0,    0,    0,    0},
-                                                        {     0,    0,    0,    0,    0,    0,    0,    1,    0,    0,    0},
-                                                        {     0,    0,    0,    0,    0,    0,    0,    0,    1,    0,    0},
-                                                        {     0,    0,    0,    0,    0,    0,    0,    0,    0,    1,    0},
-                                                        {     1,    0,    0,    0,    0,    0,    0,    0,    0,    0,    1} };
-            
-            Double_t weightArray[11]                = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
-            Double_t fullSumOfWeights               = 0;
-            for (Int_t meas = 0; meas < maxNMeasurements; meas++){
-                cout << "identity: " << identCurr[0][meas] << " <- " << identCurr[1][meas] << endl;
-            }    
-            cout << "**************************************************************************" << endl;
-            if (numberOfMeasInPtBin>1){
-                cout << "need to do more complicated stuff"<< endl;
-                TMatrixD weightingMatrix(numberOfMeasInPtBin, numberOfMeasInPtBin);
-                weightingMatrix.SetTol(1.E-23);
-                TArrayD arrayToFillMatrix(numberOfMeasInPtBin*numberOfMeasInPtBin);
-                for (Int_t nCurrMeas = 0; nCurrMeas < numberOfMeasInPtBin; nCurrMeas++){
-                    for (Int_t nCurrMeas2 = 0; nCurrMeas2 < numberOfMeasInPtBin; nCurrMeas2++){
-                        cout << cvMatrix[identCurr[1][nCurrMeas]][identCurr[1][nCurrMeas2]] << "*" << yTotErr[identCurr[1][nCurrMeas]] << "*"<<yTotErr[identCurr[1][nCurrMeas2]] << "\t" ;
-                    }
-                    cout << endl;
-                }
-                for (Int_t nCurrMeas = 0; nCurrMeas < numberOfMeasInPtBin; nCurrMeas++){
-                    for (Int_t nCurrMeas2 = 0; nCurrMeas2 < numberOfMeasInPtBin; nCurrMeas2++){
-                        cvMatrixCurrPtBin[nCurrMeas][nCurrMeas2] = cvMatrix[identCurr[1][nCurrMeas]][identCurr[1][nCurrMeas2]];
-                        cout << cvMatrixCurrPtBin[nCurrMeas][nCurrMeas2] << "\t\t" ;
-                        arrayToFillMatrix[nCurrMeas*numberOfMeasInPtBin+nCurrMeas2] = cvMatrixCurrPtBin[nCurrMeas][nCurrMeas2] * yTotErr[identCurr[1][nCurrMeas]] * yTotErr[identCurr[1][nCurrMeas2]];
-                    }    
-                    cout << endl;
-                }    
-                weightingMatrix.SetMatrixArray(arrayToFillMatrix.GetArray());
-                weightingMatrix.Print();
-                weightingMatrix.Invert();
-                cout << "inverted matrix" << endl;
-                weightingMatrix.Print();
-                cout << "trying to acces inverted matrix" << endl;
-                for (Int_t nCurrMeas = 0; nCurrMeas < numberOfMeasInPtBin; nCurrMeas++){
-                    for (Int_t nCurrMeas2 = 0; nCurrMeas2 < numberOfMeasInPtBin; nCurrMeas2++){
-                        fullSumOfWeights            = fullSumOfWeights+weightingMatrix[nCurrMeas][nCurrMeas2];
-                        cout << weightingMatrix[nCurrMeas][nCurrMeas2] << "\t" ;
-                    }
-                    cout << endl;
-                }
-                cout << fullSumOfWeights << "\t"<< TMath::Sqrt(fullSumOfWeights)<< endl;
-                cout << "weights for individual measurements" << endl;
-                for (Int_t nCurrMeas = 0; nCurrMeas < numberOfMeasInPtBin; nCurrMeas++){
-                    Double_t partSumOfWeights       = 0;
-                    for (Int_t nCurrMeas2 = 0; nCurrMeas2 < numberOfMeasInPtBin; nCurrMeas2++){
-                        partSumOfWeights            = partSumOfWeights+ weightingMatrix[nCurrMeas][nCurrMeas2];
-                    }    
-                    weightArray[nCurrMeas]          = partSumOfWeights/fullSumOfWeights;
-                    cout << weightArray[nCurrMeas] << endl;
-                }
-                for (Int_t nCurrMeas = 0; nCurrMeas < numberOfMeasInPtBin; nCurrMeas++){
-                    yValueFinal[ptBin]              = yValueFinal[ptBin]+ weightArray[nCurrMeas]* yValue[identCurr[1][nCurrMeas]];
-                    yErrStatFinal[ptBin]            = yErrStatFinal[ptBin] + TMath::Power(weightArray[nCurrMeas]* yStatErr[identCurr[1][nCurrMeas]],2);
-                    finalWeights[identCurr[1][nCurrMeas]][ptBin] = weightArray[nCurrMeas];
-                }    
-                yErrStatFinal[ptBin]                = TMath::Sqrt(yErrStatFinal[ptBin]);
-                yErrTotFinal[ptBin]                 = 1./TMath::Sqrt(fullSumOfWeights);
-                cout << "tot sys: " << yErrTotFinal[ptBin] << "\t"<< sqrt(fullSumOfWeights)<< endl; 
-                yErrSysFinal[ptBin]                 = TMath::Sqrt(yErrTotFinal[ptBin]*yErrTotFinal[ptBin] - yErrStatFinal[ptBin]*yErrStatFinal[ptBin]);
-                
-                cout << "final weighted average: " <<  yValueFinal[ptBin] << " +- " << yErrTotFinal[ptBin] << "( stat: " << yErrStatFinal[ptBin] << " , syst: " << yErrSysFinal[ptBin] << " )"<< endl;
-            } else {
-                cout << "do simple copy of measurement: " << nameMeasPtBin[0].Data() << endl; 
-                yValueFinal[ptBin]                  = yValue[identCurr[1][0]];
-                yErrStatFinal[ptBin]                = yStatErr[identCurr[1][0]];
-                yErrSysFinal[ptBin]                 = ySysErr[identCurr[1][0]];
-                yErrTotFinal[ptBin]                 = yTotErr[identCurr[1][0]];
-                finalWeights[identCurr[1][0]][ptBin]= 1.;
-                cout << "final weighted average: " <<  yValueFinal[ptBin] << " +- " << yErrTotFinal[ptBin] << "( stat: " << yErrStatFinal[ptBin] << " , syst: " << yErrSysFinal[ptBin] << " )"<< endl;
-            }    
-            cout << "__________________________________________________________________________" << endl;
-        }
-        graphStatComb                               = new TGraphAsymmErrors(nPtLimits,xValue,yValueFinal,xErr,xErr,yErrStatFinal,yErrStatFinal);
-        graphSystComb                               = new TGraphAsymmErrors(nPtLimits,xValue,yValueFinal,xErr,xErr,yErrSysFinal,yErrSysFinal);
-        TGraphAsymmErrors* returnGraph              = new TGraphAsymmErrors(nPtLimits,xValue,yValueFinal,xErr,xErr,yErrTotFinal,yErrTotFinal);
-        Int_t b                                     = 0;
-        while (yValueFinal[b] == 0){
-            graphStatComb->RemovePoint(0);
-            graphSystComb->RemovePoint(0);
-            returnGraph->RemovePoint(0);
-            b++;
-        }
-
-        fstream  fileWeightsOutput;
-        fileWeightsOutput.open(nameWeightsOutputFile.Data(), ios::out);  
-
-        fileWeightsOutput << "pT \t" ;
-        for (Int_t i = 0; i < maxNMeasurements; i++){
-            if (isPresentGeneral[i]) fileWeightsOutput << i << "\t" ;
-        }
-        fileWeightsOutput << endl;
-        
-        for (Int_t ptBin = 0; ptBin < nPtLimits; ptBin++){
-            if (yValueFinal[ptBin] > 0){
-                fileWeightsOutput << xValue[ptBin] << "\t" ;
-                for (Int_t i = 0; i < maxNMeasurements; i++){
-                    if (isPresentGeneral[i]) fileWeightsOutput << finalWeights[i][ptBin] << "\t" ;
-                }
-                fileWeightsOutput << endl;
-            }    
-        }    
-        fileWeightsOutput.close();
-        
-        if(fCorrFactors){
-        fCorrFactors->Close();
-        delete fCorrFactors;
-        }
-        return returnGraph;
-        
-    }
-
-    //*******************************************************************************************
-    //******** Combination of quantities with given statistical and sytematic errors for ********
-    //******** different triggers according to the correlation matrix given below and ***********
-    //******** order of triggers as indicated in nameMeas, no pt dependence of correlation ******
-    //******** factors forseen yet **************************************************************
-    //*******************************************************************************************
-    TGraphAsymmErrors* CombinePtPointsSpectraTriggerCorrMat(    TH1D** histoStat, TGraphAsymmErrors** graphSyst,  
-                                                                Double_t* xPtLimits,  Int_t nPtLimits,
-                                                                Int_t* startOffsets, Int_t* sysOffsets,
-                                                                TGraphAsymmErrors* &graphStatComb, TGraphAsymmErrors* &graphSystComb,
-                                                                TString nameWeightsOutputFile = "output.dat",
-                                                                Int_t mode = 2, TString energy = "2.76TeV", TString meson = "Pi0", Bool_t v2ClusterizerMerged = kFALSE,
-                                                                TString fileCorrFactors = ""
-                                                        ){
-        cout << "***************************************************************************************************" << endl;
-        cout << "*********************************Starting combination of triggers *********************************" << endl;
-        cout << "***************************************************************************************************" << endl;
-        
-        TFile* fCorrFactors = 0x0;
-        if(!fileCorrFactors.IsNull()) fCorrFactors = new TFile(fileCorrFactors.Data(),"READ");
-        Int_t maxNMeasurements                  = 12;
-        TString strEG2_A = "EG2";
-        if(energy.CompareTo("8TeV")==0) strEG2_A = "EGA";
-        TString nameMeas[12]                    = { "INT1", "INT7", "EMC1", "EMC7", strEG2_A.Data(), "EG1",
-                                                    "INT1_NLM1", "INT7_NLM1", "EMC1_NLM1", "EMC7_NLM1", "EG2_NLM1", "EG1_NLM1"};
-        Bool_t isPresentGeneral[12]             = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE,
-                                                    kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE};
-        Bool_t isPresentForPt[12]               = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE,
-                                                    kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE};
-        Double_t yValueFinal[70]                = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t yErrStatFinal[70]              = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t yErrTotFinal[70]               = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t yErrSysFinal[70]               = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t xValue[70]                     = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t xErr[70]                       = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t finalWeights[12][70]           = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0} };
-
-        Int_t binCounters[11]                       = { -1,-1,-1,-1,-1,
-                                                        -1,-1,-1,-1,-1,
-                                                        -1};
-                                                    
-        for (Int_t i = 0; i< maxNMeasurements; i++){
-            if (histoStat[i] && graphSyst[i] ) 
-                isPresentGeneral[i]                 = kTRUE;
-            if (isPresentGeneral[i]){
-                cout << "both statistical & systematic errors have been supplied for: " << nameMeas[i].Data() << endl;
-                graphSyst[i]->Print();
-            } else {
-                cout << "no input for: " << nameMeas[i].Data() << endl; 
-            }
-        }
-        
-        
-        
-        for (Int_t ptBin = 0; ptBin < nPtLimits; ptBin++){
-            Double_t yValue[11]                     = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-            Double_t yStatErr[11]                   = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-            Double_t ySysErr[11]                    = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-            Double_t yTotErr[11]                    = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-            Double_t ySysErroCorrFactorRel[11]         = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-            Int_t identCurr[2][11]                  = { {  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10 },
-                                                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};  
-            TString nameMeasPtBin[11]               = {"", "", "", "", "", "", "", "", "", "", ""};
-            Int_t numberOfMeasInPtBin               = 0;
-            for (Int_t meas = 0; meas < maxNMeasurements; meas++){
-                binCounters[meas]                   = binCounters[meas]+1;
-                cout << "Current pt boarders: " << xPtLimits[ptBin] <<" - "<< xPtLimits[ptBin+1] <<endl; 
-                xValue[ptBin]                       = xPtLimits[ptBin] + (xPtLimits[ptBin+1]-xPtLimits[ptBin])/2;
-                xErr[ptBin]                         = (xPtLimits[ptBin+1]-xPtLimits[ptBin])/2;
-                cout << xValue[ptBin] << "\t" << xErr[ptBin] << endl;
-                if (isPresentGeneral[meas]){
-                    cout << "current pt bin: " << binCounters[meas] << "\t offset: " << startOffsets[meas]  << "\t offset sys: " << sysOffsets[meas]  <<endl;
-                    if ((binCounters[meas] - startOffsets[meas]) >= 0 && histoStat[meas]->GetBinContent(binCounters[meas]+1-startOffsets[meas]) > 0. ){
-                        cout << nameMeas[meas].Data() << ": pt " <<  histoStat[meas]->GetBinCenter(binCounters[meas]+1-startOffsets[meas]) 
-                            << "\t value "<<histoStat[meas]->GetBinContent(binCounters[meas]+1-startOffsets[meas]) 
-                            << "\t stat err: "<< histoStat[meas]->GetBinError(binCounters[meas]+1-startOffsets[meas]) <<endl;
-                        if (abs(xPtLimits[ptBin]-histoStat[meas]->GetXaxis()->GetBinLowEdge(binCounters[meas]+1-startOffsets[meas])) < 0.0001 
-                            &&  abs(xPtLimits[ptBin+1]-histoStat[meas]->GetXaxis()->GetBinUpEdge(binCounters[meas]+1-startOffsets[meas])) < 0.0001 ){
-    //                         cout << "matches bin edges" << endl;
-                            isPresentForPt[meas]                    = kTRUE;
-                            identCurr[1][numberOfMeasInPtBin]       = meas;
-                            nameMeasPtBin[numberOfMeasInPtBin]      = nameMeas[meas];
-                            yValue[meas]                            = histoStat[meas]->GetBinContent(binCounters[meas]+1-startOffsets[meas]);
-                            yStatErr[meas]                          = histoStat[meas]->GetBinError(binCounters[meas]+1-startOffsets[meas]);
-                            cout << binCounters[meas]-sysOffsets[meas] << "\t"<< graphSyst[meas]->GetX()[binCounters[meas]-sysOffsets[meas]] 
-                                << "\t"<< graphSyst[meas]->GetY()[binCounters[meas]-sysOffsets[meas]]
-                                << "\t"<< graphSyst[meas]->GetErrorYlow(binCounters[meas]-sysOffsets[meas]) << endl;
-                            ySysErr[meas]                           = graphSyst[meas]->GetErrorYhigh(binCounters[meas]-sysOffsets[meas]);
-                            yTotErr[meas]                           = TMath::Sqrt(yStatErr[meas]*yStatErr[meas]+ySysErr[meas]*ySysErr[meas]);
-                            if(energy.CompareTo("pPb_5.023GeV_RpPb") == 0 && mesonType.CompareTo("Pi0") == 0 ){
-                            ySysErroCorrFactorRel[meas]           = graphSystCorrFactors[meas]->GetErrorYhigh(binCounters[meas]-sysOffsets[meas]) / graphSystCorrFactors[meas]->GetY()[binCounters[meas]-sysOffsets[meas]];
-                            }
-                            numberOfMeasInPtBin++;
-                            Double_t pTDiff = (graphSyst[meas]->GetX()[binCounters[meas]-sysOffsets[meas]] - histoStat[meas]->GetXaxis()->GetBinCenter(binCounters[meas]+1-startOffsets[meas]));
-    //                         cout << "p_{T}: "<< graphSyst[meas]->GetX()[binCounters[meas]-sysOffsets[meas]] << "\t" << histoStat[meas]->GetXaxis()->GetBinCenter(binCounters[meas]+1-startOffsets[meas]) << "\t diff: " << pTDiff << endl;
-                            if ( abs(pTDiff) > 0.001){
-                                cout << "the offsets between stat and sys are wrong, please correct" << endl;
-                                return NULL;
-                            }
-                        } else {
-                            isPresentForPt[meas] = kFALSE;
-                            cout << "measurement: "  <<  nameMeas[meas].Data() << " not taken in this pT slice, due to mismatch in binwidth, bin: " << binCounters[meas]<< "\t" << ptBin<< " boarders: " << histoStat[meas]->GetXaxis()->GetBinLowEdge(binCounters[meas]+1-startOffsets[meas]) <<" - "<< histoStat[meas]->GetXaxis()->GetBinUpEdge(binCounters[meas]+1-startOffsets[meas]) << endl;
-                            if (xPtLimits[ptBin+1] < histoStat[meas]->GetXaxis()->GetBinUpEdge(binCounters[meas]+1-startOffsets[meas]) &&
-                                abs(xPtLimits[ptBin]-histoStat[meas]->GetXaxis()->GetBinLowEdge(binCounters[meas]+1-startOffsets[meas])) < 0.0001){
-                                cout << "binning is smaller" << endl;
-                                binCounters[meas] = binCounters[meas]-1;
-                                cout << "testing bin again" << endl;
-                            }
-                        }    
-                    } else {
-                        if (binCounters[meas] - startOffsets[meas] >= 0){
-                            cout << "measurement: " <<  nameMeas[meas].Data() << " not taken in this pT slice, due to value = 0" << endl;
-                        } else {
-    // //                         cout << "measurement: " <<  nameMeas[meas].Data() << " not taken in this pT slice" << endl;
-                        }    
-                        isPresentForPt[meas] = kFALSE;
-                    }    
-                } else {
-                    cout << "measurement: " <<  nameMeas[meas].Data() << " not provided in general" << endl;
-                    isPresentForPt[meas] = kFALSE;
-                }    
-                cout << "done" << endl;
-            }
-            cout << "************************************************************************** number of measurements for this pT slice: " << numberOfMeasInPtBin << endl;
-            Double_t corrFracPCM_PCMEMC_PCM         = 0;
-            Double_t corrFracPCM_PCMEMC_PCMEMC      = 0;
-            Double_t corrFracEMC_PCMEMC_EMC         = 0;
-            Double_t corrFracEMC_PCMEMC_PCMEMC      = 0;
-            
-            Double_t corrFracPCM_PCM_PCMDal         = 0;
-            Double_t corrFracPCMDal_PCM_PCMDal      = 0;
-            Double_t corrFracPCMEMC_PCMEMC_PCMDal   = 0;
-            Double_t corrFracPCMDal_PCMEMC_PCMDal   = 0;
-            Double_t corrFracEMC_PCM_EMC            = 0;
-            Double_t corrFracEMC_PCMDal_EMC         = 0;
             Double_t corrFracEMC_EMC_PHOS           = 0;
             Double_t corrFracPCMDal_PCMDal_EMC      = 0;
             Double_t corrFracPCM_PCM_EMC            = 0;
             Double_t corrFracPHOS_EMC_PHOS          = 0;
-            Double_t corrFracPHOS_PCMEMC_PHOS       = 0;
-            Double_t corrFracPCMEMC_PCMEMC_PHOS     = 0;
+        Double_t corrFracPHOS_PCMEMC_PHOS       = 0;
+        Double_t corrFracPCMEMC_PCMEMC_PHOS     = 0;
         
             if (energy.CompareTo("2.76TeV") == 0 && mesonType.CompareTo("Pi0") == 0){ 
                 if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin],"Systems","Pi0","PCM_PCM-PCMEMC") != -10)
