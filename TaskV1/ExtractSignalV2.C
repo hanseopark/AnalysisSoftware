@@ -4105,9 +4105,9 @@ void FitSubtractedPol2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
 
     //    cout<<"Start Fitting spectra"<<endl;
     fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
-    Double_t mesonAmplitude = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
-    Double_t mesonAmplitudeMin;
-    Double_t mesonAmplitudeMax;
+    Double_t mesonAmplitude         = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
+    Double_t mesonAmplitudeMin      = 0;
+    Double_t mesonAmplitudeMax      = 0; 
     
     if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0){
         if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
@@ -4278,9 +4278,9 @@ void FitSubtractedExp1InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
 
     //    cout<<"Start Fitting spectra"<<endl;
     fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
-    Double_t mesonAmplitude = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
-    Double_t mesonAmplitudeMin;
-    Double_t mesonAmplitudeMax;
+    Double_t mesonAmplitude         = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
+    Double_t mesonAmplitudeMin      = 0;
+    Double_t mesonAmplitudeMax      = 0;
     
     if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0){
         if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
@@ -4451,9 +4451,9 @@ void FitSubtractedExp2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
 
     //    cout<<"Start Fitting spectra"<<endl;
     fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
-    Double_t mesonAmplitude = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
-    Double_t mesonAmplitudeMin;
-    Double_t mesonAmplitudeMax;
+    Double_t mesonAmplitude         = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
+    Double_t mesonAmplitudeMin      = 0;
+    Double_t mesonAmplitudeMax      = 0;
     
     if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0){
         if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
@@ -4625,9 +4625,9 @@ void FitSubtractedExp2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
 void FitSubtractedPureGaussianInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Int_t ptBin ){
 
     fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
-    Double_t mesonAmplitude =fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
-    Double_t mesonAmplitudeMin;
-    Double_t mesonAmplitudeMax;
+    Double_t mesonAmplitude         = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
+    Double_t mesonAmplitudeMin      = 0;
+    Double_t mesonAmplitudeMax      = 0;
     if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
         mesonAmplitudeMin = mesonAmplitude*98./100.;
         mesonAmplitudeMax = mesonAmplitude*115./100.;
@@ -4731,9 +4731,9 @@ void GausFitSubtractedInvMassInPtBinsNew(TH1D* fHistoMappingSignalInvMassPtBinSi
     
     fFileErrLog<<"Start Fitting spectra with Gaus fit"<<endl;
     fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
-    Double_t mesonAmplitude =fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
-    Double_t mesonAmplitudeMin = mesonAmplitude*10./100.;
-    Double_t mesonAmplitudeMax = mesonAmplitude*400./100.;
+    Double_t mesonAmplitude     = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
+    Double_t mesonAmplitudeMin  = mesonAmplitude*10./100.;
+    Double_t mesonAmplitudeMax  = mesonAmplitude*400./100.;
     
     fFitReco = NULL;
     fFitReco = new TF1(functionname,"(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
@@ -4858,9 +4858,9 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
 {
     //    cout<<"Start Fitting spectra"<<endl;
     fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
-    Double_t mesonAmplitude =fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
-    Double_t mesonAmplitudeMin;
-    Double_t mesonAmplitudeMax;
+    Double_t mesonAmplitude         = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
+    Double_t mesonAmplitudeMin      = 0;
+    Double_t mesonAmplitudeMax      = 0;
     if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0){
         mesonAmplitudeMin = mesonAmplitude*99./100.;
         mesonAmplitudeMax = mesonAmplitude*110./100.;
@@ -4966,9 +4966,9 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
 void FitTrueInvMassPureGaussianInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Int_t ptBin ){
 
     fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
-    Double_t mesonAmplitude =fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
-    Double_t mesonAmplitudeMin;
-    Double_t mesonAmplitudeMax;
+    Double_t mesonAmplitude         = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
+    Double_t mesonAmplitudeMin      = 0; 
+    Double_t mesonAmplitudeMax      = 0;
     if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
         mesonAmplitudeMin = mesonAmplitude*98./100.;
         mesonAmplitudeMax = mesonAmplitude*115./100.;
@@ -5044,10 +5044,11 @@ void FitCBSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle,
     
     fFileErrLog<<"Start Fitting spectra with CB fit"<<endl;
     fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
-    Double_t mesonAmplitude =fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
-    Double_t mesonAmplitudeMin = mesonAmplitude*50./100.;
-    Double_t mesonAmplitudeMax = mesonAmplitude*200./100.;
-    if (fMode == 4) mesonAmplitudeMin = mesonAmplitude*5./100.;
+    Double_t mesonAmplitude         = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
+    Double_t mesonAmplitudeMin      = mesonAmplitude*50./100.;
+    Double_t mesonAmplitudeMax      = mesonAmplitude*200./100.;
+    if (fMode == 4) 
+        mesonAmplitudeMin           = mesonAmplitude*5./100.;
     
     fFitReco = NULL;
 //    if (!kMC) {
@@ -5604,7 +5605,10 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
     if (fHaveToyMCInputForSec||fHaveCocktailInputForSec){
         cout << "Writing input for secondary pi0 correction" << endl;
         for (Int_t j = 0; j < 3; j++){
-            if (fHistoYieldExternSecInput[j])        fHistoYieldExternSecInput[j]->Write();
+            if (fHistoYieldExternSecInput[j]){
+                cout << "writing external sec input: " << nameSecondaries[j].Data() << endl; 
+                fHistoYieldExternSecInput[j]->Write();
+            }    
             if (fHistoYieldExternSecInputReb[j])     fHistoYieldExternSecInputReb[j]->Write();
         }
 
