@@ -609,9 +609,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 cout << fitConst->GetParameter(0) << "\t +-" << fitConst->GetParError(0) << endl;
 
                 if((j==0) && (foundCocktailInput || foundToyMCInput)){
-//                    fithistoRatioSecEffDivTrueEff[k][j] = FitObject("h",Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"Pi0",histoRatioSecEffDivTrueEff[k][0],minPtMesonSec,maxPtMeson,NULL,"QNRME+");
-                    if(kCollisionSystem==1) histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst,"QNRME+","",4,maxPtMeson);
-                    else histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst,"QNRME+","",2.5,maxPtMeson);
+                    Double_t minPtSecFitConst   = 2.5;
+                    if ((kCollisionSystem ==2 && mode == 2) || kCollisionSystem==1)
+                        minPtSecFitConst        = 4.0;
+                    histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst,"QNRME+","",minPtSecFitConst,maxPtMeson);
                     
                     fithistoRatioSecEffDivTrueEff[k][j] = new TF1(Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"[0]/pow(x,[1])+[2]");
                     fithistoRatioSecEffDivTrueEff[k][j]->SetRange(minPtMesonSec,maxPtMeson);
@@ -743,41 +744,43 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 } else if (optionEnergy.CompareTo("pPb_5.023TeV") == 0){
                     histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                     // crude assumptions // need to be validated for other energies
-//                     if (mode == 4 ){
-//                         if (j == 0 ){
-//                             if ( fitConst->GetParameter(0) > 0.3 && fitConst->GetParameter(0) < 0.7)
-//                                 histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
-//                             else 
-//                                 histoSecTrueEffi[k][j]->Scale(0.5);     
-//                         } else if ( (j == 1 || j == 2) ){
-//                             if ( (fitConst->GetParameter(0) > 0.7 && fitConst->GetParameter(0) < 1.3) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
-//                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
-//                             else     
-//                                 histoSecTrueEffi[k][j]->Scale(1.);
-//                         } else if (j == 3) {
-//                             if ( (fitConst->GetParameter(0) > 0.6 && fitConst->GetParameter(0) < 1.2) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
-//                                 histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
-//                             else     
-//                                 histoSecTrueEffi[k][j]->Scale(0.75);   
-//                         }    
-//                     } else 
-                    if (mode == 2 ) {
-                        cout << "entered here" << endl;
-                        if (j == 0){
-                            if ( fitConst->GetParameter(0) > 0.2 && fitConst->GetParameter(0) < 0.3)
+                    if (mode == 4 ){
+                        if (j == 0 ){
+                            if ( fitConst->GetParameter(0) > 0.3 && fitConst->GetParameter(0) < 0.7){
                                 histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
-                            else 
-                                histoSecTrueEffi[k][j]->Scale(0.25);     
-                        } else if (j == 1 || j == 2){
+                            } else {
+                                cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency  " << 0.5 << endl;
+                                histoSecTrueEffi[k][j]->Scale(0.5);     
+                            }    
+                        } else if ( (j == 1 || j == 2) ){
+                            if ( (fitConst->GetParameter(0) > 0.7 && fitConst->GetParameter(0) < 1.3) && !(Double_t)nBinsActive/nBinsTot < 0.5 ){
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            } else {     
+                                cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency  " << 1. << endl;
+                                histoSecTrueEffi[k][j]->Scale(1.);
+                            }    
+                        } else if (j == 3) {
+                            if ( (fitConst->GetParameter(0) > 0.6 && fitConst->GetParameter(0) < 1.2) && !(Double_t)nBinsActive/nBinsTot < 0.5 ){
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            } else {
+                                cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency  " << 0.75 << endl;
+                                histoSecTrueEffi[k][j]->Scale(0.75);   
+                            }    
+                        }    
+                    } else if (mode == 2 ) {
+                        cout << "entered here" << endl;
+                        if (j == 1 || j == 2){
                             if ( (fitConst->GetParameter(0) > 0. && fitConst->GetParameter(0) < 0.15) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
                                 histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
                             else 
                                 histoSecTrueEffi[k][j]->Scale(0.05);
+                            modifiedSecTrueEffi[k][j]   = kTRUE;
                         } else if (j == 3){
                             if ( (fitConst->GetParameter(0) > 0.1 && fitConst->GetParameter(0) < 0.3) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
                                 histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
                             else 
                                 histoSecTrueEffi[k][j]->Scale(0.15);   
+                            modifiedSecTrueEffi[k][j]   = kTRUE;
                         }    
                     } else if  ( mode == 0) {
                         if (j == 1 || j == 2){
@@ -795,7 +798,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                             modifiedSecTrueEffi[k][j]   = kTRUE;
                         }    
                     }
-                    if ( mode == 2 ){
+                    if ( mode == 4 ){
                         modifiedSecTrueEffi[k][j]   = kTRUE;
                         cout << "adjusted sec effi, due to to little stat" << endl;
                     }

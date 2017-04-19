@@ -307,11 +307,10 @@ void ExtractGammaSignalV2(      TString meson               = "",
             TString ObjectNameTruePrim                                          = "ESD_TruePrimaryPi0_InvMass_PtConv";
             TString ObjectNameTruePrimDC                                        = "ESD_TruePrimaryPi0DC_PtConv";
             TString ObjectNameTruePrimMissing                                   = "ESD_TruePrimaryPi0Missing_PtConv";
-            TString ObjectNameTrueSec[4]                                        = {"ESD_TrueSecondaryPi0_InvMass_PtConv","","",""};
-            TString ObjectNameTrueSecDC[4]                                      = {"ESD_TrueSecondaryPi0DC_PtConv","","",""};
-            TString ObjectNameTrueSecMissing[4]                                 = {"ESD_TrueSecondaryPi0Missing_PtConv","","",""};
-            fSecondaries[0]                                                  = "All";
-            maxNSec                                                             = 1;
+            TString ObjectNameTrueSec[4]                                        = { "ESD_TrueSecondaryPi0FromK0s_InvMass_PtConv", "ESD_TrueSecondaryPi0FromLambda_InvMass_PtConv",
+                                                                                    "ESD_TrueSecondaryPi0FromK0l_InvMass_PtConv", "ESD_TrueSecondaryPi0_InvMass_PtConv"};
+//             TString ObjectNameTrueSecDC[4]                                      = {"ESD_TrueSecondaryPi0DC_PtConv","","",""};
+//             TString ObjectNameTrueSecMissing[4]                                 = {"ESD_TrueSecondaryPi0Missing_PtConv","","",""};
 
             // container with histos for validated reconstructed photons
             TList *TrueConversionContainer                                      = (TList*)HistosGammaConversion->FindObject(Form("%s True histograms",fCutSelectionRead.Data()));
@@ -321,13 +320,107 @@ void ExtractGammaSignalV2(      TString meson               = "",
             
             for (Int_t j = 0; j < maxNSec; j++){
                 if (ObjectNameTrueSec[j].CompareTo("")!=0 ){
-                    fHistoTrueSecMesonInvMassVSPt[j]                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSec[j].Data());
+                    fHistoTrueSecMesonInvMassVSPt[j]                            = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSec[j].Data());
                     fHistoTrueSecMesonInvMassVSPt[j]->Sumw2();
+                }
+                if (j == 3){
+                    fHistoTrueSecMesonInvMassVSPt[j]->Add(fHistoTrueSecMesonInvMassVSPt[0],-1);
+                    fHistoTrueSecMesonInvMassVSPt[j]->Add(fHistoTrueSecMesonInvMassVSPt[1],-1);
+                    fHistoTrueSecMesonInvMassVSPt[j]->Add(fHistoTrueSecMesonInvMassVSPt[2],-1);
                 }
             }    
             FillMassMCTrueMesonHistosArrays(fHistoTruePrimMesonInvMassVSPt, fHistoTrueSecMesonInvMassVSPt);
 
-        }    
+            TList *MCContainer                                                  = (TList*)HistosGammaConversion->FindObject(Form("%s MC histograms",fCutSelectionRead.Data()));
+            
+            fHistoMCPrimPi0PtGammaLeg                                           = (TH2D*)MCContainer->FindObject("MC_Pi0_PtGamma_Leg");
+            fHistoMCPrimPi0PtGammaLeg->Sumw2();
+            fHistoMCPrimPi0InAccPtGammaLeg                                      = (TH2D*)MCContainer->FindObject("MC_Pi0InAcc_PtGamma_Leg");
+            fHistoMCPrimPi0InAccPtGammaLeg->Sumw2();
+            fHistoMCSecPi0PtGammaLeg[0]                                         = (TH2D*)MCContainer->FindObject("MC_SecPi0_PtGamma1_Source");
+            fHistoMCSecPi0PtGammaLeg[0]->Sumw2();
+            fHistoMCSecPi0PtGammaLeg[1]                                         = (TH2D*)MCContainer->FindObject("MC_SecPi0_PtGamma2_Source");
+            fHistoMCSecPi0PtGammaLeg[1]->Sumw2();
+            fHistoMCSecPi0InAccPtGammaLeg[0]                                    = (TH2D*)MCContainer->FindObject("MC_SecPi0InAcc_PtGamma1_Source");
+            fHistoMCSecPi0InAccPtGammaLeg[0]->Sumw2();
+            fHistoMCSecPi0InAccPtGammaLeg[1]                                    = (TH2D*)MCContainer->FindObject("MC_SecPi0InAcc_PtGamma2_Source");
+            fHistoMCSecPi0InAccPtGammaLeg[1]->Sumw2();
+            for (Int_t i = 0; i < 3; i++){
+                fHistoMCPrimPi0PtGamma[i]                                       = (TH1D*)fHistoMCPrimPi0PtGammaLeg->ProjectionX(Form("MC_Pi0_PtGamma_Leg%i", i),i+1,i+1, "e");
+                fHistoMCPrimPi0InAccPtGamma[i]                                  = (TH1D*)fHistoMCPrimPi0InAccPtGammaLeg->ProjectionX(Form("MC_Pi0InAcc_PtGamma_Leg%i", i),i+1,i+1, "e");
+                if (i < 2){
+                    // MC secondary pi0s 1 leg
+                    fHistoMCSecPi0PtGamma[0][i]                                 = (TH1D*)fHistoMCSecPi0PtGammaLeg[i]->ProjectionX(Form("MC_SecPi0_PtGamma%i_%s", i, fSecondaries[0].Data()), 
+                                                                                  fHistoMCSecPi0PtGammaLeg[i]->GetYaxis()->FindBin(1),fHistoMCSecPi0PtGammaLeg[i]->GetYaxis()->FindBin(1), "e");
+                    fHistoMCSecPi0PtGamma[1][i]                                 = (TH1D*)fHistoMCSecPi0PtGammaLeg[i]->ProjectionX(Form("MC_SecPi0_PtGamma%i_%s", i, fSecondaries[1].Data()),
+                                                                                  fHistoMCSecPi0PtGammaLeg[i]->GetYaxis()->FindBin(2),fHistoMCSecPi0PtGammaLeg[i]->GetYaxis()->FindBin(2), "e");
+                    fHistoMCSecPi0PtGamma[2][i]                                 = (TH1D*)fHistoMCSecPi0PtGammaLeg[i]->ProjectionX(Form("MC_SecPi0_PtGamma%i_%s", i, fSecondaries[2].Data()),
+                                                                                  fHistoMCSecPi0PtGammaLeg[i]->GetYaxis()->FindBin(3),fHistoMCSecPi0PtGammaLeg[i]->GetYaxis()->FindBin(3), "e");
+                    fHistoMCSecPi0PtGamma[3][i]                                 = (TH1D*)fHistoMCSecPi0PtGammaLeg[i]->ProjectionX(Form("MC_SecPi0_PtGamma%i_%s", i, fSecondaries[3].Data()),
+                                                                                  fHistoMCSecPi0PtGammaLeg[i]->GetYaxis()->FindBin(4),fHistoMCSecPi0PtGammaLeg[i]->GetYaxis()->FindBin(15), "e");
+                    // MC secondary pi0s 1 leg in acceptance
+                    fHistoMCSecPi0InAccPtGamma[0][i]                            = (TH1D*)fHistoMCSecPi0InAccPtGammaLeg[i]->ProjectionX(Form("MC_SecPi0InAcc_PtGamma%i_%s", i, fSecondaries[0].Data()), 
+                                                                                  fHistoMCSecPi0InAccPtGammaLeg[i]->GetYaxis()->FindBin(1),fHistoMCSecPi0InAccPtGammaLeg[i]->GetYaxis()->FindBin(1), "e");
+                    fHistoMCSecPi0InAccPtGamma[1][i]                            = (TH1D*)fHistoMCSecPi0InAccPtGammaLeg[i]->ProjectionX(Form("MC_SecPi0InAcc_PtGamma%i_%s", i, fSecondaries[1].Data()), 
+                                                                                  fHistoMCSecPi0InAccPtGammaLeg[i]->GetYaxis()->FindBin(2),fHistoMCSecPi0InAccPtGammaLeg[i]->GetYaxis()->FindBin(2), "e");
+                    fHistoMCSecPi0InAccPtGamma[2][i]                            = (TH1D*)fHistoMCSecPi0InAccPtGammaLeg[i]->ProjectionX(Form("MC_SecPi0InAcc_PtGamma%i_%s", i, fSecondaries[2].Data()), 
+                                                                                  fHistoMCSecPi0InAccPtGammaLeg[i]->GetYaxis()->FindBin(3),fHistoMCSecPi0InAccPtGammaLeg[i]->GetYaxis()->FindBin(3), "e");
+                    fHistoMCSecPi0InAccPtGamma[3][i]                            = (TH1D*)fHistoMCSecPi0InAccPtGammaLeg[i]->ProjectionX(Form("MC_SecPi0InAcc_PtGamma%i_%s", i, fSecondaries[3].Data()), 
+                                                                                  fHistoMCSecPi0InAccPtGammaLeg[i]->GetYaxis()->FindBin(4),fHistoMCSecPi0InAccPtGammaLeg[i]->GetYaxis()->FindBin(15), "e");
+                } else {
+                    fHistoMCPrimPi0PtGamma[i]->Scale(0.5);
+                    fHistoMCPrimPi0InAccPtGamma[i]->Scale(0.5);
+
+                    // MC secondary pi0s 1 leg
+                    fHistoMCSecPi0PtGamma[0][i]                                 = (TH1D*)fHistoMCSecPi0PtGamma[0][0]->Clone(Form("MC_SecPi0_PtGamma%i_%s", i, fSecondaries[0].Data()));
+                    fHistoMCSecPi0PtGamma[0][i]->Add(fHistoMCSecPi0PtGamma[0][1]);
+                    fHistoMCSecPi0PtGamma[0][i]->Scale(0.5);
+                    fHistoMCSecPi0PtGamma[1][i]                                 = (TH1D*)fHistoMCSecPi0PtGamma[1][0]->Clone(Form("MC_SecPi0_PtGamma%i_%s", i, fSecondaries[1].Data()));
+                    fHistoMCSecPi0PtGamma[1][i]->Add(fHistoMCSecPi0PtGamma[1][1]);
+                    fHistoMCSecPi0PtGamma[1][i]->Scale(0.5);
+                    fHistoMCSecPi0PtGamma[2][i]                                 = (TH1D*)fHistoMCSecPi0PtGamma[2][0]->Clone(Form("MC_SecPi0_PtGamma%i_%s", i, fSecondaries[2].Data()));
+                    fHistoMCSecPi0PtGamma[2][i]->Add(fHistoMCSecPi0PtGamma[2][1]);
+                    fHistoMCSecPi0PtGamma[2][i]->Scale(0.5);
+                    fHistoMCSecPi0PtGamma[3][i]                                 = (TH1D*)fHistoMCSecPi0PtGamma[3][0]->Clone(Form("MC_SecPi0_PtGamma%i_%s", i, fSecondaries[3].Data()));
+                    fHistoMCSecPi0PtGamma[3][i]->Add(fHistoMCSecPi0PtGamma[3][1]);
+                    fHistoMCSecPi0PtGamma[3][i]->Scale(0.5);
+                    // MC secondary pi0s 1 leg in acceptance
+                    fHistoMCSecPi0InAccPtGamma[0][i]                            = (TH1D*)fHistoMCSecPi0InAccPtGamma[0][0]->Clone(Form("MC_SecPi0InAcc_PtGamma%i_%s", i, fSecondaries[0].Data()));
+                    fHistoMCSecPi0InAccPtGamma[0][i]->Add(fHistoMCSecPi0InAccPtGamma[0][1]);
+                    fHistoMCSecPi0InAccPtGamma[0][i]->Scale(0.5);
+                    fHistoMCSecPi0InAccPtGamma[1][i]                            = (TH1D*)fHistoMCSecPi0InAccPtGamma[1][0]->Clone(Form("MC_SecPi0InAcc_PtGamma%i_%s", i, fSecondaries[1].Data()));
+                    fHistoMCSecPi0InAccPtGamma[1][i]->Add(fHistoMCSecPi0InAccPtGamma[1][1]);
+                    fHistoMCSecPi0InAccPtGamma[1][i]->Scale(0.5);
+                    fHistoMCSecPi0InAccPtGamma[2][i]                            = (TH1D*)fHistoMCSecPi0InAccPtGamma[2][0]->Clone(Form("MC_SecPi0InAcc_PtGamma%i_%s", i, fSecondaries[2].Data()));
+                    fHistoMCSecPi0InAccPtGamma[2][i]->Add(fHistoMCSecPi0InAccPtGamma[2][1]);
+                    fHistoMCSecPi0InAccPtGamma[2][i]->Scale(0.5);
+                    fHistoMCSecPi0InAccPtGamma[3][i]                            = (TH1D*)fHistoMCSecPi0InAccPtGamma[3][0]->Clone(Form("MC_SecPi0InAcc_PtGamma%i_%s", i, fSecondaries[3].Data()));
+                    fHistoMCSecPi0InAccPtGamma[3][i]->Add(fHistoMCSecPi0InAccPtGamma[3][1]);
+                    fHistoMCSecPi0InAccPtGamma[3][i]->Scale(0.5);
+                }
+            }
+            
+            for (Int_t i = 0; i<3; i++){
+                fHistoMCPrimPi0PtGammaReb[i]                                    = (TH1D*)fHistoMCPrimPi0PtGamma[i]->Clone(Form("MC_Pi0_PtGamma_Leg%i_Rebin", i));
+                RebinSpectrum(fHistoMCPrimPi0PtGammaReb[i]);
+                fHistoMCPrimPi0InAccPtGammaReb[i]                               = (TH1D*)fHistoMCPrimPi0InAccPtGamma[i]->Clone(Form("MC_Pi0InAcc_PtGamma_Leg%i_Rebin", i));
+                RebinSpectrum(fHistoMCPrimPi0InAccPtGammaReb[i]);
+                // calculate acceptance for pi0 vs ptgamma
+                fHistoAcceptancePi0PtGammaReb[i]                                = (TH1D*)fHistoMCPrimPi0InAccPtGammaReb[i]->Clone(Form("AcceptancePi0PtGamma_%i", i));
+                fHistoAcceptancePi0PtGammaReb[i]->Sumw2();
+                fHistoAcceptancePi0PtGammaReb[i]->Divide(fHistoAcceptancePi0PtGammaReb[i],fHistoMCPrimPi0PtGammaReb[i],1,1,"B");
+                for (Int_t k = 0; k < 4; k++){
+                    fHistoMCSecPi0PtGammaReb[k][i]                              = (TH1D*)fHistoMCSecPi0PtGamma[k][i]->Clone(Form("MC_SecPi0_PtGamma%i_%s_Rebin", i, fSecondaries[k].Data()));
+                    RebinSpectrum(fHistoMCSecPi0PtGammaReb[k][i]);
+                    fHistoMCSecPi0InAccPtGammaReb[k][i]                         = (TH1D*)fHistoMCSecPi0InAccPtGamma[k][i]->Clone(Form("MC_SecPi0InAcc_PtGamma%i_%s_Rebin", i, fSecondaries[k].Data()));
+                    RebinSpectrum(fHistoMCSecPi0InAccPtGammaReb[k][i]);
+                    // calculate acceptance for secondary pi0s vs ptgamma
+                    fHistoAcceptanceSecPi0PtGammaReb[k][i]                      = (TH1D*)fHistoMCSecPi0InAccPtGammaReb[k][i]->Clone(Form("AcceptanceSecPi0PtGamma_%i_%s", i,fSecondaries[k].Data()));
+                    fHistoAcceptanceSecPi0PtGammaReb[k][i]->Sumw2();
+                    fHistoAcceptanceSecPi0PtGammaReb[k][i]->Divide(fHistoAcceptanceSecPi0PtGammaReb[k][i],fHistoMCSecPi0PtGammaReb[k][i],1,1,"B");
+                }
+            }
+        }
     }
     
     // *******************************************************************************************************
@@ -1183,6 +1276,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
             PlotInvMassSecondaryInPtBins(   fHistoTrueFullMesonInvMassPtBins, fHistoTruePrimMesonInvMassPtBins, fHistoTrueSecMesonInvMassPtBins[0], nameMesonTrue, nameCanvasTrue,
                                             namePadTrue, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
                                             fCollisionSystem);
+            
         }
         
         CreatePtHistos();
@@ -1359,6 +1453,15 @@ void ExtractGammaSignalV2(      TString meson               = "",
         //************************************** Calculate correction factors **************************************
         CalculateGammaCorrection();
         
+        if (fMode == 2 || fMode == 3){
+            for (Int_t k = 0; k < 3; k++){
+                fHistoTruePi0EffiGammaPt[k]             = CalculateMesonEfficiency( fHistoYieldTrueMeson[k], NULL, fHistoMCPrimPi0InAccPtGammaReb[2], Form("TruePi0EffiGammaPt%s", nameIntRange[k].Data()));   
+                for (Int_t m = 0; m < 4; m++){
+                    fHistoTrueSecPi0EffiGammaPt[m][k]   = CalculateMesonEfficiency( fHistoYieldTrueSecMeson[k][m], NULL, fHistoMCSecPi0InAccPtGammaReb[m][2], Form("TrueSecPi0From%sEffiGammaPt%s",
+                                                                                    fSecondaries[m].Data(), nameIntRange[k].Data()));   
+                }
+            }
+        }
         //**************************** Calculate pilepup correction factors for MC *********************************
         if(pileUpCorrection && !addSig && !(mode == 4 || mode == 5)){
             FillDCAHistogramsFromTree(dcaTree,kTRUE);
@@ -2019,19 +2122,18 @@ void CalculateGammaCorrection(){
         // ==========================================
         cout << "secondary fractions" << endl;
         // ======== Secondary fractions =============
-        fHistoFracAllGammaToSecOrBin                                = (TH1D*)fHistoGammaConvPtOrBin->Clone("FracAllGammaToSecOriginalBinning");
-        fHistoFracAllGammaToSecOrBin->Divide(fHistoGammaTrueSecondaryConvPtOrBin,fHistoFracAllGammaToSecOrBin,1,1,"B");
         fHistoFracAllGammaToSec                                     = (TH1D*) fHistoGammaConvPt->Clone("FracAllGammaToSec");
         fHistoFracAllGammaToSec->Divide(fHistoGammaTrueSecondaryConvPt,fHistoFracAllGammaToSec,1,1,"B");
-
+        cout << __LINE__ << "\t" << fHistoGammaTrueSecondaryConvPt->GetNbinsX() << "\t" << fHistoFracAllGammaToSec->GetNbinsX() << endl;
         for (Int_t k = 0; k< 4; k++){
             if(nHistogramDimension==1 && k==2) continue;
             
             fHistoFracAllGammaToSecFromX[k]                         = (TH1D*)fHistoGammaConvPt->Clone(Form("FracAllGammaToSecFromXFrom%s", fSecondaries[k].Data()));
             fHistoFracAllGammaToSecFromX[k]->Divide(fHistoGammaTrueSecondaryConvGammaFromXPt[k],fHistoFracAllGammaToSecFromX[k],1,1,"B");
-
+            cout << __LINE__ << endl;
             fHistoFracAllGammaToSecFromXOrBin[k]                    = (TH1D*)fHistoGammaConvPtOrBin->Clone(Form("FracAllGammaToSecFromXFrom%sOriginalBinning", fSecondaries[k].Data()));
             fHistoFracAllGammaToSecFromXOrBin[k]->Divide(fHistoGammaTrueSecondaryConvGammaFromXPtOrBin[k],fHistoFracAllGammaToSecFromXOrBin[k],1,1,"B");
+            cout << __LINE__ << endl;
         }
         // ==========================================
         
@@ -2040,22 +2142,25 @@ void CalculateGammaCorrection(){
         fHistoGammaMCConvProb                                       = new TH1D("MCGammaConvProb_MCPt","",fNBinsPt,fBinsPt);
         fHistoGammaMCConvProb->Sumw2();
         fHistoGammaMCConvProb->Divide(fHistoGammaMCConvPt,fHistoGammaMCAllPt,1,1,"B");
+        cout << __LINE__ << endl;
 
         fHistoGammaMCConvProbOrBin                                  = (TH1D*)fHistoGammaMCConvPtOrBin->Clone("MCGammaConvProb_MCPt_OriginalBinning");
         fHistoGammaMCConvProbOrBin->Sumw2();
         fHistoGammaMCConvProbOrBin->Divide(fHistoGammaMCConvProbOrBin,fHistoGammaMCAllPtOrBin,1,1,"B");
-
+        cout << __LINE__ << endl;
+        
         // secondary conversion probabilities
         if(fUseCocktail && nHistogramDimension==2){
             for (Int_t k = 0; k < 3; k++){
                 fHistoSecondaryGammaFromXMCConvProb[k]              = new TH1D(Form("SecondaryGammaFromXFrom%sMCGammaConvProb_MCPt",fSecondaries[k].Data()),"",fNBinsPt,fBinsPt);
                 fHistoSecondaryGammaFromXMCConvProb[k]->Sumw2();
                 fHistoSecondaryGammaFromXMCConvProb[k]->Divide(fHistoSecondaryGammaConvFromXPt[k],fHistoAllSecondaryGammaFromXPt[k],1,1,"B");
-
+                cout << __LINE__ << endl;
                 fHistoSecondaryGammaFromXMCConvProbOrBin[k]         = (TH1D*)fHistoSecondaryGammaConvFromXPtOrBin[k]->Clone(Form("SecondaryGammaFromXFrom%sMCGammaConvProb_MCPtOrBin",
                                                                                                                                  fSecondaries[k].Data()));
                 fHistoSecondaryGammaFromXMCConvProbOrBin[k]->Sumw2();
                 fHistoSecondaryGammaFromXMCConvProbOrBin[k]->Divide(fHistoSecondaryGammaConvFromXPtOrBin[k],fHistoAllSecondaryGammaFromXPtOrBin[k],1,1,"B");
+                cout << __LINE__ << endl;
             }
         }
         // ==========================================
@@ -2064,18 +2169,21 @@ void CalculateGammaCorrection(){
         fHistoGammaMCPurity                                         = new TH1D("GammaPurity_Pt","",fNBinsPt,fBinsPt);
         fHistoGammaMCPurity->Sumw2();
         fHistoGammaMCPurity->Divide(fHistoGammaTrueConvPt,fHistoGammaConvPt,1,1,"B");
-
+        cout << __LINE__ << endl;
+        
         fHistoGammaMCrecPrimaryConvPt                               = (TH1D*) fHistoGammaConvPt->Clone("MCrec_PrimaryConvGamma_Pt");
         fHistoGammaMCrecPrimaryConvPt->Add(fHistoGammaTrueSecondaryConvPt,-1);
         fHistoGammaMCTruePurity                                     = new TH1D("GammaTruePurity_Pt","",fNBinsPt,fBinsPt);
         fHistoGammaMCTruePurity->Sumw2();
         fHistoGammaMCTruePurity->Divide(fHistoGammaTruePrimaryConvPt,fHistoGammaMCrecPrimaryConvPt,1,1,"B");
-
+        cout << __LINE__ << endl;
+        
         fHistoGammaMCrecPrimaryConvPtOrBin                          = (TH1D*) fHistoGammaConvPtOrBin->Clone("MC_ESDPrimaryConvGammaPt");
         fHistoGammaMCrecPrimaryConvPtOrBin->Add(fHistoGammaTrueSecondaryConvPtOrBin,-1);
         fHistoGammaMCTruePurityOrBin                                = (TH1D*)fHistoGammaMCrecPrimaryConvPtOrBin->Clone("GammaTruePurity_OriginalBinning_Pt");
         fHistoGammaMCTruePurityOrBin->Sumw2();
         fHistoGammaMCTruePurityOrBin->Divide(fHistoGammaTruePrimaryConvPtOrBin,fHistoGammaMCrecPrimaryConvPtOrBin,1,1,"B");
+        cout << __LINE__ << endl;
         // ==========================================
 
         // ================ Reco Eff ================
@@ -2273,9 +2381,6 @@ void CalculateGammaCorrection(){
         fHistoFracAllGammaToSec                                     = (TH1D*)fHistoGammaCaloPt->Clone("FracAllGammaToSec");
         fHistoFracAllGammaToSec->Divide(fHistoGammaTrueSecondaryCaloPt,fHistoFracAllGammaToSec,1,1,"B");
 
-        fHistoFracAllGammaToSecOrBin                                = (TH1D*)fHistoGammaCaloPtOrBin->Clone("FracAllGammaToSecOriginalBinning");
-        fHistoFracAllGammaToSecOrBin->Divide(fHistoGammaTrueSecondaryCaloPtOrBin,fHistoFracAllGammaToSecOrBin,1,1,"B");
-
         for (Int_t k = 0; k < 4; k++){
             if (nHistogramDimension == 1 && k == 2) continue;
             fHistoFracAllGammaToSecFromX[k]                         = (TH1D*)fHistoGammaCaloPt->Clone(Form("FracAllGammaToSecFromXFrom%s", fSecondaries[k].Data()));
@@ -2426,11 +2531,11 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
     } else if ((fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) ) {
-        nIterationsShowBackground[0]                    = 12;
-        nIterationsShowBackground[1]                    = 12;
+        nIterationsShowBackground[0]                    = 14;
+        nIterationsShowBackground[1]                    = 13;
         nIterationsShowBackground[2]                    = 15;
         nIterationsShowBackground[3]                    = 16;
-        optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
+        optionShowBackground[0]                         = "BackDecreasingWindow";   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
     } else if ((fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
@@ -2821,10 +2926,30 @@ void SaveHistos(Int_t isMC, TString fCutID, TString fPrefix3,Bool_t PileUpCorrec
                                                                                                     TObject::kOverwrite);
                     }   
                 }
-            }    
+                
+                if (fHistoMCPrimPi0PtGammaLeg)          fHistoMCPrimPi0PtGammaLeg->Write("MC_Pi0_PtGamma_Leg", TObject::kOverwrite);
+                if (fHistoMCPrimPi0InAccPtGammaLeg)     fHistoMCPrimPi0InAccPtGammaLeg->Write("MC_Pi0InAcc_PtGamma_Leg", TObject::kOverwrite);
+                if (fHistoMCSecPi0PtGammaLeg[0])        fHistoMCSecPi0PtGammaLeg[0]->Write("MC_SecPi0_PtGamma1_Source", TObject::kOverwrite);
+                if (fHistoMCSecPi0PtGammaLeg[1])        fHistoMCSecPi0PtGammaLeg[1]->Write("MC_SecPi0_PtGamma2_Source", TObject::kOverwrite);
+                if (fHistoMCSecPi0InAccPtGammaLeg[0])   fHistoMCSecPi0InAccPtGammaLeg[0]->Write("MC_SecPi0InAcc_PtGamma1_Source", TObject::kOverwrite);
+                if (fHistoMCSecPi0InAccPtGammaLeg[1])   fHistoMCSecPi0InAccPtGammaLeg[1]->Write("MC_SecPi0InAcc_PtGamma2_Source", TObject::kOverwrite);
+                
+                for (Int_t i = 0; i < 3; i++){
+                    if (fHistoMCPrimPi0PtGamma[i])              fHistoMCPrimPi0PtGamma[i]->Write(Form("MC_Pi0_PtGamma_Leg%i", i), TObject::kOverwrite);
+                    if (fHistoMCPrimPi0PtGammaReb[i])           fHistoMCPrimPi0PtGammaReb[i]->Write(Form("MC_Pi0_PtGamma_Leg%i_Rebin", i), TObject::kOverwrite);
+                    if (fHistoMCPrimPi0InAccPtGamma[i])         fHistoMCPrimPi0InAccPtGamma[i]->Write(Form("MC_Pi0InAcc_PtGamma_Leg%i", i), TObject::kOverwrite);
+                    if (fHistoMCPrimPi0InAccPtGammaReb[i])      fHistoMCPrimPi0InAccPtGammaReb[i]->Write(Form("MC_Pi0InAcc_PtGamma_Leg%i_Rebin", i), TObject::kOverwrite);                    
+                    
+                    for (Int_t k = 0; k < 4; k++){
+                        if (fHistoMCSecPi0PtGamma[k][i])            fHistoMCSecPi0PtGamma[k][i]->Write(Form("MC_SecPi0_PtGamma%i_%s", i, fSecondaries[k].Data()), TObject::kOverwrite);
+                        if (fHistoMCSecPi0PtGammaReb[k][i])         fHistoMCSecPi0PtGammaReb[k][i]->Write(Form("MC_SecPi0_PtGamma%i_%s_Rebin", i, fSecondaries[k].Data()), TObject::kOverwrite);
+                        if (fHistoMCSecPi0InAccPtGamma[k][i])       fHistoMCSecPi0InAccPtGamma[k][i]->Write(Form("MC_SecPi0InAcc_PtGamma%i_%s", i, fSecondaries[k].Data()), TObject::kOverwrite);
+                        if (fHistoMCSecPi0InAccPtGammaReb[k][i])    fHistoMCSecPi0InAccPtGammaReb[k][i]->Write(Form("MC_SecPi0InAcc_PtGamma%i_%s_Rebin", i, fSecondaries[k].Data()), TObject::kOverwrite);
+                    } 
+                }
+            }
         }
 
-        
     Output1->Write();
     Output1->Close();
 }
@@ -3014,6 +3139,31 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3,Bool_t PileUpCorrecti
         if (fEnableCalo && !fEnablePCM){
             for(Int_t i = 0; i<nContamination+1; i++)
                 if (fHistoCombinatorialSpecies[i]) fHistoCombinatorialSpecies[i]->Write(Form("ESD_TrueComb%s_Pt",fContamination[i].Data()),TObject::kOverwrite);
+        }
+
+        // writing meson secondaries
+        if (fMode == 2 || fMode == 3){
+            if (fHistoYieldTrueMesonFixedWindow)    fHistoYieldTrueMesonFixedWindow->Write("histoYieldTrueMesonFixedWindow_GammaConvPt_Binning",TObject::kOverwrite);
+            if (fHistoTrueMassMeson)    fHistoTrueMassMeson->Write("TrueMesonMass_GammaConvPt_Binning",TObject::kOverwrite);
+            if (fHistoTrueFWHMMeson)    fHistoTrueFWHMMeson->Write("TrueMesonFWHM_GammaConvPt_Binning",TObject::kOverwrite);
+            for (Int_t k = 0; k < 3; k++){ // different integration windows: normal, wide, narrow
+                if (fHistoYieldTrueMeson[k])            fHistoYieldTrueMeson[k]->Write(Form("histoYieldTrueMeson%s_GammaConvPt_Binning",nameIntRange[k].Data()),TObject::kOverwrite);
+                if (fHistoTruePi0EffiGammaPt[k])        fHistoTruePi0EffiGammaPt[k]->Write(Form("TruePi0EffiGammaPt%s", nameIntRange[k].Data()), TObject::kOverwrite);
+                for (Int_t j = 0; j < maxNSec; j++){ // different secondary types: K0s, Lambda, K0L, rest
+                    if (fHistoYieldTrueSecMeson[k][j])      fHistoYieldTrueSecMeson[k][j]->Write( Form("histoYieldTrueFrom%sSecMeson%s_GammaConvPt_Binning",fSecondaries[j].Data(),nameIntRange[k].Data()),
+                                                                                                  TObject::kOverwrite);
+                    if (fHistoTrueSecPi0EffiGammaPt[j][k])  fHistoTrueSecPi0EffiGammaPt[j][k]->Write(Form("TrueSecPi0From%sEffiGammaPt%s", fSecondaries[j].Data(), nameIntRange[k].Data()),
+                                                                                                     TObject::kOverwrite);
+                }   
+            }
+            for (Int_t i = 0; i < 3; i++){
+                if (fHistoAcceptancePi0PtGammaReb[i])       fHistoAcceptancePi0PtGammaReb[i]->Write(Form("AcceptancePi0PtGamma_%i", i), TObject::kOverwrite);
+                for (Int_t j = 0; j < maxNSec; j++){
+                    if (fHistoAcceptanceSecPi0PtGammaReb[j][i]) fHistoAcceptanceSecPi0PtGammaReb[j][i]->Write(Form("AcceptanceSecPi0PtGamma_%i_%s", i, fSecondaries[j].Data()), TObject::kOverwrite);
+                } 
+            }
+                
+            
         }
         
     Output2->Write();
@@ -4603,3 +4753,29 @@ void FillMassMCTrueMesonHistosArrays(TH2D* fHistoTrueMesonPrimInvMassVSPtFill, T
     }
 }
 
+//****************************************************************************
+//***************** Calculation of Meson Efficiency **************************
+//****************************************************************************
+TH1D* CalculateMesonEfficiency(TH1D* fMC_fMesonYieldsPt, TH1D** fMC_SecondaryYieldPt, TH1D* histAcc, TString nameEfi ) {
+    
+    // create histo with proper binning
+    TH1D* fHistoMCMesonEffiPt = new TH1D(nameEfi.Data(),"",fNBinsPt,fBinsPt);    
+    fHistoMCMesonEffiPt->Sumw2();
+    // add original reconstructed yields
+    fHistoMCMesonEffiPt->Add(fMC_fMesonYieldsPt,1.);
+    // subtract secondary yield to get only primary efficiency if wanted
+    if (fMC_SecondaryYieldPt){
+        for (Int_t j = 0; j<4; j++){
+            if(fMC_SecondaryYieldPt[j]) fHistoMCMesonEffiPt->Add(fMC_SecondaryYieldPt[j],-1.);
+        }    
+    }    
+    // devide by MC input yield in acceptance
+    fHistoMCMesonEffiPt->Divide(fHistoMCMesonEffiPt, histAcc, 1.,1.,"B");
+    // write efficiency to output file as text
+    fFileDataLog << endl << "Calculation of the Efficiency: " << nameEfi.Data()<< endl;
+    for ( Int_t i = 1; i < fHistoMCMesonEffiPt->GetNbinsX()+1 ; i++){
+        fFileDataLog << "Bin " << i << "\t" << fHistoMCMesonEffiPt->GetBinCenter(i)<< "\t"<< fHistoMCMesonEffiPt->GetBinContent(i) << "\t" << fHistoMCMesonEffiPt->GetBinError(i) <<endl;
+    }
+    // return pointer to hist
+    return fHistoMCMesonEffiPt;
+}

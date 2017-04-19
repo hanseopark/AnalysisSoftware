@@ -43,6 +43,7 @@ MinPtToy=0.5
 MaxPtToy=50
 MaxPtToyLambda=90
 ExtInputFile=""
+BinsPtGamma=0
 
 function GiveBinning5TeV()
 {
@@ -84,6 +85,7 @@ function GiveBinning5TeV()
         echo "eta binning was not set correctly. please try again.";
         correctEta=0
      fi
+     BinsPtGamma=$BinsPtPi0
 }
 
 function GiveBinningDirectPhoton5TeV()
@@ -109,6 +111,7 @@ function GiveBinningDirectPhoton5TeV()
         echo "Pi0 Binning was not set correctly. Please try again.";
         correctPi0=0
     fi
+    BinsPtGamma=$BinsPtPi0
 }
 
 function GiveBinning13TeV()
@@ -122,6 +125,7 @@ function GiveBinning13TeV()
     read BinsPtEta
     correctEta=1
     echo "You have chosen $BinsPtEta bins";
+    BinsPtGamma=$BinsPtPi0
 }
 
 function GiveBinningDirectPhoton13TeV()
@@ -155,59 +159,7 @@ function GiveBinningDirectPhoton13TeV()
         echo "Pi0 Binning was not set correctly. Please try again.";
         correctPi0=0
     fi
-}
-
-function GiveBinningDalitz7TeV()
-{
-    echo "How many p_T bins do you want to use for the Pi0? 17(5GeV), 18(7GeV), 19(10GeV), 20(16GeV) 21(20GeV) 22(25GeV) 24 (extra)";
-    read answer
-    if [ $answer = 17 ]; then
-        echo "17 Bins --> Max p_T = 5 GeV ...";
-        correctPi0=1
-        BinsPtPi0=17
-    elif [ $answer = 18 ]; then
-        echo "18 Bins --> Max p_T = 7 GeV ...";
-        correctPi0=1
-        BinsPtPi0=18
-    elif [ $answer = 19 ]; then
-        echo "19 Bins --> Max p_T = 10 GeV ...";
-        correctPi0=1
-        BinsPtPi0=19
-    elif [ $answer = 20 ]; then
-        echo "20 Bins --> Max p_T = 16 GeV ...";
-        correctPi0=1
-        BinsPtPi0=20
-    elif [ $answer = 21 ]; then
-        echo "21 Bins --> Max p_T = 20 GeV ...";
-        correctPi0=1
-        BinsPtPi0=21
-    elif [ $answer = 22 ]; then
-        echo "22 Bins --> Max p_T = 25 GeV ...";
-        correctPi0=1
-        BinsPtPi0=22
-    elif [ $answer = 24 ]; then
-        echo "24 Bins --> Max p_T = 10 GeV ...";
-        correctPi0=1
-        BinsPtPi0=24
-    else
-        echo "Pi0 Binning was not set correctly. Please try again.";
-        correctPi0=0
-    fi
-    
-    echo "How many p_t bins do you want to use for the eta meson? 8 (4.5 GeV), 9 (6 GeV)"
-    read answer
-    if [ $answer = 8 ]; then
-        echo "8 Bins --> Max p_T = 4.5 GeV ...";
-        correctEta=1
-        BinsPtEta=8
-    elif [ $answer = 9 ]; then
-        echo "9 Bins --> Max p_T = 6 GeV ...";
-        correctEta=1
-        BinsPtEta=9
-    else
-        echo "Eta Binning was not set correctly. Please try again.";
-        correctEta=0
-    fi
+    BinsPtGamma=$BinsPtPi0
 }
 
 function GiveBinningDirectPhotonHI()
@@ -241,6 +193,7 @@ function GiveBinningDirectPhotonHI()
         echo "Pi0 Binning was not set correctly. Please try again.";
         correctPi0=0
     fi
+    BinsPtGamma=$BinsPtPi0
 }
 
 function GiveBinningDirectPhotonpPb()
@@ -263,6 +216,7 @@ function GiveBinningDirectPhotonpPb()
         echo "Pi0 Binning was not set correctly. Please try again.";
         correctPi0=0
     fi
+    BinsPtGamma=$BinsPtPi0
 }
 
 function GiveBinningDirectPhoton2760TeV()
@@ -288,6 +242,7 @@ function GiveBinningDirectPhoton2760TeV()
         echo "Pi0 Binning was not set correctly. Please try again.";
         correctPi0=0
     fi
+    BinsPtGamma=$BinsPtPi0
 }
 
 function GiveBinningDirectPhoton7TeV()
@@ -325,6 +280,7 @@ function GiveBinningDirectPhoton7TeV()
         echo "Pi0 Binning was not set correctly. Please try again.";
         correctPi0=0
     fi
+    BinsPtGamma=$BinsPtPi0
 }
 
 function GiveBinning7TeV()
@@ -459,6 +415,7 @@ function GiveBinning7TeV()
         echo "eta binning was not set correctly. please try again.";
         correctEta=0
      fi
+     BinsPtGamma=$BinsPtPi0
 }
 
 function GiveBinning8TeV()
@@ -630,6 +587,7 @@ function GiveBinning8TeV()
             echo "Eta Binning was not set correctly. Please try again.";
             correctEta=0
        fi
+       BinsPtGamma=$BinsPtPi0
     fi    
 }
 
@@ -675,6 +633,7 @@ function GiveBinning900GeV()
         echo "Eta Binning was not set correctly. Please try again.";
         correctEta=0
     fi
+    BinsPtGamma=$BinsPtPi0
 }
 
 function GiveBinningDirectPhoton900GeV()
@@ -711,6 +670,7 @@ function GiveBinningDirectPhoton900GeV()
     else
         echo "Pi0 Binning was not set correctly. Please try again.";
     fi
+    BinsPtGamma=$BinsPtPi0
 }
 
 function GiveBinning2760GeV()
@@ -817,6 +777,7 @@ function GiveBinning2760GeV()
     else 
         correctEta=1
     fi    
+    BinsPtGamma=$BinsPtPi0
 }
 
 function GiveBinning2760GeVMerged()
@@ -861,6 +822,7 @@ function GiveBinning2760GeVMerged()
     DoEta=0;
     DoPi0InEtaBinning=0;
     correctEta=1;
+    BinsPtGamma=$BinsPtPi0
 }
 
 
@@ -942,6 +904,7 @@ function GiveBinningHI()
             correctEta=0
         fi
     fi
+    BinsPtGamma=$BinsPtPi0
 #    DoEta=1
 #    DoPi0InEtaBinning=1
 }
@@ -974,115 +937,20 @@ function GiveBinningHI5020GeV()
     fi
 #    DoEta=1
 #    DoPi0InEtaBinning=1
+    BinsPtGamma=$BinsPtPi0
 }
 
 
 function GiveBinningpPb()
 {
     if [ $DoPi0 -eq 1 ] || [ $DoGamma -eq 1 ]; then
-        echo "How many p_T bins do you want to use for Pi0/direct photon?  27 (7 GeV), 28 (8 GeV), 29 (10 GeV), 30 (12 GeV), 31 (14 GeV), for Calo measurements also 32 (16 GeV), 33 (18 GeV), 34 (20 GeV), 35 (22 GeV), 36 (26 GeV), 37 (30 GeV)";
+        echo "How many p_T bins do you want to use for Pi0?  27 (7 GeV), 28 (8 GeV), 29 (10 GeV), 30 (12 GeV), 31 (14 GeV), for Calo measurements also 32 (16 GeV), 33 (18 GeV), 34 (20 GeV), 35 (22 GeV), 36 (26 GeV), 37 (30 GeV)";
         echo "for calo triggers bins reach to 46."
         read answer
-        if [ $answer = 27 ]; then
-            echo "27 Bins --> Max p_T = 7 GeV ...";
-            correctPi0=1
-            BinsPtPi0=27
-        elif [ $answer = 28 ]; then
-            echo "28 Bins --> Max p_T = 8 GeV ...";
-            correctPi0=1
-            BinsPtPi0=28
-        elif [ $answer = 29 ]; then
-            echo "29 Bins --> Max p_T = 10 GeV ...";
-            correctPi0=1
-            BinsPtPi0=29
-        elif [ $answer = 30 ]; then
-            echo "30 Bins --> Max p_T = 12 GeV ...";
-            correctPi0=1
-            BinsPtPi0=30 
-        elif [ $answer = 31 ]; then
-            echo "31 Bins --> Max p_T = 14 GeV ...";
-            correctPi0=1
-            BinsPtPi0=31 
-        elif [ $answer = 32 ]; then
-            echo "32 Bins --> Max p_T = 16 GeV ...";
-            correctPi0=1
-            BinsPtPi0=32 
-        elif [ $answer = 33 ]; then
-            echo "33 Bins --> Max p_T = 18 GeV ...";
-            correctPi0=1
-            BinsPtPi0=33 
-        elif [ $answer = 34 ]; then
-            echo "34 Bins --> Max p_T = 20 GeV ...";
-            correctPi0=1
-            BinsPtPi0=34 
-        elif [ $answer = 35 ]; then
-            echo "35 Bins --> Max p_T = 22 GeV ...";
-            correctPi0=1
-            BinsPtPi0=35 
-        elif [ $answer = 36 ]; then
-            echo "36 Bins --> Max p_T = 26 GeV ...";
-            correctPi0=1
-            BinsPtPi0=36 
-        elif [ $answer = 37 ]; then
-            echo "37 Bins --> Max p_T = 30 GeV ...";
-            correctPi0=1
-            BinsPtPi0=37 
-        elif [ $answer = 38 ]; then
-            echo "38 Bins";
-            correctPi0=1
-            BinsPtPi0=38 
-        elif [ $answer = 39 ]; then
-            echo "39 Bins";
-            correctPi0=1
-            BinsPtPi0=39 
-        elif [ $answer = 40 ]; then
-            echo "40 Bins";
-            correctPi0=1
-            BinsPtPi0=40 
-        elif [ $answer = 41 ]; then
-            echo "41 Bins";
-            correctPi0=1
-            BinsPtPi0=41 
-        elif [ $answer = 42 ]; then
-            echo "42 Bins";
-            correctPi0=1
-            BinsPtPi0=42 
-        elif [ $answer = 43 ]; then
-            echo "43 Bins";
-            correctPi0=1
-            BinsPtPi0=43 
-        elif [ $answer = 44 ]; then
-            echo "44 Bins";
-            correctPi0=1
-            BinsPtPi0=44 
-        elif [ $answer = 45 ]; then
-            echo "45 Bins";
-            correctPi0=1
-            BinsPtPi0=45 
-        elif [ $answer = 46 ]; then
-            echo "46 Bins";
-            correctPi0=1
-            BinsPtPi0=46 
-        elif [ $answer = 47 ]; then
-            echo "47 Bins";
-            correctPi0=1
-            BinsPtPi0=47 
-        elif [ $answer = 48 ]; then
-            echo "48 Bins";
-            correctPi0=1
-            BinsPtPi0=48 
-        elif [ $answer = 49 ]; then
-            echo "49 Bins";
-            correctPi0=1
-            BinsPtPi0=49 
-        elif [ $answer = 50 ]; then
-            echo "50 Bins";
-            correctPi0=1
-            BinsPtPi0=50 
-        else
-            echo "Pi0 Binning was not set correctly. Please try again.";
-            correctPi0=0
-        fi
+        BinsPtPi0=$answer
+        correctPi0=1
+        echo "You have chosen " $answer " pt bins for pi0";
+        BinsPtGamma=$BinsPtPi0
     else
         correctPi0=1
     fi    
@@ -1090,157 +958,39 @@ function GiveBinningpPb()
         echo "How many p_t bins do you want to use for the eta meson? 12 (4 GeV), 14 (6 GeV), 15 (8 GeV), 16 (10 GeV), for calorimeters 17 (12 GeV), 18 (14 GeV), 19 (16 GeV), 20 (20 GeV), 21 (25 GeV), 22 (30 GeV)";
         echo "for calo triggers bins reach to 30."
         read answer
-        if [ $answer = 12 ]; then
-            echo "12 Bins --> Max p_T = 4. GeV ...";
-            correctEta=1
-            BinsPtEta=12
-        elif [ $answer = 14 ]; then
-            echo "14 Bins --> Max p_T = 6 GeV ...";
-            correctEta=1
-            BinsPtEta=14
-        elif [ $answer = 15 ]; then
-            echo "15 Bins --> Max p_T = 8 GeV ...";
-            correctEta=1
-            BinsPtEta=15
-        elif [ $answer = 16 ]; then
-            echo "16 Bins --> Max p_T = 10 GeV ...";
-            correctEta=1
-            BinsPtEta=16   
-        elif [ $answer = 17 ]; then
-            echo "17 Bins --> Max p_T = 12 GeV ...";
-            correctEta=1
-            BinsPtEta=17   
-        elif [ $answer = 18 ]; then
-            echo "18 Bins --> Max p_T = 14 GeV ...";
-            correctEta=1
-            BinsPtEta=18   
-        elif [ $answer = 19 ]; then
-            echo "19 Bins --> Max p_T = 16 GeV ...";
-            correctEta=1
-            BinsPtEta=19   
-        elif [ $answer = 20 ]; then
-            echo "20 Bins --> Max p_T = 20 GeV ...";
-            correctEta=1
-            BinsPtEta=20   
-        elif [ $answer = 21 ]; then
-            echo "21 Bins --> Max p_T = 25 GeV ...";
-            correctEta=1
-            BinsPtEta=21   
-        elif [ $answer = 22 ]; then
-            echo "22 Bins --> Max p_T = 30 GeV ...";
-            correctEta=1
-            BinsPtEta=22   
-        elif [ $answer = 23 ]; then
-            echo "23 Bins";
-            correctEta=1
-            BinsPtEta=23   
-        elif [ $answer = 24 ]; then
-            echo "24 Bins";
-            correctEta=1
-            BinsPtEta=24   
-        elif [ $answer = 25 ]; then
-            echo "25 Bins";
-            correctEta=1
-            BinsPtEta=25   
-        elif [ $answer = 26 ]; then
-            echo "26 Bins";
-            correctEta=1
-            BinsPtEta=26   
-        elif [ $answer = 27 ]; then
-            echo "27 Bins";
-            correctEta=1
-            BinsPtEta=27   
-        elif [ $answer = 28 ]; then
-            echo "28 Bins";
-            correctEta=1
-            BinsPtEta=28   
-        elif [ $answer = 29 ]; then
-            echo "29 Bins";
-            correctEta=1
-            BinsPtEta=29   
-        elif [ $answer = 30 ]; then
-            echo "30 Bins";
-            correctEta=1
-            BinsPtEta=30   
-        else
-            echo "Eta Binning was not set correctly. Please try again.";
-        fi
-        correctEta=0
+        BinsPtEta=$answer
+        correctEta=1
+        echo "You have chosen " $answer " pt bins for eta";
+    fi
+    if [ $mode == 2 ]; then
+        echo "How many p_T bins do you want to use for direct photon?  ";
+        read answer
+        BinsPtGamma=$answer
+        correctPi0=1
+        echo "You have chosen " $answer " pt bins for dir gamma";
+        directphoton="directPhoton"
     fi
 }
 
 function GiveBinningpPbDirGamma()
 {
     if [ $DoPi0 -eq 1 ] || [ $DoGamma -eq 1 ]; then
-        echo "How many p_T bins do you want to use for Pi0/direct photon?  21 (8 GeV), 22 (10 GeV), 23 (14 GeV)";
+        echo "How many p_T bins do you want to use for Pi0/direct photon?  21 (8 GeV), 22 (10 GeV), 23 (14 GeV), PCM-EMC 33";
         read answer
-        if [ $answer = 21 ]; then
-            echo "21 Bins --> Max p_T = 8 GeV ...";
-            correctPi0=1
-            BinsPtPi0=21
-        elif [ $answer = 22 ]; then
-            echo "22 Bins --> Max p_T = 10 GeV ...";
-            correctPi0=1
-            BinsPtPi0=22
-        elif [ $answer = 23 ]; then
-            echo "23 Bins --> Max p_T = 14 GeV ...";
-            correctPi0=1
-            BinsPtPi0=23 
-        else
-            echo "Pi0 Binning was not set correctly. Please try again.";
-            correctPi0=0
-        fi
+        BinsPtPi0=$answer
+        correctPi0=1
+        echo "You have chosen " $answer " pt bins for pi0 in direct photon binning";
     else
         correctPi0=1
     fi    
     if [ $DoEta -eq 1 ] || [ $DoPi0InEtaBinning -eq 1 ]; then 
         echo "How many p_t bins do you want to use for the eta meson? 12 (4 GeV), 14 (6 GeV), 15 (8 GeV), 16 (10 GeV), for calorimeters 17 (12 GeV), 18 (14 GeV), 19 (16 GeV), 20 (20 GeV), 21 (25 GeV), 22 (30 GeV)";
         read answer
-        if [ $answer = 12 ]; then
-            echo "12 Bins --> Max p_T = 4. GeV ...";
-            correctEta=1
-            BinsPtEta=12
-        elif [ $answer = 14 ]; then
-            echo "14 Bins --> Max p_T = 6 GeV ...";
-            correctEta=1
-            BinsPtEta=14
-        elif [ $answer = 15 ]; then
-            echo "15 Bins --> Max p_T = 8 GeV ...";
-            correctEta=1
-            BinsPtEta=15
-        elif [ $answer = 16 ]; then
-            echo "16 Bins --> Max p_T = 10 GeV ...";
-            correctEta=1
-            BinsPtEta=16   
-        elif [ $answer = 17 ]; then
-            echo "17 Bins --> Max p_T = 12 GeV ...";
-            correctEta=1
-            BinsPtEta=17   
-        elif [ $answer = 18 ]; then
-            echo "18 Bins --> Max p_T = 14 GeV ...";
-            correctEta=1
-            BinsPtEta=18   
-        elif [ $answer = 19 ]; then
-            echo "19 Bins --> Max p_T = 16 GeV ...";
-            correctEta=1
-            BinsPtEta=19   
-        elif [ $answer = 20 ]; then
-            echo "20 Bins --> Max p_T = 20 GeV ...";
-            correctEta=1
-            BinsPtEta=20   
-        elif [ $answer = 21 ]; then
-            echo "21 Bins --> Max p_T = 25 GeV ...";
-            correctEta=1
-            BinsPtEta=21   
-        elif [ $answer = 22 ]; then
-            echo "22 Bins --> Max p_T = 30 GeV ...";
-            correctEta=1
-            BinsPtEta=22   
-        else
-            echo "Eta Binning was not set correctly. Please try again.";
-        fi
-        correctEta=0
+        BinsPtEta=$answer
+        correctEta=1
+        echo "You have chosen " $answer " pt bins for eta";
     fi
+    BinsPtGamma=$BinsPtPi0
 }
 
 
@@ -2054,27 +1804,6 @@ do
     fi
 done
 
-# if [ $ONLYCUTS -eq 0 ] && [ $mode -lt 2 ]; then 
-#     echo "On the top you see all cuts being available, please tell me the standard cut for Meson analysis.";
-#     read standardCutMeson
-#     standardCutGamma=$standardCutMeson
-#     correct=0
-#     while [ $correct -eq 0 ]
-#     do
-#         echo "The standard cut was set to $standardCutMeson. Is this correct? Yes/No?";
-#         read answer
-#         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-#             echo "Continuing ...";
-#             correct=1
-#         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-#             echo "Aborting ...";
-#             exit
-#         else
-#             echo "Command not found. Please try again.";
-#         fi
-#     done
-# fi
-
 correct=0
 while [ $correct -eq 0 ]
 do
@@ -2124,7 +1853,7 @@ do
                 useCocktail=1
                     echo "Please enter the rapidity used in the cocktail, e.g. 0.80"
                     read cocktailRapidity
-                        echo "Rapidity of $cocktailRapidity has been chosen."
+                    echo "Rapidity of $cocktailRapidity has been chosen."
             else
                 echo "No cocktail file specified, it will not be used."
                 useCocktail=0
@@ -2358,10 +2087,6 @@ do
             echo "Command not found. Please try again.";
         fi
     elif [ $energy = "13TeV" ] || [ $energy = "13TeVLowB" ]; then
-        if [ $mode -ne 0 ]; then
-            echo "Mode is set to PCM-PCM";
-            mode=0
-        fi
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
@@ -2730,16 +2455,16 @@ if [ $mode -lt 10 ]; then
                         if [ $NEWGammaMacros == 0 ]; then
                             ExtractSignalGamma $optionsPi0Data
                         else 
-                            optionsPi0Data=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtPi0
-                            ExtractSignalGammaV2 $optionsPi0Data
+                            optionsGammaData=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtGamma
+                            ExtractSignalGammaV2 $optionsGammaData
                         fi
                         if [ $MCFILE -eq 1 ]; then 
                             optionsPi0MC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$BinsPtPi0 
                             if [ $NEWGammaMacros == 0 ]; then
                                 ExtractSignalGamma $optionsPi0MC
                             else 
-                                optionsPi0MC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtPi0 
-                                ExtractSignalGammaV2 $optionsPi0MC
+                                optionsGammaMC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtGamma 
+                                ExtractSignalGammaV2 $optionsGammaMC
                             fi
                         fi    
                     fi
