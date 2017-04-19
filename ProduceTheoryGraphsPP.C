@@ -1077,14 +1077,14 @@ void ProduceTheoryGraphsPP(){
     histoEtaToPi0RatioPythia8Monash8TeV->Sumw2();
     histoEtaToPi0RatioPythia8Monash8TeV->Divide(histoEtaToPi0RatioPythia8Monash8TeV,histoPi0Pythia8MonashInvSec8TeV);
 
-    TFile* filePythia8Monash2013_8TeVLego        = TFile::Open("ExternalInput/Theory/Pythia/Pythia8_Monash2013_8TeV_3676Mio.root");
+    TFile* filePythia8Monash2013_8TeVLego        = TFile::Open("ExternalInput/Theory/Pythia/Pythia8_Monash2013_8TeV_3640Mio.root");
     TH1F* histoPi0Pythia8MonashInvSec8TeVLego    = (TH1F*)filePythia8Monash2013_8TeVLego->Get("hPt_Pi0_MB_XSec");
     TH1F* histoEtaPythia8MonashInvSec8TeVLego    = (TH1F*)filePythia8Monash2013_8TeVLego->Get("hPt_Eta_MB_XSec");
     TH1F* histoEtaToPi0RatioPythia8Monash8TeVLego= (TH1F*)histoEtaPythia8MonashInvSec8TeVLego->Clone("histoEtaToPi0RatioPythia8Monash8TeVLego");
     histoEtaToPi0RatioPythia8Monash8TeVLego->Sumw2();
     histoEtaToPi0RatioPythia8Monash8TeVLego->Divide(histoEtaToPi0RatioPythia8Monash8TeVLego,histoPi0Pythia8MonashInvSec8TeVLego);
 
-    TFile* filePythia8Tune4C_8TeVLego            = TFile::Open("ExternalInput/Theory/Pythia/Pythia8_Tune4C_8TeV_3798Mio.root");
+    TFile* filePythia8Tune4C_8TeVLego            = TFile::Open("ExternalInput/Theory/Pythia/Pythia8_Tune4C_8TeV_3508Mio.root");
     TH1F* histoPi0Pythia8Tune4CInvSec8TeVLego    = (TH1F*)filePythia8Tune4C_8TeVLego->Get("hPt_Pi0_MB_XSec");
     TH1F* histoEtaPythia8Tune4CInvSec8TeVLego    = (TH1F*)filePythia8Tune4C_8TeVLego->Get("hPt_Eta_MB_XSec");
     TH1F* histoEtaToPi0RatioPythia8Tune4C8TeVLego= (TH1F*)histoEtaPythia8Tune4CInvSec8TeVLego->Clone("histoEtaToPi0RatioPythia8Tune4C8TeVLego");

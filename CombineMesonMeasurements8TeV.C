@@ -733,7 +733,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TH1D* histoEMCALEtaToPi0Stat                        = (TH1D*)directoryEMCALEta->Get("EtaToPi0YShiftedStatError");
         TGraphAsymmErrors* graphEMCALEtaToPi0Stat           = new TGraphAsymmErrors(histoEMCALEtaToPi0Stat);
         for(Int_t i=0; i<5; i++) graphEMCALEtaToPi0Stat->RemovePoint(0);
-        for(Int_t i=0; i<3; i++) graphEMCALEtaToPi0Stat->RemovePoint(graphEMCALEtaToPi0Stat->GetN()-1);
+        for(Int_t i=0; i<4; i++) graphEMCALEtaToPi0Stat->RemovePoint(graphEMCALEtaToPi0Stat->GetN()-1);
 
         TGraphAsymmErrors* graphEMCALEtaToPi0Sys            = (TGraphAsymmErrors*)directoryEMCALEta->Get("EtaToPi0YShiftedSystError");
         
@@ -3918,7 +3918,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TH2F * histo2DAllPi0FWHM    = new TH2F("histo2DAllPi0FWHM","histo2DAllPi0FWHM", 20, 0.23, 50. ,1000., -30, 60);
         SetStyleHistoTH2ForGraphs(histo2DAllPi0FWHM, "#it{p}_{T} (GeV/#it{c})", "Peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth, textsizeLabelsWidth,
                                   0.85*textsizeLabelsWidth, textsizeLabelsWidth, 0.8,0.28/(textsizeFacWidth*margin), 510, 505);
-        histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.5,44.5);
+        histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.5,31.5);
         histo2DAllPi0FWHM->GetYaxis()->SetMoreLogLabels(kTRUE);
         histo2DAllPi0FWHM->GetYaxis()->SetNdivisions(505);
         histo2DAllPi0FWHM->GetYaxis()->SetNoExponent(kTRUE);
@@ -3981,7 +3981,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TH2F * histo2DAllPi0Mass            = new TH2F("histo2DAllPi0Mass","histo2DAllPi0Mass",20, 0.23, 50., 1000., 110., 190);
         SetStyleHistoTH2ForGraphs(histo2DAllPi0Mass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass, textsizeLabelsMass, 0.85*textsizeLabelsMass,
                                   textsizeLabelsMass, 0.9, 0.28/(textsizeFacMass*margin), 510, 505);
-        histo2DAllPi0Mass->GetYaxis()->SetRangeUser(119.5,179.5);
+        histo2DAllPi0Mass->GetYaxis()->SetRangeUser(119.5,169.5);
         histo2DAllPi0Mass->GetXaxis()->SetMoreLogLabels(kTRUE);
         histo2DAllPi0Mass->GetYaxis()->SetNdivisions(505);
         histo2DAllPi0Mass->GetYaxis()->SetNoExponent(kTRUE);
@@ -4080,7 +4080,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     padWidthPi0->cd();
     padWidthPi0->SetLogx(); 
 
-        histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.5,44.5);
+        histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.5,31.5);
         histo2DAllPi0FWHM->DrawCopy(); 
 
         DrawGammaSetMarker(histoPCMPi0FWHMMeV, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
