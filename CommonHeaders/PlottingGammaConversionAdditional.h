@@ -3655,71 +3655,11 @@
         cout << "GetColorDefaultColor(): no valid input parameters given..." << endl;
         return kBlack;
     }
-<<<<<<< 77953150fc9517b3686d55cdbbbd29ada104b4a9
-}
-
-void PutThisThesisLabel(Double_t    startTextX,
-                        Double_t    startTextY,
-                        Size_t      textHeight,
-                        Size_t      textHeightRel   = 0.03,
-                        Float_t     textHeightFac   = 1.25,
-                        Style_t     textFont        = 62,
-                        Color_t     textColor       = 1,
-                        Bool_t      alignLeft       = kTRUE) {
-
-  Double_t differenceText = textHeight*textHeightFac;
-  if (textFont == 63 || textFont == 43)
-    differenceText        = textHeightRel*textHeightFac;
-  
-  TString labelString     = "- this thesis -";
-  TLatex *label           = new TLatex(startTextX, (startTextY-differenceText), labelString);
-
-  if(!alignLeft) label->SetTextAlign(31);
-  label->SetNDC();
-  label->SetTextColor(textColor);
-  label->SetTextFont(textFont);
-  label->SetTextSize(textHeight);
-  label->Draw();
-}
-
-void PutALICESimulationLabel(Double_t   startTextX,
-                             Double_t   startTextY,
-                             Size_t     textHeight,
-                             Size_t     textHeightRel   = 0.03,
-                             Float_t    textHeightFac   = 1.25,
-                             Style_t    textFont        = 62,
-                             Color_t    textColor       = 1,
-                             Bool_t     alignLeft       = kTRUE) {
-  
-  Double_t differenceText = textHeight*textHeightFac;
-  if (textFont == 63 || textFont == 43)
-    differenceText        = textHeightRel*textHeightFac;
-  
-  TString labelString     = "ALICE simulation";
-  TLatex *label           = new TLatex(startTextX, (startTextY-differenceText), labelString);
-  
-  if(!alignLeft) label->SetTextAlign(31);
-  label->SetNDC();
-  label->SetTextColor(textColor);
-  label->SetTextFont(textFont);
-  label->SetTextSize(textHeight);
-  label->Draw();
-}
-
-Color_t GetColorDefaultColor( TString energy,
-                            TString generator, 
-                            TString centrality, 
-                            Bool_t kBox = kFALSE){
-    
-    if (!energy.CompareTo("900GeV")){
-        if (!kBox){
-=======
 
     Style_t GetDefaultMarkerStyle( TString energy, 
                                 TString generator, 
                                 TString centrality){
         if (!energy.CompareTo("900GeV")){
->>>>>>> added precompiler flags
             if (!generator.CompareTo("")){
                 return 21;
             } else {
@@ -4410,7 +4350,10 @@ Color_t GetColorDefaultColor( TString energy,
         
         return (Size_t)1.5;
     }
-    
+
+
+
+
     void DrawMergedClusterLambdaCuts (Int_t nlm = 1, Float_t maxPt = 50.05){
         if (nlm == 1 || nlm == 0 ){
             TF1 *min1 = new TF1("min1","exp(2.135-0.245*x)",4.95,14.63);
