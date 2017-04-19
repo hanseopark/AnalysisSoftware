@@ -225,7 +225,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
         padLineShape->Divide(fColumn,fRow,0.0,0.0);
         padLineShape->Draw();
         
-        cout<<"fColumn: "<<fColumn<<" fRow: "<<fRow<<endl;
+//         cout<<"fColumn: "<<fColumn<<" fRow: "<<fRow<<endl;
         
         Double_t relWidthLogo;
         if (mesonType.CompareTo("Pi0") == 0){
@@ -239,11 +239,11 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
         
         Int_t place = 0;
         for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
-            cout<<"Pt: "<<iPt<<" of "<<fNBinsPt<<endl;
+//             cout<<"Pt: "<<iPt<<" of "<<fNBinsPt<<endl;
             Double_t startPt = fBinsPt[iPt];	
             Double_t endPt = fBinsPt[iPt+1];	
             
-            cout << startPt << "\t" << endPt << endl;
+//             cout << startPt << "\t" << endPt << endl;
             
             place = place + 1;						//give the right place in the page
             if(place == fColumn) {
@@ -373,14 +373,14 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                 }    
             }
         }
-        cout << "saving" << endl;
+//         cout << "saving" << endl;
         cout << nameLineShapePlot.Data() << endl;
         if(j==0) {
             canvasLineShape->SaveAs(nameLineShapePlot.Data());
         } else {
             canvasLineShape->SaveAs(nameLineShapePlotLeft.Data());
         }
-        cout << "deleting" << endl;
+//         cout << "deleting" << endl;
         delete padLineShape;
         delete canvasLineShape;
     }

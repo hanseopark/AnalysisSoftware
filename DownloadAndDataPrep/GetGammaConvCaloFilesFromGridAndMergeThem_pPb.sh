@@ -162,18 +162,36 @@ fi
 # LHC13b2_efix_p3MC="776"; 
 # LHC13b2_efix_p4MC="777";
 
-TRAINDIR=Legotrain-vAN20161211-sys-PCMEMC
-LHC13bData="571"; 
-LHC13cData="572"; 
-LHC13dData="573"; 
-LHC13eData="574"; 
-LHC13fData="575"; 
+# TRAINDIR=Legotrain-vAN20161211-sys-PCMEMC
+# LHC13bData="571"; 
+# LHC13cData="572"; 
+# LHC13dData="573"; 
+# LHC13eData="574"; 
+# LHC13fData="575"; 
+# 
+# LHC13b2_efix_p1MC="807"; 
+# LHC13b2_efix_p2MC="808"; 
+# LHC13b2_efix_p3MC="809"; 
+# LHC13b2_efix_p4MC="810";
+# LHC13e7MC="806";
 
-LHC13b2_efix_p1MC="807"; 
-LHC13b2_efix_p2MC="808"; 
-LHC13b2_efix_p3MC="809"; 
-LHC13b2_efix_p4MC="810";
-LHC13e7MC="806";
+TRAINDIR=Legotrain-vAN20170411-dirGamma
+LHC13bData="593"; 
+LHC13cData="595"; 
+# LHC13dData="573"; 
+# LHC13eData="574"; 
+# LHC13fData="575"; 
+
+# LHC13b2_efix_p1MC="889"; 
+# LHC13b2_efix_p2MC="890"; 
+# LHC13b2_efix_p3MC="891"; 
+# LHC13b2_efix_p4MC="892";
+# LHC13e7MC="893";
+LHC13b2_efix_p1MC="894"; 
+LHC13b2_efix_p2MC="895"; 
+LHC13b2_efix_p3MC="896"; 
+LHC13b2_efix_p4MC="897";
+LHC13e7MC="898";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 

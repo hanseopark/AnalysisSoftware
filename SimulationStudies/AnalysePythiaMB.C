@@ -112,10 +112,10 @@ Double_t FindLargestEntryIn1D(TH1D* histo){
 //******************* Main function ************************************************
 //**********************************************************************************
 
-void AnalysePythiaMB(TString fileName="Legotrain_vAN-20150825-Pythia8/PythiaAnalysisResults",  // should read something like "$PATHTODIRECTORY/PythiaAnalysisResultsBin" // use MC_gen output here!
-                         TString generator="Pythia",  // e.g. Pythia
-                         TString tune="Monash",    // e.g. Monash
-                         TString energy="2760GeV"){
+void AnalysePythiaMB(   TString fileName    = "Legotrain_vAN-20150825-Pythia8/PythiaAnalysisResults",  // should read something like "$PATHTODIRECTORY/PythiaAnalysisResultsBin" // use MC_gen output here!
+                        TString generator   = "Pythia",  // e.g. Pythia
+                        TString tune        = "Monash",    // e.g. Monash
+                        TString energy      = "2760GeV"){
   
   TH1::AddDirectory(kFALSE);
   
@@ -221,7 +221,7 @@ void AnalysePythiaMB(TString fileName="Legotrain_vAN-20150825-Pythia8/PythiaAnal
         fHPt_Y_ParticleMB[i]->Scale(1./fHNEventsMB->GetBinContent(1));
     
         // now projections on pT axis
-        fHPt_ParticleMBUB[i]    = (TH1D*)fHPt_Y_ParticleMB[i]->ProjectionX(Form("hPt_%s_MB",particle[i].Data()),1,160)->Clone(Form("hPt_%s_MB",particle[i].Data()));
+        fHPt_ParticleMBUB[i]    = (TH1D*)fHPt_Y_ParticleMB[i]->ProjectionX(Form("hPt_%s_MB",particle[i].Data()), fHPt_Y_ParticleMB[i]->GetYaxis()->FindBin(-0.8),fHPt_Y_ParticleMB[i]->GetYaxis()->FindBin(0.8))->Clone(Form("hPt_%s_MB",particle[i].Data()));
         fHPt_ParticleMB[i]      = (TH1D*)fHPt_ParticleMBUB[i]->Rebin(nbinsfinal,Form("hPt_%s_MB", particle[i].Data()),fBinsFine);
     
         fHPt_ParticleMB[i]->SetName(Form("hPt%s%s%s",particle[i].Data(),generator.Data(),tune.Data()));

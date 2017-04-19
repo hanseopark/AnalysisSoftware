@@ -281,10 +281,12 @@ void PrepareSecondaries(    TString     meson                       = "",
     cout << "deltaRap         = "     << deltaRap       << endl;
     cout << "deltaPtGen       = "     << deltaPtGen     << endl;
     cout << "deltaPt          = "     << ptMax - ptMin  << endl;
-    cout << "deltaEta         = "     << deltaEta       << endl;
+    if (isPCM)
+        cout << "deltaEta         = "     << deltaEta       << endl;
     if (isCalo)
         cout << "deltaEtaCalo     = " << deltaEtaCalo   << endl;
-    cout << "deltaPhi         = "     << deltaPhi       << endl;
+    if (isPCM)
+        cout << "deltaPhi         = "     << deltaPhi       << endl;
     if (isCalo)
         cout << "deltaPhiCalo     = " << deltaPhiCalo   << endl;
     cout << "add. scaling eta = "     << scalingEta     << " (for photons only)" << endl;
@@ -1315,7 +1317,7 @@ TList* GetCocktailInputList(TString energy, TString centrality) {
     // get list of cocktail input objects in file
     TString                         fEnergy                     = "";
     if (energy.Contains("9"))       fEnergy                     = "0.9TeV";
-    else if (energy.Contains("2"))  fEnergy                     = "2.76TeV";
+    else if (energy.Contains("2."))  fEnergy                     = "2.76TeV";
     else if (energy.Contains("5"))  fEnergy                     = "5TeV";
     else if (energy.Contains("7"))  fEnergy                     = "7TeV";
     else if (energy.Contains("8"))  fEnergy                     = "8TeV";
@@ -1348,8 +1350,8 @@ TList* GetCocktailInputList(TString energy, TString centrality) {
     }
 
     TString                             listName                = "";
-    if (fCollSys.CompareTo("pp")==0)    listName                = Form("%s_%s",     fCollSys.Data(), fEnergy.Data());
-    else                                listName                = Form("%s_%s_%s",  fCollSys.Data(), fEnergy.Data(), fCentrality.Data());
+    if (fCollSys.CompareTo("pp")==0)    listName                = Form("%s_%s",  fCollSys.Data(), fEnergy.Data());
+    else                                listName                = Form("%s_%s",  fEnergy.Data(), fCentrality.Data());
     TList* list                                                 = (TList*)file.Get(listName.Data());
     if (!list) {
         cout << "list " << listName.Data() << " not contained in file " << fileName.Data() << "!" << endl;

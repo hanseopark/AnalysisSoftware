@@ -54,16 +54,16 @@ struct SysErrorConversion {
    //	TString name;
 };
 
-void CompareDifferentDirectories( 	TString FolderList = "", 
-					TString suffix = "gif", 
-					TString meson = "", 
-					Bool_t kIsMC = "", 
-					TString optionEnergy = "", 
-					Int_t NumberOfCuts = 1, 
-					TString optionPeriod = "No",
-					Int_t mode = 9,
-					TString cutVariationName = "NonLinearity"
-				){
+void CompareDifferentDirectories(   TString FolderList              = "", 
+                                    TString suffix                  = "gif", 
+                                    TString meson                   = "", 
+                                    Bool_t kIsMC                    = 0, 
+                                    TString optionEnergy            = "", 
+                                    Int_t NumberOfCuts              = 1, 
+                                    TString optionPeriod            = "No",
+                                    Int_t mode                      = 9,
+                                    TString cutVariationName        = "NonLinearity"
+                                ){
 
     // Initialize arrays
     TString 	fileDirectory[50];

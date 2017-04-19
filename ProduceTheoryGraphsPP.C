@@ -1022,7 +1022,6 @@ void ProduceTheoryGraphsPP(){
     TH1F* histoPythia8Spec2760GeVVarBinning     = (TH1F*)filePythia8_2760GeV->Get("hPythiaComb");
     TH1F* histoPythia8InvYield2760GeVVarBinning = (TH1F*)histoPythia8Spec2760GeVVarBinning->Clone("histoPythia8InvYield2760GeV");
     histoPythia8InvYield2760GeVVarBinning->Scale(1./(xSection2760GeV*recalcBarn));
-
     
     TFile* filePythia8Monash2013_2760GeV        = TFile::Open("ExternalInput/Theory/Pythia/PYTHIA8_Monash2013Tune_2760GeV.root");
     TH1F* histoPi0Pythia8MonashInvSec2760GeV    = (TH1F*)filePythia8Monash2013_2760GeV->Get("fHistInvXsec_Pi0");
@@ -1031,7 +1030,7 @@ void ProduceTheoryGraphsPP(){
     histoEtaToPi0RatioPythia8Monash2760GeV->Sumw2();
     histoEtaToPi0RatioPythia8Monash2760GeV->Divide(histoEtaToPi0RatioPythia8Monash2760GeV,histoPi0Pythia8MonashInvSec2760GeV);
 
-    TFile* filePythia8Monash2013_2760GeVLego        = TFile::Open("ExternalInput/Theory/Pythia/Pythia8_Monash2013_2760GeV_10975Mio.root");
+    TFile* filePythia8Monash2013_2760GeVLego        = TFile::Open("ExternalInput/Theory/Pythia/Pythia8_Monash2013_2760GeV_11120Mio.root");
     TH1F* histoPi0Pythia8MonashInvSec2760GeVLego    = (TH1F*)filePythia8Monash2013_2760GeVLego->Get("hPt_Pi0_MB_XSec");
     TH1F* histoEtaPythia8MonashInvSec2760GeVLego    = (TH1F*)filePythia8Monash2013_2760GeVLego->Get("hPt_Eta_MB_XSec");
     TH1F* histoEtaToPi0RatioPythia8Monash2760GeVLego= (TH1F*)histoEtaPythia8MonashInvSec2760GeVLego->Clone("histoEtaToPi0RatioPythia8Monash2760GeVLego");

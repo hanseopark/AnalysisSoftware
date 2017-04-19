@@ -1,5 +1,5 @@
 //**************************************************************************************************
-//**************************** CompareDifferentNonLinearityCorrections *****************************
+//**************************** CompareDifferentDirectoriesMerged ***********************************
 //**************************************************************************************************
 
 /***************************************************************************************************
@@ -54,16 +54,16 @@ struct SysErrorConversion {
    //   TString name;
 };
 
-void CompareDifferentDirectoriesMerged( TString FolderList = "", 
-                                        TString suffix = "gif", 
-                                        TString meson = "", 
-                                        Bool_t kIsMC = "", 
-                                        TString optionEnergy = "", 
-                                        Int_t NumberOfCuts = 1, 
-                                        TString optionPeriod = "No",
-                                        Int_t mode = 10,
-                                        TString cutVariationName = "NonLinearity"
-                                        ){
+void CompareDifferentDirectoriesMerged( TString FolderList          = "", 
+                                        TString suffix              = "gif", 
+                                        TString meson               = "", 
+                                        Bool_t kIsMC                = kFALSE, 
+                                        TString optionEnergy        = "", 
+                                        Int_t NumberOfCuts          = 1, 
+                                        TString optionPeriod        = "No",
+                                        Int_t mode                  = 10,
+                                        TString cutVariationName    = "NonLinearity"
+                                      ){
 
     if (!(mode == 10 || mode == 11 )){
         cout << "incorrect mode: " << mode << endl;

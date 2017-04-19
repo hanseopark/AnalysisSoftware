@@ -26,7 +26,7 @@ function ChangeStructureIfNeeded()
 # changes internal structure
 
 # switches to enable/disable certain procedures
-DOWNLOADON=0
+DOWNLOADON=1
 MERGEON=1
 MERGEONBINSSingle=0
 MERGEONBINS=0
@@ -445,13 +445,16 @@ fi
 
 TRAINDIR=Legotrain-vAN20170329_TMEffiMCfix
 # LHC15g1aMC="2866";
-LHC12f1aMC="2870"; 
-LHC12f1bMC="2869"; 
+# LHC12f1aMC="2870"; 
+# LHC12f1bMC="2869"; 
+LHC12f1aMC="2878"; 
+LHC12f1bMC="2879"; 
 
-LHC15g2MC="2841";
+# LHC15g2MC="2841";
 # LHC15g2MC="2842";
-LHC15a3aMC="2867"; 
-LHC15a3aplusMC="2868"; 
+LHC15g2MC="2880";
+# LHC15a3aMC="2867"; 
+# LHC15a3aplusMC="2868"; 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
