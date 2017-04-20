@@ -1023,12 +1023,12 @@ void ProduceTheoryGraphsPP(){
     TH1F* histoPythia8InvYield2760GeVVarBinning = (TH1F*)histoPythia8Spec2760GeVVarBinning->Clone("histoPythia8InvYield2760GeV");
     histoPythia8InvYield2760GeVVarBinning->Scale(1./(xSection2760GeV*recalcBarn));
     
-    TFile* filePythia8Monash2013_2760GeV        = TFile::Open("ExternalInput/Theory/Pythia/PYTHIA8_Monash2013Tune_2760GeV.root");
-    TH1F* histoPi0Pythia8MonashInvSec2760GeV    = (TH1F*)filePythia8Monash2013_2760GeV->Get("fHistInvXsec_Pi0");
-    TH1F* histoEtaPythia8MonashInvSec2760GeV    = (TH1F*)filePythia8Monash2013_2760GeV->Get("fHistInvXsec_Eta");
-    TH1F* histoEtaToPi0RatioPythia8Monash2760GeV= (TH1F*)histoEtaPythia8MonashInvSec2760GeV->Clone("histoEtaToPi0RatioPythia8Monash2760GeV");
-    histoEtaToPi0RatioPythia8Monash2760GeV->Sumw2();
-    histoEtaToPi0RatioPythia8Monash2760GeV->Divide(histoEtaToPi0RatioPythia8Monash2760GeV,histoPi0Pythia8MonashInvSec2760GeV);
+//     TFile* filePythia8Monash2013_2760GeV        = TFile::Open("ExternalInput/Theory/Pythia/PYTHIA8_Monash2013Tune_2760GeV.root");
+//     TH1F* histoPi0Pythia8MonashInvSec2760GeV    = (TH1F*)filePythia8Monash2013_2760GeV->Get("fHistInvXsec_Pi0");
+//     TH1F* histoEtaPythia8MonashInvSec2760GeV    = (TH1F*)filePythia8Monash2013_2760GeV->Get("fHistInvXsec_Eta");
+//     TH1F* histoEtaToPi0RatioPythia8Monash2760GeV= (TH1F*)histoEtaPythia8MonashInvSec2760GeV->Clone("histoEtaToPi0RatioPythia8Monash2760GeV");
+//     histoEtaToPi0RatioPythia8Monash2760GeV->Sumw2();
+//     histoEtaToPi0RatioPythia8Monash2760GeV->Divide(histoEtaToPi0RatioPythia8Monash2760GeV,histoPi0Pythia8MonashInvSec2760GeV);
 
     TFile* filePythia8Monash2013_2760GeVLego        = TFile::Open("ExternalInput/Theory/Pythia/Pythia8_Monash2013_2760GeV_11120Mio.root");
     TH1F* histoPi0Pythia8MonashInvSec2760GeVLego    = (TH1F*)filePythia8Monash2013_2760GeVLego->Get("hPt_Pi0_MB_XSec");
@@ -1165,9 +1165,9 @@ void ProduceTheoryGraphsPP(){
         graphInvYieldCGC2760GeV->Write("graphNLOCalcCGCInvYield2760GeV", TObject::kOverwrite);
         graphInvCrossSecCGC2760GeV->Write("graphNLOCalcCGCInvCrossSec2760GeV", TObject::kOverwrite);
         // pi0, eta, eta/pi0 Pythia 8.1 Monash 2013 (Satoshi)
-        histoPi0Pythia8MonashInvSec2760GeV->Write("histoInvSecPythia8Monash2013Pi02760GeV", TObject::kOverwrite);
-        histoEtaPythia8MonashInvSec2760GeV->Write("histoInvSecPythia8Monash2013Eta2760GeV", TObject::kOverwrite);
-        histoEtaToPi0RatioPythia8Monash2760GeV->Write("histoEtaToPi0RatioPythia8Monash20132760GeV", TObject::kOverwrite);
+//         histoPi0Pythia8MonashInvSec2760GeV->Write("histoInvSecPythia8Monash2013Pi02760GeV", TObject::kOverwrite);
+//         histoEtaPythia8MonashInvSec2760GeV->Write("histoInvSecPythia8Monash2013Eta2760GeV", TObject::kOverwrite);
+//         histoEtaToPi0RatioPythia8Monash2760GeV->Write("histoEtaToPi0RatioPythia8Monash20132760GeV", TObject::kOverwrite);
         // pi0, eta, eta/pi0 Pythia 8.1 Monash 2013 (central alice)
         histoPi0Pythia8MonashInvSec2760GeVLego->Write("histoInvSecPythia8Monash2013LegoPi02760GeV", TObject::kOverwrite);
         histoEtaPythia8MonashInvSec2760GeVLego->Write("histoInvSecPythia8Monash2013LegoEta2760GeV", TObject::kOverwrite);

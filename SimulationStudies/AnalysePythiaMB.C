@@ -259,6 +259,15 @@ void AnalysePythiaMB(   TString fileName    = "Legotrain_vAN-20150825-Pythia8/Py
         fHPt_ParticleMB_XSec[i]->Scale(1e9);                     // pb!
     }  
     
+    TString secondaries[2]      = {"K", "Lambda" };
+    for (Int_t i = 0; i < 2; i++){
+        TH2F* fHPt_Y_Secondary       = (TH2F*) HistosAll->FindObject(Form("Pt_Y_Pi0From%s",secondaries[i].Data()))->Clone(Form("Pt_Y_%s_MB",secondaries[i].Data()));
+        if (fHPt_Y_Secondary->GetEntries() > 0){
+            cout << "********************************************************************************" << endl;
+            cout << "WARNING: your pi0 spectrum will contain decays from " << secondaries[i].Data() << endl;
+            cout << "********************************************************************************" << endl;
+        }    
+    }    
 //   fHPt_ParticleMB_XSec->Print("all");
   
     //***************************************************************************************************************
