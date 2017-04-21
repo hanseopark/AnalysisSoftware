@@ -903,6 +903,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //        TH1D* triggRejec[3];
         histoTriggerReject[0] = (TH1F*)fileEMCALLow->Get("TriggRejectvsE_EMC7_INT7");
         histoTriggerReject[1] = (TH1F*)fileEMCALLow->Get("TriggRejectvsE_EGA_EMC7");
+        histoTriggerReject[1]->GetXaxis()->SetRangeUser(2.3,50.);
         histoTriggerReject[2] = (TH1F*)directoryPHOSPHOSRejection->Get("fHistRejection");
 
         Double_t minPt[3] = {4.1,12.5,6.};
@@ -1023,12 +1024,12 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TH1F* histoPythia8InvXSection                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi08TeV");
         histoPythia8InvXSection->GetXaxis()->SetRangeUser(0.3,35);
         TH1F* histoPythia8InvXSectionEta                    = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta8TeV");
-        histoPythia8InvXSectionEta->GetXaxis()->SetRangeUser(0.8,35);
+        histoPythia8InvXSectionEta->GetXaxis()->SetRangeUser(0.4,35);
         TGraphErrors* graphPythia8InvXSection               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi08TeV"));
         while(graphPythia8InvXSection->GetX()[0] < 0.3) graphPythia8InvXSection->RemovePoint(0);
         while(graphPythia8InvXSection->GetX()[graphPythia8InvXSection->GetN()-1] > 35.) graphPythia8InvXSection->RemovePoint(graphPythia8InvXSection->GetN()-1);
         TGraphErrors* graphPythia8InvXSectionEta            = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta8TeV"));
-        while(graphPythia8InvXSectionEta->GetX()[0] < 0.8) graphPythia8InvXSectionEta->RemovePoint(0);
+        while(graphPythia8InvXSectionEta->GetX()[0] < 0.4) graphPythia8InvXSectionEta->RemovePoint(0);
         while(graphPythia8InvXSectionEta->GetX()[graphPythia8InvXSectionEta->GetN()-1] > 35.) graphPythia8InvXSectionEta->RemovePoint(graphPythia8InvXSectionEta->GetN()-1);
         TH1F* histoPythia8EtaToPi0                          = (TH1F*) histoPythia8InvXSectionEta->Clone("Pythia8EtaToPi0");
         histoPythia8EtaToPi0->Divide(histoPythia8InvXSection);
@@ -1041,12 +1042,12 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TH1F* histoPythia8_4CInvXSection                    = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Tune4CLegoPi08TeV");
         histoPythia8_4CInvXSection->GetXaxis()->SetRangeUser(0.3,35);
         TH1F* histoPythia8_4CInvXSectionEta                 = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Tune4CLegoEta8TeV");
-        histoPythia8_4CInvXSectionEta->GetXaxis()->SetRangeUser(0.8,35);
+        histoPythia8_4CInvXSectionEta->GetXaxis()->SetRangeUser(0.4,35);
         TGraphErrors* graphPythia8_4CInvXSection            = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Tune4CLegoPi08TeV"));
         while(graphPythia8_4CInvXSection->GetX()[0] < 0.3) graphPythia8_4CInvXSection->RemovePoint(0);
         while(graphPythia8_4CInvXSection->GetX()[graphPythia8_4CInvXSection->GetN()-1] > 35.) graphPythia8_4CInvXSection->RemovePoint(graphPythia8_4CInvXSection->GetN()-1);
         TGraphErrors* graphPythia8_4CInvXSectionEta         = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Tune4CLegoEta8TeV"));
-        while(graphPythia8_4CInvXSectionEta->GetX()[0] < 0.8) graphPythia8_4CInvXSectionEta->RemovePoint(0);
+        while(graphPythia8_4CInvXSectionEta->GetX()[0] < 0.4) graphPythia8_4CInvXSectionEta->RemovePoint(0);
         while(graphPythia8_4CInvXSectionEta->GetX()[graphPythia8_4CInvXSectionEta->GetN()-1] > 35.) graphPythia8_4CInvXSectionEta->RemovePoint(graphPythia8_4CInvXSectionEta->GetN()-1);
         TH1F* histoPythia8T4CEtaToPi0                       = (TH1F*) histoPythia8_4CInvXSectionEta->Clone("Pythia8T4CEtaToPi0");
         histoPythia8T4CEtaToPi0->Divide(histoPythia8_4CInvXSection);
@@ -2955,7 +2956,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     //fitInvXSectionEta        = FitObject("l","fitInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,0.4,35.,paramGraphEta,"QNRMEX0+");
     cout << WriteParameterToFile(fitInvXSectionEta)<< endl;
     
-     Double_t paramTCMEta[5]  = {graphCombEtaInvXSectionTotA->GetY()[1],0.5,graphCombEtaInvXSectionTotA->GetY()[1]/1000,0.8,3};
+     Double_t paramTCMEta[5]  = {graphCombEtaInvXSectionTotA->GetY()[1],0.5,graphCombEtaInvXSectionTotA->GetY()[1]/100,0.8,3.};
     // Two component model by Bylinkin
     TF1* fitTCMInvXSectionEta= FitObject("tcm","fitTCMInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,0.4,35.,paramTCMEta,"QNRMEX0+","", kFALSE);
     fitTCMInvXSectionEta     = FitObject("tcm","fitTCMInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,0.4,35.,paramTCMEta,"QNRMEX0+","", kFALSE);
@@ -3259,14 +3260,18 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     
     TH1D* histoRatioPythia8ToFitEta                  = (TH1D*) histoPythia8InvXSectionEta->Clone();
     histoRatioPythia8ToFitEta                        = CalculateHistoRatioToFit (histoRatioPythia8ToFitEta, fitTCMInvXSectionEta);
+    histoRatioPythia8ToFitEta->GetXaxis()->SetRangeUser(0.8,35);
 
     TH1D* histoRatioPythia8_4CToFitEta               = (TH1D*) histoPythia8_4CInvXSectionEta->Clone();
     histoRatioPythia8_4CToFitEta                     = CalculateHistoRatioToFit (histoRatioPythia8_4CToFitEta, fitTCMInvXSectionEta);
+    histoRatioPythia8_4CToFitEta->GetXaxis()->SetRangeUser(0.8,35);
 
     TGraphErrors* graphRatioPythia8ToFitEta             = (TGraphErrors*) graphPythia8InvXSectionEta->Clone();
     graphRatioPythia8ToFitEta                           = CalculateGraphErrRatioToFit (graphRatioPythia8ToFitEta, fitTCMInvXSectionEta);
+    while(graphRatioPythia8ToFitEta->GetX()[0] < 0.8) graphRatioPythia8ToFitEta->RemovePoint(0);
     TGraphErrors* graphRatioPythia8_4CToFitEta          = (TGraphErrors*) graphPythia8_4CInvXSectionEta->Clone();
     graphRatioPythia8_4CToFitEta                        = CalculateGraphErrRatioToFit (graphRatioPythia8_4CToFitEta, fitTCMInvXSectionEta);
+    while(graphRatioPythia8_4CToFitEta->GetX()[0] < 0.8) graphRatioPythia8_4CToFitEta->RemovePoint(0);
 
     TGraphAsymmErrors* graphRatioEtaCombCombFitStatA_WOXErr = (TGraphAsymmErrors*) graphRatioEtaCombCombFitStatA->Clone("graphRatioEtaCombCombFitStatA_WOXErr");
     ProduceGraphAsymmWithoutXErrors(graphRatioEtaCombCombFitStatA_WOXErr);
