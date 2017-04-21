@@ -951,7 +951,7 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                             break;
                         case 81:
                         case 82:
-                            return 35;      // EGA triggers
+                            return 34;      // EGA triggers
                             break;
                         default:
                             return 13;

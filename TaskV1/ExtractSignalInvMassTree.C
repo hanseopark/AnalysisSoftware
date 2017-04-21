@@ -237,6 +237,28 @@ void ExtractSignalInvMassTree(
         cout<<"ERROR: First argument in the ExtractSignalInvMassTree(....) has to be either Pi0 or Eta or Pi0EtaBinning  or EtaPrim"<<endl;
         return;
     }
+
+    if ( fEnergyFlag.CompareTo("8TeV") == 0 && meson.CompareTo("Pi0") == 0){
+      TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+      if( trigger.CompareTo("52") == 0 || triggerSet == 1){
+        fStartPtBin+=13;
+        fColumn = 3;
+        fRow = 2;
+        fExampleBin = 38;
+      }
+    }
+    if ( fEnergyFlag.CompareTo("8TeV") == 0 && meson.Contains("Eta")){
+      TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+      if( trigger.CompareTo("52") == 0 || triggerSet == 1){
+        fStartPtBin+=7;
+        fColumn-=1;
+        fExampleBin = 18;
+      }
+      if( trigger.CompareTo("81") == 0 || triggerSet == 2){
+        fStartPtBin+=1;
+        fExampleBin = 18;
+      }
+    }
     
     // set global variables for rap and BG number
     TString rapidityRange;
@@ -2665,7 +2687,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fMesonMassPlotRange[1]          = 0.3;
             if ( fMode == 4){
                 fPeakRange[0]                   = 0.05;
-                fPeakRange[1]                   = 0.17; //0.155; //0.145; 
+                fPeakRange[1]                   = 0.19; //0.155; //0.145;
                 fFitRange[0]                    = 0.07; 
                 fFitRange[1]                    = 0.25;  
                 fBGFitRange[0]                  = 0.19;
@@ -2697,8 +2719,8 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
                 if ( fEnergyFlag.CompareTo("8TeV") == 0 ){
                   TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
                   if( trigger.CompareTo("52") == 0 || trigger.CompareTo("81") == 0 || triggerSet == 1 || triggerSet == 2){
-                    fBGFitRange[0]=0.19;
-                    fBGFitRange[1]=0.26;
+                    fBGFitRange[0]=0.25;
+                    fBGFitRange[1]=0.3;
                     fPeakRange[1] = 0.19;
                     fMesonFitRange[0] = 0.04;
                     fMesonFitRange[1] = 0.26;
@@ -2710,19 +2732,19 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
 //                    fMesonIntDeltaRangeNarrow[0]    = fMesonIntDeltaRange[0]*0.4; // mod.
 //                    fMesonIntDeltaRangeNarrow[1]    = fMesonIntDeltaRange[1]*0.4; // mod.
                     if(trigger.CompareTo("81")==0 || triggerSet == 2){
-                      fMesonIntDeltaRange[1] = 0.06;
+                      fMesonIntDeltaRange[1] = 0.09;
                       fMesonIntDeltaRangeWide[1] = fMesonIntDeltaRange[1]*1.2;// mod.
                       fMesonIntDeltaRangeNarrow[1] = fMesonIntDeltaRange[1]*0.8; // mod.
                       fMesonIntDeltaRange[0] = -0.06;
                       fMesonIntDeltaRangeWide[0] = fMesonIntDeltaRange[0]*1.2;// mod.
                       fMesonIntDeltaRangeNarrow[0] = fMesonIntDeltaRange[0]*0.8; // mod.
-                      fBGFitRange[0]=0.21;
-                      fBGFitRange[1]=0.27;
+                      fBGFitRange[0]=0.25;
+                      fBGFitRange[1]=0.29;
                       fMesonFitRange[0] = 0.08;
-                      fMesonFitRange[1] = 0.27;
-                      fMesonWidthExpect = 0.03;
+                      fMesonFitRange[1] = 0.30;
+                      fMesonWidthExpect = 0.035;
                       fMesonWidthRange[0] = 0.020;
-                      fMesonWidthRange[1] = 0.060;
+                      fMesonWidthRange[1] = 0.040;
                       //fMesonIntDeltaRange[1] = 0.065;
                       //fMesonIntDeltaRangeWide[1]      = fMesonIntDeltaRange[1]*1.2;// mod.
                       //fMesonIntDeltaRangeNarrow[1]    = fMesonIntDeltaRange[1]*0.8; // mod.
