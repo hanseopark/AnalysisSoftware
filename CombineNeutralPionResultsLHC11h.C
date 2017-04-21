@@ -102,6 +102,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
     TString nameFileChargedPionKaonSpectra = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/RAA_Kaon_08052014.root";
     TString nameFileChargedPionKaonRAA = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/RAA_Pion_08052014.root";
     TString nameFileOtherExp = "ExternalInputPbPb/OtherExperiments/DataCompilationFromOtherEnergiesPbPbWithEta.root";
+    TString nameFileCocktailInput = "/home/admin1/leardini/newSoftware/cocktail_input/CocktailInputPbPb_Param_PbPb_2.76TeV.root";
 
 	TString outputDir = Form("%s/%s/NeutralMesonsPCMResults",suffix.Data(),dateForOutput.Data());
 	gSystem->Exec("mkdir -p "+outputDir);
@@ -208,6 +209,12 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 	Size_t   markerSizePi0PP900GeV = 1.8;
 	Size_t   markerSizePi0PP2760GeV  = 2.2;
 	
+    Color_t colorSec[4]                             = {kRed+2, 807, kCyan+2, kBlue};
+    Style_t markerStyleSec[4]                       = {21, 33, 29, 34};
+    Size_t markerSizeSec[4]                         = {1.5, 1.75, 2., 1.5};
+    Color_t colorSecFromToy[3]                      = {kRed-2, kOrange+1, kCyan-2};
+    Style_t markerStyleSecFromToy[3]                = {20, 33, 29};
+    Size_t markerSizeSecFromToy[3]                  = {1.7, 2, 2.2};
 
 	TString collisionSystemPP2760GeV = "pp #sqrt{#it{s}} = 2.76 TeV";      
 	TString collisionSystemPP7TeV = "pp #sqrt{#it{s}} = 7 TeV";      
@@ -267,6 +274,11 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 	TLatex *labelLegendAMass = new TLatex(0.92,0.88,"a)");
 	SetStyleTLatex( labelLegendAMass, 0.08,4);
 
+    TH1D*    histoSecAcceptance[5][4] = { { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL} }; 
+    TH1D*    histoSecTrueEffi[5][4] = { { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL} }; 
+    TH1D*    histoYieldSecMeson[5][4] = { { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL} }; 
+    TString nameSecMeson[4]                         = {"K0S", "Lambda", "K0L", "Rest"};
+    TString nameSecMesonPlot[4]                     = {"K_{s}^{0}", "#Lambda", "K_{l}^{0}", "Rest"};
 
 
     //PbPb PCM only - 2011 data
@@ -281,6 +293,12 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         TH1D* histoPCMPi0MassMCPbPbLHC11h0010           = (TH1D*)directoryPi0PbPbLHC11h0010->Get("TrueMassPi0");
         histoPCMPi0MassMCPbPbLHC11h0010->Scale(1000.);
 
+        for (Int_t j = 0; j < 4; j++){        
+            histoSecAcceptance[2][j] 	= (TH1D*)directoryPi0PbPbLHC11h0010->Get(Form("Pi0From%sAcceptance",nameSecMeson[j].Data()));
+            histoSecTrueEffi[2][j] 			= (TH1D*)directoryPi0PbPbLHC11h0010->Get(Form("Pi0From%sEfficiency",nameSecMeson[j].Data()));
+            histoYieldSecMeson[2][j] 	    = (TH1D*)directoryPi0PbPbLHC11h0010->Get(Form("Pi0From%sRawYieldPerEvent",nameSecMeson[j].Data()));
+        }
+        
         TH1D* histoPCMPi0WidthDataPbPbLHC11h0010        = (TH1D*)directoryPi0PbPbLHC11h0010->Get("FWHMPi0MeV");
         TH1D* histoPCMPi0WidthMCPbPbLHC11h0010          = (TH1D*)directoryPi0PbPbLHC11h0010->Get("TrueFWHMPi0MeV");
         TH1D* histoPi0TrueEffiPtPbPbLHC11h0010          = (TH1D*)directoryPi0PbPbLHC11h0010->Get("Pi0_Efficiency");
@@ -377,6 +395,12 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         histoPCMPi0MassDataPbPbLHC11h2050->Scale(1000.);
         TH1D* histoPCMPi0MassMCPbPbLHC11h2050           = (TH1D*)directoryPi0PbPbLHC11h2050->Get("TrueMassPi0");
         histoPCMPi0MassMCPbPbLHC11h2050->Scale(1000.);
+
+        for (Int_t j = 0; j < 4; j++){        
+            histoSecAcceptance[4][j] 	    	= (TH1D*)directoryPi0PbPbLHC11h0010->Get(Form("Pi0From%sAcceptance",nameSecMeson[j].Data()));
+            histoSecTrueEffi[4][j] 			= (TH1D*)directoryPi0PbPbLHC11h0010->Get(Form("Pi0From%sEfficiency",nameSecMeson[j].Data()));
+            histoYieldSecMeson[4][j] 	    = (TH1D*)directoryPi0PbPbLHC11h0010->Get(Form("Pi0From%sRawYieldPerEvent",nameSecMeson[j].Data()));
+        }
 
         TH1D* histoPCMPi0WidthDataPbPbLHC11h2050        = (TH1D*)directoryPi0PbPbLHC11h2050->Get("FWHMPi0MeV");
         TH1D* histoPCMPi0WidthMCPbPbLHC11h2050          = (TH1D*)directoryPi0PbPbLHC11h2050->Get("TrueFWHMPi0MeV");
@@ -843,16 +867,63 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 	}
 
 	
+	// *******************************************************************************************************
+	// ************************** 		Acceptance x Efficiency			**************************************
+	// *******************************************************************************************************   
+    TH1D* histoPi0AccEffPtPbPbLHC11h0010            = (TH1D*)histoPi0AcceptPtPbPbLHC11h0010->Clone("histoPi0AccEffPtPbPbLHC11h0010");
+    histoPi0AccEffPtPbPbLHC11h0010->Multiply(histoPi0TrueEffiPtPbPbLHC11h0010);
+	TH1D* histoPi0AccEffPtPbPbLHC11h2050            = (TH1D*)histoPi0AcceptPtPbPbLHC11h2050->Clone("histoPi0AccEffPtPbPbLHC11h2050");
+    histoPi0AccEffPtPbPbLHC11h2050->Multiply(histoPi0TrueEffiPtPbPbLHC11h2050);
+	TH1D* histoEtaAccEffPtPbPbLHC11h0010            = (TH1D*)histoEtaAcceptPtPbPbLHC11h0010->Clone("histoEtaAccEffPtPbPbLHC11h0010");
+    histoEtaAccEffPtPbPbLHC11h0010->Multiply(histoEtaTrueEffiPtPbPbLHC11h0010);
+	TH1D* histoEtaAccEffPtPbPbLHC11h2050            = (TH1D*)histoEtaAcceptPtPbPbLHC11h2050->Clone("histoEtaAccEffPtPbPbLHC11h2050");
+    histoEtaAccEffPtPbPbLHC11h2050->Multiply(histoEtaTrueEffiPtPbPbLHC11h2050);
+
+    TCanvas* canvasAccEff = new TCanvas("canvasAccEff","",200,10,1350,1350);  // gives the page size
+    DrawGammaCanvasSettings( canvasAccEff, 0.1, 0.02, 0.035, 0.09);
+    canvasAccEff->SetLogy();
+    
+        TH2F * histo2DAccEff = new TH2F("histo2DAccEff","histo2DAccEff",1000,0.,15,2000,2e-6,1e-2 );
+        SetStyleHistoTH2ForGraphs(histo2DAccEff, "#it{p}_{T} (GeV/#it{c})","Acceptance x efficiency",0.035,0.04, 0.035,0.04, .9,1.2);
+        histo2DAccEff->Draw("copy");
+        
+        DrawGammaSetMarker(histoPi0AccEffPtPbPbLHC11h0010, markerStylePbPb0010, markerSizePbPb0010, colorCombPbPb0010, colorCombPbPb0010);   
+        histoPi0AccEffPtPbPbLHC11h0010->DrawCopy("e1,same");   
+        DrawGammaSetMarker(histoPi0AccEffPtPbPbLHC11h2050, markerStylePbPb2040, markerSizePbPb2040, colorCombPbPb2040, colorCombPbPb2040);   
+        histoPi0AccEffPtPbPbLHC11h2050->DrawCopy("e1,same"); 
+
+        DrawGammaSetMarker(histoEtaAccEffPtPbPbLHC11h0010, markerStylePbPb0010, markerSizePbPb0010, kPink-7, kPink-7);   
+        histoEtaAccEffPtPbPbLHC11h0010->DrawCopy("e1,same");   
+        DrawGammaSetMarker(histoEtaAccEffPtPbPbLHC11h2050, markerStylePbPb2040, markerSizePbPb2040, kAzure+4,  kAzure+4);   
+        histoEtaAccEffPtPbPbLHC11h2050->DrawCopy("e1,same"); 
+
+        TLegend* legendAccepEff = new TLegend(0.5,0.12,0.9,0.3); //0.25,0.13,0.93,0.43);
+        legendAccepEff->SetFillColor(0);
+        legendAccepEff->SetLineColor(0);
+        legendAccepEff->SetTextSize(0.035);
+        legendAccepEff->SetTextFont(42);
+        legendAccepEff->SetMargin(0.17);
+        legendAccepEff->SetNColumns(2);
+        legendAccepEff->SetHeader(collisionSystemPbPb.Data());
+        legendAccepEff->AddEntry(histoPi0AccEffPtPbPbLHC11h0010,"#pi^{0}, 0#font[122]{-}10%","p");
+        legendAccepEff->AddEntry(histoEtaAccEffPtPbPbLHC11h0010,"#eta, 0#font[122]{-}10%","p");
+        legendAccepEff->AddEntry(histoPi0AccEffPtPbPbLHC11h2050,"#pi^{0}, 20#font[122]{-}50%","p");
+        legendAccepEff->AddEntry(histoEtaAccEffPtPbPbLHC11h2050,"#eta, 20#font[122]{-}50%","p");
+        legendAccepEff->Draw();
+        if(ThesisPlotting) thesisLabelTopLeft->Draw();
+
+	canvasAccEff->SaveAs(Form("%s/AcceEffPi0PbPb2760GeV.%s",outputDir.Data(),suffix.Data()));
+
+    
 
 	// *******************************************************************************************************
 	// ************************** 				Acceptance 				**************************************
 	// *******************************************************************************************************   
-	
 	TCanvas* canvasAcceptance = new TCanvas("canvasAcceptance","",200,10,1350,1350);  // gives the page size
 	DrawGammaCanvasSettings( canvasAcceptance, 0.1, 0.02, 0.035, 0.09);
     
         TH2F * histo2DAcceptanceEta = new TH2F("histo2DAcceptanceEta","histo2DAcceptanceEta",1000,0.001,11,2000,0.5,1.02 );
-        SetStyleHistoTH2ForGraphs(histo2DAcceptanceEta, "#it{p}_{T} (GeV/#it{c})","A_{#eta}",0.035,0.04, 0.035,0.04, .9,1.);
+        SetStyleHistoTH2ForGraphs(histo2DAcceptanceEta, "#it{p}_{T} (GeV/#it{c})","A_{#eta} in |y| < 0.85",0.035,0.04, 0.035,0.04, .9,1.2);
         histo2DAcceptanceEta->Draw("copy");
 
     // 	DrawGammaSetMarker(histoAccEta2760GeV, markerStyleSpectrum2760GeVMC, markerSizePi0PP2760GeV, colorPi02760GeV, colorPi02760GeV);  
@@ -869,7 +940,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         DrawGammaSetMarker(histoEtaAcceptPtPbPbLHC11h2050, markerStylePbPb2040, markerSizePbPb2040, colorCombPbPb2040, colorCombPbPb2040);   
         histoEtaAcceptPtPbPbLHC11h2050->DrawCopy("e1,same"); 
 
-        TLegend* legendAcceptance = new TLegend(0.45,0.12,0.9,0.3); //0.25,0.13,0.93,0.43);
+        TLegend* legendAcceptance = new TLegend(0.6,0.12,0.9,0.3); //0.25,0.13,0.93,0.43);
         legendAcceptance->SetFillColor(0);
         legendAcceptance->SetLineColor(0);
         legendAcceptance->SetTextSize(0.035);
@@ -878,10 +949,10 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         legendAcceptance->SetHeader(collisionSystemPbPb.Data());
     // 	legendAcceptance->AddEntry(histoEtaAcceptPtPbPbLHC11h0005,"0-5% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV","p");
     // 	legendAcceptance->AddEntry(histoEtaAcceptPtPbPbLHC11h0510,"5-10% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV","p");
-        legendAcceptance->AddEntry(histoEtaAcceptPtPbPbLHC11h0010,"0#font[122]{-}10% (|#eta| < 0.9, |y| < 0.85)","p");
+        legendAcceptance->AddEntry(histoEtaAcceptPtPbPbLHC11h0010,"0#font[122]{-}10%","p");
         // 	legendAcceptance->AddEntry(histoEtaAcceptPtPbPbLHC11h2040,"20-40% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV","p");
     // 	legendAcceptance->AddEntry((TObject*)0, " |#eta| < 0.9, |y| < 0.85","");
-        legendAcceptance->AddEntry(histoEtaAcceptPtPbPbLHC11h2050,"20#font[122]{-}50% (|#eta| < 0.9, |y| < 0.85)","p");
+        legendAcceptance->AddEntry(histoEtaAcceptPtPbPbLHC11h2050,"20#font[122]{-}50%","p");
     // 	legendAcceptance->AddEntry(histoAccEta2760GeV,"pp #sqrt{#it{s}} = 2.76 TeV","p");
     // 	legendAcceptance->AddEntry((TObject*)0, " |#eta| < 0.9, |y| < 0.8","");
         legendAcceptance->Draw();
@@ -891,8 +962,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 	
     canvasAcceptance->cd();
 
-        TH2F *histo2DAcceptancePi0 = new TH2F("histo2DAcceptancePi0","histo2DAcceptancePi0",1000,0.001,15.,2000,0.7,1.04);
-        SetStyleHistoTH2ForGraphs(histo2DAcceptancePi0, "#it{p}_{T} (GeV/#it{c})","A_{#pi^{0}}",0.035,0.04, 0.035,0.04, 0.9,1.);
+        TH2F *histo2DAcceptancePi0 = new TH2F("histo2DAcceptancePi0","histo2DAcceptancePi0",1000,0.001,15.,2000,0.7,1.05);
+        SetStyleHistoTH2ForGraphs(histo2DAcceptancePi0, "#it{p}_{T} (GeV/#it{c})","A_{#pi^{0}} in |y| < 0.85",0.035,0.04, 0.035,0.04, 0.9,1.2);
         histo2DAcceptancePi0->Draw("copy");
 
     // 	DrawGammaSetMarker(histoAccPi02760GeV, markerStyleSpectrum2760GeVMC, markerSizePi0PP2760GeV, colorPi02760GeV, colorPi02760GeV);  
@@ -914,6 +985,49 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         
 	canvasAcceptance->SaveAs(Form("%s/AcceptancePi0PbPb2760GeV.%s",outputDir.Data(),suffix.Data()));
 
+    canvasAcceptance->cd();
+
+        histo2DAcceptancePi0->Draw("copy");
+        
+        DrawGammaSetMarker(histoPi0AcceptPtPbPbLHC11h0010, 20, 1.7, kBlack, kBlack);   
+        histoPi0AcceptPtPbPbLHC11h0010->DrawCopy("e1,same");
+        TLegend* legendAccSec = new TLegend(0.6, 0.12, 0.9, 0.32);
+        legendAccSec->SetFillColor(0);
+        legendAccSec->SetLineColor(0);
+        legendAccSec->SetTextSize(0.035);
+        legendAccSec->SetTextFont(42);
+        legendAccSec->SetMargin(0.17);;
+        legendAccSec->SetHeader(collisionSystemPbPb.Data());
+        legendAccSec->AddEntry(histoPi0AcceptPtPbPbLHC11h0010,"primary #pi^{0}");
+        for (Int_t j = 0; j < 4; j++){
+            if (histoSecAcceptance[2][j]){
+                DrawGammaSetMarker(histoSecAcceptance[2][j], markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
+                histoSecAcceptance[2][j]->Draw("e1,same");
+                legendAccSec->AddEntry(histoSecAcceptance[2][j],Form("sec. from %s", nameSecMesonPlot[j].Data()));
+            }    
+        
+        }
+        legendAccSec->Draw();
+
+    canvasAcceptance->Update();
+    canvasAcceptance->SaveAs(Form("%s/Pi0WithSecAcceptance_0010.%s",outputDir.Data(),suffix.Data()));
+
+    canvasAcceptance->cd();
+
+        histo2DAcceptancePi0->Draw("copy");
+        
+        DrawGammaSetMarker(histoPi0AcceptPtPbPbLHC11h2050, 20, 1.7, kBlack, kBlack);   
+        histoPi0AcceptPtPbPbLHC11h2050->DrawCopy("e1,same");
+        for (Int_t j = 0; j < 4; j++){
+            if (histoSecAcceptance[4][j]){
+                DrawGammaSetMarker(histoSecAcceptance[4][j], markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
+                histoSecAcceptance[4][j]->Draw("e1,same");
+            }    
+        }
+        legendAccSec->Draw();
+
+    canvasAcceptance->Update();
+    canvasAcceptance->SaveAs(Form("%s/Pi0WithSecAcceptance_2050.%s",outputDir.Data(),suffix.Data()));
 	
 	// *******************************************************************************************************
 	// ************************** 				Efficiency 				**************************************
@@ -999,14 +1113,16 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         DrawGammaSetMarker(histoEtaTrueEffiPtPbPbLHC11h0010, markerStylePbPb0010+1, markerSizePbPb0010, colorCombPbPb1020, colorCombPbPb1020); 
         histoEtaTrueEffiPtPbPbLHC11h0010->DrawCopy("e1,same");  
 
-        TLegend* legendEffi0010 = new TLegend(0.3,0.15,0.85,0.3);
+        TLegend* legendEffi0010 = new TLegend(0.45, 0.12, 0.8, 0.25);
         legendEffi0010->SetFillColor(0);
         legendEffi0010->SetLineColor(0);
         legendEffi0010->SetTextSize(0.035);
         legendEffi0010->SetTextFont(42);
         legendEffi0010->SetMargin(0.17);
-        legendEffi0010->AddEntry(histoPi0TrueEffiPtPbPbLHC11h0010,"#pi^{0}  0#font[122]{-}10% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV","p");
-        legendEffi0010->AddEntry(histoEtaTrueEffiPtPbPbLHC11h0010,"#eta   0#font[122]{-}10% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV","p");
+        legendEffi0010->SetNColumns(2);
+        legendEffi0010->SetHeader("0#font[122]{-}10% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV");
+        legendEffi0010->AddEntry(histoPi0TrueEffiPtPbPbLHC11h0010,"#pi^{0}","p");
+        legendEffi0010->AddEntry(histoEtaTrueEffiPtPbPbLHC11h0010,"#eta","p");
         legendEffi0010->Draw();
 	
 	canvasEfficiency->SaveAs(Form("%s/MesonsEfficiency0010PbPb2760GeV.%s",outputDir.Data(),suffix.Data()));
@@ -1019,18 +1135,64 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         DrawGammaSetMarker(histoEtaTrueEffiPtPbPbLHC11h2050, markerStylePbPb2040+1, markerSizePbPb2040, colorCombPbPb4050, colorCombPbPb4050); 
         histoEtaTrueEffiPtPbPbLHC11h2050->DrawCopy("e1,same");  
 	
-        TLegend* legendEffi2050 = new TLegend(0.3,0.15,0.85,0.22);
+        TLegend* legendEffi2050 = new TLegend(0.45, 0.12, 0.8, 0.25);
         legendEffi2050->SetFillColor(0);
         legendEffi2050->SetLineColor(0);
         legendEffi2050->SetTextSize(0.035);
         legendEffi2050->SetTextFont(42);
         legendEffi2050->SetMargin(0.17);
-        legendEffi2050->AddEntry(histoPi0TrueEffiPtPbPbLHC11h2050,"#pi^{0}  20#font[122]{-}50% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV","p");
-        legendEffi2050->AddEntry(histoEtaTrueEffiPtPbPbLHC11h2050,"#eta   20#font[122]{-}50% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV","p");
+        legendEffi2050->SetNColumns(2);
+        legendEffi2050->SetHeader("20#font[122]{-}50% Pb-Pb, #sqrt{s_{_{NN}}} = 2.76 TeV");
+        legendEffi2050->AddEntry(histoPi0TrueEffiPtPbPbLHC11h2050,"#pi^{0}","p");
+        legendEffi2050->AddEntry(histoEtaTrueEffiPtPbPbLHC11h2050,"#eta","p");
         legendEffi2050->Draw();
         
 	canvasEfficiency->SaveAs(Form("%s/MesonsEfficiency2050PbPb2760GeV.%s",outputDir.Data(),suffix.Data()));
 
+    canvasEfficiency->cd();
+        TH2F * histo2DEffPi0WithSec = new TH2F("histo2DEffPi0WithSec","histo2DEffPi0WithSec",1000,0.,15.,2000,1e-7,1.e-2);
+        SetStyleHistoTH2ForGraphs(histo2DEffPi0WithSec, "#it{p}_{T} (GeV/#it{c})","#epsilon_{reco}  ",0.035,0.04, 0.035,0.04, 1.,1.);
+        histo2DEffPi0WithSec->DrawCopy();
+    
+        DrawGammaSetMarker(histoPi0TrueEffiPtPbPbLHC11h0010, 20, 1.7, kBlack, kBlack);   
+        histoPi0TrueEffiPtPbPbLHC11h0010->DrawCopy("same,e1,p");
+        
+        TLegend* legendEffWithSec = new TLegend(0.6, 0.12, 0.9, 0.32);
+        legendEffWithSec->SetFillColor(0);
+        legendEffWithSec->SetLineColor(0);
+        legendEffWithSec->SetTextSize(0.035);
+        legendEffWithSec->SetTextFont(42);
+        legendEffWithSec->SetMargin(0.17);
+        legendEffWithSec->SetHeader(collisionSystemPbPb.Data());
+        legendEffWithSec->AddEntry(histoPi0TrueEffiPtPbPbLHC11h0010,"val. prim","p");
+        for (Int_t j = 0; j < 4; j++){
+            if (histoSecTrueEffi[2][j]){
+                DrawGammaSetMarker(histoSecTrueEffi[2][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
+                histoSecTrueEffi[2][j]->DrawCopy("same,e1");  
+                legendEffWithSec->AddEntry(histoSecTrueEffi[2][j],Form("val. #pi^{0} from %s",nameSecMesonPlot[j].Data()),"p");
+            }
+        }
+        legendEffWithSec->Draw();
+    
+    canvasEfficiency->Update();
+    canvasEfficiency->SaveAs(Form("%s/Pi0WithSecTrueEff_0010.%s",outputDir.Data(),suffix.Data()));     
+    
+    canvasEfficiency->cd();
+        histo2DEffPi0->Draw("copy");
+    
+        DrawGammaSetMarker(histoPi0TrueEffiPtPbPbLHC11h2050, 20, 1.7, kBlack, kBlack);   
+        histoPi0TrueEffiPtPbPbLHC11h2050->DrawCopy("same,e1,p");
+        
+        for (Int_t j = 0; j < 4; j++){
+            if (histoSecTrueEffi[4][j]){
+                DrawGammaSetMarker(histoSecTrueEffi[4][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
+                histoSecTrueEffi[4][j]->DrawCopy("same,e1");  
+            }
+        }
+        legendEffWithSec->Draw();
+    
+    canvasEfficiency->Update();
+    canvasEfficiency->SaveAs(Form("%s/Pi0WithSecTrueEff_2050.%s",outputDir.Data(),suffix.Data()));     
 
 	Double_t arrayBoundariesX1_4[3];
 	Double_t arrayBoundariesY1_4[2];
@@ -1174,6 +1336,48 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 	
 	canvasYields->SaveAs(Form("%s/RawYieldsEtaPbPb2760GeV.%s",outputDir.Data(),suffix.Data()));
 
+    canvasYields->cd();
+        TH2F *histo2DRawPi0WithSecPbPb = new TH2F("histo2DRawPi0WithSecPbPb","histo2DRawPi0WithSecPbPb",11000,0.2,20,1000,1.e-9,4e-1);
+            SetStyleHistoTH2ForGraphs(histo2DRawPi0WithSecPbPb, "#it{p}_{T} (GeV/#it{c})","#frac{1}{#it{N}_{ev}} #frac{d#it{N^{raw}_{#pi^{0}}}}{d#it{p}_{T}}",0.035,0.04, 0.035,0.04, 1.,1.6);
+        histo2DRawPi0WithSecPbPb->Draw("copy");
+
+        TLegend* legendSecRAWYield = new TLegend(0.2,0.12,0.45,0.25);
+        legendSecRAWYield->SetFillColor(0);
+        legendSecRAWYield->SetLineColor(0);
+        legendSecRAWYield->SetTextSize(0.035);
+        legendSecRAWYield->SetTextFont(42);
+        legendSecRAWYield->SetHeader(collisionSystemPbPb.Data());
+        
+        DrawGammaSetMarker(histoPi0RawYieldPbPbLHC11h0010, 20,1.7, kBlack, kBlack);   
+        histoPi0RawYieldPbPbLHC11h0010->Draw("same,e1");
+        legendSecRAWYield->AddEntry(histoPi0RawYieldPbPbLHC11h0010,"#pi^{0} raw yield","p");
+        for (Int_t j = 0; j < 4; j++){
+            if (histoYieldSecMeson[2][j]){
+                DrawGammaSetMarker(histoYieldSecMeson[2][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
+                histoYieldSecMeson[2][j]->DrawCopy("same,e1");  
+                legendSecRAWYield->AddEntry(histoYieldSecMeson[2][j],Form("#pi^{0} from %s",nameSecMesonPlot[j].Data()),"p");
+            }    
+        }
+        legendSecRAWYield->Draw();
+        
+    canvasYields->Update();
+    canvasYields->SaveAs(Form("%s/Pi0WithSecRAWYield_0010.%s",outputDir.Data(),suffix.Data()));
+        
+    canvasYields->cd();
+        histo2DRawPi0WithSecPbPb->Draw("copy");
+
+        DrawGammaSetMarker(histoPi0RawYieldPbPbLHC11h2050, 20, 1.7, kBlack, kBlack);   
+        histoPi0RawYieldPbPbLHC11h2050->Draw("same,e1");
+        for (Int_t j = 0; j < 4; j++){
+            if (histoYieldSecMeson[4][j]){
+                DrawGammaSetMarker(histoYieldSecMeson[4][j],  markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
+                histoYieldSecMeson[4][j]->DrawCopy("same,e1");  
+            }    
+        }
+        legendSecRAWYield->Draw();
+        
+    canvasYields->Update();
+    canvasYields->SaveAs(Form("%s/Pi0WithSecRAWYield_2050.%s",outputDir.Data(),suffix.Data()));
 	
 	// *******************************************************************************************************
 	// ************************** 			Mass and Width together  	**************************************
@@ -1216,8 +1420,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
     
 	TH2D *histo2DPi0FWHM = new TH2D("histo2DPi0FWHM", "histo2DPi0FWHM", 20,0.3,20. ,1000.,-30,40);
 	SetStyleHistoTH2ForGraphs(histo2DPi0FWHM, "#it{p}_{T} (GeV/#it{c})","FWHM/2.36 (MeV/#it{c}^{2})", 0.035,0.05, 0.065,0.08, .95,.8, 515, 504); 
-	histo2DPi0FWHM->GetYaxis()->SetRangeUser(0.5,10);
-	histo2DPi0FWHM->GetYaxis()->SetLabelOffset(0.01);
+    histo2DPi0FWHM->GetYaxis()->SetRangeUser(0.2,15);
+    histo2DPi0FWHM->GetYaxis()->SetLabelOffset(0.01);
 
 	TH2D *histo2DPi0Mass = new TH2D("histo2DPi0Mass", "histo2DPi0Mass", 20,0.3,20. ,1000.,125.,150);
 	SetStyleHistoTH2ForGraphs(histo2DPi0Mass, "#it{p}_{T} (GeV/#it{c})","m_{#pi^{0}} (MeV/#it{c}^{2})", 0.062,0.076, 0.062,0.078, .95,.8, 515, 510); 
@@ -1230,7 +1434,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
                 
         DrawGammaSetMarker(histoPCMPi0WidthDataPbPbLHC11h0010, markerStylePbPb0005, markerSizePbPb0005, colorCombPbPb0005, colorCombPbPb0005);
         histoPCMPi0WidthDataPbPbLHC11h0010->DrawCopy("same,p");
-        DrawGammaSetMarker(histoPCMPi0WidthMCPbPbLHC11h0010, markerStylePbPb0005MC, markerSizePbPb0005, colorCombMCPbPb0005, colorCombMCPbPb0005);
+        DrawGammaSetMarker(histoPCMPi0WidthMCPbPbLHC11h0010, markerStylePbPb0005MC, markerSizePbPb0005, colorCombPbPb0005, colorCombPbPb0005);
         histoPCMPi0WidthMCPbPbLHC11h0010->DrawCopy("same,p");
 
         TLatex *labelMassPbPb0010 = new TLatex(0.16,0.87,collisionSystemPbPb0010.Data());
@@ -1251,7 +1455,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 
         DrawGammaSetMarker(histoPCMPi0MassDataPbPbLHC11h0010 , markerStylePbPb0005, markerSizePbPb0005, colorCombPbPb0005, colorCombPbPb0005);               
         histoPCMPi0MassDataPbPbLHC11h0010->DrawCopy("same,p");
-        DrawGammaSetMarker(histoPCMPi0MassMCPbPbLHC11h0010 , markerStylePbPb0005MC , markerSizePbPb0005, colorCombMCPbPb0005, colorCombMCPbPb0005);                
+        DrawGammaSetMarker(histoPCMPi0MassMCPbPbLHC11h0010 , markerStylePbPb0005MC , markerSizePbPb0005, colorCombPbPb0005, colorCombPbPb0005);                
         histoPCMPi0MassMCPbPbLHC11h0010->DrawCopy("same,p");
         DrawGammaLines(0.3, 20. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,1.,kGray+2,3);
  
@@ -1262,7 +1466,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
  
         DrawGammaSetMarker(histoPCMPi0WidthDataPbPbLHC11h2050, markerStylePbPb6080, markerSizePbPb6080, colorCombPbPb6080, colorCombPbPb6080);
         histoPCMPi0WidthDataPbPbLHC11h2050->DrawCopy("same,p");
-        DrawGammaSetMarker(histoPCMPi0WidthMCPbPbLHC11h2050, markerStylePbPb6080MC, markerSizePbPb6080, colorCombMCPbPb6080, colorCombMCPbPb6080);
+        DrawGammaSetMarker(histoPCMPi0WidthMCPbPbLHC11h2050, markerStylePbPb6080MC, markerSizePbPb6080, colorCombPbPb6080, colorCombPbPb6080);
         histoPCMPi0WidthMCPbPbLHC11h2050->DrawCopy("same,p");
 
         TLatex *labelMassPbPb2050 = new TLatex(0.05,0.87,collisionSystemPbPb2050.Data());
@@ -1276,7 +1480,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 
         DrawGammaSetMarker(histoPCMPi0MassDataPbPbLHC11h2050 , markerStylePbPb6080, markerSizePbPb6080, colorCombPbPb6080, colorCombPbPb6080);               
         histoPCMPi0MassDataPbPbLHC11h2050->DrawCopy("same,p");
-        DrawGammaSetMarker(histoPCMPi0MassMCPbPbLHC11h2050, markerStylePbPb0005MC , markerSizePbPb6080, colorCombMCPbPb6080, colorCombMCPbPb6080);                
+        DrawGammaSetMarker(histoPCMPi0MassMCPbPbLHC11h2050, markerStylePbPb0005MC , markerSizePbPb6080, colorCombPbPb6080, colorCombPbPb6080);                
         histoPCMPi0MassMCPbPbLHC11h2050->DrawCopy("same,p");
         DrawGammaLines(0.3, 20. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,1.,kGray+2,3);
 
@@ -1306,7 +1510,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
                 
         DrawGammaSetMarker(histoPCMEtaWidthDataPbPbLHC11h0010, markerStylePbPb0005, markerSizePbPb0005, colorCombPbPb0005, colorCombPbPb0005);
         histoPCMEtaWidthDataPbPbLHC11h0010->DrawCopy("same,p");
-        DrawGammaSetMarker(histoPCMEtaWidthMCPbPbLHC11h0010, markerStylePbPb0005MC, markerSizePbPb0005, colorCombMCPbPb0005, colorCombMCPbPb0005);
+        DrawGammaSetMarker(histoPCMEtaWidthMCPbPbLHC11h0010, markerStylePbPb0005MC, markerSizePbPb0005, colorCombPbPb0005, colorCombPbPb0005);
         histoPCMEtaWidthMCPbPbLHC11h0010->DrawCopy("same,p");
 
         labelMassPbPb0010->Draw();
@@ -1320,7 +1524,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 
         DrawGammaSetMarker(histoPCMEtaMassDataPbPbLHC11h0010 , markerStylePbPb0005, markerSizePbPb0005, colorCombPbPb0005, colorCombPbPb0005);               
         histoPCMEtaMassDataPbPbLHC11h0010->DrawCopy("same,p");
-        DrawGammaSetMarker(histoPCMEtaMassMCPbPbLHC11h0010 , markerStylePbPb0005MC , markerSizePbPb0005, colorCombMCPbPb0005, colorCombMCPbPb0005);                
+        DrawGammaSetMarker(histoPCMEtaMassMCPbPbLHC11h0010 , markerStylePbPb0005MC , markerSizePbPb0005, colorCombPbPb0005, colorCombPbPb0005);                
         histoPCMEtaMassMCPbPbLHC11h0010->DrawCopy("same,p");
         DrawGammaLines(0.5, 20. , mesonMassExpectEta*1000., mesonMassExpectEta*1000.,1.,kGray+2,3);
  
@@ -1331,7 +1535,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
  
         DrawGammaSetMarker(histoPCMEtaWidthDataPbPbLHC11h2050, markerStylePbPb6080, markerSizePbPb6080, colorCombPbPb6080, colorCombPbPb6080);
         histoPCMEtaWidthDataPbPbLHC11h2050->DrawCopy("same,p");
-        DrawGammaSetMarker(histoPCMEtaWidthMCPbPbLHC11h2050, markerStylePbPb6080MC, markerSizePbPb6080, colorCombMCPbPb6080, colorCombMCPbPb6080);
+        DrawGammaSetMarker(histoPCMEtaWidthMCPbPbLHC11h2050, markerStylePbPb6080MC, markerSizePbPb6080, colorCombPbPb6080, colorCombPbPb6080);
         histoPCMEtaWidthMCPbPbLHC11h2050->DrawCopy("same,p");
 
         labelMassPbPb2050->Draw();
@@ -1343,7 +1547,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 
         DrawGammaSetMarker(histoPCMEtaMassDataPbPbLHC11h2050 , markerStylePbPb6080, markerSizePbPb6080, colorCombPbPb6080, colorCombPbPb6080);               
         histoPCMEtaMassDataPbPbLHC11h2050->DrawCopy("same,p");
-        DrawGammaSetMarker(histoPCMEtaMassMCPbPbLHC11h2050, markerStylePbPb0005MC , markerSizePbPb6080, colorCombMCPbPb6080, colorCombMCPbPb6080);                
+        DrawGammaSetMarker(histoPCMEtaMassMCPbPbLHC11h2050, markerStylePbPb0005MC , markerSizePbPb6080, colorCombPbPb6080, colorCombPbPb6080);                
         histoPCMEtaMassMCPbPbLHC11h2050->DrawCopy("same,p");
         DrawGammaLines(0.5, 20. , mesonMassExpectEta*1000., mesonMassExpectEta*1000.,1.,kGray+2,3);
 
@@ -1819,7 +2023,6 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 	// *******************************************************************************************************
 	// ************************** 			Invariant yields			**************************************
 	// *******************************************************************************************************   
-	
 	TCanvas* canvasEtaSpectra = new TCanvas("canvasEtaSpectra","",200,10,1350,1350*1.15); // gives the page size
 	DrawGammaCanvasSettings( canvasEtaSpectra,  0.16, 0.02, 0.02, 0.09);
 	canvasEtaSpectra->SetLogy();
@@ -1936,7 +2139,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 	graphPCMPi0CorrectedSpecSysPbPbLHC11h2050->Draw("E2same");
 
 	TLatex *labelSpectraPi0LabelPbPb = new TLatex(0.6,0.89,"#pi^{0} #rightarrow #gamma #gamma #rightarrow e^{+}e^{-} e^{+}e^{-}");
-	SetStyleTLatex( labelSpectraPi0LabelPbPb, 0.04  ,4);
+	SetStyleTLatex( labelSpectraPi0LabelPbPb, 0.035  ,4);
 	labelSpectraPi0LabelPbPb->Draw();
 
 	TLegend* legendPi0Spectra = new TLegend(0.2,0.14,0.6,0.28);// with PP points 0.2,0.12,0.8,0.3);
@@ -1978,6 +2181,24 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 	canvasPi0Spectra->Print(Form("%s/SpectraPi0PbPb2760GeV.%s",outputDir.Data(),suffix.Data()));
 
 
+	// *******************************************************************************************************
+	// ************************** 			Eta to Pi0 ratio			**************************************
+	// *******************************************************************************************************   
+    TFile *fileCocktail = new TFile(nameFileCocktailInput.Data());
+    TList *folder0010 = (TList*)fileCocktail->Get("PbPb_2.76TeV_0010");
+        TF1* paramPi0PCM0010 = (TF1*)folder0010->FindObject("NPionPCMStat_Fit");
+        TF1* paramEtaPCM0010 = (TF1*)folder0010->FindObject("EtaPCMStat_Fit");
+        TF1* paramEtaToPi0RatioPCM0010 = (TF1*)folder0010->FindObject("EtaToNPionPCMStat_Fit");
+
+        TF1 *mTScaledEtaFromPi0PbPb2760GeV = (TF1*)MtScaledParam(paramPi0PCM0010, 221, 0.476);
+        TF1* etapi0RatioFromMtScalingPbPb2760GeV  = DivideTF1(mTScaledEtaFromPi0PbPb2760GeV, paramPi0PCM0010, "etapi0RatioFromMtScalingPbPb2760GeV");
+        TF1* etapi0RatioFromParamPbPb2760GeV  = DivideTF1(paramEtaPCM0010, paramPi0PCM0010, "etapi0RatioFromParamPbPb2760GeV");
+        
+        TH1D* histoetatopi0ParamToRatio = (TH1D*)paramEtaToPi0RatioPCM0010->GetHistogram();
+        TH1D* histoetatopi0FromMtScaling = (TH1D*)etapi0RatioFromMtScalingPbPb2760GeV->GetHistogram();
+        TH1D* histoetatopi0FromRatioParams = (TH1D*)etapi0RatioFromParamPbPb2760GeV->GetHistogram();
+        
+    TList *folder2050 = (TList*)fileCocktail->Get("PbPb_2.76TeV_2050");
 
     TCanvas* canvasEtatoPi0combo = new TCanvas("canvasEtatoPi0combo","",200,10,1200,1100);  //200,10,1350,900);  // gives the page size
     DrawGammaCanvasSettings( canvasEtatoPi0combo, 0.09, 0.03, 0.035, 0.1);
@@ -2033,35 +2254,84 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0RatioPbPb2760GeV.%s",outputDir.Data(), suffix.Data()));
 
 
-      canvasEtatoPi0combo->cd();
-          histo2DEtatoPi0combo->Draw("copy");
+    canvasEtatoPi0combo->cd();
+        histo2DEtatoPi0combo->Draw("copy");
 
-          graphPCMEtaToPi0RatioSysErrPbPb0010->Draw("E2same");
-          graphPCMEtaToPi0RatioPbPb0010->Draw("p,same");
-          graphPCMEtaToPi0RatioSysErrPbPb2050->Draw("E2same");
-          graphPCMEtaToPi0RatioPbPb2050->Draw("p,same");
+        graphPCMEtaToPi0RatioSysErrPbPb0010->Draw("E2same");
+        graphPCMEtaToPi0RatioPbPb0010->Draw("p,same");
+        graphPCMEtaToPi0RatioSysErrPbPb2050->Draw("E2same");
+        graphPCMEtaToPi0RatioPbPb2050->Draw("p,same");
 
-          DrawGammaSetMarkerTGraphAsym(graphRatioEtaToPi0PCM2760GeVSysErr, markerStylepp, markerSizepp, kBlack, kBlack, 1, kTRUE);
-          DrawGammaSetMarkerTGraphAsym(graphRatioEtaToPi0PCM2760GeVStatErr, markerStylepp, markerSizepp, kBlack, kBlack, 1, kTRUE);
-          graphRatioEtaToPi0PCM2760GeVStatErr->Draw("p,same");
-          graphRatioEtaToPi0PCM2760GeVSysErr->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphRatioEtaToPi0PCM2760GeVSysErr, markerStylepp, markerSizepp, kBlack, kBlack, 1, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphRatioEtaToPi0PCM2760GeVStatErr, markerStylepp, markerSizepp, kBlack, kBlack, 1, kTRUE);
+        graphRatioEtaToPi0PCM2760GeVStatErr->Draw("p,same");
+        graphRatioEtaToPi0PCM2760GeVSysErr->Draw("E2same");
 
-          legendEtatoPi0combo_onlyPbPb->Draw();
-          if(ThesisPlotting) thesisLabel3->Draw();
+        legendEtatoPi0combo_onlyPbPb->Draw();
+        if(ThesisPlotting) thesisLabel3->Draw();
 
-          TLegend* legendEtatoPi0combo_withPP276GeV = new TLegend(0.55,0.15,0.95,0.26);
-          legendEtatoPi0combo_withPP276GeV->SetFillColor(0);
-          legendEtatoPi0combo_withPP276GeV->SetLineColor(0);
-          legendEtatoPi0combo_withPP276GeV->SetTextFont(42);
-          legendEtatoPi0combo_withPP276GeV->SetTextSize(textSize);
-          legendEtatoPi0combo_withPP276GeV->SetMargin(0.17);
-          legendEtatoPi0combo_withPP276GeV->SetHeader(collisionSystemPP2760GeV.Data());
-          legendEtatoPi0combo_withPP276GeV->AddEntry(graphRatioEtaToPi0PCM2760GeVSysErr,"arXiv: XXX","fp");
-          legendEtatoPi0combo_withPP276GeV->Draw();
+        TLegend* legendEtatoPi0combo_withPP276GeV = new TLegend(0.55,0.15,0.95,0.26);
+        legendEtatoPi0combo_withPP276GeV->SetFillColor(0);
+        legendEtatoPi0combo_withPP276GeV->SetLineColor(0);
+        legendEtatoPi0combo_withPP276GeV->SetTextFont(42);
+        legendEtatoPi0combo_withPP276GeV->SetTextSize(textSize);
+        legendEtatoPi0combo_withPP276GeV->SetMargin(0.17);
+        legendEtatoPi0combo_withPP276GeV->SetHeader(collisionSystemPP2760GeV.Data());
+        legendEtatoPi0combo_withPP276GeV->AddEntry(graphRatioEtaToPi0PCM2760GeVSysErr,"arXiv: XXX","fp");
+        legendEtatoPi0combo_withPP276GeV->Draw();
 
-      canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioPbPb2760GeV_WithPP.%s",outputDir.Data(),suffix.Data()));
+    canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioPbPb2760GeV_WithPP.%s",outputDir.Data(),suffix.Data()));
 
+    canvasEtatoPi0combo->cd();
+        histo2DEtatoPi0combo->Draw("copy");
 
+        graphPCMEtaToPi0RatioSysErrPbPb0010->Draw("E2same");
+        graphPCMEtaToPi0RatioPbPb0010->Draw("p,same");
+
+        paramEtaToPi0RatioPCM0010->SetLineColor(kRed+2);
+        paramEtaToPi0RatioPCM0010->SetLineStyle(2);
+        paramEtaToPi0RatioPCM0010->SetLineWidth(2);
+        paramEtaToPi0RatioPCM0010->Draw("c,histo,same");
+
+        etapi0RatioFromMtScalingPbPb2760GeV->SetLineColor(kBlue+1);
+        etapi0RatioFromMtScalingPbPb2760GeV->SetLineStyle(3);
+        etapi0RatioFromMtScalingPbPb2760GeV->SetLineWidth(2);
+        //         etapi0RatioFromMtScalingPbPb2760GeV->GetXaxis()->SetRangeUser(1,11);
+        etapi0RatioFromMtScalingPbPb2760GeV->Draw("c,histo,same");
+
+        etapi0RatioFromParamPbPb2760GeV->SetLineColor(kGreen+2);
+        etapi0RatioFromParamPbPb2760GeV->SetLineStyle(5);
+        etapi0RatioFromParamPbPb2760GeV->SetLineWidth(2);
+        //         etapi0RatioFromParamPbPb2760GeV->GetXaxis()->SetRangeUser(0.8,11);
+        etapi0RatioFromParamPbPb2760GeV->Draw("c,histo,same");
+
+        if(ThesisPlotting) thesisLabel3->Draw();
+
+        TLegend* legendEtatoPi0_withCurves = new TLegend(0.12,0.7,0.53,0.89);
+        legendEtatoPi0_withCurves->SetFillColor(0);
+        legendEtatoPi0_withCurves->SetLineColor(0);
+        legendEtatoPi0_withCurves->SetTextFont(42);
+        legendEtatoPi0_withCurves->SetTextSize(textSize);
+        legendEtatoPi0_withCurves->SetMargin(0.17);
+        legendEtatoPi0_withCurves->SetHeader(collisionSystemPbPb.Data());
+        legendEtatoPi0_withCurves->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb0010," 0#font[122]{-}10%","pf");//collisionSystemPbPb0010.Data(),"pf");
+        legendEtatoPi0_withCurves->AddEntry(paramEtaToPi0RatioPCM0010,"parametrization to the ratio","l");
+        legendEtatoPi0_withCurves->AddEntry(etapi0RatioFromParamPbPb2760GeV,"ratio from spectra param.","l");
+        legendEtatoPi0_withCurves->AddEntry(etapi0RatioFromMtScalingPbPb2760GeV,"ratio with m_{T}-scaled #eta from #pi^{0} param.","l");
+        legendEtatoPi0_withCurves->Draw();
+
+        TLegend* legendEtatoPi0combo_withCurves = new TLegend(0.55,0.15,0.95,0.26);
+        legendEtatoPi0combo_withCurves->SetFillColor(0);
+        legendEtatoPi0combo_withCurves->SetLineColor(0);
+        legendEtatoPi0combo_withCurves->SetTextFont(42);
+        legendEtatoPi0combo_withCurves->SetTextSize(textSize);
+        legendEtatoPi0combo_withCurves->SetMargin(0.17);
+        legendEtatoPi0combo_withCurves->SetHeader(collisionSystemPP2760GeV.Data());
+        legendEtatoPi0combo_withCurves->AddEntry(graphRatioEtaToPi0PCM2760GeVSysErr,"arXiv: XXX","fp");
+        //         legendEtatoPi0combo_withCurves->Draw();
+
+    canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioPbPb2760GeV_WithCurves.%s",outputDir.Data(),suffix.Data()));
+ 
 //       TFile *fileChargedRatios = new TFile("pdf/2017_01_29/CombineMesonMeasurementsPbPb2760GeVX/InputALICEResultsPbPb2760GeV_2017_01_29.root");
 //       if(fileChargedRatios){
 //         TDirectoryFile* directoryChargedPbPb = (TDirectoryFile*)fileChargedRatios->Get("ChargedParticles_PbPb_2.76TeV");
