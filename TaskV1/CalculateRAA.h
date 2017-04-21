@@ -43,6 +43,11 @@ TH1D* 	histoTrueMassMesonMinusExp;
 TH1D* 	histoMesonSignalFullPtInvMass;
 TH1D* 	histoFWHMMesonMeV;
 TH1D*		histoTrueFWHMMesonMeV;
+TH1D*    histoSecAccept[4] = { NULL, NULL, NULL, NULL}; 
+TH1D*    histoSecEffi[4] = { NULL, NULL, NULL, NULL}; 
+TH1D*    histoSecRawYield[4] = { NULL, NULL, NULL, NULL}; 
+TString nameSecMeson[4]                         = {"K0S", "Lambda", "K0L", "Rest"};
+TString nameSecMesonPlot[4]                     = {"K_{s}^{0}", "#Lambda", "K_{l}^{0}", "Rest"};
 
 TString 		date;
 Float_t 		nEvt;

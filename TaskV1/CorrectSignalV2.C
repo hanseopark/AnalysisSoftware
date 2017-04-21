@@ -973,8 +973,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     
     if ( !kIsEta ) {
         doK0SecCorrection = kTRUE;
-        if ( (mode == 0 || mode == 9) && !kIsMC && kCollisionSystem != 2 )                  doK0SecCorrectionWithDefaultHisto = 1;
-        if ( (mode == 0 || mode == 9 || mode == 1) && !kIsMC && kCollisionSystem == 2 )     doK0SecCorrectionWithDefaultHisto = 2;
+        if ( (mode == 0 || mode == 9) && !kIsMC && kCollisionSystem != 2 )                  doK0SecCorrectionWithDefaultHisto = 1; //PCM, data, NOT pPb
+        if ( (mode == 0 || mode == 9 || mode == 1) && !kIsMC && kCollisionSystem == 2 )     doK0SecCorrectionWithDefaultHisto = 2; //PCM or EMcal, data, pPb
     }
     if (optDalitz) {
         doGGCorrection                          = kTRUE;
@@ -992,6 +992,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     histoYieldTrueSecFracMeson_orig[k][j]   = (TH1D*)histoYieldTrueSecFracMeson[k][j]->Clone(Form("TrueSecFrom%sFrac%s_orig",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                     // set fractions to 0 if none of the pt bins is above 1e-3 => 0.1%
                     if (FindLargestBin1DHist(histoYieldTrueSecFracMeson[k][j]) < 1e-3 ){
+                        cout << "No fraction above 0.1% for " << nameSecMeson[j].Data() << " in range " << nameIntRange[k].Data() << ", setting them to 0" << endl;
                         haveSecUsed[j]                      = kFALSE;
                         for (Int_t i = 1; i < histoYieldTrueSecFracMeson[k][j]->GetNbinsX()+1; i++){
                             histoYieldTrueSecFracMeson[k][j]->SetBinContent(i, 0);

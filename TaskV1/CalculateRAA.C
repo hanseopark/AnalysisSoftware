@@ -186,7 +186,15 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 	histoEffi 			= (TH1D*)file->Get("TrueMesonEffiPt");
 	histoRawYield 		= (TH1D*)file->Get("histoYieldMesonPerEvent");
 	
-	histoFWHMMeson 		= (TH1D*)file->Get("histoFWHMMeson");    
+    if (textMeson.CompareTo("Pi0") == 0){
+        for (Int_t j = 0; j < 4; j++){        
+            histoSecAccept[j] 	    	= (TH1D*)file->Get(Form("fMCSecPi0From%sAccepPt",nameSecMeson[j].Data()));
+            histoSecEffi[j] 			= (TH1D*)file->Get(Form("TrueSecFrom%sEffiPt",nameSecMeson[j].Data()));
+            histoSecRawYield[j] 	    = (TH1D*)file->Get(Form("SecYieldFrom%sMesonFromCocktail", nameSecMeson[j].Data()));
+        }
+    }
+
+    histoFWHMMeson 		= (TH1D*)file->Get("histoFWHMMeson");    
 	histoMassMeson 		= (TH1D*)file->Get("histoMassMeson");
 	histoEventQualtity 	= (TH1F*)file->Get("NEvents");
 	histoTrueFWHMMeson 	= (TH1D*)file->Get("histoTrueFWHMMeson");    
@@ -1198,6 +1206,12 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 		histoAccept->Write(Form("%s_Acceptance",textMeson.Data()),TObject::kOverwrite);
 		histoEffi->Write(Form("%s_Efficiency",textMeson.Data()),TObject::kOverwrite);
 		histoRawYield->Write(Form("%s_RawYieldPerEvent",textMeson.Data()),TObject::kOverwrite);
+
+        for (Int_t j = 0; j < 4; j++){
+            if(histoSecAccept[j])histoSecAccept[j]->Write(Form("Pi0From%sAcceptance",nameSecMeson[j].Data()),TObject::kOverwrite);
+            if(histoSecEffi[j])histoSecEffi[j]->Write(Form("Pi0From%sEfficiency",nameSecMeson[j].Data()),TObject::kOverwrite);
+            if(histoSecRawYield[j])histoSecRawYield[j]->Write(Form("Pi0From%sRawYieldPerEvent",nameSecMeson[j].Data()),TObject::kOverwrite);
+        }
 
 		histoFWHMMeson->Write(Form("FWHM%s",textMeson.Data()),TObject::kOverwrite);
 		histoMassMeson->Write(Form("Mass%s",textMeson.Data()),TObject::kOverwrite);
