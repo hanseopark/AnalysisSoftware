@@ -1621,7 +1621,13 @@ void ClusterQA(
                 } else cout << "INFO: Object |fHistClusterdEtadPtBeforeQA| could not be found! Skipping Draw..." << endl;
                 //---------------------------------------------------------------------------------------------------------------
                 // Pt dependent matching variable dPhi
-                TH2D* fHistClusterdPhidPtBeforeQA   = (TH2D*)CaloCutsContainer->FindObject(Form("dPhiVsPt_beforeClusterQA %s", fClusterCutSelection[i].Data()));
+                TH2D* fHistClusterdPhidPt_pos_BeforeQA   = (TH2D*)CaloCutsContainer->FindObject(Form("dPhiVsPt_posTracks_beforeClusterQA %s", fClusterCutSelection[i].Data()));
+                TH2D* fHistClusterdPhidPt_neg_BeforeQA   = (TH2D*)CaloCutsContainer->FindObject(Form("dPhiVsPt_negTracks_beforeClusterQA %s", fClusterCutSelection[i].Data()));
+                TH2D* fHistClusterdPhidPtBeforeQA = 0x0;
+                if(fHistClusterdPhidPt_neg_BeforeQA && fHistClusterdPhidPt_pos_BeforeQA){
+                  fHistClusterdPhidPtBeforeQA = fHistClusterdPhidPt_pos_BeforeQA;
+                  fHistClusterdPhidPtBeforeQA->Add(fHistClusterdPhidPt_neg_BeforeQA);
+                }
                 if(fHistClusterdPhidPtBeforeQA){
                     TH1D* fHistClusterdPhidPtBeforeQAPt = (TH1D*) fHistClusterdPhidPtBeforeQA->ProjectionY("dPhiVsPtOnPt_beforeClusterQA",1,fHistClusterdPhidPtBeforeQA->GetNbinsX());
                     GetMinMaxBin(fHistClusterdPhidPtBeforeQAPt,minB,maxB);
@@ -1635,6 +1641,36 @@ void ClusterQA(
                     SaveCanvasAndWriteHistogram(canvas, fHistClusterdPhidPtBeforeQA, Form("%s/dPhiVsPt_%s_beforeClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 } else cout << "INFO: Object |fHistClusterdPhidPtBeforeQA| could not be found! Skipping Draw..." << endl;
             
+                // Pt dependent matching variable dEta
+                TH2D* fHistClusterdEtadPtAfterQA   = (TH2D*)CaloCutsContainer->FindObject(Form("dEtaVsPt_afterClusterQA %s", fClusterCutSelection[i].Data()));
+                if(fHistClusterdEtadPtAfterQA){
+                    TH1D* fHistClusterdEtadPtAfterQAPt = (TH1D*) fHistClusterdEtadPtAfterQA->ProjectionY("dEtaVsPtOnPt_afterClusterQA",1,fHistClusterdEtadPtAfterQA->GetNbinsX());
+                    GetMinMaxBin(fHistClusterdEtadPtAfterQAPt,minB,maxB);
+                    delete fHistClusterdEtadPtAfterQAPt;
+                    SetYRange(fHistClusterdEtadPtAfterQA,minB,maxB+5);
+                    SetZMinMaxTH2(fHistClusterdEtadPtAfterQA,1,fHistClusterdEtadPtAfterQA->GetNbinsX(),minB,maxB+5);
+                    DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                        fHistClusterdEtadPtAfterQA,"",
+                                        "#Delta#eta_{cluster - charged tracks}","#it{p}_{T} (GeV/#it{c})",1,1,
+                                        0.85,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
+                    SaveCanvasAndWriteHistogram(canvas, fHistClusterdEtadPtAfterQA, Form("%s/dEtaVsPt_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+                } else cout << "INFO: Object |fHistClusterdEtadPtAfterQA| could not be found! Skipping Draw..." << endl;
+                //---------------------------------------------------------------------------------------------------------------
+                // Pt dependent matching variable dPhi
+                TH2D* fHistClusterdPhidPtAfterQA   = (TH2D*)CaloCutsContainer->FindObject(Form("dPhiVsPt_afterClusterQA %s", fClusterCutSelection[i].Data()));
+                if(fHistClusterdPhidPtAfterQA){
+                    TH1D* fHistClusterdPhidPtAfterQAPt = (TH1D*) fHistClusterdPhidPtAfterQA->ProjectionY("dPhiVsPtOnPt_afterClusterQA",1,fHistClusterdPhidPtAfterQA->GetNbinsX());
+                    GetMinMaxBin(fHistClusterdPhidPtAfterQAPt,minB,maxB);
+                    delete fHistClusterdPhidPtAfterQAPt;
+                    SetYRange(fHistClusterdPhidPtAfterQA,minB,maxB+5);
+                    SetZMinMaxTH2(fHistClusterdPhidPtAfterQA,1,fHistClusterdPhidPtAfterQA->GetNbinsX(),minB,maxB+5);
+                    DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                        fHistClusterdPhidPtAfterQA,"",
+                                        "#Delta#phi_{cluster - charged tracks}","#it{p}_{T} (GeV/#it{c})",1,1,
+                                        0.85,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
+                    SaveCanvasAndWriteHistogram(canvas, fHistClusterdPhidPtAfterQA, Form("%s/dPhiVsPt_%s_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+                } else cout << "INFO: Object |fHistClusterdPhidPtAfterQA| could not be found! Skipping Draw..." << endl;
+
             
                 // separating the matching parameters according to their charges
                 for(Int_t iCharge=0;iCharge<2;iCharge++){
