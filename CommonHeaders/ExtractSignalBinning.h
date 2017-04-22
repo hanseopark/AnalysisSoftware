@@ -272,9 +272,9 @@ Int_t fBinsPi0900GeVEMCPtRebin[12]              = { 2, 8, 5, 4, 4, 5, 8, 8, 8, 1
                                                         1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6,
                                                         3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0, 12.0,
                                                         16.0, 20.0, 25.0, 30.0};
-    Double_t fBinsPi08TeVPtPCMEMC[29]               = { 0.0, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2,
+    Double_t fBinsPi08TeVPtPCMEMC[31]               = { 0.0, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2,
                                                         2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.5,
-                                                        5.0, 5.5, 6.0, 7.0, 8.0, 10.0, 12.0, 16.0, 25.0};
+                                                        5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 10.0, 12.0, 16.0, 25.0};
     Double_t fBinsPi08TeVTrigger1Pt[41]             = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
                                                         1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6,
                                                         3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0,
@@ -362,9 +362,9 @@ Int_t fBinsPi08TeVPCMEMCTrigger1PtRebin[43]     = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
                                                     2, 2, 2, 2, 2, 2, 2, 2, 16, 10,
                                                     10, 8, 10, 8, 16, 8, 8, 10, 16, 10,
                                                         10, 2};
-    Int_t fBinsPi08TeVPCMEMCPtRebin[28]             = { 2, 2, 4, 2, 2, 2, 2, 2, 2, 2,
+    Int_t fBinsPi08TeVPCMEMCPtRebin[30]             = { 2, 2, 4, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                        4, 4, 4, 4, 5, 8, 16, 2};
+                                                        4, 4, 4, 4, 5, 5, 5, 8, 16, 2};
     Int_t fBinsPi08TeVPtmEMCRebin[53]               = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -1772,7 +1772,7 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                             cout << "You have chosen to have more than 32 bins, this is not possible, it will be reduced to 32" << endl;
                             fNBinsPt                        = 32;
                         }
-                    } else if (fNBinsPt > 28 && (modi == 2 || modi == 3)){
+                    } else if (fNBinsPt > 29 && (modi == 2 || modi == 3)){
                         if( specialTrigg == 2 && fNBinsPt > 42){
                         cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
                         fNBinsPt        = 42;
@@ -1780,8 +1780,8 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                         cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
                         fNBinsPt = 42;
                         } else if(specialTrigg!=1 && specialTrigg!=2) {
-                        cout << "You have chosen to have more than 28 bins, this is not possible, it will be reduced to 28" << endl;
-                        fNBinsPt        = 28;
+                        cout << "You have chosen to have more than 31 bins, this is not possible, it will be reduced to 31" << endl;
+                        fNBinsPt        = 29;
                         }
                     } else if (fNBinsPt > 55 && (modi == 10)){
                         cout << "You have chosen to have more than 55 bins, this is not possible, it will be reduced to 55" << endl;
