@@ -987,9 +987,9 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                 fFitRange[1]                = 0.72;
             } else if( fEnergyFlag.CompareTo("8TeV") == 0 ){ 
                 fFitRange[0]                = 0.34;
-                if( trigger.CompareTo("52") == 0 || trigger.CompareTo("81") == 0  || triggerSet == 1 || triggerSet == 2)
+                if( trigger.CompareTo("52") == 0 || triggerSet == 1 || trigger.CompareTo("81") == 0  || triggerSet == 2)
                     fFitRange[1]                = 0.74;
-                else 
+                else
                     fFitRange[1]                = 0.7;
             } else {
                 fFitRange[0]                = 0.38;
@@ -1101,8 +1101,9 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fMesonFitRange[0]               = 0.35; 
             fMesonFitRange[1]               = 0.7;
             if( fEnergyFlag.CompareTo("8TeV") == 0 ){
-                fMesonFitRange[0] = 0.4;
                 fMesonFitRange[1] = 0.72;
+                if(  trigger.CompareTo("52") == 0  || triggerSet == 1)
+                  fMesonFitRange[0] = 0.4;
                 if(  trigger.CompareTo("81") == 0  || triggerSet == 2){
                     fMesonFitRange[0] = 0.35;
                     fMesonFitRange[1] = 0.73;
@@ -1115,8 +1116,11 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             } else if( fEnergyFlag.CompareTo("8TeV") == 0 ){ 
                 fMesonFitRange[0]           = 0.34;
                 fMesonFitRange[1]           = 0.7;
-                if( trigger.CompareTo("52") == 0 || trigger.CompareTo("81") == 0  || triggerSet == 1  || triggerSet == 2){
+                if( trigger.CompareTo("52") == 0 || triggerSet == 1 ){
                     fMesonFitRange[1]           = 0.74;
+                }else if( trigger.CompareTo("81") == 0  || triggerSet == 2){
+                  fMesonFitRange[0]                = 0.4;
+                  fMesonFitRange[1]                = 0.7;
                 }
             } else {
                 fMesonFitRange[0]           = 0.38;
