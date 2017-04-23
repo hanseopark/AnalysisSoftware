@@ -2956,7 +2956,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     //fitInvXSectionEta        = FitObject("l","fitInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,0.4,35.,paramGraphEta,"QNRMEX0+");
     cout << WriteParameterToFile(fitInvXSectionEta)<< endl;
     
-     Double_t paramTCMEta[5]  = {graphCombEtaInvXSectionTotA->GetY()[1],0.5,graphCombEtaInvXSectionTotA->GetY()[1]/100,0.8,3.};
+    Double_t paramTCMEta[5]  = {graphCombEtaInvXSectionTotA->GetY()[0]/20,0.45,graphCombEtaInvXSectionTotA->GetY()[0],0.75,3.};
+     //Double_t paramTCMEta[5]  = {5E7,0.2,4E9,0.5,3.03};
     // Two component model by Bylinkin
     TF1* fitTCMInvXSectionEta= FitObject("tcm","fitTCMInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,0.4,35.,paramTCMEta,"QNRMEX0+","", kFALSE);
     fitTCMInvXSectionEta     = FitObject("tcm","fitTCMInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,0.4,35.,paramTCMEta,"QNRMEX0+","", kFALSE);

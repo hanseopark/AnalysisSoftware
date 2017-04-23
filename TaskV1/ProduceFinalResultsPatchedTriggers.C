@@ -2048,7 +2048,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
       if(mode == 2){
         offSetsPi0[1] = 3; //INT7
         offSetsPi0[3] = 0; //EMC7
-        offSetsPi0[4] = 4; //EGA
+        offSetsPi0[4] = 3; //EGA
       }else if(mode == 4){
         offSetsPi0[1] = 0; //INT7
         offSetsPi0[3] = 0; //EMC7
@@ -2420,8 +2420,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         }
         if (triggerName[i].Contains("INT7") && optionEnergy.CompareTo("8TeV")==0 && mode == 2)
             offSetsPi0Sys[1]+=3;
-        if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2))
+        if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && mode == 4 )
             offSetsPi0Sys[4]+=4;
+        if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && mode == 2 )
+            offSetsPi0Sys[4]+=3;
     }
 
     

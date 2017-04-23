@@ -305,6 +305,11 @@ Double_t fBinsPi08TeVEMCalTrigger1Pt[45]        = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.8
                                                         3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0, 11.0,
                                                         12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 20.0, 26.0, 30.0,
                                                         35.0, 40.0};
+    Double_t fBinsPi08TeVPCMEMCalTrigger2Pt[44]     = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
+                                                        1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6,
+                                                        3.8, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 8.5, 9.0, 10.0, 11.0,
+                                                        12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 20.0, 22.0, 26.0,
+                                                        30.0, 35.0, 40.0};
     Double_t fBinsPi08TeVPtEMC[33]                  = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
                                                         1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6,
                                                         3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0, 12.0,
@@ -355,11 +360,11 @@ Int_t fBinsPi08TeVEMCTrigger1PtRebin[44]        = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
 Int_t fBinsPi08TeVPCMEMCTrigger1PtRebin[43]     = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 4, 2, 5, 2, 5, 5,
-                                                    2, 5, 5, 5, 5, 5, 5, 5, 10, 10, 5,
-                                                    8, 8};
-    Int_t fBinsPi08TeVPCMEMCTrigger2PtRebin[42]     = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                    16, 5, 10, 5, 16, 5, 5, 5, 10, 16, 5,
+                                                    8, 2};
+    Int_t fBinsPi08TeVPCMEMCTrigger2PtRebin[43]     = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                    2, 2, 2, 2, 2, 2, 2, 2, 16, 10,
+                                                    2, 2, 2, 2, 2, 2, 2, 2, 10, 16, 10,
                                                     10, 8, 10, 8, 16, 8, 8, 10, 16, 10,
                                                         10, 2};
     Int_t fBinsPi08TeVPCMEMCPtRebin[30]             = { 2, 2, 4, 2, 2, 2, 2, 2, 2, 2,
@@ -1800,7 +1805,7 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                             if( specialTrigg == 1 ){
                                 fBinsPt[i]                 = fBinsPi08TeVPCMEMCalTrigger1Pt[i];
                             } else if ( specialTrigg == 2 ){
-                                fBinsPt[i]                 = fBinsPi08TeVTrigger2Pt[i];
+                                fBinsPt[i]                 = fBinsPi08TeVPCMEMCalTrigger2Pt[i];
                             } else
                                 fBinsPt[i]                 = fBinsPi08TeVPtPCMEMC[i];
                         } else if (modi == 10){
