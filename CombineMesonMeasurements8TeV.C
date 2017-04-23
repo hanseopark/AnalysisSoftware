@@ -5733,7 +5733,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     eta2pi0MtScaled->SetLineColor(kBlue+2);
     eta2pi0MtScaled->SetLineWidth(2.);
 
-    Double_t eta2Pi0Const = 0.456;
+    TH1F *eta2pi0MtScaledTCM = new TH1F("eta2pi0MtScaledTCM","#eta/#pi^{0} from m_{T} scaling",5000,0.4,25.);
+    eta2pi0MtScaledTCM->SetLineColor(kBlue+2);
+    eta2pi0MtScaledTCM->SetLineWidth(2.);
+
+    Double_t eta2Pi0Const = 0.459;
     Double_t mPi0 = 0.134977;
     Double_t mEta = 0.547853;
     for (Int_t i=1; i<=eta2pi0MtScaled->GetNbinsX(); i++) {
@@ -5743,6 +5747,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
       Double_t ptEta = TMath::Sqrt(mtEta*mtEta - mPi0*mPi0);
       Double_t Reta2pi0 = fitInvXSectionPi0->Eval(ptEta) / fitInvXSectionPi0->Eval(ptPi0) * eta2Pi0Const;
       eta2pi0MtScaled->SetBinContent(i,Reta2pi0);
+
+      Double_t Reta2pi0TCM = fitTCMInvXSectionPi0Plot->Eval(ptEta) / fitTCMInvXSectionPi0Plot->Eval(ptPi0) * eta2Pi0Const;
+      eta2pi0MtScaledTCM->SetBinContent(i,Reta2pi0TCM);
     }
 
     TGraphAsymmErrors* graphRatioForMt_stat     = (TGraphAsymmErrors*)graphCombEtaToPi0StatA_WOXErr->Clone();
@@ -5815,6 +5822,37 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     canvasEtatoPi0combo->Update();
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_mT.%s",outputDir.Data(), suffix.Data()));
 
+    //*************************************************************************************************************
+    //*************************************************************************************************************
+
+    histo2DEtatoPi0combo->Draw("copy");
+
+    TLegend* legendXsectionPaperEtaToPi03TCM     = GetAndSetLegend2(0.11, 0.86, 0.96, 0.96, 0.85*textSizeLabelsPixel);
+    legendXsectionPaperEtaToPi03TCM->SetNColumns(2);
+    legendXsectionPaperEtaToPi03TCM->SetMargin(0.15);
+    legendXsectionPaperEtaToPi03TCM->AddEntry(graphCombPi0InvXSectionSysA,"ALICE pp, #sqrt{#it{s}} = 8 TeV","pf");
+    legendXsectionPaperEtaToPi03TCM->AddEntry(graphEtaToPi07000GeV,"ALICE pp, #sqrt{#it{s}} = 7 TeV","p");
+    legendXsectionPaperEtaToPi03TCM->AddEntry(graphEtaToPi02760GeV,"ALICE pp, #sqrt{#it{s}} = 2.76 TeV","p");
+    legendXsectionPaperEtaToPi03TCM->AddEntry(eta2pi0MtScaled,"ALICE pp m_{T}-scaled using TCM, #sqrt{#it{s}} = 8 TeV","l");
+    legendXsectionPaperEtaToPi03TCM->Draw();
+
+    legendXsectionPaperEtaToPi04->Draw();
+
+    eta2pi0_RHIC200GeV->Draw("same,p");
+    eta2pi0_NA27_275GeV->Draw("p,same");
+    graphEtaToPi07000GeV->Draw("same,p");
+    graphEtaToPi02760GeV->Draw("same,p");
+
+    eta2pi0MtScaled->Draw("][ c same");
+
+    // plotting data
+    graphCombEtaToPi0SysA->Draw("2,same");
+    graphCombEtaToPi0StatA_WOXErr->Draw("p,same");
+
+    histo2DEtatoPi0combo->Draw("axis,same");
+
+    canvasEtatoPi0combo->Update();
+    canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_mT_TCM.%s",outputDir.Data(), suffix.Data()));
     //*************************************************************************************************************
     //*************************************************************************************************************
 
