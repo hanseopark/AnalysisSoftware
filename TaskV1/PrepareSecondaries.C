@@ -252,6 +252,7 @@ void PrepareSecondaries(    TString     meson                       = "",
     //***************************** ranges and scaling factors ******************************************************
     Double_t deltaPtGen                                         = ptGenMax-ptGenMin;
     Double_t deltaRap                                           = 2*rapidity;
+    Double_t deltaRapGen                                        = 2.0;
     Double_t deltaEta                                           = ReturnDeltaEta(fGammaCutSelection);   // 2*0.9
     Double_t eta                                                = deltaEta*0.5;                         // 0.9
     Double_t deltaPhi                                           = 2*TMath::Pi();
@@ -278,6 +279,7 @@ void PrepareSecondaries(    TString     meson                       = "",
     }
     
     cout << "========================================"  << endl;
+    cout << "deltaRapGen      = "     << deltaRapGen    << endl;
     cout << "deltaRap         = "     << deltaRap       << endl;
     cout << "deltaPtGen       = "     << deltaPtGen     << endl;
     cout << "deltaPt          = "     << ptMax - ptMin  << endl;
@@ -456,16 +458,27 @@ void PrepareSecondaries(    TString     meson                       = "",
     for (Int_t i=0; i<nMotherParticles; i++) {
         
         if (histoMesonDaughterPtYCorr[i]) {
-            // project pt distributions (from corrected pt-y histograms)
+            // project pt distributions (from corrected pt-y histograms, if doRapidityCorrection = true, otherwise from uncorrected one)
             histoMesonDaughterPtOrBin[i]                        = (TH1F*)histoMesonDaughterPtYCorr[i]->ProjectionX(Form("%s_From_%s_Pt_OrBin",fAnalyzedMeson.Data(),motherParticles[i].Data()),1,histoMesonDaughterPtY[i]->GetNbinsY(),"e");
-            SetHistogramTitles(histoMesonDaughterPtOrBin[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoMesonDaughterPtOrBin[i]->Sumw2();
+            histoMesonDaughterPtOrBin[i]->Scale(1/(histoMesonDaughterPtYCorr[i]->GetYaxis()->GetBinWidth(1)));
+            histoMesonDaughterPtOrBin[i]->Scale(1/(histoMesonDaughterPtYCorr[i]->GetXaxis()->GetBinWidth(1)));
+            histoMesonDaughterPtOrBin[i]->Scale(1/deltaPtGen);
+            histoMesonDaughterPtOrBin[i]->Scale(1/deltaRapGen);
+            histoMesonDaughterPtOrBin[i]->Scale(1/deltaRap);
+            histoMesonDaughterPtOrBin[i]->Scale(1/deltaPhi);
             histoMesonDaughterPtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
+            SetHistogramTitles(histoMesonDaughterPtOrBin[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             
-            // project y distributions (from corrected pt-y histograms)
+            // project y distributions (from corrected pt-y histograms, if doRapidityCorrection = true, otherwise from uncorrected one)
             histoMesonDaughterYOrBin[i]                         = (TH1F*)histoMesonDaughterPtYCorr[i]->ProjectionY(Form("%s_From_%s_Y_OrBin",fAnalyzedMeson.Data(),motherParticles[i].Data()),1,histoMesonDaughterPtY[i]->GetNbinsX(),"e");
-            SetHistogramTitles(histoMesonDaughterYOrBin[i],"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoMesonDaughterYOrBin[i]->Sumw2();
+            histoMesonDaughterYOrBin[i]->Scale(1/(histoMesonDaughterPtYCorr[i]->GetXaxis()->GetBinWidth(1)));
+            histoMesonDaughterYOrBin[i]->Scale(1/(histoMesonDaughterPtYCorr[i]->GetYaxis()->GetBinWidth(1)));
+            histoMesonDaughterYOrBin[i]->Scale(1/deltaPtGen);
+            histoMesonDaughterYOrBin[i]->Scale(1/deltaRapGen);
+            histoMesonDaughterYOrBin[i]->Scale(1/deltaPhi);
+            SetHistogramTitles(histoMesonDaughterYOrBin[i],"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
         } else {
             histoMesonDaughterPtOrBin[i]                        = NULL;
             histoMesonDaughterYOrBin[i]                         = NULL;
@@ -474,21 +487,36 @@ void PrepareSecondaries(    TString     meson                       = "",
         // project phi distributions
         if (histoMesonDaughterPtPhi[i]) {
             histoMesonDaughterPhiOrBin[i]                       = (TH1F*)histoMesonDaughterPtPhi[i]->ProjectionY(Form("%s_From_%s_Phi_OrBin",fAnalyzedMeson.Data(),motherParticles[i].Data()),1,histoMesonDaughterPtPhi[i]->GetNbinsX(),"e");
-            SetHistogramTitles(histoMesonDaughterPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoMesonDaughterPhiOrBin[i]->Sumw2();
+            histoMesonDaughterPhiOrBin[i]->Scale(1/(histoMesonDaughterPtPhi[i]->GetXaxis()->GetBinWidth(1)));
+            histoMesonDaughterPhiOrBin[i]->Scale(1/(histoMesonDaughterPtPhi[i]->GetYaxis()->GetBinWidth(1)));
+            histoMesonDaughterPhiOrBin[i]->Scale(1/deltaPtGen);
+            histoMesonDaughterPhiOrBin[i]->Scale(1/deltaRapGen);
+            histoMesonDaughterPhiOrBin[i]->Scale(1/deltaPhi);
+            SetHistogramTitles(histoMesonDaughterPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
         } else
             histoMesonDaughterPhiOrBin[i]                       = NULL;
         
-        // project pt and y distributions
         if (histoMesonMotherPtY[i]) {
+            // project pt distributions
             histoMesonMotherPtOrBin[i]                          = (TH1F*)histoMesonMotherPtY[i]->ProjectionX(Form("%s_Pt_OrBin",motherParticles[i].Data()),1,histoMesonMotherPtY[i]->GetNbinsY(),"e");
-            SetHistogramTitles(histoMesonMotherPtOrBin[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoMesonMotherPtOrBin[i]->Sumw2();
+            histoMesonMotherPtOrBin[i]->Scale(1/(histoMesonMotherPtY[i]->GetYaxis()->GetBinWidth(1)));
+            histoMesonMotherPtOrBin[i]->Scale(1/(histoMesonMotherPtY[i]->GetXaxis()->GetBinWidth(1)));
+            histoMesonMotherPtOrBin[i]->Scale(1/deltaPtGen);
+            histoMesonMotherPtOrBin[i]->Scale(1/deltaRapGen);
+            histoMesonMotherPtOrBin[i]->Scale(1/deltaRap);
             histoMesonMotherPtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
-            histoMesonMotherPtOrBin[i]->Scale(deltaPhi);
+            SetHistogramTitles(histoMesonMotherPtOrBin[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
+
+            // project y distributions
             histoMesonMotherYOrBin[i]                           = (TH1F*)histoMesonMotherPtY[i]->ProjectionY(Form("%s_Y_OrBin",motherParticles[i].Data()),1,histoMesonMotherPtY[i]->GetNbinsX(),"e");
-            SetHistogramTitles(histoMesonMotherYOrBin[i],"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoMesonMotherYOrBin[i]->Sumw2();
+            histoMesonMotherYOrBin[i]->Scale(1/(histoMesonMotherPtY[i]->GetXaxis()->GetBinWidth(1)));
+            histoMesonMotherYOrBin[i]->Scale(1/(histoMesonMotherPtY[i]->GetYaxis()->GetBinWidth(1)));
+            histoMesonMotherYOrBin[i]->Scale(1/deltaPtGen);
+            histoMesonMotherYOrBin[i]->Scale(1/deltaRapGen);
+            SetHistogramTitles(histoMesonMotherYOrBin[i],"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
         } else {
             histoMesonMotherPtOrBin[i]                          = NULL;
             histoMesonMotherYOrBin[i]                           = NULL;
@@ -497,8 +525,12 @@ void PrepareSecondaries(    TString     meson                       = "",
         // project phi distributions
         if (histoMesonMotherPtPhi[i]) {
             histoMesonMotherPhiOrBin[i]                         = (TH1F*)histoMesonMotherPtPhi[i]->ProjectionY(Form("%s_Phi_OrBin",motherParticles[i].Data()),1,histoMesonMotherPtPhi[i]->GetNbinsX(),"e");
-            SetHistogramTitles(histoMesonMotherPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             histoMesonMotherPhiOrBin[i]->Sumw2();
+            histoMesonMotherPhiOrBin[i]->Scale(1/(histoMesonMotherPtPhi[i]->GetXaxis()->GetBinWidth(1)));
+            histoMesonMotherPhiOrBin[i]->Scale(1/(histoMesonMotherPtPhi[i]->GetYaxis()->GetBinWidth(1)));
+            histoMesonMotherPhiOrBin[i]->Scale(1/deltaPtGen);
+            histoMesonMotherPhiOrBin[i]->Scale(1/deltaRapGen);
+            SetHistogramTitles(histoMesonMotherPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
         } else
             histoMesonMotherPhiOrBin[i]                         = NULL;
     }
@@ -516,16 +548,27 @@ void PrepareSecondaries(    TString     meson                       = "",
         if (doSecondaryGamma) {
             
             if (histoGammaFromXFromMotherPtYCorr[i]) {
-                // project pt distributions (from corrected pt-y histograms)
+                // project pt distributions (from corrected pt-y histograms, if doRapidityCorrection = true, otherwise from uncorrected one)
                 histoGammaFromXFromMotherPtOrBin[i]             = (TH1F*)histoGammaFromXFromMotherPtYCorr[i]->ProjectionX(Form("Gamma_From_X_From_%s_Pt_OrBin",motherParticles[i].Data()),1,histoGammaFromXFromMotherPtY[i]->GetNbinsY(),"e");
-                SetHistogramTitles(histoGammaFromXFromMotherPtOrBin[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
                 histoGammaFromXFromMotherPtOrBin[i]->Sumw2();
+                histoGammaFromXFromMotherPtOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtYCorr[i]->GetYaxis()->GetBinWidth(1)));
+                histoGammaFromXFromMotherPtOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtYCorr[i]->GetXaxis()->GetBinWidth(1)));
+                histoGammaFromXFromMotherPtOrBin[i]->Scale(1/deltaPtGen);
+                histoGammaFromXFromMotherPtOrBin[i]->Scale(1/deltaRapGen);
+                histoGammaFromXFromMotherPtOrBin[i]->Scale(1/deltaRap);
+                histoGammaFromXFromMotherPtOrBin[i]->Scale(1/deltaPhi);
                 histoGammaFromXFromMotherPtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
+                SetHistogramTitles(histoGammaFromXFromMotherPtOrBin[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
                 
-                // project y distributions (from corrected pt-y histograms)
+                // project y distributions (from corrected pt-y histograms, if doRapidityCorrection = true, otherwise from uncorrected one)
                 histoGammaFromXFromMotherYOrBin[i]              = (TH1F*)histoGammaFromXFromMotherPtYCorr[i]->ProjectionY(Form("Gamma_From_X_From_%s_Y_OrBin",motherParticles[i].Data()),1,histoGammaFromXFromMotherPtY[i]->GetNbinsX(),"e");
-                SetHistogramTitles(histoGammaFromXFromMotherYOrBin[i],"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
                 histoGammaFromXFromMotherYOrBin[i]->Sumw2();
+                histoGammaFromXFromMotherYOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtYCorr[i]->GetXaxis()->GetBinWidth(1)));
+                histoGammaFromXFromMotherYOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtYCorr[i]->GetYaxis()->GetBinWidth(1)));
+                histoGammaFromXFromMotherYOrBin[i]->Scale(1/deltaPtGen);
+                histoGammaFromXFromMotherYOrBin[i]->Scale(1/deltaRapGen);
+                histoGammaFromXFromMotherYOrBin[i]->Scale(1/deltaPhi);
+                SetHistogramTitles(histoGammaFromXFromMotherYOrBin[i],"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             } else {
                 histoGammaFromXFromMotherPtOrBin[i]             = NULL;
                 histoGammaFromXFromMotherYOrBin[i]              = NULL;
@@ -534,8 +577,13 @@ void PrepareSecondaries(    TString     meson                       = "",
             // project phi distributions
             if (histoGammaFromXFromMotherPtPhi[i]) {
                 histoGammaFromXFromMotherPhiOrBin[i]            = (TH1F*)histoGammaFromXFromMotherPtPhi[i]->ProjectionY(Form("Gamma_From_X_From_%s_Phi_OrBin",motherParticles[i].Data()),1,histoGammaFromXFromMotherPtPhi[i]->GetNbinsX(),"e");
-                SetHistogramTitles(histoGammaFromXFromMotherPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
                 histoGammaFromXFromMotherPhiOrBin[i]->Sumw2();
+                histoGammaFromXFromMotherPhiOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtPhi[i]->GetXaxis()->GetBinWidth(1)));
+                histoGammaFromXFromMotherPhiOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtPhi[i]->GetYaxis()->GetBinWidth(1)));
+                histoGammaFromXFromMotherPhiOrBin[i]->Scale(1/deltaPtGen);
+                histoGammaFromXFromMotherPhiOrBin[i]->Scale(1/deltaRapGen);
+                histoGammaFromXFromMotherPhiOrBin[i]->Scale(1/deltaPhi);
+                SetHistogramTitles(histoGammaFromXFromMotherPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             } else {
                 histoGammaFromXFromMotherPhiOrBin[i]            = NULL;
             }
@@ -957,26 +1005,31 @@ TH1D* CalculateRatioToTF1(TH1D* hist, TF1* func) {
     if (!hist) return NULL;
     
     TH1D* resultHist            = (TH1D*)hist->Clone(Form("%s_to_%s", hist->GetName(), func->GetName()));
-    
+
+    Double_t tempValHist        = 0.;
+    Double_t tempValFunc        = 0.;
+
     Double_t tempVal            = 0.;
     Double_t tempErr            = 0.;
-    
+
     for (Int_t i=1; i<hist->GetNbinsX()+1; i++) {
         if (hist->GetBinContent(i)) {
-            
-            tempVal             = func->Integral(hist->GetXaxis()->GetBinLowEdge(i), hist->GetXaxis()->GetBinUpEdge(i));
-            tempVal             = tempVal/(hist->GetBinContent(i)*hist->GetBinWidth(i));
+
+            tempValHist         = hist->GetBinContent(i)*hist->GetBinWidth(i);
+            tempValFunc         = func->Integral(hist->GetXaxis()->GetBinLowEdge(i), hist->GetXaxis()->GetBinUpEdge(i));
+
+            tempVal             = tempValHist/tempValFunc;
             tempErr             = tempVal*hist->GetBinError(i)/hist->GetBinContent(i);
-            
+
             resultHist->SetBinContent(  i, tempVal);
             resultHist->SetBinError(    i, tempErr);
-            
+
         } else {
             resultHist->SetBinContent(  i, 0);
             resultHist->SetBinError(    i, 0);
         }
     }
-    
+
     return resultHist;
 }
 
