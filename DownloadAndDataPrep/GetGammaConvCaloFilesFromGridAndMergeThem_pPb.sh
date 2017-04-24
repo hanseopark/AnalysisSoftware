@@ -175,23 +175,33 @@ fi
 # LHC13b2_efix_p4MC="810";
 # LHC13e7MC="806";
 
-TRAINDIR=Legotrain-vAN20170411-dirGamma
-LHC13bData="593"; 
-LHC13cData="595"; 
-# LHC13dData="573"; 
-# LHC13eData="574"; 
-# LHC13fData="575"; 
+# TRAINDIR=Legotrain-vAN20170411-dirGamma
+# LHC13bData="593"; 
+# LHC13cData="595"; 
+# # LHC13dData="573"; 
+# # LHC13eData="574"; 
+# # LHC13fData="575"; 
+# 
+# # LHC13b2_efix_p1MC="889"; 
+# # LHC13b2_efix_p2MC="890"; 
+# # LHC13b2_efix_p3MC="891"; 
+# # LHC13b2_efix_p4MC="892";
+# # LHC13e7MC="893";
+# LHC13b2_efix_p1MC="894"; 
+# LHC13b2_efix_p2MC="895"; 
+# LHC13b2_efix_p3MC="896"; 
+# LHC13b2_efix_p4MC="897";
+# LHC13e7MC="898";
 
-# LHC13b2_efix_p1MC="889"; 
-# LHC13b2_efix_p2MC="890"; 
-# LHC13b2_efix_p3MC="891"; 
-# LHC13b2_efix_p4MC="892";
-# LHC13e7MC="893";
-LHC13b2_efix_p1MC="894"; 
-LHC13b2_efix_p2MC="895"; 
-LHC13b2_efix_p3MC="896"; 
-LHC13b2_efix_p4MC="897";
-LHC13e7MC="898";
+TRAINDIR=Legotrain-vAN20170417-Weighting
+LHC13bData="599"; #pass 3 
+LHC13cData="601"; #pass 2
+LHC13b2_efix_p1MC="904"; 
+LHC13b2_efix_p2MC="905"; 
+LHC13b2_efix_p3MC="906"; 
+LHC13b2_efix_p4MC="907";
+LHC13e7MC="908";
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 

@@ -10,7 +10,7 @@
 # This script has to be run with "bash"
 
 # switches to enable/disable certain procedures
-DOWNLOADON=0
+DOWNLOADON=1
 MERGEON=1
 SINGLERUN=0
 SEPARATEON=0
@@ -241,7 +241,7 @@ fi
 # TRAINDIR=Legotrain-vAN20170318-testFixAddSig
 # LHC13e7MC="847";
 
-TRAINDIR=Legotrain-vAN20170329-MCfix
+# TRAINDIR=Legotrain-vAN20170329-MCfix
 # LHC13b2_efix_p1MC="875"; 
 # LHC13b2_efix_p2MC="876"; 
 # LHC13b2_efix_p3MC="877"; 
@@ -251,13 +251,21 @@ TRAINDIR=Legotrain-vAN20170329-MCfix
 # LHC13b2_efix_p2MC="881"; 
 # LHC13b2_efix_p3MC="882"; 
 # LHC13b2_efix_p4MC="883";
-# LHC13e7MC="884";
-LHC13b2_efix_p1MC="885"; 
-LHC13b2_efix_p2MC="886"; 
-LHC13b2_efix_p3MC="887"; 
-LHC13b2_efix_p4MC="888";
-LHC13e7MC="874";
+# # LHC13e7MC="884";
+# LHC13b2_efix_p1MC="885"; 
+# LHC13b2_efix_p2MC="886"; 
+# LHC13b2_efix_p3MC="887"; 
+# LHC13b2_efix_p4MC="888";
+# LHC13e7MC="874";
 
+TRAINDIR=Legotrain-vAN20170417-Weighting
+LHC13bData="599"; #pass 3 
+LHC13cData="601"; #pass 2
+LHC13b2_efix_p1MC="904"; 
+LHC13b2_efix_p2MC="905"; 
+LHC13b2_efix_p3MC="906"; 
+LHC13b2_efix_p4MC="907";
+LHC13e7MC="908";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
