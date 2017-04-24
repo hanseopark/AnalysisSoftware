@@ -98,14 +98,16 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TString fileNameEtaToPi0                    = "ExternalInput/WorldDataPi0Eta.root";
     TString fileNamePOWHEG8TeV                  = "ExternalInput/Theory/POWHEG_Pythia/powhegDijetShoweredWithPythia_pi0_eta_invariantXsec_NNPDF23LOas0130.root";
 
+//    TString fileName2760GeV                     = "ExternalInput/CombinedResultsPaperPP2760GeV_2016_12_15_FrediV2Clusterizer.root";
+
     TString fileNamePCMMB                       = "ExternalInput/PCM/8TeV/8TeV_data_PCMResults_InvMassBins.root";
 
     TString fileNamePHOSMB                      = "ExternalInput/PHOS/8TeV/data_PHOS-MBResultsFullCorrection_PP_NoBinShifting.root";
     TString fileNamePHOSPHOS                    = "ExternalInput/PHOS/8TeV/data_PHOS-PHOSResultsFullCorrection_PP_NoBinShifting.root";
     TString fileNamePHOSprelim                  = "ExternalInput/PHOS/8TeV/preliminary/pi0_8TeV_PHOS.root";
 //    TString fileNamePCMEta                      = "FinalResults/data_PCMResultsFullCorrection_PP_NoBinShifting_usedTosvnEtapaper.root";
-    TString fileNameChargedPionPP               = "ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_20_May_2015.root";
-    TString fileNameChargedHadronPP             = "ExternalInput/UnidentifiedCharged/ChargedHadrinSpectraPP_20_May_2015.root";
+    //TString fileNameChargedPionPP               = "ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_20_May_2015.root";
+    //TString fileNameChargedHadronPP             = "ExternalInput/UnidentifiedCharged/ChargedHadrinSpectraPP_20_May_2015.root";
     TString outputDir                           = Form("%s/%s/CombineMesonMeasurements8TeV%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
     if(plotDate) outputDir.Append(dateForOutput);
 
@@ -119,8 +121,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     gSystem->Exec(Form("cp %s %s/InputEMCALLow.root", fileNameEMCALLow.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/InputEMCALmerged.root", fileNameEMCALmerged.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/Theory.root", fileNameTheory.Data(), outputDir.Data()));
-    gSystem->Exec(Form("cp %s %s/ChargedPionsPP.root", fileNameChargedPionPP.Data(), outputDir.Data()));
-    gSystem->Exec(Form("cp %s %s/ChargedHadronsPP.root", fileNameChargedHadronPP.Data(), outputDir.Data()));
+    //gSystem->Exec(Form("cp %s %s/ChargedPionsPP.root", fileNameChargedPionPP.Data(), outputDir.Data()));
+    //gSystem->Exec(Form("cp %s %s/ChargedHadronsPP.root", fileNameChargedHadronPP.Data(), outputDir.Data()));
 
     fstream fLog;
     fLog.open(Form("%s/CombineMeson8TeV.log",outputDir.Data()), ios::out);
@@ -1089,6 +1091,14 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         TGraphAsymmErrors* graphNLOEtaToPi0                = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcEtaOverPi08000GeV_AESSS_DSS07");
         while (graphNLOEtaToPi0->GetX()[graphNLOEtaToPi0->GetN()-1] > 27. ) graphNLOEtaToPi0->RemovePoint(graphNLOEtaToPi0->GetN()-1);
+
+
+//     TFile* file2760GeV                              = new TFile(fileName2760GeV.Data());
+//     TF1* fit2760GeVPi0Tsallis                       = (TF1*) file2760GeV->Get("Pi02.76TeV/TsallisFitPi0");
+//     fit2760GeVPi0Tsallis->SetName("fit2760GeVPi0Tsallis");
+
+//     TH1F* histoPythia8InvXSection2760GeV                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi02760GeV");
+//     histoPythia8InvXSection2760GeV->GetXaxis()->SetRangeUser(0.3,35);
 
     // *******************************************************************************************************
     // ************************** Combination of different pi0 measurements **********************************
@@ -5833,7 +5843,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     legendXsectionPaperEtaToPi03TCM->AddEntry(graphCombPi0InvXSectionSysA,"ALICE pp, #sqrt{#it{s}} = 8 TeV","pf");
     legendXsectionPaperEtaToPi03TCM->AddEntry(graphEtaToPi07000GeV,"ALICE pp, #sqrt{#it{s}} = 7 TeV","p");
     legendXsectionPaperEtaToPi03TCM->AddEntry(graphEtaToPi02760GeV,"ALICE pp, #sqrt{#it{s}} = 2.76 TeV","p");
-    legendXsectionPaperEtaToPi03TCM->AddEntry(eta2pi0MtScaled,"ALICE pp m_{T}-scaled using TCM, #sqrt{#it{s}} = 8 TeV","l");
+    legendXsectionPaperEtaToPi03TCM->AddEntry(eta2pi0MtScaledTCM,"ALICE pp m_{T}-scaled, #sqrt{#it{s}} = 8 TeV","l");
     legendXsectionPaperEtaToPi03TCM->Draw();
 
     legendXsectionPaperEtaToPi04->Draw();
@@ -6354,6 +6364,56 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     canvasCompYieldPPInd->Update();
     canvasCompYieldPPInd->Print(Form("%s/ComparisonChargedHadronToNeutralPionsWithMerged_PP8TeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
+
+    //*************************************************************************************************************
+    //*************************************************************************************************************
+
+//    canvasEtatoPi0combo->cd();
+//    canvasEtatoPi0combo->SetLogx();
+//    canvasEtatoPi0combo->SetLogy();
+
+//    TH2F * histoRatioEnergies;
+//    histoRatioEnergies               = new TH2F("histoRatioEnergies","histoRatioEnergies",1000,0.05,35.,1000,0.01,1.    );
+//    SetStyleHistoTH2ForGraphs(histoRatioEnergies, "#it{p}_{T} (GeV/#it{c})","ratio", 0.85*textsizeLabelsEtaToPi0, textsizeLabelsEtaToPi0,
+//                              0.85*textsizeLabelsEtaToPi0,textsizeLabelsEtaToPi0, 0.9, 0.65, 510, 510);
+//    histoRatioEnergies->GetXaxis()->SetMoreLogLabels();
+//    histoRatioEnergies->GetXaxis()->SetNoExponent(kTRUE);
+//    histoRatioEnergies->Draw("copy");
+
+//    // plotting data
+//    TH1F *ratioOfEnergies = (TH1F*)histoPythia8InvXSection->Clone("ratioOfEnergies");
+//    ratioOfEnergies->SetTitle("");
+//    ratioOfEnergies->SetLineColor(kBlue+2);
+//    ratioOfEnergies->SetLineWidth(2.);
+//    ratioOfEnergies->GetYaxis()->SetRangeUser(0.01,1.);
+
+//    TH1F *ratioOfEnergiesToPythia = (TH1F*)histoPythia8InvXSection->Clone("ratioOfEnergiesToPythia");
+//    ratioOfEnergiesToPythia->SetTitle("");
+//    ratioOfEnergiesToPythia->SetLineColor(kRed+2);
+//    ratioOfEnergiesToPythia->SetLineWidth(2.);
+//    ratioOfEnergiesToPythia->GetYaxis()->SetRangeUser(0.01,1.);
+
+//    for (Int_t i=1; i<=ratioOfEnergies->GetNbinsX(); i++) {
+//      Double_t temp = fit2760GeVPi0Tsallis->Eval(ratioOfEnergies->GetBinCenter(i))/fitInvXSectionPi0->Eval(ratioOfEnergies->GetBinCenter(i));
+//      ratioOfEnergies->SetBinContent(i,temp);
+//      ratioOfEnergies->SetBinError(i,0.);
+//    }
+
+//    for (Int_t i=1; i<=ratioOfEnergiesToPythia->GetNbinsX(); i++) {
+//      Double_t temp = histoPythia8InvXSection2760GeV->GetBinContent(i)/histoPythia8InvXSection->GetBinContent(i);
+//      ratioOfEnergiesToPythia->SetBinContent(i,temp);
+//      ratioOfEnergiesToPythia->SetBinError(i,0.);
+//    }
+
+//    ratioOfEnergies->DrawCopy();
+//    ratioOfEnergiesToPythia->DrawCopy("same");
+
+//    DrawGammaLines(0.33, 32. , 1., 1.,0.5, kGray+2);
+
+//    histoRatioEnergies->Draw("axis,same");
+
+//    canvasEtatoPi0combo->Update();
+//    canvasEtatoPi0combo->SaveAs(Form("%s/diffEnergy_ratio.%s",outputDir.Data(), suffix.Data()));
 
     // **********************************************************************************************************************
     // **************************Plot example invariant mass bins ***********************************************************
