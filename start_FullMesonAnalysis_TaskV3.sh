@@ -48,7 +48,7 @@ BinsPtGamma=0
 function GiveBinning5TeV()
 {
      echo "how many p_t bins do you want to use for the pi0? 19(10.0 GeV), 20(12.0 GeV), 21(15.0 GeV),";
-
+     
      read answer
          if [ $answer = 19 ]; then
          echo "19 bins --> max p_t = 10.0 gev ...";
@@ -72,15 +72,15 @@ function GiveBinning5TeV()
      if [ $answer = 7 ]; then
          echo "7 bins --> max p_t = 6.0 gev ...";
          correctEta=1
-         BinsPtEta= 7
+         BinGisPtEta= 7
      elif [ $answer = 8 ]; then
          echo "8 bins --> max p_t = 8.0 gev ...";
          correctEta=1
-         BinsPtEta= 8
+         BinsPtEta=8
      elif [ $answer = 9 ]; then
          echo "9 bins --> max p_t = 9.0 gev ...";
          correctEta=1
-         BinsPtEta= 9
+         BinsPtEta=9
      else
         echo "eta binning was not set correctly. please try again.";
         correctEta=0
@@ -1997,6 +1997,21 @@ do
         else
             echo "Command not found. Please try again.";
         fi
+            if [ $ONLYRESULTS -eq 0 ]; then
+                if [ $ONLYCORRECTION -eq 0 ];  then
+                    echo "Do you want to use THnSparse for the background? Yes/No?";
+                    read answer
+                    if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                        echo "Will use THnSparse for the background ...";
+                        useTHnSparse=1
+                    elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                        echo "Will NOT use THnSparse for the background ...";
+                        useTHnSparse=0
+                    else
+                        echo "Command not found. Please try again.";
+                    fi
+                fi
+            fi
     
     elif [ $energy = "7TeV" ] ; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
