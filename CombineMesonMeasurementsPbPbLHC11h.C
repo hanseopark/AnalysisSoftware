@@ -447,6 +447,8 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "",
     TDirectoryFile* directoryNeutralMesonPP7TeV = (TDirectoryFile*)fileDataALICE->Get("NeutralMesons_PP_7TeV");
         graphCombEtaToPi0Ratiopp7TeVNoXErrors = (TGraphAsymmErrors*)directoryNeutralMesonPP7TeV->Get("graphCombEtaToPi0Ratiopp7TeVNoXErrors");
         graphCombEtaToPi0RatioSysErrpp7TeV = (TGraphAsymmErrors*)directoryNeutralMesonPP7TeV->Get("graphCombEtaToPi0RatioSysErrpp7TeV");
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0RatioSysErrpp7TeV, markerStylepp, markerSizepp, kBlack, kBlack, 1, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Ratiopp7TeVNoXErrors, markerStylepp, markerSizepp, kBlack, kBlack, 1, kTRUE);
         
     TDirectoryFile* directoryNeutralMesonPP = (TDirectoryFile*)fileDataALICE->Get("NeutralMesons_PP_2.76TeV");
         //already scaled by 1./xSection2760GeVppINEL
@@ -3186,7 +3188,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "",
             graphInvSectionCombSysPi02760GeVPlot->Draw("E2same");
 
             legendSpectraPP->SetHeader(collisionSystemPP2760GeV.Data());
-            legendSpectraPP->AddEntry(graphInvSectionCombSysPi02760GeVPlot,"arXiv:XXXX.XXXX","pf");
+            legendSpectraPP->AddEntry(graphInvSectionCombSysPi02760GeVPlot,"arXiv: 1702.00917","pf");
 
         } else if(meson.CompareTo("Eta")==0){
 
@@ -3194,7 +3196,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "",
             graphInvSectionCombSysEta2760GeVPlot->Draw("E2same");
 
             legendSpectraPP->SetHeader(collisionSystemPP2760GeV.Data());
-            legendSpectraPP->AddEntry(graphInvSectionCombSysEta2760GeVPlot,"arXiv:XXXX.XXXX","pf");
+            legendSpectraPP->AddEntry(graphInvSectionCombSysEta2760GeVPlot,"arXiv: 1702.00917","pf");
 
         }
         legendSpectraPP->Draw();
@@ -6752,7 +6754,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "",
             legendEtatoPi0combo_withPP2760GeV->SetTextSize(0.037);
             legendEtatoPi0combo_withPP2760GeV->SetMargin(0.17);
             legendEtatoPi0combo_withPP2760GeV->SetHeader(collisionSystemPP2760GeV.Data());
-            legendEtatoPi0combo_withPP2760GeV->AddEntry(graphRatioEtaToPi0Comb2760GeVSysErr,"arXiv: XXX","fp");
+            legendEtatoPi0combo_withPP2760GeV->AddEntry(graphRatioEtaToPi0Comb2760GeVSysErr,"arXiv: 1702.00917","fp");
             legendEtatoPi0combo_withPP2760GeV->AddEntry(etapi0Ratio2760GeV,"#eta from #it{m}_{T} scaled #pi^{0}","l");
             legendEtatoPi0combo_withPP2760GeV->Draw();
 
@@ -6800,7 +6802,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "",
             legendEtatoPi0combo_withPP->SetMargin(0.17);
             legendEtatoPi0combo_withPP->SetHeader(collisionSystemPP7TeV.Data());
             legendEtatoPi0combo_withPP->AddEntry(graphCombEtaToPi0RatioSysErrpp7TeV,"PLB 717 (2012) 162","fp");//"Phys. Lett. B 717 (2012) 162-172","fp");
-            legendEtatoPi0combo_withPP->AddEntry(etapi0RatioOld7TeV,"#eta from #it{m}_{T} scaled #pi^{0}","l");
+//             legendEtatoPi0combo_withPP->AddEntry(etapi0RatioOld7TeV,"#eta from #it{m}_{T} scaled #pi^{0}","l");
             legendEtatoPi0combo_withPP->Draw();
 
         canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_mtscaled_DataOnlyWithPP7TeV.%s",outputDir.Data(),suffix.Data()));
@@ -6841,7 +6843,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "",
           legendEtatoPi0combo_withPP276GeV->SetTextSize(0.037);
           legendEtatoPi0combo_withPP276GeV->SetMargin(0.17);
           legendEtatoPi0combo_withPP276GeV->SetHeader(collisionSystemPP2760GeV.Data());
-          legendEtatoPi0combo_withPP276GeV->AddEntry(graphRatioEtaToPi0Comb2760GeVSysErr,"arXiv: XXX","fp");
+          legendEtatoPi0combo_withPP276GeV->AddEntry(graphRatioEtaToPi0Comb2760GeVSysErr,"arXiv: 1702.00917","fp");
           legendEtatoPi0combo_withPP276GeV->Draw();
 
       canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_combined_DataOnlyWithPP276GeV.%s",outputDir.Data(),suffix.Data()));
@@ -7114,7 +7116,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "",
           graphRatioEtaToPi0Comb2760GeVStatErr->Draw("p,same");
           graphRatioEtaToPi0Comb2760GeVSysErr->Draw("E2same");
 
-          TLegend* legendChargedRatio2 = new TLegend(0.12,0.7,0.48,0.92);
+          TLegend* legendChargedRatio2 = new TLegend(0.12,0.7,0.48,0.9);
           legendChargedRatio2->SetFillColor(0);
           legendChargedRatio2->SetLineColor(0);
           legendChargedRatio2->SetTextFont(42);
@@ -7127,16 +7129,18 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "",
           legendChargedRatio2->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
           legendChargedRatio2->Draw();
 
-          TLegend* legendEtatoPi0combo_withPP2760GeV = new TLegend(0.55,0.15,0.95,0.3/*26*/);
+          TLegend* legendEtatoPi0combo_withPP2760GeV = GetAndSetLegend(0.55,0.15,2);// new TLegend(0.55,0.15,0.95,0.3/*26*/);
           legendEtatoPi0combo_withPP2760GeV->SetFillColor(0);
           legendEtatoPi0combo_withPP2760GeV->SetLineColor(0);
           legendEtatoPi0combo_withPP2760GeV->SetTextFont(42);
           legendEtatoPi0combo_withPP2760GeV->SetTextSize(0.037);
           legendEtatoPi0combo_withPP2760GeV->SetMargin(0.17);
           legendEtatoPi0combo_withPP2760GeV->SetHeader(collisionSystemPP2760GeV.Data());
-          legendEtatoPi0combo_withPP2760GeV->AddEntry(graphRatioEtaToPi0Comb2760GeVSysErr,"arXiv: XXX","fp");
-          legendEtatoPi0combo_withPP2760GeV->AddEntry(etapi0Ratio2760GeV,"#eta from #it{m}_{T} scaled #pi^{0}","l");
+          legendEtatoPi0combo_withPP2760GeV->AddEntry(graphRatioEtaToPi0Comb2760GeVSysErr,"arXiv: 1702.00917","fp");
+//           legendEtatoPi0combo_withPP2760GeV->AddEntry(etapi0Ratio2760GeV,"#eta from #it{m}_{T} scaled #pi^{0}","l");
           legendEtatoPi0combo_withPP2760GeV->Draw();
+
+          if(thesisPlotting)          thesisLabelHighLeft2->Draw();
 
           graphCombEtatoPi0SysPbPb2760GeV_0010->Draw("E2same");
           graphCombEtatoPi0StatPbPb2760GeV_0010->Draw("p,same");
