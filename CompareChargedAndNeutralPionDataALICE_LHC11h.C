@@ -2397,10 +2397,10 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 		graphRatioLowPtChargedPionsPHOS0010->Draw("E1psame");
 
 		DrawGammaSetMarkerTGraphErr(graphRatioOtherRefChargedPionsPCM0010, 33, markerSizeComparison+0.5, kPink+9 , kPink+9);
-		graphRatioOtherRefChargedPionsPCM0010->Draw("E1psame");
+// 		graphRatioOtherRefChargedPionsPCM0010->Draw("E1psame");
 
 		DrawGammaSetMarkerTGraphErr(graphRatioOtherRefChargedPionsPCM0010LHC11h, 33, markerSizeComparison+0.5, kPink+4,kPink+4);
-		graphRatioOtherRefChargedPionsPCM0010LHC11h->Draw("E1psame");
+// 		graphRatioOtherRefChargedPionsPCM0010LHC11h->Draw("E1psame");
 
 		
 		TLatex *labelPi0CompChargedPionsPbPbLHC11h0010 = new TLatex(0.16,0.92,collisionSystemCent10.Data());
@@ -2524,7 +2524,7 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 
         TLatex *thesisLabel = new TLatex(0.8,0.15,"This thesis");
         SetStyleTLatex( thesisLabel,0.9*textsizeLabels2,4);
-        thesisLabel->Draw();
+//          thesisLabel->Draw();
 
 	
 	histo2DCompCombinedRatioLHC11h2->Draw("axis,same");
@@ -2553,7 +2553,7 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 		DrawGammaLines(0., 15 , 1, 1 ,1,kGray,2); 
         TLatex *thesisLabel2 = new TLatex(0.78,0.15,"This thesis");
         SetStyleTLatex( thesisLabel2,0.9*textsizeLabels2,4);
-        thesisLabel2->Draw();
+//         thesisLabel2->Draw();
 
 	histo2DCompCombinedRatioLHC11h->Draw("axis,same");
 	pad6PartCompChargedIndPionsLHC11h3->Update();
@@ -2565,28 +2565,36 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 
     pad6PartCompChargedIndPionsLHC11h1->cd();
     pad6PartCompChargedIndPionsLHC11h1->SetLogx();
-    histo2DCompCombinedRatioLHC11h2->GetXaxis()->SetRangeUser(0.,15.);
-    histo2DCompCombinedRatioLHC11h2->GetYaxis()->SetRangeUser(0.,2.1);
-    histo2DCompCombinedRatioLHC11h2->DrawCopy();
+	TH2F * histo2DCompEtaCombinedRatioLHC11h2 = new TH2F("histo2DCompEtaCombinedRatioLHC11h2","histo2DCompEtaCombinedRatioLHC11h2",1000,0.3,40.,1000,0.2,4.	);
+	SetStyleHistoTH2ForGraphs(histo2DCompEtaCombinedRatioLHC11h2, "#it{p}_{T} (GeV/#it{c})","#eta/K^{#pm}",0.85*textsizeLabels1, textsizeLabels1,
+								  0.85*textsizeLabels1, textsizeLabels1, 0.8,0.25/(textsizeFac1*margin), 512, 505);
+
+    histo2DCompEtaCombinedRatioLHC11h2->GetXaxis()->SetRangeUser(0.8,15.);
+    histo2DCompEtaCombinedRatioLHC11h2->GetYaxis()->SetRangeUser(0.,2.1);
+    histo2DCompEtaCombinedRatioLHC11h2->DrawCopy();
 
 
-        DrawGammaSetMarkerTGraphErr(graphRatioOtherRefChargedKaonsPCM0010LHC11h, 33, markerSizeComparison+0.5, kPink+4,kPink+4);
+        DrawGammaSetMarkerTGraphErr(graphRatioOtherRefChargedKaonsPCM0010LHC11h, 33, markerSizeComparison+0.5, kRed, kRed);
         graphRatioOtherRefChargedKaonsPCM0010LHC11h->Draw("E1psame");
-
-
-
-        legendPi0CompChargedOnlyPCMPionsPbPb0010->Draw();
+        labelPi0CompChargedPionsPbPbLHC11h0010->Draw();
+		TLegend* legendEtaCompChargedOnlyPCMPionsPbPb0010 = new TLegend(0.15,0.8,0.75,0.9);
+		legendEtaCompChargedOnlyPCMPionsPbPb0010->SetFillColor(0);
+		legendEtaCompChargedOnlyPCMPionsPbPb0010->SetLineColor(0);
+// 		legendEtaCompChargedOnlyPCMPionsPbPb0010->SetNColumns(2);
+		legendEtaCompChargedOnlyPCMPionsPbPb0010->SetTextSize(0.85*textsizeLabels1);
+        legendEtaCompChargedOnlyPCMPionsPbPb0010->AddEntry(graphRatioOtherRefChargedKaonsPCM0010LHC11h,"#eta/K^{#pm}","p");
+        legendEtaCompChargedOnlyPCMPionsPbPb0010->Draw();
         DrawGammaLines(0., 15 , 1, 1 ,1,kGray, 2);
 
-    histo2DCompCombinedRatioLHC11h2->Draw("axis,same");
+    histo2DCompEtaCombinedRatioLHC11h2->Draw("axis,same");
     pad6PartCompChargedIndPionsLHC11h1->Update();
     pad6PartCompChargedIndPionsLHC11h3->cd();
     pad6PartCompChargedIndPionsLHC11h3->SetLogx();
-    histo2DCompCombinedRatioLHC11h->GetXaxis()->SetRangeUser(-0.25,15.);
+    histo2DCompCombinedRatioLHC11h->GetXaxis()->SetRangeUser(0.8,15.);
     histo2DCompCombinedRatioLHC11h->GetYaxis()->SetRangeUser(0.,2.1);
     histo2DCompCombinedRatioLHC11h->DrawCopy();
 
-        DrawGammaSetMarkerTGraphErr(graphRatioOtherRefChargedKaonsPCM2040LHC11h, 33, markerSizeComparison+0.5, kPink+9 , kPink+9);
+        DrawGammaSetMarkerTGraphErr(graphRatioOtherRefChargedKaonsPCM2040LHC11h, 33, markerSizeComparison+0.5, kRed , kRed);
         graphRatioOtherRefChargedKaonsPCM2040LHC11h->Draw("E1psame");
 
         labelPi0CompChargedPionsPbPbLHC11h2040->Draw();
