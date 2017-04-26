@@ -856,7 +856,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                 fMesonFitRange[1]       = 0.27;
             } else if( fEnergyFlag.CompareTo("8TeV") == 0 && ( trigger.CompareTo("52") == 0 )){
                 fMesonFitRange[0]       = 0.03;
-                fMesonFitRange[1]       = 0.27;
+                fMesonFitRange[1]       = 0.25;
                 if (setPi0.CompareTo("Pi0EtaBinning") == 0){
                   fMesonFitRange[1]         = 0.29;
                 }

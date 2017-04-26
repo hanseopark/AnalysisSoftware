@@ -3962,7 +3962,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                 if (fMode == 3 && !fEnergyFlag.CompareTo("8TeV"))
                     mesonAmplitudeMax = mesonAmplitude*150./100.;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
-                  mesonAmplitudeMin = mesonAmplitude*10./100.;
+                  mesonAmplitudeMin = mesonAmplitude*90./100.;
                   mesonAmplitudeMax = mesonAmplitude*600./100.;
                 }
             }
@@ -4163,7 +4163,7 @@ void FitSubtractedPol2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*600./100.;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
-                  mesonAmplitudeMin = mesonAmplitude*10./100.;
+                  mesonAmplitudeMin = mesonAmplitude*90./100.;
                   mesonAmplitudeMax = mesonAmplitude*600./100.;
                 }
             }
@@ -4340,7 +4340,7 @@ void FitSubtractedExp1InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*600./100.;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
-                  mesonAmplitudeMin = mesonAmplitude*10./100.;
+                  mesonAmplitudeMin = mesonAmplitude*90./100.;
                   mesonAmplitudeMax = mesonAmplitude*600./100.;
                 }
             }
@@ -4517,7 +4517,7 @@ void FitSubtractedExp2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*600./100.;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
-                  mesonAmplitudeMin = mesonAmplitude*10./100.;
+                  mesonAmplitudeMin = mesonAmplitude*90./100.;
                   mesonAmplitudeMax = mesonAmplitude*600./100.;
                 }
             }

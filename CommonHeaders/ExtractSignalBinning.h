@@ -360,7 +360,7 @@ Int_t fBinsPi08TeVEMCTrigger1PtRebin[44]        = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
 Int_t fBinsPi08TeVPCMEMCTrigger1PtRebin[43]     = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                     2, 2, 2, 2, 4, 2, 5, 2, 5, 5,
-                                                    16, 5, 10, 5, 16, 5, 5, 5, 10, 16, 5,
+                                                    2, 5, 10, 5, 16, 5, 5, 5, 10, 14, 5,
                                                     8, 2};
     Int_t fBinsPi08TeVPCMEMCTrigger2PtRebin[43]     = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
