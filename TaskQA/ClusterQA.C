@@ -1672,6 +1672,36 @@ void ClusterQA(
                 } else cout << "INFO: Object |fHistClusterdPhidPtAfterQA| could not be found! Skipping Draw..." << endl;
 
             
+                // Pt dependent matching variable dEta
+                if(fHistClusterdEtadPtBeforeQA && fHistClusterdEtadPtAfterQA){
+                    fHistClusterdEtadPtBeforeQA->Add(fHistClusterdEtadPtAfterQA,-1.);
+                    TH1D* fHistClusterdEtadPtAfterQAPt = (TH1D*) fHistClusterdEtadPtBeforeQA->ProjectionY("dEtaVsPtOnPt_unmatched_afterClusterQA",1,fHistClusterdEtadPtAfterQA->GetNbinsX());
+                    GetMinMaxBin(fHistClusterdEtadPtAfterQAPt,minB,maxB);
+                    delete fHistClusterdEtadPtAfterQAPt;
+                    SetYRange(fHistClusterdEtadPtBeforeQA,minB,maxB+5);
+                    SetZMinMaxTH2(fHistClusterdEtadPtBeforeQA,1,fHistClusterdEtadPtBeforeQA->GetNbinsX(),minB,maxB+5);
+                    DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                        fHistClusterdEtadPtBeforeQA,"",
+                                        "#Delta#eta_{cluster - charged tracks (not matched)}","#it{p}_{T} (GeV/#it{c})",1,1,
+                                        0.85,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
+                    SaveCanvasAndWriteHistogram(canvas, fHistClusterdEtadPtBeforeQA, Form("%s/dEtaVsPt_%s__unmatched_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+                } else cout << "INFO: Object |fHistClusterdEtadPtAfterQA| could not be found! Skipping Draw..." << endl;
+                //---------------------------------------------------------------------------------------------------------------
+                // Pt dependent matching variable dPhi
+                if(fHistClusterdPhidPtBeforeQA && fHistClusterdPhidPtAfterQA){
+                    fHistClusterdPhidPtBeforeQA->Add(fHistClusterdPhidPtAfterQA,-1.);
+                    TH1D* fHistClusterdPhidPtAfterQAPt = (TH1D*) fHistClusterdPhidPtBeforeQA->ProjectionY("dPhiVsPtOnPt_unmatched_afterClusterQA",1,fHistClusterdPhidPtAfterQA->GetNbinsX());
+                    GetMinMaxBin(fHistClusterdPhidPtAfterQAPt,minB,maxB);
+                    delete fHistClusterdPhidPtAfterQAPt;
+                    SetYRange(fHistClusterdPhidPtBeforeQA,minB,maxB+5);
+                    SetZMinMaxTH2(fHistClusterdPhidPtBeforeQA,1,fHistClusterdPhidPtBeforeQA->GetNbinsX(),minB,maxB+5);
+                    DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                        fHistClusterdPhidPtBeforeQA,"",
+                                        "#Delta#phi_{cluster - charged tracks (not matched)}","#it{p}_{T} (GeV/#it{c})",1,1,
+                                        0.85,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
+                    SaveCanvasAndWriteHistogram(canvas, fHistClusterdPhidPtBeforeQA, Form("%s/dPhiVsPt_%s_unmatched_afterClusterQA.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+                } else cout << "INFO: Object |fHistClusterdPhidPtAfterQA| could not be found! Skipping Draw..." << endl;
+
                 // separating the matching parameters according to their charges
                 for(Int_t iCharge=0;iCharge<2;iCharge++){
                     //---------------------------------------------------------------------------------------------------------------
