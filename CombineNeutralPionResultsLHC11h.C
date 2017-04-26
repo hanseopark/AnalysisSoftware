@@ -103,7 +103,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
     TString nameFileChargedPionKaonSpectra = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/RAA_Kaon_08052014.root";
     TString nameFileChargedPionKaonRAA = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/RAA_Pion_08052014.root";
     TString nameFileOtherExp = "ExternalInputPbPb/OtherExperiments/DataCompilationFromOtherEnergiesPbPbWithEta.root";
-    TString nameFileCocktailInput = "/home/admin1/leardini/newSoftware/cocktail_input/CocktailInputPbPb_Param_PbPb_2.76TeV.root";
+    TString nameFileCocktailInput = "/home/admin1/leardini/newSoftware/cocktail_input/CocktailInputPbPb_Param_PbPb_2.76TeV_20April2017.root";
 
 	TString outputDir = Form("%s/%s/NeutralMesonsPCMResults",suffix.Data(),dateForOutput.Data());
 	gSystem->Exec("mkdir -p "+outputDir);
@@ -1183,7 +1183,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
     canvasEfficiency->SaveAs(Form("%s/Pi0WithSecTrueEff_0010.%s",outputDir.Data(),suffix.Data()));     
     
     canvasEfficiency->cd();
-        histo2DEffPi0->Draw("copy");
+        histo2DEffPi0WithSec->Draw("copy");
     
         DrawGammaSetMarker(histoPi0TrueEffiPtPbPbLHC11h2050, 20, 1.7, kBlack, kBlack);   
         histoPi0TrueEffiPtPbPbLHC11h2050->DrawCopy("same,e1,p");
@@ -2196,15 +2196,27 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         TF1* paramEtaToPi0RatioPCM0010 = (TF1*)folder0010->FindObject("EtaToNPionPCMStat_Fit");
         TF1* paramCombEtaToPi0RatioPCM0010 = (TF1*)folder0010->FindObject("EtaToNPionCombStat_Fit");
 
-        TF1 *mTScaledEtaFromPi0PbPb2760GeV = (TF1*)MtScaledParam(paramPi0PCM0010, 221, 0.476);
-        TF1* etapi0RatioFromMtScalingPbPb2760GeV  = DivideTF1(mTScaledEtaFromPi0PbPb2760GeV, paramPi0PCM0010, "etapi0RatioFromMtScalingPbPb2760GeV");
-        TF1* etapi0RatioFromParamPbPb2760GeV  = DivideTF1(paramEtaPCM0010, paramPi0PCM0010, "etapi0RatioFromParamPbPb2760GeV");
+        TF1 *mTScaledEtaFromPi0PbPb2760GeV_0010 = (TF1*)MtScaledParam(paramPi0PCM0010, 221, 0.476);
+        TF1* etapi0RatioFromMtScalingPbPb2760GeV_0010  = DivideTF1(mTScaledEtaFromPi0PbPb2760GeV_0010, paramPi0PCM0010, "etapi0RatioFromMtScalingPbPb2760GeV_0010");
+        TF1* etapi0RatioFromParamPbPb2760GeV_0010  = DivideTF1(paramEtaPCM0010, paramPi0PCM0010, "etapi0RatioFromParamPbPb2760GeV_0010");
         
-        TH1D* histoetatopi0ParamToRatio = (TH1D*)paramEtaToPi0RatioPCM0010->GetHistogram();
-        TH1D* histoetatopi0FromMtScaling = (TH1D*)etapi0RatioFromMtScalingPbPb2760GeV->GetHistogram();
-        TH1D* histoetatopi0FromRatioParams = (TH1D*)etapi0RatioFromParamPbPb2760GeV->GetHistogram();
+        TH1D* histoetatopi0ParamToRatio_0010 = (TH1D*)paramEtaToPi0RatioPCM0010->GetHistogram();
+        TH1D* histoetatopi0FromMtScaling_0010 = (TH1D*)etapi0RatioFromMtScalingPbPb2760GeV_0010->GetHistogram();
+        TH1D* histoetatopi0FromRatioParams_0010 = (TH1D*)etapi0RatioFromParamPbPb2760GeV_0010->GetHistogram();
         
     TList *folder2050 = (TList*)fileCocktail->Get("PbPb_2.76TeV_2050");
+        TF1* paramPi0PCM2050 = (TF1*)folder2050->FindObject("NPionPCMStat_Fit");
+        TF1* paramEtaPCM2050 = (TF1*)folder2050->FindObject("EtaPCMStat_Fit");
+        TF1* paramEtaToPi0RatioPCM2050 = (TF1*)folder2050->FindObject("EtaToNPionPCMStat_Fit");
+        TF1* paramCombEtaToPi0RatioPCM2050 = (TF1*)folder2050->FindObject("EtaToNPionCombStat_Fit");
+
+        TF1 *mTScaledEtaFromPi0PbPb2760GeV_2050 = (TF1*)MtScaledParam(paramPi0PCM2050, 221, 0.476);
+        TF1* etapi0RatioFromMtScalingPbPb2760GeV_2050  = DivideTF1(mTScaledEtaFromPi0PbPb2760GeV_2050, paramPi0PCM2050, "etapi0RatioFromMtScalingPbPb2760GeV_2050");
+        TF1* etapi0RatioFromParamPbPb2760GeV_2050  = DivideTF1(paramEtaPCM2050, paramPi0PCM2050, "etapi0RatioFromParamPbPb2760GeV_2050");
+        
+        TH1D* histoetatopi0ParamToRatio_2050 = (TH1D*)paramEtaToPi0RatioPCM2050->GetHistogram();
+        TH1D* histoetatopi0FromMtScaling_2050 = (TH1D*)etapi0RatioFromMtScalingPbPb2760GeV_2050->GetHistogram();
+        TH1D* histoetatopi0FromRatioParams_2050 = (TH1D*)etapi0RatioFromParamPbPb2760GeV_2050->GetHistogram();
 
     TCanvas* canvasEtatoPi0combo = new TCanvas("canvasEtatoPi0combo","",200,10,1200,1100);  //200,10,1350,900);  // gives the page size
     DrawGammaCanvasSettings( canvasEtatoPi0combo, 0.09, 0.03, 0.035, 0.1);
@@ -2304,17 +2316,17 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         paramCombEtaToPi0RatioPCM0010->SetLineWidth(2);
         paramCombEtaToPi0RatioPCM0010->Draw("c,histo,same");
         
-        etapi0RatioFromMtScalingPbPb2760GeV->SetLineColor(kBlue+1);
-        etapi0RatioFromMtScalingPbPb2760GeV->SetLineStyle(3);
-        etapi0RatioFromMtScalingPbPb2760GeV->SetLineWidth(2);
-        //         etapi0RatioFromMtScalingPbPb2760GeV->GetXaxis()->SetRangeUser(1,11);
-        etapi0RatioFromMtScalingPbPb2760GeV->Draw("c,histo,same");
+        etapi0RatioFromMtScalingPbPb2760GeV_0010->SetLineColor(kBlue+1);
+        etapi0RatioFromMtScalingPbPb2760GeV_0010->SetLineStyle(3);
+        etapi0RatioFromMtScalingPbPb2760GeV_0010->SetLineWidth(2);
+        //         etapi0RatioFromMtScalingPbPb2760GeV_0010->GetXaxis()->SetRangeUser(1,11);
+        etapi0RatioFromMtScalingPbPb2760GeV_0010->Draw("c,histo,same");
 
-        etapi0RatioFromParamPbPb2760GeV->SetLineColor(kGreen+2);
-        etapi0RatioFromParamPbPb2760GeV->SetLineStyle(5);
-        etapi0RatioFromParamPbPb2760GeV->SetLineWidth(2);
-        //         etapi0RatioFromParamPbPb2760GeV->GetXaxis()->SetRangeUser(0.8,11);
-        etapi0RatioFromParamPbPb2760GeV->Draw("c,histo,same");
+        etapi0RatioFromParamPbPb2760GeV_0010->SetLineColor(kGreen+2);
+        etapi0RatioFromParamPbPb2760GeV_0010->SetLineStyle(5);
+        etapi0RatioFromParamPbPb2760GeV_0010->SetLineWidth(2);
+        //         etapi0RatioFromParamPbPb2760GeV_0010->GetXaxis()->SetRangeUser(0.8,11);
+        etapi0RatioFromParamPbPb2760GeV_0010->Draw("c,histo,same");
 
         if(thesisPlotting) thesisLabel3->Draw();
 
@@ -2328,8 +2340,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         legendEtatoPi0_withCurves->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb0010," 0#font[122]{-}10%","pf");//collisionSystemPbPb0010.Data(),"pf");
         legendEtatoPi0_withCurves->AddEntry(paramEtaToPi0RatioPCM0010,"param to PCM ratio","l");
         legendEtatoPi0_withCurves->AddEntry(paramCombEtaToPi0RatioPCM0010,"param to combined PCM-EMCal ratio","l");
-        legendEtatoPi0_withCurves->AddEntry(etapi0RatioFromParamPbPb2760GeV,"PCM spectra param.","l");
-        legendEtatoPi0_withCurves->AddEntry(etapi0RatioFromMtScalingPbPb2760GeV,"m_{T}-scaled #eta from PCM #pi^{0} param.","l");
+        legendEtatoPi0_withCurves->AddEntry(etapi0RatioFromParamPbPb2760GeV_0010,"PCM spectra param.","l");
+        legendEtatoPi0_withCurves->AddEntry(etapi0RatioFromMtScalingPbPb2760GeV_0010,"m_{T}-scaled #eta from PCM #pi^{0} param.","l");
         legendEtatoPi0_withCurves->Draw();
 
         TLegend* legendEtatoPi0combo_withCurves = new TLegend(0.55,0.15,0.95,0.26);
@@ -2342,7 +2354,63 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         legendEtatoPi0combo_withCurves->AddEntry(graphRatioEtaToPi0PCM2760GeVSysErr,"arXiv: 1702.00917","fp");
         //         legendEtatoPi0combo_withCurves->Draw();
 
-    canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioPbPb2760GeV_WithCurves.%s",outputDir.Data(),suffix.Data()));
+    canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioPbPb2760GeV_WithCurves_0010.%s",outputDir.Data(),suffix.Data()));
+
+   canvasEtatoPi0combo->cd();
+        histo2DEtatoPi0combo->Draw("copy");
+
+        graphPCMEtaToPi0RatioSysErrPbPb2050->Draw("E2same");
+        graphPCMEtaToPi0RatioPbPb2050->Draw("p,same");
+
+        paramEtaToPi0RatioPCM2050->SetLineColor(kRed+2);
+        paramEtaToPi0RatioPCM2050->SetLineStyle(2);
+        paramEtaToPi0RatioPCM2050->SetLineWidth(2);
+        paramEtaToPi0RatioPCM2050->Draw("c,histo,same");
+
+        paramCombEtaToPi0RatioPCM2050->SetLineColor(kMagenta+2);
+        paramCombEtaToPi0RatioPCM2050->SetLineStyle(4);
+        paramCombEtaToPi0RatioPCM2050->SetLineWidth(2);
+        paramCombEtaToPi0RatioPCM2050->Draw("c,histo,same");
+        
+        etapi0RatioFromMtScalingPbPb2760GeV_2050->SetLineColor(kBlue+1);
+        etapi0RatioFromMtScalingPbPb2760GeV_2050->SetLineStyle(3);
+        etapi0RatioFromMtScalingPbPb2760GeV_2050->SetLineWidth(2);
+        //         etapi0RatioFromMtScalingPbPb2760GeV_2050->GetXaxis()->SetRangeUser(1,11);
+        etapi0RatioFromMtScalingPbPb2760GeV_2050->Draw("c,histo,same");
+
+        etapi0RatioFromParamPbPb2760GeV_2050->SetLineColor(kGreen+2);
+        etapi0RatioFromParamPbPb2760GeV_2050->SetLineStyle(5);
+        etapi0RatioFromParamPbPb2760GeV_2050->SetLineWidth(2);
+        //         etapi0RatioFromParamPbPb2760GeV_2050->GetXaxis()->SetRangeUser(0.8,11);
+        etapi0RatioFromParamPbPb2760GeV_2050->Draw("c,histo,same");
+
+        if(thesisPlotting) thesisLabel3->Draw();
+
+        TLegend* legendEtatoPi0_withCurves2 = new TLegend(0.12,0.67,0.53,0.89);
+        legendEtatoPi0_withCurves2->SetFillColor(0);
+        legendEtatoPi0_withCurves2->SetLineColor(0);
+        legendEtatoPi0_withCurves2->SetTextFont(42);
+        legendEtatoPi0_withCurves2->SetTextSize(textSize);
+        legendEtatoPi0_withCurves2->SetMargin(0.17);
+        legendEtatoPi0_withCurves2->SetHeader(collisionSystemPbPb.Data());
+        legendEtatoPi0_withCurves2->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb2050,"20#font[122]{-}50%","pf");//collisionSystemPbPb2050.Data(),"pf");
+        legendEtatoPi0_withCurves2->AddEntry(paramEtaToPi0RatioPCM2050,"param to PCM ratio","l");
+        legendEtatoPi0_withCurves2->AddEntry(paramCombEtaToPi0RatioPCM2050,"param to combined PCM-EMCal ratio","l");
+        legendEtatoPi0_withCurves2->AddEntry(etapi0RatioFromParamPbPb2760GeV_2050,"PCM spectra param.","l");
+        legendEtatoPi0_withCurves2->AddEntry(etapi0RatioFromMtScalingPbPb2760GeV_2050,"m_{T}-scaled #eta from PCM #pi^{0} param.","l");
+        legendEtatoPi0_withCurves2->Draw();
+
+//         TLegend* legendEtatoPi0combo_withCurves = new TLegend(0.55,0.15,0.95,0.26);
+//         legendEtatoPi0combo_withCurves->SetFillColor(0);
+//         legendEtatoPi0combo_withCurves->SetLineColor(0);
+//         legendEtatoPi0combo_withCurves->SetTextFont(42);
+//         legendEtatoPi0combo_withCurves->SetTextSize(textSize);
+//         legendEtatoPi0combo_withCurves->SetMargin(0.17);
+//         legendEtatoPi0combo_withCurves->SetHeader(collisionSystemPP2760GeV.Data());
+//         legendEtatoPi0combo_withCurves->AddEntry(graphRatioEtaToPi0PCM2760GeVSysErr,"arXiv: 1702.00917","fp");
+        //         legendEtatoPi0combo_withCurves->Draw();
+
+    canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioPbPb2760GeV_WithCurves_2050.%s",outputDir.Data(),suffix.Data()));
 
     
     TFile *filePhotons0010 = new TFile("/home/admin1/leardini/Results/DirectPhotonsAnalysisApril2017/50100013_00200009847005008750404000_0152501500000000/PbPb_2.76TeV/Gamma_Pi0_MC_GammaConvV1Correction_50100013_00200009847005008750404000_0152501500000000.root");
