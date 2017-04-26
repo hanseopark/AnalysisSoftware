@@ -2966,7 +2966,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     //fitInvXSectionEta        = FitObject("l","fitInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,0.4,35.,paramGraphEta,"QNRMEX0+");
     cout << WriteParameterToFile(fitInvXSectionEta)<< endl;
     
-    Double_t paramTCMEta[5]  = {graphCombEtaInvXSectionTotA->GetY()[0]/20,0.45,graphCombEtaInvXSectionTotA->GetY()[0],0.75,3.};
+    Double_t paramTCMEta[5]  = {graphCombEtaInvXSectionTotA->GetY()[1],0.25,graphCombEtaInvXSectionTotA->GetY()[1],0.75,3.};
      //Double_t paramTCMEta[5]  = {5E7,0.2,4E9,0.5,3.03};
     // Two component model by Bylinkin
     TF1* fitTCMInvXSectionEta= FitObject("tcm","fitTCMInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,0.4,35.,paramTCMEta,"QNRMEX0+","", kFALSE);
@@ -5747,7 +5747,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     eta2pi0MtScaledTCM->SetLineColor(kBlue+2);
     eta2pi0MtScaledTCM->SetLineWidth(2.);
 
-    Double_t eta2Pi0Const = 0.459;
+    Double_t eta2Pi0Const = 0.458157;
     Double_t mPi0 = 0.134977;
     Double_t mEta = 0.547853;
     for (Int_t i=1; i<=eta2pi0MtScaled->GetNbinsX(); i++) {
