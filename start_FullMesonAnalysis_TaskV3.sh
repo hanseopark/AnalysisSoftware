@@ -72,7 +72,7 @@ function GiveBinning5TeV()
      if [ $answer = 7 ]; then
          echo "7 bins --> max p_t = 6.0 gev ...";
          correctEta=1
-         BinGisPtEta= 7
+         BinsPtEta=7
      elif [ $answer = 8 ]; then
          echo "8 bins --> max p_t = 8.0 gev ...";
          correctEta=1
