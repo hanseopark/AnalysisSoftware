@@ -113,7 +113,9 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
         optionEnergy        = "8TeV";
     } else  if (select.Contains("LHC13bc") ) {
         optionEnergy        = "pPb_5.023TeV";        
-    }    
+    } else  if (select.Contains("LHC15n")  ) {
+        optionEnergy        = "5TeV";
+    }
         
     if (select.Contains("ConvCalo") ){
         mode                = 2;
@@ -182,7 +184,12 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
         endPtBin            = 17;       
         exampleBin1         = 4;
         exampleBin2         = 16;        
-    }    
+    } else if (select.Contains("ConvCalo") && select.Contains("LHC15n") ){
+        startPtBin          = 3;
+        endPtBin            = 20;
+        exampleBin1         = 4;
+        exampleBin2         = 16;
+    }
     
 
     // Standard configuration for LHC11a with default timing cuts in tender
@@ -680,6 +687,13 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
       fPlot[0]            = "#frac{LHC16c2}{LHC12 - INT7}";
       fPlot[1]            = "#frac{LHC16c2}{LHC12 - EMC7}";
       fPlot[2]            = "#frac{LHC16c2}{LHC12 - EGA}";
+    } else if(select.CompareTo("LHC15n-Pythia-ConvCalo")==0){
+        strDataFile[0]      = "/home/pgonzale/ALICE/GridOutput/Legotrain-vAN-20161201-HikariTrains/GammaConvCalo_LHC15n-pass2_401.root";
+        strMCFile[0]        = "/home/pgonzale/ALICE/GridOutput/Legotrain-vAN-20161201-HikariTrains/GammaConvCalo_MC_LHC16h8a_LHC16h8b_401.root";
+        dataCut[0]          = "00010113_00200009327000008250400000_1111100013032230000_0163103100000010";
+        mcCut[0]            = "00010113_00200009327000008250400000_1111100013032230000_0163103100000010";
+
+        fPlot[0]            = "#frac{LHC16h8a & LHC16h8b}{LHC15n - INT7}";
     } else{
         cout << "No valid selection '" << select.Data() << "'' given, returning..." << endl;
         return;
@@ -1003,6 +1017,15 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
                    sliceHist->Rebin(2);
                    sliceBGHist->Rebin(2);
                }    
+            } else if(select.Contains("LHC15n-Pythia-ConvCalo")){
+                if(fBins[iClusterPt]>=6){
+                    sliceHist->Rebin(4);
+                    sliceBGHist->Rebin(4);
+                } else{
+                    sliceHist->Rebin(2);
+                    sliceBGHist->Rebin(2);
+                }
+            
             }
     //             else if(fBins[iClusterPt]>=8) sliceHist->Rebin(5);
     //             else sliceHist->Rebin(4);
