@@ -166,8 +166,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     Size_t sizeTrigg        [10]                = {1.5, 1.5, 1.5, 2, 2.2, 2., 1.5, 2., 2.5, 1.5 };
 
     
-    TString  nameMeasGlobal[11]                 = { "PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMCal",
-                                                    "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "EMCal high pT", "EMCal merged",
+    TString  nameMeasGlobal[11]                 = { "PCM", "PHOS", "EMC", "PCM-PHOS", "PCM-EMC",
+                                                    "PCM-Dalitz", "PHOS-Dalitz", "EMC-Dalitz", "EMC high pT", "mEMC",
                                                     "PCMOtherDataset"};
     TString  nameTrigger[3]                     = {"INT7", "EMC7", "EGA"};
     TString  nameTriggerAlternative[3]          = {"MB trigger", "EMC-L0 trigger", "EMC-L1 trigger"};
@@ -2072,15 +2072,15 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         SetStyleTLatex( textPHOSOnlyRatioPi0, textSizeLabelsPixel,4);
         textPHOSOnlyRatioPi0->SetTextFont(43);
         textPHOSOnlyRatioPi0->Draw();
-        TLatex *textEMCALOnlyRatioPi0               = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[3],"EMCal");
+        TLatex *textEMCALOnlyRatioPi0               = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[3],"EMC");
         SetStyleTLatex( textEMCALOnlyRatioPi0, textSizeLabelsPixel,4);
         textEMCALOnlyRatioPi0->SetTextFont(43);
         textEMCALOnlyRatioPi0->Draw();
-        TLatex *textPCMEMCALOnlyRatioPi0            = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[4],"PCM-EMCal");
+        TLatex *textPCMEMCALOnlyRatioPi0            = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[4],"PCM-EMC");
         SetStyleTLatex( textPCMEMCALOnlyRatioPi0, textSizeLabelsPixel,4);
         textPCMEMCALOnlyRatioPi0->SetTextFont(43);
         textPCMEMCALOnlyRatioPi0->Draw();
-//        TLatex *textEMCALMergedOnlyRatioPi0         = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[5],"EMCal merged");
+//        TLatex *textEMCALMergedOnlyRatioPi0         = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[5],"EMC merged");
 //        SetStyleTLatex( textEMCALMergedOnlyRatioPi0, textSizeLabelsPixel,4);
 //        textEMCALMergedOnlyRatioPi0->SetTextFont(43);
 //        textEMCALMergedOnlyRatioPi0->Draw();
@@ -3420,11 +3420,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         SetStyleTLatex( textPCMOnlyRatioEta, textSizeLabelsPixel,4);
         textPCMOnlyRatioEta->SetTextFont(43);
         textPCMOnlyRatioEta->Draw();
-        TLatex *textEMCALOnlyRatioEta               = new TLatex(columnsLegendOnlyEtaRatio[0],rowsLegendOnlyEtaRatio[2],"EMCal");
+        TLatex *textEMCALOnlyRatioEta               = new TLatex(columnsLegendOnlyEtaRatio[0],rowsLegendOnlyEtaRatio[2],"EMC");
         SetStyleTLatex( textEMCALOnlyRatioEta, textSizeLabelsPixel,4);
         textEMCALOnlyRatioEta->SetTextFont(43);
         textEMCALOnlyRatioEta->Draw();
-        TLatex *textPCMEMCALOnlyRatioEta            = new TLatex(columnsLegendOnlyEtaRatio[0],rowsLegendOnlyEtaRatio[3],"PCM-EMCal");
+        TLatex *textPCMEMCALOnlyRatioEta            = new TLatex(columnsLegendOnlyEtaRatio[0],rowsLegendOnlyEtaRatio[3],"PCM-EMC");
         SetStyleTLatex( textPCMEMCALOnlyRatioEta, textSizeLabelsPixel,4);
         textPCMEMCALOnlyRatioEta->SetTextFont(43);
         textPCMEMCALOnlyRatioEta->Draw();
@@ -4044,11 +4044,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         SetStyleTLatex( textMassPCM, textSizeLabelsPixel,4);
         textMassPCM->SetTextFont(43);
         textMassPCM->Draw();
-        TLatex *textMassPCMEMCAL            = new TLatex(columnsLegendMass2[0],rowsLegendMass2[2],"PCM-EMCal");
+        TLatex *textMassPCMEMCAL            = new TLatex(columnsLegendMass2[0],rowsLegendMass2[2],"PCM-EMC");
         SetStyleTLatex( textMassPCMEMCAL, textSizeLabelsPixel,4);
         textMassPCMEMCAL->SetTextFont(43);
         textMassPCMEMCAL->Draw();
-        TLatex *textMassEMCAL               = new TLatex(columnsLegendMass2[0],rowsLegendMass2[3],"EMCal");
+        TLatex *textMassEMCAL               = new TLatex(columnsLegendMass2[0],rowsLegendMass2[3],"EMC");
         SetStyleTLatex( textMassEMCAL, textSizeLabelsPixel,4);
         textMassEMCAL->SetTextFont(43);
         textMassEMCAL->Draw();
@@ -4139,11 +4139,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //         SetStyleTLatex( textFWHMPCM2, textSizeLabelsPixel,4);
 //         textFWHMPCM2->SetTextFont(43);
 //         textFWHMPCM2->Draw();
-//         TLatex *textFWHMPCMEMCAL2           = new TLatex(columnsLegendFWHM[0],rowsLegendFWHM3[2],"PCM-EMCal (FWHM/2.36)");
+//         TLatex *textFWHMPCMEMCAL2           = new TLatex(columnsLegendFWHM[0],rowsLegendFWHM3[2],"PCM-EMC (FWHM/2.36)");
 //         SetStyleTLatex( textFWHMPCMEMCAL2, textSizeLabelsPixel,4);
 //         textFWHMPCMEMCAL2->SetTextFont(43);
 //         textFWHMPCMEMCAL2->Draw();
-//         TLatex *textFWHMEMCAL2              = new TLatex(columnsLegendFWHM[0],rowsLegendFWHM3[3],"EMCal (FWHM/2.36)");
+//         TLatex *textFWHMEMCAL2              = new TLatex(columnsLegendFWHM[0],rowsLegendFWHM3[3],"EMC (FWHM/2.36)");
 //         SetStyleTLatex( textFWHMEMCAL2, textSizeLabelsPixel,4);
 //         textFWHMEMCAL2->SetTextFont(43);
 //         textFWHMEMCAL2->Draw();
@@ -4216,11 +4216,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         SetStyleTLatex( textMassPCM2, textSizeLabelsPixel,4);
         textMassPCM2->SetTextFont(43);
         textMassPCM2->Draw();
-        TLatex *textMassPCMEMCAL2           = new TLatex(columnsLegendMass2[0],rowsLegendMass3[2],"PCM-EMCal");
+        TLatex *textMassPCMEMCAL2           = new TLatex(columnsLegendMass2[0],rowsLegendMass3[2],"PCM-EMC");
         SetStyleTLatex( textMassPCMEMCAL2, textSizeLabelsPixel,4);
         textMassPCMEMCAL2->SetTextFont(43);
         textMassPCMEMCAL2->Draw();
-        TLatex *textMassEMCAL2              = new TLatex(columnsLegendMass2[0],rowsLegendMass3[3],"EMCal");
+        TLatex *textMassEMCAL2              = new TLatex(columnsLegendMass2[0],rowsLegendMass3[3],"EMC");
         SetStyleTLatex( textMassEMCAL2, textSizeLabelsPixel,4);
         textMassEMCAL2->SetTextFont(43);
         textMassEMCAL2->Draw();
@@ -4433,9 +4433,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendXSectionPi0->SetTextSize(0.035);
         legendXSectionPi0->AddEntry(graphPCMPi0InvXSectionSys,"PCM","fp");
         legendXSectionPi0->AddEntry(graphPHOSPi0InvXSectionSys,"PHOS","fp");
-        legendXSectionPi0->AddEntry(graphEMCALPi0InvXSectionSys,"EMCal","fp");
-        legendXSectionPi0->AddEntry(graphPCMEMCALPi0InvXSectionSys,"PCM-EMCal","fp");
-//        legendXSectionPi0->AddEntry(graphEMCALMergedPi0InvXSectionSys,"EMCal merged","fp");
+        legendXSectionPi0->AddEntry(graphEMCALPi0InvXSectionSys,"EMC","fp");
+        legendXSectionPi0->AddEntry(graphPCMEMCALPi0InvXSectionSys,"PCM-EMC","fp");
+//        legendXSectionPi0->AddEntry(graphEMCALMergedPi0InvXSectionSys,"EMC merged","fp");
         legendXSectionPi0->Draw();
    
     canvasXSectionPi0->SaveAs(Form("%s/Pi0_InvXSectionCompAllSystems.%s",outputDir.Data(),suffix.Data()));
@@ -4519,8 +4519,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendXSectionEta->SetTextSize(0.035);
         legendXSectionEta->AddEntry(graphPCMEtaInvXSectionSys,"PCM","fp");
 //      legendXSectionEta->AddEntry(graphPHOSPi0InvXSectionSys,"PHOS","fp");
-        legendXSectionEta->AddEntry(graphEMCALEtaInvXSectionSys,"EMCal","fp");
-        legendXSectionEta->AddEntry(graphPCMEMCALEtaInvXSectionSys,"PCM-EMCal","fp");
+        legendXSectionEta->AddEntry(graphEMCALEtaInvXSectionSys,"EMC","fp");
+        legendXSectionEta->AddEntry(graphPCMEMCALEtaInvXSectionSys,"PCM-EMC","fp");
         legendXSectionEta->Draw();
    
     canvasXSectionEta->SaveAs(Form("%s/Eta_InvXSectionCompAllSystems.%s",outputDir.Data(),suffix.Data()));
@@ -4587,9 +4587,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         TLegend* legendEffiAccPi0           = GetAndSetLegend2(0.62, 0.13, 0.9, 0.13+(3*textSizeLabelsRel),textSizeLabelsPixel);
         legendEffiAccPi0->AddEntry(histoPCMPi0AccTimesEff,"PCM","p");
-        legendEffiAccPi0->AddEntry(graphPCMEMCALPi0AccTimesEff,"PCM-EMCal","p");
-        legendEffiAccPi0->AddEntry(graphEMCALPi0AccTimesEff,"EMCal","p");
-//        legendEffiAccPi0->AddEntry(graphEMCALMergedPi0AccTimesEffDivPur,"EMCal, merged","p");
+        legendEffiAccPi0->AddEntry(graphPCMEMCALPi0AccTimesEff,"PCM-EMC","p");
+        legendEffiAccPi0->AddEntry(graphEMCALPi0AccTimesEff,"EMC","p");
+//        legendEffiAccPi0->AddEntry(graphEMCALMergedPi0AccTimesEffDivPur,"EMC, merged","p");
         legendEffiAccPi0->Draw();
 
         TLatex *labelPerfEffi               = new TLatex(0.15,0.92,"ALICE simulation");
@@ -4623,9 +4623,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         TLegend* legendEffiAccPi02          = GetAndSetLegend2(0.62, 0.13, 0.9, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
         legendEffiAccPi02->AddEntry(histoPCMPi0AccTimesEff,"PCM","p");
-        legendEffiAccPi02->AddEntry(graphPCMEMCALPi0AccTimesEff,"PCM-EMCal","p");
-        legendEffiAccPi02->AddEntry(graphEMCALPi0AccTimesEff,"EMCal","p");
-//        legendEffiAccPi02->AddEntry(graphEMCALMergedPi0AccTimesEffDivPur,"EMCal, merged","p");
+        legendEffiAccPi02->AddEntry(graphPCMEMCALPi0AccTimesEff,"PCM-EMC","p");
+        legendEffiAccPi02->AddEntry(graphEMCALPi0AccTimesEff,"EMC","p");
+//        legendEffiAccPi02->AddEntry(graphEMCALMergedPi0AccTimesEffDivPur,"EMC, merged","p");
         legendEffiAccPi02->AddEntry(histoPHOSPi0AccTimesEff,"PHOS","p");
         legendEffiAccPi02->Draw();
 
@@ -4662,8 +4662,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         
         TLegend* legendEffiAccEta           = GetAndSetLegend2(0.62, 0.13, 0.9, 0.13+(3*textSizeLabelsRel),textSizeLabelsPixel);
         legendEffiAccEta->AddEntry(histoPCMEtaAccTimesEff,"PCM","p");
-        legendEffiAccEta->AddEntry(graphPCMEMCALEtaAccTimesEff,"PCM-EMCal","p");
-        legendEffiAccEta->AddEntry(graphEMCALEtaAccTimesEff,"EMCal","p");
+        legendEffiAccEta->AddEntry(graphPCMEMCALEtaAccTimesEff,"PCM-EMC","p");
+        legendEffiAccEta->AddEntry(graphEMCALEtaAccTimesEff,"EMC","p");
         legendEffiAccEta->Draw();
 
         labelPerfEffi->Draw();
@@ -4723,10 +4723,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //        legendTriggEffPi0->AddEntry(histoEMCALPi0TriggerEff[3],"","p");
 //        legendTriggEffPi0->Draw();
 
-//        TLatex *labelPCMEMCALTriggEff           = new TLatex(0.6,0.275,"PCM-EMCal");
+//        TLatex *labelPCMEMCALTriggEff           = new TLatex(0.6,0.275,"PCM-EMC");
 //        SetStyleTLatex( labelPCMEMCALTriggEff, textSizeLabelsRel,4);
 //        labelPCMEMCALTriggEff->Draw();
-//        TLatex *labelEMCALTriggEff              = new TLatex(0.84,0.275,"EMCal");
+//        TLatex *labelEMCALTriggEff              = new TLatex(0.84,0.275,"EMC");
 //        SetStyleTLatex( labelEMCALTriggEff, textSizeLabelsRel,4);
 //        labelEMCALTriggEff->Draw();
         
@@ -5674,8 +5674,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     
         TLegend* legendEtaToPi0 = GetAndSetLegend2(0.47, 0.15, 0.9, 0.15+(textsizeLabelsEtaToPi0*3*0.9), textSizeLabelsPixel);
         legendEtaToPi0->AddEntry(graphPCMEtaToPi0Sys,"PCM","pf");
-        legendEtaToPi0->AddEntry(graphPCMEMCALEtaToPi0Sys,"PCM-EMCal","pf");
-        legendEtaToPi0->AddEntry(graphEMCALEtaToPi0Sys,"EMCal","pf");
+        legendEtaToPi0->AddEntry(graphPCMEMCALEtaToPi0Sys,"PCM-EMC","pf");
+        legendEtaToPi0->AddEntry(graphEMCALEtaToPi0Sys,"EMC","pf");
         legendEtaToPi0->Draw();
 
         TLatex *labelEnergyEtaToPi0 = new TLatex(0.13, 0.92,collisionSystem8TeV.Data());
@@ -6631,7 +6631,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 labelInvMassTrigger->SetTextFont(43);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoPCMEMC  = new TLatex(0.135,0.9-0.9*3*0.8*textsizeLabelsPP,"PCM-EMCal");
+                TLatex *labelInvMassRecoPCMEMC  = new TLatex(0.135,0.9-0.9*3*0.8*textsizeLabelsPP,"PCM-EMC");
                 SetStyleTLatex( labelInvMassRecoPCMEMC, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoPCMEMC->SetTextFont(43);
                 labelInvMassRecoPCMEMC->Draw();
@@ -6697,7 +6697,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 labelInvMassTrigger->SetTextFont(43);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoPCMEMC  = new TLatex(0.135,0.9-0.9*3*0.8*textsizeLabelsPP,"PCM-EMCal");
+                TLatex *labelInvMassRecoPCMEMC  = new TLatex(0.135,0.9-0.9*3*0.8*textsizeLabelsPP,"PCM-EMC");
                 SetStyleTLatex( labelInvMassRecoPCMEMC, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoPCMEMC->SetTextFont(43);
                 labelInvMassRecoPCMEMC->Draw();
@@ -6766,7 +6766,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 labelInvMassTrigger->SetTextFont(43);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoEMC  = new TLatex(0.135,0.9-0.9*0.8*3*textsizeLabelsPP,"EMCal");
+                TLatex *labelInvMassRecoEMC  = new TLatex(0.135,0.9-0.9*0.8*3*textsizeLabelsPP,"EMC");
                 SetStyleTLatex( labelInvMassRecoEMC, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoEMC->SetTextFont(43);
                 labelInvMassRecoEMC->Draw();
@@ -6831,7 +6831,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                 labelInvMassTrigger->SetTextFont(43);
                 labelInvMassTrigger->Draw();
 
-                TLatex *labelInvMassRecoEMC  = new TLatex(0.135,0.9-0.9*3*0.8*textsizeLabelsPP,"EMCal");
+                TLatex *labelInvMassRecoEMC  = new TLatex(0.135,0.9-0.9*3*0.8*textsizeLabelsPP,"EMC");
                 SetStyleTLatex( labelInvMassRecoEMC, 0.85*textSizeLabelsPixel,4);
                 labelInvMassRecoEMC->SetTextFont(43);
                 labelInvMassRecoEMC->Draw();
