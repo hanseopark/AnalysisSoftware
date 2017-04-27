@@ -44,7 +44,7 @@ void PhotonQA_Runwise(
 //**************************************************************************************************************
 	TString fDate = ReturnDateString();
 	TString fTextMeasurement = Form("#pi^{0} #rightarrow #gamma#gamma");
-    TString fCentrality[nSets];
+    TString fCentrality[30];
     for(Int_t i=0; i<nSets; i++) {
       if(fEnergyFlag.Contains("PbPb")){
         if(plotDataSets[i].Contains("0-10%")) fCentrality[i] = "0-10%";
