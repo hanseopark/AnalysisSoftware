@@ -34,6 +34,11 @@ function ChangeStructureIfNeeded()
 # switches to enable/disable certain procedures
 DOWNLOADON=1
 MERGEON=1
+SINGLERUN=1
+SEPARATEON=0
+MERGEONSINGLEData=1
+MERGEONSINGLEMC=0
+SPECIALMERGE=0
 
 # check if train configuration has actually been given
 HAVELHC13b=1
@@ -67,6 +72,8 @@ if [ $1 = "fbock" ]; then
     BASEDIR=/mnt/additionalStorage/OutputLegoTrains/pPb
     NSlashes=8
     NSlashes2=7
+    NSlashes3=9
+    NSlashes4=10
 elif [ $1 = "fbockGSI" ]; then 
     BASEDIR=/hera/alice/fbock/Grid/OutputLegoTrains/pPb
 elif [ $1 = "leardini" ]; then 
@@ -118,18 +125,18 @@ fi
 # LHC13b2_efix_p4MC="897";
 # LHC13e7MC="898";
 
-TRAINDIR=Legotrain-vAN20170416-Weighting
-LHC13bData="599"; #pass 3 
-LHC13cData="601"; #pass 2
-LHC13b2_efix_p1MC="899"; 
-LHC13b2_efix_p2MC="900"; 
-LHC13b2_efix_p3MC="901"; 
-LHC13b2_efix_p4MC="902";
-LHC13e7MC="903";
-
-# TRAINDIR=Legotrain-vAN20170417-Weighting
+# TRAINDIR=Legotrain-vAN20170416-Weighting
 # LHC13bData="599"; #pass 3 
 # LHC13cData="601"; #pass 2
+# LHC13b2_efix_p1MC="899"; 
+# LHC13b2_efix_p2MC="900"; 
+# LHC13b2_efix_p3MC="901"; 
+# LHC13b2_efix_p4MC="902";
+# LHC13e7MC="903";
+
+TRAINDIR=Legotrain-vAN20170417-Weighting
+# LHC13bData="599"; #pass 3 
+LHC13cData="601"; #pass 2
 # LHC13b2_efix_p1MC="904"; 
 # LHC13b2_efix_p2MC="905"; 
 # LHC13b2_efix_p3MC="906"; 
@@ -257,10 +264,55 @@ if [ $DOWNLOADON == 1 ]; then
     if [ $HAVELHC13b == 1 ]; then
         echo "downloading LHC13b"
         CopyFileIfNonExisitent $OUTPUTDIR_LHC13b "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13bData/merge_runlist_1"
-    fi    
+        if [ $SINGLERUN == 1 ]; then
+            runNumbers=`cat runlists/runNumbersLHC13b.txt`
+            echo $runNumbers
+            for runNumber in $runNumbers; do
+                CopyFileIfNonExisitent $OUTPUTDIR_LHC13b/$runNumber "/alice/data/2013/LHC13b/000$runNumber/ESDs/pass3/PWGGA/GA_pPb/$LHC13bData" $NSlashes3
+            done;    
+            if [ $MERGEONSINGLEData == 1 ]; then
+                firstrunNumber=`head -n1 runlists/runNumbersLHC13b.txt`
+                ls $OUTPUTDIR_LHC13b/$firstrunNumber/GammaCalo_*.root > fileLHC13b.txt
+                fileNumbers=`cat fileLHC13b.txt`
+                for fileName in $fileNumbers; do
+                    echo $fileName
+                    alpha=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f3 | cut -d "." -f1`
+                    if [ -z "$alpha" ]; then
+                        number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2`
+                        number=$number\_$alpha
+                    else
+                        number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2 | cut -d "." -f1`
+                    fi
+                    echo $number
+                    hadd -f $OUTPUTDIR_LHC13b/GammaCalo_$number.root $OUTPUTDIR_LHC13b/*/GammaCalo_$number.root
+                done;
+            fi    
+        fi    fi    
     if [ $HAVELHC13c == 1 ]; then
         echo "downloading LHC13c"
         CopyFileIfNonExisitent $OUTPUTDIR_LHC13c "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13cData/merge_runlist_1"
+        if [ $MERGEONSINGLEData == 1 ]; then
+            firstrunNumber=`head -n1 runlists/runNumbersLHC13c.txt`
+            ls $OUTPUTDIR_LHC13c/$firstrunNumber/GammaCalo_*.root > fileLHC13c.txt
+            fileNumbers=`cat fileLHC13c.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                alpha=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f3 | cut -d "." -f1`
+                if [ -z "$alpha" ]; then
+                    echo $alpha
+                    number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2 | cut -d "." -f1`
+                    echo $number
+                else
+                    echo $alpha
+                    number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2`
+                    number=$number\_$alpha
+                    echo $number
+                fi
+                echo $number
+                hadd -f $OUTPUTDIR_LHC13c/GammaCalo_$number.root $OUTPUTDIR_LHC13c/*/GammaCalo_$number.root
+            done;
+        fi    
+
     fi    
     if [ $HAVELHC13d == 1 ]; then
         echo "downloading LHC13d"
@@ -502,9 +554,7 @@ if [ $MERGEON == 1 ]; then
         if [ -f $OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p4_$number.root ] ; then
             hadd -f $OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_p4_$number.root $OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_$number.root $OUTPUTDIR/GammaCalo_MC_LHC13b2_efix_p4_$number.root
         fi
-    done
-
-    
+    done    
 fi
 
    

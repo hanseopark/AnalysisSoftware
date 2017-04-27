@@ -10,7 +10,7 @@
 # This script has to be run with "bash"
 
 # switches to enable/disable certain procedures
-DOWNLOADON=1
+DOWNLOADON=0
 MERGEON=1
 SINGLERUN=0
 SEPARATEON=0
@@ -102,7 +102,11 @@ function ChangeStructureIfNeeded()
         echo $number
         cp $2/GammaConvV1_$number.root $OUTPUTDIR/GammaConvV1_$4\_$number.root 
     fi
-    root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvV1_$4_$number.log\"\,0\)
+    if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log ]; then 
+        echo "nothing to be done";
+    else
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log\"\,0\)
+    fi    
 }
 
 function ChangeStructureIfNeededFlow()
@@ -123,7 +127,11 @@ function ChangeStructureIfNeededFlow()
         echo $number
         cp $2/GammaConvFlow_$number.root $OUTPUTDIR/GammaConvFlow_$4\_$number.root 
     fi
-    root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvFlow_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaConvFlow_$4_$number.log\"\,0\)
+    if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaConvFlow_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaConvFlow_$4_$number.log ]; then 
+        echo "nothing to be done";
+    else
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvFlow_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_GammaConvFlow_$4_$number.log\"\,0\)
+    fi    
 }
 
 
@@ -261,11 +269,11 @@ fi
 TRAINDIR=Legotrain-vAN20170417-Weighting
 LHC13bData="599"; #pass 3 
 LHC13cData="601"; #pass 2
-LHC13b2_efix_p1MC="904"; 
-LHC13b2_efix_p2MC="905"; 
-LHC13b2_efix_p3MC="906"; 
-LHC13b2_efix_p4MC="907";
-LHC13e7MC="908";
+# LHC13b2_efix_p1MC="904"; 
+# LHC13b2_efix_p2MC="905"; 
+# LHC13b2_efix_p3MC="906"; 
+# LHC13b2_efix_p4MC="907";
+# LHC13e7MC="908";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -300,6 +308,8 @@ fi
 if [ "$LHC13e7MC" = "" ]; then 
     HAVELHC13e7=0; 
 fi
+
+mkdir -p $OUTPUTDIR/CutSelections
 
 if [ $HAVELHC13b == 1 ]; then
     LHC13bData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13bData\_`
@@ -892,9 +902,6 @@ if [ $HAVELHC13e7 == 1 ]; then
         ChangeStructureIfNeededFlow $fileName $OUTPUTDIR_LHC13e7 $NSlashes "MC_LHC13e7"
     done;
 fi
-
-mkdir -p $OUTPUTDIR/CutSelections
-mv $OUTPUTDIR/CutSelection_*.log $OUTPUTDIR/CutSelections/
 
 if [ $MERGEON == 1 ]; then
     if [ $SPECIALMERGE == 0 ]; then 
