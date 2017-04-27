@@ -4339,7 +4339,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     padMassEta->cd();
     padMassEta->SetLogx();
 
-        TH2F * histo2DAllEtaMass    = new TH2F("histo2DAllEtaMass","histo2DAllEtaMass",1000, 0.33, 50., 1000., 505., 582);
+        TH2F * histo2DAllEtaMass    = new TH2F("histo2DAllEtaMass","histo2DAllEtaMass",1000, 0.33, 50., 1000., 505., 574);
         SetStyleHistoTH2ForGraphs(histo2DAllEtaMass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass, textsizeLabelsMass, 0.85*textsizeLabelsMass,
                                   textsizeLabelsMass, 0.9, 0.28/(textsizeFacMass*margin), 505, 505);
         histo2DAllEtaMass->GetXaxis()->SetMoreLogLabels(kTRUE);
