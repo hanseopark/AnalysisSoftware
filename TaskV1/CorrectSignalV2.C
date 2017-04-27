@@ -564,6 +564,13 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 }    
                 modifiedSecAcc[j]                   = kTRUE;
             }    
+            if ( mode == 2 &&  j < 3 && kCollisionSystem == 2){
+                histoSecAcceptance[j]               = (TH1D*)histoAcceptance->Clone(Form("fMCSecPi0From%sAccepPt_mod",nameSecMeson[j].Data()));
+                if (j == 1)
+                    histoSecAcceptance[j]->Scale(1.1);
+                else if (j == 2)
+                    histoSecAcceptance[j]->Scale(1.2);
+            }
             hasNewSecQuantities                     = kTRUE;
             nAccHistSec++;
         }

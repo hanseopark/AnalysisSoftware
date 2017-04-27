@@ -100,6 +100,8 @@ void ExtractGammaSignalV2(      TString meson               = "",
     //************************************ Set global variables ****************************************
     fDate                                                                       = ReturnDateString();
     fDirectPhoton                                                               = directphotonPlots;
+    if (directphotonPlots.CompareTo("No") != 0)
+        fDirectPhoton                                                           = "directPhoton";
     fEnergyFlag                                                                 = option;
     fPrefix                                                                     = meson;
     fPeriodFlag                                                                 = period;

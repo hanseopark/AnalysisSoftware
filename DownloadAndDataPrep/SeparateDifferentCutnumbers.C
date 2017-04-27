@@ -47,7 +47,8 @@ using namespace std;
 
 void SeparateDifferentCutnumbers(   TString nameInputFile1,
                                     TString nameOutputFileBase,                           
-                                    Int_t mode = 0
+                                    Int_t mode = 0,
+                                    Bool_t removeDCAtree = kFALSE
                                 ){
 
     TFile *fileInput1 = new TFile(nameInputFile1.Data());
@@ -99,7 +100,9 @@ void SeparateDifferentCutnumbers(   TString nameInputFile1,
                     listOutput          = new TList();
                     listOutput->SetName(defaultMainDir.Data());
                 }
-                listOutput->Add(listToSave);
+                if (!removeDCAtree){
+                    listOutput->Add(listToSave);
+                }    
                 listOutput->Write("",TObject::kSingleKey);
             fileOutput->Close();
             delete fileOutput;

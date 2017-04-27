@@ -966,13 +966,13 @@ function GiveBinningpPb()
         correctEta=1
         echo "You have chosen " $answer " pt bins for eta";
     fi
-    if [ $mode == 2 ]; then
+    if [ $mode == 2 ] && [ $DoGamma -eq 1 ]; then
         echo "How many p_T bins do you want to use for direct photon?  ";
         read answer
         BinsPtGamma=$answer
         correctPi0=1
         echo "You have chosen " $answer " pt bins for dir gamma";
-        directphoton="directPhoton"
+        directphoton="Gamma"
     fi
 }
 
@@ -1929,9 +1929,11 @@ do
             fi
         else 
 #             echo "No Direct Photon plots will be produced ...";
-#             directphoton="No"
-            directphoton="Gamma"
-#             directphoton="directPhoton"
+            if [ $mode -eq 4 ] ; then
+                directphoton="No"
+            else 
+                directphoton="Gamma"
+            fi
             if [ $ONLYRESULTS -eq 0 ]; then
                 GiveBinning2760GeV
                 correctPi0=1
