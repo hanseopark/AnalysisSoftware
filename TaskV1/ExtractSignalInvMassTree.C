@@ -2704,9 +2704,9 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){ fMesonLambdaTailRange[0] = 0.005;}
                 fMesonLambdaTailRange[1]        = 0.03;
                 fMesonMassRange[0]              = 0.;
-                fMesonMassRange[1]              = 0.3;
+                fMesonMassRange[1]              = 0.4;
                 fMesonMassPlotRange[0]          = 0.;
-                fMesonMassPlotRange[1]          = 0.3;
+                fMesonMassPlotRange[1]          = 0.4;
                 fBGFitRangeLeft[0]              = 0.06;
                 fBGFitRangeLeft[1]              = 0.08; 
                 fMesonIntDeltaRange[0]          = -0.05; 
@@ -2739,7 +2739,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
                       fMesonIntDeltaRangeWide[0] = fMesonIntDeltaRange[0]*1.2;// mod.
                       fMesonIntDeltaRangeNarrow[0] = fMesonIntDeltaRange[0]*0.8; // mod.
                       fBGFitRange[0]=0.25;
-                      fBGFitRange[1]=0.29;
+                      fBGFitRange[1]=0.30;
                       fMesonFitRange[0] = 0.08;
                       fMesonFitRange[1] = 0.30;
                       fMesonWidthExpect = 0.035;

@@ -408,7 +408,7 @@ Int_t fBinsPi08TeVEMCTrigger1PtRebin[44]        = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
     Int_t fBinsPi08TeVEMCTrigger2PtRebin[42]        = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 4, 5,
-                                                    5, 4, 5, 10, 10, 15, 21, 2, 2, 2,
+                                                    5, 4, 5, 10, 10, 15, 16, 2, 2, 2,
                                                         2, 2};
 Int_t fBinsPi08TeVPCMEMCTrigger1PtRebin[43]     = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -474,7 +474,7 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                                                         5, 5, 5, 16, 16, 10, 10, 10, 10, 10,
                                                     10, 10, 5};
     Int_t fBinsEta8TeVPCMEMCTrigger1PtRebin[23]     = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                                                    10, 8, 8, 10, 16, 16, 8, 16, 25, 25,
+                                                    10, 8, 8, 10, 10, 12, 5, 10, 10, 20,
                                                         5, 5, 5};
     Int_t fBinsEta8TeVPCMEMCTrigger2PtRebin[23]     = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                                                     5, 5, 5, 20, 25, 20, 20, 16, 16, 25,
