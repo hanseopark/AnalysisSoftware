@@ -3465,6 +3465,30 @@
                     return 879;
                 } else if (!generator.CompareTo("LHC14j4f")){
                     return 806;
+                } else if (!generator.CompareTo("LHC10_pass4_EMC")){
+                    return kCyan+3;
+                } else if (!generator.CompareTo("LHC10b_pass4_EMC")){
+                    return kBlack;
+                } else if (!generator.CompareTo("LHC10c_pass4_EMC")){
+                    return 633;
+                } else if (!generator.CompareTo("LHC10d_pass4_EMC")){
+                    return 807;
+                } else if (!generator.CompareTo("LHC10e_pass4_EMC")){
+                    return 800;
+                } else if (!generator.CompareTo("LHC10f_pass4_EMC")){
+                    return 418;
+                } else if (!generator.CompareTo("LHC14j4_EMC")){
+                    return 852;
+                } else if (!generator.CompareTo("LHC14j4b_EMC")){
+                    return kBlack;
+                } else if (!generator.CompareTo("LHC14j4c_EMC")){
+                    return 633;
+                } else if (!generator.CompareTo("LHC14j4d_EMC")){
+                    return 807;
+                } else if (!generator.CompareTo("LHC14j4e_EMC")){
+                    return 800;
+                } else if (!generator.CompareTo("LHC14j4f_EMC")){
+                    return 418;
                 }
             } else {
                 return kBlue-5;

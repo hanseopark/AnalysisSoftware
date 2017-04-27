@@ -334,6 +334,23 @@ void QA_Runwise(
         }
     }
     //**************************************************************************************************************
+    else if(select.CompareTo("LHC10EMC")==0){
+        //LHC10
+        cutNr                   = 0;
+        doHistsForEverySet      = kFALSE;
+        fEnergyFlag             = "7TeV";
+        filePath                = "../AnalysisOutput/pp7TeV/DataQA/20170321";
+        fileName                = "GammaCalo_201.root";
+        nSets                   = 6;
+        nData                   = 5;
+        TString dummyData1[6]   = {"LHC10b_pass4_EMC", "LHC10c_pass4_EMC", "LHC10d_pass4_EMC", "LHC10e_pass4_EMC", "LHC10f_pass4_EMC", "LHC14j4_EMC"};
+        TString dummyData2[6]   = {"LHC10b", "LHC10c", "LHC10d", "LHC10e", "LHC10f", "Pythia6"};
+        for (Int_t j = 0; j< nSets; j++){
+            DataSets[j]     = dummyData1[j];
+            plotDataSets[j] = dummyData2[j];
+        }
+    }
+    //**************************************************************************************************************
     else if(select.CompareTo("LHC12")==0){
         //LHC12
         doHistsForEverySet  = kFALSE;

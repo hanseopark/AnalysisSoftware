@@ -343,6 +343,21 @@ void QA(    TString select          = "LHC11a",         // set selected
 //         pathPhotonQA[1] = Form("/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20150922/%s/PhotonQA_%s.root",DataSets[1].Data(),DataSets[1].Data());
     }
     //**************************************************************************************************************
+    else if(select.CompareTo("LHC10EMC")==0){
+        //LHC10
+        cutNr           = 0;
+        nSets           = 2;
+        fEnergyFlag     = "7TeV";
+        pathDataSets[0] = "../AnalysisOutput/pp7TeV/LHC10b-f/20170321/LHC10b-f_GammaCalo_201.root";
+        pathDataSets[1] = "../AnalysisOutput/pp7TeV/LHC14j4b-f/20170329/LHC14j4b-f_GammaCalo_201.root";
+        DataSets[0]     = "LHC10_pass4";
+        DataSets[1]     = "LHC14j4";
+        plotDataSets[0] = "LHC10[b-f]";
+        plotDataSets[1] = "Pythia6";
+        pathPhotonQA[0] = "";
+        pathPhotonQA[1] = "";
+    }
+    //**************************************************************************************************************
     else if(select.CompareTo("LHC10test")==0){
     //LHC10
         nSets = 2;
