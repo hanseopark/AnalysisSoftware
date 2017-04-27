@@ -1,0 +1,43 @@
+#example config	LHC13g-kEMCEG1	-	EMC
+select	LHC13g-kEMCEG1
+mode	4
+nSets	2
+cutNr	3
+labelData	Data
+energy	2.76TeV
+pathDataSets	/home/daniel/data/work/Grid/Legotrain-vAN-20160226-2.76TeV-Calo-QA/LHC13g_GammaCalo_60.root	/home/daniel/data/work/Grid/Legotrain-vAN-20160226-2.76TeV-Calo-QA/LHC15a3a+_GammaCalo_60.root	STOP
+DataSetNames	LHC13g-kEMCEG1	LHC15a3a	STOP
+DataSetNamesPlot	LHC13g		JetJet	STOP
+
+#example config LHC13g-kEMCEG1	-PCM-EMC
+#select	LHC13g-kEMCEG1
+#mode	2	
+#nSets	2
+#cutNr	0
+#labelData	Data
+#energy	2.76TeV
+#pathDataSets	/home/daniel/data/work/Grid/Legotrain-vAN-20160302-2.76TeV-ConvCalo-QA/LHC13g_GammaConvCalo_95.root	/home/daniel/data/work/Grid/Legotrain-vAN-20160302-2.76TeV-ConvCalo-QA/LHC15a3a+_GammaConvCalo_95.root	STOP
+#DataSetNames	LHC13g-kEMCEG1	LHC15a3a	STOP
+#DataSetNamesPlot	LHC13g		JetJet	STOP
+
+#example config LHC13g-kEMCEG2	-	EMC
+#select	LHC13g-kEMCEG2
+#mode	4
+#nSets	2
+#cutNr	4
+#labelData	Data
+#energy	2.76TeV
+#pathDataSets	/home/daniel/data/work/Grid/Legotrain-vAN-20160226-2.76TeV-Calo-QA/LHC13g_GammaCalo_60.root	/home/daniel/data/work/Grid/Legotrain-vAN-20160226-2.76TeV-Calo-QA/LHC15a3a+_GammaCalo_60.root	STOP
+#DataSetNames	LHC13g-kEMCEG2	LHC15a3a	STOP
+#DataSetNamesPlot	LHC13g		JetJet	STOP
+
+#example config LHC13g-kEMCEG2	-PCM-EMC
+#select	LHC13g-kEMCEG2
+#mode	2	
+#nSets	2
+#cutNr	1
+#labelData	Data
+#energy	2.76TeV
+#pathDataSets	/home/daniel/data/work/Grid/Legotrain-vAN-20160302-2.76TeV-ConvCalo-QA/LHC13g_GammaConvCalo_95.root	/home/daniel/data/work/Grid/Legotrain-vAN-20160302-2.76TeV-ConvCalo-QA/LHC15a3a+_GammaConvCalo_95.root	STOP
+#DataSetNames	LHC13g-kEMCEG2	LHC15a3a	STOP
+#DataSetNamesPlot	LHC13g		JetJet	STOP
