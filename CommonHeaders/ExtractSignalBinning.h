@@ -272,6 +272,9 @@ Int_t fBinsPi0900GeVEMCPtRebin[12]              = { 2, 8, 5, 4, 4, 5, 8, 8, 8, 1
     Int_t fBinsDirGamma7TeVPtRebin[23]              = { 3, 2, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         2, 2, 2, 3, 3, 4, 4, 4, 5, 5,
                                                         5, 5, 5};
+    Int_t fBinsDirGamma7TeVEMCPtRebin[23]           = { 5, 5, 5, 5, 5, 4, 4, 3, 2, 2,
+                                                        2, 2, 2, 3, 3, 4, 4, 4, 5, 5,
+                                                        5, 5, 5};
 
     //****************************************************************************************************
     //******************** Pt binning for pp, 8 TeV ******************************************************
@@ -1627,7 +1630,7 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                 if (directPhoton.CompareTo("directPhoton") == 0){
                     fStartPtBin     = 1;
                     if (modi == 4)
-                        fStartPtBin = 9;
+                        fStartPtBin = 5;
                     else if(modi == 2)
                         fStartPtBin = 6;
                     else if(modi == 1)
@@ -1640,7 +1643,12 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                     }
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
                         fBinsPt[i]         = fBinsDirGamma7TeVPt[i];
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma7TeVPtRebin[i];
+                        if (i < fNBinsPt+1) {
+                            if (modi == 4)
+                                fNRebin[i] = fBinsDirGamma7TeVEMCPtRebin[i];
+                            else
+                                fNRebin[i] = fBinsDirGamma7TeVPtRebin[i];
+                        }
                     }
                 } else {
                     fStartPtBin     = 1;
