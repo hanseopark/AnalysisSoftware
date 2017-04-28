@@ -857,11 +857,13 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
             //****************************************************************************************** 
             //********************************* plot ratio efficiencies ********************************
-            //****************************************************************************************** 
+            //******************************************************************************************
 
             TCanvas *canvasSecEffiRatio                               = GetAndSetCanvas("canvasSecEffiRatio");
             
-                SetHistogramm(ratioGammaSecEffRecPt[k],"#it{p}_{T} (GeV/#it{c})","#epsilon_{eff,#gamma, sec}/#epsilon_{eff,#gamma, prim}",0.0,3.0);
+                Double_t ratioGammaSecEffiToPrimMaxY = (ratioGammaSecEffRecPt[k]->GetMaximum() + ratioGammaSecEffRecPt[k]->GetBinError(ratioGammaSecEffRecPt[k]->GetMaximumBin()))*1.2;
+
+                SetHistogramm(ratioGammaSecEffRecPt[k],"#it{p}_{T} (GeV/#it{c})","#epsilon_{eff,#gamma, sec}/#epsilon_{eff,#gamma, prim}",0.0,ratioGammaSecEffiToPrimMaxY);
                 DrawGammaSetMarker(ratioGammaSecEffRecPt[k], 20, 1, kRed+2, kRed+2);
                 ratioGammaSecEffRecPt[k]->Draw();
                 DrawGammaSetMarkerTF1( constant, 9, 2, kRed-6); 
@@ -1606,7 +1608,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         DrawGammaLines(0., maxPtGamma,1.0, 1.0, 1, kGray+2, 2);
         histoGammaTruePurity_Pt->Draw("same");
         
-        PutProcessLabelAndEnergyOnPlot( 0.18, 0.3, 0.035, cent, detectionProcess, "", 42, 0.03);
+        PutProcessLabelAndEnergyOnPlot( 0.18, 0.85, 0.035, cent, detectionProcess, "", 42, 0.03);
         
         canvasPurity2->SaveAs(Form("%s/%s_TruePurity_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
     }
@@ -1871,7 +1873,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         
         if (isCalo){
             histoGammaTruePrimaryCalo_recPt_MCPt->Draw("colz");
-            PutProcessLabelAndEnergyOnPlot( 0.15, 0.95, 0.035, cent,  detectionProcess2, "", 42, 0.03);
+            if (isPCM)  PutProcessLabelAndEnergyOnPlot( 0.15, 0.95, 0.035, cent, detectionProcess2, "", 42, 0.03);
+            else        PutProcessLabelAndEnergyOnPlot( 0.15, 0.95, 0.035, cent, detectionProcess,  "", 42, 0.03);
             canvasResponseMatrix->SaveAs(Form("%s/%s_ResponseMatrixCalo_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
             
         }
@@ -2399,22 +2402,45 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //**************** Compare cocktail secondaries to MC secondaries *********************************
     //*************************************************************************************************
     if(hasCocktailInput){
+        // divide cocktail secondary spectra by MC ones
         TH1D* histoRatioSecondariesCocktailMC_Raw_Pt[3]     = {NULL, NULL, NULL};
+        Double_t ratioSecondariesCocktailMCYMax             = 1.0;
+        Double_t ratioSecondariesCocktailMCYMin             = 0.0;
+        for (Int_t k = 0; k < 3; k++) {
+            histoRatioSecondariesCocktailMC_Raw_Pt[k]       = (TH1D*)histoGammaSecGammaFromX_Cocktail_Raw_Pt[k]->Clone(Form("histoRatioSecondariesCocktailMC%s_Raw_Pt", nameSecondaries[k].Data()));
+            if (isPCM )             histoRatioSecondariesCocktailMC_Raw_Pt[k]->Divide(histoGammaTrueSecConvGammaFromX_Pt[k]);
+            if (isCalo && !isPCM)   histoRatioSecondariesCocktailMC_Raw_Pt[k]->Divide(histoGammaTrueSecCaloGammaFromX_Pt[k]);
+
+            // get y-range min
+            if (k==0 || histoRatioSecondariesCocktailMC_Raw_Pt[k]->GetMinimum(0) < ratioSecondariesCocktailMCYMin)
+                ratioSecondariesCocktailMCYMin              = histoRatioSecondariesCocktailMC_Raw_Pt[k]->GetMinimum(0);
+
+            // get y-range max
+            if (k==0 || histoRatioSecondariesCocktailMC_Raw_Pt[k]->GetMaximum() > ratioSecondariesCocktailMCYMax)
+                ratioSecondariesCocktailMCYMax              = histoRatioSecondariesCocktailMC_Raw_Pt[k]->GetMaximum();
+        }
+        ratioSecondariesCocktailMCYMin                      = ratioSecondariesCocktailMCYMin;
+        ratioSecondariesCocktailMCYMax                      = ratioSecondariesCocktailMCYMax;
+
         TCanvas *canvasSecondaryComparison                  = GetAndSetCanvas("canvasSecondaryComparison");
         DrawGammaCanvasSettings( canvasSecondaryComparison, 0.07, 0.02, 0.02, 0.085);
         TLegend* legendCompareSecCocktailMC                 = GetAndSetLegend2(0.75, 0.935-0.035*1.1*3, 0.95, 0.935, 0.035, 1, "", 42, 0.15); 
         legendCompareSecCocktailMC->SetBorderSize(0);
-        
-        for (Int_t k = 0; k< 3; k++){
-            histoRatioSecondariesCocktailMC_Raw_Pt[k]       = (TH1D*)histoGammaSecGammaFromX_Cocktail_Raw_Pt[k]->Clone(Form("histoRatioSecondariesCocktailMC%s_Raw_Pt", nameSecondaries[k].Data()));
-            if (isPCM ) histoRatioSecondariesCocktailMC_Raw_Pt[k]->Divide(histoGammaTrueSecConvGammaFromX_Pt[k]);
-            if (isCalo && !isPCM) histoRatioSecondariesCocktailMC_Raw_Pt[k]->Divide(histoGammaTrueSecCaloGammaFromX_Pt[k]);
+
+        for (Int_t k = 0; k < 3; k++) {
             SetHistogramm(histoRatioSecondariesCocktailMC_Raw_Pt[k],"#it{p}_{T} (GeV/#it{c})", "Cocktail/MC",-99,-99,1.0,0.9);
+
+            // set y-range depending on max. ratio value
+            if (ratioSecondariesCocktailMCYMax > 2.0) {
+                canvasSecondaryComparison->SetLogy();
+                histoRatioSecondariesCocktailMC_Raw_Pt[k]->GetYaxis()->SetRangeUser(ratioSecondariesCocktailMCYMin*0.1, ratioSecondariesCocktailMCYMax*5.0);
+            } else {
+                histoRatioSecondariesCocktailMC_Raw_Pt[k]->GetYaxis()->SetRangeUser(0.0, ratioSecondariesCocktailMCYMax*1.5);
+            }
+
             DrawGammaSetMarker(histoRatioSecondariesCocktailMC_Raw_Pt[k], markerStyleSec[k], markerSizeSec[k]*2, colorSecFromToy[k] , colorSecFromToy[k]);
-            if (k == 0)
-                histoRatioSecondariesCocktailMC_Raw_Pt[k]->Draw();
-            else 
-                histoRatioSecondariesCocktailMC_Raw_Pt[k]->Draw("same");
+            if (k == 0) histoRatioSecondariesCocktailMC_Raw_Pt[k]->Draw();
+            else        histoRatioSecondariesCocktailMC_Raw_Pt[k]->Draw("same");
             legendCompareSecCocktailMC->AddEntry(histoRatioSecondariesCocktailMC_Raw_Pt[k],Form("Sec. #gamma from %s", nameLabelSecondaries[k].Data()),"p");
         }
         legendCompareSecCocktailMC->Draw();
@@ -2730,7 +2756,10 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoGammaCorrUnfoldReso_Pt->DrawCopy("e1,same");
     
         TLegend *legendGammaSpectraConvBin = GetAndSetLegend(0.45,0.85,2);
-        legendGammaSpectraConvBin->AddEntry(histoGammaCorrUnfoldReso_Pt,"corrected data #gamma spectrum");
+        if (isRunMC)
+            legendGammaSpectraConvBin->AddEntry(histoGammaCorrUnfoldReso_Pt,"corr. rec. MC #gamma spectrum");
+        else
+            legendGammaSpectraConvBin->AddEntry(histoGammaCorrUnfoldReso_Pt,"corr. data #gamma spectrum");
         legendGammaSpectraConvBin->AddEntry(histoMCGammaSpec_MCPt,"input MC #gamma spectrum");
         legendGammaSpectraConvBin->Draw();
     
