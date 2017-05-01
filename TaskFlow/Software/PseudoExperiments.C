@@ -1,8 +1,8 @@
 #include "DirectPhotonFlowFunctions.h"
 
 void  PseudoExperiments(
-                                      TString CentralityLow = "20",
-                                      TString CentralityHigh = "40",
+                                      TString CentralityLow = "0",
+                                      TString CentralityHigh = "20",
                                       Bool_t IncludeTheory = kTRUE
                                  ){
   
@@ -31,7 +31,7 @@ void  PseudoExperiments(
   graphRGamma->SetLineColor(kBlack);
   graphRGamma->SetLineWidth(3);
   
-  TFile* fileCocktail = new TFile("/home/mike/git_afterburner/AnalysisSoftware/TaskFlow/Results/CocktailV2.root");
+  TFile* fileCocktail = new TFile("/home/mike/git_afterburner/AnalysisSoftware/TaskFlow/Results/CocktailV2_2017.root");
   //cen3 = 2040
   //cen6 = 020
   //cen8 = 4080
@@ -45,7 +45,7 @@ void  PseudoExperiments(
   histoCocktail->SetMarkerColor(kGreen+2);
   histoCocktail->SetLineColor(kGreen+2);
   histoCocktail->SetLineWidth(3);
-  MaskPoints(histoCocktail,0,8);
+  MaskPoints(histoCocktail,0,2);
 
   gSystem->mkdir(Form("PseudoExperiments_%s%s", CentralityLow.Data(), CentralityHigh.Data()));
   //========================================================
@@ -365,7 +365,7 @@ void  PseudoExperiments(
   histoDirectEmpty->Draw();
   graphDirect1->Draw("SAME e1 p");
   DrawDirectInfoLabelOnPlot(CentralityLow.Data(),CentralityHigh.Data(),2);
-  T1.DrawLatex(0.17, 0.94, "This thesis");
+  T1.DrawLatex(0.17, 0.94, "work in progress");
   
   TCanvas* c4 = new TCanvas("c4","",800,800);
   SetProperMargins();
@@ -377,7 +377,7 @@ void  PseudoExperiments(
   SetProperMargins();
   histoInclusiveEmpty->Draw();
   DrawInfoLabelOnPlot(CentralityLow.Data(),CentralityHigh.Data(),2);
-  T1.DrawLatex(0.17, 0.94, "This thesis");
+  T1.DrawLatex(0.17, 0.94, "work in progress");
   graphInclusive->Draw("SAME e1 p");
   histoCocktail->Draw("SAME");
   

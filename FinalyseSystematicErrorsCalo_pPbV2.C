@@ -40,7 +40,7 @@
 #include "CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "CommonHeaders/ConversionFunctions.h"
 
-void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = "", 
+void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = "",
                                             TString energy                  = "", 
                                             TString meson                   = "", 
                                             Int_t numberOfPtBins            = 1, 
@@ -69,8 +69,6 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
     TString date                            = ReturnDateString();
     TString dateForOutput                   = ReturnDateStringForOutput();
     TString collisionSystem                 = ReturnFullCollisionsSystem(energy);
-    TString energyForOutput                 = energy;
-    energyForOutput.ReplaceAll(".","_");
     
     Color_t color[20]                       = { kBlue, kRed+1, kOrange+7, kPink+8, kGreen+2, 
                                                 kYellow+2, kOrange+2, kBlue+2, kCyan-2, kViolet+1, 
@@ -93,13 +91,18 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
     TString nameCutVariation[12];
     TString nameCutVariationSC[12];
     
-    TString nameCutVariation5023GeV[12]     = { "Yield extraction", "#theta_{#gamma#gamma}", "min E_{cluster}", "min # cells", "clu. energy calibration", 
-                                                "tr. match. to cl.", "M_{02}", "Mat. infront of EMCal", "Rapidity", "clu. energy scale",
-                                                "Efficiency", "Yield extraction #pi^{0}"};
-    TString nameCutVariationSC5023GeV[12]   = { "YieldExtraction", "OpeningAngle", "ClusterMinEnergy", "ClusterNCells", "ClusterNonLinearity", 
-                                                "ClusterTrackMatchingCalo", "ClusterM02","ClusterMaterialTRD", "Rapidity", "ClusterEnergyScale",
-                                                "Efficiency", "YieldExtractionPi0"};
+    TString nameCutVariation2760GeV[12]     = { "Yield extraction", "#theta_{#gamma#gamma}", "min E_{cluster}", "min # cells", "clu. energy calibration",
+                                                "tr. match. to cl.", "M_{02}", "Mat. infront of EMCal", "clu. energy scale", "Trigger normalization",
+                                                "Efficiency", "Yield extraction #pi^{0}" };
+    TString nameCutVariationSC2760GeV[12]   = { "YieldExtraction", "OpeningAngle", "ClusterMinEnergy", "ClusterNCells", "ClusterNonLinearity",
+                                                "ClusterTrackMatchingCalo", "ClusterM02","ClusterMaterialTRD", "ClusterEnergyScale" ,"Trigger",
+                                                "Efficiency", "YieldExtraction"};
+    TString nameCutVariation5023GeV[12]     = { "Yield extraction", "#theta_{#gamma#gamma}", "min E_{cluster}", "min # cells", "clu. energy calibration",
+                                                "tr. match. to cl.", "M_{02}", "Mat. infront of EMCal", "Rapidity", "clu. energy scale", "Efficiency", "Yield extraction #pi^{0}"};
+    TString nameCutVariationSC5023GeV[12]   = { "YieldExtraction", "OpeningAngle", "ClusterMinEnergy", "ClusterNCells", "ClusterNonLinearity",
+                                                "ClusterTrackMatchingCalo", "ClusterM02","ClusterMaterialTRD", "Rapidity", "ClusterEnergyScale", "Efficiency", "YieldExtraction"};
     if (meson.CompareTo("EtaToPi0") == 0){
+        nameCutVariation2760GeV[0]          = "Yield extraction #eta";
         nameCutVariation5023GeV[0]          = "Yield extraction #eta";
     }
     if (energy.CompareTo("pPb_5.023TeV") == 0) {
@@ -235,7 +238,8 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
             graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
         }
-        
+        cout << " graphPosErrors " << graphPosErrors << endl;
+        cout << " graphNegErrors " << graphNegErrors << endl;
         // take out offsets
         for (Int_t j = 0;j < offSetBeginning;j++){
             graphPosErrors->RemovePoint(0);
@@ -291,7 +295,7 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
                   }else{
                     error              = 0.753156-0.237041*ptBins[k]+0.0327857*ptBins[k]*ptBins[k];
                   }
-                  if (meson.CompareTo("Eta") == 0 ) error = error*1.25;
+                  //if (meson.CompareTo("Eta") == 0 ) error = error*1.25;
                   if (meson.CompareTo("EtaToPi0") == 0 ) error = TMath::Sqrt(1+1.25*1.25)*error;
                   errorsMean[i][k]            = error;
                   errorsMeanErr[i][k]         = error*0.01;
@@ -304,7 +308,7 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
             if (nameCutVariationSC[i].CompareTo("ClusterMinEnergy")==0  ){
                 cout << "Cluster minimum energy smoothing" << endl;
                 Double_t error = 2;
-                if (meson.CompareTo("Eta") == 0 ) error = error*2;
+                //if (meson.CompareTo("Eta") == 0 ) error = error*2;
                 if (meson.CompareTo("EtaToPi0") == 0 ) error = error*2;
                   for (Int_t k = 0;k < nPtBins;k++){
                       errorsMean[i][k]        = error;
@@ -343,10 +347,10 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
                 cout << "Cluster track matching smoothing" << endl;
                     for (Int_t k = 0;k < nPtBins;k++){
                       Double_t error = 2.5+(+0.09)*ptBins[k];
-                      if (meson.CompareTo("Eta") == 0){
-                        error   = error*2;
-                      }
-                      if( meson.CompareTo("EtaToPi0") == 0 ) error = TMath::Sqrt(5)*error;
+                      //if (meson.CompareTo("Eta") == 0){
+                      //  error   = error*2;
+                      //}
+                      //if( meson.CompareTo("EtaToPi0") == 0 ) error = TMath::Sqrt(5)*error;
                       errorsMean[i][k]        = error;
                       errorsMeanErr[i][k]     = 0.01*error;
                       errorsMeanCorr[i][k]    = error;
@@ -368,7 +372,7 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
             // manual smoothing for Material infront of EMC - variation 7
             if (nameCutVariationSC[i].CompareTo("ClusterMaterialTRD")==0 ){
                 cout << "Material smoothing" << endl;
-                Double_t error                  = 5.83; //(3% for TRD mat, 5% for TOF mat added in quadrature)
+                Double_t error                  = 4.24; //(3% for TRD mat, 3% for TOF mat added in quadrature)
                 if (meson.CompareTo("EtaToPi0") == 0)
                     error                       = 0;    // cancels fully for eta/pi0
                 for (Int_t k = 0;k < nPtBins;k++){
@@ -384,8 +388,7 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
                 cout << "Cluster non linearity smoothing" << endl;
                 for (Int_t k = 0;k < nPtBins;k++){
                     Double_t error              = 0.5;
-                    if (meson.CompareTo("Eta") == 0)
-                        error   = 2* error;
+//                     if (meson.CompareTo("Eta") == 0) error   = 2* error;
                     if (meson.CompareTo("EtaToPi0") == 0)
                         error   = 2* error;
                     errorsMean[i][k]            = error;
@@ -416,8 +419,8 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
                 cout << "Efficiency smoothing" << endl;
                 for (Int_t k = 0;k < nPtBins;k++){
                     Double_t error              = 4.0;
-                    if (meson.CompareTo("Eta") == 0) error   = 6.0;
-                    if (meson.CompareTo("EtaToPi0")== 0) error = TMath::Sqrt(4*4+6*6);
+                    //if (meson.CompareTo("Eta") == 0) error   = 6.0;
+                    //if (meson.CompareTo("EtaToPi0")== 0) error = TMath::Sqrt(4*4+6*6);
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -449,7 +452,6 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
             }   
         }    
         // Quadratic sum of errors except material error infront of EMCal & inner material
-        if (!nameCutVariationSC[i].CompareTo("ClusterMaterialTRD")==0){
             cout << "errors added quadratically" << endl;
             for (Int_t l = 0;l < nPtBins;l++){
                 errorsPosSummed[l]      = errorsPosSummed[l]+pow(errorsPos[i][l],2);
@@ -459,7 +461,6 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
                 errorsNegCorrSummed[l]  = errorsNegCorrSummed[l] +pow(errorsNegCorr[i][l],2);
                 errorsMeanCorrSummed[l] = errorsMeanCorrSummed[l]+ pow(errorsMeanCorr[i][l],2);
             }
-        }   
         // fill error graphs for plotting
         negativeErrors[i]       = new TGraphErrors(nPtBins,ptBins ,errorsNeg[i] ,ptBinsErr ,errorsNegErr[i] );
         meanErrors[i]           = new TGraphErrors(nPtBins,ptBins ,errorsMean[i] ,ptBinsErr ,errorsMeanErr[i] );
@@ -472,7 +473,7 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
     
     for (Int_t i = 0;i < nCuts;i++){
       for (Int_t k = 0;k < nPtBins;k++){
-	cout << " error " << errorsMean[i][k] << endl;
+	cout << "nCuts " << i << " ptbin " << ptBins[k] << " error " << errorsMean[i][k] << endl;
       }
     }
     
@@ -489,10 +490,10 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         errorsNegErrSummed[l]           = errorsNegSummed[l]*0.001;
 
         // add EMCal material errors
-        errorsPosCorrMatSummed[l]       = pow(errorsPosCorrSummed[l]+ pow(errorMaterial ,2.) + pow(errorsPosCorr[7][l],2) ,0.5);
-        errorsMeanCorrMatSummed[l]      = pow(errorsMeanCorrSummed[l]+ pow(errorMaterial ,2.)+ pow(errorsMeanCorr[7][l],2),0.5);
+        errorsPosCorrMatSummed[l]       = pow(errorsPosCorrSummed[l]+ pow(errorMaterial ,2.),0.5);
+        errorsMeanCorrMatSummed[l]      = pow(errorsMeanCorrSummed[l]+ pow(errorMaterial ,2.),0.5);
 	cout << " quad sum " << errorsMeanCorrMatSummed[l] << endl;
-        errorsNegCorrMatSummed[l]       = -pow(errorsNegCorrSummed[l]+ pow(errorMaterial ,2.)+ pow(errorsNegCorr[7][l],2),0.5);
+        errorsNegCorrMatSummed[l]       = -pow(errorsNegCorrSummed[l]+ pow(errorMaterial ,2.),0.5);
         
         errorsPosCorrSummed[l]          = pow(errorsPosCorrSummed[l],0.5);
         errorsMeanCorrSummed[l]         = pow(errorsMeanCorrSummed[l],0.5);
@@ -595,7 +596,7 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         labelTrig->Draw();
         
     canvasSysErrMean->Update();
-    canvasSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMean_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
+    canvasSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMean_%s_%s%s_%s.%s",meson.Data(), energy.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
     
     delete canvasSysErrMean;
     
@@ -653,7 +654,7 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         labelTrig->Draw();
 
     canvasNewSysErrMean->Update();
-    canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMeanNewWithMean_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
+    canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMeanNewWithMean_%s_%s%s_%s.%s",meson.Data(), energy.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
     
     // ***************************************************************************************************
     // ********************* Plot unsmoothed errors with fits ********************************************
@@ -703,13 +704,13 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
 	    leg->AddEntry("pol4","pol4","l");
 	    leg->Draw();
         
-        canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMeanNewWithMeanSingle_%s_%s%s_%s_Variation%d.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),cut,suffix.Data()));
+        canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMeanNewWithMeanSingle_%s_%s%s_%s_Variation%d.%s",meson.Data(), energy.Data(),additionalNameOutput.Data(),dateForOutput.Data(),cut,suffix.Data()));
     }   
         
     // ***************************************************************************************************
     // ********************* Create output files with errors *********************************************
     // ***************************************************************************************************    
-    const char *SysErrDatname = Form("SystematicErrorsCalculatedCalo/SystematicErrorEMCEMC_%s_%s%s_%s.dat",meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
+    const char *SysErrDatname = Form("SystematicErrorsCalculatedCalo/SystematicErrorEMCEMC_%s_%s%s_%s.dat",meson.Data(),energy.Data(),additionalNameOutput.Data(),dateForOutput.Data());
     fstream SysErrDat;
     cout << SysErrDatname << endl;
     SysErrDat.open(SysErrDatname, ios::out);
@@ -719,7 +720,7 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
 
     SysErrDat.close();
 
-    const char *SysErrDatnameMean = Form("SystematicErrorsCalculatedCalo/SystematicErrorAveragedEMCEMC_%s_%s%s_%s.dat",meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
+    const char *SysErrDatnameMean = Form("SystematicErrorsCalculatedCalo/SystematicErrorAveragedEMCEMC_%s_%s%s_%s.dat",meson.Data(),energy.Data(),additionalNameOutput.Data(),dateForOutput.Data());
     fstream SysErrDatAver;
     cout << SysErrDatnameMean << endl;
     SysErrDatAver.open(SysErrDatnameMean, ios::out);
@@ -728,24 +729,6 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
     }
 
     SysErrDatAver.close();
-
-    const char *SysErrDatnameMeanSingleErr = Form("SystematicErrorsCalculatedCalo/SystematicErrorAveragedSingleEMCEMC_%s_%s%s_%s.dat",meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
-    fstream SysErrDatAverSingle;
-    cout << SysErrDatnameMeanSingleErr << endl;
-    SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
-    SysErrDatAverSingle << "Pt bin\t" ; 
-    for (Int_t i= 0; i< numberCutStudies; i++){
-        SysErrDatAverSingle << nameCutVariationSC[i] << "\t";
-    }
-    SysErrDatAverSingle << endl; 
-    for (Int_t l=0;l< nPtBins;l++){
-        SysErrDatAverSingle << ptBins[l] << "\t";
-        for (Int_t i= 0; i< numberCutStudies; i++){
-            SysErrDatAverSingle << errorsMeanCorr[i][l] << "\t";
-        }  
-        SysErrDatAverSingle << errorsMeanCorrMatSummed[l] << endl;
-    }
-    SysErrDatAverSingle.close();
     
     // ***************************************************************************************************
     // ********************* Group errors according to topic *********************************************
@@ -759,8 +742,6 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         // grouping:
         // Signal extraction: Yield extraction 0, Open-Angle 1 
         errorsMeanCorrSignalExtraction[l] = TMath::Sqrt(errorsMeanCorr[0][l]*errorsMeanCorr[0][l]+errorsMeanCorr[1][l]*errorsMeanCorr[1][l]);
-        if (meson.CompareTo("EtaToPi0") == 0 ) // add pi0 yield extraction for plotting
-            errorsMeanCorrSignalExtraction[l] = TMath::Sqrt(errorsMeanCorr[0][l]*errorsMeanCorr[0][l]+errorsMeanCorr[1][l]*errorsMeanCorr[1][l]+errorsMeanCorr[11][l]*errorsMeanCorr[11][l]);
         // Signal extraction: NonLinearity 5 , Energy Scale 8 
         //errorsMeanCorrClusterEnergy[l]      = TMath::Sqrt(errorsMeanCorr[4][l]*errorsMeanCorr[4][l]+errorsMeanCorr[8][l]*errorsMeanCorr[8][l]);
         errorsMeanCorrClusterEnergy[l]      = TMath::Sqrt(errorsMeanCorr[4][l]*errorsMeanCorr[4][l]);//+errorsMeanCorr[8][l]*errorsMeanCorr[8][l]);
@@ -845,7 +826,7 @@ void FinalyseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         labelTrig->Draw();
     
     canvasSummedErrMean->Update();
-    canvasSummedErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysErrorSummedVisu_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
+    canvasSummedErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysErrorSummedVisu_%s_%s%s_%s.%s",meson.Data(), energy.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
     
     delete canvasSummedErrMean;
 // 

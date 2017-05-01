@@ -21,6 +21,7 @@ TFile*   				file2;
 TH1D*					histoCorrectedYield;;
 TH1D*					histoFWHMMeson;
 TH1D*					histoMassMeson;
+TH1D*					histoRatioMassMeson;
 TH1D*					histoTrueFWHMMeson;
 TH1D*					histoTrueMassMeson;
 TH1F*					histoEventQualtity;
@@ -105,9 +106,7 @@ TH1D* 					histoNumberOfEvents;
 TString 				centralityString;
 TString 				fileNamePi0pp;
 
-
-//Double_t 				recalcBarn 									= 1e12; //NLO in pbarn!!!!
-
+// Double_t 				recalcBarn 									= 1e12; //NLO in pbarn!!!!
 Double_t 				xPtLimitsPbPbPHOS[21] 						=  { 0.4,0.6,0.8,1.0,1.2,
 																		 1.4,1.6,1.8,2.0,2.2,
 																	 	 2.4,2.6,3.0,3.5,4.0,

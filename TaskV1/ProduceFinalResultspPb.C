@@ -45,7 +45,7 @@
 #include "../CommonHeaders/ConversionFunctions.h"
 #include "ProduceFinalResultspPb.h"
 
-void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection = "", TString suffix = "gif", TString textMeson = "Pi0" ,TString makeBinShiftWithFunction = "", TString optionEnergy = "", TString fileName2= "", Bool_t optNoBinShift=kFALSE, TString optDalitz = "",Int_t mode = 1){
+void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection = "", TString suffix = "eps", TString textMeson = "Pi0" ,TString makeBinShiftWithFunction = "", TString optionEnergy = "pPb_5.023TeV", TString fileName2= "", Bool_t optNoBinShift=kFALSE, TString optDalitz = "",Int_t mode = 4){
 	gROOT->Reset();	
 	gROOT->SetStyle("Plain");
 	
@@ -85,9 +85,9 @@ void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection 
 		}else if (centralityString.CompareTo("60-80%") == 0){
 			fileNameSysErr = Form("SystematicErrorsNew/SystematicErrorAveraged_%s_DummypPb.dat", textMeson.Data()); 
 		} else {
-			fileNameSysErr = Form("SystematicErrorsNew/SystematicErrorAveraged_%s_pPb_5.023TeV_MB_29_Apr_2014.dat", textMeson.Data()); 
+			  fileNameSysErr = Form("SystematicErrorsCalculatedCalo/SystematicErrorAveragedEMCEMC_%s_pPb_5.023TeV_2016_11_24.dat", textMeson.Data()); 
 		}
-		offsetSyst = 2;
+		offsetSyst = 10;
 		kMeson = kTRUE;
 	    } else {
 	      
@@ -100,8 +100,7 @@ void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection 
 		  }else if (centralityString.CompareTo("60-80%") == 0){
 			  fileNameSysErr = Form("SystematicErrorsNew/SystematicErrorAveraged_%s_DummypPb.dat", textMeson.Data()); 
 		  } else {
-			  //fileNameSysErr = Form("SystematicErrorsNew/SystematicErrorAveraged_Pi0_pPb_5.023TeVMB_27_Mar_2014.dat", textMeson.Data()); 
-			  fileNameSysErr = Form("SystematicErrorsNew/SystematicErrorAveraged_Dalitz_%s_pPb_5.023TeV_MB_2016_09_29.dat",textMeson.Data());
+			  fileNameSysErr = Form("SystematicErrorsCalculatedCalo/SystematicErrorAveragedEMCEMC_%s_pPb_5.023TeV_2016_11_24.dat", textMeson.Data()); 
 		  }
 		 offsetSyst = 3;
 		 kMeson = kTRUE;
@@ -118,9 +117,9 @@ void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection 
 		}else if (centralityString.CompareTo("60-80%") == 0){
 			fileNameSysErr = Form("SystematicErrorsNew/SystematicErrorAveraged_%s_DummypPb.dat", textMeson.Data()); 
 		} else {
-			fileNameSysErr = Form("SystematicErrorsNew/SystematicErrorAveraged_Eta_pPb_5.023TeVMB_27_Mar_2014.dat"); 
+			fileNameSysErr = Form("SystematicErrorsCalculatedCalo/SystematicErrorAveragedEMCEMC_Eta_pPb_5.023TeV_2016_11_24.dat"); 
 		}
-		offsetSyst = 4;
+		offsetSyst = 9;
 		kMeson = kFALSE;
 	}
 	cout << fileNameSysErr.Data() << endl;
@@ -178,7 +177,11 @@ void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection 
 	// File definitions
 	cout << "fileName: " << fileName.Data()<< endl;
 	file = 					new TFile(fileName);
-	histoCorrectedYield =			(TH1D*)file->Get("CorrectedYieldTrueEff"); 
+	if(mode==4){
+	  histoCorrectedYield =			(TH1D*)file->Get("CorrectedYieldNormEff");
+	}else{
+	  histoCorrectedYield =			(TH1D*)file->Get("CorrectedYieldTrueEff");
+	}
 	cout << "Bins" << endl;
 	for (Int_t i = 0; i < histoCorrectedYield->GetNbinsX()+1; i++){
 		cout << i<<"\t" <<histoCorrectedYield->GetXaxis()->GetBinCenter(i)<< "\t" <<histoCorrectedYield->GetBinContent(i)<< endl;
@@ -187,10 +190,20 @@ void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection 
 	histoFWHMMeson = 		(TH1D*)file->Get("histoFWHMMeson");    
 	histoMassMeson = 		(TH1D*)file->Get("histoMassMeson");
 	histoEventQualtity = 		(TH1F*)file->Get("NEvents");
-	histoTrueFWHMMeson = 		(TH1D*)file->Get("histoTrueFWHMMeson");    
-	histoTrueMassMeson = 		(TH1D*)file->Get("histoTrueMassMeson");
+  if(mode == 4){
+    histoTrueFWHMMeson = 		(TH1D*)file->Get("histoFWHMMesonRecMC");    
+    histoTrueMassMeson = 		(TH1D*)file->Get("histoMassMesonRecMC");
+  }else{
+    histoTrueFWHMMeson = 		(TH1D*)file->Get("histoTrueFWHMMeson");    
+    histoTrueMassMeson = 		(TH1D*)file->Get("histoTrueMassMeson");
+  }
 	TH1D* histoAcceptance= 		(TH1D*)file->Get("fMCMesonAccepPt");
-	TH1D* histoTrueEffPt =		(TH1D*)file->Get("TrueMesonEffiPt"); 
+  TH1D* histoTrueEffPt;
+  if(mode == 4){
+    histoTrueEffPt =		(TH1D*)file->Get("MesonEffiPt");
+  }else{
+    histoTrueEffPt =		(TH1D*)file->Get("TrueMesonEffiPt");
+  }
 	TH1D* histoMCInput =     	(TH1D*)file->Get("MCYield_Meson_oldBin");
 	TH1D* histoMCInputWOWeighting = (TH1D*)file->Get("MCYield_Meson_oldBinWOWeights");
 	TH1D* histoMCInputWeights =     (TH1D*)file->Get("WeightsMeson");
@@ -235,10 +248,19 @@ void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection 
  	fileSysErr.open(fileNameSysErr.Data(),ios_base::in);
 	cout << fileNameSysErr.Data() << endl;
 
-	while(!fileSysErr.eof()){
-		fileSysErr >> relSystErrorDown[nPoints] >> relSystErrorUp[nPoints]>>	relSystErrorWOMaterialDown[nPoints] >> relSystErrorWOMaterialUp[nPoints];
-		cout << nPoints << "\t"  << relSystErrorDown[nPoints] << "\t"  <<relSystErrorUp[nPoints] << "\t" << relSystErrorWOMaterialDown[nPoints] << "\t"  <<relSystErrorWOMaterialUp[nPoints] << endl;;		
-		nPoints++;
+	if(mode==4){
+	  while(!fileSysErr.eof() && nPoints<50){
+		  Double_t Pt_temp =0;
+		  fileSysErr >> Pt_temp >> relSystErrorDown[nPoints] >> relSystErrorUp[nPoints]>>	relSystErrorWOMaterialDown[nPoints] >> relSystErrorWOMaterialUp[nPoints];
+		  cout << nPoints << "\t"  << relSystErrorDown[nPoints] << "\t"  <<relSystErrorUp[nPoints] << "\t" << relSystErrorWOMaterialDown[nPoints] << "\t"  <<relSystErrorWOMaterialUp[nPoints] << endl;		
+		  nPoints++;
+	  }
+	}else{
+	  while(!fileSysErr.eof() && nPoints<50){
+		  fileSysErr >> relSystErrorDown[nPoints] >> relSystErrorUp[nPoints]>>	relSystErrorWOMaterialDown[nPoints] >> relSystErrorWOMaterialUp[nPoints];
+		  cout << nPoints << "\t"  << relSystErrorDown[nPoints] << "\t"  <<relSystErrorUp[nPoints] << "\t" << relSystErrorWOMaterialDown[nPoints] << "\t"  <<relSystErrorWOMaterialUp[nPoints] << endl;		
+		  nPoints++;
+	  }
 	}
 	fileSysErr.close();
 	nPoints = nPoints-1;
@@ -252,12 +274,20 @@ void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection 
 	DrawGammaCanvasSettings( canvasFWHM, 0.08, 0.02, 0.04, 0.09);
    
 	histoFWHMMeson->GetYaxis()->SetNdivisions(510); 
-	DrawGammaSetMarker(histoFWHMMeson, 22, 0.8, kBlack, kBlack);					  
-	DrawAutoGammaMesonHistos( histoFWHMMeson, 
-								 "", "p_{T} (GeV/c)","FWHM/2.36 (GeV/c^{2})", 
-								 kFALSE, 3.,0., kFALSE,
-								 kTRUE, -0.004, 0.020, 
-								 kFALSE, 0., 10.);
+	DrawGammaSetMarker(histoFWHMMeson, 22, 0.8, kBlack, kBlack);
+  if (textMeson.Contains("Pi0")){
+    DrawAutoGammaMesonHistos( histoFWHMMeson, 
+                 "", "p_{T} (GeV/c)","FWHM/2.36 (GeV/c^{2})", 
+                 kFALSE, 3.,0., kFALSE,
+                 kTRUE, 0, 0.030, 
+                 kFALSE, 0., 10.);
+  }else{
+    DrawAutoGammaMesonHistos( histoFWHMMeson, 
+                 "", "p_{T} (GeV/c)","FWHM/2.36 (GeV/c^{2})", 
+                 kFALSE, 3.,0., kFALSE,
+                 kTRUE, 0, 0.070, 
+                 kFALSE, 0., 10.);
+  }
 	histoFWHMMeson->GetYaxis()->SetTitleOffset(1.);
 	histoFWHMMeson->DrawCopy("e1,p"); 
 	DrawGammaSetMarker(histoTrueFWHMMeson, 26, 0.8, kRed+2, kRed+2);
@@ -288,13 +318,13 @@ void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection 
 	      DrawAutoGammaMesonHistos( histoMassMeson, 
 				"", "p_{T} (GeV/c)", Form("Mass (GeV/c^{2})"), 
 				kFALSE, 3.,0.,  kFALSE,
-				kTRUE, 0.130,0.140, 
+				kTRUE, 0.120,0.170, 
 				kFALSE, 0., 10.);
 	} else {
 	  DrawAutoGammaMesonHistos( histoMassMeson, 
 			  "", "p_{T} (GeV/c)", "Mass (GeV/c^{2})", 
 			  kFALSE, 3.,0., kFALSE,
-			  kTRUE, 0.545,0.560, 
+			  kTRUE, 0.48,0.6, 
 			  kFALSE, 0., 10.);
 	}
 
@@ -588,7 +618,7 @@ void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection 
 		delete canvasFittingSpectra;
 	}	
 	
-	if (textMeson.CompareTo("Eta")==0){
+	if (textMeson.CompareTo("Eta")==0 && kFALSE){
 	  //***************************************************************************************************
 	  //*************************** Fitting  Pi0 Spectrum *************************************************
 	  //***************************************************************************************************
@@ -987,13 +1017,17 @@ void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection 
 		}else if (centralityString.CompareTo("60-80%") == 0){
 			fileNameSysErrPi0EtaBinning = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_DummypPb.dat"; 
 		} else {
-			fileNameSysErrPi0EtaBinning = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_pPb_5.023TeVMB_28_Mar_2014.dat"; 
+			fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedCalo/SystematicErrorAveragedEMCEMC_EtaToPi0_pPb_5.023TeV_2016_11_24.dat"; 
 		}
 
 		histoCorrectedYieldEta = (TH1D*) histoCorrectedYield->Clone(); 
 		
 		file2 =               new TFile(fileName2);
-		histoCorrectedYieldPi0EtaBinning =         (TH1D*)file2->Get("CorrectedYieldTrueEff"); 
+    if(mode==4){
+    histoCorrectedYieldPi0EtaBinning =     (TH1D*)file2->Get("CorrectedYieldNormEff");
+    }else{
+      histoCorrectedYieldPi0EtaBinning =         (TH1D*)file2->Get("CorrectedYieldTrueEff");
+    }
 		cout << "Bins" << endl;
 		for (Int_t i = 0; i < histoCorrectedYieldPi0EtaBinning->GetNbinsX()+1; i++){
 			cout << i<<"\t" <<histoCorrectedYieldPi0EtaBinning->GetXaxis()->GetBinCenter(i)<< "\t"<< histoCorrectedYieldEta->GetBinContent(i) << "\t" <<histoCorrectedYieldPi0EtaBinning->GetBinContent(i)<<  "\t" <<histoCorrectedYieldEta->GetBinContent(i)/histoCorrectedYieldPi0EtaBinning->GetBinContent(i)<< endl;
@@ -1001,10 +1035,20 @@ void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection 
 		
 		fileSysErr2.open(fileNameSysErrPi0EtaBinning.Data(),ios_base::in);
 		cout << fileNameSysErrPi0EtaBinning.Data() << endl;
-		while(!fileSysErr2.eof() && nPointsPi0EtaBinning<50){
-			fileSysErr2 >> relPi0EtaBinningSystErrorDown[nPointsPi0EtaBinning] >> relPi0EtaBinningSystErrorUp[nPointsPi0EtaBinning]>> relPi0EtaBinningSystErrorWOMaterialDown[nPointsPi0EtaBinning] >> relPi0EtaBinningSystErrorWOMaterialUp[nPointsPi0EtaBinning];
-			cout << nPointsPi0EtaBinning << "\t"  << relPi0EtaBinningSystErrorDown[nPointsPi0EtaBinning] << "\t"  <<relPi0EtaBinningSystErrorUp[nPointsPi0EtaBinning] << "\t" << relPi0EtaBinningSystErrorWOMaterialDown[nPointsPi0EtaBinning] << "\t"  <<relPi0EtaBinningSystErrorWOMaterialUp[nPointsPi0EtaBinning] << endl;;     
-			nPointsPi0EtaBinning++;
+		
+		if(mode==4){
+		  Double_t Pt_temp;
+		  while(!fileSysErr2.eof() && nPointsPi0EtaBinning<50){
+			  fileSysErr2 >> Pt_temp >> relPi0EtaBinningSystErrorDown[nPointsPi0EtaBinning] >> relPi0EtaBinningSystErrorUp[nPointsPi0EtaBinning]>> relPi0EtaBinningSystErrorWOMaterialDown[nPointsPi0EtaBinning] >> relPi0EtaBinningSystErrorWOMaterialUp[nPointsPi0EtaBinning];
+			  cout << nPointsPi0EtaBinning << "\t"  << relPi0EtaBinningSystErrorDown[nPointsPi0EtaBinning] << "\t"  <<relPi0EtaBinningSystErrorUp[nPointsPi0EtaBinning] << "\t" << relPi0EtaBinningSystErrorWOMaterialDown[nPointsPi0EtaBinning] << "\t"  <<relPi0EtaBinningSystErrorWOMaterialUp[nPointsPi0EtaBinning] << endl;;     
+			  nPointsPi0EtaBinning++;
+		  }
+		}else{
+		  while(!fileSysErr2.eof() && nPointsPi0EtaBinning<50){
+			  fileSysErr2 >> relPi0EtaBinningSystErrorDown[nPointsPi0EtaBinning] >> relPi0EtaBinningSystErrorUp[nPointsPi0EtaBinning]>> relPi0EtaBinningSystErrorWOMaterialDown[nPointsPi0EtaBinning] >> relPi0EtaBinningSystErrorWOMaterialUp[nPointsPi0EtaBinning];
+			  cout << nPointsPi0EtaBinning << "\t"  << relPi0EtaBinningSystErrorDown[nPointsPi0EtaBinning] << "\t"  <<relPi0EtaBinningSystErrorUp[nPointsPi0EtaBinning] << "\t" << relPi0EtaBinningSystErrorWOMaterialDown[nPointsPi0EtaBinning] << "\t"  <<relPi0EtaBinningSystErrorWOMaterialUp[nPointsPi0EtaBinning] << endl;;     
+			  nPointsPi0EtaBinning++;
+		  }
 		}
 		fileSysErr2.close();
 		nPointsPi0EtaBinning = nPointsPi0EtaBinning-1;
@@ -1041,8 +1085,10 @@ void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection 
 			ratioXValue[i] = histoRatioEtaPi0->GetBinCenter(i+offsetSyst);
 			ratioYValue[i] = histoRatioEtaPi0->GetBinContent(i+offsetSyst);
 			ratioXError[i] = histoRatioEtaPi0->GetBinWidth(i+offsetSyst)/2.;
-			ratioSysUpError[i]= TMath::Sqrt(TMath::Power(relSystErrorWOMaterialUp[i]/100* histoCorrectedYieldEta->GetBinContent(i+offsetSyst)/histoCorrectedYieldPi0EtaBinning->GetBinContent(i+offsetSyst),2) + TMath::Power(histoCorrectedYieldEta->GetBinContent(i+offsetSyst)*relPi0EtaBinningSystErrorWOMaterialUp[i]/100/histoCorrectedYieldPi0EtaBinning->GetBinContent(i+offsetSyst),2));
-			ratioSysDownError[i]= TMath::Sqrt(TMath::Power(relSystErrorWOMaterialDown[i]/100* histoCorrectedYieldEta->GetBinContent(i+offsetSyst)/histoCorrectedYieldPi0EtaBinning->GetBinContent(i+offsetSyst),2) + TMath::Power(histoCorrectedYieldEta->GetBinContent(i+offsetSyst)*relPi0EtaBinningSystErrorWOMaterialDown[i]/100/histoCorrectedYieldPi0EtaBinning->GetBinContent(i+offsetSyst),2));
+			//ratioSysUpError[i]= TMath::Sqrt(TMath::Power(relSystErrorWOMaterialUp[i]/100* histoCorrectedYieldEta->GetBinContent(i+offsetSyst)/histoCorrectedYieldPi0EtaBinning->GetBinContent(i+offsetSyst),2) + TMath::Power(histoCorrectedYieldEta->GetBinContent(i+offsetSyst)*relPi0EtaBinningSystErrorWOMaterialUp[i]/100/histoCorrectedYieldPi0EtaBinning->GetBinContent(i+offsetSyst),2));
+			//ratioSysDownError[i]= TMath::Sqrt(TMath::Power(relSystErrorWOMaterialDown[i]/100* histoCorrectedYieldEta->GetBinContent(i+offsetSyst)/histoCorrectedYieldPi0EtaBinning->GetBinContent(i+offsetSyst),2) + TMath::Power(histoCorrectedYieldEta->GetBinContent(i+offsetSyst)*relPi0EtaBinningSystErrorWOMaterialDown[i]/100/histoCorrectedYieldPi0EtaBinning->GetBinContent(i+offsetSyst),2));
+			ratioSysUpError[i]= TMath::Sqrt(TMath::Power(relPi0EtaBinningSystErrorUp[i]/100*ratioYValue[i],2));
+			ratioSysDownError[i]= TMath::Sqrt(TMath::Power(relPi0EtaBinningSystErrorDown[i]/100*ratioYValue[i],2));
 		}
 		
 		graphSystErrRatio = new TGraphAsymmErrors(nPoints,ratioXValue,ratioYValue,ratioXError,ratioXError,ratioSysDownError,ratioSysUpError);
@@ -1067,12 +1113,16 @@ void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection 
 	
    }
 	
-	
-	const char* fileNameOutputComp = Form("%s_PCMResults_pPb%s.root",prefix2.Data(),applyBinShift.Data());
+	histoRatioMassMeson = (TH1D*)histoMassMeson->Clone();
+  histoRatioMassMeson->Divide(histoTrueMassMeson);
+  histoRatioMassMeson->GetYaxis()->SetRangeUser(0.5,1.5);
+  
+	const char* fileNameOutputComp = Form("%s_EMCalEMCalResults_test_pPb%s.root",prefix2.Data(),applyBinShift.Data());
 	TFile* fileOutputForComparisonFullyCorrected = new TFile(fileNameOutputComp,"UPDATE");		
 		if (textMeson.CompareTo("Pi0") == 0){
 			histoNumberOfEvents->Write(Form("histoNumberOfEvents%s%s",optionEnergy.Data(),centralityString.Data()),TObject::kOverwrite);
 		}
+// 		textMeson = "Pi0EtaBinning";
 		fileOutputForComparisonFullyCorrected->mkdir(Form("%s_%s_%s",textMeson.Data(),optionEnergy.Data(),centralityString.Data()));
 		fileOutputForComparisonFullyCorrected->cd(Form("%s_%s_%s",textMeson.Data(), optionEnergy.Data(),centralityString.Data()));
 		histoCorrectedYield->Write(Form("CorrectedYield%s",textMeson.Data()),TObject::kOverwrite);
@@ -1086,7 +1136,7 @@ void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection 
 		if (histoMCInputWOWeightingAddedSig)histoMCInputWOWeightingAddedSig->Write(Form("%sMCInputWOWeightsAddedSig",textMeson.Data()),TObject::kOverwrite);
 		if (histoMCInputWeightsAddedSig)histoMCInputWeightsAddedSig->Write(Form("%sMCInputWeightsAddedSig",textMeson.Data()),TObject::kOverwrite);
 		
-		if (textMeson.CompareTo("Pi0") == 0){
+		if (textMeson.CompareTo("Pi0") == 0 ){
 		    histoCorrYieldBinShifted->Write("CorrectedYieldPi0BinShifted",TObject::kOverwrite);
 		    graphCorrectedYieldSysErrBinShifted->Write(Form("%sSystErrorBinShifted",textMeson.Data()),TObject::kOverwrite);
 		    graphCorrectedYieldSysErrABinShifted->Write(Form("%sSystErrorABinShifted",textMeson.Data()),TObject::kOverwrite);
@@ -1100,12 +1150,15 @@ void ProduceFinalResultspPb(TString fileName = "myOutput", TString cutSelection 
 		histoMassMeson->Write(Form("Mass%s",textMeson.Data()),TObject::kOverwrite);
 		histoMassMesonMinusExp->Write(Form("Mass%sMinusExp",textMeson.Data()),TObject::kOverwrite);
 		histoTrueMassMeson->Write(Form("TrueMass%s",textMeson.Data()),TObject::kOverwrite);
+    histoRatioMassMeson->Write(Form("RatioMass%s",textMeson.Data()),TObject::kOverwrite);
 		histoTrueMassMesonMinusExp->Write(Form("TrueMass%sMinusExp",textMeson.Data()),TObject::kOverwrite);
 		histoTrueFWHMMesonMeV->Write(Form("TrueFWHM%sMeV",textMeson.Data()),TObject::kOverwrite);
 		histoFWHMMesonMeV->Write(Form("FWHM%sMeV",textMeson.Data()),TObject::kOverwrite);
+    if(textMeson.CompareTo("Pi0EtaBinning")!=0){
 		graphCorrectedYieldSysErr->Write(Form("%sSystError",textMeson.Data()),TObject::kOverwrite);
 		graphCorrectedYieldSysErrA->Write(Form("%sSystErrorA",textMeson.Data()),TObject::kOverwrite);
 		graphCorrectedYieldStatPlusSys->Write(Form("%sComplError",textMeson.Data()),TObject::kOverwrite);
+    }
 		
 		
 	fileOutputForComparisonFullyCorrected->Write();
