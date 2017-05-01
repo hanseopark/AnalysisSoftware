@@ -68,10 +68,14 @@ void  Systematics(
   }
   
 <<<<<<< HEAD
+<<<<<<< HEAD
   TFile* fileDefaultInclusive  = new TFile(Form("/home/mike/Dropbox/msas_ALICE/PbPb_v2dirg/170216_v2_final_systematics/Results_%s/InclusivePhotonv2_Corrected_%i_%s.root",DefaultCut.Data(),Trainconfig,DefaultCut.Data()));
 =======
   TFile* fileDefaultInclusive  = new TFile(Form("/home/mike/3_PbPb_dirg/0_analysis/170216_v2_final_systematics/Results_%s/InclusivePhotonv2_Corrected_%i_%s.root",DefaultCut.Data(),Trainconfig,DefaultCut.Data()));
 >>>>>>> update to flow code
+=======
+  TFile* fileDefaultInclusive  = new TFile(Form("/home/mike/Dropbox/msas_ALICE/PbPb_v2dirg/170216_v2_final_systematics/Results_%s/InclusivePhotonv2_Corrected_%i_%s.root",DefaultCut.Data(),Trainconfig,DefaultCut.Data()));
+>>>>>>> changes to TaskFlow and pPb analysis code
   TH1F*  histoDefaultInclusive = (TH1F*)fileDefaultInclusive->Get(Form("v2GammaIncl_corrected_%s%s_tC%i",CentralityLow.Data(),CentralityHigh.Data(),Trainconfig));
   if(!histoDefaultInclusive) cout << "histoDefaultInclusive not found in fileInclusive!!" << endl;
   histoDefaultInclusive->SetLineColor(kBlack);
@@ -84,10 +88,14 @@ void  Systematics(
     if(i==4) SystTrainConfig++;
     if(i==8) SystTrainConfig++;
 <<<<<<< HEAD
+<<<<<<< HEAD
     TFile* fileInclusive  = new TFile(Form("/home/mike/Dropbox/msas_ALICE/PbPb_v2dirg/170216_v2_final_systematics/Results_%s/InclusivePhotonv2_Corrected_%i_%s.root",SystVariations[ i].Data(),SystTrainConfig,SystVariations[ i].Data()));
 =======
     TFile* fileInclusive  = new TFile(Form("/home/mike/3_PbPb_dirg/0_analysis/170216_v2_final_systematics/Results_%s/InclusivePhotonv2_Corrected_%i_%s.root",SystVariations[ i].Data(),SystTrainConfig,SystVariations[ i].Data()));
 >>>>>>> update to flow code
+=======
+    TFile* fileInclusive  = new TFile(Form("/home/mike/Dropbox/msas_ALICE/PbPb_v2dirg/170216_v2_final_systematics/Results_%s/InclusivePhotonv2_Corrected_%i_%s.root",SystVariations[ i].Data(),SystTrainConfig,SystVariations[ i].Data()));
+>>>>>>> changes to TaskFlow and pPb analysis code
     cout << " fileInclusive " << fileInclusive << endl;
     histoInclusive[i] = (TH1F*)fileInclusive->Get(Form("v2GammaIncl_corrected_%s%s_tC%i",CentralityLow.Data(),CentralityHigh.Data(),SystTrainConfig));
     if(!histoInclusive[i]) cout << i << " histoInclusive not found in fileInclusive!!" << endl;
@@ -430,7 +438,7 @@ void  Systematics(
     SmoothSystematicError(graphSystErrors6_rel,SystNames[5].Data());
     SmoothSystematicError(graphSystErrors7_rel,SystNames[6].Data());
   }
-
+  
   TGraphAsymmErrors* graphTotalSyst_smoothed = (TGraphAsymmErrors*)CalculateTotalSystematics(graphSystErrors1_rel,graphSystErrors2_rel,graphSystErrors3_rel,graphSystErrors4_rel,graphSystErrors5_rel,graphSystErrors6_rel,graphSystErrors7_rel);
 
 
@@ -626,12 +634,17 @@ void SmoothSystematicError(TGraphAsymmErrors* g1,TString NameSyst){
   
   for(int ibin=0;ibin<NPoints;ibin++){
 <<<<<<< HEAD
+<<<<<<< HEAD
     valPol1 = fitSystematicPol1->Eval(g1_x[ibin]);
     if(valPol1>0) g1->SetPoint(ibin,g1_x[ibin],valPol1);
 =======
     valPol1 = 
     g1->SetPoint(ibin,g1_x[ibin],);
 >>>>>>> update to flow code
+=======
+    valPol1 = fitSystematicPol1->Eval(g1_x[ibin]);
+    if(valPol1>0) g1->SetPoint(ibin,g1_x[ibin],valPol1);
+>>>>>>> changes to TaskFlow and pPb analysis code
   }
 
   
