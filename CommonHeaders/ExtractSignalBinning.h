@@ -245,14 +245,18 @@ Int_t fBinsPi0900GeVEMCPtRebin[12]              = { 2, 8, 5, 4, 4, 5, 8, 8, 8, 1
 
     Double_t fBinsEta7TeVPt[18]                     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0,
                                                         3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0};
-    Double_t fBinsEta7TeVPCMPHOSPt[18]              = { 0.0, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0,
+    Double_t fBinsEta7TeVPCMPHOSPt[19]              = { 0.0, 0.8, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0,
+                                                        3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0};
+    Double_t fBinsEta7TeVPHOSPt[18]                 = { 0.0, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0,
                                                         3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0};
     Double_t fBinsEta7TeVPCMEMCPt[19]               = { 0.0, 0.4, 0.6, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0, 3.5,
                                                         4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 14.0, 20, 25.0};
     Int_t fBinsEta7TeVPtRebin[17]                   = { 8, 7, 7, 4, 4, 4, 4, 4, 5, 5,
                                                         5, 5, 5, 5, 6, 8, 8};
-    Int_t fBinsEta7TeVPCMPHOSPtRebin[17]            = { 8, 8, 8, 5, 5, 5, 5, 5, 5,
+    Int_t fBinsEta7TeVPCMPHOSPtRebin[18]            = { 8, 8, 8, 8, 5, 5, 5, 5, 5, 5,
                                                         10, 10, 8, 8, 8, 8, 8};
+    Int_t fBinsEta7TeVPHOSPtRebin[17]               = { 8, 8, 8, 8, 8, 8, 8, 8, 8,
+                                                        8, 8, 8, 8, 8, 8, 8};
 
     Int_t fBinsEta7TeVPCMEMCPtRebin[18]             = { 2, 2, 2, 16, 10, 8, 8, 8, 8, 8,
                                                         8, 10, 10, 16, 16, 16, 16, 20};
@@ -266,7 +270,7 @@ Int_t fBinsPi0900GeVEMCPtRebin[12]              = { 2, 8, 5, 4, 4, 5, 8, 8, 8, 1
     Double_t fBinsEtaPrim7TeVPt[8]                  = { 0.0, 0.5, 1.0, 2.0, 3.0, 4.0, 6.0, 10.0};
     Int_t fBinsEtaPrim7TeVPtRebin[7]                = { 8, 2, 2, 2, 2, 2, 2};
 
-    Double_t fBinsDirGamma7TeVPt[24]                = { 0.0, 0.3, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
+    Double_t fBinsDirGamma7TeVPt[24]                = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
                                                         1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 3.5, 4.0,
                                                         4.5, 5.0, 6.0, 7.0, 9.0, 12., 16., 20.};
     Int_t fBinsDirGamma7TeVPtRebin[23]              = { 3, 2, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -346,7 +350,7 @@ Double_t fBinsPi08TeVEMCalTrigger1Pt[45]        = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.8
     Double_t fBinsPi08TeVPtDCA[23]                  = { 0.0, 0.3, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 2.0,
                                                         2.4, 2.8, 3.2, 3.6, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0,
                                                         16.0, 20.0, 25.0};
-    Int_t fBinsPi08TeVPtRebin[33]                   = { 2, 4, 2, 1, 1, 1, 1, 1, 1, 1,
+    Int_t fBinsPi08TeVPtRebin[33]                   = { 2, 5, 2, 1, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 1, 2, 2, 2, 2, 4, 4, 4,
                                                         5, 5, 5};
@@ -467,7 +471,7 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                                                         16.,  17.,  18.,  19.,  20.,  22.,  24.,  26.,  28.,  30.,
                                                         35,   40,   45,   50,   55,   60,   65,   70,   75,   80,
                                                         85,   90,   95,   100 };
-    Double_t fBinsDirGamma8TeVPt[24]                = { 0.0, 0.3, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
+    Double_t fBinsDirGamma8TeVPt[24]                = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
                                                         1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 3.5, 4.0,
                                                         4.5, 5.0, 6.0, 7.0, 9.0, 12., 16., 20.};
     Int_t fBinsDirGamma8TeVPtRebin[23]              = { 3, 2, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -1657,15 +1661,15 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                     else if(modi == 2)
                         fStartPtBin = 6;
                     if(modi == 5)
-                        fStartPtBin = 4;
+                        fStartPtBin = 2;
                     fColumn         = 7;
                     fRow            = 6;
                     if (modi == 0) fRow = 7;
                     else if (modi == 2) fColumn = 7;
                     else if (modi == 4) fColumn = 6;
                     else if (modi == 5){
-                        fColumn = 6;
-                        fRow    = 5;
+                        fColumn = 7;
+                        fRow    = 6;
                     }
 
                     if (isDCA) {
@@ -1697,6 +1701,10 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                                 fBinsPt[i]      = fBinsPi07TeVEMCPt[i];
                                 if (i < fNBinsPt)
                                 fNRebin[i]   = fBinsPi07TeVEMCPtRebin[i];
+                            } else if (modi == 5){
+                                fBinsPt[i]      = fBinsPi07TeVPCMPHOSPt[i];
+                                if (i < fNBinsPt)
+                                fNRebin[i]   = fBinsPi07TeVPCMPHOSPtRebin[i];
                             } else if (modi == 1){
                                 fBinsPt[i]      = fBinsPi07TeVDalitzPt[i];
                                 if (i < fNBinsPt)
@@ -1882,11 +1890,11 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                         }
                     }
 
-                    nIterBGFit                  = 11;
-                    fMaxYFracBGOverIntHist      = 30;
-                    optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
-                    optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
-                    optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+                    nIterBGFit                  = 10;
+                    fMaxYFracBGOverIntHist      = 50;
+                    optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
+                    optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing7";
+                    optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing11";
 
                     Int_t nBinsPlot = fColumn*fRow -1;
                     if ((fNBinsPt-fStartPtBin) > nBinsPlot) fColumn++;
@@ -2580,6 +2588,8 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                     fRow            = 3;
                 } else if (modi == 2 ) {
                     fStartPtBin     = 3;
+                } else if (modi == 3 ) {
+                    fStartPtBin     = 2;
                 } else if (modi == 4) {
                     fStartPtBin     = 6;
                 }
@@ -2605,6 +2615,10 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                         fBinsPt[i]      = fBinsEta7TeVPCMEMCPt[i];
                         if (i < fNBinsPt+1)
                             fNRebin[i]  = fBinsEta7TeVEMCPtRebin[i];
+                    } else if(modi == 5){
+                        fBinsPt[i]      = fBinsEta7TeVPHOSPt[i];
+                        if (i < fNBinsPt+1)
+                            fNRebin[i]  = fBinsEta7TeVPHOSPtRebin[i];
                     } else {
                         fBinsPt[i]      = fBinsEta7TeVPt[i];
                         if (i < fNBinsPt+1)
@@ -2769,9 +2783,9 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                         if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVPtRebin[i];
                     }
                 }
-                nIterBGFit                  = 11;
-                fMaxYFracBGOverIntHist      = 30;
-                optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                nIterBGFit                  = 10;
+                fMaxYFracBGOverIntHist      = 50;
+                optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
                 optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing6";
                 optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
 
