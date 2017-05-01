@@ -2472,7 +2472,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             SetHistogramm(histoCombinatorialSpecies_Pt[16],"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",-99., -99., 1.0, 1.7);        
             DrawGammaSetMarker(histoCombinatorialSpecies_Pt[16], markersCombinatorics[16], 1., colorsCombinatorics[16], colorsCombinatorics[16]);
             histoCombinatorialSpecies_Pt[16]->Scale(1./nEvtMC);
-            histoCombinatorialSpeciesCalo_Pt[16]->GetYaxis()->SetRangeUser(histoCombinatorialSpecies_Pt[16]->GetMinimum(0)*1e-3, histoCombinatorialSpecies_Pt[16]->GetMaximum()*10.);
+            histoCombinatorialSpecies_Pt[16]->GetYaxis()->SetRangeUser(histoCombinatorialSpecies_Pt[16]->GetMinimum(0)*1e-3, histoCombinatorialSpecies_Pt[16]->GetMaximum()*10.);
             histoCombinatorialSpecies_Pt[16]->DrawCopy("");
             legendCombSpectra->AddEntry(histoCombinatorialSpecies_Pt[16],combinatoricsLabels[16]);
             
