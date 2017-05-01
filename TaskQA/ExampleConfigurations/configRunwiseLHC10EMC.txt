@@ -1,0 +1,12 @@
+#example config	LHC10[b-f] - EMC
+select	LHC10EMC
+mode	4
+cutNr	0
+nSets	6
+nData   5
+energy	7TeV
+filePath    ../AnalysisOutput/pp7TeV/DataQA/20170321
+fileName    GammaCalo_201.root
+doTrigger   kTRUE
+DataSets    LHC10b_pass4_EMC    LHC10c_pass4_EMC    LHC10d_pass4_EMC    LHC10e_pass4_EMC    LHC10f_pass4_EMC    LHC14j4_EMC STOP
+plotDataSets    LHC10b  LHC10c  LHC10d  LHC10e  LHC10f  Pythia6 STOP
