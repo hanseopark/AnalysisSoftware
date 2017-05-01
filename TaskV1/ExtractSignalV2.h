@@ -1016,6 +1016,10 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             if( fEnergyFlag.CompareTo("8TeV") == 0 || fEnergyFlag.CompareTo("7TeV") == 0 )
                 fBGFitRange[1] = 0.795;
         } else if ( mode == 5) {
+            fBGFitRange[0]                  = 0.58;
+            fBGFitRange[1]                  = 0.79;
+            fBGFitRangeLeft[0]              = 0.35;
+            fBGFitRangeLeft[1]              = 0.48;
         } else {
             fBGFitRange[0]          = 0.58; 
             fBGFitRange[1]          = 0.79; 
@@ -1029,13 +1033,8 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         
         // Initialize default Plot default integration ranges
         if (mode == 0){
-            if ( fEnergyFlag.CompareTo("8TeV")){
-                fMesonIntDeltaRange[0]      = -0.036;
-                fMesonIntDeltaRange[1]      = 0.018;
-            } else {
-                fMesonIntDeltaRange[0]      = -0.048;
-                fMesonIntDeltaRange[1]      = 0.022;
-            }    
+            fMesonIntDeltaRange[0]          = -0.036;
+            fMesonIntDeltaRange[1]          = 0.018;
             fMesonIntDeltaRangeWide[0]      = -0.068;
             fMesonIntDeltaRangeWide[1]      = 0.032;
             fMesonIntDeltaRangeNarrow[0]    = -0.033;

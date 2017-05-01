@@ -808,7 +808,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     if (energy.Contains("2.76TeV") && mode == 4){
         minPtFitSec[1]      = 1.8;
     }
-    
+    else if (!energy.CompareTo("900GeV"))
+        minPtFitSec[1]                                              = 0.4;
+
     if ( hasCocktailInput && (isPCM || isCalo) ) {        
         TF1* constant                                               = new TF1("constant", "[0]", 0, 50);
         // taken directly from MC (statistics sufficient)
@@ -827,10 +829,14 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             
             // constant fit to scale primary reco eff (statistics insufficient) MC pt
             ratioGammaSecEffMCPt[k]->Fit(constant,"SMNR0E+","", minPtFitSec[k], maxPtFitSec);
+            if(!energy.CompareTo("900GeV"))
+                ratioGammaSecEffMCPt[k]->Fit(constant,"SMNR0E+","", minPtFitSec[k], 1.1);
             constOffsetEffMCPt[k]                                   = constant->GetParameter(0);
             
             // constant fit to scale primary reco eff (statistics insufficient) MC pt
             ratioGammaSecEffRecPt[k]->Fit(constant,"SMNR0E+","", minPtFitSec[k], maxPtFitSec);
+            if(!energy.CompareTo("900GeV"))
+                ratioGammaSecEffRecPt[k]->Fit(constant,"SMNR0E+","", minPtFitSec[k], 1.1);
             constOffsetEffRecPt[k]                                  = constant->GetParameter(0);
 
             if (energy.Contains("2.76TeV") && mode == 4){
