@@ -168,7 +168,7 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
     cout << "**************************************************************************" << endl;
     cout << "Data set setup: " << endl;
     for (Int_t i = 0; i < nSets; i++){
-        if (plotDataSets[i].CompareTo(""))
+        if (!plotDataSets[i].CompareTo(""))
             plotDataSets[i]             = DataSets[i];
         cout << i << "\t" << DataSets[i].Data() << "\t" << plotDataSets[i].Data() << "\t" << pathDataSets[i].Data();
         if (doPhotonQA && diffPhotonQAPath) cout << "\t" << pathPhotonQA[i].Data();
