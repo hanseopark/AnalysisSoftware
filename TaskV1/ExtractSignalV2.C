@@ -3891,7 +3891,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
         if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
             if((GetCentralityString(fEventCutSelection)).CompareTo("0-5%")==0){ 
                 if(ptBin == 1){
-                    mesonAmplitudeMin = mesonAmplitude*40./100.;
+                    mesonAmplitudeMin = mesonAmplitude*95./100.;
                     mesonAmplitudeMax = mesonAmplitude*110./100.;                
                 } else {
                     mesonAmplitudeMin = mesonAmplitude*98./100.;

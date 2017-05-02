@@ -2095,7 +2095,8 @@ TList* GetCocktailInputList(TString energy, TString centrality) {
 
     TString                             listName                = "";
     if (fCollSys.CompareTo("pp")==0)    listName                = Form("%s_%s",  fCollSys.Data(), fEnergy.Data());
-    else                                listName                = Form("%s_%s",  fEnergy.Data(), fCentrality.Data());
+    if (fCollSys.CompareTo("pPb")==0)    listName                = Form("%s_%s",  fEnergy.Data(), fCentrality.Data());
+    else                                listName                = Form("%s_%s_%s", fCollSys.Data(), fEnergy.Data(), fCentrality.Data());
     TList* list                                                 = (TList*)file.Get(listName.Data());
     if (!list) {
         cout << "list " << listName.Data() << " not contained in file " << fileName.Data() << "!" << endl;

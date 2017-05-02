@@ -2672,6 +2672,32 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         PutProcessLabelAndEnergyOnPlot( 0.15, 0.93-0.035*1.05*2, 0.035, cent, detectionProcess, "", 42, 0.03,"",1,1.25,11);
     
     canvasRatioCombBackToBack->SaveAs(Form("%s/%s_RatioCombBackToBack_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
+    
+    
+    canvasRatioCombBackToBack->cd();
+    
+        if (isPCM ) {
+   
+            for(Int_t i = 0;i<16;i++){
+                        
+                if(i==0){
+                    histoRatioCombBackToBack[i]->GetXaxis()->SetRangeUser(1.,3.);
+                    histoRatioCombBackToBack[i]->GetYaxis()->SetRangeUser(1e-4,40);
+                    histoRatioCombBackToBack[i]->DrawCopy("e1");
+                }
+                if(i<9){
+                    DrawGammaSetMarker(histoRatioCombBackToBack[i], markersCombinatorics[i], 1., colorsCombinatorics[i], colorsCombinatorics[i]);
+                    histoRatioCombBackToBack[i]->DrawCopy("e1same");
+                }
+                else continue;
+            }
+        }
+        SummedSmallContributionsCombBackToBack->DrawCopy("e1same");
+        legendRatioCombBackToBack->Draw();
+        
+        PutProcessLabelAndEnergyOnPlot( 0.15, 0.93-0.035*1.05*2, 0.035, cent, detectionProcess, "", 42, 0.03,"",1,1.25,11);
+
+    canvasRatioCombBackToBack->SaveAs(Form("%s/%s_RatioCombBackToBackZoomed_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));    
     delete canvasRatioCombBackToBack;
     
     //*************************************************************************************************

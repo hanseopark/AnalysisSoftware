@@ -623,7 +623,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     
                     fithistoRatioSecEffDivTrueEff[k][j] = new TF1(Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"[0]/pow(x,[1])+[2]");
                     fithistoRatioSecEffDivTrueEff[k][j]->SetRange(minPtMesonSec,maxPtMeson);
-                    fithistoRatioSecEffDivTrueEff[k][j]->FixParameter(2,fitConst->GetParameter(0));
+                    if(!(mode == 0 && kCollisionSystem==1))fithistoRatioSecEffDivTrueEff[k][j]->FixParameter(2,fitConst->GetParameter(0));
                     histoRatioSecEffDivTrueEff[k][j]->Fit(fithistoRatioSecEffDivTrueEff[k][j],"QNRME+","",minPtMesonSec,maxPtMeson);
                 }   
 
