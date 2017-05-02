@@ -3,7 +3,7 @@
 //**************************************************************************************************************************
 //*********** this header contains all basic functions for the analysis as well as the correct labeling of plots ***********
 //**************************************************************************************************************************
-#ifndef GAMMACONV_ConversionFunctionsBasisc
+#ifndef GAMMACONV_ConversionFunctionsBasics
 #define GAMMACONV_ConversionFunctionsBasics
 
     #include "TObjString.h"
