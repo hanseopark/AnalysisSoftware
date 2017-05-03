@@ -798,86 +798,172 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TH1D* ratioGammaSecEffRecPt[3]                                  = { NULL, NULL, NULL };
     Double_t constOffsetEffMCPt[3]                                  = { 1, 1, 1};
     Double_t constOffsetEffRecPt[3]                                 = { 1, 1, 1};
-    Double_t minPtFitSec[3]                                         = { 1.5, 1, 0.};
-    Double_t maxPtFitSec                                            = 50;
+
+    // fit settings, will also be used in conv. prob. fit (!)
+    Double_t    minPtFitSec[3]                                      = {  1.5,  1,   0.}; // K0s, Lambda, K0l (!!!)
+    Double_t    maxPtFitSec[3]                                      = { 50.,  50., 50.};
+    Bool_t      doConstFitSec[3]                                    = {kTRUE, kTRUE, kTRUE};
     
     // adjust sec setting for different energies and modes
     if (energy.Contains("pPb")){
-        maxPtFitSec         = maxPtGamma;
-    }
-    if (energy.Contains("2.76TeV") && mode == 4){
-        minPtFitSec[1]      = 1.8;
-    }
-    else if (!energy.CompareTo("900GeV"))
+        maxPtFitSec[0]                                              = maxPtGamma;
+        maxPtFitSec[1]                                              = maxPtGamma;
+        maxPtFitSec[2]                                              = maxPtGamma;
+    } else if (energy.Contains("2.76TeV") && mode == 4) {
+        minPtFitSec[1]                                              = 1.8;
+    } else if (!energy.CompareTo("900GeV")) {
         minPtFitSec[1]                                              = 0.4;
 
+        maxPtFitSec[0]                                              = 1.1;
+        maxPtFitSec[1]                                              = 1.1;
+        maxPtFitSec[2]                                              = 1.1;
+    } else if (!energy.CompareTo("7TeV") && mode == 4) {
+        minPtFitSec[0]                                              = 1.2;
+        minPtFitSec[1]                                              = 1.2;
+        minPtFitSec[2]                                              = 1.2;
+
+        maxPtFitSec[0]                                              = maxPtGamma;
+        maxPtFitSec[1]                                              = 7.0;
+        maxPtFitSec[2]                                              = 2.4;
+
+        doConstFitSec[1]                                            = kFALSE;
+    }
+
     if ( hasCocktailInput && (isPCM || isCalo) ) {        
-        TF1* constant                                               = new TF1("constant", "[0]", 0, 50);
+        TF1* constantRecPt                                          = new TF1("constantRecPt",  "[0]",                          0, 50);
+        TF1* constantMCPt                                           = new TF1("constantMCPt",   "[0]",                          0, 50);
+        TF1* exponentRecPt                                          = new TF1("exponentRecPt",  "[0]-TMath::Exp(-[1]*x+[2])",   0, 50);
+        TF1* exponentMCPt                                           = new TF1("exponentMCPt",   "[0]-TMath::Exp(-[1]*x+[2])",   0, 50);
+
         // taken directly from MC (statistics sufficient)
         for (Int_t k = 0; k < 3; k++ ){
-            histoGammaSecFromXRecoEff_MCPt[k]                       = (TH1D*)fileCorrections->Get(Form("SecondaryGammaFromXFrom%sRecoEff_MCPt", nameSecondaries[k].Data()));
-            histoGammaSecFromXRecoEff_MCPt_Unscaled[k]              = (TH1D*)histoGammaSecFromXRecoEff_MCPt[k]->Clone(Form("SecondaryGammaFromXFrom%sRecoEff_MCPt_Unscaled", nameSecondaries[k].Data()));
-            histoGammaSecFromXRecoEff_MCPtOrBin[k]                  = (TH1D*)fileCorrections->Get(Form("SecondaryGammaFromXFrom%sRecoEff_MCPtOrBin", nameSecondaries[k].Data()));
-            histoGammaSecFromXRecoEff_RecPt[k]                      = (TH1D*)fileCorrections->Get(Form("SecondaryGammaFromXFrom%sRecoEff_Pt", nameSecondaries[k].Data()));
-            histoGammaSecFromXRecoEff_RecPt_Unscaled[k]             = (TH1D*)histoGammaSecFromXRecoEff_RecPt[k]->Clone(Form("SecondaryGammaFromXFrom%sRecoEff_Pt_Unscaled", nameSecondaries[k].Data()));
-            histoGammaSecFromXRecoEff_RecPtOrBin[k]                 = (TH1D*)fileCorrections->Get(Form("SecondaryGammaFromXFrom%sRecoEff_PtOrBin", nameSecondaries[k].Data()));
-            histoGammaSecFromXRecoEff_RecPtOrBin_Unscaled[k]        = (TH1D*)histoGammaSecFromXRecoEff_RecPtOrBin[k]->Clone(Form("SecondaryGammaFromXFrom%sRecoEff_PtOrBin_Unscaled", nameSecondaries[k].Data()));
-            ratioGammaSecEffMCPt[k]                                 = (TH1D*)histoGammaSecFromXRecoEff_MCPt[k]->Clone(Form("RatioSecEffFrom%sToPrim_MCPt", nameSecondaries[k].Data()));
+            histoGammaSecFromXRecoEff_MCPt[k]                       = (TH1D*)fileCorrections->Get(Form(                     "SecondaryGammaFromXFrom%sRecoEff_MCPt",
+                                                                                                                            nameSecondaries[k].Data()));
+            histoGammaSecFromXRecoEff_MCPt_Unscaled[k]              = (TH1D*)histoGammaSecFromXRecoEff_MCPt[k]->Clone(Form( "SecondaryGammaFromXFrom%sRecoEff_MCPt_Unscaled",
+                                                                                                                            nameSecondaries[k].Data()));
+            histoGammaSecFromXRecoEff_MCPtOrBin[k]                  = (TH1D*)fileCorrections->Get(Form(                     "SecondaryGammaFromXFrom%sRecoEff_MCPtOrBin",
+                                                                                                                            nameSecondaries[k].Data()));
+
+            histoGammaSecFromXRecoEff_RecPt[k]                      = (TH1D*)fileCorrections->Get(Form(                             "SecondaryGammaFromXFrom%sRecoEff_Pt",
+                                                                                                                                    nameSecondaries[k].Data()));
+            histoGammaSecFromXRecoEff_RecPt_Unscaled[k]             = (TH1D*)histoGammaSecFromXRecoEff_RecPt[k]->Clone(Form(        "SecondaryGammaFromXFrom%sRecoEff_Pt_Unscaled",
+                                                                                                                                    nameSecondaries[k].Data()));
+            histoGammaSecFromXRecoEff_RecPtOrBin[k]                 = (TH1D*)fileCorrections->Get(Form(                             "SecondaryGammaFromXFrom%sRecoEff_PtOrBin",
+                                                                                                                                    nameSecondaries[k].Data()));
+            histoGammaSecFromXRecoEff_RecPtOrBin_Unscaled[k]        = (TH1D*)histoGammaSecFromXRecoEff_RecPtOrBin[k]->Clone(Form(   "SecondaryGammaFromXFrom%sRecoEff_PtOrBin_Unscaled",
+                                                                                                                                    nameSecondaries[k].Data()));
+
+            ratioGammaSecEffMCPt[k]                                 = (TH1D*)histoGammaSecFromXRecoEff_MCPt[k]->Clone(Form( "RatioSecEffFrom%sToPrim_MCPt", nameSecondaries[k].Data()));
             ratioGammaSecEffMCPt[k]->Divide(histoGammaPrimaryRecoEff_MCPt);
             ratioGammaSecEffRecPt[k]                                = (TH1D*)histoGammaSecFromXRecoEff_RecPt[k]->Clone(Form("RatioSecEffFrom%sToPrim_RecPt", nameSecondaries[k].Data()));
             ratioGammaSecEffRecPt[k]->Divide(histoGammaPrimaryRecoEff_Pt);
-            
-            // constant fit to scale primary reco eff (statistics insufficient) MC pt
-            ratioGammaSecEffMCPt[k]->Fit(constant,"SMNR0E+","", minPtFitSec[k], maxPtFitSec);
-            if(!energy.CompareTo("900GeV"))
-                ratioGammaSecEffMCPt[k]->Fit(constant,"SMNR0E+","", minPtFitSec[k], 1.1);
-            constOffsetEffMCPt[k]                                   = constant->GetParameter(0);
-            
-            // constant fit to scale primary reco eff (statistics insufficient) MC pt
-            ratioGammaSecEffRecPt[k]->Fit(constant,"SMNR0E+","", minPtFitSec[k], maxPtFitSec);
-            if(!energy.CompareTo("900GeV"))
-                ratioGammaSecEffRecPt[k]->Fit(constant,"SMNR0E+","", minPtFitSec[k], 1.1);
-            constOffsetEffRecPt[k]                                  = constant->GetParameter(0);
 
-            if (energy.Contains("2.76TeV") && mode == 4){
-                if (k == 1){
-                    constOffsetEffMCPt[k]       = 1.75;                    
-                    constOffsetEffRecPt[k]      = 1.75;
-                } else if (k == 2){
-                    constOffsetEffMCPt[k]       = 2.00;
-                    constOffsetEffRecPt[k]      = 2.00;                    
+            // constant fit to scale primary reco eff (statistics insufficient) MC pt
+            ratioGammaSecEffMCPt[k]->Fit(constantMCPt,"SMNR0E+","", minPtFitSec[k], maxPtFitSec[k]);
+            constOffsetEffMCPt[k]                                   = constantMCPt->GetParameter(0);
+
+            // exponential fit to scale primary reco eff (statistics insufficient) MC pt
+            if (!doConstFitSec[k]) {
+                exponentMCPt->SetParameter(0, constOffsetEffMCPt[k]);
+                exponentMCPt->SetParameter(1, 1.);
+                exponentMCPt->SetParameter(2, minPtFitSec[k]);
+                ratioGammaSecEffMCPt[k]->Fit(exponentMCPt,"SMNR0E+","", minPtFitSec[k], maxPtFitSec[k]);
+            }
+
+            // constant fit to scale primary reco eff (statistics insufficient) MC pt
+            ratioGammaSecEffRecPt[k]->Fit(constantRecPt,"SMNR0E+","", minPtFitSec[k], maxPtFitSec[k]);
+            constOffsetEffRecPt[k]                                  = constantRecPt->GetParameter(0);
+
+            // exponential fit to scale primary reco eff (statistics insufficient) MC pt
+            if (!doConstFitSec[k]) {
+                exponentRecPt->SetParameter(0, constOffsetEffRecPt[k]);
+                exponentRecPt->SetParameter(1, 1.);
+                exponentRecPt->SetParameter(2, minPtFitSec[k]);
+                ratioGammaSecEffRecPt[k]->Fit(exponentRecPt,"SMNR0E+","", minPtFitSec[k], maxPtFitSec[k]);
+            }
+
+            // fixed ratios
+            if (energy.Contains("2.76TeV") && mode == 4) {
+                if (k == 1) {
+                    constOffsetEffMCPt[k]                           = 1.75;
+                    constOffsetEffRecPt[k]                          = 1.75;
+                } else if (k == 2) {
+                    constOffsetEffMCPt[k]                           = 2.00;
+                    constOffsetEffRecPt[k]                          = 2.00;
                 }
             }
+
+            // rescale secondary efficiencies from primary efficiency
+            Double_t tempScaleRecPt                                 = 1.;
+            Double_t tempScaleMCPt                                  = 1.;
             for (Int_t i = histoGammaSecFromXRecoEff_RecPt[k]->FindBin(minPtFitSec[k]); i < histoGammaSecFromXRecoEff_RecPt[k]->GetNbinsX()+1; i++){
-                histoGammaSecFromXRecoEff_RecPt[k]->SetBinContent(i, histoGammaPrimaryRecoEff_Pt->GetBinContent(i)*constOffsetEffRecPt[k]);
-                histoGammaSecFromXRecoEff_RecPt[k]->SetBinError(i, histoGammaPrimaryRecoEff_Pt->GetBinError(i)*constOffsetEffRecPt[k]);
-                histoGammaSecFromXRecoEff_MCPt[k]->SetBinContent(i, histoGammaPrimaryRecoEff_MCPt->GetBinContent(i)*constOffsetEffMCPt[k]);
-                histoGammaSecFromXRecoEff_MCPt[k]->SetBinError(i, histoGammaPrimaryRecoEff_MCPt->GetBinError(i)*constOffsetEffMCPt[k]);
-            }    
+                if (doConstFitSec[k]) {
+                    histoGammaSecFromXRecoEff_RecPt[k]->SetBinContent(  i, histoGammaPrimaryRecoEff_Pt->GetBinContent(i)    * constOffsetEffRecPt[k]);
+                    histoGammaSecFromXRecoEff_RecPt[k]->SetBinError(    i, histoGammaPrimaryRecoEff_Pt->GetBinError(i)      * constOffsetEffRecPt[k]);
+                    histoGammaSecFromXRecoEff_MCPt[k]->SetBinContent(   i, histoGammaPrimaryRecoEff_MCPt->GetBinContent(i)  * constOffsetEffMCPt[k]);
+                    histoGammaSecFromXRecoEff_MCPt[k]->SetBinError(     i, histoGammaPrimaryRecoEff_MCPt->GetBinError(i)    * constOffsetEffMCPt[k]);
+                } else {
+                    // evaluate fits
+                    tempScaleRecPt                                  = exponentRecPt->Integral(histoGammaSecFromXRecoEff_RecPt[k]->GetXaxis()->GetBinLowEdge(i),
+                                                                                              histoGammaSecFromXRecoEff_RecPt[k]->GetXaxis()->GetBinUpEdge(i));
+                    tempScaleRecPt                                  = tempScaleRecPt / histoGammaSecFromXRecoEff_RecPt[k]->GetXaxis()->GetBinWidth(i);
+
+                    tempScaleMCPt                                   = exponentMCPt->Integral(histoGammaSecFromXRecoEff_MCPt[k]->GetXaxis()->GetBinLowEdge(i),
+                                                                                              histoGammaSecFromXRecoEff_MCPt[k]->GetXaxis()->GetBinUpEdge(i));
+                    tempScaleMCPt                                   = tempScaleMCPt / histoGammaSecFromXRecoEff_MCPt[k]->GetXaxis()->GetBinWidth(i);
+
+                    histoGammaSecFromXRecoEff_RecPt[k]->SetBinContent(  i, histoGammaPrimaryRecoEff_Pt->GetBinContent(i)    * tempScaleRecPt);
+                    histoGammaSecFromXRecoEff_RecPt[k]->SetBinError(    i, histoGammaPrimaryRecoEff_Pt->GetBinError(i)      * tempScaleRecPt);
+                    histoGammaSecFromXRecoEff_MCPt[k]->SetBinContent(   i, histoGammaPrimaryRecoEff_MCPt->GetBinContent(i)  * tempScaleMCPt);
+                    histoGammaSecFromXRecoEff_MCPt[k]->SetBinError(     i, histoGammaPrimaryRecoEff_MCPt->GetBinError(i)    * tempScaleMCPt);
+                }
+            }
             for (Int_t i = histoGammaSecFromXRecoEff_RecPtOrBin[k]->FindBin(minPtFitSec[k]); i < histoGammaSecFromXRecoEff_RecPtOrBin[k]->GetNbinsX()+1; i++){
-                histoGammaSecFromXRecoEff_RecPtOrBin[k]->SetBinContent(i, histoGammaPrimaryRecoEff_Pt_OrBin->GetBinContent(i)*constOffsetEffRecPt[k]);
-                histoGammaSecFromXRecoEff_RecPtOrBin[k]->SetBinError(i, histoGammaPrimaryRecoEff_Pt_OrBin->GetBinError(i)*constOffsetEffRecPt[k]);
-                histoGammaSecFromXRecoEff_MCPtOrBin[k]->SetBinContent(i, histoGammaPrimaryRecoEff_MCPt_OrBin->GetBinContent(i)*constOffsetEffMCPt[k]);
-                histoGammaSecFromXRecoEff_MCPtOrBin[k]->SetBinError(i, histoGammaPrimaryRecoEff_MCPt_OrBin->GetBinError(i)*constOffsetEffMCPt[k]);
+                if (doConstFitSec[k]) {
+                    histoGammaSecFromXRecoEff_RecPtOrBin[k]->SetBinContent( i, histoGammaPrimaryRecoEff_Pt_OrBin->GetBinContent(i)  * constOffsetEffRecPt[k]);
+                    histoGammaSecFromXRecoEff_RecPtOrBin[k]->SetBinError(   i, histoGammaPrimaryRecoEff_Pt_OrBin->GetBinError(i)    * constOffsetEffRecPt[k]);
+                    histoGammaSecFromXRecoEff_MCPtOrBin[k]->SetBinContent(  i, histoGammaPrimaryRecoEff_MCPt_OrBin->GetBinContent(i)* constOffsetEffMCPt[k]);
+                    histoGammaSecFromXRecoEff_MCPtOrBin[k]->SetBinError(    i, histoGammaPrimaryRecoEff_MCPt_OrBin->GetBinError(i)  * constOffsetEffMCPt[k]);
+                } else {
+                    // evaluate fits
+                    tempScaleRecPt                                  = exponentRecPt->Integral(histoGammaSecFromXRecoEff_RecPtOrBin[k]->GetXaxis()->GetBinLowEdge(i),
+                                                                                              histoGammaSecFromXRecoEff_RecPtOrBin[k]->GetXaxis()->GetBinUpEdge(i));
+                    tempScaleRecPt                                  = tempScaleRecPt / histoGammaSecFromXRecoEff_RecPtOrBin[k]->GetXaxis()->GetBinWidth(i);
+
+                    tempScaleMCPt                                   = exponentMCPt->Integral(histoGammaSecFromXRecoEff_MCPtOrBin[k]->GetXaxis()->GetBinLowEdge(i),
+                                                                                             histoGammaSecFromXRecoEff_MCPtOrBin[k]->GetXaxis()->GetBinUpEdge(i));
+                    tempScaleMCPt                                   = tempScaleMCPt / histoGammaSecFromXRecoEff_MCPtOrBin[k]->GetXaxis()->GetBinWidth(i);
+
+                    histoGammaSecFromXRecoEff_RecPtOrBin[k]->SetBinContent( i, histoGammaPrimaryRecoEff_Pt_OrBin->GetBinContent(i)  * tempScaleRecPt);
+                    histoGammaSecFromXRecoEff_RecPtOrBin[k]->SetBinError(   i, histoGammaPrimaryRecoEff_Pt_OrBin->GetBinError(i)    * tempScaleRecPt);
+                    histoGammaSecFromXRecoEff_MCPtOrBin[k]->SetBinContent(  i, histoGammaPrimaryRecoEff_MCPt_OrBin->GetBinContent(i)* tempScaleMCPt);
+                    histoGammaSecFromXRecoEff_MCPtOrBin[k]->SetBinError(    i, histoGammaPrimaryRecoEff_MCPt_OrBin->GetBinError(i)  * tempScaleMCPt);
+                }
             }
 
             //****************************************************************************************** 
             //********************************* plot ratio efficiencies ********************************
             //******************************************************************************************
-
-            TCanvas *canvasSecEffiRatio                               = GetAndSetCanvas("canvasSecEffiRatio");
+            TCanvas *canvasSecEffiRatio                             = GetAndSetCanvas("canvasSecEffiRatio");
             
-                Double_t ratioGammaSecEffiToPrimMaxY = (ratioGammaSecEffRecPt[k]->GetMaximum() + ratioGammaSecEffRecPt[k]->GetBinError(ratioGammaSecEffRecPt[k]->GetMaximumBin()))*1.2;
+                Double_t ratioGammaSecEffiToPrimMaxY                = (ratioGammaSecEffRecPt[k]->GetMaximum() + ratioGammaSecEffRecPt[k]->GetBinError(ratioGammaSecEffRecPt[k]->GetMaximumBin()))*1.2;
 
                 SetHistogramm(ratioGammaSecEffRecPt[k],"#it{p}_{T} (GeV/#it{c})","#epsilon_{eff,#gamma, sec}/#epsilon_{eff,#gamma, prim}",0.0,ratioGammaSecEffiToPrimMaxY);
                 DrawGammaSetMarker(ratioGammaSecEffRecPt[k], 20, 1, kRed+2, kRed+2);
                 ratioGammaSecEffRecPt[k]->Draw();
-                DrawGammaSetMarkerTF1( constant, 9, 2, kRed-6); 
-                constant->Draw("same");
-                
+                if (doConstFitSec[k]) {
+                    DrawGammaSetMarkerTF1( constantRecPt, 9, 2, kRed-6);
+                    constantRecPt->Draw("same");
+                } else {
+                    DrawGammaSetMarkerTF1( exponentRecPt, 9, 2, kRed-6);
+                    exponentRecPt->Draw("same");
+                }
+
                 TLegend* legendSecEffRatio = GetAndSetLegend2(0.15,0.93-3*1.1*0.035, 0.4,0.93, 0.035, 1, cent, 42, 0.1);
                 legendSecEffRatio->AddEntry(ratioGammaSecEffRecPt[k], Form("sec %s reco. eff/prim",nameLabelSecondaries[k].Data()),"lp");
-                legendSecEffRatio->AddEntry(constant, Form("const fit: %2.2f", constOffsetEffRecPt[k]),"l");
+                if (doConstFitSec[k])   legendSecEffRatio->AddEntry(constantRecPt, Form("const fit: %2.2f", constOffsetEffRecPt[k]),"l");
+                else                    legendSecEffRatio->AddEntry(exponentRecPt, Form("[0]-exp(-[1]*x+[2]) fit: %2.2f, %2.2f, %2.2f",
+                                                                                        exponentRecPt->GetParameter(0), exponentRecPt->GetParameter(1), exponentRecPt->GetParameter(2)),"l");
                 legendSecEffRatio->Draw();
                 
             canvasSecEffiRatio->SaveAs(Form("%s/%s_RatioSecEffiToPrim%sPt_%s_%s.%s",outputDir.Data(),textPi0New.Data(),nameSecondaries[k].Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));        
@@ -888,40 +974,42 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             //****************************************************************************************** 
             TCanvas *canvasSecEffiFit                               = GetAndSetCanvas("canvasSecEffiFit");
             
-                if ( isPCM ){
-                    SetHistogramm(histoGammaPrimaryRecoEff_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.02);
-                } else if ( isCalo && !isPCM ){
-                    SetHistogramm(histoGammaPrimaryRecoEff_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 2.0);
-                } else {
-                    SetHistogramm(histoGammaPrimaryRecoEff_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.02);    
-                }
-                DrawGammaSetMarker(histoGammaPrimaryRecoEff_Pt, 20, 1, kGray+2, kGray+2);
+                if ( isPCM )                    SetHistogramm(histoGammaPrimaryRecoEff_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.02);
+                else if ( isCalo && !isPCM )    SetHistogramm(histoGammaPrimaryRecoEff_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 2.0);
+                else                            SetHistogramm(histoGammaPrimaryRecoEff_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.02);
+
+                DrawGammaSetMarker(histoGammaPrimaryRecoEff_Pt,         20, 1, kGray+2, kGray+2);
+                DrawGammaSetMarker(histoGammaPrimaryRecoEff_Pt_OrBin,   24, 1, kBlack, kBlack);
                 histoGammaPrimaryRecoEff_Pt->Draw();
-                DrawGammaSetMarker(histoGammaPrimaryRecoEff_Pt_OrBin, 24, 1, kBlack, kBlack);
                 histoGammaPrimaryRecoEff_Pt_OrBin->Draw("same");
                             
-                DrawGammaSetMarker(histoGammaSecFromXRecoEff_RecPt_Unscaled[k], 20, 1, kBlue-8, kBlue-8);
+                DrawGammaSetMarker(histoGammaSecFromXRecoEff_RecPt_Unscaled[k],         20, 1, kBlue-8, kBlue-8);
+                DrawGammaSetMarker(histoGammaSecFromXRecoEff_RecPtOrBin_Unscaled[k],    24, 1, kBlue+2, kBlue+2);
                 histoGammaSecFromXRecoEff_RecPt_Unscaled[k]->Draw("same");
-                DrawGammaSetMarker(histoGammaSecFromXRecoEff_RecPtOrBin_Unscaled[k], 24, 1, kBlue+2, kBlue+2);
                 histoGammaSecFromXRecoEff_RecPtOrBin_Unscaled[k]->Draw("same");
-                DrawGammaSetMarker(histoGammaSecFromXRecoEff_RecPt[k], 20, 1, kRed-8, kRed-8);
-                histoGammaSecFromXRecoEff_RecPt[k]->Draw("same");
+
+                DrawGammaSetMarker(histoGammaSecFromXRecoEff_RecPt[k],      20, 1, kRed-8, kRed-8);
                 DrawGammaSetMarker(histoGammaSecFromXRecoEff_RecPtOrBin[k], 20, 1, kRed+2, kRed+2);
+                histoGammaSecFromXRecoEff_RecPt[k]->Draw("same");
                 histoGammaSecFromXRecoEff_RecPtOrBin[k]->Draw("same");
                 
                 TLegend* legendSecEffFits = GetAndSetLegend2(0.15,0.93-4*1.1*0.035, 0.7,0.93, 0.035, 2, cent, 42, 0.1);
-                legendSecEffFits->AddEntry(histoGammaPrimaryRecoEff_Pt_OrBin,"primary reco. eff.","lp");
-                legendSecEffFits->AddEntry(histoGammaPrimaryRecoEff_Pt,"rebin primary reco. eff.","lp");
-                legendSecEffFits->AddEntry(histoGammaSecFromXRecoEff_RecPtOrBin_Unscaled[k], Form("%s reco. eff",nameLabelSecondaries[k].Data()),"lp");
-                legendSecEffFits->AddEntry(histoGammaSecFromXRecoEff_RecPt_Unscaled[k], Form("rebin %s reco. eff",nameLabelSecondaries[k].Data()),"lp");
-                legendSecEffFits->AddEntry(histoGammaSecFromXRecoEff_RecPt[k], Form("new %s reco. eff",nameLabelSecondaries[k].Data()),"lp");
-                legendSecEffFits->AddEntry(histoGammaSecFromXRecoEff_RecPtOrBin[k], Form("new org.bin. %s reco. eff",nameLabelSecondaries[k].Data()),"lp");
+                legendSecEffFits->AddEntry(histoGammaPrimaryRecoEff_Pt_OrBin,                   "primary reco. eff.",                                               "lp");
+                legendSecEffFits->AddEntry(histoGammaPrimaryRecoEff_Pt,                         "rebin primary reco. eff.",                                         "lp");
+                legendSecEffFits->AddEntry(histoGammaSecFromXRecoEff_RecPtOrBin_Unscaled[k],    Form("%s reco. eff",nameLabelSecondaries[k].Data()),                "lp");
+                legendSecEffFits->AddEntry(histoGammaSecFromXRecoEff_RecPt_Unscaled[k],         Form("rebin %s reco. eff",nameLabelSecondaries[k].Data()),          "lp");
+                legendSecEffFits->AddEntry(histoGammaSecFromXRecoEff_RecPt[k],                  Form("new %s reco. eff",nameLabelSecondaries[k].Data()),            "lp");
+                legendSecEffFits->AddEntry(histoGammaSecFromXRecoEff_RecPtOrBin[k],             Form("new org.bin. %s reco. eff",nameLabelSecondaries[k].Data()),   "lp");
                 legendSecEffFits->Draw();
             
             canvasSecEffiFit->SaveAs(Form("%s/%s_SecEffiFits%sPt_%s_%s.%s",outputDir.Data(),textPi0New.Data(),nameSecondaries[k].Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));        
             delete canvasSecEffiFit;
         }
-        delete constant;
+
+        delete constantRecPt;
+        delete constantMCPt;
+        delete exponentRecPt;
+        delete exponentMCPt;
     }
     
     //****************************************************************************************** 
@@ -932,43 +1020,59 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TH1D* histoGammaSecondaryFromXConvProb_MCPtOrBin[3]             = { NULL, NULL, NULL };
     TH1D* histoGammaSecondaryFromXConvProb_MCPtOrBin_Unscaled[3]    = { NULL, NULL, NULL };
     TH1D* ratioGammaConvProbMCPt[3]                                 = { NULL, NULL, NULL };
-    Double_t constOffsetConvProbMCPt[3]                             = { 1, 1, 1};
     
     if ( hasCocktailInput && isPCM ) {
-        TF1* linear                                                   = new TF1("linear", "[0]/TMath::Power((x-[1]), [2])", 0, 50);        
-        for (Int_t k = 0; k < 3; k++){
-            histoGammaSecondaryFromXConvProb_MCPt[k]                = (TH1D*)fileCorrections->Get(Form("SecondaryGammaFromXFrom%sConvProb_MCPt", nameSecondaries[k].Data()));
-            histoGammaSecondaryFromXConvProb_MCPtOrBin[k]           = (TH1D*)fileCorrections->Get(Form("SecondaryGammaFromXFrom%sConvProb_MCPtOrBin", nameSecondaries[k].Data()));
-            histoGammaSecondaryFromXConvProb_MCPt_Unscaled[k]       = (TH1D*)histoGammaSecondaryFromXConvProb_MCPt[k]->Clone(Form("SecondaryGammaFromXFrom%sConvProb_MCPt_Unscaled", nameSecondaries[k].Data()));
-            histoGammaSecondaryFromXConvProb_MCPtOrBin_Unscaled[k]  = (TH1D*)histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->Clone(Form("SecondaryGammaFromXFrom%sConvProb_MCPtOrBin_Unscaled",
-                                                                                                                                       nameSecondaries[k].Data()));
-            ratioGammaConvProbMCPt[k]                               = (TH1D*)histoGammaSecondaryFromXConvProb_MCPt[k]->Clone(Form("RatioConvProbFrom%sToPrim_MCPt", nameSecondaries[k].Data()));
-            ratioGammaConvProbMCPt[k]->Divide(histoGammaConvProb_MCPt);
-            ratioGammaConvProbMCPt[k]->Fit(linear,"SMNR0E+", "", minPtFitSec[k], maxPtFitSec);
-            constOffsetConvProbMCPt[k]                              = linear->GetParameter(0);
+        TF1* power                                                  = new TF1("power", "[0]/TMath::Power((x-[1]), [2])", 0, 50);
+        for (Int_t k = 0; k < 3; k++) {
+            histoGammaSecondaryFromXConvProb_MCPt[k]                = (TH1D*)fileCorrections->Get(Form(                                 "SecondaryGammaFromXFrom%sConvProb_MCPt",
+                                                                                                                                        nameSecondaries[k].Data()));
+            histoGammaSecondaryFromXConvProb_MCPtOrBin[k]           = (TH1D*)fileCorrections->Get(Form(                                 "SecondaryGammaFromXFrom%sConvProb_MCPtOrBin",
+                                                                                                                                        nameSecondaries[k].Data()));
+            histoGammaSecondaryFromXConvProb_MCPt_Unscaled[k]       = (TH1D*)histoGammaSecondaryFromXConvProb_MCPt[k]->Clone(Form(      "SecondaryGammaFromXFrom%sConvProb_MCPt_Unscaled",
+                                                                                                                                        nameSecondaries[k].Data()));
+            histoGammaSecondaryFromXConvProb_MCPtOrBin_Unscaled[k]  = (TH1D*)histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->Clone(Form( "SecondaryGammaFromXFrom%sConvProb_MCPtOrBin_Unscaled",
+                                                                                                                                        nameSecondaries[k].Data()));
             
-            for (Int_t i=histoGammaSecondaryFromXConvProb_MCPt[k]->FindBin(minPtFitSec[k]); i<histoGammaSecondaryFromXConvProb_MCPt[k]->GetNbinsX()+1; i++) {    
-                histoGammaSecondaryFromXConvProb_MCPt[k]->SetBinContent(i, histoGammaConvProb_MCPt->GetBinContent(i)*linear->Eval(histoGammaSecondaryFromXConvProb_MCPt[k]->GetBinCenter(i)));
-                histoGammaSecondaryFromXConvProb_MCPt[k]->SetBinError(  i, histoGammaConvProb_MCPt->GetBinError(i)*linear->Eval(histoGammaSecondaryFromXConvProb_MCPt[k]->GetBinCenter(i)));
+            ratioGammaConvProbMCPt[k]                               = (TH1D*)histoGammaSecondaryFromXConvProb_MCPt[k]->Clone(Form(      "RatioConvProbFrom%sToPrim_MCPt",
+                                                                                                                                        nameSecondaries[k].Data()));
+            ratioGammaConvProbMCPt[k]->Divide(histoGammaConvProb_MCPt);
+            ratioGammaConvProbMCPt[k]->Fit(power,"SMNR0E+", "", minPtFitSec[k], maxPtFitSec[k]);
+
+            Double_t tempEval                                       = 1.;
+            for (Int_t i=histoGammaSecondaryFromXConvProb_MCPt[k]->FindBin(minPtFitSec[k]); i<histoGammaSecondaryFromXConvProb_MCPt[k]->GetNbinsX()+1; i++) {
+                // was: tempEval = power->Eval(histoGammaSecondaryFromXConvProb_MCPt[k]->GetBinCenter(i))
+                tempEval                                            = power->Integral(histoGammaSecondaryFromXConvProb_MCPt[k]->GetXaxis()->GetBinLowEdge(i),
+                                                                                      histoGammaSecondaryFromXConvProb_MCPt[k]->GetXaxis()->GetBinUpEdge(i));
+                tempEval                                            = tempEval / histoGammaSecondaryFromXConvProb_MCPt[k]->GetBinWidth(i);
+
+                histoGammaSecondaryFromXConvProb_MCPt[k]->SetBinContent(i, histoGammaConvProb_MCPt->GetBinContent(i)    * tempEval);
+                histoGammaSecondaryFromXConvProb_MCPt[k]->SetBinError(  i, histoGammaConvProb_MCPt->GetBinError(i)      * tempEval);
             }
-            for (Int_t i=histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->FindBin(minPtFitSec[k]); i<histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->GetNbinsX()+1; i++) {    
-                histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->SetBinContent(i, histoGammaConvProb_MCPt_OrBin->GetBinContent(i)*linear->Eval(histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->GetBinCenter(i)));
-                histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->SetBinError(  i, histoGammaConvProb_MCPt_OrBin->GetBinError(i)*linear->Eval(histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->GetBinCenter(i)));
+            for (Int_t i=histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->FindBin(minPtFitSec[k]); i<histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->GetNbinsX()+1; i++) {
+                // was: tempEval = power->Eval(histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->GetBinCenter(i))
+                tempEval                                            = power->Integral(histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->GetXaxis()->GetBinLowEdge(i),
+                                                                                      histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->GetXaxis()->GetBinUpEdge(i));
+                tempEval                                            = tempEval / histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->GetBinWidth(i);
+
+                histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->SetBinContent(i, histoGammaConvProb_MCPt_OrBin->GetBinContent(i) * tempEval);
+                histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->SetBinError(  i, histoGammaConvProb_MCPt_OrBin->GetBinError(i)   * tempEval);
             }
             //****************************************************************************************** 
             //************************* plot ratio conversion probabilies ****************************** 
             //****************************************************************************************** 
             TCanvas *canvasSecConvProbRatio                               = GetAndSetCanvas("canvasSecConvProbRatio");
+
                 SetHistogramm(ratioGammaConvProbMCPt[k],"#it{p}_{T} (GeV/#it{c})","P_{conv, sec}/P_{conv, prim}",0.0,3.0);
                 DrawGammaSetMarker(ratioGammaConvProbMCPt[k], 20, 1, kRed+2, kRed+2);
                 ratioGammaConvProbMCPt[k]->Draw();
-                DrawGammaSetMarkerTF1( linear, 9, 2, kRed-6); 
-                linear->Draw("same");
+                DrawGammaSetMarkerTF1( power, 9, 2, kRed-6);
+                power->Draw("same");
                 
                 TLegend* legendSecConvProbRatio = GetAndSetLegend2(0.15,0.93-3*1.1*0.035, 0.4,0.93, 0.035, 1, cent, 42, 0.1);
                 legendSecConvProbRatio->AddEntry(ratioGammaConvProbMCPt[k], Form("sec %s P_{conv}/prim",nameLabelSecondaries[k].Data()),"lp");
-                legendSecConvProbRatio->AddEntry(linear, "linear fit","l");
+                legendSecConvProbRatio->AddEntry(power, Form("[0]/(x-[1])^[2] fit: %2.2f, %2.2f, %2.2f", power->GetParameter(0), power->GetParameter(1), power->GetParameter(2)),"l");
                 legendSecConvProbRatio->Draw();
+
             canvasSecConvProbRatio->SaveAs(Form("%s/%s_RatioSecConvProbToPrim%sPt_%s_%s.%s",outputDir.Data(),textPi0New.Data(),nameSecondaries[k].Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));        
             delete canvasSecConvProbRatio;
             
@@ -977,35 +1081,38 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             //****************************************************************************************** 
             TCanvas *canvasSecConvProbFit     = GetAndSetCanvas("canvasSecConvProbFit");
             canvasSecConvProbFit->SetTopMargin(0.035);
+
                 SetHistogramm(histoGammaConvProb_MCPt,"#it{p}_{T} (GeV/#it{c})","P_{conv} in |#eta| < 0.9",0.0,1.5e-1);
                 DrawGammaSetMarker(histoGammaConvProb_MCPt, 20, 1, kGray+2, kGray+2);
                 histoGammaConvProb_MCPt->Draw();
 
                 DrawGammaSetMarker(histoGammaConvProb_MCPt_OrBin, 24, 1, kBlack, kBlack);
                 histoGammaConvProb_MCPt_OrBin->Draw("same");
-                            
-                DrawGammaSetMarker(histoGammaSecondaryFromXConvProb_MCPt_Unscaled[k], 20, 1, kBlue-8, kBlue-8);
+
+                DrawGammaSetMarker(histoGammaSecondaryFromXConvProb_MCPt_Unscaled[k],       20, 1, kBlue-8, kBlue-8);
+                DrawGammaSetMarker(histoGammaSecondaryFromXConvProb_MCPtOrBin_Unscaled[k],  24, 1, kBlue+2, kBlue+2);
+                DrawGammaSetMarker(histoGammaSecondaryFromXConvProb_MCPt[k],                20, 1, kRed-8, kRed-8);
+                DrawGammaSetMarker(histoGammaSecondaryFromXConvProb_MCPtOrBin[k],           24, 1, kRed+2, kRed+2);
+
                 histoGammaSecondaryFromXConvProb_MCPt_Unscaled[k]->Draw("same");
-                DrawGammaSetMarker(histoGammaSecondaryFromXConvProb_MCPtOrBin_Unscaled[k], 24, 1, kBlue+2, kBlue+2);
                 histoGammaSecondaryFromXConvProb_MCPtOrBin_Unscaled[k]->Draw("same");
-                DrawGammaSetMarker(histoGammaSecondaryFromXConvProb_MCPt[k], 20, 1, kRed-8, kRed-8);
                 histoGammaSecondaryFromXConvProb_MCPt[k]->Draw("same");
-                DrawGammaSetMarker(histoGammaSecondaryFromXConvProb_MCPtOrBin[k], 24, 1, kRed+2, kRed+2);
                 histoGammaSecondaryFromXConvProb_MCPtOrBin[k]->Draw("same");
                 
                 TLegend* legendSecConvProbFits = GetAndSetLegend2(0.15,0.93-4*1.1*0.035, 0.7,0.93, 0.035, 2, cent, 42, 0.1);
-                legendSecConvProbFits->AddEntry(histoGammaConvProb_MCPt_OrBin,"primary","lp");
-                legendSecConvProbFits->AddEntry(histoGammaConvProb_MCPt,"rebin primary","lp");
-                legendSecConvProbFits->AddEntry(histoGammaSecondaryFromXConvProb_MCPtOrBin_Unscaled[k], Form("from %s ",nameLabelSecondaries[k].Data()),"lp");
-                legendSecConvProbFits->AddEntry(histoGammaSecondaryFromXConvProb_MCPt_Unscaled[k], Form("rebin from %s",nameLabelSecondaries[k].Data()),"lp");
-                legendSecConvProbFits->AddEntry(histoGammaSecondaryFromXConvProb_MCPtOrBin[k], Form("new from  %s reco. eff",nameLabelSecondaries[k].Data()),"lp");
-                legendSecConvProbFits->AddEntry(histoGammaSecondaryFromXConvProb_MCPt[k], Form("new rebin from %s ",nameLabelSecondaries[k].Data()),"lp");
+                legendSecConvProbFits->AddEntry(histoGammaConvProb_MCPt_OrBin,                              "primary","lp");
+                legendSecConvProbFits->AddEntry(histoGammaConvProb_MCPt,                                    "rebin primary","lp");
+                legendSecConvProbFits->AddEntry(histoGammaSecondaryFromXConvProb_MCPtOrBin_Unscaled[k],     Form("from %s ",nameLabelSecondaries[k].Data()),"lp");
+                legendSecConvProbFits->AddEntry(histoGammaSecondaryFromXConvProb_MCPt_Unscaled[k],          Form("rebin from %s",nameLabelSecondaries[k].Data()),"lp");
+                legendSecConvProbFits->AddEntry(histoGammaSecondaryFromXConvProb_MCPtOrBin[k],              Form("new from  %s reco. eff",nameLabelSecondaries[k].Data()),"lp");
+                legendSecConvProbFits->AddEntry(histoGammaSecondaryFromXConvProb_MCPt[k],                   Form("new rebin from %s ",nameLabelSecondaries[k].Data()),"lp");
                 legendSecConvProbFits->Draw();
 
             canvasSecConvProbFit->SaveAs(Form("%s/%s_ConversionProbFits%sMCPt_%s_%s.%s",outputDir.Data(),textPi0New.Data(),nameSecondaries[k].Data(), nameRec.Data(),cutSelection.Data(),suffix.Data()));        
             delete canvasSecConvProbFit;
         }
-        delete linear;
+
+        delete power;
     }
 
     //****************************************************************************************** 
@@ -1033,7 +1140,6 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //****************************************************************************************** 
     TH1D* histoGammaSecGammaFromX_Cocktail_Raw_Pt[3]                = { NULL, NULL, NULL };
     TH1D* histoGammaSecGammaFromX_Cocktail_Raw_PtOrBin[3]           = { NULL, NULL, NULL };
-//     Double_t scaleCocktailDecayLength[3]                            = {1.0, 1.0, 0.5/15.34};
     if ( hasCocktailInput && (isPCM || isCalo) ) {
         cout << "calculating raw secondary spectra from cocktail" << endl;
         // K0s: clone cocktail spectra
@@ -1092,12 +1198,6 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                                                                                                         histoGammaTrueSecondaryFromX_MCPt_recPtOrBin[k], nEvt, kFALSE);
             }
         }
-//         if (hasCocktailInput){
-//             for (Int_t k = 0; k<3; k++){
-//                 histoGammaSecGammaFromX_Cocktail_Raw_Pt[k]->Scale(scaleCocktailDecayLength[k]);
-//                 histoGammaSecGammaFromX_Cocktail_Raw_PtOrBin[k]->Scale(scaleCocktailDecayLength[k]);
-//             }    
-//         }        
     }
 
     //****************************************************************************************** 
