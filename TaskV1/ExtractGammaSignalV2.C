@@ -96,7 +96,6 @@ void ExtractGammaSignalV2(      TString meson               = "",
     gSystem->Exec("mkdir -p "+fOutputDir);
     gSystem->Exec("mkdir -p "+outputDirMon);
     
-
     //************************************ Set global variables ****************************************
     fDate                                                                       = ReturnDateString();
     fDirectPhoton                                                               = directphotonPlots;
@@ -111,13 +110,12 @@ void ExtractGammaSignalV2(      TString meson               = "",
     nPileupMethodUsed                                                           = nPileupMethod;
     cout << "Pictures are saved as " << suffix.Data() << endl;
     
-    
-    //************************************ Separate cutstrings ***********************************
+    //************************************ Separate cutstrings *****************************************
     fCutSelection                                                               = cutSelection;
     fCutSelectionRead                                                           = cutSelection;
     TString dummy                                                               = "" ;
     ReturnSeparatedCutNumberAdvanced( fCutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, dummy, fMesonCutSelection, fMode);
-    
+
     fEventCutSelectionRead                                                      = fEventCutSelection.Data();
     fGammaCutSelectionRead                                                      = fGammaCutSelection.Data();
     fMesonCutSelectionRead                                                      = fMesonCutSelection.Data();
@@ -133,7 +131,8 @@ void ExtractGammaSignalV2(      TString meson               = "",
         else if (fMode==0)  fCutSelectionRead                                   = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
         cout << fCutSelectionRead.Data() << endl;
     }
-    // set global variables for rap and BG number
+
+    // set global variables for rapidity and BG number
     TString rapidityRange;
     fYMaxMeson                                                                  = ReturnRapidityStringAndDouble(fMesonCutSelectionRead, rapidityRange);
     fBackgroundMultNumber                                                       = ReturnBackgroundMult(fMesonCutSelection);
@@ -142,7 +141,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
     TString textProcess = ReturnMesonString (fPrefix);
     if(textProcess.CompareTo("") == 0 ){
         cout << "Meson unknown" << endl;
-        return ;
+        return;
     }
     
     fTextMeasurement                                                            = Form("%s #rightarrow #gamma#gamma", textProcess.Data());
@@ -164,6 +163,8 @@ void ExtractGammaSignalV2(      TString meson               = "",
     }
     
     //***************************** Check for data driven purity ****************************************
+    // this is a first setup of the data driven purity approach using kappa
+    // however the full chain os not implemented and only the bin-by-bin correction is done with the data driven purity
     TString namePurityHistogram                                                 = "";
     TFile*  purityFile                                                          = NULL;
     if (purityFileName.CompareTo("")) {
@@ -191,8 +192,10 @@ void ExtractGammaSignalV2(      TString meson               = "",
             cout << "Kappa cut not recognized, not implemented yet." << endl;
             return;
         }
-        fHistoPurityKappaTemplates                                              = (TH1D*)purityFile->Get(namePurityHistogram.Data());   // replaces "GammaTruePurity_Pt" in MC output, will be used
-        if (fHistoPurityKappaTemplates) fUseDataDrivenPurity                     = kTRUE;                                               // for bin-by-bin correction in CorrectGammaV2
+
+        // replaces "GammaTruePurity_Pt" in MC output, will be used for bin-by-bin correction in CorrectGammaV2
+        fHistoPurityKappaTemplates                                              = (TH1D*)purityFile->Get(namePurityHistogram.Data());
+        if (fHistoPurityKappaTemplates) fUseDataDrivenPurity                    = kTRUE;
     }
     
     //***************************** Load binning for spectrum *******************************************
@@ -202,10 +205,9 @@ void ExtractGammaSignalV2(      TString meson               = "",
     ObjectNameDCGammaConvRPt                                                    = "ESD_TrueDoubleCountConvGamma_R_Pt";
     ObjectNameGammaConvMultipleCount                                            = "ESD_TrueMultipleCountConvGamma";
 
-    const char* FileDataLogname         = Form("%s/%s/%s_%s_GammaExtractionEffiCheck_RAWDATA%s_%s.dat", cutSelection.Data(), fEnergyFlag.Data(), fPrefix.Data(), fPrefix2.Data(), fPeriodFlag.Data(),
-                                        fCutSelectionRead.Data());
+    const char* FileDataLogname                                                 = Form("%s/%s/%s_%s_GammaExtractionEffiCheck_RAWDATA%s_%s.dat", cutSelection.Data(), fEnergyFlag.Data(),
+                                                                                       fPrefix.Data(), fPrefix2.Data(), fPeriodFlag.Data(), fCutSelectionRead.Data());
     fFileDataLog.open(FileDataLogname, ios::out);
-
 
     //************************************** Read file ***************************************************
     TFile* f                                                                    = new TFile(file.Data());
@@ -232,21 +234,17 @@ void ExtractGammaSignalV2(      TString meson               = "",
         fHistoPhotonIsSelected->Scale(1./fHistoPhotonIsSelected->GetEntries());
     }
     
-    // general histograms
+    // calculate number of events used for normalization of spectra
     fNumberOfGoodESDTracks                                                      = (TH1D*)ESDContainer->FindObject("GoodESDTracks");
     fEventQuality                                                               = (TH1D*)ESDContainer->FindObject("NEvents");
-    if (option.CompareTo("PbPb_2.76TeV") == 0)  fNEvents                        = fEventQuality->GetBinContent(1);
-    else                                        fNEvents                        = GetNEvents(fEventQuality);
+    if (option.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0)
+        fNEvents                                                                = fEventQuality->GetBinContent(1);
+    else
+        fNEvents                                                                = GetNEvents(fEventQuality);
     
-    //****************************************************************************************************
-    fMesonId                                    = 111;
-    fMesonMassExpect                            = TDatabasePDG::Instance()->GetParticle(fMesonId)->Mass();
-    // calculate number of events for normalization
-    if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0){
-        fNEvents        = fEventQuality->GetBinContent(1);
-    } else {
-        fNEvents        =  GetNEvents(fEventQuality);
-    }
+    // get neutral pion mass for hybrid PCM-EMC or PCM-PHOS analysis
+    fMesonId                                                                    = 111;
+    fMesonMassExpect                                                            = TDatabasePDG::Instance()->GetParticle(fMesonId)->Mass();
     cout<< "The mass of the meson is: "<< fMesonMassExpect<< " Events analysed: "<< fNEvents<< endl;
     
     // *******************************************************************************************************
@@ -428,6 +426,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
     // *******************************************************************************************************
     // ************************************* Load cocktail input (if available) ******************************
     // *******************************************************************************************************
+    // secondary photons from cocktail generation for secondary correction in CorrectGammaV2
     fUseCocktail                                                                = LoadSecondariesFromCocktailFile(cutSelection, option);
     
     // *******************************************************************************************************
@@ -447,15 +446,16 @@ void ExtractGammaSignalV2(      TString meson               = "",
         // MC container (contains all input MC histograms)    
         TList *MCContainer                                                      = (TList*)HistosGammaConversion->FindObject(Form("%s MC histograms",fCutSelectionRead.Data()));
         
-        // reading input distributions
+        // reading MC input distributions
         if (fEnablePCM){
+            // generated MC conv. gammas
             fHistoGammaMCConvPt                                                 = (TH1D*)MCContainer->FindObject("MC_ConvGamma_Pt");
             fHistoGammaMCConvPt->Sumw2();
             fHistoGammaMCConvPtOrBin                                            = (TH1D*)fHistoGammaMCConvPt->Clone("MC_ConvGamma_Pt_OriginalBinning");
             fHistoGammaMCConvPtOrBin->Scale(1./fHistoGammaMCConvPtOrBin->GetBinWidth(5));
             RebinSpectrum(fHistoGammaMCConvPt);
             
-            // secondary conv gammas
+            // generated secondary MC conv. gammas from K0s, K0l, Lambda and rest (mainly material interactions)
             if(fUseCocktail){
                 f2DHistoSecondaryGammaMCConvPt                                  = (TH2D*)MCContainer->FindObject("MC_SecondaryConvGamma_Pt");
                 if(f2DHistoSecondaryGammaMCConvPt){
@@ -478,15 +478,14 @@ void ExtractGammaSignalV2(      TString meson               = "",
             RebinSpectrum(fHistoGammaMCAllInEMCAccPt);
         }    
         
-        // all MC gammas
+        // all generated MC gammas (not restricted to e.g. converted ones)
         fHistoGammaMCAllPt                                                      = (TH1D*)MCContainer->FindObject("MC_AllGamma_Pt");
         fHistoGammaMCAllPt->Sumw2();
         fHistoGammaMCAllPtOrBin                                                 = (TH1D*)fHistoGammaMCAllPt->Clone("MC_AllGamma_OriginalBinning_MCPt");
         fHistoGammaMCAllPtOrBin->Scale(1./fHistoGammaMCAllPtOrBin->GetBinWidth(5));
-//         fHistoGammaMCAllPtOrBin->GetXaxis()->SetRangeUser(0.,25.);
         RebinSpectrum(fHistoGammaMCAllPt);
         
-        // all secondary MC gammas
+        // all generated secondary MC gammas from K0s, K0l, Lambda and rest (mainly material interactions)
         if(fUseCocktail){
             f2DHistoAllSecondaryGammaMCPt                                       = (TH2D*)MCContainer->FindObject("MC_AllSecondaryGamma_Pt");
             if(f2DHistoAllSecondaryGammaMCPt){
@@ -500,7 +499,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
             }
         }
         
-        // Gamma from Decay
+        // generated MC gammas from EM decays
         fHistoGammaMCDecayPt                                                    = new TH1D*[7];
         for(Int_t i = 0; i<7; i++){
             fHistoGammaMCDecayPt[i]                                             = (TH1D*)MCContainer->FindObject(Form("MC_DecayGamma%s_Pt",fDecays[i].Data()));
@@ -511,14 +510,16 @@ void ExtractGammaSignalV2(      TString meson               = "",
         // container with histos for validated reconstructed photons
         TList *TrueConversionContainer                                          = (TList*)HistosGammaConversion->FindObject(Form("%s True histograms",fCutSelectionRead.Data()));
         
-        // reading reconstructed validated distributions
+        // reading reconstructed and validated MC distributions
         if (fEnablePCM){
+            // conv. gammas
             fHistoGammaTrueConvPt                                               = (TH1D*)TrueConversionContainer->FindObject("ESD_TrueConvGamma_Pt");
             fHistoGammaTrueConvPt->Sumw2();
             fHistoGammaTrueConvPtOrBin                                          = (TH1D*)fHistoGammaTrueConvPt->Clone("TrueConvGamma_Pt_OriginalBinning");
             fHistoGammaTrueConvPtOrBin->Sumw2();
             RebinSpectrum(fHistoGammaTrueConvPt);
     
+            // primary conv. gammas
             fHistoGammaTruePrimaryConvPt                                        = (TH1D*)TrueConversionContainer->FindObject("ESD_TruePrimaryConvGamma_Pt");
             fHistoGammaTruePrimaryConvPt->Sumw2();
             fHistoGammaTruePrimaryConvPtOrBin                                   = (TH1D*)fHistoGammaTruePrimaryConvPt->Clone("TruePrimaryConvGamma_Pt_OriginalBinning");
@@ -533,7 +534,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 fHistoTrueGammaConvMultipleCount                                = (TH1F*)TrueConversionContainer->FindObject(ObjectNameGammaConvMultipleCount.Data());
             }
             
-            // check for new trainoutput, secondary historgrams in 2D
+            // check for new trainoutput with secondary historgrams in 2D (particle type vs. pt)
             fHistogramDimension                                                 = TrueConversionContainer->FindObject("ESD_TrueSecondaryConvGamma_Pt")->ClassName();
             if (fHistogramDimension.Contains("2")){
                nHistogramDimension                                              = 2;
@@ -542,17 +543,18 @@ void ExtractGammaSignalV2(      TString meson               = "",
             
             if (nHistogramDimension==2) {
                 
-                // true secondary conv gamma rec Pt
+                // true secondary conv gamma in reconstructed Pt
                 f2DHistoGammaTrueSecondaryConvPt                                = (TH2D*)TrueConversionContainer->FindObject("ESD_TrueSecondaryConvGamma_Pt");
                 fHistoGammaTrueSecondaryConvPt                                  = (TH1D*)f2DHistoGammaTrueSecondaryConvPt->ProjectionX("ESD_TrueSecondaryConvGamma_Pt",1,4,"e");
-                for (Int_t k = 0; k< 4; k++){
-                    fHistoGammaTrueSecondaryConvGammaFromXPt[k]                 = (TH1D*)f2DHistoGammaTrueSecondaryConvPt->ProjectionX(Form("ESD_TrueSecondaryConvGammaFromXFrom%s_Pt",fSecondaries[k].Data()),
-                                                                                                                                       k+1,k+1,"e");
+                for (Int_t k = 0; k<4; k++){
+                    fHistoGammaTrueSecondaryConvGammaFromXPt[k]                 = (TH1D*)f2DHistoGammaTrueSecondaryConvPt->ProjectionX(Form("ESD_TrueSecondaryConvGammaFromXFrom%s_Pt",
+                                                                                                                                            fSecondaries[k].Data()), k+1,k+1,"e");
                     fHistoGammaTrueSecondaryConvGammaFromXPt[k]->Sumw2();
-                }    
-                // MC histograms for calculation of raw secondary spectra from cocktail
+                }
+
+                // MC histograms for calculation of raw secondary spectra from cocktail (i.e. calculation of reconstruction efficiency and conversion probability)
                 if(fUseCocktail){
-                    // true secondary conv gamma in MC Pt
+                    // true secondary conv. gamma in MC Pt
                     f2DHistoGammaTrueSecondaryConvMCPt                          = (TH2D*)TrueConversionContainer->FindObject("ESD_TrueSecondaryConvGamma_MCPt");
                     for (Int_t k = 0; k < 4; k++){
                         fHistoGammaTrueSecondaryConvGammaFromXMCPt[k]           = (TH1D*)f2DHistoGammaTrueSecondaryConvMCPt->ProjectionX(Form("ESD_TrueSecondaryConvGammaFromXFrom%s_MCPt", 
@@ -561,9 +563,10 @@ void ExtractGammaSignalV2(      TString meson               = "",
                         fHistoGammaTrueSecondaryConvGammaFromXMCPtOrBin[k]      = (TH1D*)fHistoGammaTrueSecondaryConvGammaFromXMCPt[k]->Clone("ESD_TrueSecondaryConvGammaFromXFromK0s_MCPtOrBin");
                         RebinSpectrum(fHistoGammaTrueSecondaryConvGammaFromXMCPt[k]);
                 
-                        // secondary response matrices
+                        // secondary response matrices (i.e. MC vs. reconstructed pt)
                         if (k < 3){
-                            fHistoGammaTrueSecondaryFromXConv_MCPt_recPt_MC[k]  = (TH2D*)TrueConversionContainer->FindObject(Form("ESD_TrueSecondaryConvGammaFromXFrom%sESD_MCPtPt", fSecondaries[k].Data()));
+                            fHistoGammaTrueSecondaryFromXConv_MCPt_recPt_MC[k]  = (TH2D*)TrueConversionContainer->FindObject(Form("ESD_TrueSecondaryConvGammaFromXFrom%sESD_MCPtPt",
+                                                                                                                                  fSecondaries[k].Data()));
                             fHistoGammaTrueSecondaryFromXConv_MCPt_recPt_MC[k]->Sumw2();
                         }
                     }    
@@ -574,12 +577,11 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 fHistoGammaTrueSecondaryConvGammaFromXPt[0]                     = (TH1D*)TrueConversionContainer->FindObject("ESD_TrueSecondaryConvGammaFromXFromK0s_Pt");
                 fHistoGammaTrueSecondaryConvGammaFromXPt[1]                     = (TH1D*)TrueConversionContainer->FindObject("ESD_TrueSecondaryConvGammaFromXFromLambda_Pt");
             }
-            
+
             // rebin true secondary histos
             fHistoGammaTrueSecondaryConvPt->Sumw2();
             fHistoGammaTrueSecondaryConvPtOrBin                                 = (TH1D*)fHistoGammaTrueSecondaryConvPt->Clone("ESD_TrueSecondaryConvGamma_Pt_OriginalBinning");
             RebinSpectrum(fHistoGammaTrueSecondaryConvPt);    
-    
             for (Int_t k = 0; k< 4; k++){
                 if (fHistoGammaTrueSecondaryConvGammaFromXPt[k]){
                     fHistoGammaTrueSecondaryConvGammaFromXPt[k]->Sumw2();
@@ -602,7 +604,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
         
             }
 
-            // primary response matrix PCM
+            // response matrix (i.e. rec. pt vs MC pt) for primary conv. gammas
             fHistoGammaTruePrimaryConv_recPt_MCPt_MC                            = (TH2D*)TrueConversionContainer->FindObject("ESD_TruePrimaryConvGammaESD_PtMCPt");
             fHistoGammaTruePrimaryConv_recPt_MCPt_MC->Sumw2();
             fHistoGammaTruePrimaryConvMCPt                                      = (TH1D*)fHistoGammaTruePrimaryConv_recPt_MCPt_MC->ProjectionY("ESD_TruePrimaryConvGamma_MCPt");
@@ -687,7 +689,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 
             } else {
                 
-                // MC true cluster gammas
+                // reconstructed and validated MC cluster gammas
                 fHistoGammaTrueCaloUnConvPt                                                 = (TH1D*)TrueConversionContainer->FindObject("TrueClusUnConvGamma_Pt");
                 fHistoGammaTrueCaloUnConvPt->SetName("TrueClusUnConvGamma_Pt");
                 fHistoGammaTrueCaloUnConvPt->Sumw2();
@@ -708,7 +710,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 fHistoGammaTrueCaloPtOrBin->Sumw2();
                 RebinSpectrum(fHistoGammaTrueCaloPt);
                 
-                // MC true primary cluster gammas
+                // reconstructed and validated MC primary cluster gammas
                 fHistoGammaTruePrimaryCaloUnConvPt                                          = (TH1D*)TrueConversionContainer->FindObject("TruePrimaryClusGamma_Pt");
                 fHistoGammaTruePrimaryCaloUnConvPt->SetName("TruePrimaryClusUnConvGamma_Pt");
                 fHistoGammaTruePrimaryCaloUnConvPt->Sumw2();
@@ -727,7 +729,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 fHistoGammaTruePrimaryCaloPtOrBin                                           = (TH1D*)fHistoGammaTruePrimaryCaloUnConvPtOrBin->Clone("TruePrimaryClusGamma_Pt_OriginalBinning");
                 fHistoGammaTruePrimaryCaloPtOrBin->Add(fHistoGammaTruePrimaryCaloConvPtOrBin);
 
-                // check for new trainoutput, secondary historgrams in 2D
+                // check for new trainoutput with secondary historgrams in 2D
                 fHistogramDimension                                                         = TrueConversionContainer->FindObject("ESD_TrueSecondaryClusGamma_Pt")->ClassName();
                 if (fHistogramDimension.Contains("2")){
                     nHistogramDimension                                                     = 2;
@@ -736,7 +738,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
 
                 if (nHistogramDimension==2) {
  
-                    // true secondary gammas in rec Pt
+                    // reconstructed and validated MC primary secondary gammas in reconstructed pt
                     f2DHistoGammaTrueSecondaryCaloUnConvPt                                  = (TH2D*)TrueConversionContainer->FindObject("ESD_TrueSecondaryClusGamma_Pt");
                     f2DHistoGammaTrueSecondaryCaloUnConvPt->SetName("ESD_2D_TrueSecondaryClusUnConvGamma_Pt");
                     f2DHistoGammaTrueSecondaryCaloConvPt                                    = (TH2D*)TrueConversionContainer->FindObject("ESD_TrueSecondaryClusConvGamma_Pt");
@@ -744,13 +746,13 @@ void ExtractGammaSignalV2(      TString meson               = "",
                     f2DHistoGammaTrueSecondaryCaloPt                                        = (TH2D*)f2DHistoGammaTrueSecondaryCaloUnConvPt->Clone("ESD_2D_TrueSecondaryClusGamma_Pt");
                     f2DHistoGammaTrueSecondaryCaloPt->Add(f2DHistoGammaTrueSecondaryCaloConvPt);
                     
-                    // all
+                    // secondary gammas from all contributions summed
                     fHistoGammaTrueSecondaryCaloPt                                          = (TH1D*)f2DHistoGammaTrueSecondaryCaloPt->ProjectionX("ESD_TrueSecondaryClusGamma_Pt",1,5,"e");
                     fHistoGammaTrueSecondaryCaloPt->Sumw2();
                     fHistoGammaTrueSecondaryCaloPtOrBin                                     = (TH1D*)fHistoGammaTrueSecondaryCaloPt->Clone("ESD_TrueSecondaryClusGamma_PtOrBin");
                     RebinSpectrum(fHistoGammaTrueSecondaryCaloPt);
                     
-                    // K0s, K0l, Lambda
+                    // secondary gammas from K0s, K0l, Lambda and rest
                     for (Int_t k = 0; k < 4; k++){
                         if (k < 4){
                             fHistoGammaTrueSecondaryCaloFromXPt[k]                          = (TH1D*)f2DHistoGammaTrueSecondaryCaloPt->ProjectionX(Form("ESD_TrueSecondaryClusGammaFromXFrom%s_Pt",
@@ -765,13 +767,13 @@ void ExtractGammaSignalV2(      TString meson               = "",
                         RebinSpectrum(fHistoGammaTrueSecondaryCaloFromXPt[k]);
                     }
                             
-                    // Eta
+                    // secondary gammas from eta
                     fHistoGammaTrueSecondaryCaloFromXFromEtaPt                              = (TH1D*)f2DHistoGammaTrueSecondaryCaloPt->ProjectionX("ESD_TrueSecondaryClusGammaFromXFromEta_Pt",4,4,"e");
                     fHistoGammaTrueSecondaryCaloFromXFromEtaPt->Sumw2();
                     fHistoGammaTrueSecondaryCaloFromXFromEtaPtOrBin                         = (TH1D*)fHistoGammaTrueSecondaryCaloFromXFromEtaPt->Clone("ESD_TrueSecondaryClusGammaFromXFromEta_PtOrBin");
                     RebinSpectrum(fHistoGammaTrueSecondaryCaloFromXFromEtaPt);
                     
-                    // Rest (without Eta)
+                    // secondary gammas from rest (without eta)
                     fHistoGammaTrueSecondaryCaloRestNoEtaPt                                 = (TH1D*)f2DHistoGammaTrueSecondaryCaloPt->ProjectionX("ESD_TrueSecondaryClusGammaRestNoEta_Pt",5,5,"e");
                     fHistoGammaTrueSecondaryCaloRestNoEtaPt->Sumw2();
                     fHistoGammaTrueSecondaryCaloRestNoEtaPtOrBin                            = (TH1D*)fHistoGammaTrueSecondaryCaloRestNoEtaPt->Clone("ESD_TrueSecondaryClusGammaRestNoEta_PtOrBin");
@@ -784,18 +786,18 @@ void ExtractGammaSignalV2(      TString meson               = "",
                         f2DHistoGammaTrueSecondaryCaloUnConvMCPt                            = (TH2D*)TrueConversionContainer->FindObject("ESD_TrueSecondaryClusGamma_MCPt");
                         f2DHistoGammaTrueSecondaryCaloUnConvMCPt->SetName("ESD_2D_TrueSecondaryClusUnConvGamma_MCPt");
                         f2DHistoGammaTrueSecondaryCaloConvMCPt                              = (TH2D*)TrueConversionContainer->FindObject("ESD_TrueSecondaryClusConvGamma_MCPt");
-                        f2DHistoGammaTrueSecondaryCaloConvMCPt->SetName("ESD_2D_TrueSecondaryClusUnConvGamma_MCPt");
+                        f2DHistoGammaTrueSecondaryCaloConvMCPt->SetName("ESD_2D_TrueSecondaryClusConvGamma_MCPt");
                         f2DHistoGammaTrueSecondaryCaloMCPt                                  = (TH2D*)f2DHistoGammaTrueSecondaryCaloUnConvMCPt->Clone("ESD_2D_TrueSecondaryClusGamma_MCPt");
                         f2DHistoGammaTrueSecondaryCaloMCPt->Add(f2DHistoGammaTrueSecondaryCaloConvMCPt);
 
-                        // All
+                        // secondary gammas from all sources summed
                         fHistoGammaTrueSecondaryCaloMCPt                                    = (TH1D*)f2DHistoGammaTrueSecondaryCaloMCPt->ProjectionX("ESD_TrueSecondaryClusGamma_MCPt",1,5,"e");
                         fHistoGammaTrueSecondaryCaloMCPt->Sumw2();
                         fHistoGammaTrueSecondaryCaloMCPtOrBin                               = (TH1D*)fHistoGammaTrueSecondaryCaloMCPt->Clone("ESD_TrueSecondaryClusGamma_MCPtOrBin");
                         RebinSpectrum(fHistoGammaTrueSecondaryCaloMCPt);
                         
-                        // K0s, K0l, Lambda
-                        for (Int_t k = 0; k< 4; k++){
+                        // secondary gammas from K0s, K0l, Lambda and rest
+                        for (Int_t k = 0; k<4; k++){
                             if (k < 4){
                                 fHistoGammaTrueSecondaryCaloFromXMCPt[k]                    = (TH1D*)f2DHistoGammaTrueSecondaryCaloMCPt->ProjectionX(Form("ESD_TrueSecondaryClusGammaFromXFrom%s_MCPt", 
                                                                                                                                                             fSecondaries[k].Data()), k+1, k+1, "e");
@@ -809,13 +811,13 @@ void ExtractGammaSignalV2(      TString meson               = "",
                             RebinSpectrum(fHistoGammaTrueSecondaryCaloFromXMCPt[k]);
                         }
                         
-                        // Eta
+                        // secondary gammas from eta
                         fHistoGammaTrueSecondaryCaloFromXFromEtaMCPt                        = (TH1D*)f2DHistoGammaTrueSecondaryCaloMCPt->ProjectionX("ESD_TrueSecondaryClusGammaFromXFromEta_MCPt",4,4,"e");
                         fHistoGammaTrueSecondaryCaloFromXFromEtaMCPt->Sumw2();
                         fHistoGammaTrueSecondaryCaloFromXFromEtaMCPtOrBin                   = (TH1D*)fHistoGammaTrueSecondaryCaloFromXFromEtaMCPt->Clone("ESD_TrueSecondaryClusGammaFromXFromEta_MCPtOrBin");
                         RebinSpectrum(fHistoGammaTrueSecondaryCaloFromXFromEtaMCPt);
                         
-                        // Rest (without Eta)
+                        // secondary gammas from rest (without Eta)
                         fHistoGammaTrueSecondaryCaloRestNoEtaMCPt                           = (TH1D*)f2DHistoGammaTrueSecondaryCaloMCPt->ProjectionX("ESD_TrueSecondaryClusGammaRest_MCPt",5,5,"e");
                         fHistoGammaTrueSecondaryCaloRestNoEtaMCPt->Sumw2();
                         fHistoGammaTrueSecondaryCaloRestNoEtaMCPtOrBin                      = (TH1D*)fHistoGammaTrueSecondaryCaloRestNoEtaMCPt->Clone("ESD_TrueSecondaryClusGammaRestNoEta_MCPtOrBin");
@@ -875,7 +877,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
                     }
                 }
 
-                // response matrix calo
+                // true primary gamma response matrix calo
                 fHistoGammaTruePrimaryCaloUnConv_recPt_MCPt_MC                              = (TH2D*)TrueConversionContainer->FindObject("TruePrimaryClusGamma_Pt_MCPt");
                 fHistoGammaTruePrimaryCaloUnConv_recPt_MCPt_MC->SetName("TruePrimaryClusUnConvGamma_Pt_MCPt");
                 fHistoGammaTruePrimaryCaloUnConv_recPt_MCPt_MC->Sumw2();
@@ -1464,12 +1466,14 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 }
             }
         }
+
         //**************************** Calculate pilepup correction factors for MC *********************************
         if(pileUpCorrection && !addSig && !(mode == 4 || mode == 5)){
             FillDCAHistogramsFromTree(dcaTree,kTRUE);
             CalculatePileUpBackground(kTRUE);
             CalculatePileUpGammaCorrection();
         }
+
         //**************************** Save correction histograms for gammas ***************************************
         SaveCorrectionHistos(cutSelection,fPrefix2,pileUpCorrection);
     }
@@ -2113,26 +2117,28 @@ void CalculateGammaCorrection(){
                 fHistoGammaTrueSecondaryFromXConv_MCPt_recPt_MC_Rebin[k] = new TH2D(Form("TrueSecondaryFromXFrom%sConvGamma_MCPt_rectPt_Rebin",fSecondaries[k].Data()),"",fNBinsPt,fBinsPt,fNBinsPt,fBinsPt);
                 for(Int_t x = 1; x<fHistoGammaTrueSecondaryFromXConv_MCPt_recPt_MC[k]->GetNbinsX()+1; x++){
                     for(Int_t y = 1; y<fHistoGammaTrueSecondaryFromXConv_MCPt_recPt_MC[k]->GetNbinsY()+1; y++){
-                        Double_t binContent                             = fHistoGammaTrueSecondaryFromXConv_MCPt_recPt_MC[k]->GetBinContent(x,y);
-                        Double_t xcenter                                = xAxis->GetBinCenter(x);
-                        Double_t ycenter                                = yAxis->GetBinCenter(y);
+                        Double_t binContent                         = fHistoGammaTrueSecondaryFromXConv_MCPt_recPt_MC[k]->GetBinContent(x,y);
+                        Double_t xcenter                            = xAxis->GetBinCenter(x);
+                        Double_t ycenter                            = yAxis->GetBinCenter(y);
                         fHistoGammaTrueSecondaryFromXConv_MCPt_recPt_MC_Rebin[k]->Fill(xcenter,ycenter,binContent);
                     }
                 }
             }    
         }
         // ==========================================
-        cout << "secondary fractions" << endl;
+
         // ======== Secondary fractions =============
+        cout << "secondary fractions" << endl;
         fHistoFracAllGammaToSec                                     = (TH1D*) fHistoGammaConvPt->Clone("FracAllGammaToSec");
         fHistoFracAllGammaToSec->Divide(fHistoGammaTrueSecondaryConvPt,fHistoFracAllGammaToSec,1,1,"B");
         cout << __LINE__ << "\t" << fHistoGammaTrueSecondaryConvPt->GetNbinsX() << "\t" << fHistoFracAllGammaToSec->GetNbinsX() << endl;
-        for (Int_t k = 0; k< 4; k++){
-            if(nHistogramDimension==1 && k==2) continue;
-            
+        for (Int_t k = 0; k<4; k++) {
+            if (nHistogramDimension==1 && k==2) continue;
+
             fHistoFracAllGammaToSecFromX[k]                         = (TH1D*)fHistoGammaConvPt->Clone(Form("FracAllGammaToSecFromXFrom%s", fSecondaries[k].Data()));
             fHistoFracAllGammaToSecFromX[k]->Divide(fHistoGammaTrueSecondaryConvGammaFromXPt[k],fHistoFracAllGammaToSecFromX[k],1,1,"B");
             cout << __LINE__ << endl;
+
             fHistoFracAllGammaToSecFromXOrBin[k]                    = (TH1D*)fHistoGammaConvPtOrBin->Clone(Form("FracAllGammaToSecFromXFrom%sOriginalBinning", fSecondaries[k].Data()));
             fHistoFracAllGammaToSecFromXOrBin[k]->Divide(fHistoGammaTrueSecondaryConvGammaFromXPtOrBin[k],fHistoFracAllGammaToSecFromXOrBin[k],1,1,"B");
             cout << __LINE__ << endl;
@@ -2150,7 +2156,7 @@ void CalculateGammaCorrection(){
         fHistoGammaMCConvProbOrBin->Sumw2();
         fHistoGammaMCConvProbOrBin->Divide(fHistoGammaMCConvProbOrBin,fHistoGammaMCAllPtOrBin,1,1,"B");
         cout << __LINE__ << endl;
-        
+
         // secondary conversion probabilities
         if(fUseCocktail && nHistogramDimension==2){
             for (Int_t k = 0; k < 3; k++){
@@ -2158,6 +2164,7 @@ void CalculateGammaCorrection(){
                 fHistoSecondaryGammaFromXMCConvProb[k]->Sumw2();
                 fHistoSecondaryGammaFromXMCConvProb[k]->Divide(fHistoSecondaryGammaConvFromXPt[k],fHistoAllSecondaryGammaFromXPt[k],1,1,"B");
                 cout << __LINE__ << endl;
+
                 fHistoSecondaryGammaFromXMCConvProbOrBin[k]         = (TH1D*)fHistoSecondaryGammaConvFromXPtOrBin[k]->Clone(Form("SecondaryGammaFromXFrom%sMCGammaConvProb_MCPtOrBin",
                                                                                                                                  fSecondaries[k].Data()));
                 fHistoSecondaryGammaFromXMCConvProbOrBin[k]->Sumw2();
@@ -2172,14 +2179,14 @@ void CalculateGammaCorrection(){
         fHistoGammaMCPurity->Sumw2();
         fHistoGammaMCPurity->Divide(fHistoGammaTrueConvPt,fHistoGammaConvPt,1,1,"B");
         cout << __LINE__ << endl;
-        
+
         fHistoGammaMCrecPrimaryConvPt                               = (TH1D*) fHistoGammaConvPt->Clone("MCrec_PrimaryConvGamma_Pt");
         fHistoGammaMCrecPrimaryConvPt->Add(fHistoGammaTrueSecondaryConvPt,-1);
         fHistoGammaMCTruePurity                                     = new TH1D("GammaTruePurity_Pt","",fNBinsPt,fBinsPt);
         fHistoGammaMCTruePurity->Sumw2();
         fHistoGammaMCTruePurity->Divide(fHistoGammaTruePrimaryConvPt,fHistoGammaMCrecPrimaryConvPt,1,1,"B");
         cout << __LINE__ << endl;
-        
+
         fHistoGammaMCrecPrimaryConvPtOrBin                          = (TH1D*) fHistoGammaConvPtOrBin->Clone("MC_ESDPrimaryConvGammaPt");
         fHistoGammaMCrecPrimaryConvPtOrBin->Add(fHistoGammaTrueSecondaryConvPtOrBin,-1);
         fHistoGammaMCTruePurityOrBin                                = (TH1D*)fHistoGammaMCrecPrimaryConvPtOrBin->Clone("GammaTruePurity_OriginalBinning_Pt");
@@ -2229,7 +2236,8 @@ void CalculateGammaCorrection(){
                 fHistoSecondaryGammaFromXMCRecoEffMCPtOrBin[k]->Sumw2();
                 fHistoSecondaryGammaFromXMCRecoEffMCPtOrBin[k]->Divide(fHistoGammaTrueSecondaryConvGammaFromXMCPtOrBin[k],fHistoSecondaryGammaConvFromXPtOrBin[k],1,1,"B");
                 
-                fHistoSecondaryGammaFromXMCRecoEffPtOrBin[k]        = (TH1D*)fHistoGammaTrueSecondaryConvGammaFromXPtOrBin[k]->Clone(Form("SecondaryGammaFromXFrom%sRecoEff_PtOrBin", fSecondaries[k].Data()));
+                fHistoSecondaryGammaFromXMCRecoEffPtOrBin[k]        = (TH1D*)fHistoGammaTrueSecondaryConvGammaFromXPtOrBin[k]->Clone(Form("SecondaryGammaFromXFrom%sRecoEff_PtOrBin",
+                                                                                                                                          fSecondaries[k].Data()));
                 fHistoSecondaryGammaFromXMCRecoEffPtOrBin[k]->Sumw2();
                 fHistoSecondaryGammaFromXMCRecoEffPtOrBin[k]->Divide(fHistoGammaTrueSecondaryConvGammaFromXPtOrBin[k],fHistoSecondaryGammaConvFromXPtOrBin[k],1,1,"B");
             }
@@ -2717,7 +2725,7 @@ void FillDCAHistogramsFromTree(TTree *dcaTree,Bool_t isMC){
             if(cat == 2) fESDGammaPtDCAz[2]->Fill(pt,dcaZPhoton);
             if(cat == 3) fESDGammaPtDCAz[3]->Fill(pt,dcaZPhoton);
             if(cat == 2 || cat == 3) fESDGammaPtDCAz[4]->Fill(pt,dcaZPhoton);
-            if(cat != 0)fESDGammaPtDCAz[5]->Fill(pt,dcaZPhoton);
+            if(cat != 0) fESDGammaPtDCAz[5]->Fill(pt,dcaZPhoton);
         }
     }
     if(isMC){
@@ -2826,68 +2834,72 @@ void SaveHistos(Int_t isMC, TString fCutID, TString fPrefix3,Bool_t PileUpCorrec
         if (fHistoPhotonIsSelected) fHistoPhotonIsSelected->Write(Form("IsPhotonSelected %s",fGammaCutSelectionRead.Data()),TObject::kOverwrite);
         
         // write raw photons distribution
-        if (fHistoGammaConvPt) fHistoGammaConvPt->Write("ESD_ConvGamma_Pt",TObject::kOverwrite);
-        if (fHistoGammaConvPtOrBin) fHistoGammaConvPtOrBin->Write("ESD_ConvGamma_Pt_OriginalBinning",TObject::kOverwrite);
-    
+        if (fHistoGammaConvPt)      fHistoGammaConvPt->Write(       "ESD_ConvGamma_Pt",                 TObject::kOverwrite);
+        if (fHistoGammaConvPtOrBin) fHistoGammaConvPtOrBin->Write(  "ESD_ConvGamma_Pt_OriginalBinning", TObject::kOverwrite);
+        if (fHistoGammaCaloPt)      fHistoGammaCaloPt->Write(       "ESD_CaloGamma_Pt",                 TObject::kOverwrite);
+        if (fHistoGammaCaloPtOrBin) fHistoGammaCaloPtOrBin->Write(  "ESD_CaloGamma_Pt_OriginalBinning", TObject::kOverwrite);
+
         // write raw photon distributions after pileup subtraction
         if(PileUpCorrection && fEnablePCM){
-            fESDGammaPtPileUpAllCat->Write("ESD_ConvGamma_Pt_PileUp_AllCatComb",TObject::kOverwrite);
-            fESDGammaPtPileUp->Write("ESD_ConvGamma_Pt_PileUp",TObject::kOverwrite);
+            fESDGammaPtPileUpAllCat->Write( "ESD_ConvGamma_Pt_PileUp_AllCatComb",TObject::kOverwrite);
+            fESDGammaPtPileUp->Write(       "ESD_ConvGamma_Pt_PileUp",TObject::kOverwrite);
             for (Int_t i = 0; i < 4; i++) {
-                fESDGammaPtDCAzBins[i][0]->Write(Form("ESD_GammaPtDCAzBin_Full_%s", categoryName[i].Data()),TObject::kOverwrite);
-                fESDGammaPerCatPtDCAzBins[i]->Write(Form("ESD_GammaPtDCAzBin_%s", categoryName[i].Data()),TObject::kOverwrite);
-                if (i < 3) fESDGammaRatioCatToCombinedPtDCAzBins[i]->Write(Form("ESD_GammaPtDCAzBin_Ratio_%s_to_%s", categoryName[i+1].Data(), categoryName[0].Data()),TObject::kOverwrite);
+                fESDGammaPtDCAzBins[i][0]->Write(Form(      "ESD_GammaPtDCAzBin_Full_%s", categoryName[i].Data()),TObject::kOverwrite);
+                fESDGammaPerCatPtDCAzBins[i]->Write(Form(   "ESD_GammaPtDCAzBin_%s", categoryName[i].Data()),TObject::kOverwrite);
+                if (i < 3)
+                    fESDGammaRatioCatToCombinedPtDCAzBins[i]->Write(Form("ESD_GammaPtDCAzBin_Ratio_%s_to_%s", categoryName[i+1].Data(), categoryName[0].Data()),TObject::kOverwrite);
             }
         }
     
         // write secondary gamma cocktail spectra
         if(fUseCocktail){
             for (Int_t k = 0; k< 3; k++){
-                if (fHistoSecondaryGammaCocktailFromXPt[k])             fHistoSecondaryGammaCocktailFromXPt[k]->Write(Form("CocktailSecondaryGammaFromX%s_Pt", fSecondaries[k].Data()),TObject::kOverwrite);
-                if (fHistoSecondaryGammaCocktailFromXPtOrBin[k])        fHistoSecondaryGammaCocktailFromXPtOrBin[k]->Write(Form("CocktailSecondaryGammaFromX%s_PtOrBin", fSecondaries[k].Data()), 
-                                                                                                                          TObject::kOverwrite);
+                if (fHistoSecondaryGammaCocktailFromXPt[k])
+                    fHistoSecondaryGammaCocktailFromXPt[k]->Write(Form(     "CocktailSecondaryGammaFromX%s_Pt", fSecondaries[k].Data()),        TObject::kOverwrite);
+                if (fHistoSecondaryGammaCocktailFromXPtOrBin[k])
+                    fHistoSecondaryGammaCocktailFromXPtOrBin[k]->Write(Form("CocktailSecondaryGammaFromX%s_PtOrBin", fSecondaries[k].Data()),   TObject::kOverwrite);
             }
         }
     
         // write basics MC quantities if possible (converted input spectrum & reconstructed validated (&primary) photons)
         if(isMC){
-            if (fHistoGammaMCConvPt)                                    fHistoGammaMCConvPt->Write("MC_ConvGamma_MCPt",TObject::kOverwrite);
-            if (fHistoGammaMCConvPtOrBin)                               fHistoGammaMCConvPtOrBin->Write("MC_ConvGamma_MCPt_OriginalBinning",TObject::kOverwrite);
-            if (fHistoGammaTrueConvPt)                                  fHistoGammaTrueConvPt->Write("TrueConvGamma_Pt",TObject::kOverwrite);
-            if (fHistoGammaTruePrimaryConvPt)                           fHistoGammaTruePrimaryConvPt->Write("TruePrimaryConvGamma_Pt",TObject::kOverwrite);
-            if (fHistoGammaTrueCaloPt)                                  fHistoGammaTrueCaloPt->Write("TrueCaloGamma_Pt",TObject::kOverwrite);
-            if (fHistoGammaTruePrimaryCaloPt)                           fHistoGammaTruePrimaryCaloPt->Write("TruePrimaryCaloGamma_Pt",TObject::kOverwrite);
+            if (fHistoGammaMCConvPt)            fHistoGammaMCConvPt->Write(         "MC_ConvGamma_MCPt",                TObject::kOverwrite);
+            if (fHistoGammaMCConvPtOrBin)       fHistoGammaMCConvPtOrBin->Write(    "MC_ConvGamma_MCPt_OriginalBinning",TObject::kOverwrite);
+            if (fHistoGammaTrueConvPt)          fHistoGammaTrueConvPt->Write(       "TrueConvGamma_Pt",                 TObject::kOverwrite);
+            if (fHistoGammaTruePrimaryConvPt)   fHistoGammaTruePrimaryConvPt->Write("TruePrimaryConvGamma_Pt",          TObject::kOverwrite);
+            if (fHistoGammaTrueCaloPt)          fHistoGammaTrueCaloPt->Write(       "TrueCaloGamma_Pt",                 TObject::kOverwrite);
+            if (fHistoGammaTruePrimaryCaloPt)   fHistoGammaTruePrimaryCaloPt->Write("TruePrimaryCaloGamma_Pt",          TObject::kOverwrite);
             
             // write secondary spectr
             if(fUseCocktail && nHistogramDimension==2){
                 
                 for (Int_t k = 0; k < 3; k++){
                 // secondary conv gamma
-                    if (fHistoSecondaryGammaConvFromXPt[k])             fHistoSecondaryGammaConvFromXPt[k]->Write(Form("fHistoSecondaryGammaConvFromXFrom%sPt", fSecondaries[k].Data()),TObject::kOverwrite);
-                    if (fHistoSecondaryGammaConvFromXPtOrBin[k])        fHistoSecondaryGammaConvFromXPtOrBin[k]->Write( Form("fHistoSecondaryGammaConvFromXFrom%sPtOrBin", fSecondaries[k].Data()), 
-                                                                                                                        TObject::kOverwrite);
+                    if (fHistoSecondaryGammaConvFromXPt[k])
+                        fHistoSecondaryGammaConvFromXPt[k]->Write(Form(     "fHistoSecondaryGammaConvFromXFrom%sPt", fSecondaries[k].Data()),       TObject::kOverwrite);
+                    if (fHistoSecondaryGammaConvFromXPtOrBin[k])
+                        fHistoSecondaryGammaConvFromXPtOrBin[k]->Write(Form("fHistoSecondaryGammaConvFromXFrom%sPtOrBin", fSecondaries[k].Data()),  TObject::kOverwrite);
                     
                     // all secondary gamma
-                    if (fHistoAllSecondaryGammaFromXPt[k])              fHistoAllSecondaryGammaFromXPt[k]->Write(Form("fHistoAllSecondaryGammaFromXFrom%sPt", fSecondaries[k].Data()),TObject::kOverwrite);
-                    if (fHistoAllSecondaryGammaFromXPtOrBin[k])         fHistoAllSecondaryGammaFromXPtOrBin[k]->Write(  Form("fHistoAllSecondaryGammaFromXFrom%sPtOrBin", fSecondaries[k].Data()), 
-                                                                                                                        TObject::kOverwrite);
+                    if (fHistoAllSecondaryGammaFromXPt[k])
+                        fHistoAllSecondaryGammaFromXPt[k]->Write(Form(      "fHistoAllSecondaryGammaFromXFrom%sPt", fSecondaries[k].Data()),        TObject::kOverwrite);
+                    if (fHistoAllSecondaryGammaFromXPtOrBin[k])
+                        fHistoAllSecondaryGammaFromXPtOrBin[k]->Write(Form( "fHistoAllSecondaryGammaFromXFrom%sPtOrBin", fSecondaries[k].Data()),   TObject::kOverwrite);
                     
                     // MC validated secondary conv gamma rec Pt
-                    if (fHistoGammaTrueSecondaryConvGammaFromXPt[k])    fHistoGammaTrueSecondaryConvGammaFromXPt[k]->Write( Form("fHistoGammaTrueSecondaryConvGammaFromXFrom%sPt", fSecondaries[k].Data()),           
-                                                                                                                            TObject::kOverwrite);
-                    if (fHistoGammaTrueSecondaryConvGammaFromXPtOrBin[k]) fHistoGammaTrueSecondaryConvGammaFromXPtOrBin[k]->Write(  Form("fHistoGammaTrueSecondaryConvGammaFromXFrom%sPtOrBin", 
-                                                                                                                                    fSecondaries[k].Data()), TObject::kOverwrite);
+                    if (fHistoGammaTrueSecondaryConvGammaFromXPt[k])
+                        fHistoGammaTrueSecondaryConvGammaFromXPt[k]->Write(Form(        "fHistoGammaTrueSecondaryConvGammaFromXFrom%sPt", fSecondaries[k].Data()),          TObject::kOverwrite);
+                    if (fHistoGammaTrueSecondaryConvGammaFromXPtOrBin[k])
+                        fHistoGammaTrueSecondaryConvGammaFromXPtOrBin[k]->Write(Form(   "fHistoGammaTrueSecondaryConvGammaFromXFrom%sPtOrBin", fSecondaries[k].Data()),     TObject::kOverwrite);
 
                     // MC validated secondary conv gamma MC Pt
-                    if (fHistoGammaTrueSecondaryConvGammaFromXMCPt[k])  fHistoGammaTrueSecondaryConvGammaFromXMCPt[k]->Write(Form("fHistoGammaTrueSecondaryConvGammaFromXFrom%sMCPt", fSecondaries[k].Data()), TObject::kOverwrite);            
-                    if (fHistoGammaTrueSecondaryConvGammaFromXMCPtOrBin[k]) fHistoGammaTrueSecondaryConvGammaFromXMCPtOrBin[k]->Write(Form("fHistoGammaTrueSecondaryConvGammaFromXFrom%sMCPtOrBin", fSecondaries[k].Data()), TObject::kOverwrite);
+                    if (fHistoGammaTrueSecondaryConvGammaFromXMCPt[k])
+                        fHistoGammaTrueSecondaryConvGammaFromXMCPt[k]->Write(Form(      "fHistoGammaTrueSecondaryConvGammaFromXFrom%sMCPt", fSecondaries[k].Data()),        TObject::kOverwrite);
+                    if (fHistoGammaTrueSecondaryConvGammaFromXMCPtOrBin[k])
+                        fHistoGammaTrueSecondaryConvGammaFromXMCPtOrBin[k]->Write(Form( "fHistoGammaTrueSecondaryConvGammaFromXFrom%sMCPtOrBin", fSecondaries[k].Data()),   TObject::kOverwrite);
                 }   
             }
         }
-
-        // write raw photons distribution
-        if (fHistoGammaCaloPt)          fHistoGammaCaloPt->Write("ESD_CaloGamma_Pt",TObject::kOverwrite);
-        if (fHistoGammaCaloPtOrBin)     fHistoGammaCaloPtOrBin->Write("ESD_CaloGamma_Pt_OriginalBinning",TObject::kOverwrite);
 
         if (fMode == 2 || fMode == 3 ){
           // write histograms for all integration windows: normal, wide, narrow, left, left wide, left narrow
@@ -3179,39 +3191,46 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3,Bool_t PileUpCorrecti
 void SaveDCAHistos(Int_t isMC, TString fCutID, TString fPrefix3){
     const char* nameOutput                              = Form("%s/%s/%s_%s_GammaConvV1DCAHistogramms%s_%s.root",fCutSelection.Data(), fEnergyFlag.Data(), fPrefix.Data(), fPrefix3.Data(),
                                                        fPeriodFlag.Data(), fCutID.Data());
-    if(fMode == 0 && !fEnergyFlag.CompareTo("900GeV"))
-        exemplaryHighPtBin                                      = 8;
     cout << "INFO: writing into: " << nameOutput << endl;
     TFile *Output1                                      = new TFile(nameOutput,"RECREATE");
 
+    if(fMode == 0 && !fEnergyFlag.CompareTo("900GeV"))
+        exemplaryHighPtBin                              = 8;
+
         // write ratio of spectra with and without pileup
         if (!isMC) {
+            // data
             
             for (Int_t i = 0; i < 3; i++) {
-                fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[i]->Write(Form("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb_%s", backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
+                fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[i]->Write(Form(          "ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb_%s",
+                                                                                                backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
                 if (fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat[i])
-                    fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat[i]->Write(Form("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb_%s", backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
-                fESDGammaPileUpCorrFactorAllCat[i]->Write(Form("ESD_ConvGamma_PileUpCorFactor_AllCatComb_%s", backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
-                fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[i]->Write(Form("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_%s", backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
+                    fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat[i]->Write(Form(   "ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb_%s",
+                                                                                                backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
+                fESDGammaPileUpCorrFactorAllCat[i]->Write(Form(                                 "ESD_ConvGamma_PileUpCorFactor_AllCatComb_%s",
+                                                                                                backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
+                fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[i]->Write(Form(                "ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_%s",
+                                                                                                backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
                 if (fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning[i])
-                    fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning[i]->Write(Form("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_%s", backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
-                if (i == 0)
-                    fESDGammaPileUpCorrFactor[i]->Write("ESD_ConvGamma_PileUpCorFactor", TObject::kOverwrite);      // standard background estimation method
-                else
-                    fESDGammaPileUpCorrFactor[i]->Write(Form("ESD_ConvGamma_PileUpCorFactor_%s", backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
+                    fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinning[i]->Write(Form(         "ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_%s",
+                                                                                                backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
+                if (i == 0) fESDGammaPileUpCorrFactor[i]->Write(        "ESD_ConvGamma_PileUpCorFactor", TObject::kOverwrite); // standard background estimation method
+                else        fESDGammaPileUpCorrFactor[i]->Write(Form(   "ESD_ConvGamma_PileUpCorFactor_%s", backgroundExtractionMethod[i].Data()), TObject::kOverwrite);
             }
             
             for (Int_t catIter = 0; catIter < 4; catIter++) {
                 if (catIter == 0) {
-                    fESDGammaPtDCAz[5]->Write(fESDGammaPtDCAz[5]->GetName(), TObject::kOverwrite);
                     TH2D *ESDGammaPtDCAzPerEvent                                = (TH2D*)fESDGammaPtDCAz[5]->Clone(Form("%s_perEvent",fESDGammaPtDCAz[5]->GetName()));
                     ESDGammaPtDCAzPerEvent->Scale(1./fNEvents);
-                    ESDGammaPtDCAzPerEvent->Write(ESDGammaPtDCAzPerEvent->GetName(), TObject::kOverwrite);
+
+                    fESDGammaPtDCAz[5]->Write(      fESDGammaPtDCAz[5]->GetName(),      TObject::kOverwrite);
+                    ESDGammaPtDCAzPerEvent->Write(  ESDGammaPtDCAzPerEvent->GetName(),  TObject::kOverwrite);
                 } else {
-                    fESDGammaPtDCAz[catIter]->Write(fESDGammaPtDCAz[catIter]->GetName(), TObject::kOverwrite);
                     TH2D *ESDGammaPtDCAzPerEvent                                = (TH2D*)fESDGammaPtDCAz[catIter]->Clone(Form("%s_perEvent",fESDGammaPtDCAz[catIter]->GetName()));
                     ESDGammaPtDCAzPerEvent->Scale(1./fNEvents);
-                    ESDGammaPtDCAzPerEvent->Write(ESDGammaPtDCAzPerEvent->GetName(), TObject::kOverwrite);
+
+                    fESDGammaPtDCAz[catIter]->Write(fESDGammaPtDCAz[catIter]->GetName(),    TObject::kOverwrite);
+                    ESDGammaPtDCAzPerEvent->Write(  ESDGammaPtDCAzPerEvent->GetName(),      TObject::kOverwrite);
                 }
                 
                 Int_t ptBin;
@@ -3220,101 +3239,141 @@ void SaveDCAHistos(Int_t isMC, TString fCutID, TString fPrefix3){
                     else if (i == 1)    ptBin                                   = exemplaryLowPtBin;
                     else                ptBin                                   = exemplaryHighPtBin;
                     
-                    fESDGammaPtDCAzBins[catIter][ptBin]->Write(fESDGammaPtDCAzBins[catIter][ptBin]->GetName(), TObject::kOverwrite);
                     TH1D *ESDGammaPtDCAzBinsPerEvent                            = (TH1D*)fESDGammaPtDCAzBins[catIter][ptBin]->Clone(Form("%s_perEvent",fESDGammaPtDCAzBins[catIter][ptBin]->GetName()));
                     ESDGammaPtDCAzBinsPerEvent->Scale(1./fNEvents);
-                    ESDGammaPtDCAzBinsPerEvent->Write(ESDGammaPtDCAzBinsPerEvent->GetName(), TObject::kOverwrite);
+
+                    fESDGammaPtDCAzBins[catIter][ptBin]->Write( fESDGammaPtDCAzBins[catIter][ptBin]->GetName(), TObject::kOverwrite);
+                    ESDGammaPtDCAzBinsPerEvent->Write(          ESDGammaPtDCAzBinsPerEvent->GetName(),          TObject::kOverwrite);
                     
-                    fESDGammaPtDCAzBinsBack[catIter][ptBin][0]->Write(fESDGammaPtDCAzBinsBack[catIter][ptBin][0]->GetName(), TObject::kOverwrite);
                     TH1D *ESDGammaPtDCAzBinsBackPerEvent                        = (TH1D*)fESDGammaPtDCAzBinsBack[catIter][ptBin][0]->Clone(Form("%s_perEvent",fESDGammaPtDCAzBinsBack[catIter][ptBin][0]->GetName()));
                     ESDGammaPtDCAzBinsBackPerEvent->Scale(1./fNEvents);
-                    ESDGammaPtDCAzBinsBackPerEvent->Write(ESDGammaPtDCAzBinsBackPerEvent->GetName(), TObject::kOverwrite);
+
+                    fESDGammaPtDCAzBinsBack[catIter][ptBin][0]->Write(  fESDGammaPtDCAzBinsBack[catIter][ptBin][0]->GetName(),  TObject::kOverwrite);
+                    ESDGammaPtDCAzBinsBackPerEvent->Write(              ESDGammaPtDCAzBinsBackPerEvent->GetName(),              TObject::kOverwrite);
                     
-                    fESDSubGammaPtDCAzBins[catIter][ptBin][0]->Write(fESDSubGammaPtDCAzBins[catIter][ptBin][0]->GetName(), TObject::kOverwrite);
                     TH1D *ESDGammaDCAzAllSubperEvent                            = (TH1D*)fESDSubGammaPtDCAzBins[catIter][ptBin][0]->Clone(Form("%s_perEvent",fESDSubGammaPtDCAzBins[catIter][ptBin][0]->GetName()));
                     ESDGammaDCAzAllSubperEvent->Scale(1./fNEvents);
-                    ESDGammaDCAzAllSubperEvent->Write(ESDGammaDCAzAllSubperEvent->GetName(), TObject::kOverwrite);
+
+                    fESDSubGammaPtDCAzBins[catIter][ptBin][0]->Write(   fESDSubGammaPtDCAzBins[catIter][ptBin][0]->GetName(),   TObject::kOverwrite);
+                    ESDGammaDCAzAllSubperEvent->Write(                  ESDGammaDCAzAllSubperEvent->GetName(),                  TObject::kOverwrite);
                 }
             }
         } else {
+            // MC
             
-            fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Write("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", TObject::kOverwrite);
+            fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Write(        "MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb",
+                                                                                    TObject::kOverwrite);
             if(fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat)
-                fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat->Write("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb", TObject::kOverwrite);
-            fMCrecGammaPileUpCorrFactorAllCat->Write("MCrec_ConvGamma_PileUpCorrFactor_AllCatComb", TObject::kOverwrite);
-            fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning->Write("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning", TObject::kOverwrite);
+                fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat->Write( "MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb",
+                                                                                    TObject::kOverwrite);
+            fMCrecGammaPileUpCorrFactorAllCat->Write(                               "MCrec_ConvGamma_PileUpCorrFactor_AllCatComb",
+                                                                                    TObject::kOverwrite);
+            fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning->Write(              "MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning",
+                                                                                    TObject::kOverwrite);
             if(fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinning)
-                fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->Write("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit", TObject::kOverwrite);
-            fMCrecGammaPileUpCorrFactor->Write("MCrec_ConvGamma_PileUpCorrFactor", TObject::kOverwrite);
+                fMCrecGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->Write(       "MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit",
+                                                                                    TObject::kOverwrite);
+            fMCrecGammaPileUpCorrFactor->Write(                                     "MCrec_ConvGamma_PileUpCorrFactor",
+                                                                                    TObject::kOverwrite);
 
-            fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Write("ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", TObject::kOverwrite);
+            // true primary
+            fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Write(          "ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb",
+                                                                                                TObject::kOverwrite);
             if(fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat)
-                fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat->Write("ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb", TObject::kOverwrite);
-            fTruePrimaryConvGammaPileUpCorrFactorAllCat->Write("ESD_TruePrimaryConvGamma_PileUpCorrFactor_AllCatComb", TObject::kOverwrite);
-            fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning->Write("ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning", TObject::kOverwrite);
+                fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat->Write(   "ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb",
+                                                                                                TObject::kOverwrite);
+            fTruePrimaryConvGammaPileUpCorrFactorAllCat->Write(                                 "ESD_TruePrimaryConvGamma_PileUpCorrFactor_AllCatComb",
+                                                                                                TObject::kOverwrite);
+            fTruePrimaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning->Write(                "ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning",
+                                                                                                TObject::kOverwrite);
             if(fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning)
-                fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->Write("ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit", TObject::kOverwrite);
-            fTruePrimaryConvGammaPileUpCorrFactor->Write("ESD_TruePrimaryConvGamma_PileUpCorrFactor", TObject::kOverwrite);
+                fTruePrimaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->Write(         "ESD_TruePrimaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit",
+                                                                                                TObject::kOverwrite);
+            fTruePrimaryConvGammaPileUpCorrFactor->Write(                                       "ESD_TruePrimaryConvGamma_PileUpCorrFactor",
+                                                                                                TObject::kOverwrite);
 
-            fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Write("ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", TObject::kOverwrite);
+            // true secondary conv gamma
+            fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Write(            "ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb",
+                                                                                                    TObject::kOverwrite);
             if(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat)
-                fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat->Write("ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb", TObject::kOverwrite);
-            fTrueSecondaryConvGammaPileUpCorrFactorAllCat->Write("ESD_TrueSecondaryConvGamma_PileUpCorrFactor_AllCatComb", TObject::kOverwrite);
-            fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning->Write("ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning", TObject::kOverwrite);
+                fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat->Write(     "ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb",
+                                                                                                    TObject::kOverwrite);
+            fTrueSecondaryConvGammaPileUpCorrFactorAllCat->Write(                                   "ESD_TrueSecondaryConvGamma_PileUpCorrFactor_AllCatComb",
+                                                                                                    TObject::kOverwrite);
+            fTrueSecondaryConvGammaPtRatioWithWithoutPileUpDCAzDistBinning->Write(                  "ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning",
+                                                                                                    TObject::kOverwrite);
             if(fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning)
-                fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->Write("ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit", TObject::kOverwrite);
-            fTrueSecondaryConvGammaPileUpCorrFactor->Write("ESD_TrueSecondaryConvGamma_PileUpCorrFactor", TObject::kOverwrite);
+                fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->Write(           "ESD_TrueSecondaryConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_Fit",
+                                                                                                    TObject::kOverwrite);
+            fTrueSecondaryConvGammaPileUpCorrFactor->Write(                                         "ESD_TrueSecondaryConvGamma_PileUpCorrFactor",
+                                                                                                    TObject::kOverwrite);
 
-            fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Write("ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb", TObject::kOverwrite);
+            // true secondary from K0s
+            fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat->Write(    "ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning_AllCatComb",
+                                                                                                        TObject::kOverwrite);
             if(fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat)
-                fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat->Write("ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb", TObject::kOverwrite);
-            fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorAllCat->Write("ESD_TrueSecondaryFromXFromK0sConvGamma_PileUpCorrFactor_AllCatComb", TObject::kOverwrite);
-            fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning->Write("ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning", TObject::kOverwrite);
+                fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat->Write(
+                                                                                                        "ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning_Fit_AllCatComb",
+                                                                                                        TObject::kOverwrite);
+            fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorAllCat->Write(                           "ESD_TrueSecondaryFromXFromK0sConvGamma_PileUpCorrFactor_AllCatComb",
+                                                                                                        TObject::kOverwrite);
+            fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning->Write(          "ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning",
+                                                                                                        TObject::kOverwrite);
             if(fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning)
-                fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->Write("ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning_Fit", TObject::kOverwrite);
-            fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactor->Write("ESD_TrueSecondaryFromXFromK0sConvGamma_PileUpCorrFactor", TObject::kOverwrite);
+                fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning->Write(   "ESD_TrueSecondaryFromXFromK0sConvGamma_Pt__Ratio_WithWithoutPileUp_DCAzDistBinning_Fit",
+                                                                                                        TObject::kOverwrite);
+            fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactor->Write(                                 "ESD_TrueSecondaryFromXFromK0sConvGamma_PileUpCorrFactor",
+                                                                                                        TObject::kOverwrite);
 
             for (Int_t catIter = 0; catIter < 4; catIter++) {
                 if (catIter == 0) {
-                    fESDGammaPtDCAz[5]->Write("MCrec_GammaPtDCAz_all", TObject::kOverwrite);
                     TH2D *ESDGammaPtDCAzPerEvent                                = (TH2D*)fESDGammaPtDCAz[5]->Clone("MCrec_GammaPtDCAz_all_perEvent");
                     ESDGammaPtDCAzPerEvent->Scale(1./fNEvents);
-                    ESDGammaPtDCAzPerEvent->Write(ESDGammaPtDCAzPerEvent->GetName(), TObject::kOverwrite);
+
+                    fESDGammaPtDCAz[5]->Write(      "MCrec_GammaPtDCAz_all",            TObject::kOverwrite);
+                    ESDGammaPtDCAzPerEvent->Write(  ESDGammaPtDCAzPerEvent->GetName(),  TObject::kOverwrite);
                     
-                    fTruePrimaryPhotonPtDCAz[5]->Write(fTruePrimaryPhotonPtDCAz[5]->GetName(), TObject::kOverwrite);
                     TH2D *TruePrimaryPhotonPtDCAzPerEvent                       = (TH2D*)fTruePrimaryPhotonPtDCAz[5]->Clone(Form("%s_perEvent",fTruePrimaryPhotonPtDCAz[5]->GetName()));
                     TruePrimaryPhotonPtDCAzPerEvent->Scale(1./fNEvents);
-                    TruePrimaryPhotonPtDCAzPerEvent->Write(TruePrimaryPhotonPtDCAzPerEvent->GetName(), TObject::kOverwrite);
+
+                    fTruePrimaryPhotonPtDCAz[5]->Write(     fTruePrimaryPhotonPtDCAz[5]->GetName(),     TObject::kOverwrite);
+                    TruePrimaryPhotonPtDCAzPerEvent->Write( TruePrimaryPhotonPtDCAzPerEvent->GetName(), TObject::kOverwrite);
                     
-                    fTrueSecondaryPhotonPtDCAz[5]->Write(fTrueSecondaryPhotonPtDCAz[5]->GetName(), TObject::kOverwrite);
                     TH2D *TrueSecondaryPhotonPtDCAzPerEvent                     = (TH2D*)fTrueSecondaryPhotonPtDCAz[5]->Clone(Form("%s_perEvent",fTrueSecondaryPhotonPtDCAz[5]->GetName()));
                     TrueSecondaryPhotonPtDCAzPerEvent->Scale(1./fNEvents);
-                    TrueSecondaryPhotonPtDCAzPerEvent->Write(TrueSecondaryPhotonPtDCAzPerEvent->GetName(), TObject::kOverwrite);
+
+                    fTrueSecondaryPhotonPtDCAz[5]->Write(       fTrueSecondaryPhotonPtDCAz[5]->GetName(),       TObject::kOverwrite);
+                    TrueSecondaryPhotonPtDCAzPerEvent->Write(   TrueSecondaryPhotonPtDCAzPerEvent->GetName(),   TObject::kOverwrite);
                     
-                    fTrueSecondaryPhotonFromXFromK0sPtDCAz[5]->Write(fTrueSecondaryPhotonFromXFromK0sPtDCAz[5]->GetName(), TObject::kOverwrite);
                     TH2D *TrueSecondaryPhotonFromXFromK0sPtDCAzPerEvent         = (TH2D*)fTrueSecondaryPhotonFromXFromK0sPtDCAz[5]->Clone(Form("%s_perEvent",fTrueSecondaryPhotonFromXFromK0sPtDCAz[5]->GetName()));
                     TrueSecondaryPhotonFromXFromK0sPtDCAzPerEvent->Scale(1./fNEvents);
-                    TrueSecondaryPhotonFromXFromK0sPtDCAzPerEvent->Write(TrueSecondaryPhotonFromXFromK0sPtDCAzPerEvent->GetName(), TObject::kOverwrite);
+
+                    fTrueSecondaryPhotonFromXFromK0sPtDCAz[5]->Write(       fTrueSecondaryPhotonFromXFromK0sPtDCAz[5]->GetName(),       TObject::kOverwrite);
+                    TrueSecondaryPhotonFromXFromK0sPtDCAzPerEvent->Write(   TrueSecondaryPhotonFromXFromK0sPtDCAzPerEvent->GetName(),   TObject::kOverwrite);
                 } else {
-                    fESDGammaPtDCAz[catIter]->Write(Form("MCrec_GammaPtDCAz_%s", categoryName[catIter].Data()), TObject::kOverwrite);
                     TH2D *ESDGammaPtDCAzPerEvent                                = (TH2D*)fESDGammaPtDCAz[catIter]->Clone(Form("MCrec_GammaPtDCAz_%s_perEvent",categoryName[catIter].Data()));
                     ESDGammaPtDCAzPerEvent->Scale(1./fNEvents);
-                    ESDGammaPtDCAzPerEvent->Write(ESDGammaPtDCAzPerEvent->GetName(), TObject::kOverwrite);
+
+                    fESDGammaPtDCAz[catIter]->Write(    Form("MCrec_GammaPtDCAz_%s", categoryName[catIter].Data()), TObject::kOverwrite);
+                    ESDGammaPtDCAzPerEvent->Write(      ESDGammaPtDCAzPerEvent->GetName(),                          TObject::kOverwrite);
                     
-                    fTruePrimaryPhotonPtDCAz[catIter]->Write(fTruePrimaryPhotonPtDCAz[catIter]->GetName(), TObject::kOverwrite);
                     TH2D *TruePrimaryPhotonPtDCAzPerEvent                       = (TH2D*)fTruePrimaryPhotonPtDCAz[catIter]->Clone(Form("%s_perEvent",fTruePrimaryPhotonPtDCAz[catIter]->GetName()));
                     TruePrimaryPhotonPtDCAzPerEvent->Scale(1./fNEvents);
-                    TruePrimaryPhotonPtDCAzPerEvent->Write(TruePrimaryPhotonPtDCAzPerEvent->GetName(), TObject::kOverwrite);
+
+                    fTruePrimaryPhotonPtDCAz[catIter]->Write(   fTruePrimaryPhotonPtDCAz[catIter]->GetName(),   TObject::kOverwrite);
+                    TruePrimaryPhotonPtDCAzPerEvent->Write(     TruePrimaryPhotonPtDCAzPerEvent->GetName(),     TObject::kOverwrite);
                     
-                    fTrueSecondaryPhotonPtDCAz[catIter]->Write(fTrueSecondaryPhotonPtDCAz[catIter]->GetName(), TObject::kOverwrite);
                     TH2D *TrueSecondaryPhotonPtDCAzPerEvent                     = (TH2D*)fTrueSecondaryPhotonPtDCAz[catIter]->Clone(Form("%s_perEvent",fTrueSecondaryPhotonPtDCAz[catIter]->GetName()));
                     TrueSecondaryPhotonPtDCAzPerEvent->Scale(1./fNEvents);
-                    TrueSecondaryPhotonPtDCAzPerEvent->Write(TrueSecondaryPhotonPtDCAzPerEvent->GetName(), TObject::kOverwrite);
+
+                    fTrueSecondaryPhotonPtDCAz[catIter]->Write( fTrueSecondaryPhotonPtDCAz[catIter]->GetName(), TObject::kOverwrite);
+                    TrueSecondaryPhotonPtDCAzPerEvent->Write(   TrueSecondaryPhotonPtDCAzPerEvent->GetName(),   TObject::kOverwrite);
                     
-                    fTrueSecondaryPhotonFromXFromK0sPtDCAz[catIter]->Write(fTrueSecondaryPhotonFromXFromK0sPtDCAz[catIter]->GetName(), TObject::kOverwrite);
                     TH2D *TrueSecondaryPhotonFromXFromK0sPtDCAzPerEvent         = (TH2D*)fTrueSecondaryPhotonFromXFromK0sPtDCAz[catIter]->Clone(Form("%s_perEvent",fTrueSecondaryPhotonFromXFromK0sPtDCAz[catIter]->GetName()));
                     TrueSecondaryPhotonFromXFromK0sPtDCAzPerEvent->Scale(1./fNEvents);
-                    TrueSecondaryPhotonFromXFromK0sPtDCAzPerEvent->Write(TrueSecondaryPhotonFromXFromK0sPtDCAzPerEvent->GetName(), TObject::kOverwrite);
+
+                    fTrueSecondaryPhotonFromXFromK0sPtDCAz[catIter]->Write( fTrueSecondaryPhotonFromXFromK0sPtDCAz[catIter]->GetName(), TObject::kOverwrite);
+                    TrueSecondaryPhotonFromXFromK0sPtDCAzPerEvent->Write(   TrueSecondaryPhotonFromXFromK0sPtDCAzPerEvent->GetName(),   TObject::kOverwrite);
                 }
                 
                 Int_t ptBin;
@@ -3324,69 +3383,81 @@ void SaveDCAHistos(Int_t isMC, TString fCutID, TString fPrefix3){
                     else                ptBin                                   = exemplaryHighPtBin;
 
                     // MCrec
-                    fMCrecGammaPtDCAzBins[catIter][ptBin]->Write(fMCrecGammaPtDCAzBins[catIter][ptBin]->GetName(), TObject::kOverwrite);
                     TH1D *MCrecGammaPtDCAzBinsPerEvent                          = (TH1D*)fMCrecGammaPtDCAzBins[catIter][ptBin]->Clone(Form("%s_perEvent",fMCrecGammaPtDCAzBins[catIter][ptBin]->GetName()));
                     MCrecGammaPtDCAzBinsPerEvent->Scale(1./fNEvents);
-                    MCrecGammaPtDCAzBinsPerEvent->Write(MCrecGammaPtDCAzBinsPerEvent->GetName(), TObject::kOverwrite);
 
-                    fMCrecGammaPtDCAzBinsBack[catIter][ptBin]->Write(fMCrecGammaPtDCAzBinsBack[catIter][ptBin]->GetName(), TObject::kOverwrite);
+                    fMCrecGammaPtDCAzBins[catIter][ptBin]->Write(   fMCrecGammaPtDCAzBins[catIter][ptBin]->GetName(),   TObject::kOverwrite);
+                    MCrecGammaPtDCAzBinsPerEvent->Write(            MCrecGammaPtDCAzBinsPerEvent->GetName(),            TObject::kOverwrite);
+
                     TH1D *MCrecGammaPtDCAzBinsBackPerEvent                      = (TH1D*)fMCrecGammaPtDCAzBinsBack[catIter][ptBin]->Clone(Form("%s_perEvent",fMCrecGammaPtDCAzBinsBack[catIter][ptBin]->GetName()));
                     MCrecGammaPtDCAzBinsBackPerEvent->Scale(1./fNEvents);
-                    MCrecGammaPtDCAzBinsBackPerEvent->Write(MCrecGammaPtDCAzBinsBackPerEvent->GetName(), TObject::kOverwrite);
+
+                    fMCrecGammaPtDCAzBinsBack[catIter][ptBin]->Write(   fMCrecGammaPtDCAzBinsBack[catIter][ptBin]->GetName(),   TObject::kOverwrite);
+                    MCrecGammaPtDCAzBinsBackPerEvent->Write(            MCrecGammaPtDCAzBinsBackPerEvent->GetName(),            TObject::kOverwrite);
                     
-                    fMCrecSubGammaPtDCAzBins[catIter][ptBin]->Write(fMCrecSubGammaPtDCAzBins[catIter][ptBin]->GetName(), TObject::kOverwrite);
                     TH1D *MCrecSubGammaPtDCAzBinsPerEvent                       = (TH1D*)fMCrecSubGammaPtDCAzBins[catIter][ptBin]->Clone(Form("%s_perEvent",fMCrecSubGammaPtDCAzBins[catIter][ptBin]->GetName()));
                     MCrecSubGammaPtDCAzBinsPerEvent->Scale(1./fNEvents);
-                    MCrecSubGammaPtDCAzBinsPerEvent->Write(MCrecSubGammaPtDCAzBinsPerEvent->GetName(), TObject::kOverwrite);
+
+                    fMCrecSubGammaPtDCAzBins[catIter][ptBin]->Write(fMCrecSubGammaPtDCAzBins[catIter][ptBin]->GetName(),    TObject::kOverwrite);
+                    MCrecSubGammaPtDCAzBinsPerEvent->Write(         MCrecSubGammaPtDCAzBinsPerEvent->GetName(),             TObject::kOverwrite);
                     
                     // true gamma
-                    fTrueGammaPtDCAzBins[catIter][ptBin]->Write(fTrueGammaPtDCAzBins[catIter][ptBin]->GetName(), TObject::kOverwrite);
                     TH1D *TrueGammaPtDCAzBinsPerEvent                       = (TH1D*)fTrueGammaPtDCAzBins[catIter][ptBin]->Clone(Form("%s_perEvent",fTrueGammaPtDCAzBins[catIter][ptBin]->GetName()));
                     TrueGammaPtDCAzBinsPerEvent->Scale(1./fNEvents);
-                    TrueGammaPtDCAzBinsPerEvent->Write(TrueGammaPtDCAzBinsPerEvent->GetName(), TObject::kOverwrite);
+
+                    fTrueGammaPtDCAzBins[catIter][ptBin]->Write(fTrueGammaPtDCAzBins[catIter][ptBin]->GetName(),    TObject::kOverwrite);
+                    TrueGammaPtDCAzBinsPerEvent->Write(         TrueGammaPtDCAzBinsPerEvent->GetName(),             TObject::kOverwrite);
                     
-                    fTrueSubGammaPtDCAzBins[catIter][ptBin]->Write(fTrueSubGammaPtDCAzBins[catIter][ptBin]->GetName(), TObject::kOverwrite);
                     TH1D *TrueSubGammaPtDCAzBinsPerEvent                       = (TH1D*)fTrueSubGammaPtDCAzBins[catIter][ptBin]->Clone(Form("%s_perEvent",fTrueSubGammaPtDCAzBins[catIter][ptBin]->GetName()));
                     TrueSubGammaPtDCAzBinsPerEvent->Scale(1./fNEvents);
-                    TrueSubGammaPtDCAzBinsPerEvent->Write(TrueSubGammaPtDCAzBinsPerEvent->GetName(), TObject::kOverwrite);
+
+                    fTrueSubGammaPtDCAzBins[catIter][ptBin]->Write( fTrueSubGammaPtDCAzBins[catIter][ptBin]->GetName(), TObject::kOverwrite);
+                    TrueSubGammaPtDCAzBinsPerEvent->Write(          TrueSubGammaPtDCAzBinsPerEvent->GetName(),          TObject::kOverwrite);
                     
-                    fTrueBackgroundPtDCAzBins[catIter][ptBin]->Write(fTrueBackgroundPtDCAzBins[catIter][ptBin]->GetName(), TObject::kOverwrite);
                     TH1D *TrueBackgroundPtDCAzBinsPerEvent                       = (TH1D*)fTrueBackgroundPtDCAzBins[catIter][ptBin]->Clone(Form("%s_perEvent",fTrueBackgroundPtDCAzBins[catIter][ptBin]->GetName()));
                     TrueBackgroundPtDCAzBinsPerEvent->Scale(1./fNEvents);
-                    TrueBackgroundPtDCAzBinsPerEvent->Write(TrueBackgroundPtDCAzBinsPerEvent->GetName(), TObject::kOverwrite);                    
+
+                    fTrueBackgroundPtDCAzBins[catIter][ptBin]->Write(   fTrueBackgroundPtDCAzBins[catIter][ptBin]->GetName(),   TObject::kOverwrite);
+                    TrueBackgroundPtDCAzBinsPerEvent->Write(            TrueBackgroundPtDCAzBinsPerEvent->GetName(),            TObject::kOverwrite);
                     
                     // true primary
-                    fTruePrimaryGammaPtDCAzBins[catIter][ptBin]->Write(fTruePrimaryGammaPtDCAzBins[catIter][ptBin]->GetName(), TObject::kOverwrite);
                     TH1D *TruePrimaryGammaPtDCAzBinsPerEvent                    = (TH1D*)fTruePrimaryGammaPtDCAzBins[catIter][ptBin]->Clone(Form("%s_perEvent",fTruePrimaryGammaPtDCAzBins[catIter][ptBin]->GetName()));
                     TruePrimaryGammaPtDCAzBinsPerEvent->Scale(1./fNEvents);
-                    TruePrimaryGammaPtDCAzBinsPerEvent->Write(TruePrimaryGammaPtDCAzBinsPerEvent->GetName(), TObject::kOverwrite);
+
+                    fTruePrimaryGammaPtDCAzBins[catIter][ptBin]->Write( fTruePrimaryGammaPtDCAzBins[catIter][ptBin]->GetName(), TObject::kOverwrite);
+                    TruePrimaryGammaPtDCAzBinsPerEvent->Write(          TruePrimaryGammaPtDCAzBinsPerEvent->GetName(),          TObject::kOverwrite);
                     
-                    fTruePrimarySubGammaPtDCAzBins[catIter][ptBin]->Write(fTruePrimarySubGammaPtDCAzBins[catIter][ptBin]->GetName(), TObject::kOverwrite);
                     TH1D *TruePrimarySubGammaPtDCAzBinsPerEvent                 = (TH1D*)fTruePrimarySubGammaPtDCAzBins[catIter][ptBin]->Clone(Form("%s_perEvent",fTruePrimarySubGammaPtDCAzBins[catIter][ptBin]->GetName()));
                     TruePrimarySubGammaPtDCAzBinsPerEvent->Scale(1./fNEvents);
-                    TruePrimarySubGammaPtDCAzBinsPerEvent->Write(TruePrimarySubGammaPtDCAzBinsPerEvent->GetName(), TObject::kOverwrite);
+
+                    fTruePrimarySubGammaPtDCAzBins[catIter][ptBin]->Write(  fTruePrimarySubGammaPtDCAzBins[catIter][ptBin]->GetName(),  TObject::kOverwrite);
+                    TruePrimarySubGammaPtDCAzBinsPerEvent->Write(           TruePrimarySubGammaPtDCAzBinsPerEvent->GetName(),           TObject::kOverwrite);
                     
                     // true secondary
-                    fTrueSecondaryGammaPtDCAzBins[catIter][ptBin]->Write(fTrueSecondaryGammaPtDCAzBins[catIter][ptBin]->GetName(), TObject::kOverwrite);
                     TH1D *TrueSecondaryGammaPtDCAzBinsPerEvent                  = (TH1D*)fTrueSecondaryGammaPtDCAzBins[catIter][ptBin]->Clone(Form("%s_perEvent",fTrueSecondaryGammaPtDCAzBins[catIter][ptBin]->GetName()));
                     TrueSecondaryGammaPtDCAzBinsPerEvent->Scale(1./fNEvents);
-                    TrueSecondaryGammaPtDCAzBinsPerEvent->Write(TrueSecondaryGammaPtDCAzBinsPerEvent->GetName(), TObject::kOverwrite);
+
+                    fTrueSecondaryGammaPtDCAzBins[catIter][ptBin]->Write(   fTrueSecondaryGammaPtDCAzBins[catIter][ptBin]->GetName(),   TObject::kOverwrite);
+                    TrueSecondaryGammaPtDCAzBinsPerEvent->Write(            TrueSecondaryGammaPtDCAzBinsPerEvent->GetName(),            TObject::kOverwrite);
                     
-                    fTrueSecondarySubGammaPtDCAzBins[catIter][ptBin]->Write(fTrueSecondarySubGammaPtDCAzBins[catIter][ptBin]->GetName(), TObject::kOverwrite);
                     TH1D *TrueSecondarySubGammaPtDCAzBinsPerEvent               = (TH1D*)fTrueSecondarySubGammaPtDCAzBins[catIter][ptBin]->Clone(Form("%s_perEvent",fTrueSecondarySubGammaPtDCAzBins[catIter][ptBin]->GetName()));
                     TrueSecondarySubGammaPtDCAzBinsPerEvent->Scale(1./fNEvents);
-                    TrueSecondarySubGammaPtDCAzBinsPerEvent->Write(TrueSecondarySubGammaPtDCAzBinsPerEvent->GetName(), TObject::kOverwrite);
+
+                    fTrueSecondarySubGammaPtDCAzBins[catIter][ptBin]->Write(fTrueSecondarySubGammaPtDCAzBins[catIter][ptBin]->GetName(),    TObject::kOverwrite);
+                    TrueSecondarySubGammaPtDCAzBinsPerEvent->Write(         TrueSecondarySubGammaPtDCAzBinsPerEvent->GetName(),             TObject::kOverwrite);
                     
                     // true secondary from X from K0s
-                    fTrueSecondaryGammaFromXFromK0sPtDCAzBins[catIter][ptBin]->Write(fTrueSecondaryGammaFromXFromK0sPtDCAzBins[catIter][ptBin]->GetName(), TObject::kOverwrite);
                     TH1D *TrueSecondaryGammaFromXFromK0sPtDCAzBinsPerEvent      = (TH1D*)fTrueSecondaryGammaFromXFromK0sPtDCAzBins[catIter][ptBin]->Clone(Form("%s_perEvent",fTrueSecondaryGammaFromXFromK0sPtDCAzBins[catIter][ptBin]->GetName()));
                     TrueSecondaryGammaFromXFromK0sPtDCAzBinsPerEvent->Scale(1./fNEvents);
-                    TrueSecondaryGammaFromXFromK0sPtDCAzBinsPerEvent->Write(TrueSecondaryGammaFromXFromK0sPtDCAzBinsPerEvent->GetName(), TObject::kOverwrite);
+
+                    fTrueSecondaryGammaFromXFromK0sPtDCAzBins[catIter][ptBin]->Write(   fTrueSecondaryGammaFromXFromK0sPtDCAzBins[catIter][ptBin]->GetName(),   TObject::kOverwrite);
+                    TrueSecondaryGammaFromXFromK0sPtDCAzBinsPerEvent->Write(            TrueSecondaryGammaFromXFromK0sPtDCAzBinsPerEvent->GetName(),            TObject::kOverwrite);
                     
-                    fTrueSecondarySubGammaFromXFromK0sPtDCAzBins[catIter][ptBin]->Write(fTrueSecondarySubGammaFromXFromK0sPtDCAzBins[catIter][ptBin]->GetName(), TObject::kOverwrite);
                     TH1D *TrueSecondarySubGammaFromXFromK0sPtDCAzBinsPerEvent   = (TH1D*)fTrueSecondarySubGammaFromXFromK0sPtDCAzBins[catIter][ptBin]->Clone(Form("%s_perEvent",fTrueSecondarySubGammaFromXFromK0sPtDCAzBins[catIter][ptBin]->GetName()));
                     TrueSecondarySubGammaFromXFromK0sPtDCAzBinsPerEvent->Scale(1./fNEvents);
-                    TrueSecondarySubGammaFromXFromK0sPtDCAzBinsPerEvent->Write(TrueSecondarySubGammaFromXFromK0sPtDCAzBinsPerEvent->GetName(), TObject::kOverwrite);
+
+                    fTrueSecondarySubGammaFromXFromK0sPtDCAzBins[catIter][ptBin]->Write(fTrueSecondarySubGammaFromXFromK0sPtDCAzBins[catIter][ptBin]->GetName(),    TObject::kOverwrite);
+                    TrueSecondarySubGammaFromXFromK0sPtDCAzBinsPerEvent->Write(         TrueSecondarySubGammaFromXFromK0sPtDCAzBinsPerEvent->GetName(),             TObject::kOverwrite);
 
                 }
             }
@@ -3978,56 +4049,53 @@ Bool_t CalculatePileUpCorrectionFactor(TH1D* ratioWithWithoutPileUp, TH1D* &pile
 // - rebin them according to current gamma binning
 //******************************************************************************
 Bool_t LoadSecondariesFromCocktailFile(TString cutSelection, TString optionEnergy){
-    
-    Double_t xMax                                               = 20;
-    if (fEnablePCM) xMax                                        = fHistoGammaConvPtOrBin->GetXaxis()->GetXmax();
-    else            xMax                                        = fHistoGammaCaloPtOrBin->GetXaxis()->GetXmax();
 
     // search for cocktail file
     TString nameCocktailFile                                    = Form("%s/%s/SecondaryGamma%s_%.2f_%s.root",cutSelection.Data(),optionEnergy.Data(),fPeriodFlag.Data(),fYMaxMeson/2,cutSelection.Data());
     fFileCocktailInput                                          = new TFile(nameCocktailFile.Data());
     if (fFileCocktailInput->IsZombie()) fFileCocktailInput      = NULL;
 
+    // break if no cocktail file was found
+    if (!fFileCocktailInput) {
+        cout << "Cocktail file: " << nameCocktailFile.Data() << " not found!" << endl;
+        return kFALSE;
+    }
+
     // set bins
-    Int_t       nBins   = 0;
-    Double_t    xMin    = 0.;
+    Int_t       nBins                                           = 0;
+    Double_t    xMin                                            = 0.;
+    Double_t    xMax                                            = 20;
     if (fEnablePCM && !fEnableCalo) {
-        nBins           = fHistoGammaConvPtOrBin->GetNbinsX();
-        xMin            = fHistoGammaConvPtOrBin->GetXaxis()->GetXmin();
-        xMax            = fHistoGammaConvPtOrBin->GetXaxis()->GetXmax();
+        nBins                                                   = fHistoGammaConvPtOrBin->GetNbinsX();
+        xMin                                                    = fHistoGammaConvPtOrBin->GetXaxis()->GetXmin();
+        xMax                                                    = fHistoGammaConvPtOrBin->GetXaxis()->GetXmax();
     } else if (fEnableCalo && !fEnablePCM) {
-        nBins           = fHistoGammaCaloPtOrBin->GetNbinsX();
-        xMin            = fHistoGammaCaloPtOrBin->GetXaxis()->GetXmin();
-        xMax            = fHistoGammaCaloPtOrBin->GetXaxis()->GetXmax();
+        nBins                                                   = fHistoGammaCaloPtOrBin->GetNbinsX();
+        xMin                                                    = fHistoGammaCaloPtOrBin->GetXaxis()->GetXmin();
+        xMax                                                    = fHistoGammaCaloPtOrBin->GetXaxis()->GetXmax();
     } else {
         cout << "Will use " << fHistoGammaConvPtOrBin->GetName() << " for original binning of secondary gamma spectra from cocktail." << endl;
-        nBins           = fHistoGammaConvPtOrBin->GetNbinsX();
-        xMin            = fHistoGammaConvPtOrBin->GetXaxis()->GetXmin();
-        xMax            = fHistoGammaConvPtOrBin->GetXaxis()->GetXmax();
+        nBins                                                   = fHistoGammaConvPtOrBin->GetNbinsX();
+        xMin                                                    = fHistoGammaConvPtOrBin->GetXaxis()->GetXmin();
+        xMax                                                    = fHistoGammaConvPtOrBin->GetXaxis()->GetXmax();
     }
 
     // get secondary spectra from cocktail file
-    if (fFileCocktailInput){
-        cout << "Found cocktail file: " << nameCocktailFile.Data() << " -> will add cocktail histos to output" << endl;
-        
-        // K0s
-        for (Int_t k = 0; k < 3; k++){
-            fHistoSecondaryGammaCocktailFromXPt[k]              = (TH1D*)fFileCocktailInput->Get(Form("Gamma_From_X_From_%s_Pt_OrBin", fSecondaries[k].Data()));
-            if(!fHistoSecondaryGammaCocktailFromXPt[k]){
-                cout << "Gamma_From_X_From_"<<fSecondaries[k].Data()<< "_Pt_OrBin not found in cocktail file! Cocktail will not be used." << endl;
-                return kFALSE;
-            }
-            fHistoSecondaryGammaCocktailFromXPt[k]->Sumw2();
-            fHistoSecondaryGammaCocktailFromXPtOrBin[k]         = (TH1D*)fHistoSecondaryGammaCocktailFromXPt[k]->Clone(Form("CocktailSecondaryGammaFromXFrom%s_PtOrBin", fSecondaries[k].Data()));
-            RebinSpectrum(fHistoSecondaryGammaCocktailFromXPt[k]);
-
-            fHistoSecondaryGammaCocktailFromXPtOrBin[k]->SetBins(   nBins,xMin,xMax);
+    cout << "Found cocktail file: " << nameCocktailFile.Data() << " -> will add cocktail histos to output" << endl;
+    for (Int_t k = 0; k < 3; k++){
+        fHistoSecondaryGammaCocktailFromXPt[k]              = (TH1D*)fFileCocktailInput->Get(Form("Gamma_From_X_From_%s_Pt_OrBin", fSecondaries[k].Data()));
+        if(!fHistoSecondaryGammaCocktailFromXPt[k]){
+            cout << "Gamma_From_X_From_" << fSecondaries[k].Data() << "_Pt_OrBin not found in cocktail file! Cocktail will not be used." << endl;
+            return kFALSE;
         }
-        
-        // all spectra found
-        return kTRUE;
+        fHistoSecondaryGammaCocktailFromXPt[k]->Sumw2();
+        fHistoSecondaryGammaCocktailFromXPtOrBin[k]         = (TH1D*)fHistoSecondaryGammaCocktailFromXPt[k]->Clone(Form("CocktailSecondaryGammaFromXFrom%s_PtOrBin", fSecondaries[k].Data()));
+        RebinSpectrum(fHistoSecondaryGammaCocktailFromXPt[k]);
+        fHistoSecondaryGammaCocktailFromXPtOrBin[k]->SetBins(nBins,xMin,xMax);
     }
-    return kFALSE;
+
+    // all spectra found
+    return kTRUE;
 }
 
 //****************************************************************************

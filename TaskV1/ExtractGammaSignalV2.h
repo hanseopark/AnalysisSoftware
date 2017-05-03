@@ -49,8 +49,8 @@
     Int_t       exemplaryHighPtBin                                      = 15;
 
     // ShowBackground arguments
-    Int_t nIterationsShowBackground[4]                                  = {0};
-    TString optionShowBackground[3]                                     = {""};
+    Int_t       nIterationsShowBackground[4]                            = {0};
+    TString     optionShowBackground[3]                                 = {""};
 
     // binning
     TH1D*       fDeltaPtDummy                                           = NULL;
@@ -401,8 +401,8 @@
                                                     TH1D*       &pileupCorrectionFactor,
                                                     TF1*        &fitToRatio                         );
     Bool_t   LoadSecondariesFromCocktailFile    (   TString, 
-                                                    TString                                         );     // Loads secondary neutral pion input graphs from file
-    void     Delete                             ();
+                                                    TString                                         );
+    void     Delete                             (                                                   );
     void     FillMassMCTrueMesonHistosArrays    (   TH2D* fHistoTrueMesonPrimInvMassVSPtFill, 
                                                     TH2D** fHistoTrueMesonSecInvMassVSPtFill        );
     void     CheckForNULLForPointer             (   TH1D* fDummy1                                   );
