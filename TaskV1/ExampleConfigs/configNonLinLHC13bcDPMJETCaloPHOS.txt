@@ -1,0 +1,24 @@
+#configuration for CorrectCaloNonLinearityV4.C for LHC13bc DPMJET Calo PHOS
+select	LHC13bc-DPMJET-CaloPHOS
+
+mode	5
+ptRangeBins	1	21
+energy	pPb_5.023TeV
+maxNPtBins	27
+fBinsPt	0.5	0.6	0.7	0.8	0.9	1.0	1.1	1.2	1.3	1.4	1.6	1.8	2.0	2.2	2.4	2.8	3.2	3.6	4.0	5.0	6.0	8.0	10.0	12.0	16.0	20.0	25.0	30.0
+exampleBins	19	20	21	STOP
+firstPtBinSet	0	STOP
+
+nSets	1
+dataFileNames	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170406-PHOSrelated/GammaCalo_LHC13b-pass2_LHC13c-pass2_302.root		 STOP
+cutData	80000013_2444400040013200000_0163103100000010	STOP
+
+MCFileNames	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170406-PHOSrelated/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_p4_302.root	STOP
+cutMC	80000013_2444400040013200000_0163103100000010	STOP
+
+plotLabels	#frac{LHC13b2_efix}{LHC13bcde-INT7}	STOP
+
+rebinPt	0	1.1	2.4	3.95	4.5	STOP
+rebinValue	1	2	4	5	8	STOP
+
+startFit	3
