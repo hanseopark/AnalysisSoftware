@@ -72,9 +72,9 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
     StyleSettingsThesis();
     SetPlotStyle();
 
-    TString outputDir           = "CorrectCaloNonLinearity3";
+    TString outputDir           = "CorrectCaloNonLinearity";
     gSystem->Exec("mkdir -p "+outputDir);
-    TString outputDirSample     = Form("CorrectCaloNonLinearity3/%s",select.Data());
+    TString outputDirSample     = Form("CorrectCaloNonLinearity/%s",select.Data());
     gSystem->Exec("mkdir -p "+outputDirSample);
 
     // General options

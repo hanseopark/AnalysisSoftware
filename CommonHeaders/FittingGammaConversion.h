@@ -1004,7 +1004,6 @@
             paramLine[i] = Form("%s \t %.10f \t %.10f",paramName[i].Data(),param[i],paramErr[i]);
         }
 
-
         TString stringOutput = "\n\n"+name+"\n";
         for( Int_t i = 0; i < NumberParam; i++){
             stringOutput = stringOutput+paramLine[i]+"\n";
@@ -1014,43 +1013,36 @@
 
 
         return stringOutput;
-
-
     }
 
     TString WriteParameterToFileLatexTable(TF1 *Funktion, Bool_t isRad = 0){
 
-    TString name = Funktion->GetName();
-    Int_t NumberParam = Funktion->GetNpar();
-    TString  paramName[20];
-    Double_t param[20];
-    Double_t paramErr[20];
-    Double_t chiSquare = Funktion->GetChisquare();
-    Double_t NDF = Funktion->GetNDF();
+        TString name = Funktion->GetName();
+        Int_t NumberParam = Funktion->GetNpar();
+        TString  paramName[20];
+        Double_t param[20];
+        Double_t paramErr[20];
+        Double_t chiSquare = Funktion->GetChisquare();
+        Double_t NDF = Funktion->GetNDF();
 
-    TString  paramLine;
-    TString  paramLine0;
-    for( Int_t i = 0; i < NumberParam; i++){
-        paramName[i] = Funktion->GetParName(i);
-        param[i] = Funktion->GetParameter(i);
-        paramErr[i] = Funktion->GetParError(i);
-        if (isRad && i == 2) {
-            param[i] = param[i]*1000;
-            paramErr[i] = paramErr[i]*1000;
+        TString  paramLine;
+        TString  paramLine0;
+        for( Int_t i = 0; i < NumberParam; i++){
+            paramName[i] = Funktion->GetParName(i);
+            param[i] = Funktion->GetParameter(i);
+            paramErr[i] = Funktion->GetParError(i);
+            if (isRad && i == 2) {
+                param[i] = param[i]*1000;
+                paramErr[i] = paramErr[i]*1000;
+            }
+            paramLine0 = paramLine0 + Form("%s \t ",paramName[i].Data());
+            paramLine = paramLine + Form("$%.2f +- %.2f$ &\t",param[i],paramErr[i]);
         }
-        paramLine0 = paramLine0 + Form("%s \t ",paramName[i].Data());
-        paramLine = paramLine + Form("$%.2f +- %.2f$ &\t",param[i],paramErr[i]);
-    }
 
-
-    TString stringOutput = "\n\n"+name+"\n" + paramLine0 + "\n" + paramLine ;
-    stringOutput = stringOutput + Form("\n Chi2 \t %.10f \t ndf \t %.10f \n",chiSquare,NDF);
-    if (NDF!=0) stringOutput = stringOutput + Form("Chi2/ndf \t %.10f \n",chiSquare/NDF);
-
-
-    return stringOutput;
-
-
+        TString stringOutput = "\n\n"+name+"\n" + paramLine0 + "\n" + paramLine ;
+        stringOutput = stringOutput + Form("\n Chi2 \t %.10f \t ndf \t %.10f \n",chiSquare,NDF);
+        if (NDF!=0) stringOutput = stringOutput + Form("Chi2/ndf \t %.10f \n",chiSquare/NDF);
+        return stringOutput;
     }
 
 

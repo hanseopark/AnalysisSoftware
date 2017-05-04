@@ -3256,18 +3256,18 @@
         graph->SetMarkerStyle(20);
     }
 
-    void PutProcessLabelAndEnergyOnPlot( Double_t startTextX, 
-                                        Double_t startTextY, 
-                                        Size_t textHeight, 
-                                        TString fEnergy, 
-                                        TString fDecayChannel,
-                                        TString fDetectionChannel, 
-                                        Style_t textFont            = 62,
-                                        Size_t textHeightRel        = 0.03,
-                                        TString fPeriodName         = "",
-                                        Color_t textColor           = 1,
-                                        Float_t textHeightFac       = 1.25,
-                                        Int_t textAlign             = 11
+    void PutProcessLabelAndEnergyOnPlot(    Double_t startTextX, 
+                                            Double_t startTextY, 
+                                            Size_t textHeight, 
+                                            TString fEnergy, 
+                                            TString fDecayChannel,
+                                            TString fDetectionChannel, 
+                                            Style_t textFont            = 62,
+                                            Size_t textHeightRel        = 0.03,
+                                            TString fPeriodName         = "",
+                                            Color_t textColor           = 1,
+                                            Float_t textHeightFac       = 1.25,
+                                            Int_t textAlign             = 11
                                     ){
         
         Double_t differenceText     = textHeight*textHeightFac;
