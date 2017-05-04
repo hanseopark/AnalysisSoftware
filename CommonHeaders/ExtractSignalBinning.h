@@ -164,6 +164,11 @@ Int_t fBinsPi0900GeVEMCPtRebin[12]              = { 2, 8, 5, 4, 4, 5, 8, 8, 8, 1
                                                         1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6,
                                                         3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0, 12.0,
                                                         16.0, 20.0, 25.0, 30.0, 40.0};
+    Double_t fBinsPi05TeVPtEMCTrigger1[51]          = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
+                                                        1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6,
+                                                        3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0,
+                                                        8.5, 9.0, 9.5, 10., 11., 12., 13., 14., 15., 16.,
+                                                        17., 18., 19., 20., 21., 22., 23., 24., 25., 30., 40.};
     Double_t fBinsPi05TeVPtDCA[16]                  = { 0.0, 0.3, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8,
                                                         2.0, 2.4, 3.0, 5.0, 10., 12.0};
     Int_t fBinsPi05TeVPtRebin[24]                   = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -176,7 +181,12 @@ Int_t fBinsPi0900GeVEMCPtRebin[12]              = { 2, 8, 5, 4, 4, 5, 8, 8, 8, 1
     Int_t fBinsPi05TeVEMCPtRebin[32]                = { 2, 2, 2, 2, 2, 2, 2, 4, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 4, 4, 4, 4, 4, 8,
-                                                        2, 2};
+                                                        8, 8};
+    Int_t fBinsPi05TeVEMCPtRebinTrigger1[50]        = { 2, 2, 2, 2, 2, 2, 2, 4, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 4, 4, 4, 4, 4, 4,
+                                                        4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+                                                        4, 4, 4, 4, 4, 4, 4, 4, 4, 4};
     Double_t fBinsDirGamma5TeVPt[24]                = { 0.0, 0.3, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
                                                         2.4, 2.8, 3.2, 3.6, 4.2, 4.8, 5.8, 7.0, 8.5, 10.0,
                                                         12.0, 16.0, 20.0, 25.0};
@@ -189,17 +199,26 @@ Int_t fBinsPi0900GeVEMCPtRebin[12]              = { 2, 8, 5, 4, 4, 5, 8, 8, 8, 1
                                                         10, 10, 10};
     Double_t fBinsEta5TeVPCMEMCPt[23]               = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6,
                                                         4.0, 5.0, 6.0, 8., 10., 12., 14., 16., 18., 20., 25., 30., 35.};
-    Double_t fBinsEta5TeVEMCPt[23]                  = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6,
-                                                        4.0, 5.0, 6.0, 8., 10., 12., 14., 16., 18., 20., 25., 30., 35.};
     Int_t fBinsEta5TeVPCMEMCPtRebin[22]             = { 5, 8, 5, 5, 5, 4, 4, 5, 5, 5,
                                                         5, 5, 7, 5, 5, 5, 5, 5, 5, 5, 5, 5};
+    Double_t fBinsEta5TeVEMCPt[23]                  = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6,
+                                                        4.0, 5.0, 6.0, 8., 10., 12., 14., 16., 18., 20., 25., 30., 35.};
     Int_t fBinsEta5TeVEMCPtRebin[22]                = { 5, 8, 5, 5, 5, 4, 4, 5, 5, 5,
                                                         5, 5, 7, 5, 5, 5, 5, 5, 5, 5, 5, 5};
+    Double_t fBinsEta5TeVEMCPtTrigger1[30]          = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6,
+                                                        4.0, 5.0, 6.0, 7.0, 8., 9., 10., 11., 12., 13.,
+                                                        14., 15., 16., 17., 18., 19., 20., 25., 30., 35.};
+    Int_t fBinsEta5TeVEMCPtRebinTrigger1[29]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                                                        8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+                                                        8, 8, 8, 8, 8, 8, 8, 8, 8};
     Double_t fBinsEta5TeVPtDCA[9]                   = { 0.0, 0.4, 1.0, 1.5, 2.0, 3.0, 5.0, 7.0, 12.0};
     Double_t fBinsEtaPrim5TeVPt[8]                  = { 0.0, 0.5, 1.0, 2.0, 3.0, 4.0, 6.0, 10.0};
     Int_t fBinsEtaPrim5TeVPtRebin[7]                = { 8, 2, 2, 2, 2, 2, 2};
     Int_t fBinsPi0EtaBinning5TeVPtRebin[13]         = { 8, 2, 2, 2, 2, 2, 2, 4, 4, 4,
                                                         4, 4, 4 };
+    Int_t fBinsPi0EtaBinning5TeVPtRebinEMCTrigger1[29]  = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                                                            5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                                                            5, 5, 5, 5, 5, 5, 5, 5, 5};
     Int_t fBinsPi0EtaBinning5TeVPCMEMCPtRebin[13]   = { 8, 2, 2, 2, 2, 2, 2, 4, 4, 4,
                                                         4, 4, 4 };
    
@@ -931,7 +950,10 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                     return 7;
                 }
             } else if (energy.CompareTo("5TeV") == 0) {
-                    return 16;
+                if ( mode == 4 )
+                    return 24;
+                else
+                  return 14;
             } else if (energy.CompareTo("7TeV") == 0) {
                 if ( mode == 0 )
                     return 4;
@@ -1161,7 +1183,10 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                     return 4;
                 }
             } else if (energy.CompareTo("5TeV") == 0) {
-                return 5;
+              if (mode == 4)
+                return 15;
+              else
+                return 8;
             } else if (energy.CompareTo("7TeV") == 0) {
                 if (mode == 1 )
                     return 4;
@@ -1628,13 +1653,6 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                     if( modi == 4 )
                       fStartPtBin = 7;
                     
-                    if (modi == 2 && specialTrigg == 1) fStartPtBin = 7; // EMC7
-                    if (modi == 2 && specialTrigg == 2) fStartPtBin = 7; // EG2
-                    if (modi == 2 && specialTrigg == 3) fStartPtBin = 7; // EG1
-                    
-                    if (modi == 4 && specialTrigg == 1) fStartPtBin = 7; // EMC7
-                    if (modi == 4 && specialTrigg == 2) fStartPtBin = 7; // EG2
-                    if (modi == 4 && specialTrigg == 3) fStartPtBin = 7; // EG1
                     
                     fColumn         = 6;
                     fRow            = 5;
@@ -1646,10 +1664,25 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                     if (fNBinsPt > 15 && isDCA) {
                         cout << "You have chosen to have more than 15 bins, this is not possible, it will be reduced to 15" << endl;
                         fNBinsPt    = 15;
-                    }   else if ( fNBinsPt > 34 && !isDCA ) {
-                        cout << "You have chosen t o have more than 34 bins, this is not possible, it will be reduced to 34" << endl;
-                        fNBinsPt    = 34;
-                    } 
+                    }   else if ( fNBinsPt > 50 && !isDCA) {
+                        cout << "You have chosen t o have more than 50 bins, this is not possible, it will be reduced to 50" << endl;
+                        fNBinsPt    = 50;
+                    }
+                    
+                    if (modi == 2 && specialTrigg == 1) fStartPtBin = 7; // EMC7
+                    if (modi == 2 && specialTrigg == 2) fStartPtBin = 7; // EG2
+                    if (modi == 2 && specialTrigg == 3) fStartPtBin = 7; // EG1
+                    
+                    if (modi == 4 && specialTrigg == 1) { fStartPtBin = 20; fNBinsPt = 49; } // EMC7
+                    if (modi == 4 && specialTrigg == 2) { fStartPtBin = 20; fNBinsPt = 49; } // EG2
+                    if (modi == 4 && specialTrigg == 3) { fStartPtBin = 20; fNBinsPt = 49; } // EG1
+                    
+                    if(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3){
+                      fColumn         = 6;
+                      fRow            = 6;
+                    }
+                    
+                    
                     
                     
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
@@ -1660,9 +1693,15 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                             if ( i < fNBinsPt )
                                 fNRebin[i] = fBinsPi05TeVPCMEMCPtRebin[i];
                         } else if ( modi == 4 ) {
+                          if(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3){
+                            fBinsPt[i]     = fBinsPi05TeVPtEMCTrigger1[i];
+                            if ( i < fNBinsPt )
+                                fNRebin[i] = fBinsPi05TeVEMCPtRebinTrigger1[i];
+                          }else{
                             fBinsPt[i]     = fBinsPi05TeVPtEMC[i];
                             if ( i < fNBinsPt )
                                 fNRebin[i] = fBinsPi05TeVEMCPtRebin[i];
+                          }
                         } else  {
                             fBinsPt[i]          = fBinsPi05TeVPt[i];
                             if (i < fNBinsPt)
@@ -2583,6 +2622,20 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
             //********************************** Eta for pp 5TeV*******************************************
             //*********************************************************************************************
             } else if (energy.CompareTo("5TeV") == 0) {
+              
+                if (triggerSet == -1){
+                    if (trigger.CompareTo("52") == 0){
+                        specialTrigg = 1; // EMC7
+                    } else if ( trigger.CompareTo("85") == 0 ){
+                        specialTrigg = 2; // EG2 lower
+                    } else if ( trigger.CompareTo("83") == 0 ) {
+                        specialTrigg = 3; // EG1 higher
+                    }
+                } else {
+                    specialTrigg        = triggerSet;
+                }
+                    
+                    
                 fStartPtBin         = 1;
                 
                 if( modi == 2 )
@@ -2590,8 +2643,8 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                 if( modi == 4 )
                     fStartPtBin = 5;
                 
-                fColumn             = 6;
-                fRow                = 5;
+                fColumn             = 5;
+                fRow                = 4;
                 if (isDCA){
                     fColumn         = 3;
                     fRow            = 3;
@@ -2605,6 +2658,17 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                     cout << "You have chosen to have more than 23 bins for Eta, this is not possible, it will be reduced to 23" << endl;
                     fNBinsPt        = 23;
                 }
+                
+                if (modi == 4 && specialTrigg == 1) { fStartPtBin = 11; fNBinsPt = 29; } // EMC7
+                if (modi == 4 && specialTrigg == 2) { fStartPtBin = 11; fNBinsPt = 29; } // EG2
+                if (modi == 4 && specialTrigg == 3) { fStartPtBin = 11; fNBinsPt = 29; } // EG1
+                
+                if(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3){
+                  fColumn         = 5;
+                  fRow            = 5;
+                }
+                
+                
                 for (Int_t i = 0; i < fNBinsPt+2; i++) {
                     if (isDCA){
                         fBinsPt[i]  = fBinsEta5TeVPtDCA[i];
@@ -2612,7 +2676,11 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                             if        ( modi == 2 ) {
                               fBinsPt[i]  = fBinsEta5TeVPCMEMCPt[i];
                             } else if ( modi == 4 ) {
-                              fBinsPt[i]  = fBinsEta5TeVEMCPt[i];
+                              if(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3){
+                                fBinsPt[i]  = fBinsEta5TeVEMCPtTrigger1[i];
+                              }else{
+                                fBinsPt[i]  = fBinsEta5TeVEMCPt[i];
+                              }
                             } else {
                                 fBinsPt[i]  = fBinsEta5TeVPt[i];
                             }
@@ -2622,7 +2690,11 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                             if( modi == 2 ){
                               fNRebin[i] = fBinsEta5TeVPCMEMCPtRebin[i];
                             } else if ( modi == 4 ){
-                              fNRebin[i] = fBinsEta5TeVEMCPtRebin[i];
+                              if(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3){
+                                fNRebin[i] = fBinsEta5TeVEMCPtRebinTrigger1[i];
+                              }else{
+                                fNRebin[i] = fBinsEta5TeVEMCPtRebin[i];
+                              }
                             } else {
                                 fNRebin[i]  = fBinsEta5TeVPtRebin[i];
                             }
@@ -2631,8 +2703,10 @@ Int_t fBinsEta8TeVEMCTrigger1PtRebin[24]        = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
                         if (i < fNBinsPt+1) {
                             if( modi == 2 ){
                                 fNRebin[i] = fBinsPi0EtaBinning5TeVPCMEMCPtRebin[i];
+                            } else if ( modi == 4 && (specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3) ){
+                              fNRebin[i]  = fBinsPi0EtaBinning5TeVPtRebinEMCTrigger1[i];
                             } else {
-                            fNRebin[i]  = fBinsPi0EtaBinning5TeVPtRebin[i];
+                              fNRebin[i]  = fBinsPi0EtaBinning5TeVPtRebin[i];
                             }
                         }
                     }
