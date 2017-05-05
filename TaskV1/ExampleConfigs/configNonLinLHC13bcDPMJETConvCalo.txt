@@ -6,15 +6,15 @@ ptRangeBins	1	18
 energy	pPb_5.023TeV
 maxNPtBins	25
 fBinsPt	0.7	0.8	0.9	1.0	1.1	1.2	1.3	1.4	1.6	1.8	2.0	2.2	2.4	2.8	3.2	3.6	4.0	5.0	6.0	8.0	10.0	12.0	16.0	20.0	25.0	30.0
-exampleBins	10	11	12	13	14	15	16	17	18	STOP
+exampleBins	0	1	2	3	4	5	6	STOP
 firstPtBinSet	0	13	18	19	STOP
 
 nSets	2
-dataFileNames	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-pPb-CalibMike/GammaCalo_LHC13b-pass3_LHC13c-pass3_LHC13d-pass3_LHC13e-pass3_13.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-pPb-CalibMike/GammaCalo_LHC13b-pass3_LHC13c-pass3_LHC13d-pass3_LHC13e-pass3_13.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-pPb-CalibMike/GammaCalo_LHC13b-pass3_LHC13c-pass3_LHC13d-pass3_LHC13e-pass3_13.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-pPb-CalibMike/GammaCalo_LHC13b-pass3_LHC13c-pass3_LHC13d-pass3_LHC13e-pass3_13.root	 STOP
-cutData	80000013_1111100050032230000_0163103100000050	80052013_1111100050032230000_0163103100000050	80085013_1111100050032230000_0163103100000050	80083013_1111100050032230000_0163103100000050	STOP
+dataFileNames	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-pPb-CalibMike/GammaConvCalo_LHC13bcde-pass2_3.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-pPb-CalibMike/GammaConvCalo_LHC13bcde-pass2_3.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-pPb-CalibMike/GammaConvCalo_LHC13de-pass2_4.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-pPb-CalibMike/GammaConvCalo_LHC13de-pass2_4.root 	 STOP
+cutData	80000013_00200009327002008250400000_1111100053032230000_0163103100000010	80052013_00200009327002008250400000_1111100053032230000_0163103100000010	80083013_00200009327002008250400000_1111100053032230000_0163103100000010	80085013_00200009327002008250400000_1111100053032230000_0163103100000010	STOP
 
-MCFileNames	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-pPb-CalibMike/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_p4_13.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-pPb-CalibMike/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_p4_13.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-pPb-CalibMike/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_p4_13.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-pPb-CalibMike/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_p4_13.root	STOP
-cutMC	80000013_1111100050032230000_0163103100000050	80000013_1111100050032230000_0163103100000050	80000013_1111100050032230000_0163103100000050	80000013_1111100050032230000_0163103100000050	STOP
+MCFileNames	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-pPb-CalibMike/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_3.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-pPb-CalibMike/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_3.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-pPb-CalibMike/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_4.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-pPb-CalibMike/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_4.root	STOP
+cutMC	80000013_00200009327002008250400000_1111100053032230000_0163103100000010	80052013_00200009327002008250400000_1111100053032230000_0163103100000010	80083013_00200009327002008250400000_1111100053032230000_0163103100000010	80085013_00200009327002008250400000_1111100053032230000_0163103100000010	STOP
 
 plotLabels	#frac{LHC13b2_efix}{LHC13bcde-INT7}	#frac{LHC13b2_efix}{LHC13bcde-EMC7}	#frac{LHC13b2_efix}{LHC13bcde-EG2}	#frac{LHC13b2_efix}{LHC13bcde-EG1}	STOP
 

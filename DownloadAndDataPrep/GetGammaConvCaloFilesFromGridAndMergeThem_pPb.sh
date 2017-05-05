@@ -9,6 +9,18 @@
 
 # This script has to be run with "bash"
 
+# switches to enable/disable certain procedures
+DOWNLOADON=1
+MERGEON=1
+SINGLERUN=1
+SEPARATEON=0
+MERGEONSINGLEData=1
+MERGEONSINGLEMC=0
+SPECIALMERGE=0
+ISADDDOWNLOAD=0
+ADDDOWNLOADALREADY=0
+CLEANUPADDMERGE=1
+
 function GetFileNumberList()
 {
     echo $1
@@ -45,7 +57,7 @@ function CopyFileIfNonExisitent()
         unzip -u $1/root_archive.zip -d $1/
     fi
         
-    if [ $SEPARATEON == 1 ]; then
+    if [ $SEPARATEON == 1 ] && [ $ISADDDOWNLOAD == 0 ]; then
         GetFileNumberList $1 $3 fileNumbers2.txt                    
         fileNumbers=`cat fileNumbers2.txt`
         for fileNumber in $fileNumbers; do
@@ -75,11 +87,17 @@ function ChangeStructureIfNeeded()
         echo $number
         cp $2/GammaConvCalo_$number.root $OUTPUTDIR/GammaConvCalo_$4\_$number.root 
     fi
+
+    if [ -f $2/inputFailedStage1Merge/GammaConvCalo_$number.root ]; then
+        echo "adding failed merges"
+        hadd -f $OUTPUTDIR/GammaConvCalo_$4\_$number.root $2/GammaConvCalo_$number.root $2/inputFailedStage1Merge/GammaConvCalo_$number.root
+    fi
+        
     if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log ]; then 
         echo "nothing to be done";
     else
         root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvCalo_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log\"\,2\)
-    fi    
+    fi
 }
 
 function GetFileNumberMerging()
@@ -100,14 +118,95 @@ function GetFileNumberMerging()
     fi
 }
 
-# switches to enable/disable certain procedures
-DOWNLOADON=0
-MERGEON=1
-SINGLERUN=0
-SEPARATEON=1
-MERGEONSINGLEData=0
-MERGEONSINGLEMC=0
-SPECIALMERGE=0
+function ParseJDLFilesDownloadAndMerge()
+{
+    echo $1
+    maxJobnumbers=`cat $1 | wc -l`;
+    jobnumbers=`cat $1`;
+    echo $jobnumbers
+    counterJob=1
+    # Loop for all jobumbers
+    rm fileNamesAddDownload.txt
+    for jobnumber in $jobnumbers; do
+        # which job are you currently analysing
+        echo "$jobnumber, number $counterJob/ $maxJobnumbers";
+        # get the jdl from the job number
+        alien_ps -jdl $jobnumber > jdl.txt
+
+        # take out all unwanted characters from jdl
+        sed 's/{//g' jdl.txt > jdlmod.txt
+        mv jdlmod.txt jdl.txt 
+        sed 's/}//g' jdl.txt > jdlmod.txt
+        mv jdlmod.txt jdl.txt 
+        sed 's/"//g' jdl.txt > jdlmod.txt
+        mv jdlmod.txt jdl.txt 
+        sed 's/&//g' jdl.txt > jdlmod.txt
+        mv jdlmod.txt jdl.txt 
+        sed 's/\[//g' jdl.txt > jdlmod.txt
+        mv jdlmod.txt jdl.txt 
+        sed 's/\]//g' jdl.txt > jdlmod.txt
+        mv jdlmod.txt jdl.txt 
+        sed 's/ //g' jdl.txt > jdlmod.txt
+        mv jdlmod.txt jdl.txt 
+        sed 's/LF://g' jdl.txt > jdlmod.txt
+        mv jdlmod.txt jdl.txt 
+        sed 's/,nodownload//g' jdl.txt > jdlmod.txt
+        mv jdlmod.txt jdl.txt 
+        sed 's/,//g' jdl.txt > jdlmod.txt
+        mv jdlmod.txt jdl.txt 
+        # find processed files 		
+        cat jdl.txt | grep '/root_archive.zip' >> fileNamesAddDownload.txt    
+        counterJob=$((counterJob+1));
+    done
+    cat fileNamesAddDownload.txt
+    mkdir -p $2/inputFailedStage1Merge
+    echo "$2/inputFailedStage1Merge"
+    maxNFiles=`cat fileNamesAddDownload.txt | wc -l`;
+    sed 's/\/root_archive.zip//g' fileNamesAddDownload.txt > fileNamesAddDownloadMod.txt
+    cat fileNamesAddDownloadMod.txt    
+    fileNames=`cat fileNamesAddDownloadMod.txt`;
+
+    if [ $ADDDOWNLOADALREADY == 0 ]; then
+        counterFiles=1
+        ISADDDOWNLOAD=1
+        # Loop for all files
+        for fileName in $fileNames; do
+            # which job are you currently analysing
+            echo "number $counterFiles/ $maxNFiles";
+            echo $fileName;
+
+            CopyFileIfNonExisitent $2/inputFailedStage1Merge/$counterFiles $fileName 10
+            counterFiles=$((counterFiles+1));
+        done
+        ISADDDOWNLOAD=0
+
+        text=`ls $2/inputFailedStage1Merge/1/*.zip`
+        ls $2/inputFailedStage1Merge/1/*.root > fileListAdd.txt
+        NCurrSlash=`tr -dc '/' <<<"$text" | awk '{ print length; }'`
+        ADDFILESTOMERGE=`cat fileListAdd.txt`;
+        
+        echo $ADDFILESTOMERGE
+        for TOMERGE in $ADDFILESTOMERGE; do
+            echo $TOMERGE
+            TOMERGE=`echo $TOMERGE  | cut -d "/" -f $((NCurrSlash+1)) `
+            echo $TOMERGE
+            hadd -n 10 -f $2/inputFailedStage1Merge/$TOMERGE $2/inputFailedStage1Merge/*/$TOMERGE
+        done
+    fi
+
+    if [ $CLEANUPADDMERGE == 1 ]; then
+        counterFiles=1
+        # Loop for all files
+        for fileName in $fileNames; do
+            # which job are you currently analysing
+            echo "cleaning $counterFiles/ $maxNFiles";
+            echo $2/inputFailedStage1Merge/$counterFiles;
+            rm -rf $2/inputFailedStage1Merge/$counterFiles;
+            counterFiles=$((counterFiles+1));
+        done
+    fi
+}
+
 
 # check if train configuration has actually been given
 HAVELHC13b=1
@@ -278,14 +377,35 @@ fi
 # LHC13b2_efix_p4MC="907";
 # LHC13e7MC="908";
 
-TRAINDIR=Legotrain-vAN20170406-PHOSrelated
-LHC13bData="593"; #pass 3 
-LHC13cData="595"; #pass 2
-LHC13b2_efix_p1MC="894"; 
-LHC13b2_efix_p2MC="895"; 
-LHC13b2_efix_p3MC="896"; 
-LHC13b2_efix_p4MC="897";
-LHC13e7MC="898";
+# TRAINDIR=Legotrain-vAN20170406-PHOSrelated
+# LHC13bData="593"; #pass 3 
+# LHC13cData="595"; #pass 2
+# LHC13b2_efix_p1MC="894"; 
+# LHC13b2_efix_p2MC="895"; 
+# LHC13b2_efix_p3MC="896"; 
+# LHC13b2_efix_p4MC="897";
+# LHC13e7MC="898";
+
+# TRAINDIR=Legotrain-pPb-CalibMike
+# LHC13bData="448"; #pass 3 
+# LHC13cData="449"; #pass 2
+# LHC13dData="450"; #pass 2
+# LHC13eData="451"; #pass 2
+# LHC13b2_efix_p1MC="596"; 
+# LHC13b2_efix_p2MC="597"; 
+# LHC13b2_efix_p3MC="598"; 
+# LHC13b2_efix_p4MC="599";
+
+TRAINDIR=Legotrain-vAN20170501-EMCwoCalib
+# LHC13bData="615"; #pass 3 
+# LHC13cData="616"; #pass 2
+# LHC13dData="450"; #pass 2
+# LHC13eData="451"; #pass 2
+# LHC13b2_efix_p1MC="909"; 
+# LHC13b2_efix_p2MC="911"; 
+LHC13b2_efix_p3MC="913"; 
+LHC13b2_efix_p4MC="915";
+LHC13e7MC="917";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 mkdir -p $OUTPUTDIR/CutSelections
@@ -422,12 +542,16 @@ if [ $HAVELHC13b == 1 ]; then
                 echo $fileName
                 alpha=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f3 | cut -d "." -f1`
                 if [ -z "$alpha" ]; then
+                    echo $alpha
+                    number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2 | cut -d "." -f1`
+                    echo $number
+                else
+                    echo $alpha
                     number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2`
                     number=$number\_$alpha
-                else
-                    number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2 | cut -d "." -f1`
+                    echo $number
                 fi
-                echo $number
+                echo $number    
                 hadd -f $OUTPUTDIR_LHC13b/GammaConvCalo_$number.root $OUTPUTDIR_LHC13b/*/GammaConvCalo_$number.root
             done;
         fi    
@@ -484,22 +608,28 @@ fi
 if [ $HAVELHC13b2efixp1 == 1 ]; then
     echo "downloading LHC13b2_efix_p1"
     CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p1 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p1MC/merge" $NSlashes
+    ParseJDLFilesDownloadAndMerge missingMergesLHC13b2_efix_p1.txt  $OUTPUTDIR_LHC13b2_efix_p1
+    
 fi    
 if [ $HAVELHC13b2efixp2 == 1 ]; then
     echo "downloading LHC13b2_efix_p2"
-    CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p2 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p2MC/merge" $NSlashes
-fi    
+    CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p2 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p2MC/merge" $NSlashes    
+    ParseJDLFilesDownloadAndMerge missingMergesLHC13b2_efix_p2.txt  $OUTPUTDIR_LHC13b2_efix_p2
+fi
 if [ $HAVELHC13b2efixp3 == 1 ]; then
     echo "downloading LHC13b2_efix_p3"
-    CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p3 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p3MC/merge" $NSlashes
+    CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p3 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p3MC/merge" $NSlashes    
+    ParseJDLFilesDownloadAndMerge missingMergesLHC13b2_efix_p3.txt  $OUTPUTDIR_LHC13b2_efix_p3
 fi    
 if [ $HAVELHC13b2efixp4 == 1 ]; then
     echo "downloading LHC13b2_efix_p4"
     CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p4 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC/merge" $NSlashes
+    ParseJDLFilesDownloadAndMerge missingMergesLHC13b2_efix_p4.txt  $OUTPUTDIR_LHC13b2_efix_p4
 fi    
 if [ $HAVELHC13e7 == 1 ]; then
     echo "downloading LHC13e7"
     CopyFileIfNonExisitent $OUTPUTDIR_LHC13e7 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13e7MC/merge" $NSlashes
+    ParseJDLFilesDownloadAndMerge missingMergesLHC13e7.txt  $OUTPUTDIR_LHC13e7
 fi        
 
     
@@ -571,11 +701,7 @@ fi
 
 if [ $HAVELHC13b2efixp1 == 1 ]; then
     ls $OUTPUTDIR_LHC13b2_efix_p1/GammaConvCalo_*.root > fileLHC13b2efixp1.txt
-    if [ $SPECIALMERGE == 1 ]; then
-        fileNumbers=`cat file_mergeSpecial.txt`
-    else 
-        fileNumbers=`cat fileLHC13b2efixp1.txt`
-    fi
+    fileNumbers=`cat fileLHC13b2efixp1.txt`
     for fileName in $fileNumbers; do
         echo $fileName
         ChangeStructureIfNeeded $fileName $OUTPUTDIR_LHC13b2_efix_p1 $NSlashes "MC_LHC13b2_efix_p1"
@@ -652,18 +778,33 @@ if [ $MERGEON == 1 ]; then
     done
 
     if [ $HAVELHC13d == 1 ] && [ $HAVELHC13e == 1 ]; then
-        ls $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_*.root > filesForMerging.txt
+        ls $OUTPUTDIR/GammaConvCalo_LHC13d-pass$passNr\_*.root > filesForMerging.txt
         filesForMerging=`cat filesForMerging.txt`
-        echo $fileName
-        GetFileNumberMerging $fileName $((NSlashes-1)) 3
-        echo $number
-        ls $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_$number.root
-        ls $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root
-        ls $OUTPUTDIR/GammaConvCalo_LHC13d-pass$passNr\_$number.root
-        ls $OUTPUTDIR/GammaConvCalo_LHC13e-pass$passNr\_$number.root
-        if [ -f $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root ] ; then
-            hadd -f $OUTPUTDIR/GammaConvCalo_LHC13bcde-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13d-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13e-pass$passNr\_$number.root
-        fi
+        for fileName in $filesForMerging; do
+            echo $fileName
+            GetFileNumberMerging $fileName $((NSlashes-1)) 3
+            echo $number
+            ls $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_$number.root
+            ls $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root
+            ls $OUTPUTDIR/GammaConvCalo_LHC13d-pass$passNr\_$number.root
+            ls $OUTPUTDIR/GammaConvCalo_LHC13e-pass$passNr\_$number.root
+            if [ -f $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_$number.root ] &&  [ -f $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_LHC13d-pass$passNr\_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_LHC13e-pass$passNr\_$number.root ] ; then
+                hadd -f $OUTPUTDIR/GammaConvCalo_LHC13bcde-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13d-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13e-pass$passNr\_$number.root
+            fi
+            
+            ls $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root
+            ls $OUTPUTDIR/GammaConvCalo_LHC13d-pass$passNr\_$number.root
+            ls $OUTPUTDIR/GammaConvCalo_LHC13e-pass$passNr\_$number.root
+            if  [ -f $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_LHC13d-pass$passNr\_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_LHC13e-pass$passNr\_$number.root ] ; then
+                hadd -f $OUTPUTDIR/GammaConvCalo_LHC13cde-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13d-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13e-pass$passNr\_$number.root
+            fi
+
+            ls $OUTPUTDIR/GammaConvCalo_LHC13d-pass$passNr\_$number.root
+            ls $OUTPUTDIR/GammaConvCalo_LHC13e-pass$passNr\_$number.root
+            if  [ -f $OUTPUTDIR/GammaConvCalo_LHC13d-pass$passNr\_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_LHC13e-pass$passNr\_$number.root ] ; then
+                hadd -f $OUTPUTDIR/GammaConvCalo_LHC13de-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13d-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13e-pass$passNr\_$number.root
+            fi
+        done
     fi 
 
     ls $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_*.root > filesForMerging.txt

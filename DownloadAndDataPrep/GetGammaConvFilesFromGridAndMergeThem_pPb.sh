@@ -266,9 +266,9 @@ fi
 # LHC13b2_efix_p4MC="888";
 # LHC13e7MC="874";
 
-TRAINDIR=Legotrain-vAN20170417-Weighting
-LHC13bData="599"; #pass 3 
-LHC13cData="601"; #pass 2
+# TRAINDIR=Legotrain-vAN20170417-Weighting
+# LHC13bData="599"; #pass 3 
+# LHC13cData="601"; #pass 2
 # LHC13b2_efix_p1MC="904"; 
 # LHC13b2_efix_p2MC="905"; 
 # LHC13b2_efix_p3MC="906"; 

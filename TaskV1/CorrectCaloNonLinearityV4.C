@@ -102,7 +102,9 @@ void CorrectCaloNonLinearityV4(
     Int_t firstPtBinSet[6]      = { -1, -1, -1, -1, -1,     -1};
     Double_t ptBinsForRebin[10] = { -1, -1, -1, -1, -1,     -1, -1, -1, -1, -1 };
     Int_t rebin[10]             = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1};
-    Int_t exampleBin[10]        = { -1, -1, -1, -1, -1,     -1, -1, -1, -1, -1 };
+    Int_t exampleBin[30]        = { -1, -1, -1, -1, -1,     -1, -1, -1, -1, -1,
+                                    -1, -1, -1, -1, -1,     -1, -1, -1, -1, -1,
+                                    -1, -1, -1, -1, -1,     -1, -1, -1, -1, -1 };
     Int_t nExampleBins          = 0;
     Int_t fixedOffSet           = -1;
     Double_t startFit           = 3;
@@ -242,7 +244,7 @@ void CorrectCaloNonLinearityV4(
         // read example bins    
         } else if (tempValue.BeginsWith("exampleBins",TString::kIgnoreCase)){    
             if (enableAddCouts) cout << "setting exampleBins" << endl;
-            for(Int_t i = 1; i<tempArr->GetEntries() && i < 10+1 ; i++){
+            for(Int_t i = 1; i<tempArr->GetEntries() && i < 30+1 ; i++){
                 if (enableAddCouts) cout << i << "\t" <<((TString)((TObjString*)tempArr->At(i))->GetString()).Data() << endl;
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase))
                     exampleBin[i-1]         = (((TString)((TObjString*)tempArr->At(i))->GetString())).Atoi();
@@ -616,24 +618,37 @@ void CorrectCaloNonLinearityV4(
             // adjust min and max fitting range for inv mass fits
             //*******************************************************************************
             Double_t minMax[2]={0.04,0.3};
-            if( mode == 3 ){
+            // special setting for PCM-EMC
+            if( mode == 2 ){
+                if (fBinsPt[iClusterPt] < 1)
+                    minMax[1]       = 0.2;
+                if (fBinsPt[iClusterPt] < 2)
+                    minMax[1]       = 0.22;
+                if (fBinsPt[iClusterPt] < 3)
+                    minMax[1]       = 0.25;
+                minMax[0]       = 0.02;
+                Double_t min    = 0.005*fBinsPt[iClusterPt] - 0.001;
+                if (min > minMax[0])
+                    minMax[0]   = min;
+            // special setting for PCM-PHOS
+            } else if( mode == 3 ){
                 if (fBinsPt[iClusterPt] < 1)
                     minMax[1]       = 0.20;
                 else 
                     minMax[1]       = 0.25;
                 minMax[0]       = 0.03;
+            // special setting for EMC
             } else if( mode == 4 ){
                 minMax[1]       = 0.25;
                 Double_t min    = 0.02*fBinsPt[iClusterPt] - 0.001;
                 if (min > minMax[0])
                     minMax[0]   = min;
-                cout << minMax[0] << endl;
+            // special setting for PHOS    
             } else if( mode == 5){
                 minMax[1]       = 0.25;
                 Double_t min    = 0.005*fBinsPt[iClusterPt] - 0.001;
                 if (min > minMax[0])
                     minMax[0]   = min;
-                cout << minMax[0] << endl;
             }
             cout << "invMass fit range: \t" << minMax[0] << "\t" << minMax[1] << endl;
             //*******************************************************************************
@@ -845,7 +860,7 @@ void CorrectCaloNonLinearityV4(
     // plotting total correction
     //*******************************************************************************
     canvasMassRatioMCData->cd();
-    TH1D* totalCorrection = new TH1D("Total Correction","; #it{E}_{Cluster} (GeV); correction factor",1000,0.5,50);
+    TH1D* totalCorrection = new TH1D("Total Correction","; #it{E}_{Cluster} (GeV); correction factor",1000,0.3,50);
 
     
     SetStyleHistoTH1ForGraphs(totalCorrection, "#it{E}_{Cluster} (GeV)","correction factor",0.035,0.043, 0.035,0.043, 1.,0.9);
@@ -861,7 +876,7 @@ void CorrectCaloNonLinearityV4(
         totalCorrection->SetBinContent(iBin,factor);
     }
     totalCorrection->DrawCopy("p");
-    fFitCompositInverted->SetRange(0.5,50);
+    fFitCompositInverted->SetRange(0.3,50);
     fFitCompositInverted->SetLineColor(kGreen+2);
     fFitCompositInverted->Draw("same");
     
@@ -957,10 +972,22 @@ TF1* FitExpPlusGaussian(TH1D* histo, Double_t fitRangeMin, Double_t fitRangeMax,
     Double_t mesonAmplitudeMin;
     Double_t mesonAmplitudeMax;
 
-    if (mode == 3){
-        mesonAmplitudeMin = mesonAmplitude*90./100.;
+    // special setting for PCM-EMC
+    if (mode == 2){
+        if (ptcenter > 1.5)
+            mesonAmplitudeMin = mesonAmplitude*95./100.;
+        else 
+            mesonAmplitudeMin = mesonAmplitude*90./100.;
+    // special setting for PCM-PHOS
+    } else if (mode == 3){
         if (ptcenter > 1.)
             mesonAmplitudeMin = mesonAmplitude*95./100.;
+        else 
+            mesonAmplitudeMin = mesonAmplitude*90./100.;
+    // special setting for EMC
+    } else if (mode == 4){
+        mesonAmplitudeMin = mesonAmplitude*80./100.;
+    // special setting for PHOS
     } else if (mode == 5){
         if (ptcenter > 1.)
             mesonAmplitudeMin = mesonAmplitude*80./100.;
