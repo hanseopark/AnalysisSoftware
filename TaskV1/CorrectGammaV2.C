@@ -846,8 +846,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //****************************************************************************************** 
     //******************* Calculate raw secondary spectra from cocktail input ******************
     //****************************************************************************************** 
-    TH1D* histoGammaSecGammaFromX_Cocktail_Raw_Pt[3]                = { NULL, NULL, NULL };
-    TH1D* histoGammaSecGammaFromX_Cocktail_Raw_Pt_OrBin[3]          = { NULL, NULL, NULL };
+    TH1D* histoGammaSecGammaFromX_Cocktail_Raw_Pt[4]                = { NULL, NULL, NULL, NULL };
+    TH1D* histoGammaSecGammaFromX_Cocktail_Raw_Pt_OrBin[4]          = { NULL, NULL, NULL, NULL };
     if ( hasCocktailInput && (isPCM || isCalo) ) {
         cout << "calculating raw secondary spectra from cocktail" << endl;
         // K0s: clone cocktail spectra
@@ -1039,14 +1039,14 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     }
     TH1D*   histoFracAllGammaToSec_PileUp_Pt                        = NULL;
     TH1D*   histoFracAllGammaToSecFromXFromK0s_PileUp_Pt            = NULL;
-    if(doPileUpCorr&&isPCM){
+    if(doPileUpCorr && isPCM){
         // (true secondary conv. gamma)_(after MC pileup corr.) / (rec. MC conv. gamma)_(after MC pileup corr.)
         histoFracAllGammaToSec_PileUp_Pt                            = (TH1D*)fileCorrections->Get("FracAllGammaToSecPileUp");
         // (true secondary conv. gamma from K0s)_(after MC pileup corr.) / (rec. MC conv. gamma)_(after MC pileup corr.)
         histoFracAllGammaToSecFromXFromK0s_PileUp_Pt                = (TH1D*)fileCorrections->Get("FracAllGammaToSecFromXFromK0sPileUp");
     }
 
-    //****************************************************************************************** 
+    //******************************************************************************************
     //******************* Proper scaling of background *****************************************
     //****************************************************************************************** 
     TH1D *ScalingGammaBackground_Pt                                 = NULL;
@@ -1063,7 +1063,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TH1D *histoGammaMCBackground_Pt                                 = (TH1D*)histoMCrecBackground_Pt->Clone("histoGammaMCBackground_Pt");
     histoMCrecBackground_Pt->Multiply(ScalingGammaBackground_Pt);
 
-    //****************************************************************************************** 
+    //******************************************************************************************
     //******************* Calculate secondary spectra from data ********************************
     //****************************************************************************************** 
     TH1D *histoSecondaryGammaFromXSpecPt[4]                         = { NULL, NULL, NULL, NULL };
@@ -1102,7 +1102,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                 histoGammaTrueSecCaloGammaFromX_Pt[k]               = NULL;
         }
     }
-    
+
     //******************* Calculate pileup corr. secondary spectra from data *******************
     TH1D* histoSecondaryGammaSpecPtPileUp                           = NULL;
     TH1D* histoSecondaryGammaFromXFromK0sSpecPtPileUp               = NULL;
@@ -1116,7 +1116,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoSecondaryGammaFromXFromK0sSpecPtPileUp->Scale(doubleAddFactorK0s);
     }
 
-    //****************************************************************************************** 
+    //******************************************************************************************
     //******************* Scale cocktail secondary spectra *************************************
     //****************************************************************************************** 
     if (hasCocktailInput) {
@@ -1130,7 +1130,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //******************** Pileup correction factor plot ***************************************
     //******************************************************************************************
     if( doPileUpCorr && isPCM && !isRunMC){
-        TCanvas *canvasPileUpCorrFactor     = GetAndSetCanvas("canvasPileUpCorrFactor");
+        TCanvas *canvasPileUpCorrFactor                             = GetAndSetCanvas("canvasPileUpCorrFactor");
 
             DrawGammaSetMarker(histoPileUpCorrectionFactor_Pt, 20, 3, 1, 1);
             if (histoMCrecGamma_PileUp_Pt)DrawGammaSetMarker(histoPileUpCorrectionFactorMC_Pt, 24, 3, 2, 2);
@@ -1141,7 +1141,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             histoPileUpCorrectionFactor_Pt->DrawCopy("");
             if (histoMCrecGamma_PileUp_Pt)histoPileUpCorrectionFactorMC_Pt->Draw("same");
 
-            TLegend* legendPileUpCorrFactor = GetAndSetLegend(0.2,0.2,2.2,1,cent);
+            TLegend* legendPileUpCorrFactor                         = GetAndSetLegend(0.2,0.2,2.2,1,cent);
             legendPileUpCorrFactor->AddEntry(histoPileUpCorrectionFactor_Pt,"Correction Factor Data","lp");
             if (histoMCrecGamma_PileUp_Pt)legendPileUpCorrFactor->AddEntry(histoPileUpCorrectionFactorMC_Pt,"Correction Factor MC","lp");
             legendPileUpCorrFactor->Draw();
@@ -1151,9 +1151,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         canvasPileUpCorrFactor->SaveAs(Form("%s/%s_PileUpCorrFactor_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
         delete canvasPileUpCorrFactor;
         
-        Bool_t doPileUpCorrSimplePlot       = kTRUE;
+        Bool_t doPileUpCorrSimplePlot                               = kTRUE;
         if (doPileUpCorrSimplePlot && !isRunMC) {
-            TCanvas *canvasPileUpCorrFactor2= GetAndSetCanvas("canvasPileUpCorrFactor2");
+            TCanvas *canvasPileUpCorrFactor2                        = GetAndSetCanvas("canvasPileUpCorrFactor2");
             
             SetHistogramm(histoPileUpCorrectionFactor_Pt_OrBin,"#it{p}_{T} (GeV/#it{c})","Correction Factor (%)",0.90,1.02);
             DrawGammaSetMarker(histoPileUpCorrectionFactor_Pt_OrBin, 24, 1.5, kBlack, kBlack);
@@ -1169,13 +1169,13 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         
         if (histoPileUpCorrectionFactor_Pt_OrBin && !isRunMC) {
             // rebin pileup correction factor from original binning
-            TH1D* histoPileUpCorrectionFactor_PtTemp           = (TH1D*)histoPileUpCorrectionFactor_Pt_OrBin->Clone("histoPileUpCorrectionFactor_PtTemp");
-            histoPileUpCorrectionFactor_PtTemp                 = RebinTH1D(histoPileUpCorrectionFactor_PtTemp,histoPileUpCorrectionFactor_Pt,kFALSE);
+            TH1D* histoPileUpCorrectionFactor_PtTemp                = (TH1D*)histoPileUpCorrectionFactor_Pt_OrBin->Clone("histoPileUpCorrectionFactor_PtTemp");
+            histoPileUpCorrectionFactor_PtTemp                      = RebinTH1D(histoPileUpCorrectionFactor_PtTemp,histoPileUpCorrectionFactor_Pt,kFALSE);
             histoPileUpCorrectionFactor_PtTemp->SetBinContent( 1, 0);
             histoPileUpCorrectionFactor_PtTemp->SetBinError(   1, 0);
             
             // plot
-            TCanvas *canvasPileUpCorrFactor3                = GetAndSetCanvas("canvasPileUpCorrFactor3");
+            TCanvas *canvasPileUpCorrFactor3                        = GetAndSetCanvas("canvasPileUpCorrFactor3");
             
             SetHistogramm(histoPileUpCorrectionFactor_PtTemp,"#it{p}_{T} (GeV/#it{c})","Correction Factor (%)",0.90,1.02);
             DrawGammaSetMarker(histoPileUpCorrectionFactor_PtTemp, 24, 1.5, kBlack, kBlack);
@@ -1193,17 +1193,17 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //**********************************************************************************
     //******************** Background Plot *********************************************
     //**********************************************************************************
-    TCanvas* canvasBackground                      = new TCanvas("canvasBackground","",200,10,1000*1.25,1100*1.25);  // gives the page size
+    TCanvas* canvasBackground                                       = new TCanvas("canvasBackground","",200,10,1000*1.25,1100*1.25);  // gives the page size
     DrawGammaCanvasSettings( canvasBackground, 0.1, 0.02, 0.02, 0.09);
     canvasBackground->SetLogy();
     
-        TH1D* histoGammaRawSpectrum_PtMC    = NULL;
-        TH1D* histoGammaRawSpectrum_Pt      = NULL;
-        TLegend* legendBackground           = GetAndSetLegend(0.6,0.75,2,1);
+        TH1D* histoGammaRawSpectrum_PtMC                            = NULL;
+        TH1D* histoGammaRawSpectrum_Pt                              = NULL;
+        TLegend* legendBackground                                   = GetAndSetLegend(0.6,0.75,2,1);
         if (isPCM ) {
-            histoGammaRawSpectrum_PtMC      = (TH1D*) histoMCrecGamma_Pt->Clone("histoGammaRawSpectrum_PtMC");
+            histoGammaRawSpectrum_PtMC                              = (TH1D*)histoMCrecGamma_Pt->Clone("histoGammaRawSpectrum_PtMC");
             histoGammaRawSpectrum_PtMC->Scale(1./nEvtMC);
-            histoGammaRawSpectrum_Pt        = (TH1D*) histoESDConvGammaPt->Clone("histoGammaRawSpectrum_Pt");
+            histoGammaRawSpectrum_Pt                                = (TH1D*)histoESDConvGammaPt->Clone("histoGammaRawSpectrum_Pt");
             histoGammaRawSpectrum_Pt->Scale(1./nEvt);
             
             DrawGammaSetMarker(histoGammaRawSpectrum_Pt, 20, 1.0, 1, 1);
@@ -1216,9 +1216,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             histoMCrecBackground_Pt->Draw("same");
         }
         if (isCalo && !isPCM) {
-            histoGammaRawSpectrum_PtMC      = (TH1D*) histoMCrecGammaCalo_Pt->Clone("histoGammaRawSpectrum_PtMC");
+            histoGammaRawSpectrum_PtMC                              = (TH1D*) histoMCrecGammaCalo_Pt->Clone("histoGammaRawSpectrum_PtMC");
             histoGammaRawSpectrum_PtMC->Scale(1./nEvtMC);
-            histoGammaRawSpectrum_Pt        = (TH1D*) histoESDCaloGammaPt->Clone("histoGammaRawSpectrum_Pt");
+            histoGammaRawSpectrum_Pt                                = (TH1D*) histoESDCaloGammaPt->Clone("histoGammaRawSpectrum_Pt");
             histoGammaRawSpectrum_Pt->Scale(1./nEvt);
             
             DrawGammaSetMarker(histoGammaRawSpectrum_Pt, 20, 1.0, 1, 1);
@@ -1243,11 +1243,11 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //**********************************************************************************
     //******************** Secondary Spectra Plot **************************************
     //**********************************************************************************
-    TCanvas* canvasSecSpec                      = new TCanvas("canvasSecSpec","",200,10,1000*1.25,1100*1.25);  // gives the page size
+    TCanvas* canvasSecSpec                                          = new TCanvas("canvasSecSpec","",200,10,1000*1.25,1100*1.25);  // gives the page size
     DrawGammaCanvasSettings( canvasSecSpec, 0.15, 0.02, 0.02, 0.09);
     canvasSecSpec->SetLogy();
     
-        TLegend* legendSecSpec                  = GetAndSetLegend2(0.35, 0.935-0.035*1.1*4, 0.95, 0.935, 0.035, 3, "", 42, 0.1);
+        TLegend* legendSecSpec                                      = GetAndSetLegend2(0.35, 0.935-0.035*1.1*4, 0.95, 0.935, 0.035, 3, "", 42, 0.1);
 
         // secondary gamma spectra plotting as would they would be subtracted using MC fractions
         for (Int_t k = 0; k < 4; k++){
@@ -1272,6 +1272,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                     legendSecSpec->AddEntry((TObject*)0, "","");
                 }
             }
+
             // plotting cocktail on top of the MC unscaled secondaries
             if (hasCocktailInput) {
                 if (histoGammaSecGammaFromX_Cocktail_Raw_Pt[k]){
@@ -1279,7 +1280,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                         SetHistogramm(histoGammaSecGammaFromX_Cocktail_Raw_Pt[k],"#it{p}_{T} (GeV/#it{c})","Secondary Converted #gamma");
                     } else if (isCalo && !isPCM) {
                         SetHistogramm(histoGammaSecGammaFromX_Cocktail_Raw_Pt[k],"#it{p}_{T} (GeV/#it{c})","Secondary #gamma");
-                    }    
+                    }
+
                     DrawGammaSetMarker(histoGammaSecGammaFromX_Cocktail_Raw_Pt[k], markerStyleSec[k] , markerSizeSec[k], colorSecFromToy[k], colorSecFromToy[k]);
                     histoGammaSecGammaFromX_Cocktail_Raw_Pt[k]->DrawCopy("same");
                     legendSecSpec->AddEntry(histoGammaSecGammaFromX_Cocktail_Raw_Pt[k],"cocktail","pl");
@@ -1371,8 +1373,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             DrawGammaSetMarker(histoGammaTruePurity_Pt, 20, 1.0, 1, 1);
             if(doPileUpCorr)DrawGammaSetMarker(histoGammaTruePurity_PileUp_Pt, 20, 1.0, kBlue+2, kBlue+2);
             
-            if (isPCM ) SetHistogramm(histoGammaTruePurity_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{pur,#gamma} in |#eta| < %g",eta),0.6, 1.);
-            if (isCalo && !isPCM) SetHistogramm(histoGammaTruePurity_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{pur,#gamma} in |#eta| < %g",etaCalo),0.6, 1.);
+            if (isPCM )             SetHistogramm(histoGammaTruePurity_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{pur,#gamma} in |#eta| < %g",eta),0.6, 1.);
+            if (isCalo && !isPCM)   SetHistogramm(histoGammaTruePurity_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{pur,#gamma} in |#eta| < %g",etaCalo),0.6, 1.);
             histoGammaTruePurity_Pt->Draw();
             histoGammaPurity_Pt->Draw("same");
             if (doPileUpCorr) histoGammaTruePurity_PileUp_Pt->Draw("same");
@@ -1412,8 +1414,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     Bool_t      doPurityPlotSimple              = kTRUE;
     if (doPurityPlotSimple && ((isPCM && !isCalo) || (isCalo && !isPCM))) {
         
-        if (isPCM ) SetHistogramm(histoGammaTruePurity_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{pur,#gamma} in |#eta| < %g",eta),0.8, 1.1);
-        if (isCalo && !isPCM) SetHistogramm(histoGammaTruePurity_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{pur,#gamma} in |#eta| < %g",etaCalo),0.8, 1.1);
+        if (isPCM )             SetHistogramm(histoGammaTruePurity_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{pur,#gamma} in |#eta| < %g",eta),0.8, 1.1);
+        if (isCalo && !isPCM)   SetHistogramm(histoGammaTruePurity_Pt,"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{pur,#gamma} in |#eta| < %g",etaCalo),0.8, 1.1);
         
         histoGammaTruePurity_Pt->Draw();
         DrawGammaSetMarker(histoGammaTruePurity_Pt, 24, 1.5, 1, 1);
@@ -1541,117 +1543,6 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         canvasRecoEffSec->SaveAs(Form("%s/%s_ReconstructionEffSec_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
         delete canvasRecoEffSec;
     }
-
-    //**********************************************************************************
-    //******************** Reconstruction Eff Comparison Plot **************************
-    //**********************************************************************************
-    TCanvas* canvasCompRecoEff = GetAndSetCanvas("canvasCompRecoEff");
-        DrawGammaCanvasSettings( canvasCompRecoEff,0.1, 0.015, 0.02, 0.09);
-        TPad* padCompRecoEff = new TPad("padCompRecoEff", "", 0., 0.25, 1., 1.,-1, -1, -2);
-        DrawGammaPadSettings( padCompRecoEff, 0.10, 0.015, 0.02, 0.);
-        padCompRecoEff->Draw();
-        TPad* padBinCompRecoEffRatio = new TPad("padBinCompRecoEffRatio", "", 0., 0., 1., 0.25,-1, -1, -2);
-        DrawGammaPadSettings( padBinCompRecoEffRatio,  0.1, 0.015, 0.0, 0.3);
-        padBinCompRecoEffRatio->Draw();
-
-        if ( (isPCM ) || (isCalo && !isPCM) ){
-            padCompRecoEff->cd();
-            
-            if (isPCM ) {
-                SetHistogramm(histoGammaPrimaryRecoEff_MCPt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
-                SetHistogramm(histoGammaPrimaryRecoEff_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0.05, 1.0);
-                if(doPileUpCorr)SetHistogramm(histoGammaPrimaryRecoEff_PileUp_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
-            }
-            if (isCalo && !isPCM) {
-                SetHistogramm(histoGammaPrimaryRecoEff_MCPt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.0);
-                SetHistogramm(histoGammaPrimaryRecoEff_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0.05, 1.0);
-                if(doPileUpCorr)SetHistogramm(histoGammaPrimaryRecoEff_PileUp_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.0);
-            }
-
-            DrawGammaSetMarker(histoGammaPrimaryRecoEff_MCPt, 20, 1.0, kBlack, kBlack);
-            DrawGammaSetMarker(histoGammaPrimaryRecoEff_Pt, 24, 1.0, kBlue+1, kBlue+1);
-            if(doPileUpCorr)DrawGammaSetMarker(histoGammaPrimaryRecoEff_PileUp_Pt, 25, 1.0,807, 807);
-
-            histoGammaPrimaryRecoEff_Pt->Draw("e1");
-            if(doPileUpCorr)histoGammaPrimaryRecoEff_PileUp_Pt->Draw("e1,same");
-            histoGammaPrimaryRecoEff_MCPt->Draw("same,e1");
-
-            TLegend* legendCompRecoEff;
-            if(doPileUpCorr)
-                legendCompRecoEff = GetAndSetLegend(0.15 ,0.05,3,1);
-            else
-                legendCompRecoEff = GetAndSetLegend(0.15 ,0.05,2,1);
-            legendCompRecoEff->SetTextSize(0.04);
-            legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_MCPt,"MC pT Reconstruction Efficiency (unfolding)");
-            legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_Pt,"Reconstruction Efficiency for primary  #gamma");
-            if(doPileUpCorr)legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_PileUp_Pt,"Reconstruction Efficiency for primary  #gamma Pile Up");
-            legendCompRecoEff->Draw();
-        
-            PutProcessLabelAndEnergyOnPlot( 0.935, 0.95, 0.035, cent, detectionProcess, "", 42, 0.03,"",1,1.25,31);
-        }
-
-        TH1D* histoGammaResolCorrEff_Pt = NULL;
-        if ( (isPCM ) || (isCalo && !isPCM) ) {
-            histoGammaResolCorrEff_Pt = (TH1D*)histoGammaPrimaryRecoEff_Pt->Clone("histoGammaResolCorrEff_Pt");
-            histoGammaResolCorrEff_Pt->Divide(histoGammaPrimaryRecoEff_MCPt);
-
-            padBinCompRecoEffRatio->cd();
-            TH1D* histoGammaPrimaryRecoEff_PileUp_PtRatio       = NULL;
-            if(doPileUpCorr){
-                histoGammaPrimaryRecoEff_PileUp_PtRatio = (TH1D*)histoGammaPrimaryRecoEff_PileUp_Pt->Clone("GammaPrimaryRecoEffRatioPileUp");
-                histoGammaPrimaryRecoEff_PileUp_PtRatio->Divide(histoGammaPrimaryRecoEff_MCPt);
-            }
-            SetStyleHistoTH1ForGraphs(  histoGammaResolCorrEff_Pt, "#it{p}_{T} (GeV/#it{c})","#frac{Reco Eff x}{Primary MC Reco Eff}" , 0.14, 0.15,
-                                        0.12, 0.10,  0.85, 0.4, 510, 505);
-            histoGammaResolCorrEff_Pt->GetYaxis()->SetRangeUser(0.7,1.25);
-
-            histoGammaResolCorrEff_Pt->DrawCopy("e1");
-            if(doPileUpCorr)histoGammaPrimaryRecoEff_PileUp_PtRatio->DrawCopy("e1,same");
-        
-            DrawGammaLines(0., maxPtGamma,1, 1,0.5,kGray+2,2);
-            
-            canvasCompRecoEff ->SaveAs(Form("%s/%s_CompRecEff_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
-        }
-        if (isPCM && isCalo){
-            padCompRecoEff->cd();
-            SetHistogramm(histoGammaCaloPrimaryRecoEff_MCPt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.0);
-            SetHistogramm(histoGammaCaloPrimaryRecoEff_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0.05, 1.0);
-        
-            DrawGammaSetMarker(histoGammaCaloPrimaryRecoEff_MCPt, 20, 1.0, kBlack, kBlack);
-            DrawGammaSetMarker(histoGammaCaloPrimaryRecoEff_Pt, 24, 1.0, kBlue+1, kBlue+1);
-        
-            histoGammaCaloPrimaryRecoEff_Pt->Draw("e1");
-            histoGammaCaloPrimaryRecoEff_MCPt->Draw("same,e1");
-
-            TLegend* legendCompRecoEff = GetAndSetLegend(0.15 ,0.05,3,1);
-            legendCompRecoEff->SetTextSize(0.04);
-            legendCompRecoEff->AddEntry(histoGammaCaloPrimaryRecoEff_MCPt,"MC pT Reconstruction Efficiency (unfolding)");
-            legendCompRecoEff->AddEntry(histoGammaCaloPrimaryRecoEff_Pt,"Reconstruction Efficiency for primary  #gamma");
-            legendCompRecoEff->Draw();
-        
-            PutProcessLabelAndEnergyOnPlot( 0.935, 0.95, 0.035, cent, detectionProcess2, "", 42, 0.03,"",1,1.25,31);
-        }
-
-        TH1D* histoGammaCaloResolCorrEff_Pt = NULL;
-        if (isPCM && isCalo){
-            histoGammaCaloResolCorrEff_Pt = (TH1D*)histoGammaCaloPrimaryRecoEff_Pt->Clone("histoGammaCaloResolCorrEff_Pt");
-            histoGammaCaloResolCorrEff_Pt->Divide(histoGammaCaloPrimaryRecoEff_MCPt);
-
-            padBinCompRecoEffRatio->cd();
-            SetStyleHistoTH1ForGraphs(  histoGammaCaloResolCorrEff_Pt, "#it{p}_{T} (GeV/#it{c})","#frac{Reco Eff x}{Primary MC Reco Eff}" , 0.14, 0.15,
-                                        0.12, 0.10,  0.85, 0.4, 510, 505);
-            histoGammaCaloResolCorrEff_Pt->GetYaxis()->SetRangeUser(0.7,1.25);
-
-            histoGammaCaloResolCorrEff_Pt->DrawCopy("e1");
-        
-            DrawGammaLines(0., maxPtGamma,1, 1,0.5,kGray+2,2);
-    
-            canvasCompRecoEff ->SaveAs(Form("%s/%s_CompCaloRecEff_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
-        }
-        
-    delete padCompRecoEff;
-    delete padBinCompRecoEffRatio;
-    delete canvasCompRecoEff;
 
     //**********************************************************************************
     //******************** Response Matrix for detector resolution *********************
@@ -1938,6 +1829,157 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TH1D* histoGammaCaloCorrUnfoldReso_PtNotCorrected               = NULL;
     TH1D* histoGammaCaloResolCorrUnfold_BinByBin_Pt                 = NULL;
     
+    //**********************************************************************************
+    //******************** Rebin resolution correction from unfolding ******************
+    //**********************************************************************************
+    TH1D* histoGammaResolCorrUnfold_Pt_Rebin                        = (TH1D*)histoGammaResolCorrUnfold_Pt->Clone(Form("%s_Rebin", histoGammaResolCorrUnfold_Pt->GetName()));
+    histoGammaResolCorrUnfold_Pt_Rebin->Sumw2();
+    histoGammaResolCorrUnfold_Pt_Rebin                              = RebinTH1D(histoGammaResolCorrUnfold_Pt_Rebin,histoESDConvGammaPt,kFALSE);
+
+    TH1D* histoGammaResolCorrUnfold_BinByBin_Pt_Rebin               = (TH1D*)histoGammaResolCorrUnfold_BinByBin_Pt->Clone(Form("%s_Rebin", histoGammaResolCorrUnfold_BinByBin_Pt->GetName()));
+    histoGammaResolCorrUnfold_BinByBin_Pt_Rebin->Sumw2();
+    histoGammaResolCorrUnfold_BinByBin_Pt_Rebin                     = RebinTH1D(histoGammaResolCorrUnfold_BinByBin_Pt_Rebin,histoESDConvGammaPt,kTRUE);
+
+    // bin-by-bin resolution
+    TH1D* histoGammaResolCorrEff_Pt                                 = (TH1D*)histoGammaPrimaryRecoEff_Pt->Clone("histoGammaResolCorrEff_Pt");
+    histoGammaResolCorrEff_Pt->Divide(histoGammaPrimaryRecoEff_MCPt);
+
+    //**********************************************************************************
+    //******************** Reconstruction Eff Comparison Plot **************************
+    //**********************************************************************************
+    TCanvas*    canvasCompRecoEff                                   = GetAndSetCanvas("canvasCompRecoEff");
+    TPad*       padCompRecoEff                                      = new TPad("padCompRecoEff",        "", 0., 0.25, 1., 1.00, -1, -1, -2);
+    TPad*       padCompRecoEffRatio                                 = new TPad("padCompRecoEffRatio",   "", 0., 0.00, 1., 0.25, -1, -1, -2);
+
+    DrawGammaCanvasSettings(    canvasCompRecoEff,  0.10, 0.015, 0.02, 0.09);
+    DrawGammaPadSettings(       padCompRecoEff,     0.10, 0.015, 0.02, 0.00);
+    DrawGammaPadSettings(       padCompRecoEffRatio,0.10, 0.015, 0.00, 0.30);
+
+    padCompRecoEff->Draw();
+    padCompRecoEffRatio->Draw();
+
+    // convert primary reco. eff. in MC pT to rec. pT from unfolding resolution for a more reasonable comparison
+    TH1D* histoGammaPrimaryRecoEff_MCPt_ConvertToRecPt              = (TH1D*)histoGammaPrimaryRecoEff_MCPt->Clone(Form("%s_ConvertToRecPt", histoGammaPrimaryRecoEff_MCPt->GetName()));
+    histoGammaPrimaryRecoEff_MCPt_ConvertToRecPt->Multiply(histoGammaResolCorrUnfold_Pt_Rebin);
+
+    // in case of PCM or Calo method, or PCM part of hybrid PCM-Calo
+    if ( (isPCM ) || (isCalo && !isPCM) ){
+
+        // reconstruction efficiencies
+        padCompRecoEff->cd();
+
+        if (isPCM ) {
+            SetHistogramm(histoGammaPrimaryRecoEff_MCPt,                        "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
+            SetHistogramm(histoGammaPrimaryRecoEff_MCPt_ConvertToRecPt,         "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
+            SetHistogramm(histoGammaPrimaryRecoEff_Pt,                          "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0.05, 1.0);
+            if(doPileUpCorr)SetHistogramm(histoGammaPrimaryRecoEff_PileUp_Pt,   "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
+        }
+        if (isCalo && !isPCM) {
+            SetHistogramm(histoGammaPrimaryRecoEff_MCPt,                        "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.0);
+            SetHistogramm(histoGammaPrimaryRecoEff_MCPt_ConvertToRecPt,         "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.0);
+            SetHistogramm(histoGammaPrimaryRecoEff_Pt,                          "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0.05, 1.0);
+            if(doPileUpCorr)SetHistogramm(histoGammaPrimaryRecoEff_PileUp_Pt,   "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.0); // should anyway not exist...
+        }
+
+        DrawGammaSetMarker(histoGammaPrimaryRecoEff_MCPt,                       20, 1.0, kBlack,    kBlack);
+        DrawGammaSetMarker(histoGammaPrimaryRecoEff_MCPt_ConvertToRecPt,        34, 1.5, kBlue-2,   kBlue-2);
+        DrawGammaSetMarker(histoGammaPrimaryRecoEff_Pt,                         24, 1.0, kOrange-3, kOrange-3);
+        if(doPileUpCorr)DrawGammaSetMarker(histoGammaPrimaryRecoEff_PileUp_Pt,  25, 1.0, kRed+2,    kRed+2);
+
+        histoGammaPrimaryRecoEff_Pt->Draw("e1");
+        histoGammaPrimaryRecoEff_MCPt_ConvertToRecPt->Draw("e1,same");
+        histoGammaPrimaryRecoEff_Pt->Draw("e1,same");
+        histoGammaPrimaryRecoEff_MCPt->Draw("e1,same");
+        if(doPileUpCorr)histoGammaPrimaryRecoEff_PileUp_Pt->Draw("e1,same");
+
+        TLegend* legendCompRecoEff;
+        if(doPileUpCorr)    legendCompRecoEff                       = GetAndSetLegend(0.15 ,0.05,4,1);
+        else                legendCompRecoEff                       = GetAndSetLegend(0.15 ,0.05,3,1);
+        legendCompRecoEff->SetTextSize(0.04);
+        legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_MCPt,                      "unfolding prim. reco. eff. in #it{p}_{T, MC}", "p");
+        legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_MCPt_ConvertToRecPt,       "unfolding prim. reco. eff. in #it{p}_{T}", "p");
+        legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_Pt,                        "bin-by-bin prim. reco. eff. in #it{p}_{T}", "p");
+        if(doPileUpCorr)legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_PileUp_Pt, "bin-by-bin prim. reco. eff. in #it{p}_{T}, pile-up", "p");
+        legendCompRecoEff->Draw();
+
+        PutProcessLabelAndEnergyOnPlot( 0.935, 0.95, 0.035, cent, detectionProcess, "", 42, 0.03,"",1,1.25,31);
+
+        // ratios of reconstruction efficiencies to reco. eff. from unfolding in rec. pT
+        padCompRecoEffRatio->cd();
+
+        TH1D* histoRatioTemp[3]                                     = {NULL, NULL, NULL};
+        histoRatioTemp[0]                                           = (TH1D*)histoGammaPrimaryRecoEff_MCPt->Clone("tempRatio0");
+        histoRatioTemp[0]->Divide(histoGammaPrimaryRecoEff_MCPt_ConvertToRecPt);
+        histoRatioTemp[1]                                           = (TH1D*)histoGammaPrimaryRecoEff_Pt->Clone("tempRatio1");
+        histoRatioTemp[1]->Divide(histoGammaPrimaryRecoEff_MCPt_ConvertToRecPt);
+        if (doPileUpCorr) {
+            histoRatioTemp[2]                                       = (TH1D*)histoGammaPrimaryRecoEff_PileUp_Pt->Clone("tempRatio2");
+            histoRatioTemp[2]->Divide(histoGammaPrimaryRecoEff_MCPt_ConvertToRecPt);
+        }
+
+        SetStyleHistoTH1ForGraphs(histoRatioTemp[0], "#it{p}_{T} (GeV/#it{c})","#frac{reco eff x}{prim. reco. eff. unfold.}" , 0.14, 0.15,
+                                  0.12, 0.10,  0.85, 0.4, 510, 505);
+        histoRatioTemp[0]->GetYaxis()->SetRangeUser(0.65,1.35);
+
+        DrawGammaSetMarker(histoRatioTemp[0],                   20, 1.0, kBlack,    kBlack);
+        DrawGammaSetMarker(histoRatioTemp[1],                   24, 1.0, kOrange-3, kOrange-3);
+        if(doPileUpCorr)DrawGammaSetMarker(histoRatioTemp[2],   25, 1.0, kRed+2,    kRed+2);
+
+        histoRatioTemp[0]->Draw("e1");
+
+        DrawGammaLines(0., maxPtGamma, 0.8, 0.8, 1,kGray+2,2);
+        DrawGammaLines(0., maxPtGamma, 1.0, 1.0, 1,kGray+2,2);
+        DrawGammaLines(0., maxPtGamma, 1.2, 1.2, 1,kGray+2,2);
+
+        histoRatioTemp[0]->Draw("e1,same");
+        histoRatioTemp[1]->Draw("e1,same");
+        if(doPileUpCorr) histoRatioTemp[2]->Draw("e1,same");
+
+        canvasCompRecoEff ->SaveAs(Form("%s/%s_CompRecEff_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
+    }
+
+    // in case of hybrid PCM-Calo method
+    if (isPCM && isCalo){
+        padCompRecoEff->cd();
+        SetHistogramm(histoGammaCaloPrimaryRecoEff_MCPt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.0);
+        SetHistogramm(histoGammaCaloPrimaryRecoEff_Pt, "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0.05, 1.0);
+
+        DrawGammaSetMarker(histoGammaCaloPrimaryRecoEff_MCPt, 20, 1.0, kBlack, kBlack);
+        DrawGammaSetMarker(histoGammaCaloPrimaryRecoEff_Pt, 24, 1.0, kBlue+1, kBlue+1);
+
+        histoGammaCaloPrimaryRecoEff_Pt->Draw("e1");
+        histoGammaCaloPrimaryRecoEff_MCPt->Draw("same,e1");
+
+        TLegend* legendCompRecoEff = GetAndSetLegend(0.15 ,0.05,3,1);
+        legendCompRecoEff->SetTextSize(0.04);
+        legendCompRecoEff->AddEntry(histoGammaCaloPrimaryRecoEff_MCPt,"MC pT Reconstruction Efficiency (unfolding)");
+        legendCompRecoEff->AddEntry(histoGammaCaloPrimaryRecoEff_Pt,"Reconstruction Efficiency for primary  #gamma");
+        legendCompRecoEff->Draw();
+
+        PutProcessLabelAndEnergyOnPlot( 0.935, 0.95, 0.035, cent, detectionProcess2, "", 42, 0.03,"",1,1.25,31);
+    }
+
+    TH1D* histoGammaCaloResolCorrEff_Pt = NULL;
+    if (isPCM && isCalo){
+        histoGammaCaloResolCorrEff_Pt = (TH1D*)histoGammaCaloPrimaryRecoEff_Pt->Clone("histoGammaCaloResolCorrEff_Pt");
+        histoGammaCaloResolCorrEff_Pt->Divide(histoGammaCaloPrimaryRecoEff_MCPt);
+
+        padCompRecoEffRatio->cd();
+        SetStyleHistoTH1ForGraphs(  histoGammaCaloResolCorrEff_Pt, "#it{p}_{T} (GeV/#it{c})","#frac{Reco Eff x}{Primary MC Reco Eff}" , 0.14, 0.15,
+                                  0.12, 0.10,  0.85, 0.4, 510, 505);
+        histoGammaCaloResolCorrEff_Pt->GetYaxis()->SetRangeUser(0.7,1.25);
+
+        histoGammaCaloResolCorrEff_Pt->DrawCopy("e1");
+
+        DrawGammaLines(0., maxPtGamma,1, 1,0.5,kGray+2,2);
+
+        canvasCompRecoEff ->SaveAs(Form("%s/%s_CompCaloRecEff_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
+    }
+
+    delete padCompRecoEff;
+    delete padCompRecoEffRatio;
+    delete canvasCompRecoEff;
+
     //**********************************************************************************
     //******************** Corrected Photon Spectrum Plot ******************************
     //**********************************************************************************
