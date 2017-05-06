@@ -397,15 +397,15 @@ fi
 # LHC13b2_efix_p4MC="599";
 
 TRAINDIR=Legotrain-vAN20170501-EMCwoCalib
-# LHC13bData="615"; #pass 3 
-# LHC13cData="616"; #pass 2
-# LHC13dData="450"; #pass 2
-# LHC13eData="451"; #pass 2
+LHC13bData="615"; #pass 3 
+LHC13cData="616"; #pass 2
+LHC13dData="617"; #pass 2
+LHC13eData="618"; #pass 2
 # LHC13b2_efix_p1MC="909"; 
 # LHC13b2_efix_p2MC="911"; 
-LHC13b2_efix_p3MC="913"; 
-LHC13b2_efix_p4MC="915";
-LHC13e7MC="917";
+# LHC13b2_efix_p3MC="913"; 
+# LHC13b2_efix_p4MC="915";
+# LHC13e7MC="917";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 mkdir -p $OUTPUTDIR/CutSelections

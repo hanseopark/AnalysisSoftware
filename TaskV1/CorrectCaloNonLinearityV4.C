@@ -107,7 +107,7 @@ void CorrectCaloNonLinearityV4(
                                     -1, -1, -1, -1, -1,     -1, -1, -1, -1, -1 };
     Int_t nExampleBins          = 0;
     Int_t fixedOffSet           = -1;
-    Double_t startFit           = 3;
+    
     
     // pT binning general initialization
     Int_t fNBinsPt              = 50;
@@ -115,7 +115,8 @@ void CorrectCaloNonLinearityV4(
     for (Int_t i = 0; i< 51; i++){
         fBinsPt[i]              = -1.;
     }    
-    
+    Double_t rangeHighPtFitMass[4]  = {5, 10, 5, 10};
+    Double_t rangeHighPtFitRatio[2] = {3, 10};
     //**************************************************************************************************************
     //******************************* Read config file for detailed settings ***************************************
     //**************************************************************************************************************
@@ -173,7 +174,7 @@ void CorrectCaloNonLinearityV4(
         // reading number of data sets to be compared
         } else if (tempValue.BeginsWith("nSets",TString::kIgnoreCase)){    
             nSets            = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
-        // reding maximum number of pt bins
+        // reading maximum number of pt bins
         } else if (tempValue.BeginsWith("maxNPtBins",TString::kIgnoreCase)){    
             fNBinsPt        = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
         // reading ptBins
@@ -191,6 +192,17 @@ void CorrectCaloNonLinearityV4(
             if (enableAddCouts) cout << "setting ptBin bin Range" << endl;
             ptBinRange[0]               = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
             ptBinRange[1]               = ((TString)((TObjString*)tempArr->At(2))->GetString()).Atoi();        
+        // reading range for high pt const fit to ratio
+        } else if (tempValue.BeginsWith("rangeHighPtFitRatio",TString::kIgnoreCase)){    
+            rangeHighPtFitRatio[0]      = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atof();
+            rangeHighPtFitRatio[1]      = ((TString)((TObjString*)tempArr->At(2))->GetString()).Atof();
+        // reading min and max pt range for mass fits
+        } else if (tempValue.BeginsWith("rangeHighPtFitMass",TString::kIgnoreCase)){    
+            if (enableAddCouts) cout << "setting min and max pt range for mass fits" << endl;
+            rangeHighPtFitMass[0]       = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
+            rangeHighPtFitMass[1]       = ((TString)((TObjString*)tempArr->At(2))->GetString()).Atoi();        
+            rangeHighPtFitMass[2]       = ((TString)((TObjString*)tempArr->At(3))->GetString()).Atoi();        
+            rangeHighPtFitMass[3]       = ((TString)((TObjString*)tempArr->At(4))->GetString()).Atoi();        
         // read data file names
         } else if (tempValue.BeginsWith("dataFileNames",TString::kIgnoreCase)){    
             if (enableAddCouts) cout << "setting data file paths" << endl;
@@ -627,7 +639,7 @@ void CorrectCaloNonLinearityV4(
                 if (fBinsPt[iClusterPt] < 3)
                     minMax[1]       = 0.25;
                 minMax[0]       = 0.02;
-                Double_t min    = 0.005*fBinsPt[iClusterPt] - 0.001;
+                Double_t min    = 0.002*fBinsPt[iClusterPt] - 0.001;
                 if (min > minMax[0])
                     minMax[0]   = min;
             // special setting for PCM-PHOS
@@ -690,7 +702,7 @@ void CorrectCaloNonLinearityV4(
     histDataMCResults->Divide(histMCResults,histDataResults,1,1);
     DrawGammaSetMarker(histDataMCResults, 24, 2, kBlack, kBlack);
 
-    Double_t minPlotY = 0.95;
+    Double_t minPlotY = 0.93;
     if(select.Contains("LHC10-Calo")) minPlotY = 0.9;
     if(select.Contains("LHC12-JetJet")) minPlotY = 0.93;
 
@@ -725,37 +737,70 @@ void CorrectCaloNonLinearityV4(
     
     TLegend *legend = GetAndSetLegend2(0.15, 0.95, 0.95, 0.99, 0.043, 2, "", 42);
    
+    // create scaled mass vs pt histos
     TH1D* histDataResultsVsPDG =  (TH1D*)histDataResults->Clone("Mean mass data / mass PDG Pi0");
     histDataResultsVsPDG->Scale(1/massPi0);
     SetStyleHistoTH1ForGraphs(histDataResultsVsPDG, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (data)} #GT / M_{#pi^{0} (PDG)}",0.035,0.043, 0.035,0.043, 1.,1.);
     DrawGammaSetMarker(histDataResultsVsPDG, markerStyle[0], 1, color[0], color[0]);
-    TF1* fitMassDataVsPDG = new TF1("fitMassDataVsPDG", "[0] + [1]*pow(x,[2])" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
-    fitMassDataVsPDG->SetParLimits(1, rangeMult[0], rangeMult[1]);
-    fitMassDataVsPDG->SetParLimits(2, rangeExponent[0], rangeExponent[1]);
-    
-    histDataResultsVsPDG->Fit(fitMassDataVsPDG,"QRME0");
-    fitMassDataVsPDG->SetLineColor(kBlack);
-    fitMassDataVsPDG->Draw("same");
-    cout << WriteParameterToFile(fitMassDataVsPDG) << endl;
-    
     histDataResultsVsPDG->Write();
-    histDataResultsVsPDG->DrawCopy("same");
-    legend->AddEntry(histDataResultsVsPDG,"Data");
-
+    
     TH1D* histMCResultsVsPDG =  (TH1D*)histMCResults->Clone("Mean mass MC / mass PDG Pi0");
     histMCResultsVsPDG->Scale(1/massPi0);
     SetStyleHistoTH1ForGraphs(histMCResultsVsPDG, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT / M_{#pi^{0} (PDG)}",0.035,0.043, 0.035,0.043, 1.,1.);
     DrawGammaSetMarker(histMCResultsVsPDG, markerStyle[1], 1, color[1], color[1]);
+    histMCResultsVsPDG->Write();
+    
+    // fitting data mass positions
+    TF1* fitMassDataVsPDG       = new TF1("fitMassDataVsPDG", "[0] + [1]*pow(x,[2])" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
+    fitMassDataVsPDG->SetParLimits(1, rangeMult[0], rangeMult[1]);
+    fitMassDataVsPDG->SetParLimits(2, rangeExponent[0], rangeExponent[1]);
+    histDataResultsVsPDG->Fit(fitMassDataVsPDG,"QRME0");
+    cout << WriteParameterToFile(fitMassDataVsPDG) << endl;
+    
+    TF1* fitMassDataVsPDGConst  = new TF1("fitMassDataVsPDGConst", "[0]" ,rangeHighPtFitMass[0],rangeHighPtFitMass[1]);
+    histDataResultsVsPDG->Fit(fitMassDataVsPDGConst,"QRME0");
+    cout << WriteParameterToFile(fitMassDataVsPDGConst) << endl;
+    
+    TF1* fitMassDataVsPDG2      = new TF1("fitMassDataVsPDG2", "[0]-TMath::Exp(-[1]*x+[2])" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
+    fitMassDataVsPDG2->SetParameter(0, fitMassDataVsPDGConst->GetParameter(0));
+    fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-3*fitMassDataVsPDGConst->GetParError(0), 1.10*fitMassDataVsPDGConst->GetParameter(0)+3*fitMassDataVsPDGConst->GetParError(0));
+    histDataResultsVsPDG->Fit(fitMassDataVsPDG2,"QRME0");
+    cout << WriteParameterToFile(fitMassDataVsPDG2) << endl;
+    
+    // fitting MC mass positions
     TF1* fitMassMCVsPDG = new TF1("fitMassMCVsPDG", "[0] + [1]*pow(x,[2])" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fitMassMCVsPDG->SetParLimits(1, rangeMult[0], rangeMult[1]);
     fitMassMCVsPDG->SetParLimits(2, rangeExponent[0], rangeExponent[1]);
-
     histMCResultsVsPDG->Fit(fitMassMCVsPDG,"QRME0");
-    fitMassMCVsPDG->SetLineColor(kRed+2);
-    fitMassMCVsPDG->Draw("same");
     cout << WriteParameterToFile(fitMassMCVsPDG) << endl;
     
-    histMCResultsVsPDG->Write();
+    TF1* fitMassMCVsPDGConst  = new TF1("fitMassMCVsPDGConst", "[0]" ,rangeHighPtFitMass[2],rangeHighPtFitMass[3]);
+    histMCResultsVsPDG->Fit(fitMassMCVsPDGConst,"QRME0");
+    cout << WriteParameterToFile(fitMassMCVsPDGConst) << endl;
+    
+    TF1* fitMassMCVsPDG2 = new TF1("fitMassMCVsPDG2", "[0]-TMath::Exp(-[1]*x+[2])" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
+    fitMassMCVsPDG2->SetParameter(0, fitMassMCVsPDGConst->GetParameter(0));
+    fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-2*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+2*fitMassMCVsPDGConst->GetParError(0));
+    histMCResultsVsPDG->Fit(fitMassMCVsPDG2,"QRME0");
+    cout << WriteParameterToFile(fitMassMCVsPDG2) << endl;
+    
+    
+    // draw data graphs and fits
+    DrawGammaSetMarkerTF1( fitMassDataVsPDG, 1, 2, kBlack);
+    fitMassDataVsPDG->Draw("same");
+    DrawGammaSetMarkerTF1( fitMassDataVsPDGConst, 7, 2, kGray);
+    fitMassDataVsPDGConst->Draw("same");
+    DrawGammaSetMarkerTF1( fitMassDataVsPDG2, 7, 2, kGray+1);
+    fitMassDataVsPDG2->Draw("same");
+    histDataResultsVsPDG->DrawCopy("same");
+    legend->AddEntry(histDataResultsVsPDG,"Data");
+
+    DrawGammaSetMarkerTF1( fitMassMCVsPDG, 1, 2, kRed+2);
+    fitMassMCVsPDG->Draw("same");
+    DrawGammaSetMarkerTF1( fitMassMCVsPDGConst, 7, 2, kRed-8);
+    fitMassMCVsPDGConst->Draw("same");
+    DrawGammaSetMarkerTF1( fitMassMCVsPDG2, 7, 2, kRed-6);
+    fitMassMCVsPDG2->Draw("same");
     histMCResultsVsPDG->DrawCopy("same");
     legend->AddEntry(histMCResultsVsPDG,"MC");
     
@@ -773,23 +818,15 @@ void CorrectCaloNonLinearityV4(
     //*********************************************************************************************************************************
     //****************************** Fitting ratio of mean mass position in MC/data ***************************************************
     //*********************************************************************************************************************************
-    TF1* fFitConst = new TF1("DataMCConst", "[0]" ,startFit,fBinsPt[ptBinRange[1]]);
+    TF1* fFitConst = new TF1("DataMCConst", "[0]" ,rangeHighPtFitRatio[0],rangeHighPtFitRatio[1]);
     histDataMCResults->Fit(fFitConst,"QRME0");
     Double_t highPtConst            = fixedOffSet;
     if (highPtConst == -1){
         highPtConst = fFitConst->GetParameter(0);
     }
-    
-    fFitMassPos = FitDataMC(histDataMCResults, fBinsPt[ptBinRange[0]], fBinsPt[ptBinRange[1]], select,  highPtConst);
-    TF1* fFitComposit = new TF1("fFitComposit", "([0] + [1]*pow(x,[2]))/([3] + [4]*pow(x,[5]))" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
-    fFitComposit->SetParameter(0, fitMassMCVsPDG->GetParameter(0) );
-    fFitComposit->SetParameter(1, fitMassMCVsPDG->GetParameter(1) );
-    fFitComposit->SetParameter(2, fitMassMCVsPDG->GetParameter(2) );
-    fFitComposit->SetParameter(3, fitMassDataVsPDG->GetParameter(0) );
-    fFitComposit->SetParameter(4, fitMassDataVsPDG->GetParameter(1) );
-    fFitComposit->SetParameter(5, fitMassDataVsPDG->GetParameter(2) );
 
-    
+    // creating real fit functions
+    fFitMassPos = FitDataMC(histDataMCResults, fBinsPt[ptBinRange[0]], fBinsPt[ptBinRange[1]], select,  highPtConst);
     TF1* fFitCompositFitted = new TF1("fFitCompositFitted", "([0] + [1]*pow(x,[2]))/([3] + [4]*pow(x,[5]))" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]-2]);
     fFitCompositFitted->SetParameter(0, fitMassMCVsPDG->GetParameter(0) );
     fFitCompositFitted->SetParameter(1, fitMassMCVsPDG->GetParameter(1) );
@@ -798,6 +835,16 @@ void CorrectCaloNonLinearityV4(
     fFitCompositFitted->SetParameter(4, fitMassDataVsPDG->GetParameter(1) );
     fFitCompositFitted->FixParameter(5, fitMassDataVsPDG->GetParameter(2) );
     histDataMCResults->Fit(fFitCompositFitted,"QRME0");
+    
+    
+    // calculating fit functions based on mass fits with powerlaw like mass functions
+    TF1* fFitComposit = new TF1("fFitComposit", "([0] + [1]*pow(x,[2]))/([3] + [4]*pow(x,[5]))" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
+    fFitComposit->SetParameter(0, fitMassMCVsPDG->GetParameter(0) );
+    fFitComposit->SetParameter(1, fitMassMCVsPDG->GetParameter(1) );
+    fFitComposit->SetParameter(2, fitMassMCVsPDG->GetParameter(2) );
+    fFitComposit->SetParameter(3, fitMassDataVsPDG->GetParameter(0) );
+    fFitComposit->SetParameter(4, fitMassDataVsPDG->GetParameter(1) );
+    fFitComposit->SetParameter(5, fitMassDataVsPDG->GetParameter(2) );
     
     TF1* fFitCompositInverted = new TF1("fFitCompositInverted", "([0] + [1]*pow(x,[2]))/([3] + [4]*pow(x,[5]))" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fFitCompositInverted->SetParameter(0, fitMassDataVsPDG->GetParameter(0) );
@@ -815,6 +862,25 @@ void CorrectCaloNonLinearityV4(
     fFitCompositInvertedFitted->SetParameter(4, fFitCompositFitted->GetParameter(1) );
     fFitCompositInvertedFitted->SetParameter(5, fFitCompositFitted->GetParameter(2) );
     
+    
+    // calculating fit functions with exponential like mass functions
+    TF1* fFitExpComb = new TF1("fFitExpComb", "([0]-TMath::Exp(-[1]*x+[2]))/([3]-TMath::Exp(-[4]*x+[5]))" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
+    fFitExpComb->SetParameter(0, fitMassMCVsPDG2->GetParameter(0) );
+    fFitExpComb->SetParameter(1, fitMassMCVsPDG2->GetParameter(1) );
+    fFitExpComb->SetParameter(2, fitMassMCVsPDG2->GetParameter(2) );
+    fFitExpComb->SetParameter(3, fitMassDataVsPDG2->GetParameter(0) );
+    fFitExpComb->SetParameter(4, fitMassDataVsPDG2->GetParameter(1) );
+    fFitExpComb->SetParameter(5, fitMassDataVsPDG2->GetParameter(2) );
+    
+    // calculating fit functions with exponential like mass functions
+    TF1* fFitExpCombInverted = new TF1("fFitExpCombInverted", "([0]-TMath::Exp(-[1]*x+[2]))/([3]-TMath::Exp(-[4]*x+[5]))" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
+    fFitExpCombInverted->SetParameter(3, fitMassMCVsPDG2->GetParameter(0) );
+    fFitExpCombInverted->SetParameter(4, fitMassMCVsPDG2->GetParameter(1) );
+    fFitExpCombInverted->SetParameter(5, fitMassMCVsPDG2->GetParameter(2) );
+    fFitExpCombInverted->SetParameter(0, fitMassDataVsPDG2->GetParameter(0) );
+    fFitExpCombInverted->SetParameter(1, fitMassDataVsPDG2->GetParameter(1) );
+    fFitExpCombInverted->SetParameter(2, fitMassDataVsPDG2->GetParameter(2) );
+    
     histDataMCResults->GetYaxis()->SetRangeUser(minPlotY,1.05);
     histDataMCResults->GetXaxis()->SetRangeUser(fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
 
@@ -830,27 +896,44 @@ void CorrectCaloNonLinearityV4(
     fLog << WriteParameterToFile(fFitComposit) << endl;
     fLog << WriteParameterToFile(fFitCompositFitted) << endl;
     fLog << WriteParameterToFile(fFitCompositInverted) << endl;
+    fLog << WriteParameterToFile(fFitExpComb) << endl;
+    fLog << WriteParameterToFile(fFitExpCombInverted) << endl;
     fLog.close();
     
     //*******************************************************************************
     // plotting mass ratios
     //*******************************************************************************
     TCanvas *canvasMassRatioMCData = new TCanvas("canvasMassPDG","",200,10,1350,900);  // gives the page size
-    DrawGammaCanvasSettings(canvasMassRatioMCData, 0.1, 0.02, 0.02, 0.1);
+    DrawGammaCanvasSettings(canvasMassRatioMCData, 0.082, 0.012, 0.02, 0.1);
     canvasMassRatioMCData->SetLogx(1); 
     canvasMassRatioMCData->SetLogy(0); 
     
     SetStyleHistoTH1ForGraphs(histDataMCResults, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT / #LT M_{#pi^{0} (data)} #GT",0.035,0.043, 0.035,0.043, 1.,0.9);
     DrawGammaSetMarker(histDataMCResults, markerStyle[0], 1, color[0], color[0]);
+    histDataMCResults->GetXaxis()->SetMoreLogLabels();
+    histDataMCResults->GetXaxis()->SetLabelOffset(-0.01);
     histDataMCResults->Draw();
-    fFitComposit->SetLineColor(kGreen+2);
-    fFitComposit->Draw("same");
-
+    
+    DrawGammaSetMarkerTF1( fFitComposit, 7, 2, kGreen+2);
+    DrawGammaSetMarkerTF1( fFitExpComb, 8, 2, kBlue+2);
+    DrawGammaSetMarkerTF1( fFitMassPos, 1, 2, kRed+1);
+    DrawGammaSetMarkerTF1( fFitConst, 9, 2, kRed-8);
+    
     fFitMassPos->Draw("same");
+//     fFitConst->Draw("same");
+    fFitComposit->Draw("same");
+    fFitExpComb->Draw("same");
+    
     PutProcessLabelAndEnergyOnPlot(0.94, 0.96, 0.03, fCollisionSystem.Data(), fTextMeasurement.Data(), recGamma.Data(), 62, 0.03, "", 1, 1.25, 31);
     for (Int_t i = 0; i < nSets; i++){
        PutProcessLabelAndEnergyOnPlot(0.15, 0.945-2*0.03*(i), 0.03, fPlotLabelsRatio[i].Data(),"", "");
     }
+    
+    TLegend* legendCorrectionFunctions = GetAndSetLegend2(0.125,0.15, 0.4,0.15+3*1.1*0.03, 0.03, 1, "", 42, 0.15);
+    legendCorrectionFunctions->AddEntry(fFitMassPos,"Test beam function fitted","l");
+    legendCorrectionFunctions->AddEntry(fFitComposit,"Ind. Mass fitted with powerlaws","l");
+    legendCorrectionFunctions->AddEntry(fFitExpComb,"Ind. Mass fitted with exponentials","l");
+    legendCorrectionFunctions->Draw();
     
     canvasMassRatioMCData->Update();
     canvasMassRatioMCData->SaveAs(Form("%s/MeanMassRatio_%s.%s", outputDir.Data(), select.Data(), suffix.Data()));
@@ -861,11 +944,11 @@ void CorrectCaloNonLinearityV4(
     //*******************************************************************************
     canvasMassRatioMCData->cd();
     TH1D* totalCorrection = new TH1D("Total Correction","; #it{E}_{Cluster} (GeV); correction factor",1000,0.3,50);
-
-    
     SetStyleHistoTH1ForGraphs(totalCorrection, "#it{E}_{Cluster} (GeV)","correction factor",0.035,0.043, 0.035,0.043, 1.,0.9);
-    DrawGammaSetMarker(totalCorrection, 8, 1, kBlack, kBlack);
-    totalCorrection->GetYaxis()->SetRangeUser(minPlotY,1.1);
+    DrawGammaSetMarker(totalCorrection, 8, 0.8, kRed+2, kRed+2);
+    totalCorrection->GetYaxis()->SetRangeUser(minPlotY+0.031,1.1);
+    totalCorrection->GetXaxis()->SetMoreLogLabels();
+    totalCorrection->GetXaxis()->SetLabelOffset(-0.01);
     SetLogBinningXTH(totalCorrection);
  
     for(Int_t iBin = 1; iBin < totalCorrection->GetNbinsX()+1; iBin++){
@@ -877,12 +960,17 @@ void CorrectCaloNonLinearityV4(
     }
     totalCorrection->DrawCopy("p");
     fFitCompositInverted->SetRange(0.3,50);
-    fFitCompositInverted->SetLineColor(kGreen+2);
-    fFitCompositInverted->Draw("same");
+    fFitExpCombInverted->SetRange(0.3,50);
     
-    TLegend *legend2 = GetAndSetLegend2(0.2, 0.2, 0.4, 0.29, 0.03, 1, "", 42);
-    legend2->AddEntry(totalCorrection,"Correction factor for MC, direct ratio fit","l");
-    legend2->AddEntry(fFitCompositInverted,"Correction factor for MC from mass fits","l");
+    DrawGammaSetMarkerTF1( fFitCompositInverted, 7, 2, kGreen+2);
+    DrawGammaSetMarkerTF1( fFitExpCombInverted, 8, 2, kBlue+2);
+    fFitCompositInverted->Draw("same");
+    fFitExpCombInverted->Draw("same");
+    
+    TLegend *legend2 = GetAndSetLegend2(0.45,0.15, 0.725,0.15+3*1.1*0.03, 0.03, 1, "", 42, 0.15);//GetAndSetLegend2(0.2, 0.2, 0.4, 0.29, 0.03, 1, "", 42);
+    legend2->AddEntry(totalCorrection,"Correction factor for MC, test beam function (ratio fit)","l");
+    legend2->AddEntry(fFitCompositInverted,"Correction factor for MC from mass fits (powerlaws)","l");
+    legend2->AddEntry(fFitExpCombInverted,"Correction factor for MC from mass fits (exponentials)","l");
     legend2->Draw("same");
 
     PutProcessLabelAndEnergyOnPlot(0.94, 0.96, 0.03, fCollisionSystem.Data(), fTextMeasurement.Data(), recGamma.Data(), 62, 0.03, "", 1, 1.25, 31);

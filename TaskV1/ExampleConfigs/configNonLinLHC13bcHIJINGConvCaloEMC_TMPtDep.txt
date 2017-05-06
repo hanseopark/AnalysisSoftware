@@ -1,26 +1,26 @@
-#configuration for CorrectCaloNonLinearityV4.C for LHC13bc DPMJET Calo
-select	LHC13bc-DPMJET-ConvCaloEMC-PtDep
+#configuration for CorrectCaloNonLinearityV4.C for LHC13bc HIJING Calo
+select	LHC13bc-HIJING-ConvCaloEMC-PtDep
 
 mode	2
 ptRangeBins	0	30
 energy	pPb_5.023TeV
 maxNPtBins	31
 fBinsPt	0.7	0.8	0.9	1.0	1.1	1.2	1.3	1.4	1.6	1.8	2.0	2.2	2.4	2.8	3.2	3.6	4.0	5.0	6.0	7.0	8.0	9.0	10.0	11.0	12.0	14.0	16.0	18.0	20.0	22.5	25.0	30.0
-exampleBins	28	29	30	STOP
-#exampleBins	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28	STOP
+#exampleBins	28	29	30	STOP
+exampleBins	0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28	STOP
 firstPtBinSet	0	21	30	30	STOP
 
 nSets	2
 dataFileNames	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170501-EMCwoCalib/GammaConvCalo_LHC13bcde-pass2_3.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170501-EMCwoCalib/GammaConvCalo_LHC13de-pass2_4.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170501-EMCwoCalib/GammaConvCalo_LHC13de-pass2_4.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170501-EMCwoCalib/GammaConvCalo_LHC13de-pass2_4.root 	 STOP
 cutData	80000013_00200009327000008250400000_1111100057032230000_0163103100000010	80083013_00200009327000008250400000_1111100057032230000_0163103100000010	80083013_00200009327000008250400000_1111100057032230000_0163103100000010	80052013_00200009327000008250400000_1111100057032230000_0163103100000010	STOP
 
-MCFileNames	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170501-EMCwoCalib/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_3.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170501-EMCwoCalib/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_3.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170501-EMCwoCalib/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_4.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170501-EMCwoCalib/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_4.root	STOP
+MCFileNames	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170501-EMCwoCalib/GammaConvCalo_MC_LHC13e7_3.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170501-EMCwoCalib/GammaConvCalo_MC_LHC13e7_3.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170501-EMCwoCalib/GammaConvCalo_MC_LHC13e7_4.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170501-EMCwoCalib/GammaConvCalo_MC_LHC13e7_4.root	STOP
 cutMC	80000013_00200009327000008250400000_1111100057032230000_0163103100000010	80052013_00200009327000008250400000_1111100057032230000_0163103100000010	80083013_00200009327000008250400000_1111100057032230000_0163103100000010	80085013_00200009327002008250400000_1111100057032230000_0163103100000010	STOP
 
-plotLabels	#frac{LHC13b2_efix}{LHC13bcde-INT7}	#frac{LHC13b2_efix}{LHC13de-EG1}	#frac{LHC13b2_efix}{LHC13de-EMC7}	#frac{LHC13b2_efix}{LHC13de-EG2}	STOP
+plotLabels	#frac{LHC13e7}{LHC13bcde-INT7}	#frac{LHC13e7}{LHC13de-EG1}	#frac{LHC13e7}{LHC13de-EMC7}	#frac{LHC13e7}{LHC13de-EG2}	STOP
 
 rebinPt	0	2.2	2.8	4.95	STOP
 rebinValue	1	2	4	8	STOP
 
-rangeHighPtFitRatio	6	14
-rangeHighPtFitMass	6	25	5	12
+rangeHighPtFitRatio	6	12
+rangeHighPtFitMass	6	25	6	12
