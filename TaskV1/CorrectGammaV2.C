@@ -5,7 +5,6 @@
 // ***************** as of 29th Oct 2015 it superceeds CorrectGamma.C ********************************************
 // ***************************************************************************************************************
 
-
 #include <Riostream.h>
 #include <fstream>
 #include "TMath.h"
@@ -1106,6 +1105,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //******************* Calculate pileup corr. secondary spectra from data *******************
     TH1D* histoSecondaryGammaSpecPtPileUp                           = NULL;
     TH1D* histoSecondaryGammaFromXFromK0sSpecPtPileUp               = NULL;
+    TH1D* histoSecondaryGammaRestSpecPtPileUp                       = NULL;
     if(doPileUpCorr && isPCM){
         histoSecondaryGammaSpecPtPileUp                             = (TH1D*)histoESDConvGammaPtPileUp->Clone("SecondaryGammaSpecPtPileUp");
         histoSecondaryGammaSpecPtPileUp->Multiply(histoFracAllGammaToSec_PileUp_Pt);
@@ -1114,6 +1114,12 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoSecondaryGammaFromXFromK0sSpecPtPileUp->Multiply(histoFracAllGammaToSecFromXFromK0s_PileUp_Pt);
         histoSecondaryGammaFromXFromK0sSpecPtPileUp->Scale(1./nEvt);
         histoSecondaryGammaFromXFromK0sSpecPtPileUp->Scale(doubleAddFactorK0s);
+
+        if (hasCocktailInput) {
+            histoSecondaryGammaRestSpecPtPileUp                     = (TH1D*)histoESDConvGammaPtPileUp->Clone("SecondaryGammaSpecRestPtPileUp");
+            histoSecondaryGammaRestSpecPtPileUp->Multiply(histoFracAllGammaToSecFromX_Pt[3]);
+            histoSecondaryGammaRestSpecPtPileUp->Scale(1./nEvt);
+        }
     }
 
     //******************************************************************************************
@@ -1581,7 +1587,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             canvasResponseMatrix->SaveAs(Form("%s/%s_ResponseMatrixCalo_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
             
         }
-//     delete canvasResponseMatrix;
+    //delete canvasResponseMatrix;
 
     // response matrix for cocktail secondary corr
     if (hasCocktailInput) {
@@ -1609,15 +1615,15 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TH1D* histoGammaCorrUnfoldReso_Pt                           = NULL;
     TH1D* histoGammaCorrUnfoldReso_BinByBin_Pt                  = NULL;
     TH1D* histoGammaResolCorrUnfold_Pt                          = NULL;
-    TH1D* histoGammaCorrUnfoldReso_PtNotCorrected               = NULL;
     TH1D* histoGammaResolCorrUnfold_BinByBin_Pt                 = NULL;
+    TH1D* histoGammaCorrUnfoldReso_PtNotCorrected               = NULL;
     TH1D* histoSecondaryGammaFromXSpecPtOrBin[4]                = { NULL, NULL, NULL, NULL };
     // do the same with MC rec gammas as a sanity check
     TH1D* histoMCrecGammaCorr_Pt                                = NULL;
 
     if (isPCM ){
-        // Correct inclusive photon spectrum for pileup contribution
-        if(doPileUpCorr) histoESDConvGammaPt_OrBin->Multiply(histoPileUpCorrectionFactor_Pt_OrBin);
+        // correct inclusive photon spectrum for pileup contribution
+        if (doPileUpCorr) histoESDConvGammaPt_OrBin->Multiply(histoPileUpCorrectionFactor_Pt_OrBin);
         
         // correct measured gamma spectra for secondaries and purity
         if(!hasCocktailInput){
@@ -1653,11 +1659,11 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                                                 histoGammaTruePurity_Pt_OrBin 
                                             );
         }
-        
+
         // create histograms for unfolding for different techniques
         histoGammaCorrUnfoldReso_Pt                             = (TH1D*)histoESDConvGammaPt_OrBin->Clone("histoGammaCorrUnfoldReso_Pt");
-        histoMCrecGammaCorr_Pt                                  = (TH1D*)histoMCrecGamma_Pt_OrBin->Clone("GammaSpecCorrESDMC");
         histoGammaCorrUnfoldReso_BinByBin_Pt                    = (TH1D*)histoESDConvGammaPt_OrBin->Clone("histoGammaCorrUnfoldReso_BinByBin_Pt");
+        histoMCrecGammaCorr_Pt                                  = (TH1D*)histoMCrecGamma_Pt_OrBin->Clone("GammaSpecCorrESDMC");
         // TH1D *histoGammaCorrUnfoldReso_SvD_Pt                = (TH1D*)histoESDConvGammaPt_OrBin->Clone("histoGammaCorrUnfoldReso_SvD_Pt");
         // TH1D *histoGammaCorrUnfoldReso_TUnfold_Pt            = (TH1D*)histoESDConvGammaPt_OrBin->Clone("histoGammaCorrUnfoldReso_TUnfold_Pt");
 
@@ -1672,16 +1678,14 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         RooUnfoldResponse   response(0,0,histoGammaTruePrimaryConv_recPt_MCPt);
         
         // unfold with different techniques, but same response matrix
-        RooUnfoldBayes      unfold_Spectrum (&response,histoGammaCorrUnfoldReso_Pt, nIterationsUnfolding);
-        RooUnfoldBayes      unfold_SpectrumMCrec (&response,histoMCrecGammaCorr_Pt, nIterationsUnfolding);
-        RooUnfoldBinByBin   unfold_SpectrumBinByBin (&response,histoGammaCorrUnfoldReso_BinByBin_Pt);
+        RooUnfoldBayes      unfold_Spectrum (           &response,histoGammaCorrUnfoldReso_Pt, nIterationsUnfolding);
+        RooUnfoldBinByBin   unfold_SpectrumBinByBin (   &response,histoGammaCorrUnfoldReso_BinByBin_Pt);
+        RooUnfoldBayes      unfold_SpectrumMCrec (      &response,histoMCrecGammaCorr_Pt, nIterationsUnfolding);
         //RooUnfoldSvd      unfold_SpectrumSvD (&response, histoGammaCorrUnfoldReso_SvD_Pt, 20);
         //RooUnfoldTUnfold  unfold_SpectrumTUnfold (&response,histoGammaCorrUnfoldReso_TUnfold_Pt);
         
         // get histograms from RooUnfold and rebin them 
         histoGammaCorrUnfoldReso_Pt                             = (TH1D*)unfold_Spectrum.Hreco();
-        histoMCrecGammaCorr_Pt                                  = (TH1D*)unfold_SpectrumMCrec.Hreco();
-        histoMCrecGammaCorr_Pt                                  = RebinTH1D(histoMCrecGammaCorr_Pt,histoESDConvGammaPt,kTRUE);
         histoGammaResolCorrUnfold_Pt                            = (TH1D*)histoESDConvGammaPt_OrBin->Clone("histoGammaResolCorrUnfold_Pt");
         histoGammaResolCorrUnfold_Pt->Divide(histoGammaCorrUnfoldReso_Pt);    
         histoGammaCorrUnfoldReso_Pt                             = RebinTH1D(histoGammaCorrUnfoldReso_Pt,histoESDConvGammaPt,kTRUE);
@@ -1689,26 +1693,31 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoGammaCorrUnfoldReso_BinByBin_Pt                    = (TH1D*)unfold_SpectrumBinByBin.Hreco();
         histoGammaResolCorrUnfold_BinByBin_Pt                   = (TH1D*)histoESDConvGammaPt_OrBin->Clone("histoGammaResolCorrUnfold_BinByBin_Pt");
         histoGammaResolCorrUnfold_BinByBin_Pt->Divide(histoGammaCorrUnfoldReso_BinByBin_Pt);
-
         histoGammaCorrUnfoldReso_BinByBin_Pt                    = RebinTH1D(histoGammaCorrUnfoldReso_BinByBin_Pt,histoESDConvGammaPt,kTRUE);
+
+        histoMCrecGammaCorr_Pt                                  = (TH1D*)unfold_SpectrumMCrec.Hreco();
+        histoMCrecGammaCorr_Pt                                  = RebinTH1D(histoMCrecGammaCorr_Pt,histoESDConvGammaPt,kTRUE);
+
         // histoGammaCorrUnfoldReso_SvD_Pt                      = (TH1D*)unfold_SpectrumSvD.Hreco();
         // histoGammaCorrUnfoldReso_SvD_Pt                      = RebinTH1D(histoGammaCorrUnfoldReso_SvD_Pt,histoESDConvGammaPt,kTRUE);
         // histoGammaCorrUnfoldReso_TUnfold_Pt                  = (TH1D*)unfold_SpectrumTUnfold.Hreco();
         // histoGammaCorrUnfoldReso_TUnfold_Pt                  = RebinTH1D(histoGammaCorrUnfoldReso_TUnfold_Pt,histoESDConvGammaPt,kTRUE);
 
-        // Correct inclusive photon spectrum with conversion probability & reco efficiency (both versus MC pt)
+        // gamma spectrum after conv. prob., secondary, purity correction and unfolding
         histoGammaCorrUnfoldReso_PtNotCorrected                 = (TH1D*)histoGammaCorrUnfoldReso_Pt->Clone("GammaUnfoldNotCorrected");
-        CorrectGammaUnfoldResol( histoGammaCorrUnfoldReso_Pt, 
-                                 histoGammaConvProb_MCPt, 
-                                 histoGammaPrimaryRecoEff_MCPt, 
-                                 deltaEta, scaling, nEvt);
-        CorrectGammaUnfoldResol( histoMCrecGammaCorr_Pt, 
+
+        // Correct inclusive photon spectrum with conversion probability & reco efficiency (both versus MC pt)
+        CorrectGammaUnfoldResol( histoGammaCorrUnfoldReso_Pt,
                                  histoGammaConvProb_MCPt, 
                                  histoGammaPrimaryRecoEff_MCPt, 
                                  deltaEta, scaling, nEvt);
         CorrectGammaUnfoldResol( histoGammaCorrUnfoldReso_BinByBin_Pt,
                                  histoGammaConvProb_MCPt, 
                                  histoGammaPrimaryRecoEff_MCPt, 
+                                 deltaEta, scaling, nEvt);
+        CorrectGammaUnfoldResol( histoMCrecGammaCorr_Pt,
+                                 histoGammaConvProb_MCPt,
+                                 histoGammaPrimaryRecoEff_MCPt,
                                  deltaEta, scaling, nEvt);
         //CorrectGammaUnfoldResol(histoGammaCorrUnfoldReso_SvD_Pt,histoGammaConvProb_MCPt, histoGammaPrimaryRecoEff_MCPt, deltaEta, scaling, nEvt);
         //CorrectGammaUnfoldResol(histoGammaCorrUnfoldReso_TUnfold_Pt,histoGammaConvProb_MCPt, histoGammaPrimaryRecoEff_MCPt, deltaEta, scaling, nEvt);
@@ -1717,6 +1726,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                       histoGammaCorrUnfoldReso_Pt->GetMinimum(0)/100., histoGammaCorrUnfoldReso_Pt->GetMaximum()*10, 1.0, 1.7);
         SetHistogramm(histoGammaCorrUnfoldReso_BinByBin_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", -99, -99, 1.0, 1.7);
         SetHistogramm(histoMCrecGammaCorr_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", -99, -99, 1.0, 1.7);
+
         DrawGammaSetMarker(histoGammaCorrUnfoldReso_Pt, 20, 1.0, 1, 1);
         DrawGammaSetMarker(histoGammaCorrUnfoldReso_BinByBin_Pt, 24, 1.0, kBlue, kBlue);
         DrawGammaSetMarker(histoMCrecGammaCorr_Pt, 20, 1.0, kGreen-1, kGreen-1);
@@ -1780,9 +1790,6 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         // get histograms from RooUnfold and rebin them
         histoGammaCorrUnfoldReso_Pt                                 = (TH1D*)unfold_Spectrum.Hreco();
-        histoMCrecGammaCorr_Pt                                      = (TH1D*)unfold_SpectrumMCrec.Hreco();
-
-        histoMCrecGammaCorr_Pt                                      = RebinTH1D(histoMCrecGammaCorr_Pt,histoESDCaloGammaPt,kTRUE);
         histoGammaResolCorrUnfold_Pt                                = (TH1D*)histoESDCaloGammaPt_OriginalBin->Clone("histoGammaResolCorrUnfold_Pt");
         histoGammaResolCorrUnfold_Pt->Divide(histoGammaCorrUnfoldReso_Pt);
         histoGammaCorrUnfoldReso_Pt                                 = RebinTH1D(histoGammaCorrUnfoldReso_Pt,histoESDCaloGammaPt,kTRUE);
@@ -1792,9 +1799,14 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoGammaResolCorrUnfold_BinByBin_Pt->Divide(histoGammaCorrUnfoldReso_BinByBin_Pt);
         histoGammaCorrUnfoldReso_BinByBin_Pt                        = RebinTH1D(histoGammaCorrUnfoldReso_BinByBin_Pt,histoESDCaloGammaPt,kTRUE);
 
-        // Correct inclusive photon spectrum with conversion probability & reco efficiency (both versus MC pt)
+        histoMCrecGammaCorr_Pt                                      = (TH1D*)unfold_SpectrumMCrec.Hreco();
+        histoMCrecGammaCorr_Pt                                      = RebinTH1D(histoMCrecGammaCorr_Pt,histoESDCaloGammaPt,kTRUE);
+
+        // gamma spectrum after secondary, purity correction and unfolding
         histoGammaCorrUnfoldReso_PtNotCorrected                     = (TH1D*)histoGammaCorrUnfoldReso_Pt->Clone("GammaUnfoldNotCorrected");
-        CorrectGammaUnfoldResol(    histoGammaCorrUnfoldReso_Pt, 
+
+        // Correct inclusive photon spectrum with conversion probability & reco efficiency (both versus MC pt)
+        CorrectGammaUnfoldResol(    histoGammaCorrUnfoldReso_Pt,
                                     histoGammaPrimaryRecoEff_MCPt, 
                                     deltaEtaCalo, 
                                     scalingCalo, 
@@ -1813,10 +1825,11 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                                     nEvt
                                );
 
-        SetHistogramm(histoGammaCorrUnfoldReso_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", 
+        SetHistogramm(histoGammaCorrUnfoldReso_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",
                       histoGammaCorrUnfoldReso_Pt->GetMinimum(0)/100., histoGammaCorrUnfoldReso_Pt->GetMaximum()*10, 1.0, 1.7);
         SetHistogramm(histoGammaCorrUnfoldReso_BinByBin_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", -99, -99, 1.0, 1.7);
         SetHistogramm(histoMCrecGammaCorr_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", -99, -99, 1.0, 1.7);
+
         DrawGammaSetMarker(histoGammaCorrUnfoldReso_Pt, 20, 1.0, 1, 1);
         DrawGammaSetMarker(histoGammaCorrUnfoldReso_BinByBin_Pt, 24, 1.0, kBlue, kBlue);
         DrawGammaSetMarker(histoMCrecGammaCorr_Pt, 20, 1.0, kGreen-1, kGreen-1);
@@ -1834,13 +1847,19 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //**********************************************************************************
     TH1D* histoGammaResolCorrUnfold_Pt_Rebin                        = (TH1D*)histoGammaResolCorrUnfold_Pt->Clone(Form("%s_Rebin", histoGammaResolCorrUnfold_Pt->GetName()));
     histoGammaResolCorrUnfold_Pt_Rebin->Sumw2();
-    histoGammaResolCorrUnfold_Pt_Rebin                              = RebinTH1D(histoGammaResolCorrUnfold_Pt_Rebin,histoESDConvGammaPt,kFALSE);
+    if (isPCM)
+        histoGammaResolCorrUnfold_Pt_Rebin                          = RebinTH1D(histoGammaResolCorrUnfold_Pt_Rebin,histoESDConvGammaPt,kFALSE);
+    else if (isCalo && !isPCM)
+        histoGammaResolCorrUnfold_Pt_Rebin                          = RebinTH1D(histoGammaResolCorrUnfold_Pt_Rebin,histoESDCaloGammaPt,kFALSE);
 
     TH1D* histoGammaResolCorrUnfold_BinByBin_Pt_Rebin               = (TH1D*)histoGammaResolCorrUnfold_BinByBin_Pt->Clone(Form("%s_Rebin", histoGammaResolCorrUnfold_BinByBin_Pt->GetName()));
     histoGammaResolCorrUnfold_BinByBin_Pt_Rebin->Sumw2();
-    histoGammaResolCorrUnfold_BinByBin_Pt_Rebin                     = RebinTH1D(histoGammaResolCorrUnfold_BinByBin_Pt_Rebin,histoESDConvGammaPt,kTRUE);
+    if (isPCM)
+        histoGammaResolCorrUnfold_BinByBin_Pt_Rebin                 = RebinTH1D(histoGammaResolCorrUnfold_BinByBin_Pt_Rebin,histoESDConvGammaPt,kFALSE);
+    else if (isCalo && !isPCM)
+        histoGammaResolCorrUnfold_BinByBin_Pt_Rebin                 = RebinTH1D(histoGammaResolCorrUnfold_BinByBin_Pt_Rebin,histoESDCaloGammaPt,kFALSE);
 
-    // bin-by-bin resolution
+    // resolution from binwise corrections (no unfolding)
     TH1D* histoGammaResolCorrEff_Pt                                 = (TH1D*)histoGammaPrimaryRecoEff_Pt->Clone("histoGammaResolCorrEff_Pt");
     histoGammaResolCorrEff_Pt->Divide(histoGammaPrimaryRecoEff_MCPt);
 
@@ -1898,8 +1917,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         legendCompRecoEff->SetTextSize(0.04);
         legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_MCPt,                      "unfolding prim. reco. eff. in #it{p}_{T, MC}", "p");
         legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_MCPt_ConvertToRecPt,       "unfolding prim. reco. eff. in #it{p}_{T}", "p");
-        legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_Pt,                        "bin-by-bin prim. reco. eff. in #it{p}_{T}", "p");
-        if(doPileUpCorr)legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_PileUp_Pt, "bin-by-bin prim. reco. eff. in #it{p}_{T}, pile-up", "p");
+        legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_Pt,                        "binwise prim. reco. eff. in #it{p}_{T}", "p");
+        if(doPileUpCorr)legendCompRecoEff->AddEntry(histoGammaPrimaryRecoEff_PileUp_Pt, "binwise prim. reco. eff. in #it{p}_{T}, pile-up", "p");
         legendCompRecoEff->Draw();
 
         PutProcessLabelAndEnergyOnPlot( 0.935, 0.95, 0.035, cent, detectionProcess, "", 42, 0.03,"",1,1.25,31);
@@ -2013,15 +2032,15 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //******************** Resolution Correction Plot **********************************
     //**********************************************************************************
     TCanvas *canvasResolutionCorr               = GetAndSetCanvas("canvasResolutionCorr");
-        TH1D* Dummy2                            = NULL;
-        if (isPCM ) Dummy2            = (TH1D*)histoESDConvGammaPt->Clone("Dummy2");
-        if (isCalo && !isPCM) Dummy2            = (TH1D*)histoESDCaloGammaPt->Clone("Dummy2");
+        TH1D*                   Dummy2          = NULL;
+        if (isPCM )             Dummy2          = (TH1D*)histoESDConvGammaPt->Clone("Dummy2");
+        if (isCalo && !isPCM)   Dummy2          = (TH1D*)histoESDCaloGammaPt->Clone("Dummy2");
         SetHistogramm(Dummy2,"#it{p}_{T} (GeV/#it{c})", "resolution correction",0,2);
         Dummy2->Draw();
 
-        DrawGammaSetMarker(histoGammaResolCorrUnfold_Pt, 20, 1.0, kBlue+1, kBlue+1);
-        DrawGammaSetMarker(histoGammaResolCorrUnfold_BinByBin_Pt, 21, 1.0, kGray+2, kGray+2);
-        DrawGammaSetMarker(histoGammaResolCorrEff_Pt, 24, 1.5, kRed+2, kRed+2);
+        DrawGammaSetMarker(histoGammaResolCorrUnfold_Pt,            20, 1.0, kBlue+1, kBlue+1);
+        DrawGammaSetMarker(histoGammaResolCorrUnfold_BinByBin_Pt,   21, 1.0, kGray+2, kGray+2);
+        DrawGammaSetMarker(histoGammaResolCorrEff_Pt,               24, 1.5, kRed+2, kRed+2);
 
         DrawGammaLines(0., maxPtGamma,1, 1,1, kGray);
         DrawGammaLines(0., maxPtGamma,0.8, 0.8,1, kGray, 7);
@@ -2034,7 +2053,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         //histoGammaCorrUnfoldReso_TUnfold_Pt->DrawCopy("same");
 
         TLegend* legendResolutionCorr                = GetAndSetLegend(0.15,0.80,3);
-        legendResolutionCorr->AddEntry(histoGammaResolCorrEff_Pt,"from effi ");
+        legendResolutionCorr->AddEntry(histoGammaResolCorrEff_Pt,"from effi");
         legendResolutionCorr->AddEntry(histoGammaResolCorrUnfold_Pt,"from Bayesian unfolding");
         legendResolutionCorr->AddEntry(histoGammaResolCorrUnfold_BinByBin_Pt,"from bin-by-bin unfolding");
         legendResolutionCorr->Draw();
@@ -2048,9 +2067,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     // copy raw inc gamma spectrum and correct for;
     // - secondary contamination, 
     // - purity, 
-    // - conversion probability & 
     // - reco effi (vs rec pt with sec correction)
-    //****************************************************************************************** 
+    // - conversion probability &
+    //******************************************************************************************
     TH1D* histoGammaCorrEffiReso_Pt                 = NULL;
     // correct alternate way for conversion reco
     if (isPCM ) {
@@ -2066,8 +2085,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                                  );
         else
             CorrectGammaEffiResolCocktail(  histoGammaCorrEffiReso_Pt, 
-                                            histoGammaSecGammaFromX_Cocktail_Raw_Pt, 
-                                            histoGammaTrueSecCocktailGammaFromX_Pt[3], 
+                                            histoGammaSecGammaFromX_Cocktail_Raw_Pt,    // already scaled per event
+                                            histoGammaTrueSecCocktailGammaFromX_Pt[3],  // already scaled per event
                                             histoGammaTruePurity_Pt, 
                                             histoGammaConvProb_MCPt,
                                             histoGammaPrimaryRecoEff_Pt, 
@@ -2088,13 +2107,14 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                                  );
         else
             CorrectGammaEffiResolCocktail(histoGammaCorrEffiReso_Pt,
-                                          histoGammaSecGammaFromX_Cocktail_Raw_Pt, 
-                                          histoGammaTrueSecCocktailGammaFromX_Pt[3], 
+                                          histoGammaSecGammaFromX_Cocktail_Raw_Pt,      // already scaled per event
+                                          histoGammaTrueSecCocktailGammaFromX_Pt[3],    // already scaled per event
                                           histoGammaTruePurity_Pt, 
                                           histoGammaPrimaryRecoEff_Pt, 
                                           deltaEtaCalo, scalingCalo, nEvt
                                          );
     }
+
     DrawGammaSetMarker(histoGammaCorrEffiReso_Pt, 20, 1.0, kGreen+2, kGreen+2);
     SetHistogramm(histoGammaCorrEffiReso_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",
                   histoGammaCorrEffiReso_Pt->GetMinimum(0)/100., histoGammaCorrEffiReso_Pt->GetMaximum()*10, 1.0,1.7);
@@ -2107,9 +2127,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         // copy raw inc gamma spectrum after pure data driven pileup correction,
         // - secondary contamination, 
         // - pileup corrected purity, (pileup corrected, vs rec pT with sec correction) 
-        // - conversion probability 
         // - reco effi (vs rec pt with sec correction)
-        //****************************************************************************************** 
+        // - conversion probability
+        //******************************************************************************************
         histoGammaCorrEffiReso_PileUp_Pt                = (TH1D*)histoESDConvGammaPtPileUp->Clone("CorrGammaSpecPurityMinusSecPileUp");
         
         if (!hasCocktailInput) {
@@ -2122,15 +2142,15 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                                     deltaEta, scaling, nEvt
                                  );
         } else {
-            cout << __LINE__ << ": MC updated bin-by-bin correction for pileup corrected spectra not implemented yet for use of cocktail-based secondary correction, will use MC-based secondary correction." << endl;
-            CorrectGammaEffiResol(  histoGammaCorrEffiReso_PileUp_Pt,
-                                    histoSecondaryGammaSpecPtPileUp, 
-                                    histoSecondaryGammaFromXFromK0sSpecPtPileUp,
-                                    histoGammaTruePurity_PileUp_Pt,
-                                    histoGammaConvProb_MCPt, 
-                                    histoGammaPrimaryRecoEff_PileUp_Pt, 
-                                    deltaEta, scaling, nEvt
-                                 );
+            cout << __LINE__ << " INFO: MC updated bin-by-bin correction for pileup corrected spectra not fully implemented yet for use of cocktail-based secondary correction. Using secondary gamma spectra from cocktail (from fully corrected, no pileup contribution) and partially pileup corrected secondary rest from MC." << endl;
+            CorrectGammaEffiResolCocktail(histoGammaCorrEffiReso_PileUp_Pt,
+                                          histoGammaSecGammaFromX_Cocktail_Raw_Pt,      // cocktail spectra are from fully corrected, i.e. don't contain pileup contribution
+                                          histoSecondaryGammaRestSpecPtPileUp,          // conv. gamma from data after pileup corr. times frac. of secondaries rest (w/o pileup corr.)
+                                          histoGammaTruePurity_PileUp_Pt,
+                                          histoGammaConvProb_MCPt,
+                                          histoGammaPrimaryRecoEff_PileUp_Pt,
+                                          deltaEta, scaling, nEvt
+                                          );
         }
         
         DrawGammaSetMarker(histoGammaCorrEffiReso_PileUp_Pt, 20, 1.0, kMagenta, kMagenta);
@@ -2140,10 +2160,10 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         // copy raw inc gamma spectrum after pure data driven pileup correction,
         // - secondary contamination, 
         // - purity, 
-        // - conversion probability 
         // - reco effi (vs rec pt with sec correction)
-        //****************************************************************************************** 
-        histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt    = (TH1D*)histoESDConvGammaPtPileUp->Clone("CorrGammaSpecPurityMinusSecPileUpNoMCUpdate");
+        // - conversion probability
+        //******************************************************************************************
+        histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt      = (TH1D*)histoESDConvGammaPtPileUp->Clone("CorrGammaSpecPurityMinusSecPileUpNoMCUpdate");
         
         if (!hasCocktailInput) {
             CorrectGammaEffiResol(  histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt,
@@ -2156,8 +2176,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                                  );
         } else {
             CorrectGammaEffiResolCocktail( histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt, 
-                                           histoGammaSecGammaFromX_Cocktail_Raw_Pt, 
-                                           histoGammaTrueSecCocktailGammaFromX_Pt[3], 
+                                           histoGammaSecGammaFromX_Cocktail_Raw_Pt,     // cocktail spectra are from fully corrected, i.e. don't contain pileup contribution
+                                           histoGammaTrueSecCocktailGammaFromX_Pt[3],
                                            histoGammaTruePurity_Pt, 
                                            histoGammaConvProb_MCPt, 
                                            histoGammaPrimaryRecoEff_Pt, 
@@ -2586,14 +2606,14 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         PutProcessLabelAndEnergyOnPlot( 0.20, 0.15, 0.035, cent, detectionProcess,"", 42, 0.03);
         
     padAlternateCorrMethodsRatio->cd();
-        TH1D *histoRatioGammaLegacyCorrVsUnfold = NULL;
-        if (doPileUpCorr)
-            histoRatioGammaLegacyCorrVsUnfold = (TH1D*) histoGammaCorrEffiReso_PileUp_Pt->Clone("histoRatioGammaLegacyCorrVsUnfold");
-        else     
-            histoRatioGammaLegacyCorrVsUnfold = (TH1D*) histoGammaCorrEffiReso_Pt->Clone("histoRatioGammaLegacyCorrVsUnfold");
+
+        TH1D*               histoRatioGammaLegacyCorrVsUnfold   = NULL;
+        if (doPileUpCorr)   histoRatioGammaLegacyCorrVsUnfold   = (TH1D*)histoGammaCorrEffiReso_PileUp_Pt->Clone("histoRatioGammaLegacyCorrVsUnfold");
+        else                histoRatioGammaLegacyCorrVsUnfold   = (TH1D*)histoGammaCorrEffiReso_Pt->Clone("histoRatioGammaLegacyCorrVsUnfold");
         histoRatioGammaLegacyCorrVsUnfold->Divide(histoRatioGammaLegacyCorrVsUnfold,histoGammaCorrUnfoldReso_Pt,1,1,"");
         histoRatioGammaLegacyCorrVsUnfold->GetYaxis()->SetRangeUser(0.88,1.12);
-        SetStyleHistoTH1ForGraphs(  histoRatioGammaLegacyCorrVsUnfold, "#it{p}_{T} (GeV/#it{c})","#frac{#gamma corr legacy}{#gamma corr unfold}" , 0.10, 0.12,  
+
+        SetStyleHistoTH1ForGraphs(  histoRatioGammaLegacyCorrVsUnfold, "#it{p}_{T} (GeV/#it{c})","#frac{#gamma corr legacy}{#gamma corr unfold}" , 0.10, 0.12,
                                     0.10, 0.12,  0.85, 0.6, 510, 505);
         
         DrawGammaSetMarker(histoRatioGammaLegacyCorrVsUnfold, 24, 1.0, kAzure+7,  kAzure+7);
@@ -2679,89 +2699,93 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         //________________________ writing MC quantities to file _____________________________
         // input spectrum corrected for deta, dPhi, Nevt
-        if (histoMCGammaSpec_MCPt)                              histoMCGammaSpec_MCPt->Write("GammaSpecMC", TObject::kOverwrite);
-        if (histoSecondaryGammaFromXSpecPt[3])                  histoSecondaryGammaFromXSpecPt[3]->Write("histoSecondaryGammaFromXSpecPtRest", TObject::kOverwrite);
-        if (histoGammaTrueSecCocktailGammaFromX_Pt[3])          histoGammaTrueSecCocktailGammaFromX_Pt[3]->Write("histoGammaTrueSecCocktailGammaRest_Pt", TObject::kOverwrite);
-    
+        if (histoMCGammaSpec_MCPt)                              histoMCGammaSpec_MCPt->Write(                       "GammaSpecMC",                                  TObject::kOverwrite);
+        if (histoSecondaryGammaFromXSpecPt[3])                  histoSecondaryGammaFromXSpecPt[3]->Write(           "histoSecondaryGammaFromXSpecPtRest",           TObject::kOverwrite);
+        if (histoGammaTrueSecCocktailGammaFromX_Pt[3])          histoGammaTrueSecCocktailGammaFromX_Pt[3]->Write(   "histoGammaTrueSecCocktailGammaRest_Pt",        TObject::kOverwrite);
         // reconstructed MC gamma spectrum corrected deta, dPhi, Nevt
-        if (histoMCrecGammaCorr_Pt)                             histoMCrecGammaCorr_Pt->Write("GammaSpecCorrESDMC", TObject::kOverwrite);
-    
+        if (histoMCrecGammaCorr_Pt)                             histoMCrecGammaCorr_Pt->Write(                      "GammaSpecCorrESDMC",                           TObject::kOverwrite);
         // split in different source (pi0,eta,...)
         for (Int_t i= 0; i< 8; i++)
-            if (histoPhotonSource_MCPt[i])                      histoPhotonSource_MCPt[i]->Write(histoPhotonSource_MCPt[i]->GetName(), TObject::kOverwrite);
-    
+            if (histoPhotonSource_MCPt[i])                      histoPhotonSource_MCPt[i]->Write(                   histoPhotonSource_MCPt[i]->GetName(),           TObject::kOverwrite);
         // pure direct photons
-        if (histoPhotonSource_MCPt[8])                          histoPhotonSource_MCPt[8]->Write("MC_DirectPhoton_Pt", TObject::kOverwrite);
+        if (histoPhotonSource_MCPt[8])                          histoPhotonSource_MCPt[8]->Write(                   "MC_DirectPhoton_Pt",                           TObject::kOverwrite);
         // input spectrum of converted photons corrected for deta, dphi, Nevt
-        if (histoMCGammaConv_MCPt)                              histoMCGammaConv_MCPt->Write("MC_ConvGamma_MCPt", TObject::kOverwrite);
+        if (histoMCGammaConv_MCPt)                              histoMCGammaConv_MCPt->Write(                       "MC_ConvGamma_MCPt",                            TObject::kOverwrite);
         // reconstructed MC true photons corrected for deta, dphi, Nevt
-        if (histoGammaTrueConv_Pt)                              histoGammaTrueConv_Pt->Write("TrueConvGamma_Pt", TObject::kOverwrite);
-        if (histoGammaTrueCalo_Pt)                              histoGammaTrueCalo_Pt->Write("TrueCaloGamma_Pt", TObject::kOverwrite);
+        if (histoGammaTrueConv_Pt)                              histoGammaTrueConv_Pt->Write(                       "TrueConvGamma_Pt",                             TObject::kOverwrite);
+        if (histoGammaTrueCalo_Pt)                              histoGammaTrueCalo_Pt->Write(                       "TrueCaloGamma_Pt",                             TObject::kOverwrite);
         // recontructed MC photon candidates, uncorrected
-        if (histoMCrecGamma_Pt)                                 histoMCrecGamma_Pt->Write("MCrec_ConvGamma_Pt", TObject::kOverwrite);
-        if (histoMCrecGammaCalo_Pt)                             histoMCrecGammaCalo_Pt->Write("MCrec_CaloGamma_Pt", TObject::kOverwrite);
-
+        if (histoMCrecGamma_Pt)                                 histoMCrecGamma_Pt->Write(                          "MCrec_ConvGamma_Pt",                           TObject::kOverwrite);
+        if (histoMCrecGammaCalo_Pt)                             histoMCrecGammaCalo_Pt->Write(                      "MCrec_CaloGamma_Pt",                           TObject::kOverwrite);
         // summed reconstructed BG in MC
-        if (histoMCrecBackground_Pt)                            histoMCrecBackground_Pt->Write("MCrec_Background", TObject::kOverwrite);
+        if (histoMCrecBackground_Pt)                            histoMCrecBackground_Pt->Write(                     "MCrec_Background",                             TObject::kOverwrite);
         // combinatorial histos split
         if (histoCombinatorialSpecies_Pt)
-            for (Int_t i = 0;i<17;i++)                          histoCombinatorialSpecies_Pt[i]->Write(histoCombinatorialSpecies_Pt[i]->GetName(), TObject::kOverwrite);
-
+            for (Int_t i = 0;i<17;i++)                          histoCombinatorialSpecies_Pt[i]->Write(             histoCombinatorialSpecies_Pt[i]->GetName(),     TObject::kOverwrite);
         if (histoCombinatorialSpeciesCalo_Pt)
-            for (Int_t i=0; i<11; i++)                          histoCombinatorialSpeciesCalo_Pt[i]->Write(histoCombinatorialSpeciesCalo_Pt[i]->GetName(), TObject::kOverwrite);
+            for (Int_t i=0; i<11; i++)                          histoCombinatorialSpeciesCalo_Pt[i]->Write(         histoCombinatorialSpeciesCalo_Pt[i]->GetName(), TObject::kOverwrite);
 
     
         //_________________________ writing secondary correction factors to file _________________________
         for (Int_t k = 0; k < 3; k++){
-            if (histoGammaSecFromXRecoEff_MCPt[k])                  histoGammaSecFromXRecoEff_MCPt[k]->Write(histoGammaSecFromXRecoEff_MCPt[k]->GetName(), TObject::kOverwrite);
-            if (histoGammaSecFromXRecoEff_MCPt_OrBin[k])             histoGammaSecFromXRecoEff_MCPt_OrBin[k]->Write(histoGammaSecFromXRecoEff_MCPt_OrBin[k]->GetName(), TObject::kOverwrite);
-            if (histoGammaSecFromXRecoEff_RecPt[k])                 histoGammaSecFromXRecoEff_RecPt[k]->Write(histoGammaSecFromXRecoEff_RecPt[k]->GetName(), TObject::kOverwrite);
-            if (histoGammaSecFromXRecoEff_RecPt_OrBin[k])            histoGammaSecFromXRecoEff_RecPt_OrBin[k]->Write(histoGammaSecFromXRecoEff_RecPt_OrBin[k]->GetName(), TObject::kOverwrite);
-            if (histoGammaSecondaryFromXConvProb_MCPt[k])           histoGammaSecondaryFromXConvProb_MCPt[k]->Write(histoGammaSecondaryFromXConvProb_MCPt[k]->GetName(), TObject::kOverwrite);
-            if (histoGammaSecondaryFromXConvProb_MCPt_OrBin[k])      histoGammaSecondaryFromXConvProb_MCPt_OrBin[k]->Write(histoGammaSecondaryFromXConvProb_MCPt_OrBin[k]->GetName(), TObject::kOverwrite);
-            if (histoGammaSecGammaFromX_Cocktail_Raw_Pt[k])         histoGammaSecGammaFromX_Cocktail_Raw_Pt[k]->Write(histoGammaSecGammaFromX_Cocktail_Raw_Pt[k]->GetName(), TObject::kOverwrite);
-            if (histoGammaSecGammaFromX_Cocktail_Raw_Pt_OrBin[k])    histoGammaSecGammaFromX_Cocktail_Raw_Pt_OrBin[k]->Write(histoGammaSecGammaFromX_Cocktail_Raw_Pt_OrBin[k]->GetName(), TObject::kOverwrite);
-            if (histoGammaTrueSecCocktailGammaFromX_Pt[k])          histoGammaTrueSecCocktailGammaFromX_Pt[k]->Write(Form("histoGammaTrueSecCocktailGammaFromXFrom%s_Pt", nameSecondaries[k].Data()),
-                                                                                                                     TObject::kOverwrite);
-            if (histoSecondaryGammaFromXSpecPt[k])                  histoSecondaryGammaFromXSpecPt[k]->Write(Form("histoSecondaryGammaFromXFrom%sSpecPt", nameSecondaries[k].Data()), TObject::kOverwrite);
+            if (histoGammaSecFromXRecoEff_MCPt[k])                  histoGammaSecFromXRecoEff_MCPt[k]->Write(               histoGammaSecFromXRecoEff_MCPt[k]->GetName(),
+                                                                                                                            TObject::kOverwrite);
+            if (histoGammaSecFromXRecoEff_MCPt_OrBin[k])            histoGammaSecFromXRecoEff_MCPt_OrBin[k]->Write(         histoGammaSecFromXRecoEff_MCPt_OrBin[k]->GetName(),
+                                                                                                                            TObject::kOverwrite);
+            if (histoGammaSecFromXRecoEff_RecPt[k])                 histoGammaSecFromXRecoEff_RecPt[k]->Write(              histoGammaSecFromXRecoEff_RecPt[k]->GetName(),
+                                                                                                                            TObject::kOverwrite);
+            if (histoGammaSecFromXRecoEff_RecPt_OrBin[k])           histoGammaSecFromXRecoEff_RecPt_OrBin[k]->Write(        histoGammaSecFromXRecoEff_RecPt_OrBin[k]->GetName(),
+                                                                                                                            TObject::kOverwrite);
+            if (histoGammaSecondaryFromXConvProb_MCPt[k])           histoGammaSecondaryFromXConvProb_MCPt[k]->Write(        histoGammaSecondaryFromXConvProb_MCPt[k]->GetName(),
+                                                                                                                            TObject::kOverwrite);
+            if (histoGammaSecondaryFromXConvProb_MCPt_OrBin[k])     histoGammaSecondaryFromXConvProb_MCPt_OrBin[k]->Write(  histoGammaSecondaryFromXConvProb_MCPt_OrBin[k]->GetName(),
+                                                                                                                            TObject::kOverwrite);
+            if (histoGammaSecGammaFromX_Cocktail_Raw_Pt[k])         histoGammaSecGammaFromX_Cocktail_Raw_Pt[k]->Write(      histoGammaSecGammaFromX_Cocktail_Raw_Pt[k]->GetName(),
+                                                                                                                            TObject::kOverwrite);
+            if (histoGammaSecGammaFromX_Cocktail_Raw_Pt_OrBin[k])   histoGammaSecGammaFromX_Cocktail_Raw_Pt_OrBin[k]->Write(histoGammaSecGammaFromX_Cocktail_Raw_Pt_OrBin[k]->GetName(),
+                                                                                                                            TObject::kOverwrite);
+            if (histoGammaTrueSecCocktailGammaFromX_Pt[k])          histoGammaTrueSecCocktailGammaFromX_Pt[k]->Write(       Form("histoGammaTrueSecCocktailGammaFromXFrom%s_Pt", nameSecondaries[k].Data()),
+                                                                                                                            TObject::kOverwrite);
+            if (histoSecondaryGammaFromXSpecPt[k])                  histoSecondaryGammaFromXSpecPt[k]->Write(               Form("histoSecondaryGammaFromXFrom%sSpecPt", nameSecondaries[k].Data()),
+                                                                                                                            TObject::kOverwrite);
         }
         
         //_________________________ writing correction factors to file _________________________
         // photon purity without secondary subtraction
-        if (histoGammaPurity_Pt)                                histoGammaPurity_Pt->Write("GammaPurityWSec_Pt", TObject::kOverwrite);
-        if (histoGammaCaloPurity_Pt)                            histoGammaCaloPurity_Pt->Write("histoGammaCaloPurityWSec_Pt", TObject::kOverwrite);
+        if (histoGammaPurity_Pt)                                histoGammaPurity_Pt->Write(                 "GammaPurityWSec_Pt",                   TObject::kOverwrite);
+        if (histoGammaCaloPurity_Pt)                            histoGammaCaloPurity_Pt->Write(             "histoGammaCaloPurityWSec_Pt",          TObject::kOverwrite);
         // photon purity with secondary subtraction
-        if (histoGammaTruePurity_Pt)                            histoGammaTruePurity_Pt->Write("GammaPurityWOSec_Pt", TObject::kOverwrite);
-        if (histoGammaCaloTruePurity_Pt)                        histoGammaCaloTruePurity_Pt->Write("GammaCaloPurityWOSec_Pt", TObject::kOverwrite);
+        if (histoGammaTruePurity_Pt)                            histoGammaTruePurity_Pt->Write(             "GammaPurityWOSec_Pt",                  TObject::kOverwrite);
+        if (histoGammaCaloTruePurity_Pt)                        histoGammaCaloTruePurity_Pt->Write(         "GammaCaloPurityWOSec_Pt",              TObject::kOverwrite);
         // photon reconstruction efficiency including resolution correction
-        if (histoGammaPrimaryRecoEff_Pt)                        histoGammaPrimaryRecoEff_Pt->Write("GammaRecoEff_WithResolCorr_Pt", TObject::kOverwrite);
-        if (histoGammaCaloPrimaryRecoEff_Pt)                    histoGammaCaloPrimaryRecoEff_Pt->Write("GammaCaloRecoEff_WithResolCorr_Pt", TObject::kOverwrite);
+        if (histoGammaPrimaryRecoEff_Pt)                        histoGammaPrimaryRecoEff_Pt->Write(         "GammaRecoEff_WithResolCorr_Pt",        TObject::kOverwrite);
+        if (histoGammaCaloPrimaryRecoEff_Pt)                    histoGammaCaloPrimaryRecoEff_Pt->Write(     "GammaCaloRecoEff_WithResolCorr_Pt",    TObject::kOverwrite);
         // photon reconstruction efficiency without resolution correction
-        if (histoGammaPrimaryRecoEff_MCPt)                      histoGammaPrimaryRecoEff_MCPt->Write("GammaRecoEff_MCPt", TObject::kOverwrite);
-        if (histoGammaCaloPrimaryRecoEff_MCPt)                  histoGammaCaloPrimaryRecoEff_MCPt->Write("GammaCaloRecoEff_MCPt", TObject::kOverwrite);
+        if (histoGammaPrimaryRecoEff_MCPt)                      histoGammaPrimaryRecoEff_MCPt->Write(       "GammaRecoEff_MCPt",                    TObject::kOverwrite);
+        if (histoGammaCaloPrimaryRecoEff_MCPt)                  histoGammaCaloPrimaryRecoEff_MCPt->Write(   "GammaCaloRecoEff_MCPt",                TObject::kOverwrite);
         // photon conversion probability
-        if (histoGammaConvProb_MCPt)                            histoGammaConvProb_MCPt->Write("GammaConvProb_Pt", TObject::kOverwrite);
+        if (histoGammaConvProb_MCPt)                            histoGammaConvProb_MCPt->Write(             "GammaConvProb_Pt",                     TObject::kOverwrite);
         // resolution correction in case of unfolding
-        if (histoGammaResolCorrUnfold_Pt)                       histoGammaResolCorrUnfold_Pt->Write("GammaResolCorrUnfold_Pt", TObject::kOverwrite);
+        if (histoGammaResolCorrUnfold_Pt)                       histoGammaResolCorrUnfold_Pt->Write(        "GammaResolCorrUnfold_Pt",              TObject::kOverwrite);
         // photon correction factors (conv Prob, efficiency incl. resolution correction)
-        if (histoGammaCorrFac_Pt)                               histoGammaCorrFac_Pt->Write("GammaCorrFac_Pt", TObject::kOverwrite);
+        if (histoGammaCorrFac_Pt)                               histoGammaCorrFac_Pt->Write(                "GammaCorrFac_Pt",                      TObject::kOverwrite);
 
         // ________________________ writing data quantities to file
         // uncorrected spectrum (scaled by 1/Nevt)
-        if (histoGammaRawSpectrum_Pt)                           histoGammaRawSpectrum_Pt->Write("GammaRaw_Pt", TObject::kOverwrite);
+        if (histoGammaRawSpectrum_Pt)                           histoGammaRawSpectrum_Pt->Write(            "GammaRaw_Pt",                  TObject::kOverwrite);
         // corrected spectrum (legacy corrections: purity, effi incl resolution correction, secondaries, conv prob, plus trivial factors  )
-        if (histoGammaCorrEffiReso_Pt)                          histoGammaCorrEffiReso_Pt->Write("GammaCorrEffiResol_Pt", TObject::kOverwrite);
+        if (histoGammaCorrEffiReso_Pt)                          histoGammaCorrEffiReso_Pt->Write(           "GammaCorrEffiResol_Pt",        TObject::kOverwrite);
         // corrected spectrum (unfolding corrections: purity, secondaries, unfolding resolution correction, effi without unfolding corr, conv prob, plus trivial factors )
-        if (histoGammaCorrUnfoldReso_Pt)                        histoGammaCorrUnfoldReso_Pt->Write("GammaCorrUnfold_Pt", TObject::kOverwrite);
+        if (histoGammaCorrUnfoldReso_Pt)                        histoGammaCorrUnfoldReso_Pt->Write(         "GammaCorrUnfold_Pt",           TObject::kOverwrite);
         if(doPileUpCorr){
             // pileup correction factor
-            if (histoPileUpCorrectionFactor_Pt)                    histoPileUpCorrectionFactor_Pt->Write("PileUpCorrectionFactor", TObject::kOverwrite);
+            if (histoPileUpCorrectionFactor_Pt)                 histoPileUpCorrectionFactor_Pt->Write(      "PileUpCorrectionFactor",       TObject::kOverwrite);
             // same as histoGammaCorrEffiReso_Pt with additional pileup correction
-            if (histoGammaCorrEffiReso_PileUp_Pt)               histoGammaCorrEffiReso_PileUp_Pt->Write("GammaCorrEffiResolPileup_Pt", TObject::kOverwrite);
+            if (histoGammaCorrEffiReso_PileUp_Pt)               histoGammaCorrEffiReso_PileUp_Pt->Write(    "GammaCorrEffiResolPileup_Pt",  TObject::kOverwrite);
             // -> original binning
-            if (histoPileUpCorrectionFactor_Pt_OrBin)               histoPileUpCorrectionFactor_Pt_OrBin->Write("PileUpCorrectionFactorOrBin",  TObject::kOverwrite);
-            if (histoRatioWithWithoutPileUp)                    histoRatioWithWithoutPileUp->Write(     "RatioWithWithoutPileUp",       TObject::kOverwrite);
-            if (histoRatioWithWithoutPileUpFit)                 histoRatioWithWithoutPileUpFit->Write(  "RatioWithWithoutPileUpFit",    TObject::kOverwrite);
+            if (histoPileUpCorrectionFactor_Pt_OrBin)           histoPileUpCorrectionFactor_Pt_OrBin->Write("PileUpCorrectionFactorOrBin",  TObject::kOverwrite);
+            if (histoRatioWithWithoutPileUp)                    histoRatioWithWithoutPileUp->Write(         "RatioWithWithoutPileUp",       TObject::kOverwrite);
+            if (histoRatioWithWithoutPileUpFit)                 histoRatioWithWithoutPileUpFit->Write(      "RatioWithWithoutPileUpFit",    TObject::kOverwrite);
         }
         
     fileCorrectedOutput->Close();
