@@ -44,6 +44,8 @@
                                                                             "Lambda",   "Muon", "K0l",      "Rest", "All"
                                                                         };
 
+    TString     fSecondaries[4]                                         = {"K0s", "Lambda", "K0l", "Rest"};
+
     // exemplary pt bins for DCAz distributions
     Int_t       exemplaryLowPtBin                                       = 1;
     Int_t       exemplaryHighPtBin                                      = 15;
@@ -54,8 +56,6 @@
 
     // binning
     TH1D*       fDeltaPtDummy                                           = NULL;
-
-    TString     fSecondaries[4]                                         = {"K0s", "Lambda", "K0l", "Rest"};
 
     //*****************************************************************************************************
     //******************** Histograms for conversion analysis *********************************************
@@ -149,9 +149,9 @@
     TH2F**      fTrueSecondaryPhotonPtDCAz                                                          = NULL;
     TH1D***     fTrueSecondaryGammaPtDCAzBins                                                       = NULL;
     TH1D***     fTrueSecondarySubGammaPtDCAzBins                                                    = NULL;
-    TH2F**      fTrueSecondaryPhotonFromXFromK0sPtDCAz                                              = NULL;
-    TH1D***     fTrueSecondaryGammaFromXFromK0sPtDCAzBins                                           = NULL;
-    TH1D***     fTrueSecondarySubGammaFromXFromK0sPtDCAzBins                                        = NULL;
+    TH2F**      fTrueSecondaryPhotonFromXPtDCAz[4]                                                  = {NULL, NULL, NULL, NULL};
+    TH1D***     fTrueSecondaryGammaFromXPtDCAzBins[4]                                               = {NULL, NULL, NULL, NULL};
+    TH1D***     fTrueSecondarySubGammaFromXPtDCAzBins[4]                                            = {NULL, NULL, NULL, NULL};
     TH1D***     fTrueBackgroundPtDCAzBins                                                           = NULL;
     TH1D***     fTrueGammaPtDCAzBins                                                                = NULL;
     TH1D***     fTrueSubGammaPtDCAzBins                                                             = NULL;
@@ -173,8 +173,8 @@
     TH1D*       fTruePrimaryConvGammaPtPileUp                                                       = NULL;
     TH1D*       fTrueSecondaryConvGammaPtPileUpAllCat                                               = NULL;
     TH1D*       fTrueSecondaryConvGammaPtPileUp                                                     = NULL;
-    TH1D*       fTrueSecondaryFromXFromK0sConvGammaPtPileUpAllCat                                   = NULL;
-    TH1D*       fTrueSecondaryFromXFromK0sConvGammaPtPileUp                                         = NULL;
+    TH1D*       fHistoGammaTrueSecondaryConvGammaFromXPtPileUpAllCat[4]                             = {NULL, NULL, NULL, NULL};
+    TH1D*       fHistoGammaTrueSecondaryConvGammaFromXPtPileUp[4]                                   = {NULL, NULL, NULL, NULL};
 
     TH1D*       fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat                            = NULL;
     TH1D*       fMCrecGammaPtRatioWithWithoutPileUpDCAzDistBinning                                  = NULL;
@@ -191,10 +191,10 @@
     TF1*        fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat             = NULL;
     TF1*        fTrueSecondaryConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning                   = NULL;
 
-    TH1D*       fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat    = NULL;
-    TH1D*       fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpDCAzDistBinning          = NULL;
-    TF1*        fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat = NULL;
-    TF1*        fTrueSecondaryFromXFromK0sConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning       = NULL;
+    TH1D*       fTrueSecondaryFromXConvGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[4]        = {NULL, NULL, NULL, NULL};
+    TH1D*       fTrueSecondaryFromXConvGammaPtRatioWithWithoutPileUpDCAzDistBinning[4]              = {NULL, NULL, NULL, NULL};
+    TF1*        fTrueSecondaryFromXConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat[4]     = {NULL, NULL, NULL, NULL};
+    TF1*        fTrueSecondaryFromXConvGammaPtRatioWithWithoutPileUpFitDCAzDistBinning[4]           = {NULL, NULL, NULL, NULL};
 
     TH1D**      fESDGammaPileUpCorrFactorAllCat                                                     = NULL;
     TH1D**      fESDGammaPileUpCorrFactor                                                           = NULL;
@@ -204,11 +204,11 @@
     TH1D*       fTruePrimaryConvGammaPileUpCorrFactor                                               = NULL;
     TH1D*       fTrueSecondaryConvGammaPileUpCorrFactorAllCat                                       = NULL;
     TH1D*       fTrueSecondaryConvGammaPileUpCorrFactor                                             = NULL;
-    TH1D*       fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactorAllCat                           = NULL;
-    TH1D*       fTrueSecondaryFromXFromK0sConvGammaPileUpCorrFactor                                 = NULL;
+    TH1D*       fTrueSecondaryFromXConvGammaPileUpCorrFactorAllCat[4]                               = {NULL, NULL, NULL, NULL};
+    TH1D*       fTrueSecondaryFromXConvGammaPileUpCorrFactor[4]                                     = {NULL, NULL, NULL, NULL};
 
     TH1D*       fHistoFracAllGammaToSecPileUp                                                       = NULL;
-    TH1D*       fHistoFracAllGammaToSecFromXFromK0sPileUp                                           = NULL;
+    TH1D*       fHistoFracAllGammaToSecFromXPileUp[4]                                               = { NULL, NULL, NULL, NULL };
     TH1D*       fHistoGammaMCPurityPileUp                                                           = NULL;
     TH1D*       fHistoGammaMCrecPrimaryConvPtPileUp                                                 = NULL;
     TH1D*       fHistoGammaMCTruePurityPileUp                                                       = NULL;

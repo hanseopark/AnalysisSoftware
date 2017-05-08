@@ -10,8 +10,7 @@
 // - convert to inv yield (scale by bin 1/bin center)
 //*********************************************************************************************************
 void CorrectGammaEffiResol(TH1D*       histoGammaCorr,
-                           TH1D*       histoAllSec,
-                           TH1D*       histoK0sSec,
+                           TH1D**      histoSecGamma,
                            TH1D*       histoPurity,
                            TH1D*       histoConvProb,
                            TH1D*       histoRecoEff,
@@ -22,8 +21,9 @@ void CorrectGammaEffiResol(TH1D*       histoGammaCorr,
     // scale with 1/nEvt as secondaries are normalized per event
     histoGammaCorr->Scale(1./nEvt);
     // subtract secondary gammas
-    histoGammaCorr->Add(histoAllSec,-1);
-    histoGammaCorr->Add(histoK0sSec,-1);
+    for (Int_t i=0; i<4; i++) {
+        if (histoSecGamma[i]) histoGammaCorr->Add(histoSecGamma[i],-1);
+    }
     // multiply with purity for primary particles
     histoGammaCorr->Multiply(histoGammaCorr,histoPurity,1.,1.,"");
     // divide by reconstruction efficiency
@@ -101,8 +101,7 @@ void CorrectGammaEffiResolCocktail(TH1D*       histoGammaCorr,
 // - convert to inv yield (scale by bin 1/bin center)
 //*********************************************************************************************************
 void CorrectGammaEffiResol(TH1D*       histoGammaCorr,
-                           TH1D*       histoAllSec,
-                           TH1D*       histoK0sSec,
+                           TH1D**      histoSecGamma,
                            TH1D*       histoPurity,
                            TH1D*       histoRecoEff,
                            Double_t    deltaEta,
@@ -112,8 +111,9 @@ void CorrectGammaEffiResol(TH1D*       histoGammaCorr,
     // scale with 1/nEvt as secondaries are normalized per event
     histoGammaCorr->Scale(1./nEvt);
     // subtract secondary gammas
-    histoGammaCorr->Add(histoAllSec,-1);
-    histoGammaCorr->Add(histoK0sSec,-1);
+    for (Int_t i=0; i<4; i++) {
+        if (histoSecGamma[i]) histoGammaCorr->Add(histoSecGamma[i],-1);
+    }
     // multiply with purity for primary particles
     histoGammaCorr->Multiply(histoGammaCorr,histoPurity,1.,1.,"");
     // divide by reconstruction efficiency
@@ -179,14 +179,14 @@ void CorrectGammaEffiResolCocktail(TH1D*       histoGammaCorr,
 // - subtract secodary gammas (MC approach)
 // - take out impurities
 //*********************************************************************************************************
-void CorrectGammaSecAndPurity(TH1D* histoGammaCorr,
-                              TH1D* histoSecGamma,
-                              TH1D* histoSecGammaAddK0s,
-                              TH1D* histoPurity
+void CorrectGammaSecAndPurity(TH1D*     histoGammaCorr,
+                              TH1D**    histoSecGamma,
+                              TH1D*     histoPurity
                               ){
     histoGammaCorr->Sumw2();
-    histoGammaCorr->Add(histoSecGamma,-1);
-    histoGammaCorr->Add(histoSecGammaAddK0s,-1);
+    for (Int_t k = 0; k < 4; k++){
+        if (histoSecGamma[k]) histoGammaCorr->Add(histoSecGamma[k],-1);
+    }
     histoGammaCorr->Multiply(histoGammaCorr,histoPurity,1.,1.,"");
 }
 
