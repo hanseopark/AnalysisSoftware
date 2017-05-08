@@ -734,7 +734,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
     Bool_t doInclusiveFitRatio                  = kTRUE;
     if (doInclusiveFitRatio){
         for (Int_t k = 0; k < 6; k++){
-            histoIncRatioFitPurity[k]                  = (TH1D*) histoIncRatioPurityTrueEff[k]->Clone(Form("histoIncRatioFitPurity%s",nameIntRanges[k].Data()));
+            histoIncRatioFitPurity[k]           = (TH1D*) histoIncRatioPurityTrueEff[k]->Clone(Form("histoIncRatioFitPurity%s",nameIntRanges[k].Data()));
             // Set datapoints in histoIncRatioFitPurity to the fit values from fitPi0YieldC (Tsallis fit)
             for(Int_t bin = 1; bin<histoIncRatioFitPurity[k]->GetNbinsX()+1; bin++){
                 histoIncRatioFitPurity[k]->SetBinContent(bin,fitPi0YieldC->Eval(histoIncRatioPurityTrueEff[k]->GetBinCenter(bin))); //nschmidt2016 changed to hagedorn
@@ -742,7 +742,13 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
             }
             histoIncRatioFitPurity[k]->Divide( histoGammaSpecCorrPurity, histoIncRatioFitPurity[k]);
         }
-        
+
+        if (doSysErr){
+            graphInclRatioFitSysErr             = NULL;
+            graphInclRatioFitSysErr             = CalculateSysErrFromRelSysHistoWithPtBins( histoIncRatioFitPurity[0], "InclRatioFitSysError", 
+                                                                                             relSystErrorInclRatioDown, relSystErrorInclRatioUp, ptSysInclRatio, nPointsInclRatio);
+   
+        }
         DrawGammaSetMarker(histoIncRatioPurityTrueEff[0], 20, 2.0, 1, 1); 
         
         TCanvas* canvasIncRatioFit              = GetAndSetCanvas("canvasIncRatioFit",0.095,0.09,1000,815);
@@ -890,9 +896,9 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         cocktailAllGammaPi0->Divide(cocktailAllGammaRebinned,cocktailPi0Rebinned);
 
         for (Int_t k = 0; k < 6; k++){
-            histoDoubleRatioTrueEffPurity[k]     = (TH1D*) histoIncRatioPurityTrueEff[k]->Clone(Form("DoubleRatioConversionTrueEffPurity%s", nameIntRanges[k].Data()));
+            histoDoubleRatioTrueEffPurity[k]     = (TH1D*) histoIncRatioPurityTrueEff[k]->Clone(Form("DoubleRatioTrueEffPurity%s", nameIntRanges[k].Data()));
             histoDoubleRatioTrueEffPurity[k]->Divide(cocktailAllGammaPi0);
-            histoDoubleRatioFitPi0YieldPurity[k] = (TH1D*) histoIncRatioFitPurity[k]->Clone(Form("DoubleRatioConversionFitPurity%s", nameIntRanges[k].Data()));
+            histoDoubleRatioFitPi0YieldPurity[k] = (TH1D*) histoIncRatioFitPurity[k]->Clone(Form("DoubleRatioFitPurity%s", nameIntRanges[k].Data()));
             histoDoubleRatioFitPi0YieldPurity[k]->Divide(cocktailAllGammaPi0);
         }    
         if (doSysErr){
@@ -1235,19 +1241,20 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
             if(histoDoubleRatioTrueEffPurity[k])    histoDoubleRatioTrueEffPurity[k]->Write(        histoDoubleRatioTrueEffPurity[k]->GetName(),        TObject::kOverwrite);
             if(histoDoubleRatioFitPi0YieldPurity[k])histoDoubleRatioFitPi0YieldPurity[k]->Write(    histoDoubleRatioFitPi0YieldPurity[k]->GetName(),    TObject::kOverwrite);
         }    
-        
-        // systematics
-        if (graphGammaYieldSysErr)      graphGammaYieldSysErr->Write(       Form("%s_SystErr", histoGammaSpecCorrPurity->GetName()),                TObject::kOverwrite);
-        if (graphInclRatioSysErr)       graphInclRatioSysErr->Write(        Form("%s_SystErr", histoIncRatioPurityTrueEff[0]->GetName()),           TObject::kOverwrite);
-        if (graphDoubleRatioSysErr)     graphDoubleRatioSysErr->Write(      Form("%s_SystErr", histoDoubleRatioTrueEffPurity[0]->GetName()),        TObject::kOverwrite);
-        if (graphDoubleRatioFitSysErr)  graphDoubleRatioFitSysErr->Write(   Form("%s_SystErr", histoDoubleRatioFitPi0YieldPurity[0]->GetName()),       TObject::kOverwrite);
-        
         // inclusive ratio
         for (Int_t k = 0; k< 6; k++){
             histoIncRatioPurityTrueEff[k]->Write(  histoIncRatioPurityTrueEff[k]->GetName(),  TObject::kOverwrite);
             histoIncRatioFitPurity[k]->Write(      histoIncRatioFitPurity[k]->GetName(),      TObject::kOverwrite);
         }    
         histoMCIncRatio->Write(             histoMCIncRatio->GetName(),             TObject::kOverwrite);
+        
+        // systematics
+        if (graphGammaYieldSysErr)      graphGammaYieldSysErr->Write(       "histoGammaSpecCorrPurity_SystErr",                                     TObject::kOverwrite);
+        if (graphInclRatioSysErr)       graphInclRatioSysErr->Write(        Form("%s_SystErr", histoIncRatioPurityTrueEff[0]->GetName()),           TObject::kOverwrite);
+        if (graphInclRatioFitSysErr)    graphInclRatioFitSysErr->Write(     Form("%s_SystErr", histoIncRatioFitPurity[0]->GetName()),               TObject::kOverwrite);
+        if (graphDoubleRatioSysErr)     graphDoubleRatioSysErr->Write(      Form("%s_SystErr", histoDoubleRatioTrueEffPurity[0]->GetName()),        TObject::kOverwrite);
+        if (graphDoubleRatioFitSysErr)  graphDoubleRatioFitSysErr->Write(   Form("%s_SystErr", histoDoubleRatioFitPi0YieldPurity[0]->GetName()),    TObject::kOverwrite);
+        
         
 
         // cocktail
@@ -1262,7 +1269,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
             graphFragmentationPhotonNLO->Write( "graphFragmentationPhotonNLO",  TObject::kOverwrite);
             fitNLOFragmentationPhoton->Write(   "fitNLOFragmentationPhoton",    TObject::kOverwrite);
             histoRatioNLODirectPhoton->Write(   "histoRatioNLODirectPhoton",    TObject::kOverwrite);
-            graphNLODoubleRatio->Write(         "graphgraphNLODoubleRatio",     TObject::kOverwrite);
+            graphNLODoubleRatio->Write(         "graphNLODoubleRatio",          TObject::kOverwrite);
             graphNLODirGammaSpectra->Write(     "graphNLODirGamma",             TObject::kOverwrite);
         }
         

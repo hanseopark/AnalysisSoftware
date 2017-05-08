@@ -149,6 +149,7 @@
 
     TGraphAsymmErrors*  graphGammaYieldSysErr                   = NULL;
     TGraphAsymmErrors*  graphInclRatioSysErr                    = NULL;
+    TGraphAsymmErrors*  graphInclRatioFitSysErr                 = NULL;
     TGraphAsymmErrors*  graphDoubleRatioSysErr                  = NULL;
     TGraphAsymmErrors*  graphDoubleRatioFitSysErr               = NULL;
 
