@@ -967,17 +967,20 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TF1*    histoRatioWithWithoutPileUpFit                          = NULL;
     TH1D*   histoPileUpCorrectionFactor_Pt                          = NULL;
     TH1D*   histoPileUpCorrectionFactor_Pt_OrBin                    = NULL;
+    TH1D*   histoPileUpCorrectionFactorNoFit_Pt                     = NULL;
     if(doPileUpCorr && isPCM){
         histoESDConvGammaPtPileUp                                   = (TH1D*)fileUnCorrected->Get("ESD_ConvGamma_Pt_PileUp");
-        histoPileUpCorrectionFactor_Pt                              = (TH1D*)histoESDConvGammaPtPileUp->Clone("PileUpCorrectionFactor");
-        histoPileUpCorrectionFactor_Pt->Divide(histoPileUpCorrectionFactor_Pt,histoESDConvGammaPt,1,1,"B");
-        
-        // fit correction factor to get back to original binning
-        cout << "fitting ratio with to without pileup to extract correction factor in original binning" << endl;
-        
+
+        // ratio raw yield to raw yield after pileup BG subtraction
         histoRatioWithWithoutPileUp                                 = (TH1D*)histoESDConvGammaPt->Clone("histoRatioWithWithoutPileUp");
         histoRatioWithWithoutPileUp->Divide(histoRatioWithWithoutPileUp,histoESDConvGammaPtPileUp,1,1,"B");
         
+        // pileup correction factor directly from ratio to cross check correction factors from fit
+        histoPileUpCorrectionFactorNoFit_Pt                         = (TH1D*)histoESDConvGammaPtPileUp->Clone("PileUpCorrectionFactorNoFit");
+        histoPileUpCorrectionFactorNoFit_Pt->Divide(histoPileUpCorrectionFactorNoFit_Pt,histoESDConvGammaPt,1,1,"B");
+
+        // fit correction factor to get back to original binning
+        cout << "fitting ratio gamma raw yield to raw yield after pileup subtraction to extract the pileup correction factor" << endl;
         Int_t   fitStatus                                           = 0;
                 histoRatioWithWithoutPileUpFit                      = new TF1("histoRatioWithWithoutPileUpFit", "1+[0]/TMath::Power((x-[1]), [2])",
                                                                               histoESDConvGammaPt_OrBin->GetXaxis()->GetXmin(),
@@ -993,11 +996,39 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             // accepting fits, if everything went fine (i.e. fitstatus = 0) of if only improve had problems (i.e. fitstatus >= 1000)
             cout << "fit status: " << fitStatus << endl;
             
-            histoPileUpCorrectionFactor_Pt_OrBin                    = (TH1D*)histoESDConvGammaPt_OrBin->Clone(Form("%s_OriginalBinning", histoPileUpCorrectionFactor_Pt->GetName()));
+            // pileup correction factor in analysis binning
+            histoPileUpCorrectionFactor_Pt                          = (TH1D*)histoESDConvGammaPt->Clone("PileUpCorrectionFactorOrBin");
+            histoPileUpCorrectionFactor_Pt->Reset("ICES");
+            histoPileUpCorrectionFactor_Pt->Sumw2();
+
+            Double_t binContent                                     = 0.;
+            Double_t binError                                       = 0.;
+            for (Int_t i=1; i<histoPileUpCorrectionFactor_Pt->GetNbinsX()+1; i++) {
+                binContent                                          = histoRatioWithWithoutPileUpFit->Integral(histoPileUpCorrectionFactor_Pt->GetXaxis()->GetBinLowEdge(i),
+                                                                                                               histoPileUpCorrectionFactor_Pt->GetXaxis()->GetBinUpEdge(i),
+                                                                                                               histoRatioWithWithoutPileUpFitResult->GetParams()) /
+                                                                                                               histoPileUpCorrectionFactor_Pt->GetBinWidth(i);
+                binError                                            = histoRatioWithWithoutPileUpFit->IntegralError(histoPileUpCorrectionFactor_Pt->GetXaxis()->GetBinLowEdge(i),
+                                                                                                                    histoPileUpCorrectionFactor_Pt->GetXaxis()->GetBinUpEdge(i),
+                                                                                                                    histoRatioWithWithoutPileUpFitResult->GetParams(),
+                                                                                                                    histoRatioWithWithoutPileUpFitResult->GetCovarianceMatrix().GetMatrixArray()) /
+                                                                                                                    histoPileUpCorrectionFactor_Pt->GetBinWidth(i);
+                if (binContent > 0) {
+                    histoPileUpCorrectionFactor_Pt->SetBinContent(i, 1/binContent);
+                    histoPileUpCorrectionFactor_Pt->SetBinError(  i, binError/binContent/binContent);
+                } else {
+                    histoPileUpCorrectionFactor_Pt->SetBinContent(i, 1);
+                    histoPileUpCorrectionFactor_Pt->SetBinError(  i, 0);
+                }
+            }
+
+            // pileup correction factor in original binning
+            histoPileUpCorrectionFactor_Pt_OrBin                    = (TH1D*)histoESDConvGammaPt_OrBin->Clone("PileUpCorrectionFactorOrBin");
             histoPileUpCorrectionFactor_Pt_OrBin->Reset("ICES");
             histoPileUpCorrectionFactor_Pt_OrBin->Sumw2();
-            
-            Double_t binContent, binError;
+
+            binContent                                              = 0.;
+            binError                                                = 0.;
             for (Int_t i=1; i<histoPileUpCorrectionFactor_Pt_OrBin->GetNbinsX()+1; i++) {
                 binContent                                          = histoRatioWithWithoutPileUpFit->Integral(histoPileUpCorrectionFactor_Pt_OrBin->GetXaxis()->GetBinLowEdge(i),
                                                                                                                histoPileUpCorrectionFactor_Pt_OrBin->GetXaxis()->GetBinUpEdge(i),
@@ -1017,7 +1048,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                 }
             }
         } else {
-            cout << "WARNING! Pileup correction factor fit failed, no pileup correction will be applied to unfolded spectra!" << endl;
+            cout << "ERROR! Pileup correction factor fit failed, no pileup correction will be applied!" << endl;
+            doPileUpCorr                                            = NULL;
         }
     }
 
@@ -1080,7 +1112,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                 histoSecondaryGammaFromXSpecPileUpPt[k]             = (TH1D*)histoESDConvGammaPtPileUp->Clone(  Form("SecondaryGammaSpecFromXFrom%sPileUpPt",nameSecondaries[k].Data()));
 
             // overwrite spectra loaded from pure MC if running data
-            if (!isRunMC) histoGammaTrueSecConvGammaFromX_Pt[k]     = (TH1D*)histoESDConvGammaPt->Clone(Form("SecondaryMCGammaSpecFromXFrom%sPt",nameSecondaries[k].Data()));
+            if (!isRunMC) histoGammaTrueSecConvGammaFromX_Pt[k]     = (TH1D*)histoESDConvGammaPt->Clone(        Form("SecondaryMCGammaSpecFromXFrom%sPt",nameSecondaries[k].Data()));
         }
     }
     if (isCalo && !isPCM) {
@@ -1089,7 +1121,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             histoSecondaryGammaFromXSpecPtOrBin[k]                  = (TH1D*)histoESDCaloGammaPt_OrBin->Clone(  Form("SecondaryGammaSpecFromXFrom%sPt",nameSecondaries[k].Data()));
 
             // overwrite spectra loaded from pure MC if running data
-            if (!isRunMC) histoGammaTrueSecCaloGammaFromX_Pt[k]     = (TH1D*)histoESDCaloGammaPt->Clone(Form("SecondaryMCGammaSpecFromXFrom%sPt",nameSecondaries[k].Data()));
+            if (!isRunMC) histoGammaTrueSecCaloGammaFromX_Pt[k]     = (TH1D*)histoESDCaloGammaPt->Clone(        Form("SecondaryMCGammaSpecFromXFrom%sPt",nameSecondaries[k].Data()));
         }
     }
     for (Int_t k = 0; k < 4; k++){
@@ -1147,65 +1179,93 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //******************************************************************************************
     //******************** Pileup correction factor plot ***************************************
     //******************************************************************************************
-    if( doPileUpCorr && isPCM && !isRunMC){
-        TCanvas *canvasPileUpCorrFactor                             = GetAndSetCanvas("canvasPileUpCorrFactor");
+    if( doPileUpCorr && isPCM) {
+        // rebin pileup correction factor used for unfolding correction strand
+        TH1D* histoPileUpCorrectionFactor_PtTemp                    = (TH1D*)histoPileUpCorrectionFactor_Pt_OrBin->Clone("histoPileUpCorrectionFactor_PtTemp");
+        histoPileUpCorrectionFactor_PtTemp                          = RebinTH1D(histoPileUpCorrectionFactor_PtTemp,histoPileUpCorrectionFactor_Pt,kFALSE);
+        histoPileUpCorrectionFactor_PtTemp->SetBinContent( 1, 0);
+        histoPileUpCorrectionFactor_PtTemp->SetBinError(   1, 0);
 
-            DrawGammaSetMarker(histoPileUpCorrectionFactor_Pt, 20, 3, 1, 1);
-            if (histoMCrecGamma_PileUp_Pt)DrawGammaSetMarker(histoPileUpCorrectionFactorMC_Pt, 24, 3, 2, 2);
+        // pileup correction factor plot (rebinned version of factor used in unfolding correction strand)
+        Bool_t includeHistoPileUpCorrectionFactorMC_Pt              = kTRUE;
+        TCanvas* canvasPileUpCorrFactor                             = GetAndSetCanvas("canvasPileUpCorrFactor");
 
-            SetHistogramm(histoPileUpCorrectionFactor_Pt,"#it{p}_{T} (GeV/#it{c})","Correction Factor (%)",0.84,1.02);
-            if (histoMCrecGamma_PileUp_Pt)SetHistogramm(histoPileUpCorrectionFactorMC_Pt,"#it{p}_{T} (GeV/#it{c})","Correction Factor (%)",0.84,1.02);
+        SetHistogramm(histoPileUpCorrectionFactor_PtTemp,"#it{p}_{T} (GeV/#it{c})","Correction Factor (%)",0.84,1.02);
+        DrawGammaSetMarker(histoPileUpCorrectionFactor_PtTemp, 24, 2.0, kBlack, kBlack);
 
-            histoPileUpCorrectionFactor_Pt->DrawCopy("");
-            if (histoMCrecGamma_PileUp_Pt)histoPileUpCorrectionFactorMC_Pt->Draw("same");
-
-            TLegend* legendPileUpCorrFactor                         = GetAndSetLegend(0.2,0.2,2.2,1,cent);
-            legendPileUpCorrFactor->AddEntry(histoPileUpCorrectionFactor_Pt,"Correction Factor Data","lp");
-            if (histoMCrecGamma_PileUp_Pt)legendPileUpCorrFactor->AddEntry(histoPileUpCorrectionFactorMC_Pt,"Correction Factor MC","lp");
-            legendPileUpCorrFactor->Draw();
+        histoPileUpCorrectionFactor_PtTemp->Draw("e1");
+        DrawGammaLines(0., maxPtGamma,1.0, 1.0, 1, kGray+2, 2);
+        histoPileUpCorrectionFactor_PtTemp->Draw("e1,same");
         
-            PutProcessLabelAndEnergyOnPlot( 0.935, 0.25, 0.035, cent, detectionProcess, "", 42, 0.03,"",1,1.25,31);
+        if (includeHistoPileUpCorrectionFactorMC_Pt && !isRunMC) {
+            DrawGammaSetMarker(histoPileUpCorrectionFactorMC_Pt, 24, 2.0, kBlue, kBlue);
+            histoPileUpCorrectionFactorMC_Pt->Draw("e1,same");
             
-        canvasPileUpCorrFactor->SaveAs(Form("%s/%s_PileUpCorrFactor_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
+            TLegend* legendPileUp1                                  = GetAndSetLegend(0.15,0.15,2,1);
+            legendPileUp1->AddEntry(histoPileUpCorrectionFactor_PtTemp,"data","pl");
+            legendPileUp1->AddEntry(histoPileUpCorrectionFactorMC_Pt,"MC","pl");
+            legendPileUp1->Draw("same");
+        }
+
+        PutProcessLabelAndEnergyOnPlot( 0.935, 0.25, 0.035, cent, detectionProcess, "", 42, 0.03,"",1,1.25,31);
+
+        canvasPileUpCorrFactor->SaveAs(Form("%s/%s_%s_PileUpCorrFactor_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
         delete canvasPileUpCorrFactor;
-        
-        Bool_t doPileUpCorrSimplePlot                               = kTRUE;
-        if (doPileUpCorrSimplePlot && !isRunMC) {
-            TCanvas *canvasPileUpCorrFactor2                        = GetAndSetCanvas("canvasPileUpCorrFactor2");
-            
-            SetHistogramm(histoPileUpCorrectionFactor_Pt_OrBin,"#it{p}_{T} (GeV/#it{c})","Correction Factor (%)",0.90,1.02);
-            DrawGammaSetMarker(histoPileUpCorrectionFactor_Pt_OrBin, 24, 1.5, kBlack, kBlack);
-            histoPileUpCorrectionFactor_Pt_OrBin->DrawCopy("");
-            DrawGammaLines(0., histoPileUpCorrectionFactor_Pt_OrBin->GetXaxis()->GetBinUpEdge(histoPileUpCorrectionFactor_Pt_OrBin->GetNbinsX()),1.0, 1.0, 1, kGray+2, 2);
-            histoPileUpCorrectionFactor_Pt_OrBin->DrawCopy("same");
 
-            PutProcessLabelAndEnergyOnPlot( 0.935, 0.25, 0.035, cent, detectionProcess, "", 42, 0.03,"",1,1.25,31);
-            
-            canvasPileUpCorrFactor2->SaveAs(Form("%s/%s_%s_PileUpCorrFactor_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
-            delete canvasPileUpCorrFactor2;
-        }
+        // inverse of pileup correction factor plot with fit
+        TCanvas* canvasInversePileUpCorrFactor                      = GetAndSetCanvas("canvasInversePileUpCorrFactor");
+
+        SetHistogramm(histoRatioWithWithoutPileUp,"#it{p}_{T} (GeV/#it{c})","1 / Correction Factor (%)",0.9,histoRatioWithWithoutPileUp->GetMaximum()*1.1);
+        DrawGammaSetMarker(histoRatioWithWithoutPileUp, 24, 2.0, kBlack, kBlack);
+
+        histoRatioWithWithoutPileUpFit->SetLineColor(kBlue-2);
+        histoRatioWithWithoutPileUpFit->SetLineWidth(2);
+
+        histoRatioWithWithoutPileUp->Draw("e1");
+        DrawGammaLines(0., maxPtGamma,1.0, 1.0, 1, kGray+2, 2);
+        histoRatioWithWithoutPileUp->Draw("e1,same");
+        histoRatioWithWithoutPileUpFit->Draw("same");
         
-        if (histoPileUpCorrectionFactor_Pt_OrBin && !isRunMC) {
-            // rebin pileup correction factor from original binning
-            TH1D* histoPileUpCorrectionFactor_PtTemp                = (TH1D*)histoPileUpCorrectionFactor_Pt_OrBin->Clone("histoPileUpCorrectionFactor_PtTemp");
-            histoPileUpCorrectionFactor_PtTemp                      = RebinTH1D(histoPileUpCorrectionFactor_PtTemp,histoPileUpCorrectionFactor_Pt,kFALSE);
-            histoPileUpCorrectionFactor_PtTemp->SetBinContent( 1, 0);
-            histoPileUpCorrectionFactor_PtTemp->SetBinError(   1, 0);
-            
-            // plot
-            TCanvas *canvasPileUpCorrFactor3                        = GetAndSetCanvas("canvasPileUpCorrFactor3");
-            
-            SetHistogramm(histoPileUpCorrectionFactor_PtTemp,"#it{p}_{T} (GeV/#it{c})","Correction Factor (%)",0.90,1.02);
-            DrawGammaSetMarker(histoPileUpCorrectionFactor_PtTemp, 24, 1.5, kBlack, kBlack);
-            histoPileUpCorrectionFactor_PtTemp->DrawCopy("");
-            DrawGammaLines(0., maxPtGamma,1.0, 1.0, 1, kGray+2, 2);
-            histoPileUpCorrectionFactor_PtTemp->DrawCopy("same");
-            
-            PutProcessLabelAndEnergyOnPlot( 0.935, 0.25, 0.035, cent, detectionProcess, "", 42, 0.03,"",1,1.25,31);
-            
-            canvasPileUpCorrFactor3->SaveAs(Form("%s/%s_%s_PileUpCorrFactorRebinned_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
-            delete canvasPileUpCorrFactor3;
-        }
+        TLegend* legendPileUp2                                      = GetAndSetLegend(0.15,0.15,3,1);
+        legendPileUp2->AddEntry(histoRatioWithWithoutPileUp,    "#gamma_{raw} / #gamma_{raw, pileup sub.}","pl");
+        legendPileUp2->AddEntry(histoRatioWithWithoutPileUpFit, Form("fit, #chi^{2}/ndf = %.2f", histoRatioWithWithoutPileUpFit->GetChisquare() / histoRatioWithWithoutPileUpFit->GetNDF()),"pl");
+        legendPileUp2->Draw("same");
+
+        PutProcessLabelAndEnergyOnPlot( 0.935, 0.25, 0.035, cent, detectionProcess, "", 42, 0.03,"",1,1.25,31);
+
+        canvasInversePileUpCorrFactor->SaveAs(Form("%s/%s_%s_PileUpCorrFactorFit_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
+        delete canvasInversePileUpCorrFactor;
+
+        // pileup correction factor comparison plots
+        TCanvas* canvasPileUpCorrFactorComp                         = GetAndSetCanvas("canvasPileUpCorrFactorComp");
+
+        SetHistogramm(histoPileUpCorrectionFactor_PtTemp,"#it{p}_{T} (GeV/#it{c})","Correction Factor (%)",0.84,1.02);
+        DrawGammaSetMarker(histoPileUpCorrectionFactor_PtTemp,      24, 2.0, kBlack,    kBlack);
+        DrawGammaSetMarker(histoPileUpCorrectionFactor_Pt,          25, 2.0, kBlue-2,   kBlue-2);
+        DrawGammaSetMarker(histoPileUpCorrectionFactorNoFit_Pt,     25, 2.5, kAzure+2,  kAzure+2);
+        DrawGammaSetMarker(histoPileUpCorrectionFactor_Pt_OrBin,    27, 2.5, kRed+2,    kRed+2);
+        DrawGammaSetMarker(histoPileUpCorrectionFactorMC_Pt,        28, 2.5, kOrange+2, kOrange+2);
+
+        histoPileUpCorrectionFactor_PtTemp->Draw("e1");
+        DrawGammaLines(0., maxPtGamma,1.0, 1.0, 1, kGray+2, 2);
+        histoPileUpCorrectionFactor_PtTemp->Draw("e1,same");
+        histoPileUpCorrectionFactor_Pt->Draw("e1,same");
+        histoPileUpCorrectionFactorNoFit_Pt->Draw("e1,same");
+        histoPileUpCorrectionFactor_Pt_OrBin->Draw("e1,same");
+        histoPileUpCorrectionFactorMC_Pt->Draw("e1,same");
+
+        TLegend* legendPileUp3                                      = GetAndSetLegend(0.15,0.15,5,1);
+        legendPileUp3->AddEntry(histoPileUpCorrectionFactorNoFit_Pt,    "from raw gamma ratio",         "pl");
+        legendPileUp3->AddEntry(histoPileUpCorrectionFactor_Pt_OrBin,   "from fit in or. bin.",         "pl");
+        legendPileUp3->AddEntry(histoPileUpCorrectionFactor_PtTemp,     "rebin from fit in or. bin.",   "pl");
+        legendPileUp3->AddEntry(histoPileUpCorrectionFactor_Pt,         "from fit in ana. bin.",        "pl");
+        legendPileUp3->AddEntry(histoPileUpCorrectionFactorMC_Pt,       "MC from raw gamma ratio",      "pl");
+        legendPileUp3->Draw("same");
+
+        PutProcessLabelAndEnergyOnPlot( 0.935, 0.25, 0.035, cent, detectionProcess, "", 42, 0.03,"",1,1.25,31);
+
+        canvasPileUpCorrFactorComp->SaveAs(Form("%s/%s_%s_PileUpCorrFactorComp_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
+        delete canvasPileUpCorrFactorComp;
     }
 
     //**********************************************************************************
@@ -2121,8 +2181,12 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         // - reco effi (vs rec pt with sec correction)
         // - conversion probability
         //******************************************************************************************
-        histoGammaCorrEffiReso_PileUp_Pt                = (TH1D*)histoESDConvGammaPtPileUp->Clone("CorrGammaSpecPurityMinusSecPileUp");
-        
+        histoGammaCorrEffiReso_PileUp_Pt                = (TH1D*)histoESDConvGammaPt->Clone("GammaCorrEffiResolPileup_Pt");
+        histoGammaCorrEffiReso_PileUp_Pt->Multiply(histoPileUpCorrectionFactor_Pt);
+
+        // instead now using correction factor to match unfolding strand
+        //histoGammaCorrEffiReso_PileUp_Pt                = (TH1D*)histoESDConvGammaPtPileUp->Clone("CorrGammaSpecPurityMinusSecPileUp");
+
         if (!hasCocktailInput) {
             CorrectGammaEffiResol(  histoGammaCorrEffiReso_PileUp_Pt,
                                     histoSecondaryGammaFromXSpecPileUpPt,
@@ -2152,8 +2216,12 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         // - reco effi (vs rec pt with sec correction)
         // - conversion probability
         //******************************************************************************************
-        histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt      = (TH1D*)histoESDConvGammaPtPileUp->Clone("CorrGammaSpecPurityMinusSecPileUpNoMCUpdate");
-        
+        histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt      = (TH1D*)histoESDConvGammaPt->Clone("GammaCorrEffiResolPileup_NoMCUpdate_Pt");
+        histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt->Multiply(histoPileUpCorrectionFactor_Pt);
+
+        // instead now using correction factor to match unfolding strand
+        //histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt      = (TH1D*)histoESDConvGammaPtPileUp->Clone("CorrGammaSpecPurityMinusSecPileUpNoMCUpdate");
+
         if (!hasCocktailInput) {
             CorrectGammaEffiResol(  histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt,
                                     histoSecondaryGammaFromXSpecPt,
@@ -2175,7 +2243,6 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         
         DrawGammaSetMarker(histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt, 20, 1.0, kBlue+2, kBlue+2);
         SetHistogramm(histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}");
-        histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt->Draw("same");
     }
 
     //*************************************************************************************************
@@ -2805,14 +2872,15 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         // corrected spectrum (unfolding corrections: purity, secondaries, unfolding resolution correction, effi without unfolding corr, conv prob, plus trivial factors )
         if (histoGammaCorrUnfoldReso_Pt)                        histoGammaCorrUnfoldReso_Pt->Write(         "GammaCorrUnfold_Pt",           TObject::kOverwrite);
         if(doPileUpCorr){
-            // pileup correction factor
-            if (histoPileUpCorrectionFactor_Pt)                 histoPileUpCorrectionFactor_Pt->Write(      "PileUpCorrectionFactor",       TObject::kOverwrite);
             // same as histoGammaCorrEffiReso_Pt with additional pileup correction
-            if (histoGammaCorrEffiReso_PileUp_Pt)               histoGammaCorrEffiReso_PileUp_Pt->Write(    "GammaCorrEffiResolPileup_Pt",  TObject::kOverwrite);
-            // -> original binning
-            if (histoPileUpCorrectionFactor_Pt_OrBin)           histoPileUpCorrectionFactor_Pt_OrBin->Write("PileUpCorrectionFactorOrBin",  TObject::kOverwrite);
-            if (histoRatioWithWithoutPileUp)                    histoRatioWithWithoutPileUp->Write(         "RatioWithWithoutPileUp",       TObject::kOverwrite);
-            if (histoRatioWithWithoutPileUpFit)                 histoRatioWithWithoutPileUpFit->Write(      "RatioWithWithoutPileUpFit",    TObject::kOverwrite);
+            if (histoGammaCorrEffiReso_PileUp_Pt)               histoGammaCorrEffiReso_PileUp_Pt->Write(            "GammaCorrEffiResolPileup_Pt",              TObject::kOverwrite);
+            if (histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt)     histoGammaCorrEffiReso_PileUpNoMCUpdate_Pt->Write(  "GammaCorrEffiResolPileup_NoMCUpdate_Pt",   TObject::kOverwrite);
+            // pileup correction factor
+            if (histoPileUpCorrectionFactor_Pt)                 histoPileUpCorrectionFactor_Pt->Write(              "PileUpCorrectionFactor",                   TObject::kOverwrite);
+            if (histoPileUpCorrectionFactor_Pt_OrBin)           histoPileUpCorrectionFactor_Pt_OrBin->Write(        "PileUpCorrectionFactorOrBin",              TObject::kOverwrite);
+            // ratio raw yield to raw yield after pileup subtraction
+            if (histoRatioWithWithoutPileUp)                    histoRatioWithWithoutPileUp->Write(                 "RatioWithWithoutPileUp",                   TObject::kOverwrite);
+            if (histoRatioWithWithoutPileUpFit)                 histoRatioWithWithoutPileUpFit->Write(              "RatioWithWithoutPileUpFit",                TObject::kOverwrite);
         }
         
     fileCorrectedOutput->Close();
