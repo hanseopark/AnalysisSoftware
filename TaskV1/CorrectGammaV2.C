@@ -738,7 +738,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     
     //****************************************************************************************** // would be nice if this would be put inside a fct. in the header at some point
     //******************* Secondary gamma conv prob ********************************************
-    //****************************************************************************************** 
+    //******************************************************************************************
     TH1D* histoGammaSecondaryFromXConvProb_MCPt[3]                  = { NULL, NULL, NULL };
     TH1D* histoGammaSecondaryFromXConvProb_MCPt_Unscaled[3]         = { NULL, NULL, NULL };
     TH1D* histoGammaSecondaryFromXConvProb_MCPt_OrBin[3]            = { NULL, NULL, NULL };
@@ -781,6 +781,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                 histoGammaSecondaryFromXConvProb_MCPt_OrBin[k]->SetBinContent(i, histoGammaConvProb_MCPt_OrBin->GetBinContent(i) * tempEval);
                 histoGammaSecondaryFromXConvProb_MCPt_OrBin[k]->SetBinError(  i, histoGammaConvProb_MCPt_OrBin->GetBinError(i)   * tempEval);
             }
+
             //****************************************************************************************** 
             //************************* plot ratio conversion probabilies ****************************** 
             //****************************************************************************************** 
@@ -2184,8 +2185,6 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TH1D* histoMCGammaSpec_MCPt                      = (TH1D*)histoMCAllGamma_MCPt->Clone("GammaSpecMC");
     if (isPCM )             CorrectGammaMC(histoMCGammaSpec_MCPt, deltaEta,       scaling,        nEvtMC);
     if (isCalo && !isPCM)   CorrectGammaMC(histoMCGammaSpec_MCPt, deltaEtaCalo,   scalingCalo,    nEvtMC);
-    DrawGammaSetMarker(histoMCGammaSpec_MCPt, 20, 1.0, 2, 2);
-    SetHistogramm(histoMCGammaSpec_MCPt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", -99, -99, 1.0, 1.7);
 
     //*************************************************************************************************
     //********************************* Comparison Gamma Spec *****************************************
@@ -2638,16 +2637,29 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     padGammaPurityConvBin->cd();
     padGammaPurityConvBin->SetLogy();
     
-        DrawGammaSetMarker(histoGammaCorrEffiReso_Pt, 24, 1.0, 1, 1);
+        DrawGammaSetMarker(histoMCGammaSpec_MCPt,       20, 1.0, kBlack, kBlack);
+        DrawGammaSetMarker(histoGammaCorrUnfoldReso_Pt, 25, 1.0, kBlue+2, kBlue+2);
+        if (doPileUpCorr)   DrawGammaSetMarker(histoGammaCorrEffiReso_PileUp_Pt,    28, 1.5, kRed-2, kRed-2);
+        else                DrawGammaSetMarker(histoGammaCorrEffiReso_Pt,           28, 1.5, kRed-2, kRed-2);
+
+        SetHistogramm(histoMCGammaSpec_MCPt,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", -99, -99, 1.0, 1.7);
         histoMCGammaSpec_MCPt->GetYaxis()->SetRangeUser(histoMCGammaSpec_MCPt->GetMinimum(0)/100.,histoMCGammaSpec_MCPt->GetMaximum()*100);
+
         histoMCGammaSpec_MCPt->DrawCopy("e1");
-    
-        DrawGammaSetMarker(histoGammaCorrUnfoldReso_Pt, 24, 1.0, 1, 1);
         histoGammaCorrUnfoldReso_Pt->DrawCopy("e1,same");
+        if (doPileUpCorr)   histoGammaCorrEffiReso_PileUp_Pt->DrawCopy("e1,same");
+        else                histoGammaCorrEffiReso_Pt->DrawCopy("e1,same");
     
-        TLegend *legendGammaSpectraConvBin = GetAndSetLegend(0.45,0.85,2);
-        if (isRunMC)    legendGammaSpectraConvBin->AddEntry(histoGammaCorrUnfoldReso_Pt,"corr. rec. MC #gamma spectrum");
-        else            legendGammaSpectraConvBin->AddEntry(histoGammaCorrUnfoldReso_Pt,"corr. data #gamma spectrum");
+        TLegend *legendGammaSpectraConvBin          = GetAndSetLegend(0.325,0.82,3);
+        if (isRunMC) {
+            legendGammaSpectraConvBin->AddEntry(histoGammaCorrUnfoldReso_Pt,"corr. rec. MC #gamma spectrum (unfolding)");
+            if (doPileUpCorr)   legendGammaSpectraConvBin->AddEntry(histoGammaCorrEffiReso_PileUp_Pt,   "corr. rec. MC #gamma spectrum (binwise)");
+            else                legendGammaSpectraConvBin->AddEntry(histoGammaCorrEffiReso_Pt,          "corr. rec. MC #gamma spectrum (binwise)");
+        } else {
+            legendGammaSpectraConvBin->AddEntry(histoGammaCorrUnfoldReso_Pt,"corr. data #gamma spectrum (unfolding)");
+            if (doPileUpCorr)   legendGammaSpectraConvBin->AddEntry(histoGammaCorrEffiReso_PileUp_Pt,   "corr. data #gamma spectrum (binwise)");
+            else                legendGammaSpectraConvBin->AddEntry(histoGammaCorrEffiReso_Pt,          "corr. data #gamma spectrum (binwise)");
+        }
         legendGammaSpectraConvBin->AddEntry(histoMCGammaSpec_MCPt,"input MC #gamma spectrum");
         legendGammaSpectraConvBin->Draw();
     
@@ -2655,27 +2667,55 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     
     padGammaPurityConvBinRatio->cd();
 
-        TH1D* tempRatioDataMC               = NULL;
-        tempRatioDataMC                     = (TH1D*)histoGammaCorrUnfoldReso_Pt->Clone("tempRatioDataMC");
-        tempRatioDataMC->Divide(tempRatioDataMC,histoMCGammaSpec_MCPt,1.,1.,"");
-    
-        if (isRunMC)    SetStyleHistoTH1ForGraphs(tempRatioDataMC, "#it{p}_{T} (GeV/#it{c})", "#frac{rec. MC}{MC}", 0.10, 0.14, 0.10, 0.14, 0.85, 0.5, 510, 505);
-        else            SetStyleHistoTH1ForGraphs(tempRatioDataMC, "#it{p}_{T} (GeV/#it{c})", "#frac{data}{MC}",    0.10, 0.14, 0.10, 0.14, 0.85, 0.5, 510, 505);
-        DrawGammaSetMarker(tempRatioDataMC, 24, 1.0, kBlack, kBlack);
-        if (isRunMC){
-            tempRatioDataMC->GetYaxis()->SetRangeUser(0.85, 1.15);
-        } else if (energy.Contains("pPb")) {
-            tempRatioDataMC->GetYaxis()->SetRangeUser(0.5, 2.7);
+        TH1D* tempRatioDataMCUnfold                 = NULL;
+        tempRatioDataMCUnfold                       = (TH1D*)histoGammaCorrUnfoldReso_Pt->Clone("tempRatioDataMCUnfold");
+        tempRatioDataMCUnfold->Divide(tempRatioDataMCUnfold,histoMCGammaSpec_MCPt,1.,1.,"");
+
+        TH1D*               tempRatioDataMCBinwise  = NULL;
+        if (doPileUpCorr)   tempRatioDataMCBinwise  = (TH1D*)histoGammaCorrEffiReso_PileUp_Pt->Clone("tempRatioDataMCBinwise");
+        else                tempRatioDataMCBinwise  = (TH1D*)histoGammaCorrEffiReso_Pt->Clone("tempRatioDataMCBinwise");
+        tempRatioDataMCBinwise->Divide(tempRatioDataMCBinwise,histoMCGammaSpec_MCPt,1.,1.,"");
+
+        DrawGammaSetMarker(tempRatioDataMCUnfold,   25, 1.0, kBlue+2, kBlue+2);
+        DrawGammaSetMarker(tempRatioDataMCBinwise,  28, 1.5, kRed-2, kRed-2);
+
+        if (isRunMC) {
+            SetStyleHistoTH1ForGraphs(tempRatioDataMCUnfold,    "#it{p}_{T} (GeV/#it{c})", "#frac{rec. MC}{MC}", 0.10, 0.14, 0.10, 0.14, 0.85, 0.5, 510, 505);
+            SetStyleHistoTH1ForGraphs(tempRatioDataMCBinwise,   "#it{p}_{T} (GeV/#it{c})", "#frac{rec. MC}{MC}", 0.10, 0.14, 0.10, 0.14, 0.85, 0.5, 510, 505);
         } else {
-            tempRatioDataMC->GetYaxis()->SetRangeUser(0.5, 1.5);
+            SetStyleHistoTH1ForGraphs(tempRatioDataMCUnfold,    "#it{p}_{T} (GeV/#it{c})", "#frac{data}{MC}",    0.10, 0.14, 0.10, 0.14, 0.85, 0.5, 510, 505);
+            SetStyleHistoTH1ForGraphs(tempRatioDataMCBinwise,   "#it{p}_{T} (GeV/#it{c})", "#frac{data}{MC}",    0.10, 0.14, 0.10, 0.14, 0.85, 0.5, 510, 505);
         }
-        tempRatioDataMC->DrawCopy("e1");
-        DrawGammaLines(0., tempRatioDataMC->GetXaxis()->GetBinUpEdge(tempRatioDataMC->GetNbinsX()), 1., 1., 0.5, kBlue+1);
+    
+        Double_t minYLines, maxYLines;
+        if (isRunMC){
+            tempRatioDataMCUnfold->GetYaxis()->SetRangeUser(0.85, 1.15);
+            minYLines                               = 0.9;
+            maxYLines                               = 1.1;
+        } else if (energy.Contains("pPb")) {
+            tempRatioDataMCUnfold->GetYaxis()->SetRangeUser(0.5, 2.7);
+            minYLines                               = 0.8;
+            maxYLines                               = 1.2;
+        } else {
+            tempRatioDataMCUnfold->GetYaxis()->SetRangeUser(0.5, 1.5);
+            minYLines                               = 0.8;
+            maxYLines                               = 1.2;
+        }
+
+        tempRatioDataMCUnfold->DrawCopy("e1");
+
+        DrawGammaLines(0., tempRatioDataMCUnfold->GetXaxis()->GetBinUpEdge(tempRatioDataMCUnfold->GetNbinsX()), minYLines,  minYLines,  1.0, kGray+2, 8);
+        DrawGammaLines(0., tempRatioDataMCUnfold->GetXaxis()->GetBinUpEdge(tempRatioDataMCUnfold->GetNbinsX()), 1.0,        1.0,        1.0, kGray+2, 2);
+        DrawGammaLines(0., tempRatioDataMCUnfold->GetXaxis()->GetBinUpEdge(tempRatioDataMCUnfold->GetNbinsX()), maxYLines,  maxYLines,  1.0, kGray+2, 8);
+
+        tempRatioDataMCUnfold->DrawCopy("e1,same");
+        tempRatioDataMCBinwise->DrawCopy("e1,same");
     
     canvasGammaPurityConvBin->SaveAs(Form("%s/%s_%s_GammaSpectrum_SanityCheck_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
     delete canvasGammaPurityConvBin;
 
-    TH1D* histoGammaCorrFac_Pt           = (TH1D*) histoGammaPrimaryRecoEff_Pt->Clone("GammaCorrFac_Pt");
+    // is this the full correction factor that is applied to the raw spectrum?
+    TH1D*       histoGammaCorrFac_Pt                = (TH1D*) histoGammaPrimaryRecoEff_Pt->Clone("GammaCorrFac_Pt");
     if (isPCM ) histoGammaCorrFac_Pt->Multiply(histoGammaConvProb_MCPt);
     
     //***********************************************************************************************************
