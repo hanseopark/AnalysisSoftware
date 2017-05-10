@@ -286,6 +286,9 @@ Bool_t ConvertCocktailSecondaryToRaw(TH1D*       histoGammaSec,
     // multiply with conv. prob.
     if (!histoConvProb) return kFALSE;
     histoGammaSec->Multiply(histoConvProb);
+    // multiply with reco. eff. (in MC pT if unfolding is used)
+    if (!histoRecoEff) return kFALSE;
+    histoGammaSec->Multiply(histoRecoEff);
     // correct for resolution, if response matrix given (otherwise included in reco. eff.)
     if (useResponseMatrix) {
         if (!responseMatrix) return kFALSE;
@@ -294,9 +297,6 @@ Bool_t ConvertCocktailSecondaryToRaw(TH1D*       histoGammaSec,
         RooUnfoldBayes unfold_SpectrumCocktail (&response, histoGammaSec, nIterationsUnfolding);
         histoGammaSec = (TH1D*)unfold_SpectrumCocktail.Hreco();
     }
-    // multiply with reco. eff.
-    if (!histoRecoEff) return kFALSE;
-    histoGammaSec->Multiply(histoRecoEff);
     // scale with nEvt from data
     histoGammaSec->Scale(nEvt);
     
@@ -316,6 +316,9 @@ Bool_t ConvertCocktailSecondaryToRaw(TH1D*       histoGammaSec,
                                      Bool_t      useResponseMatrix,
                                      Int_t       nIterationsUnfolding = 5
                                      ){
+    // multiply with reco. eff. (in MC pT if unfolding is used)
+    if (!histoRecoEff) return kFALSE;
+    histoGammaSec->Multiply(histoRecoEff);
     // correct for resolution, if response matrix given (otherwise included in reco. eff.)
     if (useResponseMatrix) {
         if (!responseMatrix) return kFALSE;
@@ -324,9 +327,6 @@ Bool_t ConvertCocktailSecondaryToRaw(TH1D*       histoGammaSec,
         RooUnfoldBayes unfold_SpectrumCocktail (&response, histoGammaSec, nIterationsUnfolding);
         histoGammaSec = (TH1D*)unfold_SpectrumCocktail.Hreco();
     }
-    // multiply with reco. eff.
-    if (!histoRecoEff) return kFALSE;
-    histoGammaSec->Multiply(histoRecoEff);
     // scale with nEvt from data
     histoGammaSec->Scale(nEvt);
     
