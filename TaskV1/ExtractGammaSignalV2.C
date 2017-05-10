@@ -460,10 +460,11 @@ void ExtractGammaSignalV2(      TString meson               = "",
                 f2DHistoSecondaryGammaMCConvPt                                  = (TH2D*)MCContainer->FindObject("MC_SecondaryConvGamma_Pt");
                 if(f2DHistoSecondaryGammaMCConvPt){
                     for (Int_t k = 0; k< 4; k++){
-                        fHistoSecondaryGammaConvFromXPt[k]                      = (TH1D*)f2DHistoSecondaryGammaMCConvPt->ProjectionX(Form("MC_SecondaryConvGammaFromXFrom%s_Pt", fSecondaries[k].Data()),
-                                                                                                                                     k+1, k+1, "e");
+                        fHistoSecondaryGammaConvFromXPt[k]                      = (TH1D*)f2DHistoSecondaryGammaMCConvPt->ProjectionX(Form("MC_SecondaryConvGammaFromXFrom%s_Pt",
+                                                                                                                                          fSecondaries[k].Data()), k+1, k+1, "e");
                         fHistoSecondaryGammaConvFromXPt[k]->Sumw2();
-                        fHistoSecondaryGammaConvFromXPtOrBin[k]                 = (TH1D*)fHistoSecondaryGammaConvFromXPt[k]->Clone(Form("fHistoSecondaryGammaConvFromXFrom%sPtOrBin", fSecondaries[k].Data()));
+                        fHistoSecondaryGammaConvFromXPtOrBin[k]                 = (TH1D*)fHistoSecondaryGammaConvFromXPt[k]->Clone(Form("fHistoSecondaryGammaConvFromXFrom%sPtOrBin",
+                                                                                                                                        fSecondaries[k].Data()));
                         RebinSpectrum(fHistoSecondaryGammaConvFromXPt[k]);
                     }
                 }
@@ -489,12 +490,38 @@ void ExtractGammaSignalV2(      TString meson               = "",
         if(fUseCocktail){
             f2DHistoAllSecondaryGammaMCPt                                       = (TH2D*)MCContainer->FindObject("MC_AllSecondaryGamma_Pt");
             if(f2DHistoAllSecondaryGammaMCPt){
-                for (Int_t k = 0; k < 4; k++){
-                    fHistoAllSecondaryGammaFromXPt[k]                           = (TH1D*)f2DHistoAllSecondaryGammaMCPt->ProjectionX(Form("MC_AllSecondaryGammaFromXFrom%s_Pt", fSecondaries[k].Data()),
-                                                                                                                                    k+1, k+1, "e");
-                    fHistoAllSecondaryGammaFromXPt[k]->Sumw2();
-                    fHistoAllSecondaryGammaFromXPtOrBin[k]                      = (TH1D*)fHistoAllSecondaryGammaFromXPt[k]->Clone(Form("MC_AllSecondaryGammaFromXFrom%s_PtOrBin", fSecondaries[k].Data()));
-                    RebinSpectrum(fHistoAllSecondaryGammaFromXPt[k]);
+
+                // conv & conv-calo have: K0s, K0l, Lambda, rest
+                if (fEnablePCM) {
+                    for (Int_t k = 0; k < 4; k++){
+                        fHistoAllSecondaryGammaFromXPt[k]                           = (TH1D*)f2DHistoAllSecondaryGammaMCPt->ProjectionX(Form("MC_AllSecondaryGammaFromXFrom%s_Pt",
+                                                                                                                                             fSecondaries[k].Data()), k+1, k+1, "e");
+                        fHistoAllSecondaryGammaFromXPt[k]->Sumw2();
+                        fHistoAllSecondaryGammaFromXPtOrBin[k]                      = (TH1D*)fHistoAllSecondaryGammaFromXPt[k]->Clone(Form("MC_AllSecondaryGammaFromXFrom%s_PtOrBin",
+                                                                                                                                           fSecondaries[k].Data()));
+                        RebinSpectrum(fHistoAllSecondaryGammaFromXPt[k]);
+                    }
+                }
+
+                // calo has: K0s, K0l, Lambda, eta, rest
+                if (fEnableCalo && !fEnablePCM) {
+                    for (Int_t k = 0; k < 4; k++){
+                        if (k<3) {
+                            fHistoAllSecondaryGammaFromXPt[k]                           = (TH1D*)f2DHistoAllSecondaryGammaMCPt->ProjectionX(Form("MC_AllSecondaryGammaFromXFrom%s_Pt",
+                                                                                                                                                 fSecondaries[k].Data()), k+1, k+1, "e");
+                            fHistoAllSecondaryGammaFromXPt[k]->Sumw2();
+                            fHistoAllSecondaryGammaFromXPtOrBin[k]                      = (TH1D*)fHistoAllSecondaryGammaFromXPt[k]->Clone(Form("MC_AllSecondaryGammaFromXFrom%s_PtOrBin",
+                                                                                                                                               fSecondaries[k].Data()));
+                            RebinSpectrum(fHistoAllSecondaryGammaFromXPt[k]);
+                        } else {
+                            fHistoAllSecondaryGammaFromXPt[k]                           = (TH1D*)f2DHistoAllSecondaryGammaMCPt->ProjectionX(Form("MC_AllSecondaryGammaFromXFrom%s_Pt",
+                                                                                                                                                 fSecondaries[k].Data()), k+1, k+2, "e");
+                            fHistoAllSecondaryGammaFromXPt[k]->Sumw2();
+                            fHistoAllSecondaryGammaFromXPtOrBin[k]                      = (TH1D*)fHistoAllSecondaryGammaFromXPt[k]->Clone(Form("MC_AllSecondaryGammaFromXFrom%s_PtOrBin",
+                                                                                                                                               fSecondaries[k].Data()));
+                            RebinSpectrum(fHistoAllSecondaryGammaFromXPt[k]);
+                        }
+                    }
                 }
             }
         }
@@ -614,7 +641,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
         }
         
         if (fEnableCalo){
-            if (mode == 2 || mode == 3){
+            if (mode == 2 || mode == 3) {
                 fHistoGammaTrueCaloPt                           = (TH1D*)CaloContainer->FindObject("TrueClusGamma_Pt");
                 fHistoGammaTrueCaloPt->Sumw2();
                 fHistoGammaTrueCaloPtOrBin                      = (TH1D*)fHistoGammaTrueCaloPt->Clone("TrueClusGamma_Pt_OriginalBinning");
@@ -738,7 +765,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
 
                 if (nHistogramDimension==2) {
  
-                    // reconstructed and validated MC primary secondary gammas in reconstructed pt
+                    // reconstructed and validated MC primary secondary gammas (K0s, K0l, Lambda, Eta, rest) in reconstructed pt
                     f2DHistoGammaTrueSecondaryCaloUnConvPt                                  = (TH2D*)TrueConversionContainer->FindObject("ESD_TrueSecondaryClusGamma_Pt");
                     f2DHistoGammaTrueSecondaryCaloUnConvPt->SetName("ESD_2D_TrueSecondaryClusUnConvGamma_Pt");
                     f2DHistoGammaTrueSecondaryCaloConvPt                                    = (TH2D*)TrueConversionContainer->FindObject("ESD_TrueSecondaryClusConvGamma_Pt");
@@ -754,7 +781,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
                     
                     // secondary gammas from K0s, K0l, Lambda and rest
                     for (Int_t k = 0; k < 4; k++){
-                        if (k < 4){
+                        if (k < 3){
                             fHistoGammaTrueSecondaryCaloFromXPt[k]                          = (TH1D*)f2DHistoGammaTrueSecondaryCaloPt->ProjectionX(Form("ESD_TrueSecondaryClusGammaFromXFrom%s_Pt",
                                                                                                                                                         fSecondaries[k].Data()), k+1, k+1,"e");
                         } else {
@@ -798,7 +825,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
                         
                         // secondary gammas from K0s, K0l, Lambda and rest
                         for (Int_t k = 0; k<4; k++){
-                            if (k < 4){
+                            if (k < 3){
                                 fHistoGammaTrueSecondaryCaloFromXMCPt[k]                    = (TH1D*)f2DHistoGammaTrueSecondaryCaloMCPt->ProjectionX(Form("ESD_TrueSecondaryClusGammaFromXFrom%s_MCPt", 
                                                                                                                                                             fSecondaries[k].Data()), k+1, k+1, "e");
                             } else {

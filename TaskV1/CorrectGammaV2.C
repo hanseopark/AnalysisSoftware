@@ -191,8 +191,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //****************************************************************************************** 
     //********************************** secondary labels **************************************
     //****************************************************************************************** 
-    TString nameSecondaries[4]                              = { "K0s", "Lambda", "K0l", "Rest" };
-    TString nameLabelSecondaries[4]                         = { "K^{0}_{s}", "#Lambda", "K^{0}_{l}", "rest" };
+    TString nameSecondaries[4]                              = { "K0s", "K0l", "Lambda", "Rest" };
+    TString nameLabelSecondaries[4]                         = { "K^{0}_{s}", "K^{0}_{l}", "#Lambda", "rest" };
     Style_t markerStyleSec[4]                               = { 21, 33, 29, 34};
     Style_t markerStyleSecWithToy[4]                        = { 25, 27, 30, 28};
     Size_t  markerSizeSec[4]                                = { 1.5, 1.75, 2., 1.5};
@@ -523,7 +523,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     Double_t constOffsetEffRecPt[3]                                 = { 1, 1, 1};
 
     // fit settings, also used in conv. prob. fit
-    Double_t    minPtFitSec[3]                                      = {  1.5,   1.0,  0.0}; // K0s, Lambda, K0l
+    Double_t    minPtFitSec[3]                                      = {  1.5,   1.0,  0.0}; // K0s, K0l, Lambda
     Double_t    maxPtFitSec[3]                                      = { 50.0,  50.0, 50.0};
     Bool_t      doConstFitSec[3]                                    = {kTRUE, kTRUE, kTRUE};
     
@@ -608,11 +608,11 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             // fixed ratios
             if (energy.Contains("2.76TeV") && mode == 4) {
                 if (k == 1) {
-                    constOffsetEffMCPt[k]                           = 1.75;
-                    constOffsetEffRecPt[k]                          = 1.75;
-                } else if (k == 2) {
                     constOffsetEffMCPt[k]                           = 2.00;
                     constOffsetEffRecPt[k]                          = 2.00;
+                } else if (k == 2) {
+                    constOffsetEffMCPt[k]                           = 1.75;
+                    constOffsetEffRecPt[k]                          = 1.75;
                 }
             }
 
@@ -1950,7 +1950,6 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             SetHistogramm(histoGammaPrimaryRecoEff_MCPt,                        "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.0);
             SetHistogramm(histoGammaPrimaryRecoEff_MCPt_ConvertToRecPt,         "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.0);
             SetHistogramm(histoGammaPrimaryRecoEff_Pt,                          "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0.05, 1.0);
-            if(doPileUpCorr)SetHistogramm(histoGammaPrimaryRecoEff_PileUp_Pt,   "#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 1.0); // should anyway not exist...
         }
 
         DrawGammaSetMarker(histoGammaPrimaryRecoEff_MCPt,                       20, 1.0, kBlack,    kBlack);

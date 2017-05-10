@@ -44,7 +44,7 @@
                                                                             "Lambda",   "Muon", "K0l",      "Rest", "All"
                                                                         };
 
-    TString     fSecondaries[4]                                         = {"K0s", "Lambda", "K0l", "Rest"};
+    TString     fSecondaries[4]                                         = {"K0s", "K0l", "Lambda", "Rest"};
 
     // exemplary pt bins for DCAz distributions
     Int_t       exemplaryLowPtBin                                       = 1;
