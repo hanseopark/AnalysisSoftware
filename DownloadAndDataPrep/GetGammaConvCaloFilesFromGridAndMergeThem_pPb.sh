@@ -12,9 +12,9 @@
 # switches to enable/disable certain procedures
 DOWNLOADON=1
 MERGEON=1
-SINGLERUN=1
-SEPARATEON=0
-MERGEONSINGLEData=1
+SINGLERUN=0
+SEPARATEON=1
+MERGEONSINGLEData=0
 MERGEONSINGLEMC=0
 SPECIALMERGE=0
 ISADDDOWNLOAD=0
@@ -42,6 +42,24 @@ function SeparateCutsIfNeeded()
         echo "separated file $1.root already"
     else 
         root -b -x -q -l SeparateDifferentCutnumbers.C\+\(\"$1.root\"\,\"$1\"\,2\)
+    fi    
+}
+
+function SeparateCutsIfNeededConv()
+{
+    if [ -f $1\_A.root ]; then 
+        echo "separated file $1.root already"
+    else 
+        root -b -x -q -l SeparateDifferentCutnumbers.C\+\(\"$1.root\"\,\"$1\"\,0\)
+    fi    
+}
+
+function SeparateCutsIfNeededCalo()
+{
+    if [ -f $1\_A.root ]; then 
+        echo "separated file $1.root already"
+    else 
+        root -b -x -q -l SeparateDifferentCutnumbers.C\+\(\"$1.root\"\,\"$1\"\,4\)
     fi    
 }
 
@@ -88,11 +106,12 @@ function ChangeStructureIfNeeded()
         cp $2/GammaConvCalo_$number.root $OUTPUTDIR/GammaConvCalo_$4\_$number.root 
     fi
 
-    if [ -f $2/inputFailedStage1Merge/GammaConvCalo_$number.root ]; then
-        echo "adding failed merges"
-        hadd -f $OUTPUTDIR/GammaConvCalo_$4\_$number.root $2/GammaConvCalo_$number.root $2/inputFailedStage1Merge/GammaConvCalo_$number.root
-    fi
-        
+    if [ $MERGEONSINGLEMC == 1 ]; then
+      if [ -f $2/inputFailedStage1Merge/GammaConvCalo_$number.root ]; then
+          echo "adding failed merges"
+          hadd -f $OUTPUTDIR/GammaConvCalo_$4\_$number.root $2/GammaConvCalo_$number.root $2/inputFailedStage1Merge/GammaConvCalo_$number.root
+      fi
+    fi    
     if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log ]; then 
         echo "nothing to be done";
     else
@@ -122,89 +141,103 @@ function ParseJDLFilesDownloadAndMerge()
 {
     echo $1
     maxJobnumbers=`cat $1 | wc -l`;
-    jobnumbers=`cat $1`;
-    echo $jobnumbers
-    counterJob=1
-    # Loop for all jobumbers
-    rm fileNamesAddDownload.txt
-    for jobnumber in $jobnumbers; do
-        # which job are you currently analysing
-        echo "$jobnumber, number $counterJob/ $maxJobnumbers";
-        # get the jdl from the job number
-        alien_ps -jdl $jobnumber > jdl.txt
-
-        # take out all unwanted characters from jdl
-        sed 's/{//g' jdl.txt > jdlmod.txt
-        mv jdlmod.txt jdl.txt 
-        sed 's/}//g' jdl.txt > jdlmod.txt
-        mv jdlmod.txt jdl.txt 
-        sed 's/"//g' jdl.txt > jdlmod.txt
-        mv jdlmod.txt jdl.txt 
-        sed 's/&//g' jdl.txt > jdlmod.txt
-        mv jdlmod.txt jdl.txt 
-        sed 's/\[//g' jdl.txt > jdlmod.txt
-        mv jdlmod.txt jdl.txt 
-        sed 's/\]//g' jdl.txt > jdlmod.txt
-        mv jdlmod.txt jdl.txt 
-        sed 's/ //g' jdl.txt > jdlmod.txt
-        mv jdlmod.txt jdl.txt 
-        sed 's/LF://g' jdl.txt > jdlmod.txt
-        mv jdlmod.txt jdl.txt 
-        sed 's/,nodownload//g' jdl.txt > jdlmod.txt
-        mv jdlmod.txt jdl.txt 
-        sed 's/,//g' jdl.txt > jdlmod.txt
-        mv jdlmod.txt jdl.txt 
-        # find processed files 		
-        cat jdl.txt | grep '/root_archive.zip' >> fileNamesAddDownload.txt    
-        counterJob=$((counterJob+1));
-    done
-    cat fileNamesAddDownload.txt
-    mkdir -p $2/inputFailedStage1Merge
-    echo "$2/inputFailedStage1Merge"
-    maxNFiles=`cat fileNamesAddDownload.txt | wc -l`;
-    sed 's/\/root_archive.zip//g' fileNamesAddDownload.txt > fileNamesAddDownloadMod.txt
-    cat fileNamesAddDownloadMod.txt    
-    fileNames=`cat fileNamesAddDownloadMod.txt`;
-
-    if [ $ADDDOWNLOADALREADY == 0 ]; then
-        counterFiles=1
-        ISADDDOWNLOAD=1
-        # Loop for all files
-        for fileName in $fileNames; do
+    if [ $maxJobnumbers > 0 ]; then 
+        jobnumbers=`cat $1`;
+        echo $jobnumbers
+        counterJob=1
+        # Loop for all jobumbers
+        rm fileNamesAddDownload.txt
+        for jobnumber in $jobnumbers; do
             # which job are you currently analysing
-            echo "number $counterFiles/ $maxNFiles";
-            echo $fileName;
+            echo "$jobnumber, number $counterJob/ $maxJobnumbers";
+            # get the jdl from the job number
+            alien_ps -jdl $jobnumber > jdl.txt
 
-            CopyFileIfNonExisitent $2/inputFailedStage1Merge/$counterFiles $fileName 10
-            counterFiles=$((counterFiles+1));
+            # take out all unwanted characters from jdl
+            sed 's/{//g' jdl.txt > jdlmod.txt
+            mv jdlmod.txt jdl.txt 
+            sed 's/}//g' jdl.txt > jdlmod.txt
+            mv jdlmod.txt jdl.txt 
+            sed 's/"//g' jdl.txt > jdlmod.txt
+            mv jdlmod.txt jdl.txt 
+            sed 's/&//g' jdl.txt > jdlmod.txt
+            mv jdlmod.txt jdl.txt 
+            sed 's/\[//g' jdl.txt > jdlmod.txt
+            mv jdlmod.txt jdl.txt 
+            sed 's/\]//g' jdl.txt > jdlmod.txt
+            mv jdlmod.txt jdl.txt 
+            sed 's/ //g' jdl.txt > jdlmod.txt
+            mv jdlmod.txt jdl.txt 
+            sed 's/LF://g' jdl.txt > jdlmod.txt
+            mv jdlmod.txt jdl.txt 
+            sed 's/,nodownload//g' jdl.txt > jdlmod.txt
+            mv jdlmod.txt jdl.txt 
+            sed 's/,//g' jdl.txt > jdlmod.txt
+            mv jdlmod.txt jdl.txt 
+            # find processed files 		
+            cat jdl.txt | grep '/root_archive.zip' >> fileNamesAddDownload.txt    
+            counterJob=$((counterJob+1));
         done
-        ISADDDOWNLOAD=0
+        cat fileNamesAddDownload.txt
+        mkdir -p $2/inputFailedStage1Merge
+        echo "$2/inputFailedStage1Merge"
+        maxNFiles=`cat fileNamesAddDownload.txt | wc -l`;
+        sed 's/\/root_archive.zip//g' fileNamesAddDownload.txt > fileNamesAddDownloadMod.txt
+        cat fileNamesAddDownloadMod.txt    
+        fileNames=`cat fileNamesAddDownloadMod.txt`;
 
-        text=`ls $2/inputFailedStage1Merge/1/*.zip`
-        ls $2/inputFailedStage1Merge/1/*.root > fileListAdd.txt
-        NCurrSlash=`tr -dc '/' <<<"$text" | awk '{ print length; }'`
-        ADDFILESTOMERGE=`cat fileListAdd.txt`;
-        
-        echo $ADDFILESTOMERGE
-        for TOMERGE in $ADDFILESTOMERGE; do
-            echo $TOMERGE
-            TOMERGE=`echo $TOMERGE  | cut -d "/" -f $((NCurrSlash+1)) `
-            echo $TOMERGE
-            hadd -n 10 -f $2/inputFailedStage1Merge/$TOMERGE $2/inputFailedStage1Merge/*/$TOMERGE
-        done
-    fi
+        if [ $ADDDOWNLOADALREADY == 0 ]; then
+            counterFiles=1
+            ISADDDOWNLOAD=1
+            # Loop for all files
+            for fileName in $fileNames; do
+                # which job are you currently analysing
+                echo "number $counterFiles/ $maxNFiles";
+                echo $fileName;
 
-    if [ $CLEANUPADDMERGE == 1 ]; then
-        counterFiles=1
-        # Loop for all files
-        for fileName in $fileNames; do
-            # which job are you currently analysing
-            echo "cleaning $counterFiles/ $maxNFiles";
-            echo $2/inputFailedStage1Merge/$counterFiles;
-            rm -rf $2/inputFailedStage1Merge/$counterFiles;
-            counterFiles=$((counterFiles+1));
-        done
-    fi
+                CopyFileIfNonExisitent $2/inputFailedStage1Merge/$counterFiles $fileName 10
+                counterFiles=$((counterFiles+1));
+            done
+            ISADDDOWNLOAD=0
+
+            text=`ls $2/inputFailedStage1Merge/1/*.zip`
+            ls $2/inputFailedStage1Merge/1/*.root > fileListAdd.txt
+            NCurrSlash=`tr -dc '/' <<<"$text" | awk '{ print length; }'`
+            ADDFILESTOMERGE=`cat fileListAdd.txt`;
+            
+#             echo $ADDFILESTOMERGE
+            for TOMERGE in $ADDFILESTOMERGE; do
+                echo $TOMERGE
+                TOMERGE2=$TOMERGE;
+                TOMERGE=`echo $TOMERGE  | cut -d "/" -f $((NCurrSlash+1)) `
+                echo $TOMERGE
+                TOMERGE2=`echo $TOMERGE2  | cut -d "." -f 1 `
+                echo $TOMERGE2
+                hadd -n 10 -f $2/inputFailedStage1Merge/$TOMERGE $2/inputFailedStage1Merge/*/$TOMERGE
+                if [ $SEPARATEON == 1 ]; then
+                    if [[ $TOMERGE == *"GammaConvCalo_"* ]]; then
+                        SeparateCutsIfNeeded $TOMERGE2
+                    elif [[ $TOMERGE == *"GammaConvV1_"* ]]; then
+                        SeparateCutsIfNeededConv $TOMERGE2
+                    elif [[ $TOMERGE == *"GammaCalo_"* ]]; then
+                        SeparateCutsIfNeededCalo $TOMERGE2
+                    fi
+                fi  
+            done
+        fi
+
+        if [ $CLEANUPADDMERGE == 1 ]; then
+            counterFiles=1
+            # Loop for all files
+            for fileName in $fileNames; do
+                # which job are you currently analysing
+                echo "cleaning $counterFiles/ $maxNFiles";
+                echo $2/inputFailedStage1Merge/$counterFiles;
+                rm -rf $2/inputFailedStage1Merge/$counterFiles;
+                counterFiles=$((counterFiles+1));
+            done
+        fi
+   fi       
 }
 
 
@@ -396,16 +429,39 @@ fi
 # LHC13b2_efix_p3MC="598"; 
 # LHC13b2_efix_p4MC="599";
 
-TRAINDIR=Legotrain-vAN20170501-EMCwoCalib
-LHC13bData="615"; #pass 3 
-LHC13cData="616"; #pass 2
-LHC13dData="617"; #pass 2
-LHC13eData="618"; #pass 2
+# TRAINDIR=Legotrain-vAN20170501-EMCwoCalib
+# LHC13bData="615"; #pass 3 
+# LHC13cData="616"; #pass 2
+# LHC13dData="617"; #pass 2
+# LHC13eData="618"; #pass 2
 # LHC13b2_efix_p1MC="909"; 
 # LHC13b2_efix_p2MC="911"; 
 # LHC13b2_efix_p3MC="913"; 
 # LHC13b2_efix_p4MC="915";
 # LHC13e7MC="917";
+
+# TRAINDIR=Legotrain-vAN20170506-EMCrecalibAndWithMultWeights
+# LHC13bData="625"; #pass 3 
+# LHC13cData="626"; #pass 2
+# LHC13dData="617"; #pass 2
+# LHC13eData="618"; #pass 2
+# LHC13b2_efix_p1MC="920"; 
+# LHC13b2_efix_p2MC="921"; 
+# LHC13b2_efix_p3MC="922"; 
+# LHC13b2_efix_p4MC="923";
+# LHC13e7MC="924";
+# LHC13b2_efix_p1MC="925"; 
+# LHC13b2_efix_p2MC="926"; 
+# LHC13b2_efix_p3MC="927"; 
+# LHC13b2_efix_p4MC="928";
+# LHC13e7MC="929";
+
+TRAINDIR=Legotrain-vAN20170511-EMCrecalibIte1
+LHC13b2_efix_p1MC="930"; 
+LHC13b2_efix_p2MC="931"; 
+LHC13b2_efix_p3MC="932"; 
+LHC13b2_efix_p4MC="933";
+LHC13e7MC="934";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 mkdir -p $OUTPUTDIR/CutSelections
@@ -630,6 +686,35 @@ if [ $HAVELHC13e7 == 1 ]; then
     echo "downloading LHC13e7"
     CopyFileIfNonExisitent $OUTPUTDIR_LHC13e7 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13e7MC/merge" $NSlashes
     ParseJDLFilesDownloadAndMerge missingMergesLHC13e7.txt  $OUTPUTDIR_LHC13e7
+    if [ $SINGLERUN == 1 ]; then
+        runNumbers=`cat runlists/runNumbersLHC13e7.txt`
+        echo $runNumbers
+        for runNumber in $runNumbers; do
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC13e7/$runNumber "/alice/sim/2013/LHC13e7/$runNumber/PWGGA/GA_pPb_MC/$LHC13e7MC" $NSlashes3
+        done;    
+        if [ $MERGEONSINGLEMC == 1 ]; then
+            firstrunNumber=`head -n1 runlists/runNumbersLHC13e7.txt`
+            ls $OUTPUTDIR_LHC13e7/$firstrunNumber/GammaConvCalo_*.root > fileLHC13e7.txt
+            fileNumbers=`cat fileLHC13e7.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                alpha=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f3 | cut -d "." -f1`
+                if [ -z "$alpha" ]; then
+                    echo $alpha
+                    number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2 | cut -d "." -f1`
+                    echo $number
+                else
+                    echo $alpha
+                    number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2`
+                    number=$number\_$alpha
+                    echo $number
+                fi
+                echo $number
+                hadd -f $OUTPUTDIR_LHC13e7/GammaConvCalo_$number.root $OUTPUTDIR_LHC13e7/*/GammaConvCalo_$number.root
+            done;
+        fi    
+    fi
+    
 fi        
 
     

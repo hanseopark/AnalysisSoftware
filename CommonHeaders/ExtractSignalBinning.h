@@ -2156,6 +2156,8 @@
                         fColumn         = 6;
                     } else if (modi == 4) {
                         fStartPtBin     = 9;
+                        fColumn         = 6;
+                        fRow            = 4;
                     } else if (modi == 5) {
                         fStartPtBin     = 8;
                     } else if (modi == 1) {
@@ -3017,6 +3019,8 @@
                     fStartPtBin     = 7;
                 } else if (modi == 4) {
                     fStartPtBin     = 8;
+                    fColumn         = 4;
+                    fRow            = 3;
                 } else if (modi == 5) {
                     fStartPtBin     = 8;
                 }

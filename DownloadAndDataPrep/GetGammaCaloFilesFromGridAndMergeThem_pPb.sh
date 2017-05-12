@@ -168,16 +168,40 @@ fi
 # LHC13b2_efix_p3MC="598"; 
 # LHC13b2_efix_p4MC="599";
 
-TRAINDIR=Legotrain-vAN20170501-EMCwoCalib
-LHC13bData="615"; #pass 3 
-LHC13cData="616"; #pass 2
-LHC13dData="617"; #pass 2
-LHC13eData="618"; #pass 2
+# TRAINDIR=Legotrain-vAN20170501-EMCwoCalib
+# LHC13bData="615"; #pass 3 
+# LHC13cData="616"; #pass 2
+# LHC13dData="617"; #pass 2
+# LHC13eData="618"; #pass 2
 # LHC13b2_efix_p1MC="909"; 
 # LHC13b2_efix_p2MC="911"; 
 # LHC13b2_efix_p3MC="913"; 
 # LHC13b2_efix_p4MC="915";
 # LHC13e7MC="917";
+
+# TRAINDIR=Legotrain-vAN20170506-EMCrecalibAndWithMultWeights
+# LHC13bData="625"; #pass 3 
+# LHC13cData="626"; #pass 2
+# LHC13dData="617"; #pass 2
+# LHC13eData="618"; #pass 2
+# LHC13b2_efix_p1MC="920"; 
+# LHC13b2_efix_p2MC="921"; 
+# LHC13b2_efix_p3MC="922"; 
+# LHC13b2_efix_p4MC="923";
+# LHC13e7MC="924";
+# LHC13b2_efix_p1MC="925"; 
+# LHC13b2_efix_p2MC="926"; 
+# LHC13b2_efix_p3MC="927"; 
+# LHC13b2_efix_p4MC="928";
+# LHC13e7MC="929";
+
+TRAINDIR=Legotrain-vAN20170511-EMCrecalibIte1
+LHC13b2_efix_p1MC="930"; 
+LHC13b2_efix_p2MC="931"; 
+LHC13b2_efix_p3MC="932"; 
+LHC13b2_efix_p4MC="933";
+LHC13e7MC="934";
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -440,7 +464,7 @@ fi
 if [ $HAVELHC13b2efixp2 == 1 ]; then
     ls $OUTPUTDIR_LHC13b2_efix_p2/GammaCalo_*.root > fileLHC13b2efixp2.txt
     fileNumbers=`cat fileLHC13b2efixp2.txt`
-    for fileName in $fileNumbers; do
+    for fileName in $fileNumbers; do    
         ChangeStructureIfNeeded $fileName $OUTPUTDIR_LHC13b2_efix_p2 $NSlashes "MC_LHC13b2_efix_p2"
     done;
 fi

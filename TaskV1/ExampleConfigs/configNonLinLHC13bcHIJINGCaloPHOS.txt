@@ -1,5 +1,5 @@
-#configuration for CorrectCaloNonLinearityV4.C for LHC13bc DPMJET Calo PHOS
-select	LHC13bc-DPMJET-CaloPHOS
+#configuration for CorrectCaloNonLinearityV4.C for LHC13bc HIJING Calo PHOS
+select	LHC13bc-HIJING-CaloPHOS
 
 mode	5
 ptRangeBins	1	23
@@ -13,10 +13,10 @@ nSets	2
 dataFileNames	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170506-EMCrecalibAndWithMultWeights/GammaCalo_LHC13bcde-pass2_301.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170506-EMCrecalibAndWithMultWeights/GammaCalo_LHC13bcde-pass2_301.root		 STOP
 cutData	80000013_2444400041013200000_0163103100000010	80062013_2444400041013200000_0163103100000010	STOP
 
-MCFileNames	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170506-EMCrecalibAndWithMultWeights/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_p4_301.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170506-EMCrecalibAndWithMultWeights/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_p4_301.root	STOP
+MCFileNames	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170506-EMCrecalibAndWithMultWeights/GammaCalo_MC_LHC13e7_301.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170506-EMCrecalibAndWithMultWeights/GammaCalo_MC_LHC13e7_301.root	STOP
 cutMC	80000013_2444400041013200000_0163103100000010	80000013_2444400041013200000_0163103100000010	STOP
 
-plotLabels	#frac{LHC13b2_efix}{LHC13bcde-INT7}	#frac{LHC13b2_efix}{LHC13bcde-PHI7}	STOP
+plotLabels	#frac{LHC13e7}{LHC13bcde-INT7}	#frac{LHC13e7}{LHC13bcde-PHI7}	STOP
 
 rebinPt	0	1.1	2.4	3.95	4.5	9.95	STOP
 rebinValue	1	2	4	5	8	10	STOP
