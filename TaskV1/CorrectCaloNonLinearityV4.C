@@ -204,10 +204,10 @@ void CorrectCaloNonLinearityV4(
         // reading min and max pt range for mass fits
         } else if (tempValue.BeginsWith("rangeHighPtFitMass",TString::kIgnoreCase)){    
             if (enableAddCouts) cout << "setting min and max pt range for mass fits" << endl;
-            rangeHighPtFitMass[0]       = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
-            rangeHighPtFitMass[1]       = ((TString)((TObjString*)tempArr->At(2))->GetString()).Atoi();        
-            rangeHighPtFitMass[2]       = ((TString)((TObjString*)tempArr->At(3))->GetString()).Atoi();        
-            rangeHighPtFitMass[3]       = ((TString)((TObjString*)tempArr->At(4))->GetString()).Atoi();        
+            rangeHighPtFitMass[0]       = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atof();
+            rangeHighPtFitMass[1]       = ((TString)((TObjString*)tempArr->At(2))->GetString()).Atof();
+            rangeHighPtFitMass[2]       = ((TString)((TObjString*)tempArr->At(3))->GetString()).Atof();
+            rangeHighPtFitMass[3]       = ((TString)((TObjString*)tempArr->At(4))->GetString()).Atof();
         // read data file names
         } else if (tempValue.BeginsWith("dataFileNames",TString::kIgnoreCase)){    
             if (enableAddCouts) cout << "setting data file paths" << endl;
