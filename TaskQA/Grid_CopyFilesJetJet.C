@@ -72,12 +72,14 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
       ""
     };
 
-    TString train = "Legotrain-vAN-20170402-8TeV-JetJet_AOD_MCfix";
-    Int_t trainRuns[nSets] = {384,386};
+    TString train = "Legotrain-vAN-20170511-8TeV-openAngle";
+    Int_t trainRuns[nSets] = {407,408};
     TString runlist[nSets] = {"merge","merge"};
 
-    const Int_t nFiles = 2;
-    TString Files[nFiles] = {"GammaCalo_101","GammaConvCalo_100"};
+    const Int_t nFiles = 4;
+    TString Files[nFiles] = {
+      "GammaCalo_163","GammaCalo_164","GammaCalo_165", "GammaCalo_166"
+                            };
 
     //---------------------------------------------------------------------------------------------------
 

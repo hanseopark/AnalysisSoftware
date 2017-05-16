@@ -963,11 +963,11 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
       "LHC12c-kEMCEGA", "LHC12d-kEMCEGA", "LHC12f-kEMCEGA", "LHC12h-kEMCEGA", "LHC12i-kEMCEGA"
     };
 
-    TString train = "Legotrain-vAN-20170501-8TeV-DirGamma";
+    TString train = "Legotrain-vAN-20170511-8TeV-openAngle";
     Int_t trainRuns[nSets] = {
-                              2047,2048,2049,2050,2051,2052,2053,
-                              2048,2049,2050,2051,2052,2053,
-                              2049,2050,2051,2052,2053
+                              2063,2064,2065,2066,2067,2068,2069,
+                              2064,2065,2066,2067,2068,2069,
+                              2065,2066,2067,2068,2069
                              };
 
     TString runlist[nSets] = {
@@ -976,9 +976,9 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
                               "merge_runlist_11","merge_runlist_11","merge_runlist_11","merge_runlist_11","merge_runlist_11"
                              };
 
-    const Int_t nFiles = 5;
+    const Int_t nFiles = 6;
     TString Files[nFiles] = {
-      "GammaCalo_101","GammaCalo_107","GammaCalo_126","GammaCalo_146","GammaConvCalo_101"
+      "GammaCalo_161","GammaCalo_162","GammaCalo_163","GammaCalo_164","GammaCalo_165", "GammaCalo_166"
                             };
 
     const Int_t nMerge = 3;
