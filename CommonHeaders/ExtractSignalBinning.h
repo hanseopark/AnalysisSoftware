@@ -403,12 +403,12 @@
     Int_t fBinsPi08TeVEMCTrigger1PtRebin[44]        = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 4, 4, 5, 4, 4, 4, 5, 4,
-                                                        4, 4, 4, 4, 5, 5, 5, 8, 8, 12,
-                                                        20, 2, 2, 2};
+                                                        4, 4, 4, 4, 4, 5, 5, 5, 5, 10,
+                                                        8, 2, 2, 2};
     Int_t fBinsPi08TeVEMCTrigger2PtRebin[42]        = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 4, 5,
-                                                        5, 4, 5, 10, 10, 15, 16, 16, 2, 2,
+                                                        5, 4, 5, 5, 5, 5, 5, 5, 2, 2,
                                                         2, 2};
     Int_t fBinsPi08TeVPCMEMCTrigger1PtRebin[43]     = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -2863,8 +2863,8 @@
                         fNBinsPt        = 16;
                     }
                 } else if (fNBinsPt > 19 && (modi == 4)){
-                    if( setPi0.CompareTo("Pi0EtaBinning") == 0 && ( specialTrigg ==1 && fNBinsPt > 20) ){
-                        fNBinsPt        = 20;
+                    if( setPi0.CompareTo("Pi0EtaBinning") == 0 && ( specialTrigg ==1 && fNBinsPt > 21) ){
+                        fNBinsPt        = 21;
                     } else if ( setPi0.CompareTo("Pi0EtaBinning") == 0 && ( specialTrigg == 2 && fNBinsPt > 19) ){
                         fNBinsPt        = 19;
                     } else if( specialTrigg == 2 && fNBinsPt > 23){
