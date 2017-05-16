@@ -6147,7 +6147,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                         }    
                     }            
                 } 
-                if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2)) 
+                if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2))
                     offSetsEtaToPi0Sys[4]+=2;
                     
             }
@@ -6157,8 +6157,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             // Calculate averaged eta/pi0 graphs according to statistical and systematic errors taking correctly into account the cross correlations
             if (averagedEta){
                 if(optionEnergy.CompareTo("8TeV")==0 && mode==4){
-                  maxNAllowedEta -= 4;
-                  maxPtGlobalEta = 18;
+                  maxNAllowedEta -= 3;
+                  maxPtGlobalEta = 20;
                 }
                 //if(optionEnergy.CompareTo("8TeV")==0 && mode==2) maxNAllowedEta -= 2;
                 // calculate averaged eta/pi0 graphs
@@ -6511,7 +6511,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     
                 canvasRelTotErr->SaveAs(Form("%s/EtaToPi0_RelErrorsFulldecomp.%s",outputDir.Data(),suffix.Data()));
                 
-                if(optionEnergy.CompareTo("8TeV")==0 && mode==4) maxNAllowedEta += 4;
+                if(optionEnergy.CompareTo("8TeV")==0 && mode==4) maxNAllowedEta += 3;
 
 
 
