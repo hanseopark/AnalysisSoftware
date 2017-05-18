@@ -3920,12 +3920,10 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
             }
 
         } else {
-            if((GetCentralityString(fEventCutSelection)).CompareTo("0-5%")==0){ 
-                if(ptBin==2 || ptBin==3 || ptBin==5) mesonAmplitudeMin = mesonAmplitude*80./100.;
-            } else if((GetCentralityString(fEventCutSelection)).CompareTo("5-10%")==0){
-                    if(ptBin==5) mesonAmplitudeMin = mesonAmplitude*90./100.;   
-            } else if((GetCentralityString(fEventCutSelection)).CompareTo("0-10%")==0){
-                    if(ptBin==2) mesonAmplitudeMin = mesonAmplitude*80./100.;   
+            if((GetCentralityString(fEventCutSelection)).CompareTo("0-5%")==0 && (ptBin==2 || ptBin==3 || ptBin==5)){ 
+                mesonAmplitudeMin = mesonAmplitude*80./100.;
+            } else if((GetCentralityString(fEventCutSelection)).CompareTo("5-10%")==0 && ptBin==5){
+                mesonAmplitudeMin = mesonAmplitude*90./100.;   
             } else mesonAmplitudeMin = mesonAmplitude*40./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
             if (fMode == 2 || fMode == 3){
