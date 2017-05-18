@@ -999,11 +999,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
           labelDate->Draw();
         }
 
-        TLatex *labelPerfTriggFitRange = new TLatex(0.463, 0.12+(0.9*3*textSizeSpectra2)+0.01, "Fit range (GeV)");
+        TLatex *labelPerfTriggFitRange = new TLatex(0.463, 0.125+(0.9*3*textSizeSpectra2)+0.01, "Fit range (GeV)");
         SetStyleTLatex( labelPerfTriggFitRange, textSizeSpectra2,4);
         labelPerfTriggFitRange->Draw();
 
-        TLatex *labelPerfTriggRejecFac = new TLatex(0.723, 0.12+(0.9*3*textSizeSpectra2)+0.01, "Trigger rejection");
+        TLatex *labelPerfTriggRejecFac = new TLatex(0.723, 0.125+(0.9*3*textSizeSpectra2)+0.01, "Trigger rejection");
         SetStyleTLatex( labelPerfTriggRejecFac, textSizeSpectra2,4);
         labelPerfTriggRejecFac->Draw();
 
