@@ -806,14 +806,28 @@
     Int_t fBinsPi0PbPb5020GeVEMCPtRebin[24]         = { 10, 8, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 4, 4, 4, 4,
                                                         4, 8, 8, 8};
+    Double_t fBinsPi0PbPb5020GeVPCMEMCPt[25]           = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+                                                        2.2, 2.4, 2.6, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0, 10.0,
+                                                        12.0, 14.0,16.0, 20.,25.};
+    Int_t fBinsPi0PbPb5020GeVPCMEMCPtRebin[24]         = { 10, 8, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 4, 4, 4, 4,
+                                                        4, 8, 8, 8};
     Double_t fBinsPi0PbPb5020GeVPtDCA[14]           = { 0.0, 1.0, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 3.0,
                                                         3.5, 4.0, 5.0, 7.0};
     Int_t fBinsPi0PbPb5020GeVPtRebin[15]            = { 10, 4, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         4, 4, 4, 4, 4};
 
     Double_t fBinsEtaPbPb5020GeVPt[4]               = { 0.0, 1.0, 3.0, 6.0};
-    Double_t fBinsEtaPbPb5020GeVPtDCA[4]            = { 0.0, 1.0, 3.0, 6.0};
     Int_t fBinsEtaPbPb5020GeVPtRebin[3]             = { 10, 8, 8};
+    Double_t fBinsEtaPbPb5020GeVPtDCA[4]            = { 0.0, 1.0, 3.0, 6.0};
+    Double_t fBinsEtaPbPb5020GeVEMCPt[23]           = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6,
+                                                        4.0, 5.0, 6.0, 8., 10., 12., 14., 16., 18., 20., 25., 30., 35.};
+    Int_t fBinsEtaPbPb5020GeVEMCPtRebin[22]         = { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+                                                        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
+    Double_t fBinsEtaPbPb5020GeVPCMEMCPt[23]           = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6,
+                                                        4.0, 5.0, 6.0, 8., 10., 12., 14., 16., 18., 20., 25., 30., 35.};
+    Int_t fBinsEtaPbPb5020GeVPCMEMCPtRebin[22]         = { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+                                                        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
 
     Int_t fBinsPi0EtaBinningPbPb5020GeVPtRebin[3]   = { 10, 2, 2};
 
@@ -1110,10 +1124,12 @@
                 } else
                     return 4;
             } else if( energy.CompareTo("PbPb_5.02TeV") == 0) {
-                if (mode == 4){
-                return 10;
+                if (mode == 2){
+                  return 10;
+                }else if (mode == 4){
+                  return 10;
                 }else{
-                return 5;
+                  return 5;
                 }
         }
         } else if (meson.Contains("Eta")) {
@@ -1321,7 +1337,12 @@
                 } else
                     return 4;
             } else if( energy.CompareTo("PbPb_5.02TeV") == 0) {
-            return 1;
+               if (mode == 2){
+                 return 8;
+               }else if (mode == 4){
+                 return 8;
+               }else 
+                 return 1;
             }
         } else if (meson.CompareTo("EtaPrim") == 0){
             return 3;
@@ -2411,15 +2432,20 @@
                     }
 
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
-                        if (isDCA)
+                        if (isDCA){
                             fBinsPt[i]  = fBinsPi0PbPb5020GeVPtDCA[i];
-                        else
-                            fBinsPt[i]  = fBinsPi0PbPb5020GeVPt[i];
-                        if (modi == 4){
-                        fBinsPt[i]  = fBinsPi0PbPb5020GeVEMCPt[i];
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5020GeVEMCPtRebin[i];
+                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5020GeVPtRebin[i];
                         }else{
-                        if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5020GeVPtRebin[i];
+                          if (modi == 2){
+                            fBinsPt[i]  = fBinsPi0PbPb5020GeVPCMEMCPt[i];
+                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5020GeVPCMEMCPtRebin[i];
+                          }else if (modi == 4){
+                            fBinsPt[i]  = fBinsPi0PbPb5020GeVEMCPt[i];
+                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5020GeVEMCPtRebin[i];
+                          }else{
+                            fBinsPt[i]  = fBinsPi0PbPb5020GeVPt[i];
+                            if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb5020GeVPtRebin[i];
+                          }
                         }
                     }
                 }
@@ -3236,13 +3262,34 @@
                 fStartPtBin         = 1;
                 fColumn             = 3;
                 fRow                = 2;
-                if (fNBinsPt > 3) {
-                    cout << "You have chosen to have more than 3 bins, this is not possible, it will be reduced to 3" << endl;
-                    fNBinsPt        = 3;
+                
+                if( modi == 2 ){
+                  fStartPtBin = 5;
+                  fColumn             = 5;
+                  fRow                = 4;
+                }
+                
+                if( modi == 4 ){
+                  fStartPtBin = 4;
+                  fColumn             = 5;
+                  fRow                = 5;
+                }
+                
+                if (fNBinsPt > 22) {
+                    cout << "You have chosen to have more than 22 bins, this is not possible, it will be reduced to 22" << endl;
+                    fNBinsPt        = 22;
                 }
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                  if(modi == 2){
+                    fBinsPt[i]         = fBinsEtaPbPb5020GeVPCMEMCPt[i];
+                    if (i < fNBinsPt+1) fNRebin[i] = fBinsEtaPbPb5020GeVPCMEMCPtRebin[i];
+                  }else if(modi == 4){
+                    fBinsPt[i]         = fBinsEtaPbPb5020GeVEMCPt[i];
+                    if (i < fNBinsPt+1) fNRebin[i] = fBinsEtaPbPb5020GeVEMCPtRebin[i];
+                  }else{
                     fBinsPt[i]         = fBinsEtaPbPb5020GeVPt[i];
                     if (i < fNBinsPt+1) fNRebin[i] = fBinsEtaPbPb5020GeVPtRebin[i];
+                  }
                 }
             }
         //*************************************************************************************************

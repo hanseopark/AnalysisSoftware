@@ -1615,9 +1615,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             if (mode == 4 && optionEnergy.CompareTo("8TeV")==0 && trigger.CompareTo("81")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.13,0.180);
             if (mode == 2 ) histoMassMeson->GetYaxis()->SetRangeUser(0.128,0.140);
             if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
+            if ((mode == 2 ||mode == 4) && optionEnergy.CompareTo("PbPb_5.02TeV")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.170);
         } else {
             histoMassMeson->GetYaxis()->SetRangeUser(0.54,0.56);
             if (mode == 2 || mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.50,0.57);
+            if ((mode == 2 ||mode == 4) && optionEnergy.CompareTo("PbPb_5.02TeV")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.45,0.65);
         }               
         histoMassMeson->GetYaxis()->SetNdivisions(510); 
         
