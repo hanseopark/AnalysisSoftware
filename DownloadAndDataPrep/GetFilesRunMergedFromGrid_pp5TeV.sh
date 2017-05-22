@@ -47,13 +47,21 @@ echo $BASEDIR
 mkdir -p $BASEDIR
 fileName=$3 
  
-TRAINDIR=Legotrain-vAN-20170424-1-ConvCalo
+TRAINDIR=Legotrain-vAN-20170515-1-ConvCalo
 LHC15np2Data="";
-LHC15np3Data="2055_20170425-1434";
-LHC16h8a="";
-LHC16h8b="";
-LHC16k5a="";
-LHC16k5b="";
+LHC15np3Data="";
+
+# LHC16h8a="2905_20170426-0936";
+# LHC16h8b="2901_20170426-0928";
+# LHC16k5a="2904_20170426-0935";
+# LHC16k5b="2903_20170426-0928";
+
+LHC16h8a="2916_20170515-2055";
+LHC16h8b="2920_20170515-2129";
+LHC16k5a="2924_20170515-2133";
+LHC16k5b="2926_20170515-2146";
+
+
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
@@ -187,4 +195,195 @@ if [ $LHC15np3Data != "" ]; then
       done;
    done;      
 fi
+
+
+
+if [ $LHC16k5a != "" ]; then
+   OUTPUTDIR_LHC16k5a=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC16k5a
+   echo $TRAINPATHMC-$LHC16k5a;
+   mkdir -p $OUTPUTDIR_LHC16k5a
+   rm runNumbersLHC16k5aFailedRunMerge.txt
+   echo "copying LHC16k5a MC" 
+   runNumbers=`cat runlists/runNumbersLHC15n.txt`
+   for runNumber in $runNumbers; do
+      echo $runNumber
+      runNumberlocal=$runNumber
+      if [ $2 = "AOD" ]; then
+        runNumber=$runNumber/AOD158
+        
+      fi
+      mkdir -p $OUTPUTDIR_LHC16k5a/$runNumberlocal
+      if [ -f $OUTPUTDIR_LHC16k5a/$runNumberlocal/$fileName ]; then
+         echo "file " $fileName  " has already been copied for run " $runNumberlocal
+      else 
+         echo "copying /alice/sim/2016/LHC16k5a/$runNumber/PWGGA/$TRAINPATHMC/$LHC16k5a/$fileName"
+         alien_cp alien:/alice/sim/2016/LHC16k5a/$runNumber/PWGGA/$TRAINPATHMC/$LHC16k5a/$fileName file:$OUTPUTDIR_LHC16k5a/$runNumberlocal
+      fi
+      if [ $? -ne 0 ] && [ -f $OUTPUTDIR_LHC16k5a/$runNumberlocal/$fileName ]; then
+         echo "file " $fileName  " been copied for sucessfully for run " $runNumberlocal
+      else 
+         echo $runNumberlocal >> runNumbersLHC16k5aFailedRunMerge.txt
+      fi     
+   done;
+fi
+
+
+
+
+if [ $LHC16k5a != "" ]; then
+   OUTPUTDIR_LHC16k5a=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC16k5a
+   echo $TRAINPATHMC-$LHC16k5a;
+   mkdir -p $OUTPUTDIR_LHC16k5a
+   rm runNumbersLHC16k5aFailedRunMerge.txt
+   echo "copying LHC16k5a MC" 
+   runNumbers=`cat runlists/runNumbersLHC15n.txt`
+   for runNumber in $runNumbers; do
+      echo $runNumber
+      runNumberlocal=$runNumber
+      if [ $2 = "AOD" ]; then
+        runNumber=$runNumber/AOD158
+        
+      fi
+      mkdir -p $OUTPUTDIR_LHC16k5a/$runNumberlocal
+      if [ -f $OUTPUTDIR_LHC16k5a/$runNumberlocal/$fileName ]; then
+         echo "file " $fileName  " has already been copied for run " $runNumberlocal
+      else 5
+         echo "copying /alice/sim/2016/LHC16k5a/$runNumber/PWGGA/$TRAINPATHMC/$LHC16k5a/$fileName"
+         alien_cp alien:/alice/sim/2016/LHC16k5a/$runNumber/PWGGA/$TRAINPATHMC/$LHC16k5a/$fileName file:$OUTPUTDIR_LHC16k5a/$runNumberlocal
+      fi
+      if [ $? -ne 0 ] && [ -f $OUTPUTDIR_LHC16k5a/$runNumberlocal/$fileName ]; then
+         echo "file " $fileName  " been copied for sucessfully for run " $runNumberlocal
+      else 
+         echo $runNumberlocal >> runNumbersLHC16k5aFailedRunMerge.txt
+      fi     
+   done;
+fi
+
+
+
+if [ $LHC16k5b != "" ]; then
+   OUTPUTDIR_LHC16k5b=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC16k5b
+   echo $TRAINPATHMC-$LHC16k5b;
+   mkdir -p $OUTPUTDIR_LHC16k5b
+   rm runNumbersLHC16k5bFailedRunMerge.txt
+   echo "copying LHC16k5b MC" 
+   runNumbers=`cat runlists/runNumbersLHC15n.txt`
+   for runNumber in $runNumbers; do
+      echo $runNumber
+      runNumberlocal=$runNumber
+      if [ $2 = "AOD" ]; then
+        runNumber=$runNumber/AOD158
+        
+      fi
+      mkdir -p $OUTPUTDIR_LHC16k5b/$runNumberlocal
+      if [ -f $OUTPUTDIR_LHC16k5b/$runNumberlocal/$fileName ]; then
+         echo "file " $fileName  " has already been copied for run " $runNumberlocal
+      else 5
+         echo "copying /alice/sim/2016/LHC16k5b/$runNumber/PWGGA/$TRAINPATHMC/$LHC16k5b/$fileName"
+         alien_cp alien:/alice/sim/2016/LHC16k5b/$runNumber/PWGGA/$TRAINPATHMC/$LHC16k5b/$fileName file:$OUTPUTDIR_LHC16k5b/$runNumberlocal
+      fi
+      if [ $? -ne 0 ] && [ -f $OUTPUTDIR_LHC16k5b/$runNumberlocal/$fileName ]; then
+         echo "file " $fileName  " been copied for sucessfully for run " $runNumberlocal
+      else 
+         echo $runNumberlocal >> runNumbersLHC16k5bFailedRunMerge.txt
+      fi     
+   done;
+fi
+
+
+
+if [ $LHC16h8a != "" ]; then
+   OUTPUTDIR_LHC16h8a=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC16h8a
+   echo $TRAINPATHMC-$LHC16h8a;
+   mkdir -p $OUTPUTDIR_LHC16h8a
+   rm runNumbersLHC16h8aFailedRunMerge.txt
+   echo "copying LHC16h8a MC" 
+   runNumbers=`cat runlists/runNumbersLHC15n.txt`
+   for runNumber in $runNumbers; do
+      echo $runNumber
+      runNumberlocal=$runNumber
+      if [ $2 = "AOD" ]; then
+        runNumber=$runNumber/AOD158
+        
+      fi
+      mkdir -p $OUTPUTDIR_LHC16h8a/$runNumberlocal
+      if [ -f $OUTPUTDIR_LHC16h8a/$runNumberlocal/$fileName ]; then
+         echo "file " $fileName  " has already been copied for run " $runNumberlocal
+      else 5
+         echo "copying /alice/sim/2016/LHC16h8a/$runNumber/PWGGA/$TRAINPATHMC/$LHC16h8a/$fileName"
+         alien_cp alien:/alice/sim/2016/LHC16h8a/$runNumber/PWGGA/$TRAINPATHMC/$LHC16h8a/$fileName file:$OUTPUTDIR_LHC16h8a/$runNumberlocal
+      fi
+      if [ $? -ne 0 ] && [ -f $OUTPUTDIR_LHC16h8a/$runNumberlocal/$fileName ]; then
+         echo "file " $fileName  " been copied for sucessfully for run " $runNumberlocal
+      else 
+         echo $runNumberlocal >> runNumbersLHC16h8aFailedRunMerge.txt
+      fi     
+   done;
+fi
+
+
+
+if [ $LHC16h8a != "" ]; then
+   OUTPUTDIR_LHC16h8a=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC16h8a
+   echo $TRAINPATHMC-$LHC16h8a;
+   mkdir -p $OUTPUTDIR_LHC16h8a
+   rm runNumbersLHC16h8aFailedRunMerge.txt
+   echo "copying LHC16h8a MC" 
+   runNumbers=`cat runlists/runNumbersLHC15n.txt`
+   for runNumber in $runNumbers; do
+      echo $runNumber
+      runNumberlocal=$runNumber
+      if [ $2 = "AOD" ]; then
+        runNumber=$runNumber/AOD158
+        
+      fi
+      mkdir -p $OUTPUTDIR_LHC16h8a/$runNumberlocal
+      if [ -f $OUTPUTDIR_LHC16h8a/$runNumberlocal/$fileName ]; then
+         echo "file " $fileName  " has already been copied for run " $runNumberlocal
+      else 5
+         echo "copying /alice/sim/2016/LHC16h8a/$runNumber/PWGGA/$TRAINPATHMC/$LHC16h8a/$fileName"
+         alien_cp alien:/alice/sim/2016/LHC16h8a/$runNumber/PWGGA/$TRAINPATHMC/$LHC16h8a/$fileName file:$OUTPUTDIR_LHC16h8a/$runNumberlocal
+      fi
+      if [ $? -ne 0 ] && [ -f $OUTPUTDIR_LHC16h8a/$runNumberlocal/$fileName ]; then
+         echo "file " $fileName  " been copied for sucessfully for run " $runNumberlocal
+      else 
+         echo $runNumberlocal >> runNumbersLHC16h8aFailedRunMerge.txt
+      fi     
+   done;
+fi
+
+
+if [ $LHC16h8b != "" ]; then
+   OUTPUTDIR_LHC16h8b=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC16h8b
+   echo $TRAINPATHMC-$LHC16h8b;
+   mkdir -p $OUTPUTDIR_LHC16h8b
+   rm runNumbersLHC16h8bFailedRunMerge.txt
+   echo "copying_LHC16h8b MC" 
+   runNumbers=`cat runlists/runNumbersLHC15n.txt`
+   for runNumber in $runNumbers; do
+      echo $runNumber
+      runNumberlocal=$runNumber
+      if [ $2 = "AOD" ]; then
+        runNumber=$runNumber/AOD158
+      fi
+      mkdir -p $OUTPUTDIR_LHC16h8b/$runNumberlocal
+      if [ -f $OUTPUTDIR_LHC16h8b/$runNumberlocal/$fileName ]; then
+         echo "file " $fileName  " has already been copied for run " $runNumberlocal
+      else 
+         echo "copying /alice/sim/2016/LHC16h8b/$runNumber/PWGGA/$TRAINPATHMC/$LHC16h8b/$fileName"
+         alien_cp alien:/alice/sim/2016/LHC16h8b/$runNumber/PWGGA/$TRAINPATHMC/$LHC16h8b/$fileName file:$OUTPUTDIR_LHC16h8b/$runNumberlocal
+      fi
+      if [ $? -ne 0 ] && [ -f $OUTPUTDIR_LHC16h8b/$runNumberlocal/$fileName ]; then
+         echo "file " $fileName  " been copied for sucessfully for run " $runNumberlocal
+      else 
+         echo $runNumberlocal >> runNumbersLHC16h8bFailedRunMerge.txt
+      fi     
+   done;
+fi
+
+
+
+
+
+
 
