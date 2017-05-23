@@ -56,6 +56,43 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
     //*********************************************************************************************************************************
     //*********************************************************************************************************************************
 
+//    const Int_t nSets = 2;
+//    const Int_t nData = 0;
+//    TString DataSets[nSets]={
+//      "LHC16c2",
+//      "LHC16c2_plus"
+//    };
+//    TString PrefixDataSets[nSets]={
+//      "/alice/sim/2016/LHC16c2/",
+//      "/alice/sim/2016/LHC16c2_plus/"
+//    };
+
+//    TString AODfiltering[nSets]={
+//      "/AOD185",
+//      ""
+//    };
+
+//    TString train = "Legotrain-vAN-20170518-8TeV-std_EMCal";
+//    Int_t trainRuns[nSets] = {413,414};
+//    TString runlist[nSets] = {"merge","merge"};
+
+//    const Int_t nFiles = 3;
+//    TString Files[nFiles] = {
+//      "GammaCalo_101","GammaCalo_126","GammaCalo_146"
+//                            };
+
+//    const Int_t nMerge = 1;
+//    TString strMerge[nMerge]={"LHC16c2_merge"};
+//    std::vector<Int_t> mergeVec[nMerge];
+//    std::vector<Int_t>::iterator it;
+//    for(Int_t i=0; i<nSets; i++){
+//      if(0<=i && i<=1) mergeVec[0].push_back(i);
+//    }
+
+    //*********************************************************************************************************************************
+    //*********************************************************************************************************************************
+    //*********************************************************************************************************************************
+
     const Int_t nSets = 2;
     const Int_t nData = 0;
     TString DataSets[nSets]={
@@ -72,14 +109,22 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
       ""
     };
 
-    TString train = "Legotrain-vAN-20170511-8TeV-openAngle";
-    Int_t trainRuns[nSets] = {407,408};
+    TString train = "Legotrain-vAN-20170519-8TeV-EMCal_openAngleStudies";
+    Int_t trainRuns[nSets] = {419,420};
     TString runlist[nSets] = {"merge","merge"};
 
     const Int_t nFiles = 4;
     TString Files[nFiles] = {
-      "GammaCalo_163","GammaCalo_164","GammaCalo_165", "GammaCalo_166"
+      "GammaCalo_169","GammaCalo_170","GammaCalo_171","GammaCalo_172"
                             };
+
+    const Int_t nMerge = 1;
+    TString strMerge[nMerge]={"LHC16c2_merge"};
+    std::vector<Int_t> mergeVec[nMerge];
+    std::vector<Int_t>::iterator it;
+    for(Int_t i=0; i<nSets; i++){
+      if(0<=i && i<=1) mergeVec[0].push_back(i);
+    }
 
     //---------------------------------------------------------------------------------------------------
 
@@ -142,6 +187,15 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
 
     fstream fLog;
     fLog.open(Form("%s/%s/DL.log",folder.Data(),train.Data()), ios::out);
+
+    TString mergeSets[nMerge][nFiles];
+    for(Int_t iFiles=0; iFiles<nFiles; iFiles++){
+      for(Int_t iM=0; iM<nMerge; iM++){
+        TString mergeS = Form("%s/%s_%s.root", fPathLocal.Data(), strMerge[iM].Data(), Files[iFiles].Data());
+        mergeSets[iM][iFiles] = Form("hadd -f -k %s",mergeS.Data());
+        //cout << mergeSets[iM][iFiles] << endl;
+      }
+    }
 
     for(Int_t i=0; i<nSets; i++)
     {
@@ -297,6 +351,11 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
             cout << "Merging " << mergePeriod[iFiles].Data() << " ..." << endl;
             gSystem->Exec(mergePeriod[iFiles].Data());
             cout << "done!" << endl;
+
+            for(Int_t iM=0; iM<nMerge; iM++){
+              it = find( mergeVec[iM].begin(), mergeVec[iM].end(), i);
+              if( it!=mergeVec[iM].end() ) mergeSets[iM][iFiles] += Form("%s/%s_%s.root", fPathLocal.Data(), DataSets[i].Data(), Files[iFiles].Data());
+            }
           }
 
         //---------------------------------------------------------------------------------------------------
@@ -324,12 +383,20 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
             TFile fileCheck(fPathTemp.Data());
             if(!fileCheck.IsZombie()) {
               cout << "\n\t\t>>>>>>>>>>>>>>>>>>Info: ROOT-File |" << fPathTemp.Data() << "| does already exist! Continue...<<<<<<<<<<<<<<\n" << endl;
+              for(Int_t iM=0; iM<nMerge; iM++){
+                it = find( mergeVec[iM].begin(), mergeVec[iM].end(), i);
+                if( it!=mergeVec[iM].end() ) mergeSets[iM][k] += Form(" %s/%s_%s.root", fPathLocal.Data(), DataSets[i].Data(), Files[k].Data());
+              }
               gSystem->Exec(Form("ln -s %s %s/%s_%s.root",fPathTemp.Data(), fPathLocal.Data(), DataSets[i].Data(), Files[k].Data()));
               continue;
             }
 
             if(copyAlien2Local(fPathGrid,fPathTemp)){
               ChangeStrucToStd(fPathTemp.Data(),fPathTemp.Data(),Files[k].Data());
+              for(Int_t iM=0; iM<nMerge; iM++){
+                it = find( mergeVec[iM].begin(), mergeVec[iM].end(), i);
+                if( it!=mergeVec[iM].end() ) mergeSets[iM][k] += Form(" %s/%s_%s.root", fPathLocal.Data(), DataSets[i].Data(), Files[k].Data());
+              }
               gSystem->Exec(Form("ln -s %s %s/%s_%s.root",fPathTemp.Data(), fPathLocal.Data(), DataSets[i].Data(), Files[k].Data()));
               continue;
             }
@@ -344,6 +411,18 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
           }
         }
         //---------------------------------------------------------------------------------------------------
+    }
+
+    cout << "\n------------------------------------------------------" << endl;
+    cout << "Merging: " << endl;
+    cout << "------------------------------------------------------\n" << endl;
+
+    for(Int_t iFiles=0; iFiles<nFiles; iFiles++){
+      for(Int_t iM=0; iM<nMerge; iM++){
+        cout << "Merging " << strMerge[iM].Data() << " - " << Files[iFiles] << " ..." << endl;
+        gSystem->Exec(mergeSets[iM][iFiles].Data());
+        cout << "done!" << endl;
+      }
     }
 
     for(Int_t i=0; i<nSets; i++){
