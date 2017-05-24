@@ -51,37 +51,32 @@
 
 struct pi0cand{
     pi0cand(){
-      cluster_phi[0].clear();
-      cluster_eta[0].clear();
-      cluster_cellNCells[0].clear();
-      cluster_cellAbsId[0].clear();
-      cluster_cellEta[0].clear();
-      cluster_cellPhi[0].clear();
-      cluster_cellEnergy[0].clear();
-
-      cluster_phi[1].clear();
-      cluster_eta[1].clear();
-      cluster_cellNCells[1].clear();
-      cluster_cellAbsId[1].clear();
-      cluster_cellEta[1].clear();
-      cluster_cellPhi[1].clear();
-      cluster_cellEnergy[1].clear();
+      cluster_NClusters.clear();
+      cluster_phi.clear();
+      cluster_eta.clear();
+      cluster_cellNCells.clear();
+      cluster_cellAbsId.clear();
+      cluster_cellEta.clear();
+      cluster_cellPhi.clear();
+      cluster_cellEnergy.clear();
 
       pi0cand_openAngle.clear();
       pi0cand_pT.clear();
-      pi0cand_clusterDist.clear();
+      pi0cand_clusterInvMass.clear();
     }
-    std::vector<Float_t> cluster_phi[2];
-    std::vector<Float_t> cluster_eta[2];
-    std::vector<Int_t> cluster_cellAbsId[2];
-    std::vector<Int_t> cluster_cellNCells[2];
-    std::vector<Float_t> cluster_cellEta[2];
-    std::vector<Float_t> cluster_cellPhi[2];
-    std::vector<Float_t> cluster_cellEnergy[2];
+
+    std::vector<Int_t> cluster_NClusters;
+    std::vector<Float_t> cluster_phi;
+    std::vector<Float_t> cluster_eta;
+    std::vector<Int_t> cluster_cellAbsId;
+    std::vector<Int_t> cluster_cellNCells;
+    std::vector<Float_t> cluster_cellEta;
+    std::vector<Float_t> cluster_cellPhi;
+    std::vector<Float_t> cluster_cellEnergy;
 
     std::vector<Float_t> pi0cand_openAngle;
     std::vector<Float_t> pi0cand_pT;
-    std::vector<Float_t> pi0cand_clusterDist;
+    std::vector<Float_t> pi0cand_clusterInvMass;
 };
 
 struct sepClusters{
@@ -122,47 +117,55 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
           file >> fVar;
           if(fVar.Sizeof()>1)
           {
-            if(fVar.BeginsWith("--cluster")){
-              cout << "cluster" << iClus << endl;
-              file >> fVar;
-              Int_t nCells = 0;
-              do{
-                cand.cluster_cellAbsId[iClus].push_back(fVar.Atoi());
+            if(fVar.BeginsWith("--pi0cand")){
+                cout << "--------------------------" << endl;
                 file >> fVar;
                 file >> fVar;
-                cand.cluster_cellEta[iClus].push_back(fVar.Atof());
+                cand.pi0cand_openAngle.push_back(fVar.Atof());
                 file >> fVar;
                 file >> fVar;
-                cand.cluster_cellPhi[iClus].push_back(fVar.Atof());
+                cand.pi0cand_pT.push_back(fVar.Atof());
                 file >> fVar;
                 file >> fVar;
-                cand.cluster_cellEnergy[iClus].push_back(fVar.Atof());
+                cand.pi0cand_clusterInvMass.push_back(fVar.Atof());
+                cout << "pi0cand - opening angle: '" << cand.pi0cand_openAngle.at(cand.pi0cand_openAngle.size()-1) << "' - pT: '" << cand.pi0cand_pT.at(cand.pi0cand_openAngle.size()-1) << "'" << endl;
+            }else if(fVar.BeginsWith("--cluster")){
+                cout << "cluster" << iClus;
                 file >> fVar;
-                cout << ".";
-                nCells++;
-              }while(!fVar.Contains("phi"));
-              cand.cluster_cellNCells[iClus].push_back(nCells);
+                Int_t nCells = 0;
+                do{
+                    cand.cluster_cellAbsId.push_back(fVar.Atoi());
+                    file >> fVar;
+                    cand.cluster_cellEta.push_back(fVar.Atof());
+                    file >> fVar;
+                    cand.cluster_cellPhi.push_back(fVar.Atof());
+                    file >> fVar;
+                    cand.cluster_cellEnergy.push_back(fVar.Atof());
+                    file >> fVar;
+                    cout << ".";
+                    nCells++;
+                }while(!fVar.Contains("phi"));
+                cand.cluster_cellNCells.push_back(nCells);
+                file >> fVar;
+                cand.cluster_phi.push_back(fVar.Atof());
+                file >> fVar;
+                file >> fVar;
+                cand.cluster_eta.push_back(fVar.Atof());
+                iClus++;
+                cout << endl;
+            } else if(fVar.BeginsWith("--event")){
               file >> fVar;
-              cand.cluster_phi[iClus].push_back(fVar.Atof());
               file >> fVar;
-              file >> fVar;
-              cand.cluster_eta[iClus].push_back(fVar.Atof());
-              iClus++;
-              cout << endl;
-            }else if(fVar.BeginsWith("--pi0cand")){
-              file >> fVar;
-              file >> fVar;
-              cand.pi0cand_openAngle.push_back(fVar.Atof());
-              file >> fVar;
-              file >> fVar;
-              cand.pi0cand_pT.push_back(fVar.Atof());
-              file >> fVar;
-              file >> fVar;
-              cand.pi0cand_clusterDist.push_back(fVar.Atof());
-              iClus = 0;
-              cout << "pi0cand - opening angle: '" << cand.pi0cand_openAngle.at(cand.pi0cand_openAngle.size()-1) << "' - pT: '" << cand.pi0cand_pT.at(cand.pi0cand_openAngle.size()-1) << "'" << endl;
               cout << "--------------------------" << endl;
+              cout << "#clusters in event: " << fVar.Atoi() << endl;
+              cand.pi0cand_openAngle.push_back(0.);
+              cand.pi0cand_pT.push_back(0.);
+              cand.pi0cand_clusterInvMass.push_back(0.);
+            } else if(fVar.BeginsWith("---")){
+              cand.cluster_NClusters.push_back(iClus);
+              iClus = 0;
             }
+
           }
       }
   }
@@ -175,7 +178,7 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
   Double_t topMargin      = 0.1;
   Double_t bottomMargin   = 0.1;
 
-  TString outputDir           = "DebugPlots";
+  TString outputDir           = "DebugPlots2";
   gSystem->Exec("mkdir -p "+outputDir);
 
   const Int_t nEmcalEtaBins             = 96;
@@ -183,10 +186,11 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
   Float_t EmcalEtaBins[nEmcalEtaBins+1] = {-0.66687,-0.653,-0.63913,-0.62526,-0.61139,-0.59752,-0.58365,-0.56978,-0.55591,-0.54204,-0.52817,-0.5143,-0.50043,-0.48656,-0.47269,-0.45882,-0.44495,-0.43108,-0.41721,-0.40334,-0.38947,-0.3756,-0.36173,-0.34786,-0.33399,-0.32012,-0.30625,-0.29238,-0.27851,-0.26464,-0.25077,-0.2369,-0.22303,-0.20916,-0.19529,-0.18142,-0.16755,-0.15368,-0.13981,-0.12594,-0.11207,-0.0982,-0.08433,-0.07046,-0.05659,-0.04272,-0.02885,-0.01498,-0.00111,0.01276,0.02663,0.0405,0.05437,0.06824,0.08211,0.09598,0.10985,0.12372,0.13759,0.15146,0.16533,0.1792,0.19307,0.20694,0.22081,0.23468,0.24855,0.26242,0.27629,0.29016,0.30403,0.3179,0.33177,0.34564,0.35951,0.37338,0.38725,0.40112,0.41499,0.42886,0.44273,0.4566,0.47047,0.48434,0.49821,0.51208,0.52595,0.53982,0.55369,0.56756,0.58143,0.5953,0.60917,0.62304,0.63691,0.65078,0.66465};
   Float_t EmcalPhiBins[nEmcalPhiBins+1] = {1.408,1.4215,1.435,1.4485,1.462,1.4755,1.489,1.5025,1.516,1.5295,1.543,1.5565,1.57,1.5835,1.597,1.6105,1.624,1.6375,1.651,1.6645,1.678,1.6915,1.705,1.7185,1.732,1.758,1.7715,1.785,1.7985,1.812,1.8255,1.839,1.8525,1.866,1.8795,1.893,1.9065,1.92,1.9335,1.947,1.9605,1.974,1.9875,2.001,2.0145,2.028,2.0415,2.055,2.0685,2.082,2.108,2.1215,2.135,2.1485,2.162,2.1755,2.189,2.2025,2.216,2.2295,2.243,2.2565,2.27,2.2835,2.297,2.3105,2.324,2.3375,2.351,2.3645,2.378,2.3915,2.405,2.4185,2.432,2.456,2.4695,2.483,2.4965,2.51,2.5235,2.537,2.5505,2.564,2.5775,2.591,2.6045,2.618,2.6315,2.645,2.6585,2.672,2.6855,2.699,2.7125,2.726,2.7395,2.753,2.7665,2.78,2.804,2.8175,2.831,2.8445,2.858,2.8715,2.885,2.8985,2.912,2.9255,2.939,2.9525,2.966,2.9795,2.993,3.0065,3.02,3.0335,3.047,3.0605,3.074,3.0875,3.101,3.1145,3.128};
 
-  Int_t iCell1 = 0;
-  Int_t iCellMax1 = 0;
-  Int_t iCell2 = 0;
-  Int_t iCellMax2 = 0;
+  Int_t iCell = 0;
+  Int_t iCellMax = 0;
+
+  Int_t iClus = 0;
+  Int_t iClusMax = 0;
 
   TLine *line             = new TLine();
   line->SetLineStyle(2);
@@ -204,50 +208,87 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
   point->SetMarkerColor(1);
 
   std::vector<sepClusters> vecSepClus;
+  std::vector<sepClusters> vecCenterClus;
 
-  for(Int_t i = 0; i<(Int_t)cand.pi0cand_openAngle.size(); i++){
-    iCellMax1+=(Int_t)cand.cluster_cellNCells[0].at(i);
-    iCellMax2+=(Int_t)cand.cluster_cellNCells[1].at(i);
-
-    TH2F* fHistClusterEtavsPhiAfterQA     = new TH2F(Form("clusters_%i",i),"EtaPhi_afterClusterQA",nEmcalPhiBins,EmcalPhiBins,nEmcalEtaBins,EmcalEtaBins);
-    std::vector<Int_t> tempBins;
-    for(; iCell1<iCellMax1; iCell1++){
-      tempBins.push_back(fHistClusterEtavsPhiAfterQA->Fill(cand.cluster_cellPhi[0].at(iCell1),cand.cluster_cellEta[0].at(iCell1),cand.cluster_cellEnergy[0].at(iCell1)));
-    }
-
-    for(; iCell2<iCellMax2; iCell2++){
-      Int_t tempBin2 = fHistClusterEtavsPhiAfterQA->Fill(cand.cluster_cellPhi[1].at(iCell2),cand.cluster_cellEta[1].at(iCell2),cand.cluster_cellEnergy[1].at(iCell2));
-      for(Int_t iB = 0; iB < (Int_t)tempBins.size(); iB++){
-        Int_t diff = tempBins.at(iB)-tempBin2;
+  for(Int_t iEvent = 0; iEvent<(Int_t)cand.cluster_NClusters.size(); iEvent++){
+    vecCenterClus.clear();
+    vecSepClus.clear();
+    if((Int_t)cand.cluster_NClusters.at(iEvent)==0) continue;
+    iClusMax += (Int_t)cand.cluster_NClusters.at(iEvent);
+    TH2F* fHistClusterEtavsPhiAfterQA     = new TH2F(Form("clusters_%i",iEvent),"EtaPhi_afterClusterQA",nEmcalPhiBins,EmcalPhiBins,nEmcalEtaBins,EmcalEtaBins);
+    if((Int_t)cand.cluster_NClusters.at(iEvent)==1){
+      for(; iClus<iClusMax; iClus++){
+        sepClusters centerTemp;
+        centerTemp.lowX = cand.cluster_phi.at(iClus);
+        centerTemp.lowY = cand.cluster_eta.at(iClus);
+        vecCenterClus.push_back(centerTemp);
         sepClusters sepTemp;
-        if(diff == 1){
-          sepTemp.lowX = fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(tempBin2%(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
-          sepTemp.lowY = fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinLowEdge(tempBin2/(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
-          sepTemp.upX = fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(tempBin2%(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
-          sepTemp.upY = fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(tempBin2/(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
-          vecSepClus.push_back(sepTemp);
-        }else if(diff == -1){
-          sepTemp.lowX = fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinLowEdge(tempBin2%(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
-          sepTemp.lowY = fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinLowEdge(tempBin2/(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
-          sepTemp.upX = fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinLowEdge(tempBin2%(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
-          sepTemp.upY = fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(tempBin2/(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
-          vecSepClus.push_back(sepTemp);
-        }else if (diff == 126){
-          sepTemp.lowX = fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinLowEdge(tempBin2%(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
-          sepTemp.lowY = fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(tempBin2/(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
-          sepTemp.upX = fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(tempBin2%(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
-          sepTemp.upY = fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(tempBin2/(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
-          vecSepClus.push_back(sepTemp);
-        }else if (diff == -126){
-          sepTemp.lowX = fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinLowEdge(tempBin2%(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
-          sepTemp.lowY = fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinLowEdge(tempBin2/(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
-          sepTemp.upX = fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(tempBin2%(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
-          sepTemp.upY = fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinLowEdge(tempBin2/(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
-          vecSepClus.push_back(sepTemp);
+        sepTemp.lowX=-1;sepTemp.lowY=-1;
+        vecSepClus.push_back(sepTemp);
+        iCellMax+=(Int_t)cand.cluster_cellNCells.at(iClus);
+        for(; iCell<iCellMax; iCell++){
+          fHistClusterEtavsPhiAfterQA->Fill(cand.cluster_cellPhi.at(iCell),cand.cluster_cellEta.at(iCell),cand.cluster_cellEnergy.at(iCell));
         }
       }
-    }
+    }else{
+      for(; iClus<iClusMax; iClus++){
+        sepClusters centerTemp;
+        centerTemp.lowX = cand.cluster_phi.at(iClus);
+        centerTemp.lowY = cand.cluster_eta.at(iClus);
+        vecCenterClus.push_back(centerTemp);
 
+        if(iClus>0)iCell+=(Int_t)cand.cluster_cellNCells.at(iClus-1);
+        iCellMax+=(Int_t)cand.cluster_cellNCells.at(iClus);
+
+        std::vector<Int_t> tempBins;
+        for(Int_t iCell1=iCell; iCell1<iCellMax; iCell1++){
+          tempBins.push_back(fHistClusterEtavsPhiAfterQA->Fill(cand.cluster_cellPhi.at(iCell1),cand.cluster_cellEta.at(iCell1),cand.cluster_cellEnergy.at(iCell1)));
+        }
+
+        Int_t iCell_sec=iCell;
+        Int_t iCellMax_sec=iCellMax;
+        for(Int_t iClus2=iClus; iClus2<iClusMax; iClus2++){
+          if(iClus2==iClus) continue;
+
+          if(iClus2>0)iCell_sec+=(Int_t)cand.cluster_cellNCells.at(iClus2-1);
+          iCellMax_sec+=(Int_t)cand.cluster_cellNCells.at(iClus2);
+
+          for(Int_t iCell2=iCell_sec; iCell2<iCellMax_sec; iCell2++){
+            Int_t tempBin2 = fHistClusterEtavsPhiAfterQA->FindBin(cand.cluster_cellPhi.at(iCell2),cand.cluster_cellEta.at(iCell2));
+            for(Int_t iB = 0; iB < (Int_t)tempBins.size(); iB++){
+              Int_t diff = tempBins.at(iB)-tempBin2;
+              sepClusters sepTemp;
+              if(diff == 1){
+                sepTemp.lowX = fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(tempBin2%(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
+                sepTemp.lowY = fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinLowEdge(tempBin2/(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
+                sepTemp.upX = fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(tempBin2%(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
+                sepTemp.upY = fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(tempBin2/(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
+                vecSepClus.push_back(sepTemp);
+              }else if(diff == -1){
+                sepTemp.lowX = fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinLowEdge(tempBin2%(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
+                sepTemp.lowY = fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinLowEdge(tempBin2/(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
+                sepTemp.upX = fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinLowEdge(tempBin2%(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
+                sepTemp.upY = fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(tempBin2/(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
+                vecSepClus.push_back(sepTemp);
+              }else if (diff == 126){
+                sepTemp.lowX = fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinLowEdge(tempBin2%(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
+                sepTemp.lowY = fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(tempBin2/(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
+                sepTemp.upX = fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(tempBin2%(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
+                sepTemp.upY = fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(tempBin2/(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
+                vecSepClus.push_back(sepTemp);
+              }else if (diff == -126){
+                sepTemp.lowX = fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinLowEdge(tempBin2%(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
+                sepTemp.lowY = fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinLowEdge(tempBin2/(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
+                sepTemp.upX = fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(tempBin2%(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
+                sepTemp.upY = fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinLowEdge(tempBin2/(fHistClusterEtavsPhiAfterQA->GetNbinsX()+2));
+                vecSepClus.push_back(sepTemp);
+              }
+            }
+          }
+        }
+        tempBins.clear();
+      }
+    }
     Int_t minB, maxB;
     Int_t minYB, maxYB;
     GetMinMaxBin(fHistClusterEtavsPhiAfterQA,minB,maxB); minB-=2; maxB+=2;
@@ -257,7 +298,7 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
     SetYRange(fHistClusterEtavsPhiAfterQA,minYB,maxYB);
     SetZMinMaxTH2(fHistClusterEtavsPhiAfterQA,minB,maxB,minYB,maxYB);
     DrawPeriodQAHistoTH2(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
-                        fHistClusterEtavsPhiAfterQA,"","#phi","#eta",1,1);
+                         fHistClusterEtavsPhiAfterQA,"","#phi","#eta",1,1);
     for(Int_t iBx=minB; iBx<maxB; iBx++){
       if(minYB-1 < 1) line->DrawLine(fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(iBx), fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(minYB),fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(iBx), fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(maxYB));
       else line->DrawLine(fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(iBx), fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(minYB-1),fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(iBx), fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(maxYB));
@@ -266,21 +307,24 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
       if(minB-1 < 1) line->DrawLine(fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(minB), fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(iBy),fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(maxB), fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(iBy));
       else line->DrawLine(fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(minB-1), fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(iBy),fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(maxB), fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(iBy));
     }
-    point->DrawMarker(cand.cluster_phi[0].at(i),cand.cluster_eta[0].at(i));
-    point->DrawMarker(cand.cluster_phi[1].at(i),cand.cluster_eta[1].at(i));
 
+    for(Int_t iVec = 0; iVec<(Int_t) vecCenterClus.size(); iVec++){
+      sepClusters temp = vecCenterClus.at(iVec);
+      point->DrawMarker(temp.lowX,temp.lowY);
+    }
     for(Int_t iVec = 0; iVec<(Int_t) vecSepClus.size(); iVec++){
       sepClusters temp = vecSepClus.at(iVec);
-      lineClusters->DrawLine(temp.lowX,
-                             temp.lowY,
-                             temp.upX,
-                             temp.upY);
+      if(temp.lowX!=-1 && temp.lowY!=-1){
+        lineClusters->DrawLine(temp.lowX,
+                               temp.lowY,
+                               temp.upX,
+                               temp.upY);
+      }
     }
 
-    SaveCanvasAndWriteHistogram(canvas, fHistClusterEtavsPhiAfterQA, Form("%s/pi0cand_%i.%s", outputDir.Data(), i, "eps"));
+    SaveCanvasAndWriteHistogram(canvas, fHistClusterEtavsPhiAfterQA, Form("%s/output_%i.%s", outputDir.Data(), iEvent, "eps"));
 
     delete fHistClusterEtavsPhiAfterQA;
-
   }
 
   return;
