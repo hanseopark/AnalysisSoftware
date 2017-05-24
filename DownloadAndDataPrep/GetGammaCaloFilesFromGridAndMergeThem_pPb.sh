@@ -195,13 +195,45 @@ fi
 # LHC13b2_efix_p4MC="928";
 # LHC13e7MC="929";
 
-TRAINDIR=Legotrain-vAN20170511-EMCrecalibIte1
-LHC13b2_efix_p1MC="930"; 
-LHC13b2_efix_p2MC="931"; 
-LHC13b2_efix_p3MC="932"; 
-LHC13b2_efix_p4MC="933";
-LHC13e7MC="934";
+# TRAINDIR=Legotrain-vAN20170511-EMCrecalibIte1
+# LHC13b2_efix_p1MC="930"; 
+# LHC13b2_efix_p2MC="931"; 
+# LHC13b2_efix_p3MC="932"; 
+# LHC13b2_efix_p4MC="933";
+# LHC13e7MC="934";
 
+# TRAINDIR=Legotrain-vAN20170511-EMCrecalibIte2
+# LHC13b2_efix_p1MC="935"; 
+# LHC13b2_efix_p2MC="936"; 
+# LHC13b2_efix_p3MC="937"; 
+# LHC13b2_efix_p4MC="938";
+# LHC13e7MC="945";
+# LHC13b2_efix_p1MC="940"; 
+# LHC13b2_efix_p2MC="941"; 
+# LHC13b2_efix_p3MC="942"; 
+# LHC13b2_efix_p4MC="943";
+# LHC13e7MC="944";
+
+# TRAINDIR=Legotrain-vAN20170511-EMCrecalibIte3
+# LHC13b2_efix_p1MC="946"; 
+# LHC13b2_efix_p2MC="947"; 
+# LHC13b2_efix_p3MC="948"; 
+# LHC13b2_efix_p4MC="949";
+# LHC13e7MC="950";
+
+TRAINDIR=Legotrain-vAN20170519-EMCrecalibIte4
+LHC13bData="629"; #pass 3 
+LHC13cData="630"; #pass 2
+# LHC13b2_efix_p1MC="951"; 
+# LHC13b2_efix_p2MC="953"; 
+# LHC13b2_efix_p3MC="955"; 
+# LHC13b2_efix_p4MC="957";
+# LHC13e7MC="959";
+# LHC13b2_efix_p1MC="952"; 
+# LHC13b2_efix_p2MC="954"; 
+# LHC13b2_efix_p3MC="956"; 
+# LHC13b2_efix_p4MC="958";
+# LHC13e7MC="960";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -341,41 +373,53 @@ if [ $DOWNLOADON == 1 ]; then
                     echo $fileName
                     alpha=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f3 | cut -d "." -f1`
                     if [ -z "$alpha" ]; then
+                        echo $alpha
+                        number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2 | cut -d "." -f1`
+                        echo $number
+                    else
+                        echo $alpha
                         number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2`
                         number=$number\_$alpha
-                    else
-                        number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2 | cut -d "." -f1`
+                        echo $number
                     fi
                     echo $number
                     hadd -f $OUTPUTDIR_LHC13b/GammaCalo_$number.root $OUTPUTDIR_LHC13b/*/GammaCalo_$number.root
                 done;
             fi    
-        fi    fi    
+        fi   
+    fi
+    
     if [ $HAVELHC13c == 1 ]; then
         echo "downloading LHC13c"
         CopyFileIfNonExisitent $OUTPUTDIR_LHC13c "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13cData/merge_runlist_1"
-        if [ $MERGEONSINGLEData == 1 ]; then
-            firstrunNumber=`head -n1 runlists/runNumbersLHC13c.txt`
-            ls $OUTPUTDIR_LHC13c/$firstrunNumber/GammaCalo_*.root > fileLHC13c.txt
-            fileNumbers=`cat fileLHC13c.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                alpha=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f3 | cut -d "." -f1`
-                if [ -z "$alpha" ]; then
-                    echo $alpha
-                    number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2 | cut -d "." -f1`
+        if [ $SINGLERUN == 1 ]; then
+            runNumbers=`cat runlists/runNumbersLHC13c.txt`
+            echo $runNumbers
+            for runNumber in $runNumbers; do
+                CopyFileIfNonExisitent $OUTPUTDIR_LHC13c/$runNumber "/alice/data/2013/LHC13c/000$runNumber/ESDs/pass2/PWGGA/GA_pPb/$LHC13cData" $NSlashes3
+            done
+            if [ $MERGEONSINGLEData == 1 ]; then
+                firstrunNumber=`head -n1 runlists/runNumbersLHC13c.txt`
+                ls $OUTPUTDIR_LHC13c/$firstrunNumber/GammaCalo_*.root > fileLHC13c.txt
+                fileNumbers=`cat fileLHC13c.txt`
+                for fileName in $fileNumbers; do
+                    echo $fileName
+                    alpha=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f3 | cut -d "." -f1`
+                    if [ -z "$alpha" ]; then
+                        echo $alpha
+                        number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2 | cut -d "." -f1`
+                        echo $number
+                    else
+                        echo $alpha
+                        number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2`
+                        number=$number\_$alpha
+                        echo $number
+                    fi
                     echo $number
-                else
-                    echo $alpha
-                    number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f2`
-                    number=$number\_$alpha
-                    echo $number
-                fi
-                echo $number
-                hadd -f $OUTPUTDIR_LHC13c/GammaCalo_$number.root $OUTPUTDIR_LHC13c/*/GammaCalo_$number.root
-            done;
-        fi    
-
+                    hadd -f $OUTPUTDIR_LHC13c/GammaCalo_$number.root $OUTPUTDIR_LHC13c/*/GammaCalo_$number.root
+                done;
+            fi    
+        fi
     fi    
     if [ $HAVELHC13d == 1 ]; then
         echo "downloading LHC13d"

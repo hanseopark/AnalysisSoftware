@@ -628,8 +628,6 @@ void CorrectCaloNonLinearityV4(
                     canvas->SaveAs(Form("%s/ExampleBin_%sAlpha_%.01f-%.01f-withBckgAndFit.%s",outputDirSample.Data(),dataMC[iDataMC].Data(),fBinsPt[iClusterPt],fBinsPt[iClusterPt+1],suffix.Data()));
                 }
             }    
-            canvas->Write(Form("canvas_slice%sAlpha_%.01f-%.01f-withBckgAndFit",dataMC[iDataMC].Data(),fBinsPt[iClusterPt],fBinsPt[iClusterPt+1]));
-            
             canvas->Clear();
             sliceHist->GetXaxis()->SetRangeUser(0.0,0.3);
 
@@ -697,7 +695,6 @@ void CorrectCaloNonLinearityV4(
                     canvas->SaveAs(Form("%s/ExampleBin_%sAlpha_%.01f-%.01f.%s",outputDirSample.Data(),dataMC[iDataMC].Data(),fBinsPt[iClusterPt],fBinsPt[iClusterPt+1],suffix.Data()));
                 }
             }
-            canvas->Write(Form("canvas_slice%sAlpha_%.01f-%.01f",dataMC[iDataMC].Data(),fBinsPt[iClusterPt],fBinsPt[iClusterPt+1]));
             canvas->Clear();
         }
     }
@@ -714,28 +711,32 @@ void CorrectCaloNonLinearityV4(
     if(select.Contains("LHC10-Calo")) minPlotY = 0.9;
     if(select.Contains("LHC12-JetJet")) minPlotY = 0.93;
 
-
+    Double_t minMass  = 0.89;
+    Double_t maxMass  = 1.1;
+    if (mode == 4){
+        minMass  = 0.87;
+        maxMass  = 1.07;
+    }
+    
     //*********************************************************************************************************************************
     //************************************ Write mean mass for MC and data into output file *******************************************
     //*********************************************************************************************************************************    
     SetStyleHistoTH1ForGraphs(histMCResults, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT",0.035,0.043, 0.035,0.043, 1.,1.);
     DrawGammaSetMarker(histMCResults, markerStyle[1], 1, color[1], color[1]);
-    histMCResults->Write("Mean mass MC");
     SetStyleHistoTH1ForGraphs(histDataResults, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (data)} #GT",0.035,0.043, 0.035,0.043, 1.,1.);
     DrawGammaSetMarker(histDataResults, markerStyle[0], 1, color[0], color[0]);
-    histDataResults->Write("Mean mass Data");
     
     //*********************************************************************************************************************************
     //*********************************** Plotting Mean mass for data and MC vs PDG value *********************************************
     //*********************************************************************************************************************************
     TCanvas *canvasMassPDG = new TCanvas("canvasMassPDG","",200,10,1350,900);  // gives the page size
-    DrawGammaCanvasSettings(canvasMassPDG, 0.1, 0.02, 0.06, 0.1);
+    DrawGammaCanvasSettings(canvasMassPDG, 0.08, 0.02, 0.055, 0.08);
     canvasMassPDG->SetLogx(1); 
     canvasMassPDG->SetLogy(0); 
   
     TH2F * histoDummyMeanMassVsPDG;
-    histoDummyMeanMassVsPDG = new TH2F("histoDummyMeanMassVsPDG","histoDummyMeanMassVsPDG",11000,fBinsPt[ptBinRange[0]]/1.5,fBinsPt[ptBinRange[1]]*1.5,1000,0.89,1.1);
-    SetStyleHistoTH2ForGraphs(histoDummyMeanMassVsPDG, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC/data)} #GT / M_{#pi^{0} (PDG)}",0.035,0.043, 0.035,0.043, 1.,1.);
+    histoDummyMeanMassVsPDG = new TH2F("histoDummyMeanMassVsPDG", "histoDummyMeanMassVsPDG", 11000, fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5, 1000, minMass, maxMass);
+    SetStyleHistoTH2ForGraphs(histoDummyMeanMassVsPDG, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC/data)} #GT / M_{#pi^{0} (PDG)}", 0.035, 0.043, 0.035, 0.043, 0.82, 0.9);
     histoDummyMeanMassVsPDG->GetXaxis()->SetMoreLogLabels();
     histoDummyMeanMassVsPDG->GetXaxis()->SetLabelOffset(-0.01);
     histoDummyMeanMassVsPDG->DrawCopy("");
@@ -750,13 +751,11 @@ void CorrectCaloNonLinearityV4(
     histDataResultsVsPDG->Scale(1/massPi0);
     SetStyleHistoTH1ForGraphs(histDataResultsVsPDG, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (data)} #GT / M_{#pi^{0} (PDG)}",0.035,0.043, 0.035,0.043, 1.,1.);
     DrawGammaSetMarker(histDataResultsVsPDG, markerStyle[0], 1, color[0], color[0]);
-    histDataResultsVsPDG->Write();
     
     TH1D* histMCResultsVsPDG =  (TH1D*)histMCResults->Clone("Mean mass MC / mass PDG Pi0");
     histMCResultsVsPDG->Scale(1/massPi0);
     SetStyleHistoTH1ForGraphs(histMCResultsVsPDG, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT / M_{#pi^{0} (PDG)}",0.035,0.043, 0.035,0.043, 1.,1.);
     DrawGammaSetMarker(histMCResultsVsPDG, markerStyle[1], 1, color[1], color[1]);
-    histMCResultsVsPDG->Write();
     
     // fitting data mass positions
     TF1* fitMassDataVsPDG       = new TF1("fitMassDataVsPDG", "[0] + [1]*pow(x,[2])" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
@@ -820,11 +819,20 @@ void CorrectCaloNonLinearityV4(
     histMCResultsVsPDG->DrawCopy("same");
     legend->AddEntry(histMCResultsVsPDG,"MC");
     
-    PutProcessLabelAndEnergyOnPlot(0.94, 0.915, 0.03, fCollisionSystem.Data(), fTextMeasurement.Data(), recGamma.Data(), 62, 0.03, "", 1, 1.25, 31);
+    PutProcessLabelAndEnergyOnPlot(0.94, 0.915, 0.03, fCollisionSystem.Data(), fTextMeasurement.Data(), recGamma.Data(), 42, 0.03, "", 1, 1.25, 31);
     for (Int_t i = 0; i < nSets; i++){
-       PutProcessLabelAndEnergyOnPlot(0.15, 0.915-2*0.03*(i), 0.03, fPlotLabelsRatio[i].Data(),"", "");
+       PutProcessLabelAndEnergyOnPlot(0.12, 0.915-2*0.03*(i), 0.03, fPlotLabelsRatio[i].Data(),"", "", 42, 0.03, "", 1, 1.25, 11);
     }
         
+    TLegend *legendFits   = GetAndSetLegend2(0.12, 0.12 , 0.37, 0.12 + 3*0.03, 0.03, 2, "", 42, 0.35);    
+    legendFits->AddEntry(fitMassDataVsPDG, " ", "l");
+    legendFits->AddEntry(fitMassMCVsPDG, "powerlaw fit","l" );
+    legendFits->AddEntry(fitMassDataVsPDG2, " ", "l");
+    legendFits->AddEntry(fitMassMCVsPDG2, "exponential fit","l" );
+    legendFits->AddEntry(fitMassDataVsPDGConst, " ", "l");
+    legendFits->AddEntry(fitMassMCVsPDGConst, "high #it{p}_{T} const.","l" );
+    legendFits->Draw("same");
+    
     legend->Draw("same");
     canvasMassPDG->Update();
     canvasMassPDG->SaveAs(Form("%s/MeanMass_Pi0_%s.%s", outputDirSampleSummary.Data(), select.Data(), suffix.Data()));
@@ -906,13 +914,6 @@ void CorrectCaloNonLinearityV4(
     fFitExpCombInverted->SetParameter(0, fitMassDataVsPDG2->GetParameter(0) );
     fFitExpCombInverted->SetParameter(1, fitMassDataVsPDG2->GetParameter(1) );
     fFitExpCombInverted->SetParameter(2, fitMassDataVsPDG2->GetParameter(2) );
-    
-    histDataMCResults->GetYaxis()->SetRangeUser(minPlotY,1.05);
-    histDataMCResults->GetXaxis()->SetRangeUser(fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
-
-    histDataMCResults->Write("MeanMassRatioMCData-noFit");
-    fFitMassPos->Write("MeanMassRatioMCData-Fit");
-    histDataMCResults->GetListOfFunctions()->Add(fFitMassPos);
 
     fstream fLog;
     fLog.open(Form("%s/CorrectCaloNonLinearity_%s.log",outputDirSampleSummary.Data(),select.Data()), ios::out);
@@ -931,16 +932,20 @@ void CorrectCaloNonLinearityV4(
     //*******************************************************************************
     // plotting mass ratios
     //*******************************************************************************
-    TCanvas *canvasMassRatioMCData = new TCanvas("canvasMassPDG","",200,10,1350,900);  // gives the page size
+    TCanvas *canvasMassRatioMCData = new TCanvas("canvasMassRatioMCData","",200,10,1350,900);  // gives the page size
     DrawGammaCanvasSettings(canvasMassRatioMCData, 0.082, 0.012, 0.02, 0.1);
     canvasMassRatioMCData->SetLogx(1); 
     canvasMassRatioMCData->SetLogy(0); 
-    
-    SetStyleHistoTH1ForGraphs(histDataMCResults, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT / #LT M_{#pi^{0} (data)} #GT",0.035,0.043, 0.035,0.043, 1.,0.9);
-    DrawGammaSetMarker(histDataMCResults, markerStyle[0], 1, color[0], color[0]);
-    histDataMCResults->GetXaxis()->SetMoreLogLabels();
-    histDataMCResults->GetXaxis()->SetLabelOffset(-0.01);
-    histDataMCResults->Draw();
+
+    TH2F * histoDummyDataMCRatio;
+    histoDummyDataMCRatio = new TH2F("histoDummyDataMCRatio","histoDummyDataMCRatio", 11000, fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5, 1000, 0.93, 1.05);
+    SetStyleHistoTH2ForGraphs(histoDummyDataMCRatio, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT / #LT M_{#pi^{0} (data)} #GT", 0.035, 0.043, 0.035, 0.043, 0.82, 0.9);
+    histoDummyDataMCRatio->GetXaxis()->SetMoreLogLabels();
+    histoDummyDataMCRatio->GetXaxis()->SetLabelOffset(-0.01);
+    histoDummyDataMCRatio->DrawCopy("");
+
+    DrawGammaSetMarker(histDataMCResults, 20, 1, color[0], color[0]);
+//     histDataMCResults->Draw("same");
 
     Int_t nCorrections      = 3;
     if (isNotFirstIte){
@@ -948,6 +953,10 @@ void CorrectCaloNonLinearityV4(
         fFitConstFull->Draw("same");
         nCorrections++;
     }
+
+    fFitComposit->SetRange(fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5);
+    fFitExpComb->SetRange(fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5);
+    fFitMassPos->SetRange(fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5);
     
     DrawGammaSetMarkerTF1( fFitComposit, 7, 2, kGreen+2);
     DrawGammaSetMarkerTF1( fFitExpComb, 8, 2, kBlue+2);
@@ -956,20 +965,21 @@ void CorrectCaloNonLinearityV4(
     fFitMassPos->Draw("same");
     fFitComposit->Draw("same");
     fFitExpComb->Draw("same");
+    histDataMCResults->Draw("same,pe");
     
-    PutProcessLabelAndEnergyOnPlot(0.94, 0.96, 0.03, fCollisionSystem.Data(), fTextMeasurement.Data(), recGamma.Data(), 62, 0.03, "", 1, 1.25, 31);
+    PutProcessLabelAndEnergyOnPlot(0.94, 0.96, 0.03, fCollisionSystem.Data(), fTextMeasurement.Data(), recGamma.Data(), 42, 0.03, "", 1, 1.25, 31);
     for (Int_t i = 0; i < nSets; i++){
-       PutProcessLabelAndEnergyOnPlot(0.15, 0.945-2*0.03*(i), 0.03, fPlotLabelsRatio[i].Data(),"", "");
+       PutProcessLabelAndEnergyOnPlot(0.12, 0.945-2*0.03*(i), 0.03, fPlotLabelsRatio[i].Data(),"", "", 42, 0.03, "", 1, 1.25, 11);
     }
     
     TLegend* legendCorrectionFunctions = GetAndSetLegend2(0.125,0.15, 0.4,0.15+nCorrections*1.1*0.03, 0.03, 1, "", 42, 0.15);
-    legendCorrectionFunctions->AddEntry(fFitMassPos,"Test beam function fitted","l");
+    legendCorrectionFunctions->AddEntry(fFitMassPos,"Exponential function fitted","l");
     legendCorrectionFunctions->AddEntry(fFitComposit,"Ind. Mass fitted with powerlaws","l");
     legendCorrectionFunctions->AddEntry(fFitExpComb,"Ind. Mass fitted with exponentials","l");
     if(isNotFirstIte) legendCorrectionFunctions->AddEntry(fFitConstFull,"Constant fitted","l");
     legendCorrectionFunctions->Draw();
     
-    DrawGammaLines(fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]],1.0, 1.0, 1, kGray+2, 2);
+    DrawGammaLines(fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5, 1.0, 1.0, 1, kGray+2, 2);
     
     canvasMassRatioMCData->Update();
     canvasMassRatioMCData->SaveAs(Form("%s/MeanMassRatio_%s.%s", outputDirSampleSummary.Data(), select.Data(), suffix.Data()));
@@ -1006,7 +1016,7 @@ void CorrectCaloNonLinearityV4(
     
     
     TLegend *legend2 = GetAndSetLegend2(0.45,0.15, 0.725,0.15+nCorrections*1.1*0.03, 0.03, 1, "", 42, 0.15);//GetAndSetLegend2(0.2, 0.2, 0.4, 0.29, 0.03, 1, "", 42);
-    legend2->AddEntry(fFitMassPosInverted,"Correction factor for MC, test beam function (ratio fit)","l");
+    legend2->AddEntry(fFitMassPosInverted,"Correction factor for MC, exponential function (ratio fit)","l");
     legend2->AddEntry(fFitCompositInverted,"Correction factor for MC from mass fits (powerlaws)","l");
     legend2->AddEntry(fFitExpCombInverted,"Correction factor for MC from mass fits (exponentials)","l");
     if(isNotFirstIte) legend2->AddEntry(fFitConstFullInv,"Constant fitted","l");
@@ -1014,9 +1024,9 @@ void CorrectCaloNonLinearityV4(
 
     DrawGammaLines(0.3, 50.,1.0, 1.0, 1, kGray+2, 2);
     
-    PutProcessLabelAndEnergyOnPlot(0.94, 0.96, 0.03, fCollisionSystem.Data(), fTextMeasurement.Data(), recGamma.Data(), 62, 0.03, "", 1, 1.25, 31);
+    PutProcessLabelAndEnergyOnPlot(0.94, 0.96, 0.03, fCollisionSystem.Data(), fTextMeasurement.Data(), recGamma.Data(), 42, 0.03, "", 1, 1.25, 31);
     for (Int_t i = 0; i < nSets; i++){
-       PutProcessLabelAndEnergyOnPlot(0.15, 0.945-2*0.03*(i), 0.03, fPlotLabelsRatio[i].Data(),"", "");
+       PutProcessLabelAndEnergyOnPlot(0.12, 0.945-2*0.03*(i), 0.03, fPlotLabelsRatio[i].Data(),"", "", 42, 0.03, "", 1, 1.25, 11);
     }   
 
     canvasMassRatioMCData->Update();
@@ -1027,9 +1037,15 @@ void CorrectCaloNonLinearityV4(
     cout << "-----------------------------------------------------" << endl;
     cout << "-----------------------------------------------------" << endl;
 
+    histDataResults->Write("Mean mass Data");
+    histMCResults->Write("Mean mass MC");
+    histDataResultsVsPDG->Write();
+    histMCResultsVsPDG->Write();
+    histDataMCResults->Write("MeanMassRatioMCData");
     fFitMassPosInverted->Write("REXP_TotalCorr");
     fFitCompositInverted->Write("DPOW_TotalCorr");
     fFitExpCombInverted->Write("DEXP_TotalCorr");
+    fFitConstFullInv->Write("CONST_TotalCorr");
     
     fOutput->Write();
     fOutput->Close();

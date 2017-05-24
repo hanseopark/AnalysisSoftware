@@ -1,0 +1,27 @@
+select	pPbCompareOnlyDPMJet_3
+nNL	4
+addPathFiles	/PCM-EMC	/PCM-EMC	/EMC	/EMC	stop
+addPathFilesAdd	0	/PCM-EMC	/PCM-EMC	/PCM-EMC	/PCM-EMC	stop
+addPathFilesAdd	1	-	-	/EMC	/EMC	stop
+inputFileNames	LHC13bc-DPMJET-ConvCaloEMC-PtDep	LHC13bc-DPMJET-ConvCaloEMC-PtDep	LHC13bc-DPMJET-CaloEMC-ptDepTM	LHC13bc-DPMJET-CaloEMC-ptDepTM	stop
+inputFileNamesAdd	0	LHC13bc-DPMJET-ConvCaloEMC-PtDep_51	LHC13bc-DPMJET-ConvCaloEMC-PtDep_41	LHC13bc-DPMJET-ConvCaloEMC-PtDep_52	LHC13bc-DPMJET-ConvCaloEMC-PtDep_42	stop
+inputFileNamesAdd	1	-	-	LHC13bc-DPMJET-CaloEMC-ptDepTM_52_4	LHC13bc-DPMJET-CaloEMC-ptDepTM_42_4	stop
+
+isRecursAddInput	0	1	1	1	1	stop
+isRecursAddInput	1	0	0	0	0	stop
+
+plotMassData	1	0	1	0	stop
+plotMassMC	1	0	1	0	stop
+plotMassRatio	1	0	1	0	1	0	1	0	stop
+plotLabelsData	PCM-EMC	PCM-EMC	EMC	EMC	stop
+plotLabelsMC	PCM-EMC-DPMJet CCMF	PCM-EMC-DPMJet CCRF	EMC-DPMJet CMF	EMC-DPMJet CRF	stop
+plotLabelsRatio	DPMJet CCMF	DPMJet CCRF	DPMJet CMF	DPMJet CRF	stop
+nameUsedCorr	DEXP	REXP	DEXP	REXP	stop
+nameUsedCorrAdd	0	REXP	REXP	REXP	REXP	stop
+nameUsedCorrAdd	1	-	-	CONST	CONST	stop
+color	861	632	863	634	801	stop
+lineStyle	1	1	7	7	2	stop
+
+energy	pPb_5.023TeV
+periods	LHC13[b,c]
+mode	4

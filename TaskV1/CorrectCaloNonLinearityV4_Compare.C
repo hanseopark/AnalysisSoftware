@@ -134,17 +134,25 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
     Int_t nNLMC                     = 0;
     Int_t nNLRatio                  = 0;
     TString addPathFiles[10]        = {"", "", "", "", "",  "", "", "", "", "" };
-    TString addPathFilesAdd[10]     = {"", "", "", "", "",  "", "", "", "", "" };
+    TString addPathFilesAdd[3][10]  = { {"", "", "", "", "",  "", "", "", "", "" }, 
+                                        {"", "", "", "", "",  "", "", "", "", "" },
+                                        {"", "", "", "", "",  "", "", "", "", "" } };
     TString inputFileNames[10]      = {"", "", "", "", "",  "", "", "", "", "" };
-    TString inputFileNamesAdd[10]   = {"", "", "", "", "",  "", "", "", "", "" };
+    TString inputFileNamesAdd[3][10]= { {"", "", "", "", "",  "", "", "", "", "" }, 
+                                        {"", "", "", "", "",  "", "", "", "", "" },
+                                        {"", "", "", "", "",  "", "", "", "", "" } };
     TString plotLabelsData[10]      = {"", "", "", "", "",  "", "", "", "", "" };
     TString plotLabelsMC[10]        = {"", "", "", "", "",  "", "", "", "", "" };
     TString plotLabelsRatio[10]     = {"", "", "", "", "",  "", "", "", "", "" };
     TString inputFilePaths[10]      = {"", "", "", "", "",  "", "", "", "", "" };
-    TString inputFilePathsAdd[10]   = {"", "", "", "", "",  "", "", "", "", "" };
+    TString inputFilePathsAdd[3][10]= { {"", "", "", "", "",  "", "", "", "", "" },
+                                        {"", "", "", "", "",  "", "", "", "", "" }, 
+                                        {"", "", "", "", "",  "", "", "", "", "" } };
     
     TString nameUsedCorr[10]        = {"", "", "", "", "",  "", "", "", "", "" };
-    TString nameUsedCorrAdd[10]     = {"", "", "", "", "",  "", "", "", "", "" };
+    TString nameUsedCorrAdd[3][10]  = { {"", "", "", "", "",  "", "", "", "", "" },
+                                        {"", "", "", "", "",  "", "", "", "", "" }, 
+                                        {"", "", "", "", "",  "", "", "", "", "" } };
     Bool_t plotMassData[10]         = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE,
                                         kFALSE, kFALSE, kFALSE, kFALSE, kFALSE };
     Bool_t plotMassMC[10]           = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE,
@@ -154,12 +162,16 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
     TString xTitle                  = "#it{E}_{Cluster} (GeV)";
     TFile *inputFiles[10]           = { 0x0, 0x0, 0x0, 0x0, 0x0,
                                         0x0, 0x0, 0x0, 0x0, 0x0 };
-    TFile *inputFilesAdd[10]        = { 0x0, 0x0, 0x0, 0x0, 0x0,
-                                        0x0, 0x0, 0x0, 0x0, 0x0 };
-    Bool_t hasAddInput[10]          = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE,
-                                        kFALSE, kFALSE, kFALSE, kFALSE, kFALSE };
+    TFile *inputFilesAdd[3][10]     = { { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 }, 
+                                        { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 },
+                                        { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 } };
+    Bool_t hasAddInput[3][10]       = { { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE }, 
+                                        { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE }, 
+                                        { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE } };
+    Bool_t isRecursAddInput[3][10]  = { { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE }, 
+                                        { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE }, 
+                                        { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE } };
     
-                                        
     // Setup colors
     const Int_t nColor              = 11;
     const Int_t nMarkerStyle        = 10;
@@ -172,7 +184,10 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
                                        3, 4, 5, 10, 1};
 
     Bool_t isDataVariation          = kFALSE;
-    
+    TString optionEnergy            = "";
+    TString optionPeriod            = "";
+    Int_t mode                      = -1;
+    Int_t nLinesLabel               = 0;
     //**************************************************************************************************************
     //******************************* Read config file for detailed settings ***************************************
     //**************************************************************************************************************
@@ -221,17 +236,25 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
         // reading selection string
         if (tempValue.BeginsWith("select",TString::kIgnoreCase)){
             select          = (TString)((TObjString*)tempArr->At(1))->GetString();
+        // setting options for general plot labeling     
+        } else if (tempValue.BeginsWith("energy",TString::kIgnoreCase)){
+            optionEnergy    = (TString)((TObjString*)tempArr->At(1))->GetString();
+        } else if (tempValue.BeginsWith("period",TString::kIgnoreCase)){
+            optionPeriod    = (TString)((TObjString*)tempArr->At(1))->GetString();
+        } else if (tempValue.BeginsWith("mode",TString::kIgnoreCase)){
+            mode            = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
         } else if (tempValue.BeginsWith("nNL",TString::kIgnoreCase)){
             nNL             = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
         // read input names
         } else if (tempValue.BeginsWith("inputFileNamesAdd",TString::kIgnoreCase)){    
             if (enableAddCouts) cout << "Setting input file names" << endl;
-            for(Int_t i = 1; i<tempArr->GetEntries() && i < 11 ; i++){
+            Int_t currArray             = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
+            for(Int_t i = 2; i<tempArr->GetEntries() && i < 12 ; i++){
                 if (enableAddCouts) cout << i << "\t" <<((TString)((TObjString*)tempArr->At(i))->GetString()).Data() << endl;
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase))
-                    inputFileNamesAdd[i-1] = ((TString)((TObjString*)tempArr->At(i))->GetString());
+                    inputFileNamesAdd[currArray][i-2]   = ((TString)((TObjString*)tempArr->At(i))->GetString());
                 else 
-                    i                       = tempArr->GetEntries();
+                    i                                   = tempArr->GetEntries();
             }    
         } else if (tempValue.BeginsWith("inputFileNames",TString::kIgnoreCase)){    
             if (enableAddCouts) cout << "Setting input file names" << endl;
@@ -245,12 +268,13 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
         // additional path files
         } else if (tempValue.BeginsWith("addPathFilesAdd",TString::kIgnoreCase)){    
             if (enableAddCouts) cout << "Setting input file names" << endl;
-            for(Int_t i = 1; i<tempArr->GetEntries() && i < 11 ; i++){
+            Int_t currArray             = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
+            for(Int_t i = 2; i<tempArr->GetEntries() && i < 12 ; i++){
                 if (enableAddCouts) cout << i << "\t" <<((TString)((TObjString*)tempArr->At(i))->GetString()).Data() << endl;
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase))
-                    addPathFilesAdd[i-1]   = ((TString)((TObjString*)tempArr->At(i))->GetString());
+                    addPathFilesAdd[currArray][i-2]     = ((TString)((TObjString*)tempArr->At(i))->GetString());
                 else 
-                    i                   = tempArr->GetEntries();
+                    i                                   = tempArr->GetEntries();
             }    
         // additional path files
         } else if (tempValue.BeginsWith("addPathFiles",TString::kIgnoreCase)){    
@@ -261,7 +285,7 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
                     addPathFiles[i-1]   = ((TString)((TObjString*)tempArr->At(i))->GetString());
                 else 
                     i                   = tempArr->GetEntries();
-            }    
+            }   
         // read input labels data
         } else if (tempValue.BeginsWith("plotLabelsData",TString::kIgnoreCase)){    
             if (enableAddCouts) cout << "Setting plot Labels Data" << endl;
@@ -294,13 +318,28 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
             }    
         } else if (tempValue.BeginsWith("nameUsedCorrAdd",TString::kIgnoreCase)){    
             if (enableAddCouts) cout << "Setting name of used correction" << endl;
-            for(Int_t i = 1; i<tempArr->GetEntries() && i < 11 ; i++){
+            Int_t currArray             = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
+            for(Int_t i = 2; i<tempArr->GetEntries() && i < 11 ; i++){
                 if (enableAddCouts) cout << i << "\t" <<((TString)((TObjString*)tempArr->At(i))->GetString()).Data() << endl;
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase))
-                    nameUsedCorrAdd[i-1]  = ((TString)((TObjString*)tempArr->At(i))->GetString());
+                    nameUsedCorrAdd[currArray][i-2]     = ((TString)((TObjString*)tempArr->At(i))->GetString());
                 else 
-                    i                     = tempArr->GetEntries();
+                    i                                   = tempArr->GetEntries();
             }    
+        } else if (tempValue.BeginsWith("isRecursAddInput",TString::kIgnoreCase)){    
+            if (enableAddCouts) cout << "Check whether its recursion or not" << endl;
+            Int_t currArray             = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
+            for(Int_t i = 2; i<tempArr->GetEntries() && i < 11 ; i++){
+                if (enableAddCouts) cout << i << "\t" <<((TString)((TObjString*)tempArr->At(i))->GetString()).Data() << endl;
+                if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase)){
+                    if ( ((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("1") == 0){
+                        isRecursAddInput[currArray][i-2]= kTRUE;
+                        cout << "set recursion for " << i-2 << endl;
+                    }
+                } else {
+                    i                                   = tempArr->GetEntries();
+                }
+            }
         } else if (tempValue.BeginsWith("nameUsedCorr",TString::kIgnoreCase)){    
             if (enableAddCouts) cout << "Setting name of used correction" << endl;
             for(Int_t i = 1; i<tempArr->GetEntries() && i < 11 ; i++){
@@ -309,7 +348,7 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
                     nameUsedCorr[i-1]   = ((TString)((TObjString*)tempArr->At(i))->GetString());
                 else 
                     i                   = tempArr->GetEntries();
-            }    
+            }
         }  else if (tempValue.BeginsWith("plotMassData",TString::kIgnoreCase)){    
             if (enableAddCouts) cout << "enable mass plotting" << endl;
             for(Int_t i = 1; i<tempArr->GetEntries() && i < 11 ; i++){
@@ -385,8 +424,22 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
         cout << "ABORTING: You are missing the nNL setting, can't continue like that" << endl;
         return;
     }
-//     cout << "energyFlag:\t"<< optionEnergy.Data() << endl;
-//     cout << "mode:\t"<< mode << endl;
+    TString fCollisionSystem    = "";
+    TString recGamma            = "";
+    if (optionEnergy.CompareTo("") != 0){
+        cout << "energyFlag:\t"<< optionEnergy.Data() << endl;
+        fCollisionSystem    = ReturnFullCollisionsSystem(optionEnergy);
+        nLinesLabel++;
+    }    
+    if (optionPeriod.CompareTo("") != 0){
+        cout << "periodFlag:\t"<< optionPeriod.Data() << endl;
+        nLinesLabel++;
+    }    
+    if (mode != -1 ){
+        cout << "mode:\t"<< mode << endl;
+        recGamma            = ReturnFullTextReconstructionProcess(mode);
+        nLinesLabel++;
+    }
     
     cout << "**************************************************************************" << endl;
     cout << "Data set setup: " << endl;
@@ -420,13 +473,15 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
     cout << "**************************************************************************" << endl;
     cout << "Data set setup: " << endl;
     for (Int_t i = 0; i < nNL; i++){
-        cout << inputFileNamesAdd[i].Data() << endl;
-        if ( inputFileNamesAdd[i].CompareTo("") != 0 ){
-            inputFilePathsAdd[i] = Form("%s%s/CorrectCaloNonLinearity_%s.root", inputDir.Data(), addPathFilesAdd[i].Data(), inputFileNamesAdd[i].Data());
-            cout << i << "\t" << inputFileNamesAdd[i].Data() << "\t" << inputFilePathsAdd[i].Data() ;
-            cout << endl;
+        for (Int_t k = 0; k < 3; k++ ){
+//             cout << inputFileNamesAdd[k][i].Data() << endl;
+            if ( inputFileNamesAdd[k][i].CompareTo("") != 0 && inputFileNamesAdd[k][i].CompareTo("-") != 0 ){
+                inputFilePathsAdd[k][i] = Form("%s%s/CorrectCaloNonLinearity_%s.root", inputDir.Data(), addPathFilesAdd[k][i].Data(), inputFileNamesAdd[k][i].Data());
+                cout << k << "\t" << i << "\t" << inputFileNamesAdd[k][i].Data() << "\t" << inputFilePathsAdd[k][i].Data() ;
+                cout << endl;
+            }
         }
-    }
+    }    
     cout << "**************************************************************************" << endl;
     cout << "**************************************************************************" << endl;
     
@@ -437,11 +492,13 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
     for(Int_t i=0; i<nNL; i++){
         inputFiles[i] = new TFile(inputFilePaths[i].Data(),"READ");
         if(inputFiles[i]->IsZombie()) {cout << "Info: ROOT file '" << inputFilePaths[i].Data() << "' could not be openend, return!" << endl; return;}
-        if (inputFilePathsAdd[i].CompareTo("") != 0){
-            inputFilesAdd[i]  = new TFile(inputFilePathsAdd[i].Data(),"READ");
-            if(inputFilesAdd[i]->IsZombie()) {cout << "Info: ROOT file '" << inputFilePathsAdd[i].Data() << "' could not be openend, return!" << endl; return;}
-            hasAddInput[i]    = kTRUE;
-        }  
+        for (Int_t k = 0; k < 3; k++){
+            if (inputFilePathsAdd[k][i].CompareTo("") != 0){
+                inputFilesAdd[k][i]     = new TFile(inputFilePathsAdd[k][i].Data(),"READ");
+                if(inputFilesAdd[k][i]->IsZombie()) {cout << "Info: ROOT file '" << inputFilePathsAdd[k][i].Data() << "' could not be openend, return!" << endl; return;}
+                hasAddInput[k][i]       = kTRUE;
+            }  
+        }    
     }
 
     //*******************************************************************************
@@ -455,15 +512,9 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
     Int_t nColumns      = 1;
     if (nNL > 3) 
         nColumns        = 2;
-    TLegend *legendData = GetAndSetLegend2(0.13, 0.95-(nNLData/nColumns+1)*0.035, 0.75, 0.95, 0.035, nColumns, "", 42);
-    legendData->SetMargin(0.1);
-    TLegend *legendMC   = GetAndSetLegend2(0.13, 0.95-(nNLMC/nColumns+1)*0.035, 0.75, 0.95, 0.035, nColumns, "", 42);
-    legendMC->SetMargin(0.1);
-    TLegend *legendRatio= GetAndSetLegend2(0.13, 0.95-(nNLRatio/nColumns+1)*0.035, 0.75, 0.95, 0.035, nColumns, "", 42);
-    legendRatio->SetMargin(0.1);
-    TLegend *legend     = GetAndSetLegend2(0.13, 0.95-(nNL/nColumns+1)*0.035, 0.75, 0.95, 0.035, nColumns, "", 42);
-    legend->SetMargin(0.1);
-
+    TLegend *legendData = GetAndSetLegend2(0.13, 0.95-(nNLData/nColumns+1)*0.035, 0.75, 0.95, 0.035, nColumns, "", 42, 0.1);
+    TLegend *legendMC   = GetAndSetLegend2(0.13, 0.95-(nNLMC/nColumns+1)*0.035, 0.75, 0.95, 0.035, nColumns, "", 42, 0.1);
+    TLegend *legendRatio= GetAndSetLegend2(0.13, 0.95-(nNLRatio/nColumns+1)*0.035, 0.75, 0.95, 0.035, nColumns, "", 42, 0.1);
     //*******************************************************************************
     // plotting masses MC+Data
     TH1D* histoMassMC[nNL];
@@ -482,6 +533,8 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
         legendMC->AddEntry(histoMassMC[i],plotLabelsMC[i].Data());
     }
 
+    PutProcessLabelAndEnergyOnPlot(0.94, 0.16+nLinesLabel*0.035, 0.035, fCollisionSystem.Data(), optionPeriod.Data(), recGamma.Data(), 42, 0.035, "", 1, 1.25, 31);
+    
     legendMC->Draw("same");
     canvas->Update();
     canvas->SaveAs(Form("%s/Mass_MC_%s.%s", outputDir.Data(), select.Data(), suffix.Data()));
@@ -505,6 +558,8 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
         legendData->AddEntry(histoMassData[i],plotLabelsData[i].Data());
     }
 
+    PutProcessLabelAndEnergyOnPlot(0.94, 0.16+nLinesLabel*0.035, 0.035, fCollisionSystem.Data(), optionPeriod.Data(), recGamma.Data(), 42, 0.035, "", 1, 1.25, 31);
+    
     legendData->Draw("same");
     canvas->Update();
     canvas->SaveAs(Form("%s/Mass_Data_%s.%s", outputDir.Data(), select.Data(), suffix.Data()));
@@ -521,9 +576,9 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
     for(Int_t i=0; i<nNL; i++){
         if (!plotMassRatio[i]) continue;
         TString drawOption = (i==0)?"p":"p, same";
-        histoMeanMassRatio[i] = (TH1D*)inputFiles[i]->Get("MeanMassRatioMCData-noFit");
+        histoMeanMassRatio[i] = (TH1D*)inputFiles[i]->Get("MeanMassRatioMCData");
         if(!histoMeanMassRatio[i]){
-        cout << "ERROR: Could not find histogram 'MeanMassRatioMCData-noFit' in " << inputFilePaths[i].Data() << endl;
+        cout << "ERROR: Could not find histogram 'MeanMassRatioMCData' in " << inputFilePaths[i].Data() << endl;
         continue;
         }
         histoMeanMassRatio[i]->SetTitle(" ");
@@ -536,6 +591,8 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
         legendRatio->AddEntry(histoMeanMassRatio[i],plotLabelsRatio[i].Data());
     }
 
+    PutProcessLabelAndEnergyOnPlot(0.13, 0.15+nLinesLabel*0.035, 0.035, fCollisionSystem.Data(), optionPeriod.Data(), recGamma.Data(), 42, 0.035, "", 1, 1.25, 11);
+    
     legendRatio->Draw("same");
     canvasRatio->SetLogx(1); canvasRatio->SetLogy(0); canvasRatio->SetLogz(0); canvasRatio->Update();
     canvasRatio->SaveAs(Form("%s/MeanMassRatio_%s.%s", outputDir.Data(), select.Data(), suffix.Data()));
@@ -543,44 +600,70 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
     legendRatio->Clear();
 
     //*******************************************************************************
+    TCanvas *canvasRatioC     = new TCanvas("canvasRatioC","",0,0,750,500);  // gives the page size
+    DrawGammaCanvasSettings(canvasRatioC, 0.065, 0.012, 0.02, 0.08);
+    canvasRatioC->SetLogx(1); canvasRatioC->SetLogy(0);
+
     // plotting total correction
     Double_t minPlotY = 0.93;
     if(select.Contains("LHC10-Calo")) minPlotY = 0.9;
     if(select.Contains("LHC12-JetJet")) minPlotY = 0.93;
 
-    TH1D* totalCorrection = new TH1D("Total Correction","; #it{E}_{Cluster} (GeV); correction factor",1000,0.3,50);
-    SetStyleHistoTH1ForGraphs(totalCorrection, "#it{E}_{Cluster} (GeV)","correction factor",0.035,0.043, 0.035,0.043, 0.82,0.9);
+    TH1D* totalCorrection = new TH1D("Total Correction","",1000,0.3,50);
+    SetStyleHistoTH1ForGraphs(totalCorrection, "#it{E}_{Cluster} (GeV)","correction factor",0.035,0.043, 0.035,0.043, 0.82,0.8);
     totalCorrection->GetYaxis()->SetRangeUser(minPlotY+0.031,1.1);
     totalCorrection->GetXaxis()->SetMoreLogLabels();
     totalCorrection->GetXaxis()->SetLabelOffset(-0.01);
     SetLogBinningXTH(totalCorrection);
     totalCorrection->DrawCopy("p");
 
+    TLegend *legend     = GetAndSetLegend2(0.1, 0.945-(nNL/nColumns+1)*0.035, 0.62, 0.945, 0.035, nColumns, "", 42, 0.15);
+
     TF1* fitTotalCorrection[nNL];
-    TF1* fitTotalCorrectionAdd[nNL];
+    TF1* fitTotalCorrectionAdd[3][nNL];
+    TH1D* totalCorrectionDiffNL[nNL]; 
     for(Int_t i=0; i<nNL; i++){
-        TString drawOption = (i==0)?"p":"p, same";
-        fitTotalCorrection[i] = (TF1*)inputFiles[i]->Get(Form("%s_TotalCorr",nameUsedCorr[i].Data()));
+        totalCorrectionDiffNL[i]        = new TH1D(Form("%s_TotalCorrHist",nameUsedCorr[i].Data()),"",7000,0.0,70);
+        SetStyleHisto(totalCorrectionDiffNL[i], 2, lineStyle[i], color[i]);
+        
+        fitTotalCorrection[i]           = (TF1*)inputFiles[i]->Get(Form("%s_TotalCorr",nameUsedCorr[i].Data()));
         if(!fitTotalCorrection[i]){
             cout << "ERROR: Could not find histogram 'Total Correction' in " << inputFilePaths[i].Data() << endl;
             continue;
         } else {
-            if (hasAddInput[i]){
-              fitTotalCorrectionAdd[i]  = (TF1*)inputFilesAdd[i]->Get(Form("%s_TotalCorr",nameUsedCorrAdd[i].Data()));
-              if (fitTotalCorrectionAdd[i]){
-                fitTotalCorrection[i]   = MultiplyTF1(fitTotalCorrection[i], fitTotalCorrectionAdd[i], Form("TotalCorr%d",i));
-              } 
+            for (Int_t l = 1; l < totalCorrectionDiffNL[i]->GetNbinsX()+1; l++){
+                totalCorrectionDiffNL[i]->SetBinContent(l, fitTotalCorrection[i]->Eval(totalCorrectionDiffNL[i]->GetBinCenter(l)));
             }
-        }  
-        DrawGammaSetMarkerTF1( fitTotalCorrection[i], lineStyle[i], 2, color[i]);
-        fitTotalCorrection[i]->Draw("same");
-        legend->AddEntry(fitTotalCorrection[i],plotLabelsRatio[i].Data(),"l");
+            for (Int_t k = 0; k < 3; k++){
+                if (hasAddInput[k][i]){
+                    fitTotalCorrectionAdd[k][i]     = (TF1*)inputFilesAdd[k][i]->Get(Form("%s_TotalCorr",nameUsedCorrAdd[k][i].Data()));
+                    if (fitTotalCorrectionAdd[k][i] && !isRecursAddInput[k][i]){    // needs to be multiplied
+//                         cout << k<< "\t" << i << "\t" << fitTotalCorrectionAdd[k][i]->GetParameter(0) << endl;
+                        fitTotalCorrection[i]       = MultiplyTF1(fitTotalCorrection[i], fitTotalCorrectionAdd[k][i], Form("%s_TotalCorr",nameUsedCorr[i].Data()));
+                        for (Int_t l = 1; l < totalCorrectionDiffNL[i]->GetNbinsX()+1; l++){
+                            totalCorrectionDiffNL[i]->SetBinContent(l, fitTotalCorrection[i]->Eval(totalCorrectionDiffNL[i]->GetBinCenter(l)));
+                        }    
+                    } else if (fitTotalCorrectionAdd[k][i]){                        // is a recursion and needs to be calculated
+                        TH1D* dummyCorr         = (TH1D*)totalCorrectionDiffNL[i]->Clone("dummy"); 
+                        for (Int_t l = 1; l < totalCorrectionDiffNL[i]->GetNbinsX()+1; l++){
+                            Double_t ptOld              = totalCorrectionDiffNL[i]->GetBinCenter(l);
+                            Double_t ptInt              = ptOld * dummyCorr->GetBinContent(l);
+                            Double_t ptNew              = ptInt * fitTotalCorrectionAdd[k][i]->Eval(ptInt);
+                            Double_t corrFactorTotal    = ptNew/ptOld; 
+//                             if ( l%100 == 0 ) cout << ptOld   << "\t" << ptInt << "\t" << ptNew << "\t" << corrFactorTotal << endl;
+                            totalCorrectionDiffNL[i]->SetBinContent(l, corrFactorTotal);
+                        }    
+                    }
+                }
+            }
+        }
+        totalCorrectionDiffNL[i]->Draw("hist,same,c");
+        legend->AddEntry(totalCorrectionDiffNL[i],plotLabelsRatio[i].Data(),"l");
     }
 
     TH1D* testBeam = (TH1D*) totalCorrection->Clone("testbeam");
     testBeam->Reset("ICE");
-    DrawGammaSetMarker(testBeam, markerStyle[nNL], 0.2, color[nNL], color[nNL]);
-    testBeam->SetLineWidth(2);
+    SetStyleHisto(testBeam, 2, 1, color[nNL]);
     for(Int_t iBin = 1; iBin <= testBeam->GetNbinsX()+1; iBin++) {
       Float_t e = testBeam->GetXaxis()->GetBinCenter(iBin);
       Float_t factor = 1;
@@ -589,13 +672,16 @@ void CorrectCaloNonLinearityV4_Compare( TString configFileName  = "config.txt",
       testBeam->SetBinContent(iBin,factor);
     }
     legend->AddEntry(testBeam,"kPi0MCv3 / kTestBeamv3","l");
-    testBeam->Draw("p,hist,c,same");
+    testBeam->Draw("hist,c,same");
 
+    DrawGammaLines(0.3, 50.,1.0, 1.0, 1, kGray+2, 2);
+    
+    PutProcessLabelAndEnergyOnPlot(0.958, 0.15+nLinesLabel*0.035, 0.035, fCollisionSystem.Data(), optionPeriod.Data(), recGamma.Data(), 42, 0.035, "", 1, 1.25, 31);
+    
     legend->Draw("same");
-    canvasRatio->SetLogx(1); canvasRatio->SetLogy(0); canvasRatio->SetLogz(0); canvasRatio->Update();
-    canvasRatio->SaveAs(Form("%s/TotalCorrection_%s.%s", outputDir.Data(), select.Data(), suffix.Data()));
-    canvasRatio->Clear();
-    legend->Clear();
-
+    canvasRatioC->Update();
+    canvasRatioC->SaveAs(Form("%s/TotalCorrection_%s.%s", outputDir.Data(), select.Data(), suffix.Data()));
+    delete canvasRatioC;
+    
     return;
 }

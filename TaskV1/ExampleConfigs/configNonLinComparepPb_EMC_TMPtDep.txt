@@ -1,9 +1,15 @@
-select	pPbCompareFull
+select	pPbCompareFull_3
+#select	pPbCompareFull
 nNL	8
 addPathFiles	/PCM-EMC	/PCM-EMC	/PCM-EMC	/PCM-EMC	/EMC	/EMC	/EMC	/EMC	stop
-addPathFilesAdd	/PCM-EMC	/PCM-EMC	/PCM-EMC	/PCM-EMC	/PCM-EMC	/PCM-EMC	/PCM-EMC	/PCM-EMC	stop
+addPathFilesAdd	0	/PCM-EMC	/PCM-EMC	/PCM-EMC	/PCM-EMC	/PCM-EMC	/PCM-EMC	/PCM-EMC	/PCM-EMC	stop
+isRecursAddInput	0	1	1	1	1	1	1	1	1	stop
+isRecursAddInput	1	0	0	0	0	0	0	0	0	stop
+addPathFilesAdd	1	-	-	/EMC	/EMC	/EMC	/EMC	-	-	stop
 inputFileNames	LHC13bc-DPMJET-ConvCaloEMC-PtDep	LHC13bc-DPMJET-ConvCaloEMC-PtDep	LHC13bc-HIJING-ConvCaloEMC-PtDep	LHC13bc-HIJING-ConvCaloEMC-PtDep	LHC13bc-DPMJET-CaloEMC-ptDepTM	LHC13bc-DPMJET-CaloEMC-ptDepTM	LHC13bc-HIJING-CaloEMC-ptDepTM	LHC13bc-HIJING-CaloEMC-ptDepTM	stop
-inputFileNamesAdd	LHC13bc-DPMJET-ConvCaloEMC-PtDep_51	LHC13bc-DPMJET-ConvCaloEMC-PtDep_41	LHC13bc-HIJING-ConvCaloEMC-PtDep_51	LHC13bc-HIJING-ConvCaloEMC-PtDep_41	LHC13bc-DPMJET-ConvCaloEMC-PtDep_52	LHC13bc-DPMJET-ConvCaloEMC-PtDep_42	LHC13bc-HIJING-ConvCaloEMC-PtDep_52	LHC13bc-HIJING-ConvCaloEMC-PtDep_42	stop
+inputFileNamesAdd	0	LHC13bc-DPMJET-ConvCaloEMC-PtDep_51	LHC13bc-DPMJET-ConvCaloEMC-PtDep_41	LHC13bc-HIJING-ConvCaloEMC-PtDep_51	LHC13bc-HIJING-ConvCaloEMC-PtDep_41	LHC13bc-DPMJET-ConvCaloEMC-PtDep_52	LHC13bc-DPMJET-ConvCaloEMC-PtDep_42	LHC13bc-HIJING-ConvCaloEMC-PtDep_52	LHC13bc-HIJING-ConvCaloEMC-PtDep_42	stop
+inputFileNamesAdd	1	-	-	LHC13bc-HIJING-CaloEMC-ptDepTM_51_5	LHC13bc-HIJING-CaloEMC-ptDepTM_41_5	LHC13bc-DPMJET-CaloEMC-ptDepTM_52_4	LHC13bc-DPMJET-CaloEMC-ptDepTM_42_4	-	-	stop
+
 plotMassData	1	0	0	0	1	0	0	0	stop
 plotMassMC	1	0	1	0	1	0	1	0	stop
 plotMassRatio	1	0	1	0	1	0	1	0	stop
@@ -11,6 +17,11 @@ plotLabelsData	PCM-EMC	PCM-EMC	PCM-EMC	PCM-EMC	EMC	EMC	EMC	EMC	stop
 plotLabelsMC	PCM-EMC-DPMJet CCMF	PCM-EMC-DPMJet CCRF	PCM-EMC-HIJING CCMF	PCM-EMC-HIJING CCRF	EMC-DPMJet CMF	EMC-DPMJet CRF	EMC-HIJING CMF	EMC-HIJING CRF	stop
 plotLabelsRatio	DPMJet CCMF	DPMJet CCRF	HIJING CCMF	HIJING CCRF	DPMJet CMF	DPMJet CRF	HIJING CMF	HIJING CRF	stop
 nameUsedCorr	DEXP	REXP	DEXP	REXP	DEXP	REXP	DEXP	REXP	stop
-nameUsedCorrAdd	REXP	REXP	REXP	REXP	REXP	REXP	REXP	REXP	stop
+nameUsedCorrAdd	0	REXP	REXP	REXP	REXP	REXP	REXP	REXP	REXP	stop
+nameUsedCorrAdd	1	-	-	CONST	CONST	CONST	CONST	-	-	stop
 color	861	632	863	634	859	628	857	630	801	stop
 lineStyle	1	1	4	4	7	7	9	9	2	stop
+
+energy	pPb_5.023TeV
+periods	LHC13[b,c]
+mode	4

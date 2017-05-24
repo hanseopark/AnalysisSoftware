@@ -1,0 +1,29 @@
+select	pPbCompareOnlyHIJING_3
+nNL	4
+addPathFiles	/PCM-EMC	/PCM-EMC	/EMC	/EMC	stop
+addPathFilesAdd	0	/PCM-EMC	/PCM-EMC	/PCM-EMC	/PCM-EMC	stop
+addPathFilesAdd	1	/EMC	/EMC	-	-	stop
+
+isRecursAddInput	0	1	1	1	1	stop
+isRecursAddInput	1	0	0	0	0	stop
+
+inputFileNames	LHC13bc-HIJING-ConvCaloEMC-PtDep	LHC13bc-HIJING-ConvCaloEMC-PtDep	LHC13bc-HIJING-CaloEMC-ptDepTM	LHC13bc-HIJING-CaloEMC-ptDepTM	stop
+inputFileNamesAdd	0	LHC13bc-HIJING-ConvCaloEMC-PtDep_51	LHC13bc-HIJING-ConvCaloEMC-PtDep_41	LHC13bc-HIJING-ConvCaloEMC-PtDep_52	LHC13bc-HIJING-ConvCaloEMC-PtDep_42	stop
+inputFileNamesAdd	1	LHC13bc-HIJING-CaloEMC-ptDepTM_51_5	LHC13bc-HIJING-CaloEMC-ptDepTM_41_5	-	-	stop
+
+plotMassData	1	0	1	0	stop
+plotMassMC	1	0	1	0	stop
+plotMassRatio	1	0	1	0	stop
+plotLabelsData	PCM-EMC	PCM-EMC	EMC	EMC	stop
+plotLabelsMC	CCRF	PCM-EMC-HIJING CCMF	PCM-EMC-HIJING CCRF	EMC-HIJING CMF	EMC-HIJING CRF	stop
+plotLabelsRatio	HIJING CCMF	HIJING CCRF	HIJING CMF	HIJING CRF	stop
+nameUsedCorr	DEXP	REXP	DEXP	REXP	stop
+nameUsedCorrAdd	0	REXP	REXP	REXP	REXP	stop
+nameUsedCorrAdd	1	CONST	CONST	-	-	stop
+color	863	634	857	630	801	stop
+lineStyle	4	4	9	9	2	stop
+
+energy	pPb_5.023TeV
+period	LHC13[b,c]
+mode	4
+

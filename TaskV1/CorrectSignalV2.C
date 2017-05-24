@@ -1611,7 +1611,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         
         if ( !kIsEta ){
             histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.140);
-            if (mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.140);
+            if (mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.150);
             if (mode == 4 && optionEnergy.CompareTo("8TeV")==0 && trigger.CompareTo("81")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.13,0.180);
             if (mode == 2 ) histoMassMeson->GetYaxis()->SetRangeUser(0.128,0.140);
             if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
@@ -1638,7 +1638,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         TLegend* legendMass = GetAndSetLegend2(0.65, 0.13, 0.95, 0.13+(0.035*3), 0.035, 1, "", 42, 0.15);
         legendMass->AddEntry(histoMassMeson,"reconstructed Data");
         if (histoMCrecMassMeson){
-            DrawGammaSetMarker(histoMCrecMassMeson, 21, 0.8, kRed-4, kRed-4);
+            DrawGammaSetMarker(histoMCrecMassMeson, 25, 0.8, kRed-4, kRed-4);
             histoMCrecMassMeson->DrawCopy("same,e1,p"); 
             legendMass->AddEntry(histoMCrecMassMeson,"reconstructed MC");
         }
@@ -1647,7 +1647,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
         
         legendMass->Draw();
-        PutProcessLabelAndEnergyOnPlot(0.15, 0.97, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        PutProcessLabelAndEnergyOnPlot(0.15, 0.96, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
         
         canvasMass->Update();
         canvasMass->SaveAs(Form("%s/%s_Mass_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -1717,7 +1717,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                         
             legendMassRatio->Draw();
             
-            PutProcessLabelAndEnergyOnPlot(0.15, 0.97, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.15, 0.96, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
             
             canvasMassRatio->Update();
             canvasMassRatio->SaveAs(Form("%s/%s_RatioMass_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -1731,8 +1731,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             
             if ( !kIsEta ){
                 histoMassMeson->GetYaxis()->SetRangeUser(0.125,0.150);
-                if (mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.140);
-                if (mode == 2 ) histoMassMeson->GetYaxis()->SetRangeUser(0.125,0.140);
+                if (mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.150);
+                if (mode == 2 ) histoMassMeson->GetYaxis()->SetRangeUser(0.128,0.140);
                 if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
             } else {
                 histoMassMeson->GetYaxis()->SetRangeUser(0.52,0.58);
@@ -1767,7 +1767,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }
             // put MC Mass obtained from pure gaussian if available
             if (histoMCrecMassGaussianMeson){
-                DrawGammaSetMarker(histoMCrecMassGaussianMeson, 20, 0.8, kGreen-2, kGreen-2);
+                DrawGammaSetMarker(histoMCrecMassGaussianMeson, 25, 0.8, kGreen-2, kGreen-2);
                 histoMCrecMassGaussianMeson->DrawCopy("same,e1,p"); 
                 legendMass4->AddEntry(histoMCrecMassGaussianMeson,"reconstructed MC, pure Gauss");
             }
@@ -1780,7 +1780,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }
             
             DrawGammaLines(0., maxPtMeson,mesonMassExpect, mesonMassExpect,0.1);
-            PutProcessLabelAndEnergyOnPlot(0.15, 0.95, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.15, 0.96, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
             legendMass4->Draw();
             canvasMass->Update(); 
             canvasMass->SaveAs(Form("%s/%s_MassComparisonPureGaussian_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -1848,7 +1848,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }
             
             DrawGammaLines(0., maxPtMeson,mesonMassExpect, mesonMassExpect,0.1);
-            PutProcessLabelAndEnergyOnPlot(0.15, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.15, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
             legendMass2->Draw();
             
             canvasMass->Update(); 
@@ -1916,7 +1916,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             
             DrawGammaLines(0., maxPtMeson,mesonMassExpect, mesonMassExpect,0.1);
             
-            PutProcessLabelAndEnergyOnPlot(0.15, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.15, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.25, 11);
             legendMass3->Draw();
             canvasMass->Update(); 
             canvasMass->SaveAs(Form("%s/%s_MassAddedInfos_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -1981,7 +1981,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         if(kIsEta ) legendFWHM->AddEntry(histoTrueFWHMMeson,"True reconstructed #eta");
 
         legendFWHM->Draw();
-        PutProcessLabelAndEnergyOnPlot(0.7, 0.94, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        PutProcessLabelAndEnergyOnPlot(0.7, 0.94, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
         canvasFWHM->Update();
         canvasFWHM->SaveAs(Form("%s/%s_FWHM_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
 
@@ -2041,7 +2041,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if(kIsEta ) legendFWHM4->AddEntry(histoTrueWidthGaussianMeson,"True reconstructed #eta, #sigma pure Gauss");
             }
             
-            PutProcessLabelAndEnergyOnPlot(0.7, 0.94, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.7, 0.94, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
             legendFWHM4->Draw();
             canvasFWHM->Update(); 
             canvasFWHM->SaveAs(Form("%s/%s_FWHMComparisonPureGauss_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -2116,7 +2116,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if(kIsEta ) legendFWHM2->AddEntry(histoTrueFWHMCaloMergedClusterMeson,"True reconstructed #eta, merged cluster #gamma");
             }
             
-            PutProcessLabelAndEnergyOnPlot(0.7, 0.94, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.7, 0.94, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
             legendFWHM2->Draw();
             canvasFWHM->Update(); 
             canvasFWHM->SaveAs(Form("%s/%s_FWHMAddedInfos_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -2182,7 +2182,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }
             
             legendFWHM3->Draw();
-            PutProcessLabelAndEnergyOnPlot(0.7, 0.94, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.7, 0.94, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
 
             canvasFWHM->Update(); 
             canvasFWHM->SaveAs(Form("%s/%s_FWHMAddedInfos_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -2265,7 +2265,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     fitEffiBiasWOWeightsPol1[k]->Draw("same");
                     histoRatioEffWOWeightingEff[k]->Draw("e1,same");
 
-                    PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 63, 0.03);
+                    PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 43, 0.03);
 
                 canvasCompEffSimple->Update();
                 canvasCompEffSimple->SaveAs(Form("%s/%s_EffiCompW0Weighting%sRatio_%s.%s",outputDir.Data(),nameMeson.Data(),nameIntRange[k].Data(),fCutSelection.Data(),suffix.Data()));
@@ -2322,7 +2322,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         DrawGammaSetMarker(histoAcceptance, 20, 1.5, kAzure-6, kAzure-6);
         histoAcceptance->DrawCopy("e1"); 
 
-        PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 63, 0.03);
+        PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 43, 0.03);
 
         canvasAcceptance->Update();
         canvasAcceptance->SaveAs(Form("%s/%s_Acceptance_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -2353,7 +2353,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                                         kFALSE, 0., 10.);
             histoRatioAccWWOWeighting->Draw("e1");
             
-            PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 63, 0.03);
+            PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 43, 0.03);
             
             canvasAcceptance->Update();
             canvasAcceptance->SaveAs(Form("%s/%s_AcceptanceCompWAndW0WeightingRatio_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -2381,7 +2381,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             
             }
             legendAccSec->Draw();
-            PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 63, 0.03);
+            PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 43, 0.03);
             
             canvasAcceptance->Update();
             canvasAcceptance->SaveAs(Form("%s/%s_AcceptanceWithSec_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -2442,7 +2442,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }    
             legendSecFrac->Draw();
             
-            PutProcessLabelAndEnergyOnPlot(0.15, 0.93, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.15, 0.93, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
             canvasSecFrac->Update();
             canvasSecFrac->SaveAs(Form("%s/%s_FracSecondaries_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
             
@@ -2473,7 +2473,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }    
             legendSecFracUsed->Draw();
             
-            PutProcessLabelAndEnergyOnPlot(0.15, 0.93, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.15, 0.93, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
             canvasSecFrac->Update();
             canvasSecFrac->SaveAs(Form("%s/%s_FracSecondariesSmoothed_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
 
@@ -2488,7 +2488,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }    
             legendSecFracK0s->Draw();
             
-            PutProcessLabelAndEnergyOnPlot(0.15, 0.93, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.15, 0.93, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
             canvasSecFrac->Update();
             canvasSecFrac->SaveAs(Form("%s/%s_FracSecondariesFromK0sDiffIntRanges_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
 
@@ -2515,7 +2515,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 }
                 legendSecFrac->Draw();
             }    
-            PutProcessLabelAndEnergyOnPlot(0.15, 0.93, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.15, 0.93, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
             canvasSecFrac->Update();
             canvasSecFrac->SaveAs(Form("%s/%s_FracSecondariesLogy_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
 
@@ -2582,7 +2582,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             legendEff->Draw();
 
         canvasEffSimple->Update();
-        PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
 
         canvasEffSimple->SaveAs(Form("%s/%s_TrueEffSimple_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data())); 
 
@@ -2626,7 +2626,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             legendEffWithSec->Draw();
 
             canvasEffSimple->Update();
-            PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
 
             canvasEffSimple->SaveAs(Form("%s/%s_TrueEffWithSecEffi_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));     
 
@@ -2653,7 +2653,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
             legendEffWithSecRatio->Draw();
             canvasEffSimple->Update();
-            PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
 
             if (plotted)
                 canvasEffSimple->SaveAs(Form("%s/%s_RatioSecEffiToTrueEff_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
@@ -2677,7 +2677,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 legendTrueEff->AddEntry(histoTrueEffiPt[k],nameIntRangePlot[k].Data());
             }
                     
-            PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
             
         canvasEffi->Update();
         canvasEffi->SaveAs(Form("%s/%s_%s_TrueEfficiency_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
@@ -2777,7 +2777,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         DrawGammaSetMarker(histoUnCorrectedYieldDrawing, 20, 0.5, kBlack, kBlack);  
         histoUnCorrectedYieldDrawing->DrawCopy("e1");
 
-        PutProcessLabelAndEnergyOnPlot(0.62, 0.95, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        PutProcessLabelAndEnergyOnPlot(0.62, 0.95, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.25, 11);
         
     canvasRAWYield->Update();
     canvasRAWYield->SaveAs(Form("%s/%s_%s_RAWYieldPt_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
@@ -2815,7 +2815,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             legendYieldRaw->AddEntry(histoUnCorrectedYield[k],nameIntRangePlot[k].Data());            
         }    
         legendYieldRaw->Draw();    
-        PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
     
     padRawYieldRatios->cd();
     padRawYieldRatios->SetTickx();
@@ -2958,7 +2958,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             legendYield3->AddEntry(histoCorrectedYieldTrue[k],nameIntRangePlot[k].Data());
         }    
         legendYield3->Draw();    
-        PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
     
     padCorrectedYieldRatios->cd();
     padCorrectedYieldRatios->SetTickx();
@@ -2994,7 +2994,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             histoCorrectedYieldNorm[k]->DrawCopy("e1,same"); 
         }    
         legendYield3->Draw();    
-        PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
     
     padCorrectedYieldRatios->cd();
     
@@ -3048,7 +3048,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         legendComparison->AddEntry(histoFeedDownCorrectedYieldTrue[0],"corr. yield true eff, res. feed down corr.");
 
         legendComparison->Draw();
-        PutProcessLabelAndEnergyOnPlot(0.7, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        PutProcessLabelAndEnergyOnPlot(0.7, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
 
         padComparisonRatio->cd();
         padComparisonRatio->SetTickx();
@@ -3103,7 +3103,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             legendYield4->AddEntry(histoCorrectedYieldNorm[0],"normal eff");
             legendYield4->Draw();
 
-            PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.6, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
         padCorrectedYieldRatios->cd();
         padCorrectedYieldRatios->SetTickx();
         padCorrectedYieldRatios->SetTicky();
@@ -3193,7 +3193,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
         legendSecRAWYield->Draw();
 
-        PutProcessLabelAndEnergyOnPlot(0.15, 0.23, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        PutProcessLabelAndEnergyOnPlot(0.15, 0.23, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.25, 11);
         
         canvasRAWYieldSec->Update();
         canvasRAWYieldSec->SaveAs(Form("%s/%s_%s_RAWYieldSecPt_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
@@ -3245,7 +3245,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 }     
             }
             legendSecRAWRatio->Draw();
-            PutProcessLabelAndEnergyOnPlot(0.15, 0.93, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.15, 0.93, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.25, 11);
             
             canvasSecFrac2->Update();
             canvasSecFrac2->SaveAs(Form("%s/%s_%s_EffectiveSecCorrPt_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
@@ -3288,7 +3288,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
         legendFeedDownYield->Draw();
         
-        PutProcessLabelAndEnergyOnPlot(0.15, 0.23, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+        PutProcessLabelAndEnergyOnPlot(0.15, 0.23, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.25, 11);
         
         canvasFeedDownYield->Update();
         canvasFeedDownYield->SaveAs(Form("%s/%s_%s_ResonanceFeedDownYieldPt_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
@@ -3309,7 +3309,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             legendSecRAWYield->AddEntry(histoYieldGGMeson[0],"Contamination from #gamma#gamma");
             legendSecRAWYield->Draw();
 
-            PutProcessLabelAndEnergyOnPlot(0.62, 0.78, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+            PutProcessLabelAndEnergyOnPlot(0.62, 0.78, 0.03, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.25, 11);
         
         canvasRAWYieldSec->Update();
         canvasRAWYieldSec->SaveAs(Form("%s/%s_%s_RAWYieldContGGPt_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
@@ -3356,7 +3356,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 legendFracDifferentContrib->AddEntry(ratioTrueConvGammaDivTotal,"XX= #gamma_{PCM}, #gamma_{conv,cluster}");
                 legendFracDifferentContrib->Draw();
 
-                PutProcessLabelAndEnergyOnPlot(0.15, 0.92, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+                PutProcessLabelAndEnergyOnPlot(0.15, 0.92, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
                 canvasFracDifferentContrib->Update();
                 canvasFracDifferentContrib->SaveAs(Form("%s/%s_RelativeContributionsToTruePeak_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
                 delete canvasFracDifferentContrib;
@@ -3412,7 +3412,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 legendFracDifferentContrib->AddEntry(ratioTrueConvGamma2DivTotal,"XX= #gamma_{conv,cluster}, #gamma_{conv,cluster}");
                 legendFracDifferentContrib->Draw();
 
-                PutProcessLabelAndEnergyOnPlot(0.15, 0.92, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+                PutProcessLabelAndEnergyOnPlot(0.15, 0.92, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
                 canvasFracDifferentContrib->Update();
                 canvasFracDifferentContrib->SaveAs(Form("%s/%s_RelativeContributionsToTruePeak_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
                 delete canvasFracDifferentContrib;
@@ -3587,7 +3587,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         legendSys->Draw();
 
     canvasSysYieldExtraction->Update();
-    PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data());
+    PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
 
     canvasSysYieldExtraction->SaveAs(Form("%s/%s_%s_SysYieldExtraction_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data())); 
 
