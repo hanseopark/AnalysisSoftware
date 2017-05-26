@@ -483,6 +483,16 @@ void ClusterQA(
             setQAHotCells1D(cellQAData,0,1E5,0,4);
             setQATime(cellQAData,6E-7,7E-7,0,1E-7);
         }
+    } else if(DataSets[0].CompareTo("LHC15o")==0){
+        doCellQA                = kTRUE;
+        cellQAData              = new CellQAObj();
+        setQAEnergy(cellQAData,0.06,0.22,0.06,0.22);
+        setQATime(cellQAData,-0.005E-6,0.015E-6,0.005E-6,0.04E-6);
+        setQAHotCells1D(cellQAData,0.1E6,1.4E6,0,1.7);
+        const Int_t dim2D       = 9;
+        Double_t min2D[dim2D]   = {0.7,0.6,0.5,0.4,0.3,0.25,0.2,0.2,0.2};
+        Double_t max2D[dim2D]   = {1E3,1E3,105,105,105,105,105,105,105};
+        setQAHotCells2D(cellQAData,dim2D,min2D,max2D);
     } else{
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -2065,10 +2075,9 @@ void ClusterQA(
                     line->DrawLine(cellQA->TimeMean[1],cellQA->TimeSigma[0],cellQA->TimeMean[1],cellQA->TimeSigma[1]);
                     line->DrawLine(cellQA->TimeMean[0],cellQA->TimeSigma[1],cellQA->TimeMean[1],cellQA->TimeSigma[1]);
                 }
-
                 TGaxis::SetExponentOffset(0, 0.5, "y");
                 PutProcessLabelAndEnergyOnPlot(0.75, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data());
-                SaveCanvas(canvas, Form("%s/CellTimeVsSigma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kFALSE, kFALSE, kTRUE);
+                SaveCanvas(canvasJPG, Form("%s/CellTimeVsSigma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kFALSE, kFALSE, kTRUE);
 
                 // estimate Hot cells based on timing information
                 canvas->SetRightMargin(rightMargin);
@@ -2082,7 +2091,7 @@ void ClusterQA(
                     line->DrawLine(cellQA->HotCellsTime1D[1],0,cellQA->HotCellsTime1D[1],10);
                 }
                 PutProcessLabelAndEnergyOnPlot(0.8, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data());
-                SaveCanvas(canvas, Form("%s/CellHotCellsTime1D_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kFALSE, kTRUE, kFALSE);
+                SaveCanvas(canvasJPG, Form("%s/CellHotCellsTime1D_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kFALSE, kTRUE, kFALSE);
             } else cout << "INFO: Object |CellTimeVsCellID| could not be found! Skipping Draw..." << endl;
             //---------------------------------------------------------------------------------------------------------------
             // plot bad channels masked in the data already
