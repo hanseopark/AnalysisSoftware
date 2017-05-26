@@ -132,6 +132,25 @@ void ExtractGammaSignalV2(      TString meson               = "",
         cout << fCutSelectionRead.Data() << endl;
     }
 
+    TString fEventCutSelectionPileUpRejection   = fEventCutSelection(5,1);
+    cout << "cutnumber for PileUpRejection is: " << fEventCutSelectionPileUpRejection << endl;
+    if( fEventCutSelectionPileUpRejection.Atoi() > 1  && optionMC.CompareTo("kTRUE") == 0){
+      cout << "changing PileUpCut for MC" << endl;
+      cout << fEventCutSelection.Data() << endl;
+      fEventCutSelection.Replace(GetEventRemovePileUpCutPosition(),1,"1");
+      cout << fEventCutSelection.Data() << endl;
+      fEventCutSelectionRead  = fEventCutSelection;
+      fGammaCutSelectionRead  = fGammaCutSelection;
+      fMesonCutSelectionRead  = fMesonCutSelection;
+      if (mode==0)
+          fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+      if (mode==2 || mode==3)
+          fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+      if (mode==4 || mode==5)
+          fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+      cout << fCutSelectionRead.Data() << endl;
+    }
+
     // set global variables for rapidity and BG number
     TString rapidityRange;
     fYMaxMeson                                                                  = ReturnRapidityStringAndDouble(fMesonCutSelectionRead, rapidityRange);
