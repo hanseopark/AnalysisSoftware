@@ -484,7 +484,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             histoExternalInputSecPi0[j]                     = (TH1D*)fileUncorrected.Get(Form("histoSecPi0YieldFrom%s_FromCocktail",nameSecMeson[j].Data()));
             if (histoExternalInputSecPi0[j]){
                 foundCocktailInput                          = kTRUE;
-                cout << "Using the cocktail input for secondary correction" << endl;
+                cout << "Using the cocktail input for secondary correction of " << nameSecMeson[j] << endl;
                 if (j==0) strExternalInputName              = "Cocktail";
             }
         }
@@ -503,7 +503,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             if (histoExternalInputSecPi0[j]){
                 histoExternalInputSecPi0[j]->Scale(scaleFactorMeasXSecForExternalInput);
                 foundToyMCInput                         = kTRUE;
-                cout << "Using the toyMC input for secondary correction" << endl;
+                cout << "Using the toyMC input for secondary correction of " << nameSecMeson[j] << endl;
                 if (j==0) strExternalInputName = "Toy";
             }
         }
@@ -809,6 +809,29 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                         modifiedSecTrueEffi[k][j]   = kTRUE;
                         cout << "adjusted sec effi, due to to little stat" << endl;
                     }
+                } else if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0){
+                    histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                    if  ( mode == 0) {
+                        if (j == 1){
+                            if ( (fitConst->GetParameter(0) > 0.1 && fitConst->GetParameter(0) < 0.2) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else 
+                                histoSecTrueEffi[k][j]->Scale(0.12);
+                            modifiedSecTrueEffi[k][j]   = kTRUE;
+                        } else if (j == 2){
+                            if ( (fitConst->GetParameter(0) > 0. && fitConst->GetParameter(0) < 0.15) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else 
+                                histoSecTrueEffi[k][j]->Scale(0.08);
+                            modifiedSecTrueEffi[k][j]   = kTRUE;
+                        } else if (j == 3){
+                            if ( (fitConst->GetParameter(0) > 0.1 && fitConst->GetParameter(0) < 0.2) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
+                                histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                            else 
+                                histoSecTrueEffi[k][j]->Scale(0.12);
+                            modifiedSecTrueEffi[k][j]   = kTRUE;
+                        }    
+                    }
                 }
 
                 // use the fits from the MC efficiency ratio to get the secondary efficiencies for the raw yield calculation
@@ -1027,6 +1050,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         for (Int_t k = 0; k < 3; k++){
             // this is a really really ugly hack!
             if (doK0SecCorrectionWithDefaultHisto == 1){
+                cout << "Old style correction for PCM, data, NOT pPb" << endl;
                 for (Int_t i = 1; i < histoYieldTrueSecFracMeson[k][0]->GetNbinsX()+1; i++){
 
                     Double_t ptStart        = histoYieldTrueSecFracMeson[k][3]->GetXaxis()->GetBinLowEdge(i);
@@ -1048,6 +1072,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 }
             // fit current histo with pure powerlaw fit (goes to 0 at high pt)    
             } else if ( doK0SecCorrectionWithDefaultHisto == 2 ){
+                cout << "Old style correction for PCM or EMcal, data, pPb" << endl;
                 for (Int_t j = 0; j < 4; j++){
                     // exception for PCM mode set K0L to 0
                     if (haveSec[j] && haveSecUsed[j] && j != 2){

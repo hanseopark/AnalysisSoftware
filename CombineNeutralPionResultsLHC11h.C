@@ -2617,48 +2617,49 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
     TFile *filePhotons0010 = new TFile("/home/admin1/leardini/Results/DirectPhotonAnalysisMay2017/50100013_00200009847005008750404000_0152501500000000/PbPb_2.76TeV/Gamma_Pi0_MC_GammaConvV1Correction_50100013_00200009847005008750404000_0152501500000000.root");
     TFile *filePhotons2040 = new TFile("/home/admin1/leardini/Results/DirectPhotonAnalysisMay2017/52400013_00200009847005008750404000_0152501500000000/PbPb_2.76TeV/Gamma_Pi0_MC_GammaConvV1Correction_52400013_00200009847005008750404000_0152501500000000.root");
     
-    TH1D* purity_0010 = (TH1D*)filePhotons0010->Get("GammaPurityWOSec_Pt");
-    TH1D* purity_2040 = (TH1D*)filePhotons2040->Get("GammaPurityWOSec_Pt");
-    
-    TCanvas *canvasPurity                       = GetAndSetCanvas("canvasPurity");
-    TH2F * histo2DPurity = new TH2F("histo2DPurity","histo2DPurity",11000,0.,16,1000,0.,1.2);
-    SetStyleHistoTH2ForGraphs(histo2DPurity, "#it{p}_{T} (GeV/#it{c})","#gamma purity",0.035,0.04, 0.035,0.04, 1.1,1.);
-    histo2DPurity->GetYaxis()->SetRangeUser(0.905,1.02);
-    histo2DPurity->GetXaxis()->SetRangeUser(0.5,13.5);
-    histo2DPurity->Draw("copy");
-
-        DrawGammaSetMarker(purity_0010, markerStylePbPb0010,markerSizePbPb0010, colorCombPbPb0010 , colorCombPbPb0010);
-        purity_0010->Draw("same");
-        DrawGammaSetMarker(purity_2040, markerStylePbPb2040,markerSizePbPb2040, colorCombPbPb2040 , colorCombPbPb2040);
-        purity_2040->Draw("same");
-        DrawGammaLines(0.5, 13.5 , 1, 1 ,1,kGray,2);
-
-        cout << "fitting purity 0010" << endl;
-        TF1* polPurity0010 = new TF1("polPurity0010","[0]",2.,14);
-        polPurity0010->SetLineColor(kRed+2);
-        polPurity0010->SetLineWidth(1);    
-        purity_0010->Fit(polPurity0010,"NRMEX0+");
-//         polPurity0010->Draw("same");
-
-        cout << "fitting purity 2040" << endl;
-        TF1* polPurity2040 = new TF1("polPurity2040","[0]",2.,14);
-        polPurity2040->SetLineColor(kBlue+1);
-        polPurity2040->SetLineWidth(1);    
-        purity_2040->Fit(polPurity2040,"NRMEX0+");
-//         polPurity2040->Draw("same");
+    if(filePhotons0010 && filePhotons2040){
+        TH1D* purity_0010 = (TH1D*)filePhotons0010->Get("GammaPurityWOSec_Pt");
+        TH1D* purity_2040 = (TH1D*)filePhotons2040->Get("GammaPurityWOSec_Pt");
         
-        TLegend* legendPurity = GetAndSetLegend(0.65,0.15,3);
-        legendPurity->SetHeader(collisionSystemPbPb.Data());
-        legendPurity->AddEntry(purity_0010,"0#font[122]{-}10%","p");
-        legendPurity->AddEntry(purity_2040,"20#font[122]{-}40%","p");
-        legendPurity->Draw();
-        TLatex *thesisLabelPurity = new TLatex(0.16,0.3,thisthesis.Data());
-        SetStyleTLatex( thesisLabelPurity, textSize,4);
-        if(thesisPlotting) thesisLabelPurity->Draw();
+        TCanvas *canvasPurity                       = GetAndSetCanvas("canvasPurity");
+        TH2F * histo2DPurity = new TH2F("histo2DPurity","histo2DPurity",11000,0.,16,1000,0.,1.2);
+        SetStyleHistoTH2ForGraphs(histo2DPurity, "#it{p}_{T} (GeV/#it{c})","#gamma purity",0.035,0.04, 0.035,0.04, 1.1,1.);
+        histo2DPurity->GetYaxis()->SetRangeUser(0.905,1.02);
+        histo2DPurity->GetXaxis()->SetRangeUser(0.5,13.5);
+        histo2DPurity->Draw("copy");
 
-    canvasPurity->SaveAs(Form("%s/PurityGamma.%s",outputDir.Data(),suffix.Data()));
-    delete canvasPurity;
-    
+            DrawGammaSetMarker(purity_0010, markerStylePbPb0010,markerSizePbPb0010, colorCombPbPb0010 , colorCombPbPb0010);
+            purity_0010->Draw("same");
+            DrawGammaSetMarker(purity_2040, markerStylePbPb2040,markerSizePbPb2040, colorCombPbPb2040 , colorCombPbPb2040);
+            purity_2040->Draw("same");
+            DrawGammaLines(0.5, 13.5 , 1, 1 ,1,kGray,2);
+
+            cout << "fitting purity 0010" << endl;
+            TF1* polPurity0010 = new TF1("polPurity0010","[0]",2.,14);
+            polPurity0010->SetLineColor(kRed+2);
+            polPurity0010->SetLineWidth(1);    
+            purity_0010->Fit(polPurity0010,"NRMEX0+");
+    //         polPurity0010->Draw("same");
+
+            cout << "fitting purity 2040" << endl;
+            TF1* polPurity2040 = new TF1("polPurity2040","[0]",2.,14);
+            polPurity2040->SetLineColor(kBlue+1);
+            polPurity2040->SetLineWidth(1);    
+            purity_2040->Fit(polPurity2040,"NRMEX0+");
+    //         polPurity2040->Draw("same");
+            
+            TLegend* legendPurity = GetAndSetLegend(0.65,0.15,3);
+            legendPurity->SetHeader(collisionSystemPbPb.Data());
+            legendPurity->AddEntry(purity_0010,"0#font[122]{-}10%","p");
+            legendPurity->AddEntry(purity_2040,"20#font[122]{-}40%","p");
+            legendPurity->Draw();
+            TLatex *thesisLabelPurity = new TLatex(0.16,0.3,thisthesis.Data());
+            SetStyleTLatex( thesisLabelPurity, textSize,4);
+            if(thesisPlotting) thesisLabelPurity->Draw();
+
+        canvasPurity->SaveAs(Form("%s/PurityGamma.%s",outputDir.Data(),suffix.Data()));
+        delete canvasPurity;
+    }    
     
       TFile *fileChargedRatios = new TFile("pdf/2017_04_30/CombineMesonMeasurementsPbPb2760GeVX/InputALICEResultsPbPb2760GeV_2017_04_30.root");
       if(fileChargedRatios){

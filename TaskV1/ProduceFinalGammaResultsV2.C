@@ -41,8 +41,8 @@
 #include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "../CommonHeaders/ConversionFunctions.h"
 
-void ProduceFinalGammaResultsV2(    TString cutSel          = "",
-                                    TString optionEnergy    = "",
+void ProduceFinalGammaResultsV2(    TString cutSel          = "50100013_00200009847005008750404000_0152501500000000",
+                                    TString optionEnergy    = "PbPb_2.76TeV",
                                     TString suffix          = "eps",
                                     Int_t mode              = 0
                                 ){
@@ -115,7 +115,10 @@ void ProduceFinalGammaResultsV2(    TString cutSel          = "",
     Double_t maxPtLog                        = 40.;
     Double_t minY                            = 0.85;
     Double_t maxY                            = 1.65;
-    if (mode==4) {
+    if(mode == 0 && optionEnergy.CompareTo("PbPb_2.76TeV") == 0){
+        maxY                                 = 2.;
+        minY                                 = 0.75;        
+    } else if (mode==4) {
         minPt                                = 1.5;
         minY                                 = 0.5;
     }
@@ -127,7 +130,10 @@ void ProduceFinalGammaResultsV2(    TString cutSel          = "",
             
     TH2F * histo2DDoubleRatioPlotting       = new TH2F("histo2DDoubleRatioPlotting","histo2DDoubleRatioPlotting",1000,minPt,maxPtLog,1000,minY,maxY);
     SetStyleHistoTH2ForGraphs(histo2DDoubleRatioPlotting, "#it{p}_{T} (GeV/#it{c})","(#gamma_{inc}/#pi^{0})/(#gamma_{decay}/#pi^{0})", 0.04,0.04, 0.04,0.04, 1.,1.);
-    histo2DDoubleRatioPlotting->GetXaxis()->SetRangeUser(0.,histoDR->GetXaxis()->GetBinUpEdge(histoDR->GetNbinsX())*1.5);
+    if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0)
+        histo2DDoubleRatioPlotting->GetXaxis()->SetRangeUser(0.4,histoDR->GetXaxis()->GetBinUpEdge(histoDR->GetNbinsX())*1.5);
+    else
+        histo2DDoubleRatioPlotting->GetXaxis()->SetRangeUser(0.,histoDR->GetXaxis()->GetBinUpEdge(histoDR->GetNbinsX())*1.5);
     histo2DDoubleRatioPlotting->GetXaxis()->SetTitleFont(62);
     histo2DDoubleRatioPlotting->GetYaxis()->SetTitleFont(62);
     histo2DDoubleRatioPlotting->GetXaxis()->SetLabelOffset(-1e-2);
