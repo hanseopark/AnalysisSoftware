@@ -1676,7 +1676,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                                         kFALSE, 0., 0.7, kFALSE,
                                         kTRUE, 0.95, 1.05, 
                                         kFALSE, 0., 10.);
-            DrawGammaSetMarker(histoRatioRecMass, 20, 0.8, kBlack, kBlack); 
+            DrawGammaSetMarker(histoRatioRecMass, 20, 0.8, kBlack, kBlack);
+            if ((mode == 2 ||mode == 4) && optionEnergy.CompareTo("PbPb_5.02TeV")==0) histoRatioRecMass->GetYaxis()->SetRangeUser(0.75,1.25);
             histoRatioRecMass->DrawCopy("e1,p");
             DrawGammaSetMarker(histoRatioValRecMass, 24, 0.8, kRed+2, kRed+2);
             histoRatioValRecMass->DrawCopy("same,e1,p"); 
