@@ -152,7 +152,7 @@ void ExtractSignalV2(   TString meson                   = "",
 
     TString fEventCutSelectionPileUpRejection   = fEventCutSelection(5,1);
     cout << "cutnumber for PileUpRejection is: " << fEventCutSelectionPileUpRejection << endl;
-    if( !((fEventCutSelectionPileUpRejection.CompareTo("0") == 0) || (fEventCutSelectionPileUpRejection.CompareTo("1") == 0)) && optionMC.CompareTo("kTRUE") == 0){
+    if( fEventCutSelectionPileUpRejection.Atoi() > 1  && optionMC.CompareTo("kTRUE") == 0){
       cout << "changing PileUpCut for MC" << endl;
       cout << fEventCutSelection.Data() << endl;
       fEventCutSelection.Replace(GetEventRemovePileUpCutPosition(),1,"1");
@@ -160,9 +160,7 @@ void ExtractSignalV2(   TString meson                   = "",
       fEventCutSelectionRead  = fEventCutSelection;
       fGammaCutSelectionRead  = fGammaCutSelection;
       fMesonCutSelectionRead  = fMesonCutSelection;
-      if (mode==9)
-          fCutSelectionRead       = Form("%s%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
-      else if (mode==0)
+      if (mode==0)
           fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
       if (mode==2 || mode==3)
           fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
